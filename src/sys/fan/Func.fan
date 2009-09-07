@@ -7,23 +7,26 @@
 //
 
 **
-** Func models an executable subroutine.  Functions are typed by a
+** Func models an executable function.  Functions are typed by a
 ** formal parameter list and return value (or Void if no return).
 ** Functions are typically defined as method slots on a type, but
-** may also be defined via functional programming constructs such
-** closures and the '&' operator.
+** may also be defined via closures.
 **
-** An immutable function is guaranteed to not capture any
-** state from its thread, and is safe to execute on other threads.
-** The compiler marks functions as immutable based on the following
-** analysis:
-**   - static methods are always automatically immutable
-**   - instance methods on a const class are immutable
-**   - instance methods on a non-const class are never immutable
-**   - closures which don't capture any variables from their
-**     scope are automatically immutable
-**   - curried functions which only capture const variables
-**     from their scope are automatically immutable
+** An immutable function is one proven to be thread safe:
+**   - Method functions are always immutable - see `sys::Method.func`
+**   - Closures which only capture final, const variables are always
+**     immutable; toImmutable always returns this
+**   - Closures which capture non-final or non-const variables are
+**     always mutable; toImmutable always throws NotImmutableErr
+**   - Closure which capture non-final variables which aren't known
+**     to be immutable until runtime (such as Obj or List) will return
+**     false for isImmutable, but will provide a toImmutable method which
+**     attempts to bind to the current variables by calling toImmutable
+**     on each one
+**
+** The definition of a *final variable* is a variable which is never reassigned
+** after it is initialized.  Any variable which is reassigned is considered
+** a non-final variable.
 **
 ** See `docLang::Functions` for details.
 **
@@ -100,12 +103,11 @@ final class Func
                  E e := null, F f := null, G g := null, H h := null)
 
   **
-  ** Perform a functional curry by binding the specified
-  ** arguments to this function's parameters.  Return a new
-  ** function which takes the remaining unbound parameters.
-  ** The '&' operator is used as a shortcut for currying.
+  ** Create a new function by binding the specified arguments to
+  ** this function's parameters.  The new function which takes the
+  ** remaining unbound parameters.
   **
-  Func curry(Obj?[] args)
+  Func bind(Obj?[] args)
 
   **
   ** Return a new function which wraps this function but with
@@ -122,6 +124,7 @@ final class Func
   Func retype(Type t)
 
 // TODO
+Func curry(Obj?[] args)
 Func toImmutable()
 
 }

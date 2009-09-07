@@ -101,7 +101,7 @@ abstract class CNamespace : CompilerSupport
     mapMake            = sysMethod(mapType,    "make")
     mapSet             = sysMethod(mapType,    "set")
     enumOrdinal        = sysMethod(enumType,   "ordinal")
-    funcCurry          = sysMethod(funcType,   "curry")
+    funcBind           = sysMethod(funcType,   "bind")
     rangeMakeInclusive = sysMethod(rangeType,  "makeInclusive")
     rangeMakeExclusive = sysMethod(rangeType,  "makeExclusive")
     slotFindMethod     = sysMethod(slotType,   "findMethod")
@@ -317,7 +317,7 @@ abstract class CNamespace : CompilerSupport
   readonly CMethod? mapMake
   readonly CMethod? mapSet
   readonly CMethod? enumOrdinal
-  readonly CMethod? funcCurry
+  readonly CMethod? funcBind
   readonly CMethod? rangeMakeInclusive
   readonly CMethod? rangeMakeExclusive
   readonly CMethod? slotFindMethod

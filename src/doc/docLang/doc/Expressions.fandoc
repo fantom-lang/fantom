@@ -401,9 +401,6 @@ Fan has a couple other operators which will be discussed later:
   - `Closures` are expressions which create a new function inside
     a method body.
 
-  - [Curry]`Functions#currying` operator '&' is used to create a new functions
-    via supplying partial arguments.
-
   - [Call]`Functions#calling` operator '()' is used to invoke a function variable.
 
   - [Dynamic invoke]`Methods#dynamicInvoke` operator '->' is used to call

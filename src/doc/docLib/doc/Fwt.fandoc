@@ -140,29 +140,22 @@ The following illustrates a simple text field with some event handlers:
 
   class EventTest
   {
-    Void modifyCallback(Event event) { echo(event) }
-
     Void main()
     {
       text := Text
       {
-        onFocus.add |Event e| { echo(e) }
         onAction.add |,| { echo("onAction!") }
-        onModify.add(&modifyCallback)
+        onModify.add |event| { echo(event) }
       }
 
       Window { GridPane { text, }, }.open
     }
   }
 
-The example illustrates creating callbacks using both closures and
-the curry operator.  The 'onFocus' event handler is defined as
-a closure with an 'Event' argument.  The 'onAction' event handler
-is also a closure, but with no arguments (remember that you can use
-functions which take [fewer arguments]`docLang::Functions#arityCompatibility`).
-The 'onModify' event handler shows how you might use the
-[curry]`docLang::Functions#currying` operator to define a
-callback function.
+The example illustrates creating two callbacks using closures.  The
+'onAction' event handler is a closure with no arguments (remember that
+you can use functions which take [fewer arguments]`docLang::Functions#arityCompatibility`).
+The 'onModify' event handler takes an event parameter.
 
 Commands [#commands]
 ********************

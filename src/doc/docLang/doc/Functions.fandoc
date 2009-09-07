@@ -17,7 +17,7 @@ a 'Void' return type.  Functions are created one of three ways:
      for a function
   2. **Closures**: [closures]`Closures` are expressions which result
      in a function
-  3. **Curry**:  the '&' [curry]`#curry` operator is used to create
+  3. **Bind**:  the [Func.bind]`sys::Func.bind` method is used to create
      a new function by binding arguments to an existing function
 
 Function Signatures [#signatures]
@@ -215,78 +215,26 @@ function.  The 'replace' method takes two string arguments, but
 when flattened into a function it takes three string arguments because
 we have to account for the implicit 'this' argument.
 
-Currying [#currying]
-********************
-Fan uses the unary '&' operator to perform a functional *curry*.
-Currying is the process of binding one or more fixed arguments
-to a function to create a new function.  It is also known as
-a partial application (see note below).
-
-The curry operator binds whatever parameters are specified
-including the implicit 'this'.  Any remaining unbound parameters
-become parameters of the resulting function:
-
-  f := |Int a, Int b, Int c->Str| { return "$a $b $c" }
-  g := &f(0)
-  h := &f(0, 1)
-  i := &h(2)
-
-  f(0, 1, 2)  =>  "0 1 2"
-  g(1, 2)     =>  "0 1 2"
-  h(2)        =>  "0 1 2"
-  i()         =>  "0 1 2"
-
-The curry operator is often used as a mechanism to get a method
-as a function.  Unlike using reflection it lets the compiler
-perform type checking, and results in more efficient code.
-Consider a typical example to register callback functions:
-
-  Void onPress(|,| callback) {...}
-
-  Void pressed(Str what) { echo(what) }
-
-  ok.onPress(&pressed("ok"))
-  cancel.onPress(&pressed("cancel"))
-
-This example illustrates use of the curry operator to create
-functions with fixed arguments bound to the 'pressed' method.
-In both cases we are binding the implicit 'this' argument,
-plus a 'Str' argument.
-
-The difference between a [closure]`Closures` and a curry is that a
-closure binds a variable and a curry binds a reference
-to value:
-
-  x := "alpha"
-  f := |->Str| { return x }
-  g := |Str v->Str| { return v }
-  h := &g(x)
-
-  f()  =>  "alpha"
-  h()  =>  "alpha"
-
-  x = "beta"
-  f()  =>  "beta"
-  h()  =>  "alpha"
-
-
-Note: functional programming gurus don't consider partial
-application the same thing as currying.  But the distinction
-seems be sufficiently muddied that Fan stuck with the term *curry*
-for this feature.
-
 Immutable Functions [#immutable]
 ********************************
-An immutable function is one proven to be thread safe.  Immutability
-is determined by the compiler.  You can check immutability at runtime
-via `sys::Obj.isImmutable`.  Immutable functions are often required
-when working with [actors]`Actors`.
+An immutable function is one proven to be thread safe.  You can check
+immutability at runtime via `sys::Obj.isImmutable` and attempt to
+convert a function via `sys::Obj.toImmutable`.  Immutable functions are
+often required when working with [actors]`Actors`.
 
-The compiler marks functions as immutable based on the following analysis:
-   - static methods are always automatically immutable
-   - instance methods on a const class are immutable
-   - instance methods on a non-const class are never immutable
-   - closures which don't capture any variables from their
-     scope are automatically immutable
-   - curried functions which only capture const variables
-     from their scope are automatically immutable
+Immutability works as follows:
+  - Method functions are always immutable - see `sys::Method.func`
+  - Closures which only capture final, const variables are always
+    immutable; toImmutable always returns this
+  - Closures which capture non-final or non-const variables are
+    always mutable; toImmutable always throws NotImmutableErr
+  - Closure which capture non-final variables which aren't known
+    to be immutable until runtime (such as Obj or List) will return
+    false for isImmutable, but will provide a toImmutable method which
+    attempts to bind to the current variables by calling toImmutable
+    on each one
+
+The definition of a *final variable* is a variable which is never reassigned
+after it is initialized.  Any variable which is reassigned is considered
+a non-final variable.
+
