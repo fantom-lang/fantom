@@ -101,6 +101,21 @@ namespace Fan.Sys
       return type().isConst();
     }
 
+    public static object toImmutable(object self)
+    {
+      if (self is FanObj)
+        return ((FanObj)self).toImmutable();
+      else if (FanUtil.isDotnetImmutable(self.GetType()))
+        return self;
+      throw NotImmutableErr.make(self.GetType().ToString()).val;
+    }
+
+    public virtual object toImmutable()
+    {
+      if (type().isConst()) return this;
+      throw NotImmutableErr.make(type().ToString()).val;
+    }
+
     public static Type type(object self)
     {
       if (self is FanObj)

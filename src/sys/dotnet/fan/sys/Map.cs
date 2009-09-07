@@ -552,7 +552,7 @@ namespace Fan.Sys
       return m_immutable;
     }
 
-    public Map toImmutable()
+    public override object toImmutable()
     {
       if (m_immutable) return this;
 

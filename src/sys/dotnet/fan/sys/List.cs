@@ -1097,7 +1097,7 @@ namespace Fan.Sys
       return m_immutable;
     }
 
-    public List toImmutable()
+    public override object toImmutable()
     {
       if (m_immutable) return this;
 

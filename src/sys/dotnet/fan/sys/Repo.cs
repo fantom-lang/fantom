@@ -145,7 +145,7 @@ namespace Fan.Sys
       if (files.isEmpty())
       {
         if (emptySymbols == null)
-          emptySymbols = new Map(new MapType(Sys.StrType, Sys.ObjType.toNullable())).toImmutable();
+          emptySymbols = (Map)new Map(new MapType(Sys.StrType, Sys.ObjType.toNullable())).toImmutable();
         return emptySymbols;
       }
       Map map = null;
@@ -187,7 +187,7 @@ namespace Fan.Sys
         m_modified = new long[files.sz()];
         for (int i=0; i<files.sz(); ++i)
           m_modified[i] = ((File)files.get(i)).modified().ticks();
-        m_symbols = readSymbols(files).toImmutable();
+        m_symbols = (Map)readSymbols(files).toImmutable();
         m_read = Duration.nowTicks();
       }
 
@@ -234,7 +234,7 @@ namespace Fan.Sys
 
         // list of all repos
         Repo[] array = (b == w) ? new Repo[] { b } : new Repo[] { w, b };
-        a = new List(Sys.RepoType, array).toImmutable();
+        a = (List)new List(Sys.RepoType, array).toImmutable();
       }
       catch (Exception e) { Err.dumpStack(e); }
 
