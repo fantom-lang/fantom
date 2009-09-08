@@ -19,7 +19,10 @@ class Build : BuildScript
   Str[] toc :=
   [
     "sys/",          "sys",
+      "lists",       "Working with sys::List",
+      "maps",        "Working with sys::Map",
       "reflection",  "Pod, Type, Slot, Symbol reflection",
+      "logging",     "Working with sys::Log",
       "wordcount",   "File IO, Str split, Maps",
     "fwt/",          "fwt",
       "hello",       "Hello world with FWT",
@@ -34,7 +37,8 @@ class Build : BuildScript
       "hello",       "Hello world with Java FFI",
       "swing",       "Swing application using Java FFI",
     "web/",          "web",
-      "hello",       "Hello world web application",
+      "client",      "Working with web::WebClient",
+      "hello",       "Hello world web server application",
       "demo",        "Illustrates some basic web APIs",
   ]
 
