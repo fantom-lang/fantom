@@ -32,6 +32,8 @@ class Build : BuildScript
       "clock",       "FWT combined with Actors",
       "richtext",    "Basic RichText document model",
       "scrollpane",  "Using ScrollPane",
+    "email/",        "email",
+      "sending",     "Sending email via SMTP",
     "js/",           "js",
       "demo",        "Run web server to demo Fan to JavaScript in browser",
     "java/",         "java",
