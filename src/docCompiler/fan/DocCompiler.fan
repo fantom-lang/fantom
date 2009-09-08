@@ -54,6 +54,18 @@ class DocCompiler
     if (!errors.isEmpty) throw errors.last
   }
 
+  Void compileSourceToHtml(Type t, File from, File to, Str podHeading, Str typeHeading)
+  {
+    loc := Location.makeFile(from)
+    gen := SourceToHtmlGenerator(this, loc, to.out, t, from)
+    {
+      it.isScript    = true
+      it.podHeading  = podHeading
+      it.typeHeading = typeHeading
+    }
+    gen.generate
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Errors
 //////////////////////////////////////////////////////////////////////////

@@ -41,10 +41,12 @@ class ApiToHtmlGenerator : HtmlGenerator
   {
     out.print("<ul>\n")
     out.print("  <li><a href='../index.html'>$docHome</a></li>\n")
-    out.print("  <li><a href='index.html'>$t.pod.name</a></li>\n")
-    out.print("  <li><a href='${t.name}.html'>$t.name</a></li>\n")
+    out.print("  <li><a href='index.html'>$podHeading</a></li>\n")
+    out.print("  <li><a href='${t.name}.html'>$typeHeading</a></li>\n")
     out.print("</ul>\n")
   }
+  internal virtual Str podHeading()  { t.pod.name }
+  internal virtual Str typeHeading() { t.name }
 
   override Void content()
   {

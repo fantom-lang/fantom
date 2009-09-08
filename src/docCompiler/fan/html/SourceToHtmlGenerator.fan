@@ -23,7 +23,9 @@ class SourceToHtmlGenerator : ApiToHtmlGenerator
   new make(DocCompiler compiler, Location loc, OutStream out, Type t, File srcFile)
     : super(compiler, loc, out, t)
   {
-    this.srcFile = srcFile
+    this.srcFile     = srcFile
+    this.podHeading  = t.pod.name
+    this.typeHeading = t.name
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,21 +37,23 @@ class SourceToHtmlGenerator : ApiToHtmlGenerator
   **
   override Void content()
   {
-    // print type header
-    out.print("<div class='type'>\n")
-    typeOverview
-    out.print("</div>\n")
-
-    // get file
-    srcFileFacet := t->sourceFile
-    file := t.pod.files["/src/$srcFileFacet".toUri]
+    // print type header if not script
+    if (!isScript)
+    {
+      out.print("<div class='type'>\n")
+      typeOverview
+      out.print("</div>\n")
+    }
 
     // build slot:lineNum map
     slots := Str:Int[:]
-    t.slots.each |Slot s| { if (s.parent == t) slots[s.name] = s->lineNumber }
+    t.slots.each |Slot s|
+    {
+      if (s.parent == t) slots[s.name] = s->lineNumber
+    }
 
     // generate
-    FanToHtml(file.in, out, slots).parse
+    FanToHtml(srcFile.in, out, slots).parse
   }
 
   **
@@ -57,10 +61,15 @@ class SourceToHtmlGenerator : ApiToHtmlGenerator
   **
   override Void sidebar()
   {
-    out.print("<h2>More Info</h2>\n")
-    out.print("<ul class='clean'>\n")
-    out.print("  <li><a href='${t.name}.html'>View Fandoc</a></li>\n")
-    out.print("</ul>\n")
+    // only display More Info if our source isn't a script
+    if (!isScript)
+    {
+      out.print("<h2>More Info</h2>\n")
+      out.print("<ul class='clean'>\n")
+      out.print("  <li><a href='${t.name}.html'>View Fandoc</a></li>\n")
+      out.print("</ul>\n")
+    }
+
     slotsOverview(false)
   }
 
@@ -69,4 +78,7 @@ class SourceToHtmlGenerator : ApiToHtmlGenerator
 //////////////////////////////////////////////////////////////////////////
 
   File srcFile
+  override Str podHeading
+  override Str typeHeading
+  Bool isScript
 }
