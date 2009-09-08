@@ -19,6 +19,7 @@ class Build : BuildScript
   Str[] toc :=
   [
     "sys/",          "sys",
+      "stmts",       "Basic language statement constructs",
       "lists",       "Working with sys::List",
       "maps",        "Working with sys::Map",
       "files",       "Working with sys::File",
