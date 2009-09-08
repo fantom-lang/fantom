@@ -11,8 +11,7 @@ using inet
 **
 ** Email models a top level MIME message.
 **
-** See [docLib]`docLib::Email` for details.
-** See [docCookbook]`docCookbook::Email` for coding examples.
+** See [docLib]`docLib::Email` and [examples]`examples::email-sending`.
 **
 @serializable
 class Email

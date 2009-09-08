@@ -118,6 +118,7 @@ class UriMapper : DocCompilerSupport
     if (colons != null)
     {
       podName := fandocUri[1..<colons]
+
       pod := Pod.find(podName, false)
       if (pod == null) throw err("Unknown pod '$podName'", loc)
 
@@ -141,11 +142,34 @@ class UriMapper : DocCompilerSupport
     // lookup pod
     colons := fandocUri.index("::")
     podName := fandocUri[0..<colons]
+
+    // handle examples specially
+    if (podName == "examples")
+    {
+      targetUri = mapExample(fandocUri[colons+2..-1])
+      targetIsCode = false
+      return
+    }
+
     pod := Pod.find(podName, false)
     if (pod == null) throw err("Unknown pod '$podName'", loc)
 
     rest := fandocUri[colons+2..-1]
     mapTypeOrFile(pod, rest)
+  }
+
+  private Uri mapExample(Str file)
+  {
+    if (file == "index") return `../examples/index.html`
+
+    // for now just assume examples maps to source path
+    dash := file.index("-")
+    if (dash == null) throw err("Invalid example script '$file'", loc)
+    n1 := file[0..<dash]
+    n2 := file[dash+1..-1]
+    f := Repo.boot.home + `examples/${n1}/${n2}.fan`
+    if (!f.exists) throw err("Unknown example script $f", loc)
+    return `../examples/${file}.html`
   }
 
   private Void mapTypeOrFile(Pod pod, Str s)

@@ -10,7 +10,6 @@
 ** JsonParser parses JSON.
 **
 ** See [docLib]`docLib::Json` for details.
-** See [docCookbook]`docCookbook::Json` for coding examples.
 **
 internal class JsonParser
 {

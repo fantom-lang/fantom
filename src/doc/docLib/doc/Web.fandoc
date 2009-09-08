@@ -42,7 +42,7 @@ pipelining (multiple requests and responses on the same TCP socket
 connection).  There are also a series of convenience methods which
 make common cases easier.
 
-See [docCookbook::Web]`docCookbook::Web#webClient` for example code.
+See [examples]`examples::web-client` for sample code.
 
 Weblets [#weblet]
 *****************

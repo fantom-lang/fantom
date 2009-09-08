@@ -10,7 +10,6 @@
 ** JsonToken represents the tokens in JSON.
 **
 ** See [docLib]`docLib::Json` for details.
-** See [docCookbook]`docCookbook::Json` for coding examples.
 **
 internal class JsonToken
 {

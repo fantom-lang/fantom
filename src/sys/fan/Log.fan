@@ -10,8 +10,7 @@
 **
 ** Log provides a simple, but standardized mechanism for logging.
 **
-** See `docLang::Logging` for details.
-** See `docCookbook::Logging` for coding examples.
+** See `docLang::Logging` for details and [examples]`examples::sys-logging`.
 **
 const class Log
 {

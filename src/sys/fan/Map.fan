@@ -9,7 +9,7 @@
 **
 ** Map is a hash map of key/value pairs.
 **
-** See `docCookbook::Maps` for coding examples.
+** See [examples]`examples::sys-maps`.
 **
 final class Map
 {

@@ -25,7 +25,7 @@ If you want to jump right in and start coding:
   - [Download]`http://www.fandev.org` the latest build
   - [Setup]`docTools::Setup`: your environment
   - `HelloWorld`: try your hand at hello world
-  - [docCookbook]`docCookbook::index`: snippets of example
+  - [Examples]`examples::index`: snippets of example
     code for common tasks
 
 Documentation Organization [#organization]
@@ -39,7 +39,10 @@ Javadoc).  Manuals group a set of chapters on a subject:
   - [docLang]`docLang::index`: covers the language in depth
   - [docTools]`docTools::index`: command line tools, unit testing, build toolkit
   - [docLib]`docLib::index`: details on various pod libraries
-  - [docCookbook]`docCookbook::index`: example snippets of source code
+
+In addition [examples]`examples::index` can be accessed as HTML.
+All examples are designed as complete stand alone programs which
+can be run as a script.
 
 Learning Fan [#learningFan]
 ***************************
@@ -47,7 +50,7 @@ If you want to dig deep, then you'll probably want to look over
 [docIntro]`docIntro::index` to get a background.  At some point you
 should consider reading [docLang]`docLang::index` front to back - it is
 designed to be read as book.  Once you start writing code, you'll
-find [docCookbook]`docCookbook::index` and the reference APIs handy as
+find [examples]`examples::index` and the reference APIs handy as
 you learn the standard libraries.  When you start to develop real applications
 make sure to review how to write [unit tests]`docTools::Fant` and
 [build scripts]`docTools::Build`.
