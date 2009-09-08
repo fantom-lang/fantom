@@ -305,17 +305,14 @@ class ClosureVars : CompilerStep
 
   **
   ** For each variable enclosed by the closure:
-  **  1. Define field on the closure to store variable
-  **  2. Pass variable to closure constructor at substitution site
-  **  3. Add variable to as closure constructor param
+  **  1. Add field on the closure to store variable
+  **  2. Add param to as closure constructor
+  **  3. Pass variable to closure constructor at substitution site
   **  4. Assign param to field in constructor
+  **  5. Initialize variable in doCall from field
   **
-  Void addVarToClosure(ClosureExpr closure, MethodVar var, Str fieldName)
+  private Void addVarToClosure(ClosureExpr closure, MethodVar var, Str name)
   {
-    loc      := closure.location
-    thisType := closure.enclosingType
-    implType := closure.cls
-
     // check if what we are shadowing is a wrapped param
     if (var.shadows.paramWrapper != null)
       var.shadows = var.shadows.paramWrapper
@@ -327,77 +324,71 @@ class ClosureVars : CompilerStep
       var.wrapField = var.shadows.wrapField
     }
 
-    // define storage field on closure class
-    field := FieldDef(loc, implType)
-    field.name  = fieldName
-    field.flags = syntheticFieldFlags
-    field.fieldType = var.ctype
-    implType.addSlot(field)
-
-    // pass variable to subtitute closure constructor in outer scope
-    closure.substitute.args.add(LocalVarExpr.makeNoUnwrap(loc, var.shadows))
-
-    // add parameter to constructor
-    ctor := implType.methodDef("make")
-    pvar := ctor.addParamVar(var.ctype, fieldName)
-
-    // set field in constructor
-    assign := BinaryExpr.makeAssign(fieldExpr(loc, ThisExpr(loc), field), LocalVarExpr.makeNoUnwrap(loc, pvar))
-    ctor.code.stmts.insert(0, assign.toStmt)
+    loc := closure.location
+    field := addToClosure(closure, name, LocalVarExpr.makeNoUnwrap(loc, var.shadows))
 
     // load from field to local in beginning of doCall
     loadLocal := BinaryExpr.makeAssign(LocalVarExpr.makeNoUnwrap(loc, var), fieldExpr(loc, ThisExpr(loc), field))
     closure.doCall.code.stmts.insert(0, loadLocal.toStmt)
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Outer This Field
-//////////////////////////////////////////////////////////////////////////
-
   **
   ** This method is called by ClosureExpr to auto-generate the
   ** implicit outer "this" field in the Closure's implementation
   ** class:
-  **   - add $this field to closure's anonymous class
-  **   - add $this param to closure's make constructor
-  **   - set field from param in constructor
-  **   - update substitute to make sure this is passed to ctor
+  **   1. Add $this field to closure's anonymous class
+  **   2. Add $this param to closure's make constructor
+  **   3. Pass this to closure constructor at substitute site
+  **   4. Set field from param in constructor
   **
   static CField makeOuterThisField(ClosureExpr closure)
   {
-    loc      := closure.location
-    thisType := closure.enclosingType
-    implType := closure.cls
-
-    // define outer this as "$this"
-    field := FieldDef(loc, implType)
-    field.name  = "\$this"
-    field.flags = syntheticFieldFlags
-    field.fieldType = thisType
-    implType.addSlot(field)
-
-    // pass this to subtitute closure constructor - if this is a nested
-    // closure, then we have to get $this from it's own $this field
+    // pass this to subtitute closure constructor
+    loc := closure.location
+    Expr? subArg
     if (closure.enclosingClosure != null)
     {
+      // if this is a nested closure, then we have to get $this
+      // from it's own $this field
       outerThis := closure.enclosingClosure.outerThisField
-      closure.substitute.args.add(fieldExpr(loc, ThisExpr(loc), outerThis))
+      subArg = fieldExpr(loc, ThisExpr(loc), outerThis)
     }
     else
     {
       // outer most closure just uses this
-      closure.substitute.args.add(ThisExpr(loc))
+      subArg = ThisExpr(loc, closure.enclosingType)
     }
 
+    return addToClosure(closure, "\$this", subArg)
+  }
+
+  **
+  ** Common code between addVarToClosure and makeOuterThisField.
+  ** Return storage field for closure variable.
+  **
+  private static FieldDef addToClosure(ClosureExpr closure, Str name, Expr subtituteArg)
+  {
+    loc      := closure.location
+    thisType := closure.enclosingType
+    implType := closure.cls
+    ctype    := subtituteArg.ctype
+
+    // define storage field on closure class
+    field := FieldDef(loc, implType)
+    field.name  = name
+    field.flags = syntheticFieldFlags
+    field.fieldType = ctype
+    implType.addSlot(field)
+
+    // pass variable to subtitute closure constructor in outer scope
+    closure.substitute.args.add(subtituteArg)
+
     // add parameter to constructor
-    ctor  := implType.methodDef("make")
-    param := ParamDef(loc, thisType, "\$this")
-    var   := MethodVar.makeForParam(ctor, ctor.params.size+1, param, param.paramType)
-    ctor.params.add(param)
-    ctor.vars.add(var)
+    ctor := implType.methodDef("make")
+    pvar := ctor.addParamVar(ctype, name)
 
     // set field in constructor
-    assign := BinaryExpr.makeAssign(fieldExpr(loc, ThisExpr(loc), field), LocalVarExpr(loc, var))
+    assign := BinaryExpr.makeAssign(fieldExpr(loc, ThisExpr(loc), field), LocalVarExpr.makeNoUnwrap(loc, pvar))
     ctor.code.stmts.insert(0, assign.toStmt)
 
     return field
@@ -474,10 +465,8 @@ class ClosureVars : CompilerStep
 
   private static FieldExpr fieldExpr(Location loc, Expr target, CField field)
   {
-    // need to make sure all the synthetic field access is direct
-    fexpr := FieldExpr(loc, target, field)
-    fexpr.useAccessor = false
-    return fexpr
+    // make sure we don't use accessor
+    FieldExpr(loc, target, field, false)
   }
 
 //////////////////////////////////////////////////////////////////////////
