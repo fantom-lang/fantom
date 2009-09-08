@@ -313,7 +313,9 @@ class FuncType : GenericType
 
   static CType toMostSpecific(CType a, CType b)
   {
-    a.isObj || a.isVoid ? b : a
+    if (b.isGenericParameter) return a
+    if (a.isObj || a.isVoid || a.isGenericParameter) return b
+    return a
   }
 
   ParamDef[] toParamDefs(Location loc)

@@ -208,4 +208,24 @@ class RegressionTest : CompilerTest
     verifyEq(t.method("m05").params[0].of.signature, "|sys::Int,sys::Str?->sys::Pod?|")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #676 Compiler bug? walkback in closure type inference
+//////////////////////////////////////////////////////////////////////////
+
+  Void test676()
+  {
+     compile(
+       "class Foo
+        {
+          Str test(List list)
+          {
+            list.join(\",\") |item| { item->toHex }
+          }
+        }
+        ")
+
+    obj := pod.types[0].make
+    verifyEq(obj->test([0xa, 0x7, 0xc]), "a,7,c")
+  }
+
 }
