@@ -694,7 +694,7 @@
 - #663: wisp sluggish via apachebench
 - #664: Nullable params w/out name in func sig
 
-*Build 1.0.46 (working)*
+*Build 1.0.46 (8 Sep 09)*
 - Closure variable redesign
 - Change JavaScript field naming model
 - gfx::Border
@@ -709,6 +709,9 @@
 - WebClient.postStr
 - Fix fwt::ScrollPane to actually work
 - Compiler warning for curry '&' operator
-
-TODO: remove old List, Map, Func toImmutable curry methods
+- #676: Compiler bug? walkback in closure type inference
+- #679: JVM - emit LocalVariable attr for debuggers
+- #710: Actor programming example?
+- #712: UI enhancements
+- #721: Cookbook versus Examples
 
