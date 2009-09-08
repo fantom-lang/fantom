@@ -10,8 +10,7 @@
 ** TextPart is used to model email parts with a text MIME type.
 ** The default is "text/plain".
 **
-** See [docLib]`docLib::Email#textPart` for details.
-** See [docCookbook]`docCookbook::Email` for coding examples.
+** See [docLib]`docLib::Email` and [examples]`examples::email-sending`.
 **
 @serializable
 class TextPart : EmailPart

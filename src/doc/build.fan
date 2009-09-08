@@ -24,7 +24,6 @@ class Build : BuildGroup
       `docLang/build.fan`,
       `docLib/build.fan`,
       `docTools/build.fan`,
-      `docCookbook/build.fan`,
     ]
   }
 

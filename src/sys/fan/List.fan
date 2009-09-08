@@ -9,7 +9,7 @@
 **
 ** List represents an liner sequence of Objects indexed by an Int.
 **
-** See `docCookbook::Lists` for coding examples.
+** See [examples]`examples::sys-lists`.
 **
 final class List
 {

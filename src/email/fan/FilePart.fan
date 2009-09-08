@@ -9,8 +9,7 @@
 **
 ** FilePart is used to transfer binary content from a File.
 **
-** See [docLib]`docLib::Email#filePart` for details.
-** See [docCookbook]`docCookbook::Email` for coding examples.
+** See [docLib]`docLib::Email` and [examples]`examples::email-sending`.
 **
 class FilePart : EmailPart
 {

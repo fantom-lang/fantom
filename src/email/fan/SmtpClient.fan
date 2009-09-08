@@ -12,8 +12,7 @@ using inet
 ** SmtpClient implements the client side of SMTP (Simple
 ** Mail Transport Protocol) as specified by RFC 2821.
 **
-** See [docLib]`docLib::Email` for details.
-** See [docCookbook]`docCookbook::Email` for coding examples.
+** See [docLib]`docLib::Email` and [examples]`examples::email-sending`.
 **
 class SmtpClient
 {

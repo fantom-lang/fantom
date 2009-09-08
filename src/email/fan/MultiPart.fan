@@ -10,8 +10,7 @@
 ** MultiPart is used to model a multipart MIME type.  The
 ** default is "multipart/mixed".
 **
-** See [docLib]`docLib::Email#multiPart` for details.
-** See [docCookbook]`docCookbook::Email` for coding examples.
+** See [docLib]`docLib::Email` and [examples]`examples::email-sending`.
 **
 @serializable
 class MultiPart : EmailPart

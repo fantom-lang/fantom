@@ -8,7 +8,7 @@
 
 **
 ** File is used to represent a Uri path to a file or directory.
-** See `docCookbook::Files` for examples of the File API.
+** See [examples]`examples::sys-files`.
 **
 abstract const class File
 {

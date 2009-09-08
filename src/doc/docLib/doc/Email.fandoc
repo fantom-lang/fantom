@@ -18,6 +18,8 @@ mail.  The following features are supported:
 Note: at the current time there is no support for incoming email such
 as POP3 or IMAP.  If you need this functionality, please let us know.
 
+See [examples]`examples::email-sending` for sample code.
+
 SMTP [#smtp]
 ************
 The [SmtpClient]`email::SmtpClient` class lets you relay mail to a SMTP
@@ -53,8 +55,6 @@ If you run into trouble, you can turn on tracing:
 
   mailer.log.level = LogLevel.trace
 
-See [docCookbook]`docCookbook::Email` for examples.
-
 Email [#email]
 **************
 The [Email]`email::Email` class is used to model a MIME message.  Typical
@@ -79,8 +79,6 @@ The [body]`email::Email.body` can be a simple part such as
 The [validate]`email::EmailPart.validate` method is called before
 sending an email which checks that headers are correctly configured
 and performs header normalization.
-
-See [docCookbook]`docCookbook::Email` for examples.
 
 TextPart [#textPart]
 ********************
@@ -117,8 +115,6 @@ sending HTML email and you wish you provide a plain text fallback.
 The multipart boundary is automatically generated in the
 [validate]`email::MultiPart.validate` method.
 
-See [docCookbook]`docCookbook::Email#htmlMultipart` for examples.
-
 FilePart [#filePart]
 ********************
 The [FilePart]`email::FilePart` class is used to encode a binary attachment from
@@ -133,8 +129,6 @@ defined:
 
 FileParts are transfered as base64 - you may not override the
 "Content-Transfer-Encoding" header.
-
-See [docCookbook]`docCookbook::Email#fileAttachments` for examples.
 
 
 

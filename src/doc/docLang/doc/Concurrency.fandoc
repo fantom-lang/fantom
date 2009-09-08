@@ -43,9 +43,8 @@ constructed it never changes state.  Fan supports these types of
 immutable objects:
 
   - Any object instance of a [const class]`Classes#const`
-  - Some `sys::Func` instances are immutable
-  - The result of [List.toImmutable]`sys::List.toImmutable`
-    or [Map.toImmutable]`sys::Map.toImmutable`
+  - The result of [Obj.toImmutable]`sys::Obj.toImmutable`
+    on a List, Map, or Func
 
 By definition a const class is immutable - the compiler verifies
 that all the instance fields are themselves immutable and only
