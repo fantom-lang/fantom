@@ -60,6 +60,7 @@ public class FCodeEmit
     backpatch();
     errTable();
     lineTable();
+    localVarTable();
   }
 
   /**
@@ -162,6 +163,10 @@ public class FCodeEmit
     }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Attribute Tables
+//////////////////////////////////////////////////////////////////////////
+
   /**
    * Process error table (if specified).  We handle catches of Err using
    * a catch any (0 class index).  We also need to add extra entries into
@@ -216,7 +221,7 @@ public class FCodeEmit
   }
 
   /**
-   * Pocess line number table (if specified), we just reuse the
+   * Process line number table (if specified), we just reuse the
    * fcode line table buffer and replace the fcode pc with bytecode
    * pc since they are the same sized data structures.
    */
@@ -244,6 +249,34 @@ public class FCodeEmit
     int jpos = reloc[fpos];
     buf[offset+0] = (byte)(jpos >>> 8);
     buf[offset+1] = (byte)(jpos >>> 0);
+  }
+
+  /**
+   * If debug is turned on, then generate a local variable table.
+   */
+  private void localVarTable()
+  {
+    if (!Sys.debug) return;
+    if (fmethod == null) return;
+
+    AttrEmit attr = code.emitAttr("LocalVariableTable");
+    Box info = attr.info;
+    FMethodVar[] vars = fmethod.vars;
+    int offset = fmethod.isStatic() ? 0 : 1;
+
+    // Fan variables never reuse stack registers, so
+    // we can declare their scope across entire method
+    info.u2(vars.length);
+    info.grow(info.len + vars.length*10);
+    for (int i=0; i<vars.length; ++i)
+    {
+      FMethodVar var = vars[i];
+      info.u2(0);
+      info.u2(code.info.len-2-2-4); // max stack, max locals, code len
+      info.u2(code.emit.utf(var.name));
+      info.u2(code.emit.utf(pod.typeRef(var.type).jsig()));
+      info.u2(i+offset);
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

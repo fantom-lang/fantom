@@ -175,11 +175,15 @@ public class Box
     }
   }
 
-  private void grow()
+  public final void grow() { grow(buf.length*2); }
+  public final void grow(int desired)
   {
-    byte[] temp = new byte[buf.length*2];
-    System.arraycopy(buf, 0, temp, 0, buf.length);
-    buf = temp;
+    if (desired > buf.length)
+    {
+      byte[] temp = new byte[desired];
+      System.arraycopy(buf, 0, temp, 0, buf.length);
+      buf = temp;
+    }
   }
 
   public void dump()

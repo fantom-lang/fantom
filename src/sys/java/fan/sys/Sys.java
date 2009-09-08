@@ -495,4 +495,19 @@ public static fan.sys.File homeDir() { return homeDir; }
   public static Type compile(fan.sys.File file) { return ScriptUtil.compile(file, null); }
   public static Type compile(fan.sys.File file, Map options) { return ScriptUtil.compile(file, options); }
 
+//////////////////////////////////////////////////////////////////////////
+// Environment
+//////////////////////////////////////////////////////////////////////////
+
+  // constant for "fan.debug" environment variable used
+  // for generating debug attributes in bytecode
+  public static final boolean debug;
+  static
+  {
+    boolean d = false;
+    try { d = "true".equals(env.get("fan.debug")); }
+    catch (Exception e) { e.printStackTrace(); }
+    debug = d;
+  }
+
 }
