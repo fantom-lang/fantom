@@ -47,40 +47,69 @@ class TopIndexGenerator : HtmlGenerator
 
   override Void content()
   {
-    listPods("Manuals", false)
-    listPods("APIs", true)
-  }
-
-  Void listPods(Str title, Bool api)
-  {
-    out.print("<h1>$title</h1>\n")
-    out.print("<table>\n")
-
+    // get all pods to document
     pods := Pod.list.rw
+    pods = pods.exclude |p| { p.facet(@nodoc) == true }
+
+    // get sensible order
+    pods = pods.sort |a,b| { a.name.compareIgnoreCase(b.name) }
     pods.swap(0, pods.index(Pod.find("docIntro")))
     pods.swap(1, pods.index(Pod.find("docLang")))
 
-    pods = pods.exclude |p| { p.facet(@nodoc) == true }
-    pods = pods.findAll |p| { api == isAPI(p) }
-    pods = pods.sort |a,b| { a.name.compareIgnoreCase(b.name) }
+    // Manuals
+    manuals := TopIndexItem[,]
+    pods.each |p| { if (!isAPI(p)) manuals.add(TopIndexItem(p)) }
+    listPods("Manuals", manuals)
 
-    pods.each |Pod p, Int i|
+    // Examples
+    examples := TopIndexItem[,]
+    examples.add(TopIndexItem.makeExplicit("examples", "Example code illustrated via series of scripts"))
+    listPods("Examples", examples)
+
+    // APIs
+    apis := TopIndexItem[,]
+    pods.each |p| { if (isAPI(p)) apis.add(TopIndexItem(p)) }
+    listPods("APIs", apis)
+  }
+
+  internal Void listPods(Str title, TopIndexItem[] items)
+  {
+    out.print("<h1>$title</h1>\n")
+    out.print("<table>\n")
+    items.each |item, i|
     {
       cls := i % 2 == 0 ? "even" : "odd"
-      doc := PodIndexGenerator.firstSentence(p.doc ?: "")
       out.print("<tr class='$cls'>\n")
-      out.print("  <td><a href='$p.name/index.html'>$p.name</a></td>\n")
-      out.print("  <td>$doc</td>\n")
+      out.print("  <td><a href='$item.name/index.html'>$item.name</a></td>\n")
+      out.print("  <td>$item.doc</td>\n")
       out.print("</tr>\n")
     }
     out.print("</table>\n")
   }
 
-  Bool isAPI(Pod pod)
+  internal Bool isAPI(Pod pod)
   {
     if (!pod.name.startsWith("doc")) return true
     if (pod.name == "docCompiler") return true
     return false
   }
 
+}
+
+internal class TopIndexItem
+{
+  new make(Pod p)
+  {
+    name = p.name
+    doc = PodIndexGenerator.firstSentence(p.doc ?: "")
+  }
+
+  new makeExplicit(Str n, Str d)
+  {
+    name = n
+    doc = d
+  }
+
+  Str name
+  Str doc
 }

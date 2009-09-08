@@ -78,6 +78,7 @@ class FanToHtml
   {
     out.print("<div class='$classSource'>\n")
     out.print("<pre>\n")
+    if (in.peek == '#') shebang
     while (nextToken) {}
     out.print("</pre>\n")
     out.print("</div>\n")
@@ -266,6 +267,22 @@ class FanToHtml
     }
     out.print("</span>")
     if (nl(ch)) out.writeChar(ch)
+  }
+
+  **
+  ** Parse a #! shebang
+  **
+  private Void shebang()
+  {
+    out.print("<span>")
+    ch := in.next
+    while (ch != null && !nl(ch))
+    {
+      safe(ch)
+      ch = in.next
+    }
+    if (nl(ch)) out.writeChar(ch)
+    out.print("</span>")
   }
 
   **

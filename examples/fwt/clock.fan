@@ -1,3 +1,5 @@
+#! /usr/bin/env fan
+
 using fwt
 using gfx
 

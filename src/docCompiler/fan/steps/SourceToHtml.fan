@@ -37,6 +37,7 @@ class SourceToHtml : DocCompilerSupport
     log.debug("  Source [$t]")
     file := compiler.podDir + "${t.name}_src.html".toUri
     loc := Location("Source $t.qname")
+
     SourceToHtmlGenerator(compiler, loc, file.out, t, srcFile).generate
   }
 }
