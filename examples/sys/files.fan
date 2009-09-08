@@ -13,7 +13,7 @@
 **
 class Files
 {
-  File temp := Repo.working.home + `temp/`
+  File temp := Repo.working.home + `tmp/`
 
   Void main()
   {
