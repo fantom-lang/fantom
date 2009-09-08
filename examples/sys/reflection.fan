@@ -5,11 +5,15 @@
 //
 // History:
 //   26 Mar 08  Brian Frank  Creation
-//   08 Sep 08  Brian Frank  Rework fandoc -> example
+//   08 Sep 09  Brian Frank  Rework fandoc -> example
 //
 
 using fwt
 
+**
+** Working with Pod, Type, Slot, Field, Method, and Symbol
+** reflection APIs.
+**
 class Reflection
 {
   Void main()
@@ -24,9 +28,8 @@ class Reflection
 
   Void pods()
   {
+    echo("\n--- pods ---")
     p := Pod.find("compiler")
-
-    echo(""); echo("--- pods ---")
     show(Pod.list,                     "list the pods installed")
     show(Pod.find("compiler"),         "find a pod (throws err if not found)")
     show(Pod.find("bad", false),       "find a pod (returns null if not found)")
@@ -40,10 +43,9 @@ class Reflection
 
   Void types()
   {
+    echo("\n--- types ---")
     pod := Pod.find("fwt")
     t := pod.findType("Button")
-
-    echo(""); echo("--- types ---")
     show("foo".type,                     "get the type of the an object")
     show(pod.types,                      "list the types in myPod")
     show(pod.findType("Button"),         "find a type in pod by simple name")
@@ -70,10 +72,9 @@ class Reflection
 
   Void slots()
   {
+    echo("\n--- slots ---")
     t := Type.find("fwt::Widget")
     s := t.slot("onFocus")
-
-    echo(""); echo("--- slots ---")
     show(t.slot("relayout"),           "lookup the slot called xyz on someType")
     show(t.slots,                      "list all the slots on someType")
     show(Slot.find("fwt::Widget.enabled"),    "looukp a slot by its qualified name")
@@ -91,11 +92,10 @@ class Reflection
 
   Void methods()
   {
+    echo("\n--- methods ---")
     t  := Str#
     m  := Str#toInt
     ms := Str#spaces
-
-    echo(""); echo("--- methods ---")
     show(t.method("split"),            "lookup the method called xyz on someType")
     show(t.method("foo", false),       "returns null if method not found")
     show(t.methods,                    "list all the methods on someType")
@@ -112,11 +112,10 @@ class Reflection
 
   Void fields()
   {
+    echo("\n--- fields ---")
     t   := Type.find("fwt::Label")
     obj := t.make
     f   := t.field("text")
-
-    echo(""); echo("--- fields ---")
     show(t.field("onBlur"),            "lookup the field called xyz on someType")
     show(t.field("x", false),          "returns null if field not found")
     show(t.fields,                     "list all the fields on someType")
@@ -130,10 +129,9 @@ class Reflection
 
   Void symbols()
   {
+    echo("\n--- symbols ---")
     p := Pod.find("sys")
     s := @uriScheme
-
-    echo(""); echo("--- symbols ---")
     show(p.symbol("transient"),        "lookup the symbol called x on somePod")
     show(p.symbols,                    "list all the symbols on somePod")
     show(Symbol.find("sys::transient"),"looukp a symbol by its qualified name")
