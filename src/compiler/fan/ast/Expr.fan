@@ -1513,7 +1513,8 @@ class ClosureExpr : Expr
     if (!signature.inferredSignature || cls == null) return
 
     // between the explicit signature and the inferred
-    // signature, take the most specific types
+    // signature, take the most specific types; this is where
+    // we take care of functions with generic parameters like V
     t = t.toArity(((FuncType)cls.base).arity)
     t = signature.mostSpecific(t)
 
