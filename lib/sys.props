@@ -14,6 +14,10 @@ fan.runtime=java
 // attempt to query the timezone from the Java or .NET runtime
 // fan.timezone=New_York
 
+// If fan.debug is set to true, then the runtime emits debug
+// information such as the LocalVariableTable for debuggers
+// fan.debug=true
+
 //////////////////////////////////////////////////////////////////////////
 // Java Runtime
 //////////////////////////////////////////////////////////////////////////
