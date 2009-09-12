@@ -21,8 +21,8 @@ class JsMethod : JsSlot
     this.isSetter   = m.isSetter
     this.params     = m.params.map |CParam p->JsMethodParam| { JsMethodParam(s, p) }
     this.hasClosure = ClosureFinder(m).exists
-    if (m.ctorChain != null) this.ctorChain = JsExpr(s, m.ctorChain)
-    if (m.code != null) this.code = JsBlock(s, m.code)
+    if (m.ctorChain != null) this.ctorChain = JsExpr(s, m.ctorChain, false)
+    if (m.code != null) this.code = JsBlock(s, m.code, false)
   }
 
   Bool isFieldAccessor() { isGetter || isSetter }
@@ -131,7 +131,7 @@ class JsMethodParam : JsNode
   {
     this.name = vnameToJs(p.name)
     this.hasDef = p.hasDefault
-    if (hasDef) this.defVal = JsExpr(s, p->def)
+    if (hasDef) this.defVal = JsExpr(s, p->def, false)
   }
 
   new makeThis(CompilerSupport s) : super.make(s)
