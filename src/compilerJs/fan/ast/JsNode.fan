@@ -85,6 +85,14 @@ abstract class JsNode
     "with":   true
   ].toImmutable
 
+
+  Str unique()
+  {
+    Int id := Actor.locals["compilerJs.lastId"] ?: 0
+    Actor.locals["compilerJs.lastId"] = id + 1
+    return "\$_u$id"
+  }
+
   CompilerSupport support
 
 }
