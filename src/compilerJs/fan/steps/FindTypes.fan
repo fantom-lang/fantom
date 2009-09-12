@@ -37,11 +37,6 @@ class FindTypes : JsCompilerStep
     // find types to compile
     compiler.toCompile = types.findAll |def|
     {
-      // we inline closures directly, so no need to generate
-      // anonymous types like we do in Java and .NET
-      if (def.isClosure) return false
-      if (def.qname.contains("\$Cvars")) return false
-
       // check for forced or @js facet
       if (compiler.force) return true
       if (def.hasMarkerFacet("sys::js")) return true
