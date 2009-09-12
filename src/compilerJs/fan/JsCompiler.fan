@@ -27,6 +27,29 @@ class JsCompiler : Compiler
 // Pipeline
 //////////////////////////////////////////////////////////////////////////
 
+  override Void frontend()
+  {
+    InitInput(this).run
+    Tokenize(this).run
+    ResolveDepends(this).run
+    ScanForUsingsAndTypes(this).run
+    ResolveImports(this).run
+    Parse(this).run
+    OrderByInheritance(this).run
+    CheckInheritance(this).run
+    Inherit(this).run
+    DefaultCtor(this).run
+    InitEnum(this).run
+    InitClosures(this).run
+    Normalize(this).run
+    ResolveExpr(this).run
+    CheckErrors(this).run
+    CheckParamDefs(this).run
+    //ClosureVars(this).run
+    ClosureToImmutable(this).run
+    ConstChecks(this).run
+  }
+
   override Void backend()
   {
     Init(this).run
@@ -46,6 +69,5 @@ class JsCompiler : Compiler
   TypeDef[] synth := TypeDef[,]  // FindTypes
   File[]? nativeDirs             // FindTypes; dir to look for js natives
   [Str:File]? natives            // FindTypes
-
 
 }
