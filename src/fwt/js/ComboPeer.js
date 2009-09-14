@@ -44,7 +44,9 @@ fan.fwt.ComboPeer.prototype.create = function(parentElem)
 
 fan.fwt.ComboPeer.prototype.sync = function(self)
 {
+  // sync props
   var select = this.elem.firstChild;
+  select.disabled = !this.m_enabled;
 
   // clear old items
   while (select.firstChild != null)
