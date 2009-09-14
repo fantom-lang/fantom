@@ -40,6 +40,12 @@ fan.sys.Err.prototype.message = function()
   return this.msg;
 }
 
+fan.sys.Err.prototype.trace = function()
+{
+  // TODO FIXIT
+  fan.sys.Err.trace(this);
+}
+
 fan.sys.Err.prototype.traceToStr = function()
 {
   return this.toString();
