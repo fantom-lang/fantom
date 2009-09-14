@@ -279,42 +279,7 @@ class JsTryStmt : JsStmt
     out.unindent
     out.w("}").nl
 
-    if (!catches.isEmpty)
-    {
-      var := unique
-      out.w("catch ($var)").nl
-      out.w("{").nl
-      out.indent
-      out.w("$var = fan.sys.Err.make($var);").nl
-      doElse := false
-      catches.each |c|
-      {
-        if (c.qname != null)
-        {
-          if (doElse) out.w("else ")
-          else doElse = true
-
-          out.w("if ($var instanceof $c.qname)").nl
-          out.w("{").nl
-          out.indent
-          out.w("var $c.var = $var;").nl
-          c.write(out)
-          out.unindent
-          out.w("}").nl
-        }
-        else
-        {
-          out.w("else").nl
-          out.w("{").nl
-          out.indent
-          c.write(out)
-          out.unindent
-          out.w("}").nl
-        }
-      }
-      out.unindent
-      out.w("}").nl
-    }
+    if (!catches.isEmpty) writeCatches(out)
 
     if (finallyBlock != null)
     {
@@ -325,6 +290,64 @@ class JsTryStmt : JsStmt
       out.unindent
       out.w("}").nl
     }
+  }
+
+  private Void writeCatches(JsWriter out)
+  {
+    var := unique
+    hasTyped    := catches.any |c| { c.qname != null }
+    hasCatchAll := catches.any |c| { c.qname == null }
+
+    out.w("catch ($var)").nl
+    out.w("{").nl
+    out.indent
+    if (hasTyped) out.w("$var = fan.sys.Err.make($var);").nl
+
+    doElse := false
+    catches.each |c|
+    {
+      if (c.qname != null)
+      {
+        if (doElse) out.w("else ")
+        else doElse = true
+
+        out.w("if ($var instanceof $c.qname)").nl
+        out.w("{").nl
+        out.indent
+        out.w("var $c.var = $var;").nl
+        c.write(out)
+        out.unindent
+        out.w("}").nl
+      }
+      else
+      {
+        hasElse := catches.size > 1
+        if (hasElse)
+        {
+          out.w("else").nl
+          out.w("{").nl
+          out.indent
+        }
+        c.write(out)
+        if (hasElse)
+        {
+          out.unindent
+          out.w("}").nl
+        }
+      }
+    }
+
+    if (!hasCatchAll)
+    {
+      out.w("else").nl
+      out.w("{").nl
+      out.indent
+      out.w("throw $var;").nl
+      out.unindent
+      out.w("}").nl
+    }
+    out.unindent
+    out.w("}").nl
   }
 
   JsBlock? block         // try block
