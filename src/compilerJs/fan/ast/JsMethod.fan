@@ -90,7 +90,9 @@ class JsMethod : JsSlot
       }
 
       // method body
+      out.indent
       code?.write(out)
+      out.unindent
     }
 
     out.w("}").nl

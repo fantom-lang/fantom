@@ -110,22 +110,24 @@ class JsIfStmt : JsStmt
   {
     out.w("if ("); cond.write(out); out.w(")").nl
     out.w("{").nl
+    out.indent
     trueBlock.write(out)
+    out.unindent
     out.w("}").nl
     if (falseBlock != null)
     {
       if (hasElseIf)
       {
         out.w("else ")
-        out.unindent
         falseBlock.write(out)
-        out.indent
       }
       else
       {
         out.w("else").nl
         out.w("{").nl
+        out.indent
         falseBlock.write(out)
+        out.unindent
         out.w("}").nl
       }
     }
@@ -193,15 +195,13 @@ class JsForStmt : JsStmt
 
   override Void write(JsWriter out)
   {
-    out.w("for (")
-    init?.write(out);
-    out.w("; ")
-    cond?.write(out)
-    out.w("; ")
-    update?.write(out)
-    out.w(")").nl
+    out.w("for ("); init?.write(out); out.w("; ")
+      cond?.write(out); out.w("; ")
+      update?.write(out); out.w(")").nl
     out.w("{").nl
+    out.indent
     block?.write(out)
+    out.unindent
     out.w("}").nl
   }
 
@@ -225,11 +225,11 @@ class JsWhileStmt : JsStmt
 
   override Void write(JsWriter out)
   {
-    out.w("while (")
-    cond.write(out)
-    out.w(")").nl
+    out.w("while ("); cond.write(out); out.w(")").nl
     out.w("{").nl
+    out.indent
     block.write(out)
+    out.unindent
     out.w("}").nl
   }
 
@@ -274,7 +274,9 @@ class JsTryStmt : JsStmt
   {
     out.w("try").nl
     out.w("{").nl
+    out.indent
     block?.write(out)
+    out.unindent
     out.w("}").nl
 
     if (!catches.isEmpty)
@@ -284,21 +286,29 @@ class JsTryStmt : JsStmt
       out.w("{").nl
       out.indent
       out.w("$var = fan.sys.Err.make($var);").nl
+      doElse := false
       catches.each |c|
       {
         if (c.qname != null)
         {
+          if (doElse) out.w("else ")
+          else doElse = true
+
           out.w("if ($var instanceof $c.qname)").nl
           out.w("{").nl
-          out.w("  var $c.var = $var;").nl
+          out.indent
+          out.w("var $c.var = $var;").nl
           c.write(out)
+          out.unindent
           out.w("}").nl
         }
         else
         {
           out.w("else").nl
           out.w("{").nl
+          out.indent
           c.write(out)
+          out.unindent
           out.w("}").nl
         }
       }
@@ -310,7 +320,9 @@ class JsTryStmt : JsStmt
     {
       out.w("finally").nl
       out.w("{").nl
+      out.indent
       finallyBlock.write(out)
+      out.unindent
       out.w("}").nl
     }
   }
@@ -369,7 +381,9 @@ class JsSwitchStmt : JsStmt
       }
       out.w(")").nl
       out.w("{").nl
+      out.indent
       c.block?.write(out)
+      out.unindent
       out.w("}").nl
     }
     if (defBlock != null)
@@ -378,15 +392,12 @@ class JsSwitchStmt : JsStmt
       {
         out.w("else").nl
         out.w("{").nl
+        out.indent
         defBlock.write(out)
+        out.unindent
         out.w("}").nl
       }
-      else
-      {
-        out.unindent
-        defBlock.write(out)
-        out.indent
-      }
+      else { defBlock.write(out) }
     }
   }
 

@@ -22,13 +22,11 @@ class JsBlock : JsNode
 
   override Void write(JsWriter out)
   {
-    out.indent
     stmts.each |s|
     {
       s.write(out)
       out.w(";").nl
     }
-    out.unindent
   }
 
   JsStmt[] stmts   // statements for this block
