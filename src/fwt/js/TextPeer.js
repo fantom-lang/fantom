@@ -38,6 +38,7 @@ fan.fwt.TextPeer.prototype.sync = function(self)
   // sync control
   text.value = this.m_text;
   text.readOnly = !self.m_editable;
+  text.disabled = !this.m_enabled;
   if (self.m_multiLine)
   {
     // TODO - this differs a pixel or two by browser - so we'll need
