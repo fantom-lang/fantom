@@ -99,11 +99,7 @@ class JsIfStmt : JsStmt
   {
     this.cond = JsExpr(s, fs.condition, inClosure)
     this.trueBlock  = JsBlock(s, fs.trueBlock, inClosure)
-    if (fs.falseBlock != null)
-    {
-      this.falseBlock = JsBlock(s, fs.falseBlock, inClosure)
-      this.hasElseIf  = fs.falseBlock.stmts.first is IfStmt
-    }
+    this.falseBlock = (fs.falseBlock != null) ? JsBlock(s, fs.falseBlock, inClosure) : null
   }
 
   override Void write(JsWriter out)
@@ -116,27 +112,18 @@ class JsIfStmt : JsStmt
     out.w("}").nl
     if (falseBlock != null)
     {
-      if (hasElseIf)
-      {
-        out.w("else ")
-        falseBlock.write(out)
-      }
-      else
-      {
-        out.w("else").nl
-        out.w("{").nl
-        out.indent
-        falseBlock.write(out)
-        out.unindent
-        out.w("}").nl
-      }
+      out.w("else").nl
+      out.w("{").nl
+      out.indent
+      falseBlock.write(out)
+      out.unindent
+      out.w("}").nl
     }
   }
 
   JsExpr cond
   JsBlock trueBlock
   JsBlock? falseBlock
-  Bool hasElseIf := false
 }
 
 **************************************************************************
