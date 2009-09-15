@@ -35,7 +35,10 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
   if (self.m_mode == fan.fwt.ButtonMode.m_push || self.m_mode == fan.fwt.ButtonMode.m_toggle)
     return this.makePush(parentElem, self);
 
-  if (self.m_mode == fan.fwt.ButtonMode.m_check) return this.makeCheck(parentElem, self);
+  if (self.m_mode == fan.fwt.ButtonMode.m_check || self.m_mode == fan.fwt.ButtonMode.m_radio)
+    return this.makeCheck(parentElem, self);
+
+  // TODO - sep
 }
 
 fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
@@ -99,7 +102,7 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
 fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
 {
   var check = document.createElement("input");
-  check.type = "checkbox";
+  check.type = (self.m_mode == fan.fwt.ButtonMode.m_check) ? "checkbox" : "radio";
   check.style.marginRight = "6px";
 
   var div = this.emptyDiv();
@@ -194,7 +197,8 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
     w -= 2;
     h -= 2;
   }
-  else if (self.m_mode == fan.fwt.ButtonMode.m_check)
+  else if (self.m_mode == fan.fwt.ButtonMode.m_check ||
+           self.m_mode == fan.fwt.ButtonMode.m_radio)
   {
     var div = this.elem;
 
