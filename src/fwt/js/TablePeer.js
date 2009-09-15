@@ -341,6 +341,7 @@ fan.fwt.TableSupport.prototype.$ctor = function(table) { this.table = table; }
 
 fan.fwt.TableSupport.prototype.popup = function()
 {
+  var $this = this;
   var table = this.table;
 
   var selectAll = fan.fwt.MenuItem.make();
@@ -356,19 +357,13 @@ fan.fwt.TableSupport.prototype.popup = function()
 
   var selectNone = fan.fwt.MenuItem.make();
   selectNone.text$("Select None");
-  selectNone.onAction().add(fan.sys.Func.make(function(it)
-  {
-    table.peer.selection.select([]);
-  },
-  [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
+  selectNone.onAction().add(fan.sys.Func.make(function(it) { table.peer.selection.select([]); },
+    [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
 
   var xport = fan.fwt.MenuItem.make();
   xport.text$("Export");
-  xport.onAction().add(fan.sys.Func.make(function(it)
-  {
-    alert("export!");
-  },
-  [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
+  xport.onAction().add(fan.sys.Func.make(function(it) { $this.exportTable(); },
+    [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
 
   if (!table.m_multi)
   {
@@ -376,11 +371,65 @@ fan.fwt.TableSupport.prototype.popup = function()
     selectNone.enabled$(false);
   }
 
+  if (table.model().numRows() == 0) xport.enabled$(false);
+
   var menu = fan.fwt.Menu.make();
   menu.add(selectAll);
   menu.add(selectNone);
-  //menu.add(xport);
+  menu.add(xport);
   menu.open(table, fan.gfx.Point.make(0, 23));
 }
 
+fan.fwt.TableSupport.prototype.exportTable = function()
+{
+  // build csv str
+  var str = "";
+  var model = this.table.model();
+  // headers
+  for (var c=0; c<model.numCols(); c++)
+  {
+    if (c>0) str += ",";
+    str += this.escape(model.header(c));
+  }
+  str += "\n";
+  // rows
+  for (var r=0; r<model.numRows(); r++)
+  {
+    for (var c=0; c<model.numCols(); c++)
+    {
+      if (c>0) str += ",";
+      str += this.escape(model.text(c, r));
+    }
+    str += "\n";
+  }
+
+  // show in widget
+  var text = fan.fwt.Text.make();
+  text.m_multiLine = true;
+  text.m_prefRows = 20;
+  text.text$(str);
+
+  var cons = fan.fwt.ConstraintPane.make();
+  cons.m_minw = 650;
+  cons.m_maxw = 650;
+  cons.content$(text);
+
+  var dlg = fan.fwt.Dialog.make(this.table.window());
+  dlg.title$("Export");
+  dlg.body$(cons);
+  dlg.commands$(fan.sys.List.make(fan.sys.Type.find("sys::Obj"), [fan.fwt.Dialog.ok()]));
+  dlg.open();
+}
+
+fan.fwt.TableSupport.prototype.escape = function(str)
+{
+  // convert " to ""
+  str = str.replace(/\"/g, "\"\"");
+
+  // check if need to wrap in quotes
+  var wrap = str.search(/[,\n\" ]/) != -1;
+  if (wrap) str = "\"" + str + "\"";
+
+  return str;
+}
 
