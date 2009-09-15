@@ -30,7 +30,11 @@ fan.fwt.TextPeer.prototype.sync = function(self)
   // do we need to create element?
   if (text == null)
   {
-    if (self.m_multiLine) { text = document.createElement("textarea"); }
+    if (self.m_multiLine)
+    {
+      text = document.createElement("textarea");
+      text.style.whiteSpace = "nowrap";
+    }
     else { text = document.createElement("input"); text.type = "text"; }
     this.elem.appendChild(text);
   }
