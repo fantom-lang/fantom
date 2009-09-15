@@ -87,9 +87,13 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
 {
   // init hook
   if (this.selection == null)
+  {
     this.selection = new fan.fwt.TableSelection(self);
+    this.support   = new fan.fwt.TableSupport(self);
+  }
 
   // build new content
+  var $this = this;
   var tbody = document.createElement("tbody");
   var model = self.m_model;
   var rows  = model.numRows();
@@ -105,6 +109,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       var fix = document.createElement("div");
       with (fix.style)
       {
+        position     = "relative";
         font         = "bold 8pt Arial";
         padding      = "4px 6px";
         textAlign    = "left";
@@ -118,9 +123,18 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         if (c < 0) height = "100%";
       }
       if (c < 0)
+      {
         fix.innerHTML = "&nbsp;";
+        var arrow  = this.makeArrowDown();
+        arrow.style.top  = "10px";
+        arrow.style.left = "14px";
+        fix.appendChild(arrow);
+        fix.onmousedown = function() { $this.support.popup(); }
+      }
       else
+      {
         fix.appendChild(document.createTextNode(model.header(c)));
+      }
       var th = document.createElement("th");
       with (th.style)
       {
@@ -215,6 +229,38 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   this.selection.select(this.m_selected);
 }
 
+fan.fwt.TablePeer.prototype.makeArrowDown = function()
+{
+  var div = document.createElement("div");
+  div.style.position = "absolute";
+  div.width  = "5px";
+  div.height = "3px";
+
+  var dot = null;
+  dot = this.makeDot(); dot.style.top="0px"; dot.style.left="0px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top="0px"; dot.style.left="1px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top="0px"; dot.style.left="2px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top="0px"; dot.style.left="3px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top="0px"; dot.style.left="4px"; div.appendChild(dot);
+
+  dot = this.makeDot(); dot.style.top="1px"; dot.style.left="1px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top="1px"; dot.style.left="2px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top="1px"; dot.style.left="3px"; div.appendChild(dot);
+
+  dot = this.makeDot(); dot.style.top="2px"; dot.style.left="2px"; div.appendChild(dot);
+  return div;
+}
+
+fan.fwt.TablePeer.prototype.makeDot = function()
+{
+  var dot = document.createElement("div");
+  dot.style.position   = "absolute";
+  dot.style.width      = "1px";
+  dot.style.height     = "1px";
+  dot.style.background = "#404040";
+  return dot;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Selection
 //////////////////////////////////////////////////////////////////////////
@@ -252,7 +298,7 @@ fan.fwt.TableSelection.prototype.select = function(rows)
     var on  = false;
 
     var len = rows.length;
-    if (len > 1 && !this.table.multi) len = 1;
+    if (len > 1 && !this.table.m_multi) len = 1;
     for (var s=0; s<len; s++)
       if (row == rows[s])
       {
@@ -285,4 +331,56 @@ fan.fwt.TableSelection.prototype.notify = function(primaryIndex)
     for (var i=0; i<listeners.length; i++) fan.sys.Func.call(listeners[i], se);
   }
 }
+
+//////////////////////////////////////////////////////////////////////////
+// TableSupport
+//////////////////////////////////////////////////////////////////////////
+
+fan.fwt.TableSupport = fan.sys.Obj.$extend(fan.sys.Obj);
+fan.fwt.TableSupport.prototype.$ctor = function(table) { this.table = table; }
+
+fan.fwt.TableSupport.prototype.popup = function()
+{
+  var table = this.table;
+
+  var selectAll = fan.fwt.MenuItem.make();
+  selectAll.text$("Select All");
+  selectAll.onAction().add(fan.sys.Func.make(function(it)
+  {
+    var rows = [];
+    var len  = table.model().numRows();
+    for (var i=0; i<len; i++) rows.push(i);
+    table.peer.selection.select(rows);
+  },
+  [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
+
+  var selectNone = fan.fwt.MenuItem.make();
+  selectNone.text$("Select None");
+  selectNone.onAction().add(fan.sys.Func.make(function(it)
+  {
+    table.peer.selection.select([]);
+  },
+  [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
+
+  var xport = fan.fwt.MenuItem.make();
+  xport.text$("Export");
+  xport.onAction().add(fan.sys.Func.make(function(it)
+  {
+    alert("export!");
+  },
+  [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
+
+  if (!table.m_multi)
+  {
+    selectAll.enabled$(false);
+    selectNone.enabled$(false);
+  }
+
+  var menu = fan.fwt.Menu.make();
+  menu.add(selectAll);
+  menu.add(selectNone);
+  //menu.add(xport);
+  menu.open(table, fan.gfx.Point.make(0, 23));
+}
+
 
