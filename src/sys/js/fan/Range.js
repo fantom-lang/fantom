@@ -61,6 +61,24 @@ fan.sys.Range.prototype.toString = function()
     return this.m_start + ".." + this.m_end;
 }
 
+fan.sys.Range.prototype.toList = function()
+{
+  var start = this.m_start;
+  var end = this.m_end;
+  var acc = fan.sys.List.make(fan.sys.Type.find("sys::Int"), []);
+  if (start < end)
+  {
+    if (this.m_exclusive) --end;
+    for (var i=start; i<=end; ++i) acc.push(fan.sys.Int.make(i));
+  }
+  else
+  {
+    if (this.m_exclusive) ++end;
+    for (var i=start; i>=end; --i) acc.add(fan.sys.Int.make(i));
+  }
+  return acc;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
