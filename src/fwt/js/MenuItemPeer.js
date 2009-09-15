@@ -38,10 +38,24 @@ fan.fwt.MenuItemPeer.prototype.create = function(parentElem, self)
     div.style.whiteSpace = "nowrap";
   }
 
-  div.onmouseover = function() { div.style.background="#3d80df"; div.style.color="#fff"; }
-  div.onmouseout  = function() { div.style.background=""; div.style.color=""; }
+  div.onmouseover = function()
+  {
+    if (!self.peer.m_enabled) return;
+    div.style.background = "#3d80df";
+    div.style.color = "#fff";
+  }
+
+  div.onmouseout = function()
+  {
+    if (!self.peer.m_enabled) return;
+    div.style.background = "";
+    div.style.color = "";
+  }
+
   div.onclick = function()
   {
+    if (!self.peer.m_enabled) return;
+
     var evt = new fan.fwt.Event();
     evt.id = fan.fwt.EventId.m_action;
     evt.widget = self;
@@ -69,6 +83,9 @@ fan.fwt.MenuItemPeer.prototype.sync = function(self)
 
   // add new text node
   div.appendChild(document.createTextNode(this.m_text));
+
+  // sync state
+  div.style.color = self.peer.m_enabled ? "#000" : "#999";
 
   // account for padding/border
   var w = this.m_size.m_w - 8;
