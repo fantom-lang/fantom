@@ -33,7 +33,7 @@ fan.fwt.TextPeer.prototype.sync = function(self)
     if (self.m_multiLine)
     {
       text = document.createElement("textarea");
-      text.style.whiteSpace = "nowrap";
+      //text.style.whiteSpace = "nowrap";
     }
     else { text = document.createElement("input"); text.type = "text"; }
     this.elem.appendChild(text);
