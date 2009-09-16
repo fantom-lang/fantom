@@ -71,19 +71,24 @@ class RepoTest : Test
       symbols := Str:Obj?["a":4, "b":"hi", "c":[2,3,4]]
       f.writeSymbols(symbols)
 
+      // verify readSymbols *always* re-reads from file system
       verifyEq(Repo.readSymbols(`some-bad-file-foo-bar`), Str:Obj?[:])
       verifyEq(Repo.readSymbols(uri), symbols)
       verifyNotSame(Repo.readSymbols(uri), Repo.readSymbols(uri))
 
+      // verify cached
       cached := Repo.readSymbolsCached(uri)
       verifySame(cached, Repo.readSymbolsCached(uri))
       verifyEq(cached.isImmutable(), true)
       Actor.sleep(10ms)
       verifySame(cached, Repo.readSymbolsCached(uri, 1ns))
-      symbols["foo"] = "bar"
 
-      f.writeSymbols(symbols);
-      Actor.sleep(10ms)
+      // rewrite file until we get modified time in file system
+      symbols["foo"] = "bar"
+      oldTime := f.modified
+      while (f.modified == oldTime) f.writeSymbols(symbols)
+
+      // check that we refresh the cache
       newCached := Repo.readSymbolsCached(uri, 1ns)
       verifyNotSame(cached, newCached)
       verifyEq(cached["foo"], null)
