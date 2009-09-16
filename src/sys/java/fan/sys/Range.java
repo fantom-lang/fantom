@@ -18,19 +18,36 @@ public final class Range
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static final Range makeInclusive(long start, long end)
+  public static Range makeInclusive(long start, long end)
   {
     return new Range(start, end, false);
   }
 
-  public static final Range makeExclusive(long start, long end)
+  public static Range makeExclusive(long start, long end)
   {
     return new Range(start, end, true);
   }
 
-  public static final Range make(long start, long end, boolean exclusive)
+  public static Range make(long start, long end, boolean exclusive)
   {
     return new Range(start, end, exclusive);
+  }
+
+  public static Range fromStr(String s) { return fromStr(s, true); }
+  public static Range fromStr(String s, boolean checked)
+  {
+    try
+    {
+      int dot = s.indexOf('.');
+      if (s.charAt(dot+1) != '.') throw new Exception();
+      boolean exclusive = s.charAt(dot+2) == '<';
+      long start = Long.parseLong(s.substring(0, dot));
+      long end   = Long.parseLong(s.substring(dot + (exclusive?3:2)));
+      return new Range(start, end, exclusive);
+    }
+    catch (Exception e) {}
+    if (!checked) return null;
+    throw ParseErr.make("Range", s).val;
   }
 
   private Range(long start, long end, boolean exclusive)

@@ -12,6 +12,7 @@
 ** "start..end" for an inclusive end or "start..<end" for an exlusive
 ** range.
 **
+@simple
 const final class Range
 {
 
@@ -33,6 +34,13 @@ const final class Range
   ** Constructor with start, end, and exclusive flag (all must be non-null).
   **
   new make(Int start, Int end, Bool exclusive)
+
+  **
+  ** Parse from string format - inclusive is "start..end", or
+  ** exclusive is "start..<end".  If invalid format then
+  ** throw ParseErr or return null based on checked flag.
+  **
+  static Range? fromStr(Str s, Bool checked := true)
 
 //////////////////////////////////////////////////////////////////////////
 // Obj Overrides
