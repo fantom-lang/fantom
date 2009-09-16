@@ -156,11 +156,14 @@ class DateTimeTest : Test
 
     verifyEq(Date.today, DateTime.now.date)
 
-    dt1   := DateTime.now
-    time  := Time.now
+    dt1   := DateTime.now(null)
     ticks := DateTime.nowTicks
-    dt2   := DateTime.now
+    dt2   := DateTime.now(null)
     verify(dt1.ticks <= ticks && ticks <= dt2.ticks)
+
+    dt1   = DateTime.now
+    time  := Time.now
+    dt2   = DateTime.now
     verify(dt1.time <= time && time <= dt2.time)
   }
 
