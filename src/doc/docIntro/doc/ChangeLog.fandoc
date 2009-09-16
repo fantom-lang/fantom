@@ -715,3 +715,7 @@
 - #712: UI enhancements
 - #721: Cookbook versus Examples
 
+*Build 1.0.47 (working)*
+- Range.fromStr
+- FWT javascript enhancements
+

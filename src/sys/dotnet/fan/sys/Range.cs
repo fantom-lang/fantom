@@ -6,6 +6,9 @@
 //   29 Jan 07  Andy Frank  Creation
 //
 
+using System;
+using System.Globalization;
+
 namespace Fan.Sys
 {
   /// <summary>
@@ -31,6 +34,23 @@ namespace Fan.Sys
     public static Range make(long start, long end, bool exclusive)
     {
       return new Range(start, end, exclusive);
+    }
+
+    public static Range fromStr(string s) { return fromStr(s, true); }
+    public static Range fromStr(string s, bool check)
+    {
+      try
+      {
+        int dot = s.IndexOf('.');
+        if (s[dot+1] != '.') throw new Exception();
+        bool exclusive = s[dot+2] == '<';
+        long start = Convert.ToInt64(s.Substring(0, dot));
+        long end   = Convert.ToInt64(s.Substring(dot + (exclusive?3:2)));
+        return new Range(start, end, exclusive);
+      }
+      catch (Exception) {}
+      if (!check) return null;
+      throw ParseErr.make("Range", s).val;
     }
 
     private Range(long start, long end, bool exclusive)

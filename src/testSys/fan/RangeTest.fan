@@ -126,4 +126,15 @@ class RangeTest : Test
     verifyNull(acc[20])
   }
 
+  Void testFromStr()
+  {
+    verifyEq(Range.fromStr("2..3"), 2..3)
+    verifyEq(Range.fromStr("123..456"), 123..456)
+    verifyEq(Range.fromStr("-6..<-2"), -6..<-2)
+    verifyEq(Range.fromStr("3.4", false), null)
+    verifyErr(ParseErr#) { r := Range.fromStr("x..4", true) }
+    verifyErr(ParseErr#) { r := Range.fromStr("3..x") }
+    verifyEq(0..<7.toStr.in.readObj, 0..<7)
+  }
+
 }
