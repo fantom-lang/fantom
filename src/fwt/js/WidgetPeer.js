@@ -239,6 +239,16 @@ fan.fwt.WidgetPeer.setBg = function(elem, brush)
       // need to try block for IE
       var css = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(" + c1 + "), to(" + c2 + "))";
       try { backgroundImage = css; } catch (err) {} // ignore
+      return;
+    }
+    if (brush instanceof fan.gfx.Pattern)
+    {
+      var str = "";
+      var bg  = brush.m_bg;
+      if (bg != null) str += bg.toCss() + ' ';
+      str += 'url(' + brush.m_image.m_uri + ') repeat-x';
+      background = str;
+      return;
     }
   }
 }
