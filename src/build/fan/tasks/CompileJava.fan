@@ -89,17 +89,7 @@ class CompileJava : JdkTask
       cmd.add(cp.join(File.pathSep) |File f->Str| { return f.osPath })
 
       // src files/dirs
-      src.each |File f|
-      {
-        if (f.isDir)
-        {
-          f.list.each |File x| { if (x.ext == "java") cmd.add(x.osPath) }
-        }
-        else
-        {
-          cmd.add(f.osPath)
-        }
-      }
+      listFiles(cmd, src)
       log.debug(cmd.join(" "))
       r := Process(cmd).run.join
       if (r != 0) throw Err.make
@@ -107,6 +97,15 @@ class CompileJava : JdkTask
     catch (Err err)
     {
       throw fatal("CompileJava failed")
+    }
+  }
+
+  internal Void listFiles(Str[] list, File[] files)
+  {
+    files.each |File f|
+    {
+      if (f.isDir) listFiles(list, f.list)
+      else if (f.ext == "java") list.add(f.osPath)
     }
   }
 
@@ -118,7 +117,9 @@ class CompileJava : JdkTask
   ** rt.jar is automatically included
   File[] cp := File[,]
 
-  ** List of source files or directories to compile
+  ** List of source files or directories to compile.  If
+  ** a directory is specified, then it is recursively searched
+  ** for all ".java" files.
   File[] src := File[,]
 
   ** Output directory
