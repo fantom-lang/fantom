@@ -133,7 +133,7 @@ class SubclassTest : JavaTest
         new makeTicks(Int millis) : super(millis) {}
         new makeWith(Int year, Int mon, Int day) : super(year-1900, mon, day) {}
 
-        DateTime now := DateTime.now
+        DateTime now := DateTime.now(null)
 
         Bool test1() { return make.verify(now.year, now.month, now.day) }
         Bool test2() { return makeTicks(now.toJava).verify(now.year, now.month, now.day) }

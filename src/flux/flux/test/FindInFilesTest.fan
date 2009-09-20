@@ -21,7 +21,7 @@ internal class FindInFilesTest : Test
     verifyEq(results.size, 1)
     verifyMark(results[0], "alpha.txt", 1, 1)
 
-    results = FindInFiles.find("foo", tempDir)
+    results = FindInFiles.find("foo", tempDir).sort
     verifyEq(results.size, 6)
     verifyMark(results[0], "alpha.txt", 1, 1)
     verifyMark(results[1], "beta.java", 3, 10)
