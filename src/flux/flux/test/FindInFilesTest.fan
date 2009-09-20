@@ -40,7 +40,7 @@ internal class FindInFilesTest : Test
 
   Void verifyMark(Str result, Str name, Int line, Int col)
   {
-    a := result.indexr("\\")
+    a := result.indexr(File.sep)
     b := result.index("(", a)
     c := result.index(",", b)
     d := result.index(")", c)
