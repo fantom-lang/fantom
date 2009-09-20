@@ -47,7 +47,7 @@ class InteropTest : JavaTest
       }")
 
     obj := pod.types.first.make
-    verify(DateTime.fromJava(obj->a) - DateTime.now <= 50ms)
+    verify(DateTime.fromJava(obj->a) - DateTime.now(null) <= 50ms)
     verifyEq(obj->b, 1_000_000)
   }
 
@@ -141,6 +141,17 @@ class InteropTest : JavaTest
      "using [java] fanx.test
       class Foo
       {
+        new make()
+        {
+          InteropTest.snumb = 'B'
+          InteropTest.snums = 'S'
+          InteropTest.snumc = 'C'
+          InteropTest.snumi = 'I'
+          InteropTest.snuml = 'L'
+          InteropTest.snumf = 'F'.toFloat
+          InteropTest.snumd = 'D'.toFloat
+        }
+
         Int b() { return InteropTest.snumb }
         Int s() { return InteropTest.snums }
         Int c() { return InteropTest.snumc }
