@@ -118,12 +118,12 @@ class WebClientTest : Test
 
   Void testPipeline()
   {
-    c := WebClient(`http://www.google.com`)
+    c := WebClient(`http://fandev.org`)
     try
     {
       c.writeReq
       c.writeReq
-      c.reqUri = `http://www.google.com/bad-bad`
+      c.reqUri = `http://fandev.org/bad-bad`
       c.writeReq
 
       c.readRes
