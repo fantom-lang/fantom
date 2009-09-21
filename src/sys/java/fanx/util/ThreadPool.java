@@ -73,7 +73,7 @@ public class ThreadPool
     {
       Worker w = (Worker)idle.poll();
       if (w == null) break;
-      w.run(null);
+      w.post(null);
     }
   }
 
@@ -138,7 +138,7 @@ public class ThreadPool
     Worker worker = (Worker)idle.poll();
     if (worker != null)
     {
-      worker.run(work);
+      worker.post(work);
       return;
     }
 
@@ -156,28 +156,31 @@ public class ThreadPool
   }
 
   /**
-   * This is called by a worker when it completes a work item.
-   * If there is pending work return it.  Otherwise if idle time
-   * is over then free the worker and let it die. If idle time is
-   * not over then put the worker into our idle queue.
+   * This is called by a worker when it completes a work item.  If
+   * there is pending work post it back to the worker and return true.
+   * If there is no pending work and we are stopping then return
+   * false, otherwise add worker to our idle queue and return true.
    */
-  synchronized Work ready(Worker w, boolean idleTimeOver)
+  synchronized boolean ready(Worker w)
   {
     // if we have a pending work, then immediately reuse the worker
     Work work = (Work)pending.poll();
-    if (work != null) return work;
+    if (work != null)
+    {
+      w.post(work);
+      return true;
+    }
 
-    // if the worker's idle time is over or we are
-    // shutting down, then free the worker and let it die
-    if (idleTimeOver || state != RUNNING)
+    // if shutting down, then free the worker return false
+    if (state != RUNNING)
     {
       free(w);
-      return null;
+      return false;
     }
 
     // add to head of idle list (we let oldest threads die out first)
     idle.addFirst(w);
-    return null;
+    return true;
   }
 
   /**
@@ -245,33 +248,49 @@ public class ThreadPool
     {
       try
       {
-        // loop processing runnables
+        // loop until we have explicit return
         while (true)
         {
-          // execute work
+          // execute work posted to me
           try { work._work(); } catch (Throwable e) { e.printStackTrace(); }
           work = null;
 
-          // once I am finished this work, I need to
-          // get more work or enter an idle state
+          // inform pool I'm ready for more work, three potential outcomes:
+          //   - if ready returns false then time to immediately
+          //     exit and have this thread die
+          //   - if ready posted a new work item to me, then continue
+          //     my loop and immediately execute it
+          //   - enter the idle state and wait for a bit more work
+          if (!ready(this)) return;
+          if (work != null) continue;
+
+          // enter idle state until more work is posted to me
+          synchronized(this)
+          {
+            // it is possible that between ready and acquiring my
+            // lock that submit posted work to me, so double check
+            // work field before I enter my sleep cycle
+            if (work != null) continue;
+
+            // enter wait state until either timeout or more work is posted
+            try { wait(idleTime); } catch (InterruptedException e) {}
+            if (work != null) continue;
+          }
+
+          // if we've made it here, then we've expired our idle time;
+          // so free ourselves from the thread pool
+          free(this);
+
+          // it is possible that between releasing my lock and calling
+          // free that submit posted one more work item to me, so double
+          // check work field before we exit the thread
           synchronized (this)
           {
-            // let the thread pool know I am idle, if it has pending
-            // work for me, then immediately execute it
-            work = ready(this, false);
-            if (work != null) continue;
-
-            // idle this thread for a period of time to
-            // see if any new work becomes available
-            try { wait(idleTime); } catch (InterruptedException e) {}
-
-            // if work was given to me while I was waiting, then do it
-            if (work != null) continue;
-
-            // check back again for pending work but this time pass true for
-            // idleTimeOver, if still no work for me then it is time to die
-            work = ready(this, true);
-            if (work == null) return;
+            if (work != null)
+            {
+              try { work._work(); } catch (Throwable e) { e.printStackTrace(); }
+            }
+            return;
           }
         }
       }
@@ -284,16 +303,15 @@ public class ThreadPool
     }
 
     /**
-     * Give this thread a work item and wake it up from its idle state.
-     * This method should never be called unless in the idle state.
+     * Give this thread a work item and call notify in case its idling.
      */
-    public synchronized void run(Work work)
+    public synchronized void post(Work work)
     {
       this.work = work;
       notifyAll();
     }
 
-    private Work work;
+    Work work;
   }
 
 //////////////////////////////////////////////////////////////////////////
