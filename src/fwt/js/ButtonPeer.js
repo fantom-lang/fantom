@@ -61,9 +61,24 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
   }
 
   var $this = this;
-  outer.onclick = function(event)
+  outer.onmousedown = function(event)
   {
     if (!self.enabled()) return;
+    $this.m_pressed = true;
+    $this.repaint(self);
+  }
+
+  outer.onmouseout = function(event)
+  {
+    if (!self.enabled()) return;
+    $this.m_pressed = false;
+    $this.repaint(self);
+  }
+
+  outer.onmouseup = function(event)
+  {
+    if (!self.enabled()) return;
+    if ($this.m_pressed != true) return;  // mouseout before up
 
     // toggle selected if toggle mode
     if (self.m_mode == fan.fwt.ButtonMode.m_toggle)
@@ -75,24 +90,10 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
 
     var list = self.m_onAction.list();
     for (var i=0; i<list.length; i++) list[i](evt);
-  }
 
-  outer.onmousedown = function(event)
-  {
-    if (!self.enabled()) return;
-    $this.m_pressed = true;
-    $this.repaint(self);
-  }
-
-  var up = function(event)
-  {
-    if (!self.enabled()) return;
-    if (self.m_mode == fan.fwt.ButtonMode.m_toggle && $this.m_selected) return;
     $this.m_pressed = false;
     $this.repaint(self);
   }
-  outer.onmouseout = function(event) { up(event); }
-  outer.onmouseup = function(event) { up(event); }
 
   outer.appendChild(inner)
   parentElem.appendChild(outer);
