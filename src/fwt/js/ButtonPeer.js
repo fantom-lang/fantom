@@ -141,7 +141,7 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
     {
       with (inner.style)
       {
-        padding = "3px 3px 1px 5px";
+        padding = "3px 3px 2px 5px";
         borderTop    = "1px solid #a8a8a8";
         borderLeft   = "1px solid #a8a8a8";
         borderRight  = "none";
