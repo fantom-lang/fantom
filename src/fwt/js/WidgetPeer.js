@@ -131,8 +131,13 @@ fan.fwt.WidgetPeer.prototype.attachTo = function(self, elem)
   // sync to elem
   this.elem = elem;
   this.sync(self);
-  this.attachEvents(self, elem, "mousedown", self.m_onMouseDown.list());
-  // rest of events...
+  this.attachEvents(self, fan.fwt.EventId.m_mouseEnter, elem, "mouseover",  self.m_onMouseEnter.list());
+  this.attachEvents(self, fan.fwt.EventId.m_mouseExit,  elem, "mouseout",   self.m_onMouseExit.list());
+  this.attachEvents(self, fan.fwt.EventId.m_mouseDown,  elem, "mousedown",  self.m_onMouseDown.list());
+  this.attachEvents(self, fan.fwt.EventId.m_mouseMove,  elem, "mousemove",  self.m_onMouseMove.list());
+  this.attachEvents(self, fan.fwt.EventId.m_mouseUp,    elem, "mouseup",    self.m_onMouseUp.list());
+  //this.attachEvents(self, fan.fwt.EventId.m_mouseHover, elem, "mousehover", self.m_onMouseHover.list());
+  //this.attachEvents(self, fan.fwt.EventId.m_mouseWheel, elem, "mousewheel", self.m_onMouseWheel.list());
 
   // recursively attach my children
   var kids = self.m_kids;
@@ -143,7 +148,7 @@ fan.fwt.WidgetPeer.prototype.attachTo = function(self, elem)
   }
 }
 
-fan.fwt.WidgetPeer.prototype.attachEvents = function(self, elem, event, list)
+fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, list)
 {
   for (var i=0; i<list.length; i++)
   {
@@ -153,7 +158,7 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(self, elem, event, list)
       // TODO - need to fix for IE
       // TODO - only valid for mouseDown - so need to clean up this code
       var evt = new fan.fwt.Event();
-      evt.m_id = fan.fwt.EventId.m_mouseDown;
+      evt.m_id = evtId;
       evt.m_pos = fan.gfx.Point.make(e.clientX, e.clientY);
       evt.m_widget = self;
       //evt.count =
