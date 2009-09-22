@@ -43,7 +43,11 @@ fan.fwt.FwtEnvPeer.loadImage = function(fanImg, widget)
         // seems to work more reliably.  But we need to rework all
         // the relayout code to use a coalescing queue I think, so
         // this is probably just temporary.
-        var f = function() { widget.window().relayout(); }
+        var f = function()
+        {
+          var win = widget.window();
+          if (win != null) win.relayout();
+        }
         setTimeout(f, 50);
       }
       if (jsImg.addEventListener)
