@@ -386,7 +386,7 @@ class JsExpr : JsNode
         se.op == ShortcutOp.get || se.op == ShortcutOp.set)
     {
       expr(se.target)
-      if (!se.args.first.ctype.isInt)
+      if (!se.args.first.ctype.isInt || se.target.ctype?.qname == "sys::StrBuf")
       {
         out.w(se.args.size == 1 ? ".get" : ".set")
         out.w("(")
