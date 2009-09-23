@@ -74,6 +74,10 @@ fan.sys.Map.prototype.toStr = function()
   return "[" + s + "]";
 }
 
+fan.sys.Map.prototype.caseInsensitive = function() { return this.m_caseInsensitive; }
+fan.sys.Map.prototype.caseInsensitive$ = function(v) { this.m_caseInsensitive = v; }
+fan.sys.Map.prototype.m_caseInsensitive = false;
+
 //////////////////////////////////////////////////////////////////////////
 // Items
 //////////////////////////////////////////////////////////////////////////
@@ -122,6 +126,7 @@ fan.sys.Map.prototype.add = function(key, val)
 
 fan.sys.Map.prototype.set = function(key, val)
 {
+  if (this.m_caseInsensitive) key = fan.sys.Str.lower(key);
   this.keyMap[key] = key;
   this.map[key] = val;
   return this;
@@ -180,6 +185,9 @@ fan.sys.Map.prototype.ro = function()
   // TODO
   return this;
 }
+
+fan.sys.Map.prototype.isRO = function() { return false; }
+fan.sys.Map.prototype.isRW = function() { return true; }
 
 //////////////////////////////////////////////////////////////////////////
 // Static Methods
