@@ -127,6 +127,15 @@ namespace Fan.Sys
       return this;
     }
 
+    public object getOrAdd(object key, Func valFunc)
+    {
+      object val = m_map[key];
+      if (val != null) return val;
+      val = valFunc.call(key);
+      add(key, val);
+      return val;
+    }
+
     public Map setAll(Map m)
     {
       modify();

@@ -108,6 +108,14 @@ final class Map
   M add(K key, V val)
 
   **
+  ** Get the value for the specified key, or if it doesn't exist
+  ** then automatically add it.  The value function is called to
+  ** get the value to add, it is only called if the key is not
+  ** mapped. Throw ReadonlyErr if readonly only if add is required.
+  **
+  V getOrAdd(K key, |K->V| valFunc)
+
+  **
   ** Append the specified map to this map by setting every key/value in
   ** m in this map.  Keys in m not yet mapped are added and keys already
   ** mapped are overwritten.  Return this.  Throw ReadonlyErr if readonly.

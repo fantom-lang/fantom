@@ -372,6 +372,32 @@ class MapTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Get or Add
+//////////////////////////////////////////////////////////////////////////
+
+  Void testGetOrAdd()
+  {
+    m := Str:Str[:]
+    verifyEq(m.getOrAdd("a") {"_a_"}, "_a_")
+    verifyEq(m.getOrAdd("a") {"_x_"}, "_a_")
+    verifyEq(m.getOrAdd("a") {throw Err()}, "_a_")
+    verifyEq(m, ["a":"_a_"])
+
+    verifyEq(m.getOrAdd("b") {"_${it}_"}, "_b_")
+    verifyEq(m.getOrAdd("c") |k| {"_${k}_"}, "_c_")
+    verifyEq(m, ["a":"_a_", "b":"_b_", "c":"_c_"])
+
+    verifyEq(m.getOrAdd("b") {throw Err()}, "_b_")
+
+    ro := m.ro
+    verifyEq(ro.getOrAdd("a") { throw Err() }, "_a_")
+    verifyEq(m.getOrAdd("d") { "_${it}_" }, "_d_")
+    verifyEq(m, ["a":"_a_", "b":"_b_", "c":"_c_", "d":"_d_"])
+    verifyEq(ro, ["a":"_a_", "b":"_b_", "c":"_c_"])
+    verifyErr(ReadonlyErr#) { ro.getOrAdd("d") { "x" } }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // SetAll / AddAll
 //////////////////////////////////////////////////////////////////////////
 
@@ -551,6 +577,13 @@ class MapTest : Test
     // keys, values
     verifyEq(m.keys.sort, ["B", "Charlie", "a"])
     verifyEq(m.values.sort, ['a', 'b', 'c'])
+
+    // getOrAdd
+    verifyEq(m.getOrAdd("cHaRlIe") { throw Err() }, 'c')
+    verifyEq(m.getOrAdd("Delta") { 'd' }, 'd')
+    verifyEq(m.getOrAdd("delta") { throw Err() }, 'd')
+    verifyEq(m.keys.sort, ["B", "Charlie", "Delta", "a"])
+    m.remove("delta")
 
     // each
     x := Str:Int[:]
