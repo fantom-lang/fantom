@@ -111,8 +111,8 @@ fan.sys.List.fill = function(self, val, times)
 fan.sys.List.slice = function(self, range)
 {
   var size = self.length;
-  var s = range.start(size);
-  var e = range.end(size);
+  var s = range.$start(size);
+  var e = range.$end(size);
   if (e+1 < s) throw new fan.sys.IndexErr(r);
   return self.slice(s, e+1);
 }

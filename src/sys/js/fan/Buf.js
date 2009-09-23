@@ -78,8 +78,8 @@ fan.sys.Buf.prototype.get = function(pos)
 fan.sys.Buf.prototype.slice = function(range)
 {
   var size = this.size();
-  var s = range.start(size);
-  var e = range.end(size);
+  var s = range.$start(size);
+  var e = range.$end(size);
   var n = (e - s + 1);
   if (n < 0) throw fan.sys.IndexErr.make(range);
 

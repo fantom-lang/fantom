@@ -136,6 +136,21 @@ fan.sys.Int.toHex = function(self, width)
 }
 fan.sys.Int.$zeros = null;
 
+fan.sys.Int.random = function(r)
+{
+  if (r == undefined) r = Math.pow(2, 64);
+  else
+  {
+    var start = r.start();
+    var end   = r.end();
+    if (r.inclusive()) ++end;
+    if (end <= start) throw fan.sys.ArgErr.make("Range end < start: " + r);
+    r = end-start;
+  }
+  if (r < 0) r = -r;
+  return Math.floor(Math.random()*r);
+}
+
 fan.sys.Int.isUpper    = function(self) { return self >= 65 && self <= 90; }
 fan.sys.Int.isLower    = function(self) { return self >= 97 && self <= 122; }
 fan.sys.Int.upper      = function(self) { return fan.sys.Int.isLower(self) ? self-32 : self; }

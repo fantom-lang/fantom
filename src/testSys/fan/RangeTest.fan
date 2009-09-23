@@ -9,7 +9,7 @@
 **
 ** RangeTest
 **
-class RangeTest : Test
+@js class RangeTest : Test
 {
 
   Void testType()
