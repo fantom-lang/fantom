@@ -62,7 +62,7 @@ class TestRunner
     }
     else if (pod != null)
     {
-      p.types.each |Type t| { if (t.fits(Test#)) runTests(t, "*") }
+      p.types.each |t| { if (t.fits(Test#) && t.facet(@js,false)) runTests(t, "*") }
     }
     else throw Err("Pattern not supported: $arg")
     t2 := Duration.now
@@ -190,23 +190,6 @@ class TestRunner
     //echo("  -version       print version");
     //echo("  -v             verbose mode");
     //echo("  -all           test all pods");
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Whitelist
-//////////////////////////////////////////////////////////////////////////
-
-  Bool skip(Type type, Str methodName)
-  {
-    if (type.pod.name == "testSys")
-    {
-      if (type.name == "BoolTest")  return false
-      //if (type.name == "FloatTest") return false
-      //if (type.name == "IntTest")   return false
-      //if (type.name == "ListTest")  return false
-      //if (type.name == "StrTest")   return false
-    }
-    return true
   }
 
 //////////////////////////////////////////////////////////////////////////
