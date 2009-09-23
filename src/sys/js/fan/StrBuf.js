@@ -42,6 +42,71 @@ fan.sys.StrBuf.prototype.addChar = function(ch)
   return this;
 }
 
+fan.sys.StrBuf.prototype.capacity = function()
+{
+  if (this.m_capacity == null) return this.m_str.length;
+  return this.m_capacity;
+}
+fan.sys.StrBuf.prototype.capacity$ = function(c) { this.m_capacity = c; }
+fan.sys.StrBuf.prototype.m_capacity = null;
+
+fan.sys.StrBuf.prototype.clear = function()
+{
+  this.m_str = "";
+  return this;
+}
+
+fan.sys.StrBuf.prototype.get = function(i)
+{
+  if (i < 0) i = this.m_str.length+i;
+  if (i < 0 || i >= this.m_str.length) throw fan.sys.IndexErr.make(i);
+  return this.m_str.charCodeAt(i);
+}
+
+fan.sys.StrBuf.prototype.set = function(i, ch)
+{
+  if (i < 0) i = this.m_str.length+i;
+  if (i < 0 || i >= this.m_str.length) throw fan.sys.IndexErr.make(i);
+  this.m_str = this.m_str.substr(0,i) + String.fromCharCode(ch) + this.m_str.substr(i+1);
+  return this;
+}
+
+fan.sys.StrBuf.prototype.join = function(x, sep)
+{
+  if (sep == undefined) sep = " ";
+  var s = (x == null) ? "null" : fan.sys.Obj.toStr(x);
+  if (this.m_str.length > 0) this.m_str += sep;
+  this.m_str += s;
+  return this;
+}
+
+fan.sys.StrBuf.prototype.insert = function(i, x)
+{
+  var s = (x == null) ? "null" : fan.sys.Obj.toStr(x);
+  if (i < 0) i = this.m_str.length+i;
+  if (i < 0 || i > this.m_str.length) throw fan.sys.IndexErr.make(i);
+  this.m_str = this.m_str.substr(0,i) + s + this.m_str.substr(i);
+  return this;
+}
+
+fan.sys.StrBuf.prototype.remove = function(i)
+{
+  if (i < 0) i = this.m_str.length+i;
+  if (i< 0 || i >= this.m_str.length) throw fan.sys.IndexErr.make(i);
+  this.m_str = this.m_str.substr(0,i) + this.m_str.substr(i+1);
+  return this;
+}
+
+fan.sys.StrBuf.prototype.removeRange = function(r)
+{
+  var s = r.start(this.m_str.length);
+  var e = r.end(this.m_str.length);
+  var n = e - s + 1;
+  if (s < 0 || n < 0) throw fan.sys.IndexErr.make(r);
+  this.m_str = this.m_str.substr(0,s) + this.m_str.substr(e+1);
+  return this;
+}
+
 fan.sys.StrBuf.prototype.isEmpty = function()
 {
   return this.m_str.length == 0;

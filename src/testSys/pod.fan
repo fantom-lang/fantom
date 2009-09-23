@@ -17,6 +17,7 @@
 @podResDirs = [`res/`, `locale/`]
 @nodoc
 @podIndexFacets = [@testSysByStr, @testSys::testSysByType]
+@js
 
 pod testSys
 {
