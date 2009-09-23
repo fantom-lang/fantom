@@ -138,7 +138,7 @@ fan.sys.Int.$zeros = null;
 
 fan.sys.Int.random = function(r)
 {
-  if (r == undefined) r = Math.pow(2, 64);
+  if (r == undefined) return Math.floor(Math.random() * Math.pow(2, 64));
   else
   {
     var start = r.start();
@@ -146,9 +146,9 @@ fan.sys.Int.random = function(r)
     if (r.inclusive()) ++end;
     if (end <= start) throw fan.sys.ArgErr.make("Range end < start: " + r);
     r = end-start;
+    if (r < 0) r = -r;
+    return Math.floor(Math.random()*r) + start;
   }
-  if (r < 0) r = -r;
-  return Math.floor(Math.random()*r);
 }
 
 fan.sys.Int.isUpper    = function(self) { return self >= 65 && self <= 90; }
