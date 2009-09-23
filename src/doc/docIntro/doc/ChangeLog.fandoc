@@ -717,5 +717,7 @@
 
 *Build 1.0.47 (working)*
 - Range.fromStr
+- Map.getOrAdd
 - FWT javascript enhancements
+
 

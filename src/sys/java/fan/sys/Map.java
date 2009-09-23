@@ -135,6 +135,15 @@ public final class Map
     return this;
   }
 
+  public final Object getOrAdd(Object key, Func valFunc)
+  {
+    Object val = map.get(key);
+    if (val != null) return val;
+    val = valFunc.call(key);
+    add(key, val);
+    return val;
+  }
+
   public final Map setAll(Map m)
   {
     modify();
