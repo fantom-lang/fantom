@@ -241,8 +241,8 @@ fan.sys.Str.size = function(self)
 fan.sys.Str.slice = function(self, range)
 {
   var size = self.length;
-  var s = range.start(size);
-  var e = range.end(size);
+  var s = range.$start(size);
+  var e = range.$end(size);
   if (e+1 < s) throw new fan.sys.IndexErr(range);
   return self.substr(s, (e-s)+1);
 }

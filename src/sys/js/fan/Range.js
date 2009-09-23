@@ -23,42 +23,79 @@ fan.sys.Range.prototype.$ctor = function(start, end, exclusive)
   this.m_exclusive = (exclusive == undefined) ? false : exclusive;
 }
 
+fan.sys.Range.makeInclusive = function(start, end)
+{
+  return new fan.sys.Range(start, end, false);
+}
+
+fan.sys.Range.makeExclusive = function(start, end)
+{
+  return new fan.sys.Range(start, end, true);
+}
+
+fan.sys.Range.make = function(start, end, exclusive)
+{
+  return new fan.sys.Range(start, end, exclusive);
+}
+
+fan.sys.Range.fromStr = function(s, checked)
+{
+  if (checked == undefined) checked = true;
+  try
+  {
+    var dot = s.indexOf('.');
+    if (s.charAt(dot+1) != '.') throw new Error();
+    var exclusive = s.charAt(dot+2) == '<';
+    var start = fan.sys.Int.fromStr(s.substr(0, dot));
+    var end   = fan.sys.Int.fromStr(s.substr(dot + (exclusive?3:2)));
+    return new fan.sys.Range(start, end, exclusive);
+  }
+  catch (err) {}
+  if (!checked) return null;
+  throw fan.sys.ParseErr.make("Range", s);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Range.prototype.type = function()
+fan.sys.Range.prototype.start = function() { return this.m_start; }
+fan.sys.Range.prototype.end   = function() { return this.m_end; }
+fan.sys.Range.prototype.inclusive = function() { return !this.m_exclusive; }
+fan.sys.Range.prototype.exclusive = function() { return this.m_exclusive; }
+
+fan.sys.Range.prototype.contains = function(i)
 {
-  return fan.sys.Type.find("sys::Range")
-}
-
-fan.sys.Range.prototype.start = function(size)
-{
-  if (size == null) return this.m_start;
-
-  var x = this.m_start;
-  if (x < 0) x = size + x;
-  if (x > size) throw new fan.sys.IndexErr(this);
-  return x;
-}
-
-fan.sys.Range.prototype.end = function(size)
-{
-  if (size == null) return this.m_end;
-
-  var x = this.m_end;
-  if (x < 0) x = size + x;
-  if (this.m_exclusive) x--;
-  if (x >= size) throw new fan.sys.IndexErr(this);
-  return x;
-}
-
-fan.sys.Range.prototype.toString = function()
-{
-  if (this.m_exclusive)
-    return this.m_start + "..." + this.m_end;
+  if (this.m_start < this.m_end)
+  {
+    if (this.m_exclusive)
+      return this.m_start <= i && i < this.m_end;
+    else
+      return this.m_start <= i && i <= this.m_end;
+  }
   else
-    return this.m_start + ".." + this.m_end;
+  {
+    if (this.m_exclusive)
+      return this.m_end < i && i <= this.m_start;
+    else
+      return this.m_end <= i && i <= this.m_start;
+  }
+}
+
+fan.sys.Range.prototype.each = function(f)
+{
+  var start = this.m_start;
+  var end   = this.m_end;
+  if (start < end)
+  {
+    if (this.m_exclusive) --end;
+    for (var i=start; i<=end; ++i) f(fan.sys.Int.make(i));
+  }
+  else
+  {
+    if (this.m_exclusive) ++end;
+    for (var i=start; i>=end; --i) f(fan.sys.Int.make(i));
+  }
 }
 
 fan.sys.Range.prototype.toList = function()
@@ -74,27 +111,54 @@ fan.sys.Range.prototype.toList = function()
   else
   {
     if (this.m_exclusive) ++end;
-    for (var i=start; i>=end; --i) acc.add(fan.sys.Int.make(i));
+    for (var i=start; i>=end; --i) acc.push(fan.sys.Int.make(i));
   }
   return acc;
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Static Methods
-//////////////////////////////////////////////////////////////////////////
+fan.sys.Range.prototype.random = function() { return fan.sys.Int.random(this); }
 
-fan.sys.Range.makeInclusive = function(start, end)
+fan.sys.Range.prototype.equals = function(that)
 {
-  return new fan.sys.Range(start, end, false);
+  if (that instanceof fan.sys.Range)
+  {
+    return this.m_start == that.m_start &&
+           this.m_end == that.m_end &&
+           this.m_exclusive == that.m_exclusive;
+  }
+  return false;
 }
 
-fan.sys.Range.makeExclusive = function(start, end)
+fan.sys.Range.prototype.hash = function() { return (this.m_start << 24) ^ this.m_end; }
+
+fan.sys.Range.prototype.toStr = function()
 {
-  return new fan.sys.Range(start, end, true);
+  if (this.m_exclusive)
+    return this.m_start + "..<" + this.m_end;
+  else
+    return this.m_start + ".." + this.m_end;
 }
 
-fan.sys.Range.make = function(start, end, exclusive)
+fan.sys.Range.prototype.type = function() { return fan.sys.Type.find("sys::Range"); }
+
+fan.sys.Range.prototype.$start = function(size)
 {
-  return new fan.sys.Range(start, end, exclusive);
+  if (size == null) return this.m_start;
+
+  var x = this.m_start;
+  if (x < 0) x = size + x;
+  if (x > size) throw new fan.sys.IndexErr(this);
+  return x;
+}
+
+fan.sys.Range.prototype.$end = function(size)
+{
+  if (size == null) return this.m_end;
+
+  var x = this.m_end;
+  if (x < 0) x = size + x;
+  if (this.m_exclusive) x--;
+  if (x >= size) throw new fan.sys.IndexErr(this);
+  return x;
 }
 

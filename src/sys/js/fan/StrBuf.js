@@ -99,8 +99,8 @@ fan.sys.StrBuf.prototype.remove = function(i)
 
 fan.sys.StrBuf.prototype.removeRange = function(r)
 {
-  var s = r.start(this.m_str.length);
-  var e = r.end(this.m_str.length);
+  var s = r.$start(this.m_str.length);
+  var e = r.$end(this.m_str.length);
   var n = e - s + 1;
   if (s < 0 || n < 0) throw fan.sys.IndexErr.make(r);
   this.m_str = this.m_str.substr(0,s) + this.m_str.substr(e+1);

@@ -809,8 +809,8 @@ fan.sys.Uri.prototype.slice = function(range, forcePathAbs)
     throw fan.sys.Err.make("Uri has no path: " + this);
 
   var size = this.m_path.length;
-  var s = range.start(size);
-  var e = range.end(size);
+  var s = range.$start(size);
+  var e = range.$end(size);
   var n = e - s + 1;
   if (n < 0) throw fan.sys.IndexErr.make(range);
 
