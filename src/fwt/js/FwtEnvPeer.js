@@ -74,7 +74,6 @@ fan.fwt.FwtEnvPeer.prototype.imageResize = function(self, fanImg, size)
 {
   // generate a unique uri as the key for the new image
   var uri = fan.fwt.FwtEnvPeer.nextMemUriStr();
-  uri = fan.fwt.FwtEnvPeer.nextMemUriStr();
 
   // get the original js image
   var jsOrig = fan.fwt.FwtEnvPeer.loadImage(fanImg)
@@ -95,7 +94,7 @@ fan.fwt.FwtEnvPeer.prototype.imageResize = function(self, fanImg, size)
   fan.fwt.FwtEnvPeer.imgCache[uri] = jsNew;
 
   // create new Fan wrapper which references jsNew via uri
-  return fan.gfx.Image.makeUri(fan.sys.Uri.fromStr(uri));
+  return fan.gfx.Image.makeUri(uri);
 }
 
 //////////////////////////////////////////////////////////////////////////
