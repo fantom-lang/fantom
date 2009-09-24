@@ -39,7 +39,9 @@ fan.fwt.Graphics.prototype.brush$  = function(b)
   else if (b instanceof fan.gfx.Pattern)
   {
     var jsImg = fan.fwt.FwtEnvPeer.loadImage(b.m_image);
-    var style = this.cx.createPattern(jsImg, 'repeat');
+    var style = (jsImg.width > 0 && jsImg.height > 0)
+      ? this.cx.createPattern(jsImg, 'repeat')
+      : "rgba(0,0,0,0)";
     this.cx.fillStyle = style;
     this.cx.strokeStyle = style;
   }
@@ -173,7 +175,8 @@ fan.fwt.Graphics.prototype.drawText = function (s, x, y)
 fan.fwt.Graphics.prototype.drawImage = function (fanImg, x, y)
 {
   var jsImg = fan.fwt.FwtEnvPeer.loadImage(fanImg);
-  this.cx.drawImage(jsImg, x, y)
+  if (jsImg.width > 0 && jsImg.height > 0)
+    this.cx.drawImage(jsImg, x, y)
   return this;
 }
 
@@ -181,7 +184,8 @@ fan.fwt.Graphics.prototype.drawImage = function (fanImg, x, y)
 fan.fwt.Graphics.prototype.copyImage = function (fanImg, src, dst)
 {
   var jsImg = fan.fwt.FwtEnvPeer.loadImage(fanImg);
-  this.cx.drawImage(jsImg, src.m_x, src.m_y, src.m_w, src.m_h, dst.m_x, dst.m_y, dst.m_w, dst.m_h)
+  if (jsImg.width > 0 && jsImg.height > 0)
+    this.cx.drawImage(jsImg, src.m_x, src.m_y, src.m_w, src.m_h, dst.m_x, dst.m_y, dst.m_w, dst.m_h)
   return this;
 }
 
