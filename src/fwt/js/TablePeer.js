@@ -182,6 +182,11 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         {
           // normal text node
           td.appendChild(document.createTextNode(model.text(c,r)));
+
+          // style overrides
+          var bg = model.bg(c,r); if (bg != null) td.style.background = bg.toCss();
+          var fg = model.fg(c,r); if (fg != null) td.style.color = fg.toCss();
+          var font = model.font(c,r); if (font != null) td.style.font = font.toStr();
         }
         else
         {
