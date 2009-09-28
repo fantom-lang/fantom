@@ -280,7 +280,7 @@ fan.fwt.TableSelection.prototype.toggle = function(event)
     var on  = target.checked;
     var tr  = target.parentNode.parentNode;
     var row = tr.rowIndex;
-    if (this.table.peer.headerVisible) row--; // account for th row
+    if (this.table.peer.m_headerVisible) row--; // account for th row
     this.table.peer.m_selected = this.select(on ? [row] : []);
     this.notify(row);
   //}
@@ -290,7 +290,7 @@ fan.fwt.TableSelection.prototype.select = function(rows)
 {
   var selected = [];
   var tbody = this.table.peer.elem.firstChild.firstChild;
-  var start = this.table.peer.headerVisible ? 1 : 0; // skip th row
+  var start = this.table.peer.m_headerVisible ? 1 : 0; // skip th row
   for (var i=start; i<tbody.childNodes.length; i++)
   {
     var row = i-start;
