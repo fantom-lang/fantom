@@ -98,12 +98,12 @@ fan.sys.Float.fromStr = function(s, checked)
   if (s == "NaN") return fan.sys.Float.nan;
   if (s == "INF") return fan.sys.Float.posInf;
   if (s == "-INF") return fan.sys.Float.negInf;
-  // temp check till we get correct algorithm
-  if (/^[0-9]+\.[0-9]+$/.test(s) == false)
-  {
-    if (checked != null && !checked) return null;
-    throw new fan.sys.ParseErr("Float", s);
-  }
+//  // temp check till we get correct algorithm
+//  if (/^[0-9]+\.?[0-9]*$/.test(s) == false)
+//  {
+//    if (checked != null && !checked) return null;
+//    throw new fan.sys.ParseErr("Float", s);
+//  }
   var num = parseFloat(s);
   if (isNaN(num))
   {
