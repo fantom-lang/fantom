@@ -136,6 +136,7 @@ fan.sys.Float.m_negInf = fan.sys.Float.make(Number.NEGATIVE_INFINITY);
 fan.sys.Float.m_nan    = fan.sys.Float.make(Number.NaN);
 fan.sys.Float.m_e      = fan.sys.Float.make(Math.E);
 fan.sys.Float.m_pi     = fan.sys.Float.make(Math.PI);
+fan.sys.Float.m_defVal = 0;
 
 fan.sys.Int.m_maxVal = new Long(0x7fffffff, 0xffffffff);
 fan.sys.Int.m_minVal = new Long(0x80000000, 0x00000000);
