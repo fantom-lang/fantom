@@ -262,17 +262,31 @@ public class FCodeEmit
     AttrEmit attr = code.emitAttr("LocalVariableTable");
     Box info = attr.info;
     FMethodVar[] vars = fmethod.vars;
-    int offset = fmethod.isStatic() ? 0 : 1;
+    int num = vars.length;  // num of vars including implicit this
+    int offset = 0;         // offset if including implicit this
+    if (!fmethod.isStatic()) { ++offset; ++num; }
 
     // Fan variables never reuse stack registers, so
     // we can declare their scope across entire method
-    info.u2(vars.length);
-    info.grow(info.len + vars.length*10);
+    int start = 0;
+    int end = code.info.len-2-2-4; // max stack, max locals, code len
+
+    info.u2(num);
+    info.grow(info.len + num*10);
+    if (!fmethod.isStatic())
+    {
+      // implicit this
+      info.u2(start);
+      info.u2(end);
+      info.u2(code.emit.utf("this"));
+      info.u2(code.emit.utf(pod.typeRef(parent.type.self).jsig()));
+      info.u2(0);
+    }
     for (int i=0; i<vars.length; ++i)
     {
       FMethodVar var = vars[i];
-      info.u2(0);
-      info.u2(code.info.len-2-2-4); // max stack, max locals, code len
+      info.u2(start);
+      info.u2(end);
       info.u2(code.emit.utf(var.name));
       info.u2(code.emit.utf(pod.typeRef(var.type).jsig()));
       info.u2(i+offset);
