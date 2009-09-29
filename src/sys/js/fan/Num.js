@@ -27,11 +27,11 @@ fan.sys.Num.prototype.type = function()
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.Num.toDecimal = function(val) { return val; }
-fan.sys.Num.toFloat = function(val) { return val; }
+fan.sys.Num.toFloat = function(val) { return fan.sys.Float.make(val.valueOf()); }
 fan.sys.Num.toInt = function(val)
 {
   if (isNaN(val)) return 0;
-  if (val == Number.POSITIVE_INFINITY) return fan.sys.Int.maxVal;
-  if (val == Number.NEGATIVE_INFINITY) return fan.sys.Int.minVal;
+  if (val == Number.POSITIVE_INFINITY) return fan.sys.Int.m_maxVal;
+  if (val == Number.NEGATIVE_INFINITY) return fan.sys.Int.m_minVal;
   return Math.floor(val);
 }
