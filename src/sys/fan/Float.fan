@@ -101,6 +101,20 @@ const final class Float : Num
   **
   ** Compare based on floating point value.
   **
+  ** NaN works as follows:
+  **   - for the '<=>' operator NaN is always less than other
+  **     values and equal to itself (so sort works as expected)
+  **   - for all other comparison operators anything compared
+  **     against NaN is false (normal Java semanatics)
+  **
+  ** Examples:
+  **   Float.nan <=> Float.nan  =>  0
+  **   2f <=> Float.nan         =>  1
+  **   Float.nan <=> 2f         =>  -1
+  **   2f < Float.nan           =>  false
+  **   Float.nan < 2f           =>  false
+  **   Float.nan <= Float.nan   =>  false
+  **
   override Int compare(Obj obj)
 
   **
