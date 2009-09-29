@@ -369,7 +369,22 @@ class JsExpr : JsNode
           return
         }
       }
-      if (se.op.degree == 1) { out.w(se.opToken); expr(lhs); return }
+      if (se.op.degree == 1)
+      {
+        if (se.opToken == Token.minus && se.target.ctype?.qname == "sys::Float")
+        {
+          // TODO: optimize -(literal) case
+          out.w("fan.sys.Float.negate(")
+          expr(lhs)
+          out.w(")")
+        }
+        else
+        {
+          out.w(se.opToken)
+          expr(lhs)
+        }
+        return
+      }
       if (se.op.degree == 2)
       {
         out.w("(")

@@ -129,10 +129,10 @@ fan.sys.Obj.compare = function(self, that)
     if (that == null) return +1;
     return self.compare(that);
   }
-//  else if ((typeof self) == "number")
-//  {
-//    return fan.sys.Float.compare(self, that);
-//  }
+  else if (self != null && self.$fanType != null)
+  {
+    return fan.sys.Float.compare(self, that);
+  }
   else
   {
     if (self == null)

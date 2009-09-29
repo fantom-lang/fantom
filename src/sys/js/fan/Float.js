@@ -36,7 +36,8 @@ fan.sys.Float.prototype.type = function()
 
 fan.sys.Float.equals = function(self, that)
 {
-  if (that != null && self.$fanType == that.$fanType)
+  // TODO: either ignore type or wrap everything with Float.make()
+  if (that != null)// && self.$fanType == that.$fanType)
   {
     if (isNaN(self) || isNaN(that)) return false;
     return self.valueOf() == that.valueOf();
@@ -74,6 +75,7 @@ fan.sys.Float.log   = function(self) { return Math.log(self); }
 fan.sys.Float.log10 = function(self) { return Math.log(self) / Math.LN10; }
 fan.sys.Float.min   = function(self, that) { return Math.min(self, that); }
 fan.sys.Float.max   = function(self, that) { return Math.max(self, that); }
+fan.sys.Float.negate = function(self) { return fan.sys.Float.make(-self); }
 fan.sys.Float.pow   = function(self, exp) { return Math.pow(self, exp); }
 fan.sys.Float.round = function(self) { return Math.round(self); }
 fan.sys.Float.sqrt  = function(self) { return Math.sqrt(self); }
@@ -95,30 +97,33 @@ fan.sys.Float.toRadians = function(self) { return self * Math.PI / 180; }
 
 fan.sys.Float.fromStr = function(s, checked)
 {
-  if (s == "NaN") return fan.sys.Float.nan;
-  if (s == "INF") return fan.sys.Float.posInf;
-  if (s == "-INF") return fan.sys.Float.negInf;
-//  // temp check till we get correct algorithm
-//  if (/^[0-9]+\.?[0-9]*$/.test(s) == false)
-//  {
-//    if (checked != null && !checked) return null;
-//    throw new fan.sys.ParseErr("Float", s);
-//  }
-  var num = parseFloat(s);
-  if (isNaN(num))
+  if (s == "NaN") return fan.sys.Float.m_nan;
+  if (s == "INF") return fan.sys.Float.m_posInf;
+  if (s == "-INF") return fan.sys.Float.m_negInf;
+  if (isNaN(s))
   {
     if (checked != null && !checked) return null;
     throw new fan.sys.ParseErr("Float", s);
   }
-  return num;
+  return parseFloat(s);
 }
 
 fan.sys.Float.toStr = function(self)
 {
   if (isNaN(self)) return "NaN";
-  if (self == fan.sys.Float.posInf) return "INF";
-  if (self == fan.sys.Float.negInf) return "-INF";
+  if (self == fan.sys.Float.m_posInf) return "INF";
+  if (self == fan.sys.Float.m_negInf) return "-INF";
   return ""+self;
+}
+
+fan.sys.Float.toCode = function(self)
+{
+  if (isNaN(self)) return "Float.nan";
+  if (self == fan.sys.Float.m_posInf) return "Float.posInf";
+  if (self == fan.sys.Float.m_negInf) return "Float.negInf";
+  var s = ""+self
+  if (s.indexOf(".") == -1) s += ".0";
+  return s + "f";
 }
 
 //////////////////////////////////////////////////////////////////////////
