@@ -235,6 +235,7 @@ abstract class BuildPod : BuildScript
     stubDir := stubOnly ? libJavaDir : jtemp
     Exec(this, [javaExe.osPath,
                      "-cp", (libJavaDir + `sys.jar`).osPath,
+                     "-Dfan.home=$Repo.working.home.osPath",
                      "fanx.tools.Jstub",
                      "-d", stubDir.osPath,
                      podName]).run
