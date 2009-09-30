@@ -20,7 +20,7 @@ fan.fwt.TablePeer.prototype.m_headerVisible = true;
 fan.fwt.TablePeer.prototype.headerVisible   = function(self) { return this.m_headerVisible; }
 fan.fwt.TablePeer.prototype.headerVisible$  = function(self, val) { this.m_headerVisible = val; }
 
-fan.fwt.TablePeer.prototype.m_selected = true;
+fan.fwt.TablePeer.prototype.m_selected = true; // TODO fix
 fan.fwt.TablePeer.prototype.selected   = function(self) { return this.m_selected; }
 fan.fwt.TablePeer.prototype.selected$  = function(self, val)
 {
@@ -322,7 +322,7 @@ fan.fwt.TableSelection.prototype.select = function(rows)
     for (var c=0; c<tr.childNodes.length-1; c++)
       tr.childNodes[c].style.borderColor = br;
   }
-  return selected;
+  return fan.sys.List.make(fan.sys.Type.find("sys::Int"), selected);
 }
 
 fan.fwt.TableSelection.prototype.notify = function(primaryIndex)
