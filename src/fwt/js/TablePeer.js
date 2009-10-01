@@ -275,20 +275,32 @@ fan.fwt.TableSelection.prototype.$ctor = function(table) { this.table = table; }
 
 fan.fwt.TableSelection.prototype.toggle = function(event)
 {
-  // TODO - support multiple selection
-  //if (this.table.multi)
-  //{
-  //}
-  //else
-  //{
-    var target = event.target ? event.target : event.srcElement;
-    var on  = target.checked;
-    var tr  = target.parentNode.parentNode;
-    var row = tr.rowIndex;
-    if (this.table.peer.m_headerVisible) row--; // account for th row
-    this.table.peer.m_selected = this.select(on ? [row] : []);
+  var target = event.target ? event.target : event.srcElement;
+  var multi  = this.table.m_multi && event.ctrlKey;
+  var on  = target.checked;
+  var tr  = target.parentNode.parentNode;
+  var row = tr.rowIndex;
+  if (this.table.peer.m_headerVisible) row--; // account for th row
+  var list = null;
+
+  if (multi)
+  {
+    list = this.table.peer.m_selected;
+    var found = false;
+    for (var i=0; i<list.length; i++)
+      if (list[i] == row)
+        { list.splice(i,1); found=true; }
+    if (!found) list.push(row);
+    this.table.peer.m_selected = this.select(list);
     this.notify(row);
-  //}
+  }
+  else
+  {
+    list = (this.table.m_multi || on) ? [row] : [];
+  }
+
+  this.table.peer.m_selected = this.select(list);
+  this.notify(row);
 }
 
 fan.fwt.TableSelection.prototype.select = function(rows)
