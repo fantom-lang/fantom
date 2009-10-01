@@ -17,7 +17,11 @@ fan.fwt.ComboPeer.prototype.font$  = function(self, val) { this.m_font = val; }
 fan.fwt.ComboPeer.prototype.m_font = null;
 
 fan.fwt.ComboPeer.prototype.items   = function(self) { return this.m_items; }
-fan.fwt.ComboPeer.prototype.items$  = function(self, val) { this.m_items = val; }
+fan.fwt.ComboPeer.prototype.items$  = function(self, val)
+{
+  this.m_items = val;
+  this.needsRebuild = true;
+}
 fan.fwt.ComboPeer.prototype.m_items = null;
 
 fan.fwt.ComboPeer.prototype.selectedIndex   = function(self) { return this.m_selectedIndex; }
@@ -42,7 +46,8 @@ fan.fwt.ComboPeer.prototype.create = function(parentElem)
   return div;
 }
 
-fan.fwt.ComboPeer.prototype.sync = function(self)
+fan.fwt.ComboPeer.prototype.needsRebuild = true;
+fan.fwt.ComboPeer.prototype.rebuild = function(self)
 {
   // sync props
   var select = this.elem.firstChild;
@@ -59,6 +64,19 @@ fan.fwt.ComboPeer.prototype.sync = function(self)
     option.appendChild(document.createTextNode(this.m_items[i]));
     select.appendChild(option);
   }
+}
+
+fan.fwt.ComboPeer.prototype.sync = function(self)
+{
+  if (this.needsRebuild)
+  {
+    this.rebuild();
+    this.needsRebuild = false;
+  }
+
+  // sync props
+  var select = this.elem.firstChild;
+  select.disabled = !this.m_enabled;
 
   // set selectedIndex to self to sync
   this.selectedIndex$(self, this.m_selectedIndex);
