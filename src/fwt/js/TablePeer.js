@@ -25,7 +25,11 @@ fan.fwt.TablePeer.prototype.selected   = function(self) { return this.m_selected
 fan.fwt.TablePeer.prototype.selected$  = function(self, val)
 {
   this.m_selected = val;
-  if (this.selection != null) this.selection.select(val);
+  if (this.selection != null)
+  {
+    this.selection.select(val);
+    if (val.length > 0) this.selection.last = val[0];
+  }
 }
 
 fan.fwt.TablePeer.prototype.create = function(parentElem)
@@ -271,12 +275,16 @@ fan.fwt.TablePeer.prototype.makeDot = function()
 //////////////////////////////////////////////////////////////////////////
 
 fan.fwt.TableSelection = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
-fan.fwt.TableSelection.prototype.$ctor = function(table) { this.table = table; }
+fan.fwt.TableSelection.prototype.$ctor = function(table)
+{
+  this.table = table;
+  this.last = null;
+}
 
 fan.fwt.TableSelection.prototype.toggle = function(event)
 {
   var target = event.target ? event.target : event.srcElement;
-  var multi  = this.table.m_multi && event.ctrlKey;
+  var multi  = this.table.m_multi && (event.ctrlKey || event.shiftKey);
   var on  = target.checked;
   var tr  = target.parentNode.parentNode;
   var row = tr.rowIndex;
@@ -285,21 +293,32 @@ fan.fwt.TableSelection.prototype.toggle = function(event)
 
   if (multi)
   {
-    list = this.table.peer.m_selected;
-    var found = false;
-    for (var i=0; i<list.length; i++)
-      if (list[i] == row)
-        { list.splice(i,1); found=true; }
-    if (!found) list.push(row);
-    this.table.peer.m_selected = this.select(list);
-    this.notify(row);
+    if (event.shiftKey && this.last != null)
+    {
+      list = [];
+      var start = (this.last < row) ? this.last : row;
+      var end   = (this.last < row) ? row : this.last;
+      for (var i=start; i<=end; i++) list.push(i);
+    }
+    else
+    {
+      list = this.table.peer.m_selected;
+      var found = false;
+      for (var i=0; i<list.length; i++)
+        if (list[i] == row)
+          { list.splice(i,1); found=true; }
+      if (!found) list.push(row);
+      this.last = row;
+    }
   }
   else
   {
-    list = (this.table.m_multi || on) ? [row] : [];
+    var hadMulti = this.table.m_multi && this.table.peer.m_selected.length > 1;
+    list = (on || hadMulti) ? [row] : [];
+    this.last = row;
   }
 
-  this.table.peer.m_selected = this.select(list);
+  this.table.peer.m_selected = this.select(list);  // keep list sorted
   this.notify(row);
 }
 
