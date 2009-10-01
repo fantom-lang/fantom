@@ -201,7 +201,8 @@ fan.fwt.WidgetPeer.prototype.emptyDiv = function()
 fan.fwt.WidgetPeer.prototype.detach = function(self)
 {
   var elem = self.peer.elem;
-  elem.parentNode.removeChild(elem);
+  if (elem != null)
+    elem.parentNode.removeChild(elem);
   delete self.peer.elem;
 }
 
