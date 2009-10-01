@@ -68,9 +68,11 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
     if (this.m_text.length > 0)
     {
       img.style.verticalAlign = "middle";
-      img.onload = function() {
-        img.style.paddingRight = Math.floor(img.height*3/16) + "px";
-      }
+      img.style.paddingRight  = "3px";
+      // TODO: this requires widget to be relayed out cause prefSize has changed
+      //img.onload = function() {
+      //  img.style.paddingRight = Math.floor(img.height*3/16) + "px";
+      //}
     }
     img.border = "0";
     img.src = this.m_image.m_uri;
