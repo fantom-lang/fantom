@@ -132,6 +132,14 @@ fan.sys.Map.prototype.set = function(key, val)
   return this;
 }
 
+fan.sys.Map.prototype.remove = function(key)
+{
+  var v = this.map[key];
+  delete this.keyMap[key];
+  delete this.map[key];
+  return v;
+}
+
 fan.sys.Map.prototype.isEmpty = function() { return this.size() == 0; }
 fan.sys.Map.prototype.size = function()
 {
