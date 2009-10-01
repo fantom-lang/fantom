@@ -368,14 +368,19 @@ fan.fwt.TableSupport.prototype.popup = function()
     var rows = [];
     var len  = table.model().numRows();
     for (var i=0; i<len; i++) rows.push(i);
-    table.peer.selection.select(rows);
+    table.peer.m_selected = table.peer.selection.select(rows);
+    table.peer.selection.notify(0);
   },
   [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
 
   var selectNone = fan.fwt.MenuItem.make();
   selectNone.text$("Select None");
-  selectNone.onAction().add(fan.sys.Func.make(function(it) { table.peer.selection.select([]); },
-    [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
+  selectNone.onAction().add(fan.sys.Func.make(function(it)
+  {
+    table.peer.m_selected = table.peer.selection.select([]);
+    table.peer.selection.notify(0);
+  },
+  [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
 
   var xport = fan.fwt.MenuItem.make();
   xport.text$("Export");
