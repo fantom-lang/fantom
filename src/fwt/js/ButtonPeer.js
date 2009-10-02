@@ -21,7 +21,11 @@ fan.fwt.ButtonPeer.prototype.image$ = function(self, val) { this.m_image = val; 
 fan.fwt.ButtonPeer.prototype.m_image = null;
 
 fan.fwt.ButtonPeer.prototype.selected = function(self) { return this.m_selected; }
-fan.fwt.ButtonPeer.prototype.selected$ = function(self, val) { this.m_selected = val; }
+fan.fwt.ButtonPeer.prototype.selected$ = function(self, val)
+{
+  this.m_selected = val;
+  if (this.elem != null) this.sync(self);
+}
 fan.fwt.ButtonPeer.prototype.m_selected = false;
 
 fan.fwt.ButtonPeer.prototype.text = function(self) { return this.m_text; }
