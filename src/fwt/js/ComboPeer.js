@@ -81,8 +81,21 @@ fan.fwt.ComboPeer.prototype.sync = function(self)
   // set selectedIndex to self to sync
   this.selectedIndex$(self, this.m_selectedIndex);
 
-  // sync changes back to widget
-  select.onchange = function() { self.selectedIndex$(select.selectedIndex); }
+  select.onchange = function()
+  {
+    // sync changes back to widget
+    self.selectedIndex$(select.selectedIndex);
+
+    // fire onModify
+    if (self.m_onModify.size() > 0)
+    {
+      var me = fan.fwt.Event.make();
+      me.m_id = fan.fwt.EventId.m_modified;
+      me.m_widget = self;
+      var list = self.m_onModify.list();
+      for (var i=0; i<list.length; i++) list[i](me);
+    }
+  }
 
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
