@@ -194,7 +194,7 @@ public class Process
         try
         {
           int n = in.read(temp, 0, temp.length);
-          if (n < 0) break;
+          if (n < 0) { if (out != null) out.flush(); break; }
           if (out != null) out.write(temp, 0, n);
         }
         catch (Throwable e)
