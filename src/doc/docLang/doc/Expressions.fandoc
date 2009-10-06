@@ -296,7 +296,7 @@ creates sub-strings:
   s[start..<end] => "ab"
 
 We use '..' to specify an inclusive end index, and '..<' to specify
-an exclusive start index.  Also note how we can use any arbitrary expression
+an exclusive end index.  Also note how we can use any arbitrary expression
 with the range operators to define compact slice expressions.
 
 By convention Fan APIs which support integer indexing allow the use of negative
