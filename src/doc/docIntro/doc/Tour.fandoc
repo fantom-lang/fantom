@@ -45,7 +45,9 @@ level scripting languages:
   5sec                // Duration literal
   `/dir/file.txt`     // Uri literal
   [0, 1, 2]           // List literal
+  [,]                 // List literal for empty list
   [1:"one", 2:"two"]  // Map literal
+  [:]                 // Map literal for empty map
   Int#                // Type literal
   Int#plus            // Slot literal
 
