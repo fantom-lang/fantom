@@ -28,7 +28,7 @@ const final class Int : Num
   ** integer values (both negative and positive) are produced with
   ** equal probability.  If range is non-null, then the result
   ** is guaranteed to be inclusive of the range.  Also see
-  ** `Range.random` and `List.random`.
+  ** `Float.random`, `Range.random`, and `List.random`.
   **
   ** Examples:
   **   r := Int.random

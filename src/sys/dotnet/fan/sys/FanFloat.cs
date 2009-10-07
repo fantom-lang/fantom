@@ -51,6 +51,9 @@ namespace Fan.Sys
       return BitConverter.ToSingle(BitConverter.GetBytes(bits), 0);
     }
 
+    public static double random() { return rand.NextDouble(); }
+    static readonly Random rand = new System.Random();
+
   //////////////////////////////////////////////////////////////////////////
   // Identity
   //////////////////////////////////////////////////////////////////////////
