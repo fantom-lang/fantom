@@ -388,10 +388,10 @@ public class RichTextPeer
     TextChangingEvent te = new TextChangingEvent(content);
     te.start            = (int)tc.startOffset;
     te.replaceCharCount = tc.oldText.length();
-    te.replaceLineCount = tc.oldNumNewlines.intValue();
+    te.replaceLineCount = tc.oldNumNewlines().intValue();
     te.newText          = tc.newText;
     te.newCharCount     = tc.newText.length();
-    te.newLineCount     = tc.newNumNewlines.intValue();
+    te.newLineCount     = tc.newNumNewlines().intValue();
 
     // fire SWT changing event
     content.fireTextChanging(te);
