@@ -118,6 +118,26 @@ namespace Fan.Sys
       }
     }
 
+    public List map(Func f)
+    {
+      long start = m_start;
+      long end = m_end;
+      Type r = f.returns();
+      if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
+      List acc = new List(r);
+      if (start < end)
+      {
+        if (m_exclusive) --end;
+        for (long i=start; i<=end; ++i) acc.add(f.call(i));
+      }
+      else
+      {
+        if (m_exclusive) ++end;
+        for (long i=start; i>=end; --i) acc.add(f.call(i));
+      }
+      return acc;
+    }
+
     public List toList()
     {
       int start = (int)m_start;

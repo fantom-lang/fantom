@@ -117,6 +117,16 @@ const final class Range
   Void each(|Int i| c)
 
   **
+  ** Create a new list which is the result of calling c for
+  ** every integer in the range.  The new list is typed based on
+  ** the return type of c.
+  **
+  ** Example:
+  **   (10..15).map |i->Str| { i.toHex }  =>  Str[a, b, c, d, e, f]
+  **
+  Obj?[] map(|Int i->Obj?| c)
+
+  **
   ** Convert this range into a list of Ints.
   **
   ** Example:
