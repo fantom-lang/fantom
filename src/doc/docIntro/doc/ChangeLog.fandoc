@@ -720,5 +720,6 @@
 - Map.getOrAdd
 - FWT javascript enhancements
 - Float.random
+- Random.map
 
 

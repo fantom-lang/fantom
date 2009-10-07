@@ -237,7 +237,7 @@ class ListTest : Test
     verifyEq(z.type.method("insert").params[1].of, Duration[]#)
     verifyEq(z.type.method("removeAt").returns,    Duration[]#)
     verifyEq(z.type.method("each").params[0].of, |Duration[] a, Int i->Void|#)
-    verifyEq(z.type.method("map").returns, List#)
+    verifyEq(z.type.method("map").returns, Obj?[]#)
     verifyNotEq(z.type.method("map").returns, Duration[]#)
     verifyNotEq(z.type.method("each").params[0].of, |Obj a, Int i->Void|#)
   }

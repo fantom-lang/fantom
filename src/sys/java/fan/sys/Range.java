@@ -115,6 +115,24 @@ public final class Range
     }
   }
 
+  public final List map(Func f)
+  {
+    Type r = f.returns();
+    if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
+    List acc = new List(r);
+    if (start < end)
+    {
+      if (exclusive) --end;
+      for (long i=start; i<=end; ++i) acc.add(f.call(Long.valueOf(i)));
+    }
+    else
+    {
+      if (exclusive) ++end;
+      for (long i=start; i>=end; --i) acc.add(f.call(Long.valueOf(i)));
+    }
+    return acc;
+  }
+
   public final List toList()
   {
     long start = this.start;

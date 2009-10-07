@@ -435,7 +435,7 @@ final class List
   **   list := [3, 4, 5]
   **   list.map |Int v->Int| { return v*2 } => [6, 8, 10]
   **
-  List map(|V item, Int index->Obj?| c)
+  Obj?[] map(|V item, Int index->Obj?| c)
 
   **
   ** Reduce is used to iterate through every item in the list

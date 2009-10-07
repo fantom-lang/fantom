@@ -320,7 +320,7 @@ final class Map
   **   x := m.map |Int v->Int| { return v*2 }
   **   x => [2:4, 3:6, 4:8]
   **
-  Map map(|V val, K key->Obj?| c)
+  Obj:Obj? map(|V val, K key->Obj?| c)
 
 //////////////////////////////////////////////////////////////////////////
 // Readonly

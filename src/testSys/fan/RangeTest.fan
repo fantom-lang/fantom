@@ -101,6 +101,15 @@
     verifyEq(list, [6, 5, 4])
   }
 
+  Void testMap()
+  {
+    verifyEq((0..3).map { it.toStr }, Obj?["0", "1", "2", "3"])
+    verifyEq((0..<3).map { it.toStr }, Obj?["0", "1", "2"])
+    verifyEq((0..<3).map |i->Str| { i.toStr }, Str["0", "1", "2"])
+    verifyEq((9..7).map |i->Float| { i.toFloat }, Float[9f, 8f, 7f])
+    verifyEq((9..<7).map |i->Float| { i.toFloat }, Float[9f, 8f])
+  }
+
   Void testRange()
   {
     verifyEq((0..0).toList, [0])
