@@ -43,6 +43,11 @@ const final class Float : Num
   static Float? fromStr(Str s, Bool checked := true)
 
   **
+  ** Generate a random float between 0.0 inclusive and 1.0 exclusive.
+  **
+  static Float random()
+
+  **
   ** Default value is 0f.
   **
   static const Float defVal

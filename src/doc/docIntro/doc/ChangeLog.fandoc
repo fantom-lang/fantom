@@ -719,5 +719,6 @@
 - Range.fromStr
 - Map.getOrAdd
 - FWT javascript enhancements
+- Float.random
 
 
