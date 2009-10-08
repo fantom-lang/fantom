@@ -79,7 +79,14 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
     parent.appendChild(img);
   }
 
-  var text = document.createTextNode(this.m_text);
+  // to keep height consisten for empty labels
+  var text;
+  if (this.m_text == "" && this.m_image == null)
+  {
+    text = document.createElement("span");
+    text.innerHTML = "&nbsp;"
+  }
+  else text = document.createTextNode(this.m_text);
   parent.appendChild(text);
 
   // apply fg to parent elem to make <a> color correctly
