@@ -10,7 +10,10 @@
  * TablePeer.
  */
 fan.fwt.TablePeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
-fan.fwt.TablePeer.prototype.$ctor = function(self) {}
+fan.fwt.TablePeer.prototype.$ctor = function(self)
+{
+  this.inPrefSize = false;
+}
 
 // TODO
 //fan.fwt.TablePeer.prototype.colAt = function(self, pos) {}
@@ -30,6 +33,14 @@ fan.fwt.TablePeer.prototype.selected$  = function(self, val)
     this.selection.select(val);
     if (val.length > 0) this.selection.last = val[0];
   }
+}
+
+fan.fwt.TablePeer.prototype.prefSize = function(self, hints)
+{
+  this.inPrefSize = true;
+  var pref = fan.fwt.WidgetPeer.prototype.prefSize.call(this, self, hints);
+  this.inPrefSize = false;
+  return pref;
 }
 
 fan.fwt.TablePeer.prototype.create = function(parentElem)
@@ -76,7 +87,7 @@ fan.fwt.TablePeer.prototype.sync = function(self)
   }
 
   // no border if content not visible
-  if (this.m_size.m_w == 0 || this.m_size.m_h == 0)
+  if (this.m_size.m_w == 0 || this.m_size.m_h == 0 && !this.inPrefSize)
     this.elem.style.borderWidth = "0px";
   else
     this.elem.style.borderWidth = "1px";
