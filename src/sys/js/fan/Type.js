@@ -30,14 +30,15 @@ fan.sys.Type.prototype.$ctor = function(qname, base, mixins)
     mixins[i] = fan.sys.Type.find(mixins[i]);
 
   var s = qname.split("::");
-  this.m_qname   = qname;
-  this.m_pod     = fan.sys.Pod.find(s[0]);
-  this.m_name    = s[1];
-  this.m_base    = base == null ? null : fan.sys.Type.find(base);
-  this.m_mixins  = mixins;
-  this.m_slots   = [];
-  this.m_$qname  = 'fan.' + this.m_pod + '.' + this.m_name;
-  this.m_isMixin = false;
+  this.m_qname    = qname;
+  this.m_pod      = fan.sys.Pod.find(s[0]);
+  this.m_name     = s[1];
+  this.m_base     = base == null ? null : fan.sys.Type.find(base);
+  this.m_mixins   = mixins;
+  this.m_slots    = [];
+  this.m_$qname   = 'fan.' + this.m_pod + '.' + this.m_name;
+  this.m_isMixin  = false;
+  this.m_nullable = new fan.sys.NullableType(this);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -58,11 +59,15 @@ fan.sys.Type.prototype.toStr = function()     { return this.signature(); }
 fan.sys.Type.prototype.toLocale = function()  { return this.signature(); }
 fan.sys.Type.prototype.type = function()      { return fan.sys.Type.find("sys::Type"); }
 fan.sys.Type.prototype.toListOf = function()  { return new fan.sys.ListType(this); }
-fan.sys.Type.prototype.emptyList = function() { return new fan.sys.ListType(this); }
+fan.sys.Type.prototype.emptyList = function() { return new fan.sys.List.make(this, []); }
 
 fan.sys.Type.prototype.fits = function(that) { return this.is(that); }
 fan.sys.Type.prototype.is = function(that)
 {
+  // we don't take nullable into account for fits
+  if (that instanceof fan.sys.NullableType)
+    that = that.m_root;
+
   if (this.equals(that)) return true;
 
   // check base class
@@ -91,8 +96,7 @@ fan.sys.Type.isMixin = function(mixin, that)
   return false;
 }
 
-// TODO
-fan.sys.Type.prototype.toNullable = function() { return this; }
+fan.sys.Type.prototype.toNullable = function() { return this.m_nullable; }
 fan.sys.Type.prototype.toNonNullable = function() { return this; }
 
 //////////////////////////////////////////////////////////////////////////
@@ -257,6 +261,51 @@ fan.sys.Type.common = function(objs)
 }
 
 /*************************************************************************
+ * NullableType
+ ************************************************************************/
+
+fan.sys.NullableType = fan.sys.Obj.$extend(fan.sys.Type)
+fan.sys.NullableType.prototype.$ctor = function(root)
+{
+  this.m_root = root;
+  this.m_signature = root.signature() + "?";
+}
+
+fan.sys.NullableType.prototype.pod = function() { return this.m_root.pod(); }
+fan.sys.NullableType.prototype.name = function() { return this.m_root.name(); }
+fan.sys.NullableType.prototype.qname = function() { return this.m_root.qname(); }
+fan.sys.NullableType.prototype.signature = function() { return this.m_signature; }
+fan.sys.NullableType.prototype.flags = function() { return this.m_root.flags(); }
+
+fan.sys.NullableType.prototype.base = function() { return this.m_root.base(); }
+fan.sys.NullableType.prototype.mixins = function() { return this.m_root.mixins(); }
+fan.sys.NullableType.prototype.inheritance = function() { return this.m_root.inheritance(); }
+fan.sys.NullableType.prototype.is = function(type) { return this.m_root.is(type); }
+
+fan.sys.NullableType.prototype.isValue = function() { return this.m_root.isValue(); }
+
+fan.sys.NullableType.prototype.isNullable = function() { return true; }
+fan.sys.NullableType.prototype.toNullable = function() { return this; }
+fan.sys.NullableType.prototype.toNonNullable = function() { return this.m_root; }
+
+fan.sys.NullableType.prototype.isGenericType = function() { return this.m_root.isGenericType(); }
+fan.sys.NullableType.prototype.isGenericInstance = function() { return this.m_root.isGenericInstance(); }
+fan.sys.NullableType.prototype.isGenericParameter = function() { return this.m_root.isGenericParameter(); }
+fan.sys.NullableType.prototype.getRawType = function() { return this.m_root.getRawType(); }
+fan.sys.NullableType.prototype.params = function() { return this.m_root.params(); }
+fan.sys.NullableType.prototype.parameterize = function(params) { return this.m_root.parameterize(params).toNullable(); }
+
+fan.sys.NullableType.prototype.fields = function() { return this.m_root.fields(); }
+fan.sys.NullableType.prototype.methods = function() { return this.m_root.methods(); }
+fan.sys.NullableType.prototype.slots = function() { return this.m_root.slots(); }
+fan.sys.NullableType.prototype.slot = function(name, checked) { return this.m_root.slot(name, checked); }
+
+fan.sys.NullableType.prototype.facets = function(inherited) { return this.m_root.facets(inherited); }
+fan.sys.NullableType.prototype.facet = function(key, def, inherited) { return this.m_root.facet(key, def, inherited); }
+
+fan.sys.NullableType.prototype.doc = function() { return this.m_root.doc(); }
+
+/*************************************************************************
  * ListType
  ************************************************************************/
 
@@ -273,6 +322,12 @@ fan.sys.ListType.prototype.equals = function(that)
     return this.v.equals(that.v);
   else
     return false;
+}
+fan.sys.ListType.prototype.is = function(that)
+{
+  if (that instanceof fan.sys.ListType)
+    return this.v.is(that.v);
+  return fan.sys.Type.prototype.is.call(this, that);
 }
 
 /*************************************************************************
@@ -360,6 +415,7 @@ fan.sys.FuncType.prototype.is = function(that)
   }
   // TODO FIXIT - need to add as FuncType in Type.$af
   if (that.toString() == "sys::Func") return true;
+  if (that.toString() == "sys::Func?") return true;
   return this.base().is(that);
 }
 
