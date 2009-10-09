@@ -29,6 +29,7 @@ class Boot : BootScript
   {
     UriSpace.root.create(`/homePage`, Home#)
     UriSpace.root.create(`/show-script`, ShowScript#)
+    UriSpace.root.create(`/echo`, EchoWeblet#)
   }
 }
 
@@ -77,6 +78,7 @@ class ShowScript : Widget
     out.head
       out.title.w("FWT Demo - $f.name").titleEnd
       out.includeJs(`/sys/pod/sys/sys.js`)
+      out.includeJs(`/sys/pod/dom/dom.js`)
       out.includeJs(`/sys/pod/gfx/gfx.js`)
       out.includeJs(`/sys/pod/fwt/fwt.js`)
       out.style.w(
@@ -134,3 +136,15 @@ class ShowScript : Widget
   Str? js
 }
 
+class EchoWeblet : Weblet
+{
+  override Void onGet()  { print(req.uri.queryStr)  }
+  override Void onPost() { print(req.in.readAllStr) }
+  Void print(Str s)
+  {
+    buf := Buf().printLine(s)
+    res.headers["Content-Length"] = buf.size.toStr
+    res.headers["Content-Type"] = "text/plain"
+    res.out.writeBuf(buf.flip)
+  }
+}

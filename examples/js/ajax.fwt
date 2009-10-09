@@ -1,0 +1,38 @@
+//
+// Copyright (c) 2009, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   9 Oct 09  Andy Frank  Creation
+//
+
+using gfx
+using fwt
+
+class Ajax : Window
+{
+  new make() : super(null, null)
+  {
+    field := Text { prefCols=50 }
+    content = BorderPane
+    {
+      insets = Insets(24)
+      GridPane
+      {
+        Button
+        {
+          text = "Click me!"
+          onAction.add
+          {
+            dom::HttpReq(`/echo`).send("This is from the server!") |res|
+            {
+              field.text = res.content
+            }
+          }
+        },
+        field,
+      },
+    }
+  }
+}
+
