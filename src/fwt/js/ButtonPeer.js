@@ -34,6 +34,12 @@ fan.fwt.ButtonPeer.prototype.m_text = "";
 
 fan.fwt.ButtonPeer.prototype.m_pressed = false;
 
+fan.fwt.ButtonPeer.prototype.prefSize = function(self, hints)
+{
+  var pref = fan.fwt.WidgetPeer.prototype.prefSize.call(this, self, hints);
+  return fan.gfx.Size.make(pref.m_w, 25);
+}
+
 fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
 {
   if (self.m_mode == fan.fwt.ButtonMode.m_push || self.m_mode == fan.fwt.ButtonMode.m_toggle)
@@ -50,17 +56,17 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
   var outer = this.emptyDiv();
   with (outer.style)
   {
-    border = "1px solid #555";
+    paddingRight = "13px";
   }
 
   var inner = document.createElement("div");
   with (inner.style)
   {
-    //font       = "bold 10pt Arial";
+    font       = "bold 10pt Arial";
+    color      = "#333";
     textAlign  = "center";
     cursor     = "default";
     whiteSpace = "nowrap";
-    //textShadow = "0 1px 1px #fff";
     // use repaint for styles that change b/w pressed/unpressed
   }
 
@@ -143,32 +149,33 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
 
     if (pressed)
     {
+      with (outer.style)
+      {
+        var x = outer.offsetWidth-13;
+        background = "url(/s/fwt/res/img/button-right.png) no-repeat " + x + "px -25px";
+        height = "25px";
+      }
       with (inner.style)
       {
-        padding = "3px 3px 2px 5px";
-        borderTop    = "1px solid #a8a8a8";
-        borderLeft   = "1px solid #a8a8a8";
-        borderRight  = "none";
-        borderBottom = "none";
-        backgroundColor = "#c0c0c0";
-
-        // IE workaround
-        try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#c0c0c0), to(#dadada))"; } catch (err) {} // ignore
+        background = "url(/s/fwt/res/img/button-left.png) no-repeat 0 -25px";
+        height = "25px";
+        padding = "5px 0px 0 13px";
       }
     }
     else
     {
+      with (outer.style)
+      {
+        var uri = fan.sys.UriPodBase + "fwt/res/img/button-right.png";
+        background = "url(" + uri + ") no-repeat top right";
+        height = "25px";
+      }
       with (inner.style)
       {
-        padding = "2px 4px";
-        borderTop    = "1px solid #fff";
-        borderLeft   = "1px solid #fff";
-        borderRight  = "1px solid #cacaca";
-        borderBottom = "1px solid #cacaca";
-        backgroundColor = "#eee";
-
-        // IE workaround
-        try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#dadada))"; } catch (err) {} // ignore
+        var uri = fan.sys.UriPodBase + "fwt/res/img/button-left.png";
+        background = "url(" + uri + ") no-repeat";
+        height = "25px";
+        padding = "4px 0px 0 13px";
       }
     }
   }
@@ -199,8 +206,7 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
     this.elem.style.borderColor =  this.m_enabled ? "#555" : "#999";
 
     // account for padding/border
-    w -= 2;
-    h -= 2;
+    w -= 13;
   }
   else if (self.m_mode == fan.fwt.ButtonMode.m_check ||
            self.m_mode == fan.fwt.ButtonMode.m_radio)

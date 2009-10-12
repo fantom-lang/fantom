@@ -15,7 +15,7 @@
 @podSrcDirs  = [`fan/`, `test/`]
 @podJavaDirs = [`java/`]
 @podJsDirs   = [`js/`]
-@podResDirs  = [`locale/`, `res/javafx/`]
+@podResDirs  = [`locale/`, `res/img/`, `res/javafx/`]
 @js
 
 pod fwt {}
