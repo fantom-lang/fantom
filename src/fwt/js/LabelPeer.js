@@ -58,6 +58,18 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
   {
     var a = document.createElement("a");
     a.href = self.m_uri.toStr();
+    try
+    {
+      if (self.m_underline == fan.fresco.UnderlineMode.m_none) a.style.textDecoration = "none";
+      else if (self.m_underline == fan.fresco.UnderlineMode.m_hover)
+      {
+        a.style.textDecoration = "none";
+        a.onmouseover = function() { a.style.textDecoration = "underline"; }
+        a.onmouseout  = function() { a.style.textDecoration = "none"; }
+      }
+    }
+    catch (err) {} // ignore
+
     parent.appendChild(a);
     parent = a;
   }
