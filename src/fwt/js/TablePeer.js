@@ -148,7 +148,9 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       }
       else
       {
-        fix.appendChild(document.createTextNode(model.header(c)));
+        var s = model.header(c);
+        if (s.length == 0) fix.innerHTML = "&nbsp;"
+        else fix.appendChild(document.createTextNode(s));
       }
       var th = document.createElement("th");
       with (th.style)
