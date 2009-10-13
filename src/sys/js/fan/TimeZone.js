@@ -34,7 +34,7 @@ fan.sys.TimeZone.listFullNames = function()
 
 fan.sys.TimeZone.fromStr = function(name, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
 
   // check cache first
   var tz = fan.sys.TimeZone.cache[name];

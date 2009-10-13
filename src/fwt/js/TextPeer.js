@@ -17,7 +17,7 @@ fan.fwt.TextPeer.prototype.text$ = function(self, val, sync)
 {
   this.m_text = val;
 
-  if (sync == undefined) sync = true;
+  if (sync === undefined) sync = true;
   if (sync && this.elem != null && this.elem.firstChild != null)
     this.elem.firstChild.value = this.m_text;
 }

@@ -214,8 +214,8 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
 {
   with (this.elem.style)
   {
-    if (w == undefined) w = this.m_size.m_w;
-    if (h == undefined) h = this.m_size.m_h;
+    if (w === undefined) w = this.m_size.m_w;
+    if (h === undefined) h = this.m_size.m_h;
 
     // TEMP fix for IE
     if (w < 0) w = 0;

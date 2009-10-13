@@ -20,7 +20,7 @@ fan.sys.MimeType.prototype.type = function() { return fan.sys.Type.find("sys::Mi
 
 fan.sys.MimeType.fromStr = function(s, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
   try
   {
     // common interned mime types
@@ -69,7 +69,7 @@ fan.sys.MimeType.fromStr = function(s, checked)
 
 fan.sys.MimeType.parseParams = function(s, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
   try
   {
     return fan.sys.MimeType.doParseParams(s, 0);

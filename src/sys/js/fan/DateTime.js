@@ -33,7 +33,7 @@ fan.sys.DateTime.maxTicks   = 3155760000000000000;  // 2100
 
 fan.sys.DateTime.now = function(tolerance)
 {
-  if (tolerance == undefined)
+  if (tolerance === undefined)
   {
     if (fan.sys.DateTime.toleranceDefault == null)
       fan.sys.DateTime.toleranceDefault = fan.sys.Duration.makeMillis(250);
@@ -56,7 +56,7 @@ fan.sys.DateTime.now = function(tolerance)
 
 fan.sys.DateTime.nowUtc = function(tolerance)
 {
-  if (tolerance == undefined)
+  if (tolerance === undefined)
   {
     if (fan.sys.DateTime.toleranceDefault == null)
       fan.sys.DateTime.toleranceDefault = fan.sys.Duration.makeMillis(250);
@@ -85,9 +85,9 @@ fan.sys.DateTime.prototype.$ctor = function() {}
 
 fan.sys.DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
 {
-  if (sec == undefined) sec = 0;
-  if (ns  == undefined) ns = 0;
-  if (tz  == undefined) tz = fan.sys.TimeZone.current();
+  if (sec === undefined) sec = 0;
+  if (ns  === undefined) ns = 0;
+  if (tz  === undefined) tz = fan.sys.TimeZone.current();
 
   month = month.ordinal();
 
@@ -151,7 +151,7 @@ fan.sys.DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
 
 fan.sys.DateTime.makeDT = function(d, t, tz)
 {
-  if (tz == undefined) tz = TimeZone.current();
+  if (tz === undefined) tz = TimeZone.current();
   return fan.sys.DateTime.make(
     d.year(), d.month(), d.day(),
     t.hour(), t.min(), t.sec(), t.nanoSec(), tz);
@@ -163,7 +163,7 @@ fan.sys.DateTime.makeDT = function(d, t, tz)
 
 fan.sys.DateTime.makeTicks = function(ticks, tz)
 {
-  if (tz == undefined) tz = fan.sys.TimeZone.current();
+  if (tz === undefined) tz = fan.sys.TimeZone.current();
 
   // check boundary conditions 1901 to 2099
   if (ticks < fan.sys.DateTime.minTicks || ticks >= fan.sys.DateTime.maxTicks)
@@ -268,8 +268,8 @@ fan.sys.DateTime.makeTicks = function(ticks, tz)
 
 fan.sys.DateTime.fromStr = function(s, checked, iso)
 {
-  if (checked == undefined) checked = true;
-  if (iso == undefined) iso = false;
+  if (checked === undefined) checked = true;
+  if (iso === undefined) iso = false;
 
   try
   {
@@ -407,8 +407,8 @@ fan.sys.DateTime.prototype.dayOfYear = function() { return fan.sys.DateTime.dayO
 
 fan.sys.DateTime.prototype.toLocale = function(pattern, locale)
 {
-  if (pattern == undefined) pattern = null;
-  if (locale == undefined) locale = null;
+  if (pattern === undefined) pattern = null;
+  if (locale === undefined) locale = null;
 
   // locale specific default
   if (pattern == null)
@@ -734,7 +734,7 @@ fan.sys.DateTime.prototype.toIso = function()
 
 fan.sys.DateTime.fromIso = function(s, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
   return fan.sys.DateTime.fromStr(s, checked, true);
 }
 

@@ -132,7 +132,7 @@ fan.sys.List.sort = function(self, func)
 
 fan.sys.List.index = function(self, val, off)
 {
-  if (off == undefined) off = 0;
+  if (off === undefined) off = 0;
 
   if (self.length == 0) return null;
   var start = off;
@@ -168,7 +168,7 @@ fan.sys.List.index = function(self, val, off)
 
 fan.sys.List.indexSame = function(self, val, off)
 {
-  if (off == undefined) off = 0;
+  if (off === undefined) off = 0;
 
   if (self.length == 0) return null;
   var start = off;
@@ -356,7 +356,7 @@ fan.sys.List.map = function(self, f)
 
 fan.sys.List.max = function(self, f)
 {
-  if (f == undefined) f = null;
+  if (f === undefined) f = null;
   if (self.length == 0) return null;
   var max = self[0];
   for (var i=1; i<self.length; ++i)
@@ -372,7 +372,7 @@ fan.sys.List.max = function(self, f)
 
 fan.sys.List.min = function(self, f)
 {
-  if (f == undefined) f = null;
+  if (f === undefined) f = null;
   if (self.length == 0) return null;
   var min = self[0];
   for (var i=1; i<self.length; ++i)
@@ -394,7 +394,7 @@ fan.sys.List.toImmutable = function(self) { return fan.sys.List.make(self.$fanTy
 // Conversion
 fan.sys.List.join = function(self, sep, func)
 {
-  if (sep == undefined) sep = ""
+  if (sep === undefined) sep = ""
   if (self.length == 0) return "";
   if (self.length == 1)
   {
@@ -408,7 +408,7 @@ fan.sys.List.join = function(self, sep, func)
   for (var i=0; i<self.length; ++i)
   {
     if (i > 0) s += sep;
-    if (func == undefined)
+    if (func === undefined)
       s += self[i];
     else
       s += func(self[i], i);

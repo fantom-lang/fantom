@@ -36,8 +36,8 @@ fan.sys.Int.maxInt = 9007199254740992;  // max exact int in js (2^53)
 
 fan.sys.Int.fromStr = function(s, radix, checked)
 {
-  if (radix == undefined) radix = 10;
-  if (checked == undefined) checked = true;
+  if (radix === undefined) radix = 10;
+  if (checked === undefined) checked = true;
   try
   {
     var num = Long.fromStr(s, radix);
@@ -138,7 +138,7 @@ fan.sys.Int.$zeros = null;
 
 fan.sys.Int.random = function(r)
 {
-  if (r == undefined) return Math.floor(Math.random() * Math.pow(2, 64));
+  if (r === undefined) return Math.floor(Math.random() * Math.pow(2, 64));
   else
   {
     var start = r.start();
