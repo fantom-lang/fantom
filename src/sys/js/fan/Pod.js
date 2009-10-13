@@ -44,7 +44,7 @@ fan.sys.Pod.prototype.types = function()
 
 fan.sys.Pod.prototype.findType = function(qname, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
   var t = this.m_types[qname];
   if (t == null && checked)
     throw fan.sys.UnknownTypeErr.make(qname);
@@ -54,7 +54,7 @@ fan.sys.Pod.prototype.findType = function(qname, checked)
 fan.sys.Pod.prototype.loc = function(key, def)
 {
   // TODO
-  //if (def == undefined) def = key;
+  //if (def === undefined) def = key;
 
   if (key == "ok.name") return "OK";
   if (key == "cancel.name") return "Cancel";
@@ -109,7 +109,7 @@ fan.sys.Pod.list = function()
 
 fan.sys.Pod.find = function(name, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
   var p = fan.sys.Pod.$pods[name];
   if (p == null && checked)
     throw fan.sys.UnknownPodErr.make(name);

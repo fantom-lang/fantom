@@ -58,7 +58,7 @@ class JsMethod : JsSlot
     params.each |p|
     {
       if (!p.hasDef) return
-      out.w("  if ($p.name == undefined) $p.name = ")
+      out.w("  if ($p.name === undefined) $p.name = ")
       p.defVal.write(out)
       out.w(";").nl
     }

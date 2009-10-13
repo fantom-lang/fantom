@@ -39,7 +39,7 @@ fan.sys.Test.prototype.verifyFalse = function(cond, msg)
 
 fan.sys.Test.prototype.verifyNull = function(a, msg)
 {
-  if (msg == undefined) msg = null;
+  if (msg === undefined) msg = null;
   if (a != null)
   {
     if (msg == null) msg = fan.sys.Obj.toStr(a) + " is not null";
@@ -50,7 +50,7 @@ fan.sys.Test.prototype.verifyNull = function(a, msg)
 
 fan.sys.Test.prototype.verifyNotNull = function(a, msg)
 {
-  if (msg == undefined) msg = null;
+  if (msg === undefined) msg = null;
   if (a == null)
   {
     if (msg == null) msg = fan.sys.Obj.toStr(a) + " is null";
