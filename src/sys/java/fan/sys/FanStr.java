@@ -289,31 +289,65 @@ public class FanStr
   public static void each(String self, Func f)
   {
     int len = self.length();
-    for (int i=0; i<len ; ++i)
-      f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i));
+    if (f.params.sz() == 1)
+    {
+      for (int i=0; i<len ; ++i)
+        f.call(Long.valueOf(self.charAt(i)));
+    }
+    else
+    {
+      for (int i=0; i<len ; ++i)
+        f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i));
+    }
   }
 
   public static void eachr(String self, Func f)
   {
-    for (int i=self.length()-1; i>=0; --i)
-      f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i));
+    if (f.params.sz() == 1)
+    {
+      for (int i=self.length()-1; i>=0; --i)
+        f.call(Long.valueOf(self.charAt(i)));
+    }
+    else
+    {
+      for (int i=self.length()-1; i>=0; --i)
+        f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i));
+    }
   }
 
   public static boolean any(String self, Func f)
   {
     int len = self.length();
-    for (int i=0; i<len ; ++i)
-      if (f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i)) == Boolean.TRUE)
-        return true;
+    if (f.params.sz() == 1)
+    {
+      for (int i=0; i<len ; ++i)
+        if (f.call(Long.valueOf(self.charAt(i))) == Boolean.TRUE)
+          return true;
+    }
+    else
+    {
+      for (int i=0; i<len ; ++i)
+        if (f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i)) == Boolean.TRUE)
+          return true;
+    }
     return false;
   }
 
   public static boolean all(String self, Func f)
   {
     int len = self.length();
-    for (int i=0; i<len ; ++i)
-      if (f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i)) == Boolean.FALSE)
-        return false;
+    if (f.params.sz() == 1)
+    {
+      for (int i=0; i<len ; ++i)
+        if (f.call(Long.valueOf(self.charAt(i))) == Boolean.FALSE)
+          return false;
+    }
+    else
+    {
+      for (int i=0; i<len ; ++i)
+        if (f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i)) == Boolean.FALSE)
+          return false;
+    }
     return true;
   }
 
