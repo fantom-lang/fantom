@@ -41,7 +41,7 @@ of Fan installation.  For example if you rebuild jfan, then the output
 goes into "devHome/lib/java/sys.jar".  In the case of the *rel*
 installation we don't want this default because we will overwrite
 ourselves (which leads to some nasty problems).  So you need to set
-the *devHome* symbol in "etc/build/pod.fansym" of your *rel* installation
+the *buildDevHome* symbol in "etc/build/pod.fansym" of your *rel* installation
 to reference the *dev* directory using a URI (not OS path):
 
   // Must be configured boot build in substitute/release installation
@@ -234,7 +234,7 @@ In summary, you want to make sure of a couple key things:
   1. setup your *rel* installation and never touch it (consider it readonly)
   2. ensure jdkHome and dotnetHome are configured in both *rel*
      and *dev* lib/sys.props
-  3. ensure *rel* lib/sys.props devHome points to your *dev* installation
+  3. ensure *rel* etc/build/pod.fansym buildDevHome points to your *dev* installation
   4. make sure your substitutes are configured correctly:
      a. on Unix make sure your FAN_SUBSTITUTE env points to the *rel* installation
      b. on Windows make sure your *dev* lib/sys.props substitutes are configured
