@@ -358,7 +358,7 @@ abstract class Widget
 //////////////////////////////////////////////////////////////////////////
 
   ** Is this widget attached to a native peer?
-  private native Bool attached()
+  internal native Bool attached()
 
   ** Attach to a native peer
   private native Void attach()

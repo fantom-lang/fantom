@@ -103,11 +103,14 @@ class RichText : TextWidget
 
   **
   ** Backing data model of text document.
+  ** The model cannot be changed once the widget has been
+  ** been mounted into an open window.
   **
   RichTextModel? model
   {
     set
     {
+      if (attached) throw Err("Cannot change model once widget is attached")
       old := this.*model
       if (old != null) old.onModify.remove(onModelModifyFunc)
       if (val != null) val.onModify.add(onModelModifyFunc)
