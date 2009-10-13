@@ -850,7 +850,7 @@ public final class DateTime
 // ISO 8601
 //////////////////////////////////////////////////////////////////////////
 
-  public String toIso() { return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFz"); }
+  public String toIso() { return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz"); }
 
   public static DateTime fromIso(String s) { return fromStr(s, true, true); }
   public static DateTime fromIso(String s, boolean checked) { return fromStr(s, checked, true); }
