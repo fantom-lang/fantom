@@ -729,7 +729,7 @@ fan.sys.DateTime.checkYear = function(year)
 
 fan.sys.DateTime.prototype.toIso = function()
 {
-  return this.toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFz");
+  return this.toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz");
 }
 
 fan.sys.DateTime.fromIso = function(s, checked)
