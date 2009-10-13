@@ -103,7 +103,7 @@ fan.sys.LogRecord.prototype.type = function() { return fan.sys.Type.find("sys::L
 
 fan.sys.LogRecord.make = function(time, level, logName, msg, err)
 {
-  if (err == undefined) err = null;
+  if (err === undefined) err = null;
   var self = new fan.sys.LogRecord();
   self.m_time    = time;
   self.m_level   = level;
@@ -126,7 +126,7 @@ fan.sys.LogRecord.prototype.toStr = function()
 fan.sys.LogRecord.prototype.print = function(out)
 {
   // TODO
-  //if (out == undefined) out = ???
+  //if (out === undefined) out = ???
   //out.printLine(toStr());
   //if (err != null) err.trace(out, 2, true);
   try

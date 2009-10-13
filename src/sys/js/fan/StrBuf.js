@@ -73,7 +73,7 @@ fan.sys.StrBuf.prototype.set = function(i, ch)
 
 fan.sys.StrBuf.prototype.join = function(x, sep)
 {
-  if (sep == undefined) sep = " ";
+  if (sep === undefined) sep = " ";
   var s = (x == null) ? "null" : fan.sys.Obj.toStr(x);
   if (this.m_str.length > 0) this.m_str += sep;
   this.m_str += s;

@@ -62,7 +62,7 @@ fan.sys.OutStream.prototype.write = function(x) // long
 
 fan.sys.OutStream.prototype.writeBuf = function(buf, n)
 {
-  if (n == undefined) b = buf.remaining();
+  if (n === undefined) b = buf.remaining();
   try
   {
     this.out.writeBuf(buf, n);
@@ -200,8 +200,8 @@ fan.sys.OutStream.prototype.writeChar(char c)
 
 fan.sys.OutStream.prototype.writeChars = function(s, off, len)
 {
-  if (off == undefined) off = 0;
-  if (len == undefined) len = s.length-off;
+  if (off === undefined) off = 0;
+  if (len === undefined) len = s.length-off;
   var end = off+len;
   for (var i=off; i<end; i++)
     this.w(s.charCodeAt(i));

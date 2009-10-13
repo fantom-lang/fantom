@@ -289,7 +289,7 @@ Long.prototype.toString = function(radix)
 {
   if (this.str == null)
   {
-    if (radix == undefined) radix = 10;
+    if (radix === undefined) radix = 10;
 
     var s = "";
     var val = this;
