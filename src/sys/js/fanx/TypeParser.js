@@ -164,7 +164,7 @@ fanx_TypeParser.prototype.$consume = function()
 
 fanx_TypeParser.prototype.err = function(sig)
 {
-  if (sig == undefined) sig = this.sig;
+  if (sig === undefined) sig = this.sig;
   return fan.sys.ArgErr.make("Invalid type signature '" + sig + "'");
 }
 

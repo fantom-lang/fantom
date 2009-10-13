@@ -441,7 +441,7 @@ fanx_ObjDecoder.prototype.toMapType = function(t, curField, infer)
  */
 fanx_ObjDecoder.prototype.readType = function(lbracket)
 {
-  if (lbracket == undefined) lbracket = false;
+  if (lbracket === undefined) lbracket = false;
   var t = this.readSimpleType();
   if (this.curt == fanx_Token.QUESTION)
   {

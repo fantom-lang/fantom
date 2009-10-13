@@ -54,7 +54,7 @@ fan.sys.Field.prototype.get = function(instance)
 
 fan.sys.Field.prototype.set = function(instance, value, checkConst)
 {
-  if (checkConst == undefined) checkConst = true;
+  if (checkConst === undefined) checkConst = true;
 
   // check const
   if ((this.m_flags & fan.sys.FConst.Const) != 0)

@@ -15,14 +15,14 @@ fan.sys.Map = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.sys.Map.prototype.$ctor = function(k, v)
 {
   var mt = null;
-  if (k != undefined && v == undefined)
+  if (k !== undefined && v === undefined)
   {
     mt = k;
   }
   else
   {
-    if (k == undefined) k = fan.sys.Type.find("sys::Obj")
-    if (v == undefined) v = fan.sys.Type.find("sys::Obj")
+    if (k === undefined) k = fan.sys.Type.find("sys::Obj")
+    if (v === undefined) v = fan.sys.Type.find("sys::Obj")
     mt = new fan.sys.MapType(k, v);
   }
   this.keyMap = {};

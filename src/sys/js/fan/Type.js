@@ -22,10 +22,10 @@ fan.sys.Type = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.sys.Type.prototype.$ctor = function(qname, base, mixins)
 {
   // workaround for inhertiance
-  if (qname == undefined) return;
+  if (qname === undefined) return;
 
   // mixins
-  if (mixins == undefined) mixins = [];
+  if (mixins === undefined) mixins = [];
   for (var i=0; i<mixins.length; i++)
     mixins[i] = fan.sys.Type.find(mixins[i]);
 
@@ -149,7 +149,7 @@ fan.sys.Type.prototype.fields = function()
 
 fan.sys.Type.prototype.slot = function(name, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
   var s = this.$slot(name);
   if (s == null && checked)
     throw fan.sys.UnknownSlotErr.make(this.m_qname + "." + name);
@@ -158,7 +158,7 @@ fan.sys.Type.prototype.slot = function(name, checked)
 
 fan.sys.Type.prototype.method = function(name, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
   var f = this.$slot(name);
   if ((f == null || !(f instanceof fan.sys.Method)) && checked)
     throw fan.sys.UnknownSlotErr.make(this.m_qname + "." + name);
@@ -167,7 +167,7 @@ fan.sys.Type.prototype.method = function(name, checked)
 
 fan.sys.Type.prototype.field = function(name, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
   var f = this.$slot(name);
   if ((f == null || !(f instanceof fan.sys.Field)) && checked)
     throw fan.sys.UnknownSlotErr.make(this.m_qname + "." + name);

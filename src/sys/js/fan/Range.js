@@ -20,7 +20,7 @@ fan.sys.Range.prototype.$ctor = function(start, end, exclusive)
 {
   this.m_start = start;
   this.m_end = end;
-  this.m_exclusive = (exclusive == undefined) ? false : exclusive;
+  this.m_exclusive = (exclusive === undefined) ? false : exclusive;
 }
 
 fan.sys.Range.makeInclusive = function(start, end)
@@ -40,7 +40,7 @@ fan.sys.Range.make = function(start, end, exclusive)
 
 fan.sys.Range.fromStr = function(s, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
   try
   {
     var dot = s.indexOf('.');

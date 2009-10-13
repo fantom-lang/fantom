@@ -101,7 +101,7 @@ fan.sys.InStream.prototype.unreadChar = function(c)
 
 fan.sys.InStream.prototype.readLine = function(max)
 {
-  if (max == undefined) max = fan.sys.Int.Chunk;
+  if (max === undefined) max = fan.sys.Int.Chunk;
 
   // max limit
   var maxChars = (max != null) ? max.valueOf() : fan.sys.Int.maxVal;
@@ -155,7 +155,7 @@ fan.sys.InStream.prototype.readAllLines = function()
 
 fan.sys.InStream.prototype.readAllStr = function(normalizeNewlines)
 {
-  if (normalizeNewlines == undefined) normalizeNewlines = true;
+  if (normalizeNewlines === undefined) normalizeNewlines = true;
   try
   {
     var s = "";
@@ -191,7 +191,7 @@ fan.sys.InStream.prototype.readAllStr = function(normalizeNewlines)
 
 fan.sys.InStream.prototype.readObj = function(options)
 {
-  if (options == undefined) options = null;
+  if (options === undefined) options = null;
   return new fanx_ObjDecoder(this, options).readObj();
 }
 

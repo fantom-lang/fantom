@@ -260,7 +260,7 @@ fan.sys.Buf.prototype.eachLine = function(f) { this.m_in.eachLine(f); }
 
 fan.sys.Buf.prototype.readAllStr = function(normalizeNewlines)
 {
-  if (normalizeNewlines == undefined) normalizeNewlines = true;
+  if (normalizeNewlines === undefined) normalizeNewlines = true;
   return this.m_in.readAllStr(normalizeNewlines);
 }
 

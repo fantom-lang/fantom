@@ -19,7 +19,7 @@ fan.sys.Uri.prototype.$ctor = function() {}
 
 fan.sys.Uri.fromStr = function(s, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
   try
   {
     return fan.sys.Uri.makeSections(new fan.sys.UriDecoder(s, false).decode());
@@ -33,7 +33,7 @@ fan.sys.Uri.fromStr = function(s, checked)
 
 fan.sys.Uri.decode = function(s, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
   try
   {
     return new fan.sys.Uri.makeSections(new fan.sys.UriDecoder(s, true).decode());
@@ -803,7 +803,7 @@ fan.sys.Uri.prototype.sliceToPathAbs = function(range) { return this.slice(range
 
 fan.sys.Uri.prototype.slice = function(range, forcePathAbs)
 {
-  if (forcePathAbs == undefined) forcePathAbs = false;
+  if (forcePathAbs === undefined) forcePathAbs = false;
 
   if (this.m_pathStr == null)
     throw fan.sys.Err.make("Uri has no path: " + this);

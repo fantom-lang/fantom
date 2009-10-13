@@ -30,8 +30,8 @@ fan.sys.Time.prototype.$ctor = function(hour, min, sec, ns)
 
 fan.sys.Time.make = function(hour, min, sec, ns)
 {
-  if (sec == undefined) sec = 0;
-  if (ns == undefined)  ns = 0;
+  if (sec === undefined) sec = 0;
+  if (ns === undefined)  ns = 0;
   return new fan.sys.Time(hour, min, sec, ns);
 }
 
@@ -43,7 +43,7 @@ fan.sys.Time.now = function()
 
 fan.sys.Time.fromStr = function(s, checked)
 {
-  if (checked == undefined) checked = true;
+  if (checked === undefined) checked = true;
   try
   {
     var num = function(x,index) { return x.charCodeAt(index) - 48; }
@@ -146,7 +146,7 @@ fan.sys.Time.prototype.nanoSec = function() { return this.m_ns; }
 
 fan.sys.Time.prototype.toLocale = function(pattern)
 {
-  if (pattern == undefined) pattern = null;
+  if (pattern === undefined) pattern = null;
 
   // locale specific default
   var locale = null;

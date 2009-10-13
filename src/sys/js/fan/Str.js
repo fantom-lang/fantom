@@ -205,7 +205,7 @@ fan.sys.Str.justr = function(self, width)
 
 fan.sys.Str.padl = function(self, w, ch)
 {
-  if (ch == undefined) ch = 32;
+  if (ch === undefined) ch = 32;
   if (self.length >= w) return self;
   var c = String.fromCharCode(ch);
   var s = '';
@@ -216,7 +216,7 @@ fan.sys.Str.padl = function(self, w, ch)
 
 fan.sys.Str.padr = function(self, w, ch)
 {
-  if (ch == undefined) ch = 32;
+  if (ch === undefined) ch = 32;
   if (self.length >= w) return self;
   var c = String.fromCharCode(ch);
   var s = '';
@@ -426,8 +426,8 @@ fan.sys.Str.toBuf = function(self)//, Charset charset := Charset.utf8)
 
 fan.sys.Str.toCode = function(self, quote, escu)
 {
-  if (quote == undefined) quote = 34;
-  if (escu == undefined) escu = false;
+  if (quote === undefined) quote = 34;
+  if (escu === undefined) escu = false;
 
   // opening quote
   var s = "";
