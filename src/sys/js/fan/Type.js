@@ -325,8 +325,8 @@ fan.sys.ListType.prototype.equals = function(that)
 }
 fan.sys.ListType.prototype.is = function(that)
 {
-  if (that instanceof fan.sys.ListType)
-    return this.v.is(that.v);
+  if (that instanceof fan.sys.ListType) return this.v.is(that.v);
+  if (that instanceof fan.sys.Type) return that.m_qname == "sys::List";
   return fan.sys.Type.prototype.is.call(this, that);
 }
 
