@@ -148,8 +148,20 @@ class CtorTest : Test
     return i
   }
 
-  // TODO
-  //   - argument shortcuts
+//////////////////////////////////////////////////////////////////////////
+// Const Fields
+//////////////////////////////////////////////////////////////////////////
+
+  Void testConstFields()
+  {
+    x := ConstFieldCtor()
+    verifyEq(x.listA.isImmutable, true)
+    verifyEq(x.listB.isImmutable, true)
+    verifyEq(x.mapA.isImmutable,  true)
+    verifyEq(x.mapB.isImmutable,  true)
+    verifyEq(x.funcA.isImmutable, true)
+    verifyEq(x.funcB.isImmutable, true)
+  }
 
 }
 
@@ -250,3 +262,28 @@ class CtorOrderB : CtorOrderA
   Str r := q + ",2"
   Int x := CtorTest.orderInit
 }
+
+//////////////////////////////////////////////////////////////////////////
+// ConstFieldCtor
+//////////////////////////////////////////////////////////////////////////
+
+class ConstFieldCtor
+{
+  new make()
+  {
+    listA = ["a"]
+    listB = ["b"]
+    mapA = ["a":"a"]
+    mapB = ["b":"b"]
+    funcA = |,| { echo("a") }
+    funcB = |,| { echo("b") }
+  }
+
+  const List listA
+  const Obj?[] listB
+  const Map mapA
+  const Obj:Obj mapB
+  const Func funcA
+  const |,| funcB
+}
+
