@@ -179,9 +179,32 @@
   }
 
 //////////////////////////////////////////////////////////////////////////
-// TODO
+// OutputStream
 //////////////////////////////////////////////////////////////////////////
 
-  // TODO - pretty much everything
+  Void testOut()
+  {
+    verifyOut("x\u0abc\n") |out| { out.print("x\u0abc\n") }
+    verifyOut("x\u0abc\n") |out| { out.printLine("x\u0abc") }
+    verifyOut("x\u0abc\n") |out| { out.writeChar('x').writeChar('\u0abc').writeChar('\n') }
+    verifyOut("x\u0abc\n") |out| { out.writeChars("x\u0abc\n") }
+    verifyOut("&lt;foo>") |out| { out.writeXml("<foo>") }
+
+    verifyErr(UnsupportedErr#) { StrBuf().out.write(3) }
+    verifyErr(UnsupportedErr#) { StrBuf().out.writeBuf(Buf()) }
+    verifyErr(UnsupportedErr#) { StrBuf().out.writeI2(99) }
+    verifyErr(UnsupportedErr#) { StrBuf().out.writeI4(99) }
+    verifyErr(UnsupportedErr#) { StrBuf().out.writeI8(99) }
+    verifyErr(UnsupportedErr#) { StrBuf().out.writeF4(99f) }
+    verifyErr(UnsupportedErr#) { StrBuf().out.writeF8(99f) }
+    verifyErr(UnsupportedErr#) { StrBuf().out.writeUtf("foo") }
+  }
+
+  Void verifyOut(Str expected, |OutStream out| f)
+  {
+    s := StrBuf()
+    f(s.out)
+    verifyEq(s.toStr, expected)
+  }
 
 }

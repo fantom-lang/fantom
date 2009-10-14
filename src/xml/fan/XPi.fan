@@ -53,8 +53,8 @@ class XPi : XNode
   **
   override Void write(OutStream out)
   {
-    out.write('<').write('?').writeChars(target).write(' ')
-       .writeChars(val).write('?').write('>')
+    out.writeChar('<').writeChar('?').writeChars(target).writeChar(' ')
+       .writeChars(val).writeChar('?').writeChar('>')
   }
 
 }

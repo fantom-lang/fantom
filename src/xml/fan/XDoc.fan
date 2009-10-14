@@ -112,8 +112,8 @@ class XDoc : XNode
   override Void write(OutStream out)
   {
     out.writeChars("<?xml version='1.0' encoding='${out.charset}'?>\n")
-    if (docType != null) out.writeChars(docType.toStr).write('\n')
-    piList.each |XPi pi| { pi.write(out); out.write('\n') }
+    if (docType != null) out.writeChars(docType.toStr).writeChar('\n')
+    piList.each |XPi pi| { pi.write(out); out.writeChar('\n') }
     root.write(out)
     out.writeChar('\n')
   }

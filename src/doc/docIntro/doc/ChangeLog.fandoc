@@ -721,5 +721,7 @@
 - FWT javascript enhancements
 - Float.random
 - Range.map
+- Fix StrBuf.out anomalies
+- XNode.writeToStr
 
 
