@@ -122,9 +122,53 @@ fan.sys.StrBuf.prototype.toStr = function()
   return this.m_str;
 }
 
+fan.sys.StrBuf.prototype.out = function()
+{
+  return new fan.sys.StrBufOutStream(this);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.StrBuf.make = function() { return new fan.sys.StrBuf(); }
+
+/*************************************************************************
+ * StrBufOutStream
+ ************************************************************************/
+
+fan.sys.StrBufOutStream = fan.sys.Obj.$extend(fan.sys.OutStream);
+fan.sys.StrBufOutStream.prototype.$ctor = function(buf)
+{
+  this.m_str = (buf === undefined) ? buf.m_str : "";
+}
+
+//////////////////////////////////////////////////////////////////////////
+// OutStream
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.StrBufOutStream.prototype.w = function(v)
+{
+  throw fan.sys.UnsupportedErr.make("binary write on StrBuf output");
+}
+
+fan.sys.StrBufOutStream.prototype.writeBuf = function(buf, n)
+{
+  throw fan.sys.UnsupportedErr.make("binary write on StrBuf output");
+}
+
+fan.sys.StrBufOutStream.prototype.writeChar = function(c)
+{
+  this.m_str += String.fromCharCode(c);
+  return this;
+}
+
+fan.sys.StrBufOutStream.prototype.writeChars = function(s, off, len)
+{
+  this.m_str += s.substr(off, len);
+  return this;
+}
+
+fan.sys.StrBufOutStream.prototype.flush = function() { return this; }
+fan.sys.StrBufOutStream.prototype.close = function() { return true; }
 
