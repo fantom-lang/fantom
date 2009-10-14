@@ -190,9 +190,16 @@ class WriteTest : XmlTest
     buf := Buf()
     xml.write(buf.out)
     actual := buf.flip.readAllStr
-
-    // verify actual XML text and expected XML text is the same
     verifyEq(actual, expected)
+
+    // write using string buffer
+    strBuf := StrBuf()
+    xml.write(strBuf.out)
+    actual = strBuf.toStr
+    verifyEq(actual, expected)
+
+    // writeToStr convenience
+    verifyEq(xml.writeToStr, expected)
 
     // verify roundtrip using parser if doc or elem
     if (!testRoundtrip) return

@@ -38,6 +38,16 @@ abstract class XNode
   XNode? parent { internal set }
 
   **
+  ** Conveniece to `write` to an in-memory string.
+  **
+  Str writeToStr()
+  {
+    s := StrBuf()
+    write(s.out)
+    return s.toStr
+  }
+
+  **
   ** Write this node to the output stream.
   **
   abstract Void write(OutStream out)

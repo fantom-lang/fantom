@@ -23,11 +23,13 @@ public class StrBufOutStream
   public StrBufOutStream(StrBuf buf)
   {
     this.sb = buf.sb;
+    this.charsetEncoder = strBufEncoder;
   }
 
   public StrBufOutStream()
   {
     this.sb = new StringBuilder();
+    this.charsetEncoder = strBufEncoder;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -41,6 +43,11 @@ public class StrBufOutStream
 //////////////////////////////////////////////////////////////////////////
 
   public OutStream w(int v)
+  {
+    throw UnsupportedErr.make("binary write on StrBuf output").val;
+  }
+
+  public OutStream write(long x)
   {
     throw UnsupportedErr.make("binary write on StrBuf output").val;
   }
@@ -77,6 +84,19 @@ public class StrBufOutStream
   {
     return true;
   }
+
+  static final Charset.Encoder strBufEncoder = new Charset.Encoder()
+  {
+    public void encode(char ch, OutStream out)
+    {
+      ((StrBufOutStream)out).sb.append(ch);
+    }
+
+    public void encode(char ch, InStream out)
+    {
+      throw UnsupportedErr.make("binary write on StrBuf output").val;
+    }
+  };
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
