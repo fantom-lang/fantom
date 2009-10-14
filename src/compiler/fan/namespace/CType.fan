@@ -393,7 +393,7 @@ mixin CType
 
     // these are checked at runtime
     t := deref.toNonNullable
-    if (t.isObj || t is ListType || t is MapType || t is FuncType)
+    if (t.isObj || t.isList || t.isMap|| t.isFunc)
       return true
 
     // definitely no way it can be immutable
