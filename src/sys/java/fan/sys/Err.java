@@ -177,10 +177,11 @@ public class Err
 
     // print each level of the stack trace
     out.indent(indent).writeChars(toStr()).writeChar('\n');
+    int num = 0;
     for (int i=start; i<elems.length; ++i)
     {
-      trace(elems[i], out, indent+2);
-      if (i-start+1 >= maxDepth)
+      if (trace(elems[i], out, indent+2)) num++;
+      if (num >= maxDepth)
       {
         int more = elems.length - i - start;
         out.indent(indent+2).writeChars(more + " More...\n");
@@ -203,12 +204,15 @@ public class Err
     return this;
   }
 
-  public static void trace(StackTraceElement elem, OutStream out, int indent)
+  public static boolean trace(StackTraceElement elem, OutStream out, int indent)
   {
     String className  = elem.getClassName();
     String methodName = elem.getMethodName();
     String fileName = elem.getFileName();
     int line = elem.getLineNumber();
+
+    // skip crap like reflection internals
+    if (className.startsWith("sun.reflect.")) return false;
 
     // fan class
     if (className.startsWith("fan.") && !className.startsWith("fan.sys."))
@@ -230,7 +234,7 @@ public class Err
         if (dollar2 > 0)
         {
           // don't print callX for closures
-          if (slotName.startsWith("call")) return;
+          if (slotName.startsWith("call")) return false;
           // remap closure class back to original method
           if (slotName.startsWith("doCall"))
           {
@@ -257,6 +261,7 @@ public class Err
     else out.writeChars(fileName);
     if (line > 0) out.writeChar(':').writeChars(String.valueOf(line));
     out.writeChar(')').writeChar('\n');
+    return true;
   }
 
   public String traceToStr()
