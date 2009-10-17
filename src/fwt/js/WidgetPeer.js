@@ -187,6 +187,8 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, l
   }
 }
 
+fan.fwt.WidgetPeer.prototype.checkKeyListeners = function(self) {}
+
 fan.fwt.WidgetPeer.prototype.create = function(parentElem, self)
 {
   var div = this.emptyDiv();
