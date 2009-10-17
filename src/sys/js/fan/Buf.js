@@ -311,8 +311,41 @@ for (var i=10; i<16; ++i) fan.sys.Buf.hexInv[97+i-10] = fan.sys.Buf.hexInv[65+i-
 // Base64
 //////////////////////////////////////////////////////////////////////////
 
-// toBase64
-// fromBase64
+fan.sys.Buf.prototype.toBase64 = function()
+{
+  throw fan.sys.UnsupportedErr.make(this.type()+".toBase64");
+}
+
+fan.sys.Buf.fromBase64 = function(s)
+{
+  var slen = s.length;
+  var si = 0;
+  var max = slen * 6 / 8;
+  var buf = [];
+  var size = 0;
+
+  while (si < slen)
+  {
+    var n = 0;
+    var v = 0;
+    for (var j=0; j<4 && si<slen;)
+    {
+      var ch = s.charCodeAt(si++);
+      var c = ch < 128 ? fan.sys.Buf.base64inv[ch] : -1;
+      if (c >= 0)
+      {
+        n |= c << (18 - j++ * 6);
+        if (ch != 61 /*'='*/) v++;
+      }
+    }
+
+    if (v > 1) buf.push(n >> 16);
+    if (v > 2) buf.push(n >> 8);
+    if (v > 3) buf.push(n);
+  }
+
+  return fan.sys.MemBuf.makeBytes(buf);
+}
 
 fan.sys.Buf.base64chars = [
 //A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z
@@ -321,4 +354,10 @@ fan.sys.Buf.base64chars = [
   97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,
 //0  1  2  3  4  5  6  7  8  9  +  /
   48,49,50,51,52,53,54,55,56,57,43,47];
+
+fan.sys.Buf.base64inv = [];
+for (var i=0; i<128; ++i) fan.sys.Buf.base64inv[i] = -1;
+for (var i=0; i<fan.sys.Buf.base64chars.length; ++i)
+  fan.sys.Buf.base64inv[fan.sys.Buf.base64chars[i]] = i;
+fan.sys.Buf.base64inv[61] = 0; // '='
 
