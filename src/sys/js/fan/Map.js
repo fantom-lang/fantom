@@ -68,7 +68,7 @@ fan.sys.Map.prototype.toStr = function()
   for (var k in this.map)
   {
     if (s.length > 0) s += ", ";
-    s += k + ":" + this.map[k];
+    s += this.keyMap[k] + ":" + this.map[k];
   }
   if (s.length == 0) return "[:]";
   return "[" + s + "]";
@@ -98,6 +98,7 @@ fan.sys.Map.prototype.values = function()
 
 fan.sys.Map.prototype.get = function(key, defVal)
 {
+  if (this.m_caseInsensitive) key = fan.sys.Str.lower(key);
   var val = this.map[key];
   if (val == null && defVal != null)
     return defVal;
@@ -106,6 +107,7 @@ fan.sys.Map.prototype.get = function(key, defVal)
 
 fan.sys.Map.prototype.containsKey = function(key)
 {
+  if (this.m_caseInsensitive) key = fan.sys.Str.lower(key);
   for (var k in this.map)
     if (fan.sys.Obj.equals(k, key))
       return true;
@@ -126,14 +128,16 @@ fan.sys.Map.prototype.add = function(key, val)
 
 fan.sys.Map.prototype.set = function(key, val)
 {
+  var orig = key;
   if (this.m_caseInsensitive) key = fan.sys.Str.lower(key);
-  this.keyMap[key] = key;
+  this.keyMap[key] = orig;
   this.map[key] = val;
   return this;
 }
 
 fan.sys.Map.prototype.remove = function(key)
 {
+  if (this.m_caseInsensitive) key = fan.sys.Str.lower(key);
   var v = this.map[key];
   delete this.keyMap[key];
   delete this.map[key];
