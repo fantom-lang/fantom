@@ -152,12 +152,14 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
       with (outer.style)
       {
         var x = outer.offsetWidth-13;
-        background = "url(/s/fwt/res/img/button-right.png) no-repeat " + x + "px -25px";
+        var uri = fan.sys.UriPodBase + "fwt/res/img/button-right.png";
+        background = "url(" + uri + ") no-repeat " + x + "px -25px";
         height = "25px";
       }
       with (inner.style)
       {
-        background = "url(/s/fwt/res/img/button-left.png) no-repeat 0 -25px";
+        var uri = fan.sys.UriPodBase + "fwt/res/img/button-left.png";
+        background = "url(" + uri + ") no-repeat 0 -25px";
         height = "25px";
         padding = "5px 0px 0 13px";
       }
