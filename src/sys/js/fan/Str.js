@@ -61,6 +61,24 @@ fan.sys.Str.each = function(self, func)
     func(self.charCodeAt(i), i);
 }
 
+fan.sys.Str.all = function(self, f)
+{
+  var len = self.length;
+  if (f.length == 1)
+  {
+    for (var i=0; i<len; ++i)
+      if (f(self.charCodeAt(i)) == false)
+        return false;
+  }
+  else
+  {
+    for (var i=0; i<len; ++i)
+      if (f(self.charCodeAt(i), i) == false)
+        return false;
+  }
+  return true;
+}
+
 fan.sys.Str.endsWith = function(self, test)
 {
   if (self.length < test.length) return false;
