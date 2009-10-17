@@ -7,6 +7,8 @@
 //   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
+using web
+
 **
 ** Doc models the DOM document object.
 **
@@ -14,10 +16,18 @@
 class Doc
 {
 
+//////////////////////////////////////////////////////////////////////////
+// Constructors
+//////////////////////////////////////////////////////////////////////////
+
   **
   ** Private ctor.
   **
   private new make() {}
+
+//////////////////////////////////////////////////////////////////////////
+// Elements
+//////////////////////////////////////////////////////////////////////////
 
   **
   ** Get the body element.
@@ -36,5 +46,33 @@ class Doc
   ** to the given values.
   **
   static native Elem createElem(Str tagName, [Str:Str]? attrib := null)
+
+//////////////////////////////////////////////////////////////////////////
+// Cookies
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Map of cookie values keyed by cookie name.  The
+  ** cookies map is readonly and case insensitive.
+  **
+  static Str:Str cookies()
+  {
+    try
+      return MimeType.parseParams(getCookiesStr).ro
+    catch (Err e)
+      e.trace
+    return Str:Str[:].ro
+  }
+
+  **
+  ** Add a cookie to this session.
+  **
+  static Void addCookie(Cookie c)
+  {
+    addCookieStr(c.toStr)
+  }
+
+  private static native Str getCookiesStr()
+  private static native Str addCookieStr(Str c)
 
 }

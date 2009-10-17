@@ -78,6 +78,7 @@ class ShowScript : Widget
     out.head
       out.title.w("FWT Demo - $f.name").titleEnd
       out.includeJs(`/sys/pod/sys/sys.js`)
+      out.includeJs(`/sys/pod/web/web.js`)
       out.includeJs(`/sys/pod/dom/dom.js`)
       out.includeJs(`/sys/pod/gfx/gfx.js`)
       out.includeJs(`/sys/pod/fwt/fwt.js`)

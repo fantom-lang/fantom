@@ -12,7 +12,7 @@
 ** Web Browser DOM API
 **
 
-@podDepends = [Depend("sys 1.0")]
+@podDepends = [Depend("sys 1.0"), Depend("web 1.0")]
 @podSrcDirs = [`fan/`]
 @podJsDirs  = [`js/`]
 @js

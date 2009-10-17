@@ -25,12 +25,12 @@ class Window
   static native Void alert(Obj obj)
 
   **
-  ** Get the URI for this window.
+  ** Get the Uri for this window.
   **
   static native Uri uri()
 
   **
-  ** Hyperlink to the given URI in this window.
+  ** Hyperlink to the given Uri in this window.
   **
   static native Void hyperlink(Uri uri)
 
