@@ -723,5 +723,5 @@
 - Range.map
 - Fix StrBuf.out anomalies
 - XNode.writeToStr
-
+- dom::Doc.cookies
 

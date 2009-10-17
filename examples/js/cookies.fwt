@@ -1,0 +1,92 @@
+//
+// Copyright (c) 2009, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   17 Oct 09  Andy Frank  Creation
+//
+
+using gfx
+using fwt
+using web
+
+class Cookies : Window
+{
+  new make() : super(null, null)
+  {
+    table = Table { model=CookieModel(dom::Doc.cookies) }
+    content = InsetPane(24)
+    {
+      EdgePane
+      {
+        top = InsetPane(0,0,12,0) {
+          GridPane {
+            Button {
+              text = "Add Cookie"
+              onAction.add { addCookie }
+            },
+          },
+        }
+        center = table
+      },
+    }
+  }
+
+  Void addCookie()
+  {
+    name  := Text { prefCols=40 }
+    value := Text { prefCols=40 }
+    dlg   := Dialog(window)
+    {
+      it.title = "Add Cookie"
+      it.body = GridPane
+      {
+        numCols = 2
+        Label { text="Name"  }, name,
+        Label { text="Value" }, value,
+      }
+      it.commands = Dialog.okCancel
+    }
+    dlg.onClose.add |e|
+    {
+     if (e.data == Dialog.ok)
+     {
+       try
+       {
+         dom::Doc.addCookie(Cookie(name.text, Buf().print(value.text).toBase64))
+         table.model = CookieModel(dom::Doc.cookies)
+         table.refreshAll
+       }
+       catch (Err err)
+       {
+         Dialog.openErr(window, "Could not add cookie", err)
+       }
+     }
+    }
+    dlg.open
+  }
+
+  Table table
+}
+
+class CookieModel : TableModel
+{
+  new make(Str:Str map)
+  {
+    this.keys = map.keys.sort
+    this.map = map
+  }
+  override Int numRows() { return keys.size }
+  override Int numCols() { return cols.size }
+  override Str header(Int col) { return cols[col] }
+  override Str text(Int col, Int row)
+  {
+    key := keys[row]
+    return col==0 ? key : Buf.fromBase64(map[key]).readAllStr
+  }
+  Str[] cols := ["Name", "Value"]
+  Str[] keys
+  Str:Str map
+}
+
+

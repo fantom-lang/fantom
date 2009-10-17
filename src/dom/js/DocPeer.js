@@ -35,3 +35,7 @@ fan.dom.DocPeer.createElem = function(tagName, attribs)
   }
   return wrap;
 }
+
+fan.dom.DocPeer.getCookiesStr = function() { return document.cookie; }
+fan.dom.DocPeer.addCookieStr = function(c) { document.cookie = c; }
+
