@@ -187,7 +187,7 @@ abstract class Expr : Node
   **
   ** Get this expression as a string suitable for documentation.
   **
-  Str toDocStr()
+  Str? toDocStr()
   {
     // not perfect, but better than what we had previously which
     // was nothing; we might want to grab the actual text from the
@@ -195,6 +195,12 @@ abstract class Expr : Node
     // the buffer by the time the tokens are passed to the parser
     try
     {
+      // if we access an internal slot then don't expose in public docs
+      CSlot? slot := null
+      if (this is CallExpr) slot = ((CallExpr)this).method
+      else if (this is FieldExpr) slot = ((FieldExpr)this).field
+      if (slot != null && (slot.isPrivate || slot.isInternal)) return null
+
       // remove extra parens with binary ops
       s := toStr
       if (s[0] == '(' && s[-1] == ')') s = s[1..-2]

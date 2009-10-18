@@ -716,7 +716,7 @@
 - #721: Cookbook versus Examples
 
 *Build 1.0.47 (working)*
-- Range.fromStr
+- Range fromStr, isEmpty, min, max, first, last
 - Map.getOrAdd
 - FWT javascript enhancements
 - Float.random
@@ -724,4 +724,6 @@
 - Fix StrBuf.out anomalies
 - XNode.writeToStr
 - dom::Doc.cookies
+- Tweak compiler to hide private/internal default exprs in fandoc
+
 

@@ -171,7 +171,11 @@ class MethodDef : SlotDef, CMethod
     meta := Str:Str[:]
     paramDefs.each |ParamDef p|
     {
-      if (p.hasDefault) meta[p.name+".def"] = p.def.toDocStr
+      if (p.hasDefault)
+      {
+        defStr := p.def.toDocStr
+        if (defStr != null) meta[p.name+".def"] = defStr
+      }
     }
     return meta
   }

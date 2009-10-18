@@ -79,7 +79,9 @@ public class FieldDef : SlotDef, CField
   override [Str:Str]? docMeta()
   {
     if (init == null) return null
-    return ["def": init.toDocStr]
+    initDoc := init.toDocStr
+    if (initDoc == null) return null
+    return ["def": initDoc]
   }
 
 //////////////////////////////////////////////////////////////////////////
