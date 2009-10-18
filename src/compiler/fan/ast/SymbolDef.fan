@@ -66,7 +66,9 @@ class SymbolDef : DefNode, CSymbol
 
   override [Str:Str]? docMeta()
   {
-    return ["def": val.toDocStr]
+    valStr := val.toDocStr
+    if (valStr == null) return null
+    return ["def": valStr]
   }
 
 //////////////////////////////////////////////////////////////////////////
