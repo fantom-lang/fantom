@@ -228,4 +228,27 @@ class RegressionTest : CompilerTest
     verifyEq(obj->test([0xa, 0x7, 0xc]), "a,7,c")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #788 Coercion in IndexedAssignExpr
+//////////////////////////////////////////////////////////////////////////
+
+  Void test788()
+  {
+     compile(
+       "class Foo
+        {
+          Int[] list := Int[2, 3, 4]
+          Int[] test(Int? i)
+          {
+            list[i] += 1
+            return list
+          }
+        }
+        ")
+
+    obj := pod.types[0].make
+    verifyEq(obj->test(0), [3, 3, 4])
+    verifyEq(obj->test(2), [3, 3, 5])
+  }
+
 }

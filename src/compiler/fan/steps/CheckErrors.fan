@@ -976,6 +976,18 @@ class CheckErrors : CompilerStep
     if (shortcut.leave && shortcut.isAssign && shortcut.target.assignRequiresTempVar)
       shortcut.tempVar = curMethod.addLocalVar(shortcut.ctype, null, null)
 
+    // we need two scratch variables to manipulate the stack cause
+    // .NET is lame when it comes to doing anything with the stack
+    //   - scratchA: target collection
+    //   - scratchB: index
+    indexedAssign := shortcut as IndexedAssignExpr
+    if (indexedAssign != null)
+    {
+      target := (ShortcutExpr)indexedAssign.target
+      indexedAssign.scratchA = curMethod.addLocalVar(target.target.ctype, null, null)
+      indexedAssign.scratchB = curMethod.addLocalVar(target.args[0].ctype, null, null)
+    }
+
     // perform normal call checking
     if (!shortcut.isCompare)
       checkCall(shortcut)
