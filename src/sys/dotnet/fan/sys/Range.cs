@@ -84,6 +84,39 @@ namespace Fan.Sys
       return m_exclusive;
     }
 
+    public bool isEmpty()
+    {
+      return m_exclusive && m_start == m_end;
+    }
+
+    public Long min()
+    {
+      if (isEmpty()) return null;
+      if (m_end < m_start) return Long.valueOf(m_exclusive ? m_end+1 : m_end);
+      return Long.valueOf(m_start);
+    }
+
+    public Long max()
+    {
+      if (isEmpty()) return null;
+      if (m_end < m_start) return Long.valueOf(m_start);
+      return Long.valueOf(m_exclusive ? m_end-1 : m_end);
+    }
+
+    public Long first()
+    {
+      if (isEmpty()) return null;
+      return Long.valueOf(m_start);
+    }
+
+    public Long last()
+    {
+      if (isEmpty()) return null;
+      if (!m_exclusive) return Long.valueOf(m_end);
+      if (m_start < m_end) return Long.valueOf(m_end-1);
+      return Long.valueOf(m_end+1);
+    }
+
     public bool contains(long i)
     {
       if (m_start < m_end)
