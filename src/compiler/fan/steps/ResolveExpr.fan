@@ -616,14 +616,6 @@ class ResolveExpr : CompilerStep
     // already be resolved
     resolveCall(expr)
 
-    // we need two scratch variables to manipulate the stack cause
-    // .NET is lame when it comes to doing anything with the stack
-    //   - scratchA: target collection
-    //   - scratchB: index
-    target := (ShortcutExpr)expr.target
-    expr.scratchA = curMethod.addLocalVar(target.target.ctype, null, null)
-    expr.scratchB = curMethod.addLocalVar(target.args[0].ctype, null, null)
-
     // resolve the set method which matches
     // the get method on the target
     get := ((ShortcutExpr)expr.target).method
