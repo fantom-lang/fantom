@@ -81,6 +81,39 @@ public final class Range
     return exclusive;
   }
 
+  public final boolean isEmpty()
+  {
+    return exclusive && start == end;
+  }
+
+  public final Long min()
+  {
+    if (isEmpty()) return null;
+    if (end < start) return Long.valueOf(exclusive ? end+1 : end);
+    return Long.valueOf(start);
+  }
+
+  public final Long max()
+  {
+    if (isEmpty()) return null;
+    if (end < start) return Long.valueOf(start);
+    return Long.valueOf(exclusive ? end-1 : end);
+  }
+
+  public final Long first()
+  {
+    if (isEmpty()) return null;
+    return Long.valueOf(start);
+  }
+
+  public final Long last()
+  {
+    if (isEmpty()) return null;
+    if (!exclusive) return Long.valueOf(end);
+    if (start < end) return Long.valueOf(end-1);
+    return Long.valueOf(end+1);
+  }
+
   public final boolean contains(long i)
   {
     if (start < end)

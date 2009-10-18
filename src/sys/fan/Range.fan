@@ -100,6 +100,36 @@ const final class Range
   Bool exclusive()
 
   **
+  ** Return if this range contains no integer values.
+  ** Equivalent to 'toList.isEmpty'.
+  **
+  Bool isEmpty()
+
+  **
+  ** Get the minimum value of the range. If range contains
+  ** no values then return null.  Equivalent to 'toList.min'.
+  **
+  Int? min()
+
+  **
+  ** Get the maximum value of the range. If range contains
+  ** no values then return null.  Equivalent to 'toList.max'.
+  **
+  Int? max()
+
+  **
+  ** Get the first value of the range.   If range contains
+  ** no values then return null.  Equivalent to 'toList.first'.
+  **
+  Int? first()
+
+  **
+  ** Get the last value of the range.   If range contains
+  ** no values then return null.  Equivalent to 'toList.last'.
+  **
+  Int? last()
+
+  **
   ** Return if this range contains the specified integer.
   **
   ** Example:

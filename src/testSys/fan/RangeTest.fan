@@ -110,17 +110,27 @@
     verifyEq((9..<7).map |i->Float| { i.toFloat }, Float[9f, 8f])
   }
 
-  Void testRange()
+  Void testList()
   {
-    verifyEq((0..0).toList, [0])
-    verifyEq((0..<0).toList, Int[,])
-    verifyEq((3..<3).toList, Int[,])
-    verifyEq((2..4).toList, [2,3,4])
-    verifyEq((2..<4).toList, [2,3])
-    verifyEq((-2..2).toList, [-2,-1,0,1,2])
-    verifyEq((10..8).toList, [10,9,8])
-    verifyEq((10..<8).toList, [10,9])
-    verifyEq((-4..-8).toList, [-4,-5,-6,-7,-8])
+    verifyList(0..0,   [0])
+    verifyList(0..<0,  Int[,])
+    verifyList(3..<3,  Int[,])
+    verifyList(2..4,   [2,3,4])
+    verifyList(2..<4,  [2,3])
+    verifyList(-2..2,  [-2,-1,0,1,2])
+    verifyList(10..8,  [10,9,8])
+    verifyList(10..<8, [10,9])
+    verifyList(-4..-8, [-4,-5,-6,-7,-8])
+  }
+
+  Void verifyList(Range r, Int[] list)
+  {
+    verifyEq(r.toList,  list)
+    verifyEq(r.isEmpty, list.isEmpty)
+    verifyEq(r.min,     list.min)
+    verifyEq(r.max,     list.max)
+    verifyEq(r.first,   list.first)
+    verifyEq(r.last,    list.last)
   }
 
   Void testRandom()
