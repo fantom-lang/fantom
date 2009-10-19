@@ -103,7 +103,7 @@ fan.sys.Type.prototype.toNonNullable = function() { return this; }
 // Make
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Type.prototype.make = function()
+fan.sys.Type.prototype.make = function(args)
 {
   // return defVal if cached
   if (this.m_$defVal != null) return this.m_$defVal;
@@ -111,7 +111,24 @@ fan.sys.Type.prototype.make = function()
   // look for defVal and cache if exists
   var obj = eval(this.m_$qname);
   if (obj.m_defVal != null) { this.m_$defVal = obj.m_defVal; return obj.m_defVal; }
-  return obj.make();
+
+  // call make with args
+  if (args == undefined) return obj.make();
+  var a = args;
+  switch (args.length)
+  {
+    case 0: return obj.make();
+    case 1: return obj.make(a[0]);
+    case 2: return obj.make(a[0], a[1]);
+    case 3: return obj.make(a[0], a[1], a[2]);
+    case 4: return obj.make(a[0], a[1], a[2], a[3]);
+    case 5: return obj.make(a[0], a[1], a[2], a[3], a[4]);
+    case 6: return obj.make(a[0], a[1], a[2], a[3], a[4], a[5]);
+    case 7: return obj.make(a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
+    case 8: return obj.make(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
+    case 9: return obj.make(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
+    default: throw fan.sys.Err.make("10+ args not yet implemented");
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////
