@@ -112,7 +112,6 @@ fan.fwt.WidgetPeer.prototype.m_size = fan.gfx.Size.make(0,0);
 
 fan.fwt.WidgetPeer.prototype.focus = function(self)
 {
-  console.log("# widget.focus");
 }
 
 //////////////////////////////////////////////////////////////////////////
