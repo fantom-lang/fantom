@@ -48,6 +48,9 @@ fan.fwt.TablePeer.prototype.create = function(parentElem)
   // init selected
   this.m_selected = fan.sys.List.make(fan.sys.Type.find("sys::Int"), []);
 
+  // make sure we force rebuild
+  this.needRebuild = true;
+
   var table = document.createElement("table");
   with (table.style)
   {

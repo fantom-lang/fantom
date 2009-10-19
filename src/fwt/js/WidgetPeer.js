@@ -210,6 +210,15 @@ fan.fwt.WidgetPeer.prototype.emptyDiv = function()
 
 fan.fwt.WidgetPeer.prototype.detach = function(self)
 {
+  // recursively detach my children
+  var kids = self.m_kids;
+  for (var i=0; i<kids.length; i++)
+  {
+    var kid = kids[i];
+    kid.peer.detach(kid);
+  }
+
+  // detach myself
   var elem = self.peer.elem;
   if (elem != null)
     elem.parentNode.removeChild(elem);
