@@ -135,10 +135,15 @@ public class Err
 
   public String toStr()
   {
+    // wrap with try block to safely handle boot-strap problems
+    String qname;
+    try { qname = type().qname(); }
+    catch (Throwable e) { qname = getClass().getName(); }
+
     if (message == null)
-      return type().qname();
+      return qname;
     else
-      return type().qname() + ": " + message;
+      return qname + ": " + message;
   }
 
 //////////////////////////////////////////////////////////////////////////
