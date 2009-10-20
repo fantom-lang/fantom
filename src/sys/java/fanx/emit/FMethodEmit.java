@@ -352,7 +352,7 @@ public class FMethodEmit
     pushArgs(code, !(isStatic && !self), paramLen);
 
     // emit default arguments
-    FCodeEmit.Reg[] regs = FCodeEmit.initRegs(emit.pod, isStatic & !isCtor, method.vars);
+    FCodeEmit.Reg[] regs = FCodeEmit.initRegs(emit, isStatic & !isCtor, method.vars);
     for (int i=paramLen; i<method.paramCount; ++i)
     {
       FCodeEmit e = new FCodeEmit(emit, method.vars[i].def, code, regs, emit.pod.typeRef(method.ret));

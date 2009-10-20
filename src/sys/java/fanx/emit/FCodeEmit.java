@@ -26,7 +26,7 @@ public class FCodeEmit
   public FCodeEmit(FTypeEmit parent, FMethod fmethod, CodeEmit code)
   {
     this(parent, fmethod.code, code,
-         initRegs(parent.pod,  fmethod.isStatic(), fmethod.vars),
+         initRegs(parent, fmethod.isStatic(), fmethod.vars),
          parent.pod.typeRef(fmethod.ret));
     this.fmethod  = fmethod;
     code.maxStack = fmethod.maxStack * 2; // TODO: how should we handle wide items on stack?
@@ -261,35 +261,22 @@ public class FCodeEmit
 
     AttrEmit attr = code.emitAttr("LocalVariableTable");
     Box info = attr.info;
-    FMethodVar[] vars = fmethod.vars;
-    int num = vars.length;  // num of vars including implicit this
-    int offset = 0;         // offset if including implicit this
-    if (!fmethod.isStatic()) { ++offset; ++num; }
 
     // Fan variables never reuse stack registers, so
     // we can declare their scope across entire method
     int start = 0;
     int end = code.info.len-2-2-4; // max stack, max locals, code len
 
-    info.u2(num);
-    info.grow(info.len + num*10);
-    if (!fmethod.isStatic())
+    info.u2(regs.length);
+    info.grow(info.len + regs.length*10);
+    for (int i=0; i<regs.length; ++i)
     {
-      // implicit this
+      Reg reg = regs[i];
       info.u2(start);
       info.u2(end);
-      info.u2(code.emit.utf("this"));
-      info.u2(code.emit.utf(pod.typeRef(parent.type.self).jsig()));
-      info.u2(0);
-    }
-    for (int i=0; i<vars.length; ++i)
-    {
-      FMethodVar var = vars[i];
-      info.u2(start);
-      info.u2(end);
-      info.u2(code.emit.utf(var.name));
-      info.u2(code.emit.utf(pod.typeRef(var.type).jsig()));
-      info.u2(i+offset);
+      info.u2(code.emit.utf(reg.name));
+      info.u2(code.emit.utf(reg.typeRef.jsig()));
+      info.u2(reg.jindex);
     }
   }
 
@@ -1217,8 +1204,9 @@ public class FCodeEmit
    * Registers are typed (so we know which XLOAD_X and XSTORE_X opcodes
    * to use) and might be numbered differently (if using longs/doubles).
    */
-  static Reg[] initRegs(FPod pod, boolean isStatic, FMethodVar[] vars)
+  static Reg[] initRegs(FTypeEmit parent, boolean isStatic, FMethodVar[] vars)
   {
+    FPod pod = parent.pod;
     Reg[] regs = new Reg[isStatic ? vars.length : vars.length+1];
     int jindex = 0;
     for (int i=0; i<regs.length; ++i)
@@ -1227,16 +1215,20 @@ public class FCodeEmit
       if (i == 0 && !isStatic)
       {
         // this pointer
+        r.typeRef = pod.typeRef(parent.type.self);
+        r.name = "this";
         r.stackType = FTypeRef.OBJ;
         r.jindex = jindex;
         ++jindex;
       }
       else
       {
-        FTypeRef typeRef = pod.typeRef(vars[isStatic ? i : i - 1].type);
-        r.stackType = typeRef.stackType;
+        FMethodVar var = vars[isStatic ? i : i - 1];
+        r.typeRef = pod.typeRef(var.type);
+        r.name = var.name;
+        r.stackType = r.typeRef.stackType;
         r.jindex = jindex;
-        jindex += typeRef.isWide() ? 2 : 1;
+        jindex += r.typeRef.isWide() ? 2 : 1;
       }
       regs[i] = r;
     }
@@ -1253,8 +1245,10 @@ public class FCodeEmit
   {
     public String toString() { return "Reg " + jindex + " " + (char)stackType; }
     public boolean isWide() { return FTypeRef.isWide(stackType); }
-    int stackType;  // FTypeRef.OBJ, LONG, INT, etc
-    int jindex;     // Java register number to use (might shift for longs/doubles)
+    String name;      // local variable name
+    FTypeRef typeRef; // local variable type
+    int stackType;    // FTypeRef.OBJ, LONG, INT, etc
+    int jindex;       // Java register number to use (might shift for longs/doubles)
   }
 
 //////////////////////////////////////////////////////////////////////////
