@@ -796,7 +796,7 @@ fan.sys.Uri.prototype.pathOnly = function()
   t.pathStr  = this.m_pathStr;
   t.query    = fan.sys.Uri.emptyQuery();
   t.str      = this.m_pathStr;
-  return new Uri(t);
+  return fan.sys.Uri.makeSections(t);
 }
 
 fan.sys.Uri.prototype.sliceToPathAbs = function(range) { return this.slice(range, true); }
