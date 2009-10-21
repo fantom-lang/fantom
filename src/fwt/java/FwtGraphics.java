@@ -163,6 +163,24 @@ public class FwtGraphics implements Graphics
     return this;
   }
 
+  public Graphics drawPolyline(fan.sys.List p)
+  {
+    gc.drawPolyline(toInts(p));
+    return this;
+  }
+
+  public Graphics drawPolygon(fan.sys.List p)
+  {
+    gc.drawPolygon(toInts(p));
+    return this;
+  }
+
+  public Graphics fillPolygon(fan.sys.List p)
+  {
+    gc.fillPolygon(toInts(p));
+    return this;
+  }
+
   public Graphics drawRect(long x, long y, long w, long h)
   {
     gc.drawRectangle((int)x, (int)y, (int)w, (int)h);
@@ -286,6 +304,23 @@ public class FwtGraphics implements Graphics
     int alpha;
     Transform transform;
     Rectangle clip;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Util
+//////////////////////////////////////////////////////////////////////////
+
+  int[] toInts(fan.sys.List points)
+  {
+    int size = (int)points.size() * 2;
+    int[] a = new int[size];
+    for (int i=0; i<size; i+=2)
+    {
+      Point p = (Point)points.get(i/2);
+      a[i]   = (int)p.x;
+      a[i+1] = (int)p.y;
+    }
+    return a;
   }
 
 //////////////////////////////////////////////////////////////////////////

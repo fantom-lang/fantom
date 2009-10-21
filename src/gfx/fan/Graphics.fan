@@ -48,6 +48,21 @@ mixin Graphics
   abstract This drawLine(Int x1, Int y1, Int x2, Int y2)
 
   **
+  ** Draw a polyline with the current pen and brush.
+  **
+  abstract This drawPolyline(Point[] p)
+
+  **
+  ** Draw a polygon with the current pen and brush.
+  **
+  abstract This drawPolygon(Point[] p)
+
+  **
+  ** Fill a polygon with the current brush.
+  **
+  abstract This fillPolygon(Point[] p)
+
+  **
   ** Draw a rectangle with the current pen and brush.
   **
   abstract This drawRect(Int x, Int y, Int w, Int h)

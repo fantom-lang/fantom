@@ -791,6 +791,20 @@ class GraphicsDemo : Canvas
     g.brush = Color.purple; g.drawText("Hello World!", 70, 50)
     g.font = Desktop.sysFontMonospace.toSize(16).toBold; g.drawText("Hello World!", 70, 70)
 
+    g.pen = Pen { width = 2; join = Pen.joinBevel }
+    g.brush = Color("#a00")
+    g.drawPolyline([
+      Point(10, 380),
+      Point(30, 420),
+      Point(50, 380),
+      Point(70, 420),
+      Point(90, 380)])
+
+    polygon := [Point(180, 380), Point(140, 440), Point(220, 440)]
+    g.pen = Pen("1")
+    g.brush = Color("#f88"); g.fillPolygon(polygon)
+    g.brush = Color("#800"); g.drawPolygon(polygon)
+
     img := demo.folderIcon
     g.drawImage(img, 220, 20)
     g.copyImage(img, Rect(0, 0, img.size.w, img.size.h), Rect(250, 30, 64, 64))
