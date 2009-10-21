@@ -101,6 +101,47 @@ fan.fwt.Graphics.prototype.drawLine = function(x1, y1, x2, y2)
   return this;
 }
 
+// This drawPolyline(Point[] p)
+fan.fwt.Graphics.prototype.drawPolyline = function(p)
+{
+  this.cx.beginPath();
+  for (var i=0; i<p.length; i++)
+  {
+    if (i == 0) this.cx.moveTo(p[i].m_x+0.5, p[i].m_y+0.5);
+    else this.cx.lineTo(p[i].m_x+0.5, p[i].m_y+0.5);
+  }
+  this.cx.stroke();
+  return this;
+}
+
+// This drawPolygon(Point[] p)
+fan.fwt.Graphics.prototype.drawPolygon = function(p)
+{
+  this.cx.beginPath();
+  for (var i=0; i<p.length; i++)
+  {
+    if (i == 0) this.cx.moveTo(p[i].m_x+0.5, p[i].m_y+0.5);
+    else this.cx.lineTo(p[i].m_x+0.5, p[i].m_y+0.5);
+  }
+  this.cx.closePath();
+  this.cx.stroke();
+  return this;
+}
+
+// This fillPolygon(Point[] p)
+fan.fwt.Graphics.prototype.fillPolygon = function(p)
+{
+  this.cx.beginPath();
+  for (var i=0; i<p.length; i++)
+  {
+    if (i == 0) this.cx.moveTo(p[i].m_x+0.5, p[i].m_y+0.5);
+    else this.cx.lineTo(p[i].m_x+0.5, p[i].m_y+0.5);
+  }
+  this.cx.closePath();
+  this.cx.fill();
+  return this;
+}
+
 // This drawRect(Int x, Int y, Int w, Int h)
 fan.fwt.Graphics.prototype.drawRect = function(x, y, w, h)
 {

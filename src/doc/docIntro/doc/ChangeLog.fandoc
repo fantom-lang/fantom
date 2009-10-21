@@ -725,5 +725,5 @@
 - XNode.writeToStr
 - dom::Doc.cookies
 - Tweak compiler to hide private/internal default exprs in fandoc
-
+- Graphics: drawPolyline, drawPolygon, fillPolygon
 
