@@ -84,6 +84,13 @@ fan.sys.List.insert = function(self, index, item)
   return self;
 }
 
++fan.sys.List.remove = function(self, val)
++{
++  var index = fan.sys.List.index(self, val);
++  if (index == null) return null;
++  return fan.sys.List.removeAt(self, index);
++}
+
 fan.sys.List.removeSame = function(self, val)
 {
   var index = fan.sys.List.indexSame(self, val);
