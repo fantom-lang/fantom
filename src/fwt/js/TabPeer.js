@@ -45,24 +45,23 @@ fan.fwt.TabPeer.prototype.sync = function(self)
     cursor  = "default";
     padding = "6px 12px";
     border  = "1px solid #404040";
-
-    if (selected)
-    {
-      borderBottom = "1px solid #eee";
-      backgroundColor = "#eee";
-      // IE workaround
-      try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f8f8f8), to(#eee))"; } catch (err) {} // ignore
-    }
-    else
-    {
-      backgroundColor = "#ccc";
-      // IE workaround
-      try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ccc))"; } catch (err) {} // ignore
-    }
-
+    if (selected) borderBottom = "1px solid #eee";
     MozBorderRadius = "5px 5px 0 0";
     webkitBorderTopLeftRadius  = "5px";
     webkitBorderTopRightRadius = "5px";
+  }
+
+  if (selected)
+  {
+    fan.fwt.WidgetPeer.setBg(elem, fan.gfx.Gradient.makeLinear(
+      fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#f8f8f8"),
+      fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#eee")));
+  }
+  else
+  {
+    fan.fwt.WidgetPeer.setBg(elem, fan.gfx.Gradient.makeLinear(
+      fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#eee"),
+      fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#ccc")));
   }
 
   // account for border/padding

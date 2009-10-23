@@ -266,9 +266,18 @@ fan.fwt.WidgetPeer.setBg = function(elem, brush)
       // set background to first stop for fallback if gradeints not supported
       background = c1;
 
-      // need to try block for IE
-      var css = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(" + c1 + "), to(" + c2 + "))";
-      try { backgroundImage = css; } catch (err) {} // ignore
+      // IE throws here, so trap and use filter in catch
+      try
+      {
+        backgroundImage = "-moz-linear-gradient(0% 0%, 0% 100%, from(" + c1 + "), to(" + c2 + "))";
+        backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(" + c1 + "), to(" + c2 + "))";
+      }
+      catch (err)
+      {
+        filter = "progid:DXImageTransform.Microsoft.Gradient(" +
+          "StartColorStr=" + c1 + ", EndColorStr=" + c2 + ")";
+      }
+
       return;
     }
     if (brush instanceof fan.gfx.Pattern)

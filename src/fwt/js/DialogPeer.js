@@ -54,10 +54,10 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     MozBorderRadiusTopright    = "4px";
     webkitBorderTopLeftRadius  = "4px";
     webkitBorderTopRightRadius = "4px";
-    backgroundColor = "#6f6f6f";
-    // IE workaround
-    try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#6f6f6f), to(#535353))"; } catch (err) {} // ignore
   }
+  fan.fwt.WidgetPeer.setBg(tbar, fan.gfx.Gradient.makeLinear(
+    fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#6f6f6f"),
+    fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#535353")));
   var content = this.emptyDiv();
   with (content.style)
   {
