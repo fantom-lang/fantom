@@ -21,9 +21,10 @@ public final class Date
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Date today()
+  public static Date today() { return DateTime.now().date(); }
+  public static Date today(TimeZone tz)
   {
-    return DateTime.now().date();
+    return DateTime.makeTicks(DateTime.nowTicks(), tz).date();
   }
 
   public static Date make(long year, Month month, long day)
