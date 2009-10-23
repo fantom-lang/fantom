@@ -12,35 +12,67 @@
 fan.fwt.LabelPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
 fan.fwt.LabelPeer.prototype.$ctor = function(self) {}
 
-fan.fwt.LabelPeer.prototype.text   = function(self) { return this.m_text; }
-fan.fwt.LabelPeer.prototype.text$  = function(self, val) { this.m_text = val; }
 fan.fwt.LabelPeer.prototype.m_text = "";
+fan.fwt.LabelPeer.prototype.text   = function(self) { return this.m_text; }
+fan.fwt.LabelPeer.prototype.text$  = function(self, val)
+{
+  this.m_text = val;
+  this.needRebuild = true;
+}
 
-fan.fwt.LabelPeer.prototype.bg   = function(self) { return this.m_bg; }
-fan.fwt.LabelPeer.prototype.bg$  = function(self, val) { this.m_bg = val; }
 fan.fwt.LabelPeer.prototype.m_bg = null;
+fan.fwt.LabelPeer.prototype.bg   = function(self) { return this.m_bg; }
+fan.fwt.LabelPeer.prototype.bg$  = function(self, val)
+{
+  this.m_bg = val;
+  this.needRebuild = true;
+}
 
-fan.fwt.LabelPeer.prototype.fg   = function(self) { return this.m_fg; }
-fan.fwt.LabelPeer.prototype.fg$  = function(self, val) { this.m_fg = val; }
 fan.fwt.LabelPeer.prototype.m_fg = null;
+fan.fwt.LabelPeer.prototype.fg   = function(self) { return this.m_fg; }
+fan.fwt.LabelPeer.prototype.fg$  = function(self, val)
+{
+  this.m_fg = val;
+  this.needRebuild = true;
+}
 
-fan.fwt.LabelPeer.prototype.font   = function(self) { return this.m_font; }
-fan.fwt.LabelPeer.prototype.font$  = function(self, val) { this.m_font = val; }
 fan.fwt.LabelPeer.prototype.m_font = null;
+fan.fwt.LabelPeer.prototype.font   = function(self) { return this.m_font; }
+fan.fwt.LabelPeer.prototype.font$  = function(self, val)
+{
+  this.m_font = val;
+  this.needRebuild = true;
+}
 
-fan.fwt.LabelPeer.prototype.halign   = function(self) { return this.m_halign; }
-fan.fwt.LabelPeer.prototype.halign$  = function(self, val) { this.m_halign = val; }
 fan.fwt.LabelPeer.prototype.m_halign = null;
+fan.fwt.LabelPeer.prototype.halign   = function(self) { return this.m_halign; }
+fan.fwt.LabelPeer.prototype.halign$  = function(self, val)
+{
+  this.m_halign = val;
+  this.needRebuild = true;
+}
 
+fan.fwt.LabelPeer.prototype.m_image = null;
 fan.fwt.LabelPeer.prototype.image  = function(self) { return this.m_image; }
 fan.fwt.LabelPeer.prototype.image$ = function(self, val)
 {
   this.m_image = val;
   fan.fwt.FwtEnvPeer.loadImage(val, self)
+  this.needRebuild = true;
 }
-fan.fwt.LabelPeer.prototype.m_image = null;
 
 fan.fwt.LabelPeer.prototype.sync = function(self)
+{
+  if (this.needRebuild == true)
+  {
+    this.rebuild(self);
+    this.needRebuild = false;
+  }
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
+}
+
+fan.fwt.LabelPeer.prototype.needRebuild = true;
+fan.fwt.LabelPeer.prototype.rebuild = function(self)
 {
   var parent = this.elem;
 
@@ -118,6 +150,6 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
     whiteSpace = "nowrap";
     cursor = "default";
   }
-
-  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
+
+
