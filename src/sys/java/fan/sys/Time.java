@@ -22,9 +22,10 @@ public final class Time
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Time now()
+  public static Time now() { return DateTime.now().time(); }
+  public static Time now(TimeZone tz)
   {
-    return DateTime.now().time();
+    return DateTime.makeTicks(DateTime.nowTicks(), tz).time();
   }
 
   public static Time make(long hour, long min) { return make(hour, min, 0L, 0L); }

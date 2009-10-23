@@ -19,10 +19,11 @@ const final class Time
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the current time using the default timezone.  Convenience for:
-  **   DateTime.now.time
+  ** Get the current time using the specified timezone.
+  ** This method may use `DateTime.now` with the default
+  ** tolerance 250ms.
   **
-  static Time now()
+  static Time now(TimeZone tz := TimeZone.current)
 
   **
   ** Make for the specified time values:

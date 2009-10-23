@@ -721,6 +721,7 @@
 - FWT javascript enhancements
 - Float.random
 - Range.map
+- Date.today and Time.now take optional TimeZone
 - Fix StrBuf.out anomalies
 - XNode.writeToStr
 - dom::Doc.cookies

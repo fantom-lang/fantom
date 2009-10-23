@@ -18,9 +18,9 @@ const final class Date
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get today's Date using default timezone.
+  ** Get today's Date using specified timezone.
   **
-  static Date today()
+  static Date today(TimeZone tz := TimeZone.current)
 
   **
   ** Make for the specified date values:

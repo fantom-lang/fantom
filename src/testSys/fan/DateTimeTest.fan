@@ -155,6 +155,7 @@ class DateTimeTest : Test
     verify(b !== c)
 
     verifyEq(Date.today, DateTime.now.date)
+    verifyEq(Date.today(TimeZone.utc), DateTime.nowUtc.date)
 
     dt1   := DateTime.now(null)
     ticks := DateTime.nowTicks
@@ -164,6 +165,11 @@ class DateTimeTest : Test
     dt1   = DateTime.now
     time  := Time.now
     dt2   = DateTime.now
+    verify(dt1.time <= time && time <= dt2.time)
+
+    dt1   = DateTime.nowUtc
+    time  = Time.now(TimeZone.utc)
+    dt2   = DateTime.nowUtc
     verify(dt1.time <= time && time <= dt2.time)
   }
 
