@@ -117,6 +117,7 @@ with (fan.sys.Pod.$add("sys"))
 };
 
 // TODO - temp
+// fromStr
 fan.sys.Type.find("sys::Bool").$am("fromStr", 20482);
 fan.sys.Type.find("sys::Date").$am("fromStr", 20482);
 fan.sys.Type.find("sys::DateTime").$am("fromStr", 20482);
@@ -126,6 +127,10 @@ fan.sys.Type.find("sys::Int").$am("fromStr", 20482);
 fan.sys.Type.find("sys::Str").$am("fromStr", 20482);
 fan.sys.Type.find("sys::Time").$am("fromStr", 20482);
 fan.sys.Type.find("sys::Uri").$am("fromStr", 20482);
+// toLocale
+fan.sys.Type.find("sys::Date").$am("toLocale", 4096);
+fan.sys.Type.find("sys::DateTime").$am("toLocale", 4096);
+fan.sys.Type.find("sys::Time").$am("toLocale", 4096);
 
 // TODO - we really need to emit the type info *before*, but not
 // sure quite how that should work yet.  So in the mean time, stick
