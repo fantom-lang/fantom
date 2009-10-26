@@ -12,6 +12,7 @@
 fan.fwt.TablePeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
 fan.fwt.TablePeer.prototype.$ctor = function(self)
 {
+  this.m_selected = fan.sys.List.make(fan.sys.Type.find("sys::Int"), []);
   this.inPrefSize = false;
 }
 
@@ -23,7 +24,7 @@ fan.fwt.TablePeer.prototype.m_headerVisible = true;
 fan.fwt.TablePeer.prototype.headerVisible   = function(self) { return this.m_headerVisible; }
 fan.fwt.TablePeer.prototype.headerVisible$  = function(self, val) { this.m_headerVisible = val; }
 
-fan.fwt.TablePeer.prototype.m_selected = true; // TODO fix
+fan.fwt.TablePeer.prototype.m_selected = null;
 fan.fwt.TablePeer.prototype.selected   = function(self) { return this.m_selected; }
 fan.fwt.TablePeer.prototype.selected$  = function(self, val)
 {
@@ -45,9 +46,6 @@ fan.fwt.TablePeer.prototype.prefSize = function(self, hints)
 
 fan.fwt.TablePeer.prototype.create = function(parentElem)
 {
-  // init selected
-  this.m_selected = fan.sys.List.make(fan.sys.Type.find("sys::Int"), []);
-
   // make sure we force rebuild
   this.needRebuild = true;
 
