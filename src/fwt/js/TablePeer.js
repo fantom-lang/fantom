@@ -374,9 +374,9 @@ fan.fwt.TableSelection.prototype.notify = function(primaryIndex)
 {
   if (this.table.m_onSelect.size() > 0)
   {
-    var se   = fan.fwt.Event.make();
-    se.id    = fan.fwt.EventId.m_select;
-    se.index = primaryIndex;
+    var se     = fan.fwt.Event.make();
+    se.m_id    = fan.fwt.EventId.m_select;
+    se.m_index = primaryIndex;
     var listeners = this.table.m_onSelect.list();
     for (var i=0; i<listeners.length; i++) fan.sys.Func.call(listeners[i], se);
   }
