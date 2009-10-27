@@ -130,6 +130,8 @@ fan.sys.Type.find("sys::Uri").$am("fromStr", 20482);
 // toLocale
 fan.sys.Type.find("sys::Date").$am("toLocale", 4096);
 fan.sys.Type.find("sys::DateTime").$am("toLocale", 4096);
+fan.sys.Type.find("sys::DateTime").$am("date", 4096);
+fan.sys.Type.find("sys::DateTime").$am("time", 4096);
 fan.sys.Type.find("sys::Time").$am("toLocale", 4096);
 
 // TODO - we really need to emit the type info *before*, but not
