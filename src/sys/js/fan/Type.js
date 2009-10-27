@@ -332,6 +332,7 @@ fan.sys.ListType.prototype.$ctor = function(v)
   this.v = v;
   this.m_mixins = [];
 }
+fan.sys.ListType.prototype.base = function() { return fan.sys.Type.find("sys::List"); }
 fan.sys.ListType.prototype.signature = function() { return this.v.signature() + '[]'; }
 fan.sys.ListType.prototype.equals = function(that)
 {
