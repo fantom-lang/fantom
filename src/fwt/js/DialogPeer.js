@@ -86,6 +86,33 @@ fan.fwt.DialogPeer.prototype.open = function(self)
   // cache elements so we can remove when we close
   this.$mask = mask;
   this.$shell = shell;
+
+  // try to focus first form element
+  var elem = fan.fwt.DialogPeer.findFormControl(content);
+  if (elem != null)
+  {
+    // NOTE: needed to use a delay here for this to
+    // work reliably, assumingly to give the renderer
+    // time to layout DOM changes.
+    var func = function() { elem.focus(); }
+    setTimeout(func, 50);
+  }
+}
+
+fan.fwt.DialogPeer.findFormControl = function(node)
+{
+  var tag = node.tagName;
+  if (tag != null)
+  {
+    tag = tag.toLowerCase();
+    if (tag == "input" || tag == "select" || tag == "textarea") return node;
+  }
+  for (var i=0; i<node.childNodes.length; i++)
+  {
+    var n = fan.fwt.DialogPeer.findFormControl(node.childNodes[i])
+    if (n != null) return n;
+  }
+  return null;
 }
 
 fan.fwt.DialogPeer.prototype.close = function(self, result)
