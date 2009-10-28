@@ -56,7 +56,7 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
   var outer = this.emptyDiv();
   with (outer.style)
   {
-    paddingRight = "13px";
+    paddingRight = "6px";
   }
 
   var inner = document.createElement("div");
@@ -151,7 +151,7 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
     {
       with (outer.style)
       {
-        var x = outer.offsetWidth-13;
+        var x = outer.offsetWidth-6;
         var uri = fan.sys.UriPodBase + "fwt/res/img/button-right.png";
         background = "url(" + uri + ") no-repeat " + x + "px -25px";
         height = "25px";
@@ -161,7 +161,7 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
         var uri = fan.sys.UriPodBase + "fwt/res/img/button-left.png";
         background = "url(" + uri + ") no-repeat 0 -25px";
         height = "25px";
-        padding = "5px 0px 0 13px";
+        padding = "5px 6px 0 12px";
       }
     }
     else
@@ -177,7 +177,7 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
         var uri = fan.sys.UriPodBase + "fwt/res/img/button-left.png";
         background = "url(" + uri + ") no-repeat";
         height = "25px";
-        padding = "4px 0px 0 13px";
+        padding = "4px 6px 0 12px";
       }
     }
   }
@@ -208,7 +208,7 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
     this.elem.style.borderColor =  this.m_enabled ? "#555" : "#999";
 
     // account for padding/border
-    w -= 13;
+    w -= 6;
   }
   else if (self.m_mode == fan.fwt.ButtonMode.m_check ||
            self.m_mode == fan.fwt.ButtonMode.m_radio)
