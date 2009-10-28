@@ -427,6 +427,22 @@ fan.sys.List.min = function(self, f)
   return min;
 }
 
+fan.sys.List.unique = function(self, f)
+{
+  var dups = {};
+  var acc = fan.sys.List.make(self.$fanType, []);
+  for (var i=0; i<self.length; ++i)
+  {
+    var v = self[i];
+    if (dups[v] == null)
+    {
+      dups[v] = this;
+      acc.push(v);
+    }
+  }
+  return acc;
+}
+
 // TODO
 fan.sys.List.rw = function(self) { return fan.sys.List.make(self.$fanType, self.slice(0)); }
 fan.sys.List.ro = function(self) { return fan.sys.List.make(self.$fanType, self.slice(0)); }
