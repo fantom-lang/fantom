@@ -119,7 +119,7 @@ fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
   var div = this.emptyDiv();
   with (div.style)
   {
-    font = this.m_font==null ? "bold 10pt Arial" : this.m_font.toStr();
+    font = this.m_font==null ? "10pt Arial" : this.m_font.toStr();
     whiteSpace = "nowrap";
   }
   div.appendChild(check);
