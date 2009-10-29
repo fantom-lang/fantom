@@ -62,7 +62,7 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
   var inner = document.createElement("div");
   with (inner.style)
   {
-    font       = "bold 10pt Arial";
+    font       = this.m_font==null ? "bold 10pt Arial" : this.m_font.toStr();
     color      = "#333";
     textAlign  = "center";
     cursor     = "default";
@@ -117,7 +117,11 @@ fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
   check.style.marginRight = "6px";
 
   var div = this.emptyDiv();
-  div.style.whiteSpace = "nowrap";
+  with (div.style)
+  {
+    font = this.m_font==null ? "bold 10pt Arial" : this.m_font.toStr();
+    whiteSpace = "nowrap";
+  }
   div.appendChild(check);
   div.onclick = function(event)
   {
