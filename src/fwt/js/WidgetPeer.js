@@ -163,16 +163,21 @@ fan.fwt.WidgetPeer.prototype.attachTo = function(self, elem)
 
 fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, list)
 {
+  var peer = this;
   for (var i=0; i<list.length; i++)
   {
     var meth = list[i];
     var func = function(e)
     {
+      // find pos relative to widget
+      var dis = peer.posOnDisplay(self);
+      var rel = fan.gfx.Point.make(e.clientX-dis.m_x, e.clientY-dis.m_y);
+
       // TODO - need to fix for IE
       // TODO - only valid for mouseDown - so need to clean up this code
       var evt = new fan.fwt.Event();
       evt.m_id = evtId;
-      evt.m_pos = fan.gfx.Point.make(e.clientX, e.clientY);
+      evt.m_pos = rel;
       evt.m_widget = self;
       //evt.count =
       //evt.key =
