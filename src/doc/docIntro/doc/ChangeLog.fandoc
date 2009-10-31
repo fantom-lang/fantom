@@ -722,6 +722,7 @@
 - Float.random
 - Range.map
 - Date.today and Time.now take optional TimeZone
+- Date firstOfMonth, lastOfMonth
 - Fix StrBuf.out anomalies
 - XNode.writeToStr
 - dom::Doc.cookies

@@ -177,6 +177,22 @@ const final class Date
   **
   Duration minus(Date days)
 
+  **
+  ** Get the first day of this Date's current month.
+  **
+  ** Example:
+  **   Date("2009-10-28").firstOfMonth  =>  2009-10-01
+  **
+  Date firstOfMonth()
+
+  **
+  ** Get the last day of this Date's current month.
+  **
+  ** Example:
+  **   Date("2009-10-28").lastOfMonth  =>  2009-10-31
+  **
+  Date lastOfMonth()
+
 //////////////////////////////////////////////////////////////////////////
 // Misc
 //////////////////////////////////////////////////////////////////////////
