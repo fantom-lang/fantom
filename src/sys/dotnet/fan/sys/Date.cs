@@ -350,6 +350,19 @@ namespace Fan.Sys
         return DateTime.daysInMon[mon];
     }
 
+    public Date firstOfMonth()
+    {
+      if (m_day == 1) return this;
+      return new Date(m_year, m_month, 1);
+    }
+
+    public Date lastOfMonth()
+    {
+      int last = (int)month().numDays(m_year);
+      if (m_day == last) return this;
+      return new Date(m_year, m_month, last);
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Misc
   //////////////////////////////////////////////////////////////////////////
