@@ -59,7 +59,7 @@ fan.sys.Map.prototype.hash = function()
 
 fan.sys.Map.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Map");
+  return this.$fanType;
 }
 
 fan.sys.Map.prototype.toStr = function()
@@ -93,7 +93,7 @@ fan.sys.Map.prototype.values = function()
 {
   var list = [];
   for (var k in this.map) list.push(this.map[k]);
-  return list;
+  return fan.sys.List.make(this.$fanType.v, list);
 }
 
 fan.sys.Map.prototype.get = function(key, defVal)

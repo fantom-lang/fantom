@@ -15,6 +15,8 @@ fan.sys.List = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.sys.List.prototype.$ctor = function() {}
 fan.sys.List.prototype.type = function()  { return fan.sys.Type.find("sys::List"); }
 
+fan.sys.List.$type = null;
+
 //////////////////////////////////////////////////////////////////////////
 // Constructors
 //////////////////////////////////////////////////////////////////////////

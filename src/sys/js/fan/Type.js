@@ -61,6 +61,9 @@ fan.sys.Type.prototype.type = function()      { return fan.sys.Type.find("sys::T
 fan.sys.Type.prototype.toListOf = function()  { return new fan.sys.ListType(this); }
 fan.sys.Type.prototype.emptyList = function() { return new fan.sys.List.make(this, []); }
 
+fan.sys.Type.prototype.isNullable = function() { return false; }
+fan.sys.Type.prototype.toNonNullable = function() { return this; }
+
 fan.sys.Type.prototype.fits = function(that) { return this.is(that); }
 fan.sys.Type.prototype.is = function(that)
 {
@@ -332,6 +335,7 @@ fan.sys.ListType.prototype.$ctor = function(v)
   this.v = v;
   this.m_mixins = [];
 }
+
 fan.sys.ListType.prototype.base = function() { return fan.sys.Type.find("sys::List"); }
 fan.sys.ListType.prototype.signature = function() { return this.v.signature() + '[]'; }
 fan.sys.ListType.prototype.equals = function(that)
@@ -341,11 +345,41 @@ fan.sys.ListType.prototype.equals = function(that)
   else
     return false;
 }
+
 fan.sys.ListType.prototype.is = function(that)
 {
-  if (that instanceof fan.sys.ListType) return this.v.is(that.v);
-  if (that instanceof fan.sys.Type) return that.m_qname == "sys::List";
-  return fan.sys.Type.prototype.is.call(this, that);
+  if (that instanceof fan.sys.ListType)
+  {
+    if (that.v.qname() == "sys::Obj") return true;
+    return this.v.is(that.v);
+  }
+  if (that instanceof fan.sys.Type)
+  {
+    if (that.qname() == "sys::List") return true;
+    if (that.qname() == "sys::Obj")  return true;
+  }
+  return false;
+}
+
+fan.sys.ListType.prototype.as = function(obj, that)
+{
+  var objType = fan.sys.Obj.type(obj);
+
+  if (objType instanceof fan.sys.ListType &&
+      objType.v.qname() == "sys::Obj")
+    return obj;
+
+  if (that instanceof fan.sys.NullableType &&
+      that.m_root instanceof fan.sys.ListType)
+    that = that.m_root;
+
+  return objType.is(that) ? obj : null;
+}
+
+fan.sys.ListType.prototype.toNullable = function()
+{
+  if (this.m_nullable == null) this.m_nullable = new fan.sys.NullableType(this);
+  return this.m_nullable;
 }
 
 /*************************************************************************
@@ -372,6 +406,42 @@ fan.sys.MapType.prototype.equals = function(that)
     return this.k.equals(that.k) && this.v.equals(that.v);
   else
     return false;
+}
+
+fan.sys.MapType.prototype.is = function(that)
+{
+  if (that instanceof fan.sys.MapType)
+  {
+    return this.k.is(that.k) && this.v.is(that.v);
+  }
+  if (that instanceof fan.sys.Type)
+  {
+    if (that.qname() == "sys::Map") return true;
+    if (that.qname() == "sys::Obj")  return true;
+  }
+  return false;
+}
+
+fan.sys.MapType.prototype.as = function(obj, that)
+{
+  var objType = fan.sys.Obj.type(obj);
+
+  if (objType instanceof fan.sys.MapType &&
+      objType.k.qname() == "sys::Obj" &&
+      objType.v.qname() == "sys::Obj")
+    return obj;
+
+  //if (that instanceof fan.sys.NullableType &&
+  //    that.m_root instanceof fan.sys.ListType)
+  //  that = that.m_root;
+
+  return objType.is(that) ? obj : null;
+}
+
+fan.sys.MapType.prototype.toNullable = function()
+{
+  if (this.m_nullable == null) this.m_nullable = new fan.sys.NullableType(this);
+  return this.m_nullable;
 }
 
 /*************************************************************************
