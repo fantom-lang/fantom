@@ -226,7 +226,7 @@ fan.sys.DateTime.makeTicks = function(ticks, tz)
       // time to get us back to standard time
       if (rule.isWallTime() && fan.sys.TimeZone.dstOffset(rule, year, month, day, Math.floor(rem/fan.sys.DateTime.nsPerSec)) == 0)
       {
-        ticks -= dstOffset * sysDateTime.nsPerSec;
+        ticks -= dstOffset * fan.sys.DateTime.nsPerSec;
         dstOffset = fan.sys.Int.maxVal;
         continue;
       }
