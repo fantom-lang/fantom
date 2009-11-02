@@ -350,6 +350,19 @@ public final class Date
       return DateTime.daysInMon[mon];
   }
 
+  public final Date firstOfMonth()
+  {
+    if (day == 1) return this;
+    return new Date(year, month, 1);
+  }
+
+  public final Date lastOfMonth()
+  {
+    int last = (int)month().numDays(year);
+    if (day == last) return this;
+    return new Date(year, month, last);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Misc
 //////////////////////////////////////////////////////////////////////////

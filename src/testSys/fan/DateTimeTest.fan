@@ -1220,6 +1220,27 @@ class DateTimeTest : Test
     verifyEq(a - b, -diff)
   }
 
+  Void testDateFirstAndLast()
+  {
+    verifyDateFirstAndLast(Date(2009, jan, 1))
+    verifyDateFirstAndLast(Date(2009, jan, 31))
+    verifyDateFirstAndLast(Date(2009, oct, 31))
+    verifyDateFirstAndLast(Date(2008, feb, 4))
+    verifyDateFirstAndLast(Date(2009, feb, 7))
+  }
+
+  Void verifyDateFirstAndLast(Date d)
+  {
+    first := d.firstOfMonth
+    verifyEq(first.year,  d.year)
+    verifyEq(first.month, d.month)
+    verifyEq(first.day,   1)
+    last := d.lastOfMonth
+    verifyEq(last.year,  d.year)
+    verifyEq(last.month, d.month)
+    verifyEq(last.day,   d.month.numDays(d.year))
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Today/Tomorrow/Yesterday
 //////////////////////////////////////////////////////////////////////////
