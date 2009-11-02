@@ -247,13 +247,6 @@ class JsExpr : JsNode
         out.w(")")
         return
       }
-      else if (ce.target.ctype.qname == "sys::Err" && ce.method.name == "trace")
-      {
-        out.w("fan.sys.Err.trace(")
-        expr(ce.target)
-        out.w(")")
-        return
-      }
       if (ce.target is SuperExpr)
       {
         base := ce.target->explicitType ?: ce.target.ctype
