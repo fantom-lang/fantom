@@ -366,7 +366,8 @@ fan.sys.ListType.prototype.as = function(obj, that)
   var objType = fan.sys.Obj.type(obj);
 
   if (objType instanceof fan.sys.ListType &&
-      objType.v.qname() == "sys::Obj")
+      objType.v.qname() == "sys::Obj" &&
+      that instanceof fan.sys.ListType)
     return obj;
 
   if (that instanceof fan.sys.NullableType &&
@@ -428,7 +429,8 @@ fan.sys.MapType.prototype.as = function(obj, that)
 
   if (objType instanceof fan.sys.MapType &&
       objType.k.qname() == "sys::Obj" &&
-      objType.v.qname() == "sys::Obj")
+      objType.v.qname() == "sys::Obj" &&
+      that instanceof fan.sys.MapType)
     return obj;
 
   //if (that instanceof fan.sys.NullableType &&
