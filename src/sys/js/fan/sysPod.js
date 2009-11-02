@@ -96,7 +96,7 @@ with (fan.sys.Pod.$add("sys"))
   $at("Err",       "sys::Obj");
   $at("ArgErr",    "sys::Err");
   // TODO: CancelledErr
-  // TODO: CastErr
+  $at("CastErr",   "sys::Obj");
   // TODO: ConstErr
   $at("IOErr",     "sys::Err");
   $at("IndexErr",  "sys::Err");
@@ -116,6 +116,13 @@ with (fan.sys.Pod.$add("sys"))
   $at("UnsupportedErr", "sys::Err");
 };
 
+// TODO FIXIT
+// cache sys types
+fan.sys.Obj.$type  = fan.sys.Type.find("sys::Obj");
+fan.sys.List.$type = fan.sys.Type.find("sys::List");
+fan.sys.Map.$type  = fan.sys.Type.find("sys::Map");
+fan.sys.Pod.$type  = fan.sys.Type.find("sys::Pod");
+
 // TODO - temp
 // fromStr
 fan.sys.Type.find("sys::Bool").$am("fromStr", 20482);
@@ -133,6 +140,8 @@ fan.sys.Type.find("sys::DateTime").$am("toLocale", 4096);
 fan.sys.Type.find("sys::DateTime").$am("date", 4096);
 fan.sys.Type.find("sys::DateTime").$am("time", 4096);
 fan.sys.Type.find("sys::Time").$am("toLocale", 4096);
+// misc
+fan.sys.Type.find("sys::Duration").$am("toMin", 4096);
 
 // TODO - we really need to emit the type info *before*, but not
 // sure quite how that should work yet.  So in the mean time, stick

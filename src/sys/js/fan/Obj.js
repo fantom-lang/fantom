@@ -107,6 +107,8 @@ fan.sys.Obj.prototype.trap = function(name, args)
 // Static
 //////////////////////////////////////////////////////////////////////////
 
+// TODO FIXIT: Move all these out into util class
+
 fan.sys.Obj.equals = function(self, that)
 {
   if (self instanceof fan.sys.Obj) return self.equals(that);
@@ -155,9 +157,25 @@ fan.sys.Obj.is = function(obj, type)
 
 fan.sys.Obj.as = function(obj, type)
 {
-  if (obj == null) return false;
-  if (fan.sys.Obj.type(obj).is(type)) return obj;
+  if (obj == null) return null;
+  var t = fan.sys.Obj.type(obj);
+
+// TODOD FIXIT: temp workaround till we rework funcs
+if (t instanceof fan.sys.FuncType) return obj;
+
+  if (t.is(fan.sys.List.$type)) return t.as(obj, type);
+  if (t.is(fan.sys.Map.$type))  return t.as(obj, type);
+  if (t.is(type)) return obj;
   return null;
+}
+
+fan.sys.Obj.coerce = function(obj, type)
+{
+  if (obj == null) return obj;
+  var v = fan.sys.Obj.as(obj, type);
+  if (v == null)
+    throw fan.sys.CastErr.make(fan.sys.Obj.type(obj) + " cannot be cast to " + type);
+  return obj;
 }
 
 fan.sys.Obj.isImmutable = function(self)

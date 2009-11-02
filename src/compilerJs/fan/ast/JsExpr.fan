@@ -60,7 +60,7 @@ class JsExpr : JsNode
       case ExprId.isExpr:       typeCheckExpr(ex)
       case ExprId.isnotExpr:    out.w("!"); typeCheckExpr(ex)
       case ExprId.asExpr:       typeCheckExpr(ex)
-      case ExprId.coerce:       expr(ex->target)
+      case ExprId.coerce:       coerceExpr(ex)
       case ExprId.call:         callExpr(ex)
       case ExprId.construction: callExpr(ex)
       case ExprId.shortcut:     shortcutExpr(ex)
@@ -107,7 +107,7 @@ class JsExpr : JsNode
 
   Void listLiteralExpr(ListLiteralExpr le)
   {
-    t := le.explicitType != null ? le.explicitType.v.qname : Obj#.qname
+    t := (le.explicitType ?: le.ctype)->v->qname
     out.w("fan.sys.List.make(fan.sys.Type.find(\"$t\"), [")
     le.vals.each |Expr ex, Int i|
     {
@@ -124,11 +124,9 @@ class JsExpr : JsNode
     out.w("],[")
     me.vals.each |Expr val, Int i| { if (i > 0) out.w(","); expr(val) }
     out.w("]")
-    if (me.explicitType != null)
-    {
-      out.w(",fan.sys.Type.find(\"").w(me.explicitType.k).w("\")")
-      out.w(",fan.sys.Type.find(\"").w(me.explicitType.v).w("\")")
-    }
+    t := me.explicitType ?: me.ctype
+    out.w(",fan.sys.Type.find(\"").w(t->k).w("\")")
+    out.w(",fan.sys.Type.find(\"").w(t->v).w("\")")
     out.w(")")
   }
 
@@ -154,6 +152,13 @@ class JsExpr : JsNode
   {
     method := te.id == ExprId.asExpr ? "as" : "is"
     out.w("fan.sys.Obj.$method(")
+    expr(te.target)
+    out.w(",fan.sys.Type.find(\"$te.check\"))")
+  }
+
+  Void coerceExpr(TypeCheckExpr te)
+  {
+    out.w("fan.sys.Obj.coerce(")
     expr(te.target)
     out.w(",fan.sys.Type.find(\"$te.check\"))")
   }

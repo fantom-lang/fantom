@@ -79,6 +79,12 @@ fan.sys.ArgErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.cal
 fan.sys.ArgErr.prototype.type = function() { return fan.sys.Type.find("sys::ArgErr"); }
 fan.sys.ArgErr.make = function(msg) { return new fan.sys.ArgErr(msg); }
 
+// CastErr
+fan.sys.CastErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.CastErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.call(this, msg); }
+fan.sys.CastErr.prototype.type = function() { return fan.sys.Type.find("sys::CastErr"); }
+fan.sys.CastErr.make = function(msg) { return new fan.sys.CastErr(msg); }
+
 // NullErr
 fan.sys.NullErr = fan.sys.Obj.$extend(fan.sys.Err);
 fan.sys.NullErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.call(this, msg); }
