@@ -61,6 +61,12 @@ fan.fwt.LabelPeer.prototype.image$ = function(self, val)
   this.needRebuild = true;
 }
 
+fan.fwt.LabelPeer.prototype.create = function(parentElem, self)
+{
+  this.needRebuild = true; // make sure we force rebuild
+  return fan.fwt.WidgetPeer.prototype.create.call(this, parentElem, self);
+}
+
 fan.fwt.LabelPeer.prototype.sync = function(self)
 {
   if (this.needRebuild == true)
