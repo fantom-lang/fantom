@@ -104,7 +104,7 @@ const class TimeZone
   ** time to get wall time during daylight savings time (often 1hr).
   ** If daylight savings time is not observed then return null.
   **
-  Duration dstOffset(Int year)
+  Duration? dstOffset(Int year)
 
   **
   ** Get the abbreviated name during standard time.
@@ -115,7 +115,7 @@ const class TimeZone
   ** Get the abbreviated name during daylight savings time
   ** or null if daylight savings time not observed.
   **
-  Str dstAbbr(Int year)
+  Str? dstAbbr(Int year)
 
   **
   ** Return `name`.
