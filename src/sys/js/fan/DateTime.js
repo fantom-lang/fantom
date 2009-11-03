@@ -634,8 +634,20 @@ fan.sys.DateTime.prototype.plus = function(duration)
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Methods
+// Utils
 //////////////////////////////////////////////////////////////////////////
+
+fan.sys.DateTime.prototype.toTimeZone = function(tz)
+{
+  if (this.m_tz == tz) return this;
+  return fan.sys.DateTime.makeTicks(this.m_ticks, tz);
+}
+
+fan.sys.DateTime.prototype.toUtc = function()
+{
+  if (this.m_tz == fan.sys.TimeZone.m_utc) return this;
+  return fan.sys.DateTime.makeTicks(this.m_ticks, fan.sys.TimeZone.m_utc);
+}
 
 fan.sys.DateTime.prototype.toStr = function()
 {
