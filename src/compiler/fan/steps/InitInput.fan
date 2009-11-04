@@ -214,6 +214,15 @@ class InitInput : CompilerStep
     if (compiler.srcFiles.isEmpty && compiler.resFiles.isEmpty)
       throw err("No fan source files found", null)
 
+    // map sure no duplicate names in srcFiles
+    map := Str:File[:]
+    compiler.srcFiles.each |file|
+    {
+      if (map[file.name] != null)
+        throw err("Cannot have source files with duplicate names: $file.name", Location.makeFile(file))
+      map[file.name] = file
+    }
+
     log.info("FindSourceFiles [${compiler.srcFiles.size} files]")
   }
 
