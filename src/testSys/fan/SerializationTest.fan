@@ -102,6 +102,15 @@ class SerializationTest : Test
     verifySer("using testSys\n SerializationTest#", type)
     verifyErr(IOErr#) { "crazyFooBad::Bar#".in.readObj }
     verifyErr(IOErr#) { "sys::Foo#".in.readObj }
+    verifySer("using sys\nStr[]#", Str[]#)
+    verifySer("sys::Str[]#", Str[]#)
+    verifySer("sys::Str[]?#", Str[]?#)
+    verifySer("sys::Str?[][]#", Str?[][]#)
+    verifySer("sys::Str:sys::Int#", [Str:Int]#)
+    verifySer("[sys::Str:sys::Int?]#", [Str:Int?]#)
+    verifySer("using sys\nStr:Int?#", [Str:Int?]#)
+    verifySer("using sys\n[Str:Int?][]#", [Str:Int?][]#)
+    verifySer("using sys\n[Str:Int?][]?#", [Str:Int?][]?#)
 
     // Symbol literals
     verifySer("@sys::simple", @simple)

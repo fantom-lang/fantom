@@ -338,6 +338,8 @@ public class ObjDecoder
         t = peekType; peekType = null;
         consume();
         while (curt == Token.LRBRACKET) { consume(); t = t.toListOf(); }
+        if (curt == Token.QUESTION) { consume(); t = t.toNullable(); }
+        if (curt == Token.POUND) { consume(); return t; }
         consume(Token.LBRACKET, "Expecting '['");
       }
     }
