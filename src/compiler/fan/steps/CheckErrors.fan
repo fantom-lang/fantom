@@ -1525,7 +1525,6 @@ class CheckErrors : CompilerStep
     if (myType != null)
     {
       if (myType.isClosure) myType = curType.closure.enclosingType
-      if (myType.curry != null) myType = curType.curry.enclosingType
     }
 
     // consider the slot internal if its parent is internal

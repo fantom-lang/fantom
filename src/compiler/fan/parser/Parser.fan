@@ -1474,12 +1474,6 @@ public class Parser : CompilerSupport
       return UnaryExpr(loc, tokt.toExprId, tokt, parenExpr)
     }
 
-    if (tokt === Token.amp)
-    {
-      consume
-      return CurryExpr(loc, curType, parenExpr)
-    }
-
     if (tokt === Token.plus)
     {
       consume
