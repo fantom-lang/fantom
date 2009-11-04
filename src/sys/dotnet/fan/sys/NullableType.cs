@@ -30,6 +30,20 @@ namespace Fan.Sys
   // Type
   //////////////////////////////////////////////////////////////////////////
 
+    public override int GetHashCode() { return (int)hash(); }
+
+    public override long hash() { return m_root.hash() ^ 0x614a9739b1bf9de5L; }
+
+    public override bool Equals(object obj)
+    {
+      if (obj is NullableType)
+      {
+        NullableType x = (NullableType)obj;
+        return m_root.Equals(x.m_root);
+      }
+      return false;
+    }
+
     public override Pod pod() { return m_root.pod(); }
     public override string name() { return m_root.name(); }
     public override string qname() { return m_root.qname(); }

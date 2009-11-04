@@ -28,6 +28,18 @@ public class NullableType
 // Type
 //////////////////////////////////////////////////////////////////////////
 
+  public long hash() { return root.hash() ^ 0x614a9739b1bf9de5L; }
+
+  public boolean equals(Object obj)
+  {
+    if (obj instanceof NullableType)
+    {
+      NullableType x = (NullableType)obj;
+      return root.equals(x.root);
+    }
+    return false;
+  }
+
   public Pod pod() { return root.pod(); }
   public String name() { return root.name(); }
   public String qname() { return root.qname(); }
