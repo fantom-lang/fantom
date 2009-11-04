@@ -105,7 +105,7 @@ fan.sys.Float.fromStr = function(s, checked)
     if (checked != null && !checked) return null;
     throw new fan.sys.ParseErr("Float", s);
   }
-  return parseFloat(s);
+  return fan.sys.Float.make(parseFloat(s));
 }
 
 fan.sys.Float.toStr = function(self)
