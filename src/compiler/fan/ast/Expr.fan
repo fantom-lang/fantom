@@ -1374,37 +1374,6 @@ class TernaryExpr : Expr
 }
 
 **************************************************************************
-** CurryExpr
-**************************************************************************
-
-**
-** CurryExpr is used to "curry" a function into another
-** function thru partially evaluation
-**
-class CurryExpr : Expr
-{
-  new make(Location location, TypeDef enclosingType, Expr operand)
-    : super(location, ExprId.curry)
-  {
-    this.enclosingType = enclosingType
-    this.operand = operand
-  }
-
-  override Void walkChildren(Visitor v)
-  {
-    operand = operand.walk(v)
-  }
-
-  override Str toStr()
-  {
-    return "&$operand"
-  }
-
-  TypeDef enclosingType
-  Expr operand
-}
-
-**************************************************************************
 ** ComplexLiteral
 **************************************************************************
 
@@ -1673,7 +1642,6 @@ enum ExprId
   unknownVar,       // UnknownVarExpr
   storage,
   ternary,          // TernaryExpr
-  curry,            // CurryExpr
   complexLiteral,   // ComplexLiteral
   closure,          // ClosureExpr
   dsl               // DslExpr

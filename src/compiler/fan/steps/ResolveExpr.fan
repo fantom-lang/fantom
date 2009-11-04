@@ -182,7 +182,6 @@ class ResolveExpr : CompilerStep
       case ExprId.storage:         return resolveStorage(expr)
       case ExprId.coerce:          expr.ctype = ((TypeCheckExpr)expr).check
       case ExprId.ternary:         resolveTernary(expr)
-      case ExprId.curry:           return resolveCurry(expr)
       case ExprId.closure:         resolveClosure(expr)
       case ExprId.dsl:             return resolveDsl(expr)
     }
@@ -632,30 +631,6 @@ class ResolveExpr : CompilerStep
   }
 
   **
-  ** CurryExpr
-  **
-  private Expr resolveCurry(CurryExpr expr)
-  {
-    // short circuit if operand is in error
-    if (expr.operand.ctype == ns.error)
-    {
-      expr.ctype = ns.error
-      return expr
-    }
-
-    // if the operand isn't a CallExpr, then we have a problem
-    if (expr.operand.id !== ExprId.call)
-    {
-      err("Invalid operand '$expr.operand.id' for curry operator", expr.location)
-      expr.ctype = ns.error
-      return expr
-    }
-
-    // use CurryResolver for all the heavy lifting
-    return CurryResolver(compiler, curType, curryCount++, expr).resolve
-  }
-
-  **
   ** ClosureExpr will just output its substitute expression.  But we take
   ** this opportunity to capture the local variables in the closure's scope
   ** and cache them on the ClosureExpr.  We also do variable name checking.
@@ -877,6 +852,5 @@ class ResolveExpr : CompilerStep
   Stmt[] stmtStack  := Stmt[,]    // statement stack
   Block[] blockStack := Block[,]  // block stack used for scoping
   Bool inClosure := false         // are we inside a closure's block
-  Int curryCount := 0             // total number of curry exprs processed
 
 }

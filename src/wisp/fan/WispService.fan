@@ -25,7 +25,7 @@ const class WispService : WebService
   override Void onStart()
   {
     super.onStart
-    Actor(listenerPool, &listen).send(null)
+    Actor(listenerPool, |,| { listen }).send(null)
   }
 
   override Void onStop()
