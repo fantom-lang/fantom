@@ -341,6 +341,8 @@ class TokenizerTest : Test
 
   Void testStringInterpolation()
   {
+    lparen := makeToken(Token.lparenSynthetic)
+
     verifyTokens("\"\\\$x\"", [makeStr("\$x")])
 
     verifyTokens("\"\$x\"",   [lparen, makeStr(""), plus, makeId("x"), rparen])
@@ -361,16 +363,16 @@ class TokenizerTest : Test
     verifyTokens("\"a\$x-\$y\"", [lparen, makeStr("a"), plus, makeId("x"),
       plus, makeStr("-"), plus, makeId("y"), rparen])
 
-    verifyTokens("\"\${x}\"", [lparen, makeStr(""), plus, lparen(),
+    verifyTokens("\"\${x}\"", [lparen, makeStr(""), plus, lparen,
       makeId("x"), rparen, rparen])
 
-    verifyTokens("\"\${x-y}\"", [lparen, makeStr(""), plus, lparen(), makeId("x"),
+    verifyTokens("\"\${x-y}\"", [lparen, makeStr(""), plus, lparen, makeId("x"),
       makeToken(Token.minus), makeId("y"), rparen, rparen])
 
-    verifyTokens("\"foo\${x-y}bar\"", [lparen, makeStr("foo"), plus, lparen(), makeId("x"),
+    verifyTokens("\"foo\${x-y}bar\"", [lparen, makeStr("foo"), plus, lparen, makeId("x"),
       makeToken(Token.minus), makeId("y"), rparen, plus, makeStr("bar"), rparen])
 
-    verifyTokens("\"foo\${x-y}bar\$roo\"", [lparen, makeStr("foo"), plus, lparen(), makeId("x"),
+    verifyTokens("\"foo\${x-y}bar\$roo\"", [lparen, makeStr("foo"), plus, lparen, makeId("x"),
       makeToken(Token.minus), makeId("y"), rparen, plus, makeStr("bar"), plus, makeId("roo"), rparen])
 
     verifyInvalid("\"\$x")
@@ -608,13 +610,13 @@ class TokenizerTest : Test
 // Comments
 //////////////////////////////////////////////////////////////////////////
 
-  Void testInterpolation()
+  Void testInterpolationLoc()
   {
-    verifyInterpolation(
+    verifyInterpolationLoc(
       Str<|"foo"|>,
       [[1, 1, "foo"]])
 
-    verifyInterpolation(
+    verifyInterpolationLoc(
       //   12345678901234
       Str<|"foo|$bar"|>,
       [[1,  1, "("],
@@ -623,7 +625,7 @@ class TokenizerTest : Test
        [1,  7, "bar"],
        [1, 10, ")"]])
 
-    verifyInterpolation(
+    verifyInterpolationLoc(
       //   12345678901234567890
       Str<|"foo|$bar.x.y|baz"|>,
       [[1,  1, "("],
@@ -638,7 +640,7 @@ class TokenizerTest : Test
        [1, 14, "|baz"],
        [1, 18, ")"]])
 
-    verifyInterpolation(
+    verifyInterpolationLoc(
       //   12345678901234567890
       Str<|"${x}_"|>,
       [[1,  1, "("],
@@ -651,7 +653,7 @@ class TokenizerTest : Test
        [1,  6, "_"],
        [1,  7, ")"]])
 
-    verifyInterpolation(
+    verifyInterpolationLoc(
       //   12345678901234567890
       Str<|"123
             ${foo}
@@ -667,7 +669,7 @@ class TokenizerTest : Test
        [3,  5, ")"]])
   }
 
-  Void verifyInterpolation(Str src, Obj[][] expected)
+  Void verifyInterpolationLoc(Str src, Obj[][] expected)
   {
     toks := tokenize(src)
     /*

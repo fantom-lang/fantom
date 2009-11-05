@@ -251,4 +251,18 @@ class RegressionTest : CompilerTest
     verifyEq(obj->test(2), [3, 3, 5])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #731 Method calls should always require parens
+//////////////////////////////////////////////////////////////////////////
+
+  Void test731()
+  {
+    // parser stage
+    verifyErrors(
+     "class Foo { Void foo(Int x) { echo \"foo\$x\" } }",
+       [
+         1, 31, "Expected expression statement",
+       ])
+  }
+
 }

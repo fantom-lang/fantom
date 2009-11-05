@@ -1426,12 +1426,12 @@ public class Parser : CompilerSupport
   **
   private Expr parenExpr()
   {
-    if (curt != Token.lparen)
+    if (curt !== Token.lparen && curt !== Token.lparenSynthetic)
       return unaryExpr
 
-    // consume opening paren
+    // consume opening paren (or synthetic paren)
     loc := cur
-    consume(Token.lparen)
+    consume()
 
     // In Fan just like C# and Java, a paren could mean
     // either a cast or a parenthesized expression
