@@ -1028,7 +1028,7 @@ class CheckErrorsTest : CompilerTest
        28, 34, "Inconvertible types 'sys::Str' and 'sys::Type'",
        29, 34, "Inconvertible types 'sys::Str' and 'sys::Num'",
        30, 33, "Calling constructor on abstract class",
-       31, 33, "Invalid args plus(sys::Obj?), not (sys::Void)",
+       31, 29, "Invalid args plus(sys::Obj?), not (sys::Void)",
        32, 29, "Invalid args plus(sys::Int), not (sys::Void)",
        33, 29, "Invalid args plus(sys::Int), not (sys::Duration)",
        34, 35, "Cannot use 'as' operator with nullable type '$podName::Foo?'",

@@ -306,6 +306,8 @@ class Tokenizer : CompilerSupport
     try
     {
       // opening quote
+      line := this.line
+      col := this.col
       consume
       if (q.isTriple) { consume; consume }
 
@@ -339,21 +341,23 @@ class Tokenizer : CompilerSupport
           if (!interpolated)
           {
             interpolated = true
-            tokens.add(makeVirtualToken(Token.lparen))
+            tokens.add(makeVirtualToken(line, col, Token.lparen, null))
           }
 
           // process interpolated string, it returns null
           // if at end of string literal
-          if (!interpolation(s.toStr, q))
+          if (!interpolation(line, col, s.toStr, q))
           {
-            tokens.add(makeVirtualToken(Token.rparen))
+            line = this.line; col = this.col - 1;  // before quote
+            tokens.add(makeVirtualToken(line, col, Token.rparen, null))
             if (q.isUri)
             {
-              tokens.add(makeVirtualToken(Token.dot))
-              tokens.add(makeVirtualToken(Token.identifier, "toUri"))
+              tokens.add(makeVirtualToken(line, col, Token.dot))
+              tokens.add(makeVirtualToken(line, col, Token.identifier, "toUri"))
             }
             return null
           }
+          line = this.line; col = this.col
 
           s.clear
         }
@@ -389,12 +393,13 @@ class Tokenizer : CompilerSupport
       // and if URI, then add call to Uri
       if (interpolated)
       {
-        tokens.add(makeVirtualToken(Token.strLiteral, s.toStr))
-        tokens.add(makeVirtualToken(Token.rparen))
+        tokens.add(makeVirtualToken(line, col, Token.strLiteral, s.toStr))
+        line = this.line; col = this.col - 1;  // before quote
+        tokens.add(makeVirtualToken(line, col, Token.rparen, null))
         if (q.isUri)
         {
-          tokens.add(makeVirtualToken(Token.dot))
-          tokens.add(makeVirtualToken(Token.identifier, "toUri"))
+          tokens.add(makeVirtualToken(line, col, Token.dot, null))
+          tokens.add(makeVirtualToken(line, col, Token.identifier, "toUri"))
         }
         return null
       }
@@ -447,16 +452,18 @@ class Tokenizer : CompilerSupport
   **   "a ${b} c" -> "a " + b + " c"
   ** Return true if more in the string literal.
   **
-  private Bool interpolation(Str s, Quoted q)
+  private Bool interpolation(Int line, Int col, Str s, Quoted q)
   {
     consume // $
-    tokens.add(makeVirtualToken(Token.strLiteral, s))
-    tokens.add(makeVirtualToken(Token.plus))
+    tokens.add(makeVirtualToken(line, col, Token.strLiteral, s))
+    line = this.line; col = this.col
+    tokens.add(makeVirtualToken(line, col, Token.plus))
 
     // if { we allow an expression b/w {...}
     if (cur == '{')
     {
-      tokens.add(makeVirtualToken(Token.lparen))
+      line = this.line; col = this.col
+      tokens.add(makeVirtualToken(line, col, Token.lparen))
       consume
       while (true)
       {
@@ -465,7 +472,8 @@ class Tokenizer : CompilerSupport
         if (tok.kind == Token.rbrace) break
         tokens.add(tok)
       }
-      tokens.add(makeVirtualToken(Token.rparen))
+      line = this.line; col = this.col
+      tokens.add(makeVirtualToken(line, col, Token.rparen))
     }
 
     // else also allow a single identifier with
@@ -493,7 +501,8 @@ class Tokenizer : CompilerSupport
     if (endOfQuoted(q)) return false
 
     // add plus and return true to keep chugging
-    tokens.add(makeVirtualToken(Token.plus))
+    line = this.line; col = this.col
+    tokens.add(makeVirtualToken(line, col, Token.plus))
     return true
   }
 
@@ -525,7 +534,7 @@ class Tokenizer : CompilerSupport
   **
   ** Create a virtual token for string interpolation.
   **
-  private TokenVal makeVirtualToken(Token kind, Obj? value := null)
+  private TokenVal makeVirtualToken(Int line, Int col, Token kind, Obj? value := null)
   {
     tok := TokenVal(kind, value)
     tok.file  = filename

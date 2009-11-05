@@ -605,6 +605,90 @@ class TokenizerTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Comments
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInterpolation()
+  {
+    verifyInterpolation(
+      Str<|"foo"|>,
+      [[1, 1, "foo"]])
+
+    verifyInterpolation(
+      //   12345678901234
+      Str<|"foo|$bar"|>,
+      [[1,  1, "("],
+       [1,  1, "foo|"],
+       [1,  7, "+"],
+       [1,  7, "bar"],
+       [1, 10, ")"]])
+
+    verifyInterpolation(
+      //   12345678901234567890
+      Str<|"foo|$bar.x.y|baz"|>,
+      [[1,  1, "("],
+       [1,  1, "foo|"],
+       [1,  7, "+"],
+       [1,  7, "bar"],
+       [1, 10, "."],
+       [1, 11, "x"],
+       [1, 12, "."],
+       [1, 13, "y"],
+       [1, 14, "+"],
+       [1, 14, "|baz"],
+       [1, 18, ")"]])
+
+    verifyInterpolation(
+      //   12345678901234567890
+      Str<|"${x}_"|>,
+      [[1,  1, "("],
+       [1,  1, ""],
+       [1,  3, "+"],
+       [1,  3, "("],
+       [1,  4, "x"],
+       [1,  6, ")"],
+       [1,  6, "+"],
+       [1,  6, "_"],
+       [1,  7, ")"]])
+
+    verifyInterpolation(
+      //   12345678901234567890
+      Str<|"123
+            ${foo}
+            456"|>,
+      [[1,  1, "("],
+       [1,  1, "123\n"],
+       [2,  3, "+"],
+       [2,  3, "("],
+       [2,  4, "foo"],
+       [2,  8, ")"],
+       [2,  8, "+"],
+       [2,  8, "\n456"],
+       [3,  5, ")"]])
+  }
+
+  Void verifyInterpolation(Str src, Obj[][] expected)
+  {
+    toks := tokenize(src)
+    /*
+    echo("================")
+    echo("12345678901234")
+    echo(src)
+    toks.each |t| { echo(t.toLocationStr + ": " + t) }
+    */
+    verifyEq(toks.size, expected.size)
+    toks.each |tok, i|
+    {
+      str := tok.toStr
+      if (tok.kind === Token.strLiteral) str = tok.val
+
+      verifyEq(tok.line, expected[i][0])
+      verifyEq(tok.col,  expected[i][1])
+      verifyEq(str,      expected[i][2])
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Util
 //////////////////////////////////////////////////////////////////////////
 
