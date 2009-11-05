@@ -134,8 +134,8 @@ fan.fwt.Graphics.prototype.fillPolygon = function(p)
   this.cx.beginPath();
   for (var i=0; i<p.length; i++)
   {
-    if (i == 0) this.cx.moveTo(p[i].m_x+0.5, p[i].m_y+0.5);
-    else this.cx.lineTo(p[i].m_x+0.5, p[i].m_y+0.5);
+    if (i == 0) this.cx.moveTo(p[i].m_x, p[i].m_y);
+    else this.cx.lineTo(p[i].m_x, p[i].m_y);
   }
   this.cx.closePath();
   this.cx.fill();
