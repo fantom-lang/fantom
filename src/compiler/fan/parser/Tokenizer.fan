@@ -341,7 +341,7 @@ class Tokenizer : CompilerSupport
           if (!interpolated)
           {
             interpolated = true
-            tokens.add(makeVirtualToken(line, col, Token.lparen, null))
+            tokens.add(makeVirtualToken(line, col, Token.lparenSynthetic, null))
           }
 
           // process interpolated string, it returns null
@@ -463,7 +463,7 @@ class Tokenizer : CompilerSupport
     if (cur == '{')
     {
       line = this.line; col = this.col
-      tokens.add(makeVirtualToken(line, col, Token.lparen))
+      tokens.add(makeVirtualToken(line, col, Token.lparenSynthetic))
       consume
       while (true)
       {

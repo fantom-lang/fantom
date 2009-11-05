@@ -86,6 +86,7 @@ enum Token
   safeArrow     ("?->"),
   docComment    ("**"),
   dollar        ("\$"),
+  lparenSynthetic ("("),  // synthetic () grouping of interpolated string exprs
 
   // keywords
   abstractKeyword,
