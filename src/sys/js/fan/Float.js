@@ -68,17 +68,17 @@ fan.sys.Float.approx = function(self, that, tolerance)
     : tolerance;
   return Math.abs(self - that) <= t;
 }
-fan.sys.Float.ceil  = function(self) { return Math.ceil(self); }
-fan.sys.Float.exp   = function(self) { return Math.exp(self); }
-fan.sys.Float.floor = function(self) { return Math.floor(self); }
-fan.sys.Float.log   = function(self) { return Math.log(self); }
-fan.sys.Float.log10 = function(self) { return Math.log(self) / Math.LN10; }
+fan.sys.Float.ceil  = function(self) { return fan.sys.Float.make(Math.ceil(self)); }
+fan.sys.Float.exp   = function(self) { return fan.sys.Float.make(Math.exp(self)); }
+fan.sys.Float.floor = function(self) { return fan.sys.Float.make(Math.floor(self)); }
+fan.sys.Float.log   = function(self) { return fan.sys.Float.make(Math.log(self)); }
+fan.sys.Float.log10 = function(self) { return fan.sys.Float.make(Math.log(self) / Math.LN10); }
 fan.sys.Float.min   = function(self, that) { return fan.sys.Float.make(Math.min(self, that)); }
 fan.sys.Float.max   = function(self, that) { return fan.sys.Float.make(Math.max(self, that)); }
 fan.sys.Float.negate = function(self) { return fan.sys.Float.make(-self); }
-fan.sys.Float.pow   = function(self, exp) { return Math.pow(self, exp); }
-fan.sys.Float.round = function(self) { return Math.round(self); }
-fan.sys.Float.sqrt  = function(self) { return Math.sqrt(self); }
+fan.sys.Float.pow   = function(self, exp) { return fan.sys.Float.make(Math.pow(self, exp)); }
+fan.sys.Float.round = function(self) { return fan.sys.Float.make(Math.round(self)); }
+fan.sys.Float.sqrt  = function(self) { return fan.sys.Float.make(Math.sqrt(self)); }
 
 // Trig
 fan.sys.Float.acos  = function(self) { return Math.acos(self); }
