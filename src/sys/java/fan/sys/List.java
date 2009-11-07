@@ -582,6 +582,27 @@ public final class List
     return null;
   }
 
+  public final Object eachrWhile(Func f)
+  {
+    if (f.params.sz() == 1)
+    {
+      for (int i=size-1; i>=0; --i)
+      {
+        Object r = f.call(values[i]);
+        if (r != null) return r;
+      }
+    }
+    else
+    {
+      for (int i=size-1; i>=0; --i)
+      {
+        Object r = f.call(values[i], Long.valueOf(i));
+        if (r != null) return r;
+      }
+    }
+    return null;
+  }
+
   public final Object find(Func f)
   {
     if (f.params.sz() == 1)

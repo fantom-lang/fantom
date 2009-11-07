@@ -554,6 +554,16 @@ namespace Fan.Sys
       return null;
     }
 
+    public object eachrWhile(Func f)
+    {
+      for (int i=m_size-1; i>=0; i--)
+      {
+        object r = f.call(m_values[i], i);
+        if (r != null) return r;
+      }
+      return null;
+    }
+
     public object find(Func f)
     {
       for (int i=0; i<m_size; i++)
