@@ -717,6 +717,7 @@
 
 *Build 1.0.47 (working)*
 - Range fromStr, isEmpty, min, max, first, last
+- List.eachrWhile
 - Map.getOrAdd
 - FWT javascript enhancements
 - Float.random

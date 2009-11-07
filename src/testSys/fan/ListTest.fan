@@ -814,10 +814,15 @@ class ListTest : Test
     verifyEq(x.eachWhile |Str s->Str?| { return s == "b" ? "B" : null }, "B")
     verifyEq(x.eachWhile |Str s->Str?| { return s == "x" ? "X" : null }, null)
     verifyEq(x.eachWhile |Str s, Int i->Str?| { return i == 2 ? s : null }, "c")
+    verifyEq(x.eachrWhile |Str s, Int i->Str?| { return i == 1 ? s : null }, "b")
 
     n = 0; x.eachWhile |Str s->Obj?| { n++; return s == "b" ? true : null }; verifyEq(n, 2)
     n = 0; x.eachWhile |Str s->Obj?| { n++; return s == "c" ? true : null }; verifyEq(n, 3)
     n = 0; x.eachWhile |Str s->Obj?| { n++; return s == "x" ? true : null }; verifyEq(n, 4)
+
+    n = 0; x.eachrWhile |Str s->Obj?| { n++; return s == "b" ? true : null }; verifyEq(n, 3)
+    n = 0; x.eachrWhile |Str s->Obj?| { n++; return s == "c" ? true : null }; verifyEq(n, 2)
+    n = 0; x.eachrWhile |Str s->Obj?| { n++; return s == "x" ? true : null }; verifyEq(n, 4)
   }
 
 //////////////////////////////////////////////////////////////////////////
