@@ -12,6 +12,7 @@ import fan.sys.*;
 import fan.sys.List;
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
@@ -306,10 +307,12 @@ public class TreePeer
   public void handleMenuDetect(Event event)
   {
     Tree tree = (Tree)this.control;
-    TreeItem item = tree.getItem(tree.toControl(event.x, event.y));
+    Point ctrlPos = tree.toControl(event.x, event.y);
+    TreeItem item = tree.getItem(ctrlPos);
     final fan.fwt.Tree self = (fan.fwt.Tree)this.self;
 
     fan.fwt.Event fe = event(EventId.popup);
+    fe.pos = point(ctrlPos);
     if (item != null) fe.data = node(item);
     self.onPopup().fire(fe);
 

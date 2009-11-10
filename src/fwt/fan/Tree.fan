@@ -59,6 +59,7 @@ class Tree : Widget
   ** Event fields:
   **   - `Event.data`: the primary selection node object, or
   **     'null' if this is a background popup.
+  **   - `Event.pos`: the mouse position of the popup.
   **
   @transient readonly EventListeners onPopup := EventListeners()
 
