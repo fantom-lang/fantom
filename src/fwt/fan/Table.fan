@@ -59,6 +59,7 @@ class Table : Widget
   ** Event fields:
   **   - `Event.index`: the row index, or 'null' if this is a
   **     background popup.
+  **   - `Event.pos`: the mouse position of the popup.
   **
   @transient readonly EventListeners onPopup := EventListeners()
 
