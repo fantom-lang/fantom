@@ -101,6 +101,11 @@ public final class Duration
     return System.nanoTime();
   }
 
+  public static long nowMillis()
+  {
+    return System.nanoTime() / 1000000L;
+  }
+
   public static Duration boot()
   {
     return boot;

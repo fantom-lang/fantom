@@ -69,7 +69,18 @@ public final class Future
           // if still not done throw a timeout exception
           if ((state & DONE) == 0)
           {
-            wait(timeout.millis());
+            // compute deadline in millis
+            long deadline = Duration.nowMillis() + timeout.millis();
+
+            // loop until we are done or our deadline has passed
+            while ((state & DONE) == 0)
+            {
+              long left = deadline - Duration.nowMillis();
+              if (left <= 0L) break;
+              wait(left);
+            }
+
+            // if we still aren't done this is a timeout
             if ((state & DONE) == 0) throw TimeoutErr.make("Future.get timed out").val;
           }
         }
