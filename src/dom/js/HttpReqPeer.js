@@ -63,8 +63,12 @@ fan.dom.HttpReqPeer.prototype.sendForm = function(self, form, func)
   for (var i=0; i<k.length; i++)
   {
     if (i > 0) content += "&";
-    content += escape(k[i]) + "=" + escape(form.get(k[i]));
+    content += this.encode(k[i]) + "=" + this.encode(form.get(k[i]));
   }
   this.send(self, content, func)
 }
 
+fan.dom.HttpReqPeer.prototype.encode = function(orig)
+{
+  return escape(orig).replace(/\+/g, "%2B");
+}
