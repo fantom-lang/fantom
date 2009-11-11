@@ -39,11 +39,36 @@ final class Sys
   **   2. Java system properties (Java VM only obviously)
   **   3. {homeDir}/lib/sys.props
   **
-  ** The following environment variables are always available:
-  **   - os.name: name of the host operating system
-  **   - os.version: version of the host operating system
-  **
   static Str:Str env()
+
+  **
+  ** Operating system name as one of the following string constants:
+  **   - "win"
+  **   - "macosx"
+  **   - "linux"
+  **   - "aix"
+  **   - "solaris"
+  **   - "hpux"
+  **   - "qnx"
+  **
+  static Str os()
+
+  **
+  ** List of 'arch' names:
+  **   - "x86"
+  **   - "x86_64"
+  **   - "ppc"
+  **   - "sparc"
+  **   - "ia64"
+  **   - "ia64_32"
+  **
+  static Str arch()
+
+  **
+  ** Name of the host platform as a string formatted
+  ** as "<os>-<arch>".  See `os` and `arch`.
+  **
+  static Str platform()
 
   **
   ** Poll for a platform dependent map of diagnostics name/value
