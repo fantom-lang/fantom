@@ -359,6 +359,11 @@ public final class Uri
 
       // === normalize ===
       normalize();
+
+      // if decoding, then we don't want to use original
+      // str as Uri.str, so null it out
+      this.str = null;
+
       return this;
     }
 
@@ -555,7 +560,6 @@ public final class Uri
       return c;
     }
 
-    String str;
     boolean decoding;
     int dpos;
     boolean nextCharWasEscaped;
