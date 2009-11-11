@@ -157,8 +157,9 @@ namespace Fanx.Tools
       writeLine("Licensed under the Academic Free License version 3.0");
       writeLine("");
       writeLine(".NET Runtime:");
-      writeLine("  clr.version: " + Environment.Version);
-      writeLine("  sys.version: " + Sys.SysPod.version());
+      writeLine("  clr.version:  " + Environment.Version);
+      writeLine("  sys.platform: " + Sys.platform());
+      writeLine("  sys.version:  " + Sys.SysPod.version());
       writeLine("");
       writeLine("Fan Repos:");
       for (int i=0; i<Repo.list().size(); ++i)

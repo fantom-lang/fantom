@@ -9,6 +9,7 @@ package fan.sys;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.*;
 import java.security.*;
 import java.util.*;
 import fanx.emit.*;
@@ -19,7 +20,7 @@ import fanx.util.*;
  * the "fan." namespace to map to dynamically loaded Fan classes.
  */
 public class FanClassLoader
-  extends SecureClassLoader
+  extends URLClassLoader
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,18 +56,12 @@ public class FanClassLoader
 
   public FanClassLoader()
   {
-    super(FanClassLoader.class.getClassLoader());
-    init();
+    this(FanClassLoader.class.getClassLoader());
   }
 
   private FanClassLoader(ClassLoader parent)
   {
-    super(parent);
-    init();
-  }
-
-  private void init()
-  {
+    super(getExtUrls(), parent);
     try
     {
       this.allPermissions = new AllPermission().newPermissionCollection();
@@ -75,6 +70,26 @@ public class FanClassLoader
     catch (Throwable e)
     {
       e.printStackTrace();
+    }
+  }
+
+  private static URL[] getExtUrls()
+  {
+    try
+    {
+      String sep = File.separator;
+      File extDir = new File(Sys.HomeDir, "lib"+sep+"java"+sep+"ext"+sep+Sys.platform());
+      ArrayList acc = new ArrayList();
+      File[] list = extDir.listFiles();
+      for (int i=0; list != null && i<list.length; ++i)
+        if (list[i].getName().endsWith(".jar"))
+          acc.add(list[i].toURL());
+      return (URL[])acc.toArray(new URL[acc.size()]);
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      return new URL[0];
     }
   }
 
@@ -169,8 +184,9 @@ public class FanClassLoader
       return t.emit();
     }
 
-    // fallback to system class loader
-    return findSystemClass(name);
+    // fallback to default URLClassLoader loader
+    // implementation which searches my ext jars
+    return super.findClass(name);
   }
 
 //////////////////////////////////////////////////////////////////////////

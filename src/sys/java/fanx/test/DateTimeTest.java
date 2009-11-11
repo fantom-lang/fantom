@@ -193,7 +193,7 @@ public class DateTimeTest
 
   public void verifyTzInit()
   {
-    Sys.homeDir();
+    String os = Sys.os();
     verifyTzInit("New_York", "America/New_York");
     verifyTzInit("America/New_York", "America/New_York");
     verifyTzInit("Europe/London", "Europe/London");

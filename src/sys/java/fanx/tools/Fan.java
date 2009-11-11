@@ -166,6 +166,7 @@ public class Fan
     println("  java.vm.vendor:  " + System.getProperty("java.vm.vendor"));
     println("  java.vm.version: " + System.getProperty("java.vm.version"));
     println("  java.home:       " + System.getProperty("java.home"));
+    println("  fan.platform:    " + Sys.platform());
     println("  fan.version:     " + Sys.SysPod.version());
     println("");
     println("Fan Repos:");

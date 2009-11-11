@@ -732,4 +732,5 @@
 - JavaScript: proper type coercion
 - FWT Tree/Table onPopup support for Event.pos
 - Fix Future.get timeouts for OS X
+- Sys os, arch, platform
 

@@ -35,9 +35,6 @@ public final class Sys
 
   public static Map env() { return env; }
 
-// TODO
-public static fan.sys.File homeDir() { return homeDir; }
-
   public static String hostName() { return hostName; }
 
   public static String userName() { return userName; }
@@ -54,6 +51,52 @@ public static fan.sys.File homeDir() { return homeDir; }
   public static long idHash(Object obj)
   {
     return System.identityHashCode(obj);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Platform
+//////////////////////////////////////////////////////////////////////////
+
+  public static String os() { return os; }
+  public static String arch() { return arch; }
+  public static String platform() { return platform; }
+
+  public static final String os = osInit();
+  public static final String arch = archInit();
+  public static final String platform  = os + "-" + arch;
+
+  private static String osInit()
+  {
+    String os = System.getProperty("os.name", "unknown");
+    os = sanitize(os);
+    if (os.contains("mac"))   return "macosx";
+    if (os.contains("sunos")) return "solaris";
+    if (os.contains("win"))   return "win";
+    return os;
+  }
+
+  private static String archInit()
+  {
+    String arch = System.getProperty("os.arch", "unknown");
+    arch = sanitize(arch);
+    if (arch.contains("i386"))  return "x86";
+    if (arch.contains("amd64")) return "x86_64";
+    return arch;
+  }
+
+  private static String sanitize(String s)
+  {
+    StringBuilder buf = new StringBuilder();
+    for (int i=0; i<s.length(); ++i)
+    {
+      int c = s.charAt(i);
+      if (c == '_') { buf.append((char)c); continue; }
+      if ('a' <= c && c <= 'z') { buf.append((char)c); continue; }
+      if ('0' <= c && c <= '9') { buf.append((char)c); continue; }
+      if ('A' <= c && c <= 'Z') { buf.append((char)(c | 0x20)); continue; }
+      // skip it
+    }
+    return buf.toString();
   }
 
 //////////////////////////////////////////////////////////////////////////
