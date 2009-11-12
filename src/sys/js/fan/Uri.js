@@ -191,7 +191,7 @@ fan.sys.UriSections.prototype.normalizePath = function()
       dotLast = true;
       i -= 1;
     }
-    else if (seg == ".." && i > 0 && !this.path[i-1].toString() == "..")
+    else if (seg == ".." && i > 0 && this.path[i-1].toString() != "..")
     {
       fan.sys.List.removeAt(this.path, i);
       fan.sys.List.removeAt(this.path, i-1);
@@ -1199,6 +1199,37 @@ fan.sys.Uri.appendQueryStr = function(buf, str)
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.Uri.isName = function(name)
+{
+  var len = name.length;
+
+  // must be at least one character long
+  if (len == 0) return false;
+
+  // check for "." and ".."
+  if (name.charAt(0) == '.' && len <= 2)
+  {
+    if (len == 1) return false;
+    if (name.charAt(1) == '.') return false;
+  }
+
+  // check that each char is unreserved
+  for (var i=0; i<len; ++i)
+  {
+    var c = name.charCodeAt(i);
+    if (c < 128 && fan.sys.Uri.nameMap[c]) continue;
+    return false;
+  }
+
+  return true;
+}
+
+fan.sys.Uri.checkName = function(name)
+{
+  if (!fan.sys.Uri.isName(name))
+    throw fan.sys.NameErr.make(name);
+}
+
 fan.sys.Uri.isUpper = function(c)
 {
   return 65 <= c && c <= 90;
@@ -1292,7 +1323,7 @@ fan.sys.Uri.charMap[64] = fan.sys.Uri.PATH | fan.sys.Uri.QUERY | fan.sys.Uri.FRA
 // be backslashed escaped in each section
 fan.sys.Uri.delimEscMap[58]  = fan.sys.Uri.PATH;
 fan.sys.Uri.delimEscMap[47]  = fan.sys.Uri.PATH;
-fan.sys.Uri.delimEscMap[33]  = fan.sys.Uri.PATH;
+fan.sys.Uri.delimEscMap[63]  = fan.sys.Uri.PATH;
 fan.sys.Uri.delimEscMap[35]  = fan.sys.Uri.PATH | fan.sys.Uri.QUERY;
 fan.sys.Uri.delimEscMap[38]  = fan.sys.Uri.QUERY;
 fan.sys.Uri.delimEscMap[59]  = fan.sys.Uri.QUERY;
