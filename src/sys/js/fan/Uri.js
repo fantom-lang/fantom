@@ -209,7 +209,7 @@ fan.sys.UriSections.prototype.normalizePath = function()
   {
     if (dotLast) isDir = true;
     if (this.path.length == 0 || fan.sys.List.last(this.path).toString() == "..") isDir = false;
-    this.pathStr = this.toPathStr(isAbs, this.path, isDir);
+    this.pathStr = fan.sys.Uri.toPathStr(isAbs, this.path, isDir);
   }
 }
 
