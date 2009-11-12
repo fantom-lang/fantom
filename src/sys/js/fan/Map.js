@@ -135,6 +135,20 @@ fan.sys.Map.prototype.set = function(key, val)
   return this;
 }
 
+
+fan.sys.Map.prototype.setAll = function(m)
+{
+  //modify();
+  var keys = m.keys();
+  var len = keys.length;
+  for (var i=0; i<len; i++)
+  {
+    var key = keys[i];
+    this.set(key, m.get(key));
+  }
+  return this;
+}
+
 fan.sys.Map.prototype.remove = function(key)
 {
   if (this.m_caseInsensitive) key = fan.sys.Str.lower(key);
@@ -150,6 +164,14 @@ fan.sys.Map.prototype.size = function()
   var sz = 0;
   for (var k in this.map) sz++;
   return sz;
+}
+
+fan.sys.Map.prototype.dup = function()
+{
+  var dup = new fan.sys.Map(this.$fanType.k, this.$fanType.v);
+  for (prop in this.keyMap) dup.keyMap[prop] = this.keyMap[prop];
+  for (prop in this.map) dup.map[prop] = this.map[prop];
+  return dup;
 }
 
 fan.sys.Map.prototype.clear = function()

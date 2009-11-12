@@ -185,7 +185,7 @@ fan.sys.Str.lower = function(self)
 
 fan.sys.Str.replace = function(self, oldstr, newstr)
 {
-  return self.replace(new RegExp(oldstr,"g"), newstr);
+  return self.split(oldstr).join(newstr);
 }
 
 fan.sys.Str.fromDisplayName = function(self)
