@@ -116,6 +116,12 @@ fan.sys.IndexErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prototype.
 fan.sys.IndexErr.prototype.type = function() { return fan.sys.Type.find("sys::IndexErr"); }
 fan.sys.IndexErr.make = function(msg, cause) { return new fan.sys.IndexErr(msg, cause); }
 
+// NameErr
+fan.sys.NameErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.NameErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prototype.$ctor.call(this, msg, cause); }
+fan.sys.NameErr.prototype.type = function() { return fan.sys.Type.find("sys::NameErr"); }
+fan.sys.NameErr.make = function(msg, cause) { return new fan.sys.NameErr(msg, cause); }
+
 // ParseErr
 fan.sys.ParseErr = fan.sys.Obj.$extend(fan.sys.Err);
 fan.sys.ParseErr.prototype.$ctor = function(type, val, more, cause)
