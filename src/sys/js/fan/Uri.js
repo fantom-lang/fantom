@@ -27,7 +27,7 @@ fan.sys.Uri.fromStr = function(s, checked)
   catch (err)
   {
     if (!checked) return null;
-    throw new fan.sys.ParseErr("Uri",  s);
+    throw fan.sys.ParseErr.make("Uri",  s);
   }
 }
 
@@ -41,7 +41,7 @@ fan.sys.Uri.decode = function(s, checked)
   catch (err)
   {
     if (!checked) return null;
-    throw fan.sys.ParseErr("Uri", s);
+    throw fan.sys.ParseErr.make("Uri", s);
   }
 }
 
@@ -323,6 +323,11 @@ fan.sys.UriDecoder.prototype.decode = function()
 
   // === normalize ===
   this.normalize();
+
+  // if decoding, then we don't want to use original
+  // str as Uri.str, so null it out
+  this.str = null;
+
   return this;
 }
 
@@ -484,17 +489,17 @@ fan.sys.UriDecoder.prototype.nextChar = function(section)
       /* 110x xxxx   10xx xxxx*/
       c2 = this.nextOctet(section);
       if ((c2 & 0xC0) != 0x80)
-        throw new fan.sys.ParseErr("Invalid UTF-8 encoding");
+        throw fan.sys.ParseErr.make("Invalid UTF-8 encoding");
       return ((c & 0x1F) << 6) | (c2 & 0x3F);
     case 14:
       /* 1110 xxxx  10xx xxxx  10xx xxxx */
       c2 = this.nextOctet(section);
       c3 = this.nextOctet(section);
       if (((c2 & 0xC0) != 0x80) || ((c3 & 0xC0) != 0x80))
-        throw new fan.sys.ParseErr("Invalid UTF-8 encoding");
+        throw fan.sys.ParseErr.make("Invalid UTF-8 encoding");
       return (((c & 0x0F) << 12) | ((c2 & 0x3F) << 6) | ((c3 & 0x3F) << 0));
     default:
-      throw new fan.sys.ParseErr("Invalid UTF-8 encoding");
+      throw fan.sys.ParseErr.make("Invalid UTF-8 encoding");
   }
 }
 
@@ -507,7 +512,8 @@ fan.sys.UriDecoder.prototype.nextOctet = function(section)
   if (c == 37) // %
   {
     this.nextCharWasEscaped = true;
-    return (fan.sys.Uri.hexNibble(this.str.charCodeAt(dpos++)) << 4) | fan.sys.Uri.hexNibble(str.charCodeAt(dpos++));
+    return (fan.sys.Uri.hexNibble(this.str.charCodeAt(this.dpos++)) << 4) | fan.sys.Uri.hexNibble(this.str.charCodeAt(this.dpos++));
+    return x;
   }
   else
   {
@@ -516,17 +522,16 @@ fan.sys.UriDecoder.prototype.nextOctet = function(section)
 
   // + maps to space only in query
   if (c == 43 && section == fan.sys.Uri.QUERY) // +
-    return ' ';
+    return 32 // ' ';
 
   // verify character ok
   if (c >= fan.sys.Uri.charMap.length || (fan.sys.Uri.charMap[c] & section) == 0)
-    throw new fan.sys.ParseErr("Invalid char in " + fan.sys.Uri.toSection(section) + " at index " + (dpos-1));
+    throw fan.sys.ParseErr.make("Invalid char in " + fan.sys.Uri.toSection(section) + " at index " + (this.dpos-1));
 
   // return character as is
   return c;
 }
 
-fan.sys.UriDecoder.prototype.str = null;
 fan.sys.UriDecoder.prototype.decoding = false;
 fan.sys.UriDecoder.prototype.dpos = null;
 fan.sys.UriDecoder.prototype.nextCharWasEscaped = null;
@@ -650,11 +655,33 @@ fan.sys.UriEncoder.prototype.percentEncodeByte = function(c)
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Uri.prototype.type = function() { return fan.sys.Type.find("sys::Uri"); }
-fan.sys.Uri.prototype.equals = function(that) { return this.m_str == that.m_str; }
-fan.sys.Uri.prototype.toCode = function() { return '`' + this.m_str + '`'; }
-fan.sys.Uri.prototype.toStr = function() { return this.m_str; }
-fan.sys.Uri.prototype.toLocale = function() { return this.m_str; }
+fan.sys.Uri.prototype.type = function()
+{
+  return fan.sys.Type.find("sys::Uri");
+}
+
+fan.sys.Uri.prototype.equals = function(that)
+{
+  if (that instanceof fan.sys.Uri)
+    return this.m_str === that.m_str;
+  else
+    return false;
+}
+
+fan.sys.Uri.prototype.toCode = function()
+{
+  return '`' + this.m_str + '`';
+}
+
+fan.sys.Uri.prototype.toStr = function()
+{
+  return this.m_str;
+}
+
+fan.sys.Uri.prototype.toLocale = function()
+{
+  return this.m_str;
+}
 
 fan.sys.Uri.prototype.encode = function()
 {
@@ -855,7 +882,7 @@ fan.sys.Uri.prototype.slice = function(range, forcePathAbs)
     t.str = t.pathStr;
   }
 
-  return new fan.sys.Uri.makeSections(t);
+  return fan.sys.Uri.makeSections(t);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1122,7 +1149,7 @@ fan.sys.Uri.isUpper = function(c)
 fan.sys.Uri.hexNibble = function(ch)
 {
   if ((fan.sys.Uri.charMap[ch] & fan.sys.Uri.HEX) == 0)
-    throw new fan.sys.ParseErr("Invalid percent encoded hex: '" + String.fromCharCode(ch));
+    throw fan.sys.ParseErr.make("Invalid percent encoded hex: '" + String.fromCharCode(ch));
 
   if (ch <= 57) return ch - 48;
   if (ch <= 90) return (ch - 65) + 10;
@@ -1171,10 +1198,10 @@ for (var i=65; i<=90; ++i) { fan.sys.Uri.charMap[i] = fan.sys.Uri.unreserved; fa
 for (var i=48; i<=57; ++i) { fan.sys.Uri.charMap[i] = fan.sys.Uri.unreserved; fan.sys.Uri.nameMap[i] = true; }
 
 // unreserved symbols
-fan.sys.Uri.charMap[45] = fan.sys.Uri.unreserved; fan.sys.Uri.nameMap['-'] = true;
-fan.sys.Uri.charMap[46] = fan.sys.Uri.unreserved; fan.sys.Uri.nameMap['.'] = true;
-fan.sys.Uri.charMap[95] = fan.sys.Uri.unreserved; fan.sys.Uri.nameMap['_'] = true;
-fan.sys.Uri.charMap[126] = fan.sys.Uri.unreserved; fan.sys.Uri.nameMap['~'] = true;
+fan.sys.Uri.charMap[45] = fan.sys.Uri.unreserved; fan.sys.Uri.nameMap[45] = true;
+fan.sys.Uri.charMap[46] = fan.sys.Uri.unreserved; fan.sys.Uri.nameMap[46] = true;
+fan.sys.Uri.charMap[95] = fan.sys.Uri.unreserved; fan.sys.Uri.nameMap[95] = true;
+fan.sys.Uri.charMap[126] = fan.sys.Uri.unreserved; fan.sys.Uri.nameMap[126] = true;
 
 // hex
 for (var i=48; i<=57; ++i) fan.sys.Uri.charMap[i] |= fan.sys.Uri.HEX | fan.sys.Uri.DIGIT;
@@ -1200,7 +1227,7 @@ fan.sys.Uri.charMap[47] = fan.sys.Uri.PATH | fan.sys.Uri.QUERY | fan.sys.Uri.FRA
 fan.sys.Uri.charMap[63] = fan.sys.Uri.QUERY | fan.sys.Uri.FRAG;
 fan.sys.Uri.charMap[35] = 0;
 fan.sys.Uri.charMap[91] = 0;
-fan.sys.Uri.charMap[03] = 0;
+fan.sys.Uri.charMap[93] = 0;
 fan.sys.Uri.charMap[64] = fan.sys.Uri.PATH | fan.sys.Uri.QUERY | fan.sys.Uri.FRAG;
 
 // delimiter escape map - which characters need to
