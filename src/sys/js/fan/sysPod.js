@@ -101,7 +101,7 @@ with (fan.sys.Pod.$add("sys"))
   $at("IOErr",     "sys::Err");
   $at("IndexErr",  "sys::Err");
   // TODO: InterruptedErr
-  // TODO: NameErr
+  $at("NameErr",   "sys::Err");
   // TODO: NotImmutableErr
   $at("NullErr",        "sys::Err");
   $at("ParseErr",       "sys::Err");
