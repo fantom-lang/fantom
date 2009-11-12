@@ -274,7 +274,7 @@ fan.fwt.WidgetPeer.setBg = function(elem, brush)
       // IE throws here, so trap and use filter in catch
       try
       {
-        backgroundImage = "-moz-linear-gradient(0% 0%, 0% 100%, from(" + c1 + "), to(" + c2 + "))";
+        backgroundImage = "-moz-linear-gradient(top, " + c1 + ", " + c2 + ")";
         backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(" + c1 + "), to(" + c2 + "))";
       }
       catch (err)
