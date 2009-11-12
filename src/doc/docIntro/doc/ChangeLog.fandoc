@@ -733,4 +733,5 @@
 - FWT Tree/Table onPopup support for Event.pos
 - Fix Future.get timeouts for OS X
 - Sys os, arch, platform
+- js: Fully pass UriTest; encode/decode Uris properly in browser
 
