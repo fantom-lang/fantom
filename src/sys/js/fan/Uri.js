@@ -45,6 +45,63 @@ fan.sys.Uri.decode = function(s, checked)
   }
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Uri.decodeQuery = function(s)
+{
+  try
+  {
+    return new fan.sys.UriDecoder(s, true).decodeQuery();
+  }
+  catch (err)
+  {
+    if (err instanceof fan.sys.ArgErr)
+      throw fan.sys.ArgErr.make("Invalid Uri query: `" + s + "`: " + err.message());
+
+    throw fan.sys.ArgErr.make("Invalid Uri query: `" + s + "`");
+  }
+}
+
+fan.sys.Uri.encodeQuery = function(map)
+{
+  var buf  = "";
+  var keys = map.keys();
+  var len  = keys.length;
+  for (var i=0; i<len; i++)
+  {
+    var key = keys[i];
+    var val = map.get(key);
+    if (buf.length > 0) buf += '&';
+    buf = fan.sys.Uri.encodeQueryStr(buf, key);
+    if (val != null)
+    {
+      buf += '=';
+      buf = fan.sys.Uri.encodeQueryStr(buf, val);
+    }
+  }
+  return buf;
+}
+
+fan.sys.Uri.encodeQueryStr = function(buf, str)
+{
+  var len = str.length;
+  for (var i=0; i<len; ++i)
+  {
+    var c = str.charCodeAt(i);
+    if (c < 128 && (fan.sys.Uri.charMap[c] & fan.sys.Uri.QUERY) != 0 && (fan.sys.Uri.delimEscMap[c] & fan.sys.Uri.QUERY) == 0)
+      buf += str.charAt(i);
+    else
+      buf = fan.sys.UriEncoder.percentEncodeChar(buf, c);
+  }
+  return buf;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Section Constructor
+//////////////////////////////////////////////////////////////////////////
+
 fan.sys.Uri.makeSections = function(x)
 {
   var uri = new fan.sys.Uri();
@@ -65,7 +122,7 @@ fan.sys.Uri.makeSections = function(x)
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-//  static final Range parentRange = Range.make(0L, -2L, false);
+fan.sys.Uri.parentRange = fan.sys.Range.make(0, -2, false);
 
 // defVal - see sysPod.js
 
@@ -423,7 +480,7 @@ fan.sys.UriDecoder.prototype.parseQuery = function(q)
   catch (err)
   {
     // don't let internal error bring down whole uri
-    fan.sys.Obj.echo(err);
+    fan.sys.Err.make(err).trace();
   }
 
   return map;
@@ -595,7 +652,7 @@ fan.sys.UriEncoder.prototype.doEncode = function(s, section)
     c = s.charCodeAt(i);
 
     // unreserved character
-    if (c < 128 && (fan.sys.Uri.charMap[c] & section) != 0 && prev != '\\')
+    if (c < 128 && (fan.sys.Uri.charMap[c] & section) != 0 && prev != 92)
     {
       this.buf += String.fromCharCode(c);
       continue;
@@ -610,7 +667,7 @@ fan.sys.UriEncoder.prototype.doEncode = function(s, section)
     if (c == 32 && section == fan.sys.Uri.QUERY)
       this.buf += '+';
     else
-      this.percentEncodeChar(c);
+      this.buf = fan.sys.UriEncoder.percentEncodeChar(this.buf, c);
 
     // if we just encoded backslash, then it
     // doesn't escape the next char
@@ -623,32 +680,34 @@ fan.sys.UriEncoder.prototype.uri = null;
 fan.sys.UriEncoder.prototype.encoding = null;
 fan.sys.UriEncoder.prototype.buf = null;
 
-fan.sys.UriEncoder.prototype.percentEncodeChar = function(c)
+fan.sys.UriEncoder.percentEncodeChar = function(buf, c)
 {
   if (c <= 0x007F)
   {
-    this.percentEncodeByte(c);
+    buf = fan.sys.UriEncoder.percentEncodeByte(buf, c);
   }
   else if (c > 0x07FF)
   {
-    this.percentEncodeByte(0xE0 | ((c >> 12) & 0x0F));
-    this.percentEncodeByte(0x80 | ((c >>  6) & 0x3F));
-    this.percentEncodeByte(0x80 | ((c >>  0) & 0x3F));
+    buf = fan.sys.UriEncoder.percentEncodeByte(buf, 0xE0 | ((c >> 12) & 0x0F));
+    buf = fan.sys.UriEncoder.percentEncodeByte(buf, 0x80 | ((c >>  6) & 0x3F));
+    buf = fan.sys.UriEncoder.percentEncodeByte(buf, 0x80 | ((c >>  0) & 0x3F));
   }
   else
   {
-    this.percentEncodeByte(0xC0 | ((c >>  6) & 0x1F));
-    this.percentEncodeByte(0x80 | ((c >>  0) & 0x3F));
+    buf = fan.sys.UriEncoder.percentEncodeByte(buf, 0xC0 | ((c >>  6) & 0x1F));
+    buf = fan.sys.UriEncoder.percentEncodeByte(buf, 0x80 | ((c >>  0) & 0x3F));
   }
+  return buf;
 }
 
-fan.sys.UriEncoder.prototype.percentEncodeByte = function(c)
+fan.sys.UriEncoder.percentEncodeByte = function(buf, c)
 {
-  this.buf += '%';
+  buf += '%';
   var hi = (c >> 4) & 0xf;
   var lo = c & 0xf;
-  this.buf += (hi < 10 ? String.fromCharCode(48+hi) : String.fromCharCode(65+(hi-10)));
-  this.buf += (lo < 10 ? String.fromCharCode(48+lo) : String.fromCharCode(65+(lo-10)));
+  buf += (hi < 10 ? String.fromCharCode(48+hi) : String.fromCharCode(65+(hi-10)));
+  buf += (lo < 10 ? String.fromCharCode(48+lo) : String.fromCharCode(65+(lo-10)));
+  return buf;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -806,7 +865,7 @@ fan.sys.Uri.prototype.parent = function()
   if (this.m_path.length == 1 && !this.isPathAbs() && !this.isDir()) return null;
 
   // use slice
-  return this.slice(parentRange);
+  return this.slice(fan.sys.Uri.parentRange);
 }
 
 fan.sys.Uri.prototype.pathOnly = function()
