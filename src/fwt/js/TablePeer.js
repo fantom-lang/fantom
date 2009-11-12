@@ -298,7 +298,7 @@ fan.fwt.TableSelection.prototype.$ctor = function(table)
 fan.fwt.TableSelection.prototype.toggle = function(event)
 {
   var target = event.target ? event.target : event.srcElement;
-  var multi  = this.table.m_multi && (event.ctrlKey || event.shiftKey);
+  var multi  = this.table.m_multi && (event.ctrlKey || event.metaKey || event.shiftKey);
   var on  = target.checked;
   var tr  = target.parentNode.parentNode;
   var row = tr.rowIndex;
