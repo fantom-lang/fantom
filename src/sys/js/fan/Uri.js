@@ -1151,50 +1151,49 @@ fan.sys.Uri.prototype.plusSlash = function()
   return fan.sys.Uri.makeSections(t);
 }
 
-/*
-public Uri plusQuery(Map q)
+fan.sys.Uri.prototype.plusQuery = function(q)
 {
   if (q == null || q.isEmpty()) return this;
 
-  Map merge = this.query.dup().setAll(q);
+  var merge = this.m_query.dup().setAll(q);
 
-  StringBuilder s = new StringBuilder(256);
-  java.util.Iterator it = merge.pairsIterator();
-  while (it.hasNext())
+  var s = "";
+  var keys = merge.keys();
+  for (var i=0; i<keys.length; i++)
   {
-    if (s.length() > 0) s.append('&');
-    java.util.Map.Entry e = (java.util.Map.Entry)it.next();
-    String key = (String)e.getKey();
-    String val = (String)e.getValue();
-    appendQueryStr(s, key);
-    s.append('=');
-    appendQueryStr(s, val);
+    if (s.length > 0) s += '&';
+    var key = keys[i];
+    var val = merge.get(key);
+    s = fan.sys.Uri.appendQueryStr(s, key);
+    s += '=';
+    s = fan.sys.Uri.appendQueryStr(s, val);
   }
 
-  Sections t = new Sections();
-  t.scheme   = this.scheme;
-  t.userInfo = this.userInfo;
-  t.host     = this.host;
-  t.port     = this.port;
-  t.frag     = this.frag;
-  t.pathStr  = this.pathStr;
-  t.path     = this.path;
+  var t = new fan.sys.UriSections();
+  t.scheme   = this.m_scheme;
+  t.userInfo = this.m_userInfo;
+  t.host     = this.m_host;
+  t.port     = this.m_port;
+  t.frag     = this.m_frag;
+  t.pathStr  = this.m_pathStr;
+  t.path     = this.m_path;
   t.query    = merge.ro();
-  t.queryStr = s.toString();
-  return new Uri(t);
+  t.queryStr = s;
+  return fan.sys.Uri.makeSections(t);
 }
 
-static void appendQueryStr(StringBuilder buf, String str)
+fan.sys.Uri.appendQueryStr = function(buf, str)
 {
-  for (int i=0; i<str.length(); ++i)
+  var len = str.length;
+  for (var i=0; i<len; ++i)
   {
-    int c = str.charAt(i);
-    if (c < delimEscMap.length && (delimEscMap[c] & QUERY) != 0)
-      buf.append('\\');
-    buf.append((char)c);
+    var c = str.charCodeAt(i);
+    if (c < fan.sys.Uri.delimEscMap.length && (fan.sys.Uri.delimEscMap[c] & fan.sys.Uri.QUERY) != 0)
+      buf += '\\';
+    buf += str.charAt(i);
   }
+  return buf;
 }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
