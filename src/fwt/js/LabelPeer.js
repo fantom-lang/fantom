@@ -95,7 +95,7 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
   if (self.m_uri != null)
   {
     var a = document.createElement("a");
-    a.href = self.m_uri.toStr();
+    a.href = self.m_uri.encode();
     try
     {
       if (self.m_underline == fan.fresco.UnderlineMode.m_none) a.style.textDecoration = "none";
