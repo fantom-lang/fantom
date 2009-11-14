@@ -326,7 +326,8 @@ public class Env
     {
       Class c = Class.forName("org.eclipse.swt.internal." + SWT.getPlatform() + ".OS");
       Method m = c.getMethod("GetWindowLong", new Class[] { int.class, int.class });
-      return ((Integer)m.invoke(null, new Object[] {w.handle, new Integer(k)})).intValue();
+      int h = osHandle(w);
+      return ((Integer)m.invoke(null, new Object[] {h, new Integer(k)})).intValue();
     }
     catch (Exception e)
     {
@@ -341,11 +342,24 @@ public class Env
     {
       Class c = Class.forName("org.eclipse.swt.internal." + SWT.getPlatform() + ".OS");
       Method m = c.getMethod("SetWindowLong", new Class[] { int.class, int.class, int.class });
-      m.invoke(null, new Object[] {w.handle, new Integer(k), new Integer(v)});
+      int h = osHandle(w);
+      m.invoke(null, new Object[] {h, new Integer(k), new Integer(v)});
     }
     catch (Exception e)
     {
       e.printStackTrace();
+    }
+  }
+
+  public static int osHandle(Control w)
+  {
+    try
+    {
+      return w.getClass().getField("handle").getInt(w);
+    }
+    catch (Exception e)
+    {
+      return 0;
     }
   }
 
