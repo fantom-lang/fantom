@@ -74,12 +74,8 @@ abstract class BuildScript
   ** {devHomeDir}/lib/java/ext
   const File libJavaExtDir := devHomeDir + `lib/java/ext/`
 
-  ** {devHomeDir}/lib/java/ext/{os} or null if unknown.
-  ** Currently we map to os:
-  **   - Windows   => "win"
-  **   - MAC OS X  => "mac"
-  **   - Linux     => "linux"
-  File libJavaExtOsDir := libJavaExtDir
+  ** {devHomeDir}/lib/java/ext/{Sys.platform}
+  File libJavaExtPlatformDir := libJavaExtDir + `$Sys.platform/`
 
   ** {devHomeDir}/lib/dotnet
   const File libDotnetDir := devHomeDir + `lib/dotnet/`
@@ -114,16 +110,6 @@ abstract class BuildScript
 
     // exeExt
     exeExt = isWindows ? ".exe" : ""
-
-    // try and figure out which lib/ext/{os} to use - this
-    // is really going to work long term because it doesn't
-    // address the variations in os/microprocessors
-    if (isWindows)
-      libJavaExtOsDir = libJavaExtDir + `win/`
-    else if (osName.contains("os x"))
-      libJavaExtOsDir = libJavaExtDir + `mac/`
-    else if (osName.contains("linux"))
-      libJavaExtOsDir = libJavaExtDir + `linux/`
 
     // debug
     if (log.isDebug)
