@@ -303,8 +303,8 @@ public class Env
 // Platform
 //////////////////////////////////////////////////////////////////////////
 
-  public static boolean isWindows() { return SWT.getPlatform().equals("win32"); }
-  public static boolean isMac() { return SWT.getPlatform().equals("carbon"); }
+  public static boolean isWindows() { return Sys.os().equals("win32"); }
+  public static boolean isMac() { return Sys.os().equals("macosx"); }
 
   public static int os(String name)
   {
