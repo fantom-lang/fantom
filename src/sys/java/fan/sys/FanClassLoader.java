@@ -78,12 +78,11 @@ public class FanClassLoader
     try
     {
       String sep = File.separator;
-      File extDir = new File(Sys.HomeDir, "lib"+sep+"java"+sep+"ext"+sep+Sys.platform());
+      File extDir = new File(Sys.HomeDir, "lib" + sep + "java" + sep + "ext");
+      File platDir = new File(extDir, Sys.platform());
       ArrayList acc = new ArrayList();
-      File[] list = extDir.listFiles();
-      for (int i=0; list != null && i<list.length; ++i)
-        if (list[i].getName().endsWith(".jar"))
-          acc.add(list[i].toURL());
+      addExtJars(acc, extDir);
+      addExtJars(acc, platDir);
       return (URL[])acc.toArray(new URL[acc.size()]);
     }
     catch (Exception e)
@@ -91,6 +90,13 @@ public class FanClassLoader
       e.printStackTrace();
       return new URL[0];
     }
+  }
+
+  private static void addExtJars(ArrayList acc, File extDir) throws Exception
+  {
+    File[] list = extDir.listFiles();
+    for (int i=0; list != null && i<list.length; ++i)
+      if (list[i].getName().endsWith(".jar")) acc.add(list[i].toURL());
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -42,8 +42,8 @@ final class Sys
   static Str:Str env()
 
   **
-  ** Operating system name as one of the following string constants:
-  **   - "win"
+  ** Operating system name as one of the following constants:
+  **   - "win32"
   **   - "macosx"
   **   - "linux"
   **   - "aix"
@@ -54,7 +54,7 @@ final class Sys
   static Str os()
 
   **
-  ** List of 'arch' names:
+  ** Microprocessor architecture name as one of the following constants:
   **   - "x86"
   **   - "x86_64"
   **   - "ppc"

@@ -69,9 +69,9 @@ public final class Sys
   {
     String os = System.getProperty("os.name", "unknown");
     os = sanitize(os);
+    if (os.contains("win"))   return "win32";
     if (os.contains("mac"))   return "macosx";
     if (os.contains("sunos")) return "solaris";
-    if (os.contains("win"))   return "win";
     return os;
   }
 
