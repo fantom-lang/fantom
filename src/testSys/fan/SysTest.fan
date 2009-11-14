@@ -43,7 +43,7 @@ class SysTest : Test
   Void testPlatform()
   {
     // valid known list of os and arch constants
-    os := ["win", "macosx", "linux", "aix", "solaris", "hpux", "qnx"]
+    os := ["win32", "macosx", "linux", "aix", "solaris", "hpux", "qnx"]
     arch := ["x86", "x86_64", "ppc", "sparc", "ia64", "ia64_32"]
 
     verify(os.contains(Sys.os))
