@@ -70,28 +70,6 @@ int findJvmPath()
 //////////////////////////////////////////////////////////////////////////
 
 /**
- * Find all the jar files in relDir (relative to fanHome) and
- * add them to the classpath.
- */
-void addExtJars(char* cp, const char* relDir)
-{
-  static char search[MAX_PATH];
-  WIN32_FIND_DATA f;
-  HANDLE h;
-
-  sprintf(search, "%s\\%s\\*.jar", fanHome, relDir);
-  h = FindFirstFile(search, &f);
-  if (h == INVALID_HANDLE_VALUE) return;
-  do
-  {
-    if (debug) printf("--   addExtJar: %s\\%s\n", relDir, f.cFileName);
-    sprintf(cp, "%s;%s\\%s\\%s", cp, fanHome, relDir, f.cFileName);
-  }
-  while (FindNextFile(h, &f) != 0);
-  FindClose(h);
-}
-
-/**
  * Get the full list of options to pass to the Java VM which
  * are the required options set by the launcher, plus any additional
  * options configured in sys.props.
@@ -104,19 +82,12 @@ int initOptions()
   // found in lib/java/ext/win and lib/java/ext/win
   static char optClassPath[MAX_PATH*10];
   sprintf(optClassPath, "-Djava.class.path=%s\\lib\\java\\sys.jar", fanHome);
-  addExtJars(optClassPath, "lib\\java\\ext");
-  addExtJars(optClassPath, "lib\\java\\ext\\win");
   options[nOptions++].optionString = optClassPath;
 
   // predefined fan.home
   static char optHome[MAX_PATH];
   sprintf(optHome, "-Dfan.home=%s", fanHome);
   options[nOptions++].optionString = optHome;
-
-  // predefined java.library.path
-  static char libPath[MAX_PATH];
-  sprintf(libPath, "-Djava.library.path=%s\\lib\\java\\ext\\win", fanHome);
-  options[nOptions++].optionString = libPath;
 
   // user specified options from sys.props
   const char* prop = getProp(sysProps, "fan.java.options", "");
