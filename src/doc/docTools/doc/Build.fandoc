@@ -83,6 +83,9 @@ Or we can pass one or more targets as arguments:
   Compile away!
   BUILD SUCCESS [2ms]!
 
+Note: see [Setup]`Setup` to configure your environment to run
+scripts using just the script filename.
+
 BuildScript [#BuildScript]
 **************************
 The [BuildScript]`build::BuildScript` is the base class for
