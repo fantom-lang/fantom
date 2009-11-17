@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-Fan includes a unit test framework baked right into the runtime - it is
+Fantom includes a unit test framework baked right into the runtime - it is
 very similar to common test frameworks such as [JUnit]`http://www.junit.org/`.
 The key concepts for testing:
 

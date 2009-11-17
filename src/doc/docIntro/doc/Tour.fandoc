@@ -135,7 +135,7 @@ The code above is basically equivalent to this Java code:
 
 The reason Java and C# programmers write such tortured code is
 on the off-chance that they want to trap when a field is get
-or set.  In Fan, fields are always accessed via an auto-generated
+or set.  In Fantom, fields are always accessed via an auto-generated
 getter or setter which you can override:
 
   class Person

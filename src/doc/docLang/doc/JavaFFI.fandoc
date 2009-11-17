@@ -308,7 +308,7 @@ the Fantom type system using the Java VM name:
 
   using [java] java.util::Map$Entry as Entry
 
-Note that since the "$" is not a legal identifier char in Fan, you must
+Note that since the "$" is not a legal identifier char in Fantom, you must
 [rename]`CompilationUnits#using` the Java inner class to a valid Fan
 identifier with the 'as' keyword.
 

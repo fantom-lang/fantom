@@ -61,7 +61,7 @@ identical in the following example:
 Constructors [#ctor]
 ********************
 Constructors are special methods used to create new instances of a class.  In
-Fan, constructors are named methods.  The difference is that they use the 'new'
+Fantom, constructors are named methods.  The difference is that they use the 'new'
 keyword in their definition instead of a return type (the return type is implied
 to be an instance of the type):
 

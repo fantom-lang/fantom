@@ -8,11 +8,11 @@
 
 Overview [#overview]
 ********************
-The Fan distribution includes a desktop tool called *flux*.  Flux
+The Fantom distribution includes a desktop tool called *flux*.  Flux
 is a framework for building general purpose desktop applications
-with the [fwt]`docLib::Fwt` toolkit.  The standard Fan distribution
+with the [fwt]`docLib::Fwt` toolkit.  The standard Fantom distribution
 includes with a set of flux plugins which provide basic IDE support
-for Fan.
+for Fantom.
 
 On Window's you launch flux with the "flux.exe" executable.  On
 Unix use the "flux" bash script.  Both of these are just conveniences
@@ -21,7 +21,7 @@ to open on startup:
   flux
   flux Foo.fan
 
-The Fan installation used to run flux defines the set of plugins
+The Fantom installation used to run flux defines the set of plugins
 available.  By convention the flux plugins included in the standard
 distribution are prefixed with "flux".  You can add new plugins by
 dropping new pods into your "lib/fan" directory.
@@ -32,12 +32,12 @@ Flux is based on a browser based paradigm.  Users hyperlink from
 one Uri to another.  They can navigate back or forward in their
 navigation history just like a browser.
 
-Unlike a normal browser, we leverage Fan's built-in [naming]`docLang::Naming`
+Unlike a normal browser, we leverage Fantom's built-in [naming]`docLang::Naming`
 framework.  This means we can use Flux to browser any Uri mapped into
-the Fan's uri space including the file system, "fan:" namespaces, or any
-of the protocols plugged into Fan via 'UriScheme'.
+the Fantom's uri space including the file system, "fan:" namespaces, or any
+of the protocols plugged into Fantom via 'UriScheme'.
 
-When a user navigates to a uri, the uri is resolved into a Fan object
+When a user navigates to a uri, the uri is resolved into a Fantom object
 via the standard [naming]`docLang::Naming` subsystem.  We call the
 resolved object a *resource*.  Then the runtime looks in the
 [type database]`docLang::TypeDatabase` to find all the *views* registered
@@ -138,7 +138,7 @@ are:
 Tools [#tools]
 **************
 You can add your own commands into the Tools menu.  Tools are nothing
-but a Fan script file which declares a `flux::FluxCommand` class.  The
+but a Fantom script file which declares a `flux::FluxCommand` class.  The
 Tools menu structure reflects the "/etc/flux/tools/" directory.  Sub-directories
 are represented as sub-menus and scripts ending in ".fan" are the command
 menu items.  When the command is executed the script is compiled if out
@@ -182,9 +182,9 @@ to your "etc/flux/pod.fansym" file, where the key is "tools.{filename}":
     "tools.HelloWorld": "Ctrl+F9",
     ...
 
-Compiling Fan  [#compilingFan]
-******************************
-The standard Fan distribution includes a tools script called "Build".
+Compiling Fantom  [#compilingFan]
+*********************************
+The standard Fantom distribution includes a tools script called "Build".
 If you run this tool in any file which is under a directory which contains
 a "build.fan" script, it will run the build script with the default
 target - this a convenient way to recompile the current pod you are

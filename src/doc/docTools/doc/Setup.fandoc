@@ -8,16 +8,16 @@
 
 Unix Setup [#unix]
 ******************
-The Fan distribution is packaged as a zip file.  Once unpacked
+The Fantom distribution is packaged as a zip file.  Once unpacked
 you should add "fan/bin" into your path:
 
   PATH=$PATH:/applications/fan/bin
 
-The Fan launchers are implemented as a set of Bash shell
+The Fantom launchers are implemented as a set of Bash shell
 scripts which all route to common code sourced in "bin/fanlaunch".
 The current implementation is pretty simple and requires that
 you have a "java" command available in your environment (we
-haven't tried Mono with Fan yet).
+haven't tried Mono with Fantom yet).
 
 If the unpacked zip file doesn't have the executable permission
 set on script files, then the "adm/unixsetup" script will
@@ -28,7 +28,7 @@ build scripts:
 
 Executable Scripts [#executableUnix]
 =====================================
-Fan allows the first line of a source file to start with "#!" to run
+Fantom allows the first line of a source file to start with "#!" to run
 as a Unix shell script:
 
   #! /usr/bin/env fan
@@ -39,7 +39,7 @@ as a Unix shell script:
 
 Windows Setup [#windows]
 ************************
-The Fan distribution includes a set of Win32 executables which
+The Fantom distribution includes a set of Win32 executables which
 allow you to configure which version of Java or .NET is being
 used via "lib/sys.props".
 
@@ -61,11 +61,11 @@ executable assuming we installed to "c:\dev\fan":
 
 Selecting Java or .NET Runtime [#runtime]
 =========================================
-Fan is designed to be run on either a Java VM or a .NET CLR.  You
+Fantom is designed to be run on either a Java VM or a .NET CLR.  You
 can test which runtime is being used via "fan -version":
 
   C:\dev\fan>fan -version
-  Fan Launcher
+  Fantom Launcher
   Copyright (c) 2006-2009, Brian Frank and Andy Frank
   Licensed under the Academic Free License version 3.0
 
@@ -77,7 +77,7 @@ can test which runtime is being used via "fan -version":
     java.home:       C:\Program Files\Java\jre6
     fan.version:     1.0.45
 
-  Fan Repos:
+  Fantom Repos:
       boot:          file:/C:/dev/fan/
 
 Use "lib/sys.props" to configure which runtime is used by default.
@@ -98,7 +98,7 @@ environmental variable:
 
 Java Runtime [#javaRuntime]
 ===========================
-If running on Windows, the Fan launcher will attempt to locate the current
+If running on Windows, the Fantom launcher will attempt to locate the current
 Java VM via the registry key "SOFTWARE\\JavaSoft\\Java Runtime Environment.CurrentVersion"
 similar to how "java.exe" works.  You can specify the path to the "jvm.dll"
 to use explicitly via the "fan.java.jvm" system property.  You can use
@@ -110,10 +110,10 @@ settings.
   fan.java.jvm=c:\\dev\\tools\\java\\jre\\bin\\client\\jvm.dll
   fan.java.options=-Xmx128M
 
-Fan currently requires Java version 1.5 or greater to run.
+Fantom currently requires Java version 1.5 or greater to run.
 Java 1.6 or greater is required to compile from source.
 
-You can also run Fan directly without the launcher by adding "sys.jar"
+You can also run Fantom directly without the launcher by adding "sys.jar"
 to your classpath and ensuring either the "fan_home" environment variable
 is set or the "fan.home" Java system property is set:
 
@@ -129,16 +129,16 @@ the Java class 'fanx.tools.Fant'.
 
 .NET Runtime [#dotnetRuntime]
 =============================
-The Fan launcher will attempt to use the latest version of .NET installed.
+The Fantom launcher will attempt to use the latest version of .NET installed.
 
-Fan currently requires .NET version 2.0 or greater.
+Fantom currently requires .NET version 2.0 or greater.
 
 TODO: Support manually specifying version, running without launcher
 
 Substitutes [#substitutes]
 ==========================
 Another feature of the launcher executables is the ability to map
-specific script files to use an alternate Fan runtime.  This technique
+specific script files to use an alternate Fantom runtime.  This technique
 is used to manage the [bootstrap build]`Bootstrap#substitutes` process.
 
 Launcher Debugger [#debugging]
@@ -162,7 +162,7 @@ or .NET environment working:
 Java Extensions [#javaExt]
 **************************
 You can add Java JARs to the following directories to have them automatically
-loaded by the Fan class loader:
+loaded by the Fantom class loader:
   - '{home}/lib/java/ext/'
   - '{home}/lib/java/ext/{platform}'
 
@@ -172,7 +172,7 @@ You can verify your platform running "fan -version".
 
 SWT Support [#swt]
 ******************
-The Fan distribution ships with SWT support for a a couple common
+The Fantom distribution ships with SWT support for a a couple common
 platforms.  If your platform is not supported, follow these steps
 to get SWT working:
   1. Verify your platform identifier using "fan -version" (see
@@ -185,7 +185,7 @@ You can easily test SWT support by attempting to run `Flux`.
 
 Repos [#repos]
 **************
-The default behavior of Fan is to manage all its files under the
+The default behavior of Fantom is to manage all its files under the
 installation directory.  This is called the *boot repo*.  But you can
 also organize your own working files under a different directory
 called the *working repo*.  See `docLang::Repos` for details.

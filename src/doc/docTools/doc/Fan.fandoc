@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-The 'fan' launcher is used to run Fan code.  It can be used in
+The 'fan' launcher is used to run Fantom code.  It can be used in
 two ways:
 
   1. to execute a method in a precompiled pod
