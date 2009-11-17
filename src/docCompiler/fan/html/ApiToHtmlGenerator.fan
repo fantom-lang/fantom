@@ -41,7 +41,9 @@ class ApiToHtmlGenerator : HtmlGenerator
   {
     out.print("<ul>\n")
     out.print("  <li><a href='../index.html'>$docHome</a></li>\n")
+    out.print("  <li>&gt;</li>\n")
     out.print("  <li><a href='index.html'>$podHeading</a></li>\n")
+    out.print("  <li>&gt;</li>\n")
     out.print("  <li><a href='${t.name}.html'>$typeHeading</a></li>\n")
     out.print("</ul>\n")
   }
