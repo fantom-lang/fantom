@@ -11,7 +11,7 @@ Overview [#overview]
 The [xml]`xml::index` API provides the core APIs for working with XML:
 
   1. [XElem]`xml::XElem`: Provides a standard representation of an XML element tree
-     to be used in memory. It is similar to the W3's DOM, but Fan centric.
+     to be used in memory. It is similar to the W3's DOM, but Fantom centric.
 
   2. [XParser]`xml::XParser`: is a non-validating XML parser. It may be used in
      two modes: to read an entire XML document into memory or as a pull-parser.

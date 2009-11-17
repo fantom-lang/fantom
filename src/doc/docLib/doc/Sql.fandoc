@@ -14,7 +14,7 @@ with relational databases.  Its basic goals in life:
 
  - Connections: manage interaction with the database
  - Statements: execute SQL statements
- - Map Queries: map query results into Fan objects
+ - Map Queries: map query results into Fantom objects
 
 NOTE: the 'sql' API is pretty basic right now - it is just enough
 to get us started.  Please let us know which enhancements would
@@ -59,7 +59,7 @@ is closed.
 
 Connections in Java [#java]
 ===========================
-When running in a Java VM, Fan uses JDBC under the covers.  Using
+When running in a Java VM, Fantom uses JDBC under the covers.  Using
 MySQL as an example, follow these steps to open a connection in
 the JVM:
 
@@ -71,7 +71,7 @@ up as something like "mysql-connector-java-5.0.6-bin.jar".
 
 2.  Ensure the JDBC class is loaded into memory.  The simplest
 way to preload the class is to define "sql.driver" in
-Fan's "lib/sys.props".  For MySQL the sys prop would be:
+Fantom's "lib/sys.props".  For MySQL the sys prop would be:
       sql.mysql.driver=com.mysql.jdbc.Driver
 
 3.  Create and start a SqlService instance using the JDBC URL for the
@@ -119,7 +119,7 @@ parameters.
 Queries [#queries]
 ******************
 The result of an SQL query is always a relational table described
-by fixed columns with zero or more rows.  Fan supports two different
+by fixed columns with zero or more rows.  Fantom supports two different
 mechanisms  for retrieving query results: as a list of [Rows]`sql::Row`
 or by iterating the rows with a closure.
 

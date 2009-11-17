@@ -26,7 +26,7 @@ Resources [#resources]
 **********************
 Resources are the objects a user browses, views, and edits in a flux
 application.  Resources are modeled by the `flux::Resource` class.
-The 'Resource' class typically wraps some other Fan object to define
+The 'Resource' class typically wraps some other Fantom object to define
 how it is presented in the user interface such as its name, icon,
 the available views, and children if tree structured.
 
@@ -75,7 +75,7 @@ process to resolve the resource and views:
 
 Uri Resolution [#uriResolution]
 ===============================
-The step of navigation is to resolve the Uri to a normal Fan 'Obj' using
+The step of navigation is to resolve the Uri to a normal Fantom 'Obj' using
 the standard [naming facilities]`docLang::Naming`.  This means that
 any Uri which has been mapped via a 'UriScheme' or into the
 [UriSpace API]`docLang::UriSpaces` is available for navigation.  You
@@ -84,7 +84,7 @@ these techniques.
 
 Resource Resolution [#resourceResolution]
 =========================================
-Uri resolution maps the Uri to a normal Fan object. But we really want
+Uri resolution maps the Uri to a normal Fantom object. But we really want
 a 'Resource' instance so that we know how to display the object in our UI.
 If the object from uri resolution is already an instance of Resource, then
 we don't need to do anything special.

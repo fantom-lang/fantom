@@ -8,10 +8,10 @@
 
 Overview [#overview]
 ********************
-The [json]`json::index` API provides basic serialization between Fan Maps,
+The [json]`json::index` API provides basic serialization between Fantom Maps,
 Lists, and most primitives with Javascript Object Notation (JSON).
 
-There are plans to provide detailed type information about Fan types as
+There are plans to provide detailed type information about Fantom types as
 part of the JSON serialization at some point, but currently the following
 are supported:
  - [Map]`sys::Map`

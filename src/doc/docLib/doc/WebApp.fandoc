@@ -14,7 +14,7 @@ be going through many changes during development
 The [webapp]`webapp::index` pod defines a framework for building web
 applications by assembling prebuilt [WebSteps]`web::WebStep`:
   - [FindResourceStep]`#findResourceStep`: maps the request URI
-    to a Fan obj which represents a resource in the VM's
+    to a Fantom obj which represents a resource in the VM's
     local [UriSpace]`docLang::UriSpaces`
   - [FindViewStep]`#findViewStep`: find a suitable Weblet which
     can service the request and provide a representation of
@@ -27,7 +27,7 @@ applications by assembling prebuilt [WebSteps]`web::WebStep`:
 FindResourceStep [#findResourceStep]
 ************************************
 [FindResourceStep]`webapp::FindResourceStep` is responsible for
-mapping the web request URI to a Fan object which represents the
+mapping the web request URI to a Fantom object which represents the
 the resource to service.  This object can be anything, but is typically
 a File or an object in the domain model (such as a row in the database).
 In most cases, the web request URI is mapped directly to the local

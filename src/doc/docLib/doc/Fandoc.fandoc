@@ -11,7 +11,7 @@ Overview [#overview]
 Fandoc is documentation format written in plaintext similiar to
 [Markdown]`http://daringfireball.net/projects/markdown/`.  Fandoc
 is the format used for:
-  - Fan source code documentation via the '**' [comment]`docLang::CompilationUnits#comments`
+  - Fantom source code documentation via the '**' [comment]`docLang::CompilationUnits#comments`
   - All the documentation manuals (including this document itself)
   - Comments on fandev.org discussion groups
 
@@ -43,14 +43,14 @@ pre>
   - Strong: **foo bar**
   - Emphasis: *foo bar*
   - Hyperlink: `http://fandev.org/`
-  - Hyperlink: [Fan Home Page]`http://fandev.org/`
+  - Hyperlink: [Fantom Home Page]`http://fantom.org/`
 <pre
 
   - Code inline: 'FandocParser'
   - Strong: **foo bar**
   - Emphasis: *foo bar*
   - Hyperlink: `http://fandev.org/`
-  - Hyperlink: [Fan Home Page]`http://fandev.org/`
+  - Hyperlink: [Fantom Home Page]`http://fantom.org/`
 
 Paragraphs [#p]
 ***************
