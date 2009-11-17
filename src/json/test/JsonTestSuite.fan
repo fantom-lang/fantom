@@ -121,7 +121,7 @@ internal class JsonTestSuite
      },
      JsonTestCase
      {
-       map = ["kuri":`http://fandev.org`]
+       map = ["kuri":`http://fantom.org`]
        description = "Uri"
      },
      JsonTestCase

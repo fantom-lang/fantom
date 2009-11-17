@@ -27,7 +27,7 @@ class SymbolsTest : Test
     verifyImmutable(@durA, "durA",     30ms)
     verifyImmutable(@strA, "strA",     "alpha")
     verifyImmutable(@strB, "strB",     "line1\nline2\nline3_\u02c3_")
-    verifyImmutable(@uriA, "uriA",     `http://fandev.org/`)
+    verifyImmutable(@uriA, "uriA",     `http://fantom.org/`)
     verifyImmutable(@numA, "numA",     45,   Num#)
     verifyImmutable(@numB, "numB",     null, Num?#)
 
@@ -94,7 +94,7 @@ class SymbolsTest : Test
          using testSys
          n=null;   b=true;   i=123456789
          f=12.4f;  d=3.33d;  dur=3min
-         uri=`http://fandev.org/`
+         uri=`http://fantom.org/`
          str="foo\nbar\u2cd3"
          ver=Version("1.2.3")
          date=Date("2009-07-21")
@@ -109,7 +109,7 @@ class SymbolsTest : Test
       Str:Obj?[
         "n":null,  "b":true,  "i":123456789,
         "f":12.4f, "d":3.33d, "dur":3min,
-        "uri":`http://fandev.org/`,
+        "uri":`http://fantom.org/`,
         "str":"foo\nbar\u2cd3",
         "ver":Version("1.2.3"),
         "date":Date("2009-07-21"),

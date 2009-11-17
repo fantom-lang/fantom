@@ -122,7 +122,7 @@ class TcpSocketTest : Test
   Void doTestConnectHttp(Duration? timeout)
   {
     // connect to www server
-    s := TcpSocket().connect(IpAddress("www.fandev.org"), 80, timeout)
+    s := TcpSocket().connect(IpAddress("fantom.org"), 80, timeout)
 
     // verify connetion state
     verifyEq(s.isBound, true)
@@ -157,19 +157,19 @@ class TcpSocketTest : Test
     // verify duplicate name
     verifyErr(ArgErr#) |,|
     {
-       x := TcpSocket().connect(IpAddress("www.fandev.org"), 80)
+       x := TcpSocket().connect(IpAddress("fantom.org"), 80)
        x.fork(Thread.current.name, &runFork(x.localPort, x.remoteAddress.numeric))
     }
 
     // verify non-const method
     verifyErr(NotImmutableErr#) |,|
     {
-       x := TcpSocket().connect(IpAddress("www.fandev.org"), 80)
+       x := TcpSocket().connect(IpAddress("fantom.org"), 80)
        x.fork(null) |TcpSocket s| { fail }
     }
 
     // connect to www server
-    s := TcpSocket().connect(IpAddress("www.fandev.org"), 80)
+    s := TcpSocket().connect(IpAddress("fantom.org"), 80)
     so := s.options
 
     // fork

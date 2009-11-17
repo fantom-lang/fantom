@@ -61,7 +61,7 @@ class ExprTest : CompilerTest
 
     // uri
     verifyExpr("`x`",  `x`)
-    verifyExpr("`http://fandev/path/file?query#frag`", `http://fandev/path/file?query#frag`)
+    verifyExpr("`http://fantom/path/file?query#frag`", `http://fantom/path/file?query#frag`)
 
     // type
     verifyExpr("Str#", Str#)

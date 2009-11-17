@@ -98,12 +98,12 @@ class EmailTest : Test
   static Void main()
   {
     // setup
-    to   := ["x@fandev.org"]
-    from := "x@fandev.org"
+    to   := ["x@fantom.org"]
+    from := "x@fantom.org"
     mailer := SmtpClient
     {
       host     = "webmail.richweb.com"
-      username = "x@fandev.org"
+      username = "x@fantom.org"
       password = ""
       log.level = LogLevel.debug
     }

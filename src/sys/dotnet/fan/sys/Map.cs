@@ -256,7 +256,7 @@ namespace Fan.Sys
     public void ordered(bool v)
     {
       // TODO
-      // http://hg.fandev.org/repos/fan-1.0?cs=bc1b2c7e511f
+      // http://hg.fantom.org/repos/fan-1.0?cs=bc1b2c7e511f
 
       throw UnsupportedErr.make("Not yet implemented").val;
     }

@@ -22,7 +22,7 @@ Quick Start [#quickStart]
 *************************
 If you want to jump right in and start coding:
 
-  - [Download]`http://www.fandev.org` the latest build
+  - [Download]`http://fantom.org` the latest build
   - [Setup]`docTools::Setup`: your environment
   - `HelloWorld`: try your hand at hello world
   - [Examples]`examples::index`: snippets of example
@@ -58,7 +58,7 @@ make sure to review how to write [unit tests]`docTools::Fant` and
 Getting Involved [#gettingInvolved]
 ***********************************
 The place to ask questions and submit feedback is the
-[discussion group]`http://www.fandev.org/sidewalk/topic/`.
+[discussion group]`http://fantom.org/sidewalk/topic/`.
 Or you can [contact us]`Faq#contact` directly.  Let us know
 what you think!
 
