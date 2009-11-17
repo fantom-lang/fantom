@@ -239,7 +239,7 @@ fan.sys.Type.prototype.$slot = function(name)
 //////////////////////////////////////////////////////////////////////////
 
 /**
- * Find the Fan type for this qname.
+ * Find the Fantom type for this qname.
  */
 fan.sys.Type.find = function(sig, checked)
 {
@@ -247,7 +247,7 @@ fan.sys.Type.find = function(sig, checked)
 }
 
 /**
- * Get the Fan type
+ * Get the Fantom type
  */
 fan.sys.Type.toFanType = function(obj)
 {
@@ -256,7 +256,7 @@ fan.sys.Type.toFanType = function(obj)
   if ((typeof obj) == "boolean" || obj instanceof Boolean) return fan.sys.Type.find("sys::Bool");
   if ((typeof obj) == "number"  || obj instanceof Number)  return fan.sys.Type.find("sys::Int");
   if ((typeof obj) == "string"  || obj instanceof String)  return fan.sys.Type.find("sys::Str");
-  throw fan.sys.Err.make("sys::Type.toFanType: Not a Fan type: " + obj);
+  throw fan.sys.Err.make("sys::Type.toFanType: Not a Fantom type: " + obj);
 }
 
 fan.sys.Type.common = function(objs)

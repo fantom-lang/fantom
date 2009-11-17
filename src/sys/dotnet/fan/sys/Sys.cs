@@ -82,7 +82,7 @@ namespace Fan.Sys
     // TODO: need to query 32-bit versus 64-bit, looks like you need WMI for this
     public static string os() { return "win32"; }
     public static string arch() { return "x86"; }
-    public static string platform() { return "win-x86"; }
+    public static string platform() { return "win32-x86"; }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
