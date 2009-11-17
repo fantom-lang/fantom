@@ -37,6 +37,7 @@ class FandocIndexToHtmlGenerator : HtmlGenerator
   {
     out.print("<ul>\n")
     out.print("  <li><a href='../index.html'>$docHome</a></li>\n")
+    out.print("  <li>&gt;</li>\n")
     out.print("  <li><a href='index.html'>$compiler.pod.name</a></li>\n")
     out.print("</ul>\n")
   }

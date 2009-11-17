@@ -150,8 +150,14 @@ div.subHeader ul
   list-style-type: none;
   white-space: nowrap;
 }
-div.subHeader a { color: #4e4d3a; }
-div.subHeader li { display: inline; padding-right: 10px; }
+div.subHeader li
+{
+  display: inline;
+  padding-right: 4px;
+  font: 10pt "Arial Narrow", Arial;
+  color:#9d9a7b;
+}
+div.subHeader li a { color: #4e4d3a; font:10pt Arial; }
 
 /*************************************************************************
  * Footer
