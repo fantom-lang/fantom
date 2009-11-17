@@ -716,6 +716,7 @@
 - #721: Cookbook versus Examples
 
 *Build 1.0.47 (working)*
+- Rename Fan to Fantom!
 - Range fromStr, isEmpty, min, max, first, last
 - List.eachrWhile
 - Map.getOrAdd
