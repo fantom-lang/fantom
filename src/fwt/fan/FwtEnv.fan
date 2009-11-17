@@ -9,7 +9,7 @@
 using gfx
 
 **
-** FwtEnv the gfx environment implementation for the Fan Widget Toolkit.
+** FwtEnv the gfx environment implementation for the Fantom Widget Toolkit.
 **
 @js
 internal const class FwtEnv : GfxEnv

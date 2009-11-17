@@ -11,7 +11,7 @@ using fandoc
 
 **
 ** FanToHtml generates a syntax color coded HTML fragment from a
-** Fan source file.  The actual CSS styles are not defined by this
+** Fantom source file.  The actual CSS styles are not defined by this
 ** class, and should be set by the parent HTML markup or external
 ** CSS file.
 **

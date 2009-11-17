@@ -8,7 +8,7 @@
 //
 
 **
-** Fan daemon framework
+** Fantom daemon framework
 **
 
 @podDepends = [Depend("sys 1.0")]

@@ -204,7 +204,7 @@ class TryTest : Test
   **
   ** The goal here is to cause exceptions which are raised by the
   ** runtime rather than our system code - we want to ensure that
-  ** they are mapped to their Fan counterparts correctly.  We try
+  ** they are mapped to their Fantom counterparts correctly.  We try
   ** one in three scenerios: Test.verifyErr, catch, and reflection
   **
   Void testRuntimeMapping()

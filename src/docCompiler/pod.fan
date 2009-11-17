@@ -8,7 +8,7 @@
 //
 
 **
-** Fan documentation compiler
+** Fantom documentation compiler
 **
 
 @podDepends = [Depend("sys 1.0"),

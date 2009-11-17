@@ -91,7 +91,7 @@ class IpAddressTest : Test
     // map to new instance by bytes
     // NOTE: Java appears to normalize the host address string
     // differently when made by bytes, but I don't think we should
-    // push that into the Fan API contract
+    // push that into the Fantom API contract
     x := IpAddress.makeBytes(a.bytes)
     verifyEq(a, x)
     verifyEq(a.bytes.toHex, x.bytes.toHex)

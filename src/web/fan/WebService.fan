@@ -8,7 +8,7 @@
 
 **
 ** WebService defines the standard service interface
-** for all Fan based web servers.
+** for all Fantom based web servers.
 **
 ** See [docLib::Web]`docLib::Web#webServices`
 **
