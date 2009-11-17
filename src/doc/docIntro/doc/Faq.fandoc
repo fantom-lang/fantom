@@ -9,31 +9,32 @@
 Contact Us? [#contact]
 ======================
 Please direct questions or feedback to the
-[discussion group]`http://www.fandev.org/sidewalk/topic/`. You can also
+[discussion group]`http://fantom.org/sidewalk/topic/`. You can also
 email us directly:
   - Brian: briansfrank at gmail dot com
   - Andy: afrankvt at gmail dot com
 
-What's up with the name Fan? [#name]
-====================================
-"The Fan" is the [neighborhood]`http://en.wikipedia.org/wiki/Fan_district`
+Didn't this language used to be called Fan? [#fan]
+==================================================
+Yeap!  Originally the language was called Fan; named after "The Fan" which
+is the [neighborhood]`http://en.wikipedia.org/wiki/Fan_district`
 where we live in Richmond, VA.  It's a great turn of the 20th century
 neighborhood back when urban planning was human-centric as opposed
-to automobile-centric.  It also has the added bonus of being a very
-short word!
+to automobile-centric.  But after a long debate about the searchability
+of Fan, we renamed the langauge to Fantom in Novemember 2009.
 
-How is Fan licensed? [#license]
+How is Fantom licensed? [#license]
 ===============================
-Fan is licensed under the [Academic Free License 3.0]`License` which
+Fantom is licensed under the [Academic Free License 3.0]`License` which
 is a BSD-styled license (it is very similiar to the Apache 2.0 license).
 
-What is the status of Fan? [#status]
+What is the status of Fantom? [#status]
 ====================================
-Fan is currently in [development]`Roadmap#status`.
+Fantom is currently in [development]`Roadmap#status`.
 
-How do Fan version numbers work? [#versions]
+How do Fantom version numbers work? [#versions]
 ============================================
-Fan version numbers are a three or four part series of decimal
+Fantom version numbers are a three or four part series of decimal
 integers separated by dots: 'major.minor.build.patch'.  We are
 currently developing version 1.0 as a series of incrementing
 builds: 1.0.30, 1.0.31, etc.

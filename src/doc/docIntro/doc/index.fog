@@ -8,8 +8,8 @@
 
 [
   [`StartHere`,  "learn how to get started and use the documentation"],
-  [`Tour`,       "whirlwind tour of Fan's features"],
-  [`WhyFan`,     "why we built Fan and what problems we desire to solve"],
+  [`Tour`,       "whirlwind tour of Fantom's features"],
+  [`WhyFan`,     "why we built Fantom and what problems we desire to solve"],
   [`HelloWorld`, "getting started with hello world"],
   [`Roadmap`,    "current development status and future plans"],
   [`Faq`,        "frequently asked questions"],
