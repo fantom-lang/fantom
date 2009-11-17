@@ -192,7 +192,18 @@ public class FanClassLoader
 
     // fallback to default URLClassLoader loader
     // implementation which searches my ext jars
-    return super.findClass(name);
+    try
+    {
+      return super.findClass(name);
+    }
+    catch (NoClassDefFoundError e)   { checkLoadFailure(name); throw e; }
+    catch (ClassNotFoundException e) { checkLoadFailure(name); throw e; }
+  }
+
+  private static void checkLoadFailure(String name)
+  {
+    if (name.contains("eclipse.swt"))
+      System.out.println("ERROR: cannot load SWT library - see `http://fantom.org/doc/docTools/Setup.html#swt`");
   }
 
 //////////////////////////////////////////////////////////////////////////
