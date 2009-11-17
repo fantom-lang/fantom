@@ -37,7 +37,7 @@ class Build : BuildScript
     "email/",        "email",
       "sending",     "Sending email via SMTP",
     "js/",           "js",
-      "demo",        "Run web server to demo Fan to JavaScript in browser",
+      "demo",        "Run web server to demo Fantom to JavaScript in browser",
     "java/",         "java",
       "hello",       "Hello world with Java FFI",
       "swing",       "Swing application using Java FFI",

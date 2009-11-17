@@ -28,17 +28,17 @@ class Client
   {
     // simple string get
     echo("\n--- getStr ---")
-    str := WebClient(`http://fandev.org/`).getStr
+    str := WebClient(`http://fantom.org/`).getStr
     echo(str.in.readLine + "...")
 
     // simple binary get
     echo("\n--- getBuf ---")
-    buf := WebClient(`http://fandev.org/`).getBuf
+    buf := WebClient(`http://fantom.org/`).getBuf
     echo(buf.readLine + "...")
 
     // get as input stream
     echo("\n--- getIn ---")
-    c := WebClient(`http://fandev.org/doc/`)
+    c := WebClient(`http://fantom.org/doc/`)
     try
     {
       in := c.getIn
@@ -80,9 +80,9 @@ class Client
     echo("\n--- pipelining ---")
     // pipelining: write 2 requests, then read 2 responses
     c := WebClient()
-    c.reqUri = `http://fandev.org/`
+    c.reqUri = `http://fantom.org/`
     c.writeReq
-    c.reqUri = `http://fandev.org/doc/`
+    c.reqUri = `http://fantom.org/doc/`
     c.writeReq
     c.readRes
     echo(c.resStr[0..30] + "...") // process path1 response

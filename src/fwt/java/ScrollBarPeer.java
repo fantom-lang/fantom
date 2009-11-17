@@ -133,7 +133,7 @@ public class ScrollBarPeer
     // this is potentially pretty expense, we only add ourselves as a
     // key listener when someone registers with ScrollBar.onModify.
     //
-    //   - http://fandev.org/sidewalk/topic/534
+    //   - http://fantom.org/sidewalk/topic/534
     //   - http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg44740.html
     //
 

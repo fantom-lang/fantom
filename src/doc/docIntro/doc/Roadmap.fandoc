@@ -48,7 +48,7 @@ keyword which will let you declare thread locals much like you would
 a static field.  With that feature, many APIs can be reworked - for
 example Weblet can declare req/res as thread locals.
 
-See [design proposal]`http://www.fandev.org/sidewalk/topic/204`
+See [design proposal]`http://fantom.org/sidewalk/topic/204`
 
 .NET Runtime [#dotnet]
 ======================

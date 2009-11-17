@@ -603,7 +603,7 @@ class FwtDemo
   }
 
   WebBrowser browser := WebBrowser {}
-  Str homeUri := "http://fandev.org/"
+  Str homeUri := "http://fantom.org/"
 
   File scriptDir  := File.make(type->sourceFile.toStr.toUri).parent
 

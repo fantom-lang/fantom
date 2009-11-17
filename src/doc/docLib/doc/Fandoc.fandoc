@@ -13,7 +13,7 @@ Fandoc is documentation format written in plaintext similiar to
 is the format used for:
   - Fantom source code documentation via the '**' [comment]`docLang::CompilationUnits#comments`
   - All the documentation manuals (including this document itself)
-  - Comments on fandev.org discussion groups
+  - Comments on fantom.org discussion groups
 
 You can use the [fandoc APIs]`#api` to parse fandoc plaintext
 into a document object model and generate HTML.
@@ -42,14 +42,14 @@ pre>
   - Inline code: 'FandocParser'
   - Strong: **foo bar**
   - Emphasis: *foo bar*
-  - Hyperlink: `http://fandev.org/`
+  - Hyperlink: `http://fantom.org/`
   - Hyperlink: [Fantom Home Page]`http://fantom.org/`
 <pre
 
   - Code inline: 'FandocParser'
   - Strong: **foo bar**
   - Emphasis: *foo bar*
-  - Hyperlink: `http://fandev.org/`
+  - Hyperlink: `http://fantom.org/`
   - Hyperlink: [Fantom Home Page]`http://fantom.org/`
 
 Paragraphs [#p]
@@ -181,10 +181,10 @@ Images use the same syntax as a hyperlink with anchor text, but
 are prefixed with a bang:
 
 pre>
-  ![fan logo]`http://fandev.org/doc/eximg.png`
+  ![fan logo]`http://fantom.org/doc/eximg.png`
 <pre
 
-![fan logo]`http://fandev.org/doc/eximg.png`
+![fan logo]`http://fantom.org/doc/eximg.png`
 
 Headings [#headings]
 ********************

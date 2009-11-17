@@ -39,7 +39,7 @@ pod testSys
   strA := "alpha"
   strB := "line1\nline2\nline3_\u02c3_"
 
-  uriA := `http://fandev.org/`
+  uriA := `http://fantom.org/`
 
   Num numA := 45
   Num? numB := null

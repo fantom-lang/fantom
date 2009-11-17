@@ -1,5 +1,5 @@
-# Copyright (c) 2005, Brian Frank, Andy Frank, and John Sublett.
-# Licensed under BSD, see http://www.fandev.org/license.txt for terms.
+# Copyright (c) 2005, Brian Frank and Andy Frank
+# Licensed under the Academic Free License version 3.0
 
 #
 # Env -- setups the environment for admin tasks

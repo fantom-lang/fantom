@@ -247,7 +247,7 @@ is the foundation of Fantom's subsystem for naming and resolution.  'Uris' have
 their own literal syntax using the back tick:
   `index.html`
   `/some/path/file.txt`
-  `http://fandev.org`
+  `http://fantom.org/`
   `TPS Report.doc`
 
 Note that when working with URIs in Fantom and representing them as literals we
