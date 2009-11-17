@@ -192,7 +192,7 @@ abstract const class Slot
   override Str toStr()
 
   **
-  ** Return a string representation of the Fan code signature.
+  ** Return a string representation of the Fantom code signature.
   **
   virtual Str signature()
 

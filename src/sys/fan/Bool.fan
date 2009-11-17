@@ -89,7 +89,7 @@ const final class Bool
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get this Bool as a Fan code literal - returns `toStr`.
+  ** Get this Bool as a Fantom code literal - returns `toStr`.
   **
   Str toCode()
 

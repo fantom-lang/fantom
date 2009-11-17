@@ -9,12 +9,12 @@
 **
 ** TimeZone represents a region's offset from UTC and its daylight
 ** savings time rules.  TimeZones are historical - UTC offset and DST
-** rules may change depending on the year.  The Fan implementation of
+** rules may change depending on the year.  The Fantom implementation of
 ** historical time zones is optimized to handle only year boundaries (so
 ** some historical changes which don't occur on year boundaries may
 ** not be 100% accurate).
 **
-** The Fan time zone database and naming model is based on the
+** The Fantom time zone database and naming model is based on the
 ** [ZoneInfo database]`http://www.twinsun.com/tz/tz-link.htm` used
 ** by UNIX and Java (also known as the Olsen database).  All time
 ** zones have both a simple `name` and a `fullName`.  The 'fullName'
@@ -62,7 +62,7 @@ const class TimeZone
   ** timezone is configured by the Java or .NET runtime or it
   ** can be manually configured in "sys.props" with the key
   ** "fan.timezone" and any value accepted by `fromStr`.  Once
-  ** Fan is booted, the default timezone cannot be changed.
+  ** Fantom is booted, the default timezone cannot be changed.
   **
   static TimeZone current()
 

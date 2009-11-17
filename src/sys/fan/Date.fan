@@ -223,7 +223,7 @@ const final class Date
   DateTime midnight(TimeZone tz := TimeZone.current)
 
   **
-  ** Get this Date as a Fan expression suitable for code generation.
+  ** Get this Date as a Fantom expression suitable for code generation.
   **
   Str toCode()
 

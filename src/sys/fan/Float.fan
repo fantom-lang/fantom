@@ -321,7 +321,7 @@ const final class Float : Num
   override Str toStr()
 
   **
-  ** Get this Float as a Fan code literal.
+  ** Get this Float as a Fantom code literal.
   **
   Str toCode()
 

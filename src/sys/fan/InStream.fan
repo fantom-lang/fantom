@@ -300,7 +300,7 @@ class InStream
 
   **
   ** Read a serialized object from the stream according to
-  ** the Fan [serialization format]`docLang::Serialization`.
+  ** the Fantom [serialization format]`docLang::Serialization`.
   ** Throw IOErr or ParseErr on error.  This method may consume
   ** bytes/chars past the end of the serialized object (we may
   ** want to add a "full stop" token at some point to support
@@ -315,7 +315,7 @@ class InStream
 
   **
   ** Read a fan symbols file which is a set of zero more
-  ** name/serialized object pairs separated by a Fan end of
+  ** name/serialized object pairs separated by a Fantom end of
   ** statement (semicolon or newline).  Throw IOErr or ParseErr
   ** on error.
   **
@@ -327,7 +327,7 @@ class InStream
 
   **
   ** Read the entire stream into a Str:Str of name value pairs using the
-  ** Fan props file format.  This format is similiar but different than
+  ** Fantom props file format.  This format is similiar but different than
   ** the Java properties file format:
   **   - Input must be UTF-8 encoded (current charset is ignored)
   **   - Name/value pairs formatted as logical line: <name>"="<value>
@@ -340,7 +340,7 @@ class InStream
   **   - Use trailing \ to continue logical line to another actual line,
   **     any leading whitespace (space or tab char) is trimmed from beginning
   **     of continued line
-  **   - Fan Str literal escape sequences supported: \n \r \t or \uxxxx
+  **   - Fantom Str literal escape sequences supported: \n \r \t or \uxxxx
   **   - The $ character is treated as a normal character and should not be
   **     escaped, but convention is to indicate a variable in a format string
   **   - Convention is that name is lower camel case with dot separators

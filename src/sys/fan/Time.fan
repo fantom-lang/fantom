@@ -185,7 +185,7 @@ const final class Time
   DateTime toDateTime(Date d, TimeZone tz := TimeZone.current)
 
   **
-  ** Get this Time as a Fan expression suitable for code generation.
+  ** Get this Time as a Fantom expression suitable for code generation.
   **
   Str toCode()
 
