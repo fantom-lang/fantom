@@ -4,7 +4,7 @@
 //
 // History:
 //   17 Nov 08  Brian Frank  Creation
-//   13 Dec 08  Brian Frank  Port from Java to Fan using FFI
+//   13 Dec 08  Brian Frank  Port from Java to Fantom using FFI
 //
 
 using compiler
@@ -23,7 +23,7 @@ using [java] fanx.util
 internal class JavaReflect
 {
   **
-  ** Map class meta-data and Java members to Fan slots
+  ** Map class meta-data and Java members to Fantom slots
   ** for the specified JavaType
   **
   static Void load(JavaType self, Str:CSlot slots)
@@ -46,7 +46,7 @@ internal class JavaReflect
     }
     self.mixins = mixins
 
-    // map Java modifiers to Fan flags
+    // map Java modifiers to Fantom flags
     self.flags = toClassFlags(cls.getModifiers)
 
     // map Java fields to CSlots (public and protected)
@@ -116,7 +116,7 @@ internal class JavaReflect
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Java Member -> Fan CSlot
+// Java Member -> Fantom CSlot
 //////////////////////////////////////////////////////////////////////////
 
   static Void mapField(JavaType self, Str:CSlot slots, JField java)
@@ -273,7 +273,7 @@ internal class JavaReflect
   }
 
   **
-  ** If the specified Java classname maps directly to a Fan type
+  ** If the specified Java classname maps directly to a Fantom type
   ** then return it, otherwise null.  Direct mappings are 'sys::Obj',
   ** 'sys::Str', and 'sys::Decimal' - this method only handles
   ** object classes, not primitives like boolean, long, and double.
@@ -290,7 +290,7 @@ internal class JavaReflect
   }
 
   **
-  ** Convert Java class modifiers to Fan flags.
+  ** Convert Java class modifiers to Fantom flags.
   **
   static Int toClassFlags(Int modifiers)
   {
@@ -298,7 +298,7 @@ internal class JavaReflect
   }
 
   **
-  ** Convert Java member modifiers to Fan flags.
+  ** Convert Java member modifiers to Fantom flags.
   **
   static Int toMemberFlags(Int modifiers)
   {

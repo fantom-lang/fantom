@@ -10,7 +10,7 @@ using compiler
 
 **
 ** JavaBridge is the compiler plugin for bringing Java
-** classes into the Fan type system.
+** classes into the Fantom type system.
 **
 @compilerBridge="java"
 class JavaBridge : CBridge
@@ -95,7 +95,7 @@ class JavaBridge : CBridge
   }
 
   **
-  ** Resolve a construction chain call where a Fan constructor
+  ** Resolve a construction chain call where a Fantom constructor
   ** calls the super-class constructor.  Type check the arguments
   ** and insert any conversions needed.
   **
@@ -134,7 +134,7 @@ class JavaBridge : CBridge
 
     // if we have multiple matches; resolve to
     // most specific match according to JLS rules
-    // TODO: this does not correct resolve when using Fan implicit casting
+    // TODO: this does not correct resolve when using Fantom implicit casting
     if (matches.size > 1)
     {
       best := resolveMostSpecific(matches)
@@ -217,13 +217,13 @@ class JavaBridge : CBridge
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Called during Inherit step when a Fan slot overrides a FFI slot.
+  ** Called during Inherit step when a Fantom slot overrides a FFI slot.
   ** Log and throw compiler error if there is a problem.
   **
   override Void checkOverride(TypeDef t, CSlot base, SlotDef def)
   {
-    // we don't allow Fan to override Java methods with multiple
-    // overloaded versions since the Fan type system can't actually
+    // we don't allow Fantom to override Java methods with multiple
+    // overloaded versions since the Fantom type system can't actually
     // override all the overloaded versions
     jslot := base as JavaSlot
     if (jslot?.next != null)
@@ -243,7 +243,7 @@ class JavaBridge : CBridge
     if (base.params.size != def.params.size) return
 
     // if the return type is primitive or Java array and the
-    // Fan declaration matches how it is inferred into the Fan
+    // Fantom declaration matches how it is inferred into the Fan
     // type system, then just change the return type - the compiler
     // will impliclty do all the return coercions
     if (isOverrideInferredType(base.returnType, def.returnType))
@@ -252,9 +252,9 @@ class JavaBridge : CBridge
     }
 
     // if any of the parameters is a primitive or Java array
-    // and the Fan declaration matches how it is inferred into
-    // the Fan type type, then change the parameter type to
-    // the Java override type and make the Fan type a local
+    // and the Fantom declaration matches how it is inferred into
+    // the Fantom type type, then change the parameter type to
+    // the Java override type and make the Fantom type a local
     // variable:
     //   Java:   void foo(int a) { ... }
     //   Fan:    Void foo(Int a) { ... }
@@ -281,7 +281,7 @@ class JavaBridge : CBridge
   **
   ** When overriding a Java method check if the base type is
   ** is a Java primitive or array and the override definition is
-  ** matches how the Java type is inferred in the Fan type system.
+  ** matches how the Java type is inferred in the Fantom type system.
   ** If we have a match return true and we'll swizzle things in
   ** checkMethodOverride.
   **
@@ -318,7 +318,7 @@ class JavaBridge : CBridge
     }
 
     // we don't allow deep inheritance of Java classes because
-    // the Fan constructor and Java constructor model don't match
+    // the Fantom constructor and Java constructor model don't match
     // up past one level of inheritance
     // NOTE: that that when we remove this restriction we need to
     // test how field initialization works because instance$init
@@ -331,7 +331,7 @@ class JavaBridge : CBridge
       return
     }
 
-    // ensure that when we map Fan constructors to Java
+    // ensure that when we map Fantom constructors to Java
     // constructors that we don't have duplicate signatures
     ctors := def.ctorDefs
     ctors.each |MethodDef a, Int i|
@@ -386,7 +386,7 @@ class JavaBridge : CBridge
     expected = expected.deref
     if (actual == expected) return expr
 
-    // handle Fan to Java primitives
+    // handle Fantom to Java primitives
     if (expected.pod == primitives)
       return coerceToPrimitive(expr, expected, onErr)
 
@@ -394,11 +394,11 @@ class JavaBridge : CBridge
     if (actual.pod == primitives)
       return coerceFromPrimitive(expr, expected, onErr)
 
-    // handle Java array to Fan list
+    // handle Java array to Fantom list
     if (actual.name[0] == '[')
       return coerceFromArray(expr, expected, onErr)
 
-    // handle Fan list to Java array
+    // handle Fantom list to Java array
     if (expected.name[0] == '[')
       return coerceToArray(expr, expected, onErr)
 
@@ -406,7 +406,7 @@ class JavaBridge : CBridge
     if (actual is FuncType && expected.isMixin && expected.toNonNullable is JavaType)
       return coerceFuncToInterface(expr, expected.toNonNullable, onErr)
 
-     // use normal Fan coercion behavior
+     // use normal Fantom coercion behavior
     return super.coerce(expr, expected, onErr)
   }
 
@@ -432,7 +432,7 @@ class JavaBridge : CBridge
   }
 
   **
-  ** Coerce a Java primitive to a Fan type.
+  ** Coerce a Java primitive to a Fantom type.
   **
   Expr coerceFromPrimitive(Expr expr, CType expected, |,| onErr)
   {
@@ -458,7 +458,7 @@ class JavaBridge : CBridge
   }
 
   **
-  ** Coerce a Java array to a Fan list.
+  ** Coerce a Java array to a Fantom list.
   **
   Expr coerceFromArray(Expr expr, CType expected, |,| onErr)
   {
@@ -494,7 +494,7 @@ class JavaBridge : CBridge
   }
 
   **
-  ** Coerce a Fan list to Java array.
+  ** Coerce a Fantom list to Java array.
   **
   Expr coerceToArray(Expr expr, CType expected, |,| onErr)
   {
