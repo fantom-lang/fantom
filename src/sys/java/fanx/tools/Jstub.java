@@ -65,7 +65,7 @@ public class Jstub
       // write manifest
       out.putNextEntry(new ZipEntry("meta-inf/Manifest.mf"));
       out.write("Manifest-Version: 1.0\n".getBytes());
-      out.write("Created-By: Fan Java Stub\n".getBytes());
+      out.write("Created-By: Fantom Java Stub\n".getBytes());
       out.closeEntry();
     }
     finally

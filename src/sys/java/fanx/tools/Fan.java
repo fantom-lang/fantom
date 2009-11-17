@@ -12,7 +12,7 @@ import fan.sys.*;
 import fanx.util.*;
 
 /**
- * Fan runtime command line tool.
+ * Fantom runtime command line tool.
  */
 public class Fan
 {
@@ -50,7 +50,7 @@ public class Fan
     for (int i=0; i<args.length; ++i)
       if (args[i].equals("-fcodeDump")) options.add("fcodeDump", Boolean.TRUE);
 
-    // use Fan reflection to run compiler::Main.compileScript(File)
+    // use Fantom reflection to run compiler::Main.compileScript(File)
     Pod pod = null;
     try
     {
@@ -169,7 +169,7 @@ public class Fan
     println("  fan.platform:    " + Sys.platform());
     println("  fan.version:     " + Sys.SysPod.version());
     println("");
-    println("Fan Repos:");
+    println("Fantom Repos:");
     for (int i=0; i<Repo.list().size(); ++i)
     {
       Repo repo = (Repo)Repo.list().get(i);
@@ -186,7 +186,7 @@ public class Fan
     long t2 = System.nanoTime();
 
     println("");
-    println("Fan Pods [" + (t2-t1)/1000000L + "ms]:");
+    println("Fantom Pods [" + (t2-t1)/1000000L + "ms]:");
 
     println("  Pod                 Version   Repo");
     println("  ---                 -------   ----");
@@ -222,12 +222,12 @@ public class Fan
         }
         else if (a == "-version")
         {
-          version("Fan Launcher");
+          version("Fantom Launcher");
           return 3;
         }
         else if (a == "-pods")
         {
-          pods("Fan Launcher");
+          pods("Fantom Launcher");
           return 4;
         }
         else if (a.charAt(0) == '-')
@@ -255,7 +255,7 @@ public class Fan
 
   void help()
   {
-    println("Fan Launcher");
+    println("Fantom Launcher");
     println("Usage:");
     println("  fan [options] <pod>::<type>.<method> [args]*");
     println("  fan [options] <filename> [args]*");

@@ -82,7 +82,7 @@ public class ScriptUtil
 
   private static Pod compile(String podName, File f, Map options)
   {
-    // use Fan reflection to run compiler::Main.compileScript(File)
+    // use Fantom reflection to run compiler::Main.compileScript(File)
     Method m = Slot.findMethod("compiler::Main.compileScript", true);
     return (Pod)m.call(podName, f, options);
   }

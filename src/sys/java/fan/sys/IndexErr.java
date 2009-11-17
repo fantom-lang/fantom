@@ -22,7 +22,7 @@ public class IndexErr
   public static IndexErr make(Range index) { return make(String.valueOf(index)); }
 
 //////////////////////////////////////////////////////////////////////////
-// Fan Constructors
+// Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
   public static IndexErr make() { return make((String)null, (Err)null); }

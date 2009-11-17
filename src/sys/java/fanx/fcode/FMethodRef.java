@@ -14,7 +14,7 @@ import fanx.emit.*;
 
 /**
  * FMethodRef is used to reference methods for a call operation.
- * We use FMethodRef to encapsulate how Fan method call opcodes are
+ * We use FMethodRef to encapsulate how Fantom method call opcodes are
  * emitted to Java bytecode.
  */
 public class FMethodRef
@@ -61,7 +61,7 @@ public class FMethodRef
     //   CallCtor <init>     // call to java constructor
     if (special != null) { special.emit(this, code); return; }
 
-    // Fan constructor calls are static calls on factory method:
+    // Fantom constructor calls are static calls on factory method:
     //   static Foo make(...) {}
     if (jsig == null)
     {

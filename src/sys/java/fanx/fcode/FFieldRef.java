@@ -14,7 +14,7 @@ import fanx.emit.*;
 
 /**
  * FFieldRef is used to reference methods for a field access operation.
- * We use FFieldRef to encapsulate how Fan field access opcodes are
+ * We use FFieldRef to encapsulate how Fantom field access opcodes are
  * emitted to Java bytecode.
  */
 public class FFieldRef

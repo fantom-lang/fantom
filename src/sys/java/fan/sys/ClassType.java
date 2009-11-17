@@ -638,7 +638,7 @@ catch (Exception e) { e.printStackTrace(); }
       }
 
       // get parameters, if sys we need to skip the
-      // methods that use non-Fan signatures
+      // methods that use non-Fantom signatures
       Class[] params = m.getParameterTypes();
       int numParams = params.length;
       if (pod == Sys.SysPod)
@@ -682,7 +682,7 @@ catch (Exception e) { e.printStackTrace(); }
       // anything that starts with fan. is a clean fan type
       if (p.getName().startsWith("fan.")) continue;
 
-      // try to map to non-FFI Fan type - this handles
+      // try to map to non-FFI Fantom type - this handles
       // things like long, Long, String
       Type x = FanUtil.toFanType(p, false);
       if (x == null || x.isJava()) return false;

@@ -18,12 +18,12 @@ public class Err
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Java to Fan Mapping
+// Java to Fantom Mapping
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * Map a java exception to it's Fan Err counter part.  Common runtime
-   * exceptions are mapped into explicit Fan types.  Otherwise we just
+   * Map a java exception to it's Fantom Err counter part.  Common runtime
+   * exceptions are mapped into explicit Fantom types.  Otherwise we just
    * wrap the exception with a generic Err.
    */
   public static Err make(Throwable ex)
@@ -68,7 +68,7 @@ public class Err
   public static Err make(String msg, Throwable e) { return make(msg, make(e)); }
 
 //////////////////////////////////////////////////////////////////////////
-// Fan Constructors
+// Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
   public static Err make() { return make((String)null, (Err)null); }
@@ -104,7 +104,7 @@ public class Err
 
   /**
    * This constructor is used by special subclasses which provide
-   * a transparent mapping between Java and Fan exception types.
+   * a transparent mapping between Java and Fantom exception types.
    */
   public Err(Val val, Throwable actual)
   {
