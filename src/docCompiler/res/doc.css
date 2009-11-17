@@ -84,11 +84,12 @@ div.header p
   margin: 0;
   padding: 0;
   position: absolute;
-  top: 10px;
+  top: 12px;
   right: 0;
-  color: #eec;
+  color: #fff;
+  font-size: 8pt;
 }
-div.header p a { color: #eec; }
+div.header p a { color: #fff; }
 div.header form { display: inline; }
 div.header form p { top: 40px; }
 div.header ul
