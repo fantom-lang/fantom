@@ -8,7 +8,7 @@
 
 **
 ** CType is a "compiler type" which is class used for representing
-** the Fan type system in the compiler.  CTypes map to types within
+** the Fantom type system in the compiler.  CTypes map to types within
 ** the compilation units themsevles as TypeDef and TypeRef or to
 ** precompiled types in imported pods via ReflectType or FType.
 **
@@ -134,9 +134,9 @@ mixin CType
   virtual CType inferredAs() { return this }
 
   **
-  ** Return if type is supported by the Fan type system.  For example
+  ** Return if type is supported by the Fantom type system.  For example
   ** the Java FFI will correctly model a Java multi-dimensional array
-  ** during compilation, however there is no Fan representation.  We
+  ** during compilation, however there is no Fantom representation.  We
   ** check for supported types during CheckErrors when accessing
   ** fields and methods.
   **
@@ -148,7 +148,7 @@ mixin CType
 
   **
   ** A generic type means that one or more of my slots contain signatures
-  ** using a generic parameter (such as V or K).  Fan supports three built-in
+  ** using a generic parameter (such as V or K).  Fantom supports three built-in
   ** generic types: List, Map, and Func.  A generic instance (such as Str[])
   ** is NOT a generic type (all of its generic parameters have been filled in).
   ** User defined generic types are not supported in Fan.
@@ -168,7 +168,7 @@ mixin CType
   ** Return if this type is a generic parameter (such as V or K) in a
   ** generic type (List, Map, or Method).  Generic parameters serve
   ** as place holders for the parameterization of the generic type.
-  ** Fan has a predefined set of generic parameters which are always
+  ** Fantom has a predefined set of generic parameters which are always
   ** defined in the sys pod with a one character name.
   **
   abstract Bool isGenericParameter()

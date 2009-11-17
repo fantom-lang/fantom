@@ -503,7 +503,7 @@ class CallResolver : CompilerSupport
 
   **
   ** If this field access or method call returns a type which
-  ** isn't directly represented in the Fan type system, then
+  ** isn't directly represented in the Fantom type system, then
   ** implicitly coerce it
   **
   private Void ffiCoercion()
@@ -516,7 +516,7 @@ class CallResolver : CompilerSupport
       {
         result = foreign.bridge.coerce(result, inferred) |,|
         {
-          throw err("Cannot coerce call return to Fan type", location)
+          throw err("Cannot coerce call return to Fantom type", location)
         }
       }
     }

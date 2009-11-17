@@ -1589,8 +1589,8 @@ class DslExpr : Expr
   CType anchorType  // anchorType <|src|>
   Str src           // anchorType <|src|>
   Location srcLoc   // location of first char of src
-  Int leadingTabs   // number of leading tabs on original Fan line
-  Int leadingSpaces // number of leading non-tab chars on original Fan line
+  Int leadingTabs   // number of leading tabs on original Fantom line
+  Int leadingSpaces // number of leading non-tab chars on original Fantom line
 }
 
 **************************************************************************

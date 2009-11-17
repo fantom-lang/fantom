@@ -4,11 +4,11 @@
 //
 // History:
 //   15 Sep 05  Brian Frank  Creation
-//    3 Jun 06  Brian Frank  Ported from Java to Fan - Megan's b-day
+//    3 Jun 06  Brian Frank  Ported from Java to Fantom - Megan's b-day
 //
 
 **
-** Main is the main entry point for the Fan compiler.
+** Main is the main entry point for the Fantom compiler.
 ** Originally it was used for "fanc" command line, but it
 ** encapsualtes static methods used by sys.
 **

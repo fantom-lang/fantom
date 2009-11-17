@@ -111,12 +111,12 @@ class CompilerInput
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Fan source code to compile (str mode only)
+  ** Fantom source code to compile (str mode only)
   **
   Str? srcStr
 
   **
-  ** Fan source code for "pod.fan" (str mode only)
+  ** Fantom source code for "pod.fan" (str mode only)
   ** For testing only!!!
   **
   @nodoc Str? podStr

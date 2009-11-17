@@ -431,7 +431,7 @@ public class Parser : CompilerSupport
     facets := facets()
     flags := flags()
 
-    // check if this is a Java style constructor, log error and parse like Fan sytle ctor
+    // check if this is a Java style constructor, log error and parse like Fantom sytle ctor
     if (curt === Token.identifier && cur.val == parent.name && peekt == Token.lparen)
     {
       err("Invalid constructor syntax - use new keyword")
@@ -1433,7 +1433,7 @@ public class Parser : CompilerSupport
     loc := cur
     consume()
 
-    // In Fan just like C# and Java, a paren could mean
+    // In Fantom just like C# and Java, a paren could mean
     // either a cast or a parenthesized expression
     mark := pos
     castType := tryType
