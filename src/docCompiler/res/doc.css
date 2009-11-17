@@ -268,7 +268,7 @@ div.sidebar li { margin: 3px 3px 3px 0; }
 .slots .detail dd.hidden { display: none; }
 
 .slotInfo { color: #999; }
-div.fandoc .slotInfo p { font-size: 10pt; }
+div.fandoc .slotInfo p { font-size: 10pt; margin: 2px 0;}
 .slotInfo a { color: #999; }
 
 /*************************************************************************
