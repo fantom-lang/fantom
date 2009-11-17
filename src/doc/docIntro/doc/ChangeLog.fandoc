@@ -715,7 +715,7 @@
 - #712: UI enhancements
 - #721: Cookbook versus Examples
 
-*Build 1.0.47 (working)*
+*Build 1.0.47 (17 Nov 09)*
 - Rename Fan to Fantom!
 - Range fromStr, isEmpty, min, max, first, last
 - List.eachrWhile
@@ -737,4 +737,11 @@
 - Sys os, arch, platform
 - Upgrade SWT from 3.4 to 3.5.1
 - Redesign Java extension mechanism to use lib/java/ext/{Sys.platform}
+- #685: File naming bug?
+- #697: Remove '&' curry/partial apply operator
+- #731: Method calls should always require parens
+- #740: Cannot load 32-bit SWT libraries on 64-bit JVM
+- #743: Issues building from hg on Snow Leopard
+- #788: Coercion of indexed assignment shortcut
+- #806: can't read MapType from ObjectDeserializer
 

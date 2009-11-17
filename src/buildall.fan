@@ -149,7 +149,7 @@ class Build : BuildGroup
   @target="create build zip file"
   Void zip()
   {
-    moniker := "fan-${@buildVersion.val}"
+    moniker := "fantom-${@buildVersion.val}"
     zip := CreateZip(this)
     {
       outFile = devHomeDir + `${moniker}.zip`
