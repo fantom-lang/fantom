@@ -122,7 +122,7 @@ class TcpSocketTest : Test
   Void doTestConnectHttp(Duration? timeout)
   {
     // connect to www server
-    s := TcpSocket().connect(IpAddress("fantom.org"), 80, timeout)
+    s := TcpSocket().connect(IpAddress("hg.fantom.org"), 80, timeout)
 
     // verify connetion state
     verifyEq(s.isBound, true)
@@ -138,7 +138,7 @@ class TcpSocketTest : Test
 
     // read first response line
     res := s.in.readLine
-    verify(res.startsWith("HTTP/1.1 200 OK"))
+    verify(res.startsWith("HTTP/"))
 
     // cleanup
     s.close
