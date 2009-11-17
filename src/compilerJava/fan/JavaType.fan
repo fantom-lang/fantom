@@ -206,7 +206,7 @@ class JavaType : CType
   ** can correctly resolve the FFI qname.  This means that
   ** that an array of java.lang.Object will have an arrayOf
   ** value of [java]java.lang::Object.  This method correctly
-  ** maps the arrayOf map to its canonical Fan type.
+  ** maps the arrayOf map to its canonical Fantom type.
   **
   CType? inferredArrayOf()
   {

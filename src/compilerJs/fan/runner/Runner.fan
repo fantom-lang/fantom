@@ -10,7 +10,7 @@ using [java] java.lang
 using [java] javax.script
 
 **
-** Runner takes a Fan qname and attempts to run the
+** Runner takes a Fantom qname and attempts to run the
 ** matching JavaScript implemenation.
 **
 class Runner

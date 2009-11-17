@@ -8,7 +8,7 @@
 //
 
 **
-** Fan to JavaScript Compiler
+** Fantom to JavaScript Compiler
 **
 
 @podDepends = [Depend("sys 1.0"), Depend("compiler 1.0"), Depend("build 1.0")]

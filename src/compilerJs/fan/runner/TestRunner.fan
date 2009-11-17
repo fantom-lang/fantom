@@ -10,7 +10,7 @@ using [java] java.lang
 using [java] javax.script
 
 **
-** TestRunner is the command line tool to run Fan unit tests
+** TestRunner is the command line tool to run Fantom unit tests
 ** against their JavaScript implementations.
 **
 class TestRunner
@@ -176,7 +176,7 @@ class TestRunner
 
   Void help()
   {
-    echo("Fan Test");
+    echo("Fantom Test");
     echo("Usage:");
     //echo("  fant [options] -all");
     //echo("  fant [options] <pod> [pod]*");
