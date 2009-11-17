@@ -53,7 +53,7 @@ abstract class HtmlGenerator : HtmlDocWriter
     // header
     out.print("<div class='header'>\n")
     out.print("<div>\n")
-    out.print("<h1><a href='/'>Fan</a></h1>\n")
+    out.print("<h1><a href='/'>Fantom</a></h1>\n")
     out.print("<p id='sidewalkLogin_'>&nbsp;</p>\n")
     out.print("<form method='get' action='/sidewalk/search/'>\n")
     out.print("<p>\n")
