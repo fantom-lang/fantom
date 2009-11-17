@@ -162,7 +162,7 @@ class OutStream
 
   **
   ** Write a serialized object from the stream according to
-  ** the Fan [serialization format]`docLang::Serialization`.
+  ** the Fantom [serialization format]`docLang::Serialization`.
   ** Throw IOErr on error.  Return this.
   **
   ** The options may be used to specify the format of the output:
@@ -189,7 +189,7 @@ class OutStream
 
   **
   ** Write the given map of Str name/value pairs to the output stream
-  ** according to the Fan props file format (see `InStream.readProps` for
+  ** according to the Fantom props file format (see `InStream.readProps` for
   ** full specification).  The props are written using UTF-8 regardless
   ** of this stream's current charset.  If close argument is true, then
   ** automatically close the stream.  Return this.

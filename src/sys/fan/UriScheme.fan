@@ -38,7 +38,7 @@ abstract const class UriScheme
   override Str toStr()
 
   **
-  ** Resolve the uri to a Fan object.  If uri cannot
+  ** Resolve the uri to a Fantom object.  If uri cannot
   ** be resolved by this scheme then throw UnresolvedErr.
   **
   abstract Obj? get(Uri uri, Obj? base)

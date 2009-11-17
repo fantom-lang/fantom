@@ -132,7 +132,7 @@ const final class Uri
   **   DIGIT       =  %x30-39 ; 0-9
   **
   ** Although RFC 3986 does allow path segments to contain other
-  ** special characters such as 'sub-delims', Fan takes a strict
+  ** special characters such as 'sub-delims', Fantom takes a strict
   ** approach to names to be used in URIs.
   **
   static Bool isName(Str name)
@@ -573,7 +573,7 @@ const final class Uri
   File toFile()
 
   **
-  ** Resolve this Uri into an Fan object.
+  ** Resolve this Uri into an Fantom object.
   ** See [docLang]`docLang::Naming#resolving` for the resolve process.
   **
   Obj? get(Obj? base := null, Bool checked := true)
@@ -583,7 +583,7 @@ const final class Uri
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get this Uri as a Fan code literal.
+  ** Get this Uri as a Fantom code literal.
   **
   Str toCode()
 

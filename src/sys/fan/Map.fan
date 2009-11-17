@@ -232,7 +232,7 @@ final class Map
   Str join(Str separator, |V val, K key->Str|? c := null)
 
   **
-  ** Get this map as a Fan expression suitable for code generation.
+  ** Get this map as a Fantom expression suitable for code generation.
   ** The individual keys and values must all respond to the 'toCode' method.
   **
   Str toCode()

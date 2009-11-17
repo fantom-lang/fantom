@@ -8,7 +8,7 @@
 
 **
 ** Version is defined as a list of decimal digits separated
-** by the dot.  Convention for Fan pods is a four part version
+** by the dot.  Convention for Fantom pods is a four part version
 ** format of 'major.minor.build.patch'.
 **
 @simple

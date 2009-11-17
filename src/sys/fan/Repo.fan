@@ -7,7 +7,7 @@
 //
 
 **
-** Repo models a Fan repository which is a directory in the
+** Repo models a Fantom repository which is a directory in the
 ** file system used to store library and configuration files.
 ** See `docLang::Repos` for details.
 **
@@ -19,18 +19,18 @@ final const class Repo
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the working repo used to launch this Fan VM.  If the
+  ** Get the working repo used to launch this Fantom VM.  If the
   ** enviroment specifies no repo, then this is the boot repo.
   **
   static Repo working()
 
   **
-  ** Get the bootstrap repo used to launch this Fan VM.
+  ** Get the bootstrap repo used to launch this Fantom VM.
   **
   static Repo boot()
 
   **
-  ** List the full set of inherited repos used to launch this Fan VM.
+  ** List the full set of inherited repos used to launch this Fantom VM.
   ** The repos are ordered from highest priority (working) to lowest
   ** priority (boot).
   **

@@ -9,7 +9,7 @@
 **
 ** Universally Unique Identifier.  UUIDs are 128-bit identifiers which
 ** are unique across space and time making them ideal for naming without
-** a central naming authority.  Fan's UUIDs are loosely based on RFC 4122
+** a central naming authority.  Fantom's UUIDs are loosely based on RFC 4122
 ** with the following parts used in the generation:
 **
 **   - 8 bytes: nanosecond ticks since 1 Jan 2000 UTC

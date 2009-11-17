@@ -8,7 +8,7 @@
 
 **
 ** Depend models a dependency as a pod name and a version
-** constraint.  Convention for Fan pods is a four part
+** constraint.  Convention for Fantom pods is a four part
 ** version format of 'major.minor.build.patch'.
 **
 ** The string format for Depend:

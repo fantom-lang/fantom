@@ -36,7 +36,7 @@
 ** Units which don't cleanly fit this model should be represented as
 ** dimensionless (all ratios set to zero).
 **
-** Fan's model for units of measurement and the unit database are
+** Fantom's model for units of measurement and the unit database are
 ** derived from the OASIS oBIX specification.
 **
 @simple

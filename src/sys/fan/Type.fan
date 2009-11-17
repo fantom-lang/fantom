@@ -172,7 +172,7 @@ const class Type
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Is this a value type.  Fan supports three implicit value
+  ** Is this a value type.  Fantom supports three implicit value
   ** types: `Bool`, `Int`, and `Float`.
   **
   Bool isValue()
@@ -206,10 +206,10 @@ const class Type
 
   **
   ** A generic type contains slot signatures which may be parameterized - for
-  ** example Map's key and value types are generic as K and V.  Fan supports
+  ** example Map's key and value types are generic as K and V.  Fantom supports
   ** three built-in generic types: List, Map, and Func.   A parameterized
   ** type such as Str[] is not a generic type (all of its generic parameters
-  ** have been filled in).  User defined generic types are not supported in Fan.
+  ** have been filled in).  User defined generic types are not supported in Fantom.
   **
   ** Examples:
   **   Str#.isGeneric   => false

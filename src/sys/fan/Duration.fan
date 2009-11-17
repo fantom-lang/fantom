@@ -35,7 +35,7 @@ const final class Duration
   static Duration make(Int ticks)
 
   **
-  ** Parse a Str into a Duration according to the Fan
+  ** Parse a Str into a Duration according to the Fantom
   ** [literal format]`docLang::Literals#duration`.
   ** If invalid format and checked is false return null,
   ** otherwise throw ParseErr.  The following suffixes
@@ -55,13 +55,13 @@ const final class Duration
   static Duration? fromStr(Str s, Bool checked := true)
 
   **
-  ** Get the system timer at boot time of the Fan VM.
+  ** Get the system timer at boot time of the Fantom VM.
   **
   static Duration boot()
 
   **
   ** Get the duration which has elapsed since the
-  ** Fan VM was booted which is 'now - boot'.
+  ** Fantom VM was booted which is 'now - boot'.
   **
   static Duration uptime()
 
@@ -206,7 +206,7 @@ const final class Duration
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get this Duration as a Fan code literal.
+  ** Get this Duration as a Fantom code literal.
   **
   Str toCode()
 

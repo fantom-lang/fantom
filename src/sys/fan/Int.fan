@@ -351,7 +351,7 @@ const final class Int : Num
   Str toChar()
 
   **
-  ** Get this Int as a Fan code literal.  Base must be 10 or 16.
+  ** Get this Int as a Fantom code literal.  Base must be 10 or 16.
   **
   Str toCode(Int base := 10)
 

@@ -575,7 +575,7 @@ const final class Str
   Decimal? toDecimal(Bool checked := true)
 
   **
-  ** Return this string as its Fan source code and serialization
+  ** Return this string as its Fantom source code and serialization
   ** representation surrounded by the specified quote character (which
   ** defaults to '"').  If quote is null then the return is unquoted.
   ** This method will backslash escape the following characters:

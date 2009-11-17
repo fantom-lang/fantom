@@ -7,7 +7,7 @@
 //
 
 **
-** Test is the base for Fan unit tests.
+** Test is the base for Fantom unit tests.
 **
 abstract class Test
 {

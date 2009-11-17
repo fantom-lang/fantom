@@ -7,9 +7,9 @@
 //
 
 **
-** DateTime represents an absolute instance in time.  Fan time is
+** DateTime represents an absolute instance in time.  Fantom time is
 ** normalized as nanosecond ticks since 1 Jan 2000 UTC with a
-** supported range of 1901 to 2099.  Fan time does not support
+** supported range of 1901 to 2099.  Fantom time does not support
 ** leap seconds (same as Java and UNIX).  An instance of DateTime
 ** also models the date and time of an absolute instance against
 ** a specific `TimeZone`.
@@ -91,7 +91,7 @@ const final class DateTime
   static DateTime? fromStr(Str s, Bool checked := true)
 
   **
-  ** Get the boot time of the Fan VM with `TimeZone.current`
+  ** Get the boot time of the Fantom VM with `TimeZone.current`
   **
   static DateTime boot()
 
@@ -130,7 +130,7 @@ const final class DateTime
   **
   ** See `toLocale` for the pattern legend.  The base of the
   ** string encoding conforms to ISO 8601 and XML Schema
-  ** Part 2.  The Fan format also appends the timezone name to
+  ** Part 2.  The Fantom format also appends the timezone name to
   ** avoid the ambiguities associated with interpretting the time
   ** zone offset.  Also see `toIso` and `toHttpStr`.
   **
@@ -423,7 +423,7 @@ const final class DateTime
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get this DateTime as a Fan expression suitable for code generation.
+  ** Get this DateTime as a Fantom expression suitable for code generation.
   **
   Str toCode()
 
