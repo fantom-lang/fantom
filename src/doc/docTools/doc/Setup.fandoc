@@ -9,9 +9,9 @@
 Unix Setup [#unix]
 ******************
 The Fantom distribution is packaged as a zip file.  Once unpacked
-you should add "fan/bin" into your path:
+you should add "bin" into your path:
 
-  PATH=$PATH:/applications/fan/bin
+  PATH=$PATH:/apps/fantom/bin
 
 The Fantom launchers are implemented as a set of Bash shell
 scripts which all route to common code sourced in "bin/fanlaunch".
