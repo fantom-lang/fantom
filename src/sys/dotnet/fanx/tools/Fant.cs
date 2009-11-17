@@ -207,7 +207,7 @@ namespace Fanx.Tools
           }
           if (a == "-version")
           {
-            Fan.version("Fan Test");
+            Fan.version("Fantom Test");
             return -1;
           }
           else if (a == "-v")
@@ -244,7 +244,7 @@ namespace Fanx.Tools
 
     static void help()
     {
-      writeLine("Fan Test");
+      writeLine("Fantom Test");
       writeLine("Usage:");
       writeLine("  fant [options] -all");
       writeLine("  fant [options] <pod> [pod]*");

@@ -286,7 +286,7 @@ namespace Fanx.Emit
 
     /// <summary>
     /// The CLR requires all methods implemented by an interface
-    /// to be marked as virtual.  However, Fan (and Java) allow
+    /// to be marked as virtual.  However, Fantom (and Java) allow
     /// this:
     ///
     ///   mixin Mixin

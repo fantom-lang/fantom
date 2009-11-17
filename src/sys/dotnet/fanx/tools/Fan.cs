@@ -14,7 +14,7 @@ using Type = Fan.Sys.Type;
 namespace Fanx.Tools
 {
   /// <summary>
-  /// Fan runtime for .NET.
+  /// Fantom runtime for .NET.
   /// </summary>
   ///
   public class Fan : Tool
@@ -45,7 +45,7 @@ namespace Fanx.Tools
     {
       LocalFile f = (LocalFile)(new LocalFile(file).normalize());
 
-      // use Fan reflection to run compiler::Main.compileScript(File)
+      // use Fantom reflection to run compiler::Main.compileScript(File)
       Pod pod = null;
       try
       {
@@ -161,7 +161,7 @@ namespace Fanx.Tools
       writeLine("  sys.platform: " + Sys.platform());
       writeLine("  sys.version:  " + Sys.SysPod.version());
       writeLine("");
-      writeLine("Fan Repos:");
+      writeLine("Fantom Repos:");
       for (int i=0; i<Repo.list().size(); ++i)
       {
         Repo repo = (Repo)Repo.list().get(i);
@@ -178,7 +178,7 @@ namespace Fanx.Tools
       long t2 = Duration.nowTicks();
 
       writeLine("");
-      writeLine("Fan Pods [" + (t2-t1)/1000000L + "ms]:");
+      writeLine("Fantom Pods [" + (t2-t1)/1000000L + "ms]:");
 
       writeLine("  Pod                 Version   Repo");
       writeLine("  ---                 -------   ----");
@@ -215,12 +215,12 @@ namespace Fanx.Tools
           }
           else if (a == "-version")
           {
-            version("Fan Launcher");
+            version("Fantom Launcher");
             return 3;
           }
           else if (a == "-pods")
           {
-            pods("Fan Launcher");
+            pods("Fantom Launcher");
             return 4;
           }
           else if (a[0] == '-')
@@ -248,7 +248,7 @@ namespace Fanx.Tools
 
     static void help()
     {
-      writeLine("Fan Launcher");
+      writeLine("Fantom Launcher");
       writeLine("Usage:");
       writeLine("  fan [options] <pod>::<type>.<method> [args]*");
       writeLine("  fan [options] <filename> [args]*");

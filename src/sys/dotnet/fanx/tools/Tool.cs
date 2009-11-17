@@ -27,7 +27,7 @@ namespace Fanx.Tools
   {
 
   //////////////////////////////////////////////////////////////////////////
-  // Fan Assembly Loading
+  // Fantom Assembly Loading
   //////////////////////////////////////////////////////////////////////////
 
     /// <summary>
@@ -110,7 +110,7 @@ namespace Fanx.Tools
 
     /// <summary>
     /// Return the cmd line arguments passed for the
-    /// Fan launcher code.
+    /// Fantom launcher code.
     /// </summary>
     public static string[] getArgv()
     {

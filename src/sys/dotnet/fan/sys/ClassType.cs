@@ -608,7 +608,7 @@ namespace Fan.Sys
         }
 
         // get parameters, if sys we need to skip the
-        // methods that use non-Fan signatures
+        // methods that use non-Fantom signatures
         ParameterInfo[] pars = m.GetParameters();
         int numParams = pars.Length;
         if (m_pod == Sys.SysPod)

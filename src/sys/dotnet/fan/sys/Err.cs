@@ -23,12 +23,12 @@ namespace Fan.Sys
   {
 
   //////////////////////////////////////////////////////////////////////////
-  // C# to Fan Mapping
+  // C# to Fantom Mapping
   //////////////////////////////////////////////////////////////////////////
 
     /// <summary>
-    /// Map a java exception to it's Fan Err counter part.  Common runtime
-    /// exceptions are mapped into explicit Fan types.  Otherwise we just
+    /// Map a java exception to it's Fantom Err counter part.  Common runtime
+    /// exceptions are mapped into explicit Fantom types.  Otherwise we just
     /// wrap the exception with a generic Err.
     /// </summary>
     public static Err make(Exception ex)
@@ -75,7 +75,7 @@ namespace Fan.Sys
     public static Err make(string msg, Exception e) { return make(msg, make(e)); }
 
   //////////////////////////////////////////////////////////////////////////
-  // Fan Constructors
+  // Fantom Constructors
   //////////////////////////////////////////////////////////////////////////
 
     public static Err make() { return make((string)null, (Err)null); }
@@ -113,7 +113,7 @@ namespace Fan.Sys
 
     /// <summary>
     /// This constructor is used by special subclasses which provide
-    /// a transparent mapping between .NET and Fan exception types.
+    /// a transparent mapping between .NET and Fantom exception types.
     /// </summary>
     public Err(Val val, Exception actual)
     {

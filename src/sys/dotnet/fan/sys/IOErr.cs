@@ -24,7 +24,7 @@ namespace Fan.Sys
     public new static IOErr make(string msg, Exception cause)  { return make(msg, Err.make(cause)); }
 
   //////////////////////////////////////////////////////////////////////////
-  // Fan Constructors
+  // Fantom Constructors
   //////////////////////////////////////////////////////////////////////////
 
     public new static IOErr make() { return make((string)null, (Err)null); }

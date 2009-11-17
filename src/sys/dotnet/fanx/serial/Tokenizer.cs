@@ -13,7 +13,7 @@ namespace Fanx.Serial
 {
   /// <summary>
   /// Tokenizer inputs a stream of Unicode characters and
-  /// outputs tokens for the Fan serialization grammar.
+  /// outputs tokens for the Fantom serialization grammar.
   /// </summary>
   public class Tokenizer
   {

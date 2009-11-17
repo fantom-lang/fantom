@@ -124,7 +124,7 @@ namespace Fan.Sys
 
     /**
      * Given an immutable object or EncodedVal object return
-     * its Fan object value.  If the value is immutable then it
+     * its Fantom object value.  If the value is immutable then it
      * should be cached for future use.
      */
     public static object decodeVal(EncodedVal encodedVal)

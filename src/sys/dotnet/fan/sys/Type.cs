@@ -113,7 +113,7 @@ namespace Fan.Sys
 
     /// <summary>
     /// A generic type means that one or more of my slots contain signatures
-    /// using a generic parameter (such as V or K).  Fan supports three built-in
+    /// using a generic parameter (such as V or K).  Fantom supports three built-in
     /// generic types: List, Map, and Method.  A generic instance (such as string[])
     /// is NOT a generic type (all of its generic parameters have been filled in).
     /// User defined generic types are not supported in Fan.
@@ -139,7 +139,7 @@ namespace Fan.Sys
     /// Return if this type is a generic parameter (such as V or K) in a
     /// generic type (List, Map, or Method).  Generic parameters serve
     /// as place holders for the parameterization of the generic type.
-    /// Fan has a predefined set of generic parameters which are always
+    /// Fantom has a predefined set of generic parameters which are always
     /// defined in the sys pod with a one character name.
     /// </summary>
     public virtual bool isGenericParameter()
