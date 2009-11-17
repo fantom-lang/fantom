@@ -33,7 +33,7 @@ class FandocToHtmlGenerator : HtmlGenerator
   override Str title()
   {
     title := doc.meta["title"]
-    if (title != null) return title
+    if (title != null) return toDisplay(title)
     compiler.err("WARNING: Missing title", loc)
     return super.title
   }
@@ -98,13 +98,13 @@ class FandocToHtmlGenerator : HtmlGenerator
       out.print("<a href='${prev}.html'>")
       out.print("<img src='${pathToRoot}go-previous.png' alt='prev' />")
       out.print("</a>")
-      out.print(" <a href='${prev}.html'>$prev</a>")
+      out.print(" <a href='${prev}.html'>${toDisplay(prev.name)}</a>")
       out.print("</div>\n")
     }
     if (next != null)
     {
       out.print("<div class='next'>")
-      out.print("<a href='${next}.html'>$next</a>")
+      out.print("<a href='${next}.html'>${toDisplay(next.name)}</a>")
       out.print(" <a href='${next}.html'>")
       out.print("<img src='${pathToRoot}go-next.png' alt='next' />")
       out.print("</a>")

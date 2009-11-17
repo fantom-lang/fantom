@@ -169,6 +169,17 @@ abstract class HtmlGenerator : HtmlDocWriter
     out.print("</div>\n")
   }
 
+  **
+  ** Return the display version of this string.
+  **
+  Str toDisplay(Str s)
+  {
+    if (s == "DSL")  return s
+    if (s == "DSLs") return s
+    if (s == "JavaScript") return s
+    return s.toDisplayName
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // HtmlDocWriter
 //////////////////////////////////////////////////////////////////////////

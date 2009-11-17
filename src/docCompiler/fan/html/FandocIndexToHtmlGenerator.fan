@@ -82,7 +82,7 @@ class FandocIndexToHtmlGenerator : HtmlGenerator
       }
 
       out.print("<tr class='$cls'>\n")
-      out.print("  <td><a href='${link}.html'>$link</a></td>\n")
+      out.print("  <td><a href='${link}.html'>${toDisplay(link.toStr)}</a></td>\n")
       out.print("  <td>$text</td>\n")
       out.print("</tr>\n")
     }
