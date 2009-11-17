@@ -15,7 +15,7 @@ The [dom]`dom::index` pod provides a framework for interoperating with
 the browser DOM and related browser APIs.  For the most part, these map
 one-to-one:
 
-  Browser           Fan
+  Browser           Fantom
   --------------    ---------------
   Window            Window
   Document          Doc

@@ -114,7 +114,7 @@ higher level model which buffers the response to provide more flexibility.
 WebSessions [#sessions]
 ***********************
 The `web::WebSession` class models the client session which allows you to
-persist state between HTTP requests.  WebSessions in Fan are cookie
+persist state between HTTP requests.  WebSessions in Fantom are cookie
 based using the cookie name "fanws".  The default session implementation
 stores sessions in memory for up to one hour, then clears them from
 the cache - session state is not persisted between VM restarts.
@@ -147,12 +147,12 @@ Example of storing a counter in a session:
 WebServices [#webServices]
 **************************
 The `web::WebService` class is the base class for plugging in
-web server implementations.  Fan comes bundled with the `wisp::WispService`
-which implements a web server purely in Fan code - so you can use
+web server implementations.  Fantom comes bundled with the `wisp::WispService`
+which implements a web server purely in Fantom code - so you can use
 it without the fuss of setting up additional software.  The plan
 is over time to add implementations for plugging into a Java
 Servlet container, into IIS, and to have a fan_mod for Apache.  Most
-important is that all Fan code written to the web pod APIs should be
+important is that all Fantom code written to the web pod APIs should be
 insulated from the web server implementation.
 
 WebStep Pipeline [#pipeline]

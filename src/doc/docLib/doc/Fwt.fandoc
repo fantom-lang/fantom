@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-Fan Widget Toolkit or [FWT]`fwt::index` provides a toolkit for
+Fantom Widget Toolkit or [FWT]`fwt::index` provides a toolkit for
 building both desktop and HTML5 browser based applications:
 
   - Widgets are reusable UI components such as buttons, text fields, dialogs, etc
