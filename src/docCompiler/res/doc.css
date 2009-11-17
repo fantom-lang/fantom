@@ -5,6 +5,7 @@
 // History:
 //   8 May 07  Andy Frank  Creation
 //   6 Dec 07  Andy Frank  Redesign
+//  16 Nov 09  Andy Frank  Move to Fantom.org
 */
 
 /*************************************************************************
@@ -13,12 +14,12 @@
 
 body
 {
-  font: 10pt "Lucida Grande", Verdana, Arial, sans-serif;
+  font: 10pt "Lucida Grande", Arial, sans-serif;
   margin: 0 0 3em 0; padding: 0;
 }
-input { font: 10pt "Lucida Grande", Verdana, Arial, sans-serif; }
+input { font: 10pt "Lucida Grande", Arial, sans-serif; }
 code,pre,textarea { font: 9pt Monaco, "Courier New", monospace; }
-a { color: #00f; }
+a { color: #185098; }
 blockquote
 {
   margin: 1em 0;
@@ -28,17 +29,17 @@ blockquote
 }
 
 h1,h2,h3,h4,h5 { font-family: Arial, sans-serif; }
-h1.title { font-size: 22pt; color: #566981; }
-h1 { font-size: 18pt; color: #ad4e00; }
-h2 { font-size: 14pt; color: #25272a; }
-h3 { font-size: 12pt; }
-h4 { font-size: 10pt; }
-h5 { font-size: 10pt; }
+h1.title { font-size: 18pt; color: #2f5381; }
+h1 { font-size: 15pt; color: #ad4e00; }
+h2 { font-size: 12pt; color: #25272a; }
+h3 { font-size: 11pt; }
+h4 { font-size: 11pt; }
+h5 { font-size: 11pt; }
 
-table { border-collapse: collapse; border-spacing: 0; width: 100%; }
+table { border-collapse: collapse; width: 100%; border-bottom: 1px solid #d0dae5; }
 table tr.even { background: #f2f6f8; }
 table th { padding: 5px; font-weight: bold; text-align: left; }
-table td { border: 1px solid #d0dae5; padding: 5px; }
+table td { border-top: 1px solid #d0dae5; padding: 5px; }
 table td:first-child  { width: 25%; }
 
 /*************************************************************************
@@ -47,9 +48,11 @@ table td:first-child  { width: 25%; }
 
 div.header
 {
-  background: #25272a;
+  background: #14253c;
   color: #fff;
-  border-bottom: 5px solid #566981;
+  border-bottom: 5px solid #2f5381;
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#14253c), to(#0a121e));
+  background-image: -moz-linear-gradient(top, #14253c, #0a121e);
 }
 div.header > div
 {
@@ -60,17 +63,17 @@ div.header > div
 }
 div.header h1
 {
-  height: 1.2em;
+  height: 1.4em;
   font-size:22pt;
   margin:0;
   padding:0;
 }
 div.header h1 a
 {
-  background: url(fanLogo.png) no-repeat 0 0;
+  background: url(fantom.png) no-repeat 0 0;
   float: left;
-  width: 50px;
-  height: 25px;
+  width: 161px;
+  height: 37px;
   margin-top: 2px;
   overflow: hidden;
   text-indent: -9999px;
@@ -98,30 +101,48 @@ div.header ul
   left: 0;
   white-space: nowrap;
 }
-div.header li { display: inline; font-size: 11pt; }
+div.header li
+{
+  display: inline; font-size: 11pt;
+  border-top: 1px solid #fff;
+}
 div.header li a
 {
   float: left;
-  padding: 6px 12px;
+  padding: 5px 12px 7px 12px;
   margin-right: 2px;
-  background: #394455;
   color: #fff;
   text-decoration: none;
   outline: none;
-  -moz-border-radius-topleft: 2px;
-  -moz-border-radius-topright: 2px;
-  -webkit-border-top-left-radius: 2px;
-  -webkit-border-top-right-radius: 2px;
+  background: #203858;
+  background: -webkit-gradient(linear, 0 75%, 0 100%, from(#203858), to(#1b2f49));
+  background-image: -moz-linear-gradient(top, #203858 75%, #1b2f49);
+  border-top: 2px solid #264368;
 }
-div.header li a:hover { background: #414f61; }
-div.header li.active a { background: #566981; }
+div.header li a:hover
+{
+  border-top: 2px solid #345988;
+  background: #27466f;
+}
+div.header li.active a
+{
+  border-top: 2px solid #4971a5;
+  background: #2f5381;
+}
 
 /*************************************************************************
  * SubHeader
  ************************************************************************/
 
-div.subHeader { background: #d0dae5 url(subHeaderBg.png) repeat-x; }
-div.subHeader > div { width: 850px; margin: 0 auto 1em auto; }
+div.subHeader
+{
+  background: #d7d7c9;
+  border-top: 1px solid #1e3554;
+  border-bottom: 1px solid #bebea8;
+  background: -webkit-gradient(linear, 0 0, 0 25%, from(#a4a490), to(#d7d7c9));
+  background-image: -moz-linear-gradient(top, #a4a490, #d7d7c9 25%);
+}
+div.subHeader > div { width: 850px; margin: 0 auto; }
 div.subHeader ul
 {
   margin: 0;
@@ -129,7 +150,7 @@ div.subHeader ul
   list-style-type: none;
   white-space: nowrap;
 }
-div.subHeader a { color: #3a415a; }
+div.subHeader a { color: #4e4d3a; }
 div.subHeader li { display: inline; padding-right: 10px; }
 
 /*************************************************************************
@@ -157,21 +178,35 @@ div.content > div
 
 /**** Fandoc ****/
 div.fandoc { width: 630px; }
+div.fandoc p { font-size:11pt; }
+div.fandoc li { font-size:11pt; }
 div.fandoc code { color: #080; white-space: nowrap; }
-div.fandoc code.sig a { color: #080; }
 div.fandoc blockquote code { color: #808; }
 div.fandoc pre
 {
-  color: #555;
-  background: #f5f5f5;
-  border: 1px dashed #aaa;
+  color: #333;
+  background: #f7f7ed;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: 1px solid #dfe0cd;
   padding: 10px;
 }
-div.fandoc pre.podFacets a { color:#555; }
-div.prevNext { position: relative; height: 30px; }
+div.prevNext { position: relative; height: 32px; }
 div.prevNext img { border: 0; vertical-align: middle; }
-div.prevNext div.prev { position: absolute; top: 5px; left: 5px; }
-div.prevNext div.next { position: absolute; top: 5px; right: 5px; }
+div.prevNext div.prev { position: absolute; top: 7px; left: 5px; }
+div.prevNext div.next { position: absolute; top: 7px; right: 5px; }
+div.prevNext:first-child
+{
+  background: #f7f7ed;
+  background: -webkit-gradient(linear, 0 0, 0 25%, from(#e2e3cf), to(#f7f7ed));
+  background-image: -moz-linear-gradient(top, #d7d7c9, #f7f7ed 25%);
+  border: 1px solid #dfe0cd;
+  border-top: none;
+  -moz-border-radius: 0 0 5px 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+}
+div.prevNext:first-child a { color: #4e4d3a; }
 div.prevNext + h1.title { margin-top: 0.5em; }
 
 /**** Sidebar ****/
@@ -193,7 +228,7 @@ div.sidebar li { margin: 3px 3px 3px 0; }
 .todo, .TODO { color: blue; }
 
 .type .overview h1 { margin-top: 0; }
-.type .overview h2 { color: #ad4e00; margin: 0; }
+.type .overview h2 { color: #ad4e00; margin-bottom: 0; }
 
 .slots .overview li.hidden { display: none; }
 .slots .overview li.hidden a { color: #f00; }
@@ -201,7 +236,8 @@ div.sidebar li { margin: 3px 3px 3px 0; }
 .slots .detail dt
 {
   font: bold 11pt "Lucida Grande", Arial;
-  background: url(slotBg.png) repeat-x;
+  border-top: 1px solid #d0dae5;
+  background: #f2f6f8;
   padding: 5px;
   margin-bottom: -0.5em;
   position: relative;
@@ -217,19 +253,16 @@ div.sidebar li { margin: 3px 3px 3px 0; }
 }
 .slots .detail dt.hidden
 {
-  background: url(slotHiddenBg.png) repeat-x;
+  background: #f8f8f8;
+  border-top: 1px solid #ddd;
   display: none;
+  color: #999;
 }
+.slots .detail dt.hidden a { color: #999; }
 .slots .detail dd.hidden { display: none; }
 
-.slotInfo
-{
-  background: #f8f8f8;
-  color: #999;
-  font-size: 8pt;
-  padding: 0.5em 1em;
-}
-.slotInfo p { margin: 0.5em 0; }
+.slotInfo { color: #999; }
+div.fandoc .slotInfo p { font-size: 10pt; }
 .slotInfo a { color: #999; }
 
 /*************************************************************************
