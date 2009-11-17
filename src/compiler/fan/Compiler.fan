@@ -10,7 +10,7 @@
 **
 ** Compiler manages the top level process of the compiler pipeline.
 ** There are a couple different "pipelines" used to accomplish
-** various twists on compiling Fan code (from memory, files, etc).
+** various twists on compiling Fantom code (from memory, files, etc).
 ** The pipelines are implemented as discrete CompilerSteps.
 ** As the steps are executed, the Compiler instance itself stores
 ** the state as we move from files -> ast -> resolved ast -> code.

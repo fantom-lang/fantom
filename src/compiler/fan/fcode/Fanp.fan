@@ -7,7 +7,7 @@
 //
 
 **
-** Fan Disassembler
+** Fantom Disassembler
 **
 class Fanp
 {
@@ -140,7 +140,7 @@ class Fanp
 
   Void help()
   {
-    echo("Fan Disassembler");
+    echo("Fantom Disassembler");
     echo("Usage:");
     echo("  fanp [options] <pod>");
     echo("  fanp [options] <pod>::<type>");

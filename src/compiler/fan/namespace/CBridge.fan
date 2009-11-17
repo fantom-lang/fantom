@@ -8,7 +8,7 @@
 
 **
 ** CBridge is the base class for compiler FFI plugins to expose
-** external type systems to the Fan compiler as CPods, CTypes, and
+** external type systems to the Fantom compiler as CPods, CTypes, and
 ** CSlots.  Subclasses are registered for a FFI name with the
 ** "compilerBridge" facet and must declare a constructor with a
 ** Compiler arg.
@@ -43,7 +43,7 @@ abstract class CBridge : CompilerSupport
   **
   ** Coerce the target expression to the specified type.  If
   ** the expression is not type compatible run the onErr function.
-  ** Default implementation provides standard Fan coercion.
+  ** Default implementation provides standard Fantom coercion.
   **
   virtual Expr coerce(Expr expr, CType expected, |,| onErr)
   {
@@ -57,7 +57,7 @@ abstract class CBridge : CompilerSupport
   abstract Expr resolveConstruction(CallExpr call)
 
   **
-  ** Resolve a construction chain call where a Fan constructor
+  ** Resolve a construction chain call where a Fantom constructor
   ** calls the super-class constructor.  Type check the arguments
   ** and insert any conversions needed.
   **
@@ -70,7 +70,7 @@ abstract class CBridge : CompilerSupport
   abstract Expr resolveCall(CallExpr call)
 
   **
-  ** Called during Inherit step when a Fan slot overrides a FFI slot.
+  ** Called during Inherit step when a Fantom slot overrides a FFI slot.
   ** Log and throw compiler error if there is a problem.
   **
   abstract Void checkOverride(TypeDef t, CSlot base, SlotDef def)

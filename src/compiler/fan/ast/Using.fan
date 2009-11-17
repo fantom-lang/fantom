@@ -4,7 +4,7 @@
 //
 // History:
 //   15 Sep 05  Brian Frank  Creation
-//    3 Jun 06  Brian Frank  Ported from Java to Fan - Megan's b-day!
+//    3 Jun 06  Brian Frank  Ported from Java to Fantom - Megan's b-day!
 //   11 Oct 06  Brian Frank  Switch from import keyword to using
 //
 

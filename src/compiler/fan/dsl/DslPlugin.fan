@@ -66,7 +66,7 @@ abstract class DslPlugin : CompilerSupport
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Compile DSL source into its Fan equivalent expression.
+  ** Compile DSL source into its Fantom equivalent expression.
   ** Log and throw compiler error if there is a problem.
   **
   abstract Expr compile(DslExpr dsl)

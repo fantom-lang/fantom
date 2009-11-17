@@ -38,7 +38,7 @@ class TokenVal : Location
   }
 
   **
-  ** Get this token as Fan source code.
+  ** Get this token as Fantom source code.
   **
   Str toCode()
   {
