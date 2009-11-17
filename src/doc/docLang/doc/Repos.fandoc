@@ -56,7 +56,7 @@ or fan bash script).  Core libraries like 'sys' must be loaded out of the
 boot repo.
 
 You can use 'fan -version' to see what repos are configured.  By default
-the boot repo is the only repo used by Fan:
+the boot repo is the only repo used by Fantom:
 
   C:\dev\fan>fan -version
 

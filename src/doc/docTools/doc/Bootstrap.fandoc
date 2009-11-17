@@ -8,12 +8,12 @@
 
 Overview [#overview]
 ********************
-The Fan compiler is written in Fan itself - which presents a chicken
+The Fantom compiler is written in Fantom itself - which presents a chicken
 and the egg problem.  How do you compile the compiler without having
 a compiler?  To solve this problem, the bootstrap process requires
-two Fan installations:
+two Fantom installations:
 
-  1.  *rel*: known good Fan installation (typically the last build)
+  1.  *rel*: known good Fantom installation (typically the last build)
   2.  *dev*: development environment to build (probably pulled from hg)
 
 By convention we structure our development directory tree like this:
@@ -37,7 +37,7 @@ is the development directory.
 Dev Home [#devHome]
 *******************
 By default the build assumes *devHome* to be the home directory
-of Fan installation.  For example if you rebuild jfan, then the output
+of Fantom installation.  For example if you rebuild jfan, then the output
 goes into "devHome/lib/java/sys.jar".  In the case of the *rel*
 installation we don't want this default because we will overwrite
 ourselves (which leads to some nasty problems).  So you need to set
@@ -66,7 +66,7 @@ to compile these pods, we need to use our *rel* installation.
 
 Windows Substitutes [#subsWindows]
 ==================================
-To make this all work seamlessly on Windows, the Fan launcher will
+To make this all work seamlessly on Windows, the Fantom launcher will
 look in "sys.props" to see if a substitute runtime should be used.
 For example in our environment we map the following scripts to
 use the *rel* installation.
@@ -131,7 +131,7 @@ So you can ignore the .NET configuration on Unix platforms.
 Buildall [#buildall]
 ********************
 The "buildall.fan" script is the top level build script for compiling
-the Fan distribution.  We commonly run this command to rebuild everything
+the Fantom distribution.  We commonly run this command to rebuild everything
 and run tests on every pod:
 
   buildall full test

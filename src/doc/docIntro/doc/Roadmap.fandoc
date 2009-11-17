@@ -40,7 +40,7 @@ such as HTTP-REST and cloud computing.
 
 Threadlocals [#threadlocals]
 ============================
-As we start to design libraries and applications with Fan, it is clear
+As we start to design libraries and applications with Fantom, it is clear
 that we are relying on thread locals to a much greater extent than in
 our past lives.  Today thread locals are stored in a big map which
 is ok, but we can do better.  The plan is to add support for a 'threadlocal'

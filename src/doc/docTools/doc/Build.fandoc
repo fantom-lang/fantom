@@ -8,30 +8,30 @@
 
 Overview [#overview]
 ********************
-Fan comes bundled with its own standard build engine to promote
+Fantom comes bundled with its own standard build engine to promote
 consistency and make sharing code easy.  Build scripts are normal
-[Fan scripts]`Fan#scripts` which subclass from `build::BuildScript`.
+[Fantom scripts]`Fan#scripts` which subclass from `build::BuildScript`.
 Characteristics of build scripts:
 
   - 'BuildScript' base class handles common functions like command
     line parsing, environment setup, and logging
   - Subclasses define *targets* which are things the build script
     can do such as "compile", "clean", or "test"
-  - Targets are implemented as normal Fan methods which can
+  - Targets are implemented as normal Fantom methods which can
     execute any procedural code needed using the APIs installed
   - The 'build' pod provides libraries of *tasks* which are designed
     to provide common chunks of functionality which can be composed
     to define targets
   - The 'build' pod provides a library of predefined 'BuildScript'
     classes to handle common scripts - one you will use all
-    the time is [BuildPod]`build::BuildPod` used to build Fan pods.
+    the time is [BuildPod]`build::BuildPod` used to build Fantom pods.
 
 The build toolkit is designed to provide a consistent way to organize
 build scripts - it doesn't provide a comprehensive library of
 everything you might need to perform a build.  But by predefining
 common scripts such as [BuildPod]`build::BuildPod` it reduces most
 scripts down to purely declarative information.  When you do need the
-power of custom code, you can implement it cleanly as normal Fan code.
+power of custom code, you can implement it cleanly as normal Fantom code.
 
 Example [#example]
 ******************
@@ -132,17 +132,17 @@ a [FatalBuildErr]`build::FatalBuildErr` via this pattern:
 BuildPod [#buildPod]
 ********************
 [BuildPod]`build::BuildPod` is the base class for build
-scripts which build a Fan pod.  The 'BuildPod' script defines
+scripts which build a Fantom pod.  The 'BuildPod' script defines
 a bunch of fields to be filled in. Plus it predefines several
 targets ready to use:
 
-  - [compile]`build::BuildPod.compile`: recompiles the Fan code
+  - [compile]`build::BuildPod.compile`: recompiles the Fantom code
     into a pod file
   - [javaNative]`build::BuildPod.javaNative`: recompiles the
     Java native code
   - [dotnetNative]`build::BuildPod.dotnetNative`: recompiles the
     C# .NET native code
-  - [js]`build::BuildPod.js`: compiles Fan source to JavaScript
+  - [js]`build::BuildPod.js`: compiles Fantom source to JavaScript
   - [clean]`build::BuildPod.clean`: deletes all the intermediate
     and derived target files
   - [doc]`build::BuildPod.doc`: compile fandoc to HTML

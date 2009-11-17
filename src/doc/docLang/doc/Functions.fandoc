@@ -167,7 +167,7 @@ but you don't actually have to use all of those parameters.
 
 Methods [#methods]
 ******************
-In Fan, all methods wrap a function accessed via the
+In Fantom, all methods wrap a function accessed via the
 [Method.func]`sys::Method.func` method.  The 'Func' for a method
 serves as its reflective handle.  This relationship between
 functions and methods is a key aspect of how Fantom bridges object

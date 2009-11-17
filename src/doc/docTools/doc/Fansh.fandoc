@@ -8,13 +8,13 @@
 
 Overview [#overview]
 ********************
-The 'fansh' is a very simple interactive shell for exploring Fan.  The
+The 'fansh' is a very simple interactive shell for exploring Fantom.  The
 shell allows you enter a one line statement or expression.  If the
 result of the expression is non-void, then it will print the result
 via the 'Obj.toStr' method.  Enter "quit" to exit:
 
   C:\dev\fan\bin>fansh
-  Fan Shell v1.0.19 ('?' for help)
+  Fantom Shell v1.0.19 ('?' for help)
   fansh> 3 + 4
   7
   fansh> "3" + 4
@@ -31,7 +31,7 @@ evaluations.  You can enter the "scope" command to list the current
 local variables.  An example:
 
   C:\dev\fan\bin>fansh
-  Fan Shell v1.0.19 ('?' for help)
+  Fantom Shell v1.0.19 ('?' for help)
   fansh> x := 5
   5
   fansh> y := 7
@@ -67,9 +67,9 @@ Or you can import a pod via the [using]`docLang::CompilationUnits#using` a state
 
 Limitations [#limitations]
 **************************
-Currently the Fan shell is quite limited compared to the shells of many
+Currently the Fantom shell is quite limited compared to the shells of many
 other languages.  You cannot enter a multi-line statement or expression.
 Also you cannot enter full type definitions.  If you wish to explore the
-language using more than simple line statements, run your Fan code
+language using more than simple line statements, run your Fantom code
 as a [script]`Fan#scripts`.
 

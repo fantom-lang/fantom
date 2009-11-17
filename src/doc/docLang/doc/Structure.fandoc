@@ -53,7 +53,7 @@ the *qualified name* or *qname*.  Because pod names are globally unique, a type'
 qname is also globally unique.  For example 'sys::Str' is the qname of the 'Str'
 type which is contained by the 'sys' pod.
 
-There are two variations of Types in Fan: [classes]`TypeSystem#classes`
+There are two variations of Types in Fantom: [classes]`TypeSystem#classes`
 and [mixins]`TypeSystem#mixins`.
 
 The `sys::Type` type is the reflection API for working with types at runtime.

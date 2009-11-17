@@ -224,7 +224,7 @@ For example to represent 5 seconds you could use the 'Duration.make' constructor
 
 But all those zeros make it unwieldy.  Plus it is a little inefficient because
 it requires creating a new instance of 'Duration' every time the expression is executed.
-In Fan, 'Durations' are expressed using a literal syntax formatted as a decimal number
+In Fantom, 'Durations' are expressed using a literal syntax formatted as a decimal number
 with an optional dotted fraction and one of the following suffixes:
 
   ns:  nanoseconds  (x 1)

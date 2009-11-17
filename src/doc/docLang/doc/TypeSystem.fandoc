@@ -46,7 +46,7 @@ with domain specific terminology.
 
 Types [#types]
 **************
-There are two kinds of types in Fan:
+There are two kinds of types in Fantom:
   - Classes
   - Mixins
 
