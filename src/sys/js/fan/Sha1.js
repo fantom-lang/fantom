@@ -7,7 +7,7 @@
  * See http://pajhome.org.uk/crypt/md5 for details.
  *
  * Modifications:
- *   10 July 2009  Andy Frank  Edited to run in Fan and for size/usage
+ *   10 July 2009  Andy Frank  Edited to run in Fantom and for size/usage
  */
 fan.sys.Buf_Sha1 = function(buf, key)
 {

@@ -12,7 +12,7 @@ var fan = {};
 fan.sys = {};
 
 /**
- * Obj is the base class for all Fan types.
+ * Obj is the base class for all Fantom types.
  */
 fan.sys.Obj = function() {};
 
@@ -188,7 +188,7 @@ fan.sys.Obj.isImmutable = function(self)
     if ((typeof self) == "number") return true;
 // TODO
     if (self != null && self.$fanType != null) return true;
-    throw new fan.sys.Err("sys::Obj.isImmutable: Not a Fan type: " + self);
+    throw new fan.sys.Err("sys::Obj.isImmutable: Not a Fantom type: " + self);
   }
 }
 
