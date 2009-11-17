@@ -14,10 +14,10 @@ will likely have design changes as it gets flushed out
 The basics of Uri naming are covered in the `Naming` chapter.  This
 chapter covers the APIs related to managing "fan:" uris.
 
-Fan defines a standard URI naming system influenced by the
+Fantom defines a standard URI naming system influenced by the
 [REST]`http://en.wikipedia.org/wiki/Representational_State_Transfer`
 architecture of the World Wide Web:
-  - Resources are represented as Fan objects
+  - Resources are represented as Fantom objects
   - Resources are identified with [Uris]`sys::Uri`
   - Resources are managed using a small set of "verbs"
   - Resources are transfered between threads safely
@@ -30,7 +30,7 @@ methods:
   - [UriSpace.put]`sys::UriSpace.create`: update a Uri resource mapping
   - [UriSpace.delete]`sys::UriSpace.delete`: delete a Uri resource mapping
 
-Fan's uri space is managed much like a Unix file system.  The uri space
+Fantom's uri space is managed much like a Unix file system.  The uri space
 is managed as a tree of Uri paths.  By default the *root uri space*
 manages everything under "/".  The root uri space implements its CRUD
 interface using a simple memory store.  Alternate uri space implementations
@@ -107,7 +107,7 @@ Dir UriSpaces [#dir]
 ********************
 The factory method [UriSpace.makeDir]`sys::UriSpace.makeDir` creates
 a custom uri space instance which allows you to mount a file system
-directory into the Fan uri space:
+directory into the Fantom uri space:
 
   UriSpace.mount(`/fandocs`, UriSpace.makeDir(Repo.boot.home +`doc/`))
   UriSpace.root[`/fandocs/`]            =>  sys::File for doc directory

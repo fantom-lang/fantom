@@ -51,7 +51,7 @@ Implementation Reuse [#implReuse]
 =================================
 If a type declares only abstract slots, then a subclass is inheriting
 purely the type contract - this is what happens in Java or C# when
-declaring an interface.  However, in Fan both classes and mixins can
+declaring an interface.  However, in Fantom both classes and mixins can
 declare an implementation for their slots.  Subclasses can then
 inherit the implementation of their super type slots.  We call this
 technique *implementation reuse* - it gives us a convenient mechanism
@@ -114,7 +114,7 @@ super types:
      a. One is concrete and the other is abstract
      b. Both are virtual and the subtype overrides to provide unambiguous definition
 
-Using the rules above, Fan avoids the diamond inheritance problem.  First
+Using the rules above, Fantom avoids the diamond inheritance problem.  First
 mixins can't declare concrete fields, which mean they never store state.
 Second any ambiguity that arises from diamond inheritance or otherwise
 requires the subclass to explicitly disambiguate (or if the inherited

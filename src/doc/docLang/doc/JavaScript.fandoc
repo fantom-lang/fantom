@@ -9,7 +9,7 @@
 Overview [#overview]
 ********************
 
-Fan provides support for compiling to JavaScript and running in
+Fantom provides support for compiling to JavaScript and running in
 JavaScript VMs such as web browsers.  Most of the sys API is available,
 however not all pods and APIs are accessible due to limitations of the
 JavaScript VM enviornment.

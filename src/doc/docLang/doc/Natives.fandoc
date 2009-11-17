@@ -26,7 +26,7 @@ Native Fields [#fields]
 ***********************
 Native fields are similar to abstract fields in that they generate a
 getter and setter, but no actual storage.  The emit process will route
-the Fan getter/setter to the peer class:
+the Fantom getter/setter to the peer class:
 
   class Native
   {

@@ -40,8 +40,8 @@ However 'Bool?' does default to null.
 
 Int [#int]
 **********
-`sys::Int` is used to represent a 64-bit signed integer.  Fan does not have any integer
-types for smaller precisions.  Fan also uses Int to represent a single character
+`sys::Int` is used to represent a 64-bit signed integer.  Fantom does not have any integer
+types for smaller precisions.  Fantom also uses Int to represent a single character
 of a string as a Unicode code point (which happens to be handy because there are
 actually more than 2^16 Unicode characters).  Int is 'const' which means that all
 instances are immutable.
@@ -51,7 +51,7 @@ represented in hexadecimal if prefixed with '0x'.  Octal notation is not
 supported.  You can use the '_' underbar anywhere within an 'Int' literal as
 a separator to make your code more readable.
 
-Fan also permits C style character literals to represent a Unicode code point
+Fantom also permits C style character literals to represent a Unicode code point
 as an 'Int' literal.  Character literals are surrounded with the tick and support
 the following escapes:
 
@@ -76,7 +76,7 @@ However 'Int?' does default to null.
 
 Float [#float]
 **************
-`sys::Float` is used to represent a 64-bit floating point number.  Fan does
+`sys::Float` is used to represent a 64-bit floating point number.  Fantom does
 not have a type for 32-bit floats.  Float is 'const' which means that
 instances are immutable.
 
@@ -186,12 +186,12 @@ is syntax sugar for:
   "x is " + x + ", in hex " + x.toHex + ", and x+8 is " + (x+8)
 
 String interpolation makes string formatting easier to read and write.
-Fan coding convention is to always use string interpolation rather than
+Fantom coding convention is to always use string interpolation rather than
 concatenation.
 
 Triple Quotes [#tripleQuotes]
 =============================
-Fan also supports '"""' triple quoted string literals.  These work exactly
+Fantom also supports '"""' triple quoted string literals.  These work exactly
 like normal string literals except that you don't need to escape the
 double quote '"' character.  Interpolation and multi-line work exactly
 the same:
@@ -214,7 +214,7 @@ Duration [#duration]
 ********************
 In Java, an API which requires a measurement of time typically uses a long with
 the number of milliseconds.  This tends to be a bit ambiguous and becomes problematic
-when you need finer precision.  Fan APIs always use a typed value for time.  Absolute
+when you need finer precision.  Fantom APIs always use a typed value for time.  Absolute
 time measurement is represented using `sys::DateTime` and relative time measurement is
 represented by `sys::Duration` - both are normalized using nanosecond precision.
 For example to represent 5 seconds you could use the 'Duration.make' constructor:
@@ -243,14 +243,14 @@ Examples of 'Duration' literals:
 Uri [#uri]
 **********
 The `sys::Uri` class is used to represent a Uniform Resource Identifier which
-is the foundation of Fan's subsystem for naming and resolution.  'Uris' have
+is the foundation of Fantom's subsystem for naming and resolution.  'Uris' have
 their own literal syntax using the back tick:
   `index.html`
   `/some/path/file.txt`
   `http://fandev.org`
   `TPS Report.doc`
 
-Note that when working with URIs in Fan and representing them as literals we
+Note that when working with URIs in Fantom and representing them as literals we
 always use *standard form*.  For example a space is represented using
 a normal space, not encoded as "%20":
   `TPS Report.doc`.toStr      // yields "TPS Report.doc"
@@ -269,7 +269,7 @@ Uris support interpolation following the same rules as [Str interpolation]`#inte
 
 Type [#type]
 ************
-The `sys::Type` class is the foundation of the Fan reflection APIs.  Typically 'Type'
+The `sys::Type` class is the foundation of the Fantom reflection APIs.  Typically 'Type'
 instances are queried using the `sys::Obj.type` method.  But you can also represent
 a 'Type' instance using the type literal syntax which is simply a type name followed
 by the '#' symbol:
@@ -304,7 +304,7 @@ See [Symbols]`Symbols#literals` chapter for details.
 Range [#range]
 **************
 A `sys::Range` represents a contiguous range of integers from start to end.  Ranges
-may be represented as literals in Fan source code as 'start..end' for an inclusive
+may be represented as literals in Fantom source code as 'start..end' for an inclusive
 end or 'start..<end' for an exclusive range.  Inclusive and exclusive determines if
 the end index is included in the range (start is always inclusive).  Example
 of 'Range' literals:

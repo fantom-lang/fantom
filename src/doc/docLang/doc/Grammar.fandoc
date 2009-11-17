@@ -8,7 +8,7 @@
 
 Legend [#legend]
 ****************
-Legend for Fan BNF Grammar:
+Legend for Fantom BNF Grammar:
 
   :=      is defined as
   <x>     non-terminal

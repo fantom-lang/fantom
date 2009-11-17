@@ -8,7 +8,7 @@
 
 Locale [#locale]
 ****************
-The `sys::Locale` class is the hub API for Fan's localization
+The `sys::Locale` class is the hub API for Fantom's localization
 infrastructure.  Locales are used to represent a language via
 an ISO 639 two letter code.  A locale may also optionally represent
 a specific country or region via a ISO 3166 two letter code.  Common
@@ -35,15 +35,15 @@ locales include:
       zh-CN  China (Simplified)
       zh-TW  Taiwan
 
-When the Fan VM is started it will create a default locale based on the
-underlying platform.  For example on a Java VM, the default Fan locale
+When the Fantom VM is started it will create a default locale based on the
+underlying platform.  For example on a Java VM, the default Fantom locale
 will be initialized from 'java.util.Locale.getDefault' (which in turn is
 initialized from the operating system's default locale).
 
 Locales are configured as a thread local variable.  Use `sys::Locale.current`
 and `sys::Locale.setCurrent` to get and set the current thread's locale.
 
-By convention 'Locale' is never passed as a parameter to Fan APIs.  Rather
+By convention 'Locale' is never passed as a parameter to Fantom APIs.  Rather
 the locale is implied by the current thread.  As a general rule APIs which
 are locale sensitive will include the term 'locale' in their method name.
 

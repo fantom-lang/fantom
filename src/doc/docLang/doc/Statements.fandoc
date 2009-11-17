@@ -8,16 +8,16 @@
 
 Overview [#overview]
 ********************
-Fan code is written as a series of statements just like Java or C#.
-However unlike Java/C#, Fan statements are not required to be terminated
-with a semicolon.  A Fan statement may be terminated one of three ways:
+Fantom code is written as a series of statements just like Java or C#.
+However unlike Java/C#, Fantom statements are not required to be terminated
+with a semicolon.  A Fantom statement may be terminated one of three ways:
   1. newline
   2. semicolon
   3. end of block '}' curly brace
 
 By convention a simple newline is the preferred mechanism for separating
 statements.  A semicolon is only used when placing multiple statements
-on the same line.  For example these are all valid Fan statements:
+on the same line.  For example these are all valid Fantom statements:
 
   if (authenticated)
   {
@@ -37,11 +37,11 @@ The first version is the preferred syntax.  The third version
 also exhibits good mojo if it is compact enough to keep the code
 readable.
 
-The Fan grammar is not perfectly unambiguous when you omit semicolons.
+The Fantom grammar is not perfectly unambiguous when you omit semicolons.
 So on occasion you will run into a situation when the compiler
 complains and you might need to stick in a semicolon - but in
 practice this rarely happens.  Another side effect of this is
-that Fan requires the opening parenthesis of a method call to
+that Fantom requires the opening parenthesis of a method call to
 be on the same line as the method identifier:
 
   // ok
@@ -95,7 +95,7 @@ line as the 'return' keyword:
   return
     call(x, y, z)
 
-Fan allows you omit the 'return' keyword if your method or closure
+Fantom allows you omit the 'return' keyword if your method or closure
 contains exactly one statement:
 
   Str name() { return "Bob" } // long version
@@ -113,7 +113,7 @@ Local variables may be declared using the following syntax:
   // example
   Str name := "Jack Shephard"
 
-Fan supports [type inference]`http://en.wikipedia.org/wiki/Type_inference`
+Fantom supports [type inference]`http://en.wikipedia.org/wiki/Type_inference`
 for local variables, which allows you to omit the type signature.
 If the type signature is omitted, then the variable is typed according
 to the initializer expression.  In the example above the right hand
@@ -121,19 +121,19 @@ side resolves to a 'Str', so we could rewrite the statement above as:
 
   name := "Jack Shephard"
 
-Fan convention encourages use of type inference when possible.  However
+Fantom convention encourages use of type inference when possible.  However
 if the right hand side expression resolves to an ambiguous type, then
 you will need to specify the variable's type signature.  The most common
 case when type inference doesn't work is when you need to initialize a
 local variable to 'null'.
 
-Fan uses the ':=' operator for local variable initialization rather than
+Fantom uses the ':=' operator for local variable initialization rather than
 the standard '=' assignment operator.  The primary purpose of the ':='
 syntax is to distinguish normal assignments from local declarations.
 This syntax captures programmer intent better and enables the compiler
 to catch typos like a misspelled local.
 
-Fan does not support the comma operator to declare multiple local
+Fantom does not support the comma operator to declare multiple local
 variables like Java or C#.  In practice though most locals will be
 declared using type inference.
 
@@ -144,7 +144,7 @@ or C# which require definite assignment.
 
 If Statements [#if]
 *******************
-Fan supports 'if' and 'else' using the Java/C# syntax:
+Fantom supports 'if' and 'else' using the Java/C# syntax:
 
   if (<cond>)
     <block>
@@ -167,13 +167,13 @@ delineated by '{' '}' curly braces.
 
 Loop Statement [#loop]
 ***********************
-Fan supports  'while' and 'for' loops using familiar Java and C#
-syntax.  Although you'll find when writing Fan that most looping
+Fantom supports  'while' and 'for' loops using familiar Java and C#
+syntax.  Although you'll find when writing Fantom that most looping
 is actually done using [closures]`Closures`.
 
 While Statement [#while]
 ========================
-Fan supports 'while' loops using Java/C# syntax:
+Fantom supports 'while' loops using Java/C# syntax:
 
   // syntax
   while (<cond>)
@@ -188,11 +188,11 @@ evaluations to 'false'.  The 'while' condition must evaluate to
 a 'sys::Bool' expression.  The block can be a single statement or
 a block of multiple statements delineated by '{' '}' curly braces.
 
-Fan doesn't currently support 'do' 'while' loops.
+Fantom doesn't currently support 'do' 'while' loops.
 
 For Statement [#for]
 ====================
-Fan supports 'for' loops using Java/C# syntax:
+Fantom supports 'for' loops using Java/C# syntax:
 
   // syntax
   for (<init>; <cond>; <update>)
@@ -234,7 +234,7 @@ to break out of the loop.  For example:
   done
 
 The 'break' statement always applies to the inner-most loop.
-Fan does not support labeled 'breaks'.
+Fantom does not support labeled 'breaks'.
 
 Continue Statement [#continue]
 ==============================
@@ -255,11 +255,11 @@ loops to jump back to the top of the loop.  For example:
   done
 
 The 'continue' statement always applies to the inner-most loop.
-Fan does not support labeled 'continues'.
+Fantom does not support labeled 'continues'.
 
 Switch Statement [#switch]
 **************************
-Fan supports a 'switch' statement used to execute a block of
+Fantom supports a 'switch' statement used to execute a block of
 code by matching the value of a expression against a list
 of *case labels*. The syntax is very similar to Java/C#:
 
@@ -280,7 +280,7 @@ block.  If no matches are found then the optional 'default' block
 is executed.  Unlike the 'if', 'for', and 'while' statements, the
 case blocks are not wrapped with '{' '}' curly braces.
 
-Fan's 'switch' statement allows the condition and case expressions
+Fantom's 'switch' statement allows the condition and case expressions
 to be any valid expressions.  So you can switch on strings or types
 too.  When the condition evaluates to an `sys::Int` or `sys::Enum`
 and the 'case' labels evaluate to constants, then the 'switch' is
@@ -306,7 +306,7 @@ method.  For example:
     default:     methodNotSupported
   }
 
-In Fan the 'switch' statement doesn't require a 'break' to end a block
+In Fantom the 'switch' statement doesn't require a 'break' to end a block
 of code for a given case like Java or C#.  You cannot fall-through
 from one case block to the next case block.  However you can group
 multiple case labels together like we did with 'Weekday.sat' and 'Weekday.sun'
@@ -314,6 +314,6 @@ in the example above.
 
 Exception Handling [#exceptions]
 ******************************************
-Fan supports 'throw' and 'try' statements with a syntax very similar
+Fantom supports 'throw' and 'try' statements with a syntax very similar
 to Java and C#.  These statements are discussed separately in
 the [exception handling]`Exceptions` chapter.

@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-Functions are first class objects in Fan modeled via the `sys::Func`
+Functions are first class objects in Fantom modeled via the `sys::Func`
 class.  Functions have a signature formally defined as a set of *parameter
 types* and a *return type*.  Functions which don't return an object have
 a 'Void' return type.  Functions are created one of three ways:
@@ -41,7 +41,7 @@ The examples above are type signatures much like you'd use 'Str' or 'Str[]'.
 
 Calling Functions [#calling]
 ****************************
-Functions are just objects like everything else in Fan.  All functions
+Functions are just objects like everything else in Fantom.  All functions
 subclass the [Func]`sys::Func` class which provides methods for invoking
 the function.  The most basic method is [Func.callList]`sys::Func.callList`
 which takes a list of arguments and returns the result (or null if
@@ -60,7 +60,7 @@ function above with two arguments:
 Using the 'call' arity versions provides better performance in
 most cases because it skips packaging up the arguments in a list.
 
-Fan also supports a bit of syntax sugar to call a function like
+Fantom also supports a bit of syntax sugar to call a function like
 a normal method call using the '()' operator.  For example we could
 call the function above using this syntax:
 
@@ -147,7 +147,7 @@ into functional type compatibility by dissecting these examples:
 
 Here we see that a function that accepts one 'Int' is compatible
 with a function type that generates two 'Ints'.  This is an ability
-of all functions in Fan - to accept more arguments than they will
+of all functions in Fantom - to accept more arguments than they will
 use.  It is kind of like [default parameters]`Methods#defaultParams`
 in reverse.  We use this technique all the time in the core
 classes.  For example the [Map.each]`sys::Map.each` method is
@@ -170,7 +170,7 @@ Methods [#methods]
 In Fan, all methods wrap a function accessed via the
 [Method.func]`sys::Method.func` method.  The 'Func' for a method
 serves as its reflective handle.  This relationship between
-functions and methods is a key aspect of how Fan bridges object
+functions and methods is a key aspect of how Fantom bridges object
 oriented and functional programming (the flip side is that all
 functions are an object).
 
@@ -195,7 +195,7 @@ call:
 Instance methods map to a function where the first argument is
 the implicit 'this' parameter.  If you've ever used Python this
 concept is pretty much in your face with the explicit 'self' argument.
-Fan lets you use instance methods like Java or C#, but we still need
+Fantom lets you use instance methods like Java or C#, but we still need
 to map those OO methods to functions.  Let's consider this example:
 
     m := Str#replace

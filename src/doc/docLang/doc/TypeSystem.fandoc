@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-The Fan type system serves two primary purposes:
+The Fantom type system serves two primary purposes:
   - Encapsulation: a mechanism to group fields and methods together
   - Contracts: a mechanism to model semantics
 
@@ -65,7 +65,7 @@ a class (or another mixin).
 
 Mixins are similar to interfaces in Java or C#, but much more flexible.
 A Java or C# interface is purely a type definition of abstract methods, it
-can't actually include any behavior itself.  Fan mixins can declare
+can't actually include any behavior itself.  Fantom mixins can declare
 concrete methods which provide a lot more power.
 
 You can't create instances of a mixin - they are an abstract type designed
@@ -75,18 +75,18 @@ define a type contract which requires a field signature.
 
 Pure Object Oriented [#pureOO]
 ******************************
-Fan is fundamentally an object-oriented language.  It is "pure" in the
+Fantom is fundamentally an object-oriented language.  It is "pure" in the
 sense that everything is an object including core types such as 'Int'.
 For example, Java primitive types such as 'boolean' and 'int' do not
 subclass from 'java.lang.Object' which creates a fractured type system.
-Fan defines a unified class hierarchy with 'sys::Obj' as the root.
+Fantom defines a unified class hierarchy with 'sys::Obj' as the root.
 Since everything is an object, you can call methods on everything:
 
   false.type   =>  sys::Bool
   1972.isEven  =>  true
   'x'.toChar   =>  "x"
 
-Arrays are another type system anomaly not supported by Fan.  For example,
+Arrays are another type system anomaly not supported by Fantom.  For example,
 in Java arrays are reference types which can be used as a 'java.lang.Object'
 type, but they aren't proper classes with nice OO methods.  In most
 circumstances, the `sys::List` class is used instead of arrays.  Plus
@@ -113,7 +113,7 @@ Value-Types [#valueTypes]
 *************************
 The special types 'Bool', 'Int', and 'Float' are *value-types*.  These
 types are optimized by the runtime to be passed by value instead of as
-a reference to an object.  This allows Fan to achieve the same performance
+a reference to an object.  This allows Fantom to achieve the same performance
 as using primitives in Java and value-types in C#.
 
 Value-types can be nullable also.  For instance a variable declared to
@@ -123,10 +123,10 @@ Value-types differ from reference types in that fields default to false/zero
 instead of null.  However the nullable versions of value-types do
 default to null.
 
-A mapping of Fan types to their runtime representations:
+A mapping of Fantom types to their runtime representations:
 
-  Fan      Default   Java                .NET
-  ---      -------   ----                ------
+  Fantom   Default   Java                .NET
+  ------   -------   ----                ------
   Bool     false     boolean             bool
   Bool?    null      java.lang.Boolean   bool?
   Int      0         long                long
@@ -134,22 +134,22 @@ A mapping of Fan types to their runtime representations:
   Float    0.0f      double              double
   Float?   null      java.lang.Double    double?
 
-By convention Fan APIs use 'null' to indicate an non-normal condition.  For
+By convention Fantom APIs use 'null' to indicate an non-normal condition.  For
 example, often in a Java API which returns an 'int' such as 'String.indexOf()'
 or 'InputStream.read()' a special value of -1 will be used to indicate
 a non-normal result.  This can be especially problematic when -1 is
-a valid result.  In Fan APIs we return 'Int?' and use 'null' instead of
+a valid result.  In Fantom APIs we return 'Int?' and use 'null' instead of
 a special value like -1.
 
 Statically Typed [#staticallyType]
 **********************************
-Fan is statically typed - all method and fields signatures require
+Fantom is statically typed - all method and fields signatures require
 type declarations.  This is a religious issue for many developers, but
 we believe type declarations just add too much value for code analysis
 and readability to throw them out for a bit of code compression.
 
 However there are definitely times when a static type system gets in
-the way of an elegant solution.  So Fan provides some dynamic typing
+the way of an elegant solution.  So Fantom provides some dynamic typing
 features too:
   - the '->' [dynamic invoke]`Methods#dynamicInvoke` operator lets
     you call any method with runtime checking
@@ -226,7 +226,7 @@ and a special type signature syntax.
 List [#list]
 ============
 Lists are a sequential collection of objects with fast integer indexing.
-A Fan list is very similar to an 'ArrayList' in Java or C# with similar
+A Fantom list is very similar to an 'ArrayList' in Java or C# with similar
 performance tradeoffs: fast indexing and appending, but slower inserts
 and removes from the middle.  Lists have a [literal]`Literals#list` syntax
 and a special [type signature]`#listSignature` syntax.
@@ -239,27 +239,27 @@ and a special [type signature]`#mapSignature` syntax.
 
 Generics [#generics]
 ********************
-Another feature eschewed by Fan is user defined generics.  We fall into
+Another feature eschewed by Fantom is user defined generics.  We fall into
 that camp which finds generics a wicked, complicated solution to a
 narrow range of problems.  For example generics are great for collections,
 but the mental gymnastics required to digest declarations like
 'Class Enum<E extends Enum<E>>' are too much for us.
 
-Although there isn't a general purpose generics mechanism, Fan does use
+Although there isn't a general purpose generics mechanism, Fantom does use
 generics in a limited fashion.  Specifically three classes use generics:
 
   - [List]`#listSignature`
   - [Map]`#mapSignature`
   - [Func]`#funcSignature`
 
-These are the only three *generic types* in Fan.  Each generic type
+These are the only three *generic types* in Fantom.  Each generic type
 uses a set of *generic parameters* in its method signatures.
 Generic parameters are always one of the following single ASCII
 letters: 'A-H', 'L', 'M', 'R', and 'V'.  The meaning of each generic
 parameter is discussed below.
 
 To use a generic we have to specify a type for each of the generic
-parameters - we call this process *parameterization*.  Fan doesn't use
+parameters - we call this process *parameterization*.  Fantom doesn't use
 a general purpose parameterization syntax like 'List<Str>' as used by
 Java and C#.  Instead each of the three generic types has its own custom
 parameterization syntax discussed below.
@@ -360,7 +360,7 @@ we need to specify a method that requires that callback:
 
   void sort(Comparator comparator)
 
-In Fan we skip the interface part and just declare the callback type
+In Fantom we skip the interface part and just declare the callback type
 using an in-place function signature:
 
   Void sort(|Obj a, Obj b->Int| comparator)

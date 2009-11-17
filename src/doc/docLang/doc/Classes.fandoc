@@ -85,7 +85,7 @@ class which doesn't have a superclass itself.
 
 Instances [#instances]
 **********************
-Fan uses a [pure object oriented]`TypeSystem#pureOO` type system.
+Fantom uses a [pure object oriented]`TypeSystem#pureOO` type system.
 This means that all variables are an object which is an instance
 of exactly one class.
 
