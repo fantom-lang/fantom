@@ -201,7 +201,7 @@ public abstract class FTypeEmit
   protected void emitInstanceInit(FMethod m)
   {
     // if base class is normal Java class imported via FFI, then
-    // the Fan constructors are the Java constructors
+    // the Fantom constructors are the Java constructors
     if (parent.base().isJava()) return;
 
     hasInstanceInit = true;
@@ -341,7 +341,7 @@ public abstract class FTypeEmit
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * Map Fan flags to Java flags.  Note we emit protected as public and
+   * Map Fantom flags to Java flags.  Note we emit protected as public and
    * internal/private as package-private so that we don't need to deal
    * with scope issues for accessors like closures and helper classes.
    */
@@ -359,7 +359,7 @@ public abstract class FTypeEmit
   }
 
   /**
-   * Given a Fan qname index, map to a Java class name: fan/sys/Version
+   * Given a Fantom qname index, map to a Java class name: fan/sys/Version
    */
   String jname(int index)
   {

@@ -12,7 +12,7 @@ import fan.sys.*;
 import fanx.fcode.*;
 
 /**
- * Fan Disassembler
+ * Fantom Disassembler
  */
 public class Fanp
 {

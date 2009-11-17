@@ -10,7 +10,7 @@ package fan.sys;
 import java.io.*;
 
 /**
- * SysOutStream is an Fan sys::OutStream which
+ * SysOutStream is an Fantom sys::OutStream which
  * routes to a java.io.OutputStream.
  */
 public class SysOutStream

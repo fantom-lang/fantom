@@ -15,7 +15,7 @@ import java.util.Iterator;
 import fan.sys.*;
 
 /**
- * Interop defines for converting between Fan and Java for common types.
+ * Interop defines for converting between Fantom and Java for common types.
  */
 public class Interop
 {
@@ -25,9 +25,9 @@ public class Interop
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * Given a Java exception instance translate to a Fan exception.
-   * If the exception maps to a built-in Fan exception then the
-   * native Fan type is used - for example NullPointerException will
+   * Given a Java exception instance translate to a Fantom exception.
+   * If the exception maps to a built-in Fantom exception then the
+   * native Fantom type is used - for example NullPointerException will
    * return a NullErr.  Otherwise the Java exception is wrapped
    * as a generic Err instance.
    */
@@ -37,7 +37,7 @@ public class Interop
   }
 
   /**
-   * Given a Fan exception instance, get the underlying Java exception.
+   * Given a Fantom exception instance, get the underlying Java exception.
    */
   public static Throwable toJava(Err err)
   {

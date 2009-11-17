@@ -22,7 +22,7 @@ public class ArgErr
   public static ArgErr make(Range index) { return make(String.valueOf(index)); }
 
 //////////////////////////////////////////////////////////////////////////
-// Fan Constructors
+// Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
   public static ArgErr make() { return make((String)null, (Err)null); }

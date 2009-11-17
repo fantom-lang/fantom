@@ -13,13 +13,13 @@ import fanx.fcode.*;
 import java.lang.reflect.Modifier;
 
 /**
- * FanUtil defines the mappings between the Fan and Java type systems.
+ * FanUtil defines the mappings between the Fantom and Java type systems.
  */
 public class FanUtil
 {
 
   /**
-   * Convert Java class to Fan type.
+   * Convert Java class to Fantom type.
    */
   public static Type toFanType(Class cls, boolean checked)
   {
@@ -85,7 +85,7 @@ public class FanUtil
   }
 
   /**
-   * Return if the Fan Type is represented as a Java class
+   * Return if the Fantom Type is represented as a Java class
    * such as sys::Int as java.lang.Long.
    */
   public static boolean isJavaRepresentation(Type t)
@@ -101,7 +101,7 @@ public class FanUtil
   }
 
   /**
-   * Given a Fan qname, get the Java class name:
+   * Given a Fantom qname, get the Java class name:
    *   sys::Obj  =>  java.lang.Object
    *   foo::Bar  =>  fan.foo.Bar
    */
@@ -143,7 +143,7 @@ public class FanUtil
   }
 
   /**
-   * Given a Fan qname, get the Java implementation class name:
+   * Given a Fantom qname, get the Java implementation class name:
    *   sys::Obj   =>  fan.sys.FanObj
    *   sys::Float =>  fan.sys.FanFloat
    *   sys::Obj   =>  fan.sys.FanObj
@@ -186,7 +186,7 @@ public class FanUtil
   }
 
   /**
-   * Given a Fan qname, get the Java type signature:
+   * Given a Fantom qname, get the Java type signature:
    *   sys::Obj  =>  java/lang/Object
    *   foo::Bar  =>  fan/foo/Bar
    */
@@ -301,7 +301,7 @@ public class FanUtil
   }
 
   /**
-   * Given a Fan type, get the Java type signature:
+   * Given a Fantom type, get the Java type signature:
    *   fan/sys/Duration
    */
   public static String toJavaTypeSig(Type t)
@@ -310,7 +310,7 @@ public class FanUtil
   }
 
   /**
-   * Given a Fan type, get the Java member signature.
+   * Given a Fantom type, get the Java member signature.
    *   Lfan/sys/Duration;
    */
   public static String toJavaMemberSig(Type t)
@@ -326,7 +326,7 @@ public class FanUtil
   }
 
   /**
-   * Given a Fan type, get its stack type: 'A', 'I', 'J', etc
+   * Given a Fantom type, get its stack type: 'A', 'I', 'J', etc
    */
   public static int toJavaStackType(Type t)
   {
@@ -374,7 +374,7 @@ public class FanUtil
   }
 
   /**
-   * Map Java class modifiers to Fan flags.
+   * Map Java class modifiers to Fantom flags.
    */
   public static int classModifiersToFanFlags(int m)
   {
@@ -391,7 +391,7 @@ public class FanUtil
   }
 
   /**
-   * Map Java field/method modifiers to Fan flags.
+   * Map Java field/method modifiers to Fantom flags.
    */
   public static int memberModifiersToFanFlags(int m)
   {

@@ -21,7 +21,7 @@ public class IOErr
   public static IOErr make(String msg, Throwable cause)  { return make(msg, Err.make(cause)); }
 
 //////////////////////////////////////////////////////////////////////////
-// Fan Constructors
+// Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
   public static IOErr make() { return make((String)null, (Err)null); }

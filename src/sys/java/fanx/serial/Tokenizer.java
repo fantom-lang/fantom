@@ -14,7 +14,7 @@ import fanx.util.StrUtil;
 
 /**
  * Tokenizer inputs a stream of Unicode characters and
- * outputs tokens for the Fan serialization grammar.
+ * outputs tokens for the Fantom serialization grammar.
  */
 public class Tokenizer
 {

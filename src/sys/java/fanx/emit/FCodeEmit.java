@@ -262,7 +262,7 @@ public class FCodeEmit
     AttrEmit attr = code.emitAttr("LocalVariableTable");
     Box info = attr.info;
 
-    // Fan variables never reuse stack registers, so
+    // Fantom variables never reuse stack registers, so
     // we can declare their scope across entire method
     int start = 0;
     int end = code.info.len-2-2-4; // max stack, max locals, code len
@@ -438,7 +438,7 @@ public class FCodeEmit
   }
 
   /** Load variable onto stack using Java type and java index (which might
-      not map to Fan index.  Return next available java index */
+      not map to Fantom index.  Return next available java index */
   static int loadVar(CodeEmit code, int stackType, int jindex)
   {
     switch (stackType)
@@ -874,7 +874,7 @@ public class FCodeEmit
     FTypeRef typeRef = pod.typeRef(u2());
 
     // if a generic instance, we have to use a method call
-    // because Fan types don't map to Java classes exactly;
+    // because Fantom types don't map to Java classes exactly;
     // otherwise we can use straight bytecode
     if (typeRef.isGenericInstance())
     {
@@ -1200,7 +1200,7 @@ public class FCodeEmit
   }
 
   /**
-   * Map to Java register info for the given Fan local variables.
+   * Map to Java register info for the given Fantom local variables.
    * Registers are typed (so we know which XLOAD_X and XSTORE_X opcodes
    * to use) and might be numbered differently (if using longs/doubles).
    */

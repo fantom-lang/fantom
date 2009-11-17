@@ -124,7 +124,7 @@ public class DateTimeTest
   {
     System.out.print("     " + tzName + ": ");
 
-    tzFan = fan.sys.TimeZone.fromStr(tzName);
+    tzFan  = fan.sys.TimeZone.fromStr(tzName);
     tzJava = java.util.TimeZone.getTimeZone(tzName);
     num = 0;
     curYear = -1;

@@ -13,7 +13,7 @@ import fanx.fcode.*;
 import fanx.util.*;
 
 /**
- * JavaType wraps a Java class as a Fan type for FFI reflection.
+ * JavaType wraps a Java class as a Fantom type for FFI reflection.
  */
 public class JavaType
   extends Type
@@ -54,7 +54,7 @@ public class JavaType
    */
   public static JavaType make(String podName, String typeName)
   {
-    // we shouldn't be using this method for pure Fan types
+    // we shouldn't be using this method for pure Fantom types
     if (!podName.startsWith("[java]"))
       throw ArgErr.make("Unsupported FFI type: " + podName + "::" + typeName).val;
 
@@ -175,7 +175,7 @@ public class JavaType
     }
     catch (Exception e)
     {
-      throw UnknownTypeErr.make("Cannot map Fan type to Java class: " + qname(), e).val;
+      throw UnknownTypeErr.make("Cannot map Fantom type to Java class: " + qname(), e).val;
     }
   }
 
@@ -218,7 +218,7 @@ public class JavaType
   }
 
   /**
-   * Reflect the Java class to map is members to Fan slots.
+   * Reflect the Java class to map is members to Fantom slots.
    */
   private synchronized JavaType initSlots()
   {
@@ -229,7 +229,7 @@ public class JavaType
     java.lang.reflect.Field[] jfields = toClass().getFields();
     java.lang.reflect.Method[] jmethods = toClass().getMethods();
 
-    // allocate Fan reflection structurs
+    // allocate Fantom reflection structurs
     List slots = new List(Sys.SlotType, jfields.length+jmethods.length+4);
     List fields = new List(Sys.FieldType, jfields.length);
     List methods = new List(Sys.MethodType, jfields.length+4);
@@ -298,7 +298,7 @@ public class JavaType
   }
 
   /**
-   * Map a Java Field to a Fan field.
+   * Map a Java Field to a Fantom field.
    */
   private Field toFan(java.lang.reflect.Field java)
   {
@@ -314,7 +314,7 @@ public class JavaType
   }
 
   /**
-   * Map a Java Method to a Fan Method.
+   * Map a Java Method to a Fantom Method.
    */
   private Method toFan(java.lang.reflect.Method java)
   {
@@ -444,7 +444,7 @@ public class JavaType
   /**
    * Return if given arguments can be used against the specified
    * parameter types.  We have to take into account that we might
-   * coercing the arguments from their Fan represention to Java.
+   * coercing the arguments from their Fantom represention to Java.
    */
   static boolean argsMatchParams(Object[] args, Class[] params)
   {
@@ -457,7 +457,7 @@ public class JavaType
   /**
    * Return if given argument can be used against the specified
    * parameter type.  We have to take into account that we might
-   * coercing the arguments from their Fan represention to Java.
+   * coercing the arguments from their Fantom represention to Java.
    */
   static boolean argMatchesParam(Object arg, Class param)
   {
@@ -500,7 +500,7 @@ public class JavaType
   }
 
   /**
-   * Coerce the specified Fan representation to the Java class.
+   * Coerce the specified Fantom representation to the Java class.
    */
   static Object coerceToJava(Object val, Class expected)
   {
@@ -518,7 +518,7 @@ public class JavaType
   }
 
   /**
-   * Coerce a Java object to its Fan representation.
+   * Coerce a Java object to its Fantom representation.
    */
   static Object coerceFromJava(Object val)
   {
@@ -543,7 +543,7 @@ public class JavaType
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * Map a Fan qname to a Java classname:
+   * Map a Fantom qname to a Java classname:
    *  [java]java.util::Date -> java.util.Date
    */
   static String toClassName(String podName, String typeName)
@@ -554,7 +554,7 @@ public class JavaType
   }
 
   /**
-   * Map Java class to Fan type.
+   * Map Java class to Fantom type.
    */
   public static Type toFanType(Class cls)
   {

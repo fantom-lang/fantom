@@ -11,7 +11,7 @@ import java.math.*;
 import fanx.util.*;
 
 /**
- * FanObj is the root class of all classes in Fan - it is the class
+ * FanObj is the root class of all classes in Fantom - it is the class
  * representation of Obj.
  */
 public class FanObj

@@ -102,7 +102,7 @@ public abstract class Type
 
   /**
    * A generic type means that one or more of my slots contain signatures
-   * using a generic parameter (such as V or K).  Fan supports three built-in
+   * using a generic parameter (such as V or K).  Fantom supports three built-in
    * generic types: List, Map, and Func.  A generic instance (such as Str[])
    * is NOT a generic type (all of its generic parameters have been filled in).
    * User defined generic types are not supported in Fan.
@@ -128,7 +128,7 @@ public abstract class Type
    * Return if this type is a generic parameter (such as V or K) in a
    * generic type (List, Map, or Method).  Generic parameters serve
    * as place holders for the parameterization of the generic type.
-   * Fan has a predefined set of generic parameters which are always
+   * Fantom has a predefined set of generic parameters which are always
    * defined in the sys pod with a one character name.
    */
   public boolean isGenericParameter()
@@ -338,12 +338,12 @@ public abstract class Type
 
   /**
    * Return if this is a JavaType which represents a Java
-   * class imported into the Fan type system via the Java FFI.
+   * class imported into the Fantom type system via the Java FFI.
    */
   public final boolean isJava() { return this instanceof JavaType; }
 
   /**
-   * Return if the Fan Type is represented as a Java class
+   * Return if the Fantom Type is represented as a Java class
    * such as sys::Int as java.lang.Long.
    */
   public abstract boolean javaRepr();

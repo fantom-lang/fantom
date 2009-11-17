@@ -22,7 +22,7 @@ public class UnresolvedErr
   public static UnresolvedErr make(Uri uri)  { return make(uri.str); }
 
 //////////////////////////////////////////////////////////////////////////
-// Fan Constructors
+// Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
   public static UnresolvedErr make() { return make((String)null, (Err)null); }

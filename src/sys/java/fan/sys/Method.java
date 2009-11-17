@@ -197,7 +197,7 @@ public class Method
 
       if (javaStatic && !fanStatic)
       {
-        // if Java static doesn't match Fan static, then this is
+        // if Java static doesn't match Fantom static, then this is
         // a FanXXX method which we need to call as Java static
         int p = checkArgs(argsSize, false, true);
         Object[] a = new Object[p+1];

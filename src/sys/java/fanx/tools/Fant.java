@@ -12,7 +12,7 @@ import fan.sys.*;
 import fan.sys.List;
 
 /**
- * Fant is the command line used to run Fan unit tests.
+ * Fant is the command line used to run Fantom unit tests.
  */
 public class Fant
 {
@@ -226,7 +226,7 @@ public class Fant
         }
         if (a == "-version")
         {
-          Fan.version("Fan Test");
+          Fan.version("Fantom Test");
           return -1;
         }
         else if (a == "-v")
@@ -266,7 +266,7 @@ public class Fant
    */
   void help()
   {
-    System.out.println("Fan Test");
+    System.out.println("Fantom Test");
     System.out.println("Usage:");
     System.out.println("  fant [options] -all");
     System.out.println("  fant [options] <pod> [pod]*");

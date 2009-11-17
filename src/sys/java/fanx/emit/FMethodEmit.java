@@ -111,7 +111,7 @@ public class FMethodEmit
     // parameters: note each factory allocs the object and
     // passes it to the make$ wrapper; we rely on the make$
     // wrappers to do default params because the factory's
-    // signature doesn't match up to what the Fan compiler
+    // signature doesn't match up to what the Fantom compiler
     // generated (ctor assumes local_0 is this pointer)
     for (int i=0; i<method.paramCount; ++i)
       if (method.vars[i].def != null)
@@ -142,8 +142,8 @@ public class FMethodEmit
   }
 
   /**
-   * Emit a Fan constructor for a class which subclasses from
-   * a normal Java class brought into the Fan type system via FFI.
+   * Emit a Fantom constructor for a class which subclasses from
+   * a normal Java class brought into the Fantom type system via FFI.
    * In this case the superclass constructor is a real constructor
    * so we need to emit the code differently:
    *   fan:

@@ -17,7 +17,7 @@ import fanx.util.*;
 
 /**
  * FanClassLoader is used to emit fcode to Java bytecode.  It manages
- * the "fan." namespace to map to dynamically loaded Fan classes.
+ * the "fan." namespace to map to dynamically loaded Fantom classes.
  */
 public class FanClassLoader
   extends URLClassLoader
@@ -129,7 +129,7 @@ public class FanClassLoader
         return cls;
       }
 
-      // anything starting with "fan." maps to a Fan Type (or native peer code)
+      // anything starting with "fan." maps to a Fantom Type (or native peer code)
       if (name.startsWith("fan."))
       {
         // fan.{pod}.{type}

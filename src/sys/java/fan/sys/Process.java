@@ -134,7 +134,7 @@ public class Process
       if (mergeErr)
         builder.redirectErrorStream(true);
 
-      // map Fan streams to Java streams
+      // map Fantom streams to Java streams
 
 
       // start it
