@@ -9,7 +9,7 @@
 using compiler
 
 **
-** Run the fan compiler to produce a Fan pod.
+** Run the compiler to produce a Fantom pod.
 **
 class CompileFan : Task
 {

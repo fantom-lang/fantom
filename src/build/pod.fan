@@ -8,7 +8,7 @@
 //
 
 **
-** Fan build utility
+** Fantom build utility
 **
 
 @podDepends = [Depend("sys 1.0"), Depend("compiler 1.0")]

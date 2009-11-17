@@ -9,7 +9,7 @@
 using compiler
 
 **
-** Run the javascript compiler to produce a Fan pod.
+** Run the javascript compiler to produce a Fantom pod.
 **
 class CompileJs : Task
 {
