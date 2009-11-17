@@ -76,7 +76,7 @@ abstract class DslPlugin : CompilerSupport
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Normalize the DSL source using Fan's multi-line whitespace
+  ** Normalize the DSL source using Fantom's multi-line whitespace
   ** rules where no non-whitespace chars may be appear to the left
   ** of the opening "<|" token.  If source is formatted incorrectly
   ** then log and throw error.

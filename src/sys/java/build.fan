@@ -12,7 +12,7 @@ using build
 **
 ** Build: sys.jar
 **
-** Note: this script builds the Java runtime for Fan's sys pod.
+** Note: this script builds the Java runtime for Fantom's sys pod.
 **
 class Build : BuildJava
 {

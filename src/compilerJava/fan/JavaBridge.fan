@@ -257,7 +257,7 @@ class JavaBridge : CBridge
     // the Java override type and make the Fantom type a local
     // variable:
     //   Java:   void foo(int a) { ... }
-    //   Fan:    Void foo(Int a) { ... }
+    //   Fantom: Void foo(Int a) { ... }
     //   Result: Void foo(int a_$J) { Int a := a_$J; ... }
     //
     base.params.eachr |CParam bp, Int i|
@@ -579,7 +579,7 @@ class JavaBridge : CBridge
   **
   CMethod generateFuncToInterfaceWrapper(Location loc, FuncType funcType, CType expected, CMethod method)
   {
-    //   Fan:    func typed as |Str|
+    //   Fantom: func typed as |Str|
     //   Java:   interface Foo { void bar(String) }
     //   Result: FuncWrapperX(func)
     //

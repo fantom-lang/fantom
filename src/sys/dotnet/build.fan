@@ -12,7 +12,7 @@ using build
 **
 ** Build: sys.dll
 **
-** Note: this script builds the .NET runtime for Fan's sys pod.
+** Note: this script builds the .NET runtime for Fantom's sys pod.
 **
 class Build : BuildCs
 {
