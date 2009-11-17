@@ -8,7 +8,7 @@
 
 Hello World [#helloWorld]
 *************************
-We start our whirlwind tour of Fan's features, with the
+We start our whirlwind tour of Fantom's features, with the
 quintessential hello world:
 
   class HelloWorld
@@ -23,7 +23,7 @@ Minor differences from Java or C# include:
   - all type names are capitalized including 'Void' (Fan
     doesn't have primitives nor primitive keywords).
   - Class and method protection scope default to 'public'.
-  - Fan sports the 'echo' method for writing to the console or
+  - Fantom sports the 'echo' method for writing to the console or
     you can use 'Sys.out'.
   - Statements can be terminated with a newline (you can use
     a semicolon too)
@@ -31,7 +31,7 @@ Minor differences from Java or C# include:
 
 Literals [#literals]
 ********************
-Fan supports the same primitive [literals]`docLang::Literals`
+Fantom supports the same primitive [literals]`docLang::Literals`
 as Java or C#, plus some that are typically found in higher
 level scripting languages:
 
@@ -53,7 +53,7 @@ level scripting languages:
 
 Expressions [#expressions]
 **************************
-Fan reuses most the same [expression]`docLang::Expressions`
+Fantom reuses most the same [expression]`docLang::Expressions`
 syntax as Java and C#:
 
   obj.toStr()   // call the toStr method
@@ -103,7 +103,7 @@ Java and C#:
   while (x) {}        // while
 
 The most noticeable difference is the use of ':=' to declare
-a local variable.  Fan uses type inference, so you can
+a local variable.  Fantom uses type inference, so you can
 omit a local's type declaration.  The ':=' operator is used
 instead of '=' to show the intention of declaration versus
 assignment.  It prevents silly mistakes like variable name typos.
@@ -167,7 +167,7 @@ calls:
 
 Constructors [#ctor]
 ********************
-One thing different about Fan is that [constructors]`docLang::Methods#ctor`
+One thing different about Fantom is that [constructors]`docLang::Methods#ctor`
 are named methods:
 
   class Point
@@ -206,7 +206,7 @@ for a method to be overridden.
 Mixins [#mixins]
 ****************
 Java and C# use interfaces to implement multiple type inheritance.
-Fan [mixins]`docLang::Mixins` are like interfaces but can declare
+Fantom [mixins]`docLang::Mixins` are like interfaces but can declare
 method implementations:
 
   mixin Audio
@@ -221,7 +221,7 @@ method implementations:
     override Int volume := 0
   }
 
-The best way to explain what the Fan code does above is to map
+The best way to explain what the Fantom code does above is to map
 it to its Java equivalent:
 
   interface Audio
@@ -255,7 +255,7 @@ fields which define getters and setters, but no actual storage.
 
 Closures [#closures]
 ********************
-Fan supports first class [functions]`docLang::Functions` and
+Fantom supports first class [functions]`docLang::Functions` and
 [closures]`docLang::Closures` - the standard APIs make heavy
 use of functional programming.  Closure syntax kind of, sort of
 looks like Ruby.  For example iteration over collections is almost
@@ -293,7 +293,7 @@ instance:
 
 Dynamic Programming [#dynamic]
 ******************************
-Fan provides some key features to break free from the shackles
+Fantom provides some key features to break free from the shackles
 of strong typing when needed.  When you access a field or method
 using the "." dot operator the compiler does type checking.
 But you can also use the "->" dynamic call operator to skip
@@ -334,7 +334,7 @@ versus propagating into unrelated code.
 
 Serialization [#serialization]
 ******************************
-The [serialization]`docLang::Serialization` syntax of Fan is a
+The [serialization]`docLang::Serialization` syntax of Fantom is a
 subset of the actual programming language.  This means you use
 serialization to build up arbitrarily complex object structures
 in code.  Plus it makes serialized objects easy for us humans
@@ -388,7 +388,7 @@ method:
 
 Actors [#actors]
 ******************
-Fan includes an [actor framework]`docLang::Actors` for building
+Fantom includes an [actor framework]`docLang::Actors` for building
 concurrent applications:
 
   // spawn actor which aynchronously increments an Int msg

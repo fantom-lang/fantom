@@ -9,7 +9,7 @@
 Overview [#overview]
 ********************
 Do we really need another programming language?  Well obviously we thought
-so, or we wouldn't have built Fan!  Fan is designed as a practical programming
+so, or we wouldn't have built Fantom!  Fantom is designed as a practical programming
 language to make it easy and fun to get real work done.  It is not an
 academic language to explore bleeding edge theories, but based on solid real
 world experience.  During its design we set out to solve what we perceived
@@ -18,38 +18,38 @@ many of Java's problems are shared by C# and .NET also.
 
 Portability [#portability]
 **************************
-The primary reason we created Fan is to write software that can seamlessly
+The primary reason we created Fantom is to write software that can seamlessly
 run on both the Java VM and the .NET CLR.  The reality is that many software
 organizations are committed to one or the other of these platforms.  Even
 dynamic languages like Python and Ruby are getting hosted on one of these VMs.
 Whether your business is in-house software or building software components to
 sell to other companies, you tend to pick one camp or the other.
 
-We built Fan from the ground up to tackle portability between these VMs.
-Fan's source language compiles into fcode - a bytecode representation that
+We built Fantom from the ground up to tackle portability between these VMs.
+Fantom's source language compiles into fcode - a bytecode representation that
 can be translated into both Java bytecode and IL easily.  This translation
-is typically done at runtime, which enables you to deploy Fan modules as
+is typically done at runtime, which enables you to deploy Fantom modules as
 a single file and have them run on either VM.
 
 But getting a language to run on both Java and .NET is the easy part - in
 fact there are many solutions to this problem.  The hard part is getting
-portable APIs.  Fan provides a set of APIs which abstract away the Java
-and .NET APIs.  We actually consider this one of Fan's primary benefits,
+portable APIs.  Fantom provides a set of APIs which abstract away the Java
+and .NET APIs.  We actually consider this one of Fantom's primary benefits,
 because it gives us a chance to develop a suite of system APIs that are
 elegant and easy to use compared to the Java and .NET counter parts.
 
 But portability means much more than just Java or .NET.  We also support
-compiling Fan to JavaScript for use in browsers, including support for
+compiling Fantom to JavaScript for use in browsers, including support for
 many of the standard libraries.
 
-Because Fan is designed from the ground up to be portable, targeting
+Because Fantom is designed from the ground up to be portable, targeting
 new platforms is reasonably easy.  Future targets might include Objective-C
 for the iPhone, the [LLVM]`http://llvm.org/`, or [Parrot]`http://www.parrotcode.org/`.
 
 Elegant APIs [#elegantApis]
 ***************************
 Beauty is in the eye of the beholder - but we are obsessed with making the
-Fan APIs beautiful.  The Java and .NET APIs have developed over the years
+Fantom APIs beautiful.  The Java and .NET APIs have developed over the years
 into a somewhat tangled mess.  Some APIs are just plain bad - Java's
 'Calendar' class is the poster child for APIs which are just miserable to
 use.  You have to use all of their weird C like constants for access,
@@ -58,13 +58,13 @@ months are freaking zero based, but weekdays are one based!
 Some of this is normal cruft setting in, but much of it is a general philosophy
 in both Java and .NET API design.  Both platforms tend toward APIs using a
 proliferation of small classes that are over abstracted and under powered.
-Fan follows a very different philosophy - we believe in a very few, but powerful
+Fantom follows a very different philosophy - we believe in a very few, but powerful
 classes.  A good example is the 'java.io' package which contains over 60 classes
 and interfaces.  To do anything useful requires three of four classes, and if
 you forget to use [buffered streams]`http://www.tbray.org/ongoing/When/200x/2005/09/13/Buffering`,
 then performance goes to hell.  And even with all of these classes, it is still
 a lot of work to do basic things like parse a file into lines of text.
-Fan collapses most of the 'java.io' functionality into four classes:
+Fantom collapses most of the 'java.io' functionality into four classes:
 `sys::File`, `sys::Buf`, `sys::InStream`, and `sys::OutStream`.  The IO
 streams classes are buffered by default, support both binary and text,
 and have lots of conveniences built right in.
@@ -73,10 +73,10 @@ Strong versus Dynamic Typing [#typing]
 **************************************
 The industry has developed a schism between proponents of strong typing
 and those of dynamic typing.  Frankly we find both sides too extreme
-for our taste, so Fan takes a middle of the road, moderate approach to
+for our taste, so Fantom takes a middle of the road, moderate approach to
 its type system.
 
-On the strong typing side, Fan requires you to annotate field
+On the strong typing side, Fantom requires you to annotate field
 and method signatures with types.  We think this is a good thing.
 Programming is about constructing well defined contracts between
 software components - type systems aren't perfect, but they do
@@ -84,11 +84,11 @@ a pretty good job for documenting and defining these contracts.
 If I want to write a method which expects a Str and returns an Int,
 then that should be captured right in the code.
 
-Beyond annotating field and method signatures with types, Fan takes
+Beyond annotating field and method signatures with types, Fantom takes
 a laissez faire attitude towards type declaration.  Type inference
 is often used for local variables and collection literals.
 
-Sometimes you just really need dynamic typing.  One of Fan's pivotal
+Sometimes you just really need dynamic typing.  One of Fantom's pivotal
 features is the ability to call a method using strong or dynamic
 typing.  If you call a method via the "." operator, the call is type
 checked by the compiler and compiled into an efficient opcode.
@@ -100,17 +100,17 @@ build all sorts of nifty dynamic designs.
 
 Generics [#generic]
 *******************
-Interestingly enough while Fan is trying to make programs less
+Interestingly enough while Fantom is trying to make programs less
 strongly typed, the Java and C# languages are moving to be more strongly
 typed.  Generic types illustrate this trend - a feature added to
 both Java and C# in the not so distant past.  Our philosophy is that
 generics are a pretty complicated solution to a fairly insignificant
 problem.
 
-Fan takes a limited approach to generics.  There is no support for
+Fantom takes a limited approach to generics.  There is no support for
 user defined generics.  However, three built-in classes 'List', 'Map',
 and 'Func' can be parameterized using a special syntax.  For example
-a list of 'Ints' in Fan is declared as 'Int[]' using the familiar
+a list of 'Ints' in Fantom is declared as 'Int[]' using the familiar
 array type syntax of Java and C#.  This trade-off seems to hit the
 sweet spot where generics make sense without complicating the overall
 type system.
@@ -137,7 +137,7 @@ implementing code.
 There are plenty of good reasons why Java and C# ended up using
 the class/interface model.  Multiple inheritance offers lots of
 power, but comes at the expense of complexity and some pretty nasty
-pitfalls.  Fan takes a middle of the road approach called mixins.
+pitfalls.  Fantom takes a middle of the road approach called mixins.
 Mixins are essentially Java or C# interfaces that can have method
 implementations.  To avoid some of the pitfalls of true
 multiple inheritance, mixins restrict features such as fields
@@ -172,7 +172,7 @@ that makes .NET module files difficult to work with.  And to require
 a separate, undocumented debug pdb file to get meaningful stack
 traces is just plain wrong.
 
-Everything in Fan is designed around modular units called pods.
+Everything in Fantom is designed around modular units called pods.
 Pods are the unit of versioning and deployment.  They are combined
 together using clear dependencies.  Like Java they are just ZIP
 files which can be easily examined.
@@ -189,7 +189,7 @@ what JAR file the class might live in.
 
 This whole notion of type namespaces versus deployment namespaces
 does offer flexibility, but also seems like unnecessary complexity.
-Fan takes a simple approach to managing the namespace using a fixed
+Fantom takes a simple approach to managing the namespace using a fixed
 three level hierarchy "pod::type.slot".  The first level of the
 namespace is always the pod name which also happens to be the unit
 of deployment and versioning.  This consistency becomes important
@@ -211,7 +211,7 @@ remains fractured.
 are special types which have the performance of primitives, but
 they still cleanly subclass from 'System.Object'.
 
-Fan follows the .NET model of value types.  The three special
+Fantom follows the .NET model of value types.  The three special
 types 'Bool', 'Int', and 'Float' are value types which are implemented
 as primitives in Java and value types in .NET.  These types have
 all the same performance characteristics of using 'boolean',
@@ -228,7 +228,7 @@ classes.  Both languages seem to be moving towards true closure support
 and first class functions.  But they leave a huge legacy of APIs
 and code designed without functional programming in mind.
 
-Fan was designed from the ground up to support functions as first
+Fantom was designed from the ground up to support functions as first
 class objects.  Closures are a key feature of the language, and
 all the APIs are written to use functions and closures where
 appropriate.
@@ -241,9 +241,9 @@ tasks include mostly noise which makes for very ugly, verbose declarative
 programming.  For this reason, you often find the declarative parts of
 a Java or C# application shoved off into XML files.
 
-Fan incorporates declarative programming right into the language.  Fan
+Fantom incorporates declarative programming right into the language.  Fan
 supports a literal syntax for lists, maps, ranges, uris, and durations.
-Fan also includes a text serialization syntax which is human readable and
+Fantom also includes a text serialization syntax which is human readable and
 writable.  The serialization syntax is a clean subset of the programming
 language - so you can paste a serialization file right into your source
 code as an expression.
@@ -257,7 +257,7 @@ incorrectly, then deadlocks can occur.  This is a fairly low level approach
 to managing concurrency.  It also makes it quite difficult to create
 composable software components.
 
-Fan tackles concurrency using a couple techniques:
+Fantom tackles concurrency using a couple techniques:
   - Immutability is built into the language (thread safe classes)
   - Static fields must be immutable (no shared state)
   - Threads include built-in message passing support (Erlang style concurrency)
@@ -266,7 +266,7 @@ Fan tackles concurrency using a couple techniques:
 
 UriSpaces [#uriSpaces]
 ************************
-Fan embraces a [REST]`http://en.wikipedia.org/wiki/Representational_State_Transfer`
+Fantom embraces a [REST]`http://en.wikipedia.org/wiki/Representational_State_Transfer`
 design to provide a unified namespace which maps URIs to resource objects
 in an application.
 
@@ -283,8 +283,8 @@ Web-based and cloud based resources (such as [Amazon's S3]`http://www.amazon.com
 Little Things [#littleThings]
 *****************************
 The beauty of a new language is that it gives you a clean slate to fix
-all the little things that aggravate you (we built Fan to scratch our
-own itches).  Other little things we included in Fan which we found
+all the little things that aggravate you (we built Fantom to scratch our
+own itches).  Other little things we included in Fantom which we found
 frustrating about Java:
 
   - **Default parameters**: methods can have default arguments - no more
@@ -304,9 +304,9 @@ frustrating about Java:
     systems - all the reasons why [Anders Hejlsberg]`http://www.artima.com/intv/handcuffs.html`
     didn't include checked exceptions in C#.
 
-  - **Numeric Precision**:  Fan doesn't include support for 32-bit, 16-bit,
+  - **Numeric Precision**:  Fantom doesn't include support for 32-bit, 16-bit,
     and 8-bit integers and floats.  There is only a 64-bit Int and a 64-bit
     Float.  This eliminates a lot of complexity associated with precision
     problems such as file lengths, Unicode characters, or very large lists.
     Although much of the Java and C# implementation is 16-bit chars and 32-bit
-    ints under the covers, the Fan APIs themselves are future proof.
+    ints under the covers, the Fantom APIs themselves are future proof.

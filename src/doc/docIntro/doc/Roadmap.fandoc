@@ -8,16 +8,17 @@
 
 Current Status [#status]
 ************************
-Fan is currently in development of its initial 1.0 release.  The core
-language and Java runtime are quite stable.  The .NET runtime is almost
-there, but not quite.  At this point, we are building out system APIs
-for concurrency, database access, and web applications.
+Fantom is currently in development of its initial 1.0 release.  The core
+language and Java runtime are quite stable.  JavaScript support is alpha
+quality.  The .NET runtime is almost there, but not quite.  At this
+point, we are building out system APIs for concurrency, database
+access, and web applications.
 
 Stability [#stability]
 **********************
 The functionality in each build should be stable.  We are very committed
 to fixing bugs and getting existing code solid before moving on to new
-features.  However Fan is still new, and like all software platforms it
+features.  However Fantom is still new, and like all software platforms it
 still needs to be wrung out in lots of different applications.
 
 We can't promise that we won't make breaking language or API changes.  We
@@ -57,7 +58,7 @@ Some of the .NET runtime is incomplete:
 
 .NET FFI [#dotnetFFI]
 =================================================
-Fan includes a [Java FFI]`docLang::JavaFFI.html` for seamlessly working
+Fantom includes a [Java FFI]`docLang::JavaFFI.html` for seamlessly working
 with Java libraries.  But we still need to implement the .NET FFI.  If
 you would like to help please let us know.
 
@@ -98,19 +99,5 @@ Web Server Integration [#webServers]
 All of our initial work with the 'web' API has been with our
 own web server implementation (wisp).  Although the plan is to
 eventually plug the 'web' API into Java servlet based containers,
-into IIS, and to have a mod_fan for Apache.
-
-Grouping [#grouping]
-====================
-Original [discussion]`http://www.fandev.org/sidewalk/topic/25` was
-on grouping tests, but seems like a way to group pods, types, and
-slots in a generic way would be valuable for many application: testing,
-IDE navigation, reflection, etc.
-
-Pod Repositories [#podRepositories]
-===================================
-Today a Fan environment is a simple flat directory of pods.  Eventually
-we need a more sophisticated solution.  See [discussion]`http://fandev.org/sidewalk/topic/425#c2420`.
-
-
+into IIS, and to have a mod_fantom for Apache.
 

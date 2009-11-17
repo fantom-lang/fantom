@@ -8,15 +8,15 @@
 
 Learn More [#learnMore]
 ***********************
-Try these links to learn more about Fan:
-  - `Tour`: quick introduction to Fan's features by code example
+Try these links to learn more about Fantom:
+  - `Tour`: quick introduction to Fantom's features by code example
   - `WhyFan`: why we're crazy enough to build Fan
   - Hello world five different ways:
-      - [fan shell]`HelloWorld#fansh`: interactive shell
-      - [fan script]`HelloWorld#script`: executable scripts
-      - [fan pod]`HelloWorld#pod`: precompiled modules
-      - [fan fwt]`HelloWorld#fwt`: desktop application
-      - [fan web app]`HelloWorld#webapp`: web application libraries
+      - [Fantom shell]`HelloWorld#fansh`: interactive shell
+      - [Fantom script]`HelloWorld#script`: executable scripts
+      - [Fantom pod]`HelloWorld#pod`: precompiled modules
+      - [Fantom fwt]`HelloWorld#fwt`: desktop application
+      - [Fantom web app]`HelloWorld#webapp`: web application libraries
 
 Quick Start [#quickStart]
 *************************
@@ -44,8 +44,8 @@ In addition [examples]`examples::index` can be accessed as HTML.
 All examples are designed as complete stand alone programs which
 can be run as a script.
 
-Learning Fan [#learningFan]
-***************************
+Learning Fantom [#learningFantom]
+*********************************
 If you want to dig deep, then you'll probably want to look over
 [docIntro]`docIntro::index` to get a background.  At some point you
 should consider reading [docLang]`docLang::index` front to back - it is

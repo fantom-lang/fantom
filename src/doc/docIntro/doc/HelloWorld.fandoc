@@ -8,17 +8,17 @@
 
 Setup [#setup]
 **************
-Fan is distributed as a simple zip file you will need to unzip to
+Fantom is distributed as a simple zip file you will need to unzip to
 your local machine.  Make sure the correct binary directory is included
 in your path:
   {fan.home}/bin
 
-When you first install Fan it will automatically try to run using
+When you first install Fantom it will automatically try to run using
 your currently configured Java VM (requires Java 1.5 or greater).
 If things are working correctly you should be able to run "fan -version":
 
   C:\dev\fan\bin>fan -version
-  Fan Launcher
+  Fantom Launcher
   Copyright (c) 2006-2008, Brian Frank and Andy Frank
   Licensed under the Academic Free License version 3.0
 
@@ -38,23 +38,23 @@ If that doesn't work then try these options:
   4. [Switch]`docTools::Setup#runtime` to use the .NET runtime
   5. Turn on [launcher debugging]`docTools::Setup#debugging`
 
-Fan Shell [#fansh]
-******************
-The Fan shell is a command line tool for evaluating expressions and
+Fantom Shell [#fansh]
+*********************
+The Fantom shell is a command line tool for evaluating expressions and
 statements.  It is a great way to test things out.  To launch the
 shell run the 'fansh' executable and call the [Obj.echo]`sys::Obj.echo`
 method:
 
   C:\dev\fan\bin>fansh
-  Fan Shell v1.0.22 ('?' for help)
+  Fantom Shell v1.0.22 ('?' for help)
   fansh> echo("hello world #1")
   hello world #1
   fansh> quit
 
-Checkout `docTools::Fansh` for more details on the fan shell.
+Checkout `docTools::Fansh` for more details on the Fantom shell.
 
-Fan Script [#script]
-********************
+Fantom Script [#script]
+***********************
 You can also execute any file with the ".fan" extension as a script
 file.  The script must contain a full class definition with a
 method called "main".  Create a file called "hello.fan":
@@ -73,16 +73,16 @@ Note that unlike Java or C# the arguments aren't required to be
 passed as a parameter to main.  You can declare a 'Str[]' parameter
 if you want or you can access them via [Sys.args]`sys::Sys.args`.
 
-Checkout `docTools::Fan` for more details running fan scripts.
+Checkout `docTools::Fan` for more details running Fantom scripts.
 Also see [unix setup]`docTools::Setup#executableUnix` and
 [windows setup]`docTools::Setup#executableWindows` to make fan
 scripts executable without calling the launcher explicitly.
 
-Fan Pod [#pod]
-**************
+Fantom Pod [#pod]
+*****************
 For production systems, you typically organize your code into precompiled
 modules called [pods]`docLang::Structure#pods`.  Pods are built using
-Fan's [build toolkit]`docTools::Build`.  To build a new pod called "hello"
+Fantom's [build toolkit]`docTools::Build`.  To build a new pod called "hello"
 create a directory structure organized as follows:
 
   hello/
@@ -102,7 +102,7 @@ The contents of "build.fan" is the build script:
   }
 
 The contents of "pod.fan" declares the meta-data for your
-pod and which directories contain Fan source files:
+pod and which directories contain Fantom source files:
 
   @podDepends  = [Depend("sys 1.0")]
   @podSrcDirs  = [`fan/`]
@@ -115,7 +115,7 @@ The "fan/Main.fan" file declares a single class called "Main":
     static Void main() { echo("hello world #3") }
   }
 
-The build file itself is just a normal Fan script file which will
+The build file itself is just a normal Fantom script file which will
 compile the pod:
 
   C:\dev\fan\src\hello>fan build.fan
@@ -142,9 +142,9 @@ executable:
 Checkout `docTools::Fan` for more details running methods in a
 pod, and `docTools::Build` for details on the build toolkit.
 
-Fan FWT [#fwt]
-**************
-The [Fan Widget Toolkit]`fwt::index` makes it easy to create
+Fantom FWT [#fwt]
+*****************
+The [Fantom Widget Toolkit]`fwt::index` makes it easy to create
 desktop applications.  The following script will launch a simple
 window (this script is available under "examples/fwt/hello.fan"):
 
@@ -157,12 +157,12 @@ window (this script is available under "examples/fwt/hello.fan"):
     }
   }
 
-Fan makes declarative work like UI definition easy because
+Fantom makes declarative work like UI definition easy because
 [serialized objects]`docLang::Serialization` can be used as normal
 expressions.
 
-Fan WebApp [#webapp]
-********************
+Fantom WebApp [#webapp]
+***********************
 To create a very simple hello world web application:
   - Create a daemon boot script
   - Configure the web server with a simple pipeline
@@ -205,12 +205,12 @@ Let's look at some example code (this script is available under
 
 The boot script contains two classes.  The first class 'Boot' subclasses
 [BootScript]`fand::BootScript` which provides the standard plumbing for
-writing scripts to boot a Fan daemon.  It's primary purpose is to configure
+writing scripts to boot a Fantom daemon.  It's primary purpose is to configure
 the web server to run on port 8080 and to use a simple pipeline which
 defines how to process HTTP requests.  The pipeline is configured using
 some prebuilt steps provided by the [webapp]`docLib::WebApp` framework.
 
-The 'Hello' class subclasses [Weblet]`docLib::Web#weblet` which is Fan's
+The 'Hello' class subclasses [Weblet]`docLib::Web#weblet` which is Fantom's
 "servlet" API for servicing web requests.  It doesn't do much - sets
 the content type and writes the response text.  Lastly we mount this
 weblet into our uri space as the home page.  [UriSpaces]`docLang::UriSpaces`

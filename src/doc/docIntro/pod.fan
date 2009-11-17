@@ -8,7 +8,7 @@
 //
 
 **
-** Overview and getting started with Fan
+** Overview and getting started with Fantom
 **
 
 @podDepends=Depend[,]
