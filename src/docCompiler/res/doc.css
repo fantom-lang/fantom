@@ -14,10 +14,10 @@
 
 body
 {
-  font: 10pt "Lucida Grande", Arial, sans-serif;
+  font: 10pt Arial, sans-serif;
   margin: 0 0 3em 0; padding: 0;
 }
-input { font: 10pt "Lucida Grande", Arial, sans-serif; }
+input { font: 10pt Arial, sans-serif; }
 code,pre,textarea { font: 9pt Monaco, "Courier New", monospace; }
 a { color: #185098; }
 blockquote
@@ -235,7 +235,7 @@ div.sidebar li { margin: 3px 3px 3px 0; }
 .slots .detail dd { margin: 1em 0 2em 1em; }
 .slots .detail dt
 {
-  font: bold 11pt "Lucida Grande", Arial;
+  font: bold 11pt Arial;
   border-top: 1px solid #d0dae5;
   background: #f2f6f8;
   padding: 5px;
