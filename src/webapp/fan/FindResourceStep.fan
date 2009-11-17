@@ -10,7 +10,7 @@ using web
 
 **
 ** FindResourceStep is responsible for mapping the incoming the
-** URI to a Fan object and setting the `web::WebReq.resource`
+** URI to a Fantom object and setting the `web::WebReq.resource`
 ** field.
 **
 ** See [docLib::WebApp]`docLib::WebApp#findResourceStep`

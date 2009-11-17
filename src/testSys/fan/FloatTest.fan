@@ -701,7 +701,7 @@ class FloatTest : Test
     for (i:=0; i<count; ++i) DecimalFormat(pattern).format(i.toFloat)
     t3 := Duration.now
 
-    echo("Fan  ${(t2-t1).toMillis}ms")
+    echo("Fantom  ${(t2-t1).toMillis}ms")
     echo("Java ${(t3-t2).toMillis}ms")
   }
   */

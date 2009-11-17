@@ -176,7 +176,7 @@ class ReflectTest : JavaTest
   {
     t := Type.find("[java]java.io::DataInput")
 
-    // primitives with direct Fan mappings
+    // primitives with direct Fantom mappings
     verifyMethod(t.method("readBoolean"), t, Bool#)
     verifyMethod(t.method("readLong"),    t, Int#)
     verifyMethod(t.method("readDouble"),  t, Float#)

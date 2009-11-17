@@ -8,7 +8,7 @@
 //
 
 **
-** Fan Widget Toolkit
+** Fantom Widget Toolkit
 **
 
 @podDepends  = [Depend("sys 1.0"), Depend("gfx 1.0")]

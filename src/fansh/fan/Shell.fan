@@ -9,7 +9,7 @@
 using compiler
 
 **
-** Fan Shell
+** Fantom Shell
 **
 class Shell
 {
@@ -24,7 +24,7 @@ class Shell
   Void run()
   {
     warmup
-    out.printLine("Fan Shell v${type.pod.version} ('?' for help)")
+    out.printLine("Fantom Shell v${type.pod.version} ('?' for help)")
     while (isAlive)
     {
       // input next line
@@ -107,7 +107,7 @@ class Shell
   Void help()
   {
     out.printLine
-    out.printLine("Fan Shell v${type.pod.version}")
+    out.printLine("Fantom Shell v${type.pod.version}")
     out.printLine("Commands:")
     out.printLine("  quit, exit, bye   exit shell")
     out.printLine("  ?, help, usage    help summary")

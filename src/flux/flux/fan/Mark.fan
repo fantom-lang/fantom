@@ -26,7 +26,7 @@ const class Mark
   ** file name.  If we match a filename, then we look for an
   ** optional line and column number no more than a few chars
   ** from the filename.  This will correctly handle output from
-  ** various compilers including Fan compilers, javac, and the
+  ** various compilers including Fantom compilers, javac, and the
   ** C# compiler.  Return null if file path found.
   **
   static Mark? fromStr(Str text)

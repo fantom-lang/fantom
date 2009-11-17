@@ -601,7 +601,7 @@ class DateTimeTest : Test
     verifyDateTime(-869961540100_000000, utc, 1972, jun, 7, 0, 0, 59, wed, std, null, 900_000_000)
     verifyDateTime(-869961576544_000000, utc, 1972, jun, 7, 0, 0, 23, wed, std, null, 456_000_000)
 
-    // Fan epoch is 1-jan-2000
+    // Fantom epoch is 1-jan-2000
     verifyDateTime(0, utc, 2000, jan, 1, 0, 0, 0, sat, std)
 
     // Java epoch is 1-jan-1970
@@ -610,7 +610,7 @@ class DateTimeTest : Test
     // Boundary condition for leap table monForDayOfYearLeap
     verifyDateTime(-220906800000_000000, ny, 1992, dec, 31, 0, 0, 0, thu, std)
 
-    // Fan epoch +1day
+    // Fantom epoch +1day
     verifyDateTime(86400000_000000, utc, 2000, jan, 2, 0, 0, 0, sun, std)
 
     // right now as I code this

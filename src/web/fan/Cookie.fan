@@ -39,7 +39,7 @@ const class Cookie
   ** range of 0x20 and 0x7e (see `WebUtil.toQuotedStr`) with the
   ** exception of the semicolon.
   **
-  ** Fan cookies will use quoted string values, however some browsers
+  ** Fantom cookies will use quoted string values, however some browsers
   ** such as IE won't parse a quoted string with semicolons correctly,
   ** so we make semicolons illegal.  If you have a value which might
   ** include non-ASCII characters or semicolons, then consider encoding

@@ -9,7 +9,7 @@
 using compiler
 
 **
-** Main is the main entry point for the Fan documentation compiler.
+** Main is the main entry point for the Fantom documentation compiler.
 **
 class Main
 {
@@ -139,7 +139,7 @@ class Main
   **
   Void help()
   {
-    println("Fan Doc Compiler")
+    println("Fantom Doc Compiler")
     println("Usage:")
     println("  docCompiler [options] <podName>")
     println("Options:")
@@ -156,7 +156,7 @@ class Main
   **
   Void version()
   {
-    println("Fan Doc Compiler")
+    println("Fantom Doc Compiler")
     println("Copyright (c) 2007, Brian Frank and Andy Frank")
     println("Licensed under the Academic Free License version 3.0")
   }

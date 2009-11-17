@@ -8,7 +8,7 @@
 //
 
 **
-** Interactive Fan Shell
+** Interactive Fantom Shell
 **
 
 @podDepends = [Depend("sys 1.0"), Depend("compiler 1.0")]
