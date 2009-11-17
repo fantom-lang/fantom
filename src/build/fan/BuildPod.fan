@@ -10,7 +10,7 @@ using compiler
 
 **
 ** BuildPod is the base class for build scripts used to manage
-** building a Fan source code and resources into a Fan pod.
+** building a Fantom source code and resources into a Fantom pod.
 **
 ** See `docTools::Build` for details.
 **
@@ -330,7 +330,7 @@ abstract class BuildPod : BuildScript
 // JavaScript
 //////////////////////////////////////////////////////////////////////////
 
-  @target="compile Fan source to JavaScript"
+  @target="compile Fantom source to JavaScript"
   virtual Void js()
   {
     if (!podJs) return

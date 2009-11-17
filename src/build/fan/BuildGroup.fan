@@ -21,7 +21,7 @@ abstract class BuildGroup : BuildScript
 
   **
   ** Required list of Uris relative to this scriptDir of
-  ** Fan build script files to group together.
+  ** Fantom build script files to group together.
   **
   Uri[] childrenScripts := Uri[,]
 

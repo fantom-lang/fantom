@@ -9,7 +9,7 @@
 using compiler
 
 **
-** FanScript is used to compiler a Fan script into
+** FanScript is used to compile a Fantom script into
 ** memory and run it via reflection.
 **
 class FanScript : Task

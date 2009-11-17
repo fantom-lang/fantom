@@ -39,7 +39,7 @@ class Main
 
   Void help()
   {
-    echo("Fan Build Tool");
+    echo("Fantom Build Tool");
     echo("Usage:");
     echo("  fanb [options] [dir] [target]");
     echo("Options:");
