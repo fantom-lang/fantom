@@ -25,7 +25,7 @@ namespace Fan.Sys
     public static IndexErr make(Range index) { return make(index.ToString()); }
 
   //////////////////////////////////////////////////////////////////////////
-  // Fan Constructors
+  // Fantom Constructors
   //////////////////////////////////////////////////////////////////////////
 
     public new static IndexErr make() { return make((string)null, (Err)null); }

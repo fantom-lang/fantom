@@ -18,14 +18,14 @@ namespace Fanx.Util
   public class FanUtil
   {
     /// <summary>
-    /// Convert .NET type to Fan type.
+    /// Convert .NET type to Fantom type.
     /// </summary>
     public static Fan.Sys.Type toFanType(Type dotnetType, bool check)
     {
       Fan.Sys.Type t = (Fan.Sys.Type)dotnetToFanTypes[dotnetType.FullName];
       if (t != null) return t;
       if (!check) return null;
-      throw Fan.Sys.Err.make("Not a Fan type: " + dotnetType).val;
+      throw Fan.Sys.Err.make("Not a Fantom type: " + dotnetType).val;
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ namespace Fanx.Util
     }
 
     /// <summary>
-    /// Return if the Fan Type is represented as a .NET class
+    /// Return if the Fantom Type is represented as a .NET class
     /// such as sys::Int as Fan.Sys.Long.
     /// </summary>
     public static bool isDotnetRepresentation(Fan.Sys.Type t)
@@ -53,7 +53,7 @@ namespace Fanx.Util
     }
 
     /// <summary>
-    /// Return the .NET type name for this Fan type.
+    /// Return the .NET type name for this Fantom type.
     /// </summary>
     public static string toDotnetTypeName(Fan.Sys.Type type)
     {
@@ -61,7 +61,7 @@ namespace Fanx.Util
     }
 
     /// <summary>
-    /// Return the .NET type name for this Fan pod and type.
+    /// Return the .NET type name for this Fantom pod and type.
     /// </summary>
     public static string toDotnetTypeName(string podName, string typeName, bool nullable)
     {
@@ -99,7 +99,7 @@ namespace Fanx.Util
     }
 
     /// <summary>
-    /// Given a Fan qname, get the .NET implementation class name:
+    /// Given a Fantom qname, get the .NET implementation class name:
     /// </summary>
     public static string toDotnetImplTypeName(string podName, string typeName)
     {
@@ -156,7 +156,7 @@ namespace Fanx.Util
     }
 
     /// <summary>
-    /// Return the .NET method name for this Fan method name.
+    /// Return the .NET method name for this Fantom method name.
     /// </summary>
     public static string toDotnetMethodName(string fanName)
     {
@@ -165,7 +165,7 @@ namespace Fanx.Util
     }
 
     /// <summary>
-    /// Return the Fan method name for this .NET method name.
+    /// Return the Fantom method name for this .NET method name.
     /// </summary>
     public static string toFanMethodName(string dotnetName)
     {
@@ -174,7 +174,7 @@ namespace Fanx.Util
     }
 
     /// <summary>
-    /// Given a Fan type, get its stack type: 'A', 'I', 'J', etc
+    /// Given a Fantom type, get its stack type: 'A', 'I', 'J', etc
     /// </summary>
     public static int toDotnetStackType(Fan.Sys.Type t)
     {
@@ -190,7 +190,7 @@ namespace Fanx.Util
 
     /// <summary>
     /// If the given object is a .NET primitive, make it as
-    /// a Fan type, otherwise return obj.
+    /// a Fantom type, otherwise return obj.
     /// </summary>
     public static object box(object obj)
     {
@@ -226,10 +226,10 @@ namespace Fanx.Util
     }
 
     /// <summary>
-    /// If the qualifed type name is a Fan type, then return
+    /// If the qualifed type name is a Fantom type, then return
     /// the pod name the type should belong to, which should
     /// also be the assembly name.  If the type name does not
-    /// appear to be a Fan type, return null.
+    /// appear to be a Fantom type, return null.
     /// </summary>
     public static string getPodName(string qname)
     {

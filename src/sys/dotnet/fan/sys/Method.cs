@@ -206,7 +206,7 @@ namespace Fan.Sys
 
         if (dotnetStatic && !fanStatic)
         {
-          // if Java static doesn't match Fan static, then this is
+          // if Java static doesn't match Fantom static, then this is
           // a FanXXX method which we need to call as Java static
           int p = checkArgs(argsSize, false, true);
           object[] a = new object[p+1];
@@ -498,7 +498,7 @@ namespace Fan.Sys
         //  System.Console.WriteLine(m_reflect[i]);
 
         // TODO - not sure how this should work entirely yet, but we need
-        // to be responsible for "boxing" Fan wrappers and primitives
+        // to be responsible for "boxing" Fantom wrappers and primitives
 
         // box the parameters
         ParameterInfo[] pars = m.GetParameters();

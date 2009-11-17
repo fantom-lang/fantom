@@ -12,7 +12,7 @@ using Fanx.Util;
 namespace Fan.Sys
 {
   ///
-  /// FanObj is the root class of all classes in Fan - it is the class
+  /// FanObj is the root class of all classes in Fantom - it is the class
   /// representation of Obj which manifests itself as both an interface
   /// called Obj and this class.
   ///

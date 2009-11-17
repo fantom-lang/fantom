@@ -481,7 +481,7 @@ namespace Fanx.Emit
   //////////////////////////////////////////////////////////////////////////
 
     /// <summary>
-    /// Map Fan flags to .NET field flags.  Note we emit protected as
+    /// Map Fantom flags to .NET field flags.  Note we emit protected as
     /// public and internal/private as package-private so that we don't
     /// need to deal with scope issues for accessors like closures and
     /// helper classes.
@@ -504,7 +504,7 @@ namespace Fanx.Emit
     }
 
     /// <summary>
-    /// Given a Fan qname index, map to a .NET type name: sys/Bool
+    /// Given a Fantom qname index, map to a .NET type name: sys/Bool
     /// </summary>
     internal string nname(int index)
     {

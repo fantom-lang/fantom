@@ -743,7 +743,7 @@ namespace Fan.Sys
 
     /// <summary>
     /// Static util for day of year (0-365).
-    /// NOTE: this is zero based, unlike public Fan method.
+    /// NOTE: this is zero based, unlike public Fantom method.
     /// </summary>
     public static int dayOfYear(int year, int mon, int day)
     {

@@ -25,7 +25,7 @@ namespace Fan.Sys
     public static UnresolvedErr make(Uri uri) { return make(uri.m_str); }
 
   //////////////////////////////////////////////////////////////////////////
-  // Fan Constructors
+  // Fantom Constructors
   //////////////////////////////////////////////////////////////////////////
 
     public new static UnresolvedErr make() { return make((string)null, (Err)null); }

@@ -356,7 +356,7 @@ namespace Fanx.Emit
 
     /// <summary>
     /// Load variable onto stack using Java type and java index (which might
-    /// not map to Fan index.  Return next available java index
+    /// not map to Fantom index.  Return next available java index
     /// </summary>
     internal static void loadVar(CILInstructions code, int stackType, int index)
     {
@@ -776,7 +776,7 @@ namespace Fanx.Emit
       FTypeRef typeRef = pod.typeRef(u2());
 
       // if a generic instance, we have to use a method call
-      // because Fan types don't map to Java classes exactly;
+      // because Fantom types don't map to Java classes exactly;
       // otherwise we can use straight bytecode
       if (typeRef.isGenericInstance())
       {
@@ -940,7 +940,7 @@ namespace Fanx.Emit
         code.Inst(Op.ldnull);
         code.Branch(BranchOp.bne_un_s, match);
 
-        // then check Fan type
+        // then check Fantom type
         code.Inst(Op.dup);
         code.TypeInst(TypeOp.isinst, emitter.findType(exType));
         code.Inst(Op.ldnull);
@@ -1207,7 +1207,7 @@ namespace Fanx.Emit
     }
 
     /// <summary>
-    /// Map to .NET register info for the given Fan local variables.
+    /// Map to .NET register info for the given Fantom local variables.
     /// </summary>
     internal static Reg[] initRegs(FPod pod, bool isStatic, FMethodVar[] vars)
     {
