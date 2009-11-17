@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-Fan tackles concurrency using a very different path from Java
+Fantom tackles concurrency using a very different path from Java
 and C#.  Java and C# use a shared memory model - all threads have access
 to each other's memory space.  Synchronization locks are required to ensure
 that threads share data in a consistent manner.  This concurrency model
@@ -18,7 +18,7 @@ of both race conditions and deadlocks.  This model also makes it very
 hard to create composable systems because all system components must
 orchestrate their use of locking consistently.
 
-The Fan model of concurrency is based upon the following principles:
+The Fantom model of concurrency is based upon the following principles:
 
  - **No Shared Mutable State**: threads never share mutable state
    under any circumstances;
@@ -30,16 +30,16 @@ The Fan model of concurrency is based upon the following principles:
  - **Message Passing**: the actor  API is built around the idea
    of [passing messages]`Actors` between asynchronous workers;
 
- - **REST**: Fan applications are built using a [UriSpace]`UriSpaces`
+ - **REST**: Fantom applications are built using a [UriSpace]`UriSpaces`
    of resources identified with URIs.  UriSpaces provides a
    *whiteboard* mechanism for multiple threads to share state.  You
-   might think of Fan's REST model as coarsely grained transactional
+   might think of Fantom's REST model as coarsely grained transactional
    memory (although it is much more than that).
 
 Immutability [#immutability]
 ****************************
 An object is said to be *immutable* if we can guarantee that once
-constructed it never changes state.  Fan supports these types of
+constructed it never changes state.  Fantom supports these types of
 immutable objects:
 
   - Any object instance of a [const class]`Classes#const`

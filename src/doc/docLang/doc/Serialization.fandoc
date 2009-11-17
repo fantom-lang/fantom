@@ -12,20 +12,20 @@ Serialization is the process of writing objects to an output stream,
 and reading them back from an input stream.  Serialization provides
 a simple mechanism to persist objects to a file or to pass objects over a
 network.  Serialization is also used with [actors]`Actors` as a
-safe way to pass messages between actors.  Fan serialization uses a human
-friendly text format which looks a lot just like Fan source code (in fact it
+safe way to pass messages between actors.  Fantom serialization uses a human
+friendly text format which looks a lot just like Fantom source code (in fact it
 is a subset of the source grammar).
 
 Data Model [#model]
 *******************
 Serialization in Java is *graph* based - it will handle an arbitrary number
-of references to a particular object.  Fan serialization is strictly *tree*
+of references to a particular object.  Fantom serialization is strictly *tree*
 based, it will not attempt to keep track of object references - it is up
 to you design your data models as a tree. If you need to cross reference
 objects in your tree, then you should use a Uri or some other identifier.
 
 Each object in the tree is classified as a *literal*, *simple*, or *complex*.
-Most of the standard Fan literals such as 'Bool', 'Int', 'Str' are supported
+Most of the standard Fantom literals such as 'Bool', 'Int', 'Str' are supported
 as well as the collections types 'List' and 'Map'.  Simples are leaf nodes
 serialized via a string representation.  Complexes are an aggregate node
 defined by their fields which store nested objects (either literals, simples,
@@ -108,18 +108,18 @@ spaces and skip fields at their default values:
 
 Syntax [#syntax]
 ****************
-The Fan serialization syntax is designed to be easy to read and write by a human,
-but also efficient for machine processing.  The syntax is based on the Fan programming
+The Fantom serialization syntax is designed to be easy to read and write by a human,
+but also efficient for machine processing.  The syntax is based on the Fantom programming
 language itself, although it is purely declarative (no expressions or behavior).
 An object is defined as one of:
 
-  - Literal: one of the standard Fan literals using the exact same
+  - Literal: one of the standard Fantom literals using the exact same
     representation as you would use in your source code (this
     includes 'List' and 'Map')
   - Simple: the string representation of a simple type
   - Complex: a type and its list of field name/values pairs
 
-The Fan programming language is a complete superset of the serialization
+The Fantom programming language is a complete superset of the serialization
 syntax - you can paste any serialized object into a source file as an expression.
 
 Using [#using]
@@ -147,8 +147,8 @@ then you need to explicitly import via 'using sys'.
 
 Literals [#syntaxLiterals]
 ==========================
-Most of the standard Fan literals are serialized using the same representation
-as defined by the Fan programming language:
+Most of the standard Fantom literals are serialized using the same representation
+as defined by the Fantom programming language:
 
   - [sys::Bool]`Literals#bool`
   - [sys::Int]`Literals#int`
@@ -182,7 +182,7 @@ You may use this syntax directly in source code via the [simple expression]`Expr
 Complex [#syntaxComplex]
 ========================
 A complex is serialized as a list of field name/value pairs separated by a newline
-or a semicolon (just like Fan statements).  Any field can be omitted, in which
+or a semicolon (just like Fantom statements).  Any field can be omitted, in which
 case the field's default is used.  The syntax for a complex is:
 
   <type>
@@ -240,7 +240,7 @@ This syntax is also supported directly in source code via [it-blocks]`Expression
 
 Grammar [#syntaxGrammar]
 ========================
-The formal grammar of the Fan serialization formats:
+The formal grammar of the Fantom serialization formats:
 
   // .fansym file format for list of name/obj pairs
   fansymDoc := header (fansym*)
@@ -266,5 +266,5 @@ The formal grammar of the Fan serialization formats:
   item      := obj
 
 The 'literal', 'using', and 'type' productions use the same [grammar]`Grammar`
-as the Fan programming language.  However the 'type' production can
+as the Fantom programming language.  However the 'type' production can
 never be a function type.

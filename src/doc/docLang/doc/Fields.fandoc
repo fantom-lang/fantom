@@ -15,7 +15,7 @@ field encapsulates three concepts:
   2.  **Getter**: a method to get the field
   3.  **Setter**: a method to set the field
 
-The key concept in Fan is that *all* fields *automatically* use a getter
+The key concept in Fantom is that *all* fields *automatically* use a getter
 and setter method (there are a couple exceptions to this rule we will discuss
 below).  In Java fields are simply a storage location.  Most Java programmers
 then wrap the field in a getter and setter method resulting in a huge amount
@@ -129,7 +129,7 @@ than Java final fields - you can set them as many times as you like (or
 let them default to null), but you can't assign to them outside of the
 construction process.
 
-Fan also allows const instance fields to be set during the construction
+Fantom also allows const instance fields to be set during the construction
 process via an [it-block]`Closures#itBlocks`:
 
   class Thing
@@ -342,7 +342,7 @@ Field overrides of a method may use [covariance]`Inheritance#covariance` - the
 field may be declared using a more specific type than the method return
 type.
 
-This design pattern is a handy technique to use in your Fan code.
+This design pattern is a handy technique to use in your Fantom code.
 
 Mixins [#mixins]
 ****************

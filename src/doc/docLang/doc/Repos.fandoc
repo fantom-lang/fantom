@@ -8,8 +8,8 @@
 
 Overview [#overview]
 ********************
-Repos are Fan repositories used to organize code for deployment.
-Repos may be chained together to define the overall Fan environment.
+Repos are Fantom repositories used to organize code for deployment.
+Repos may be chained together to define the overall Fantom environment.
 
 Directory Structure [#dirs]
 ***************************
@@ -50,8 +50,8 @@ match a pod name.
 
 Boot Repo [#boot]
 *****************
-Every Fan installation contains a full repo which is called the *boot repo*.
-The boot repo is always relative to the location used to launch Fan (fan.exe
+Every Fantom installation contains a full repo which is called the *boot repo*.
+The boot repo is always relative to the location used to launch Fantom (fan.exe
 or fan bash script).  Core libraries like 'sys' must be loaded out of the
 boot repo.
 
@@ -68,12 +68,12 @@ the boot repo is the only repo used by Fan:
     java.home:       C:\Program Files\Java\jre6
     fan.version:     1.0.44
 
-  Fan Repos:
+  Fantom Repos:
       boot:          file:/C:/dev/fan/
 
 Working Repo [#working]
 ***********************
-Every Fan installation has a *working repo* which is used as the first
+Every Fantom installation has a *working repo* which is used as the first
 place to look for pods and configuration files.  Runtime files such as 'types.db'
 are generated under the working repo directory.
 
@@ -93,7 +93,7 @@ The the value OF 'FAN_REPO' should be a file directory formatted as a Uri:
     java.home:       C:\Program Files\Java\jre6
     fan.version:     1.0.44
 
-  Fan Repos:
+  Fantom Repos:
       working:       file:/C:/dev/fanworking/
       boot:          file:/C:/dev/fan/
 
@@ -144,11 +144,11 @@ You can use 'fan -pods' to see where your pods are being loaded:
     java.home:       C:\Program Files\Java\jre6
     fan.version:     1.0.44
 
-  Fan Repos:
+  Fantom Repos:
       working:       file:/C:/dev/fanworking/
       boot:          file:/C:/dev/fan/
 
-  Fan Pods [1717ms]:
+  Fantom Pods [1717ms]:
     Pod              Version   Repo
     ---              -------   ----
     build            1.0.44    boot

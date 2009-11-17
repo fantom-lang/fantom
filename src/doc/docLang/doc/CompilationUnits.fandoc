@@ -8,7 +8,7 @@
 
 Organization [#organization]
 ****************************
-Fan source code for pods is organized into one or more directories on
+Fantom source code for pods is organized into one or more directories on
 the file system.  By convention the source tree of a pod is structured
 as follows:
 
@@ -23,7 +23,7 @@ as follows:
 Each of those directories may contain arbitrary sub-directories under it,
 although it is not required.
 
-Fan source code is stored in plain text files using a ".fan" extension.  Each
+Fantom source code is stored in plain text files using a ".fan" extension.  Each
 source file can contain one or more [class]`Classes` or [mixin]`Mixins`
 definitions.  Unlike Java, there is no restriction that each type must be
 in its own source file.  Although by convention we put each class into a
@@ -32,7 +32,7 @@ classes, then it is best to combine them intelligently.
 
 Char Encoding [#charEncoding]
 *****************************
-There is only one simple rule to follow - all Fan source files must be
+There is only one simple rule to follow - all Fantom source files must be
 in UTF-8 encoding.  Even better, if you want to ensure that your source
 code is drop-dead easy to use in any editor then use standard 7-bit ASCII
 characters (which is a clean subset of UTF-8).  End of story, enough said.
@@ -89,7 +89,7 @@ fact it is a compiler error is you try to import manually.
 
 Comments [#comments]
 ********************
-Fan supports three styles of comments:
+Fantom supports three styles of comments:
 
   - '/* */' block comments are used to comment out a block of text which
     can span multiple lines.  You can nest '/* */' comments as a handy

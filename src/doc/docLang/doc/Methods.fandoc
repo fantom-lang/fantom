@@ -99,7 +99,7 @@ a constructor on a mixin.
 
 Construction Calls [#constructionCalls]
 =======================================
-Fan supports a special syntax called *construction calls* with
+Fantom supports a special syntax called *construction calls* with
 the syntax 'Type(args)'.  These calls are resolved as follows:
 
   1. bind to 'Type.fromStr' *if* there is exactly one Str argument *and*
@@ -202,7 +202,7 @@ This allows you to call the 'add' method with 2, 3, or 4 arguments:
 
 Shortcuts [#shortcuts]
 **********************
-Fan supports operator overloading using *shortcut methods*.  Basically
+Fantom supports operator overloading using *shortcut methods*.  Basically
 any method that uses one of the predefined shortcut method signatures
 can be invoked via its associated operator.  For example if you wish
 to create a class that supports 'Str' indexing using the '[]' operator
@@ -285,7 +285,7 @@ returns a value.
 
 Covariance [#covariance]
 ************************
-Fan supports [covariance]`Inheritance#covariance` - which allows
+Fantom supports [covariance]`Inheritance#covariance` - which allows
 an overridden method to narrow the return type of the inherited
 method:
 
@@ -326,7 +326,7 @@ to be able to write something like this:
 If you actually tried to compile that code you'd get an error like
 "Unknown slot Connection.talk".  We could write code without method
 chaining, or we could even use the "->" operator.  But this technique
-is so commonly used, that Fan allows you to declare the return
+is so commonly used, that Fantom allows you to declare the return
 type as 'This':
 
   class Connection
@@ -352,7 +352,7 @@ which return 'This' must also return 'This'.
 Dynamic Invoke [#dynamicInvoke]
 *******************************
 As any dynamic language proponent can tell you - sometimes static
-typing can be a real pain.  So Fan supports a hybrid static/dynamic
+typing can be a real pain.  So Fantom supports a hybrid static/dynamic
 design by providing two call operators.  The '.' dot operator accesses
 a slot using static typing - if the slot cannot be resolved at compile
 time, then it results in a compile time error.
@@ -370,7 +370,7 @@ will get or set the field depending on the number of arguments:
 
 In the simplest case, the '->' operator is syntax sugar to by-pass static
 type checking and use reflection.  But the ability to override the 'trap'
-method is a powerful technique in the Fan toolkit for building dynamic
+method is a powerful technique in the Fantom toolkit for building dynamic
 solutions.
 
 You can also the '?->' operator to safely handle a null target.  See

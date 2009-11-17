@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-The Fan compiler generates pod files which contain a bytecode
+The Fantom compiler generates pod files which contain a bytecode
 representation of the code which we call *fcode*.  Pod files are just
 normal zip files you can open in your favorite zip tool.  Pod files
 also contain files for the constant pools and any resource files you might
@@ -32,7 +32,7 @@ The following illustration depicts this architecture:
 
 Natives [#natives]
 ******************
-If a pod is written 100% in Fan code, then it is completely portable between
+If a pod is written 100% in Fantom code, then it is completely portable between
 the runtimes.  However some pods like 'inet' or 'fwt' need to bind the
 underlying platform with native methods.
 
@@ -68,12 +68,12 @@ are not met, then the pod cannot be loaded.
 
 Application Deployment [#appDeployment]
 ***************************************
-Deploying a Fan application involves three components:
+Deploying a Fantom application involves three components:
   1. Platform runtime: either the Java VM or the .NET VM (usually pre-installed)
-  2. Fan runtime: a distribution of the core files
+  2. Fantom runtime: a distribution of the core files
   3. Pods: the library of pods necessary for your application
 
-The Fan distribution downloaded from the web is really a developer
+The Fantom distribution downloaded from the web is really a developer
 distro.  Most of those files are not needed for runtime.  In general
 the only directories needed for runtime is the 'bin' and 'lib'
 directory.  Within the 'lib' directory you can remove all the pod, jar,

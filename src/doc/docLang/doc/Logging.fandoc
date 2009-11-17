@@ -9,7 +9,7 @@
 Log Creation [#creation]
 ************************
 The `sys::Log` class standardizes how to embed logging statements into
-Fan applications.  Every 'Log' instance in the VM has a unique name
+Fantom applications.  Every 'Log' instance in the VM has a unique name
 which by convention always starts with the pod name and uses dot
 separators.  Once a Log instance has been created for a specified
 name, it remains bound to that name for the lifetime of the VM.  Logs

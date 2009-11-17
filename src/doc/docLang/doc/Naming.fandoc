@@ -10,7 +10,7 @@ Overview [#overview]
 ********************
 A "name" is a set of conventions and rules for using strings as identifiers.
 Good names are typically human readable, although that isn't necessarily
-required.  Fan provides a unified naming design based on the `sys::Uri` class.
+required.  Fantom provides a unified naming design based on the `sys::Uri` class.
 Uris are a good choice for naming because they provide:
   - Ability to transcribe the name into an ASCII string (with appropriate escaping)
   - Well defined model for plugging in "protocol" (scheme) handlers
@@ -22,7 +22,7 @@ Uris are a good choice for naming because they provide:
 
 Resolving Uris [#resolving]
 ***************************
-In Fan anything of interest we might wish to identify with a name
+In Fantom anything of interest we might wish to identify with a name
 is assigned a Uri.  We resolve Uris to 'sys::Obj' instances.  The
 actual object type is dependent on the Uri.  For example all "file:"
 Uris will resolve to a 'sys::File'.  Resolving a Uri is done via
@@ -68,9 +68,9 @@ to implement uri to object resolution.
 
 Fan Scheme [#fanScheme]
 ***********************
-The Fan runtime includes support for the "fan:" scheme which resolves
+The Fantom runtime includes support for the "fan:" scheme which resolves
 Uris via the [UriSpace]`UriSpaces` API.  The "fan:" scheme is designed
-to name everything of interest inside the Fan VM.  You can use the
+to name everything of interest inside the Fantom VM.  You can use the
 'UriSpace' API to plug in your own application specific name mappings:
 
   UriSpace.root.create(`/myapp/hello`, "Hi")

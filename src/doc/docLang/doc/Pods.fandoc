@@ -8,8 +8,8 @@
 
 Overview [#overview]
 ********************
-Pods are the top of Fan's namespace as well as the unit of deployment.  A pod's
-name is globally unique and is used to organize the top level of Fan's namespace.
+Pods are the top of Fantom's namespace as well as the unit of deployment.  A pod's
+name is globally unique and is used to organize the top level of Fantom's namespace.
 In this respect pods serve the purpose of both a Java package and a JAR file
 (or .NET namespace and DLL).
 
@@ -43,7 +43,7 @@ the '@podDepends' facets.  A summary of commonly uses facets:
     static type checking, and runtime to ensure things are deployed correctly.
 
   - [podSrcDirs]`@sys::podSrcDirs`: list of file Uris relative to "pod.fan"
-    which contain Fan source code for the pod.
+    which contain Fantom source code for the pod.
 
   - [podResDirs]`@sys::podResDirs`: list of file Uris relative to "pod.fan"
     which contain source files to bundle with the pod.

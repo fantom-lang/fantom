@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-These are the coding conventions we've used in the Fan code base.
+These are the coding conventions we've used in the Fantom code base.
 By no means are you required to follow our conventions - they are
 documented just in case you care.  However these conventions are
 enforced if contributing code for the core distribution.

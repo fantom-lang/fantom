@@ -8,7 +8,7 @@
 
 Operator Precedence [#precedence]
 *********************************
-Fan's expression syntax is very similar to C, Java, C# and company.
+Fantom's expression syntax is very similar to C, Java, C# and company.
 Operators in order of precedence:
 
   - Primary: '(x)   x.y   x.y()   x->y()   x?.y   x?.y()   x?->y()   x[y]'
@@ -28,7 +28,7 @@ Operators in order of precedence:
   - Assignment: '=   *=   /=   %=   +=   -=   <<=   >>=   &=   ^=   |='
   - Collection Add: ','
 
-Fan breaks with C convention in that the bitwise operators are
+Fantom breaks with C convention in that the bitwise operators are
 a higher precedence than the relational operators.  This makes writing
 bitwise expressions more intuitive:
 
@@ -36,7 +36,7 @@ bitwise expressions more intuitive:
 
 Shortcut Operators [#shortcuts]
 *******************************
-Fan is a pure OO language in that everything is an object you can call
+Fantom is a pure OO language in that everything is an object you can call
 methods on - even value-types such as 'Bool' and 'Int'.  As such almost
 all the operators are really just method calls.  We call these operators
 the *shortcut operators* because they are just syntax sugar for calling
@@ -161,7 +161,7 @@ to 'falseExpr'.  Examples:
 
 Null Convenience Operators [#nullConvenience]
 *********************************************
-Fan supports several of the operators found in Groovy to make
+Fantom supports several of the operators found in Groovy to make
 working with null more convenient:
   - **Elvis Operator** 'x ?: y'  (look at it sideways as a "smiley" face)
   - **Safe Invoke** 'x?.y'
@@ -299,7 +299,7 @@ We use '..' to specify an inclusive end index, and '..<' to specify
 an exclusive end index.  Also note how we can use any arbitrary expression
 with the range operators to define compact slice expressions.
 
-By convention Fan APIs which support integer indexing allow the use of negative
+By convention Fantom APIs which support integer indexing allow the use of negative
 integers to index from the end of the list.  For example '-1' can be used to
 index the last item of a list (or the last character of a string).  Using
 negative indexes works with all three shortcuts:
@@ -314,7 +314,7 @@ which take an index argument.
 
 Serialization Expressions [#serialization]
 ******************************************
-Fan supports three expression constructs which are designed to make the
+Fantom supports three expression constructs which are designed to make the
 programming language a true superset of the [serialization]`Serialization`
 syntax:
   - Simples
@@ -324,7 +324,7 @@ syntax:
 Simples [#simples]
 ==================
 [Simples]`Serialization#simple` are special serializable types which serialize
-via a string represenation.  Fan allows the use of a simple
+via a string represenation.  Fantom allows the use of a simple
 expression:
 
    <type>(<str>)
@@ -396,7 +396,7 @@ Here is an FWT example:
 
 Advanced Operators [#advances]
 ******************************
-Fan has a couple other operators which will be discussed later:
+Fantom has a couple other operators which will be discussed later:
 
   - `Closures` are expressions which create a new function inside
     a method body.

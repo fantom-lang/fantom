@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-Fan includes an [actor framework]`http://en.wikipedia.org/wiki/Actor_model`
+Fantom includes an [actor framework]`http://en.wikipedia.org/wiki/Actor_model`
 for concurrency.  [Actors]`sys::Actor` are light weight objects which
 asynchronously process work on a background thread.  Actors are given
 work by sending them asynchronous message.  Actor's then process those
@@ -187,7 +187,7 @@ Messages sent with 'sendLater' and 'sendWhenDone' are never coalsesed.
 
 Flow Control [#flowControl]
 ***************************
-The current implementation of Fan uses *unbounded* message queues.  This
+The current implementation of Fantom uses *unbounded* message queues.  This
 means if an actor is receiving messages faster than it can process them,
 then its queue will continue to grow.  Eventually this might result in out of
 memory exceptions.  You can use some of the following techniques to implement

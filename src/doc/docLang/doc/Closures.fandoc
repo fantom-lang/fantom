@@ -24,7 +24,7 @@ The basic syntax of a closure:
 The start of a closure is its signature which reuses the same
 syntax as [function types]`Functions#signatures`.  The body of the
 closure is a series of zero or more statements.  The 'return' statement
-is used to return a result and exit out of the closure (Fan doesn't
+is used to return a result and exit out of the closure (Fantom doesn't
 support any other way to jump out of a closure other than 'return' or
 'throw').  Let's look a simple example:
 
@@ -163,7 +163,7 @@ the code as:
 
   evens := list.findAll(|Int v->Bool| { return v%2==0 })
 
-Since closures are used heavily in this way, Fan supports a
+Since closures are used heavily in this way, Fantom supports a
 special syntax borrowed from Ruby.  If a closure is the last
 argument to a method call, then the closure can be pulled out as
 a suffix to the call:
@@ -281,7 +281,7 @@ as '|This|' to indicate that an it-block function is expected:
 
 With-Blocks [#withBlocks]
 *************************
-Fan allows you to append an it-block to any expression.  Whenever an
+Fantom allows you to append an it-block to any expression.  Whenever an
 it-block is used and a function is not expected, then the compiler
 generates a call to [Obj.with]`sys::Obj.with`:
 

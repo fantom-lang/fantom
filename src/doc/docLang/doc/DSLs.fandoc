@@ -9,18 +9,18 @@
 Overview [#overview]
 ********************
 DSLs or Domain Specific Languages allow you to embed other languages
-into your Fan source code.  The syntax for a DSL is:
+into your Fantom source code.  The syntax for a DSL is:
 
   AnchorType <|...|>
 
 Everything between the '<|' and '|>' tokens is considered source code
 of the DSL itself.  The anchor type defines how to the compile the DSL.
 DslPlugins are registered on the anchor type, and called by the Fan
-compiler to translate them into a Fan expression.
+compiler to translate them into a Fantom expression.
 
 Built-in DSLs [#builtIn]
 ************************
-Fan currently ships with these DSLs:
+Fantom currently ships with these DSLs:
 
 Str DSL [#str]
 ==============
