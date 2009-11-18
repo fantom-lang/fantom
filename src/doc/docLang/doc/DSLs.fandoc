@@ -15,7 +15,7 @@ into your Fantom source code.  The syntax for a DSL is:
 
 Everything between the '<|' and '|>' tokens is considered source code
 of the DSL itself.  The anchor type defines how to the compile the DSL.
-DslPlugins are registered on the anchor type, and called by the Fan
+DslPlugins are registered on the anchor type, and called by the Fantom
 compiler to translate them into a Fantom expression.
 
 Built-in DSLs [#builtIn]
