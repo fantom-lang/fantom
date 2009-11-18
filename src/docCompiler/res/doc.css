@@ -67,6 +67,7 @@ div.header h1
   font-size:22pt;
   margin:0;
   padding:0;
+  color:#fff;
 }
 div.header h1 a
 {
@@ -249,6 +250,7 @@ div.sidebar li { margin: 3px 3px 3px 0; }
   margin-bottom: -0.5em;
   position: relative;
 }
+
 .slots .detail dt a
 {
   color: #7aa3c0;
