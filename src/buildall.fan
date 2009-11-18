@@ -192,7 +192,7 @@ class Build : BuildGroup
     Delete.make(this, devHomeDir+`lib/types.db`).run
     Delete.make(this, devHomeDir+`lib/tmp`).run
     Delete.make(this, devHomeDir+`src/sys/java/temp/`).run
-    Delete.make(this, devHomeDir+`flux/session/`).run
+    Delete.make(this, devHomeDir+`etc/flux/session/`).run
 
     libJavaDir.list.each |File f|
     {

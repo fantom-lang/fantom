@@ -169,7 +169,7 @@ must use a matching number of leading tabs followed by space characters:
 
 Str Interpolation [#interpolation]
 ==================================
-Str literals support string interpolation which allow arbitrary Fan
+Str literals support string interpolation which allow arbitrary Fantom
 expressions to be embedded inside the string literals.  Embedded expressions
 are prefixed using the '$' dollar sign and surrounded with '{' and '}' braces.
 If the expression is a simple identifier or sequence of dotted identifiers then
