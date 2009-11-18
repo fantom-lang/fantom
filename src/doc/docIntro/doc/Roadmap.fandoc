@@ -72,7 +72,7 @@ still need POP3 and MIME decoding.
 
 Sys APIs [#sys]
 ===============
-Some of the 'sys' APIs are imcomplete, such as 'Regex'.
+Some of the 'sys' APIs are incomplete, such as 'Regex'.
 
 Web APIs [#web]
 ===============
