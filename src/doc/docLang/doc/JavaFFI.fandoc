@@ -23,7 +23,7 @@ there is a level of impedance mismatch between the two type systems.
 Features supported by the Java FFI:
   - Interop with any Java API except those which use multi-dimensional arrays
   - Static type checking
-  - Call overloaded Java methods from Fan
+  - Call overloaded Java methods from Fantom
   - Construct Java classes using the Fantom [constructor syntax]`Methods#constructionCalls`
   - Extend Java classes (only one level of inheritance allowed right now)
   - Implement Java interfaces
@@ -88,7 +88,7 @@ How it Works [#howItWorks]
 **************************
 The Java FFI does not use any special Fantom syntax.  Java APIs are
 imported into the Fantom type system via the normal 'using' statement
-with a special syntax for pod names.  Java packages are mapped to Fan
+with a special syntax for pod names.  Java packages are mapped to Fantom
 pods by prefixing the string "[java]".  For example the Java package
 'javax.swing' has the Fantom pod name of '[java]javax.swing'.
 
@@ -309,7 +309,7 @@ the Fantom type system using the Java VM name:
   using [java] java.util::Map$Entry as Entry
 
 Note that since the "$" is not a legal identifier char in Fantom, you must
-[rename]`CompilationUnits#using` the Java inner class to a valid Fan
+[rename]`CompilationUnits#using` the Java inner class to a valid Fantom
 identifier with the 'as' keyword.
 
 Dynamic Calls [#dynamicCalls]

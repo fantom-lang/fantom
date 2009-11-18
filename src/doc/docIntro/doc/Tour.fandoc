@@ -20,7 +20,7 @@ quintessential hello world:
   }
 
 Minor differences from Java or C# include:
-  - all type names are capitalized including 'Void' (Fan
+  - all type names are capitalized including 'Void' (Fantom
     doesn't have primitives nor primitive keywords).
   - Class and method protection scope default to 'public'.
   - Fantom sports the 'echo' method for writing to the console or
