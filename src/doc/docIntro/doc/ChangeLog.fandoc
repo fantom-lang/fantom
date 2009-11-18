@@ -745,3 +745,5 @@
 - #788: Coercion of indexed assignment shortcut
 - #806: can't read MapType from ObjectDeserializer
 
+*Build 1.0.48 (incomplete)*
+
