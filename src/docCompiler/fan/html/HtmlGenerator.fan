@@ -176,6 +176,7 @@ abstract class HtmlGenerator : HtmlDocWriter
   {
     if (s == "DSL")  return s
     if (s == "DSLs") return s
+    if (s == "IDEs") return s
     if (s == "JavaScript") return s
     return s.toDisplayName
   }
