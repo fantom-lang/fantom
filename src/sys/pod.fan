@@ -7,7 +7,7 @@
 //
 
 **
-** Fan system runtime
+** Fantom system runtime
 **
 
 @podDepends = Depend[,]
