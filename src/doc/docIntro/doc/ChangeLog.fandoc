@@ -746,4 +746,5 @@
 - #806: can't read MapType from ObjectDeserializer
 
 *Build 1.0.48 (incomplete)*
+- New docLang::IDEs chapter
 
