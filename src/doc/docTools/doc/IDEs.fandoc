@@ -12,7 +12,7 @@ Despite Fantom being such a young language, there are many projects
 for bringing Fantom support to your favorite IDE.  Note many of these
 projects are still in early development.
 
-Netbeans FantomIDE (tcolor) [#netbeans]
+Netbeans FantomIDE (tcolar) [#netbeans]
 ***************************************
 FantomIDE is an IDE for the Fantom language based on Netbeans
 It can be installed *as a plugin* to an existing Netbeans installation
@@ -20,6 +20,7 @@ or as a *standalone IDE*.  It contains out of the box support for
 Fantom as well as Java, Javascript, CSS, HTML, XML, Subversion, Mercurial.
 
   - [Home Page]`http://fanide.colar.net/home`
+  - [Screencast]`http://www.colar.net/fanide/fansuite2.htm`
   - [Download]`http://fanide.colar.net/install`
 
 Eclipse (xored) [#eclipse]
