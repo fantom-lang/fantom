@@ -36,9 +36,11 @@ Early access to Fantom support for Eclipse:
 
 IntelliJ fan4idea (JFrog) [#intellij]
 *************************************
-Fantom programming language plugin for IntelliJ IDEA 8.x.
+Fantom programming language plugin for IntelliJ IDEA.  Fan4Idea
+can be found in the standard list of plugin from IntelliJ UI.
 
   - [Home Page]`http://wiki.jfrog.org/confluence/display/FANP/Home`
+  - [Download]`http://plugins.intellij.net/plugin/?id=4241`
 
 Text Editors  [#textEditors]
 ****************************
