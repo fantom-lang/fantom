@@ -7,6 +7,8 @@
 //
 package fan.sys;
 
+import java.util.Iterator;
+import java.util.Map.Entry;
 import fanx.fcode.*;
 
 /**
@@ -15,6 +17,29 @@ import fanx.fcode.*;
 public class Field
   extends Slot
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Factories
+//////////////////////////////////////////////////////////////////////////
+
+  public static Func makeSetFunc(final Map map)
+  {
+    return new Func.Indirect1()
+    {
+      public Object call(Object obj)
+      {
+        Iterator it = map.pairsIterator();
+        while (it.hasNext())
+        {
+          Entry entry = (Entry)it.next();
+          Field field = (Field)entry.getKey();
+          Object val = entry.getValue();
+          field.set(obj, val, obj != inCtor);
+        }
+        return null;
+      }
+    };
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructor

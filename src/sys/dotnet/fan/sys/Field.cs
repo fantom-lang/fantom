@@ -7,6 +7,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Reflection;
 using Fanx.Fcode;
 using Fanx.Util;
@@ -18,6 +19,32 @@ namespace Fan.Sys
   /// </summary>
   public class Field : Slot
   {
+
+  //////////////////////////////////////////////////////////////////////////
+  // Factories
+  //////////////////////////////////////////////////////////////////////////
+
+    public static Func makeSetFunc(Map map)
+    {
+      return new SetFunc(map);
+    }
+
+    internal class SetFunc : Func.Indirect1
+    {
+      internal SetFunc(Map map) { m_map = map; }
+      public override Object call(Object obj)
+      {
+        IDictionaryEnumerator en = m_map.pairsIterator();
+        while (en.MoveNext())
+        {
+          Field field = (Field)en.Key;
+          object val = en.Value;
+          field.set(obj, val, obj != m_inCtor);
+        }
+        return null;
+      }
+      Map m_map;
+    }
 
   //////////////////////////////////////////////////////////////////////////
   // C# Constructors

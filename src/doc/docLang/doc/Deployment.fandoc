@@ -75,6 +75,6 @@ Deploying a Fantom application involves three components:
 
 The Fantom distribution downloaded from the web is really a developer
 distro.  Most of those files are not needed for runtime.  In general
-the only directories needed for runtime is the 'bin' and 'lib'
-directory.  Within the 'lib' directory you can remove all the pod, jar,
-and dll files not needed by your application.
+the only directories needed for runtime are 'bin', 'lib', and 'etc'.  Within
+the 'lib' directory you can remove all the pod, jar, and dll files not
+needed by your application.

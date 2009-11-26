@@ -273,6 +273,31 @@ class FieldTest : Test
   readonly public Int flagsReadonlyPublic
   protected readonly Int flagsReadonlyProtected
   readonly internal Int flagsReadonlyInternal
+
+//////////////////////////////////////////////////////////////////////////
+// makeSetFunc
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMakeSetFunc()
+  {
+    // simple
+    s := SerSimple(0, 0)
+    f := Field.makeSetFunc([SerSimple#a: 6, SerSimple#b: 7])
+    f(s)
+    verifyEq(s.a, 6)
+    verifyEq(s.b, 7)
+
+    // const
+    f = Field.makeSetFunc([ConstMakeSetTest#x: 9, ConstMakeSetTest#y: null, ConstMakeSetTest#z: [0, 1, 2].toImmutable])
+    ConstMakeSetTest c := ConstMakeSetTest#.make([f])
+    verifyEq(c.x, 9)
+    verifyEq(c.y, null)
+    verifyEq(c.z, [0, 1, 2])
+
+    verifyErr(ReadonlyErr#) { f(c) }
+    verifyErr(ReadonlyErr#) { ConstMakeSetTest#.make([Field.makeSetFunc([ConstMakeSetTest#z: this])]) }
+  }
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -284,5 +309,17 @@ class OutsideAccessor
   static Int getCount(FieldTest test) { return test.count }
   static Void setCount(FieldTest test, Int c) { test.count = c }
   static Int setCountLeave(FieldTest test, Int c) { return test.count = c }
-
 }
+
+//////////////////////////////////////////////////////////////////////////
+// OutsideAccessor
+//////////////////////////////////////////////////////////////////////////
+
+const class ConstMakeSetTest
+{
+  new make(|This|? f) { f?.call(this) }
+  const Int x
+  const Str? y := "foo"
+  const Obj? z
+}
+

@@ -110,7 +110,7 @@ public abstract class Func
   public static abstract class Indirect0 extends Indirect
   {
     protected Indirect0(FuncType type) { super(type); }
-    protected Indirect0() { super(new FuncType(new Type[] {}, Sys.ObjType)); }
+    protected Indirect0() { super(type0); }
     public final Object callList(List args) { return call(); }
     public abstract Object call();
     public final Object call(Object a) { return call(); }
@@ -126,7 +126,7 @@ public abstract class Func
   public static abstract class Indirect1 extends Indirect
   {
     protected Indirect1(FuncType type) { super(type); }
-    protected Indirect1() { super(new FuncType(new Type[] { Sys.ObjType }, Sys.ObjType)); }
+    protected Indirect1() { super(type1); }
     public final Object callList(List args) { return call(args.get(0)); }
     public final Object call() { throw tooFewArgs(0); }
     public abstract Object call(Object a);
@@ -153,7 +153,7 @@ public abstract class Func
   public static abstract class Indirect2 extends Indirect
   {
     protected Indirect2(FuncType type) { super(type); }
-    protected Indirect2() { super(new FuncType(new Type[] { Sys.ObjType, Sys.ObjType }, Sys.ObjType)); }
+    protected Indirect2() { super(type2); }
     public final Object callList(List args) { return call(args.get(0), args.get(1)); }
     public final Object call() { throw tooFewArgs(0); }
     public final Object call(Object a) { throw tooFewArgs(1); }
@@ -169,7 +169,7 @@ public abstract class Func
   public static abstract class Indirect3 extends Indirect
   {
     protected Indirect3(FuncType type) { super(type); }
-    protected Indirect3() { super(new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType)); }
+    protected Indirect3() { super(type3); }
     public final Object callList(List args) { return call(args.get(0), args.get(1), args.get(2)); }
     public final Object call() { throw tooFewArgs(0); }
     public final Object call(Object a) { throw tooFewArgs(1); }
@@ -185,7 +185,7 @@ public abstract class Func
   public static abstract class Indirect4 extends Indirect
   {
     protected Indirect4(FuncType type) { super(type); }
-    protected Indirect4() { super(new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType)); }
+    protected Indirect4() { super(type4); }
     public final Object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3)); }
     public final Object call() { throw tooFewArgs(0); }
     public final Object call(Object a) { throw tooFewArgs(1); }
@@ -394,6 +394,11 @@ public final Func curry(List args) { return bind(args); }
 //////////////////////////////////////////////////////////////////////////
 
   static final Object[] noArgs = new Object[0];
+  static final FuncType type0 = new FuncType(new Type[] {}, Sys.ObjType);
+  static final FuncType type1 = new FuncType(new Type[] { Sys.ObjType }, Sys.ObjType);
+  static final FuncType type2 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType }, Sys.ObjType);
+  static final FuncType type3 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType);
+  static final FuncType type4 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType);
 
   final Type returns;
   final List params;
