@@ -109,6 +109,7 @@ namespace Fan.Sys
     public abstract class Indirect0 : Indirect
     {
       protected Indirect0(FuncType type) : base(type) {}
+      protected Indirect0() : base(type0) {}
       public override object callList(List args) { return call(); }
       public override abstract object call();
       public override object call(object a) { return call(); }
@@ -124,6 +125,7 @@ namespace Fan.Sys
     public abstract class Indirect1 : Indirect
     {
       protected Indirect1(FuncType type) : base(type) {}
+      protected Indirect1() : base(type1) {}
       public override object callList(List args) { return call(args.get(0)); }
       public override object call() { throw tooFewArgs(0); }
       public override abstract object call(object a);
@@ -144,12 +146,13 @@ namespace Fan.Sys
         throw ConstErr.make(msg).val;
       }
 
-      object m_inCtor;
+      internal object m_inCtor;
     }
 
     public abstract class Indirect2 : Indirect
     {
       protected Indirect2(FuncType type) : base(type) {}
+      protected Indirect2() : base(type2) {}
       public override object callList(List args) { return call(args.get(0), args.get(1)); }
       public override object call() { throw tooFewArgs(0); }
       public override object call(object a) { throw tooFewArgs(1); }
@@ -165,6 +168,7 @@ namespace Fan.Sys
     public abstract class Indirect3 : Indirect
     {
       protected Indirect3(FuncType type) : base(type) {}
+      protected Indirect3() : base(type3) {}
       public override object callList(List args) { return call(args.get(0), args.get(1), args.get(2)); }
       public override object call() { throw tooFewArgs(0); }
       public override object call(object a) { throw tooFewArgs(1); }
@@ -180,6 +184,7 @@ namespace Fan.Sys
     public abstract class Indirect4 : Indirect
     {
       protected Indirect4(FuncType type) : base(type) {}
+      protected Indirect4() : base(type4) {}
       public override object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3)); }
       public override object call() { throw tooFewArgs(0); }
       public override object call(object a) { throw tooFewArgs(1); }
@@ -379,6 +384,11 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     internal static readonly object[] noArgs = new object[0];
+    internal static readonly FuncType type0 = new FuncType(new Type[] {}, Sys.ObjType);
+    internal static readonly FuncType type1 = new FuncType(new Type[] { Sys.ObjType }, Sys.ObjType);
+    internal static readonly FuncType type2 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType }, Sys.ObjType);
+    internal static readonly FuncType type3 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType);
+    internal static readonly FuncType type4 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType);
 
     internal readonly Type m_returns;
     internal readonly List m_params;

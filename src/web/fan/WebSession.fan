@@ -51,7 +51,7 @@ class WebSession
   ** between HTTP requests.  The values stored in this
   ** map must be serializable.
   **
-  readonly Str:Obj? map := Str:Obj[:]
+  readonly Str:Obj? map := Str:Obj?[:]
 
   **
   ** Delete this web session which clears both the user
