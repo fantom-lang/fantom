@@ -39,8 +39,8 @@ Reading Json [#read]
 Reading JSON takes raw JSON from a stream and produces a [Map]`sys::Map`.
 
 Given the following json:
-  str := "{\"k1\":\"v1\", \"k2\":3.4159, \"k3\":[1,2,3], \"k4\": {\"m1\":true, \"m2\":null}}"
 
-  input := InStream.makeForStr(str)
-  Str:Obj? data = Json.read(input)
-  data["k1"] -> "v1"
+  str := """{"k1":"v1", "k2":3.4159, "k3":[1,2,3], "k4": {"m1":true, "m2":null}}"""
+  Str:Obj? data := Json.read(str.in)
+  data["k1"]  =>  v1
+
