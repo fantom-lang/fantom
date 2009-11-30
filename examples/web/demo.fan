@@ -12,6 +12,9 @@ class Boot : BootScript
 {
   override Service[] services()
   {
+    docDir := Repo.boot.home + `doc/`
+    if (!docDir.exists) docDir = scriptDir + `demo/`
+
     pipeline := PipelineMod
     {
       // pipeline steps
@@ -23,7 +26,7 @@ class Boot : BootScript
           [
             "index": FileMod { file = scriptDir + `demo/index.html` },
             "flag":  FileMod { file = `fan:/sys/pod/icons/x32/flag.png`.get },
-            "doc":   FileMod { file = Repo.boot.home + `doc/` },
+            "doc":   FileMod { file = docDir },
             "logs":  FileMod { file = scriptDir + `demo/logs/` },
             "dump":  TestMod("dump"),
           ]
@@ -77,7 +80,6 @@ const class TestMod : WebMod
     res.out.printLine("version:   $req.version")
     res.out.printLine("method:    $req.method")
     res.out.printLine("stash:     $req.stash")
-    res.out.printLine("userAgent: $req.userAgent")
     res.out.printLine("cookies:   $req.cookies")
     res.out.printLine("  foo:     " + req.cookies["foo"])
     res.out.printLine("  bar:     " + req.cookies["bar"])

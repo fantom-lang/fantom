@@ -77,8 +77,6 @@ Common methods you will use include:
     stuff for the browser "connection" between HTTP requests
   - [stash]`web::WebReq.stash`: a 'Str:Obj' map used to stash stuff
     only for the life of request
-  - [userAgent]`web::WebReq.userAgent`: access the parsed "User-Agent"
-    header
 
 WebRes [#webRes]
 ****************

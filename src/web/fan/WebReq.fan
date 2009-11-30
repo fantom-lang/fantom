@@ -130,21 +130,6 @@ abstract class WebReq
   abstract WebSession session()
 
   **
-  ** The UserAgent for this request or null if the
-  ** "User-Agent" header was not specified in the request.
-  **
-  virtual once UserAgent? userAgent()
-  {
-    try
-    {
-      h := headers["User-Agent"]
-      if (h != null) return UserAgent.fromStr(h)
-    }
-    catch (Err e) e.trace
-    return null
-  }
-
-  **
   ** Get the key/value pairs of the form data.  If the request
   ** content type is "application/x-www-form-urlencoded", then the
   ** first time this method is called the request content is read

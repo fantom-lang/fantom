@@ -81,7 +81,7 @@ internal const class WispDefaultMod : WebMod
         .h1.w("Wisp").h1End
         .p.w("Wisp is running!").pEnd
         .p.w("Currently there is no WebMod installed on this server.").pEnd
-        .p.w("See <a href='http://fantom.org/doc/docLib/Web.html'>Web Docs</a>
+        .p.w("See <a href='http://fantom.org/doc/docLib/Wisp.html'>docLib::Wisp</a>
               to configure a WebMod for the server.").pEnd
       .bodyEnd
     .htmlEnd
