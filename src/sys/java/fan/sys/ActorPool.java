@@ -77,6 +77,7 @@ public class ActorPool
   public final ActorPool join() { return join(null); }
   public final ActorPool join(Duration timeout)
   {
+    if (!isStopped()) throw Err.make("ActorPool is not stopped").val;
     long ms = timeout == null ? Long.MAX_VALUE : timeout.millis();
     try
     {

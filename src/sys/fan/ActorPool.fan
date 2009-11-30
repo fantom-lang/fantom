@@ -57,7 +57,8 @@ const class ActorPool
   **
   ** Wait for this pool's actors to fully terminate or until the
   ** given timeout occurs.  A null timeout blocks forever.  If this
-  ** method times out, then TimeoutErr is thrown.  Return this.
+  ** method times out, then TimeoutErr is thrown.  Throw Err if the
+  ** pool is not stopped.  Return this.
   **
   This join(Duration? timeout := null)
 
