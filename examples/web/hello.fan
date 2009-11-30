@@ -9,7 +9,6 @@
 
 using fand
 using web
-using webapp
 using wisp
 
 **
@@ -22,23 +21,16 @@ class Boot : BootScript
     WispService
     {
       port = 8080
-      pipeline = [FindResourceStep {}, FindViewStep {}, ServiceViewStep {}]
+      root = HelloMod()
     }
   ]
-
-  override Void setup()
-  {
-    UriSpace.root.create(`/homePage`, Hello#)
-  }
 }
 
-class Hello : Weblet
+const class HelloMod : WebMod
 {
   override Void onGet()
   {
-    text := "hello world #4"
     res.headers["Content-Type"] = "text/plain; charset=utf-8"
-    res.headers["Content-Length"] = text.size.toStr
-    res.out.print(text)
+    res.out.print("hello world #4")
   }
 }

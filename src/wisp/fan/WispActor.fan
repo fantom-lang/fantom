@@ -74,7 +74,7 @@ internal const class WispActor : Actor
       initReqRes(req, res)
 
       // service which runs thru the installed web steps
-      service.service(req, res)
+      doService(req, res)
 
       // assume success which allows us to re-use this connection
       success = true
@@ -182,6 +182,30 @@ internal const class WispActor : Actor
     res.headers["Server"] = "Wisp/" + type.pod.version
     res.headers["Date"] = DateTime.now.toHttpStr
     res.headers["Connection"] = "keep-alive"
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Service
+//////////////////////////////////////////////////////////////////////////
+
+  private Void doService(WebReq req, WebRes res)
+  {
+    // init thread locals
+    Actor.locals["web.req"] = req
+    Actor.locals["web.res"] = res
+    try
+    {
+      service.root.onService
+    }
+    finally
+    {
+      // save session if accessed
+      service.sessionMgr.save
+
+      // cleanup thread locals
+      Actor.locals.remove("web.req")
+      Actor.locals.remove("web.res")
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

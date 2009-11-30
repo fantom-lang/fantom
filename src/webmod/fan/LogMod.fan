@@ -10,11 +10,11 @@ using web
 using fand
 
 **
-** LogStep is used log requests according to the W3C extended log file format.
+** LogMod is used log requests according to the W3C extended log file format.
 **
-** See [docLib::WebApp]`docLib::WebApp#logStep`
+** See [docLib::WebMod]`docLib::WebMod#log`
 **
-const class LogStep : WebAppStep
+const class LogMod : WebMod
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -26,7 +26,8 @@ const class LogStep : WebAppStep
   **
   new make(|This|? f := null)
   {
-    if (f != null) f(this)
+    f?.call(this)
+    if (file === noFile) throw ArgErr("Must configure ${type}.file field")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -36,11 +37,12 @@ const class LogStep : WebAppStep
   **
   ** Output log file.
   **
-  const File? file
+  const File file := noFile
+  private static const File noFile := File(`no-file-configured`)
 
   **
   ** Format of the log records as a string of #Fields names.
-  ** See [docLib::WebApp]`docLib::WebApp#logStep`
+  ** See [docLib::WebMod]`docLib::WebMod#log`
   **
   const Str fields := "date time c-ip cs-method cs-uri-stem cs-uri-query sc-status time-taken cs(User-Agent) cs(Referer)"
 
@@ -48,14 +50,8 @@ const class LogStep : WebAppStep
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
-  override Void onStart(WebService service)
+  override Void onStart()
   {
-    if (file == null)
-    {
-      log.error("LogStep.file not configured")
-      return
-    }
-
     // init logger
     logger.open(file)
 
@@ -63,26 +59,17 @@ const class LogStep : WebAppStep
     logger.writeStr("#Remark ==========================================================================")
     logger.writeStr("#Remark " + DateTime.now.toLocale)
     logger.writeStr("#Version 1.0")
-    logger.writeStr("#Software webapp::LogStep ${type.pod.version}")
+    logger.writeStr("#Software ${type} ${type.pod.version}")
     logger.writeStr("#Start-Date " + DateTime.nowUtc.toLocale("DD-MM-YYYY hh:mm:ss"))
     logger.writeStr("#Fields $fields")
   }
 
-  override Void onStop(WebService service)
+  override Void onStop()
   {
     logger.stop
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Service
-//////////////////////////////////////////////////////////////////////////
-
-  override Void onBeforeService(WebReq req, WebRes res)
-  {
-    req.stash["webapp.startTime"] = Duration.now
-  }
-
-  override Void onAfterService(WebReq req, WebRes res)
+  override Void onService()
   {
     try
     {
@@ -114,7 +101,7 @@ const class LogStep : WebAppStep
     }
     catch (Err e)
     {
-      log.error("LogStep", e)
+      logger.writeStr("# $e")
     }
   }
 
@@ -184,7 +171,7 @@ const class LogStep : WebAppStep
 
   internal static Str formatTimeTaken(WebReq req, WebRes res)
   {
-    d := Duration.now - req.stash["webapp.startTime"]
+    d := Duration.now - req.stash["web.startTime"]
     return d.toMillis.toStr
   }
 

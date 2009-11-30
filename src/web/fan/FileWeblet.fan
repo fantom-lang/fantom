@@ -20,13 +20,27 @@ class FileWeblet : Weblet
 {
 
 //////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Constructor with file to service.
+  **
+  **
+  new make(File file)
+  {
+    if (file.isDir) throw ArgErr("FileWeblet cannot process dir")
+    this.file = file
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Access
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** The file being serviced by this FileWeblet (initialized in service).
+  ** The file being serviced by this FileWeblet.
   **
-  readonly File? file
+  const File file
 
   **
   ** Get the modified time of the file floored to 1 second
@@ -56,34 +70,11 @@ class FileWeblet : Weblet
   **
   ** Handle GET request for the file.
   **
-  override Void service()
-  {
-    this.file = (File)req.resource
-    if (this.file.isDir) throw Err("FileWeblet cannot process dir")
-    super.service
-  }
-
-  **
-  ** Handle GET request for the file.
-  **
   override Void onGet()
   {
     // set identity headers
     res.headers["ETag"] = etag
-// TODO
-try
     res.headers["Last-Modified"] = modified.toHttpStr
-catch (Err e)
-{
-    echo("##
-          ##
-          ## ERROR: FileWeblet.onGet
-          ##   file.modified: $file.modified
-          ##   modified:      $modified
-          ##   $e
-          ##")
-    e.trace
-}
 
     // check if we can return a 304 not modified
     if (checkNotModified) return

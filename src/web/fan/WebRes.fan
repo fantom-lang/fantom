@@ -19,11 +19,6 @@ abstract class WebRes
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the WebService managing the request.
-  **
-  abstract WebService service()
-
-  **
   ** Get or set the HTTP status code for this response. Status code
   ** defaults to 200.  Throw an err if status code passed in is not
   ** recognized, or if the response has already been committed.
@@ -90,8 +85,7 @@ abstract class WebRes
 
   **
   ** Done is called to indicate that that response is complete
-  ** to terminate pipeline processing.  Once called, no further
-  ** WebSteps in the pipeline are executed.
+  ** to terminate pipeline processing.
   **
   abstract Void done()
 

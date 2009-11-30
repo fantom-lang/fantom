@@ -31,11 +31,6 @@ class WispRes : WebRes
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** WispService.
-  **
-  override WispService service
-
-  **
   ** Get or set the HTTP status code for this response. Status code
   ** defaults to 200. If response has already been committed, throws Err.
   ** If status code passed in is not recognized, throws Err.
@@ -207,6 +202,7 @@ class WispRes : WebRes
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  internal WispService service
   internal TcpSocket socket
   internal WebOutStream? webOut
 
