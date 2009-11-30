@@ -9,7 +9,7 @@
 
 using fand
 using web
-using webapp
+using webmod
 using wisp
 using compiler
 using compilerJs
@@ -21,22 +21,29 @@ class Boot : BootScript
     WispService
     {
       port = 8080
-      pipeline = [FindResourceStep {}, FindViewStep {}, ServiceViewStep {}]
+      root = JsDemoMod(scriptDir)
     }
   ]
-
-  override Void setup()
-  {
-    UriSpace.root.create(`/homePage`, Home#)
-    UriSpace.root.create(`/show-script`, ShowScript#)
-    UriSpace.root.create(`/echo`, EchoWeblet#)
-  }
 }
 
-class Home : Widget
+const class JsDemoMod : WebMod
 {
-  File scriptDir := File(type->sourceFile->toUri->parent)
+  new make(File dir) { scriptDir = dir }
+
+  const File scriptDir
+
   override Void onGet()
+  {
+    name := req.modRel.path.first
+    if (name == null)
+      onIndex
+    else if (name == "pod")
+      onPodFile
+    else
+      ShowScript(scriptDir + `$name`).onGet
+  }
+
+  Void onIndex()
   {
     res.headers["Content-Type"] = "text/html"
     out := res.out
@@ -51,23 +58,30 @@ class Home : Widget
       scriptDir.list.each |f|
       {
         if (f.ext == "fwt")
-          out.li.a(`/show-script?$f.name`).w(f.name).aEnd.liEnd
+          out.li.a(`/$f.name`).w(f.name).aEnd.liEnd
       }
       out.ulEnd
     out.bodyEnd
     out.htmlEnd
   }
+
+  Void onPodFile()
+  {
+    // serve up pod resources
+    File file := ("fan:/sys" + req.uri).toUri.get
+    if (!file.exists) { res.sendError(404); return }
+    FileWeblet(file).onService
+  }
 }
 
-class ShowScript : Widget
+class ShowScript : Weblet
 {
-  File scriptDir := File(type->sourceFile->toUri->parent)
+  new make(File f) { file = f }
   override Void onGet()
   {
-    f := scriptDir + req.uri.queryStr.toUri
-    if (!f.exists) { res.sendError(404); return }
+    if (!file.exists) { res.sendError(404); return }
 
-    compile(f)
+    compile
     t := compiler.types[0]
     entryPoint := "fan.${t.pod}.${t.name}"
 
@@ -76,12 +90,12 @@ class ShowScript : Widget
     out.docType
     out.html
     out.head
-      out.title.w("FWT Demo - $f.name").titleEnd
-      out.includeJs(`/sys/pod/sys/sys.js`)
-      out.includeJs(`/sys/pod/web/web.js`)
-      out.includeJs(`/sys/pod/dom/dom.js`)
-      out.includeJs(`/sys/pod/gfx/gfx.js`)
-      out.includeJs(`/sys/pod/fwt/fwt.js`)
+      out.title.w("FWT Demo - $file.name").titleEnd
+      out.includeJs(`/pod/sys/sys.js`)
+      out.includeJs(`/pod/web/web.js`)
+      out.includeJs(`/pod/dom/dom.js`)
+      out.includeJs(`/pod/gfx/gfx.js`)
+      out.includeJs(`/pod/fwt/fwt.js`)
       out.style.w(
        "body { font: 10pt Arial; }
         a { color: #00f; }
@@ -118,7 +132,7 @@ class ShowScript : Widget
     out.htmlEnd
   }
 
-  Void compile(File file)
+  Void compile()
   {
     input := CompilerInput.make
     input.podName        = file.basename
@@ -133,19 +147,8 @@ class ShowScript : Widget
     this.js = compiler.compile.str
   }
 
+  File file
   JsCompiler? compiler
   Str? js
 }
 
-class EchoWeblet : Weblet
-{
-  override Void onGet()  { print(req.uri.queryStr)  }
-  override Void onPost() { print(req.in.readAllStr) }
-  Void print(Str s)
-  {
-    buf := Buf().printLine(s)
-    res.headers["Content-Length"] = buf.size.toStr
-    res.headers["Content-Type"] = "text/plain"
-    res.out.writeBuf(buf.flip)
-  }
-}
