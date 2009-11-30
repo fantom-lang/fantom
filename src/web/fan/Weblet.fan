@@ -11,49 +11,46 @@
 **
 ** See [docLib::Web]`docLib::Web#weblet`
 **
-abstract class Weblet
+mixin Weblet
 {
-
-//////////////////////////////////////////////////////////////////////////
-// Constructor
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Default constructor.
-  **
-  new make()
-  {
-    req := Actor.locals["web.req"] as WebReq
-    res := Actor.locals["web.res"] as WebRes
-    if (req != null) this.req = req
-    if (res != null) this.res = res
-  }
 
 //////////////////////////////////////////////////////////////////////////
 // Request/Response
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** The WebReq instance for this request, or null if current
-  ** actor is not servicing a request.
+  ** The WebReq instance for this current web request.  Raise an exception
+  ** if the current actor thread is not serving a web request.
   **
-  @transient readonly WebReq? req
+  WebReq req()
+  {
+    try
+      return Actor.locals["web.req"]
+    catch (NullErr e)
+      throw Err("No web request active in thread")
+  }
 
   **
-  ** The WebRes instance for this request, or null if current
-  ** actor is not servicing a request.
+  ** The WebRes instance for this current web request.  Raise an exception
+  ** if the current actor thread is not serving a web request.
   **
-  @transient readonly WebRes? res
+  WebRes res()
+  {
+    try
+      return Actor.locals["web.res"]
+    catch (NullErr e)
+      throw Err("No web request active in thread")
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Service Methods
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Service a web request. The default implementation of this
-  ** method calls the method that matches WebReq.method.
+  ** Service a web request. The default implementation routes
+  ** to `onGet`, `onPost`, etc based on the request's method.
   **
-  virtual Void service()
+  virtual Void onService()
   {
     switch (req.method)
     {
@@ -64,7 +61,7 @@ abstract class Weblet
       case "DELETE":  onDelete
       case "OPTIONS": onOptions
       case "TRACE":   onTrace
-      default: throw UnsupportedErr("Unsupported method \"$req.method\".")
+      default:        res.sendError(501)
     }
   }
 

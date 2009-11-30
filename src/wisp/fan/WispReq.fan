@@ -27,13 +27,14 @@ class WispReq : WebReq
     this.webIn = in
   }
 
-  override WispService service
+  override WebMod mod := WispDefaultMod()
   override Str method := ""
   override Version version := nullVersion
   override IpAddress remoteAddress() { return socket.remoteAddress }
   override Int remotePort() { return socket.remotePort }
   override Str:Str headers := nullHeaders
   override Uri uri := ``
+  override once WebSession session() { service.sessionMgr.load(this) }
 
   override InStream in()
   {
@@ -44,6 +45,7 @@ class WispReq : WebReq
   static const Version nullVersion := Version("0")
   static const Str:Str nullHeaders := Str:Str[:]
 
+  internal WispService service
   internal TcpSocket socket
   internal InStream? webIn
 }

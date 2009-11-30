@@ -55,7 +55,7 @@ abstract class BootScript
   **
   ** The services are the list of threads to spawn on startup.
   **
-  abstract Service[] services
+  abstract Service[] services()
 
   **
   ** Install all the threads

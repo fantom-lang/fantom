@@ -16,15 +16,6 @@ using inet
 abstract class WebReq
 {
 
-//////////////////////////////////////////////////////////////////////////
-// Public
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Get the WebService managing the request.
-  **
-  abstract WebService service()
-
   **
   ** The HTTP request method in uppercase. Example: GET, POST, PUT.
   **
@@ -73,6 +64,43 @@ abstract class WebReq
   }
 
   **
+  ** Get the WebMod which is currently responsible
+  ** for processing this request.
+  **
+  abstract WebMod mod
+
+  **
+  ** Base URI of the current WebMod.  This Uri always end in a slash.
+  ** This is URI used to route to the WebMod itself.  The remainder
+  ** of `uri` is stored in `modRel` so that the following always
+  ** holds true (with exception of a trailing slash):
+  **   modBase + modRel == uri
+  **
+  ** For example if the current WebMod is mounted as '/mod' then:
+  **   uri          modBase   modRel
+  **   ----------   -------   -------
+  **   `/mod`       `/mod/`   ``
+  **   `/mod/`      `/mod/`   ``
+  **   `/mod?q`     `/mod/`   `?q`
+  **   `/mod/a`     `/mod/`   `a`
+  **   `/mod/a/b`   `/mod/`   `a/b`
+  **
+  Uri modBase := `/`
+  {
+    set
+    {
+      if (!val.isDir) throw ArgErr("modBase must end in slash");
+      if (val.path.size > uri.path.size) throw ArgErr("modBase ($val) is not slice of uri ($uri)");
+      *modBase = val
+    }
+  }
+
+  **
+  ** WebMod relative part of the URI - see `modBase`.
+  **
+  Uri modRel() { uri[modBase.path.size..-1] }
+
+  **
   ** Map of HTTP request headers.  The headers map is readonly
   ** and case sensitive (see `sys::Map.caseInsensitive`).
   **
@@ -99,10 +127,7 @@ abstract class WebReq
   ** The session must be accessed the first time before the
   ** response is committed.
   **
-  virtual once WebSession session()
-  {
-    return service.sessionMgr.load(this)
-  }
+  abstract WebSession session()
 
   **
   ** The UserAgent for this request or null if the
@@ -149,12 +174,6 @@ abstract class WebReq
   ** in order to pass data b/w Weblets while processing
   ** this request.
   **
-  Str:Obj? stash := Str:Obj?[:]
-
-  **
-  ** The namespace object resolved by `uri`.
-  **
-  Obj? resource
-
+  Str:Obj? stash := Str:Obj?["web.startTime":Duration.now]
 
 }
