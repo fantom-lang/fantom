@@ -12,7 +12,7 @@ using web
 **
 ** WispReq
 **
-class WispReq : WebReq
+internal class WispReq : WebReq
 {
   new make(WispService service, TcpSocket socket)
   {

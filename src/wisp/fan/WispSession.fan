@@ -11,7 +11,7 @@ using web
 **
 ** WispSession
 **
-class WispSession : WebSession
+internal class WispSession : WebSession
 {
 
   internal new make(Str? id := null) : super(id) {}
@@ -35,7 +35,7 @@ class WispSession : WebSession
 **
 ** WispSessionMgr manages WispSession storage and cleanup.
 **
-const class WispSessionMgr : ActorPool
+internal const class WispSessionMgr : ActorPool
 {
   const Actor actor := Actor(this) |msg,cx| { receive(msg, cx) }
 
