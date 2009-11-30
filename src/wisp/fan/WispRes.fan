@@ -12,7 +12,7 @@ using web
 **
 ** WispRes
 **
-class WispRes : WebRes
+internal class WispRes : WebRes
 {
 
 //////////////////////////////////////////////////////////////////////////

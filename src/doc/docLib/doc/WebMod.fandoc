@@ -8,9 +8,6 @@
 
 Overview [#overview]
 ********************
-**WARNING**: the webmod framework was recently refactored, so it
-might still go through a few changes.
-
 The [webmod]`webmod::index` pod defines a library for web modules
 which may be composed together:
   - [FileMod]`#file`: publish static files
@@ -20,15 +17,103 @@ which may be composed together:
 
 FileMod [#file]
 ***************
-[FileMod]`webmod::FileMod` is TODO...
+[FileMod]`webmod::FileMod` is a simple way to publish static files
+under a base URI.  FileMod may be used with a single file or with
+a directory.  If using FileMod with a directory, then any request
+which maps to a directory which does not end in slash is redirected
+to include a trailing slash.  Requests to directories are mapped to
+"index.html" in that directory.
+
+Let's assume we have the following file structure:
+
+  pub/
+    index.html
+    alpha.html
+    icon.png
+    foo/
+      index.html
+      beta.html
+
+Let's assume this top level route mapping:
+
+  RouteMod
+  {
+    routes =
+    [
+      "favicon.ico": `pub/icon.png`,
+      "stuff":       `pub/`
+    ]
+  }
+
+Single file modules map directly to the file:
+
+  /favicon.ico     =>  pub/icon.png
+  /favicon.ico?q   =>  pub/icon.png  // queries ignored
+  /favicon.ico/foo =>  404           // deeper paths return 404
+
+Directories map files based on [WebReq.modRel]`web::WebReq.modRel`:
+
+  /stuff                =>  redirect /stuff/
+  /stuff/               =>  /stuff/index.html
+  /stuff/index.html     =>  /stuff/index.html
+  /stuff/alpha.html     =>  /stuff/alpha.html
+  /stuff/foo            =>  redirect /stuff/foo/
+  /stuff/foo/           =>  /stuff/foo/index.html
+  /stuff/foo/beta.html  =>  /stuff/foo/beta.html
 
 RouteMod [#route]
 *****************
-[RouteMod]`webmod::RouteMod` is TODO...
+[RouteMod]`webmod::RouteMod` is a composition module used to route
+path names in a URI to sub-modules.  RouteMod maps the first path
+name in [WebReq.modRel]`web::WebReq.modRel` to a sub module via
+the 'routes' map.  If 'modRel' is the empty path, then RouteMod
+will route to the name "index".
+
+Example configuration with nested routes:
+
+  root =  RouteMod
+  {
+    routes =
+    [
+      "index": top,
+      "foo":   foo,
+      "bar":   RouteMod
+      {
+        routes =
+        [
+          "index": bar,
+          "alpha": alpha,
+        ]
+      }
+    ]
+  }
+
+Request uri to module mappings:
+
+  /             =>  top
+  /index/       =>  top
+  /index/x      =>  top
+  /foo          =>  foo
+  /foo/index    =>  foo
+  /foo/a/b      =>  foo
+  /bar          =>  bar
+  /bar/         =>  bar
+  /bar/alpha    =>  alpha
+  /bar/alpha/x  =>  alpha
 
 PipelineMod [#pipeline]
 ***********************
-[PipelineMod]`webmod::PipelineMod` is TODO...
+[PipelineMod]`webmod::PipelineMod` is a composition module used
+to run a request through a series of sub-modules.  The lifecycle of
+a PipelineMod request:
+  1. Call each module in 'before'
+  2. Call each module in 'steps' as long as 'WebRes.isDone' returns false
+  3. Call each module in 'after'
+
+The before, steps, and after lists are processed in their declaration
+order. Every module declared in before and after is called for every
+request regardless of the 'WebRes.isDone' state.  But the modules
+declared steps are only processed as long as 'WebRes.isDone' is false.
 
 LogMod [#log]
 ************

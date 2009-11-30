@@ -12,13 +12,15 @@ using inet
 **
 ** Wisp implementation of WebService.
 **
+** See [docLib::Wisp]`docLib::Wisp`
+**
 const class WispService : Service
 {
 
   **
   ** Standard log for web service
   **
-  static const Log log := Log.get("web")
+  internal static const Log log := Log.get("web")
 
   **
   ** Well known TCP port for HTTP traffic.
@@ -60,9 +62,9 @@ const class WispService : Service
     }
   }
 
-  const ActorPool listenerPool   := ActorPool()
-  const ActorPool processorPool  := ActorPool()
-  const WispSessionMgr sessionMgr := WispSessionMgr()
+  internal const ActorPool listenerPool   := ActorPool()
+  internal const ActorPool processorPool  := ActorPool()
+  internal const WispSessionMgr sessionMgr := WispSessionMgr()
 
 }
 
