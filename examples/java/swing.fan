@@ -36,7 +36,7 @@ class SwingDemo
       setVisible(true)
     }
 
-    Actor.sleep(Duration.maxVal) // Fantom launcher exits if this thread exists
+    Actor.sleep(Duration.maxVal) // Fantom launcher exits if this thread exits
   }
 
 }
