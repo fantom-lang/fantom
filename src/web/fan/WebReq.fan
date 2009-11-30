@@ -37,8 +37,8 @@ abstract class WebReq
   abstract Int remotePort()
 
   **
-  ** The request URI including the query string relative
-  ** to this authority.  Also see `absUri`.
+  ** The request URI including the query string relative to
+  ** this authority.  Also see `absUri`, `modBase`, and `modRel`.
   **
   ** Examples:
   **   /a/b/c
@@ -48,8 +48,8 @@ abstract class WebReq
 
   **
   ** The absolute request URI including the full authority
-  ** and the query string.  Also see `uri`.  This method is
-  ** equivalent to:
+  ** and the query string.  Also see `uri`, `modBase`, and `modRel`.
+  ** This method is equivalent to:
   **   "http://" + headers["Host"] + uri
   **
   ** Examples:
@@ -70,8 +70,8 @@ abstract class WebReq
   abstract WebMod mod
 
   **
-  ** Base URI of the current WebMod.  This Uri always end in a slash.
-  ** This is URI used to route to the WebMod itself.  The remainder
+  ** Base URI of the current WebMod.  This Uri always ends in a slash.
+  ** This is the URI used to route to the WebMod itself.  The remainder
   ** of `uri` is stored in `modRel` so that the following always
   ** holds true (with exception of a trailing slash):
   **   modBase + modRel == uri

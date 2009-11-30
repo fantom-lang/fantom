@@ -33,9 +33,10 @@ class Build : BuildGroup
       `inet/build.fan`,
       `fansh/build.fan`,
       `web/build.fan`,
-      `webapp/build.fan`,
+      `webmod/build.fan`,
       `dom/build.fan`,
-      `testWeb/build.fan`,
+// TODO
+//      `testWeb/build.fan`,
       `wisp/build.fan`,
       `fandoc/build.fan`,
       `docCompiler/build.fan`,

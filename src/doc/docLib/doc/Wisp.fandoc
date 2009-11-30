@@ -6,6 +6,14 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-TODO: wisp pod
+Overview [#overview]
+********************
+Fantom comes bundled with the `wisp::WispService` which implements
+a web server purely in Fantom code - so you can use it without
+the fuss of setting up additional software.
 
 See [wisp]`wisp::index` API
+
+TODO: setups and review public fandocs
+
+

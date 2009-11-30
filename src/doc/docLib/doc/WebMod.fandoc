@@ -1,0 +1,66 @@
+**************************************************************************
+** title:      WebMod
+** author:     Brian Frank
+** created:    05 Apr 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+**WARNING**: the webmod framework was recently refactored, so it
+might still go through a few changes.
+
+The [webmod]`webmod::index` pod defines a library for web modules
+which may be composed together:
+  - [FileMod]`#file`: publish static files
+  - [RouteMap]`#route`: route to a sub-module based on a URI path name
+  - [PipelineMod]`#pipeline`: run through a serial list of sub-modules
+  - [LogMod]`#log`: logs using W3C extended log format
+
+FileMod [#file]
+***************
+[FileMod]`webmod::FileMod` is TODO...
+
+RouteMod [#route]
+*****************
+[RouteMod]`webmod::RouteMod` is TODO...
+
+PipelineMod [#pipeline]
+***********************
+[PipelineMod]`webmod::PipelineMod` is TODO...
+
+LogMod [#log]
+************
+[LogMod]`webmod::LogMod` class is used to generate a server
+log file for all HTTP requests in the [W3C Extended Log File
+Format]`http://www.w3.org/TR/WD-logfile.html`.  The 'file' Uri
+must be configured - records are always appended to this file.
+Logging is best done a step in the 'WebPipleine.after'.
+
+The 'fields' property configures the format of the log records.
+It is a string of field names separated by a space.  The following
+field names are supported:
+  - **date**: UTC date as DD-MM-YYYY
+  - **time**: UTC time as hh:mm:ss
+  - **c-ip**: the numeric IP address of the remote client socket
+  - **c-port**: the IP port of the remote client socket
+  - **cs-method**: the request method such as GET
+  - **cs-uri**: the encoded request uri (path and query)
+  - **cs-uri-stem**: the encoded path of the request uri
+  - **cs-uri-query**: the encoded query of the request uri
+  - **sc-status**: the return status code
+  - **time-taken**: the time taken to process request in milliseconds
+  - **cs(HeaderName)**: request header value such 'User-Agent'
+
+If any unknown fields are specified or not available then "-" is logged.
+The default format is:
+
+  date time c-ip cs-method cs-uri-stem cs-uri-query
+    sc-status time-taken cs(User-Agent) cs(Referer)
+
+Example log record with this format:
+
+  18-04-2008 01:42:54 127.0.0.1 GET / - 304 1 "Mozilla/5.0 (Windows; U;
+    Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13"
+    "http://localhost:8080/dir/index.html"

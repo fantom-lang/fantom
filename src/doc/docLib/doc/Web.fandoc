@@ -17,14 +17,14 @@ Client side HTTP requests:
 
 Server side web APIs are organized into the primary classes:
 
-  - [Weblet]`web::Weblet`: an entity which processes a web
-    request - it is very much like a Java servlet.
   - [WebReq]`web::WebReq`: models an incoming web request such
     as the method, uri, request headers, and input stream.
   - [WebRes]`web::WebRes`: models the outgoing web response
     such as the status code, response headers, and output stream.
-  - [WebService]`web::WebService`: base class for the HTTP server
-    implementations and used to configure the web pipeline.
+  - [Weblet]`web::Weblet`: an entity which processes a web
+    request.
+  - [WebMod]`web::WebMod`: a web module which may be composed with
+    other modules to built up a web solution.
 
 WebClient [#webClient]
 **********************
@@ -46,15 +46,14 @@ See [examples]`examples::web-client` for sample code.
 
 Weblets [#weblet]
 *****************
-Pretty much anything that touches a HTTP request should be a subclass
-of `web::Weblet`.  The lifecycle of a Weblet is quite simple:
+Pretty much anything that touches a HTTP request should be implement
+`web::Weblet`.  The lifecycle of a Weblet is quite simple:
   - all web requests are guaranteed to be called on their own
     thread with the thread locals "web.req" and "web.res"
-  - 'make': the constructor automatically initializes the 'req'
-    and 'res' fields with the current thread's 'WebReq' and
-    'WebRes' - so there no need to pass the request and response
-    around
-  - 'service': the 'service' method can be overridden directly to
+  - 'req'/'res': the current thread's 'WebReq' and 'WebRes' are
+    available with these methods - so there no need to pass the
+    request and response around
+  - 'onService': the 'onService' method can be overridden directly to
     handle the request, or the default implementation will route
     to the 'doGet', 'doPost', etc methods
 
@@ -65,6 +64,10 @@ Common methods you will use include:
   - [method]`web::WebReq.method`: HTTP method such as "GET" or "POST"
   - [uri]`web::WebReq.uri`: the request URI parsed into a `sys::Uri`
     which allows you access the parsed path and query segments.
+  - [mod]`web::WebReq.mod`: web module currently responsible for request
+  - [modBase]`web::WebReq.modBase`: URI used to route to current module
+  - [modRel]`web::WebReq.modRel`: module relative URI used for module
+    internal processing
   - [headers]`web::WebReq.headers`: a case insensitive 'Str:Str' map
     of the request HTTP headers
   - [in]`web::WebReq.in`: access to the raw input stream of the request
@@ -74,7 +77,6 @@ Common methods you will use include:
     stuff for the browser "connection" between HTTP requests
   - [stash]`web::WebReq.stash`: a 'Str:Obj' map used to stash stuff
     only for the life of request
-  - [resource]`web::WebReq.resource`: the [webapp]`WebApp` resource
   - [userAgent]`web::WebReq.userAgent`: access the parsed "User-Agent"
     header
 
@@ -108,8 +110,7 @@ Common methods you will use include:
   - [redirect]`web::WebRes.redirect`: used to send a redirect status code
 
 WebRes is a fairly low level API which requires the commit state
-model to avoid buffering the content.  The [Widget]`WebWidget` API provides a
-higher level model which buffers the response to provide more flexibility.
+model to avoid buffering the content.
 
 WebSessions [#sessions]
 ***********************
@@ -144,23 +145,25 @@ Example of storing a counter in a session:
     res.out.printLine("session counter=$count")
   }
 
-WebServices [#webServices]
-**************************
-The `web::WebService` class is the base class for plugging in
-web server implementations.  Fantom comes bundled with the `wisp::WispService`
-which implements a web server purely in Fantom code - so you can use
-it without the fuss of setting up additional software.  The plan
-is over time to add implementations for plugging into a Java
-Servlet container, into IIS, and to have a fan_mod for Apache.  Most
-important is that all Fantom code written to the web pod APIs should be
-insulated from the web server implementation.
+WebMods [#webmod]
+******************
+The `web::WebMod` class is the base class for plugging in web server
+modules.  WebMods are immutable Weblets which may be composed together
+to build higher level modules or to configure the entire web server.
 
-WebStep Pipeline [#pipeline]
-****************************
-The [WebService.pipeline]`web::WebService.pipeline` field defines how
-web requests are processed using a *pipeline* of [WebSteps]`web::WebStep`.
-WebSteps are just like Weblets, but are const so that they can be
-configured on the const WebService.  The web pod itself is a low
-layer API and doesn't define any WebSteps itself.  The [webapp]`WebApp`
-pod is layered above the web pod and defines a whole mini-framework
-of steps you can use.
+During processing of a given web request, there is always exactly one
+WebMod responsible for the request which is available via the
+[WebReq.mod]`web::WebReq.mod` method.  The URI used to route to the
+module is accessed by [WebReq.modBase]`web::WebReq.modBase`,
+and the remainder of the URI which is internal to the module via
+[WebReq.modRel]`web::WebReq.modRel`.  Using these methods you can
+write modules which can be freely plugged anywhere into a server's
+URI namespace.
+
+WebMods receive the 'onStart' and 'onStop' callbacks when the web server
+is started and stopped.  These callbacks can be used to perform
+initialization and cleanup such as managing actors.
+
+The [webmod]`WebMod` pod includes a library of modules which are
+designed to handle common tasks such publishing static files, routing,
+and pipelining.
