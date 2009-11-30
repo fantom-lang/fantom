@@ -10,18 +10,18 @@
 ** WebMod defines a web modules which is plugged into a
 ** web server's URI namespace to service web requests.
 **
-** See [docLib::Web]`docLib::Web`
+** See [docLib::Web]`docLib::Web#webmod`
 **
 abstract const class WebMod : Weblet
 {
 
   **
-  ** Initialization callback.
+  ** Initialization callback when web server is started.
   **
   virtual Void onStart() {}
 
   **
-  ** Cleanup callback.
+  ** Cleanup callback when web server is stoppped.
   **
   virtual Void onStop() {}
 

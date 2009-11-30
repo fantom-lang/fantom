@@ -232,8 +232,8 @@ pre>
   - `docLang::index`: pod index
   - `docLang::Closures`: chapter
   - `docLang::Closures#syntax`: anchor within chapter
-  - `WebApp`: chapter (internal to pod)
-  - `WebApp#LogStep`: anchor within chapter (internal to pod)
+  - `Web`: chapter (internal to pod)
+  - `Web#WebReq`: anchor within chapter (internal to pod)
 <pre
 
 **APIs:**
@@ -248,8 +248,8 @@ pre>
   - `docLang::index`: pod index
   - `docLang::Closures`: chapter
   - `docLang::Closures#syntax`: anchor within chapter
-  - `WebApp`: chapter (internal to pod)
-  - `WebApp#logStep`: anchor within chapter (internal to pod)
+  - `WebMod`: chapter (internal to pod)
+  - `WebMod#log`: anchor within chapter (internal to pod)
 
 Fandoc API [#api]
 *****************

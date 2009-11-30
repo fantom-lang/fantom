@@ -13,21 +13,7 @@
 
 @podDepends  = [Depend("sys 1.0"), Depend("inet 1.0")]
 @podSrcDirs  = [`fan/`, `test/`]
-@podIndexFacets = [@webView]
 @js
 
-pod web
-{
-  **
-  ** Indicates a web based view on the given types.
-  ** See `docLib::WebApp`.
-  **
-  Type[] webView := Type[,]
-
-  **
-  ** Indicates priority of web view: 0 is lowest.
-  ** See `docLib::WebApp`.
-  **
-  Int webViewPriority := 0
-}
+pod web {}
 

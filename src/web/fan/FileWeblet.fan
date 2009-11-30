@@ -15,7 +15,6 @@
 ** for cache validation.  It does not specify any cache control
 ** directives.
 **
-@webView=[File#]
 class FileWeblet : Weblet
 {
 

@@ -163,18 +163,15 @@ expressions.
 
 Fantom WebApp [#webapp]
 ***********************
-To create a very simple hello world web application:
-  - Create a daemon boot script
-  - Configure the web server with a simple pipeline
-  - Write a simple weblet
-  - Mount the weblet into the uri space
+To create a very simple hello world web application we can
+create a daemon boot script which launches Fantom's built-in
+web server with a simple hello WebMod.
 
 Let's look at some example code (this script is available under
 "examples/web/hello.fan"):
 
   using fand
   using web
-  using webapp
   using wisp
 
   class Boot : BootScript
@@ -184,37 +181,29 @@ Let's look at some example code (this script is available under
       WispService
       {
         port = 8080
-        pipeline = [FindResourceStep {}, FindViewStep {}, ServiceViewStep {}]
+        root = HelloMod()
       }
     ]
-
-    override Void setup()
-    {
-      UriSpace.root.create(`/homePage`, Hello#)
-    }
   }
 
-  class Hello : Weblet
+  const class HelloMod : WebMod
   {
     override Void onGet()
     {
-      res.headers["Content-Type"] = "text/plain"
-      res.out.printLine("hello world #4")
+      res.headers["Content-Type"] = "text/plain; charset=utf-8"
+      res.out.print("hello world #4")
     }
   }
 
 The boot script contains two classes.  The first class 'Boot' subclasses
 [BootScript]`fand::BootScript` which provides the standard plumbing for
 writing scripts to boot a Fantom daemon.  It's primary purpose is to configure
-the web server to run on port 8080 and to use a simple pipeline which
-defines how to process HTTP requests.  The pipeline is configured using
-some prebuilt steps provided by the [webapp]`docLib::WebApp` framework.
+the web server to run on port 8080 and to use a simple webmod which
+defines how to process HTTP requests.
 
-The 'Hello' class subclasses [Weblet]`docLib::Web#weblet` which is Fantom's
+The 'HelloMod' class subclasses [WebMod]`docLib::Web#webmod` which is Fantom's
 "servlet" API for servicing web requests.  It doesn't do much - sets
-the content type and writes the response text.  Lastly we mount this
-weblet into our uri space as the home page.  [UriSpaces]`docLang::UriSpaces`
-define how we map URIs to resources.
+the content type and writes the response text.
 
 If you run this script:
 
@@ -222,4 +211,4 @@ If you run this script:
   [09:57:40 11-Apr-08] [info] [fand] booting...
   [09:57:40 11-Apr-08] [info] [web] WispService started on port 8080
 
-You should be able to "http://localhost:8080/" with your browser!
+You should be able to hit `http://localhost:8080/` with your browser!

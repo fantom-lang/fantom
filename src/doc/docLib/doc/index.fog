@@ -19,8 +19,7 @@
   [`Flux`,      "Framework for building browser based fwt applications"],
 "Web Applications",
   [`Web`,       "web client and server APIs"],
-  [`WebApp`,    "web application framework"],
-  [`WebWidget`, "web application widgets"],
+  [`WebMod`,    "web module library"],
   [`Dom`,       "browser DOM APIs"],
   [`Wisp`,      "Fantom's built-in web server"],
 ]
