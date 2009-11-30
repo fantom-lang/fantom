@@ -76,6 +76,7 @@ namespace Fan.Sys
     public ActorPool join() { return join(null); }
     public ActorPool join(Duration timeout)
     {
+      if (!isStopped()) throw Err.make("ActorPool is not stopped").val;
       long ms = timeout == null ? System.Int32.MaxValue : timeout.millis();
       try
       {

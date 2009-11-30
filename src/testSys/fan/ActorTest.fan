@@ -215,10 +215,12 @@ class ActorTest : Test
     // still running
     verifyEq(pool.isStopped, false)
     verifyEq(pool.isDone, false)
+    verifyErr(Err#) { pool.join }
+    verifyErr(Err#) { pool.join(5sec) }
 
     // join with timeout
     t1 := Duration.now
-    verifyErr(TimeoutErr#) |,| { pool.stop.join(100ms) }
+    verifyErr(TimeoutErr#) { pool.stop.join(100ms) }
     t2 := Duration.now
     verify(t2 - t1 <= 120ms)
     verifyEq(pool.isStopped, true)
