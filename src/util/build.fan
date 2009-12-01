@@ -5,17 +5,18 @@
 //
 // History:
 //   14 Nov 07  Brian Frank  Creation
+//    1 Dec 09  Brian Frank  Rename fand to util
 //
 
 using build
 
 **
-** Build: fand
+** Build: util
 **
 class Build : BuildPod
 {
   override Void setup()
   {
-    podName = "fand"
+    podName = "util"
   }
 }

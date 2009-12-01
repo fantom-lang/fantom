@@ -7,23 +7,27 @@
 //   12 Jun 09  Brian Frank  Creation
 //
 
-using fand
+using util
 using web
 using webmod
 using wisp
 using compiler
 using compilerJs
 
-class Boot : BootScript
+class JsDemo : AbstractMain
 {
-  override Service[] services :=
-  [
-    WispService
+  @opt="http port"
+  Int port := 8080
+
+  override Void run()
+  {
+    wisp := WispService
     {
-      port = 8080
-      root = JsDemoMod(scriptDir)
+      it.port = this.port
+      it.root = JsDemoMod(homeDir)
     }
-  ]
+    runServices([wisp])
+  }
 }
 
 const class JsDemoMod : WebMod

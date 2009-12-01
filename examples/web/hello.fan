@@ -7,23 +7,27 @@
 //   11 Apr 08  Brian Frank  Creation
 //
 
-using fand
+using util
 using web
 using wisp
 
 **
-** Boot script for weblet hello world
+** Boot script for web hello world
 **
-class Boot : BootScript
+class WebHello : AbstractMain
 {
-  override Service[] services :=
-  [
-    WispService
+  @opt="http port"
+  Int port := 8080
+
+  override Void run()
+  {
+    wisp := WispService
     {
-      port = 8080
-      root = HelloMod()
+      it.port = this.port
+      it.root = HelloMod()
     }
-  ]
+    runServices([wisp])
+  }
 }
 
 const class HelloMod : WebMod
