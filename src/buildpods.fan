@@ -29,7 +29,7 @@ class Build : BuildGroup
       `testNative/build.fan`,
       `testCompiler/build.fan`,
       `testJava/build.fan`,
-      `fand/build.fan`,
+      `util/build.fan`,
       `inet/build.fan`,
       `fansh/build.fan`,
       `web/build.fan`,
