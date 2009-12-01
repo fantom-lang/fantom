@@ -9,7 +9,6 @@
 [
 "Utilities",
   [`Fandoc`,    "text formatting language"],
-  [`Fand`,      "daemon server scripts"],
   [`Email`,     "MIME and SMTP email support"],
   [`Sql`,       "relational database APIs"],
   [`Xml`,       "XML parsing and document modeling"],
