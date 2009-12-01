@@ -170,20 +170,24 @@ web server with a simple hello WebMod.
 Let's look at some example code (this script is available under
 "examples/web/hello.fan"):
 
-  using fand
+  using util
   using web
   using wisp
 
-  class Boot : BootScript
+  class WebHello : AbstractMain
   {
-    override Service[] services :=
-    [
-      WispService
+    @opt="http port"
+    Int port := 8080
+
+    override Void run()
+    {
+      wisp := WispService
       {
-        port = 8080
-        root = HelloMod()
+        it.port = this.port
+        it.root = HelloMod()
       }
-    ]
+      runServices([wisp])
+    }
   }
 
   const class HelloMod : WebMod
@@ -195,11 +199,11 @@ Let's look at some example code (this script is available under
     }
   }
 
-The boot script contains two classes.  The first class 'Boot' subclasses
-[BootScript]`fand::BootScript` which provides the standard plumbing for
-writing scripts to boot a Fantom daemon.  It's primary purpose is to configure
-the web server to run on port 8080 and to use a simple webmod which
-defines how to process HTTP requests.
+The boot script contains two classes.  The first class 'WebHello' subclasses
+[AbstractMain]`util::AbstractMain` which provides the standard plumbing for
+writing main routines.  It's primary purpose is to configure the web server
+to run on port 8080 and to use a simple webmod which defines how to
+process HTTP requests.
 
 The 'HelloMod' class subclasses [WebMod]`docLib::Web#webmod` which is Fantom's
 "servlet" API for servicing web requests.  It doesn't do much - sets

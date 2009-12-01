@@ -10,7 +10,7 @@
 ** Standard library of WebMods
 **
 
-@podDepends = [Depend("sys 1.0"), Depend("inet 1.0"), Depend("web 1.0"), Depend("fand 1.0")]
+@podDepends = [Depend("sys 1.0"), Depend("inet 1.0"), Depend("web 1.0"), Depend("util 1.0")]
 @podSrcDirs = [`fan/`]
 
 pod webmod {}

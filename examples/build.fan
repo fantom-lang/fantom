@@ -41,6 +41,8 @@ class Build : BuildScript
     "java/",         "java",
       "hello",       "Hello world with Java FFI",
       "swing",       "Swing application using Java FFI",
+    "util/",         "util",
+      "main",        "Working with util::AbstractMain",
     "web/",          "web",
       "client",      "Working with web::WebClient",
       "hello",       "Hello world web server application",

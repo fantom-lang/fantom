@@ -1,6 +1,6 @@
 #! /usr/bin/env fan
 
-using fand
+using util
 using web
 using webmod
 using wisp
@@ -8,13 +8,26 @@ using wisp
 **
 ** Samples for web and webmod pods.
 **
-class Boot : BootScript
+class Boot : AbstractMain
 {
-  override Service[] services()
-  {
-    docDir := Repo.boot.home + `doc/`
-    if (!docDir.exists) docDir = scriptDir + `demo/`
+  @opt="http port"
+  Int port := 8080
 
+  override Void run()
+  {
+    // create log dir is it doesn't exist
+    logDir := homeDir + `demo/logs/`
+    if (!logDir.exists) logDir.create
+
+    // install sys log handler
+    sysLogger := FileLogger { file = logDir + `sys.log` }
+    Log.addHandler |rec| { sysLogger.writeLogRecord(rec) }
+
+    // check if doc directory exists
+    docDir := Repo.boot.home + `doc/`
+    if (!docDir.exists) docDir = homeDir + `demo/`
+
+    // configure our web pipeline
     pipeline := PipelineMod
     {
       // pipeline steps
@@ -24,10 +37,10 @@ class Boot : BootScript
         {
           routes =
           [
-            "index": FileMod { file = scriptDir + `demo/index.html` },
+            "index": FileMod { file = homeDir + `demo/index.html` },
             "flag":  FileMod { file = `fan:/sys/pod/icons/x32/flag.png`.get },
             "doc":   FileMod { file = docDir },
-            "logs":  FileMod { file = scriptDir + `demo/logs/` },
+            "logs":  FileMod { file = logDir },
             "dump":  TestMod("dump"),
           ]
         }
@@ -36,18 +49,12 @@ class Boot : BootScript
       // steps to run after every request
       after =
       [
-        LogMod { file = scriptFile + `demo/logs/web.log` }
+        LogMod { file = logDir + `web.log` }
       ]
     }
 
-    // return just the WispService for our list of services
-    return [ WispService { port = 8080; root = pipeline } ]
-  }
-
-  override Void setup()
-  {
-    sysLogger := FileLogger { file = scriptDir + `demo/logs/sys.log` }
-    Log.addHandler |rec| { sysLogger.writeLogRecord(rec) }
+    // run WispService
+    runServices([ WispService { it.port = this.port; root = pipeline } ])
   }
 }
 
