@@ -167,6 +167,15 @@ public final class List
     }
   }
 
+  public final Object getSafe(long index) { return getSafe(index, null); }
+  public final Object getSafe(long index, Object def)
+  {
+    int i = (int)index;
+    if (i < 0) i = size + i;
+    if (i >= size || i < 0) return def;
+    return values[i];
+  }
+
   public final List slice(Range r)
   {
     try

@@ -101,6 +101,14 @@ final class List
   V get(Int index)
 
   **
+  ** Get the item at the specified index, but if index is out of
+  ** range, then return 'def' parameter.  A negative index may be
+  ** used according to the same semantics as `get`.  This method
+  ** is idempotent.
+  **
+  V? getSafe(Int index, V? def := null)
+
+  **
   ** Return a sub-list based on the specified range.  Negative indexes
   ** may be used to access from the end of the list.  This method
   ** is accessed via the [] operator.  This method is idempotent.
