@@ -243,6 +243,43 @@ class ListTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Get
+//////////////////////////////////////////////////////////////////////////
+
+  Void testGet()
+  {
+    // empty
+    (-10..10).each |i| { verifyGetErr(Str[,], i) }
+
+    // size one
+    verifyGet(["a"], 0, "a")
+    verifyGet(["a"], -1, "a")
+    (-10..-2).each |i| { verifyGetErr(Str[,], i) }
+    (1..10).each |i| { verifyGetErr(Str[,], i) }
+
+    // size two
+    verifyGet(["a", "b"], 0,  "a")
+    verifyGet(["a", "b"], 1,  "b")
+    verifyGet(["a", "b"], -1, "b")
+    verifyGet(["a", "b"], -2, "a")
+    (-10..-3).each |i| { verifyGetErr(Str[,], i) }
+    (2..10).each |i| { verifyGetErr(Str[,], i) }
+  }
+
+  Void verifyGet(Str[] list, Int i, Str expected)
+  {
+    verifyEq(list.get(i), expected)
+    verifyEq(list.getSafe(i), expected)
+  }
+
+  Void verifyGetErr(Str[] list, Int i)
+  {
+    verifyErr(IndexErr#) { list.get(i) }
+    verifyEq(list.getSafe(i), null)
+    verifyEq(list.getSafe(i, "!"), "!")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Items
 //////////////////////////////////////////////////////////////////////////
 

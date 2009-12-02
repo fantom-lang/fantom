@@ -747,4 +747,5 @@
 
 *Build 1.0.48 (incomplete)*
 - New docLang::IDEs chapter
+- List.getSafe
 
