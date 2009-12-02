@@ -202,10 +202,11 @@ class FanToHtml
   **
   private Void comment()
   {
-    in.next // eat first /
-    ch := in.next
-    if (ch == '/')
+    in.next // eat '/'
+    peek := in.peek
+    if (peek == '/')
     {
+      ch := in.read
       out.print("<span class='y'>/")
       while (ch != null && !nl(ch))
       {
@@ -215,8 +216,9 @@ class FanToHtml
       out.print("</span>")
       if (nl(ch)) out.writeChar(ch)
     }
-    else if (ch == '*')
+    else if (peek == '*')
     {
+      ch := in.read
       out.print("<span class='x'>/*")
       a := in.next
       b := in.next
@@ -249,6 +251,11 @@ class FanToHtml
       }
       out.print("</span>")
     }
+    else
+    {
+      // was not acutally a comment
+      out.writeChar('/')
+    }
   }
 
   **
@@ -256,17 +263,25 @@ class FanToHtml
   **
   private Void fandoc()
   {
-    out.print("<span class='z'>")
-    out.writeChar(in.next) // *
-    out.writeChar(in.next) // *
-    ch := in.next
-    while (ch != null && !nl(ch))
+    in.read // eat first '*'
+    if (in.peek == '*')
     {
-      safe(ch)
-      ch = in.next
+      in.read // eat second '*'
+      out.print("<span class='z'>**")
+      ch := in.next
+      while (ch != null && !nl(ch))
+      {
+        safe(ch)
+        ch = in.next
+      }
+      out.print("</span>")
+      if (nl(ch)) out.writeChar(ch)
     }
-    out.print("</span>")
-    if (nl(ch)) out.writeChar(ch)
+    else
+    {
+      // not actually a fandoc commnet
+      out.writeChar('*')
+    }
   }
 
   **

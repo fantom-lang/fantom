@@ -86,6 +86,8 @@ class FanToHtmlTest : Test
 
   Void testLineComments()
   {
+    verifyHtml("x/5", "x/5")
+    verifyHtml("x / 5", "x / 5")
     verifyHtml("// foo", "<span class='y'>// foo</span>")
     verifyHtml("// foo\n", "<span class='y'>// foo</span>\n")
     verifyHtml("// foo\n// bar\n", "<span class='y'>// foo</span>\n<span class='y'>// bar</span>\n")
@@ -106,6 +108,8 @@ class FanToHtmlTest : Test
 
   Void testFandocComments()
   {
+    verifyHtml("x*5", "x*5")
+    verifyHtml("x * 5", "x * 5")
     verifyHtml("** foo", "<span class='z'>** foo</span>")
     verifyHtml("** foo\n", "<span class='z'>** foo</span>\n")
     verifyHtml("** foo\n** bar\n", "<span class='z'>** foo</span>\n<span class='z'>** bar</span>\n")
