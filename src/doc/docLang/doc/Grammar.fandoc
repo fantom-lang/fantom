@@ -113,7 +113,7 @@ Stmt [#stmt]
   <while>          :=  "while" "(" <expr> ")" <block>
   <exprStmt>       :=  <expr> <eos>
   <localDef>       :=  [<type>] <id> [":=" <expr>] <eos>
-  <itAdd>          :=  <expr> ("," <expr>)*
+  <itAdd>          :=  <expr> ("," <expr>)* <eos>
 
   <try>            :=  "try" <block> <catch>* [<finally>]
   <catch>          :=  "catch" [<catchDef>] <block>

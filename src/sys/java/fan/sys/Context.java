@@ -42,6 +42,25 @@ public final class Context
 
   public final Context set(String name, Object val) { map.set(name, val); return this; }
 
+  public Object trap(String name, List args)
+  {
+    if (args.size() == 0)
+    {
+      Object val = map.get(name);
+      if (val != null) return val;
+      throw UnknownSlotErr.make("Name not in Context.map: " + name).val;
+    }
+
+    if (args.size() == 1)
+    {
+      Object val = args.first();
+      map.set(name, val);
+      return val;
+    }
+
+    return super.trap(name, args);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////

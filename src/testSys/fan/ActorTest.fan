@@ -33,6 +33,32 @@ class ActorTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Context
+//////////////////////////////////////////////////////////////////////////
+
+  Void testContext()
+  {
+    a := Actor(ActorPool()) |msg, Context cx|
+    {
+      switch (msg)
+      {
+        case "get":  return cx->foo
+        case "zero": return cx->foo = 0
+        case "inc":  return cx->foo = 1 + cx->foo
+      }
+      return 99
+    }
+
+    verifyErr(UnknownSlotErr#) { a.send("get").get }
+    verifyEq(a.send("zero").get, 0)
+    verifyEq(a.send("inc").get, 1)
+    verifyEq(a.send("inc").get, 2)
+    verifyEq(a.send("get").get, 2)
+    verifyEq(a.send("zero").get, 0)
+    verifyEq(a.send("get").get, 0)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Basics
 //////////////////////////////////////////////////////////////////////////
 
