@@ -746,6 +746,7 @@
 - #806: can't read MapType from ObjectDeserializer
 
 *Build 1.0.48 (incomplete)*
-- New docLang::IDEs chapter
-- List.getSafe
+- #826 New docLang::IDEs chapter
+- #844 List.getSafe
+- #848 Context.trap
 

@@ -917,7 +917,7 @@ public class Parser : CompilerSupport
 
   **
   ** Comma operator is sugar for it.add(target):
-  **   <itAdd>  :=  <expr> ("," <expr>)*
+  **   <itAdd>  :=  <expr> ("," <expr>)* <eos>
   **
   private Expr itAdd(Expr e)
   {

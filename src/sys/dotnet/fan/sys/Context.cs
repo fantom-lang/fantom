@@ -42,6 +42,25 @@ namespace Fan.Sys
 
     public Context set(string name, object val) { m_map.set(name, val); return this; }
 
+    public override object trap(string name, List args)
+    {
+      if (args.size() == 0)
+      {
+        object val = m_map.get(name);
+        if (val != null) return val;
+        throw UnknownSlotErr.make("Name not in Context.map: " + name).val;
+      }
+
+      if (args.size() == 1)
+      {
+        object val = args.first();
+        m_map.set(name, val);
+        return val;
+      }
+
+      return base.trap(name, args);
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////

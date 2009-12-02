@@ -16,6 +16,11 @@ final class Context
 {
 
   **
+  ** Private make
+  **
+  private new make()
+
+  **
   ** Get the actor associated with this context.
   **
   Actor actor()
@@ -34,5 +39,17 @@ final class Context
   ** Conveniece for setting a value from the `map`.
   **
   This set(Str name, Obj? val)
+
+  **
+  ** Trap is implemented to get and set the map via
+  ** the dynamic invoke operator:
+  **
+  **   cx->foo      =>  cx.get("foo")
+  **   cx->foo = 8  =>  cx.set("foo", 8)
+  **
+  ** If you attempt to call trap with no arguments on a
+  ** name not in the map, then UnknownSlotErr is raised.
+  **
+  override Obj? trap(Str name, Obj?[]? args)
 
 }
