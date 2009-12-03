@@ -122,8 +122,7 @@ fan.sys.Uri.makeSections = function(x)
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Uri.parentRange = fan.sys.Range.make(0, -2, false);
-
+// parentRange - see sysPod.js
 // defVal - see sysPod.js
 
 fan.sys.Uri.prototype.m_str = null;
