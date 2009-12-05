@@ -150,6 +150,8 @@ public final class Range
 
   public final List map(Func f)
   {
+    long start = this.start;
+    long end = this.end;
     Type r = f.returns();
     if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
     List acc = new List(r);
@@ -260,6 +262,6 @@ public final class Range
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private long start, end;
-  private boolean exclusive;
+  private final long start, end;
+  private final boolean exclusive;
 }

@@ -92,13 +92,15 @@ abstract class WebReq
       if (!val.isDir) throw ArgErr("modBase must end in slash");
       if (val.path.size > uri.path.size) throw ArgErr("modBase ($val) is not slice of uri ($uri)");
       *modBase = val
+      modRelVal = uri[val.path.size..-1]
     }
   }
 
   **
   ** WebMod relative part of the URI - see `modBase`.
   **
-  Uri modRel() { uri[modBase.path.size..-1] }
+  Uri modRel() { modRelVal ?: uri }
+  private Uri? modRelVal
 
   **
   ** Map of HTTP request headers.  The headers map is readonly

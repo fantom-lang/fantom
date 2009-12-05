@@ -29,8 +29,6 @@
 ** the service a chance to setup/shutdown its actors and associated
 ** resources.
 **
-** Services are typically configured in a `fand::BootScript`.
-**
 const mixin Service
 {
 
