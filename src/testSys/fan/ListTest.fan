@@ -364,7 +364,7 @@ class ListTest : Test
     x := Str[,]
 
     verifyEq(a.addAll(x), Str[,])
-    verifyEq(a.insertAll(-1, x), Str[,])
+    verifyErr(IndexErr#) { a.insertAll(-1, x) }
 
     a.add("a")
     verifyEq(a.addAll(x), ["a"])
@@ -381,6 +381,16 @@ class ListTest : Test
     a = ["a", "b", "c"]
     verifyEq(a.insertAll(1, a), ["a", "a", "b", "c", "b", "c"])
     verifyEq(a.insertAll(-2, ["x", "y"]), ["a", "a", "b", "c", "x", "y", "b", "c"])
+
+    verifyEq(Str[,].insertAll(0, ["a"]), ["a"])
+    verifyErr(IndexErr#) { [,].insertAll(1, [,]) }
+    verifyErr(IndexErr#) { [,].insertAll(-1, ["a"]) }
+
+    verifyEq(["a"].insertAll(0, ["b"]), ["b", "a"])
+    verifyEq(["a"].insertAll(1, ["b"]), ["a", "b"])
+    verifyEq(["a"].insertAll(-1, ["b"]), ["b", "a"])
+    verifyErr(IndexErr#) { ["a"].insertAll(2, ["b"]) }
+    verifyErr(IndexErr#) { ["a"].insertAll(-3, ["b"]) }
   }
 
 //////////////////////////////////////////////////////////////////////////
