@@ -373,7 +373,7 @@ namespace Fan.Sys
       // modify in insertAll(int, List)
       int i = (int)index;
       if (i < 0) i = m_size + i;
-      if (i > m_size) throw IndexErr.make(index).val;
+      if (i > m_size || i < 0) throw IndexErr.make(index).val;
       return insertAll(i, list);
     }
 

@@ -390,7 +390,7 @@ public final class List
     // modify in insertAll(int, List)
     int i = (int)index;
     if (i < 0) i = size + i;
-    if (i > size) throw IndexErr.make(index).val;
+    if (i > size || i < 0) throw IndexErr.make(index).val;
     return insertAll(i, list);
   }
 
