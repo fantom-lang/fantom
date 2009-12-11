@@ -143,7 +143,7 @@ process via an [it-block]`Closures#itBlocks`:
 
 Inside of it-blocks, the check for setting a const field is moved from
 compile-time to run-time.  The compiler will allow *any* it-block to set
-a const field on 'it'.  However, if if an attempt is made to call the
+a const field on 'it'.  However, if an attempt is made to call the
 it-block outside of the constructor then 'ConstErr' is thrown.  This
 gives you flexibility to build APIs which capture a snippet of code
 used to modify an immutable class.

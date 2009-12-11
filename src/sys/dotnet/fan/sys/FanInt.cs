@@ -329,6 +329,10 @@ namespace Fan.Sys
     public static String toLocale(long self) { return toLocale(self, null); }
     public static String toLocale(long self, string pattern)
     {
+      // if pattern is "B" format as bytes
+      if (pattern != null && pattern.Length == 1 && pattern[0] == 'B')
+        return toLocaleBytes(self);
+
       // get current locale
       Locale locale = Locale.current();
       NumberFormatInfo df = locale.dec();
@@ -343,6 +347,20 @@ namespace Fan.Sys
       // route to common FanNum method
       return FanNum.toLocale(p, d, df);
     }
+
+    static string toLocaleBytes(long b)
+    {
+      if (b < KB)    return b + "B";
+      if (b < 10*KB) return FanFloat.toLocale((double)b/KB, "#.#") + "KB";
+      if (b < MB)    return Math.Round((double)b/KB) + "KB";
+      if (b < 10*MB) return FanFloat.toLocale((double)b/MB, "#.#") + "MB";
+      if (b < GB)    return Math.Round((double)b/MB) + "MB";
+      if (b < 10*GB) return FanFloat.toLocale((double)b/GB, "#.#") + "GB";
+      return Math.Round((double)b/GB) + "GB";
+    }
+    private static readonly long KB = 1024L;
+    private static readonly long MB = 1024L*1024L;
+    private static readonly long GB = 1024L*1024L*1024L;
 
     public static bool localeIsUpper(long self)
     {

@@ -645,6 +645,22 @@ class IntTest : Test
     // default, alternate locale
     verifyToLocale(12345, null, "12,345")
     Locale("fr-FR").use { verifyEq(12345.toLocale("#,###"), "12\u00a0345") }
+
+    // bytes
+    kb := 1024; mb := 1024*1024; gb := 1024*1024*1024;
+    verifyToLocale(0, "B", "0B")
+    verifyToLocale(123, "B", "123B")
+    verifyToLocale(kb, "B", "1KB")
+    verifyToLocale(8397, "B", "8.2KB")
+    verifyToLocale(30*kb-500, "B", "30KB")
+    verifyToLocale(123*kb, "B", "123KB")
+    verifyToLocale(mb, "B", "1MB")
+    verifyToLocale(6_606_028, "B", "6.3MB")
+    verifyToLocale(15*mb-100, "B", "15MB")
+    verifyToLocale(682*mb+30*kb, "B", "682MB")
+    verifyToLocale(gb, "B", "1GB")
+    verifyToLocale((2.8f*gb.toFloat).toInt, "B", "2.8GB")
+    verifyToLocale(13*gb-10*mb, "B", "13GB")
   }
 
   Void verifyToLocale(Int i, Str? pattern, Str expected)

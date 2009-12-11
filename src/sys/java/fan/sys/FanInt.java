@@ -398,6 +398,10 @@ public final class FanInt
   public static String toLocale(long self) { return toLocale(self, null); }
   public static String toLocale(long self, String pattern)
   {
+    // if pattern is "B" format as bytes
+    if (pattern != null && pattern.length() == 1 && pattern.charAt(0) == 'B')
+      return toLocaleBytes(self);
+
     // get current locale
     Locale locale = Locale.current();
     java.text.DecimalFormatSymbols df = locale.decimal();
@@ -412,6 +416,20 @@ public final class FanInt
     // route to common FanNum method
     return FanNum.toLocale(p, d, df);
   }
+
+  static String toLocaleBytes(long b)
+  {
+    if (b < KB)    return b + "B";
+    if (b < 10*KB) return FanFloat.toLocale((double)b/KB, "#.#") + "KB";
+    if (b < MB)    return Math.round((double)b/KB) + "KB";
+    if (b < 10*MB) return FanFloat.toLocale((double)b/MB, "#.#") + "MB";
+    if (b < GB)    return Math.round((double)b/MB) + "MB";
+    if (b < 10*GB) return FanFloat.toLocale((double)b/GB, "#.#") + "GB";
+    return Math.round((double)b/GB) + "GB";
+  }
+  private static final long KB = 1024L;
+  private static final long MB = 1024L*1024L;
+  private static final long GB = 1024L*1024L*1024L;
 
   public static boolean localeIsUpper(long self)
   {

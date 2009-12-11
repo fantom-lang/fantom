@@ -288,10 +288,18 @@ const final class Int : Num
   ** See `Float.toLocale` for pattern language.  Fractional formatting
   ** is not supported for integers.
   **
+  ** In addition 'Int.toLocale' supports the "B" pattern which will
+  ** format a number of bytes with the appropiate B, KB, MB, GB suffix
+  ** based on the magnitide (1024B == 1KB).
+  **
   ** Examples:
   **   3.toLocale("00")             =>  03
   **   3.toLocale("000")            =>  003
   **   123456789.toLocale("#,###")  =>  123,456,789
+  **   123.toLocale("B")            =>  123B
+  **   1234.toLocale("B")           =>  1.2KB
+  **   100_000.toLocale("B")        =>  98KB
+  **   (3*1024*1024).toLocale("B")  =>  3MB
   **
   Str toLocale(Str? pattern := null)
 
