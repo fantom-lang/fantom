@@ -100,6 +100,7 @@ public class JavaType
 //////////////////////////////////////////////////////////////////////////
 
   public Pod pod() { return null; }
+  public String podName() { return podName; }
   public String name() { return typeName; }
   public String qname() { return podName + "::" + typeName; }
   public String signature() { return qname(); }
