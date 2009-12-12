@@ -24,12 +24,12 @@ internal class JsonParser
     consume
     skipWhitespace
     if (cur == JsonToken.arrayStart)
-      return array
+      return parseArray
     else
-      return parseObject
+      return parseObj
   }
 
-  private Str:Obj? parseObject()
+  private Str:Obj? parseObj()
   {
     pairs := Str:Obj?[:] { ordered = true }
 
@@ -57,30 +57,30 @@ internal class JsonParser
   private Void parsePair(Str:Obj? obj)
   {
     skipWhitespace
-    key := key
+    key := parseKey
 
     skipWhitespace
 
     expect(JsonToken.colon)
     skipWhitespace
 
-    val := value
+    val := parseVal
     skipWhitespace
 
     obj[key] = val
   }
 
-  private Str key()
+  private Str parseKey()
   {
-    return string
+    parseStr
   }
 
-  private Obj? value()
+  private Obj? parseVal()
   {
-    if (this.cur == JsonToken.quote) return string
-    else if (this.cur.isDigit || this.cur == '-') return digits
-    else if (this.cur == JsonToken.objectStart) return parseObject
-    else if (this.cur == JsonToken.arrayStart) return array
+    if (this.cur == JsonToken.quote) return parseStr
+    else if (this.cur.isDigit || this.cur == '-') return parseNum
+    else if (this.cur == JsonToken.objectStart) return parseObj
+    else if (this.cur == JsonToken.arrayStart) return parseArray
     else if (this.cur == 't')
     {
       "true".size.times |Int i|{ consume }
@@ -101,7 +101,7 @@ internal class JsonParser
   }
 
   // parse number, duration(FIXIT, or range)
-  private Obj digits()
+  private Obj parseNum()
   {
     integral := StrBuf()
     fractional := StrBuf()
@@ -153,7 +153,7 @@ internal class JsonParser
     return num
   }
 
-  private Str string()
+  private Str parseStr()
   {
     s := StrBuf()
     expect(JsonToken.quote)
@@ -206,7 +206,7 @@ internal class JsonParser
     throw err("Invalid escape sequence")
   }
 
-  private List array()
+  private List parseArray()
   {
     array := [,]
     expect(JsonToken.arrayStart)
@@ -216,7 +216,7 @@ internal class JsonParser
     while (true)
     {
       skipWhitespace
-      val := value
+      val := parseVal
       array.add(val)
       if (!maybe(JsonToken.comma)) break
     }

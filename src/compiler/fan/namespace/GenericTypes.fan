@@ -31,7 +31,7 @@ abstract class GenericType : CType
   override Str qname()     { return base.qname }
   override Obj? facet(Str qname, Obj? def) { base.facet(qname, def) }
 
-  override Bool isValue() { return false }
+  override Bool isVal() { return false }
 
   override Bool isNullable() { return false }
   override once CType toNullable() { return NullableType(this) }
@@ -401,7 +401,7 @@ class GenericParameterType : CType
   override Str signature() { return qname }
   override Int flags() { return FConst.Public }
   override Obj? facet(Str qname, Obj? def) { def }
-  override Bool isValue() { return false }
+  override Bool isVal() { return false }
   override Bool isNullable() { return false }
   override once CType toNullable() { return NullableType(this) }
   override Bool isGeneric() { return false }

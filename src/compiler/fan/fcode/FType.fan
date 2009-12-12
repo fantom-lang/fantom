@@ -50,9 +50,9 @@ class FType : CType
     return fpod.resolveTypes(fmixins)
   }
 
-  override once Bool isValue()
+  override once Bool isVal()
   {
-    return isValueType(qname)
+    return isValType(qname)
   }
 
   override Str:CSlot slots

@@ -44,7 +44,7 @@ class TypeRef : Node, CType
 
   override Bool isValid() { t.isValid }
 
-  override Bool isValue() { t.isValue }
+  override Bool isVal() { t.isVal }
 
   override Bool isNullable() { t.isNullable }
   override CType toNullable() { t.toNullable }

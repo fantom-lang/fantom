@@ -81,7 +81,7 @@ public abstract class Type
 // Value Types
 //////////////////////////////////////////////////////////////////////////
 
-  public boolean isValue()
+  public boolean isVal()
   {
     return this == Sys.BoolType || this == Sys.IntType || this == Sys.FloatType;
   }

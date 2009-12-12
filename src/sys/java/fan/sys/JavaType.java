@@ -116,7 +116,7 @@ public class JavaType
     return type.toClass().isAssignableFrom(toClass());
   }
 
-  public boolean isValue() { return false; }
+  public boolean isVal() { return false; }
 
   public final boolean isNullable() { return false; }
   public final synchronized Type toNullable()

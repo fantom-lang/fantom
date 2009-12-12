@@ -302,7 +302,7 @@ fan.sys.NullableType.prototype.mixins = function() { return this.m_root.mixins()
 fan.sys.NullableType.prototype.inheritance = function() { return this.m_root.inheritance(); }
 fan.sys.NullableType.prototype.is = function(type) { return this.m_root.is(type); }
 
-fan.sys.NullableType.prototype.isValue = function() { return this.m_root.isValue(); }
+fan.sys.NullableType.prototype.isVal = function() { return this.m_root.isVal(); }
 
 fan.sys.NullableType.prototype.isNullable = function() { return true; }
 fan.sys.NullableType.prototype.toNullable = function() { return this; }

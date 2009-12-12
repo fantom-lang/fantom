@@ -48,21 +48,21 @@ class TypeTest : Test
 
   Void testValueTypes()
   {
-    verifyEq(Bool#.isValue,     true)
-    verifyEq(Bool?#.isValue,    true)
-    verifyEq(Int#.isValue,      true)
-    verifyEq(Int?#.isValue,     true)
-    verifyEq(Float#.isValue,    true)
-    verifyEq(Float?#.isValue,   true)
+    verifyEq(Bool#.isVal,     true)
+    verifyEq(Bool?#.isVal,    true)
+    verifyEq(Int#.isVal,      true)
+    verifyEq(Int?#.isVal,     true)
+    verifyEq(Float#.isVal,    true)
+    verifyEq(Float?#.isVal,   true)
 
-    verifyEq(Obj#.isValue,      false)
-    verifyEq(Obj?#.isValue,     false)
-    verifyEq(Num#.isValue,      false)
-    verifyEq(Num?#.isValue,     false)
-    verifyEq(Decimal#.isValue,  false)
-    verifyEq(Decimal?#.isValue, false)
-    verifyEq(Str#.isValue,      false)
-    verifyEq(Str?#.isValue,     false)
+    verifyEq(Obj#.isVal,      false)
+    verifyEq(Obj?#.isVal,     false)
+    verifyEq(Num#.isVal,      false)
+    verifyEq(Num?#.isVal,     false)
+    verifyEq(Decimal#.isVal,  false)
+    verifyEq(Decimal?#.isVal, false)
+    verifyEq(Str#.isVal,      false)
+    verifyEq(Str?#.isVal,     false)
   }
 
 //////////////////////////////////////////////////////////////////////////
