@@ -150,27 +150,27 @@ mixin TreeModel
   ** Get the text to display for specified node.
   ** Default is 'node.toStr'.
   **
-  virtual Str text(Obj node) { return node.toStr }
+  virtual Str text(Obj node) { node.toStr }
 
   **
   ** Get the image to display for specified node or null.
   **
-  virtual Image? image(Obj node) { return null }
+  virtual Image? image(Obj node) { null }
 
   **
   ** Get the font for specified node or null for default.
   **
-  virtual Font? font(Obj node) { return null }
+  virtual Font? font(Obj node) { null }
 
   **
   ** Get the foreground color for specified node or null for default.
   **
-  virtual Color? fg(Obj node) { return null }
+  virtual Color? fg(Obj node) { null }
 
   **
   ** Get the background color for specified node or null for default.
   **
-  virtual Color? bg(Obj node) { return null }
+  virtual Color? bg(Obj node) { null }
 
   **
   ** Return if this has or might have children.  This
@@ -178,13 +178,12 @@ mixin TreeModel
   ** without actually loading all the children.  The
   ** default returns '!children.isEmpty'.
   **
-  virtual Bool hasChildren(Obj node) { return !children(node).isEmpty }
+  virtual Bool hasChildren(Obj node) { !children(node).isEmpty }
 
   **
-  ** Get the children of the specified node.  If no
-  ** children return null or the empty list.
-  ** Default returns null.
+  ** Get the children of the specified node.  If no children
+  ** return an empty list.  Default behavior is no children.
   **
-  virtual Obj[]? children(Obj node) { return null }
+  virtual Obj[] children(Obj node) { Obj#.emptyList }
 
 }

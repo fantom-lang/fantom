@@ -296,7 +296,7 @@ internal class NavTreeModel : TreeModel
   override Str text(Obj node) { return ((NavNode)node).name }
   override Image? image(Obj node) { return ((NavNode)node).icon }
   override Bool hasChildren(Obj node) { return ((NavNode)node).hasChildren }
-  override Obj[]? children(Obj node) { return ((NavNode)node).children }
+  override Obj[] children(Obj node) { return ((NavNode)node).children }
   private NavNode[] myRoots
 }
 
