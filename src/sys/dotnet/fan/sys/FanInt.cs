@@ -334,7 +334,7 @@ namespace Fan.Sys
         return toLocaleBytes(self);
 
       // get current locale
-      Locale locale = Locale.current();
+      Locale locale = Locale.cur();
       NumberFormatInfo df = locale.dec();
 
       // get default pattern if necessary
@@ -377,13 +377,13 @@ namespace Fan.Sys
     public static long localeUpper(long self)
     {
       long val = self;
-      return Char.ToUpper((char)val, Locale.current().dotnet());
+      return Char.ToUpper((char)val, Locale.cur().dotnet());
     }
 
     public static long localeLower(long self)
     {
       long val = self;
-      return Char.ToLower((char)val, Locale.current().dotnet());
+      return Char.ToLower((char)val, Locale.cur().dotnet());
     }
 
   //////////////////////////////////////////////////////////////////////////

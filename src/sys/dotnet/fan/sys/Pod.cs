@@ -352,12 +352,12 @@ namespace Fan.Sys
 
     public string loc(string key)
     {
-      return Locale.current().doGet(this, m_name, key, Locale.m_getNoDef);
+      return Locale.cur().doGet(this, m_name, key, Locale.m_getNoDef);
     }
 
     public string loc(string key, string def)
     {
-      return Locale.current().doGet(this, m_name, key, def);
+      return Locale.cur().doGet(this, m_name, key, def);
     }
 
   //////////////////////////////////////////////////////////////////////////

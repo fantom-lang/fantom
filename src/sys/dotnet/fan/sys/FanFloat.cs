@@ -219,7 +219,7 @@ namespace Fan.Sys
     public static string toLocale(double self, string pattern)
     {
       // get current locale
-      Locale locale = Locale.current();
+      Locale locale = Locale.cur();
       NumberFormatInfo df = locale.dec();
 
       // handle special values

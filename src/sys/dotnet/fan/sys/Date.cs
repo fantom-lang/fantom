@@ -152,7 +152,7 @@ namespace Fan.Sys
       Locale locale = null;
       if (pattern == null)
       {
-        if (locale == null) locale = Locale.current();
+        if (locale == null) locale = Locale.cur();
         pattern = locale.get("sys", m_localeKey, "D-MMM-YYYY");
       }
 
@@ -201,11 +201,11 @@ namespace Fan.Sys
             switch (n)
             {
               case 4:
-                if (locale == null) locale = Locale.current();
+                if (locale == null) locale = Locale.cur();
                 s.Append(mon.full(locale));
                 break;
               case 3:
-                if (locale == null) locale = Locale.current();
+                if (locale == null) locale = Locale.cur();
                 s.Append(mon.abbr(locale));
                 break;
               case 2:  if (mon.ord+1 < 10) s.Append('0'); s.Append(mon.ord+1); break;
@@ -229,11 +229,11 @@ namespace Fan.Sys
             switch (n)
             {
               case 4:
-                if (locale == null) locale = Locale.current();
+                if (locale == null) locale = Locale.cur();
                 s.Append(week.full(locale));
                 break;
               case 3:
-                if (locale == null) locale = Locale.current();
+                if (locale == null) locale = Locale.cur();
                 s.Append(week.abbr(locale));
                 break;
               default: invalidNum = true; break;

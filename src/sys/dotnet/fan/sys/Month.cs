@@ -80,13 +80,13 @@ namespace Fan.Sys
       throw ArgErr.make("Invalid pattern: " + pattern).val;
     }
 
-    public string localeAbbr() { return abbr(Locale.current()); }
+    public string localeAbbr() { return abbr(Locale.cur()); }
     public string abbr(Locale locale)
     {
       return locale.get("sys", localeAbbrKey);
     }
 
-    public string localeFull() { return full(Locale.current()); }
+    public string localeFull() { return full(Locale.cur()); }
     public string full(Locale locale)
     {
       return locale.get("sys", localeFullKey);

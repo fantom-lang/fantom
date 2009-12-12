@@ -48,37 +48,37 @@ namespace Fan.Sys
 
     public static string localeDecimal()
     {
-      return Locale.current().dec().NumberDecimalSeparator;
+      return Locale.cur().dec().NumberDecimalSeparator;
     }
 
     public static string localeGrouping()
     {
-      return Locale.current().dec().NumberGroupSeparator;
+      return Locale.cur().dec().NumberGroupSeparator;
     }
 
     public static string localeMinus()
     {
-      return Locale.current().dec().NegativeSign;
+      return Locale.cur().dec().NegativeSign;
     }
 
     public static string localePercent()
     {
-      return Locale.current().dec().PercentSymbol;
+      return Locale.cur().dec().PercentSymbol;
     }
 
     public static String localePosInf()
     {
-      return Locale.current().dec().PositiveInfinitySymbol;
+      return Locale.cur().dec().PositiveInfinitySymbol;
     }
 
     public static String localeNegInf()
     {
-      return Locale.current().dec().NegativeInfinitySymbol;
+      return Locale.cur().dec().NegativeInfinitySymbol;
     }
 
     public static String localeNaN()
     {
-      return Locale.current().dec().NaNSymbol;
+      return Locale.cur().dec().NaNSymbol;
     }
 
     internal static string toLocale(NumPattern p, NumDigits d, NumberFormatInfo df)

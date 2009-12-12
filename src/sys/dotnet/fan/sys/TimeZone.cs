@@ -90,9 +90,9 @@ namespace Fan.Sys
       return m_utc;
     }
 
-    public static TimeZone current()
+    public static TimeZone cur()
     {
-      return m_current;
+      return m_cur;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -572,7 +572,7 @@ namespace Fan.Sys
 
     static Hashtable cache = new Hashtable(); // string -> TimeZone
     internal static TimeZone m_utc;
-    internal static TimeZone m_current = null;
+    internal static TimeZone m_cur = null;
 
     static TimeZone()
     {
@@ -605,15 +605,15 @@ namespace Fan.Sys
         string sysProp = (string)Sys.env().get("fan.timezone");
         if (sysProp != null)
         {
-          m_current = fromStr(sysProp);
+          m_cur = fromStr(sysProp);
         }
 
         // we assume Java default uses Olsen name
         else
         {
           // TODO - no clue how to auto map this yet
-          //current = fromStr(java.util.TimeZone.getDefault().getID());
-          m_current = fromStr("America/New_York");
+          //cur = fromStr(java.util.TimeZone.getDefault().getID());
+          m_cur = fromStr("America/New_York");
         }
       }
       catch (Exception e)
@@ -621,7 +621,7 @@ namespace Fan.Sys
         System.Console.WriteLine("ERROR: Cannot init current timezone");
         Err.dumpStack(e);
 
-        m_current = m_utc;
+        m_cur = m_utc;
       }
     }
 

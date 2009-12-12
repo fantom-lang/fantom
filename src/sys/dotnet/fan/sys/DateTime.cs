@@ -47,7 +47,7 @@ namespace Fan.Sys
       if (tolerance != null && now - c.m_ticks <= tolerance.m_ticks)
           return c;
 
-      return cached = new DateTime(now, TimeZone.m_current);
+      return cached = new DateTime(now, TimeZone.m_cur);
     }
 
     public static DateTime nowUtc()  { return nowUtc(toleranceDefault); }
@@ -83,9 +83,9 @@ namespace Fan.Sys
   // Constructor - Values
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime make(long year, Month month, long day, long hour, long min) { return make(year, month, day, hour, min, 0, 0, TimeZone.m_current); }
-    public static DateTime make(long year, Month month, long day, long hour, long min, long sec) { return make(year, month, day, hour, min, sec, 0, TimeZone.m_current); }
-    public static DateTime make(long year, Month month, long day, long hour, long min, long sec, long ns) { return make(year, month, day, hour, min, sec, ns, TimeZone.m_current); }
+    public static DateTime make(long year, Month month, long day, long hour, long min) { return make(year, month, day, hour, min, 0, 0, TimeZone.m_cur); }
+    public static DateTime make(long year, Month month, long day, long hour, long min, long sec) { return make(year, month, day, hour, min, sec, 0, TimeZone.m_cur); }
+    public static DateTime make(long year, Month month, long day, long hour, long min, long sec, long ns) { return make(year, month, day, hour, min, sec, ns, TimeZone.m_cur); }
     public static DateTime make(long year, Month month, long day, long hour, long min, long sec, long ns, TimeZone tz)
     {
       return new DateTime((int)year, month.ord, (int)day, (int)hour, (int)min, (int)sec, ns, System.Int32.MaxValue, tz);
@@ -152,7 +152,7 @@ namespace Fan.Sys
   // Constructor - Date, Time
   //////////////////////////////////////////////////////////////////////////
 
-    internal static DateTime makeDT(Date d, Time t) { return makeDT(d, t, TimeZone.m_current); }
+    internal static DateTime makeDT(Date d, Time t) { return makeDT(d, t, TimeZone.m_cur); }
     internal static DateTime makeDT(Date d, Time t, TimeZone tz)
     {
       return new DateTime(d.m_year, d.m_month, d.m_day, t.m_hour, t.m_min, t.m_sec, t.m_ns, System.Int32.MaxValue, tz);
@@ -162,7 +162,7 @@ namespace Fan.Sys
   // Constructor - Ticks
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime makeTicks(long ticks) { return makeTicks(ticks, TimeZone.m_current); }
+    public static DateTime makeTicks(long ticks) { return makeTicks(ticks, TimeZone.m_cur); }
     public static DateTime makeTicks(long ticks, TimeZone tz)
     {
       return new DateTime(ticks, tz);
@@ -445,7 +445,7 @@ namespace Fan.Sys
       Locale locale = null;
       if (pattern == null)
       {
-        if (locale == null) locale = Locale.current();
+        if (locale == null) locale = Locale.cur();
         pattern = locale.get("sys", localeKey);
       }
 
@@ -494,11 +494,11 @@ namespace Fan.Sys
             switch (n)
             {
               case 4:
-                if (locale == null) locale = Locale.current();
+                if (locale == null) locale = Locale.cur();
                 s.Append(mon.full(locale));
                 break;
               case 3:
-                if (locale == null) locale = Locale.current();
+                if (locale == null) locale = Locale.cur();
                 s.Append(mon.abbr(locale));
                 break;
               case 2:  if (mon.ord+1 < 10) s.Append('0'); s.Append(mon.ord+1); break;
@@ -522,11 +522,11 @@ namespace Fan.Sys
             switch (n)
             {
               case 4:
-                if (locale == null) locale = Locale.current();
+                if (locale == null) locale = Locale.cur();
                 s.Append(wd.full(locale));
                 break;
               case 3:
-                if (locale == null) locale = Locale.current();
+                if (locale == null) locale = Locale.cur();
                 s.Append(wd.abbr(locale));
                 break;
               default: invalidNum = true; break;
@@ -837,11 +837,11 @@ namespace Fan.Sys
   // Java
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime fromJava(long millis) { return fromJava(millis, TimeZone.m_current); }
+    public static DateTime fromJava(long millis) { return fromJava(millis, TimeZone.m_cur); }
     public static DateTime fromJava(long millis, TimeZone tz)
     {
       if (millis <= 0) return null;
-      return new DateTime((millis-diffJava)*nsPerMilli, TimeZone.m_current);
+      return new DateTime((millis-diffJava)*nsPerMilli, TimeZone.m_cur);
     }
 
     public long toJava() { return (m_ticks / nsPerMilli) + diffJava; }
@@ -853,7 +853,7 @@ namespace Fan.Sys
     public static DateTime dotnet(long dotnetTicks)
     {
       if (dotnetTicks <= 0) return null;
-      return new DateTime((dotnetTicks-diffDotnet)*nsPerTick, TimeZone.m_current);
+      return new DateTime((dotnetTicks-diffDotnet)*nsPerTick, TimeZone.m_cur);
     }
 
     public long dotnet() { return (m_ticks / nsPerTick) + diffDotnet; }
@@ -940,7 +940,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     static readonly Duration toleranceDefault = Duration.makeMillis(250);
-    static volatile DateTime cached = new DateTime(0, TimeZone.m_current);
+    static volatile DateTime cached = new DateTime(0, TimeZone.m_cur);
     static volatile DateTime cachedUtc = new DateTime(0, TimeZone.m_utc);
     static readonly DateTime m_boot;
     static readonly object m_nowUniqueLock = new object();

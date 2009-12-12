@@ -749,19 +749,19 @@ namespace Fan.Sys
 
     public static long localeCompare(string self, string x)
     {
-      int cmp = String.Compare(self, x, true, Locale.current().dotnet());
+      int cmp = String.Compare(self, x, true, Locale.cur().dotnet());
       if (cmp < 0) return -1;
       return cmp == 0 ? 0 : +1;
     }
 
     public static string localeLower(string self)
     {
-      return self.ToLower(Locale.current().dotnet());
+      return self.ToLower(Locale.cur().dotnet());
     }
 
     public static string localeUpper(string self)
     {
-      return self.ToUpper(Locale.current().dotnet());
+      return self.ToUpper(Locale.cur().dotnet());
     }
 
     public static string localeCapitalize(string self)
@@ -772,7 +772,7 @@ namespace Fan.Sys
         if (Char.IsLower((char)ch))
         {
           StringBuilder s = new StringBuilder(self.Length);
-          s.Append(Char.ToUpper((char)ch, Locale.current().dotnet()));
+          s.Append(Char.ToUpper((char)ch, Locale.cur().dotnet()));
           s.Append(self, 1, self.Length-1);
           return s.ToString();
         }
@@ -788,7 +788,7 @@ namespace Fan.Sys
         if (Char.IsUpper((char)ch))
         {
           StringBuilder s = new StringBuilder(self.Length);
-          s.Append(Char.ToLower((char)ch, Locale.current().dotnet()));
+          s.Append(Char.ToLower((char)ch, Locale.cur().dotnet()));
           s.Append(self, 1, self.Length-1);
           return s.ToString();
         }
