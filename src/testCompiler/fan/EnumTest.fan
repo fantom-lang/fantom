@@ -41,12 +41,13 @@ class EnumTest : CompilerTest
     verifyEq(c.get->ordinal, 2)
     verifyEq(c.get->name, "c")
 
-    v := t.field("values")
+    v := t.field("vals")
     verifyEq(v.of.signature, "$t.qname[]")
     verifyEq(v.isPublic, true)
     verifyEq(v.isStatic, true)
     verifyEq(v.isConst, true)
     verifyEq(v.get->isRO, true)
+    verifyEq(v.get->isImmutable, true)
     verifyEq(v.get->get(0), a.get)
     verifyEq(v.get->get(1), b.get)
     verifyEq(v.get->get(2), c.get)
@@ -94,7 +95,7 @@ class EnumTest : CompilerTest
     verifyEq(c.get->name, "c")
     verifyEq(c.get->x, 12)
 
-    v := t.field("values")
+    v := t.field("vals")
     verifyEq(v.of.signature, "$t.qname[]")
     verifyEq(v.isPublic, true)
     verifyEq(v.isStatic, true)
@@ -119,8 +120,8 @@ class EnumTest : CompilerTest
         const static Str[] caps
         static
         {
-          // verify values are initialized first
-          caps = values.map |Foo x->Str| { x.name.upper }
+          // verify vals are initialized first
+          caps = vals.map |Foo x->Str| { x.name.upper }
         }
       }")
 
@@ -140,7 +141,7 @@ class EnumTest : CompilerTest
         static
         {
           m := Str:Foo[:]
-          values.each |Foo t| { m[t.name.upper] = t }
+          vals.each |Foo t| { m[t.name.upper] = t }
           map = m
         }
       }")
@@ -158,8 +159,8 @@ class EnumTest : CompilerTest
   {
     // InitEnum
     verifyErrors(
-     "mixin X { static Int values() {} abstract Str foo(); }
-      enum A { a; Void values() {} }
+     "mixin X { static Int vals() {} abstract Str foo(); }
+      enum A { a; Void vals() {} }
       enum B : X { a, b }
       enum C { foo;  Str foo() { return null } }
       enum D : X { foo }
@@ -170,8 +171,8 @@ class EnumTest : CompilerTest
       @simple enum I { a, b }
       ",
        [
-         2, 13, "Enum 'values' conflicts with slot",
-         3, 1,  "Enum 'values' conflicts with inherited slot '$podName::X.values'",
+         2, 13, "Enum 'vals' conflicts with slot",
+         3, 1,  "Enum 'vals' conflicts with inherited slot '$podName::X.vals'",
          4, 16, "Enum 'foo' conflicts with slot",
          5, 14, "Enum 'foo' conflicts with inherited slot '$podName::X.foo'",
          6, 17, "Enum constructor must be named 'make'",

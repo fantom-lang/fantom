@@ -33,7 +33,7 @@ namespace Fan.Sys
       m_jul, m_aug, m_sep, m_oct, m_nov, m_dec
     };
 
-    public static readonly List m_values = new List(Sys.MonthType, array).ro();
+    public static readonly List m_vals = new List(Sys.MonthType, array).ro();
 
     private Month(int ordinal, string name)
     {

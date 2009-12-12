@@ -27,7 +27,7 @@ namespace Fan.Sys
       m_sun, m_mon, m_tue, m_wed, m_thu, m_fri, m_sat
     };
 
-    public static readonly List m_values = new List(Sys.WeekdayType, array).ro();
+    public static readonly List m_vals = new List(Sys.WeekdayType, array).ro();
 
     private Weekday(int ordinal, string name)
     {

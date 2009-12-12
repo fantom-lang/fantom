@@ -49,11 +49,11 @@ class Logging
 
     // this code performs string concatenation on every call
     x := 1; y := 2; z := 3
-    log.debug("The values are x=$x, y=$y, and z=$z")
+    log.debug("The vals are x=$x, y=$y, and z=$z")
 
     // this code performs string concatenation only when needed
     if (log.isDebug)
-      log.debug("The values are x=$x, y=$y, and z=$z")
+      log.debug("The vals are x=$x, y=$y, and z=$z")
 
     // installing log handler
     echo("\n--- installing log handler ---")

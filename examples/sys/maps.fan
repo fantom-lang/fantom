@@ -31,12 +31,12 @@ class Maps
   Void signatures()
   {
     echo("\n--- signatures ---")
-    show([sys::Int:sys::Str]#,  "formal signature Int keys, Str values")
+    show([sys::Int:sys::Str]#,  "formal signature Int keys, Str vals")
     show([Int:Str]#,            "unqualified type names")
     show(Int:Str#,              "you can omit brackets most of the time")
-    show(Int:Str?#,             "Int keys, Str? values (might store null)")
+    show(Int:Str?#,             "Int keys, Str? vals (might store null)")
     show([Int:Str]?#,           "Int:Str variable which might be null")
-    show(Str:Int[]#,            "Str keys, Int[] values")
+    show(Str:Int[]#,            "Str keys, Int[] vals")
     show([Str:Int][]#,          "list of Str:Int maps (need brackets)")
   }
 
@@ -81,7 +81,7 @@ class Maps
     echo("\n--- listConversion ---")
     x := [0:"zero", 1:"one", 2:"two"]
     show(x.keys,      "list the keys [0, 1, 2]")
-    show(x.vals,      "list the values [zero, one, two]")
+    show(x.vals,      "list the vals [zero, one, two]")
   }
 
   Void iteration()

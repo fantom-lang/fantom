@@ -387,7 +387,7 @@ class StmtTest : CompilerTest
     verifyEq(compiler.types[0].methodDef("func").code.stmts[1]->isTableswitch, true)
 
     code =
-     "weekday := (Weekday)Weekday.values[a]
+     "weekday := (Weekday)Weekday.vals[a]
       switch (weekday)
       {
         case Weekday.sun:

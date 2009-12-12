@@ -89,7 +89,7 @@ fan.sys.Map.prototype.keys = function()
   return fan.sys.List.make(this.$fanType.k, list);
 }
 
-fan.sys.Map.prototype.values = function()
+fan.sys.Map.prototype.vals = function()
 {
   var list = [];
   for (var k in this.map) list.push(this.map[k]);

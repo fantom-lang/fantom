@@ -19,4 +19,7 @@ enum LogLevel
   error,
   silent
 
+// TODO build 1.0.48
+static const LogLevel[] vals
+
 }

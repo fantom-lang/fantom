@@ -104,8 +104,8 @@ class EnumTest : Test
 
   Void testValues()
   {
-    verifyEq(EnumAbc.values, [EnumAbc.A, EnumAbc.B, EnumAbc.C])
-    verifyEq(EnumAbc.values.isRO, true)
+    verifyEq(EnumAbc.vals, [EnumAbc.A, EnumAbc.B, EnumAbc.C])
+    verifyEq(EnumAbc.vals.isRO, true)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -154,7 +154,7 @@ class EnumTest : Test
 
   Void testCtor()
   {
-    verifyEq(Suits.values, [Suits.clubs, Suits.diamonds, Suits.hearts, Suits.spades])
+    verifyEq(Suits.vals, [Suits.clubs, Suits.diamonds, Suits.hearts, Suits.spades])
     verifyEq(Suits.clubs.ordinal,    0)
     verifyEq(Suits.diamonds.ordinal, 1)
     verifyEq(Suits.hearts.ordinal,   2)

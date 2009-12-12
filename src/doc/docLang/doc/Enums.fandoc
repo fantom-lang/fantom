@@ -100,13 +100,13 @@ work with enums (using 'Month' as an example):
 
   - `sys::Enum.ordinal`: the 'Int' ordinal key
   - `sys::Enum.name`: the 'Str' name key
-  - `sys::Month.values`: lookup instance by ordinal
+  - `sys::Month.vals`: lookup instance by ordinal
   - `sys::Month.fromStr`: lookup instance by name
 
 Example code:
 
   apr := Month.apr              // direct access
-  jun := Month.values[5]        // lookup by ordinal
+  jun := Month.vals[5]          // lookup by ordinal
   aug := Month.fromStr("aug")   // lookup by name
   Month.fromStr("bad")          // throws ParseErr
   Month.fromStr("bad", false)   // returns null
