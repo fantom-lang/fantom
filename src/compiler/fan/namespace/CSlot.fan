@@ -19,6 +19,7 @@ mixin CSlot
   abstract Str qname()
   abstract Str signature()
   abstract Int flags()
+  abstract Obj? facet(Str qname, Obj? def)
 
   override final Str toStr() { return signature }
 

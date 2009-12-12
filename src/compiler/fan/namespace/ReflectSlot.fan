@@ -25,6 +25,13 @@ abstract class ReflectSlot : CSlot
   override Str signature() { return slot.signature }
   override readonly Int flags
   abstract Slot slot()
+
+  override Obj? facet(Str qname, Obj? def)
+  {
+    sym := Symbol.find(qname, false)
+    if (sym == null) return null
+    return slot.facet(sym, def)
+  }
 }
 
 **************************************************************************

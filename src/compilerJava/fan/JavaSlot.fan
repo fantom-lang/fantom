@@ -18,6 +18,7 @@ abstract class JavaSlot : CSlot
   override Str name
   override once Str qname() { return parent.qname + "." + name }
   override Int flags
+  override Obj? facet(Str qname, Obj? def) { def }
 
   override Bool isForeign() { return true }
 

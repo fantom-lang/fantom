@@ -1504,12 +1504,20 @@ class CheckErrors : CompilerStep
       if (t.isInternal && t.pod != curType.pod)
         err("Internal type '$t' not accessible", loc)
     }
+
+    if (t.facet("sys::deprecated", null) == true)
+      warn("Deprecated type '$t'", loc)
   }
 
   private Void checkSlotProtection(CSlot slot, Location loc, Bool setter := false)
   {
     errMsg := slotProtectionErr(slot, setter)
     if (errMsg != null) err(errMsg, loc)
+
+    if (slot.facet("sys::deprecated", null) == true)
+      warn("Deprecated slot '$slot.qname'", loc)
+    else if (slot.parent.facet("sys::deprecated", null) == true)
+      warn("Deprecated type '$slot.parent'", loc)
   }
 
   private Str? slotProtectionErr(CSlot slot, Bool setter := false)
