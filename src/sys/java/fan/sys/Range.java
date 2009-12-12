@@ -132,6 +132,12 @@ public final class Range
     }
   }
 
+  public final Range offset(long offset)
+  {
+    if (offset == 0) return this;
+    return new Range(start+offset, end+offset, exclusive);
+  }
+
   public final void each(Func f)
   {
     long start = this.start;

@@ -139,6 +139,16 @@ const final class Range
   Bool contains(Int i)
 
   **
+  ** Create a new range by adding offset to this range's
+  ** start and end values.
+  **
+  ** Example:
+  **   (3..5).offset(2)   =>  5..7
+  **   (3..<5).offset(-2) =>  1..<3
+  **
+  Range offset(Int offset)
+
+  **
   ** Call the specified function for each integer in the range.
   **
   ** Example:

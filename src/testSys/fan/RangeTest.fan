@@ -80,6 +80,16 @@ class RangeTest : Test
     verifyEq((3..<0).contains(3), true)
   }
 
+  Void testOffset()
+  {
+    verifyEq((10..20).offset(0), 10..20)
+    verifyEq((10..20).offset(5), 15..25)
+    verifyEq((10..20).offset(-5), 5..15)
+    verifyEq((-10..<-20).offset(0), -10..<-20)
+    verifyEq((-10..<-20).offset(5), -5..<-15)
+    verifyEq((-10..<-20).offset(-5), -15..<-25)
+  }
+
   Void testEach()
   {
     list := Int[,]
