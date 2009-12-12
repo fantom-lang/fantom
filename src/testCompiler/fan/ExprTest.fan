@@ -452,7 +452,7 @@ class ExprTest : CompilerTest
     verifyExpr("sf", 1972)
 
     // generics
-    verifyExpr("tue", Weekday.tue, null, null, "Weekday tue := Weekday.values[2];")
+    verifyExpr("tue", Weekday.tue, null, null, "Weekday tue := Weekday.vals[2];")
   }
 
 //////////////////////////////////////////////////////////////////////////

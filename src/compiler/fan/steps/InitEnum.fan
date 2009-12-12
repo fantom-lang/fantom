@@ -47,7 +47,7 @@ class InitEnum : CompilerStep
 
       fields := FieldDef[,]
       t.enumDefs.each |EnumDef e| { fields.add(makeField(e)) }
-      fields.add(makeValuesField)
+      fields.add(makeValsField)
 
       // add enum fields to beginning of type
       fields.each |FieldDef f, Int i| { t.addSlot(f, i) }
@@ -184,18 +184,18 @@ class InitEnum : CompilerStep
   }
 
   **
-  ** Make values field: List of Enum values
+  ** Make vals field: List of Enum values
   **
-  FieldDef makeValuesField()
+  FieldDef makeValsField()
   {
     // ensure there isn't already a slot with same name
-    dup := curType.slot("values")
+    dup := curType.slot("vals")
     if (dup != null)
     {
       if (dup.parent == curType)
-        throw err("Enum 'values' conflicts with slot", (Location)dup->location)
+        throw err("Enum 'vals' conflicts with slot", (Location)dup->location)
       else
-        throw err("Enum 'values' conflicts with inherited slot '$dup.qname'", curType.location)
+        throw err("Enum 'vals' conflicts with inherited slot '$dup.qname'", curType.location)
     }
 
     loc := curType.location
@@ -212,7 +212,7 @@ class InitEnum : CompilerStep
     // static field
     f := FieldDef(loc, curType)
     f.flags     = FConst.Public | FConst.Static | FConst.Const | FConst.Storage
-    f.name      = "values"
+    f.name      = "vals"
     f.fieldType = listType
     f.init      = init
     f.doc       = ["List of $curType.name values indexed by ordinal"]

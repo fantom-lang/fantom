@@ -385,10 +385,10 @@ class FwtDemo
       Label { text="numCols" },      Text { text="5"; onModify.add {setInt(grid, "numCols", it)} },
       Label { text="hgap" },         Text { text="10"; onModify.add {setInt(grid, "hgap", it)} },
       Label { text="vgap" },         Text { text="10"; onModify.add {setInt(grid, "vgap", it)} },
-      Label { text="halignCells" },  Combo { items=Halign.values; onModify.add {setEnum(grid, "halignCells", it)} },
-      Label { text="valignCells" },  Combo { items=Valign.values; onModify.add {setEnum(grid, "valignCells", it)} },
-      Label { text="halignPane" },   Combo { items=Halign.values; onModify.add {setEnum(grid, "halignPane", it)} },
-      Label { text="valignPane" },   Combo { items=Valign.values; onModify.add {setEnum(grid, "valignPane", it)} },
+      Label { text="halignCells" },  Combo { items=Halign.vals; onModify.add {setEnum(grid, "halignCells", it)} },
+      Label { text="valignCells" },  Combo { items=Valign.vals; onModify.add {setEnum(grid, "valignCells", it)} },
+      Label { text="halignPane" },   Combo { items=Halign.vals; onModify.add {setEnum(grid, "halignPane", it)} },
+      Label { text="valignPane" },   Combo { items=Valign.vals; onModify.add {setEnum(grid, "valignPane", it)} },
       Label { text="expandRow" },    Text { text="null"; onModify.add {setInt(grid, "expandRow", it)} },
       Label { text="expandCol" },    Text { text="null"; onModify.add {setInt(grid, "expandCol", it)} },
       Label { text="uniformCols" },  Combo { items=[false,true]; onModify.add {setBool(grid, "uniformCols", it)} },
@@ -444,7 +444,7 @@ class FwtDemo
   **
   Widget makeWindow()
   {
-    mode := Combo { items = WindowMode.values; editable=false }
+    mode := Combo { items = WindowMode.vals; editable=false }
     alwaysOnTop := Button { it.mode = ButtonMode.check; text = "alwaysOnTop" }
     resizable := Button { it.mode = ButtonMode.check; text = "resizable" }
     showTrim := Button { it.mode = ButtonMode.check; text = "showTrim"; selected = true }

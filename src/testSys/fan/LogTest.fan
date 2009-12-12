@@ -19,8 +19,8 @@ class LogTest : Test
   Void testLogLevel()
   {
     verifyEq(LogLevel#.qname, "sys::LogLevel")
-    verifyEq(LogLevel.values, [LogLevel.debug, LogLevel.info, LogLevel.warn, LogLevel.error, LogLevel.silent])
-    verifyEq(LogLevel.values.isRO, true)
+    verifyEq(LogLevel.vals, [LogLevel.debug, LogLevel.info, LogLevel.warn, LogLevel.error, LogLevel.silent])
+    verifyEq(LogLevel.vals.isImmutable, true)
 
     verifyEq(LogLevel.debug.ordinal,  0)
     verifyEq(LogLevel.info.ordinal,   1)

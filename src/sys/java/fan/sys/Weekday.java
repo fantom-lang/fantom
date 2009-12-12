@@ -24,7 +24,9 @@ public final class Weekday
 
   static final Weekday[] array = { sun, mon, tue, wed, thu, fri, sat };
 
-  public static final List values = new List(Sys.WeekdayType, array).ro();
+// TODO
+public static final List values = (List)new List(Sys.WeekdayType, array).toImmutable();
+  public static final List vals = (List)new List(Sys.WeekdayType, array).toImmutable();
 
   private Weekday(int ordinal, String name)
   {
