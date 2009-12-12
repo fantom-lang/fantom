@@ -748,7 +748,5 @@
 *Build 1.0.48 (incomplete)*
 - Fix List.insertAll error checking
 - Int.toLocale "B" pattern for formatting size in bytes
-- #826 New docLang::IDEs chapter
-- #844 List.getSafe
-- #848 Context.trap
+- Add sys::deprecated facet and compiler warnings
 

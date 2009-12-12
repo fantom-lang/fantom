@@ -28,39 +28,40 @@ class TypeRef : Node, CType
 // CType
 //////////////////////////////////////////////////////////////////////////
 
-  override CNamespace ns() { return t.ns }
-  override CPod pod()      { return t.pod }
-  override Str name()      { return t.name }
-  override Str qname()     { return t.qname }
-  override Str signature() { return t.signature }
-  override CType deref()   { return t }
-  override Bool isForeign() { return t.isForeign }
-  override Int flags()     { return t.flags }
+  override CNamespace ns() { t.ns }
+  override CPod pod()      { t.pod }
+  override Str name()      { t.name }
+  override Str qname()     { t.qname }
+  override Str signature() { t.signature }
+  override CType deref()   { t }
+  override Bool isForeign() { t.isForeign }
+  override Obj? facet(Str qname, Obj? def) { t.facet(qname, def) }
+  override Int flags()     { t.flags }
 
-  override CType? base() { return t.base }
-  override CType[] mixins() { return t.mixins }
-  override Bool fits(CType that) { return t.fits(that) }
+  override CType? base() { t.base }
+  override CType[] mixins() { t.mixins }
+  override Bool fits(CType that) { t.fits(that) }
 
   override Bool isValid() { t.isValid }
 
-  override Bool isValue() { return t.isValue }
+  override Bool isValue() { t.isValue }
 
-  override Bool isNullable() { return t.isNullable }
-  override CType toNullable() { return t.toNullable }
-  override CType toNonNullable() { return t.toNonNullable }
+  override Bool isNullable() { t.isNullable }
+  override CType toNullable() { t.toNullable }
+  override CType toNonNullable() { t.toNonNullable }
 
-  override CType inferredAs() { return t.inferredAs }
+  override CType inferredAs() { t.inferredAs }
 
-  override Bool isGeneric() { return t.isGeneric }
-  override Bool isParameterized() { return t.isParameterized }
-  override Bool isGenericParameter() { return t.isGenericParameter }
+  override Bool isGeneric() { t.isGeneric }
+  override Bool isParameterized() { t.isParameterized }
+  override Bool isGenericParameter() { t.isGenericParameter }
   override CType parameterizeThis(CType thisType) { t.parameterizeThis(thisType) }
-  override CType toListOf() { return t.toListOf }
+  override CType toListOf() { t.toListOf }
 
-  override CSlot? slot(Str name) { return t.slot(name) }
-  override CField? field(Str name) { return t.field(name) }
-  override CMethod? method(Str name) { return t.method(name) }
-  override Str:CSlot slots() { return t.slots }
+  override CSlot? slot(Str name) { t.slot(name) }
+  override CField? field(Str name) { t.field(name) }
+  override CMethod? method(Str name) { t.method(name) }
+  override Str:CSlot slots() { t.slots }
 
 //////////////////////////////////////////////////////////////////////////
 // Debug

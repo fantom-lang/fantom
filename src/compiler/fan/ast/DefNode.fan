@@ -38,6 +38,15 @@ abstract class DefNode : Node
     }
   }
 
+  Obj? facet(Str qname, Obj? def)
+  {
+    // TODO: should we map these by qname?
+    if (facets == null) return def
+    f := facets.find |f| { f.key.qname == qname }
+    if (f != null && f.val is LiteralExpr) return ((LiteralExpr)f.val).val
+    return def
+  }
+
   Bool hasMarkerFacet(Str qname)
   {
     if (facets == null) return false

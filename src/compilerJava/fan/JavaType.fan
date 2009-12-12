@@ -44,6 +44,8 @@ class JavaType : CType
   override CType[] mixins { get { load; return *mixins } internal set }
   override Int flags { get { load; return *flags } internal set }
 
+  override Obj? facet(Str qname, Obj? def) { def }
+
   override Bool isForeign() { return true }
   override Bool isSupported() { return arrayRank <= 1 } // multi-dimensional arrays unsupported
 

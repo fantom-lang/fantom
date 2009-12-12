@@ -25,7 +25,7 @@ class Main
     input := CompilerInput.make
     input.podName        = podName
     input.version        = Version("0")
-    input.log.level      = LogLevel.error
+    input.log.level      = LogLevel.warn
     input.isScript       = true
     input.srcStr         = file.readAllStr
     input.srcStrLocation = Location.makeFile(file)

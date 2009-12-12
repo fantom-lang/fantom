@@ -103,12 +103,24 @@ class CompilerSupport
   }
 
   **
+  ** Create, log, and return a warning CompilerErr.
+  **
+  virtual CompilerErr warn(Str msg, Location? loc)
+  {
+    if (suppressErr) throw SuppressedErr.make
+    return errReport(CompilerErr(msg, loc, null, LogLevel.warn))
+  }
+
+  **
   ** Log, store, and return the specified CompilerErr.
   **
   CompilerErr errReport(CompilerErr e)
   {
     c.log.compilerErr(e)
-    c.errors.add(e)
+    if (e.isWarn)
+      c.warns.add(e)
+    else
+      c.errors.add(e)
     return e
   }
 
