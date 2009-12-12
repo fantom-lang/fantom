@@ -209,7 +209,7 @@ class FandocParser
 
       // if more code, then add blank lines and continue
       if (curt === LineType.normal && curIndent >= indent)
-        blanks.times |,| { buf.add("\n") }
+        blanks.times { buf.add("\n") }
       else
         break
     }

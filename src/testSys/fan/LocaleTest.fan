@@ -31,16 +31,16 @@ class LocaleTest : Test
     verifyLocale("fr-CA", "fr", "CA")
 
     verifyEq(Locale.fromStr("", false), null)
-    verifyErr(ParseErr#) |,| { Locale.fromStr("x") }
-    verifyErr(ParseErr#) |,| { Locale.fromStr("x", true) }
-    verifyErr(ParseErr#) |,| { Locale.fromStr("e2") }
-    verifyErr(ParseErr#) |,| { Locale.fromStr("en_US") }
-    verifyErr(ParseErr#) |,| { Locale.fromStr("en-x") }
-    verifyErr(ParseErr#) |,| { Locale.fromStr("en-x2") }
-    verifyErr(ParseErr#) |,| { Locale.fromStr("en-xxx") }
-    verifyErr(ParseErr#) |,| { Locale.fromStr("EN") }
-    verifyErr(ParseErr#) |,| { Locale.fromStr("EN-US") }
-    verifyErr(ParseErr#) |,| { Locale.fromStr("en-us") }
+    verifyErr(ParseErr#) { Locale.fromStr("x") }
+    verifyErr(ParseErr#) { Locale.fromStr("x", true) }
+    verifyErr(ParseErr#) { Locale.fromStr("e2") }
+    verifyErr(ParseErr#) { Locale.fromStr("en_US") }
+    verifyErr(ParseErr#) { Locale.fromStr("en-x") }
+    verifyErr(ParseErr#) { Locale.fromStr("en-x2") }
+    verifyErr(ParseErr#) { Locale.fromStr("en-xxx") }
+    verifyErr(ParseErr#) { Locale.fromStr("EN") }
+    verifyErr(ParseErr#) { Locale.fromStr("EN-US") }
+    verifyErr(ParseErr#) { Locale.fromStr("en-us") }
   }
 
   Void verifyLocale(Str str, Str lang, Str? country)
@@ -66,7 +66,7 @@ class LocaleTest : Test
     verifyEq(Locale.cur.toStr, "zh-TW")
 
     // can't set to null
-    //verifyErr(NullErr#) |,| { Locale.setCurrent(null) }
+    //verifyErr(NullErr#) { Locale.setCurrent(null) }
 
     // check with closure which throws exception
     try

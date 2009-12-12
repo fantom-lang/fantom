@@ -263,7 +263,7 @@ class MiscTest : CompilerTest
         static Str[]? m03(Int a, Int b) { return null }
 
         // closures
-        static Func c00() { return |,| {} }
+        static Func c00() { return |->| {} }
         Func c01() { return |->Int| { a := 3; return a; } }
         Func c02() { return |->Obj| { return m01(null) } }
         static Func c03() { a := 3; return |->Obj| { return a } }
@@ -404,7 +404,7 @@ class MiscTest : CompilerTest
     verifyEq(o->d, 9)
     verifyEq(o->e, 2)
     verifyEq(o->f, 3)
-    verifyErr(ArgErr#) |,| { o->g }
+    verifyErr(ArgErr#) { o->g }
     verifyEq(o->h, [0, 1, 2])
     verifyEq(o->i, [0, 1, 2, 3])
     verifyEq(o->j(true), false)
@@ -489,9 +489,9 @@ class MiscTest : CompilerTest
      b := pod.findType("B").make
      verifySame(a->x, a->x)
      verifyNotSame(b->x, b->x)
-     verifyErr(Err#) |,| { a->bad }
-     verifyErr(Err#) |,| { a->bad }
-     verifyErr(Err#) |,| { a->bad }
+     verifyErr(Err#) { a->bad }
+     verifyErr(Err#) { a->bad }
+     verifyErr(Err#) { a->bad }
 
     verifyErrors(
       "class Foo

@@ -14,13 +14,13 @@ class WebClientTest : Test
 
   Void testBadConfig()
   {
-    verifyErr(ArgErr#) |,| { x := WebClient(`not/abs`) }
-    verifyErr(ArgErr#) |,| { x := WebClient { reqUri = `/not/abs`; writeReq; readRes } }
+    verifyErr(ArgErr#) { x := WebClient(`not/abs`) }
+    verifyErr(ArgErr#) { x := WebClient { reqUri = `/not/abs`; writeReq; readRes } }
 
-    verifyErr(Err#) |,| { x := WebClient { writeReq; readRes } }
-    verifyErr(Err#) |,| { x := WebClient { reqUri = `http://foo/`; reqHeaders = Str:Str[:]; writeReq; readRes } }
-    verifyErr(Err#) |,| { x := WebClient { reqUri = `http://foo/`; reqHeaders["Host"] = "bad"; writeReq; readRes } }
-    verifyErr(Err#) |,| { x := WebClient { reqUri = `http://foo/`; reqHeaders["host"] = "bad"; writeReq; readRes } }
+    verifyErr(Err#) { x := WebClient { writeReq; readRes } }
+    verifyErr(Err#) { x := WebClient { reqUri = `http://foo/`; reqHeaders = Str:Str[:]; writeReq; readRes } }
+    verifyErr(Err#) { x := WebClient { reqUri = `http://foo/`; reqHeaders["Host"] = "bad"; writeReq; readRes } }
+    verifyErr(Err#) { x := WebClient { reqUri = `http://foo/`; reqHeaders["host"] = "bad"; writeReq; readRes } }
   }
 
   Void testGetFixed()
@@ -42,8 +42,8 @@ class WebClientTest : Test
       verify(c.resHeader("server").contains("Apache"))
       verify(c.resHeader("SERVER", true).contains("Apache"))
       verifyEq(c.resHeader("foo-bar", false), null)
-      verifyErr(Err#) |,| { c.resHeader("foo-bar") }
-      verifyErr(Err#) |,| { c.resHeader("foo-bar", true) }
+      verifyErr(Err#) { c.resHeader("foo-bar") }
+      verifyErr(Err#) { c.resHeader("foo-bar", true) }
 
       // fixed content-length
       len := c.resHeader("Content-Length").toInt

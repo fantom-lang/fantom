@@ -167,7 +167,7 @@ class BufTest : Test
     verifyErr(IndexErr#) |->Int| { return Buf.make[0] }
     verifyErr(IndexErr#) |->Int| { return buf[3] }
     verifyErr(IndexErr#) |->Int| { return buf[-4] }
-    verifyErr(IndexErr#) |,| { buf.seek(-4) }
+    verifyErr(IndexErr#) { buf.seek(-4) }
 
     // sets
     buf[0] = 'A';
@@ -184,9 +184,9 @@ class BufTest : Test
     verifyEq(buf[2], 0xff)
 
     // set errors
-    verifyErr(IndexErr#) |,| { Buf.make[0] = 99 }
-    verifyErr(IndexErr#) |,| { buf[3] = 99 }
-    verifyErr(IndexErr#) |,| { buf[-4] = 99 }
+    verifyErr(IndexErr#) { Buf.make[0] = 99 }
+    verifyErr(IndexErr#) { buf[3] = 99 }
+    verifyErr(IndexErr#) { buf[-4] = 99 }
 
     // clear
     buf.clear
@@ -235,8 +235,8 @@ class BufTest : Test
     verifyEq(b.capacity, 7)
     verifyEq(b.size, 7)
 
-    verifyErr(ArgErr#) |,| { b.capacity = 6 }
-    verifyErr(ArgErr#) |,| { b.capacity = -9 }
+    verifyErr(ArgErr#) { b.capacity = 6 }
+    verifyErr(ArgErr#) { b.capacity = -9 }
 
     b.size = 8
     verifyEq(b.capacity, 8)
@@ -781,8 +781,8 @@ class BufTest : Test
     verifyHexStr("Fan", "46616e");
     verifyHexStr("\r\n", "0d0a");
 
-    verifyErr(IOErr#) |,| { Buf.fromHex("3x") }
-    verifyErr(IOErr#) |,| { Buf.fromHex("a") }
+    verifyErr(IOErr#) { Buf.fromHex("3x") }
+    verifyErr(IOErr#) { Buf.fromHex("a") }
   }
 
   Void verifyHexStr(Str src, Str hex)
@@ -850,7 +850,7 @@ class BufTest : Test
     verifyDigest("The quick brown fox jumps over the lazy dog", "SHA-256",
       "d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592")
 
-    verifyErr(ArgErr#) |,| { ascii("foo").toDigest("Foo Digest!") }
+    verifyErr(ArgErr#) { ascii("foo").toDigest("Foo Digest!") }
   }
 
   Void verifyDigest(Str text, Str algorithm, Str digest)

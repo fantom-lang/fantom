@@ -27,9 +27,9 @@ internal class FindBar : ContentPane, TextEditorSupport
 
     findText = Combo() { editable = true }
     findText.items = history.find
-    findText.onFocus.add  |,| { caretPos = richText.selectStart }
-    findText.onBlur.add   |,| { updateHistory }
-    findText.onModify.add |,| { find(null, true, true) }
+    findText.onFocus.add  |->| { caretPos = richText.selectStart }
+    findText.onBlur.add   |->| { updateHistory }
+    findText.onModify.add |->| { find(null, true, true) }
     findText.onKeyDown.add |e|
     {
       switch (e.key)
@@ -43,7 +43,7 @@ internal class FindBar : ContentPane, TextEditorSupport
     {
       mode = ButtonMode.check
       text = Flux#.loc("find.matchCase")
-      onAction.add |,| { updateHistory; find(null, true, true) }
+      onAction.add |->| { updateHistory; find(null, true, true) }
       selected = history.matchCase
     }
 

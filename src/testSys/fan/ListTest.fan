@@ -316,15 +316,15 @@ class ListTest : Test
 
     // IndexErr - no items
     list = Int[,]
-    verifyErr(IndexErr#) |,| { x:=list[0] }
-    verifyErr(IndexErr#) |,| { x:=list[1] }
-    verifyErr(IndexErr#) |,| { x:=list[-1] }
-    verifyErr(IndexErr#) |,| { x:=list[-2] }
+    verifyErr(IndexErr#) { x:=list[0] }
+    verifyErr(IndexErr#) { x:=list[1] }
+    verifyErr(IndexErr#) { x:=list[-1] }
+    verifyErr(IndexErr#) { x:=list[-2] }
 
     // IndexErr - one items
     list = [77]
-    verifyErr(IndexErr#) |,| { x:=list[1] }
-    verifyErr(IndexErr#) |,| { x:=list[-2] }
+    verifyErr(IndexErr#) { x:=list[1] }
+    verifyErr(IndexErr#) { x:=list[-2] }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -411,7 +411,7 @@ class ListTest : Test
     x.add("a").add("b")
     verifyEq(x.size, 2)
     verifyEq(x.capacity, 2)
-    verifyErr(ArgErr#) |,| { x.capacity = 1 }
+    verifyErr(ArgErr#) { x.capacity = 1 }
 
     x.add("c")  // auto-grow
     verifyEq(x.size, 3)
@@ -525,13 +525,13 @@ class ListTest : Test
     verifyEq(ex[1..-2], [1, 2])
 
     // errors
-    verifyErr(IndexErr#) |,| { x:=list[0..4] }
-    verifyErr(IndexErr#) |,| { x:=list[0..<5] }
-    verifyErr(IndexErr#) |,| { x:=list[2..<1] }
-    verifyErr(IndexErr#) |,| { x:=list[3..1] }
-    verifyErr(IndexErr#) |,| { x:=list[-5..-1] }
-    verifyErr(IndexErr#) |,| { x:=list[1..4] }
-    verifyErr(IndexErr#) |,| { x:=list[1..5] }
+    verifyErr(IndexErr#) { x:=list[0..4] }
+    verifyErr(IndexErr#) { x:=list[0..<5] }
+    verifyErr(IndexErr#) { x:=list[2..<1] }
+    verifyErr(IndexErr#) { x:=list[3..1] }
+    verifyErr(IndexErr#) { x:=list[-5..-1] }
+    verifyErr(IndexErr#) { x:=list[1..4] }
+    verifyErr(IndexErr#) { x:=list[1..5] }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -666,8 +666,8 @@ class ListTest : Test
     verifyEq(list.index(null, 2), 2)
     verifyEq(list.index(null, 3), 4)
 
-    verifyErr(IndexErr#) |,| { list.index("a", 7) }
-    verifyErr(IndexErr#) |,| { list.index("a", -8) }
+    verifyErr(IndexErr#) { list.index("a", 7) }
+    verifyErr(IndexErr#) { list.index("a", -8) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1385,25 +1385,25 @@ class ListTest : Test
     verifyEq(r.join, "abc")
 
     // verify all modification methods throw ReadonlyErr
-    verifyErr(ReadonlyErr#) |,| { r.size = 10 }
-    verifyErr(ReadonlyErr#) |,| { r.capacity = 10 }
-    verifyErr(ReadonlyErr#) |,| { r[2] = "x" }
-    verifyErr(ReadonlyErr#) |,| { r.add("x") }
-    verifyErr(ReadonlyErr#) |,| { r.addAll(["x"]) }
-    verifyErr(ReadonlyErr#) |,| { r.insert(2, "x") }
-    verifyErr(ReadonlyErr#) |,| { r.insertAll(2, ["x"]) }
-    verifyErr(ReadonlyErr#) |,| { r.remove("a") }
-    verifyErr(ReadonlyErr#) |,| { r.removeAt(5) }
-    verifyErr(ReadonlyErr#) |,| { r.removeSame("a") }
-    verifyErr(ReadonlyErr#) |,| { r.clear }
-    verifyErr(ReadonlyErr#) |,| { r.trim }
-    verifyErr(ReadonlyErr#) |,| { r.fill("", 3) }
-    verifyErr(ReadonlyErr#) |,| { r.pop }
-    verifyErr(ReadonlyErr#) |,| { r.push("x") }
-    verifyErr(ReadonlyErr#) |,| { r.sort }
-    verifyErr(ReadonlyErr#) |,| { r.sortr }
-    verifyErr(ReadonlyErr#) |,| { r.reverse }
-    verifyErr(ReadonlyErr#) |,| { r.swap(0, 1) }
+    verifyErr(ReadonlyErr#) { r.size = 10 }
+    verifyErr(ReadonlyErr#) { r.capacity = 10 }
+    verifyErr(ReadonlyErr#) { r[2] = "x" }
+    verifyErr(ReadonlyErr#) { r.add("x") }
+    verifyErr(ReadonlyErr#) { r.addAll(["x"]) }
+    verifyErr(ReadonlyErr#) { r.insert(2, "x") }
+    verifyErr(ReadonlyErr#) { r.insertAll(2, ["x"]) }
+    verifyErr(ReadonlyErr#) { r.remove("a") }
+    verifyErr(ReadonlyErr#) { r.removeAt(5) }
+    verifyErr(ReadonlyErr#) { r.removeSame("a") }
+    verifyErr(ReadonlyErr#) { r.clear }
+    verifyErr(ReadonlyErr#) { r.trim }
+    verifyErr(ReadonlyErr#) { r.fill("", 3) }
+    verifyErr(ReadonlyErr#) { r.pop }
+    verifyErr(ReadonlyErr#) { r.push("x") }
+    verifyErr(ReadonlyErr#) { r.sort }
+    verifyErr(ReadonlyErr#) { r.sortr }
+    verifyErr(ReadonlyErr#) { r.reverse }
+    verifyErr(ReadonlyErr#) { r.swap(0, 1) }
 
     // verify rw detaches ro
     x.add("d")
@@ -1509,9 +1509,9 @@ class ListTest : Test
 
     verifyEq([this].isImmutable, false)
     verifyEq([this].ro.isImmutable, false)
-    verifyErr(NotImmutableErr#) |,| { [this].toImmutable }
-    verifyErr(NotImmutableErr#) |,| { [0, this, 2].toImmutable }
-    verifyErr(NotImmutableErr#) |,| { [0, [this], 2].toImmutable }
+    verifyErr(NotImmutableErr#) { [this].toImmutable }
+    verifyErr(NotImmutableErr#) { [0, this, 2].toImmutable }
+    verifyErr(NotImmutableErr#) { [0, [this], 2].toImmutable }
   }
 
 }

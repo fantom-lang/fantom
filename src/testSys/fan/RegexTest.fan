@@ -109,16 +109,16 @@ class RegexTest : Test
       verifyEq(m.end,  s.size)
       verifyEq(m.groupCount, 0)
 
-      verifyErr(IndexErr#) |,| { m.group(1) }
-      verifyErr(IndexErr#) |,| { m.start(1) }
-      verifyErr(IndexErr#) |,| { m.end(1) }
+      verifyErr(IndexErr#) { m.group(1) }
+      verifyErr(IndexErr#) { m.start(1) }
+      verifyErr(IndexErr#) { m.end(1) }
     }
     else
     {
       verifyEq(m.groupCount, 0)
-      verifyErr(Err#) |,| { m.group }
-      verifyErr(Err#) |,| { m.start }
-      verifyErr(Err#) |,| { m.end }
+      verifyErr(Err#) { m.group }
+      verifyErr(Err#) { m.start }
+      verifyErr(Err#) { m.end }
     }
   }
 

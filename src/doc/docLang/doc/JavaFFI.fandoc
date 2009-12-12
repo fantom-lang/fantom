@@ -333,8 +333,7 @@ use a Fantom function whenever a 'Runnable' is expected:
   void execute(Runnable r)
 
   // Fantom code
-  execute |,| { echo("run!") }
-  execute(&run)
+  execute |->| { echo("run!") }
 
 The standard rules for coercion between Java and Fantom types apply for how
 the function implements the interface's method.

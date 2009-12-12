@@ -38,20 +38,20 @@ class ClosureTest : Test
     Obj cObj := c
     Int? m := 3
 
-    verifyAlwaysImmutable |,| { echo("foo") }
-    verifyAlwaysImmutable |,| { echo(x) }
-    verifyAlwaysImmutable |,| { echo("$x, $y") }
+    verifyAlwaysImmutable |->| { echo("foo") }
+    verifyAlwaysImmutable |->|{ echo(x) }
+    verifyAlwaysImmutable |->|{ echo("$x, $y") }
     verifyAlwaysImmutable(c.f)
 
-    verifyNeverImmutable |,| { echo(this) }
-    verifyNeverImmutable |,| { echo(in) }
-    verifyNeverImmutable |,| { echo("$this, $in") }
-    verifyNeverImmutable |,| { m += 1 }
-    verifyNeverImmutable |,| { echo(m) } // b/c of above
+    verifyNeverImmutable |->| { echo(this) }
+    verifyNeverImmutable |->| { echo(in) }
+    verifyNeverImmutable |->| { echo("$this, $in") }
+    verifyNeverImmutable |->| { m += 1 }
+    verifyNeverImmutable |->| { echo(m) } // b/c of above
 
-    verifyMaybeImmutable(true)  |,| { echo(xObj) }
-    verifyMaybeImmutable(true)  |,| { echo(cObj) }
-    verifyMaybeImmutable(false) |,| { echo(inObj) }
+    verifyMaybeImmutable(true)  |->| { echo(xObj) }
+    verifyMaybeImmutable(true)  |->| { echo(cObj) }
+    verifyMaybeImmutable(false) |->| { echo(inObj) }
   }
 
   Void testImmutableList()
@@ -101,7 +101,7 @@ class ClosureTest : Test
   Void testFuncFields()
   {
     verifyEq(ClosureFieldA().f.call, 1972)
-    verifyErr(NotImmutableErr#) |,| { ClosureFieldB().f.call }
+    verifyErr(NotImmutableErr#) { ClosureFieldB().f.call }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -149,7 +149,7 @@ class ClosureTest : Test
     3.times( |Int i| { x += y } )
     verifyEq(x, 5)
 
-    Func m := |,| { x += y }
+    Func m := |->| { x += y }
     verifyEq(x, 5)
     m.call
     verifyEq(x, 6)
@@ -312,7 +312,7 @@ class ClosureTest : Test
     Str r := ""
     a := "A"
     b := "B"
-    f := |,| { r = r + "(" + a + "," + b + ")" }
+    f := |->| { r = r + "(" + a + "," + b + ")" }
     f()
     a = "a"
     b = "b"
@@ -328,7 +328,7 @@ class ClosureTest : Test
   {
     str := this.toStr
     x := ""
-    f := |,|
+    f := |->|
     {
       x = this.toStr
       verifyEq(toStr, str)
@@ -410,7 +410,7 @@ class ClosureFieldB
 
 const class ClosureInConst
 {
-  Func f() { |,| { echo(this) } }
+  Func f() { |->| { echo(this) } }
 }
 
 **************************************************************************

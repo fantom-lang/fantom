@@ -51,7 +51,7 @@ class Desktop
   ** on the UI thread, then it is ok for the function to be
   ** mutable.
   **
-  static native Void callAsync(|,| f)
+  static native Void callAsync(|->| f)
 
 //////////////////////////////////////////////////////////////////////////
 // Dispose

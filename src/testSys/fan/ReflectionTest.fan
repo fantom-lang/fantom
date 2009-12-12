@@ -68,14 +68,14 @@ class ReflectionTest : Test
     verifyEq(ReflectMixinCls#ints.get(x), null)
     ReflectMixinCls#ints.set(x, Int[3,4])
     verifyEq(ReflectMixinCls#ints.get(x), Int[3,4])
-    verifyErr(ArgErr#) |,| { ReflectMixinCls#ints.set(x, Num[6, 7f]) }
+    verifyErr(ArgErr#) { ReflectMixinCls#ints.set(x, Num[6, 7f]) }
 
     verifyEq(ReflectMixinCls#map.get(x), Str:Num[:])
     ReflectMixinCls#map.set(x, Str:Num["i":8, "f":9f])
     verifyEq(ReflectMixinCls#map.get(x), Str:Num["i":8, "f":9f])
     ReflectMixinCls#map.set(x, Str:Int["i":6])
     verifyEq(ReflectMixinCls#map.get(x), Str:Int["i":6])
-    verifyErr(ArgErr#) |,| { ReflectMixinCls#map.set(x, Str:Obj["5":4]) }
+    verifyErr(ArgErr#) { ReflectMixinCls#map.set(x, Str:Obj["5":4]) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -143,9 +143,9 @@ class ReflectionTest : Test
       // verify explicits less than i fail
       for (j:=0; j<i; ++j)
       {
-        verifyErr(ArgErr#) |,| { statics[j]->call(ms) }
-        verifyErr(ArgErr#) |,| { instances[j]->call(mi) }
-        verifyErr(ArgErr#) |,| { funcs[j]->call(mi) }
+        verifyErr(ArgErr#) { statics[j]->call(ms) }
+        verifyErr(ArgErr#) { instances[j]->call(mi) }
+        verifyErr(ArgErr#) { funcs[j]->call(mi) }
       }
 
       // verify explicits i and greater work (we
@@ -255,7 +255,7 @@ class ReflectionTest : Test
   {
     m := type.method("defaultsInstance0")
 
-    verifyErr(ArgErr#) |,| { m.call() }
+    verifyErr(ArgErr#) { m.call() }
     verifyEq(m.call(this), "abc")
     verifyEq(m.call(this, 'x'), "xbc")
     verifyEq(m.call(this, 'x', 'y'), "xyc")
@@ -265,8 +265,8 @@ class ReflectionTest : Test
     verifyEq(m.call(this, 'x', 'y', 'z', '?', '?', '?'), "xyz")
     verifyEq(m.call(this, 'x', 'y', 'z', '?', '?', '?', '?'), "xyz")
 
-    verifyErr(ArgErr#) |,| { m.callList(null) }
-    verifyErr(ArgErr#) |,| { m.callList([,]) }
+    verifyErr(ArgErr#) { m.callList(null) }
+    verifyErr(ArgErr#) { m.callList([,]) }
     verifyEq(m.callList([this]), "abc")
     verifyEq(m.callList([this, 'x']), "xbc")
     verifyEq(m.callList([this, 'x', 'y']), "xyc")
@@ -296,8 +296,8 @@ class ReflectionTest : Test
   {
     m := type.method("defaultsInstance1")
 
-    verifyErr(ArgErr#) |,| { m.call() }
-    verifyErr(ArgErr#) |,| { m.call(this) }
+    verifyErr(ArgErr#) { m.call() }
+    verifyErr(ArgErr#) { m.call(this) }
     verifyEq(m.call(this, 'x'), "xbc")
     verifyEq(m.call(this, 'x', 'y'), "xyc")
     verifyEq(m.call(this, 'x', 'y', 'z'), "xyz")
@@ -306,17 +306,17 @@ class ReflectionTest : Test
     verifyEq(m.call(this, 'x', 'y', 'z', '?', '?', '?'), "xyz")
     verifyEq(m.call(this, 'x', 'y', 'z', '?', '?', '?', '?'), "xyz")
 
-    verifyErr(ArgErr#) |,| { m.callList(null) }
-    verifyErr(ArgErr#) |,| { m.callList([,]) }
-    verifyErr(ArgErr#) |,| { m.callList([this]) }
+    verifyErr(ArgErr#) { m.callList(null) }
+    verifyErr(ArgErr#) { m.callList([,]) }
+    verifyErr(ArgErr#) { m.callList([this]) }
     verifyEq(m.callList([this, 'x']), "xbc")
     verifyEq(m.callList([this, 'x', 'y']), "xyc")
     verifyEq(m.callList([this, 'x', 'y', 'z']), "xyz")
     verifyEq(m.callList([this, 'x', 'y', 'z', '?']), "xyz")
     verifyEq(m.callList([this, 'x', 'y', 'z', '?', '?']), "xyz")
 
-    verifyErr(ArgErr#) |,| { m.callOn(this, null) }
-    verifyErr(ArgErr#) |,| { m.callOn(this, [,]) }
+    verifyErr(ArgErr#) { m.callOn(this, null) }
+    verifyErr(ArgErr#) { m.callOn(this, [,]) }
     verifyEq(m.callOn(this, ['x']), "xbc")
     verifyEq(m.callOn(this, ['x', 'y']), "xyc")
     verifyEq(m.callOn(this, ['x', 'y', 'z']), "xyz")
@@ -344,7 +344,7 @@ class ReflectionTest : Test
 
     // reflect static field
     verifyEq(t.field("sx").get, 99)
-    verifyErr(ReadonlyErr#) |,| { t.field("sx").set(null, 77) }
+    verifyErr(ReadonlyErr#) { t.field("sx").set(null, 77) }
 
     // reflect instance method
     obj := ReflectMixinCls.make
@@ -371,13 +371,13 @@ class ReflectionTest : Test
     verifyEq(t.field("iz").get(obj), 1972)
 
     // invalid sets
-    verifyErr(ArgErr#) |,| { obj.type.field("ints").set(obj, "x") }
-    verifyErr(ArgErr#) |,| { obj.type.field("ints").set(obj, ["x"]) }
-    verifyErr(ArgErr#) |,| { obj.type.field("iz").set(obj, "x") }
+    verifyErr(ArgErr#) { obj.type.field("ints").set(obj, "x") }
+    verifyErr(ArgErr#) { obj.type.field("ints").set(obj, ["x"]) }
+    verifyErr(ArgErr#) { obj.type.field("iz").set(obj, "x") }
 
     // trap
     verifyEq(obj->add(4, 6), 10)
-    verifyErr(ReadonlyErr#) |,| { obj->sx = 101 }
+    verifyErr(ReadonlyErr#) { obj->sx = 101 }
     verifyEq(obj->a, 'a')
     verifyEq(obj->b, 'b')
     verifyEq(obj->c, 'C')

@@ -159,7 +159,7 @@ class WriteTest : XmlTest
     verifyWrite(x, "<x><![CDATA['hi' & <there>\n \"line2\"]]></x>")
 
     x = XElem("x").add(XText("]]>") { cdata=true })
-    verifyErr(IOErr#) |,| { verifyWrite(x, "?") }
+    verifyErr(IOErr#) { verifyWrite(x, "?") }
   }
 
   Void testNs()

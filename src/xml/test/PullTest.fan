@@ -290,8 +290,8 @@ class PullTest : XmlTest
     verifyEq(parser.depth, depth)
     verifyElem(parser.elem, stack.last)
     stack.each |XElem e, Int i| { verifyElem(parser.elemAt(i), e) }
-    verifyErr(IndexErr#) |,| { parser.elemAt(-1) }
-    verifyErr(IndexErr#) |,| { parser.elemAt(stack.size) }
+    verifyErr(IndexErr#) { parser.elemAt(-1) }
+    verifyErr(IndexErr#) { parser.elemAt(stack.size) }
     switch (t)
     {
       case text: verifyText(parser.text, cur)

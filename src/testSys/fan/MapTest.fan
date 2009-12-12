@@ -258,7 +258,7 @@ class MapTest : Test
     verifyEq(m[2], "two")
     verifyEq(m[5], "five")
     verifyEq(m[9], "nine")
-    verifyErr(ArgErr#) |,| { m.add(2, "err") }
+    verifyErr(ArgErr#) { m.add(2, "err") }
     verifyEq(m[2], "two")
 
     m[9] = null
@@ -277,7 +277,7 @@ class MapTest : Test
     verifyEq(m[2], "two")
     verifyEq(m[5], "five")
     verifyEq(m[9], "nine")
-    verifyErr(ArgErr#) |,| { m.add(9, "err") }
+    verifyErr(ArgErr#) { m.add(9, "err") }
     verifyEq(m[9], "nine")
     m[9] = null
 
@@ -313,13 +313,13 @@ class MapTest : Test
     for (Int i :=0;   i<500;   ++i) verifyEq(m[i], i.toStr)
     for (Int i :=500; i<1000;  ++i) verifyEq(m[i], null)
 
-    //verifyErr(NullErr#) |,| { m.set(null, "foo") }
-    //verifyErr(NullErr#) |,| { m.add(null, "foo") }
+    //verifyErr(NullErr#) { m.set(null, "foo") }
+    //verifyErr(NullErr#) { m.add(null, "foo") }
 
     em := [:]
-    verifyErr(NotImmutableErr#) |,| { em.add(this, "foo") }
-    verifyErr(NotImmutableErr#) |,| { em.set(this, "foo") }
-    verifyErr(NotImmutableErr#) |,| { em[this] = "foo" }
+    verifyErr(NotImmutableErr#) { em.add(this, "foo") }
+    verifyErr(NotImmutableErr#) { em.set(this, "foo") }
+    verifyErr(NotImmutableErr#) { em[this] = "foo" }
     verify(em.isEmpty)
   }
 
@@ -408,7 +408,7 @@ class MapTest : Test
 
     m = [2:2ns, 3:3ns, 4:4ns]
     verifyEq(m.addAll([1:10ns, 5:50ns]), [1:10ns, 2:2ns, 3:3ns, 4:4ns, 5:50ns])
-    verifyErr(ArgErr#) |,| { m.addAll([1:10ns, 5:50ns]) }
+    verifyErr(ArgErr#) { m.addAll([1:10ns, 5:50ns]) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -435,9 +435,9 @@ class MapTest : Test
     verifyEq([2:2ns, 3:3ns].addList([4ns, 5ns]) |Duration v, Int i->Int| { return i },
              [2:2ns, 3:3ns, 0:4ns, 1:5ns])
 
-    verifyErr(ArgErr#) |,| { [2:20].addList([2]) }
-    verifyErr(ArgErr#) |,| { [2:20].addList([33]) |Int v->Int| { return 2 } }
-    verifyErr(ArgErr#) |,| { [2:20].addList([33]) |Int v, Int i->Int| { return 2 } }
+    verifyErr(ArgErr#) { [2:20].addList([2]) }
+    verifyErr(ArgErr#) { [2:20].addList([33]) |Int v->Int| { return 2 } }
+    verifyErr(ArgErr#) { [2:20].addList([33]) |Int v, Int i->Int| { return 2 } }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -554,9 +554,9 @@ class MapTest : Test
     verifyEq(m.containsKey("B"), true)
 
     // add existing
-    verifyErr(ArgErr#) |,| { m.add("B", 'x') }
-    verifyErr(ArgErr#) |,| { m.add("b", 'x') }
-    verifyErr(ArgErr#) |,| { m.add("A", 'x') }
+    verifyErr(ArgErr#) { m.add("B", 'x') }
+    verifyErr(ArgErr#) { m.add("b", 'x') }
+    verifyErr(ArgErr#) { m.add("A", 'x') }
 
     // get, set, containsKey
     m.set("Charlie", 'x')
@@ -697,11 +697,11 @@ class MapTest : Test
     verifyNotEq(m, ["Alpha":'a', "Beta":'b', "C":'c'])
 
     // errors
-    verifyErr(UnsupportedErr#) |,| { Int:Str[:].caseInsensitive = true }
-    verifyErr(UnsupportedErr#) |,| { Obj:Str[:].caseInsensitive = true }
-    verifyErr(UnsupportedErr#) |,| { ["a":0].caseInsensitive = true }
-    verifyErr(UnsupportedErr#) |,| { Str:Str[:] { ordered = true; caseInsensitive = true } }
-    verifyErr(ReadonlyErr#) |,| { xro := Str:Str[:].ro; xro.caseInsensitive = true }
+    verifyErr(UnsupportedErr#) { Int:Str[:].caseInsensitive = true }
+    verifyErr(UnsupportedErr#) { Obj:Str[:].caseInsensitive = true }
+    verifyErr(UnsupportedErr#) { ["a":0].caseInsensitive = true }
+    verifyErr(UnsupportedErr#) { Str:Str[:] { ordered = true; caseInsensitive = true } }
+    verifyErr(ReadonlyErr#) { xro := Str:Str[:].ro; xro.caseInsensitive = true }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -719,7 +719,7 @@ class MapTest : Test
     verifyEq(m.containsKey("2"), true)
     verifyEq(m.containsKey("7"), true)
     verifyEq(m.containsKey("x"), false)
-    verifyErr(ArgErr#) |,| { m.add("4", 99) }
+    verifyErr(ArgErr#) { m.add("4", 99) }
 
     // keys, values
     verifyEq(m.keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
@@ -770,7 +770,7 @@ class MapTest : Test
     verifyEq(r.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9", "5", "10"])
     verifyEq(r.vals, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5, 10])
     verifyEq(r["6"], 66)
-    verifyErr(ReadonlyErr#) |,| { r["3"] = 333 }
+    verifyErr(ReadonlyErr#) { r["3"] = 333 }
 
     // to immutable
     i := m.toImmutable
@@ -779,7 +779,7 @@ class MapTest : Test
     verifyEq(i.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9", "5", "10"])
     verifyEq(i.vals, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5, 10])
     verifyEq(i["10"], 10)
-    verifyErr(ReadonlyErr#) |,| { i["3"] = 333 }
+    verifyErr(ReadonlyErr#) { i["3"] = 333 }
 
     // to rw
     rw := r.rw
@@ -795,9 +795,9 @@ class MapTest : Test
     verifyNotEq(m.vals, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
     // errors
-    verifyErr(UnsupportedErr#) |,| { ["a":0].ordered = true }
-    verifyErr(UnsupportedErr#) |,| { Str:Str[:] { caseInsensitive = true; ordered = true } }
-    verifyErr(ReadonlyErr#) |,| { xro := Str:Str[:].ro; xro.ordered = true }
+    verifyErr(UnsupportedErr#) { ["a":0].ordered = true }
+    verifyErr(UnsupportedErr#) { Str:Str[:] { caseInsensitive = true; ordered = true } }
+    verifyErr(ReadonlyErr#) { xro := Str:Str[:].ro; xro.ordered = true }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -823,7 +823,7 @@ class MapTest : Test
     verifyEq(a[0], "zero")
     verifyEq(a[3], "")
     verifyEq(a.get(3, "x"), "x")
-    verifyErr(ReadonlyErr#) |,| { a.def = null }
+    verifyErr(ReadonlyErr#) { a.def = null }
 
     a = a.rw
     verifyEq(a.def, "")
@@ -838,13 +838,13 @@ class MapTest : Test
     verifyEq(a[0], "zero")
     verifyEq(a[3], "?")
     verifyEq(a.get(3, "x"), "x")
-    verifyErr(ReadonlyErr#) |,| { a.def = null }
+    verifyErr(ReadonlyErr#) { a.def = null }
     verifyEq(a.def, "?")
 
     b := ["x":[0, 1]] { def = Int[,].toImmutable }
     verifyEq(b["x"], [0, 1])
     verifyEq(b["y"], Int[,])
-    verifyErr(NotImmutableErr#) |,| { b.def = [3] }
+    verifyErr(NotImmutableErr#) { b.def = [3] }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1074,19 +1074,19 @@ class MapTest : Test
     verifyEq(r.def, null)
 
     // verify all modification methods throw ReadonlyErr
-    verifyErr(ReadonlyErr#) |,| { r[2] = "x" }
-    verifyErr(ReadonlyErr#) |,| { r[3] = "x" }
-    verifyErr(ReadonlyErr#) |,| { r.add(2, "?") }
-    verifyErr(ReadonlyErr#) |,| { r.setAll([1:"yikes!"]) }
-    verifyErr(ReadonlyErr#) |,| { r.addAll([1:"yikes!"]) }
-    verifyErr(ReadonlyErr#) |,| { r.setList(["foo"]) |Str v->Int| { return 99 } }
-    verifyErr(ReadonlyErr#) |,| { r.addList(["foo"]) |Str v->Int| { return 99 } }
-    verifyErr(ReadonlyErr#) |,| { r.remove(0) }
-    verifyErr(ReadonlyErr#) |,| { r.remove(5) }
-    verifyErr(ReadonlyErr#) |,| { r.clear }
-    verifyErr(ReadonlyErr#) |,| { r.caseInsensitive = true }
-    verifyErr(ReadonlyErr#) |,| { r.ordered = true }
-    verifyErr(ReadonlyErr#) |,| { r.def = "" }
+    verifyErr(ReadonlyErr#) { r[2] = "x" }
+    verifyErr(ReadonlyErr#) { r[3] = "x" }
+    verifyErr(ReadonlyErr#) { r.add(2, "?") }
+    verifyErr(ReadonlyErr#) { r.setAll([1:"yikes!"]) }
+    verifyErr(ReadonlyErr#) { r.addAll([1:"yikes!"]) }
+    verifyErr(ReadonlyErr#) { r.setList(["foo"]) |Str v->Int| { return 99 } }
+    verifyErr(ReadonlyErr#) { r.addList(["foo"]) |Str v->Int| { return 99 } }
+    verifyErr(ReadonlyErr#) { r.remove(0) }
+    verifyErr(ReadonlyErr#) { r.remove(5) }
+    verifyErr(ReadonlyErr#) { r.clear }
+    verifyErr(ReadonlyErr#) { r.caseInsensitive = true }
+    verifyErr(ReadonlyErr#) { r.ordered = true }
+    verifyErr(ReadonlyErr#) { r.def = "" }
 
     // verify rw detaches ro
     x[3] = "d"
@@ -1172,9 +1172,9 @@ class MapTest : Test
 
     verifyEq([0:this].isImmutable, false)
     verifyEq([0:this].ro.isImmutable, false)
-    verifyErr(NotImmutableErr#) |,| { [0:this].toImmutable }
-    verifyErr(NotImmutableErr#) |,| { [0:[this]].toImmutable }
-    verifyErr(NotImmutableErr#) |,| { [4:[8ns:this]].toImmutable }
+    verifyErr(NotImmutableErr#) { [0:this].toImmutable }
+    verifyErr(NotImmutableErr#) { [0:[this]].toImmutable }
+    verifyErr(NotImmutableErr#) { [4:[8ns:this]].toImmutable }
   }
 
 }

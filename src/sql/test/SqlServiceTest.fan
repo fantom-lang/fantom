@@ -169,8 +169,8 @@ class SqlServiceTest : Test
     */
 
     verifyEq(row.col("foobar", false), null)
-    verifyErr(ArgErr#) |,| { row.col("foobar") }
-    verifyErr(ArgErr#) |,| { row.col("foobar", true) }
+    verifyErr(ArgErr#) { row.col("foobar") }
+    verifyErr(ArgErr#) { row.col("foobar", true) }
   }
 
 //////////////////////////////////////////////////////////////////////////

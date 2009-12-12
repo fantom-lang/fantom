@@ -275,8 +275,8 @@ class ConstFieldCtor
     listB = ["b"]
     mapA = ["a":"a"]
     mapB = ["b":"b"]
-    funcA = |,| { echo("a") }
-    funcB = |,| { echo("b") }
+    funcA = |->| { echo("a") }
+    funcB = |->| { echo("b") }
   }
 
   const List listA
@@ -284,6 +284,6 @@ class ConstFieldCtor
   const Map mapA
   const Obj:Obj mapB
   const Func funcA
-  const |,| funcB
+  const |->| funcB
 }
 

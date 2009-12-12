@@ -25,7 +25,7 @@ class ClosureTest : CompilerTest
       {
         static Void x()
         {
-          at := |,| {}
+          at := |->| {}
           bt := |Int x, Str y->Str| { return \"x\" }
           ct := |Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int j| {}
         }
@@ -107,16 +107,16 @@ class ClosureTest : CompilerTest
       {
         override Int x() { return 4 }
         static Int  a() { return |->Int| { return this.x }.call }
-        static Void b() { |,| { |,| { this.x } }.call }
+        static Void b() { |->| { |->| { this.x } }.call }
         Int  c() { return |->Int| { return super.x }.call }
-        Void d() { |,| { |,| { super.x } }.call }
+        Void d() { |->| { |->| { super.x } }.call }
       }
       ",
        [
           9, 45, "Cannot access 'this' within closure of static context",
-         10, 33, "Cannot access 'this' within closure of static context",
+         10, 35, "Cannot access 'this' within closure of static context",
          11, 38, "Invalid use of 'super' within closure",
-         12, 26, "Invalid use of 'super' within closure",
+         12, 28, "Invalid use of 'super' within closure",
        ])
   }
 
@@ -167,9 +167,9 @@ class ClosureTest : CompilerTest
         static
         {
           Int x := 0
-          3.times |,|
+          3.times
           {
-            2.times |,| { x++ }
+            2.times { x++ }
           }
           f = |->Int| { return x }.call
         }
@@ -200,11 +200,11 @@ class ClosureTest : CompilerTest
     compile(
      "class Foo
       {
-        |,| c1 := |,| { s=\"c1\" };
+        |->| c1 := |->| { s=\"c1\" };
         |Str x| c2 := |Str x| { s=x };
         |Str x| c3 := |Str x| { sets(x) };
         |Str x| c4 := |Str x| { this.sets(x) };
-        static const |,| sc1 := |,| { Actor.locals[\"testCompiler.closure\"] = \"sc1\" }
+        static const |->| sc1 := |->| { Actor.locals[\"testCompiler.closure\"] = \"sc1\" }
         static const |Str x| sc2 := |Str x| { Actor.locals[\"testCompiler.closure\"] = x }
         Void sets(Str x) { s = x }
         Str? s
@@ -461,7 +461,7 @@ class ClosureTest : CompilerTest
      "class Foo
       {
         Void m0() { s = \"m0\" }
-        Void m1(|,| f := |,| { s=\"m1\" }) { f() }
+        Void m1(|->| f := |->| { s=\"m1\" }) { f() }
         Void m2(Str x, |Str y| f := |Str y| { s=y }) { f(x) }
         Str? s
       }")
@@ -491,10 +491,10 @@ class ClosureTest : CompilerTest
           b := true;
 
           3.times |Int a| { return };
-          2.times |,| { |Int x, Int b| {} };
+          2.times |->| { |Int x, Int b| {} };
 
-          |,| { a := true }.callList;
-          |,| { |,| { b := 4 } }.callList;
+          |->| { a := true }.callList;
+          |->| { |->| { b := 4 } }.callList;
         }
       }
       ",
@@ -502,9 +502,9 @@ class ClosureTest : CompilerTest
          6,  5, "Variable 'a' is already defined in current block",
          7,  5, "Variable 'b' is already defined in current block",
          9, 13, "Closure parameter 'a' is already defined in current block",
-        10, 19, "Closure parameter 'b' is already defined in current block",
-        12, 11, "Variable 'a' is already defined in current block",
-        13, 17, "Variable 'b' is already defined in current block",
+        10, 20, "Closure parameter 'b' is already defined in current block",
+        12, 12, "Variable 'a' is already defined in current block",
+        13, 19, "Variable 'b' is already defined in current block",
        ])
   }
 
@@ -517,11 +517,11 @@ class ClosureTest : CompilerTest
     compile(
      "class Foo
       {
-        new make() { f := |,| { i = 4 }; f()  }
+        new make() { f := |->| { i = 4 }; f()  }
         const Int i
 
         static const Int j
-        static  { f := |,| { j = 7 }; f()  }
+        static  { f := |->| { j = 7 }; f()  }
       }")
 
     // compiler.fpod.dump
@@ -597,7 +597,7 @@ class ClosureTest : CompilerTest
     verifyErrors(
      "class Foo
       {
-        Void m03() { f0 |,| {} }   // ok
+        Void m03() { f0 |->| {} }   // ok
         Void m04() { f0 |a| {} }
         Void m05() { f1 |a| {} }   // ok
         Void m06() { f1 |a,b| {} }
@@ -605,7 +605,7 @@ class ClosureTest : CompilerTest
         Void m08() { f2 |a,b,c| {} }
         Void m09() { f2 |a,b,c,d| {} }
 
-        Void f0(|,| f) {}
+        Void f0(|->| f) {}
         Void f1(|Str| f) {}
         Void f2(|Str,Str| f) {}
       }

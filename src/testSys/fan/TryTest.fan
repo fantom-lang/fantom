@@ -78,7 +78,7 @@ class TryTest : Test
 
   Void testCatchWrongType()
   {
-    verifyErr(IndexErr#) |,|
+    verifyErr(IndexErr#) |->|
     {
       try
       {
@@ -100,7 +100,7 @@ class TryTest : Test
     verifyEq(catchMultiple(IOErr.make), IOErr#)
     verifyEq(catchMultiple(IndexErr.make), IndexErr#)
     verifyEq(catchMultiple(ArgErr.make), ArgErr#)
-    verifyErr(ReadonlyErr#) |,| { catchMultiple(ReadonlyErr.make) }
+    verifyErr(ReadonlyErr#) { catchMultiple(ReadonlyErr.make) }
   }
 
   Type catchMultiple(Err err)
@@ -210,24 +210,24 @@ class TryTest : Test
   Void testRuntimeMapping()
   {
     try { throwCastErr } catch (CastErr e) { } catch { fail }
-    verifyErr(CastErr#) |,| { throwCastErr }
-    verifyErr(CastErr#) |,| { TryTest#throwCastErr.call }
+    verifyErr(CastErr#) { throwCastErr }
+    verifyErr(CastErr#) { TryTest#throwCastErr.call }
 
     try { throwNullErr } catch (NullErr e) { } catch { fail }
-    verifyErr(NullErr#) |,| { throwNullErr }
-    verifyErr(NullErr#) |,| { TryTest#throwNullErr.call }
+    verifyErr(NullErr#) { throwNullErr }
+    verifyErr(NullErr#) { TryTest#throwNullErr.call }
 
     try { throwIndexErr } catch (IndexErr e) { } catch { fail }
-    verifyErr(IndexErr#) |,| { throwIndexErr }
-    verifyErr(IndexErr#) |,| { TryTest#throwIndexErr.call }
+    verifyErr(IndexErr#) { throwIndexErr }
+    verifyErr(IndexErr#) { TryTest#throwIndexErr.call }
 
     try { throwIOErr } catch (IOErr e) { } catch { fail }
-    verifyErr(IOErr#) |,| { throwIOErr }
-    verifyErr(IOErr#) |,| { TryTest#throwIOErr.call }
+    verifyErr(IOErr#) { throwIOErr }
+    verifyErr(IOErr#) { TryTest#throwIOErr.call }
 
     try { throwInterruptedErr } catch (InterruptedErr e) { } catch { fail }
-    verifyErr(InterruptedErr#) |,| { throwInterruptedErr }
-    verifyErr(InterruptedErr#) |,| { TryTest#throwInterruptedErr.call }
+    verifyErr(InterruptedErr#) { throwInterruptedErr }
+    verifyErr(InterruptedErr#) { TryTest#throwInterruptedErr.call }
   }
 
   static Str throwCastErr() { Obj four := 4; return (Str)four }

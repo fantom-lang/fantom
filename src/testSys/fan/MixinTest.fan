@@ -59,14 +59,14 @@ class MixinTest : Test
     verifyEq(abi.coc, "23")
 
     // this return
-    verifyErr(UnsupportedErr#) |,| { a.thisa }
+    verifyErr(UnsupportedErr#) { a.thisa }
     verify(a.thisb   ===  a)
     verify(a.thisb.mxClsA == "MxClsA")
     verify(ab.thisa  ===  ab)
     verify(ab.thisb  ===  ab)
     verify(ab.thisa.mxClsAB == "MxClsAB")
-    verifyErr(UnresolvedErr#) |,| { abi.thisa }
-    verifyErr(IndexErr#)      |,| { abi.thisb }
+    verifyErr(UnresolvedErr#) { abi.thisa }
+    verifyErr(IndexErr#) { abi.thisb }
   }
 
 //////////////////////////////////////////////////////////////////////////

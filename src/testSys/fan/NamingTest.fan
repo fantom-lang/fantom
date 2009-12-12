@@ -31,8 +31,8 @@ class NamingTest : Test
     verifySame(UriScheme.find("file"), x)
 
     verifyEq(UriScheme.find("foobar", false), null)
-    verifyErr(UnresolvedErr#) |,| { UriScheme.find("foobar") }
-    verifyErr(UnresolvedErr#) |,| { UriScheme.find("foobar", true) }
+    verifyErr(UnresolvedErr#) { UriScheme.find("foobar") }
+    verifyErr(UnresolvedErr#) { UriScheme.find("foobar", true) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -70,9 +70,9 @@ class NamingTest : Test
     verifySame(`fan:/sys/pod/testSys/res/test.txt`.get, type.pod.files[`/res/test.txt`])
 
     verifySame(`fan:/sys/pod/badpod`.get(null, false), null)
-    verifyErr(UnresolvedErr#) |,| { `fan:/sys/pod/badpod`.get }
-    verifyErr(UnresolvedErr#) |,| { `fan:/sys/pod/badpod`.get(null) }
-    verifyErr(UnresolvedErr#) |,| { `fan:/sys/pod/badpod`.get(null, true) }
+    verifyErr(UnresolvedErr#) { `fan:/sys/pod/badpod`.get }
+    verifyErr(UnresolvedErr#) { `fan:/sys/pod/badpod`.get(null) }
+    verifyErr(UnresolvedErr#) { `fan:/sys/pod/badpod`.get(null, true) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -88,9 +88,9 @@ class NamingTest : Test
     verifySame(`fan:/sys/pod/testSys/res/test.txt`.get(p), f)
     verifySame(`res/test.txt`.get(p), f)
 
-    verifyErr(UnresolvedErr#) |,| { `res/test.txt`.get(null) }
-    verifyErr(UnresolvedErr#) |,| { `res/test.txt`.get("foo") }
-    verifyErr(UnresolvedErr#) |,| { `res/test.txt`.get(File.make(`rel`)) }
+    verifyErr(UnresolvedErr#) { `res/test.txt`.get(null) }
+    verifyErr(UnresolvedErr#) { `res/test.txt`.get("foo") }
+    verifyErr(UnresolvedErr#) { `res/test.txt`.get(File.make(`rel`)) }
   }
 
 

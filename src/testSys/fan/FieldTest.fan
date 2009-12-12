@@ -200,11 +200,11 @@ class FieldTest : Test
     verifyEq(type.field("constX").get(this), 4)
     verifyEq(type.field("constY").get, [0,1,2])
 
-    verifyErr(ReadonlyErr#) |,| { type.field("constX").set(this, 5) }
-    verifyErr(ReadonlyErr#) |,| { type.field("constY").set(null, [9, 8, 7]) }
+    verifyErr(ReadonlyErr#) { this.type.field("constX").set(this, 5) }
+    verifyErr(ReadonlyErr#) { this.type.field("constY").set(null, [9, 8, 7]) }
 
-    verifyErr(ReadonlyErr#) |,| { this->constX = 5 }
-    verifyErr(ReadonlyErr#) |,| { this->constY = [9, 8, 7] }
+    verifyErr(ReadonlyErr#) { this->constX = 5 }
+    verifyErr(ReadonlyErr#) { this->constY = [9, 8, 7] }
   }
 
   const Int constX := 4

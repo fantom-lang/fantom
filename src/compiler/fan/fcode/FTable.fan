@@ -137,7 +137,7 @@ class FTable
   {
     table = [,]
     if (in == null) return this
-    in.readU2.times |,| { table.add(reader.call(in)) }
+    in.readU2.times { table.add(reader.call(in)) }
     in.close
     return this
   }

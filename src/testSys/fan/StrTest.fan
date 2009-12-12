@@ -365,11 +365,11 @@ class StrTest : Test
     verifyEq("abcd"[1..-2],  "bc")
 
 
-    verifyErr(IndexErr#) |,| { x:=s[0..4] }
-    verifyErr(IndexErr#) |,| { x:=s[1..4] }
-    verifyErr(IndexErr#) |,| { x:=s[3..1] }
-    verifyErr(IndexErr#) |,| { x:=s[3..<2] }
-    verifyErr(IndexErr#) |,| { x:=s[0..<5] }
+    verifyErr(IndexErr#) { x:=s[0..4] }
+    verifyErr(IndexErr#) { x:=s[1..4] }
+    verifyErr(IndexErr#) { x:=s[3..1] }
+    verifyErr(IndexErr#) { x:=s[3..<2] }
+    verifyErr(IndexErr#) { x:=s[0..<5] }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1040,20 +1040,20 @@ class StrTest : Test
     verifyEq("true".toBool, true)
     verifyEq("false".toBool, false)
     verifyEq("xxx".toBool(false), null)
-    verifyErr(ParseErr#) |,| { "blah".toBool }
+    verifyErr(ParseErr#) { "blah".toBool }
 
     verifyEq("708".toInt, 708)
     verifyEq("ff".toInt(16), 0xff)
     verifyEq("xxx".toInt(10, false), null)
-    verifyErr(ParseErr#) |,| { "blah".toInt }
+    verifyErr(ParseErr#) { "blah".toInt }
 
     verifyEq("760.5".toFloat(), 760.5f)
     verifyEq("xxx".toFloat(false), null)
-    verifyErr(ParseErr#) |,| { "blah".toFloat }
+    verifyErr(ParseErr#) { "blah".toFloat }
 
     verifyEq("8.00".toDecimal, 8.00)
     verifyEq("5.x".toDecimal(false), null)
-    verifyErr(ParseErr#) |,| { "5.x".toDecimal }
+    verifyErr(ParseErr#) { "5.x".toDecimal }
 
     verifyEq("http://foo/".toUri, `http://foo/`)
   }

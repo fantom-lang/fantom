@@ -62,7 +62,7 @@ class FuncTest : Test
   {
     x := 0
 
-    invoke |,| { x++ }; verifyEq(x, 1)
+    invoke |->| { x++ }; verifyEq(x, 1)
     invoke |->Int| { return x++ }; verifyEq(x, 2)
     invoke |Int a| { x+=a }; verifyEq(x, 5)
     invoke |Int a->Int| { return x+=a }; verifyEq(x, 8)
@@ -216,8 +216,8 @@ class FuncTest : Test
     verifyEq(i.bind([2f, "q"]).call, "true 7 2.0 q")
     verifyEq(i.bind([2f, "q"]).call('x'), "true 7 2.0 q")
 
-    verifyErr(ArgErr#) |,| { f.bind([true, 8, 8f, "x", "y"]) }
-    verifyErr(ArgErr#) |,| { i.bind([8f, "x", null]) }
+    verifyErr(ArgErr#) { f.bind([true, 8, 8f, "x", "y"]) }
+    verifyErr(ArgErr#) { i.bind([8f, "x", null]) }
   }
 
 //////////////////////////////////////////////////////////////////////////

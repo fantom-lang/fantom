@@ -55,9 +55,9 @@ internal class FindInFiles
       body  = content
       commands = [Dialog.ok, Dialog.cancel]
     }
-    query.onAction.add |,| { dlg.close(Dialog.ok) }
-    uri.onAction.add   |,| { dlg.close(Dialog.ok) }
-    uri.onModify.add   |,|
+    query.onAction.add |->| { dlg.close(Dialog.ok) }
+    uri.onAction.add   |->| { dlg.close(Dialog.ok) }
+    uri.onModify.add   |->|
     {
       err.text = File(uri.text.toUri, false).exists ? "" : "Directory not found"
       err.parent?.parent?.relayout

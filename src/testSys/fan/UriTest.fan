@@ -106,15 +106,15 @@ class UriTest : Test
     verifyEq(x.frag, "f-g~h")
 
     verifyEq(Uri.decode(s, false), null)
-    verifyErr(ParseErr#) |,| { Uri.decode(s) }
-    verifyErr(ParseErr#) |,| { Uri.decode(s, true) }
-    verifyErr(ParseErr#) |,| { Uri.decode("/a%") }
-    verifyErr(ParseErr#) |,| { Uri.decode("/a%C") }
-    verifyErr(ParseErr#) |,| { Uri.decode("http://user^host/") }
-    verifyErr(ParseErr#) |,| { Uri.decode("http://foo:aa/") }
-    verifyErr(ParseErr#) |,| { Uri.decode("http://foo/a?h g") }
-    verifyErr(ParseErr#) |,| { Uri.decode("a b") }
-    verifyErr(ParseErr#) |,| { Uri.decode("a#g#h") }
+    verifyErr(ParseErr#) { Uri.decode(s) }
+    verifyErr(ParseErr#) { Uri.decode(s, true) }
+    verifyErr(ParseErr#) { Uri.decode("/a%") }
+    verifyErr(ParseErr#) { Uri.decode("/a%C") }
+    verifyErr(ParseErr#) { Uri.decode("http://user^host/") }
+    verifyErr(ParseErr#) { Uri.decode("http://foo:aa/") }
+    verifyErr(ParseErr#) { Uri.decode("http://foo/a?h g") }
+    verifyErr(ParseErr#) { Uri.decode("a b") }
+    verifyErr(ParseErr#) { Uri.decode("a#g#h") }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -560,12 +560,12 @@ class UriTest : Test
     verifySlice(`http://h:9/a/b/c?query#frag`, 0..-2, `http://h:9/a/b/`)
     verifySlice(`http://h:9/a/b/c?query#frag`, 0..-3, `http://h:9/a/`)
     verifySlice(`http://h:9/a/b/c?query#frag`, 0..-4, `http://h:9/`)
-    verifyErr(IndexErr#) |,| { x := `http://h:9/a/b/c?query#frag`[0..-5] }
+    verifyErr(IndexErr#) { x := `http://h:9/a/b/c?query#frag`[0..-5] }
 
     verifySlice(`http://h:9/a/b/c?query#frag`, 0..<-1, `http://h:9/a/b/`)
     verifySlice(`http://h:9/a/b/c?query#frag`, 0..<-2, `http://h:9/a/`)
     verifySlice(`http://h:9/a/b/c?query#frag`, 0..<-3, `http://h:9/`)
-    verifyErr(IndexErr#) |,| { x := `http://h:9/a/b/c?query#frag`[0..<-4] }
+    verifyErr(IndexErr#) { x := `http://h:9/a/b/c?query#frag`[0..<-4] }
 
     verifySlice(`http://h:9/a/b/c?query#frag`, 0..2, `http://h:9/a/b/c?query#frag`)
     verifySlice(`http://h:9/a/b/c?query#frag`, 0..1, `http://h:9/a/b/`)
@@ -979,7 +979,7 @@ class UriTest : Test
   {
     verifyEq(Uri.isName(n), ok)
     if (ok) Uri.checkName(n)
-    else verifyErr(NameErr#) |,| { Uri.checkName(n) }
+    else verifyErr(NameErr#) { Uri.checkName(n) }
   }
 
 //////////////////////////////////////////////////////////////////////////

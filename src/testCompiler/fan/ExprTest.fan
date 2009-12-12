@@ -158,7 +158,7 @@ class ExprTest : CompilerTest
     verifyExpr("(Obj)a as Str", "x", "x")
 
     verifyExpr("(Str)a", "x", "x")
-    verifyErr(CastErr#) |,| { verifyExpr("(Str)((Obj)a)", null, 3) }
+    verifyErr(CastErr#) { verifyExpr("(Str)((Obj)a)", null, 3) }
 
     verifyExpr("true ? a : b", 1, 1, 2)
     verifyExpr("false ? a : b", 2, 1, 2)
@@ -398,7 +398,7 @@ class ExprTest : CompilerTest
       {
         Int f() { return a += b++ }
         Int g() { return a += ++b }
-        Void h() { 3.times |,| { a = (b++) } }
+        Void h() { 3.times |->| { a = (b++) } }
         Int i() { return a += b++ + (c++).toInt }
         Void j() { x := 2; a = |->Int| { return x++ }.call; b = x } // cvar field
 

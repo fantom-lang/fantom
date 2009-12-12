@@ -94,7 +94,7 @@ class CallTest : Test
     verifyEq([0, 1, 2]->find(|Int x->Bool| { return x == 2 }), 2)
 
     // errors
-    verifyErr(UnknownSlotErr#) |,| { obj->blah }
+    verifyErr(UnknownSlotErr#) { obj->blah }
   }
 
 }

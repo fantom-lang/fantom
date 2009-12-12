@@ -173,7 +173,7 @@ class FPrinter : FConst
   {
     buf := attr.data
     buf.seek(0)
-    buf.readU2.times |,|
+    buf.readU2.times
     {
       key := pod.symbolRefStr(buf.readU2)
       val := buf.readUtf
@@ -185,7 +185,7 @@ class FPrinter : FConst
   {
     buf := attr.data
     buf.seek(0)
-    buf.readU2.times |,|
+    buf.readU2.times
     {
       start   := buf.readU2
       end     := buf.readU2
@@ -199,7 +199,7 @@ class FPrinter : FConst
   {
     buf := attr.data
     buf.seek(0)
-    buf.readU2.times |,|
+    buf.readU2.times
     {
       pc   := buf.readU2
       line := buf.readU2

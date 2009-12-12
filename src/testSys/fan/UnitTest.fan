@@ -39,13 +39,13 @@ class UnitTest : Test
     verifyParse("test_7;;kg2",
       "test_7", "test_7", ["kg":2], 1f, 0f)
 
-    verifyErr(ParseErr#) |,| { Unit("test_8;t8;foo2") }
-    verifyErr(ParseErr#) |,| { Unit("test_8;t8;m2;xx") }
-    verifyErr(ParseErr#) |,| { Unit("test_8;t8;m2;5;#") }
+    verifyErr(ParseErr#) { Unit("test_8;t8;foo2") }
+    verifyErr(ParseErr#) { Unit("test_8;t8;m2;xx") }
+    verifyErr(ParseErr#) { Unit("test_8;t8;m2;5;#") }
 
     verifyEq(Unit.find("test_8", false), null)
-    verifyErr(Err#) |,| { Unit.find("test_8") }
-    verifyErr(Err#) |,| { Unit.find("test_8", true) }
+    verifyErr(Err#) { Unit.find("test_8") }
+    verifyErr(Err#) { Unit.find("test_8", true) }
   }
 
   Void verifyParse(Str s, Str n, Str sym, Str:Int dim, Float scale, Float offset := 0f)
@@ -67,8 +67,8 @@ class UnitTest : Test
     // verify additional parses are interned
     verifySame(Unit(s), u)
     verifySame(Unit(s), u)
-    verifyErr(Err#) |,| { Unit("$n; foobar") }
-    verifyErr(Err#) |,| { Unit("$n; $sym; m-33*A33") }
+    verifyErr(Err#) { Unit("$n; foobar") }
+    verifyErr(Err#) { Unit("$n; $sym; m-33*A33") }
 
     // verify round trip
     verifySame(Unit(u.toStr), u)
@@ -140,7 +140,7 @@ class UnitTest : Test
     verifyConv(1f, mi, 5280f, ft)
     verifyConv(70f, mm, 2.75590551f, in)
 
-    verifyErr(Err#) |,| { verifyConv(60f, m, 1f, Unit.find("cubic_meter")) }
+    verifyErr(Err#) { verifyConv(60f, m, 1f, Unit.find("cubic_meter")) }
   }
 
   Void testConversionTime()
@@ -153,7 +153,7 @@ class UnitTest : Test
     verifyConv(60f, min, 1f, hr)
     verifyConv(2.5f, hr, 150f, min)
 
-    verifyErr(Err#) |,| { verifyConv(60f, sec, 1f, Unit.find("meter")) }
+    verifyErr(Err#) { verifyConv(60f, sec, 1f, Unit.find("meter")) }
   }
 
   Void testConversionTemp()

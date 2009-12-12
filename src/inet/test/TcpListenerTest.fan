@@ -58,7 +58,7 @@ class TcpListenerTest : Test
 
     // duplicate port
     x := TcpSocket.make
-    verifyErr(IOErr#) |,| { x.bind(null, s.localPort) }
+    verifyErr(IOErr#) { x.bind(null, s.localPort) }
 
     // cleanup
     s.close
@@ -77,7 +77,7 @@ class TcpListenerTest : Test
 
     t1 := Duration.now
     listener.options.receiveTimeout = 100ms
-    verifyErr(IOErr#) |,| { listener.accept }
+    verifyErr(IOErr#) { listener.accept }
     t2 := Duration.now
     verify(50ms < t2-t1 && t2-t1 < 200ms, (t2-t1).toLocale)
 
@@ -145,29 +145,29 @@ class TcpListenerTest : Test
     so.receiveTimeout = null
     verifyEq(so.receiveTimeout, null)
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.broadcast) }
-    verifyErr(UnsupportedErr#) |,| { so.broadcast = false }
+    verifyErr(UnsupportedErr#) { echo(so.broadcast) }
+    verifyErr(UnsupportedErr#) { so.broadcast = false }
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.inBufferSize) }
-    verifyErr(UnsupportedErr#) |,| { so.inBufferSize = 88 }
+    verifyErr(UnsupportedErr#) { echo(so.inBufferSize) }
+    verifyErr(UnsupportedErr#) { so.inBufferSize = 88 }
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.outBufferSize) }
-    verifyErr(UnsupportedErr#) |,| { so.outBufferSize = 99 }
+    verifyErr(UnsupportedErr#) { echo(so.outBufferSize) }
+    verifyErr(UnsupportedErr#) { so.outBufferSize = 99 }
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.keepAlive) }
-    verifyErr(UnsupportedErr#) |,| { so.keepAlive = false }
+    verifyErr(UnsupportedErr#) { echo(so.keepAlive) }
+    verifyErr(UnsupportedErr#) { so.keepAlive = false }
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.sendBufferSize) }
-    verifyErr(UnsupportedErr#) |,| { so.sendBufferSize = 100 }
+    verifyErr(UnsupportedErr#) { echo(so.sendBufferSize) }
+    verifyErr(UnsupportedErr#) { so.sendBufferSize = 100 }
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.linger) }
-    verifyErr(UnsupportedErr#) |,| { so.linger = null }
+    verifyErr(UnsupportedErr#) { echo(so.linger) }
+    verifyErr(UnsupportedErr#) { so.linger = null }
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.noDelay) }
-    verifyErr(UnsupportedErr#) |,| { so.noDelay = true }
+    verifyErr(UnsupportedErr#) { echo(so.noDelay) }
+    verifyErr(UnsupportedErr#) { so.noDelay = true }
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.trafficClass) }
-    verifyErr(UnsupportedErr#) |,| { so.trafficClass = 0 }
+    verifyErr(UnsupportedErr#) { echo(so.trafficClass) }
+    verifyErr(UnsupportedErr#) { so.trafficClass = 0 }
 
     s.close
   }

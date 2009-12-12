@@ -187,7 +187,7 @@ final class FPod : CPod, FConst
     fsymbols = Str:FSymbol[:]
     if (in != null)
     {
-      in.readU2.times |,|
+      in.readU2.times
       {
         s := FSymbol(this).read(in)
         fsymbols[s.name] = s
@@ -204,7 +204,7 @@ final class FPod : CPod, FConst
     in = this.in(`/types.def`)
     ftypes = FType[,]
     ftypesByName = Str:FType[:]
-    in.readU2.times |,|
+    in.readU2.times
     {
       ftype := FType(this).readMeta(in)
       ftypes.add(ftype)
@@ -285,9 +285,9 @@ final class FPod : CPod, FConst
     name = in.readUtf
     version = Version.fromStr(in.readUtf)
     depends = Depend[,]
-    in.readU2.times |,| { depends.add(Depend.fromStr(in.readUtf)) }
+    in.readU2.times { depends.add(Depend.fromStr(in.readUtf)) }
     fattrs = FAttr[,]
-    in.readU2.times |,| { fattrs.add(FAttr.make.read(in)) }
+    in.readU2.times { fattrs.add(FAttr.make.read(in)) }
   }
 
   Void writePodMeta(OutStream out)

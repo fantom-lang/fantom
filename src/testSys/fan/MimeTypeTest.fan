@@ -94,8 +94,8 @@ class MimeTypeTest : Test
   Void verifyFromStrBad(Str s)
   {
     verifyEq(MimeType.fromStr(s, false), null)
-    verifyErr(ParseErr#) |,| { MimeType.fromStr(s) }
-    verifyErr(ParseErr#) |,| { MimeType.fromStr(s, true) }
+    verifyErr(ParseErr#) { MimeType.fromStr(s) }
+    verifyErr(ParseErr#) { MimeType.fromStr(s, true) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -114,9 +114,9 @@ class MimeTypeTest : Test
     verifyParseParams("a=\"quot=\\\"\"; b=c; d=\"bs=\\\\\"; e=\"_\\\\\\\"_\"", ["a":"quot=\"", "b":"c", "d":"bs=\\", "e":"_\\\"_"])
 
     verifyEq(MimeType.parseParams("n=", false), null)
-    verifyErr(ParseErr#) |,| { MimeType.parseParams("x", true) }
-    verifyErr(ParseErr#) |,| { MimeType.parseParams("x=f;y=") }
-    verifyErr(ParseErr#) |,| { MimeType.parseParams("x=f (comment)") }
+    verifyErr(ParseErr#) { MimeType.parseParams("x", true) }
+    verifyErr(ParseErr#) { MimeType.parseParams("x=f;y=") }
+    verifyErr(ParseErr#) { MimeType.parseParams("x=f (comment)") }
   }
 
   Void verifyParseParams(Str s, Str:Str params)

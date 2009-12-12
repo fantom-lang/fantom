@@ -732,7 +732,7 @@ class TokenizerTest : Test
 
   Void verifyInvalid(Str src)
   {
-    verifyErr(CompilerErr#) |,| { tokenize(src) }
+    verifyErr(CompilerErr#) { tokenize(src) }
   }
 
 //////////////////////////////////////////////////////////////////////////

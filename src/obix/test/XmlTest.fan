@@ -539,7 +539,7 @@ class XmlTest : ObixTest
 
   Void verifyParseErr(Str s)
   {
-    verifyErr(XErr#) |,| { ObixObj.readXml(s.in) }
+    verifyErr(XErr#) { ObixObj.readXml(s.in) }
   }
 
 }

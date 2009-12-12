@@ -264,7 +264,7 @@ class CheckErrorsTest : JavaTest
         Void funcA(FuncA x) {}
 
         Void test00() { funcA |Str? s->Str?| { return null } } // ok
-        Void test01() { funcA |,| {} }  // bad return
+        Void test01() { funcA |->| {} }  // bad return
         Void test02() { funcA |Str? s->Int| { return 3} } // bad return
         Void test03() { funcA |Str? s, Int x->Str?| { return 3} } // not enough params
         Void test04() { funcA |Int x->Str?| { return 3} } // bad params

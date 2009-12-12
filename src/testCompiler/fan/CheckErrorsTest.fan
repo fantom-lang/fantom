@@ -1106,35 +1106,35 @@ class CheckErrorsTest : CompilerTest
     verifyErrors(
      "class Foo                                               // 1
       {                                                       // 2
-        Void m00a() { |,| { x := this.make }.call }           // 3
-        Void m00b() { |,| { |,| { x := this.make }.call }.call } // 4
-        Void m01a() { |,| { this.m02a }.call }                // 5
-        Void m01b() { |,| { |,| { this.m02a }.call }.call }   // 6
-        static Void m02a() { |,| { m00a; Foo.m00a() }.call }  // 7
-        static Void m02b() { |,| { |,| { m00a; Foo.m00a() }.call }.call } // 8
-        Void m03a(Str x) { |,| { this.sf.size }.call }       // 9
-        Void m03b(Str x) { |,| { |,| { this.sf.size }.call }.call } // 10
-        static Void m04a(Str x) { |,| { f.size; Foo.f.size }.call }
-        static Void m04b(Str x) { |,| { |,| { f.size; Foo.f.size }.call }.call }
+        Void m00a() { |->| { x := this.make }.call }           // 3
+        Void m00b() { |->| { |,| { x := this.make }.call }.call } // 4
+        Void m01a() { |->| { this.m02a }.call }                // 5
+        Void m01b() { |->| { |->| { this.m02a }.call }.call }   // 6
+        static Void m02a() { |->| { m00a; Foo.m00a() }.call }  // 7
+        static Void m02b() { |->| { |->| { m00a; Foo.m00a() }.call }.call } // 8
+        Void m03a(Str x) { |->| { this.sf.size }.call }       // 9
+        Void m03b(Str x) { |->| { |->| { this.sf.size }.call }.call } // 10
+        static Void m04a(Str x) { |->| { f.size; Foo.f.size }.call }
+        static Void m04b(Str x) { |->| { |->| { f.size; Foo.f.size }.call }.call }
 
         Str? f
         const static Str? sf
       }",
 
-       [3, 33, "Cannot call constructor 'make' on instance",
-        4, 39, "Cannot call constructor 'make' on instance",
-        5, 28, "Cannot call static method 'm02a' on instance",
-        6, 34, "Cannot call static method 'm02a' on instance",
-        7, 30, "Cannot call instance method 'm00a' in static context",
-        7, 40, "Cannot call instance method 'm00a' in static context",
-        8, 36, "Cannot call instance method 'm00a' in static context",
-        8, 46, "Cannot call instance method 'm00a' in static context",
-        9, 33, "Cannot access static field 'sf' on instance",
-       10, 39, "Cannot access static field 'sf' on instance",
-       11, 35, "Cannot access instance field 'f' in static context",
-       11, 47, "Cannot access instance field 'f' in static context",
-       12, 41, "Cannot access instance field 'f' in static context",
-       12, 53, "Cannot access instance field 'f' in static context",
+       [3, 34, "Cannot call constructor 'make' on instance",
+        4, 40, "Cannot call constructor 'make' on instance",
+        5, 29, "Cannot call static method 'm02a' on instance",
+        6, 36, "Cannot call static method 'm02a' on instance",
+        7, 31, "Cannot call instance method 'm00a' in static context",
+        7, 41, "Cannot call instance method 'm00a' in static context",
+        8, 38, "Cannot call instance method 'm00a' in static context",
+        8, 48, "Cannot call instance method 'm00a' in static context",
+        9, 34, "Cannot access static field 'sf' on instance",
+       10, 41, "Cannot access static field 'sf' on instance",
+       11, 36, "Cannot access instance field 'f' in static context",
+       11, 48, "Cannot access instance field 'f' in static context",
+       12, 43, "Cannot access instance field 'f' in static context",
+       12, 55, "Cannot access instance field 'f' in static context",
        ])
   }
 
@@ -1225,7 +1225,7 @@ class CheckErrorsTest : CompilerTest
           o is Int;           // 11
           o as Int;           // 12
           i == 4 ? 0ns : 1ns; // 13
-          |,| {};             // 14
+          |->| {}             // 14
           i == 2;             // 15
           s === o;            // 16
           Foo()               // 17

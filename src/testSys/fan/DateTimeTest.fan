@@ -204,7 +204,7 @@ class DateTimeTest : Test
   {
     // spawn off a bunch of actors to loop on DateTime.nowUnique
     futures := Future[,]
-    10.times |,|
+    10.times |->|
     {
       actor := Actor(ActorPool(), #nowUniqueLoop.func)
       futures.add(actor.send(null))
@@ -320,9 +320,9 @@ class DateTimeTest : Test
     verifyMonthLocale(Month.nov, "11", "11", "Nov", "November")
     verifyMonthLocale(Month.dec, "12", "12", "Dec", "December")
 
-    verifyErr(ArgErr#) |,| { Month.jan.toLocale("") }
-    verifyErr(ArgErr#) |,| { Month.jan.toLocale("MMMMM") }
-    verifyErr(ArgErr#) |,| { Month.jan.toLocale("MMx") }
+    verifyErr(ArgErr#) { Month.jan.toLocale("") }
+    verifyErr(ArgErr#) { Month.jan.toLocale("MMMMM") }
+    verifyErr(ArgErr#) { Month.jan.toLocale("MMx") }
   }
 
   Void verifyMonthLocale(Month mon, Str m, Str mm, Str mmm, Str mmmm)
@@ -390,10 +390,10 @@ class DateTimeTest : Test
     verifyWeekdayLocale(Weekday.fri, "Fri", "Friday")
     verifyWeekdayLocale(Weekday.sat, "Sat", "Saturday")
 
-    verifyErr(ArgErr#) |,| { Weekday.sun.toLocale("") }
-    verifyErr(ArgErr#) |,| { Weekday.sun.toLocale("W") }
-    verifyErr(ArgErr#) |,| { Weekday.sun.toLocale("WWWWW") }
-    verifyErr(ArgErr#) |,| { Weekday.sun.toLocale("x") }
+    verifyErr(ArgErr#) { Weekday.sun.toLocale("") }
+    verifyErr(ArgErr#) { Weekday.sun.toLocale("W") }
+    verifyErr(ArgErr#) { Weekday.sun.toLocale("WWWWW") }
+    verifyErr(ArgErr#) { Weekday.sun.toLocale("x") }
   }
 
   Void verifyWeekdayLocale(Weekday w, Str www, Str wwww)
@@ -461,7 +461,7 @@ class DateTimeTest : Test
     verify(!names.contains("New_York"))
 
     verify(TimeZone.fromStr("foo bar", false) == null)
-    verifyErr(ParseErr#) |,| { TimeZone.fromStr("foo bar") }
+    verifyErr(ParseErr#) { TimeZone.fromStr("foo bar") }
 
     x := TimeZone.fromStr("America/New_York")
     verifyEq(x.name,  "New_York")
@@ -565,9 +565,9 @@ class DateTimeTest : Test
     verifyWeekdayInMonth(2016, feb, mon, [1, 8, 15, 22, 29])
 
     verifyEq(DateTime.weekdayInMonth(2007, Month.oct, Weekday.sun, -1), 28)
-    verifyErr(ArgErr#) |,| { DateTime.weekdayInMonth(2007, oct, mon, 0) }
-    verifyErr(ArgErr#) |,| { DateTime.weekdayInMonth(2007, oct, wed, 6) }
-    verifyErr(ArgErr#) |,| { DateTime.weekdayInMonth(2016, feb, tue, -5) }
+    verifyErr(ArgErr#) { DateTime.weekdayInMonth(2007, oct, mon, 0) }
+    verifyErr(ArgErr#) { DateTime.weekdayInMonth(2007, oct, wed, 6) }
+    verifyErr(ArgErr#) { DateTime.weekdayInMonth(2016, feb, tue, -5) }
   }
 
   Void verifyWeekdayInMonth(Int year, Month mon, Weekday weekday, Int[] days)
@@ -726,20 +726,20 @@ class DateTimeTest : Test
    //  - Future rules for Asia/Jerusalem
 
     // out of bounds
-    verifyErr(ArgErr#) |,| { DateTime.make(1899, Month.jun, 1, 0, 0) }
-    verifyErr(ArgErr#) |,| { DateTime.make(2100, Month.jun, 1, 0, 0) }
-    verifyErr(ArgErr#) |,| { DateTime.make(2007, Month.feb, 0, 0, 0) }
-    verifyErr(ArgErr#) |,| { DateTime.make(2007, Month.feb, 29, 0, 0) }
-    verifyErr(ArgErr#) |,| { DateTime.make(2007, Month.jun, 6, -1, 0) }
-    verifyErr(ArgErr#) |,| { DateTime.make(2007, Month.jun, 6, 60, 00) }
-    verifyErr(ArgErr#) |,| { DateTime.make(2007, Month.jun, 6, 0, -1) }
-    verifyErr(ArgErr#) |,| { DateTime.make(2007, Month.jun, 6, 0, 60) }
-    verifyErr(ArgErr#) |,| { DateTime.make(2007, Month.jun, 6, 0, 0, -1) }
-    verifyErr(ArgErr#) |,| { DateTime.make(2007, Month.jun, 6, 0, 0, 60) }
-    verifyErr(ArgErr#) |,| { DateTime.make(2007, Month.jun, 6, 0, 0, 0, -1) }
-    verifyErr(ArgErr#) |,| { DateTime.make(2007, Month.jun, 6, 0, 0, 0, 1_000_000_000) }
-    verifyErr(ArgErr#) |,| { DateTime.makeTicks(-3124137600000_000001, utc) }
-    verifyErr(ArgErr#) |,| { DateTime.makeTicks(3155760000000_000000, utc) }
+    verifyErr(ArgErr#) { DateTime.make(1899, Month.jun, 1, 0, 0) }
+    verifyErr(ArgErr#) { DateTime.make(2100, Month.jun, 1, 0, 0) }
+    verifyErr(ArgErr#) { DateTime.make(2007, Month.feb, 0, 0, 0) }
+    verifyErr(ArgErr#) { DateTime.make(2007, Month.feb, 29, 0, 0) }
+    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, -1, 0) }
+    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 60, 00) }
+    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 0, -1) }
+    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 0, 60) }
+    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 0, 0, -1) }
+    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 0, 0, 60) }
+    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 0, 0, 0, -1) }
+    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 0, 0, 0, 1_000_000_000) }
+    verifyErr(ArgErr#) { DateTime.makeTicks(-3124137600000_000001, utc) }
+    verifyErr(ArgErr#) { DateTime.makeTicks(3155760000000_000000, utc) }
   }
 
   Void verifyDateTime(Int ticks, TimeZone tz, Int year, Month month, Int day,
@@ -843,9 +843,9 @@ class DateTimeTest : Test
 
     verifyEq(Date.fromStr("1972-06-03"), Date(1972, Month.jun, 3))
     verifyEq(Date.fromIso("2009/05/03", false), null)
-    verifyErr(ParseErr#) |,| { Date.fromStr("1990") }
-    verifyErr(ParseErr#) |,| { Date.fromIso("2009-12-30Z") }
-    verifyErr(ParseErr#) |,| { Date.fromIso("2009-12-30-04:30") }
+    verifyErr(ParseErr#) { Date.fromStr("1990") }
+    verifyErr(ParseErr#) { Date.fromIso("2009-12-30Z") }
+    verifyErr(ParseErr#) { Date.fromIso("2009-12-30-04:30") }
   }
 
   Void verifyDateToStr(Date d, Str s)
@@ -870,8 +870,8 @@ class DateTimeTest : Test
 
     verifyEq(Time.fromStr("30:99", false), null)
     verifyEq(Time.fromIso("12:30:00Z", false), null)
-    verifyErr(ParseErr#) |,| { Time.fromStr("") }
-    verifyErr(ParseErr#) |,| { Time.fromIso("12:30:00+05:00") }
+    verifyErr(ParseErr#) { Time.fromStr("") }
+    verifyErr(ParseErr#) { Time.fromIso("12:30:00+05:00") }
   }
 
   Void verifyTimeToStr(Time t, Str s)
@@ -885,8 +885,8 @@ class DateTimeTest : Test
   Void verifyFromStrErr(Str s)
   {
     verifyEq(DateTime.fromStr(s, false), null)
-    verifyErr(ParseErr#) |,| { DateTime.fromStr(s) }
-    verifyErr(ParseErr#) |,| { DateTime.fromStr(s, true) }
+    verifyErr(ParseErr#) { DateTime.fromStr(s) }
+    verifyErr(ParseErr#) { DateTime.fromStr(s, true) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -964,18 +964,18 @@ class DateTimeTest : Test
     verifyEq(x.toLocale("'It is' k:mma!"), "It is 3:30PM!")
 
     // errors
-    verifyErr(ArgErr#) |,| { x.toLocale("Y") }
-    verifyErr(ArgErr#) |,| { x.toLocale("YYY") }
-    verifyErr(ArgErr#) |,| { x.toLocale("YYYYY") }
-    verifyErr(ArgErr#) |,| { x.toLocale("MMMMM") }
-    verifyErr(ArgErr#) |,| { x.toLocale("DDD") }
-    verifyErr(ArgErr#) |,| { x.toLocale("WW") }
-    verifyErr(ArgErr#) |,| { x.toLocale("WWWWW") }
-    verifyErr(ArgErr#) |,| { x.toLocale("hhh") }
-    verifyErr(ArgErr#) |,| { x.toLocale("kkk") }
-    verifyErr(ArgErr#) |,| { x.toLocale("aa") }
-    verifyErr(ArgErr#) |,| { x.toLocale("mmm") }
-    verifyErr(ArgErr#) |,| { x.toLocale("sss") }
+    verifyErr(ArgErr#) { x.toLocale("Y") }
+    verifyErr(ArgErr#) { x.toLocale("YYY") }
+    verifyErr(ArgErr#) { x.toLocale("YYYYY") }
+    verifyErr(ArgErr#) { x.toLocale("MMMMM") }
+    verifyErr(ArgErr#) { x.toLocale("DDD") }
+    verifyErr(ArgErr#) { x.toLocale("WW") }
+    verifyErr(ArgErr#) { x.toLocale("WWWWW") }
+    verifyErr(ArgErr#) { x.toLocale("hhh") }
+    verifyErr(ArgErr#) { x.toLocale("kkk") }
+    verifyErr(ArgErr#) { x.toLocale("aa") }
+    verifyErr(ArgErr#) { x.toLocale("mmm") }
+    verifyErr(ArgErr#) { x.toLocale("sss") }
   }
 
   Void testDateLocale()
@@ -1027,12 +1027,12 @@ class DateTimeTest : Test
 
     verifyNull(DateTime.fromIso(DateTime.now.toStr, false))
     verifyNotNull(DateTime.fromIso(DateTime.now.toIso, false))
-    verifyErr(ParseErr#) |,| { DateTime.fromIso(DateTime.now.toStr) }
+    verifyErr(ParseErr#) { DateTime.fromIso(DateTime.now.toStr) }
   }
 
   Void verifyIso(Str s, Int y, Month mon, Int day, Int h, Int min, Int sec, Int ns, TimeZone tz, Duration offset)
   {
-    verifyErr(ParseErr#) |,| { DateTime.fromStr(s); }
+    verifyErr(ParseErr#) { DateTime.fromStr(s); }
     d := DateTime.fromIso(s)
     verifyEq(d.year, y)
     verifyEq(d.month, mon)
@@ -1068,7 +1068,7 @@ class DateTimeTest : Test
     }
 
     verifyEq(DateTime.fromHttpStr("06 Nov 1994 08:49:37", false), null)
-    verifyErr(ParseErr#) |,| { DateTime.fromHttpStr("Sun, 06 Nov 08:49:37 GMT") }
+    verifyErr(ParseErr#) { DateTime.fromHttpStr("Sun, 06 Nov 08:49:37 GMT") }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1175,8 +1175,8 @@ class DateTimeTest : Test
     verifyToDuration(Time(4, 0, 0, 0), 4hr)
     verifyToDuration(Time(4, 3, 2, 1), 4hr+3min+2sec+1ns)
     verifyToDuration(Time(23, 59, 12, 123_000_789), 23hr+59min+12sec+123_000_789ns)
-    verifyErr(ArgErr#) |,| { Time.fromDuration(-10hr) }
-    verifyErr(ArgErr#) |,| { Time.fromDuration(25hr) }
+    verifyErr(ArgErr#) { Time.fromDuration(-10hr) }
+    verifyErr(ArgErr#) { Time.fromDuration(25hr) }
   }
 
   Void verifyToDuration(Time t, Duration d)
@@ -1208,8 +1208,8 @@ class DateTimeTest : Test
     verifyDateMath(Date(1980, feb, 3),   Date(1979, dec, 15),  -50day)
     verifyDateMath(Date(1981, feb, 3),   Date(1979, dec, 15),  -416day)
 
-    verifyErr(ArgErr#) |,| { x := Date.today + 22hr }
-    verifyErr(ArgErr#) |,| { x := Date.today + -13min }
+    verifyErr(ArgErr#) { x := Date.today + 22hr }
+    verifyErr(ArgErr#) { x := Date.today + -13min }
   }
 
   Void verifyDateMath(Date a, Date b, Duration diff)

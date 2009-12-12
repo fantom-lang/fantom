@@ -161,7 +161,7 @@ const class FMethodRef
     name   := in.readU2
     ret    := in.readU2
     p := Int[,]
-    in.readU1.times |,| { p.add(in.readU2) }
+    in.readU1.times { p.add(in.readU2) }
     return make(parent, name, ret, p)
   }
 

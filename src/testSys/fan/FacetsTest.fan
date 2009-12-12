@@ -44,7 +44,7 @@ class FacetsTest : Test
     verifyEq(t.facets.size, 16)
     verifyEq(t.facet(@transient), null)
     verifyEq(t.facet(@transient, "!"), "!")
-    verifyErr(ReadonlyErr#) |,| { t.facets.set(@transient, "!") }
+    verifyErr(ReadonlyErr#) { t.facets.set(@transient, "!") }
 
     verifyTypeFacet(t, @boolA, true)
     verifyTypeFacet(t, @boolB, false)
@@ -98,7 +98,7 @@ class FacetsTest : Test
     verifyEq(f.facets.type, [Symbol:Obj?]#)
     verifyEq(f.facet(@nodoc), null)
     verifyEq(f.facet(@nodoc, "!"), "!")
-    verifyErr(ReadonlyErr#) |,| { f.facets.set(@nodoc, "!") }
+    verifyErr(ReadonlyErr#) { f.facets.set(@nodoc, "!") }
 
     verifySlotFacet(f, @boolB, true)
     verifySlotFacet(f, @intB, 4)

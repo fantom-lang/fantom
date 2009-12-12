@@ -109,7 +109,7 @@ class SimpleJsonTest : Test
            "a\nb"  : "crazy key"
            }|>.in)
 
-    f := |,|
+    f := |->|
     {
       verifyEq(obj["foo"], "bar\nbaz")
       verifyEq(obj["bar"], "_\r \t \u0abc \\ /_")

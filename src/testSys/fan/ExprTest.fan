@@ -67,8 +67,8 @@ class ExprTest : Test
   {
     Str? x := null
     verifyErr(NullErr#) |->Str| { return x }
-    verifyErr(NullErr#) |,| { Obj? a := null; verifyCoercion(a, "hi") }
-    verifyErr(NullErr#) |,| { Str? a := null; verifyCoercion(this, a) }
+    verifyErr(NullErr#) { Obj? a := null; verifyCoercion(a, "hi") }
+    verifyErr(NullErr#) { Str? a := null; verifyCoercion(this, a) }
   }
 
   Void verifyCoercion(Obj x, Str y) {}
@@ -114,7 +114,7 @@ class ExprTest : Test
     verifyEq(a?.toHex?.toInt(16), null)
     verifyEq(a?.toHex?.toInt(16)?.toDigit, null)
     verifyEq(a?.toHex?.index("b"), null)
-    verifyErr(NullErr#) |,| { Int j := a?.toHex?.index("c") }
+    verifyErr(NullErr#) { Int j := a?.toHex?.index("c") }
     verifyEq(a?.toHex?.index("d")?.toStr, null)
     verifyEq(a?.toHex?.index("x")?.toStr, null)
     verifyEq(a?.toHex?.get(-1)?.toChar, null)
@@ -132,7 +132,7 @@ class ExprTest : Test
     b = null
     verifyEq(b?.mInt(4), null)
     verifyEq(b?.mInt(4)?.toHex(2), null)
-    verifyErr(NullErr#) |,| { Int j := b?.mInt(7) }
+    verifyErr(NullErr#) { Int j := b?.mInt(7) }
     verifyEq(b?.mIntQ(4), null)
     verifyEq(b?.mIntQ('0')?.fromDigit, null)
     verifyEq(b?.mIntQ(null)?.max(3), null)

@@ -43,7 +43,7 @@ class LogTest : Test
   Void testMake()
   {
     log := log()
-    verifyErr(ArgErr#) |,| { x := TestLog.make(log.name, true) }
+    verifyErr(ArgErr#) { x := TestLog.make(log.name, true) }
     verifyEq(log.name, "testSys.TestLog")
     verifyEq(log.level, LogLevel.info)
 // TODO
@@ -54,11 +54,11 @@ class LogTest : Test
     verifySame(Log.find(log.name), log)
     verifySame(Log.find(log.name, true), log)
     verifyEq(Log.find("testSys.foobar", false), null)
-    verifyErr(Err#) |,| { Log.find("testSys.foobar") }
-    verifyErr(Err#) |,| { Log.find("testSys.foobar", true) }
-    verifyErr(NameErr#) |,| { Log.get("@badName") }
-    verifyErr(NameErr#) |,| { x := Log.make("no good", true) }
-    verifyErr(NameErr#) |,| { x := TestLog.make("no good", false) }
+    verifyErr(Err#) { Log.find("testSys.foobar") }
+    verifyErr(Err#) { Log.find("testSys.foobar", true) }
+    verifyErr(NameErr#) { Log.get("@badName") }
+    verifyErr(NameErr#) { x := Log.make("no good", true) }
+    verifyErr(NameErr#) { x := TestLog.make("no good", false) }
 
     // unregistered
     unreg := Log("testSysUnreg", false)
@@ -224,7 +224,7 @@ class LogTest : Test
 
       Log.addHandler(h)
       verify(Log.handlers.contains(h))
-      verifyErr(NotImmutableErr#) |,| { Log.addHandler { mutableHandler(it) } }
+      verifyErr(NotImmutableErr#) { Log.addHandler { mutableHandler(it) } }
 
       reset
       Log.get("testSys.LogTestToo").info("what")

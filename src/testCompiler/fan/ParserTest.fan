@@ -692,7 +692,7 @@ class ParserTest : CompilerTest
     expr = verifyExpr("sys::Int[][]#", ExprId.typeLiteral);  verifyEq(expr->val->signature, "sys::Int[][]")
     expr = verifyExpr("Str:Foo#", ExprId.typeLiteral);  verifyEq(expr->val->signature, "[sys::Str:$podName::Foo]")
     expr = verifyExpr("[Str:$podName::Foo]#", ExprId.typeLiteral);  verifyEq(expr->val->signature, "[sys::Str:$podName::Foo]")
-    expr = verifyExpr("|,|#", ExprId.typeLiteral);  verifyEq(expr->val->signature, "|->sys::Void|")
+    expr = verifyExpr("|->|#", ExprId.typeLiteral);  verifyEq(expr->val->signature, "|->sys::Void|")
 
     // range literal
     expr = verifyExpr("x..y", ExprId.rangeLiteral);  verifyEq(expr->exclusive, false)
@@ -979,7 +979,7 @@ class ParserTest : CompilerTest
 
   Void testClosures()
   {
-    expr := verifyExpr("x |,| {}", ExprId.call)
+    expr := verifyExpr("x |->| {}", ExprId.call)
       verifyEq(expr->name, "x")
       verifyEq(expr->args->size, 1)
       verifyEq(expr->args->last->id, ExprId.closure)
@@ -1001,7 +1001,7 @@ class ParserTest : CompilerTest
       verifyEq(expr->args->last->id, ExprId.closure)
       verifyEq(expr->args->last->signature->signature, "|->sys::Bool|")
 
-    expr = verifyExpr("|,| {}.callList(null)", ExprId.call)
+    expr = verifyExpr("|->| {}.callList(null)", ExprId.call)
       verifyEq(expr->name, "callList")
       verifyEq(expr->target->id, ExprId.closure)
       verifyEq(expr->target->signature->signature, "|->sys::Void|")
@@ -1218,7 +1218,7 @@ class ParserTest : CompilerTest
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  true)
 
-    t = verifyType("|,|")
+    t = verifyType("|->|")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Func")
       verifyEq(t.qname,       "sys::Func")
@@ -1284,24 +1284,24 @@ class ParserTest : CompilerTest
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Int[]:[sys::Str:sys::Bool]]")
 
-    t = verifyType("|,|[]")
+    t = verifyType("|->|[]")
       verifyEq(t.qname,       "sys::List")
       verifyEq(t.signature,   "|->sys::Void|[]")
 
-    t = verifyType("| |,| a->Int:Obj|")
+    t = verifyType("| |->| a->Int:Obj|")
       verifyEq(t.qname,       "sys::Func")
       verifyEq(t.signature,   "||->sys::Void|->[sys::Int:sys::Obj]|")
 
-    t = verifyType("Str:|,|")
+    t = verifyType("Str:|->|")
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Str:|->sys::Void|]")
 
-    t = verifyType("Str:| Int:Int[] a -> |,| |[]")
+    t = verifyType("Str:| Int:Int[] a -> |->| |[]")
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Str:|[sys::Int:sys::Int[]]->|->sys::Void||[]]")
       verifyEq(t.isNullable,  false)
 
-    t = verifyType("[Str:| Int:Int[] a -> |,| |[]]?")
+    t = verifyType("[Str:| Int:Int[] a -> |->| |[]]?")
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Str:|[sys::Int:sys::Int[]]->|->sys::Void||[]]?")
       verifyEq(t.isNullable,  true)

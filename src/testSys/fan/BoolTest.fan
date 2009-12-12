@@ -151,7 +151,7 @@ class BoolTest : Test
 
     // logical and - short circuit
     verifyEq(s != null && s.size == 0, false)
-    verifyErr(NullErr#) |,| { verifyEq(s == null && s.size == 0, false) }
+    verifyErr(NullErr#) { x := s == null && s.size == 0 }
 
     // logical or
     verifyEq(f || f, false)
@@ -165,7 +165,7 @@ class BoolTest : Test
 
     // logical or - short circuit
     verifyEq(s == null || s.size == 0, true)
-    verifyErr(NullErr#) |,| { verifyEq(s != null || s.size == 0, false) }
+    verifyErr(NullErr#) { x := s != null || s.size == 0 }
 
     // bitwise and
     verifyEq(f & f, false)
@@ -178,8 +178,8 @@ class BoolTest : Test
     verifyEq(nt & nt, true)
 
     // bitwise and - no short circuit
-    verifyErr(NullErr#) |,| { verifyEq((s != null) & (s.size == 0), false) }
-    verifyErr(NullErr#) |,| { verifyEq((s == null) & (s.size == 0), false) }
+    verifyErr(NullErr#) { x := (s != null) & (s.size == 0) }
+    verifyErr(NullErr#) { x := (s == null) & (s.size == 0) }
 
     // bitwise or
     verifyEq(f | f, false)
@@ -192,8 +192,8 @@ class BoolTest : Test
     verifyEq(t | nt, true)
 
     // bitwise or - no short circuit
-    verifyErr(NullErr#) |,| { verifyEq((s == null) | (s.size == 0), true) }
-    verifyErr(NullErr#) |,| { verifyEq((s != null) | (s.size == 0), false) }
+    verifyErr(NullErr#) { x := (s == null) | (s.size == 0) }
+    verifyErr(NullErr#) { x := (s != null) | (s.size == 0) }
 
     // bitwise xor
     verifyEq(f ^ f, false)
@@ -206,8 +206,8 @@ class BoolTest : Test
     verifyEq(nt ^ nt, false)
 
     // bitwise xor - no short circuit
-    verifyErr(NullErr#) |,| { verifyEq((s == null) ^ (s.size == 0), true) }
-    verifyErr(NullErr#) |,| { verifyEq((s != null) ^ (s.size == 0), false) }
+    verifyErr(NullErr#) { x := (s == null) ^ (s.size == 0) }
+    verifyErr(NullErr#) { x := (s != null) ^ (s.size == 0) }
 
     // bitwise and assignment
     Bool x := false
@@ -252,8 +252,8 @@ class BoolTest : Test
     verifyEq(Bool.fromStr("true"), true)
     verifyEq(Bool.fromStr("false"), false)
     verifyEq(Bool.fromStr("F", false), null)
-    verifyErr(ParseErr#) |,| { Bool.fromStr("True") }
-    verifyErr(ParseErr#) |,| { Bool.fromStr("") }
+    verifyErr(ParseErr#) { Bool.fromStr("True") }
+    verifyErr(ParseErr#) { Bool.fromStr("") }
   }
 
 //////////////////////////////////////////////////////////////////////////

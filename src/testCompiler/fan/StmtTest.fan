@@ -214,7 +214,7 @@ class StmtTest : CompilerTest
 
   Void testThrow()
   {
-    verifyErr(IOErr#) |,| { verifyStmt("throw IOErr.make", null) }
+    verifyErr(IOErr#) { verifyStmt("throw IOErr.make", null) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -695,7 +695,7 @@ class StmtTest : CompilerTest
     verifyEq(r, [0, 3, 99])
 
     r = Int[,]
-    verifyErr(NullErr#) |,| { t.method("f").call(r, null) }
+    verifyErr(NullErr#) { t.method("f").call(r, null) }
     verifyEq(r, [0, 99])
   }
 
@@ -728,7 +728,7 @@ class StmtTest : CompilerTest
     verifyEq(r, [0, 1, 2, 3, 4])
 
     r = Int[,]
-    verifyErr(ArgErr#) |,| { t.method("f").call(r, true) }
+    verifyErr(ArgErr#) { t.method("f").call(r, true) }
     verifyEq(r, [0, 1, 3])
   }
 
@@ -863,7 +863,7 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    verifyErr(ArgErr#) |,| { t.method("f").call(r) }
+    verifyErr(ArgErr#) { t.method("f").call(r) }
     verifyEq(r, [0, 11, 101, 12, 102, 103])
   }
 
@@ -1059,11 +1059,11 @@ class StmtTest : CompilerTest
     verifyEq(r, [0, 1, 2, 99])
 
     r = Int[,]
-    verifyErr(IndexErr#) |,| { t.method("f").call(r, IndexErr.make) }
+    verifyErr(IndexErr#) { t.method("f").call(r, IndexErr.make) }
     verifyEq(r, [0, 1, 3, 99])
 
     r = Int[,]
-    verifyErr(IOErr#) |,| { t.method("f").call(r, IOErr.make) }
+    verifyErr(IOErr#) { t.method("f").call(r, IOErr.make) }
     verifyEq(r, [0, 1, 3, 99])
   }
 
@@ -1106,11 +1106,11 @@ class StmtTest : CompilerTest
     verifyEq(r, [0, 1, 2, 99])
 
     r = Int[,]
-    verifyErr(IOErr#) |,| { t.method("f").call(r, IOErr.make) }
+    verifyErr(IOErr#) { t.method("f").call(r, IOErr.make) }
     verifyEq(r, [0, 1, 3, 99])
 
     r = Int[,]
-    verifyErr(IndexErr#) |,| { t.method("f").call(r, IndexErr.make) }
+    verifyErr(IndexErr#) { t.method("f").call(r, IndexErr.make) }
     verifyEq(r, [0, 1, 5, 99])
   }
 

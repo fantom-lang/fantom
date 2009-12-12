@@ -22,10 +22,10 @@ class SlotTest : Test
     verifySame(Slot.findMethod("sys::Int.plus"), Int#plus)
     verifySame(Slot.findFunc("sys::Int.minus"), Int#minus.func)
     verifySame(Pod.find("sys::Int.foo", false), null)
-    verifyErr(UnknownPodErr#) |,| { Slot.find("badPodName::Foo.bar") }
-    verifyErr(UnknownTypeErr#) |,| { Slot.find("sys::Foo.bar") }
-    verifyErr(UnknownSlotErr#) |,| { Slot.find("sys::Int.foo") }
-    verifyErr(CastErr#) |,| { Slot.findField("sys::Int.isSpace") }
+    verifyErr(UnknownPodErr#) { Slot.find("badPodName::Foo.bar") }
+    verifyErr(UnknownTypeErr#) { Slot.find("sys::Foo.bar") }
+    verifyErr(UnknownSlotErr#) { Slot.find("sys::Int.foo") }
+    verifyErr(CastErr#) { Slot.findField("sys::Int.isSpace") }
   }
 
 //////////////////////////////////////////////////////////////////////////

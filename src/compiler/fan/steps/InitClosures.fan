@@ -217,7 +217,7 @@ class InitClosures : CompilerStep
 
   **
   ** Generate in-place subtitution of closure:
-  **   |,| { ... }  =>  Closure$Cls.make()
+  **   |->| { ... }  =>  Closure$Cls.make()
   **
   private Void substitute()
   {

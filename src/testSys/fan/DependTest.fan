@@ -89,16 +89,16 @@ class DependTest : Test
 
     verifyEq(Depend.fromStr("", false), null)
     verifyEq(Depend.fromStr("3", false), null)
-    verifyErr(ParseErr#) |,| { Depend.fromStr("") }
-    verifyErr(ParseErr#) |,| { Depend.fromStr("3", true) }
-    verifyErr(ParseErr#) |,| { Depend.fromStr("x") }
-    verifyErr(ParseErr#) |,| { Depend.fromStr("x5") }
-    verifyErr(ParseErr#) |,| { Depend.fromStr("foo 1x") }
-    verifyErr(ParseErr#) |,| { Depend.fromStr("foo 1*") }
-    verifyErr(ParseErr#) |,| { Depend.fromStr("foo 1-*") }
-    verifyErr(ParseErr#) |,| { Depend.fromStr(" 8") }
-    verifyErr(ParseErr#) |,| { Depend.fromStr(" foo 0") }
-    verifyErr(ParseErr#) |,| { Depend.fromStr("foo\n1.8") }
+    verifyErr(ParseErr#) { Depend.fromStr("") }
+    verifyErr(ParseErr#) { Depend.fromStr("3", true) }
+    verifyErr(ParseErr#) { Depend.fromStr("x") }
+    verifyErr(ParseErr#) { Depend.fromStr("x5") }
+    verifyErr(ParseErr#) { Depend.fromStr("foo 1x") }
+    verifyErr(ParseErr#) { Depend.fromStr("foo 1*") }
+    verifyErr(ParseErr#) { Depend.fromStr("foo 1-*") }
+    verifyErr(ParseErr#) { Depend.fromStr(" 8") }
+    verifyErr(ParseErr#) { Depend.fromStr(" foo 0") }
+    verifyErr(ParseErr#) { Depend.fromStr("foo\n1.8") }
   }
 
 //////////////////////////////////////////////////////////////////////////

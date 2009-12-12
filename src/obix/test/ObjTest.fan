@@ -56,10 +56,10 @@ class ObjTest : ObixTest
     verifyChildren(p, [d, c, b, a])
 
     // verify errors
-    verifyErr(ArgErr#) |,| { p.add(b) }
-    verifyErr(ArgErr#) |,| { p.add(ObixObj { name = "b"}) }
-    verifyErr(ArgErr#) |,| { p.remove(ObixObj { name = "b"}) }
-    verifyErr(UnsupportedErr#) |,| { b.name = "boo" }
+    verifyErr(ArgErr#) { p.add(b) }
+    verifyErr(ArgErr#) { p.add(ObixObj { name = "b"}) }
+    verifyErr(ArgErr#) { p.remove(ObixObj { name = "b"}) }
+    verifyErr(UnsupportedErr#) { b.name = "boo" }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,7 +73,7 @@ class ObjTest : ObixTest
      "list", "op", "feed", "ref", "err"]
 
     names.each |Str s| { x := ObixObj { elemName=s } }
-    verifyErr(ArgErr#) |,| { x := ObixObj { elemName="foo" } }
+    verifyErr(ArgErr#) { x := ObixObj { elemName="foo" } }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -123,8 +123,8 @@ class ObjTest : ObixTest
     verifyVal("date", Date.today)
     verifyVal("time", Time.now)
 
-    verifyErr(ArgErr#) |,| { x := ObixObj { val = this } }
-    verifyErr(ArgErr#) |,| { x := ObixObj { val = Locale.current } }
+    verifyErr(ArgErr#) { x := ObixObj { val = this } }
+    verifyErr(ArgErr#) { x := ObixObj { val = Locale.current } }
   }
 
   Void verifyVal(Str elemName, Obj? val)

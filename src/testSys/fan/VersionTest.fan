@@ -38,15 +38,15 @@ class VersionTest : Test
     verifyEq(Version.fromStr(".", false), null)
     verifyEq(Version.fromStr("4.x", false), null)
 
-    verifyErr(ParseErr#) |,| { Version.fromStr("") }
-    verifyErr(ParseErr#) |,| { Version.fromStr(".") }
-    verifyErr(ParseErr#) |,| { Version.fromStr("x") }
-    verifyErr(ParseErr#) |,| { Version.fromStr("3a") }
-    verifyErr(ParseErr#) |,| { Version.fromStr("3.x") }
-    verifyErr(ParseErr#) |,| { Version.fromStr("3..0") }
-    verifyErr(ParseErr#) |,| { Version.fromStr(".3.0") }
-    verifyErr(ParseErr#) |,| { Version.fromStr("3.0.", true) }
-    verifyErr(ParseErr#) |,| { Version.fromStr("1.0\n", true) }
+    verifyErr(ParseErr#) { Version.fromStr("") }
+    verifyErr(ParseErr#) { Version.fromStr(".") }
+    verifyErr(ParseErr#) { Version.fromStr("x") }
+    verifyErr(ParseErr#) { Version.fromStr("3a") }
+    verifyErr(ParseErr#) { Version.fromStr("3.x") }
+    verifyErr(ParseErr#) { Version.fromStr("3..0") }
+    verifyErr(ParseErr#) { Version.fromStr(".3.0") }
+    verifyErr(ParseErr#) { Version.fromStr("3.0.", true) }
+    verifyErr(ParseErr#) { Version.fromStr("1.0\n", true) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,10 +77,10 @@ class VersionTest : Test
     verifyEq(v.segments, [1, 2])
     verifyEq(v.toStr, "1.2")
 
-    verifyErr(ArgErr#) |,| { Version.make(Int[,]) }
-    verifyErr(ArgErr#) |,| { Version.make(Int[-2]) }
-    verifyErr(ArgErr#) |,| { Version.make(Int[1, -2]) }
-    verifyErr(ReadonlyErr#) |,| { Version.make([4, 8]).segments[0] = 9 }
+    verifyErr(ArgErr#) { Version.make(Int[,]) }
+    verifyErr(ArgErr#) { Version.make(Int[-2]) }
+    verifyErr(ArgErr#) { Version.make(Int[1, -2]) }
+    verifyErr(ReadonlyErr#) { Version.make([4, 8]).segments[0] = 9 }
   }
 
 //////////////////////////////////////////////////////////////////////////

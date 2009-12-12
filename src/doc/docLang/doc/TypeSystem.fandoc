@@ -341,7 +341,7 @@ the syntax used by [closures]`Closures`:
   |Str s->Void|        // function which takes one Str arg and returns void
   |Str s|              // same as above, omitting optional void return
   |->Void|             // function which takes no arguments and returns void
-  |,|                  // shortcut for above
+  |->|                  // shortcut for above
 
 Function signatures are used extensively in functional programming
 and closures.  It can be a bit tricky to grasp at first, but what we

@@ -27,7 +27,7 @@ class KeyTest : Test
     verifyKey(Key.shift+Key.alt+Key.x, "Shift+Alt+X", [Key.shift, Key.alt, Key.x])
     verifyKey(Key.x+Key.shift+Key.alt, "Shift+Alt+X", [Key.shift, Key.alt, Key.x])
     verifyKey(Key.shift+Key.x+Key.alt, "Shift+Alt+X", [Key.shift, Key.alt, Key.x])
-    verifyErr(ArgErr#) |,| { k := Key.x + Key.y }
+    verifyErr(ArgErr#) { k := Key.x + Key.y }
   }
 
   Void testParse()
@@ -42,8 +42,8 @@ class KeyTest : Test
     verifyEq(Key.fromStr("Foo", false), null)
     verifyEq(Key.fromStr("R+W", false), null)
 
-    verifyErr(ParseErr#) |,| { Key("R+W") }
-    verifyErr(ParseErr#) |,| { Key.fromStr("2+3+4", true) }
+    verifyErr(ParseErr#) { Key("R+W") }
+    verifyErr(ParseErr#) { Key.fromStr("2+3+4", true) }
   }
 
   Void verifyKey(Key k, Str s, Key[] ks)
