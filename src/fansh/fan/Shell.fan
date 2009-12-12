@@ -136,7 +136,7 @@ class Shell
     usings.each |u| { out.printLine("  $u") }
     out.printLine
     out.printLine("Current Scope:")
-    scope.values.sort.each |v| { out.printLine("  $v.of $v.name = $v.val") }
+    scope.vals.sort.each |v| { out.printLine("  $v.of $v.name = $v.val") }
     out.printLine
   }
 

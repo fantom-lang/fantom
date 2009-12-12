@@ -468,27 +468,27 @@ class MapTest : Test
   {
     m := [0:"zero"]
     verifyEq(m.keys,   [0])
-    verifyEq(m.values, ["zero"])
+    verifyEq(m.vals, ["zero"])
 
     m = [0:"zero", 1:"one"]
     verifyEq(m.keys.sort,   [0, 1])
-    verifyEq(m.values.sort, ["one", "zero"])
+    verifyEq(m.vals.sort, ["one", "zero"])
 
     m = [0:"zero", 1:"one", 2:"two"]
     verifyEq(m.keys.sort,   [0, 1, 2])
-    verifyEq(m.values.sort, ["one", "two", "zero"])
+    verifyEq(m.vals.sort, ["one", "two", "zero"])
 
     m = [0:"zero", 1:"one", 2:"two", 3:"three"]
     verifyEq(m.keys.sort,   [0, 1, 2, 3])
-    verifyEq(m.values.sort, ["one", "three", "two", "zero"])
+    verifyEq(m.vals.sort, ["one", "three", "two", "zero"])
 
     m = [0:"zero", 1:"one", 2:"two", 3:"three", 4:"four"]
     verifyEq(m.keys.sort,   [0, 1, 2, 3, 4])
-    verifyEq(m.values.sort, ["four", "one", "three", "two", "zero"])
+    verifyEq(m.vals.sort, ["four", "one", "three", "two", "zero"])
 
     x := ["a":[0], "b":[0,1], "c":[0,1,2]]
     verifyEq(x.keys.sort,   ["a", "b", "c"])
-    verifyEq(x.values.sort |Int[] a, Int[] b->Int| { return a.size <=> b.size },
+    verifyEq(x.vals.sort |Int[] a, Int[] b->Int| { return a.size <=> b.size },
              [[0], [0,1], [0,1,2]])
   }
 
@@ -576,7 +576,7 @@ class MapTest : Test
 
     // keys, values
     verifyEq(m.keys.sort, ["B", "Charlie", "a"])
-    verifyEq(m.values.sort, ['a', 'b', 'c'])
+    verifyEq(m.vals.sort, ['a', 'b', 'c'])
 
     // getOrAdd
     verifyEq(m.getOrAdd("cHaRlIe") { throw Err() }, 'c')
@@ -603,7 +603,7 @@ class MapTest : Test
     // dup
     d := m.dup
     verifyEq(d.keys.sort, ["B", "Charlie", "a"])
-    verifyEq(d.values.sort, ['a', 'b', 'c'])
+    verifyEq(d.vals.sort, ['a', 'b', 'c'])
     d["charlie"] = 'x'
     verifyEq(m["Charlie"], 'c')
     verifyEq(m["charlIE"], 'c')
@@ -723,7 +723,7 @@ class MapTest : Test
 
     // keys, values
     verifyEq(m.keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
-    verifyEq(m.values, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    verifyEq(m.vals, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
     // each
     n := 0
@@ -744,31 +744,31 @@ class MapTest : Test
     // dup
     d := m.dup
     verifyEq(d.keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
-    verifyEq(d.values, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    verifyEq(d.vals, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
     // remove
     verifyEq(m.remove("5"), 5)
     verifyEq(m["5"], null)
     verifyEq(m.containsKey("5"), false)
     verifyEq(m.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9"])
-    verifyEq(m.values, [0, 1, 2, 3, 4, 6, 7, 8, 9])
+    verifyEq(m.vals, [0, 1, 2, 3, 4, 6, 7, 8, 9])
 
     // addAll
     m.addAll(Str:Int[:] { ordered = true; add("5", 5); add("10",10) })
     verifyEq(m.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9", "5", "10"])
-    verifyEq(m.values, [0, 1, 2, 3, 4, 6, 7, 8, 9, 5, 10])
+    verifyEq(m.vals, [0, 1, 2, 3, 4, 6, 7, 8, 9, 5, 10])
 
     // setAll
     m["1"] = 11
     m.setAll(["6":66, "8":88])
     verifyEq(m.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9", "5", "10"])
-    verifyEq(m.values, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5, 10])
+    verifyEq(m.vals, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5, 10])
 
     // to readonly
     r := m.ro
     verifyEq(r.ordered, true)
     verifyEq(r.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9", "5", "10"])
-    verifyEq(r.values, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5, 10])
+    verifyEq(r.vals, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5, 10])
     verifyEq(r["6"], 66)
     verifyErr(ReadonlyErr#) |,| { r["3"] = 333 }
 
@@ -777,7 +777,7 @@ class MapTest : Test
     m.clear
     verifyEq(i.ordered, true)
     verifyEq(i.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9", "5", "10"])
-    verifyEq(i.values, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5, 10])
+    verifyEq(i.vals, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5, 10])
     verifyEq(i["10"], 10)
     verifyErr(ReadonlyErr#) |,| { i["3"] = 333 }
 
@@ -786,13 +786,13 @@ class MapTest : Test
     verifyEq(rw.ordered, true)
     verifyEq(rw.remove("10"), 10)
     verifyEq(rw.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9", "5"])
-    verifyEq(rw.values, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5])
+    verifyEq(rw.vals, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5])
 
     // set false
     m.ordered = false
     10.times |Int j| { m.add(j.toStr, j) }
     verifyNotEq(m.keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
-    verifyNotEq(m.values, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    verifyNotEq(m.vals, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
     // errors
     verifyErr(UnsupportedErr#) |,| { ["a":0].ordered = true }
@@ -1063,7 +1063,7 @@ class MapTest : Test
     verifyEq(r.containsKey(2), true)
     verifyEq(r.containsKey(4), false)
     verifyEq(r.keys.sort, [0, 1, 2])
-    verifyEq(r.values.sort, ["a", "b", "c"])
+    verifyEq(r.vals.sort, ["a", "b", "c"])
     verifyEq(r.dup, [0:"a", 1:"b", 2:"c"])
     r.each |Str v, Int k| { verifyEq(r[k], v) }
     verifyEq(r.find |Str s->Bool| { return s == "b" }, "b")

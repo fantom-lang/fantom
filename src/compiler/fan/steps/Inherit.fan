@@ -78,7 +78,7 @@ class Inherit : CompilerStep
     // inherit each slot from parent type (if test then
     // sort the slots to test errors in consistent order)
     if (compiler.input.isTest)
-      parent.slots.values.sort(|CSlot a, CSlot b->Int| {return a.name <=> b.name}).each(closure)
+      parent.slots.vals.sort(|CSlot a, CSlot b->Int| {return a.name <=> b.name}).each(closure)
     else
       parent.slots.each(closure)
   }

@@ -72,7 +72,7 @@ class ParserTotureTest : Test
     verifyEq(Int[]:Str[]#get.returns,   Str[]?#)
     verifyEq(Int[]:Str[]#.method("get").params[0].of, Int[]#)
 
-    verifyEq(Int[][]:Str[][]#values.returns,  Str[][][]#)
+    verifyEq(Int[][]:Str[][]#vals.returns,  Str[][][]#)
     verifyEq(Int[][]:Str[][]#.method("get").params[0].of, Int[][]#)
   }
 

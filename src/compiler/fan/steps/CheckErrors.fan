@@ -174,7 +174,7 @@ class CheckErrors : CompilerStep
     }
 
     if (compiler.input.isTest)
-      t.slots.values.sort.each(closure)
+      t.slots.vals.sort.each(closure)
     else
       t.slots.each(closure)
   }

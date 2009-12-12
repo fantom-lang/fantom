@@ -98,7 +98,10 @@ namespace Fan.Sys
       return new List(m_type.m_k, m_map.Keys);
     }
 
-    public List values()
+    // TODO
+    public List values() { return vals(); }
+
+    public List vals()
     {
       return new List(m_type.m_v, m_map.Values);
     }
