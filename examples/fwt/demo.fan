@@ -638,7 +638,7 @@ class DirTreeModel : TreeModel
 
   override Image? image(Obj node) { return demo.folderIcon }
 
-  override Obj[]? children(Obj obj) { return obj->listDirs }
+  override Obj[] children(Obj obj) { return obj->listDirs }
 }
 
 **************************************************************************
