@@ -117,6 +117,12 @@ namespace Fan.Sys
       return Long.valueOf(m_end+1);
     }
 
+    public Range offset(long offset)
+    {
+      if (offset == 0) return this;
+      return new Range(m_start+offset, m_end+offset, m_exclusive);
+    }
+
     public bool contains(long i)
     {
       if (m_start < m_end)
