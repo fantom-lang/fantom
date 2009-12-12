@@ -111,15 +111,15 @@ const class Image
 
   **
   ** Get the size of the image or 0,0 if not loaded yet
-  ** using `GfxEnv.current`
+  ** using `GfxEnv.cur`
   **
-  Size size() { GfxEnv.current.imageSize(this) }
+  Size size() { GfxEnv.cur.imageSize(this) }
 
   **
-  ** Resize this image into a new image using  `GfxEnv.current`.
+  ** Resize this image into a new image using  `GfxEnv.cur`.
   ** Also see `Graphics.copyImage`.
   ** Note: this method doesn't support transparency correctly yet.
   **
-  Image resize(Size size) { GfxEnv.current.imageResize(this, size) }
+  Image resize(Size size) { GfxEnv.cur.imageResize(this, size) }
 
 }

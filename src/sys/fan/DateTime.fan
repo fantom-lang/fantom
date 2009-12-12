@@ -23,7 +23,7 @@ const final class DateTime
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return the current time using `TimeZone.current`.  The tolerance
+  ** Return the current time using `TimeZone.cur`.  The tolerance
   ** parameter specifies that you are willing to use a cached DateTime
   ** instance as long as (now - cached <= tolerance).  If tolerance is null,
   ** then this method always creates a new DateTime instance.  Using
@@ -65,7 +65,7 @@ const final class DateTime
   ** ArgErr if ticks represent a year out of the range 1901
   ** to 2099.
   **
-  static DateTime makeTicks(Int ticks, TimeZone tz := TimeZone.current)
+  static DateTime makeTicks(Int ticks, TimeZone tz := TimeZone.cur)
 
   **
   ** Make for the specified date and time values:
@@ -80,7 +80,7 @@ const final class DateTime
   **
   ** Throw ArgErr is any of the parameters are out of range.
   **
-  static DateTime make(Int year, Month month, Int day, Int hour, Int min, Int sec := 0, Int ns := 0, TimeZone tz := TimeZone.current)
+  static DateTime make(Int year, Month month, Int day, Int hour, Int min, Int sec := 0, Int ns := 0, TimeZone tz := TimeZone.cur)
 
   **
   ** Parse the string into a DateTime from the programmatic encoding
@@ -91,7 +91,7 @@ const final class DateTime
   static DateTime? fromStr(Str s, Bool checked := true)
 
   **
-  ** Get the boot time of the Fantom VM with `TimeZone.current`
+  ** Get the boot time of the Fantom VM with `TimeZone.cur`
   **
   static DateTime boot()
 
@@ -359,7 +359,7 @@ const final class DateTime
   ** using the specified timezone (defaults to current).  If millis
   ** are less than or equal to zero then return null.
   **
-  static DateTime? fromJava(Int millis, TimeZone tz := TimeZone.current)
+  static DateTime? fromJava(Int millis, TimeZone tz := TimeZone.cur)
 
   **
   ** Get this date in Java milliseconds since the epoch of 1 Jan 1970.

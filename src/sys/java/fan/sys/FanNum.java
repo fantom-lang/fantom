@@ -43,38 +43,38 @@ public class FanNum
 
   public static String localeDecimal()
   {
-    return FanInt.toChar(Locale.current().decimal().getDecimalSeparator());
+    return FanInt.toChar(Locale.cur().decimal().getDecimalSeparator());
   }
 
   public static String localeGrouping()
   {
-    return FanInt.toChar(Locale.current().decimal().getGroupingSeparator());
+    return FanInt.toChar(Locale.cur().decimal().getGroupingSeparator());
   }
 
   public static String localeMinus()
   {
-    return FanInt.toChar(Locale.current().decimal().getMinusSign());
+    return FanInt.toChar(Locale.cur().decimal().getMinusSign());
   }
 
   public static String localePercent()
   {
-    return FanInt.toChar(Locale.current().decimal().getPercent());
+    return FanInt.toChar(Locale.cur().decimal().getPercent());
   }
 
   public static String localePosInf()
   {
-    return Locale.current().decimal().getInfinity();
+    return Locale.cur().decimal().getInfinity();
   }
 
   public static String localeNegInf()
   {
-    Locale locale = Locale.current();
+    Locale locale = Locale.cur();
     return locale.decimal().getMinusSign() + locale.decimal().getInfinity();
   }
 
   public static String localeNaN()
   {
-    return Locale.current().decimal().getNaN();
+    return Locale.cur().decimal().getNaN();
   }
 
   static String toLocale(NumPattern p, NumDigits d, DecimalFormatSymbols df)

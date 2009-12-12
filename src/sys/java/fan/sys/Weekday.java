@@ -61,13 +61,13 @@ public final class Weekday
     throw ArgErr.make("Invalid pattern: " + pattern).val;
   }
 
-  public String localeAbbr() { return abbr(Locale.current()); }
+  public String localeAbbr() { return abbr(Locale.cur()); }
   public String abbr(Locale locale)
   {
     return locale.get("sys", localeAbbrKey);
   }
 
-  public String localeFull() { return full(Locale.current()); }
+  public String localeFull() { return full(Locale.cur()); }
   public String full(Locale locale)
   {
     return locale.get("sys", localeFullKey);
@@ -75,7 +75,7 @@ public final class Weekday
 
   public static Weekday localeStartOfWeek()
   {
-    return fromStr(Locale.current().get("sys", "weekdayStart"));
+    return fromStr(Locale.cur().get("sys", "weekdayStart"));
   }
 
   final int ord;

@@ -152,7 +152,7 @@ public final class FanDecimal
   public static String toLocale(BigDecimal self, String pattern)
   {
     // get current locale
-    Locale locale = Locale.current();
+    Locale locale = Locale.cur();
     java.text.DecimalFormatSymbols df = locale.decimal();
 
     // get default pattern if necessary

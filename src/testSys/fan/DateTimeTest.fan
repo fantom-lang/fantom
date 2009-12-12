@@ -56,13 +56,13 @@ class DateTimeTest : Test
 
   override Void setup()
   {
-    origLocale = Locale.current
-    Locale.setCurrent(Locale.fromStr("en-US"))
+    origLocale = Locale.cur
+    Locale.setCur(Locale.fromStr("en-US"))
   }
 
   override Void teardown()
   {
-    Locale.setCurrent(origLocale)
+    Locale.setCur(origLocale)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ class DateTimeTest : Test
 
     a := DateTime.now
     verify(a === DateTime.now)
-    verifySame(a.tz, TimeZone.current)
+    verifySame(a.tz, TimeZone.cur)
 
     b := DateTime.now(null)
     verify(a !== b)
@@ -243,7 +243,7 @@ class DateTimeTest : Test
   Void testBoot()
   {
     verifySame(DateTime.boot, DateTime.boot)
-    verifySame(DateTime.boot.tz, TimeZone.current)
+    verifySame(DateTime.boot.tz, TimeZone.cur)
     verify(DateTime.boot < DateTime.now(null))
   }
 
@@ -1141,7 +1141,7 @@ class DateTimeTest : Test
     f := |DateTime dt|
     {
       verifyEq(dt, DateTime(2009, Month.dec, 31, 12, 30, 47, 123_456))
-      verifyEq(dt.tz, TimeZone.current)
+      verifyEq(dt.tz, TimeZone.cur)
       verifyEq(dt.year, 2009)
       verifyEq(dt.month, Month.dec)
       verifyEq(dt.day, 31)

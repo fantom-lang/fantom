@@ -15,12 +15,12 @@ class LocaleTest : Test
 
   override Void setup()
   {
-    orig = Locale.current
+    orig = Locale.cur
   }
 
   override Void teardown()
   {
-    Locale.setCurrent(orig)
+    Locale.setCur(orig)
   }
 
   Void testIdentity()
@@ -57,13 +57,13 @@ class LocaleTest : Test
   {
     // change to France
     fr := Locale.fromStr("fr-FR")
-    Locale.setCurrent(fr)
-    verifyEq(Locale.current.toStr, "fr-FR")
+    Locale.setCur(fr)
+    verifyEq(Locale.cur.toStr, "fr-FR")
 
     // change to Taiwan
     zh := Locale.fromStr("zh-TW")
-    Locale.setCurrent(zh)
-    verifyEq(Locale.current.toStr, "zh-TW")
+    Locale.setCur(zh)
+    verifyEq(Locale.cur.toStr, "zh-TW")
 
     // can't set to null
     //verifyErr(NullErr#) |,| { Locale.setCurrent(null) }
@@ -73,31 +73,31 @@ class LocaleTest : Test
     {
       fr.use
       {
-        verifyEq(Locale.current.toStr, "fr-FR")
+        verifyEq(Locale.cur.toStr, "fr-FR")
         throw Err.make
       }
     }
     catch
     {
     }
-    verifyEq(Locale.current.toStr, "zh-TW")
+    verifyEq(Locale.cur.toStr, "zh-TW")
 
     // create actor that accepts
     // messages to change its own locale
     actor := Actor(ActorPool()) |Obj msg->Obj|
     {
-      if (msg == ".")  return Locale.current
+      if (msg == ".")  return Locale.cur
       loc := Locale.fromStr(msg)
-      Locale.setCurrent(loc)
-      return Locale.current
+      Locale.setCur(loc)
+      return Locale.cur
     }
 
     // check that changes on other thread don't effect my thread
     verifyEq(actor.send(".").get, Locale("zh-TW"))
     verifyEq(actor.send("fr-FR").get, fr)
-    verifyEq(Locale.current.toStr, "zh-TW")
+    verifyEq(Locale.cur.toStr, "zh-TW")
     verifyEq(actor.send("de").get, Locale("de"))
-    verifyEq(Locale.current.toStr, "zh-TW")
+    verifyEq(Locale.cur.toStr, "zh-TW")
   }
 
   Void testProps()
@@ -150,8 +150,8 @@ class LocaleTest : Test
 
   Void verifyProp(Locale x, Str key, Str? expected, Str? def := "_no_def_")
   {
-    old := Locale.current
-    Locale.setCurrent(x)
+    old := Locale.cur
+    Locale.setCur(x)
     try
     {
       if (def == "_no_def_")
@@ -169,7 +169,7 @@ class LocaleTest : Test
     }
     finally
     {
-      Locale.setCurrent(old)
+      Locale.setCur(old)
     }
   }
 

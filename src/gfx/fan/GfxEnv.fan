@@ -17,13 +17,16 @@ abstract const class GfxEnv
 // Access
 //////////////////////////////////////////////////////////////////////////
 
+  // TODO: use `cur`
+  static GfxEnv? current(Bool checked := true) { cur(checked) }
+
   **
   ** Get the current thread's graphics environment.  If no
   ** environment is active then throw Err or return null based
   ** on checked flag.  The current environment is configured
   ** with the "gfx.env" Actor local.
   **
-  static GfxEnv? current(Bool checked := true)
+  static GfxEnv? cur(Bool checked := true)
   {
     GfxEnv? env := Actor.locals["gfx.env"]
     if (env != null) return env

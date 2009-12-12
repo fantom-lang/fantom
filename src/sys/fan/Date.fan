@@ -20,7 +20,7 @@ const final class Date
   **
   ** Get today's Date using specified timezone.
   **
-  static Date today(TimeZone tz := TimeZone.current)
+  static Date today(TimeZone tz := TimeZone.cur)
 
   **
   ** Make for the specified date values:
@@ -215,12 +215,12 @@ const final class Date
   **
   ** Combine this Date with the given Time to return a DateTime.
   **
-  DateTime toDateTime(Time t, TimeZone tz := TimeZone.current)
+  DateTime toDateTime(Time t, TimeZone tz := TimeZone.cur)
 
   **
   ** Return a DateTime for the beginning of the this day at midnight.
   **
-  DateTime midnight(TimeZone tz := TimeZone.current)
+  DateTime midnight(TimeZone tz := TimeZone.cur)
 
   **
   ** Get this Date as a Fantom expression suitable for code generation.

@@ -23,7 +23,7 @@ const final class Time
   ** This method may use `DateTime.now` with the default
   ** tolerance 250ms.
   **
-  static Time now(TimeZone tz := TimeZone.current)
+  static Time now(TimeZone tz := TimeZone.cur)
 
   **
   ** Make for the specified time values:
@@ -182,7 +182,7 @@ const final class Time
   **
   ** Combine this Time with the given Date to return a DateTime.
   **
-  DateTime toDateTime(Date d, TimeZone tz := TimeZone.current)
+  DateTime toDateTime(Date d, TimeZone tz := TimeZone.cur)
 
   **
   ** Get this Time as a Fantom expression suitable for code generation.
