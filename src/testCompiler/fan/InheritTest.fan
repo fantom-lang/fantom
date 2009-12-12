@@ -844,6 +844,7 @@ class InheritTest : CompilerTest
         3, 12, "Cannot use This as parameter type",
         4, 12, "Cannot use Void as parameter type",
         5, 16, "Cannot use This as local variable type",
+        6, 27, "'null' is not assignable to 'sys::Void?'",
         6, 16, "Cannot use Void as local variable type",
         7, 3,  "Cannot return This from static method",
         8, 23, "Cannot return 'sys::Int' as $podName::Foo This",

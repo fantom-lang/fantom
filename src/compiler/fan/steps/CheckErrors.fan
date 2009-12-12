@@ -1595,7 +1595,7 @@ class CheckErrors : CompilerStep
     if (actual == expected) return expr
 
     // we can never use a void expression
-    if (actual.isVoid)
+    if (actual.isVoid || expected.isVoid)
     {
       onErr()
       return expr

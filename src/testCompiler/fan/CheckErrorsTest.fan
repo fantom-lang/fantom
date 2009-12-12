@@ -1574,6 +1574,7 @@ class CheckErrorsTest : CompilerTest
          7, 12, "Cannot use Void as parameter type",
          8, 12, "Cannot use This as parameter type",
          9, 12, "Invalid type '|->sys::This|?'",
+        10, 15, "'null' is not assignable to 'sys::Void?'",
         10, 15, "Cannot use Void as local variable type",
         11, 15, "Cannot use This as local variable type",
         12, 15, "Invalid type 'sys::Void[]?'",
