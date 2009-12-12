@@ -115,7 +115,7 @@ class DocTest : Test
   {
     doc := makeDoc("")
     text := ""
-    20.times |,|
+    20.times
     {
       newText := randLines(1..5)
       start := Int.random(0..doc.size)
@@ -283,7 +283,7 @@ class DocTest : Test
   Str randLines(Range numLines)
   {
     text := ""
-    Int.random(numLines).times |,|
+    Int.random(numLines).times
     {
       line := "abcdefghijklmnopqrstuvwxyz"[0..<Int.random(0..25)] + "\n"
       text += line

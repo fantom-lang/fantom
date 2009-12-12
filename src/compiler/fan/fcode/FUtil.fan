@@ -59,7 +59,7 @@ class FUtil : FConst
     if (size == 0) return FAttr#.emptyList
     fattrs := FAttr[,]
     fattrs.capacity = size
-    size.times |,| { fattrs.add(FAttr.make.read(in)) }
+    size.times { fattrs.add(FAttr.make.read(in)) }
     return fattrs
   }
 

@@ -27,10 +27,10 @@ class MethodTest : Test
 
   Void testIs()
   {
-    Func m := |,| {}
+    Func m := |->| {}
     verifyEq(m.type.signature, "|->sys::Void|");
     verifyIsFunc(m)
-    verify(m is |,|)
+    verify(m is |->|)
     verify(m is |->Void|)
     verify(m is |Int a|)
     verify(m is |Int a, Int b|)
@@ -88,7 +88,7 @@ class MethodTest : Test
 // Reflection
 //////////////////////////////////////////////////////////////////////////
 
-  Void dummy0(|,| x) {}
+  Void dummy0(|->| x) {}
   Void dummy1(|->Str| x) {}
   Void dummy2(|Float x| x) {}
   Void dummy3(|Float x, Int y->Str| x) {}
@@ -133,7 +133,7 @@ class MethodTest : Test
 
   Void testReflectClosures()
   {
-    verifyFunc( |,|{},
+    verifyFunc( |->|{},
       "|->sys::Void|", Type[,], Void#);
 
     verifyFunc( |->Str?| { return null},

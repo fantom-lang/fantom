@@ -981,7 +981,7 @@ class XParser
   static
   {
     name := Bool[,]
-    128.times |,| { name.add(false) }
+    128.times |->| { name.add(false) }
     for (i:='a'; i<='z'; ++i) name[i] = true
     for (i:='A'; i<='Z'; ++i) name[i] = true
     for (i:='0'; i<='9'; ++i) name[i] = true
@@ -991,7 +991,7 @@ class XParser
     nameMap = name
 
     space := Bool[,]
-    128.times |,| { space.add(false) }
+    128.times |->| { space.add(false) }
     space['\n'] = true
     space['\r'] = true
     space[' ']  = true

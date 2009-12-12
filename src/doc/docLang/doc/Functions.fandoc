@@ -35,7 +35,7 @@ The 'Func' class is a built-in generic type, with a custom
   |Str s->Void|        // function which takes one Str arg and returns void
   |Str s|              // same as above, omitting optional void return
   |->Void|             // function which takes no arguments and returns void
-  |,|                  // shortcut for above
+  |->|                 // shortcut for above
 
 The examples above are type signatures much like you'd use 'Str' or 'Str[]'.
 

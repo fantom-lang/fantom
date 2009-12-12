@@ -34,12 +34,12 @@ class TypeTest : Test
     verifySame(Type.find("sys::Int"), Int#)
     verifySame(Type.find("sys::Str[]"), Str[]#)
     verifySame(Type.find("sys::notHereFoo", false), null)
-    verifyErr(UnknownTypeErr#) |,| { Type.find("sys::notHereFoo") }
-    verifyErr(UnknownPodErr#) |,| { Type.find("notHereFoo::Duh") }
-    verifyErr(ArgErr#) |,| { Type.find("sys") }
-    verifyErr(ArgErr#) |,| { Type.find("sys::") }
-    verifyErr(ArgErr#) |,| { Type.find("::sys") }
-    verifyErr(ArgErr#) |,| { Type.find("[]") }
+    verifyErr(UnknownTypeErr#) { Type.find("sys::notHereFoo") }
+    verifyErr(UnknownPodErr#) { Type.find("notHereFoo::Duh") }
+    verifyErr(ArgErr#) { Type.find("sys") }
+    verifyErr(ArgErr#) { Type.find("sys::") }
+    verifyErr(ArgErr#) { Type.find("::sys") }
+    verifyErr(ArgErr#) { Type.find("[]") }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -71,7 +71,7 @@ class TypeTest : Test
 
   Void testFindByFacet()
   {
-    verifyErr(Err#) |,| { Type.findByFacet(@nodoc, "") }
+    verifyErr(Err#) { Type.findByFacet(@nodoc, "") }
 
     x := Type.findByFacet(@testSysByStr, "zeta")
     verifyEq(x.size, 0)
@@ -230,21 +230,21 @@ class TypeTest : Test
   {
     verifyEq(List#.parameterize(["V":Bool#]), Bool[]#)
     verifyEq(List#.parameterize(["V":Bool[]#]), Bool[][]#)
-    verifyErr(ArgErr#) |,| { List#.parameterize(["X":Bool[]#]) }
+    verifyErr(ArgErr#) { List#.parameterize(["X":Bool[]#]) }
 
     verifyEq(Map#.parameterize(["K":Str#, "V":Slot#]), Str:Slot#)
     verifyEq(Map#.parameterize(["K":Str#, "V":Int[]#]), Str:Int[]#)
-    verifyErr(ArgErr#) |,| { Map#.parameterize(["V":Bool[]#]) }
-    verifyErr(ArgErr#) |,| { Map#.parameterize(["K":Bool[]#]) }
+    verifyErr(ArgErr#) { Map#.parameterize(["V":Bool[]#]) }
+    verifyErr(ArgErr#) { Map#.parameterize(["K":Bool[]#]) }
 
-    verifyEq(Func#.parameterize(["R":Void#]), |,|#)
+    verifyEq(Func#.parameterize(["R":Void#]), |->|#)
     verifyEq(Func#.parameterize(["A":Str#, "R":Int#]), |Str a->Int|#)
     verifyEq(Func#.parameterize(["A":Str#, "B":Bool#, "C":Int#, "R":Float#]),
       |Str a, Bool b, Int c->Float|#)
-    verifyErr(ArgErr#) |,| { Func#.parameterize(["A":Bool[]#]) }
+    verifyErr(ArgErr#) { Func#.parameterize(["A":Bool[]#]) }
 
-    verifyErr(UnsupportedErr#) |,| { Str#.parameterize(["X":Void#]) }
-    verifyErr(UnsupportedErr#) |,| { Str[]#.parameterize(["X":Void#]) }
+    verifyErr(UnsupportedErr#) { Str#.parameterize(["X":Void#]) }
+    verifyErr(UnsupportedErr#) { Str[]#.parameterize(["X":Void#]) }
   }
 
   Void testToListOf()
@@ -262,7 +262,7 @@ class TypeTest : Test
     verifyEq(s.isImmutable, true)
     verifyEq(s.type.signature, "sys::Str[]")
     verifySame(s, Str#.emptyList)
-    verifyErr(ReadonlyErr#) |,| { s.add("foo") }
+    verifyErr(ReadonlyErr#) { s.add("foo") }
 
     sl :=  Str[]#.emptyList
     verifyEq(sl, Str[][,])
@@ -270,7 +270,7 @@ class TypeTest : Test
     verifyEq(sl.type.signature, "sys::Str[][]")
     verifySame(sl, Str[]#.emptyList)
     verifyNotSame(sl, s)
-    verifyErr(ReadonlyErr#) |,| { sl.add(Str[,]) }
+    verifyErr(ReadonlyErr#) { sl.add(Str[,]) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -281,7 +281,7 @@ class TypeTest : Test
   {
     verify(File#.make([`foo`]) is File)
     verifyEq(File#.make([`foo`])->uri, `foo`)
-    //verifyErr(Err#) |,| { Bool.type.make }
+    //verifyErr(Err#) { Bool.type.make }
   }
 
 //////////////////////////////////////////////////////////////////////////

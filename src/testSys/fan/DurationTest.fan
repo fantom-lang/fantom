@@ -210,12 +210,12 @@ class DurationTest : Test
     verifyEq(Duration.fromStr("-1.5day"), -36hr)
 
     // invalid
-    verifyErr(ParseErr#) |,| { Duration.fromStr("4") }
-    verifyErr(ParseErr#) |,| { Duration.fromStr("4x") }
-    verifyErr(ParseErr#) |,| { Duration.fromStr("4seconds") }
-    verifyErr(ParseErr#) |,| { Duration.fromStr("xms") }
-    verifyErr(ParseErr#) |,| { Duration.fromStr("x4ms") }
-    verifyErr(ParseErr#) |,| { Duration.fromStr("4days") }
+    verifyErr(ParseErr#) { Duration.fromStr("4") }
+    verifyErr(ParseErr#) { Duration.fromStr("4x") }
+    verifyErr(ParseErr#) { Duration.fromStr("4seconds") }
+    verifyErr(ParseErr#) { Duration.fromStr("xms") }
+    verifyErr(ParseErr#) { Duration.fromStr("x4ms") }
+    verifyErr(ParseErr#) { Duration.fromStr("4days") }
   }
 
   Void verifyStr(Duration dur, Str format)
@@ -279,12 +279,12 @@ class DurationTest : Test
     verifyEq(Duration.fromIso("PTH4M", false), null)
     verifyEq(Duration.fromIso("PT4D", false), null)
     verifyEq(Duration.fromIso("P4ST", false), null)
-    verifyErr(ParseErr#) |,| { Duration.fromIso("3") }
-    verifyErr(ParseErr#) |,| { Duration.fromIso("3S", true) }
-    verifyErr(ParseErr#) |,| { Duration.fromIso("P3S") }
-    verifyErr(ParseErr#) |,| { Duration.fromIso("PT3S5") }
-    verifyErr(ParseErr#) |,| { Duration.fromIso("P5.0M") }
-    verifyErr(ParseErr#) |,| { Duration.fromIso("P2Y") }
+    verifyErr(ParseErr#) { Duration.fromIso("3") }
+    verifyErr(ParseErr#) { Duration.fromIso("3S", true) }
+    verifyErr(ParseErr#) { Duration.fromIso("P3S") }
+    verifyErr(ParseErr#) { Duration.fromIso("PT3S5") }
+    verifyErr(ParseErr#) { Duration.fromIso("P5.0M") }
+    verifyErr(ParseErr#) { Duration.fromIso("P2Y") }
   }
 
   Void verifyIso(Duration d, Str s)

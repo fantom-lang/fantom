@@ -19,7 +19,7 @@ class UpdateHeader
         errorCount++
         return
       }
-      2.times |,| { lines.removeAt(0) }
+      2.times { lines.removeAt(0) }
     }
     // strip existing header
     else
@@ -33,7 +33,7 @@ class UpdateHeader
         errorCount++
         return
       }
-      4.times |,| { lines.removeAt(0) }
+      4.times { lines.removeAt(0) }
     }
 
     // find existing author/creation
@@ -54,7 +54,7 @@ class UpdateHeader
     }
     author := lines[authorIndex]
     creation := lines[creationIndex]
-    3.times |,| { lines.removeAt(authorIndex-1) }
+    3.times { lines.removeAt(authorIndex-1) }
 
     // parse out author, history
     author = author[author.index("@author") + 7..-1].trim

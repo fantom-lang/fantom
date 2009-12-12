@@ -28,7 +28,7 @@ is used to return a result and exit out of the closure (Fantom doesn't
 support any other way to jump out of a closure other than 'return' or
 'throw').  Let's look a simple example:
 
-  f := |,| { echo("hi there") }
+  f := |->| { echo("hi there") }
   f()
   f()
 
@@ -37,7 +37,7 @@ If we run the code above "hi there" is printed twice.  We are assigning
 the closure to the variable 'f'.  The closure itself is an expression
 which creates an instance of [Func]`sys::Func` - just like '8' is
 an expression which creates an [Int]`sys::Int`.  The signature of the
-function is '|,|' which means that the function takes no arguments
+function is '|->|' which means that the function takes no arguments
 and returns 'Void'.  Once the closure is assigned to 'f', we can
 [call]`Functions#calling` 'f' like any other function.
 

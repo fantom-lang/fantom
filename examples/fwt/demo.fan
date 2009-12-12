@@ -63,7 +63,7 @@ class FwtDemo
         MenuItem { text = "Next";    image = nextIcon;    onAction.add {browser.forward} },
         MenuItem { text = "Refresh"; image = refreshIcon; onAction.add {browser.refresh} },
         MenuItem { text = "Stop";    image = stopIcon;    onAction.add {browser.stop} },
-        MenuItem { text = "Exit"; onAction.add |,| { Sys.exit } },
+        MenuItem { text = "Exit"; onAction.add |->| { Sys.exit } },
       },
 
       Menu
@@ -160,7 +160,7 @@ class FwtDemo
   Widget makeWebBrowser()
   {
     url := Text { text=homeUri }
-    url.onAction.add |,| { browser.load(url.text.toUri) }
+    url.onAction.add |->| { browser.load(url.text.toUri) }
 
     return EdgePane
     {
@@ -309,7 +309,7 @@ class FwtDemo
     insetsText := Text { text = b.insets.toStr }
     bgText     := Text { text = "" }
 
-    update := |,|
+    update := |->|
     {
       b.border = Border(borderText.text)
       b.insets = Insets(insetsText.text)
@@ -449,7 +449,7 @@ class FwtDemo
     resizable := Button { it.mode = ButtonMode.check; text = "resizable" }
     showTrim := Button { it.mode = ButtonMode.check; text = "showTrim"; selected = true }
 
-    open := |,|
+    open := |->|
     {
       close := Button { text="Close Me" }
       w := Window(mode.window)
@@ -505,7 +505,7 @@ class FwtDemo
         center = area
         right = InsetPane
         {
-          Button { text="=>"; onAction.add |,| { deserializeTo(area.text, test) } },
+          Button { text="=>"; onAction.add |->| { deserializeTo(area.text, test) } },
         }
       },
       test,

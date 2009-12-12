@@ -37,7 +37,7 @@ const class WispService : Service
 
   override Void onStart()
   {
-    Actor(listenerPool, |,| { listen }).send(null)
+    Actor(listenerPool, |->| { listen }).send(null)
     root.onStart
   }
 

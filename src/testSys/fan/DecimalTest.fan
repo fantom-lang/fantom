@@ -195,8 +195,8 @@ class DecimalTest : Test
     verifyEq(Decimal.fromStr("0.8"), 0.8d)
     verifyEq(Decimal.fromStr("99.00"), 99.00d)
     verifyEq(Decimal.fromStr("bad", false),  null)
-    verifyErr(ParseErr#) |,| { Decimal.fromStr("x.x") }
-    verifyErr(ParseErr#) |,| { Decimal.fromStr("%\$##", true) }
+    verifyErr(ParseErr#) { Decimal.fromStr("x.x") }
+    verifyErr(ParseErr#) { Decimal.fromStr("%\$##", true) }
   }
 
 //////////////////////////////////////////////////////////////////////////

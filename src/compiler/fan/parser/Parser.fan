@@ -2225,7 +2225,7 @@ public class Parser : CompilerSupport
 
   **
   ** Method type signature:
-  **   <funcType>       :=  "|" ("," | <funcTypeSig>) "|"
+  **   <funcType>       :=  "|" ("->" | <funcTypeSig>) "|"
   **   <funcTypeSig>    :=  <formals> ["->" <type>]
   **   <formals>        :=  [<formal> ("," <formal>)*]
   **   <formal>         :=  <formFull> | <formalInferred> | <formalTypeOnly>
@@ -2242,13 +2242,15 @@ public class Parser : CompilerSupport
     // opening pipe
     consume(Token.pipe)
 
-    // |,| is the empty method type
-    if (curt === Token.comma)
-    {
-      consume
-      consume(Token.pipe)
-      return FuncType(params, names, ret)
-    }
+// |,| is the empty method type
+// TODO
+if (curt === Token.comma)
+{
+  errReport(CompilerErr("use |->| instead of |,|", cur, null, LogLevel.warn))
+  consume
+  consume(Token.pipe)
+  return FuncType(params, names, ret)
+}
 
     // params, must be one if no ->
     inferred := false
@@ -2271,7 +2273,8 @@ public class Parser : CompilerSupport
     if (curt === Token.arrow)
     {
       consume
-      ret = ctype
+      if (curt !== Token.pipe || cur.whitespace)
+        ret = ctype
     }
 
     // closing pipe

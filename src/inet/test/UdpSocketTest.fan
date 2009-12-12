@@ -66,7 +66,7 @@ class UdpSocketTest : Test
 
     // duplicate port
     x := UdpSocket.make
-    verifyErr(IOErr#) |,| { x.bind(null, s.localPort) }
+    verifyErr(IOErr#) { x.bind(null, s.localPort) }
 
     // cleanup
     s.close
@@ -83,7 +83,7 @@ class UdpSocketTest : Test
   {
     // launch server
     s := UdpSocket.make.bind(null, null)
-    sactor := Actor(ActorPool()) |,| { runServer(s) }
+    sactor := Actor(ActorPool()) |->| { runServer(s) }
     sfuture := sactor.send(null)
     Actor.sleep(50ms)
 
@@ -96,8 +96,8 @@ class UdpSocketTest : Test
     verifyEq(c.remotePort, s.localPort)
 
     // verify addr/port must be null
-    verifyErr(ArgErr#) |,| { c.send(UdpPacket(IpAddress.local, null, Buf.make)) }
-    verifyErr(ArgErr#) |,| { c.send(UdpPacket(null, s.localPort, Buf.make)) }
+    verifyErr(ArgErr#) { c.send(UdpPacket(IpAddress.local, null, Buf.make)) }
+    verifyErr(ArgErr#) { c.send(UdpPacket(null, s.localPort, Buf.make)) }
 
     // send "alpha"
     buf := Buf.make
@@ -112,7 +112,7 @@ class UdpSocketTest : Test
     // send "lo" with pos=3
     buf.clear.print("hello")
     buf.flip
-    3.times |,| { buf.read }
+    3.times { buf.read }
     verifyEq(buf.pos, 3)
     c.send(UdpPacket(null, null, buf))
 
@@ -127,8 +127,8 @@ class UdpSocketTest : Test
     verifyEq(c.remotePort, null)
 
     // verify addr/port cannot be null
-    verifyErr(ArgErr#) |,| { c.send(UdpPacket(IpAddress.local, null, Buf.make)) }
-    verifyErr(ArgErr#) |,| { c.send(UdpPacket(null, s.localPort, Buf.make)) }
+    verifyErr(ArgErr#) { c.send(UdpPacket(IpAddress.local, null, Buf.make)) }
+    verifyErr(ArgErr#) { c.send(UdpPacket(null, s.localPort, Buf.make)) }
 
     // send "abc"
     c.send(UdpPacket(IpAddress.local, s.localPort, (Buf)buf.clear.print("abc")->flip))
@@ -232,20 +232,20 @@ class UdpSocketTest : Test
     so.trafficClass = 0x6
     verifyEq(so.trafficClass, 0x6)
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.inBufferSize) }
-    verifyErr(UnsupportedErr#) |,| { so.inBufferSize = 88 }
+    verifyErr(UnsupportedErr#) { echo(so.inBufferSize) }
+    verifyErr(UnsupportedErr#) { so.inBufferSize = 88 }
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.outBufferSize) }
-    verifyErr(UnsupportedErr#) |,| { so.outBufferSize = 99 }
+    verifyErr(UnsupportedErr#) { echo(so.outBufferSize) }
+    verifyErr(UnsupportedErr#) { so.outBufferSize = 99 }
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.keepAlive) }
-    verifyErr(UnsupportedErr#) |,| { so.keepAlive = false }
+    verifyErr(UnsupportedErr#) { echo(so.keepAlive) }
+    verifyErr(UnsupportedErr#) { so.keepAlive = false }
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.linger) }
-    verifyErr(UnsupportedErr#) |,| { so.linger = null }
+    verifyErr(UnsupportedErr#) { echo(so.linger) }
+    verifyErr(UnsupportedErr#) { so.linger = null }
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.noDelay) }
-    verifyErr(UnsupportedErr#) |,| { so.noDelay = true }
+    verifyErr(UnsupportedErr#) { echo(so.noDelay) }
+    verifyErr(UnsupportedErr#) { so.noDelay = true }
 
     xo := TcpSocket().options
     xo.copyFrom(so)

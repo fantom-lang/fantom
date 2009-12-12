@@ -33,9 +33,9 @@ internal class FindInFilesTest : Test
     results = FindInFiles.find("", tempDir)
     verifyEq(results.size, 0)
 
-    //verifyErr(ArgErr#) |,| { FindInFiles(null, "foo").find }
-    //verifyErr(ArgErr#) |,| { FindInFiles(tempDir, null).find }
-    verifyErr(ArgErr#) |,| { FindInFiles.find("foo", tempDir+`dne/`) }
+    //verifyErr(ArgErr#) { FindInFiles(null, "foo").find }
+    //verifyErr(ArgErr#) { FindInFiles(tempDir, null).find }
+    verifyErr(ArgErr#) { FindInFiles.find("foo", this.tempDir+`dne/`) }
   }
 
   Void verifyMark(Str result, Str name, Int line, Int col)

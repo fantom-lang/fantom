@@ -188,12 +188,12 @@ class ServiceTest : Test
     if (s == null)
     {
       verifyEq(Service.find(t, false), null)
-      verifyErr(UnknownServiceErr#) |,| { Service.find(t) }
-      verifyErr(UnknownServiceErr#) |,| { Service.find(t, true) }
+      verifyErr(UnknownServiceErr#) { Service.find(t) }
+      verifyErr(UnknownServiceErr#) { Service.find(t, true) }
 
       verifyEq(UriSpace.root.get(uri, false), null)
-      verifyErr(UnresolvedErr#) |,| { UriSpace.root.get(uri) }
-      verifyErr(UnresolvedErr#) |,| { UriSpace.root.get(uri, true) }
+      verifyErr(UnresolvedErr#) { UriSpace.root.get(uri) }
+      verifyErr(UnresolvedErr#) { UriSpace.root.get(uri, true) }
     }
     else
     {

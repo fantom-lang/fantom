@@ -451,8 +451,8 @@ class FloatTest : Test
     verifyEq(Float.fromStr("-INF"), Float.negInf)
     verifyEq(Float.fromStr("NaN"),  Float.nan)
     verifyEq(Float.fromStr("foo", false),  null)
-    verifyErr(ParseErr#) |,| { Float.fromStr("no way!") }
-    verifyErr(ParseErr#) |,| { Float.fromStr("%\$##", true) }
+    verifyErr(ParseErr#) { Float.fromStr("no way!") }
+    verifyErr(ParseErr#) { Float.fromStr("%\$##", true) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -461,7 +461,7 @@ class FloatTest : Test
 
   Void testRandom()
   {
-    100.times |,|
+    100.times |->|
     {
       f := Float.random
       verify(0f <= f && f < 1.0f)

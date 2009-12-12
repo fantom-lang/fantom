@@ -23,8 +23,8 @@ class TcpSocketTest : Test
     verifyEq(s.localPort, null)
     verifyEq(s.remoteAddress, null)
     verifyEq(s.remotePort, null)
-    verifyErr(IOErr#) |,| { s.in }
-    verifyErr(IOErr#) |,| { s.out }
+    verifyErr(IOErr#) { s.in }
+    verifyErr(IOErr#) { s.out }
     s.close
   }
 
@@ -49,8 +49,8 @@ class TcpSocketTest : Test
     verifyEq(s.isBound, true)
     verifyEq(s.isConnected, false)
     verifyEq(s.isClosed, false)
-    verifyErr(IOErr#) |,| { s.in }
-    verifyErr(IOErr#) |,| { s.out }
+    verifyErr(IOErr#) { s.in }
+    verifyErr(IOErr#) { s.out }
 
     // local address
     if (addr == null)
@@ -70,15 +70,15 @@ class TcpSocketTest : Test
 
     // duplicate port
     x := TcpSocket.make
-    verifyErr(IOErr#) |,| { x.bind(null, s.localPort) }
+    verifyErr(IOErr#) { x.bind(null, s.localPort) }
 
     // cleanup
     s.close
     x.close
 
     verifyEq(s.isClosed, true)
-    verifyErr(IOErr#) |,| { s.in }
-    verifyErr(IOErr#) |,| { s.out }
+    verifyErr(IOErr#) { s.in }
+    verifyErr(IOErr#) { s.out }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -89,24 +89,24 @@ class TcpSocketTest : Test
   {
     // local, invalid port
     s := TcpSocket.make
-    verifyErr(IOErr#) |,| { s.connect(IpAddress.local, 1969) }
+    verifyErr(IOErr#) { s.connect(IpAddress.local, 1969) }
     verifyEq(s.isConnected, false)
-    verifyErr(IOErr#) |,| { s.in }
-    verifyErr(IOErr#) |,| { s.out }
+    verifyErr(IOErr#) { s.in }
+    verifyErr(IOErr#) { s.out }
     s.close
 
     // invalid host
     t1 := Duration.now
     s = TcpSocket.make
-    verifyErr(IOErr#) |,| { s.connect(IpAddress("1.1.1.1"), 1969, 100ms) }
+    verifyErr(IOErr#) { s.connect(IpAddress("1.1.1.1"), 1969, 100ms) }
     t2 := Duration.now
     verifyEq(s.isConnected, false)
     verify(80ms < t2-t1 && t2-t1 < 150ms)
     s.close
 
     verifyEq(s.isClosed, true)
-    verifyErr(IOErr#) |,| { s.in }
-    verifyErr(IOErr#) |,| { s.out }
+    verifyErr(IOErr#) { s.in }
+    verifyErr(IOErr#) { s.out }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -130,8 +130,8 @@ class TcpSocketTest : Test
     verifyEq(s.isClosed, false)
     verify((Obj?)s.in != null)
     verify((Obj?)s.out != null)
-    verifyErr(Err#) |,| { s.options.inBufferSize = 16 }
-    verifyErr(Err#) |,| { s.options.outBufferSize = 16 }
+    verifyErr(Err#) { s.options.inBufferSize = 16 }
+    verifyErr(Err#) { s.options.outBufferSize = 16 }
 
     // send very simple request line
     s.out.print("GET / HTTP/1.0\r\n\r\n").flush
@@ -143,8 +143,8 @@ class TcpSocketTest : Test
     // cleanup
     s.close
     verifyEq(s.isClosed, true)
-    verifyErr(IOErr#) |,| { s.in }
-    verifyErr(IOErr#) |,| { s.out }
+    verifyErr(IOErr#) { s.in }
+    verifyErr(IOErr#) { s.out }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -155,14 +155,14 @@ class TcpSocketTest : Test
   Void testFork()
   {
     // verify duplicate name
-    verifyErr(ArgErr#) |,|
+    verifyErr(ArgErr#)
     {
        x := TcpSocket().connect(IpAddress("fantom.org"), 80)
        x.fork(Thread.current.name, &runFork(x.localPort, x.remoteAddress.numeric))
     }
 
     // verify non-const method
-    verifyErr(NotImmutableErr#) |,|
+    verifyErr(NotImmutableErr#)
     {
        x := TcpSocket().connect(IpAddress("fantom.org"), 80)
        x.fork(null) |TcpSocket s| { fail }
@@ -176,40 +176,40 @@ class TcpSocketTest : Test
     t := s.fork(null, &runFork(s.localPort, s.remoteAddress.numeric))
 
     // verify that all methods on s now throw UnsupportedErr
-    verifyErr(UnsupportedErr#) |,| { s.isBound }
-    verifyErr(UnsupportedErr#) |,| { s.isConnected }
-    verifyErr(UnsupportedErr#) |,| { s.isClosed }
-    verifyErr(UnsupportedErr#) |,| { s.localAddress }
-    verifyErr(UnsupportedErr#) |,| { s.localPort }
-    verifyErr(UnsupportedErr#) |,| { s.remoteAddress }
-    verifyErr(UnsupportedErr#) |,| { s.remotePort  }
-    verifyErr(UnsupportedErr#) |,| { s.bind(null, null) }
-    verifyErr(UnsupportedErr#) |,| { s.connect(null, null) }
-    verifyErr(UnsupportedErr#) |,| { s.in }
-    verifyErr(UnsupportedErr#) |,| { s.out }
-    verifyErr(UnsupportedErr#) |,| { s.close }
-    verifyErr(UnsupportedErr#) |,| { s.fork(null, null) }
-    verifyErr(UnsupportedErr#) |,| { s.options }
+    verifyErr(UnsupportedErr#) { s.isBound }
+    verifyErr(UnsupportedErr#) { s.isConnected }
+    verifyErr(UnsupportedErr#) { s.isClosed }
+    verifyErr(UnsupportedErr#) { s.localAddress }
+    verifyErr(UnsupportedErr#) { s.localPort }
+    verifyErr(UnsupportedErr#) { s.remoteAddress }
+    verifyErr(UnsupportedErr#) { s.remotePort  }
+    verifyErr(UnsupportedErr#) { s.bind(null, null) }
+    verifyErr(UnsupportedErr#) { s.connect(null, null) }
+    verifyErr(UnsupportedErr#) { s.in }
+    verifyErr(UnsupportedErr#) { s.out }
+    verifyErr(UnsupportedErr#) { s.close }
+    verifyErr(UnsupportedErr#) { s.fork(null, null) }
+    verifyErr(UnsupportedErr#) { s.options }
 
     // verify that all socket options now throw UnsupportedErr
-    verifyErr(UnsupportedErr#) |,| { echo(so.inBufferSize) }
-    verifyErr(UnsupportedErr#) |,| { so.inBufferSize = 100}
-    verifyErr(UnsupportedErr#) |,| { echo(so.outBufferSize) }
-    verifyErr(UnsupportedErr#) |,| { so.outBufferSize = 100}
-    verifyErr(UnsupportedErr#) |,| { echo(so.keepAlive) }
-    verifyErr(UnsupportedErr#) |,| { so.keepAlive = false }
-    verifyErr(UnsupportedErr#) |,| { echo(so.receiveBufferSize) }
-    verifyErr(UnsupportedErr#) |,| { so.receiveBufferSize = 10}
-    verifyErr(UnsupportedErr#) |,| { echo(so.sendBufferSize) }
-    verifyErr(UnsupportedErr#) |,| { so.sendBufferSize = 10}
-    verifyErr(UnsupportedErr#) |,| { echo(so.linger) }
-    verifyErr(UnsupportedErr#) |,| { so.linger = null }
-    verifyErr(UnsupportedErr#) |,| { echo(so.receiveTimeout) }
-    verifyErr(UnsupportedErr#) |,| { so.receiveTimeout = null }
-    verifyErr(UnsupportedErr#) |,| { echo(so.noDelay) }
-    verifyErr(UnsupportedErr#) |,| { so.noDelay = false }
-    verifyErr(UnsupportedErr#) |,| { echo(so.trafficClass) }
-    verifyErr(UnsupportedErr#) |,| { so.trafficClass = 0 }
+    verifyErr(UnsupportedErr#) { echo(so.inBufferSize) }
+    verifyErr(UnsupportedErr#) { so.inBufferSize = 100}
+    verifyErr(UnsupportedErr#) { echo(so.outBufferSize) }
+    verifyErr(UnsupportedErr#) { so.outBufferSize = 100}
+    verifyErr(UnsupportedErr#) { echo(so.keepAlive) }
+    verifyErr(UnsupportedErr#) { so.keepAlive = false }
+    verifyErr(UnsupportedErr#) { echo(so.receiveBufferSize) }
+    verifyErr(UnsupportedErr#) { so.receiveBufferSize = 10}
+    verifyErr(UnsupportedErr#) { echo(so.sendBufferSize) }
+    verifyErr(UnsupportedErr#) { so.sendBufferSize = 10}
+    verifyErr(UnsupportedErr#) { echo(so.linger) }
+    verifyErr(UnsupportedErr#) { so.linger = null }
+    verifyErr(UnsupportedErr#) { echo(so.receiveTimeout) }
+    verifyErr(UnsupportedErr#) { so.receiveTimeout = null }
+    verifyErr(UnsupportedErr#) { echo(so.noDelay) }
+    verifyErr(UnsupportedErr#) { so.noDelay = false }
+    verifyErr(UnsupportedErr#) { echo(so.trafficClass) }
+    verifyErr(UnsupportedErr#) { so.trafficClass = 0 }
 
     // join and verify response
     verifyEq(t.join, "HTTP/1.1 200 OK")
@@ -285,8 +285,8 @@ class TcpSocketTest : Test
     so.trafficClass = 0x6
     verifyEq(so.trafficClass, 0x6)
 
-    verifyErr(UnsupportedErr#) |,| { echo(so.broadcast) }
-    verifyErr(UnsupportedErr#) |,| { so.broadcast = false }
+    verifyErr(UnsupportedErr#) { echo(so.broadcast) }
+    verifyErr(UnsupportedErr#) { so.broadcast = false }
 
     xo := TcpSocket().options
     xo.copyFrom(so)

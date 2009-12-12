@@ -244,7 +244,7 @@ class JavaType : CType
     if (isArray)
     {
       rank := arrayRank
-      rank.times |,| { s.addChar('[') }
+      rank.times { s.addChar('[') }
       s.addChar('L')
       s.add(pod.packageName).addChar('.')
       s.add(name[rank .. -rank])

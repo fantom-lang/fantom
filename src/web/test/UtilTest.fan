@@ -28,14 +28,14 @@ class UtilTest : Test
     verifyQuotedStr("foo bar", "\"foo bar\"")
     verifyQuotedStr("foo\"bar\"baz", "\"foo\\\"bar\\\"baz\"")
 
-    verifyErr(ArgErr#) |,| { WebUtil.toQuotedStr("foo\nbar") }
-    verifyErr(ArgErr#) |,| { WebUtil.toQuotedStr("\u007f") }
-    verifyErr(ArgErr#) |,| { WebUtil.toQuotedStr("\u024a") }
+    verifyErr(ArgErr#) { WebUtil.toQuotedStr("foo\nbar") }
+    verifyErr(ArgErr#) { WebUtil.toQuotedStr("\u007f") }
+    verifyErr(ArgErr#) { WebUtil.toQuotedStr("\u024a") }
 
-    verifyErr(ArgErr#) |,| { WebUtil.fromQuotedStr("") }
-    verifyErr(ArgErr#) |,| { WebUtil.fromQuotedStr("\"") }
-    verifyErr(ArgErr#) |,| { WebUtil.fromQuotedStr("\"x") }
-    verifyErr(ArgErr#) |,| { WebUtil.fromQuotedStr("x\"") }
+    verifyErr(ArgErr#) { WebUtil.fromQuotedStr("") }
+    verifyErr(ArgErr#) { WebUtil.fromQuotedStr("\"") }
+    verifyErr(ArgErr#) { WebUtil.fromQuotedStr("\"x") }
+    verifyErr(ArgErr#) { WebUtil.fromQuotedStr("x\"") }
   }
 
   Void verifyQuotedStr(Str s, Str expected)
@@ -120,14 +120,14 @@ class UtilTest : Test
     buf := Buf()
     out := WebUtil.makeFixedOutStream(buf.out, 4)
     out.print("abcd")
-    verifyErr(IOErr#) |,| { out.write('x') }
+    verifyErr(IOErr#) { out.write('x') }
     verifyEq(buf.flip.readAllStr, "abcd")
 
     buf2 := Buf()
     buf.seek(0)
     out = WebUtil.makeFixedOutStream(buf2.out, 2)
     out.writeBuf(buf, 2)
-    verifyErr(IOErr#) |,| { out.writeBuf(buf, 1) }
+    verifyErr(IOErr#) { out.writeBuf(buf, 1) }
     verifyEq(buf2.flip.readAllStr, "ab")
   }
 

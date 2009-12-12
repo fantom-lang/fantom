@@ -79,7 +79,7 @@ class FMethod : FSlot, CMethod
     paramCount = in.readU1
     localCount = in.readU1
     vars = FMethodVar[,];
-    (paramCount+localCount).times |,| { vars.add(FMethodVar(this).read(in)) }
+    (paramCount+localCount).times { vars.add(FMethodVar(this).read(in)) }
     code = FUtil.readBuf(in)
     fattrs = FUtil.readAttrs(in)
     return this
@@ -147,7 +147,7 @@ class FMethodVar : FConst, CParam
     flags     = in.readU1
 
     // we currently only support the DefaultParam attr
-    in.readU2.times |,|
+    in.readU2.times
     {
       attrNameIndex := in.readU2
       attrBuf  := FUtil.readBuf(in)

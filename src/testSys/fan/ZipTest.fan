@@ -41,17 +41,17 @@ class ZipTest : Test
     in.close
 
     // verify errors
-    verifyErr(IOErr#) |,| { Zip.open(sys) }
-    verifyErr(IOErr#) |,| { Zip.open(Repo.boot.home) }
-    verifyErr(IOErr#) |,| { Zip.open(Repo.boot.home + `notfound.txt`) }
-    verifyErr(IOErr#) |,| { sys.out }
-    verifyErr(IOErr#) |,| { sys.create }
-    verifyErr(IOErr#) |,| { sys.delete }
-    verifyErr(IOErr#) |,| { sys.deleteOnExit }
-    verifyErr(IOErr#) |,| { sys.moveTo(tempDir) }
-    verifyErr(UnsupportedErr#) |,| { z.readNext() }
-    verifyErr(UnsupportedErr#) |,| { z.writeNext(`/foo.txt`) }
-    verifyErr(UnsupportedErr#) |,| { z.finish }
+    verifyErr(IOErr#) { Zip.open(sys) }
+    verifyErr(IOErr#) { Zip.open(Repo.boot.home) }
+    verifyErr(IOErr#) { Zip.open(Repo.boot.home + `notfound.txt`) }
+    verifyErr(IOErr#) { sys.out }
+    verifyErr(IOErr#) { sys.create }
+    verifyErr(IOErr#) { sys.delete }
+    verifyErr(IOErr#) { sys.deleteOnExit }
+    verifyErr(IOErr#) { sys.moveTo(this.tempDir) }
+    verifyErr(UnsupportedErr#) { z.readNext() }
+    verifyErr(UnsupportedErr#) { z.writeNext(`/foo.txt`) }
+    verifyErr(UnsupportedErr#) { z.finish }
 
     // cleanup
     z.close
@@ -131,9 +131,9 @@ class ZipTest : Test
     out.close
 
     // errors
-    verifyErr(UnsupportedErr#) |,| { z.readNext() }
-    verifyErr(ArgErr#) |,| { z.writeNext(`/file.txt#frag`) }
-    verifyErr(ArgErr#) |,| { z.writeNext(`/file.txt?query`) }
+    verifyErr(UnsupportedErr#) { z.readNext() }
+    verifyErr(ArgErr#) { z.writeNext(`/file.txt#frag`) }
+    verifyErr(ArgErr#) { z.writeNext(`/file.txt?query`) }
   }
 
   Void read(Zip z)
@@ -161,8 +161,8 @@ class ZipTest : Test
     verifyEq(f.in.readS8, 0xabcd_0123_0000_ffff)
 
     // errors
-    verifyErr(UnsupportedErr#) |,| { z.writeNext(`/relative.txt`) }
-    verifyErr(UnsupportedErr#) |,| { z.finish }
+    verifyErr(UnsupportedErr#) { z.writeNext(`/relative.txt`) }
+    verifyErr(UnsupportedErr#) { z.finish }
   }
 
   DateTime start := DateTime.now

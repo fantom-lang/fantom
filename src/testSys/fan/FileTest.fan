@@ -78,8 +78,8 @@ class FileTest : Test
     slash := dir.uri
     noSlash := slash.toStr[0..-2].toUri
 
-    verifyErr(IOErr#) |,| { File.make(noSlash) }
-    verifyErr(IOErr#) |,| { x := tempDir + `dir`; echo("$x $x.exists") }
+    verifyErr(IOErr#) { File.make(noSlash) }
+    verifyErr(IOErr#) { x := this.tempDir + `dir`; echo("$x $x.exists") }
 
     x := File.make(noSlash, false)
     verifyEq(x.uri, slash)
@@ -117,8 +117,8 @@ class FileTest : Test
     verify(file.name.endsWith(".fantest"))
     verify(file.toStr.startsWith(Repo.working.home.uri.relToAuth.toStr))
 
-    verifyErr(IOErr#) |,| { File.createTemp("xyz", ".tmp", file) }
-    verifyErr(IOErr#) |,| { File.createTemp("xyz", ".tmp", FileTest#.pod.files[`/res/test.txt`]) }
+    verifyErr(IOErr#) { File.createTemp("xyz", ".tmp", file) }
+    verifyErr(IOErr#) { File.createTemp("xyz", ".tmp", FileTest#.pod.files[`/res/test.txt`]) }
   }
 
   Void testCreateAndDelete()
@@ -185,8 +185,8 @@ class FileTest : Test
     verify(f.exists); f.create
 
     // check errors
-    verifyErr(IOErr#) |,| { File.make((f.pathStr+"/").toUri) }
-    verifyErr(IOErr#) |,| { File.make(d.toStr[0..-2].toUri) }
+    verifyErr(IOErr#) { File.make((f.pathStr+"/").toUri) }
+    verifyErr(IOErr#) { File.make(d.toStr[0..-2].toUri) }
 
     // delete
     d.delete; verifyFalse(d.exists)
@@ -213,9 +213,9 @@ class FileTest : Test
     a1.out.print("hello world!").close
 
     // errors
-    verifyErr(ArgErr#) |,| { dirA.copyTo(tempDir + `bad`) }
-    verifyErr(ArgErr#) |,| { a1.copyTo(tempDir + `bad/`) }
-    verifyErr(ArgErr#) |,| { dirA.copyInto(tempDir + `bad`) }
+    verifyErr(ArgErr#) { dirA.copyTo(this.tempDir + `bad`) }
+    verifyErr(ArgErr#) { a1.copyTo(this.tempDir + `bad/`) }
+    verifyErr(ArgErr#) { dirA.copyInto(this.tempDir + `bad`) }
 
     // copyTo file
     a2 := dirA + `a2`
@@ -259,7 +259,7 @@ class FileTest : Test
     (dirX + `dirA/a1`).create.out.print("roo").close;
 
     // copy overwrite=true
-    verifyErr(IOErr#) |,| { dirB.copyTo(dirX) }
+    verifyErr(IOErr#) { dirB.copyTo(dirX) }
     dirB.copyTo(dirX, ["overwrite":false])
     verifyEq((dirX + `a1`).readAllStr, "foo")
     verifyEq((dirX + `a2`).readAllStr, "bar")
@@ -289,9 +289,9 @@ class FileTest : Test
     a1.out.print("hi").close
 
     // errors
-    verifyErr(ArgErr#) |,| { dirA.moveTo(tempDir + `bad`) }
-    verifyErr(ArgErr#) |,| { a1.moveTo(tempDir + `bad/`) }
-    verifyErr(ArgErr#) |,| { dirA.moveInto(tempDir + `bad`) }
+    verifyErr(ArgErr#) { dirA.moveTo(this.tempDir + `bad`) }
+    verifyErr(ArgErr#) { a1.moveTo(this.tempDir + `bad/`) }
+    verifyErr(ArgErr#) { dirA.moveInto(this.tempDir + `bad`) }
 
     // moveTo file
     a1 = a1.moveTo(dirA+`a1`)
@@ -309,8 +309,8 @@ class FileTest : Test
     verifyEq(dirB.list[0].name, "foo")
 
     // move to existing
-    verifyErr(IOErr#) |,| { dirA.moveTo(tempDir) }
-    verifyErr(IOErr#) |,| { dirA.rename("foo") }
+    verifyErr(IOErr#) { dirA.moveTo(this.tempDir) }
+    verifyErr(IOErr#) { dirA.rename("foo") }
   }
 
   Void testStreamConvenience()
@@ -446,7 +446,7 @@ class FileTest : Test
     verifyEq(f.readAllStr, "hello world")
 
     b = f.open("r")
-    verifyErr(IOErr#) |,| { b.write('x') }
+    verifyErr(IOErr#) { b.write('x') }
     verifyEq(b.read, 'h')
     verifyEq(b.read, 'e')
     b.seek(6)

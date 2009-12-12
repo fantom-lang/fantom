@@ -155,7 +155,7 @@ class FType : CType
     self    = in.readU2
     fbase   = in.readU2
     fmixins = Int[,]
-    in.readU2.times |,| { fmixins.add(in.readU2) }
+    in.readU2.times { fmixins.add(in.readU2) }
     flags   = in.readU4
     return this
   }
@@ -190,13 +190,13 @@ class FType : CType
     in := fpod.in(uri)
 
     ffields = FField[,]
-    in.readU2.times |,| { ffields.add(FField(this).read(in)) }
+    in.readU2.times { ffields.add(FField(this).read(in)) }
 
     fmethods = FMethod[,]
-    in.readU2.times |,| { fmethods.add(FMethod(this).read(in)) }
+    in.readU2.times { fmethods.add(FMethod(this).read(in)) }
 
     fattrs = FAttr[,]
-    in.readU2.times |,| { fattrs.add(FAttr.make.read(in)) }
+    in.readU2.times { fattrs.add(FAttr.make.read(in)) }
 
     in.close
   }

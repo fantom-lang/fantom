@@ -377,7 +377,7 @@ class ItBlockTest : CompilerTest
           catch (Err e)
           {
             list := Obj[,] { add(e.type.name) }
-            f := |,| { e = CastErr() }
+            f := |->| { e = CastErr() }
             f()
             list.add(e.type.name)
             return list
@@ -480,10 +480,10 @@ class ItBlockTest : CompilerTest
     verifyEq(obj->test10, 30)
     verifyEq(obj->test11, 21)
     verifyEq(obj->test12, 32)
-    verifyErr(ConstErr#) |,| { obj->bad1 }
-    verifyErr(ConstErr#) |,| { obj->bad2 }
-    verifyErr(ConstErr#) |,| { obj->bad3 }
-    verifyErr(ConstErr#) |,| { obj->bad4 }
+    verifyErr(ConstErr#) { obj->bad1 }
+    verifyErr(ConstErr#) { obj->bad2 }
+    verifyErr(ConstErr#) { obj->bad3 }
+    verifyErr(ConstErr#) { obj->bad4 }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -556,7 +556,7 @@ class ItBlockTest : CompilerTest
         static Obj i() { return B { 6, } }
 
         static Void v() {}
-        static Void f0(|,| f) {}
+        static Void f0(|->| f) {}
         static Void f1(|Obj?| f) {}
         static Void f2(|Obj?,Obj?| f) {}
       }
@@ -588,7 +588,7 @@ class ItBlockTest : CompilerTest
         static Obj i(Foo f) { f { it = f } }       // not assignable
         static Obj j() { return A { return } }     // return not allowed
         static Obj k() { return |C c| { c.x = 3 } }          // const outside it-block
-        static Obj l() { c := C(); return |,| { c.x = 3 } }  // const outside it-block
+        static Obj l() { c := C(); return |->| { c.x = 3 } }  // const outside it-block
       }
 
       class A { Int x; Int y}
@@ -604,7 +604,7 @@ class ItBlockTest : CompilerTest
        11, 29, "Left hand side is not assignable",
        12, 31, "Cannot use return inside it-block",
        13, 37, "Cannot set const field '$podName::C.x'",
-       14, 45, "Cannot set const field '$podName::C.x'",
+       14, 46, "Cannot set const field '$podName::C.x'",
       ])
   }
 

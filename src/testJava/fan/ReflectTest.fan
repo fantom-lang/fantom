@@ -113,8 +113,8 @@ class ReflectTest : JavaTest
     verifySame(t.toNullable, t.toNullable)
     verifySame(t.toNullable.toNonNullable, t)
 
-    verifyErr(ArgErr#) |,| { Type.find("[Java]java.util::Date") }
-    verifyErr(ArgErr#) |,| { Type.find("[java] java.util::Date") }
+    verifyErr(ArgErr#) { Type.find("[Java]java.util::Date") }
+    verifyErr(ArgErr#) { Type.find("[java] java.util::Date") }
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -55,10 +55,10 @@ class StrBufTest : Test
     s[-3] = 'B'; verifyEq(s.toStr, "ABcD")
     s[2]  = 'C'; verifyEq(s.toStr, "ABCD")
 
-    verifyErr(IndexErr#) |,| { x := s[4] }
-    verifyErr(IndexErr#) |,| { x := s[-5] }
-    verifyErr(IndexErr#) |,| { s[4] = 'x' }
-    verifyErr(IndexErr#) |,| { s[-5] = 'x' }
+    verifyErr(IndexErr#) { x := s[4] }
+    verifyErr(IndexErr#) { x := s[-5] }
+    verifyErr(IndexErr#) { s[4] = 'x' }
+    verifyErr(IndexErr#) { s[-5] = 'x' }
     verifyEq(s.toStr, "ABCD")
   }
 
@@ -110,8 +110,8 @@ class StrBufTest : Test
     verifyEq(s.toStr, "4nullxytrueAz")
 
     s.clear.add("abc")
-    verifyErr(IndexErr#) |,| { s.insert(4, "x") }
-    verifyErr(IndexErr#) |,| { s.insert(-4, "x") }
+    verifyErr(IndexErr#) { s.insert(4, "x") }
+    verifyErr(IndexErr#) { s.insert(-4, "x") }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -135,8 +135,8 @@ class StrBufTest : Test
     verifyEq(s.toStr, "")
 
     s.add("abcdef")
-    verifyErr(IndexErr#) |,| { s.remove(-7) }
-    verifyErr(IndexErr#) |,| { s.remove(6) }
+    verifyErr(IndexErr#) { s.remove(-7) }
+    verifyErr(IndexErr#) { s.remove(6) }
   }
 
 //////////////////////////////////////////////////////////////////////////

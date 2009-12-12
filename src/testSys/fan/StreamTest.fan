@@ -288,17 +288,17 @@ class StreamTest : Test
       test.verifyEq(in.peek, null)
       test.verifyEq(in.read, null)
 
-      test.verifyErr(IOErr#) |,| { in.readBufFully(null, 1) }
-      test.verifyErr(IOErr#) |,| { in.readU1 }
-      test.verifyErr(IOErr#) |,| { in.readS1 }
-      test.verifyErr(IOErr#) |,| { in.readU2 }
-      test.verifyErr(IOErr#) |,| { in.readS2 }
-      test.verifyErr(IOErr#) |,| { in.readU4 }
-      test.verifyErr(IOErr#) |,| { in.readS4 }
-      test.verifyErr(IOErr#) |,| { in.readS8 }
-      test.verifyErr(IOErr#) |,| { in.readF4 }
-      test.verifyErr(IOErr#) |,| { in.readF8 }
-      test.verifyErr(IOErr#) |,| { in.readUtf}
+      test.verifyErr(IOErr#) { in.readBufFully(null, 1) }
+      test.verifyErr(IOErr#) { in.readU1 }
+      test.verifyErr(IOErr#) { in.readS1 }
+      test.verifyErr(IOErr#) { in.readU2 }
+      test.verifyErr(IOErr#) { in.readS2 }
+      test.verifyErr(IOErr#) { in.readU4 }
+      test.verifyErr(IOErr#) { in.readS4 }
+      test.verifyErr(IOErr#) { in.readS8 }
+      test.verifyErr(IOErr#) { in.readF4 }
+      test.verifyErr(IOErr#) { in.readF8 }
+      test.verifyErr(IOErr#) { in.readUtf}
     }
   }
 
@@ -828,11 +828,11 @@ class StreamTest : Test
     verifyEq(buf.in.readProps, expected)
     verifySame(buf.charset, Charset.utf16BE)
 
-    verifyErr(ArgErr#) |,| { "dupKey=1\ndupKey=2".in.readProps }
-    verifyErr(IOErr#) |,| { "a=\\u56G0\n".in.readProps }
-    verifyErr(IOErr#) |,| { "a=1\\x".in.readProps }
-    verifyErr(IOErr#) |,| { "novalue".in.readProps }
-    verifyErr(IOErr#) |,| { "novalue\na=b".in.readProps }
+    verifyErr(ArgErr#) { "dupKey=1\ndupKey=2".in.readProps }
+    verifyErr(IOErr#) { "a=\\u56G0\n".in.readProps }
+    verifyErr(IOErr#) { "a=1\\x".in.readProps }
+    verifyErr(IOErr#) { "novalue".in.readProps }
+    verifyErr(IOErr#) { "novalue\na=b".in.readProps }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -871,7 +871,7 @@ class StreamTest : Test
     // verify can't copy more than is available
     in = f1.in
     out = f2.out
-    verifyErr(IOErr#) |,| { n = in.pipe(out, "This is my file!".size+2) }
+    verifyErr(IOErr#) { n = in.pipe(out, "This is my file!".size+2) }
     in.close
     out.close
     verifyEq(f1.size, f2.size)
@@ -930,9 +930,9 @@ class StreamTest : Test
   {
     buf := StrBuf.make
     out := buf.out
-    verifyErr(UnsupportedErr#) |,| { out.write(6) }
-    verifyErr(UnsupportedErr#) |,| { out.writeBuf(Buf.make) }
-    verifyErr(UnsupportedErr#) |,| { out.writeI4(7) }
+    verifyErr(UnsupportedErr#) { out.write(6) }
+    verifyErr(UnsupportedErr#) { out.writeBuf(Buf.make) }
+    verifyErr(UnsupportedErr#) { out.writeI4(7) }
     out.writeChar('a')
     out.flush()
     out.writeChars("bc")

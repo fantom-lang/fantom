@@ -19,7 +19,7 @@ fan.fwt.DesktopPeer.isMac     = function() { return false; }
 // TODO
 //fan.fwt.DesktopPeer.bounds()
 //fan.fwt.DesktopPeer.focus()
-//fan.fwt.DesktopPeer.callAsync(|,| f)
+//fan.fwt.DesktopPeer.callAsync(|->| f)
 
 //////////////////////////////////////////////////////////////////////////
 // Dispose

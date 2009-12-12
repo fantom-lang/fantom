@@ -423,7 +423,7 @@ class ApiToHtmlGenerator : HtmlGenerator
           buf.add(makeTypeLink(p[k], map))
         }
         if (p["R"] != Void#) buf.add(" -> ").add(makeTypeLink(p["R"], map))
-        if (buf.size == 1) buf.add(",") // for |,|
+        if (buf.size == 1) buf.add("->") // for |->|
         buf.addChar('|')
         if (t.isNullable) buf.add("?")
         return buf.toStr

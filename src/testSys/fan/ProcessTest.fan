@@ -27,7 +27,7 @@ class ProcessTest : Test
     proc := makeProc
     proc.run
     verifyEq(proc.join, 7)
-    verifyErr(Err#) |,| { proc.run }
+    verifyErr(Err#) { proc.run }
   }
 
   Void testStdSeparate()
@@ -35,11 +35,11 @@ class ProcessTest : Test
     proc := makeProc { mergeErr=false }
     proc.run
     verifyEq(proc.join, 7)
-    verifyErr(Err#) |,| { proc.dir=null }
-    verifyErr(Err#) |,| { proc.out=null }
-    verifyErr(Err#) |,| { proc.err=null }
-    verifyErr(Err#) |,| { proc.in=null }
-    verifyErr(Err#) |,| { proc.run }
+    verifyErr(Err#) { proc.dir=null }
+    verifyErr(Err#) { proc.out=null }
+    verifyErr(Err#) { proc.err=null }
+    verifyErr(Err#) { proc.in=null }
+    verifyErr(Err#) { proc.run }
   }
 
   Void testStrMerged()

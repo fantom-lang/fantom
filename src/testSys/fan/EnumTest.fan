@@ -116,11 +116,11 @@ class EnumTest : Test
   {
     verifySame(Weekday.fromStr("mon"), Weekday.mon)
     verifySame(Weekday.fromStr("xxx", false), null)
-    verifyErr(ParseErr#) |,| { Weekday.fromStr("xxx") }
+    verifyErr(ParseErr#) { Weekday.fromStr("xxx") }
 
     verifySame(Month.fromStr("apr"), Month.apr)
     verifySame(Month.fromStr("xxx", false), null)
-    verifyErr(ParseErr#) |,| { Month.fromStr("xxx") }
+    verifyErr(ParseErr#) { Month.fromStr("xxx") }
 
     verifySame(EnumAbc.fromStr("A"), EnumAbc.A)
     verifySame(EnumAbc.fromStr("B"), EnumAbc.B)
@@ -132,9 +132,9 @@ class EnumTest : Test
     verifySame(Suits.fromStr("clubs"), Suits.clubs)
     verifySame(Suits.fromStr("colors", false), null)
 
-    verifyErr(ParseErr#) |,| { EnumAbc.fromStr("values") }
-    verifyErr(ParseErr#) |,| { EnumAbc.fromStr("first", true) }
-    verifyErr(ParseErr#) |,| { EnumAbc.fromStr("foo") }
+    verifyErr(ParseErr#) { EnumAbc.fromStr("values") }
+    verifyErr(ParseErr#) { EnumAbc.fromStr("first", true) }
+    verifyErr(ParseErr#) { EnumAbc.fromStr("foo") }
   }
 
 //////////////////////////////////////////////////////////////////////////

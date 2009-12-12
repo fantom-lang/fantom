@@ -20,29 +20,29 @@ class UriSpaceTest : Test
     verifyEq(UriSpace.root.uri, `/`)
 
     verifyEq(UriSpace.find(`/sys`).type.qname, "sys::SysUriSpace")
-    verifyErr(ArgErr#) |,| { UriSpace.mount(`/sys`, TestUriSpace.make) }
+    verifyErr(ArgErr#) { UriSpace.mount(`/sys`, TestUriSpace.make) }
 
-    verifyErr(ArgErr#) |,| { UriSpace.root.get(`fan:/sys/foo`) }
-    verifyErr(ArgErr#) |,| { UriSpace.root.create(`fan:/sys/foo`, "x") }
-    verifyErr(ArgErr#) |,| { UriSpace.root.put(`fan:/sys/foo`, "x") }
-    verifyErr(ArgErr#) |,| { UriSpace.root.delete(`fan:/sys/foo`) }
+    verifyErr(ArgErr#) { UriSpace.root.get(`fan:/sys/foo`) }
+    verifyErr(ArgErr#) { UriSpace.root.create(`fan:/sys/foo`, "x") }
+    verifyErr(ArgErr#) { UriSpace.root.put(`fan:/sys/foo`, "x") }
+    verifyErr(ArgErr#) { UriSpace.root.delete(`fan:/sys/foo`) }
   }
 
   Void testRootCrud()
   {
     // get unresolved
     verifyEq(UriSpace.root.get(`/test/foo`, false), null)
-    verifyErr(UnresolvedErr#) |,| { UriSpace.root.get(`/test/foo`) }
-    verifyErr(UnresolvedErr#) |,| { UriSpace.root.get(`/test/foo`, true) }
+    verifyErr(UnresolvedErr#) { UriSpace.root.get(`/test/foo`) }
+    verifyErr(UnresolvedErr#) { UriSpace.root.get(`/test/foo`, true) }
     verifyEq(`fan:/test/foo`.get(null, false), null)
-    verifyErr(UnresolvedErr#) |,| { `fan:/test/foo`.get }
-    verifyErr(UnresolvedErr#) |,| { `fan:/test/foo`.get(null, true) }
+    verifyErr(UnresolvedErr#) { `fan:/test/foo`.get }
+    verifyErr(UnresolvedErr#) { `fan:/test/foo`.get(null, true) }
 
     // put, delete unresolved
-    verifyErr(UnresolvedErr#) |,| { UriSpace.root.put(`/test/foo`, "bad") }
-    verifyErr(UnresolvedErr#) |,| { UriSpace.root.get(`/test/foo`) }
-    verifyErr(UnresolvedErr#) |,| { UriSpace.root.delete(`/test/foo`) }
-    verifyErr(UnresolvedErr#) |,| { UriSpace.root.get(`/test/foo`) }
+    verifyErr(UnresolvedErr#) { UriSpace.root.put(`/test/foo`, "bad") }
+    verifyErr(UnresolvedErr#) { UriSpace.root.get(`/test/foo`) }
+    verifyErr(UnresolvedErr#) { UriSpace.root.delete(`/test/foo`) }
+    verifyErr(UnresolvedErr#) { UriSpace.root.get(`/test/foo`) }
 
     // create
     verifySame(UriSpace.root.create(`/test/foo`, "star blazers"), `/test/foo`)
@@ -66,7 +66,7 @@ class UriSpaceTest : Test
     // delete
     UriSpace.root.delete(`/test/foo`)
     verifyEq(UriSpace.root.get(`/test/foo`, false), null)
-    verifyErr(UnresolvedErr#) |,| { UriSpace.root.get(`/test/foo`) }
+    verifyErr(UnresolvedErr#) { UriSpace.root.get(`/test/foo`) }
 
     // immutable create
     immutable := ["a", "b", "c"].toImmutable
@@ -114,16 +114,16 @@ class UriSpaceTest : Test
     d := TestUriSpace.make
 
     verifyEq(a.uri, null)
-    verifyErr(ArgErr#) |,| { UriSpace.mount(`http://foo/`, a) }
-    verifyErr(ArgErr#) |,| { UriSpace.mount(`http://foo/x`, a) }
-    verifyErr(ArgErr#) |,| { UriSpace.mount(``, a) }
-    verifyErr(ArgErr#) |,| { UriSpace.mount(`a`, a) }
-    verifyErr(ArgErr#) |,| { UriSpace.mount(`/a?q`, a) }
-    verifyErr(ArgErr#) |,| { UriSpace.mount(`/a#f`, a) }
+    verifyErr(ArgErr#) { UriSpace.mount(`http://foo/`, a) }
+    verifyErr(ArgErr#) { UriSpace.mount(`http://foo/x`, a) }
+    verifyErr(ArgErr#) { UriSpace.mount(``, a) }
+    verifyErr(ArgErr#) { UriSpace.mount(`a`, a) }
+    verifyErr(ArgErr#) { UriSpace.mount(`/a?q`, a) }
+    verifyErr(ArgErr#) { UriSpace.mount(`/a#f`, a) }
     UriSpace.mount(`/testns`, a)
     verifyEq(a.uri, `/testns`)
-    verifyErr(ArgErr#) |,| { UriSpace.mount(`/testns`, a) }
-    verifyErr(ArgErr#) |,| { UriSpace.mount(`/testns`, b) }
+    verifyErr(ArgErr#) { UriSpace.mount(`/testns`, a) }
+    verifyErr(ArgErr#) { UriSpace.mount(`/testns`, b) }
 
     UriSpace.mount(`/testns/foo`, b)
     UriSpace.mount(`/testns/foo/wack`, c)
@@ -154,7 +154,7 @@ class UriSpaceTest : Test
     UriSpace.unmount(c.uri)
     UriSpace.unmount(d.uri)
     verifyEq(a.uri, null)
-    verifyErr(UnresolvedErr#) |,| { UriSpace.unmount(`/testns`) }
+    verifyErr(UnresolvedErr#) { UriSpace.unmount(`/testns`) }
   }
 
   Void testMountCrud()
@@ -162,8 +162,8 @@ class UriSpaceTest : Test
     UriSpace.mount(`/testns`, TestUriSpace.make)
 
     verifyEq(UriSpace.root.get(`/testns`, false), null)
-    verifyErr(UnresolvedErr#) |,| { UriSpace.root.get(`/testns`) }
-    verifyErr(UnresolvedErr#) |,| { UriSpace.root.get(`/testns`, true) }
+    verifyErr(UnresolvedErr#) { UriSpace.root.get(`/testns`) }
+    verifyErr(UnresolvedErr#) { UriSpace.root.get(`/testns`, true) }
 
     // get
     Actor.locals["/testns"] = "argo"
@@ -184,7 +184,7 @@ class UriSpaceTest : Test
     // delete
     UriSpace.root.delete(`/testns/venture`)
     verifyEq(Actor.locals["/testns/venture"], null)
-    verifyErr(UnresolvedErr#) |,| { UriSpace.root.get(`/testns/venture`) }
+    verifyErr(UnresolvedErr#) { UriSpace.root.get(`/testns/venture`) }
 
     UriSpace.unmount(`/testns`)
   }

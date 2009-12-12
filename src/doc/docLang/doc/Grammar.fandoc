@@ -199,8 +199,7 @@ Type [#type]
   <simpleType>     :=  <id> ["::" <id>]
   <listType>       :=  <type> "[]"
   <mapType>        :=  ["["] <type> ":" <type> ["]"]
-  <funcType>       :=  "|" ("," | <funcTypeSig>) "|"
-  <funcTypeSig>    :=  <formals> ["->" <type>]
+  <funcType>       :=  "|" [formals] "->" [type] "|"
   <formals>        :=  [<formal> ("," <formal>)*]
   <formal>         :=  <formalFull> | <formalInferred> | <formalTypeOnly>
   <formalFull>     :=  <type> <id>

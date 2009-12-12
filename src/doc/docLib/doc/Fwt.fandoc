@@ -144,7 +144,7 @@ The following illustrates a simple text field with some event handlers:
     {
       text := Text
       {
-        onAction.add |,| { echo("onAction!") }
+        onAction.add |->| { echo("onAction!") }
         onModify.add |event| { echo(event) }
       }
 
@@ -176,7 +176,7 @@ example to create a localized "Save" command:
   save.accelerator=Ctrl+S
 
   // create Command instance
-  save := Command.makeLocale(Pod.find("flux"), "save") |,| { echo("save!") }
+  save := Command.makeLocale(Pod.find("flux"), "save") |->| { echo("save!") }
 
 You can create UI widgets from commands:
 

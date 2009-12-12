@@ -28,8 +28,8 @@ class ActorTest : Test
   Void testMake()
   {
     mutable := |Context cx, Obj? msg->Obj?| { fail; return null }
-    verifyErr(ArgErr#) |,| { x := Actor(pool) }
-    verifyErr(NotImmutableErr#) |,| { x := Actor(pool, mutable) }
+    verifyErr(ArgErr#) { x := Actor(pool) }
+    verifyErr(NotImmutableErr#) { x := Actor(pool, mutable) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -102,7 +102,7 @@ class ActorTest : Test
   {
     // build a bunch actors
     actors := Actor[,]
-    200.times |,| { actors.add(Actor(pool, #order.func)) }
+    200.times { actors.add(Actor(pool, #order.func)) }
 
     // randomly send increasing ints to the actors
     100_000.times |Int i| { actors[Int.random(0..<actors.size)].send(i) }
@@ -149,13 +149,13 @@ class ActorTest : Test
     verify(f.isDone)
 
     // non-serializable mutables
-    verifyErr(IOErr#) |,| { a.send(this) }
-    verifyErr(IOErr#) |,| { a.send("mutable").get }
+    verifyErr(IOErr#) { a.send(this) }
+    verifyErr(IOErr#) { a.send("mutable").get }
 
     // receive raises error
     f = a.send("throw")
-    verifyErr(UnknownServiceErr#) |,| { f.get }
-    verifyErr(UnknownServiceErr#) |,| { f.get }
+    verifyErr(UnknownServiceErr#) { f.get }
+    verifyErr(UnknownServiceErr#) { f.get }
     verify(f.isDone)
   }
 
@@ -182,7 +182,7 @@ class ActorTest : Test
 
     // get with timeout
     t1 := Duration.now
-    verifyErr(TimeoutErr#) |,| { f.get(50ms) }
+    verifyErr(TimeoutErr#) { f.get(50ms) }
     t2 := Duration.now
     verify(t2-t1 < 70ms, (t2-t1).toLocale)
 
@@ -190,8 +190,8 @@ class ActorTest : Test
     Actor(pool, |msg| {cancel(msg)}).send(f)
 
     // block on future until canceled
-    verifyErr(CancelledErr#) |,| { f.get }
-    verifyErr(CancelledErr#) |,| { f.get }
+    verifyErr(CancelledErr#) { f.get }
+    verifyErr(CancelledErr#) { f.get }
     verify(f.isDone)
     verify(f.isCancelled)
   }
@@ -255,8 +255,8 @@ class ActorTest : Test
     // verify can't send or schedule anymore
     actors.each |Actor a|
     {
-      verifyErr(Err#) |,| { a.send(10sec) }
-      verifyErr(Err#) |,| { a.sendLater(1sec, 1sec) }
+      verifyErr(Err#) { a.send(10sec) }
+      verifyErr(Err#) { a.sendLater(1sec, 1sec) }
     }
 
     // stop again, join with no timeout
@@ -280,8 +280,8 @@ class ActorTest : Test
     {
       verify(f.isDone)
       verify(f.isCancelled)
-      verifyErr(CancelledErr#) |,| { f.get }
-      verifyErr(CancelledErr#) |,| { f.get(200ms) }
+      verifyErr(CancelledErr#) { f.get }
+      verifyErr(CancelledErr#) { f.get(200ms) }
     }
   }
 
@@ -295,7 +295,7 @@ class ActorTest : Test
     futures := Future[,]
     durs := Duration[,]
     scheduled := Future[,]
-    200.times |,|
+    200.times |->|
     {
       actor := Actor(pool, #sleep.func)
 
@@ -320,7 +320,7 @@ class ActorTest : Test
     verifyEq(pool.isStopped, true)
 
     // verify can't send anymore
-    verifyErr(Err#) |,| { Actor(pool, #sleep.func).send(10sec) }
+    verifyErr(Err#) { Actor(pool, #sleep.func).send(10sec) }
 
     // join
     pool.join
@@ -339,14 +339,14 @@ class ActorTest : Test
       // each future either
       if (f.isCancelled)
       {
-        verifyErr(CancelledErr#) |,| { f.get }
+        verifyErr(CancelledErr#) { f.get }
       }
       else
       {
         try
           verifyEq(f.get, durs[i])
         catch (InterruptedErr e)
-          verifyErr(InterruptedErr#) |,| { f.get }
+          verifyErr(InterruptedErr#) { f.get }
       }
     }
 
@@ -362,7 +362,7 @@ class ActorTest : Test
   {
     // warm up a threads with dummy requests
     receive := |Obj? msg->Obj?| { returnNow(msg) }
-    5.times |,| { Actor(pool, receive).sendLater(10ms, "dummy") }
+    5.times { Actor(pool, receive).sendLater(10ms, "dummy") }
 
     start := Duration.now
     x100 := Actor(pool, receive).sendLater(100ms, null)
@@ -396,17 +396,17 @@ class ActorTest : Test
   Void testLaterRand()
   {
     // warm up a threads with dummy requests
-    5.times |,| { Actor(pool, #returnNow.func).sendLater(10ms, "dummy") }
+    5.times { Actor(pool, #returnNow.func).sendLater(10ms, "dummy") }
 
     // schedule a bunch of actors and messages with random times
     start := Duration.now
     actors := Actor[,]
     futures := Future[,]
     durs := Duration?[,]
-    5.times |,|
+    5.times |->|
     {
       a := Actor(pool, #returnNow.func)
-      10.times |,|
+      10.times |->|
       {
         // schedule something randonly between 0ms and 1sec
         Duration? dur := 1ms * Int.random(0..<1000).toFloat
@@ -430,7 +430,7 @@ class ActorTest : Test
     {
       verify(f.isCancelled)
       verify(f.isDone)
-      verifyErr(CancelledErr#) |,| { f.get }
+      verifyErr(CancelledErr#) { f.get }
     }
     else
     {
@@ -460,8 +460,8 @@ class ActorTest : Test
     a2 := a.send("cancel")
     a2.cancel
     verifyEq(a0.get, "start")
-    verifyErr(IndexErr#) |,| { a1.get }
-    verifyErr(CancelledErr#) |,| { a2.get }
+    verifyErr(IndexErr#) { a1.get }
+    verifyErr(CancelledErr#) { a2.get }
 
     // send some messages with futures already done
     b0 := b.sendWhenDone(a0, a0); c0 := c.sendWhenDone(a0, a0)
@@ -572,7 +572,7 @@ class ActorTest : Test
     f2s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["one", "two"]) }
     f3s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["one", "two", "three"]) }
     f4s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["one", "two", "three", "four"]) }
-    ferr.each |Future f| { verify(f.isDone); verifyErr(IndexErr#) |,| { f.get } }
+    ferr.each |Future f| { verify(f.isDone); verifyErr(IndexErr#) { f.get } }
     verifyAllCancelled(fcancel)
   }
 
@@ -637,7 +637,7 @@ class ActorTest : Test
     f1s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["1", 1, 2]) }
     f2s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["2", 10, 20, 30]) }
     f3s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["3", 100, 200]) }
-    ferr.each |Future f| { verify(f.isDone); verifyErr(IndexErr#) |,| { f.get } }
+    ferr.each |Future f| { verify(f.isDone); verifyErr(IndexErr#) { f.get } }
     verifyAllCancelled(fcancel)
   }
 

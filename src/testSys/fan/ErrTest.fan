@@ -37,10 +37,10 @@ class ErrTest : Test
   Void testTrace()
   {
     Int line := #testTrace->lineNumber; line += 3 // next line
-    verifyTrace(line++) |,| { throw Err.make("foo") }
-    verifyTrace(line++) |,| { Obj x := 3; ((Str)x).size }
-    verifyTrace(line++) |,| { Pod? x := null; x.name }
-    verifyTrace(line++) |,| { try { throw Err.make("cause") } catch (Err e) { throw Err.make("foo", e) } }
+    verifyTrace(line++) |->| { throw Err.make("foo") }
+    verifyTrace(line++) |->| { Obj x := 3; ((Str)x).size }
+    verifyTrace(line++) |->| { Pod? x := null; x.name }
+    verifyTrace(line++) |->| { try { throw Err.make("cause") } catch (Err e) { throw Err.make("foo", e) } }
   }
 
   Void verifyTrace(Int line, Func f)

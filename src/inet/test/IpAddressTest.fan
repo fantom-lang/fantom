@@ -37,9 +37,9 @@ class IpAddressTest : Test
                "::169.2.30.200")
 
     // invalid
-    verifyErr(UnknownHostErr#) |,| { IpAddress("0123:4567:89ab:cdef:fedc:ba98:7654:3210:ffff") }
-    verifyErr(UnknownHostErr#) |,| { IpAddress("::fx54:3210:ffff") }
-    verifyErr(UnknownHostErr#) |,| { IpAddress("not.going.to.happen.") }
+    verifyErr(UnknownHostErr#) { IpAddress("0123:4567:89ab:cdef:fedc:ba98:7654:3210:ffff") }
+    verifyErr(UnknownHostErr#) { IpAddress("::fx54:3210:ffff") }
+    verifyErr(UnknownHostErr#) { IpAddress("not.going.to.happen.") }
 
     // local
     verifySame(IpAddress.local, IpAddress.local)
@@ -82,7 +82,7 @@ class IpAddressTest : Test
     verifyEq(a.bytes.toHex, buf.toHex)
 
     // ensure buf ready to read
-    2.times |,|
+    2.times
     {
       abytes := a.bytes
       bytes.each |Int b| { verifyEq(abytes.read, b) }

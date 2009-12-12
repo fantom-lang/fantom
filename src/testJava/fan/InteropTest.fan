@@ -577,7 +577,7 @@ class InteropTest : JavaTest
         Int funcB(Int a, Int b, Int c, FuncB f) { return f.add(a, b, c) }
         Str[] funcC(Str[] a, FuncC f) { return f.swap(a) }
 
-        Int test1() { n := 0; run |,| { n++ }; return n }
+        Int test1() { n := 0; run |->| { n++ }; return n }
         Str? test2(Str? x) { return funcA(x) |Str? s->Str?| { return s } }
         Int test3(Int x, Int y, Int z) { return funcB(x, y, z) |Int a, Int b, Int c->Int| { return a+b+c } }
         Str[] test4(Str[] a) { return funcC(a) |Str[] x->Str[]| { return x.swap(0, 1) } }

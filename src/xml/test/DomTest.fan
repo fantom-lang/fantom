@@ -27,10 +27,10 @@ class DomTest : Test
     verifyEq(x.attrs.isRO, true)
     verifyEq(x.attr("a", false), null)
     verifyEq(x.get("a", false), null)
-    verifyErr(XErr#) |,| { x.attr("a") }
-    verifyErr(XErr#) |,| { x.attr("a", true) }
-    verifyErr(XErr#) |,| { x.get("a") }
-    verifyErr(XErr#) |,| { x.get("a", true) }
+    verifyErr(XErr#) { x.attr("a") }
+    verifyErr(XErr#) { x.attr("a", true) }
+    verifyErr(XErr#) { x.get("a") }
+    verifyErr(XErr#) { x.get("a", true) }
 
     verifySame(x.add(a), x)
     verifyEq(x.attrs, [a])
@@ -52,7 +52,7 @@ class DomTest : Test
     verifySame(x["b"], "bval")
     verifySame(x["c"], "cval")
     verifyEq(x.get("aa", false), null)
-    verifyErr(XErr#) |,| { x.attr("aa") }
+    verifyErr(XErr#) { x.attr("aa") }
 
     acc := XAttr[,]
     x.eachAttr |XAttr q| { acc.add(q) }
@@ -89,8 +89,8 @@ class DomTest : Test
     verifyEq(x.children.isRO, true)
     verifyEq(x.elems, XElem[,])
     verifyEq(x.elem("foo", false), null)
-    verifyErr(XErr#) |,| { x.elem("foo") }
-    verifyErr(XErr#) |,| { x.elem("foo", true) }
+    verifyErr(XErr#) { x.elem("foo") }
+    verifyErr(XErr#) { x.elem("foo", true) }
     verifyEq(x.text, null)
 
     x.add(pi)
@@ -123,8 +123,8 @@ class DomTest : Test
     verifySame(x.elem("a"), a)
     verifySame(x.elem("b"), b)
     verifyEq(x.elem("foo", false), null)
-    verifyErr(XErr#) |,| { x.elem("foo") }
-    verifyErr(XErr#) |,| { x.elem("foo", true) }
+    verifyErr(XErr#) { x.elem("foo") }
+    verifyErr(XErr#) { x.elem("foo", true) }
     verifySame(x.text, t)
 
     // each
@@ -133,7 +133,7 @@ class DomTest : Test
     verifyEq(acc, [pi, a, t, b])
 
     // removeAt
-    verifyErr(ArgErr#) |,| { x.add(t) }
+    verifyErr(ArgErr#) { x.add(t) }
     verifySame(x.removeAt(-2), t)
     verifyEq(t.parent, null)
 
@@ -181,7 +181,7 @@ class DomTest : Test
     verifySame(doc.root.elem("a").elem("b").doc, doc)
     verifySame(doc.root.elem("a").elem("b").text.doc, doc)
     verifyEq(XElem("x").doc, null)
-    verifyErr(ArgErr#) |,| { doc.root = doc.root.elem("a") }
+    verifyErr(ArgErr#) { doc.root = doc.root.elem("a") }
 
     doc.add(XElem("newRoot"))
     verifyEq(doc.root.name, "newRoot")
@@ -270,7 +270,7 @@ class DomTest : Test
     verifySame(a.ns, nsq)
 
     // don't allow since no prefix means no ns, not default ns
-    verifyErr(ArgErr#) |,| { x := XAttr("def", "defval", nsdef) }
+    verifyErr(ArgErr#) { x := XAttr("def", "defval", nsdef) }
   }
 
 }

@@ -465,7 +465,7 @@ class IntTest : Test
     verifyEq(32.toChar, " ")
     verifyEq(0x1234.toChar, "\u1234")
 
-    verifyErr(Err#) |,| { 0x10000.toChar }
+    verifyErr(Err#) { 0x10000.toChar }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -530,9 +530,9 @@ class IntTest : Test
     verifyEq(Int.fromStr("aabbccdd00112233", 16), 0xaabbccdd00112233)
     verifyEq(Int.fromStr("80BF3ecA63100DdE", 16), 0x80bf3eca63100dde)
     verifyEq(Int.fromStr("badz", 16, false), null)
-    verifyErr(ParseErr#) |,| { Int.fromStr("x") }
-    verifyErr(ParseErr#) |,| { Int.fromStr("3", 2, true) }
-    verifyErr(ParseErr#) |,| { Int.fromStr("3g", 16, true) }
+    verifyErr(ParseErr#) { Int.fromStr("x") }
+    verifyErr(ParseErr#) { Int.fromStr("3", 2, true) }
+    verifyErr(ParseErr#) { Int.fromStr("3g", 16, true) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -542,11 +542,11 @@ class IntTest : Test
   Void testRandom()
   {
     acc := Int:Obj[:]
-    10.times |,| { acc.set(Int.random, this) }
+    10.times |->| { acc.set(Int.random, this) }
     verifyEq(acc.size, 10)
 
     acc.clear
-    1000.times |,|
+    1000.times |->|
     {
       i := Int.random(0..10)
       verify((0..10).contains(i))
@@ -555,7 +555,7 @@ class IntTest : Test
     verifyEq(acc.size, 11)
 
     acc.clear
-    1000.times |,|
+    1000.times |->|
     {
       i := Int.random(10..<20)
       verify((10..<20).contains(i))
@@ -563,8 +563,8 @@ class IntTest : Test
     }
     verifyEq(acc.size, 10)
 
-    verifyErr(ArgErr#) |,| { Int.random(20..<10) }
-    verifyErr(ArgErr#) |,| { Int.random(2..1) }
+    verifyErr(ArgErr#) { Int.random(20..<10) }
+    verifyErr(ArgErr#) { Int.random(2..1) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -601,7 +601,7 @@ class IntTest : Test
     verifyEq(493446.toCode, "493446")
     verifyEq((-3345).toCode(10), "-3345")
     verifyEq(0xabcd.toCode(16), "0xabcd")
-    verifyErr(ArgErr#) |,| { 3999.toCode(8) }
+    verifyErr(ArgErr#) { 3999.toCode(8) }
   }
 
 //////////////////////////////////////////////////////////////////////////

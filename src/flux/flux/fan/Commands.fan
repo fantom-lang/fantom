@@ -269,7 +269,7 @@ internal class Commands
     return MenuItem
     {
       text = name
-      onAction.add |,| { frame.load(item.uri) }
+      onAction.add |->| { frame.load(item.uri) }
     }
   }
 

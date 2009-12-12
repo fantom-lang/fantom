@@ -110,7 +110,7 @@ class FileResource : Resource
     if (file.isDir)
     {
       menu.addCommand(Command.makeLocale(type.pod, "openIn") { openIn(file) })
-      menu.addCommand(Command.makeLocale(type.pod, CommandId.findInFiles, |,| { findInFiles(frame, file) }) { accelerator = null })
+      menu.addCommand(Command.makeLocale(type.pod, CommandId.findInFiles, |->| { findInFiles(frame, file) }) { accelerator = null })
       menu.addSep
       menu.addCommand(Command.makeLocale(type.pod, "newDir") { newDir(frame,file) })
     }

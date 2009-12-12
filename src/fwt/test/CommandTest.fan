@@ -15,7 +15,7 @@ class CommandTest : Test
   Void testBinding()
   {
     count := 0
-    c := Command("Foo", null) |,| { count++ }
+    c := Command("Foo", null) |->| { count++ }
     m := MenuItem { command = c }
     verifyEq(m.text, "Foo")
     verifyEq(m.enabled, true)

@@ -33,7 +33,7 @@ class PodTest : Test
   {
     verifySame(Pod.find("sys"), Bool#.pod)
     verifySame(Pod.find("notHereFoo", false), null)
-    verifyErr(UnknownPodErr#) |,| { Pod.find("notHereFoo") }
+    verifyErr(UnknownPodErr#) { Pod.find("notHereFoo") }
   }
 
 //////////////////////////////////////////////////////////////////////////

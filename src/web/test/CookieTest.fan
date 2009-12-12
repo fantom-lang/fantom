@@ -18,11 +18,11 @@ class CookieTest : Test
     verifyCookie("foo=\"bar baz\"", Cookie("foo", "bar baz"))
     verifyCookie("foo=\"_\\\"quot\\\"_\"", Cookie("foo", "_\"quot\"_"))
 
-    verifyErr(ArgErr#) |,| { c := Cookie("\$path", "bar") }
-    verifyErr(ArgErr#) |,| { c := Cookie("foo bar", "bar") }
-    verifyErr(ArgErr#) |,| { c := Cookie("foo", "bar\nbaz") }
-    verifyErr(ArgErr#) |,| { c := Cookie("foo", "del is \u007f") }
-    verifyErr(ArgErr#) |,| { c := Cookie("foo", "a;b;c") }
+    verifyErr(ArgErr#) { c := Cookie("\$path", "bar") }
+    verifyErr(ArgErr#) { c := Cookie("foo bar", "bar") }
+    verifyErr(ArgErr#) { c := Cookie("foo", "bar\nbaz") }
+    verifyErr(ArgErr#) { c := Cookie("foo", "del is \u007f") }
+    verifyErr(ArgErr#) { c := Cookie("foo", "a;b;c") }
   }
 
   Void verifyCookie(Str s, Cookie c)
