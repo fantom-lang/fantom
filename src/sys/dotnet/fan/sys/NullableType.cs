@@ -55,7 +55,7 @@ namespace Fan.Sys
     public override List inheritance() { return m_root.inheritance(); }
     public override bool @is(Type type) { return m_root.@is(type); }
 
-    public override bool isValue() { return m_root.isValue(); }
+    public override bool isVal() { return m_root.isVal(); }
 
     public override bool isNullable() { return true; }
     public override Type toNullable() { return this; }

@@ -1087,7 +1087,7 @@ class CodeAsm : CompilerSupport
     // if safe, handle null case
     if (fexpr.isSafe)
     {
-      if (field.fieldType.isValue) coerceOp(field.fieldType, field.fieldType.toNullable)
+      if (field.fieldType.isVal) coerceOp(field.fieldType, field.fieldType.toNullable)
       endLabel := jump(FOp.Jump)
       backpatch(isNullLabel)
       opType(FOp.Pop, fexpr.ctype)
@@ -1180,7 +1180,7 @@ class CodeAsm : CompilerSupport
     if (call.isSafe)
     {
       // sanity check
-      if (target == null || (target.ctype.isValue && !target.ctype.isNullable))
+      if (target == null || (target.ctype.isVal && !target.ctype.isNullable))
         throw err("Compiler error call isSafe: $call", call.location)
 
       // check if null and if so then jump over call
@@ -1189,7 +1189,7 @@ class CodeAsm : CompilerSupport
       isNullLabel = jump(FOp.JumpTrue)
 
       // now if we are calling a value-type method we might need to coerce
-      if (target.ctype.isValue || method.parent.isValue)
+      if (target.ctype.isVal || method.parent.isVal)
         coerceOp(target.ctype, call.method.parent)
     }
 
@@ -1208,7 +1208,7 @@ class CodeAsm : CompilerSupport
     if (call.isSafe)
     {
       // if the method return a value type, ensure it is coerced to nullable
-      if (method.returnType.isValue && call.leave)
+      if (method.returnType.isVal && call.leave)
         coerceOp(method.returnType, call.ctype.toNullable)
 
       // jump to end after successful call and push null onto
@@ -1464,7 +1464,7 @@ class CodeAsm : CompilerSupport
       case ExprId.shortcut:
         set := (CMethod)c->setMethod
         // if calling setter we have to ensure unboxed
-        if (c.ctype.isValue && coerce == null) coerceOp(c.ctype, ns.objType)
+        if (c.ctype.isVal && coerce == null) coerceOp(c.ctype, ns.objType)
         op(FOp.CallVirtual, fpod.addMethodRef(set, 2))
         if (!set.returnType.isVoid) opType(FOp.Pop, set.returnType)
       default:
@@ -1501,7 +1501,7 @@ class CodeAsm : CompilerSupport
       if (!isEmptyStrLiteral(lhs))
       {
         this.expr(lhs)
-        if (lhs.ctype.isValue) coerceOp(lhs.ctype, ns.objType)
+        if (lhs.ctype.isVal) coerceOp(lhs.ctype, ns.objType)
         op(FOp.CallVirtual, fpod.addMethodRef(ns.strBufAdd))
       }
     }

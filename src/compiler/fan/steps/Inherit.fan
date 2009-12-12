@@ -284,7 +284,7 @@ class Inherit : CompilerStep
           throw err("Return type mismatch in override of '$base.qname' - '$baseRet.inferredAs' != '$defRet'", loc)
 
         // can't use covariance with value types
-        if (defRet.isValue || baseRet.isValue)
+        if (defRet.isVal || baseRet.isVal)
           throw err("Cannot use covariance with value types '$base.qname' - '$baseRet' != '$defRet'", loc)
       }
 
@@ -320,7 +320,7 @@ class Inherit : CompilerStep
         throw err("Type mismatch in override of '$base.qname' - '$rt' != '$ft'", loc)
 
       // can't use covariance with value types
-      if (ft.isValue || rt.isValue)
+      if (ft.isVal || rt.isVal)
         throw err("Cannot use covariance with value types '$base.qname' - '$rt' != '$ft'", loc)
     }
 

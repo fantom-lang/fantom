@@ -61,7 +61,7 @@ class NamespaceTest : CompilerTest
     verifyEq(int.name,  "Int")
     verifyEq(int.qname, "sys::Int")
     verifyEq(int.signature, "sys::Int")
-    verifyEq(int.isValue, true)
+    verifyEq(int.isVal, true)
     verifyEq(int.isGeneric, false)
     verifyEq(int.isParameterized, false)
     verifyEq(int.isGenericParameter, false)

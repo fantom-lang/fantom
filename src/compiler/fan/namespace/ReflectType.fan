@@ -27,7 +27,7 @@ class ReflectType : CType
     this.t       = t
     this.base    = ns.importType(t.base)
     this.mixins  = ns.importTypes(t.mixins)
-    this.isValue = t.isValue
+    this.isVal   = t.isVal
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ class ReflectType : CType
     return t.facet(sym, def)
   }
 
-  override readonly Bool isValue
+  override readonly Bool isVal
 
   override Bool isNullable() { return false }
   override once CType toNullable() { return NullableType(this) }

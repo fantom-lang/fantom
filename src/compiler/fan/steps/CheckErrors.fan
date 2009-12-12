@@ -510,7 +510,7 @@ class CheckErrors : CompilerStep
     {
       f.isStatic == isStaticInit &&
       !f.isAbstract && !f.isOverride && !f.isNative && f.isStorage &&
-      !f.fieldType.isNullable && !f.fieldType.isValue && f.init == null
+      !f.fieldType.isNullable && !f.fieldType.isVal && f.init == null
     }
     if (fields.isEmpty) return
 
@@ -882,7 +882,7 @@ class CheckErrors : CompilerStep
     checkCompare(expr.lhs, expr.rhs)
 
     // don't allow for value types
-    if (expr.lhs.ctype.isValue || expr.rhs.ctype.isValue)
+    if (expr.lhs.ctype.isVal || expr.rhs.ctype.isVal)
       err("Cannot use '$expr.opToken.symbol' operator with value types", expr.location)
   }
 
@@ -1173,7 +1173,7 @@ class CheckErrors : CompilerStep
     // and safe calls since they are handled specially
     if (call.target != null && !call.isCompare && !call.isSafe)
     {
-      if (call.target.ctype.isValue || call.method.parent.isValue)
+      if (call.target.ctype.isVal || call.method.parent.isVal)
         call.target = coerce(call.target, call.method.parent) |,| {}
     }
   }
@@ -1317,7 +1317,7 @@ class CheckErrors : CompilerStep
     // used with value type expressions
     if (expr.id != ExprId.coerce)
     {
-      if (target.isValue)
+      if (target.isVal)
       {
         err("Cannot use '$expr.opStr' operator on value type '$target'", expr.location)
         return
@@ -1560,7 +1560,7 @@ class CheckErrors : CompilerStep
   **
   private Expr box(Expr expr)
   {
-    if (expr.ctype.isValue)
+    if (expr.ctype.isVal)
       return TypeCheckExpr.coerce(expr, ns.objType.toNullable)
     else
       return expr
@@ -1684,7 +1684,7 @@ class CheckErrors : CompilerStep
   {
     // if either side is a value type and we got past
     // the equals check then we definitely need a coercion
-    if (from.isValue || to.isValue) return true
+    if (from.isVal || to.isVal) return true
 
     // if going from Obj? -> Obj we need a nullable coercion
     if (!to.isNullable) return from.isNullable

@@ -38,7 +38,7 @@ internal class JsonWriter
     // Uri -> literal, done
     // Version
     // Weekday
-    writeValue(obj)
+    writeVal(obj)
   }
 
   private Void writeObj(Obj obj)
@@ -84,10 +84,10 @@ internal class JsonWriter
 
   // FIXIT actually need to write values out for number, obj, array, true,
   // false, null
-  private Void writeValue(Obj? val)
+  private Void writeVal(Obj? val)
   {
     // FIXIT need route for DateTime
-    if (val is Str) writeString(val)
+    if (val is Str) writeStr(val)
     else if (val is Duration) writeDuration(val)
     else if (val is Num) writeNumber(val)
     else if (val is List) writeArray(val)
@@ -107,7 +107,7 @@ internal class JsonWriter
     array.each |Obj? o|
     {
       if (notFirst) this.out.writeChar(JsonToken.comma)
-      writeValue(o)
+      writeVal(o)
       notFirst = true
     }
     this.out.writeChar(JsonToken.arrayEnd)
@@ -117,15 +117,15 @@ internal class JsonWriter
   {
     writeKey(key)
     this.out.writeChar(JsonToken.colon)
-    writeValue(val)
+    writeVal(val)
   }
 
   private Void writeKey(Str key)
   {
-    writeString(key)
+    writeStr(key)
   }
 
-  private Void writeString(Str str)
+  private Void writeStr(Str str)
   {
     this.out.writeChar(JsonToken.quote)
     str.each |char|

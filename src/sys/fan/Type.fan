@@ -175,7 +175,7 @@ const class Type
   ** Is this a value type.  Fantom supports three implicit value
   ** types: `Bool`, `Int`, and `Float`.
   **
-  Bool isValue()
+  Bool isVal()
 
 //////////////////////////////////////////////////////////////////////////
 // Nullable

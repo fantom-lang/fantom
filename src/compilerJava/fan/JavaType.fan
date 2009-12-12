@@ -49,7 +49,7 @@ class JavaType : CType
   override Bool isForeign() { return true }
   override Bool isSupported() { return arrayRank <= 1 } // multi-dimensional arrays unsupported
 
-  override Bool isValue() { return false }
+  override Bool isVal() { return false }
 
   override Bool isNullable() { return false }
   override once CType toNullable() { return NullableType(this) }

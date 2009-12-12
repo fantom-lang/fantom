@@ -92,7 +92,7 @@ namespace Fan.Sys
   // Value Types
   //////////////////////////////////////////////////////////////////////////
 
-    public virtual bool isValue()
+    public virtual bool isVal()
     {
       return this == Sys.BoolType || this == Sys.IntType || this == Sys.FloatType;
     }

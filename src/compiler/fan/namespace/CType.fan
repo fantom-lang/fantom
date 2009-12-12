@@ -61,12 +61,12 @@ mixin CType
   **
   ** Is this is a value type (Bool, Int, or Float and their nullables)
   **
-  abstract Bool isValue()
+  abstract Bool isVal()
 
   **
   ** Static utility for value type
   **
-  static Bool isValueType(Str qname)
+  static Bool isValType(Str qname)
   {
     switch (qname)
     {

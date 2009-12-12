@@ -32,7 +32,7 @@ class Flux
     // check cache
     cached := options[name]
     if (cached != null && cached.file.modified == cached.modified)
-      return cached.value
+      return cached.val
 
     // not cached or modified since we loaded cache
     file := Repo.working.home + `etc/flux/session/${name}.fog`
@@ -92,10 +92,10 @@ class Flux
 
 internal class CachedOptions
 {
-  new make(File f, Obj? v) { file = f; modified = f.modified; value = v }
+  new make(File f, Obj? v) { file = f; modified = f.modified; val = v }
   File file
   DateTime? modified
-  Obj? value
+  Obj? val
 }
 
 **************************************************************************
