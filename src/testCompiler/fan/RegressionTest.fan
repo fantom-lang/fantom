@@ -265,4 +265,17 @@ class RegressionTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #861 Obj Void Returns
+//////////////////////////////////////////////////////////////////////////
+
+  Void test861()
+  {
+    verifyErrors(
+     "class Foo { Void foo() { return (Obj)4 } }",
+       [
+         1, 33, "Cannot return 'sys::Obj' as 'sys::Void'",
+       ])
+  }
+
 }
