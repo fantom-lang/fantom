@@ -60,31 +60,31 @@ namespace Fan.Sys
   // Thread
   //////////////////////////////////////////////////////////////////////////
 
-    public static Locale current()
+    public static Locale cur()
     {
-      if (m_current == null) m_current = defaultLocale;
-      return m_current;
+      if (m_cur == null) m_cur = defaultLocale;
+      return m_cur;
     }
 
-    public static void setCurrent(Locale locale)
+    public static void setCur(Locale locale)
     {
       if (locale == null) throw NullErr.make().val;
-      m_current = locale;
+      m_cur = locale;
     }
 
-    [ThreadStatic] static Locale m_current;
+    [ThreadStatic] static Locale m_cur;
 
     public Locale use(Func func)
     {
-      Locale old = current();
+      Locale old = cur();
       try
       {
-        setCurrent(this);
+        setCur(this);
         func.call(this);
       }
       finally
       {
-        setCurrent(old);
+        setCur(old);
       }
       return this;
     }

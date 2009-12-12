@@ -181,7 +181,7 @@ namespace Fan.Sys
     {
       // set locals for this actor
       m_locals = m_context.m_locals;
-      Locale.setCurrent(m_context.m_locale);
+      Locale.setCur(m_context.m_locale);
 
       // process up to 100 messages before yielding the thread
       for (int count = 0; count < 100; count++)
@@ -196,7 +196,7 @@ namespace Fan.Sys
       }
 
       // flush locals back to context
-      m_context.m_locale = Locale.current();
+      m_context.m_locale = Locale.cur();
 
       // done dispatching, either clear the submitted
       // flag or resubmit to the thread pool
