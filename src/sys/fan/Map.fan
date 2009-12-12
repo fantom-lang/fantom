@@ -82,7 +82,10 @@ final class Map
   **
   ** Get a list of all the mapped values.  This method is idempotent.
   **
-  V[] values()
+  V[] vals()
+
+  ** TODO: use `vals`
+  @deprecated V[] values()
 
   **
   ** Create a shallow duplicate copy of this Map.  The keys and

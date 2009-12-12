@@ -49,7 +49,7 @@ class PodDef : DefNode, CPod
 
   override CType[] types()
   {
-    return typeDefs.values
+    return typeDefs.vals
   }
 
 //////////////////////////////////////////////////////////////////////////

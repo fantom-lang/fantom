@@ -439,12 +439,12 @@ mixin CType
   **
   ** List of the all defined fields (including inherited fields).
   **
-  CField[] fields() { return (CField[])slots.values.findType(CField#) }
+  CField[] fields() { return (CField[])slots.vals.findType(CField#) }
 
   **
   ** List of the all defined methods (including inherited methods).
   **
-  CMethod[] methods() { return (CMethod[])slots.values.findType(CMethod#) }
+  CMethod[] methods() { return (CMethod[])slots.vals.findType(CMethod#) }
 
   **
   ** List of the all constructors.

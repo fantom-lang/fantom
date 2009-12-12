@@ -33,7 +33,7 @@ class ReflectPod : CPod
         loadedAllTypes = true
         pod.types.each |Type t| { resolveType(t.name, true) }
       }
-      return typeMap.values
+      return typeMap.vals
     }
   }
 

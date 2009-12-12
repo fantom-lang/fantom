@@ -108,7 +108,7 @@ class JsTypeRef : JsNode
     this.pod   = ref.pod.name
     this.name  = ref.name
     this.sig   = ref.signature
-    this.slots = ref.slots.values.map |CSlot s->JsSlotRef| { JsSlotRef(cs, s) }
+    this.slots = ref.slots.vals.map |CSlot s->JsSlotRef| { JsSlotRef(cs, s) }
     this.isSynthetic = ref.isSynthetic
   }
 

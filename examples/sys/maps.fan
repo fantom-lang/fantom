@@ -81,7 +81,7 @@ class Maps
     echo("\n--- listConversion ---")
     x := [0:"zero", 1:"one", 2:"two"]
     show(x.keys,      "list the keys [0, 1, 2]")
-    show(x.values,    "list the values [zero, one, two]")
+    show(x.vals,      "list the values [zero, one, two]")
   }
 
   Void iteration()
