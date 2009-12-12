@@ -177,7 +177,7 @@ public class Actor
   {
     // set locals for this actor
     locals.set(context.locals);
-    Locale.setCurrent(context.locale);
+    Locale.setCur(context.locale);
 
     // process up to 100 messages before yielding the thread
     for (int count = 0; count < 100; count++)
@@ -192,7 +192,7 @@ public class Actor
     }
 
     // flush locals back to context
-    context.locale = Locale.current();
+    context.locale = Locale.cur();
 
     // done dispatching, either clear the submitted
     // flag or resubmit to the thread pool

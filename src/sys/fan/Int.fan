@@ -373,7 +373,7 @@ const final class Int : Num
   ** Convert nano-seconds ticks since 1-Jan-2000 to a DateTime.
   ** Convenience for `DateTime.makeTicks`.
   **
-  DateTime toDateTime(TimeZone tz := TimeZone.current)
+  DateTime toDateTime(TimeZone tz := TimeZone.cur)
 
 /////////////////////////////////////////////////////////////////////////
 // Closures

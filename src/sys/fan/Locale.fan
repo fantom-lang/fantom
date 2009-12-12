@@ -37,13 +37,19 @@ const class Locale
   **
   ** Get the current thread's locale.
   **
-  static Locale current()
+  static Locale cur()
 
   **
   ** Set the current thread's locale.
   ** Throw NullErr if null is passed.
   **
-  static Void setCurrent(Locale locale)
+  static Void setCur(Locale locale)
+
+  ** TODO: use `cur`
+  @deprecated static Locale current()
+
+  ** TODO: use `setCur`
+  @deprecated static Void setCurrent(Locale locale)
 
   **
   ** Run the specified function using this locale as the

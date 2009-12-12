@@ -688,10 +688,10 @@ class ActorTest : Test
     if (Actor.locals["testLocal"] == null)
     {
       Actor.locals["testLocal"] = num
-      Locale.setCurrent(locale)
+      Locale.setCur(locale)
     }
 
-    return Actor.locals["testLocal"].toStr + " " + Locale.current
+    return Actor.locals["testLocal"].toStr + " " + Locale.cur
   }
 
 }

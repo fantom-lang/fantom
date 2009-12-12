@@ -744,19 +744,19 @@ public class FanStr
 
   public static long localeCompare(String self, String x)
   {
-    int cmp = Locale.current().collator().compare(self, x);
+    int cmp = Locale.cur().collator().compare(self, x);
     if (cmp < 0) return -1;
     return cmp == 0 ? 0 : +1;
   }
 
   public static String localeLower(String self)
   {
-    return self.toLowerCase(Locale.current().java());
+    return self.toLowerCase(Locale.cur().java());
   }
 
   public static String localeUpper(String self)
   {
-    return self.toUpperCase(Locale.current().java());
+    return self.toUpperCase(Locale.cur().java());
   }
 
   public static String localeCapitalize(String self)
@@ -767,7 +767,7 @@ public class FanStr
       if (Character.isLowerCase(ch))
       {
         StringBuilder s = new StringBuilder(self.length());
-        s.append(Character.toString((char)ch).toUpperCase(Locale.current().java()).charAt(0));
+        s.append(Character.toString((char)ch).toUpperCase(Locale.cur().java()).charAt(0));
         s.append(self, 1, self.length());
         return s.toString();
       }
@@ -783,7 +783,7 @@ public class FanStr
       if (Character.isUpperCase(ch))
       {
         StringBuilder s = new StringBuilder(self.length());
-        s.append(Character.toString((char)ch).toLowerCase(Locale.current().java()).charAt(0));
+        s.append(Character.toString((char)ch).toLowerCase(Locale.cur().java()).charAt(0));
         s.append(self, 1, self.length());
         return s.toString();
       }

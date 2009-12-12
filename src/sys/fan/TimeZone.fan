@@ -64,7 +64,10 @@ const class TimeZone
   ** "fan.timezone" and any value accepted by `fromStr`.  Once
   ** Fantom is booted, the default timezone cannot be changed.
   **
-  static TimeZone current()
+  static TimeZone cur()
+
+  ** TODO: use `cur`
+  @deprecated static TimeZone current()
 
   **
   ** Default value is UTC.

@@ -59,7 +59,13 @@ fan.sys.TimeZone.utc = function()
   return fan.sys.TimeZone.m_utc;
 }
 
+// TODO
 fan.sys.TimeZone.current = function()
+{
+  return fan.sys.TimeZone.cur();
+}
+
+fan.sys.TimeZone.cur = function()
 {
   // TODO
   if (fan.sys.TimeZone.m_current == null)

@@ -56,33 +56,37 @@ public class Locale
 // Thread
 //////////////////////////////////////////////////////////////////////////
 
-  public static Locale current()
+  // TODO
+  public static Locale current() { return cur(); }
+  public static void setCurrent(Locale locale) { setCur(locale); }
+
+  public static Locale cur()
   {
-    return (Locale)current.get();
+    return (Locale)cur.get();
   }
 
-  public static void setCurrent(Locale locale)
+  public static void setCur(Locale locale)
   {
     if (locale == null) throw NullErr.make().val;
-    current.set(locale);
+    cur.set(locale);
   }
 
-  static final ThreadLocal current = new ThreadLocal()
+  static final ThreadLocal cur = new ThreadLocal()
   {
     protected Object initialValue() { return defaultLocale; }
   };
 
   public Locale use(Func func)
   {
-    Locale old = current();
+    Locale old = cur();
     try
     {
-      setCurrent(this);
+      setCur(this);
       func.call(this);
     }
     finally
     {
-      setCurrent(old);
+      setCur(old);
     }
     return this;
   }

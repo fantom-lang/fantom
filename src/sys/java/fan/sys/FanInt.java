@@ -403,7 +403,7 @@ public final class FanInt
       return toLocaleBytes(self);
 
     // get current locale
-    Locale locale = Locale.current();
+    Locale locale = Locale.cur();
     java.text.DecimalFormatSymbols df = locale.decimal();
 
     // get default pattern if necessary
@@ -444,13 +444,13 @@ public final class FanInt
   public static long localeUpper(long self)
   {
     // Java doesn't provide a locale Character API
-    return Character.toString((char)self).toUpperCase(Locale.current().java()).charAt(0);
+    return Character.toString((char)self).toUpperCase(Locale.cur().java()).charAt(0);
   }
 
   public static long localeLower(long self)
   {
     // Java doesn't provide a locale Character API
-    return Character.toString((char)self).toLowerCase(Locale.current().java()).charAt(0);
+    return Character.toString((char)self).toLowerCase(Locale.cur().java()).charAt(0);
   }
 
 //////////////////////////////////////////////////////////////////////////

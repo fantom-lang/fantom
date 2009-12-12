@@ -153,7 +153,7 @@ public final class Date
     Locale locale = null;
     if (pattern == null)
     {
-      if (locale == null) locale = Locale.current();
+      if (locale == null) locale = Locale.cur();
       pattern = locale.get("sys", localeKey, "D-MMM-YYYY");
     }
 
@@ -202,11 +202,11 @@ public final class Date
           switch (n)
           {
             case 4:
-              if (locale == null) locale = Locale.current();
+              if (locale == null) locale = Locale.cur();
               s.append(mon.full(locale));
               break;
             case 3:
-              if (locale == null) locale = Locale.current();
+              if (locale == null) locale = Locale.cur();
               s.append(mon.abbr(locale));
               break;
             case 2:  if (mon.ord+1 < 10) s.append('0');
@@ -230,11 +230,11 @@ public final class Date
           switch (n)
           {
             case 4:
-              if (locale == null) locale = Locale.current();
+              if (locale == null) locale = Locale.cur();
               s.append(weekday.full(locale));
               break;
             case 3:
-              if (locale == null) locale = Locale.current();
+              if (locale == null) locale = Locale.cur();
               s.append(weekday.abbr(locale));
               break;
             default: invalidNum = true;

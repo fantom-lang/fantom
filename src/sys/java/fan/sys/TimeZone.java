@@ -94,9 +94,15 @@ public final class TimeZone
     return utc;
   }
 
+  public static TimeZone cur()
+  {
+    return cur;
+  }
+
+  // TODO
   public static TimeZone current()
   {
-    return current;
+    return cur;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -498,7 +504,7 @@ public final class TimeZone
 
   static HashMap cache = new HashMap(); // String -> TimeZone
   static TimeZone utc;
-  static TimeZone current;
+  static TimeZone cur;
 
 //////////////////////////////////////////////////////////////////////////
 // Initialization
@@ -535,11 +541,11 @@ public final class TimeZone
       String sysProp = (String)Sys.env().get("fan.timezone");
       if (sysProp != null)
       {
-        current = fromStr(sysProp);
+        cur = fromStr(sysProp);
       }
       else
       {
-        current = fromJava(java.util.TimeZone.getDefault().getID());
+        cur = fromJava(java.util.TimeZone.getDefault().getID());
       }
     }
     catch (Throwable e)
@@ -547,7 +553,7 @@ public final class TimeZone
       System.out.println("ERROR: Cannot init current timezone");
       e.printStackTrace();
 
-      current = utc;
+      cur = utc;
     }
   }
 

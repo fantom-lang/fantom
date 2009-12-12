@@ -360,12 +360,12 @@ public class Pod
 
   public final String loc(String key)
   {
-    return Locale.current().doGet(this, name, key, Locale.getNoDef);
+    return Locale.cur().doGet(this, name, key, Locale.getNoDef);
   }
 
   public final String loc(String key, String def)
   {
-    return Locale.current().doGet(this, name, key, def);
+    return Locale.cur().doGet(this, name, key, def);
   }
 
 //////////////////////////////////////////////////////////////////////////

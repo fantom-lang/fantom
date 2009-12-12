@@ -326,7 +326,7 @@ public final class FanFloat
   public static String toLocale(double self, String pattern)
   {
     // get current locale
-    Locale locale = Locale.current();
+    Locale locale = Locale.cur();
     java.text.DecimalFormatSymbols df = locale.decimal();
 
     // handle special values

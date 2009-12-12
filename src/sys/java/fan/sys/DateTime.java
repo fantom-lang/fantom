@@ -46,7 +46,7 @@ public final class DateTime
     if (tolerance != null && now - c.ticks <= tolerance.ticks)
         return c;
 
-    return cached = new DateTime(now, TimeZone.current);
+    return cached = new DateTime(now, TimeZone.cur);
   }
 
   public static DateTime nowUtc()  { return nowUtc(toleranceDefault); }
@@ -82,9 +82,9 @@ public final class DateTime
 // Constructor - Values
 //////////////////////////////////////////////////////////////////////////
 
-  public static DateTime make(long year, Month month, long day, long hour, long min) { return make(year, month, day, hour, min, 0L, 0L, TimeZone.current); }
-  public static DateTime make(long year, Month month, long day, long hour, long min, long sec) { return make(year, month, day, hour, min, sec, 0L, TimeZone.current); }
-  public static DateTime make(long year, Month month, long day, long hour, long min, long sec, long ns) { return make(year, month, day, hour, min, sec, ns, TimeZone.current); }
+  public static DateTime make(long year, Month month, long day, long hour, long min) { return make(year, month, day, hour, min, 0L, 0L, TimeZone.cur); }
+  public static DateTime make(long year, Month month, long day, long hour, long min, long sec) { return make(year, month, day, hour, min, sec, 0L, TimeZone.cur); }
+  public static DateTime make(long year, Month month, long day, long hour, long min, long sec, long ns) { return make(year, month, day, hour, min, sec, ns, TimeZone.cur); }
   public static DateTime make(long year, Month month, long day, long hour, long min, long sec, long ns, TimeZone tz)
   {
     return new DateTime((int)year, month.ord, (int)day, (int)hour, (int)min, (int)sec, ns, Integer.MAX_VALUE, tz);
@@ -151,7 +151,7 @@ public final class DateTime
 // Constructor - Date,Time
 //////////////////////////////////////////////////////////////////////////
 
-  static DateTime makeDT(Date d, Time t) { return makeDT(d, t, TimeZone.current); }
+  static DateTime makeDT(Date d, Time t) { return makeDT(d, t, TimeZone.cur); }
   static DateTime makeDT(Date d, Time t, TimeZone tz)
   {
     return new DateTime(d.year, d.month, d.day, t.hour, t.min, t.sec, t.ns, Integer.MAX_VALUE, tz);
@@ -161,7 +161,7 @@ public final class DateTime
 // Constructor - Ticks
 //////////////////////////////////////////////////////////////////////////
 
-  public static DateTime makeTicks(long ticks) { return makeTicks(ticks, TimeZone.current); }
+  public static DateTime makeTicks(long ticks) { return makeTicks(ticks, TimeZone.cur); }
   public static DateTime makeTicks(long ticks, TimeZone tz)
   {
     return new DateTime(ticks, tz);
@@ -440,7 +440,7 @@ public final class DateTime
     // locale specific default
     if (pattern == null)
     {
-      if (locale == null) locale = Locale.current();
+      if (locale == null) locale = Locale.cur();
       pattern = locale.get("sys", localeKey, "D-MMM-YYYY WWW hh:mm:ss zzz");
     }
 
@@ -489,11 +489,11 @@ public final class DateTime
           switch (n)
           {
             case 4:
-              if (locale == null) locale = Locale.current();
+              if (locale == null) locale = Locale.cur();
               s.append(mon.full(locale));
               break;
             case 3:
-              if (locale == null) locale = Locale.current();
+              if (locale == null) locale = Locale.cur();
               s.append(mon.abbr(locale));
               break;
             case 2:  if (mon.ord+1 < 10) s.append('0');
@@ -517,11 +517,11 @@ public final class DateTime
           switch (n)
           {
             case 4:
-              if (locale == null) locale = Locale.current();
+              if (locale == null) locale = Locale.cur();
               s.append(weekday.full(locale));
               break;
             case 3:
-              if (locale == null) locale = Locale.current();
+              if (locale == null) locale = Locale.cur();
               s.append(weekday.abbr(locale));
               break;
             default: invalidNum = true;
@@ -837,7 +837,7 @@ public final class DateTime
 // Java
 //////////////////////////////////////////////////////////////////////////
 
-  public static DateTime fromJava(long millis) { return fromJava(millis, TimeZone.current); }
+  public static DateTime fromJava(long millis) { return fromJava(millis, TimeZone.cur); }
   public static DateTime fromJava(long millis, TimeZone tz)
   {
     if (millis <= 0) return null;
@@ -930,7 +930,7 @@ public final class DateTime
 //////////////////////////////////////////////////////////////////////////
 
   private static final Duration toleranceDefault = Duration.makeMillis(250);
-  private static volatile DateTime cached = new DateTime(0, TimeZone.current);
+  private static volatile DateTime cached = new DateTime(0, TimeZone.cur);
   private static volatile DateTime cachedUtc = new DateTime(0, TimeZone.utc);
   private static Object nowUniqueLock = new Object();
   private static long nowUniqueLast;
