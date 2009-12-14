@@ -127,7 +127,10 @@ class ApiToHtmlGenerator : HtmlGenerator
     if (t.isEnum)
     {
       out.print("<ul>\n")
-      vals := t.field("values").get as Obj[]
+// TODO - remove after 49
+temp := t.field("values",false) ?: t.field("vals")
+vals := temp.get as Obj[]
+      //vals := t.field("vals").get as Obj[]
       vals.each |Obj obj|
       {
         out.print("<li><a href='#$obj'>").print(obj).print("</a></li>\n")
