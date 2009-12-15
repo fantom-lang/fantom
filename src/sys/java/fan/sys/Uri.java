@@ -990,8 +990,17 @@ public final class Uri
     // if diverenge is at root, then no commonality
     if (d == 0)
     {
-      t.path = this.path;
-      t.pathStr = this.pathStr;
+      // `/a/b/c`.relTo(`/`) should be `a/b/c`
+      if (base.path.isEmpty() && this.pathStr.startsWith("/"))
+      {
+        t.path = this.path;
+        t.pathStr = this.pathStr.substring(1);
+      }
+      else
+      {
+        t.path = this.path;
+        t.pathStr = this.pathStr;
+      }
     }
 
     // if paths are exactly the same

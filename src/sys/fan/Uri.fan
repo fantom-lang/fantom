@@ -542,8 +542,10 @@ const final class Uri
   ** Examples:
   **   `http://foo/a/b/c`.relTo(`http://foo/a/b/c`) => ``
   **   `http://foo/a/b/c`.relTo(`http://foo/a/b`)   => `c`
-  **   `//foo/a/b/c`.relTo(`http://foo/`)           => `a/b/c`
   **   `/a/b/c`.relTo(`/a`)                         => `b/c`
+  **   `a/b/c`.relTo(`/a`)                          => `b/c`
+  **   `/a/b/c?q`.relTo(`/`)                        => `a/b/c?q`
+  **   `/a/x`.relTo(`/a/b/c`)                       => `../x`
   **
   Uri relTo(Uri base)
 
