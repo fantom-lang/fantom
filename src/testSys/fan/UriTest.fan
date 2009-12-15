@@ -921,7 +921,8 @@ class UriTest : Test
     verifyRelTo(`http://foo/a/b/c`,  `http://foo/a/b`,    `c`)
     verifyRelTo(`http://foo/a/b/c`,  `http://foo/a/b/`,   `c`)
     verifyRelTo(`http://foo/a/b/c`,  `http://foo/a`,      `b/c`)
-    verifyRelTo(`http://foo/a/b/c`,  `http://foo/`,       `/a/b/c`)
+    verifyRelTo(`http://foo/a/b/c`,  `http://foo/`,       `a/b/c`)
+    verifyRelTo(`http://foo/a/b/c`,  `http://foo/ax`,     `/a/b/c`)
 
     verifyRelTo(`/a/b/`,  `/x/b/c`,  `/a/b/`)
     verifyRelTo(`/a/b/`,  `/a/x/c`,  `../b/`)
@@ -931,9 +932,14 @@ class UriTest : Test
     verifyRelTo(`/a/b/c`, `/a/b/c`, ``)
     verifyRelTo(`/a/b/c`, `/a/b`,   `c`)
     verifyRelTo(`/a/b/c`, `/a`,     `b/c`)
-    verifyRelTo(`/a/b/c`, `/`,      `/a/b/c`)
+    verifyRelTo(`/a/b/c`, `/`,      `a/b/c`)
+    verifyRelTo(`/a/b/c`, `/ax`,    `/a/b/c`)
     verifyRelTo(`/foo/`,  `/foo/`,  ``)
     verifyRelTo(`/foo/`,  `/foo/bar/`, `../`)
+    verifyRelTo(`/`, `/`,  ``)
+    verifyRelTo(`/foo?q`, `/`,  `foo?q`)
+    verifyRelTo(`foo?q`, `/`,  `foo?q`)
+    verifyRelTo(`foo/bar#f`, `/`,  `foo/bar#f`)
   }
 
   Void verifyRelTo(Uri a, Uri b, Uri r)

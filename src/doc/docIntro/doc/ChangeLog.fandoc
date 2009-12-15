@@ -750,4 +750,5 @@
 - Int.toLocale "B" pattern for formatting size in bytes
 - Add sys::deprecated facet and compiler warnings
 - DateTime, Date, and Time support in sql
+- Fix Uri.relTo(/) to remove leading slash
 

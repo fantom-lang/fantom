@@ -992,8 +992,17 @@ namespace Fan.Sys
       // if diverenge is at root, then no commonality
       if (d == 0)
       {
-        t.path = this.m_path;
-        t.pathStr = this.m_pathStr;
+        // `/a/b/c`.relTo(`/`) should be `a/b/c`
+        if (baseUri.m_path.isEmpty() && this.m_pathStr.StartsWith("/"))
+        {
+          t.path = this.m_path;
+          t.pathStr = this.m_pathStr.Substring(1);
+        }
+        else
+        {
+          t.path = this.m_path;
+          t.pathStr = this.m_pathStr;
+        }
       }
 
       // if paths are exactly the same
