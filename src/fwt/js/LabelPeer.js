@@ -118,7 +118,7 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     var img = document.createElement("img");
     if (this.m_text.length > 0)
     {
-      img.style.verticalAlign = "middle";
+      img.style.verticalAlign = "bottom";
       img.style.paddingRight  = "3px";
       // TODO: this requires widget to be relayed out cause prefSize has changed
       //img.onload = function() {
