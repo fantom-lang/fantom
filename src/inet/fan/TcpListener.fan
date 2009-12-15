@@ -64,7 +64,7 @@ const class TcpListener
   ** is null an ephemeral port is selected.  Throw IOErr if the port is
   ** already bound or the bind fails.  Return this.
   **
-  native TcpListener bind(IpAddress? addr, Int? port, Int backlog := 50)
+  native This bind(IpAddress? addr, Int? port, Int backlog := 50)
 
   **
   ** Accept the next incoming connection.  This method blocks the
