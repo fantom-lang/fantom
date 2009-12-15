@@ -58,15 +58,10 @@ final class Func
 
   **
   ** Return the associated method if this function implements a
-  ** method slot.  If this function a is curried method using the
-  ** "&" operator method call syntax, it will return the associated
-  ** method.  Otherwise return 'null'.
+  ** method slot.  Otherwise return 'null'.
   **
   ** Examples:
-  **   f := Int#plus.func
-  **   f.method           =>  sys::Int.plus
-  **   (&10.plus).method  =>  sys::Int.plus
-  **   (&f(10)).method    =>  null
+  **   Int#plus.func.method  =>  sys::Int.plus
   **
   Method? method()
 

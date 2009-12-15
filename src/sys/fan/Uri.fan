@@ -269,7 +269,7 @@ const final class Uri
   ** escaped.
   **
   ** Examples:
-  **   `mailto:me@there.com`  =>  null
+  **   `mailto:me@there.com`  =>  ["me@there.com"]
   **   `http://host`.path     =>  Str[,]
   **   `http://foo/`.path     =>  Str[,]
   **   `/`.path               =>  Str[,]
