@@ -142,13 +142,16 @@ class SqlServiceTest : Test
       ducks     bigint,
       height    float,
       weight    double,
+      dt        datetime,
+      d         date,
+      t         time,
       primary key (farmer_id))
       ").execute
 
     row := db.tableRow("farmers")
     cols := row.cols
 
-    verifyEq(cols.size, 11)
+    verifyEq(cols.size, 14)
     verifyEq(cols.isRO, true)
     verifyEq(cols is Col[], true)
     verifyEq(cols.type, Col[]#)
@@ -166,6 +169,9 @@ class SqlServiceTest : Test
     verifyCol(row.col("ducks"),         8,  "ducks",     Int#,   "bigint")
     verifyCol(row.col("height"),        9,  "height",    Float#, "float")
     verifyCol(row.col("weight"),        10, "weight",    Float#, "double")
+    verifyCol(row.col("dt"),            11, "dt",        DateTime#, "datetime")
+    verifyCol(row.col("d"),             12, "d",         Date#,  "date")
+    verifyCol(row.col("t"),             13, "t",         Time#,  "time")
     */
 
     verifyEq(row.col("foobar", false), null)
@@ -180,12 +186,15 @@ class SqlServiceTest : Test
   Void insertTable()
   {
     // insert a couple rows
+    dt := DateTime(2009, Month.dec, 15, 23, 19, 21)
+    date := Date("1972-09-10")
+    time := Time("14:31:55")
     data := [
-      [1, "Alice",   false, "Pooh",     "abcd", 21,   1,   80,  null, 5.3f,  120f],
-      [2, "Brian",   true,  "Haley",    "1234", 35,   2,   99,   5,   5.7f,  140f],
-      [3, "Charlie", null,  "Addi",     null,   null, 3,   44,   7,   null, 6.1f],
-      [4, "Donny",   true,  null,       "wxyz", 40,  null, null, 8,   null, null],
-      [5, "John",    true,  "Berkeley", "5678", 35,  null, null, 8,   null, null],
+      [1, "Alice",   false, "Pooh",     "abcd", 21,   1,   80,  null, 5.3f,  120f, dt, date, time],
+      [2, "Brian",   true,  "Haley",    "1234", 35,   2,   99,   5,   5.7f,  140f, dt, date, time],
+      [3, "Charlie", null,  "Addi",     null,   null, 3,   44,   7,   null, 6.1f,  dt, date, time],
+      [4, "Donny",   true,  null,       "wxyz", 40,  null, null, 8,   null, null,  dt, date, time],
+      [5, "John",    true,  "Berkeley", "5678", 35,  null, null, 8,   null, null,  dt, date, time],
     ]
     data.each |Obj[] row| { insertFarmer(row[1..-1]) }
 
@@ -212,17 +221,23 @@ class SqlServiceTest : Test
     verifyEq(f->ducks,    null)
     verifyEq(f->height,   5.3f)
     verifyEq(f->weight,   120.0f)
+    verifyEq(f->dt,       dt)
+    verifyEq(f->d,        date)
+    verifyEq(f->t,        time)
 
     verifyEq(f[f.col("pet")], "Pooh")
   }
 
   Void insertFarmer(Obj[] row)
   {
-    s := "insert farmers (name, married, pet, ss, age, pigs, cows, ducks, height, weight) values ("
+    s := "insert farmers (name, married, pet, ss, age, pigs, cows, ducks, height, weight, dt, d, t) values ("
     s += row.join(", ") |Obj? o->Str|
     {
-      if (o == null) return "null"
-      if (o is Str) return "'$o'"
+      if (o == null)     return "null"
+      if (o is Str)      return "'$o'"
+      if (o is DateTime) return "'" + o->toLocale("YYYY-MM-DD hh:mm:ss") + "'"
+      if (o is Date)     return "'" + o->toLocale("YYYY-MM-DD") + "'"
+      if (o is Time)     return "'" + o->toLocale("hh:mm:ss") + "'"
       return o.toStr
     }
     s += ")"
@@ -231,7 +246,7 @@ class SqlServiceTest : Test
 
   Void verifyFarmerCols(Row r)
   {
-    verifyEq(r.cols.size, 11)
+    verifyEq(r.cols.size, 14)
     verifyEq(r.cols.isRO, true)
 // TODO
 //    verifyCol(t.fields[0],  0,  "farmer_id", Int#,   "INT")
@@ -246,6 +261,9 @@ class SqlServiceTest : Test
     verifyCol(r.cols[8],  8,  "ducks",     Int#,   "BIGINT")
     verifyCol(r.cols[9],  9,  "height",    Float#, "FLOAT")
     verifyCol(r.cols[10], 10, "weight",    Float#, "DOUBLE")
+    verifyCol(r.cols[11], 11, "dt",        DateTime#, "DATETIME")
+    verifyCol(r.cols[12], 12, "d",         Date#,  "DATE")
+    verifyCol(r.cols[13], 13, "t",         Time#,  "TIME")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -325,7 +343,7 @@ class SqlServiceTest : Test
     verifyEq(rows[3]->name, "Donny")
     verifyEq(rows[4]->name, "John")
 
-    insertFarmer(["Bad", false, "Bad",  "bad!", 21, 1, 80, null, 5.3f, 120f])
+    insertFarmer(["Bad", false, "Bad",  "bad!", 21, 1, 80, null, 5.3f, 120f, DateTime.now, Date.today, Time.now])
     db.rollback
     rows = query("select name from farmers order by name")
     verifyEq(rows.size, 5)
@@ -428,5 +446,8 @@ internal class Farmer
   Num? ducks
   Float height
   Float weight
+  DateTime? dt
+  Date? d
+  Time? t
 }
 
