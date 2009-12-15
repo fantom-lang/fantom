@@ -68,17 +68,26 @@ public class SqlUtil
       case Types.LONGVARBINARY:
         return Sys.BufType;
 
+      case Types.TIMESTAMP:
+        return Sys.DateTimeType;
+
+      case Types.DATE:
+        return Sys.DateType;
+
+      case Types.TIME:
+        return Sys.TimeType;
+
       default:
         return null;
     }
   }
 
 //////////////////////////////////////////////////////////////////////////
-// From fa
+// Sql => Fantom
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * Map an java.sql.ResultSet column to a Fan object.
+   * Map an java.sql.ResultSet column to a Fantom object.
    */
   public static Object toObj(ResultSet rs, int col)
     throws SQLException
@@ -123,7 +132,7 @@ public class SqlUtil
   }
 
   /**
-   * Map an java.sql.ResultSet column to a Fan object.
+   * Map an java.sql.ResultSet column to a Fantom object.
    */
   public static SqlToFan converter(ResultSet rs, int col)
     throws SQLException
@@ -153,6 +162,15 @@ public class SqlUtil
       case Types.VARBINARY:
       case Types.LONGVARBINARY:
         return new ToFanBuf();
+
+      case Types.TIMESTAMP:
+        return new ToFanDateTime();
+
+      case Types.DATE:
+        return new ToFanDate();
+
+      case Types.TIME:
+        return new ToFanTime();
 
       default:
         return new ToDefFanStr();
@@ -208,6 +226,39 @@ public class SqlUtil
       double f = rs.getDouble(col);
       if (rs.wasNull()) return null;
       return Double.valueOf(f);
+    }
+  }
+
+  public static class ToFanDateTime extends SqlToFan
+  {
+    public Object toObj(ResultSet rs, int col)
+      throws SQLException
+    {
+      java.sql.Timestamp ts = rs.getTimestamp(col);
+      if (rs.wasNull()) return null;
+      return DateTime.fromJava(ts.getTime());
+    }
+  }
+
+  public static class ToFanDate extends SqlToFan
+  {
+    public Object toObj(ResultSet rs, int col)
+      throws SQLException
+    {
+      java.sql.Date d = rs.getDate(col);
+      if (rs.wasNull()) return null;
+      return fan.sys.Date.make(d.getYear()+1900, (Month)Month.vals.get(d.getMonth()), d.getDate());
+    }
+  }
+
+  public static class ToFanTime extends SqlToFan
+  {
+    public Object toObj(ResultSet rs, int col)
+      throws SQLException
+    {
+      java.sql.Time t = rs.getTime(col);
+      if (rs.wasNull()) return null;
+      return fan.sys.Time.make(t.getHours(), t.getMinutes(), t.getSeconds());
     }
   }
 
