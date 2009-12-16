@@ -21,16 +21,19 @@ class CreateZip : Task
   override Void run()
   {
     // basic sanity checking
-    if (inDir == null) throw fatal("Not configured: CreateZip.inDir")
+    if (inDirs == null || inDirs.isEmpty) throw fatal("Not configured: CreateZip.inDirs")
     if (outFile == null) throw fatal("Not configured: CreateZip.outFile")
-    if (!inDir.isDir) throw fatal("Not a directory: $inDir")
 
     // ensure outFile is not under inDir (although we do allow
     // outFile to be placed directly under inDir as convenience)
-    inPath := inDir.normalize.pathStr
-    outPath := outFile.normalize.parent.pathStr
-    if (outPath.startsWith(inPath) && inPath != outPath)
-      throw fatal("Cannot set outFile under inDir: $outPath under $inPath")
+    inDirs.each |File inDir|
+    {
+      if (!inDir.isDir) throw fatal("Not a directory: $inDir")
+      inPath := inDir.normalize.pathStr
+      outPath := outFile.normalize.parent.pathStr
+      if (outPath.startsWith(inPath) && inPath != outPath)
+        throw fatal("Cannot set outFile under inDir: $outPath under $inPath")
+    }
 
     // ensure prefixPath is formatted correctly
     if (pathPrefix != null)
@@ -44,12 +47,15 @@ class CreateZip : Task
     out := Zip.write(outFile.out)
     try
     {
-      inDir.list.each |File f|
+      inDirs.each |File inDir|
       {
-        if (f.name == outFile.name) return
-        uri := f.name.toUri
-        if (pathPrefix != null) uri = pathPrefix + uri
-        zip(out, f, uri.toStr)
+        inDir.list.each |File f|
+        {
+          if (f.name == outFile.name) return
+          uri := f.name.toUri
+          if (pathPrefix != null) uri = pathPrefix + uri
+          zip(out, f, uri.toStr)
+        }
       }
     }
     catch (Err err)
@@ -83,10 +89,10 @@ class CreateZip : Task
   ** Required output zip file to create
   File? outFile
 
-  ** Required directory to zip up.  The contents of this dir are
+  ** Required directories to zip up.  The contents of these dirs are
   ** recursively zipped up with zip paths relative to this root
   ** directory.
-  File? inDir
+  File[]? inDirs
 
   ** This function is called on each file under 'inDir'; if true
   ** returned it is included in the zip, if false then it is excluded.
