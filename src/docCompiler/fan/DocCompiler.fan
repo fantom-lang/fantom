@@ -26,6 +26,7 @@ class DocCompiler
     errors = CompilerErr[,]
     outDir = Repo.boot.home + `doc/`
     uriMapper = UriMapper(this)
+    htmlTheme = HtmlTheme()
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -100,5 +101,6 @@ class DocCompiler
   File? podDir              // Init: outDir/podName
   Obj[]? fandocIndex        // FandocToHtml if we have "index.fog"
   Type? curType             // if running Api generation
+  HtmlTheme htmlTheme       // html theme to use
 
 }
