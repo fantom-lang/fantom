@@ -92,7 +92,9 @@ class Main
           println("ERROR: must specified dir with -d option")
           return false
         }
-        compiler.outDir = File(args[++i].toUri).normalize
+        path := args[++i]
+        file := path.contains("\\") ? File.os(path) : File(path.toUri, false)
+        compiler.outDir = file
       }
       else if (a == "-v")
       {
