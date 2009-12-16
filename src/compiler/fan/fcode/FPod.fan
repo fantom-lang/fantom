@@ -174,7 +174,7 @@ final class FPod : CPod, FConst
     typeRefs.read(in(`/typeRefs.def`))
     fieldRefs.read(in(`/fieldRefs.def`))
     methodRefs.read(in(`/methodRefs.def`))
-    symbolRefs.read(in(`/symbolDefs.def`))
+    symbolRefs.read(in(`/symbolRefs.def`))
     ints.read(in(`/ints.def`))
     floats.read(in(`/floats.def`))
     decimals.read(in(`/decimals.def`))
