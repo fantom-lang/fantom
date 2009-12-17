@@ -6,6 +6,7 @@
 //   17 Oct 09  Andy Frank  Creation
 //
 
+using dom
 using gfx
 using fwt
 using web
@@ -14,7 +15,7 @@ class Cookies : Window
 {
   new make() : super(null, null)
   {
-    table = Table { model=CookieModel(dom::Doc.cookies) }
+    table = Table { model=CookieModel(Win.cur.doc.cookies) }
     content = InsetPane(24)
     {
       EdgePane
@@ -53,8 +54,9 @@ class Cookies : Window
      {
        try
        {
-         dom::Doc.addCookie(Cookie(name.text, Buf().print(value.text).toBase64))
-         table.model = CookieModel(dom::Doc.cookies)
+         doc := Win.cur.doc
+         doc.addCookie(Cookie(name.text, Buf().print(value.text).toBase64))
+         table.model = CookieModel(doc.cookies)
          table.refreshAll
        }
        catch (Err err)

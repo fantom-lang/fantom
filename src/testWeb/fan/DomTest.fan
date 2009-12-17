@@ -78,7 +78,7 @@ class TestClient
 {
   Void testAttrs()
   {
-    elem := Doc.elem("testAttrs")
+    elem := Win.cur.doc.elem("testAttrs")
     verify(elem != null)
 
     verifyEq(elem.id,    "testAttrs")
@@ -147,7 +147,7 @@ class TestClient
 
   Void testBasics()
   {
-    elem := Doc.elem("testBasics")
+    elem := Win.cur.elem("testBasics")
     verify(elem != null)
     kids := elem.children
     verifyEq(kids.size, 3)
@@ -158,14 +158,14 @@ class TestClient
 
   Void testCreate()
   {
-    elem := Doc.createElem("div")
+    elem := Win.cur.doc.createElem("div")
     verifyEq(elem.tagName, "div")
 
-    elem = Doc.createElem("div", ["class":"foo"])
+    elem = Win.cur.doc.createElem("div", ["class":"foo"])
     verifyEq(elem.tagName, "div")
     verifyEq(elem.className, "foo")
 
-    elem = Doc.createElem("div", ["id":"cool", "name":"yay", "class":"foo"])
+    elem = Win.cur.doc.createElem("div", ["id":"cool", "name":"yay", "class":"foo"])
     verifyEq(elem.tagName, "div")
     verifyEq(elem["id"], "cool")
     verifyEq(elem["name"], "yay")

@@ -175,7 +175,7 @@ class FxTestClient
   static Void show(Str id, Str dur)
   {
     start := Duration.now
-    Doc.elem(id).effect.show(Duration(dur)) |fx|
+    Win.cur.doc.elem(id).effect.show(Duration(dur)) |fx|
     {
       end := Duration.now
       fx.elem.html = "Hello! (${(end-start).toMillis}ms)"
@@ -185,7 +185,7 @@ class FxTestClient
   static Void hide(Str id, Str dur)
   {
     start := Duration.now
-    Doc.elem(id).effect.hide(Duration(dur)) |fx|
+    Win.cur.doc.elem(id).effect.hide(Duration(dur)) |fx|
     {
       end := Duration.now
       fx.elem.html = "Hello! (${(end-start).toMillis}ms)"
@@ -199,7 +199,7 @@ class FxTestClient
   static Void fadeTo(Str id, Decimal opacity, Str dur)
   {
     start := Duration.now
-    Doc.elem(id).effect.fadeTo(opacity, Duration(dur)) |fx|
+    Win.cur.doc.elem(id).effect.fadeTo(opacity, Duration(dur)) |fx|
     {
       end := Duration.now
       op  := fx.elem.style->opacity
@@ -211,7 +211,7 @@ class FxTestClient
   {
     d  := Duration(dur)
     t1 := Duration.now
-    Doc.elem(id).effect.fadeOut(d) |fx|
+    Win.cur.doc.elem(id).effect.fadeOut(d) |fx|
     {
       t2 := Duration.now
       fx.fadeIn(d) |fx2|
@@ -226,7 +226,7 @@ class FxTestClient
   {
     d  := Duration(dur)
     t1 := Duration.now
-    Doc.elem(id).effect.animate(["opacity":"0.0" ], d) |fx|
+    Win.cur.doc.elem(id).effect.animate(["opacity":"0.0" ], d) |fx|
     {
       t2 := Duration.now
       fx.animate(["opacity":"1.0"], d) |fx2|
@@ -244,7 +244,7 @@ class FxTestClient
   static Void slideDown(Str id, Str dur)
   {
     start := Duration.now
-    Doc.elem(id).effect.slideDown(Duration(dur)) |fx|
+    Win.cur.doc.elem(id).effect.slideDown(Duration(dur)) |fx|
     {
       end := Duration.now
       fx.elem.html = "Hello! (${(end-start).toMillis}ms)"
@@ -254,7 +254,7 @@ class FxTestClient
   static Void slideUp(Str id, Str dur)
   {
     start := Duration.now
-    Doc.elem(id).effect.slideUp(Duration(dur)) |fx|
+    Win.cur.doc.elem(id).effect.slideUp(Duration(dur)) |fx|
     {
       end := Duration.now
       fx.elem.html = "Hello! (${(end-start).toMillis}ms)"
@@ -270,8 +270,8 @@ class FxTestClient
     d  := Duration(dur)
     t1 := Duration.now
     t2 := 0ms
-    Doc.elem(id).effect.fadeOut(d) |fx| { t2 = Duration.now }
-    Doc.elem(id).effect.fadeIn(d)  |fx|
+    Win.cur.doc.elem(id).effect.fadeOut(d) |fx| { t2 = Duration.now }
+    Win.cur.doc.elem(id).effect.fadeIn(d)  |fx|
     {
       t3 := Duration.now
       fx.elem.html = "Hello! (${(t2-t1).toMillis}ms, ${(t3-t2).toMillis}ms)"
@@ -283,8 +283,8 @@ class FxTestClient
     d  := Duration(dur)
     t1 := Duration.now
     t2 := 0ms
-    Doc.elem(id).effect.slideUp(d)   |fx| { t2 = Duration.now }
-    Doc.elem(id).effect.slideDown(d) |fx|
+    Win.cur.doc.elem(id).effect.slideUp(d)   |fx| { t2 = Duration.now }
+    Win.cur.doc.elem(id).effect.slideDown(d) |fx|
     {
       t3 := Duration.now
       fx.elem.html = "Hello! (${(t2-t1).toMillis}ms, ${(t3-t2).toMillis}ms)"
@@ -293,7 +293,7 @@ class FxTestClient
 
   static Void queue3(Str id, Str dur)
   {
-    fx := Doc.elem(id).effect
+    fx := Win.cur.doc.elem(id).effect
     d  := Duration(dur)
     t1 := Duration.now
     fx.fadeOut(d)
@@ -310,7 +310,7 @@ class FxTestClient
   {
     d  := Duration(dur)
     t1 := Duration.now
-    Doc.elem(id).effect.fadeOut(d) |fx1| {
+    Win.cur.doc.elem(id).effect.fadeOut(d) |fx1| {
       fx1.fadeIn(d) |fx2| {
         fx2.slideUp(d) |fx3| {
           fx3.slideDown(d) |fx4| {
@@ -326,8 +326,8 @@ class FxTestClient
   {
     d   := Duration(dur)
     t1  := Duration.now
-    fxa := Doc.elem(a).effect
-    fxb := Doc.elem(b).effect
+    fxa := Win.cur.doc.elem(a).effect
+    fxb := Win.cur.doc.elem(b).effect
     fxa.fadeOut(d)
     fxa.fadeIn(d) |fx|
     {
@@ -346,14 +346,14 @@ class FxTestClient
   {
     d  := Duration(dur)
     t1 := Duration.now
-    Doc.elem(a).effect.fadeOut(d)
-    Doc.elem(a).effect.fadeIn(d) |fx|
+    Win.cur.doc.elem(a).effect.fadeOut(d)
+    Win.cur.doc.elem(a).effect.fadeIn(d) |fx|
     {
       t2 := Duration.now
       fx.elem.html = "Hello! (${(t2-t1).toMillis}ms)"
     }
-    Doc.elem(b).effect.fadeOut(d)
-    Doc.elem(b).effect.fadeIn(d) |fx|
+    Win.cur.doc.elem(b).effect.fadeOut(d)
+    Win.cur.doc.elem(b).effect.fadeIn(d) |fx|
     {
       t2 := Duration.now
       fx.elem.html = "Hello! (${(t2-t1).toMillis}ms)"
@@ -364,8 +364,8 @@ class FxTestClient
   {
     d   := Duration(dur)
     t1  := Duration.now
-    fxa := Doc.elem(a).effect
-    fxb := Doc.elem(b).effect
+    fxa := Win.cur.doc.elem(a).effect
+    fxb := Win.cur.doc.elem(b).effect
     fxa.fadeOut(d)
     fxa.fadeIn(d) |fx|
     {

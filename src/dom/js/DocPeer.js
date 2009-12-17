@@ -11,19 +11,19 @@
 fan.dom.DocPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.dom.DocPeer.prototype.$ctor = function(self) {}
 
-fan.dom.DocPeer.body = function()
+fan.dom.DocPeer.prototype.body = function(self)
 {
   return fan.dom.ElemPeer.make(document.body);
 }
 
-fan.dom.DocPeer.elem = function(id)
+fan.dom.DocPeer.prototype.elem = function(self, id)
 {
   var elem = document.getElementById(id);
   if (elem == null) return null;
   return fan.dom.ElemPeer.make(elem);
 }
 
-fan.dom.DocPeer.createElem = function(tagName, attribs)
+fan.dom.DocPeer.prototype.createElem = function(self, tagName, attribs)
 {
   var elem = document.createElement(tagName);
   var wrap = fan.dom.ElemPeer.make(elem);
@@ -36,6 +36,6 @@ fan.dom.DocPeer.createElem = function(tagName, attribs)
   return wrap;
 }
 
-fan.dom.DocPeer.getCookiesStr = function() { return document.cookie; }
-fan.dom.DocPeer.addCookieStr = function(c) { document.cookie = c; }
+fan.dom.DocPeer.prototype.getCookiesStr = function(self) { return document.cookie; }
+fan.dom.DocPeer.prototype.addCookieStr = function(self,c) { document.cookie = c; }
 
