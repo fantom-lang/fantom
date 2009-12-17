@@ -223,7 +223,8 @@ vals := temp.get as Obj[]
     if (hidden) cls += " hidden"
     out.print("<dt id='$slot.name' class='$cls'>$slot.name")
     if (docsrc)
-      out.print("<a href='$source#$slot.name'>Source</a></dt>\n")
+      out.print("<a href='$source#$slot.name'>Source</a>")
+    out.print("</dt>\n")
     out.print("<dd")
     if (hidden) out.print(" class='hidden'")
     out.print(">\n")
