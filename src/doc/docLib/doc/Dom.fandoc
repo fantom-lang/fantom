@@ -34,8 +34,9 @@ Window [#window]
 Doc [#doc]
 ==========
 
-  Doc.elem("someId")      // return the Elem with id='someId'
-  Doc.createElem("div")   // create a new <div> element
+  doc := Win.cur.doc      // get doc instance for this window
+  doc.elem("someId")      // return the Elem with id='someId'
+  doc.createElem("div")   // create a new <div> element
 
 Elem [#elem]
 ============

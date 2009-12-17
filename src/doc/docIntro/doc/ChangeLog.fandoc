@@ -752,4 +752,6 @@
 - DateTime, Date, and Time support in sql
 - Fix Uri.relTo(/) to remove leading slash
 - Change build::CreateZip.inDir => inDirs
+- Rename dom::Window -> dom::Win
+- Move dom::Win, dom::Doc to singletons
 

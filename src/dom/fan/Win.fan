@@ -25,6 +25,11 @@ class Win
   private new make() {}
 
   **
+  ** Return the Doc instance for this window.
+  **
+  native Doc doc()
+
+  **
   ** Display a modal message box with the given text.
   **
   native Void alert(Obj obj)
