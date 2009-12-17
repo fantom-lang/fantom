@@ -79,7 +79,7 @@ fan.sys.LogLevel.m_warn   = new fan.sys.LogLevel(2, "warn");
 fan.sys.LogLevel.m_error  = new fan.sys.LogLevel(3, "error");
 fan.sys.LogLevel.m_silent = new fan.sys.LogLevel(4, "silent");
 
-fan.sys.LogLevel.m_values =
+fan.sys.LogLevel.m_vals =
 [
   fan.sys.LogLevel.m_debug,
   fan.sys.LogLevel.m_info,
