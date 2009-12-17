@@ -38,6 +38,11 @@ namespace Fan.Sys
   // Management
   //////////////////////////////////////////////////////////////////////////
 
+    public static Pod of(object obj)
+    {
+      return Type.of(obj).pod();
+    }
+
     public static Pod find(string name) { return doFind(name, true, null); }
     public static Pod find(string name, bool check) { return doFind(name, check, null); }
     public static Pod doFind(string name, bool check, FPod fpod)

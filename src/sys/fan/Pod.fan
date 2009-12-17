@@ -18,6 +18,12 @@ final const class Pod
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Get the pod of the given instance which is convenience
+  ** for 'Type.of(obj).pod'.  See `Type.pod`.
+  **
+  static Pod? of(Obj obj)
+
+  **
   ** Get a list of all the pods installed.  Note that currently this
   ** method will load all of the pods into memory, so it is an expensive
   ** operation.

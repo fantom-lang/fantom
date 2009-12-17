@@ -146,6 +146,11 @@ public class Test
     verifyCount++;
   }
 
+  public void verifyType(Object obj, Type t)
+  {
+    verifyEq(Type.of(obj), t);
+  }
+
   public void verifyErr(Type errType, Func f)
   {
     try

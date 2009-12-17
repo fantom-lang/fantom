@@ -37,6 +37,11 @@ public class Pod
 // Management
 //////////////////////////////////////////////////////////////////////////
 
+  public static Pod of(Object obj)
+  {
+    return Type.of(obj).pod();
+  }
+
   public static Pod find(String name) { return doFind(name, true, null, null); }
   public static Pod find(String name, boolean checked) { return doFind(name, checked, null, null); }
   public static Pod doFind(String name, boolean checked, FPod fpod, HashMap resolving)

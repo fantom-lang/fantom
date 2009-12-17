@@ -34,6 +34,14 @@ public abstract class Type
 // Management
 //////////////////////////////////////////////////////////////////////////
 
+  public static Type of(Object obj)
+  {
+    if (obj instanceof FanObj)
+      return ((FanObj)obj).type();
+    else
+      return FanUtil.toFanType(obj.getClass(), true);
+  }
+
   public static Type find(String sig) { return TypeParser.load(sig, true, null); }
   public static Type find(String sig, boolean checked) { return TypeParser.load(sig, checked, null); }
 
