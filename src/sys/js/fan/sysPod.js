@@ -172,7 +172,7 @@ fan.sys.MimeType.m_dir       = fan.sys.MimeType.predefined("x-directory", "norma
 
 fan.sys.UriPodBase = "/sys/pod/";
 
-fan.sys.Month.m_values = fan.sys.List.make(fan.sys.Type.find("sys::Month"),
+fan.sys.Month.m_vals = fan.sys.List.make(fan.sys.Type.find("sys::Month"),
 [
   fan.sys.Month.m_jan,
   fan.sys.Month.m_feb,

@@ -27,13 +27,13 @@ fan.sys.Weekday.prototype.$ctor = function(ordinal, name)
 
 fan.sys.Weekday.prototype.increment = function()
 {
-  var arr = fan.sys.Weekday.m_values;
+  var arr = fan.sys.Weekday.m_vals;
   return arr[(this.m_ordinal+1) % arr.length];
 }
 
 fan.sys.Weekday.prototype.decrement = function()
 {
-  var arr = fan.sys.Weekday.m_values;
+  var arr = fan.sys.Weekday.m_vals;
   return this.m_ordinal == 0 ? arr[arr.length-1] : arr[this.m_ordinal-1];
 }
 
@@ -86,7 +86,7 @@ fan.sys.Weekday.m_thu = new fan.sys.Weekday(4,  "thu");
 fan.sys.Weekday.m_fri = new fan.sys.Weekday(5,  "fri");
 fan.sys.Weekday.m_sat = new fan.sys.Weekday(6,  "sat");
 
-fan.sys.Weekday.m_values =
+fan.sys.Weekday.m_vals =
 [
   fan.sys.Weekday.m_sun,
   fan.sys.Weekday.m_mon,

@@ -335,8 +335,8 @@ fan.sys.DateTime.fromStr = function(s, checked, iso)
       tz = fan.sys.TimeZone.fromStr(s.substring(i), true);
     }
 
-    //return fan.sys.DateTime.make(year, fan.sys.Month.m_values[month], day, hour, min, sec, ns, offset, tz);
-    return fan.sys.DateTime.make(year, fan.sys.Month.m_values[month], day, hour, min, sec, ns, tz);
+    //return fan.sys.DateTime.make(year, fan.sys.Month.m_vals[month], day, hour, min, sec, ns, offset, tz);
+    return fan.sys.DateTime.make(year, fan.sys.Month.m_vals[month], day, hour, min, sec, ns, tz);
   }
   catch (err)
   {
@@ -381,7 +381,7 @@ fan.sys.DateTime.prototype.ticks = function() { return this.m_ticks; }
 fan.sys.DateTime.prototype.date = function() { return fan.sys.Date.make(this.year(), this.month(), this.day()); }
 fan.sys.DateTime.prototype.time = function() { return fan.sys.Time.make(this.hour(), this.min(), this.sec(), this.nanoSec()); }
 fan.sys.DateTime.prototype.year = function() { return (this.m_fields & 0xff) + 1900; }
-fan.sys.DateTime.prototype.month = function() { return fan.sys.Month.m_values[(this.m_fields >> 8) & 0xf]; }
+fan.sys.DateTime.prototype.month = function() { return fan.sys.Month.m_vals[(this.m_fields >> 8) & 0xf]; }
 fan.sys.DateTime.prototype.day = function() { return (this.m_fields >> 12) & 0x1f; }
 fan.sys.DateTime.prototype.hour = function() { return (this.m_fields >> 17) & 0x1f; }
 fan.sys.DateTime.prototype.min = function() { return (this.m_fields >> 22) & 0x3f; }
@@ -395,7 +395,7 @@ fan.sys.DateTime.prototype.nanoSec = function()
   var rem = this.m_ticks >= 0 ? this.m_ticks : this.m_ticks - fan.sys.DateTime.yearTicks[0];
   return rem % fan.sys.DateTime.nsPerSec;
 }
-fan.sys.DateTime.prototype.weekday = function() { return fan.sys.Weekday.m_values[(this.m_fields >> 28) & 0x7]; }
+fan.sys.DateTime.prototype.weekday = function() { return fan.sys.Weekday.m_vals[(this.m_fields >> 28) & 0x7]; }
 fan.sys.DateTime.prototype.tz = function() { return this.m_tz; }
 fan.sys.DateTime.prototype.dst = function() { return ((this.m_fields >> 31) & 0x1) != 0; }
 fan.sys.DateTime.prototype.tzAbbr = function() { return this.dst() ? this.m_tz.dstAbbr(this.year()) : this.m_tz.stdAbbr(this.year()); }

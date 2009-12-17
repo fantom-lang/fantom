@@ -95,13 +95,13 @@ fan.sys.Date.prototype.toStr = function()
 }
 
 fan.sys.Date.prototype.year  = function() { return this.m_year; }
-fan.sys.Date.prototype.month = function() { return fan.sys.Month.m_values[this.m_month]; }
+fan.sys.Date.prototype.month = function() { return fan.sys.Month.m_vals[this.m_month]; }
 fan.sys.Date.prototype.day   = function() { return this.m_day; }
 
 fan.sys.Date.prototype.weekday = function()
 {
   var weekday = (fan.sys.DateTime.firstWeekday(this.m_year, this.m_month) + this.m_day - 1) % 7;
-  return fan.sys.Weekday.m_values[weekday];
+  return fan.sys.Weekday.m_vals[weekday];
 }
 
 fan.sys.Date.prototype.dayOfYear = function()

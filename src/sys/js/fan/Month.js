@@ -27,13 +27,13 @@ fan.sys.Month.prototype.$ctor = function(ordinal, name)
 
 fan.sys.Month.prototype.increment = function()
 {
-  var arr = fan.sys.Month.m_values;
+  var arr = fan.sys.Month.m_vals;
   return arr[(this.m_ordinal+1) % arr.length];
 }
 
 fan.sys.Month.prototype.decrement = function()
 {
-  var arr = fan.sys.Month.m_values;
+  var arr = fan.sys.Month.m_vals;
   return this.m_ordinal == 0 ? arr[arr.length-1] : arr[this.m_ordinal-1];
 }
 

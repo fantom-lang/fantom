@@ -214,13 +214,13 @@ fan.sys.TimeZone.compareOnDay = function(rule, x, year, mon, day)
       return 0;
 
     case 'l':
-      var last = fan.sys.DateTime.weekdayInMonth(year, fan.sys.Month.m_values[mon], fan.sys.Weekday.m_values[x.onWeekday], -1);
+      var last = fan.sys.DateTime.weekdayInMonth(year, fan.sys.Month.m_vals[mon], fan.sys.Weekday.m_vals[x.onWeekday], -1);
       if (last < day) return -1;
       if (last > day) return +1;
       return 0;
 
     case '>':
-      var start = fan.sys.DateTime.weekdayInMonth(year, fan.sys.Month.m_values[mon], fan.sys.Weekday.m_values[x.onWeekday], 1);
+      var start = fan.sys.DateTime.weekdayInMonth(year, fan.sys.Month.m_vals[mon], fan.sys.Weekday.m_vals[x.onWeekday], 1);
       while (start < x.onDay) start += 7;
       if (start < day) return -1;
       if (start > day) return +1;
