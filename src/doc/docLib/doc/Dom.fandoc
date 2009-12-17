@@ -17,7 +17,7 @@ one-to-one:
 
   Browser           Fantom
   --------------    ---------------
-  Window            Window
+  Win               Window
   Document          Doc
   Element           Elem
   Event             Event
@@ -26,9 +26,10 @@ one-to-one:
 Window [#window]
 ================
 
-  Window.alert("Hello!")  // display a modal dialog
-  Window.uri              // the URI for this page
-  Window.hyperlink(uri)   // hyperlink to new page
+  win := Win.cur       // get current Win instance
+  win.alert("Hello!")  // display a modal dialog
+  win.uri              // the URI for this page
+  win.hyperlink(uri)   // hyperlink to new page
 
 Doc [#doc]
 ==========
@@ -74,7 +75,7 @@ Elem [#elem]
   elem.h                  // height of element
 
   // event handlers
-  elem.onEvent("click", false) |e| { Window.alert("$e.target clicked!") }
+  elem.onEvent("click", false) |e| { Win.cur.alert("$e.target clicked!") }
 
   // find
   elem.find |e| { e.tagName == "img" }     // find first <img> descendant
@@ -89,7 +90,7 @@ is passed to you in the callback closure:
 
   HttpReq(uri).send("some content") |res|
   {
-    Window.alert(res.content)
+    Win.cur.alert(res.content)
   }
 
 If you are submitting form values, you can use
@@ -99,7 +100,7 @@ values as a form submission, and set the Content-Type to
 
   HttpReq(uri).sendForm(["name":"Barney Stinson"]) |res|
   {
-    Window.alert(res.content)
+    Win.cur.alert(res.content)
   }
 
 Effects [#effects]

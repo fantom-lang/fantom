@@ -23,7 +23,7 @@ mark a type using the '@js' facet.
   @js
   class GonnaBeJs
   {
-    Void sayHi() { Window.alert("Hello!") }
+    Void sayHi() { Win.cur.alert("Hello!") }
   }
 
 Compiling [#compiling]

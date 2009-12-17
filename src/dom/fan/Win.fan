@@ -11,8 +11,13 @@
 ** Window models the DOM window object.
 **
 @js
-class Window
+class Win
 {
+
+  **
+  ** Return the current window instance.
+  **
+  static native Win cur()
 
   **
   ** Private ctor.
@@ -22,16 +27,16 @@ class Window
   **
   ** Display a modal message box with the given text.
   **
-  static native Void alert(Obj obj)
+  native Void alert(Obj obj)
 
   **
   ** Get the Uri for this window.
   **
-  static native Uri uri()
+  native Uri uri()
 
   **
   ** Hyperlink to the given Uri in this window.
   **
-  static native Void hyperlink(Uri uri)
+  native Void hyperlink(Uri uri)
 
 }
