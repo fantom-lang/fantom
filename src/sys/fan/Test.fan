@@ -101,6 +101,11 @@ abstract class Test
   Void verifyNotSame(Obj? a, Obj? b, Str? msg := null)
 
   **
+  ** Verify that 'Type.of(obj)' equals the given type.
+  **
+  Void verifyType(Obj obj, Type t)
+
+  **
   ** Verify that the function throws an Err of the
   ** exact same type as err (compare using === operator).
   **

@@ -28,6 +28,11 @@ const class Type
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Get the class Type of the given instance.
+  **
+  static Type of(Obj obj)
+
+  **
   ** Find a Type by it's qualified name "pod::Type".  If the type
   ** doesn't exist and checked is false then return null, otherwise
   ** throw UnknownTypeErr.

@@ -45,6 +45,14 @@ namespace Fan.Sys
   // Management
   //////////////////////////////////////////////////////////////////////////
 
+    public static Type of(object obj)
+    {
+      if (obj is FanObj)
+        return ((FanObj)obj).type();
+      else
+        return FanUtil.toFanType(obj.GetType(), true);
+    }
+
     public static Type find(string sig) { return TypeParser.load(sig, true, null); }
     public static Type find(string sig, bool check) { return TypeParser.load(sig, check, null); }
 
