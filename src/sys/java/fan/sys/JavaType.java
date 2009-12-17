@@ -309,6 +309,18 @@ public class JavaType
     Facets facets = Facets.empty();
     Type of       = toFanType(java.getType());
 
+    // map Java transients to facets
+    if (Modifier.isTransient(java.getModifiers()))
+    {
+      if (transientFacets == null)
+      {
+        HashMap m = new HashMap();
+        m.put("sys::transient", Boolean.TRUE);
+        transientFacets = Facets.make(m);
+      }
+      facets = transientFacets;
+    }
+
     Field fan = new Field(parent, name, flags, facets, -1, of);
     fan.reflect = java;
     return fan;
@@ -567,6 +579,7 @@ public class JavaType
 //////////////////////////////////////////////////////////////////////////
 
   private static final HashMap cache = new HashMap(); // String -> JavaType
+  private static Facets transientFacets;
 
   public static final JavaType ByteType  = make(byte.class);
   public static final JavaType ShortType = make(short.class);
