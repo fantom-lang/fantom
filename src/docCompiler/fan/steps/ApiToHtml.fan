@@ -11,7 +11,7 @@ using compiler
 **
 ** ApiToHtml generates an HTML file for each type in pod
 **
-class ApiToHtml : DocCompilerSupport
+class ApiToHtml : DocCompilerStep
 {
 
   new make(DocCompiler compiler)
@@ -23,7 +23,7 @@ class ApiToHtml : DocCompilerSupport
   {
     compiler.pod.types.each |Type t|
     {
-      if (!HtmlGenerator.showType(t)) return
+      if (!showType(t)) return
       generate(t)
     }
   }
@@ -31,7 +31,7 @@ class ApiToHtml : DocCompilerSupport
   Void generate(Type t)
   {
     log.debug("  API [$t]")
-    file := compiler.podDir + "${t.name}.html".toUri
+    file := compiler.podOutDir + "${t.name}.html".toUri
     loc := Location(t.qname)
     compiler.curType = t
     ApiToHtmlGenerator(compiler, loc, file.out, t).generate

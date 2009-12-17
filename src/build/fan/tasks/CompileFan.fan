@@ -29,7 +29,6 @@ class CompileFan : Task
     input.dependsDir  = script.resolveDir(script.dependsDir, true)
     input.log         = log
     input.includeDoc  = includeDoc
-    input.includeSrc  = includeSrc
     input.mode        = CompilerInputMode.file
     input.podDef      = script.podDef
     input.outDir      = script.outDir.toFile

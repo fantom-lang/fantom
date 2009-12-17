@@ -64,9 +64,6 @@ class WritePod : CompilerStep
 
       // if including fandoc write it out too
       if (compiler.input.includeDoc) writeDocs(zip)
-
-      // if including source write it out too
-      if (compiler.input.includeSrc) writeSrc(zip)
     }
     catch (CompilerErr e)
     {
@@ -187,18 +184,6 @@ class WritePod : CompilerStep
       doc.each |Str line| { out.print("  ").printLine(line) }
     }
     out.printLine
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Src
-//////////////////////////////////////////////////////////////////////////
-
-  private Void writeSrc(Zip zip)
-  {
-    compiler.srcFiles.each |File f|
-    {
-      writeRes(zip, f, "src/$f.name".toUri)
-    }
   }
 
 //////////////////////////////////////////////////////////////////////////

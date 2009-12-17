@@ -85,7 +85,8 @@ class ApiToHtmlGenerator : HtmlGenerator
   {
     out.print("<h2>More Info</h2>\n")
     out.print("<ul class='clean'>\n")
-    out.print("  <li><a href='$source'>View Source</a></li>\n")
+    if (docsrc)
+      out.print("  <li><a href='$source'>View Source</a></li>\n")
     out.print("  <li><a href='#' onclick='ShowSlots.toggle(event); return false;'>")
     out.print("Show All Slots</a></li>\n")
     out.print("</ul>\n")
@@ -221,6 +222,7 @@ vals := temp.get as Obj[]
     cls := (slot.isField) ? "field" : "method"
     if (hidden) cls += " hidden"
     out.print("<dt id='$slot.name' class='$cls'>$slot.name")
+    if (docsrc)
       out.print("<a href='$source#$slot.name'>Source</a></dt>\n")
     out.print("<dd")
     if (hidden) out.print(" class='hidden'")

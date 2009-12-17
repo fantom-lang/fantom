@@ -11,7 +11,7 @@ using compiler
 **
 ** BuildSearchIndex generates the top level navigation and search index.
 **
-class BuildSearchIndex : DocCompilerSupport
+class BuildSearchIndex : DocCompilerStep
 {
 
   new make(DocCompiler compiler)
@@ -31,7 +31,7 @@ class BuildSearchIndex : DocCompilerSupport
       if (p.facet(@nodoc) == true) return
       p.types.each |Type t, Int i|
       {
-        if (!HtmlGenerator.showType(t)) return
+        if (!showType(t)) return
         if (first) first = false
         else out.print(",\n")
         out.print("\"$t.qname\"")

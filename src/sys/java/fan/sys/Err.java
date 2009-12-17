@@ -189,7 +189,8 @@ public class Err
       if (num >= maxDepth)
       {
         int more = elems.length - i - start;
-        out.indent(indent+2).writeChars(more + " More...\n");
+        if (more > 0)
+          out.indent(indent+2).writeChars(more + " More...\n");
         break;
       }
     }

@@ -11,7 +11,7 @@ using compiler
 **
 ** Init prepares the output directory.
 **
-class Init : DocCompilerSupport
+class Init : DocCompilerStep
 {
 
   new make(DocCompiler compiler)
@@ -21,7 +21,7 @@ class Init : DocCompilerSupport
 
   Void run()
   {
-    dir := compiler.outDir + "${compiler.pod.name}/".toUri
+    dir := compiler.outDir + `${compiler.pod.name}/`
 
     log.debug("  Delete [$dir]")
     dir.delete
@@ -29,6 +29,6 @@ class Init : DocCompilerSupport
     log.debug("  Create [$dir]")
     dir.create
 
-    compiler.podDir = dir
+    compiler.podOutDir = dir
   }
 }

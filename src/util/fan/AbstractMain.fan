@@ -110,7 +110,7 @@ abstract class AbstractMain
   ** Parse the command line and set this instances fields.
   ** Return false if not all of the arguments were passed.
   **
-  virtual Bool parseArgs(Str[] toks := Sys.args)
+  virtual Bool parseArgs(Str[] toks)
   {
     args := argFields
     opts := optFields
@@ -237,9 +237,10 @@ abstract class AbstractMain
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Print usage of arguments and options
+  ** Print usage of arguments and options.
+  ** Return non-zero.
   **
-  virtual Void usage(OutStream out := Sys.out)
+  virtual Int usage(OutStream out := Sys.out)
   {
     // get list of argument and option fields
     args := argFields
@@ -264,6 +265,7 @@ abstract class AbstractMain
     usagePrint(out, "Arguments:", argRows)
     usagePrint(out, "Options:", optRows)
     out.printLine
+    return 1
   }
 
   private Str[] usageArg(Field field)
@@ -285,7 +287,7 @@ abstract class AbstractMain
     if (def != false) col1 += " <$field.of.name>"
 
     col2 := desc
-    if (def != false) col2 += " (default $def)"
+    if (def != false && def != null) col2 += " (default $def)"
 
     return [col1, col2]
   }
@@ -313,9 +315,10 @@ abstract class AbstractMain
   **
   ** Run the application.  This method is called after the
   ** command line has been parsed.  See `runServices` to
-  ** launch a deamon application.
+  ** launch a deamon application.  Return status code, zero
+  ** for success.
   **
-  abstract Void run()
+  abstract Int run()
 
   **
   ** Run the set of services:
@@ -323,11 +326,12 @@ abstract class AbstractMain
   **   2. call start on each service
   **   3. put main thread to sleep.
   **
-  virtual Void runServices(Service[] services)
+  virtual Int runServices(Service[] services)
   {
     services.each |Service s| { s.install }
     services.each |Service s| { s.start }
     Actor.sleep(Duration.maxVal)
+    return 0
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -342,13 +346,13 @@ abstract class AbstractMain
   **   3. Call `run` and return 0
   **   4. If an exception is raised log it and return 1
   **
-  virtual Int main()
+  virtual Int main(Str[] args := Sys.args)
   {
     success := false
     try
     {
       // parse command line
-      argsOk := parseArgs
+      argsOk := parseArgs(args)
 
       // if args not ok or help was specified, dump usage
       if (!argsOk || helpOpt)
@@ -359,8 +363,7 @@ abstract class AbstractMain
       }
 
       // call run
-      run
-      return 0
+      return run
     }
     catch (Err err)
     {

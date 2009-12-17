@@ -12,7 +12,7 @@ using fandoc
 **
 ** FandocToHtml generates an HTML file for each fandoc file in pod
 **
-class FandocToHtml : DocCompilerSupport
+class FandocToHtml : DocCompilerStep
 {
 
   new make(DocCompiler compiler)
@@ -42,7 +42,7 @@ class FandocToHtml : DocCompilerSupport
         log.debug("  FandocIndex [$indexFile]")
         compiler.fandocIndex = indexFile.in.readObj
         loc := Location.makeFile(indexFile)
-        outFile := compiler.podDir + "index.html".toUri
+        outFile := compiler.podOutDir + `index.html`
         FandocIndexToHtmlGenerator(compiler, loc, outFile.out).generate
       }
       catch (Err e)
@@ -65,7 +65,7 @@ class FandocToHtml : DocCompilerSupport
       doc := FandocParser().parse(inFile.name, inFile.in)
       loc := Location(compiler.pod + "::" + inFile.name)
 
-      outFile := compiler.podDir + "${inFile.basename}.html".toUri
+      outFile := compiler.podOutDir + `${inFile.basename}.html`
       FandocToHtmlGenerator(compiler, loc, outFile, doc).generate
 
       return doc

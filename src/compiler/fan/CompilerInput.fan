@@ -76,11 +76,6 @@ class CompilerInput
   Bool includeDoc := false
 
   **
-  ** Include source code in output pod, default is false
-  **
-  Bool includeSrc := false
-
-  **
   ** Is this compile process being run inside a test, default is false
   **
   Bool isTest := false
@@ -140,7 +135,6 @@ class CompilerInput
     validateReqField("output")
     validateReqField("outDir")
     validateReqField("includeDoc")
-    validateReqField("includeSrc")
     validateReqField("isTest")
     validateReqField("mode")
     validateReqField("podName")

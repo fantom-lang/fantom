@@ -154,4 +154,11 @@ pod sys
   **
   Bool nodoc := false
 
+  **
+  ** This facet is used on pods to indicate whether the source code
+  ** should be included in the documentation.  By default source code
+  ** it *not* included.
+  **
+  Bool docsrc := false
+
 }

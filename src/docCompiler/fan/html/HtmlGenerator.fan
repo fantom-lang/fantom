@@ -13,7 +13,7 @@ using fandoc
 ** HtmlGenerator is the base class for HTML generation which
 ** handles all the navigation and URI concerns
 **
-abstract class HtmlGenerator : HtmlDocWriter
+abstract class HtmlGenerator : HtmlDocWriter, DocCompilerSupport
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -26,6 +26,12 @@ abstract class HtmlGenerator : HtmlDocWriter
     this.compiler = compiler
     this.loc = loc
   }
+
+//////////////////////////////////////////////////////////////////////////
+// DocCompilerSupport
+//////////////////////////////////////////////////////////////////////////
+
+  override DocCompiler compiler
 
 //////////////////////////////////////////////////////////////////////////
 // Generator
@@ -163,34 +169,6 @@ abstract class HtmlGenerator : HtmlDocWriter
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Filters
-//////////////////////////////////////////////////////////////////////////
-
-  static Bool showType(Type t)
-  {
-    if (t.isInternal) return false
-    if (t.isSynthetic) return false
-    if (t.fits(Test#) && t != Test#) return false
-    if (t.facet(@nodoc) == true) return false
-    return true
-  }
-
-  static Bool showSlot(Type t, Slot s)
-  {
-    if (s.isSynthetic) return false
-    if (s.facet(@nodoc) == true) return false
-    return t == s.parent
-  }
-
-  static Bool showByDefault(Type t, Slot s)
-  {
-    v := s.isPublic || s.isProtected
-    v &= t == Obj# || s.parent != Obj#
-    v &= t == s.parent
-    return v
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Support
 //////////////////////////////////////////////////////////////////////////
 
@@ -235,7 +213,6 @@ abstract class HtmlGenerator : HtmlDocWriter
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  DocCompiler compiler
   Location loc
   Str docHome := "Doc Home"
 }
