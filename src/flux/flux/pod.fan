@@ -22,6 +22,8 @@
 
 @podIndexFacets = [@fluxResource, @fluxSideBar, @fluxView, @fluxViewMimeType]
 
+@docsrc
+
 pod flux
 {
 

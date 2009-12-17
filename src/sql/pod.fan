@@ -14,5 +14,6 @@
 @podDepends = [Depend("sys 1.0")]
 @podSrcDirs = [`fan/`, `fan/dialects/`, `test/`]
 @podJavaDirs = [`java/`]
+@docsrc
 
 pod sql {}

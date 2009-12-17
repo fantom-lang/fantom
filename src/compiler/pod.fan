@@ -22,6 +22,7 @@
                `fan/steps/`,
                `fan/util/`]
 @podIndexFacets = [@compilerBridge, @compilerDsl]
+@docsrc
 
 pod compiler
 {

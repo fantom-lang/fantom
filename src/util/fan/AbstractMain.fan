@@ -225,7 +225,7 @@ abstract class AbstractMain
     if (of == File#)
     {
       if (tok.contains("\\"))
-        return File.os(tok)
+        return File.os(tok).normalize
       else
         return File.make(tok.toUri, false)
     }

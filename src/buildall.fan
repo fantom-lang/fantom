@@ -101,8 +101,10 @@ class Build : BuildGroup
     fanExe := (binDir+"fan$exeExt".toUri).osPath
     allBuildPodScripts.each |BuildPod script|
     {
-      if (script.podName.startsWith("test")) return
-      Exec.make(this, [fanExe, "docCompiler", script.podName]).run
+      name := script.podName
+      if (name.startsWith("test")) return
+      src := script.scriptDir
+      Exec.make(this, [fanExe, "docCompiler", "-src", src.osPath, name]).run
     }
 
     Exec.make(this, [fanExe, "docCompiler", "-topindex"]).run

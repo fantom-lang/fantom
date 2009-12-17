@@ -14,6 +14,7 @@
 @podSrcDirs = [`fan/`]
 @podResDirs = [`locale/`]
 @podIndexFacets = [@uriScheme]
+@docsrc
 
 pod sys
 {
