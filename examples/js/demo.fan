@@ -19,14 +19,14 @@ class JsDemo : AbstractMain
   @opt="http port"
   Int port := 8080
 
-  override Void run()
+  override Int run()
   {
     wisp := WispService
     {
       it.port = this.port
       it.root = JsDemoMod(homeDir)
     }
-    runServices([wisp])
+    return runServices([wisp])
   }
 }
 

@@ -13,7 +13,7 @@ class Boot : AbstractMain
   @opt="http port"
   Int port := 8080
 
-  override Void run()
+  override Int run()
   {
     // create log dir is it doesn't exist
     logDir := homeDir + `demo/logs/`
@@ -54,7 +54,7 @@ class Boot : AbstractMain
     }
 
     // run WispService
-    runServices([ WispService { it.port = this.port; root = pipeline } ])
+    return runServices([ WispService { it.port = this.port; root = pipeline } ])
   }
 }
 
