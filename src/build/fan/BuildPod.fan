@@ -403,7 +403,10 @@ abstract class BuildPod : BuildScript
   {
     // use docCompiler reflectively
     docCompiler := Type.find("docCompiler::Main").make
-    Int r := docCompiler->run(Str[podName])
+    docCompiler->d    = devHomeDir + `doc/`
+    docCompiler->src  = scriptDir
+    docCompiler->pods = [podName]
+    Int r := docCompiler->run
     if (r != 0) fatal("Cannot doc compiler '$podName'")
   }
 

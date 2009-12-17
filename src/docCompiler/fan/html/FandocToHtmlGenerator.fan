@@ -34,7 +34,7 @@ class FandocToHtmlGenerator : HtmlGenerator
   {
     title := doc.meta["title"]
     if (title != null) return toDisplay(title)
-    compiler.err("WARNING: Missing title", loc)
+    err("Missing title", loc)
     return super.title
   }
 

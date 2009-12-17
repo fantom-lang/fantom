@@ -12,7 +12,7 @@ using compiler
 ** PodIndexToHtml generates the Index.html file
 ** for a specific pod if one wasn't manually provided.
 **
-class PodIndexToHtml : DocCompilerSupport
+class PodIndexToHtml : DocCompilerStep
 {
 
   new make(DocCompiler compiler)
@@ -24,7 +24,7 @@ class PodIndexToHtml : DocCompilerSupport
   {
     log.debug("  Index [$compiler.pod]")
     if (compiler.fandocIndex != null) return
-    file := compiler.podDir + "index.html".toUri
+    file := compiler.podOutDir + `index.html`
     loc  := Location("index.html")
     PodIndexGenerator(compiler, loc, file.out).generate
   }

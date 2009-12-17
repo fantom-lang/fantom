@@ -24,6 +24,7 @@ class DocCompiler
   {
     log = CompilerLog()
     errors = CompilerErr[,]
+    warns  = CompilerErr[,]
     outDir = Repo.boot.home + `doc/`
     uriMapper = UriMapper(this)
     htmlTheme = HtmlTheme()
@@ -42,7 +43,7 @@ class DocCompiler
     FandocToHtml(this).run
     PodIndexToHtml(this).run
     SymbolsToHtml(this).run
-    CopyResources(this, pod, podDir).run
+    CopyResources(this, pod, podOutDir).run
     if (!errors.isEmpty) throw errors.last
   }
 
@@ -68,37 +69,17 @@ class DocCompiler
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Errors
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Create, log, and return a CompilerErr.
-  **
-  CompilerErr err(Str msg, Location loc)
-  {
-    return errReport(CompilerErr(msg, loc))
-  }
-
-  **
-  ** Log, store, and return the specified CompilerErr.
-  **
-  CompilerErr errReport(CompilerErr e)
-  {
-    log.compilerErr(e)
-    errors.add(e)
-    return e
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   CompilerLog log           // ctor
   CompilerErr[] errors      // accumulated errors
-  File outDir               // output directory
+  CompilerErr[] warns       // accumulated warnings
+  File? srcDir              // source tree (required for docsrc)
+  File outDir               // top level output directory
+  File? podOutDir           // Init: outDir + podName
   Pod? pod                  // pod to compile
   UriMapper uriMapper       // normalizes fandoc URIs to HTML
-  File? podDir              // Init: outDir/podName
   Obj[]? fandocIndex        // FandocToHtml if we have "index.fog"
   Type? curType             // if running Api generation
   HtmlTheme htmlTheme       // html theme to use

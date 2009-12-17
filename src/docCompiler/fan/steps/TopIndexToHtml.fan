@@ -11,7 +11,7 @@ using compiler
 **
 ** TopIndexToHtml generates the top level navigation and search index.
 **
-class TopIndexToHtml : DocCompilerSupport
+class TopIndexToHtml : DocCompilerStep
 {
 
   new make(DocCompiler compiler)

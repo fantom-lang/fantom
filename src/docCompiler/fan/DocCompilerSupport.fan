@@ -12,31 +12,54 @@ using compiler
 ** DocCompilerSupport provides lots of convenience methods
 ** for classes used during the documentation compiler pipeline.
 **
-class DocCompilerSupport
+mixin DocCompilerSupport
 {
-
-//////////////////////////////////////////////////////////////////////////
-// Construction
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Constructor takes the associated Compiler
-  **
-  new make(DocCompiler compiler)
-  {
-    this.compiler = compiler
-  }
 
 //////////////////////////////////////////////////////////////////////////
 // Convenience
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Parent compiler instance
+  **
+  abstract DocCompiler compiler()
+
+  **
   ** Convenience for compiler.log
   **
-  CompilerLog log()
+  CompilerLog log() { compiler.log }
+
+  **
+  ** Return if we should be generating source code documentation.
+  **
+  Bool docsrc() { compiler.pod.facet(@docsrc, false) == true }
+
+//////////////////////////////////////////////////////////////////////////
+// Filters
+//////////////////////////////////////////////////////////////////////////
+
+  Bool showType(Type t)
   {
-    return compiler.log
+    if (t.isInternal) return false
+    if (t.isSynthetic) return false
+    if (t.fits(Test#) && t != Test#) return false
+    if (t.facet(@nodoc) == true) return false
+    return true
+  }
+
+  Bool showSlot(Type t, Slot s)
+  {
+    if (s.isSynthetic) return false
+    if (s.facet(@nodoc) == true) return false
+    return t == s.parent
+  }
+
+  Bool showByDefault(Type t, Slot s)
+  {
+    v := s.isPublic || s.isProtected
+    v &= t == Obj# || s.parent != Obj#
+    v &= t == s.parent
+    return v
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -52,12 +75,23 @@ class DocCompilerSupport
   }
 
   **
+  ** Create, log, and return a warning CompilerErr.
+  **
+  CompilerErr warn(Str msg, Location loc)
+  {
+    return errReport(CompilerErr(msg, loc, null, LogLevel.warn))
+  }
+
+  **
   ** Log, store, and return the specified CompilerErr.
   **
   CompilerErr errReport(CompilerErr e)
   {
     compiler.log.compilerErr(e)
-    compiler.errors.add(e)
+    if (e.isWarn)
+      compiler.warns.add(e)
+    else
+      compiler.errors.add(e)
     return e
   }
 
@@ -69,11 +103,5 @@ class DocCompilerSupport
     if (!compiler.errors.isEmpty)
       throw compiler.errors.last
   }
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  DocCompiler compiler
 
 }

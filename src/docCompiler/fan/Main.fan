@@ -6,186 +6,117 @@
 //   5 May 06  Brian Frank  Creation
 //
 
+using util
 using compiler
 
 **
 ** Main is the main entry point for the Fantom documentation compiler.
 **
-class Main
+class Main : AbstractMain
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Options
+//////////////////////////////////////////////////////////////////////////
+
+  @opt="print version information"
+  Bool version := false
+
+  @opt="compile top index"
+  Bool topindex := false
+
+  @opt="verbose mode (more logging)"
+  @optAliases=["v"]
+  Bool verbose := false
+
+  @opt="silent mode (no logging)"
+  Bool silent := false
+
+  @opt="output directory for pod file"
+  File? d := null
+
+  @opt="directory of source code"
+  File? src := null
+
+  @arg="pod name(s) to compile"
+  Str[] pods := Str[,]
 
 //////////////////////////////////////////////////////////////////////////
 // Run
 //////////////////////////////////////////////////////////////////////////
 
-  **
-  ** Main entry point for compiler.  Return 0 on success.
-  **
-  Int run(Str[] args)
+  override Int run()
   {
-    t1 := Duration.now
-    success := true
+    // top level routing
+    if (version) return doVersion
+    if (topindex) return doTopindex
+    if (pods.isEmpty) return usage
 
-    // process args
-    if (!parseArgs(args)) return 0
-
-    // process each directory specified
+    // compile each pod specified
     try
     {
-      pipeline.callList([compiler])
+      pods.each |podName|
+      {
+        c := makeCompiler
+        c.pod = Pod.find(podName)
+        c.compilePodToHtml
+      }
+      return 0
+    }
+    catch (UnknownPodErr e)
+    {
+      log.error(e.toStr)
+      return 1
     }
     catch (CompilerErr err)
     {
       // all errors should already be logged by Compiler
-      success = false
+      return 1
     }
-    catch (Err err)
+    catch (Err e)
     {
-      compiler.log.compilerErr(CompilerErr("Internal compiler error", null, err))
-      err.trace
-      success = false
+      log.error("Internal compiler error", e)
+      return 1
     }
+  }
 
-    t2 := Duration.now
-    if (success)
+  private DocCompiler makeCompiler()
+  {
+    c := DocCompiler()
+    if (silent)      c.log.level = LogLevel.silent
+    if (verbose)     c.log.level = LogLevel.debug
+    if (d != null)   c.outDir = d
+    if (src != null) c.srcDir = src
+    return c
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Top Index
+//////////////////////////////////////////////////////////////////////////
+
+  private Int doTopindex()
+  {
+    try
     {
-      println("SUCCESS (" + (t2-t1).toMillis + "ms)")
+      makeCompiler.compileTopIndexToHtml
       return 0
     }
-    else
+    catch (Err e)
     {
-      println("FAILED (" + (t2-t1).toMillis + "ms)")
-      return -1
+      log.error("Topindex failed", e)
+      return 1
     }
   }
 
-  **
-  ** Process command line args and return false if we should exit.
-  **
-  Bool parseArgs(Str[] args)
+//////////////////////////////////////////////////////////////////////////
+// Version
+//////////////////////////////////////////////////////////////////////////
+
+  private Int doVersion(OutStream out := Sys.out)
   {
-    if (args.isEmpty)
-    {
-      help
-      return false
-    }
-
-    enoughArgs := false
-    for (i:=0; i<args.size; ++i)
-    {
-      a := args[i]
-      if (a.isEmpty) continue
-      if (a == "-help" || a == "-h" || a == "-?")
-      {
-        help
-        return false
-      }
-      else if (a == "-version")
-      {
-        version
-        return false
-      }
-      else if (a == "-d")
-      {
-        if (i+1 >= args.size)
-        {
-          println("ERROR: must specified dir with -d option")
-          return false
-        }
-        path := args[++i]
-        file := path.contains("\\") ? File.os(path) : File(path.toUri, false)
-        compiler.outDir = file
-      }
-      else if (a == "-v")
-      {
-        compiler.log.level = LogLevel.debug
-      }
-      else if (a == "-silent")
-      {
-        compiler.log.level = LogLevel.silent
-      }
-      else if (a == "-topindex")
-      {
-        pipeline = |DocCompiler c| { c.compileTopIndexToHtml }
-        enoughArgs = true
-      }
-      else if (a[0] == '-')
-      {
-        println("WARNING: Unknown option " + a)
-      }
-      else
-      {
-        compiler.pod = Pod.find(a, false)
-        if (compiler.pod == null)
-        {
-          println("ERROR: Pod not found: $a")
-          return false
-        }
-        enoughArgs = true
-      }
-    }
-
-    // if no dirs were specified, assume current dir
-    if (!enoughArgs)
-    {
-      println("ERROR: not enough arguments")
-      help
-      return false
-    }
-
-    return true
+    out.printLine("Fantom Doc Compiler ${type.pod.version}")
+    out.printLine("Copyright (c) 2007, Brian Frank and Andy Frank")
+    out.printLine("Licensed under the Academic Free License version 3.0")
+    return 1
   }
-
-  **
-  ** Dump help usage.
-  **
-  Void help()
-  {
-    println("Fantom Doc Compiler")
-    println("Usage:")
-    println("  docCompiler [options] <podName>")
-    println("Options:")
-    println("  -help, -h, -?  print usage help")
-    println("  -version       print version information")
-    println("  -d <dir>       output directory for pod file")
-    println("  -v             verbose mode (more logging)")
-    println("  -silent        silent mode (no logging)")
-    println("  -topindex      compile top index")
-  }
-
-  **
-  ** Dump version.
-  **
-  Void version()
-  {
-    println("Fantom Doc Compiler")
-    println("Copyright (c) 2007, Brian Frank and Andy Frank")
-    println("Licensed under the Academic Free License version 3.0")
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Utils
-//////////////////////////////////////////////////////////////////////////
-
-  Void println(Obj s)
-  {
-    compiler.log.printLine(s)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Main
-//////////////////////////////////////////////////////////////////////////
-
-  static Void main()
-  {
-    Sys.exit(make.run(Sys.args))
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  DocCompiler compiler := DocCompiler();
-  |DocCompiler c| pipeline := |DocCompiler c| { c.compilePodToHtml }
-
 }

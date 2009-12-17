@@ -39,7 +39,7 @@ class DemoMain : AbstractMain
   @arg="list argument"
   Str[]? varArg
 
-  override Void run()
+  override Int run()
   {
     echo("DemoMain.run")
     echo("  log      = $log")
@@ -49,5 +49,6 @@ class DemoMain : AbstractMain
       if (f.isStatic) return
       echo("  ${f.name.padr(8)} = ${f.get(this)}")
     }
+    return 0
   }
 }

@@ -13,7 +13,7 @@ using fandoc
 ** CopyResources copies master resource files like fandoc.css
 ** to the target directory.
 **
-class CopyResources : DocCompilerSupport
+class CopyResources : DocCompilerStep
 {
 
   new make(DocCompiler compiler, Pod pod, File outDir)

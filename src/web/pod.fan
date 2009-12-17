@@ -14,6 +14,7 @@
 @podDepends  = [Depend("sys 1.0"), Depend("inet 1.0")]
 @podSrcDirs  = [`fan/`, `test/`]
 @js
+@docsrc
 
 pod web {}
 

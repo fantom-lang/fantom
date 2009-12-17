@@ -124,7 +124,7 @@ class ObjTest : ObixTest
     verifyVal("time", Time.now)
 
     verifyErr(ArgErr#) { x := ObixObj { val = this } }
-    verifyErr(ArgErr#) { x := ObixObj { val = Locale.current } }
+    verifyErr(ArgErr#) { x := ObixObj { val = Locale.cur } }
   }
 
   Void verifyVal(Str elemName, Obj? val)
