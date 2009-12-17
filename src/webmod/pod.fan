@@ -12,5 +12,6 @@
 
 @podDepends = [Depend("sys 1.0"), Depend("inet 1.0"), Depend("web 1.0"), Depend("util 1.0")]
 @podSrcDirs = [`fan/`]
+@docsrc
 
 pod webmod {}

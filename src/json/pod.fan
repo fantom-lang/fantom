@@ -13,5 +13,6 @@
 
 @podDepends = [Depend("sys 1.0")]
 @podSrcDirs = [`fan/`, `test/`]
+@docsrc
 
 pod json {}

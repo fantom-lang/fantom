@@ -15,5 +15,6 @@
 @podSrcDirs = [`fan/`, `test/`]
 @podJavaDirs = Uri[,]
 @js
+@docsrc
 
 pod gfx {}

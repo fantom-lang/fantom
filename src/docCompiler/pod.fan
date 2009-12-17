@@ -18,5 +18,6 @@
                Depend("fandoc 1.0")]
 @podSrcDirs = [`fan/`, `fan/steps/`, `fan/html/`, `test/`]
 @podResDirs = [`res/`]
+@docsrc
 
 pod docCompiler {}

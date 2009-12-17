@@ -16,6 +16,7 @@
 @podSrcDirs = [`fan/`]
 @podJsDirs  = [`js/`]
 @js
+@docsrc
 
 pod dom {}
 

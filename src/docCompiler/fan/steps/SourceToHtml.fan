@@ -36,6 +36,7 @@ class SourceToHtml : DocCompilerStep
     compiler.srcDir.walk |f|
     {
       if (f.isDir || f.ext != "fan") return
+      if (f.name == "build.fan") return
       if (srcFiles.containsKey(f.name))
         warn("Duplicate source file names: $f.name", Location.makeFile(f))
       else

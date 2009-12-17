@@ -20,6 +20,7 @@ using fwt
                Depend("flux 1.0")]
 @podSrcDirs = [`fan/`, `test/`]
 @podResDirs = [`locale/`]
+@docsrc
 
 pod fluxText
 {

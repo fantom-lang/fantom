@@ -17,6 +17,7 @@
 @podJsDirs   = [`js/`]
 @podResDirs  = [`locale/`, `res/img/`, `res/javafx/`]
 @js
+@docsrc
 
 pod fwt {}
 
