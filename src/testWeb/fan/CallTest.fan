@@ -68,7 +68,7 @@ class CallTestClient
   {
     HttpReq(uri).send("") |HttpRes res|
     {
-      Window.alert(
+      Win.cur.alert(
         "$res.status
          $res.headers
 
