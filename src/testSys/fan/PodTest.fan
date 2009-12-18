@@ -123,7 +123,6 @@ class PodTest : Test
   Void testLog()
   {
     verifyEq(Pod.of(this).log.name, "testSys")
-    verifySame(Type.of(this).log, Pod.of(this).log)
   }
 
 

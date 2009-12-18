@@ -421,16 +421,15 @@ const class Type
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return the log for this type's pod name.  This is
-  ** convenience for 'Log.get(pod.name)'.  Also see `Pod.log`.
+  ** Use `Pod.log`
   **
+  @deprecated
   Log log()
 
   **
-  ** Return the localized property.  This is convenience for:
-  **   Locale.cur.get(pod.name, key, def)
-  ** Also see `Locale.get` and `Pod.loc`.
+  ** Use `Pod.loc`
   **
+  @deprecated
   Str? loc(Str key, Str? def := "name::key")
 
 }

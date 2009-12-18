@@ -26,7 +26,6 @@ class Logging
     // get the standard log for a type's pod
     echo("\n--- sysLog ---")
     echo(Str#.pod.log)
-    echo(Str#.log)
     echo(Pod.of("foo").log)
 
     // find an existing log

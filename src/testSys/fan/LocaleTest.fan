@@ -158,13 +158,11 @@ class LocaleTest : Test
       {
         verifyEq(x.get("testSys", key), expected)
         verifyEq(Pod.of(this).loc(key), expected)
-        verifyEq(LocaleTest#.loc(key), expected)
       }
       else
       {
         verifyEq(x.get("testSys", key, def), expected)
         verifyEq(Pod.of(this).loc(key, def), expected)
-        verifyEq(LocaleTest#.loc(key, def), expected)
       }
     }
     finally

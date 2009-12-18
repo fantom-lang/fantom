@@ -18,7 +18,7 @@ class Flux
   **
   ** Standard log for flux pod.
   **
-  static const Log log := Flux#.log
+  static const Log log := Flux#.pod.log
 
   **
   ** Read an session options file into memory.  An option file is a
