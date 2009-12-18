@@ -103,30 +103,3 @@ Convenience methods are availabe for the common request methods:
 The [postForm]`dom::HttpReq.postForm` will automatically encode the
 request to look like a normal HTML form submission.
 
-Effects [#effects]
-==================
-
-Modeled after [jQuery]`http://jquery.com/`, the [Effect]`dom::Effect`
-object allows an element to be animated, such as sliding it down, fading in,
-or transitioning between colors.  Common effects can be applied directly using
-a built-in method:
-
-  // show/hide
-  elem.effect.show
-  elem.effect.show(100ms)
-  elem.effect.hide(200ms)
-
-  // sliding
-  elem.effect.slideDown(500ms)
-  elem.effect.slideUp(250ms)
-
-  // fading
-  elem.effect.fadeIn(100ms)
-  elem.effect.fadeOut(100ms)
-  elem.effect.fadeTo(0.75, 200ms)
-
-Arbitrary animations can be applied using the
-[animate]`dom::Effect.animate` method:
-
-  // move elem diagonally down 100px
-  elem.effect.animate(["left":"100px", "top":"100px"], 250ms)
