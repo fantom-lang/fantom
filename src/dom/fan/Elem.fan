@@ -86,8 +86,7 @@ class Elem
   ** does not exist.  This is typically only valid for form
   ** elements.
   **
-// TODO: rename to val
-  native Obj? value
+  native Obj? val
 
   **
   ** The checked attribute for this element, or null if one
