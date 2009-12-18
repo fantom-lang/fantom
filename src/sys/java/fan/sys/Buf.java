@@ -328,6 +328,8 @@ public abstract class Buf
 
   public final Long peekChar() { return in.peekChar(); }
 
+  public final String readChars(long n) { return in.readChars(n); }
+
   public final String readLine() { return in.readLine(); }
   public final String readLine(Long max) { return in.readLine(max); }
 

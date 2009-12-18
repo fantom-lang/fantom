@@ -234,6 +234,13 @@ class InStream
   Int? peekChar()
 
   **
+  ** Read the next n chars from the stream as a Str using the
+  ** current `charset`.  Block until exactly n chars have been
+  ** read or throw IOErr if end of stream is reached first.
+  **
+  Str readChars(Int n)
+
+  **
   ** Read the next line from the input stream as a Str based on the
   ** configured charset.  A line is terminated by \n, \r\n, \r, or
   ** EOF.  The Str returned never contains the trailing newline.

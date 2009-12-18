@@ -375,6 +375,20 @@ public class InStream
     return x;
   }
 
+  public String readChars(long n)
+  {
+    if (n < 0) throw ArgErr.make("readChars n < 0: " + n).val;
+    if (n == 0) return "";
+    StringBuilder buf = new StringBuilder(256);
+    for (int i=(int)n; i>0; --i)
+    {
+      int ch = rChar();
+      if (ch < 0) throw IOErr.make("Unexpected end of stream").val;
+      buf.append((char)ch);
+    }
+    return buf.toString();
+  }
+
   public String readLine() { return readLine(FanInt.Chunk); }
   public String readLine(Long max)
   {
