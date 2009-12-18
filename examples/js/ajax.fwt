@@ -14,41 +14,38 @@ class Ajax : Window
 {
   new make() : super(null, null)
   {
-    get  := Text { prefCols=50 }
-    post := Text { prefCols=50 }
-    form := Text { prefCols=50 }
     content = BorderPane
     {
       insets = Insets(24)
       GridPane
       {
-        numCols = 2
+        numCols = 3
+        hgap    = 12
         Button {
           text = "Get!"
-          onAction.add {
-            HttpReq { uri=`/echo` }.get |res| {
-              get.text = res.content
-            }
-          }
-        }, get,
+          onAction.add { HttpReq { uri=`/echo` }.get |res| { disRes(res) }}
+        },
         Button {
           text = "Post!"
-          onAction.add {
-            HttpReq { uri=`/echo` }.post("This is a request from the server!") |res| {
-              post.text = res.content
-            }
-          }
-        }, post,
+          onAction.add { HttpReq { uri=`/echo` }.post("some content") |res| { disRes(res) }}
+        },
         Button {
           text = "Form!"
-          onAction.add {
-            HttpReq { uri=`/echo` }.postForm(["foo":"bar"]) |res| {
-              form.text = res.content
-            }
-          }
-        }, form,
+          onAction.add { HttpReq { uri=`/echo` }.postForm(
+            ["foo":"bar","name":"Barney Stinson"]) |res| { disRes(res) }}
+        },
       },
     }
+  }
+
+  Void disRes(HttpRes res)
+  {
+    Win.cur.alert(
+      "[Request]
+       $res.content
+       [Response]
+       $res.status
+       $res.headers")
   }
 }
 
