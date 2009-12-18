@@ -10,6 +10,8 @@
 **
 ** Event models the DOM event object.
 **
+** See [docLib]`docLib::Dom` for details.
+**
 @js
 class Event
 {
