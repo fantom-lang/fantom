@@ -6,6 +6,7 @@
 //   9 Oct 09  Andy Frank  Creation
 //
 
+using dom
 using gfx
 using fwt
 
@@ -13,24 +14,39 @@ class Ajax : Window
 {
   new make() : super(null, null)
   {
-    field := Text { prefCols=50 }
+    get  := Text { prefCols=50 }
+    post := Text { prefCols=50 }
+    form := Text { prefCols=50 }
     content = BorderPane
     {
       insets = Insets(24)
       GridPane
       {
-        Button
-        {
-          text = "Click me!"
-          onAction.add
-          {
-            dom::HttpReq(`/echo`).send("This is from the server!") |res|
-            {
-              field.text = res.content
+        numCols = 2
+        Button {
+          text = "Get!"
+          onAction.add {
+            HttpReq { uri=`/echo` }.get |res| {
+              get.text = res.content
             }
           }
-        },
-        field,
+        }, get,
+        Button {
+          text = "Post!"
+          onAction.add {
+            HttpReq { uri=`/echo` }.post("This is a request from the server!") |res| {
+              post.text = res.content
+            }
+          }
+        }, post,
+        Button {
+          text = "Form!"
+          onAction.add {
+            HttpReq { uri=`/echo` }.postForm(["foo":"bar"]) |res| {
+              form.text = res.content
+            }
+          }
+        }, form,
       },
     }
   }

@@ -80,8 +80,8 @@ const class JsDemoMod : WebMod
 
   Void onEcho()
   {
-    s   := req.method == "GET" ? req.uri.queryStr : req.in.readAllStr
-    buf := Buf().printLine(s)
+    s   := req.method == "GET" ? "" : req.in.readAllStr
+    buf := Buf().printLine("[$req.method] $s")
     res.headers["Content-Length"] = buf.size.toStr
     res.headers["Content-Type"] = "text/plain"
     res.out.writeBuf(buf.flip)

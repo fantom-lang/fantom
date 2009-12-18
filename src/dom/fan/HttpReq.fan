@@ -10,28 +10,24 @@
 **
 ** HttpReq models the request side of an XMLHttpRequest instance.
 **
+** See [docLib]`docLib::Dom#xhr` for details.
+**
 @js
 class HttpReq
 {
 
   **
-  ** Create a new HttpReq instance with for the given Uri.
+  ** Create a new HttpReq instance.
   **
-  new make(Uri uri, Str? method := null)
+  new make(|This|? f)
   {
-    this.uri = uri
-    if (method != null) this.method = method
+    if (f != null) f(this)
   }
 
   **
   ** The Uri to send the request.
   **
-  Uri uri
-
-  **
-  ** The HTTP method to use.  Defaults to 'POST'.
-  **
-  Str method := "POST"
+  Uri uri := `#`
 
   **
   ** The request headers to send.
@@ -45,17 +41,43 @@ class HttpReq
   Bool async := true
 
   **
-  ** Send the request with the specificed content, after
-  ** receiving the response, call the given closure with
-  ** the resulting HttpRes.
+  ** Send a request with the given content using the given
+  ** HTTP method (case does not matter).  After receiving
+  ** the response, call the given closure with the resulting
+  ** HttpRes object.
   **
-  native Void send(Str content, |HttpRes res| c)
+  native Void send(Str method, Str content, |HttpRes res| c)
 
   **
-  ** Send the request with the specified name/value pairs
-  ** as an HTML form submission, and call the given closure
-  ** with the resulting HttpRes response.
+  ** Convenience for 'send("GET", "", c)'.
   **
-  native Void sendForm(Str:Str form, |HttpRes res| c)
+  Void get(|HttpRes res| c)
+  {
+    send("GET", "", c)
+  }
+
+  **
+  ** Convenience for 'send("POST", content, c)'.
+  **
+  Void post(Str content, |HttpRes res| c)
+  {
+    send("POST", content, c)
+  }
+
+  **
+  ** Post the 'form' map as a HTML form submission.  Formats
+  ** the map into a valid url-encoded content string, and sets
+  ** 'Content-Type' header to 'application/x-www-form-urlencoded'.
+  **
+  Void postForm(Str:Str form, |HttpRes res| c)
+  {
+    headers["Content-Type"] = "application/x-www-form-urlencoded"
+    send("POST", encodeForm(form), c)
+  }
+
+  **
+  ** Encode the form map into a value URL-encoded string.
+  **
+  private native Str encodeForm(Str:Str form)
 
 }
