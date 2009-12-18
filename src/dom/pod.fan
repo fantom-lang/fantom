@@ -13,7 +13,7 @@
 **
 
 @podDepends = [Depend("sys 1.0"), Depend("web 1.0")]
-@podSrcDirs = [`fan/`]
+@podSrcDirs = [`fan/`, `test/`]
 @podJsDirs  = [`js/`]
 @js
 @docsrc
