@@ -249,6 +249,17 @@ fan.sys.Type.find = function(sig, checked)
 /**
  * Get the Fantom type
  */
+fan.sys.Type.of = function(obj)
+{
+  if (obj instanceof fan.sys.Obj)
+    return obj.type();
+  else
+    return fan.sys.Type.toFanType(obj);
+}
+
+/**
+ * Get the Fantom type
+ */
 fan.sys.Type.toFanType = function(obj)
 {
   if (obj== null) throw fan.sys.Err.make("sys::Type.toFanType: obj is null");
