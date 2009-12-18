@@ -342,7 +342,7 @@ type as 'This':
 The 'This' type is a special marker type like 'Void'.  It indicates
 that a method is guaranteed to always return an instance of the
 target type.  In our example above, the expression 'x.open' will
-always evaluate to an instance of 'x.type'.
+always evaluate to an instance of 'Type.of(x)'.
 
 Use of 'This' is restricted to the return type of non-static
 methods.  You can't use it for static methods, parameter types,

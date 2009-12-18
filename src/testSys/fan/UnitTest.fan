@@ -99,14 +99,14 @@ class UnitTest : Test
     verifyEq(m3.m, 3)
 
     all := Unit.list
-    verifyEq(all.type, Unit[]#)
+    verifyType(all, Unit[]#)
     verify(all.contains(m))
     verify(all.contains(m3))
 
     quantities := Unit.quantities
     verify(quantities.size > 0)
     verify(quantities.isRO)
-    verifyEq(quantities.type, Str[]#)
+    verifyType(quantities, Str[]#)
 
     verify(quantities.contains("length"))
     verify(Unit.quantity("length").contains(m))

@@ -14,12 +14,12 @@ class UriSpaceTest : Test
 
   Void testRoot()
   {
-    verifyEq(UriSpace.root.type.name, "RootUriSpace")
+    verifyEq(Type.of(UriSpace.root).name, "RootUriSpace")
     verifyEq(UriSpace.root is UriSpace, true)
-    verifyEq(UriSpace.root.type.base, UriSpace#)
+    verifyEq(Type.of(UriSpace.root).base, UriSpace#)
     verifyEq(UriSpace.root.uri, `/`)
 
-    verifyEq(UriSpace.find(`/sys`).type.qname, "sys::SysUriSpace")
+    verifyEq(Type.of(UriSpace.find(`/sys`)).qname, "sys::SysUriSpace")
     verifyErr(ArgErr#) { UriSpace.mount(`/sys`, TestUriSpace.make) }
 
     verifyErr(ArgErr#) { UriSpace.root.get(`fan:/sys/foo`) }

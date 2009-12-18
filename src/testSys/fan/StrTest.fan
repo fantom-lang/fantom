@@ -73,7 +73,7 @@ class StrTest : Test
     verifyEq("$x.toHex", "ab")
     verifyEq("$x.toHex.size",   "2")
     verifyEq("$x.toHex.size()", "2()")
-    verifyEq("$type",    "testSys::StrTest")
+    verifyEq("${Type.of(this)}", "testSys::StrTest")
     verifyEq("x$five",   "x5")
     verifyEq("$five^",   "5^")
     verifyEq("x$five*",  "x5*")
@@ -90,11 +90,10 @@ class StrTest : Test
     verifyEq("${foo()}", "foo")
     verifyEq("$this.foo", "foo")
     verifyEq("$this.foo.size", "3")
-    verifyEq("$this.type", "testSys::StrTest")
     verifyEq("$super.tempDir", tempDir.toStr)
 
     y := "$five".toInt
-    verifyEq(y.type, Int#)
+    verifyType(y, Int#)
     verifyEq(y, 5)
   }
 

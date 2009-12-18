@@ -61,12 +61,12 @@ statements import symbols into the namespace.
 
 Symbol literals evaluate to the `sys::Symbol` instance itself:
 
-  @transient.type    =>  sys::Symbol
-  @transient.pod     =>  sys
-  @transient.name    =>  transient
-  @transient.qname   =>  sys::transient
-  @transient.of      =>  sys::Bool
-  @transient.defVal  =>  false
+  Type.of(@transient) =>  sys::Symbol
+  @transient.pod      =>  sys
+  @transient.name     =>  transient
+  @transient.qname    =>  sys::transient
+  @transient.of       =>  sys::Bool
+  @transient.defVal   =>  false
 
 Virtual Symbols [#virtual]
 **************************

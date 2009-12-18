@@ -23,7 +23,7 @@ class RegexTest : Test
     verifyNotEq(re, ";")
     verifyEq(re.toStr, ";")
     verifyEq(re.hash, ";".hash)
-    verifyEq(re.type, Regex#)
+    verifyType(re, Regex#)
   }
 
 //////////////////////////////////////////////////////////////////////////

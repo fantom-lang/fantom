@@ -20,9 +20,10 @@ class TypeTest : Test
 
   Void testIdentity()
   {
-    verifyEq(this.type.isImmutable, true)
-    verifyEq(this.type.toStr, "testSys::TypeTest")
-    verifyEq(this.type.toLocale, "testSys::TypeTest")
+    t := Type.of(this)
+    verifyEq(t.isImmutable, true)
+    verifyEq(t.toStr, "testSys::TypeTest")
+    verifyEq(t.toLocale, "testSys::TypeTest")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -115,17 +116,18 @@ class TypeTest : Test
 
   Void testFlags()
   {
-    // isAbstract
+    // isAbstract]
+    t := Type.of(this)
     verifyEq(Test#.isAbstract, true)
-    verifyEq(type.isAbstract, false)
+    verifyEq(t.isAbstract, false)
 
     // isClass
-    verifyEq(type.isClass, true)
+    verifyEq(t.isClass, true)
     verifyEq(EnumAbc#.isClass, false)
     verifyEq(MxA#.isClass, false)
 
     // isEnum
-    verifyEq(type.isEnum, false)
+    verifyEq(t.isEnum, false)
     verifyEq(EnumAbc#.isEnum, true)
     verifyEq(MxA#.isEnum, false)
 
@@ -134,16 +136,16 @@ class TypeTest : Test
     verifyEq(Test#.isFinal, false)
 
     // isInternal
-    verifyEq(type.isInternal, false)
+    verifyEq(t.isInternal, false)
     verifyEq(EnumAbc#.isInternal, true)
 
     // isMixin
-    verifyEq(type.isMixin, false)
+    verifyEq(t.isMixin, false)
     verifyEq(EnumAbc#.isMixin, false)
     verifyEq(MxA#.isMixin, true)
 
     // isPublic
-    verifyEq(type.isPublic, true)
+    verifyEq(t.isPublic, true)
     verifyEq(EnumAbc#.isPublic, false)
 
     // isSynthetic
@@ -260,14 +262,14 @@ class TypeTest : Test
     s :=  Str#.emptyList
     verifyEq(s, Str[,])
     verifyEq(s.isImmutable, true)
-    verifyEq(s.type.signature, "sys::Str[]")
+    verifyEq(Type.of(s).signature, "sys::Str[]")
     verifySame(s, Str#.emptyList)
     verifyErr(ReadonlyErr#) { s.add("foo") }
 
     sl :=  Str[]#.emptyList
     verifyEq(sl, Str[][,])
     verifyEq(sl.isImmutable, true)
-    verifyEq(sl.type.signature, "sys::Str[][]")
+    verifyEq(Type.of(sl).signature, "sys::Str[][]")
     verifySame(sl, Str[]#.emptyList)
     verifyNotSame(sl, s)
     verifyErr(ReadonlyErr#) { sl.add(Str[,]) }
@@ -290,7 +292,7 @@ class TypeTest : Test
 
   Void testSynthetic()
   {
-    type.pod.types.each |Type t|
+    Pod.of(this).types.each |Type t|
     {
       verifyEq(t.isSynthetic, t.name.index("\$") != null, t.toStr)
       verifySlotsSynthetic(t)

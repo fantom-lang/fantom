@@ -27,7 +27,7 @@ class Logging
     echo("\n--- sysLog ---")
     echo(Str#.pod.log)
     echo(Str#.log)
-    echo("foo".type.log)
+    echo(Pod.of("foo").log)
 
     // find an existing log
     echo("\n--- find existing ---")

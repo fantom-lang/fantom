@@ -43,7 +43,7 @@ internal class JsonWriter
 
   private Void writeObj(Obj obj)
   {
-    type := obj.type
+    type := Type.of(obj)
 
     this.out.writeChar(JsonToken.objectStart)
     writePair("fanType", type.signature)

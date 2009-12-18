@@ -255,7 +255,7 @@ class DateTimeTest : Test
   {
     verifyEq(Month#.qname, "sys::Month")
     verifySame(Month#.base, Enum#)
-    verifySame(Month.jan.type, Month#)
+    verifySame(Type.of(Month.jan), Month#)
 
     verifyEq(Month.vals.isRO, true)
     verifyEq(Month.vals.size, 12)
@@ -344,7 +344,7 @@ class DateTimeTest : Test
   {
     verifyEq(Weekday#.qname, "sys::Weekday")
     verifySame(Weekday#.base, Enum#)
-    verifySame(Weekday.sun.type, Weekday#)
+    verifySame(Type.of(Weekday.sun), Weekday#)
 
     verifyEq(Weekday.vals.isRO, true)
     verifyEq(Weekday.vals.size, 7)

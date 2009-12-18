@@ -23,8 +23,8 @@ class StreamTest : Test
     OutStream out := f.out
 
     // verify typing of out stream
-    verifySame(out.type.base, OutStream#)
-    verifyEq(out.type.qname, "sys::SysOutStream")
+    verifySame(Type.of(out).base, OutStream#)
+    verifyEq(Type.of(out).qname, "sys::SysOutStream")
 
     // write one byte
     out.write('x')
@@ -35,8 +35,8 @@ class StreamTest : Test
     InStream in := f.in
 
     // verify typing of in stream
-    verifySame(in.type.base, InStream#)
-    verifyEq(in.type.qname, "sys::SysInStream")
+    verifySame(Type.of(in).base, InStream#)
+    verifyEq(Type.of(in).qname, "sys::SysInStream")
 
     // read one byte back
     verifyEq(in.read, 'x')

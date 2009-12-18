@@ -87,9 +87,9 @@ internal class NavBar : SideBar
     // ignore onModify events while we update combo
     ignore = true
     old   := combo.selectedIndex
-    name  := r == null ? type.loc("navBar.root") : r.name
+    name  := r == null ? Pod.of(this).loc("navBar.root") : r.name
     items := combo.items.size == 0 ? combo.items.dup : combo.items[0..<-1]
-    combo.items = items.add(name).add(type.loc("navBar.editList"))
+    combo.items = items.add(name).add(Pod.of(this).loc("navBar.editList"))
     if (old >= 0) combo.selectedIndex = old
     ignore = false
   }
@@ -152,14 +152,14 @@ internal class NavBar : SideBar
       if (r is FileResource && r->file->isDir)
       {
         menu.add(MenuItem { mode = MenuItemMode.sep })
-        menu.add(MenuItem { command = Command.makeLocale(this.type.pod, "navBar.refresh") {onRefresh(n)} })
-        menu.add(MenuItem { command = Command.makeLocale(this.type.pod, "navBar.goInto") {onGoInto(n)} })
+        menu.add(MenuItem { command = Command.makeLocale(Pod.of(this), "navBar.refresh") {onRefresh(n)} })
+        menu.add(MenuItem { command = Command.makeLocale(Pod.of(this), "navBar.goInto") {onGoInto(n)} })
       }
     }
     else
     {
       menu = Menu()
-      menu.add(MenuItem { command = Command.makeLocale(this.type.pod, "navBar.sync") {onSync} })
+      menu.add(MenuItem { command = Command.makeLocale(Pod.of(this), "navBar.sync") {onSync} })
     }
     event.popup = menu
   }
@@ -216,14 +216,14 @@ internal class NavBar : SideBar
   {
     // reset index back to active
     ignore = true
-    combo.selectedIndex = trees.findIndex |Tree t->Bool| { return t === active }
+    combo.selectedIndex = trees.findIndex |Tree t->Bool| { t === active }
     ignore = false
 
     // now show dialog
     list := EditList(combo.items[0..<-1])
     dlg  := Dialog(frame)
     {
-      title    = this.type.loc("navBar.edit")
+      title    = Pod.of(this).loc("navBar.edit")
       body     = list
       commands = [Dialog.ok, Dialog.cancel]
     }
@@ -254,7 +254,7 @@ internal class NavBar : SideBar
       // update widget
       trees = newTrees
       ignore = true
-      combo.items = items.add(type.loc("navBar.editList"))
+      combo.items = items.add(Pod.of(this).loc("navBar.editList"))
       combo.selectedIndex = index
       ignore = false
       select(index)

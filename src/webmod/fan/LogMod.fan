@@ -27,7 +27,7 @@ const class LogMod : WebMod
   new make(|This|? f := null)
   {
     f?.call(this)
-    if (file === noFile) throw ArgErr("Must configure ${type}.file field")
+    if (file === noFile) throw ArgErr("Must configure ${Type.of(this)}.file field")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,7 +59,7 @@ const class LogMod : WebMod
     logger.writeStr("#Remark ==========================================================================")
     logger.writeStr("#Remark " + DateTime.now.toLocale)
     logger.writeStr("#Version 1.0")
-    logger.writeStr("#Software ${type} ${type.pod.version}")
+    logger.writeStr("#Software ${Type.of(this)} ${Pod.of(this).version}")
     logger.writeStr("#Start-Date " + DateTime.nowUtc.toLocale("DD-MM-YYYY hh:mm:ss"))
     logger.writeStr("#Fields $fields")
   }

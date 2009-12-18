@@ -139,8 +139,8 @@ class ObixObj
       if (elemName == "enum" && val is Str) { *val = val; return }
       if (val != null)
       {
-        elem := ObixUtil.valTypeToElemName[val.type]
-        if (elem == null) throw ArgErr("Invalid val type: $val.type")
+        elem := ObixUtil.valTypeToElemName[Type.of(val)]
+        if (elem == null) throw ArgErr("Invalid val type: ${Type.of(val)}")
         this.*elemName = elem
         if (val is DateTime && tz == null)
         {

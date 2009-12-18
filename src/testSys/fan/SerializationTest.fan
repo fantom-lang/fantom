@@ -98,8 +98,8 @@ class SerializationTest : Test
 
     // Type literals
     verifySer("sys::Num#", Num#)
-    verifySer("testSys::SerializationTest#", type)
-    verifySer("using testSys\n SerializationTest#", type)
+    verifySer("testSys::SerializationTest#", Type.of(this))
+    verifySer("using testSys\n SerializationTest#", Type.of(this))
     verifyErr(IOErr#) { "crazyFooBad::Bar#".in.readObj }
     verifyErr(IOErr#) { "sys::Foo#".in.readObj }
     verifySer("using sys\nStr[]#", Str[]#)
@@ -333,7 +333,7 @@ class SerializationTest : Test
     x.map["bar"] = 5
     x.map["foo"] = Str:Obj[:]
     SerListMap y := verifySer("testSys::SerListMap { map=[\"foo\":[sys::Str:sys::Obj][:], \"bar\":5] }", x)
-    verifyEq(y.map["foo"].type, Str:Obj#)
+    verifyType(y.map["foo"], Str:Obj#)
   }
 
   Void testComplexCompound()
@@ -718,7 +718,7 @@ class SerializationTest : Test
   {
     verifySkipErrors(
        Obj?[SerA.make,this,SerA.make],
-       "sys::Obj?[testSys::SerA,null /* Not serializable: ${type.qname} */,testSys::SerA]",
+       "sys::Obj?[testSys::SerA,null /* Not serializable: ${Type.of(this).qname} */,testSys::SerA]",
        Obj?[SerA.make,null,SerA.make])
   }
 
@@ -760,15 +760,15 @@ class SerializationTest : Test
   static Void dump(Obj x, Obj y)
   {
     echo("--- Serialization Dump ---")
-    echo("$x.type ?= $y.type")
+    echo("${Type.of(x)} ?= ${Type.of(y)}")
     //echo("$x ?= $y  =>  ${x==y}")
-    x.type.fields.each |Field f|
+    Type.of(x).fields.each |Field f|
     {
       a := f.get(x)
       b := f.get(y)
       cond := a == b ? "==" : "!="
-      at := a == null ? "null" : a.type.signature
-      bt := b == null ? "null" : b.type.signature
+      at := a == null ? "null" : Type.of(a).signature
+      bt := b == null ? "null" : Type.of(b).signature
       echo("$f.name $a $cond $b ($at $cond $bt)")
     }
   }
@@ -893,8 +893,8 @@ class SerListMap
   {
     x := obj as SerListMap
     if (x == null) return false
-    return x.list == list && x.list.type == list.type &&
-          x.map == map && x.map.type == map.type
+    return x.list == list && Type.of(x.list) == Type.of(list) &&
+          x.map == map && Type.of(x.map) == Type.of(map)
   }
 
   override Str toStr()

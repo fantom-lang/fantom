@@ -52,7 +52,7 @@ class FluxCommand : Command
     {
       if (binding != null) accelerator = Key(binding)
     }
-    catch type.log.error("FluxCommand: invalid syntax in @keysBindings '$id:$binding'")
+    catch Pod.of(this).log.error("FluxCommand: invalid syntax in @keysBindings '$id:$binding'")
   }
 
   **

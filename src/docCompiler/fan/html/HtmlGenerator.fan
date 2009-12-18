@@ -196,7 +196,9 @@ abstract class HtmlGenerator : HtmlDocWriter, DocCompilerSupport
     if (list != null && !list.isEmpty)
     {
       x := list.first
-      inferred := list.all { x?.type == it?.type }
+      inferred := x == null ?
+                  list.all { it == null } :
+                  list.all { it != null && Type.of(x) == Type.of(it) }
       if (inferred) return "[" + list.join(", ") { facetValToStr(it) } + "]"
     }
 

@@ -56,9 +56,10 @@ abstract class AbstractMain
   **
   virtual Str appName()
   {
-    if (type.pod.repo == null) return type->sourceFile->toUri->basename
-    if (type.name == "Main") return type.pod.name
-    return type.name
+    t := Type.of(this)
+    if (t.pod.repo == null) return t->sourceFile->toUri->basename
+    if (t.name == "Main") return t.pod.name
+    return t.name
   }
 
   **
@@ -73,10 +74,11 @@ abstract class AbstractMain
   **
   virtual File homeDir()
   {
-    if (type.pod.repo == null)
-      return File(type->sourceFile->toUri).parent
+    t := Type.of(this)
+    if (t.pod.repo == null)
+      return File(t->sourceFile->toUri).parent
     else
-      return Repo.working.home + `etc/${type.pod.name}/`
+      return Repo.working.home + `etc/${t.pod.name}/`
   }
 
   **
@@ -95,7 +97,7 @@ abstract class AbstractMain
   **
   virtual Field[] argFields()
   {
-    type.fields.findAll |f| { f.facet(@arg) != null }
+    Type.of(this).fields.findAll |f| { f.facet(@arg) != null }
   }
 
   **
@@ -103,7 +105,7 @@ abstract class AbstractMain
   **
   virtual Field[] optFields()
   {
-    type.fields.findAll |f| { f.facet(@opt) != null }
+    Type.of(this).fields.findAll |f| { f.facet(@opt) != null }
   }
 
   **
@@ -278,7 +280,7 @@ abstract class AbstractMain
   private Str[] usageOpt(Field field)
   {
     name := optName(field)
-    def := field.get(type.make)
+    def := field.get(Type.of(this).make)
     Str desc := field.facet(@opt)
     Str[] aliases := field.facet(@optAliases, Str[,])
 

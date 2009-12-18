@@ -422,11 +422,11 @@ class InteropTest : JavaTest
       class Foo
       {
         InteropTest x := InteropTest()
-        Obj[] b() { v := x.numb;   return [v.type, v] }
-        Obj[] s() { v := x.nums(); return [v.type, v] }
-        Obj[] c() { v := x.numc;   return [v.type, v] }
-        Obj[] i() { v := x.numi(); return [v.type, v] }
-        Obj[] f() { v := x.numf;   return [v.type, v] }
+        Obj[] b() { v := x.numb;   return [Type.of(v), v] }
+        Obj[] s() { v := x.nums(); return [Type.of(v), v] }
+        Obj[] c() { v := x.numc;   return [Type.of(v), v] }
+        Obj[] i() { v := x.numi(); return [Type.of(v), v] }
+        Obj[] f() { v := x.numf;   return [Type.of(v), v] }
 
         Obj   m00() { return x.numi.toHex }
         Obj   m01() { return x.numi().toHex }
@@ -511,7 +511,7 @@ class InteropTest : JavaTest
         Bool test1() { return this < this }
         Bool test2() { return this <= this }
         Bool test3() { return this == this }
-        Str  test4() { return type.name }
+        Str  test4() { return Type.of(this).name }
         Bool test5() { return toStr == toString }
         Bool test6() { return this.isImmutable }
         Bool test7() { return hash == hashCode }
@@ -655,7 +655,7 @@ class InteropTest : JavaTest
       ")
 
     obj := pod.types.first.make
-    verifyEq(obj->m00.type.toStr, "[java]java.lang::ClassNotFoundException")
+    verifyEq(Type.of(obj->m00).toStr, "[java]java.lang::ClassNotFoundException")
     verifyErr(NullErr#) { obj->m01 }
   }
 

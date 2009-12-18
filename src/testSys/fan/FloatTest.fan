@@ -29,7 +29,7 @@ class FloatTest : Test
   Void testIs()
   {
     Obj x := 3.0f
-    verify(x.type === Float#)
+    verify(Type.of(x) === Float#)
     verify(x.isImmutable)
 
     verify(x is Obj)
@@ -38,7 +38,7 @@ class FloatTest : Test
     verifyFalse(x is Int)
 
     y := -4f
-    verify(y.type === Float#)
+    verify(Type.of(y) === Float#)
     verify(y.isImmutable)
   }
 

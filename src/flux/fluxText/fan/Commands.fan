@@ -11,7 +11,7 @@ using flux
 
 internal class TextEditorCommand : FluxCommand
 {
-  new make(Str id) : super(id, type.pod) {}
+  new make(Str id) : super(id, Pod.of(this)) {}
 
   TextEditor editor() { return view }
 

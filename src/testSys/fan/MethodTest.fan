@@ -28,7 +28,7 @@ class MethodTest : Test
   Void testIs()
   {
     Func m := |->| {}
-    verifyEq(m.type.signature, "|->sys::Void|");
+    verifyEq(Type.of(m).signature, "|->sys::Void|");
     verifyIsFunc(m)
     verify(m is |->|)
     verify(m is |->Void|)
@@ -38,7 +38,7 @@ class MethodTest : Test
 
     m = |->Int| { return 0 }
     verifyIsFunc(m)
-    verifyEq(m.type.signature, "|->sys::Int|");
+    verifyEq(Type.of(m).signature, "|->sys::Int|");
     verify(m is |->Int|)
     verify(m is |Str a->Int|)
     verify(m is |Str a, Int b->Int|)
@@ -47,7 +47,7 @@ class MethodTest : Test
 
     m = |Slot a| { }
     verifyIsFunc(m)
-    verifyEq(m.type.signature, "|sys::Slot->sys::Void|");
+    verifyEq(Type.of(m).signature, "|sys::Slot->sys::Void|");
     verify(m is |Slot x|)
     verify(m is |Field x|)
     verify(m is |Method x|)
@@ -57,7 +57,7 @@ class MethodTest : Test
 
     m = |Slot s, Str x, Obj o->Str| { return x }
     verifyIsFunc(m)
-    verifyEq(m.type.signature, "|sys::Slot,sys::Str,sys::Obj->sys::Str|")
+    verifyEq(Type.of(m).signature, "|sys::Slot,sys::Str,sys::Obj->sys::Str|")
     verify(m is |Slot a, Str b, Obj c->Str|)
     verify(m is |Slot a, Str b, Obj c->Obj|)
     verify(m is |Slot a, Str b, Int c->Obj|)
@@ -106,27 +106,29 @@ class MethodTest : Test
 
   Void testReflectMethodParam()
   {
-    verifyType( type.method("dummy0").params[0].of,
+    t := Type.of(this)
+
+    verifySig( t.method("dummy0").params[0].of,
       "|->sys::Void|", Type[,], Void#);
 
-    verifyType( type.method("dummy1").params[0].of,
+    verifySig( t.method("dummy1").params[0].of,
       "|->sys::Str|", Type[,], Str#);
 
-    verifyType( type.method("dummy2").params[0].of,
+    verifySig( t.method("dummy2").params[0].of,
       "|sys::Float->sys::Void|", [Float#], Void#);
 
-    verifyType( type.method("dummy3").params[0].of,
+    verifySig( t.method("dummy3").params[0].of,
       "|sys::Float,sys::Int->sys::Str|", [Float#, Int#], Str#);
 
-    verifyType( type.method("dummy4").params[0].of,
+    verifySig( t.method("dummy4").params[0].of,
       "|sys::Float,sys::Int,sys::Bool,sys::Str,sys::Float,sys::Int,sys::Bool,sys::Str->sys::Str|",
       [Float#, Int#, Bool#, Str#, Float#, Int#, Bool#, Str#], Str#);
 
-    verifyType( type.method("dummy5").params[0].of,
+    verifySig( t.method("dummy5").params[0].of,
       "|sys::Float,sys::Int,sys::Bool,sys::Str,sys::Float,sys::Int,sys::Bool,sys::Str,sys::Type->sys::Str|",
       [Float#, Int#, Bool#, Str#, Float#, Int#, Bool#, Str#, Type#], Str#);
 
-    verifyType( type.method("dummy6").params[0].of,
+    verifySig( t.method("dummy6").params[0].of,
       "|sys::Float,sys::Int,sys::Bool,sys::Str,sys::Float,sys::Int,sys::Bool,sys::Str,sys::Type,sys::Slot->sys::Void|",
       [Float#, Int#, Bool#, Str#, Float#, Int#, Bool#, Str#, Type#, Slot#], Void#);
   }
@@ -167,10 +169,10 @@ class MethodTest : Test
       verifyEq(params[i], fp[i].of)
     }
 
-    verifyType(f.type, sig, params, ret);
+    verifySig(Type.of(f), sig, params, ret);
   }
 
-  Void verifyType(Type t, Str sig, Type[] params, Type ret)
+  Void verifySig(Type t, Str sig, Type[] params, Type ret)
   {
     // echo("-- testReflectWith '" + t.qname + "' ?= " + sig + "; " + params + " ret=" + ret);
 

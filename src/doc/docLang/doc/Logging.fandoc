@@ -15,11 +15,10 @@ separators.  Once a Log instance has been created for a specified
 name, it remains bound to that name for the lifetime of the VM.  Logs
 are const, immutable instances shared by all threads.
 
-Most of the time, you should just use [Type.log]`sys::Type.log`
-or [Pod.log]`sys::Pod.log` to get the standard log for your pod:
+Most of the time, you should just use [Pod.log]`sys::Pod.log` to
+get the standard log for your pod:
 
-  type.log.error("...")
-  obj.type.log.error("...")
+  Pod.of(this).log.error("...")
 
 You can also use [Log.get]`sys::Log.get` which will create the Log
 on the first call, and look it up on subsequent calls:

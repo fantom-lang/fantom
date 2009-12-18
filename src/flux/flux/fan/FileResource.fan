@@ -109,14 +109,14 @@ class FileResource : Resource
     menu := super.popup(frame, event)
     if (file.isDir)
     {
-      menu.addCommand(Command.makeLocale(type.pod, "openIn") { openIn(file) })
-      menu.addCommand(Command.makeLocale(type.pod, CommandId.findInFiles, |->| { findInFiles(frame, file) }) { accelerator = null })
+      menu.addCommand(Command.makeLocale(Pod.of(this), "openIn") { openIn(file) })
+      menu.addCommand(Command.makeLocale(Pod.of(this), CommandId.findInFiles, |->| { findInFiles(frame, file) }) { accelerator = null })
       menu.addSep
-      menu.addCommand(Command.makeLocale(type.pod, "newDir") { newDir(frame,file) })
+      menu.addCommand(Command.makeLocale(Pod.of(this), "newDir") { newDir(frame,file) })
     }
     else menu.addSep
-    menu.addCommand(Command.makeLocale(type.pod, "duplicate") { duplicate(frame,file) })
-    menu.addCommand(Command.makeLocale(type.pod, "rename") { rename(frame,file) })
+    menu.addCommand(Command.makeLocale(Pod.of(this), "duplicate") { duplicate(frame,file) })
+    menu.addCommand(Command.makeLocale(Pod.of(this), "rename") { rename(frame,file) })
     return menu
   }
 
@@ -147,7 +147,7 @@ class FileResource : Resource
   internal Void newDir(Frame frame, File dir)
   {
     if (!dir.isDir) throw ArgErr("Not a directory: $dir")
-    newDir := promptFileName(frame, type.loc("newDir.name"), dir, "")
+    newDir := promptFileName(frame, Pod.of(this).loc("newDir.name"), dir, "")
     if (newDir == null) return
     uri := dir.uri + "$newDir/".toUri
     File(uri).create
@@ -158,7 +158,7 @@ class FileResource : Resource
   **
   internal Void duplicate(Frame frame, File src)
   {
-    name := promptFileName(frame, type.loc("duplicate.name"), src.parent, src.name)
+    name := promptFileName(frame, Pod.of(this).loc("duplicate.name"), src.parent, src.name)
     if (name == null) return
     target := src.parent + (src.isDir ? "$name/".toUri : name.toUri)
     src.copyTo(target)
@@ -169,7 +169,7 @@ class FileResource : Resource
   **
   internal Void rename(Frame frame, File src)
   {
-    name := promptFileName(frame, type.loc("rename.name"), src.parent, src.name)
+    name := promptFileName(frame, Pod.of(this).loc("rename.name"), src.parent, src.name)
     if (name == null) return
     src.rename(name)
   }

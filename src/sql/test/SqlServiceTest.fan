@@ -73,7 +73,7 @@ class SqlServiceTest : Test
     catch (Err e)
     {
       echo("**")
-      echo("** WARNING: Cannot perform SqlServiceTest without available database: " + db.type.qname)
+      echo("** WARNING: Cannot perform SqlServiceTest without available database: ${Type.of(db)}")
       echo("**          $e")
       echo("**")
       return false
@@ -154,7 +154,7 @@ class SqlServiceTest : Test
     verifyEq(cols.size, 14)
     verifyEq(cols.isRO, true)
     verifyEq(cols is Col[], true)
-    verifyEq(cols.type, Col[]#)
+    verifyType(cols, Col[]#)
     verifyFarmerCols(row)
 
     /*
@@ -206,7 +206,7 @@ class SqlServiceTest : Test
 
     // query with type
     farmers := db.sql("select * from farmers order by farmer_id").query
-    verifyEq(farmers.type, Row[]#)
+    verifyType(farmers, Row[]#)
     verifyEq(farmers is Row[], true)
     verifyEq(farmers[0] is Row, true)
     f := farmers[0]

@@ -63,7 +63,7 @@ class ObjTest : Test
     ObjMixinImpl a := ObjMixinImpl.make()
     ObjMixinImpl b := ObjMixinImpl.make()
 
-    verifyEq(a.type, ObjMixinImpl#)
+    verifyType(a, ObjMixinImpl#)
     verifyEq(a == a, true)
     verifyEq(a == b, false)
     verifyEq(a.equals(a), true)
@@ -75,7 +75,7 @@ class ObjTest : Test
     ObjMixin ma := ObjMixinImpl.make()
     ObjMixin mb := ObjMixinImpl.make()
 
-    verifyEq(ma.type, ObjMixinImpl#)
+    verifyType(ma, ObjMixinImpl#)
     verifyEq(ma == ma, true)
     verifyEq(ma == mb, false)
     verifyEq(ma.equals(ma), true)
@@ -107,8 +107,8 @@ class ObjTest : Test
   {
     verifyEq(this.isImmutable, false)
     verifyEq(Unsafe(this).isImmutable, true)
-    verifyEq(Unsafe(this).type, Unsafe#)
-    verifyEq(Unsafe(this).type.qname, "sys::Unsafe")
+    verifyType(Unsafe(this), Unsafe#)
+    verifyEq(Type.of(Unsafe(this)).qname, "sys::Unsafe")
     verifySame(Unsafe(this).val, this)
   }
 

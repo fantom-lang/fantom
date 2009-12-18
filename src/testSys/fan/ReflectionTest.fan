@@ -28,7 +28,7 @@ class ReflectionTest : Test
     verifyEq(m.qname, "sys::Str.toInt")
     verifyEq(m.returns, Int?#)
 
-    verifyEq(m.params.type, Param[]#)
+    verifyType(m.params, Param[]#)
     verifyEq(m.params.size, 2)
     verifyEq(m.params.isRO, true)
     verifyEq(m.params[0].of, Int#)
@@ -38,7 +38,7 @@ class ReflectionTest : Test
     verifyEq(m.params[1].name, "checked")
     verifyEq(m.params[1].hasDefault, true)
 
-    verifyEq(m.func.params.type, Param[]#)
+    verifyType(m.func.params, Param[]#)
     verifyEq(m.func.params.size, 3)
     verifyEq(m.func.params.isRO, true)
     verifyEq(m.func.params[0].of, Str#)
@@ -126,8 +126,8 @@ class ReflectionTest : Test
     for (i:=0; i<10; ++i)
     {
       // get static sX method and instance iX method
-      ms := type.method("s$i")
-      mi := type.method("i$i")
+      ms := Type.of(this).method("s$i")
+      mi := Type.of(this).method("i$i")
       verifyEq(ms.params.size, i)
       verifyEq(mi.params.size, i)
 
@@ -213,7 +213,7 @@ class ReflectionTest : Test
 
   Void testDefaultParamStatic()
   {
-    m := type.method("defaultsStatic")
+    m := Type.of(this).method("defaultsStatic")
 
     verifyEq(m.call(), "abc")
     verifyEq(m.call('x'), "xbc")
@@ -253,7 +253,7 @@ class ReflectionTest : Test
 
   Void testDefaultParamInstance0()
   {
-    m := type.method("defaultsInstance0")
+    m := Type.of(this).method("defaultsInstance0")
 
     verifyErr(ArgErr#) { m.call() }
     verifyEq(m.call(this), "abc")
@@ -294,7 +294,7 @@ class ReflectionTest : Test
 
   Void testDefaultParamInstance1()
   {
-    m := type.method("defaultsInstance1")
+    m := Type.of(this).method("defaultsInstance1")
 
     verifyErr(ArgErr#) { m.call() }
     verifyErr(ArgErr#) { m.call(this) }
@@ -371,9 +371,9 @@ class ReflectionTest : Test
     verifyEq(t.field("iz").get(obj), 1972)
 
     // invalid sets
-    verifyErr(ArgErr#) { obj.type.field("ints").set(obj, "x") }
-    verifyErr(ArgErr#) { obj.type.field("ints").set(obj, ["x"]) }
-    verifyErr(ArgErr#) { obj.type.field("iz").set(obj, "x") }
+    verifyErr(ArgErr#) { Type.of(obj).field("ints").set(obj, "x") }
+    verifyErr(ArgErr#) { Type.of(obj).field("ints").set(obj, ["x"]) }
+    verifyErr(ArgErr#) { Type.of(obj).field("iz").set(obj, "x") }
 
     // trap
     verifyEq(obj->add(4, 6), 10)

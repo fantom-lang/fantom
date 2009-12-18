@@ -133,7 +133,7 @@ class MixinTest : Test
   Void testAs()
   {
     Obj x := MxClsAB.make
-    verify(x.type === MxClsAB#)
+    verify(Type.of(x) === MxClsAB#)
 
     MxClsAB? cls := x as MxClsAB;  verify(cls === x)
     MxA?     a   := x as MxA;      verify(a   === x)
@@ -157,7 +157,7 @@ class MixinTest : Test
 
     // call Obj instance methods on mixin
     verifyEq(a.toStr, "MxClsAB!")
-    verify(a.type === MxClsAB#)
+    verify(Type.of(a) === MxClsAB#)
 
     // call Obj instance operators on mixin
     verifyEq(a > a,  false)
@@ -382,32 +382,32 @@ class MixinTest : Test
 
 mixin MxA
 {
-  static Str sa() { return "sa" }
-  Str ia() { return "ia" }
-  Str wrapToStr1() { return this.toStr }  // explicit this
-  Str wrapToStr2() { return toStr }       // implicit this
-  static Type staticWrapType(MxA a) { return a.type }
-  virtual Str va() { return "va" }
+  static Str sa() { "sa" }
+  Str ia() { "ia" }
+  Str wrapToStr1() { this.toStr }  // explicit this
+  Str wrapToStr2() { toStr }       // implicit this
+  static Type staticWrapType(MxA a) { Type.of(a) }
+  virtual Str va() { "va" }
   abstract Str aa()
-  virtual Obj coa() { return "1" }
-  virtual Obj cob() { return "2" }
-  virtual Obj coc() { return "3" }
-  virtual This thisa() { return this }
-  virtual This thisb() { return this }
+  virtual Obj coa() { "1" }
+  virtual Obj cob() { "2" }
+  virtual Obj coc() { "3" }
+  virtual This thisa() { this }
+  virtual This thisb() { this }
 }
 
 mixin MxB
 {
-  static Str sb() { return "sb" }
-  Str ib() { return "ib" }
-  virtual Str vb() { return "vb" }
+  static Str sb() { "sb" }
+  Str ib() { "ib" }
+  virtual Str vb() { "vb" }
   abstract Str ab()
 }
 
 mixin MxAB : MxA, MxB
 {
-  override Str coa() { return "11" }
-  override Str cob() { return "12" }
+  override Str coa() { "11" }
+  override Str cob() { "12" }
   override This thisa() { throw UnresolvedErr() }
 }
 

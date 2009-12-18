@@ -69,7 +69,7 @@ internal class ObixUtil
   internal static Str valToStr(Obj? val)
   {
     if (val == null) return "null"
-    func := valTypeToStrFunc[val.type]
+    func := valTypeToStrFunc[Type.of(val)]
     if (func != null) return func(val)
     return val.toStr
   }

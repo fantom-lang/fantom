@@ -22,8 +22,8 @@ class FacetsTest : Test
 
   Void testAttributes()
   {
-    verifyEq(type->lineNumber, 14)
-    verifyEq(type->sourceFile, "FacetsTest.fan")
+    verifyEq(Type.of(this)->lineNumber, 14)
+    verifyEq(Type.of(this)->sourceFile, "FacetsTest.fan")
 
     Field field := #aField
     verifyEq(field->lineNumber, 16)
@@ -40,7 +40,7 @@ class FacetsTest : Test
   {
     t := FacetsA#
     verifyEq(t.facets.isRO, true)
-    verifyEq(t.facets.type, [Symbol:Obj?]#)
+    verifyType(t.facets, [Symbol:Obj?]#)
     verifyEq(t.facets.size, 16)
     verifyEq(t.facet(@transient), null)
     verifyEq(t.facet(@transient, "!"), "!")
@@ -95,7 +95,7 @@ class FacetsTest : Test
     f := FacetsA#.field("i")
     verifyEq(f.facets.isRO, true)
     verifyEq(f.facets.size, 3)
-    verifyEq(f.facets.type, [Symbol:Obj?]#)
+    verifyType(f.facets, [Symbol:Obj?]#)
     verifyEq(f.facet(@nodoc), null)
     verifyEq(f.facet(@nodoc, "!"), "!")
     verifyErr(ReadonlyErr#) { f.facets.set(@nodoc, "!") }
@@ -122,7 +122,7 @@ class FacetsTest : Test
     verifyEq(m.facet(@boolB, "!"), "!")
     verifyEq(m.facets.isImmutable, true)
     verifySame(m.facets, m.facets)
-    verifySame(m.facets, type.slot("testSlotFacetsEmpty").facets)
+    verifySame(m.facets, Type.of(this).slot("testSlotFacetsEmpty").facets)
   }
 
   Void verifySlotFacet(Slot s, Symbol key, Obj expected)

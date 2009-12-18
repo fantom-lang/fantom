@@ -47,7 +47,7 @@ class MapTest : Test
     verifyEq(Int:Str#, Int:Str#)
     verifyNotEq(Int:Str#, Int:Obj#)
     verifyNotEq(Int:Str#, Obj:Str#)
-    verifyNotEq(Int:Str#, [:].type)
+    verifyNotEq(Int:Str#, Type.of([:]))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -95,12 +95,12 @@ class MapTest : Test
     // empty Obj[Obj]
     Obj a := [:]
     verify(a is Obj:Obj)
-    verifyEq(a.type, Obj:Obj?#)
+    verifyType(a, Obj:Obj?#)
 
     // inferred Obj:Obj
     Obj b := [2:"two", "three":3]
     verify(b is Obj:Obj)
-    verifyEq(b.type, Obj:Obj#)
+    verifyType(b, Obj:Obj#)
 
     // inferred Int:Str
     Obj c := [3:"c"]
@@ -109,17 +109,17 @@ class MapTest : Test
     verify(c is Num:Str)
     verify(c is Num:Obj)
     verify(c is Obj:Obj)
-    verifyEq(c.type, Int:Str#)
-    verifyEq([3 : null , 4 : "d"].type, Int:Str?#)   // null
+    verifyType(c, Int:Str#)
+    verifyType([3 : null , 4 : "d"], Int:Str?#)   // null
 
     Obj d := [3:"c"]
-    verifyNotEq(d.type, Obj:Str#)
-    verifyNotEq(d.type, Int:Obj#)
-    verifyNotEq(d.type, Sys:Bool#)
+    verifyNotEq(Type.of(d), Obj:Str#)
+    verifyNotEq(Type.of(d), Int:Obj#)
+    verifyNotEq(Type.of(d), Sys:Bool#)
 
     // nullable
     Obj e := [2:"two", "three":null, "four":4]
-    verifyEq(e.type, Obj:Obj?#)
+    verifyType(e, Obj:Obj?#)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -165,64 +165,66 @@ class MapTest : Test
   Void testReflect()
   {
     a := [:]
-    verifyEq(a.type.base,      Map#)
-    verifyEq(a.type.base.base, Obj#)
-    verifyEq(a.type.pod.name,  "sys")
-    verifyEq(a.type.name,      "Map")
-    verifyEq(a.type.qname,     "sys::Map")
-    verifyEq(a.type.signature, "[sys::Obj:sys::Obj?]")
-    verifyEq(a.type.toStr,     "[sys::Obj:sys::Obj?]")
-    verifyEq(a.type.method("isEmpty").returns,  Bool#)
-    verifyEq(a.type.method("get").returns,      Obj?#)
-    verifyEq(a.type.method("get").params[0].of, Obj#)
-    verifyEq(a.type.method("get").params[1].of, Obj?#)
-    verifyEq(a.type.method("set").returns,      Obj:Obj?#)
-    verifyEq(a.type.method("set").params[0].of, Obj#)
-    verifyEq(a.type.method("set").params[1].of, Obj?#)
-    verifyEq(a.type.method("each").params[0].of, |Obj? v, Obj k->Void|#)
-    verifyNotEq(a.type.method("each").params[0].of, |Str v, Obj k->Void|#)
+    t := Type.of(a)
+    verifyEq(t.base,      Map#)
+    verifyEq(t.base.base, Obj#)
+    verifyEq(t.pod.name,  "sys")
+    verifyEq(t.name,      "Map")
+    verifyEq(t.qname,     "sys::Map")
+    verifyEq(t.signature, "[sys::Obj:sys::Obj?]")
+    verifyEq(t.toStr,     "[sys::Obj:sys::Obj?]")
+    verifyEq(t.method("isEmpty").returns,  Bool#)
+    verifyEq(t.method("get").returns,      Obj?#)
+    verifyEq(t.method("get").params[0].of, Obj#)
+    verifyEq(t.method("get").params[1].of, Obj?#)
+    verifyEq(t.method("set").returns,      Obj:Obj?#)
+    verifyEq(t.method("set").params[0].of, Obj#)
+    verifyEq(t.method("set").params[1].of, Obj?#)
+    verifyEq(t.method("each").params[0].of, |Obj? v, Obj k->Void|#)
+    verifyNotEq(t.method("each").params[0].of, |Str v, Obj k->Void|#)
 
     b := [0:"zero"]
-    verifyEq(b.type.base,      Map#)
-    verifyEq(b.type.base.base, Obj#)
-    verifyEq(b.type.pod.name,  "sys")
-    verifyEq(b.type.name,      "Map")
-    verifyEq(b.type.qname,     "sys::Map")
-    verifyEq(b.type.signature, "[sys::Int:sys::Str]")
-    verifyEq(b.type.toStr,     "[sys::Int:sys::Str]")
-    verifyEq(b.type.method("isEmpty").returns,  Bool#)
-    verifyEq(b.type.method("get").returns,      Str?#)
-    verifyEq(b.type.method("get").params[0].of, Int#)
-    verifyEq(b.type.method("get").params[1].of, Str?#)
-    verifyEq(b.type.method("set").returns,      Int:Str#)
-    verifyEq(b.type.method("set").params[0].of, Int#)
-    verifyEq(b.type.method("set").params[1].of, Str#)
-    verifyEq(b.type.field("def").of, Str?#)
-    verifyEq(b.type.method("keys").returns,     Int[]#)
-    verifyEq(b.type.method("values").returns,   Str[]#)
-    verifyEq(b.type.method("each").params[0].of, |Str v, Int k->Void|#)
-    verifyNotEq(b.type.method("each").params[0].of, |Obj v, Int i->Void|#)
+    t = Type.of(b)
+    verifyEq(t.base,      Map#)
+    verifyEq(t.base.base, Obj#)
+    verifyEq(t.pod.name,  "sys")
+    verifyEq(t.name,      "Map")
+    verifyEq(t.qname,     "sys::Map")
+    verifyEq(t.signature, "[sys::Int:sys::Str]")
+    verifyEq(t.toStr,     "[sys::Int:sys::Str]")
+    verifyEq(t.method("isEmpty").returns,  Bool#)
+    verifyEq(t.method("get").returns,      Str?#)
+    verifyEq(t.method("get").params[0].of, Int#)
+    verifyEq(t.method("get").params[1].of, Str?#)
+    verifyEq(t.method("set").returns,      Int:Str#)
+    verifyEq(t.method("set").params[0].of, Int#)
+    verifyEq(t.method("set").params[1].of, Str#)
+    verifyEq(t.field("def").of, Str?#)
+    verifyEq(t.method("keys").returns,     Int[]#)
+    verifyEq(t.method("values").returns,   Str[]#)
+    verifyEq(t.method("each").params[0].of, |Str v, Int k->Void|#)
+    verifyNotEq(t.method("each").params[0].of, |Obj v, Int i->Void|#)
 
     c := [ArgErr.make:[0,1,2]]
-    verifyEq(c.type.base,      Map#)
-    verifyEq(c.type.base.base, Obj#)
-    verifyEq(c.type.pod.name,  "sys")
-    verifyEq(c.type.name,      "Map")
-    verifyEq(c.type.qname,     "sys::Map")
-    verifyEq(c.type.signature, "[sys::ArgErr:sys::Int[]]")
-    verifyEq(c.type.toStr,     "[sys::ArgErr:sys::Int[]]")
-    verifyEq(c.type.method("isEmpty").returns,   Bool#)
-    verifyEq(c.type.method("get").returns,       Int[]?#)
-    verifyEq(c.type.method("get").params[0].of,  ArgErr#)
-    verifyEq(c.type.method("set").returns,       ArgErr:Int[]#)
-    verifyEq(c.type.method("set").returns,       [ArgErr:Int[]]#)
-    verifyEq(c.type.method("set").params[0].of,  ArgErr#)
-    verifyEq(c.type.method("set").params[1].of,  Int[]#)
-    verifyEq(c.type.method("keys").returns,      ArgErr[]#)
-    verifyEq(c.type.method("values").returns,    Int[][]#)
-    verifyEq(c.type.method("each").params[0].of, |Int[] v, ArgErr k->Void|#)
+    t = Type.of(c)
+    verifyEq(t.base,      Map#)
+    verifyEq(t.base.base, Obj#)
+    verifyEq(t.pod.name,  "sys")
+    verifyEq(t.name,      "Map")
+    verifyEq(t.qname,     "sys::Map")
+    verifyEq(t.signature, "[sys::ArgErr:sys::Int[]]")
+    verifyEq(t.toStr,     "[sys::ArgErr:sys::Int[]]")
+    verifyEq(t.method("isEmpty").returns,   Bool#)
+    verifyEq(t.method("get").returns,       Int[]?#)
+    verifyEq(t.method("get").params[0].of,  ArgErr#)
+    verifyEq(t.method("set").returns,       ArgErr:Int[]#)
+    verifyEq(t.method("set").returns,       [ArgErr:Int[]]#)
+    verifyEq(t.method("set").params[0].of,  ArgErr#)
+    verifyEq(t.method("set").params[1].of,  Int[]#)
+    verifyEq(t.method("keys").returns,      ArgErr[]#)
+    verifyEq(t.method("values").returns,    Int[][]#)
+    verifyEq(t.method("each").params[0].of, |Int[] v, ArgErr k->Void|#)
   }
-
 //////////////////////////////////////////////////////////////////////////
 // Add/Remove
 //////////////////////////////////////////////////////////////////////////
@@ -354,12 +356,12 @@ class MapTest : Test
   {
     a := ['a':"A", 'b':"B", 'c':"C"]
     verifyEq(a.size, 3)
-    verifyEq(a.type, Int:Str#)
+    verifyType(a, Int:Str#)
     verifyEq(a, ['a':"A", 'b':"B", 'c':"C"])
 
     b := a.dup
     verifyEq(b.size, 3)
-    verifyEq(b.type, Int:Str#)
+    verifyType(b, Int:Str#)
     verifyEq(b, ['a':"A", 'b':"B", 'c':"C"])
 
     a['a'] = "X"
@@ -1053,7 +1055,7 @@ class MapTest : Test
     verifyEq(r, x)
 
     // verify all idempotent methods work
-    verifyEq(r.type, Int:Str#)
+    verifyType(r, Int:Str#)
     verifyEq(r.isEmpty, false)
     verifyEq(r.size, 3)
     verifyEq(r[0], "a")
@@ -1151,7 +1153,7 @@ class MapTest : Test
     verifyNotSame(m.ro, mc)
     verify(mc.isRO)
     verify(mc.isImmutable)
-    verifyEq(mc.type.signature, "[sys::Int[]:[sys::Duration:sys::Str]?]")
+    verifyEq(Type.of(mc).signature, "[sys::Int[]:[sys::Duration:sys::Str]?]")
     verifyEq(mc.get([0]), [0ns:"zero"])
     //verifyEq(mc.get(null), null)
     verifyEq(mc.get([2]), null)

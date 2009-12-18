@@ -28,7 +28,7 @@ internal class LocatorBar : Canvas
   {
     icon = r.icon
     uriText.text = r.uri.toStr
-    view = frame.view.type.name
+    view = Type.of(frame.view).name
     repaint
   }
 

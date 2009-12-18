@@ -69,8 +69,8 @@ class ActorTest : Test
     a := Actor(pool, #incr.func)
 
     // verify basic identity
-    verifyEq(g.type, ActorPool#)
-    verifyEq(a.type, Actor#)
+    verifyType(g, ActorPool#)
+    verifyType(a, Actor#)
     verifySame(a.pool, pool)
     verifyEq(g.isStopped, false)
     verifyEq(g.isDone, false)
@@ -80,7 +80,7 @@ class ActorTest : Test
     100.times |Int i| { futures.add(a.send(i)) }
     futures.each |Future f, Int i|
     {
-      verifyEq(f.type, Future#)
+      verifyType(f, Future#)
       verifyEq(f.get, i+1)
       verify(f.isDone)
       verify(!f.isCancelled)
@@ -90,7 +90,7 @@ class ActorTest : Test
 
   static Int incr(Int msg, Context cx)
   {
-    if (cx.type != Context#) echo("ERROR: Context.type hosed")
+    if (Type.of(cx) != Context#) echo("ERROR: Context.type hosed")
     return msg+1
   }
 
@@ -518,7 +518,7 @@ class ActorTest : Test
     try
       x += msg.get.toStr
     catch (Err e)
-      x += e.type.name
+      x += Type.of(e).name
     cx["x"] = x
     return x
   }

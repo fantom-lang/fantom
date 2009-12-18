@@ -47,7 +47,7 @@ class TryTest : Test
     }
     catch (IndexErr err)
     {
-      s += "caught($err.type.name)"
+      s += "caught(${Type.of(err).name})"
     }
     verifyEq(s, "start before caught(IndexErr)");
   }
@@ -67,7 +67,7 @@ class TryTest : Test
     }
     catch (IOErr err)
     {
-      s += "caught($err.type.name)"
+      s += "caught(${Type.of(err).name})"
     }
     verifyEq(s, "start before caught(CatchTestIOErr)");
   }

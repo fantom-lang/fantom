@@ -21,8 +21,8 @@ const class FileMod : WebMod
   new make(|This|? f)
   {
     f?.call(this)
-    if (file === noFile) throw ArgErr("Must configure ${type}.file field")
-    if (!file.exists) throw ArgErr("${type}.file does not exist: $file")
+    if (file === noFile) throw ArgErr("Must configure ${Type.of(this)}.file field")
+    if (!file.exists) throw ArgErr("${Type.of(this)}.file does not exist: $file")
   }
 
   **

@@ -37,7 +37,7 @@ final class SocketOptions
   **
   Void copyFrom(SocketOptions options)
   {
-    type.fields.each |Field f|
+    Type.of(this).fields.each |Field f|
     {
       try
         f.set(this, f.get(options))
@@ -182,7 +182,7 @@ final class SocketOptions
     }
     catch (UnknownSlotErr e)
     {
-      throw UnsupportedErr("Option not supported for $socket.type")
+      throw UnsupportedErr("Option not supported for ${Type.of(socket)}")
     }
   }
 

@@ -36,7 +36,7 @@ internal class SideBarPane : ContentPane
 
   SideBar? sideBar(Type t, Bool make)
   {
-    sb := sideBars.find |SideBar x->Bool| { return x.type === t }
+    sb := sideBars.find |SideBar x->Bool| { Type.of(x) === t }
     if (sb == null && make)
     {
       sb = t.make
@@ -65,7 +65,7 @@ internal class SideBarPane : ContentPane
     }
     else
     {
-      throw Err("Invalid ${sb.type}.prefAlign $pref")
+      throw Err("Invalid ${Type.of(sb)}.prefAlign $pref")
     }
     sb.parent.visible = true
     sb.parent.relayout

@@ -37,7 +37,7 @@ class UuidTest : Test
     verifyEq(a.toStr, "aabbccdd-0022-0345-0123-ff00eecc5577")
 
     // type
-    verifySame(a.type, Uuid#)
+    verifySame(Type.of(a), Uuid#)
   }
 
   Void testParse()

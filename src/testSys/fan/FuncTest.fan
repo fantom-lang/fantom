@@ -77,17 +77,17 @@ class FuncTest : Test
   Void testRetype()
   {
     x := |x,y->Obj?| { "$x, $y" }
-    verifyEq(x.type.signature, "|sys::Obj?,sys::Obj?->sys::Obj?|")
+    verifyEq(Type.of(x).signature, "|sys::Obj?,sys::Obj?->sys::Obj?|")
     verifyEq(x(3, 4), "3, 4")
 
     x = x.retype(|Int,Int?->Str|#)
-    verifyEq(x.type.signature, "|sys::Int,sys::Int?->sys::Str|")
+    verifyEq(Type.of(x).signature, "|sys::Int,sys::Int?->sys::Str|")
     verifyEq(x(3, 4), "3, 4")
 
     y := Str#plus.func
     verifyEq(y.method, Str#plus)
     y = y.retype(|Str,Int->Str|#)
-    verifyEq(y.type.signature, "|sys::Str,sys::Int->sys::Str|")
+    verifyEq(Type.of(y).signature, "|sys::Str,sys::Int->sys::Str|")
     verifyEq(y.method, Str#plus)
     verifyEq(y("x", 5), "x5")
     verifyEq(y.callOn("x", [5]), "x5")
@@ -98,10 +98,10 @@ class FuncTest : Test
     z := |a,b,c,d,e,f,g,h->Str| { "$a$b$c$d$e$f$g$h" }
     verifyEq(z.isImmutable, true)
     zSig := |Str a,Str b,Str c,Str d,Str e,Str f,Str g,Str h->Str|#
-    verifyNotEq(z.type, zSig)
+    verifyNotEq(Type.of(z), zSig)
     z = z.retype(zSig)
     verifyEq(z.isImmutable, true)
-    verifyEq(z.type, zSig)
+    verifyEq(Type.of(z), zSig)
     verifyEq(z("a", "b", "c", "d", "e", "f", "g", "h"), "abcdefgh")
     verifyEq(z.callOn("a", ["b", "c", "d", "e", "f", "g", "h"]), "abcdefgh")
     verifyEq(z.callList(["a", "b", "c", "d", "e", "f", "g", "h"]), "abcdefgh")
@@ -184,7 +184,7 @@ class FuncTest : Test
   Void testCurrySig()
   {
     Func f := |Bool b, Int i, Float f, Str s->Str| { return "$b $i $f $s" }
-    verifyEq(f.type.signature, "|sys::Bool,sys::Int,sys::Float,sys::Str->sys::Str|")
+    verifyEq(Type.of(f).signature, "|sys::Bool,sys::Int,sys::Float,sys::Str->sys::Str|")
     verifyEq(f.params[0].of, Bool#)
     verifyEq(f.params[1].of, Int#)
     verifyEq(f.params[2].of, Float#)
@@ -192,19 +192,19 @@ class FuncTest : Test
     verifyEq(f.returns, Str#)
 
     g := f.bind([true])
-    verifyEq(g.type.signature, "|sys::Int,sys::Float,sys::Str->sys::Str|")
+    verifyEq(Type.of(g).signature, "|sys::Int,sys::Float,sys::Str->sys::Str|")
     verifyEq(g.params[0].of, Int#)
     verifyEq(g.params[1].of, Float#)
     verifyEq(g.params[2].of, Str#)
     verifyEq(g.returns, Str#)
 
     h := f.bind([true, 9, 4f])
-    verifyEq(h.type.signature, "|sys::Str->sys::Str|")
+    verifyEq(Type.of(h).signature, "|sys::Str->sys::Str|")
     verifyEq(h.params[0].of, Str#)
     verifyEq(h.returns, Str#)
 
     i := g.bind([7])
-    verifyEq(i.type.signature, "|sys::Float,sys::Str->sys::Str|")
+    verifyEq(Type.of(i).signature, "|sys::Float,sys::Str->sys::Str|")
     verifyEq(i.params[0].of, Float#)
     verifyEq(i.params[1].of, Str#)
     verifyEq(i.returns, Str#)

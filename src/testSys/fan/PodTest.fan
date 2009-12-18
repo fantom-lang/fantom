@@ -18,11 +18,12 @@ class PodTest : Test
 
   Void testIdentity()
   {
-    pod := type.pod
+    pod := Pod.of(this)
     verifyEq(pod.name,  "testSys")
     verifyEq(pod.toStr, "testSys")
     verifyEq(pod.uri,   `fan:/sys/pod/testSys/`)
     verifySame(pod.uri.get, pod)
+    verifySame(pod, Type.of(this).pod)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -44,7 +45,7 @@ class PodTest : Test
   {
     pods := Pod.list
     verify(pods.isRO)
-    verifyEq(pods.type, Pod[]#)
+    verifyType(pods, Pod[]#)
     verify(pods.contains(Pod.find("sys")))
     verify(pods.contains(Pod.find("testSys")))
   }
@@ -91,9 +92,9 @@ class PodTest : Test
     verifyEq(pod.version.major, 1)
     verifyEq(pod.version.minor, 0)
     verify(pod.depends.isRO)
-    verifyEq(pod.facets.type, [Symbol:Obj?]#)
+    verifyType(pod.facets, [Symbol:Obj?]#)
     verifyEq(pod.facets.findAll |v,s| { s.qname == "sys::podBuildTime" }.size, 1)
-    verifyEq(pod.facet(@podBuildTime).type, DateTime#)
+    verifyType(pod.facet(@podBuildTime), DateTime#)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -102,13 +103,13 @@ class PodTest : Test
 
   Void testFiles()
   {
-    files := type.pod.files
+    files := Pod.of(this).files
     verify(files.containsKey(`/locale/en.props`))
     verify(files.containsKey(`/locale/en-US.props`))
     verify(files.containsKey(`/locale/es.props`))
     verify(files.containsKey(`/locale/es-MX.props`))
 
-    f := type.pod.files[`/res/test.txt`]
+    f := Pod.of(this).files[`/res/test.txt`]
     verify(f != null)
     verifyEq(f.name, "test.txt")
     verifyEq(f.size, 19)
@@ -121,8 +122,8 @@ class PodTest : Test
 
   Void testLog()
   {
-    verifyEq(type.pod.log.name, "testSys")
-    verifySame(type.log, type.pod.log)
+    verifyEq(Pod.of(this).log.name, "testSys")
+    verifySame(Type.of(this).log, Pod.of(this).log)
   }
 
 

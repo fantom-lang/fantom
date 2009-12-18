@@ -39,7 +39,7 @@ class FilePart : EmailPart
     super.validate
 
     // check file is configured
-    if ((Obj?)file == null) throw Err("file null in $type.name")
+    if ((Obj?)file == null) throw Err("file null in ${Type.of(this).name}")
 
     // default content-type to file mime type
     if (headers["Content-Type"] == null)

@@ -59,7 +59,7 @@ class TabPane : Widget
   override This add(Widget? kid)
   {
     if (kid isnot Tab)
-      throw ArgErr("Child of TabPane must be Tab, not $kid.type")
+      throw ArgErr("Child of TabPane must be Tab, not ${Type.of(kid)}")
     super.add(kid)
     return this
   }

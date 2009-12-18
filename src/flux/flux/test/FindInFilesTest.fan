@@ -11,7 +11,7 @@ internal class FindInFilesTest : Test
 
   Void test()
   {
-    type.pod.files.each |File f|
+    Pod.of(this).files.each |File f|
     {
       if (f.uri.toStr.startsWith("/test/files/"))
         f.copyTo(tempDir + f.uri.toStr["/test/files/".size..-1].toUri)

@@ -619,7 +619,7 @@ class ExprTest : CompilerTest
 
           Int m(Int p)
           {
-            list := [ (|Int a->Int|) type.method(\"m1\").func() ]
+            list := [ (|Int a->Int|) Type.of(this).method(\"m1\").func() ]
             return list[0](p)
           }
 
@@ -745,8 +745,8 @@ class ExprTest : CompilerTest
   Void verifyExpr(Str code, Obj? result, Obj? a := null, Obj? b := null, Str more := "", Bool nullable := false)
   {
     params := ""
-    if (a != null) params = a.type.signature + (nullable ? "?" :"") + " a"
-    if (b != null) params += ", " + b.type.signature + (nullable ? "?" :"") + " b"
+    if (a != null) params = Type.of(a).signature + (nullable ? "?" :"") + " a"
+    if (b != null) params += ", " + Type.of(b).signature + (nullable ? "?" :"") + " b"
 
     src :=
      "class Foo

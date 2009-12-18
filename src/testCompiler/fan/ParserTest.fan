@@ -1077,7 +1077,7 @@ class ParserTest : CompilerTest
 
   Void testTypes()
   {
-    t := verifyType("Str")
+    t := parseType("Str")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Str")
       verifyEq(t.qname,       "sys::Str")
@@ -1089,7 +1089,7 @@ class ParserTest : CompilerTest
       verifyEq(t.toListOf.isNullable, false)
       verifyEq(t.toNullable.signature, "sys::Str?")
 
-    t = verifyType("Str?")
+    t = parseType("Str?")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Str")
       verifyEq(t.qname,       "sys::Str")
@@ -1101,7 +1101,7 @@ class ParserTest : CompilerTest
       verifyEq(t.toListOf.isNullable, false)
       verifyEq(t.toNullable.signature, "sys::Str?")
 
-    t = verifyType("sys::Str")
+    t = parseType("sys::Str")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Str")
       verifyEq(t.qname,       "sys::Str")
@@ -1112,7 +1112,7 @@ class ParserTest : CompilerTest
       verifyEq(t.toListOf.signature, "sys::Str[]")
       verifyEq(t.toListOf.isNullable, false)
 
-    t = verifyType("sys::Str?")
+    t = parseType("sys::Str?")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Str")
       verifyEq(t.qname,       "sys::Str")
@@ -1121,7 +1121,7 @@ class ParserTest : CompilerTest
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  true)
 
-    t = verifyType("$podName::Foo")
+    t = parseType("$podName::Foo")
       verifyEq(t.pod.name,    podName)
       verifyEq(t.name,        "Foo")
       verifyEq(t.qname,       "$podName::Foo")
@@ -1132,7 +1132,7 @@ class ParserTest : CompilerTest
       verifyEq(t.toListOf.signature, "$podName::Foo[]")
       verifyEq(t.toListOf.isNullable, false)
 
-    t = verifyType("$podName::Foo?")
+    t = parseType("$podName::Foo?")
       verifyEq(t.pod.name,    podName)
       verifyEq(t.name,        "Foo")
       verifyEq(t.qname,       "$podName::Foo")
@@ -1144,7 +1144,7 @@ class ParserTest : CompilerTest
       verifyEq(t.toListOf.isNullable, false)
       verifyEq(t.toNullable.signature, "$podName::Foo?")
 
-    t = verifyType("Str[]")
+    t = parseType("Str[]")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "List")
       verifyEq(t.qname,       "sys::List")
@@ -1153,7 +1153,7 @@ class ParserTest : CompilerTest
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  false)
 
-    t = verifyType("Str?[]")
+    t = parseType("Str?[]")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "List")
       verifyEq(t.qname,       "sys::List")
@@ -1162,7 +1162,7 @@ class ParserTest : CompilerTest
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  false)
 
-    t = verifyType("Str[]?")
+    t = parseType("Str[]?")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "List")
       verifyEq(t.qname,       "sys::List")
@@ -1172,7 +1172,7 @@ class ParserTest : CompilerTest
       verifyEq(t.isNullable,  true)
       verifyEq(t.toNullable.signature, "sys::Str[]?")
 
-    t = verifyType("Int[][]")
+    t = parseType("Int[][]")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "List")
       verifyEq(t.qname,       "sys::List")
@@ -1180,7 +1180,7 @@ class ParserTest : CompilerTest
       verifyEq(t.base.qname,  "sys::List")
       verifyEq(t.mixins.size, 0)
 
-    t = verifyType("Int:Str")
+    t = parseType("Int:Str")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Map")
       verifyEq(t.qname,       "sys::Map")
@@ -1189,7 +1189,7 @@ class ParserTest : CompilerTest
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  false)
 
-    t = verifyType("Int:Str?")
+    t = parseType("Int:Str?")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Map")
       verifyEq(t.qname,       "sys::Map")
@@ -1201,7 +1201,7 @@ class ParserTest : CompilerTest
     verifyErrors("class Foo { Void a(Str?:Str bad) {} }",
       [1,  23, "Map type cannot have nullable key type"])
 
-    t = verifyType("[Int:Str]")
+    t = parseType("[Int:Str]")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Map")
       verifyEq(t.qname,       "sys::Map")
@@ -1209,7 +1209,7 @@ class ParserTest : CompilerTest
       verifyEq(t.base.qname,  "sys::Map")
       verifyEq(t.mixins.size, 0)
 
-    t = verifyType("[Int:Str]?")
+    t = parseType("[Int:Str]?")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Map")
       verifyEq(t.qname,       "sys::Map")
@@ -1218,7 +1218,7 @@ class ParserTest : CompilerTest
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  true)
 
-    t = verifyType("|->|")
+    t = parseType("|->|")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Func")
       verifyEq(t.qname,       "sys::Func")
@@ -1226,7 +1226,7 @@ class ParserTest : CompilerTest
       verifyEq(t.base.qname,  "sys::Func")
       verifyEq(t.mixins.size, 0)
 
-    t = verifyType("|Str s->Bool|")
+    t = parseType("|Str s->Bool|")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Func")
       verifyEq(t.qname,       "sys::Func")
@@ -1235,7 +1235,7 @@ class ParserTest : CompilerTest
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  false)
 
-    t = verifyType("|Str s->Bool|?")
+    t = parseType("|Str s->Bool|?")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Func")
       verifyEq(t.qname,       "sys::Func")
@@ -1244,70 +1244,70 @@ class ParserTest : CompilerTest
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  true)
 
-    t = verifyType("|Str a, Int b->Bool|")
+    t = parseType("|Str a, Int b->Bool|")
       verifyEq(t.qname,       "sys::Func")
       verifyEq(t.signature,   "|sys::Str,sys::Int->sys::Bool|")
 
-    t = verifyType("|Str a, Int b|")
+    t = parseType("|Str a, Int b|")
       verifyEq(t.qname,       "sys::Func")
       verifyEq(t.signature,   "|sys::Str,sys::Int->sys::Void|")
 
-    t = verifyType("|->Str|")
+    t = parseType("|->Str|")
       verifyEq(t.qname,       "sys::Func")
       verifyEq(t.signature,   "|->sys::Str|")
 
-    t = verifyType("|->Str?|")
+    t = parseType("|->Str?|")
       verifyEq(t.qname,       "sys::Func")
       verifyEq(t.signature,   "|->sys::Str?|")
 
-    t = verifyType("Str:Obj[]")
+    t = parseType("Str:Obj[]")
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Str:sys::Obj[]]")
 
-    t = verifyType("Str[]:Obj")
+    t = parseType("Str[]:Obj")
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Str[]:sys::Obj]")
 
-    t = verifyType("Int:[Str:Obj[]][]")
+    t = parseType("Int:[Str:Obj[]][]")
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Int:[sys::Str:sys::Obj[]][]]")
 
-    t = verifyType("sys::Int:[Str:sys::Obj[]][]")
+    t = parseType("sys::Int:[Str:sys::Obj[]][]")
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Int:[sys::Str:sys::Obj[]][]]")
 
-    t = verifyType("[Int:[Str:Obj[]]][]")
+    t = parseType("[Int:[Str:Obj[]]][]")
       verifyEq(t.qname,       "sys::List")
       verifyEq(t.signature,   "[sys::Int:[sys::Str:sys::Obj[]]][]")
 
-    t = verifyType("[Int[]:[Str:Bool]]")
+    t = parseType("[Int[]:[Str:Bool]]")
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Int[]:[sys::Str:sys::Bool]]")
 
-    t = verifyType("|->|[]")
+    t = parseType("|->|[]")
       verifyEq(t.qname,       "sys::List")
       verifyEq(t.signature,   "|->sys::Void|[]")
 
-    t = verifyType("| |->| a->Int:Obj|")
+    t = parseType("| |->| a->Int:Obj|")
       verifyEq(t.qname,       "sys::Func")
       verifyEq(t.signature,   "||->sys::Void|->[sys::Int:sys::Obj]|")
 
-    t = verifyType("Str:|->|")
+    t = parseType("Str:|->|")
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Str:|->sys::Void|]")
 
-    t = verifyType("Str:| Int:Int[] a -> |->| |[]")
+    t = parseType("Str:| Int:Int[] a -> |->| |[]")
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Str:|[sys::Int:sys::Int[]]->|->sys::Void||[]]")
       verifyEq(t.isNullable,  false)
 
-    t = verifyType("[Str:| Int:Int[] a -> |->| |[]]?")
+    t = parseType("[Str:| Int:Int[] a -> |->| |[]]?")
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Str:|[sys::Int:sys::Int[]]->|->sys::Void||[]]?")
       verifyEq(t.isNullable,  true)
   }
 
-  CType verifyType(Str typeStr)
+  CType parseType(Str typeStr)
   {
     parse("class Foo { Void m($typeStr x) {} }")
     m := (MethodDef)t.slotDefs.first

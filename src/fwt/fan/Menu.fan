@@ -63,7 +63,7 @@ class Menu : MenuItem
   override This add(Widget? kid)
   {
     if (kid isnot MenuItem)
-      throw ArgErr("Child of Menu must be MenuItem, not $kid.type")
+      throw ArgErr("Child of Menu must be MenuItem, not ${Type.of(kid)}")
     super.add(kid)
     return this
   }

@@ -87,12 +87,12 @@ class ClosureTest : CompilerTest
 
      t := pod.types[0]
      obj := t.make
-     verifyEq(obj.type.method("xc1").callList([obj]), 1972)
-     verifyEq(obj.type.method("xc2").callList([obj]), 1972)
-     verifyEq(obj.type.method("yc1").callList([obj]), 72)
-     verifyEq(obj.type.method("yc2").callList([obj]), 72)
-     verifyEq(obj.type.method("fc1").callList([obj]), 66)
-     verifyEq(obj.type.method("fc2").callList([obj]), 66)
+     verifyEq(t.method("xc1").callList([obj]), 1972)
+     verifyEq(t.method("xc2").callList([obj]), 1972)
+     verifyEq(t.method("yc1").callList([obj]), 72)
+     verifyEq(t.method("yc2").callList([obj]), 72)
+     verifyEq(t.method("fc1").callList([obj]), 66)
+     verifyEq(t.method("fc2").callList([obj]), 66)
   }
 
   Void testOuterThisErrors()
@@ -141,7 +141,7 @@ class ClosureTest : CompilerTest
      // verify code works correctly
      t  := pod.types[0]
      obj := t.make
-     verifyEq(obj.type.method("f").callList([obj]), 17)
+     verifyEq(t.method("f").callList([obj]), 17)
 
      // verify first closure doesn't have cvars overhead
      c0 := compiler.types[1]
@@ -300,7 +300,7 @@ class ClosureTest : CompilerTest
      // verify code works correctly
      t  := pod.types[0]
      obj := t.make
-     verifyEq(obj.type.method("f").callList([obj, 0, 1]), "(0: 0 1 2 3)(1: 1 1 2 4)(2: 2 1 2 5)")
+     verifyEq(t.method("f").callList([obj, 0, 1]), "(0: 0 1 2 3)(1: 1 1 2 4)(2: 2 1 2 5)")
    }
 
 //////////////////////////////////////////////////////////////////////////
@@ -333,7 +333,7 @@ class ClosureTest : CompilerTest
      // verify code works correctly
      t  := pod.types[0]
      obj := t.make
-     verifyEq(obj.type.method("f").callList([1]),
+     verifyEq(t.method("f").callList([1]),
        "[1 2 0 10 0][2 4 0 10 1][3 8 1 11 0][4 16 1 11 1]")
    }
 
@@ -373,7 +373,7 @@ class ClosureTest : CompilerTest
      // verify code works correctly
      t  := pod.types[0]
      obj := t.make
-     verifyEq(obj.type.method("f").callList([1]),
+     verifyEq(t.method("f").callList([1]),
        "i=0 [2 2 0 0 0][2 2 0 0 1][2 4 0 1 0][2 4 0 1 1]\n" +
        "i=1 [3 8 1 0 0][3 8 1 0 1][3 16 1 1 0][3 16 1 1 1]\n | 3 32 3 4")
    }
@@ -405,7 +405,7 @@ class ClosureTest : CompilerTest
      // verify code works correctly
      t  := pod.types[0]
      obj := t.make
-     verifyEq(obj.type.method("f").callList([obj]), null)
+     verifyEq(t.method("f").callList([obj]), null)
      verifyEq(obj->counter, 4)
    }
 
@@ -566,7 +566,7 @@ class ClosureTest : CompilerTest
         Type m17() { foo |Int a,b->Int| { 4 } }
         Type m18() { foo |Int a, Float b->Int| { 4 } }
 
-        Type foo(|Num,Num->Num| f) { return f.type }
+        Type foo(|Num,Num->Num| f) { Type.of(f) }
        }")
 
     // compiler.fpod.dump

@@ -211,7 +211,7 @@ class Dialog : Window
     body := this.body
     if (body == null) body = Label {}
     if (body is Str) body = Label { text = body.toStr }
-    if (body isnot Widget) throw Err("body is not Str or Widget: $body.type")
+    if (body isnot Widget) throw Err("body is not Str or Widget: ${Type.of(body)}")
 
     // combine body with image if specified
     bodyAndImage := body as Widget
@@ -239,7 +239,7 @@ class Dialog : Window
         font = Desktop.sysFontMonospace
         text = details.toStr
       }
-      if (details isnot Widget) throw ArgErr("details not Err, Str, or Widget: " + details.type)
+      if (details isnot Widget) throw ArgErr("details not Err, Str, or Widget: ${Type.of(details)}")
       commands = commands.dup.add(DialogCommand(DialogCommandId.details, details))
     }
 
