@@ -208,17 +208,6 @@ fan.dom.ElemPeer.prototype.onEvent = function(self, type, useCapture, handler)
   }
 }
 
-fan.dom.ElemPeer.prototype.effect = function(self)
-{
-  if (this.fx == null)
-  {
-    this.fx = fan.dom.Effect.make(self);
-    this.fx.peer.sync(self);
-  }
-  return this.fx;
-}
-fan.dom.ElemPeer.prototype.fx = null;
-
 fan.dom.ElemPeer.prototype.toStr = function(self)
 {
   var name = this.elem.nodeName;
