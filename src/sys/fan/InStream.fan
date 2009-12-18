@@ -96,6 +96,12 @@ class InStream
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Byte order mode for binary reads.
+  ** Default is `Endian.big` (network byte order).
+  **
+  virtual Endian endian
+
+  **
   ** Peek at the next byte to be read without actually consuming
   ** it.  Peek has the same semantics as a read/unread.  Return
   ** null if at end of stream.
@@ -103,11 +109,11 @@ class InStream
   Int? peek()
 
   **
-  ** Read the next byte as an unsigned 8-bit number in network
-  ** byte order.  This method may be paired with OutStream.write.
-  ** Throw IOErr on error or if the end of stream is reached before
-  ** one byte can be read.  This method differs from read() in that
-  ** it will throw IOErr on end of stream rather than return null.
+  ** Read the next byte as an unsigned 8-bit number.  This method may
+  ** be paired with `OutStream.write`.  Throw IOErr on error or if the
+  ** end of stream is reached before one byte can be read.  This method
+  ** differs from `read` in that it will throw IOErr on end of stream
+  ** rather than return null.
   **
   Int readU1()
 
@@ -119,40 +125,40 @@ class InStream
   Int readS1()
 
   **
-  ** Read the next two bytes as an unsigned 16-bit number in network
-  ** byte order.  This method may be paired with `OutStream.writeI2`.
+  ** Read the next two bytes as an unsigned 16-bit number using configured
+  ** `endian`.  This method may be paired with `OutStream.writeI2`.
   ** Throw IOErr on error or if the end of stream is reached before
   ** two bytes can be read.
   **
   Int readU2()
 
   **
-  ** Read the next two bytes as a signed 16-bit number in network
-  ** byte order.  This method may be paired with `OutStream.writeI2`.
+  ** Read the next two bytes as a signed 16-bit number using configured
+  ** `endian`.  This method may be paired with `OutStream.writeI2`.
   ** Throw IOErr on error or if the end of stream is reached before
   ** two bytes can be read.
   **
   Int readS2()
 
   **
-  ** Read the next four bytes as an unsigned 32-bit number in network
-  ** byte order.  This method may be paired with `OutStream.writeI4`.
+  ** Read the next four bytes as an unsigned 32-bit number using configured
+  ** `endian`.  This method may be paired with `OutStream.writeI4`.
   ** Throw IOErr on error or if the end of stream is reached before
   ** four bytes can be read.
   **
   Int readU4()
 
   **
-  ** Read the next four bytes as a signed 32-bit number in network
-  ** byte order.  This method may be paired with `OutStream.writeI4`.
+  ** Read the next four bytes as a signed 32-bit number using configured
+  ** `endian`.  This method may be paired with `OutStream.writeI4`.
   ** Throw IOErr on error or if the end of stream is reached before
   ** four bytes can be read.
   **
   Int readS4()
 
   **
-  ** Read the next eight bytes as a signed 64-bit number in network
-  ** byte order.  This method may be paired with `OutStream.writeI8`.
+  ** Read the next eight bytes as a signed 64-bit number using configured
+  ** `endian`.  This method may be paired with `OutStream.writeI8`.
   ** Throw IOErr on error or if the end of stream is reached before
   ** eight bytes can be read.  Note there is no readU8 (because Java
   ** doesn't support unsigned longs).
@@ -160,16 +166,16 @@ class InStream
   Int readS8()
 
   **
-  ** Read the next four bytes as a 32-bit floating point number in
-  ** network byte order according to `Float.bits32`.  This method may be
-  ** paired with `OutStream.writeF4`.  Throw IOErr on error or if the
-  ** end of stream is reached before four bytes can be read.
+  ** Read the next four bytes as a 32-bit floating point number using
+  ** using configured `endian` according to `Float.bits32`.  This method
+  ** may be paired with `OutStream.writeF4`.  Throw IOErr on error or if
+  ** the end of stream is reached before four bytes can be read.
   **
   Float readF4()
 
   **
-  ** Read the next eight bytes as a 64-bit floating point number in
-  ** network byte order according to `Float.bits`.  This method may be
+  ** Read the next eight bytes as a 64-bit floating point number using
+  ** configured `endian` according to `Float.bits`.  This method may be
   ** paired with `OutStream.writeF8`.  Throw IOErr on error or if the
   ** end of stream is reached before four bytes can be read.
   **

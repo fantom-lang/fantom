@@ -92,32 +92,62 @@ public class OutStream
     }
   }
 
+  public Endian endian()
+  {
+    return bigEndian ? Endian.big : Endian.little;
+  }
+
+  public void endian(Endian endian)
+  {
+    bigEndian = endian == Endian.big;
+  }
+
   public OutStream writeI2(long x)
   {
     int v = (int)x;
-    return this.w((v >>> 8) & 0xFF)
-               .w((v >>> 0) & 0xFF);
+    if (bigEndian)
+      return this.w((v >>> 8) & 0xFF)
+                 .w((v >>> 0) & 0xFF);
+    else
+      return this.w((v >>> 0) & 0xFF)
+                 .w((v >>> 8) & 0xFF);
   }
 
   public OutStream writeI4(long x)
   {
     int v = (int)x;
-    return this.w((v >>> 24) & 0xFF)
-               .w((v >>> 16) & 0xFF)
-               .w((v >>> 8)  & 0xFF)
-               .w((v >>> 0)  & 0xFF);
+    if (bigEndian)
+      return this.w((v >>> 24) & 0xFF)
+                 .w((v >>> 16) & 0xFF)
+                 .w((v >>> 8)  & 0xFF)
+                 .w((v >>> 0)  & 0xFF);
+    else
+      return this.w((v >>> 0)  & 0xFF)
+                 .w((v >>> 8)  & 0xFF)
+                 .w((v >>> 16) & 0xFF)
+                 .w((v >>> 24) & 0xFF);
   }
 
   public OutStream writeI8(long v)
   {
-    return this.w((int)(v >>> 56) & 0xFF)
-               .w((int)(v >>> 48) & 0xFF)
-               .w((int)(v >>> 40) & 0xFF)
-               .w((int)(v >>> 32) & 0xFF)
-               .w((int)(v >>> 24) & 0xFF)
-               .w((int)(v >>> 16) & 0xFF)
-               .w((int)(v >>> 8)  & 0xFF)
-               .w((int)(v >>> 0)  & 0xFF);
+    if (bigEndian)
+      return this.w((int)(v >>> 56) & 0xFF)
+                 .w((int)(v >>> 48) & 0xFF)
+                 .w((int)(v >>> 40) & 0xFF)
+                 .w((int)(v >>> 32) & 0xFF)
+                 .w((int)(v >>> 24) & 0xFF)
+                 .w((int)(v >>> 16) & 0xFF)
+                 .w((int)(v >>> 8)  & 0xFF)
+                 .w((int)(v >>> 0)  & 0xFF);
+    else
+      return this.w((int)(v >>> 0)  & 0xFF)
+                 .w((int)(v >>> 8)  & 0xFF)
+                 .w((int)(v >>> 16) & 0xFF)
+                 .w((int)(v >>> 24) & 0xFF)
+                 .w((int)(v >>> 32) & 0xFF)
+                 .w((int)(v >>> 40) & 0xFF)
+                 .w((int)(v >>> 48) & 0xFF)
+                 .w((int)(v >>> 56) & 0xFF);
   }
 
   public OutStream writeF4(double x)
@@ -479,6 +509,7 @@ public class OutStream
 //////////////////////////////////////////////////////////////////////////
 
   OutStream out;
+  boolean bigEndian = true;
   Charset charset = Charset.utf8();
   Charset.Encoder charsetEncoder = charset.newEncoder();
 
