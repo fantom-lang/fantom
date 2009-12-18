@@ -12,7 +12,7 @@ using web
 **
 ** Doc models the DOM document object.
 **
-** See [docLib]`docLib::Dom` for details.
+** See [docLib]`docLib::Dom#doc` for details.
 **
 @js
 class Doc

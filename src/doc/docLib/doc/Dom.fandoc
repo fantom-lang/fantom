@@ -23,8 +23,8 @@ one-to-one:
   Event             Event
   XmlHttpRequest    HttpReq/HttpRes
 
-Window [#window]
-================
+Win [#win]
+==========
 
   win := Win.cur       // get current Win instance
   win.alert("Hello!")  // display a modal dialog
