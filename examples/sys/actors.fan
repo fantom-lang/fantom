@@ -43,11 +43,11 @@ class Actors
 
     // this actor stores state in context to keep
     // track of a simple counter everytime a message is received
-    a := Actor(ActorPool()) |msg, cx|
+    a := Actor(ActorPool()) |msg|
     {
-      if (msg == "current") return cx["counter"]
-      if (msg == "reset") { cx["counter"] = 0; return null }
-      cx["counter"] = 1 + cx["counter"]
+      if (msg == "current") return Actor.locals["counter"]
+      if (msg == "reset") { Actor.locals["counter"] = 0; return null }
+      Actor.locals["counter"] = 1 + Actor.locals["counter"]
       return null  // ignored
     }
 
