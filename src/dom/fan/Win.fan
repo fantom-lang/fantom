@@ -10,7 +10,7 @@
 **
 ** Win models the DOM window object.
 **
-** See [docLib]`docLib::Dom` for details.
+** See [docLib]`docLib::Dom#win` for details.
 **
 @js
 class Win
