@@ -61,10 +61,10 @@ internal const class FileIndex : Actor
   {
     // handle ready message
     if (msg === `ready`) return true
-    if (msg === `rebuild`) { doRebuild(cx); return null }
+    if (msg === `rebuild`) { doRebuild; return null }
 
     // handle find message
-    map := cx["map"] as Uri:FileItem
+    map := Actor.locals["fileIndexMap"] as Uri:FileItem
     if (map == null) throw Err("Must configure @indexDirs")
     return doFind(map, msg)
   }
@@ -91,15 +91,15 @@ internal const class FileIndex : Actor
 // Indexing
 //////////////////////////////////////////////////////////////////////////
 
-  Void doRebuild(Context cx)
+  Void doRebuild()
   {
-    cx["map"] = null
+    Actor.locals["fileIndexMap"] = null
     dirs := @indexDirs.val
     if (dirs.isEmpty) return
 
     map := Uri:FileItem[:]
-    cx["dir"] = dirs
-    cx["map"] = map
+    Actor.locals["fileIndexDir"] = dirs
+    Actor.locals["fileIndexMap"] = map
 
     t1 := Duration.now
     dirs.each |dir|

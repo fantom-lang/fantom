@@ -27,35 +27,9 @@ class ActorTest : Test
 
   Void testMake()
   {
-    mutable := |Context cx, Obj? msg->Obj?| { fail; return null }
+    mutable := |Obj? msg->Obj?| { fail; return null }
     verifyErr(ArgErr#) { x := Actor(pool) }
     verifyErr(NotImmutableErr#) { x := Actor(pool, mutable) }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Context
-//////////////////////////////////////////////////////////////////////////
-
-  Void testContext()
-  {
-    a := Actor(ActorPool()) |msg, Context cx|
-    {
-      switch (msg)
-      {
-        case "get":  return cx->foo
-        case "zero": return cx->foo = 0
-        case "inc":  return cx->foo = 1 + cx->foo
-      }
-      return 99
-    }
-
-    verifyErr(UnknownSlotErr#) { a.send("get").get }
-    verifyEq(a.send("zero").get, 0)
-    verifyEq(a.send("inc").get, 1)
-    verifyEq(a.send("inc").get, 2)
-    verifyEq(a.send("get").get, 2)
-    verifyEq(a.send("zero").get, 0)
-    verifyEq(a.send("get").get, 0)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -88,9 +62,8 @@ class ActorTest : Test
     }
   }
 
-  static Int incr(Int msg, Context cx)
+  static Int incr(Int msg)
   {
-    if (Type.of(cx) != Context#) echo("ERROR: Context.type hosed")
     return msg+1
   }
 
@@ -118,10 +91,10 @@ class ActorTest : Test
     }
   }
 
-  static Obj? order(Obj msg, Context cx)
+  static Obj? order(Obj msg)
   {
-    Int[]? r := cx.get("foo")
-    if (r == null) cx.set("foo", r = Int[,])
+    Int[]? r := Actor.locals.get("foo")
+    if (r == null) Actor.locals.set("foo", r = Int[,])
     if (msg.toStr.startsWith("result")) return r
     r.add(msg)
     return null
@@ -137,8 +110,8 @@ class ActorTest : Test
 
     // const
     f := a.send("const")
-    verifySame(f.get, a)
-    verifySame(f.get, a)
+    verifySame(f.get, constObj)
+    verifySame(f.get, constObj)
     verify(f.isDone)
 
     // serializable
@@ -159,17 +132,18 @@ class ActorTest : Test
     verify(f.isDone)
   }
 
-  static Obj? messaging(Str msg, Context cx)
+  static Obj? messaging(Str msg)
   {
     switch (msg)
     {
-      case "const":   return cx.actor
+      case "const":   return constObj
       case "serial":  return SerA { i = 123_321 }
       case "throw":   throw UnknownServiceErr()
-      case "mutable": return cx
+      case "mutable": return Buf()
       default: return "?"
     }
   }
+  static const Obj constObj := [1, 2, 3]
 
 //////////////////////////////////////////////////////////////////////////
 // Timeout/Cancel
@@ -510,16 +484,16 @@ class ActorTest : Test
     return msg
   }
 
-  static Obj? whenDoneB(Future msg, Context cx)
+  static Obj? whenDoneB(Future msg)
   {
-    Str x := cx.get("x", "")
+    Str x := Actor.locals.get("x", "")
     if (!x.isEmpty) x += ","
     if (!msg.isDone) throw Err("not done yet!")
     try
       x += msg.get.toStr
     catch (Err e)
       x += Type.of(e).name
-    cx["x"] = x
+    Actor.locals["x"] = x
     return x
   }
 
@@ -576,11 +550,11 @@ class ActorTest : Test
     verifyAllCancelled(fcancel)
   }
 
-  static Obj? coalesce(Obj? msg, Context cx)
+  static Obj? coalesce(Obj? msg)
   {
-    if (msg is Duration) { Actor.sleep(msg); cx["msgs"] = Str[,]; return msg }
+    if (msg is Duration) { Actor.sleep(msg); Actor.locals["msgs"] = Str[,]; return msg }
     if (msg == "throw") throw IndexErr("foo bar")
-    Str[] msgs := cx.get("msgs")
+    Str[] msgs := Actor.locals["msgs"]
     msgs.add(msg)
     return msgs
   }
