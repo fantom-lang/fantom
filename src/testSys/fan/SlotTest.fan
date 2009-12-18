@@ -37,7 +37,7 @@ class SlotTest : Test
     a := SlotsA.make
     b := SlotsB.make
 
-    s := a.type.slot("a")
+    s := Type.of(a).slot("a")
     verifyEq(s.qname,      "testSys::SlotsA.a")
     verifyEq(s.isField,     true);    verifyEq(s.isMethod,    false)
     verifyEq(s.isConst,     false);   verifyEq(s.isCtor,      false)
@@ -47,7 +47,7 @@ class SlotTest : Test
     verifyEq(s.isStatic,    false);   verifyEq(s.isSynthetic, false)
     verifyEq(s.isVirtual,   true)
 
-    s = b.type.slot("a")
+    s = Type.of(b).slot("a")
     verifyEq(s.qname,      "testSys::SlotsB.a")
     verifyEq(s.isField,     true);    verifyEq(s.isMethod,    false)
     verifyEq(s.isConst,     false);   verifyEq(s.isCtor,      false)
@@ -57,7 +57,7 @@ class SlotTest : Test
     verifyEq(s.isStatic,    false);   verifyEq(s.isSynthetic, false)
     verifyEq(s.isVirtual,   false)
 
-    s = a.type.slot("b")
+    s = Type.of(a).slot("b")
     verifyEq(s.qname,      "testSys::SlotsA.b")
     verifyEq(s.isField,     false);   verifyEq(s.isMethod,   true)
     verifyEq(s.isConst,     false);   verifyEq(s.isCtor,      false)
@@ -67,7 +67,7 @@ class SlotTest : Test
     verifyEq(s.isStatic,    false);   verifyEq(s.isSynthetic, false)
     verifyEq(s.isVirtual,   true)
 
-    s = b.type.slot("b")
+    s = Type.of(b).slot("b")
     verifyEq(s.qname,      "testSys::SlotsB.b")
     verifyEq(s.isField,     false);   verifyEq(s.isMethod,    true)
     verifyEq(s.isConst,     false);   verifyEq(s.isCtor,      false)
@@ -77,7 +77,7 @@ class SlotTest : Test
     verifyEq(s.isStatic,    false);   verifyEq(s.isSynthetic, false)
     verifyEq(s.isVirtual,   false)
 
-    s = a.type.slot("c")
+    s = Type.of(a).slot("c")
     verifyEq(s.qname,      "testSys::SlotsA.c")
     verifyEq(s.isField,     true);    verifyEq(s.isMethod,    false)
     verifyEq(s.isConst,     true);    verifyEq(s.isCtor,      false)

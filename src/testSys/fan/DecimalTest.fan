@@ -19,7 +19,7 @@ class DecimalTest : Test
   Void testIs()
   {
     Obj x := 3.0d
-    verify(x.type === Decimal#)
+    verify(Type.of(x) === Decimal#)
 
     verify(x is Obj)
     verify(x is Num)

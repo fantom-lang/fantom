@@ -38,8 +38,8 @@ class MultiPart : EmailPart
   override Void validate()
   {
     super.validate
-    if ((Obj?)parts == null) throw NullErr("no parts in $type.name")
-    if (parts.isEmpty) throw Err("no parts in $type.name")
+    if ((Obj?)parts == null) throw NullErr("no parts in ${Type.of(this).name}")
+    if (parts.isEmpty) throw Err("no parts in ${Type.of(this).name}")
     if (headers["Content-Type"] == null) throw Err("Must define Content-Type header")
 
     // generate a boundary if not specified

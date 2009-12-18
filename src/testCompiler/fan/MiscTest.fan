@@ -235,7 +235,7 @@ class MiscTest : CompilerTest
      "class Foo : Test
       {
         static Str x(Int[] a, Int:Str b, |Int x| c) { return a.toStr }
-        Obj testIt() { return type.method(\"x\").call([1, 2, 3], [4:4.toStr], |Int x| {}) }
+        Obj testIt() { Type.of(this).method(\"x\").call([1, 2, 3], [4:4.toStr], |Int x| {}) }
       }")
 
      t := pod.types.first
@@ -828,15 +828,16 @@ class MiscTest : CompilerTest
 
     compile("class Derived : $recPod::SubRecImpl {}")
 
-    obj := pod.types[0].make
+    t := pod.types[0]
+    obj := t.make
     verifyEq(obj->foo, "foo")
     verifyEq(obj->bar, "bar")
     verifyEq(obj->baz, "baz 3")
     verifyEq(obj->goo, "goo")
-    verifyEq(obj.type.method("foo").parent.name, "RecImpl")
-    verifyEq(obj.type.method("bar").parent.name, "SubRecImpl")
-    verifyEq(obj.type.method("baz").parent.name, "SubRecImpl")
-    verifyEq(obj.type.method("goo").parent.name, "SubRec")
+    verifyEq(t.method("foo").parent.name, "RecImpl")
+    verifyEq(t.method("bar").parent.name, "SubRecImpl")
+    verifyEq(t.method("baz").parent.name, "SubRecImpl")
+    verifyEq(t.method("goo").parent.name, "SubRec")
   }
 
 //////////////////////////////////////////////////////////////////////////

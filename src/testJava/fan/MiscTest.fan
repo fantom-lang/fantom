@@ -48,8 +48,8 @@ class MiscTest : JavaTest
       }")
 
     obj := pod.types.first.make([null])
-    verifyEq(obj->foo.type.name, "Foo")
-    verifyEq(obj->bar.type.name, "Foo")
+    verifyEq(Type.of(obj->foo).name, "Foo")
+    verifyEq(Type.of(obj->bar).name, "Foo")
   }
 
 //////////////////////////////////////////////////////////////////////////

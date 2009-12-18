@@ -135,7 +135,7 @@ class Command
       if (locIcon != null)
         this.icon = Image.make(locIcon.toUri)
     }
-    catch type.log.error("Command: cannot load '${keyBase}.icon' => $locIcon")
+    catch Command#.pod.log.error("Command: cannot load '${keyBase}.icon' => $locIcon")
 
     // accelerator
     locAcc := pod.loc("${keyBase}.accelerator.${plat}", null)
@@ -154,7 +154,7 @@ class Command
           this.accelerator = this.accelerator.replace(Key.ctrl, Key.command)
       }
     }
-    catch type.log.error("Command: cannot load '${keyBase}.accelerator ' => $locAcc")
+    catch Command#.pod.log.error("Command: cannot load '${keyBase}.accelerator ' => $locAcc")
 
     // onInvoke
     if (onInvoke != null) this.onInvoke.add(onInvoke)
@@ -264,7 +264,7 @@ class Command
   **
   virtual Bool undoable()
   {
-    type.method("undo").parent != Command#
+    Type.of(this).method("undo").parent != Command#
   }
 
   **

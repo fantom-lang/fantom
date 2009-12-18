@@ -55,16 +55,16 @@ Always prefer the 'facet' method over 'facets' since it is much more
 efficient.  Some examples:
 
   // get a description string
-  obj.type.facet(@description)
+  Type.of(obj).facet(@description)
 
   // check if an object implements the simple facet
-  obj.type.facet(@simple, false) == true
+  Type.of(obj).facet(@simple, false) == true
 
 If querying type facets, you can use the 'inherited' parameter
 to search facets in the inheritance chain:
 
   // check if an object or any of its super-types has the obsolete facet
-  obj.type.facet(@obsolete, null, true)
+  Type.of(obj).facet(@obsolete, null, true)
 
 Facet Indexing [#indexing]
 **************************

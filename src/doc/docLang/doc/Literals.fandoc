@@ -270,7 +270,7 @@ Uris support interpolation following the same rules as [Str interpolation]`#inte
 Type [#type]
 ************
 The `sys::Type` class is the foundation of the Fantom reflection APIs.  Typically 'Type'
-instances are queried using the `sys::Obj.type` method.  But you can also represent
+instances are queried using the `sys::Type.of` method.  But you can also represent
 a 'Type' instance using the type literal syntax which is simply a type name followed
 by the '#' symbol:
 

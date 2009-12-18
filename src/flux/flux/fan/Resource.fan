@@ -46,8 +46,8 @@ abstract class Resource
     if (obj is Resource) return obj
 
     // 3. map via fluxResource facet
-    rtype := Type.findByFacet(@fluxResource, obj.type, true).first
-    if (rtype == null) throw UnsupportedErr("No resource mapping for $obj.type")
+    rtype := Type.findByFacet(@fluxResource, Type.of(obj), true).first
+    if (rtype == null) throw UnsupportedErr("No resource mapping for ${Type.of(obj)}")
     return rtype.make([uri, obj])
   }
 
@@ -92,7 +92,7 @@ abstract class Resource
   **
   virtual Type[] views()
   {
-    acc := Type.findByFacet(@fluxView, type, true)
+    acc := Type.findByFacet(@fluxView, Type.of(this), true)
     acc = acc.exclude |Type t->Bool| { return t.isAbstract }
     return acc
   }
@@ -112,7 +112,7 @@ abstract class Resource
   **
   virtual Menu? viewsMenu(Frame? frame, Event? event)
   {
-    menu := Menu { text = this.type.loc("views.name") }
+    menu := Menu { text = Pod.of(this).loc("views.name") }
     views.each |Type v, Int i|
     {
       viewUri := i == 0 ? uri : uri.plusQuery(["view":v.qname])

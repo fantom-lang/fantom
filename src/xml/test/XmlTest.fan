@@ -18,7 +18,7 @@ abstract class XmlTest : Test
   Void verifyNode(XNode a, XNode b)
   {
     verifyEq(a.nodeType, b.nodeType)
-    switch (a.type)
+    switch (Type.of(a))
     {
       case XDoc#:  verifyDoc(a, b)
       case XElem#: verifyElem(a, b)

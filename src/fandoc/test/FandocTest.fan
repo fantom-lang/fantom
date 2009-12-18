@@ -538,7 +538,7 @@ class FandocTest : Test
       }
       else
       {
-        verifyEq(a.type, DocText#)
+        verifyType(a, DocText#)
         verifyEq(a->str, e)
       }
     }

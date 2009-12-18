@@ -246,7 +246,7 @@ class ItBlockTest : CompilerTest
 
      ('f'..'l').each |Int i|
      {
-       x = obj.type.method(i.toChar).call(obj)
+       x = Type.of(obj).method(i.toChar).call(obj)
        verifyEq(x->kids->first->name, "a")
      }
 
@@ -350,7 +350,7 @@ class ItBlockTest : CompilerTest
           catch (Err e)
           {
             list := Obj[,] { add(e.toStr) }
-            list.add(e.type.name)
+            list.add(Type.of(e).name)
             return list
           }
         }
@@ -376,10 +376,10 @@ class ItBlockTest : CompilerTest
           }
           catch (Err e)
           {
-            list := Obj[,] { add(e.type.name) }
+            list := Obj[,] { add(Type.of(e).name) }
             f := |->| { e = CastErr() }
             f()
-            list.add(e.type.name)
+            list.add(Type.of(e).name)
             return list
           }
         }

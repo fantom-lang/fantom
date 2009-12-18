@@ -19,9 +19,9 @@ class ErrTest : Test
   Void testType()
   {
     err := Err.make
-    verifySame(err.type, Err#)
-    verifySame(err.type.base, Obj#)
-    verifyEq(err.type.qname, "sys::Err")
+    verifySame(Type.of(err), Err#)
+    verifySame(Type.of(err).base, Obj#)
+    verifyEq(Type.of(err).qname, "sys::Err")
     verify(err is Err)
     verify(err is Obj)
   }
@@ -128,148 +128,106 @@ class ErrTest : Test
 
   Void testAllSysErrs()
   {
-    cause := Err.make
+    cause := Err("cause")
     Err? err
 
     // ArgErr
-    err = ArgErr.make("msg", cause)
-    verifySame(err.type, ArgErr#)
-    verifySame(err.type.base, Err#)
-    verifyEq(err.type.qname, "sys::ArgErr")
+    err = verifyErrType(ArgErr("msg", cause), ArgErr#, "sys::ArgErr")
     verify(err is ArgErr)
-    verify(err is Err)
-    verify(err is Obj)
-    verify(err.message === "msg")
-    verify(err.cause === cause)
-    err = ArgErr.make
-    verify(err.message === null)
-    verify(err.cause === null)
+    verifyNull(ArgErr().message)
 
     // CastErr
-    err = CastErr.make("msg", cause)
-    verifySame(err.type, CastErr#)
-    verifySame(err.type.base, Err#)
-    verifyEq(err.type.qname, "sys::CastErr")
+    err = verifyErrType(CastErr("msg", cause), CastErr#, "sys::CastErr")
     verify(err is CastErr)
-    verify(err is Err)
-    verify(err is Obj)
-    verify(err.message === "msg")
-    verify(err.cause === cause)
-    err = CastErr.make
-    verify(err.message === null)
-    verify(err.cause === null)
+    verifyNull(CastErr().message)
+
+    // CancelledErr
+    err = verifyErrType(CancelledErr("msg", cause), CancelledErr#, "sys::CancelledErr")
+    verify(err is CancelledErr)
+    verifyNull(CancelledErr().message)
+
+    // ConstErr
+    err = verifyErrType(ConstErr("msg", cause), ConstErr#, "sys::ConstErr")
+    verify(err is ConstErr)
+    verifyNull(ConstErr().message)
 
     // IndexErr
-    err = IndexErr.make("msg", cause)
-    verifySame(err.type, IndexErr#)
-    verifySame(err.type.base, Err#)
-    verifyEq(err.type.qname, "sys::IndexErr")
+    err = verifyErrType(IndexErr("msg", cause), IndexErr#, "sys::IndexErr")
     verify(err is IndexErr)
-    verify(err is Err)
-    verify(err is Obj)
-    verify(err.message === "msg")
-    verify(err.cause === cause)
-    err = IndexErr.make
-    verify(err.message === null)
-    verify(err.cause === null)
+    verifyNull(IndexErr().message)
+
+    // InterruptedErr
+    err = verifyErrType(InterruptedErr("msg", cause), InterruptedErr#, "sys::InterruptedErr")
+    verify(err is InterruptedErr)
+    verifyNull(InterruptedErr().message)
 
     // IOErr
-    err = IOErr.make("msg", cause)
-    verifySame(err.type, IOErr#)
-    verifySame(err.type.base, Err#)
-    verifyEq(err.type.qname, "sys::IOErr")
+    err = verifyErrType(IOErr("msg", cause), IOErr#, "sys::IOErr")
     verify(err is IOErr)
-    verify(err is Err)
-    verify(err is Obj)
-    verify(err.message === "msg")
-    verify(err.cause === cause)
-    err = IOErr.make
-    verify(err.message === null)
-    verify(err.cause === null)
+    verifyNull(IOErr().message)
+
+    // NotImmutableErr
+    err = verifyErrType(NotImmutableErr("msg", cause), NotImmutableErr#, "sys::NotImmutableErr")
+    verify(err is NotImmutableErr)
+    verifyNull(NotImmutableErr().message)
+
+    // NameErr
+    err = verifyErrType(NameErr("msg", cause), NameErr#, "sys::NameErr")
+    verify(err is NameErr)
+    verifyNull(NameErr().message)
 
     // NullErr
-    err = NullErr.make("msg", cause)
-    verifySame(err.type, NullErr#)
-    verifySame(err.type.base, Err#)
-    verifyEq(err.type.qname, "sys::NullErr")
+    err = verifyErrType(NullErr("msg", cause), NullErr#, "sys::NullErr")
     verify(err is NullErr)
-    verify(err is Err)
-    verify(err is Obj)
-    verify(err.message === "msg")
-    verify(err.cause === cause)
-    err = NullErr.make
-    verify(err.message === null)
-    verify(err.cause === null)
+    verifyNull(NullErr().message)
+
+    // ParseErr
+    err = verifyErrType(ParseErr("msg", cause), ParseErr#, "sys::ParseErr")
+    verify(err is ParseErr)
+    verifyNull(ParseErr().message)
 
     // ReadonlyErr
-    err = ReadonlyErr.make("msg", cause)
-    verifySame(err.type, ReadonlyErr#)
-    verifySame(err.type.base, Err#)
-    verifyEq(err.type.qname, "sys::ReadonlyErr")
+    err = verifyErrType(ReadonlyErr("msg", cause), ReadonlyErr#, "sys::ReadonlyErr")
     verify(err is ReadonlyErr)
-    verify(err is Err)
-    verify(err is Obj)
-    verify(err.message === "msg")
-    verify(err.cause === cause)
-    err = ReadonlyErr.make
-    verify(err.message === null)
-    verify(err.cause === null)
+    verifyNull(ReadonlyErr().message)
+
+    // TimeoutErr
+    err = verifyErrType(TimeoutErr("msg", cause), TimeoutErr#, "sys::TimeoutErr")
+    verify(err is TimeoutErr)
+    verifyNull(TimeoutErr().message)
 
     // UnknownPodErr
-    err = UnknownPodErr.make("msg", cause)
-    verifySame(err.type, UnknownPodErr#)
-    verifySame(err.type.base, Err#)
-    verifyEq(err.type.qname, "sys::UnknownPodErr")
+    err = verifyErrType(UnknownPodErr("msg", cause), UnknownPodErr#, "sys::UnknownPodErr")
     verify(err is UnknownPodErr)
-    verify(err is Err)
-    verify(err is Obj)
-    verify(err.message === "msg")
-    verify(err.cause === cause)
-    err = UnknownPodErr.make
-    verify(err.message === null)
-    verify(err.cause === null)
+    verifyNull(UnknownPodErr().message)
 
     // UnknownSlotErr
-    err = UnknownSlotErr.make("msg", cause)
-    verifySame(err.type, UnknownSlotErr#)
-    verifySame(err.type.base, Err#)
-    verifyEq(err.type.qname, "sys::UnknownSlotErr")
+    err = verifyErrType(UnknownSlotErr("msg", cause), UnknownSlotErr#, "sys::UnknownSlotErr")
     verify(err is UnknownSlotErr)
-    verify(err is Err)
-    verify(err is Obj)
-    verify(err.message === "msg")
-    verify(err.cause === cause)
-    err = UnknownSlotErr.make
-    verify(err.message === null)
-    verify(err.cause === null)
+    verifyNull(UnknownSlotErr().message)
 
     // UnknownTypeErr
-    err = UnknownTypeErr.make("msg", cause)
-    verifySame(err.type, UnknownTypeErr#)
-    verifySame(err.type.base, Err#)
-    verifyEq(err.type.qname, "sys::UnknownTypeErr")
+    err = verifyErrType(UnknownTypeErr("msg", cause), UnknownTypeErr#, "sys::UnknownTypeErr")
     verify(err is UnknownTypeErr)
-    verify(err is Err)
-    verify(err is Obj)
-    verify(err.message === "msg")
-    verify(err.cause === cause)
-    err = UnknownTypeErr.make
-    verify(err.message === null)
-    verify(err.cause === null)
+    verifyNull(UnknownTypeErr().message)
 
     // UnsupportedErr
-    err = UnsupportedErr.make("msg", cause)
-    verifySame(err.type, UnsupportedErr#)
-    verifySame(err.type.base, Err#)
-    verifyEq(err.type.qname, "sys::UnsupportedErr")
+    err = verifyErrType(UnsupportedErr("msg", cause), UnsupportedErr#, "sys::UnsupportedErr")
     verify(err is UnsupportedErr)
+    verifyNull(UnsupportedErr().message)
+  }
+
+  Err verifyErrType(Err err, Type t, Str qname)
+  {
+    verifySame(Type.of(err), t)
+    verifyEq(Type.of(err).qname, qname)
+    verifyEq(Type.of(err).base, Err#)
+    verifyEq(Type.of(err).base.base, Obj#)
     verify(err is Err)
     verify(err is Obj)
-    verify(err.message === "msg")
-    verify(err.cause === cause)
-    err = UnsupportedErr.make
-    verify(err.message === null)
-    verify(err.cause === null)
+    verifySame(err.message, "msg")
+    verifySame(err.cause.message, "cause")
+    return err
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -278,38 +236,32 @@ class ErrTest : Test
 
   Void testSubclassing()
   {
-    cause := Err.make
+    cause := Err("cause")
 
     // create TestOneErr with both params
-    err := TestOneErr.make("msg", cause)
-    verifySame(err.type, TestOneErr#)
-    verifySame(err.type.base, Err#)
-    verifyEq(err.type.qname, "testSys::TestOneErr")
+    err := TestOneErr("msg", cause)
+    verifyErrType(err,TestOneErr#, "testSys::TestOneErr")
     verify(err is TestOneErr)
-    verify(err is Err)
-    verify(err is Obj)
-    verify(err.message === "msg")
-    verify(err.cause === cause)
     verifyEq(err.r, -3f)
 
     // verify TestOneErr with 2 default params
-    err = TestOneErr.make()
-    verifySame(err.type, TestOneErr#)
+    err = TestOneErr()
+    verifySame(Type.of(err), TestOneErr#)
     verify(err.message === null)
     verify(err.cause === null)
 
     // verify TestOneErr with 1 default params
     err = TestOneErr.make("foobar")
-    verifySame(err.type, TestOneErr#)
+    verifySame(Type.of(err), TestOneErr#)
     verify(err.message === "foobar")
     verify(err.cause === null)
 
     // verify TestTwoErr which subclasses from TestOneErr
     err2 := TestTwoErr.make()
-    verifySame(err2.type, TestTwoErr#)
-    verifySame(err2.type.base, TestOneErr#)
-    verifySame(err2.type.base.base, Err#)
-    verifyEq(err2.type.qname, "testSys::TestTwoErr")
+    verifySame(Type.of(err2), TestTwoErr#)
+    verifySame(Type.of(err2).base, TestOneErr#)
+    verifySame(Type.of(err2).base.base, Err#)
+    verifyEq(Type.of(err2).qname, "testSys::TestTwoErr")
     verify(err2 is TestTwoErr)
     verify(err2 is TestOneErr)
     verify(err is Err)
@@ -320,10 +272,10 @@ class ErrTest : Test
 
     // verify TestIOErr which subclasses from IOErr
     errIO := TestIOErr.make()
-    verifySame(errIO.type, TestIOErr#)
-    verifySame(errIO.type.base, IOErr#)
-    verifySame(errIO.type.base.base, Err#)
-    verifyEq(errIO.type.qname, "testSys::TestIOErr")
+    verifySame(Type.of(errIO), TestIOErr#)
+    verifySame(Type.of(errIO).base, IOErr#)
+    verifySame(Type.of(errIO).base.base, Err#)
+    verifyEq(Type.of(errIO).qname, "testSys::TestIOErr")
     verify(errIO is TestIOErr)
     verify(errIO is IOErr)
     verify(errIO is Err)

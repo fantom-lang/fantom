@@ -121,9 +121,9 @@ abstract class Obj
   This toImmutable()
 
   **
-  ** Get the Type instance used to represent this object's type.
-  ** This method is never overridden directly.
+  ** Use `Type.of` or `Pod.of`
   **
+  @deprecated
   virtual Type type()
 
 //////////////////////////////////////////////////////////////////////////

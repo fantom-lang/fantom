@@ -19,11 +19,11 @@ class ListTest : Test
   Void testPlay()
   {
     x := [0, 1, 2, 3]
-    verify(x.type == Int[]#)
-    verify(x.type === Int[]#)
+    verify(Type.of(x) == Int[]#)
+    verify(Type.of(x) === Int[]#)
     a := x[-1]
     verify((Obj?)a is Int)
-    verify(a.type == Int#)
+    verify(Type.of(a) == Int#)
     verify(a == 3)
   }
 
@@ -74,29 +74,29 @@ class ListTest : Test
 
   Void testInference()
   {
-    verifyEq([,].type,     Obj?[]#)
-    verifyEq(Obj?[,].type, Obj?[]#)
-    verifyEq(Obj[,].type,  Obj[]#)
-    verifyEq([null].type,  Obj?[]#)
-    verifyEq([null,null].type, Obj?[]#)
-    verifyEq([2,null].type,  Int?[]#)
-    verifyEq([null,2].type,  Int?[]#)
-    verifyEq([2,null,2f].type, Num?[]#)
-    verifyEq([null,3,2f].type, Num?[]#)
+    verifyType([,],     Obj?[]#)
+    verifyType(Obj?[,], Obj?[]#)
+    verifyType(Obj[,],  Obj[]#)
+    verifyType([null],  Obj?[]#)
+    verifyType([null,null], Obj?[]#)
+    verifyType([2,null],  Int?[]#)
+    verifyType([null,2],  Int?[]#)
+    verifyType([2,null,2f], Num?[]#)
+    verifyType([null,3,2f], Num?[]#)
 
     // expressions used to create list literal
     [Str:Int]? x := null
-    verifyEq([this->toStr].type, Obj?[]#)
-    verifyEq([Pod.find("xxxx", false)].type, Pod?[]#)
-    verifyEq([this as Test].type, Test?[]#)
-    verifyEq([(Obj?)this ?: "foo"].type, Obj?[]#)
-    verifyEq([x?.toStr].type, Str?[]#)
-    verifyEq([x?.def].type, Int?[]#)
-    verifyEq([x?.caseInsensitive].type, Bool?[]#)
-    verifyEq([x?->foo].type, Obj?[]#)
-    verifyEq([returnThis].type, ListTest[]#)
-    verifyEq([x == null ? "x" : null].type, Str?[]#)
-    verifyEq([x == null ? null : 4f].type, Float?[]#)
+    verifyType([this->toStr], Obj?[]#)
+    verifyType([Pod.find("xxxx", false)], Pod?[]#)
+    verifyType([this as Test], Test?[]#)
+    verifyType([(Obj?)this ?: "foo"], Obj?[]#)
+    verifyType([x?.toStr], Str?[]#)
+    verifyType([x?.def], Int?[]#)
+    verifyType([x?.caseInsensitive], Bool?[]#)
+    verifyType([x?->foo], Obj?[]#)
+    verifyType([returnThis], ListTest[]#)
+    verifyType([x == null ? "x" : null], Str?[]#)
+    verifyType([x == null ? null : 4f], Float?[]#)
   }
 
   This returnThis() { return this }
@@ -110,7 +110,7 @@ class ListTest : Test
     verify([null] is Obj?[])
     verify([2,null] is Obj?[])
     verify([null,"2"] is Obj?[])
-    verifyFalse((Obj)[type,8f] is Str)
+    verifyFalse((Obj)[Type.of(this),8f] is Str)
     verifyFalse((Obj)["a",this] is Str[])
 
     // Int[]
@@ -190,56 +190,59 @@ class ListTest : Test
     verifyEq([[2]].of, Int[]#)
 
     x := [,]
-    verifyEq(x.type.base,      List#)
-    verifyEq(x.type.base.base, Obj#)
-    verifyEq(x.type.pod.name,  "sys")
-    verifyEq(x.type.name,      "List")
-    verifyEq(x.type.qname,     "sys::List")
-    verifyEq(x.type.signature, "sys::Obj?[]")
-    verifyEq(x.type.toStr,     "sys::Obj?[]")
-    verifyEq(x.type.method("isEmpty").returns,  Bool#)
-    verifyEq(x.type.method("first").returns,    Obj?#)
-    verifyEq(x.type.method("get").returns,      Obj?#)
-    verifyEq(x.type.method("add").returns,      Obj?[]#)
-    verifyEq(x.type.method("add").params[0].of, Obj?#)
-    verifyEq(x.type.method("each").params[0].of, |Obj? a, Int i->Void|#)
-    verifyNotEq(x.type.method("each").params[0].of, |Str a, Int i->Void|#)
+    t := Type.of(x)
+    verifyEq(t.base,      List#)
+    verifyEq(t.base.base, Obj#)
+    verifyEq(t.pod.name,  "sys")
+    verifyEq(t.name,      "List")
+    verifyEq(t.qname,     "sys::List")
+    verifyEq(t.signature, "sys::Obj?[]")
+    verifyEq(t.toStr,     "sys::Obj?[]")
+    verifyEq(t.method("isEmpty").returns,  Bool#)
+    verifyEq(t.method("first").returns,    Obj?#)
+    verifyEq(t.method("get").returns,      Obj?#)
+    verifyEq(t.method("add").returns,      Obj?[]#)
+    verifyEq(t.method("add").params[0].of, Obj?#)
+    verifyEq(t.method("each").params[0].of, |Obj? a, Int i->Void|#)
+    verifyNotEq(t.method("each").params[0].of, |Str a, Int i->Void|#)
 
     y := [7]
-    verifyEq(y.type.base,      List#)
-    verifyEq(y.type.base.base, Obj#)
-    verifyEq(y.type.pod.name,  "sys")
-    verifyEq(y.type.name,      "List")
-    verifyEq(y.type.qname,     "sys::List")
-    verifyEq(y.type.signature, "sys::Int[]")
-    verifyEq(y.type.toStr,     "sys::Int[]")
-    verifyEq(y.type.method("isEmpty").returns,  Bool#)
-    verifyEq(y.type.method("first").returns,    Int?#)
-    verifyEq(y.type.method("get").returns,      Int#)
-    verifyEq(y.type.method("add").returns,      Int[]#)
-    verifyEq(y.type.method("add").params[0].of, Int#)
-    verifyEq(y.type.method("each").params[0].of, |Int a, Int i->Void|#)
-    verifyNotEq(y.type.method("each").params[0].of, |Obj a, Int i->Void|#)
+    t = Type.of(y)
+    verifyEq(t.base,      List#)
+    verifyEq(t.base.base, Obj#)
+    verifyEq(t.pod.name,  "sys")
+    verifyEq(t.name,      "List")
+    verifyEq(t.qname,     "sys::List")
+    verifyEq(t.signature, "sys::Int[]")
+    verifyEq(t.toStr,     "sys::Int[]")
+    verifyEq(t.method("isEmpty").returns,  Bool#)
+    verifyEq(t.method("first").returns,    Int?#)
+    verifyEq(t.method("get").returns,      Int#)
+    verifyEq(t.method("add").returns,      Int[]#)
+    verifyEq(t.method("add").params[0].of, Int#)
+    verifyEq(t.method("each").params[0].of, |Int a, Int i->Void|#)
+    verifyNotEq(t.method("each").params[0].of, |Obj a, Int i->Void|#)
 
     z := [[8ms]]
-    verifyEq(z.type.base,      List#)
-    verifyEq(z.type.base.base, Obj#)
-    verifyEq(z.type.pod.name,  "sys")
-    verifyEq(z.type.name,      "List")
-    verifyEq(z.type.qname,     "sys::List")
-    verifyEq(z.type.signature, "sys::Duration[][]")
-    verifyEq(z.type.toStr,     "sys::Duration[][]")
-    verifyEq(z.type.method("isEmpty").returns,   Bool#)
-    verifyEq(z.type.method("first").returns,     Duration[]?#)
-    verifyEq(z.type.method("get").returns,       Duration[]#)
-    verifyEq(z.type.method("add").returns,       Duration[][]#)
-    verifyEq(z.type.method("add").params[0].of,  Duration[]#)
-    verifyEq(z.type.method("insert").params[1].of, Duration[]#)
-    verifyEq(z.type.method("removeAt").returns,    Duration[]#)
-    verifyEq(z.type.method("each").params[0].of, |Duration[] a, Int i->Void|#)
-    verifyEq(z.type.method("map").returns, Obj?[]#)
-    verifyNotEq(z.type.method("map").returns, Duration[]#)
-    verifyNotEq(z.type.method("each").params[0].of, |Obj a, Int i->Void|#)
+    t = Type.of(z)
+    verifyEq(t.base,      List#)
+    verifyEq(t.base.base, Obj#)
+    verifyEq(t.pod.name,  "sys")
+    verifyEq(t.name,      "List")
+    verifyEq(t.qname,     "sys::List")
+    verifyEq(t.signature, "sys::Duration[][]")
+    verifyEq(t.toStr,     "sys::Duration[][]")
+    verifyEq(t.method("isEmpty").returns,   Bool#)
+    verifyEq(t.method("first").returns,     Duration[]?#)
+    verifyEq(t.method("get").returns,       Duration[]#)
+    verifyEq(t.method("add").returns,       Duration[][]#)
+    verifyEq(t.method("add").params[0].of,  Duration[]#)
+    verifyEq(t.method("insert").params[1].of, Duration[]#)
+    verifyEq(t.method("removeAt").returns,    Duration[]#)
+    verifyEq(t.method("each").params[0].of, |Duration[] a, Int i->Void|#)
+    verifyEq(t.method("map").returns, Obj?[]#)
+    verifyNotEq(t.method("map").returns, Duration[]#)
+    verifyNotEq(t.method("each").params[0].of, |Obj a, Int i->Void|#)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -335,12 +338,12 @@ class ListTest : Test
   {
     a := [0, 1, 2]
     verifyEq(a.size, 3)
-    verifyEq(a.type, Int[]#)
+    verifyType(a, Int[]#)
     verifyEq(a, [0, 1, 2])
 
     b := a.dup
     verifyEq(b.size, 3)
-    verifyEq(b.type, Int[]#)
+    verifyType(b, Int[]#)
     verifyEq(b, [0, 1, 2])
 
     a[1] = 99
@@ -907,9 +910,9 @@ class ListTest : Test
 
     // findType
     verifyEq(["a", 3, "b", 6sec].findType(Str#), ["a", "b"])
-    verifyEq(["a", 3, "b", 6sec].findType(Str#).type, Str[]#)
+    verifyType(["a", 3, "b", 6sec].findType(Str#), Str[]#)
     verifyEq(["a", 3, "b", 6sec, 5f].findType(Num#), [3, 5f])
-    verifyEq(["a", 3, "b", 6sec, 5f].findType(Num#).type, Num[]#)
+    verifyType(["a", 3, "b", 6sec, 5f].findType(Num#), Num[]#)
     verifyEq([null, "a", 3, "b", null, 5ms].findType(Duration#), [5ms])
     verifyEq(["a", 3, "b", 6sec, 5f].findType(Obj#), ["a", 3, "b", 6sec, 5f])
 
@@ -1032,7 +1035,7 @@ class ListTest : Test
 
   Void testUnion()
   {
-    verifyEq([0, 1, 2].union([2]).type, Int[]#)
+    verifyType([0, 1, 2].union([2]), Int[]#)
     verifyEq(Int[,].union([2]), [2])
     verifyEq(Int[6].union(Int[,]), [6])
     verifyEq(Int[0, 1, 2].union(Int[1, 2, 3]), [0, 1, 2, 3])
@@ -1047,7 +1050,7 @@ class ListTest : Test
 
   Void testIntersection()
   {
-    verifyEq([0, 1, 2].intersection([2]).type, Int[]#)
+    verifyType([0, 1, 2].intersection([2]), Int[]#)
     verifyEq(Int[,].intersection([2]), Int[,])
     verifyEq(Int[6].intersection(Int[,]), Int[,])
     verifyEq([4].intersection([5]), Int[,])
@@ -1352,7 +1355,7 @@ class ListTest : Test
     verifyEq(r, x)
 
     // verify all idempotent methods work
-    verifyEq(r.type, Str[]#)
+    verifyType(r, Str[]#)
     verifyEq(r.isEmpty, false)
     verifyEq(r.size, 3)
     verifyEq(r.capacity, 3)
@@ -1485,7 +1488,7 @@ class ListTest : Test
     m := [0:"zero", 99:null]
     z := [m, null]
     zc := z.toImmutable
-    verifyEq(zc.type.signature, "[sys::Int:sys::Str?]?[]")
+    verifyEq(Type.of(zc).signature, "[sys::Int:sys::Str?]?[]")
     verify(zc.isRO)
     verify(zc[0].isRO)
     verify(zc[0].isImmutable)

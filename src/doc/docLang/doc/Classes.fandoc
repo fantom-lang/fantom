@@ -92,10 +92,10 @@ of exactly one class.
 Reflection [#reflection]
 ************************
 The `sys::Type` class is used to represent a class at runtime.  You
-can always get the class type of an object using the `sys::Obj.type`
+can always get the class type of an object using the `sys::Type.of`
 method:
 
-  Type t := obj.type
+  Type t := Type.of(obj)
 
 Since all objects are instances of a class, this 'Type' object will
 always represent a class.  Given a 'Type' which represents a concrete

@@ -179,7 +179,7 @@ internal const class WispActor : Actor
     if (req.webIn === req.socket.in) req.webIn = null
 
     // init response - set predefined headers
-    res.headers["Server"] = "Wisp/" + type.pod.version
+    res.headers["Server"] = wispVer
     res.headers["Date"] = DateTime.now.toHttpStr
     res.headers["Connection"] = "keep-alive"
   }
@@ -251,6 +251,7 @@ internal const class WispActor : Actor
 
   static const Version ver10 := Version("1.0")
   static const Version ver11 := Version("1.1")
+  static const Str wispVer   := "Wisp/" + WispActor#.pod.version
 
   const WispService service
   const TcpSocket socket

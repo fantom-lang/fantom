@@ -23,7 +23,7 @@ internal class Commands
     this.frame = frame
     this.byId = Str:FluxCommand[:]
     this.viewManaged = ViewManagedCommand[,]
-    type.fields.each |Field f|
+    Type.of(this).fields.each |Field f|
     {
       cmd := f.get(this) as FluxCommand
       if (cmd != null)
@@ -57,7 +57,7 @@ internal class Commands
   {
     return Menu
     {
-      text = this.type.loc("file.name")
+      text = Pod.of(this).loc("file.name")
       addCommand(newTab)
       addCommand(openLocation)
       addCommand(closeTab)
@@ -73,7 +73,7 @@ internal class Commands
   {
     return Menu
     {
-      text = this.type.loc("edit.name")
+      text = Pod.of(this).loc("edit.name")
       onOpen.add { onEditMenuOpen(it) }
       addCommand(undo)
       addCommand(redo)
@@ -104,7 +104,7 @@ internal class Commands
   {
     menu := Menu
     {
-      text = this.type.loc("view.name")
+      text = Pod.of(this).loc("view.name")
       onOpen.add { onViewMenuOpen(it) }
       addCommand(reload)
       addSep
@@ -126,7 +126,7 @@ internal class Commands
   {
     menu := Menu
     {
-      text = this.type.loc("history.name")
+      text = Pod.of(this).loc("history.name")
       onOpen.add { onHistoryMenuOpen(it) }
       addCommand(back)
       addCommand(forward)
@@ -143,7 +143,7 @@ internal class Commands
   {
     menu := Menu
     {
-      text = this.type.loc("tools.name")
+      text = Pod.of(this).loc("tools.name")
       addCommand(options)
       addCommand(refreshTools)
       addSep
@@ -158,7 +158,7 @@ internal class Commands
   {
     return Menu
     {
-      text = this.type.loc("help.name")
+      text = Pod.of(this).loc("help.name")
       addCommand(about)
     }
   }
@@ -219,8 +219,8 @@ internal class Commands
 
   Void onEditMenuOpen(Event event)
   {
-    undo := type.loc("undo.name")
-    redo := type.loc("redo.name")
+    undo := Pod.of(this).loc("undo.name")
+    redo := Pod.of(this).loc("redo.name")
 
     stack := frame.view.commandStack
     if (stack.listUndo.size > 0) undo = "$undo $stack.listUndo.last.name"
@@ -429,15 +429,15 @@ internal class ExitCommand : FluxCommand
     dirty := frame.views.findAll |View v->Bool| { return v.dirty }
     if (dirty.size > 0)
     {
-      grid := GridPane { Label { text=this.type.pod.loc("saveChanges"); font=Desktop.sysFont.toBold },}
+      grid := GridPane { Label { text=Pod.of(this).loc("saveChanges"); font=Desktop.sysFont.toBold },}
       dirty.each |View v|
       {
         grid.add(InsetPane(0,0,0,8) {
          Button { it.mode=ButtonMode.check; it.text=v.resource.uri.toStr; it.selected=true },
         })
       }
-      saveSel  := ExitSaveCommand(type.pod, "saveSelected")
-      saveNone := ExitSaveCommand(type.pod, "saveNone")
+      saveSel  := ExitSaveCommand(Pod.of(this), "saveSelected")
+      saveNone := ExitSaveCommand(Pod.of(this), "saveNone")
       cancel   := ExitSaveCommand(Command#.pod, "cancel")
       pane := ConstraintPane
       {
@@ -826,7 +826,7 @@ internal class AboutCommand : FluxCommand
     {
       halignCells = Halign.center
       vgap = 0
-      Label { text = "Version $this.type.pod.version"; font = small },
+      Label { text = "Version ${Pod.of(this).version}"; font = small },
     }
     Repo.list.each |repo|
     {

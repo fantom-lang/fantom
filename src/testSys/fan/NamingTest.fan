@@ -19,13 +19,13 @@ class NamingTest : Test
   Void testSchemeFind()
   {
     x := UriScheme.find("fan")
-    verifyEq(x.type.qname, "sys::FanScheme")
+    verifyEq(Type.of(x).qname, "sys::FanScheme")
     verifyEq(x.scheme, "fan")
     verifyEq(x.toStr, "fan")
     verifySame(UriScheme.find("fan"), x)
 
     x = UriScheme.find("file")
-    verifyEq(x.type.qname, "sys::FileScheme")
+    verifyEq(Type.of(x).qname, "sys::FileScheme")
     verifyEq(x.scheme, "file")
     verifyEq(x.toStr, "file")
     verifySame(UriScheme.find("file"), x)
@@ -66,8 +66,8 @@ class NamingTest : Test
   Void testFanPod()
   {
     verifySame(`fan:/sys/pod/sys`.get, Str#.pod)
-    verifySame(`fan:/sys/pod/testSys`.get, type.pod)
-    verifySame(`fan:/sys/pod/testSys/res/test.txt`.get, type.pod.files[`/res/test.txt`])
+    verifySame(`fan:/sys/pod/testSys`.get, Pod.of(this))
+    verifySame(`fan:/sys/pod/testSys/res/test.txt`.get, Pod.of(this).files[`/res/test.txt`])
 
     verifySame(`fan:/sys/pod/badpod`.get(null, false), null)
     verifyErr(UnresolvedErr#) { `fan:/sys/pod/badpod`.get }
@@ -81,7 +81,7 @@ class NamingTest : Test
 
   Void testWithBase()
   {
-    p := type.pod
+    p := Pod.of(this)
     f := p.files[`/res/test.txt`]
     verifySame(`fan:/sys/pod/testSys/res/test.txt`.get(null), f)
     verifySame(`fan:/sys/pod/testSys/res/test.txt`.get(UriSpace.root), f)

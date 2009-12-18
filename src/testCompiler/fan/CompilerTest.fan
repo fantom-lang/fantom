@@ -20,7 +20,7 @@ abstract class CompilerTest : Test
 
   Str podName() { return id.replace("::", "_") + "_" + podNameSuffix }
 
-  Void compile(Str src, LogLevel logLevel := LogLevel.error, Bool isScript := true)
+  Void compile(Str src, LogLevel logLevel := LogLevel.warn, Bool isScript := true)
   {
     input := CompilerInput.make
     input.podName     = podName

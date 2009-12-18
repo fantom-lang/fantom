@@ -42,7 +42,7 @@ class TextPart : EmailPart
     super.validate
 
     // check text
-    if ((Obj?)text == null) throw NullErr("text null in $type.name")
+    if ((Obj?)text == null) throw NullErr("text null in ${Type.of(this).name}")
 
     // check content-type header
     ct := headers["Content-Type"]

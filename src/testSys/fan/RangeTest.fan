@@ -15,13 +15,13 @@ class RangeTest : Test
   Void testType()
   {
     r := 0..2
-    verifyEq(r.type, Range#)
+    verifyType(r, Range#)
   }
 
   Void testEquals()
   {
     Obj? x := 0..2
-    verifySame(x.type, Range#)
+    verifySame(Type.of(x), Range#)
     verify(x == Range.makeInclusive(0, 2))
     verify(x != Range.makeExclusive(0, 2))
     verify(0..<2 != Range.makeInclusive(0, 2))

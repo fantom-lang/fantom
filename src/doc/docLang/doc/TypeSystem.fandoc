@@ -54,7 +54,7 @@ Classes [#classes]
 ==================
 Classes are the primary mechanism for specifying types.  All objects
 are instances of exactly one class which can be queried at runtime via
-the `sys::Obj.type` method.  Classes support single [inheritance]`Inheritance`
+the `sys::Type.of` method.  Classes support single [inheritance]`Inheritance`
 just like Java or C#.
 
 Mixins [#mixins]
@@ -82,9 +82,9 @@ subclass from 'java.lang.Object' which creates a fractured type system.
 Fantom defines a unified class hierarchy with 'sys::Obj' as the root.
 Since everything is an object, you can call methods on everything:
 
-  false.type   =>  sys::Bool
-  1972.isEven  =>  true
-  'x'.toChar   =>  "x"
+  Type.of(false) =>  sys::Bool
+  1972.isEven    =>  true
+  'x'.toChar     =>  "x"
 
 Arrays are another type system anomaly not supported by Fantom.  For example,
 in Java arrays are reference types which can be used as a 'java.lang.Object'

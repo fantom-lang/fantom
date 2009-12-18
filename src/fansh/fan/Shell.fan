@@ -24,7 +24,7 @@ class Shell
   Void run()
   {
     warmup
-    out.printLine("Fantom Shell v${type.pod.version} ('?' for help)")
+    out.printLine("Fantom Shell v${Pod.of(this).version} ('?' for help)")
     while (isAlive)
     {
       // input next line
@@ -107,7 +107,7 @@ class Shell
   Void help()
   {
     out.printLine
-    out.printLine("Fantom Shell v${type.pod.version}")
+    out.printLine("Fantom Shell v${Pod.of(this).version}")
     out.printLine("Commands:")
     out.printLine("  quit, exit, bye   exit shell")
     out.printLine("  ?, help, usage    help summary")

@@ -30,7 +30,7 @@ class DurationTest : Test
 
   Void testIs()
   {
-    verify(3ms.type === Duration#)
+    verify(Type.of(3ms) === Duration#)
 
     verify(0sec is Obj)
     verify(3ms is Duration)

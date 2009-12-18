@@ -40,8 +40,8 @@ class IntTest : Test
   {
     Obj x := 3
 
-    verify(x.type === Int#)
-    verify(3.type === Int#)
+    verify(Type.of(x) === Int#)
+    verify(Type.of(3) === Int#)
     verify(x.isImmutable)
     verify(8.isImmutable)
 

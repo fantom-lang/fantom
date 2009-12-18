@@ -340,7 +340,7 @@ class NamespaceTest : CompilerTest
     {
     }
 
-    myVer := type.pod.version
+    myVer := Pod.of(this).version
     doVerifyErrors(
       [null, null, "Cannot resolve depend: pod 'jarJarBinks' not found",
        null, null, "Cannot resolve depend: 'testCompiler $myVer' != 'testCompiler 99.0'"])
@@ -359,7 +359,7 @@ class NamespaceTest : CompilerTest
     {
     }
 
-    myVer := type.pod.version
+    myVer := Pod.of(this).version
     doVerifyErrors(
       [null, null, "All pods must have a dependency on 'sys'"])
   }

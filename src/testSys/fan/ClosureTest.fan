@@ -250,8 +250,8 @@ class ClosureTest : Test
     verifySame(|->Obj| { return this }.call, this)
     verifySame(|->Obj| { return this.name }.call, "foobar")
     verifySame(|->Obj| { return this.name() }.call, "foobar")
-    verifySame(|->Obj| { return type }.call, type)
-    verifySame(|->Obj| { return this.type }.call, type)
+    verifySame(|->Obj| { return isImmutable }.call, false)
+    verifySame(|->Obj| { return Type.of(this) }.call, Type.of(this))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -332,8 +332,8 @@ class ClosureTest : Test
     {
       x = this.toStr
       verifyEq(toStr, str)
-      verifyEq(this.type, ClosureTest#)
-      verifyEq(type, ClosureTest#)
+      verifyEq(this.toStr, str)
+      verifyEq(Type.of(this), ClosureTest#)
     }
     f()
     verifyEq(x, str)

@@ -208,10 +208,11 @@ class ReflectTest : JavaTest
   {
     // basics
     now := DateTime.now
-    date := Type.find("[java]java.util::Date").make
-    verifyEq(date.type.method("getYear").callOn(date, [,]), now.year-1900)
-    verifyEq(date.type.method("getYear").call(date), now.year-1900)
-    verifyEq(date.type.method("getYear").callList([date]), now.year-1900)
+    t := Type.find("[java]java.util::Date")
+    date := t.make
+    verifyEq(t.method("getYear").callOn(date, [,]), now.year-1900)
+    verifyEq(t.method("getYear").call(date), now.year-1900)
+    verifyEq(t.method("getYear").callList([date]), now.year-1900)
     verifyEq(date->getYear, now.year-1900)
     verifyEq(date->toString, date.toStr)
 
@@ -242,10 +243,10 @@ class ReflectTest : JavaTest
     verifyEq(x->xnumd(), 100.toFloat)
 
     // verify numi can be looked up as both field and method
-    numiField := x.type.field("numi")
-    numi := x.type.method("numi")
-    verifySame(x.type.slot("numi"), numiField)
-    si := x.type.method("si") // static test
+    numiField := Type.of(x).field("numi")
+    numi := Type.of(x).method("numi")
+    verifySame(Type.of(x).slot("numi"), numiField)
+    si := Type.of(x).method("si") // static test
 
     // numi as field
     verifyEq(numiField.get(x), 'i')

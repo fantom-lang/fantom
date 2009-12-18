@@ -22,7 +22,7 @@ class BoolTest : Test
     Bool? t := true
     Bool? f := false
     verify(x.isImmutable)
-    verify(x.type === Bool#)
+    verify(Type.of(x) === Bool#)
     verify(t.isImmutable)
     verify(true.isImmutable)
     verify(true == true)

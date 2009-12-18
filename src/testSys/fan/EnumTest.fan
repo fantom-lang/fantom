@@ -26,7 +26,7 @@ class EnumTest : Test
     verifyEq(Obj#.isEnum, false)
     verifyEq(Str#.isEnum, false)
 
-    verifySame(EnumAbc.A.type, EnumAbc#)
+    verifySame(Type.of(EnumAbc.A), EnumAbc#)
 
     verify(EnumAbc.A is EnumAbc)
     verify(EnumAbc.A is Enum)

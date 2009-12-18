@@ -101,7 +101,7 @@ class ProcessTest : Test
   Process makeProc(Str[] args := Str[,])
   {
     cmd := (Repo.boot.home + (isWindows ? `bin/fan.exe` : `bin/fan`)).osPath
-    return Process([cmd, type.qname].addAll(args))
+    return Process([cmd, Type.of(this).qname].addAll(args))
   }
 
   Bool isWindows() { return Sys.env["os.name"].lower.contains("win") }

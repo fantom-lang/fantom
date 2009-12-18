@@ -141,22 +141,23 @@ class FieldTest : Test
   Void testReflectSignatures()
   {
     // instance field
-    verify(type.slot("count").isField)
-    verifyEq(type.field("count").name, "count")
-    verifyEq(type.field("count").of, Int#)
+    t := Type.of(this)
+    verify(t.slot("count").isField)
+    verifyEq(t.field("count").name, "count")
+    verifyEq(t.field("count").of, Int#)
 
     // instance getter
-    verify(type.field("count")->getter != null)
-    verifyEq(type.field("count")->getter->name, "count")
-    verifyEq(type.field("count")->getter->returns, Int#)
-    verifyEq(type.field("count")->getter->params->size, 0)
+    verify(t.field("count")->getter != null)
+    verifyEq(t.field("count")->getter->name, "count")
+    verifyEq(t.field("count")->getter->returns, Int#)
+    verifyEq(t.field("count")->getter->params->size, 0)
 
     // instance setter
-    verify(type.field("count")->setter != null)
-    verifyEq(type.field("count")->setter->name, "count")
-    verifyEq(type.field("count")->setter->returns, Void#)
-    verifyEq(type.field("count")->setter->params->size, 1)
-    verifyEq(type.field("count")->setter->params->get(0)->of, Int#)
+    verify(t.field("count")->setter != null)
+    verifyEq(t.field("count")->setter->name, "count")
+    verifyEq(t.field("count")->setter->returns, Void#)
+    verifyEq(t.field("count")->setter->params->size, 1)
+    verifyEq(t.field("count")->setter->params->get(0)->of, Int#)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -165,7 +166,7 @@ class FieldTest : Test
 
   Void testReflectionInstance()
   {
-    Field f := type.field("count");
+    Field f := Type.of(this).field("count");
 
     // reflect - getter
     verifyEq(f.get(this), 0);
@@ -194,14 +195,15 @@ class FieldTest : Test
 
   Void testReflectionConst()
   {
+    t := Type.of(this)
     verifyEq(this->constX, 4)
     verifyEq(this->constY, [0,1,2])
     verifyEq(this->constY->isImmutable, true)
-    verifyEq(type.field("constX").get(this), 4)
-    verifyEq(type.field("constY").get, [0,1,2])
+    verifyEq(t.field("constX").get(this), 4)
+    verifyEq(t.field("constY").get, [0,1,2])
 
-    verifyErr(ReadonlyErr#) { this.type.field("constX").set(this, 5) }
-    verifyErr(ReadonlyErr#) { this.type.field("constY").set(null, [9, 8, 7]) }
+    verifyErr(ReadonlyErr#) { t.field("constX").set(this, 5) }
+    verifyErr(ReadonlyErr#) { t.field("constY").set(null, [9, 8, 7]) }
 
     verifyErr(ReadonlyErr#) { this->constX = 5 }
     verifyErr(ReadonlyErr#) { this->constY = [9, 8, 7] }
@@ -217,49 +219,50 @@ class FieldTest : Test
   Void testFlags()
   {
     // all public
-    verifyEq(type.field("flagsAllPublic").isPublic, true)
-    verifyEq(type.field("flagsAllPublic")->getter->isPublic, true)
-    verifyEq(type.field("flagsAllPublic")->setter->isPublic, true)
+    t := Type.of(this)
+    verifyEq(t.field("flagsAllPublic").isPublic, true)
+    verifyEq(t.field("flagsAllPublic")->getter->isPublic, true)
+    verifyEq(t.field("flagsAllPublic")->setter->isPublic, true)
 
     // all internal
-    verifyEq(type.field("flagsAllInternal").isInternal, true)
-    verifyEq(type.field("flagsAllInternal")->getter->isInternal, true)
-    verifyEq(type.field("flagsAllInternal")->setter->isInternal, true)
+    verifyEq(t.field("flagsAllInternal").isInternal, true)
+    verifyEq(t.field("flagsAllInternal")->getter->isInternal, true)
+    verifyEq(t.field("flagsAllInternal")->setter->isInternal, true)
 
     // all protected
-    verifyEq(type.field("flagsAllProtected").isProtected, true)
-    verifyEq(type.field("flagsAllProtected")->getter->isProtected, true)
-    verifyEq(type.field("flagsAllProtected")->setter->isProtected, true)
+    verifyEq(t.field("flagsAllProtected").isProtected, true)
+    verifyEq(t.field("flagsAllProtected")->getter->isProtected, true)
+    verifyEq(t.field("flagsAllProtected")->setter->isProtected, true)
 
     // all private
-    verifyEq(type.field("flagsAllPrivate").isPrivate, true)
-    verifyEq(type.field("flagsAllPrivate")->getter->isPrivate, true)
-    verifyEq(type.field("flagsAllPrivate")->setter->isPrivate, true)
+    verifyEq(t.field("flagsAllPrivate").isPrivate, true)
+    verifyEq(t.field("flagsAllPrivate")->getter->isPrivate, true)
+    verifyEq(t.field("flagsAllPrivate")->setter->isPrivate, true)
 
     // public w/ private set
-    verifyEq(type.field("flagsPublicPrivateSet").isPublic, true)
-    verifyEq(type.field("flagsPublicPrivateSet")->getter->isPublic, true)
-    verifyEq(type.field("flagsPublicPrivateSet")->setter->isPrivate, true)
+    verifyEq(t.field("flagsPublicPrivateSet").isPublic, true)
+    verifyEq(t.field("flagsPublicPrivateSet")->getter->isPublic, true)
+    verifyEq(t.field("flagsPublicPrivateSet")->setter->isPrivate, true)
 
     // protected w/ private set
-    verifyEq(type.field("flagsProtectedInternalSet").isProtected, true)
-    verifyEq(type.field("flagsProtectedInternalSet")->getter->isProtected, true)
-    verifyEq(type.field("flagsProtectedInternalSet")->setter->isInternal, true)
+    verifyEq(t.field("flagsProtectedInternalSet").isProtected, true)
+    verifyEq(t.field("flagsProtectedInternalSet")->getter->isProtected, true)
+    verifyEq(t.field("flagsProtectedInternalSet")->setter->isInternal, true)
 
     // readonly public
-    verifyEq(type.field("flagsReadonlyPublic").isPublic, true)
-    verifyEq(type.field("flagsReadonlyPublic")->getter->isPublic, true)
-    verifyEq(type.field("flagsReadonlyPublic")->setter->isPrivate, true)
+    verifyEq(t.field("flagsReadonlyPublic").isPublic, true)
+    verifyEq(t.field("flagsReadonlyPublic")->getter->isPublic, true)
+    verifyEq(t.field("flagsReadonlyPublic")->setter->isPrivate, true)
 
     // readonly protected
-    verifyEq(type.field("flagsReadonlyProtected").isProtected, true)
-    verifyEq(type.field("flagsReadonlyProtected")->getter->isProtected, true)
-    verifyEq(type.field("flagsReadonlyProtected")->setter->isPrivate, true)
+    verifyEq(t.field("flagsReadonlyProtected").isProtected, true)
+    verifyEq(t.field("flagsReadonlyProtected")->getter->isProtected, true)
+    verifyEq(t.field("flagsReadonlyProtected")->setter->isPrivate, true)
 
     // readonly internal
-    verifyEq(type.field("flagsReadonlyInternal").isInternal, true)
-    verifyEq(type.field("flagsReadonlyInternal")->getter->isInternal, true)
-    verifyEq(type.field("flagsReadonlyInternal")->setter->isPrivate, true)
+    verifyEq(t.field("flagsReadonlyInternal").isInternal, true)
+    verifyEq(t.field("flagsReadonlyInternal")->getter->isInternal, true)
+    verifyEq(t.field("flagsReadonlyInternal")->setter->isPrivate, true)
   }
 
   Int flagsAllPublic

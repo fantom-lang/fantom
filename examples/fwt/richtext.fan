@@ -49,7 +49,7 @@ class RichTextDemo
     echo("-- onScroll $name $e  [val=$sb.val min=$sb.min max=$sb.max thumb=$sb.thumb page=$sb.page orient=$sb.orientation")
   }
 
-  File scriptFile  := type->sourceFile.toStr.toUri.toFile
+  File scriptFile  := Type.of(this)->sourceFile.toStr.toUri.toFile
 }
 
 **

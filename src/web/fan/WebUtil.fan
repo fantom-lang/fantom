@@ -363,7 +363,7 @@ internal class ChunkInStream : InStream
     catch throw IOErr("Invalid format for HTTP chunked transfer encoding")
   }
 
-  override Str toStr() { "$type.qname { isFixed=$isFixed chunkRem=$chunkRem pushback=$pushback }" }
+  override Str toStr() { "${Type.of(this).qname} { isFixed=$isFixed chunkRem=$chunkRem pushback=$pushback }" }
 
   InStream in         // underlying input stream
   Bool isFixed        // if non-null, then we're using as one fixed chunk

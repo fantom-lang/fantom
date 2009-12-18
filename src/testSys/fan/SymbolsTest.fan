@@ -44,26 +44,26 @@ class SymbolsTest : Test
     verifyMutable(@serialC, "serialC", SerA { i = 12345; s = "symbols!"}, Obj#)
   }
 
-  Void verifyImmutable(Symbol x, Str name, Obj? val, Type of := val.type)
+  Void verifyImmutable(Symbol x, Str name, Obj? val, Type of := Type.of(val))
   {
     verifySymbol(x, name, val, of)
     verifySame(x.defVal, x.defVal)
   }
 
-  Void verifyMutable(Symbol x, Str name, Obj? val, Type of := val.type)
+  Void verifyMutable(Symbol x, Str name, Obj? val, Type of := Type.of(val))
   {
     verifySymbol(x, name, val, of)
     verifyNotSame(x.defVal, x.defVal)
   }
 
-  Void verifySymbol(Symbol x, Str name, Obj? val, Type of := val.type)
+  Void verifySymbol(Symbol x, Str name, Obj? val, Type of := Type.of(val))
   {
-    verifyEq(x, type.pod.symbol(name))
-    verifySame(x, type.pod.symbol(name))
+    verifyEq(x, Pod.of(this).symbol(name))
+    verifySame(x, Pod.of(this).symbol(name))
     verifyEq(x.name, name)
     verifyEq(x.qname, "testSys::$name")
     verifyEq(x.toStr, "@testSys::$name")
-    verifySame(x.pod, type.pod)
+    verifySame(x.pod, Pod.of(this))
     verifyEq(x.of, of)
     verifyEq(x.val, val)
     verifyEq(x.defVal, val)
@@ -126,7 +126,7 @@ class SymbolsTest : Test
   Void verifyIO(Str s, Str:Obj? expected)
   {
     actual := s.in.readSymbols
-    verifyEq(actual.type, [Str:Obj?]#)
+    verifyType(actual, [Str:Obj?]#)
     verifyEq(actual, expected)
     verifyEq(Buf().writeSymbols(actual).flip.readSymbols, expected)
   }
