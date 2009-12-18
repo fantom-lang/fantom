@@ -70,13 +70,11 @@ properties:
   Button(loc.get("myApp", "ok"))
   Button(loc.get("myApp", "cancel"))
 
-You can also use the [Pod.loc]`sys::Pod.loc` and [Type.loc]`sys::Type.loc`
-convenience methods to lookup a localized property for the current thread's
-locale:
+You can also use the [Pod.loc]`sys::Pod.loc` convenience method to lookup
+a localized property for the current thread's locale:
 
-  pod.loc("key")
-  type.loc("key")
-  FooBar#.loc("key")
+  Pod.of(this).loc("key")
+  FooBar#.pod.loc("key")
 
 The following rules are used to resolve a localized property:
    1. Find the pod and use its resource files
