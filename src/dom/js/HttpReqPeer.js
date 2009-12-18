@@ -12,10 +12,10 @@ fan.dom.HttpReqPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.dom.HttpReqPeer.prototype.$ctor = function(self) {}
 
-fan.dom.HttpReqPeer.prototype.send = function(self, content, func)
+fan.dom.HttpReqPeer.prototype.send = function(self, method, content, func)
 {
   var xhr = new XMLHttpRequest();
-  xhr.open(self.m_method, self.m_uri.m_str, self.m_async);
+  xhr.open(method.toUpperCase(), self.m_uri.m_str, self.m_async);
   if (self.m_async)
   {
     xhr.onreadystatechange = function ()
@@ -55,20 +55,16 @@ fan.dom.HttpReqPeer.makeRes = function(xhr)
   return res;
 }
 
-fan.dom.HttpReqPeer.prototype.sendForm = function(self, form, func)
+fan.dom.HttpReqPeer.prototype.encodeForm = function(self, form)
 {
-  self.m_headers.set("Content-Type", "application/x-www-form-urlencoded");
+  var encode = function(orig) { return escape(orig).replace(/\+/g, "%2B"); }
   var content = ""
   var k = form.keys();
   for (var i=0; i<k.length; i++)
   {
     if (i > 0) content += "&";
-    content += this.encode(k[i]) + "=" + this.encode(form.get(k[i]));
+    content += encode(k[i]) + "=" + encode(form.get(k[i]));
   }
-  this.send(self, content, func)
+  return content;
 }
 
-fan.dom.HttpReqPeer.prototype.encode = function(orig)
-{
-  return escape(orig).replace(/\+/g, "%2B");
-}

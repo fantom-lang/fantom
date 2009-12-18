@@ -17,7 +17,7 @@ one-to-one:
 
   Browser           Fantom
   --------------    ---------------
-  Win               Window
+  Window            Win
   Document          Doc
   Element           Elem
   Event             Event
@@ -89,20 +89,19 @@ The [HttpReq]`dom::HttpReq` object is used to make background HTTP
 requests from the browser.  For both sync and async requests, the response
 is passed to you in the callback closure:
 
-  HttpReq(uri).send("some content") |res|
+  HttpReq { uri=`/foo` }.send("POST", "some content") |res|
   {
     Win.cur.alert(res.content)
   }
 
-If you are submitting form values, you can use
-[sendForm]`dom::HttpReq.sendForm` to automatically encode the
-values as a form submission, and set the Content-Type to
-'application/form-url-encoded':
+Convenience methods are availabe for the common request methods:
 
-  HttpReq(uri).sendForm(["name":"Barney Stinson"]) |res|
-  {
-    Win.cur.alert(res.content)
-  }
+  HttpReq { uri=`/foo` }.get |res| {...}
+  HttpReq { uri=`/foo` }.post("some content") |res| {...}
+  HttpReq { uri=`/foo` }.postForm(["name":"Barney Stinson"]) |res| {...}
+
+The [postForm]`dom::HttpReq.postForm` will automatically encode the
+request to look like a normal HTML form submission.
 
 Effects [#effects]
 ==================
