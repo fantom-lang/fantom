@@ -637,6 +637,23 @@ class StreamTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Read Chars
+//////////////////////////////////////////////////////////////////////////
+
+  Void testReadChars()
+  {
+    f := tempDir + `readChars`
+    f.out.print("hello;_\u01ab_\u2c34;foo").close
+    in := f.in
+    verifyErr(ArgErr#) { in.readChars(-1) }
+    verifyEq(in.readChars(0), "")
+    verifyEq(in.readChars(6), "hello;")
+    verifyEq(in.readChars(5), "_\u01ab_\u2c34;")
+    verifyErr(IOErr#) { in.readChars(4) }
+    in.close
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Read Line
 //////////////////////////////////////////////////////////////////////////
 

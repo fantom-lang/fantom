@@ -456,6 +456,11 @@ class Buf
   Int? peekChar()
 
   **
+  ** Convenience for [in.readChars]`InStream.readChars`
+  **
+  Str readChars(Int n)
+
+  **
   ** Convenience for [in.readLine]`InStream.readLine`
   **
   Str? readLine(Int? max := 4096)
