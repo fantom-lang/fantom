@@ -133,13 +133,13 @@ internal class DomTestClient
     verify(str.contains("color: red"))
     */
 
-    verifyEq(elem.value,      null)
+    verifyEq(elem.val,        null)
     verifyEq(elem["value"],   null)
     verifyEq(elem.checked,    null)
     verifyEq(elem["checked"], null)
     verifyEq(elem.children[0].name,      "alpha")
     verifyEq(elem.children[0]["name"],   "alpha")
-    verifyEq(elem.children[0].value,     "foo")
+    verifyEq(elem.children[0].val,       "foo")
     verifyEq(elem.children[0]["value"],  "foo")
     verifyEq(elem.children[1].name,       "beta")
     verifyEq(elem.children[1]["name"],    "beta")
