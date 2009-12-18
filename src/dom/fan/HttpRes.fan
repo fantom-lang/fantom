@@ -10,6 +10,8 @@
 **
 ** HttpRes models the response side of an XMLHttpRequest instance.
 **
+** See [docLib]`docLib::Dom` for details.
+**
 @js
 class HttpRes
 {

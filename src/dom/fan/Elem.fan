@@ -10,6 +10,8 @@
 **
 ** Elem models a DOM element object.
 **
+** See [docLib]`docLib::Dom` for details.
+**
 @js
 class Elem
 {
