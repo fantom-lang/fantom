@@ -35,7 +35,7 @@ const class Clock : Actor
   **
   ** receive a message in actor's own pool thread
   **
-  override Obj? receive(Obj? msg, Context cx)
+  override Obj? receive(Obj? msg)
   {
     // assuming we recognize the message, have the
     // UI thread execute an update (with this actor's

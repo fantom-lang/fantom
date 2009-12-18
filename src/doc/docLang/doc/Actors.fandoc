@@ -34,7 +34,7 @@ message and returns the increment:
   const class IncrActor : Actor
   {
     new make(ActorPool p) : super(p) {}
-    override Obj? receive(Obj? msg, Context cx) { msg->increment }
+    override Obj? receive(Obj? msg) { msg->increment }
   }
 
 An actor is guaranteed to receive its messages atomically - it
@@ -45,23 +45,31 @@ sent to an actor, the runtime may use three different threads to
 process those messages.  But the actor is guaranteed to process
 the messages serially one after the other.
 
-Context [#context]
-******************
+Actor Locals [#locals]
+***********************
 Actors are [const classes]`Classes#const` which means they must be
 immutable.  This lets you pass actor references between actors, but
 you can't maintain any mutable state in the actor's fields.
-Instead the actor's "mutable world state" is stored in a
-[Context]`sys::Context`.  Context is basically an arbitrary map
-of name/value pairs which is passed to your receive method.
+Instead you can store the actor's "mutable world state" in
+[Actor.locals]`sys::Actor.locals`.  Actor locals is a string/object
+map which works like a thread local - a unique map is used for every
+actor.  To prevent naming collisions, you should prefix your map
+keys with your pod name:
+
+    // store a actor local
+    Actor.locals["acme.global"] = "hum bug"
+
+    // get a thread local
+    Actor.locals["acme.global"]
 
 For example to build an actor which maintains a counter every time
 it receives a message:
 
   pool := ActorPool()
-  a := Actor(pool) |Obj msg, Context cx->Obj|
+  a := Actor(pool) |msg|
   {
-    count := 1 + cx.get("count", 0)
-    cx["count"] = count
+    count := 1 + Actor.locals.get("count", 0)
+    Actor.locals["count"] = count
     return count
   }
 
@@ -241,16 +249,3 @@ processing their pending message queues - all pending messages are cancelled.
 Actors which are currently  executing a message are interrupted (which may
 or may not immediately terminate that thread).  Once all actors have
 relinquished their threads, the ActorPool enters the *done* state.
-
-Actor Locals [#locals]
-***********************
-Every actor has *actor locals* - a string/object map for storing
-thread global variables.  Locals are accessed using the
-[Actor.locals]`sys::Actor.locals` method.  To prevent naming
-collisions, you should prefix your map keys with your pod name:
-
-    // store a actor local
-    Actor.locals["acme.global"] = "hum bug"
-
-    // get a thread local
-    Actor.locals["acme.global"]
