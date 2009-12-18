@@ -33,7 +33,7 @@ internal const class WispActor : Actor
   **
   ** Process a series of HTTP requests and responses on a socket.
   **
-  override Obj? receive(Obj? msg, Context cx)
+  override Obj? receive(Obj? msg)
   {
     try
     {

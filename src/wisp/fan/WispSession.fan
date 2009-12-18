@@ -37,7 +37,7 @@ internal class WispSession : WebSession
 **
 internal const class WispSessionMgr : ActorPool
 {
-  const Actor actor := Actor(this) |msg,cx| { receive(msg, cx) }
+  const Actor actor := Actor(this) |msg| { receive(msg) }
 
   const Duration houseKeepingPeriod := 1min
 
@@ -83,10 +83,10 @@ internal const class WispSessionMgr : ActorPool
     }
   }
 
-  Obj? receive(Obj? msg, Context cx)
+  Obj? receive(Obj? msg)
   {
-    [Str:WispSession]? sessions := cx["sessions"]
-    if (sessions == null) cx["sessions"] = sessions = Str:WispSession[:]
+    [Str:WispSession]? sessions := Actor.locals["wisp.sessions"]
+    if (sessions == null) Actor.locals["wisp.sessions"] = sessions = Str:WispSession[:]
 
     // generate new session
     if (msg === "_new")

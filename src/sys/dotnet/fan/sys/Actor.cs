@@ -94,9 +94,9 @@ namespace Fan.Sys
 
     public Future sendWhenDone(Future f, object msg) { return _send(msg, null, f); }
 
-    protected object receive(object msg, Context cx)
+    protected object receive(object msg)
     {
-      if (m_receive != null) return m_receive.call(msg, cx);
+      if (m_receive != null) return m_receive.call(msg);
       System.Console.WriteLine("WARNING: " + type() + ".receive not overridden");
       return null;
     }
@@ -220,7 +220,7 @@ namespace Fan.Sys
       {
         if (future.isCancelled()) return;
         if (m_pool.m_killed) { future.cancel(); return; }
-        future.set(receive(future.m_msg, m_context));
+        future.set(receive(future.m_msg));
       }
       catch (Err.Val e)
       {
@@ -352,6 +352,18 @@ namespace Fan.Sys
 
       Func toKeyFunc, coalesceFunc;
       Hashtable pending = new Hashtable();
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Context
+  //////////////////////////////////////////////////////////////////////////
+
+    internal class Context
+    {
+      internal Context(Actor actor) { m_actor = actor; }
+      internal Actor m_actor;
+      internal Map m_locals = new Map(Sys.StrType, Sys.ObjType.toNullable());
+      internal Locale m_locale = Locale.cur();
     }
 
   //////////////////////////////////////////////////////////////////////////
