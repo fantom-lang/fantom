@@ -89,9 +89,9 @@ public class Actor
 
   public final Future sendWhenDone(Future f, Object msg) { return _send(msg, null, f); }
 
-  protected Object receive(Object msg, Context cx)
+  protected Object receive(Object msg)
   {
-    if (receive != null) return receive.call(msg, cx);
+    if (receive != null) return receive.call(msg);
     System.out.println("WARNING: " + type() + ".receive not overridden");
     return null;
   }
@@ -217,7 +217,7 @@ public class Actor
     {
       if (future.isCancelled()) return;
       if (pool.killed) { future.cancel(); return; }
-      future.set(receive(future.msg, context));
+      future.set(receive(future.msg));
     }
     catch (Err.Val e)
     {
@@ -349,6 +349,18 @@ public class Actor
 
     Func toKeyFunc, coalesceFunc;
     HashMap pending = new HashMap();
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Context
+//////////////////////////////////////////////////////////////////////////
+
+  static final class Context
+  {
+    Context(Actor actor) { this.actor = actor; }
+    final Actor actor;
+    final Map locals = new Map(Sys.StrType, Sys.ObjType.toNullable());
+    Locale locale = Locale.cur();
   }
 
 //////////////////////////////////////////////////////////////////////////

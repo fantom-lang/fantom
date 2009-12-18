@@ -57,7 +57,7 @@ internal const class FileIndex : Actor
 // Actor
 //////////////////////////////////////////////////////////////////////////
 
-  override Obj? receive(Obj? msg, Context cx)
+  override Obj? receive(Obj? msg)
   {
     // handle ready message
     if (msg === `ready`) return true
