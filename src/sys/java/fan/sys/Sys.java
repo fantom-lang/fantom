@@ -277,6 +277,7 @@ public final class Sys
 
   // IO
   public static final Type CharsetType      = builtin("Charset",      ObjType);
+  public static final Type EndianType       = builtin("Endian",       EnumType);
   public static final Type InStreamType     = builtin("InStream",     ObjType);
   public static final Type SysInStreamType  = builtin("SysInStream",  ObjType);
   public static final Type OutStreamType    = builtin("OutStream",    ObjType);

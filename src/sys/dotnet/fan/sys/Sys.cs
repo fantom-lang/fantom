@@ -201,6 +201,7 @@ namespace Fan.Sys
         LocalFileType    = builtin("LocalFile",    FileType);
         ZipEntryFileType = builtin("ZipEntryFile", FileType);
         ZipType          = builtin("Zip",          ObjType);
+        EndianType       = builtin("Endian",       EnumType);
 
         // actos
         ActorType        = builtin("Actor",        ObjType);
@@ -458,6 +459,7 @@ namespace Fan.Sys
     public static readonly Type LocalFileType;
     public static readonly Type ZipEntryFileType;
     public static readonly Type ZipType;
+    public static readonly Type EndianType;
 
     // actos
     public static readonly Type ActorType;
