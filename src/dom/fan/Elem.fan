@@ -67,16 +67,6 @@ class Elem
   native This removeClassName(Str className)
 
   **
-  ** Get the style object for this element.
-  **
-  native Obj style()
-
-  **
-  ** Get the computed style object for this element.
-  **
-  native Obj computedStyle()
-
-  **
   ** The HTML markup contained in this element.
   **
   native Str html
