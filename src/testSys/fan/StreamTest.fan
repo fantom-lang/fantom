@@ -207,6 +207,23 @@ class StreamTest : Test
     out.writeUtf("Apple")
     out.writeUtf("a\u00FF\uabcd")
     out.writeUtf("\u00F7*\uFB6E\u043B\u0000\n&cool")
+
+    // little endian
+    if (out.endian !== Endian.big) throw Err()
+    out.endian = Endian.little
+    if (out.endian !== Endian.little) throw Err()
+    out.writeI2(0xaabb)
+    out.writeI4(0xaabbccdd)
+    out.writeI8(0xaabbccdd11223344)
+    out.writeI2(0xaabb)
+    out.writeI2(-2398)
+    out.writeI4(0xaabbccdd)
+    out.writeI4(-123_456)
+    out.writeI8(0xaabbccdd11223344)
+    out.endian = Endian.big
+    if (out.endian !== Endian.big) throw Err()
+
+    // end-of-stream tests
     out.writeI4(0x01_02_03_04)
   }
 
@@ -280,6 +297,23 @@ class StreamTest : Test
     test.verifyEq(in.readUtf, "Apple")
     test.verifyEq(in.readUtf, "a\u00FF\uabcd")
     test.verifyEq(in.readUtf, "\u00F7*\uFB6E\u043B\u0000\n&cool")
+
+    // little endian
+    test.verifyEq(in.readU2, 0xbbaa)
+    test.verifyEq(in.readU4, 0xddccbbaa)
+    test.verifyEq(in.readS8, 0x44332211ddccbbaa)
+    test.verifySame(in.endian, Endian.big)
+    in.endian = Endian.little
+    test.verifySame(in.endian, Endian.little)
+    test.verifyEq(in.readU2, 0xaabb)
+    test.verifyEq(in.readS2, -2398)
+    test.verifyEq(in.readU4, 0xaabbccdd)
+    test.verifyEq(in.readS4, -123_456)
+    test.verifyEq(in.readS8, 0xaabbccdd11223344)
+    in.endian = Endian.big
+    test.verifySame(in.endian, Endian.big)
+
+    // end of stream tests
     if (testSize)
     {
       test.verifyEq(in.skip(6), 4)

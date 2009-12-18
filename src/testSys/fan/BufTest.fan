@@ -596,6 +596,25 @@ class BufTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Endian
+//////////////////////////////////////////////////////////////////////////
+
+  Void testEndian()
+  {
+    buf := Buf()
+    verifySame(buf.endian, Endian.big)
+    buf.endian = Endian.little
+    verifySame(buf.endian, Endian.little)
+    buf.writeI2(0xaabb).writeI4(0xaabbccdd).writeI2(0xccdd).writeI4(0x11223344).flip
+    buf.endian = Endian.big
+    verifyEq(buf.readU2, 0xbbaa)
+    verifyEq(buf.readU4, 0xddccbbaa)
+    buf.endian = Endian.little
+    verifyEq(buf.readU2, 0xccdd)
+    verifyEq(buf.readU4, 0x11223344)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Char IO
 //////////////////////////////////////////////////////////////////////////
 

@@ -176,6 +176,16 @@ public class InStream
     return buf;
   }
 
+  public Endian endian()
+  {
+    return bigEndian ? Endian.big : Endian.little;
+  }
+
+  public void endian(Endian endian)
+  {
+    bigEndian = endian == Endian.big;
+  }
+
   public Long peek()
   {
     Long x = read();
@@ -202,7 +212,10 @@ public class InStream
     int c1 = r();
     int c2 = r();
     if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream").val;
-    return c1 << 8 | c2;
+    if (bigEndian)
+      return c1 << 8 | c2;
+    else
+      return c2 << 8 | c1;
   }
 
   public long readS2()
@@ -210,7 +223,10 @@ public class InStream
     int c1 = r();
     int c2 = r();
     if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream").val;
-    return (short)(c1 << 8 | c2);
+    if (bigEndian)
+      return (short)(c1 << 8 | c2);
+    else
+      return (short)(c2 << 8 | c1);
   }
 
   public long readU4()
@@ -220,7 +236,10 @@ public class InStream
     long c3 = r();
     long c4 = r();
     if ((c1 | c2 | c3 | c4) < 0) throw IOErr.make("Unexpected end of stream").val;
-    return (c1 << 24) + (c2 << 16) + (c3 << 8) + c4;
+    if (bigEndian)
+      return (c1 << 24) + (c2 << 16) + (c3 << 8) + c4;
+    else
+      return (c4 << 24) + (c3 << 16) + (c2 << 8) + c1;
   }
 
   public long readS4()
@@ -230,7 +249,10 @@ public class InStream
     int c3 = r();
     int c4 = r();
     if ((c1 | c2 | c3 | c4) < 0) throw IOErr.make("Unexpected end of stream").val;
-    return ((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
+    if (bigEndian)
+      return ((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
+    else
+      return ((c4 << 24) + (c3 << 16) + (c2 << 8) + c1);
   }
 
   public long readS8()
@@ -244,9 +266,12 @@ public class InStream
     long c7 = r();
     long c8 = r();
     if ((c1 | c2 | c3 | c4 | c5 | c6 | c7 | c8) < 0) throw IOErr.make("Unexpected end of stream").val;
-    return ((c1 << 56) + (c2 << 48) + (c3 << 40) + (c4 << 32) +
-            (c5 << 24) + (c6 << 16) + (c7 << 8) + c8);
-  }
+    if (bigEndian)
+      return ((c1 << 56) + (c2 << 48) + (c3 << 40) + (c4 << 32) +
+              (c5 << 24) + (c6 << 16) + (c7 << 8) + c8);
+    else
+      return ((c8 << 56) + (c7 << 48) + (c6 << 40) + (c5 << 32) +
+              (c4 << 24) + (c3 << 16) + (c2 << 8) + c1);  }
 
   public double readF4()
   {
@@ -698,6 +723,7 @@ public class InStream
 //////////////////////////////////////////////////////////////////////////
 
   InStream in;
+  boolean bigEndian = true;
   Charset charset = Charset.utf8();
   Charset.Decoder charsetDecoder = charset.newDecoder();
   Charset.Encoder charsetEncoder = charset.newEncoder();

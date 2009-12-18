@@ -73,34 +73,40 @@ class OutStream
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Write two bytes as a 16-bit number in network byte order.  This method
+  ** Byte order mode for binary writes.
+  ** Default is `Endian.big` (network byte order).
+  **
+  virtual Endian endian
+
+  **
+  ** Write two bytes as a 16-bit number using configured `endian`.  This method
   ** may be paired with `InStream.readU2` or `InStream.readS2`.  Throw IOErr
   ** on error.  Return this.
   **
   This writeI2(Int n)
 
   **
-  ** Write four bytes as a 32-bit number in network byte order.  This
+  ** Write four bytes as a 32-bit number using configured `endian`.  This
   ** method may be paired with `InStream.readU4` or `InStream.readS4`.  Throw
   ** IOErr on error.  Return this.
   **
   This writeI4(Int n)
 
   **
-  ** Write eight bytes as a 64-bit number in network byte order.  This
+  ** Write eight bytes as a 64-bit number using configured `endian`.  This
   ** is paired with `InStream.readS8`.  Throw IOErr on error.  Return this.
   **
   This writeI8(Int n)
 
   **
-  ** Write four bytes as a 32-bit floating point number in network byte
+  ** Write four bytes as a 32-bit floating point number using configured `endian`
   ** order according to `Float.bits32`.  This is paired with `InStream.readF4`.
   ** Throw IOErr on error.  Return this.
   **
   This writeF4(Float r)
 
   **
-  ** Write eight bytes as a 64-bit floating point number in network byte
+  ** Write eight bytes as a 64-bit floating point number using configured `endian`
   ** order according to `Float.bits`.  This is paired with `InStream.readF8`.
   ** Throw IOErr on error.  Return this.
   **

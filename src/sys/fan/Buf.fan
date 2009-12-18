@@ -200,6 +200,12 @@ class Buf
   This flush()
 
   **
+  ** Byte order mode for both OutStream and InStream.
+  ** Default is `Endian.big` (network byte order).
+  **
+  Endian endian
+
+  **
   ** Character set for both the OutStream and InStream.
   **
   Charset charset
