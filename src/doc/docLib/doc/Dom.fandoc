@@ -66,7 +66,7 @@ Elem [#elem]
   elem.remove(child)      // remove a child element
 
   // form conveniences
-  elem.value              // the 'value' attribute
+  elem.val                // the 'value' attribute
   elem.checked            // true/false for checkboxes
 
   // position and size
