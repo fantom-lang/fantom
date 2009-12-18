@@ -12,6 +12,7 @@
 ** lifetime.  Context provides a map of arbitrary objects keyed
 ** by a string name to store state.
 **
+@deprecated
 final class Context
 {
 

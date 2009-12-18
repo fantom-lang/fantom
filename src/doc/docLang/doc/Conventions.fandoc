@@ -39,7 +39,8 @@ Naming [#naming]
 
 Common Names [#commonNames]
 ***************************
-  - Prefer val to value
+  - Prefer val(s) to value(s)
+  - Prefer cur to current
   - Prefer io/IO to Io
   - Prefer ro/RO to Ro
   - Prefer rw/RW to Rw

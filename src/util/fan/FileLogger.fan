@@ -58,7 +58,7 @@ const class FileLogger : ActorPool
   **
   ** Run the script
   **
-  internal Obj? receive(Obj msg, Context cx)
+  internal Obj? receive(Obj msg)
   {
     // if file message, this is an open()
     file := this.file
@@ -67,20 +67,20 @@ const class FileLogger : ActorPool
     {
       file = msg
       write = false
-      cx["error"] = null
+      Actor.locals["error"] = null
     }
 
     // if we are in error condition ignore
-    if (cx["error"] != null) return null
+    if (Actor.locals["error"] != null) return null
 
     // open file if first time thru
-    OutStream? out := cx["out"]
+    OutStream? out := Actor.locals["out"]
     if (out == null)
     {
       // if no file configured
       if (file == null)
       {
-        cx["error"] = true
+        Actor.locals["error"] = true
         log.error("No file configured")
         return null
       }
@@ -90,11 +90,11 @@ const class FileLogger : ActorPool
       {
         if (!file.exists) file.create
         out = file.out(true)
-        cx["out"] = out
+        Actor.locals["out"] = out
       }
       catch (Err e)
       {
-        cx["error"] = true
+        Actor.locals["error"] = true
         log.error("Cannot open log file: $file", e)
         return null
       }
@@ -107,6 +107,6 @@ const class FileLogger : ActorPool
   }
 
   private const static Log log := Log.get("logger")
-  private const Actor actor := Actor(this) |msg, cx| { receive(msg, cx) }
+  private const Actor actor := Actor(this) |msg| { receive(msg) }
 
 }
