@@ -309,6 +309,10 @@ class ResolveExpr : CompilerStep
   **
   private Expr resolveIt(ItExpr expr)
   {
+    // if inside of field setter it is our implicit val parameter
+    if (curMethod != null && curMethod.isFieldSetter)
+      return LocalVarExpr(expr.location, curMethod.vars.first)
+
     // can't use it keyword outside of an it-block
     if (!inClosure || !curType.closure.isItBlock)
     {
@@ -370,6 +374,13 @@ class ResolveExpr : CompilerStep
       if (binding != null)
         return LocalVarExpr(var.location, binding)
     }
+
+// TODO
+if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
+{
+  warn("Use 'it' instead of 'val' in setter", var.location)
+  return LocalVarExpr(var.location, curMethod.vars.first)
+}
 
     // at this point it can't be a local variable, so it must be
     // a slot on either myself or the variable's target

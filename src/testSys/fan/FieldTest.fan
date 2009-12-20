@@ -39,7 +39,7 @@ class FieldTest : Test
   Int count := 0
   {
     get { getCounter++; return *count }
-    set { setCounter++; *count = val }
+    set { setCounter++; *count = it }
   }
   Int getCounter := 0
   Int setCounter := 0

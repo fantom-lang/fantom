@@ -274,7 +274,7 @@ internal class ConsoleModel : RichTextModel
   override Str text
   {
     get { return lines.join(delimiter) |ConsoleLine line->Str| { return line.text } }
-    set { modify(0, size, val) }
+    set { modify(0, size, it) }
   }
 
   override Int charCount() { return size }

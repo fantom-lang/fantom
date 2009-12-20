@@ -244,7 +244,7 @@ class ClosureTest : CompilerTest
           set
           {
             s = \"\"
-            val.times |Int i|
+            it.times |Int i|
             {
               2.times |Int j| { s += \"(\$i,\$j)\" }
             }

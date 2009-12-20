@@ -86,7 +86,7 @@ class Combo : Widget
   @transient Obj? selected
   {
     get { i := selectedIndex; return i == null ? null : items[i] }
-    set { i := index(val); if (i != null) selectedIndex = i }
+    set { i := index(it); if (i != null) selectedIndex = i }
   }
 
   **

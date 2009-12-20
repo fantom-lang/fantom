@@ -40,8 +40,8 @@ internal class WispRes : WebRes
     set
     {
       checkUncommitted
-      if (statusMsg[val] == null) throw Err("Unknown status code: $val");
-      *statusCode = val
+      if (statusMsg[it] == null) throw Err("Unknown status code: $it");
+      *statusCode = it
     }
   }
 

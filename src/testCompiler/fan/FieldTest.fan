@@ -32,7 +32,7 @@ class FieldTest : CompilerTest
           Int x := 3
           {
             get { xGets++; return *x }
-            set { xSets++; this.*x = val }
+            set { xSets++; this.*x = it }
           }
 
           Int xGets := 0
@@ -77,7 +77,7 @@ class FieldTest : CompilerTest
         Int a := 2
         {
           get { return *a != 2 ? *a : -1 }
-          set { aset = val; *a = val }
+          set { aset = it; *a = it }
         }
         Int aset := 0
 
@@ -100,7 +100,7 @@ class FieldTest : CompilerTest
         Int c := 3
         {
           get { return *c != 3 ? *c : 5 }
-          set { *c = val; ctrap = val }
+          set { *c = it; ctrap = it }
         }
         Int ctrap := 0
       }")
@@ -195,8 +195,8 @@ class FieldTest : CompilerTest
         Int a
         Int b := 99
         Int c { get { return *c } }
-        Int d { set { *d = val } }
-        Int e { get { return *e } set { *e = val } }
+        Int d { set { *d = it } }
+        Int e { get { return *e } set { *e = it } }
         Int f { get { return 2 } }
         Int g { set { } }
         Int h { get { return 777 } set {} }
@@ -204,11 +204,11 @@ class FieldTest : CompilerTest
 
         // no storage
         Int o { get { return 2 } set {} }
-        Int p { get { return a } set { a = val } }
-        Int q { get { return x } set { x = val } }
+        Int p { get { return a } set { a = it } }
+        Int q { get { return x } set { x = it } }
 
         Bar bar := Bar.make
-        Int x { get { return bar.x } set { bar.x = val } }
+        Int x { get { return bar.x } set { bar.x = it } }
       }
 
       class Bar
@@ -320,7 +320,7 @@ class FieldTest : CompilerTest
         virtual Int x
         {
           get { aGets++; return *x }
-          set { aSets++; *x = val }
+          set { aSets++; *x = it }
         }
         Int aGets := 0
         Int aSets := 0
@@ -331,7 +331,7 @@ class FieldTest : CompilerTest
         override Int x
         {
           get { bGets++; return super.x }
-          set { bSets++; super.x = val }
+          set { bSets++; super.x = it }
         }
         Int bGets := 0
         Int bSets := 0
@@ -342,7 +342,7 @@ class FieldTest : CompilerTest
         override Int x
         {
           get { cGets++; return super.x }
-          set { cSets++; super.x = val }
+          set { cSets++; super.x = it }
         }
         Int cGets := 0
         Int cSets := 0
@@ -401,7 +401,7 @@ class FieldTest : CompilerTest
     compile(
      "class A
       {
-        virtual Int x := 3 { set { xTrap = val } }
+        virtual Int x := 3 { set { xTrap = it } }
         Int xTrap
       }
 
@@ -425,7 +425,7 @@ class FieldTest : CompilerTest
     compile(
      "class A
       {
-        virtual Int x { get { return y } set { y = val } }
+        virtual Int x { get { return y } set { y = it } }
         Int y
       }
 
@@ -469,7 +469,7 @@ class FieldTest : CompilerTest
     compile(
      "class A
       {
-        virtual Int x { get { return *y } set { *y = val } }
+        virtual Int x { get { return *y } set { *y = it } }
         Int y
       }
 
@@ -481,7 +481,7 @@ class FieldTest : CompilerTest
         override Int x
         {
           get { bGets++; return super.x }
-          set { bSets++; super.x = val }
+          set { bSets++; super.x = it }
         }
 
         private Int bGets := 0
@@ -507,28 +507,6 @@ class FieldTest : CompilerTest
      verifyEq(obj->get, 9)
      verifyEq(obj->bGets, 2); verifyEq(obj->bSets, 1)
    }
-
-//////////////////////////////////////////////////////////////////////////
-// Field Called Val
-//////////////////////////////////////////////////////////////////////////
-
-  Void testFieldCalledVal()
-  {
-    compile(
-     "class Foo
-      {
-        Int val
-        {
-          set { *val = val*100 }
-        }
-      }
-      ")
-
-     obj := pod.types.first.make
-     verifyEq(obj->val, 0)
-     obj->val = 3
-     verifyEq(obj->val, 300)
-  }
 
 //////////////////////////////////////////////////////////////////////////
 // Errors
