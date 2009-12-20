@@ -105,10 +105,7 @@ abstract class BuildScript
   internal virtual Void initEnv()
   {
     // are we running on a Window's box?
-    osName := Sys.env.get("os.name", "?").lower
-    isWindows = osName.contains("win")
-
-    // exeExt
+    isWindows = Sys.os == "win32"
     exeExt = isWindows ? ".exe" : ""
 
     // debug
