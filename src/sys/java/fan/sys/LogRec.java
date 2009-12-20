@@ -8,9 +8,9 @@
 package fan.sys;
 
 /**
- * LogRecord
+ * LogRec
  */
-public class LogRecord
+public class LogRec
   extends FanObj
 {
 
@@ -18,22 +18,21 @@ public class LogRecord
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static LogRecord make(DateTime time, LogLevel level, String logName, String msg) { return make(time, level, logName, msg, null); }
-  public static LogRecord make(DateTime time, LogLevel level, String logName, String msg, Err err)
+  public static LogRec make(DateTime time, LogLevel level, String logName, String msg) { return make(time, level, logName, msg, null); }
+  public static LogRec make(DateTime time, LogLevel level, String logName, String msg, Err err)
   {
-    LogRecord self = new LogRecord();
+    LogRec self = new LogRec();
     make$(self, time, level, logName, msg, err);
     return self;
   }
 
-  public static void make$(LogRecord self, DateTime time, LogLevel level, String logName, String msg) { make$(self, time, level, logName, msg, null); }
-  public static void make$(LogRecord self, DateTime time, LogLevel level, String logName, String msg, Err err)
+  public static void make$(LogRec self, DateTime time, LogLevel level, String logName, String msg) { make$(self, time, level, logName, msg, null); }
+  public static void make$(LogRec self, DateTime time, LogLevel level, String logName, String msg, Err err)
   {
     self.time    = time;
     self.level   = level;
     self.logName = logName;
     self.msg     = msg;
-self.message = msg;
     self.err     = err;
   }
 
@@ -41,7 +40,7 @@ self.message = msg;
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.LogRecordType; }
+  public Type type() { return Sys.LogRecType; }
 
   public String toStr()
   {
@@ -50,7 +49,7 @@ self.message = msg;
     s.append('[').append(ts).append(']')
      .append(' ').append('[').append(level).append(']')
      .append(' ').append('[').append(logName).append(']')
-     .append(' ').append(message);
+     .append(' ').append(msg);
     return s.toString();
   }
 
@@ -71,8 +70,6 @@ self.message = msg;
   public DateTime time;
   public LogLevel level;
   public String logName;
-// TODO
-public String message;
   public String msg;
   public Err err;
 

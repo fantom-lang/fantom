@@ -217,7 +217,7 @@ class LogTest : Test
     Log.removeHandler(console)
     try
     {
-      h := |LogRecord rec|
+      h := |LogRec rec|
       {
         Actor.locals["testSys.logRecord"] = rec
       }
@@ -243,7 +243,7 @@ class LogTest : Test
     }
   }
 
-  Void mutableHandler(LogRecord rec) {}
+  Void mutableHandler(LogRec rec) {}
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
@@ -252,7 +252,7 @@ class LogTest : Test
   Void verifyLog(LogLevel? level, Str? msg := null, Err? err := null)
   {
     log := log()
-    LogRecord? rec := Actor.locals["testSys.logRecord"]
+    LogRec? rec := Actor.locals["testSys.logRecord"]
     if (level == null)
     {
       verifyEq(level, null)
@@ -290,7 +290,7 @@ const class TestLog : Log
 {
   new make(Str name, Bool reg) : super(name, reg) {}
 
-  override Void log(LogRecord rec)
+  override Void log(LogRec rec)
   {
     // super.log(time, level, msg, err)
     if (isEnabled(level))

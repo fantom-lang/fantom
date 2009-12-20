@@ -128,7 +128,7 @@ const class Log
   ** handling.  The standard implementation is to call each of the
   ** installed `handlers` if the specified level is enabled.
   **
-  virtual Void log(LogRecord rec)
+  virtual Void log(LogRec rec)
 
 //////////////////////////////////////////////////////////////////////////
 // Handlers
@@ -137,17 +137,17 @@ const class Log
   **
   ** List all the handler functions installed to process log events.
   **
-  static |LogRecord rec|[] handlers()
+  static |LogRec rec|[] handlers()
 
   **
   ** Install a handler to receive callbacks on logging events.
   ** If the handler func is not immutable, then throw NotImmutableErr.
   **
-  static Void addHandler(|LogRecord rec| handler)
+  static Void addHandler(|LogRec rec| handler)
 
   **
   ** Uninstall a log handler.
   **
-  static Void removeHandler(|LogRecord rec| handler)
+  static Void removeHandler(|LogRec rec| handler)
 
 }

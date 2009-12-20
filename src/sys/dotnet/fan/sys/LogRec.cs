@@ -11,25 +11,25 @@ using System.Text;
 namespace Fan.Sys
 {
   /// <summary>
-  /// LogRecord.
+  /// LogRec.
   /// </summary>
-  public class LogRecord : FanObj
+  public class LogRec : FanObj
   {
 
   //////////////////////////////////////////////////////////////////////////
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static LogRecord make(DateTime time, LogLevel level, string logName, string msg) { return make(time, level, logName, msg, null); }
-    public static LogRecord make(DateTime time, LogLevel level, string logName, string msg, Err err)
+    public static LogRec make(DateTime time, LogLevel level, string logName, string msg) { return make(time, level, logName, msg, null); }
+    public static LogRec make(DateTime time, LogLevel level, string logName, string msg, Err err)
     {
-      LogRecord self = new LogRecord();
+      LogRec self = new LogRec();
       make_(self, time, level, logName, msg, err);
       return self;
     }
 
-    public static void make_(LogRecord self, DateTime time, LogLevel level, string logName, string msg) { make_(self, time, level, logName, msg, null); }
-    public static void make_(LogRecord self, DateTime time, LogLevel level, string logName, string msg, Err err)
+    public static void make_(LogRec self, DateTime time, LogLevel level, string logName, string msg) { make_(self, time, level, logName, msg, null); }
+    public static void make_(LogRec self, DateTime time, LogLevel level, string logName, string msg, Err err)
     {
       self.m_time    = time;
       self.m_level   = level;
@@ -42,7 +42,7 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.LogRecordType; }
+    public override Type type() { return Sys.LogRecType; }
 
     public override string toStr()
     {

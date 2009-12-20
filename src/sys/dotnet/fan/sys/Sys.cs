@@ -212,7 +212,7 @@ namespace Fan.Sys
         DependType       = builtin("Depend",       ObjType);
         LogType          = builtin("Log",          ObjType);
         LogLevelType     = builtin("LogLevel",     EnumType);
-        LogRecordType    = builtin("LogRecord",    ObjType);
+        LogRecType       = builtin("LogRec",       ObjType);
         LocaleType       = builtin("Locale",       ObjType);
         MimeTypeType     = builtin("MimeType",     ObjType);
         ProcessType      = builtin("Process",      ObjType);
@@ -469,7 +469,7 @@ namespace Fan.Sys
     public static readonly Type DependType;
     public static readonly Type LogType;
     public static readonly Type LogLevelType;
-    public static readonly Type LogRecordType;
+    public static readonly Type LogRecType;
     public static readonly Type LocaleType;
     public static readonly Type MimeTypeType;
     public static readonly Type ProcessType;

@@ -86,7 +86,7 @@ You can get/set the current severity level of a Log via the
 
 Log Handlers [#handlers]
 ************************
-Log handlers are functions designed to process [LogRecords]`sys::LogRecord`.
+Log handlers are functions designed to process [LogRecs]`sys::LogRec`.
 The following 'Log' methods are used to manage the handlers in a VM:
 
   - [Log.handlers]`sys::Log.handlers`: list the installed handler functions
@@ -95,12 +95,12 @@ The following 'Log' methods are used to manage the handlers in a VM:
 
 Handlers must be an instance of an [immutable Func]`Functions#immutable` (they
 are shared by all threads).  On startup there is always one handler installed
-which will print each record to the console via the [LogRecord.print]`sys::LogRecord.print`
+which will print each record to the console via the [LogRec.print]`sys::LogRec.print`
 method.
 
 Here is a simple example of an installing a handler:
 
-  Log.addHandler |LogRecord rec| { echo("My Handler: $rec") }
+  Log.addHandler |rec| { echo("My Handler: $rec") }
 
 Log Setup [#setup]
 ******************

@@ -144,31 +144,31 @@ public class Log
   public final void error(String msg, Throwable e) { error(msg, Err.make(e)); }
   public final void error(String msg, Err err)
   {
-    log(LogRecord.make(DateTime.now(), LogLevel.error, name, msg, err));
+    log(LogRec.make(DateTime.now(), LogLevel.error, name, msg, err));
   }
 
   public final void warn(String msg) { warn(msg, (Err)null); }
   public final void warn(String msg, Throwable e) { warn(msg, Err.make(e)); }
   public final void warn(String msg, Err err)
   {
-    log(LogRecord.make(DateTime.now(), LogLevel.warn, name, msg, err));
+    log(LogRec.make(DateTime.now(), LogLevel.warn, name, msg, err));
   }
 
   public final void info(String msg) { info(msg, (Err)null); }
   public final void info(String msg, Throwable e) { info(msg, Err.make(e)); }
   public final void info(String msg, Err err)
   {
-    log(LogRecord.make(DateTime.now(), LogLevel.info, name, msg, err));
+    log(LogRec.make(DateTime.now(), LogLevel.info, name, msg, err));
   }
 
   public final void debug(String msg) { debug(msg, (Err)null); }
   public final void debug(String msg, Throwable e) { debug(msg, Err.make(e)); }
   public final void debug(String msg, Err err)
   {
-    log(LogRecord.make(DateTime.now(), LogLevel.debug, name, msg, err));
+    log(LogRec.make(DateTime.now(), LogLevel.debug, name, msg, err));
   }
 
-  public void log(LogRecord rec)
+  public void log(LogRec rec)
   {
     if (!enabled(rec.level)) return;
 
@@ -223,7 +223,7 @@ public class Log
   {
     try
     {
-      handlers[0] = Sys.LogRecordType.method("print", true).func();
+      handlers[0] = Sys.LogRecType.method("print", true).func();
     }
     catch (Throwable e)
     {

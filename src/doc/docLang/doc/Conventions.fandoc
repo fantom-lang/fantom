@@ -39,12 +39,14 @@ Naming [#naming]
 
 Common Names [#commonNames]
 ***************************
-  - Prefer val(s) to value(s)
+  - Prefer id/Id to ID or Identifier
+  - Prefer val to value
   - Prefer cur to current
+  - Prefer msg to message
+  - Prefer rec to record
   - Prefer io/IO to Io
   - Prefer ro/RO to Ro
   - Prefer rw/RW to Rw
-  - Prefer id/Id to ID or Identifier
   - Prefer xml/Xml to XML
   - Prefer html/Html to HTML
   - Prefer http/Http to HTTP

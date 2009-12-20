@@ -301,7 +301,7 @@ public final class Sys
   public static final Type DependType       = builtin("Depend",       ObjType);
   public static final Type LogType          = builtin("Log",          ObjType);
   public static final Type LogLevelType     = builtin("LogLevel",     EnumType);
-  public static final Type LogRecordType    = builtin("LogRecord",    ObjType);
+  public static final Type LogRecType       = builtin("LogRec",       ObjType);
   public static final Type LocaleType       = builtin("Locale",       ObjType);
   public static final Type MimeTypeType     = builtin("MimeType",     ObjType);
   public static final Type ProcessType      = builtin("Process",      ObjType);

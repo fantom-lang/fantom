@@ -144,31 +144,31 @@ namespace Fan.Sys
     public void error(string message, System.Exception e) { error(message, Err.make(e)); }
     public void error(string message, Err err)
     {
-      log(LogRecord.make(DateTime.now(), LogLevel.m_error, m_name, message, err));
+      log(LogRec.make(DateTime.now(), LogLevel.m_error, m_name, message, err));
     }
 
     public void warn(string message) { warn(message, (Err)null); }
     public void warn(string message, System.Exception e) { warn(message, Err.make(e)); }
     public void warn(string message, Err err)
     {
-      log(LogRecord.make(DateTime.now(), LogLevel.m_warn, m_name, message, err));
+      log(LogRec.make(DateTime.now(), LogLevel.m_warn, m_name, message, err));
     }
 
     public void info(string message) { info(message, (Err)null); }
     public void info(string message, System.Exception e) { info(message, Err.make(e)); }
     public void info(string message, Err err)
     {
-      log(LogRecord.make(DateTime.now(), LogLevel.m_info, m_name, message, err));
+      log(LogRec.make(DateTime.now(), LogLevel.m_info, m_name, message, err));
     }
 
     public void debug(string message) { debug(message, (Err)null); }
     public void debug(string message, System.Exception e) { debug(message, Err.make(e)); }
     public void debug(string message, Err err)
     {
-      log(LogRecord.make(DateTime.now(), LogLevel.m_debug, m_name, message, err));
+      log(LogRec.make(DateTime.now(), LogLevel.m_debug, m_name, message, err));
     }
 
-    public virtual void log(LogRecord rec)
+    public virtual void log(LogRec rec)
     {
       if (!enabled(rec.m_level)) return;
 
@@ -228,7 +228,7 @@ namespace Fan.Sys
     {
       try
       {
-        m_handlers[0] = Sys.LogRecordType.method("print", true).func();
+        m_handlers[0] = Sys.LogRecType.method("print", true).func();
       }
       catch (System.Exception e)
       {

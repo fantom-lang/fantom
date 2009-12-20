@@ -7,10 +7,10 @@
 //
 
 **
-** LogRecord all the information of a single logging event.
+** LogRec all the information of a single logging event.
 ** See `docLang::Logging` for details.
 **
-const class LogRecord
+const class LogRec
 {
 
   **
@@ -37,10 +37,6 @@ const class LogRecord
   ** Message text event
   **
   const Str msg
-
-** TODO: use `msg`
-@deprecated
-const Str message
 
   **
   ** Exception if applicable
