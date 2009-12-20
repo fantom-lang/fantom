@@ -79,7 +79,7 @@ internal class FindInFiles
       // run in console
       frame.console.show.run(#doFind, [q, f.uri.toStr, match.selected.toStr])
     }
-    catch (Err e) { Dialog.openErr(frame, e.message, e) }
+    catch (Err e) { Dialog.openErr(frame, e.msg, e) }
   }
 
   static Str[] doFind(ExecParams params)

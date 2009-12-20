@@ -19,17 +19,21 @@ const class Err
   **
   ** Construct with specified error message and optional root cause.
   **
-  new make(Str? msg := null, Err? cause := null)
+  new make(Str msg := "", Err? cause := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the string message passed to the contructor or null if
-  ** a message is not available.
+  ** Get the string message passed to the contructor or empty
+  ** string if a message is not available.
   **
-  Str? message()
+  Str msg()
+
+** TODO: use `msg`
+@deprecated
+Str? message()
 
   **
   ** Get the underyling cause exception or null.

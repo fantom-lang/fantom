@@ -25,7 +25,7 @@ public class IndexErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static IndexErr make() { return make((String)null, (Err)null); }
+  public static IndexErr make() { return make("", (Err)null); }
   public static IndexErr make(String msg) { return make(msg, (Err)null); }
   public static IndexErr make(String msg, Err cause)
   {

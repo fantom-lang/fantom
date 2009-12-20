@@ -21,7 +21,7 @@ namespace Fan.Sys
   // Fantom Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static UnknownServiceErr make() { return make((string)null, (Err)null); }
+    public new static UnknownServiceErr make() { return make("", (Err)null); }
     public new static UnknownServiceErr make(string msg) { return make(msg, (Err)null); }
     public new static UnknownServiceErr make(string msg, Err cause)
     {

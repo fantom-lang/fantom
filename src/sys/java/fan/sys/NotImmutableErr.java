@@ -18,7 +18,7 @@ public class NotImmutableErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static NotImmutableErr make() { return make((String)null, (Err)null); }
+  public static NotImmutableErr make() { return make("", (Err)null); }
   public static NotImmutableErr make(String msg) { return make(msg, (Err)null); }
   public static NotImmutableErr make(String msg, Err cause)
   {

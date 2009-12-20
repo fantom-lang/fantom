@@ -140,32 +140,32 @@ public class Log
 // Logging
 //////////////////////////////////////////////////////////////////////////
 
-  public final void error(String message) { error(message, (Err)null); }
-  public final void error(String message, Throwable e) { error(message, Err.make(e)); }
-  public final void error(String message, Err err)
+  public final void error(String msg) { error(msg, (Err)null); }
+  public final void error(String msg, Throwable e) { error(msg, Err.make(e)); }
+  public final void error(String msg, Err err)
   {
-    log(LogRecord.make(DateTime.now(), LogLevel.error, name, message, err));
+    log(LogRecord.make(DateTime.now(), LogLevel.error, name, msg, err));
   }
 
-  public final void warn(String message) { warn(message, (Err)null); }
-  public final void warn(String message, Throwable e) { warn(message, Err.make(e)); }
-  public final void warn(String message, Err err)
+  public final void warn(String msg) { warn(msg, (Err)null); }
+  public final void warn(String msg, Throwable e) { warn(msg, Err.make(e)); }
+  public final void warn(String msg, Err err)
   {
-    log(LogRecord.make(DateTime.now(), LogLevel.warn, name, message, err));
+    log(LogRecord.make(DateTime.now(), LogLevel.warn, name, msg, err));
   }
 
-  public final void info(String message) { info(message, (Err)null); }
-  public final void info(String message, Throwable e) { info(message, Err.make(e)); }
-  public final void info(String message, Err err)
+  public final void info(String msg) { info(msg, (Err)null); }
+  public final void info(String msg, Throwable e) { info(msg, Err.make(e)); }
+  public final void info(String msg, Err err)
   {
-    log(LogRecord.make(DateTime.now(), LogLevel.info, name, message, err));
+    log(LogRecord.make(DateTime.now(), LogLevel.info, name, msg, err));
   }
 
-  public final void debug(String message) { debug(message, (Err)null); }
-  public final void debug(String message, Throwable e) { debug(message, Err.make(e)); }
-  public final void debug(String message, Err err)
+  public final void debug(String msg) { debug(msg, (Err)null); }
+  public final void debug(String msg, Throwable e) { debug(msg, Err.make(e)); }
+  public final void debug(String msg, Err err)
   {
-    log(LogRecord.make(DateTime.now(), LogLevel.debug, name, message, err));
+    log(LogRecord.make(DateTime.now(), LogLevel.debug, name, msg, err));
   }
 
   public void log(LogRecord rec)

@@ -18,7 +18,7 @@ public class UnknownSymbolErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static UnknownSymbolErr make() { return make((String)null, (Err)null); }
+  public static UnknownSymbolErr make() { return make("", (Err)null); }
   public static UnknownSymbolErr make(String msg) { return make(msg, (Err)null); }
   public static UnknownSymbolErr make(String msg, Err cause)
   {

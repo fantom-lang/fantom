@@ -18,7 +18,7 @@ public class UnknownPodErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static UnknownPodErr make() { return make((String)null, (Err)null); }
+  public static UnknownPodErr make() { return make("", (Err)null); }
   public static UnknownPodErr make(String msg) { return make(msg, (Err)null); }
   public static UnknownPodErr make(String msg, Err cause)
   {

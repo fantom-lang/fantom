@@ -261,7 +261,7 @@ class LogTest : Test
     {
       verify(start.ticks <= rec.time.ticks && rec.time.ticks < start.ticks + 1sec.ticks)
       verifyEq(rec.level, level)
-      verifyEq(rec.message,  msg)
+      verifyEq(rec.msg,  msg)
       verifyEq(rec.err,  err)
     }
   }

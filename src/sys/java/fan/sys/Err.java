@@ -71,7 +71,7 @@ public class Err
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static Err make() { return make((String)null, (Err)null); }
+  public static Err make() { return make("", (Err)null); }
   public static Err make(String msg) { return make(msg, (Err)null); }
   public static Err make(String msg, Err cause)
   {
@@ -84,8 +84,9 @@ public class Err
   public static void make$(Err self, String msg) { make$(self, msg, null); }
   public static void make$(Err self, String msg, Err cause)
   {
-    self.message = msg;
-    self.cause   = cause;
+    if (msg == null) throw NullErr.make("msg is null").val;
+    self.msg = msg;
+    self.cause = cause;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -111,27 +112,21 @@ public class Err
     this.val = val;
     val.err = this;
     this.actual = actual;
-    this.message = actual.toString();
+    this.msg = actual.toString();
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public String message()
-  {
-    return message;
-  }
+// TODO
+public String message() { return msg; }
 
-  public Err cause()
-  {
-    return cause;
-  }
+  public String msg() { return msg; }
 
-  public Type type()
-  {
-    return Sys.ErrType;
-  }
+  public Err cause() { return cause; }
+
+  public Type type() { return Sys.ErrType; }
 
   public String toStr()
   {
@@ -140,10 +135,10 @@ public class Err
     try { qname = type().qname(); }
     catch (Throwable e) { qname = getClass().getName(); }
 
-    if (message == null)
+    if (msg == null || msg.length() == 0)
       return qname;
     else
-      return qname + ": " + message;
+      return qname + ": " + msg;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -317,7 +312,7 @@ public class Err
 //////////////////////////////////////////////////////////////////////////
 
   public final Val val;
-  String message;
+  String msg = "";
   Err cause;
   Throwable actual;
 

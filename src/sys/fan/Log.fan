@@ -105,22 +105,22 @@ const class Log
   **
   ** Generate a `LogLevel.error` log entry.
   **
-  Void error(Str message, Err? err := null)
+  Void error(Str msg, Err? err := null)
 
   **
   ** Generate a `LogLevel.warn` log entry.
   **
-  Void warn(Str message, Err? err := null)
+  Void warn(Str msg, Err? err := null)
 
   **
   ** Generate a `LogLevel.info` log entry.
   **
-  Void info(Str message, Err? err := null)
+  Void info(Str msg, Err? err := null)
 
   **
   ** Generate a `LogLevel.debug` log entry.
   **
-  Void debug(Str message, Err? err := null)
+  Void debug(Str msg, Err? err := null)
 
   **
   ** Publish a log entry.  The convenience methods `error`, `warn`

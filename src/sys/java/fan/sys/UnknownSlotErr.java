@@ -18,7 +18,7 @@ public class UnknownSlotErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static UnknownSlotErr make() { return make((String)null, (Err)null); }
+  public static UnknownSlotErr make() { return make("", (Err)null); }
   public static UnknownSlotErr make(String msg) { return make(msg, (Err)null); }
   public static UnknownSlotErr make(String msg, Err cause)
   {

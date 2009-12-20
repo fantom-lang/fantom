@@ -20,7 +20,7 @@ namespace Fan.Sys
   // Fantom Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static InterruptedErr make() { return make((string)null, (Err)null); }
+    public new static InterruptedErr make() { return make("", (Err)null); }
     public new static InterruptedErr make(string msg) { return make(msg, (Err)null); }
     public new static InterruptedErr make(string msg, Err cause)
     {

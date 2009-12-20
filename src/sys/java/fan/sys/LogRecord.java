@@ -32,7 +32,8 @@ public class LogRecord
     self.time    = time;
     self.level   = level;
     self.logName = logName;
-    self.message = msg;
+    self.msg     = msg;
+self.message = msg;
     self.err     = err;
   }
 
@@ -70,7 +71,9 @@ public class LogRecord
   public DateTime time;
   public LogLevel level;
   public String logName;
-  public String message;
+// TODO
+public String message;
+  public String msg;
   public Err err;
 
 }

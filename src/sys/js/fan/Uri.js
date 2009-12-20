@@ -58,7 +58,7 @@ fan.sys.Uri.decodeQuery = function(s)
   catch (err)
   {
     if (err instanceof fan.sys.ArgErr)
-      throw fan.sys.ArgErr.make("Invalid Uri query: `" + s + "`: " + err.message());
+      throw fan.sys.ArgErr.make("Invalid Uri query: `" + s + "`: " + err.msg());
 
     throw fan.sys.ArgErr.make("Invalid Uri query: `" + s + "`");
   }

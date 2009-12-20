@@ -108,7 +108,7 @@ fan.sys.LogRecord.make = function(time, level, logName, msg, err)
   self.m_time    = time;
   self.m_level   = level;
   self.m_logName = logName;
-  self.m_message = msg;
+  self.m_msg     = msg;
   self.m_err     = err;
   return self;
 }
@@ -120,7 +120,7 @@ fan.sys.LogRecord.make = function(time, level, logName, msg, err)
 fan.sys.LogRecord.prototype.toStr = function()
 {
   var ts = "todo"; //((DateTime)time).toLocale("hh:mm:ss DD-MMM-YY");
-  return '[' + ts + '] [' + this.m_level + '] [' + this.m_logName + '] ' + this.m_message;
+  return '[' + ts + '] [' + this.m_level + '] [' + this.m_logName + '] ' + this.m_msg;
 }
 
 fan.sys.LogRecord.prototype.print = function(out)

@@ -24,7 +24,7 @@ public class IOErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static IOErr make() { return make((String)null, (Err)null); }
+  public static IOErr make() { return make("", (Err)null); }
   public static IOErr make(String msg) { return make(msg, (Err)null); }
   public static IOErr make(String msg, Err cause)
   {

@@ -65,7 +65,7 @@ abstract class CompilerTest : Test
     verifyEq("size=${c.errors.size}", "size=${errors.size / 3}")
     for (i := 0; i<errors.size/3; ++i)
     {
-      verifyEq(c.errors[i].message,       errors[i*3+2])
+      verifyEq(c.errors[i].msg,           errors[i*3+2])
       verifyEq(c.errors[i].location.line, errors[i*3+0])
       verifyEq(c.errors[i].location.col,  errors[i*3+1])
     }

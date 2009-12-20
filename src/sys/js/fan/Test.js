@@ -151,11 +151,11 @@ fan.sys.Test.prototype.type = function()
 
 function TestException(msg)
 {
-  this.message = msg;
+  this.msg  = msg;
   this.name = "TestException";
 }
 
 TestException.prototype.toString = function()
 {
-  return this.name + ": " + this.message;
+  return this.name + ": " + this.msg;
 }

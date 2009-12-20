@@ -33,7 +33,7 @@ public final class Uri
     catch (ParseErr.Val e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Uri",  s, e.err.message()).val;
+      throw ParseErr.make("Uri",  s, e.err.msg()).val;
     }
     catch (Exception e)
     {
@@ -52,7 +52,7 @@ public final class Uri
     catch (ParseErr.Val e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Uri",  s, e.err.message()).val;
+      throw ParseErr.make("Uri",  s, e.err.msg()).val;
     }
     catch (Exception e)
     {
@@ -73,7 +73,7 @@ public final class Uri
     }
     catch (ArgErr.Val e)
     {
-      throw ArgErr.make("Invalid Uri query: `" + s + "`: " + e.err.message()).val;
+      throw ArgErr.make("Invalid Uri query: `" + s + "`: " + e.err.msg()).val;
     }
     catch (Exception e)
     {

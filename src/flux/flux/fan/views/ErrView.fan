@@ -16,9 +16,9 @@ using fwt
 **
 internal class ErrView : View
 {
-  new make(Str message, Err? cause := null)
+  new make(Str msg, Err? cause := null)
   {
-    this.message = message
+    this.msg = msg
     this.cause = cause
   }
 
@@ -34,7 +34,7 @@ internal class ErrView : View
       {
         image  = Flux.icon(`/x16/err.png`)
         font   = Font("bold 12pt Dialog")
-        text   = "ERROR: $message"
+        text   = "ERROR: $msg"
       },
       InsetPane
       {
@@ -56,6 +56,6 @@ internal class ErrView : View
     this.content = content
   }
 
-  const Str message
+  const Str msg
   const Err? cause
 }

@@ -35,7 +35,7 @@ namespace Fan.Sys
       catch (ParseErr.Val e)
       {
         if (!check) return null;
-        throw ParseErr.make("Uri",  s, e.m_err.message()).val;
+        throw ParseErr.make("Uri",  s, e.m_err.msg()).val;
       }
       catch (Exception)
       {
@@ -54,7 +54,7 @@ namespace Fan.Sys
       catch (ParseErr.Val e)
       {
         if (!check) return null;
-        throw ParseErr.make("Uri",  s, e.m_err.message()).val;
+        throw ParseErr.make("Uri",  s, e.m_err.msg()).val;
       }
       catch (Exception)
       {
@@ -75,7 +75,7 @@ namespace Fan.Sys
       }
       catch (ArgErr.Val e)
       {
-        throw ArgErr.make("Invalid Uri query: `" + s + "`: " + e.m_err.message()).val;
+        throw ArgErr.make("Invalid Uri query: `" + s + "`: " + e.m_err.msg()).val;
       }
       catch (Exception)
       {

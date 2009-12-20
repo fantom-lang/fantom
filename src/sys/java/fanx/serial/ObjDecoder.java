@@ -202,7 +202,7 @@ public class ObjDecoder
     }
     catch (ParseErr.Val e)
     {
-      throw ParseErr.make(e.err().message() + " [Line " + line + "]").val;
+      throw ParseErr.make(e.err().msg() + " [Line " + line + "]").val;
     }
     catch (Throwable e)
     {

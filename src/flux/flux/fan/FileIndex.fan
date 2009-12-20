@@ -59,11 +59,11 @@ internal const class FileIndex : Actor
 
   override Obj? receive(Obj? msg)
   {
-    // handle ready message
+    // handle ready msg
     if (msg === `ready`) return true
     if (msg === `rebuild`) { doRebuild; return null }
 
-    // handle find message
+    // handle find msg
     map := Actor.locals["fileIndexMap"] as Uri:FileItem
     if (map == null) throw Err("Must configure @indexDirs")
     return doFind(map, msg)

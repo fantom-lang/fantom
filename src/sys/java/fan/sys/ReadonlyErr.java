@@ -18,7 +18,7 @@ public class ReadonlyErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static ReadonlyErr make() { return make((String)null, (Err)null); }
+  public static ReadonlyErr make() { return make("", (Err)null); }
   public static ReadonlyErr make(String msg) { return make(msg, (Err)null); }
   public static ReadonlyErr make(String msg, Err cause)
   {

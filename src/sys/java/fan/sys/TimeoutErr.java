@@ -18,7 +18,7 @@ public class TimeoutErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static TimeoutErr make() { return make((String)null, (Err)null); }
+  public static TimeoutErr make() { return make("", (Err)null); }
   public static TimeoutErr make(String msg) { return make(msg, (Err)null); }
   public static TimeoutErr make(String msg, Err cause)
   {

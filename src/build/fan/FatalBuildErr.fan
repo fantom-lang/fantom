@@ -12,7 +12,7 @@
 **
 const class FatalBuildErr : Err
 {
-  new make(Str? msg := null, Err? cause := null)
+  new make(Str msg := "", Err? cause := null)
     : super(msg, cause)
   {
   }
