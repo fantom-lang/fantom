@@ -85,7 +85,7 @@ class ScriptTest : CompilerTest
     }
     catch (CompilerErr e)
     {
-      verifyEq(e.message, "Unknown type 'Intx'")
+      verifyEq(e.msg, "Unknown type 'Intx'")
       verifyEq(e.col, 20)
     }
   }

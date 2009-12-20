@@ -22,7 +22,7 @@ public class InterruptedErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static InterruptedErr make() { return make((String)null, (Err)null); }
+  public static InterruptedErr make() { return make("", (Err)null); }
   public static InterruptedErr make(String msg) { return make(msg, (Err)null); }
   public static InterruptedErr make(String msg, Err cause)
   {

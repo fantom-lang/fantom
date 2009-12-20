@@ -78,7 +78,7 @@ namespace Fan.Sys
   // Fantom Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public static Err make() { return make((string)null, (Err)null); }
+    public static Err make() { return make("", (Err)null); }
     public static Err make(string msg) { return make(msg, (Err)null); }
     public static Err make(string msg, Err cause)
     {
@@ -91,8 +91,9 @@ namespace Fan.Sys
     public static void make_(Err self, string msg) { make_(self, msg, null); }
     public static void make_(Err self, string msg, Err cause)
     {
-      self.m_message = msg;
-      self.m_cause   = cause;
+      if (msg == null) throw NullErr.make("msg is null").val;
+      self.m_msg = msg;
+      self.m_cause = cause;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -120,16 +121,16 @@ namespace Fan.Sys
       this.val = val;
       val.m_err = this;
       this.m_actual = actual;
-      this.m_message = actual.Message;
+      this.m_msg = actual.Message;
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public string message()
+    public string msg()
     {
-      return m_message;
+      return m_msg;
     }
 
     public Err cause()
@@ -166,10 +167,10 @@ namespace Fan.Sys
 
     public override string toStr()
     {
-      if (m_message == null)
+      if (m_msg == null || m_msg.Length == 0)
         return type().qname();
       else
-        return type().qname() + ": " + m_message;
+        return type().qname() + ": " + m_msg;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -305,7 +306,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public readonly Val val;
-    internal string m_message;
+    internal string m_msg;
     internal Err m_cause = null;
     internal Exception m_actual;
     internal string m_stack;       // only used for Method.invoke()

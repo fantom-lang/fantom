@@ -466,9 +466,9 @@ class FandocTest : Test
     verifyEq(parser.errors.size, errors.size/2)
     parser.errors.each |FandocErr e, Int i|
     {
-      verifyEq(e.file,    "Test")
-      verifyEq(e.line,    errors[i*2])
-      verifyEq(e.message, errors[i*2+1])
+      verifyEq(e.file, "Test")
+      verifyEq(e.line, errors[i*2])
+      verifyEq(e.msg,  errors[i*2+1])
     }
 
   }

@@ -18,7 +18,7 @@ public class NullErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static NullErr make() { return make((String)null, (Err)null); }
+  public static NullErr make() { return make("", (Err)null); }
   public static NullErr make(String msg) { return make(msg, (Err)null); }
   public static NullErr make(String msg, Err cause)
   {

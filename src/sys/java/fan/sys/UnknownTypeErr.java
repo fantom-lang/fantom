@@ -18,7 +18,7 @@ public class UnknownTypeErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static UnknownTypeErr make() { return make((String)null, (Err)null); }
+  public static UnknownTypeErr make() { return make("", (Err)null); }
   public static UnknownTypeErr make(String msg) { return make(msg, (Err)null); }
   public static UnknownTypeErr make(String msg, Err cause)
   {

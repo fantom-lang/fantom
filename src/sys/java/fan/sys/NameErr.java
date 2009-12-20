@@ -18,7 +18,7 @@ public class NameErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static NameErr make() { return make((String)null, (Err)null); }
+  public static NameErr make() { return make("", (Err)null); }
   public static NameErr make(String msg) { return make(msg, (Err)null); }
   public static NameErr make(String msg, Err cause)
   {

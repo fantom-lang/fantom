@@ -20,7 +20,7 @@ class Email
   **
   ** Unique identifier for message (auto-generated).
   **
-  Str messageId := "<${DateTime.now.ticks/1ms.ticks}.${Buf.random(4).toHex}@${IpAddress.local.hostname}>"
+  Str msgId := "<${DateTime.now.ticks/1ms.ticks}.${Buf.random(4).toHex}@${IpAddress.local.hostname}>"
 
   **
   ** From email address.
@@ -74,10 +74,7 @@ class Email
     if ((to == null || to.isEmpty) &&
         (cc == null || cc.isEmpty) &&
         (bcc == null || bcc.isEmpty)) throw Err("no recipients")
-    // TODO shouldn't need this once we have fail-safe nullable checking
-    if ((Obj?)messageId == null) throw NullErr("messageId is null")
     if ((Obj?)from == null) throw NullErr("from is null")
-    if ((Obj?)subject == null) throw NullErr("subject is null")
     if ((Obj?)body == null) throw NullErr("body is null")
     body.validate
   }
@@ -87,7 +84,7 @@ class Email
   **
   virtual Void encode(OutStream out)
   {
-    out.print("Message-ID: $messageId\r\n")
+    out.print("Message-ID: $msgId\r\n")
     out.print("From: $from\r\n")
     if (to != null && !to.isEmpty) out.print("To: " + to.join(",") + "\r\n")
     if (cc != null && !cc.isEmpty) out.print("Cc: " + cc.join(",") + "\r\n")

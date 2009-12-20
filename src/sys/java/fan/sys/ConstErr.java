@@ -18,7 +18,7 @@ public class ConstErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static ConstErr make() { return make((String)null, (Err)null); }
+  public static ConstErr make() { return make("", (Err)null); }
   public static ConstErr make(String msg) { return make(msg, (Err)null); }
   public static ConstErr make(String msg, Err cause)
   {

@@ -34,9 +34,13 @@ const class LogRecord
   const Str logName
 
   **
-  ** Severity level of event
+  ** Message text event
   **
-  const Str message
+  const Str msg
+
+** TODO: use `msg`
+@deprecated
+const Str message
 
   **
   ** Exception if applicable

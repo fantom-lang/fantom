@@ -19,7 +19,7 @@ public class CancelledErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static CancelledErr make() { return make((String)null, (Err)null); }
+  public static CancelledErr make() { return make("", (Err)null); }
   public static CancelledErr make(String msg) { return make(msg, (Err)null); }
   public static CancelledErr make(String msg, Err cause)
   {

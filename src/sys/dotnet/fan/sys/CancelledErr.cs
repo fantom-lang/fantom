@@ -18,7 +18,7 @@ namespace Fan.Sys
   // Fantom Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static CancelledErr make() { return make((string)null, (Err)null); }
+    public new static CancelledErr make() { return make("", (Err)null); }
     public new static CancelledErr make(string msg) { return make(msg, (Err)null); }
     public new static CancelledErr make(string msg, Err cause)
     {

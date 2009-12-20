@@ -32,7 +32,7 @@ public class ParseErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static ParseErr make() { return make((String)null, (Err)null); }
+  public static ParseErr make() { return make("", (Err)null); }
   public static ParseErr make(String msg) { return make(msg, (Err)null); }
   public static ParseErr make(String msg, Err cause)
   {

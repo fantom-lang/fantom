@@ -18,7 +18,7 @@ public class TestErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static TestErr make() { return make((String)null, (Err)null); }
+  public static TestErr make() { return make("", (Err)null); }
   public static TestErr make(String msg) { return make(msg, (Err)null); }
   public static TestErr make(String msg, Err cause)
   {

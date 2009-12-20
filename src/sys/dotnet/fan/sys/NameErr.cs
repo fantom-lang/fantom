@@ -21,7 +21,7 @@ namespace Fan.Sys
   // Fantom Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static NameErr make() { return make((string)null, (Err)null); }
+    public new static NameErr make() { return make("", (Err)null); }
     public new static NameErr make(string msg) { return make(msg, (Err)null); }
     public new static NameErr make(string msg, Err cause)
     {

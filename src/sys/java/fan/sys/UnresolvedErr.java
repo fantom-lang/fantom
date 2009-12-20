@@ -25,7 +25,7 @@ public class UnresolvedErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static UnresolvedErr make() { return make((String)null, (Err)null); }
+  public static UnresolvedErr make() { return make("", (Err)null); }
   public static UnresolvedErr make(String msg) { return make(msg, (Err)null); }
   public static UnresolvedErr make(String msg, Err cause)
   {

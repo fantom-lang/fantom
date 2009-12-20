@@ -18,7 +18,7 @@ public class CastErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static CastErr make() { return make((String)null, (Err)null); }
+  public static CastErr make() { return make("", (Err)null); }
   public static CastErr make(String msg) { return make(msg, (Err)null); }
   public static CastErr make(String msg, Err cause)
   {

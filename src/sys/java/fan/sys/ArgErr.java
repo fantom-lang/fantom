@@ -25,7 +25,7 @@ public class ArgErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static ArgErr make() { return make((String)null, (Err)null); }
+  public static ArgErr make() { return make("", (Err)null); }
   public static ArgErr make(String msg) { return make(msg, (Err)null); }
   public static ArgErr make(String msg, Err cause)
   {

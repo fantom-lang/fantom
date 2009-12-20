@@ -28,7 +28,7 @@ namespace Fan.Sys
   // Fantom Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static IndexErr make() { return make((string)null, (Err)null); }
+    public new static IndexErr make() { return make("", (Err)null); }
     public new static IndexErr make(string msg) { return make(msg, (Err)null); }
     public new static IndexErr make(string msg, Err cause)
     {

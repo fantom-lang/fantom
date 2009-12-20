@@ -40,7 +40,7 @@ internal class ViewTab : EdgePane
       doLoad(r, v, mode)
     }
     catch (ViewLoadErr err)
-      loadErr(ErrResource(uri), err.message, mode, err.cause)
+      loadErr(ErrResource(uri), err.msg, mode, err.cause)
     catch (Err err)
       loadErr(ErrResource(uri), "Cannot load view", mode, err)
   }

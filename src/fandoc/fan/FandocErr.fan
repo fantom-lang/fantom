@@ -21,7 +21,7 @@ const class FandocErr : Err
 
   override Str toStr()
   {
-    return "$message [$file:$line]"
+    return "$msg [$file:$line]"
   }
 
   const Str file

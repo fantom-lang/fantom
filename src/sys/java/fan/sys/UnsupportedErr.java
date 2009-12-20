@@ -18,7 +18,7 @@ public class UnsupportedErr
 // Fantom Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static UnsupportedErr make() { return make((String)null, (Err)null); }
+  public static UnsupportedErr make() { return make("", (Err)null); }
   public static UnsupportedErr make(String msg) { return make(msg, (Err)null); }
   public static UnsupportedErr make(String msg, Err cause)
   {

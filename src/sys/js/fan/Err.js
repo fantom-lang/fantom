@@ -16,10 +16,10 @@ fan.sys.Err = fan.sys.Obj.$extend(fan.sys.Obj);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Err.prototype.$ctor = function(message, cause)
+fan.sys.Err.prototype.$ctor = function(msg, cause)
 {
-  this.m_message = message;
-  this.m_cause   = cause;
+  this.m_msg   = msg;
+  this.m_cause = cause;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,12 +38,12 @@ fan.sys.Err.prototype.type = function()
 
 fan.sys.Err.prototype.toStr = function()
 {
-  return this.type() + ": " + this.m_message;
+  return this.type() + ": " + this.m_msg;
 }
 
-fan.sys.Err.prototype.message = function()
+fan.sys.Err.prototype.msg = function()
 {
-  return this.m_message;
+  return this.m_msg;
 }
 
 fan.sys.Err.prototype.trace = function()
@@ -53,7 +53,7 @@ fan.sys.Err.prototype.trace = function()
 
 fan.sys.Err.prototype.traceToStr = function()
 {
-  var s = this.type() + ": " + this.m_message;
+  var s = this.type() + ": " + this.m_msg;
   if (this.m_cause != null)
   {
     s += "\n  Caused by: " + this.m_cause.traceToStr();
@@ -77,7 +77,7 @@ fan.sys.Err.make = function(err, cause)
     //  SyntaxError
     //  TypeError
     //  URIError
-    return new fan.sys.Err(err.message);
+    return new fan.sys.Err(err.msg);
   }
   return new fan.sys.Err("" + err, cause);
 }

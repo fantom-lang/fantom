@@ -164,5 +164,5 @@ class CompilerSupport
 
 internal const class SuppressedErr : Err
 {
-  new make() : super(null, null) {}
+  new make() : super("", null) {}
 }

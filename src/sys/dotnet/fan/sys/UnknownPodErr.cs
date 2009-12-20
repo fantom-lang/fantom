@@ -21,7 +21,7 @@ namespace Fan.Sys
   // Fantom Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static UnknownPodErr make() { return make((string)null, (Err)null); }
+    public new static UnknownPodErr make() { return make("", (Err)null); }
     public new static UnknownPodErr make(string msg) { return make(msg, (Err)null); }
     public new static UnknownPodErr make(string msg, Err cause)
     {
