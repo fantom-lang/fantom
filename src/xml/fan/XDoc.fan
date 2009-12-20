@@ -62,9 +62,9 @@ class XDoc : XNode
   {
     set
     {
-      if (val.parent != null) throw ArgErr("Node already parented: $val")
-      val.parent = this
-      this.*root = val
+      if (it.parent != null) throw ArgErr("Node already parented: $it")
+      it.parent = this
+      this.*root = it
     }
   }
 

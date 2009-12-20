@@ -66,10 +66,12 @@ class MethodDef : SlotDef, CMethod
   **
   ** Return if getter/setter for FieldDef
   **
-  Bool isFieldAccessor()
-  {
-    return accessorFor != null
-  }
+  Bool isFieldAccessor() { accessorFor != null }
+
+  **
+  ** Return if setter for FieldDef
+  **
+  Bool isFieldSetter() { accessorFor != null && paramDefs.size == 1  }
 
   **
   ** Return if this is a once method

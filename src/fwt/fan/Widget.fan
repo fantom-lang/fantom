@@ -232,7 +232,7 @@ abstract class Widget
   Rect bounds
   {
     get { return Rect.makePosSize(pos, size) }
-    set { pos = val.pos; size = val.size }
+    set { pos = it.pos; size = it.size }
   }
 
   **

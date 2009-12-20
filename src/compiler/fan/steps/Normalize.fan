@@ -291,7 +291,7 @@ class Normalize : CompilerStep
   {
     loc := f.location
     lhs := FieldExpr(loc, SuperExpr(loc), f.concreteBase)
-    rhs := UnknownVarExpr(loc, null, "val")
+    rhs := UnknownVarExpr(loc, null, "it")
     code := f.get.code
     f.set.code.stmts.clear
     f.set.code.add(BinaryExpr.makeAssign(lhs, rhs).toStmt)

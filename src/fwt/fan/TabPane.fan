@@ -45,7 +45,7 @@ class TabPane : Widget
   @transient Tab? selected
   {
     get { i := selectedIndex; return i == null ? null : tabs[i] }
-    set { i := index(val); if (i != null) selectedIndex = i }
+    set { i := index(it); if (i != null) selectedIndex = i }
   }
 
   **

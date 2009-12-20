@@ -113,8 +113,8 @@ class RichText : TextWidget
       if (attached) throw Err("Cannot change model once widget is attached")
       old := this.*model
       if (old != null) old.onModify.remove(onModelModifyFunc)
-      if (val != null) val.onModify.add(onModelModifyFunc)
-      this.*model = val
+      if (it != null) it.onModify.add(onModelModifyFunc)
+      this.*model = it
     }
   }
 
@@ -138,7 +138,7 @@ class RichText : TextWidget
   override Str text
   {
     get { return model.text }
-    set { model.text = val }
+    set { model.text = it }
   }
 
 //////////////////////////////////////////////////////////////////////////

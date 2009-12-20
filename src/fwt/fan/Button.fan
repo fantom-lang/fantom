@@ -94,20 +94,21 @@ class Button : Widget
   {
     set
     {
+      newVal := it
       this.*command?.unregister(this)
-      this.*command = val
-      if (val != null)
+      this.*command = newVal
+      if (newVal != null)
       {
-        enabled  = val.enabled
-        text     = val.name
-        image    = val.icon
-        selected = val.selected
+        enabled  = newVal.enabled
+        text     = newVal.name
+        image    = newVal.icon
+        selected = newVal.selected
         onAction.add |Event e|
         {
-          val.selected = this.selected
-          val.invoke(e)
+          newVal.selected = this.selected
+          newVal.invoke(e)
         }
-        val.register(this)
+        newVal.register(this)
       }
     }
   }

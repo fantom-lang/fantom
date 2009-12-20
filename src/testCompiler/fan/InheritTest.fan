@@ -955,8 +955,8 @@ class InheritTest : CompilerTest
         // abstract method -> field
         override Int p0 := 101
         override Int p1 := 102 { get { p1_get++; return *p1 } }
-        override Int p2 := 103 { get { p2_get++; return *p2 } set { p2_set++; *p2 = val } }
-        override Int p3 := 104 { set { p3_set++; *p3 = val } }
+        override Int p2 := 103 { get { p2_get++; return *p2 } set { p2_set++; *p2 = it } }
+        override Int p3 := 104 { set { p3_set++; *p3 = it } }
         Int p1_get := 0
         Int p2_get := 0
         Int p2_set := 0

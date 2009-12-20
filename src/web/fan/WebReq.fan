@@ -89,10 +89,10 @@ abstract class WebReq
   {
     set
     {
-      if (!val.isDir) throw ArgErr("modBase must end in slash");
-      if (val.path.size > uri.path.size) throw ArgErr("modBase ($val) is not slice of uri ($uri)");
-      *modBase = val
-      modRelVal = uri[val.path.size..-1]
+      if (!it.isDir) throw ArgErr("modBase must end in slash");
+      if (it.path.size > uri.path.size) throw ArgErr("modBase ($it) is not slice of uri ($uri)");
+      *modBase = it
+      modRelVal = uri[it.path.size..-1]
     }
   }
 

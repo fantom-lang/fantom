@@ -127,7 +127,7 @@ class MiscTest : CompilerTest
      verifyEq(g.set.returnType.qname, "sys::Void")
      verifyEq(g.set.params.size, 1)
      verifyEq(g.set.params[0].paramType.qname, "sys::Int")
-     verifyEq(g.set.params[0].name, "val")
+     verifyEq(g.set.params[0].name, "it")
      verifyEq(g.set.code.stmts.size, 2)
      verifyEq(g.set.code.stmts[0].id, StmtId.expr)
      verifyEq(g.set.code.stmts[0]->expr->id, ExprId.assign)

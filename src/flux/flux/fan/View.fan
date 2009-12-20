@@ -41,7 +41,7 @@ abstract class View : ContentPane
   **
   CommandStack commandStack
   {
-    set { *commandStack = val; val.onModify.add {commandStackModified } }
+    set { *commandStack = it; it.onModify.add {commandStackModified } }
   }
   internal Void commandStackModified() { frame?.commands?.updateEdit }
 
@@ -68,9 +68,9 @@ abstract class View : ContentPane
   {
     set
     {
-      if (*dirty == val) return
-      *dirty = val
-      tab?.onDirty(this, val)
+      if (*dirty == it) return
+      *dirty = it
+      tab?.onDirty(this, it)
     }
   }
 

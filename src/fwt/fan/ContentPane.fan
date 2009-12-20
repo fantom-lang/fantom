@@ -23,7 +23,7 @@ class ContentPane : Pane
   **
   ** The content child widget.
   **
-  Widget? content { set { remove(*content); Widget.super.add(val); *content = val } }
+  Widget? content { set { remove(*content); Widget.super.add(it); *content = it } }
 
   **
   ** If this the first widget added, then assume it the content.

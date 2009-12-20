@@ -575,7 +575,7 @@ public class Parser : CompilerSupport
     set.flags = f.flags | FConst.Setter
     set.name  = f.name
     set.ret   = ns.voidType
-    set.params.add(ParamDef(loc, f.fieldType, "val"))
+    set.params.add(ParamDef(loc, f.fieldType, "it"))
     f.set = set
   }
 
@@ -599,7 +599,7 @@ public class Parser : CompilerSupport
     {
       f.flags |= FConst.Storage
       lhs := f.makeAccessorExpr(loc, false)
-      rhs := UnknownVarExpr(loc, null, "val")
+      rhs := UnknownVarExpr(loc, null, "it")
       f.set.code = Block(loc)
       f.set.code.add(BinaryExpr.makeAssign(lhs, rhs).toStmt)
       f.set.code.add(ReturnStmt(loc))

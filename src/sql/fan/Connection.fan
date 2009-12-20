@@ -98,7 +98,7 @@ internal class Connection
   Bool autoCommit
   {
     get { return getAutoCommit }
-    set { setAutoCommit(val) }
+    set { setAutoCommit(it) }
   }
   private native Bool getAutoCommit()
   private native Void setAutoCommit(Bool b)

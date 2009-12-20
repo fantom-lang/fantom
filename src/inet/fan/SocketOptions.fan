@@ -58,7 +58,7 @@ final class SocketOptions
   Int? inBufferSize
   {
     get { return (Int)wrap |->Obj| { return socket->getInBufferSize } }
-    set { wrap |->| { socket->setInBufferSize(val) } }
+    set { newVal := it; wrap |->| { socket->setInBufferSize(newVal) } }
   }
 
   **
@@ -69,7 +69,7 @@ final class SocketOptions
   Int? outBufferSize
   {
     get { return (Int)wrap |->Obj| { return socket->getOutBufferSize } }
-    set { wrap |->| { socket->setOutBufferSize(val) } }
+    set { newVal := it; wrap |->| { socket->setOutBufferSize(newVal) } }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ final class SocketOptions
   Bool broadcast
   {
     get { return (Bool)wrap |->Obj| { return socket->getBroadcast } }
-    set { wrap |->| { socket->setBroadcast(val) } }
+    set { newVal := it; wrap |->| { socket->setBroadcast(newVal) } }
   }
 
   **
@@ -91,7 +91,7 @@ final class SocketOptions
   Bool keepAlive
   {
     get { return (Bool)wrap |->Obj| { return socket->getKeepAlive } }
-    set { wrap |->| { socket->setKeepAlive(val) } }
+    set { newVal := it; wrap |->| { socket->setKeepAlive(newVal) } }
   }
 
   **
@@ -100,7 +100,7 @@ final class SocketOptions
   Int receiveBufferSize
   {
     get { return (Int)wrap |->Obj| { return socket->getReceiveBufferSize } }
-    set { wrap |->| { socket->setReceiveBufferSize(val) } }
+    set { newVal := it; wrap |->| { socket->setReceiveBufferSize(newVal) } }
   }
 
   **
@@ -109,7 +109,7 @@ final class SocketOptions
   Int sendBufferSize
   {
     get { return (Int)wrap |->Obj| { return socket->getSendBufferSize } }
-    set { wrap |->| { socket->setSendBufferSize(val) } }
+    set { newVal := it; wrap |->| { socket->setSendBufferSize(newVal) } }
   }
 
   **
@@ -119,7 +119,7 @@ final class SocketOptions
   Bool reuseAddress
   {
     get { return (Bool)wrap |->Obj| { return socket->getReuseAddress } }
-    set { wrap |->| { socket->setReuseAddress(val) } }
+    set { newVal := it; wrap |->| { socket->setReuseAddress(newVal) } }
   }
 
   **
@@ -129,7 +129,7 @@ final class SocketOptions
   Duration? linger
   {
     get { return (Duration?)wrap |->Obj?| { return socket->getLinger} }
-    set { wrap |->| { socket->setLinger(val) } }
+    set { newVal := it; wrap |->| { socket->setLinger(newVal) } }
   }
 
   **
@@ -140,7 +140,7 @@ final class SocketOptions
   Duration? receiveTimeout
   {
     get { return (Duration?)wrap |->Obj?| { return socket->getReceiveTimeout } }
-    set { wrap |->| { socket->setReceiveTimeout(val) } }
+    set { newVal := it; wrap |->| { socket->setReceiveTimeout(newVal) } }
   }
 
   **
@@ -150,7 +150,7 @@ final class SocketOptions
   Bool noDelay
   {
     get { return (Bool)wrap |->Obj| { return socket->getNoDelay } }
-    set { wrap |->| { socket->setNoDelay(val) } }
+    set { newVal := it; wrap |->| { socket->setNoDelay(newVal) } }
   }
 
   **
@@ -167,7 +167,7 @@ final class SocketOptions
   Int trafficClass
   {
     get { return (Int)wrap |->Obj| { return socket->getTrafficClass } }
-    set { wrap |->| { socket->setTrafficClass(val) } }
+    set { newVal := it; wrap |->| { socket->setTrafficClass(newVal) } }
   }
 
 //////////////////////////////////////////////////////////////////////////
