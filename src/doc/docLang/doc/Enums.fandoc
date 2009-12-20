@@ -37,7 +37,7 @@ instance of the range has the following characteristics:
   - is immutable (enums are implied const)
 
 The compiler automatically generates two helper slots:
-  - 'values' is a list of all the values in the
+  - 'vals' is a list of all the values in the
     range indexed by ordinal
   - 'fromStr' is used to resolve by name
 
@@ -54,7 +54,7 @@ the covers:
     static const Color blue  = make(1, "blue")
     static const Color green = make(2, "green")
 
-    static const Color[] values = [red, blue, green].toImmutable
+    static const Color[] vals = [red, blue, green].toImmutable
 
     static Color? fromStr(Str s) { ... }
 
