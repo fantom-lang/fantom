@@ -12,7 +12,7 @@
 **
 **    sysLogger := FileLogger(scriptDir + `logs/sys.log`)
 **    sysLogger.start
-**    Log.addHandler(&sysLogger.writeLogRecord)
+**    Log.addHandler |rec| { sysLogger.writeLogRec(rec) }
 **
 **
 const class FileLogger : ActorPool
@@ -42,7 +42,7 @@ const class FileLogger : ActorPool
   **
   ** Append string log message to file.
   **
-  Void writeLogRecord(LogRecord rec)
+  Void writeLogRec(LogRec rec)
   {
     actor.send(rec.toStr)
   }

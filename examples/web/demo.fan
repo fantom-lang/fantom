@@ -21,7 +21,7 @@ class Boot : AbstractMain
 
     // install sys log handler
     sysLogger := FileLogger { file = logDir + `sys.log` }
-    Log.addHandler |rec| { sysLogger.writeLogRecord(rec) }
+    Log.addHandler |rec| { sysLogger.writeLogRec(rec) }
 
     // check if doc directory exists
     docDir := Repo.boot.home + `doc/`

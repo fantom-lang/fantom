@@ -60,7 +60,7 @@ class CompilerLog
   **
   Void error(Str msg, Err? err := null)
   {
-    log(LogRecord(DateTime.now, LogLevel.error, "compiler", msg, err))
+    log(LogRec(DateTime.now, LogLevel.error, "compiler", msg, err))
   }
 
   **
@@ -68,7 +68,7 @@ class CompilerLog
   **
   Void warn(Str msg, Err? err := null)
   {
-    log(LogRecord(DateTime.now, LogLevel.warn, "compiler", msg, err))
+    log(LogRec(DateTime.now, LogLevel.warn, "compiler", msg, err))
   }
 
   **
@@ -76,7 +76,7 @@ class CompilerLog
   **
   Void info(Str msg, Err? err := null)
   {
-    log(LogRecord(DateTime.now, LogLevel.info, "compiler", msg, err))
+    log(LogRec(DateTime.now, LogLevel.info, "compiler", msg, err))
   }
 
   **
@@ -84,7 +84,7 @@ class CompilerLog
   **
   Void debug(Str msg, Err? err := null)
   {
-    log(LogRecord(DateTime.now, LogLevel.debug, "compiler", msg, err))
+    log(LogRec(DateTime.now, LogLevel.debug, "compiler", msg, err))
   }
 
   **
@@ -92,12 +92,12 @@ class CompilerLog
   ** if the specified level is greater than or equal to
   ** the configured level field.
   **
-  virtual Void log(LogRecord rec)
+  virtual Void log(LogRec rec)
   {
     if (rec.level < this.level) return
     if (rec.level >= LogLevel.warn) print(rec.level.toStr.capitalize).print(": ")
     print(Str.spaces(indentation*2))
-    printLine(rec.message)
+    printLine(rec.msg)
 
     if (rec.err != null)
     {

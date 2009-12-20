@@ -89,22 +89,22 @@ fan.sys.LogLevel.m_vals =
 ]
 
 /*************************************************************************
- * LogRecord
+ * LogRec
  ************************************************************************/
 
-fan.sys.LogRecord = fan.sys.Obj.$extend(fan.sys.Obj);
+fan.sys.LogRec = fan.sys.Obj.$extend(fan.sys.Obj);
 
-fan.sys.LogRecord.prototype.$ctor = function() {}
-fan.sys.LogRecord.prototype.type = function() { return fan.sys.Type.find("sys::LogRecord"); }
+fan.sys.LogRec.prototype.$ctor = function() {}
+fan.sys.LogRec.prototype.type = function() { return fan.sys.Type.find("sys::LogRec"); }
 
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.LogRecord.make = function(time, level, logName, msg, err)
+fan.sys.LogRec.make = function(time, level, logName, msg, err)
 {
   if (err === undefined) err = null;
-  var self = new fan.sys.LogRecord();
+  var self = new fan.sys.LogRec();
   self.m_time    = time;
   self.m_level   = level;
   self.m_logName = logName;
@@ -117,13 +117,13 @@ fan.sys.LogRecord.make = function(time, level, logName, msg, err)
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.LogRecord.prototype.toStr = function()
+fan.sys.LogRec.prototype.toStr = function()
 {
   var ts = "todo"; //((DateTime)time).toLocale("hh:mm:ss DD-MMM-YY");
   return '[' + ts + '] [' + this.m_level + '] [' + this.m_logName + '] ' + this.m_msg;
 }
 
-fan.sys.LogRecord.prototype.print = function(out)
+fan.sys.LogRec.prototype.print = function(out)
 {
   // TODO
   //if (out === undefined) out = ???
