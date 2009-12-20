@@ -77,7 +77,7 @@ The syntax for declaring a getter or setter is similar to C# properties:
     Int id := 0
     {
       get { echo("get id"); return *id }
-      set { echo("set id"); *id = val }
+      set { echo("set id"); *id = it }
     }
   }
 
@@ -86,8 +86,11 @@ value assignment (or after the field identifier if no initial value).
 You can declare both 'get' and 'set' - or if you just declare one, then
 the other is automatically generated.
 
-Inside the setter, the special local variable 'val' contains the new value
-of the field.
+Inside the setter, the 'it' keyword references the new value being
+assigned to the field.  If you need to use 'it' inside a closure, then
+assign to a local variable:
+
+  set { newVal := it; 3.times { echo(newVal) }; this.*f = newVal }
 
 The '*' storage operator is used to access the raw storage of the
 field (think about like C dereference operator).  The '*' operator is used
@@ -199,7 +202,7 @@ You can narrow the scope of the setter as follows:
   class Thing
   {
     Int id { protected set }
-    Str name { internal set { *name = val } }
+    Str name { internal set { *name = it } }
   }
 
 In the example above the fields 'id' and 'name' are publicly
@@ -256,7 +259,7 @@ override the getter and setter methods:
     override Int id
     {
       get { echo("NewThing.id get"); return super.id }
-      set { echo("NewThing.id set"); super.id = val }
+      set { echo("NewThing.id set"); super.id = it }
     }
   }
 
