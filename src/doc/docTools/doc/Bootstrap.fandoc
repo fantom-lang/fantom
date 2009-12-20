@@ -10,8 +10,9 @@ Overview [#overview]
 ********************
 The Fantom compiler is written in Fantom itself - which presents a chicken
 and the egg problem.  How do you compile the compiler without having
-a compiler?  To solve this problem, the bootstrap process requires
-two Fantom installations:
+a compiler?  The problem is further compounded by the fact that the build
+scripts themselves are written in Fantom.  To solve this problem, the
+bootstrap process requires two Fantom installations:
 
   1.  *rel*: known good Fantom installation (typically the last build)
   2.  *dev*: development environment to build (probably pulled from hg)
@@ -33,6 +34,36 @@ The "rel" directory always contains the last released build.  The "fan"
 directory contains our main development code branch.  We call our top
 level directory "dev", but for the purposes of this discussion "fan"
 is the development directory.
+
+Bootstrap Script [#script]
+**************************
+The easiest way to perform a bootstrap build from hg tip is to use the
+"bootstrap.fan" script:
+  1. Download latest released build from `http://fantom.org/`
+  2. Unzip that build to '{relHome}'
+  3. Ensure 'hg' is installed in your path (see [Mercurial]`http://mercurial.selenic.com/`)
+  4. Verify 'java_home' env var points to your JDK installation
+  5. Execute '{relHome}/bin/fan {relHome}/adm/bootstrap.fan'
+  6. Go grab a cup of coffee
+
+NOTE: you need JDK 1.6 to recompile Fantom.  However only 1.5 is required
+to run Fantom.
+
+By default devHome is assumed to be a peer to relHome called "fan". If
+you'd like to use another directory then specify the "-devHome" option.
+
+This script will perform a number of steps:
+  1. Verifies your environment
+  2. Clones hg tip or if hg repo exists performs a pull/update
+  3. Configures your etc files
+  4. Rebuilds your devHome environment from scratch
+
+NOTE: the bootstrap script does *not* update your [substitutes]`#substitutes`.
+You must still do that by hand if you plan on rebuilding individual bootstrap
+pods yourself.
+
+The rest of this chapter covers all the internal details required to
+fully understand bootstrap building.
 
 Dev Home [#devHome]
 *******************
