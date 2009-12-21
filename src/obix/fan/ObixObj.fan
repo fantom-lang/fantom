@@ -452,7 +452,7 @@ class ObixObj
 
   internal static const Uri[] noUris := Uri[,]
   internal static const ObixObj[] noChildren := ObixObj[,]
-  internal static const Int xmlEsc := OutStream.xmlEscNewlines | OutStream.xmlEscQuotes
+  internal static const Int xmlEsc := OutStream.xmlEscNewlines.or(OutStream.xmlEscQuotes)
 
   private [Str:ObixObj]? kidsByName // map of children by name
   private ObixObj? kidsHead         // children linked list

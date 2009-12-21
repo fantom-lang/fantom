@@ -326,9 +326,9 @@ class ParserTest : CompilerTest
     f := (FieldDef)t.fieldDefs[0]
     verifyEq(f.name, "a")
     verifyEq(f.fieldType.qname, "sys::Int")
-    verifyEq(f.flags, FConst.Public|FConst.Storage)
-    verifyEq(f.get.flags, FConst.Public|FConst.Synthetic|FConst.Getter)
-    verifyEq(f.set.flags, FConst.Public|FConst.Synthetic|FConst.Setter)
+    verifyEq(f.flags, FConst.Public.or(FConst.Storage))
+    verifyEq(f.get.flags, FConst.Public.or(FConst.Synthetic).or(FConst.Getter))
+    verifyEq(f.set.flags, FConst.Public.or(FConst.Synthetic).or(FConst.Setter))
     verify(f.init == null)
     verify(!f.hasGet)
     verify(!f.hasSet)
@@ -337,9 +337,9 @@ class ParserTest : CompilerTest
     f = (FieldDef)t.fieldDefs[1]
     verifyEq(f.name, "b")
     verifyEq(f.fieldType.qname, "sys::Int")
-    verifyEq(f.flags, FConst.Private|FConst.Storage)
-    verifyEq(f.get.flags, FConst.Private|FConst.Synthetic|FConst.Getter)
-    verifyEq(f.set.flags, FConst.Private|FConst.Synthetic|FConst.Setter)
+    verifyEq(f.flags, FConst.Private.or(FConst.Storage))
+    verifyEq(f.get.flags, FConst.Private.or(FConst.Synthetic).or(FConst.Getter))
+    verifyEq(f.set.flags, FConst.Private.or(FConst.Synthetic).or(FConst.Setter))
     verify(f.init != null)
     verify(!f.hasGet)
     verify(!f.hasSet)
@@ -348,9 +348,9 @@ class ParserTest : CompilerTest
     f = (FieldDef)t.fieldDefs[2]
     verifyEq(f.name, "c")
     verifyEq(f.fieldType.qname, "sys::Str")
-    verifyEq(f.flags, FConst.Public|FConst.Static|FConst.Storage)
-    verifyEq(f.get.flags, FConst.Public|FConst.Static|FConst.Synthetic|FConst.Getter)
-    verifyEq(f.set.flags, FConst.Private|FConst.Static|FConst.Synthetic|FConst.Setter)
+    verifyEq(f.flags, FConst.Public.or(FConst.Static).or(FConst.Storage))
+    verifyEq(f.get.flags, FConst.Public.or(FConst.Static).or(FConst.Synthetic).or(FConst.Getter))
+    verifyEq(f.set.flags, FConst.Private.or(FConst.Static).or(FConst.Synthetic).or(FConst.Setter))
     verify(f.init == null)
     verify(!f.hasGet)
     verify(!f.hasSet)
@@ -360,8 +360,8 @@ class ParserTest : CompilerTest
     verifyEq(f.name, "d")
     verifyEq(f.fieldType.qname, "sys::Int")
     verifyEq(f.flags, FConst.Public)
-    verifyEq(f.get.flags, FConst.Public|FConst.Getter)
-    verifyEq(f.set.flags, FConst.Public|FConst.Setter)
+    verifyEq(f.get.flags, FConst.Public.or(FConst.Getter))
+    verifyEq(f.set.flags, FConst.Public.or(FConst.Setter))
     verify(f.init != null)
     verify(f.hasGet)
     verify(f.hasSet)
@@ -370,9 +370,9 @@ class ParserTest : CompilerTest
     f = (FieldDef)t.fieldDefs[4]
     verifyEq(f.name, "e")
     verifyEq(f.fieldType.qname, "sys::Bool")
-    verifyEq(f.flags, FConst.Public|FConst.Abstract|FConst.Virtual)
-    verifyEq(f.get.flags, FConst.Public|FConst.Abstract|FConst.Virtual|FConst.Synthetic|FConst.Getter)
-    verifyEq(f.set.flags, FConst.Public|FConst.Abstract|FConst.Virtual|FConst.Synthetic|FConst.Setter)
+    verifyEq(f.flags, FConst.Public.or(FConst.Abstract).or(FConst.Virtual))
+    verifyEq(f.get.flags, FConst.Public.or(FConst.Abstract).or(FConst.Virtual).or(FConst.Synthetic).or(FConst.Getter))
+    verifyEq(f.set.flags, FConst.Public.or(FConst.Abstract).or(FConst.Virtual).or(FConst.Synthetic).or(FConst.Setter))
     verify(f.init == null)
     verify(!f.hasGet)
     verify(!f.hasSet)
@@ -380,15 +380,15 @@ class ParserTest : CompilerTest
     // Bool f := true
     f = (FieldDef)t.fieldDefs[5]
     verifyEq(f.name, "f")
-    verifyEq(f.flags, FConst.Public|FConst.Storage)
+    verifyEq(f.flags, FConst.Public.or(FConst.Storage))
     verify(f.init != null)
 
     // readonly Int g := 5 { get {} }
     f = (FieldDef)t.fieldDefs[6]
     verifyEq(f.name, "g")
-    verifyEq(f.flags, FConst.Public|FConst.Storage)
-    verifyEq(f.get.flags, FConst.Public|FConst.Getter)
-    verifyEq(f.set.flags, FConst.Private|FConst.Synthetic|FConst.Setter)
+    verifyEq(f.flags, FConst.Public.or(FConst.Storage))
+    verifyEq(f.get.flags, FConst.Public.or(FConst.Getter))
+    verifyEq(f.set.flags, FConst.Private.or(FConst.Synthetic).or(FConst.Setter))
     verify(f.init != null)
     verify(f.hasGet)
     verify(!f.hasSet)
@@ -435,7 +435,7 @@ class ParserTest : CompilerTest
     n := 0
     m := (MethodDef)t.slotDefs[n++]
     verifyEq(m.name, "make")
-    verifyEq(m.flags, FConst.Public|FConst.Ctor)
+    verifyEq(m.flags, FConst.Public.or(FConst.Ctor))
     verifyEq(m.ret.qname, "sys::Void")
     verifyEq(m.paramDefs.size, 0)
     verifyEq(m.ctorChain, null)
@@ -468,7 +468,7 @@ class ParserTest : CompilerTest
     // static Void b(Int x)
     m = (MethodDef)t.slotDefs[n++]
     verifyEq(m.name, "b")
-    verifyEq(m.flags, FConst.Public|FConst.Static)
+    verifyEq(m.flags, FConst.Public.or(FConst.Static))
     verifyEq(m.ret.qname, "sys::Void")
     verifyEq(m.params.size, 1)
     verifyParam(m.paramDefs[0], "sys::Int", "x")
@@ -485,7 +485,7 @@ class ParserTest : CompilerTest
     // static {}
     m = (MethodDef)t.slotDefs[n++]
     verifyEq(m.name, "static\$init")
-    verifyEq(m.flags, FConst.Private|FConst.Static|FConst.Synthetic)
+    verifyEq(m.flags, FConst.Private.or(FConst.Static).or(FConst.Synthetic))
     verifyEq(m.ret.qname, "sys::Void")
     verifyEq(m.params.size, 0)
   }

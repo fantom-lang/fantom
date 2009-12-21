@@ -116,7 +116,7 @@ const class XAttr
     out.writeXml(name)
        .writeChar('=')
        .writeChar('\'')
-       .writeXml(val, OutStream.xmlEscQuotes|OutStream.xmlEscNewlines)
+       .writeXml(val, OutStream.xmlEscQuotes.or(OutStream.xmlEscNewlines))
        .writeChar('\'')
   }
 

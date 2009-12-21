@@ -88,11 +88,6 @@ const final class Int : Num
   Int negate()
 
   **
-  ** Bitwise inverse of this.  Shortcut is  ~a.
-  **
-  Int inverse()
-
-  **
   ** Multiply this with b.  Shortcut is a*b.
   **
   Int mult(Int b)
@@ -118,31 +113,6 @@ const final class Int : Num
   Int minus(Int b)
 
   **
-  ** Bitwise-and of this and b.  Shortcut is a&b.
-  **
-  Int and(Int b)
-
-  **
-  ** Bitwise-or of this and b.  Shortcut is a|b.
-  **
-  Int or(Int b)
-
-  **
-  ** Bitwise-exclusive-or of this and b.  Shortcut is a^b.
-  **
-  Int xor(Int b)
-
-  **
-  ** Bitwise left shift of this by b.  Shortcut is a<<b.
-  **
-  Int lshift(Int b)
-
-  **
-  ** Bitwise right shift of this by b.  Shortcut is a>>b.
-  **
-  Int rshift(Int b)
-
-  **
   ** Increment by one.  Shortcut is ++a or a++.
   **
   Int increment()
@@ -151,6 +121,45 @@ const final class Int : Num
   ** Decrement by one.  Shortcut is --a or a--.
   **
   Int decrement()
+
+//////////////////////////////////////////////////////////////////////////
+// Bitwise
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Bitwise not/inverse of this.
+  **
+  Int not()
+
+  **
+  ** Bitwise-and of this and b.
+  **
+  Int and(Int b)
+
+  **
+  ** Bitwise-or of this and b.
+  **
+  Int or(Int b)
+
+  **
+  ** Bitwise-exclusive-or of this and b.
+  **
+  Int xor(Int b)
+
+  **
+  ** Bitwise left shift of this by b.
+  **
+  Int shiftl(Int b)
+
+  **
+  ** Bitwise right shift of this by b.
+  **
+  Int shiftr(Int b)
+
+// TODO
+@deprecated Int lshift(Int b)
+@deprecated Int rshift(Int b)
+@deprecated Int inverse()
 
 /////////////////////////////////////////////////////////////////////////
 // Math

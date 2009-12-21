@@ -108,7 +108,7 @@ const class Font
   **
   override Int hash()
   {
-    hash := name.hash ^ size.hash
+    hash := name.hash.xor(size)
     if (bold) hash *= 73
     if (italic) hash *= 19
     return hash

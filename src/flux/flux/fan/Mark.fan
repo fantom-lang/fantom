@@ -57,8 +57,8 @@ const class Mark
   override Int hash()
   {
     hash := uri.hash
-    if (line != null) hash ^= line << 21
-    if (col != null)  hash ^= col << 11
+    if (line != null) hash = hash.xor(line.shiftl(21))
+    if (col != null)  hash = hash.xor(col.shiftl(11))
     return hash
   }
 

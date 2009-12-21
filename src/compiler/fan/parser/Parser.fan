@@ -1366,7 +1366,12 @@ public class Parser : CompilerSupport
   {
     expr := bitAndExpr
     while (curt === Token.caret || curt === Token.pipe)
+    {
+// TODO
+if (curt === Token.caret) warn("Replace bitwise ^ with 'xor' method call", cur)
+if (curt === Token.pipe)  warn("Replace bitwise | with 'or' method call", cur)
       expr = ShortcutExpr.makeBinary(expr, consume.kind, bitAndExpr)
+    }
     return expr
   }
 
@@ -1378,7 +1383,10 @@ public class Parser : CompilerSupport
   {
     expr := shiftExpr
     while (curt === Token.amp)
+    {
+if (curt === Token.caret) warn("Replace bitwise & with 'and' method call", cur)
       expr = ShortcutExpr.makeBinary(expr, consume.kind, shiftExpr)
+    }
     return expr
   }
 
@@ -1390,7 +1398,11 @@ public class Parser : CompilerSupport
   {
     expr := additiveExpr
     while (curt === Token.lshift || curt === Token.rshift)
+    {
+if (curt === Token.lshift) warn("Replace bitwise << with 'shiftl' method call", cur)
+if (curt === Token.rshift) warn("Replace bitwise >> with 'shiftr' method call", cur)
       expr = ShortcutExpr.makeBinary(expr, consume.kind, additiveExpr)
+    }
     return expr
   }
 
@@ -1482,6 +1494,7 @@ public class Parser : CompilerSupport
 
     if (tokt === Token.tilde || tokt === Token.minus)
     {
+if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
       consume
       return ShortcutExpr.makeUnary(loc, tokt, parenExpr)
     }

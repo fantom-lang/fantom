@@ -94,7 +94,10 @@ const class Color : Brush
         case 5: r=v; g=p; b=q
       }
     }
-    return make((r * 255f).toInt << 16 | (g * 255f).toInt << 8 | (b * 255f).toInt, false)
+    return make((r * 255f).toInt.shiftl(16)
+                .or((g * 255f).toInt.shiftl(8))
+                .or((b * 255f).toInt),
+                false)
   }
 
   **
@@ -120,10 +123,10 @@ const class Color : Brush
       switch (sub.size)
       {
         case 3:
-          r := (hex >> 8) & 0xf; r = (r << 4) | r
-          g := (hex >> 4) & 0xf; g = (g << 4) | g
-          b := (hex >> 0) & 0xf; b = (b << 4) | b
-          return make((r << 16) | (g << 8) | b)
+          r := hex.shiftr(8).and(0xf); r = r.shiftl(4).or(r)
+          g := hex.shiftr(4).and(0xf); g = g.shiftl(4).or(g)
+          b := hex.shiftr(0).and(0xf); b = b.shiftl(4).or(b)
+          return make(r.shiftl(16).or(g.shiftl(8)).or(b))
         case 6:
           return make(hex, false)
         case 8:
@@ -149,28 +152,28 @@ const class Color : Brush
   **
   ** Get the RGB bitmask without the alpha bits.
   **
-  Int rgb() { argb & 0x00ff_ffff }
+  Int rgb() { argb.and(0x00ff_ffff) }
 
   **
   ** The alpha component from 0 to 255, where 255 is opaque
   ** and 0 is transparent.
   **
-  Int a() { (argb >> 24) & 0xff }
+  Int a() { argb.shiftr(24).and(0xff) }
 
   **
   ** The red component from 0 to 255.
   **
-  Int r() { (argb >> 16) & 0xff }
+  Int r() { argb.shiftr(16).and(0xff) }
 
   **
   ** The green component from 0 to 255.
   **
-  Int g() { (argb >> 8) & 0xff }
+  Int g() { argb.shiftr(8).and(0xff) }
 
   **
   ** The blue component from 0 to 255.
   **
-  Int b() { argb & 0xff }
+  Int b() { argb.and(0xff) }
 
   **
   ** Hue as a float between 0.0 and 360.0 of the HSV model (hue,

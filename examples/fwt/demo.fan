@@ -882,7 +882,7 @@ class GraphicsDemo : Canvas
     g.brush = Color("#ccc")
     12.times |Int by| {
       24.times |Int bx| {
-        if (bx.isEven ^ by.isEven)
+        if (bx.isEven.xor(by.isEven))
           g.fillRect(bx*10, by*10, 10, 10)
       }
     }

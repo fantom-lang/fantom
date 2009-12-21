@@ -1310,7 +1310,7 @@ class ListTest : Test
     x[0] += x[0]
     verifyEq(x[0], 8)
     x.add(0xabcd)
-    x[1] <<= 4
+    x[1] = x[1].shiftl(4)
     verifyEq(x, [8, 0xabcd0])
 
     f := [3f, 2f]

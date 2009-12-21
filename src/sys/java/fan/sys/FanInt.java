@@ -107,11 +107,6 @@ public final class FanInt
     return -self;
   }
 
-  public static long inverse(long self)
-  {
-    return ~self;
-  }
-
   public static long mult(long self, long x)
   {
     return self * x;
@@ -137,6 +132,30 @@ public final class FanInt
     return self - x;
   }
 
+  public static long increment(long self)
+  {
+    return self+1;
+  }
+
+  public static long decrement(long self)
+  {
+    return self-1;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Bitwise
+//////////////////////////////////////////////////////////////////////////
+
+// TODO
+public static long inverse(long self) { return ~self; }
+public static long lshift(long self, long x) { return self << x; }
+public static long rshift(long self, long x) { return self >> x; }
+
+  public static long not(long self)
+  {
+    return ~self;
+  }
+
   public static long and(long self, long x)
   {
     return self & x;
@@ -152,24 +171,14 @@ public final class FanInt
     return self ^ x;
   }
 
-  public static long lshift(long self, long x)
+  public static long shiftl(long self, long x)
   {
     return self << x;
   }
 
-  public static long rshift(long self, long x)
+  public static long shiftr(long self, long x)
   {
     return self >> x;
-  }
-
-  public static long increment(long self)
-  {
-    return self+1;
-  }
-
-  public static long decrement(long self)
-  {
-    return self-1;
   }
 
 //////////////////////////////////////////////////////////////////////////

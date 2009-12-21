@@ -790,7 +790,7 @@ class SerA
 
   override Int hash()
   {
-    return i.hash ^ f.hash
+    return i.hash.xor(f.hash)
   }
 
   override Bool equals(Obj? obj)
@@ -919,7 +919,7 @@ class SerSimple
   }
   new make(Int a, Int b) { this.a = a; this.b = b }
   override Str toStr() { return "$a,$b" }
-  override Int hash() { return a ^ b }
+  override Int hash() { return a.xor(b) }
   override Bool equals(Obj? obj)
   {
     if (obj isnot SerSimple) return false
