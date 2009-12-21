@@ -114,7 +114,7 @@ class Bootstrap : AbstractMain
     if (relHome == devHome)
       fatal("relHome == devHome")
 
-    if (!jdkHome.exists || !jdkHome.plus(`jre/lib/rt.jar`).exists)
+    if (jdkHome == null || !jdkHome.exists)
       fatal("check that 'java_home' env var points to your JDK")
   }
 
