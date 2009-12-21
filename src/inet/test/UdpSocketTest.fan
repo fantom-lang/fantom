@@ -19,9 +19,9 @@ class UdpSocketTest : Test
     verifyEq(s.isBound, false)
     verifyEq(s.isConnected, false)
     verifyEq(s.isClosed, false)
-    verifyEq(s.localAddress, null)
+    verifyEq(s.localAddr, null)
     verifyEq(s.localPort, null)
-    verifyEq(s.remoteAddress, null)
+    verifyEq(s.remoteAddr, null)
     verifyEq(s.remotePort, null)
     s.close
   }
@@ -33,12 +33,12 @@ class UdpSocketTest : Test
   Void testBind()
   {
     verifyBind(null, null)
-    verifyBind(IpAddress.local, null)
+    verifyBind(IpAddr.local, null)
     verifyBind(null, 2072)
-    verifyBind(IpAddress.local, 2073)
+    verifyBind(IpAddr.local, 2073)
   }
 
-  Void verifyBind(IpAddress? addr, Int? port)
+  Void verifyBind(IpAddr? addr, Int? port)
   {
     s := UdpSocket.make
     verifySame(s.bind(addr, port), s)
@@ -50,9 +50,9 @@ class UdpSocketTest : Test
 
     // local address
     if (addr == null)
-      verify(s.localAddress != null)
+      verify(s.localAddr != null)
     else
-      verifyEq(s.localAddress, addr)
+      verifyEq(s.localAddr, addr)
 
     // local port
     if (port == null)
@@ -61,7 +61,7 @@ class UdpSocketTest : Test
       verifyEq(s.localPort, port)
 
     // null remote
-    verifyEq(s.remoteAddress, null)
+    verifyEq(s.remoteAddr, null)
     verifyEq(s.remotePort, null)
 
     // duplicate port
@@ -89,14 +89,14 @@ class UdpSocketTest : Test
 
     // connect
     c := UdpSocket()
-    c.connect(IpAddress.local, s.localPort)
+    c.connect(IpAddr.local, s.localPort)
     verifyEq(c.isBound, true)
     verifyEq(c.isConnected, true)
-    verifyEq(c.remoteAddress, IpAddress.local)
+    verifyEq(c.remoteAddr, IpAddr.local)
     verifyEq(c.remotePort, s.localPort)
 
     // verify addr/port must be null
-    verifyErr(ArgErr#) { c.send(UdpPacket(IpAddress.local, null, Buf.make)) }
+    verifyErr(ArgErr#) { c.send(UdpPacket(IpAddr.local, null, Buf.make)) }
     verifyErr(ArgErr#) { c.send(UdpPacket(null, s.localPort, Buf.make)) }
 
     // send "alpha"
@@ -123,38 +123,38 @@ class UdpSocketTest : Test
     // disconnect
     c.disconnect
     verifyEq(c.isConnected, false)
-    verifyEq(c.remoteAddress, null)
+    verifyEq(c.remoteAddr, null)
     verifyEq(c.remotePort, null)
 
     // verify addr/port cannot be null
-    verifyErr(ArgErr#) { c.send(UdpPacket(IpAddress.local, null, Buf.make)) }
+    verifyErr(ArgErr#) { c.send(UdpPacket(IpAddr.local, null, Buf.make)) }
     verifyErr(ArgErr#) { c.send(UdpPacket(null, s.localPort, Buf.make)) }
 
     // send "abc"
-    c.send(UdpPacket(IpAddress.local, s.localPort, (Buf)buf.clear.print("abc")->flip))
+    c.send(UdpPacket(IpAddr.local, s.localPort, (Buf)buf.clear.print("abc")->flip))
 
     // receive in Buf.pos=2
     buf.clear.print("xy")
     verifyEq(buf.pos, 2)
     packet = c.receive(UdpPacket(null, null, buf))
-    verifyEq(packet.address, IpAddress.local)
+    verifyEq(packet.addr, IpAddr.local)
     verifyEq(packet.port, s.localPort)
     verifyEq(packet.data.flip.readAllStr, "xyabc.")
 
     // send "ABCDEFG"
-    c.send(UdpPacket(IpAddress.local, s.localPort, (Buf)buf.clear.print("ABCDEFG")->flip))
+    c.send(UdpPacket(IpAddr.local, s.localPort, (Buf)buf.clear.print("ABCDEFG")->flip))
 
     // receive with capacity too small and validate truncating
     buf.clear.capacity = 3
     verifyEq(buf.pos, 0)
     verifyEq(buf.capacity, 3)
     c.receive(packet)
-    verifyEq(packet.address, IpAddress.local)
+    verifyEq(packet.addr, IpAddr.local)
     verifyEq(packet.port, s.localPort)
     verifyEq(packet.data.flip.readAllStr, "ABC")
 
     // send "0123456789"
-    c.send(UdpPacket(IpAddress.local, s.localPort, (Buf)buf.clear.print("0123456789")->flip))
+    c.send(UdpPacket(IpAddr.local, s.localPort, (Buf)buf.clear.print("0123456789")->flip))
 
     // receive with capacity too small and pos=2 to validate truncating
     buf.clear.capacity = 5
@@ -162,14 +162,14 @@ class UdpSocketTest : Test
     verifyEq(buf.pos, 2)
     verifyEq(buf.capacity, 5)
     c.receive(packet)
-    verifyEq(packet.address, IpAddress.local)
+    verifyEq(packet.addr, IpAddr.local)
     verifyEq(packet.port, s.localPort)
     verifyEq(packet.data.flip.readAllStr, "qr012")
 
     // reconnect
-    c.connect(IpAddress.local, s.localPort)
+    c.connect(IpAddr.local, s.localPort)
     verifyEq(c.isConnected, true)
-    verifyEq(c.remoteAddress, IpAddress.local)
+    verifyEq(c.remoteAddr, IpAddr.local)
     verifyEq(c.remotePort, s.localPort)
 
     // send kill and join
@@ -219,9 +219,9 @@ class UdpSocketTest : Test
     so.sendBufferSize = send/2
     verifyEq(so.sendBufferSize, send/2)
 
-    reuse := so.reuseAddress
-    so.reuseAddress = !reuse
-    verifyEq(so.reuseAddress, !reuse)
+    reuse := so.reuseAddr
+    so.reuseAddr = !reuse
+    verifyEq(so.reuseAddr, !reuse)
 
     so.receiveTimeout = 100ms
     verifyEq(so.receiveTimeout, 100ms)
@@ -252,7 +252,7 @@ class UdpSocketTest : Test
     verifyEq(xo.broadcast, so.broadcast)
     verifyEq(xo.receiveBufferSize, so.receiveBufferSize)
     verifyEq(xo.sendBufferSize, so.sendBufferSize)
-    verifyEq(xo.reuseAddress, so.reuseAddress)
+    verifyEq(xo.reuseAddr, so.reuseAddr)
     verifyEq(xo.receiveTimeout, so.receiveTimeout)
 
     s.close
@@ -269,13 +269,13 @@ class UdpSocketTest : Test
     echo("bound      = $s.isBound")
     echo("connected  = $s.isConnected")
     echo("closed     = $s.isClosed")
-    echo("localAddr  = $s.localAddress")
+    echo("localAddr  = $s.localAddr")
     echo("localPort  = $s.localPort")
-    echo("remoteAddr = $s.remoteAddress")
+    echo("remoteAddr = $s.remoteAddr")
     echo("remotePort = $s.remotePort")
     echo("receive    = $s.options.receiveBufferSize")
     echo("send       = $s.options.sendBufferSize")
-    echo("reuseAddr  = $s.options.reuseAddress")
+    echo("reuseAddr  = $s.options.reuseAddr")
     echo("timeout    = $s.options.receiveTimeout")
     echo("trafficCls = 0x$s.options.trafficClass.toHex")
   }

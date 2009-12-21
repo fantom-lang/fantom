@@ -7,10 +7,10 @@
 //
 
 **
-** IpAddress models both IPv4 and IPv6 numeric addresses as well
+** IpAddr models both IPv4 and IPv6 numeric addresses as well
 ** as provide DNS hostname resolution.
 **
-final class IpAddress
+final class IpAddr
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -25,36 +25,36 @@ final class IpAddress
   ** be resolved then UnknownHostErr is thrown.
   **
   ** Examples:
-  **   IpAddress("169.200.3.103")
-  **   IpAddress("1080:0:0:0:8:800:200C:417A")
-  **   IpAddress("1080::8:800:200C:417A")
-  **   IpAddress("::ffff:129.144.52.38")
-  **   IpAddress("somehost")
-  **   IpAddress("www.acme.com")
+  **   IpAddr("169.200.3.103")
+  **   IpAddr("1080:0:0:0:8:800:200C:417A")
+  **   IpAddr("1080::8:800:200C:417A")
+  **   IpAddr("::ffff:129.144.52.38")
+  **   IpAddr("somehost")
+  **   IpAddr("www.acme.com")
   **
-  native static IpAddress make(Str s)
+  native static IpAddr make(Str s)
 
   **
   ** Resolve a hostname to all of its configured IP addresses. If a
   ** numeric IPv4 or IPv6 address is specified then a list of one
-  ** IpAddress is returned.  If a hostname if provided, then it is
+  ** IpAddr is returned.  If a hostname if provided, then it is
   ** resolved to all its configured IP addresses potentially blocking
   ** the calling thread.  If the address is invalid or a hostname
   ** cannot be resolved then UnknownHostErr is thrown.
   **
-  native static IpAddress[] makeAll(Str s)
+  native static IpAddr[] makeAll(Str s)
 
   **
-  ** Make an IpAddress for the specified raw bytes.  The size of
+  ** Make an IpAddr for the specified raw bytes.  The size of
   ** the byte buffer must be 4 for IPv4 or 16 for IPv6, otherwise
   ** ArgErr is thrown.  The bytes must be a memory backed buffer.
   **
-  native static IpAddress makeBytes(Buf bytes)
+  native static IpAddr makeBytes(Buf bytes)
 
   **
-  ** Return the IpAddress for the local machine.
+  ** Return the IpAddr for the local machine.
   **
-  native static IpAddress local()
+  native static IpAddr local()
 
   **
   ** Private constructor.

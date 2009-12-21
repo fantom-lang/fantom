@@ -11,23 +11,23 @@ import java.io.*;
 import java.net.*;
 import fan.sys.*;
 
-public class IpAddressPeer
+public class IpAddrPeer
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Peer Factory
 //////////////////////////////////////////////////////////////////////////
 
-  public static IpAddressPeer make(IpAddress fan)
+  public static IpAddrPeer make(IpAddr fan)
   {
-    return new IpAddressPeer();
+    return new IpAddrPeer();
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static IpAddress make(String str)
+  public static IpAddr make(String str)
   {
     try
     {
@@ -44,7 +44,7 @@ public class IpAddressPeer
     try
     {
       InetAddress[] addr = InetAddress.getAllByName(str);
-      List list = new List(IpAddress.$Type, addr.length);
+      List list = new List(IpAddr.$Type, addr.length);
       for (int i=0; i<addr.length; ++i)
         list.add(make(str, addr[i]));
       return list;
@@ -55,7 +55,7 @@ public class IpAddressPeer
     }
   }
 
-  public static IpAddress makeBytes(Buf bytes)
+  public static IpAddr makeBytes(Buf bytes)
   {
     try
     {
@@ -69,7 +69,7 @@ public class IpAddressPeer
     }
   }
 
-  public static IpAddress local()
+  public static IpAddr local()
   {
     if (local == null)
     {
@@ -96,14 +96,14 @@ public class IpAddressPeer
     return local;
   }
 
-  public static IpAddress make(InetAddress java)
+  public static IpAddr make(InetAddress java)
   {
     return make(java.getHostAddress(), java);
   }
 
-  public static IpAddress make(String str, InetAddress java)
+  public static IpAddr make(String str, InetAddress java)
   {
-    IpAddress fan = IpAddress.internalMake();
+    IpAddr fan = IpAddr.internalMake();
     fan.peer.str  = str;
     fan.peer.java = java;
     return fan;
@@ -113,20 +113,20 @@ public class IpAddressPeer
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public long hash(IpAddress fan)
+  public long hash(IpAddr fan)
   {
     return java.hashCode();
   }
 
-  public boolean equals(IpAddress fan, Object obj)
+  public boolean equals(IpAddr fan, Object obj)
   {
-    if (obj instanceof IpAddress)
-      return this.java.equals(((IpAddress)obj).peer.java);
+    if (obj instanceof IpAddr)
+      return this.java.equals(((IpAddr)obj).peer.java);
     else
       return false;
   }
 
-  public String toStr(IpAddress fan)
+  public String toStr(IpAddr fan)
   {
     return str;
   }
@@ -135,27 +135,27 @@ public class IpAddressPeer
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public boolean isIPv4(IpAddress fan)
+  public boolean isIPv4(IpAddr fan)
   {
     return java instanceof Inet4Address;
   }
 
-  public boolean isIPv6(IpAddress fan)
+  public boolean isIPv6(IpAddr fan)
   {
     return java instanceof Inet6Address;
   }
 
-  public Buf bytes(IpAddress fan)
+  public Buf bytes(IpAddr fan)
   {
     return new MemBuf(java.getAddress());
   }
 
-  public String numeric(IpAddress fan)
+  public String numeric(IpAddr fan)
   {
     return java.getHostAddress();
   }
 
-  public String hostname(IpAddress fan)
+  public String hostname(IpAddr fan)
   {
     return java.getHostName();
   }
@@ -164,7 +164,7 @@ public class IpAddressPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private static IpAddress local;
+  private static IpAddr local;
 
   public String str;
   public InetAddress java;

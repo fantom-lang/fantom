@@ -33,7 +33,7 @@ namespace Fan.Inet
       s.ReceiveBufferSize = (int)m_receiveBufferSize;
       s.SendBufferSize    = (int)m_sendBufferSize;
       s.ReceiveTimeout    = m_receiveTimeout;
-      s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, m_reuseAddress);
+      s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, m_reuseAddr);
       s.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService, (int)m_trafficClass);
       return s;
     }
@@ -61,12 +61,12 @@ namespace Fan.Inet
   // End Points
   //////////////////////////////////////////////////////////////////////////
 
-    public IpAddress localAddress(UdpSocket fan)
+    public IpAddr localAddr(UdpSocket fan)
     {
       if (!isBound(fan)) return null;
       IPEndPoint pt = m_dotnet.LocalEndPoint as IPEndPoint;
       if (pt == null) return null;
-      return IpAddressPeer.make(pt.Address);
+      return IpAddrPeer.make(pt.Address);
     }
 
     public Long localPort(UdpSocket fan)
@@ -78,7 +78,7 @@ namespace Fan.Inet
       return Long.valueOf(pt.Port);
     }
 
-    public IpAddress remoteAddress(UdpSocket fan)
+    public IpAddr remoteAddr(UdpSocket fan)
     {
       if (!isConnected(fan)) return null;
       return m_remoteAddr;
@@ -94,7 +94,7 @@ namespace Fan.Inet
   // Communication
   //////////////////////////////////////////////////////////////////////////
 
-    public UdpSocket bind(UdpSocket fan, IpAddress addr, Long port)
+    public UdpSocket bind(UdpSocket fan, IpAddr addr, Long port)
     {
       try
       {
@@ -110,14 +110,14 @@ namespace Fan.Inet
       }
     }
 
-    public UdpSocket connect(UdpSocket fan, IpAddress addr, long port)
+    public UdpSocket connect(UdpSocket fan, IpAddr addr, long port)
     {
       try
       {
         if (m_dotnet == null) m_dotnet = createSocket();
         m_dotnet.Connect(addr.m_peer.m_dotnet, (int)port);
         IPEndPoint endPoint = m_dotnet.RemoteEndPoint as IPEndPoint;
-        m_remoteAddr = IpAddressPeer.make(endPoint.Address);
+        m_remoteAddr = IpAddrPeer.make(endPoint.Address);
         m_remotePort = endPoint.Port;
         return fan;
       }
@@ -136,7 +136,7 @@ namespace Fan.Inet
       int len = data.m_size - off;
 
       // map address, port
-      IpAddress addr = packet.address();
+      IpAddr addr = packet.addr();
       Long port = packet.port();
       if (isConnected(fan))
       {
@@ -230,7 +230,7 @@ namespace Fan.Inet
 
       // update packet with received message
       IPEndPoint endPoint = sender as IPEndPoint;
-      packet.address(IpAddressPeer.make(endPoint.Address));
+      packet.addr(IpAddrPeer.make(endPoint.Address));
       packet.port(Long.valueOf(endPoint.Port));
       data.m_pos  += recv;
       data.m_size += recv;
@@ -289,8 +289,8 @@ namespace Fan.Inet
     public long getSendBufferSize(UdpSocket fan) { return m_sendBufferSize; }
     public void setSendBufferSize(UdpSocket fan, long v) { m_sendBufferSize = v; }
 
-    public bool getReuseAddress(UdpSocket fan) { return m_reuseAddress; }
-    public void setReuseAddress(UdpSocket fan, bool v) { m_reuseAddress = v; }
+    public bool getReuseAddr(UdpSocket fan) { return m_reuseAddr; }
+    public void setReuseAddr(UdpSocket fan, bool v) { m_reuseAddr = v; }
 
     public Duration getReceiveTimeout(UdpSocket fan)
     {
@@ -312,7 +312,7 @@ namespace Fan.Inet
 
     private Socket m_dotnet;
 
-    private IpAddress m_remoteAddr;
+    private IpAddr m_remoteAddr;
     private int m_remotePort;
     private SocketOptions m_options;
     private bool m_closed;
@@ -320,7 +320,7 @@ namespace Fan.Inet
     private bool m_enableBroadcast   = false;
     private long m_receiveBufferSize = 8192;
     private long m_sendBufferSize    = 8192;
-    private bool m_reuseAddress      = false;
+    private bool m_reuseAddr         = false;
     private int m_receiveTimeout     = 0;
     private long m_trafficClass      = 0;
 

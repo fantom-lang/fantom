@@ -30,7 +30,7 @@ internal class WispReq : WebReq
   override WebMod mod := WispDefaultMod()
   override Str method := ""
   override Version version := nullVersion
-  override IpAddress remoteAddress() { return socket.remoteAddress }
+  override IpAddr remoteAddr() { return socket.remoteAddr }
   override Int remotePort() { return socket.remotePort }
   override Str:Str headers := nullHeaders
   override Uri uri := ``

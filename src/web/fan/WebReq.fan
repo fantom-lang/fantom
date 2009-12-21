@@ -29,7 +29,7 @@ abstract class WebReq
   **
   ** Get the IP host address of the client socket making this request.
   **
-  abstract IpAddress remoteAddress()
+  abstract IpAddr remoteAddr()
 
   **
   ** Get the IP port of the client socket making this request.

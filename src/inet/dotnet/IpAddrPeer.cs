@@ -13,23 +13,23 @@ using Fan.Sys;
 
 namespace Fan.Inet
 {
-  public class IpAddressPeer
+  public class IpAddrPeer
   {
 
   //////////////////////////////////////////////////////////////////////////
   // Peer Factory
   //////////////////////////////////////////////////////////////////////////
 
-    public static IpAddressPeer make(IpAddress fan)
+    public static IpAddrPeer make(IpAddr fan)
     {
-      return new IpAddressPeer();
+      return new IpAddrPeer();
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public static IpAddress make(string str)
+    public static IpAddr make(string str)
     {
       try
       {
@@ -46,7 +46,7 @@ namespace Fan.Inet
       try
       {
         IPAddress[] addr = Dns.GetHostAddresses(str);
-        List list = new List(Fan.Sys.Sys.ObjType, addr.Length); //IpAddress.$Type, addr.length);
+        List list = new List(Fan.Sys.Sys.ObjType, addr.Length); //IpAddr.$Type, addr.length);
         for (int i=0; i<addr.Length; i++)
           list.add(make(str, addr[i]));
         return list;
@@ -57,7 +57,7 @@ namespace Fan.Inet
       }
     }
 
-    public static IpAddress makeBytes(Buf bytes)
+    public static IpAddr makeBytes(Buf bytes)
     {
       try
       {
@@ -71,7 +71,7 @@ namespace Fan.Inet
       }
     }
 
-    public static IpAddress local()
+    public static IpAddr local()
     {
       if (m_local == null)
       {
@@ -109,14 +109,14 @@ namespace Fan.Inet
       return m_local;
     }
 
-    public static IpAddress make(IPAddress dotnet)
+    public static IpAddr make(IPAddress dotnet)
     {
       return make(dotnet.ToString(), dotnet);
     }
 
-    public static IpAddress make(string str, IPAddress dotnet)
+    public static IpAddr make(string str, IPAddress dotnet)
     {
-      IpAddress fan = IpAddress.internalMake();
+      IpAddr fan = IpAddr.internalMake();
       fan.m_peer.m_str = str;
       fan.m_peer.m_dotnet = dotnet;
       return fan;
@@ -126,20 +126,20 @@ namespace Fan.Inet
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public long hash(IpAddress fan)
+    public long hash(IpAddr fan)
     {
       return m_dotnet.GetHashCode();
     }
 
-    public bool Equals(IpAddress fan, object obj)
+    public bool Equals(IpAddr fan, object obj)
     {
-      if (obj is IpAddress)
-        return this.m_dotnet.Equals(((IpAddress)obj).m_peer.m_dotnet);
+      if (obj is IpAddr)
+        return this.m_dotnet.Equals(((IpAddr)obj).m_peer.m_dotnet);
       else
         return false;
     }
 
-    public string toStr(IpAddress fan)
+    public string toStr(IpAddr fan)
     {
       return m_str;
     }
@@ -148,27 +148,27 @@ namespace Fan.Inet
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public bool isIPv4(IpAddress fan)
+    public bool isIPv4(IpAddr fan)
     {
       return m_dotnet.AddressFamily == AddressFamily.InterNetwork;
     }
 
-    public bool isIPv6(IpAddress fan)
+    public bool isIPv6(IpAddr fan)
     {
       return m_dotnet.AddressFamily == AddressFamily.InterNetworkV6;
     }
 
-    public Buf bytes(IpAddress fan)
+    public Buf bytes(IpAddr fan)
     {
       return new MemBuf(m_dotnet.GetAddressBytes());
     }
 
-    public string numeric(IpAddress fan)
+    public string numeric(IpAddr fan)
     {
       return m_dotnet.ToString();
     }
 
-    public string hostname(IpAddress fan)
+    public string hostname(IpAddr fan)
     {
       return Dns.GetHostEntry(m_dotnet).HostName;
     }
@@ -177,7 +177,7 @@ namespace Fan.Inet
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private static IpAddress m_local;
+    private static IpAddr m_local;
 
     public string m_str;
     public IPAddress m_dotnet;

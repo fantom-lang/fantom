@@ -47,7 +47,7 @@ const class TcpListener
   **
   ** Get the bound local address or null if unbound.
   **
-  native IpAddress? localAddress()
+  native IpAddr? localAddr()
 
   **
   ** Get the bound local port or null if unbound.
@@ -60,11 +60,11 @@ const class TcpListener
 
   **
   ** Bind this listener to the specified local address.  If addr is null
-  ** then the default IpAddress for the local host is selected.  If port
+  ** then the default IpAddr for the local host is selected.  If port
   ** is null an ephemeral port is selected.  Throw IOErr if the port is
   ** already bound or the bind fails.  Return this.
   **
-  native This bind(IpAddress? addr, Int? port, Int backlog := 50)
+  native This bind(IpAddr? addr, Int? port, Int backlog := 50)
 
   **
   ** Accept the next incoming connection.  This method blocks the
@@ -90,7 +90,7 @@ const class TcpListener
   ** Access the SocketOptions used to tune this server socket.
   ** The following options apply to TcpListeners:
   **   - receiveBufferSize
-  **   - reuseAddress
+  **   - reuseAddr
   **   - receiveTimeout
   **  Accessing other option fields will throw UnsupportedErr.
   **
@@ -102,8 +102,8 @@ const class TcpListener
   internal native Int getReceiveBufferSize()
   internal native Void setReceiveBufferSize(Int v)
 
-  internal native Bool getReuseAddress()
-  internal native Void setReuseAddress(Bool v)
+  internal native Bool getReuseAddr()
+  internal native Void setReuseAddr(Bool v)
 
   internal native Duration? getReceiveTimeout()
   internal native Void setReceiveTimeout(Duration? v)

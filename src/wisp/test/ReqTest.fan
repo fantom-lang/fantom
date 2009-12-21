@@ -55,7 +55,7 @@ class ReqTest : Test
   {
     uri := Sys.args.first.toUri
     socket := TcpSocket.make
-    socket.connect(IpAddress(uri.host), uri.port)
+    socket.connect(IpAddr(uri.host), uri.port)
     socket.out.print("GET $uri.pathStr HTTP/1.1\r\n")
     socket.out.print("Host: $uri.host\r\n")
     socket.out.print("\r\n")

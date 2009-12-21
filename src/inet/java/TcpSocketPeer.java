@@ -54,12 +54,12 @@ public class TcpSocketPeer
 // End Points
 //////////////////////////////////////////////////////////////////////////
 
-  public IpAddress localAddress(TcpSocket fan)
+  public IpAddr localAddr(TcpSocket fan)
   {
     if (!isBound()) return null;
     InetAddress addr = getLocalAddress();
     if (addr == null) return null;
-    return IpAddressPeer.make(addr);
+    return IpAddrPeer.make(addr);
   }
 
   public Long localPort(TcpSocket fan)
@@ -70,7 +70,7 @@ public class TcpSocketPeer
     return Long.valueOf(port);
   }
 
-  public IpAddress remoteAddress(TcpSocket fan)
+  public IpAddr remoteAddr(TcpSocket fan)
   {
     if (!isConnected()) return null;
     return remoteAddr;
@@ -86,7 +86,7 @@ public class TcpSocketPeer
 // Communication
 //////////////////////////////////////////////////////////////////////////
 
-  public TcpSocket bind(TcpSocket fan, IpAddress addr, Long port)
+  public TcpSocket bind(TcpSocket fan, IpAddr addr, Long port)
   {
     try
     {
@@ -101,7 +101,7 @@ public class TcpSocketPeer
     }
   }
 
-  public TcpSocket connect(TcpSocket fan, IpAddress addr, long port, Duration timeout)
+  public TcpSocket connect(TcpSocket fan, IpAddr addr, long port, Duration timeout)
   {
     try
     {
@@ -121,7 +121,7 @@ public class TcpSocketPeer
     throws IOException
   {
     InetSocketAddress sockAddr = (InetSocketAddress)getRemoteSocketAddress();
-    this.remoteAddr = IpAddressPeer.make(sockAddr.getAddress());
+    this.remoteAddr = IpAddrPeer.make(sockAddr.getAddress());
     this.remotePort = sockAddr.getPort();
     this.in  = SysInStream.make(getInputStream(), getInBufferSize(fan));
     this.out = SysOutStream.make(getOutputStream(), getOutBufferSize(fan));
@@ -268,7 +268,7 @@ public class TcpSocketPeer
     }
   }
 
-  public boolean getReuseAddress(TcpSocket fan)
+  public boolean getReuseAddr(TcpSocket fan)
   {
     try
     {
@@ -280,7 +280,7 @@ public class TcpSocketPeer
     }
   }
 
-  public void setReuseAddress(TcpSocket fan, boolean v)
+  public void setReuseAddr(TcpSocket fan, boolean v)
   {
     try
     {
@@ -404,7 +404,7 @@ public class TcpSocketPeer
 
   private int inBufSize = 4096;
   private int outBufSize = 4096;
-  private IpAddress remoteAddr;
+  private IpAddr remoteAddr;
   private int remotePort;
   private SysInStream in;
   private SysOutStream out;

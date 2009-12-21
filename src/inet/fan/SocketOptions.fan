@@ -116,10 +116,10 @@ final class SocketOptions
   ** SO_REUSEADDR socket option is used to control the time
   ** wait state of a closed socket.
   **
-  Bool reuseAddress
+  Bool reuseAddr
   {
-    get { return (Bool)wrap |->Obj| { return socket->getReuseAddress } }
-    set { newVal := it; wrap |->| { socket->setReuseAddress(newVal) } }
+    get { return (Bool)wrap |->Obj| { return socket->getReuseAddr } }
+    set { newVal := it; wrap |->| { socket->setReuseAddr(newVal) } }
   }
 
   **

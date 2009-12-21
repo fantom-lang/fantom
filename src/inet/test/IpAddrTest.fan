@@ -6,7 +6,7 @@
 //   9 Feb 07  Brian Frank  Creation
 //
 
-class IpAddressTest : Test
+class IpAddrTest : Test
 {
 
   public Void test()
@@ -37,30 +37,30 @@ class IpAddressTest : Test
                "::169.2.30.200")
 
     // invalid
-    verifyErr(UnknownHostErr#) { IpAddress("0123:4567:89ab:cdef:fedc:ba98:7654:3210:ffff") }
-    verifyErr(UnknownHostErr#) { IpAddress("::fx54:3210:ffff") }
-    verifyErr(UnknownHostErr#) { IpAddress("not.going.to.happen.") }
+    verifyErr(UnknownHostErr#) { IpAddr("0123:4567:89ab:cdef:fedc:ba98:7654:3210:ffff") }
+    verifyErr(UnknownHostErr#) { IpAddr("::fx54:3210:ffff") }
+    verifyErr(UnknownHostErr#) { IpAddr("not.going.to.happen.") }
 
     // local
-    verifySame(IpAddress.local, IpAddress.local)
+    verifySame(IpAddr.local, IpAddr.local)
 
     // host lookup (will this test last the test of time...
-    ms := IpAddress.makeAll("microsoft.com")
+    ms := IpAddr.makeAll("microsoft.com")
     verify(ms.size > 1)
 
     // identity
-    verifyEq(ms[0], IpAddress(ms[0].numeric))
-    verifyEq(ms[0].hash, IpAddress(ms[0].numeric).hash)
-    verifyNotEq(ms[0], IpAddress(ms[1].numeric))
-    verifyNotEq(ms[0].hash, IpAddress(ms[1].numeric).hash)
-    verifyEq(IpAddress("www.microsoft.com"), IpAddress("WWW.Microsoft.COM"))
-    verifyEq(IpAddress("www.microsoft.com").hash, IpAddress("WWW.Microsoft.COM").hash)
+    verifyEq(ms[0], IpAddr(ms[0].numeric))
+    verifyEq(ms[0].hash, IpAddr(ms[0].numeric).hash)
+    verifyNotEq(ms[0], IpAddr(ms[1].numeric))
+    verifyNotEq(ms[0].hash, IpAddr(ms[1].numeric).hash)
+    verifyEq(IpAddr("www.microsoft.com"), IpAddr("WWW.Microsoft.COM"))
+    verifyEq(IpAddr("www.microsoft.com").hash, IpAddr("WWW.Microsoft.COM").hash)
   }
 
   Void verifyAddr(Str str, Int[] bytes, Str numeric := str, Str? numericAlt := null)
   {
     // check fields
-    a := IpAddress(str)
+    a := IpAddr(str)
     verifyEq(a.toStr, str)
     verifyEq(a.isIPv4,  bytes.size == 4)
     verifyEq(a.isIPv6,  bytes.size == 16)
@@ -92,20 +92,20 @@ class IpAddressTest : Test
     // NOTE: Java appears to normalize the host address string
     // differently when made by bytes, but I don't think we should
     // push that into the Fantom API contract
-    x := IpAddress.makeBytes(a.bytes)
+    x := IpAddr.makeBytes(a.bytes)
     verifyEq(a, x)
     verifyEq(a.bytes.toHex, x.bytes.toHex)
     verifyEq(a.isIPv4,  x.isIPv4)
 
     // makeAll
-    all := IpAddress.makeAll(str)
+    all := IpAddr.makeAll(str)
     verifyEq(all.size, 1)
     verifyEq(all[0].toStr, str)
     verifyEq(all[0], a)
   }
 
   /*
-  Void dump(IpAddress a)
+  Void dump(IpAddr a)
   {
     echo("-------------------")
     echo("toStr    = $a")

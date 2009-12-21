@@ -19,9 +19,9 @@ class TcpSocketTest : Test
     verifyEq(s.isBound, false)
     verifyEq(s.isConnected, false)
     verifyEq(s.isClosed, false)
-    verifyEq(s.localAddress, null)
+    verifyEq(s.localAddr, null)
     verifyEq(s.localPort, null)
-    verifyEq(s.remoteAddress, null)
+    verifyEq(s.remoteAddr, null)
     verifyEq(s.remotePort, null)
     verifyErr(IOErr#) { s.in }
     verifyErr(IOErr#) { s.out }
@@ -35,12 +35,12 @@ class TcpSocketTest : Test
   Void testBind()
   {
     verifyBind(null, null)
-    verifyBind(IpAddress.local, null)
+    verifyBind(IpAddr.local, null)
     verifyBind(null, 1972)
-    verifyBind(IpAddress.local, 1973)
+    verifyBind(IpAddr.local, 1973)
   }
 
-  Void verifyBind(IpAddress? addr, Int? port)
+  Void verifyBind(IpAddr? addr, Int? port)
   {
     s := TcpSocket.make
     verifySame(s.bind(addr, port), s)
@@ -54,9 +54,9 @@ class TcpSocketTest : Test
 
     // local address
     if (addr == null)
-      verify(s.localAddress != null)
+      verify(s.localAddr != null)
     else
-      verifyEq(s.localAddress, addr)
+      verifyEq(s.localAddr, addr)
 
     // local port
     if (port == null)
@@ -65,7 +65,7 @@ class TcpSocketTest : Test
       verifyEq(s.localPort, port)
 
     // null remote
-    verifyEq(s.remoteAddress, null)
+    verifyEq(s.remoteAddr, null)
     verifyEq(s.remotePort, null)
 
     // duplicate port
@@ -89,7 +89,7 @@ class TcpSocketTest : Test
   {
     // local, invalid port
     s := TcpSocket.make
-    verifyErr(IOErr#) { s.connect(IpAddress.local, 1969) }
+    verifyErr(IOErr#) { s.connect(IpAddr.local, 1969) }
     verifyEq(s.isConnected, false)
     verifyErr(IOErr#) { s.in }
     verifyErr(IOErr#) { s.out }
@@ -98,7 +98,7 @@ class TcpSocketTest : Test
     // invalid host
     t1 := Duration.now
     s = TcpSocket.make
-    verifyErr(IOErr#) { s.connect(IpAddress("1.1.1.1"), 1969, 100ms) }
+    verifyErr(IOErr#) { s.connect(IpAddr("1.1.1.1"), 1969, 100ms) }
     t2 := Duration.now
     verifyEq(s.isConnected, false)
     verify(80ms < t2-t1 && t2-t1 < 150ms)
@@ -122,7 +122,7 @@ class TcpSocketTest : Test
   Void doTestConnectHttp(Duration? timeout)
   {
     // connect to www server
-    s := TcpSocket().connect(IpAddress("hg.fantom.org"), 80, timeout)
+    s := TcpSocket().connect(IpAddr("hg.fantom.org"), 80, timeout)
 
     // verify connetion state
     verifyEq(s.isBound, true)
@@ -157,31 +157,31 @@ class TcpSocketTest : Test
     // verify duplicate name
     verifyErr(ArgErr#)
     {
-       x := TcpSocket().connect(IpAddress("fantom.org"), 80)
-       x.fork(Thread.current.name, &runFork(x.localPort, x.remoteAddress.numeric))
+       x := TcpSocket().connect(IpAddr("fantom.org"), 80)
+       x.fork(Thread.current.name, &runFork(x.localPort, x.remoteAddr.numeric))
     }
 
     // verify non-const method
     verifyErr(NotImmutableErr#)
     {
-       x := TcpSocket().connect(IpAddress("fantom.org"), 80)
+       x := TcpSocket().connect(IpAddr("fantom.org"), 80)
        x.fork(null) |TcpSocket s| { fail }
     }
 
     // connect to www server
-    s := TcpSocket().connect(IpAddress("fantom.org"), 80)
+    s := TcpSocket().connect(IpAddr("fantom.org"), 80)
     so := s.options
 
     // fork
-    t := s.fork(null, &runFork(s.localPort, s.remoteAddress.numeric))
+    t := s.fork(null, &runFork(s.localPort, s.remoteAddr.numeric))
 
     // verify that all methods on s now throw UnsupportedErr
     verifyErr(UnsupportedErr#) { s.isBound }
     verifyErr(UnsupportedErr#) { s.isConnected }
     verifyErr(UnsupportedErr#) { s.isClosed }
-    verifyErr(UnsupportedErr#) { s.localAddress }
+    verifyErr(UnsupportedErr#) { s.localAddr }
     verifyErr(UnsupportedErr#) { s.localPort }
-    verifyErr(UnsupportedErr#) { s.remoteAddress }
+    verifyErr(UnsupportedErr#) { s.remoteAddr }
     verifyErr(UnsupportedErr#) { s.remotePort  }
     verifyErr(UnsupportedErr#) { s.bind(null, null) }
     verifyErr(UnsupportedErr#) { s.connect(null, null) }
@@ -219,7 +219,7 @@ class TcpSocketTest : Test
   {
     // verify state of new detached socket
     if (s.localPort != localPort) return null
-    if (s.remoteAddress.numeric != remoteAddr) return null
+    if (s.remoteAddr.numeric != remoteAddr) return null
     if (s.remotePort != 80) return null
 
     // send very simple request line
@@ -263,9 +263,9 @@ class TcpSocketTest : Test
     so.sendBufferSize = send*4
     verifyEq(so.sendBufferSize, send*4)
 
-    reuse := so.reuseAddress
-    so.reuseAddress = !reuse
-    verifyEq(so.reuseAddress, !reuse)
+    reuse := so.reuseAddr
+    so.reuseAddr = !reuse
+    verifyEq(so.reuseAddr, !reuse)
 
     so.linger = 2sec
     verifyEq(so.linger, 2sec)
@@ -295,7 +295,7 @@ class TcpSocketTest : Test
     verifyEq(xo.keepAlive, so.keepAlive)
     verifyEq(xo.receiveBufferSize, so.receiveBufferSize)
     verifyEq(xo.sendBufferSize, so.sendBufferSize)
-    verifyEq(xo.reuseAddress, so.reuseAddress)
+    verifyEq(xo.reuseAddr, so.reuseAddr)
     verifyEq(xo.linger, so.linger)
     verifyEq(xo.receiveTimeout, so.receiveTimeout)
     verifyEq(xo.noDelay, so.noDelay)
@@ -315,14 +315,14 @@ class TcpSocketTest : Test
     echo("bound      = $s.isBound")
     echo("connected  = $s.isConnected")
     echo("closed     = $s.isClosed")
-    echo("localAddr  = $s.localAddress")
+    echo("localAddr  = $s.localAddr")
     echo("localPort  = $s.localPort")
-    echo("remoteAddr = $s.remoteAddress")
+    echo("remoteAddr = $s.remoteAddr")
     echo("remotePort = $s.remotePort")
     echo("keepAlive  = $s.options.keepAlive")
     echo("receive    = $s.options.receiveBufferSize")
     echo("send       = $s.options.sendBufferSize")
-    echo("reuseAddr  = $s.options.reuseAddress")
+    echo("reuseAddr  = $s.options.reuseAddr")
     echo("linger     = $s.options.linger")
     echo("timeout    = $s.options.receiveTimeout")
     echo("noDelay    = $s.options.noDelay")

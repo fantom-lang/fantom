@@ -18,7 +18,7 @@ class TcpListenerTest : Test
     s := TcpListener.make
     verifyEq(s.isBound, false)
     verifyEq(s.isClosed, false)
-    verifyEq(s.localAddress, null)
+    verifyEq(s.localAddr, null)
     verifyEq(s.localPort, null)
     s.close
   }
@@ -30,12 +30,12 @@ class TcpListenerTest : Test
   Void testBind()
   {
     verifyBind(null, null)
-    verifyBind(IpAddress.local, null)
+    verifyBind(IpAddr.local, null)
     verifyBind(null, 1872)
-    verifyBind(IpAddress.local, 1873)
+    verifyBind(IpAddr.local, 1873)
   }
 
-  Void verifyBind(IpAddress? addr, Int? port)
+  Void verifyBind(IpAddr? addr, Int? port)
   {
     s := TcpListener.make
     verifySame(s.bind(addr, port), s)
@@ -46,9 +46,9 @@ class TcpListenerTest : Test
 
     // local address
     if (addr == null)
-      verify(s.localAddress != null)
+      verify(s.localAddr!= null)
     else
-      verifyEq(s.localAddress, addr)
+      verifyEq(s.localAddr, addr)
 
     // local port
     if (port == null)
@@ -109,7 +109,7 @@ class TcpListenerTest : Test
   static Obj runClient(Int port)
   {
     trace("c: connecting...")
-    s := TcpSocket.make.connect(IpAddress.local, port)
+    s := TcpSocket.make.connect(IpAddr.local, port)
     trace("c: connected!")
     s.out.printLine("hello").flush
     res := s.in.readLine
@@ -136,9 +136,9 @@ class TcpListenerTest : Test
     so.receiveBufferSize = receive*2
     verifyEq(so.receiveBufferSize, receive*2)
 
-    reuse := so.reuseAddress
-    so.reuseAddress = !reuse
-    verifyEq(so.reuseAddress, !reuse)
+    reuse := so.reuseAddr
+    so.reuseAddr = !reuse
+    verifyEq(so.reuseAddr, !reuse)
 
     so.receiveTimeout = 100ms
     verifyEq(so.receiveTimeout, 100ms)
@@ -181,10 +181,10 @@ class TcpListenerTest : Test
     echo("---------")
     echo("bound      = $s.isBound")
     echo("closed     = $s.isClosed")
-    echo("localAddr  = $s.localAddress")
+    echo("localAddr  = $s.localAddr")
     echo("localPort  = $s.localPort")
     echo("receive    = $s.options.receiveBufferSize")
-    echo("reuseAddr  = $s.options.reuseAddress")
+    echo("reuseAddr  = $s.options.reuseAddr")
     echo("timeout    = $s.options.receiveTimeout")
   }
 

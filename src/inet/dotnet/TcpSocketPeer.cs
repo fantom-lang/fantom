@@ -63,12 +63,12 @@ namespace Fan.Inet
   // End Points
   //////////////////////////////////////////////////////////////////////////
 
-    public IpAddress localAddress(TcpSocket fan)
+    public IpAddr localAddr(TcpSocket fan)
     {
       if (!m_dotnet.IsBound) return null;
       IPEndPoint pt = m_dotnet.LocalEndPoint as IPEndPoint;
       if (pt == null) return null;
-      return IpAddressPeer.make(pt.Address);
+      return IpAddrPeer.make(pt.Address);
     }
 
     public Long localPort(TcpSocket fan)
@@ -80,7 +80,7 @@ namespace Fan.Inet
       return Long.valueOf(pt.Port);
     }
 
-    public IpAddress remoteAddress(TcpSocket fan)
+    public IpAddr remoteAddr(TcpSocket fan)
     {
       if (!m_dotnet.Connected) return null;
       return m_remoteAddr;
@@ -96,7 +96,7 @@ namespace Fan.Inet
   // Communication
   //////////////////////////////////////////////////////////////////////////
 
-    public TcpSocket bind(TcpSocket fan, IpAddress addr, Long port)
+    public TcpSocket bind(TcpSocket fan, IpAddr addr, Long port)
     {
       try
       {
@@ -111,7 +111,7 @@ namespace Fan.Inet
       }
     }
 
-    public TcpSocket connect(TcpSocket fan, IpAddress addr, long port, Duration timeout)
+    public TcpSocket connect(TcpSocket fan, IpAddr addr, long port, Duration timeout)
     {
       if (timeout != null)
       {
@@ -134,7 +134,7 @@ namespace Fan.Inet
     internal void connected(TcpSocket fan)
     {
       IPEndPoint endPoint = m_dotnet.RemoteEndPoint as IPEndPoint;
-      m_remoteAddr = IpAddressPeer.make(endPoint.Address);
+      m_remoteAddr = IpAddrPeer.make(endPoint.Address);
       m_remotePort = endPoint.Port;
       m_in  = SysInStream.make(new NetworkStream(m_dotnet), getInBufferSize(fan));
       m_out = SysOutStream.make(new NetworkStream(m_dotnet), getOutBufferSize(fan));
@@ -306,13 +306,13 @@ namespace Fan.Inet
       m_dotnet.SendBufferSize = (int)v;
     }
 
-    public bool getReuseAddress(TcpSocket fan)
+    public bool getReuseAddr(TcpSocket fan)
     {
       return Convert.ToBoolean(m_dotnet.GetSocketOption(
        SocketOptionLevel.Socket, SocketOptionName.ReuseAddress));
     }
 
-    public void setReuseAddress(TcpSocket fan, bool v)
+    public void setReuseAddr(TcpSocket fan, bool v)
     {
       m_dotnet.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v);
     }
@@ -378,7 +378,7 @@ namespace Fan.Inet
 
     private int m_inBufSize = 4096;
     private int m_outBufSize = 4096;
-    private IpAddress m_remoteAddr;
+    private IpAddr m_remoteAddr;
     private int m_remotePort;
     private SysInStream m_in;
     private SysOutStream m_out;

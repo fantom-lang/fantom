@@ -289,7 +289,7 @@ class WebClient
     {
       socket = TcpSocket()
       if (options != null) socket.options.copyFrom(this.options)
-      socket.connect(IpAddress(reqUri.host), reqUri.port ?: 80)
+      socket.connect(IpAddr(reqUri.host), reqUri.port ?: 80)
     }
 
     // figure out if/how we are streaming out content body

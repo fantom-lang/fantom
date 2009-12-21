@@ -135,7 +135,7 @@ const class LogMod : WebMod
 
   internal static Str formatCIp(WebReq req, WebRes res)
   {
-    return req.remoteAddress.numeric
+    return req.remoteAddr.numeric
   }
 
   internal static Str formatCPort(WebReq req, WebRes res)

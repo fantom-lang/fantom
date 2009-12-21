@@ -54,12 +54,12 @@ public class TcpListenerPeer
 // End Points
 //////////////////////////////////////////////////////////////////////////
 
-  public IpAddress localAddress(TcpListener fan)
+  public IpAddr localAddr(TcpListener fan)
   {
     if (!isBound()) return null;
     InetAddress addr = getInetAddress();
     if (addr == null) return null;
-    return IpAddressPeer.make(addr);
+    return IpAddrPeer.make(addr);
   }
 
   public Long localPort(TcpListener fan)
@@ -74,7 +74,7 @@ public class TcpListenerPeer
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public TcpListener bind(TcpListener fan, IpAddress addr, Long port, long backlog)
+  public TcpListener bind(TcpListener fan, IpAddr addr, Long port, long backlog)
   {
     try
     {
@@ -145,7 +145,7 @@ public class TcpListenerPeer
     }
   }
 
-  public boolean getReuseAddress(TcpListener fan)
+  public boolean getReuseAddr(TcpListener fan)
   {
     try
     {
@@ -157,7 +157,7 @@ public class TcpListenerPeer
     }
   }
 
-  public void setReuseAddress(TcpListener fan, boolean v)
+  public void setReuseAddr(TcpListener fan, boolean v)
   {
     try
     {
@@ -202,7 +202,7 @@ public class TcpListenerPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private IpAddress remoteAddr;
+  private IpAddr remoteAddr;
   private int remotePort;
   private int inBufSize = 4096;
   private int outBufSize = 4096;

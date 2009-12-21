@@ -55,7 +55,7 @@ const class UdpSocket
   **
   ** Get the bound local address or null if unbound.
   **
-  native IpAddress? localAddress()
+  native IpAddr? localAddr()
 
   **
   ** Get the bound local port or null if unbound.
@@ -65,7 +65,7 @@ const class UdpSocket
   **
   ** Get the remote address or null if not connected to a specific end point.
   **
-  native IpAddress? remoteAddress()
+  native IpAddr? remoteAddr()
 
   **
   ** Get the remote port or null if not connected to a specific end point.
@@ -78,17 +78,17 @@ const class UdpSocket
 
   **
   ** Bind this socket to the specified local address.  If addr is null
-  ** then the default IpAddress for the local host is selected.  If port
+  ** then the default IpAddr for the local host is selected.  If port
   ** is null an ephemeral port is selected.  Throw IOErr if the port is
   ** already bound or the bind fails.  Return this.
   **
-  native This bind(IpAddress? addr, Int? port)
+  native This bind(IpAddr? addr, Int? port)
 
   **
   ** Connect this socket to the specified address and port.  Once
   ** connected packets may only be send to the remote using this socket.
   **
-  native This connect(IpAddress addr, Int port)
+  native This connect(IpAddr addr, Int port)
 
   **
   ** Send the packet to its specified remote endpoint.  If this is
@@ -140,7 +140,7 @@ const class UdpSocket
   **   - broadcast
   **   - receiveBufferSize
   **   - sendBufferSize
-  **   - reuseAddress
+  **   - reuseAddr
   **   - receiveBufferSize
   **   - trafficClass
   **  Accessing other option fields will throw UnsupportedErr.
@@ -156,8 +156,8 @@ const class UdpSocket
   internal native Int getSendBufferSize()
   internal native Void setSendBufferSize(Int v)
 
-  internal native Bool getReuseAddress()
-  internal native Void setReuseAddress(Bool v)
+  internal native Bool getReuseAddr()
+  internal native Void setReuseAddr(Bool v)
 
   internal native Duration? getReceiveTimeout()
   internal native Void setReceiveTimeout(Duration? v)
