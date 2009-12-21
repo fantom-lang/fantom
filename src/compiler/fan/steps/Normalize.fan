@@ -182,7 +182,7 @@ class Normalize : CompilerStep
 
     // generate storage field
     f := FieldDef(loc, curType)
-    f.flags     = FConst.Private | FConst.Storage | FConst.Synthetic
+    f.flags     = FConst.Private + FConst.Storage + FConst.Synthetic
     f.name      = m.name + "\$Store"
     f.fieldType = ns.objType.toNullable
     f.init      = Expr.makeForLiteral(loc, ns, "_once_")
@@ -191,7 +191,7 @@ class Normalize : CompilerStep
 
     // add name$Once with original code
     x := MethodDef(loc, curType)
-    x.flags        = FConst.Private | FConst.Synthetic
+    x.flags        = FConst.Private + FConst.Synthetic
     x.name         = m.name + "\$Once"
     x.ret          = ns.objType.toNullable
     x.inheritedRet = null

@@ -17,8 +17,5 @@ enum Endian
   ** Least significant byte first
   little
 
-// TODO build 1.0.48
-static const Endian[] vals
-
 }
 

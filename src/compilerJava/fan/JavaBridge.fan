@@ -173,7 +173,7 @@ class JavaBridge : CBridge
       else
       {
         // ensure arg fits parameter type (or auto-cast)
-        newArgs[i] = coerce(args[i], p.paramType) |,| { isErr = true }
+        newArgs[i] = coerce(args[i], p.paramType) |->| { isErr = true }
       }
     }
     if (isErr) return null
@@ -371,7 +371,7 @@ class JavaBridge : CBridge
     // use dummy expression and route to coerce code
     dummy := UnknownVarExpr(Location("dummy"), null, "dummy") { ctype = actual }
     fits := true
-    coerce(dummy, expected) |,| { fits=false }
+    coerce(dummy, expected) |->| { fits=false }
     return fits
   }
 
@@ -379,7 +379,7 @@ class JavaBridge : CBridge
   ** Coerce expression to expected type.  If not a type match
   ** then run the onErr function.
   **
-  override Expr coerce(Expr expr, CType expected, |,| onErr)
+  override Expr coerce(Expr expr, CType expected, |->| onErr)
   {
     // handle easy case
     actual := expr.ctype
@@ -414,7 +414,7 @@ class JavaBridge : CBridge
   ** Coerce a fan expression to a Java primitive (other
   ** than the ones we support natively)
   **
-  Expr coerceToPrimitive(Expr expr, JavaType expected, |,| onErr)
+  Expr coerceToPrimitive(Expr expr, JavaType expected, |->| onErr)
   {
     actual := expr.ctype
 
@@ -434,7 +434,7 @@ class JavaBridge : CBridge
   **
   ** Coerce a Java primitive to a Fantom type.
   **
-  Expr coerceFromPrimitive(Expr expr, CType expected, |,| onErr)
+  Expr coerceFromPrimitive(Expr expr, CType expected, |->| onErr)
   {
     actual := (JavaType)expr.ctype
 
@@ -460,7 +460,7 @@ class JavaBridge : CBridge
   **
   ** Coerce a Java array to a Fantom list.
   **
-  Expr coerceFromArray(Expr expr, CType expected, |,| onErr)
+  Expr coerceFromArray(Expr expr, CType expected, |->| onErr)
   {
     actual := (JavaType)expr.ctype.toNonNullable
 
@@ -496,7 +496,7 @@ class JavaBridge : CBridge
   **
   ** Coerce a Fantom list to Java array.
   **
-  Expr coerceToArray(Expr expr, CType expected, |,| onErr)
+  Expr coerceToArray(Expr expr, CType expected, |->| onErr)
   {
     loc := expr.location
     expectedOf := ((JavaType)expected.toNonNullable).inferredArrayOf
@@ -524,7 +524,7 @@ class JavaBridge : CBridge
   ** Attempt to coerce a parameterized sys::Func expr to a Java
   ** interface if the interface supports exactly one matching method.
   **
-  Expr coerceFuncToInterface(Expr expr, JavaType expected, |,| onErr)
+  Expr coerceFuncToInterface(Expr expr, JavaType expected, |->| onErr)
   {
     // check if we have exactly one abstract method in the expected type
     loc := expr.location
@@ -592,7 +592,7 @@ class JavaBridge : CBridge
 
     // generate FuncWrapper class
     name := "FuncWrapper" + funcWrappers.size
-    cls := TypeDef(ns, loc, compiler.types[0].unit, name, FConst.Internal | FConst.Synthetic)
+    cls := TypeDef(ns, loc, compiler.types[0].unit, name, FConst.Internal + FConst.Synthetic)
     cls.base = ns.objType
     cls.mixins = [expected]
     addTypeDef(cls)
@@ -600,12 +600,12 @@ class JavaBridge : CBridge
     // generate FuncWrapper._func field
     field := FieldDef(loc, cls)
     ((SlotDef)field).name = "_func"
-    ((DefNode)field).flags = FConst.Private | FConst.Storage | FConst.Synthetic
+    ((DefNode)field).flags = FConst.Private + FConst.Storage + FConst.Synthetic
     field.fieldType = funcType
     cls.addSlot(field)
 
     // generate FuncWrapper.make constructor
-    ctor := MethodDef(loc, cls, "make", FConst.Internal | FConst.Ctor | FConst.Synthetic)
+    ctor := MethodDef(loc, cls, "make", FConst.Internal + FConst.Ctor + FConst.Synthetic)
     ctor.ret  = ns.voidType
     ctor.paramDefs = [ParamDef(loc, funcType, "f")]
     ctor.code = Block.make(loc)
@@ -616,7 +616,7 @@ class JavaBridge : CBridge
     cls.addSlot(ctor)
 
     // generate FuncWrapper override of abstract method
-    over := MethodDef(loc, cls, method.name, FConst.Public | FConst.Override | FConst.Synthetic)
+    over := MethodDef(loc, cls, method.name, FConst.Public + FConst.Override + FConst.Synthetic)
     over.ret = method.returnType
     over.paramDefs = ParamDef[,]
     over.code = Block.make(loc)
@@ -652,7 +652,7 @@ class JavaBridge : CBridge
     {
       parent = this.ns.listType
       name = "make"
-      flags = FConst.Public | FConst.Static
+      flags = FConst.Public + FConst.Static
       returnType = this.ns.listType
       params =
       [

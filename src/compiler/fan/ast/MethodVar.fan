@@ -29,7 +29,7 @@ class MethodVar
     this.paramDef = p
   }
 
-  Bool isParam() { (flags & FConst.Param) != 0 }
+  Bool isParam() { flags.and(FConst.Param) != 0 }
 
   Bool isWrapped() { wrapField != null }
 

@@ -54,7 +54,7 @@ class DefaultCtor : CompilerStep
     block.stmts.add(ReturnStmt.makeSynthetic(loc))
 
     m := MethodDef(loc, parent)
-    m.flags = flags | FConst.Ctor | FConst.Synthetic
+    m.flags = flags.or(FConst.Ctor + FConst.Synthetic)
     m.name  = "make"
     m.ret   = parent.ns.voidType
     m.code  = block

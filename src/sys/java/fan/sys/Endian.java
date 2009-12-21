@@ -19,8 +19,6 @@ public final class Endian
 
   static final Endian[] array = { big, little };
 
-// TODO
-public static final List values = (List)new List(Sys.EndianType, array).toImmutable();
   public static final List vals = (List)new List(Sys.EndianType, array).toImmutable();
 
   private Endian(int ordinal, String name)

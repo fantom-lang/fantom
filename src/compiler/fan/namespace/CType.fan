@@ -323,43 +323,43 @@ mixin CType
   **
   ** Return if this Type is a mixin type and cannot be instantiated.
   **
-  Bool isMixin() { flags & FConst.Mixin != 0 }
+  Bool isMixin() { flags.and(FConst.Mixin) != 0 }
 
   **
   ** Return if this Type is an sys::Enum
   **
-  Bool isEnum() { flags & FConst.Enum != 0 }
+  Bool isEnum() { flags.and(FConst.Enum) != 0 }
 
   **
   ** Return if this Type is abstract and cannot be instantiated.  This
   ** method will always return true if the type is a mixin.
   **
-  Bool isAbstract() { flags & FConst.Abstract != 0 }
+  Bool isAbstract() { flags.and(FConst.Abstract) != 0 }
 
   **
   ** Return if this Type is const and immutable.
   **
-  Bool isConst() { flags & FConst.Const != 0 }
+  Bool isConst() { flags.and(FConst.Const) != 0 }
 
   **
   ** Return if this Type is final and cannot be subclassed.
   **
-  Bool isFinal() { flags & FConst.Final != 0 }
+  Bool isFinal() { flags.and(FConst.Final) != 0 }
 
   **
   ** Is this a public scoped class
   **
-  Bool isPublic() { flags & FConst.Public != 0 }
+  Bool isPublic() { flags.and(FConst.Public) != 0 }
 
   **
   ** Is this an internally scoped class
   **
-  Bool isInternal() { flags & FConst.Internal != 0 }
+  Bool isInternal() { flags.and(FConst.Internal) != 0 }
 
   **
   ** Is this a compiler generated synthetic class
   **
-  Bool isSynthetic() { flags & FConst.Synthetic != 0 }
+  Bool isSynthetic() { flags.and(FConst.Synthetic) != 0 }
 
 //////////////////////////////////////////////////////////////////////////
 // Facets

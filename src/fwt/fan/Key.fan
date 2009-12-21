@@ -242,7 +242,7 @@ const class Key
     if (isAlt)     s.join(alt.str,     "+")
     if (isCtrl)    s.join(ctrl.str,    "+")
     if (isCommand) s.join(command.str, "+")
-    baseMask := mask & modifierUnmask
+    baseMask := mask.and(modifierUnmask)
     if (baseMask != 0) s.join(fromMask(baseMask).str, "+")
     return s.toStr
   }
@@ -264,43 +264,43 @@ const class Key
   **
   ** Return a Key instance with only the modifiers.
   **
-  Key modifiers() { return fromMask(mask & modifierMask) }
+  Key modifiers() { fromMask(mask.and(modifierMask)) }
 
   **
   ** Is this instance is a modifier which may be combined
   ** with other keys: shift, alt, ctrl, command.
   **
-  Bool isModifier() { return mask & modifierUnmask == 0 }
+  Bool isModifier() { mask.and(modifierUnmask) == 0 }
 
   **
   ** Return if any of the modifier keys are down.
   **
-  Bool hasModifier() { return mask & modifierMask != 0 }
+  Bool hasModifier() { mask.and(modifierMask) != 0 }
 
   **
   ** Return if the specified modifier is down.
   **
-  Bool isDown(Key modifier) { return mask & modifier.mask != 0 }
+  Bool isDown(Key modifier) { mask.and(modifier.mask) != 0 }
 
   **
   ** Convenience for 'isDown(shift)'
   **
-  Bool isShift() { return isDown(shift) }
+  Bool isShift() { isDown(shift) }
 
   **
   ** Convenience for 'isDown(alt)'
   **
-  Bool isAlt() { return isDown(alt) }
+  Bool isAlt() { isDown(alt) }
 
   **
   ** Convenience for 'isDown(ctrl)'
   **
-  Bool isCtrl() { return isDown(ctrl) }
+  Bool isCtrl() { isDown(ctrl) }
 
   **
   ** Convenience for 'isDown(comand)'
   **
-  Bool isCommand() { return isDown(command) }
+  Bool isCommand() { isDown(command) }
 
   **
   ** Add two keys to create a new key combination.

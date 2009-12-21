@@ -161,7 +161,7 @@ internal class JavaReflect
       fan := JavaMethod()
       fan.parent = self
       fan.name = "<init>"
-      fan.flags = toMemberFlags(mods) | FConst.Ctor
+      fan.flags = toMemberFlags(mods).or(FConst.Ctor)
       fan.returnType = self
       fan.setParamTypes(toFanTypes(self.bridge, java.getParameterTypes))
       addSlot(slots, fan.name, fan)

@@ -285,7 +285,7 @@ class Tokenizer : CompilerSupport
       }
       nibCount++
       if (nibCount > 16) throw err("Hex literal too big")
-      val = (val << 4) + nib;
+      val = val.shiftl(4) + nib;
       consume
     }
 
@@ -607,7 +607,7 @@ class Tokenizer : CompilerSupport
       n1 := cur.fromDigit(16); consume
       n0 := cur.fromDigit(16); consume
       if (n3 == null || n2 == null || n1 == null || n0 == null) throw err("Invalid hex value for \\uxxxx")
-      return ((n3 << 12) | (n2 << 8) | (n1 << 4) | n0)
+      return n3.shiftl(12).or(n2.shiftl(8)).or(n1.shiftl(4)).or(n0)
     }
 
     throw err("Invalid escape sequence")

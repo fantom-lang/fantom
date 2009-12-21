@@ -96,7 +96,7 @@ class InitEnum : CompilerStep
     {
       m = MethodDef(curType.location, curType)
       m.name = "make"
-      m.flags = FConst.Ctor | FConst.Private | FConst.Synthetic
+      m.flags = FConst.Ctor + FConst.Private + FConst.Synthetic
       m.ret = TypeRef(curType.location, ns.voidType)
       m.code = Block(curType.location)
       m.code.stmts.add(ReturnStmt.makeSynthetic(curType.location))
@@ -128,7 +128,7 @@ class InitEnum : CompilerStep
     loc := curType.location
     m := MethodDef(loc, curType)
     m.name = "fromStr"
-    m.flags = FConst.Static | FConst.Public
+    m.flags = FConst.Public + FConst.Static
     m.params.add(ParamDef(loc, ns.strType, "name"))
     m.params.add(ParamDef(loc, ns.boolType, "checked", LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)))
     m.ret = TypeRef(loc, curType.toNullable)
@@ -176,7 +176,7 @@ class InitEnum : CompilerStep
     // static field
     f := FieldDef(loc, curType)
     f.doc       = def.doc
-    f.flags     = FConst.Public | FConst.Static | FConst.Const | FConst.Storage | FConst.Enum
+    f.flags     = FConst.Public + FConst.Static + FConst.Const + FConst.Storage + FConst.Enum
     f.name      = def.name
     f.fieldType = curType
     f.init      = init
@@ -211,7 +211,7 @@ class InitEnum : CompilerStep
 
     // static field
     f := FieldDef(loc, curType)
-    f.flags     = FConst.Public | FConst.Static | FConst.Const | FConst.Storage
+    f.flags     = FConst.Public + FConst.Static + FConst.Const + FConst.Storage
     f.name      = "vals"
     f.fieldType = listType
     f.init      = init

@@ -271,7 +271,7 @@ class JavaType : CType
     {
       it.parent = this
       it.name = "<new>"
-      it.flags = FConst.Ctor | FConst.Public
+      it.flags = FConst.Ctor + FConst.Public
       it.returnType = this
       it.params = JavaParam[,]
     }
@@ -288,7 +288,7 @@ class JavaType : CType
     {
       it.parent = base
       it.name = "<class>"
-      it.flags = FConst.Public | FConst.Static
+      it.flags = FConst.Public + FConst.Static
       it.returnType = bridge.classType
       it.params = JavaParam[,]
     }

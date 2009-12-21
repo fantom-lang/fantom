@@ -41,7 +41,7 @@ abstract class FSlot : CSlot, FConst
   protected Void writeCommon(OutStream out)
   {
     out.writeI2(nameIndex)
-    out.writeI4(flags & FlagsMask)
+    out.writeI4(flags.and(FlagsMask))
   }
 
   protected Void readCommon(InStream in)

@@ -117,12 +117,12 @@ class FMethodVar : FConst, CParam
 {
   new make(FMethod fmethod) { this.fmethod = fmethod }
 
-  override Str name() { return fpod.n(nameIndex) }
-  override CType paramType() { return fpod.toType(typeRef) }
-  override Bool hasDefault() { return def != null }
-  override Str toStr() { return "$paramType $name" }
+  override Str name() { fpod.n(nameIndex) }
+  override CType paramType() { fpod.toType(typeRef) }
+  override Bool hasDefault() { def != null }
+  override Str toStr() { "$paramType $name" }
 
-  Bool isParam()  { return flags & FConst.Param != 0 }
+  Bool isParam()  { flags.and(FConst.Param) != 0 }
 
   Void write(OutStream out)
   {

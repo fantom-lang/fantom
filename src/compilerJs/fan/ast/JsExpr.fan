@@ -88,8 +88,8 @@ class JsExpr : JsNode
     val := le.val as Int
     if (val.abs > maxInt || val == Int.minVal)
     {
-      hi := (val >> 32) & 0xffff_ffff
-      lo := val & 0xffff_ffff
+      hi := val.shiftr(32).and(0xffff_ffff)
+      lo := val.and(0xffff_ffff)
       out.w("new Long(0x$hi.toHex,0x$lo.toHex)")
     }
     else out.w(val)

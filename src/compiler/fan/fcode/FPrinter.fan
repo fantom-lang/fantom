@@ -115,7 +115,7 @@ class FPrinter : FConst
     m.vars.each |FMethodVar v, Int reg|
     {
       role := v.isParam ?  "Param" : "Local"
-      if (m.flags & FConst.Static == 0) reg++
+      if (m.flags.and(FConst.Static) == 0) reg++
       printLine("    [" + role + " " + reg + "] " + pod.n(v.nameIndex) + " -> " + typeRef(v.typeRef))
       if (v.def != null) code(v.def)
     }
@@ -225,24 +225,24 @@ class FPrinter : FConst
   Str flags(Int flags)
   {
     s := StrBuf.make
-    if (flags & FConst.Abstract  != 0) s.add("abstract ")
-    if (flags & FConst.Const     != 0) s.add("const ")
-    if (flags & FConst.Ctor      != 0) s.add("ctor ")
-    if (flags & FConst.Enum      != 0) s.add("enum ")
-    if (flags & FConst.Final     != 0) s.add("final ")
-    if (flags & FConst.Getter    != 0) s.add("getter ")
-    if (flags & FConst.Internal  != 0) s.add("internal ")
-    if (flags & FConst.Mixin     != 0) s.add("mixin ")
-    if (flags & FConst.Native    != 0) s.add("native ")
-    if (flags & FConst.Override  != 0) s.add("override ")
-    if (flags & FConst.Private   != 0) s.add("private ")
-    if (flags & FConst.Protected != 0) s.add("protected ")
-    if (flags & FConst.Public    != 0) s.add("public ")
-    if (flags & FConst.Setter    != 0) s.add("setter ")
-    if (flags & FConst.Static    != 0) s.add("static ")
-    if (flags & FConst.Storage   != 0) s.add("storage ")
-    if (flags & FConst.Synthetic != 0) s.add("synthetic ")
-    if (flags & FConst.Virtual   != 0) s.add("virtual ")
+    if (flags.and(FConst.Abstract)  != 0) s.add("abstract ")
+    if (flags.and(FConst.Const)     != 0) s.add("const ")
+    if (flags.and(FConst.Ctor)      != 0) s.add("ctor ")
+    if (flags.and(FConst.Enum)      != 0) s.add("enum ")
+    if (flags.and(FConst.Final)     != 0) s.add("final ")
+    if (flags.and(FConst.Getter)    != 0) s.add("getter ")
+    if (flags.and(FConst.Internal)  != 0) s.add("internal ")
+    if (flags.and(FConst.Mixin)     != 0) s.add("mixin ")
+    if (flags.and(FConst.Native)    != 0) s.add("native ")
+    if (flags.and(FConst.Override)  != 0) s.add("override ")
+    if (flags.and(FConst.Private)   != 0) s.add("private ")
+    if (flags.and(FConst.Protected) != 0) s.add("protected ")
+    if (flags.and(FConst.Public)    != 0) s.add("public ")
+    if (flags.and(FConst.Setter)    != 0) s.add("setter ")
+    if (flags.and(FConst.Static)    != 0) s.add("static ")
+    if (flags.and(FConst.Storage)   != 0) s.add("storage ")
+    if (flags.and(FConst.Synthetic) != 0) s.add("synthetic ")
+    if (flags.and(FConst.Virtual)   != 0) s.add("virtual ")
     return s.toStr[0..-2]
   }
 

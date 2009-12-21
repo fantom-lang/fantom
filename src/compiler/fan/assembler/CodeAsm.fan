@@ -389,7 +389,7 @@ class CodeAsm : CompilerSupport
     code.writeI2(count)
     jumpStart := code.size
     fill := count*2
-    fill.times |,| { code.write(0xff) }  // we'll backpatch the jump offsets last
+    fill.times |->| { code.write(0xff) }  // we'll backpatch the jump offsets last
 
     // default block goes first - it's the switch fall
     // thru, save offset to back patch jump

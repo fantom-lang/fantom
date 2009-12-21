@@ -155,7 +155,7 @@ class Build : BuildGroup
     zip := CreateZip(this)
     {
       outFile = devHomeDir + `${moniker}.zip`
-      inDir = devHomeDir
+      inDirs = [devHomeDir]
       pathPrefix = "$moniker/".toUri
       filter = |File f, Str path->Bool|
       {

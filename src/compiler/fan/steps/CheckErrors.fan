@@ -77,7 +77,7 @@ class CheckErrors : CompilerStep
       err("Symbol '$s.name' has non-const type '$s.of'", s.location)
 
     // verify symbol has correct type
-    coerce(s.val, s.of) |,|
+    coerce(s.val, s.of) |->|
     {
       err("'$s.val.toTypeStr' is not assignable to '$s.of'", s.val.location)
     }
@@ -132,21 +132,21 @@ class CheckErrors : CompilerStep
     loc := t.location
 
     // these modifiers are never allowed on a type
-    if (flags & FConst.Ctor != 0)      err("Cannot use 'new' modifier on type", loc)
-    if (flags & FConst.Native != 0)    err("Cannot use 'native' modifier on type", loc)
-    if (flags & Parser.Once != 0)      err("Cannot use 'once' modifier on type", loc)
-    if (flags & FConst.Override != 0)  err("Cannot use 'override' modifier on type", loc)
-    if (flags & FConst.Private != 0)   err("Cannot use 'private' modifier on type", loc)
-    if (flags & FConst.Protected != 0) err("Cannot use 'protected' modifier on type", loc)
-    if (flags & FConst.Static != 0)    err("Cannot use 'static' modifier on type", loc)
-    if (flags & FConst.Virtual != 0)   err("Cannot use 'virtual' modifier on type", loc)
-    if (flags & Parser.Readonly != 0)  err("Cannot use 'readonly' modifier on type", loc)
+    if (flags.and(FConst.Ctor) != 0)      err("Cannot use 'new' modifier on type", loc)
+    if (flags.and(FConst.Native) != 0)    err("Cannot use 'native' modifier on type", loc)
+    if (flags.and(Parser.Once) != 0)      err("Cannot use 'once' modifier on type", loc)
+    if (flags.and(FConst.Override) != 0)  err("Cannot use 'override' modifier on type", loc)
+    if (flags.and(FConst.Private) != 0)   err("Cannot use 'private' modifier on type", loc)
+    if (flags.and(FConst.Protected) != 0) err("Cannot use 'protected' modifier on type", loc)
+    if (flags.and(FConst.Static) != 0)    err("Cannot use 'static' modifier on type", loc)
+    if (flags.and(FConst.Virtual) != 0)   err("Cannot use 'virtual' modifier on type", loc)
+    if (flags.and(Parser.Readonly) != 0)  err("Cannot use 'readonly' modifier on type", loc)
 
     // check invalid protection combinations
     checkProtectionFlags(flags, loc)
 
     // check abstract and final
-    if ((flags & FConst.Abstract != 0) && (flags & FConst.Final != 0))
+    if (flags.and(FConst.Abstract) != 0 && flags.and(FConst.Final) != 0)
       err("Invalid combination of 'abstract' and 'final' modifiers", loc)
   }
 
@@ -236,7 +236,7 @@ class CheckErrors : CompilerStep
     // if this field overrides a concrete field,
     // then it never gets its own storage
     if (f.concreteBase != null)
-      f.flags &= ~FConst.Storage
+      f.flags = f.flags.and(FConst.Storage.not)
 
     // check for invalid flags
     checkFieldFlags(f)
@@ -270,27 +270,27 @@ class CheckErrors : CompilerStep
     loc   := f.location
 
     // these modifiers are never allowed on a field
-    if (flags & FConst.Ctor != 0)    err("Cannot use 'new' modifier on field", loc)
-    if (flags & FConst.Final != 0)   err("Cannot use 'final' modifier on field", loc)
-    if (flags & Parser.Once != 0)    err("Cannot use 'once' modifier on field", loc)
+    if (flags.and(FConst.Ctor) != 0)    err("Cannot use 'new' modifier on field", loc)
+    if (flags.and(FConst.Final) != 0)   err("Cannot use 'final' modifier on field", loc)
+    if (flags.and(Parser.Once) != 0)    err("Cannot use 'once' modifier on field", loc)
 
     // check invalid protection combinations
     checkProtectionFlags(flags, loc)
 
     // if native
-    if (flags & FConst.Native != 0)
+    if (flags.and(FConst.Native) != 0)
     {
-      if (flags & FConst.Const != 0) err("Invalid combination of 'native' and 'const' modifiers", loc)
-      if (flags & FConst.Abstract != 0) err("Invalid combination of 'native' and 'abstract' modifiers", loc)
-      if (flags & FConst.Static != 0) err("Invalid combination of 'native' and 'static' modifiers", loc)
+      if (flags.and(FConst.Const) != 0) err("Invalid combination of 'native' and 'const' modifiers", loc)
+      if (flags.and(FConst.Abstract) != 0) err("Invalid combination of 'native' and 'abstract' modifiers", loc)
+      if (flags.and(FConst.Static) != 0) err("Invalid combination of 'native' and 'static' modifiers", loc)
     }
 
     // if const
-    if (flags & FConst.Const != 0)
+    if (flags.and(FConst.Const) != 0)
     {
       // invalid const flag combo
-      if (flags & FConst.Abstract != 0) err("Invalid combination of 'const' and 'abstract' modifiers", loc)
-      else if (flags & FConst.Virtual != 0 && flags & FConst.Override == 0) err("Invalid combination of 'const' and 'virtual' modifiers", loc)
+      if (flags.and(FConst.Abstract) != 0) err("Invalid combination of 'const' and 'abstract' modifiers", loc)
+      else if (flags.and(FConst.Virtual) != 0 && flags.and(FConst.Override) == 0) err("Invalid combination of 'const' and 'virtual' modifiers", loc)
 
       // invalid type
       if (!f.fieldType.isConstFieldType)
@@ -299,35 +299,35 @@ class CheckErrors : CompilerStep
     else
     {
       // static fields must be const
-      if (flags & FConst.Static != 0) err("Static field '$f.name' must be const", loc)
+      if (flags.and(FConst.Static) != 0) err("Static field '$f.name' must be const", loc)
     }
 
     // check invalid protection combinations on setter (getter
     // can no modifiers which is checked in the parser)
     if (f.setter != null)
     {
-      fieldProtection  := flags & ~Parser.ProtectionMask
-      setterProtection := f.set.flags & ~Parser.ProtectionMask
+      fieldProtection  := flags.and(Parser.ProtectionMask.not)
+      setterProtection := f.set.flags.and(Parser.ProtectionMask.not)
       if (fieldProtection != setterProtection)
       {
         // verify protection flag combinations
         checkProtectionFlags(f.set.flags, loc)
 
         // verify that setter has narrowed protection
-        if (fieldProtection & FConst.Private != 0)
+        if (fieldProtection.and(FConst.Private) != 0)
         {
-          if (setterProtection & FConst.Public != 0)    err("Setter cannot have wider visibility than the field", loc)
-          if (setterProtection & FConst.Protected != 0) err("Setter cannot have wider visibility than the field", loc)
-          if (setterProtection & FConst.Internal != 0)  err("Setter cannot have wider visibility than the field", loc)
+          if (setterProtection.and(FConst.Public) != 0)    err("Setter cannot have wider visibility than the field", loc)
+          if (setterProtection.and(FConst.Protected) != 0) err("Setter cannot have wider visibility than the field", loc)
+          if (setterProtection.and(FConst.Internal) != 0)  err("Setter cannot have wider visibility than the field", loc)
         }
-        else if (fieldProtection & FConst.Internal != 0)
+        else if (fieldProtection.and(FConst.Internal) != 0)
         {
-          if (setterProtection & FConst.Public != 0)    err("Setter cannot have wider visibility than the field", loc)
-          if (setterProtection & FConst.Protected != 0) err("Setter cannot have wider visibility than the field", loc)
+          if (setterProtection.and(FConst.Public) != 0)    err("Setter cannot have wider visibility than the field", loc)
+          if (setterProtection.and(FConst.Protected) != 0) err("Setter cannot have wider visibility than the field", loc)
         }
-        else if (fieldProtection & FConst.Protected != 0)
+        else if (fieldProtection.and(FConst.Protected) != 0)
         {
-          if (setterProtection & FConst.Public != 0)    err("Setter cannot have wider visibility than the field", loc)
+          if (setterProtection.and(FConst.Public) != 0)    err("Setter cannot have wider visibility than the field", loc)
         }
       }
     }
@@ -381,50 +381,50 @@ class CheckErrors : CompilerStep
     loc := m.location
 
     // these modifiers are never allowed on a method
-    if (flags & FConst.Final != 0)     err("Cannot use 'final' modifier on method", loc)
-    if (flags & FConst.Const != 0)     err("Cannot use 'const' modifier on method", loc)
-    if (flags & Parser.Readonly != 0)  err("Cannot use 'readonly' modifier on method", loc)
+    if (flags.and(FConst.Final) != 0)     err("Cannot use 'final' modifier on method", loc)
+    if (flags.and(FConst.Const) != 0)     err("Cannot use 'const' modifier on method", loc)
+    if (flags.and(Parser.Readonly) != 0)  err("Cannot use 'readonly' modifier on method", loc)
 
     // check invalid protection combinations
     checkProtectionFlags(flags, loc)
 
     // check invalid constructor flags
-    if (flags & FConst.Ctor != 0)
+    if (flags.and(FConst.Ctor) != 0)
     {
-      if (flags & FConst.Abstract != 0) err("Invalid combination of 'new' and 'abstract' modifiers", loc)
-      else if (flags & FConst.Override != 0) err("Invalid combination of 'new' and 'override' modifiers", loc)
-      else if (flags & FConst.Virtual != 0) err("Invalid combination of 'new' and 'virtual' modifiers", loc)
-      if (flags & Parser.Once != 0)     err("Invalid combination of 'new' and 'once' modifiers", loc)
-      if (flags & FConst.Native != 0)   err("Invalid combination of 'new' and 'native' modifiers", loc)
-      if (flags & FConst.Static != 0)   err("Invalid combination of 'new' and 'static' modifiers", loc)
+      if (flags.and(FConst.Abstract) != 0) err("Invalid combination of 'new' and 'abstract' modifiers", loc)
+      else if (flags.and(FConst.Override) != 0) err("Invalid combination of 'new' and 'override' modifiers", loc)
+      else if (flags.and(FConst.Virtual) != 0) err("Invalid combination of 'new' and 'virtual' modifiers", loc)
+      if (flags.and(Parser.Once) != 0)     err("Invalid combination of 'new' and 'once' modifiers", loc)
+      if (flags.and(FConst.Native) != 0)   err("Invalid combination of 'new' and 'native' modifiers", loc)
+      if (flags.and(FConst.Static) != 0)   err("Invalid combination of 'new' and 'static' modifiers", loc)
     }
 
     // check invalid static flags
-    if (flags & FConst.Static != 0)
+    if (flags.and(FConst.Static) != 0)
     {
-      if (flags & FConst.Abstract != 0) err("Invalid combination of 'static' and 'abstract' modifiers", loc)
-      else if (flags & FConst.Override != 0) err("Invalid combination of 'static' and 'override' modifiers", loc)
-      else if (flags & FConst.Virtual != 0) err("Invalid combination of 'static' and 'virtual' modifiers", loc)
-      if (flags & Parser.Once != 0) err("Invalid combination of 'static' and 'once' modifiers", loc)
+      if (flags.and(FConst.Abstract) != 0) err("Invalid combination of 'static' and 'abstract' modifiers", loc)
+      else if (flags.and(FConst.Override) != 0) err("Invalid combination of 'static' and 'override' modifiers", loc)
+      else if (flags.and(FConst.Virtual) != 0) err("Invalid combination of 'static' and 'virtual' modifiers", loc)
+      if (flags.and(Parser.Once) != 0) err("Invalid combination of 'static' and 'once' modifiers", loc)
     }
 
     // check invalid abstract flags
-    if (flags & FConst.Abstract != 0)
+    if (flags.and(FConst.Abstract) != 0)
     {
-      if (flags & FConst.Native != 0) err("Invalid combination of 'abstract' and 'native' modifiers", loc)
-      if (flags & Parser.Once != 0) err("Invalid combination of 'abstract' and 'once' modifiers", loc)
+      if (flags.and(FConst.Native) != 0) err("Invalid combination of 'abstract' and 'native' modifiers", loc)
+      if (flags.and(Parser.Once) != 0) err("Invalid combination of 'abstract' and 'once' modifiers", loc)
     }
 
     // mixins cannot have once methods
-    if (flags & Parser.Once != 0)
+    if (flags.and(Parser.Once) != 0)
     {
       if (curType.isMixin)
         err("Mixins cannot have once methods", m.location)
     }
 
     // normalize method flags after checking
-    if (m.flags & FConst.Static != 0)
-      m.flags |= FConst.Const;
+    if (m.flags.and(FConst.Static) != 0)
+      m.flags = flags.or(FConst.Const);
   }
 
   private Void checkParams(MethodDef m)
@@ -457,7 +457,7 @@ class CheckErrors : CompilerStep
     // check parameter default type
     if (p.def != null && !p.paramType.isGenericParameter)
     {
-      p.def = coerce(p.def, p.paramType) |,|
+      p.def = coerce(p.def, p.paramType) |->|
       {
         err("'$p.def.toTypeStr' is not assignable to '$p.paramType'", p.def.location)
       }
@@ -617,7 +617,7 @@ class CheckErrors : CompilerStep
 
   private Void checkIf(IfStmt stmt)
   {
-    stmt.condition = coerce(stmt.condition, ns.boolType) |,|
+    stmt.condition = coerce(stmt.condition, ns.boolType) |->|
     {
       err("If condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.location)
     }
@@ -625,7 +625,7 @@ class CheckErrors : CompilerStep
 
   private Void checkThrow(ThrowStmt stmt)
   {
-    stmt.exception = coerce(stmt.exception, ns.errType) |,|
+    stmt.exception = coerce(stmt.exception, ns.errType) |->|
     {
       err("Must throw Err, not '$stmt.exception.ctype'", stmt.exception.location)
     }
@@ -635,7 +635,7 @@ class CheckErrors : CompilerStep
   {
     if (stmt.condition != null)
     {
-      stmt.condition = coerce(stmt.condition, ns.boolType) |,|
+      stmt.condition = coerce(stmt.condition, ns.boolType) |->|
       {
         err("For condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.location)
       }
@@ -644,7 +644,7 @@ class CheckErrors : CompilerStep
 
   private Void checkWhile(WhileStmt stmt)
   {
-    stmt.condition = coerce(stmt.condition, ns.boolType) |,|
+    stmt.condition = coerce(stmt.condition, ns.boolType) |->|
     {
       err("While condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.location)
     }
@@ -686,7 +686,7 @@ class CheckErrors : CompilerStep
     }
     else
     {
-      stmt.expr = coerce(stmt.expr, ret) |,|
+      stmt.expr = coerce(stmt.expr, ret) |->|
       {
         err("Cannot return '$stmt.expr.toTypeStr' as '$ret'", stmt.expr.location)
       }
@@ -811,7 +811,7 @@ class CheckErrors : CompilerStep
     valType := listType.v
     expr.vals.each |Expr val, Int i|
     {
-      expr.vals[i] = coerceBoxed(val, valType) |,|
+      expr.vals[i] = coerceBoxed(val, valType) |->|
       {
         err("Invalid value type '$val.toTypeStr' for list of '$valType'", val.location)
       }
@@ -826,13 +826,13 @@ class CheckErrors : CompilerStep
     valType := mapType.v
     expr.keys.each |Expr key, Int i|
     {
-      expr.keys[i] = coerceBoxed(key, keyType) |,|
+      expr.keys[i] = coerceBoxed(key, keyType) |->|
       {
         err("Invalid key type '$key.toTypeStr' for map type '$mapType'", key.location)
       }
 
       val := expr.vals[i]
-      expr.vals[i] = coerceBoxed(val, valType) |,|
+      expr.vals[i] = coerceBoxed(val, valType) |->|
       {
         err("Invalid value type '$val.toTypeStr' for map type '$mapType'", val.location)
       }
@@ -841,11 +841,11 @@ class CheckErrors : CompilerStep
 
   private Void checkRangeLiteral(RangeLiteralExpr range)
   {
-    range.start = coerce(range.start, ns.intType) |,|
+    range.start = coerce(range.start, ns.intType) |->|
     {
       err("Range must be Int..Int, not '${range.start.ctype}..${range.end.ctype}'", range.location)
     }
-    range.end = coerce(range.end, ns.intType) |,|
+    range.end = coerce(range.end, ns.intType) |->|
     {
       err("Range must be Int..Int, not '${range.start.ctype}..${range.end.ctype}'", range.location)
     }
@@ -853,7 +853,7 @@ class CheckErrors : CompilerStep
 
   private Void checkBool(UnaryExpr expr)
   {
-    expr.operand = coerce(expr.operand, ns.boolType) |,|
+    expr.operand = coerce(expr.operand, ns.boolType) |->|
     {
       err("Cannot apply '$expr.opToken.symbol' operator to '$expr.operand.ctype'", expr.location)
     }
@@ -870,7 +870,7 @@ class CheckErrors : CompilerStep
   {
     expr.operands.each |Expr operand, Int i|
     {
-      expr.operands[i] = coerce(operand, ns.boolType) |,|
+      expr.operands[i] = coerce(operand, ns.boolType) |->|
       {
         err("Cannot apply '$expr.opToken.symbol' operator to '$operand.ctype'", operand.location)
       }
@@ -899,7 +899,7 @@ class CheckErrors : CompilerStep
   private Void checkAssign(BinaryExpr expr)
   {
     // check that rhs is assignable to lhs
-    expr.rhs = coerce(expr.rhs, expr.lhs.ctype) |,|
+    expr.rhs = coerce(expr.rhs, expr.lhs.ctype) |->|
     {
       err("'$expr.rhs.toTypeStr' is not assignable to '$expr.lhs.ctype'", expr.rhs.location)
     }
@@ -929,7 +929,7 @@ class CheckErrors : CompilerStep
     if (!expr.lhs.ctype.isNullable)
       err("Cannot use '?:' operator on non-nullable type '$expr.lhs.ctype'", expr.location)
 
-    expr.rhs = coerce(expr.rhs, expr.ctype) |,|
+    expr.rhs = coerce(expr.rhs, expr.ctype) |->|
     {
       err("Cannot coerce '$expr.rhs.toTypeStr' to '$expr.ctype'", expr.rhs.location);
     }
@@ -1174,7 +1174,7 @@ class CheckErrors : CompilerStep
     if (call.target != null && !call.isCompare && !call.isSafe)
     {
       if (call.target.ctype.isVal || call.method.parent.isVal)
-        call.target = coerce(call.target, call.method.parent) |,| {}
+        call.target = coerce(call.target, call.method.parent) |->| {}
     }
   }
 
@@ -1331,15 +1331,15 @@ class CheckErrors : CompilerStep
 
   private Void checkTernary(TernaryExpr expr)
   {
-    expr.condition = coerce(expr.condition, ns.boolType) |,|
+    expr.condition = coerce(expr.condition, ns.boolType) |->|
     {
       err("Ternary condition must be Bool, not '$expr.condition.ctype'", expr.condition.location)
     }
-    expr.trueExpr = coerce(expr.trueExpr, expr.ctype) |,|
+    expr.trueExpr = coerce(expr.trueExpr, expr.ctype) |->|
     {
       err("Ternary true expr '$expr.trueExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.trueExpr.location)
     }
-    expr.falseExpr = coerce(expr.falseExpr, expr.ctype) |,|
+    expr.falseExpr = coerce(expr.falseExpr, expr.ctype) |->|
     {
       err("Ternary falseexpr '$expr.falseExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.falseExpr.location)
     }
@@ -1376,7 +1376,7 @@ class CheckErrors : CompilerStep
         sig.params.each |CType p, Int i|
         {
           // check each argument and ensure boxed
-          newArgs[i] = coerceBoxed(args[i], p) |,| { isErr = true }
+          newArgs[i] = coerceBoxed(args[i], p) |->| { isErr = true }
         }
       }
     }
@@ -1401,7 +1401,7 @@ class CheckErrors : CompilerStep
         {
           // ensure arg fits parameter type (or auto-cast)
           pt := p.paramType.parameterizeThis(base)
-          newArgs[i] = coerce(args[i], pt) |,|
+          newArgs[i] = coerce(args[i], pt) |->|
           {
             isErr = name != "compare" // TODO let anything slide for Obj.compare
           }
@@ -1450,12 +1450,12 @@ class CheckErrors : CompilerStep
 
   private Void checkProtectionFlags(Int flags, Location loc)
   {
-    isPublic    := flags & FConst.Public    != 0
-    isProtected := flags & FConst.Protected != 0
-    isPrivate   := flags & FConst.Private   != 0
-    isInternal  := flags & FConst.Internal  != 0
-    isVirtual   := flags & FConst.Virtual   != 0
-    isOverride  := flags & FConst.Override  != 0
+    isPublic    := flags.and(FConst.Public)    != 0
+    isProtected := flags.and(FConst.Protected) != 0
+    isPrivate   := flags.and(FConst.Private)   != 0
+    isInternal  := flags.and(FConst.Internal)  != 0
+    isVirtual   := flags.and(FConst.Virtual)   != 0
+    isOverride  := flags.and(FConst.Override)  != 0
 
     if (isPublic)
     {
@@ -1569,7 +1569,7 @@ class CheckErrors : CompilerStep
   **
   ** Run the standard coerce method and ensure the result is boxed.
   **
-  private Expr coerceBoxed(Expr expr, CType expected, |,| onErr)
+  private Expr coerceBoxed(Expr expr, CType expected, |->| onErr)
   {
     return box(coerce(expr, expected, onErr))
   }
@@ -1578,7 +1578,7 @@ class CheckErrors : CompilerStep
   ** Coerce the target expression to the specified type.  If
   ** the expression is not type compatible run the onErr function.
   **
-  Expr coerce(Expr expr, CType expected, |,| onErr)
+  Expr coerce(Expr expr, CType expected, |->| onErr)
   {
     // route to bridge for FFI coercion if either side if foreign
     if (expected.isForeign) return expected.bridge.coerce(expr, expected, onErr)
@@ -1593,7 +1593,7 @@ class CheckErrors : CompilerStep
   ** the expression is not type compatible run the onErr function.
   ** Default Fantom behavior.
   **
-  static Expr doCoerce(Expr expr, CType expected, |,| onErr)
+  static Expr doCoerce(Expr expr, CType expected, |->| onErr)
   {
     // sanity check that expression has been typed
     CType actual := expr.ctype

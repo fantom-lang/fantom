@@ -26,9 +26,6 @@ enum Weekday
   ** Saturday
   sat
 
-// TODO build 1.0.48
-static const Weekday[] vals
-
   **
   ** Return the day after this weekday.
   **
