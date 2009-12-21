@@ -46,12 +46,12 @@ namespace Fan.Inet
   // End Points
   //////////////////////////////////////////////////////////////////////////
 
-    public IpAddress localAddress(TcpListener fan)
+    public IpAddr localAddr(TcpListener fan)
     {
       if (!m_bound) return null;
       IPEndPoint pt = m_dotnet.LocalEndpoint as IPEndPoint;
       if (pt == null) return null;
-      return IpAddressPeer.make(pt.Address);
+      return IpAddrPeer.make(pt.Address);
     }
 
     public Long localPort(TcpListener fan)
@@ -67,13 +67,13 @@ namespace Fan.Inet
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public TcpListener bind(TcpListener fan, IpAddress addr, Long port, long backlog)
+    public TcpListener bind(TcpListener fan, IpAddr addr, Long port, long backlog)
     {
       IPAddress dotnetAddr = (addr == null) ? IPAddress.Any : addr.m_peer.m_dotnet;
       int dotnetPort = (port == null) ? 0 : port.intValue();
       m_dotnet = new System.Net.Sockets.TcpListener(dotnetAddr, dotnetPort);
       m_dotnet.Server.ReceiveBufferSize = (int)m_receiveBufferSize;
-      m_dotnet.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, m_reuseAddress);
+      m_dotnet.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, m_reuseAddr);
       m_dotnet.Start((int)backlog);
       m_bound = true;
       return fan;
@@ -118,8 +118,8 @@ namespace Fan.Inet
     public long getReceiveBufferSize(TcpListener fan) { return m_receiveBufferSize; }
     public void setReceiveBufferSize(TcpListener fan, long v) { m_receiveBufferSize = v; }
 
-    public bool getReuseAddress(TcpListener fan) { return m_reuseAddress; }
-    public void setReuseAddress(TcpListener fan, bool v) { m_reuseAddress = v; }
+    public bool getReuseAddr(TcpListener fan) { return m_reuseAddr; }
+    public void setReuseAddr(TcpListener fan, bool v) { m_reuseAddr = v; }
 
     public Duration getReceiveTimeout(TcpListener fan)
     {
@@ -140,7 +140,7 @@ namespace Fan.Inet
     private bool m_bound  = false;
     private bool m_closed = false;
     private long m_receiveBufferSize = 8192;
-    private bool m_reuseAddress = false;
+    private bool m_reuseAddr = false;
     private int m_timeout = 0;            // accept timeout in millis
 
   }

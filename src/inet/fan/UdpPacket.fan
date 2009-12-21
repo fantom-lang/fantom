@@ -7,7 +7,7 @@
 //
 
 **
-** UdpPacket encapsulates an IpAddress, port, and payload of bytes
+** UdpPacket encapsulates an IpAddr, port, and payload of bytes
 ** to send or receive from a UdpSocket.
 **
 class UdpPacket
@@ -20,9 +20,9 @@ class UdpPacket
   **
   ** Construct a new UdpPacket.
   **
-  new make(IpAddress? addr := null, Int? port := null, Buf? data := null)
+  new make(IpAddr? addr := null, Int? port := null, Buf? data := null)
   {
-    this.address = addr
+    this.addr = addr
     this.port = port
     this.data = data
   }
@@ -32,9 +32,9 @@ class UdpPacket
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** The send or receive IpAddress.  Defaults to null.
+  ** The send or receive IpAddr.  Defaults to null.
   **
-  IpAddress? address := null
+  IpAddr? addr := null
 
   **
   ** The send or receive port number.  Defaults to null.

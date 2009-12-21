@@ -60,12 +60,12 @@ public class UdpSocketPeer
 // End Points
 //////////////////////////////////////////////////////////////////////////
 
-  public IpAddress localAddress(UdpSocket fan)
+  public IpAddr localAddr(UdpSocket fan)
   {
     if (!isBound()) return null;
     InetAddress addr = getLocalAddress();
     if (addr == null) return null;
-    return IpAddressPeer.make(addr);
+    return IpAddrPeer.make(addr);
   }
 
   public Long localPort(UdpSocket fan)
@@ -76,7 +76,7 @@ public class UdpSocketPeer
     return Long.valueOf(port);
   }
 
-  public IpAddress remoteAddress(UdpSocket fan)
+  public IpAddr remoteAddr(UdpSocket fan)
   {
     if (!isConnected()) return null;
     return remoteAddr;
@@ -92,7 +92,7 @@ public class UdpSocketPeer
 // Communication
 //////////////////////////////////////////////////////////////////////////
 
-  public UdpSocket bind(UdpSocket fan, IpAddress addr, Long port)
+  public UdpSocket bind(UdpSocket fan, IpAddr addr, Long port)
   {
     try
     {
@@ -107,7 +107,7 @@ public class UdpSocketPeer
     }
   }
 
-  public UdpSocket connect(UdpSocket fan, IpAddress addr, long port)
+  public UdpSocket connect(UdpSocket fan, IpAddr addr, long port)
   {
     try
     {
@@ -132,7 +132,7 @@ public class UdpSocketPeer
     DatagramPacket datagram = new DatagramPacket(buf, off, len);
 
     // map address, port
-    IpAddress addr = packet.address();
+    IpAddr addr = packet.addr();
     Long port = packet.port();
     if (isConnected())
     {
@@ -185,7 +185,7 @@ public class UdpSocketPeer
     }
 
     // update packet with received message
-    packet.address(IpAddressPeer.make(datagram.getAddress()));
+    packet.addr(IpAddrPeer.make(datagram.getAddress()));
     packet.port(Long.valueOf(datagram.getPort()));
     data.pos  += datagram.getLength();
     data.size += datagram.getLength();
@@ -296,7 +296,7 @@ public class UdpSocketPeer
     }
   }
 
-  public boolean getReuseAddress(UdpSocket fan)
+  public boolean getReuseAddr(UdpSocket fan)
   {
     try
     {
@@ -308,7 +308,7 @@ public class UdpSocketPeer
     }
   }
 
-  public void setReuseAddress(UdpSocket fan, boolean v)
+  public void setReuseAddr(UdpSocket fan, boolean v)
   {
     try
     {
@@ -377,7 +377,7 @@ public class UdpSocketPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private IpAddress remoteAddr;
+  private IpAddr remoteAddr;
   private int remotePort = -1;
   private SocketOptions options;
 

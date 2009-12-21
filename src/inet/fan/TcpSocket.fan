@@ -52,7 +52,7 @@ const class TcpSocket
   **
   ** Get the bound local address or null if unbound.
   **
-  native IpAddress? localAddress()
+  native IpAddr? localAddr()
 
   **
   ** Get the bound local port or null if unbound.
@@ -62,7 +62,7 @@ const class TcpSocket
   **
   ** Get the remote address or null if not connected.
   **
-  native IpAddress? remoteAddress()
+  native IpAddr? remoteAddr()
 
   **
   ** Get the remote port or null if not connected.
@@ -75,11 +75,11 @@ const class TcpSocket
 
   **
   ** Bind this socket to the specified local address.  If addr is null
-  ** then the default IpAddress for the local host is selected.  If port
+  ** then the default IpAddr for the local host is selected.  If port
   ** is null an ephemeral port is selected.  Throw IOErr if the port is
   ** already bound or the bind fails.  Return this.
   **
-  native This bind(IpAddress? addr, Int? port)
+  native This bind(IpAddr? addr, Int? port)
 
   **
   ** Connect this socket to the specified address and port.  This method
@@ -87,7 +87,7 @@ const class TcpSocket
   ** connection error.  If a non-null timeout is specified, then block no
   ** longer then the specified timeout before raising an IOErr.
   **
-  native This connect(IpAddress addr, Int port, Duration? timeout := null)
+  native This connect(IpAddr addr, Int port, Duration? timeout := null)
 
   **
   ** Get the input stream used to read data from the socket.  The input
@@ -122,7 +122,7 @@ const class TcpSocket
   **   - keepAlive
   **   - receiveBufferSize
   **   - sendBufferSize
-  **   - reuseAddress
+  **   - reuseAddr
   **   - linger
   **   - receiveTimeout
   **   - noDelay
@@ -146,8 +146,8 @@ const class TcpSocket
   internal native Int getSendBufferSize()
   internal native Void setSendBufferSize(Int v)
 
-  internal native Bool getReuseAddress()
-  internal native Void setReuseAddress(Bool v)
+  internal native Bool getReuseAddr()
+  internal native Void setReuseAddr(Bool v)
 
   internal native Duration? getLinger()
   internal native Void setLinger(Duration? v)

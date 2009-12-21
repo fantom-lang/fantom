@@ -44,6 +44,9 @@ Common Names [#commonNames]
   - Prefer cur to current
   - Prefer msg to message
   - Prefer rec to record
+  - Prefer addr to address
+  - Prefer req to request
+  - Prefer res to response
   - Prefer io/IO to Io
   - Prefer ro/RO to Ro
   - Prefer rw/RW to Rw
