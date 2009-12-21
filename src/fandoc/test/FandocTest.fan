@@ -423,21 +423,21 @@ class FandocTest : Test
 // Errors
 //////////////////////////////////////////////////////////////////////////
 
-  Void testErrors()
+  Void testErrs()
   {
-    verifyErrors("*i",
+    verifyErrs("*i",
      ["<body>", ["<p>", "*i"]],
      [1, "Invalid *emphasis*"])
 
-    verifyErrors("a\nb\n**i",
+    verifyErrs("a\nb\n**i",
      ["<body>", ["<p>", "a b **i"]],
      [3, "Invalid **strong**"])
 
-    verifyErrors("aaaa\nbbbb bbb\n\nccc\n**i",
+    verifyErrs("aaaa\nbbbb bbb\n\nccc\n**i",
      ["<body>", ["<p>", "aaaa bbbb bbb"], ["<p>", "ccc **i"]],
      [5, "Invalid **strong**"])
 
-    verifyErrors(
+    verifyErrs(
     "abc `foo
 
      1. ok
@@ -451,24 +451,24 @@ class FandocTest : Test
        5, "Invalid **strong**",
      ])
 
-    verifyErrors("------\na\n- one\n- two",
+    verifyErrs("------\na\n- one\n- two",
      ["<body>", ["<pre>", "------\na\n- one\n- two"]],
      [1, "Invalid line 1"])
   }
 
-  Void verifyErrors(Str str, Obj[] expected, Obj[] errors)
+  Void verifyErrs(Str str, Obj[] expected, Obj[] errs)
   {
     parser := FandocParser { silent = true }
     doc := parser.parse("Test", str.in)
     verifyDocNode(doc, expected)
     //echo("======")
-    //parser.errors.each |Err e| { echo(e) }
-    verifyEq(parser.errors.size, errors.size/2)
-    parser.errors.each |FandocErr e, Int i|
+    //parser.errs.each |Err e| { echo(e) }
+    verifyEq(parser.errs.size, errs.size/2)
+    parser.errs.each |FandocErr e, Int i|
     {
       verifyEq(e.file, "Test")
-      verifyEq(e.line, errors[i*2])
-      verifyEq(e.msg,  errors[i*2+1])
+      verifyEq(e.line, errs[i*2])
+      verifyEq(e.msg,  errs[i*2+1])
     }
 
   }

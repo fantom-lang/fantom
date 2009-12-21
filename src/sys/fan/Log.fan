@@ -78,10 +78,14 @@ const class Log
   **
   Bool isEnabled(LogLevel level)
 
+** TODO: use `isErr`
+@deprecated
+Bool isError()
+
   **
   ** Return if error level is enabled.
   **
-  Bool isError()
+  Bool isErr()
 
   **
   ** Return if warn level is enabled.
@@ -102,10 +106,14 @@ const class Log
 // Logging
 //////////////////////////////////////////////////////////////////////////
 
+** TODO: use `err`
+@deprecated
+Void error(Str msg, Err? err := null)
+
   **
-  ** Generate a `LogLevel.error` log entry.
+  ** Generate a `LogLevel.err` log entry.
   **
-  Void error(Str msg, Err? err := null)
+  Void err(Str msg, Err? err := null)
 
   **
   ** Generate a `LogLevel.warn` log entry.

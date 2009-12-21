@@ -108,7 +108,7 @@ class PodIndexGenerator : HtmlGenerator
         }
         catch (Err e)
         {
-          compiler.log.error("Failed to generate fandoc for $t.qname")
+          compiler.log.err("Failed to generate fandoc for $t.qname")
         }
       }
       out.print("</td>\n")

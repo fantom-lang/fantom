@@ -12,7 +12,7 @@
 const class CompilerErr : Err
 {
 
-  new make(Str msg, Location? location, Err? cause := null, LogLevel level := LogLevel.error)
+  new make(Str msg, Location? location, Err? cause := null, LogLevel level := LogLevel.err)
     : super(msg, cause)
   {
     this.level = level
@@ -29,7 +29,7 @@ const class CompilerErr : Err
     return Location(file, line, col)
   }
 
-  Bool isError() { level === LogLevel.error }
+  Bool isErr() { level === LogLevel.err }
 
   Bool isWarn() { level === LogLevel.warn }
 

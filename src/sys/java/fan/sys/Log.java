@@ -128,7 +128,7 @@ public class Log
     return enabled(level);
   }
 
-  public final boolean isError() { return isEnabled(LogLevel.error); }
+  public final boolean isErr()   { return isEnabled(LogLevel.err); }
 
   public final boolean isWarn()  { return isEnabled(LogLevel.warn); }
 
@@ -140,11 +140,16 @@ public class Log
 // Logging
 //////////////////////////////////////////////////////////////////////////
 
-  public final void error(String msg) { error(msg, (Err)null); }
-  public final void error(String msg, Throwable e) { error(msg, Err.make(e)); }
-  public final void error(String msg, Err err)
+// TODO
+public final boolean isError() { return isEnabled(LogLevel.error); }
+public final void error(String msg) { err(msg, (Err)null); }
+public final void error(String msg, Err err) { err(msg, err); }
+
+  public final void err(String msg) { err(msg, (Err)null); }
+  public final void err(String msg, Throwable e) { err(msg, Err.make(e)); }
+  public final void err(String msg, Err err)
   {
-    log(LogRec.make(DateTime.now(), LogLevel.error, name, msg, err));
+    log(LogRec.make(DateTime.now(), LogLevel.err, name, msg, err));
   }
 
   public final void warn(String msg) { warn(msg, (Err)null); }

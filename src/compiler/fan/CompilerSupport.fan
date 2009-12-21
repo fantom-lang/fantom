@@ -120,7 +120,7 @@ class CompilerSupport
     if (e.isWarn)
       c.warns.add(e)
     else
-      c.errors.add(e)
+      c.errs.add(e)
     return e
   }
 
@@ -129,8 +129,8 @@ class CompilerSupport
   **
   Void bombIfErr()
   {
-    if (!c.errors.isEmpty)
-      throw c.errors.first
+    if (!c.errs.isEmpty)
+      throw c.errs.first
   }
 
   **
@@ -142,7 +142,7 @@ class CompilerSupport
   {
     log := Log.get("typedb")
     oldLevel := log.level
-    log.level = LogLevel.error
+    log.level = LogLevel.err
     try
       return Type.findByFacet(key, facetVal, options)
     finally

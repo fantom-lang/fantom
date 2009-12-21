@@ -98,7 +98,7 @@ class Evaluator
     // if we still don't have a compile, report errors and bail
     if (pod == null)
     {
-      reportCompilerErrors
+      reportCompilerErrs
       return
     }
 
@@ -113,7 +113,7 @@ class Evaluator
     }
     catch (Err e)
     {
-      reportEvalError(e)
+      reportEvalErr(e)
       return
     }
 
@@ -178,15 +178,15 @@ class Evaluator
     return Type.find(stmt.ctype.signature)
   }
 
-  private Void reportCompilerErrors()
+  private Void reportCompilerErrs()
   {
-    compiler.errors.each |CompilerErr e|
+    compiler.errs.each |CompilerErr e|
     {
-      out.printLine("ERROR($e.col): $e.message")
+      out.printLine("ERROR($e.col): $e.msg")
     }
   }
 
-  private Void reportEvalError(Err e)
+  private Void reportEvalErr(Err e)
   {
     // trace to buffer
     buf := Buf.make

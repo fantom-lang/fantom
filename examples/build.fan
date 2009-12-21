@@ -84,7 +84,7 @@ class Build : BuildScript
       srcFile := dir + `${name}.fan`
       if (!srcFile.exists)
       {
-        log.error("index file missing $srcFile")
+        log.err("index file missing $srcFile")
         fail = true
         continue
       }
@@ -98,7 +98,7 @@ class Build : BuildScript
         t = Sys.compile(srcFile)
       catch (Err e)
       {
-        log.error("Failed to compile $srcFile", e)
+        log.err("Failed to compile $srcFile", e)
         fail = true
         continue
       }

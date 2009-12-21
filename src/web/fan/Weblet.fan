@@ -61,7 +61,7 @@ mixin Weblet
       case "DELETE":  onDelete
       case "OPTIONS": onOptions
       case "TRACE":   onTrace
-      default:        res.sendError(501)
+      default:        res.sendErr(501)
     }
   }
 
@@ -71,7 +71,7 @@ mixin Weblet
   **
   virtual Void onGet()
   {
-    res.sendError(501)
+    res.sendErr(501)
   }
 
   **
@@ -81,7 +81,7 @@ mixin Weblet
   // TODO - make work like servlets
   virtual Void onHead()
   {
-    res.sendError(501)
+    res.sendErr(501)
   }
 
   **
@@ -90,7 +90,7 @@ mixin Weblet
   **
   virtual Void onPost()
   {
-    res.sendError(501)
+    res.sendErr(501)
   }
 
   **
@@ -99,7 +99,7 @@ mixin Weblet
   **
   virtual Void onPut()
   {
-    res.sendError(501)
+    res.sendErr(501)
   }
 
   **
@@ -108,7 +108,7 @@ mixin Weblet
   **
   virtual Void onDelete()
   {
-    res.sendError(501)
+    res.sendErr(501)
   }
 
   **
@@ -117,7 +117,7 @@ mixin Weblet
   **
   virtual Void onOptions()
   {
-    res.sendError(501)
+    res.sendErr(501)
   }
 
   **
@@ -126,7 +126,7 @@ mixin Weblet
   **
   virtual Void onTrace()
   {
-    res.sendError(501)
+    res.sendErr(501)
   }
 
 }

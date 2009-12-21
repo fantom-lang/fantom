@@ -160,7 +160,7 @@ abstract class AbstractMain
       // check that we have a next value to parse
       if (next == null || next.startsWith("-"))
       {
-        log.error("Missing value for -$n")
+        log.err("Missing value for -$n")
         return false // did not consume next
       }
 
@@ -169,7 +169,7 @@ abstract class AbstractMain
         // parse the value to proper type and set field
         field.set(this, parseVal(field.of, next))
       }
-      catch (Err e) log.error("Cannot parse -$n as $field.of.name: $next")
+      catch (Err e) log.err("Cannot parse -$n as $field.of.name: $next")
       return true // we *did* consume next
     }
 
@@ -196,7 +196,7 @@ abstract class AbstractMain
       if (list == null) field.set(this, list = List.make(of, 8))
       list.add(val)
     }
-    catch (Err e) log.error("Cannot parse argument as $field.of.name: $tok")
+    catch (Err e) log.err("Cannot parse argument as $field.of.name: $tok")
     return !isList // increment argi if not list
   }
 
@@ -360,7 +360,7 @@ abstract class AbstractMain
       if (!argsOk || helpOpt)
       {
         usage
-        if (!helpOpt) log.error("Missing arguments")
+        if (!helpOpt) log.err("Missing arguments")
         return 1
       }
 
@@ -369,7 +369,7 @@ abstract class AbstractMain
     }
     catch (Err err)
     {
-      log.error("Cannot boot")
+      log.err("Cannot boot")
       err.trace
       return 1
     }

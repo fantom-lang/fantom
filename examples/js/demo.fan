@@ -94,7 +94,7 @@ const class JsDemoMod : WebMod
   {
     // serve up pod resources
     File file := ("fan:/sys" + req.uri).toUri.get
-    if (!file.exists) { res.sendError(404); return }
+    if (!file.exists) { res.sendErr(404); return }
     FileWeblet(file).onService
   }
 }
@@ -104,7 +104,7 @@ class ShowScript : Weblet
   new make(File f) { file = f }
   override Void onGet()
   {
-    if (!file.exists) { res.sendError(404); return }
+    if (!file.exists) { res.sendErr(404); return }
 
     compile
     t := compiler.types[0]
@@ -163,7 +163,7 @@ class ShowScript : Weblet
     input := CompilerInput.make
     input.podName        = file.basename
     input.version        = Version("0")
-    input.log.level      = LogLevel.error
+    input.log.level      = LogLevel.err
     input.isScript       = true
     input.srcStr         = file.readAllStr
     input.srcStrLocation = Location.makeFile(file)

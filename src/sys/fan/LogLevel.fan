@@ -16,7 +16,7 @@ enum LogLevel
   debug,
   info,
   warn,
-  error,
+  err,
   silent
 
 // TODO build 1.0.48

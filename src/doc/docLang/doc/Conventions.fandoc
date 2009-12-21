@@ -39,10 +39,12 @@ Naming [#naming]
 
 Common Names [#commonNames]
 ***************************
+  - Prefer add to append
   - Prefer addr to address
   - Prefer arg to argument
   - Prefer cur to current
   - Prefer dotnet/Dotnet
+  - Prefer err to error
   - Prefer html/Html to HTML
   - Prefer http/Http to HTTP
   - Prefer id/Id to ID or Identifier
@@ -56,6 +58,7 @@ Common Names [#commonNames]
   - Prefer rw/RW to Rw
   - Prefer size to length or count
   - Prefer val to value
+  - Prefer warn to warning
   - Prefer xml/Xml to XML
 
 Indention [#indention]

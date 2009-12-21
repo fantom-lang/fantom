@@ -19,20 +19,20 @@ class LogTest : Test
   Void testLogLevel()
   {
     verifyEq(LogLevel#.qname, "sys::LogLevel")
-    verifyEq(LogLevel.vals, [LogLevel.debug, LogLevel.info, LogLevel.warn, LogLevel.error, LogLevel.silent])
+    verifyEq(LogLevel.vals, [LogLevel.debug, LogLevel.info, LogLevel.warn, LogLevel.err, LogLevel.silent])
     verifyEq(LogLevel.vals.isImmutable, true)
 
     verifyEq(LogLevel.debug.ordinal,  0)
     verifyEq(LogLevel.info.ordinal,   1)
     verifyEq(LogLevel.warn.ordinal,   2)
-    verifyEq(LogLevel.error.ordinal,  3)
+    verifyEq(LogLevel.err.ordinal,    3)
     verifyEq(LogLevel.silent.ordinal, 4)
 
     verifySame(LogLevel.fromStr("warn"), LogLevel.warn)
 
-    verify(LogLevel.silent > LogLevel.error)
-    verify(LogLevel.error  > LogLevel.debug)
-    verify(LogLevel.error  > LogLevel.warn)
+    verify(LogLevel.silent > LogLevel.err)
+    verify(LogLevel.err    > LogLevel.debug)
+    verify(LogLevel.err    > LogLevel.warn)
     verify(LogLevel.warn   > LogLevel.info)
   }
 
@@ -85,27 +85,27 @@ class LogTest : Test
 
     log.level = LogLevel.silent
     reset
-    log.error("xyz")
+    log.err("xyz")
     verifyLog(null)
     reset
-    log.error("xyz", err)
+    log.err("xyz", err)
     verifyLog(null)
 
-    verifyFalse(log.isEnabled(LogLevel.error))
-    verifyFalse(log.isError)
+    verifyFalse(log.isEnabled(LogLevel.err))
+    verifyFalse(log.isErr)
     verifyFalse(log.isWarn)
     verifyFalse(log.isInfo)
     verifyFalse(log.isDebug);
 
-    [LogLevel.error, LogLevel.warn, LogLevel.info, LogLevel.debug].each |LogLevel level|
+    [LogLevel.err, LogLevel.warn, LogLevel.info, LogLevel.debug].each |LogLevel level|
     {
       log.level = level
       reset
-      log.error("xyz")
-      verifyLog(LogLevel.error, "xyz", null)
+      log.err("xyz")
+      verifyLog(LogLevel.err, "xyz", null)
       reset
-      log.error("xyz", err)
-      verifyLog(LogLevel.error, "xyz", err)
+      log.err("xyz", err)
+      verifyLog(LogLevel.err, "xyz", err)
     }
   }
 
@@ -120,7 +120,7 @@ class LogTest : Test
     log := log()
     err := Err.make;
 
-    [LogLevel.silent, LogLevel.error].each |LogLevel level|
+    [LogLevel.silent, LogLevel.err].each |LogLevel level|
     {
       log.level = level
       reset
@@ -152,7 +152,7 @@ class LogTest : Test
     log := log()
     err := Err.make;
 
-    [LogLevel.silent, LogLevel.error, LogLevel.warn].each |LogLevel level|
+    [LogLevel.silent, LogLevel.err, LogLevel.warn].each |LogLevel level|
     {
       log.level = level
       reset
@@ -184,7 +184,7 @@ class LogTest : Test
     log := log()
     err := Err.make;
 
-    [LogLevel.silent, LogLevel.error, LogLevel.warn, LogLevel.info].each |LogLevel level|
+    [LogLevel.silent, LogLevel.err, LogLevel.warn, LogLevel.info].each |LogLevel level|
     {
       log.level = level
       reset

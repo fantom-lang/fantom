@@ -47,7 +47,7 @@ class Flux
     }
     catch (Err e)
     {
-      log.error("Cannot load options: $file", e)
+      log.err("Cannot load options: $file", e)
     }
     if (value == null) value = t?.make
 
@@ -73,7 +73,7 @@ class Flux
     }
     catch (Err e)
     {
-      log.error("Cannot save options: $file", e)
+      log.err("Cannot save options: $file", e)
       return false
     }
   }
@@ -128,7 +128,7 @@ internal const class FluxUtilThread : Thread
     }
     catch (Err e)
     {
-      type.log.error("Cannot load options: $file", e)
+      type.log.err("Cannot load options: $file", e)
     }
     return t.make
   }

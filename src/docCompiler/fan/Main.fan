@@ -65,7 +65,7 @@ class Main : AbstractMain
     }
     catch (UnknownPodErr e)
     {
-      log.error(e.toStr)
+      log.err(e.toStr)
       return 1
     }
     catch (CompilerErr err)
@@ -75,7 +75,7 @@ class Main : AbstractMain
     }
     catch (Err e)
     {
-      log.error("Internal compiler error", e)
+      log.err("Internal compiler error", e)
       return 1
     }
   }
@@ -103,7 +103,7 @@ class Main : AbstractMain
     }
     catch (Err e)
     {
-      log.error("Topindex failed", e)
+      log.err("Topindex failed", e)
       return 1
     }
   }

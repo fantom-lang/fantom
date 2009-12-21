@@ -57,7 +57,7 @@ namespace Fanx.Typedb
           }
           catch (System.Exception e)
           {
-            log.error("Cannot load type database", e);
+            log.err("Cannot load type database", e);
           }
 
           // close it so we can rebuild
@@ -75,7 +75,7 @@ namespace Fanx.Typedb
       }
       catch (System.Exception e)
       {
-        log.error("Cannot load type database", e);
+        log.err("Cannot load type database", e);
         throw Err.make("Cannot load type database", e).val;
       }
     }

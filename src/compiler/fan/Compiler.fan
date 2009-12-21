@@ -41,7 +41,7 @@ class Compiler
 
     this.input    = input
     this.log      = input.log
-    this.errors   = CompilerErr[,]
+    this.errs     = CompilerErr[,]
     this.warns    = CompilerErr[,]
     this.depends  = Depend[,]
     this.wrappers = Str:CField[:]
@@ -106,9 +106,13 @@ class Compiler
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+// TODO
+@deprecated
+CompilerErr[] errors() { errs }
+
   CompilerInput input       // ctor
   CompilerLog log           // ctor
-  CompilerErr[] errors      // accumulated errors
+  CompilerErr[] errs        // accumulated errors
   CompilerErr[] warns       // accumulated warnings
   Depend[] depends          // InitInput
   CNamespace? ns            // InitInput

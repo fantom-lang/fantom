@@ -75,7 +75,7 @@ namespace Fanx.Typedb
         }
         catch (Exception e)
         {
-          log.error("Cannot load " + f, e);
+          log.err("Cannot load " + f, e);
         }
       }
       pods = (Pod[])acc.ToArray(typeof(Pod));

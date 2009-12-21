@@ -18,7 +18,7 @@ are const, immutable instances shared by all threads.
 Most of the time, you should just use [Pod.log]`sys::Pod.log` to
 get the standard log for your pod:
 
-  Pod.of(this).log.error("...")
+  Pod.of(this).log.err("...")
 
 You can also use [Log.get]`sys::Log.get` which will create the Log
 on the first call, and look it up on subsequent calls:
@@ -38,7 +38,7 @@ Log Statements [#statements]
 ****************************
 The following methods are used to generate log records:
 
-  - [Log.error]`sys::Log.error`: something bad happened
+  - [Log.err]`sys::Log.err`: something bad happened
   - [Log.warn]`sys::Log.warn`: something happened which might be bad
   - [Log.info]`sys::Log.info`: something interesting happened
   - [Log.debug]`sys::Log.debug`: something happened which is
@@ -47,7 +47,7 @@ The following methods are used to generate log records:
 All logging methods take a 'Str' message, and an optional 'Err'.
 Some simple examples:
 
-  log.error("The freaking file didn't load", err)
+  log.err("The freaking file didn't load", err)
   log.info("CatchRoadRoader service started on port $port")
 
 When writing debug log statements, we expect that they will be turned
@@ -81,7 +81,7 @@ You can get/set the current severity level of a Log via the
 [level]`sys::Log.level` field.  Some code examples:
 
   log.level = LogLevel.warn
-  log.level < LogLevel.error    // returns true
+  log.level < LogLevel.err    // returns true
   log.level < LogLevel.info     // returns false
 
 Log Handlers [#handlers]

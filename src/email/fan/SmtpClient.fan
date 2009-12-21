@@ -67,7 +67,7 @@ class SmtpClient
     if (host == null) throw NullErr("host is null")
 
     // open the socket connection
-    sock = TcpSocket().connect(IpAddress(host), port)
+    sock = TcpSocket().connect(IpAddr(host), port)
     try
     {
       // read server hello
@@ -75,7 +75,7 @@ class SmtpClient
       if (res.code != 220) throw SmtpErr.makeRes(res)
 
       // EHLO query the extensions supported
-      writeReq("EHLO [$IpAddress.local.numeric]")
+      writeReq("EHLO [$IpAddr.local.numeric]")
       res = readRes
       if (res.code != 250) throw SmtpErr.makeRes(res)
       readExts(res)

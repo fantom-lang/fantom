@@ -55,7 +55,7 @@ public class TypeDb
         }
         catch (Exception e)
         {
-          log.error("Cannot load type database", e);
+          log.err("Cannot load type database", e);
         }
 
         // close it so we can rebuild
@@ -73,7 +73,7 @@ public class TypeDb
     }
     catch (Exception e)
     {
-      log.error("Cannot load type database", e);
+      log.err("Cannot load type database", e);
       throw Err.make("Cannot load type database", e).val;
     }
   }

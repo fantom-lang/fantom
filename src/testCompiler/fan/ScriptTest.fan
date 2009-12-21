@@ -69,8 +69,8 @@ class ScriptTest : CompilerTest
     Sys.compile(f, ["log":log, "logLevel":LogLevel.silent])
     verifyEq(log.level, LogLevel.silent)
 
-    Sys.compile(f, ["log":log, "logLevel":LogLevel.error, "force":true])
-    verifyEq(log.level, LogLevel.error)
+    Sys.compile(f, ["log":log, "logLevel":LogLevel.err, "force":true])
+    verifyEq(log.level, LogLevel.err)
   }
 
   Void testCompileError()
