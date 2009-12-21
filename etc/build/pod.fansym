@@ -11,10 +11,10 @@ using sys
 buildVersion=Version("1.0.48")
 
 // Must be configured boot build in substitute/release installation
-buildDevHome=`file:/C:/dev/boot/`
+//buildDevHome=`file:/C:/dev/fan/`
 
 // Windows setup
-buildJdkHome=`file:/C:/dev/tools/java/`
+buildJdkHome=`/C:/dev/tools/java/`
 buildDotnetHome=`/C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/`
 
 // Mac setup
