@@ -56,6 +56,7 @@
 ** The `plus` and `relTo` methods can be used to resolve and relativize
 ** relative references against a base URI.
 **
+@simple
 const final class Uri
 {
 

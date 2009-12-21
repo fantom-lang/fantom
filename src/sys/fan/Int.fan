@@ -9,6 +9,7 @@
 **
 ** Int is used to represent a signed 64-bit integer.
 **
+@simple
 const final class Int : Num
 {
 

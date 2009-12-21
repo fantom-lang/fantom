@@ -10,6 +10,7 @@
 **
 ** Float is used to represent a 64-bit floating point number.
 **
+@simple
 const final class Float : Num
 {
 

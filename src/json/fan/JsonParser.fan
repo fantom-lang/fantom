@@ -18,15 +18,11 @@ internal class JsonParser
     this.in = in
   }
 
-  // FIXIT need one to parse to Obj as well, doing Map/List for now
-  internal Obj parse()
+  internal Obj? parse()
   {
     consume
     skipWhitespace
-    if (cur == JsonToken.arrayStart)
-      return parseArray
-    else
-      return parseObj
+    return parseVal
   }
 
   private Str:Obj? parseObj()
@@ -57,7 +53,7 @@ internal class JsonParser
   private Void parsePair(Str:Obj? obj)
   {
     skipWhitespace
-    key := parseKey
+    key := parseStr
 
     skipWhitespace
 
@@ -70,11 +66,6 @@ internal class JsonParser
     obj[key] = val
   }
 
-  private Str parseKey()
-  {
-    parseStr
-  }
-
   private Obj? parseVal()
   {
     if (this.cur == JsonToken.quote) return parseStr
@@ -83,24 +74,23 @@ internal class JsonParser
     else if (this.cur == JsonToken.arrayStart) return parseArray
     else if (this.cur == 't')
     {
-      "true".size.times |Int i|{ consume }
+      "true".size.times |->| { consume }
       return true
     }
     else if (this.cur == 'f')
     {
-      "false".size.times |Int i|{ consume }
+      "false".size.times |->| { consume }
       return false
     }
     else if (this.cur == 'n')
     {
-      "null".size.times |Int i|{ consume }
+      "null".size.times |->| { consume }
       return null
     }
 
-    throw Err("Finish this method!")
+    throw err("Unexpected token " + this.cur)
   }
 
-  // parse number, duration(FIXIT, or range)
   private Obj parseNum()
   {
     integral := StrBuf()

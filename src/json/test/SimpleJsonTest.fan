@@ -57,7 +57,6 @@ class SimpleJsonTest : Test
     stream := buf.out
     Json.write(stream, map)
     stream.close
-    //echo(buf.toStr)
     newMap := Json.read(buf.toStr.in)
     validate(map, newMap)
     return newMap
