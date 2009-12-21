@@ -36,9 +36,6 @@ enum Month
   ** December
   dec
 
-// TODO build 1.0.48
-static const Month[] vals
-
   **
   ** Return the month after this month.
   **

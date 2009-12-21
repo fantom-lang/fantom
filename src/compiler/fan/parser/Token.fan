@@ -260,7 +260,7 @@ enum Token
   static
   {
     map := Str:Token[:]
-    values.each |Token t|
+    vals.each |Token t|
     {
       if (t.keyword) map[t.symbol] = t
     }
@@ -273,7 +273,7 @@ enum Token
 
   static Void main()
   {
-    values.each |Token t|
+    vals.each |Token t|
     {
       echo(t.name + "  '" + t.symbol + "'")
     }

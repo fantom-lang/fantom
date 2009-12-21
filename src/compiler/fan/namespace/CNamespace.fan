@@ -110,7 +110,7 @@ abstract class CNamespace : CompilerSupport
     typeMethod         = sysMethod(typeType,   "method")
 
     // mock methods
-    mockFlags := FConst.Public | FConst.Virtual
+    mockFlags := FConst.Public + FConst.Virtual
     funcEnterCtor   = MockMethod(funcType, "enterCtor",   mockFlags, voidType, [objType])
     funcExitCtor    = MockMethod(funcType, "exitCtor",    mockFlags, voidType, CType[,])
     funcCheckInCtor = MockMethod(funcType, "checkInCtor", mockFlags, voidType, [objType])

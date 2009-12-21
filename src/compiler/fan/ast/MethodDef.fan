@@ -21,7 +21,7 @@ class MethodDef : SlotDef, CMethod
   {
     def := make(location, parent)
     def.name   = "static\$init"
-    def.flags  = FConst.Private | FConst.Static | FConst.Synthetic
+    def.flags  = FConst.Private + FConst.Static + FConst.Synthetic
     def.ret    = parent.ns.voidType
     def.code   = block
     return def;
@@ -31,7 +31,7 @@ class MethodDef : SlotDef, CMethod
   {
     def := make(location, parent)
     def.name   = "instance\$init\$$parent.pod.name\$$parent.name";
-    def.flags  = FConst.Private | FConst.Synthetic
+    def.flags  = FConst.Private + FConst.Synthetic
     def.ret    = parent.ns.voidType
     def.code   = block
     return def;
@@ -76,7 +76,7 @@ class MethodDef : SlotDef, CMethod
   **
   ** Return if this is a once method
   **
-  Bool isOnce() { flags & Parser.Once != 0 }
+  Bool isOnce() { flags.and(Parser.Once) != 0 }
 
   **
   ** Make and add a MethodVar for a local variable.

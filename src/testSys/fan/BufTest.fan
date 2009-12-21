@@ -769,7 +769,7 @@ class BufTest : Test
     src.flip
     src.in.pipe(dst.out, null, false)
     verifyEq(dst.size, 2300)
-    2300.times |Int i| { verifyEq(dst[i], i & 0xff) }
+    2300.times |Int i| { verifyEq(dst[i], i.and(0xff)) }
 
     src.seek(0)
     f := tempDir + `pipeit`
@@ -782,7 +782,7 @@ class BufTest : Test
     dst.clear
     x.in.readBuf(dst, 2003)
     verifyEq(dst.size, 2003)
-    2003.times |Int i| { verifyEq(dst[i], i & 0xff) }
+    2003.times |Int i| { verifyEq(dst[i], i.and(0xff)) }
     src.seek(0)
     x.clear
     x.out.writeBuf(src)
@@ -794,7 +794,7 @@ class BufTest : Test
     in.readBuf(dst, 2001)
     in.close
     verifyEq(dst.size, 2001)
-    2001.times |Int i| { verifyEq(dst[i], i & 0xff) }
+    2001.times |Int i| { verifyEq(dst[i], i.and(0xff)) }
 
     src.seek(0)
     dst.clear

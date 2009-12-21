@@ -21,25 +21,25 @@ mixin CSlot
   abstract Int flags()
   abstract Obj? facet(Str qname, Obj? def)
 
-  override final Str toStr() { return signature }
+  override final Str toStr() { signature }
 
-  Bool isAbstract()  { return flags & FConst.Abstract  != 0 }
-  Bool isAccessor()  { return flags & (FConst.Getter | FConst.Setter) != 0 }
-  Bool isConst()     { return flags & FConst.Const     != 0 }
-  Bool isCtor()      { return flags & FConst.Ctor      != 0 }
-  Bool isEnum()      { return flags & FConst.Enum      != 0 }
-  Bool isGetter()    { return flags & FConst.Getter    != 0 }
-  Bool isInternal()  { return flags & FConst.Internal  != 0 }
-  Bool isNative()    { return flags & FConst.Native    != 0 }
-  Bool isOverride()  { return flags & FConst.Override  != 0 }
-  Bool isPrivate()   { return flags & FConst.Private   != 0 }
-  Bool isProtected() { return flags & FConst.Protected != 0 }
-  Bool isPublic()    { return flags & FConst.Public    != 0 }
-  Bool isSetter()    { return flags & FConst.Setter    != 0 }
-  Bool isStatic()    { return flags & FConst.Static    != 0 }
-  Bool isStorage()   { return flags & FConst.Storage   != 0 }
-  Bool isSynthetic() { return flags & FConst.Synthetic != 0 }
-  Bool isVirtual()   { return flags & FConst.Virtual   != 0 }
+  Bool isAbstract()  { flags.and(FConst.Abstract)  != 0 }
+  Bool isAccessor()  { flags.and(FConst.Getter.or(FConst.Setter)) != 0 }
+  Bool isConst()     { flags.and(FConst.Const)     != 0 }
+  Bool isCtor()      { flags.and(FConst.Ctor)      != 0 }
+  Bool isEnum()      { flags.and(FConst.Enum)      != 0 }
+  Bool isGetter()    { flags.and(FConst.Getter)    != 0 }
+  Bool isInternal()  { flags.and(FConst.Internal)  != 0 }
+  Bool isNative()    { flags.and(FConst.Native)    != 0 }
+  Bool isOverride()  { flags.and(FConst.Override)  != 0 }
+  Bool isPrivate()   { flags.and(FConst.Private)   != 0 }
+  Bool isProtected() { flags.and(FConst.Protected) != 0 }
+  Bool isPublic()    { flags.and(FConst.Public)    != 0 }
+  Bool isSetter()    { flags.and(FConst.Setter)    != 0 }
+  Bool isStatic()    { flags.and(FConst.Static)    != 0 }
+  Bool isStorage()   { flags.and(FConst.Storage)   != 0 }
+  Bool isSynthetic() { flags.and(FConst.Synthetic) != 0 }
+  Bool isVirtual()   { flags.and(FConst.Virtual)   != 0 }
 
   **
   ** If this a foreign function interface slot.  A FFI slot is one

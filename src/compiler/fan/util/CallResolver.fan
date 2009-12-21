@@ -514,7 +514,7 @@ class CallResolver : CompilerSupport
       inferred := foreign.inferredAs
       if (foreign !== inferred)
       {
-        result = foreign.bridge.coerce(result, inferred) |,|
+        result = foreign.bridge.coerce(result, inferred) |->|
         {
           throw err("Cannot coerce call return to Fantom type", location)
         }

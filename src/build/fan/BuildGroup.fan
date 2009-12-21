@@ -101,7 +101,7 @@ abstract class BuildGroup : BuildScript
     if (myTarget != null) return myTarget
 
     // make a target which runs on the children scripts
-    return Target(this, name, "run '$name' on all children") |,| { runOnChildren(name) }
+    return Target(this, name, "run '$name' on all children") |->| { runOnChildren(name) }
   }
 
   **

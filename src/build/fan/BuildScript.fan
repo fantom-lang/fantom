@@ -204,7 +204,7 @@ abstract class BuildScript
     return targets
   }
 
-  private Func toFunc(Method m) { return |,| { m.callOn(this, null) } }
+  private Func toFunc(Method m) { return |->| { m.callOn(this, null) } }
 
 //////////////////////////////////////////////////////////////////////////
 // Debug Env Target

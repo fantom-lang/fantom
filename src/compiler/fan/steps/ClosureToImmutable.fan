@@ -99,7 +99,7 @@ class ClosureToImmutable : CompilerStep
   {
     loc := cls.location
     m := MethodDef(loc, cls)
-    m.flags = FConst.Public | FConst.Synthetic | FConst.Override
+    m.flags = FConst.Public + FConst.Synthetic + FConst.Override
     m.name = "isImmutable"
     m.ret  = ns.boolType
     m.code = Block(loc)
@@ -133,7 +133,7 @@ class ClosureToImmutable : CompilerStep
     immutableField := FieldDef(loc, cls)
     immutableField.name = "immutable"
     immutableField.fieldType = ns.boolType
-    immutableField.flags = FConst.Private | FConst.Storage | FConst.Synthetic
+    immutableField.flags = FConst.Private + FConst.Storage + FConst.Synthetic
     cls.addSlot(immutableField)
 
     // Bool isImmutable() { immutable }
@@ -141,7 +141,7 @@ class ClosureToImmutable : CompilerStep
 
     // Obj toImmutable()
     m := MethodDef(loc, cls)
-    m.flags = FConst.Public | FConst.Synthetic | FConst.Override
+    m.flags = FConst.Public + FConst.Synthetic + FConst.Override
     m.name = "toImmutable"
     m.ret  = ns.objType
     m.code = Block(loc)

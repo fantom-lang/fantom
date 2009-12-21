@@ -101,9 +101,9 @@ class FType : CType
       if (f != null)
       {
         // if already mapped to field must be getter/setter
-        if ((m.flags & FConst.Getter) != 0)
+        if (m.flags.and(FConst.Getter) != 0)
           f.getter = m
-        else if ((m.flags & FConst.Setter) != 0)
+        else if (m.flags.and(FConst.Setter) != 0)
           f.setter = m
         else
           throw Err("Conflicting slots: $f and $m")
@@ -147,7 +147,7 @@ class FType : CType
     out.writeI2(fbase)
     out.writeI2(fmixins.size)
     fmixins.each |Int m| { out.writeI2(m) }
-    out.writeI4(flags & FConst.FlagsMask)
+    out.writeI4(flags.and(FConst.FlagsMask))
   }
 
   This readMeta(InStream in)

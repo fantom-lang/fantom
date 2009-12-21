@@ -76,7 +76,7 @@ class InitClosures : CompilerStep
   private Void genClass()
   {
     cls = TypeDef(ns, loc, closure.enclosingType.unit, closure.name)
-    cls.flags   = FConst.Internal | FConst.Final | FConst.Synthetic
+    cls.flags   = FConst.Internal + FConst.Final + FConst.Synthetic
     cls.base    = closure.signature
     cls.closure = closure
     closure.cls = cls
@@ -93,7 +93,7 @@ class InitClosures : CompilerStep
     code.stmts.add(ReturnStmt.makeSynthetic(loc))
 
     ctor = MethodDef(loc, cls)
-    ctor.flags = FConst.Internal | FConst.Ctor | FConst.Synthetic
+    ctor.flags = FConst.Internal + FConst.Ctor + FConst.Synthetic
     ctor.name = "make"
     ctor.ret  = ns.voidType
     ctor.code = code
@@ -108,7 +108,7 @@ class InitClosures : CompilerStep
   {
     doCall = MethodDef(loc, cls)
     doCall.name  = "doCall"
-    doCall.flags = FConst.Internal | FConst.Synthetic
+    doCall.flags = FConst.Internal + FConst.Synthetic
     doCall.code  = closure.code
     doCall.ret = signature.ret
     doCall.paramDefs = signature.toParamDefs(loc)
@@ -138,7 +138,7 @@ class InitClosures : CompilerStep
 
     // method def
     m := MethodDef(loc, parent)
-    m.flags = FConst.Override | FConst.Synthetic
+    m.flags = FConst.Override + FConst.Synthetic
     m.ret   = ns.objType.toNullable
     m.code  = Block(loc)
 

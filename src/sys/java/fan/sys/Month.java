@@ -33,8 +33,6 @@ public final class Month
     jul, aug, sep, oct, nov, dec
   };
 
-// TODO
-public static final List values = (List)new List(Sys.MonthType, array).toImmutable();
   public static final List vals = (List)new List(Sys.MonthType, array).toImmutable();
 
   private Month(int ordinal, String name)

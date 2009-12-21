@@ -178,7 +178,7 @@ public class Parser : CompilerSupport
 
     // <flags>
     flags := flags(false)
-    if (flags & ~ProtectionMask == 0) flags |= FConst.Public
+    if (flags.and(ProtectionMask.not) == 0) flags = flags.or(FConst.Public)
 
     // local working variables
     loc     := cur
@@ -188,18 +188,18 @@ public class Parser : CompilerSupport
     // mixin, enum, or class
     if (curt === Token.mixinKeyword)
     {
-      if (flags & FConst.Abstract != 0) err("The 'abstract' modifier is implied on mixin", loc)
-      if (flags & FConst.Final != 0) err("Cannot use 'final' modifier on mixin", loc)
-      flags |= FConst.Mixin | FConst.Abstract
+      if (flags.and(FConst.Abstract) != 0) err("The 'abstract' modifier is implied on mixin", loc)
+      if (flags.and(FConst.Final) != 0) err("Cannot use 'final' modifier on mixin", loc)
+      flags = flags.or(FConst.Mixin + FConst.Abstract)
       isMixin = true
       consume
     }
     else if (curt === Token.enumKeyword)
     {
-      if (flags & FConst.Const != 0) err("The 'const' modifier is implied on enum", loc)
-      if (flags & FConst.Final != 0) err("The 'final' modifier is implied on enum", loc)
-      if (flags & FConst.Abstract != 0) err("Cannot use 'abstract' modifier on enum", loc)
-      flags |= FConst.Enum | FConst.Const | FConst.Final
+      if (flags.and(FConst.Const) != 0) err("The 'const' modifier is implied on enum", loc)
+      if (flags.and(FConst.Final) != 0) err("The 'final' modifier is implied on enum", loc)
+      if (flags.and(FConst.Abstract) != 0) err("Cannot use 'abstract' modifier on enum", loc)
+      flags = flags.or(FConst.Enum + FConst.Const + FConst.Final)
       isEnum = true
       consume
     }
@@ -331,21 +331,21 @@ public class Parser : CompilerSupport
       consume
     }
 
-    if ((flags & FConst.Abstract != 0) && (flags & FConst.Virtual != 0))
+    if (flags.and(FConst.Abstract) != 0 && flags.and(FConst.Virtual) != 0)
       err("Abstract implies virtual", loc)
-    if ((flags & FConst.Override != 0) && (flags & FConst.Virtual != 0))
+    if (flags.and(FConst.Override) != 0 && flags.and(FConst.Virtual) != 0)
       err("Override implies virtual", loc)
 
     if (normalize)
     {
       if (!protection) flags |= FConst.Public
-      if (flags & FConst.Abstract != 0) flags |= FConst.Virtual
-      if (flags & FConst.Override != 0)
+      if (flags.and(FConst.Abstract) != 0) flags = flags.or(FConst.Virtual)
+      if (flags.and(FConst.Override) != 0)
       {
-        if (flags & FConst.Final != 0)
-          flags &= ~FConst.Final
+        if (flags.and(FConst.Final) != 0)
+          flags = flags.and(FConst.Final.not)
         else
-          flags |= FConst.Virtual
+          flags = flags.or(FConst.Virtual)
       }
     }
 
@@ -435,7 +435,7 @@ public class Parser : CompilerSupport
     if (curt === Token.identifier && cur.val == parent.name && peekt == Token.lparen)
     {
       err("Invalid constructor syntax - use new keyword")
-      return methodDef(loc, parent, doc, facets, flags|FConst.Ctor, TypeRef(loc, ns.voidType), consumeId)
+      return methodDef(loc, parent, doc, facets, flags.or(FConst.Ctor), TypeRef(loc, ns.voidType), consumeId)
     }
 
     // check for inferred typed field
@@ -447,7 +447,7 @@ public class Parser : CompilerSupport
     }
 
     // check for constructor
-    if (flags & FConst.Ctor != 0)
+    if (flags.and(FConst.Ctor) != 0)
     {
       name := consumeId
       return methodDef(loc, parent, doc, facets, flags, TypeRef(loc, ns.voidType), name)
@@ -484,7 +484,7 @@ public class Parser : CompilerSupport
     field := FieldDef(loc, parent)
     field.doc    = doc
     field.facets = facets
-    field.flags  = flags & ~ParserFlagsMask
+    field.flags  = flags.and(ParserFlagsMask.not)
     field.name   = name
     if (type != null) field.fieldType = type
 
@@ -539,9 +539,9 @@ public class Parser : CompilerSupport
     }
 
     // readonly is syntatic sugar for { private set }
-    if (flags & Readonly != 0)
+    if (flags.and(Readonly) != 0)
     {
-      field.set.flags = (field.set.flags & ProtectionMask) | FConst.Private
+      field.set.flags = field.set.flags.and(ProtectionMask).or(FConst.Private)
     }
 
     endOfStmt
@@ -560,7 +560,7 @@ public class Parser : CompilerSupport
     loc := f.location
     get := MethodDef(loc, f.parentDef)
     get.accessorFor = f
-    get.flags = f.flags | FConst.Getter
+    get.flags = f.flags.or(FConst.Getter)
     get.name  = f.name
     get.ret   = f.fieldType
     f.get = get
@@ -572,7 +572,7 @@ public class Parser : CompilerSupport
     loc := f.location
     set := MethodDef(loc, f.parentDef)
     set.accessorFor = f
-    set.flags = f.flags | FConst.Setter
+    set.flags = f.flags.or(FConst.Setter)
     set.name  = f.name
     set.ret   = ns.voidType
     set.params.add(ParamDef(loc, f.fieldType, "it"))
@@ -645,9 +645,9 @@ public class Parser : CompilerSupport
       {
         if (accessorFlags != 0)
         {
-          if (accessorFlags & ProtectionMask != 0)
+          if (accessorFlags.and(ProtectionMask) != 0)
             err("Cannot use modifiers on field setter except to narrow protection", loc)
-          f.set.flags = (f.set.flags & ProtectionMask) | accessorFlags
+          f.set.flags = f.set.flags.and(ProtectionMask).or(accessorFlags)
         }
         f.set.code = block
       }
@@ -704,7 +704,7 @@ public class Parser : CompilerSupport
 
     // if no body expected
     if (isSys) flags |= FConst.Native
-    if (flags & FConst.Abstract != 0 || flags & FConst.Native != 0)
+    if (flags.and(FConst.Abstract) != 0 || flags.and(FConst.Native) != 0)
     {
       if (curt === Token.lbrace)
       {
@@ -719,7 +719,7 @@ public class Parser : CompilerSupport
     }
 
     // ctor chain
-    if ((flags & FConst.Ctor != 0) && (curt === Token.colon))
+    if ((flags.and(FConst.Ctor) != 0) && (curt === Token.colon))
       method.ctorChain = ctorChain(method);
 
     // body
@@ -1384,7 +1384,7 @@ if (curt === Token.pipe)  warn("Replace bitwise | with 'or' method call", cur)
     expr := shiftExpr
     while (curt === Token.amp)
     {
-if (curt === Token.caret) warn("Replace bitwise & with 'and' method call", cur)
+if (curt === Token.amp) warn("Replace bitwise & with 'and' method call", cur)
       expr = ShortcutExpr.makeBinary(expr, consume.kind, shiftExpr)
     }
     return expr
@@ -2437,7 +2437,7 @@ if (curt === Token.comma)
   const static Int ParserFlagsMask := Readonly
 
   // Bitwise and this mask to clear all protection scope flags
-  const static Int ProtectionMask := ~(FConst.Public|FConst.Protected|FConst.Private|FConst.Internal)
+  const static Int ProtectionMask := (FConst.Public+FConst.Protected+FConst.Private+FConst.Internal).not
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

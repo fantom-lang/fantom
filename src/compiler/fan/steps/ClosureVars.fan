@@ -427,7 +427,7 @@ class ClosureVars : CompilerStep
     // define new wrapper
     loc := Location("synthetic")
     w := TypeDef(cs.ns, loc, cs.syntheticsUnit, name)
-    w.flags = FConst.Internal | FConst.Synthetic
+    w.flags = FConst.Internal + FConst.Synthetic
     w.base  = cs.ns.objType
     cs.addTypeDef(w)
 
@@ -440,7 +440,7 @@ class ClosureVars : CompilerStep
 
     // generate constructor:  make(T v) { this.val = v }
     ctor := MethodDef(loc, w)
-    ctor.flags  = FConst.Ctor | FConst.Internal | FConst.Synthetic
+    ctor.flags  = FConst.Ctor + FConst.Internal + FConst.Synthetic
     ctor.name   = "make"
     ctor.ret    = cs.ns.voidType
     param := ParamDef(loc, ctype, "v")
@@ -473,7 +473,7 @@ class ClosureVars : CompilerStep
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private const static Int syntheticFieldFlags:= FConst.Internal | FConst.Storage | FConst.Synthetic
+  private const static Int syntheticFieldFlags:= FConst.Internal+FConst.Storage+FConst.Synthetic
 
 }
 

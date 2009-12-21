@@ -45,7 +45,7 @@ abstract class CBridge : CompilerSupport
   ** the expression is not type compatible run the onErr function.
   ** Default implementation provides standard Fantom coercion.
   **
-  virtual Expr coerce(Expr expr, CType expected, |,| onErr)
+  virtual Expr coerce(Expr expr, CType expected, |->| onErr)
   {
     return CheckErrors.doCoerce(expr, expected, onErr)
   }

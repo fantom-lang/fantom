@@ -18,7 +18,7 @@ const class FTypeRef
     this.podName  = podName
     this.typeName = typeName
     this.sig      = sig
-    this.hashcode = (podName << 17) ^ (typeName) ^ (sig.hash)
+    this.hashcode = podName.shiftl(17).xor(typeName).xor(sig.hash)
   }
 
   override Int hash() { return hashcode }
@@ -70,7 +70,7 @@ const class FFieldRef
     this.parent  = parent
     this.name    = name
     this.typeRef = typeRef
-    this.hashcode = (parent << 23) ^ (name << 7) ^ (typeRef)
+    this.hashcode = parent.shiftl(23).xor(name.shiftl(7)).xor(typeRef)
   }
 
   override Int hash()
@@ -120,7 +120,7 @@ const class FMethodRef
     this.name    = name
     this.ret     = ret
     this.params  = params
-    this.hashcode = (parent << 23) ^ (name << 7) ^ (ret)
+    this.hashcode = parent.shiftl(23).xor(name.shiftl(7)).xor(ret)
   }
 
   override Int hash()
@@ -186,7 +186,7 @@ const class FSymbolRef
   {
     this.podName    = podName
     this.symbolName = symbolName
-    this.hash       = (podName << 17) ^ (symbolName)
+    this.hash       = podName.shiftl(17).xor(symbolName)
   }
 
   override const Int hash
