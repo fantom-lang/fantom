@@ -9,6 +9,7 @@
 **
 ** Bool represents a boolean condition of true or false.
 **
+@simple
 const final class Bool
 {
 

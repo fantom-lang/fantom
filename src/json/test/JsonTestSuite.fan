@@ -121,11 +121,6 @@ internal class JsonTestSuite
      },
      JsonTestCase
      {
-       map = ["kuri":`http://fantom.org`]
-       description = "Uri"
-     },
-     JsonTestCase
-     {
        map = ["myTrue":true,"myFalse":false,"myNull":null]
        description = "Bools and nulls"
      },

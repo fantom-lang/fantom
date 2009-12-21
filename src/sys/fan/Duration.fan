@@ -9,6 +9,7 @@
 **
 ** Duration represents a relative duration of time with nanosecond precision.
 **
+@simple
 const final class Duration
 {
 

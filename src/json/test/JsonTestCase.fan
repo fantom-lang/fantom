@@ -27,20 +27,20 @@ internal class JsonTestCase
     fail("Value for "+key+" is expected null",out)
   }
 
-  private Void writeUriJs(Str resultVar, Str key, Uri uri, OutStream out)
-  {
-    out.printLine("if ("+resultVar+"['"+key+"'] != '`"+uri.toStr+"`')")
-    fail("Uri Equality to "+uri, out)
-    out.printLine("else")
-    pass("Uri Equality to "+uri, out)
-  }
-
   private Void writeBoolJs(Str resultVar, Str key, Bool bool, OutStream out)
   {
     out.printLine("if ("+resultVar+"['"+key+"'] != "+bool.toStr+")")
     fail("Boolean Test against expected "+bool, out)
     out.printLine("else")
     pass("Boolean Test against expected "+bool, out)
+  }
+
+  private Void writeStrJs(Str resultVar, Str key, Str val, OutStream out)
+  {
+    out.printLine("if ("+resultVar+"['"+key+"'] != "+val.toCode+")")
+    fail("Simple Equality to "+val.toCode, out)
+    out.printLine("else")
+    pass("Simple Equality to "+val.toCode, out)
   }
 
   private Void writeObjJs(Str resultVar, Str key, Obj val, OutStream out)
@@ -125,10 +125,6 @@ internal class JsonTestCase
         {
           writeNullJs(resultVar, key, out)
         }
-        else if (val is Uri)
-        {
-          writeUriJs(resultVar, key, val as Uri, out)
-        }
         else if (val is List)
         {
           writeListJs(resultVar, key, val as List, out)
@@ -140,6 +136,10 @@ internal class JsonTestCase
         else if (val is Bool)
         {
           writeBoolJs(resultVar, key, val as Bool, out)
+        }
+        else if (val is Str)
+        {
+          writeStrJs(resultVar, key, val as Str, out)
         }
         else
         {

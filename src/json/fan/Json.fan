@@ -7,8 +7,7 @@
 //
 
 **
-** Json implements serialization and deserialization of Fan
-** objects to and from Javascript Object Notation (JSON).
+** Serialization to/from Javascript Object Notation (JSON).
 **
 ** See [docLib]`docLib::Json` for details.
 **
@@ -16,20 +15,48 @@ class Json
 {
   **
   ** Write the given object as JSON to the given stream.
-  ** The object passed must be with a 'Str:Obj?' map or
-  ** a 'Obj?[]' list.
+  ** The obj must be one of the follow:
+  **   - null
+  **   - Bool
+  **   - Num
+  **   - Str
+  **   - Str:Obj?
+  **   - Obj?[]
+  **   - [simple]`docLang::Serialization#simple` (written as JSON string)
+  **   - [serializable]`docLang::Serialization#serializable` (written as JSON object)
   **
-  public static Void write(OutStream out, Obj obj)
+  ** See [docLib]`docLib::Json` for details.
+  **
+  public static Void write(OutStream out, Obj? obj)
   {
     JsonWriter(out).write(obj)
     out.flush
   }
 
   **
-  ** Read a JSON object from the given stream and return
-  ** either a 'Str:Obj?' map or a 'Obj?[]' list.
+  ** Convenience for `write` to an in-memory string.
   **
-  public static Obj read(InStream in)
+  public static Str writeToStr(Obj? obj)
+  {
+    buf := StrBuf()
+    write(buf.out, obj)
+    return buf.toStr
+  }
+
+  **
+  ** Read a JSON object from the given stream and return
+  ** one of the follow types:
+  **   - null
+  **   - Bool
+  **   - Int
+  **   - Float
+  **   - Str
+  **   - Str:Obj?
+  **   - Obj?[]
+  **
+  ** See [Str.in]`sys::Str.in` to read from an in-memory string.
+  **
+  public static Obj? read(InStream in)
   {
     return JsonParser(in).parse
   }
