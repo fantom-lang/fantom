@@ -39,22 +39,24 @@ Naming [#naming]
 
 Common Names [#commonNames]
 ***************************
-  - Prefer id/Id to ID or Identifier
-  - Prefer val to value
-  - Prefer cur to current
-  - Prefer msg to message
-  - Prefer rec to record
   - Prefer addr to address
-  - Prefer req to request
-  - Prefer res to response
-  - Prefer io/IO to Io
-  - Prefer ro/RO to Ro
-  - Prefer rw/RW to Rw
-  - Prefer xml/Xml to XML
+  - Prefer arg to argument
+  - Prefer cur to current
+  - Prefer dotnet/Dotnet
   - Prefer html/Html to HTML
   - Prefer http/Http to HTTP
-  - Prefer dotnet/Dotnet
+  - Prefer id/Id to ID or Identifier
+  - Prefer io/IO to Io
+  - Prefer msg to message
+  - Prefer param to parameter
+  - Prefer rec to record
+  - Prefer req to request
+  - Prefer res to response
+  - Prefer ro/RO to Ro
+  - Prefer rw/RW to Rw
   - Prefer size to length or count
+  - Prefer val to value
+  - Prefer xml/Xml to XML
 
 Indention [#indention]
 **********************
