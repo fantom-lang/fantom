@@ -243,6 +243,10 @@ fan.sys.Int.or     = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1
 fan.sys.Int.shl = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
 fan.sys.Int.shr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
 
+fan.sys.Int.not    = function(a) { return ~a; }
+fan.sys.Int.shiftl = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
+fan.sys.Int.shiftr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
+
 /*
 fan.sys.Int.and = function(a, b)
 {
