@@ -251,7 +251,7 @@ class XmlTest : ObixTest
        })
    }
 
-  Void testValErrors()
+  Void testValErrs()
   {
     // turn obj's with val into str
     verifyParse("<obj val='foo'/>", ObixObj { elemName="str"; val="foo" })

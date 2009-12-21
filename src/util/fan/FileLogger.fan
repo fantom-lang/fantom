@@ -81,7 +81,7 @@ const class FileLogger : ActorPool
       if (file == null)
       {
         Actor.locals["error"] = true
-        log.error("No file configured")
+        log.err("No file configured")
         return null
       }
 
@@ -95,7 +95,7 @@ const class FileLogger : ActorPool
       catch (Err e)
       {
         Actor.locals["error"] = true
-        log.error("Cannot open log file: $file", e)
+        log.err("Cannot open log file: $file", e)
         return null
       }
     }

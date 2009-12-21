@@ -21,13 +21,14 @@ public class LogLevel
   public static final LogLevel debug  = new LogLevel(0, "debug");
   public static final LogLevel info   = new LogLevel(1, "info");
   public static final LogLevel warn   = new LogLevel(2, "warn");
-  public static final LogLevel error  = new LogLevel(3, "error");
+  public static final LogLevel err    = new LogLevel(3, "err");
   public static final LogLevel silent = new LogLevel(4, "silent");
 
-  static final LogLevel[] array = { debug, info, warn, error, silent };
+  static final LogLevel[] array = { debug, info, warn, err, silent };
 
 // TODO
 public static final List values = (List)new List(Sys.LogLevelType, array).toImmutable();
+public static final LogLevel error = err;
   public static final List vals = (List)new List(Sys.LogLevelType, array).toImmutable();
 
 //////////////////////////////////////////////////////////////////////////

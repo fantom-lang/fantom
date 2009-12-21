@@ -76,7 +76,11 @@ abstract class WebRes
   ** for this error code, it will trump the message passed in.
   ** This method implicitly calls `done`.
   **
-  abstract Void sendError(Int statusCode, Str? msg := null)
+  abstract Void sendErr(Int statusCode, Str? msg := null)
+
+** TODO: use `sendErr`
+@deprecated
+Void sendError(Int statusCode, Str? msg := null) { sendErr(statusCode, msg) }
 
   **
   ** Return if this response is complete - see `done`.

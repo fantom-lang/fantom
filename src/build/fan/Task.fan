@@ -57,7 +57,7 @@ abstract class Task
   **
   FatalBuildErr fatal(Str msg, Err? err := null)
   {
-    log.error(msg, err)
+    log.err(msg, err)
     return FatalBuildErr(msg, err)
   }
 

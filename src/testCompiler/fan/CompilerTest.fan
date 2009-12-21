@@ -57,17 +57,17 @@ abstract class CompilerTest : Test
     doVerifyErrors(errors)
   }
 
-  Void doVerifyErrors(Obj[] errors)
+  Void doVerifyErrors(Obj[] errs)
   {
     c := compiler
     if (dumpErrors)
-      echo(c.errors.join("\n") |CompilerErr e->Str| { return "${e.location.toLocationStr.justl(14)} $e.toStr" })
-    verifyEq("size=${c.errors.size}", "size=${errors.size / 3}")
-    for (i := 0; i<errors.size/3; ++i)
+      echo(c.errs.join("\n") |CompilerErr e->Str| { return "${e.location.toLocationStr.justl(14)} $e.toStr" })
+    verifyEq("size=${c.errs.size}", "size=${errs.size / 3}")
+    for (i := 0; i<errs.size/3; ++i)
     {
-      verifyEq(c.errors[i].msg,           errors[i*3+2])
-      verifyEq(c.errors[i].location.line, errors[i*3+0])
-      verifyEq(c.errors[i].location.col,  errors[i*3+1])
+      verifyEq(c.errs[i].msg,           errs[i*3+2])
+      verifyEq(c.errs[i].location.line, errs[i*3+0])
+      verifyEq(c.errs[i].location.col,  errs[i*3+1])
     }
   }
 

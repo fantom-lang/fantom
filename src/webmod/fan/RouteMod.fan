@@ -37,7 +37,7 @@ const class RouteMod : WebMod
 
     // lookup route, if not found this is 404
     route := routes[name ?: "index"]
-    if (route == null) { res.sendError(404); return }
+    if (route == null) { res.sendErr(404); return }
 
     // dive into sub-WebMode
     req.mod = route

@@ -15,7 +15,7 @@ fan.sys.Log = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.sys.Log.prototype.$ctor = function() {}
 fan.sys.Log.prototype.type = function() { return fan.sys.Type.find("sys::Log"); }
 
-fan.sys.Log.prototype.error = function(msg, err) { this.log(msg, err); }
+fan.sys.Log.prototype.err = function(msg, err) { this.log(msg, err); }
 fan.sys.Log.prototype.info = function(msg, err) { this.log(msg, err); }
 fan.sys.Log.prototype.warn = function(msg, err) { this.log(msg, err); }
 
@@ -76,7 +76,7 @@ fan.sys.LogLevel.prototype.type = function()
 fan.sys.LogLevel.m_debug  = new fan.sys.LogLevel(0, "debug");
 fan.sys.LogLevel.m_info   = new fan.sys.LogLevel(1, "info");
 fan.sys.LogLevel.m_warn   = new fan.sys.LogLevel(2, "warn");
-fan.sys.LogLevel.m_error  = new fan.sys.LogLevel(3, "error");
+fan.sys.LogLevel.m_err    = new fan.sys.LogLevel(3, "err");
 fan.sys.LogLevel.m_silent = new fan.sys.LogLevel(4, "silent");
 
 fan.sys.LogLevel.m_vals =
@@ -84,7 +84,7 @@ fan.sys.LogLevel.m_vals =
   fan.sys.LogLevel.m_debug,
   fan.sys.LogLevel.m_info,
   fan.sys.LogLevel.m_warn,
-  fan.sys.LogLevel.m_error,
+  fan.sys.LogLevel.m_err,
   fan.sys.LogLevel.m_silent
 ]
 

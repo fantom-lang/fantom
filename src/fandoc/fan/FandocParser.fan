@@ -26,7 +26,7 @@ class FandocParser
   Doc parse(Str filename, InStream in, Bool close := true)
   {
     this.filename = filename
-    this.errors   = FandocErr[,]
+    this.errs = FandocErr[,]
     readLines(in, close)
 
     doc := Doc.make
@@ -335,7 +335,7 @@ class FandocParser
   **
   private Void errReport(FandocErr err)
   {
-    errors.add(err)
+    errs.add(err)
     if (!silent) echo("ERROR: $err")
   }
 
@@ -461,7 +461,7 @@ class FandocParser
   Bool silent := false
 
   ** List of errors detected
-  FandocErr[] errors := FandocErr[,]
+  FandocErr[] errs := FandocErr[,]
 
   ** If true, then leading lines starting with '**' are parsed as header
   Bool parseHeader := true

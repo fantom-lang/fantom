@@ -75,7 +75,7 @@ class Builder
       }
       catch (Throwable e)
       {
-        log.error("Cannot load " + f, e);
+        log.err("Cannot load " + f, e);
       }
     }
     pods = (Pod[])acc.toArray(new Pod[acc.size()]);

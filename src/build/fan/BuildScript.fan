@@ -36,7 +36,7 @@ abstract class BuildScript
     }
     catch (Err err)
     {
-      log.error("Error initializing script [$scriptFile.osPath]")
+      log.err("Error initializing script [$scriptFile.osPath]")
       throw err
     }
   }
@@ -95,7 +95,7 @@ abstract class BuildScript
         return f
       }
     }
-    catch log.error("Invalid URI for @buildDevHome: ${@buildDevHome.val}")
+    catch log.err("Invalid URI for @buildDevHome: ${@buildDevHome.val}")
     return Repo.boot.home
   }
 
@@ -245,7 +245,7 @@ abstract class BuildScript
     published := targets
     if (published.isEmpty)
     {
-      log.error("No targets available for script")
+      log.err("No targets available for script")
       return false
     }
 
@@ -261,7 +261,7 @@ abstract class BuildScript
         target := published.find |Target t->Bool| { return t.name == arg }
         if (target == null)
         {
-          log.error("Unknown build target '$arg'")
+          log.err("Unknown build target '$arg'")
           success = false
         }
         else
@@ -328,7 +328,7 @@ abstract class BuildScript
   {
     val := type.field(field).get(this)
     if (val != null) return true
-    log.error("Required field not set: '$field' [$toStr]")
+    log.err("Required field not set: '$field' [$toStr]")
     return false
   }
 
@@ -385,9 +385,9 @@ abstract class BuildScript
       {
         ok = false
         if (expectDir)
-          log.error("Invalid directory [$uri]")
+          log.err("Invalid directory [$uri]")
         else
-          log.error("Invalid file [$uri]")
+          log.err("Invalid file [$uri]")
       }
       files.add(file)
     }
@@ -404,7 +404,7 @@ abstract class BuildScript
   **
   FatalBuildErr fatal(Str msg, Err? err := null)
   {
-    log.error(msg, err)
+    log.err(msg, err)
     return FatalBuildErr(msg, err)
   }
 
@@ -432,7 +432,7 @@ abstract class BuildScript
     }
     catch (Err err)
     {
-      log.error("Internal build error [$toStr]")
+      log.err("Internal build error [$toStr]")
       err.trace
     }
     t2 := Duration.now

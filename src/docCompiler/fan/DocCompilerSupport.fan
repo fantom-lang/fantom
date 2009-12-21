@@ -91,7 +91,7 @@ mixin DocCompilerSupport
     if (e.isWarn)
       compiler.warns.add(e)
     else
-      compiler.errors.add(e)
+      compiler.errs.add(e)
     return e
   }
 
@@ -100,8 +100,8 @@ mixin DocCompilerSupport
   **
   Void bombIfErr()
   {
-    if (!compiler.errors.isEmpty)
-      throw compiler.errors.last
+    if (!compiler.errs.isEmpty)
+      throw compiler.errs.last
   }
 
 }

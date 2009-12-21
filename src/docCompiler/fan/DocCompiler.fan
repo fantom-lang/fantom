@@ -23,8 +23,8 @@ class DocCompiler
   new make()
   {
     log = CompilerLog()
-    errors = CompilerErr[,]
-    warns  = CompilerErr[,]
+    errs = CompilerErr[,]
+    warns = CompilerErr[,]
     outDir = Repo.boot.home + `doc/`
     uriMapper = UriMapper(this)
     htmlTheme = HtmlTheme()
@@ -44,7 +44,7 @@ class DocCompiler
     PodIndexToHtml(this).run
     SymbolsToHtml(this).run
     CopyResources(this, pod, podOutDir).run
-    if (!errors.isEmpty) throw errors.last
+    if (!errs.isEmpty) throw errs.last
   }
 
   Void compileTopIndexToHtml()
@@ -53,7 +53,7 @@ class DocCompiler
     TopIndexToHtml(this).run
     BuildSearchIndex(this).run
     CopyResources(this, DocCompiler#.pod, outDir).run
-    if (!errors.isEmpty) throw errors.last
+    if (!errs.isEmpty) throw errs.last
   }
 
   Void compileSourceToHtml(Type t, File from, File to, Str podHeading, Str typeHeading)
@@ -73,7 +73,7 @@ class DocCompiler
 //////////////////////////////////////////////////////////////////////////
 
   CompilerLog log           // ctor
-  CompilerErr[] errors      // accumulated errors
+  CompilerErr[] errs        // accumulated errors
   CompilerErr[] warns       // accumulated warnings
   File? srcDir              // source tree (required for docsrc)
   File outDir               // top level output directory

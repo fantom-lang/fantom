@@ -28,7 +28,7 @@ class Delete : Task
     }
     catch (Err err)
     {
-      log.error("Cannot delete file [$file]", err)
+      log.err("Cannot delete file [$file]", err)
     }
   }
 

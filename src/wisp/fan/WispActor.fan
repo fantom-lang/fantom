@@ -229,7 +229,7 @@ internal const class WispActor : Actor
       }
 
       // log internal error
-      WispService.log.error("Internal error processing: $req.uri", err)
+      WispService.log.err("Internal error processing: $req.uri", err)
 
       // if not committed yet, then return 400 if bad
       // client request or 500 if server error

@@ -136,7 +136,7 @@ class Command
       if (locIcon != null)
         this.icon = Image.make(locIcon.toUri)
     }
-    catch Command#.pod.log.error("Command: cannot load '${keyBase}.icon' => $locIcon")
+    catch Command#.pod.log.err("Command: cannot load '${keyBase}.icon' => $locIcon")
 
     // accelerator
     locAcc := pod.loc("${keyBase}.accelerator.${plat}", null)
@@ -155,7 +155,7 @@ class Command
           this.accelerator = this.accelerator.replace(Key.ctrl, Key.command)
       }
     }
-    catch Command#.pod.log.error("Command: cannot load '${keyBase}.accelerator ' => $locAcc")
+    catch Command#.pod.log.err("Command: cannot load '${keyBase}.accelerator ' => $locAcc")
 
     // onInvoke
     if (onInvoke != null) this.onInvoke.add(onInvoke)
@@ -234,7 +234,7 @@ class Command
     try
       invoked(event)
     catch (Err e)
-      onInvokeError(event, e)
+      onInvokeErr(event, e)
   }
 
   **
@@ -250,7 +250,7 @@ class Command
   ** Subclass hook to handle when an exception is raised
   ** by invoke.  Default implementation raises an error dialog.
   **
-  protected virtual Void onInvokeError(Event? event, Err err)
+  protected virtual Void onInvokeErr(Event? event, Err err)
   {
     window := event?.window ?: registry.first?.window
     Dialog.openErr(window, "$name: $err", err)

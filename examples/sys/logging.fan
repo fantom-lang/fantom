@@ -35,7 +35,7 @@ class Logging
 
     // log at different levels
     echo("\n--- logging ---")
-    log.error("The freaking file didn't load", IOErr())
+    log.err("The freaking file didn't load", IOErr())
     log.info("CatchRoadRoader service started")
     log.warn("Something fishy is going on here")
     log.debug("Not logged by default")

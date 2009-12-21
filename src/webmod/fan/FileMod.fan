@@ -38,7 +38,7 @@ const class FileMod : WebMod
     if (!file.isDir)
     {
       // don't publish a single file with path longer than mod itself
-      if (!req.modRel.path.isEmpty) { res.sendError(404); return }
+      if (!req.modRel.path.isEmpty) { res.sendErr(404); return }
 
       // publish the file and we ar don
       FileWeblet(file).onService
@@ -59,7 +59,7 @@ const class FileMod : WebMod
     }
 
     // if it doesn't exist then 404
-    if (!f.exists) { res.sendError(404); return }
+    if (!f.exists) { res.sendErr(404); return }
 
     // publish the file
     FileWeblet(f).onService

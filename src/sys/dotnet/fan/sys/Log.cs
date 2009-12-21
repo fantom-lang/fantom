@@ -128,7 +128,7 @@ namespace Fan.Sys
       return enabled(level);
     }
 
-    public bool isError() { return isEnabled(LogLevel.m_error); }
+    public bool isErr() { return isEnabled(LogLevel.m_err); }
 
     public bool isWarn()  { return isEnabled(LogLevel.m_warn); }
 
@@ -140,11 +140,11 @@ namespace Fan.Sys
   // Logging
   //////////////////////////////////////////////////////////////////////////
 
-    public void error(string message) { error(message, (Err)null); }
-    public void error(string message, System.Exception e) { error(message, Err.make(e)); }
-    public void error(string message, Err err)
+    public void err(string message) { err(message, (Err)null); }
+    public void err(string message, System.Exception e) { err(message, Err.make(e)); }
+    public void err(string message, Err err)
     {
-      log(LogRec.make(DateTime.now(), LogLevel.m_error, m_name, message, err));
+      log(LogRec.make(DateTime.now(), LogLevel.m_err, m_name, message, err));
     }
 
     public void warn(string message) { warn(message, (Err)null); }

@@ -672,7 +672,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
       return expr
     }
 
-    origNumError := compiler.errors.size
+    origNumErrs := compiler.errs.size
     expr.ctype = ns.error
     try
     {
@@ -682,7 +682,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
     }
     catch (CompilerErr e)
     {
-      if (compiler.errors.size == origNumError) errReport(e)
+      if (compiler.errs.size == origNumErrs) errReport(e)
       return expr
     }
     catch (Err e)

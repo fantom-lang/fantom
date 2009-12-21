@@ -48,7 +48,7 @@ class CompileJs : Task
     }
     catch (Err err)
     {
-      log.error("Internal compiler error")
+      log.err("Internal compiler error")
       err.trace
       throw FatalBuildErr.make
     }

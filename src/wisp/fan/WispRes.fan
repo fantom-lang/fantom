@@ -113,7 +113,7 @@ internal class WispRes : WebRes
   ** this method throws an Err.  If the server has a preconfigured page
   ** for this error code, it will trump the message passed in.
   **
-  override Void sendError(Int statusCode, Str? msg := null)
+  override Void sendErr(Int statusCode, Str? msg := null)
   {
     // write message to buffer
     buf := Buf()

@@ -58,9 +58,9 @@ class CompilerLog
   **
   ** Log an error level message.
   **
-  Void error(Str msg, Err? err := null)
+  Void err(Str msg, Err? err := null)
   {
-    log(LogRec(DateTime.now, LogLevel.error, "compiler", msg, err))
+    log(LogRec(DateTime.now, LogLevel.err, "compiler", msg, err))
   }
 
   **

@@ -21,10 +21,10 @@ namespace Fan.Sys
     public static readonly LogLevel m_debug  = new LogLevel(0, "debug");
     public static readonly LogLevel m_info   = new LogLevel(1, "info");
     public static readonly LogLevel m_warn   = new LogLevel(2, "warn");
-    public static readonly LogLevel m_error  = new LogLevel(3, "error");
+    public static readonly LogLevel m_err    = new LogLevel(3, "err");
     public static readonly LogLevel m_silent = new LogLevel(4, "silent");
 
-    static readonly LogLevel[] array = { m_debug, m_info, m_warn, m_error, m_silent };
+    static readonly LogLevel[] array = { m_debug, m_info, m_warn, m_err, m_silent };
 
     public static readonly List m_vals = new List(Sys.LogLevelType, array).ro();
 

@@ -20,7 +20,7 @@ class Email
   **
   ** Unique identifier for message (auto-generated).
   **
-  Str msgId := "<${DateTime.now.ticks/1ms.ticks}.${Buf.random(4).toHex}@${IpAddress.local.hostname}>"
+  Str msgId := "<${DateTime.now.ticks/1ms.ticks}.${Buf.random(4).toHex}@${IpAddr.local.hostname}>"
 
   **
   ** From email address.

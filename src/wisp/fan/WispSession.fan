@@ -79,7 +79,7 @@ internal const class WispSessionMgr : ActorPool
     }
     catch (Err e)
     {
-      WispService.log.error("WispSession save", e)
+      WispService.log.err("WispSession save", e)
     }
   }
 

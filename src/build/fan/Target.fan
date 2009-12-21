@@ -83,7 +83,7 @@ class Target
     }
     catch (Err err)
     {
-      script.log.error("Target '$name' failed [$script.toStr]")
+      script.log.err("Target '$name' failed [$script.toStr]")
       err.trace
       throw FatalBuildErr("", err)
     }
