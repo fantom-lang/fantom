@@ -57,7 +57,10 @@ const class Gradient : Brush
   **
   override Int hash()
   {
-    return (p1.hash << 45) ^ (p2.hash << 30) ^ (c1.hash << 45) ^ c2.hash
+    return (p1.hash.shiftl(45))
+           .xor(p2.hash.shiftl(30))
+           .xor(c1.hash.shiftl(15))
+           .xor(c2.hash)
   }
 
   **
@@ -137,8 +140,10 @@ const class Pattern : Brush
   **
   override Int hash()
   {
-    return (image.hash) ^ (bg == null ? 97 : bg.hash) ^
-           (halign.hash << 11) ^ (valign.hash << 7)
+    return image.hash
+           .xor(bg == null ? 97 : bg.hash)
+           .xor(halign.hash.shiftl(11))
+           .xor(valign.hash.shiftl(7))
   }
 
   **

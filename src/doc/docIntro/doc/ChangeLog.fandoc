@@ -755,4 +755,5 @@
 - Rename dom::Window -> dom::Win
 - Move dom::Win, dom::Doc to singletons
 - #869: deprecate Obj.type, Type.loc, Type.log
+- #870: depreate bitwise operators '~ | ^ &'
 

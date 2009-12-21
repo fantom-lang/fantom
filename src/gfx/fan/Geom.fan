@@ -37,10 +37,10 @@ const class Point
   }
 
   ** Return 'x+tx, y+ty'
-  Point translate(Point t) { return make(x+t.x, y+t.y) }
+  Point translate(Point t) { make(x+t.x, y+t.y) }
 
   ** Return hash of x and y.
-  override Int hash() { return x.hash ^ (y.hash << 16) }
+  override Int hash() { x.xor(y.shiftl(16)) }
 
   ** Return if obj is same Point value.
   override Bool equals(Obj? obj)
@@ -51,7 +51,7 @@ const class Point
   }
 
   ** Return '"x,y"'
-  override Str toStr() { return "$x,$y" }
+  override Str toStr() { "$x,$y" }
 
   ** X coordinate
   const Int x
@@ -91,10 +91,10 @@ const class Size
   }
 
   ** Return '"w,h"'
-  override Str toStr() { return "$w,$h" }
+  override Str toStr() { "$w,$h" }
 
   ** Return hash of w and h.
-  override Int hash() { return w.hash ^ (h.hash << 16) }
+  override Int hash() { w.xor(h.shiftl(16)) }
 
   ** Return if obj is same Size value.
   override Bool equals(Obj? obj)
@@ -150,10 +150,10 @@ const class Rect
   }
 
   ** Get the x, y coordinate of this rectangle.
-  Point pos() { return Point(x, y) }
+  Point pos() { Point(x, y) }
 
   ** Get the w, h size of this rectangle.
-  Size size() { return Size(w, h) }
+  Size size() { Size(w, h) }
 
   ** Return true if x,y is inside the bounds of this rectangle.
   Bool contains(Int x, Int y)
@@ -168,7 +168,7 @@ const class Rect
   ** Return hash of x, y, w, and h.
   override Int hash()
   {
-    return x.hash ^ (y.hash << 16) ^ (w.hash << 32) ^ (w.hash << 48)
+    x.xor(y.shiftl(8)).xor(w.shiftl(16)).xor(w.shiftl(24))
   }
 
   ** Return if obj is same Rect value.
@@ -259,7 +259,7 @@ const class Insets
   ** Return hash of top, right, bottom, left.
   override Int hash()
   {
-    return top.hash ^ (right.hash << 16) ^ (bottom.hash << 32) ^ (left.hash << 48)
+    top.xor(right.shiftl(8)).xor(bottom.shiftl(16)).xor(left.shiftl(24))
   }
 
   ** Return if obj is same Insets value.
@@ -272,7 +272,7 @@ const class Insets
   }
 
   ** Return right+left, top+bottom
-  Size toSize() { return Size(right+left, top+bottom) }
+  Size toSize() { Size(right+left, top+bottom) }
 
   ** Top side spacing
   const Int top
@@ -306,12 +306,12 @@ const class Hints
   new make(Int? w, Int? h) { this.w = w; this.h = h }
 
   ** Return '"w,h"'
-  override Str toStr() { return "$w,$h" }
+  override Str toStr() { "$w,$h" }
 
   ** Return hash of w and h.
   override Int hash()
   {
-    return (w == null ? 3 : w.hash) ^((h == null ? 11 : h.hash) << 16)
+    (w == null ? 3 : w.hash).xor((h == null ? 11 : h.hash).shiftl(16))
   }
 
   ** Return if obj is same Hints value.

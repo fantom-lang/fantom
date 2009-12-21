@@ -37,7 +37,7 @@ internal class Parser
       rules.keywords.each |Str k|
       {
         keywords[k] = true
-        keywordPrefixes[k[0] << 16 | k[1]] = true
+        keywordPrefixes[k[0].shiftl(16).or(k[1])] = true
       }
     }
 
@@ -184,7 +184,7 @@ internal class Parser
     */
 
     // identifier which might be keyword
-    if (keywordPrefixes[cur<<16|peek])
+    if (keywordPrefixes[cur.shiftl(16).or(peek)])
     {
       start := pos
       consume

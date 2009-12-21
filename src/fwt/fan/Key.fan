@@ -62,57 +62,57 @@ const class Key
   static const Key esc             := predefine(0x1B, "Esc")
   static const Key tab             := predefine('\t', "Tab")
 
-  static const Key up              := predefine((1 << 24) + 1,  "Up")
-  static const Key down            := predefine((1 << 24) + 2,  "Down")
-  static const Key left            := predefine((1 << 24) + 3,  "Left")
-  static const Key right           := predefine((1 << 24) + 4,  "Right")
-  static const Key pageUp          := predefine((1 << 24) + 5,  "PageUp")
-  static const Key pageDown        := predefine((1 << 24) + 6,  "PageDown")
-  static const Key home            := predefine((1 << 24) + 7,  "Home")
-  static const Key end             := predefine((1 << 24) + 8,  "End")
-  static const Key insert          := predefine((1 << 24) + 9,  "Insert")
+  static const Key up              := predefine(0x0100_0000 + 1,  "Up")
+  static const Key down            := predefine(0x0100_0000 + 2,  "Down")
+  static const Key left            := predefine(0x0100_0000 + 3,  "Left")
+  static const Key right           := predefine(0x0100_0000 + 4,  "Right")
+  static const Key pageUp          := predefine(0x0100_0000 + 5,  "PageUp")
+  static const Key pageDown        := predefine(0x0100_0000 + 6,  "PageDown")
+  static const Key home            := predefine(0x0100_0000 + 7,  "Home")
+  static const Key end             := predefine(0x0100_0000 + 8,  "End")
+  static const Key insert          := predefine(0x0100_0000 + 9,  "Insert")
 
-  static const Key f1              := predefine((1 << 24) + 10, "F1")
-  static const Key f2              := predefine((1 << 24) + 11, "F2")
-  static const Key f3              := predefine((1 << 24) + 12, "F3")
-  static const Key f4              := predefine((1 << 24) + 13, "F4")
-  static const Key f5              := predefine((1 << 24) + 14, "F5")
-  static const Key f6              := predefine((1 << 24) + 15, "F6")
-  static const Key f7              := predefine((1 << 24) + 16, "F7")
-  static const Key f8              := predefine((1 << 24) + 17, "F8")
-  static const Key f9              := predefine((1 << 24) + 18, "F9")
-  static const Key f10             := predefine((1 << 24) + 19, "F10")
-  static const Key f11             := predefine((1 << 24) + 20, "F11")
-  static const Key f12             := predefine((1 << 24) + 21, "F12")
+  static const Key f1              := predefine(0x0100_0000 + 10, "F1")
+  static const Key f2              := predefine(0x0100_0000 + 11, "F2")
+  static const Key f3              := predefine(0x0100_0000 + 12, "F3")
+  static const Key f4              := predefine(0x0100_0000 + 13, "F4")
+  static const Key f5              := predefine(0x0100_0000 + 14, "F5")
+  static const Key f6              := predefine(0x0100_0000 + 15, "F6")
+  static const Key f7              := predefine(0x0100_0000 + 16, "F7")
+  static const Key f8              := predefine(0x0100_0000 + 17, "F8")
+  static const Key f9              := predefine(0x0100_0000 + 18, "F9")
+  static const Key f10             := predefine(0x0100_0000 + 19, "F10")
+  static const Key f11             := predefine(0x0100_0000 + 20, "F11")
+  static const Key f12             := predefine(0x0100_0000 + 21, "F12")
 
-  static const Key keypadMult      := predefine((1 << 24) + 42, "Keypad*")
-  static const Key keypadPlus      := predefine((1 << 24) + 43, "Keypad+")
-  static const Key keypadMinus     := predefine((1 << 24) + 45, "Keypad-")
-  static const Key keypadDot       := predefine((1 << 24) + 46, "Keypad.")
-  static const Key keypadDiv       := predefine((1 << 24) + 47, "Keypad/")
-  static const Key keypad0         := predefine((1 << 24) + 48, "Keypad0")
-  static const Key keypad1         := predefine((1 << 24) + 49, "Keypad1")
-  static const Key keypad2         := predefine((1 << 24) + 50, "Keypad2")
-  static const Key keypad3         := predefine((1 << 24) + 51, "Keypad3")
-  static const Key keypad4         := predefine((1 << 24) + 52, "Keypad4")
-  static const Key keypad5         := predefine((1 << 24) + 53, "Keypad5")
-  static const Key keypad6         := predefine((1 << 24) + 54, "Keypad6")
-  static const Key keypad7         := predefine((1 << 24) + 55, "Keypad7")
-  static const Key keypad8         := predefine((1 << 24) + 56, "Keypad8")
-  static const Key keypad9         := predefine((1 << 24) + 57, "Keypad9")
-  static const Key keypadEqual     := predefine((1 << 24) + 61, "Keypad=")
-  static const Key keypadEnter     := predefine((1 << 24) + 80, "KeypadEnter")
+  static const Key keypadMult      := predefine(0x0100_0000 + 42, "Keypad*")
+  static const Key keypadPlus      := predefine(0x0100_0000 + 43, "Keypad+")
+  static const Key keypadMinus     := predefine(0x0100_0000 + 45, "Keypad-")
+  static const Key keypadDot       := predefine(0x0100_0000 + 46, "Keypad.")
+  static const Key keypadDiv       := predefine(0x0100_0000 + 47, "Keypad/")
+  static const Key keypad0         := predefine(0x0100_0000 + 48, "Keypad0")
+  static const Key keypad1         := predefine(0x0100_0000 + 49, "Keypad1")
+  static const Key keypad2         := predefine(0x0100_0000 + 50, "Keypad2")
+  static const Key keypad3         := predefine(0x0100_0000 + 51, "Keypad3")
+  static const Key keypad4         := predefine(0x0100_0000 + 52, "Keypad4")
+  static const Key keypad5         := predefine(0x0100_0000 + 53, "Keypad5")
+  static const Key keypad6         := predefine(0x0100_0000 + 54, "Keypad6")
+  static const Key keypad7         := predefine(0x0100_0000 + 55, "Keypad7")
+  static const Key keypad8         := predefine(0x0100_0000 + 56, "Keypad8")
+  static const Key keypad9         := predefine(0x0100_0000 + 57, "Keypad9")
+  static const Key keypadEqual     := predefine(0x0100_0000 + 61, "Keypad=")
+  static const Key keypadEnter     := predefine(0x0100_0000 + 80, "KeypadEnter")
 
-  static const Key capsLock        := predefine((1 << 24) + 82, "CapsLock")
-  static const Key numLock         := predefine((1 << 24) + 83, "NumLock")
-  static const Key scrollLock      := predefine((1 << 24) + 84, "ScrollLock")
-  static const Key pause           := predefine((1 << 24) + 85, "Pause")
-  static const Key printScreen     := predefine((1 << 24) + 87, "PrintScreen")
+  static const Key capsLock        := predefine(0x0100_0000 + 82, "CapsLock")
+  static const Key numLock         := predefine(0x0100_0000 + 83, "NumLock")
+  static const Key scrollLock      := predefine(0x0100_0000 + 84, "ScrollLock")
+  static const Key pause           := predefine(0x0100_0000 + 85, "Pause")
+  static const Key printScreen     := predefine(0x0100_0000 + 87, "PrintScreen")
 
-  static const Key alt             := predefine(1 << 16, "Alt")
-  static const Key shift           := predefine(1 << 17, "Shift")
-  static const Key ctrl            := predefine(1 << 18, "Ctrl")
-  static const Key command         := predefine(1 << 22, "Command")
+  static const Key alt             := predefine(0x0001_0000, "Alt")
+  static const Key shift           := predefine(0x0002_0000, "Shift")
+  static const Key ctrl            := predefine(0x0004_0000, "Ctrl")
+  static const Key command         := predefine(0x0040_0000, "Command")
 
   private new predefine(Int mask, Str str, Bool mod := false)
   {
@@ -120,8 +120,8 @@ const class Key
     this.str  = str
   }
 
-  private static const Int modifierMask := alt.mask | shift.mask | ctrl.mask | command.mask
-  private static const Int modifierUnmask := ~modifierMask
+  private static const Int modifierMask := alt.mask.or(shift.mask).or(ctrl.mask).or(command.mask)
+  private static const Int modifierUnmask := modifierMask.not
   private static const Key none := predefine(0, "")
   private static const Int:Key byMask
   private static const Str:Key byStr
@@ -310,7 +310,7 @@ const class Key
   Key plus(Key x)
   {
     if (!isModifier && !x.isModifier) throw ArgErr("Neither is modifier: $this + $x")
-    return makeNew(mask|x.mask, null)
+    return makeNew(mask.or(x.mask), null)
   }
 
   **
@@ -319,8 +319,8 @@ const class Key
   **
   Key replace(Key modFrom, Key modTo)
   {
-    if ((mask & modFrom.mask) == 0) return this;
-    return makeNew((mask & ~modFrom.mask)|modTo.mask, null);
+    if ((mask.and(modFrom.mask)) == 0) return this;
+    return makeNew((mask.and(modFrom.mask.not)).or(modTo.mask), null);
   }
 
 //////////////////////////////////////////////////////////////////////////

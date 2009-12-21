@@ -283,6 +283,7 @@ class ExprTest : CompilerTest
     verifyExpr("a % b", 1, 5, 2)
 
     // bitwise operators
+// TODO
     verifyExpr("~a", 0xffff_ffff_ffff_5432, 0xabcd)
     verifyExpr("a >> b", 0xa, 0xab, 4)
     verifyExpr("a << b", 0xab0, 0xab, 4)
@@ -347,6 +348,7 @@ class ExprTest : CompilerTest
     verifyExpr("$v", 3, 6, 2,  "x := a; $v = x; $v/= b;")
     verifyExpr("$v", 2, 8, 3,  "x := a; $v = x; $v%= b;")
 
+// TODO
     verifyExpr("$v", 0xab, 0xabcd, 8,    "x := a; $v = x; $v>>= b;")
     verifyExpr("$v", 0xabcd0, 0xabcd, 4, "x := a; $v = x; $v<<= b;")
     verifyExpr("$v", 0x8a, 0xab, 0x9e,   "x := a; $v = x; $v&= b;")

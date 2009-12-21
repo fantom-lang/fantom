@@ -112,8 +112,8 @@ const class Pen
   **
   override Int hash()
   {
-    h := width ^ (cap << 16) ^ (join << 20)
-    if (dash != null) h ^= dash.hash << 32
+    h := width.xor(cap.shiftl(16)).xor(join.shiftl(20))
+    if (dash != null) h = h.xor(dash.hash.shiftl(32))
     return h
   }
 

@@ -26,7 +26,7 @@ class UuidTest : Test
     verifyNotEq(a, Uuid.makeBits(0xaabb_ccdd_0022_0345, 0x0123_ff00eecc5576))
 
     // hash
-    verifyEq(a.hash, 0xaabb_ccdd_0022_0345 ^ 0x0123_ff00eecc5577)
+    verifyEq(a.hash, 0xaabb_ccdd_0022_0345.xor(0x0123_ff00eecc5577))
 
     // compare
     verifyEq(a <=> Uuid.makeBits(0xaabb_ccdd_0022_0345, 0x0123_ff00eecc5577), 0)

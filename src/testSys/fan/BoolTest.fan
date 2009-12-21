@@ -168,6 +168,7 @@ class BoolTest : Test
     verifyErr(NullErr#) { x := s != null || s.size == 0 }
 
     // bitwise and
+/* TODO: keep bitwise methods?
     verifyEq(f & f, false)
     verifyEq(f & t, false)
     verifyEq(t & f, false)
@@ -236,6 +237,7 @@ class BoolTest : Test
     g = true;  g ^= true;  verifyEq(g, false)
     q[0] = false; q[0] ^= true;  verifyEq(q[0], true)
     r[0] = true;  r[0] ^= false; verifyEq(r[0], true)
+*/
   }
 
   Bool f := true
