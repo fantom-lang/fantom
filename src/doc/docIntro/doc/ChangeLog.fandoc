@@ -745,7 +745,7 @@
 - #788: Coercion of indexed assignment shortcut
 - #806: can't read MapType from ObjectDeserializer
 
-*Build 1.0.48 (incomplete)*
+*Build 1.0.48 (21 Dec 09)*
 - Fix List.insertAll error checking
 - Int.toLocale "B" pattern for formatting size in bytes
 - Add sys::deprecated facet and compiler warnings
@@ -754,6 +754,25 @@
 - Change build::CreateZip.inDir => inDirs
 - Rename dom::Window -> dom::Win
 - Move dom::Win, dom::Doc to singletons
+- #768: Fan source to HTML bug
+- #796: Using Json to read/write Fan objects
+- #797: Setting const fields with reflection
+- #826: New docLang::IDEs chapter
+- #836: New WebMod API
+- #841: Proposal: fand to util
+- #844: List.getSafe
+- #848: Remove sys::Context
+- #851: Change |,| to |->|
+- #853: InStream::readChars
+- #854: Dom API cleanup
+- #855: Some API renames
+- #860: Range.offset
+- #861: compiler: fix Obj to Void coercion bug
+- #865: Make fwt::TreeModel.children non-nullable
 - #869: deprecate Obj.type, Type.loc, Type.log
 - #870: depreate bitwise operators '~ | ^ &'
+- #873: InStream / OutStream endianness
+- #874: Field setters: val => it
+- #875: Add 1-step bootstrap script
+- #876: Source Doc Changes
 
