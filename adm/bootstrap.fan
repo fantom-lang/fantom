@@ -187,10 +187,10 @@ class Bootstrap : AbstractMain
   {
     runBuild(relHome, `src/buildall.fan`, "superclean")
     runBuild(relHome, `src/buildboot.fan`, "full")
-    runBuild(devHome, `src/buildpods.fan`, "full")
+    runBuild(devHome, `src/buildpods.fan`, "full", ["FAN_HOME":devHome.osPath])
   }
 
-  Void runBuild(File envHome, Uri script, Str target)
+  Void runBuild(File envHome, Uri script, Str target, [Str:Str]? env := null)
   {
     // figure out which launcher to use
     bin := (Sys.os) == "win32" ? `bin/fan.exe` : `bin/fan`
@@ -199,7 +199,9 @@ class Bootstrap : AbstractMain
     cmd := [envHome.plus(bin).osPath, devHome.plus(script).osPath, target]
     echo("")
     echo(cmd.join(" "))
-    r := Process(cmd).run.join
+    p := Process(cmd)
+    if (env != null) p.env.setAll(env)
+    r := p.run.join
     if (r != 0) fatal("$script $target failed")
   }
 
