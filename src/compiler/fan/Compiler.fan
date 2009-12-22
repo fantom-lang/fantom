@@ -99,6 +99,7 @@ class Compiler
   virtual Void backend()
   {
     Assemble(this).run
+    CompileJs(this).run
     GenerateOutput(this).run
   }
 
@@ -124,6 +125,7 @@ CompilerErr[] errors() { errs }
   ClosureExpr[]? closures   // Parse
   Str:CField wrappers       // ClosureVars
   FPod? fpod                // Assemble
+  Str? js                   // CompileJs
   CompilerOutput? output    // GenerateOutput
 
 }

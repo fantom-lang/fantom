@@ -757,7 +757,7 @@
 - #768: Fan source to HTML bug
 - #796: Using Json to read/write Fan objects
 - #797: Setting const fields with reflection
-- #826: New docLang::IDEs chapter
+- #826: New docTools::IDEs chapter
 - #836: New WebMod API
 - #841: Proposal: fand to util
 - #844: List.getSafe
@@ -775,4 +775,8 @@
 - #874: Field setters: val => it
 - #875: Add 1-step bootstrap script
 - #876: Source Doc Changes
+
+*Build 1.0.49 (working)*
+
+- TODO: change deprecated to be string
 
