@@ -95,8 +95,8 @@ class CompilerLog
   virtual Void log(LogRec rec)
   {
     if (rec.level < this.level) return
-    if (rec.level >= LogLevel.warn) print(rec.level.toStr.capitalize).print(": ")
-    print(Str.spaces(indentation*2))
+    if (rec.level >= LogLevel.warn) print(rec.level.toStr.upper).print(": ")
+    else print(Str.spaces(indentation*2))
     printLine(rec.msg)
 
     if (rec.err != null)

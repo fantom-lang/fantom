@@ -38,7 +38,8 @@ class WritePod : CompilerStep
   {
     dir  := compiler.input.outDir
     fpod := compiler.fpod
-    podFile := dir + "${fpod.name}.pod".toUri
+    podName := fpod.name
+    podFile := dir + "${podName}.pod".toUri
     location = Location.makeFile(podFile)
 
     log.info("WritePod [${podFile.toStr}]")
@@ -59,6 +60,10 @@ class WritePod : CompilerStep
       if (!compiler.input.isScript)
         writeTypeDb(zip)
 
+      // write javascript
+      if (compiler.js != null)
+        writeStr(zip, `${podName}.js`, compiler.js)
+
       // write resource files
       compiler.resFiles.each |File f| { writeRes(zip, f) }
 
@@ -78,6 +83,18 @@ class WritePod : CompilerStep
     // close file
     if (zip != null) zip.close
     return podFile
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// JavaScript
+//////////////////////////////////////////////////////////////////////////
+
+  private Void writeStr(Zip zip, Uri path, Str content)
+  {
+    try
+      zip.writeNext(path, DateTime.now).print(content).close
+    catch (Err e)
+      throw errReport(CompilerErr("Cannot write resource '$path'", location, e))
   }
 
 //////////////////////////////////////////////////////////////////////////
