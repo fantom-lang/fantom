@@ -348,7 +348,7 @@ abstract class BuildPod : BuildScript
 
     // compile javascript
     out := jsTemp.createFile("${podName}.js").out
-    jsc := CompileJs(this)
+    jsc := build::CompileJs(this)
     jsc.out = out
     jsc.nativeDirs = nativeDirs
     jsc.run
