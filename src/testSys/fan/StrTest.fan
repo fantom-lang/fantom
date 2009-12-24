@@ -581,6 +581,49 @@ class StrTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Eachr
+//////////////////////////////////////////////////////////////////////////
+
+  Void testEachr()
+  {
+    chars   := Int[,]
+    indices := Int[,]
+
+    // empty with just char
+    chars.clear; indices.clear
+    "".eachr |Int c| { chars.add(c) }
+    verifyEq(chars, Int[,])
+
+    // empty with char and index
+    chars.clear; indices.clear
+    "".eachr |Int c, Int index| { chars.add(c); indices.add(index) }
+    verifyEq(chars, Int[,])
+    verifyEq(indices, Int[,])
+
+    // "x" with just char
+    chars.clear; indices.clear
+    "x".eachr |Int c| { chars.add(c) }
+    verifyEq(chars, ['x'])
+
+    // "x" with char and index
+    chars.clear; indices.clear
+    "x".eachr |Int c, Int index| { chars.add(c); indices.add(index) }
+    verifyEq(chars, ['x'])
+    verifyEq(indices, [0])
+
+    // "abc" with just char
+    chars.clear; indices.clear
+    "abc".eachr |Int c| { chars.add(c) }
+    verifyEq(chars, ['c', 'b', 'a'])
+
+    // "abc" with char and index
+    chars.clear; indices.clear
+    "abc".eachr |Int c, Int index| { chars.add(c); indices.add(index) }
+    verifyEq(chars, ['c', 'b', 'a'])
+    verifyEq(indices, [2, 1, 0])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Any/All
 //////////////////////////////////////////////////////////////////////////
 
