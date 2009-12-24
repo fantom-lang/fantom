@@ -182,7 +182,7 @@ class StrTest : Test
     verifyEq("b" <=> "a", 1)
   }
 
-  Void testCompareIngoreCase()
+  Void testCompareIgnoreCase()
   {
     verifyEq("a".compareIgnoreCase("b"), -1)
     verifyEq("a".compareIgnoreCase("a"), 0)
