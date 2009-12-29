@@ -12,7 +12,7 @@ fan.dom.HttpReqPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.dom.HttpReqPeer.prototype.$ctor = function(self) {}
 
-fan.dom.HttpReqPeer.prototype.send = function(self, method, content, func)
+fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
 {
   var xhr = new XMLHttpRequest();
   xhr.open(method.toUpperCase(), self.m_uri.m_str, self.m_async);
@@ -21,19 +21,20 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, func)
     xhr.onreadystatechange = function ()
     {
       if (xhr.readyState == 4)
-        func(fan.dom.HttpReqPeer.makeRes(xhr));
+        f.call(fan.dom.HttpReqPeer.makeRes(xhr));
     }
   }
   var ct = false;
   var k = self.m_headers.keys();
-  for (var i=0; i<k.length; i++)
+  for (var i=0; i<k.size(); i++)
   {
-    if (fan.sys.Str.lower(k[i]) == "content-type") ct = true;
-    xhr.setRequestHeader(k[i], self.m_headers.get(k[i]));
+    var key = k.get(i);
+    if (fan.sys.Str.lower(key) == "content-type") ct = true;
+    xhr.setRequestHeader(key, self.m_headers.get(key));
   }
   if (!ct) xhr.setRequestHeader("Content-Type", "text/plain");
   xhr.send(content);
-  if (!self.m_async) func(fan.dom.HttpReqPeer.makeRes(xhr));
+  if (!self.m_async) f.call(fan.dom.HttpReqPeer.makeRes(xhr));
 }
 
 fan.dom.HttpReqPeer.makeRes = function(xhr)
@@ -60,10 +61,10 @@ fan.dom.HttpReqPeer.prototype.encodeForm = function(self, form)
   var encode = function(orig) { return escape(orig).replace(/\+/g, "%2B"); }
   var content = ""
   var k = form.keys();
-  for (var i=0; i<k.length; i++)
+  for (var i=0; i<k.size(); i++)
   {
     if (i > 0) content += "&";
-    content += encode(k[i]) + "=" + encode(form.get(k[i]));
+    content += encode(k.get(i)) + "=" + encode(form.get(k.get(i)));
   }
   return content;
 }

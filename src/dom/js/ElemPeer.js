@@ -158,27 +158,27 @@ fan.dom.ElemPeer.prototype.focus = function(self)
   catch (err) {} // ignore
 }
 
-fan.dom.ElemPeer.prototype.find = function(self, func)
+fan.dom.ElemPeer.prototype.find = function(self, f)
 {
   var kids = this.children(self);
   for (var i=0; i<kids.length; i++)
   {
     var kid = kids[i];
-    if (func(kid)) return kid;
+    if (f.call(kid)) return kid;
     kid = kid.find(func);
     if (kid != null) return kid;
   }
   return null;
 }
 
-fan.dom.ElemPeer.prototype.findAll = function(self, func, acc)
+fan.dom.ElemPeer.prototype.findAll = function(self, f, acc)
 {
   if (acc == null) acc = new Array();
   var kids = this.children(self);
   for (var i=0; i<kids.length; i++)
   {
     var kid = kids[i];
-    if (func(kid)) acc.push(kid);
+    if (f.call(kid)) acc.push(kid);
     kid.findAll(func, acc);
   }
   return acc;
