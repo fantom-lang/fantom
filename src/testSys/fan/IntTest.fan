@@ -9,6 +9,7 @@
 **
 ** IntTest
 **
+@js
 class IntTest : Test
 {
 
