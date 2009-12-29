@@ -12,7 +12,7 @@
 fan.fwt.TablePeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
 fan.fwt.TablePeer.prototype.$ctor = function(self)
 {
-  this.m_selected = fan.sys.List.make(fan.sys.Type.find("sys::Int"), []);
+  this.m_selected = fan.sys.List.make(fan.sys.Int.$type, []);
   this.inPrefSize = false;
 }
 
@@ -479,7 +479,7 @@ fan.fwt.TableSupport.prototype.exportTable = function()
   var dlg = fan.fwt.Dialog.make(this.table.window());
   dlg.title$("Export");
   dlg.body$(cons);
-  dlg.commands$(fan.sys.List.make(fan.sys.Type.find("sys::Obj"), [fan.fwt.Dialog.ok()]));
+  dlg.commands$(fan.sys.List.make(fan.sys.Obj.$type, [fan.fwt.Dialog.ok()]));
   dlg.open();
 }
 
