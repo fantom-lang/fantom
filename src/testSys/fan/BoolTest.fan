@@ -9,6 +9,7 @@
 **
 ** BoolTest
 **
+@js
 class BoolTest : Test
 {
 

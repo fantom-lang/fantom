@@ -9,6 +9,7 @@
 **
 ** FloatTest
 **
+@js
 class FloatTest : Test
 {
 

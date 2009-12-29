@@ -9,6 +9,7 @@
 **
 ** TypeTest
 **
+@js
 @testSysByStr=["alpha", "beta"]
 @testSysByType=[SerB#, MxB#]
 class TypeTest : Test
