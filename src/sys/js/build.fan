@@ -22,45 +22,20 @@ class Build : BuildScript
   {
     log.info("compile [js]")
 
+    sys   = scriptFile.parent + `fan/`
+    fanx  = scriptFile.parent + `fanx/`
+    types = Pod.find("sys").types
+
     tempDir := scriptFile.parent + `temp-js/`
     tempDir.delete
     tempDir.create
 
     lib := tempDir.createFile("sys.js")
     out := lib.out
-
-    // collect source files
-    src := Str:File[:] { ordered = true }
-    (scriptFile.parent + `fan/`).walk  |f| { if (f.ext == "js") src[f.name] = f }
-    (scriptFile.parent + `fanx/`).walk |f| { if (f.ext == "js") src[f.name] = f }
-
-    // output first
-    first.each |Str name|
-    {
-      f := src[name]
-      if (log.isDebug) log.printLine("  [$f]")
-      if (f == null) throw Err("Required file not found: $name")
-      append(f, out)
-    }
-
-    // output everyone else
-    src.each |File f|
-    {
-      if (first.contains(f.name)) return
-      if (last.contains(f.name)) return
-      if (log.isDebug) log.printLine("  [$f]")
-      append(f, out)
-    }
-
-    // output last
-    last.each |Str name|
-    {
-      f := src[name]
-      if (log.isDebug) log.printLine("  [$f]")
-      if (f == null) throw Err("Required file not found: $name")
-      append(f, out)
-    }
-
+    writeSys(out)
+    writeFanx(out)
+    writeTypeInfo(out)
+    writeSysSupport(out)
     out.close
 
     // add into pod file
@@ -69,6 +44,78 @@ class Build : BuildScript
     Exec.make(this, [jar.osPath, "fu", pod.osPath, "-C", tempDir.osPath, "."], tempDir).run
 
     tempDir.delete
+  }
+
+  private Void writeSys(OutStream out)
+  {
+    log.debug("  fan/")
+    types.each |t|
+    {
+      f := sys + `${t.name}.js`
+      if (f.exists) append(f, out)
+    }
+  }
+
+  private Void writeTypeInfo(OutStream out)
+  {
+    log.debug("  TypeInfo")
+
+    out.printLine("with (fan.sys.Pod.\$add('sys'))")
+    out.printLine("{")
+
+    // filter out synthetic types from reflection
+    reflect := types.findAll |t|
+    {
+      if (t.isSynthetic) return false
+      if (t.fits(Err#)) return true
+      return (sys+`${t.name}.js`).exists
+    }
+
+    // Obj and Type must be defined first
+    i := reflect.index(Type#)
+    reflect.insert(1, reflect.removeAt(i))
+
+    // write all types first
+    reflect.each |t|
+    {
+      adder  := t.isMixin ? "\$am" : "\$at"
+      base   := t.base == null ? "null" : "'$t.base.qname'"
+      mixins := t.mixins.join(",") |m| { "'$m.pod::$m.name'" }
+      flags  := t->flags
+      out.printLine("  fan.sys.${t.name}.\$type = $adder('$t.name',$base,[$mixins],$flags);")
+    }
+
+    // then write slot info
+    reflect.each |t|
+    {
+      if (t.fields.isEmpty && t.methods.isEmpty) return
+      out.print("  fan.sys.${t.name}.\$type")
+      t.fields.each |f| { out.print(".\$af('$f.name',${f->flags},'$f.of.signature')") }
+      t.methods.each |m| { out.print(".\$am('$m.name',${m->flags})") }
+      out.printLine(";")
+    }
+
+    out.printLine("}")
+  }
+
+  private Void writeSysSupport(OutStream out)
+  {
+    log.debug("  fan/ [support]")
+    append(sys + `FConst.js`, out)
+    append(sys + `Long.js`, out)
+    append(sys + `MemBufStream.js`, out)
+    append(sys + `Md5.js`, out)
+    append(sys + `ObjUtil.js`, out)
+    append(sys + `Sha1.js`, out)
+    append(sys + `StrInStream.js`, out)
+    append(sys + `staticInit.js`, out)
+    append(sys + `timezones.js`, out)
+  }
+
+  private Void writeFanx(OutStream out)
+  {
+    log.debug("  fanx/")
+    fanx.listFiles.each |f| { append(f, out) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -109,6 +156,8 @@ class Build : BuildScript
 
   Void append(File f, OutStream out)
   {
+    log.debug("    $f.name")
+
     inBlock := false
     f.readAllLines.each |Str line|
     {
@@ -145,12 +194,8 @@ class Build : BuildScript
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  // must be first
-  Str[] first := ["Obj.js", "Pod.js", "Type.js", "Slot.js", "Err.js", "Func.js",
-                  "Num.js", "List.js", "Map.js", "Enum.js", "Long.js", "Int.js",
-                  "InStream.js", "OutStream.js", "Md5.js", "Sha1.js"]
-
-  // must be last
-  Str[] last := ["sysPod.js", "timezones.js"]
+  File? sys      // sys/fan/ dir
+  File? fanx     // sys/fanx/ dir
+  Type[]? types  // types to emit
 
 }
