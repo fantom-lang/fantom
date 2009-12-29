@@ -37,7 +37,7 @@ fan.sys.Pod.prototype.types = function()
   {
     var arr = [];
     for (p in this.m_types) arr.push(this.m_types[p]);
-    this.$typesArray = fan.sys.List.make(fan.sys.Type.find("sys::Type"), arr);
+    this.$typesArray = fan.sys.List.make(fan.sys.Type.$type, arr);
   }
   return this.$typesArray;
 }

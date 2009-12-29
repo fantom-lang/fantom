@@ -13,7 +13,7 @@
 fan.sys.Log = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.sys.Log.prototype.$ctor = function() {}
-fan.sys.Log.prototype.type = function() { return fan.sys.Type.find("sys::Log"); }
+fan.sys.Log.prototype.type = function() { return fan.sys.Log.$type; }
 
 fan.sys.Log.prototype.err  = function(msg, err) { this.log(msg, err); }
 fan.sys.Log.prototype.info = function(msg, err) { this.log(msg, err); }
@@ -66,7 +66,7 @@ fan.sys.LogLevel.prototype.$ctor = function(ordinal, name)
 
 fan.sys.LogLevel.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::LogLevel");
+  return fan.sys.LogLevel.$type;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -95,7 +95,7 @@ fan.sys.LogLevel.m_vals =
 fan.sys.LogRec = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.sys.LogRec.prototype.$ctor = function() {}
-fan.sys.LogRec.prototype.type = function() { return fan.sys.Type.find("sys::LogRec"); }
+fan.sys.LogRec.prototype.type = function() { return fan.sys.LogRec.$type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Construction

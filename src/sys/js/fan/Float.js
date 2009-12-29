@@ -21,13 +21,13 @@ fan.sys.Float.prototype.$ctor = function() {}
 fan.sys.Float.make = function(val)
 {
   var x = new Number(val);
-  x.$fanType = fan.sys.Type.find("sys::Float");
+  x.$fanType = fan.sys.Float.$type;
   return x;
 }
 
 fan.sys.Float.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Float");
+  return fan.sys.Float.$type;
 }
 
 //////////////////////////////////////////////////////////////////////////

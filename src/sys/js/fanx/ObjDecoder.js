@@ -20,7 +20,7 @@ function fanx_ObjDecoder(input, options)
   this.consume();
 
   fanx_ObjDecoder.defaultMapType =
-    new fan.sys.MapType(fan.sys.Type.find("sys::Obj"), fan.sys.Type.find("sys::Obj"));
+    new fan.sys.MapType(fan.sys.Obj.$type, fan.sys.Obj.$type);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -401,7 +401,7 @@ fanx_ObjDecoder.prototype.toListOfType = function(t, curField, infer)
     if (ft instanceof fan.sys.ListType) return ft.v;
   }
   if (infer) return null;
-  return fan.sys.Type.find("sys::Obj").toNullable(); //Sys.ObjType.toNullable();
+  return fan.sys.Obj.$type.toNullable(); //Sys.ObjType.toNullable();
 }
 
 /**

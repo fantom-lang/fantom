@@ -151,7 +151,7 @@ fan.sys.Test.prototype.err = function(msg)
 
 fan.sys.Test.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Test")
+  return fan.sys.Test.$type;
 }
 
 //////////////////////////////////////////////////////////////////////////

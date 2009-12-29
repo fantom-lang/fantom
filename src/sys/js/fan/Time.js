@@ -128,7 +128,7 @@ fan.sys.Time.prototype.toStr = function()
 
 fan.sys.Time.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Time");
+  return fan.sys.Time.$type;
 }
 
 //////////////////////////////////////////////////////////////////////////

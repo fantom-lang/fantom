@@ -132,7 +132,7 @@ fan.sys.Duration.prototype.compare = function(that)
 
 fan.sys.Duration.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Duration");
+  return fan.sys.Duration.$type;
 }
 
 fan.sys.Duration.prototype.ticks = function()

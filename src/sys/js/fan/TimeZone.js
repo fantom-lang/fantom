@@ -79,7 +79,7 @@ fan.sys.TimeZone.cur = function()
 
 fan.sys.TimeZone.prototype.toStr = function () { return this.m_name; }
 
-fan.sys.TimeZone.prototype.type = function() { return fan.sys.Type.find("sys::TimeZone"); }
+fan.sys.TimeZone.prototype.type = function() { return fan.sys.TimeZone.$type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods

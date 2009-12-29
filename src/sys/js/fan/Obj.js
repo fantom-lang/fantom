@@ -77,7 +77,7 @@ fan.sys.Obj.prototype.toImmutable = function()
 
 fan.sys.Obj.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Obj")
+  return fan.sys.Obj.$type;
 }
 
 fan.sys.Obj.prototype.toStr = function()

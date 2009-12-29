@@ -21,7 +21,7 @@ fan.sys.Decimal.prototype.$ctor = function() {}
 fan.sys.Decimal.make = function(val)
 {
   var x = new Number(val);
-  x.$fanType = fan.sys.Type.find("sys::Decimal");
+  x.$fanType = fan.sys.Decimal.$type;
   return x;
 }
 

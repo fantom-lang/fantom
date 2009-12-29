@@ -27,7 +27,7 @@ fan.sys.StrBuf.prototype.$ctor = function()
 
 fan.sys.StrBuf.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::StrBuf");
+  return fan.sys.StrBuf.$type;
 }
 
 fan.sys.StrBuf.prototype.add = function(obj)

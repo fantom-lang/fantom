@@ -53,7 +53,7 @@ fan.sys.Month.prototype.numDays = function(year)
 
 fan.sys.Month.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Month");
+  return fan.sys.Month.$type;
 }
 
 // TODO FIXIT

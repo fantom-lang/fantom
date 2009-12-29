@@ -28,7 +28,7 @@ fan.sys.Slot.prototype.$ctor = function()
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Slot.prototype.type = function() { return fan.sys.Type.find("sys::Slot"); }
+fan.sys.Slot.prototype.type = function() { return fan.sys.Slot.$type; }
 fan.sys.Slot.prototype.toStr = function() { return this.m_qname; }
 
 //////////////////////////////////////////////////////////////////////////

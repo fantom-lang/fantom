@@ -437,7 +437,7 @@ fan.sys.UriDecoder.prototype.decodeQuery = function()
 fan.sys.UriDecoder.prototype.parseQuery = function(q)
 {
   if (q == null) return null;
-  var map = new fan.sys.Map(fan.sys.Type.find("sys::Str"), fan.sys.Type.find("sys::Str"));
+  var map = new fan.sys.Map(fan.sys.Str.$type, fan.sys.Str.$type);
 
   try
   {
@@ -712,7 +712,7 @@ fan.sys.UriEncoder.percentEncodeByte = function(buf, c)
 
 fan.sys.Uri.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Uri");
+  return fan.sys.Uri.$type;
 }
 
 fan.sys.Uri.prototype.equals = function(that)

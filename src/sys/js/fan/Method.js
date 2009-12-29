@@ -39,7 +39,7 @@ fan.sys.Method.prototype.invoke = function(instance, args)
 
 fan.sys.Method.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Method");
+  return fan.sys.Method.$type;
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -54,7 +54,7 @@ fan.sys.Date.prototype.compare = function(that)
 
 fan.sys.Date.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Date");
+  return fan.sys.Date.$type;
 }
 
 fan.sys.Date.prototype.toIso = function()

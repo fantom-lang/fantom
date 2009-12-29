@@ -97,7 +97,7 @@ fan.sys.Type.prototype.isMixin = function()   { return this.m_isMixin; }
 fan.sys.Type.prototype.log = function()       { return fan.sys.Log.get(this.m_pod.m_name); }
 fan.sys.Type.prototype.toStr = function()     { return this.signature(); }
 fan.sys.Type.prototype.toLocale = function()  { return this.signature(); }
-fan.sys.Type.prototype.type = function()      { return fan.sys.Type.find("sys::Type"); }
+fan.sys.Type.prototype.type = function()      { return fan.sys.Type.$type; }
 
 fan.sys.Type.prototype.toListOf = function()
 {
@@ -344,16 +344,15 @@ fan.sys.Type.toFanType = function(obj)
 {
   if (obj == null) throw fan.sys.Err.make("sys::Type.toFanType: obj is null");
   if (obj.$fanType != undefined) return obj.$fanType;
-  if ((typeof obj) == "boolean" || obj instanceof Boolean) return fan.sys.Type.find("sys::Bool");
-  if ((typeof obj) == "number"  || obj instanceof Number)  return fan.sys.Type.find("sys::Int");
-  if ((typeof obj) == "string"  || obj instanceof String)  return fan.sys.Type.find("sys::Str");
-println("### " + (typeof obj));
+  if ((typeof obj) == "boolean" || obj instanceof Boolean) return fan.sys.Bool.$type;
+  if ((typeof obj) == "number"  || obj instanceof Number)  return fan.sys.Int.$type;
+  if ((typeof obj) == "string"  || obj instanceof String)  return fan.sys.Str.$type;
   throw fan.sys.Err.make("sys::Type.toFanType: Not a Fantom type: " + obj);
 }
 
 fan.sys.Type.common = function(objs)
 {
-  if (objs.length == 0) return fan.sys.Type.find("sys::Obj").toNullable();
+  if (objs.length == 0) return fan.sys.Obj.$type.toNullable();
   var nullable = false;
   var best = null;
   for (var i=0; i<objs.length; i++)
@@ -365,10 +364,10 @@ fan.sys.Type.common = function(objs)
     while (!t.is(best))
     {
       best = best.base();
-      if (best == null) return nullable ? fan.sys.Type.find("sys::Obj").toNullable() : fan.sys.Type.find("sys::Obj");
+      if (best == null) return nullable ? fan.sys.Obj.$type.toNullable() : fan.sys.Obj.$type;
     }
   }
-  if (best == null) best = fan.sys.Type.find("sys::Obj");
+  if (best == null) best = fan.sys.Obj.$type;
   return nullable ? best.toNullable() : best;
 }
 
