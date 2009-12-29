@@ -777,6 +777,7 @@
 - #876: Source Doc Changes
 
 *Build 1.0.49 (working)*
+- #889: compilerJs Rework
 
 - TODO: change deprecated to be string
 

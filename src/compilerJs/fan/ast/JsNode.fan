@@ -44,6 +44,7 @@ abstract class JsNode
   {
     // use this method as a hook to look for synthentic types
     // used in compiled types that we need to emit
+    /*
     if (ctype.isSynthetic)
     {
       if (ctype.qname.contains("Curry\$"))
@@ -52,6 +53,7 @@ abstract class JsNode
         if (!list.contains(ctype)) list.add(ctype)
       }
     }
+    */
     /*
     else
     {
