@@ -23,7 +23,7 @@ class Ajax : Window
         hgap    = 12
         Button {
           text = "Get!"
-          onAction.add { HttpReq { uri=`/echo` }.get |res| { disRes(res) }}
+          onAction.add { HttpReq { uri=`/echo`; headers["foo"]="bar!" }.get |res| { disRes(res) }}
         },
         Button {
           text = "Post!"
