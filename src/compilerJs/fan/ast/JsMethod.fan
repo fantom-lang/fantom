@@ -20,9 +20,10 @@ class JsMethod : JsSlot
     this.isGetter   = m.isGetter
     this.isSetter   = m.isSetter
     this.params     = m.params.map |CParam p->JsMethodParam| { JsMethodParam(s, p) }
+    this.ret        = JsTypeRef(s, m.ret)
     this.hasClosure = ClosureFinder(m).exists
-    if (m.ctorChain != null) this.ctorChain = JsExpr(s, m.ctorChain, false)
-    if (m.code != null) this.code = JsBlock(s, m.code, false)
+    if (m.ctorChain != null) this.ctorChain = JsExpr.makeFor(s, m.ctorChain)
+    if (m.code != null) this.code = JsBlock(s, m.code)
   }
 
   Bool isFieldAccessor() { isGetter || isSetter }
@@ -31,52 +32,57 @@ class JsMethod : JsSlot
   {
     if (isCtor)
     {
-      writeMethod(out,
-       "  var instance = new $parent();
-          instance.$name\$${sig(params)};
-          return instance;
-        ")
-      name   = "$name\$"
-      isCtor = false
+      // write static factory make method
+      ctorParams := [JsMethodParam.makeSelf(support)].addAll(params)
+      out.w("${parent}.$name = function${sig(params)}
+             {
+               var self = new $parent();
+               ${parent}.$name\$${sig(ctorParams)};
+               return self;
+             }").nl
+
+      // write factory make$ method
+      thisName = "self"
+      writeMethod(out, "$name\$", ctorParams)
+      thisName = "this"
     }
-    else if (isGetter) name = "$name"
-    else if (isSetter) name = "$name\$"
-    writeMethod(out)
+    else if (isSetter) writeMethod(out, "$name\$", params)
+    else writeMethod(out, name, params)
   }
 
-  Void writeMethod(JsWriter out, Str? alt := null)
+  Void writeMethod(JsWriter out, Str methName, JsMethodParam[] methParams)
   {
     // skip abstract methods
     if (isAbstract) return
 
     out.w(parent)
     if (!isStatic && !isCtor) out.w(".prototype")
-    out.w(".$name = function${sig(params)}").nl
+    out.w(".$methName = function${sig(methParams)}").nl
     out.w("{").nl
+    out.indent
 
     // def params
     params.each |p|
     {
       if (!p.hasDef) return
-      out.w("  if ($p.name === undefined) $p.name = ")
+      out.w("if ($p.name === undefined) $p.name = ")
       p.defVal.write(out)
       out.w(";").nl
     }
 
     // closure support
-    if (hasClosure) out.w("  var \$this = this;").nl
+    if (hasClosure) out.w("var \$this = $thisName;").nl
 
-    if (alt != null) out.w(alt)
-    else if (isNative)
+    if (isNative)
     {
       if (isStatic)
       {
-        out.w("  return ${parentPeer.qname}Peer.$name${sig(params)};").nl
+        out.w("return ${parentPeer.qname}Peer.$methName${sig(methParams)};").nl
       }
       else
       {
-        pars := isStatic ? params : [JsMethodParam.makeThis(support)].addAll(params)
-        out.w("  return this.peer.$name${sig(pars)};").nl
+        pars := isStatic ? params : [JsMethodParam.makeThis(support)].addAll(methParams)
+        out.w("return this.peer.$methName${sig(pars)};").nl
       }
     }
     else
@@ -84,17 +90,15 @@ class JsMethod : JsSlot
       // ctor chaining
       if (ctorChain != null)
       {
-        out.w("  ")
         ctorChain.write(out)
         out.w(";").nl
       }
 
       // method body
-      out.indent
       code?.write(out)
-      out.unindent
     }
 
+    out.unindent
     out.w("}").nl
   }
 
@@ -115,6 +119,7 @@ class JsMethod : JsSlot
   Bool isGetter           // is this method a field getter
   Bool isSetter           // is this method a field setter
   JsMethodParam[] params  // method params
+  JsTypeRef ret           // return type for method
   Bool hasClosure         // does this method contain a closure
   JsExpr? ctorChain       // ctorChain if has one
   JsBlock? code           // method body if has one
@@ -132,8 +137,9 @@ class JsMethodParam : JsNode
   new make(CompilerSupport s, CParam p) : super(s)
   {
     this.name = vnameToJs(p.name)
+    this.paramType = JsTypeRef(s, p.paramType)
     this.hasDef = p.hasDefault
-    if (hasDef) this.defVal = JsExpr(s, p->def, false)
+    if (hasDef) this.defVal = JsExpr.makeFor(s, p->def)
   }
 
   new makeThis(CompilerSupport s) : super.make(s)
@@ -141,14 +147,20 @@ class JsMethodParam : JsNode
     this.name = "this"
   }
 
+  new makeSelf(CompilerSupport s) : super.make(s)
+  {
+    this.name = "self"
+  }
+
   override Void write(JsWriter out)
   {
     out.w(name)
   }
 
-  Str name        // param name
-  Bool hasDef     // has default value
-  JsNode? defVal  // default value
+  Str name              // param name
+  JsTypeRef? paramType  // param type
+  Bool hasDef           // has default value
+  JsNode? defVal        // default value
 }
 
 **************************************************************************

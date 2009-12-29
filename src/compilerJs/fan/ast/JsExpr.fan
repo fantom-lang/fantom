@@ -11,560 +11,881 @@ using compiler
 **
 ** JsExpr
 **
-class JsExpr : JsNode
+abstract class JsExpr : JsNode
 {
-  new make(CompilerSupport s, Expr x, Bool inClosure) : super(s)
+  new make(CompilerSupport s) : super(s) {}
+
+  static JsExpr makeFor(CompilerSupport s, Expr expr)
   {
-    this.x = x
-    this.inClosure = inClosure
+    switch (expr.id)
+    {
+      case ExprId.nullLiteral:     return JsNullLiteralExpr(s)
+      case ExprId.trueLiteral:     return JsBoolLiteralExpr(s, true)
+      case ExprId.falseLiteral:    return JsBoolLiteralExpr(s, false)
+      case ExprId.intLiteral:      return JsIntLiteralExpr(s, expr)
+      case ExprId.floatLiteral:    return JsFloatLiteralExpr(s, expr)
+      case ExprId.decimalLiteral:  return JsDecimalLiteralExpr(s, expr)
+      case ExprId.strLiteral:      return JsStrLiteralExpr(s, expr)
+      case ExprId.durationLiteral: return JsDurationLiteralExpr(s, expr)
+      case ExprId.uriLiteral:      return JsUriLiteralExpr(s, expr)
+      case ExprId.typeLiteral:     return JsTypeLiteralExpr(s, expr)
+      case ExprId.slotLiteral:     return JsSlotLiteralExpr(s, expr)
+      case ExprId.symbolLiteral:   return JsSymbolLiteralExpr(s, expr)
+      case ExprId.rangeLiteral:    return JsRangeLiteralExpr(s, expr)
+      case ExprId.listLiteral:     return JsListLiteralExpr(s, expr)
+      case ExprId.mapLiteral:      return JsMapLiteralExpr(s, expr)
+
+      case ExprId.boolNot:         return JsUnaryExpr(s, expr)
+      case ExprId.cmpNull:         return JsUnaryExpr(s, expr)
+      case ExprId.cmpNotNull:      return JsUnaryExpr(s, expr)
+
+      case ExprId.elvis:           return JsElvisExpr(s, expr)
+      case ExprId.assign:          return JsBinaryExpr(s, expr)
+      case ExprId.same:            return JsBinaryExpr(s, expr)
+      case ExprId.notSame:         return JsBinaryExpr(s, expr)
+      case ExprId.ternary:         return JsTernaryExpr(s, expr)
+
+      case ExprId.boolOr:          return JsCondExpr(s, expr)
+      case ExprId.boolAnd:         return JsCondExpr(s, expr)
+
+      case ExprId.isExpr:          return JsTypeCheckExpr(s, expr)
+      case ExprId.isnotExpr:       return JsTypeCheckExpr(s, expr)
+      case ExprId.asExpr:          return JsTypeCheckExpr(s, expr)
+      case ExprId.coerce:          return JsTypeCheckExpr(s, expr)
+
+      case ExprId.call:            return JsCallExpr(s, expr)
+      case ExprId.construction:    return JsCallExpr(s, expr)
+      case ExprId.shortcut:        return JsShortcutExpr(s, expr)
+      case ExprId.field:           return JsFieldExpr(s, expr)
+      case ExprId.closure:         return JsClosureExpr(s, expr)
+
+      case ExprId.localVar:        return JsLocalVarExpr(s, expr)
+      case ExprId.thisExpr:        return JsThisExpr(s)
+      case ExprId.superExpr:       return JsSuperExpr(s, expr)
+      case ExprId.itExpr:          return JsItExpr(s)
+      case ExprId.staticTarget:    return JsStaticTargetExpr(s, expr)
+
+      // Not implemented
+      //case ExprId.unknownVar
+      //case ExprId.storage
+      //case ExprId.curry
+      //case ExprId.complexLiteral
+
+      default: throw s.err("Unknown ExprId: $expr.id", expr.location)
+    }
+  }
+}
+
+**************************************************************************
+** JsThisExpr
+**************************************************************************
+
+class JsThisExpr : JsExpr
+{
+  new make(CompilerSupport s) : super(s) {}
+  override Void write(JsWriter out) { out.w(thisName) }
+}
+
+**************************************************************************
+** JsSuperExpr
+**************************************************************************
+
+class JsSuperExpr : JsExpr
+{
+  new make(CompilerSupport s, SuperExpr se) : super(s)
+  {
+    if (se.explicitType != null)
+      explicitType = JsTypeRef(s, se.explicitType)
+  }
+  override Void write(JsWriter out) {} // handled in JsCallExpr
+  JsTypeRef? explicitType
+}
+
+**************************************************************************
+** JsItExpr
+**************************************************************************
+
+class JsItExpr : JsExpr
+{
+  new make(CompilerSupport s) : super(s) {}
+  override Void write(JsWriter out) { out.w("it" ) }
+}
+
+**************************************************************************
+** JsLocalVarExpr
+**************************************************************************
+
+class JsLocalVarExpr : JsExpr
+{
+  new make(CompilerSupport s, LocalVarExpr le) : super(s)
+  {
+    name = vnameToJs(le.var.name)
+  }
+  override Void write(JsWriter out)
+  {
+    out.w(name)
+  }
+  Str name
+}
+
+**************************************************************************
+** JsStaticTargetExpr
+**************************************************************************
+
+class JsStaticTargetExpr : JsExpr
+{
+  new make(CompilerSupport s, StaticTargetExpr le) : super(s)
+  {
+    target = JsTypeRef(s, le.ctype)
+  }
+  override Void write(JsWriter out)
+  {
+    out.w(target.qname)
+  }
+  JsTypeRef target
+}
+
+**************************************************************************
+** JsNullLiteralExpr
+**************************************************************************
+
+class JsNullLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s) : super(s) {}
+  override Void write(JsWriter out) { out.w("null" ) }
+}
+
+**************************************************************************
+** JsBoolLiteralExpr
+**************************************************************************
+
+class JsBoolLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, Bool val) : super(s)
+  {
+    this.val = val
+  }
+  override Void write(JsWriter out)
+  {
+    out.w(val ? "true" : "false")
+  }
+  Bool val
+}
+
+**************************************************************************
+** JsIntLiteralExpr
+**************************************************************************
+
+class JsIntLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, LiteralExpr x) : super(s)
+  {
+    this.val = x.val as Int
+  }
+  override Void write(JsWriter out)
+  {
+    out.w(val)
+  }
+  Int val
+}
+
+**************************************************************************
+** JsFloatLiteralExpr
+**************************************************************************
+
+class JsFloatLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, LiteralExpr x) : super(s)
+  {
+    this.val = x.val as Float
+  }
+  override Void write(JsWriter out)
+  {
+    out.w("fan.sys.Float.make($val)")
+  }
+  Float val
+}
+
+**************************************************************************
+** JsDecimalLiteralExpr
+**************************************************************************
+
+class JsDecimalLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, LiteralExpr x) : super(s)
+  {
+    this.val = x.val as Decimal
+  }
+  override Void write(JsWriter out)
+  {
+    out.w("fan.sys.Decimal.make($val)")
+  }
+  Decimal val
+}
+
+**************************************************************************
+** JsStrLiteralExpr
+**************************************************************************
+
+class JsStrLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, LiteralExpr x) : super(s)
+  {
+    this.val = x.val as Str
+    this.esc = val.toCode('\"', true)[1..-2]  // remove outer quotes
+  }
+  override Void write(JsWriter out)
+  {
+    out.w("\"$esc\"")
+  }
+  Str val
+  Str esc
+}
+
+**************************************************************************
+** JsDurationLiteralExpr
+**************************************************************************
+
+class JsDurationLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, LiteralExpr x) : super(s)
+  {
+    this.val = x.val as Duration
+  }
+  override Void write(JsWriter out)
+  {
+    out.w("fan.sys.Duration.fromStr(\"$val.toStr\")")
+  }
+  Duration val
+}
+
+**************************************************************************
+** JsUriLiteralExpr
+**************************************************************************
+
+class JsUriLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, LiteralExpr x) : super(s)
+  {
+    this.val = x.val
+    this.str = val.toStr.toCode('\"', true)
+  }
+  override Void write(JsWriter out)
+  {
+    out.w("fan.sys.Uri.fromStr(")
+    out.w(val.toStr.toCode('\"', true))
+    out.w(")")
+  }
+  Obj val
+  Str str
+}
+
+**************************************************************************
+** JsTypeLiteralExpr
+**************************************************************************
+
+class JsTypeLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, LiteralExpr x) : super(s)
+  {
+    this.val = JsTypeRef(s, x.val)
+  }
+  override Void write(JsWriter out)
+  {
+    writeType(val, out)
+  }
+  static Void writeType(JsTypeRef t, JsWriter out)
+  {
+    if (t.isList || t.isMap || t.isFunc)
+    {
+      out.w("fan.sys.Type.find(\"$t.sig\")")
+    }
+    else
+    {
+      out.w("${t.qname}.\$type")
+      if (t.isNullable) out.w(".toNullable()")
+    }
+  }
+  JsTypeRef val
+}
+
+**************************************************************************
+** JsSlotLiteralExpr
+**************************************************************************
+
+class JsSlotLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, SlotLiteralExpr x) : super(s)
+  {
+    this.parent = JsTypeRef(s, x.parent)
+    this.name   = x.name
+  }
+  override Void write(JsWriter out)
+  {
+    JsTypeLiteralExpr.writeType(parent, out)
+    out.w(".slot(\"$name\")")
+  }
+  JsTypeRef parent  // slot parent type
+  Str name          // slot name
+}
+
+**************************************************************************
+** JsSymbolLiteralExpr
+**************************************************************************
+
+class JsSymbolLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, SymbolExpr x) : super(s)
+  {
+    this.qname = x.symbol.qname
+  }
+  override Void write(JsWriter out)
+  {
+    out.w("fan.sys.Symbol.find(\"$qname\")")
+  }
+  Str qname
+}
+
+**************************************************************************
+** JsRangeLiteralExpr
+**************************************************************************
+
+class JsRangeLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, RangeLiteralExpr x) : super(s)
+  {
+    start = JsExpr.makeFor(s, x.start)
+    end   = JsExpr.makeFor(s, x.end)
+    exclusive = x.exclusive
+  }
+  override Void write(JsWriter out)
+  {
+    out.w("fan.sys.Range.make(")
+    start.write(out)
+    out.w(",")
+    end.write(out)
+    if (exclusive) out.w(",true")
+    out.w(")")
+  }
+  JsExpr start
+  JsExpr end
+  Bool exclusive
+}
+
+**************************************************************************
+** JsListLiteralExpr
+**************************************************************************
+
+class JsListLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, ListLiteralExpr x) : super(s)
+  {
+    this.inferredType = JsTypeRef(s, x.ctype)
+    if (x.explicitType != null)
+      this.explicitType = JsTypeRef(s, x.explicitType)
+
+    this.vals = x.vals.map |v->JsExpr| { JsExpr.makeFor(s, v) }
+  }
+  override Void write(JsWriter out)
+  {
+    of := (explicitType ?: inferredType).v
+    out.w("fan.sys.List.make(")
+    JsTypeLiteralExpr.writeType(of, out)
+    if (vals.size > 0)
+    {
+      out.w(", [")
+      vals.each |v,i|
+      {
+        if (i > 0) out.w(",")
+        v.write(out)
+      }
+      out.w("]")
+    }
+    out.w(")")
+  }
+  JsTypeRef inferredType
+  JsTypeRef? explicitType
+  JsExpr[] vals
+}
+
+**************************************************************************
+** JsMapLiteralExpr
+**************************************************************************
+
+class JsMapLiteralExpr : JsExpr
+{
+  new make(CompilerSupport s, MapLiteralExpr me) : super(s)
+  {
+    this.inferredType = JsTypeRef(s, me.ctype)
+    if (me.explicitType != null)
+      this.explicitType = JsTypeRef(s, me.explicitType)
+
+    this.keys = me.keys.map |k->JsExpr| { JsExpr.makeFor(s, k) }
+    this.vals = me.vals.map |v->JsExpr| { JsExpr.makeFor(s, v) }
+  }
+  override Void write(JsWriter out)
+  {
+    out.w("fan.sys.Map.fromLiteral([")
+    keys.each |k,i| { if (i > 0) out.w(","); k.write(out) }
+    out.w("],[")
+    vals.each |v,i| { if (i > 0) out.w(","); v.write(out) }
+    out.w("]")
+    t := explicitType ?: inferredType
+    out.w(",fan.sys.Type.find(\"").w(t.k.sig).w("\")")
+    out.w(",fan.sys.Type.find(\"").w(t.v.sig).w("\")")
+    out.w(")")
+  }
+  JsTypeRef inferredType
+  JsTypeRef? explicitType
+  JsExpr[] keys
+  JsExpr[] vals
+}
+
+**************************************************************************
+** JsUnaryExpr
+**************************************************************************
+
+class JsUnaryExpr : JsExpr
+{
+  new make(CompilerSupport s, UnaryExpr x) : super(s)
+  {
+    this.id      = x.id
+    this.symbol  = x.opToken.symbol
+    this.operand = JsExpr.makeFor(s, x.operand)
+  }
+  override Void write(JsWriter out)
+  {
+    switch (id)
+    {
+      case ExprId.cmpNull:    operand.write(out); out.w(" == null")
+      case ExprId.cmpNotNull: operand.write(out); out.w(" != null")
+      default:                out.w(symbol); operand.write(out)
+    }
+  }
+  ExprId id
+  Str symbol
+  JsExpr operand
+}
+
+**************************************************************************
+** JsBinaryExpr
+**************************************************************************
+
+class JsBinaryExpr : JsExpr
+{
+  new make(CompilerSupport s, BinaryExpr x) : super(s)
+  {
+    this.symbol = x.opToken.symbol
+    this.lhs    = JsExpr.makeFor(s, x.lhs)
+    this.rhs    = JsExpr.makeFor(s, x.rhs)
+  }
+  override Void write(JsWriter out)
+  {
+    if (lhs is JsFieldExpr && lhs->useAccessor == true)
+    {
+      lhs->isSet = true
+      lhs.write(out)
+      out.w("\$(")
+      rhs.write(out)
+      out.w(")")
+    }
+    else
+    {
+      lhs.write(out)
+      out.w(" $symbol ")
+      rhs.write(out)
+    }
+  }
+  Str symbol
+  JsExpr lhs
+  JsExpr rhs
+}
+
+**************************************************************************
+** JsTernaryExpr
+**************************************************************************
+
+class JsTernaryExpr : JsExpr
+{
+  new make(CompilerSupport s, TernaryExpr te) : super(s)
+  {
+    this.condition = JsExpr.makeFor(s, te.condition)
+    this.trueExpr  = JsExpr.makeFor(s, te.trueExpr)
+    this.falseExpr = JsExpr.makeFor(s, te.falseExpr)
+  }
+  override Void write(JsWriter out)
+  {
+    out.w("(("); condition.write(out); out.w(") ? ")
+    out.w("(");  trueExpr.write(out);  out.w(") : ")
+    out.w("(");  falseExpr.write(out); out.w("))")
+  }
+  JsExpr condition
+  JsExpr trueExpr
+  JsExpr falseExpr
+}
+
+**************************************************************************
+** JsElvisExpr
+**************************************************************************
+
+class JsElvisExpr : JsExpr
+{
+  new make(CompilerSupport s, BinaryExpr be) : super(s)
+  {
+    this.lhs = JsExpr.makeFor(s, be.lhs)
+    this.rhs = JsExpr.makeFor(s, be.rhs)
+  }
+  override Void write(JsWriter out)
+  {
+    var := unique
+    old := thisName
+    thisName = "\$this"
+    out.w("(function(\$this) { var $var = ")
+    lhs.write(out)
+    out.w("; if ($var != null) return $var; return ")
+    rhs.write(out)
+    out.w("; })($old)")
+    thisName = old
+  }
+  JsExpr lhs
+  JsExpr rhs
+}
+
+**************************************************************************
+** JsCondExpr
+**************************************************************************
+
+class JsCondExpr : JsExpr
+{
+  new make(CompilerSupport s, CondExpr ce) : super(s)
+  {
+    this.symbol   = ce.opToken.symbol
+    this.operands = ce.operands.map |op->JsExpr| { JsExpr.makeFor(s, op) }
+  }
+  override Void write(JsWriter out)
+  {
+    operands.each |op,i|
+    {
+      if (i>0 && i<operands.size) out.w(" $symbol ")
+      op.write(out)
+    }
+  }
+  Str symbol
+  JsExpr[] operands
+}
+
+**************************************************************************
+** JsTypeCheckExpr
+**************************************************************************
+
+class JsTypeCheckExpr : JsExpr
+{
+  new make(CompilerSupport s, TypeCheckExpr te) : super(s)
+  {
+    this.op     = te.id == ExprId.coerce ? "coerce" : te.opStr
+    this.target = JsExpr.makeFor(s, te.target)
+    this.check  = JsTypeRef(s, te.check)
+  }
+  override Void write(JsWriter out)
+  {
+    m := op
+    if (m == "isnot")
+    {
+      out.w("!")
+      m = "is"
+    }
+    out.w("fan.sys.ObjUtil.$m(")
+    target.write(out)
+    out.w(",")
+    JsTypeLiteralExpr.writeType(check, out)
+    out.w(")")
+  }
+  Str op
+  JsExpr target
+  JsTypeRef check
+}
+
+**************************************************************************
+** JsCallExpr
+**************************************************************************
+
+class JsCallExpr : JsExpr
+{
+  new make(CompilerSupport s, CallExpr ce) : super(s)
+  {
+    this.name   = vnameToJs(ce.method.name)
+    this.args   = ce.args.map |a->JsExpr| { JsExpr.makeFor(s, a) }
+    this.isSafe = ce.isSafe
+    this.isMock = ce.method is MockMethod
+    this.isCtorChain = ce.isCtorChain
+    this.isDynamic = ce.isDynamic
+    if (isDynamic) this.dynamicName = ce.name
+
+    if (ce.method != null)
+    {
+      this.parent = JsTypeRef(s, ce.method.parent)
+      this.isCtor = ce.method.isCtor
+      this.isObj  = ce.method.parent.qname == "sys::Obj"
+      this.isPrim = isPrimitive(ce.method.parent)
+      this.isStatic = ce.method.isStatic
+    }
+
+    if (ce.target != null)
+    {
+      this.target = JsExpr.makeFor(s, ce.target)
+      this.targetType = ce.target.ctype == null ? parent : JsTypeRef(s, ce.target.ctype)
+    }
+
+    // force these methods to route thru ObjUtil
+    if (name == "equals" || name == "compare") isObj = true
+
+    // use isMock as hook to skip instance inits
+    if (name.startsWith("instance\$init\$")) isMock = true
   }
 
   override Void write(JsWriter out)
   {
-    this.out = out
-    expr(x)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Expr
-//////////////////////////////////////////////////////////////////////////
-
-  Void expr(Expr ex)
-  {
-    switch (ex.id)
-    {
-      case ExprId.nullLiteral:  out.w("null")
-      case ExprId.trueLiteral:  out.w("true")
-      case ExprId.falseLiteral: out.w("false")
-      case ExprId.intLiteral:   intLiteralExpr(ex)
-      case ExprId.floatLiteral: out.w("fan.sys.Float.make($ex)")
-      case ExprId.decimalLiteral: out.w("fan.sys.Decimal.make($ex)")
-      case ExprId.strLiteral:   out.w("\"").w(ex->val.toStr.toCode('\"', true)[1..-2]).w("\"")
-      case ExprId.durationLiteral: out.w("fan.sys.Duration.fromStr(\"").w(ex).w("\")")
-      case ExprId.uriLiteral:   out.w("fan.sys.Uri.fromStr(").w(ex->val.toStr.toCode('\"', true)).w(")")
-      case ExprId.typeLiteral:  out.w("fan.sys.Type.find(\"${ex->val->signature}\")")
-      case ExprId.slotLiteral:  out.w("fan.sys.Type.find(\"${ex->parent->signature}\").slot(\"${ex->name}\")")
-      case ExprId.symbolLiteral: out.w("fan.sys.Symbol.find(\"${ex->symbol->qname}\")")
-      case ExprId.rangeLiteral: rangeLiteralExpr(ex)
-      case ExprId.listLiteral:  listLiteralExpr(ex)
-      case ExprId.mapLiteral:   mapLiteralExpr(ex)
-      case ExprId.boolNot:      out.w("!"); expr(ex->operand)
-      case ExprId.cmpNull:      expr(ex->operand); out.w(" == null")
-      case ExprId.cmpNotNull:   expr(ex->operand); out.w(" != null")
-      case ExprId.elvis:        elvisExpr(ex)
-      case ExprId.assign:       assignExpr(ex)
-      case ExprId.same:         expr(ex->lhs); out.w(" === "); expr(ex->rhs)
-      case ExprId.notSame:      out.w("!("); expr(ex->lhs); out.w(" === "); expr(ex->rhs); out.w(")")
-      case ExprId.boolOr:       condExpr(ex)
-      case ExprId.boolAnd:      condExpr(ex)
-      case ExprId.isExpr:       typeCheckExpr(ex)
-      case ExprId.isnotExpr:    out.w("!"); typeCheckExpr(ex)
-      case ExprId.asExpr:       typeCheckExpr(ex)
-      case ExprId.coerce:       coerceExpr(ex)
-      case ExprId.call:         callExpr(ex)
-      case ExprId.construction: callExpr(ex)
-      case ExprId.shortcut:     shortcutExpr(ex)
-      case ExprId.field:        fieldExpr(ex)
-      case ExprId.localVar:     out.w(vnameToJs(ex.toStr))
-      case ExprId.thisExpr:     out.w(inClosure ? "\$this" : "this")
-      case ExprId.superExpr:    out.w("this.\$super")
-      case ExprId.itExpr:       out.w("it")
-      case ExprId.staticTarget: out.w(qnameToJs(ex->ctype))
-      //case ExprId.unknownVar
-      //case ExprId.storage
-      case ExprId.ternary:
-        out.w("(("); expr(ex->condition); out.w(") ? ")
-        out.w("("); expr(ex->trueExpr);  out.w(") : ")
-        out.w("("); expr(ex->falseExpr); out.w("))")
-      //case ExprId.curry
-      //case ExprId.complexLiteral
-      case ExprId.closure:      closureExpr(ex)
-      default: support.err("Unknown ExprId: $ex.id", ex.location)
-    }
-  }
-
-  Void intLiteralExpr(LiteralExpr le)
-  {
-    val := le.val as Int
-    if (val.abs > maxInt || val == Int.minVal)
-    {
-      hi := val.shiftr(32).and(0xffff_ffff)
-      lo := val.and(0xffff_ffff)
-      out.w("new Long(0x$hi.toHex,0x$lo.toHex)")
-    }
-    else out.w(val)
-  }
-
-  Void rangeLiteralExpr(RangeLiteralExpr re)
-  {
-    out.w("fan.sys.Range.make(")
-    expr(re.start)
-    out.w(",")
-    expr(re.end)
-    if (re.exclusive) out.w(",true")
-    out.w(")")
-  }
-
-  Void listLiteralExpr(ListLiteralExpr le)
-  {
-    t := (le.explicitType ?: le.ctype)->v->qname
-    out.w("fan.sys.List.make(fan.sys.Type.find(\"$t\"), [")
-    le.vals.each |Expr ex, Int i|
-    {
-      if (i > 0) out.w(",")
-      expr(ex)
-    }
-    out.w("])")
-  }
-
-  Void mapLiteralExpr(MapLiteralExpr me)
-  {
-    out.w("fan.sys.Map.fromLiteral([")
-    me.keys.each |Expr key, Int i| { if (i > 0) out.w(","); expr(key) }
-    out.w("],[")
-    me.vals.each |Expr val, Int i| { if (i > 0) out.w(","); expr(val) }
-    out.w("]")
-    t := me.explicitType ?: me.ctype
-    out.w(",fan.sys.Type.find(\"").w(t->k).w("\")")
-    out.w(",fan.sys.Type.find(\"").w(t->v).w("\")")
-    out.w(")")
-  }
-
-  Void elvisExpr(BinaryExpr be)
-  {
-    out.w("("); expr(be.lhs); out.w(" != null)")
-    out.w(" ? ("); expr(be.lhs); out.w(")")
-    out.w(" : ("); expr(be.rhs); out.w(")")
-  }
-
-  Void assignExpr(BinaryExpr be)
-  {
-    if (be.lhs is FieldExpr)
-    {
-      fe := be.lhs as FieldExpr
-      if (fe.useAccessor) { fieldExpr(fe,false); out.w("("); expr(be.rhs); out.w(")") }
-      else { fieldExpr(fe); out.w(" = "); expr(be.rhs); }
-    }
-    else { expr(be.lhs); out.w(" = "); expr(be.rhs) }
-  }
-
-  Void typeCheckExpr(TypeCheckExpr te)
-  {
-    method := te.id == ExprId.asExpr ? "as" : "is"
-    out.w("fan.sys.Obj.$method(")
-    expr(te.target)
-    out.w(",fan.sys.Type.find(\"$te.check\"))")
-  }
-
-  Void coerceExpr(TypeCheckExpr te)
-  {
-    out.w("fan.sys.Obj.coerce(")
-    expr(te.target)
-    out.w(",fan.sys.Type.find(\"$te.check\"))")
-  }
-
-  Void callExpr(CallExpr ce, Bool doSafe := true)
-  {
     // skip mock methods used to insert implicit runtime checks
-    if (ce.method is MockMethod) return
+    if (isMock) return
 
-    if (ce.isSafe && doSafe)
+    if (isSafe)
     {
-      out.w("((")
-      expr(ce.target)
-      out.w(" == null) ? null : (")
-      callExpr(ce, false)
-      out.w("))")
-      return
+      // wrap if safe-nav
+      safeVar = unique
+      old := thisName
+      thisName = "\$this"
+      out.w("(function(\$this) { var $safeVar = ")
+      if (target == null) out.w(thisName)
+      else target.write(out)
+      out.w("; if ($safeVar == null) return null; return ")
+      writeCall(out)
+      out.w("; })($old)")
+      thisName = old
     }
-
-    // check for special cases
-    if (isObjMethod(ce.method.name))
+    else
     {
-      firstArg := true
-      if (ce is ShortcutExpr && ce->opToken.toStr == "!=") out.w("!")
-      if (ce.target is SuperExpr)
-      {
-        base := ce.target->explicitType ?: ce.target.ctype
-        out.w(qnameToJs(base)).w(".prototype.${ce.method.name}.call(this,")
-        firstArg = false
-      }
-      else
-      {
-        out.w("fan.sys.Obj.${vnameToJs(ce.method.name)}(")
-        expr(ce.target)
-      }
-      ce.args.each |arg, i|
-      {
-        if (i>0 || firstArg) out.w(", ")
-        expr(arg)
-      }
+      // normal call
+      writeCall(out)
+    }
+  }
+
+  Void writeCall(JsWriter out)
+  {
+    if (isObj) writeObj(out)
+    else if (isPrim) writePrimitive(out)
+    else if (isCtorChain) writeCtorChain(out)
+    else if (target is JsSuperExpr) writeSuper(out)
+    else
+    {
+      writeTarget(out)
+      out.w(".$name(")
+      writeArgs(out)
       out.w(")")
-      if (ce is ShortcutExpr && ce->op === ShortcutOp.cmp && ce->opToken.toStr != "<=>")
-        out.w(" ${ce->opToken} 0")
-      return
     }
+  }
 
-    // normal case
-    if (ce.target != null)
+  Void writeObj(JsWriter out)
+  {
+    out.w("fan.sys.ObjUtil.$name(")
+    if (isStatic) writeArgs(out)
+    else
     {
-      if (isPrimitive(ce.target.ctype.toStr) ||
-          ce.target.ctype.isList ||
-          ce.target.ctype.isFunc ||
-          ce.target is TypeCheckExpr ||
-          ce.target is ItExpr)
-      {
-        ctype := ce.target.ctype
-        route := false
-        if (ce.target is TypeCheckExpr) ctype = ce.target->check
-        if (ctype.isList)      { out.w("fan.sys.List.${vnameToJs(ce.name)}("); route=true }
-        else if (ctype.isFunc) { out.w("fan.sys.Func.${vnameToJs(ce.name)}("); route=true }
-        else if (isPrimitive(ctype.toStr))
-        {
-          mname := ce.name
-          if (ce.method.isCtor || mname == "<ctor>")
-          {
-            if (mname == "<ctor>") mname = "make"
-            first := ce.method.params.first
-            if (ce.name == "<ctor>" && ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
-              mname = "fromStr"
-          }
-          out.w("${qnameToJs(ctype)}.${vnameToJs(mname)}(")
-          route = true
-        }
-        i := 0
-        if (!route)
-        {
-          expr(ce.target)
-          out.w(".${vnameToJs(ce.name)}(")
-        }
-        else if (!ce.method.isStatic)
-        {
-          expr(ce.target)
-          if (ce.args.size > 0) i++
-        }
-        ce.args.each |arg| { if (i++ > 0) out.w(","); expr(arg) }
-        out.w(")")
-        return
-      }
-      if (ce.target is SuperExpr)
-      {
-        base := ce.target->explicitType ?: ce.target.ctype
-        out.w(qnameToJs(base)).w(".prototype")
-      }
-      else
-      {
-        expr(ce.target)
-      }
-    }
-    else if (ce.method.isStatic || ce.method.isCtor)
-    {
-      out.w(qnameToJs(ce.method.parent))
-    }
-    Str? mname := vnameToJs(ce.name)
-    if (ce.method.isCtor || ce.name == "<ctor>")
-    {
-      mname = ce.name == "<ctor>" ? "make" : ce.name
-      if (ce.target is SuperExpr) mname = "$mname\$"
-      first := ce.method.params.first
-      if (ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
-      {
-        parent  := ce.method.parent
-        fromStr := parent.methods.find |m| { m.parent.qname == parent.qname && m.name == "fromStr" }
-        if (ce.name == "<ctor>" && fromStr != null) mname = "fromStr"
-      }
-    }
-    else if (ce.target != null)
-    {
-      // TODO - not sure we need this, or if its right...
-      if (ce.target.ctype.qname == "sys::Func" && Regex("call\\d").matches(mname))
-        mname = null
-    }
-    if (ce.isDynamic)
-    {
-      out.w(".trap('$mname',fan.sys.List.make(fan.sys.Type.find('sys::Obj'),[")
-      ce.args.each |arg,i|
-      {
-        if (i > 0) out.w(",")
-        expr(arg)
-      }
-      out.w("]))")
-      return
-    }
-    if (mname != null) out.w(".").w(mname)
-    i := 0
-    if (ce.target is SuperExpr)
-    {
-      out.w(".call(this")
-      i++
-    }
-    else out.w("(")
-    ce.args.each |arg|
-    {
-      if (i++ > 0) out.w(", ")
-      expr(arg)
+      writeTarget(out)
+      writeArgs(out, true)
     }
     out.w(")")
   }
 
-  Void shortcutExpr(ShortcutExpr se)
+  Void writePrimitive(JsWriter out)
   {
-    // try to optimize the primitive case
-    if (isPrimitive(se.target.ctype?.qname) &&
-        se.method.name != "compare" && se.method.name != "get" && se.method.name != "slice")
+    out.w("${targetType.qname}.$name(")
+    if (isStatic) writeArgs(out)
+    else
     {
-      lhs := se.target
-      rhs := se.args.first
-      if (se.op == ShortcutOp.increment)
-      {
-        if (se.isPostfixLeave) { expr(lhs); out.w("++") }
-        else { out.w("++"); expr(lhs) }
-        return
-      }
-      if (se.op == ShortcutOp.decrement)
-      {
-        if (se.isPostfixLeave) { expr(lhs); out.w("--") }
-        else { out.w("--"); expr(lhs) }
-        return
-      }
-      if (se.target.ctype?.qname == "sys::Int")
-      {
-        Str? op := null
-        switch (se.op)
-        {
-          case ShortcutOp.plus:   op = "plus"
-          case ShortcutOp.minus:  op = "minus"
-          case ShortcutOp.mult:   op = "mult"
-          case ShortcutOp.div:    op = "div"
-          case ShortcutOp.mod:    op = "mod"
-          case ShortcutOp.and:    op = "and"
-          case ShortcutOp.or:     op = "or"
-          case ShortcutOp.lshift: op = "shl"
-          case ShortcutOp.rshift: op = "shr"
-        }
-        if (op != null)
-        {
-          if (se.isAssign) { expr(lhs); out.w(" = ") }
-          if (se.opToken == Token.notEq) out.w("!")
-          out.w("fan.sys.Int.$op(")
-          expr(lhs)
-          out.w(",")
-          expr(rhs)
-          out.w(")")
-          return
-        }
-      }
-      if (se.target.ctype?.qname == "sys::Float")
-      {
-        if (se.op == ShortcutOp.eq)
-        {
-          if (se.opToken == Token.notEq) out.w("!")
-          out.w("fan.sys.Float.equals(")
-          expr(lhs)
-          out.w(",")
-          expr(rhs)
-          out.w(")")
-          return
-        }
-      }
-      if (se.op.degree == 1)
-      {
-        if (se.opToken == Token.minus && se.target.ctype?.qname == "sys::Float")
-        {
-          // TODO: optimize -(literal) case
-          out.w("fan.sys.Float.negate(")
-          expr(lhs)
-          out.w(")")
-        }
-        else
-        {
-          out.w(se.opToken)
-          expr(lhs)
-        }
-        return
-      }
-      if (se.op.degree == 2)
-      {
-        out.w("(")
-        expr(lhs)
-        out.w(" $se.opToken ")
-        expr(rhs)
-        out.w(")")
-        return
-      }
+      writeTarget(out)
+      writeArgs(out, true)
     }
-
-    // check for list access
-    if (!isPrimitive(se.target.ctype?.qname) &&
-        se.op == ShortcutOp.get || se.op == ShortcutOp.set)
-    {
-      expr(se.target)
-      if (!se.args.first.ctype.isInt || se.target.ctype?.qname == "sys::StrBuf")
-      {
-        out.w(se.args.size == 1 ? ".get" : ".set")
-        out.w("(")
-        expr(se.args.first)
-        if (se.args.size > 1) { out.w(","); expr(se.args[1]) }
-        out.w(")")
-        return
-      }
-      i := "$se.args.first".toInt(10, false)
-      if (i != null && i < 0)
-      {
-        out.w("[")
-        expr(se.target)
-        out.w(".length$i]")
-      }
-      else
-      {
-        out.w("[")
-        expr(se.args.first)
-        out.w("]")
-      }
-      if (se.args.size > 1)
-      {
-        out.w(" = ")
-        expr(se.args[1])
-      }
-      return
-    }
-
-    // fallback to call as method
-    callExpr(se)
+    out.w(")")
   }
 
-  Void condExpr(CondExpr ce)
+  Void writeCtorChain(JsWriter out)
   {
-    ce.operands.each |Expr op, Int i|
+    out.w("${targetType.qname}.${name}\$($thisName")
+    writeArgs(out, true)
+    out.w(")")
+  }
+
+  Void writeSuper(JsWriter out)
+  {
+    JsTypeRef t := target->explicitType ?: targetType
+    out.w("${t.qname}.prototype.${name}.call($thisName")
+    writeArgs(out, true)
+    out.w(")")
+  }
+
+  Void writeTarget(JsWriter out)
+  {
+
+    if (isStatic || isCtor) parent.write(out)
+    else if (safeVar != null) out.w(safeVar)
+    else if (target == null) out.w(thisName)
+    else target.write(out)
+  }
+
+  Void writeArgs(JsWriter out, Bool hasFirstArg := false)
+  {
+    if (isDynamic)
     {
-      if (i > 0 && i<ce.operands.size) out.w(" $ce.opToken ")
-      expr(op)
+      if (hasFirstArg) out.w(",")
+      out.w("\"$dynamicName\"")
+      hasFirstArg = true
+    }
+    args.each |arg,i|
+    {
+      if (hasFirstArg || i > 0) out.w(",")
+      arg.write(out)
     }
   }
 
-  Void fieldExpr(FieldExpr fe, Bool get := true)
+  JsExpr? target         // call target
+  JsTypeRef? targetType  // call target type
+  JsTypeRef? parent      // method parent type
+  Str name               // method name
+  JsExpr[] args          // args to pass to method
+  Bool isObj             // is target sys::Obj
+  Bool isPrim            // is target a primitive type (Int,Bool,etc)
+  Bool isSafe            // if ?. operator
+  Str? safeVar           // var target expr is held in for safe-nav
+  Bool isMock            // mock methods used to insert implicit runtime checks
+  Bool isCtor            // is this a ctor call
+  Bool isCtorChain       // is this a ctor chain call
+  Bool isStatic          // is this a static method
+  Bool isDynamic         // is this a -> call
+  Str? dynamicName       // name of -> call
+
+}
+
+**************************************************************************
+** JsShortcutExpr
+**************************************************************************
+
+class JsShortcutExpr : JsCallExpr
+{
+  new make(CompilerSupport s, ShortcutExpr se) : super(s, se)
   {
-    if (fe.target?.ctype?.isList == true)
+    this.symbol    = se.opToken.symbol
+    this.isAssign  = se.isAssign
+
+    switch (symbol)
     {
-      if (fe.name == "size" && get)
-      {
-        expr(fe.target)
-        out.w(".length")
-      }
-      else
-      {
-        out.w("fan.sys.List.${vnameToJs(fe.name)}(")
-        expr(fe.target)
-        out.w(get ? ")" : ",")
-      }
-      return
+      case "!=": name = "compareNE"
+      case "<":  name = "compareLT"
+      case "<=": name = "compareLE"
+      case ">=": name = "compareGE"
+      case ">":  name = "compareGT"
     }
-    cvar := fe.target?.toStr == "\$cvars"
-    name := fe.name
-    if (fe.target != null && !cvar)
-    {
-      expr(fe.target)
-      if (name == "\$this") return // skip $this ref for closures
-      out.w(".")
-    }
-    if (cvar)
-    {
-      if (name[0] == '$') name = name[1..-1]
-      else { i := name.index("\$"); if (i != null) name = name[0..<i] }
-    }
-    if (fe.target == null && fe.field.isStatic)
-    {
-      out.w(qnameToJs(fe.field.parent)).w(".")
-    }
-    if (!cvar && !fe.useAccessor) out.w("m_")
-    out.w(vnameToJs(name))
-    if (!cvar && fe.useAccessor) out.w(get ? "()" : "\$")
+
+    if (isAssign) assignTarget = findAssignTarget(target, se.location)
   }
 
-  Void closureExpr(ClosureExpr ce)
+  private JsExpr findAssignTarget(JsExpr expr, Location loc)
   {
-//    closureLevel++
-    out.w("fan.sys.Func.make(function(")
-    ce.doCall.vars.each |MethodVar v, Int i|
+    if (expr is JsLocalVarExpr || expr is JsFieldExpr) return expr
+    t := Type.of(expr).field("target", false)
+    if (t != null) return findAssignTarget(t.get(expr), loc)
+    throw support.err("No base Expr found", loc)
+  }
+
+  override Void write(JsWriter out)
+  {
+    if (isAssign)
     {
-      if (!v.isParam) return
-      if (i > 0) out.w(",")
-      out.w(vnameToJs(v.name))
+      assignTarget.write(out)
+      out.w(" = ")
     }
-    out.w(")").nl
-    out.w("{").nl
-    if (ce.doCall?.code != null)
+    super.write(out)
+  }
+
+  Str symbol            // the shortcut token symbol
+  Bool isAssign         // does this expr assign
+  JsExpr? assignTarget  // target of assignment
+}
+
+**************************************************************************
+** JsFieldExpr
+**************************************************************************
+
+class JsFieldExpr : JsExpr
+{
+  new make(CompilerSupport s, FieldExpr fe) : super(s)
+  {
+    if (fe.target != null) this.target = JsExpr.makeFor(s, fe.target)
+    this.parent = JsTypeRef(s, fe.field.parent)
+    this.name   = vnameToJs(fe.name)
+    this.useAccessor = fe.useAccessor
+  }
+  override Void write(JsWriter out)
+  {
+    if (target == null) parent.write(out)
+    else target.write(out)
+    if (name == "\$this") return // skip $this ref for closures
+    out.w(".")
+    if (useAccessor)
     {
-      out.nl
-//block(ce.doCall.code, false)
-      JsBlock(support, ce.doCall.code, true).write(out) // false?
+      out.w("$name")
+      if (!isSet) out.w("()")
     }
-    out.w("},").nl
-    out.w("[")
-    ce.doCall.params.each |p,i|
+    else out.w("m_$name")
+  }
+  JsExpr? target       // field target
+  JsTypeRef parent     // field parent type
+  Str name             // field name
+  Bool useAccessor     // false if access using '*' storage operator
+  Bool isSet := false  // transiently use for setters
+}
+
+**************************************************************************
+** JsClosureExpr
+**************************************************************************
+
+class JsClosureExpr : JsExpr
+{
+  new make(CompilerSupport s, ClosureExpr ce) : super(s)
+  {
+    this.func = JsMethod(s, ce.doCall)
+  }
+  override Void write(JsWriter out)
+  {
+    sig := func.sig(func.params)
+    out.w("fan.sys.Func.make(").nl
+    out.indent
+
+    // params
+    out.w("fan.sys.List.make(fan.sys.Param.\$type, [")
+    func.params.each |p,i|
     {
       if(i > 0) out.w(",")
-      out.w("new fan.sys.Param(\"$p.name\",\"$p.paramType.qname\",$p.hasDefault)")
+      out.w("new fan.sys.Param(\"$p.name\",\"$p.paramType.sig\",$p.hasDef)")
     }
-    out.w("],fan.sys.Type.find(\"$ce.doCall.ret.qname\"))")
-//    closureLevel--
+    out.w("]),").nl
+
+    // return
+    JsTypeLiteralExpr.writeType(func.ret, out)
+    out.w(",").nl
+
+    // func
+    out.w("function$sig").nl
+    out.w("{").nl
+    out.indent
+    old := thisName
+    thisName = "\$this"
+    func.code?.write(out)
+    thisName = old
+    out.unindent
+    out.w("})")
+    out.unindent
   }
-
-//////////////////////////////////////////////////////////////////////////
-// Util
-//////////////////////////////////////////////////////////////////////////
-
-  const Int maxInt := 9007199254740992  // max exact int in js (2^53)
-
-  //Int closureLevel := 0
-
-  **
-  ** Return true if we are inside a closure.
-  **
-  Bool inClosure := false //()
-  //{
-  //  return closureLevel > 0
-  //}
-
-  Bool isPrimitive(Str qname) { return primitiveMap.get(qname, false) }
-  const Str:Bool primitiveMap :=
-  [
-    "sys::Bool":     true,
-    "sys::Bool?":    true,
-    "sys::Decimal":  true,
-    "sys::Decimal?": true,
-    "sys::Float":    true,
-    "sys::Float?":   true,
-    "sys::Int":      true,
-    "sys::Int?":     true,
-    "sys::Num":      true,
-    "sys::Num?":     true,
-    "sys::Str":      true,
-    "sys::Str?":     true,
-  ]
-
-  Bool isObjMethod(Str methodName) { return objMethodMap.get(methodName, false) }
-  const Str:Bool objMethodMap :=
-  [
-    "equals":      true,
-    "compare":     true,
-    "isImmutable": true,
-    "toImmutable": true,
-    "toStr":       true,
-    "type":        true,
-    "with":        true,
-  ]
-
-  //Str unique() { return "\$_u${lastId++}" }
-  //Int lastId := 0
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  Node x
-  JsWriter? out
-
+  JsMethod? func  // the func for this closure
 }
 
 

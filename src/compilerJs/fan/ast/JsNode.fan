@@ -87,7 +87,38 @@ abstract class JsNode
     "with":   true
   ].toImmutable
 
+  **
+  ** Return true if the type is a primitive type:
+  **  - Bool
+  **  - Decimal
+  **  - Float
+  **  - Int
+  **  - Num
+  **  - Str
+  **
+  Bool isPrimitive(CType ctype) { return pmap.get(ctype.qname, false) }
+  const Str:Bool pmap :=
+  [
+    "sys::Bool":    true,
+    "sys::Decimal": true,
+    "sys::Float":   true,
+    "sys::Int":     true,
+    "sys::Num":     true,
+    "sys::Str":     true
+  ]
 
+  **
+  ** The name of the 'this' var.
+  **
+  Str thisName
+  {
+    get { Actor.locals["compilerJs.this"] ?: "this" }
+    set { Actor.locals["compilerJs.this"] = it }
+  }
+
+  **
+  ** Return a unique identifier name.
+  **
   Str unique()
   {
     Int id := Actor.locals["compilerJs.lastId"] ?: 0

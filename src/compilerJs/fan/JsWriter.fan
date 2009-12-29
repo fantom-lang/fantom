@@ -75,6 +75,49 @@ class JsWriter
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Minify
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Write the minified content of the InSteam.
+  **
+  Void minify(InStream in)
+  {
+    inBlock := false
+    in.readAllLines.each |line|
+    {
+      s := line
+      // line comments
+      if (s.size > 1 && (s[0] == '/' && s[1] == '/')) return
+// need to check if inside str
+//      i := s.index("//")
+//      if (i != null) s = s[0..<i]
+      // block comments
+      temp := s
+      a := temp.index("/*")
+      if (a != null)
+      {
+        s = temp[0..<a]
+        inBlock = true
+      }
+      if (inBlock)
+      {
+        b := temp.index("*/")
+        if (b != null)
+        {
+          s = (a == null) ? temp[b+2..-1] : s + temp[b+2..-1]
+          inBlock = false
+        }
+      }
+      // trim and print
+      s = s.trimEnd
+      if (inBlock) return
+      if (s.size == 0) return
+      out.printLine(s)
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
