@@ -30,8 +30,8 @@ fan.dom.DocPeer.prototype.createElem = function(self, tagName, attribs)
   if (attribs != null)
   {
     var k = attribs.keys();
-    for (var i=0; i<k.length; i++)
-      wrap.set(k[i], attribs.get(k[i]));
+    for (var i=0; i<k.size(); i++)
+      wrap.set(k.get(i), attribs.get(k.get(i)));
   }
   return wrap;
 }
