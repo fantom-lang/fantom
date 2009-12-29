@@ -85,14 +85,14 @@ fan.fwt.MenuPeer.prototype.relayout = function(self)
   var ph = 0;
 
   var kids = self.m_kids;
-  for (var i=0; i<kids.length; i++)
-    pw = Math.max(pw, kids[i].prefSize().m_w);
+  for (var i=0; i<kids.size(); i++)
+    pw = Math.max(pw, kids.get(i).prefSize().m_w);
 
   pw += 8; // account for padding
 
-  for (var i=0; i<kids.length; i++)
+  for (var i=0; i<kids.size(); i++)
   {
-    var kid  = kids[i];
+    var kid  = kids.get(i);
     var pref = kid.prefSize();
     var mh = pref.m_h + 2;  // account for padding
 

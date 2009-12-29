@@ -30,9 +30,9 @@ fan.fwt.WidgetPeer.prototype.relayout = function(self)
   if (self.onLayout) self.onLayout();
 
   var kids = self.m_kids;
-  for (var i=0; i<kids.length; i++)
+  for (var i=0; i<kids.size(); i++)
   {
-    var kid = kids[i];
+    var kid = kids.get(i);
     kid.peer.relayout(kid);
   }
 
@@ -154,9 +154,9 @@ fan.fwt.WidgetPeer.prototype.attachTo = function(self, elem)
 
   // recursively attach my children
   var kids = self.m_kids;
-  for (var i=0; i<kids.length; i++)
+  for (var i=0; i<kids.size(); i++)
   {
-    var kid = kids[i];
+    var kid = kids.get(i);
     kid.peer.attach(kid);
   }
 }
@@ -164,9 +164,9 @@ fan.fwt.WidgetPeer.prototype.attachTo = function(self, elem)
 fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, list)
 {
   var peer = this;
-  for (var i=0; i<list.length; i++)
+  for (var i=0; i<list.size(); i++)
   {
-    var meth = list[i];
+    var meth = list.get(i);
     var func = function(e)
     {
       // find pos relative to widget
@@ -175,7 +175,7 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, l
 
       // TODO - need to fix for IE
       // TODO - only valid for mouseDown - so need to clean up this code
-      var evt = new fan.fwt.Event();
+      var evt = fan.fwt.Event.make();
       evt.m_id = evtId;
       evt.m_pos = rel;
       evt.m_widget = self;
@@ -217,9 +217,9 @@ fan.fwt.WidgetPeer.prototype.detach = function(self)
 {
   // recursively detach my children
   var kids = self.m_kids;
-  for (var i=0; i<kids.length; i++)
+  for (var i=0; i<kids.size(); i++)
   {
-    var kid = kids[i];
+    var kid = kids.get(i);
     kid.peer.detach(kid);
   }
 

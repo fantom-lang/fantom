@@ -32,7 +32,7 @@ fan.fwt.TablePeer.prototype.selected$  = function(self, val)
   if (this.selection != null)
   {
     this.selection.select(val);
-    if (val.length > 0) this.selection.last = val[0];
+    if (val.size() > 0) this.selection.last = val.get(0);
   }
 }
 
@@ -316,7 +316,7 @@ fan.fwt.TableSelection.prototype.toggle = function(event)
     }
     else
     {
-      list = this.table.peer.m_selected;
+      list = this.table.peer.m_selected.m_values;
       var found = false;
       for (var i=0; i<list.length; i++)
         if (list[i] == row)
@@ -327,7 +327,7 @@ fan.fwt.TableSelection.prototype.toggle = function(event)
   }
   else
   {
-    var hadMulti = this.table.m_multi && this.table.peer.m_selected.length > 1;
+    var hadMulti = this.table.m_multi && this.table.peer.m_selected.size() > 1;
     list = (on || hadMulti) ? [row] : [];
     this.last = row;
   }
@@ -367,7 +367,7 @@ fan.fwt.TableSelection.prototype.select = function(rows)
     for (var c=0; c<tr.childNodes.length-1; c++)
       tr.childNodes[c].style.borderColor = br;
   }
-  return fan.sys.List.make(fan.sys.Type.find("sys::Int"), selected);
+  return fan.sys.List.make(fan.sys.Int.$type, selected);
 }
 
 fan.fwt.TableSelection.prototype.notify = function(primaryIndex)
@@ -379,7 +379,7 @@ fan.fwt.TableSelection.prototype.notify = function(primaryIndex)
     se.m_index  = primaryIndex;
     se.m_widget = this.table;
     var listeners = this.table.m_onSelect.list();
-    for (var i=0; i<listeners.length; i++) fan.sys.Func.call(listeners[i], se);
+    for (var i=0; i<listeners.size(); i++) fan.sys.Func.call(listeners.get(i), se);
   }
 }
 
@@ -397,29 +397,35 @@ fan.fwt.TableSupport.prototype.popup = function()
 
   var selectAll = fan.fwt.MenuItem.make();
   selectAll.text$("Select All");
-  selectAll.onAction().add(fan.sys.Func.make(function(it)
-  {
-    var rows = [];
-    var len  = table.model().numRows();
-    for (var i=0; i<len; i++) rows.push(i);
-    table.peer.m_selected = table.peer.selection.select(rows);
-    table.peer.selection.notify(0);
-  },
-  [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
+  selectAll.onAction().add(fan.sys.Func.make(
+    fan.sys.List.make(fan.sys.Param.$type, [new fan.sys.Param("it","fwt::Event",false)]),
+    fan.sys.Void.$type,
+    function(it)
+    {
+      var rows = [];
+      var len  = table.model().numRows();
+      for (var i=0; i<len; i++) rows.push(i);
+      table.peer.m_selected = table.peer.selection.select(rows);
+      table.peer.selection.notify(0);
+    }));
 
   var selectNone = fan.fwt.MenuItem.make();
   selectNone.text$("Select None");
-  selectNone.onAction().add(fan.sys.Func.make(function(it)
-  {
-    table.peer.m_selected = table.peer.selection.select([]);
-    table.peer.selection.notify(0);
-  },
-  [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
+  selectNone.onAction().add(fan.sys.Func.make(
+    fan.sys.List.make(fan.sys.Param.$type, [new fan.sys.Param("it","fwt::Event",false)]),
+    fan.sys.Void.$type,
+    function(it)
+    {
+      table.peer.m_selected = table.peer.selection.select([]);
+      table.peer.selection.notify(0);
+    }));
 
   var xport = fan.fwt.MenuItem.make();
   xport.text$("Export");
-  xport.onAction().add(fan.sys.Func.make(function(it) { $this.exportTable(); },
-    [new fan.sys.Param("it","fwt::Event",false)],fan.sys.Type.find("sys::Void")));
+  xport.onAction().add(fan.sys.Func.make(
+    fan.sys.List.make(fan.sys.Param.$type, [new fan.sys.Param("it","fwt::Event",false)]),
+    fan.sys.Void.$type,
+    function(it) { $this.exportTable(); }));
 
   if (!table.m_multi)
   {

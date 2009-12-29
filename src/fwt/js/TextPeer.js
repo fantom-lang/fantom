@@ -71,7 +71,7 @@ fan.fwt.TextPeer.prototype.sync = function(self)
       ae.m_id = fan.fwt.EventId.m_action;
       ae.m_widget = self;
       var list = self.m_onAction.list();
-      for (var i=0; i<list.length; i++) list[i](ae);
+      for (var i=0; i<list.size(); i++) list.get(i).call(ae);
     }
 
     // fire onModify
@@ -81,8 +81,9 @@ fan.fwt.TextPeer.prototype.sync = function(self)
       me.m_id = fan.fwt.EventId.m_modified;
       me.m_widget = self;
       var list = self.m_onModify.list();
-      for (var i=0; i<list.length; i++) list[i](me);
+      for (var i=0; i<list.size(); i++) list.get(i).call(me);
     }
   }
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
+

@@ -94,12 +94,12 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
     if (self.m_mode == fan.fwt.ButtonMode.m_toggle)
       $this.m_selected = !$this.m_selected;
 
-    var evt = new fan.fwt.Event();
+    var evt = fan.fwt.Event.make();
     evt.m_id = fan.fwt.EventId.m_action;
     evt.m_widget = self;
 
     var list = self.m_onAction.list();
-    for (var i=0; i<list.length; i++) list[i](evt);
+    for (var i=0; i<list.size(); i++) list.get(i).call(evt);
 
     $this.m_pressed = false;
     $this.repaint(self);
@@ -130,12 +130,12 @@ fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
     // bind selected to widget
     self.selected$(check.checked);
 
-    var evt = new fan.fwt.Event();
+    var evt = fan.fwt.Event.make();
     evt.m_id = fan.fwt.EventId.m_action;
     evt.m_widget = self;
 
     var list = self.m_onAction.list();
-    for (var i=0; i<list.length; i++) list[i](evt);
+    for (var i=0; i<list.size(); i++) list.get(i).call(evt);
   }
 
   parentElem.appendChild(div);
