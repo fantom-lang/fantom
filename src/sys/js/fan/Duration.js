@@ -16,9 +16,99 @@ fan.sys.Duration = fan.sys.Obj.$extend(fan.sys.Obj);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.Duration.fromStr = function(s, checked)
+{
+  if (checked === undefined) checked = true;
+
+  //   ns:   nanoseconds  (x 1)
+  //   ms:   milliseconds (x 1,000,000)
+  //   sec:  seconds      (x 1,000,000,000)
+  //   min:  minutes      (x 60,000,000,000)
+  //   hr:   hours        (x 3,600,000,000,000)
+  //   day:  days         (x 86,400,000,000,000)
+  try
+  {
+    var len = s.length;
+    var x1  = s.charAt(len-1);
+    var x2  = s.charAt(len-2);
+    var x3  = s.charAt(len-3);
+    var dot = s.indexOf('.') > 0;
+
+    var mult = -1;
+    var suffixLen  = -1;
+    switch (x1)
+    {
+      case 's':
+        if (x2 == 'n') { mult=1; suffixLen=2; } // ns
+        if (x2 == 'm') { mult=1000000; suffixLen=2; } // ms
+        break;
+      case 'c':
+        if (x2 == 'e' && x3 == 's') { mult=1000000000; suffixLen=3; } // sec
+        break;
+      case 'n':
+        if (x2 == 'i' && x3 == 'm') { mult=60000000000; suffixLen=3; } // min
+        break;
+      case 'r':
+        if (x2 == 'h') { mult=3600000000000; suffixLen=2; } // hr
+        break;
+      case 'y':
+        if (x2 == 'a' && x3 == 'd') { mult=86400000000000; suffixLen=3; } // day
+        break;
+    }
+
+    if (mult < 0) throw new Error();
+
+    s = s.substring(0, len-suffixLen);
+    if (dot)
+    {
+      var num = parseFloat(s);
+      if (isNaN(num)) throw new Error();
+      return fan.sys.Duration.make(Math.floor(num*mult));
+    }
+    else
+    {
+      var num = fan.sys.Int.fromStr(s);
+      return fan.sys.Duration.make(num*mult);
+    }
+  }
+  catch (err)
+  {
+    if (!checked) return null;
+    throw fan.sys.ParseErr.make("Duration", s);
+  }
+}
+
+fan.sys.Duration.now = function()
+{
+  var ms = new Date().getTime();
+  return fan.sys.Duration.make(ms * fan.sys.Duration.nsPerMilli);
+}
+
+fan.sys.Duration.nowTicks = function()
+{
+  return fan.sys.Duration.now().ticks();
+}
+
+fan.sys.Duration.boot = function()
+{
+  return fan.sys.Duration.m_boot;
+}
+
+fan.sys.Duration.uptime = function()
+{
+  return fan.sys.Duration.now().minus(fan.sys.Duration.m_boot);
+}
+
+fan.sys.Duration.make = function(ticks)
+{
+  var self = new fan.sys.Duration();
+  self.m_ticks = ticks;
+  return self;
+}
+
 fan.sys.Duration.prototype.$ctor = function(ticks)
 {
-  this.m_ticks = ticks;
+  this.m_ticks = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,7 +157,7 @@ fan.sys.Duration.prototype.floor = function(accuracy)
 fan.sys.Duration.prototype.abs = function()
 {
   if (this.m_ticks >= 0) return this;
-  return new fan.sys.Duration(-this.m_ticks);
+  return fan.sys.Duration.make(-this.m_ticks);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -102,101 +192,228 @@ fan.sys.Duration.prototype.toHour   = function() { return Math.floor(this.m_tick
 fan.sys.Duration.prototype.toDay    = function() { return Math.floor(this.m_ticks / fan.sys.Duration.nsPerDay); }
 
 //////////////////////////////////////////////////////////////////////////
-// Static
+// Locale
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Duration.make = function(ticks)
+fan.sys.Duration.prototype.toLocale = function()
 {
-  return new fan.sys.Duration(ticks);
+  var ticks = this.m_ticks;
+
+  // less than 1000ns Xns
+  if (ticks < 1000) return ticks + "ns";
+
+  // less than 2ms X.XXXms
+  if (ticks < 2*fan.sys.Duration.nsPerMilli)
+  {
+    var s = '';
+    var ms = Math.floor(ticks/fan.sys.Duration.nsPerMilli);
+    var us = Math.floor((ticks - ms*fan.sys.Duration.nsPerMilli)/1000);
+    s += ms;
+    s += '.';
+    if (us < 100) s += '0';
+    if (us < 10)  s += '0';
+    s += us;
+    if (s.charAt(s.length-1) == '0') s = s.substr(0, s.length-1);
+    if (s.charAt(s.length-1) == '0') s = s.substr(0, s.length-1);
+    s += "ms";
+    return s;
+  }
+
+  // less than 2sec Xms
+  if (ticks < 2*fan.sys.Duration.nsPerSec)
+    return Math.floor(ticks/fan.sys.Duration.nsPerMilli) + "ms";
+
+  // less than 2min Xsec
+  if (ticks < 1*fan.sys.Duration.nsPerMin)
+    return Math.floor(ticks/fan.sys.Duration.nsPerSec) + "sec";
+
+  // [Xdays] [Xhr] Xmin Xsec
+  var days = Math.floor(ticks/fan.sys.Duration.nsPerDay); ticks -= days*fan.sys.Duration.nsPerDay;
+  var hr   = Math.floor(ticks/fan.sys.Duration.nsPerHr);  ticks -= hr*fan.sys.Duration.nsPerHr;
+  var min  = Math.floor(ticks/fan.sys.Duration.nsPerMin); ticks -= min*fan.sys.Duration.nsPerMin;
+  var sec  = Math.floor(ticks/fan.sys.Duration.nsPerSec);
+
+  var s = '';
+  if (days > 0) s += days + (days == 1 ? "day " : "days ");
+  if (days > 0 || hr > 0) s += hr + "hr ";
+  s += min + "min ";
+  s += sec + "sec";
+  return s;
 }
 
-fan.sys.Duration.makeMillis = function(ms)
+//////////////////////////////////////////////////////////////////////////
+// ISO 8601
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Duration.prototype.toIso = function()
 {
-  return fan.sys.Duration.make(ms*1000000);
+  var s = '';
+  var ticks = this.m_ticks;
+  if (ticks == 0) return "PT0S";
+
+  if (ticks < 0) s += '-';
+  s += 'P';
+  var abs  = Math.abs(ticks);
+  var sec  = Math.floor(abs / fan.sys.Duration.nsPerSec);
+  var frac = abs % fan.sys.Duration.nsPerSec;
+
+  // days
+  if (sec > fan.sys.Duration.secPerDay)
+  {
+    s += Math.floor(sec/fan.sys.Duration.secPerDay) + 'D';
+    sec = sec % fan.sys.Duration.secPerDay;
+  }
+  if (sec == 0 && frac == 0) return s;
+  s += 'T';
+
+  // hours, minutes
+  if (sec > fan.sys.Duration.secPerHr)
+  {
+    s += Math.floor(sec/fan.sys.Duration.secPerHr) + 'H';
+    sec = sec % fan.sys.Duration.secPerHr;
+  }
+  if (sec > fan.sys.Duration.secPerMin)
+  {
+    s += Math.floor(sec/fan.sys.Duration.secPerMin) + 'M';
+    sec = sec % fan.sys.Duration.secPerMin;
+  }
+  if (sec == 0 && frac == 0) return s;
+
+  // seconds and fractional seconds
+  s += sec;
+  if (frac != 0)
+  {
+    s += '.';
+    for (var i=10; i<=100000000; i*=10) if (frac < i) s += '0';
+    s += frac;
+    var x = s.length-1;
+    while (s.charAt(x) == '0') x--;
+    s = s.substr(0, x+1);
+  }
+  s += 'S';
+  return s;
 }
 
-fan.sys.Duration.fromStr = function(s, checked)
+fan.sys.Duration.fromIso = function(s, checked)
 {
-  //   ns:   nanoseconds  (x 1)
-  //   ms:   milliseconds (x 1,000,000)
-  //   sec:  seconds      (x 1,000,000,000)
-  //   min:  minutes      (x 60,000,000,000)
-  //   hr:   hours        (x 3,600,000,000,000)
-  //   day:  days         (x 86,400,000,000,000)
+  if (checked === undefined) checked = true;
   try
   {
-    var len = s.length;
-    var x1  = s.charAt(len-1);
-    var x2  = s.charAt(len-2);
-    var x3  = s.charAt(len-3);
-    var dot = s.indexOf('.') > 0;
+    var ticks = 0;
+    var neg = false;
+    var p = new fan.sys.IsoParser(s);
 
-    var mult = -1;
-    var suffixLen  = -1;
-    switch (x1)
+    // check for negative
+    if (p.cur == 45) { neg = true; p.consume(); }
+    else if (p.cur == 43) { p.consume(); }
+
+    // next char must be P
+    p.consume(80);
+    if (p.cur == -1) throw new Error();
+
+    // D
+    var num = 0;
+    if (p.cur != 84)
     {
-      case 's':
-        if (x2 == 'n') { mult=1; suffixLen=2; } // ns
-        if (x2 == 'm') { mult=1000000; suffixLen=2; } // ms
-        break;
-      case 'c':
-        if (x2 == 'e' && x3 == 's') { mult=1000000000; suffixLen=3; } // sec
-        break;
-      case 'n':
-        if (x2 == 'i' && x3 == 'm') { mult=60000000000; suffixLen=3; } // min
-        break;
-      case 'r':
-        if (x2 == 'h') { mult=3600000000000; suffixLen=2; } // hr
-        break;
-      case 'y':
-        if (x2 == 'a' && x3 == 'd') { mult=86400000000000; suffixLen=3; } // day
-        break;
+      num = p.num();
+      p.consume(68);
+      ticks += num * fan.sys.Duration.nsPerDay;
+      if (p.cur == -1) return fan.sys.Duration.make(ticks);
     }
 
-    if (mult < 0) throw new Error();
+    // next char must be T
+    p.consume(84);
+    if (p.cur == -1) throw new Error();
+    num = p.num();
 
-    s = s.substring(0, len-suffixLen);
-    if (dot)
+    // H
+    if (num >= 0 && p.cur == 72)
     {
-      var num = parseFloat(s);
-      if (isNaN(num)) throw new Error();
-      return new fan.sys.Duration(Math.floor(num*mult));
+      p.consume();
+      ticks += num * fan.sys.Duration.nsPerHr;
+      num = p.num();
     }
-    else
+
+    // M
+    if (num >= 0 && p.cur == 77)
     {
-      var num = fan.sys.Int.fromStr(s);
-      return new fan.sys.Duration(num*mult);
+      p.consume();
+      ticks += num * fan.sys.Duration.nsPerMin;
+      num = p.num();
     }
+
+    // S
+    if (num >= 0 && p.cur == 83 || p.cur == 46)
+    {
+      ticks += num * fan.sys.Duration.nsPerSec;
+      if (p.cur == 46) { p.consume(); ticks += p.frac(); }
+      p.consume(83);
+    }
+
+    // verify we parsed everything
+    if (p.cur != -1) throw new Error();
+
+    // negate if necessary and return result
+    if (neg) ticks = -ticks;
+    return fan.sys.Duration.make(ticks);
   }
   catch (err)
   {
-    if (checked != null && !checked) return null;
-    throw new fan.sys.ParseErr("Duration", s);
+    if (!checked) return null;
+    throw fan.sys.ParseErr.make("ISO 8601 Duration",  s);
   }
 }
 
-fan.sys.Duration.now = function()
+fan.sys.IsoParser = function(s)
 {
-  var ms = new Date().getTime();
-  return new fan.sys.Duration(ms * fan.sys.Duration.nsPerMilli);
+  this.s = s;
+  this.cur = s.charCodeAt(0);
+  this.off = 0;
+  this.curIsDigit = false;
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Static Fields
-//////////////////////////////////////////////////////////////////////////
+fan.sys.IsoParser.prototype.num = function()
+{
+  if (!this.curIsDigit && this.cur != -1 && this.cur != 46)
+    throw new Error();
+  var num = 0;
+  while (this.curIsDigit)
+  {
+    num = num*10 + this.digit();
+    this.consume();
+  }
+  return num;
+}
 
-fan.sys.Duration.nsPerDay   = 86400000000000;
-fan.sys.Duration.nsPerHr    = 3600000000000;
-fan.sys.Duration.nsPerMin   = 60000000000;
-fan.sys.Duration.nsPerSec   = 1000000000;
-fan.sys.Duration.nsPerMilli = 1000000;
-fan.sys.Duration.secPerDay  = 86400;
-fan.sys.Duration.secPerHr   = 3600;
-fan.sys.Duration.secPerMin  = 60;
+fan.sys.IsoParser.prototype.frac = function()
+{
+  // get up to nine decimal places as milliseconds within a fraction
+  var ticks = 0;
+  for (var i=100000000; i>=0; i/=10)
+  {
+    if (!this.curIsDigit) break;
+    ticks += this.digit() * i;
+    this.consume();
+  }
+  return ticks;
+}
 
-fan.sys.Duration.m_defVal   = new fan.sys.Duration(0);
-fan.sys.Duration.minVal    = new fan.sys.Duration(fan.sys.Int.minVal);
-fan.sys.Duration.maxVal    = new fan.sys.Duration(fan.sys.Int.maxVal);
-fan.sys.Duration.oneDay    = new fan.sys.Duration(fan.sys.Duration.nsPerDay);
-fan.sys.Duration.negOneDay = new fan.sys.Duration(-fan.sys.Duration.nsPerDay);
+fan.sys.IsoParser.prototype.digit = function() { return this.cur - 48; }
+
+fan.sys.IsoParser.prototype.consume = function(ch)
+{
+  if (ch != null && this.cur != ch) throw new Error();
+
+  this.off++;
+  if (this.off < this.s.length)
+  {
+    this.cur = this.s.charCodeAt(this.off);
+    this.curIsDigit = 48 <= this.cur && this.cur <= 57;
+  }
+  else
+  {
+    this.cur = -1;
+    this.curIsDigit = false;
+  }
+}
 

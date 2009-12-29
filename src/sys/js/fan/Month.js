@@ -18,7 +18,13 @@ fan.sys.Month = fan.sys.Obj.$extend(fan.sys.Enum);
 
 fan.sys.Month.prototype.$ctor = function(ordinal, name)
 {
-  this.make$(ordinal, name);
+  fan.sys.Enum.make$(this, ordinal, name);
+}
+
+fan.sys.Month.fromStr = function(name, checked)
+{
+  if (checked === undefined) checked = true;
+  return fan.sys.Enum.doFromStr(fan.sys.Month.$type, name, checked);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -91,23 +97,4 @@ fan.sys.Month.prototype.full = function(locale)
     case 11: return "December";
   }
 }
-
-//////////////////////////////////////////////////////////////////////////
-// Static
-//////////////////////////////////////////////////////////////////////////
-
-fan.sys.Month.m_jan = new fan.sys.Month(0,  "jan");
-fan.sys.Month.m_feb = new fan.sys.Month(1,  "feb");
-fan.sys.Month.m_mar = new fan.sys.Month(2,  "mar");
-fan.sys.Month.m_apr = new fan.sys.Month(3,  "apr");
-fan.sys.Month.m_may = new fan.sys.Month(4,  "may");
-fan.sys.Month.m_jun = new fan.sys.Month(5,  "jun");
-fan.sys.Month.m_jul = new fan.sys.Month(6,  "jul");
-fan.sys.Month.m_aug = new fan.sys.Month(7,  "aug");
-fan.sys.Month.m_sep = new fan.sys.Month(8,  "sep");
-fan.sys.Month.m_oct = new fan.sys.Month(9,  "oct");
-fan.sys.Month.m_nov = new fan.sys.Month(10, "nov");
-fan.sys.Month.m_dec = new fan.sys.Month(11, "dec");
-
-// values defined in sysPod.js
 

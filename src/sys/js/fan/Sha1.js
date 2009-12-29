@@ -145,7 +145,7 @@ fan.sys.Buf_Sha1 = function(buf, key)
     return words;
   }
 
-  var dw = (key == undefined)
+  var dw = (key === undefined)
     ? core_sha1(bytesToWords(buf), buf.length * chrsz)
     : core_hmac_sha1(key, buf);
 

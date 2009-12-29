@@ -184,7 +184,7 @@ fan.sys.Buf_Md5 = function(buf, key)
     return words;
   }
 
-  var dw = (key == undefined)
+  var dw = (key === undefined)
     ? core_md5(bytesToWords(buf), buf.length * chrsz)
     : core_hmac_md5(key, buf);
 

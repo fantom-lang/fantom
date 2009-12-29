@@ -24,10 +24,17 @@ fan.sys.Obj = function() {};
  * Handles the boilerplate code for implementing OO-style
  * inhertiance in Javascript.
  */
+fan.sys.Obj.$init = {};
 fan.sys.Obj.$extend = function(base)
 {
-  function f() { this.$ctor.apply(this, arguments); }
-  f.prototype = new base;
+  //function f() { this.$ctor.apply(this, arguments); }
+  function f()
+  {
+    if (arguments.length > 0 && arguments[0] === fan.sys.Obj.$init) return;
+    this.$ctor.apply(this, arguments);
+  }
+  //f.prototype = new base;
+  f.prototype = new base(fan.sys.Obj.$init)
   f.prototype.constructor = f;
   return f;
 }
@@ -41,7 +48,7 @@ fan.sys.Obj.prototype.make$ = function() {}
 
 fan.sys.Obj.prototype.equals = function(that)
 {
-  return this == that;
+  return this === that;
 }
 
 fan.sys.Obj.prototype.compare = function(that)
@@ -51,20 +58,21 @@ fan.sys.Obj.prototype.compare = function(that)
   return 0;
 }
 
-fan.sys.Obj.prototype.$with = function(func)
+fan.sys.Obj.prototype.$with = function(f)
 {
-  func(this);
+  f.call(this);
   return this;
 }
 
 fan.sys.Obj.prototype.isImmutable = function()
 {
-  return false;
+  return this.type().isConst();
 }
 
 fan.sys.Obj.prototype.toImmutable = function()
 {
-  return this;
+  if (this.type().isConst()) return this;
+  throw fan.sys.NotImmutableErr.make(this.type().toString());
 }
 
 fan.sys.Obj.prototype.type = function()
@@ -103,140 +111,4 @@ fan.sys.Obj.prototype.trap = function(name, args)
   }
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Static
-//////////////////////////////////////////////////////////////////////////
-
-// TODO FIXIT: Move all these out into util class
-
-fan.sys.Obj.equals = function(self, that)
-{
-  if (self instanceof fan.sys.Obj) return self.equals(that);
-  else if (self instanceof Long) return fan.sys.Int.equals(self, that);
-  else if ((typeof self) == "number") return fan.sys.Int.equals(self, that);
-  else if (self != null && self.constructor == Array) return fan.sys.List.equals(self, that);
-  else
-  {
-    if (self != null && self.$fanType != null)
-      return fan.sys.Float.equals(self, that);
-    else
-      return self == that;
-   }
-}
-
-fan.sys.Obj.compare = function(self, that)
-{
-  if (self instanceof fan.sys.Obj)
-  {
-    if (that == null) return +1;
-    return self.compare(that);
-  }
-  else if (self != null && self.$fanType != null)
-  {
-    return fan.sys.Float.compare(self, that);
-  }
-  else
-  {
-    if (self == null)
-    {
-      if (that != null) return -1;
-      return 0;
-    }
-    if (that == null) return 1;
-    if (self < that) return -1;
-    if (self > that) return 1;
-    return 0;
-  }
-}
-
-fan.sys.Obj.is = function(obj, type)
-{
-  if (obj == null) return false;
-  return fan.sys.Obj.type(obj).is(type);
-}
-
-fan.sys.Obj.as = function(obj, type)
-{
-  if (obj == null) return null;
-  var t = fan.sys.Obj.type(obj);
-
-// TODOD FIXIT: temp workaround till we rework funcs
-if (t instanceof fan.sys.FuncType) return obj;
-
-  if (t.is(fan.sys.List.$type)) return t.as(obj, type);
-  if (t.is(fan.sys.Map.$type))  return t.as(obj, type);
-  if (t.is(type)) return obj;
-  return null;
-}
-
-fan.sys.Obj.coerce = function(obj, type)
-{
-  if (obj == null) return obj;
-  var v = fan.sys.Obj.as(obj, type);
-  if (v == null)
-    throw fan.sys.CastErr.make(fan.sys.Obj.type(obj) + " cannot be cast to " + type);
-  return obj;
-}
-
-fan.sys.Obj.isImmutable = function(self)
-{
-  if (self instanceof fan.sys.Obj)
-    return self.isImmutable();
-  else
-  {
-    if ((typeof self) == "boolean") return true;
-    if ((typeof self) == "number") return true;
-// TODO
-    if (self != null && self.$fanType != null) return true;
-    throw new fan.sys.Err("sys::Obj.isImmutable: Not a Fantom type: " + self);
-  }
-}
-
-fan.sys.Obj.toImmutable = function(self)
-{
-  return self
-}
-
-fan.sys.Obj.type = function(self)
-{
-  if (self == null) throw fan.sys.Err.make("fan.sys.Obj.type: self is null");
-  if (self instanceof fan.sys.Obj)
-    return self.type();
-  else
-    return fan.sys.Type.toFanType(self);
-}
-
-fan.sys.Obj.toStr = function(obj)
-{
-  if (obj == null) return "null";
-  if (typeof obj == "string") return obj;
-  if (obj.constructor == Array) return fan.sys.List.toStr(obj);
-
-  // TODO - can't for the life of me figure how the
-  // heck Error.toString would ever try to call Obj.toStr
-  // so trap it for now
-  if (obj instanceof Error) return Error.prototype.toString.call(obj);
-
-// TEMP
-if (obj.$fanType == fan.sys.Type.find("sys::Float")) return fan.sys.Float.toStr(obj);
-
-  return obj.toString();
-}
-
-fan.sys.Obj.echo = function(str)
-{
-  var s = fan.sys.Obj.toStr(str);
-  try { console.log(s); }
-  catch (e1)
-  {
-    try { println(s); }
-    catch (e2) {} //alert(s); }
-  }
-}
-
-fan.sys.Obj.$with = function(self, func)
-{
-  func(self);
-  return self;
-}
 

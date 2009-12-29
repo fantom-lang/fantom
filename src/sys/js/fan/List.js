@@ -5,6 +5,7 @@
 // History:
 //   12 Jan 09  Andy Frank  Creation
 //   20 May 09  Andy Frank  Refactor to new OO model
+//   3 Dec 09   Andy Frank  Wrap Array object
 //
 
 /**
@@ -12,486 +13,791 @@
  */
 fan.sys.List = fan.sys.Obj.$extend(fan.sys.Obj);
 
-fan.sys.List.prototype.$ctor = function() {}
-fan.sys.List.prototype.type = function()  { return fan.sys.Type.find("sys::List"); }
-
-fan.sys.List.$type = null;
-
 //////////////////////////////////////////////////////////////////////////
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.List.make = function(type, vals)
+fan.sys.List.make = function(of, values)
 {
-  vals.$fanType = new fan.sys.ListType(type);
-  return vals;
+  if (values === undefined) values = [];
+
+  var self = new fan.sys.List();
+  self.m_of = of;
+  self.m_size = values.length;
+  self.m_values = values;
+  self.m_readonly = false;
+  self.m_immutable = false;
+  return self;
+}
+
+fan.sys.List.prototype.$ctor = function()
+{
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Indentity
+// Identity
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.List.equals = function(self, that)
+fan.sys.List.prototype.type = function() { return this.m_of.toListOf(); }
+fan.sys.List.prototype.of = function() { return this.m_of; }
+
+fan.sys.List.prototype.isEmpty = function() { return this.m_size == 0; }
+
+fan.sys.List.prototype.size = function() { return this.m_size; }
+fan.sys.List.prototype.size$ = function(val)
 {
-  if (that != null && that.constructor == Array)
+  this.modify();
+  /*
+  var newSize = val;
+  if (newSize > this.m_size)
   {
-    // self.of ?= that.of
-    if (self.length != that.length) return false;
-    for (var i=0; i<self.length; i++)
-      if (!fan.sys.Obj.equals(self[i], that[i]))
+    Object[] temp = newArray(newSize);
+    System.arraycopy(values, 0, temp, 0, size);
+    this.m_values = temp;
+    this.m_size = newSize;
+  }
+  else
+  {
+    Object[] temp = newArray(newSize);
+    System.arraycopy(values, 0, temp, 0, newSize);
+    this.m_values = this.m_values.slice(temp;
+    this.m_size = newSize;
+  }
+  */
+}
+
+fan.sys.List.prototype.capacity = function() { return this.m_values.length; }
+fan.sys.List.prototype.capacity$ = function(val)
+{
+  if (val < this.m_size) throw fan.sys.ArgErr.make("capacity < size");
+  this.size$(val);
+}
+
+fan.sys.List.prototype.get = function(index)
+{
+  if (index < 0) index = this.m_size + index;
+  if (index >= this.m_size || index < 0) throw fan.sys.IndexErr.make(index);
+  return this.m_values[index];
+}
+
+fan.sys.List.prototype.getSafe = function(index, def)
+{
+  if (def === undefined) def = null;
+  if (index < 0) index = this.m_size + index;
+  if (index >= this.m_size || index < 0) return def;
+  return this.m_values[index];
+}
+
+fan.sys.List.prototype.slice = function(range)
+{
+  var s = range.$start(this.m_size);
+  var e = range.$end(this.m_size);
+  if (e+1 < s || s < 0) throw fan.sys.IndexErr.make(range);
+  return fan.sys.List.make(this.m_of, this.m_values.slice(s, e+1));
+}
+
+fan.sys.List.prototype.contains = function(value)
+{
+  return this.index(value) != null;
+}
+
+fan.sys.List.prototype.containsSame = function(value)
+{
+  return this.indexSame(value) != null;
+}
+
+fan.sys.List.prototype.containsAll = function(list)
+{
+  for (var i=0; i<list.size(); ++i)
+    if (this.index(list.get(i)) == null)
+      return false;
+  return true;
+}
+
+fan.sys.List.prototype.containsAllSame = function(list)
+{
+  for (var i=0; i<list.size(); ++i)
+    if (this.index(list.get(i)) == null)
+      return false;
+  return true;
+}
+
+fan.sys.List.prototype.index = function(value, off)
+{
+  if (off === undefined) off = 0;
+
+  var size = this.m_size;
+  var values = this.m_values;
+  if (size == 0) return null;
+  var start = off;
+  if (start < 0) start = size + start;
+  if (start >= size || start < 0) throw fan.sys.IndexErr.make(off);
+
+  if (value == null)
+  {
+    for (var i=start; i<size; ++i)
+      if (values[i] == null)
+        return i;
+  }
+  else
+  {
+    for (var i=start; i<size; ++i)
+    {
+      var obj = values[i];
+      if (obj != null && fan.sys.ObjUtil.equals(obj, value))
+        return i;
+    }
+  }
+  return null;
+}
+
+fan.sys.List.prototype.indexSame = function(value, off)
+{
+  if (off === undefined) off = 0;
+
+  var size = this.m_size;
+  var values = this.m_values;
+  if (size == 0) return null;
+  var start = off;
+  if (start < 0) start = size + start;
+  if (start >= size || start < 0) throw fan.sys.IndexErr.make(off);
+
+  for (var i=start; i<size; i++)
+    if (value === values[i])
+      return i;
+  return null;
+}
+
+fan.sys.List.prototype.first = function()
+{
+  if (this.m_size == 0) return null;
+  return this.m_values[0];
+}
+
+fan.sys.List.prototype.last = function()
+{
+  if (this.m_size == 0) return null;
+  return this.m_values[this.m_size-1];
+}
+
+fan.sys.List.prototype.dup = function()
+{
+  return fan.sys.List.make(this.m_of, this.m_values.slice(0));
+}
+
+fan.sys.List.prototype.hash = function()
+{
+  var hash = 33;
+  var size = this.m_size;
+  var vals = this.m_values;
+  for (var i=0; i<size; ++i)
+  {
+    var obj = vals[i];
+    if (obj != null) hash ^= fan.sys.ObjUtil.hash(obj);
+  }
+  return hash;
+}
+
+fan.sys.List.prototype.equals = function(that)
+{
+  if (that instanceof fan.sys.List)
+  {
+    if (!this.m_of.equals(that.m_of)) return false;
+    if (this.m_size != that.m_size) return false;
+    for (var i=0; i<this.m_size; ++i)
+      if (!fan.sys.ObjUtil.equals(this.m_values[i], that.m_values[i]))
         return false;
     return true;
   }
   return false;
 }
 
-fan.sys.List.toStr = function(self)
-{
-  if (self.length == 0) return "[,]";
-  var s = "[";
-  for (var i=0; i<self.length; i++)
-  {
-    if (i > 0) s += ", ";
-    s += self[i];
-  }
-  s += "]";
-  return s;
-}
-
 //////////////////////////////////////////////////////////////////////////
-// Access
+// Modification
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.List.isEmpty = function(self)
+fan.sys.List.prototype.set = function(index, value)
 {
-  return self.length == 0;
-}
-
-fan.sys.List.add = function(self, item)
-{
-  self.push(item);
-  return self;
-}
-
-fan.sys.List.addAll = function(self, list)
-{
-  for (var i=0; i<list.length; i++)
-    self.push(list[i]);
-  return self;
-}
-
-fan.sys.List.insert = function(self, index, item)
-{
-  self.splice(index, 0, item);
-  return self;
-}
-
-fan.sys.List.remove = function(self, val)
-{
-  var index = fan.sys.List.index(self, val);
-  if (index == null) return null;
-  return fan.sys.List.removeAt(self, index);
-}
-
-fan.sys.List.removeSame = function(self, val)
-{
-  var index = fan.sys.List.indexSame(self, val);
-  if (index == null) return null;
-  return fan.sys.List.removeAt(self, index);
-}
-
-fan.sys.List.removeAt = function(self, index)
-{
-  return self.splice(index, 1);
-}
-
-fan.sys.List.clear = function(self)
-{
-  self.splice(0, self.length);
-  return self;
-}
-
-fan.sys.List.fill = function(self, val, times)
-{
-  for (var i=0; i<times; i++) self.push(val);
-  return self;
-}
-
-fan.sys.List.slice = function(self, range)
-{
-  var size = self.length;
-  var s = range.$start(size);
-  var e = range.$end(size);
-  if (e+1 < s) throw new fan.sys.IndexErr(r);
-  return self.slice(s, e+1);
-}
-
-fan.sys.List.contains = function(self, val)
-{
-  return fan.sys.List.index(self, val) != null;
-}
-
-fan.sys.List.sort = function(self, func)
-{
-  if (func != null)
-    return self.sort(func);
-  else
-    return self.sort();
-}
-
-fan.sys.List.index = function(self, val, off)
-{
-  if (off === undefined) off = 0;
-
-  if (self.length == 0) return null;
-  var start = off;
-  if (start < 0) start = self.length + start;
-  if (start >= self.length) throw fan.sys.IndexErr.make(off);
-
-  try
-  {
-    if (val == null)
-    {
-      for (var i=start; i<sef.length; ++i)
-        if (self[i] == null)
-          return i;
-    }
-    else
-    {
-      for (var i=start; i<self.length; ++i)
-      {
-        var obj = self[i];
-        if (obj != null && fan.sys.Obj.equals(obj, val))
-          return i;
-      }
-    }
-    return null;
-  }
-  // TODO
+  this.modify();
+  //try
+  //{
+    if (index < 0) index = this.m_size + index;
+    if (index >= this.m_size || index < 0) throw fan.sys.IndexErr.make(index);
+    this.m_values[index] = value;
+    return this;
+  //}
   //catch (ArrayIndexOutOfBoundsException e)
-  catch (err)
-  {
-    throw fan.sys.IndexErr.make(off);
-  }
+  //{
+  //  throw IndexErr.make(index).val;
+  //}
+  //catch (ArrayStoreException e)
+  //{
+  //  throw CastErr.make("Setting '" + FanObj.type(value) + "' into '" + of + "[]'").val;
+  //}
 }
 
-fan.sys.List.indexSame = function(self, val, off)
+fan.sys.List.prototype.add = function(value)
 {
-  if (off === undefined) off = 0;
-
-  if (self.length == 0) return null;
-  var start = off;
-  if (start < 0) start = self.length + start;
-  if (start >= self.length) throw fan.sys.IndexErr.make(off);
-
-  try
-  {
-    for (var i=start; i<self.length; i++)
-      if (val == self[i])
-        return i;
-    return null;
-  }
-  // TODO
-  //catch (ArrayIndexOutOfBoundsException e)
-  catch (err)
-  {
-    throw fan.sys.IndexErr.make(off);
-  }
+  // modify in insert$
+  return this.insert$(this.m_size, value);
 }
 
-fan.sys.List.first = function(self)
+fan.sys.List.prototype.addAll = function(list)
 {
-  if (self.length == 0) return null;
-  return self[0];
+  // modify in insertAll$
+  return this.insertAll$(this.m_size, list);
 }
 
-fan.sys.List.last = function(self)
+fan.sys.List.prototype.insert = function(index, value)
 {
-  if (self.length == 0) return null;
-  return self[self.length-1];
+  // modify in insert$
+  if (index < 0) index = this.m_size + index;
+  if (index > this.m_size || index < 0) throw fan.sys.IndexErr.make(index);
+  return this.insert$(index, value);
 }
 
-fan.sys.List.dup = function(self)
+fan.sys.List.prototype.insert$ = function(i, value)
 {
-  return fan.sys.List.make(self.$fanType, self.slice(0));
+  //try
+  //{
+    this.modify();
+    this.m_values.splice(i, 0, value);
+    this.m_size++;
+    return this;
+  //}
+  //catch (ArrayStoreException e)
+  //{
+  //  throw CastErr.make("Adding '" + FanObj.type(value) + "' into '" + of + "[]'").val;
+  //}
+}
+
+fan.sys.List.prototype.insertAll = function(index, list)
+{
+  // modify in insertAll$
+  if (index < 0) index = this.m_size + index;
+  if (index > this.m_size || index < 0) throw fan.sys.IndexErr.make(index);
+  return this.insertAll$(index, list);
+}
+
+fan.sys.List.prototype.insertAll$ = function(i, list)
+{
+  // TODO: worth it to optimze small lists?
+  // splice(i, 0, list[0], list[1], list[2])
+  this.modify();
+  if (list.m_size == 0) return this;
+  var vals = list.m_values;
+  if (this.m_values === vals) vals = vals.slice(0);
+  for (var j=0; j<list.m_size; j++)
+    this.m_values.splice(i+j, 0, vals[j]);
+  this.m_size += list.m_size;
+  return this;
+}
+
+fan.sys.List.prototype.remove = function(value)
+{
+  // modify in removeAt
+  var index = this.index(value);
+  if (index == null) return null;
+  return this.removeAt(index);
+}
+
+fan.sys.List.prototype.removeSame = function(value)
+{
+  // modify in removeAt
+  var index = this.indexSame(value);
+  if (index == null) return null;
+  return this.removeAt(index);
+}
+
+fan.sys.List.prototype.removeAt = function(index)
+{
+  this.modify();
+  if (index < 0) index = this.m_size + index;
+  if (index >= this.m_size || index < 0) throw fan.sys.IndexErr.make(index);
+  var old = this.m_values.splice(index, 1);
+  this.m_size--;
+  return old[0];
+}
+
+fan.sys.List.prototype.removeRange = function(r)
+{
+  this.modify();
+  var s = r.$start(this.m_size);
+  var e = r.$end(this.m_size);
+  var n = e - s + 1;
+  if (n < 0) throw fan.sys.IndexErr.make(r);
+  this.m_values.splice(s, n);
+  this.m_size -= n;
+  return this;
+}
+
+fan.sys.List.prototype.trim = function()
+{
+  this.modify();
+  return this;
+}
+
+fan.sys.List.prototype.clear = function()
+{
+  this.modify();
+  this.m_values.splice(0, this.m_size);
+  this.m_size = 0;
+  return this;
+}
+
+fan.sys.List.prototype.fill = function(value, times)
+{
+  this.modify();
+  for (var i=0; i<times; i++) this.add(value);
+  return this;
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Stack
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.List.peek = function(self)
+fan.sys.List.prototype.peek = function()
 {
-  if (self.length == 0) return null;
-  return self[self.length-1];
+  if (this.m_size == 0) return null;
+  return this.m_values[this.m_size-1];
 }
 
-fan.sys.List.pop = function(self)
+fan.sys.List.prototype.pop = function()
 {
   // modify in removeAt()
-  if (self.length == 0) return null;
-  return fan.sys.List.removeAt(self, -1);
+  if (this.m_size == 0) return null;
+  return this.removeAt(-1);
 }
 
-fan.sys.List.push = function(self, obj)
+fan.sys.List.prototype.push = function(obj)
 {
   // modify in add()
-  return sys.fan.List.add(self, obj);
+  return this.add(obj);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Iterators
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.List.each = function(self, func)
+fan.sys.List.prototype.each = function(f)
 {
-  if (func.length == 1)
+  if (f.m_params.size() == 1)
   {
-    for (var i=0; i<self.length; i++)
-      func(self[i])
+    for (var i=0; i<this.m_size; i++)
+      f.call(this.m_values[i])
   }
   else
   {
-    for (var i=0; i<self.length; i++)
-      func(self[i], i)
+    for (var i=0; i<this.m_size; i++)
+      f.call(this.m_values[i], i)
   }
 }
 
-fan.sys.List.eachr = function(self, func)
+fan.sys.List.prototype.eachr = function(f)
 {
-  if (func.length == 1)
+  if (f.m_params.size() == 1)
   {
-    for (var i=self.length-1; i>=0; i--)
-      func(self[i])
+    for (var i=this.m_size-1; i>=0; i--)
+      f.call(this.m_values[i])
   }
   else
   {
-    for (var i=self.length-1; i>=0; i--)
-      func(self[i], i)
+    for (var i=this.m_size-1; i>=0; i--)
+      f.call(this.m_values[i], i)
   }
 }
 
-fan.sys.List.eachWhile = function(self, f)
+fan.sys.List.prototype.eachRange = function(r, f)
 {
-  if (f.length == 1)
+  var s = r.$start(this.m_size);
+  var e = r.$end(this.m_size);
+  var n = e - s + 1;
+  if (n < 0) throw fan.sys.IndexErr.make(r);
+
+  if (f.m_params.size() == 1)
   {
-    for (var i=0; i<self.length; ++i)
+    for (var i=s; i<=e; ++i)
+      f.call(this.m_values[i]);
+  }
+  else
+  {
+    for (var i=s; i<=e; ++i)
+      f.call(this.m_values[i], i);
+  }
+}
+
+fan.sys.List.prototype.eachWhile = function(f)
+{
+  if (f.m_params.size() == 1)
+  {
+    for (var i=0; i<this.m_size; ++i)
     {
-      var r = f(self[i]);
+      var r = f.call(this.m_values[i]);
       if (r != null) return r;
     }
   }
   else
   {
-    for (var i=0; i<self.length; ++i)
+    for (var i=0; i<this.m_size; ++i)
     {
-      var r = f(self[i], i);
+      var r = f.call(this.m_values[i], i);
       if (r != null) return r;
     }
   }
   return null;
 }
 
-fan.sys.List.eachrWhile = function(self, f)
+fan.sys.List.prototype.eachrWhile = function(f)
 {
-  if (f.length == 1)
+  if (f.m_params.size() == 1)
   {
-    for (var i=self.length-1; i>=0; i--)
+    for (var i=this.m_size-1; i>=0; i--)
     {
-      var r = f(self[i]);
+      var r = f.call(this.m_values[i]);
       if (r != null) return r;
     }
   }
   else
   {
-    for (var i=self.length-1; i>=0; i--)
+    for (var i=this.m_size-1; i>=0; i--)
     {
-      var r = f(self[i], i);
+      var r = f.call(this.m_values[i], i);
       if (r != null) return r;
     }
   }
   return null;
 }
 
-fan.sys.List.find = function(self, f)
+fan.sys.List.prototype.find = function(f)
 {
-  if (f.length == 1)
+  if (f.m_params.size() == 1)
   {
-    for (var i=0; i<self.length; i++)
-      if (f(self[i]) == true)
-        return self[i];
+    for (var i=0; i<this.m_size; i++)
+      if (f.call(this.m_values[i]) == true)
+        return this.m_values[i];
   }
   else
   {
-    for (var i=0; i<self.length; i++)
-      if (f(self[i], i) == true)
-        return self[i];
+    for (var i=0; i<this.m_size; i++)
+      if (f.call(this.m_values[i], i) == true)
+        return this.m_values[i];
   }
   return null;
 }
 
-fan.sys.List.findIndex = function(self, f)
+fan.sys.List.prototype.findIndex = function(f)
 {
-  if (f.length == 1)
+  if (f.m_params.size() == 1)
   {
-    for (var i=0; i<self.length; i++)
-      if (f(self[i]) == true)
+    for (var i=0; i<this.m_size; i++)
+      if (f.call(this.m_values[i]) == true)
         return i;
   }
   else
   {
-    for (var i=0; i<self.length; i++)
-      if (f(self[i], i) == true)
+    for (var i=0; i<this.m_size; i++)
+      if (f.call(this.m_values[i], i) == true)
         return i;
   }
   return null;
 }
 
-fan.sys.List.findAll = function(self, f)
+fan.sys.List.prototype.findAll = function(f)
 {
-  var v = self.$fanType.v;
-  var acc = fan.sys.List.make(v, []);
-  if (f.length == 1)
+  var acc = fan.sys.List.make(this.m_of);
+  if (f.m_params.size() == 1)
   {
-    for (var i=0; i<self.length; i++)
-      if (f(self[i]) == true)
-        acc.push(self[i]);
+    for (var i=0; i<this.m_size; i++)
+      if (f.call(this.m_values[i]) == true)
+        acc.add(this.m_values[i]);
   }
   else
   {
-    for (var i=0; i<self.length; i++)
-      if (f(self[i], i) == true)
-        acc.push(self[i]);
+    for (var i=0; i<this.m_size; i++)
+      if (f.call(this.m_values[i], i) == true)
+        acc.add(this.m_values[i]);
   }
   return acc;
 }
 
-fan.sys.List.any = function(self, f)
+fan.sys.List.prototype.findType = function(t)
 {
-  if (f.length == 1)
+  var acc = fan.sys.List.make(t);
+  for (var i=0; i<this.m_size; ++i)
   {
-    for (var i=0; i<self.length; i++)
-      if (f(self[i]) == true)
+    var item = this.m_values[i];
+    if (item != null && fan.sys.ObjUtil.type(item).is(t))
+      acc.add(item);
+  }
+  return acc;
+}
+
+fan.sys.List.prototype.exclude = function(f)
+{
+  var acc = fan.sys.List.make(this.m_of);
+  if (f.m_params.size() == 1)
+  {
+    for (var i=0; i<this.m_size; ++i)
+      if (f.call(this.m_values[i]) != true)
+        acc.add(this.m_values[i]);
+  }
+  else
+  {
+    for (var i=0; i<this.m_size; ++i)
+      if (f.call(this.m_values[i], i) != true)
+        acc.add(this.m_values[i]);
+  }
+  return acc;
+}
+
+fan.sys.List.prototype.any = function(f)
+{
+  if (f.m_params.size() == 1)
+  {
+    for (var i=0; i<this.m_size; ++i)
+      if (f.call(this.m_values[i]) == true)
         return true;
   }
   else
   {
-    for (var i=0; i<self.length; i++)
-      if (f(self[i], i) == true)
+    for (var i=0; i<this.m_size; ++i)
+      if (f.call(this.m_values[i], i) == true)
         return true;
   }
   return false;
 }
 
-fan.sys.List.all = function(self, f)
+fan.sys.List.prototype.all = function(f)
 {
-  if (f.length == 1)
+  if (f.m_params.size() == 1)
   {
-    for (var i=0; i<self.length; i++)
-      if (f(self[i]) != true)
+    for (var i=0; i<this.m_size; ++i)
+      if (f.call(this.m_values[i]) != true)
         return false;
   }
   else
   {
-    for (var i=0; i<self.length; i++)
-      if (f(self[i], i) != true)
+    for (var i=0; i<this.m_size; ++i)
+      if (f.call(this.m_values[i], i) != true)
         return false;
   }
   return true;
 }
 
-fan.sys.List.map = function(self, f)
+fan.sys.List.prototype.reduce = function(reduction, f)
 {
-  var r = f.$fanType.ret;
-  // if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
-  var acc = fan.sys.List.make(r, []);
-  if (f.length == 1)
+  if (f.m_params.size() == 1)
   {
-    for (var i=0; i<self.length; ++i)
-      acc.push(f(self[i]));
+    for (var i=0; i<this.m_size; ++i)
+      reduction = f.call(reduction, this.m_values[i]);
   }
   else
   {
-    for (var i=0; i<self.length; ++i)
-      acc.push(f(self[i], i));
+    for (var i=0; i<this.m_size; ++i)
+      reduction = f.call(reduction, this.m_values[i], i);
+  }
+  return reduction;
+}
+
+fan.sys.List.prototype.map = function(f)
+{
+  var r = f.returns();
+  if (r == fan.sys.Void.$type) r = fan.sys.Obj.$type.toNullable();
+  var acc = fan.sys.List.make(r);
+  if (f.m_params.size() == 1)
+  {
+    for (var i=0; i<this.m_size; ++i)
+      acc.add(f.call(this.m_values[i]));
+  }
+  else
+  {
+    for (var i=0; i<this.m_size; ++i)
+      acc.add(f.call(this.m_values[i], i));
   }
   return acc;
 }
 
-fan.sys.List.max = function(self, f)
+fan.sys.List.prototype.max = function(f)
 {
   if (f === undefined) f = null;
-  if (self.length == 0) return null;
-  var max = self[0];
-  for (var i=1; i<self.length; ++i)
+  if (this.m_size == 0) return null;
+  var max = this.m_values[0];
+  for (var i=1; i<this.m_size; ++i)
   {
-    var s = self[i];
+    var s = this.m_values[i];
     if (f == null)
       max = (s != null && s > max) ? s : max;
     else
-      max = (s != null && f(s, max) > 0) ? s : max;
+      max = (s != null && f.call(s, max) > 0) ? s : max;
   }
   return max;
 }
 
-fan.sys.List.min = function(self, f)
+fan.sys.List.prototype.min = function(f)
 {
   if (f === undefined) f = null;
-  if (self.length == 0) return null;
-  var min = self[0];
-  for (var i=1; i<self.length; ++i)
+  if (this.m_size == 0) return null;
+  var min = this.m_values[0];
+  for (var i=1; i<this.m_size; ++i)
   {
-    var s = self[i];
+    var s = this.m_values[i];
     if (f == null)
       min = (s == null || s < min) ? s : min;
     else
-      min = (s == null || f(s, min) < 0) ? s : min;
+      min = (s == null || f.call(s, min) < 0) ? s : min;
   }
   return min;
 }
 
-fan.sys.List.unique = function(self, f)
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.List.prototype.sort = function(self, f)
 {
-  var dups = {};
-  var acc = fan.sys.List.make(self.$fanType, []);
-  for (var i=0; i<self.length; ++i)
-  {
-    var v = self[i];
-    if (dups[v] == null)
-    {
-      dups[v] = this;
-      acc.push(v);
-    }
-  }
-  return acc;
+  this.modify();
+  if (f === undefined) f = null;
+  if (f != null)
+    this.m_values.sort(function(a,b) { return f.call(a,b) });
+  else
+    this.m_values.sort();
+  return this;
 }
 
-// TODO
-fan.sys.List.rw = function(self) { return fan.sys.List.make(self.$fanType, self.slice(0)); }
-fan.sys.List.ro = function(self) { return fan.sys.List.make(self.$fanType, self.slice(0)); }
-fan.sys.List.toImmutable = function(self) { return fan.sys.List.make(self.$fanType, self.slice(0)); }
-
-// Conversion
-fan.sys.List.join = function(self, sep, func)
+fan.sys.List.prototype.sortr = function(self, f)
 {
-  if (sep === undefined) sep = ""
-  if (self.length == 0) return "";
-  if (self.length == 1)
+  this.modify();
+  if (f === undefined) f = null;
+  if (f != null)
+    this.m_values.sort(function(a,b) { return f.call(b,a) });
+  else
+    this.m_values.sort().reverse();
+  return this;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Conversion
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.List.prototype.join = function(sep, f)
+{
+  if (sep === undefined) sep = "";
+  if (f === undefined) f = null;
+
+  if (this.m_size === 0) return "";
+  if (this.m_size === 1)
   {
-    var v = self[0];
-    if (func != undefined) return func(v, 0);
+    var v = this.m_values[0];
+    if (f != null) return f.call(v, 0);
     if (v == null) return "null";
-    return fan.sys.Obj.toStr(v);
+    return fan.sys.ObjUtil.toStr(v);
   }
 
   var s = ""
-  for (var i=0; i<self.length; ++i)
+  for (var i=0; i<this.m_size; ++i)
   {
     if (i > 0) s += sep;
-    if (func === undefined)
-      s += self[i];
+    if (f == null)
+      s += this.m_values[i];
     else
-      s += func(self[i], i);
+      s += f.call(this.m_values[i], i);
   }
   return s;
 }
+
+fan.sys.List.prototype.toStr = function()
+{
+  if (this.m_size == 0) return "[,]";
+  var s = "[";
+  for (var i=0; i<this.m_size; i++)
+  {
+    if (i > 0) s += ", ";
+    s += this.m_values[i];
+  }
+  s += "]";
+  return s;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Readonly
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.List.prototype.isRW = function()
+{
+  return !this.m_readonly;
+}
+
+fan.sys.List.prototype.isRO = function()
+{
+  return this.m_readonly;
+}
+
+fan.sys.List.prototype.rw = function()
+{
+  if (!this.m_readonly) return this;
+
+  var rw = fan.sys.List.make(this.m_of, this.m_values.slice(0));
+  rw.m_readonly = false;
+  rw.m_readonlyList = this;
+  return rw;
+}
+
+fan.sys.List.prototype.ro = function()
+{
+  if (this.m_readonly) return this;
+  if (this.m_readonlyList == null)
+  {
+    var ro = fan.sys.List.make(this.m_of, this.m_values.slice(0));
+    ro.m_readonly = true;
+    this.m_readonlyList = ro;
+  }
+  return this.m_readonlyList;
+}
+
+fan.sys.List.prototype.isImmutable = function()
+{
+  return this.m_immutable;
+}
+
+fan.sys.List.prototype.toImmutable = function()
+{
+  if (this.m_immutable) return this;
+
+  // make safe copy
+  var temp = [];
+  for (var i=0; i<this.m_size; ++i)
+  {
+    var item = this.m_values[i];
+    if (item != null)
+    {
+      if (item instanceof fan.sys.List) item = item.toImmutable();
+      else if (item instanceof fan.sys.Map) item = item.toImmutable();
+      else if (!fan.sys.ObjUtil.isImmutable(item))
+        throw fan.sys.NotImmutableErr.make("Item [" + i + "] not immutable " +
+          fan.sys.Type.of(item));
+    }
+    temp[i] = item;
+  }
+
+  // return new immutable list
+  var ro = fan.sys.List.make(this.m_of, temp);
+  ro.m_readonly = true;
+  ro.m_immutable = true;
+  return ro;
+}
+
+fan.sys.List.prototype.modify = function()
+{
+  // if readonly then throw readonly exception
+  if (this.m_readonly)
+    throw fan.sys.ReadonlyErr.make("List is readonly");
+
+  // if we have a cached readonlyList, then detach
+  // it so it remains immutable
+  if (this.m_readonlyList != null)
+  {
+    this.m_readonlyList.m_values = this.m_values.slice(0);
+    this.m_readonlyList = null;
+  }
+}
+

@@ -40,11 +40,12 @@ fan.sys.Int.fromStr = function(s, radix, checked)
   if (checked === undefined) checked = true;
   try
   {
+    if (s == null || s.length == 0) throw Error();
     var num = Long.fromStr(s, radix);
     return num;
   }
   catch (err) {}
-  if (checked) throw new fan.sys.ParseErr("Int", s);
+  if (checked) throw fan.sys.ParseErr.make("Int", s);
   return null;
 }
 fan.sys.Int.toStr = function(self)
@@ -164,15 +165,33 @@ fan.sys.Int.equalsIgnoreCase = function(self, ch) { return (self|0x20) == (ch|0x
 // Iterators
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Int.times = function(self, func)
+fan.sys.Int.times = function(self, f)
 {
   for (var i=0; i<self; i++)
-    func(i);
+    f.call(i);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Arithmetic
 //////////////////////////////////////////////////////////////////////////
+
+fan.sys.Int.negate = function(self)
+{
+  // TODO: if a is Long
+  return -self.valueOf();
+}
+
+fan.sys.Int.increment = function(self)
+{
+  // TODO: if a is Long
+  return self+1;
+}
+
+fan.sys.Int.decrement = function(self)
+{
+  // TODO: if a is Long
+  return self-1;
+}
 
 fan.sys.Int.plus = function(a, b)
 {
@@ -238,8 +257,8 @@ return Math.pow(a, b);
 //////////////////////////////////////////////////////////////////////////
 
 // TODO - these impls only work upto 32 bits!!!
-fan.sys.Int.and    = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return x; }
-fan.sys.Int.or     = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return x; }
+fan.sys.Int.and = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return x; }
+fan.sys.Int.or  = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return x; }
 fan.sys.Int.shl = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
 fan.sys.Int.shr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
 
@@ -278,6 +297,37 @@ fan.sys.Int.shr = function(a, n)
   return Long.shr(a, n);
 }
 */
+
+//////////////////////////////////////////////////////////////////////////
+// CharMap
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Int.charMap = [];
+fan.sys.Int.SPACE    = 0x01;
+fan.sys.Int.UPPER    = 0x02;
+fan.sys.Int.LOWER    = 0x04;
+fan.sys.Int.DIGIT    = 0x08;
+fan.sys.Int.HEX      = 0x10;
+fan.sys.Int.ALPHA    = fan.sys.Int.UPPER | fan.sys.Int.LOWER;
+fan.sys.Int.ALPHANUM = fan.sys.Int.UPPER | fan.sys.Int.LOWER | fan.sys.Int.DIGIT;
+
+fan.sys.Int.charMap[32] |= fan.sys.Int.SPACE;
+fan.sys.Int.charMap[10] |= fan.sys.Int.SPACE;
+fan.sys.Int.charMap[13] |= fan.sys.Int.SPACE;
+fan.sys.Int.charMap[9]  |= fan.sys.Int.SPACE;
+fan.sys.Int.charMap[12] |= fan.sys.Int.SPACE;
+
+// alpha characters
+for (var i=97; i<=122; ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.LOWER;
+for (var i=65; i<=90;  ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.UPPER;
+
+// digit characters
+for (var i=48; i<=57; ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.DIGIT;
+
+// hex characters
+for (var i=48; i<=57;  ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.HEX;
+for (var i=97; i<=102; ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.HEX;
+for (var i=65; i<=70;  ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.HEX;
 
 //////////////////////////////////////////////////////////////////////////
 // Static Fields

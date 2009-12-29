@@ -12,54 +12,51 @@
  */
 fan.sys.Func = fan.sys.Obj.$extend(fan.sys.Obj);
 
-fan.sys.Func.prototype.$ctor = function() {}
-fan.sys.Func.prototype.type = function() { return fan.sys.Type.find("sys::Func"); }
-
 //////////////////////////////////////////////////////////////////////////
-// Static
+// Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Func.make = function(f, params, ret)
+fan.sys.Func.prototype.$ctor = function()
+{
+}
+
+fan.sys.Func.make = function(params, ret, func)
+{
+  var self = new fan.sys.Func();
+  fan.sys.Func.make$(self, params, ret, func);
+  return self;
+}
+
+fan.sys.Func.make$ = function(self, params, ret, func)
 {
   var types = [];
   for (var i=0; i<params.length; i++)
     types.push(params[i].m_of);
-  f.$fanParams = params;
-  f.$fanType = new fan.sys.FuncType(types, ret);
-  return f;
+
+  self.m_params = params;
+  self.m_return = ret;
+  self.m_type   = new fan.sys.FuncType(types, ret);
+  self.m_func   = func;
 }
 
-fan.sys.Func.params   = function(f) { return f.$fanParams; }
-fan.sys.Func.ret      = function(f) { return f.$fanType.ret; }
-fan.sys.Func.call     = function(f)
-{
-  var args = Array.prototype.slice.call(arguments).slice(1);
-  return f.apply(null, args);
-}
-fan.sys.Func.callList = function(f, args) { return f.apply(null, args); }
-fan.sys.Func.callOn   = function(f, obj, args)
+//////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Func.prototype.type = function() { return this.m_type; }
+
+//////////////////////////////////////////////////////////////////////////
+// Methods
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Func.prototype.params = function() { return this.m_params; }
+fan.sys.Func.prototype.returns = function() { return this.m_return; }
+fan.sys.Func.prototype.call = function() { return this.m_func.apply(null, arguments); }
+fan.sys.Func.callList = function(args) { return this.m_func.apply(null, args); }
+fan.sys.Func.callOn = function(obj, args)
 {
   var acc = args.slice();
   acc.unshift(obj);
-  return f.apply(null, acc);
+  return this.m_func.apply(null, acc);
 }
 
-fan.sys.Func.curry = function(f, args)
-{
-  var t = f.$fanType;
-  if (args.length == 0) return f;
-  if (args.length > t.params.length)
-    throw fan.sys.ArgErr.make("args.size > params.size");
-
-  var len = t.params.length - args.length;
-  var newParams = [];
-  for (var i=0; i<len; i++)
-    newParams.push(t.params[args.length+i])
-
-  return fan.sys.Func.make(function() {
-    var curried = args.slice();
-    for (var i=0; i<arguments.length; i++)
-      curried.push(arguments[i]);
-    return f.apply(null, curried);
-  }, newParams, t.ret);
-}

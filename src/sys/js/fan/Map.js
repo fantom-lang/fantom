@@ -27,6 +27,7 @@ fan.sys.Map.prototype.$ctor = function(k, v)
   }
   this.keyMap = {};
   this.map = {};
+  this.m_readonly = false;
   this.$fanType = mt;
 }
 
@@ -89,7 +90,7 @@ fan.sys.Map.prototype.keys = function()
   return fan.sys.List.make(this.$fanType.k, list);
 }
 
-fan.sys.Map.prototype.vals = function()
+fan.sys.Map.prototype.values = function()
 {
   var list = [];
   for (var k in this.map) list.push(this.map[k]);
@@ -109,7 +110,7 @@ fan.sys.Map.prototype.containsKey = function(key)
 {
   if (this.m_caseInsensitive) key = fan.sys.Str.lower(key);
   for (var k in this.map)
-    if (fan.sys.Obj.equals(k, key))
+    if (fan.sys.ObjUtil.equals(k, key))
       return true;
   return false;
 }
@@ -211,17 +212,19 @@ fan.sys.Map.prototype.each = function(func)
 fan.sys.Map.prototype.toImmutable = function()
 {
   // TODO
+  this.m_readonly = true;
   return this;
 }
 
 fan.sys.Map.prototype.ro = function()
 {
   // TODO
+  this.m_readonly = true;
   return this;
 }
 
-fan.sys.Map.prototype.isRO = function() { return false; }
-fan.sys.Map.prototype.isRW = function() { return true; }
+fan.sys.Map.prototype.isRO = function() { return this.m_readonly; }
+fan.sys.Map.prototype.isRW = function() { return !this.m_readonly; }
 
 //////////////////////////////////////////////////////////////////////////
 // Static Methods

@@ -210,7 +210,7 @@ fan.sys.OutStream.prototype.writeChars = function(s, off, len)
 
 fan.sys.OutStream.prototype.print = function(obj)
 {
-  var s = obj == null ? "null" : fan.sys.Obj.toStr(obj);
+  var s = obj == null ? "null" : fan.sys.ObjUtil.toStr(obj);
   return this.writeChars(s, 0, s.length);
 }
 

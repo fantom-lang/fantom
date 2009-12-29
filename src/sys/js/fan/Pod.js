@@ -42,12 +42,15 @@ fan.sys.Pod.prototype.types = function()
   return this.$typesArray;
 }
 
-fan.sys.Pod.prototype.findType = function(qname, checked)
+fan.sys.Pod.prototype.findType = function(name, checked)
 {
   if (checked === undefined) checked = true;
-  var t = this.m_types[qname];
+  var t = this.m_types[name];
   if (t == null && checked)
-    throw fan.sys.UnknownTypeErr.make(qname);
+  {
+    //fan.sys.ObjUtil.echo("UnknownType: " + this.m_name + "::" + name);
+    throw fan.sys.UnknownTypeErr.make(this.m_name + "::" + name);
+  }
   return t;
 }
 
@@ -82,20 +85,20 @@ fan.sys.Pod.prototype.type = function() { return fan.sys.Pod.$type; }
 fan.sys.Pod.prototype.toStr = function() { return this.m_name; }
 
 // addType
-fan.sys.Pod.prototype.$at = function(name, baseQname, mixins)
+fan.sys.Pod.prototype.$at = function(name, baseQname, mixins, flags)
 {
   var qname = this.m_name + "::" + name;
   if (this.m_types[name] != null)
     throw fan.sys.Err.make("Type already exists " + qname);
-  var t = new fan.sys.Type(qname, baseQname, mixins);
+  var t = new fan.sys.Type(qname, baseQname, mixins, flags);
   this.m_types[name] = t;
   return t;
 }
 
 // addMixin
-fan.sys.Pod.prototype.$am = function(name, baseQname, mixins)
+fan.sys.Pod.prototype.$am = function(name, baseQname, mixins, flags)
 {
-  var t = this.$at(name, baseQname, mixins);
+  var t = this.$at(name, baseQname, mixins, flags);
   t.m_isMixin = true;
   return t;
 }

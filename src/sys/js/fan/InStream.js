@@ -146,10 +146,10 @@ fan.sys.InStream.prototype.readAllLines = function()
       list.push(line);
     return list;
   }
-  catch (err) { fan.sys.Obj.echo(err); }
+  catch (err) { fan.sys.Err.make(err).trace(); }
   finally
   {
-    try { this.close(); } catch (err) { fan.sys.Obj.echo(err); }
+    try { this.close(); } catch (err) { fan.sys.Err.make(err).trace(); }
   }
 }
 
@@ -165,8 +165,8 @@ fan.sys.InStream.prototype.readAllStr = function(normalizeNewlines)
     var last = -1;
     while (true)
     {
-      var c = this.rChar();
-      if (c < 0) break;
+      var c = this.readChar();
+      if (c == null) break;
 
       // normalize newlines and add to buffer
       if (normalize)
@@ -185,7 +185,7 @@ fan.sys.InStream.prototype.readAllStr = function(normalizeNewlines)
   }
   finally
   {
-    try { this.close(); } catch (err) { fan.sys.Obj.echo(err); }
+    try { this.close(); } catch (err) { fan.sys.ObjUtil.echo(err); }
   }
 }
 

@@ -19,75 +19,101 @@ fan.sys.Type = fan.sys.Obj.$extend(fan.sys.Obj);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Type.prototype.$ctor = function(qname, base, mixins)
+fan.sys.Type.prototype.$ctor = function(qname, base, mixins, flags)
 {
   // workaround for inhertiance
   if (qname === undefined) return;
 
   // mixins
-  if (mixins === undefined) mixins = [];
-  for (var i=0; i<mixins.length; i++)
-    mixins[i] = fan.sys.Type.find(mixins[i]);
+  if (fan.sys.Type.$type != null)
+  {
+    var acc = fan.sys.List.make(fan.sys.Type.$type, []);
+    for (var i=0; i<mixins.length; i++)
+      acc.add(fan.sys.Type.find(mixins[i]));
+    this.m_mixins = acc.ro();
+  }
 
   var s = qname.split("::");
   this.m_qname    = qname;
   this.m_pod      = fan.sys.Pod.find(s[0]);
   this.m_name     = s[1];
   this.m_base     = base == null ? null : fan.sys.Type.find(base);
-  this.m_mixins   = mixins;
   this.m_slots    = [];
+  this.m_flags    = flags;
   this.m_$qname   = 'fan.' + this.m_pod + '.' + this.m_name;
   this.m_isMixin  = false;
   this.m_nullable = new fan.sys.NullableType(this);
 }
 
 //////////////////////////////////////////////////////////////////////////
+// Naming
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Type.prototype.pod = function() { return this.m_pod; }
+fan.sys.Type.prototype.name = function() { return this.m_name; }
+fan.sys.Type.prototype.qname = function() { return this.m_qname; }
+fan.sys.Type.prototype.signature = function() { return this.m_qname; }
+
+//////////////////////////////////////////////////////////////////////////
+// Flags
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Type.prototype.isAbstract  = function() { return (this.flags() & fan.sys.FConst.Abstract) != 0; }
+fan.sys.Type.prototype.isClass     = function() { return (this.flags() & (fan.sys.FConst.Enum|fan.sys.FConst.Mixin)) == 0; }
+fan.sys.Type.prototype.isConst     = function() { return (this.flags() & fan.sys.FConst.Const) != 0; }
+fan.sys.Type.prototype.isEnum      = function() { return (this.flags() & fan.sys.FConst.Enum) != 0; }
+fan.sys.Type.prototype.isFinal     = function() { return (this.flags() & fan.sys.FConst.Final) != 0; }
+fan.sys.Type.prototype.isInternal  = function() { return (this.flags() & fan.sys.FConst.Internal) != 0; }
+fan.sys.Type.prototype.isMixin     = function() { return (this.flags() & fan.sys.FConst.Mixin) != 0; }
+fan.sys.Type.prototype.isPublic    = function() { return (this.flags() & fan.sys.FConst.Public) != 0; }
+fan.sys.Type.prototype.isSynthetic = function() { return (this.flags() & fan.sys.FConst.Synthetic) != 0; }
+fan.sys.Type.prototype.flags = function() { return this.m_flags; };
+
+fan.sys.Type.prototype.trap = function(name, args)
+{
+  // private undocumented access
+  if (name == "flags") return this.flags();
+  return fan.sys.Obj.prototype.trap.call(this, name, args);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Value Types
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Type.prototype.isVal = function()
+{
+  return this === fan.sys.Bool.$type ||
+         this === fan.sys.Int.$type ||
+         this === fan.sys.Float.$type;
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Type.prototype.base = function()      { return this.m_base; }
-fan.sys.Type.prototype.mixins = function()    { return this.m_mixins; }
 fan.sys.Type.prototype.isClass = function()   { return !this.m_isMixin && this.m_base.m_qname != "sys::Enum"; }
 fan.sys.Type.prototype.isEnum = function()    { return this.m_base != null && this.m_base.m_qname == "sys::Enum"; }
 fan.sys.Type.prototype.isMixin = function()   { return this.m_isMixin; }
 fan.sys.Type.prototype.log = function()       { return fan.sys.Log.get(this.m_pod.m_name); }
-fan.sys.Type.prototype.name = function()      { return this.m_name; }
-fan.sys.Type.prototype.qname = function()     { return this.m_qname; }
-fan.sys.Type.prototype.pod = function()       { return this.m_pod; }
-fan.sys.Type.prototype.signature = function() { return this.m_qname; }
 fan.sys.Type.prototype.toStr = function()     { return this.signature(); }
 fan.sys.Type.prototype.toLocale = function()  { return this.signature(); }
 fan.sys.Type.prototype.type = function()      { return fan.sys.Type.find("sys::Type"); }
-fan.sys.Type.prototype.toListOf = function()  { return new fan.sys.ListType(this); }
-fan.sys.Type.prototype.emptyList = function() { return new fan.sys.List.make(this, []); }
+
+fan.sys.Type.prototype.toListOf = function()
+{
+  if (this.m_listOf == null) this.m_listOf = new fan.sys.ListType(this);
+  return this.m_listOf;
+}
+
+fan.sys.Type.prototype.emptyList = function()
+{
+  if (this.$emptyList == null)
+    this.$emptyList = fan.sys.List.make(this).toImmutable();
+  return this.$emptyList;
+}
 
 fan.sys.Type.prototype.isNullable = function() { return false; }
 fan.sys.Type.prototype.toNonNullable = function() { return this; }
-
-fan.sys.Type.prototype.fits = function(that) { return this.is(that); }
-fan.sys.Type.prototype.is = function(that)
-{
-  // we don't take nullable into account for fits
-  if (that instanceof fan.sys.NullableType)
-    that = that.m_root;
-
-  if (this.equals(that)) return true;
-
-  // check base class
-  var base = this.m_base;
-  while (base != null)
-  {
-    if (base.equals(that)) return true;
-    base = base.m_base;
-  }
-
-  // check mixins
-  var m = this.m_mixins;
-  for (var i=0; i<m.length; i++)
-    if (fan.sys.Type.isMixin(m[i], that)) return true;
-
-  return false;
-}
 
 fan.sys.Type.isMixin = function(mixin, that)
 {
@@ -116,7 +142,7 @@ fan.sys.Type.prototype.make = function(args)
   if (obj.m_defVal != null) { this.m_$defVal = obj.m_defVal; return obj.m_defVal; }
 
   // call make with args
-  if (args == undefined) return obj.make();
+  if (args === undefined) return obj.make();
   var a = args;
   switch (args.length)
   {
@@ -140,31 +166,31 @@ fan.sys.Type.prototype.make = function(args)
 
 fan.sys.Type.prototype.slots = function()
 {
-  // TODO - include inheritance
+  // TODO FIXIT: include inheritance; cache
   var acc = [];
   for (var i in this.m_slots)
     acc.push(this.m_slots[i]);
-  return acc;
+  return fan.sys.List.make(fan.sys.Slot.$type, acc);
 }
 
 fan.sys.Type.prototype.methods = function()
 {
-  // TODO - include inheritance
+  // TODO FIXIT: include inheritance; cache
   var acc = [];
   for (var i in this.m_slots)
     if (this.m_slots[i] instanceof fan.sys.Method)
       acc.push(this.m_slots[i]);
-  return acc;
+  return fan.sys.List.make(fan.sys.Method.$type, acc);
 }
 
 fan.sys.Type.prototype.fields = function()
 {
-  // TODO - include inheritance
+  // TODO FIXIT: include inheritance; cache
   var acc = [];
   for (var i in this.m_slots)
     if (this.m_slots[i] instanceof fan.sys.Field)
       acc.push(this.m_slots[i]);
-  return acc;
+  return fan.sys.List.make(fan.sys.Field.$type, acc);
 }
 
 fan.sys.Type.prototype.slot = function(name, checked)
@@ -205,10 +231,64 @@ fan.sys.Type.prototype.$am = function(name, flags)
 // addField
 fan.sys.Type.prototype.$af = function(name, flags, of)
 {
+  // TODO: Map.def - not sure how to handle this yet
+  if (of == 'sys::V?') return this;
+
   var t = fanx_TypeParser.load(of);
   var f = new fan.sys.Field(this, name, flags, t);
   this.m_slots[name] = f;
   return this;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Inheritance
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Type.prototype.base = function()
+{
+  return this.m_base;
+}
+
+fan.sys.Type.prototype.mixins = function()
+{
+  // lazy-build mxins list for Obj and Type
+  if (this.m_mixins == null)
+    this.m_mixins = fan.sys.List.make(fan.sys.Type.$type, []).ro();
+  return this.m_mixins;
+}
+
+
+// TODO
+//fan.sys.Type.prototype.inheritance = function()
+//{
+//}
+
+fan.sys.Type.prototype.fits = function(that) { return this.is(that); }
+fan.sys.Type.prototype.is = function(that)
+{
+  // we don't take nullable into account for fits
+  if (that instanceof fan.sys.NullableType)
+    that = that.m_root;
+
+  if (this.equals(that)) return true;
+
+  // check for void
+  if (this === fan.sys.Void.$type) return false;
+
+  // check base class
+  var base = this.m_base;
+  while (base != null)
+  {
+    if (base.equals(that)) return true;
+    base = base.m_base;
+  }
+
+  // check mixins
+  var m = this.mixins();
+  for (var i=0; i<m.size(); i++)
+    if (fan.sys.Type.isMixin(m.get(i), that)) return true;
+
+  return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -262,11 +342,12 @@ fan.sys.Type.of = function(obj)
  */
 fan.sys.Type.toFanType = function(obj)
 {
-  if (obj== null) throw fan.sys.Err.make("sys::Type.toFanType: obj is null");
+  if (obj == null) throw fan.sys.Err.make("sys::Type.toFanType: obj is null");
   if (obj.$fanType != undefined) return obj.$fanType;
   if ((typeof obj) == "boolean" || obj instanceof Boolean) return fan.sys.Type.find("sys::Bool");
   if ((typeof obj) == "number"  || obj instanceof Number)  return fan.sys.Type.find("sys::Int");
   if ((typeof obj) == "string"  || obj instanceof String)  return fan.sys.Type.find("sys::Str");
+println("### " + (typeof obj));
   throw fan.sys.Err.make("sys::Type.toFanType: Not a Fantom type: " + obj);
 }
 
@@ -279,7 +360,7 @@ fan.sys.Type.common = function(objs)
   {
     var obj = objs[i];
     if (obj == null) { nullable = true; continue; }
-    var t = fan.sys.Obj.type(obj);
+    var t = fan.sys.ObjUtil.type(obj);
     if (best == null) { best = t; continue; }
     while (!t.is(best))
     {
@@ -347,7 +428,7 @@ fan.sys.ListType.prototype.$ctor = function(v)
   this.m_mixins = [];
 }
 
-fan.sys.ListType.prototype.base = function() { return fan.sys.Type.find("sys::List"); }
+fan.sys.ListType.prototype.base = function() { return fan.sys.List.$type; }
 fan.sys.ListType.prototype.signature = function() { return this.v.signature() + '[]'; }
 fan.sys.ListType.prototype.equals = function(that)
 {
@@ -374,7 +455,7 @@ fan.sys.ListType.prototype.is = function(that)
 
 fan.sys.ListType.prototype.as = function(obj, that)
 {
-  var objType = fan.sys.Obj.type(obj);
+  var objType = fan.sys.ObjUtil.type(obj);
 
   if (objType instanceof fan.sys.ListType &&
       objType.v.qname() == "sys::Obj" &&
@@ -436,7 +517,7 @@ fan.sys.MapType.prototype.is = function(that)
 
 fan.sys.MapType.prototype.as = function(obj, that)
 {
-  var objType = fan.sys.Obj.type(obj);
+  var objType = fan.sys.ObjUtil.type(obj);
 
   if (objType instanceof fan.sys.MapType &&
       objType.k.qname() == "sys::Obj" &&
@@ -518,5 +599,11 @@ fan.sys.FuncType.prototype.is = function(that)
   if (that.toString() == "sys::Func") return true;
   if (that.toString() == "sys::Func?") return true;
   return this.base().is(that);
+}
+
+fan.sys.FuncType.prototype.as = function(that)
+{
+  // TODO FIXIT
+  return that;
 }
 

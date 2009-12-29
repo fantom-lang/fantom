@@ -16,7 +16,4 @@ fan.sys.Locale.prototype.type = function() { return fan.sys.Type.find("sys::Loca
 
 // TODO
 fan.sys.Locale.current = function() { return null; }
-
 fan.sys.Locale.cur = function() { return null; }
-
-

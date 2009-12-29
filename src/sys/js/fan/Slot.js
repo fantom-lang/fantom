@@ -38,6 +38,8 @@ fan.sys.Slot.prototype.toStr = function() { return this.m_qname; }
 fan.sys.Slot.prototype.parent = function() { return this.m_parent; }
 fan.sys.Slot.prototype.qname = function() { return this.m_qname; }
 fan.sys.Slot.prototype.name = function() { return this.m_name; }
+fan.sys.Slot.prototype.isField = function() { return this instanceof fan.sys.Field; }
+fan.sys.Slot.prototype.isMethod = function() { return this instanceof fan.sys.Method; }
 
 //////////////////////////////////////////////////////////////////////////
 // Flags
