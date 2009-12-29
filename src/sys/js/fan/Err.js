@@ -33,7 +33,7 @@ fan.sys.Err.prototype.cause = function()
 
 fan.sys.Err.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Err");
+  return fan.sys.Err.$type;
 }
 
 fan.sys.Err.prototype.toStr = function()

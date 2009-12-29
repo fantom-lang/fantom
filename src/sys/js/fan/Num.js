@@ -17,10 +17,7 @@ fan.sys.Num = fan.sys.Obj.$extend(fan.sys.Obj);
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.Num.prototype.$ctor = function() {}
-fan.sys.Num.prototype.type = function()
-{
-  return fan.sys.Type.find("sys::Num");
-}
+fan.sys.Num.prototype.type = function() { return fan.sys.Num.$type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Static Methods

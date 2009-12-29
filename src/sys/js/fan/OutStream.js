@@ -22,7 +22,7 @@ fan.sys.OutStream.prototype.make$ = function(out) { this.out = out; }
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.OutStream.prototype.type = function() { return fan.sys.Type.find("sys::OutStream"); }
+fan.sys.OutStream.prototype.type = function() { return fan.sys.OutStream.$type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Java OutputStream

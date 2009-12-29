@@ -35,7 +35,7 @@ fan.sys.Buf.prototype.toStr = function()
 
 fan.sys.Buf.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Buf");
+  return fan.sys.Buf.$type;
 }
 
 //////////////////////////////////////////////////////////////////////////

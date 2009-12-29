@@ -45,7 +45,7 @@ fan.sys.Weekday.prototype.decrement = function()
 
 fan.sys.Weekday.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Weekday");
+  return fan.sys.Weekday.$type;
 }
 
 // TODO FIXIT

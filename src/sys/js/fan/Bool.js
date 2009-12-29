@@ -24,7 +24,7 @@ fan.sys.Bool.prototype.$ctor = function() {}
 
 fan.sys.Bool.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::Bool");
+  return fan.sys.Boo.$type;
 }
 
 //////////////////////////////////////////////////////////////////////////

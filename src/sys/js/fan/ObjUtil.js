@@ -179,7 +179,7 @@ fan.sys.ObjUtil.toStr = function(obj)
 //  if (obj instanceof Error) return Error.prototype.toString.call(obj);
 
 // TEMP
-if (obj.$fanType == fan.sys.Type.find("sys::Float")) return fan.sys.Float.toStr(obj);
+if (obj.$fanType === fan.sys.Float.$type) return fan.sys.Float.toStr(obj);
 
   return obj.toString();
 }

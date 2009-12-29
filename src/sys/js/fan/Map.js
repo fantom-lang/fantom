@@ -21,8 +21,8 @@ fan.sys.Map.prototype.$ctor = function(k, v)
   }
   else
   {
-    if (k === undefined) k = fan.sys.Type.find("sys::Obj")
-    if (v === undefined) v = fan.sys.Type.find("sys::Obj")
+    if (k === undefined) k = fan.sys.Obj.$type;
+    if (v === undefined) v = fan.sys.Obj.$type.toNullable();
     mt = new fan.sys.MapType(k, v);
   }
   this.keyMap = {};

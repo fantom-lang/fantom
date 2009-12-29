@@ -12,7 +12,6 @@
  */
 fan.sys.MimeType = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.sys.MimeType.prototype.$ctor = function() {}
-fan.sys.MimeType.prototype.type = function() { return fan.sys.Type.find("sys::MimeType"); }
 
 //////////////////////////////////////////////////////////////////////////
 // fromStr
@@ -84,7 +83,7 @@ fan.sys.MimeType.parseParams = function(s, checked)
 
 fan.sys.MimeType.doParseParams = function(s, offset)
 {
-  var params = new fan.sys.Map(fan.sys.Type.find("sys::Str"), fan.sys.Type.find("sys::Str"));
+  var params = new fan.sys.Map(fan.sys.Str.$type, fan.sys.Str.$type);
   params.caseInsensitive$(true);
   var inQuotes = false;
   var keyStart = offset;
@@ -207,7 +206,7 @@ fan.sys.MimeType.prototype.hash = function()
 
 fan.sys.MimeType.prototype.toStr = function() { return this.m_str; }
 
-fan.sys.MimeType.prototype.type = function() { return fan.sys.Type.find("sys::MimeType"); }
+fan.sys.MimeType.prototype.type = function() { return fan.sys.MimeType.$type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
@@ -235,7 +234,7 @@ fan.sys.MimeType.emptyParams = function()
   var q = fan.sys.MimeType.emptyQuery;
   if (q == null)
   {
-    q = new fan.sys.Map(fan.sys.Type.find("sys::Str"), fan.sys.Type.find("sys::Str"));
+    q = new fan.sys.Map(fan.sys.Str.$type, fan.sys.Str.$type);
     q.caseInsensitive$(true);
     //q = q.toImmutable();
     fan.sys.MimeType.emptyQuery = q;

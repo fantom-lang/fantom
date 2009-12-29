@@ -371,7 +371,7 @@ fan.sys.DateTime.prototype.compare = function(obj)
 
 fan.sys.DateTime.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::DateTime");
+  return fan.sys.DateTime.$type;
 }
 //////////////////////////////////////////////////////////////////////////
 // Access

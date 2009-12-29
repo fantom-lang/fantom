@@ -140,7 +140,7 @@ fan.sys.InStream.prototype.readAllLines = function()
 {
   try
   {
-    var list = fan.sys.List.make(fan.sys.Type.find("sys::Str"), []);
+    var list = fan.sys.List.make(fan.sys.Str.$type, []);
     var line = "";
     while ((line = this.readLine()) != null)
       list.push(line);
@@ -207,7 +207,7 @@ fan.sys.InStream.prototype.close = function()
 
 fan.sys.InStream.prototype.type = function()
 {
-  return fan.sys.Type.find("sys::InStream");
+  return fan.sys.InStream.$type;
 }
 
 //////////////////////////////////////////////////////////////////////////
