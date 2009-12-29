@@ -56,7 +56,7 @@ fan.sys.Range.fromStr = function(s, checked)
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Methods
+// Range
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.Range.prototype.start = function() { return this.m_start; }
@@ -82,27 +82,47 @@ fan.sys.Range.prototype.contains = function(i)
   }
 }
 
-fan.sys.Range.prototype.each = function(f)
+fan.sys.Range.prototype.each = function(func)
 {
   var start = this.m_start;
   var end   = this.m_end;
   if (start < end)
   {
     if (this.m_exclusive) --end;
-    for (var i=start; i<=end; ++i) f(fan.sys.Int.make(i));
+    for (var i=start; i<=end; ++i) func.call(fan.sys.Int.make(i));
   }
   else
   {
     if (this.m_exclusive) ++end;
-    for (var i=start; i>=end; --i) f(fan.sys.Int.make(i));
+    for (var i=start; i>=end; --i) func.call(fan.sys.Int.make(i));
   }
+}
+
+fan.sys.Range.prototype.map = function(func)
+{
+  var r = func.returns();
+  if (r === fan.sys.Void.$type) r = fan.sys.Obj.$type.toNullable();
+  var acc   = fan.sys.List.make(r);
+  var start = this.m_start;
+  var end   = this.m_end;
+  if (start < end)
+  {
+    if (this.m_exclusive) --end;
+    for (var i=start; i<=end; ++i) acc.add(func.call(i));
+  }
+  else
+  {
+    if (this.m_exclusive) ++end;
+    for (var i=start; i>=end; --i) acc.add(func.call(i));
+  }
+  return acc;
 }
 
 fan.sys.Range.prototype.toList = function()
 {
   var start = this.m_start;
   var end = this.m_end;
-  var acc = fan.sys.List.make(fan.sys.Type.find("sys::Int"), []);
+  var acc = fan.sys.List.make(fan.sys.Int.$type);
   if (start < end)
   {
     if (this.m_exclusive) --end;
@@ -139,7 +159,7 @@ fan.sys.Range.prototype.toStr = function()
     return this.m_start + ".." + this.m_end;
 }
 
-fan.sys.Range.prototype.type = function() { return fan.sys.Type.find("sys::Range"); }
+fan.sys.Range.prototype.type = function() { return fan.sys.Range.$type;}
 
 fan.sys.Range.prototype.$start = function(size)
 {
@@ -147,7 +167,7 @@ fan.sys.Range.prototype.$start = function(size)
 
   var x = this.m_start;
   if (x < 0) x = size + x;
-  if (x > size) throw new fan.sys.IndexErr(this);
+  if (x > size) throw fan.sys.IndexErr.make(this);
   return x;
 }
 
@@ -158,7 +178,7 @@ fan.sys.Range.prototype.$end = function(size)
   var x = this.m_end;
   if (x < 0) x = size + x;
   if (this.m_exclusive) x--;
-  if (x >= size) throw new fan.sys.IndexErr(this);
+  if (x >= size) throw fan.sys.IndexErr.make(this);
   return x;
 }
 

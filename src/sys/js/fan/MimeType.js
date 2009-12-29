@@ -175,8 +175,8 @@ fan.sys.MimeType.forExt = function(s)
   }
   catch (err)
   {
-    fan.sys.Obj.echo("MimeType.forExt: " + s);
-    fan.sys.Obj.echo(err);
+    fan.sys.ObjUtil.echo("MimeType.forExt: " + s);
+    fan.sys.ObjUtil.echo(err);
     return null;
   }
 }

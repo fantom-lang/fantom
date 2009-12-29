@@ -18,11 +18,33 @@ fan.sys.Enum = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.sys.Enum.prototype.$ctor = function() {}
 
-fan.sys.Enum.prototype.make$ = function(ordinal, name)
+fan.sys.Enum.make = function(ordinal, name)
 {
-  if (name == null) throw new fan.sys.NullErr();
-  this.m_ordinal = ordinal;
-  this.m_name = name;
+  // should never be used
+  throw new Error();
+}
+
+fan.sys.Enum.make$ = function(self, ordinal, name)
+{
+  if (name == null) throw fan.sys.NullErr.make();
+  self.m_ordinal = ordinal;
+  self.m_name = name;
+}
+
+fan.sys.Enum.doFromStr = function(t, name, checked)
+{
+  // the compiler marks the value fields with the Enum flag
+  var slot = t.slot(name, false);
+  if (slot != null && (slot.m_flags & fan.sys.FConst.Enum) != 0)
+  {
+    try
+    {
+      return slot.get(null);
+    }
+    catch (err) {}
+  }
+  if (!checked) return null;
+  throw fan.sys.ParseErr.make(t.qname(), name);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -41,52 +63,9 @@ fan.sys.Enum.prototype.compare = function(that)
   return +1;
 }
 
-fan.sys.Enum.prototype.type = function()
-{
-  return fan.sys.Type.find("sys::Enum");
-}
+fan.sys.Enum.prototype.type = function()    { return fan.sys.Enum.$type; }
+fan.sys.Enum.prototype.toStr = function()   { return this.m_name; }
+fan.sys.Enum.prototype.ordinal = function() { return this.m_ordinal; }
+fan.sys.Enum.prototype.name = function()    { return this.m_name; }
 
-fan.sys.Enum.prototype.toStr = function()
-{
-  return this.m_name;
-}
 
-fan.sys.Enum.prototype.ordinal = function()
-{
-  return this.m_ordinal;
-}
-
-fan.sys.Enum.prototype.name = function()
-{
-  return this.m_name;
-}
-
-//////////////////////////////////////////////////////////////////////////
-// Static
-//////////////////////////////////////////////////////////////////////////
-
-fan.sys.Enum.make = function(ordinal, name)
-{
-  // should never be used
-  throw new Error();
-}
-
-/*
-fan.sys.Enum.doFromStr(t, name, checked)
-{
-  // the compiler marks the value fields with the Enum flag
-  Slot slot = t.slot(name, false);
-  if (slot != null && (slot.flags & FConst.Enum) != 0)
-  {
-    try
-    {
-      return (Enum)((Field)slot).get(null);
-    }
-    catch (Exception e)
-    {
-    }
-  }
-  if (!checked) return null;
-  throw ParseErr.make(t.qname(), name).val;
-}
-*/

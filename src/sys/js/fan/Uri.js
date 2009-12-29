@@ -110,7 +110,7 @@ fan.sys.Uri.makeSections = function(x)
   uri.m_host     = x.host;
   uri.m_port     = x.port;
   uri.m_pathStr  = x.pathStr;
-  uri.m_path     = fan.sys.List.ro(x.path);
+  uri.m_path     = x.path.ro();
   uri.m_queryStr = x.queryStr;
   uri.m_query    = x.query.ro();
   uri.m_frag     = x.frag;
@@ -121,9 +121,6 @@ fan.sys.Uri.makeSections = function(x)
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
-
-// parentRange - see sysPod.js
-// defVal - see sysPod.js
 
 fan.sys.Uri.prototype.m_str = null;
 fan.sys.Uri.prototype.m_scheme = null;
@@ -180,20 +177,20 @@ fan.sys.UriSections.prototype.normalizePath = function()
   var isDir = fan.sys.Str.endsWith(this.pathStr, "/");
   var dotLast = false;
   var modified = false;
-  for (var i=0; i<this.path.length; ++i)
+  for (var i=0; i<this.path.size(); ++i)
   {
-    var seg = this.path[i];
-    if (seg == "." && (this.path.length > 1 || this.host != null))
+    var seg = this.path.get(i);
+    if (seg == "." && (this.path.size() > 1 || this.host != null))
     {
-      fan.sys.List.removeAt(this.path, i);
+      this.path.removeAt(i);
       modified = true;
       dotLast = true;
       i -= 1;
     }
-    else if (seg == ".." && i > 0 && this.path[i-1].toString() != "..")
+    else if (seg == ".." && i > 0 && this.path.get(i-1).toString() != "..")
     {
-      fan.sys.List.removeAt(this.path, i);
-      fan.sys.List.removeAt(this.path, i-1);
+      this.path.removeAt(i);
+      this.path.removeAt(i-1);
       modified = true;
       i -= 2;
       dotLast = true;
@@ -207,7 +204,7 @@ fan.sys.UriSections.prototype.normalizePath = function()
   if (modified)
   {
     if (dotLast) isDir = true;
-    if (this.path.length == 0 || fan.sys.List.last(this.path).toString() == "..") isDir = false;
+    if (this.path.size() == 0 || this.path.last().toString() == "..") isDir = false;
     this.pathStr = fan.sys.Uri.toPathStr(isAbs, this.path, isDir);
   }
 }
@@ -389,7 +386,7 @@ fan.sys.UriDecoder.prototype.decode = function()
 
 fan.sys.UriDecoder.prototype.pathSegments = function(pathStr, numSegs)
 {
-  // if pathStr is "/" then path si the empty list
+  // if pathStr is "/" then path is the empty list
   var len = pathStr.length;
   if (len == 0 || (len == 1 && pathStr.charAt(0) == '/'))
     return fan.sys.Uri.emptyPath();
@@ -429,7 +426,7 @@ fan.sys.UriDecoder.prototype.pathSegments = function(pathStr, numSegs)
     n++;
   }
 
-  return fan.sys.List.make(fan.sys.Type.find("sys::Str"), path);
+  return fan.sys.List.make(fan.sys.Str.$type, path);
 }
 
 fan.sys.UriDecoder.prototype.decodeQuery = function()
@@ -811,8 +808,8 @@ fan.sys.Uri.prototype.isPathOnly = function()
 
 fan.sys.Uri.prototype.name = function()
 {
-  if (this.m_path.length == 0) return "";
-  return fan.sys.List.last(this.m_path);
+  if (this.m_path.size() == 0) return "";
+  return this.m_path.last();
 }
 
 fan.sys.Uri.prototype.basename = function()
@@ -858,10 +855,10 @@ fan.sys.Uri.prototype.frag = function() { return this.m_frag; }
 fan.sys.Uri.prototype.parent = function()
 {
   // if no path bail
-  if (this.m_path.length == 0) return null;
+  if (this.m_path.size() == 0) return null;
 
   // if just a simple filename, then no parent
-  if (this.m_path.length == 1 && !this.isPathAbs() && !this.isDir()) return null;
+  if (this.m_path.size() == 1 && !this.isPathAbs() && !this.isDir()) return null;
 
   // use slice
   return this.slice(fan.sys.Uri.parentRange);
@@ -893,7 +890,7 @@ fan.sys.Uri.prototype.slice = function(range, forcePathAbs)
   if (this.m_pathStr == null)
     throw fan.sys.Err.make("Uri has no path: " + this);
 
-  var size = this.m_path.length;
+  var size = this.m_path.size();
   var s = range.$start(size);
   var e = range.$end(size);
   var n = e - s + 1;
@@ -904,16 +901,16 @@ fan.sys.Uri.prototype.slice = function(range, forcePathAbs)
   if (head && tail && (!forcePathAbs || this.isPathAbs())) return this;
 
   var t = new fan.sys.UriSections();
-  t.path = fan.sys.List.slice(this.m_path, range);
+  t.path = this.m_path.slice(range);
 
   var sb = "";
   if ((head && this.isPathAbs()) || forcePathAbs) sb += '/';
-  for (var i=0; i<t.path.length; ++i)
+  for (var i=0; i<t.path.size(); ++i)
   {
     if (i > 0) sb += '/';
-    sb += t.path[i];
+    sb += t.path.get(i);
   }
-  if (t.path.length > 0 && (!tail || this.isDir())) sb += '/';
+  if (t.path.size() > 0 && (!tail || this.isDir())) sb += '/';
   t.pathStr = sb;
 
   if (head)
@@ -964,20 +961,29 @@ fan.sys.Uri.prototype.relTo = function(base)
 
   // find divergence
   var d=0;
-  var len = Math.min(this.m_path.length, base.m_path.length);
+  var len = Math.min(this.m_path.size(), base.m_path.size());
   for (; d<len; ++d)
-    if (this.m_path[d] != base.m_path[d])
+    if (this.m_path.get(d) != base.m_path.get(d))
       break;
 
   // if diverenge is at root, then no commonality
   if (d == 0)
   {
-    t.path = this.m_path;
-    t.pathStr = this.m_pathStr;
+    // `/a/b/c`.relTo(`/`) should be `a/b/c`
+    if (base.m_path.isEmpty() && fan.sys.Str.startsWith(this.m_pathStr, "/"))
+    {
+      t.path = this.m_path;
+      t.pathStr = this.m_pathStr.substring(1);
+    }
+    else
+    {
+      t.path = this.m_path;
+      t.pathStr = this.m_pathStr;
+    }
   }
 
   // if paths are exactly the same
-  else if (d == this.m_path.length && d == base.m_path.length)
+  else if (d == this.m_path.size() && d == base.m_path.size())
   {
     t.path = fan.sys.Uri.emptyPath();
     t.pathStr = "";
@@ -987,12 +993,12 @@ fan.sys.Uri.prototype.relTo = function(base)
   else
   {
     // slice my path
-    t.path = fan.sys.List.slice(this.m_path, fan.sys.Range.makeInclusive(d, -1));
+    t.path = this.m_path.slice(fan.sys.Range.makeInclusive(d, -1));
 
     // insert .. backup if needed
-    var backup = base.m_path.length - d;
+    var backup = base.m_path.size() - d;
     if (!base.isDir()) backup--;
-    while (backup-- > 0) fan.sys.List.insert(t.path, 0, "..");
+    while (backup-- > 0) t.path.insert(0, "..");
 
     // format the new path string
     t.pathStr = fan.sys.Uri.toPathStr(false, t.path, this.isDir());
@@ -1074,24 +1080,24 @@ fan.sys.Uri.merge = function(t, base, r)
   // compute the target path taking into account whether
   // the base is a dir and any dot segments in relative ref
   var tPath;
-  if (base.m_path.length == 0)
+  if (base.m_path.size() == 0)
   {
     tPath = r.m_path;
   }
   else
   {
-    tPath = fan.sys.List.rw(base.m_path);
-    if (!baseIsDir) fan.sys.List.pop(tPath);
-    for (var i=0; i<rPath.length; ++i)
+    tPath = base.m_path.rw();
+    if (!baseIsDir) tPath.pop();
+    for (var i=0; i<rPath.size(); ++i)
     {
-      var rSeg = rPath[i];
+      var rSeg = rPath.get(i);
       if (rSeg == ".") { dotLast = true; continue; }
       if (rSeg == "..")
       {
-        if (tPath.length > 0) { fan.sys.List.pop(tPath); dotLast = true; continue; }
+        if (tPath.size() > 0) { tPath.pop(); dotLast = true; continue; }
         if (baseIsAbs) continue;
       }
-      tPath.push(rSeg); dotLast = false;
+      tPath.add(rSeg); dotLast = false;
     }
   }
 
@@ -1103,10 +1109,10 @@ fan.sys.Uri.toPathStr = function(isAbs, path, isDir)
 {
   var buf = '';
   if (isAbs) buf += '/';
-  for (var i=0; i<path.length; ++i)
+  for (var i=0; i<path.size(); ++i)
   {
     if (i > 0) buf += '/';
-    buf += path[i];
+    buf += path.get(i);
   }
   if (isDir && !(buf.length > 0 && buf.charAt(buf.length-1) == '/'))
     buf += '/';
@@ -1115,11 +1121,11 @@ fan.sys.Uri.toPathStr = function(isAbs, path, isDir)
 
 fan.sys.Uri.prototype.plusName = function(name, asDir)
 {
-  var size    = this.m_path.length;
-  var isDir   = this.isDir();
-  var newSize = isDir ? size + 1 : size;
-  var temp    = fan.sys.List.dup(this.m_path);
-  temp[newSize-1]  = name;
+  var size        = this.m_path.size();
+  var isDir       = this.isDir();
+  var newSize     = isDir ? size + 1 : size;
+  var temp        = this.m_path.dup().m_values;
+  temp[newSize-1] = name;
 
   var t = new fan.sys.UriSections();
   t.scheme   = this.m_scheme;
@@ -1129,7 +1135,7 @@ fan.sys.Uri.prototype.plusName = function(name, asDir)
   t.query    = fan.sys.Uri.emptyQuery();
   t.queryStr = null;
   t.frag     = null;
-  t.path     = fan.sys.List.make(fan.sys.Type.find("sys::Str"), temp);
+  t.path     = fan.sys.List.make(fan.sys.Str.$type, temp);
   t.pathStr  = fan.sys.Uri.toPathStr(this.isPathAbs(), t.path, asDir);
   return fan.sys.Uri.makeSections(t);
 }
@@ -1338,9 +1344,8 @@ fan.sys.Uri.emptyPath = function()
   var p = fan.sys.Uri.$emptyPath;
   if (p == null)
   {
-    p = fan.sys.List.make(fan.sys.Type.find("sys::Str"), []);
-    p = fan.sys.List.toImmutable(p);
-    fan.sys.Uri.$emptyPath = p;
+    p = fan.sys.Uri.$emptyPath =
+      fan.sys.List.make(fan.sys.Str.$type, []).toImmutable();
   }
   return p;
 }
@@ -1352,7 +1357,7 @@ fan.sys.Uri.emptyQuery = function()
   if (q == null)
   {
     q = fan.sys.Uri.$emptyQuery =
-      new fan.sys.Map(fan.sys.Type.find("sys::Str"), fan.sys.Type.find("sys::Str")).toImmutable();
+      new fan.sys.Map(fan.sys.Str.$type, fan.sys.Str.$type).toImmutable();
   }
   return q;
 }

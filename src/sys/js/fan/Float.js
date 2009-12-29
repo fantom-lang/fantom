@@ -80,6 +80,12 @@ fan.sys.Float.pow   = function(self, exp) { return fan.sys.Float.make(Math.pow(s
 fan.sys.Float.round = function(self) { return fan.sys.Float.make(Math.round(self)); }
 fan.sys.Float.sqrt  = function(self) { return fan.sys.Float.make(Math.sqrt(self)); }
 
+// arithmetic
+fan.sys.Float.plus  = function(a,b) { return fan.sys.Float.make(a+b); }
+fan.sys.Float.minus = function(a,b) { return fan.sys.Float.make(a-b); }
+fan.sys.Float.mult  = function(a,b) { return fan.sys.Float.make(a*b); }
+fan.sys.Float.div   = function(a,b) { return fan.sys.Float.make(a/b); }
+
 // Trig
 fan.sys.Float.acos  = function(self) { return Math.acos(self); }
 fan.sys.Float.asin  = function(self) { return Math.asin(self); }
@@ -103,7 +109,7 @@ fan.sys.Float.fromStr = function(s, checked)
   if (isNaN(s))
   {
     if (checked != null && !checked) return null;
-    throw new fan.sys.ParseErr("Float", s);
+    throw fan.sys.ParseErr.make("Float", s);
   }
   return fan.sys.Float.make(parseFloat(s));
 }

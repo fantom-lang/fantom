@@ -21,6 +21,10 @@ fan.sys.Test.prototype.$ctor = function()
   this.verifyCount = 0;
 }
 
+fan.sys.Test.make$ = function(self)
+{
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
@@ -42,7 +46,7 @@ fan.sys.Test.prototype.verifyNull = function(a, msg)
   if (msg === undefined) msg = null;
   if (a != null)
   {
-    if (msg == null) msg = fan.sys.Obj.toStr(a) + " is not null";
+    if (msg == null) msg = fan.sys.ObjUtil.toStr(a) + " is not null";
     this.fail(msg);
   }
   this.verifyCount++;
@@ -53,7 +57,7 @@ fan.sys.Test.prototype.verifyNotNull = function(a, msg)
   if (msg === undefined) msg = null;
   if (a == null)
   {
-    if (msg == null) msg = fan.sys.Obj.toStr(a) + " is null";
+    if (msg == null) msg = fan.sys.ObjUtil.toStr(a) + " is null";
     this.fail(msg);
   }
   this.verifyCount++;
@@ -61,9 +65,9 @@ fan.sys.Test.prototype.verifyNotNull = function(a, msg)
 
 fan.sys.Test.prototype.verifyEq = function(expected, actual, msg)
 {
-  if (!fan.sys.Obj.equals(expected, actual))
+  if (!fan.sys.ObjUtil.equals(expected, actual))
   {
-    if (msg == null) msg = fan.sys.Obj.toStr(expected) + " != " + fan.sys.Obj.toStr(actual);
+    if (msg == null) msg = fan.sys.ObjUtil.toStr(expected) + " != " + fan.sys.ObjUtil.toStr(actual);
     this.fail(msg);
   }
   /*
@@ -82,9 +86,9 @@ fan.sys.Test.prototype.verifyEq = function(expected, actual, msg)
 
 fan.sys.Test.prototype.verifyNotEq = function(expected, actual, msg)
 {
-  if (fan.sys.Obj.equals(expected, actual))
+  if (fan.sys.ObjUtil.equals(expected, actual))
   {
-    if (msg == null) msg = fan.sys.Obj.toStr(expected) + " == " + fan.sys.Obj.toStr(actual);
+    if (msg == null) msg = fan.sys.ObjUtil.toStr(expected) + " == " + fan.sys.ObjUtil.toStr(actual);
     this.fail(msg);
   }
   this.verifyCount++;
@@ -92,9 +96,9 @@ fan.sys.Test.prototype.verifyNotEq = function(expected, actual, msg)
 
 fan.sys.Test.prototype.verifySame = function(expected, actual, msg)
 {
-  if (!fan.sys.Obj.equals(expected, actual))
+  if (!fan.sys.ObjUtil.equals(expected, actual))
   {
-    if (msg == null) msg = fan.sys.Obj.toStr(expected) + " !== " + fan.sys.Obj.toStr(actual);
+    if (msg == null) msg = fan.sys.ObjUtil.toStr(expected) + " !== " + fan.sys.ObjUtil.toStr(actual);
     this.fail(msg);
   }
   this.verifyCount++;
@@ -102,19 +106,24 @@ fan.sys.Test.prototype.verifySame = function(expected, actual, msg)
 
 fan.sys.Test.prototype.verifyNotSame = function(expected, actual, msg)
 {
-  if (fan.sys.Obj.equals(expected == actual))
+  if (fan.sys.ObjUtil.equals(expected == actual))
   {
-    if (msg == null) msg = fan.sys.Obj.toStr(expected) + " === " + fan.sys.Obj.toStr(actual);
+    if (msg == null) msg = fan.sys.ObjUtil.toStr(expected) + " === " + fan.sys.ObjUtil.toStr(actual);
     this.fail(msg);
   }
   this.verifyCount++;
 }
 
-fan.sys.Test.prototype.verifyErr = function(errType, f)
+fan.sys.Test.prototype.verifyType = function(obj, t)
+{
+  this.verifyEq(fan.sys.Type.of(obj), t);
+}
+
+fan.sys.Test.prototype.verifyErr = function(errType, func)
 {
   try
   {
-    f();
+    func.call();
   }
   catch (err)
   {
@@ -135,9 +144,9 @@ fan.sys.Test.prototype.fail = function(msg)
 fan.sys.Test.prototype.err = function(msg)
 {
   if (msg == null)
-    return new fan.sys.Err("Test failed");
+    return fan.sys.Err.make("Test failed");
   else
-    return new fan.sys.Err("Test failed: " + msg);
+    return fan.sys.Err.make("Test failed: " + msg);
 }
 
 fan.sys.Test.prototype.type = function()
@@ -151,7 +160,7 @@ fan.sys.Test.prototype.type = function()
 
 function TestException(msg)
 {
-  this.msg  = msg;
+  this.mge = msg;
   this.name = "TestException";
 }
 

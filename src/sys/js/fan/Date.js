@@ -115,7 +115,7 @@ fan.sys.Date.prototype.plus = function(d)
 
   // check even number of days
   if (ticks % fan.sys.Duration.nsPerDay != 0)
-    throw new fan.sys.ArgErr("Duration must be even num of days");
+    throw fan.sys.ArgErr.make("Duration must be even num of days");
 
   var year = this.m_year;
   var month = this.m_month;
@@ -226,7 +226,7 @@ fan.sys.Date.fromStr = function(s, checked)
   catch (err)
   {
     if (checked != null && !checked) return null;
-    throw new fan.sys.ParseErr("Date", s);
+    throw fan.sys.ParseErr.make("Date", s);
   }
 }
 

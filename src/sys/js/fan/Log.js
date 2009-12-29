@@ -15,7 +15,7 @@ fan.sys.Log = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.sys.Log.prototype.$ctor = function() {}
 fan.sys.Log.prototype.type = function() { return fan.sys.Type.find("sys::Log"); }
 
-fan.sys.Log.prototype.err = function(msg, err) { this.log(msg, err); }
+fan.sys.Log.prototype.err  = function(msg, err) { this.log(msg, err); }
 fan.sys.Log.prototype.info = function(msg, err) { this.log(msg, err); }
 fan.sys.Log.prototype.warn = function(msg, err) { this.log(msg, err); }
 

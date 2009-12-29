@@ -25,6 +25,20 @@ fan.sys.Field.prototype.$ctor = function(parent, name, flags, of)
   this.m_of     = of;
   this.m_$name  = this.$name(name);
   this.m_$qname = this.m_parent.m_$qname + '.m_' + this.m_$name;
+  this.m_getter = null;
+  this.m_setter = null;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Obj
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Field.prototype.trap = function(name, args)
+{
+  // private undocumented access
+  if (name == "getter") return this.m_getter;
+  if (name == "setter") return this.m_setter;
+  return fan.sys.Obj.prototype.trap.call(this, name, args);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -79,8 +93,8 @@ fan.sys.Field.prototype.set = function(instance, value, checkConst)
   //}
   if (value != null)
   {
-    if (!fan.sys.Obj.type(value).is(this.m_of))
-      throw fan.sys.ArgErr.make("Wrong type for field " + this.m_qname + ": " + this.m_of + " != " + fan.sys.Obj.type(value));
+    if (!fan.sys.ObjUtil.type(value).is(this.m_of))
+      throw fan.sys.ArgErr.make("Wrong type for field " + this.m_qname + ": " + this.m_of + " != " + fan.sys.ObjUtil.type(value));
   }
 
   // TODO
@@ -106,5 +120,5 @@ fan.sys.Field.prototype.set = function(instance, value, checkConst)
   }
 }
 
-fan.sys.Field.prototype.type = function() { return fan.sys.Type.find("sys::Field"); }
+fan.sys.Field.prototype.type = function() { return fan.sys.Field.$type; }
 

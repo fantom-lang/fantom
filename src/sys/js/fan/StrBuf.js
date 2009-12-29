@@ -32,7 +32,7 @@ fan.sys.StrBuf.prototype.type = function()
 
 fan.sys.StrBuf.prototype.add = function(obj)
 {
-  this.m_str += obj==null ? "null" : fan.sys.Obj.toStr(obj);
+  this.m_str += obj==null ? "null" : fan.sys.ObjUtil.toStr(obj);
   return this;
 }
 
@@ -74,7 +74,7 @@ fan.sys.StrBuf.prototype.set = function(i, ch)
 fan.sys.StrBuf.prototype.join = function(x, sep)
 {
   if (sep === undefined) sep = " ";
-  var s = (x == null) ? "null" : fan.sys.Obj.toStr(x);
+  var s = (x == null) ? "null" : fan.sys.ObjUtil.toStr(x);
   if (this.m_str.length > 0) this.m_str += sep;
   this.m_str += s;
   return this;
@@ -82,7 +82,7 @@ fan.sys.StrBuf.prototype.join = function(x, sep)
 
 fan.sys.StrBuf.prototype.insert = function(i, x)
 {
-  var s = (x == null) ? "null" : fan.sys.Obj.toStr(x);
+  var s = (x == null) ? "null" : fan.sys.ObjUtil.toStr(x);
   if (i < 0) i = this.m_str.length+i;
   if (i < 0 || i > this.m_str.length) throw fan.sys.IndexErr.make(i);
   this.m_str = this.m_str.substr(0,i) + s + this.m_str.substr(i);

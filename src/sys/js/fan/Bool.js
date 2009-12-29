@@ -19,7 +19,7 @@ fan.sys.Bool = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.sys.Bool.prototype.$ctor = function() {}
 
 //////////////////////////////////////////////////////////////////////////
-// Methods
+// Identity
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.Bool.prototype.type = function()
@@ -28,17 +28,27 @@ fan.sys.Bool.prototype.type = function()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Static
+// Operators
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Bool.not = function(self)    { return !self; }
+fan.sys.Bool.and = function(self, b) { return self && b; }
+fan.sys.Bool.or  = function(self, b) { return self || b; }
+fan.sys.Bool.xor = function(self, b) { return self != b; }
+
+//////////////////////////////////////////////////////////////////////////
+// Str
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.Bool.fromStr = function(s, checked)
 {
+  if (checked === undefined) checked = true;
   if (s == "true") return true;
   if (s == "false") return false;
-  if (checked != null && !checked) return null;
-  throw new fan.sys.ParseErr("Bool", s);
+  if (!checked) return null;
+  throw fan.sys.ParseErr.make("Bool", s);
 }
 
 fan.sys.Bool.toStr  = function(self) { return self ? "true" : "false"; }
 fan.sys.Bool.toCode = function(self) { return self ? "true" : "false"; }
-fan.sys.Bool.m_defVal = false;
+
