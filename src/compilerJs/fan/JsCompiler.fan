@@ -52,24 +52,58 @@ class JsCompiler : Compiler
 
   override Void backend()
   {
-    Init(this).run
-    FindTypes(this).run
-    Translate(this).run
-    Cleanup(this).run
+    init
+    jsPod.write(JsWriter(out))
+    cleanup
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Steps
+//////////////////////////////////////////////////////////////////////////
+
+  Void init()
+  {
+    // TODO - is the correct behavoir?
+    // if compiling script, force
+    if (input.mode == CompilerInputMode.str) force = true
+    output = CompilerOutput()
+    output.mode = input.output
+
+    // redirect to buf if output is str
+    if (output.mode == CompilerOutputMode.str)
+    {
+      buf = Buf()
+      out = buf.out
+    }
+
+    // find natives to compile
+    natives = Str:File[:]
+    if (nativeDirs != null) {
+      nativeDirs.each |dir| {
+        dir.listFiles.each |f| { natives[f.name] = f }
+      }
+    }
+
+    // define pod
+    jsPod = JsPod(CompilerSupport(this), pod, types)
+  }
+
+  Void cleanup()
+  {
+    // if str target, copy buf contents back into output
+    if (output.mode == CompilerOutputMode.str)
+      output.str = buf.flip.in.readAllStr
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  OutStream? out                 // output of compiler
-  Buf? buf                       // Init/Cleanup
-  Bool force := false            // FindTypes; force compile all types
-  TypeDef[]? toCompile           // FindTypes
-  TypeDef[] synth := TypeDef[,]  // FindTypes
-  File[]? nativeDirs             // FindTypes; dir to look for js natives
-  [Str:File]? natives            // FindTypes
-  JsPod? jsPod                   // FindTypes
-  //JsType[]? jsTypes              // JsTypes
+  OutStream? out        // output of compiler
+  Buf? buf              // buf output for str output
+  Bool force := false   // force compile all types
+  File[]? nativeDirs    // dir to look for js natives
+  [Str:File]? natives   // native filename map
+  JsPod? jsPod          // JsPod AST
 
 }

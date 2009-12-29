@@ -12,7 +12,7 @@
 **
 
 @podDepends = [Depend("sys 1.0"), Depend("compiler 1.0"), Depend("build 1.0")]
-@podSrcDirs = [`fan/`, `fan/ast/`, `fan/steps/`, `fan/runner/`]
+@podSrcDirs = [`fan/`, `fan/ast/`, `fan/runner/`]
 @docsrc
 
 pod compilerJs {}
