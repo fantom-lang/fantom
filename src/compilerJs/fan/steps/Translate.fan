@@ -35,7 +35,6 @@ class Translate : JsCompilerStep
     this.out = JsWriter(compiler.out)
     this.natives = compiler.natives?.dup ?: Str:File[:]
 
-    JsPod(support, compiler.pod, compiler.toCompile).write(out)
     writeTypes
     writeNatives
 
@@ -48,9 +47,10 @@ class Translate : JsCompilerStep
 
   Void writeTypes()
   {
-    jsTypes := JsType[,]
+    //compiler.jsTypes = JsType[,]
 
     // compile types
+    /*
     compiler.toCompile.each |def|
     {
       // we inline closures directly, so no need to generate
@@ -72,21 +72,31 @@ class Translate : JsCompilerStep
       // compile type
       t := JsType(support, def)
       t.write(out)
-      jsTypes.add(t)
+      compiler.jsTypes.add(t)
     }
+    */
+
+    // emit type info
+    compiler.jsPod.write(out)
 
     // emit static inits
-    jsTypes.each |t|
+    /*
+    compiler.jsTypes.each |t|
     {
       if (t.staticInit != null)
         out.w("${t.qname}.$t.staticInit();").nl
     }
+    */
 
     // emit referenced synthentic types
+    /*
     compiler.synth.each |def|
     {
-      JsType(support, def).write(out)
+      t := JsType(support, def)
+      t.write(out)
+      compiler.jsTypes.add(t)
     }
+    */
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -95,12 +105,14 @@ class Translate : JsCompilerStep
 
   Void writeNatives()
   {
+    /*
     natives.each |f|
     {
       in := f.in
       minify(in, compiler.out)
       in.close
     }
+    */
   }
 
   Void minify(InStream in, OutStream out)

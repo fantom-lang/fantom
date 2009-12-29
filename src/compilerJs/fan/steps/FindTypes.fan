@@ -35,6 +35,7 @@ class FindTypes : JsCompilerStep
     log.debug("FindTypes")
 
     // find types to compile
+    /*
     compiler.toCompile = types.findAll |def|
     {
       // check for forced or @js facet
@@ -42,16 +43,19 @@ class FindTypes : JsCompilerStep
       if (def.hasMarkerFacet("sys::js")) return true
       return false
     }
+    */
 
     // find natives to compile
+    compiler.natives = Str:File[:]
     if (compiler.nativeDirs != null)
     {
-      compiler.natives = Str:File[:]
       compiler.nativeDirs.each |dir|
       {
-        dir.listFiles.each |f| { compiler.natives[f.basename] = f }
+        dir.listFiles.each |f| { compiler.natives[f.name] = f }
       }
     }
+
+    compiler.jsPod = JsPod(CompilerSupport(compiler), compiler.pod, compiler.types)
   }
 
 }

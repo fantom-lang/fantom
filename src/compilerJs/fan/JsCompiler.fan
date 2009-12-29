@@ -69,5 +69,7 @@ class JsCompiler : Compiler
   TypeDef[] synth := TypeDef[,]  // FindTypes
   File[]? nativeDirs             // FindTypes; dir to look for js natives
   [Str:File]? natives            // FindTypes
+  JsPod? jsPod                   // FindTypes
+  //JsType[]? jsTypes              // JsTypes
 
 }

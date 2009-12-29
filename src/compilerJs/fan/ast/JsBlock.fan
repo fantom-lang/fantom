@@ -13,11 +13,9 @@ using compiler
 **
 class JsBlock : JsNode
 {
-  new make(CompilerSupport support, Block block, Bool inClosure)
-    : super(support)
+  new make(CompilerSupport support, Block block) : super(support)
   {
-    this.inClosure = inClosure
-    this.stmts = block.stmts.map |s->JsStmt| { JsStmt.makeFor(support, s, inClosure) }
+    this.stmts = block.stmts.map |s->JsStmt| { JsStmt.makeFor(support, s) }
   }
 
   override Void write(JsWriter out)
@@ -30,5 +28,4 @@ class JsBlock : JsNode
   }
 
   JsStmt[] stmts   // statements for this block
-  Bool inClosure   // does this block occur inside a closure
 }
