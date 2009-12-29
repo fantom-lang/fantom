@@ -58,10 +58,10 @@ fan.fwt.ComboPeer.prototype.rebuild = function(self)
     select.removeChild(select.firstChild);
 
   // add new items
-  for (var i=0; i<this.m_items.length; i++)
+  for (var i=0; i<this.m_items.size(); i++)
   {
     var option = document.createElement("option");
-    option.appendChild(document.createTextNode(this.m_items[i]));
+    option.appendChild(document.createTextNode(this.m_items.get(i)));
     select.appendChild(option);
   }
 }
@@ -93,7 +93,7 @@ fan.fwt.ComboPeer.prototype.sync = function(self)
       me.m_id = fan.fwt.EventId.m_modified;
       me.m_widget = self;
       var list = self.m_onModify.list();
-      for (var i=0; i<list.length; i++) list[i](me);
+      for (var i=0; i<list.size(); i++) list.get(i).call(me);
     }
   }
 

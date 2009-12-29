@@ -105,10 +105,11 @@ fan.fwt.Graphics.prototype.drawLine = function(x1, y1, x2, y2)
 fan.fwt.Graphics.prototype.drawPolyline = function(p)
 {
   this.cx.beginPath();
-  for (var i=0; i<p.length; i++)
+  for (var i=0; i<p.size(); i++)
   {
-    if (i == 0) this.cx.moveTo(p[i].m_x+0.5, p[i].m_y+0.5);
-    else this.cx.lineTo(p[i].m_x+0.5, p[i].m_y+0.5);
+    var pt = p.get(i);
+    if (i == 0) this.cx.moveTo(pt.m_x+0.5, pt.m_y+0.5);
+    else this.cx.lineTo(pt.m_x+0.5, pt.m_y+0.5);
   }
   this.cx.stroke();
   return this;
@@ -118,10 +119,11 @@ fan.fwt.Graphics.prototype.drawPolyline = function(p)
 fan.fwt.Graphics.prototype.drawPolygon = function(p)
 {
   this.cx.beginPath();
-  for (var i=0; i<p.length; i++)
+  for (var i=0; i<p.size(); i++)
   {
-    if (i == 0) this.cx.moveTo(p[i].m_x+0.5, p[i].m_y+0.5);
-    else this.cx.lineTo(p[i].m_x+0.5, p[i].m_y+0.5);
+    var pt = p.get(i);
+    if (i == 0) this.cx.moveTo(pt.m_x+0.5, pt.m_y+0.5);
+    else this.cx.lineTo(pt.m_x+0.5, pt.m_y+0.5);
   }
   this.cx.closePath();
   this.cx.stroke();
@@ -132,10 +134,11 @@ fan.fwt.Graphics.prototype.drawPolygon = function(p)
 fan.fwt.Graphics.prototype.fillPolygon = function(p)
 {
   this.cx.beginPath();
-  for (var i=0; i<p.length; i++)
+  for (var i=0; i<p.size(); i++)
   {
-    if (i == 0) this.cx.moveTo(p[i].m_x, p[i].m_y);
-    else this.cx.lineTo(p[i].m_x, p[i].m_y);
+    var pt = p.get(i);
+    if (i == 0) this.cx.moveTo(pt.m_x, pt.m_y);
+    else this.cx.lineTo(pt.m_x, pt.m_y);
   }
   this.cx.closePath();
   this.cx.fill();

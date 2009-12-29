@@ -41,7 +41,7 @@ fan.fwt.WindowPeer.prototype.close = function(self, result)
   event.m_data = result;
 
   var list = self.m_onClose.list();
-  for (var i=0; i<list.length; i++) list[i](event);
+  for (var i=0; i<list.size(); i++) list.get(i).call(event);
 }
 
 fan.fwt.WindowPeer.prototype.sync = function(self)

@@ -56,12 +56,12 @@ fan.fwt.MenuItemPeer.prototype.create = function(parentElem, self)
   {
     if (!self.peer.m_enabled) return;
 
-    var evt = new fan.fwt.Event();
+    var evt = fan.fwt.Event.make();
     evt.id = fan.fwt.EventId.m_action;
     evt.widget = self;
 
     var list = self.m_onAction.list();
-    for (var i=0; i<list.length; i++) list[i](evt);
+    for (var i=0; i<list.size(); i++) list.get(i).call(evt);
   }
 
   parentElem.appendChild(div);

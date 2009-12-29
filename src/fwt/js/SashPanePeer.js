@@ -22,9 +22,9 @@ fan.fwt.SashPanePeer.prototype.prefSize = function(self, hints)
   if (self.m_orientation == fan.gfx.Orientation.m_horizontal)
   {
     var max = 0;
-    for (var i=0; i<self.m_kids.length; i++)
+    for (var i=0; i<self.m_kids.size(); i++)
     {
-      var pref = self.m_kids[i].prefSize();
+      var pref = self.m_kids.get(i).prefSize();
       max = Math.max(max, pref.m_w);
     }
     return fan.gfx.Size.make(max, 10);
@@ -32,9 +32,9 @@ fan.fwt.SashPanePeer.prototype.prefSize = function(self, hints)
   else
   {
     var max = 0;
-    for (var i=0; i<self.m_kids.length; i++)
+    for (var i=0; i<self.m_kids.size(); i++)
     {
-      var pref = self.m_kids[i].prefSize();
+      var pref = self.m_kids.get(i).prefSize();
       max = Math.max(max, pref.m_h);
     }
     return fan.gfx.Size.make(10, max);
@@ -43,8 +43,8 @@ fan.fwt.SashPanePeer.prototype.prefSize = function(self, hints)
 
 fan.fwt.SashPanePeer.prototype.sync = function(self)
 {
-  if (this.m_weights != null && this.m_weights.length != self.m_kids.length)
-    throw new fan.sys.ArgErr.make("weights.size != kids.length");
+  if (this.m_weights != null && this.m_weights.size() != self.m_kids.size())
+    throw fan.sys.ArgErr.make("weights.size != kids.size");
 
   if (self.m_orientation == fan.gfx.Orientation.m_horizontal)
     this.doHoriz(self);
@@ -60,18 +60,18 @@ fan.fwt.SashPanePeer.prototype.doHoriz = function(self)
   var wt = this.m_weights;
 
   var dy = 0;
-  var dh = Math.floor(h /self.m_kids.length);
+  var dh = Math.floor(h /self.m_kids.size());
 
-  for (var i=0; i<self.m_kids.length; i++)
+  for (var i=0; i<self.m_kids.size(); i++)
   {
     var cw = w;
-    var ch = wt==null ? dh : Math.floor(h * (wt[i].valueOf() / 100));
+    var ch = wt==null ? dh : Math.floor(h * (wt.get(i).valueOf() / 100));
 
     // if last widget, force to fill remaining space
-    if (i == self.m_kids.length-1) ch = h-dy;
+    if (i == self.m_kids.size()-1) ch = h-dy;
 
-    self.m_kids[i].pos$(fan.gfx.Point.make(0, dy));
-    self.m_kids[i].size$(fan.gfx.Size.make(cw, ch));
+    self.m_kids.get(i).pos$(fan.gfx.Point.make(0, dy));
+    self.m_kids.get(i).size$(fan.gfx.Size.make(cw, ch));
 
     dy += ch;
   }
@@ -84,18 +84,18 @@ fan.fwt.SashPanePeer.prototype.doVert = function(self)
   var wt = this.m_weights;
 
   var dx = 0;
-  var dw = Math.floor(w / self.m_kids.length);
+  var dw = Math.floor(w / self.m_kids.size());
 
-  for (var i=0; i<self.m_kids.length; i++)
+  for (var i=0; i<self.m_kids.size(); i++)
   {
-    var cw = wt==null ? dw : Math.floor(w * (wt[i].valueOf() / 100));
+    var cw = wt==null ? dw : Math.floor(w * (wt.get(i).valueOf() / 100));
     var ch = h;
 
     // if last widget, force to fill remaining space
-    if (i == self.m_kids.length-1) cw = w-dx;
+    if (i == self.m_kids.size()-1) cw = w-dx;
 
-    self.m_kids[i].pos$(fan.gfx.Point.make(dx, 0));
-    self.m_kids[i].size$(fan.gfx.Size.make(cw, ch));
+    self.m_kids.get(i).pos$(fan.gfx.Point.make(dx, 0));
+    self.m_kids.get(i).size$(fan.gfx.Size.make(cw, ch));
 
     dx += cw;
   }
