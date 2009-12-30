@@ -99,11 +99,11 @@ fan.sys.Obj.prototype.trap = function(name, args)
   }
   else
   {
-    var argSize = (args == null) ? 0 : args.length;
+    var argSize = (args == null) ? 0 : args.size();
     if (argSize == 0) return slot.get(this);
     if (argSize == 1) // one arg -> setter
     {
-      var val = args[0];
+      var val = args.get(0);
       slot.set(this, val);
       return val;
     }
