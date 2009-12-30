@@ -44,13 +44,13 @@ fan.sys.DateTime.now = function(tolerance)
   var now = (new Date().getTime() - fan.sys.DateTime.diffJs) * fan.sys.DateTime.nsPerMilli;
 
   if (fan.sys.DateTime.cached == null)
-    fan.sys.DateTime.cached = fan.sys.DateTime.makeTicks(0, fan.sys.TimeZone.current());
+    fan.sys.DateTime.cached = fan.sys.DateTime.makeTicks(0, fan.sys.TimeZone.cur());
 
   var c = fan.sys.DateTime.cached;
   if (tolerance != null && now - c.m_ticks <= tolerance.m_ticks)
       return c;
 
-  fan.sys.DateTime.cached = fan.sys.DateTime.makeTicks(now, fan.sys.TimeZone.current());
+  fan.sys.DateTime.cached = fan.sys.DateTime.makeTicks(now, fan.sys.TimeZone.cur());
   return fan.sys.DateTime.cached;
 }
 
@@ -87,7 +87,7 @@ fan.sys.DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
 {
   if (sec === undefined) sec = 0;
   if (ns  === undefined) ns = 0;
-  if (tz  === undefined) tz = fan.sys.TimeZone.current();
+  if (tz  === undefined) tz = fan.sys.TimeZone.cur();
 
   month = month.ordinal();
 
@@ -151,7 +151,7 @@ fan.sys.DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
 
 fan.sys.DateTime.makeDT = function(d, t, tz)
 {
-  if (tz === undefined) tz = TimeZone.current();
+  if (tz === undefined) tz = TimeZone.cur();
   return fan.sys.DateTime.make(
     d.year(), d.month(), d.day(),
     t.hour(), t.min(), t.sec(), t.nanoSec(), tz);
@@ -163,7 +163,7 @@ fan.sys.DateTime.makeDT = function(d, t, tz)
 
 fan.sys.DateTime.makeTicks = function(ticks, tz)
 {
-  if (tz === undefined) tz = fan.sys.TimeZone.current();
+  if (tz === undefined) tz = fan.sys.TimeZone.cur();
 
   // check boundary conditions 1901 to 2099
   if (ticks < fan.sys.DateTime.minTicks || ticks >= fan.sys.DateTime.maxTicks)
@@ -413,7 +413,7 @@ fan.sys.DateTime.prototype.toLocale = function(pattern, locale)
   // locale specific default
   if (pattern == null)
   {
-//    if (locale == null) locale = Locale.current();
+//    if (locale == null) locale = Locale.cur();
 //    pattern = locale.get("sys", localeKey, "D-MMM-YYYY WWW hh:mm:ss zzz");
 pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
   }
@@ -463,11 +463,11 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
         switch (n)
         {
           case 4:
-            if (locale == null) locale = fan.sys.Locale.current();
+            if (locale == null) locale = fan.sys.Locale.cur();
             s += mon.full(locale);
             break;
           case 3:
-            if (locale == null) locale = fan.sys.Locale.current();
+            if (locale == null) locale = fan.sys.Locale.cur();
             s += mon.abbr(locale);
             break;
           case 2:  if (mon.m_ordinal+1 < 10) s += '0';
@@ -491,11 +491,11 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
         switch (n)
         {
           case 4:
-            if (locale == null) locale = fan.sys.Locale.current();
+            if (locale == null) locale = fan.sys.Locale.cur();
             s += weekday.full(locale);
             break;
           case 3:
-            if (locale == null) locale = fan.sys.Locale.current();
+            if (locale == null) locale = fan.sys.Locale.cur();
             s += weekday.abbr(locale);
             break;
           default: invalidNum = true;

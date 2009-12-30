@@ -59,18 +59,12 @@ fan.sys.TimeZone.utc = function()
   return fan.sys.TimeZone.m_utc;
 }
 
-// TODO
-fan.sys.TimeZone.current = function()
-{
-  return fan.sys.TimeZone.cur();
-}
-
 fan.sys.TimeZone.cur = function()
 {
   // TODO
-  if (fan.sys.TimeZone.m_current == null)
-    fan.sys.TimeZone.m_current = fan.sys.TimeZone.fromStr("New_York");
-  return fan.sys.TimeZone.m_current;
+  if (fan.sys.TimeZone.m_cur == null)
+    fan.sys.TimeZone.m_cur = fan.sys.TimeZone.fromStr("New_York");
+  return fan.sys.TimeZone.m_cur;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -260,8 +254,8 @@ fan.sys.TimeZone.compareAtTime = function(rule, x, time)
 fan.sys.TimeZone.cache = [];
 fan.sys.TimeZone.names = [];
 fan.sys.TimeZone.fullNames = [];
-fan.sys.TimeZone.m_utc = null;      // lazy-loaded
-fan.sys.TimeZone.m_current = null;  // lazy-loaded
+fan.sys.TimeZone.m_utc = null;  // lazy-loaded
+fan.sys.TimeZone.m_cur = null;  // lazy-loaded
 
 
 /*************************************************************************
