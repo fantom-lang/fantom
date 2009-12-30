@@ -737,14 +737,17 @@ class JsCallExpr : JsExpr
     if (isDynamic)
     {
       if (hasFirstArg) out.w(",")
-      out.w("\"$dynamicName\"")
-      hasFirstArg = true
+      out.w("\"$dynamicName\",fan.sys.List.make(fan.sys.Obj.\$type.toNullable(),[")
+      hasFirstArg = false
     }
+
     args.each |arg,i|
     {
       if (hasFirstArg || i > 0) out.w(",")
       arg.write(out)
     }
+
+    if (isDynamic) out.w("])")
   }
 
   JsExpr? target         // call target
