@@ -181,7 +181,7 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, l
       evt.m_widget = self;
       //evt.count =
       //evt.key =
-      meth(evt);
+      meth.call(evt);
     }
 
     if (elem.addEventListener)
