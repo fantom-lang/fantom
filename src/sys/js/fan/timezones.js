@@ -1001,4 +1001,4 @@ fan.sys.TimeZone.fullNames.push("Etc/GMT-9");
 
 // DateTime.defVal
 fan.sys.DateTime.m_defVal = fan.sys.DateTime.make(2000, fan.sys.Month.m_jan, 1, 0, 0, 0, 0, fan.sys.TimeZone.utc());
-
+fan.sys.DateTime.m_boot = fan.sys.DateTime.now();
