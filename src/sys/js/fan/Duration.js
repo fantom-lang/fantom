@@ -106,6 +106,16 @@ fan.sys.Duration.make = function(ticks)
   return self;
 }
 
+fan.sys.Duration.makeMillis = function(ms)
+{
+  return fan.sys.Duration.make(ms*1000000);
+}
+
+fan.sys.Duration.makeSec = function(secs)
+{
+  return fan.sys.Duration.make(secs*1000000000);
+}
+
 fan.sys.Duration.prototype.$ctor = function(ticks)
 {
   this.m_ticks = 0;

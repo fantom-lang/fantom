@@ -66,7 +66,7 @@ fan.sys.DateTime.nowUtc = function(tolerance)
 
   var now = (new Date().getTime() - fan.sys.DateTime.diffJs) * fan.sys.DateTime.nsPerMilli;
 
- if (fan.sys.DateTime.cachedUtc == null)
+  if (fan.sys.DateTime.cachedUtc == null)
     fan.sys.DateTime.cachedUtc = fan.sys.DateTime.makeTicks(0, fan.sys.TimeZone.utc());
 
   var c = fan.sys.DateTime.cachedUtc;
@@ -75,6 +75,11 @@ fan.sys.DateTime.nowUtc = function(tolerance)
 
   fan.sys.DateTime.cachedUtc = fan.sys.DateTime.makeTicks(now, fan.sys.TimeZone.utc());
   return fan.sys.DateTime.cachedUtc;
+}
+
+fan.sys.DateTime.boot = function()
+{
+  return fan.sys.DateTime.m_boot;
 }
 
 //////////////////////////////////////////////////////////////////////////
