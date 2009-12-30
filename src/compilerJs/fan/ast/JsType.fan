@@ -62,6 +62,7 @@ class JsType : JsNode
     out.indent
     out.w("${base.qname}.prototype.\$ctor.call(this);").nl
     if (peer != null) out.w("this.peer = new ${peer.qname}Peer(this);").nl
+    out.w("var \$this = this;").nl
     instanceInit?.write(out)
     out.unindent
     out.w("}").nl
