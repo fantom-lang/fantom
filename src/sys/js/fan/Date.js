@@ -245,13 +245,13 @@ fan.sys.Date.prototype.isTomorrow  = function() { return this.equals(fan.sys.Dat
 
 fan.sys.Date.prototype.toDateTime = function(t, tz)
 {
-  if (tz === undefined) tz = fan.sys.TimeZone.current();
+  if (tz === undefined) tz = fan.sys.TimeZone.cur();
   return fan.sys.DateTime.makeDT(this, t, tz);
 }
 
 fan.sys.Date.prototype.midnight = function(tz)
 {
-  if (tz === undefined) tz = fan.sys.TimeZone.current();
+  if (tz === undefined) tz = fan.sys.TimeZone.cur();
   return fan.sys.DateTime.makeDT(this, fan.sys.Time.m_defVal, tz);
 }
 
