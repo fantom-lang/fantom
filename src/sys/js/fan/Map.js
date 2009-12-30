@@ -196,12 +196,12 @@ fan.sys.Map.prototype.m_ordered = false;
 // Iterators
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Map.prototype.each = function(func)
+fan.sys.Map.prototype.each = function(f)
 {
   for (var k in this.map)
   {
     var v = this.map[k];
-    func(v, k);
+    f.call(v, k);
   }
 }
 
