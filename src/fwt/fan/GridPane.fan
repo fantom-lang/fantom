@@ -174,6 +174,13 @@ internal class GridPaneSizes
 {
   new make(GridPane grid, Widget[] kids)
   {
+    // short-circuit if no kids
+    if (kids.isEmpty)
+    {
+      prefPane = Size.defVal
+      return
+    }
+
     // compute colw and rowh lists
     col := 0; row := 0
     kids.each |Widget kid|
