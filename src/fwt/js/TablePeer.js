@@ -379,7 +379,7 @@ fan.fwt.TableSelection.prototype.notify = function(primaryIndex)
     se.m_index  = primaryIndex;
     se.m_widget = this.table;
     var listeners = this.table.m_onSelect.list();
-    for (var i=0; i<listeners.size(); i++) fan.sys.Func.call(listeners.get(i), se);
+    for (var i=0; i<listeners.size(); i++) listeners.get(i).call(se);
   }
 }
 
