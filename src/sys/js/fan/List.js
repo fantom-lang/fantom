@@ -653,7 +653,7 @@ fan.sys.List.prototype.min = function(f)
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.List.prototype.sort = function(self, f)
+fan.sys.List.prototype.sort = function(f)
 {
   this.modify();
   if (f === undefined) f = null;
@@ -664,7 +664,7 @@ fan.sys.List.prototype.sort = function(self, f)
   return this;
 }
 
-fan.sys.List.prototype.sortr = function(self, f)
+fan.sys.List.prototype.sortr = function(f)
 {
   this.modify();
   if (f === undefined) f = null;
