@@ -34,13 +34,13 @@ fan.sys.Month.fromStr = function(name, checked)
 fan.sys.Month.prototype.increment = function()
 {
   var arr = fan.sys.Month.m_vals;
-  return arr[(this.m_ordinal+1) % arr.length];
+  return arr.get((this.m_ordinal+1) % arr.size());
 }
 
 fan.sys.Month.prototype.decrement = function()
 {
   var arr = fan.sys.Month.m_vals;
-  return this.m_ordinal == 0 ? arr[arr.length-1] : arr[this.m_ordinal-1];
+  return this.m_ordinal == 0 ? arr.get(arr.size()-1) : arr.get(this.m_ordinal-1);
 }
 
 fan.sys.Month.prototype.numDays = function(year)
