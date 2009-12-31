@@ -239,9 +239,9 @@ fan.sys.Date.fromIso = function(s, checked)
 // Misc
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Date.prototype.isYesterday = function() { return this.equals(fan.sys.Date.today().plus(fan.sys.Duration.negOneDay)); }
+fan.sys.Date.prototype.isYesterday = function() { return this.equals(fan.sys.Date.today().plus(fan.sys.Duration.m_negOneDay)); }
 fan.sys.Date.prototype.isToday     = function() { return this.equals(fan.sys.Date.today()); }
-fan.sys.Date.prototype.isTomorrow  = function() { return this.equals(fan.sys.Date.today().plus(fan.sys.Duration.oneDay)); }
+fan.sys.Date.prototype.isTomorrow  = function() { return this.equals(fan.sys.Date.today().plus(fan.sys.Duration.m_oneDay)); }
 
 fan.sys.Date.prototype.toDateTime = function(t, tz)
 {
