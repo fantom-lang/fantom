@@ -150,6 +150,28 @@ fan.sys.Map.prototype.setAll = function(m)
   return this;
 }
 
+fan.sys.Map.prototype.addList = function(list, f)
+{
+  //modify();
+  if (f === undefined) f = null;
+  if (f == null)
+  {
+    for (var i=0; i<list.size(); ++i)
+      this.add(list.get(i), list.get(i));
+  }
+  else if (f.m_params.size() == 1)
+  {
+    for (var i=0; i<list.size(); ++i)
+      this.add(f.call(list.get(i)), list.get(i));
+  }
+  else
+  {
+    for (var i=0; i<list.size(); ++i)
+      this.add(f.call(list.get(i), i), list.get(i));
+  }
+  return this;
+}
+
 fan.sys.Map.prototype.remove = function(key)
 {
   if (this.m_caseInsensitive) key = fan.sys.Str.lower(key);
