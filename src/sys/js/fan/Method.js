@@ -46,6 +46,7 @@ fan.sys.Method.prototype.type = function()
 // Call Conveniences
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.Method.prototype.callOn = function(target, args) { return this.invoke(target, args); }
 fan.sys.Method.prototype.call = function()
 {
   var instance = null;

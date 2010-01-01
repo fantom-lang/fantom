@@ -54,10 +54,5 @@ fan.sys.Func.prototype.returns = function() { return this.m_return; }
 
 fan.sys.Func.prototype.call = function() { return this.m_func.apply(null, arguments); }
 fan.sys.Func.prototype.callList = function(args) { return this.m_func.apply(null, args.m_values); }
-fan.sys.Func.prototype.callOn = function(obj, args)
-{
-  var acc = args.slice();
-  acc.unshift(obj);
-  return this.m_func.apply(null, acc);
-}
+fan.sys.Func.prototype.callOn = function(obj, args) { return this.m_func.apply(obj, args.m_values); }
 
