@@ -356,7 +356,7 @@ it-block expression:
     state  = "TX"
   }
 
-  // is syntax sugar for
+  // is syntax sugar for (note: can't actually use it as param name)
   Address.make.with |Address it|
   {
     it.street = "123 Happy Lane"
@@ -382,16 +382,16 @@ Here is an FWT example:
   Menu
   {
     text = "File"
-    MenuItem { text = "Open"; onSelect=&open },
-    MenuItem { text = "Save"; onSelect=&save },
+    MenuItem { text = "Open"; onSelect=#open.func } },
+    MenuItem { text = "Save"; onSelect=#save.func },
   }
 
-  // is syntax sugar for
+  // is syntax sugar for (note: can't actually use it as param name)
   Menu.make.with |Menu it|
   {
     it.text = "File"
-    it.add(MenuItem { text = "Open"; onSelect=&open })
-      .add(MenuItem { text = "Save"; onSelect=&save })
+    it.add(MenuItem { text = "Open"; onSelect=#open.func })
+     .add(MenuItem { text = "Save"; onSelect=#save.func })
   }
 
 Advanced Operators [#advances]
