@@ -47,7 +47,7 @@ public class StrInStream
     for (int i=0; i<nval; ++i)
     {
       int c = rChar();
-      if (c < 0) return Long.valueOf(i);
+      if (c < 0) return i == 0 ? null : Long.valueOf(i);
       buf.out.w(c);
     }
     return n;
