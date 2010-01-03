@@ -778,6 +778,7 @@ class JsShortcutExpr : JsCallExpr
   {
     this.symbol    = se.opToken.symbol
     this.isAssign  = se.isAssign
+    this.isPostfixLeave = se.isPostfixLeave
 
     switch (symbol)
     {
@@ -801,6 +802,23 @@ class JsShortcutExpr : JsCallExpr
 
   override Void write(JsWriter out)
   {
+    if (isPostfixLeave)
+    {
+      var := unique
+      old := thisName
+      thisName = "\$this"
+      out.w("(function(\$this) { var $var = ")
+      assignTarget.write(out)
+      out.w("; ")
+      doWrite(out)
+      out.w("; return $var; })($old)")
+      thisName = old
+    }
+    else doWrite(out)
+  }
+
+  Void doWrite(JsWriter out)
+  {
     if (isAssign)
     {
       assignTarget.write(out)
@@ -811,6 +829,7 @@ class JsShortcutExpr : JsCallExpr
 
   Str symbol            // the shortcut token symbol
   Bool isAssign         // does this expr assign
+  Bool isPostfixLeave   // is postfix expr
   JsExpr? assignTarget  // target of assignment
 }
 
