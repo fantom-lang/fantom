@@ -78,29 +78,29 @@ public final class MemBuf
     this.pos = (int)x;
   }
 
-  final int getByte(long pos)
+  public final int getByte(long pos)
   {
     return buf[(int)pos] & 0xFF;
   }
 
-  final void setByte(long pos, int x)
+  public final void setByte(long pos, int x)
   {
     buf[(int)pos] = (byte)x;
   }
 
-  final void getBytes(long pos, byte[] dest, int off, int len)
+  public final void getBytes(long pos, byte[] dest, int off, int len)
   {
     System.arraycopy(this.buf, (int)pos, dest, off, len);
   }
 
-  final void pipeTo(byte[] dst, int dstPos, int len)
+  public final void pipeTo(byte[] dst, int dstPos, int len)
   {
     if (pos + len > size) throw IOErr.make("Not enough bytes to write").val;
     System.arraycopy(buf, pos, dst, dstPos, len);
     pos += len;
   }
 
-  final void pipeTo(OutputStream dst, long lenLong)
+  public final void pipeTo(OutputStream dst, long lenLong)
     throws IOException
   {
     int len = (int)lenLong;
@@ -109,7 +109,7 @@ public final class MemBuf
     pos += len;
   }
 
-  final void pipeTo(RandomAccessFile dst, long lenLong)
+  public final void pipeTo(RandomAccessFile dst, long lenLong)
     throws IOException
   {
     int len = (int)lenLong;
@@ -118,14 +118,14 @@ public final class MemBuf
     pos += len;
   }
 
-  final void pipeTo(ByteBuffer dst, int len)
+  public final void pipeTo(ByteBuffer dst, int len)
   {
     if (pos + len > size) throw IOErr.make("Not enough bytes to write").val;
     dst.put(buf, pos, len);
     pos += len;
   }
 
-  final void pipeFrom(byte[] src, int srcPos, int len)
+  public final void pipeFrom(byte[] src, int srcPos, int len)
   {
     grow(pos+len);
     System.arraycopy(src, srcPos, buf, pos, len);
@@ -133,7 +133,7 @@ public final class MemBuf
     size = pos;
   }
 
-  final long pipeFrom(InputStream src, long lenLong)
+  public final long pipeFrom(InputStream src, long lenLong)
     throws IOException
   {
     int len = (int)lenLong;
@@ -145,7 +145,7 @@ public final class MemBuf
     return read;
   }
 
-  final long pipeFrom(RandomAccessFile src, long lenLong)
+  public final long pipeFrom(RandomAccessFile src, long lenLong)
     throws IOException
   {
     int len = (int)lenLong;
@@ -157,7 +157,7 @@ public final class MemBuf
     return read;
   }
 
-  final int pipeFrom(ByteBuffer src, int len)
+  public final int pipeFrom(ByteBuffer src, int len)
   {
     grow(pos+len);
     src.get(buf, pos, len);

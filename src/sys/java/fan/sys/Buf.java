@@ -68,19 +68,19 @@ public abstract class Buf
 // Support
 //////////////////////////////////////////////////////////////////////////
 
-  abstract int getByte(long pos);
-  abstract void getBytes(long pos, byte[] dst, int off, int len);
-  abstract void setByte(long pos, int x);
+  public abstract int getByte(long pos);
+  public abstract void getBytes(long pos, byte[] dst, int off, int len);
+  public abstract void setByte(long pos, int x);
 
-  abstract void pipeTo(byte[] dst, int dstPos, int len);
-  abstract void pipeTo(OutputStream dst, long len) throws IOException;
-  abstract void pipeTo(RandomAccessFile dst, long len) throws IOException;
-  abstract void pipeTo(ByteBuffer dst, int len);
+  public abstract void pipeTo(byte[] dst, int dstPos, int len);
+  public abstract void pipeTo(OutputStream dst, long len) throws IOException;
+  public abstract void pipeTo(RandomAccessFile dst, long len) throws IOException;
+  public abstract void pipeTo(ByteBuffer dst, int len);
 
-  abstract void pipeFrom(byte[] src, int srcPos, int len);
-  abstract long pipeFrom(InputStream src, long len) throws IOException;
-  abstract long pipeFrom(RandomAccessFile src, long len) throws IOException;
-  abstract int pipeFrom(ByteBuffer src, int len);
+  public abstract void pipeFrom(byte[] src, int srcPos, int len);
+  public abstract long pipeFrom(InputStream src, long len) throws IOException;
+  public abstract long pipeFrom(RandomAccessFile src, long len) throws IOException;
+  public abstract int pipeFrom(ByteBuffer src, int len);
 
 //////////////////////////////////////////////////////////////////////////
 // Access

@@ -60,17 +60,17 @@ public class MmapBuf
     mmap.position((int)x);
   }
 
-  final int getByte(long pos)
+  public final int getByte(long pos)
   {
     return mmap.get((int)pos) & 0xff;
   }
 
-  final void setByte(long pos, int x)
+  public final void setByte(long pos, int x)
   {
     mmap.put((int)pos, (byte)x);
   }
 
-  final void getBytes(long pos, byte[] dst, int off, int len)
+  public final void getBytes(long pos, byte[] dst, int off, int len)
   {
     int oldPos = mmap.position();
     mmap.position((int)pos);
@@ -78,12 +78,12 @@ public class MmapBuf
     mmap.position(oldPos);
   }
 
-  final void pipeTo(byte[] dst, int dstPos, int len)
+  public final void pipeTo(byte[] dst, int dstPos, int len)
   {
     mmap.get(dst, dstPos, len);
   }
 
-  final void pipeTo(OutputStream dst, long lenLong)
+  public final void pipeTo(OutputStream dst, long lenLong)
     throws IOException
   {
     byte[] temp = temp();
@@ -98,7 +98,7 @@ public class MmapBuf
     }
   }
 
-  final void pipeTo(RandomAccessFile dst, long lenLong)
+  public final void pipeTo(RandomAccessFile dst, long lenLong)
     throws IOException
   {
     byte[] temp = temp();
@@ -113,7 +113,7 @@ public class MmapBuf
     }
   }
 
-  final void pipeTo(ByteBuffer dst, int len)
+  public final void pipeTo(ByteBuffer dst, int len)
   {
     pipe(mmap, dst, len);
   }
@@ -133,12 +133,12 @@ public class MmapBuf
     }
   }
 
-  final void pipeFrom(byte[] src, int srcPos, int len)
+  public final void pipeFrom(byte[] src, int srcPos, int len)
   {
     mmap.put(src, srcPos, len);
   }
 
-  final long pipeFrom(InputStream src, long lenLong)
+  public final long pipeFrom(InputStream src, long lenLong)
     throws IOException
   {
     byte[] temp = temp();
@@ -154,7 +154,7 @@ public class MmapBuf
     return total;
   }
 
-  final long pipeFrom(RandomAccessFile src, long lenLong)
+  public final long pipeFrom(RandomAccessFile src, long lenLong)
     throws IOException
   {
     byte[] temp = temp();
@@ -170,7 +170,7 @@ public class MmapBuf
     return total;
   }
 
-  final int pipeFrom(ByteBuffer src, int len)
+  public final int pipeFrom(ByteBuffer src, int len)
   {
     pipe(src, mmap, len);
     return len;

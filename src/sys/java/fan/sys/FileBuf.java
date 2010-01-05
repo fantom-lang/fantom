@@ -88,7 +88,7 @@ public class FileBuf
     }
   }
 
-  final int getByte(long pos)
+  public final int getByte(long pos)
   {
     try
     {
@@ -104,7 +104,7 @@ public class FileBuf
     }
   }
 
-  final void setByte(long pos, int x)
+  public final void setByte(long pos, int x)
   {
     try
     {
@@ -119,7 +119,7 @@ public class FileBuf
     }
   }
 
-  final void getBytes(long pos, byte[] dst, int off, int len)
+  public final void getBytes(long pos, byte[] dst, int off, int len)
   {
     try
     {
@@ -132,7 +132,7 @@ public class FileBuf
     }
   }
 
-  final void pipeTo(byte[] dst, int dstPos, int len)
+  public final void pipeTo(byte[] dst, int dstPos, int len)
   {
     try
     {
@@ -144,7 +144,7 @@ public class FileBuf
     }
   }
 
-  final void pipeTo(OutputStream dst, long len)
+  public final void pipeTo(OutputStream dst, long len)
     throws IOException
   {
     byte[] temp = temp();
@@ -157,7 +157,7 @@ public class FileBuf
     }
   }
 
-  final void pipeTo(RandomAccessFile dst, long len)
+  public final void pipeTo(RandomAccessFile dst, long len)
     throws IOException
   {
     byte[] temp = temp();
@@ -170,7 +170,7 @@ public class FileBuf
     }
   }
 
-  final void pipeTo(ByteBuffer dst, int len)
+  public final void pipeTo(ByteBuffer dst, int len)
   {
     try
     {
@@ -189,7 +189,7 @@ public class FileBuf
     }
   }
 
-  final void pipeFrom(byte[] src, int srcPos, int len)
+  public final void pipeFrom(byte[] src, int srcPos, int len)
   {
     try
     {
@@ -201,7 +201,7 @@ public class FileBuf
     }
   }
 
-  final long pipeFrom(InputStream src, long len)
+  public final long pipeFrom(InputStream src, long len)
     throws IOException
   {
     byte[] temp = temp();
@@ -216,7 +216,7 @@ public class FileBuf
     return total;
   }
 
-  final long pipeFrom(RandomAccessFile src, long len)
+  public final long pipeFrom(RandomAccessFile src, long len)
     throws IOException
   {
     byte[] temp = temp();
@@ -231,7 +231,7 @@ public class FileBuf
     return total;
   }
 
-  final int pipeFrom(ByteBuffer src, int len)
+  public final int pipeFrom(ByteBuffer src, int len)
   {
     try
     {
