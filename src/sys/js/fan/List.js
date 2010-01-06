@@ -47,30 +47,18 @@ fan.sys.List.prototype.size = function() { return this.m_size; }
 fan.sys.List.prototype.size$ = function(val)
 {
   this.modify();
-  /*
+  var oldSize = this.m_size;
   var newSize = val;
-  if (newSize > this.m_size)
-  {
-    Object[] temp = newArray(newSize);
-    System.arraycopy(values, 0, temp, 0, size);
-    this.m_values = temp;
-    this.m_size = newSize;
-  }
-  else
-  {
-    Object[] temp = newArray(newSize);
-    System.arraycopy(values, 0, temp, 0, newSize);
-    this.m_values = this.m_values.slice(temp;
-    this.m_size = newSize;
-  }
-  */
+  for (var i=0; this.m_size+i<newSize; i++)
+    this.m_values.push(null);
+  this.m_size = newSize;
 }
 
 fan.sys.List.prototype.capacity = function() { return this.m_values.length; }
 fan.sys.List.prototype.capacity$ = function(val)
 {
   if (val < this.m_size) throw fan.sys.ArgErr.make("capacity < size");
-  this.size$(val);
+  // noop
 }
 
 fan.sys.List.prototype.get = function(index)
