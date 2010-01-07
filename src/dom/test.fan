@@ -37,12 +37,12 @@ const class DomTestMod : WebMod
     if (name == null) onIndex
     else if (name == "pod") onPodFile
     else if (name == "dom") DomTest().onService
-    else res.sendError(404)
+    else res.sendErr(404)
   }
 
   Void onIndex()
   {
-    if (req.method != "GET") { res.sendError(501); return }
+    if (req.method != "GET") { res.sendErr(501); return }
     res.headers["Content-Type"] = "text/html"
     out := res.out
     out.docType
@@ -62,57 +62,10 @@ const class DomTestMod : WebMod
   Void onPodFile()
   {
     // serve up pod resources
-    if (req.method != "GET") { res.sendError(501); return }
+    if (req.method != "GET") { res.sendErr(501); return }
     File file := ("fan:/sys" + req.uri).toUri.get
-    if (!file.exists) { res.sendError(404); return }
+    if (!file.exists) { res.sendErr(404); return }
     FileWeblet(file).onService
   }
 }
 
-/*
-using fand
-using wisp
-using web
-using webapp
-using testWeb
-
-class Boot : BootScript
-{
-  override Service[] services :=
-  [
-    // WebService
-    WispService
-    {
-      port = 8080
-      pipeline =
-      [
-        FindResourceStep {},
-        FindViewStep {},
-        ServiceViewStep {},
-      ]
-    },
-  ]
-
-  override Void setup()
-  {
-    UriSpace.root.create(`/homePage`, Index#)
-    UriSpace.root.create(`/dom`,      DomTest#)
-    UriSpace.root.create(`/domFx`,    DomFxTest#)
-    UriSpace.root.create(`/call`,     CallTest#)
-  }
-}
-
-class Index : Widget
-{
-  override Void onGet()
-  {
-    head.title.w("testWeb Tests").titleEnd
-    body.h1.w("testWeb Tests").h1End
-    body.ul
-    body.li.a(`/dom`).w("dom unit tests").aEnd.liEnd
-    body.li.a(`/domFx`).w("domFx tests").aEnd.liEnd
-    body.li.a(`/call`).w("Call tests").aEnd.liEnd
-    body.ulEnd
-  }
-}
-*/
