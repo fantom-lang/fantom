@@ -686,6 +686,11 @@ public final class DateTime
     return make(year(), month(), day(), 0, 0, 0, 0, tz);
   }
 
+  public final boolean isMidnight()
+  {
+    return hour() == 0 && min() == 0 && sec() == 0 && getNanoSec() == 0;
+  }
+
   public final String toStr()
   {
     return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");

@@ -1130,6 +1130,14 @@ class DateTimeTest : Test
     // DST
     verifyEq(DateTime(2009, Month.mar, 7, 4, 5, 0, 0, ny).midnight.time, Time(0, 0))
     verifyEq(DateTime(2009, Month.nov, 1, 4, 5, 0, 0, ny).midnight.time, Time(0, 0))
+
+    // isMidnight
+    x := Date.today.midnight
+    verifyEq(x.isMidnight, true)
+    verifyEq(x.time.isMidnight, true)
+    x = x + 1ns
+    verifyEq(x.isMidnight, false)
+    verifyEq(x.time.isMidnight, false)
   }
 
 //////////////////////////////////////////////////////////////////////////

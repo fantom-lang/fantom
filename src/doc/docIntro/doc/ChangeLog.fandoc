@@ -778,6 +778,7 @@
 
 *Build 1.0.49 (working)*
 - #889: compilerJs Rework
+- DateTime, Time: isMidnight
 
 - TODO: change deprecated to be string
 

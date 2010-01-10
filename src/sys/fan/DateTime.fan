@@ -330,6 +330,11 @@ const final class DateTime
   DateTime midnight()
 
   **
+  ** Return if the time portion is "00:00:00".
+  **
+  Bool isMidnight()
+
+  **
   ** Return if the specified year is a leap year.
   **
   static Bool isLeapYear(Int year)
