@@ -693,6 +693,11 @@ namespace Fan.Sys
       return make(year(), month(), day(), 0, 0, 0, 0, m_tz);
     }
 
+    public bool isMidnight()
+    {
+      return hour() == 0 && min() == 0 && sec() == 0 && getNanoSec() == 0;
+    }
+
     public override string toStr()
     {
       return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");

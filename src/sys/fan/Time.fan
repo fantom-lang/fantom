@@ -189,4 +189,9 @@ const final class Time
   **
   Str toCode()
 
+  **
+  ** Return if "00:00:00" which is equal to `defVal`.
+  **
+  Bool isMidnight()
+
 }
