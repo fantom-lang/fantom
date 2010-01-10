@@ -107,7 +107,7 @@ fan.fwt.FwtEnvPeer.fontCx = null;
 fan.fwt.FwtEnvPeer.prototype.fontHeight = function(self, font)
 {
   // fudge this as 150% of size
-  return font.m_size * 1.5
+  return Math.round(font.m_size * 1.5);
 }
 
 fan.fwt.FwtEnvPeer.prototype.fontAscent = function(self, font)
@@ -119,13 +119,13 @@ fan.fwt.FwtEnvPeer.prototype.fontAscent = function(self, font)
 fan.fwt.FwtEnvPeer.prototype.fontDescent = function(self, font)
 {
   // fudge this as 30% of size
-  return font.m_size * 0.3
+  return Math.round(font.m_size * 0.3);
 }
 
 fan.fwt.FwtEnvPeer.prototype.fontLeading = function(self, font)
 {
   // fudge this as 16% of size
-  return font.m_size * 0.16
+  return Math.round(font.m_size * 0.16);
 }
 
 fan.fwt.FwtEnvPeer.prototype.fontWidth = function(self, font, str)
