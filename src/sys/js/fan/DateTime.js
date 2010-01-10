@@ -654,6 +654,11 @@ fan.sys.DateTime.prototype.toUtc = function()
   return fan.sys.DateTime.makeTicks(this.m_ticks, fan.sys.TimeZone.m_utc);
 }
 
+fan.sys.DateTime.prototype.isMidnight = function()
+{
+  return this.hour() == 0 && this.min() == 0 && this.sec() == 0 && this.nanoSec() == 0;
+}
+
 fan.sys.DateTime.prototype.toStr = function()
 {
   return this.toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");
