@@ -511,6 +511,7 @@ namespace Fan.Sys
             int day = getDay();
             switch (n)
             {
+              case 3:  s.Append(day); s.Append(daySuffix(day)); break;
               case 2:  if (day < 10) s.Append('0'); s.Append(day); break;
               case 1:  s.Append(day); break;
               default: invalidNum = true; break;
@@ -648,6 +649,18 @@ namespace Fan.Sys
       }
 
       return s.ToString();
+    }
+
+    internal static string daySuffix(int day)
+    {
+      // eventually need localization
+      switch (day)
+      {
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
+      }
     }
 
   //////////////////////////////////////////////////////////////////////////

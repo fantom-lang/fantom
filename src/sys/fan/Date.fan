@@ -125,6 +125,7 @@ const final class Date
   **   MMMM   Full month                 June, November
   **   D      One/two digit day          5, 28
   **   DD     Two digit day              05, 28
+  **   DDD    Day with suffix            1st, 2nd, 3rd, 24th
   **   WWW    Three letter abbr weekday  Tue
   **   WWWW   Full weekday               Tuesday
   **   'xyz'  Literal characters

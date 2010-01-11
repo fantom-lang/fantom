@@ -506,6 +506,7 @@ public final class DateTime
           int day = getDay();
           switch (n)
           {
+            case 3:  s.append(day).append(daySuffix(day)); break;
             case 2:  if (day < 10) s.append('0');
             case 1:  s.append(day); break;
             default: invalidNum = true;
@@ -641,6 +642,18 @@ public final class DateTime
     }
 
     return s.toString();
+  }
+
+  static String daySuffix(int day)
+  {
+    // eventually need localization
+    switch (day)
+    {
+      case 1: return "st";
+      case 2: return "nd";
+      case 3: return "rd";
+      default: return "th";
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
