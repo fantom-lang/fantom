@@ -218,6 +218,7 @@ namespace Fan.Sys
             int day = getDay();
             switch (n)
             {
+              case 3:  s.Append(day); s.Append(DateTime.daySuffix(day)); break;
               case 2:  if (day < 10) s.Append('0'); s.Append(day); break;
               case 1:  s.Append(day); break;
               default: invalidNum = true; break;

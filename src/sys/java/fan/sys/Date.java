@@ -219,6 +219,7 @@ public final class Date
           int day = getDay();
           switch (n)
           {
+            case 3:  s.append(day).append(DateTime.daySuffix(day)); break;
             case 2:  if (day < 10) s.append('0');
             case 1:  s.append(day); break;
             default: invalidNum = true;

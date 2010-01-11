@@ -899,7 +899,7 @@ class DateTimeTest : Test
     x := DateTime.make(2008, Month.feb, 5, 3, 7, 20, 123_000_000, ny)
     verifyEq(x.toLocale("YY, YYYY"), "08, 2008")
     verifyEq(x.toLocale("M, MM, MMM, MMMM"), "2, 02, Feb, February")
-    verifyEq(x.toLocale("D, DD"), "5, 05")
+    verifyEq(x.toLocale("D, DD, DDD"), "5, 05, 5th")
     verifyEq(x.toLocale("WWW WWWW"), "Tue Tuesday")
     verifyEq(x.toLocale("h, hh, k, kk, a"), "3, 03, 3, 03, AM")
     verifyEq(x.toLocale("m, mm"), "7, 07")
@@ -968,7 +968,7 @@ class DateTimeTest : Test
     verifyErr(ArgErr#) { x.toLocale("YYY") }
     verifyErr(ArgErr#) { x.toLocale("YYYYY") }
     verifyErr(ArgErr#) { x.toLocale("MMMMM") }
-    verifyErr(ArgErr#) { x.toLocale("DDD") }
+    verifyErr(ArgErr#) { x.toLocale("DDDD") }
     verifyErr(ArgErr#) { x.toLocale("WW") }
     verifyErr(ArgErr#) { x.toLocale("WWWWW") }
     verifyErr(ArgErr#) { x.toLocale("hhh") }
@@ -986,6 +986,12 @@ class DateTimeTest : Test
 
     d = Date(1776, Month.jul, 4)
     verifyEq(d.toLocale("MMMM D, YYYY"), "July 4, 1776")
+    verifyEq(d.toLocale("MMMM DDD, YYYY"), "July 4th, 1776")
+
+    verifyEq(Date("2010-01-01").toLocale("DDD"), "1st")
+    verifyEq(Date("2010-01-02").toLocale("DDD"), "2nd")
+    verifyEq(Date("2010-01-03").toLocale("DDD"), "3rd")
+    verifyEq(Date("2010-01-04").toLocale("DDD"), "4th")
   }
 
   Void testTimeLocale()

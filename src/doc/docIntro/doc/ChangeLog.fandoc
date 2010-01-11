@@ -779,6 +779,7 @@
 *Build 1.0.49 (working)*
 - #889: compilerJs Rework
 - DateTime, Time: isMidnight
+- DateTime, Date support for DDD pattern 1st, 2nd, etc
 
 - TODO: change deprecated to be string
 
