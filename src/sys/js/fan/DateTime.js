@@ -485,6 +485,7 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
         var day = this.day();
         switch (n)
         {
+          case 3:  s += day + fan.sys.DateTime.daySuffix(day); break;
           case 2:  if (day < 10) s += '0';
           case 1:  s += day; break;
           default: invalidNum = true;
@@ -620,6 +621,18 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
   }
 
   return s;
+}
+
+fan.sys.DateTime.daySuffix = function(day)
+{
+  // eventually need localization
+  switch (day)
+  {
+    case 1: return "st";
+    case 2: return "nd";
+    case 3: return "rd";
+    default: return "th";
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////
