@@ -146,17 +146,12 @@ public class FanNum
  */
 class NumDigits
 {
-  NumDigits(double d)
-  {
-    this(Double.toString(d));
-  }
-
   NumDigits(BigDecimal d)
   {
     this(d.toString());
   }
 
-  private NumDigits(String s)
+  NumDigits(String s)
   {
     digits = new char[s.length()+16];
 

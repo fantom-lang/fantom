@@ -650,6 +650,11 @@ class FloatTest : Test
     verifyLocale(Float.pi, "0.0000", "3.1416")
     verifyLocale(Float.pi, "0.00000", "3.14159")
 
+    verifyEq(0.0003f.toLocale("0.0##"), "0.0")
+    verifyEq(0.0003f.toLocale("0.0###"), "0.0003")
+    verifyEq(0.0000003f.toLocale("0.######"), "0")
+    verifyEq(0.0000003f.toLocale("0.#######"), "0.0000003")
+
     // specials
     if (Sys.env["java.home"] != null)
     {
