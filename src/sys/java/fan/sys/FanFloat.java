@@ -325,24 +325,38 @@ public final class FanFloat
   public static String toLocale(double self) { return toLocale(self, null); }
   public static String toLocale(double self, String pattern)
   {
-    // get current locale
-    Locale locale = Locale.cur();
-    java.text.DecimalFormatSymbols df = locale.decimal();
+    try
+    {
+      // get current locale
+      Locale locale = Locale.cur();
+      java.text.DecimalFormatSymbols df = locale.decimal();
 
-    // handle special values
-    if (Double.isNaN(self)) return df.getNaN();
-    if (self == Double.POSITIVE_INFINITY) return df.getInfinity();
-    if (self == Double.NEGATIVE_INFINITY) return df.getMinusSign() + df.getInfinity();
+      // handle special values
+      if (Double.isNaN(self)) return df.getNaN();
+      if (self == Double.POSITIVE_INFINITY) return df.getInfinity();
+      if (self == Double.NEGATIVE_INFINITY) return df.getMinusSign() + df.getInfinity();
 
-    // get default pattern if necessary
-    if (pattern == null) pattern = locale.get("sys", "float", "#,###.0##");
+      // get default pattern if necessary
+      if (pattern == null) pattern = locale.get("sys", "float", "#,###.0##");
 
-    // parse pattern and get digits
-    NumPattern p = NumPattern.parse(pattern);
-    NumDigits d = new NumDigits(self);
+      // TODO: if value is < 10^-3 or > 10^7 it will be
+      // converted to exponent string, so just bail on that
+      String string = Double.toString(self);
+      if (string.indexOf('E') > 0)
+        string = new java.text.DecimalFormat("0.#########").format(self);
 
-    // route to common FanNum method
-    return FanNum.toLocale(p, d, df);
+      // parse pattern and get digits
+      NumPattern p = NumPattern.parse(pattern);
+      NumDigits d = new NumDigits(string);
+
+      // route to common FanNum method
+      return FanNum.toLocale(p, d, df);
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      return String.valueOf(self);
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
