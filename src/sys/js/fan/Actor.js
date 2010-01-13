@@ -23,7 +23,7 @@ fan.sys.Actor.locals = function()
   {
     var k = fan.sys.Str.$type;
     var v = fan.sys.Obj.$type.toNullable();
-    fan.sys.Actor.$locals = new fan.sys.Map(k, v);
+    fan.sys.Actor.$locals = fan.sys.Map.make(k, v);
   }
   return fan.sys.Actor.$locals;
 }

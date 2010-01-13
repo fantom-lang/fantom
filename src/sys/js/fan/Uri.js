@@ -437,7 +437,7 @@ fan.sys.UriDecoder.prototype.decodeQuery = function()
 fan.sys.UriDecoder.prototype.parseQuery = function(q)
 {
   if (q == null) return null;
-  var map = new fan.sys.Map(fan.sys.Str.$type, fan.sys.Str.$type);
+  var map = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Str.$type);
 
   try
   {
@@ -1357,7 +1357,7 @@ fan.sys.Uri.emptyQuery = function()
   if (q == null)
   {
     q = fan.sys.Uri.$emptyQuery =
-      new fan.sys.Map(fan.sys.Str.$type, fan.sys.Str.$type).toImmutable();
+      fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Str.$type).toImmutable();
   }
   return q;
 }

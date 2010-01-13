@@ -83,7 +83,7 @@ fan.sys.MimeType.parseParams = function(s, checked)
 
 fan.sys.MimeType.doParseParams = function(s, offset)
 {
-  var params = new fan.sys.Map(fan.sys.Str.$type, fan.sys.Str.$type);
+  var params = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Str.$type);
   params.caseInsensitive$(true);
   var inQuotes = false;
   var keyStart = offset;
@@ -234,7 +234,7 @@ fan.sys.MimeType.emptyParams = function()
   var q = fan.sys.MimeType.emptyQuery;
   if (q == null)
   {
-    q = new fan.sys.Map(fan.sys.Str.$type, fan.sys.Str.$type);
+    q = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Str.$type);
     q.caseInsensitive$(true);
     //q = q.toImmutable();
     fan.sys.MimeType.emptyQuery = q;
