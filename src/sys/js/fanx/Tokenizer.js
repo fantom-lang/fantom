@@ -314,7 +314,7 @@ var str = String.fromCharCode(this.cur);
 str += String.fromCharCode(this.cur);
     nibCount++;
     if (nibCount > 16) throw this.err("Hex literal too big");
-//    val = fan.sys.Int.shl(val, 4) + nib;
+//    val = fan.sys.Int.shiftl(val, 4) + nib;
     this.consume();
   }
   //this.val = val;

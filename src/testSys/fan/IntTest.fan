@@ -19,8 +19,16 @@ class IntTest : Test
 
   Void testConstants()
   {
-    verifyEq(Int.maxVal, 9223372036854775807)
-    verifyEq(Int.minVal, -9223372036854775807-1)
+    if (js)
+    {
+      verifyEq(Int.maxVal, 9007199254740992)
+      verifyEq(Int.minVal, -9007199254740992)
+    }
+    else
+    {
+      verifyEq(Int.maxVal, 9223372036854775807)
+      verifyEq(Int.minVal, -9223372036854775807-1)
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -508,10 +516,13 @@ class IntTest : Test
   {
     verifyEq(255.toHex, "ff")
     verifyEq(255.toHex(4), "00ff")
-    verifyEq(0x123456789abcdef.toHex, "123456789abcdef")
-    verifyEq(0x123456789abcdef.toHex(18), "000123456789abcdef")
     verifyEq(0.toHex(10), "0000000000")
-    verifyEq(0xaabbccdd00112233.toHex, "aabbccdd00112233")
+    if (!js)
+    {
+      verifyEq(0x123456789abcdef.toHex, "123456789abcdef")
+      verifyEq(0x123456789abcdef.toHex(18), "000123456789abcdef")
+      verifyEq(0xaabbccdd00112233.toHex, "aabbccdd00112233")
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -529,8 +540,11 @@ class IntTest : Test
     verifyEq(Int.fromStr("AbCdEf", 16), 0xabcdef)
     verifyEq(Int.fromStr("77", 10, true), 77)
     verifyEq(Int.fromStr("x", 10, false), null)
-    verifyEq(Int.fromStr("aabbccdd00112233", 16), 0xaabbccdd00112233)
-    verifyEq(Int.fromStr("80BF3ecA63100DdE", 16), 0x80bf3eca63100dde)
+    if (!js)
+    {
+      verifyEq(Int.fromStr("aabbccdd00112233", 16), 0xaabbccdd00112233)
+      verifyEq(Int.fromStr("80BF3ecA63100DdE", 16), 0x80bf3eca63100dde)
+    }
     verifyEq(Int.fromStr("badz", 16, false), null)
     verifyErr(ParseErr#) { Int.fromStr("x") }
     verifyErr(ParseErr#) { Int.fromStr("3", 2, true) }
@@ -675,5 +689,7 @@ class IntTest : Test
       verifyEq(actual, expected)
     }
   }
+
+  const Bool js := Sys.env["fan.runtime"] == "javascript"
 
 }
