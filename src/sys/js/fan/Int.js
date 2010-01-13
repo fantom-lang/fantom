@@ -105,30 +105,6 @@ fan.sys.Int.fromDigit = function(self, radix)
   return null;
 }
 
-fan.sys.Int.toChar = function(self)
-{
-  if (self < 0 || self > 0xFFFF) throw new Err("Invalid unicode char: " + self);
-  return String.fromCharCode(self);
-}
-
-fan.sys.Int.toHex = function(self, width)
-{
-  var x = (self instanceof Long) ? self : Long.fromNumber(self);
-  var s = Long.fromNumber(self).toString(16);
-  if (width != null && s.length < width)
-  {
-    if (fan.sys.Int.$zeros == null)
-    {
-      fan.sys.Int.$zeros = [""];
-      for (var i=1; i<16; i++)
-        fan.sys.Int.$zeros[i] = fan.sys.Int.$zeros[i-1] + "0";
-    }
-    s = fan.sys.Int.$zeros[width-s.length] + s;
-  }
-  return s;
-}
-fan.sys.Int.$zeros = null;
-
 fan.sys.Int.random = function(r)
 {
   if (r === undefined) return Math.floor(Math.random() * Math.pow(2, 64));
@@ -167,23 +143,9 @@ fan.sys.Int.times = function(self, f)
 // Arithmetic
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Int.negate = function(self)
-{
-  // TODO: if a is Long
-  return -self.valueOf();
-}
-
-fan.sys.Int.increment = function(self)
-{
-  // TODO: if a is Long
-  return self+1;
-}
-
-fan.sys.Int.decrement = function(self)
-{
-  // TODO: if a is Long
-  return self-1;
-}
+fan.sys.Int.negate    = function(self) { return -self; }
+fan.sys.Int.increment = function(self) { return self+1; }
+fan.sys.Int.decrement = function(self) { return self-1; }
 
 fan.sys.Int.plus = function(a, b)
 {
@@ -248,47 +210,50 @@ return Math.pow(a, b);
 // Bitwise operators
 //////////////////////////////////////////////////////////////////////////
 
-// TODO - these impls only work upto 32 bits!!!
-fan.sys.Int.and = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return x; }
-fan.sys.Int.or  = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return x; }
-fan.sys.Int.shl = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
-fan.sys.Int.shr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
+// NOTE: these methods only operate on the lowest 32 bits of the integer
 
-fan.sys.Int.not    = function(a) { return ~a; }
+fan.sys.Int.not    = function(a)    { return ~a; }
+fan.sys.Int.and    = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return x; }
+fan.sys.Int.or     = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return x; }
+fan.sys.Int.xor    = function(a, b) { var x = a ^ b;  if (x<0) x += 0xffffffff+1; return x; }
 fan.sys.Int.shiftl = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
 fan.sys.Int.shiftr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
 
-/*
-fan.sys.Int.and = function(a, b)
+//////////////////////////////////////////////////////////////////////////
+// Conversion
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Int.toChar = function(self)
 {
-  // always wrap with Long to make sure we retain precision
-  if (!(a instanceof Long)) a = Long.fromNumber(a);
-  if (!(b instanceof Long)) b = Long.fromNumber(b);
-  return Long.and(a, b);
+  if (self < 0 || self > 0xFFFF) throw new Err("Invalid unicode char: " + self);
+  return String.fromCharCode(self);
 }
 
-fan.sys.Int.or = function(a, b)
+fan.sys.Int.toHex = function(self, width)
 {
-  // always wrap with Long to make sure we retain precision
-  if (!(a instanceof Long)) a = Long.fromNumber(a);
-  if (!(b instanceof Long)) b = Long.fromNumber(b);
-  return Long.or(a, b);
+  var x = (self instanceof Long) ? self : Long.fromNumber(self);
+  var s = Long.fromNumber(self).toString(16);
+  if (width != null && s.length < width)
+  {
+    if (fan.sys.Int.$zeros == null)
+    {
+      fan.sys.Int.$zeros = [""];
+      for (var i=1; i<16; i++)
+        fan.sys.Int.$zeros[i] = fan.sys.Int.$zeros[i-1] + "0";
+    }
+    s = fan.sys.Int.$zeros[width-s.length] + s;
+  }
+  return s;
 }
+fan.sys.Int.$zeros = null;
 
-fan.sys.Int.shl = function(a, n)
+fan.sys.Int.toCode = function(self, base)
 {
-  // always wrap with Long to make sure we retain precision
-  if (!(a instanceof Long)) a = Long.fromNumber(a);
-  return Long.shl(a, n);
+  if (base === undefined) base = 10;
+  if (base == 10) return self.toString();
+  if (base == 16) return "0x" + fan.sys.Int.toHex(self);
+  throw fan.sys.ArgErr.make("Invalid base " + base);
 }
-
-fan.sys.Int.shr = function(a, n)
-{
-  // always wrap with Long to make sure we retain precision
-  if (!(a instanceof Long)) a = Long.fromNumber(a);
-  return Long.shr(a, n);
-}
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // CharMap
@@ -321,8 +286,3 @@ for (var i=48; i<=57;  ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.HEX;
 for (var i=97; i<=102; ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.HEX;
 for (var i=65; i<=70;  ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.HEX;
 
-//////////////////////////////////////////////////////////////////////////
-// Static Fields
-//////////////////////////////////////////////////////////////////////////
-
-// see sysPod.js
