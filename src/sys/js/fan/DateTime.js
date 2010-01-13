@@ -114,7 +114,7 @@ fan.sys.DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
   // adjust for timezone and dst (we might know the UTC offset)
   var rule = tz.rule(year);
   var dst;
-  //if (fan.sys.Int.equal(knownOffset, fan.sys.Int.maxVal))
+  //if (fan.sys.Int.equal(knownOffset, fan.sys.Int.m_maxVal))
   //{
     // don't know offset so compute from timezone rule
     ticks -= rule.offset * fan.sys.DateTime.nsPerSec;
@@ -219,7 +219,7 @@ fan.sys.DateTime.makeTicks = function(ticks, tz)
 
     // if dstOffset is set to max, then this is
     // the third time thru the loop: std->dst->std
-    if (fan.sys.Int.equals(dstOffset, fan.sys.Int.maxVal)) { dstOffset = 0; break; }
+    if (fan.sys.Int.equals(dstOffset, fan.sys.Int.m_maxVal)) { dstOffset = 0; break; }
 
     // if dstOffset is non-zero we have run this
     // loop twice to recompute the date for dst
@@ -232,7 +232,7 @@ fan.sys.DateTime.makeTicks = function(ticks, tz)
       if (rule.isWallTime() && fan.sys.TimeZone.dstOffset(rule, year, month, day, Math.floor(rem/fan.sys.DateTime.nsPerSec)) == 0)
       {
         ticks -= dstOffset * fan.sys.DateTime.nsPerSec;
-        dstOffset = fan.sys.Int.maxVal;
+        dstOffset = fan.sys.Int.m_maxVal;
         continue;
       }
       break;

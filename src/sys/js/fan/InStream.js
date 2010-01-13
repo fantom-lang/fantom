@@ -104,7 +104,7 @@ fan.sys.InStream.prototype.readLine = function(max)
   if (max === undefined) max = fan.sys.Int.Chunk;
 
   // max limit
-  var maxChars = (max != null) ? max.valueOf() : fan.sys.Int.maxVal;
+  var maxChars = (max != null) ? max.valueOf() : fan.sys.Int.m_maxVal;
   if (maxChars <= 0) return "";
 
   // read first char, if at end of file bail
