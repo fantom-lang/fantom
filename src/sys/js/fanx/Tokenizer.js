@@ -318,7 +318,7 @@ str += String.fromCharCode(this.cur);
     this.consume();
   }
   //this.val = val;
-this.val = Long.fromStr(str, 16);
+this.val = fan.sys.Int.fromStr(str, 16);
   return type;
 }
 
