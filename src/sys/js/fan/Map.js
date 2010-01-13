@@ -8,11 +8,15 @@
 //
 
 /**
- * Map - TODO
+ * Map.
  */
 fan.sys.Map = fan.sys.Obj.$extend(fan.sys.Obj);
 
-fan.sys.Map.prototype.$ctor = function(k, v)
+//////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Map.make = function(k, v)
 {
   var mt = null;
   if (k !== undefined && v === undefined)
@@ -25,10 +29,17 @@ fan.sys.Map.prototype.$ctor = function(k, v)
     if (v === undefined) v = fan.sys.Obj.$type.toNullable();
     mt = new fan.sys.MapType(k, v);
   }
-  this.keyMap = {};
-  this.map = {};
-  this.m_readonly = false;
-  this.$fanType = mt;
+
+  var self = new fan.sys.Map();
+  self.keyMap = {};
+  self.map = {};
+  self.m_readonly = false;
+  self.m_type = mt;
+  return self;
+}
+
+fan.sys.Map.prototype.$ctor = function()
+{
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -39,7 +50,7 @@ fan.sys.Map.prototype.equals = function(that)
 {
   if (that != null)
   {
-    if (!this.$fanType.equals(that.$fanType)) return false;
+    if (!this.m_type.equals(that.m_type)) return false;
     var selfNum = 0;
     for (var k in this.map)
     {
@@ -60,7 +71,7 @@ fan.sys.Map.prototype.hash = function()
 
 fan.sys.Map.prototype.type = function()
 {
-  return this.$fanType;
+  return this.m_type;
 }
 
 fan.sys.Map.prototype.toStr = function()
@@ -87,14 +98,14 @@ fan.sys.Map.prototype.keys = function()
 {
   var list = [];
   for (var k in this.keyMap) list.push(this.keyMap[k]);
-  return fan.sys.List.make(this.$fanType.k, list);
+  return fan.sys.List.make(this.m_type.k, list);
 }
 
 fan.sys.Map.prototype.vals = function()
 {
   var list = [];
   for (var k in this.map) list.push(this.map[k]);
-  return fan.sys.List.make(this.$fanType.v, list);
+  return fan.sys.List.make(this.m_type.v, list);
 }
 
 fan.sys.Map.prototype.get = function(key, defVal)
@@ -191,7 +202,7 @@ fan.sys.Map.prototype.size = function()
 
 fan.sys.Map.prototype.dup = function()
 {
-  var dup = new fan.sys.Map(this.$fanType.k, this.$fanType.v);
+  var dup = fan.sys.Map.make(this.m_type.k, this.m_type.v);
   for (prop in this.keyMap) dup.keyMap[prop] = this.keyMap[prop];
   for (prop in this.map) dup.map[prop] = this.map[prop];
   return dup;
@@ -254,7 +265,7 @@ fan.sys.Map.prototype.isRW = function() { return !this.m_readonly; }
 
 fan.sys.Map.fromLiteral = function(keys, vals, k, v)
 {
-  var map = new fan.sys.Map(k,v);
+  var map = fan.sys.Map.make(k,v);
   for (var i=0; i<keys.length; i++)
     map.set(keys[i], vals[i]);
   return map;

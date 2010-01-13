@@ -308,7 +308,7 @@ fanx_ObjDecoder.prototype.readCollection = function(curField, t)
   {
     this.consume();
     this.consume(fanx_Token.RBRACKET, "Expecting ']'");
-    return new fan.sys.Map(this.toMapType(t, curField, false));
+    return fan.sys.Map.make(this.toMapType(t, curField, false));
   }
 
   // read first list item or first map key
@@ -381,7 +381,7 @@ readMap = function(mapType, firstKey)
     mapType = new fan.sys.MapType(k, v);
   }
 
-  return new fan.sys.Map((fan.sys.MapType)mapType, map);
+  return fan.sys.Map.make((fan.sys.MapType)mapType, map);
 },
 */
 
