@@ -23,7 +23,7 @@ fan.sys.Num.prototype.type = function() { return fan.sys.Num.$type; }
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Num.toDecimal = function(val) { return val; }
+fan.sys.Num.toDecimal = function(val) { return fan.sys.Decimal.make(val); }
 fan.sys.Num.toFloat = function(val) { return fan.sys.Float.make(val.valueOf()); }
 fan.sys.Num.toInt = function(val)
 {

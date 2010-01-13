@@ -20,16 +20,18 @@ fan.sys.ObjUtil.hash = function(obj)
 
 fan.sys.ObjUtil.equals = function(a, b)
 {
+  if (a == null) return b == null;
   if (a instanceof fan.sys.Obj) return a.equals(b);
-  else if (a instanceof Long) return fan.sys.Int.equals(a, b);
-  else if ((typeof a) == "number") return fan.sys.Int.equals(a, b);
-  else
-  {
-    if (a != null && a.$fanType != null)
-      return fan.sys.Float.equals(a, b);
-    else
-      return a == b;
-   }
+
+  var t = typeof a;
+  if (t === "number") return fan.sys.Int.equals(a, b);
+  if (t === "string") return a === b;
+
+  var f = a.$fanType;
+  if (f === fan.sys.Float.$type) return fan.sys.Float.equals(a, b);
+  if (f === fan.sys.Decimal.$type) return fan.sys.Decimal.equals(a, b);
+
+  return a === b;
 }
 
 fan.sys.ObjUtil.compare = function(a, b)

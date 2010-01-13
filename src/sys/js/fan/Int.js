@@ -33,7 +33,7 @@ fan.sys.Int.fromStr = function(s, radix, checked)
   {
     if (s == null || s.length == 0) throw Error();
     var num = Long.fromStr(s, radix);
-    return num;
+    return num.valueOf();
   }
   catch (err) {}
   if (checked) throw fan.sys.ParseErr.make("Int", s);
@@ -42,23 +42,15 @@ fan.sys.Int.fromStr = function(s, radix, checked)
 
 fan.sys.Int.toStr = function(self)
 {
-  return ""+self;
+  return self.toString();
 }
 
 fan.sys.Int.equals = function(self, obj)
 {
-  var sis = self instanceof Long;
-  var ois = obj instanceof Long;
-  if (sis || ois)
-  {
-    if (!sis) self = Long.fromNumber(self);
-    if (!ois) obj = Long.fromNumber(obj);
-    return self.equals(obj);
-  }
-  else return self == obj;
+  return self === obj;
 }
 
-fan.sys.Int.abs = function(self) { return self < 0 ? -self : self; }
+fan.sys.Int.abs = function(self)      { return self < 0 ? -self : self; }
 fan.sys.Int.min = function(self, val) { return self < val ? self : val; }
 fan.sys.Int.max = function(self, val) { return self > val ? self : val; }
 
@@ -147,63 +139,16 @@ fan.sys.Int.negate    = function(self) { return -self; }
 fan.sys.Int.increment = function(self) { return self+1; }
 fan.sys.Int.decrement = function(self) { return self-1; }
 
-fan.sys.Int.plus = function(a, b)
-{
-  // always wrap with Long to make sure we retain precision
-  if (!(a instanceof Long)) a = Long.fromNumber(a);
-  if (!(b instanceof Long)) b = Long.fromNumber(b);
-  return Long.add(a, b);
-}
+fan.sys.Int.plus  = function(a, b) { return a + b; }
+fan.sys.Int.minus = function(a, b) { return a - b; }
+fan.sys.Int.mult  = function(a, b) { return a * b; }
+fan.sys.Int.div   = function(a, b) { return Math.floor(a / b); }
+fan.sys.Int.mod   = function(a, b) { return a % b; }
 
-fan.sys.Int.minus = function(a, b)
+fan.sys.Int.pow = function(self, pow)
 {
-  // always wrap with Long to make sure we retain precision
-  if (!(a instanceof Long)) a = Long.fromNumber(a);
-  if (!(b instanceof Long)) b = Long.fromNumber(b);
-  return Long.sub(a, b);
-}
-
-fan.sys.Int.mult = function(a, b)
-{
-return a.valueOf() * b.valueOf();
-/*
-TODO - FIXIT
-  // always wrap with Long to make sure we retain precision
-  if (!(a instanceof Long)) a = Long.fromNumber(a);
-  if (!(b instanceof Long)) b = Long.fromNumber(b);
-  return Long.mul(a, b);
-*/
-}
-
-fan.sys.Int.div = function(a, b)
-{
-return Math.floor(a / b);
-/*
-TODO - FIXIT
-  // always wrap with Long to make sure we retain precision
-  if (!(a instanceof Long)) a = Long.fromNumber(a);
-  if (!(b instanceof Long)) b = Long.fromNumber(b);
-  return Long.div(a, b);
-*/
-}
-
-fan.sys.Int.mod = function(a, b)
-{
-return a % b;
-/*
-TODO - FIXIT
-  // always wrap with Long to make sure we retain precision
-  if (!(a instanceof Long)) a = Long.fromNumber(a);
-  if (!(b instanceof Long)) b = Long.fromNumber(b);
-  return Long.mod(a, b);
-*/
-}
-
-fan.sys.Int.pow = function(a, b)
-{
-if (b < 0) throw fan.sys.ArgErr.make("pow < 0");
-return Math.pow(a, b);
-// TODO - FIXIT
+  if (pow < 0) throw fan.sys.ArgErr.make("pow < 0");
+  return Math.pow(self, pow);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -212,10 +157,10 @@ return Math.pow(a, b);
 
 // NOTE: these methods only operate on the lowest 32 bits of the integer
 
-fan.sys.Int.not    = function(a)    { return ~a; }
-fan.sys.Int.and    = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return x; }
-fan.sys.Int.or     = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return x; }
-fan.sys.Int.xor    = function(a, b) { var x = a ^ b;  if (x<0) x += 0xffffffff+1; return x; }
+fan.sys.Int.not = function(a)    { return ~a; }
+fan.sys.Int.and = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return x; }
+fan.sys.Int.or  = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return x; }
+fan.sys.Int.xor = function(a, b) { var x = a ^ b;  if (x<0) x += 0xffffffff+1; return x; }
 fan.sys.Int.shiftl = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
 fan.sys.Int.shiftr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
 
@@ -254,6 +199,19 @@ fan.sys.Int.toCode = function(self, base)
   if (base == 16) return "0x" + fan.sys.Int.toHex(self);
   throw fan.sys.ArgErr.make("Invalid base " + base);
 }
+
+fan.sys.Int.toDuration = function(self)
+{
+  return fan.sys.Duration.make(self);
+}
+
+fan.sys.Int.toDateTime = function(self, tz)
+{
+  return (tz === undefined)
+    ? fan.sys.DateTime.makeTicks(self)
+    : fan.sys.DateTime.makeTicks(self, tz);
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // CharMap
