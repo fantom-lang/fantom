@@ -22,7 +22,7 @@ fan.sys.Int.prototype.type = function() { return fan.sys.Int.$type; }
 fan.sys.Int.make = function(val) { return val; }
 
 //////////////////////////////////////////////////////////////////////////
-// Static
+// Construction
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.Int.fromStr = function(s, radix, checked)
@@ -31,13 +31,39 @@ fan.sys.Int.fromStr = function(s, radix, checked)
   if (checked === undefined) checked = true;
   try
   {
-    if (s == null || s.length == 0) throw Error();
-    var num = Long.fromStr(s, radix);
-    return num.valueOf();
+    if (radix === 10) { var n = fan.sys.Int.parseDecimal(s); return n; }
+    if (radix === 16) { var n = fan.sys.Int.parseHex(s); return n; }
+    throw new Error("Unsupported radix " + radix);
   }
   catch (err) {}
   if (checked) throw fan.sys.ParseErr.make("Int", s);
   return null;
+}
+
+fan.sys.Int.parseDecimal = function(s)
+{
+  var n = 0;
+  if (s.charCodeAt(0) === 45) n++;
+  for (var i=n; i<s.length; i++)
+  {
+    ch = s.charCodeAt(i);
+    if (ch >= 48 && ch <= 57) continue;
+    throw new Error("Illegal decimal char " + s.charAt(i));
+  }
+  return parseInt(s);
+}
+
+fan.sys.Int.parseHex = function(s)
+{
+  for (var i=0; i<s.length; i++)
+  {
+    ch = s.charCodeAt(i);
+    if (ch >= 48 && ch <= 57) continue;
+    if (ch >= 65 && ch <= 70) continue;
+    if (ch >= 97 && ch <= 102) continue;
+    throw new Error("Illegal hex char " + s.charAt(i));
+  }
+  return parseInt(s, 16);
 }
 
 fan.sys.Int.toStr = function(self)
