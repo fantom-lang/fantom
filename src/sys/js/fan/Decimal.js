@@ -25,6 +25,11 @@ fan.sys.Decimal.make = function(val)
   return x;
 }
 
+fan.sys.Decimal.toFloat = function(self)
+{
+  return fan.sys.Float.make(self.valueOf());
+}
+
 fan.sys.Decimal.negate = function(self)
 {
   return fan.sys.Decimal.make(-self.valueOf());
