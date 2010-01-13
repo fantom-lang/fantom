@@ -780,6 +780,8 @@
 - #889: compilerJs Rework
 - DateTime, Time: isMidnight
 - DateTime, Date support for DDD pattern 1st, 2nd, etc
+- js: Int.toCode, toDuration, toDateTime
+- js: Remove Long support; use native Numbers for integers
 
 - TODO: change deprecated to be string
 

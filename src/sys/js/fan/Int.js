@@ -202,8 +202,20 @@ fan.sys.Int.toChar = function(self)
 
 fan.sys.Int.toHex = function(self, width)
 {
-  var x = (self instanceof Long) ? self : Long.fromNumber(self);
-  var s = Long.fromNumber(self).toString(16);
+  if (width === undefined) width = null;
+
+  // convert to hex string
+  var val = self;
+  var s = "";
+  while (true)
+  {
+    // write chars backwards
+    s = "0123456789abcdef".charAt(val % 16) + s;
+    val = Math.floor(val / 16);
+    if (val === 0) break
+  }
+
+  // pad width
   if (width != null && s.length < width)
   {
     if (fan.sys.Int.$zeros == null)
@@ -214,6 +226,7 @@ fan.sys.Int.toHex = function(self, width)
     }
     s = fan.sys.Int.$zeros[width-s.length] + s;
   }
+
   return s;
 }
 fan.sys.Int.$zeros = null;

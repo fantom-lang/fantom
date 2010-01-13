@@ -102,7 +102,6 @@ class Build : BuildScript
   {
     log.debug("  fan/ [support]")
     append(sys + `FConst.js`, out)
-    append(sys + `Long.js`, out)
     append(sys + `MemBufStream.js`, out)
     append(sys + `Md5.js`, out)
     append(sys + `ObjUtil.js`, out)
