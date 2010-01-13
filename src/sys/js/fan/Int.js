@@ -19,16 +19,7 @@ fan.sys.Int = fan.sys.Obj.$extend(fan.sys.Num);
 fan.sys.Int.prototype.$ctor = function() {}
 fan.sys.Int.prototype.type = function() { return fan.sys.Int.$type; }
 
-// TODO - need to look at how this code is used
-fan.sys.Int.make = function(val)
-{
-  if (val instanceof Long) return val;
-  if (typeof(val) == "string") return new Long.fromStr(val);
-  if (val <= fan.sys.Int.maxInt) val;
-  return Long.fromNumber(val);
-}
-
-fan.sys.Int.maxInt = 9007199254740992;  // max exact int in js (2^53)
+fan.sys.Int.make = function(val) { return val; }
 
 //////////////////////////////////////////////////////////////////////////
 // Static
@@ -48,6 +39,7 @@ fan.sys.Int.fromStr = function(s, radix, checked)
   if (checked) throw fan.sys.ParseErr.make("Int", s);
   return null;
 }
+
 fan.sys.Int.toStr = function(self)
 {
   return ""+self;
