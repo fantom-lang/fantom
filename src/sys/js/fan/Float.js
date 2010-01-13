@@ -36,8 +36,7 @@ fan.sys.Float.prototype.type = function()
 
 fan.sys.Float.equals = function(self, that)
 {
-  // TODO: either ignore type or wrap everything with Float.make()
-  if (that != null)// && self.$fanType == that.$fanType)
+  if (that != null && self.$fanType === that.$fanType)
   {
     if (isNaN(self) || isNaN(that)) return false;
     return self.valueOf() == that.valueOf();
@@ -132,13 +131,3 @@ fan.sys.Float.toCode = function(self)
   return s + "f";
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Static Fields
-//////////////////////////////////////////////////////////////////////////
-
-// TEMP - see sysPod.js
-//fan.sys.Float.posInf = fan.sys.Float.make(Number.POSITIVE_INFINITY);
-//fan.sys.Float.negInf = fan.sys.Float.make(Number.NEGATIVE_INFINITY);
-//fan.sys.Float.nan    = fan.sys.Float.make(Number.NaN);
-//fan.sys.Float.e      = fan.sys.Float.make(Math.E);
-//fan.sys.Float.pi     = fan.sys.Float.make(Math.PI);
