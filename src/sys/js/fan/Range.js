@@ -89,12 +89,12 @@ fan.sys.Range.prototype.each = function(func)
   if (start < end)
   {
     if (this.m_exclusive) --end;
-    for (var i=start; i<=end; ++i) func.call(fan.sys.Int.make(i));
+    for (var i=start; i<=end; ++i) func.call(i);
   }
   else
   {
     if (this.m_exclusive) ++end;
-    for (var i=start; i>=end; --i) func.call(fan.sys.Int.make(i));
+    for (var i=start; i>=end; --i) func.call(i);
   }
 }
 
@@ -126,12 +126,12 @@ fan.sys.Range.prototype.toList = function()
   if (start < end)
   {
     if (this.m_exclusive) --end;
-    for (var i=start; i<=end; ++i) acc.push(fan.sys.Int.make(i));
+    for (var i=start; i<=end; ++i) acc.push(i);
   }
   else
   {
     if (this.m_exclusive) ++end;
-    for (var i=start; i>=end; --i) acc.push(fan.sys.Int.make(i));
+    for (var i=start; i>=end; --i) acc.push(i);
   }
   return acc;
 }
