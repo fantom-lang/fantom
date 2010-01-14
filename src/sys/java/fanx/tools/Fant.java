@@ -184,7 +184,6 @@ public class Fant
     }
     finally
     {
-      test.curTestMethod = null;
       try
       {
         if (args != null) teardown.callList(args);
@@ -196,6 +195,7 @@ public class Fant
         else
           e.printStackTrace();
       }
+      test.curTestMethod = null;
     }
   }
 
