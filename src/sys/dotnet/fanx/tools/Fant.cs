@@ -167,7 +167,6 @@ namespace Fanx.Tools
       }
       finally
       {
-        test.m_curTestMethod = null;
         try
         {
           if (args != null) teardown.callList(args);
@@ -176,6 +175,7 @@ namespace Fanx.Tools
         {
           Err.dumpStack(e);
         }
+        test.m_curTestMethod = null;
       }
     }
 
