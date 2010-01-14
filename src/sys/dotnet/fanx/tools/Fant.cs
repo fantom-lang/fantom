@@ -149,6 +149,7 @@ namespace Fanx.Tools
 
       try
       {
+        test.m_curTestMethod = method;
         setup.callList(args);
         method.callList(args);
         return test.verifyCount;
@@ -166,6 +167,7 @@ namespace Fanx.Tools
       }
       finally
       {
+        test.m_curTestMethod = null;
         try
         {
           if (args != null) teardown.callList(args);

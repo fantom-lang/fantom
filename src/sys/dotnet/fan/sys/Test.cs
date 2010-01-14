@@ -37,17 +37,11 @@ namespace Fan.Sys
   // Lifecycle
   //////////////////////////////////////////////////////////////////////////
 
-    public string id()
+    public Method curTestMethod()
     {
-      if (m_id == null)
-      {
-        string qname = type().qname();
-        int n = 0;
-        if (idMap[qname] != null) n = (int)idMap[qname];
-        m_id = qname + n;
-        idMap[qname] = n+1;
-      }
-      return m_id;
+      if (m_curTestMethod == null)
+        throw Err.make("No test currently executing for " + type()).val;
+      return m_curTestMethod;
     }
 
     public virtual void setup() {}
@@ -217,8 +211,8 @@ namespace Fan.Sys
 
     public int verifyCount;
     public static bool verbose;
+    public Method m_curTestMethod;
     File m_tempDir = null;
-    string m_id = null;
 
   }
 }

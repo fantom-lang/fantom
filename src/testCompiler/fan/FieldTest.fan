@@ -248,7 +248,7 @@ class FieldTest : CompilerTest
 
   Void verifyStorage(Field f, Bool expected)
   {
-    verifySame(((Int)f->flags) & FConst.Storage != 0, expected)
+    verifySame(((Int)f->flags).and(FConst.Storage) != 0, expected)
   }
 
 //////////////////////////////////////////////////////////////////////////
