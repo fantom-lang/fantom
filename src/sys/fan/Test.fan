@@ -9,6 +9,8 @@
 **
 ** Test is the base for Fantom unit tests.
 **
+** See `docTools:Fant`.
+**
 abstract class Test
 {
 
@@ -26,10 +28,11 @@ abstract class Test
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get a unique id for this run of the test method.  This id is
-  ** guaranteed to be unique for the life of the VM.
+  ** Get the current test method being executed or throw Err if
+  ** not currently running a test.  This method is available during
+  ** both `setup` and `teardown` as well during the test itself.
   **
-  Str id()
+  Method curTestMethod()
 
   **
   ** Setup is called before running each test method.

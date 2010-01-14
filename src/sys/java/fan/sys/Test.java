@@ -36,17 +36,11 @@ public class Test
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
-  public String id()
+  public Method curTestMethod()
   {
-    if (id == null)
-    {
-      String qname = type().qname();
-      Integer n = (Integer)idMap.get(qname);
-      if (n == null) n = Integer.valueOf(0);
-      id = qname + n;
-      idMap.put(qname, Integer.valueOf(n.intValue()+1));
-    }
-    return id;
+    if (curTestMethod == null)
+      throw Err.make("No test currently executing for " + type()).val;
+    return curTestMethod;
   }
 
   public void setup() {}
@@ -220,11 +214,9 @@ public class Test
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  static final HashMap idMap = new HashMap(); // qname -> Integer
-
   public int verifyCount;
   public static boolean verbose;
+  public Method curTestMethod;
   File tempDir;
-  String id;
 
 }

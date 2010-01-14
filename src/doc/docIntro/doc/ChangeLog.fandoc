@@ -782,6 +782,7 @@
 - DateTime, Date support for DDD pattern 1st, 2nd, etc
 - js: Int.toCode, toDuration, toDateTime
 - js: Remove Long support; use native Numbers for integers
+- Test.id => curTestMethod
 
 - TODO: change deprecated to be string
 

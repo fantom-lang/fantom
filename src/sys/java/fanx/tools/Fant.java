@@ -167,6 +167,7 @@ public class Fant
 
     try
     {
+      test.curTestMethod = method;
       setup.callList(args);
       method.callList(args);
       return test.verifyCount;
@@ -183,6 +184,7 @@ public class Fant
     }
     finally
     {
+      test.curTestMethod = null;
       try
       {
         if (args != null) teardown.callList(args);

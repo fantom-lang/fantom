@@ -18,7 +18,10 @@ abstract class CompilerTest : Test
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  Str podName() { return id.replace("::", "_") + "_" + podNameSuffix }
+  Str podName()
+  {
+    curTestMethod.toStr.replace("::", "_").replace(".", "_") + "_" + podNameSuffix
+  }
 
   Void compile(Str src, LogLevel logLevel := LogLevel.warn, Bool isScript := true)
   {
