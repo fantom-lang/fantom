@@ -96,7 +96,19 @@ public class FanObj
 
   public boolean isImmutable()
   {
-    return type().isConst();
+    try
+    {
+      return type().isConst();
+    }
+    catch (NullPointerException e)
+    {
+      // there are cases where accessing the type in a static initializer
+      // can happen before the type is configured; since static init problems
+      // are tricky to debug just make sure we dump some diagnostics
+      Err err = Err.make("Calling Obj.isImmutable in static initializers before type are available");
+      err.trace();
+      throw err.val;
+    }
   }
 
   public static Object toImmutable(Object self)
