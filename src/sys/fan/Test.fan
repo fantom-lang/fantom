@@ -9,7 +9,7 @@
 **
 ** Test is the base for Fantom unit tests.
 **
-** See `docTools:Fant`.
+** See `docTools::Fant`.
 **
 abstract class Test
 {
