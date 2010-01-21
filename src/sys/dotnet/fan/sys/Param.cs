@@ -29,7 +29,7 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.ParamType; }
+    public override Type @typeof() { return Sys.ParamType; }
 
     public string name()  { return m_name; }
     public Type of()   { return m_of; }

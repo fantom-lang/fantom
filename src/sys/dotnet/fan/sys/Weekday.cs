@@ -43,7 +43,7 @@ namespace Fan.Sys
       return (Weekday)doFromStr(Sys.WeekdayType, name, check);
     }
 
-    public override Type type() { return Sys.WeekdayType; }
+    public override Type @typeof() { return Sys.WeekdayType; }
 
     public Weekday increment() { return array[(ord+1)%array.Length]; }
 

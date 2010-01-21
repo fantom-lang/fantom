@@ -60,7 +60,7 @@ namespace Fan.Sys
       return FanInt.compare(m_ordinal, ((Enum)obj).m_ordinal);
     }
 
-    public override Type type()
+    public override Type @typeof()
     {
       return Sys.EnumType;
     }

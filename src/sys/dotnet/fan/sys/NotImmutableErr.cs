@@ -44,7 +44,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.NotImmutableErrType; }
+    public override Type @typeof() { return Sys.NotImmutableErrType; }
 
   //////////////////////////////////////////////////////////////////////////
   // Val - Java Exception Type

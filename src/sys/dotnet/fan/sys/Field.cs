@@ -60,7 +60,7 @@ namespace Fan.Sys
   // Signature
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type()  { return Sys.FieldType;  }
+    public override Type @typeof()  { return Sys.FieldType;  }
 
     public Type of() { return m_of; }
 
@@ -126,8 +126,8 @@ namespace Fan.Sys
       // check generic type (the .NET runtime will check non-generics)
       if (m_of.isGenericInstance() && value != null)
       {
-        if (!type(value).@is(m_of.toNonNullable()))
-          throw ArgErr.make("Wrong type for field " + qname() + ": " + m_of + " != " + type(value)).val;
+        if (!@typeof(value).@is(m_of.toNonNullable()))
+          throw ArgErr.make("Wrong type for field " + qname() + ": " + m_of + " != " + @typeof(value)).val;
       }
 
       if (m_setter != null)

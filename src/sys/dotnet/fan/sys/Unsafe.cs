@@ -19,7 +19,7 @@ namespace Fan.Sys
 
     public Unsafe(object val) { this.m_val = val; }
 
-    public override Type type() { return Sys.UnsafeType; }
+    public override Type @typeof() { return Sys.UnsafeType; }
 
     public object val() { return m_val; }
 

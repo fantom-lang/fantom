@@ -194,7 +194,7 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.PodType; }
+    public override Type @typeof() { return Sys.PodType; }
 
     public string name()  { return m_name; }
 

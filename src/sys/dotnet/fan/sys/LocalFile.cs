@@ -157,7 +157,7 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.LocalFileType; }
+    public override Type @typeof() { return Sys.LocalFileType; }
 
   //////////////////////////////////////////////////////////////////////////
   // File
@@ -315,7 +315,7 @@ namespace Fan.Sys
       }
 
       if (!(to is LocalFile))
-        throw IOErr.make("Cannot move LocalFile to " + to.type()).val;
+        throw IOErr.make("Cannot move LocalFile to " + to.@typeof()).val;
       LocalFile dest = (LocalFile)to;
 
       if (dest.exists())

@@ -42,7 +42,7 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.LogRecType; }
+    public override Type @typeof() { return Sys.LogRecType; }
 
     public override string toStr()
     {

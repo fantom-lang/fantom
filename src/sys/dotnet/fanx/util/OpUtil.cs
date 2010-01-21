@@ -200,7 +200,7 @@ namespace Fanx.Util
     public static bool @is(object instance, Type type)
     {
       if (instance == null) return false;
-      return FanObj.type(instance).fits(type);
+      return FanObj.@typeof(instance).fits(type);
     }
 
     public static object toImmutable(object obj)
@@ -214,7 +214,7 @@ namespace Fanx.Util
       if (FanObj.isImmutable(obj)) return obj;
       if (obj is List)   return ((List)obj).toImmutable();
       if (obj is Map)    return ((Map)obj).toImmutable();
-      throw NotImmutableErr.make(FanObj.type(obj).toStr()).val;
+      throw NotImmutableErr.make(FanObj.@typeof(obj).toStr()).val;
     }
 
   }

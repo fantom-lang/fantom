@@ -115,7 +115,7 @@ namespace Fan.Sys
       return FanStr.hash(toStr());
     }
 
-    public override Type type()
+    public override Type @typeof()
     {
       return Sys.VersionType;
     }

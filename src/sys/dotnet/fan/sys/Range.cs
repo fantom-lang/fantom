@@ -234,7 +234,7 @@ namespace Fan.Sys
         return m_start.ToString() + ".." + m_end.ToString();
     }
 
-    public override Type type() { return Sys.RangeType; }
+    public override Type @typeof() { return Sys.RangeType; }
 
   //////////////////////////////////////////////////////////////////////////
   // Slice Utils

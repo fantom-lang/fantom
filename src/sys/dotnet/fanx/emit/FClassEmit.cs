@@ -68,9 +68,9 @@ namespace Fanx.Emit
       // generate type() instance method
       PERWAPI.MethodDef m = emitter.classDef.AddMethod(
         PERWAPI.MethAttr.Public | PERWAPI.MethAttr.Virtual, PERWAPI.ImplAttr.IL,
-        "type", emitter.findType("Fan.Sys.Type"), new PERWAPI.Param[0]);
+        "typeof", emitter.findType("Fan.Sys.Type"), new PERWAPI.Param[0]);
       m.AddCallConv(PERWAPI.CallConv.Instance);
-      emitter.addToMethodMap(className, "type", new string[0], m);
+      emitter.addToMethodMap(className, "typeof", new string[0], m);
 
       PERWAPI.CILInstructions code = m.CreateCodeBuffer();
       code.FieldInst(PERWAPI.FieldOp.ldsfld, typeField);

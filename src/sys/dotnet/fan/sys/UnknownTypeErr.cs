@@ -45,7 +45,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.UnknownTypeErrType; }
+    public override Type @typeof() { return Sys.UnknownTypeErrType; }
 
   //////////////////////////////////////////////////////////////////////////
   // Val - C# Exception Type

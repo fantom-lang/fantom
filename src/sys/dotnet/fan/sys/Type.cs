@@ -48,7 +48,7 @@ namespace Fan.Sys
     public static Type of(object obj)
     {
       if (obj is FanObj)
-        return ((FanObj)obj).type();
+        return ((FanObj)obj).@typeof();
       else
         return FanUtil.toFanType(obj.GetType(), true);
     }
@@ -67,7 +67,7 @@ namespace Fan.Sys
   // Naming
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.TypeType; }
+    public override Type @typeof() { return Sys.TypeType; }
 
     public abstract Pod pod();
     public abstract string name();
@@ -296,7 +296,7 @@ namespace Fan.Sys
       {
         object obj = objs[i];
         if (obj == null) { nullable = true; continue; }
-        Type t = type(obj);
+        Type t = @typeof(obj);
         if (best == null) { best = t; continue; }
         while (!t.@is(best))
         {

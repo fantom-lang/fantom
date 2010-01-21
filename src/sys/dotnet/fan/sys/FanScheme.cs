@@ -26,7 +26,7 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.FanSchemeType; }
+    public override Type @typeof() { return Sys.FanSchemeType; }
 
     public override object get(Uri uri, object @base)
     {

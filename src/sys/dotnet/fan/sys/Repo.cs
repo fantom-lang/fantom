@@ -50,7 +50,7 @@ namespace Fan.Sys
 
     public override string toStr()  { return m_name + " [" + m_home + "]";  }
 
-    public override Type type()  { return Sys.RepoType;  }
+    public override Type @typeof()  { return Sys.RepoType;  }
 
   //////////////////////////////////////////////////////////////////////////
   // Files

@@ -87,7 +87,7 @@ namespace Fanx.Serial
         return;
       }
 
-      Type type = FanObj.type(obj);
+      Type type = FanObj.@typeof(obj);
       if (type.facet(symSimple, null, true) == Boolean.True)
       {
         writeSimple(type, obj);
@@ -124,7 +124,7 @@ namespace Fanx.Serial
 
       bool first = true;
       object defObj = null;
-      if (skipDefaults) defObj = FanObj.type(obj).make();
+      if (skipDefaults) defObj = FanObj.@typeof(obj).make();
 
       List fields = type.fields();
       for (int i=0; i<fields.sz(); ++i)
@@ -219,7 +219,7 @@ namespace Fanx.Serial
 
       // figure out if we can use an inferred type
       bool inferred = false;
-      if (list.type() == curFieldType)
+      if (list.@typeof() == curFieldType)
       {
         inferred = true;
       }
@@ -256,7 +256,7 @@ namespace Fanx.Serial
     public void writeMap(Map map)
     {
       // get k,v type
-      MapType t = (MapType)map.type();
+      MapType t = (MapType)map.@typeof();
 
       // decide if we're going output as single or multi-line format
       bool nl = isMultiLine(t.m_k) || isMultiLine(t.m_v);

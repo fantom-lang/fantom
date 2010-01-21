@@ -160,7 +160,7 @@ namespace Fan.Sys
       return m_ticks;
     }
 
-    public override sealed Type type()
+    public override sealed Type @typeof()
     {
       return Sys.DurationType;
     }

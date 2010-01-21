@@ -35,9 +35,9 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override string toStr() { return type().toStr(); }
+    public override string toStr() { return @typeof().toStr(); }
 
-    public override Type type() { return Sys.RootUriSpaceType; }
+    public override Type @typeof() { return Sys.RootUriSpaceType; }
 
   //////////////////////////////////////////////////////////////////////////
   // UriSpace

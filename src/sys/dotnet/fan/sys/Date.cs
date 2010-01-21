@@ -113,7 +113,7 @@ namespace Fan.Sys
       return toLocale("YYYY-MM-DD");
     }
 
-    public override Type type()
+    public override Type @typeof()
     {
       return Sys.DateType;
     }

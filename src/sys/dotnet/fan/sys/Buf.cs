@@ -55,10 +55,10 @@ namespace Fan.Sys
 
     public override string toStr()
     {
-      return type().name() + "(pos=" + getPos() + " size=" + getSize() + ")";
+      return @typeof().name() + "(pos=" + getPos() + " size=" + getSize() + ")";
     }
 
-    public override Type type() { return Sys.BufType; }
+    public override Type @typeof() { return Sys.BufType; }
 
   //////////////////////////////////////////////////////////////////////////
   // Support
@@ -348,7 +348,7 @@ namespace Fan.Sys
 
     public virtual string toHex()
     {
-      throw UnsupportedErr.make(type()+".toHex").val;
+      throw UnsupportedErr.make(@typeof()+".toHex").val;
     }
 
     public static Buf fromHex(string s)
@@ -384,7 +384,7 @@ namespace Fan.Sys
 
     public virtual string toBase64()
     {
-      throw UnsupportedErr.make(type()+".toBase64").val;
+      throw UnsupportedErr.make(@typeof()+".toBase64").val;
     }
 
     public static Buf fromBase64(string s)
@@ -424,12 +424,12 @@ namespace Fan.Sys
 
     public virtual Buf toDigest(string algorithm)
     {
-      throw UnsupportedErr.make(type()+".toDigest").val;
+      throw UnsupportedErr.make(@typeof()+".toDigest").val;
     }
 
     public virtual Buf hmac(String algorithm, Buf key)
     {
-      throw UnsupportedErr.make(type()+".hmac").val;
+      throw UnsupportedErr.make(@typeof()+".hmac").val;
     }
 
   //////////////////////////////////////////////////////////////////////////
