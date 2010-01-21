@@ -69,6 +69,8 @@ namespace Fan.Sys
 
     public static FileSystemInfo uriToFile(Uri uri)
     {
+      if (uri.scheme() != null && uri.scheme() != "file")
+        throw ArgErr.make("Invalid Uri scheme for local file: " + uri).val;
       string path = uriToPath(uri);
       if (System.IO.Directory.Exists(path)) return new DirectoryInfo(path);
       if (System.IO.File.Exists(path)) return new FileInfo(path);

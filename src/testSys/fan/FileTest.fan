@@ -54,6 +54,12 @@ class FileTest : Test
     verify(f.path.size < f.normalize.path.size)
     verifyEq(f.uri, f.uri.toFile.uri)
     verifyEq(f.normalize.uri.scheme, "file")
+
+    f = File(`file:/ok/path`)
+    verifyEq(f.uri.scheme, "file")
+    verifyEq(f.uri.pathStr, "/ok/path")
+
+    verifyErr(ArgErr#) { File(`c:/bad/windows/path`) }
   }
 
   Void testPlus()

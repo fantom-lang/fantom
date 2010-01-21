@@ -27,7 +27,8 @@ abstract const class File
   ** If the file doesn't exist, then it is assumed to be to a directory
   ** based on a trailing slash (see `isDir`).  If the Uri has a relative
   ** path, then it is assumed to be relative to the current working
-  ** directory.
+  ** directory.  Throw ArgErr if the Uri has a scheme other than null
+  ** or "file:".
   **
   static File make(Uri uri, Bool checkSlash := true)
 
