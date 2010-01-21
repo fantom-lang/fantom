@@ -2255,16 +2255,6 @@ if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
     // opening pipe
     consume(Token.pipe)
 
-// |,| is the empty method type
-// TODO
-if (curt === Token.comma)
-{
-  errReport(CompilerErr("use |->| instead of |,|", cur, null, LogLevel.warn))
-  consume
-  consume(Token.pipe)
-  return FuncType(params, names, ret)
-}
-
     // params, must be one if no ->
     inferred := false
     if (curt !== Token.arrow) inferred = funcTypeFormal(params, names)

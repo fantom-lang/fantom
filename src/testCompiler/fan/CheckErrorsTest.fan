@@ -537,8 +537,8 @@ class CheckErrorsTest : CompilerTest
         Str a
         virtual Int b
         abstract Int c { get { return *c } }
-        abstract Int d { set { *d = val } }
-        abstract Int e { get { return *e } set { *e = val } }
+        abstract Int d { set { *d = it } }
+        abstract Int e { get { return *e } set { *e = it } }
         const Int f := 3
         abstract Int g := 5
       }
@@ -546,8 +546,8 @@ class CheckErrorsTest : CompilerTest
       abstract class Foo
       {
         abstract Int c { get { return *c } }
-        abstract Int d { set { *d = val } }
-        abstract Int e { get { return *e } set { *e = val } }
+        abstract Int d { set { *d = it } }
+        abstract Int e { get { return *e } set { *e = it } }
         abstract Int f := 3
       }
       ",
@@ -718,10 +718,10 @@ class CheckErrorsTest : CompilerTest
         Int m01() { return this.*r00 }
 
         Int f00 { get { return f00 } }
-        Int f01 { set { f01 = val } }
-        Int f02 { get { return f02 } set { f02 = val } }
+        Int f01 { set { f01 = it } }
+        Int f02 { get { return f02 } set { f02 = it } }
 
-        override Int r01 { set { *r01 = val } }
+        override Int r01 { set { *r01 = it } }
       }
 
       class Root
@@ -1104,15 +1104,15 @@ class CheckErrorsTest : CompilerTest
   {
     // errors
     verifyErrors(
-     "class Foo                                               // 1
-      {                                                       // 2
+     "class Foo                                                // 1
+      {                                                        // 2
         Void m00a() { |->| { x := this.make }.call }           // 3
-        Void m00b() { |->| { |,| { x := this.make }.call }.call } // 4
+        Void m00b() { |->| { |->| { x := this.make }.call }.call } // 4
         Void m01a() { |->| { this.m02a }.call }                // 5
-        Void m01b() { |->| { |->| { this.m02a }.call }.call }   // 6
+        Void m01b() { |->| { |->| { this.m02a }.call }.call }  // 6
         static Void m02a() { |->| { m00a; Foo.m00a() }.call }  // 7
         static Void m02b() { |->| { |->| { m00a; Foo.m00a() }.call }.call } // 8
-        Void m03a(Str x) { |->| { this.sf.size }.call }       // 9
+        Void m03a(Str x) { |->| { this.sf.size }.call }        // 9
         Void m03b(Str x) { |->| { |->| { this.sf.size }.call }.call } // 10
         static Void m04a(Str x) { |->| { f.size; Foo.f.size }.call }
         static Void m04b(Str x) { |->| { |->| { f.size; Foo.f.size }.call }.call }
@@ -1122,7 +1122,7 @@ class CheckErrorsTest : CompilerTest
       }",
 
        [3, 34, "Cannot call constructor 'make' on instance",
-        4, 40, "Cannot call constructor 'make' on instance",
+        4, 41, "Cannot call constructor 'make' on instance",
         5, 29, "Cannot call static method 'm02a' on instance",
         6, 36, "Cannot call static method 'm02a' on instance",
         7, 31, "Cannot call instance method 'm00a' in static context",
@@ -1143,7 +1143,7 @@ class CheckErrorsTest : CompilerTest
     verifyErrors(
      "class Foo : Base, A
       {
-        override Int x { get { return super.x } set { A.super.x = val } }
+        override Int x { get { return super.x } set { A.super.x = it } }
         override Void n() { super.n }
         override Void m() { A.super.m() }
       }

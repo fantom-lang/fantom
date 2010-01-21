@@ -22,7 +22,7 @@ class ParserTest : CompilerTest
   {
     parse(
      "using compiler::Compiler         // explicit using
-      using compiler::Location as Loc  // as from sys
+      using compiler::Loc as XLoc      // as from sys
       using $podName::Int as MyInt     // as from me vs sys
       using $podName::Float            // me overrides sys
       class Foo {}
@@ -44,13 +44,13 @@ class ParserTest : CompilerTest
     verifyEq(unit.usings[4].resolvedPod.name, "$podName")
 
     verifyEq(unit.usings[1].resolvedType.qname, "compiler::Compiler")
-    verifyEq(unit.usings[2].resolvedType.qname, "compiler::Location")
+    verifyEq(unit.usings[2].resolvedType.qname, "compiler::Loc")
     verifyEq(unit.usings[3].resolvedType.qname, "$podName::Int")
     verifyEq(unit.usings[4].resolvedType.qname, "$podName::Float")
 
     verifyEq(unit.importedTypes["Foo"].first.qname, "$podName::Foo")
     verifyEq(unit.importedTypes["Compiler"].first.qname, "compiler::Compiler")
-    verifyEq(unit.importedTypes["Loc"].first.qname, "compiler::Location")
+    verifyEq(unit.importedTypes["XLoc"].first.qname, "compiler::Loc")
 
     // verify both me::Sys and sys::Sys imported
     verify(unit.importedTypes["Sys"].any |CType t->Bool| { return t.qname == "sys::Sys" })
