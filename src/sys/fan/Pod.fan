@@ -179,7 +179,7 @@ final const class Pod
   **
   ** Return the localized property.  This is convenience for:
   **   Locale.cur.get(name, key, def)
-  ** Also see `Locale.get` and `Type.loc`.
+  ** Also see `Locale.get`.
   **
   Str? loc(Str key, Str? def := "name::key")
 

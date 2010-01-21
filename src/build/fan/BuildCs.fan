@@ -49,9 +49,9 @@ abstract class BuildCs : BuildScript
   internal override Void validate()
   {
     ok := true
-    ok &= validateReqField("output")
-    ok &= validateReqField("targetType")
-    ok &= validateReqField("dirs")
+    ok = ok.and(validateReqField("output"))
+    ok = ok.and(validateReqField("targetType"))
+    ok = ok.and(validateReqField("dirs"))
     if (!ok) throw FatalBuildErr.make
   }
 

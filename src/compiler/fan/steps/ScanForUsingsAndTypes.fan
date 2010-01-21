@@ -151,9 +151,9 @@ class UsingAndTypeScanner : CompilerSupport
 
     // set enum/mixin flag to use by Parser
     if (tok.kind === Token.mixinKeyword)
-      typeDef.flags |= FConst.Mixin
+      typeDef.flags = typeDef.flags.or(FConst.Mixin)
     else if (tok.kind === Token.enumKeyword)
-      typeDef.flags |= FConst.Enum
+      typeDef.flags = typeDef.flags.or(FConst.Enum)
 
     // check for duplicate type names
     if (allTypes.containsKey(name))

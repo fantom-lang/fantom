@@ -146,11 +146,6 @@ public final class FanInt
 // Bitwise
 //////////////////////////////////////////////////////////////////////////
 
-// TODO
-public static long inverse(long self) { return ~self; }
-public static long lshift(long self, long x) { return self << x; }
-public static long rshift(long self, long x) { return self >> x; }
-
   public static long not(long self)
   {
     return ~self;

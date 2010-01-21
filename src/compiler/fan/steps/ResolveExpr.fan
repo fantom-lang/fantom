@@ -407,7 +407,11 @@ class ResolveExpr : CompilerStep
 
     f := resolved as FieldExpr
     f.useAccessor = false
-    if (f.field is FieldDef) ((FieldDef)f.field).flags |= FConst.Storage
+    if (f.field is FieldDef)
+    {
+      fd := (FieldDef)f.field
+      fd.flags = fd.flags.or(FConst.Storage)
+    }
     return f
   }
 

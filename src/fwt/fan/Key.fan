@@ -181,7 +181,7 @@ const class Key
           if (gotBase) throw Err()
           gotBase = true
         }
-        mask |= part.mask
+        mask = mask.or(part.mask)
       }
       return makeNew(mask, s)
     }

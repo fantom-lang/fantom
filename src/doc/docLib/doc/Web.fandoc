@@ -88,9 +88,9 @@ A 'WebRes' has the following lifecycle:
   - **Committed**: at this point the HTTP response headers have been
     written, and you can write the response content via the out
     stream.  Once a response is committed, attempts to access 'statusCode',
-    'headers', 'cookies', 'redirect', or 'sendError' will raise an exception
+    'headers', 'cookies', 'redirect', or 'sendErr' will raise an exception
   - **Done**: at this point the response is complete - for example once
-    the 'redirect' or 'sendError' method is called, the response
+    the 'redirect' or 'sendErr' method is called, the response
     is done
 
 Common methods you will use include:
@@ -104,7 +104,7 @@ Common methods you will use include:
     the content - first call commits the response
   - [isCommitted]`web::WebRes.isCommitted`: check commit state
   - [isDone]`web::WebRes.isDone`: check done state
-  - [sendError]`web::WebRes.sendError`: used to send an error status code
+  - [sendErr]`web::WebRes.sendErr`: used to send an error status code
   - [redirect]`web::WebRes.redirect`: used to send a redirect status code
 
 WebRes is a fairly low level API which requires the commit state

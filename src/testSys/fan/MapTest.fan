@@ -1025,7 +1025,7 @@ class MapTest : Test
     ++x["two"]
     verifyEq(x["two"], 5)
 
-    x["three"] |= 0xab00
+    x["three"] += 0xab00
     verifyEq(x["three"], 0xab03)
   }
 

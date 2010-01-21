@@ -763,7 +763,6 @@ class Tokenizer : CompilerSupport
         if (cur == '=') { consume; return TokenVal(Token.assignPercent) }
         return TokenVal(Token.percent)
       case '&':
-        if (cur == '=') { consume; return TokenVal(Token.assignAmp) }
         if (cur == '&') { consume; return TokenVal(Token.doubleAmp) }
         return TokenVal(Token.amp)
       case '(':
@@ -808,12 +807,6 @@ class Tokenizer : CompilerSupport
           if (cur == '>') { consume; return TokenVal(Token.cmp) }
           return TokenVal(Token.ltEq)
         }
-        if (cur == '<')
-        {
-          consume
-          if (cur == '=') { consume; return TokenVal(Token.assignLshift) }
-          return TokenVal(Token.lshift)
-        }
         return TokenVal(Token.lt)
       case '=':
         if (cur == '=')
@@ -825,12 +818,6 @@ class Tokenizer : CompilerSupport
         return TokenVal(Token.assign)
       case '>':
         if (cur == '=') { consume; return TokenVal(Token.gtEq) }
-        if (cur == '>')
-        {
-          consume
-          if (cur == '=') { consume; return TokenVal(Token.assignRshift) }
-          return TokenVal(Token.rshift)
-        }
         return TokenVal(Token.gt)
       case '?':
         if (cur == ':') { consume; return TokenVal(Token.elvis) }
@@ -850,13 +837,11 @@ class Tokenizer : CompilerSupport
       case ']':
         return TokenVal(Token.rbracket)
       case '^':
-        if (cur == '=') { consume; return TokenVal(Token.assignCaret) }
         return TokenVal(Token.caret)
       case '{':
         return TokenVal(Token.lbrace)
       case '|':
         if (cur == '|') { consume; return TokenVal(Token.doublePipe) }
-        if (cur == '=') { consume; return TokenVal(Token.assignPipe) }
         return TokenVal(Token.pipe)
       case '}':
         return TokenVal(Token.rbrace)

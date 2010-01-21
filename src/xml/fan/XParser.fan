@@ -415,7 +415,7 @@ class XParser
       else
       {
         if (!sp) throw err("Expecting space before attribute", line, col-1)
-        resolveAttrNs |= parseAttr(c, elem)
+        resolveAttrNs = resolveAttrNs.or(parseAttr(c, elem))
       }
     }
 

@@ -447,7 +447,7 @@ class MiscTest : CompilerTest
       {
         Void a(Str? x := null) { }
         Void b(Int[] y := Int[,] , Str z := \"hi\\n\") {}
-        Void c(Int x := 7, Int y := x-x , Int z := ~ y) {}
+        Void c(Int x := 7, Int y := x-x , Int z := - y) {}
         Void d(Str? x := mi(), Str? y := ms(5)) {}
 
         Str? mi() { return null }
@@ -461,7 +461,7 @@ class MiscTest : CompilerTest
     verifyEq(t.method("b").params[1]->def->toDocStr, "\"hi\\n\"")
     verifyEq(t.method("c").params[0]->def->toDocStr, "7")
     verifyEq(t.method("c").params[1]->def->toDocStr, "x - x")
-    verifyEq(t.method("c").params[2]->def->toDocStr, "~y")
+    verifyEq(t.method("c").params[2]->def->toDocStr, "-y")
     verifyEq(t.method("d").params[0]->def->toDocStr, "this.mi()")
     verifyEq(t.method("d").params[1]->def->toDocStr, "Foo.ms(5)")
   }

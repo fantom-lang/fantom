@@ -1321,13 +1321,6 @@ class ListTest : Test
     s := ["x"]
     s[0] += "y"
     verifyEq(s, ["xy"])
-
-    b := [false, false, true, true]
-    b[0] |= Bool.fromStr("false")
-    b[1] |= true
-    b[2] |= false
-    verifyEq(b[3] |= true, true)
-    verifyEq(b, [false, true, true, true])
   }
 
 //////////////////////////////////////////////////////////////////////////

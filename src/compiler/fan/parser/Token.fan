@@ -58,8 +58,6 @@ enum Token
   ltEq          ("<="),
   gt            (">"),
   gtEq          (">="),
-  lshift        ("<<"),
-  rshift        (">>"),
   lbrace        ("{"),
   rbrace        ("}"),
   lparen        ("("),
@@ -75,11 +73,6 @@ enum Token
   assignStar    ("*="),
   assignSlash   ("/="),
   assignPercent ("%="),
-  assignAmp     ("&="),
-  assignPipe    ("|="),
-  assignCaret   ("^="),
-  assignLshift  ("<<="),
-  assignRshift  (">>="),
   arrow         ("->"),
   elvis         ("?:"),
   safeDot       ("?."),
@@ -209,12 +202,6 @@ enum Token
       case star:           return ShortcutOp.mult      // a * b
       case slash:          return ShortcutOp.div       // a / b
       case percent:        return ShortcutOp.mod       // a % b
-      case lshift:         return ShortcutOp.lshift    // a << b
-      case rshift:         return ShortcutOp.rshift    // a >> b
-      case amp:            return ShortcutOp.and       // a & b
-      case pipe:           return ShortcutOp.or        // a | b
-      case caret:          return ShortcutOp.xor       // a ^ b
-      case tilde:          return ShortcutOp.inverse   // ~a
       case increment:      return ShortcutOp.increment // ++a, a++
       case decrement:      return ShortcutOp.decrement // --a, a--
       case eq:             return ShortcutOp.eq        // a == b
@@ -229,11 +216,6 @@ enum Token
       case assignStar:     return ShortcutOp.mult      // a *= b
       case assignSlash:    return ShortcutOp.div       // a /= b
       case assignPercent:  return ShortcutOp.mod       // a %= b
-      case assignAmp:      return ShortcutOp.and       // a &= b
-      case assignPipe:     return ShortcutOp.or        // a |= b
-      case assignCaret:    return ShortcutOp.xor       // a ^= b
-      case assignLshift:   return ShortcutOp.lshift    // a <<= b
-      case assignRshift:   return ShortcutOp.rshift    // a >>= b
       default: throw Err(toStr)
     }
   }

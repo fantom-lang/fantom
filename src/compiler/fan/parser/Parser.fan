@@ -309,20 +309,20 @@ public class Parser : CompilerSupport
       oldFlags := flags
       switch (curt)
       {
-        case Token.abstractKeyword:  flags |= FConst.Abstract
-        case Token.constKeyword:     flags |= FConst.Const
-        case Token.finalKeyword:     flags |= FConst.Final
-        case Token.internalKeyword:  flags |= FConst.Internal;  protection = true
-        case Token.nativeKeyword:    flags |= FConst.Native
-        case Token.newKeyword:       flags |= FConst.Ctor
-        case Token.onceKeyword:      flags |= Once // Parser only flag
-        case Token.overrideKeyword:  flags |= FConst.Override
-        case Token.privateKeyword:   flags |= FConst.Private;   protection = true
-        case Token.protectedKeyword: flags |= FConst.Protected; protection = true
-        case Token.publicKeyword:    flags |= FConst.Public;    protection = true
-        case Token.readonlyKeyword:  flags |= Readonly // Parser only flag
-        case Token.staticKeyword:    flags |= FConst.Static
-        case Token.virtualKeyword:   flags |= FConst.Virtual
+        case Token.abstractKeyword:  flags = flags.or(FConst.Abstract)
+        case Token.constKeyword:     flags = flags.or(FConst.Const)
+        case Token.finalKeyword:     flags = flags.or(FConst.Final)
+        case Token.internalKeyword:  flags = flags.or(FConst.Internal);  protection = true
+        case Token.nativeKeyword:    flags = flags.or(FConst.Native)
+        case Token.newKeyword:       flags = flags.or(FConst.Ctor)
+        case Token.onceKeyword:      flags = flags.or(Once) // Parser only flag
+        case Token.overrideKeyword:  flags = flags.or(FConst.Override)
+        case Token.privateKeyword:   flags = flags.or(FConst.Private);   protection = true
+        case Token.protectedKeyword: flags = flags.or(FConst.Protected); protection = true
+        case Token.publicKeyword:    flags = flags.or(FConst.Public);    protection = true
+        case Token.readonlyKeyword:  flags = flags.or(Readonly) // Parser only flag
+        case Token.staticKeyword:    flags = flags.or(FConst.Static)
+        case Token.virtualKeyword:   flags = flags.or(FConst.Virtual)
         default:                     done = true
       }
       if (done) break
@@ -338,7 +338,7 @@ public class Parser : CompilerSupport
 
     if (normalize)
     {
-      if (!protection) flags |= FConst.Public
+      if (!protection) flags = flags.or(FConst.Public)
       if (flags.and(FConst.Abstract) != 0) flags = flags.or(FConst.Virtual)
       if (flags.and(FConst.Override) != 0)
       {
@@ -492,7 +492,7 @@ public class Parser : CompilerSupport
     // until proved otherwise in ResolveExpr step or we
     // auto-generate getters/setters
     if (field.isConst)
-      field.flags |= FConst.Storage
+      field.flags = field.flags.or(FConst.Storage)
 
     // field initializer
     if (curt === Token.defAssign || curt === Token.assign)
@@ -582,10 +582,10 @@ public class Parser : CompilerSupport
   private Void genSyntheticGet(FieldDef f)
   {
     loc := f.loc
-    f.get.flags |= FConst.Synthetic
+    f.get.flags = f.get.flags.or(FConst.Synthetic)
     if (!f.isAbstract && !f.isNative)
     {
-      f.flags |= FConst.Storage
+      f.flags = f.flags.or(FConst.Storage)
       f.get.code = Block(loc)
       f.get.code.add(ReturnStmt(loc, f.makeAccessorExpr(loc, false)))
     }
@@ -594,10 +594,10 @@ public class Parser : CompilerSupport
   private Void genSyntheticSet(FieldDef f)
   {
     loc := f.loc
-    f.set.flags |= FConst.Synthetic
+    f.set.flags = f.set.flags.or(FConst.Synthetic)
     if (!f.isAbstract && !f.isNative)
     {
-      f.flags |= FConst.Storage
+      f.flags = f.flags.or(FConst.Storage)
       lhs := f.makeAccessorExpr(loc, false)
       rhs := UnknownVarExpr(loc, null, "it")
       f.set.code = Block(loc)
@@ -703,7 +703,7 @@ public class Parser : CompilerSupport
     consume(Token.rparen)
 
     // if no body expected
-    if (isSys) flags |= FConst.Native
+    if (isSys) flags = flags.or(FConst.Native)
     if (flags.and(FConst.Abstract) != 0 || flags.and(FConst.Native) != 0)
     {
       if (curt === Token.lbrace)
@@ -1184,7 +1184,7 @@ public class Parser : CompilerSupport
   **
   ** Assignment expression:
   **   <assignExpr>  :=  <condOrExpr> [<assignOp> <assignExpr>]
-  **   <assignOp>    :=  "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>="  | "&=" | "^=" | "|="
+  **   <assignOp>    :=  "=" | "*=" | "/=" | "%=" | "+=" | "-="
   **
   private Expr assignExpr(Expr? expr := null)
   {
@@ -1347,61 +1347,13 @@ public class Parser : CompilerSupport
   **
   private Expr rangeExpr()
   {
-    expr := bitOrExpr
+    expr := addExpr
     if (curt === Token.dotDot || curt === Token.dotDotLt)
     {
       start := expr
       exclusive := consume.kind === Token.dotDotLt
-      end := bitOrExpr
+      end := addExpr
       return RangeLiteralExpr(expr.loc, ns.rangeType, start, end, exclusive)
-    }
-    return expr
-  }
-
-  **
-  ** Bitwise or expression:
-  **   <bitOrExpr>  :=  <bitAndExpr> (("^" | "|") <bitAndExpr>)*
-  **
-  private Expr bitOrExpr()
-  {
-    expr := bitAndExpr
-    while (curt === Token.caret || curt === Token.pipe)
-    {
-// TODO
-if (curt === Token.caret) warn("Replace bitwise ^ with 'xor' method call", cur)
-if (curt === Token.pipe)  warn("Replace bitwise | with 'or' method call", cur)
-      expr = ShortcutExpr.makeBinary(expr, consume.kind, bitAndExpr)
-    }
-    return expr
-  }
-
-  **
-  ** Bitwise and expression:
-  **   <bitAndExpr>  :=  <shiftExpr> (("&" <shiftExpr>)*
-  **
-  private Expr bitAndExpr()
-  {
-    expr := shiftExpr
-    while (curt === Token.amp)
-    {
-if (curt === Token.amp) warn("Replace bitwise & with 'and' method call", cur)
-      expr = ShortcutExpr.makeBinary(expr, consume.kind, shiftExpr)
-    }
-    return expr
-  }
-
-  **
-  ** Bitwise shift expression:
-  **   <shiftExpr>  :=  <addExpr> (("<<" | ">>") <addExpr>)*
-  **
-  private Expr shiftExpr()
-  {
-    expr := additiveExpr
-    while (curt === Token.lshift || curt === Token.rshift)
-    {
-if (curt === Token.lshift) warn("Replace bitwise << with 'shiftl' method call", cur)
-if (curt === Token.rshift) warn("Replace bitwise >> with 'shiftr' method call", cur)
-      expr = ShortcutExpr.makeBinary(expr, consume.kind, additiveExpr)
     }
     return expr
   }
@@ -1410,11 +1362,11 @@ if (curt === Token.rshift) warn("Replace bitwise >> with 'shiftr' method call", 
   ** Additive expression:
   **   <addExpr>  :=  <multExpr> (("+" | "-") <multExpr>)*
   **
-  private Expr additiveExpr()
+  private Expr addExpr()
   {
-    expr := multiplicativeExpr
+    expr := multExpr
     while (curt === Token.plus || curt === Token.minus)
-      expr = ShortcutExpr.makeBinary(expr, consume.kind, multiplicativeExpr)
+      expr = ShortcutExpr.makeBinary(expr, consume.kind, multExpr)
     return expr
   }
 
@@ -1422,7 +1374,7 @@ if (curt === Token.rshift) warn("Replace bitwise >> with 'shiftr' method call", 
   ** Multiplicative expression:
   **   <multExpr>  :=  <parenExpr> (("*" | "/" | "%") <parenExpr>)*
   **
-  private Expr multiplicativeExpr()
+  private Expr multExpr()
   {
     expr := parenExpr
     while (curt === Token.star || curt === Token.slash || curt === Token.percent)
@@ -1492,9 +1444,8 @@ if (curt === Token.rshift) warn("Replace bitwise >> with 'shiftr' method call", 
       return parenExpr // optimize +expr to just expr
     }
 
-    if (tokt === Token.tilde || tokt === Token.minus)
+    if (tokt === Token.minus)
     {
-if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
       consume
       return ShortcutExpr.makeUnary(loc, tokt, parenExpr)
     }
@@ -2261,7 +2212,7 @@ if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
     while (curt === Token.comma)
     {
       consume
-      inferred |= funcTypeFormal(params, names)
+      inferred = inferred.or(funcTypeFormal(params, names))
     }
 
     // if we see ?-> in a function type, that means |X?->ret|
@@ -2427,7 +2378,7 @@ if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
   const static Int ParserFlagsMask := Readonly
 
   // Bitwise and this mask to clear all protection scope flags
-  const static Int ProtectionMask := (FConst.Public+FConst.Protected+FConst.Private+FConst.Internal).not
+  const static Int ProtectionMask := (FConst.Public).or(FConst.Protected).or(FConst.Private).or(FConst.Internal).not
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

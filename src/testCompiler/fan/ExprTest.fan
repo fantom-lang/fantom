@@ -282,15 +282,6 @@ class ExprTest : CompilerTest
     verifyExpr("a / b", 3, 12, 4)
     verifyExpr("a % b", 1, 5, 2)
 
-    // bitwise operators
-// TODO
-    verifyExpr("~a", 0xffff_ffff_ffff_5432, 0xabcd)
-    verifyExpr("a >> b", 0xa, 0xab, 4)
-    verifyExpr("a << b", 0xab0, 0xab, 4)
-    verifyExpr("a & b", 0x8a, 0xab, 0x9e)
-    verifyExpr("a | b", 0xbf, 0xab, 0x9e)
-    verifyExpr("a ^ b", 0x35, 0xab, 0x9e)
-
     // equality
     verifyExpr("a == b", true, "x", "x", "", true)
     verifyExpr("a == null", false, "x", "x", "", true)
@@ -347,13 +338,6 @@ class ExprTest : CompilerTest
     verifyExpr("$v", 6, 2, 3,  "x := a; $v = x; $v*= b;")
     verifyExpr("$v", 3, 6, 2,  "x := a; $v = x; $v/= b;")
     verifyExpr("$v", 2, 8, 3,  "x := a; $v = x; $v%= b;")
-
-// TODO
-    verifyExpr("$v", 0xab, 0xabcd, 8,    "x := a; $v = x; $v>>= b;")
-    verifyExpr("$v", 0xabcd0, 0xabcd, 4, "x := a; $v = x; $v<<= b;")
-    verifyExpr("$v", 0x8a, 0xab, 0x9e,   "x := a; $v = x; $v&= b;")
-    verifyExpr("$v", 0xbf, 0xab, 0x9e,   "x := a; $v = x; $v|= b;")
-    verifyExpr("$v", 0x35, 0xab, 0x9e,   "x := a; $v = x; $v^= b;")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -706,7 +690,7 @@ class ExprTest : CompilerTest
         static Obj n(Str x) { return x++ }
         static Obj o(Str x) { return --x }
         static Obj q(Str x) { return x / 3 }
-        static Obj r(Str x) { return x |= 3 }
+        static Obj r(Str x) { return x *= 3 }
         static Obj s(Str x) { return x?.foo }
         static Obj t(Str x) { return x?.foo() }
         static Obj u() { return Str#bad }
@@ -730,7 +714,7 @@ class ExprTest : CompilerTest
        16, 32, "Unknown method 'sys::Str.increment'",
        17, 32, "Unknown method 'sys::Str.decrement'",
        18, 32, "Unknown method 'sys::Str.div'",
-       19, 32, "Unknown method 'sys::Str.or'",
+       19, 32, "Unknown method 'sys::Str.mult'",
        20, 35, "Unknown slot 'sys::Str.foo'",
        21, 35, "Unknown method 'sys::Str.foo'",
        22, 27, "Unknown slot literal 'sys::Str.bad'",
