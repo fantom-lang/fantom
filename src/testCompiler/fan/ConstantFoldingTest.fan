@@ -26,11 +26,6 @@ class ConstantFoldingTest : CompilerTest
         static Int percent() { return 8 % 5 }
         static Int plus()    { return 4 + 3 }
         static Int minus()   { return 10 - 7 }
-        static Int amp()     { return 0xff & 0x0f }
-        static Int pipe()    { return 0xa0 | 0x0b }
-        static Int caret()   { return 0xff ^ 0x17 }
-        static Int lshift()  { return 0x0a << 4 }
-        static Int rshift()  { return 0x80 >> 1 }
         static Int negate()  { return -1 }
         static Str toString(){ return 5.toStr }
         static Str toHex()   { return 0xabcd.toHex }
@@ -42,10 +37,6 @@ class ConstantFoldingTest : CompilerTest
      verifyMethodReturns("percent", 3)
      verifyMethodReturns("plus",    7)
      verifyMethodReturns("minus",   3)
-     verifyMethodReturns("amp",     0x0f)
-     verifyMethodReturns("pipe",    0xab)
-     verifyMethodReturns("caret",   0xe8)
-     verifyMethodReturns("lshift",  0xa0)
      verifyMethodReturns("negate",  -1)
      verifyMethodReturns("toString", "5")
      verifyMethodReturns("toHex",   "abcd")

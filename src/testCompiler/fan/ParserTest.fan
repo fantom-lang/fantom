@@ -716,7 +716,6 @@ class ParserTest : CompilerTest
     expr = verifyShortcut("x++", ShortcutOp.increment, Token.increment, ["x"], true, true)
     expr = verifyShortcut("x--", ShortcutOp.decrement, Token.decrement, ["x"], true, true)
     expr = verifyShortcut("-x", ShortcutOp.negate, Token.minus, ["x"])
-    expr = verifyShortcut("~x", ShortcutOp.inverse,  Token.tilde, ["x"])
     expr = verifyExpr("x == null", ExprId.cmpNull);  verifyEq(expr->operand->name, "x")
     expr = verifyExpr("x === null", ExprId.cmpNull);  verifyEq(expr->operand->name, "x")
     expr = verifyExpr("null == x", ExprId.cmpNull);  verifyEq(expr->operand->name, "x")
@@ -746,11 +745,6 @@ class ParserTest : CompilerTest
     expr = verifyShortcut("x*y",     ShortcutOp.mult,    Token.star,    ["x", "y"])
     expr = verifyShortcut("x/y",     ShortcutOp.div,     Token.slash,   ["x", "y"])
     expr = verifyShortcut("x%y",     ShortcutOp.mod,     Token.percent, ["x", "y"])
-    expr = verifyShortcut("x>>y",    ShortcutOp.rshift,  Token.rshift,  ["x", "y"])
-    expr = verifyShortcut("x<<y",    ShortcutOp.lshift,  Token.lshift,  ["x", "y"])
-    expr = verifyShortcut("x|y",     ShortcutOp.or,      Token.pipe,    ["x", "y"])
-    expr = verifyShortcut("x&y",     ShortcutOp.and,     Token.amp,     ["x", "y"])
-    expr = verifyShortcut("x^y",     ShortcutOp.xor,     Token.caret,   ["x", "y"])
 
     // ternary
     expr = verifyExpr("x ? y : z", ExprId.ternary);
@@ -786,11 +780,6 @@ class ParserTest : CompilerTest
     expr = verifyShortcut("x *= y",   ShortcutOp.mult,    Token.assignStar,    ["x", "y"], true)
     expr = verifyShortcut("x /= y",   ShortcutOp.div,     Token.assignSlash,   ["x", "y"], true)
     expr = verifyShortcut("x %= y",   ShortcutOp.mod,     Token.assignPercent, ["x", "y"], true)
-    expr = verifyShortcut("x >>= y",  ShortcutOp.rshift,  Token.assignRshift,  ["x", "y"], true)
-    expr = verifyShortcut("x <<= y",  ShortcutOp.lshift,  Token.assignLshift,  ["x", "y"], true)
-    expr = verifyShortcut("x |= y",   ShortcutOp.or,      Token.assignPipe,    ["x", "y"], true)
-    expr = verifyShortcut("x &= y",   ShortcutOp.and,     Token.assignAmp,     ["x", "y"], true)
-    expr = verifyShortcut("x ^= y",   ShortcutOp.xor,     Token.assignCaret,   ["x", "y"], true)
 
     // call chains (dot, arrow)
     expr = verifyExpr("x.y", ExprId.unknownVar)
@@ -1010,21 +999,6 @@ class ParserTest : CompilerTest
       verifyEq(expr->name, "callList")
       verifyEq(expr->target->id, ExprId.closure)
       verifyEq(expr->target->signature->signature, "|sys::Str->sys::Bool|")
-
-    // not closures!
-    expr = verifyExpr("x | Float.nan", ExprId.shortcut)
-      verifyEq(expr->name, "or")
-      verifyEq(expr->op, ShortcutOp.or)
-      verifyEq(expr->target->name, "x")
-      verifyEq(expr->args->first->id, ExprId.unknownVar)
-      verifyEq(expr->args->first->target->id, ExprId.staticTarget)
-      verifyEq(expr->args->first->target->ctype->toStr, "sys::Float")
-
-    /*
-    verifyStmt("x := 0xab00 | y\n|->Void| { y = x }.call", StmtId.localDef)
-    m := (MethodDef)t.slots.first
-    verifyEq(m.code.stmts[1].id, StmtId.expr)
-    */
   }
 
   Void testBadExpr()

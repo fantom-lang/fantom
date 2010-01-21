@@ -12,12 +12,9 @@ Fantom's expression syntax is very similar to C, Java, C# and company.
 Operators in order of precedence:
 
   - Primary: '(x)   x.y   x.y()   x->y()   x?.y   x?.y()   x?->y()   x[y]'
-  - Unary: '++x   --x   x++   x--   ~x   !x   +x   -x   (T)x   &x()  *x'
+  - Unary: '++x   --x   x++   x--  !x   +x   -x   (T)x   &x()  *x'
   - Multiplicative: '*   /   %'
   - Additive: '+   -'
-  - Shift: '<<   >>'
-  - Bitwise And: '&'
-  - Bitwise Or: '|   ^'
   - Range: '..   ..<'
   - Elvis: 'x ?: y'
   - Relational: '<   <=   >=   >   <=>   is   isnot   as'
@@ -25,14 +22,8 @@ Operators in order of precedence:
   - Conditional And: '&&'
   - Conditional Or: '||'
   - Ternary: 'x ? t : f'
-  - Assignment: '=   *=   /=   %=   +=   -=   <<=   >>=   &=   ^=   |='
+  - Assignment: '=   *=   /=   %=   +=   -='
   - Collection Add: ','
-
-Fantom breaks with C convention in that the bitwise operators are
-a higher precedence than the relational operators.  This makes writing
-bitwise expressions more intuitive:
-
-  isCool := flags & Flags.cool != 0
 
 Shortcut Operators [#shortcuts]
 *******************************
@@ -50,12 +41,6 @@ a specific method:
    a[b]      =>  a.get(b)
    a[b] = c  =>  a.set(b, c)
    a[b]      =>  a.slice(b) if b is Range
-   a << b    =>  a.lshift(b)
-   a >> b    =>  a.rshift(b)
-   a & b     =>  a.and(b)
-   a | b     =>  a.or(b)
-   a ^ b     =>  a.xor(b)
-   ~a        =>  a.inverse()
    -a        =>  a.negate()
    ++a, a++  =>  a = a.increment()
    --a, a--  =>  a = a.decrement()
@@ -311,6 +296,18 @@ negative indexes works with all three shortcuts:
 
 Use of negative indexes applies to most methods on 'List' and 'Str'
 which take an index argument.
+
+Bitwise Operators [#bitwise]
+****************************
+Fantom doesn't have bitwise operators, instead normal method
+calls are used:
+
+  ~a      =>   a.not
+  a & b   =>   a.and(b)
+  a | b   =>   a.or(b)
+  a ^ b   =>   a.xor(b)
+  a << b  =>   a.shiftl(b)
+  a >> b  =>   a.shiftr(b)
 
 Serialization Expressions [#serialization]
 ******************************************

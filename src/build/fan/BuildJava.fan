@@ -44,8 +44,8 @@ abstract class BuildJava : BuildScript
   internal override Void validate()
   {
     ok := true
-    ok &= validateReqField("jar")
-    ok &= validateReqField("packages")
+    ok = ok.and(validateReqField("jar"))
+    ok = ok.and(validateReqField("packages"))
     if (!ok) throw FatalBuildErr.make
 
     // boot strap checking - ensure that we aren't overwriting sys.jar

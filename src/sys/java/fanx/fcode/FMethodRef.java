@@ -348,12 +348,13 @@ public class FMethodRef
   static Special intOr     = new SpecialOp(LOR);
   static Special intXor    = new SpecialOp(LXOR);
   static Special intNegate = new SpecialOp(LNEG);
-  static Special intLshift = new SpecialOp2(L2I, LSHL);
-  static Special intRshift = new SpecialOp2(L2I, LSHR);
+  static Special intShiftl = new SpecialOp2(L2I, LSHL);
+  static Special intShiftr = new SpecialOp2(L2I, LSHR);
 
   static HashMap intSpecials = new HashMap();
   static
   {
+    intSpecials.put("negate", intNegate);
     intSpecials.put("plus",   intPlus);
     intSpecials.put("minus",  intMinus);
     intSpecials.put("mult",   intMult);
@@ -362,9 +363,8 @@ public class FMethodRef
     intSpecials.put("and",    intAnd);
     intSpecials.put("or",     intOr);
     intSpecials.put("xor",    intXor);
-    intSpecials.put("negate", intNegate);
-    intSpecials.put("lshift", intLshift);
-    intSpecials.put("rshift", intRshift);
+    intSpecials.put("shiftl", intShiftl);
+    intSpecials.put("shiftr", intShiftr);
   }
 
 //////////////////////////////////////////////////////////////////////////

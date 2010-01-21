@@ -60,7 +60,7 @@ const class Color : Brush
   **
   new make(Int argb := 0, Bool hasAlpha := false)
   {
-    if (!hasAlpha) argb |= 0xff00_0000
+    if (!hasAlpha) argb = argb.or(0xff00_0000)
     this.argb = argb
   }
 

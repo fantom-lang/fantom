@@ -100,7 +100,7 @@ const class Locale
   **   5. If all else fails return the def parameter which
   **      defaults to 'pod::key'
   **
-  ** Also see `Pod.loc` and `Type.loc`.
+  ** Also see `Pod.loc`.
   **
   Str? get(Str pod, Str key, Str? def := "pod::key")
 

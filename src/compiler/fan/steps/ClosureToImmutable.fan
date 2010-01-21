@@ -89,7 +89,7 @@ class ClosureToImmutable : CompilerStep
   **
   Void setAllFieldsConst(TypeDef cls)
   {
-    cls.fieldDefs.each |f| { f.flags |= FConst.Const }
+    cls.fieldDefs.each |f| { f.flags = f.flags.or(FConst.Const) }
   }
 
   **

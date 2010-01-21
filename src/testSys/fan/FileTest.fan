@@ -587,7 +587,7 @@ class FileTest : Test
     eq := true
     len.times |Int i|
     {
-      eq &= a[apos+i] == b[bpos+i]
+      eq = eq.and(a[apos+i] == b[bpos+i])
     }
     verify(eq)
   }

@@ -40,8 +40,8 @@ underlying platform.  For example on a Java VM, the default Fantom locale
 will be initialized from 'java.util.Locale.getDefault' (which in turn is
 initialized from the operating system's default locale).
 
-Locales are configured as a thread local variable.  Use `sys::Locale.current`
-and `sys::Locale.setCurrent` to get and set the current thread's locale.
+Locales are configured as a thread local variable.  Use `sys::Locale.cur`
+and `sys::Locale.setCur` to get and set the current thread's locale.
 
 By convention 'Locale' is never passed as a parameter to Fantom APIs.  Rather
 the locale is implied by the current thread.  As a general rule APIs which
@@ -66,7 +66,7 @@ The `sys::Locale.get` API is used to lookup a localized property.  Assuming
 your pod name is "myApp", the following code would lookup some localized
 properties:
 
-  loc := Locale.current
+  loc := Locale.cur
   Button(loc.get("myApp", "ok"))
   Button(loc.get("myApp", "cancel"))
 

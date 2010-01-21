@@ -72,7 +72,7 @@ severe:
   - **debug**: log everything
   - **info**: log everything but debug
   - **warn**: log everything but debug, info
-  - **error**: log only errors
+  - **err**: log only errors
   - **silent**: log nothing
 
 All logs default to level 'info' (see [setup]`#setup` to change default levels).

@@ -36,7 +36,7 @@ abstract class BuildGroup : BuildScript
   {
     // validate required fields
     ok := true
-    ok &= validateReqField("childrenScripts")
+    ok = ok.and(validateReqField("childrenScripts"))
     if (!ok) throw FatalBuildErr.make
 
     // compile script Uris into BuildScript instances

@@ -75,7 +75,7 @@ abstract class BuildPod : BuildScript
     if (version == null) version = @buildVersion.val
     if (outDir == null)  outDir  = (Repo.working.home + `lib/fan/`).uri
     ok := true
-    ok &= validateReqField("podName")
+    ok = ok.and(validateReqField("podName"))
     if (!ok) throw FatalBuildErr.make
 
     // boot strap checking - ensure that we aren't

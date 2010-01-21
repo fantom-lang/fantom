@@ -57,8 +57,8 @@ mixin DocCompilerSupport
   Bool showByDefault(Type t, Slot s)
   {
     v := s.isPublic || s.isProtected
-    v &= t == Obj# || s.parent != Obj#
-    v &= t == s.parent
+    v = v.and(t == Obj# || s.parent != Obj#)
+    v = v.and(t == s.parent)
     return v
   }
 

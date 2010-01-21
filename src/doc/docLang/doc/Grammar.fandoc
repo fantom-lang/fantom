@@ -129,8 +129,7 @@ Expr [#expr]
 
   <expr>           :=  <assignExpr>
   <assignExpr>     :=  <ternaryExpr> [<assignOp> <assignExpr>]
-  <assignOp>       :=  "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>="  |
-                       "&=" | "^=" | "|="
+  <assignOp>       :=  "=" | "*=" | "/=" | "%=" | "+=" | "-="
   <ternaryExpr>    :=  <condOrExpr> ["?" <condOrExpr> ":" <condOrExpr>]
   <condOrExpr>     :=  <condAndExpr>  ("||" <condAndExpr>)*
   <condAndExpr>    :=  <equalityExpr> ("&&" <equalityExpr>)*
@@ -139,17 +138,14 @@ Expr [#expr]
   <typeCheckExpr>  :=  <elvisExpr> [("is" | "as" | "isnot") <type>]
   <compareExpr>    :=  <elvisExpr> (("<" | "<=" | ">" | ">=" | "<=>") <elvisExpr>)*
   <elvisExpr>      :=  <rangeExpr> "?:" <rangeExpr>
-  <rangeExpr>      :=  <bitOrExpr> ((".." | "..<") <bitOrExpr>)*
-  <bitOrExpr>      :=  <bitAndExpr> (("^" | "|") <bitAndExpr>)*
-  <bitAndExpr>     :=  <shiftExpr> ("&" <shiftExpr>)*
-  <shiftExpr>      :=  <addExpr> (("<<" | ">>") <addExpr>)*
+  <rangeExpr>      :=  <addExpr> ((".." | "..<") <addExpr>)*
   <addExpr>        :=  <multExpr> (("+" | "-") <multExpr>)*
   <multExpr>       :=  <parenExpr> (("*" | "/" | "%") <parenExpr>)*
   <parenExpr>      :=  <unaryExpr> | <castExpr> | <groupedExpr>
   <castExpr>       :=  "(" <type> ")" <parenExpr>
   <groupedExpr>    :=  "(" <expr> ")" <termChain>*
   <unaryExpr>      :=  <prefixExpr> | <termExpr> | <postfixExpr>
-  <prefixExpr>     :=  ("!" | "+" | "-" | "~" | "&" | "++" | "--") <parenExpr>
+  <prefixExpr>     :=  ("!" | "+" | "-" | "&" | "++" | "--") <parenExpr>
   <postfixExpr>    :=  <termExpr> ("++" | "--")
   <termExpr>       :=  <termBase> <termChain>*
   <termBase>       :=  <literal> | <idExpr> | <typeBase>
