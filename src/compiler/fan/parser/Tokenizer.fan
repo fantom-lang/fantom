@@ -24,11 +24,11 @@ class Tokenizer : CompilerSupport
   ** File.readAllStr).  If isDoc is false, we skip all star-star
   ** Fandoc comments.
   **
-  new make(Compiler compiler, Location location, Str buf, Bool isDoc)
+  new make(Compiler compiler, Loc loc, Str buf, Bool isDoc)
     : super(compiler)
   {
     this.buf      = buf
-    this.filename = location.file
+    this.filename = loc.file
     this.isDoc    = isDoc
     this.tokens   = TokenVal[,]
     this.inStrLiteral = false
@@ -879,9 +879,9 @@ class Tokenizer : CompilerSupport
   **
   ** Return a CompilerException for current location in source.
   **
-  override CompilerErr err(Str msg, Location? loc := null)
+  override CompilerErr err(Str msg, Loc? loc := null)
   {
-    if (loc == null) loc = Location(filename, line, col)
+    if (loc == null) loc = Loc(filename, line, col)
     return super.err(msg, loc);
   }
 
@@ -940,7 +940,7 @@ class Tokenizer : CompilerSupport
     files := File(`/dev/fan/src/testSys/fan/`).list
     files.each |File f|
     {
-      tok := Tokenizer(null, Location(f.name), f.readAllStr, false).tokenize
+      tok := Tokenizer(null, Loc(f.name), f.readAllStr, false).tokenize
       echo("-- " + f + " [" + tok.size + "]")
     }
     t2 := Duration.now

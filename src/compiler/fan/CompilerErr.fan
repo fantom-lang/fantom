@@ -12,22 +12,19 @@
 const class CompilerErr : Err
 {
 
-  new make(Str msg, Location? location, Err? cause := null, LogLevel level := LogLevel.err)
+  new make(Str msg, Loc? loc, Err? cause := null, LogLevel level := LogLevel.err)
     : super(msg, cause)
   {
     this.level = level
-    if (location != null)
+    if (loc != null)
     {
-      this.file = location.file
-      this.line = location.line
-      this.col  = location.col
+      this.file = loc.file
+      this.line = loc.line
+      this.col  = loc.col
     }
   }
 
-  Location location()
-  {
-    return Location(file, line, col)
-  }
+  Loc loc() { Loc(file, line, col) }
 
   Bool isErr() { level === LogLevel.err }
 

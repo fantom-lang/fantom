@@ -71,7 +71,7 @@ abstract class JsExpr : JsNode
       //case ExprId.curry
       //case ExprId.complexLiteral
 
-      default: throw s.err("Unknown ExprId: $expr.id", expr.location)
+      default: throw s.err("Unknown ExprId: $expr.id", expr.loc)
     }
   }
 }
@@ -789,10 +789,10 @@ class JsShortcutExpr : JsCallExpr
       case ">":  name = "compareGT"
     }
 
-    if (isAssign) assignTarget = findAssignTarget(target, se.location)
+    if (isAssign) assignTarget = findAssignTarget(target, se.loc)
   }
 
-  private JsExpr findAssignTarget(JsExpr expr, Location loc)
+  private JsExpr findAssignTarget(JsExpr expr, Loc loc)
   {
     if (expr is JsLocalVarExpr || expr is JsFieldExpr) return expr
     t := Type.of(expr).field("target", false)

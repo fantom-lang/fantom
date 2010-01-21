@@ -34,8 +34,8 @@ class RegexDslPlugin : DslPlugin
   {
     regexType := ns.resolveType("sys::Regex")
     fromStr := regexType.method("fromStr")
-    args := [Expr.makeForLiteral(dsl.location, ns, dsl.src)]
-    return CallExpr.makeWithMethod(dsl.location, null, fromStr, args)
+    args := [Expr.makeForLiteral(dsl.loc, ns, dsl.src)]
+    return CallExpr.makeWithMethod(dsl.loc, null, fromStr, args)
   }
 
 }

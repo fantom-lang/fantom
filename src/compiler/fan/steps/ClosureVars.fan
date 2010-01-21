@@ -200,19 +200,19 @@ class ClosureVars : CompilerStep
     // get the initial value to pass to wrapper constructor
     Expr? init
     if (stmt.init == null)
-      init = LiteralExpr.makeNull(stmt.location, ns)
+      init = LiteralExpr.makeNull(stmt.loc, ns)
     else
       init = ((BinaryExpr)stmt.init).rhs
 
     // replace original initialization with wrapper construction
-    stmt.init = initWrapper(stmt.location, stmt.var, init)
+    stmt.init = initWrapper(stmt.loc, stmt.var, init)
     return null
   }
 
   **
   ** Generate the expression: var := Wrapper(init)
   **
-  private Expr initWrapper(Location loc, MethodVar var, Expr init)
+  private Expr initWrapper(Loc loc, MethodVar var, Expr init)
   {
     wrapCtor := var.wrapField.parent.method("make")
     lhs := LocalVarExpr.makeNoUnwrap(loc, var)
@@ -240,7 +240,7 @@ class ClosureVars : CompilerStep
       var = var.paramWrapper
 
       // if not unwrapping, we still need to use different variable
-      if (!local.unwrap) return LocalVarExpr(local.location, var)
+      if (!local.unwrap) return LocalVarExpr(local.loc, var)
     }
 
     // if not a wrapped variable or we have explictly marked
@@ -248,7 +248,7 @@ class ClosureVars : CompilerStep
     if (!var.isWrapped || !local.unwrap) return local
 
     // unwrap from the Wrapper.val field
-    loc := local.location
+    loc := local.loc
     return fieldExpr(loc, LocalVarExpr.makeNoUnwrap(loc, var), var.wrapField)
   }
 
@@ -270,7 +270,7 @@ class ClosureVars : CompilerStep
     method.vars.each |var|
     {
       if (var.paramWrapper == null) return
-      loc := method.location
+      loc := method.loc
       initWrap := initWrapper(loc, var.paramWrapper, LocalVarExpr(loc, var))
       method.code.stmts.insert(0, initWrap.toStmt)
     }
@@ -324,7 +324,7 @@ class ClosureVars : CompilerStep
       var.wrapField = var.shadows.wrapField
     }
 
-    loc := closure.location
+    loc := closure.loc
     field := addToClosure(closure, name, LocalVarExpr.makeNoUnwrap(loc, var.shadows))
 
     // load from field to local in beginning of doCall
@@ -344,7 +344,7 @@ class ClosureVars : CompilerStep
   static CField makeOuterThisField(ClosureExpr closure)
   {
     // pass this to subtitute closure constructor
-    loc := closure.location
+    loc := closure.loc
     Expr? subArg
     if (closure.enclosingClosure != null)
     {
@@ -368,7 +368,7 @@ class ClosureVars : CompilerStep
   **
   private static FieldDef addToClosure(ClosureExpr closure, Str name, Expr subtituteArg)
   {
-    loc      := closure.location
+    loc      := closure.loc
     thisType := closure.enclosingType
     implType := closure.cls
     ctype    := subtituteArg.ctype
@@ -425,7 +425,7 @@ class ClosureVars : CompilerStep
     if (existing != null) return existing
 
     // define new wrapper
-    loc := Location("synthetic")
+    loc := Loc("synthetic")
     w := TypeDef(cs.ns, loc, cs.syntheticsUnit, name)
     w.flags = FConst.Internal + FConst.Synthetic
     w.base  = cs.ns.objType
@@ -463,7 +463,7 @@ class ClosureVars : CompilerStep
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  private static FieldExpr fieldExpr(Location loc, Expr target, CField field)
+  private static FieldExpr fieldExpr(Loc loc, Expr target, CField field)
   {
     // make sure we don't use accessor
     FieldExpr(loc, target, field, false)

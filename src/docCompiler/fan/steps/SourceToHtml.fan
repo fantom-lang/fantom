@@ -27,7 +27,7 @@ class SourceToHtml : DocCompilerStep
     // make sure srcDir is configured
     if (compiler.srcDir == null)
     {
-      warn("DocCompiler.srcDir not configured!", Location("config"))
+      warn("DocCompiler.srcDir not configured!", Loc("config"))
       return
     }
 
@@ -38,7 +38,7 @@ class SourceToHtml : DocCompilerStep
       if (f.isDir || f.ext != "fan") return
       if (f.name == "build.fan") return
       if (srcFiles.containsKey(f.name))
-        warn("Duplicate source file names: $f.name", Location.makeFile(f))
+        warn("Duplicate source file names: $f.name", Loc.makeFile(f))
       else
         srcFiles[f.name] = f
     }
@@ -60,14 +60,14 @@ class SourceToHtml : DocCompilerStep
     srcFile := srcFiles[srcFileName]
     if (srcFile == null)
     {
-      warn("Cannot find source file: $srcFileName", Location(srcFileName))
+      warn("Cannot find source file: $srcFileName", Loc(srcFileName))
       return
     }
 
     // do it
     log.debug("  Source [$t]")
     file := compiler.podOutDir + `${t.name}_src.html`
-    loc := Location("Source $t.qname")
+    loc := Loc("Source $t.qname")
     SourceToHtmlGenerator(compiler, loc, file.out, t, srcFile).generate
   }
 

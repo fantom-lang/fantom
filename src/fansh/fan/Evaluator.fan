@@ -141,7 +141,7 @@ class Evaluator
       output      = CompilerOutputMode.transientPod
       mode        = CompilerInputMode.str
       srcStr      = source
-      srcStrLocation = Location("fansh")
+      srcStrLoc   = Loc("fansh")
     }
 
     // create fresh compiler

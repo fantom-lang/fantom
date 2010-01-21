@@ -37,9 +37,9 @@ class DefaultCtor : CompilerStep
     if (dup != null)
     {
       if (dup.parent === t)
-        err("Default constructor 'make' conflicts with slot at " + dup->location->toLocationStr, t.location)
+        err("Default constructor 'make' conflicts with slot at " + dup->loc->toLocStr, t.loc)
       else
-        err("Default constructor 'make' conflicts with inherited slot '$dup.qname'", t.location)
+        err("Default constructor 'make' conflicts with inherited slot '$dup.qname'", t.loc)
       return
     }
 
@@ -48,7 +48,7 @@ class DefaultCtor : CompilerStep
 
   static MethodDef addDefaultCtor(TypeDef parent, Int flags)
   {
-    loc := parent.location
+    loc := parent.loc
 
     block := Block(loc)
     block.stmts.add(ReturnStmt.makeSynthetic(loc))

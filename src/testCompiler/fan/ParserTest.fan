@@ -1410,7 +1410,7 @@ class ParserTest : CompilerTest
     compiler.ns = ReflectNamespace(compiler)
 
     // use custom pipeline only to parse phase
-    loc := Location.make("Test")
+    loc := Loc("Test")
     compiler.pod = PodDef(compiler.ns, loc, podName)
     ResolveDepends(compiler).run
     Tokenize(compiler).tokenize(loc, src)

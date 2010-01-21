@@ -56,7 +56,7 @@ class CheckInheritance : CompilerStep
       cls := t.mixins.find |CType x->Bool| { return !x.isMixin }
       if (cls != null)
       {
-        err("Invalid inheritance order, ensure class '$cls' comes first before mixins", t.location)
+        err("Invalid inheritance order, ensure class '$cls' comes first before mixins", t.loc)
         return false
       }
     }
@@ -71,27 +71,27 @@ class CheckInheritance : CompilerStep
 
     // ensure mixin doesn't extend class
     if (t.isMixin && t.baseSpecified)
-      err("Mixin '$t.name' cannot extend class '$base'", t.location)
+      err("Mixin '$t.name' cannot extend class '$base'", t.loc)
 
     // ensure enum doesn't extend class
     if (t.isEnum && t.baseSpecified)
-      err("Enum '$t.name' cannot extend class '$base'", t.location)
+      err("Enum '$t.name' cannot extend class '$base'", t.loc)
 
     // check extends a mixin
     if (base.isMixin)
-      err("Class '$t.name' cannot extend mixin '$base'", t.location)
+      err("Class '$t.name' cannot extend mixin '$base'", t.loc)
 
     // check extends parameterized type
     if (base.isParameterized)
-      err("Class '$t.name' cannot extend parameterized type '$base'", t.location)
+      err("Class '$t.name' cannot extend parameterized type '$base'", t.loc)
 
     // check extends final
     if (base.isFinal)
-      err("Class '$t.name' cannot extend final class '$base'", t.location)
+      err("Class '$t.name' cannot extend final class '$base'", t.loc)
 
     // check extends internal scoped outside my pod
     if (base.isInternal && t.pod != base.pod)
-      err("Class '$t.name' cannot access internal scoped class '$base'", t.location)
+      err("Class '$t.name' cannot access internal scoped class '$base'", t.loc)
   }
 
   private Void checkMixin(TypeDef t, CType m)
@@ -100,14 +100,14 @@ class CheckInheritance : CompilerStep
     if (!m.isMixin)
     {
       if (t.isMixin)
-        err("Mixin '$t.name' cannot extend class '$m'", t.location)
+        err("Mixin '$t.name' cannot extend class '$m'", t.loc)
       else
-        err("Class '$t.name' cannot mixin class '$m'", t.location)
+        err("Class '$t.name' cannot mixin class '$m'", t.loc)
     }
 
     // check extends internal scoped outside my pod
     if (m.isInternal && t.pod != m.pod)
-      err("Type '$t.name' cannot access internal scoped mixin '$m'", t.location)
+      err("Type '$t.name' cannot access internal scoped mixin '$m'", t.loc)
   }
 
 }

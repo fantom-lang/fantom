@@ -31,7 +31,7 @@ abstract class JsStmt : JsNode
       case StmtId.continueStmt: return JsContinueStmt(s)
       case StmtId.tryStmt:      return JsTryStmt(s, stmt)
       case StmtId.switchStmt:   return JsSwitchStmt(s, stmt)
-      default: throw s.err("Unknown StmtId: $stmt.id", stmt.location)
+      default: throw s.err("Unknown StmtId: $stmt.id", stmt.loc)
     }
   }
 }

@@ -118,7 +118,7 @@ class CompilerLog
   virtual Void compilerErr(CompilerErr err)
   {
     if (err.level < this.level) return
-    loc := err.location.toLocationStr
+    loc := err.loc.toLocStr
     if (err.isWarn)
       printLine("$loc: WARN $err.msg")
     else

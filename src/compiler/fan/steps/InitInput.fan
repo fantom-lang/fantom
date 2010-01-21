@@ -84,7 +84,7 @@ class InitInput : CompilerStep
   {
     // if "pod.fan" as passed in then parse it
     if (input.podStr != null)
-      parsePodFacets(Location("pod.fan"), input.podStr)
+      parsePodFacets(Loc("pod.fan"), input.podStr)
   }
 
   private Void initPodFacetsFileMode()
@@ -94,11 +94,11 @@ class InitInput : CompilerStep
     if (!podDef.exists) throw err("Invalid podDef: $podDef", null)
 
     // parse pod facets
-    loc := Location.makeFile(podDef)
+    loc := Loc.makeFile(podDef)
     parsePodFacets(loc, podDef.readAllStr)
   }
 
-  private Void parsePodFacets(Location loc, Str src)
+  private Void parsePodFacets(Loc loc, Str src)
   {
     try
       podFacets = PodFacetsParser(loc, src).parse
@@ -173,10 +173,10 @@ class InitInput : CompilerStep
     // verify "pod.fan" matches podName passed in
     podName := input.podName
     if (podFacets != null && podName!= podFacets.podName)
-      throw err("CompilerInput.podName does not match 'pod.fan': $podName != $podFacets.podName", podFacets.location)
+      throw err("CompilerInput.podName does not match 'pod.fan': $podName != $podFacets.podName", podFacets.loc)
 
     // init compiler fields
-    compiler.pod   = PodDef(ns, Location(podName), podName)
+    compiler.pod   = PodDef(ns, Loc(podName), podName)
     compiler.isSys = podName == "sys"
   }
 
@@ -219,7 +219,7 @@ class InitInput : CompilerStep
     compiler.srcFiles.each |file|
     {
       if (map[file.name] != null)
-        throw err("Cannot have source files with duplicate names: $file.name", Location.makeFile(file))
+        throw err("Cannot have source files with duplicate names: $file.name", Loc.makeFile(file))
       map[file.name] = file
     }
 
@@ -234,7 +234,7 @@ class InitInput : CompilerStep
     uris.each |uri|
     {
       dir := base + uri
-      if (!dir.isDir) throw err("Invalid directory", Location.makeFile(dir))
+      if (!dir.isDir) throw err("Invalid directory", Loc.makeFile(dir))
       dir.list.each |file|
       {
         if (file.isDir) return
@@ -248,7 +248,7 @@ class InitInput : CompilerStep
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Location loc                // ctor
+  private Loc loc                     // ctor
   private CompilerInput input         // ctor
   private PodFacetsParser? podFacets  // parsePodFacets
 

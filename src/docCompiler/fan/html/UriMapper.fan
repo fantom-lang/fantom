@@ -36,7 +36,7 @@ class UriMapper : DocCompilerSupport
   ** Given a fandoc uri string, map it to a relative URL
   ** to the resource's HTML.
   **
-  Uri map(Str fandocUri, Location loc)
+  Uri map(Str fandocUri, Loc loc)
   {
     this.fandocUri    = fandocUri
     this.loc          = loc
@@ -323,7 +323,7 @@ class UriMapper : DocCompilerSupport
 
   Str? fandocUri
   Str? frag
-  Location? loc
+  Loc? loc
   Uri? targetUri
   Bool targetIsCode
   Bool targetIsSlot

@@ -16,8 +16,8 @@ class Block : Node
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location)
-    : super(location)
+  new make(Loc loc)
+    : super(loc)
   {
     stmts = Stmt[,]
   }

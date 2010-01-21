@@ -99,11 +99,11 @@ class ResolveExpr : CompilerStep
     // doesn't do true definite assignment checking since most local
     // variables use type inference anyhow)
     if (def.init == null && !def.isCatchVar)
-      def.init = LiteralExpr.makeDefaultLiteral(def.location, ns, def.ctype)
+      def.init = LiteralExpr.makeDefaultLiteral(def.loc, ns, def.ctype)
 
     // turn init into full assignment
     if (def.init != null)
-      def.init = BinaryExpr.makeAssign(LocalVarExpr(def.location, def.var), def.init)
+      def.init = BinaryExpr.makeAssign(LocalVarExpr(def.loc, def.var), def.init)
   }
 
   private Void resolveFor(ForStmt stmt)
@@ -135,7 +135,7 @@ class ResolveExpr : CompilerStep
 
     // expr type must be resolved at this point
     if ((Obj?)expr.ctype == null)
-      throw err("Expr type not resolved: ${expr.id}: ${expr}", expr.location)
+      throw err("Expr type not resolved: ${expr.id}: ${expr}", expr.loc)
 
     // if we resolved to a generic parameter like V or K,
     // then use its real underlying type
@@ -197,7 +197,7 @@ class ResolveExpr : CompilerStep
     slot := expr.parent.slot(expr.name)
     if (slot == null)
     {
-      err("Unknown slot literal '${expr.parent.signature}.${expr.name}'", expr.location)
+      err("Unknown slot literal '${expr.parent.signature}.${expr.name}'", expr.loc)
       expr.ctype = ns.error
       return expr
     }
@@ -249,7 +249,7 @@ class ResolveExpr : CompilerStep
   private Expr resolveSymbol(SymbolExpr expr)
   {
     expr.ctype = ns.symbolType
-    expr.symbol = ResolveImports.resolveSymbol(this, curUnit, expr.podName, expr.name, expr.location)
+    expr.symbol = ResolveImports.resolveSymbol(this, curUnit, expr.podName, expr.name, expr.loc)
     return expr
   }
 
@@ -260,7 +260,7 @@ class ResolveExpr : CompilerStep
   {
     if (inClosure)
     {
-      loc := expr.location
+      loc := expr.loc
       closure := curType.closure
 
       // if the closure is in a static slot, report an error
@@ -291,7 +291,7 @@ class ResolveExpr : CompilerStep
       // cannot be used outside of the class - we could potentially
       // work around this using a wrapper method - but for now we will
       // just disallow it
-      err("Invalid use of 'super' within closure", expr.location)
+      err("Invalid use of 'super' within closure", expr.loc)
       expr.ctype = ns.error
       return expr
     }
@@ -311,12 +311,12 @@ class ResolveExpr : CompilerStep
   {
     // if inside of field setter it is our implicit val parameter
     if (curMethod != null && curMethod.isFieldSetter)
-      return LocalVarExpr(expr.location, curMethod.vars.first)
+      return LocalVarExpr(expr.loc, curMethod.vars.first)
 
     // can't use it keyword outside of an it-block
     if (!inClosure || !curType.closure.isItBlock)
     {
-      err("Invalid use of 'it' outside of it-block", expr.location)
+      err("Invalid use of 'it' outside of it-block", expr.loc)
       expr.ctype = ns.error
       return expr
     }
@@ -370,16 +370,16 @@ class ResolveExpr : CompilerStep
     if (var.target == null)
     {
       // attempt to a name in the current scope
-      binding := resolveLocal(var.name, var.location)
+      binding := resolveLocal(var.name, var.loc)
       if (binding != null)
-        return LocalVarExpr(var.location, binding)
+        return LocalVarExpr(var.loc, binding)
     }
 
 // TODO
 if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
 {
-  warn("Use 'it' instead of 'val' in setter", var.location)
-  return LocalVarExpr(var.location, curMethod.vars.first)
+  warn("Use 'it' instead of 'val' in setter", var.loc)
+  return LocalVarExpr(var.loc, curMethod.vars.first)
 }
 
     // at this point it can't be a local variable, so it must be
@@ -401,14 +401,14 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
     {
       field := curType.field(var.name)
       if (field != null)
-        resolved = FieldExpr(var.location, ThisExpr(var.location), field)
+        resolved = FieldExpr(var.loc, ThisExpr(var.loc), field)
     }
 
     // is we can't resolve as field, then this is an error
     if (resolved.id !== ExprId.field)
     {
       if (resolved.ctype !== ns.error)
-        err("Invalid use of field storage operator '*'", var.location)
+        err("Invalid use of field storage operator '*'", var.loc)
       return resolved
     }
 
@@ -463,9 +463,9 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
     if (call.target == null)
     {
       // attempt to a name in the current scope
-      binding := resolveLocal(call.name, call.location)
+      binding := resolveLocal(call.name, call.loc)
       if (binding != null)
-        return resolveCallOnLocalVar(call, LocalVarExpr(call.location, binding))
+        return resolveCallOnLocalVar(call, LocalVarExpr(call.loc, binding))
     }
 
     return CallResolver(compiler, curType, curMethod, call).resolve
@@ -489,7 +489,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
     if (!binding.ctype.fits(ns.funcType))
     {
       if (binding.ctype != ns.error)
-        err("Cannot call local variable '$call.name' like a function", call.location)
+        err("Cannot call local variable '$call.name' like a function", call.loc)
       call.ctype = ns.error
       return call
     }
@@ -499,7 +499,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
     // that many arguments are just inane so tough luck
     if (call.args.size > 8)
     {
-      err("Tough luck - cannot use () operator with more than 8 arguments, use call(List)", call.location)
+      err("Tough luck - cannot use () operator with more than 8 arguments, use call(List)", call.loc)
       call.ctype = ns.error
       return call
     }
@@ -507,7 +507,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
     // invoking the () operator on a sys::Func is syntactic
     // sugar for invoking one of the Func.call methods
     callMethod := binding.ctype.method("call")
-    return CallExpr.makeWithMethod(call.location, binding, callMethod, call.args)
+    return CallExpr.makeWithMethod(call.loc, binding, callMethod, call.args)
   }
 
   **
@@ -538,7 +538,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
     // resolve make
     call.method = base.method("make")
     if (call.method == null)
-      err("Unknown construction method '${base.qname}.make'", call.location)
+      err("Unknown construction method '${base.qname}.make'", call.loc)
 
     // hook to infer closure type from call or to
     // translateinto an implicit call to Obj.with
@@ -614,7 +614,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
     // we better have a x[y] indexed get expression
     if (orig.target.id != ExprId.shortcut && orig.target->op === ShortcutOp.get)
     {
-      err("Expected indexed expression", orig.location)
+      err("Expected indexed expression", orig.loc)
       return orig
     }
 
@@ -633,7 +633,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
     if (set == null || set.params.size != 2 || set.isStatic ||
         set.params[0].paramType.toNonNullable != get.params[0].paramType.toNonNullable ||
         set.params[1].paramType.toNonNullable != get.returnType.toNonNullable)
-      err("No matching 'set' method for '$get.qname'", orig.location)
+      err("No matching 'set' method for '$get.qname'", orig.loc)
     else
       expr.setMethod = set
 
@@ -656,7 +656,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
     expr.doCall.paramDefs.each |ParamDef p|
     {
       if (expr.enclosingVars.containsKey(p.name) && p.name != "it")
-        err("Closure parameter '$p.name' is already defined in current block", p.location)
+        err("Closure parameter '$p.name' is already defined in current block", p.loc)
     }
   }
 
@@ -665,7 +665,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
   **
   private Expr resolveDsl(DslExpr expr)
   {
-    plugin := DslPlugin.find(this, expr.location, expr.anchorType)
+    plugin := DslPlugin.find(this, expr.loc, expr.anchorType)
     if (plugin == null)
     {
       expr.ctype = ns.error
@@ -687,7 +687,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
     }
     catch (Err e)
     {
-      errReport(CompilerErr("Internal error in DslPlugin '$plugin.typeof': $e", expr.location, e))
+      errReport(CompilerErr("Internal error in DslPlugin '$plugin.typeof': $e", expr.loc, e))
       e.trace
       return expr
     }
@@ -719,8 +719,8 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
   private Void bindToMethodVar(LocalDefStmt def)
   {
     // make sure it doesn't exist in the current scope
-    if (resolveLocal(def.name, def.location) != null)
-      err("Variable '$def.name' is already defined in current block", def.location)
+    if (resolveLocal(def.name, def.loc) != null)
+      err("Variable '$def.name' is already defined in current block", def.loc)
 
     // create and add it
     def.var = curMethod.addLocalVarForDef(def, currentBlock)
@@ -730,7 +730,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
   ** Resolve a local variable using current scope based on
   ** the block stack and possibly the scope of a closure.
   **
-  private MethodVar? resolveLocal(Str name, Location loc)
+  private MethodVar? resolveLocal(Str name, Loc loc)
   {
     // if not in method, then we can't have a local
     if (curMethod == null) return null

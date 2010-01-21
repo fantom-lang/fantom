@@ -41,14 +41,14 @@ class FandocToHtml : DocCompilerStep
       {
         log.debug("  FandocIndex [$indexFile]")
         compiler.fandocIndex = indexFile.in.readObj
-        loc := Location.makeFile(indexFile)
+        loc := Loc.makeFile(indexFile)
         outFile := compiler.podOutDir + `index.html`
         FandocIndexToHtmlGenerator(compiler, loc, outFile.out).generate
       }
       catch (Err e)
       {
         errReport(CompilerErr("Cannot read index.fog",
-          Location.makeFile(indexFile), e))
+          Loc.makeFile(indexFile), e))
       }
     }
 
@@ -63,7 +63,7 @@ class FandocToHtml : DocCompilerStep
     try
     {
       doc := FandocParser().parse(inFile.name, inFile.in)
-      loc := Location(compiler.pod + "::" + inFile.name)
+      loc := Loc(compiler.pod + "::" + inFile.name)
 
       outFile := compiler.podOutDir + `${inFile.basename}.html`
       FandocToHtmlGenerator(compiler, loc, outFile, doc).generate
@@ -72,7 +72,7 @@ class FandocToHtml : DocCompilerStep
     }
     catch (Err e)
     {
-      errReport(CompilerErr("Cannot parse fandoc file", Location.makeFile(inFile), e))
+      errReport(CompilerErr("Cannot parse fandoc file", Loc.makeFile(inFile), e))
       return null
     }
   }

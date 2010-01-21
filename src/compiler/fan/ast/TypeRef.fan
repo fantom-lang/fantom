@@ -9,7 +9,7 @@
 **
 ** TypeRef models a type reference such as an extends clause or a
 ** method parameter.  Really it is just an AST node wrapper for a
-** CType that let's us keep track of the source code Location.
+** CType that let's us keep track of the source code Loc.
 **
 class TypeRef : Node, CType
 {
@@ -18,8 +18,8 @@ class TypeRef : Node, CType
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, CType t)
-    : super(location)
+  new make(Loc loc, CType t)
+    : super(loc)
   {
     this.t = t
   }

@@ -17,7 +17,7 @@ class FacetDef : Node
 //////////////////////////////////////////////////////////////////////////
 
   new make(SymbolExpr key, Expr val)
-    : super(key.location)
+    : super(key.loc)
   {
     this.key = key
     this.val = val

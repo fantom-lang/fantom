@@ -20,7 +20,7 @@ abstract class HtmlGenerator : HtmlDocWriter, DocCompilerSupport
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(DocCompiler compiler, Location loc, OutStream out)
+  new make(DocCompiler compiler, Loc loc, OutStream out)
     : super(out)
   {
     this.compiler = compiler
@@ -215,6 +215,6 @@ abstract class HtmlGenerator : HtmlDocWriter, DocCompilerSupport
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Location loc
+  Loc loc
   Str docHome := "Doc Home"
 }

@@ -23,7 +23,7 @@ class CompileJs : Task
     script := script as BuildPod
 
     input := CompilerInput.make
-    input.inputLoc    = Location.makeFile(script.scriptFile)
+    input.inputLoc    = Loc.makeFile(script.scriptFile)
     input.podName     = script.podName
     input.version     = script.version
     input.dependsDir  = script.resolveDir(script.dependsDir, true)

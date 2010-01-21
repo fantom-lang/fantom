@@ -16,8 +16,8 @@ abstract class Expr : Node
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, ExprId id)
-    : super(location)
+  new make(Loc loc, ExprId id)
+    : super(loc)
   {
     this.id = id
   }
@@ -133,13 +133,13 @@ abstract class Expr : Node
   **
   virtual Str serialize()
   {
-    throw CompilerErr("'$id' not serializable", location)
+    throw CompilerErr("'$id' not serializable", loc)
   }
 
   **
   ** Make an Expr which will serialize the given literal.
   **
-  static Expr makeForLiteral(Location loc, CNamespace ns, Obj val)
+  static Expr makeForLiteral(Loc loc, CNamespace ns, Obj val)
   {
     switch (val.typeof)
     {
@@ -302,7 +302,7 @@ abstract class Expr : Node
 **
 class LiteralExpr : Expr
 {
-  new make(Location loc, ExprId id, CType ctype, Obj? val)
+  new make(Loc loc, ExprId id, CType ctype, Obj? val)
     : super(loc, id)
   {
     this.ctype = ctype
@@ -311,16 +311,16 @@ class LiteralExpr : Expr
       throw Err("null literal must typed as nullable!")
   }
 
-  new makeNull(Location loc, CNamespace ns)
+  new makeNull(Loc loc, CNamespace ns)
     : this.make(loc, ExprId.nullLiteral, ns.objType.toNullable, null) {}
 
-  new makeTrue(Location loc, CNamespace ns)
+  new makeTrue(Loc loc, CNamespace ns)
     : this.make(loc, ExprId.trueLiteral, ns.boolType, true) {}
 
-  new makeFalse(Location loc, CNamespace ns)
+  new makeFalse(Loc loc, CNamespace ns)
     : this.make(loc, ExprId.falseLiteral, ns.boolType, false) {}
 
-  static LiteralExpr makeDefaultLiteral(Location loc, CNamespace ns, CType ctype)
+  static LiteralExpr makeDefaultLiteral(Loc loc, CNamespace ns, CType ctype)
   {
     if (!ctype.isNullable())
     {
@@ -378,7 +378,7 @@ class LiteralExpr : Expr
 **
 class SlotLiteralExpr : Expr
 {
-  new make(Location loc, CType parent, Str name)
+  new make(Loc loc, CType parent, Str name)
     : super(loc, ExprId.slotLiteral)
   {
     this.parent = parent
@@ -403,14 +403,14 @@ class SlotLiteralExpr : Expr
 **
 class SymbolExpr: Expr
 {
-  new make(Location loc, Str? podName, Str name)
+  new make(Loc loc, Str? podName, Str name)
     : super(loc, ExprId.symbolLiteral)
   {
     this.podName = podName
     this.name = name
   }
 
-  new makeFor(Location loc, CSymbol symbol)
+  new makeFor(Loc loc, CSymbol symbol)
     : this.make(loc, symbol.pod.name, symbol.name)
   {
     this.ctype = symbol.ns.symbolType
@@ -437,8 +437,8 @@ class SymbolExpr: Expr
 **
 class RangeLiteralExpr : Expr
 {
-  new make(Location location, CType ctype, Expr start, Expr end, Bool exclusive)
-    : super(location, ExprId.rangeLiteral)
+  new make(Loc loc, CType ctype, Expr start, Expr end, Bool exclusive)
+    : super(loc, ExprId.rangeLiteral)
   {
     this.ctype = ctype
     this.start = start
@@ -474,14 +474,14 @@ class RangeLiteralExpr : Expr
 **
 class ListLiteralExpr : Expr
 {
-  new make(Location location, ListType? explicitType := null)
-    : super(location, ExprId.listLiteral)
+  new make(Loc loc, ListType? explicitType := null)
+    : super(loc, ExprId.listLiteral)
   {
     this.explicitType = explicitType
   }
 
-  new makeFor(Location location, CType ctype, Expr[] vals)
-    : super.make(location, ExprId.listLiteral)
+  new makeFor(Loc loc, CType ctype, Expr[] vals)
+    : super.make(loc, ExprId.listLiteral)
   {
     this.ctype = ctype
     this.vals  = vals
@@ -530,8 +530,8 @@ class ListLiteralExpr : Expr
 **
 class MapLiteralExpr : Expr
 {
-  new make(Location location, MapType? explicitType := null)
-    : super(location, ExprId.mapLiteral)
+  new make(Loc loc, MapType? explicitType := null)
+    : super(loc, ExprId.mapLiteral)
   {
     this.explicitType = explicitType
   }
@@ -585,8 +585,8 @@ class MapLiteralExpr : Expr
 **
 class UnaryExpr : Expr
 {
-  new make(Location location, ExprId id, Token opToken, Expr operand)
-    : super(location, id)
+  new make(Loc loc, ExprId id, Token opToken, Expr operand)
+    : super(loc, id)
   {
     this.opToken = opToken
     this.operand = operand
@@ -625,7 +625,7 @@ class UnaryExpr : Expr
 class BinaryExpr : Expr
 {
   new make(Expr lhs, Token opToken, Expr rhs)
-    : super(lhs.location, opToken.toExprId)
+    : super(lhs.loc, opToken.toExprId)
   {
     this.lhs = lhs
     this.opToken = opToken
@@ -685,7 +685,7 @@ class BinaryExpr : Expr
 class CondExpr : Expr
 {
   new make(Expr first, Token opToken)
-    : super(first.location, opToken.toExprId)
+    : super(first.loc, opToken.toExprId)
   {
     this.opToken = opToken
     this.operands = [first]
@@ -719,8 +719,8 @@ class CondExpr : Expr
 **
 abstract class NameExpr : Expr
 {
-  new make(Location location, ExprId id, Expr? target, Str? name)
-    : super(location, id)
+  new make(Loc loc, ExprId id, Expr? target, Str? name)
+    : super(loc, id)
   {
     this.target = target
     this.name   = name
@@ -756,13 +756,13 @@ abstract class NameExpr : Expr
 **
 class UnknownVarExpr : NameExpr
 {
-  new make(Location location, Expr? target, Str name)
-    : super(location, ExprId.unknownVar, target, name)
+  new make(Loc loc, Expr? target, Str name)
+    : super(loc, ExprId.unknownVar, target, name)
   {
   }
 
-  new makeStorage(Location location, Expr? target, Str name)
-    : super.make(location, ExprId.storage, target, name)
+  new makeStorage(Loc loc, Expr? target, Str name)
+    : super.make(loc, ExprId.storage, target, name)
   {
   }
 
@@ -777,8 +777,8 @@ class UnknownVarExpr : NameExpr
 **
 class CallExpr : NameExpr
 {
-  new make(Location location, Expr? target := null, Str? name := null, ExprId id := ExprId.call)
-    : super(location, id, target, name)
+  new make(Loc loc, Expr? target := null, Str? name := null, ExprId id := ExprId.call)
+    : super(loc, id, target, name)
   {
     args = Expr[,]
     isDynamic = false
@@ -786,8 +786,8 @@ class CallExpr : NameExpr
     isCtorChain = false
   }
 
-  new makeWithMethod(Location location, Expr? target, CMethod method, Expr[]? args := null)
-    : this.make(location, target, method.name, ExprId.call)
+  new makeWithMethod(Loc loc, Expr? target, CMethod method, Expr[]? args := null)
+    : this.make(loc, target, method.name, ExprId.call)
   {
     this.method = method
     this.ctype = method.isCtor ? method.parent : method.returnType
@@ -910,7 +910,7 @@ class CallExpr : NameExpr
 **
 class ShortcutExpr : CallExpr
 {
-  new makeUnary(Location loc, Token opToken, Expr operand)
+  new makeUnary(Loc loc, Token opToken, Expr operand)
     : super.make(loc, null, null, ExprId.shortcut)
   {
     this.op      = opToken.toShortcutOp(1)
@@ -920,7 +920,7 @@ class ShortcutExpr : CallExpr
   }
 
   new makeBinary(Expr lhs, Token opToken, Expr rhs)
-    : super.make(lhs.location, null, null, ExprId.shortcut)
+    : super.make(lhs.loc, null, null, ExprId.shortcut)
   {
     this.op      = opToken.toShortcutOp(2)
     this.opToken = opToken
@@ -929,7 +929,7 @@ class ShortcutExpr : CallExpr
     this.args.add(rhs)
   }
 
-  new makeGet(Location loc, Expr target, Expr index)
+  new makeGet(Loc loc, Expr target, Expr index)
     : super.make(loc, null, null, ExprId.shortcut)
   {
     this.op      = ShortcutOp.get
@@ -940,7 +940,7 @@ class ShortcutExpr : CallExpr
   }
 
   new makeFrom(ShortcutExpr from)
-    : super.make(from.location, null, null, ExprId.shortcut)
+    : super.make(from.loc, null, null, ExprId.shortcut)
   {
     this.op      = from.op
     this.opToken = from.opToken
@@ -1031,8 +1031,8 @@ class IndexedAssignExpr : ShortcutExpr
 **
 class FieldExpr : NameExpr
 {
-  new make(Location location, Expr? target := null, CField? field := null, Bool useAccessor := true)
-    : super(location, ExprId.field, target, null)
+  new make(Loc loc, Expr? target := null, CField? field := null, Bool useAccessor := true)
+    : super(loc, ExprId.field, target, null)
   {
     this.useAccessor = useAccessor
     this.isSafe = false
@@ -1070,7 +1070,7 @@ class FieldExpr : NameExpr
           enumDef := fieldDef.parentDef.enumDef(field.name)
           if (enumDef != null) return enumDef.ordinal
         default:
-          throw CompilerErr("Invalid field for tableswitch: " + field.typeof, location)
+          throw CompilerErr("Invalid field for tableswitch: " + field.typeof, loc)
       }
     }
     return null
@@ -1119,8 +1119,8 @@ class FieldExpr : NameExpr
 **
 class LocalVarExpr : Expr
 {
-  new make(Location location, MethodVar? var, ExprId id := ExprId.localVar)
-    : super(location, id)
+  new make(Loc loc, MethodVar? var, ExprId id := ExprId.localVar)
+    : super(loc, id)
   {
     if (var != null)
     {
@@ -1129,8 +1129,8 @@ class LocalVarExpr : Expr
     }
   }
 
-  new makeNoUnwrap(Location location, MethodVar var)
-    : super.make(location, ExprId.localVar)
+  new makeNoUnwrap(Loc loc, MethodVar var)
+    : super.make(loc, ExprId.localVar)
   {
     this.var    = var
     this.ctype  = var.ctype
@@ -1171,8 +1171,8 @@ class LocalVarExpr : Expr
 **
 class ThisExpr : LocalVarExpr
 {
-  new make(Location location, CType? ctype := null)
-    : super(location, null, ExprId.thisExpr)
+  new make(Loc loc, CType? ctype := null)
+    : super(loc, null, ExprId.thisExpr)
   {
     this.ctype = ctype
   }
@@ -1195,8 +1195,8 @@ class ThisExpr : LocalVarExpr
 **
 class SuperExpr : LocalVarExpr
 {
-  new make(Location location, CType? explicitType := null)
-    : super(location, null, ExprId.superExpr)
+  new make(Loc loc, CType? explicitType := null)
+    : super(loc, null, ExprId.superExpr)
   {
     this.explicitType = explicitType
   }
@@ -1226,8 +1226,8 @@ class SuperExpr : LocalVarExpr
 **
 class ItExpr : LocalVarExpr
 {
-  new make(Location location, CType? ctype := null)
-    : super(location, null, ExprId.itExpr)
+  new make(Loc loc, CType? ctype := null)
+    : super(loc, null, ExprId.itExpr)
   {
     this.ctype = ctype
   }
@@ -1249,8 +1249,8 @@ class ItExpr : LocalVarExpr
 **
 class StaticTargetExpr : Expr
 {
-  new make(Location location, CType ctype)
-    : super(location, ExprId.staticTarget)
+  new make(Loc loc, CType ctype)
+    : super(loc, ExprId.staticTarget)
   {
     this.ctype = ctype
   }
@@ -1271,8 +1271,8 @@ class StaticTargetExpr : Expr
 **
 class TypeCheckExpr : Expr
 {
-  new make(Location location, ExprId id, Expr target, CType check)
-    : super(location, id)
+  new make(Loc loc, ExprId id, Expr target, CType check)
+    : super(loc, id)
   {
     this.target = target
     this.check  = check
@@ -1280,7 +1280,7 @@ class TypeCheckExpr : Expr
   }
 
   new coerce(Expr target, CType to)
-    : super.make(target.location, ExprId.coerce)
+    : super.make(target.loc, ExprId.coerce)
   {
     if (to.isGenericParameter) to = to.ns.objType // TODO: not sure about this
     this.target = target
@@ -1349,7 +1349,7 @@ class TypeCheckExpr : Expr
 class TernaryExpr : Expr
 {
   new make(Expr condition, Expr trueExpr, Expr falseExpr)
-    : super(condition.location, ExprId.ternary)
+    : super(condition.loc, ExprId.ternary)
   {
     this.condition = condition
     this.trueExpr  = trueExpr
@@ -1384,8 +1384,8 @@ class TernaryExpr : Expr
 **
 class ComplexLiteral : Expr
 {
-  new make(Location location, CType ctype)
-    : super(location, ExprId.complexLiteral)
+  new make(Loc loc, CType ctype)
+    : super(loc, ExprId.complexLiteral)
   {
     this.ctype = ctype
     this.names = Str[,]
@@ -1432,10 +1432,10 @@ class ComplexLiteral : Expr
 **
 class ClosureExpr : Expr
 {
-  new make(Location location, TypeDef enclosingType,
+  new make(Loc loc, TypeDef enclosingType,
            SlotDef enclosingSlot, ClosureExpr? enclosingClosure,
            FuncType signature, Str name)
-    : super(location, ExprId.closure)
+    : super(loc, ExprId.closure)
   {
     this.ctype            = signature
     this.enclosingType    = enclosingType
@@ -1447,7 +1447,7 @@ class ClosureExpr : Expr
 
   once CField outerThisField()
   {
-    if (enclosingSlot.isStatic) throw Err("Internal error: $location.toLocationStr")
+    if (enclosingSlot.isStatic) throw Err("Internal error: $loc.toLocStr")
     return ClosureVars.makeOuterThisField(this)
   }
 
@@ -1475,7 +1475,7 @@ class ClosureExpr : Expr
   Expr toWith(Expr target)
   {
     if (target.ctype != null) setInferredSignature(FuncType.makeItBlock(target.ctype))
-    x := CallExpr.makeWithMethod(location, target, enclosingType.ns.objWith, Expr[this])
+    x := CallExpr.makeWithMethod(loc, target, enclosingType.ns.objWith, Expr[this])
     // TODO: this coercion should be added automatically later in the pipeline
     if (target.ctype == null) return x
     return TypeCheckExpr.coerce(x, target.ctype)
@@ -1533,7 +1533,7 @@ class ClosureExpr : Expr
     if (code.first.id !== StmtId.expr) return
     if (!((ReturnStmt)code.last).isSynthetic) return
     expr := ((ExprStmt)code.first).expr
-    code.set(0, ReturnStmt.makeSynthetic(expr.location, expr))
+    code.set(0, ReturnStmt.makeSynthetic(expr.loc, expr))
     code.removeAt(1)
   }
 
@@ -1568,8 +1568,8 @@ class ClosureExpr : Expr
 **
 class DslExpr : Expr
 {
-  new make(Location location, CType anchorType, Location srcLoc, Str src)
-    : super(location, ExprId.dsl)
+  new make(Loc loc, CType anchorType, Loc srcLoc, Str src)
+    : super(loc, ExprId.dsl)
   {
     this.anchorType = anchorType
     this.src        = src
@@ -1588,7 +1588,7 @@ class DslExpr : Expr
 
   CType anchorType  // anchorType <|src|>
   Str src           // anchorType <|src|>
-  Location srcLoc   // location of first char of src
+  Loc srcLoc        // location of first char of src
   Int leadingTabs   // number of leading tabs on original Fantom line
   Int leadingSpaces // number of leading non-tab chars on original Fantom line
 }

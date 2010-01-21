@@ -43,7 +43,7 @@ class CheckParamDefs : CompilerStep
       {
         param := params[i]
         var   := m.vars[i]
-        loc   := param.location
+        loc   := param.loc
 
         if (!param.name.equals(var.name)) throw err("invalid state", loc)
 

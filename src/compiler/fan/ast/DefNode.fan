@@ -19,8 +19,8 @@ abstract class DefNode : Node
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location)
-    : super(location)
+  new make(Loc loc)
+    : super(loc)
   {
   }
 
@@ -56,7 +56,7 @@ abstract class DefNode : Node
   Void addFacet(CompilerSupport support, CSymbol symbol, Obj value)
   {
     if (facets == null) facets = FacetDef[,]
-    loc := location
+    loc := this.loc
     f := FacetDef(SymbolExpr.makeFor(loc, symbol), Expr.makeForLiteral(loc, ns, value))
     facets.add(f)
   }

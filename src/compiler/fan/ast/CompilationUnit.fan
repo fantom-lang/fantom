@@ -17,8 +17,8 @@ class CompilationUnit : Node
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, CPod pod)
-    : super(location)
+  new make(Loc loc, CPod pod)
+    : super(loc)
   {
     this.pod    = pod
     this.usings = Using[,]
@@ -38,7 +38,7 @@ class CompilationUnit : Node
 
   override Str toStr()
   {
-    return location.toStr
+    return loc.toStr
   }
 
 //////////////////////////////////////////////////////////////////////////

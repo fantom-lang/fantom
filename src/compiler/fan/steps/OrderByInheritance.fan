@@ -69,7 +69,7 @@ class OrderByInheritance : CompilerStep
     // in which case we have cyclic inheritance
     if (processing.containsKey(def.qname))
     {
-      err("Cyclic inheritance for '$def.name'", def.location)
+      err("Cyclic inheritance for '$def.name'", def.loc)
       return
     }
     processing[def.qname] = def

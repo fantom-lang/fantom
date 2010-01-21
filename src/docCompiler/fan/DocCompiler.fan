@@ -58,7 +58,7 @@ class DocCompiler
 
   Void compileSourceToHtml(Type t, File from, File to, Str podHeading, Str typeHeading)
   {
-    loc := Location.makeFile(from)
+    loc := Loc.makeFile(from)
     gen := SourceToHtmlGenerator(this, loc, to.out, t, from)
     {
       it.isScript    = true

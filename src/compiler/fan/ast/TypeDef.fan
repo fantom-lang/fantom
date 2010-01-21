@@ -17,8 +17,8 @@ class TypeDef : DefNode, CType
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(CNamespace ns, Location location, CompilationUnit unit, Str name, Int flags := 0)
-    : super(location)
+  new make(CNamespace ns, Loc loc, CompilationUnit unit, Str name, Int flags := 0)
+    : super(loc)
   {
     this.ns          = ns
     this.pod         = unit.pod
@@ -104,7 +104,7 @@ class TypeDef : DefNode, CType
     // sanity check
     name := s.name
     if (hasSlot(name))
-      throw ns.err("Internal error: duplicate slot $name", location)
+      throw ns.err("Internal error: duplicate slot $name", loc)
 
     // add to all slots table
     slotMap[name] = s
@@ -137,9 +137,9 @@ class TypeDef : DefNode, CType
   {
     // sanity checks
     if (oldSlot.name != newSlot.name)
-      throw ns.err("Not same names: $oldSlot != $newSlot", location)
+      throw ns.err("Not same names: $oldSlot != $newSlot", loc)
     if (slotMap[oldSlot.name] !== oldSlot)
-      throw ns.err("Old slot not mapped: $oldSlot", location)
+      throw ns.err("Old slot not mapped: $oldSlot", loc)
 
     // remap in slotMap table
     name := oldSlot.name

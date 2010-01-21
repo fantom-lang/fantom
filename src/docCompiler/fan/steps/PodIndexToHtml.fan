@@ -25,7 +25,7 @@ class PodIndexToHtml : DocCompilerStep
     log.debug("  Index [$compiler.pod]")
     if (compiler.fandocIndex != null) return
     file := compiler.podOutDir + `index.html`
-    loc  := Location("index.html")
+    loc  := Loc("index.html")
     PodIndexGenerator(compiler, loc, file.out).generate
   }
 

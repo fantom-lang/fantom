@@ -64,7 +64,7 @@ class InitClosures : CompilerStep
   private Void setup(ClosureExpr c)
   {
     this.closure         = c
-    this.loc             = c.location
+    this.loc             = c.loc
     this.signature       = c.signature
     this.enclosingType   = c.enclosingType
   }
@@ -131,7 +131,7 @@ class InitClosures : CompilerStep
   ** args onto the stack, then redirect to the specified CallExpr c.
   ** We share this code for both closures and curries.
   **
-  static MethodDef genMethodCall(Compiler compiler, Location loc, TypeDef parent,
+  static MethodDef genMethodCall(Compiler compiler, Loc loc, TypeDef parent,
                                  FuncType signature, CallExpr c, Bool firstAsTarget)
   {
     ns := compiler.ns
@@ -230,7 +230,7 @@ class InitClosures : CompilerStep
 //////////////////////////////////////////////////////////////////////////
 
   ClosureExpr? closure        // current closure
-  Location? loc               // closure.location
+  Loc? loc                    // closure.loc
   FuncType? signature         // closure.sig
   TypeDef? enclosingType      // closure.enclosingType
   TypeDef? cls                // current anonymous class implementing closure

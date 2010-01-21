@@ -80,10 +80,10 @@ class Assembler : CompilerSupport, FConst
 
     attrs := AttrAsm(compiler, fpod)
     if (compiler.input.mode == CompilerInputMode.str)
-      attrs.sourceFile(def.location.fileUri)
+      attrs.sourceFile(def.loc.fileUri)
     else
-      attrs.sourceFile(def.location.filename)
-    attrs.lineNumber(def.location.line)
+      attrs.sourceFile(def.loc.filename)
+    attrs.lineNumber(def.loc.line)
     attrs.facets(def.facets)
     t.fattrs = attrs.attrs
 
@@ -98,7 +98,7 @@ class Assembler : CompilerSupport, FConst
     f.typeRef   = typeRef(def.fieldType)
 
     attrs := AttrAsm(compiler, fpod)
-    attrs.lineNumber(def.location.line)
+    attrs.lineNumber(def.loc.line)
     attrs.facets(def.facets)
     f.fattrs = attrs.attrs
 
@@ -134,7 +134,7 @@ class Assembler : CompilerSupport, FConst
 
     m.code = assembleCode(def, attrs)
 
-    attrs.lineNumber(def.location.line)
+    attrs.lineNumber(def.loc.line)
     attrs.facets(def.facets)
     m.fattrs = attrs.attrs
 
@@ -151,7 +151,7 @@ class Assembler : CompilerSupport, FConst
     try
       f.val = def.val.serialize
     catch (CompilerErr e)
-      err("Symbol value is not serializable: '$def.name' ($e.msg)", def.val.location)
+      err("Symbol value is not serializable: '$def.name' ($e.msg)", def.val.loc)
 
     return f
   }
@@ -175,7 +175,7 @@ class Assembler : CompilerSupport, FConst
     block := def.code
     if (block == null) return null
 
-    asm := CodeAsm(compiler, def.location, fpod, def)
+    asm := CodeAsm(compiler, def.loc, fpod, def)
     if (def.ctorChain != null) asm.expr(def.ctorChain)
     asm.block(block)
 
@@ -188,7 +188,7 @@ class Assembler : CompilerSupport, FConst
   private Buf? assembleExpr(Expr? expr)
   {
     if (expr == null) return null
-    asm := CodeAsm(compiler, expr.location, fpod, null)
+    asm := CodeAsm(compiler, expr.loc, fpod, null)
     asm.expr(expr)
     return asm.finishCode
   }

@@ -69,7 +69,7 @@ mixin DocCompilerSupport
   **
   ** Create, log, and return a CompilerErr.
   **
-  virtual CompilerErr err(Str msg, Location loc)
+  virtual CompilerErr err(Str msg, Loc loc)
   {
     return errReport(CompilerErr(msg, loc))
   }
@@ -77,7 +77,7 @@ mixin DocCompilerSupport
   **
   ** Create, log, and return a warning CompilerErr.
   **
-  CompilerErr warn(Str msg, Location loc)
+  CompilerErr warn(Str msg, Loc loc)
   {
     return errReport(CompilerErr(msg, loc, null, LogLevel.warn))
   }

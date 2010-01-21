@@ -319,7 +319,7 @@ class FuncType : GenericType
     return a
   }
 
-  ParamDef[] toParamDefs(Location loc)
+  ParamDef[] toParamDefs(Loc loc)
   {
     p := ParamDef[,]
     p.size = params.size

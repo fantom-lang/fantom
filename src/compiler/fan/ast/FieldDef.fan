@@ -17,8 +17,8 @@ public class FieldDef : SlotDef, CField
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, TypeDef parent, Str name := "?", Int flags := 0)
-     : super(location, parent)
+  new make(Loc loc, TypeDef parent, Str name := "?", Int flags := 0)
+     : super(loc, parent)
   {
     this.name = name
     this.flags = flags
@@ -31,7 +31,7 @@ public class FieldDef : SlotDef, CField
   Bool hasGet() { return get != null && !get.isSynthetic }
   Bool hasSet() { return set != null && !set.isSynthetic }
 
-  FieldExpr makeAccessorExpr(Location loc, Bool useAccessor)
+  FieldExpr makeAccessorExpr(Loc loc, Bool useAccessor)
   {
     Expr? target
     if (isStatic)

@@ -34,7 +34,7 @@ abstract class CBridge : CompilerSupport
   ** Throw a CompilerErr with appropriate message if name
   ** cannot be resolved.
   **
-  abstract CPod resolvePod(Str name, Location? loc)
+  abstract CPod resolvePod(Str name, Loc? loc)
 
 //////////////////////////////////////////////////////////////////////////
 // AST

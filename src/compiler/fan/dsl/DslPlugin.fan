@@ -23,7 +23,7 @@ abstract class DslPlugin : CompilerSupport
   ** Find a DSL plugin for the given anchor type.  If there
   ** is a problem then log an error and return null.
   **
-  static DslPlugin? find(CompilerSupport c, Location loc, CType anchorType)
+  static DslPlugin? find(CompilerSupport c, Loc loc, CType anchorType)
   {
     qname := anchorType.qname
     t := findByFacet(@compilerDsl, qname)
@@ -114,7 +114,7 @@ abstract class DslPlugin : CompilerSupport
 
         // if we made here, that means we have a non-whitespace
         // char which is to the left of the opening "<|" token
-        loc := Location(dsl.srcLoc.file, dsl.srcLoc.line+i, j+1)
+        loc := Loc(dsl.srcLoc.file, dsl.srcLoc.line+i, j+1)
         if (dsl.leadingTabs == 0)
           throw err("Leading space in $dsl.anchorType.name DSL must be $dsl.leadingSpaces spaces", loc)
         else

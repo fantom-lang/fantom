@@ -32,7 +32,7 @@ class ApiToHtml : DocCompilerStep
   {
     log.debug("  API [$t]")
     file := compiler.podOutDir + "${t.name}.html".toUri
-    loc := Location(t.qname)
+    loc := Loc(t.qname)
     compiler.curType = t
     ApiToHtmlGenerator(compiler, loc, file.out, t).generate
     compiler.curType = null

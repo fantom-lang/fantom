@@ -20,13 +20,13 @@ class PodFacetsParser
   **
   ** Construct with location and source.
   **
-  new make(Location location, Str source)
+  new make(Loc loc, Str source)
   {
-    this.location = location
-    this.source   = source
-    this.tokens   = TokenVal[,]
-    this.facets   = Str:Obj?[:]
-    this.usings   = "using sys\n"
+    this.loc    = loc
+    this.source = source
+    this.tokens = TokenVal[,]
+    this.facets = Str:Obj?[:]
+    this.usings = "using sys\n"
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,7 +78,7 @@ class PodFacetsParser
     if (facet == null)
     {
       if (!checked) return null
-      throw CompilerErr("Pod facet not found '$qname'", location)
+      throw CompilerErr("Pod facet not found '$qname'", loc)
     }
 
     // parse value is still unparsed
@@ -109,7 +109,7 @@ class PodFacetsParser
   private Bool tokenize()
   {
     // read everything up to pod <id>
-    tokenizer := Tokenizer(Compiler(CompilerInput()), location, source, false)
+    tokenizer := Tokenizer(Compiler(CompilerInput()), loc, source, false)
     lastIsPod := false
     while (true)
     {
@@ -233,7 +233,7 @@ class PodFacetsParser
   **
   ** Throw a CompilerError for current location
   **
-  private CompilerErr err(Str msg, Location? loc := null)
+  private CompilerErr err(Str msg, Loc? loc := null)
   {
     if (loc == null) loc = cur
     throw CompilerErr(msg, loc)
@@ -290,7 +290,7 @@ class PodFacetsParser
     if (args.isEmpty) { echo("usage PodFacetsParser <pod.fan>"); return }
     f := args.first.toUri.toFile
     t1 := Duration.now
-    p := PodFacetsParser(Location.makeFile(f), f.readAllStr).parse
+    p := PodFacetsParser(Loc.makeFile(f), f.readAllStr).parse
     t2 := Duration.now
     echo("")
     echo("Parsed '$p.podName' ${(t2-t1).toLocale}")
@@ -312,7 +312,7 @@ class PodFacetsParser
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Location location            // location of entire file
+  Loc loc                      // location of entire file
   private Str source           // source file to parse
   private TokenVal[] tokens    // tokenize
   private Int pos              // offset into tokens for cur
@@ -324,9 +324,9 @@ class PodFacetsParser
 
 internal class PodFacet
 {
-  new make(Location l, Str n) { loc = l; name = n }
+  new make(Loc l, Str n) { loc = l; name = n }
   override Str toStr() { "$name val=$val unparsed=$unparsed" }
-  Location loc
+  Loc loc
   Str name
   Obj? val
   Str? unparsed

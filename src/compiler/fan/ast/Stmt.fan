@@ -16,8 +16,8 @@ abstract class Stmt : Node
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, StmtId id)
-    : super(location)
+  new make(Loc loc, StmtId id)
+    : super(loc)
   {
     this.id = id
   }
@@ -80,7 +80,7 @@ abstract class Stmt : Node
 **
 class NopStmt : Stmt
 {
-  new make(Location location) : super(location, StmtId.nop) {}
+  new make(Loc loc) : super(loc, StmtId.nop) {}
 
   override Bool isExit() { false }
 
@@ -103,7 +103,7 @@ class NopStmt : Stmt
 class ExprStmt : Stmt
 {
   new make(Expr expr)
-    : super(expr.location, StmtId.expr)
+    : super(expr.loc, StmtId.expr)
   {
     this.expr = expr
   }
@@ -143,8 +143,8 @@ class ExprStmt : Stmt
 **
 class LocalDefStmt : Stmt
 {
-  new make(Location location, CType? ctype := null, Str name := "")
-    : super(location, StmtId.localDef)
+  new make(Loc loc, CType? ctype := null, Str name := "")
+    : super(loc, StmtId.localDef)
   {
     this.ctype = ctype
     this.name = name
@@ -160,7 +160,7 @@ class LocalDefStmt : Stmt
   }
 
   new makeCatchVar(Catch c)
-    : super.make(c.location, StmtId.localDef)
+    : super.make(c.loc, StmtId.localDef)
   {
     ctype = c.errType
     name  = c.errVariable
@@ -195,8 +195,8 @@ class LocalDefStmt : Stmt
 **
 class IfStmt : Stmt
 {
-  new make(Location location, Expr condition, Block trueBlock)
-    : super(location, StmtId.ifStmt)
+  new make(Loc loc, Expr condition, Block trueBlock)
+    : super(loc, StmtId.ifStmt)
   {
     this.condition = condition
     this.trueBlock = trueBlock
@@ -248,14 +248,14 @@ class IfStmt : Stmt
 **
 class ReturnStmt : Stmt
 {
-  new make(Location location, Expr? expr := null)
-    : super(location, StmtId.returnStmt)
+  new make(Loc loc, Expr? expr := null)
+    : super(loc, StmtId.returnStmt)
   {
     this.expr = expr
   }
 
-  new makeSynthetic(Location location, Expr? expr := null)
-    : this.make(location, expr)
+  new makeSynthetic(Loc loc, Expr? expr := null)
+    : this.make(loc, expr)
   {
     this.isSynthetic = true
   }
@@ -297,8 +297,8 @@ class ReturnStmt : Stmt
 **
 class ThrowStmt : Stmt
 {
-  new make(Location location, Expr exception)
-    : super(location, StmtId.throwStmt)
+  new make(Loc loc, Expr exception)
+    : super(loc, StmtId.throwStmt)
   {
     this.exception = exception
   }
@@ -330,7 +330,7 @@ class ThrowStmt : Stmt
 **
 class ForStmt : Stmt
 {
-  new make(Location location) : super(location, StmtId.forStmt) {}
+  new make(Loc loc) : super(loc, StmtId.forStmt) {}
 
   override Bool isExit() { false }
 
@@ -377,8 +377,8 @@ class ForStmt : Stmt
 **
 class WhileStmt : Stmt
 {
-  new make(Location location, Expr condition, Block block)
-    : super(location, StmtId.whileStmt)
+  new make(Loc loc, Expr condition, Block block)
+    : super(loc, StmtId.whileStmt)
   {
     this.condition = condition
     this.block = block
@@ -416,7 +416,7 @@ class WhileStmt : Stmt
 **
 class BreakStmt : Stmt
 {
-  new make(Location location) : super(location, StmtId.breakStmt) {}
+  new make(Loc loc) : super(loc, StmtId.breakStmt) {}
 
   override Bool isExit() { false }
 
@@ -439,7 +439,7 @@ class BreakStmt : Stmt
 **
 class ContinueStmt : Stmt
 {
-  new make(Location location) : super(location, StmtId.continueStmt) {}
+  new make(Loc loc) : super(loc, StmtId.continueStmt) {}
 
   override Bool isExit() { false }
 
@@ -462,8 +462,8 @@ class ContinueStmt : Stmt
 **
 class TryStmt : Stmt
 {
-  new make(Location location)
-    : super(location, StmtId.tryStmt)
+  new make(Loc loc)
+    : super(loc, StmtId.tryStmt)
   {
     catches = Catch[,]
   }
@@ -516,8 +516,8 @@ class TryStmt : Stmt
 **
 class Catch : Node
 {
-  new make(Location location)
-    : super(location)
+  new make(Loc loc)
+    : super(loc)
   {
   }
 
@@ -551,8 +551,8 @@ class Catch : Node
 **
 class SwitchStmt : Stmt
 {
-  new make(Location location, Expr condition)
-    : super(location, StmtId.switchStmt)
+  new make(Loc loc, Expr condition)
+    : super(loc, StmtId.switchStmt)
   {
     this.condition = condition
     this.cases = Case[,]
@@ -607,8 +607,8 @@ class SwitchStmt : Stmt
 **
 class Case : Node
 {
-  new make(Location location)
-    : super(location)
+  new make(Loc loc)
+    : super(loc)
   {
     cases = Expr[,]
   }
