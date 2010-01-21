@@ -151,7 +151,7 @@ class Assembler : CompilerSupport, FConst
     try
       f.val = def.val.serialize
     catch (CompilerErr e)
-      err("Symbol value is not serializable: '$def.name' ($e.message)", def.val.location)
+      err("Symbol value is not serializable: '$def.name' ($e.msg)", def.val.location)
 
     return f
   }

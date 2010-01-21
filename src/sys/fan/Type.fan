@@ -417,20 +417,4 @@ const class Type
   **
   Str toLocale()
 
-//////////////////////////////////////////////////////////////////////////
-// Utils
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Use `Pod.log`
-  **
-  @deprecated
-  Log log()
-
-  **
-  ** Use `Pod.loc`
-  **
-  @deprecated
-  Str? loc(Str key, Str? def := "name::key")
-
 }

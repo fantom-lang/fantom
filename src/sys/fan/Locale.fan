@@ -45,12 +45,6 @@ const class Locale
   **
   static Void setCur(Locale locale)
 
-  ** TODO: use `cur`
-  @deprecated static Locale current()
-
-  ** TODO: use `setCur`
-  @deprecated static Void setCurrent(Locale locale)
-
   **
   ** Run the specified function using this locale as the
   ** the actor's current locale.  This method guarantees

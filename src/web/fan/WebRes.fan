@@ -78,10 +78,6 @@ abstract class WebRes
   **
   abstract Void sendErr(Int statusCode, Str? msg := null)
 
-** TODO: use `sendErr`
-@deprecated
-Void sendError(Int statusCode, Str? msg := null) { sendErr(statusCode, msg) }
-
   **
   ** Return if this response is complete - see `done`.
   **

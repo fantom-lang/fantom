@@ -31,10 +31,6 @@ const class Err
   **
   Str msg()
 
-** TODO: use `msg`
-@deprecated
-Str? message()
-
   **
   ** Get the underyling cause exception or null.
   **

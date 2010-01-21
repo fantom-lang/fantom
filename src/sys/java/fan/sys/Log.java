@@ -140,11 +140,6 @@ public class Log
 // Logging
 //////////////////////////////////////////////////////////////////////////
 
-// TODO
-public final boolean isError() { return isEnabled(LogLevel.error); }
-public final void error(String msg) { err(msg, (Err)null); }
-public final void error(String msg, Err err) { err(msg, err); }
-
   public final void err(String msg) { err(msg, (Err)null); }
   public final void err(String msg, Throwable e) { err(msg, Err.make(e)); }
   public final void err(String msg, Err err)

@@ -56,10 +56,6 @@ public class Locale
 // Thread
 //////////////////////////////////////////////////////////////////////////
 
-  // TODO
-  public static Locale current() { return cur(); }
-  public static void setCurrent(Locale locale) { setCur(locale); }
-
   public static Locale cur()
   {
     return (Locale)cur.get();

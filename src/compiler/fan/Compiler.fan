@@ -107,10 +107,6 @@ class Compiler
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-// TODO
-@deprecated
-CompilerErr[] errors() { errs }
-
   CompilerInput input       // ctor
   CompilerLog log           // ctor
   CompilerErr[] errs        // accumulated errors
