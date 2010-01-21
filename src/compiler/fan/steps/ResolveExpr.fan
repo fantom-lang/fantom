@@ -375,13 +375,6 @@ class ResolveExpr : CompilerStep
         return LocalVarExpr(var.loc, binding)
     }
 
-// TODO
-if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
-{
-  warn("Use 'it' instead of 'val' in setter", var.loc)
-  return LocalVarExpr(var.loc, curMethod.vars.first)
-}
-
     // at this point it can't be a local variable, so it must be
     // a slot on either myself or the variable's target
     return CallResolver(compiler, curType, curMethod, var).resolve

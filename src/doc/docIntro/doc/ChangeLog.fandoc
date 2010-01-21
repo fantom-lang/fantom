@@ -16,6 +16,8 @@
 - Test.id => curTestMethod
 - compiler::Location => Loc
 - Remove methods deprecated in 1.0.48
+- Remove deprecated support for '|,|' closure syntax
+- Remove deprecated support for 'val' in field setters
 
 - TODO: change deprecated to be string
 

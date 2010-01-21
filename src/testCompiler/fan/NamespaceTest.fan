@@ -385,7 +385,7 @@ class NamespaceTest : CompilerTest
     verifyErrors(
      "class Foo
       {
-        Void x(sys::Str a, compiler::Location loc) {}
+        Void x(sys::Str a, compiler::Loc loc) {}
       }
       ",
        [
