@@ -44,7 +44,7 @@ namespace Fan.Sys
       return (LogLevel)doFromStr(Sys.LogLevelType, name, check);
     }
 
-    public override Type type() { return Sys.LogLevelType; }
+    public override Type @typeof() { return Sys.LogLevelType; }
 
     internal readonly int m_ord;
 

@@ -49,7 +49,7 @@ namespace Fan.Sys
       return (Month)doFromStr(Sys.MonthType, name, check);
     }
 
-    public override Type type() { return Sys.MonthType; }
+    public override Type @typeof() { return Sys.MonthType; }
 
     public Month increment() { return array[(ord+1)%array.Length]; }
 

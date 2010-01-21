@@ -65,7 +65,7 @@ namespace Fan.Sys
 
     public override string toStr() { return m_source; }
 
-    public override Type type() { return Sys.RegexType; }
+    public override Type @typeof() { return Sys.RegexType; }
 
   //////////////////////////////////////////////////////////////////////////
   // Regular expression

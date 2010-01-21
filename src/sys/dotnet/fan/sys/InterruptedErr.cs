@@ -45,7 +45,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.InterruptedErrType; }
+    public override Type @typeof() { return Sys.InterruptedErrType; }
 
   //////////////////////////////////////////////////////////////////////////
   // Val - Java Exception Type

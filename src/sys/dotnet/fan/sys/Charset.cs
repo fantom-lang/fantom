@@ -288,7 +288,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.CharsetType; }
+    public override Type @typeof() { return Sys.CharsetType; }
 
     public string name() { return m_name; }
 

@@ -72,7 +72,7 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.SlotType; }
+    public override Type @typeof() { return Sys.SlotType; }
 
     public Type parent()      { return m_parent; }
     public virtual string name() { return m_name; }

@@ -225,7 +225,7 @@ namespace Fan.Sys
       return m_str;
     }
 
-    public override Type type()
+    public override Type @typeof()
     {
       return Sys.MimeTypeType;
     }

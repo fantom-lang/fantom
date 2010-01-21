@@ -101,7 +101,7 @@ namespace Fan.Sys
 
     public override string toStr() { return m_name; }
 
-    public override Type type() { return Sys.TimeZoneType; }
+    public override Type @typeof() { return Sys.TimeZoneType; }
 
   //////////////////////////////////////////////////////////////////////////
   // Methods

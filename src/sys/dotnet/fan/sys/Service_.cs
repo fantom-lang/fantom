@@ -115,7 +115,7 @@ namespace Fan.Sys
     {
       try
       {
-        List types = FanObj.type(self).inheritance();
+        List types = FanObj.@typeof(self).inheritance();
         lock (m_lock)
         {
           // if already installed, short circuit
@@ -151,7 +151,7 @@ namespace Fan.Sys
     {
       try
       {
-        List types = FanObj.type(self).inheritance();
+        List types = FanObj.@typeof(self).inheritance();
         lock (m_lock)
         {
           // ensure service is stopped

@@ -564,7 +564,7 @@ namespace Fanx.Typedb
         object v = getObj(name);
         if (v == null) return null;
         if (v is string) return (string)v;
-        log.warn("Expecting '" + loc + "@" + name + "' to be string, not " + FanObj.type(v));
+        log.warn("Expecting '" + loc + "@" + name + "' to be string, not " + FanObj.@typeof(v));
         return null;
       }
 
@@ -573,7 +573,7 @@ namespace Fanx.Typedb
         object v = getObj(name);
         if (v == null) return null;
         if (v is List && ((List)v).of() == Sys.SymbolType) return (List)v;
-        log.warn("Expecting '" + loc + "@" + name + "' to be Symbol[], not " + FanObj.type(v));
+        log.warn("Expecting '" + loc + "@" + name + "' to be Symbol[], not " + FanObj.@typeof(v));
         return null;
       }
 

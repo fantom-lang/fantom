@@ -39,7 +39,7 @@ namespace Fan.Sys
         throw NullErr.make("pool is null").val;
 
       // check receive method
-      if (receive == null && self.type() == Sys.ActorType)
+      if (receive == null && self.@typeof() == Sys.ActorType)
         throw ArgErr.make("must supply receive func or subclass Actor").val;
       if (receive != null && !receive.isImmutable())
         throw NotImmutableErr.make("Receive func not immutable: " + receive).val;
@@ -80,7 +80,7 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.ActorType; }
+    public override Type @typeof() { return Sys.ActorType; }
 
   //////////////////////////////////////////////////////////////////////////
   // Actor
@@ -97,7 +97,7 @@ namespace Fan.Sys
     protected object receive(object msg)
     {
       if (m_receive != null) return m_receive.call(msg);
-      System.Console.WriteLine("WARNING: " + type() + ".receive not overridden");
+      System.Console.WriteLine("WARNING: " + @typeof() + ".receive not overridden");
       return null;
     }
 

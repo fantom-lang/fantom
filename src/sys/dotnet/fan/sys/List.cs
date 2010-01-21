@@ -85,7 +85,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type()
+    public override Type @typeof()
     {
       return m_of.toListOf();
     }
@@ -607,7 +607,7 @@ namespace Fan.Sys
       for (int i=0; i<m_size; i++)
       {
         object item = m_values[i];
-        if (item != null && type(item).@is(t))
+        if (item != null && @typeof(item).@is(t))
           acc.add(item);
       }
       return acc;
@@ -1132,7 +1132,7 @@ namespace Fan.Sys
           else if (item is Map)
             item = ((Map)item).toImmutable();
           else if (!isImmutable(item))
-            throw NotImmutableErr.make("Item [" + i + "] not immutable " + type(item)).val;
+            throw NotImmutableErr.make("Item [" + i + "] not immutable " + @typeof(item)).val;
         }
         temp[i] = item;
       }

@@ -719,7 +719,7 @@ namespace Fan.Sys
       @out.wStrLiteral(m_str, '`');
     }
 
-    public override Type type()
+    public override Type @typeof()
     {
       return Sys.UriType;
     }
@@ -1251,7 +1251,7 @@ namespace Fan.Sys
         }
         catch (System.Exception e)
         {
-          throw UnresolvedErr.make("Cannot access base '" + FanObj.type(@base) + ".uri' to normalize: " + this, e).val;
+          throw UnresolvedErr.make("Cannot access base '" + FanObj.@typeof(@base) + ".uri' to normalize: " + this, e).val;
         }
         if (baseUri.m_scheme == null)
           throw UnresolvedErr.make("Base object's uri is not absolute: " + baseUri).val;

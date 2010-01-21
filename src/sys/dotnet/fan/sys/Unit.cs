@@ -238,7 +238,7 @@ namespace Fan.Sys
 
     public override sealed long hash() { return FanObj.hash(toStr()); }
 
-    public override sealed Type type() { return Sys.UnitType; }
+    public override sealed Type @typeof() { return Sys.UnitType; }
 
     public override string toStr()
     {

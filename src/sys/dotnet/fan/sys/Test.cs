@@ -28,7 +28,7 @@ namespace Fan.Sys
   // Obj Overrides
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type()
+    public override Type @typeof()
     {
       return Sys.TestType;
     }
@@ -40,7 +40,7 @@ namespace Fan.Sys
     public Method curTestMethod()
     {
       if (m_curTestMethod == null)
-        throw Err.make("No test currently executing for " + type()).val;
+        throw Err.make("No test currently executing for " + @typeof()).val;
       return m_curTestMethod;
     }
 
@@ -144,6 +144,11 @@ namespace Fan.Sys
       verifyCount++;
     }
 
+    public void verifyType(object obj, Type t)
+    {
+      verifyEq(Type.of(obj), t);
+    }
+
     public void verifyErr(Type errType, Func f)
     {
       try
@@ -153,14 +158,14 @@ namespace Fan.Sys
       catch (Err.Val e)
       {
         if (verbose) System.Console.WriteLine("  verifyErr: " + e);
-        if (e.err().type() == errType) { verifyCount++; return; }
-        fail(e.err().type() + " thrown, expected " + errType);
+        if (e.err().@typeof() == errType) { verifyCount++; return; }
+        fail(e.err().@typeof() + " thrown, expected " + errType);
       }
       catch (System.Exception e)
       {
         if (verbose) System.Console.WriteLine("  verifyErr: " + e);
         Err err = Fan.Sys.Err.make(e);
-        if (err.type() == errType) { verifyCount++; return; }
+        if (err.@typeof() == errType) { verifyCount++; return; }
         fail(e.GetType() + " thrown, expected " + errType);
       }
       fail("No err thrown, expected " + errType);

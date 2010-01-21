@@ -104,7 +104,7 @@ namespace Fan.Sys
 
     public override sealed string toStr() { return m_uri.toStr(); }
 
-    public override Type type() { return Sys.FileType; }
+    public override Type @typeof() { return Sys.FileType; }
 
   //////////////////////////////////////////////////////////////////////////
   // Uri

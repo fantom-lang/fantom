@@ -35,6 +35,6 @@ namespace Fan.Sys
       return (Endian)doFromStr(Sys.EndianType, name, check);
     }
 
-    public override Type type() { return Sys.EndianType; }
+    public override Type @typeof() { return Sys.EndianType; }
  }
 }

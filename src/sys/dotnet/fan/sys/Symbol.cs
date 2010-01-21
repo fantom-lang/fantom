@@ -79,7 +79,7 @@ namespace Fan.Sys
 
     public override string toStr()  { return "@" + m_qname;  }
 
-    public override Type type()  { return Sys.SymbolType;  }
+    public override Type @typeof()  { return Sys.SymbolType;  }
 
   //////////////////////////////////////////////////////////////////////////
   // Value Management

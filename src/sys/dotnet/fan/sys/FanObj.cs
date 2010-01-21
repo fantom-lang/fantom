@@ -98,7 +98,7 @@ namespace Fan.Sys
 
     public virtual bool isImmutable()
     {
-      return type().isConst();
+      return @typeof().isConst();
     }
 
     public static object toImmutable(object self)
@@ -112,19 +112,19 @@ namespace Fan.Sys
 
     public virtual object toImmutable()
     {
-      if (type().isConst()) return this;
-      throw NotImmutableErr.make(type().ToString()).val;
+      if (@typeof().isConst()) return this;
+      throw NotImmutableErr.make(@typeof().ToString()).val;
     }
 
-    public static Type type(object self)
+    public static Type @typeof(object self)
     {
       if (self is FanObj)
-        return ((FanObj)self).type();
+        return ((FanObj)self).@typeof();
       else
         return FanUtil.toFanType(self.GetType(), true);
     }
 
-    public virtual Type type()
+    public virtual Type @typeof()
     {
       return Sys.ObjType;
     }
@@ -149,10 +149,10 @@ namespace Fan.Sys
       if (self is FanObj)
         return ((FanObj)self).trap(name, args);
       else
-        return doTrap(self, name, args, type(self));
+        return doTrap(self, name, args, @typeof(self));
     }
 
-    public virtual object trap(string name, List args) { return doTrap(this, name, args, type()); }
+    public virtual object trap(string name, List args) { return doTrap(this, name, args, @typeof()); }
 
     private static object doTrap(object self, string name, List args, Type type)
     {

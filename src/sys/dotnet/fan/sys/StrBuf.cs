@@ -162,7 +162,7 @@ namespace Fan.Sys
       return sb.ToString();
     }
 
-    public override Type type()
+    public override Type @typeof()
     {
       return Sys.StrBufType;
     }

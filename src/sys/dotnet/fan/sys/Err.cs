@@ -160,7 +160,7 @@ namespace Fan.Sys
       return buf.flip().readAllStr();
     }
 
-    public override Type type()
+    public override Type @typeof()
     {
       return Sys.ErrType;
     }
@@ -168,9 +168,9 @@ namespace Fan.Sys
     public override string toStr()
     {
       if (m_msg == null || m_msg.Length == 0)
-        return type().qname();
+        return @typeof().qname();
       else
-        return type().qname() + ": " + m_msg;
+        return @typeof().qname() + ": " + m_msg;
     }
 
   //////////////////////////////////////////////////////////////////////////

@@ -44,7 +44,7 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.InStreamType; }
+    public override Type @typeof() { return Sys.InStreamType; }
 
   //////////////////////////////////////////////////////////////////////////
   // C# Stream
@@ -103,7 +103,7 @@ namespace Fan.Sys
       catch (System.NullReferenceException e)
       {
         if (m_in == null)
-          throw UnsupportedErr.make(type().qname() + " wraps null InStream").val;
+          throw UnsupportedErr.make(@typeof().qname() + " wraps null InStream").val;
         else
           throw e;
       }
@@ -118,7 +118,7 @@ namespace Fan.Sys
       catch (System.NullReferenceException e)
       {
         if (m_in == null)
-          throw UnsupportedErr.make(type().qname() + " wraps null InStream").val;
+          throw UnsupportedErr.make(@typeof().qname() + " wraps null InStream").val;
         else
           throw e;
       }
@@ -134,7 +134,7 @@ namespace Fan.Sys
       catch (System.NullReferenceException e)
       {
         if (m_in == null)
-          throw UnsupportedErr.make(type().qname() + " wraps null InStream").val;
+          throw UnsupportedErr.make(@typeof().qname() + " wraps null InStream").val;
         else
           throw e;
       }

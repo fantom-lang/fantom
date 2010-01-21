@@ -31,7 +31,7 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.FuncType; }
+    public override Type @typeof() { return Sys.FuncType; }
 
     public Type returns() { return m_returns; }
 
@@ -90,7 +90,7 @@ namespace Fan.Sys
       protected Indirect(FuncType type) : base(type) { this.m_type = type; }
 
       public string name() { return GetType().Name; }
-      public override Type type()  { return m_type; }
+      public override Type @typeof()  { return m_type; }
       public override string  toStr() { return m_type.signature(); }
       public override bool isImmutable() { return false; }
       public override Method method() { return null; }
@@ -142,7 +142,7 @@ namespace Fan.Sys
       public override void checkInCtor(object it)
       {
         if (it == m_inCtor) return;
-        string msg = it == null ? "null" : FanObj.type(it).qname();
+        string msg = it == null ? "null" : FanObj.@typeof(it).qname();
         throw ConstErr.make(msg).val;
       }
 
@@ -291,7 +291,7 @@ namespace Fan.Sys
     internal class Wrapper : Func
     {
       internal Wrapper(FuncType t, Func orig) : base(t) { m_type = t; m_orig = orig; }
-      public override Type type()  { return m_type; }
+      public override Type @typeof()  { return m_type; }
       public override bool isImmutable() { return m_orig.isImmutable(); }
       public override Method method() { return m_orig.method(); }
       public override object callOn(object target, List args) { return m_orig.callOn(target, args); }
@@ -337,7 +337,7 @@ namespace Fan.Sys
       }
 
       public string  name()  { return GetType().Name; }
-      public override Type type()  { return m_type; }
+      public override Type @typeof()  { return m_type; }
       public override string  toStr() { return m_type.signature(); }
       public override bool isImmutable() { return false; }
       public override Method method() { return null; }

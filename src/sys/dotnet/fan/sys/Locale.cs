@@ -97,7 +97,7 @@ namespace Fan.Sys
 
     public string country() { return m_country; }
 
-    public override Type type() { return Sys.LocaleType; }
+    public override Type @typeof() { return Sys.LocaleType; }
 
     public override int GetHashCode() { return m_str.GetHashCode(); }
 

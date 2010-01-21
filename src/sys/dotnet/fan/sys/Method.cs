@@ -76,7 +76,7 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.MethodType; }
+    public override Type @typeof() { return Sys.MethodType; }
 
     public Type returns() { return m_func.returns(); }
 

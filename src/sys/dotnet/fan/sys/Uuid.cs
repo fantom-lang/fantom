@@ -111,7 +111,7 @@ namespace Fan.Sys
       return m_lo < x.m_lo ? -1 : 1;
     }
 
-    public override Type type()
+    public override Type @typeof()
     {
       return Sys.UuidType;
     }

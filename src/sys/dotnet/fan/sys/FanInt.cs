@@ -95,7 +95,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static long negate    (long self)         { return -self; }
-    public static long inverse   (long self)         { return ~self; }
+    public static long not       (long self)         { return ~self; }
     public static long mult      (long self, long x) { return self * x; }
     public static long div       (long self, long x) { return self / x; }
     public static long mod       (long self, long x) { return self % x; }
@@ -104,8 +104,8 @@ namespace Fan.Sys
     public static long and       (long self, long x) { return self & x; }
     public static long or        (long self, long x) { return self | x; }
     public static long xor       (long self, long x) { return self ^ x; }
-    public static long lshift    (long self, long x) { return self << ((int)x); }
-    public static long rshift    (long self, long x) { return self >> ((int)x); }
+    public static long shiftl    (long self, long x) { return self << ((int)x); }
+    public static long shiftr    (long self, long x) { return self >> ((int)x); }
     public static long increment (long self)         { return self+1; }
     public static long decrement (long self)         { return self-1; }
 

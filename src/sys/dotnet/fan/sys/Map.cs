@@ -53,7 +53,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type()
+    public override Type @typeof()
     {
       return m_type;
     }
@@ -112,7 +112,7 @@ namespace Fan.Sys
       if (key == null)
         throw NullErr.make("key is null").val;
       if (!isImmutable(key))
-        throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
+        throw NotImmutableErr.make("key is not immutable: " + @typeof(key)).val;
       m_map[key] = val;
       return this;
     }
@@ -123,7 +123,7 @@ namespace Fan.Sys
       if (key == null)
         throw NullErr.make("key is null").val;
       if (!isImmutable(key))
-        throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
+        throw NotImmutableErr.make("key is not immutable: " + @typeof(key)).val;
       if (m_map[key] != null)
         throw ArgErr.make("Key already mapped: " + key).val;
       m_map[key] = val;
@@ -269,7 +269,7 @@ namespace Fan.Sys
     {
       modify();
       if (v != null && !isImmutable(v))
-        throw NotImmutableErr.make("def must be immutable: " + type(v)).val;
+        throw NotImmutableErr.make("def must be immutable: " + @typeof(v)).val;
       this.m_def = v;
     }
 
@@ -277,7 +277,7 @@ namespace Fan.Sys
     {
       if (that is Map)
       {
-        if (!m_type.Equals(type(that)))
+        if (!m_type.Equals(@typeof(that)))
           return false;
 
         Hashtable thatMap = ((Map)that).m_map;
@@ -498,7 +498,7 @@ namespace Fan.Sys
     {
       int size = (int)this.size();
       StringBuilder s = new StringBuilder(32+size*32);
-      s.Append(type().signature());
+      s.Append(@typeof().signature());
       s.Append('[');
       if (size == 0) s.Append(':');
       bool first = true;
@@ -584,7 +584,7 @@ namespace Fan.Sys
           else if (val is Map)
             val = ((Map)val).toImmutable();
           else if (!isImmutable(val))
-            throw NotImmutableErr.make("Item [" + key + "] not immutable " + type(val)).val;
+            throw NotImmutableErr.make("Item [" + key + "] not immutable " + @typeof(val)).val;
         }
 
         temp[key] = val;

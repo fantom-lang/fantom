@@ -69,7 +69,7 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.UriSchemeType; }
+    public override Type @typeof() { return Sys.UriSchemeType; }
 
     public override string toStr() { return m_scheme; }
 

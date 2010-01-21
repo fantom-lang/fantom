@@ -145,7 +145,7 @@ namespace Fan.Sys
       return toLocale("hh:mm:ss.FFFFFFFFF");
     }
 
-    public override Type type()
+    public override Type @typeof()
     {
       return Sys.TimeType;
     }

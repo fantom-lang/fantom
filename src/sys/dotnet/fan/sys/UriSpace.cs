@@ -48,9 +48,9 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override string toStr() { return type().qname() + " uri=" + m_uri; }
+    public override string toStr() { return @typeof().qname() + " uri=" + m_uri; }
 
-    public override Type type() { return Sys.UriSpaceType; }
+    public override Type @typeof() { return Sys.UriSpaceType; }
 
   //////////////////////////////////////////////////////////////////////////
   // UriSpace
@@ -63,17 +63,17 @@ namespace Fan.Sys
 
     public virtual Uri create(Uri uri, object obj)
     {
-      throw UnsupportedErr.make(type() + ".create").val;
+      throw UnsupportedErr.make(@typeof() + ".create").val;
     }
 
     public virtual void put(Uri uri, object obj)
     {
-      throw UnsupportedErr.make(type() + ".put").val;
+      throw UnsupportedErr.make(@typeof() + ".put").val;
     }
 
     public virtual void delete(Uri uri)
     {
-      throw UnsupportedErr.make(type() + ".delete").val;
+      throw UnsupportedErr.make(@typeof() + ".delete").val;
     }
 
   //////////////////////////////////////////////////////////////////////////

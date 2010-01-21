@@ -47,7 +47,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type()
+    public override Type @typeof()
     {
       return Sys.ProcessType;
     }

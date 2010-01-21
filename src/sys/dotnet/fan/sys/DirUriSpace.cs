@@ -32,7 +32,7 @@ namespace Fan.Sys
 
     public override string toStr() { return "DirUriSpace " + m_dir; }
 
-    public override Type type() { return Sys.DirUriSpaceType; }
+    public override Type @typeof() { return Sys.DirUriSpaceType; }
 
   //////////////////////////////////////////////////////////////////////////
   // UriSpace

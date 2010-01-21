@@ -42,7 +42,7 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.OutStreamType; }
+    public override Type @typeof() { return Sys.OutStreamType; }
 
   //////////////////////////////////////////////////////////////////////////
   // C# OutputStream
@@ -74,7 +74,7 @@ namespace Fan.Sys
       catch (System.NullReferenceException e)
       {
         if (m_out == null)
-          throw UnsupportedErr.make(type().qname() + " wraps null OutStream").val;
+          throw UnsupportedErr.make(@typeof().qname() + " wraps null OutStream").val;
         else
           throw e;
       }
@@ -91,7 +91,7 @@ namespace Fan.Sys
       catch (System.NullReferenceException e)
       {
         if (m_out == null)
-          throw UnsupportedErr.make(type().qname() + " wraps null OutStream").val;
+          throw UnsupportedErr.make(@typeof().qname() + " wraps null OutStream").val;
         else
           throw e;
       }

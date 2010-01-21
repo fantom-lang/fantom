@@ -60,7 +60,7 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.ZipType; }
+    public override Type @typeof() { return Sys.ZipType; }
 
     public override string toStr()
     {
