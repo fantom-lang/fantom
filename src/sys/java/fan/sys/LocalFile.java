@@ -59,6 +59,8 @@ public class LocalFile
 
   public static java.io.File uriToFile(Uri uri)
   {
+    if (uri.scheme() != null && !uri.scheme().equals("file"))
+      throw ArgErr.make("Invalid Uri scheme for local file: " + uri).val;
     return new java.io.File(uriToPath(uri));
   }
 
