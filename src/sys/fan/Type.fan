@@ -29,7 +29,7 @@ const class Type
 
   **
   ** Get the class Type of the given instance.  Also
-  ** see `Obj.type` which provides the same functionality.
+  ** see `Obj.typeof` which provides the same functionality.
   **
   static Type of(Obj obj)
 
