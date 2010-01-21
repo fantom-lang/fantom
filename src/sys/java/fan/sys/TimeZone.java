@@ -111,7 +111,7 @@ public final class TimeZone
 
   public String toStr() { return name; }
 
-  public Type type() { return Sys.TimeZoneType; }
+  public Type typeof() { return Sys.TimeZoneType; }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods

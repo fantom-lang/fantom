@@ -224,7 +224,7 @@ public final class Range
       return start + ".." + end;
   }
 
-  public Type type() { return Sys.RangeType; }
+  public Type typeof() { return Sys.RangeType; }
 
 //////////////////////////////////////////////////////////////////////////
 // Slice Utils

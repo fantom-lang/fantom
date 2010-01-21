@@ -13,6 +13,6 @@ package fan.sys;
 public class This
 {
 
-  public Type type() { return Sys.ThisType; }
+  public Type typeof() { return Sys.ThisType; }
 
 }

@@ -114,7 +114,7 @@ public class FanStr
     return self;
   }
 
-  public static Type type(String self)
+  public static Type typeof(String self)
   {
     return Sys.StrType;
   }

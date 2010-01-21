@@ -49,7 +49,7 @@ public final class Month
     return (Month)doFromStr(Sys.MonthType, name, checked);
   }
 
-  public Type type() { return Sys.MonthType; }
+  public Type typeof() { return Sys.MonthType; }
 
   public Month increment() { return array[(ord+1)%array.length]; }
 

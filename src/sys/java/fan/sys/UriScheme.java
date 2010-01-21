@@ -69,7 +69,7 @@ public abstract class UriScheme
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.UriSchemeType; }
+  public Type typeof() { return Sys.UriSchemeType; }
 
   public String toStr() { return scheme; }
 

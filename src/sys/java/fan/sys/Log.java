@@ -88,7 +88,7 @@ public class Log
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.LogType;
   }

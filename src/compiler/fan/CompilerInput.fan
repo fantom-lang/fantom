@@ -154,7 +154,7 @@ class CompilerInput
   **
   private Void validateReqField(Str field)
   {
-    val := type.field(field).get(this)
+    val := typeof.field(field).get(this)
     if (val == null)
       throw ArgErr("CompilerInput.${field} not set", null)
   }

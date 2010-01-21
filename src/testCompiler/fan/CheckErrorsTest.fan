@@ -90,22 +90,22 @@ class CheckErrorsTest : CompilerTest
   {
     // check inherit stage
     verifyErrors(
-     "class A { Type type }
-      class B { Type type() { return Str# } }
+     "class A { Type typeof }
+      class B { Type typeof() { return Str# } }
       ",
        [
-         1, 11, "Must specify override keyword to override 'sys::Obj.type'",
-         2, 11, "Must specify override keyword to override 'sys::Obj.type'",
+         1, 11, "Must specify override keyword to override 'sys::Obj.typeof'",
+         2, 11, "Must specify override keyword to override 'sys::Obj.typeof'",
        ])
 
     // check errors stage
     verifyErrors(
-     "class A { override Type type }
-      class B { override Type type() { return Str# } }
+     "class A { override Type typeof }
+      class B { override Type typeof() { return Str# } }
       ",
        [
-         1, 11, "Cannot override Obj.type()",
-         2, 11, "Cannot override Obj.type()",
+         1, 11, "Cannot override Obj.typeof()",
+         2, 11, "Cannot override Obj.typeof()",
        ])
   }
 

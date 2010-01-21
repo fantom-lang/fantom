@@ -234,7 +234,7 @@ public final class Unit
 
   public final long hash() { return FanObj.hash(toStr()); }
 
-  public final Type type() { return Sys.UnitType; }
+  public final Type typeof() { return Sys.UnitType; }
 
   public String toStr()
   {

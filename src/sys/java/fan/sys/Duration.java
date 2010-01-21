@@ -154,7 +154,7 @@ public final class Duration
     return ticks;
   }
 
-  public final Type type()
+  public final Type typeof()
   {
     return Sys.DurationType;
   }

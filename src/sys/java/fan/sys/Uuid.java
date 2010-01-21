@@ -107,7 +107,7 @@ public final class Uuid
     return lo < x.lo ? -1 : 1;
   }
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.UuidType;
   }

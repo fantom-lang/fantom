@@ -140,7 +140,7 @@ public class StrBuf
     return sb.toString();
   }
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.StrBufType;
   }

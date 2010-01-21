@@ -177,7 +177,7 @@ public class OpUtil
   public static boolean is(Object instance, Type type)
   {
     if (instance == null) return false;
-    return FanObj.type(instance).fits(type);
+    return FanObj.typeof(instance).fits(type);
   }
 
   public static Object toImmutable(Object obj)
@@ -186,7 +186,7 @@ public class OpUtil
     if (FanObj.isImmutable(obj)) return obj;
     if (obj instanceof List)   return ((List)obj).toImmutable();
     if (obj instanceof Map)    return ((Map)obj).toImmutable();
-    throw NotImmutableErr.make(FanObj.type(obj).toStr()).val;
+    throw NotImmutableErr.make(FanObj.typeof(obj).toStr()).val;
   }
 
 }

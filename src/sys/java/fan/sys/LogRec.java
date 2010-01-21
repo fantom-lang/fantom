@@ -40,7 +40,7 @@ public class LogRec
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.LogRecType; }
+  public Type typeof() { return Sys.LogRecType; }
 
   public String toStr()
   {

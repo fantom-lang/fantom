@@ -99,7 +99,7 @@ public class Locale
 
   public String country() { return country; }
 
-  public Type type() { return Sys.LocaleType; }
+  public Type typeof() { return Sys.LocaleType; }
 
   public int hashCode() { return str.hashCode(); }
 

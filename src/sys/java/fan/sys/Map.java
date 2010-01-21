@@ -56,7 +56,7 @@ public final class Map
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Type type()
+  public final Type typeof()
   {
     return type;
   }
@@ -117,7 +117,7 @@ public final class Map
     if (key == null)
       throw NullErr.make("key is null").val;
     if (!isImmutable(key))
-      throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
+      throw NotImmutableErr.make("key is not immutable: " + typeof(key)).val;
     map.put(key, value);
     return this;
   }
@@ -128,7 +128,7 @@ public final class Map
     if (key == null)
       throw NullErr.make("key is null").val;
     if (!isImmutable(key))
-      throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
+      throw NotImmutableErr.make("key is not immutable: " + typeof(key)).val;
     Object old = map.put(key, value);
     if (old != null)
     {
@@ -289,7 +289,7 @@ public final class Map
   {
     modify();
     if (v != null && !isImmutable(v))
-      throw NotImmutableErr.make("def must be immutable: " + type(v)).val;
+      throw NotImmutableErr.make("def must be immutable: " + typeof(v)).val;
     this.def = v;
   }
 
@@ -297,7 +297,7 @@ public final class Map
   {
     if (that instanceof Map)
     {
-      return type.equals(type(that)) && map.equals(((Map)that).map);
+      return type.equals(typeof(that)) && map.equals(((Map)that).map);
     }
     return false;
   }
@@ -580,7 +580,7 @@ public final class Map
         else if (val instanceof Map)
           val = ((Map)val).toImmutable();
         else if (!isImmutable(val))
-          throw NotImmutableErr.make("Item [" + key + "] not immutable " + type(val)).val;
+          throw NotImmutableErr.make("Item [" + key + "] not immutable " + typeof(val)).val;
       }
 
       temp.put(key, val);

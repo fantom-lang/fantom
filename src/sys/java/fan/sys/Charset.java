@@ -270,7 +270,7 @@ public class Charset
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.CharsetType; }
+  public Type typeof() { return Sys.CharsetType; }
 
   public String name() { return name; }
 

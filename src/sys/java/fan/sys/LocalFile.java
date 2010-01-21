@@ -137,7 +137,7 @@ public class LocalFile
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.LocalFileType; }
+  public Type typeof() { return Sys.LocalFileType; }
 
 //////////////////////////////////////////////////////////////////////////
 // File
@@ -274,7 +274,7 @@ public class LocalFile
     }
 
     if (!(to instanceof LocalFile))
-      throw IOErr.make("Cannot move LocalFile to " + to.type()).val;
+      throw IOErr.make("Cannot move LocalFile to " + to.typeof()).val;
     LocalFile dest = (LocalFile)to;
 
     if (dest.exists())

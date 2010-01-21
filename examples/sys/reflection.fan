@@ -46,7 +46,7 @@ class Reflection
     echo("\n--- types ---")
     pod := Pod.find("fwt")
     t := pod.findType("Button")
-    show(Type.of("foo"),                 "get the type of the an object")
+    show("foo".typeof,                   "get the type of the an object")
     show(pod.types,                      "list the types in myPod")
     show(pod.findType("Button"),         "find a type in pod by simple name")
     show(pod.findType("Foo", false),     "returns null if type not found")

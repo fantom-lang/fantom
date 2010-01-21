@@ -65,7 +65,7 @@ public abstract class Enum
     return FanInt.compare(ordinal, ((Enum)obj).ordinal);
   }
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.EnumType;
   }

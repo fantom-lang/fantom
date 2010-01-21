@@ -13,6 +13,6 @@ package fan.sys;
 public class Void
 {
 
-  public Type type() { return Sys.VoidType; }
+  public Type typeof() { return Sys.VoidType; }
 
 }

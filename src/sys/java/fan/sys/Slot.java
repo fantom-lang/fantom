@@ -71,7 +71,7 @@ public abstract class Slot
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.SlotType; }
+  public Type typeof() { return Sys.SlotType; }
 
   public Type parent()   { return parent; }
   public String name()      { return name; }

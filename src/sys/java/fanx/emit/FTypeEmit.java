@@ -131,8 +131,8 @@ public abstract class FTypeEmit
     // generate public static Type $Type; set in clinit
     typeField = emitField("$Type", "Lfan/sys/Type;", EmitConst.PUBLIC|EmitConst.STATIC|EmitConst.FINAL);
 
-    // generate type() instance method
-    MethodEmit me = emitMethod("type", "()Lfan/sys/Type;", EmitConst.PUBLIC);
+    // generate typeof() instance method
+    MethodEmit me = emitMethod("typeof", "()Lfan/sys/Type;", EmitConst.PUBLIC);
     CodeEmit code = me.emitCode();
     code.maxLocals = 1;
     code.maxStack  = 2;

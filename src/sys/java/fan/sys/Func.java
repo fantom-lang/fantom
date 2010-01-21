@@ -31,7 +31,7 @@ public abstract class Func
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.FuncType; }
+  public Type typeof() { return Sys.FuncType; }
 
   public Type returns() { return returns; }
 
@@ -90,7 +90,7 @@ public abstract class Func
     protected Indirect(FuncType type) { super(type); this.type = type; }
 
     public String  name()  { return getClass().getName(); }
-    public Type type()  { return type; }
+    public Type typeof()  { return type; }
     public String  toStr() { return type.signature(); }
     public boolean isImmutable() { return false; }
     public Method method() { return null; }
@@ -143,7 +143,7 @@ public abstract class Func
     public void checkInCtor(Object it)
     {
       if (it == inCtor) return;
-      String msg = it == null ? "null" : FanObj.type(it).qname();
+      String msg = it == null ? "null" : FanObj.typeof(it).qname();
       throw ConstErr.make(msg).val;
     }
 
@@ -292,7 +292,7 @@ public abstract class Func
   static class Wrapper extends Func
   {
     Wrapper(FuncType t, Func orig) { super(t); this.type = t; this.orig = orig; }
-    public Type type()  { return type; }
+    public Type typeof()  { return type; }
     public final boolean isImmutable() { return orig.isImmutable(); }
     public final Method method() { return orig.method(); }
     public final Object callOn(Object target, List args) { return orig.callOn(target, args); }
@@ -314,8 +314,6 @@ public abstract class Func
 // Bind
 //////////////////////////////////////////////////////////////////////////
 
-// TODO
-public final Func curry(List args) { return bind(args); }
   public final Func bind(List args)
   {
     if (args.sz() == 0) return this;
@@ -340,7 +338,7 @@ public final Func curry(List args) { return bind(args); }
     }
 
     public String name()  { return getClass().getName(); }
-    public Type type()  { return type; }
+    public Type typeof()  { return type; }
     public String  toStr() { return type.signature(); }
     public boolean isImmutable() { return false; }
     public Method method() { return null; }

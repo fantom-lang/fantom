@@ -98,7 +98,7 @@ public class FanObj
   {
     try
     {
-      return type().isConst();
+      return typeof().isConst();
     }
     catch (NullPointerException e)
     {
@@ -122,19 +122,19 @@ public class FanObj
 
   public Object toImmutable()
   {
-    if (type().isConst()) return this;
-    throw NotImmutableErr.make(type().toString()).val;
+    if (typeof().isConst()) return this;
+    throw NotImmutableErr.make(typeof().toString()).val;
   }
 
-  public static Type type(Object self)
+  public static Type typeof(Object self)
   {
     if (self instanceof FanObj)
-      return ((FanObj)self).type();
+      return ((FanObj)self).typeof();
     else
       return FanUtil.toFanType(self.getClass(), true);
   }
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.ObjType;
   }
@@ -159,10 +159,10 @@ public class FanObj
     if (self instanceof FanObj)
       return ((FanObj)self).trap(name, args);
     else
-      return doTrap(self, name, args, type(self));
+      return doTrap(self, name, args, typeof(self));
   }
 
-  public Object trap(String name, List args) { return doTrap(this, name, args, type()); }
+  public Object trap(String name, List args) { return doTrap(this, name, args, typeof()); }
 
   private static Object doTrap(Object self, String name, List args, Type type)
   {

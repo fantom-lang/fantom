@@ -718,7 +718,7 @@ public final class Uri
     out.wStrLiteral(str, '`');
   }
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.UriType;
   }
@@ -1249,7 +1249,7 @@ public final class Uri
       }
       catch (Throwable e)
       {
-        throw UnresolvedErr.make("Cannot access base '" + FanObj.type(base) + ".uri' to normalize: " + this, e).val;
+        throw UnresolvedErr.make("Cannot access base '" + FanObj.typeof(base) + ".uri' to normalize: " + this, e).val;
       }
       if (baseUri.scheme == null)
         throw UnresolvedErr.make("Base object's uri is not absolute: " + baseUri).val;

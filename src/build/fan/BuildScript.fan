@@ -49,7 +49,7 @@ abstract class BuildScript
   BuildLog log := BuildLog()
 
   ** The source file of this script
-  const File scriptFile := File(type->sourceFile.toStr.toUri)
+  const File scriptFile := File(typeof->sourceFile.toStr.toUri)
 
   ** The directory containing the this script
   const File scriptDir := scriptFile.parent
@@ -136,7 +136,7 @@ abstract class BuildScript
   **
   override Str toStr()
   {
-    return type->sourceFile.toStr
+    return typeof->sourceFile.toStr
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -182,7 +182,7 @@ abstract class BuildScript
   virtual Target[] makeTargets()
   {
     targets := Target[,]
-    type.methods.each |Method m|
+    typeof.methods.each |Method m|
     {
       description := m.facet(@target)
       if (description == null) return
@@ -214,7 +214,7 @@ abstract class BuildScript
   virtual Void dumpenv()
   {
     log.out.printLine("---------------")
-    log.out.printLine("  scriptFile:   $scriptFile [$type.base]")
+    log.out.printLine("  scriptFile:   $scriptFile [$typeof.base]")
     log.out.printLine("  boot.home:    $Repo.boot.home")
     log.out.printLine("  working.home: $Repo.working.home")
     log.out.printLine("  devHomeDir:   $devHomeDir")
@@ -326,7 +326,7 @@ abstract class BuildScript
   **
   internal Bool validateReqField(Str field)
   {
-    val := type.field(field).get(this)
+    val := typeof.field(field).get(this)
     if (val != null) return true
     log.err("Required field not set: '$field' [$toStr]")
     return false

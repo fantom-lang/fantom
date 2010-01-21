@@ -47,7 +47,7 @@ public class Process
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.ProcessType;
   }

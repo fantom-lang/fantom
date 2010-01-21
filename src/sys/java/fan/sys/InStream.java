@@ -37,7 +37,7 @@ public class InStream
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.InStreamType; }
+  public Type typeof() { return Sys.InStreamType; }
 
 //////////////////////////////////////////////////////////////////////////
 // Java InputStream
@@ -96,7 +96,7 @@ public class InStream
     catch (NullPointerException e)
     {
       if (in == null)
-        throw UnsupportedErr.make(type().qname() + " wraps null InStream").val;
+        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream").val;
       else
         throw e;
     }
@@ -111,7 +111,7 @@ public class InStream
     catch (NullPointerException e)
     {
       if (in == null)
-        throw UnsupportedErr.make(type().qname() + " wraps null InStream").val;
+        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream").val;
       else
         throw e;
     }
@@ -127,7 +127,7 @@ public class InStream
     catch (NullPointerException e)
     {
       if (in == null)
-        throw UnsupportedErr.make(type().qname() + " wraps null InStream").val;
+        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream").val;
       else
         throw e;
     }

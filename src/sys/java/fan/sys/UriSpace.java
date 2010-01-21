@@ -52,9 +52,9 @@ public abstract class UriSpace
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public String toStr() { return type().qname() + " uri=" + uri; }
+  public String toStr() { return typeof().qname() + " uri=" + uri; }
 
-  public Type type() { return Sys.UriSpaceType; }
+  public Type typeof() { return Sys.UriSpaceType; }
 
 //////////////////////////////////////////////////////////////////////////
 // UriSpace
@@ -67,17 +67,17 @@ public abstract class UriSpace
 
   public Uri create(Uri uri, Object obj)
   {
-    throw UnsupportedErr.make(type() + ".create").val;
+    throw UnsupportedErr.make(typeof() + ".create").val;
   }
 
   public void put(Uri uri, Object obj)
   {
-    throw UnsupportedErr.make(type() + ".put").val;
+    throw UnsupportedErr.make(typeof() + ".put").val;
   }
 
   public void delete(Uri uri)
   {
-    throw UnsupportedErr.make(type() + ".delete").val;
+    throw UnsupportedErr.make(typeof() + ".delete").val;
   }
 
 //////////////////////////////////////////////////////////////////////////

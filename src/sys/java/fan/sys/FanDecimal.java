@@ -59,7 +59,7 @@ public final class FanDecimal
     return self.hashCode();
   }
 
-  public static Type type()
+  public static Type typeof()
   {
     return Sys.DecimalType;
   }

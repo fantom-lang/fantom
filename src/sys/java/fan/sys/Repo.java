@@ -45,7 +45,7 @@ public final class Repo
 
   public String toStr()  { return name + " [" + home + "]";  }
 
-  public Type type()  { return Sys.RepoType;  }
+  public Type typeof()  { return Sys.RepoType;  }
 
 //////////////////////////////////////////////////////////////////////////
 // Files

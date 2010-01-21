@@ -38,7 +38,7 @@ public class Actor
       throw NullErr.make("pool is null").val;
 
     // check receive method
-    if (receive == null && self.type() == Sys.ActorType)
+    if (receive == null && self.typeof() == Sys.ActorType)
       throw ArgErr.make("must supply receive func or subclass Actor").val;
     if (receive != null) receive = (Func)receive.toImmutable();
 
@@ -75,7 +75,7 @@ public class Actor
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.ActorType; }
+  public Type typeof() { return Sys.ActorType; }
 
 //////////////////////////////////////////////////////////////////////////
 // Actor
@@ -92,7 +92,7 @@ public class Actor
   protected Object receive(Object msg)
   {
     if (receive != null) return receive.call(msg);
-    System.out.println("WARNING: " + type() + ".receive not overridden");
+    System.out.println("WARNING: " + typeof() + ".receive not overridden");
     return null;
   }
 

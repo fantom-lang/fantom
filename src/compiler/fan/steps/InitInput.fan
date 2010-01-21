@@ -112,7 +112,7 @@ class InitInput : CompilerStep
   {
     if (podFacets == null) return def
     try
-      return podFacets.get(qname, false, def.type) ?: def
+      return podFacets.get(qname, false, def.typeof) ?: def
     catch (CompilerErr e)
       throw errReport(e)
   }

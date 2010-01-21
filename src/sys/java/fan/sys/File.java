@@ -96,7 +96,7 @@ public abstract class File
 
   public final String toStr() { return uri.toStr(); }
 
-  public Type type() { return Sys.FileType; }
+  public Type typeof() { return Sys.FileType; }
 
 //////////////////////////////////////////////////////////////////////////
 // Uri
