@@ -7,9 +7,9 @@
 //
 
 **
-** TokenVal stores an instance of a Token at a specific Location.
+** TokenVal stores an instance of a Token at a specific location.
 **
-class TokenVal : Location
+class TokenVal : Loc
 {
 
   new make(Token kind, Obj? val := null)

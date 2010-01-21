@@ -20,7 +20,7 @@ class SourceToHtmlGenerator : ApiToHtmlGenerator
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(DocCompiler compiler, Location loc, OutStream out, Type t, File srcFile)
+  new make(DocCompiler compiler, Loc loc, OutStream out, Type t, File srcFile)
     : super(compiler, loc, out, t)
   {
     this.srcFile     = srcFile

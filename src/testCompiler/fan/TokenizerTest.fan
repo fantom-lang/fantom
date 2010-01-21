@@ -19,25 +19,25 @@ class TokenizerTest : Test
 // Location
 //////////////////////////////////////////////////////////////////////////
 
-  Void testLocation()
+  Void testLo()
   {
-    verifyEq(Location("foo"), Location("foo"))
-    verifyEq(Location("foo", 4), Location("foo", 4))
-    verifyEq(Location("foo", 4, 6), Location("foo", 4, 6))
+    verifyEq(Loc("foo"), Loc("foo"))
+    verifyEq(Loc("foo", 4), Loc("foo", 4))
+    verifyEq(Loc("foo", 4, 6), Loc("foo", 4, 6))
 
-    verifyNotEq(Location("foo"), Location("bar"))
-    verifyNotEq(Location("foo", 4), Location("foo", 5))
-    verifyNotEq(Location("foo", 4, 6), Location("foo", 4, 4))
+    verifyNotEq(Loc("foo"), Loc("bar"))
+    verifyNotEq(Loc("foo", 4), Loc("foo", 5))
+    verifyNotEq(Loc("foo", 4, 6), Loc("foo", 4, 4))
 
-    verify(Location("foo") <= Location("foo"))
-    verify(Location("foo", 5) <= Location("foo", 5))
-    verify(Location("foo", 5, 7) >= Location("foo", 5, 7))
+    verify(Loc("foo") <= Loc("foo"))
+    verify(Loc("foo", 5) <= Loc("foo", 5))
+    verify(Loc("foo", 5, 7) >= Loc("foo", 5, 7))
 
-    verify(Location("foo") > Location("bar"))
-    verify(Location("bar") < Location("foo"))
-    verify(Location("foo", 10) > Location("foo", 6))
-    verify(Location("foo", 99, 2) > Location("foo", 9, 100))
-    verify(Location("foo", 5, 2) < Location("foo", 5, 10))
+    verify(Loc("foo") > Loc("bar"))
+    verify(Loc("bar") < Loc("foo"))
+    verify(Loc("foo", 10) > Loc("foo", 6))
+    verify(Loc("foo", 99, 2) > Loc("foo", 9, 100))
+    verify(Loc("foo", 5, 2) < Loc("foo", 5, 10))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -699,7 +699,7 @@ class TokenizerTest : Test
     // strip trailing eof
     c := Compiler(CompilerInput())
     c.log.level = LogLevel.silent
-    return Tokenizer.make(c, Location.make("test"), src, true).tokenize[0..-2]
+    return Tokenizer.make(c, Loc("test"), src, true).tokenize[0..-2]
   }
 
   Void verifyToken(Str src, TokenVal want)

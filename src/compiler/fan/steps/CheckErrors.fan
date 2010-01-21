@@ -66,20 +66,20 @@ class CheckErrors : CompilerStep
   {
     // verify symbols don't conflict with types
     if (pod.resolveType(s.name, false) != null)
-      err("Symbol name '$s.name' conflicts with type", s.location)
+      err("Symbol name '$s.name' conflicts with type", s.loc)
 
     // verify we don't use a restricted name
     if (isRestrictedName(s.name))
-      err("Symbol name '$s.name' is restricted", s.location)
+      err("Symbol name '$s.name' is restricted", s.loc)
 
     // verify symbol type is immutable
     if (!s.of.isConstFieldType || s.of.isFunc)
-      err("Symbol '$s.name' has non-const type '$s.of'", s.location)
+      err("Symbol '$s.name' has non-const type '$s.of'", s.loc)
 
     // verify symbol has correct type
     coerce(s.val, s.of) |->|
     {
-      err("'$s.val.toTypeStr' is not assignable to '$s.of'", s.val.location)
+      err("'$s.val.toTypeStr' is not assignable to '$s.of'", s.val.loc)
     }
   }
 
@@ -108,7 +108,7 @@ class CheckErrors : CompilerStep
 
     // verify we don't use a restricted name
     if (isRestrictedName(t.name))
-      err("Type name '$t.name' is restricted", t.location)
+      err("Type name '$t.name' is restricted", t.loc)
 
     // if type extends from any FFI types then give bridge a hook
     foreign := t.foreignInheritance
@@ -116,7 +116,7 @@ class CheckErrors : CompilerStep
 
     // check some knuckle head doesn't override type
     if (t.slotDef("typeof") != null && !compiler.isSys)
-      err("Cannot override Obj.typeof()", t.slotDef("typeof").location)
+      err("Cannot override Obj.typeof()", t.slotDef("typeof").loc)
 
     // check inheritance
     if (t.base != null) checkBase(t, t.base)
@@ -129,7 +129,7 @@ class CheckErrors : CompilerStep
   private Void checkTypeFlags(TypeDef t)
   {
     flags := t.flags
-    loc := t.location
+    loc := t.loc
 
     // these modifiers are never allowed on a type
     if (flags.and(FConst.Ctor) != 0)      err("Cannot use 'new' modifier on type", loc)
@@ -163,13 +163,13 @@ class CheckErrors : CompilerStep
       {
         if (!errForDef)
         {
-          err("Class '$t.name' must be abstract since it contains abstract slots", t.location)
+          err("Class '$t.name' must be abstract since it contains abstract slots", t.loc)
           errForDef = true
         }
       }
       else
       {
-        err("Class '$t.name' must be abstract since it inherits but doesn't override '$slot.qname'", t.location)
+        err("Class '$t.name' must be abstract since it inherits but doesn't override '$slot.qname'", t.loc)
       }
     }
 
@@ -186,7 +186,7 @@ class CheckErrors : CompilerStep
 
     // const class cannot inherit from non-const class
     if (t.base != null && t.base != ns.objType && !t.base.isConst)
-      err("Const type '$t.name' cannot subclass non-const class '$t.base.name'", t.location)
+      err("Const type '$t.name' cannot subclass non-const class '$t.base.name'", t.loc)
 
     // check that each field is const or has no storage; don't
     // worry about statics because they are forced to be const
@@ -194,14 +194,14 @@ class CheckErrors : CompilerStep
     t.fieldDefs.each |FieldDef f|
     {
       if (!f.isConst && !f.isStatic && f.isStorage && !isSys)
-        err("Const type '$t.name' cannot contain non-const field '$f.name'", f.location)
+        err("Const type '$t.name' cannot contain non-const field '$f.name'", f.loc)
     }
 
     // check that no once methods
     t.methodDefs.each |MethodDef m|
     {
       if (m.isOnce)
-        err("Const type '$t.name' cannot contain once method '$m.name'", m.location)
+        err("Const type '$t.name' cannot contain once method '$m.name'", m.loc)
     }
   }
 
@@ -209,22 +209,22 @@ class CheckErrors : CompilerStep
   {
     // check that a public class doesn't subclass from internal classes
     if (t.isPublic && !base.isPublic)
-      err("Public type '$t.name' cannot extend from internal class '$base.name'", t.location)
+      err("Public type '$t.name' cannot extend from internal class '$base.name'", t.loc)
 
     // if base is const, then t must be const
     if (!t.isConst && base.isConst)
-      err("Non-const type '$t.name' cannot subclass const class '$base.name'", t.location)
+      err("Non-const type '$t.name' cannot subclass const class '$base.name'", t.loc)
   }
 
   private Void checkMixin(TypeDef t, CType m)
   {
     // check that a public class doesn't implement from internal mixin
     if (t.isPublic && !m.isPublic)
-      err("Public type '$t.name' cannot implement internal mixin '$m.name'", t.location)
+      err("Public type '$t.name' cannot implement internal mixin '$m.name'", t.loc)
 
     // if mixin is const, then t must be const
     if (!t.isConst && m.isConst)
-      err("Non-const type '$t.name' cannot implement const mixin '$m.name'", t.location)
+      err("Non-const type '$t.name' cannot implement const mixin '$m.name'", t.loc)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -246,28 +246,28 @@ class CheckErrors : CompilerStep
 
     // mixins cannot have non-abstract fields
     if (curType.isMixin && !f.isAbstract && !f.isStatic)
-      err("Mixin field '$f.name' must be abstract", f.location)
+      err("Mixin field '$f.name' must be abstract", f.loc)
 
     // abstract field cannot have initialization
     if (f.isAbstract && f.init != null)
-      err("Abstract field '$f.name' cannot have initializer", f.init.location)
+      err("Abstract field '$f.name' cannot have initializer", f.init.loc)
 
     // abstract field cannot have getter/setter
     if (f.isAbstract && (f.hasGet || f.hasSet))
-      err("Abstract field '$f.name' cannot have getter or setter", f.location)
+      err("Abstract field '$f.name' cannot have getter or setter", f.loc)
 
     // check internal type
-    checkTypeProtection(f.fieldType, f.location)
+    checkTypeProtection(f.fieldType, f.loc)
 
     // check that public field isn't using internal type
     if (curType.isPublic && (f.isPublic || f.isProtected) && !f.fieldType.isPublic)
-      err("Public field '${curType.name}.${f.name}' cannot use internal type '$f.fieldType'", f.location)
+      err("Public field '${curType.name}.${f.name}' cannot use internal type '$f.fieldType'", f.loc)
   }
 
   private Void checkFieldFlags(FieldDef f)
   {
     flags := f.flags
-    loc   := f.location
+    loc   := f.loc
 
     // these modifiers are never allowed on a field
     if (flags.and(FConst.Ctor) != 0)    err("Cannot use 'new' modifier on field", loc)
@@ -357,17 +357,17 @@ class CheckErrors : CompilerStep
     // check types used in signature
     if (!m.isAccessor)
     {
-      checkTypeProtection(m.returnType, m.location)
-      m.paramDefs.each |ParamDef p| { checkTypeProtection(p.paramType, p.location) }
+      checkTypeProtection(m.returnType, m.loc)
+      m.paramDefs.each |ParamDef p| { checkTypeProtection(p.paramType, p.loc) }
     }
 
     // check that public method isn't using internal types in its signature
     if (!m.isAccessor && curType.isPublic && (m.isPublic || m.isProtected))
     {
-      if (!m.returnType.isPublic) err("Public method '${curType.name}.${m.name}' cannot use internal type '$m.returnType'", m.location);
+      if (!m.returnType.isPublic) err("Public method '${curType.name}.${m.name}' cannot use internal type '$m.returnType'", m.loc);
       m.paramDefs.each |ParamDef p|
       {
-        if (!p.paramType.isPublic) err("Public method '${curType.name}.${m.name}' cannot use internal type '$p.paramType'", m.location);
+        if (!p.paramType.isPublic) err("Public method '${curType.name}.${m.name}' cannot use internal type '$p.paramType'", m.loc);
       }
     }
   }
@@ -378,7 +378,7 @@ class CheckErrors : CompilerStep
     if (m.isFieldAccessor) return
 
     flags := m.flags
-    loc := m.location
+    loc := m.loc
 
     // these modifiers are never allowed on a method
     if (flags.and(FConst.Final) != 0)     err("Cannot use 'final' modifier on method", loc)
@@ -419,7 +419,7 @@ class CheckErrors : CompilerStep
     if (flags.and(Parser.Once) != 0)
     {
       if (curType.isMixin)
-        err("Mixins cannot have once methods", m.location)
+        err("Mixins cannot have once methods", m.loc)
     }
 
     // normalize method flags after checking
@@ -437,7 +437,7 @@ class CheckErrors : CompilerStep
       if (seenDef)
       {
         if (p.def == null)
-          err("Parameter '$p.name' must have default", p.location)
+          err("Parameter '$p.name' must have default", p.loc)
       }
       else
       {
@@ -450,16 +450,16 @@ class CheckErrors : CompilerStep
   {
     // check type
     t := p.paramType
-    if (t.isVoid) { err("Cannot use Void as parameter type", p.location); return }
-    if (t.isThis)  { err("Cannot use This as parameter type", p.location); return }
-    if (t.toNonNullable.signature != "|sys::This->sys::Void|") checkValidType(p.location, t)
+    if (t.isVoid) { err("Cannot use Void as parameter type", p.loc); return }
+    if (t.isThis)  { err("Cannot use This as parameter type", p.loc); return }
+    if (t.toNonNullable.signature != "|sys::This->sys::Void|") checkValidType(p.loc, t)
 
     // check parameter default type
     if (p.def != null && !p.paramType.isGenericParameter)
     {
       p.def = coerce(p.def, p.paramType) |->|
       {
-        err("'$p.def.toTypeStr' is not assignable to '$p.paramType'", p.def.location)
+        err("'$p.def.toTypeStr' is not assignable to '$p.paramType'", p.def.loc)
       }
     }
   }
@@ -469,25 +469,25 @@ class CheckErrors : CompilerStep
     if (m.ret.isThis)
     {
       if (m.isStatic)
-        err("Cannot return This from static method", m.location)
+        err("Cannot return This from static method", m.loc)
 
       if (m.ret.isNullable)
-        err("This type cannot be nullable", m.location)
+        err("This type cannot be nullable", m.loc)
     }
 
     if (!m.ret.isThis && !m.ret.isVoid)
-      checkValidType(m.location, m.ret)
+      checkValidType(m.loc, m.ret)
   }
 
   private Void checkCtor(MethodDef m)
   {
     // mixins cannot have constructors
     if (curType.isMixin)
-      err("Mixins cannot have constructors", m.location)
+      err("Mixins cannot have constructors", m.loc)
 
     // ensure super/this constructor is called
     if (m.ctorChain == null && !compiler.isSys && !curType.base.isObj && !curType.isSynthetic)
-      err("Must call super class constructor in '$m.name'", m.location)
+      err("Must call super class constructor in '$m.name'", m.loc)
 
     // if this constructor doesn't call a this
     // constructor, then check for definite assignment
@@ -526,9 +526,9 @@ class CheckErrors : CompilerStep
       }
       if (definite) return
       if (isStaticInit)
-        err("Non-nullable field '$f.name' must be assigned in static initializer", f.location)
+        err("Non-nullable field '$f.name' must be assigned in static initializer", f.loc)
       else
-        err("Non-nullable field '$f.name' must be assigned in constructor '$m.name'", m.location)
+        err("Non-nullable field '$f.name' must be assigned in constructor '$m.name'", m.loc)
     }
   }
 
@@ -547,14 +547,14 @@ class CheckErrors : CompilerStep
       checkFacet(f)
       for (j := i+1; j < facets.size; ++j)
         if (f.key.qname == facets[j].key.qname)
-          err("Duplicate facet '$f.key.qname'", f.location)
+          err("Duplicate facet '$f.key.qname'", f.loc)
     }
   }
 
   Void checkFacet(FacetDef f)
   {
     if (!f.val.ctype.fits(f.key.symbol.of))
-      err("Wrong type for facet '@$f.key.qname': expected '$f.key.symbol.of' not '$f.val.ctype'", f.location)
+      err("Wrong type for facet '@$f.key.qname': expected '$f.key.symbol.of' not '$f.val.ctype'", f.loc)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -603,23 +603,23 @@ class CheckErrors : CompilerStep
   private Void checkExprStmt(ExprStmt stmt)
   {
     if (!stmt.expr.isStmt)
-      err("Not a statement", stmt.expr.location)
+      err("Not a statement", stmt.expr.loc)
   }
 
   private Void checkLocalDef(LocalDefStmt stmt)
   {
     // check not Void
     t := stmt.ctype
-    if (t.isVoid) { err("Cannot use Void as local variable type", stmt.location); return }
-    if (t.isThis) { err("Cannot use This as local variable type", stmt.location); return }
-    checkValidType(stmt.location, t)
+    if (t.isVoid) { err("Cannot use Void as local variable type", stmt.loc); return }
+    if (t.isThis) { err("Cannot use This as local variable type", stmt.loc); return }
+    checkValidType(stmt.loc, t)
   }
 
   private Void checkIf(IfStmt stmt)
   {
     stmt.condition = coerce(stmt.condition, ns.boolType) |->|
     {
-      err("If condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.location)
+      err("If condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.loc)
     }
   }
 
@@ -627,7 +627,7 @@ class CheckErrors : CompilerStep
   {
     stmt.exception = coerce(stmt.exception, ns.errType) |->|
     {
-      err("Must throw Err, not '$stmt.exception.ctype'", stmt.exception.location)
+      err("Must throw Err, not '$stmt.exception.ctype'", stmt.exception.loc)
     }
   }
 
@@ -637,7 +637,7 @@ class CheckErrors : CompilerStep
     {
       stmt.condition = coerce(stmt.condition, ns.boolType) |->|
       {
-        err("For condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.location)
+        err("For condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.loc)
       }
     }
   }
@@ -646,28 +646,28 @@ class CheckErrors : CompilerStep
   {
     stmt.condition = coerce(stmt.condition, ns.boolType) |->|
     {
-      err("While condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.location)
+      err("While condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.loc)
     }
   }
 
   private Void checkBreak(BreakStmt stmt)
   {
     if (stmt.loop == null)
-      err("Break outside of loop (break is implicit in switch)", stmt.location)
+      err("Break outside of loop (break is implicit in switch)", stmt.loc)
 
     // can't leave control of a finally block
     if (finallyDepth > 0)
-      err("Cannot leave finally block", stmt.location)
+      err("Cannot leave finally block", stmt.loc)
   }
 
   private Void checkContinue(ContinueStmt stmt)
   {
     if (stmt.loop == null)
-      err("Continue outside of loop", stmt.location)
+      err("Continue outside of loop", stmt.loc)
 
     // can't leave control of a finally block
     if (finallyDepth > 0)
-      err("Cannot leave finally block", stmt.location)
+      err("Cannot leave finally block", stmt.loc)
   }
 
   private Void checkReturn(ReturnStmt stmt)
@@ -677,28 +677,28 @@ class CheckErrors : CompilerStep
     {
       // this is just a sanity check - it should be caught in parser
       if (!ret.isVoid)
-        err("Must return a value from non-Void method", stmt.location)
+        err("Must return a value from non-Void method", stmt.loc)
     }
     else if (ret.isThis)
     {
       if (!stmt.expr.ctype.fits(curType))
-        err("Cannot return '$stmt.expr.toTypeStr' as $curType This", stmt.expr.location)
+        err("Cannot return '$stmt.expr.toTypeStr' as $curType This", stmt.expr.loc)
     }
     else
     {
       stmt.expr = coerce(stmt.expr, ret) |->|
       {
-        err("Cannot return '$stmt.expr.toTypeStr' as '$ret'", stmt.expr.location)
+        err("Cannot return '$stmt.expr.toTypeStr' as '$ret'", stmt.expr.loc)
       }
     }
 
     // can't use return inside an it-block (might be confusing)
     if (!stmt.isSynthetic && curType.isClosure && curType.closure.isItBlock)
-      err("Cannot use return inside it-block", stmt.location)
+      err("Cannot use return inside it-block", stmt.loc)
 
     // can't leave control of a finally block
     if (finallyDepth > 0)
-      err("Cannot leave finally block", stmt.location)
+      err("Cannot leave finally block", stmt.loc)
 
     // add temp local var if returning from a protected region,
     // we always call this variable "$return" and reuse it if
@@ -715,7 +715,7 @@ class CheckErrors : CompilerStep
   {
     // check that try block not empty
     if (stmt.block.isEmpty)
-      err("Try block cannot be empty", stmt.location)
+      err("Try block cannot be empty", stmt.loc)
 
     // check each catch
     caught := CType[,]
@@ -724,9 +724,9 @@ class CheckErrors : CompilerStep
       CType? errType := c.errType
       if (errType == null) errType = ns.errType
       if (!errType.fits(ns.errType))
-        err("Must catch Err, not '$c.errType'", c.errType.location)
+        err("Must catch Err, not '$c.errType'", c.errType.loc)
       else if (errType.fitsAny(caught))
-        err("Already caught '$errType'", c.location)
+        err("Already caught '$errType'", c.loc)
       caught.add(errType)
     }
   }
@@ -751,7 +751,7 @@ class CheckErrors : CompilerStep
           if (dups[literal] == null)
             dups[literal] = literal
           else
-            err("Duplicate case label", expr.location)
+            err("Duplicate case label", expr.loc)
         }
       }
     }
@@ -796,12 +796,12 @@ class CheckErrors : CompilerStep
 
   private Void checkTypeLiteral(LiteralExpr expr)
   {
-    checkTypeProtection((CType)expr.val, expr.location)
+    checkTypeProtection((CType)expr.val, expr.loc)
   }
 
   private Void checkSlotLiteral(SlotLiteralExpr expr)
   {
-    checkSlotProtection(expr.slot, expr.location)
+    checkSlotProtection(expr.slot, expr.loc)
   }
 
   private Void checkListLiteral(ListLiteralExpr expr)
@@ -813,7 +813,7 @@ class CheckErrors : CompilerStep
     {
       expr.vals[i] = coerceBoxed(val, valType) |->|
       {
-        err("Invalid value type '$val.toTypeStr' for list of '$valType'", val.location)
+        err("Invalid value type '$val.toTypeStr' for list of '$valType'", val.loc)
       }
     }
   }
@@ -828,13 +828,13 @@ class CheckErrors : CompilerStep
     {
       expr.keys[i] = coerceBoxed(key, keyType) |->|
       {
-        err("Invalid key type '$key.toTypeStr' for map type '$mapType'", key.location)
+        err("Invalid key type '$key.toTypeStr' for map type '$mapType'", key.loc)
       }
 
       val := expr.vals[i]
       expr.vals[i] = coerceBoxed(val, valType) |->|
       {
-        err("Invalid value type '$val.toTypeStr' for map type '$mapType'", val.location)
+        err("Invalid value type '$val.toTypeStr' for map type '$mapType'", val.loc)
       }
     }
   }
@@ -843,11 +843,11 @@ class CheckErrors : CompilerStep
   {
     range.start = coerce(range.start, ns.intType) |->|
     {
-      err("Range must be Int..Int, not '${range.start.ctype}..${range.end.ctype}'", range.location)
+      err("Range must be Int..Int, not '${range.start.ctype}..${range.end.ctype}'", range.loc)
     }
     range.end = coerce(range.end, ns.intType) |->|
     {
-      err("Range must be Int..Int, not '${range.start.ctype}..${range.end.ctype}'", range.location)
+      err("Range must be Int..Int, not '${range.start.ctype}..${range.end.ctype}'", range.loc)
     }
   }
 
@@ -855,7 +855,7 @@ class CheckErrors : CompilerStep
   {
     expr.operand = coerce(expr.operand, ns.boolType) |->|
     {
-      err("Cannot apply '$expr.opToken.symbol' operator to '$expr.operand.ctype'", expr.location)
+      err("Cannot apply '$expr.opToken.symbol' operator to '$expr.operand.ctype'", expr.loc)
     }
   }
 
@@ -863,7 +863,7 @@ class CheckErrors : CompilerStep
   {
     t := expr.operand.ctype
     if (!t.isNullable)
-      err("Comparison of non-nullable type '$t' to null", expr.location)
+      err("Comparison of non-nullable type '$t' to null", expr.loc)
   }
 
   private Void checkBools(CondExpr expr)
@@ -872,7 +872,7 @@ class CheckErrors : CompilerStep
     {
       expr.operands[i] = coerce(operand, ns.boolType) |->|
       {
-        err("Cannot apply '$expr.opToken.symbol' operator to '$operand.ctype'", operand.location)
+        err("Cannot apply '$expr.opToken.symbol' operator to '$operand.ctype'", operand.loc)
       }
     }
   }
@@ -883,14 +883,14 @@ class CheckErrors : CompilerStep
 
     // don't allow for value types
     if (expr.lhs.ctype.isVal || expr.rhs.ctype.isVal)
-      err("Cannot use '$expr.opToken.symbol' operator with value types", expr.location)
+      err("Cannot use '$expr.opToken.symbol' operator with value types", expr.loc)
   }
 
   private Bool checkCompare(Expr lhs, Expr rhs)
   {
     if (!lhs.ctype.fits(rhs.ctype) && !rhs.ctype.fits(lhs.ctype))
     {
-      err("Incomparable types '$lhs.ctype' and '$rhs.ctype'", lhs.location)
+      err("Incomparable types '$lhs.ctype' and '$rhs.ctype'", lhs.loc)
       return false
     }
     return true
@@ -901,16 +901,16 @@ class CheckErrors : CompilerStep
     // check that rhs is assignable to lhs
     expr.rhs = coerce(expr.rhs, expr.lhs.ctype) |->|
     {
-      err("'$expr.rhs.toTypeStr' is not assignable to '$expr.lhs.ctype'", expr.rhs.location)
+      err("'$expr.rhs.toTypeStr' is not assignable to '$expr.lhs.ctype'", expr.rhs.loc)
     }
 
     // check that lhs is assignable
     if (!expr.lhs.isAssignable)
-      err("Left hand side is not assignable", expr.lhs.location)
+      err("Left hand side is not assignable", expr.lhs.loc)
 
     // check not assigning to same variable
     if (expr.lhs.sameVarAs(expr.rhs))
-      err("Self assignment", expr.lhs.location)
+      err("Self assignment", expr.lhs.loc)
 
     // check left hand side field (common code with checkShortcut)
     if (expr.lhs.id === ExprId.field)
@@ -927,11 +927,11 @@ class CheckErrors : CompilerStep
   private Void checkElvis(BinaryExpr expr)
   {
     if (!expr.lhs.ctype.isNullable)
-      err("Cannot use '?:' operator on non-nullable type '$expr.lhs.ctype'", expr.location)
+      err("Cannot use '?:' operator on non-nullable type '$expr.lhs.ctype'", expr.loc)
 
     expr.rhs = coerce(expr.rhs, expr.ctype) |->|
     {
-      err("Cannot coerce '$expr.rhs.toTypeStr' to '$expr.ctype'", expr.rhs.location);
+      err("Cannot coerce '$expr.rhs.toTypeStr' to '$expr.ctype'", expr.rhs.loc);
     }
   }
 
@@ -940,7 +940,7 @@ class CheckErrors : CompilerStep
     while (x is NameExpr)
     {
       ne := (NameExpr)x
-      if (ne.isSafe) err("Null-safe operator on left hand side of assignment", x.location)
+      if (ne.isSafe) err("Null-safe operator on left hand side of assignment", x.loc)
       x = ne.target
     }
   }
@@ -962,7 +962,7 @@ class CheckErrors : CompilerStep
     {
       // check that lhs is assignable
       if (!shortcut.target.isAssignable)
-        err("Target is not assignable", shortcut.target.location)
+        err("Target is not assignable", shortcut.target.loc)
 
       // check left hand side field (common code with checkAssign)
       if (shortcut.target.id === ExprId.field)
@@ -1001,7 +1001,7 @@ class CheckErrors : CompilerStep
     // check protection scope (which might be more narrow than the scope
     // of the entire field as checked in checkProtection by checkField)
     if (field.setter != null && slotProtectionErr(field) == null)
-      checkSlotProtection(field.setter, lhs.location, true)
+      checkSlotProtection(field.setter, lhs.loc, true)
 
     // if not-const we are done
     if (!field.isConst) return rhs
@@ -1020,7 +1020,7 @@ class CheckErrors : CompilerStep
     // check attempt to set static field outside of static initializer
     if (field.isStatic && !inMethod.isStaticInit)
     {
-      err("Cannot set const static field '$field.name' outside of static initializer", lhs.location)
+      err("Cannot set const static field '$field.name' outside of static initializer", lhs.loc)
       return rhs
     }
 
@@ -1033,7 +1033,7 @@ class CheckErrors : CompilerStep
       {
         if (!inType.fits(field.parent) || !inMethod.isCtor)
         {
-          err("Cannot set const field '$field.qname'", lhs.location)
+          err("Cannot set const field '$field.qname'", lhs.loc)
           return rhs
         }
       }
@@ -1041,7 +1041,7 @@ class CheckErrors : CompilerStep
       // check attempt to set instance field outside of ctor
       if (!field.isStatic && !(inMethod.isInstanceInit || inMethod.isCtor))
       {
-        err("Cannot set const field '$field.name' outside of constructor", lhs.location)
+        err("Cannot set const field '$field.name' outside of constructor", lhs.loc)
         return rhs
       }
     }
@@ -1062,7 +1062,7 @@ class CheckErrors : CompilerStep
     if (rhs.id == ExprId.nullLiteral) return rhs
 
     // wrap existing assigned with call toImmutable
-    call := CallExpr.makeWithMethod(rhs.location, rhs, ns.objToImmutable) { isSafe = true }
+    call := CallExpr.makeWithMethod(rhs.loc, rhs, ns.objToImmutable) { isSafe = true }
     if (fieldType.toNonNullable.isObj) return call
     return TypeCheckExpr.coerce(call, fieldType)
 
@@ -1074,7 +1074,7 @@ class CheckErrors : CompilerStep
     {
       // check that ctor method is the expected type
       if (call.ctype.toNonNullable != call.method.returnType.toNonNullable)
-        err("Construction method '$call.method.qname' must return '$call.ctype.name'", call.location)
+        err("Construction method '$call.method.qname' must return '$call.ctype.name'", call.loc)
 
       // but allow ctor to be typed as nullable
       call.ctype = call.method.returnType
@@ -1088,14 +1088,14 @@ class CheckErrors : CompilerStep
     m := call.method
     if (m == null)
     {
-      err("Something wrong with method call?", call.location)
+      err("Something wrong with method call?", call.loc)
       return
     }
 
     name := m.name
 
     // check protection scope
-    checkSlotProtection(call.method, call.location)
+    checkSlotProtection(call.method, call.loc)
 
     // if a foreign function, then verify we aren't using unsupported types
     if (m.isForeign)
@@ -1103,13 +1103,13 @@ class CheckErrors : CompilerStep
       // just log one use of unsupported return or param type and return
       if (!m.returnType.isSupported)
       {
-        err("Method '$name' uses unsupported type '$m.returnType'", call.location)
+        err("Method '$name' uses unsupported type '$m.returnType'", call.loc)
         return
       }
       unsupported := m.params.find |CParam p->Bool| { return !p.paramType.isSupported }
       if (unsupported != null)
       {
-        err("Method '$name' uses unsupported type '$unsupported.paramType'", call.location)
+        err("Method '$name' uses unsupported type '$unsupported.paramType'", call.loc)
         return
       }
     }
@@ -1131,25 +1131,25 @@ class CheckErrors : CompilerStep
     {
       // ensure we aren't calling constructors on an instance
       if (call.target != null && call.target.id !== ExprId.staticTarget && !call.target.synthetic)
-        err("Cannot call constructor '$name' on instance", call.location)
+        err("Cannot call constructor '$name' on instance", call.loc)
 
       // ensure we aren't calling a constructor on an abstract class
       if (m.parent.isAbstract)
-        err("Calling constructor on abstract class", call.location)
+        err("Calling constructor on abstract class", call.loc)
     }
 
     // ensure we aren't calling static methods on an instance
     if (m.isStatic)
     {
       if (call.target != null && call.target.id !== ExprId.staticTarget)
-        err("Cannot call static method '$name' on instance", call.location)
+        err("Cannot call static method '$name' on instance", call.loc)
     }
 
     // ensure we can't calling an instance method statically
     if (!m.isStatic && !m.isCtor)
     {
       if (call.target == null || call.target.id === ExprId.staticTarget)
-        err("Cannot call instance method '$name' in static context", call.location)
+        err("Cannot call instance method '$name' in static context", call.loc)
     }
 
     // if using super
@@ -1157,16 +1157,16 @@ class CheckErrors : CompilerStep
     {
       // check that super is concrete
       if (m.isAbstract)
-        err("Cannot use super to call abstract method '$m.qname'", call.target.location)
+        err("Cannot use super to call abstract method '$m.qname'", call.target.loc)
 
       // check that calling super with exact param match otherwise stack overflow
       if (call.args.size != m.params.size && m.name == curMethod.name && !m.isCtor)
-        err("Must call super method '$m.qname' with exactly $m.params.size arguments", call.target.location)
+        err("Must call super method '$m.qname' with exactly $m.params.size arguments", call.target.loc)
     }
 
     // don't allow safe calls on non-nullable type
     if (call.isSafe && call.target != null && !call.target.ctype.isNullable)
-      err("Cannot use null-safe call on non-nullable type '$call.target.ctype'", call.target.location)
+      err("Cannot use null-safe call on non-nullable type '$call.target.ctype'", call.target.loc)
 
     // if calling a method on a value-type, ensure target is
     // coerced to non-null; we don't do this for comparisons
@@ -1183,12 +1183,12 @@ class CheckErrors : CompilerStep
     field := f.field
 
     // check protection scope
-    checkSlotProtection(field, f.location)
+    checkSlotProtection(field, f.loc)
 
     // if a FFI, then verify we aren't using unsupported types
     if (!field.fieldType.isSupported)
     {
-      err("Field '$field.name' has unsupported type '$field.fieldType'", f.location)
+      err("Field '$field.name' has unsupported type '$field.fieldType'", f.loc)
       return
     }
 
@@ -1196,26 +1196,26 @@ class CheckErrors : CompilerStep
     if (field.isStatic)
     {
       if (f.target != null && f.target.id !== ExprId.staticTarget)
-        err("Cannot access static field '$f.name' on instance", f.location)
+        err("Cannot access static field '$f.name' on instance", f.loc)
     }
 
     // if instance field
     else
     {
       if (f.target == null || f.target.id === ExprId.staticTarget)
-        err("Cannot access instance field '$f.name' in static context", f.location)
+        err("Cannot access instance field '$f.name' in static context", f.loc)
     }
 
     // if using super check that concrete
     if (f.target != null && f.target.id === ExprId.superExpr)
     {
       if (field.isAbstract)
-        err("Cannot use super to access abstract field '$field.qname'", f.target.location)
+        err("Cannot use super to access abstract field '$field.qname'", f.target.loc)
     }
 
     // don't allow safe access on non-nullable type
     if (f.isSafe && f.target != null && !f.target.ctype.isNullable)
-      err("Cannot use null-safe access on non-nullable type '$f.target.ctype'", f.target.location)
+      err("Cannot use null-safe access on non-nullable type '$f.target.ctype'", f.target.loc)
 
     // if using the field's accessor method
     if (f.useAccessor)
@@ -1225,7 +1225,7 @@ class CheckErrors : CompilerStep
 
       // check that we aren't using an field accessor inside of itself
       if (curMethod != null && (field.getter === curMethod || field.setter === curMethod))
-        err("Cannot use field accessor inside accessor itself - use '*' operator", f.location)
+        err("Cannot use field accessor inside accessor itself - use '*' operator", f.loc)
     }
 
     // if accessing storage directly
@@ -1237,16 +1237,16 @@ class CheckErrors : CompilerStep
       enclosing := curType.isClosure ? curType.closure.enclosingType : curType
       if (!field.isConst && field.parent != curType && field.parent != enclosing)
       {
-        err("Field storage for '$field.qname' not accessible", f.location)
+        err("Field storage for '$field.qname' not accessible", f.loc)
       }
 
       // sanity check that field has storage
       else if (!field.isStorage)
       {
         if (field is FieldDef && ((FieldDef)field).concreteBase != null)
-          err("Field storage of inherited field '${field->concreteBase->qname}' not accessible (might try super)", f.location)
+          err("Field storage of inherited field '${field->concreteBase->qname}' not accessible (might try super)", f.loc)
         else
-          err("Invalid storage access of field '$field.qname' which doesn't have storage", f.location)
+          err("Invalid storage access of field '$field.qname' which doesn't have storage", f.loc)
       }
     }
   }
@@ -1278,26 +1278,26 @@ class CheckErrors : CompilerStep
   private Void checkThis(ThisExpr expr)
   {
     if (inStatic)
-      err("Cannot access 'this' in static context", expr.location)
+      err("Cannot access 'this' in static context", expr.loc)
   }
 
   private Void checkSuper(SuperExpr expr)
   {
     if (inStatic)
-      err("Cannot access 'super' in static context", expr.location)
+      err("Cannot access 'super' in static context", expr.loc)
 
     if (curType.isMixin)
     {
       if (expr.explicitType == null)
-        err("Must use named 'super' inside mixin", expr.location)
+        err("Must use named 'super' inside mixin", expr.loc)
       else if (!expr.explicitType.isMixin)
-        err("Cannot use 'Obj.super' inside mixin (yeah I know - take it up with Sun)", expr.location)
+        err("Cannot use 'Obj.super' inside mixin (yeah I know - take it up with Sun)", expr.loc)
     }
 
     if (expr.explicitType != null)
     {
       if (!curType.fits(expr.explicitType))
-        err("Named super '$expr.explicitType' not a super class of '$curType.name'", expr.location)
+        err("Named super '$expr.explicitType' not a super class of '$curType.name'", expr.loc)
     }
   }
 
@@ -1311,7 +1311,7 @@ class CheckErrors : CompilerStep
     check := expr.check
     target := expr.target.ctype
     if (!check.fits(target) && !target.fits(check) && !check.isMixin && !target.isMixin)
-      err("Inconvertible types '$target' and '$check'", expr.location)
+      err("Inconvertible types '$target' and '$check'", expr.loc)
 
     // don't allow is, as, isnot (everything but coerce) to be
     // used with value type expressions
@@ -1319,29 +1319,29 @@ class CheckErrors : CompilerStep
     {
       if (target.isVal)
       {
-        err("Cannot use '$expr.opStr' operator on value type '$target'", expr.location)
+        err("Cannot use '$expr.opStr' operator on value type '$target'", expr.loc)
         return
       }
     }
 
     // don't allow as with nullable
     if (expr.id === ExprId.asExpr && check.isNullable)
-      err("Cannot use 'as' operator with nullable type '$check'", expr.location)
+      err("Cannot use 'as' operator with nullable type '$check'", expr.loc)
   }
 
   private Void checkTernary(TernaryExpr expr)
   {
     expr.condition = coerce(expr.condition, ns.boolType) |->|
     {
-      err("Ternary condition must be Bool, not '$expr.condition.ctype'", expr.condition.location)
+      err("Ternary condition must be Bool, not '$expr.condition.ctype'", expr.condition.loc)
     }
     expr.trueExpr = coerce(expr.trueExpr, expr.ctype) |->|
     {
-      err("Ternary true expr '$expr.trueExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.trueExpr.location)
+      err("Ternary true expr '$expr.trueExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.trueExpr.loc)
     }
     expr.falseExpr = coerce(expr.falseExpr, expr.ctype) |->|
     {
-      err("Ternary falseexpr '$expr.falseExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.falseExpr.location)
+      err("Ternary falseexpr '$expr.falseExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.falseExpr.loc)
     }
   }
 
@@ -1427,7 +1427,7 @@ class CheckErrors : CompilerStep
     else
       msg += "$name(" + params.join(", ", |p| { paramTypeStr(base, p) }) + ")"
     msg += ", not (" + args.join(", ", |Expr e->Str| { return "$e.toTypeStr" }) + ")"
-    err(msg, call.location)
+    err(msg, call.loc)
   }
 
   internal static Str paramTypeStr(CType base, CParam param)
@@ -1439,7 +1439,7 @@ class CheckErrors : CompilerStep
 // Type
 //////////////////////////////////////////////////////////////////////////
 
-  private Void checkValidType(Location loc, CType t)
+  private Void checkValidType(Loc loc, CType t)
   {
     if (!t.isValid) err("Invalid type '$t'", loc)
   }
@@ -1448,7 +1448,7 @@ class CheckErrors : CompilerStep
 // Flag Utils
 //////////////////////////////////////////////////////////////////////////
 
-  private Void checkProtectionFlags(Int flags, Location loc)
+  private Void checkProtectionFlags(Int flags, Loc loc)
   {
     isPublic    := flags.and(FConst.Public)    != 0
     isProtected := flags.and(FConst.Protected) != 0
@@ -1475,7 +1475,7 @@ class CheckErrors : CompilerStep
     }
   }
 
-  private Void checkTypeProtection(CType t, Location loc)
+  private Void checkTypeProtection(CType t, Loc loc)
   {
     t = t.toNonNullable
 
@@ -1509,7 +1509,7 @@ class CheckErrors : CompilerStep
       warn("Deprecated type '$t'", loc)
   }
 
-  private Void checkSlotProtection(CSlot slot, Location loc, Bool setter := false)
+  private Void checkSlotProtection(CSlot slot, Loc loc, Bool setter := false)
   {
     errMsg := slotProtectionErr(slot, setter)
     if (errMsg != null) err(errMsg, loc)

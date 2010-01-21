@@ -47,7 +47,7 @@ class Inherit : CompilerStep
     t.slotDefs.each |SlotDef slot|
     {
       if (slot.isOverride && !slot.overridden && !slot.isAccessor)
-        err("Override of unknown virtual slot '$slot.name'", slot.location)
+        err("Override of unknown virtual slot '$slot.name'", slot.loc)
     }
   }
 
@@ -60,7 +60,7 @@ class Inherit : CompilerStep
     if (parent == null)
     {
       if (t.qname == "sys::Obj") return
-      else throw err("Illegal state", t.location)
+      else throw err("Illegal state", t.loc)
     }
 
     closure := |CSlot s|
@@ -132,7 +132,7 @@ class Inherit : CompilerStep
     // if the two slots don't have matching signatures
     // then this is an inheritance conflict
     if (!matchingSignatures(oldSlot, newSlot))
-      throw err("Inherited slots have conflicting signatures '$oldSlot.qname' and '$newSlot.qname'", t.location)
+      throw err("Inherited slots have conflicting signatures '$oldSlot.qname' and '$newSlot.qname'", t.loc)
 
     // check if there is a clear keeper between old and new slots
     keep := keep(oldSlot, newSlot)
@@ -144,10 +144,10 @@ class Inherit : CompilerStep
 
     // if both are virtual, then subclass must remove ambiguous
     if (oldSlot.isVirtual && newSlot.isVirtual)
-      throw err("Must override ambiguous inheritance '$oldSlot.qname' and '$newSlot.qname'", t.location)
+      throw err("Must override ambiguous inheritance '$oldSlot.qname' and '$newSlot.qname'", t.loc)
 
     // anything else is an unfixable inheritance conflict
-    throw err("Inheritance conflict '$oldSlot.qname' and '$newSlot.qname'", t.location)
+    throw err("Inheritance conflict '$oldSlot.qname' and '$newSlot.qname'", t.loc)
   }
 
   **
@@ -203,7 +203,7 @@ class Inherit : CompilerStep
   **
   private Void checkOverride(TypeDef t, CSlot base, SlotDef def)
   {
-    loc := def.location
+    loc := def.loc
 
     // check base is virtual
     if (!base.isVirtual)
@@ -243,7 +243,7 @@ class Inherit : CompilerStep
     }
 
     // TODO otherwise this is a potential inheritance conflict
-    throw err("Invalid slot override of '$base.qname'", def.location)
+    throw err("Invalid slot override of '$base.qname'", def.loc)
   }
 
   private Bool isOverrideProtectionErr(CSlot base, SlotDef def)
@@ -262,7 +262,7 @@ class Inherit : CompilerStep
 
   private Void checkMethodMethodOverride(TypeDef t, CMethod base, MethodDef def)
   {
-    loc := def.location
+    loc := def.loc
 
     defRet := def.returnType
     baseRet := base.returnType
@@ -308,7 +308,7 @@ class Inherit : CompilerStep
 
   private Void checkMethodFieldOverride(TypeDef t, CMethod base, FieldDef def)
   {
-    loc := def.location
+    loc := def.loc
 
     // check that types match
     ft := def.fieldType
@@ -337,7 +337,7 @@ class Inherit : CompilerStep
 
   private Void checkFieldFieldOverride(TypeDef t, CField base, FieldDef def)
   {
-    loc := def.location
+    loc := def.loc
 
     // check that types match
     if (base.fieldType != def.fieldType)

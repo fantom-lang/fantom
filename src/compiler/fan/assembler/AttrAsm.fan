@@ -56,7 +56,7 @@ class AttrAsm : CompilerSupport
       }
       catch (CompilerErr e)
       {
-        err("Facet value is not serializable: '$f.key' ($e.msg)", f.val.location)
+        err("Facet value is not serializable: '$f.key' ($e.msg)", f.val.loc)
       }
     }
     add(FConst.FacetsAttr, buf)

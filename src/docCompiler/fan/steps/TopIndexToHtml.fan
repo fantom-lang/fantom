@@ -24,7 +24,7 @@ class TopIndexToHtml : DocCompilerStep
     log.debug("  TopIndexToHtml")
     compiler.outDir.create
     file := compiler.outDir + "index.html".toUri
-    loc  := Location("index.html")
+    loc  := Loc("index.html")
     TopIndexGenerator(compiler, loc, file.out).generate
   }
 

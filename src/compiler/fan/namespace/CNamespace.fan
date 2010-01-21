@@ -148,7 +148,7 @@ abstract class CNamespace : CompilerSupport
   ** Resolve to foreign function interface bridge.
   ** Bridges are loaded once for each compiler session.
   **
-  private CBridge resolveBridge(Str name, Location? loc)
+  private CBridge resolveBridge(Str name, Loc? loc)
   {
     // check cache
     bridge := bridgeCache[name]
@@ -178,7 +178,7 @@ abstract class CNamespace : CompilerSupport
   ** Attempt to import the specified pod name against our
   ** dependency library.  If not found then throw CompilerErr.
   **
-  CPod resolvePod(Str podName, Location? loc)
+  CPod resolvePod(Str podName, Loc? loc)
   {
     // check cache
     pod := podCache[podName]

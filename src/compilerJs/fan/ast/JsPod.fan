@@ -73,7 +73,7 @@ class JsPod : JsNode
     file := natives[key]
     if (file == null)
     {
-      support.err("Missing native impl for $t.sig", Location("${t.name}.fan"))
+      support.err("Missing native impl for $t.sig", Loc("${t.name}.fan"))
     }
     else
     {

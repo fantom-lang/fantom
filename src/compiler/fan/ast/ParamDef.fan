@@ -16,8 +16,8 @@ class ParamDef : Node, CParam
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, CType paramType, Str name, Expr? def := null)
-    : super(location)
+  new make(Loc loc, CType paramType, Str name, Expr? def := null)
+    : super(loc)
   {
     this.paramType = paramType
     this.name = name

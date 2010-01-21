@@ -36,19 +36,19 @@ class Tokenize : CompilerStep
 
   private Void runStrMode()
   {
-    if (input.podStr != null) tokenize(Location("pod.fan"), input.podStr)
-    tokenize(input.srcStrLocation, input.srcStr)
+    if (input.podStr != null) tokenize(Loc("pod.fan"), input.podStr)
+    tokenize(input.srcStrLoc, input.srcStr)
   }
 
   private Void runFileMode()
   {
     compiler.srcFiles.each |file|
     {
-      location := Location.makeFile(file)
+      loc := Loc.makeFile(file)
       try
       {
         src := file.readAllStr
-        tokenize(location, src)
+        tokenize(loc, src)
       }
       catch (CompilerErr err)
       {
@@ -57,17 +57,17 @@ class Tokenize : CompilerStep
       catch (Err e)
       {
         if (file.exists)
-          throw err("Cannot read source file: $e", location)
+          throw err("Cannot read source file: $e", loc)
         else
-          throw err("Source file not found", location)
+          throw err("Source file not found", loc)
       }
     }
   }
 
-  CompilationUnit tokenize(Location location, Str src)
+  CompilationUnit tokenize(Loc loc, Str src)
   {
-    unit := CompilationUnit(location, pod)
-    tokenizer := Tokenizer(compiler, location, src, input.includeDoc)
+    unit := CompilationUnit(loc, pod)
+    tokenizer := Tokenizer(compiler, loc, src, input.includeDoc)
     unit.tokens = tokenizer.tokenize
     pod.units.add(unit)
     return unit

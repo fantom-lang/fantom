@@ -35,7 +35,7 @@ abstract class CompilerTest : Test
     input.mode        = CompilerInputMode.str
     input.srcStr      = src
     input.podStr      = podStr
-    input.srcStrLocation = Location.make("Script")
+    input.srcStrLoc   = Loc.make("Script")
 
     compiler = Compiler.make(input)
     pod = compiler.compile.transientPod
@@ -64,13 +64,13 @@ abstract class CompilerTest : Test
   {
     c := compiler
     if (dumpErrors)
-      echo(c.errs.join("\n") |CompilerErr e->Str| { return "${e.location.toLocationStr.justl(14)} $e.toStr" })
+      echo(c.errs.join("\n") |CompilerErr e->Str| { return "${e.loc.toLocStr.justl(14)} $e.toStr" })
     verifyEq("size=${c.errs.size}", "size=${errs.size / 3}")
     for (i := 0; i<errs.size/3; ++i)
     {
-      verifyEq(c.errs[i].msg,           errs[i*3+2])
-      verifyEq(c.errs[i].location.line, errs[i*3+0])
-      verifyEq(c.errs[i].location.col,  errs[i*3+1])
+      verifyEq(c.errs[i].msg,      errs[i*3+2])
+      verifyEq(c.errs[i].loc.line, errs[i*3+0])
+      verifyEq(c.errs[i].loc.col,  errs[i*3+1])
     }
   }
 

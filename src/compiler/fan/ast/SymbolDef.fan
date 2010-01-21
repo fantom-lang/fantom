@@ -16,8 +16,8 @@ class SymbolDef : DefNode, CSymbol
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, CompilationUnit unit, CType? of, Str name, Int flags, Expr val)
-    : super(location)
+  new make(Loc loc, CompilationUnit unit, CType? of, Str name, Int flags, Expr val)
+    : super(loc)
   {
     this.unit  = unit
     this.ctype = of

@@ -23,7 +23,7 @@ class SymbolsToHtml : DocCompilerStep
   {
     log.debug("  Symbols [$compiler.pod]")
     file := compiler.podOutDir + `pod-meta.html`
-    loc  := Location("pod-meta.html")
+    loc  := Loc("pod-meta.html")
     SymbolsGenerator(compiler, loc, file.out).generate
   }
 

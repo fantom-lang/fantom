@@ -28,7 +28,7 @@ class Main
     input.log.level      = LogLevel.warn
     input.isScript       = true
     input.srcStr         = file.readAllStr
-    input.srcStrLocation = Location.makeFile(file)
+    input.srcStrLoc      = Loc.makeFile(file)
     input.mode           = CompilerInputMode.str
     input.output         = CompilerOutputMode.transientPod
 

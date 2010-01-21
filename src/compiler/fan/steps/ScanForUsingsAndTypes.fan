@@ -72,7 +72,7 @@ class UsingAndTypeScanner : CompilerSupport
   {
     // sys is imported implicitly (unless this is sys itself)
     if (!isSys)
-      unit.usings.add(Using(unit.location) { podName="sys" })
+      unit.usings.add(Using(unit.loc) { podName="sys" })
 
     // scan tokens quickly looking for keywords
     inClassHeader := false
@@ -157,7 +157,7 @@ class UsingAndTypeScanner : CompilerSupport
 
     // check for duplicate type names
     if (allTypes.containsKey(name))
-      err("Duplicate type name '$name'", typeDef.location)
+      err("Duplicate type name '$name'", typeDef.loc)
     else
       allTypes[name] = typeDef
   }

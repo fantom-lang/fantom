@@ -21,11 +21,9 @@ abstract class Node
   **
   ** All Node's must have a valid location in a source file.
   **
-  new make(Location location)
+  new make(Loc loc)
   {
-    if ((Obj?)location == null)
-      throw NullErr("null location")
-    this.location = location
+    this.loc = loc
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,6 +47,6 @@ abstract class Node
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  readonly Location location
+  readonly Loc loc
 
 }

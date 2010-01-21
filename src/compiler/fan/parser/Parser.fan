@@ -266,7 +266,7 @@ public class Parser : CompilerSupport
       // do duplicate name error checking here
       if (def.hasSlotDef(slot.name))
       {
-        err("Duplicate slot name '$slot.name'", slot.location)
+        err("Duplicate slot name '$slot.name'", slot.loc)
       }
       else
       {
@@ -369,7 +369,7 @@ public class Parser : CompilerSupport
       consume
       enumDef := enumDef(ordinal++)
       if (def.enumDefs.any |EnumDef e->Bool| { return e.name == enumDef.name })
-        err("Duplicate enum name '$enumDef.name'", enumDef.location)
+        err("Duplicate enum name '$enumDef.name'", enumDef.loc)
       def.enumDefs.add(enumDef)
     }
     endOfStmt
@@ -417,9 +417,9 @@ public class Parser : CompilerSupport
     // check for static {} class initialization
     if (curt === Token.staticKeyword && peekt === Token.lbrace)
     {
-      location := cur
+      loc := cur
       consume
-      sInit := MethodDef.makeStaticInit(location, parent, null)
+      sInit := MethodDef.makeStaticInit(loc, parent, null)
       curSlot = sInit
       sInit.code = block
       curSlot = null
@@ -478,7 +478,7 @@ public class Parser : CompilerSupport
   **   <fieldGetter>  :=  "get" (<eos> | <block>)
   **   <fieldSetter>  :=  <protection> "set" (<eos> | <block>)
   **
-  private FieldDef fieldDef(Location loc, TypeDef parent, Str[]? doc, FacetDef[]? facets, Int flags, TypeRef? type, Str name)
+  private FieldDef fieldDef(Loc loc, TypeDef parent, Str[]? doc, FacetDef[]? facets, Int flags, TypeRef? type, Str name)
   {
     // define field itself
     field := FieldDef(loc, parent)
@@ -557,7 +557,7 @@ public class Parser : CompilerSupport
   private Void defGet(FieldDef f)
   {
     // getter MethodDef
-    loc := f.location
+    loc := f.loc
     get := MethodDef(loc, f.parentDef)
     get.accessorFor = f
     get.flags = f.flags.or(FConst.Getter)
@@ -569,7 +569,7 @@ public class Parser : CompilerSupport
   private Void defSet(FieldDef f)
   {
     // setter MethodDef
-    loc := f.location
+    loc := f.loc
     set := MethodDef(loc, f.parentDef)
     set.accessorFor = f
     set.flags = f.flags.or(FConst.Setter)
@@ -581,7 +581,7 @@ public class Parser : CompilerSupport
 
   private Void genSyntheticGet(FieldDef f)
   {
-    loc := f.location
+    loc := f.loc
     f.get.flags |= FConst.Synthetic
     if (!f.isAbstract && !f.isNative)
     {
@@ -593,7 +593,7 @@ public class Parser : CompilerSupport
 
   private Void genSyntheticSet(FieldDef f)
   {
-    loc := f.location
+    loc := f.loc
     f.set.flags |= FConst.Synthetic
     if (!f.isAbstract && !f.isNative)
     {
@@ -670,7 +670,7 @@ public class Parser : CompilerSupport
   **   <param>          :=  <type> <id> [":=" <expr>]
   **   <methodBody>     :=  <eos> | ( "{" <stmts> "}" )
   **
-  private MethodDef methodDef(Location loc, TypeDef parent, Str[]? doc, FacetDef[]? facets, Int flags, TypeRef ret, Str name)
+  private MethodDef methodDef(Loc loc, TypeDef parent, Str[]? doc, FacetDef[]? facets, Int flags, TypeRef ret, Str name)
   {
     method := MethodDef(loc, parent)
     method.doc    = doc
@@ -694,7 +694,7 @@ public class Parser : CompilerSupport
       {
         newParam := paramDef
         if (method.params.any |ParamDef p->Bool| { return p.name == newParam.name })
-          err("Duplicate parameter name '$newParam.name'", newParam.location)
+          err("Duplicate parameter name '$newParam.name'", newParam.loc)
         method.params.add(newParam)
         if (curt === Token.rparen) break
         consume(Token.comma)
@@ -795,7 +795,7 @@ public class Parser : CompilerSupport
       }
       else
       {
-        val = LiteralExpr(key.location, ExprId.trueLiteral, ns.boolType, true)
+        val = LiteralExpr(key.loc, ExprId.trueLiteral, ns.boolType, true)
       }
       facets.add(FacetDef(key, val))
     }
@@ -921,7 +921,7 @@ public class Parser : CompilerSupport
   **
   private Expr itAdd(Expr e)
   {
-    e = CallExpr(e.location, ItExpr(cur), "add") { args.add(e) }
+    e = CallExpr(e.loc, ItExpr(cur), "add") { args.add(e) }
     while (true)
     {
       consume(Token.comma)
@@ -936,7 +936,7 @@ public class Parser : CompilerSupport
   ** Parse local variable declaration, the current token must be
   ** the identifier of the local variable.
   **
-  private LocalDefStmt localDefStmt(Location loc, CType? localType, Bool isEndOfStmt)
+  private LocalDefStmt localDefStmt(Loc loc, CType? localType, Bool isEndOfStmt)
   {
     stmt := LocalDefStmt(loc, localType, consumeId)
 
@@ -1278,7 +1278,7 @@ public class Parser : CompilerSupport
       {
         id := (tok === Token.eq || tok === Token.same) ? ExprId.cmpNull : ExprId.cmpNotNull
         operand := (lhs.id === ExprId.nullLiteral) ? rhs : lhs
-        expr = UnaryExpr(lhs.location, id, tok, operand)
+        expr = UnaryExpr(lhs.loc, id, tok, operand)
       }
       else
       {
@@ -1310,13 +1310,13 @@ public class Parser : CompilerSupport
       {
         case Token.isKeyword:
           consume
-          expr = TypeCheckExpr(expr.location, ExprId.isExpr, expr, ctype)
+          expr = TypeCheckExpr(expr.loc, ExprId.isExpr, expr, ctype)
         case Token.isnotKeyword:
           consume
-          expr = TypeCheckExpr(expr.location, ExprId.isnotExpr, expr, ctype)
+          expr = TypeCheckExpr(expr.loc, ExprId.isnotExpr, expr, ctype)
         case Token.asKeyword:
           consume
-          expr = TypeCheckExpr(expr.location, ExprId.asExpr, expr, ctype)
+          expr = TypeCheckExpr(expr.loc, ExprId.asExpr, expr, ctype)
         default:
           expr = ShortcutExpr.makeBinary(expr, consume.kind, elvisExpr)
       }
@@ -1353,7 +1353,7 @@ public class Parser : CompilerSupport
       start := expr
       exclusive := consume.kind === Token.dotDotLt
       end := bitOrExpr
-      return RangeLiteralExpr(expr.location, ns.rangeType, start, end, exclusive)
+      return RangeLiteralExpr(expr.loc, ns.rangeType, start, end, exclusive)
     }
     return expr
   }
@@ -1601,7 +1601,7 @@ if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
   **
   ** Handle a term expression which begins with a type literal.
   **
-  private Expr typeBaseExpr(Location loc, CType ctype)
+  private Expr typeBaseExpr(Loc loc, CType ctype)
   {
     // type or slot literal
     if (curt === Token.pound)
@@ -1631,7 +1631,7 @@ if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
     // dsl
     if (curt == Token.dsl)
     {
-      srcLoc := Location(cur.file, cur.line, cur.col+2)
+      srcLoc := Loc(cur.file, cur.line, cur.col+2)
       dslVal := cur as TokenValDsl
       return DslExpr(loc, ctype, srcLoc, consume.val)
       {
@@ -1861,7 +1861,7 @@ if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
   **   <mapItems>   :=  ":" | (<mapPair> ("," <mapPair>)*)
   **   <mapPair>    :=  <expr> ":" <expr>
   **
-  private Expr collectionLiteralExpr(Location loc, CType? explicitType)
+  private Expr collectionLiteralExpr(Loc loc, CType? explicitType)
   {
     // empty list [,]
     if (peekt === Token.comma)
@@ -1898,7 +1898,7 @@ if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
   ** else
   **   cur must be on comma after first item
   **
-  private ListLiteralExpr listLiteralExpr(Location loc, CType? explicitType, Expr? first)
+  private ListLiteralExpr listLiteralExpr(Loc loc, CType? explicitType, Expr? first)
   {
     // explicitType is type of List:  Str[,]
     if (explicitType != null)
@@ -1939,7 +1939,7 @@ if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
   ** else
   **   cur must be on colon of first key/value pair
   **
-  private MapLiteralExpr mapLiteralExpr(Location loc, CType? explicitType, Expr? first)
+  private MapLiteralExpr mapLiteralExpr(Loc loc, CType? explicitType, Expr? first)
   {
     // explicitType is *the* map type: Str:Str[,]
     if (explicitType != null && explicitType isnot MapType)
@@ -2039,7 +2039,7 @@ if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
   **
   ** Parse body of closure expression and return ClosureExpr.
   **
-  private ClosureExpr closure(Location loc, FuncType funcType)
+  private ClosureExpr closure(Loc loc, FuncType funcType)
   {
     if (curSlot == null) throw err("Unexpected closure")
 
@@ -2067,7 +2067,7 @@ if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
   ** field or method definition.  It is used to parse complex literals
   ** declared in a facet without mucking up the closure code path.
   **
-  private Expr complexLiteral(Location loc, CType ctype)
+  private Expr complexLiteral(Loc loc, CType ctype)
   {
     complex := ComplexLiteral(loc, ctype)
     consume(Token.lbrace)
@@ -2091,7 +2091,7 @@ if (curt === Token.tilde) warn("Replace bitwise ~ with 'not' method call", cur)
   **
   private TypeRef typeRef()
   {
-    Location loc := cur
+    Loc loc := cur
     return TypeRef(loc, ctype)
   }
 
@@ -2337,7 +2337,7 @@ if (curt === Token.comma)
 // Errors
 //////////////////////////////////////////////////////////////////////////
 
-  override CompilerErr err(Str msg, Location? loc := null)
+  override CompilerErr err(Str msg, Loc? loc := null)
   {
     if (loc == null) loc = cur
     return super.err(msg, loc)

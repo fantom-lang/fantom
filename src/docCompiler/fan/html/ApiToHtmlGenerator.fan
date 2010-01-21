@@ -19,7 +19,7 @@ class ApiToHtmlGenerator : HtmlGenerator
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(DocCompiler compiler, Location loc, OutStream out, Type t)
+  new make(DocCompiler compiler, Loc loc, OutStream out, Type t)
     : super(compiler, loc, out)
   {
     this.t = t

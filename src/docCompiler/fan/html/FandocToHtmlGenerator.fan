@@ -19,7 +19,7 @@ class FandocToHtmlGenerator : HtmlGenerator
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(DocCompiler compiler, Location loc, File file, Doc doc)
+  new make(DocCompiler compiler, Loc loc, File file, Doc doc)
     : super(compiler, loc, file.out)
   {
     this.file = file

@@ -101,9 +101,9 @@ abstract class BuildPod : BuildScript
     {
       if (!podDef.exists) throw fatal("podDef does not exist: $podDef")
       try
-        podFacetsParser = PodFacetsParser(Location.makeFile(podDef), podDef.readAllStr).parse
+        podFacetsParser = PodFacetsParser(Loc.makeFile(podDef), podDef.readAllStr).parse
       catch (CompilerErr e)
-        throw fatal("$e.msg [$e.location.toLocationStr]")
+        throw fatal("$e.msg [$e.loc.toLocStr]")
     }
     return podFacetsParser
   }

@@ -16,8 +16,8 @@ abstract class SlotDef : DefNode, CSlot
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, TypeDef parentDef)
-    : super(location)
+  new make(Loc loc, TypeDef parentDef)
+    : super(loc)
   {
     this.parentDef = parentDef
   }

@@ -44,7 +44,7 @@ class Parse : CompilerStep
     units.each |CompilationUnit unit|
     {
       p := Parser(compiler, unit, closures)
-      if (unit.location.filename == "pod.fan")
+      if (unit.loc.filename == "pod.fan")
         p.parsePodDef
       else
         p.parse

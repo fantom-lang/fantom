@@ -32,7 +32,7 @@ class StrDslPlugin : DslPlugin
   **
   override Expr compile(DslExpr dsl)
   {
-    Expr.makeForLiteral(dsl.location, ns, normalizeSrc(dsl))
+    Expr.makeForLiteral(dsl.loc, ns, normalizeSrc(dsl))
   }
 
 }

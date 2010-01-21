@@ -16,8 +16,8 @@ class PodDef : DefNode, CPod
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(CNamespace ns, Location location, Str name)
-    : super(location)
+  new make(CNamespace ns, Loc loc, Str name)
+    : super(loc)
   {
     this.ns = ns
     this.name = name

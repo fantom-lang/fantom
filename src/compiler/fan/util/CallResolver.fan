@@ -27,7 +27,7 @@ class CallResolver : CompilerSupport
     this.curType   = curType
     this.curMethod = curMethod
     this.expr      = expr
-    this.location  = expr.location
+    this.loc       = expr.loc
     this.target    = expr.target
     this.name      = expr.name
 
@@ -100,9 +100,9 @@ class CallResolver : CompilerSupport
       if (stypes != null && !stypes.isEmpty)
       {
         if (stypes.size > 1)
-          throw err("Ambiguous type: " + stypes.join(", "), location)
+          throw err("Ambiguous type: " + stypes.join(", "), loc)
         else
-          result = StaticTargetExpr(location, stypes.first)
+          result = StaticTargetExpr(loc, stypes.first)
         return true
       }
     }
@@ -141,10 +141,10 @@ class CallResolver : CompilerSupport
 
     // if base is the error type, then we already logged an error
     // trying to resolve the target and it's pointless to continue
-    if (base === ns.error) throw CompilerErr("ignore", location, null)
+    if (base === ns.error) throw CompilerErr("ignore", loc, null)
 
     // sanity check
-    if (base == null) throw err("Internal error", location)
+    if (base == null) throw err("Internal error", loc)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -169,7 +169,7 @@ class CallResolver : CompilerSupport
 
       // if we found a match on both base and it, that is an error
       if (isAmbiguous(found, foundIt))
-        throw err("Ambiguous slot '$name' on both 'this' ($base) and 'it' ($baseIt)", location)
+        throw err("Ambiguous slot '$name' on both 'this' ($base) and 'it' ($baseIt)", loc)
 
       // resolved against implicit it
       if (foundIt != null)
@@ -185,17 +185,17 @@ class CallResolver : CompilerSupport
       if (isVar)
       {
         if (target == null)
-          throw err("Unknown variable '$name'", location)
+          throw err("Unknown variable '$name'", loc)
         else
-          throw err("Unknown slot '$errSig'", location)
+          throw err("Unknown slot '$errSig'", loc)
       }
       else
       {
         ct := target as CallExpr
         if (name == "add" && ct != null && ct.target?.id === ExprId.itExpr && ct.method != null)
-          throw err("'$ct.method.qname' must return This", location)
+          throw err("'$ct.method.qname' must return This", loc)
         else
-          throw err("Unknown method '$errSig'", location)
+          throw err("Unknown method '$errSig'", loc)
       }
     }
   }
@@ -224,7 +224,7 @@ class CallResolver : CompilerSupport
 
     // if we resolve a method call against a field that is an error
     if (found is CField)
-      throw err("Expected method, not field '$errSig'", location)
+      throw err("Expected method, not field '$errSig'", loc)
 
     return found
   }
@@ -263,17 +263,17 @@ class CallResolver : CompilerSupport
 
     if (foundOnIt)
     {
-      target = ItExpr(location, baseIt)
+      target = ItExpr(loc, baseIt)
     }
     else if (curType.isClosure)
     {
       closure := curType.closure
       if (!closure.enclosingSlot.isStatic)
-        target = FieldExpr(location, ThisExpr(location, closure.enclosingType), closure.outerThisField)
+        target = FieldExpr(loc, ThisExpr(loc, closure.enclosingType), closure.outerThisField)
     }
     else
     {
-      target = ThisExpr(location, curType)
+      target = ThisExpr(loc, curType)
     }
   }
 
@@ -303,7 +303,7 @@ class CallResolver : CompilerSupport
     call := expr as CallExpr
     if (call == null)
     {
-      call = CallExpr(location)
+      call = CallExpr(loc)
       call.name   = name
       call.args   = args
     }
@@ -324,7 +324,7 @@ class CallResolver : CompilerSupport
   {
     f := (CField)found
 
-    field := FieldExpr(location)
+    field := FieldExpr(loc)
     field.target = target
     field.name   = name
     field.field  = f
@@ -389,7 +389,7 @@ class CallResolver : CompilerSupport
       // can't chain it-block if call returns Void
       if (call.ctype.isVoid)
       {
-        support.err("Cannot apply it-block to Void expr", call.location)
+        support.err("Cannot apply it-block to Void expr", call.loc)
         return call
       }
 
@@ -516,7 +516,7 @@ class CallResolver : CompilerSupport
       {
         result = foreign.bridge.coerce(result, inferred) |->|
         {
-          throw err("Cannot coerce call return to Fantom type", location)
+          throw err("Cannot coerce call return to Fantom type", loc)
         }
       }
     }
@@ -543,7 +543,7 @@ class CallResolver : CompilerSupport
   TypeDef? curType     // current type of scope
   MethodDef? curMethod // current method of scope
   NameExpr expr        // original expression being resolved
-  Location location    // location of original expression
+  Loc loc              // location of original expression
   Expr? target         // target base or null
   Str name             // slot name to resolve
   Bool isVar           // are we resolving simple variable

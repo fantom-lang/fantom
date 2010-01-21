@@ -46,9 +46,9 @@ class Normalize : CompilerStep
 
   override Void visitTypeDef(TypeDef t)
   {
-    location := t.location
-    iInit := Block(location)  // instance init
-    sInit := Block(location)  // static init
+    loc := t.loc
+    iInit := Block(loc)  // instance init
+    sInit := Block(loc)  // static init
 
     // walk thru all the slots
     t.slotDefs.dup.each |SlotDef s|
@@ -80,8 +80,8 @@ class Normalize : CompilerStep
     // add instance$init if needed
     if (!iInit.isEmpty)
     {
-      iInit.add(ReturnStmt.makeSynthetic(location))
-      ii := MethodDef.makeInstanceInit(iInit.location, t, iInit)
+      iInit.add(ReturnStmt.makeSynthetic(loc))
+      ii := MethodDef.makeInstanceInit(iInit.loc, t, iInit)
       t.addSlot(ii)
       callInstanceInit(t, ii)
     }
@@ -89,8 +89,8 @@ class Normalize : CompilerStep
     // add static$init if needed
     if (!sInit.isEmpty)
     {
-      sInit.add(ReturnStmt.makeSynthetic(location))
-      t.normalizeStaticInits(MethodDef.makeStaticInit(sInit.location, t, sInit))
+      sInit.add(ReturnStmt.makeSynthetic(loc))
+      t.normalizeStaticInits(MethodDef.makeStaticInit(sInit.loc, t, sInit))
     }
   }
 
@@ -99,7 +99,7 @@ class Normalize : CompilerStep
     // append inside an "if (true) {}" block so that each static
     // initializer is given its own scope in the unified static initializer;
     // the "if (true)" gets optimized away in CoodeAsm
-    loc := m.location
+    loc := m.loc
     cond := LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)
     ifStmt := IfStmt(loc, cond, m.code)
     sInit.add(ifStmt)
@@ -128,12 +128,12 @@ class Normalize : CompilerStep
   private Void addImplicitReturn(MethodDef m)
   {
     code := m.code
-    loc := code.location
+    loc := code.loc
 
     // we allow return keyword to be omitted if there is exactly one statement
     if (code.size == 1 && !m.returnType.isVoid && code.stmts[0].id == StmtId.expr)
     {
-      code.stmts[0] = ReturnStmt.makeSynthetic(code.stmts[0].location, code.stmts[0]->expr)
+      code.stmts[0] = ReturnStmt.makeSynthetic(code.stmts[0].loc, code.stmts[0]->expr)
       return
     }
 
@@ -163,13 +163,13 @@ class Normalize : CompilerStep
     if (!superCtor.params.isEmpty) return
 
     // if we find a ctor to use, then create an implicit super call
-    m.ctorChain = CallExpr.makeWithMethod(m.location, SuperExpr(m.location), superCtor)
+    m.ctorChain = CallExpr.makeWithMethod(m.loc, SuperExpr(m.loc), superCtor)
     m.ctorChain.isCtorChain = true
   }
 
   private Void normalizeOnce(MethodDef m, Block iInit)
   {
-    loc := m.location
+    loc := m.loc
 
     // we'll report these errors in CheckErrors
     if (curType.isConst || curType.isMixin ||
@@ -247,7 +247,7 @@ class Normalize : CompilerStep
       if (!m.isCtor) return
       if (compiler.isSys) return
       if (m.ctorChain != null && m.ctorChain.target.id === ExprId.thisExpr) return
-      call := CallExpr.makeWithMethod(m.location, ThisExpr(m.location), ii)
+      call := CallExpr.makeWithMethod(m.loc, ThisExpr(m.loc), ii)
       m.code.stmts.insert(0, call.toStmt)
     }
   }
@@ -260,9 +260,9 @@ class Normalize : CompilerStep
   {
     // validate type of field
     t := f.fieldType
-    if (t.isThis)   { err("Cannot use This as field type", f.location); return }
-    if (t.isVoid)   { err("Cannot use Void as field type", f.location); return }
-    if (!t.isValid) { err("Invalid type '$t'", f.location); return }
+    if (t.isThis)   { err("Cannot use This as field type", f.loc); return }
+    if (t.isVoid)   { err("Cannot use Void as field type", f.loc); return }
+    if (!t.isValid) { err("Invalid type '$t'", f.loc); return }
 
     // if this field overrides a concrete field, that means we already have
     // a concrete getter/setter for this field - if either of this field's
@@ -282,14 +282,14 @@ class Normalize : CompilerStep
 
   private Void genSyntheticOverrideGet(FieldDef f)
   {
-    loc := f.location
+    loc := f.loc
     f.get.code.stmts.clear
     f.get.code.add(ReturnStmt.makeSynthetic(loc, FieldExpr(loc, SuperExpr(loc), f.concreteBase)))
   }
 
   private Void genSyntheticOverrideSet(FieldDef f)
   {
-    loc := f.location
+    loc := f.loc
     lhs := FieldExpr(loc, SuperExpr(loc), f.concreteBase)
     rhs := UnknownVarExpr(loc, null, "it")
     code := f.get.code
@@ -301,7 +301,7 @@ class Normalize : CompilerStep
   private static ExprStmt fieldInitStmt(FieldDef f)
   {
     useAccessor := f.concreteBase != null
-    lhs := f.makeAccessorExpr(f.location, useAccessor)
+    lhs := f.makeAccessorExpr(f.loc, useAccessor)
     rhs := f.init
     return BinaryExpr.makeAssign(lhs, rhs).toStmt
   }

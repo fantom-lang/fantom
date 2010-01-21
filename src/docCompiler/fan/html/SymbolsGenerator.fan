@@ -19,7 +19,7 @@ class SymbolsGenerator : HtmlGenerator
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(DocCompiler compiler, Location loc, OutStream out)
+  new make(DocCompiler compiler, Loc loc, OutStream out)
     : super(compiler, loc, out)
   {
     this.pod = compiler.pod

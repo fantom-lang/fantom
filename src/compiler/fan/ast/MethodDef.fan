@@ -17,9 +17,9 @@ class MethodDef : SlotDef, CMethod
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static MethodDef makeStaticInit(Location location, TypeDef parent, Block? block)
+  public static MethodDef makeStaticInit(Loc loc, TypeDef parent, Block? block)
   {
-    def := make(location, parent)
+    def := make(loc, parent)
     def.name   = "static\$init"
     def.flags  = FConst.Private + FConst.Static + FConst.Synthetic
     def.ret    = parent.ns.voidType
@@ -27,9 +27,9 @@ class MethodDef : SlotDef, CMethod
     return def;
   }
 
-  public static MethodDef makeInstanceInit(Location location, TypeDef parent, Block? block)
+  public static MethodDef makeInstanceInit(Loc loc, TypeDef parent, Block? block)
   {
-    def := make(location, parent)
+    def := make(loc, parent)
     def.name   = "instance\$init\$$parent.pod.name\$$parent.name";
     def.flags  = FConst.Private + FConst.Synthetic
     def.ret    = parent.ns.voidType
@@ -37,8 +37,8 @@ class MethodDef : SlotDef, CMethod
     return def;
   }
 
-  new make(Location location, TypeDef parent, Str name := "?", Int flags := 0)
-     : super(location, parent)
+  new make(Loc loc, TypeDef parent, Str name := "?", Int flags := 0)
+     : super(loc, parent)
   {
     this.name = name
     this.flags = flags
@@ -115,7 +115,7 @@ class MethodDef : SlotDef, CMethod
   MethodVar addParamVar(CType ctype, Str name)
   {
     if (vars.size > 0 && !vars[-1].isParam) throw Err("Add param with locals $qname")
-    param := ParamDef(location, ctype, name)
+    param := ParamDef(loc, ctype, name)
     params.add(param)
     var := MethodVar.makeForParam(this, params.size, param, ctype)
     vars.add(var)

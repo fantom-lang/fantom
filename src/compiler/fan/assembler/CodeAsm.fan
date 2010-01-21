@@ -16,10 +16,10 @@ class CodeAsm : CompilerSupport
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Compiler compiler, Location location, FPod fpod, MethodDef? curMethod)
+  new make(Compiler compiler, Loc loc, FPod fpod, MethodDef? curMethod)
     : super(compiler)
   {
-    this.location  = location
+    this.loc       = loc
     this.fpod      = fpod
     this.curMethod = curMethod
     this.code      = Buf.make
@@ -245,7 +245,7 @@ class CodeAsm : CompilerSupport
     // associated loop should be top of stack
     loop := loopStack.peek
     if (loop.stmt !== stmt->loop)
-      throw err("Internal compiler error", stmt.location)
+      throw err("Internal compiler error", stmt.loc)
 
     // if we are inside a protection region which was pushed onto
     // my loop's own stack that means this break or continue
@@ -321,7 +321,7 @@ class CodeAsm : CompilerSupport
           expr := c.cases[i]
           // TODO: need to handle static const Int fields here
           literal := expr.asTableSwitchCase
-          if (literal == null) throw CompilerErr("return null", c.location)
+          if (literal == null) throw CompilerErr("return null", c.loc)
           if (literal < min) min = literal
           if (literal > max) max = literal
         }
@@ -609,7 +609,7 @@ class CodeAsm : CompilerSupport
 
   Void expr(Expr expr)
   {
-    line(expr.location)
+    line(expr.loc)
     switch (expr.id)
     {
       case ExprId.nullLiteral:     nullLiteral
@@ -795,7 +795,7 @@ class CodeAsm : CompilerSupport
   {
     if (binary.lhs.id === ExprId.nullLiteral ||
         binary.rhs.id === ExprId.nullLiteral)
-      err("Unexpected use of same with null literals", binary.location)
+      err("Unexpected use of same with null literals", binary.loc)
     expr(binary.lhs)
     expr(binary.rhs)
     op(FOp.CmpSame)
@@ -805,7 +805,7 @@ class CodeAsm : CompilerSupport
   {
     if (binary.lhs.id === ExprId.nullLiteral ||
         binary.rhs.id === ExprId.nullLiteral)
-      err("Unexpected use of same with null literals", binary.location)
+      err("Unexpected use of same with null literals", binary.loc)
     expr(binary.lhs)
     expr(binary.rhs)
     op(FOp.CmpNotSame)
@@ -986,7 +986,7 @@ class CodeAsm : CompilerSupport
     {
       case ExprId.localVar: assignLocalVar(expr)
       case ExprId.field:    assignField(expr)
-      default: throw err("Internal compiler error", expr.location)
+      default: throw err("Internal compiler error", expr.loc)
     }
   }
 
@@ -1030,7 +1030,7 @@ class CodeAsm : CompilerSupport
     Int? isNullLabel := null
     if (fexpr.isSafe)
     {
-      if (fexpr.target == null) throw err("Compiler error field isSafe", fexpr.location)
+      if (fexpr.target == null) throw err("Compiler error field isSafe", fexpr.loc)
       opType(FOp.Dup, fexpr.ctype)
       opType(FOp.CmpNull, fexpr.ctype)
       isNullLabel = jump(FOp.JumpTrue)
@@ -1073,7 +1073,7 @@ class CodeAsm : CompilerSupport
         if (field.isStatic)
           op(FOp.LoadMixinStatic, index)
         else
-          throw err("LoadMixinInstance", fexpr.location)
+          throw err("LoadMixinInstance", fexpr.loc)
       }
       else
       {
@@ -1150,7 +1150,7 @@ class CodeAsm : CompilerSupport
         if (field.isStatic)
           op(FOp.StoreMixinStatic, index)
         else
-          throw err("StoreMixinInstance", fexpr.location)
+          throw err("StoreMixinInstance", fexpr.loc)
       }
       else
       {
@@ -1181,7 +1181,7 @@ class CodeAsm : CompilerSupport
     {
       // sanity check
       if (target == null || (target.ctype.isVal && !target.ctype.isNullable))
-        throw err("Compiler error call isSafe: $call", call.location)
+        throw err("Compiler error call isSafe: $call", call.loc)
 
       // check if null and if so then jump over call
       opType(FOp.Dup, target.ctype)
@@ -1425,7 +1425,7 @@ class CodeAsm : CompilerSupport
         invokeCall(get, true)
         leaveUsingTemp = true
       default:
-        throw err("Internal error", var.location)
+        throw err("Internal error", var.loc)
     }
 
     // if we have a coercion do it
@@ -1468,7 +1468,7 @@ class CodeAsm : CompilerSupport
         op(FOp.CallVirtual, fpod.addMethodRef(set, 2))
         if (!set.returnType.isVoid) opType(FOp.Pop, set.returnType)
       default:
-        throw err("Internal error", var.location)
+        throw err("Internal error", var.loc)
     }
 
     // if field leave, then load back from temp local
@@ -1597,7 +1597,7 @@ class CodeAsm : CompilerSupport
     }
 
     // check final size
-    if (code.size >= 0x7fff) throw err("Method too big", location)
+    if (code.size >= 0x7fff) throw err("Method too big", loc)
     return code
   }
 
@@ -1622,7 +1622,7 @@ class CodeAsm : CompilerSupport
   **
   ** Map the opcode we are getting ready to add to the specified line number
   **
-  private Void line(Location loc)
+  private Void line(Loc loc)
   {
     line := loc.line
     if (line == null || lastLine == line) return
@@ -1636,7 +1636,7 @@ class CodeAsm : CompilerSupport
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Location location
+  Loc loc
   FPod fpod
   MethodDef? curMethod
   Buf code

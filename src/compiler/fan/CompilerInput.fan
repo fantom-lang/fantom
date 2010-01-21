@@ -24,7 +24,7 @@ class CompilerInput
   ** Location to use for reporting errors associated with the input
   ** itself - typically this is mapped to the build script.
   **
-  Location inputLoc := Location("CompilerInput")
+  Loc inputLoc := Loc("CompilerInput")
 
   **
   ** Name of output pod - required for scripts and str mode.
@@ -119,7 +119,7 @@ class CompilerInput
   **
   ** Location to use for SourceFile facet (str mode only)
   **
-  Location? srcStrLocation
+  Loc? srcStrLoc
 
 //////////////////////////////////////////////////////////////////////////
 // Validation
@@ -144,7 +144,7 @@ class CompilerInput
         validateReqField("podDef")
       case CompilerInputMode.str:
         validateReqField("srcStr")
-        validateReqField("srcStrLocation")
+        validateReqField("srcStrLoc")
     }
   }
 

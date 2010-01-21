@@ -53,7 +53,7 @@ class ClosureToImmutable : CompilerStep
     // Func.toImmutable will do the right thing for us
     if (isAlwaysImmutable(cls))
     {
-      genIsImmutable(cls, LiteralExpr.makeTrue(cls.location, ns))
+      genIsImmutable(cls, LiteralExpr.makeTrue(cls.loc, ns))
       setAllFieldsConst(cls)
       return
     }
@@ -97,7 +97,7 @@ class ClosureToImmutable : CompilerStep
   **
   private Void genIsImmutable(TypeDef cls, Expr result)
   {
-    loc := cls.location
+    loc := cls.loc
     m := MethodDef(loc, cls)
     m.flags = FConst.Public + FConst.Synthetic + FConst.Override
     m.name = "isImmutable"
@@ -127,7 +127,7 @@ class ClosureToImmutable : CompilerStep
   **
   private Void genToImmutable(TypeDef cls)
   {
-    loc := cls.location
+    loc := cls.loc
 
     // Bool immutable
     immutableField := FieldDef(loc, cls)

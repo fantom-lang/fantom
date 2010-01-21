@@ -85,18 +85,18 @@ class ResolveImports : CompilerStep
 
       // check that this podName was in the compiler's
       // input dependencies
-      checkUsingPod(this, podName, u.location)
+      checkUsingPod(this, podName, u.loc)
 
       // don't allow a using my own pod
       if (u.typeName == null && u.podName == compiler.pod.name)
-        err("Using '$u.podName' is on pod being compiled", u.location)
+        err("Using '$u.podName' is on pod being compiled", u.loc)
 
       // check for duplicate imports
       key := podName
       if (u.typeName != null) key += "::$u.typeName"
       if (dups.containsKey(key))
       {
-        err("Duplicate using '$key'", u.location)
+        err("Duplicate using '$key'", u.loc)
         return
       }
       dups[key] = u
@@ -109,7 +109,7 @@ class ResolveImports : CompilerStep
       {
         try
         {
-          pod := ns.resolvePod(podName, u.location)
+          pod := ns.resolvePod(podName, u.loc)
           resolved[podName] = u.resolvedPod = pod
         }
         catch (CompilerErr e)
@@ -125,7 +125,7 @@ class ResolveImports : CompilerStep
         u.resolvedType = u.resolvedPod.resolveType(u.typeName, false)
         if (u.resolvedType== null)
         {
-          err("Type not found in pod '$podName::$u.typeName'", u.location)
+          err("Type not found in pod '$podName::$u.typeName'", u.loc)
           return
         }
       }
@@ -213,7 +213,7 @@ class ResolveImports : CompilerStep
   ** an imported type.  If the type name cannot be resolved then we
   ** log an error and return null.
   **
-  static CType? resolveQualified(CompilerSupport cs, Str podName, Str typeName, Location location)
+  static CType? resolveQualified(CompilerSupport cs, Str podName, Str typeName, Loc loc)
   {
     // first check pod being compiled
     if (podName == cs.compiler.pod.name)
@@ -221,21 +221,21 @@ class ResolveImports : CompilerStep
       t := cs.pod.resolveType(typeName, false)
       if (t == null)
       {
-        cs.err("Type '$typeName' not found within pod being compiled", location)
+        cs.err("Type '$typeName' not found within pod being compiled", loc)
         return null
       }
       return t
     }
 
     // resolve pod
-    pod := resolvePod(cs, podName, location)
+    pod := resolvePod(cs, podName, loc)
     if (pod == null) return null
 
     // now try to lookup type
     t := pod.resolveType(typeName, false)
     if (t == null)
     {
-      cs.err("Type '$typeName' not found in pod '$podName'", location);
+      cs.err("Type '$typeName' not found in pod '$podName'", loc);
       return null
     }
 
@@ -246,7 +246,7 @@ class ResolveImports : CompilerStep
   ** Resolve a pod name into its CPod representation.  If pod
   ** cannot be resolved then log an error and return null.
   **
-  static CPod? resolvePod(CompilerSupport cs, Str podName, Location location)
+  static CPod? resolvePod(CompilerSupport cs, Str podName, Loc loc)
   {
     // if this is the pod being compiled no further checks needed
     if (cs.pod.name == podName) return cs.pod
@@ -255,7 +255,7 @@ class ResolveImports : CompilerStep
     CPod? pod := null
     try
     {
-      pod = cs.ns.resolvePod(podName, location)
+      pod = cs.ns.resolvePod(podName, loc)
     }
     catch (CompilerErr e)
     {
@@ -264,7 +264,7 @@ class ResolveImports : CompilerStep
     }
 
     // check that we have a dependency on the pod
-    checkUsingPod(cs, podName, location)
+    checkUsingPod(cs, podName, loc)
 
     return pod
   }
@@ -272,7 +272,7 @@ class ResolveImports : CompilerStep
   **
   ** Check that a pod name is in the dependency list.
   **
-  private static Void checkUsingPod(CompilerSupport cs, Str podName, Location loc)
+  private static Void checkUsingPod(CompilerSupport cs, Str podName, Loc loc)
   {
     // scripts don't need dependencies
     if (cs.compiler.input.isScript) return
@@ -294,18 +294,18 @@ class ResolveImports : CompilerStep
   ** Resolve a unqualified symbol name using the given unit's imported
   ** pod list.  If the symbol cannot be resolved log an error and return null.
   **
-  static CSymbol? resolveSymbol(CompilerSupport cs, CompilationUnit unit, Str? podName, Str name, Location location)
+  static CSymbol? resolveSymbol(CompilerSupport cs, CompilationUnit unit, Str? podName, Str name, Loc loc)
   {
     // fully qualified
     if (podName != null)
     {
       // resolve pod
-      pod := resolvePod(cs, podName, location)
+      pod := resolvePod(cs, podName, loc)
       if (pod == null) return null
 
       // resolve symbol
       symbol := pod.resolveSymbol(name, false)
-      if (symbol == null) cs.err("Unresolved symbol '${podName}::${name}'", location)
+      if (symbol == null) cs.err("Unresolved symbol '${podName}::${name}'", loc)
       return symbol
     }
 
@@ -317,10 +317,10 @@ class ResolveImports : CompilerStep
       s := u.resolvedPod.resolveSymbol(name, false)
       if (s == null) return
       if (found == null) { found = s; return }
-      cs.err("Ambiguous symbol '$found.qname' and '$s.qname'", location)
+      cs.err("Ambiguous symbol '$found.qname' and '$s.qname'", loc)
     }
     if (found != null) return found
-    cs.err("Unresolved symbol '$name'", location)
+    cs.err("Unresolved symbol '$name'", loc)
     return null
   }
 

@@ -36,7 +36,7 @@ class JavaBridge : CBridge
   **
   ** Map a FFI "podName" to a Java package.
   **
-  override CPod resolvePod(Str name, Location? loc)
+  override CPod resolvePod(Str name, Loc? loc)
   {
     // the empty package is used to represent primitives
     if (name == "") return primitives
@@ -84,7 +84,7 @@ class JavaBridge : CBridge
     // before the args (we don't do this for interop Array classes)
     if (!base.isInteropArray)
     {
-      loc := call.location
+      loc := call.loc
       call.target = CallExpr.makeWithMethod(loc, null, base.newMethod) { synthetic=true }
     }
 
@@ -103,7 +103,7 @@ class JavaBridge : CBridge
   {
     // we don't allow chaining to a this ctor for Java FFI
     if (call.target.id !== ExprId.superExpr)
-      throw err("Must use super constructor call in Java FFI", call.location)
+      throw err("Must use super constructor call in Java FFI", call.loc)
 
     // route to a superclass constructor
     JavaType base := call.target.ctype.deref
@@ -147,7 +147,7 @@ class JavaBridge : CBridge
     s.add(call.name).add("(")
     s.add(call.args.join(", ") |Expr arg->Str| { return arg.toTypeStr })
     s.add(")")
-    throw err(s.toStr, call.location)
+    throw err(s.toStr, call.loc)
   }
 
   **
@@ -227,7 +227,7 @@ class JavaBridge : CBridge
     // override all the overloaded versions
     jslot := base as JavaSlot
     if (jslot?.next != null)
-      throw err("Cannot override Java overloaded method: '$jslot.name'", def.location)
+      throw err("Cannot override Java overloaded method: '$jslot.name'", def.loc)
 
     // route to method override checking
     if (base is JavaMethod && def is MethodDef)
@@ -266,10 +266,10 @@ class JavaBridge : CBridge
       if (!isOverrideInferredType(bp.paramType, dp.paramType)) return
 
       // add local variable: Int bar := bar_$J
-      local := LocalDefStmt(def.location)
+      local := LocalDefStmt(def.loc)
       local.ctype = dp.paramType
       local.name  = dp.name
-      local.init  = UnknownVarExpr(def.location, null, dp.name + "_\$J")
+      local.init  = UnknownVarExpr(def.loc, null, dp.name + "_\$J")
       def.code.stmts.insert(0, local)
 
       // rename parameter Int bar -> int bar_$J
@@ -313,7 +313,7 @@ class JavaBridge : CBridge
     // can't subclass a primitive array like ByteArray/byte[]
     if (def.base.deref is JavaType && def.base.deref->isInteropArray)
     {
-      err("Cannot subclass from Java interop array: $def.base", def.location)
+      err("Cannot subclass from Java interop array: $def.base", def.loc)
       return
     }
 
@@ -327,7 +327,7 @@ class JavaBridge : CBridge
     while (javaBase != null && !javaBase.isForeign) javaBase = javaBase.base
     if (javaBase != null && javaBase !== def.base)
     {
-      err("Cannot subclass Java class more than one level: $javaBase", def.location)
+      err("Cannot subclass Java class more than one level: $javaBase", def.loc)
       return
     }
 
@@ -339,7 +339,7 @@ class JavaBridge : CBridge
       ctors.each |MethodDef b, Int j|
       {
         if (i > j && areParamsSame(a, b))
-          err("Duplicate Java FFI constructor signatures: '$b.name' and '$a.name'", a.location)
+          err("Duplicate Java FFI constructor signatures: '$b.name' and '$a.name'", a.loc)
       }
     }
   }
@@ -369,7 +369,7 @@ class JavaBridge : CBridge
   Bool fits(CType actual, CType expected)
   {
     // use dummy expression and route to coerce code
-    dummy := UnknownVarExpr(Location("dummy"), null, "dummy") { ctype = actual }
+    dummy := UnknownVarExpr(Loc("dummy"), null, "dummy") { ctype = actual }
     fits := true
     coerce(dummy, expected) |->| { fits=false }
     return fits
@@ -488,7 +488,7 @@ class JavaBridge : CBridge
   **
   private Expr arrayToList(Expr expr, CType of)
   {
-    loc := expr.location
+    loc := expr.loc
     ofExpr := LiteralExpr(loc, ExprId.typeLiteral, ns.typeType, of)
     return CallExpr.makeWithMethod(loc, null, listMakeFromArray, [ofExpr, expr])
   }
@@ -498,7 +498,7 @@ class JavaBridge : CBridge
   **
   Expr coerceToArray(Expr expr, CType expected, |->| onErr)
   {
-    loc := expr.location
+    loc := expr.loc
     expectedOf := ((JavaType)expected.toNonNullable).inferredArrayOf
     actual := expr.ctype
 
@@ -527,7 +527,7 @@ class JavaBridge : CBridge
   Expr coerceFuncToInterface(Expr expr, JavaType expected, |->| onErr)
   {
     // check if we have exactly one abstract method in the expected type
-    loc := expr.location
+    loc := expr.loc
     abstracts := expected.methods.findAll |CMethod m->Bool| { return m.isAbstract }
     if (abstracts.size != 1) { onErr(); return expr }
     method := abstracts.first
@@ -541,7 +541,7 @@ class JavaBridge : CBridge
     ctor := funcWrappers[key]
     if (ctor == null)
     {
-      ctor = generateFuncToInterfaceWrapper(expr.location, funcType, expected, method)
+      ctor = generateFuncToInterfaceWrapper(expr.loc, funcType, expected, method)
       funcWrappers[key] = ctor
     }
 
@@ -577,7 +577,7 @@ class JavaBridge : CBridge
   ** Generate the wrapper which implements the specified expected interface
   ** and overrides the specified method which calls the function.
   **
-  CMethod generateFuncToInterfaceWrapper(Location loc, FuncType funcType, CType expected, CMethod method)
+  CMethod generateFuncToInterfaceWrapper(Loc loc, FuncType funcType, CType expected, CMethod method)
   {
     //   Fantom: func typed as |Str|
     //   Java:   interface Foo { void bar(String) }

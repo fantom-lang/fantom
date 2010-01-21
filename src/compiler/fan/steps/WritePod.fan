@@ -40,7 +40,7 @@ class WritePod : CompilerStep
     fpod := compiler.fpod
     podName := fpod.name
     podFile := dir + "${podName}.pod".toUri
-    location = Location.makeFile(podFile)
+    loc = Loc.makeFile(podFile)
 
     log.info("WritePod [${podFile.toStr}]")
 
@@ -77,7 +77,7 @@ class WritePod : CompilerStep
     catch (Err e)
     {
       e.trace
-      throw errReport(CompilerErr("Cannot write", location, e))
+      throw errReport(CompilerErr("Cannot write", loc, e))
     }
 
     // close file
@@ -94,7 +94,7 @@ class WritePod : CompilerStep
     try
       zip.writeNext(path, DateTime.now).print(content).close
     catch (Err e)
-      throw errReport(CompilerErr("Cannot write resource '$path'", location, e))
+      throw errReport(CompilerErr("Cannot write resource '$path'", loc, e))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,7 @@ class WritePod : CompilerStep
     }
     catch (Err e)
     {
-      throw errReport(CompilerErr("Cannot write resource file '$path'", location, e))
+      throw errReport(CompilerErr("Cannot write resource file '$path'", loc, e))
     }
   }
 
@@ -154,7 +154,7 @@ class WritePod : CompilerStep
     }
     catch (Err e)
     {
-      throw errReport(CompilerErr("Cannot write pod fandoc", location, e))
+      throw errReport(CompilerErr("Cannot write pod fandoc", loc, e))
     }
   }
 
@@ -178,7 +178,7 @@ class WritePod : CompilerStep
     }
     catch (Err e)
     {
-      throw errReport(CompilerErr("Cannot write fandoc '$t.name'", t.location, e))
+      throw errReport(CompilerErr("Cannot write fandoc '$t.name'", t.loc, e))
     }
   }
 
@@ -310,6 +310,6 @@ class WritePod : CompilerStep
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Location? location
+  private Loc? loc
   private FacetDef[] noFacets := FacetDef[,].ro
 }

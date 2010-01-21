@@ -7,9 +7,9 @@
 //
 
 **
-** Location provides a source file, line number, and column number.
+** Loc provides a source file, line number, and column number.
 **
-class Location
+class Loc
 {
 
   new make(Str? file, Int? line := null, Int? col := null)
@@ -68,14 +68,14 @@ class Location
 
   override Bool equals(Obj? that)
   {
-    x := that as Location
+    x := that as Loc
     if (x == null) return false
     return file == x.file && line == x.line && col == x.col
   }
 
   override Int compare(Obj that)
   {
-    x := (Location)that
+    x := (Loc)that
     if (file != x.file) return file <=> x.file
     if (line != x.line) return line <=> x.line
     return col <=> x.col
@@ -83,10 +83,10 @@ class Location
 
   override Str toStr()
   {
-    return toLocationStr
+    return toLocStr
   }
 
-  Str toLocationStr()
+  Str toLocStr()
   {
     StrBuf s := StrBuf()
     s.add(file)

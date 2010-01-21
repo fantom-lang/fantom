@@ -70,7 +70,7 @@ class ConstChecks : CompilerStep
     if (!c.isItBlock || !c.setsConst) return
 
     // add inCtor check
-    loc := c.location
+    loc := c.loc
     check := CallExpr.makeWithMethod(loc, ThisExpr(loc), ns.funcCheckInCtor, [ItExpr(loc)])
     check.noLeave
     c.doCall.code.stmts.insert(0, check.toStmt)
@@ -89,7 +89,7 @@ class ConstChecks : CompilerStep
     this.curCtor = ctor
 
     // add enterCtor
-    loc := ctor.location
+    loc := ctor.loc
     enter := CallExpr.makeWithMethod(loc, LocalVarExpr(loc, itBlockVar), ns.funcEnterCtor, [ThisExpr(loc)])
     enter.isSafe = true
     enter.noLeave
@@ -102,7 +102,7 @@ class ConstChecks : CompilerStep
   override Stmt[]? visitStmt(Stmt stmt)
   {
     if (stmt.id !== StmtId.returnStmt) return null
-    loc := stmt.location
+    loc := stmt.loc
     exit := CallExpr.makeWithMethod(loc, LocalVarExpr(loc, itBlockVar), ns.funcExitCtor)
     exit.isSafe = true
     exit.noLeave

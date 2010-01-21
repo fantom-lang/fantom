@@ -77,34 +77,34 @@ class InitEnum : CompilerStep
       if (ctor.name == "make")
         m = ctor
       else
-        throw err("Enum constructor must be named 'make'", ctor.location)
+        throw err("Enum constructor must be named 'make'", ctor.loc)
     }
 
     // if we found an existing constructor, then error check it
     if (m != null)
     {
       if (!m.isPrivate)
-        err("Enum constructor must be private", m.location)
+        err("Enum constructor must be private", m.loc)
 
       if (m.ctorChain != null)
-        err("Enum constructor cannot call super constructor", m.location)
+        err("Enum constructor cannot call super constructor", m.loc)
     }
 
     // if we didn't find an existing constructor, then
     // add a synthetic one
     if (m == null)
     {
-      m = MethodDef(curType.location, curType)
+      m = MethodDef(curType.loc, curType)
       m.name = "make"
       m.flags = FConst.Ctor + FConst.Private + FConst.Synthetic
-      m.ret = TypeRef(curType.location, ns.voidType)
-      m.code = Block(curType.location)
-      m.code.stmts.add(ReturnStmt.makeSynthetic(curType.location))
+      m.ret = TypeRef(curType.loc, ns.voidType)
+      m.code = Block(curType.loc)
+      m.code.stmts.add(ReturnStmt.makeSynthetic(curType.loc))
       curType.addSlot(m)
     }
 
     // Enum.make call
-    loc := m.location
+    loc := m.loc
     m.ctorChain = CallExpr(loc, SuperExpr(loc), "make")
     m.ctorChain.isCtorChain = true
     m.ctorChain.args.add(UnknownVarExpr(loc, null, "\$ordinal"))
@@ -125,7 +125,7 @@ class InitEnum : CompilerStep
   Void addFromStr()
   {
     // static CurType fromStr(Str name, Bool checked := true)
-    loc := curType.location
+    loc := curType.loc
     m := MethodDef(loc, curType)
     m.name = "fromStr"
     m.flags = FConst.Public + FConst.Static
@@ -160,12 +160,12 @@ class InitEnum : CompilerStep
     if (dup != null)
     {
       if (dup.parent === curType)
-        throw err("Enum '$def.name' conflicts with slot", (Location)dup->location)
+        throw err("Enum '$def.name' conflicts with slot", (Loc)dup->loc)
       else
-        throw err("Enum '$def.name' conflicts with inherited slot '$dup.qname'", def.location)
+        throw err("Enum '$def.name' conflicts with inherited slot '$dup.qname'", def.loc)
     }
 
-    loc := def.location
+    loc := def.loc
 
     // initializer
     init := CallExpr(loc, null, "make")
@@ -193,12 +193,12 @@ class InitEnum : CompilerStep
     if (dup != null)
     {
       if (dup.parent == curType)
-        throw err("Enum 'vals' conflicts with slot", (Location)dup->location)
+        throw err("Enum 'vals' conflicts with slot", (Loc)dup->loc)
       else
-        throw err("Enum 'vals' conflicts with inherited slot '$dup.qname'", curType.location)
+        throw err("Enum 'vals' conflicts with inherited slot '$dup.qname'", curType.loc)
     }
 
-    loc := curType.location
+    loc := curType.loc
 
     // initializer
     listType := curType.toListOf
