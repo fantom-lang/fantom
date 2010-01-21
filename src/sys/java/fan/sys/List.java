@@ -93,7 +93,7 @@ public final class List
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Type type()
+  public final Type typeof()
   {
     return of.toListOf();
   }
@@ -341,7 +341,7 @@ public final class List
     }
     catch (ArrayStoreException e)
     {
-      throw CastErr.make("Setting '" + FanObj.type(value) + "' into '" + of + "[]'").val;
+      throw CastErr.make("Setting '" + FanObj.typeof(value) + "' into '" + of + "[]'").val;
     }
   }
 
@@ -381,7 +381,7 @@ public final class List
     }
     catch (ArrayStoreException e)
     {
-      throw CastErr.make("Adding '" + FanObj.type(value) + "' into '" + of + "[]'").val;
+      throw CastErr.make("Adding '" + FanObj.typeof(value) + "' into '" + of + "[]'").val;
     }
   }
 
@@ -675,7 +675,7 @@ public final class List
     for (int i=0; i<size; ++i)
     {
       Object item = values[i];
-      if (item != null && type(item).is(t))
+      if (item != null && typeof(item).is(t))
         acc.add(item);
     }
     return acc;
@@ -1233,7 +1233,7 @@ public final class List
         else if (item instanceof Map)
           item = ((Map)item).toImmutable();
         else if (!isImmutable(item))
-          throw NotImmutableErr.make("Item [" + i + "] not immutable " + type(item)).val;
+          throw NotImmutableErr.make("Item [" + i + "] not immutable " + typeof(item)).val;
       }
       temp[i] = item;
     }

@@ -93,7 +93,7 @@ public final class FanInt
     return self;
   }
 
-  public static Type type(long self)
+  public static Type typeof(long self)
   {
     return Sys.IntType;
   }

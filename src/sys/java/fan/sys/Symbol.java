@@ -76,7 +76,7 @@ public final class Symbol
 
   public String toStr()  { return "@" + qname;  }
 
-  public Type type()  { return Sys.SymbolType;  }
+  public Type typeof()  { return Sys.SymbolType;  }
 
 //////////////////////////////////////////////////////////////////////////
 // Value Management

@@ -80,7 +80,7 @@ public class ObjEncoder
       return;
     }
 
-    Type type = FanObj.type(obj);
+    Type type = FanObj.typeof(obj);
     if (type.facet(symSimple, null, true) == Boolean.TRUE)
     {
       writeSimple(type, obj);
@@ -117,7 +117,7 @@ public class ObjEncoder
 
     boolean first = true;
     Object defObj = null;
-    if (skipDefaults) defObj = FanObj.type(obj).make();
+    if (skipDefaults) defObj = FanObj.typeof(obj).make();
 
     List fields = type.fields();
     for (int i=0; i<fields.sz(); ++i)
@@ -207,7 +207,7 @@ public class ObjEncoder
 
     // figure out if we can use an inferred type
     boolean inferred = false;
-    if (list.type() == curFieldType)
+    if (list.typeof() == curFieldType)
     {
       inferred = true;
     }
@@ -244,7 +244,7 @@ public class ObjEncoder
   public void writeMap(Map map)
   {
     // get k,v type
-    MapType t = (MapType)map.type();
+    MapType t = (MapType)map.typeof();
 
     // decide if we're going output as single or multi-line format
     boolean nl = isMultiLine(t.k) || isMultiLine(t.v);

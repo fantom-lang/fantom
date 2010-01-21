@@ -209,7 +209,7 @@ public class Pod
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.PodType; }
+  public Type typeof() { return Sys.PodType; }
 
   public final String name()  { return name; }
 

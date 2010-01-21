@@ -43,7 +43,7 @@ public class UnsupportedErr
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.UnsupportedErrType;
   }

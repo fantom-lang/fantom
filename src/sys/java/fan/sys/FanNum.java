@@ -35,7 +35,7 @@ public class FanNum
     return new BigDecimal(self.doubleValue());
   }
 
-  public static Type type(Number self) { return Sys.NumType; }
+  public static Type typeof(Number self) { return Sys.NumType; }
 
 //////////////////////////////////////////////////////////////////////////
 // Locale

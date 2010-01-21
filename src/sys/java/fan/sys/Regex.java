@@ -63,7 +63,7 @@ public final class Regex
 
   public String toStr() { return source; }
 
-  public Type type() { return Sys.RegexType; }
+  public Type typeof() { return Sys.RegexType; }
 
 //////////////////////////////////////////////////////////////////////////
 // Regular expression

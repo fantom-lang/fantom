@@ -376,7 +376,7 @@ public final class DateTime
     return ticks;
   }
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.DateTimeType;
   }

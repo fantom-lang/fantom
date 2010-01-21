@@ -37,7 +37,7 @@ public abstract class Type
   public static Type of(Object obj)
   {
     if (obj instanceof FanObj)
-      return ((FanObj)obj).type();
+      return ((FanObj)obj).typeof();
     else
       return FanUtil.toFanType(obj.getClass(), true);
   }
@@ -56,7 +56,7 @@ public abstract class Type
 // Naming
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.TypeType; }
+  public Type typeof() { return Sys.TypeType; }
 
   public abstract Pod pod();
   public abstract String name();
@@ -284,7 +284,7 @@ public abstract class Type
     {
       Object obj = objs[i];
       if (obj == null) { nullable = true; continue; }
-      Type t = type(obj);
+      Type t = typeof(obj);
       if (best == null) { best = t; continue; }
       while (!t.is(best))
       {

@@ -145,7 +145,7 @@ public final class Time
     return toLocale("hh:mm:ss.FFFFFFFFF");
   }
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.TimeType;
   }

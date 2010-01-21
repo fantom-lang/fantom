@@ -48,7 +48,7 @@ public final class FanBool
     return self ? 1231 : 1237;
   }
 
-  public static Type type(boolean self)
+  public static Type typeof(boolean self)
   {
     return Sys.BoolType;
   }

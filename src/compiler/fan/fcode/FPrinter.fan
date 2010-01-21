@@ -58,7 +58,7 @@ class FPrinter : FConst
     printLine(title)
     table.table.each |Obj obj, Int index|
     {
-      m := obj.type.method("format", false)
+      m := obj.typeof.method("format", false)
       s := m != null ? m.callList([obj, pod]) : obj.toStr
       printLine("  [$index]  $s")
     }

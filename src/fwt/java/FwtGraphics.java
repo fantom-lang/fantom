@@ -62,7 +62,7 @@ public class FwtGraphics implements Graphics
       }
       else
       {
-        throw ArgErr.make("Unsupported brush type: " + FanObj.type(brush)).val;
+        throw ArgErr.make("Unsupported brush type: " + FanObj.typeof(brush)).val;
       }
     }
     finally

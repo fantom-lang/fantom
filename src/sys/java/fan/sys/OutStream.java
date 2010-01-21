@@ -37,7 +37,7 @@ public class OutStream
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.OutStreamType; }
+  public Type typeofs() { return Sys.OutStreamType; }
 
 //////////////////////////////////////////////////////////////////////////
 // Java OutputStream
@@ -69,7 +69,7 @@ public class OutStream
     catch (NullPointerException e)
     {
       if (out == null)
-        throw UnsupportedErr.make(type().qname() + " wraps null OutStream").val;
+        throw UnsupportedErr.make(typeof().qname() + " wraps null OutStream").val;
       else
         throw e;
     }
@@ -86,7 +86,7 @@ public class OutStream
     catch (NullPointerException e)
     {
       if (out == null)
-        throw UnsupportedErr.make(type().qname() + " wraps null OutStream").val;
+        throw UnsupportedErr.make(typeof().qname() + " wraps null OutStream").val;
       else
         throw e;
     }

@@ -55,7 +55,7 @@ public class Field
 // Signature
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type()  { return Sys.FieldType;  }
+  public Type typeof()  { return Sys.FieldType;  }
 
   public Type of() { return of; }
 
@@ -124,8 +124,8 @@ public class Field
     // check generic type (the Java runtime will check non-generics)
     if (of.isGenericInstance() && value != null)
     {
-      if (!type(value).is(of.toNonNullable()))
-        throw ArgErr.make("Wrong type for field " + qname() + ": " + of + " != " + type(value)).val;
+      if (!typeof(value).is(of.toNonNullable()))
+        throw ArgErr.make("Wrong type for field " + qname() + ": " + of + " != " + typeof(value)).val;
     }
 
     if (setter != null)

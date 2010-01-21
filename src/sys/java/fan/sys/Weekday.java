@@ -41,7 +41,7 @@ public final class Weekday
     return (Weekday)doFromStr(Sys.WeekdayType, name, checked);
   }
 
-  public Type type() { return Sys.WeekdayType; }
+  public Type typeof() { return Sys.WeekdayType; }
 
   public Weekday increment() { return array[(ord+1)%array.length]; }
 

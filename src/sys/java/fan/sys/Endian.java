@@ -32,6 +32,6 @@ public final class Endian
     return (Endian)doFromStr(Sys.EndianType, name, checked);
   }
 
-  public Type type() { return Sys.EndianType; }
+  public Type typeof() { return Sys.EndianType; }
 
 }

@@ -26,7 +26,7 @@ public class FileScheme
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.FileSchemeType; }
+  public Type typeof() { return Sys.FileSchemeType; }
 
   public Object get(Uri uri, Object base)
   {

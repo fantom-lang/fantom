@@ -104,7 +104,7 @@ public class Service$
   {
     try
     {
-      List types = FanObj.type(self).inheritance();
+      List types = FanObj.typeof(self).inheritance();
       synchronized (lock)
       {
         // if already installed, short circuit
@@ -140,7 +140,7 @@ public class Service$
   {
     try
     {
-      List types = FanObj.type(self).inheritance();
+      List types = FanObj.typeof(self).inheritance();
       synchronized (lock)
       {
         // ensure service is stopped

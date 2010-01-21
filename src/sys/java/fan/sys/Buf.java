@@ -59,10 +59,10 @@ public abstract class Buf
 
   public String toStr()
   {
-    return type().name() + "(pos=" + pos() + " size=" + size() + ")";
+    return typeof().name() + "(pos=" + pos() + " size=" + size() + ")";
   }
 
-  public Type type() { return Sys.BufType; }
+  public Type typeof() { return Sys.BufType; }
 
 //////////////////////////////////////////////////////////////////////////
 // Support
@@ -355,7 +355,7 @@ public abstract class Buf
 
   public String toHex()
   {
-    throw UnsupportedErr.make(type()+".toHex").val;
+    throw UnsupportedErr.make(typeof()+".toHex").val;
   }
 
   public static Buf fromHex(String str)
@@ -401,7 +401,7 @@ public abstract class Buf
 
   public String toBase64()
   {
-    throw UnsupportedErr.make(type()+".toBase64").val;
+    throw UnsupportedErr.make(typeof()+".toBase64").val;
   }
 
   public static Buf fromBase64(String s)
@@ -450,12 +450,12 @@ public abstract class Buf
 
   public Buf toDigest(String algorithm)
   {
-    throw UnsupportedErr.make(type()+".toDigest").val;
+    throw UnsupportedErr.make(typeof()+".toDigest").val;
   }
 
   public Buf hmac(String algorithm, Buf key)
   {
-    throw UnsupportedErr.make(type()+".hmac").val;
+    throw UnsupportedErr.make(typeof()+".hmac").val;
   }
 
 //////////////////////////////////////////////////////////////////////////

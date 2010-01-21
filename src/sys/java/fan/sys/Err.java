@@ -126,13 +126,13 @@ public String message() { return msg; }
 
   public Err cause() { return cause; }
 
-  public Type type() { return Sys.ErrType; }
+  public Type typeof() { return Sys.ErrType; }
 
   public String toStr()
   {
     // wrap with try block to safely handle boot-strap problems
     String qname;
-    try { qname = type().qname(); }
+    try { qname = typeof().qname(); }
     catch (Throwable e) { qname = getClass().getName(); }
 
     if (msg == null || msg.length() == 0)

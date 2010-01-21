@@ -115,7 +115,7 @@ public final class FanFloat
     return Float.floatToIntBits((float)self) & 0xFFFFFFFFL;
   }
 
-  public static Type type(double self)
+  public static Type typeof(double self)
   {
     return Sys.FloatType;
   }

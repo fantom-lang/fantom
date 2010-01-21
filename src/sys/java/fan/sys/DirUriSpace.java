@@ -34,7 +34,7 @@ final class DirUriSpace
 
   public String toStr() { return "DirUriSpace " + dir; }
 
-  public Type type() { return Sys.DirUriSpaceType; }
+  public Type typeof() { return Sys.DirUriSpaceType; }
 
 //////////////////////////////////////////////////////////////////////////
 // UriSpace

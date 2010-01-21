@@ -29,7 +29,7 @@ public class Param
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.ParamType; }
+  public Type typeof() { return Sys.ParamType; }
 
   public String name()  { return name; }
   public Type of()   { return of; }

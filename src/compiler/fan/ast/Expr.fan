@@ -141,7 +141,7 @@ abstract class Expr : Node
   **
   static Expr makeForLiteral(Location loc, CNamespace ns, Obj val)
   {
-    switch (val.type)
+    switch (val.typeof)
     {
       case Bool#:
         return val == true ?
@@ -158,7 +158,7 @@ abstract class Expr : Node
           args   = [makeForLiteral(loc, ns, val.toStr)]
         }
       default:
-        throw Err("Unsupported literal type $val.type")
+        throw Err("Unsupported literal type $val.typeof")
     }
   }
 
@@ -1060,7 +1060,7 @@ class FieldExpr : NameExpr
     // TODO - this should probably be tightened up if we switch to const
     if (field.isStatic && field.parent.isEnum && ctype.isEnum)
     {
-      switch (field.type)
+      switch (field.typeof)
       {
         case ReflectField#:
           ifield := field as ReflectField
@@ -1070,7 +1070,7 @@ class FieldExpr : NameExpr
           enumDef := fieldDef.parentDef.enumDef(field.name)
           if (enumDef != null) return enumDef.ordinal
         default:
-          throw CompilerErr("Invalid field for tableswitch: " + field.type, location)
+          throw CompilerErr("Invalid field for tableswitch: " + field.typeof, location)
       }
     }
     return null

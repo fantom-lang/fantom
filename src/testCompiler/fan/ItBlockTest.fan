@@ -72,7 +72,7 @@ class ItBlockTest : CompilerTest
      verifyEq(x->j, 12)
 
      x = t.method("e").call
-     verifyEq(x->type, Str[]#)
+     verifyEq(x->typeof, Str[]#)
      verifyEq(x->size, 33)
      verifyEq(x->capacity, 33)
 

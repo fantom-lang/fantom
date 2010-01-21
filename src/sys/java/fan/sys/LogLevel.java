@@ -46,7 +46,7 @@ public static final LogLevel error = err;
     return (LogLevel)doFromStr(Sys.LogLevelType, name, checked);
   }
 
-  public Type type() { return Sys.LogLevelType; }
+  public Type typeof() { return Sys.LogLevelType; }
 
   final int ord;
 

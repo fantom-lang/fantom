@@ -62,7 +62,7 @@ public final class Zip
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.ZipType; }
+  public Type typeof() { return Sys.ZipType; }
 
   public String toStr()
   {

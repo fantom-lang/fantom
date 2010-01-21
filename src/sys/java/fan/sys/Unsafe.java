@@ -18,7 +18,7 @@ public final class Unsafe
 
   public Unsafe(Object val) { this.val = val; }
 
-  public Type type() { return Sys.UnsafeType; }
+  public Type typeof() { return Sys.UnsafeType; }
 
   public Object val() { return val; }
 

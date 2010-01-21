@@ -570,7 +570,7 @@ class Builder
       Object v = getObj(name);
       if (v == null) return null;
       if (v instanceof String) return (String)v;
-      log.warn("Expecting '" + loc + "@" + name + "' to be Str, not " + FanObj.type(v));
+      log.warn("Expecting '" + loc + "@" + name + "' to be Str, not " + FanObj.typeof(v));
       return null;
     }
 
@@ -579,7 +579,7 @@ class Builder
       Object v = getObj(name);
       if (v == null) return null;
       if (v instanceof List && ((List)v).of() == Sys.SymbolType) return (List)v;
-      log.warn("Expecting '" + loc + "@" + name + "' to be Symbol[], not " + FanObj.type(v));
+      log.warn("Expecting '" + loc + "@" + name + "' to be Symbol[], not " + FanObj.typeof(v));
       return null;
     }
 

@@ -44,7 +44,7 @@ class DemoMain : AbstractMain
     echo("DemoMain.run")
     echo("  log      = $log")
     echo("  homeDir  = $homeDir")
-    Type.of(this).fields.each |f|
+    this.typeof.fields.each |f|
     {
       if (f.isStatic) return
       echo("  ${f.name.padr(8)} = ${f.get(this)}")

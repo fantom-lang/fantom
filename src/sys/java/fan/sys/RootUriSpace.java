@@ -35,9 +35,9 @@ public final class RootUriSpace
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public String toStr() { return type().toStr(); }
+  public String toStr() { return typeof().toStr(); }
 
-  public Type type() { return Sys.RootUriSpaceType; }
+  public Type typeof() { return Sys.RootUriSpaceType; }
 
 //////////////////////////////////////////////////////////////////////////
 // UriSpace

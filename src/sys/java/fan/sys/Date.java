@@ -114,7 +114,7 @@ public final class Date
     return toLocale("YYYY-MM-DD");
   }
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.DateType;
   }

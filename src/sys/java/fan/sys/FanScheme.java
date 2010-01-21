@@ -26,7 +26,7 @@ public class FanScheme
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.FanSchemeType; }
+  public Type typeof() { return Sys.FanSchemeType; }
 
   public Object get(Uri uri, Object base)
   {

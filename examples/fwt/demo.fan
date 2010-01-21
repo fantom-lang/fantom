@@ -548,7 +548,7 @@ class FwtDemo
 
   static Void setInt(Widget obj, Str field, Event e)
   {
-    f := Type.of(obj).field(field)
+    f := obj.typeof.field(field)
     Str text := e.widget->text
     int := text.toInt(10, false)
     if (int != null || text=="null") f.set(obj, int)
@@ -557,7 +557,7 @@ class FwtDemo
 
   static Void setBool(Widget obj, Str field, Event e)
   {
-    f := Type.of(obj).field(field)
+    f := obj.typeof.field(field)
     Str text := e.widget->text
     b := text.toBool(false)
     if (b != null) f.set(obj, b)
@@ -566,7 +566,7 @@ class FwtDemo
 
   static Void setEnum(Widget obj, Str field, Event e)
   {
-    f := Type.of(obj).field(field)
+    f := obj.typeof.field(field)
     en := f.get(obj)->fromStr(e.widget->text, false)
     if (en != null) f.set(obj, en)
     obj.relayout
@@ -605,7 +605,7 @@ class FwtDemo
   WebBrowser browser := WebBrowser {}
   Str homeUri := "http://fantom.org/"
 
-  File scriptDir  := File.make(Type.of(this)->sourceFile.toStr.toUri).parent
+  File scriptDir  := File.make(this.typeof->sourceFile.toStr.toUri).parent
 
   Image backIcon    := Image(`fan:/sys/pod/icons/x16/arrowLeft.png`)
   Image nextIcon    := Image(`fan:/sys/pod/icons/x16/arrowRight.png`)

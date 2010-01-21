@@ -27,7 +27,7 @@ public class Test
 // Object Overrides
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.TestType;
   }
@@ -39,7 +39,7 @@ public class Test
   public Method curTestMethod()
   {
     if (curTestMethod == null)
-      throw Err.make("No test currently executing for " + type()).val;
+      throw Err.make("No test currently executing for " + typeof()).val;
     return curTestMethod;
   }
 
@@ -154,14 +154,14 @@ public class Test
     catch (Err.Val e)
     {
       if (verbose) System.out.println("  verifyErr: " + e);
-      if (e.err().type() == errType) { verifyCount++; return; }
-      fail(e.err().type() + " thrown, expected " + errType);
+      if (e.err().typeof() == errType) { verifyCount++; return; }
+      fail(e.err().typeof() + " thrown, expected " + errType);
     }
     catch (Throwable e)
     {
       if (verbose) System.out.println("  verifyErr: " + e);
       Err err = Err.make(e);
-      if (err.type() == errType) { verifyCount++; return; }
+      if (err.typeof() == errType) { verifyCount++; return; }
       fail(e.toString() + " thrown, expected " + errType);
     }
     fail("No err thrown, expected " + errType);

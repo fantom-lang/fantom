@@ -54,7 +54,7 @@ class ConstantFolder : CompilerSupport
     }
 
     // everything is constant, so try to find an instance method
-    method := target.type.method(name, false)
+    method := target.typeof.method(name, false)
     if (method == null || method.isStatic) return call
     if (call.args.size != method.params.size)
     {

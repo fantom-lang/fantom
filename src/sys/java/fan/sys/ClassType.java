@@ -188,12 +188,12 @@ public class ClassType
   public static Type common(Object[] objs, int n)
   {
     if (objs.length == 0) return Sys.ObjType;
-    Type best = type(objs[0]);
+    Type best = typeof(objs[0]);
     for (int i=1; i<n; ++i)
     {
       Object obj = objs[i];
       if (obj == null) continue;
-      Type t = type(obj);
+      Type t = typeof(obj);
       while (!t.is(best))
       {
         best = best.base();

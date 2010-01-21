@@ -226,7 +226,7 @@ public final class MimeType
     return str;
   }
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.MimeTypeType;
   }

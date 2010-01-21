@@ -96,8 +96,8 @@ class PodFacetsParser
     }
 
     // check type
-    if (!facet.val.type.fits(expected))
-      throw CompilerErr("Invalid type for pod facet '$qname'; expected '$expected' not '$facet.val.type'", facet.loc)
+    if (!facet.val.typeof.fits(expected))
+      throw CompilerErr("Invalid type for pod facet '$qname'; expected '$expected' not '$facet.val.typeof'", facet.loc)
 
     return facet.val
   }

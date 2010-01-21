@@ -115,8 +115,8 @@ class CheckErrors : CompilerStep
     if (foreign != null) foreign.bridge.checkType(t)
 
     // check some knuckle head doesn't override type
-    if (t.slotDef("type") != null && !compiler.isSys)
-      err("Cannot override Obj.type()", t.slotDef("type").location)
+    if (t.slotDef("typeof") != null && !compiler.isSys)
+      err("Cannot override Obj.typeof()", t.slotDef("typeof").location)
 
     // check inheritance
     if (t.base != null) checkBase(t, t.base)

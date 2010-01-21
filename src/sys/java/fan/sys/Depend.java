@@ -182,7 +182,7 @@ public final class Depend
     return FanStr.hash(toStr());
   }
 
-  public Type type()
+  public Type typeof()
   {
     return Sys.DependType;
   }

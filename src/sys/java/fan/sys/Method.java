@@ -75,7 +75,7 @@ public class Method
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.MethodType; }
+  public Type typeof() { return Sys.MethodType; }
 
   public Type returns() { return func.returns(); }
 

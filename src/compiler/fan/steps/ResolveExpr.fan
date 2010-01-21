@@ -687,7 +687,7 @@ if (var.name == "val" && curMethod != null && curMethod.isFieldSetter)
     }
     catch (Err e)
     {
-      errReport(CompilerErr("Internal error in DslPlugin '$plugin.type': $e", expr.location, e))
+      errReport(CompilerErr("Internal error in DslPlugin '$plugin.typeof': $e", expr.location, e))
       e.trace
       return expr
     }
