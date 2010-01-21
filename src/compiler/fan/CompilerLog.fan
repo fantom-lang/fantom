@@ -120,9 +120,9 @@ class CompilerLog
     if (err.level < this.level) return
     loc := err.location.toLocationStr
     if (err.isWarn)
-      printLine("$loc: WARN $err.message")
+      printLine("$loc: WARN $err.msg")
     else
-      printLine("$loc: $err.message")
+      printLine("$loc: $err.msg")
     if (isDebug) err.trace(out)
   }
 

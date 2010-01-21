@@ -119,9 +119,6 @@ public class Err
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-// TODO
-public String message() { return msg; }
-
   public String msg() { return msg; }
 
   public Err cause() { return cause; }

@@ -201,7 +201,7 @@ class MapTest : Test
     verifyEq(t.method("set").params[1].of, Str#)
     verifyEq(t.field("def").of, Str?#)
     verifyEq(t.method("keys").returns,     Int[]#)
-    verifyEq(t.method("values").returns,   Str[]#)
+    verifyEq(t.method("vals").returns,     Str[]#)
     verifyEq(t.method("each").params[0].of, |Str v, Int k->Void|#)
     verifyNotEq(t.method("each").params[0].of, |Obj v, Int i->Void|#)
 
@@ -222,7 +222,7 @@ class MapTest : Test
     verifyEq(t.method("set").params[0].of,  ArgErr#)
     verifyEq(t.method("set").params[1].of,  Int[]#)
     verifyEq(t.method("keys").returns,      ArgErr[]#)
-    verifyEq(t.method("values").returns,    Int[][]#)
+    verifyEq(t.method("vals").returns,      Int[][]#)
     verifyEq(t.method("each").params[0].of, |Int[] v, ArgErr k->Void|#)
   }
 //////////////////////////////////////////////////////////////////////////

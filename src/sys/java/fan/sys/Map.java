@@ -103,9 +103,6 @@ public final class Map
     return new List(type.k, keys);
   }
 
-  // TODO
-  public final List values() { return vals(); }
-
   public final List vals()
   {
     return new List(type.v, map.values());

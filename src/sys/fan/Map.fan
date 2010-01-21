@@ -84,9 +84,6 @@ final class Map
   **
   V[] vals()
 
-  ** TODO: use `vals`
-  @deprecated V[] values()
-
   **
   ** Create a shallow duplicate copy of this Map.  The keys and
   ** values themselves are not duplicated.  This method is idempotent.

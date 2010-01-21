@@ -66,9 +66,6 @@ const class TimeZone
   **
   static TimeZone cur()
 
-  ** TODO: use `cur`
-  @deprecated static TimeZone current()
-
   **
   ** Default value is UTC.
   **

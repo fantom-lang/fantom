@@ -78,10 +78,6 @@ const class Log
   **
   Bool isEnabled(LogLevel level)
 
-** TODO: use `isErr`
-@deprecated
-Bool isError()
-
   **
   ** Return if error level is enabled.
   **
@@ -105,10 +101,6 @@ Bool isError()
 //////////////////////////////////////////////////////////////////////////
 // Logging
 //////////////////////////////////////////////////////////////////////////
-
-** TODO: use `err`
-@deprecated
-Void error(Str msg, Err? err := null)
 
   **
   ** Generate a `LogLevel.err` log entry.

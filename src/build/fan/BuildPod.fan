@@ -103,7 +103,7 @@ abstract class BuildPod : BuildScript
       try
         podFacetsParser = PodFacetsParser(Location.makeFile(podDef), podDef.readAllStr).parse
       catch (CompilerErr e)
-        throw fatal("$e.message [$e.location.toLocationStr]")
+        throw fatal("$e.msg [$e.location.toLocationStr]")
     }
     return podFacetsParser
   }

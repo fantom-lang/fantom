@@ -313,6 +313,6 @@ internal class JavaReflect
   static Void errUnknownType(UnknownTypeErr e)
   {
     // just print a warning and ignore problematic APIs
-    echo("WARNING: Cannot map Java type: $e.message")
+    echo("WARNING: Cannot map Java type: $e.msg")
   }
 }
