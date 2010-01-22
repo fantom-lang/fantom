@@ -1183,13 +1183,13 @@ public class Parser : CompilerSupport
 
   **
   ** Assignment expression:
-  **   <assignExpr>  :=  <condOrExpr> [<assignOp> <assignExpr>]
-  **   <assignOp>    :=  "=" | "*=" | "/=" | "%=" | "+=" | "-="
+  **   <assignExpr>     :=  <ifExpr> [<assignOp> <assignExpr>]
+  **   <assignOp>       :=  "=" | "*=" | "/=" | "%=" | "+=" | "-="
   **
   private Expr assignExpr(Expr? expr := null)
   {
     // this is tree if built to the right (others to the left)
-    if (expr == null) expr = ternary
+    if (expr == null) expr = ifExpr
     if (curt.isAssign)
     {
       if (curt === Token.assign)
@@ -1201,22 +1201,41 @@ public class Parser : CompilerSupport
   }
 
   **
-  ** Ternary expression:
-  **   <ternaryExpr> :=  <condOrExpr> ["?" <condOrExpr> ":" <condOrExpr>]
+  ** Ternary/Elvis expressions:
+  **   <ifExpr>       :=  <ternaryExpr> | <elvisExpr>
+  **   <ternaryExpr>  :=  <condOrExpr> ["?" <ifExprBody> ":" <ifExprBody>]
+  **   <elvisExpr>    :=  <condOrExpr> "?:" <ifExprBody>
   **
-  private Expr ternary()
+  private Expr ifExpr()
   {
     expr := condOrExpr
     if (curt === Token.question)
     {
       condition := expr
       consume(Token.question)
-      trueExpr := condOrExpr
+      trueExpr := ifExprBody
       consume(Token.colon)
-      falseExpr := condOrExpr
+      falseExpr := ifExprBody
       expr = TernaryExpr(condition, trueExpr, falseExpr)
     }
+    else if (curt === Token.elvis)
+    {
+      lhs := expr
+      consume
+      rhs := ifExprBody
+      expr = BinaryExpr(lhs, Token.elvis, rhs)
+    }
     return expr
+  }
+
+  **
+  ** If expression body (ternary/elvis):
+  **   <ifExprBody>   :=  <condOrExpr> | <ifExprThrow>
+  **   <ifExprThrow>  :=  "throw" <expr>
+  **
+  private Expr ifExprBody()
+  {
+    condOrExpr
   }
 
   **
@@ -1294,12 +1313,12 @@ public class Parser : CompilerSupport
   **
   ** Relational expression:
   **   <relationalExpr> :=  <typeCheckExpr> | <compareExpr>
-  **   <typeCheckExpr>  :=  <elvisExpr> [("is" | "as" | "isnot") <type>]
-  **   <compareExpr>    :=  <elvisExpr> (("<" | "<=" | ">" | ">=" | "<=>") <elvisExpr>)*
+  **   <typeCheckExpr>  :=  <rangeExpr> [("is" | "as" | "isnot") <type>]
+  **   <compareExpr>    :=  <rangeExpr> (("<" | "<=" | ">" | ">=" | "<=>") <rangeExpr>)*
   **
   private Expr relationalExpr()
   {
-    expr := elvisExpr
+    expr := rangeExpr
     while (curt === Token.isKeyword || curt === Token.isnotKeyword ||
            curt === Token.asKeyword ||
            curt === Token.lt || curt === Token.ltEq ||
@@ -1318,25 +1337,8 @@ public class Parser : CompilerSupport
           consume
           expr = TypeCheckExpr(expr.loc, ExprId.asExpr, expr, ctype)
         default:
-          expr = ShortcutExpr.makeBinary(expr, consume.kind, elvisExpr)
+          expr = ShortcutExpr.makeBinary(expr, consume.kind, rangeExpr)
       }
-    }
-    return expr
-  }
-
-  **
-  ** Elvis expression:
-  **   <elvisExpr> :=  <condOrExpr> "?:" <condOrExpr>
-  **
-  private Expr elvisExpr()
-  {
-    expr := rangeExpr
-    while (curt === Token.elvis)
-    {
-      lhs := expr
-      consume
-      rhs := rangeExpr
-      expr = BinaryExpr(lhs, Token.elvis, rhs)
     }
     return expr
   }
