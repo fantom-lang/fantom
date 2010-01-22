@@ -38,7 +38,7 @@ fan.sys.Str.compareIgnoreCase = function(self, that)
 
 fan.sys.Str.toStr = function(self) { return self; }
 fan.sys.Str.toLocale = function(self) { return self; }
-fan.sys.Str.type = function(self) { return fan.sys.Str.$type; }
+fan.sys.Str.$typeof = function(self) { return fan.sys.Str.$type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Operators

@@ -80,7 +80,7 @@ fan.sys.Pod.prototype.loc = function(key, def)
   return def;
 }
 
-fan.sys.Pod.prototype.type = function() { return fan.sys.Pod.$type; }
+fan.sys.Pod.prototype.$typeof = function() { return fan.sys.Pod.$type; }
 
 fan.sys.Pod.prototype.toStr = function() { return this.m_name; }
 

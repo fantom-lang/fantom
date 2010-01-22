@@ -159,7 +159,7 @@ fan.sys.Range.prototype.toStr = function()
     return this.m_start + ".." + this.m_end;
 }
 
-fan.sys.Range.prototype.type = function() { return fan.sys.Range.$type;}
+fan.sys.Range.prototype.$typeof = function() { return fan.sys.Range.$type;}
 
 fan.sys.Range.prototype.$start = function(size)
 {

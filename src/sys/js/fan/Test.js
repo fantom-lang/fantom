@@ -128,10 +128,10 @@ fan.sys.Test.prototype.verifyErr = function(errType, func)
   catch (err)
   {
     var e = fan.sys.Err.make(err);
-    if (e.type() == errType) { this.verifyCount++; return; }
+    if (e.$typeof() == errType) { this.verifyCount++; return; }
     //if (verbose) System.out.println("  verifyErr: " + e);
     println("  verifyErr: " + e);
-    this.fail(e.type() + " thrown, expected " + errType);
+    this.fail(e.$typeof() + " thrown, expected " + errType);
   }
   this.fail("No err thrown, expected " + errType);
 }
@@ -149,7 +149,7 @@ fan.sys.Test.prototype.err = function(msg)
     return fan.sys.Err.make("Test failed: " + msg);
 }
 
-fan.sys.Test.prototype.type = function()
+fan.sys.Test.prototype.$typeof = function()
 {
   return fan.sys.Test.$type;
 }

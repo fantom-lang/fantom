@@ -66,23 +66,23 @@ fan.sys.Obj.prototype.$with = function(f)
 
 fan.sys.Obj.prototype.isImmutable = function()
 {
-  return this.type().isConst();
+  return this.$typeof().isConst();
 }
 
 fan.sys.Obj.prototype.toImmutable = function()
 {
-  if (this.type().isConst()) return this;
-  throw fan.sys.NotImmutableErr.make(this.type().toString());
+  if (this.$typeof().isConst()) return this;
+  throw fan.sys.NotImmutableErr.make(this.$typeof().toString());
 }
 
-fan.sys.Obj.prototype.type = function()
+fan.sys.Obj.prototype.$typeof = function()
 {
   return fan.sys.Obj.$type;
 }
 
 fan.sys.Obj.prototype.toStr = function()
 {
-  return "" + this.type();
+  return "" + this.$typeof();
 }
 
 fan.sys.Obj.prototype.toString = function()
@@ -92,7 +92,7 @@ fan.sys.Obj.prototype.toString = function()
 
 fan.sys.Obj.prototype.trap = function(name, args)
 {
-  var slot = this.type().slot(name, true);
+  var slot = this.$typeof().slot(name, true);
   if (slot instanceof fan.sys.Method)
   {
     return slot.invoke(this, args);

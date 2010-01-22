@@ -206,7 +206,7 @@ fan.sys.MimeType.prototype.hash = function()
 
 fan.sys.MimeType.prototype.toStr = function() { return this.m_str; }
 
-fan.sys.MimeType.prototype.type = function() { return fan.sys.MimeType.$type; }
+fan.sys.MimeType.prototype.$typeof = function() { return fan.sys.MimeType.$type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods

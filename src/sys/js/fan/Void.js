@@ -10,5 +10,5 @@
  * Void
  */
 fan.sys.Void = function() {};
-fan.sys.Void.prototype.type = function() { return fan.sys.Void.$type; }
+fan.sys.Void.prototype.$typeof = function() { return fan.sys.Void.$type; }
 

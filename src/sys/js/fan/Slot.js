@@ -28,7 +28,7 @@ fan.sys.Slot.prototype.$ctor = function()
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Slot.prototype.type = function() { return fan.sys.Slot.$type; }
+fan.sys.Slot.prototype.$typeof = function() { return fan.sys.Slot.$type; }
 fan.sys.Slot.prototype.toStr = function() { return this.m_qname; }
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,6 +72,7 @@ fan.sys.Slot.prototype.$name = function(n)
     case "fan":    return "$fan";
     case "import": return "$import";
     case "in":     return "$in";
+    case "typeof": return "$typeof";
     case "var":    return "$var";
     case "with":   return "$with";
   }

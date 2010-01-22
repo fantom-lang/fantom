@@ -106,7 +106,7 @@ fan.sys.ObjUtil.coerce = function(obj, type)
 
 fan.sys.ObjUtil.type = function(obj)
 {
-  if (obj instanceof fan.sys.Obj) return obj.type();
+  if (obj instanceof fan.sys.Obj) return obj.$typeof();
   else return fan.sys.Type.toFanType(obj);
 }
 

@@ -22,7 +22,7 @@ fan.sys.Bool.prototype.$ctor = function() {}
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Bool.prototype.type = function()
+fan.sys.Bool.prototype.$typeof = function()
 {
   return fan.sys.Boo.$type;
 }

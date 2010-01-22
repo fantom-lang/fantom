@@ -126,7 +126,7 @@ fan.sys.Time.prototype.toStr = function()
   return this.toLocale("hh:mm:ss.FFFFFFFFF");
 }
 
-fan.sys.Time.prototype.type = function()
+fan.sys.Time.prototype.$typeof = function()
 {
   return fan.sys.Time.$type;
 }

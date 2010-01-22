@@ -24,7 +24,7 @@ fan.sys.LogLevel.prototype.$ctor = function(ordinal, name)
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.LogLevel.prototype.type = function()
+fan.sys.LogLevel.prototype.$typeof = function()
 {
   return fan.sys.LogLevel.$type;
 }

@@ -38,7 +38,7 @@ fan.sys.List.prototype.$ctor = function()
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.List.prototype.type = function() { return this.m_of.toListOf(); }
+fan.sys.List.prototype.$typeof = function() { return this.m_of.toListOf(); }
 fan.sys.List.prototype.of = function() { return this.m_of; }
 
 fan.sys.List.prototype.isEmpty = function() { return this.m_size == 0; }

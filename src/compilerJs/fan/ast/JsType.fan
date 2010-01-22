@@ -69,7 +69,7 @@ class JsType : JsNode
 
     // type
     if (!isSynthetic)
-      out.w("${qname}.prototype.type = function() { return ${qname}.\$type; }").nl
+      out.w("${qname}.prototype.\$typeof = function() { return ${qname}.\$type; }").nl
 
     // slots
     methods.each |m| { m.write(out) }
