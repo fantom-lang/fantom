@@ -1341,7 +1341,7 @@ class CheckErrors : CompilerStep
     }
     expr.falseExpr = coerce(expr.falseExpr, expr.ctype) |->|
     {
-      err("Ternary falseexpr '$expr.falseExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.falseExpr.loc)
+      err("Ternary false expr '$expr.falseExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.falseExpr.loc)
     }
   }
 
@@ -1601,6 +1601,9 @@ class CheckErrors : CompilerStep
 
     // if the same type this is easy
     if (actual == expected) return expr
+
+    // if actual type is nothing, then its of no matter
+    if (actual.isNothing) return expr
 
     // we can never use a void expression
     if (actual.isVoid || expected.isVoid)

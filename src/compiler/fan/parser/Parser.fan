@@ -1235,7 +1235,16 @@ public class Parser : CompilerSupport
   **
   private Expr ifExprBody()
   {
-    condOrExpr
+    if (curt === Token.throwKeyword)
+    {
+      loc := cur
+      consume(Token.throwKeyword)
+      return ThrowExpr(loc, expr)
+    }
+    else
+    {
+      return condOrExpr
+    }
   }
 
   **

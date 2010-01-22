@@ -1594,6 +1594,32 @@ class DslExpr : Expr
 }
 
 **************************************************************************
+** ThrowExpr
+**************************************************************************
+
+**
+** ThrowExpr models throw as an expr versus a statement
+** for use inside ternary/elvis operations.
+**
+class ThrowExpr : Expr
+{
+  new make(Loc loc, Expr exception)
+    : super(loc, ExprId.throwExpr)
+  {
+    this.exception = exception
+  }
+
+  override Void walkChildren(Visitor v)
+  {
+    exception = exception.walk(v)
+  }
+
+  override Str toStr() { "throw $exception" }
+
+  Expr exception   // exception to throw
+}
+
+**************************************************************************
 ** ExprId
 **************************************************************************
 
@@ -1644,7 +1670,8 @@ enum ExprId
   ternary,          // TernaryExpr
   complexLiteral,   // ComplexLiteral
   closure,          // ClosureExpr
-  dsl               // DslExpr
+  dsl,              // DslExpr
+  throwExpr         // ThrowExpr
 }
 
 **************************************************************************

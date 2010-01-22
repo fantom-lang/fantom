@@ -289,6 +289,13 @@ mixin CType
   **
   public static CType common(CNamespace ns, CType[] types)
   {
+    // special handling for nothing
+    if (types.size == 2)
+    {
+      if (types[0].isNothing) return types[1]
+      if (types[1].isNothing) return types[0]
+    }
+
     if (types.isEmpty) return ns.objType.toNullable
     nullable := types[0].isNullable
     best := types[0].toNonNullable
@@ -384,6 +391,7 @@ mixin CType
   Bool isList()    { fits(ns.listType) }
   Bool isMap()     { fits(ns.mapType) }
   Bool isFunc()    { fits(ns.funcType) }
+  Bool isNothing() { this === ns.nothingType }
 
   ** Is this a valid type usable anywhere (such as local var)
   virtual Bool isValid() { !isVoid && !isThis }
