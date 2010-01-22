@@ -134,7 +134,7 @@ class ExampleIndexGenerator : HtmlGenerator
 {
 
   new make(DocCompiler compiler, OutStream out, Str contentStr)
-    : super(compiler, Location("example index"), out)
+    : super(compiler, Loc("example index"), out)
   {
     this.contentStr = contentStr
   }
