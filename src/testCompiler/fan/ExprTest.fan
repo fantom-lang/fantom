@@ -259,13 +259,13 @@ class ExprTest : CompilerTest
     verifyExpr("a.index(\"b\")?:-1", 1, "abc", null, "", true)
     verifyExpr("a.index(\"b\")?:-1", -1, "xyz", null, "", true)
 
-    verifyExpr("a ?: b ?: \"x\"", "foo", "foo", "bar", "", true)
-    verifyExpr("a ?: b ?: \"x\"", "foo", "foo", xNull, "", true)
-    verifyExpr("a ?: b ?: \"x\"", "bar", xNull, "bar", "", true)
-    verifyExpr("a ?: b ?: \"x\"", "x",   xNull, xNull, "", true)
+    verifyExpr("(a ?: b) ?: \"x\"", "foo", "foo", "bar", "", true)
+    verifyExpr("(a ?: b) ?: \"x\"", "foo", "foo", xNull, "", true)
+    verifyExpr("(a ?: b) ?: \"x\"", "bar", xNull, "bar", "", true)
+    verifyExpr("(a ?: b) ?: \"x\"", "x",   xNull, xNull, "", true)
 
-    verifyExpr("a ?: b < \"m\"", true, "a", "z", "", true)
-    verifyExpr("a ?: b < \"m\"", false, xNull, "z", "", true)
+    verifyExpr("(a ?: b) < \"m\"", true, "a", "z", "", true)
+    verifyExpr("(a ?: b) < \"m\"", false, xNull, "z", "", true)
   }
 
 //////////////////////////////////////////////////////////////////////////

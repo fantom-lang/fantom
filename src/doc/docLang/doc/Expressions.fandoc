@@ -16,12 +16,11 @@ Operators in order of precedence:
   - Multiplicative: '*   /   %'
   - Additive: '+   -'
   - Range: '..   ..<'
-  - Elvis: 'x ?: y'
   - Relational: '<   <=   >=   >   <=>   is   isnot   as'
   - Equality: '==   !=   ===   !=='
   - Conditional And: '&&'
   - Conditional Or: '||'
-  - Ternary: 'x ? t : f'
+  - If Expr: 'x?t:f   x?:y'
   - Assignment: '=   *=   /=   %=   +=   -='
   - Collection Add: ','
 
@@ -144,6 +143,11 @@ to 'falseExpr'.  Examples:
   3 > 4 ? "yes" : "no"  => evaluates to "no"
   6 > 4 ? "yes" : "no"  => evaluates to "yes"
 
+Fantom also supports use of a 'throw' statement as one of the results
+of a ternary operation:
+
+  val := isValid(key) ? map[key] : throw ArgErr("invalid key")
+
 Null Convenience Operators [#nullConvenience]
 *********************************************
 Fantom supports several of the operators found in Groovy to make
@@ -169,6 +173,11 @@ ternary operator:
 
 The elvis operator may not be used on a non-nullable type since
 by definition it will not be null.
+
+Like the [ternary]`#ternary` operator the elvis operator may use
+a 'throw' statement as the right hand side of the expression:
+
+  val := map[key] ?: throw ArgErr("key not found")
 
 Safe Invoke [#safeInvoke]
 =========================
