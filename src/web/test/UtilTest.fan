@@ -143,4 +143,83 @@ class UtilTest : Test
     verifyEq(in.read, null)
   }
 
+  Void testParseMultiPart()
+  {
+    // couple empty posts
+    s :=
+    """------WebKitFormBoundaryvx0NalAyBZjdpZAe
+       Content-Disposition: form-data; name="file1"; filename="empty.txt"
+
+
+       ------WebKitFormBoundaryvx0NalAyBZjdpZAe
+       Content-Disposition: form-data; name="file2"; filename="empty.txt"
+
+
+       ------WebKitFormBoundaryvx0NalAyBZjdpZAe--
+       """
+
+    boundary := "----WebKitFormBoundaryvx0NalAyBZjdpZAe"
+    WebUtil.parseMultiPart(s.replace("\n", "\r\n").in, boundary) |h, in|
+    {
+      verify(h["Content-Disposition"].startsWith("form-data"))
+      verifyEq(in.readAllStr, "")
+    }
+
+    // test real post from IE using test data below
+    boundary = "---------------------------7dacb195e0632"
+    base64 :=
+      "LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS03ZGFjYjE5NWUwNjMyDQpDb250ZW5
+       0LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9ImZpbGUxIjsgZmlsZW5hbWU9Ik
+       M6XGRldlxmYW5cbXVsdGlwYXJ0LWEudHh0Ig0KQ29udGVudC1UeXBlOiB0ZXh0L3BsY
+       WluDQoNCmZvbyBiYXINCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tN2RhY2Ix
+       OTVlMDYzMg0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJmaWx
+       lMiI7IGZpbGVuYW1lPSJDOlxkZXZcZmFuXG11bHRpcGFydC1iLnR4dCINCkNvbnRlbn
+       QtVHlwZTogdGV4dC9wbGFpbg0KDQoAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobH
+       B0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Ojs8PT4/QEFCQ0RFRkdISUpLTE1O
+       T1BRUlNUVVZXWFlaW1xdXl9gYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXp7fH1+f4C
+       BgoOEhYaHiImKi4yNjo+QkZKTlJWWl5iZmpucnZ6foKGio6SlpqeoqaqrrK2ur7Cxsr
+       O0tba3uLm6u7y9vr/AwcLDxMXGxw0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tL
+       S03ZGFjYjE5NWUwNjMyDQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5h
+       bWU9ImZpbGUzIjsgZmlsZW5hbWU9IkM6XGRldlxmYW5cbXVsdGlwYXJ0LWMudHh0Ig0
+       KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluDQoNCi0tLS0tLS0NCi0tLS0tLS0NCi0tLS
+       0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tN2RhY2IxOTVlMDYzMi0tDQo="
+    count := 0
+    WebUtil.parseMultiPart(Buf.fromBase64(base64).in, boundary) |h, in|
+    {
+      switch (count++)
+      {
+        // verify no extra newlines
+        case 0:
+          verifyEq(in.readAllStr, "foo bar")
+
+        // verify binary data, readBuf, and unread
+        case 1:
+          100.times |i| { verifyEq(in.readU1, i) }
+          in.unread(0xab).unread(0xcd)
+          verifyEq(in.readU2, 0xcdab)
+          buf := Buf()
+          in.readBufFully(buf, 100)
+          100.times |i| { verifyEq(buf[i], 100+i) }
+          verifyNull(in.read)
+
+        // verify data that might look like boundaries
+        case 2:
+          verifyEq(in.readAllStr(false), "-------\r\n-------")
+      }
+    }
+
+  }
+
+  // generate test files for testParseMultiPart
+  static Void main(Str[] args)
+  {
+    `multipart-a`.toFile.out.print("foo bar").close
+
+    out := `multipart-b`.toFile.out
+    200.times |i| { out.write(i) }
+    out.close
+
+    `multipart-c`.toFile.out.print("-------\r\n-------").close
+  }
+
 }

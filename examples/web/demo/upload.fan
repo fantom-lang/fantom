@@ -28,10 +28,10 @@ const class UploadMod : WebMod
 
     // get boundary string
     mime := MimeType(req.headers["Content-Type"])
-    boundry := mime.params["boundary"] ?: throw IOErr("Missing boundary param: $mime")
+    boundary := mime.params["boundary"] ?: throw IOErr("Missing boundary param: $mime")
 
     // process each multi-part
-    WebUtil.parseMultiPartForm(req.in, boundry) |headers, in|
+    WebUtil.parseMultiPart(req.in, boundary) |headers, in|
     {
       // pick one of these (but not both!)
       //echoPart(headers, in)
