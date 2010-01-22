@@ -293,7 +293,7 @@ class WebUtil
   ** must completely drain the input stream to prepare for the next
   ** part.
   **
-  static Void parseMultiPartForm(InStream in, Str boundary, |Str:Str headers, InStream in| cb)
+  static Void parseMultiPart(InStream in, Str boundary, |Str:Str headers, InStream in| cb)
   {
     boundary = "--" + boundary
     line := in.readLine
@@ -578,8 +578,14 @@ internal class MultiPartInStream : InStream
     for (i:=0; i<boundary.size; ++i)
     {
       c := in.readU1
+      if (c != boundary[i])
+      {
+        if (c == '\r') in.unread(c)
+        else curLine.write(c)
+        curLine.seek(0)
+        return true
+      }
       curLine.write(c)
-      if (c != boundary[i]) { curLine.seek(0); return true }
     }
 
     // we have boundary match, so now figure out if end of parts
