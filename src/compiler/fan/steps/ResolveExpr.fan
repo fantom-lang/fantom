@@ -184,6 +184,7 @@ class ResolveExpr : CompilerStep
       case ExprId.ternary:         resolveTernary(expr)
       case ExprId.closure:         resolveClosure(expr)
       case ExprId.dsl:             return resolveDsl(expr)
+      case ExprId.throwExpr:       expr.ctype = ns.nothingType
     }
 
     return expr

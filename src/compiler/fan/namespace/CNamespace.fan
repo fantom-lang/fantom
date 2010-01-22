@@ -40,6 +40,9 @@ abstract class CNamespace : CompilerSupport
     // error placeholder type
     error = GenericParameterType(this, "Error")
 
+    // nothing placeholder type
+    nothingType = GenericParameterType(this, "Nothing")
+
     // generic parameter types
     genericParams =
     [
@@ -272,6 +275,9 @@ abstract class CNamespace : CompilerSupport
 
   // place holder type used for resolve errors
   readonly CType? error
+
+  // place holder type used to indicate nothing (like throw expr)
+  readonly CType? nothingType
 
   // generic type for it block until we can infer type
   readonly FuncType? itBlockType

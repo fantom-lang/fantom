@@ -142,9 +142,11 @@ class CodeAsm : CompilerSupport
     op(FOp.Return)
   }
 
-  private Void throwStmt(ThrowStmt stmt)
+  private Void throwStmt(ThrowStmt stmt) { throwOp(stmt.exception) }
+
+  private Void throwOp(Expr exception)
   {
-    expr(stmt.exception)
+    expr(exception)
     op(FOp.Throw)
   }
 
@@ -651,6 +653,7 @@ class CodeAsm : CompilerSupport
       case ExprId.closure:         closure(expr)
       case ExprId.ternary:         ternary(expr)
       case ExprId.staticTarget:    return
+      case ExprId.throwExpr:       throwOp(((ThrowExpr)expr).exception)
       default:                     throw Err(expr.id.toStr)
     }
   }
