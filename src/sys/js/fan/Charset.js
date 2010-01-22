@@ -13,7 +13,7 @@
 fan.sys.Charset = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.sys.Charset.prototype.$ctor = function() {}
-fan.sys.Charset.prototype.type = function() { return fan.sys.Charset.$type; }
+fan.sys.Charset.prototype.$typeof = function() { return fan.sys.Charset.$type; }
 
 // TODO
 fan.sys.Charset.utf16BE = function() { return null; }

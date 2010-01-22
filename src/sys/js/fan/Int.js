@@ -17,7 +17,7 @@ fan.sys.Int = fan.sys.Obj.$extend(fan.sys.Num);
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.Int.prototype.$ctor = function() {}
-fan.sys.Int.prototype.type = function() { return fan.sys.Int.$type; }
+fan.sys.Int.prototype.$typeof = function() { return fan.sys.Int.$type; }
 
 fan.sys.Int.make = function(val) { return val; }
 

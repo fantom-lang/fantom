@@ -161,14 +161,14 @@ class ShowScript : Weblet
   Void compile()
   {
     input := CompilerInput.make
-    input.podName        = file.basename
-    input.version        = Version("0")
-    input.log.level      = LogLevel.err
-    input.isScript       = true
-    input.srcStr         = file.readAllStr
-    input.srcStrLocation = Location.makeFile(file)
-    input.mode           = CompilerInputMode.str
-    input.output         = CompilerOutputMode.str
+    input.podName   = file.basename
+    input.version   = Version("0")
+    input.log.level = LogLevel.err
+    input.isScript  = true
+    input.srcStr    = file.readAllStr
+    input.srcStrLoc = Loc.makeFile(file)
+    input.mode      = CompilerInputMode.str
+    input.output    = CompilerOutputMode.str
     this.compiler = JsCompiler(input)
     this.js = compiler.compile.str
   }

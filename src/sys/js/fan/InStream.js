@@ -32,7 +32,7 @@ fan.sys.InStream.prototype.read = function()
   catch (err)
   {
     if (this.$in == null)
-      throw fan.sys.UnsupportedErr.make(this.type().qname() + " wraps null InStream");
+      throw fan.sys.UnsupportedErr.make(this.$typeof().qname() + " wraps null InStream");
     else
       throw fan.sys.Err.make(err);
   }
@@ -76,7 +76,7 @@ fan.sys.InStream.prototype.readChar = function()
   catch (err)
   {
     if (this.$in == null)
-      throw fan.sys.UnsupportedErr.make(this.type().qname() + " wraps null InStream");
+      throw fan.sys.UnsupportedErr.make(this.$typeof().qname() + " wraps null InStream");
     else
       throw fan.sys.Err.make(err);
   }
@@ -91,7 +91,7 @@ fan.sys.InStream.prototype.unreadChar = function(c)
   catch (err)
   {
     if (this.$in == null)
-      throw fan.sys.UnsupportedErr.make(this.type().qname() + " wraps null InStream");
+      throw fan.sys.UnsupportedErr.make(this.$typeof().qname() + " wraps null InStream");
     else
       throw fan.sys.Err.make(err);
   }
@@ -205,7 +205,7 @@ fan.sys.InStream.prototype.close = function()
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.InStream.prototype.type = function()
+fan.sys.InStream.prototype.$typeof = function()
 {
   return fan.sys.InStream.$type;
 }

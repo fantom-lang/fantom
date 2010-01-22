@@ -85,6 +85,7 @@ abstract class JsNode
     "fan":    true,
     "import": true,
     "in":     true,
+    "typeof": true,
     "var":    true,
     "with":   true
   ].toImmutable

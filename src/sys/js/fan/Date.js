@@ -52,7 +52,7 @@ fan.sys.Date.prototype.compare = function(that)
   return this.m_year < that.m_year ? -1 : +1;
 }
 
-fan.sys.Date.prototype.type = function()
+fan.sys.Date.prototype.$typeof = function()
 {
   return fan.sys.Date.$type;
 }

@@ -22,7 +22,7 @@ fan.sys.OutStream.prototype.make$ = function(out) { this.out = out; }
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.OutStream.prototype.type = function() { return fan.sys.OutStream.$type; }
+fan.sys.OutStream.prototype.$typeof = function() { return fan.sys.OutStream.$type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Java OutputStream
@@ -54,7 +54,7 @@ fan.sys.OutStream.prototype.write = function(x) // long
   catch (err)
   {
     if (this.out == null)
-      throw fan.sys.UnsupportedErr.make(this.type().qname() + " wraps null OutStream");
+      throw fan.sys.UnsupportedErr.make(this.$typeof().qname() + " wraps null OutStream");
     else
       throw err;
   }
@@ -71,7 +71,7 @@ fan.sys.OutStream.prototype.writeBuf = function(buf, n)
   catch (err)
   {
     if (this.out == null)
-      throw fan.sys.UnsupportedErr.make(this.type().qname() + " wraps null OutStream");
+      throw fan.sys.UnsupportedErr.make(this.$typeof().qname() + " wraps null OutStream");
     else
       throw err;
   }

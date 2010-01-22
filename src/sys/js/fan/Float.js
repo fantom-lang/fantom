@@ -25,7 +25,7 @@ fan.sys.Float.make = function(val)
   return x;
 }
 
-fan.sys.Float.prototype.type = function()
+fan.sys.Float.prototype.$typeof = function()
 {
   return fan.sys.Float.$type;
 }

@@ -12,6 +12,6 @@
 fan.sys.Locale = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.sys.Locale.prototype.$ctor = function() {}
-fan.sys.Locale.prototype.type = function() { return fan.sys.Locale.$type; }
+fan.sys.Locale.prototype.$typeof = function() { return fan.sys.Locale.$type; }
 
 fan.sys.Locale.cur = function() { return null; }

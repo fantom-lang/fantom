@@ -51,7 +51,7 @@ fan.sys.Month.prototype.numDays = function(year)
     return fan.sys.DateTime.daysInMon[this.m_ordinal];
 }
 
-fan.sys.Month.prototype.type = function()
+fan.sys.Month.prototype.$typeof = function()
 {
   return fan.sys.Month.$type;
 }

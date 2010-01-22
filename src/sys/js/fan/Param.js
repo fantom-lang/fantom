@@ -30,5 +30,5 @@ fan.sys.Param.prototype.$ctor = function(name, of, hasDefault)
 fan.sys.Param.prototype.name = function() { return this.m_name; }
 fan.sys.Param.prototype.of = function() { return this.m_of; }
 fan.sys.Param.prototype.hasDefault = function() { return this.m_hasDefault; }
-fan.sys.Param.prototype.type = function() { return fan.sys.Param.$type; }
+fan.sys.Param.prototype.$typeof = function() { return fan.sys.Param.$type; }
 

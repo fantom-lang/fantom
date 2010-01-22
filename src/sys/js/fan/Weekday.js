@@ -43,7 +43,7 @@ fan.sys.Weekday.prototype.decrement = function()
   return this.m_ordinal == 0 ? arr.get(arr.size()-1) : arr.get(this.m_ordinal-1);
 }
 
-fan.sys.Weekday.prototype.type = function()
+fan.sys.Weekday.prototype.$typeof = function()
 {
   return fan.sys.Weekday.$type;
 }

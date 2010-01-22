@@ -11,7 +11,7 @@
  */
 fan.sys.Actor = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.sys.Actor.prototype.$ctor = function() {}
-fan.sys.Actor.prototype.type = function() { return fan.sys.Actor.$type; }
+fan.sys.Actor.prototype.$typeof = function() { return fan.sys.Actor.$type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods

@@ -120,5 +120,5 @@ fan.sys.Field.prototype.set = function(instance, value, checkConst)
   }
 }
 
-fan.sys.Field.prototype.type = function() { return fan.sys.Field.$type; }
+fan.sys.Field.prototype.$typeof = function() { return fan.sys.Field.$type; }
 

@@ -25,7 +25,7 @@ fan.sys.StrBuf.prototype.$ctor = function()
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.StrBuf.prototype.type = function()
+fan.sys.StrBuf.prototype.$typeof = function()
 {
   return fan.sys.StrBuf.$type;
 }

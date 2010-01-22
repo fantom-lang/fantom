@@ -23,7 +23,7 @@ fan.sys.Endian.fromStr = function(name, checked)
   return fan.sys.Enum.doFromStr(fan.sys.Endian.$type, name, checked);
 }
 
-fan.sys.Endian.prototype.type = function()
+fan.sys.Endian.prototype.$typeof = function()
 {
   return fan.sys.Endian.$type;
 }

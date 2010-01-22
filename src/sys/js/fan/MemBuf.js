@@ -36,7 +36,7 @@ fan.sys.MemBuf.makeBytes = function(bytes)
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.MemBuf.prototype.type = function() { return fan.sys.MemBuf.$type; }
+fan.sys.MemBuf.prototype.$typeof = function() { return fan.sys.MemBuf.$type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Buf Support

@@ -374,7 +374,7 @@ fan.sys.DateTime.prototype.compare = function(obj)
   if (this.m_ticks < that) return -1; return this.m_ticks  == that ? 0 : +1;
 }
 
-fan.sys.DateTime.prototype.type = function()
+fan.sys.DateTime.prototype.$typeof = function()
 {
   return fan.sys.DateTime.$type;
 }

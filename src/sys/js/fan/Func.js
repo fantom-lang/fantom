@@ -43,7 +43,7 @@ fan.sys.Func.make$ = function(self, params, ret, func)
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Func.prototype.type = function() { return this.m_type; }
+fan.sys.Func.prototype.$typeof = function() { return this.m_type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods

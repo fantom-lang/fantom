@@ -710,7 +710,7 @@ fan.sys.UriEncoder.percentEncodeByte = function(buf, c)
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Uri.prototype.type = function()
+fan.sys.Uri.prototype.$typeof = function()
 {
   return fan.sys.Uri.$type;
 }

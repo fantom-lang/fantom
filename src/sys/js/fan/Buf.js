@@ -30,10 +30,10 @@ fan.sys.Buf.prototype.equals = function(that)
 
 fan.sys.Buf.prototype.toStr = function()
 {
-  return this.type().name() + "(pos=" + this.pos() + " size=" + this.size() + ")";
+  return this.$typeof().name() + "(pos=" + this.pos() + " size=" + this.size() + ")";
 }
 
-fan.sys.Buf.prototype.type = function()
+fan.sys.Buf.prototype.$typeof = function()
 {
   return fan.sys.Buf.$type;
 }
@@ -313,7 +313,7 @@ for (var i=10; i<16; ++i) fan.sys.Buf.hexInv[97+i-10] = fan.sys.Buf.hexInv[65+i-
 
 fan.sys.Buf.prototype.toBase64 = function()
 {
-  throw fan.sys.UnsupportedErr.make(this.type()+".toBase64");
+  throw fan.sys.UnsupportedErr.make(this.$typeof()+".toBase64");
 }
 
 fan.sys.Buf.fromBase64 = function(s)

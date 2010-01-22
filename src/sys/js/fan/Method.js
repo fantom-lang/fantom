@@ -37,7 +37,7 @@ fan.sys.Method.prototype.invoke = function(instance, args)
   return func.apply(instance, args.m_values);
 }
 
-fan.sys.Method.prototype.type = function()
+fan.sys.Method.prototype.$typeof = function()
 {
   return fan.sys.Method.$type;
 }

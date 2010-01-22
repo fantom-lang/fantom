@@ -140,7 +140,7 @@ fan.sys.Duration.prototype.compare = function(that)
   return +1;
 }
 
-fan.sys.Duration.prototype.type = function()
+fan.sys.Duration.prototype.$typeof = function()
 {
   return fan.sys.Duration.$type;
 }

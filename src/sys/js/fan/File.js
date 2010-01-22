@@ -12,7 +12,7 @@
 fan.sys.File = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.sys.File.prototype.$ctor = function() {}
-fan.sys.File.prototype.type = function() { return fan.sys.File.$type; }
+fan.sys.File.prototype.$typeof = function() { return fan.sys.File.$type; }
 
 fan.sys.File.prototype.exists = function() { return true; }
 

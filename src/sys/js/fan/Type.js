@@ -97,7 +97,7 @@ fan.sys.Type.prototype.isMixin = function()   { return this.m_isMixin; }
 fan.sys.Type.prototype.log = function()       { return fan.sys.Log.get(this.m_pod.m_name); }
 fan.sys.Type.prototype.toStr = function()     { return this.signature(); }
 fan.sys.Type.prototype.toLocale = function()  { return this.signature(); }
-fan.sys.Type.prototype.type = function()      { return fan.sys.Type.$type; }
+fan.sys.Type.prototype.$typeof = function()   { return fan.sys.Type.$type; }
 
 fan.sys.Type.prototype.toListOf = function()
 {
@@ -332,7 +332,7 @@ fan.sys.Type.find = function(sig, checked)
 fan.sys.Type.of = function(obj)
 {
   if (obj instanceof fan.sys.Obj)
-    return obj.type();
+    return obj.$typeof();
   else
     return fan.sys.Type.toFanType(obj);
 }

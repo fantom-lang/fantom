@@ -69,7 +69,7 @@ fan.sys.Map.prototype.hash = function()
   return 0;
 }
 
-fan.sys.Map.prototype.type = function()
+fan.sys.Map.prototype.$typeof = function()
 {
   return this.m_type;
 }
