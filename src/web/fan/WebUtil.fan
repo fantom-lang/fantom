@@ -283,6 +283,32 @@ class WebUtil
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Multi-Part Forms
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Parse a multipart/form-data input stream.  For each part in the
+  ** stream call the given callback function with the part's headers
+  ** and an input stream used to read the part's body.  Each callback
+  ** must completely drain the input stream to prepare for the next
+  ** part.
+  **
+  static Void parseMultiPartForm(InStream in, Str boundary, |Str:Str headers, InStream in| cb)
+  {
+    boundary = "--" + boundary
+    line := in.readLine
+    if (line == boundary + "--") return
+    if (line != boundary) throw IOErr("Expecting boundry line $boundary.toCode")
+    while (true)
+    {
+      headers := parseHeaders(in)
+      partIn := MultiPartInStream(in, boundary)
+      cb(headers, partIn)
+      if (partIn.endOfParts) break
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
@@ -489,3 +515,94 @@ internal class ChunkOutStream : OutStream
   Buf? buffer      // buffer for bytes
   Bool closed      // have we written final close chunk?
 }
+
+**************************************************************************
+** MultiPartInStream
+**************************************************************************
+
+internal class MultiPartInStream : InStream
+{
+  new make(InStream in, Str boundary) : super(null)
+  {
+    this.in = in
+    this.boundary = boundary
+    this.curLine = Buf(1024)
+  }
+
+  override Int? read()
+  {
+    if (pushback != null && !pushback.isEmpty) return pushback.pop
+    if (!checkLine) return null
+    return curLine.read
+  }
+
+  override Int? readBuf(Buf buf, Int n)
+  {
+    if (pushback != null && !pushback.isEmpty && n > 0)
+    {
+      buf.write(pushback.pop)
+      return 1
+    }
+    if (!checkLine) return null
+    return curLine.readBuf(buf, n)
+  }
+
+  override This unread(Int b)
+  {
+    if (pushback == null) pushback = Int[,]
+    pushback.push(b)
+    return this
+  }
+
+  private Bool checkLine()
+  {
+    // if we have bytes remaining in this line return true
+    if (curLine.remaining > 0) return true
+
+    // if we have read boundary, then this part is complete
+    if (endOfPart) return false
+
+    // read the next line or 1000 bytes into curLine buf
+    curLine.clear
+    for (i:=0; i<1024; ++i)
+    {
+      c := in.readU1
+      curLine.write(c)
+      if (c == '\n') break
+    }
+
+    // if not a property \r\n newline then keep chugging
+    if (curLine.size < 2 || curLine[-2] != '\r') { curLine.seek(0); return true }
+
+    // go ahead and keep reading as long as we have boundary match
+    for (i:=0; i<boundary.size; ++i)
+    {
+      c := in.readU1
+      curLine.write(c)
+      if (c != boundary[i]) { curLine.seek(0); return true }
+    }
+
+    // we have boundary match, so now figure out if end of parts
+    curLine.size = curLine.size - boundary.size - 2
+    c1 := in.readU1
+    c2 := in.readU1
+    if (c1 == '-' && c2 == '-')
+    {
+      endOfParts = true
+      c1 = in.readU1
+      c2 = in.readU1
+    }
+    if (c1 != '\r' || c2 != '\n') throw IOErr("Fishy boundary " + (c1.toChar + c2.toChar).toCode('"', true))
+    endOfPart = true
+    curLine.seek(0)
+    return curLine.size > 0
+  }
+
+  InStream in
+  Str boundary
+  Buf curLine
+  Int[]? pushback     // stack for unread
+  Bool endOfPart
+  Bool endOfParts
+}
+
