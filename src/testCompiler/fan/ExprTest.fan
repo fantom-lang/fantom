@@ -269,6 +269,33 @@ class ExprTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Throw Expr
+//////////////////////////////////////////////////////////////////////////
+
+  Void testThrowExpr()
+  {
+    compile(
+     "class Foo
+      {
+        Str a(Int x) { v := x.isOdd ? x + 100 : throw ArgErr(); return v.toHex }
+        Str b(Int x) { v := x.isOdd ? throw ArgErr() : x + 100; return v.toHex }
+        Str c(Int x) { x.isOdd ? throw ReadonlyErr() : throw IOErr() }
+        Str d(Str x) { v := Int.fromStr(x, 10, false) ?: throw IOErr(); return v.toHex }
+      }
+      ")
+
+     o := pod.types.first.make
+     verifyEq(o->a(5), 105.toHex)
+     verifyErr(ArgErr#) { o->a(4) }
+     verifyEq(o->b(4), 104.toHex)
+     verifyErr(ArgErr#) { o->b(5) }
+     verifyErr(ReadonlyErr#) { o->c(3) }
+     verifyErr(IOErr#) { o->c(4) }
+     verifyEq(o->d("45"), 45.toHex)
+     verifyErr(IOErr#) { o->d("xyz") }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Shortcuts
 //////////////////////////////////////////////////////////////////////////
 
