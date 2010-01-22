@@ -64,6 +64,7 @@ abstract class JsExpr : JsNode
       case ExprId.superExpr:       return JsSuperExpr(s, expr)
       case ExprId.itExpr:          return JsItExpr(s)
       case ExprId.staticTarget:    return JsStaticTargetExpr(s, expr)
+      case ExprId.throwExpr:       return JsThrowExpr(s, expr)
 
       // Not implemented
       //case ExprId.unknownVar
@@ -515,9 +516,17 @@ class JsTernaryExpr : JsExpr
   }
   override Void write(JsWriter out)
   {
-    out.w("(("); condition.write(out); out.w(") ? ")
-    out.w("(");  trueExpr.write(out);  out.w(") : ")
-    out.w("(");  falseExpr.write(out); out.w("))")
+    var := unique
+    old := thisName
+    thisName = "\$this"
+    out.w("(function(\$this) { ")
+    out.w("if ("); condition.write(out); out.w(") ")
+    if (trueExpr isnot JsThrowExpr) out.w("return ")
+    trueExpr.write(out); out.w("; ")
+    if (falseExpr isnot JsThrowExpr) out.w("return ")
+    falseExpr.write(out); out.w("; ")
+    out.w("})($old)")
+    thisName = old
   }
   JsExpr condition
   JsExpr trueExpr
@@ -542,7 +551,8 @@ class JsElvisExpr : JsExpr
     thisName = "\$this"
     out.w("(function(\$this) { var $var = ")
     lhs.write(out)
-    out.w("; if ($var != null) return $var; return ")
+    out.w("; if ($var != null) return $var; ")
+    if (rhs isnot JsThrowExpr) out.w("return ")
     rhs.write(out)
     out.w("; })($old)")
     thisName = old
@@ -910,4 +920,21 @@ class JsClosureExpr : JsExpr
   JsMethod? func  // the func for this closure
 }
 
+**************************************************************************
+** JsThrowExpr
+**************************************************************************
+
+class JsThrowExpr : JsExpr
+{
+  new make(CompilerSupport s, ThrowExpr te) : super(s)
+  {
+    this.exception = JsExpr.makeFor(s, te.exception)
+  }
+  override Void write(JsWriter out)
+  {
+    out.w("throw ")
+    exception.write(out)
+  }
+  JsExpr exception  // the exception to throw
+}
 
