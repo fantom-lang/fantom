@@ -322,10 +322,10 @@ class FuncType : GenericType
   ParamDef[] toParamDefs(Loc loc)
   {
     p := ParamDef[,]
-    p.size = params.size
+    p.capacity = params.size
     for (i:=0; i<params.size; ++i)
     {
-      p[i] = ParamDef(loc, params[i], names[i])
+      p.add(ParamDef(loc, params[i], names[i]))
     }
     return p
   }

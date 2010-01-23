@@ -123,6 +123,7 @@ public final class List
     int newSize = (int)s;
     if (newSize > size)
     {
+      if (!of.isNullable()) throw ArgErr.make("Cannot grow non-nullable list of " + of).val;
       Object[] temp = newArray(newSize);
       System.arraycopy(values, 0, temp, 0, size);
       values = temp;

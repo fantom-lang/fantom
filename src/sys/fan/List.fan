@@ -71,13 +71,18 @@ final class List
   Bool isEmpty()
 
   **
-  ** The number of items in the list.  If the size is set greater than
-  ** the current size then the list is automatically grown to be a sparse
-  ** list with new items defaulting to null.  If the size is set less than
-  ** the current size then any items with indices past the new size are
-  ** automatically removed.  Changing size automatically allocates new
-  ** storage so that capacity exactly matches the new size.  Getting size
-  ** is idempotent, setting size throws ReadonlyErr if readonly.
+  ** The number of items in the list.  Getting size is idempotent,
+  ** setting size throws ReadonlyErr if readonly.
+  **
+  ** If the size is set greater than the current size then the list is
+  ** automatically grown to be a sparse list with new items defaulting
+  ** to null.  However if this is a non-nullable list, then growing a
+  ** list will throw ArgErr.
+  **
+  ** If the size is set less than the current size then any items with
+  ** indices past the new size are automatically removed.  Changing size
+  ** automatically allocates new storage so that capacity exactly matches
+  ** the new size.
   **
   Int size
 

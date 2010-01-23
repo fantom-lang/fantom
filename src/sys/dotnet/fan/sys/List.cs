@@ -115,6 +115,7 @@ namespace Fan.Sys
       int newSize = (int)s;
       if (newSize > m_size)
       {
+        if (!m_of.isNullable()) throw ArgErr.make("Cannot grow non-nullable list of " + m_of).val;
         object[] temp = new object[newSize];
         Array.Copy(m_values, 0, temp, 0, m_size);
         m_values = temp;
