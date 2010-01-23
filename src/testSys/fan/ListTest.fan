@@ -461,6 +461,11 @@ class ListTest : Test
     verifyEq(x.size, 1)
     verifyEq(x.capacity, 1)
     verifyEq(x, Str?["x"])
+
+    y := ["a", "b", "c"]
+    y.size = 2
+    verifyEq(y, ["a", "b"])
+    verifyErr(ArgErr#) { y.size = 3 }
   }
 
 //////////////////////////////////////////////////////////////////////////

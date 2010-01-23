@@ -371,7 +371,7 @@ class CodeAsm : CompilerSupport
 
     // now allocate our jump table
     count := max - min + 1
-    jumps := Case[,]
+    jumps := Case?[,]
     jumps.size = count
 
     // walk thru each case, and map the jump offset to a block
@@ -399,7 +399,7 @@ class CodeAsm : CompilerSupport
     defaultEnd := switchBlock(stmt.defaultBlock)
 
     // now write each case block
-    caseEnds := Int[,]
+    caseEnds := Int?[,]
     caseEnds.size = stmt.cases.size
     stmt.cases.each |Case c, Int i|
     {
@@ -456,7 +456,7 @@ class CodeAsm : CompilerSupport
     defaultEnd := switchBlock(stmt.defaultBlock, condition.ctype)
 
     // now write each case block
-    caseEnds := Int[,]
+    caseEnds := Int?[,]
     caseEnds.size = stmt.cases.size
     stmt.cases.each |Case c, Int i|
     {
@@ -531,7 +531,7 @@ class CodeAsm : CompilerSupport
     }
 
     // assemble catch blocks
-    catchDones := Int[,]
+    catchDones := Int?[,]
     catchDones.size = stmt.catches.size
     stmt.catches.each |Catch c, Int i|
     {

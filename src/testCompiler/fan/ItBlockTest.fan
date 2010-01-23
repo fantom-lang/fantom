@@ -25,7 +25,7 @@ class ItBlockTest : CompilerTest
         static Obj b() { return Foo.make { i = 9; j += 6 } }
         static Obj c() { return Foo.make { inc } }
         static Obj d() { return Foo { i = 10; j = 11; inc } }
-        static Obj e() { return Str[,] { size = 33 } }
+        static Obj e() { return Str?[,] { size = 33 } }
         static Obj f()
         {
           return Foo
@@ -72,7 +72,7 @@ class ItBlockTest : CompilerTest
      verifyEq(x->j, 12)
 
      x = t.method("e").call
-     verifyEq(x->typeof, Str[]#)
+     verifyEq(x->typeof, Str?[]#)
      verifyEq(x->size, 33)
      verifyEq(x->capacity, 33)
 
