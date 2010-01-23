@@ -1964,8 +1964,8 @@ public class Parser : CompilerSupport
     // otherwise this can only be a FuncType declaration,
     // so give it a whirl, and bail if that fails
     mark := pos
-    funcType := (FuncType?)tryType
-    if (funcType == null) return null
+    funcType := tryType as FuncType
+    if (funcType == null) { reset(mark); return null }
 
     // if we don't see opening brace for body - no go
     if (curt !== Token.lbrace) { reset(mark); return null }
