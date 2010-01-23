@@ -84,7 +84,7 @@ namespace Fan.Sys
   // Access
   //////////////////////////////////////////////////////////////////////////
 
-    public bool empty()
+    public bool isEmpty()
     {
       return getSize() == 0;
     }

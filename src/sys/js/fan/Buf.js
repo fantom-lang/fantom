@@ -42,7 +42,7 @@ fan.sys.Buf.prototype.$typeof = function()
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Buf.prototype.empty = function() { return this.size() == 0; }
+fan.sys.Buf.prototype.isEmpty = function() { return this.size() == 0; }
 
 fan.sys.Buf.prototype.capacity = function() { return fan.sys.Int.m_maxVal; }
 //fan.sys.Buf.prototype.capacity$ = function(long c) {}
