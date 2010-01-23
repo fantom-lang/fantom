@@ -836,6 +836,18 @@ namespace Fan.Sys
       return this;
     }
 
+    public List moveTo(object item, long toIndex)
+    {
+      modify();
+      Long curIndex = index(item);
+      if (curIndex == null) return this;
+      if (curIndex.longValue() == toIndex) return this;
+      removeAt(curIndex.longValue());
+      if (toIndex == -1) return add(item);
+      if (toIndex < 0) ++toIndex;
+      return insert(toIndex, item);
+    }
+
     public List flatten()
     {
       List acc = new List(Sys.ObjType.toNullable(), m_size*2);
