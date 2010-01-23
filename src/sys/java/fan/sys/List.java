@@ -920,6 +920,18 @@ public final class List
     return this;
   }
 
+  public final List moveTo(Object item, long toIndex)
+  {
+    modify();
+    Long curIndex = index(item);
+    if (curIndex == null) return this;
+    if (curIndex == toIndex) return this;
+    removeAt(curIndex);
+    if (toIndex == -1) return add(item);
+    if (toIndex < 0) ++toIndex;
+    return insert(toIndex, item);
+  }
+
   public final List flatten()
   {
     List acc = new List(Sys.ObjType.toNullable(), size*2);

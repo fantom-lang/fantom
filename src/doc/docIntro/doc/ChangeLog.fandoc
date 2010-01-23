@@ -8,8 +8,8 @@
 
 *Build 1.0.49 (working)*
 - Obj.type => typeof
-- List.containsAny
-- Remove List.containsSame, containsAllSame
+- List added: containsAny, moveTo
+- List removed: containsSame, containsAllSame
 - Buf.empty => isEmpty
 - Test.id => curTestMethod
 - DateTime, Time: isMidnight
