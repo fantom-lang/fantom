@@ -89,11 +89,6 @@ fan.sys.List.prototype.contains = function(value)
   return this.index(value) != null;
 }
 
-fan.sys.List.prototype.containsSame = function(value)
-{
-  return this.indexSame(value) != null;
-}
-
 fan.sys.List.prototype.containsAll = function(list)
 {
   for (var i=0; i<list.size(); ++i)
@@ -102,12 +97,12 @@ fan.sys.List.prototype.containsAll = function(list)
   return true;
 }
 
-fan.sys.List.prototype.containsAllSame = function(list)
+fan.sys.List.prototype.containsAny = function(list)
 {
   for (var i=0; i<list.size(); ++i)
-    if (this.index(list.get(i)) == null)
-      return false;
-  return true;
+    if (this.index(list.get(i)) != null)
+      return true;
+  return false;
 }
 
 fan.sys.List.prototype.index = function(value, off)

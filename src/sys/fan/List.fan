@@ -111,7 +111,7 @@ final class List
   **
   ** Return a sub-list based on the specified range.  Negative indexes
   ** may be used to access from the end of the list.  This method
-  ** is accessed via the [] operator.  This method is idempotent.
+  ** is accessed via the '[]' operator.  This method is idempotent.
   ** Throw IndexErr if range illegal.
   **
   ** Examples:
@@ -125,35 +125,27 @@ final class List
   L slice(Range range)
 
   **
-  ** Return if this list contains the specified item using
-  ** the == operator (shortcut for equals method) to check
-  ** for equality.  This method is idempotent.
+  ** Return if this list contains the specified item.
+  ** Equality is determined by `Obj.equals`.  This method is idempotent.
   **
   Bool contains(V item)
 
   **
-  ** Return if this list contains the specified item using
-  ** the === same operator.  This method is idempotent.
-  **
-  Bool containsSame(V item)
-
-  **
-  ** Return if this list contains every item in the specified
-  ** list using the == operator (shortcut for equals method).
-  ** This method is idempotent.
+  ** Return if this list contains every item in the specified list.
+  ** Equality is determined by `Obj.equals`.  This method is idempotent.
   **
   Bool containsAll(L list)
 
   **
-  ** Return if this list contains every item in the specified
-  ** list using the === same operator.  This method is idempotent.
+  ** Return if this list contains any one of the items in the specified list.
+  ** Equality is determined by `Obj.equals`.  This method is idempotent.
   **
-  Bool containsAllSame(L list)
+  Bool containsAny(L list)
 
   **
   ** Return the integer index of the specified item using
-  ** the == operator (shortcut for equals method) to check
-  ** for equality.  Use `indexSame` to find with === operator.
+  ** the '==' operator (shortcut for equals method) to check
+  ** for equality.  Use `indexSame` to find with '===' operator.
   ** The search starts at the specified offset and returns
   ** the first match.  The offset may be negative to access
   ** from end of list.  Throw IndexErr if offset is out of
@@ -164,7 +156,7 @@ final class List
 
   **
   ** Return integer index just like `List.index` except
-  ** use === same operator instead of the == equals operator.
+  ** use '===' same operator instead of the '==' equals operator.
   **
   Int? indexSame(V item, Int offset := 0)
 
