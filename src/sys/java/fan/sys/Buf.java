@@ -86,7 +86,7 @@ public abstract class Buf
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  public final boolean empty()
+  public final boolean isEmpty()
   {
     return size() == 0;
   }

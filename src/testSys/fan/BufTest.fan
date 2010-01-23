@@ -82,14 +82,14 @@ class BufTest : Test
   {
     verifyEq(buf.pos,  0)
     verifyEq(buf.size, 0)
-    verify(buf.empty)
+    verify(buf.isEmpty)
 
     // write size=1
     buf.write('a')
     verifyEq(buf.pos,  1)
     verifyEq(buf.size, 1)
     verifyEq(buf[0], 'a')
-    verifyFalse(buf.empty)
+    verifyFalse(buf.isEmpty)
 
     // write size=2
     buf.write('b')

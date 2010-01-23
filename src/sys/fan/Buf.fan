@@ -74,7 +74,7 @@ class Buf
   **
   ** Return if size() == 0.
   **
-  Bool empty()
+  Bool isEmpty()
 
   **
   ** Return the total number of bytes in the buffer.  If the size is
