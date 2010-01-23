@@ -193,11 +193,6 @@ namespace Fan.Sys
       return index(val) != null;
     }
 
-    public bool containsSame(object val)
-    {
-      return indexSame(val) != null;
-    }
-
     public bool containsAll(List list)
     {
       for (int i=0; i<list.sz(); i++)
@@ -206,12 +201,12 @@ namespace Fan.Sys
       return true;
     }
 
-    public bool containsAllSame(List list)
+    public bool containsAny(List list)
     {
       for (int i=0; i<list.sz(); i++)
-        if (indexSame(list.get(i)) == null)
-          return false;
-      return true;
+        if (index(list.get(i)) != null)
+          return true;
+      return false;
     }
 
     public Long index(object val) { return index(val, 0); }

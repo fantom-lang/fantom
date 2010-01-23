@@ -201,11 +201,6 @@ public final class List
     return index(value) != null;
   }
 
-  public final boolean containsSame(Object value)
-  {
-    return indexSame(value) != null;
-  }
-
   public final boolean containsAll(List list)
   {
     for (int i=0; i<list.sz(); ++i)
@@ -214,12 +209,12 @@ public final class List
     return true;
   }
 
-  public final boolean containsAllSame(List list)
+  public final boolean containsAny(List list)
   {
     for (int i=0; i<list.sz(); ++i)
-      if (indexSame(list.get(i)) == null)
-        return false;
-    return true;
+      if (index(list.get(i)) != null)
+        return true;
+    return false;
   }
 
   public final Long index(Object value) { return index(value, 0L); }

@@ -624,13 +624,11 @@ class ListTest : Test
     verify(list.contains("a"))
     verify(list.contains("foo"))
 
-    verify(list.containsSame("a"))
-    verify(!list.containsSame("foo"))
-
     verifyEq(list.index("a"), 0)
     verifyEq(list.index("foo"), 6)
 
     verifyEq(list.indexSame("a"), 0)
+    verifyEq(list.indexSame("abc"[0..0]), null)
     verifyEq(list.indexSame("foo"), null)
 
     verify(list.contains("b"))
@@ -655,7 +653,12 @@ class ListTest : Test
     verifyEq(list.containsAll(["b", "a", "c"]), true)
     verifyEq(list.containsAll(["b", "x"]), false)
     verifyEq(list.containsAll(["b", null, "foo"]), true)
-    verifyEq(list.containsAllSame(["b", null, "foo"]), false)
+
+    verifyEq(list.containsAny(Str?[,]), false)
+    verifyEq(list.containsAny(["x"]), false)
+    verifyEq(list.containsAny(["x", "b"]), true)
+    verifyEq(list.containsAny(["x", "y", "z"]), false)
+    verifyEq(list.containsAny(["x", "y", "z", null]), true)
 
     verifyEq(list.index("a", -5), null)
     verifyEq(list.index("a", -7), 0)

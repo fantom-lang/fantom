@@ -139,9 +139,9 @@ class ServiceTest : Test
     verifyService(TestServiceM#, a)
     verifyService(TestServiceA#, a)
     verifyService(TestServiceB#, b)
-    verify(Service.findAll(TestServiceM#).containsSame(b2))
-    verify(Service.findAll(TestServiceA#).containsSame(b2))
-    verify(Service.findAll(TestServiceB#).containsSame(b2))
+    verify(Service.findAll(TestServiceM#).contains(b2))
+    verify(Service.findAll(TestServiceA#).contains(b2))
+    verify(Service.findAll(TestServiceB#).contains(b2))
 
     // install a2
     verifySame(a2.install, a2)
@@ -149,8 +149,8 @@ class ServiceTest : Test
     verifyService(TestServiceM#, a)
     verifyService(TestServiceA#, a)
     verifyService(TestServiceB#, b)
-    verify(Service.findAll(TestServiceM#).containsSame(a2))
-    verify(Service.findAll(TestServiceA#).containsSame(a2))
+    verify(Service.findAll(TestServiceM#).contains(a2))
+    verify(Service.findAll(TestServiceA#).contains(a2))
 
     // uninstall b
     verifySame(b.uninstall, b)
@@ -197,8 +197,8 @@ class ServiceTest : Test
     }
     else
     {
-      verify(Service.list.containsSame(s))
-      verify(Service.findAll(t).containsSame(s))
+      verify(Service.list.contains(s))
+      verify(Service.findAll(t).contains(s))
       verifySame(Service.find(t), s)
       verifySame(Service.find(t, false), s)
       verifySame(Service.find(t, true), s)

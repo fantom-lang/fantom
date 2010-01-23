@@ -119,9 +119,9 @@ class RepoTest : Test
            verifySame(Pod.find("$podB").repo, Repo.working)
            verifySame(Pod.find("sys").repo,   Repo.boot)
            pods := Pod.list
-           verify(pods.containsSame(Pod.find("$podA")))
-           verify(pods.containsSame(Pod.find("$podB")))
-           verify(pods.containsSame(Pod.find("sys")))
+           verify(pods.contains(Pod.find("$podA")))
+           verify(pods.contains(Pod.find("$podB")))
+           verify(pods.contains(Pod.find("sys")))
          }
 
          // test facets
