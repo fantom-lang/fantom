@@ -204,8 +204,7 @@ const final class Str
 
   **
   ** Call the specified function for every char in the starting
-  ** with index 0 and incrementing up to size-1.  This method is
-  ** idempotent.
+  ** with index 0 and incrementing up to size-1.
   **
   ** Example:
   **   "abc".each |Int c| { echo(c.toChar) }
@@ -215,7 +214,7 @@ const final class Str
   **
   ** Reverse each - call the specified function for every char in
   ** the string starting with index size-1 and decrementing down
-  ** to 0.  This method is idempotent.
+  ** to 0.
   **
   ** Example:
   **   "abc".eachr |Int c| { echo(c.toChar) }
