@@ -167,9 +167,9 @@ class DateTimeTest : Test
     dt2   = DateTime.now
     verify(dt1.time <= time && time <= dt2.time)
 
-    dt1   = DateTime.nowUtc
+    dt1   = DateTime.nowUtc(null)
     time  = Time.now(TimeZone.utc)
-    dt2   = DateTime.nowUtc
+    dt2   = DateTime.nowUtc(null)
     verify(dt1.time <= time && time <= dt2.time)
   }
 
