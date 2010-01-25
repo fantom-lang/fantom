@@ -66,12 +66,12 @@ final class List
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return if size == 0.  This method is idempotent.
+  ** Return if size == 0.  This method is readonly safe.
   **
   Bool isEmpty()
 
   **
-  ** The number of items in the list.  Getting size is idempotent,
+  ** The number of items in the list.  Getting size is readonly safe,
   ** setting size throws ReadonlyErr if readonly.
   **
   ** If the size is set greater than the current size then the list is
@@ -90,9 +90,9 @@ final class List
   ** The number of items this list can hold without allocating more memory.
   ** Capacity is always greater or equal to size.  If adding a large
   ** number of items, it may be more efficient to manually set capacity.
-  ** See the trim() method to automatically set capacity to size.  Throw
+  ** See the `trim` method to automatically set capacity to size.  Throw
   ** ArgErr if attempting to set capacity less than size.  Getting capacity
-  ** is idempotent, setting capacity throws ReadonlyErr if readonly.
+  ** is readonly safe, setting capacity throws ReadonlyErr if readonly.
   **
   Int capacity
 
@@ -101,7 +101,7 @@ final class List
   ** negative index may be used to access an index from the end of the
   ** list.  For example get(-1) is translated into get(size()-1).  The
   ** get method is accessed via the [] shortcut operator.  Throw
-  ** IndexErr if index is out of range.  This method is idempotent.
+  ** IndexErr if index is out of range.  This method is readonly safe.
   **
   V get(Int index)
 
@@ -109,14 +109,14 @@ final class List
   ** Get the item at the specified index, but if index is out of
   ** range, then return 'def' parameter.  A negative index may be
   ** used according to the same semantics as `get`.  This method
-  ** is idempotent.
+  ** is readonly safe.
   **
   V? getSafe(Int index, V? def := null)
 
   **
   ** Return a sub-list based on the specified range.  Negative indexes
   ** may be used to access from the end of the list.  This method
-  ** is accessed via the '[]' operator.  This method is idempotent.
+  ** is accessed via the '[]' operator.  This method is readonly safe.
   ** Throw IndexErr if range illegal.
   **
   ** Examples:
@@ -131,19 +131,19 @@ final class List
 
   **
   ** Return if this list contains the specified item.
-  ** Equality is determined by `Obj.equals`.  This method is idempotent.
+  ** Equality is determined by `Obj.equals`.  This method is readonly safe.
   **
   Bool contains(V item)
 
   **
   ** Return if this list contains every item in the specified list.
-  ** Equality is determined by `Obj.equals`.  This method is idempotent.
+  ** Equality is determined by `Obj.equals`.  This method is readonly safe.
   **
   Bool containsAll(L list)
 
   **
   ** Return if this list contains any one of the items in the specified list.
-  ** Equality is determined by `Obj.equals`.  This method is idempotent.
+  ** Equality is determined by `Obj.equals`.  This method is readonly safe.
   **
   Bool containsAny(L list)
 
@@ -155,7 +155,7 @@ final class List
   ** the first match.  The offset may be negative to access
   ** from end of list.  Throw IndexErr if offset is out of
   ** range.  If the item is not found return null.  This method
-  ** is idempotent.
+  ** is readonly safe.
   **
   Int? index(V item, Int offset := 0)
 
@@ -167,19 +167,19 @@ final class List
 
   **
   ** Return the item at index 0, or if empty return null.
-  ** This method is idempotent.
+  ** This method is readonly safe.
   **
   V? first()
 
   **
   ** Return the item at index-1, or if empty return null.
-  ** This method is idempotent.
+  ** This method is readonly safe.
   **
   V? last()
 
   **
   ** Create a shallow duplicate copy of this List.  The items
-  ** themselves are not duplicated.  This method is idempotent.
+  ** themselves are not duplicated.  This method is readonly safe.
   **
   L dup()
 
@@ -287,7 +287,7 @@ final class List
   **
   ** Return the item at index-1, or if empty return null.
   ** This method has the same semantics as last().  This method
-  ** is idempotent.
+  ** is readonly safe.
   **
   V? peek()
 
@@ -313,7 +313,7 @@ final class List
   **
   ** Call the specified function for every item in the list starting
   ** with index 0 and incrementing up to size-1.  This method is
-  ** idempotent.
+  ** readonly safe.
   **
   ** Example:
   **   ["a", "b", "c"].each |Str s| { echo(s) }
@@ -323,7 +323,7 @@ final class List
   **
   ** Reverse each - call the specified function for every item in
   ** the list starting with index size-1 and decrementing down
-  ** to 0.  This method is idempotent.
+  ** to 0.  This method is readonly safe.
   **
   ** Example:
   **   ["a", "b", "c"].eachr |Str s| { echo(s) }
@@ -333,7 +333,7 @@ final class List
   **
   ** Iterate the list usnig the specified range.   Negative indexes
   ** may be used to access from the end of the list.  This method is
-  ** idempotent.  Throw IndexErr if range is invalid.
+  ** readonly safe.  Throw IndexErr if range is invalid.
   **
   Void eachRange(Range r, |V item, Int index| c)
 
@@ -342,7 +342,7 @@ final class List
   ** size-1 until the function returns non-null.  If function
   ** returns non-null, then break the iteration and return the
   ** resulting object.  Return null if the function returns
-  ** null for every item.  This method is idempotent.
+  ** null for every item.  This method is readonly safe.
   **
   Obj? eachWhile(|V item, Int index->Obj?| c)
 
@@ -351,14 +351,14 @@ final class List
   ** with size-1 down to 0.  If the function returns non-null, then
   ** break the iteration and return the resulting object.  Return
   ** null if the function returns null for every item.  This method
-  ** is idempotent.
+  ** is readonly safe.
   **
   Obj? eachrWhile(|V item, Int index->Obj?| c)
 
   **
   ** Return the first item in the list for which c returns true.
   ** If c returns false for every item, then return null.  This
-  ** method is idempotent.
+  ** method is readonly safe.
   **
   ** Example:
   **   list := [0, 1, 2, 3, 4]
@@ -370,7 +370,7 @@ final class List
   **
   ** Return the first item in the list for which c returns true
   ** and return the item's index.  If c returns false for every
-  ** item, then return null.  This method is idempotent.
+  ** item, then return null.  This method is readonly safe.
   **
   ** Example:
   **   list := [5, 6, 7]
@@ -383,7 +383,7 @@ final class List
   ** Return a new list containing the items for which c returns
   ** true.  If c returns false for every item, then return an
   ** empty list.  The inverse of this method is exclude().  This
-  ** method is idempotent.
+  ** method is readonly safe.
   **
   ** Example:
   **   list := [0, 1, 2, 3, 4]
@@ -396,7 +396,7 @@ final class List
   ** of the specified type such that item.type.fits(t) is true.  Any null
   ** items are automatically excluded.  If none of the items are instance
   ** of the specified type, then an empty list is returned.  The returned
-  ** list will be a list of t.  This method is idempotent.
+  ** list will be a list of t.  This method is readonly safe.
   **
   ** Example:
   **   list := ["a", 3, "foo", 5sec, null]
@@ -408,7 +408,7 @@ final class List
   ** Return a new list containing the items for which c returns
   ** false.  If c returns true for every item, then return an
   ** empty list.  The inverse of this method is findAll().  This
-  ** method is idempotent.
+  ** method is readonly safe.
   **
   ** Example:
   **   list := [0, 1, 2, 3, 4]
@@ -419,7 +419,7 @@ final class List
   **
   ** Return true if c returns true for any of the items in
   ** the list.  If the list is empty, return false.  This method
-  ** is idempotent.
+  ** is readonly safe.
   **
   ** Example:
   **   list := ["ant", "bear"]
@@ -431,7 +431,7 @@ final class List
   **
   ** Return true if c returns true for all of the items in
   ** the list.  If the list is empty, return true.  This method
-  ** is idempotent.
+  ** is readonly safe.
   **
   ** Example:
   **   list := ["ant", "bear"]
@@ -443,7 +443,7 @@ final class List
   **
   ** Create a new list which is the result of calling c for
   ** every item in this list.  The new list is typed based on
-  ** the return type of c.  This method is idempotent.
+  ** the return type of c.  This method is readonly safe.
   **
   ** Example:
   **   list := [3, 4, 5]
@@ -456,7 +456,7 @@ final class List
   ** to reduce the list into a single value called the reduction.
   ** The initial value of the reduction is passed in as the init
   ** parameter, then passed back to the closure along with each
-  ** item.  This method is idempotent.
+  ** item.  This method is readonly safe.
   **
   ** Example:
   **   list := [1, 2, 3]
@@ -468,7 +468,7 @@ final class List
   ** Return the minimum value of the list.  If c is provided, then it
   ** implements the comparator returning -1, 0, or 1.  If c is null
   ** then the <=> operator is used (shortcut for compare method).  If
-  ** the list is empty, return null.  This method is idempotent.
+  ** the list is empty, return null.  This method is readonly safe.
   **
   ** Example:
   **   list := ["albatross", "dog", "horse"]
@@ -481,7 +481,7 @@ final class List
   ** Return the maximum value of the list.  If c is provided, then it
   ** implements the comparator returning -1, 0, or 1.  If c is null
   ** then the <=> operator is used (shortcut for compare method).  If
-  ** the list is empty, return null.  This method is idempotent.
+  ** the list is empty, return null.  This method is readonly safe.
   **
   ** Example:
   **   list := ["albatross", "dog", "horse"]
@@ -494,7 +494,7 @@ final class List
   ** Returns a new list with all duplicate items removed such that the
   ** resulting list is a proper set.  Duplicates are detected using hash()
   ** and the == operator (shortcut for equals method).  This method is
-  ** idempotent.
+  ** readonly safe.
   **
   ** Example:
   **   ["a", "a", "b", "c", "b", "b"].unique => ["a", "b", "c"]
@@ -507,7 +507,7 @@ final class List
   ** The resulting list is ordered first by this list's order, and secondarily
   ** by that's order.  The new list is guaranteed to be unique with no duplicate
   ** values.  Equality is determined using hash() and the == operator
-  ** (shortcut for equals method).  This method is idempotent.
+  ** (shortcut for equals method).  This method is readonly safe.
   **
   ** Example:
   **   [1, 2].union([3, 2]) => [1, 2, 3]
@@ -520,7 +520,7 @@ final class List
   ** are in *both* lists.  The new list will be ordered according to this
   ** list's order.  The new list is guaranteed to be unique with no duplicate
   ** values.  Equality is determined using hash() and the == operator
-  ** (shortcut for equals method).  This method is idempotent.
+  ** (shortcut for equals method).  This method is readonly safe.
   **
   ** Example:
   **   [0, 1, 2, 3].intersection([5, 3, 1]) => [1, 3]
@@ -604,7 +604,7 @@ final class List
 
   **
   ** Return a new list which recursively flattens any list items into
-  ** a one-dimensional result.  This method is idempotent.
+  ** a one-dimensional result.  This method is readonly safe.
   **
   ** Examples:
   **   [1,2,3].flatten        =>  [1,2,3]
@@ -615,7 +615,7 @@ final class List
 
   **
   ** Return a random item from the list.  If the list is empty
-  ** return null.  This method is idempotent.  See `Int.random`.
+  ** return null.  This method is readonly safe.  See `Int.random`.
   **
   V? random()
 
@@ -624,7 +624,7 @@ final class List
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return a string representation the list.  This method is idempotent.
+  ** Return a string representation the list.  This method is readonly safe.
   **
   override Str toStr()
 
@@ -632,7 +632,7 @@ final class List
   ** Return a string by concatenating each item's toStr result
   ** using the specified separator string.  If c is non-null
   ** then it is used to format each item into a string, otherwise
-  ** Obj.toStr is used.  This method is idempotent.
+  ** Obj.toStr is used.  This method is readonly safe.
   **
   ** Example:
   **   ["a", "b", "c"].join => "abc"
@@ -655,33 +655,33 @@ final class List
   ** Return if this List is readonly.  A readonly List is guaranteed to
   ** be immutable (although its items may be mutable themselves).  Any
   ** attempt to  modify a readonly List will result in ReadonlyErr.  Use
-  ** rw() to get a read-write List from a readonly List.  Methods
-  ** documented as idempotent may be used safely with a readonly List.
-  ** This method is idempotent.
+  ** `rw` to get a read-write List from a readonly List.  Methods
+  ** documented as "readonly safe" may be used safely with a readonly List.
+  ** This method is readonly safe.
   **
   Bool isRO()
 
   **
   ** Return if this List is read-write.  A read-write List is mutable
-  ** and may be modified.  Use ro() to get a readonly List from a
-  ** read-write List.  This method is idempotent.
+  ** and may be modified.  Use `ro` to get a readonly List from a
+  ** read-write List.  This method is readonly safe.
   **
   Bool isRW()
 
   **
-  ** Get a readonly, immutable List instance with the same contents
-  ** as this List (although the items may be mutable themselves).  If
-  ** this List is already readonly, then return this.  Only methods
-  ** documented as idempotent may be used safely with a readonly List,
-  ** all others will throw ReadonlyErr.  This method is idempotent.
-  ** See isImmutable and toImmutable for deep immutability.
+  ** Get a readonly List instance with the same contents as this
+  ** List (although the items may be mutable themselves).  If this
+  ** List is already readonly, then return this.  Only methods
+  ** documented as "readonly safe" may be used safely with a readonly
+  ** List, all others will throw ReadonlyErr.  This method is readonly
+  ** safe.  See `isImmutable` and `toImmutable` for deep immutability.
   **
   L ro()
 
   **
   ** Get a read-write, mutable List instance with the same contents
   ** as this List.  If this List is already read-write, then return this.
-  ** This method is idempotent.
+  ** This method is readonly safe.
   **
   L rw()
 

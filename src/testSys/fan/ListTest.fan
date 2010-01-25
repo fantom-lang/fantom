@@ -1375,7 +1375,7 @@ class ListTest : Test
     verifySame(r.ro, r)
     verifyEq(r, x)
 
-    // verify all idempotent methods work
+    // verify all readonly safe methods work
     verifyType(r, Str[]#)
     verifyEq(r.isEmpty, false)
     verifyEq(r.size, 3)

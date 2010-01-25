@@ -1054,7 +1054,7 @@ class MapTest : Test
     verifySame(r.ro, r)
     verifyEq(r, x)
 
-    // verify all idempotent methods work
+    // verify all readonly safe methods work
     verifyType(r, Int:Str#)
     verifyEq(r.isEmpty, false)
     verifyEq(r.size, 3)

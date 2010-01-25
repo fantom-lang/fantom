@@ -50,43 +50,43 @@ final class Map
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return if size() == 0.  This method is idempotent.
+  ** Return if size() == 0.  This method is readonly safe.
   **
   Bool isEmpty()
 
   **
   ** Get the number of key/value pairs in the list.  This
-  ** method is idempotent.
+  ** method is readonly safe.
   **
   Int size()
 
   **
   ** Get the value for the specified key.  If key is not mapped,
   ** then return the value of the def parameter.  If def is omitted
-  ** it defaults to the `def` field.  This method is idempotent.
-  ** Shortcut is a[key].
+  ** it defaults to the `def` field.  This method is readonly safe.
+  ** Shortcut is 'a[key]'.
   **
   V? get(K key, V? def := this.def)
 
   **
   ** Return if the specified key is mapped.
-  ** This method is idempotent.
+  ** This method is readonly safe.
   **
   Bool containsKey(K key)
 
   **
-  ** Get a list of all the mapped keys.  This method is idempotent.
+  ** Get a list of all the mapped keys.  This method is readonly safe.
   **
   K[] keys()
 
   **
-  ** Get a list of all the mapped values.  This method is idempotent.
+  ** Get a list of all the mapped values.  This method is readonly safe.
   **
   V[] vals()
 
   **
   ** Create a shallow duplicate copy of this Map.  The keys and
-  ** values themselves are not duplicated.  This method is idempotent.
+  ** values themselves are not duplicated.  This method is readonly safe.
   **
   M dup()
 
@@ -184,7 +184,7 @@ final class Map
   ** is preserved (keys aren't made all lower or upper case).  This field
   ** defaults to false.
   **
-  ** Getting this field is idempotent.  If you attempt to set this method
+  ** Getting this field is readonly safe.  If you attempt to set this method
   ** on a map which is not empty or not typed to use Str keys, then throw
   ** UnsupportedOperation.  Throw ReadonlyErr if set when readonly.  This
   ** mode cannot be used concurrently with `ordered`.
@@ -197,7 +197,7 @@ final class Map
   ** a linked list in addition to the normal hashmap.  This field defaults
   ** to false.
   **
-  ** Getting this field is idempotent.  If you attempt to set this method
+  ** Getting this field is readonly safe.  If you attempt to set this method
   ** on a map which is not empty, then throw UnsupportedOperation.  Throw
   ** ReadonlyErr if set when readonly.  This mode cannot be used concurrently
   ** with `caseInsensitive`.
@@ -207,7 +207,7 @@ final class Map
   **
   ** The default value to use for `get` when a key isn't mapped.
   ** This field defaults to null.  The value of 'def' must be immutable
-  ** or NotImmutableErr is thrown.  Getting this field is idempotent.
+  ** or NotImmutableErr is thrown.  Getting this field is readonly safe.
   ** Throw ReadonlyErr if set when readonly.
   **
   V? def
@@ -217,7 +217,7 @@ final class Map
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return a string representation the Map.  This method is idempotent.
+  ** Return a string representation the Map.  This method is readonly safe.
   **
   override Str toStr()
 
@@ -225,7 +225,7 @@ final class Map
   ** Return a string by concatenating each key/value pair using
   ** the specified separator string.  If c is non-null then it
   ** is used to format each pair into a string, otherwise "$k: $v"
-  ** is used.  This method is idempotent.
+  ** is used.  This method is readonly safe.
   **
   ** Example:
   **
@@ -243,7 +243,7 @@ final class Map
 
   **
   ** Call the specified function for every key/value in the list.
-  ** This method is idempotent.
+  ** This method is readonly safe.
   **
   Void each(|V val, K key| c)
 
@@ -252,30 +252,30 @@ final class Map
   ** returns non-null.  If function returns non-null, then break
   ** the iteration and return the resulting object.  Return null
   ** if the function returns null for every key/value pair.
-  ** This method is idempotent.
+  ** This method is readonly safe.
   **
   Obj? eachWhile(|V val, K key->Obj?| c)
 
   **
   ** Return the first value in the map for which c returns true.
   ** If c returns false for every pair, then return null.  This
-  ** method is idempotent.
+  ** method is readonly safe.
   **
   V? find(|V val, K key->Bool| c)
 
   **
   ** Return a new map containing the key/value pairs for which c
   ** returns true.  If c returns false for every item, then return
-  ** an empty map.  The inverse of this method is exclude(). This
-  ** method is idempotent.
+  ** an empty map.  The inverse of this method is `exclude`. This
+  ** method is readonly safe.
   **
   M findAll(|V val, K key->Bool| c)
 
   **
   ** Return a new map containing the key/value pairs for which c
   ** returns false.  If c returns true for every item, then return
-  ** an empty list.  The inverse of this method is findAll().  This
-  ** method is idempotent.
+  ** an empty list.  The inverse of this method is `findAll`.  This
+  ** method is readonly safe.
   **
   ** Example:
   **   map := ["off":0, "slow":50, "fast":100]
@@ -286,14 +286,14 @@ final class Map
   **
   ** Return true if c returns true for any of the key/value pairs
   ** in the map.  If the map is empty, return false.  This method
-  ** is idempotent.
+  ** is readonly safe.
   **
   Bool any(|V val, K key->Bool| c)
 
   **
   ** Return true if c returns true for all of the key/value pairs
   ** in the map.  If the list is empty, return true.  This method
-  ** is idempotent.
+  ** is readonly safe.
   **
   Bool all(|V val, K key->Bool| c)
 
@@ -302,7 +302,7 @@ final class Map
   ** to reduce the map into a single value called the reduction.
   ** The initial value of the reduction is passed in as the init
   ** parameter, then passed back to the closure along with each
-  ** item.  This method is idempotent.
+  ** item.  This method is readonly safe.
   **
   ** Example:
   **   m := ["2":2, "3":3, "4":4]
@@ -313,7 +313,7 @@ final class Map
   **
   ** Create a new map with the same keys, but apply the specified
   ** closure to generate new values.  The new mapped is typed based
-  ** on the return type of c.  This method is idempotent.
+  ** on the return type of c.  This method is readonly safe.
   **
   ** Example:
   **   m := [2:2, 3:3, 4:4]
@@ -330,33 +330,33 @@ final class Map
   ** Return if this Map is readonly.  A readonly Map is guaranteed
   ** to be immutable (although its values may be mutable themselves).
   ** Any attempt to modify a readonly Map will result in ReadonlyErr.
-  ** Use rw() to get a read-write Map from a readonly Map.  Methods
-  ** documented as idempotent may be used safely with a readonly Map.
-  ** This method is idempotent.
+  ** Use `rw` to get a read-write Map from a readonly Map.  Methods
+  ** documented as "readonly safe" may be used safely with a readonly Map.
+  ** This method is readonly safe.
   **
   Bool isRO()
 
   **
   ** Return if this Map is read-write.  A read-write Map is mutable
-  ** and may be modified.  Use ro() to get a readonly Map from a
-  ** read-write Map.  This method is idempotent.
+  ** and may be modified.  Use r`o` to get a readonly Map from a
+  ** read-write Map.  This method is readonly safe.
   **
   Bool isRW()
 
   **
-  ** Get a readonly, immutable Map instance with the same contents
-  ** as this Map (although its values may be mutable themselves).
-  ** If this Map is already readonly, then return this.  Only methods
-  ** documented as idempotent may be used safely with a readonly
+  ** Get a readonly Map instance with the same contents as this
+  ** Map (although its values may be mutable themselves).  If this
+  ** Map is already readonly, then return this.  Only methods
+  ** documented as "readonly safe" may be used safely with a readonly
   ** Map, all others will throw ReadonlyErr.  This method is
-  ** idempotent.
+  ** readonly safe.
   **
   M ro()
 
   **
   ** Get a read-write, mutable Map instance with the same contents
   ** as this Map.  If this Map is already read-write, then return this.
-  ** This method is idempotent.
+  ** This method is readonly safe.
   **
   M rw()
 
