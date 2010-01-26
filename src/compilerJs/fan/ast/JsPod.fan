@@ -18,8 +18,9 @@ class JsPod : JsNode
     this.name  = pod.name
     this.types = JsType[,]
 
-    compiler := (JsCompiler)support.compiler
-    this.natives = compiler.natives.dup
+    // build native map
+    this.natives = Str:File[:]
+    s.compiler.jsFiles?.each |f| { natives[f.name] = f }
 
     defs.each |TypeDef def|
     {
@@ -34,8 +35,8 @@ class JsPod : JsNode
         return
       }
 
-      // check for forced or @js facet
-      if (s.compiler->force || def.hasMarkerFacet("sys::js"))
+      // check for @js facet
+      if (def.hasMarkerFacet("sys::js"))
         types.add(JsType(s,def))
     }
   }
