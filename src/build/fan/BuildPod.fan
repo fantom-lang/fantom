@@ -333,6 +333,7 @@ abstract class BuildPod : BuildScript
   @target="compile Fantom source to JavaScript"
   virtual Void js()
   {
+    /*
     if (!podJs) return
 
     log.info("js [$podName]")
@@ -365,6 +366,7 @@ abstract class BuildPod : BuildScript
     Delete(this, jsTemp).run
 
     log.unindent
+    */
   }
 
 //////////////////////////////////////////////////////////////////////////
