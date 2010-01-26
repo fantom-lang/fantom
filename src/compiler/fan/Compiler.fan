@@ -88,6 +88,7 @@ class Compiler
     ResolveExpr(this).run
     CheckErrors(this).run
     CheckParamDefs(this).run
+    CompileJs(this).run
     ClosureVars(this).run
     ClosureToImmutable(this).run
     ConstChecks(this).run
@@ -99,7 +100,6 @@ class Compiler
   virtual Void backend()
   {
     Assemble(this).run
-    CompileJs(this).run
     GenerateOutput(this).run
   }
 
@@ -117,6 +117,7 @@ class Compiler
   Bool isSys := false       // InitInput; are we compiling sys itself
   File[]? srcFiles          // InitInput
   File[]? resFiles          // InitInput
+  File[]? jsFiles           // InitInput
   TypeDef[]? types          // Parse
   ClosureExpr[]? closures   // Parse
   Str:CField wrappers       // ClosureVars

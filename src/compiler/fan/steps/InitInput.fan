@@ -207,6 +207,7 @@ class InitInput : CompilerStep
     // map pod facets to src/res files
     compiler.srcFiles = findFiles("sys::podSrcDirs", "fan")
     compiler.resFiles = findFiles("sys::podResDirs", null)
+    compiler.jsFiles  = findFiles("sys::podJsDirs",  "js")
 
     // "pod.fan" is always implicit include in source
     compiler.srcFiles.insert(0, input.podDef)
