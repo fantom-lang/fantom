@@ -11,7 +11,7 @@ using gfx
 using fwt
 using web
 
-class Cookies : Window
+@js class Cookies : Window
 {
   new make() : super(null, null)
   {
@@ -71,7 +71,7 @@ class Cookies : Window
   Table table
 }
 
-class CookieModel : TableModel
+@js class CookieModel : TableModel
 {
   new make(Str:Str map)
   {
