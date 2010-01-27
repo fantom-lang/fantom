@@ -156,20 +156,18 @@ abstract class BuildPod : BuildScript
   **
   ** Default target is `compile`.
   **
-  override Target defaultTarget()
-  {
-    if (podJavaDirs == null && podDotnetDirs == null && !podJs && podJsDirs == null)
-      return target("compile")
-    else
-      return target("full")
-  }
+  override Target defaultTarget() { target("compile") }
 
 //////////////////////////////////////////////////////////////////////////
 // Compile
 //////////////////////////////////////////////////////////////////////////
 
-  @target="compile fan source into pod"
-  virtual Void compile(Bool includeFandocAndSrc := false)
+  **
+  ** Compile the source into a pod file and all associated
+  ** natives.  See `compileJava` and `compileDotnet`.
+  **
+  @target="compile fan source into pod and all associated natives"
+  virtual Void compile()
   {
     log.info("compile [$podName]")
     log.indent
@@ -177,35 +175,32 @@ abstract class BuildPod : BuildScript
     fanc.includeDoc = !podNodoc
     fanc.includeSrc = !podNodoc
     fanc.run
+    compileJava
+    compileDotnet
     log.unindent
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Clean
-//////////////////////////////////////////////////////////////////////////
+// TODO
+@target="build native Java jar file"
+virtual Void javaNative() { log.info("java -- NOT USED ANYMORE")}
 
-  @target="delete all intermediate and target files"
-  virtual Void clean()
-  {
-    log.info("clean [$podName]")
-    log.indent
-    Delete(this, libFanDir+"${podName}.pod".toUri).run
-    Delete(this, libJavaDir+"${podName}.jar".toUri).run
-    Delete(this, libDotnetDir+"${podName}.dll".toUri).run
-    Delete(this, libDotnetDir+"${podName}.pdb".toUri).run
-    Delete(this, libDir+"tmp/${podName}.dll".toUri).run
-    Delete(this, libDir+"tmp/${podName}.pdb".toUri).run
-    Delete(this, scriptDir+"temp-java/".toUri).run
-    Delete(this, scriptDir+"temp-dotnet/".toUri).run
-    log.unindent
-  }
+@target="compile Fantom source to JavaScript"
+virtual Void js() { log.info("js -- NOT USED ANYMORE") }
+
+@target="compile+native (no fandoc+src)"
+virtual Void compileAll() { echo("TODO - not supported anymore") }
+
+@target="build native .NET assembly"
+virtual Void dotnetNative() { log.info("dotnet -- NOT USED ANYMORE") }
 
 //////////////////////////////////////////////////////////////////////////
-// JavaNative
+// Compile Java
 //////////////////////////////////////////////////////////////////////////
 
-  @target="build native Java jar file"
-  virtual Void javaNative()
+  **
+  ** Compile native Java jar file if podJavaDirs is configured
+  **
+  virtual Void compileJava()
   {
     if (podJavaDirs == null) return
 
@@ -275,8 +270,10 @@ abstract class BuildPod : BuildScript
 // DotnetNative
 //////////////////////////////////////////////////////////////////////////
 
-  @target="build native .NET assembly"
-  virtual Void dotnetNative()
+  **
+  ** Compile native .NET assembly is podDotnetDirs configured
+  **
+  virtual Void compileDotnet()
   {
     if (podDotnetDirs == null) return
 
@@ -327,81 +324,35 @@ abstract class BuildPod : BuildScript
   }
 
 //////////////////////////////////////////////////////////////////////////
-// JavaScript
+// Clean
 //////////////////////////////////////////////////////////////////////////
 
-  @target="compile Fantom source to JavaScript"
-  virtual Void js()
+  **
+  ** Clean all targets which might be built for this pod.
+  **
+  @target="delete all intermediate and target files"
+  virtual Void clean()
   {
-    log.info("js -- NOT USED ANYMORE")
-    // TODO
-    /*
-    if (!podJs) return
-
-    log.info("js [$podName]")
+    log.info("clean [$podName]")
     log.indent
-
-    // env
-    nativeDirs := resolveDirs(podJsDirs)
-    jsTemp := scriptDir + `temp-js/`
-
-    // start with a clean directory
-    Delete(this, jsTemp).run
-    CreateDir(this, jsTemp).run
-
-    // compile javascript
-    out := jsTemp.createFile("${podName}.js").out
-    jsc := build::CompileJs(this)
-    jsc.out = out
-    jsc.nativeDirs = nativeDirs
-    jsc.run
-    out.close
-
-    // append files to the pod zip (we use java's jar tool)
-    jdk    := JdkTask(this)
-    jarExe := jdk.jarExe
-    curPod := libFanDir + "${podName}.pod".toUri
-    Exec(this, [jarExe.osPath, "-fu", curPod.osPath, "-C", jsTemp.osPath,
-      "${podName}.js"], jsTemp).run
-
-    // cleanup temp
-    Delete(this, jsTemp).run
-
+    Delete(this, libFanDir+"${podName}.pod".toUri).run
+    Delete(this, libJavaDir+"${podName}.jar".toUri).run
+    Delete(this, libDotnetDir+"${podName}.dll".toUri).run
+    Delete(this, libDotnetDir+"${podName}.pdb".toUri).run
+    Delete(this, libDir+"tmp/${podName}.dll".toUri).run
+    Delete(this, libDir+"tmp/${podName}.pdb".toUri).run
+    Delete(this, scriptDir+"temp-java/".toUri).run
+    Delete(this, scriptDir+"temp-dotnet/".toUri).run
     log.unindent
-    */
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// CompileAll
-//////////////////////////////////////////////////////////////////////////
-
-  @target="compile+native (no fandoc+src)"
-  virtual Void compileAll()
-  {
-    compile(false)
-    javaNative
-    dotnetNative
-    js
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Full
-//////////////////////////////////////////////////////////////////////////
-
-  @target="clean+compile+native (with doc+src)"
-  virtual Void full()
-  {
-    clean
-    compile(true)
-    javaNative
-    dotnetNative
-    js
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Doc
 //////////////////////////////////////////////////////////////////////////
 
+  **
+  ** Build the HTML documentation
+  **
   @target="build fandoc HTML docs"
   virtual Void doc()
   {
@@ -418,6 +369,9 @@ abstract class BuildPod : BuildScript
 // Test
 //////////////////////////////////////////////////////////////////////////
 
+  **
+  ** Run the unit tests using 'fant' for this pod.
+  **
   @target="run fant for specified pod"
   virtual Void test()
   {
@@ -428,6 +382,21 @@ abstract class BuildPod : BuildScript
     Exec(this, [fant.osPath, podName]).run
 
     log.unindent
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Full
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Full performs `clean`, `compile`, and `test`.
+  **
+  @target="clean + compile + test"
+  virtual Void full()
+  {
+    clean
+    compile
+    test
   }
 
 }
