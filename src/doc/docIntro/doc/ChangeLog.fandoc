@@ -14,6 +14,7 @@
 - Test.id => curTestMethod
 - DateTime, Time: isMidnight
 - DateTime, Date support for DDD pattern 1st, 2nd, etc
+- Integrate JavaScript compiler into main compiler pipeline
 - #889: compilerJs Rework
 - js: Int.toCode, toDuration, toDateTime
 - js: Remove Long support; use native Numbers for integers
