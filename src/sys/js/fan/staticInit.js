@@ -135,9 +135,3 @@ fan.sys.Weekday.m_vals = fan.sys.List.make(fan.sys.Weekday.$type,
   fan.sys.Weekday.m_sat
 ]);
 
-//
-// Sys
-//
-fan.sys.Sys.m_env = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Str.$type);
-fan.sys.Sys.m_env.set("fan.runtime", "javascript");
-
