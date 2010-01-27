@@ -44,7 +44,7 @@ class ReflectPod : CPod
     if (rt != null) return rt
 
     // use reflection
-    t := pod.findType(typeName, checked)
+    t := pod.type(typeName, checked)
     if (t == null) return null
 
     // make ReflectType and add to both

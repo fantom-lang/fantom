@@ -45,7 +45,7 @@ class ReflectField : ReflectSlot, CField
   {
     this.parent = parent
     this.f = f
-    this.fieldType = ns.importType(f.of)
+    this.fieldType = ns.importType(f.type)
     get := (Method?)f->getter; if (get != null) this.getter = ns.importMethod(get)
     set := (Method?)f->setter; if (set != null) this.setter = ns.importMethod(set)
   }
@@ -112,7 +112,7 @@ class ReflectParam : CParam
   new make(ReflectNamespace ns, Param p)
   {
     this.p = p
-    this.paramType = ns.importType(p.of)
+    this.paramType = ns.importType(p.type)
   }
 
   override Str name() { return p.name }
