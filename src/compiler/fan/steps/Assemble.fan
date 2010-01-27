@@ -35,6 +35,9 @@ class Assemble : CompilerStep
   **
   override Void run()
   {
+    // don't both assembling fcode if we aren't going to use it
+    if (compiler.input.output === CompilerOutputMode.js) return
+
     log.debug("Assemble")
     compiler.fpod = Assembler(compiler).assemblePod
     bombIfErr

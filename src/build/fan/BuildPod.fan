@@ -333,6 +333,8 @@ abstract class BuildPod : BuildScript
   @target="compile Fantom source to JavaScript"
   virtual Void js()
   {
+    log.info("js -- NOT USED ANYMORE")
+    // TODO
     /*
     if (!podJs) return
 

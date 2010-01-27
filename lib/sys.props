@@ -31,7 +31,7 @@ fan.runtime=java
 
 // Set this property to pass additional command line options to the Java VM.
 // The options should be listed together separated with a space.
-fan.java.options=-Xmx128M
+fan.java.options=-Xmx256M
 
 //////////////////////////////////////////////////////////////////////////
 // Sql

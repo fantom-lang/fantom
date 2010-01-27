@@ -54,8 +54,8 @@ class CompilerInput
 
   **
   ** What type of output should be generated - the compiler
-  ** can be used to generate a transient in-memory pod or
-  ** to write out a pod zip file to disk.
+  ** can be used to generate a transient in-memory pod, write a
+  ** pod zip file to disk, or generate JavaScript code.
   **
   CompilerOutputMode? output := null
 

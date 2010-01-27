@@ -21,6 +21,7 @@ class JsPod : JsNode
     // build native map
     this.natives = Str:File[:]
     s.compiler.jsFiles?.each |f| { natives[f.name] = f }
+    jsOutput := s.compiler.input.output === CompilerOutputMode.js
 
     defs.each |TypeDef def|
     {
@@ -35,8 +36,8 @@ class JsPod : JsNode
         return
       }
 
-      // check for @js facet
-      if (def.hasMarkerFacet("sys::js"))
+      // check for @js facet or explicit js output
+      if (def.hasMarkerFacet("sys::js") || jsOutput)
         types.add(JsType(s,def))
     }
   }
