@@ -35,7 +35,7 @@ class Flux
       return cached.val
 
     // not cached or modified since we loaded cache
-    file := Repo.working.home + `etc/flux/session/${name}.fog`
+    file := Env.cur.workDir + `etc/flux/session/${name}.fog`
     Obj? value := null
     try
     {
@@ -64,7 +64,7 @@ class Flux
   **
   internal static Bool saveSession(Str name, Obj options)
   {
-    file := Repo.working.home + `etc/flux/session/${name}.fog`
+    file := Env.cur.workDir + `etc/flux/session/${name}.fog`
     try
     {
       log.debug("Save options: $file")

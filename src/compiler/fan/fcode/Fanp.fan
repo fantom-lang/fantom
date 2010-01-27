@@ -64,7 +64,7 @@ class Fanp
   FPod fpod(Str podName)
   {
     c := Compiler(CompilerInput()) // dummy compiler
-    ns := FPodNamespace(c, Repo.boot.home + `lib/fan/`)
+    ns := FPodNamespace(c, Env.cur.homeDir + `lib/fan/`)
     FPod fpod := ns.resolvePod(podName, null)
     fpod.readFully
     return fpod

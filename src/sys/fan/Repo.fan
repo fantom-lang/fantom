@@ -54,8 +54,9 @@ final const class Repo
   Str name()
 
   **
-  ** Get the home directory of the repo.
+  ** Use `Env.homeDir`, `Env.workDir`, `Env.tempDir`
   **
+  @deprecated
   File home()
 
   **

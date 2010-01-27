@@ -8,7 +8,6 @@
 package fan.sys;
 
 import java.lang.management.*;
-import java.io.File;
 import java.util.Iterator;
 import fanx.util.*;
 
@@ -66,7 +65,7 @@ public class BootEnv
       }
 
       // sys.properties
-      LocalFile f = new LocalFile(new File(Sys.HomeDir, "lib" + File.separator + "sys.props"));
+      LocalFile f = new LocalFile(new java.io.File(Sys.HomeDir, "lib" + java.io.File.separator + "sys.props"));
       if (f.exists())
       {
         try
@@ -141,6 +140,13 @@ public class BootEnv
   public OutStream out() { return out; }
 
   public OutStream err() { return err; }
+
+  public File homeDir() { return Sys.homeDir; }
+
+  // TODO
+  public File workDir() { return Repo.working().home(); }
+
+  public File tempDir() { return Sys.tempDir; }
 
 //////////////////////////////////////////////////////////////////////////
 // Diagnostics

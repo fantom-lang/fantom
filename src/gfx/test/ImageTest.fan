@@ -16,7 +16,7 @@ class ImageTest : Test
   Void test()
   {
     // not actually an image obviously
-    file := (Repo.boot.home+`lib/fan/gfx.pod`).normalize
+    file := (Env.cur.homeDir+`lib/fan/gfx.pod`).normalize
 
     verify := |Image img|
     {

@@ -76,6 +76,12 @@ public abstract class Env
 
   public OutStream err() { return parent.err(); }
 
+  public File homeDir() { return parent.homeDir(); }
+
+  public File workDir() { return parent.workDir(); }
+
+  public File tempDir() { return parent.tempDir(); }
+
 //////////////////////////////////////////////////////////////////////////
 // Compile Hooks
 //////////////////////////////////////////////////////////////////////////

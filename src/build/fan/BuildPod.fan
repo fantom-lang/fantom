@@ -50,7 +50,7 @@ abstract class BuildPod : BuildScript
 
   **
   ** Directory to write pod file.  By default it goes into
-  ** "Repo.working + fan/lib"
+  ** "{Env.cur.workDir}/fan/lib"
   **
   Uri? outDir
 
@@ -73,7 +73,7 @@ abstract class BuildPod : BuildScript
   internal override Void validate()
   {
     if (version == null) version = @buildVersion.val
-    if (outDir == null)  outDir  = (Repo.working.home + `lib/fan/`).uri
+    if (outDir == null)  outDir  = (Env.cur.workDir + `lib/fan/`).uri
     ok := true
     ok = ok.and(validateReqField("podName"))
     if (!ok) throw FatalBuildErr.make
@@ -83,7 +83,7 @@ abstract class BuildPod : BuildScript
     if (podName == "sys" || podName == "build" ||
         podName == "compiler" || podName == "compilerJava")
     {
-      if (Repo.boot.home == devHomeDir)
+      if (Env.cur.homeDir == devHomeDir)
         throw fatal("Must update @buildDevHome for bootstrap build")
     }
   }
@@ -235,7 +235,7 @@ abstract class BuildPod : BuildScript
     stubDir := stubOnly ? libJavaDir : jtemp
     Exec(this, [javaExe.osPath,
                      "-cp", (libJavaDir + `sys.jar`).osPath,
-                     "-Dfan.home=$Repo.working.home.osPath",
+                     "-Dfan.home=$Env.cur.workDir.osPath",
                      "fanx.tools.Jstub",
                      "-d", stubDir.osPath,
                      podName]).run

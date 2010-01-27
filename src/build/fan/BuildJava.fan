@@ -51,7 +51,7 @@ abstract class BuildJava : BuildScript
     // boot strap checking - ensure that we aren't overwriting sys.jar
     if (jar.name == "sys.jar")
     {
-      if (Repo.boot.home == devHomeDir)
+      if (Env.cur.homeDir == devHomeDir)
         throw fatal("Must update @buildDevHome for bootstrap build")
     }
   }

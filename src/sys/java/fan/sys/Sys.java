@@ -329,13 +329,15 @@ public final class Sys
     }
   }
 
-  public static final LocalFile homeDir = toLocalFile("homeDir", HomeDir);
+  public static final fan.sys.File homeDir = toLocalFile("homeDir", HomeDir);
+  public static final fan.sys.File workDir = homeDir;
+  public static final fan.sys.File tempDir = workDir.plus(Uri.fromStr("temp/"), false);
 
-  private static LocalFile toLocalFile(String fieldName, File f)
+  private static fan.sys.File toLocalFile(String fieldName, File f)
   {
     try
     {
-      return new LocalFile(f, true);
+      return new LocalFile(f, true).normalize();
     }
     catch (Throwable e)
     {

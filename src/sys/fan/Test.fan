@@ -131,7 +131,7 @@ abstract class Test
   ** Return a temporary test directory which may used as a scratch
   ** directory.  This directory is guaranteed to be created and empty
   ** the first time this method is called for a given test run.  The
-  ** test directory is "{Repo.working}/tmp/test/".
+  ** test directory is "{Env.cur.tempDir}/test/".
   **
   File tempDir()
 
