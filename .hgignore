@@ -31,5 +31,6 @@ syntax: regexp
 # src/
 ^src/sys/java/temp/
 
-# tmp/
+# temp
 ^tmp/
+^temp/
