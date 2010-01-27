@@ -265,6 +265,7 @@ fan.sys.UriDecoder.prototype.decode = function()
     var scheme = str.substring(0, i);
     if (hasUpper) scheme = fan.sys.Str.lower(scheme);
     this.scheme = scheme;
+    break;
   }
 
   // ==== authority ====
