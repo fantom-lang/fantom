@@ -50,7 +50,11 @@ final const class Symbol
   **
   ** Get the value type of the symbol.
   **
-  Type of()
+  Type type()
+
+** Use `type`
+@deprecated
+Type of()
 
   **
   ** Return if symbol is virtual which means it may be overridden

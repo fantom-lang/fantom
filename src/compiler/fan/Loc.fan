@@ -60,9 +60,9 @@ class Loc
   override Int hash()
   {
     hash := 33
-    if (file != null) hash ^= file.hash
-    if (line != null) hash ^= line.hash
-    if (col  != null) hash ^= col.hash
+    if (file != null) hash = hash.xor(file.hash)
+    if (line != null) hash = hash.xor(line.hash)
+    if (col  != null) hash = hash.xor(col.hash)
     return hash
   }
 

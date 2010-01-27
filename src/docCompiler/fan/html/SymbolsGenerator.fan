@@ -81,7 +81,7 @@ class SymbolsGenerator : HtmlGenerator
       out.print("<p><code class='sig'>")
       meta := ApiToHtmlGenerator.parseMeta(s.doc)
       map := |Type x->Uri| { return compiler.uriMapper.map(x.qname, loc) }
-      out.print(ApiToHtmlGenerator.makeTypeLink(s.of, map))
+      out.print(ApiToHtmlGenerator.makeTypeLink(s.type, map))
       out.print(" $s.name")
       def := meta["def"]
       out.print(" := $def")

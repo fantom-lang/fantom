@@ -138,12 +138,12 @@ public abstract class GenericType
   Field parameterize(Field f)
   {
     // if not generic, short circuit and reuse original
-    Type of = f.of();
-    if (!of.isGenericParameter()) return f;
+    Type t = f.type();
+    if (!t.isGenericParameter()) return f;
 
     // create new parameterized version
-    of = parameterize(of);
-    Field pf = new Field(this, f.name, f.flags, f.facets, f.lineNum, of);
+    t = parameterize(t);
+    Field pf = new Field(this, f.name, f.flags, f.facets, f.lineNum, t);
     pf.reflect = f.reflect;
     return pf;
   }
@@ -172,9 +172,9 @@ public abstract class GenericType
     for (int i=0; i<m.params.sz(); ++i)
     {
       Param p = (Param)m.params.get(i);
-      if (p.of.isGenericParameter())
+      if (p.type.isGenericParameter())
       {
-        params.add(new Param(p.name, parameterize(p.of), p.mask));
+        params.add(new Param(p.name, parameterize(p.type), p.mask));
       }
       else
       {

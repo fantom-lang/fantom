@@ -18,12 +18,15 @@ public class Param
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public Param(String name, Type of, int mask)
+  public Param(String name, Type type, int mask)
   {
     this.name = name;
-    this.of   = of;
+    this.type = type;
     this.mask = mask;
   }
+
+// TODO
+public Type of()   { return type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
@@ -32,10 +35,10 @@ public class Param
   public Type typeof() { return Sys.ParamType; }
 
   public String name()  { return name; }
-  public Type of()   { return of; }
+  public Type type()   { return type; }
   public boolean hasDefault() { return (mask & HAS_DEFAULT) != 0; }
 
-  public String toStr() { return of + " " + name; }
+  public String toStr() { return type + " " + name; }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
@@ -44,7 +47,7 @@ public class Param
   public static final int HAS_DEFAULT   = 0x01;  // is a default value provided
 
   final String name;
-  final Type of;
+  final Type type;
   final int mask;
 
 }

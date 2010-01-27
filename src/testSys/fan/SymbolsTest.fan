@@ -64,7 +64,7 @@ class SymbolsTest : Test
     verifyEq(x.qname, "testSys::$name")
     verifyEq(x.toStr, "@testSys::$name")
     verifySame(x.pod, Pod.of(this))
-    verifyEq(x.of, of)
+    verifyEq(x.type, of)
     verifyEq(x.val, val)
     verifyEq(x.defVal, val)
   }

@@ -44,7 +44,11 @@ const class Field : Slot
   **
   ** Type stored by the field.
   **
-  Type of()
+  Type type()
+
+** Use `type`
+@deprecated
+Type of()
 
 //////////////////////////////////////////////////////////////////////////
 // Reflection

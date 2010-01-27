@@ -36,7 +36,7 @@ public class FanUtil
       String typeName = name.substring(dot+1);
       Pod pod = Pod.find(podName, checked);
       if (pod == null) return null;
-      return pod.findType(typeName, checked);
+      return pod.type(typeName, checked);
     }
 
     // map to a FFI Java class

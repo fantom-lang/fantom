@@ -29,14 +29,14 @@ class SymbolsTest : CompilerTest
     verifyEq(x.name, "foo")
     verifyEq(x.qname, "${pod.name}::foo")
     verifyEq(x.pod, pod)
-    verifyEq(x.of, Int#)
+    verifyEq(x.type, Int#)
     verifyEq(x.val, 3)
 
     x = pod.symbol("bar")
     verifyEq(x.name, "bar")
     verifyEq(x.qname, "${pod.name}::bar")
     verifyEq(x.pod, pod)
-    verifyEq(x.of, Duration#)
+    verifyEq(x.type, Duration#)
     verifyEq(x.val, 10sec)
   }
 
@@ -74,9 +74,9 @@ class SymbolsTest : CompilerTest
        """
     compile("class Foo {}")
 
-    x := pod.symbol("a"); verifyEq(x.of, Int#); verifyEq(x.val, -3)
-    x = pod.symbol("b");  verifyEq(x.of, Int#); verifyEq(x.val, -210)
-    x = pod.symbol("c");  verifyEq(x.of, Str#); verifyEq(x.val, "foobar")
+    x := pod.symbol("a"); verifyEq(x.type, Int#); verifyEq(x.val, -3)
+    x = pod.symbol("b");  verifyEq(x.type, Int#); verifyEq(x.val, -210)
+    x = pod.symbol("c");  verifyEq(x.type, Str#); verifyEq(x.val, "foobar")
   }
 
 //////////////////////////////////////////////////////////////////////////

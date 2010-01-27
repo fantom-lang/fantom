@@ -117,7 +117,7 @@ public class Fan
     {
       args = null;
     }
-    else if (((Param)params.get(0)).of().is(Sys.StrType.toListOf()) &&
+    else if (((Param)params.get(0)).type().is(Sys.StrType.toListOf()) &&
              (params.sz() == 1 || ((Param)params.get(1)).hasDefault()))
     {
       args = new List(Sys.ObjType, new Object[] { Sys.args() });

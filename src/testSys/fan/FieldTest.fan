@@ -144,7 +144,7 @@ class FieldTest : Test
     t := Type.of(this)
     verify(t.slot("count").isField)
     verifyEq(t.field("count").name, "count")
-    verifyEq(t.field("count").of, Int#)
+    verifyEq(t.field("count").type, Int#)
 
     // instance getter
     verify(t.field("count")->getter != null)

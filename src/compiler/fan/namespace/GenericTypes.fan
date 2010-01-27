@@ -249,7 +249,7 @@ class FuncType : GenericType
     s := StrBuf.make.add("|")
     params.each |CType p, Int i|
     {
-      isGenericParameter |= p.isGenericParameter
+      isGenericParameter = isGenericParameter.or(p.isGenericParameter)
       if (i > 0) s.add(","); s.add(p.signature)
     }
     s.add("->").add(ret.signature).add("|")

@@ -321,7 +321,7 @@ public abstract class Func
 
     Type[] newParams = new Type[params.sz()-args.sz()];
     for (int i=0; i<newParams.length; ++i)
-      newParams[i] = ((Param)params.get(args.sz()+i)).of;
+      newParams[i] = ((Param)params.get(args.sz()+i)).type;
 
     FuncType newType = new FuncType(newParams, this.returns);
     return new BindFunc(newType, this, args);

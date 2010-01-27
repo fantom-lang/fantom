@@ -660,7 +660,7 @@ class InheritTest : CompilerTest
       }"
     )
 
-    Type q := pod.findType("Q")
+    Type q := pod.type("Q")
 
     compile(
      "using $q.pod.name
@@ -685,8 +685,8 @@ class InheritTest : CompilerTest
 
     // compiler.fpod.dump
 
-    a := pod.findType("A")
-    b := pod.findType("B")
+    a := pod.type("A")
+    b := pod.type("B")
     o := b.make
 
     verifySame(b.base, a)
@@ -780,9 +780,9 @@ class InheritTest : CompilerTest
       }")
     // compiler.fpod.dump
 
-    a := pod.findType("A").make
-    b := pod.findType("B").make
-    c := pod.findType("C").make
+    a := pod.type("A").make
+    b := pod.type("B").make
+    c := pod.type("C").make
 
     verifyEq(a->testA, 'A')
     verifySame(a->x, a)
@@ -1196,7 +1196,7 @@ class InheritTest : CompilerTest
       }
       ")
 
-     t := pod.findType("Foo")
+     t := pod.type("Foo")
      obj := t.make
      verifyEq(obj.toStr, "Foo.x,Foo.y,Foo.a1,Foo.a2")
      verifyEq(obj->aToStr, "Foo.a1,Foo.a2")
@@ -1298,8 +1298,8 @@ class InheritTest : CompilerTest
         new make() { x += 10 }
       }")
 
-    x := pod.findType("X").make
-    y := pod.findType("Y").make
+    x := pod.type("X").make
+    y := pod.type("Y").make
     verifyEq(x->x, 1)
     verifyEq(y->x, 11)
     verifyEq(y->y, 2)

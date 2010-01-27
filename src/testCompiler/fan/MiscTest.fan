@@ -485,8 +485,8 @@ class MiscTest : CompilerTest
       }
       ")
 
-     a := pod.findType("A").make
-     b := pod.findType("B").make
+     a := pod.type("A").make
+     b := pod.type("B").make
      verifySame(a->x, a->x)
      verifyNotSame(b->x, b->x)
      verifyErr(Err#) { a->bad }
@@ -524,12 +524,12 @@ class MiscTest : CompilerTest
       }")
 
     t := pod.types.first
-    verifyEq(t.method("a").params[0].of, |Int a, Str b|#)
-    verifyEq(t.method("b").params[0].of, |Int a, Str b|#)
-    verifyEq(t.method("c").params[0].of, |Int a, Str b|#)
-    verifyEq(t.method("d").params[0].of, |Int a, Str b|#)
-    verifyEq(t.method("e").params[0].of, |Duration|#)
-    verifyEq(t.method("f").params[0].of, |Duration->Int|#)
+    verifyEq(t.method("a").params[0].type, |Int a, Str b|#)
+    verifyEq(t.method("b").params[0].type, |Int a, Str b|#)
+    verifyEq(t.method("c").params[0].type, |Int a, Str b|#)
+    verifyEq(t.method("d").params[0].type, |Int a, Str b|#)
+    verifyEq(t.method("e").params[0].type, |Duration|#)
+    verifyEq(t.method("f").params[0].type, |Duration->Int|#)
   }
 
 //////////////////////////////////////////////////////////////////////////

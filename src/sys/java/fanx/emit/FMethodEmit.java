@@ -300,7 +300,7 @@ public class FMethodEmit
       {
         // push args
         Param param = (Param)m.params().get(p);
-        jindex = FCodeEmit.loadVar(code, FanUtil.toJavaStackType(param.of()), jindex);
+        jindex = FCodeEmit.loadVar(code, FanUtil.toJavaStackType(param.type()), jindex);
       }
       code.op2(INVOKESTATIC, emit.method(parent + "$." + name + implSig));
       code.op(FCodeEmit.returnOp(FanUtil.toJavaStackType(m.returns())));
@@ -425,7 +425,7 @@ public class FMethodEmit
     for (int i=0; i<paramLen; ++i)
     {
       Param param = (Param)m.params().get(i);
-      sig.append(FanUtil.toJavaMemberSig(param.of()));
+      sig.append(FanUtil.toJavaMemberSig(param.type()));
     }
     sig.append(')');
 

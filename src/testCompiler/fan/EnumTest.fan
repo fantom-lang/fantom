@@ -26,7 +26,7 @@ class EnumTest : CompilerTest
 
     a := t.field("a")
     verifyEq(a.name, "a")
-    verifyEq(a.of, t)
+    verifyEq(a.type, t)
     verifyEq(a.isPublic, true)
     verifyEq(a.isStatic, true)
     verifyEq(a.isConst, true)
@@ -42,7 +42,7 @@ class EnumTest : CompilerTest
     verifyEq(c.get->name, "c")
 
     v := t.field("vals")
-    verifyEq(v.of.signature, "$t.qname[]")
+    verifyEq(v.type.signature, "$t.qname[]")
     verifyEq(v.isPublic, true)
     verifyEq(v.isStatic, true)
     verifyEq(v.isConst, true)
@@ -77,7 +77,7 @@ class EnumTest : CompilerTest
 
     a := t.field("a")
     verifyEq(a.name, "a")
-    verifyEq(a.of, t)
+    verifyEq(a.type, t)
     verifyEq(a.isPublic, true)
     verifyEq(a.isStatic, true)
     verifyEq(a.isConst, true)
@@ -96,7 +96,7 @@ class EnumTest : CompilerTest
     verifyEq(c.get->x, 12)
 
     v := t.field("vals")
-    verifyEq(v.of.signature, "$t.qname[]")
+    verifyEq(v.type.signature, "$t.qname[]")
     verifyEq(v.isPublic, true)
     verifyEq(v.isStatic, true)
     verifyEq(v.isConst, true)

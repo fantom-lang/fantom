@@ -342,7 +342,7 @@ public class TypeDb
     if (ti.type != null) return ti.type;
 
     if (pi.pod == null) pi.pod = Pod.find(pi.name, true);
-    Type t = pi.pod.findType(ti.name, true);
+    Type t = pi.pod.type(ti.name, true);
     ti.type = t;
     ti.name = t.name();
     return t;

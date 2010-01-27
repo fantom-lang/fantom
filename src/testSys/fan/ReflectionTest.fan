@@ -31,23 +31,23 @@ class ReflectionTest : Test
     verifyType(m.params, Param[]#)
     verifyEq(m.params.size, 2)
     verifyEq(m.params.isRO, true)
-    verifyEq(m.params[0].of, Int#)
+    verifyEq(m.params[0].type, Int#)
     verifyEq(m.params[0].name, "radix")
     verifyEq(m.params[0].hasDefault, true)
-    verifyEq(m.params[1].of, Bool#)
+    verifyEq(m.params[1].type, Bool#)
     verifyEq(m.params[1].name, "checked")
     verifyEq(m.params[1].hasDefault, true)
 
     verifyType(m.func.params, Param[]#)
     verifyEq(m.func.params.size, 3)
     verifyEq(m.func.params.isRO, true)
-    verifyEq(m.func.params[0].of, Str#)
+    verifyEq(m.func.params[0].type, Str#)
     verifyEq(m.func.params[0].name, "this")
     verifyEq(m.func.params[0].hasDefault, false)
-    verifyEq(m.func.params[1].of, Int#)
+    verifyEq(m.func.params[1].type, Int#)
     verifyEq(m.func.params[1].name, "radix")
     verifyEq(m.func.params[1].hasDefault, true)
-    verifyEq(m.func.params[2].of, Bool#)
+    verifyEq(m.func.params[2].type, Bool#)
     verifyEq(m.func.params[2].name, "checked")
     verifyEq(m.func.params[2].hasDefault, true)
 
@@ -428,12 +428,12 @@ class ReflectionTest : Test
     m := #nullableMethod
     verifyEq(m.returns.signature, "sys::Int?")
     verifyEq(m.returns.isNullable, true)
-    verifyEq(m.params[0].of.signature, "sys::Bool?")
-    verifyEq(m.params[0].of.isNullable, true)
+    verifyEq(m.params[0].type.signature, "sys::Bool?")
+    verifyEq(m.params[0].type.isNullable, true)
 
     f := #nullableField
-    verifyEq(f.of.signature, "sys::Str[]?")
-    verifyEq(f.of.isNullable, true)
+    verifyEq(f.type.signature, "sys::Str[]?")
+    verifyEq(f.type.isNullable, true)
   }
 
   Int? nullableMethod(Bool? a) { return null }

@@ -200,12 +200,12 @@ class RegressionTest : CompilerTest
         ")
 
     t := pod.types[0]
-    verifyEq(t.method("m00").params[0].of.signature, "|sys::Int?->sys::Void|")
-    verifyEq(t.method("m01").params[0].of.signature, "|sys::Int?->sys::Void|")
-    verifyEq(t.method("m02").params[0].of.signature, "|sys::Int?->sys::Void|")
-    verifyEq(t.method("m03").params[0].of.signature, "|sys::Int?->sys::Void|")
-    verifyEq(t.method("m04").params[0].of.signature, "|sys::Int,sys::Str?->sys::Pod?|")
-    verifyEq(t.method("m05").params[0].of.signature, "|sys::Int,sys::Str?->sys::Pod?|")
+    verifyEq(t.method("m00").params[0].type.signature, "|sys::Int?->sys::Void|")
+    verifyEq(t.method("m01").params[0].type.signature, "|sys::Int?->sys::Void|")
+    verifyEq(t.method("m02").params[0].type.signature, "|sys::Int?->sys::Void|")
+    verifyEq(t.method("m03").params[0].type.signature, "|sys::Int?->sys::Void|")
+    verifyEq(t.method("m04").params[0].type.signature, "|sys::Int,sys::Str?->sys::Pod?|")
+    verifyEq(t.method("m05").params[0].type.signature, "|sys::Int,sys::Str?->sys::Pod?|")
   }
 
 //////////////////////////////////////////////////////////////////////////

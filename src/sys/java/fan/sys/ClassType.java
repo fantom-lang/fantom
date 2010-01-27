@@ -431,7 +431,7 @@ public class ClassType
   private Field map(FPod fpod, FField f)
   {
     String name = f.name.intern();
-    Type fieldType = pod.findType(f.type);
+    Type fieldType = pod.type(f.type);
     return new Field(this, name, f.flags, f.attrs.facets(), f.attrs.lineNum, fieldType);
   }
 
@@ -441,14 +441,14 @@ public class ClassType
   private Method map(FPod fpod, FMethod m)
   {
     String name = m.name.intern();
-    Type returns = pod.findType(m.ret);
-    Type inheritedReturns = pod.findType(m.inheritedRet);
+    Type returns = pod.type(m.ret);
+    Type inheritedReturns = pod.type(m.inheritedRet);
     List params = new List(Sys.ParamType, m.paramCount);
     for (int j=0; j<m.paramCount; ++j)
     {
       FMethodVar p = m.vars[j];
       int pflags = (p.def == null) ? 0 : Param.HAS_DEFAULT;
-      params.add(new Param(p.name.intern(), pod.findType(p.type), pflags));
+      params.add(new Param(p.name.intern(), pod.type(p.type), pflags));
     }
     return new Method(this, name, m.flags, m.attrs.facets(), m.attrs.lineNum, returns, inheritedReturns, params);
   }

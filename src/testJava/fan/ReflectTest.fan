@@ -161,11 +161,11 @@ class ReflectTest : JavaTest
     verifyField(t.field("separatorChar"), t, Type.find("[java]::char"))
   }
 
-  Void verifyField(Field f, Type parent, Type of)
+  Void verifyField(Field f, Type parent, Type type)
   {
     verifySame(f.parent, parent)
-    verifySame(f.of, of)
-    verify(f.of == of)
+    verifySame(f.type, type)
+    verify(f.type == type)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -197,7 +197,7 @@ class ReflectTest : JavaTest
     verify(m.returns == ret)
     verifyEq(m.params.isRO, true)
     verifyEq(m.params.size, params.size)
-    params.each |Type p, Int i| { verifySame(p, m.params[i].of) }
+    params.each |Type p, Int i| { verifySame(p, m.params[i].type) }
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -33,7 +33,11 @@ final class Param
   **
   ** Type of the parameter.
   **
-  Type of()
+  Type type()
+
+** Use `type`
+@deprecated
+Type of()
 
   **
   ** Return if this parameter has a default value.  If true,

@@ -116,7 +116,7 @@ abstract class AbstractMain
   {
     args := argFields
     opts := optFields
-    varArgs := !args.isEmpty && args.last.of.fits(List#)
+    varArgs := !args.isEmpty && args.last.type.fits(List#)
     argi := 0
     for (i:=0; i<toks.size; ++i)
     {
@@ -151,7 +151,7 @@ abstract class AbstractMain
       if (optName(field) != n && !aliases.contains(n)) continue
 
       // if field is a bool we always assume the true value
-      if (field.of == Bool#)
+      if (field.type == Bool#)
       {
         field.set(this, true)
         return false // did not consume next
@@ -167,9 +167,9 @@ abstract class AbstractMain
       try
       {
         // parse the value to proper type and set field
-        field.set(this, parseVal(field.of, next))
+        field.set(this, parseVal(field.type, next))
       }
-      catch (Err e) log.err("Cannot parse -$n as $field.of.name: $next")
+      catch (Err e) log.err("Cannot parse -$n as $field.type.name: $next")
       return true // we *did* consume next
     }
 
@@ -179,24 +179,24 @@ abstract class AbstractMain
 
   private Bool parseArg(Field field, Str tok)
   {
-    isList := field.of.fits(List#)
+    isList := field.type.fits(List#)
     try
     {
       // if not a list, this is easy
       if (!isList)
       {
-        field.set(this, parseVal(field.of, tok))
+        field.set(this, parseVal(field.type, tok))
         return true // increment argi
       }
 
       // if list, then parse list item and add to end of list
-      of := field.of.params["V"]
+      of := field.type.params["V"]
       val :=  parseVal(of, tok)
       list := field.get(this) as Obj?[]
       if (list == null) field.set(this, list = List.make(of, 8))
       list.add(val)
     }
-    catch (Err e) log.err("Cannot parse argument as $field.of.name: $tok")
+    catch (Err e) log.err("Cannot parse argument as $field.type.name: $tok")
     return !isList // increment argi if not list
   }
 
@@ -215,8 +215,8 @@ abstract class AbstractMain
   private Void updateField(Field f, Str tok)
   {
     Obj? val := tok
-    if (f.of.toNonNullable != Str#)
-      val = f.of.method("fromStr").call(tok)
+    if (f.type.toNonNullable != Str#)
+      val = f.type.method("fromStr").call(tok)
     f.set(this, val)
   }
 
@@ -256,7 +256,7 @@ abstract class AbstractMain
     argSummary := args.join(" ") |field|
     {
       s := "<" + argName(field) + ">"
-      if (field.of.fits(List#)) s += "*"
+      if (field.type.fits(List#)) s += "*"
       return s
     }
 
@@ -286,7 +286,7 @@ abstract class AbstractMain
 
     col1 := "-$name"
     if (!aliases.isEmpty) col1 += ", -" + aliases.join(", -")
-    if (def != false) col1 += " <$field.of.name>"
+    if (def != false) col1 += " <$field.type.name>"
 
     col2 := desc
     if (def != false && def != null) col2 += " (default $def)"
