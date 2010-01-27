@@ -18,7 +18,9 @@ class SysTest : Test
 
   Void testArgs()
   {
+    verifyEq(Sys.args.of, Str#)
     verifyEq(Sys.args.isRO, true)
+    verifyEq(Sys.args.isImmutable, true)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -27,7 +29,9 @@ class SysTest : Test
 
   Void testEnv()
   {
+    verifyEq(Sys.env.typeof, [Str:Str]#)
     verifyEq(Sys.env.isRO, true)
+    verifyEq(Sys.env.isImmutable, true)
     verifyEq(Sys.hostName.isEmpty, false)
     verifyEq(Sys.userName.isEmpty, false)
     verify(Sys.env.caseInsensitive)

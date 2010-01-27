@@ -24,6 +24,7 @@
 - Remove deprecated support for 'val' in field setters
 
 - TODO: change deprecated to be string
+- TODO: deprecate Symbol.of, Param.of, Field.of, Pod.findType
 
 *Build 1.0.48 (21 Dec 09)*
 - Fix List.insertAll error checking

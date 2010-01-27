@@ -28,38 +28,8 @@ public final class Sys
   private Sys() {}
 
 //////////////////////////////////////////////////////////////////////////
-// Environment
-//////////////////////////////////////////////////////////////////////////
-
-  public static List args() { return args.ro(); }
-
-  public static Map env() { return env; }
-
-  public static String hostName() { return hostName; }
-
-  public static String userName() { return userName; }
-
-  public static void exit() { exit(0L); }
-  public static void exit(long status) { System.exit((int)status); }
-
-  public static InStream  in()  { return StdIn; }
-  public static OutStream out() { return StdOut; }
-  public static OutStream err() { return StdErr; }
-
-  public static void gc() { System.gc(); }
-
-  public static long idHash(Object obj)
-  {
-    return System.identityHashCode(obj);
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Platform
 //////////////////////////////////////////////////////////////////////////
-
-  public static String os() { return os; }
-  public static String arch() { return arch; }
-  public static String platform() { return platform; }
 
   public static final String os = osInit();
   public static final String arch = archInit();
@@ -100,49 +70,12 @@ public final class Sys
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Diagnostics
-//////////////////////////////////////////////////////////////////////////
-
-  public static Map diagnostics()
-  {
-    Map d = new Map(StrType, ObjType);
-
-    // memory
-    MemoryMXBean mem = ManagementFactory.getMemoryMXBean();
-    d.add("mem.heap",    Long.valueOf(mem.getHeapMemoryUsage().getUsed()));
-    d.add("mem.nonHeap", Long.valueOf(mem.getNonHeapMemoryUsage().getUsed()));
-
-    // threads
-    ThreadMXBean thread = ManagementFactory.getThreadMXBean();
-    long[] threadIds = thread.getAllThreadIds();
-    d.add("thread.size", Long.valueOf(threadIds.length));
-    for (int i=0; i<threadIds.length; ++i)
-    {
-      ThreadInfo ti = thread.getThreadInfo(threadIds[i]);
-      d.add("thread." + i + ".name",    ti.getThreadName());
-      d.add("thread." + i + ".state",   ti.getThreadState().toString());
-      d.add("thread." + i + ".cpuTime", Duration.make(thread.getThreadCpuTime(threadIds[i])));
-    }
-
-    // class loading
-    ClassLoadingMXBean cls = ManagementFactory.getClassLoadingMXBean();
-    d.add("classes.loaded",   Long.valueOf(cls.getLoadedClassCount()));
-    d.add("classes.total",    Long.valueOf(cls.getTotalLoadedClassCount()));
-    d.add("classes.unloaded", Long.valueOf(cls.getUnloadedClassCount()));
-
-    return d;
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   public static final File HomeDir;
   public static final File PodsDir;
   public static final Pod  SysPod;
-  public static final InStream  StdIn  = new SysInStream(System.in);
-  public static final OutStream StdOut = new SysOutStream(System.out);
-  public static final OutStream StdErr = new SysOutStream(System.err);
 
   // if true then we disable FanClassLoader and all classes
   // must be available precompiled into bytecode from the
@@ -251,7 +184,6 @@ public final class Sys
   public static final Type RangeType     = builtin("Range",    ObjType);
   public static final Type StrType       = builtin("Str",      ObjType);
   public static final Type StrBufType    = builtin("StrBuf",   ObjType);
-  public static final Type SysType       = builtin("Sys",      ObjType);
   public static final Type TestType      = builtin("Test",     ObjType);
   public static final Type DateTimeType  = builtin("DateTime", ObjType);
   public static final Type DateType      = builtin("Date",     ObjType);
@@ -261,6 +193,9 @@ public final class Sys
   public static final Type WeekdayType   = builtin("Weekday",  EnumType);
   public static final Type ThisType      = builtin("This",     ObjType);
   public static final Type VoidType      = builtin("Void",     ObjType);
+  public static final Type EnvType       = builtin("Env",      ObjType);
+  public static final Type BootEnvType   = builtin("BootEnv",  EnvType);
+  public static final Type SysType       = builtin("Sys",      ObjType);
 
   // reflection
   public static final Type SlotType      = builtin("Slot",     ObjType);
@@ -394,7 +329,6 @@ public final class Sys
     }
   }
 
-  public static final List args = new List(StrType);
   public static final LocalFile homeDir = toLocalFile("homeDir", HomeDir);
 
   private static LocalFile toLocalFile(String fieldName, File f)
@@ -409,76 +343,6 @@ public final class Sys
       e.printStackTrace();
       return null;
     }
-  }
-
-  public static final String hostName;
-  static
-  {
-    String name;
-    try
-    {
-      name = java.net.InetAddress.getLocalHost().getHostName();
-    }
-    catch (Throwable e)
-    {
-      name = "unknown";
-    }
-    hostName = name;
-  }
-
-  public static final String userName = System.getProperty("user.name", "unknown");
-
-//////////////////////////////////////////////////////////////////////////
-// Env
-//////////////////////////////////////////////////////////////////////////
-
-  private static Map env = new Map(StrType, StrType);
-  static
-  {
-    try
-    {
-      env.caseInsensitive(true);
-
-      // environment variables
-      java.util.Map getenv = System.getenv();
-      Iterator it = getenv.keySet().iterator();
-      while (it.hasNext())
-      {
-        String key = (String)it.next();
-        String val = (String)getenv.get(key);
-        env.set(key, val);
-      }
-
-      // Java system properties
-      it = System.getProperties().keySet().iterator();
-      while (it.hasNext())
-      {
-        String key = (String)it.next();
-        String val = System.getProperty(key);
-        env.set(key, val);
-      }
-
-      // sys.properties
-      LocalFile f = new LocalFile(new File(HomeDir, "lib" + File.separator + "sys.props"));
-      if (f.exists())
-      {
-        try
-        {
-          Map props = f.readProps();
-          env.setAll(props);
-        }
-        catch (Exception e)
-        {
-          System.out.println("ERROR: Invalid props file: " + f);
-          System.out.println("  " + e);
-        }
-      }
-    }
-    catch (Throwable e)
-    {
-      e.printStackTrace();
-    }
-    env = env.ro();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -514,6 +378,40 @@ public final class Sys
     javaVersion = ver;
   }
 
+////////////////////////////////////////////////////////////////////////
+// TODO
+////////////////////////////////////////////////////////////////////////
+
+  public static BootEnv bootEnv = new BootEnv();
+  static Env curEnv = bootEnv;
+
+  public static List args() { return Env.cur().args(); }
+
+  public static Map env() { return Env.cur().vars(); }
+
+  public static String hostName() { return Env.cur().host(); }
+
+  public static String userName() { return Env.cur().user(); }
+
+  public static void exit() { Env.cur().exit(); }
+  public static void exit(long status) { Env.cur().exit(status); }
+
+  public static InStream  in()  { return Env.cur().in(); }
+  public static OutStream out() { return Env.cur().out(); }
+  public static OutStream err() { return Env.cur().err(); }
+
+  public static void gc() { bootEnv.gc(); }
+
+  public static long idHash(Object obj) { return Env.cur().idHash(obj); }
+
+  public static String os() { return Env.cur().os(); }
+  public static String arch() { return Env.cur().arch(); }
+  public static String platform() { return Env.cur().platform(); }
+  public static Map diagnostics() { return Env.cur().diagnostics(); }
+
+  public static Type compile(fan.sys.File file) { return Env.cur().compile(file, null); }
+  public static Type compile(fan.sys.File file, Map options) { return Env.cur().compile(file, options); }
+
 //////////////////////////////////////////////////////////////////////////
 // Touch
 //////////////////////////////////////////////////////////////////////////
@@ -532,13 +430,6 @@ public final class Sys
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Compiler Utils
-//////////////////////////////////////////////////////////////////////////
-
-  public static Type compile(fan.sys.File file) { return ScriptUtil.compile(file, null); }
-  public static Type compile(fan.sys.File file, Map options) { return ScriptUtil.compile(file, options); }
-
-//////////////////////////////////////////////////////////////////////////
 // Environment
 //////////////////////////////////////////////////////////////////////////
 
@@ -548,7 +439,7 @@ public final class Sys
   static
   {
     boolean d = false;
-    try { d = "true".equals(env.get("fan.debug")); }
+    try { d = "true".equals(Env.cur().vars().get("fan.debug")); }
     catch (Exception e) { e.printStackTrace(); }
     debug = d;
   }

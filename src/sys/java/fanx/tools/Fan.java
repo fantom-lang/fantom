@@ -25,8 +25,7 @@ public class Fan
     throws Exception
   {
     // args
-    for (int i=0; i<args.length; ++i)
-      Sys.args.add(args[i]);
+    Sys.bootEnv.setArgs(args);
 
     // first try as file name
     File file = new File(target);
