@@ -72,13 +72,13 @@ fan.sys.ObjUtil.compareGT = function(a,b) { return fan.sys.ObjUtil.compare(a,b) 
 fan.sys.ObjUtil.is = function(obj, type)
 {
   if (obj == null) return false;
-  return fan.sys.ObjUtil.type(obj).is(type);
+  return fan.sys.ObjUtil.$typeof(obj).is(type);
 }
 
 fan.sys.ObjUtil.as = function(obj, type)
 {
   if (obj == null) return null;
-  var t = fan.sys.ObjUtil.type(obj);
+  var t = fan.sys.ObjUtil.$typeof(obj);
   if (t.is(fan.sys.Func.$type)) return t.as(obj, type);
   if (t.is(fan.sys.List.$type)) return t.as(obj, type);
   if (t.is(fan.sys.Map.$type))  return t.as(obj, type);
@@ -97,14 +97,14 @@ fan.sys.ObjUtil.coerce = function(obj, type)
   var v = fan.sys.ObjUtil.as(obj, type);
   if (v == null)
   {
-    var t = fan.sys.ObjUtil.type(obj);
+    var t = fan.sys.ObjUtil.$typeof(obj);
     throw fan.sys.CastErr.make(t + " cannot be cast to " + type);
   }
 
   return obj;
 }
 
-fan.sys.ObjUtil.type = function(obj)
+fan.sys.ObjUtil.$typeof = function(obj)
 {
   if (obj instanceof fan.sys.Obj) return obj.$typeof();
   else return fan.sys.Type.toFanType(obj);

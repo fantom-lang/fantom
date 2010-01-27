@@ -359,7 +359,7 @@ fan.sys.Type.common = function(objs)
   {
     var obj = objs[i];
     if (obj == null) { nullable = true; continue; }
-    var t = fan.sys.ObjUtil.type(obj);
+    var t = fan.sys.ObjUtil.$typeof(obj);
     if (best == null) { best = t; continue; }
     while (!t.is(best))
     {
@@ -454,7 +454,7 @@ fan.sys.ListType.prototype.is = function(that)
 
 fan.sys.ListType.prototype.as = function(obj, that)
 {
-  var objType = fan.sys.ObjUtil.type(obj);
+  var objType = fan.sys.ObjUtil.$typeof(obj);
 
   if (objType instanceof fan.sys.ListType &&
       objType.v.qname() == "sys::Obj" &&
@@ -516,7 +516,7 @@ fan.sys.MapType.prototype.is = function(that)
 
 fan.sys.MapType.prototype.as = function(obj, that)
 {
-  var objType = fan.sys.ObjUtil.type(obj);
+  var objType = fan.sys.ObjUtil.$typeof(obj);
 
   if (objType instanceof fan.sys.MapType &&
       objType.k.qname() == "sys::Obj" &&

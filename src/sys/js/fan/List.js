@@ -509,7 +509,7 @@ fan.sys.List.prototype.findType = function(t)
   for (var i=0; i<this.m_size; ++i)
   {
     var item = this.m_values[i];
-    if (item != null && fan.sys.ObjUtil.type(item).is(t))
+    if (item != null && fan.sys.ObjUtil.$typeof(item).is(t))
       acc.add(item);
   }
   return acc;
