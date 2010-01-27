@@ -6,10 +6,6 @@
 //   12 Jan 10  Andy Frank  Creation
 //
 
-// TODO FIXIT - this whole file goes away
-fan.sys.Sys = fan.sys.Obj.$extend(fan.sys.Obj);
-fan.sys.Sys.prototype.$ctor = function() {}
-
 /**
  * Env.
  */
