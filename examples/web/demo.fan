@@ -25,7 +25,7 @@ class Boot : AbstractMain
     Log.addHandler |rec| { sysLogger.writeLogRec(rec) }
 
     // check if doc directory exists
-    docDir := Repo.boot.home + `doc/`
+    docDir := Env.cur.homeDir + `doc/`
     if (!docDir.exists) docDir = homeDir + `demo/`
 
     // configure our web pipeline
@@ -73,7 +73,7 @@ const class ScriptMod : WebMod
     errLog := Buf()
     try
     {
-      t := Sys.compile(file, ["logOut":errLog.out])
+      t := Env.cur.compileScript(file, ["logOut":errLog.out])
       t.make->onService
     }
     catch (CompilerErr e)

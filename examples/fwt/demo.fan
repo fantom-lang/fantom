@@ -63,7 +63,7 @@ class FwtDemo
         MenuItem { text = "Next";    image = nextIcon;    onAction.add {browser.forward} },
         MenuItem { text = "Refresh"; image = refreshIcon; onAction.add {browser.refresh} },
         MenuItem { text = "Stop";    image = stopIcon;    onAction.add {browser.stop} },
-        MenuItem { text = "Exit"; onAction.add |->| { Sys.exit } },
+        MenuItem { text = "Exit"; onAction.add |->| { Env.cur.exit } },
       },
 
       Menu
@@ -125,9 +125,9 @@ class FwtDemo
         MenuItem { text = "Option B"; onAction.add |Event e| { echo((Dialog(e.window) {body=Button { text="BIG!" }; commands=Dialog.okCancel}).open) } },
         MenuItem { mode = MenuItemMode.sep },
         MenuItem { text = "File Open";  onAction.add |Event e| { echo(FileDialog {}.open(e.window)) } },
-        MenuItem { text = "Files Open"; onAction.add |Event e| { echo(FileDialog { dir=Repo.boot.home; mode=FileDialogMode.openFiles }.open(e.window)) } },
+        MenuItem { text = "Files Open"; onAction.add |Event e| { echo(FileDialog { dir=Env.cur.homeDir; mode=FileDialogMode.openFiles }.open(e.window)) } },
         MenuItem { text = "File Save";  onAction.add |Event e| { echo(FileDialog { name="foo.txt";  mode=FileDialogMode.saveFile }.open(e.window)) } },
-        MenuItem { text = "Dir Open";   onAction.add |Event e| { echo(FileDialog { dir=Repo.boot.home; mode=FileDialogMode.openDir }.open(e.window)) } },
+        MenuItem { text = "Dir Open";   onAction.add |Event e| { echo(FileDialog { dir=Env.cur.homeDir; mode=FileDialogMode.openDir }.open(e.window)) } },
       },
 
     }
@@ -632,7 +632,7 @@ class DirTreeModel : TreeModel
 {
   FwtDemo? demo
 
-  override Obj[] roots() { return Repo.boot.home.listDirs }
+  override Obj[] roots() { return Env.cur.homeDir.listDirs }
 
   override Str text(Obj node) { return node->name }
 

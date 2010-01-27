@@ -11,7 +11,7 @@ class Wordcount
     if (args.size != 1)
     {
       echo("usage: Wordcount <file>")
-      Sys.exit(-1)
+      Env.cur.exit(-1)
     }
 
     // Set up our map to count each word, and set its default to zero

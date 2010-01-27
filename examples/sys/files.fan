@@ -13,7 +13,7 @@
 **
 class Files
 {
-  File temp := Repo.working.home + `tmp/`
+  File temp := Env.cur.tempDir
 
   Void main()
   {
@@ -63,7 +63,7 @@ class Files
     echo("\n--- dirs ---")
 
     // check if file is a directory
-    dir := Repo.boot.home
+    dir := Env.cur.homeDir
     show(dir.isDir,  "dir.isDir")
 
     // list all files in a directory (files and dirs)

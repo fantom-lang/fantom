@@ -16,13 +16,13 @@ fan.sys.Field = fan.sys.Obj.$extend(fan.sys.Slot);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Field.prototype.$ctor = function(parent, name, flags, of)
+fan.sys.Field.prototype.$ctor = function(parent, name, flags, type)
 {
   this.m_parent = parent;
   this.m_name   = name;
   this.m_qname  = parent.qname() + "." + name;
   this.m_flags  = flags;
-  this.m_of     = of;
+  this.m_type   = type;
   this.m_$name  = this.$name(name);
   this.m_$qname = this.m_parent.m_$qname + '.m_' + this.m_$name;
   this.m_getter = null;
@@ -45,7 +45,7 @@ fan.sys.Field.prototype.trap = function(name, args)
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Field.prototype.of = function() { return this.m_of; }
+fan.sys.Field.prototype.type = function() { return this.m_type; }
 
 fan.sys.Field.prototype.get = function(instance)
 {
@@ -93,8 +93,8 @@ fan.sys.Field.prototype.set = function(instance, value, checkConst)
   //}
   if (value != null)
   {
-    if (!fan.sys.ObjUtil.type(value).is(this.m_of))
-      throw fan.sys.ArgErr.make("Wrong type for field " + this.m_qname + ": " + this.m_of + " != " + fan.sys.ObjUtil.type(value));
+    if (!fan.sys.ObjUtil.type(value).is(this.m_type))
+      throw fan.sys.ArgErr.make("Wrong type for field " + this.m_qname + ": " + this.m_type + " != " + fan.sys.ObjUtil.type(value));
   }
 
   // TODO
