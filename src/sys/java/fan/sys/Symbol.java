@@ -66,9 +66,6 @@ public final class Symbol
 
   public String name() { return name; }
 
-// TODO
-public Type of() { return type; }
-
   public Type type() { return type; }
 
   public boolean isVirtual() { return (flags & FConst.Virtual) != 0; }

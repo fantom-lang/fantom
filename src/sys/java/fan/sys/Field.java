@@ -57,9 +57,6 @@ public class Field
 
   public Type typeof()  { return Sys.FieldType;  }
 
-// TODO
-public Type of() { return type; }
-
   public Type type() { return type; }
 
   public String signature() { return type.toStr() + " " + name; }

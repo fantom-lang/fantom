@@ -611,7 +611,7 @@ catch (Exception e) { e.printStackTrace(); }
 
   private void finishMethod(java.lang.reflect.Method m, boolean staticOnly)
   {
-    if (pod == Sys.SysPod && !Modifier.isPublic(m.getModifiers())) return;
+    if (pod == Sys.sysPod && !Modifier.isPublic(m.getModifiers())) return;
     this.finishing = m.getName();
     String name = m.getName();
     Slot slot = slot(name, false);
@@ -641,7 +641,7 @@ catch (Exception e) { e.printStackTrace(); }
       // methods that use non-Fantom signatures
       Class[] params = m.getParameterTypes();
       int numParams = params.length;
-      if (pod == Sys.SysPod)
+      if (pod == Sys.sysPod)
       {
         if (!checkAllFan(params)) return;
         if (javaRepr)

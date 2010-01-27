@@ -141,7 +141,7 @@ public abstract class Type
    */
   public boolean isGenericParameter()
   {
-    return pod() == Sys.SysPod && name().length() == 1;
+    return pod() == Sys.sysPod && name().length() == 1;
   }
 
   /*

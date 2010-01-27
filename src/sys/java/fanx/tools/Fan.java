@@ -53,7 +53,7 @@ public class Fan
     Pod pod = null;
     try
     {
-      pod = Sys.compile(f, options).pod();
+      pod = Env.cur().compileScript(f, options).pod();
     }
     catch (Err.Val e)
     {
@@ -120,7 +120,7 @@ public class Fan
     else if (((Param)params.get(0)).type().is(Sys.StrType.toListOf()) &&
              (params.sz() == 1 || ((Param)params.get(1)).hasDefault()))
     {
-      args = new List(Sys.ObjType, new Object[] { Sys.args() });
+      args = new List(Sys.ObjType, new Object[] { Env.cur().args() });
     }
     else
     {
@@ -165,8 +165,8 @@ public class Fan
     println("  java.vm.vendor:  " + System.getProperty("java.vm.vendor"));
     println("  java.vm.version: " + System.getProperty("java.vm.version"));
     println("  java.home:       " + System.getProperty("java.home"));
-    println("  fan.platform:    " + Sys.platform());
-    println("  fan.version:     " + Sys.SysPod.version());
+    println("  fan.platform:    " + Env.cur().platform());
+    println("  fan.version:     " + Sys.sysPod.version());
     println("");
     println("Fantom Repos:");
     for (int i=0; i<Repo.list().size(); ++i)

@@ -285,7 +285,7 @@ public class ObjEncoder
 
   private boolean isMultiLine(Type t)
   {
-    return t.pod() != Sys.SysPod;
+    return t.pod() != Sys.sysPod;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -371,10 +371,10 @@ public class ObjEncoder
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  static final Symbol symSimple       = Sys.SysPod.symbol("simple");
-  static final Symbol symSerializable = Sys.SysPod.symbol("serializable");
-  static final Symbol symCollection   = Sys.SysPod.symbol("collection");
-  static final Symbol symTransient    = Sys.SysPod.symbol("transient");
+  static final Symbol symSimple       = Sys.sysPod.symbol("simple");
+  static final Symbol symSerializable = Sys.sysPod.symbol("serializable");
+  static final Symbol symCollection   = Sys.sysPod.symbol("collection");
+  static final Symbol symTransient    = Sys.sysPod.symbol("transient");
 
   OutStream out;
   int level  = 0;
