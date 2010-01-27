@@ -93,8 +93,8 @@ fan.sys.Field.prototype.set = function(instance, value, checkConst)
   //}
   if (value != null)
   {
-    if (!fan.sys.ObjUtil.type(value).is(this.m_type))
-      throw fan.sys.ArgErr.make("Wrong type for field " + this.m_qname + ": " + this.m_type + " != " + fan.sys.ObjUtil.type(value));
+    if (!fan.sys.ObjUtil.$typeof(value).is(this.m_type))
+      throw fan.sys.ArgErr.make("Wrong type for field " + this.m_qname + ": " + this.m_type + " != " + fan.sys.ObjUtil.$typeof(value));
   }
 
   // TODO
