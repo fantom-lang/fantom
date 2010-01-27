@@ -357,8 +357,8 @@ class Build : BuildScript
     buf.writeUtf("\n" +
       "buildTool:adm/buildtz.fan\n" +
       "buildTime:${DateTime.now}\n" +
-      "buildUser:${Sys.userName}\n" +
-      "buildHost:${Sys.hostName}\n"
+      "buildUser:${Env.cur.user}\n" +
+      "buildHost:${Env.cur.host}\n"
     )
 
     // create map of all the prefix/names
