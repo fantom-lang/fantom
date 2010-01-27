@@ -142,7 +142,7 @@ public class Err
 // Trace
 //////////////////////////////////////////////////////////////////////////
 
-  public Err trace() { return trace(Sys.StdOut, null, 0, true); }
+  public Err trace() { return trace(Env.cur().out(), null, 0, true); }
   public Err trace(OutStream out) { return trace(out, null, 0, true); }
   public Err trace(OutStream out, Map opt) { return trace(out, opt, 0, true); }
   public Err trace(OutStream out, Map opt, int indent, boolean useActual)
