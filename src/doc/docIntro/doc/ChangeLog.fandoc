@@ -16,7 +16,6 @@
 - DateTime, Time: isMidnight
 - DateTime, Date support for DDD pattern 1st, 2nd, etc
 - Integrate JavaScript compiler into main compiler pipeline
-- #889: compilerJs Rework
 - js: Int.toCode, toDuration, toDateTime
 - js: Remove Long support; use native Numbers for integers
 - compiler::Location => Loc
@@ -31,6 +30,7 @@
 - #869: Obj.type => Obj.typeof
 - #870: Proposal: bitwise operators
 - #878: Use Native Number type for sys::Int on JavaScript
+- #889: compilerJs Rework
 - #892: Proposal: using ?: operator with throw
 - #922: Don't allow one char scheme names in File(Uri)
 - #927: List API Changes
