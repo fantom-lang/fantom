@@ -68,5 +68,5 @@ fanlaunch()
   export FAN_HOME
   FAN_MAIN=fanx.tools.$1
   shift
-  $FAN_JAVA $osFlags $libPath -cp "$FAN_CP" -Dfan.home="$FAN_HOME" $FAN_MAIN "$@"
+  $FAN_JAVA $osFlags -Xmx256M $libPath -cp "$FAN_CP" -Dfan.home="$FAN_HOME" $FAN_MAIN "$@"
 }
