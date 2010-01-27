@@ -121,8 +121,9 @@ class Compiler
   TypeDef[]? types          // Parse
   ClosureExpr[]? closures   // Parse
   Str:CField wrappers       // ClosureVars
+  Obj? jsPod                // CompileJs (JavaScript AST)
+  Str? js                   // CompileJs (JavaScript code)
   FPod? fpod                // Assemble
-  Str? js                   // CompileJs
   CompilerOutput? output    // GenerateOutput
 
 }

@@ -30,7 +30,8 @@ class CompileJsPlugin : CompilerStep
     buf := StrBuf()
     jsPod = JsPod(this, pod, types)
     jsPod.write(JsWriter(buf.out))
-    compiler.js =  buf.toStr
+    compiler.jsPod = jsPod
+    compiler.js    = buf.toStr
   }
 
 //////////////////////////////////////////////////////////////////////////
