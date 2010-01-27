@@ -70,7 +70,7 @@ abstract class AbstractMain
   **
   ** Home directory for the application.  For a script
   ** this defaults to directory of the script.  For pods
-  ** the default is "{Repo.working/etc/{pod}".
+  ** the default is "{Env.cur.workDir}/etc/{pod}".
   **
   virtual File homeDir()
   {
@@ -78,7 +78,7 @@ abstract class AbstractMain
     if (t.pod.repo == null)
       return File(t->sourceFile->toUri).parent
     else
-      return Repo.working.home + `etc/${t.pod.name}/`
+      return Env.cur.workDir + `etc/${t.pod.name}/`
   }
 
   **

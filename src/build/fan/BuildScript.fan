@@ -55,7 +55,7 @@ abstract class BuildScript
   const File scriptDir := scriptFile.parent
 
   ** Home directory of development installation.  By default this
-  ** value is initialized by `@buildDevHome`, otherwise 'Repo.boot.home'`
+  ** value is initialized by `@buildDevHome`, otherwise 'Env.cur.homeDir'`
   ** is used.
   const File devHomeDir := resolveDevHomeDir
 
@@ -96,7 +96,7 @@ abstract class BuildScript
       }
     }
     catch log.err("Invalid URI for @buildDevHome: ${@buildDevHome.val}")
-    return Repo.boot.home
+    return Env.cur.homeDir
   }
 
   **
@@ -215,8 +215,8 @@ abstract class BuildScript
   {
     log.out.printLine("---------------")
     log.out.printLine("  scriptFile:   $scriptFile [$typeof.base]")
-    log.out.printLine("  boot.home:    $Repo.boot.home")
-    log.out.printLine("  working.home: $Repo.working.home")
+    log.out.printLine("  Env.homeDir:  $Env.cur.homeDir")
+    log.out.printLine("  Env.workDir:  $Env.cur.workDir")
     log.out.printLine("  devHomeDir:   $devHomeDir")
     log.level = LogLevel.warn // suppress success message
   }

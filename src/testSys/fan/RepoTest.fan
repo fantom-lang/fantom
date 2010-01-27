@@ -26,9 +26,6 @@ class RepoTest : Test
     verifyEq(Repo.list.isImmutable, true)
     verifySame(Repo.list[0], Repo.working)
     verifySame(Repo.list[-1], Repo.boot)
-
-    verifyEq(Repo.boot.home.isDir, true)
-    verifyEq(Repo.working.home.isDir, true)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,7 +62,7 @@ class RepoTest : Test
   Void testReadSymbols()
   {
     uri := `tmp/test/foo.fansym`
-    f := Repo.working.home + uri
+    f := Env.cur.workDir + uri
     try
     {
       symbols := Str:Obj?["a":4, "b":"hi", "c":[2,3,4]]

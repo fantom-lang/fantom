@@ -354,7 +354,7 @@ internal class Commands
   readonly Int historyMenuSize
   readonly Menu? toolsMenu
   readonly Int toolsMenuSize
-  readonly File toolsDir := Repo.boot.home +`etc/flux/tools/`
+  readonly File toolsDir := Env.cur.homeDir +`etc/flux/tools/`
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -767,7 +767,7 @@ internal class RecentCommand : FluxCommand
 internal class OptionsCommand : FluxCommand
 {
   new make() : super(CommandId.options) {}
-  override Void invoked(Event? event) { frame.load((Repo.boot.home+`etc/flux/`).uri) }
+  override Void invoked(Event? event) { frame.load((Env.cur.homeDir+`etc/flux/`).uri) }
 }
 
 ** Refresh the tools menu

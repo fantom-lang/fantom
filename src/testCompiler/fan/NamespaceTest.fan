@@ -29,7 +29,7 @@ class NamespaceTest : CompilerTest
   Void testFPod()
   {
     c := Compiler(CompilerInput())
-    ns := FPodNamespace(c, Repo.boot.home + `lib/fan/`)
+    ns := FPodNamespace(c, Env.cur.homeDir + `lib/fan/`)
     c.ns = ns
     verifySys(ns)
   }

@@ -19,7 +19,7 @@ class ZipTest : Test
   Void testOpen()
   {
     // open a known zip file, for testing we can use a pod file
-    f := Repo.boot.home + `lib/fan/sys.pod`
+    f := Env.cur.homeDir + `lib/fan/sys.pod`
     z := Zip.open(f)
     verifySame(z.file, f)
     verifyEq(z.toStr, f.uri.toStr)
@@ -42,8 +42,8 @@ class ZipTest : Test
 
     // verify errors
     verifyErr(IOErr#) { Zip.open(sys) }
-    verifyErr(IOErr#) { Zip.open(Repo.boot.home) }
-    verifyErr(IOErr#) { Zip.open(Repo.boot.home + `notfound.txt`) }
+    verifyErr(IOErr#) { Zip.open(Env.cur.homeDir) }
+    verifyErr(IOErr#) { Zip.open(Env.cur.homeDir + `notfound.txt`) }
     verifyErr(IOErr#) { sys.out }
     verifyErr(IOErr#) { sys.create }
     verifyErr(IOErr#) { sys.delete }

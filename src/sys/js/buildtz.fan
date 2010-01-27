@@ -17,7 +17,7 @@ class BuildTz
 {
   Void main()
   {
-    js  := Repo.boot.home + `src/sys/js/fan/timezones.js`
+    js  := Env.cur.homeDir + `src/sys/js/fan/timezones.js`
     out := js.out
     try
     {
@@ -61,7 +61,7 @@ class BuildTz
 
   Void loadIndex()
   {
-    db = Repo.boot.home + `etc/sys/timezones.ftz`
+    db = Env.cur.homeDir + `etc/sys/timezones.ftz`
     if (!db.exists) throw Err("tz databse not found: $db")
     in := db.in
 

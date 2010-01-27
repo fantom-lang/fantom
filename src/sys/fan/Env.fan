@@ -151,6 +151,22 @@ abstract const class Env
   **
   virtual OutStream err()
 
+  **
+  ** Get the home directory of Fantom installation.
+  **
+  virtual File homeDir()
+
+  **
+  ** Get the working directory to use for saving compiled
+  ** pods and configuration information.
+  **
+  virtual File workDir()
+
+  **
+  ** Get the temp directory to use for scratch files.
+  **
+  virtual File tempDir()
+
 //////////////////////////////////////////////////////////////////////////
 // Compile Hooks
 //////////////////////////////////////////////////////////////////////////

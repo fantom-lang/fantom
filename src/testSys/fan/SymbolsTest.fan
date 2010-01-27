@@ -138,7 +138,7 @@ class SymbolsTest : Test
   Void testOverrides()
   {
     // create temp etc/testSys
-    f := Repo.working.home + `etc/testSys/pod.fansym`
+    f := Env.cur.workDir + `etc/testSys/pod.fansym`
     try
     {
       f.delete

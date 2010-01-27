@@ -29,9 +29,9 @@ class FluxUtilTest : Test
 
   Void testMarkParse()
   {
-    f := Repo.boot.home + `lib/sys.props`
+    f := Env.cur.homeDir + `lib/sys.props`
     verifyMark("${f.osPath}", f)
-    verifyMark("${f.osPath} ${Repo.boot.home}", f)
+    verifyMark("${f.osPath} ${Env.cur.homeDir}", f)
     verifyMark("(${f.osPath})", f)
     verifyMark("---${f.osPath}---", f)
     verifyMark("${f.osPath}:8", f, 8)

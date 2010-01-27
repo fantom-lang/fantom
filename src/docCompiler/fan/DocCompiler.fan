@@ -25,7 +25,7 @@ class DocCompiler
     log = CompilerLog()
     errs = CompilerErr[,]
     warns = CompilerErr[,]
-    outDir = Repo.boot.home + `doc/`
+    outDir = Env.cur.homeDir + `doc/`
     uriMapper = UriMapper(this)
     htmlTheme = HtmlTheme()
   }

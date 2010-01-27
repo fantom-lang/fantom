@@ -170,7 +170,7 @@ class UriMapper : DocCompilerSupport
     if (dash == null) throw err("Invalid example script '$file'", loc)
     n1 := file[0..<dash]
     n2 := file[dash+1..-1]
-    f := Repo.boot.home + `examples/${n1}/${n2}.fan`
+    f := Env.cur.homeDir + `examples/${n1}/${n2}.fan`
     if (!f.exists) throw err("Unknown example script $f", loc)
     return `../examples/${file}.html`
   }
