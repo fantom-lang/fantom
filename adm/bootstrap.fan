@@ -185,9 +185,9 @@ class Bootstrap : AbstractMain
 
   Void build()
   {
-    runBuild(relHome, `src/buildall.fan`, "superclean")
-    runBuild(relHome, `src/buildboot.fan`, "full")
-    runBuild(devHome, `src/buildpods.fan`, "full", ["FAN_HOME":devHome.osPath])
+    runBuild(relHome, `src/buildall.fan`,  "superclean")
+    runBuild(relHome, `src/buildboot.fan`, "compile")
+    runBuild(devHome, `src/buildpods.fan`, "compile", ["FAN_HOME":devHome.osPath])
   }
 
   Void runBuild(File envHome, Uri script, Str target, [Str:Str]? env := null)
