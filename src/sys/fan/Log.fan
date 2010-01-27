@@ -123,7 +123,7 @@ const class Log
   Void debug(Str msg, Err? err := null)
 
   **
-  ** Publish a log entry.  The convenience methods `error`, `warn`
+  ** Publish a log entry.  The convenience methods `err`, `warn`
   ** `info`, and `debug` all route to this method for centralized
   ** handling.  The standard implementation is to call each of the
   ** installed `handlers` if the specified level is enabled.

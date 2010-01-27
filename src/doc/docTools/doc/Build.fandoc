@@ -136,18 +136,13 @@ scripts which build a Fantom pod.  The 'BuildPod' script defines
 a bunch of fields to be filled in. Plus it predefines several
 targets ready to use:
 
-  - [compile]`build::BuildPod.compile`: recompiles the Fantom code
-    into a pod file
-  - [javaNative]`build::BuildPod.javaNative`: recompiles the
-    Java native code
-  - [dotnetNative]`build::BuildPod.dotnetNative`: recompiles the
-    C# .NET native code
-  - [js]`build::BuildPod.js`: compiles Fantom source to JavaScript
+  - [compile]`build::BuildPod.compile`: recompiles Fantom code into
+    a pod file along with all associated natives (JavaScript, Java, .NET)
   - [clean]`build::BuildPod.clean`: deletes all the intermediate
     and derived target files
   - [doc]`build::BuildPod.doc`: compile fandoc to HTML
   - [test]`build::BuildPod.test`: runs all tests declared by the pod
-  - [full]`build::BuildPod.full`: clean, compile, natives, docs
+  - [full]`build::BuildPod.full`: clean, compile, test
 
 By convention pod source directories are organized as follows:
 

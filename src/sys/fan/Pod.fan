@@ -176,7 +176,7 @@ Type? findType(Str name, Bool checked := true)
 
   **
   ** Return the log for this pod's name.  This is a
-  ** convenience for 'Log.get(name)'.  Also see `Type.log`.
+  ** convenience for 'Log.get(name)'.
   **
   Log log()
 
