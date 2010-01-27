@@ -17,7 +17,7 @@ class ReflectSymbol : CSymbol
   {
     this.pod = pod
     this.symbol = symbol
-    this.of = pod.ns.importType(symbol.of)
+    this.of = pod.ns.importType(symbol.type)
   }
 
   override ReflectPod pod
