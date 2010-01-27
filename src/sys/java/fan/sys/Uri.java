@@ -257,6 +257,7 @@ public final class Uri
         String scheme = str.substring(0, i);
         if (hasUpper) scheme = FanStr.lower(scheme);
         this.scheme = scheme;
+        break;
       }
 
       // ==== authority ====

@@ -260,6 +260,7 @@ namespace Fan.Sys
           string scheme = str.Substring(0, i);
           if (hasUpper) scheme = FanStr.lower(scheme);
           this.scheme = scheme;
+          break;
         }
 
         // ==== authority ====
