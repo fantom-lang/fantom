@@ -73,7 +73,7 @@ class Bootstrap : AbstractMain
     jdkVer = execToStr(["javac", "-version"])
 
     // javaHome
-    javaHome := Sys.env.find |v, k| { k.lower == "java_home" }
+    javaHome := Env.cur.vars.find |v, k| { k.lower == "java_home" }
     if (javaHome != null)
       jdkHome = File.os(javaHome).normalize
 
@@ -124,8 +124,8 @@ class Bootstrap : AbstractMain
 
   Void confirm()
   {
-    Sys.out.print("Continue with these settings? [y|n] ").flush
-    line := Sys.in.readLine
+    Env.cur.out.print("Continue with these settings? [y|n] ").flush
+    line := Env.cur.in.readLine
     if (!line.lower.startsWith("y"))
     {
       echo("CANCELLED")
@@ -193,7 +193,7 @@ class Bootstrap : AbstractMain
   Void runBuild(File envHome, Uri script, Str target, [Str:Str]? env := null)
   {
     // figure out which launcher to use
-    bin := (Sys.os) == "win32" ? `bin/fan.exe` : `bin/fan`
+    bin := (Env.cur.os) == "win32" ? `bin/fan.exe` : `bin/fan`
 
     // buildboot using rel
     cmd := [envHome.plus(bin).osPath, devHome.plus(script).osPath, target]

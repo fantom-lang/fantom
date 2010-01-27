@@ -6,6 +6,8 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.50 (working)*
+
 *Build 1.0.49 (27 Jan 10)*
 - Obj.type => typeof
 - List added: containsAny, moveTo
@@ -30,6 +32,7 @@
 - #869: Obj.type => Obj.typeof
 - #870: Proposal: bitwise operators
 - #878: Use Native Number type for sys::Int on JavaScript
+- #883: Simplify standard build targets
 - #889: compilerJs Rework
 - #892: Proposal: using ?: operator with throw
 - #922: Don't allow one char scheme names in File(Uri)
