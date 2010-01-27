@@ -108,27 +108,27 @@ class MethodTest : Test
   {
     t := Type.of(this)
 
-    verifySig( t.method("dummy0").params[0].of,
+    verifySig( t.method("dummy0").params[0].type,
       "|->sys::Void|", Type[,], Void#);
 
-    verifySig( t.method("dummy1").params[0].of,
+    verifySig( t.method("dummy1").params[0].type,
       "|->sys::Str|", Type[,], Str#);
 
-    verifySig( t.method("dummy2").params[0].of,
+    verifySig( t.method("dummy2").params[0].type,
       "|sys::Float->sys::Void|", [Float#], Void#);
 
-    verifySig( t.method("dummy3").params[0].of,
+    verifySig( t.method("dummy3").params[0].type,
       "|sys::Float,sys::Int->sys::Str|", [Float#, Int#], Str#);
 
-    verifySig( t.method("dummy4").params[0].of,
+    verifySig( t.method("dummy4").params[0].type,
       "|sys::Float,sys::Int,sys::Bool,sys::Str,sys::Float,sys::Int,sys::Bool,sys::Str->sys::Str|",
       [Float#, Int#, Bool#, Str#, Float#, Int#, Bool#, Str#], Str#);
 
-    verifySig( t.method("dummy5").params[0].of,
+    verifySig( t.method("dummy5").params[0].type,
       "|sys::Float,sys::Int,sys::Bool,sys::Str,sys::Float,sys::Int,sys::Bool,sys::Str,sys::Type->sys::Str|",
       [Float#, Int#, Bool#, Str#, Float#, Int#, Bool#, Str#, Type#], Str#);
 
-    verifySig( t.method("dummy6").params[0].of,
+    verifySig( t.method("dummy6").params[0].type,
       "|sys::Float,sys::Int,sys::Bool,sys::Str,sys::Float,sys::Int,sys::Bool,sys::Str,sys::Type,sys::Slot->sys::Void|",
       [Float#, Int#, Bool#, Str#, Float#, Int#, Bool#, Str#, Type#, Slot#], Void#);
   }
@@ -166,7 +166,7 @@ class MethodTest : Test
     verifyEq(f.returns, ret)
     for (Int i:=0; i<params.size; ++i)
     {
-      verifyEq(params[i], fp[i].of)
+      verifyEq(params[i], fp[i].type)
     }
 
     verifySig(Type.of(f), sig, params, ret);
@@ -196,13 +196,13 @@ class MethodTest : Test
       // verify p0..pn params
       for (Int j:=0; j<params.size && j<i; ++j)
       {
-        verifyEq(c.params[j].of, params[j])
+        verifyEq(c.params[j].type, params[j])
       }
 
       // verify rest left at Obj
       for (Int k:=params.size; k<8 && k<i; ++k)
       {
-        verifyEq(c.params[k].of, Obj#)
+        verifyEq(c.params[k].type, Obj#)
       }
     }
   }

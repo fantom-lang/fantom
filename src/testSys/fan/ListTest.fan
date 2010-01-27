@@ -203,9 +203,9 @@ class ListTest : Test
     verifyEq(t.method("first").returns,    Obj?#)
     verifyEq(t.method("get").returns,      Obj?#)
     verifyEq(t.method("add").returns,      Obj?[]#)
-    verifyEq(t.method("add").params[0].of, Obj?#)
-    verifyEq(t.method("each").params[0].of, |Obj? a, Int i->Void|#)
-    verifyNotEq(t.method("each").params[0].of, |Str a, Int i->Void|#)
+    verifyEq(t.method("add").params[0].type, Obj?#)
+    verifyEq(t.method("each").params[0].type, |Obj? a, Int i->Void|#)
+    verifyNotEq(t.method("each").params[0].type, |Str a, Int i->Void|#)
 
     y := [7]
     t = Type.of(y)
@@ -220,9 +220,9 @@ class ListTest : Test
     verifyEq(t.method("first").returns,    Int?#)
     verifyEq(t.method("get").returns,      Int#)
     verifyEq(t.method("add").returns,      Int[]#)
-    verifyEq(t.method("add").params[0].of, Int#)
-    verifyEq(t.method("each").params[0].of, |Int a, Int i->Void|#)
-    verifyNotEq(t.method("each").params[0].of, |Obj a, Int i->Void|#)
+    verifyEq(t.method("add").params[0].type, Int#)
+    verifyEq(t.method("each").params[0].type, |Int a, Int i->Void|#)
+    verifyNotEq(t.method("each").params[0].type, |Obj a, Int i->Void|#)
 
     z := [[8ms]]
     t = Type.of(z)
@@ -237,13 +237,13 @@ class ListTest : Test
     verifyEq(t.method("first").returns,     Duration[]?#)
     verifyEq(t.method("get").returns,       Duration[]#)
     verifyEq(t.method("add").returns,       Duration[][]#)
-    verifyEq(t.method("add").params[0].of,  Duration[]#)
-    verifyEq(t.method("insert").params[1].of, Duration[]#)
+    verifyEq(t.method("add").params[0].type, Duration[]#)
+    verifyEq(t.method("insert").params[1].type, Duration[]#)
     verifyEq(t.method("removeAt").returns,    Duration[]#)
-    verifyEq(t.method("each").params[0].of, |Duration[] a, Int i->Void|#)
+    verifyEq(t.method("each").params[0].type, |Duration[] a, Int i->Void|#)
     verifyEq(t.method("map").returns, Obj?[]#)
     verifyNotEq(t.method("map").returns, Duration[]#)
-    verifyNotEq(t.method("each").params[0].of, |Obj a, Int i->Void|#)
+    verifyNotEq(t.method("each").params[0].type, |Obj a, Int i->Void|#)
   }
 
 //////////////////////////////////////////////////////////////////////////

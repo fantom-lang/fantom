@@ -62,7 +62,7 @@ public class TypeParser
 
       // if the type is from the pod being loaded then return to the pod
       if (loadingPod != null && podName.equals(loadingPod.name()))
-        return loadingPod.findType(typeName, checked);
+        return loadingPod.type(typeName, checked);
 
       // do a straight lookup
       return find(podName, typeName, checked);
@@ -87,7 +87,7 @@ public class TypeParser
   {
     Pod pod = Pod.find(podName, checked);
     if (pod == null) return null;
-    return pod.findType(typeName, checked);
+    return pod.type(typeName, checked);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -227,7 +227,7 @@ public class TypeParser
     }
 
     if (loadingPod != null && podName.equals(loadingPod.name()))
-      return loadingPod.findType(typeName, checked);
+      return loadingPod.type(typeName, checked);
     else
       return find(podName, typeName, checked);
   }

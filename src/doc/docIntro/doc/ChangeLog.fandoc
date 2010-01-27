@@ -12,6 +12,7 @@
 - List removed: containsSame, containsAllSame
 - Buf.empty => isEmpty
 - Test.id => curTestMethod
+- Field.of, Param.of, Symbol.of, Pod.findType => type
 - DateTime, Time: isMidnight
 - DateTime, Date support for DDD pattern 1st, 2nd, etc
 - Integrate JavaScript compiler into main compiler pipeline

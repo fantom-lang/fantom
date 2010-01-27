@@ -185,28 +185,28 @@ class FuncTest : Test
   {
     Func f := |Bool b, Int i, Float f, Str s->Str| { return "$b $i $f $s" }
     verifyEq(Type.of(f).signature, "|sys::Bool,sys::Int,sys::Float,sys::Str->sys::Str|")
-    verifyEq(f.params[0].of, Bool#)
-    verifyEq(f.params[1].of, Int#)
-    verifyEq(f.params[2].of, Float#)
-    verifyEq(f.params[3].of, Str#)
+    verifyEq(f.params[0].type, Bool#)
+    verifyEq(f.params[1].type, Int#)
+    verifyEq(f.params[2].type, Float#)
+    verifyEq(f.params[3].type, Str#)
     verifyEq(f.returns, Str#)
 
     g := f.bind([true])
     verifyEq(Type.of(g).signature, "|sys::Int,sys::Float,sys::Str->sys::Str|")
-    verifyEq(g.params[0].of, Int#)
-    verifyEq(g.params[1].of, Float#)
-    verifyEq(g.params[2].of, Str#)
+    verifyEq(g.params[0].type, Int#)
+    verifyEq(g.params[1].type, Float#)
+    verifyEq(g.params[2].type, Str#)
     verifyEq(g.returns, Str#)
 
     h := f.bind([true, 9, 4f])
     verifyEq(Type.of(h).signature, "|sys::Str->sys::Str|")
-    verifyEq(h.params[0].of, Str#)
+    verifyEq(h.params[0].type, Str#)
     verifyEq(h.returns, Str#)
 
     i := g.bind([7])
     verifyEq(Type.of(i).signature, "|sys::Float,sys::Str->sys::Str|")
-    verifyEq(i.params[0].of, Float#)
-    verifyEq(i.params[1].of, Str#)
+    verifyEq(i.params[0].type, Float#)
+    verifyEq(i.params[1].type, Str#)
     verifyEq(i.returns, Str#)
 
     verifyEq(f.call(false, 8, 3f, "x"), "false 8 3.0 x")

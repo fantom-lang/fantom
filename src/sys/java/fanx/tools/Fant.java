@@ -109,7 +109,7 @@ public class Fant
   private Type[] tests(Pod pod, String testName)
   {
     // named test
-    if (!testName.equals("*")) return new Type[] { pod.findType(testName, true) };
+    if (!testName.equals("*")) return new Type[] { pod.type(testName, true) };
 
     // all types which subclass Test
     List all = pod.types();

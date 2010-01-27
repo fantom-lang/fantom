@@ -180,19 +180,6 @@ abstract class BuildPod : BuildScript
     log.unindent
   }
 
-// TODO
-@target="build native Java jar file"
-virtual Void javaNative() { log.info("java -- NOT USED ANYMORE")}
-
-@target="compile Fantom source to JavaScript"
-virtual Void js() { log.info("js -- NOT USED ANYMORE") }
-
-@target="compile+native (no fandoc+src)"
-virtual Void compileAll() { echo("TODO - not supported anymore") }
-
-@target="build native .NET assembly"
-virtual Void dotnetNative() { log.info("dotnet -- NOT USED ANYMORE") }
-
 //////////////////////////////////////////////////////////////////////////
 // Compile Java
 //////////////////////////////////////////////////////////////////////////

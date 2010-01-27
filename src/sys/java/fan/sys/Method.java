@@ -64,7 +64,7 @@ public class Method
 
     int p = returns.isGenericParameter() ? 1 : 0;
     for (int i=0; i<params.sz(); ++i)
-      p |= ((Param)params.get(i)).of.isGenericParameter() ? 1 : 0;
+      p |= ((Param)params.get(i)).type.isGenericParameter() ? 1 : 0;
 
     int mask = 0;
     if (p != 0) mask |= GENERIC;
@@ -93,7 +93,7 @@ public class Method
     {
       if (i > 0) s.append(", ");
       Param p = (Param)params.get(i);
-      s.append(p.of).append(' ').append(p.name);
+      s.append(p.type).append(' ').append(p.name);
     }
     s.append(')');
     return s.toString();

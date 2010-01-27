@@ -45,10 +45,10 @@ public class Field
 // Java Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public Field(Type parent, String name, int flags, Facets facets, int lineNum, Type of)
+  public Field(Type parent, String name, int flags, Facets facets, int lineNum, Type type)
   {
     super(parent, name, flags, facets, lineNum);
-    this.of = of;
+    this.type = type;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -57,9 +57,12 @@ public class Field
 
   public Type typeof()  { return Sys.FieldType;  }
 
-  public Type of() { return of; }
+// TODO
+public Type of() { return type; }
 
-  public String signature() { return of.toStr() + " " + name; }
+  public Type type() { return type; }
+
+  public String signature() { return type.toStr() + " " + name; }
 
   public Object trap(String name, List args)
   {
@@ -122,10 +125,10 @@ public class Field
       throw ReadonlyErr.make("Cannot set static field " + qname()).val;
 
     // check generic type (the Java runtime will check non-generics)
-    if (of.isGenericInstance() && value != null)
+    if (type.isGenericInstance() && value != null)
     {
-      if (!typeof(value).is(of.toNonNullable()))
-        throw ArgErr.make("Wrong type for field " + qname() + ": " + of + " != " + typeof(value)).val;
+      if (!typeof(value).is(type.toNonNullable()))
+        throw ArgErr.make("Wrong type for field " + qname() + ": " + type + " != " + typeof(value)).val;
     }
 
     if (setter != null)
@@ -158,7 +161,7 @@ public class Field
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Type of;
+  Type type;
   Method getter;
   Method setter;
   java.lang.reflect.Field reflect;

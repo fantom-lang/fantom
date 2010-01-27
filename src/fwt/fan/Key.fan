@@ -131,7 +131,7 @@ const class Key
     s := Str:Key[:]
     Key#.fields.each |Field f|
     {
-      if (f.isStatic && f.of == Key#)
+      if (f.isStatic && f.type == Key#)
       {
         Key key := f.get(null)
         m[key.mask] = key

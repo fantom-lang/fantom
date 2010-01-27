@@ -319,7 +319,7 @@ public final class Sys
   {
     try
     {
-      return SysPod.findType(name, true);
+      return SysPod.type(name, true);
     }
     catch (Throwable e)
     {

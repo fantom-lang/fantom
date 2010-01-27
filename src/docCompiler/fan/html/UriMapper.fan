@@ -207,7 +207,7 @@ class UriMapper : DocCompilerSupport
     }
 
     // first try type in pod
-    t := pod.findType(typeName, false)
+    t := pod.type(typeName, false)
     if (t != null)
     {
       mapSlot(t, rest)

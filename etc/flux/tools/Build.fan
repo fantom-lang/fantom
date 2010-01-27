@@ -35,7 +35,7 @@ class Build : FluxCommand
     r := frame.view.resource
     if (r isnot FileResource)
     {
-      Dialog.openErr(frame, "Current view is not file resource: $r.type")
+      Dialog.openErr(frame, "Current view is not file resource: $r.typeof")
       return false
     }
 

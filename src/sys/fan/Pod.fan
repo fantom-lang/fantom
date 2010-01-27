@@ -124,7 +124,11 @@ final const class Pod
   ** Find a type by name.  If the type doesn't exist and checked
   ** is false then return null, otherwise throw UnknownTypeErr.
   **
-  Type? findType(Str name, Bool checked := true)
+  Type? type(Str name, Bool checked := true)
+
+** Use `type`
+@deprecated
+Type? findType(Str name, Bool checked := true)
 
 //////////////////////////////////////////////////////////////////////////
 // Symbols

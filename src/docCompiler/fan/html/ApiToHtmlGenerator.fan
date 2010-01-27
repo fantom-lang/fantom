@@ -237,7 +237,7 @@ vals := temp.get as Obj[]
       f := (Field)slot
       meta := parseMeta(slot.doc)
       slotModifiers(f)
-      typeLink(f.of)
+      typeLink(f.type)
       out.print(" $f.name")
       def := meta["def"]
       if (def != null) out.print(" := $def")
@@ -258,7 +258,7 @@ vals := temp.get as Obj[]
       m.params.each |Param p, Int i|
       {
         if (i > 0) out.print(", ")
-        typeLink(p.of)
+        typeLink(p.type)
         out.print(" $p.name")
         if (p.hasDefault)
         {

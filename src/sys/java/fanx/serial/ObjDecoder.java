@@ -116,7 +116,7 @@ public class ObjDecoder
 
     consume();
     String typeName = consumeId("Expecting type name");
-    Type t = pod.findType(typeName, false);
+    Type t = pod.type(typeName, false);
     if (t == null) throw err("Unknown type: " + podName + "::" + typeName);
 
     if (curt == Token.AS)
@@ -450,7 +450,7 @@ public class ObjDecoder
     if (t != null) return t;
     if (curField != null)
     {
-      Type ft = curField.of().toNonNullable();
+      Type ft = curField.type().toNonNullable();
       if (ft instanceof ListType) return ((ListType)ft).v;
     }
     if (infer) return null;
@@ -474,7 +474,7 @@ public class ObjDecoder
 
     if (curField != null)
     {
-      Type ft = curField.of().toNonNullable();
+      Type ft = curField.type().toNonNullable();
       if (ft instanceof MapType) return (MapType)ft;
     }
 
@@ -556,7 +556,7 @@ public class ObjDecoder
     if (pod == null) throw err("Pod not found: " + n, line);
 
     // resolve type
-    Type type = pod.findType(typeName, false);
+    Type type = pod.type(typeName, false);
     if (type == null) throw err("Type not found: " + n + "::" + typeName, line);
     return type;
   }
@@ -699,7 +699,7 @@ public class ObjDecoder
   static class UsingPod extends Using
   {
     UsingPod(Pod p) { pod = p; }
-    Type resolve(String n) { return pod.findType(n, false); }
+    Type resolve(String n) { return pod.type(n, false); }
     Symbol resolveSymbol(String n) { return pod.symbol(n, false); }
     final Pod pod;
   }

@@ -28,10 +28,4 @@ class Build : BuildPod
     outDir  = @buildDevHome.val + `lib/fan/`
   }
 
-  @target="compile fan source into pod"
-  override Void compile(Bool full := true)
-  {
-    super.compile(full)
-  }
-
 }

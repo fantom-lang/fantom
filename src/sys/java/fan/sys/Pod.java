@@ -265,8 +265,12 @@ public class Pod
 
   public List types() { return new List(Sys.TypeType, types); }
 
-  public Type findType(String name) { return findType(name, true); }
-  public Type findType(String name, boolean checked)
+// TODO
+public Type findType(String name) { return type(name, true); }
+public Type findType(String name, boolean checked) { return type(name, checked); }
+
+  public Type type(String name) { return type(name, true); }
+  public Type type(String name, boolean checked)
   {
     Type type = (Type)typesByName.get(name);
     if (type != null) return type;
@@ -410,11 +414,11 @@ public class Pod
     {
       FType ftype = fpod.types[i];
       ClassType type = types[i];
-      type.base = findType(ftype.base);
+      type.base = type(ftype.base);
 
       List mixins = new List(typeType, ftype.mixins.length);
       for (int j=0; j<ftype.mixins.length; ++j)
-        mixins.add(findType(ftype.mixins[j]));
+        mixins.add(type(ftype.mixins[j]));
       type.mixins = mixins.ro();
     }
   }
@@ -433,7 +437,7 @@ public class Pod
     FPodEmit.initFields(fpod, cls);
   }
 
-  Type findType(int qname)
+  Type type(int qname)
   {
     if (qname == 0xFFFF || qname == -1) return null;
 
@@ -457,7 +461,7 @@ public class Pod
     // I might not yet be added to the system namespace if I'm just
     // loading my own hollow types
     Pod pod = podName.equals(name) ? this : Pod.doFind(podName, true, null, null);
-    Type type = pod.findType(typeName, false);
+    Type type = pod.type(typeName, false);
     if (type != null)
     {
       if (ref.isNullable()) type = type.toNullable();
