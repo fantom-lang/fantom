@@ -18,7 +18,7 @@ namespace Fan.Sys
   ///
   /// Sys provides static access to the system's environment.
   ///
-  public sealed class Sys : FanObj
+  public sealed class Sys
   {
 
   //////////////////////////////////////////////////////////////////////////
@@ -163,7 +163,6 @@ namespace Fan.Sys
         RangeType    = builtin("Range",    ObjType);
         StrType      = builtin("Str",      ObjType);
         StrBufType   = builtin("StrBuf",   ObjType);
-        SysType      = builtin("Sys",      ObjType);
         TestType     = builtin("Test",     ObjType);
         DateTimeType = builtin("DateTime", ObjType);
         DateType     = builtin("Date",     ObjType);
@@ -420,7 +419,6 @@ namespace Fan.Sys
     public static readonly Type RangeType;
     public static readonly Type StrType;
     public static readonly Type StrBufType;
-    public static readonly Type SysType;
     public static readonly Type TestType;
     public static readonly Type DateTimeType;
     public static readonly Type TimeZoneType;

@@ -570,15 +570,7 @@ public final class Map
       Object val = e.getValue();
 
       if (val != null)
-      {
-        // TODO Obj.toImmutable
-        if (val instanceof List)
-          val = ((List)val).toImmutable();
-        else if (val instanceof Map)
-          val = ((Map)val).toImmutable();
-        else if (!isImmutable(val))
-          throw NotImmutableErr.make("Item [" + key + "] not immutable " + typeof(val)).val;
-      }
+        val = FanObj.toImmutable(val);
 
       temp.put(key, val);
     }

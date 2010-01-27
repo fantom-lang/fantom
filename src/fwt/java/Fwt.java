@@ -303,8 +303,8 @@ public class Fwt
 // Platform
 //////////////////////////////////////////////////////////////////////////
 
-  public static boolean isWindows() { return Sys.os().equals("win32"); }
-  public static boolean isMac() { return Sys.os().equals("macosx"); }
+  public static boolean isWindows() { return Env.cur().os().equals("win32"); }
+  public static boolean isMac() { return Env.cur().os().equals("macosx"); }
 
   public static int os(String name)
   {

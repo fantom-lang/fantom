@@ -52,10 +52,6 @@ final const class Symbol
   **
   Type type()
 
-** Use `type`
-@deprecated
-Type of()
-
   **
   ** Return if symbol is virtual which means it may be overridden
   ** in a fansym configuration file.

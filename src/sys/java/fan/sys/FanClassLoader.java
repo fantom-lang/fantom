@@ -79,7 +79,7 @@ public class FanClassLoader
     {
       String sep = File.separator;
       File extDir = new File(Sys.HomeDir, "lib" + sep + "java" + sep + "ext");
-      File platDir = new File(extDir, Sys.platform());
+      File platDir = new File(extDir, Sys.platform);
       ArrayList acc = new ArrayList();
       addExtJars(acc, extDir);
       addExtJars(acc, platDir);

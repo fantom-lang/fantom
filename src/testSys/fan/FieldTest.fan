@@ -157,7 +157,7 @@ class FieldTest : Test
     verifyEq(t.field("count")->setter->name, "count")
     verifyEq(t.field("count")->setter->returns, Void#)
     verifyEq(t.field("count")->setter->params->size, 1)
-    verifyEq(t.field("count")->setter->params->get(0)->of, Int#)
+    verifyEq(t.field("count")->setter->params->get(0)->type, Int#)
   }
 
 //////////////////////////////////////////////////////////////////////////

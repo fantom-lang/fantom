@@ -16,9 +16,9 @@ import fanx.util.*;
 
 /**
  * Sys provides static access to the system's environment.
+ * The Sys static intializer is used to boot a Fantom runtime.
  */
 public final class Sys
-  extends FanObj
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,9 +73,10 @@ public final class Sys
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+// TODO
   public static final File HomeDir;
   public static final File PodsDir;
-  public static final Pod  SysPod;
+  public static final Pod  sysPod;
 
   // if true then we disable FanClassLoader and all classes
   // must be available precompiled into bytecode from the
@@ -110,7 +111,7 @@ public final class Sys
       */
 
       // load sys pod
-      SysPod = Pod.doFind("sys", true, null, null);
+      sysPod = Pod.doFind("sys", true, null, null);
     }
     catch (Throwable e)
     {
@@ -195,7 +196,6 @@ public final class Sys
   public static final Type VoidType      = builtin("Void",     ObjType);
   public static final Type EnvType       = builtin("Env",      ObjType);
   public static final Type BootEnvType   = builtin("BootEnv",  EnvType);
-  public static final Type SysType       = builtin("Sys",      ObjType);
 
   // reflection
   public static final Type SlotType      = builtin("Slot",     ObjType);
@@ -283,19 +283,19 @@ public final class Sys
                                 HType, KType, LType, MType, RType, VType;
   static
   {
-    GenericParameterTypes['A'] = AType = new ClassType(SysPod, "A", 0, null);  // A-H Params
-    GenericParameterTypes['B'] = BType = new ClassType(SysPod, "B", 0, null);
-    GenericParameterTypes['C'] = CType = new ClassType(SysPod, "C", 0, null);
-    GenericParameterTypes['D'] = DType = new ClassType(SysPod, "D", 0, null);
-    GenericParameterTypes['E'] = EType = new ClassType(SysPod, "E", 0, null);
-    GenericParameterTypes['F'] = FType = new ClassType(SysPod, "F", 0, null);
-    GenericParameterTypes['G'] = GType = new ClassType(SysPod, "G", 0, null);
-    GenericParameterTypes['H'] = HType = new ClassType(SysPod, "H", 0, null);
-    GenericParameterTypes['K'] = KType = new ClassType(SysPod, "K", 0, null);  // Key
-    GenericParameterTypes['L'] = LType = new ClassType(SysPod, "L", 0, null);  // Parameterized List
-    GenericParameterTypes['M'] = MType = new ClassType(SysPod, "M", 0, null);  // Parameterized Map
-    GenericParameterTypes['R'] = RType = new ClassType(SysPod, "R", 0, null);  // Return
-    GenericParameterTypes['V'] = VType = new ClassType(SysPod, "V", 0, null);  // Value
+    GenericParameterTypes['A'] = AType = new ClassType(sysPod, "A", 0, null);  // A-H Params
+    GenericParameterTypes['B'] = BType = new ClassType(sysPod, "B", 0, null);
+    GenericParameterTypes['C'] = CType = new ClassType(sysPod, "C", 0, null);
+    GenericParameterTypes['D'] = DType = new ClassType(sysPod, "D", 0, null);
+    GenericParameterTypes['E'] = EType = new ClassType(sysPod, "E", 0, null);
+    GenericParameterTypes['F'] = FType = new ClassType(sysPod, "F", 0, null);
+    GenericParameterTypes['G'] = GType = new ClassType(sysPod, "G", 0, null);
+    GenericParameterTypes['H'] = HType = new ClassType(sysPod, "H", 0, null);
+    GenericParameterTypes['K'] = KType = new ClassType(sysPod, "K", 0, null);  // Key
+    GenericParameterTypes['L'] = LType = new ClassType(sysPod, "L", 0, null);  // Parameterized List
+    GenericParameterTypes['M'] = MType = new ClassType(sysPod, "M", 0, null);  // Parameterized Map
+    GenericParameterTypes['R'] = RType = new ClassType(sysPod, "R", 0, null);  // Return
+    GenericParameterTypes['V'] = VType = new ClassType(sysPod, "V", 0, null);  // Value
 
     List noMixins = new List(TypeType, 0).ro();
     for (int i=0; i<GenericParameterTypes.length; ++i)
@@ -319,7 +319,7 @@ public final class Sys
   {
     try
     {
-      return SysPod.type(name, true);
+      return sysPod.type(name, true);
     }
     catch (Throwable e)
     {
@@ -380,39 +380,9 @@ public final class Sys
     javaVersion = ver;
   }
 
-////////////////////////////////////////////////////////////////////////
-// TODO
-////////////////////////////////////////////////////////////////////////
-
+// TODO: final organization of this class a bootstrap?
   public static BootEnv bootEnv = new BootEnv();
   static Env curEnv = bootEnv;
-
-  public static List args() { return Env.cur().args(); }
-
-  public static Map env() { return Env.cur().vars(); }
-
-  public static String hostName() { return Env.cur().host(); }
-
-  public static String userName() { return Env.cur().user(); }
-
-  public static void exit() { Env.cur().exit(); }
-  public static void exit(long status) { Env.cur().exit(status); }
-
-  public static InStream  in()  { return Env.cur().in(); }
-  public static OutStream out() { return Env.cur().out(); }
-  public static OutStream err() { return Env.cur().err(); }
-
-  public static void gc() { bootEnv.gc(); }
-
-  public static long idHash(Object obj) { return Env.cur().idHash(obj); }
-
-  public static String os() { return Env.cur().os(); }
-  public static String arch() { return Env.cur().arch(); }
-  public static String platform() { return Env.cur().platform(); }
-  public static Map diagnostics() { return Env.cur().diagnostics(); }
-
-  public static Type compile(fan.sys.File file) { return Env.cur().compileScript(file, null); }
-  public static Type compile(fan.sys.File file, Map options) { return Env.cur().compileScript(file, options); }
 
 //////////////////////////////////////////////////////////////////////////
 // Touch

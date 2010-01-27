@@ -265,10 +265,6 @@ public class Pod
 
   public List types() { return new List(Sys.TypeType, types); }
 
-// TODO
-public Type findType(String name) { return type(name, true); }
-public Type findType(String name, boolean checked) { return type(name, checked); }
-
   public Type type(String name) { return type(name, true); }
   public Type type(String name, boolean checked)
   {

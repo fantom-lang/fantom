@@ -90,7 +90,7 @@ public class FanUtil
    */
   public static boolean isJavaRepresentation(Type t)
   {
-    if (t.pod() != Sys.SysPod) return false;
+    if (t.pod() != Sys.sysPod) return false;
     return t == Sys.ObjType   ||
            t == Sys.BoolType  ||
            t == Sys.StrType   ||

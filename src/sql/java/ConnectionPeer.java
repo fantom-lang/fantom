@@ -249,7 +249,7 @@ public class ConnectionPeer
     // is assumed to be a driver class name.
     try
     {
-      List envKeys = Sys.env().keys();
+      List envKeys = Env.cur().vars().keys();
       int keyCount = envKeys.sz();
       for (int i = 0; i < keyCount; i++)
       {
@@ -257,7 +257,7 @@ public class ConnectionPeer
         if (!key.startsWith("sql.")) continue;
         if (!key.endsWith(".driver")) continue;
 
-        String driver = (String)Sys.env().get(key);
+        String driver = (String)Env.cur().vars().get(key);
         try
         {
           Class.forName(driver);

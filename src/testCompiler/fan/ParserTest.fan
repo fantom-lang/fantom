@@ -26,7 +26,7 @@ class ParserTest : CompilerTest
       using $podName::Int as MyInt     // as from me vs sys
       using $podName::Float            // me overrides sys
       class Foo {}
-      class Sys {}
+      class Env {}
       class Int {}
       class Float {}")
 
@@ -53,8 +53,8 @@ class ParserTest : CompilerTest
     verifyEq(unit.importedTypes["XLoc"].first.qname, "compiler::Loc")
 
     // verify both me::Sys and sys::Sys imported
-    verify(unit.importedTypes["Sys"].any |CType t->Bool| { return t.qname == "sys::Sys" })
-    verify(unit.importedTypes["Sys"].any |CType t->Bool| { return t.qname == "$podName::Sys" })
+    verify(unit.importedTypes["Env"].any |CType t->Bool| { return t.qname == "sys::Env" })
+    verify(unit.importedTypes["Env"].any |CType t->Bool| { return t.qname == "$podName::Env" })
 
     // verify sys::Int vs me::Int as MyInt
     verifyEq(unit.importedTypes["Int"].size, 1)
