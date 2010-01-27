@@ -162,7 +162,7 @@ class Sending
 
     // dump email to standard out
     echo("--- To, CC, BCC ---")
-    email.encode(Sys.out)
+    email.encode(Env.cur.out)
   }
 
 }

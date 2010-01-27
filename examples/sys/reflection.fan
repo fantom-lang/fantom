@@ -45,11 +45,11 @@ class Reflection
   {
     echo("\n--- types ---")
     pod := Pod.find("fwt")
-    t := pod.findType("Button")
+    t := pod.type("Button")
     show("foo".typeof,                   "get the type of the an object")
     show(pod.types,                      "list the types in myPod")
-    show(pod.findType("Button"),         "find a type in pod by simple name")
-    show(pod.findType("Foo", false),     "returns null if type not found")
+    show(pod.type("Button"),             "find a type in pod by simple name")
+    show(pod.type("Foo", false),         "returns null if type not found")
     show(Type.find("fwt::Label"),        "lookup a type by its qualified name")
     show(Type.find("fwt::Foo", false),   "returns null if type not found")
     show(Int#,                           "type literal for sys::Int")
@@ -121,7 +121,7 @@ class Reflection
     show(t.fields,                     "list all the fields on someType")
     show(Slot.findField("fwt::Label.text"),       "looukp a field by its qualified name")
     show(Slot.findField("fwt::Label.foo", false),  "returns null if field not found")
-    show(f.of,                         "type of field")
+    show(f.type,                       "type of field")
     f.set(obj, "hi")                   // set instance field
     show(f.get(obj),                   "get instance field")
     show(Float#pi.get,                 "get static field")
@@ -138,7 +138,7 @@ class Reflection
     show(@sys::transient,              "qualified symbol literal")
     show(@transient,                   "unqualified symbol literal")
     show(s.qname,                      "qualified name")
-    show(s.of,                         "type of symbol")
+    show(s.type,                       "type of symbol")
     show(s.val,                        "value of symbol")
   }
 

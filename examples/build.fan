@@ -95,7 +95,7 @@ class Build : BuildScript
       // verify it compiles
       Type? t
       try
-        t = Sys.compile(srcFile)
+        t = Env.cur.compileScript(srcFile)
       catch (Err e)
       {
         log.err("Failed to compile $srcFile", e)

@@ -31,7 +31,7 @@ fan.sys.Func.make$ = function(self, params, ret, func)
 {
   var types = [];
   for (var i=0; i<params.length; i++)
-    types.push(params[i].m_of);
+    types.push(params[i].m_type);
 
   self.m_params = params;
   self.m_return = ret;

@@ -90,7 +90,7 @@ class Build : BuildScript
     {
       if (t.fields.isEmpty && t.methods.isEmpty) return
       out.print("  fan.sys.${t.name}.\$type")
-      t.fields.each |f| { out.print(".\$af('$f.name',${f->flags},'$f.of.signature')") }
+      t.fields.each |f| { out.print(".\$af('$f.name',${f->flags},'$f.type.signature')") }
       t.methods.each |m| { out.print(".\$am('$m.name',${m->flags})") }
       out.printLine(";")
     }
