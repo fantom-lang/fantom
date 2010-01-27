@@ -17,9 +17,6 @@ abstract const class GfxEnv
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  // TODO: use `cur`
-  static GfxEnv? current(Bool checked := true) { cur(checked) }
-
   **
   ** Get the current thread's graphics environment.  If no
   ** environment is active then throw Err or return null based

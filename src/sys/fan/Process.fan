@@ -55,20 +55,20 @@ final class Process
 
   **
   ** The output stream used to sink the process stdout.
-  ** Default is to send to `Sys.out`.  If set to null, then
+  ** Default is to send to `Env.out`.  If set to null, then
   ** output is silently consumed like /dev/null.
   **
-  OutStream? out := Sys.out
+  OutStream? out := Env.cur.out
 
   **
   ** The output stream used to sink the process stderr.
-  ** Default is to send to `Sys.err`.  If set to null, then
+  ** Default is to send to `Env.err`.  If set to null, then
   ** output is silently consumed like /dev/null.  Note
   ** this field is ignored if `mergeErr` is set
   ** true, in which case stderr goes to the stream configured
   ** via 'out'.
   **
-  OutStream? err := Sys.err
+  OutStream? err := Env.cur.err
 
   **
   ** The input stream used to source the process stdin.

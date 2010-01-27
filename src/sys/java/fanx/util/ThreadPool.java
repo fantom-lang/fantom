@@ -199,7 +199,7 @@ public class ThreadPool
 
   public void dump(fan.sys.List args)
   {
-    fan.sys.OutStream out = fan.sys.Sys.out();
+    fan.sys.OutStream out = fan.sys.Env.cur().out();
     if (args != null && args.size() > 0)
       out = (fan.sys.OutStream)args.get(0);
 

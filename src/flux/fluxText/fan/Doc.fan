@@ -448,7 +448,7 @@ class Doc : RichTextModel
   **
   ** Debug dump of the document model.
   **
-  Void dump(OutStream out := Sys.out)
+  Void dump(OutStream out := Env.cur.out)
   {
     out.printLine("")
     out.printLine("==== Doc.dump ===")

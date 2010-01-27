@@ -791,7 +791,7 @@ internal class ToolScriptCommand : FluxCommand
   {
     try
     {
-      FluxCommand cmd := Sys.compile(file).make([id])
+      FluxCommand cmd := Env.cur.compileScript(file).make([id])
       cmd.frame = frame
       cmd.invoke(event)
     }

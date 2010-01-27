@@ -43,7 +43,7 @@ When an exception is thrown, the runtime captures the call stack of
 and stores it with the 'Err' instance.  You can dump the call stack
 of an exception using the 'trace' method:
 
-  err.trace       // dumps to Sys.out
+  err.trace       // dumps to Env.cur.out
   err.trace(log)  // dumps to log output stream
 
 Throw Statement [#throw]

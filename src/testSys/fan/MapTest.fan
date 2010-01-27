@@ -115,7 +115,7 @@ class MapTest : Test
     Obj d := [3:"c"]
     verifyNotEq(Type.of(d), Obj:Str#)
     verifyNotEq(Type.of(d), Int:Obj#)
-    verifyNotEq(Type.of(d), Sys:Bool#)
+    verifyNotEq(Type.of(d), Charset:Bool#)
 
     // nullable
     Obj e := [2:"two", "three":null, "four":4]

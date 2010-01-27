@@ -961,7 +961,7 @@ class XParser
     m1 := Sys.diagnostics["mem.heap"].toStr.toInt
 
     doc := XParser(File.os(Sys.args[0]).in).parseDoc
-    doc.write(Sys.out)
+    doc.write(Env.cur.out)
 
     m2 := Sys.diagnostics["mem.heap"].toStr.toInt
     t2 := Duration.now

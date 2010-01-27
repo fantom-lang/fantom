@@ -54,7 +54,7 @@ abstract class DocNode
   **
   ** Debug dump to output stream.
   **
-  Void dump(OutStream out := Sys.out)
+  Void dump(OutStream out := Env.cur.out)
   {
     html := HtmlDocWriter(out)
     write(html)

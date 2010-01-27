@@ -17,8 +17,8 @@ class ProcessTest : Test
     p := Process()
     verify(p.mergeErr)
     verify(p.env.size > 0)
-    verifySame(p.out, Sys.out)
-    verifySame(p.err, Sys.err)
+    verifySame(p.out, Env.cur.out)
+    verifySame(p.err, Env.cur.err)
     verifySame(p.in, null)
   }
 
@@ -104,7 +104,7 @@ class ProcessTest : Test
     return Process([cmd, Type.of(this).qname].addAll(args))
   }
 
-  Bool isWindows() { return Sys.env["os.name"].lower.contains("win") }
+  Bool isWindows() { return Env.cur.os == "win32" }
 
 //////////////////////////////////////////////////////////////////////////
 // Process Spawned
@@ -117,21 +117,21 @@ class ProcessTest : Test
       m := ProcessTest#.method(args.first, false)
       if (m != null) return m.call(args[1..-1])
     }
-    Sys.out.printLine("     ProcessTest.out " + args.join(" ")).flush
-    Sys.err.printLine("     ProcessTest.err " + args.join(" ")).flush
+    Env.cur.out.printLine("     ProcessTest.out " + args.join(" ")).flush
+    Env.cur.err.printLine("     ProcessTest.err " + args.join(" ")).flush
     return 7
   }
 
   static Int printEnv(Str[] args)
   {
-    Sys.out.printLine("     " + Sys.env[args.first]).flush
+    Env.cur.out.printLine("     " + Env.cur.vars[args.first]).flush
     return 0
   }
 
   static Int echoStdIn(Str[] args)
   {
-    line := Sys.in.readLine
-    Sys.out.printLine("     $line").flush
+    line := Env.cur.in.readLine
+    Env.cur.out.printLine("     $line").flush
     return 0
   }
 

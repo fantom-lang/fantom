@@ -38,14 +38,14 @@ const class Err
 
   **
   ** Dump the stack trace of this exception to the specified
-  ** output stream (or Sys.out by default).  Return this.
+  ** output stream (or 'Env.cur.out' by default).  Return this.
   **
   ** The options may be used to specify the format of the output:
   **   - "maxDepth": Int specifies how many methods in each
   **        exception of chain to include.  If unspecified the
   **        default is 20.
   **
-  This trace(OutStream out := Sys.out, [Str:Obj]? options := null)
+  This trace(OutStream out := Env.cur.out, [Str:Obj]? options := null)
 
   **
   ** Dump the stack trace of this exception to a Str.

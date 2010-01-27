@@ -51,6 +51,6 @@ const class LogRec
   **
   ** Print to the specified output stream.
   **
-  Str print(OutStream out := Sys.out)
+  Str print(OutStream out := Env.cur.out)
 
 }

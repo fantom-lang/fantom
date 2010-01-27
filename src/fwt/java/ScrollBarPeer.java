@@ -147,13 +147,13 @@ public class ScrollBarPeer
     // create a key listener on the scrollable (StyledText, Table, or Tree);
     // after it fires a key event, we check if the scroll bar has been
     // modified to see if we need to fire an onModify event
-    final Env env = Env.get();
+    final Fwt fwt = Fwt.get();
     if (scrollableKeyListener == null) scrollableKeyListener = new Listener()
     {
       public void handleEvent(final Event event)
       {
         // asyncExec ensures that Scrollable handles key first
-        env.display.asyncExec(new Runnable()
+        fwt.display.asyncExec(new Runnable()
         {
           public void run()
           {

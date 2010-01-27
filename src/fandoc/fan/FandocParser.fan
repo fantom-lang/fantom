@@ -447,9 +447,9 @@ class FandocParser
 // Main
 //////////////////////////////////////////////////////////////////////////
 
-  static Void main()
+  static Void main(Str[] args := Env.cur.args)
   {
-    doc := make.parse(Sys.args[0], File(Sys.args[0].toUri).in)
+    doc := make.parse(args[0], File(args[0].toUri).in)
     doc.dump
   }
 

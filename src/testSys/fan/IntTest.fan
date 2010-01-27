@@ -690,6 +690,6 @@ class IntTest : Test
     }
   }
 
-  const Bool js := Sys.env["fan.runtime"] == "javascript"
+  const Bool js := Env.cur.runtime == "js"
 
 }

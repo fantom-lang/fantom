@@ -112,7 +112,7 @@ class Main : AbstractMain
 // Version
 //////////////////////////////////////////////////////////////////////////
 
-  private Int doVersion(OutStream out := Sys.out)
+  private Int doVersion(OutStream out := Env.cur.out)
   {
     out.printLine("Fantom Doc Compiler ${Pod.of(this).version}")
     out.printLine("Copyright (c) 2007, Brian Frank and Andy Frank")

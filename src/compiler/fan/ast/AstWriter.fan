@@ -20,7 +20,7 @@ class AstWriter
   **
   ** Make for specified output stream
   **
-  new make(OutStream out := Sys.out)
+  new make(OutStream out := Env.cur.out)
   {
     this.out = out
   }

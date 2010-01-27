@@ -19,21 +19,21 @@ class ScriptTest : CompilerTest
     f := tempDir + `test.fan`
     f.out.print("class Foo { Int x() { return 2008 } }").close
 
-    t1 := Sys.compile(f)
+    t1 := Env.cur.compileScript(f)
     verifyEq(t1.make->x, 2008)
 
-    t2 := Sys.compile(f)
+    t2 := Env.cur.compileScript(f)
     verifySame(t1, t2)
     verifyEq(t2.make->x, 2008)
 
     f.out.print("class Foo { Str x() { return \"2009\" } }").close
-    t3 := Sys.compile(f)
+    t3 := Env.cur.compileScript(f)
     verifyNotSame(t1, t3)
     verifyEq(t3.make->x, "2009")
 
-    t4 := Sys.compile(f, ["force":false])
+    t4 := Env.cur.compileScript(f, ["force":false])
     verifySame(t3, t4)
-    t5 := Sys.compile(f, ["force":true])
+    t5 := Env.cur.compileScript(f, ["force":true])
     verifyNotSame(t3, t5)
   }
 
@@ -46,7 +46,7 @@ class ScriptTest : CompilerTest
       class B { }"
     ).close
 
-    t := Sys.compile(f)
+    t := Env.cur.compileScript(f)
     verifyEq(t.name, "C")
 
     f.out.print(
@@ -55,7 +55,7 @@ class ScriptTest : CompilerTest
       class B { }"
     ).close
 
-    t = Sys.compile(f)
+    t = Env.cur.compileScript(f)
     verifyEq(t.name, "A")
   }
 
@@ -66,10 +66,10 @@ class ScriptTest : CompilerTest
 
     log := CompilerLog.make
 
-    Sys.compile(f, ["log":log, "logLevel":LogLevel.silent])
+    Env.cur.compileScript(f, ["log":log, "logLevel":LogLevel.silent])
     verifyEq(log.level, LogLevel.silent)
 
-    Sys.compile(f, ["log":log, "logLevel":LogLevel.err, "force":true])
+    Env.cur.compileScript(f, ["log":log, "logLevel":LogLevel.err, "force":true])
     verifyEq(log.level, LogLevel.err)
   }
 
@@ -80,7 +80,7 @@ class ScriptTest : CompilerTest
 
     try
     {
-      Sys.compile(f, ["logLevel":LogLevel.silent])
+      Env.cur.compileScript(f, ["logLevel":LogLevel.silent])
       fail
     }
     catch (CompilerErr e)

@@ -50,6 +50,6 @@ class Main
 // Main
 //////////////////////////////////////////////////////////////////////////
 
-  static Void main() { make.run(Sys.args) }
+  static Void main() { make.run(Env.cur.args) }
 
 }

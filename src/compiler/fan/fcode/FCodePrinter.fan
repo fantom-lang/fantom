@@ -17,7 +17,7 @@ class FCodePrinter : FConst
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(FPod pod, OutStream out := Sys.out)
+  new make(FPod pod, OutStream out := Env.cur.out)
   {
     this.pod = pod
     this.out = out

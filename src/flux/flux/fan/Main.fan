@@ -44,7 +44,7 @@ internal class Main
   static Void exit(Frame f)
   {
     f.saveState
-    Sys.exit(0)
+    Env.cur.exit(0)
   }
 
 }

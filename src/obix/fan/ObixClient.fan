@@ -166,7 +166,7 @@ class ObixClient
     c := ObixClient(args[0].toUri, "", "")
     c.readLobby
     about := c.readAbout
-    about.writeXml(Sys.out)
+    about.writeXml(Env.cur.out)
     echo(about->serverName)
     echo(about->vendorName)
     echo(about->productName)

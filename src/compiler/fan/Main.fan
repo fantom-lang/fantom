@@ -18,7 +18,7 @@ class Main
 
   **
   ** Compile the script file into a transient pod.
-  ** See `sys::Sys.compile` for option definitions.
+  ** See `sys::Env.compileScript` for option definitions.
   **
   static Pod compileScript(Str podName, File file, [Str:Obj]? options := null)
   {

@@ -20,16 +20,16 @@ class TestRunner
 // Main
 //////////////////////////////////////////////////////////////////////////
 
-  Void main()
+  Void main(Str[] args := Env.cur.args)
   {
-    if (Sys.args.size != 1)
+    if (args.size != 1)
     {
       help
-      Sys.exit(-1)
+      return
     }
 
     // get args
-    arg    := Sys.args.first
+    arg    := args.first
     pod    := arg
     type   := "*"
     method := "*"

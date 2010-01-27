@@ -47,6 +47,8 @@ public abstract class Env
 
   public final String platform() { return Sys.platform; }
 
+  public final String runtime() { return "java"; }
+
   public final long idHash(Object obj) { return System.identityHashCode(obj); }
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,8 +80,8 @@ public abstract class Env
 // Compile Hooks
 //////////////////////////////////////////////////////////////////////////
 
-  public Type compile(fan.sys.File file) { return this.compile(file, null); }
-  public Type compile(fan.sys.File file, Map options) { return parent.compile(file, options); }
+  public Type compileScript(fan.sys.File file) { return this.compileScript(file, null); }
+  public Type compileScript(fan.sys.File file, Map options) { return parent.compileScript(file, options); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

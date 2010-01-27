@@ -51,9 +51,9 @@ class ReqTest : Test
   */
   }
 
-  static Void main()
+  static Void main(Str[] args := Env.cur.args)
   {
-    uri := Sys.args.first.toUri
+    uri := args.first.toUri
     socket := TcpSocket.make
     socket.connect(IpAddr(uri.host), uri.port)
     socket.out.print("GET $uri.pathStr HTTP/1.1\r\n")

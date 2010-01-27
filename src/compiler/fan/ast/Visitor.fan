@@ -218,7 +218,7 @@ internal class ExprVisitor : Visitor
 /*
 class TreeWriter : AstWriter mixin Visitor
 {
-  new make(OutStream out := Sys.out) : super(out) {}
+  new make(OutStream out := Env.cur.out) : super(out) {}
   override Void enterTypeDef(TypeDef def) { w(def.qname).nl; indent }
   override Void exitTypeDef(TypeDef def) { unindent }
 

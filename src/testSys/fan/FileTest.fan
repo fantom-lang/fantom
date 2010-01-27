@@ -430,7 +430,7 @@ class FileTest : Test
     verifyEq(g.path[-1], "cool \\#5")
 
     // extra Windoze testing
-    if (Sys.env.get("os.name", "").contains("Windows"))
+    if (Env.cur.os == "win32")
     {
       f = File.make(`/a/b/c.txt`)
       verifyEq(f.uri.toStr.replace("/", "\\"), f.osPath)

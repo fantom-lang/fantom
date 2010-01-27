@@ -27,7 +27,7 @@ class InteropTest : JavaTest
       }")
 
     obj := pod.types.first.make
-    verifyEq(obj->a("java.home"), Sys.env["java.home"])
+    verifyEq(obj->a("java.home"), Env.cur.vars["java.home"])
     verifyEq(obj->a("bad one"), null)
     verifyEq(obj->b("bad one", "default"), "default")
   }

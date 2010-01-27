@@ -24,7 +24,7 @@ Minor differences from Java or C# include:
     doesn't have primitives nor primitive keywords).
   - Class and method protection scope default to 'public'.
   - Fantom sports the 'echo' method for writing to the console or
-    you can use 'Sys.out'.
+    you can use 'Env.cur.out'.
   - Statements can be terminated with a newline (you can use
     a semicolon too)
   - You can declare 'Str[]' args or access them from 'Sys.args'
@@ -361,7 +361,7 @@ to read and write:
   }
 
   // dump serialized structure to console
-  Sys.out.writeObj(homer, ["indent":2])
+  Env.cur.out.writeObj(homer, ["indent":2])
 
 Immutability [#immutability]
 ****************************

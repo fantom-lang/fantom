@@ -180,7 +180,7 @@ public class BootEnv
 // Compile Hooks
 //////////////////////////////////////////////////////////////////////////
 
-  public Type compile(fan.sys.File file, Map options)
+  public Type compileScript(fan.sys.File file, Map options)
   {
     return ScriptUtil.compile(file, options);
   }
