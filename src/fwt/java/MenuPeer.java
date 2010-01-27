@@ -93,7 +93,7 @@ public class MenuPeer
     menu.setLocation(new Point((int)pos.x, (int)pos.y));
     menu.setVisible(true);
 
-    Display display = Env.get().display;
+    Display display = Fwt.get().display;
     while (!menu.isDisposed() && menu.isVisible())
       if (!display.readAndDispatch())
         display.sleep();

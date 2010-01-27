@@ -21,10 +21,10 @@ class SqlServiceTest : Test
   once SqlService db()
   {
     return SqlService(
-      Sys.env["sql.test.connection"],
-      Sys.env["sql.test.username"],
-      Sys.env["sql.test.password"],
-      Type.find(Sys.env["sql.test.dialect"]).make)
+      Env.cur.vars["sql.test.connection"],
+      Env.cur.vars["sql.test.username"],
+      Env.cur.vars["sql.test.password"],
+      Type.find(Env.cur.vars["sql.test.dialect"]).make)
   }
 
 //////////////////////////////////////////////////////////////////////////

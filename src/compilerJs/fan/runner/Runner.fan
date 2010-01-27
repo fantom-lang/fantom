@@ -16,16 +16,16 @@ using [java] javax.script
 class Runner
 {
 
-  Void main()
+  Void main(Str[] args := Env.cur.args)
   {
-    if (Sys.args.size != 1)
+    if (args.size != 1)
     {
       echo("Usage: Runner <pod>::<type>.<method>")
-      Sys.exit(-1)
+      return
     }
 
     // get args
-    arg    := Sys.args.first
+    arg    := args.first
     pod    := arg
     type   := "Main"
     method := "main"

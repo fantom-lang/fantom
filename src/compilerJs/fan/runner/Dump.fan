@@ -12,17 +12,17 @@
 class Dump
 {
 
-  Void main()
+  Void main(Str[] args := Env.cur.args)
   {
-    if (Sys.args.size == 0)
+    if (args.size == 0)
     {
       help
-      Sys.exit(-1)
+      return
     }
 
-    pod  := Sys.args.first
-    line := Sys.args.size > 1 ? Sys.args[1].toInt : null
-    cx   := Sys.args.size > 2 ? Sys.args[2].toInt : 4
+    pod  := args.first
+    line := args.size > 1 ? args[1].toInt : null
+    cx   := args.size > 2 ? args[2].toInt : 4
 
     Pod.find(pod).files[`/${pod}.js`].readAllLines.each |s,i|
     {

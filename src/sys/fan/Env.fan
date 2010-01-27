@@ -71,6 +71,14 @@ abstract const class Env
   Str arch()
 
   **
+  ** Virtual machine runtime as one of the following constants:
+  **   - "java"
+  **   - "dotnet"
+  **   - "js"
+  **
+  Str runtime()
+
+  **
   ** Return the default hash code of `Obj.hash` for the
   ** specified object regardless of whether the object
   ** has overridden the 'hash' method.  If null then

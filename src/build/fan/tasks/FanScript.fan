@@ -25,7 +25,7 @@ class FanScript : Task
   {
     try
     {
-      return Sys.compile(file).pod
+      return Env.cur.compileScript(file).pod
     }
     catch (CompilerErr err)
     {

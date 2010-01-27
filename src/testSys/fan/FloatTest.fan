@@ -656,7 +656,7 @@ class FloatTest : Test
     verifyEq(0.0000003f.toLocale("0.#######"), "0.0000003")
 
     // specials
-    if (Sys.env["java.home"] != null)
+    if (Env.cur.vars["java.home"] != null)
     {
       verifyLocale(Float.nan, "#.#", "\ufffd")
       verifyLocale(Float.posInf, "#.#", "\u221e")

@@ -61,10 +61,10 @@ public class TreePeer
     if (hbar != null) ((ScrollBarPeer)self.hbar().peer).attachToScrollable(t, hbar);
     if (vbar != null) ((ScrollBarPeer)self.vbar().peer).attachToScrollable(t, vbar);
 
-    if (Env.isWindows())
+    if (Fwt.isWindows())
     {
       // don't use dotted lines because they offend Andy's sense of taste
-      Env.osSet(t, Env.os("GWL_STYLE"), Env.osGet(t, Env.os("GWL_STYLE")) ^ Env.os("TVS_HASLINES"));
+      Fwt.osSet(t, Fwt.os("GWL_STYLE"), Fwt.osGet(t, Fwt.os("GWL_STYLE")) ^ Fwt.os("TVS_HASLINES"));
     }
 
     this.control = t;
@@ -265,12 +265,12 @@ public class TreePeer
     Data data = new Data();
     data.node = node;
 
-    Env env = Env.get();
+    Fwt fwt = Fwt.get();
     item.setText(model.text(node));
-    item.setImage(env.image(model.image(node)));
-    item.setFont(env.font(model.font(node)));
-    item.setForeground(env.color(model.fg(node)));
-    item.setBackground(env.color(model.bg(node)));
+    item.setImage(fwt.image(model.image(node)));
+    item.setFont(fwt.font(model.font(node)));
+    item.setForeground(fwt.color(model.fg(node)));
+    item.setBackground(fwt.color(model.bg(node)));
     item.setData(data);
 
     // assume we only have one child to prevent the SWT from loading
@@ -325,7 +325,7 @@ public class TreePeer
       event.y-self.posOnDisplay().y);
     if (popup != null)
     {
-      Env.get().display.asyncExec(new Runnable()
+      Fwt.get().display.asyncExec(new Runnable()
       {
         public void run() { popup.open(self, pos); }
       });

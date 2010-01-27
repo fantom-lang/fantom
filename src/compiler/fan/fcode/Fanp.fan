@@ -159,7 +159,7 @@ class Fanp
 
   static Void main()
   {
-    make.run(Sys.args)
+    make.run(Env.cur.args)
   }
 
 //////////////////////////////////////////////////////////////////////////

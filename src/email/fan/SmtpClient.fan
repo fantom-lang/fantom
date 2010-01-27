@@ -297,7 +297,7 @@ class SmtpClient
 
 internal class SmtpRes
 {
-  Void dump(OutStream out := Sys.out)
+  Void dump(OutStream out := Env.cur.out)
   {
     lines.each |Str line, Int i|
     {

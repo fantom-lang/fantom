@@ -187,7 +187,7 @@ class RepoTest : Test
 
   Void run(Str target)
   {
-    isWindows := Sys.env.get("os.name", "?").lower.contains("win")
+    isWindows := Env.cur.os == "win32"
     exeExt := isWindows ? ".exe" : ""
     fan := "fan" + exeExt
     p := Process([fan, target])

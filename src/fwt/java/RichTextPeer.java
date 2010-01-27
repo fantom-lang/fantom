@@ -123,7 +123,7 @@ public class RichTextPeer
       // async action; found this tip on the discussion group:
       // http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg26461.html
       // suppress exceptions, b/c something the widget gets disposed out under us
-      Env.get().display.asyncExec(new Runnable()
+      Fwt.get().display.asyncExec(new Runnable()
       {
         public void run()
         {
@@ -542,10 +542,10 @@ public class RichTextPeer
   public void lineGetStyle(LineStyleEvent event)
   {
     RichText self = (RichText )this.self;
-    Env env = Env.get();
+    Fwt fwt = Fwt.get();
     int lineOffset = event.lineOffset;
     int lineLen = event.lineText.length();
-    Font defFont = env.font(self.font());
+    Font defFont = fwt.font(self.font());
 
     // get Int/RichTextStyle list where Int is offset in line
     List list = model.lineStyling(model.lineAtOffset(lineOffset));
@@ -558,20 +558,20 @@ public class RichTextPeer
     {
       Long offsetInLine = (Long)list.get(i*2);
       RichTextStyle s = (RichTextStyle)list.get(i*2+1);
-      results[i] = toStyleRange(env, s, lineOffset+offsetInLine.intValue(), defFont);
+      results[i] = toStyleRange(fwt, s, lineOffset+offsetInLine.intValue(), defFont);
       if (i > 0) results[i-1].length = results[i].start - results[i-1].start;
     }
     if (num > 0)
       results[num-1].length = lineLen - (results[num-1].start - lineOffset);
   }
 
-  StyleRange toStyleRange(Env env, RichTextStyle s, int start, Font defFont)
+  StyleRange toStyleRange(Fwt fwt, RichTextStyle s, int start, Font defFont)
   {
     StyleRange r = new StyleRange();
     r.start          = start;
-    r.foreground     = env.color(s.fg);
-    r.background     = env.color(s.bg);
-    r.font           = env.font(s.font);
+    r.foreground     = fwt.color(s.fg);
+    r.background     = fwt.color(s.bg);
+    r.font           = fwt.font(s.font);
     if (r.font == null) r.font = defFont;
     if (s.underline != null && s.underline != RichTextUnderline.none)
     {
@@ -580,7 +580,7 @@ public class RichTextPeer
       if (s.underlineColor == null)
         r.underlineColor = r.foreground;
       else
-        r.underlineColor = env.color(s.underlineColor);
+        r.underlineColor = fwt.color(s.underlineColor);
     }
     return r;
   }
@@ -595,7 +595,7 @@ public class RichTextPeer
   public void lineGetBackground(LineBackgroundEvent event)
   {
     Color bg = model.lineBackground(model.lineAtOffset(event.lineOffset));
-    if (bg != null) event.lineBackground = Env.get().color(bg);
+    if (bg != null) event.lineBackground = Fwt.get().color(bg);
   }
 
 //////////////////////////////////////////////////////////////////////////

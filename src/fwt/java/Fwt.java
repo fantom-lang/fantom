@@ -22,9 +22,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 
 /**
- * Env manages the display resources.
+ * Fwt manages the display resources.
  */
-public class Env
+public class Fwt
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -32,35 +32,35 @@ public class Env
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * Get the Env for the current thread.
+   * Get the Fwt for the current thread.
    */
-  public static Env get()
+  public static Fwt get()
   {
-    return (Env)threadlocal.get();
+    return (Fwt)threadlocal.get();
   }
 
   /**
    * Get the main UI thread display.
    */
-  public static Env main()
+  public static Fwt main()
   {
-    if (mainEnv == null) throw new IllegalStateException("Main UI thread not running");
-    return mainEnv;
+    if (mainFwt == null) throw new IllegalStateException("Main UI thread not running");
+    return mainFwt;
   }
 
-  private static volatile Env mainEnv;
+  private static volatile Fwt mainFwt;
   private static ThreadLocal threadlocal = new ThreadLocal()
   {
     protected Object initialValue()
     {
-      Env env = new Env();
+      Fwt fwt = new Fwt();
       Actor.locals().add("gfx.env", FwtEnv.make());
-      if (mainEnv == null) mainEnv = env;
-      return env;
+      if (mainFwt == null) mainFwt = fwt;
+      return fwt;
     }
   };
 
-  private Env() {}
+  private Fwt() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Display

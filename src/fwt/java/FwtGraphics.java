@@ -33,7 +33,7 @@ public class FwtGraphics implements Graphics
   public void brush(Brush brush)
   {
     this.brush = brush;
-    Env env = Env.get();
+    Fwt fwt = Fwt.get();
     Pattern oldfg = gc.getForegroundPattern();
     Pattern oldbg = gc.getBackgroundPattern();
     try
@@ -42,7 +42,7 @@ public class FwtGraphics implements Graphics
       {
         int ca = (int)((Color)brush).a();
         gc.setAlpha((alpha == 255) ? ca : (int)((alpha * ca) / 255));
-        org.eclipse.swt.graphics.Color c = env.color((Color)brush);
+        org.eclipse.swt.graphics.Color c = fwt.color((Color)brush);
         gc.setForeground(c);
         gc.setBackground(c);
         gc.setForegroundPattern(null);
@@ -50,13 +50,13 @@ public class FwtGraphics implements Graphics
       }
       else if (brush instanceof Gradient)
       {
-        Pattern p = pattern(env, (Gradient)brush);
+        Pattern p = pattern(fwt, (Gradient)brush);
         gc.setForegroundPattern(p);
         gc.setBackgroundPattern(p);
       }
       else if (brush instanceof fan.gfx.Pattern)
       {
-        Pattern p = pattern(env, (fan.gfx.Pattern)brush);
+        Pattern p = pattern(fwt, (fan.gfx.Pattern)brush);
         gc.setForegroundPattern(p);
         gc.setBackgroundPattern(p);
       }
@@ -72,7 +72,7 @@ public class FwtGraphics implements Graphics
     }
   }
 
-  private Pattern pattern(Env env, Gradient g)
+  private Pattern pattern(Fwt fwt, Gradient g)
   {
     int a1 = (int)g.c1.a();
     int a2 = (int)g.c2.a();
@@ -81,16 +81,16 @@ public class FwtGraphics implements Graphics
       a1 = (int)((alpha * a1) / 255);
       a2 = (int)((alpha * a2) / 255);
     }
-    return new Pattern(env.display,
+    return new Pattern(fwt.display,
         (float)g.p1.x, (float)g.p1.y,
         (float)g.p2.x, (float)g.p2.y,
-        env.color(g.c1), a1,
-        env.color(g.c2), a2);
+        fwt.color(g.c1), a1,
+        fwt.color(g.c2), a2);
   }
 
-  private Pattern pattern(Env env, fan.gfx.Pattern p)
+  private Pattern pattern(Fwt fwt, fan.gfx.Pattern p)
   {
-    return new Pattern(env.display, env.image(p.image));
+    return new Pattern(fwt.display, fwt.image(p.image));
   }
 
   public Pen pen()
@@ -131,7 +131,7 @@ public class FwtGraphics implements Graphics
   public void font(Font font)
   {
     this.font = font;
-    this.gc.setFont(Env.get().font(font));
+    this.gc.setFont(Fwt.get().font(font));
   }
 
   public boolean antialias()
@@ -226,13 +226,13 @@ public class FwtGraphics implements Graphics
 
   public Graphics drawImage(Image img, long x, long y)
   {
-    gc.drawImage(Env.get().image(img), (int)x, (int)y);
+    gc.drawImage(Fwt.get().image(img), (int)x, (int)y);
     return this;
   }
 
   public Graphics copyImage(Image img, Rect s, Rect d)
   {
-    gc.drawImage(Env.get().image(img),
+    gc.drawImage(Fwt.get().image(img),
       (int)s.x, (int)s.y, (int)s.w, (int)s.h,
       (int)d.x, (int)d.y, (int)d.w, (int)d.h);
     return this;

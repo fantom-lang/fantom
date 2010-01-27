@@ -74,8 +74,8 @@ abstract class BuildScript
   ** {devHomeDir}/lib/java/ext
   const File libJavaExtDir := devHomeDir + `lib/java/ext/`
 
-  ** {devHomeDir}/lib/java/ext/{Sys.platform}
-  File libJavaExtPlatformDir := libJavaExtDir + `$Sys.platform/`
+  ** {devHomeDir}/lib/java/ext/{Env.cur.platform}
+  File libJavaExtPlatformDir := libJavaExtDir + `$Env.cur.platform/`
 
   ** {devHomeDir}/lib/dotnet
   const File libDotnetDir := devHomeDir + `lib/dotnet/`
@@ -105,7 +105,7 @@ abstract class BuildScript
   internal virtual Void initEnv()
   {
     // are we running on a Window's box?
-    isWindows = Sys.os == "win32"
+    isWindows = Env.cur.os == "win32"
     exeExt = isWindows ? ".exe" : ""
 
     // debug
@@ -416,7 +416,7 @@ abstract class BuildScript
   ** Run the script with the specified arguments.
   ** Return 0 on success or -1 on failure.
   **
-  Int main(Str[] args := Sys.args)
+  Int main(Str[] args := Env.cur.args)
   {
     t1 := Duration.now
     success := false

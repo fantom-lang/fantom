@@ -409,8 +409,8 @@ public final class Sys
   public static String platform() { return Env.cur().platform(); }
   public static Map diagnostics() { return Env.cur().diagnostics(); }
 
-  public static Type compile(fan.sys.File file) { return Env.cur().compile(file, null); }
-  public static Type compile(fan.sys.File file, Map options) { return Env.cur().compile(file, options); }
+  public static Type compile(fan.sys.File file) { return Env.cur().compileScript(file, null); }
+  public static Type compile(fan.sys.File file, Map options) { return Env.cur().compileScript(file, options); }
 
 //////////////////////////////////////////////////////////////////////////
 // Touch

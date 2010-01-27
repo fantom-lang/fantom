@@ -749,7 +749,7 @@ class SerializationTest : Test
 
     // verify writeObj via round trip
     doc := Buf.make.writeObj(expected, ["indent":2]).flip.readAllStr
-//Sys.out.printLine("-------------------")
+//Env.cur.out.printLine("-------------------")
 //echo(doc)
     z := Buf.make.print(doc).flip.readObj
     verifyEq(z, expected)

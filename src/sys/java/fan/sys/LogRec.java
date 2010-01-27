@@ -53,7 +53,7 @@ public class LogRec
     return s.toString();
   }
 
-  public void print() { print(Sys.out()); }
+  public void print() { print(Env.cur().out()); }
   public void print(OutStream out)
   {
     synchronized (out)

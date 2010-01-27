@@ -54,7 +54,7 @@ it-blocks:
       XElem("m") { XText("I "), XElem("i") { XText("mean"), }, XText(" it!"), },
     },
   }
-  doc.write(Sys.out)
+  doc.write(Env.cur.out)
 
   // would print the following to the console
   <?xml version='1.0' encoding='UTF-8'?>
@@ -94,7 +94,7 @@ attributes are declared:
     XElem("elem", nsDef),
     XElem("elem", nsBar),
   }
-  root.write(Sys.out)
+  root.write(Env.cur.out)
 
   // would print the following to the console
   <b:root xmlns='http://foo/default' xmlns:b='http://foo/bar'>
@@ -108,8 +108,8 @@ All the XML node classes support a 'write' method which takes
 an 'OutStream'.  During debugging it is often convenient to
 write to standard out:
 
-  node.write(Sys.out)
-  Sys.out.flush
+  node.write(Env.cur.out)
+  Env.cur.out.flush
 
 To write an XML document from memory to a file:
 

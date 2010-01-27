@@ -7,9 +7,9 @@
 //
 
 **
-** SysTest
+** EnvTest
 **
-class SysTest : Test
+class EnvTest : Test
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -18,26 +18,24 @@ class SysTest : Test
 
   Void testArgs()
   {
-    verifyEq(Sys.args.of, Str#)
-    verifyEq(Sys.args.isRO, true)
-    verifyEq(Sys.args.isImmutable, true)
+    verifyEq(Env.cur.args.of, Str#)
+    verifyEq(Env.cur.args.isRO, true)
+    verifyEq(Env.cur.args.isImmutable, true)
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Env
+// Vars
 //////////////////////////////////////////////////////////////////////////
 
   Void testEnv()
   {
-    verifyEq(Sys.env.typeof, [Str:Str]#)
-    verifyEq(Sys.env.isRO, true)
-    verifyEq(Sys.env.isImmutable, true)
-    verifyEq(Sys.hostName.isEmpty, false)
-    verifyEq(Sys.userName.isEmpty, false)
-    verify(Sys.env.caseInsensitive)
-    verify(Sys.env["os.name"] != null)
-    verify(Sys.env["os.version"] != null)
-    verify(Sys.env["OS.Name"] != null)
+    verifyEq(Env.cur.vars.typeof, [Str:Str]#)
+    verifyEq(Env.cur.vars.isRO, true)
+    verifyEq(Env.cur.vars.isImmutable, true)
+    verify(Env.cur.vars.caseInsensitive)
+    verify(Env.cur.vars["os.name"] != null)
+    verify(Env.cur.vars["os.version"] != null)
+    verify(Env.cur.vars["OS.Name"] != null)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,10 +47,22 @@ class SysTest : Test
     // valid known list of os and arch constants
     os := ["win32", "macosx", "linux", "aix", "solaris", "hpux", "qnx"]
     arch := ["x86", "x86_64", "ppc", "sparc", "ia64", "ia64_32"]
+    runtime := ["java", "dotnet", "js"]
 
-    verify(os.contains(Sys.os))
-    verify(arch.contains(Sys.arch))
-    verifyEq(Sys.platform, "${Sys.os}-${Sys.arch}");
+    verify(os.contains(Env.cur.os))
+    verify(arch.contains(Env.cur.arch))
+    verify(runtime.contains(Env.cur.runtime))
+    verifyEq(Env.cur.platform, "${Env.cur.os}-${Env.cur.arch}");
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Misc
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMisc()
+  {
+    verifyEq(Env.cur.host.isEmpty, false)
+    verifyEq(Env.cur.user.isEmpty, false)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,9 +71,9 @@ class SysTest : Test
 
   Void testIdHash()
   {
-    verifyEq(Sys.idHash(null), 0)
-    verifyEq(Sys.idHash(this), Sys.idHash(this))
-    verifyNotEq(Sys.idHash("hello"), "hello".hash)
+    verifyEq(Env.cur.idHash(null), 0)
+    verifyEq(Env.cur.idHash(this), Env.cur.idHash(this))
+    verifyNotEq(Env.cur.idHash("hello"), "hello".hash)
   }
 
 }

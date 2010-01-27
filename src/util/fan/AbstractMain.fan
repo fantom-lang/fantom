@@ -242,7 +242,7 @@ abstract class AbstractMain
   ** Print usage of arguments and options.
   ** Return non-zero.
   **
-  virtual Int usage(OutStream out := Sys.out)
+  virtual Int usage(OutStream out := Env.cur.out)
   {
     // get list of argument and option fields
     args := argFields
@@ -348,7 +348,7 @@ abstract class AbstractMain
   **   3. Call `run` and return 0
   **   4. If an exception is raised log it and return 1
   **
-  virtual Int main(Str[] args := Sys.args)
+  virtual Int main(Str[] args := Env.cur.args)
   {
     success := false
     try

@@ -14,7 +14,7 @@ using compiler
 class BuildLog : CompilerLog
 {
 
-  new make(OutStream out := Sys.out)
+  new make(OutStream out := Env.cur.out)
     : super(out)
   {
   }

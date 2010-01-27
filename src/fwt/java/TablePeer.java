@@ -155,7 +155,7 @@ public class TablePeer
     TableModel model = model();
     if (model == null) return;
 
-    Env env = Env.get();
+    Fwt fwt = Fwt.get();
     TableItem item = (TableItem)event.item;
 
     int numCols = (int)model.numCols();
@@ -171,10 +171,10 @@ public class TablePeer
 
       long col = i;
       item.setText(i, model.text(col, row));
-      item.setImage(i, env.image(model.image(col, row)));
-      item.setFont(i, env.font(model.font(col, row)));
-      item.setForeground(i, env.color(model.fg(col, row)));
-      item.setBackground(i, env.color(model.bg(col, row)));
+      item.setImage(i, fwt.image(model.image(col, row)));
+      item.setFont(i, fwt.font(model.font(col, row)));
+      item.setForeground(i, fwt.color(model.fg(col, row)));
+      item.setBackground(i, fwt.color(model.bg(col, row)));
     }
   }
 
@@ -219,7 +219,7 @@ public class TablePeer
       event.y-self.posOnDisplay().y);
     if (popup != null)
     {
-      Env.get().display.asyncExec(new Runnable()
+      Fwt.get().display.asyncExec(new Runnable()
       {
         public void run() { popup.open(self, pos); }
       });

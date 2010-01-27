@@ -169,8 +169,8 @@ class Shell
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  OutStream out := Sys.out
-  InStream in := Sys.in
+  OutStream out := Env.cur.out
+  InStream in := Env.cur.in
   internal Bool isAlive := true
   internal Int evalCount := 0
   internal Str:Var scope := Str:Var[:]

@@ -6,9 +6,8 @@
 //   9 Jan 06  Brian Frank  Creation
 //
 
-**
-** Sys provides static access to the system's environment.
-**
+** Use `Env` now
+@deprecated
 final class Sys
 {
 

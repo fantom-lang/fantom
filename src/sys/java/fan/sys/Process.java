@@ -267,8 +267,8 @@ public class Process
   private File dir;
   private Map env;
   private boolean mergeErr = true;
-  private OutStream out = Sys.out();
-  private OutStream err = Sys.err();
+  private OutStream out = Env.cur().out();
+  private OutStream err = Env.cur().err();
   private InStream in   = null;
   private volatile java.lang.Process proc;
 

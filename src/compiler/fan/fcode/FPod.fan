@@ -150,7 +150,7 @@ final class FPod : CPod, FConst
     return symbolRefs.add(FSymbolRef(p, n))
   }
 
-  Void dump(OutStream out := Sys.out)
+  Void dump(OutStream out := Env.cur.out)
   {
     p := FPrinter(this, out)
     p.showCode = true

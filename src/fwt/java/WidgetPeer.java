@@ -132,7 +132,7 @@ public class WidgetPeer
   public fan.gfx.Point posOnDisplay(fan.fwt.Widget self)
   {
     if (!(control instanceof Control)) return null;
-    Point pt = Env.get().display.map((Control)control, null, 0, 0);
+    Point pt = Fwt.get().display.map((Control)control, null, 0, 0);
     return point(pt);
   }
 

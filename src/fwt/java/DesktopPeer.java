@@ -36,41 +36,41 @@ public class DesktopPeer
 
   public static String platform()
   {
-    if (Env.isWindows()) return "windows";
-    if (Env.isMac()) return "mac";
+    if (Fwt.isWindows()) return "windows";
+    if (Fwt.isMac()) return "mac";
     return SWT.getPlatform();
   }
 
   public static boolean isWindows()
   {
-    return Env.isWindows();
+    return Fwt.isWindows();
   }
 
   public static boolean isMac()
   {
-    return Env.isMac();
+    return Fwt.isMac();
   }
 
   public static Rect bounds()
   {
-    return WidgetPeer.rect(Env.get().display.getBounds());
+    return WidgetPeer.rect(Fwt.get().display.getBounds());
   }
 
   public static fan.fwt.Widget focus()
   {
-    return WidgetPeer.toFanWidget(Env.get().display.getFocusControl());
+    return WidgetPeer.toFanWidget(Fwt.get().display.getFocusControl());
   }
 
   public static void callAsync(Func func)
   {
     // check if running on UI thread
-    Env env = Env.main();
-    if (java.lang.Thread.currentThread() != env.display.getThread())
+    Fwt fwt = Fwt.main();
+    if (java.lang.Thread.currentThread() != fwt.display.getThread())
       func = (Func)func.toImmutable();
 
     // enqueue on main UI thread's display
     final Func finalFunc = func;
-    env.display.asyncExec(new Runnable()
+    fwt.display.asyncExec(new Runnable()
     {
       public void run()
       {
@@ -92,17 +92,17 @@ public class DesktopPeer
 
   public static void disposeColor(fan.gfx.Color f)
   {
-    Env.get().dispose(f);
+    Fwt.get().dispose(f);
   }
 
   public static void disposeFont(fan.gfx.Font f)
   {
-    Env.get().dispose(f);
+    Fwt.get().dispose(f);
   }
 
   public static void disposeImage(fan.gfx.Image f)
   {
-    Env.get().dispose(f);
+    Fwt.get().dispose(f);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -113,7 +113,7 @@ public class DesktopPeer
   {
     if (sysFont == null)
     {
-      FontData data = Env.get().display.getSystemFont().getFontData()[0];
+      FontData data = Fwt.get().display.getSystemFont().getFontData()[0];
       sysFont = fan.gfx.Font.makeFields(data.getName(), data.getHeight());
     }
     return sysFont;
@@ -125,7 +125,7 @@ public class DesktopPeer
     if (sysFontMonospace == null)
     {
       String name = "Courier New"; int size = 9;
-      if (Env.isMac()) { name = "Monaco"; size = 12; }
+      if (Fwt.isMac()) { name = "Monaco"; size = 12; }
       sysFontMonospace = fan.gfx.Font.makeFields(name, size);
     }
     return sysFontMonospace;
@@ -166,7 +166,7 @@ public class DesktopPeer
     fan.gfx.Color c = sysColors[index];
     if (c == null)
     {
-      Color sys = Env.get().display.getSystemColor(swtId);
+      Color sys = Fwt.get().display.getSystemColor(swtId);
       int rgb = (sys.getRed() << 16) | (sys.getGreen() << 8) | sys.getBlue();
       c = sysColors[index] = fan.gfx.Color.make(rgb, false);
     }

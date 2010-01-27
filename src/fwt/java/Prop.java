@@ -330,7 +330,7 @@ public abstract class Prop
       val = v;
       Widget w = peer.control;
       if (w != null)
-        set(w, Env.get().color(val));
+        set(w, Fwt.get().color(val));
     }
 
     public abstract void set(Widget w, Color v);
@@ -360,7 +360,7 @@ public abstract class Prop
       val = v;
       Widget w = peer.control;
       if (w != null)
-        set(w, Env.get().image(val));
+        set(w, Fwt.get().image(val));
     }
 
     public abstract void set(Widget w, Image v);
@@ -390,7 +390,7 @@ public abstract class Prop
       val = v;
       Widget w = peer.control;
       if (w != null)
-        set(w, Env.get().font(val));
+        set(w, Fwt.get().font(val));
     }
 
     public abstract void set(Widget w, Font v);

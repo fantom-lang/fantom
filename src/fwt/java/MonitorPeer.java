@@ -40,12 +40,12 @@ public class MonitorPeer
 
   public static List list()
   {
-    return Env.get().monitors();
+    return Fwt.get().monitors();
   }
 
   public static fan.fwt.Monitor primary()
   {
-    return Env.get().primaryMonitor();
+    return Fwt.get().primaryMonitor();
   }
 
   public Rect bounds(fan.fwt.Monitor self)

@@ -32,7 +32,7 @@ public class FwtEnvPeer
 
   public Size imageSize(FwtEnv self, fan.gfx.Image f)
   {
-    Image x = Env.get().image(f);
+    Image x = Fwt.get().image(f);
     if (x == null) return Size.defVal;
     Rectangle r = x.getBounds();
     return Size.make(r.width, r.height);
@@ -44,8 +44,8 @@ public class FwtEnvPeer
     int rh = (int)size.h;
 
     // get SWT image
-    Env env = Env.get();
-    Image s = env.image(f);
+    Fwt fwt = Fwt.get();
+    Image s = fwt.image(f);
     if (s == null) throw Err.make("Image not valid or not loaded yet").val;
 
     // if image already matches requested resize, return it
@@ -59,12 +59,12 @@ public class FwtEnvPeer
     ImageData sdata = s.getImageData();
     ImageData rdata = new ImageData(rw, rh, sdata.depth, sdata.palette);
     rdata.transparentPixel = sdata.transparentPixel; // this don't work
-    Image resultSwt = new Image(env.display, rdata);
+    Image resultSwt = new Image(fwt.display, rdata);
 
     // paint new SWT image
     GC gc = new GC(resultSwt);
     Color bg = resultSwt.getBackground();
-    if (bg == null) bg = env.display.getSystemColor(SWT.COLOR_WHITE);
+    if (bg == null) bg = fwt.display.getSystemColor(SWT.COLOR_WHITE);
     gc.setBackground(bg);
     gc.fillRectangle(0, 0, rw, rh);
     gc.drawImage(s, 0, 0, sw, sh, 0, 0, rw, rh);
@@ -73,7 +73,7 @@ public class FwtEnvPeer
     // return new gfx::Image backed by new SWT image
     Uri uri = Uri.fromStr("mem-" + Uuid.make());
     fan.gfx.Image resultFan = fan.gfx.Image.makeUri(uri);
-    env.images.put(uri, resultSwt);
+    fwt.images.put(uri, resultSwt);
     return resultFan;
   }
 
@@ -108,9 +108,9 @@ public class FwtEnvPeer
 
   private GC scratchGC(fan.gfx.Font f)
   {
-    Env env = Env.get();
-    GC gc = env.scratchGC();
-    gc.setFont(env.font(f));
+    Fwt fwt = Fwt.get();
+    GC gc = fwt.scratchGC();
+    gc.setFont(fwt.font(f));
     return gc;
   }
 

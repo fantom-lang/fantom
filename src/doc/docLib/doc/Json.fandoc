@@ -41,7 +41,7 @@ Writing is accomplised via [write]`json::Json.write` which writes
 a given map to an [OutStream]`sys::OutStream`.  To write to standard out:
 
   map := ["key":"value", "intKey":123]
-  Json.write(map, Sys.out)
+  Json.write(map, Env.cur.out)
 
 You can also use the [writeToStr]`json::Json.writeToStr` as a convenience
 to write to an in-memory string.

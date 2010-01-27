@@ -29,7 +29,7 @@ class ClassPath
     // System.property "sun.boot.class.path"; this is preferable
     // to trying to figure out rt.jar - on platforms like Mac OS X
     // the classes are in very non-standard locations
-    Sys.env.get("sun.boot.class.path", "").split(File.pathSep[0]).each |Str path|
+    Env.cur.vars.get("sun.boot.class.path", "").split(File.pathSep[0]).each |Str path|
     {
       f := File.os(path)
       // skip big jar files we can probably safely ignore
@@ -41,7 +41,7 @@ class ClassPath
     }
 
     // {java}lib/rt.jar (only if sun.boot.class.path failed)
-    lib := File.os(Sys.env.get("java.home", "") + File.sep + "lib")
+    lib := File.os(Env.cur.vars.get("java.home", "") + File.sep + "lib")
     if (entries.isEmpty)
     {
       rt := lib + `rt.jar`
@@ -54,7 +54,7 @@ class ClassPath
 
 
     // -classpath
-    Sys.env.get("java.class.path", "").split(File.pathSep[0]).each |Str path|
+    Env.cur.vars.get("java.class.path", "").split(File.pathSep[0]).each |Str path|
     {
       f := File.os(path)
       if (f.exists) entries.add(f)
@@ -129,7 +129,7 @@ class ClassPath
       finally { if (zip != null) zip.close }
     }
   }
-  
+
   private Void accept(Str:Str[] acc, Uri uri)
   {
     if (uri.ext != "class") return

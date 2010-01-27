@@ -146,13 +146,13 @@ public class WindowPeer
     result = null;
 
     // create SWT shell
-    Env env = Env.get();
+    Fwt fwt = Fwt.get();
     Shell shell;
     fan.fwt.Widget parent = self.parent();
     Shell parentShell = parent == null ? null : (Shell)parent.peer.control;
     if (parentShell == null)
     {
-      shell = new Shell(env.display, style(self));
+      shell = new Shell(fwt.display, style(self));
     }
     else
     {
@@ -172,7 +172,7 @@ public class WindowPeer
     {
       shell.pack();
       Rectangle mb = shell.getBounds();
-      Rectangle pb = env.display.getPrimaryMonitor().getClientArea();
+      Rectangle pb = fwt.display.getPrimaryMonitor().getClientArea();
       int pw = Math.min(mb.width, pb.width-50);
       int ph = Math.min(mb.height, pb.height-50);
       self.size(size(pw, ph));
@@ -183,7 +183,7 @@ public class WindowPeer
     if (!explicitPos)
     {
       Rectangle pb = parentShell == null ?
-        env.display.getPrimaryMonitor().getClientArea() :
+        fwt.display.getPrimaryMonitor().getClientArea() :
         parentShell.getBounds();
       Rectangle mb = shell.getBounds();
       int cx = pb.x + (pb.width - mb.width)/2;
@@ -195,7 +195,7 @@ public class WindowPeer
     // still might cover multiple monitors though, but
     // provides a safe sanity check
     Rectangle mb = shell.getBounds();
-    Rectangle db = env.display.getClientArea();
+    Rectangle db = fwt.display.getClientArea();
     if (mb.width > db.width) mb.width = db.width;
     if (mb.height > db.height) mb.height = db.height;
     if (mb.x + mb.width > db.x + db.width) mb.x = db.x + db.width - mb.width;
@@ -208,7 +208,7 @@ public class WindowPeer
     shell.open();
 
     // block until dialog is closed
-    env.eventLoop(shell);
+    fwt.eventLoop(shell);
 
     // cleanup
     detach(self);
