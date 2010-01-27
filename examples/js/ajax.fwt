@@ -10,7 +10,7 @@ using dom
 using gfx
 using fwt
 
-@js class Ajax : Window
+class Ajax : Window
 {
   new make() : super(null, null)
   {

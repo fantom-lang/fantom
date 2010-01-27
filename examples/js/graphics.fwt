@@ -9,7 +9,7 @@
 using gfx
 using fwt
 
-@js class GraphicsDemo : Window
+class GraphicsDemo : Window
 {
   new make() : super(null, null)
   {
@@ -17,7 +17,7 @@ using fwt
   }
 }
 
-@js class MyCanvas : Canvas
+class MyCanvas : Canvas
 {
 
   override Void onPaint(Graphics g)

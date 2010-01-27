@@ -167,13 +167,11 @@ class ShowScript : Weblet
     input.isScript  = true
     input.srcStr    = file.readAllStr
     input.srcStrLoc = Loc.makeFile(file)
-    input.podStr    = "@js pod $input.podName {}"
     input.mode      = CompilerInputMode.str
-    input.output    = CompilerOutputMode.str
+    input.output    = CompilerOutputMode.js
 
     this.compiler = Compiler(input)
-    compiler.compile
-    this.js = compiler.js
+    this.js = compiler.compile.js
   }
 
   File file
