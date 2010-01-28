@@ -1,0 +1,19 @@
+//
+// Config: build
+//
+// History:
+//   22 Jul 09  Brian Frank  Creation
+//
+
+// default version used by build scripts
+buildVersion=1.0.49
+
+// Must be configured boot build in substitute/release installation
+//buildDevHome=file:/C:/dev/fan/
+
+// Windows setup
+buildJdkHome=/C:/dev/tools/java/
+buildDotnetHome=/C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
+
+// Mac setup
+//buildJdkHome=/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home/
