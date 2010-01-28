@@ -144,7 +144,7 @@ public class Locale
 
   public String get(String podName, String key)
   {
-    return doGet(Pod.find(podName, false), podName, key, getNoDef);
+    return doGet(Pod.find(podName, false), podName, key, Env.noDef);
   }
 
   public String get(String podName, String key, String def)
@@ -161,6 +161,13 @@ public class Locale
    */
   String doGet(Pod pod, String podName, String key, String def)
   {
+// TODO
+if (pod != null) return pod.locale(key, def);
+if (def == Env.noDef) return podName + "::" + key;
+return def;
+  }
+
+/*
     // 1. Find the pod and use its resource files
     if (pod != null)
     {
@@ -184,7 +191,7 @@ public class Locale
     }
 
     // 5. If all else fails return def, which defaults to pod::key
-    if (def == getNoDef) return podName + "::" + key;
+    if (def == Env.noDef) return podName + "::" + key;
     return def;
   }
 
@@ -232,6 +239,7 @@ public class Locale
   }
 
   static final Map noProps = new Map(Sys.StrType, Sys.StrType).ro();
+  */
 
 //////////////////////////////////////////////////////////////////////////
 // Default Locale
@@ -261,9 +269,6 @@ public class Locale
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
-
-  // use predefined string to avoid unnecessary string concat
-  static final String getNoDef = "_locale_nodef_";
 
   public static final Locale en = Locale.fromStr("en");
 
