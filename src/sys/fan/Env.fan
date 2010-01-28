@@ -228,12 +228,20 @@ abstract const class Env
   virtual Type compileScript(File f, [Str:Obj]? options := null)
 
   **
-  ** Return a merged key/value map of all the prop files referenced
-  ** by the uri via `findAllFiles`.  The files are parsed using
-  ** `InStream.readProps` and merged according to their priority
-  ** order (first file overwrites keys in other files).
+  ** Return a merged key/value map of all the prop files found
+  ** using the following resolution rules:
+  **   1. `Env.findAllFiles`: "etc/{pod}/{uri}"
+  **   2. `Pod.files`: "/{uri}"
   **
-  ** The map is cached so that subsequent calls for the same uri
+  ** The uri must be relative.
+  **
+  ** The files are parsed using `InStream.readProps` and merged according
+  ** to their priority order.  If the file is defined as a resource in
+  ** the pod itself, then it is treated as lowest priority.  The first
+  ** file returned by 'findAllFiles' is treated as highest priority and
+  ** overwrites any key-value pairs defined at a lower priority.
+  **
+  ** The map is cached so that subsequent calls for the same path
   ** doesn't require accessing the file system again.  The 'maxAge'
   ** parameter specifies the tolerance accepted before a cache
   ** refresh is performed to check if any of the files have been
@@ -241,33 +249,32 @@ abstract const class Env
   **
   ** Also see `Pod.props`.
   **
-  virtual Str:Str props(Uri uri, Duration maxAge)
+  virtual Str:Str props(Pod pod, Uri uri, Duration maxAge)
 
   **
   ** Lookup a configuration property for given pod/key pair.
   ** If not found then return 'def'.  Default implementation
-  ** routes to `props` using maxAge of one minute:
+  ** routes to `props` using max age of one minute:
   **
-  **   props(`etc/$pod/config.props`, 1min).get(key, def)
+  **   props(pod, `config.props`, 1min).get(key, def)
   **
   ** Also see `Pod.config`.
   **
-  virtual Str? config(Str pod, Str key, Str? def := null)
+  virtual Str? config(Pod pod, Str key, Str? def := null)
 
   **
   ** Lookup a localized property for the specified pod/key pair.
   ** The following rules are used for resolution:
-  **   1. `Env.props`: "etc/{pod}/locale/{locale}.props"
-  **   2. `Env.props`: "etc/{pod}/locale/{lang}.props"
-  **   3. `Pod.files`: "/locale/{locale}.props"
-  **   4. `Pod.files`: "/locale/{lang}.props"
-  **   5. `Pod.files`: "/locale/en.props"
-  **   6. Fallback to 'pod::key' unless 'def' specified
+  **   1. 'props(pod, `locale/{locale}.props`)'
+  **   2. 'props(pod, `locale/{lang}.props`)'
+  **   3. 'props(pod, `locale/en.props`)'
+  **   4. Fallback to 'pod::key' unless 'def' specified
   **
-  ** Where "locale" is `Locale.toStr` and "lang" is `Locale.lang`.
+  ** Where '{locale}' is `Locale.toStr` and '{lang}' is `Locale.lang`.
+  **
   ** Also see `Pod.locale`.
   **
-  virtual Str? locale(Str pod, Str key, Str? def := "pod::key", Locale locale := Locale.cur)
+  virtual Str? locale(Pod pod, Str key, Str? def := "pod::key", Locale locale := Locale.cur)
 
 }
 

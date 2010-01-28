@@ -113,31 +113,50 @@ public abstract class Env
     return scripts.compile(file, options);
   }
 
-  public Map props(Uri uri, Duration maxAge)
+  public Map props(Pod pod, Uri uri, Duration maxAge)
   {
-    return props.get(uri, maxAge);
+    return props.get(pod, uri, maxAge);
   }
 
-  public String config(String pod, String key) { return config(pod, key, null); }
-  public String config(String pod, String key, String def)
+  public String config(Pod pod, String key) { return config(pod, key, null); }
+  public String config(Pod pod, String key, String def)
   {
-    String uri = "etc/" + pod + "/config.props";
-    return (String)props.get(uri, Duration.oneMin).get(key, def);
+    return (String)props.get(pod, configProps, Duration.oneMin).get(key, def);
   }
 
-  public String locale(String pod, String key) { return locale(pod, key, EnvLocale.noDef, Locale.cur()); }
-  public String locale(String pod, String key, String def) { return locale(pod, key, def, Locale.cur()); }
-  public String locale(String pod, String key, String def, Locale loc)
+  public String locale(Pod pod, String key) { return locale(pod, key, noDef, Locale.cur()); }
+  public String locale(Pod pod, String key, String def) { return locale(pod, key, def, Locale.cur()); }
+  public String locale(Pod pod, String key, String def, Locale locale)
   {
-    return locale.get(pod, key, def, loc);
+    Object val;
+    Duration maxAge = Duration.maxVal;
+
+    // 1. 'props(pod, `locale/{locale}.props`)'
+    val = props(pod, locale.strProps, maxAge).get(key, null);
+    if (val != null) return (String)val;
+
+    // 2. 'props(pod, `locale/{lang}.props`)'
+    val = props(pod, locale.langProps, maxAge).get(key, null);
+    if (val != null) return (String)val;
+
+    // 3. 'props(pod, `locale/en.props`)'
+    val = props(pod, localeEnProps, maxAge).get(key, null);
+    if (val != null) return (String)val;
+
+    // 4. Fallback to 'pod::key' unless 'def' specified
+    if (def == noDef) return pod + "::" + key;
+    return def;
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  static final String noDef = "_Env_nodef_";
+  static Uri configProps    = Uri.fromStr("config.props");
+  static Uri localeEnProps  = Uri.fromStr("locale/en.props");
+
   private Env parent;
   private EnvScripts scripts = new EnvScripts();
   private EnvProps props = new EnvProps(this);
-  private EnvLocale locale = new EnvLocale(this);
 }

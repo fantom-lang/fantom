@@ -47,9 +47,11 @@ public class Locale
 
   private Locale(String str, String lang, String country)
   {
-    this.str     = str;
-    this.lang    = lang;
-    this.country = country;
+    this.str       = str;
+    this.lang      = lang;
+    this.country   = country;
+    this.strProps  = Uri.fromStr("locale/" + str + ".props");
+    this.langProps = Uri.fromStr("locale/" + lang + ".props");
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -268,6 +270,8 @@ public class Locale
   final String str;
   final String lang;
   final String country;
+  public final Uri strProps;    // `locale/{str}.props`
+  public final Uri langProps;   // `locale/{lang}.props`
   java.util.Locale javaLocale;
   java.text.Collator javaCollator;
   java.text.DecimalFormatSymbols javaDecimal;
