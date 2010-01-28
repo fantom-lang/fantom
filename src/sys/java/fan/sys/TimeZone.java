@@ -490,7 +490,7 @@ public final class TimeZone
 // Database Index
 //////////////////////////////////////////////////////////////////////////
 
-  static File dbFile = new File(Sys.HomeDir, "etc" + java.io.File.separator + "sys" + java.io.File.separator + "timezones.ftz");
+  static File dbFile = new File(Sys.homeDir, "etc" + java.io.File.separator + "sys" + java.io.File.separator + "timezones.ftz");
   static String[] prefixes    = new String[0];
   static byte[] indexPrefixes = new byte[0];
   static String[] indexNames  = new String[0];

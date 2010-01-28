@@ -140,7 +140,7 @@ public class Pod
     Object repo = null;
     if (name.equals("sys"))
     {
-      file = new File(Sys.PodsDir, name + ".pod");
+      file = new File(Sys.podsDir, name + ".pod");
       repo = null; // can't load this class yet
     }
     else
@@ -467,7 +467,7 @@ public class Pod
     // handle generic parameter types (for sys pod only)
     if (this.name.equals("sys"))
     {
-      type = Sys.genericParameterType(typeName);
+      type = Sys.genericParamType(typeName);
       if (type != null)
       {
         if (ref.isNullable()) type = type.toNullable();
