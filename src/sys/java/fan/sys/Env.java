@@ -83,11 +83,19 @@ public abstract class Env
   public File tempDir() { return parent.tempDir(); }
 
 //////////////////////////////////////////////////////////////////////////
-// Compile Hooks
+// Resolution
 //////////////////////////////////////////////////////////////////////////
 
   public Type compileScript(fan.sys.File file) { return this.compileScript(file, null); }
   public Type compileScript(fan.sys.File file, Map options) { return parent.compileScript(file, options); }
+
+  public final File findFile(String uri) { return findFile(Uri.fromStr(uri), true); }
+  public final File findFile(String uri, boolean checked) { return findFile(Uri.fromStr(uri), checked); }
+  public File findFile(Uri uri) { return this.findFile(uri, true); }
+  public File findFile(Uri uri, boolean checked) { return parent.findFile(uri, checked); }
+
+  public final List findAllFiles(String uri) { return findAllFiles(Uri.fromStr(uri)); }
+  public List findAllFiles(Uri uri) { return parent.findAllFiles(uri); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

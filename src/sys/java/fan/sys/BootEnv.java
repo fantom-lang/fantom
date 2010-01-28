@@ -150,6 +150,8 @@ public class BootEnv
 
   public File tempDir() { return tempDir; }
 
+  public Type compileScript(fan.sys.File file, Map options)  { return ScriptUtil.compile(file, options); }
+
 //////////////////////////////////////////////////////////////////////////
 // Diagnostics
 //////////////////////////////////////////////////////////////////////////
@@ -185,12 +187,23 @@ public class BootEnv
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Compile Hooks
+// Find Files
 //////////////////////////////////////////////////////////////////////////
 
-  public Type compileScript(fan.sys.File file, Map options)
+  public File findFile(Uri uri, boolean checked)
   {
-    return ScriptUtil.compile(file, options);
+    if (uri.isPathAbs()) throw ArgErr.make("Uri must be relative: " + uri).val;
+    File f = homeDir.plus(uri, false);
+    if (f.exists()) return f;
+    if (!checked) return null;
+    throw IOErr.make("File not found in Env: " + uri).val;
+  }
+
+  public List findAllFiles(Uri uri)
+  {
+    File f = findFile(uri, false);
+    if (f == null) return Sys.FileType.emptyList();
+    return new List(Sys.FileType, new File[] { f });
   }
 
 //////////////////////////////////////////////////////////////////////////

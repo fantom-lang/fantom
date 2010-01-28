@@ -95,4 +95,31 @@ class EnvTest : Test
     verifyNotEq(Env.cur.idHash("hello"), "hello".hash)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// FindFile
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFindFile()
+  {
+    // file
+    file := Env.cur.findFile(`etc/sys/timezones.ftz`)
+    verifyEq(file.readAllBuf.readS8, 0x66616e74_7a203032)
+
+    // directories
+    verifyEq(Env.cur.findFile(`etc/sys`).isDir, true)
+    verifyEq(Env.cur.findFile(`etc/sys/`).isDir, true)
+
+    // arg err
+    verifyErr(ArgErr#) { Env.cur.findFile(`/etc/`) }
+
+    // not found
+    verifyEq(Env.cur.findFile(`etc/foo bar/no exist`, false), null)
+    verifyErr(IOErr#) { Env.cur.findFile(`etc/foo bar/no exist`) }
+    verifyErr(IOErr#) { Env.cur.findFile(`etc/foo bar/no exist`, true) }
+
+    // findAllFiles
+    verify(Env.cur.findAllFiles(`etc/sys/timezones.ftz`).size >= 1)
+    verifyEq(Env.cur.findAllFiles(`bad/unknown file`).size, 0)
+  }
+
 }
