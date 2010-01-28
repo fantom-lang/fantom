@@ -113,17 +113,23 @@ public abstract class Env
     return scripts.compile(file, options);
   }
 
-  public Map props(Uri uri) { return props(uri, Duration.oneMin); }
   public Map props(Uri uri, Duration maxAge)
   {
     return props.get(uri, maxAge);
   }
 
-  public String config(String podName, String keyName) { return config(podName, keyName, null); }
-  public String config(String podName, String keyName, String def)
+  public String config(String pod, String key) { return config(pod, key, null); }
+  public String config(String pod, String key, String def)
   {
-    String uri = "etc/" + podName + "/config.props";
-    return (String)props.get(uri, Duration.oneMin).get(keyName, def);
+    String uri = "etc/" + pod + "/config.props";
+    return (String)props.get(uri, Duration.oneMin).get(key, def);
+  }
+
+  public String locale(String pod, String key) { return locale(pod, key, EnvLocale.noDef, Locale.cur()); }
+  public String locale(String pod, String key, String def) { return locale(pod, key, def, Locale.cur()); }
+  public String locale(String pod, String key, String def, Locale loc)
+  {
+    return locale.get(pod, key, def, loc);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -131,6 +137,7 @@ public abstract class Env
 //////////////////////////////////////////////////////////////////////////
 
   private Env parent;
-  private ScriptCache scripts = new ScriptCache();
-  private PropsCache props = new PropsCache(this);
+  private EnvScripts scripts = new EnvScripts();
+  private EnvProps props = new EnvProps(this);
+  private EnvLocale locale = new EnvLocale(this);
 }

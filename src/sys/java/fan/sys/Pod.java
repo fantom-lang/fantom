@@ -365,7 +365,7 @@ public class Pod
 
   public final String config(String key)
   {
-    return Env.cur().config(name, key, null);
+    return Env.cur().config(name, key);
   }
 
   public final String config(String key, String def)
@@ -373,14 +373,49 @@ public class Pod
     return Env.cur().config(name, key, def);
   }
 
+  public final String locale(String key)
+  {
+    return Env.cur().locale(name, key);
+  }
+
+  public final String locale(String key, String def)
+  {
+    return Env.cur().locale(name, key, def);
+  }
+
+// TODO
   public final String loc(String key)
   {
     return Locale.cur().doGet(this, name, key, Locale.getNoDef);
   }
 
+// TODO
   public final String loc(String key, String def)
   {
     return Locale.cur().doGet(this, name, key, def);
+  }
+
+  public final Map props(Uri uri) { return props(uri.toStr()); }
+  public final Map props(String uri)
+  {
+    Map map = null;
+    synchronized(props) { map = (Map)props.get(uri); }
+    if (map != null) return map;
+
+    fan.sys.File f = (fan.sys.File)files().get(Uri.fromStr(uri));
+    map = EnvProps.empty;
+    try
+    {
+      if (f != null) map = (Map)f.readProps().toImmutable();
+    }
+    catch (Exception e)
+    {
+      System.out.println("ERROR: Cannot load props " + name + "::" + uri);
+      System.out.println("  " + e);
+    }
+
+    synchronized(props) { props.put(uri, map); }
+    return map;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -545,7 +580,9 @@ public class Pod
   HashMap typesByName;
   Class cls;
   Map files;
-  HashMap locales = new HashMap(4);
+  HashMap props = new HashMap(4);
+// TODO
+HashMap locales = new HashMap(4);
   Log log;
   Object symbolsLock = new Object();
   HashMap symbols;
