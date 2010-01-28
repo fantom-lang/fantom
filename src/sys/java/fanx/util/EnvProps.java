@@ -12,11 +12,11 @@ import java.util.HashMap;
 import fan.sys.*;
 
 /**
- * PropsCache manages caching and compilation of 'Env.props'.
+ * EnvProps manages caching and compilation of 'Env.props'.
  */
-public class PropsCache
+public class EnvProps
 {
-  public PropsCache(Env env) { this.env = env; }
+  public EnvProps(Env env) { this.env = env; }
 
   public synchronized Map get(String uri, Duration maxAge)
   {
@@ -45,7 +45,7 @@ public class PropsCache
 
   static Map readProps(List files)
   {
-    if (files.isEmpty()) return emptyProps;
+    if (files.isEmpty()) return empty;
     Map acc = null;
     for (int i=files.sz()-1; i>=0; --i)
     {
@@ -92,7 +92,7 @@ public class PropsCache
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  static final Map emptyProps = (Map)new Map(new MapType(Sys.StrType, Sys.StrType)).toImmutable();
+  public static final Map empty = (Map)new Map(new MapType(Sys.StrType, Sys.StrType)).toImmutable();
 
   private final Env env;
   private final HashMap cache = new HashMap();

@@ -239,15 +239,35 @@ abstract const class Env
   ** refresh is performed to check if any of the files have been
   ** modified.
   **
-  virtual Str:Str props(Uri uri, Duration maxAge := 1min)
+  ** Also see `Pod.props`.
+  **
+  virtual Str:Str props(Uri uri, Duration maxAge)
 
   **
-  ** Lookup a configuration name/value pair.  If not found then
-  ** return 'def'.  Default implementation routes to `props`:
+  ** Lookup a configuration property for given pod/key pair.
+  ** If not found then return 'def'.  Default implementation
+  ** routes to `props` using maxAge of one minute:
   **
-  **   props(`etc/$podName/config.props`).get(keyName, def)
+  **   props(`etc/$pod/config.props`, 1min).get(key, def)
   **
-  virtual Str? config(Str podName, Str keyName, Str? def := null)
+  ** Also see `Pod.config`.
+  **
+  virtual Str? config(Str pod, Str key, Str? def := null)
+
+  **
+  ** Lookup a localized property for the specified pod/key pair.
+  ** The following rules are used for resolution:
+  **   1. `Env.props`: "etc/{pod}/locale/{locale}.props"
+  **   2. `Env.props`: "etc/{pod}/locale/{lang}.props"
+  **   3. `Pod.files`: "/locale/{locale}.props"
+  **   4. `Pod.files`: "/locale/{lang}.props"
+  **   5. `Pod.files`: "/locale/en.props"
+  **   6. Fallback to 'pod::key' unless 'def' specified
+  **
+  ** Where "locale" is `Locale.toStr` and "lang" is `Locale.lang`.
+  ** Also see `Pod.locale`.
+  **
+  virtual Str? locale(Str pod, Str key, Str? def := "pod::key", Locale locale := Locale.cur)
 
 }
 

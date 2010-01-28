@@ -177,15 +177,32 @@ final const class Pod
   Log log()
 
   **
-  ** Convenience for `Env.config`.
+  ** Parse a props file which is resource in this pod (see `files`).
+  ** The props file is parsed by `InStream.readProps`. The result is
+  ** cached so that all subsequent calls return the same immutable map.
+  ** If the file is not found or cannot be parsed return an empty file.
+  **
+  ** Also see `Env.props`.
+  **
+  Str:Str props(Uri uri)
+
+  **
+  ** Convenience for `Env.config` using `Locale.cur`.
   **
   Str? config(Str name, Str? def := null)
+
+  **
+  ** Convenience for `Env.locale`
+  **
+  Str? locale(Str name, Str? def := "pod::name")
 
   **
   ** Return the localized property.  This is convenience for:
   **   Locale.cur.get(name, key, def)
   ** Also see `Locale.get`.
   **
+// TODO
+// @deprecated
   Str? loc(Str key, Str? def := "name::key")
 
 }

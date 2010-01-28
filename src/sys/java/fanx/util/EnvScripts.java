@@ -11,9 +11,9 @@ import java.util.HashMap;
 import fan.sys.*;
 
 /**
- * ScriptCache manages caching and compilation of 'Env.compileScript'.
+ * EnvScripts manages caching and compilation of 'Env.compileScript'.
  */
-public class ScriptCache
+public class EnvScripts
 {
 
 //////////////////////////////////////////////////////////////////////////

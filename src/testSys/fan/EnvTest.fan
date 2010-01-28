@@ -136,12 +136,12 @@ class EnvTest : Test
       f.writeProps(props)
 
       // verify basics
-      verifyEq(Env.cur.props(`some-bad-file-foo-bar`), Str:Str[:])
-      verifyEq(Env.cur.props(uri), props)
+      verifyEq(Env.cur.props(`some-bad-file-foo-bar`, 1min), Str:Str[:])
+      verifyEq(Env.cur.props(uri, 1min), props)
 
       // verify cached
-      cached := Env.cur.props(uri)
-      verifySame(cached, Env.cur.props(uri))
+      cached := Env.cur.props(uri, 1min)
+      verifySame(cached, Env.cur.props(uri, 1min))
       verifyEq(cached.isImmutable(), true)
       Actor.sleep(10ms)
       verifySame(cached, Env.cur.props(uri, 1ns))
@@ -152,7 +152,7 @@ class EnvTest : Test
       while (f.modified == oldTime) f.writeProps(props)
 
       // verify with normal maxAge still cached
-      verifySame(cached, Env.cur.props(uri))
+      verifySame(cached, Env.cur.props(uri, 1min))
 
       // check that we refresh the cache
       newCached := Env.cur.props(uri, 1ns)

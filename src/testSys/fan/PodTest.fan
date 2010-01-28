@@ -125,5 +125,22 @@ class PodTest : Test
     verifyEq(Pod.of(this).log.name, "testSys")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Props
+//////////////////////////////////////////////////////////////////////////
+
+  Void testProps()
+  {
+    pod := typeof.pod
+    verifyEq(pod.props(`/locale/en.props`)["a"], "a en")
+    verifyEq(pod.props(`/locale/en.props`).isImmutable, true)
+
+    verifyEq(pod.props(`/not/found`).size, 0)
+    verifyEq(pod.props(`/not/found`).isImmutable, true)
+
+    verifySame(pod.props(`/locale/en.props`), pod.props(`/locale/en.props`))
+    verifySame(pod.props(`/not/found`), pod.props(`/not/found`))
+  }
+
 
 }
