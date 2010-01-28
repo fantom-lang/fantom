@@ -392,7 +392,7 @@ public class Pod
 // TODO
   public final String loc(String key)
   {
-    return Locale.cur().doGet(this, name, key, Locale.getNoDef);
+    return Locale.cur().doGet(this, name, key, Env.noDef);
   }
 
 // TODO
@@ -563,8 +563,6 @@ public class Pod
   HashMap typesByName;
   Class cls;
   Map files;
-// TODO
-HashMap locales = new HashMap(4);
   Log log;
   Object symbolsLock = new Object();
   HashMap symbols;
