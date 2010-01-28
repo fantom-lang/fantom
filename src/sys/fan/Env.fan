@@ -168,7 +168,7 @@ abstract const class Env
   virtual File tempDir()
 
 //////////////////////////////////////////////////////////////////////////
-// Compile Hooks
+// Resolution
 //////////////////////////////////////////////////////////////////////////
 
   **
@@ -187,6 +187,23 @@ abstract const class Env
   **     a recompile
   **
   virtual Type compileScript(File f, [Str:Obj]? options := null)
+
+  **
+  ** Find a file in the environment using a relative path such
+  ** as "etc/foo/config.props".  If the URI is not relative then
+  ** throw ArgErr.  If the file is not found in the environment
+  ** then throw IOErr or return null based on checked flag.
+  **
+  virtual File? findFile(Uri uri, Bool checked := true)
+
+  **
+  ** Find all the files in the environment which match a relative
+  ** path such as "etc/foo/config.props".  It is possible to have
+  ** multiple matches if the environment uses a search path model.
+  ** If the URI is not relative then throw ArgErr.  Return empty
+  ** list if the file is not found in environment.
+  **
+  virtual File[] findAllFiles(Uri uri)
 
 }
 
