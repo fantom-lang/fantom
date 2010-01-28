@@ -177,6 +177,11 @@ final const class Pod
   Log log()
 
   **
+  ** Convenience for `Env.config`.
+  **
+  Str? config(Str name, Str? def := null)
+
+  **
   ** Return the localized property.  This is convenience for:
   **   Locale.cur.get(name, key, def)
   ** Also see `Locale.get`.

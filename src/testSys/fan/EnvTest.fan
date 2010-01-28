@@ -166,4 +166,21 @@ class EnvTest : Test
     }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Config
+//////////////////////////////////////////////////////////////////////////
+
+  Void testConfig()
+  {
+    pod := Pod.find("build", false)
+    if (pod == null) return
+    verifyNotNull(pod.config("buildVersion"))
+    verifySame(pod.config("buildVersion"), pod.config("buildVersion"))
+    verifyEq(pod.config("buildVersion"), Env.cur.config("build", "buildVersion"))
+    verifyEq(pod.config("foo.not.found"), null)
+    verifyEq(pod.config("foo.not.found", "?"), "?")
+    verifyEq(Env.cur.config("build", "foo.not.found"), null)
+    verifyEq(Env.cur.config("build", "foo.not.found", "?"), "?")
+  }
+
 }

@@ -91,21 +91,40 @@ public abstract class Env
 
   public final File findFile(String uri) { return findFile(Uri.fromStr(uri), true); }
   public final File findFile(String uri, boolean checked) { return findFile(Uri.fromStr(uri), checked); }
-  public File findFile(Uri uri) { return this.findFile(uri, true); }
-  public File findFile(Uri uri, boolean checked) { return parent.findFile(uri, checked); }
+  public File findFile(Uri uri) { return findFile(uri, true); }
+  public File findFile(Uri uri, boolean checked)
+  {
+    return parent.findFile(uri, checked);
+  }
 
   public final List findAllFiles(String uri) { return findAllFiles(Uri.fromStr(uri)); }
-  public List findAllFiles(Uri uri) { return parent.findAllFiles(uri); }
+  public List findAllFiles(Uri uri)
+  {
+    return parent.findAllFiles(uri);
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public Type compileScript(fan.sys.File file) { return this.compileScript(file, null); }
-  public Type compileScript(fan.sys.File file, Map options) { return scripts.compile(file, options); }
+  public Type compileScript(fan.sys.File file) { return compileScript(file, null); }
+  public Type compileScript(fan.sys.File file, Map options)
+  {
+    return scripts.compile(file, options);
+  }
 
   public Map props(Uri uri) { return props(uri, Duration.oneMin); }
-  public Map props(Uri uri, Duration maxAge) { return props.get(uri, maxAge); }
+  public Map props(Uri uri, Duration maxAge)
+  {
+    return props.get(uri, maxAge);
+  }
+
+  public String config(String podName, String keyName) { return config(podName, keyName, null); }
+  public String config(String podName, String keyName, String def)
+  {
+    String uri = "etc/" + podName + "/config.props";
+    return (String)props.get(uri, Duration.oneMin).get(keyName, def);
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

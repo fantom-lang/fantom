@@ -241,6 +241,14 @@ abstract const class Env
   **
   virtual Str:Str props(Uri uri, Duration maxAge := 1min)
 
+  **
+  ** Lookup a configuration name/value pair.  If not found then
+  ** return 'def'.  Default implementation routes to `props`:
+  **
+  **   props(`etc/$podName/config.props`).get(keyName, def)
+  **
+  virtual Str? config(Str podName, Str keyName, Str? def := null)
+
 }
 
 **************************************************************************

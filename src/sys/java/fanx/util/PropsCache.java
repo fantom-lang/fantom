@@ -18,9 +18,17 @@ public class PropsCache
 {
   public PropsCache(Env env) { this.env = env; }
 
-  public synchronized Map get(Uri uri, Duration maxAge)
+  public synchronized Map get(String uri, Duration maxAge)
   {
     CachedProps cp = (CachedProps)cache.get(uri);
+    if (cp == null || Duration.nowTicks() - cp.read > maxAge.ticks)
+      cp = refreshProps(Uri.fromStr(uri), cp);
+    return cp.props;
+  }
+
+  public synchronized Map get(Uri uri, Duration maxAge)
+  {
+    CachedProps cp = (CachedProps)cache.get(uri.toStr());
     if (cp == null || Duration.nowTicks() - cp.read > maxAge.ticks)
       cp = refreshProps(uri, cp);
     return cp.props;
@@ -31,7 +39,7 @@ public class PropsCache
     List files = env.findAllFiles(uri);
     if (cp != null && !cp.isStale(files)) return cp;
     cp = new CachedProps(files);
-    cache.put(uri, cp);
+    cache.put(uri.toStr(), cp);
     return cp;
   }
 

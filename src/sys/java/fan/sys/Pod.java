@@ -363,6 +363,16 @@ public class Pod
     return log;
   }
 
+  public final String config(String key)
+  {
+    return Env.cur().config(name, key, null);
+  }
+
+  public final String config(String key, String def)
+  {
+    return Env.cur().config(name, key, def);
+  }
+
   public final String loc(String key)
   {
     return Locale.cur().doGet(this, name, key, Locale.getNoDef);
