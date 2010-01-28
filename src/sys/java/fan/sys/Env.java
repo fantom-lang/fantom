@@ -7,6 +7,8 @@
 //
 package fan.sys;
 
+import java.util.HashMap;
+
 /**
  * Env
  */
@@ -98,9 +100,81 @@ public abstract class Env
   public List findAllFiles(Uri uri) { return parent.findAllFiles(uri); }
 
 //////////////////////////////////////////////////////////////////////////
+// Props
+//////////////////////////////////////////////////////////////////////////
+
+  public final Map props(Uri uri) { return props(uri, Duration.oneMin); }
+  public final Map props(Uri uri, Duration maxAge)
+  {
+    synchronized (cachedProps)
+    {
+      CachedProps cp = (CachedProps)cachedProps.get(uri);
+      if (cp == null || Duration.nowTicks() - cp.read > maxAge.ticks)
+        cp = refreshProps(uri, cp);
+      return cp.props;
+    }
+  }
+
+  private CachedProps refreshProps(Uri uri, CachedProps cp)
+  {
+    List files = findAllFiles(uri);
+    if (cp != null && !cp.isStale(files)) return cp;
+    cp = new CachedProps(files);
+    cachedProps.put(uri, cp);
+    return cp;
+  }
+
+  static Map readProps(List files)
+  {
+    if (files.isEmpty()) return emptyProps;
+    Map acc = null;
+    for (int i=files.sz()-1; i>=0; --i)
+    {
+      InStream in = ((File)files.get(i)).in();
+      try
+      {
+        Map props = in.readProps();
+        if (acc == null) acc = props;
+        else acc.addAll(props);
+      }
+      finally { in.close(); }
+    }
+    return acc;
+  }
+
+  static class CachedProps
+  {
+    CachedProps(List files)
+    {
+      this.files = files;
+      this.modified = new long[files.sz()];
+      for (int i=0; i<files.sz(); ++i)
+        this.modified[i] = ((File)files.get(i)).modified().ticks();
+      this.props = (Map)readProps(files).toImmutable();
+      this.read = Duration.nowTicks();
+    }
+
+    boolean isStale(List x)
+    {
+      if (files.sz() != x.sz()) return true;
+      for (int i=0; i<x.sz(); ++i)
+        if (modified[i] != ((File)x.get(i)).modified().ticks())
+          return true;
+      return false;
+    }
+
+    long read;        // Duration.nowTicks when we read
+    List files;       // list of files we read from
+    long[] modified;  // timestamps of file when we read
+    Map props;        // immutable props read
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Env parent;
+  static final Map emptyProps = (Map)new Map(new MapType(Sys.StrType, Sys.StrType)).toImmutable();
 
+  private Env parent;
+  private HashMap cachedProps = new HashMap();
 }
