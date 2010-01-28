@@ -122,4 +122,48 @@ class EnvTest : Test
     verifyEq(Env.cur.findAllFiles(`bad/unknown file`).size, 0)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Props
+//////////////////////////////////////////////////////////////////////////
+
+  Void testProps()
+  {
+    uri := `temp/test/foo.props`
+    f := Env.cur.workDir + uri
+    try
+    {
+      props := ["a":"alpha", "b":"beta"]
+      f.writeProps(props)
+
+      // verify basics
+      verifyEq(Env.cur.props(`some-bad-file-foo-bar`), Str:Str[:])
+      verifyEq(Env.cur.props(uri), props)
+
+      // verify cached
+      cached := Env.cur.props(uri)
+      verifySame(cached, Env.cur.props(uri))
+      verifyEq(cached.isImmutable(), true)
+      Actor.sleep(10ms)
+      verifySame(cached, Env.cur.props(uri, 1ns))
+
+      // rewrite file until we get modified time in file system
+      props["foo"] = "bar"
+      oldTime := f.modified
+      while (f.modified == oldTime) f.writeProps(props)
+
+      // verify with normal maxAge still cached
+      verifySame(cached, Env.cur.props(uri))
+
+      // check that we refresh the cache
+      newCached := Env.cur.props(uri, 1ns)
+      verifyNotSame(cached, newCached)
+      verifyEq(cached["foo"], null)
+      verifyEq(newCached["foo"], "bar")
+    }
+    finally
+    {
+      f.delete
+    }
+  }
+
 }

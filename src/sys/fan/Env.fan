@@ -192,7 +192,9 @@ abstract const class Env
   ** Find a file in the environment using a relative path such
   ** as "etc/foo/config.props".  If the URI is not relative then
   ** throw ArgErr.  If the file is not found in the environment
-  ** then throw IOErr or return null based on checked flag.
+  ** then throw IOErr or return null based on checked flag.  If
+  ** `findAllFiles` would return multiple matches, then this method
+  ** should always return the file with the highest priority.
   **
   virtual File? findFile(Uri uri, Bool checked := true)
 
@@ -200,10 +202,26 @@ abstract const class Env
   ** Find all the files in the environment which match a relative
   ** path such as "etc/foo/config.props".  It is possible to have
   ** multiple matches if the environment uses a search path model.
-  ** If the URI is not relative then throw ArgErr.  Return empty
-  ** list if the file is not found in environment.
+  ** If the list contains more than one item, then the first file
+  ** has the highest priority and the last item has the lowest
+  ** priority.  If the URI is not relative then throw ArgErr.
+  ** Return empty list if the file is not found in environment.
   **
   virtual File[] findAllFiles(Uri uri)
+
+  **
+  ** Return a merged key/value map of all the prop files referenced
+  ** by the uri via `findAllFiles`.  The files are parsed using
+  ** `InStream.readProps` and merged according to their priority
+  ** order (first file overwrites keys in other files).
+  **
+  ** The map is cached so that subsequent calls for the same uri
+  ** doesn't require accessing the file system again.  The 'maxAge'
+  ** parameter specifies the tolerance accepted before a cache
+  ** refresh is performed to check if any of the files have been
+  ** modified.
+  **
+  Str:Str props(Uri uri, Duration maxAge := 1min)
 
 }
 
