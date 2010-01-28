@@ -177,22 +177,17 @@ final const class Pod
   Log log()
 
   **
-  ** Parse a props file which is resource in this pod (see `files`).
-  ** The props file is parsed by `InStream.readProps`. The result is
-  ** cached so that all subsequent calls return the same immutable map.
-  ** If the file is not found or cannot be parsed return an empty file.
+  ** Convenience for `Env.props`.
   **
-  ** Also see `Env.props`.
-  **
-  Str:Str props(Uri uri)
+  Str:Str props(Uri uri, Duration maxAge)
 
   **
-  ** Convenience for `Env.config` using `Locale.cur`.
+  ** Convenience for `Env.config`.
   **
   Str? config(Str name, Str? def := null)
 
   **
-  ** Convenience for `Env.locale`
+  ** Convenience for `Env.locale` using `Locale.cur`.
   **
   Str? locale(Str name, Str? def := "pod::name")
 

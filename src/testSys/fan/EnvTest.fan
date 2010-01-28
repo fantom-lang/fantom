@@ -128,23 +128,24 @@ class EnvTest : Test
 
   Void testProps()
   {
-    uri := `temp/test/foo.props`
-    f := Env.cur.workDir + uri
+    pod := typeof.pod
+    uri := `foo/bar.props`
+    f := Env.cur.workDir + `etc/testSys/$uri`
     try
     {
       props := ["a":"alpha", "b":"beta"]
       f.writeProps(props)
 
       // verify basics
-      verifyEq(Env.cur.props(`some-bad-file-foo-bar`, 1min), Str:Str[:])
-      verifyEq(Env.cur.props(uri, 1min), props)
+      verifyEq(Env.cur.props(pod, `some-bad-file-foo-bar`, 1min), Str:Str[:])
+      verifyEq(Env.cur.props(pod, uri, 1min), props)
 
       // verify cached
-      cached := Env.cur.props(uri, 1min)
-      verifySame(cached, Env.cur.props(uri, 1min))
+      cached := Env.cur.props(pod, uri, 1min)
+      verifySame(cached, Env.cur.props(pod, uri, 1min))
       verifyEq(cached.isImmutable(), true)
       Actor.sleep(10ms)
-      verifySame(cached, Env.cur.props(uri, 1ns))
+      verifySame(cached, Env.cur.props(pod, uri, 1ns))
 
       // rewrite file until we get modified time in file system
       props["foo"] = "bar"
@@ -152,10 +153,10 @@ class EnvTest : Test
       while (f.modified == oldTime) f.writeProps(props)
 
       // verify with normal maxAge still cached
-      verifySame(cached, Env.cur.props(uri, 1min))
+      verifySame(cached, Env.cur.props(pod, uri, 1min))
 
       // check that we refresh the cache
-      newCached := Env.cur.props(uri, 1ns)
+      newCached := Env.cur.props(pod, uri, 1ns)
       verifyNotSame(cached, newCached)
       verifyEq(cached["foo"], null)
       verifyEq(newCached["foo"], "bar")
@@ -176,11 +177,102 @@ class EnvTest : Test
     if (pod == null) return
     verifyNotNull(pod.config("buildVersion"))
     verifySame(pod.config("buildVersion"), pod.config("buildVersion"))
-    verifyEq(pod.config("buildVersion"), Env.cur.config("build", "buildVersion"))
+    verifyEq(pod.config("buildVersion"), Env.cur.config(pod, "buildVersion"))
     verifyEq(pod.config("foo.not.found"), null)
     verifyEq(pod.config("foo.not.found", "?"), "?")
-    verifyEq(Env.cur.config("build", "foo.not.found"), null)
-    verifyEq(Env.cur.config("build", "foo.not.found", "?"), "?")
+    verifyEq(Env.cur.config(pod, "foo.not.found"), null)
+    verifyEq(Env.cur.config(pod, "foo.not.found", "?"), "?")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+  Void testLocale()
+  {
+    f1 := Env.cur.workDir + `etc/testSys/locale/en.props`
+    f2 := Env.cur.workDir + `etc/testSys/locale/en-US.props`
+    try
+    {
+      f1.writeProps(["e":"e en etc", "f":"f en etc"])
+      f2.writeProps(["f":"f en-US etc"])
+
+      x := Locale.fromStr("en")
+      verifyLocale(x, "a", "a en")
+      verifyLocale(x, "b", "b en")
+      verifyLocale(x, "c", "c en")
+      verifyLocale(x, "d", "d en")
+      verifyLocale(x, "e", "e en etc")
+      verifyLocale(x, "f", "f en etc")
+      verifyLocale(x, "x", null)
+
+      x = Locale.fromStr("en-US")
+      verifyLocale(x, "a", "a en-US")
+      verifyLocale(x, "b", "b en")
+      verifyLocale(x, "c", "c en")
+      verifyLocale(x, "d", "d en")
+      verifyLocale(x, "e", "e en etc")
+      verifyLocale(x, "f", "f en-US etc")
+      verifyLocale(x, "x", null)
+
+      x = Locale.fromStr("es")
+      verifyLocale(x, "a", "a es")
+      verifyLocale(x, "b", "b es")
+      verifyLocale(x, "c", "c es")
+      verifyLocale(x, "d", "d en")
+      verifyLocale(x, "e", "e es")
+      verifyLocale(x, "f", "f en etc")
+      verifyLocale(x, "x", null)
+
+      x = Locale.fromStr("es-MX")
+      verifyLocale(x, "a", "a es-MX")
+      verifyLocale(x, "b", "b es")
+      verifyLocale(x, "c", "c es")
+      verifyLocale(x, "d", "d en")
+      verifyLocale(x, "e", "e es")
+      verifyLocale(x, "f", "f en etc")
+      verifyLocale(x, "x", null)
+
+      x = Locale.fromStr("fr-CA")
+      verifyLocale(x, "a", "a en")
+      verifyLocale(x, "b", "b en")
+      verifyLocale(x, "c", "c en")
+      verifyLocale(x, "d", "d en")
+      verifyLocale(x, "e", "e en etc")
+      verifyLocale(x, "f", "f en etc")
+    }
+    finally
+    {
+      f1.delete
+      f2.delete
+    }
+  }
+
+  Void verifyLocale(Locale loc, Str key, Str? expected)
+  {
+    // Env.cur.locale using explicit locale
+    pod := typeof.pod
+    verifyEq(Env.cur.locale(pod, key, null, loc), expected)
+    verifyEq(Env.cur.locale(pod, key, "?!#", loc), expected ?: "?!#")
+
+    // Locale.cur
+    loc.use
+    {
+      if (expected != null)
+      {
+        verifyEq(pod.locale(key), expected)
+        verifyEq(pod.locale(key, "@%#"), expected)
+        verifyEq(Env.cur.locale(pod, key), expected)
+        verifyEq(Env.cur.locale(pod, key, "@%#"), expected)
+      }
+      else
+      {
+        verifyEq(pod.locale(key), "testSys::" + key)
+        verifyEq(pod.locale(key, "@%#"), "@%#")
+        verifyEq(Env.cur.locale(pod, key), "testSys::" + key)
+        verifyEq(Env.cur.locale(pod, key, "!#!"), "!#!")
+      }
+    }
   }
 
 }
