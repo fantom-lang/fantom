@@ -24,13 +24,15 @@ public class BootEnv
 
   public BootEnv()
   {
-    this.args = initArgs();
-    this.vars = initVars();
-    this.host = initHost();
-    this.user = initUser();
-    this.in   = new SysInStream(System.in);
-    this.out  = new SysOutStream(System.out);
-    this.err  = new SysOutStream(System.err);
+    this.args    = initArgs();
+    this.vars    = initVars();
+    this.host    = initHost();
+    this.user    = initUser();
+    this.in      = new SysInStream(System.in);
+    this.out     = new SysOutStream(System.out);
+    this.err     = new SysOutStream(System.err);
+    this.homeDir = new LocalFile(Sys.homeDir, true).normalize();
+    this.tempDir = homeDir.plus(Uri.fromStr("temp/"), false);
   }
 
   private static List initArgs()
@@ -65,7 +67,7 @@ public class BootEnv
       }
 
       // sys.properties
-      LocalFile f = new LocalFile(new java.io.File(Sys.HomeDir, "lib" + java.io.File.separator + "sys.props"));
+      LocalFile f = new LocalFile(new java.io.File(Sys.homeDir, "lib" + java.io.File.separator + "sys.props"));
       if (f.exists())
       {
         try
@@ -141,12 +143,12 @@ public class BootEnv
 
   public OutStream err() { return err; }
 
-  public File homeDir() { return Sys.homeDir; }
+  public File homeDir() { return homeDir; }
 
   // TODO
   public File workDir() { return Repo.working().home(); }
 
-  public File tempDir() { return Sys.tempDir; }
+  public File tempDir() { return tempDir; }
 
 //////////////////////////////////////////////////////////////////////////
 // Diagnostics
@@ -202,6 +204,8 @@ public class BootEnv
   private final InStream  in;
   private final OutStream out;
   private final OutStream err;
+  private final File homeDir;
+  private final File tempDir;
 
 }
 

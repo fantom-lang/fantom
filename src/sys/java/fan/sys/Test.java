@@ -203,7 +203,7 @@ public class Test
   {
     if (tempDir == null)
     {
-      tempDir = Sys.tempDir.plus(Uri.fromStr("test/"), false);
+      tempDir = Env.cur().tempDir().plus(Uri.fromStr("test/"), false);
       tempDir.delete();
       tempDir.create();
     }

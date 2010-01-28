@@ -218,7 +218,7 @@ public final class Repo
     try
     {
       // boot repo
-      b = new Repo("boot", Sys.homeDir.normalize());
+      b = new Repo("boot", Env.cur().homeDir().normalize());
 
       // working repo
       File wd = resolveWorking();

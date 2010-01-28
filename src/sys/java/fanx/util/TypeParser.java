@@ -222,7 +222,7 @@ public class TypeParser
     // check for generic parameter like sys::V
     if (typeName.length() == 1 && podName.equals("sys"))
     {
-      Type type = Sys.genericParameterType(typeName);
+      Type type = Sys.genericParamType(typeName);
       if (type != null) return type;
     }
 

@@ -15,43 +15,224 @@ import fanx.fcode.*;
 import fanx.util.*;
 
 /**
- * Sys provides static access to the system's environment.
- * The Sys static intializer is used to boot a Fantom runtime.
+ * Sys provides static access to the system's environment and initializes
+ * key data structures in a specific order in its static initializer.
  */
 public final class Sys
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Constructor
+// Fields (loaded before type constants)
 //////////////////////////////////////////////////////////////////////////
 
-  private Sys() {}
+  /** Env.os constant */
+  public static final String os = initOs();
 
-//////////////////////////////////////////////////////////////////////////
-// Platform
-//////////////////////////////////////////////////////////////////////////
+  /** Env.arch constant */
+  public static final String arch = initArch();
 
-  public static final String os = osInit();
-  public static final String arch = archInit();
+  /** Env.platform constant */
   public static final String platform  = os + "-" + arch;
 
-  private static String osInit()
+  /** BootEnv.homeDir */
+  public static final File homeDir = initHomeDir();
+
+  /** {BootEnv.homeDir}/lib/fan/ */
+  public static final File podsDir = initPodsDir();
+
+  /** {BootEnv.homeDir}/lib/fan/sys.pod */
+  public static final Pod  sysPod  = initSysPod();
+
+//////////////////////////////////////////////////////////////////////////
+// Fields (type constants)
+//////////////////////////////////////////////////////////////////////////
+
+  // the Eve of all types
+  public static final Type ObjType       = initType("Obj",      null);
+
+  // basic primitives
+  public static final Type NumType       = initType("Num",      ObjType);
+  public static final Type EnumType      = initType("Enum",     ObjType);
+  public static final Type BoolType      = initType("Bool",     ObjType);
+  public static final Type DurationType  = initType("Duration", ObjType);
+  public static final Type FuncType      = initType("Func",     ObjType);
+  public static final Type IntType       = initType("Int",      NumType);
+  public static final Type DecimalType   = initType("Decimal",  NumType);
+  public static final Type FloatType     = initType("Float",    NumType);
+  public static final Type ListType      = initType("List",     ObjType);
+  public static final Type MapType       = initType("Map",      ObjType);
+  public static final Type MonthType     = initType("Month",    EnumType);
+  public static final Type PodType       = initType("Pod",      ObjType);
+  public static final Type RepoType      = initType("Repo",     ObjType);
+  public static final Type RangeType     = initType("Range",    ObjType);
+  public static final Type StrType       = initType("Str",      ObjType);
+  public static final Type StrBufType    = initType("StrBuf",   ObjType);
+  public static final Type TestType      = initType("Test",     ObjType);
+  public static final Type DateTimeType  = initType("DateTime", ObjType);
+  public static final Type DateType      = initType("Date",     ObjType);
+  public static final Type TimeType      = initType("Time",     ObjType);
+  public static final Type TimeZoneType  = initType("TimeZone", ObjType);
+  public static final Type TypeType      = initType("Type",     ObjType);
+  public static final Type WeekdayType   = initType("Weekday",  EnumType);
+  public static final Type ThisType      = initType("This",     ObjType);
+  public static final Type VoidType      = initType("Void",     ObjType);
+  public static final Type EnvType       = initType("Env",      ObjType);
+  public static final Type BootEnvType   = initType("BootEnv",  EnvType);
+
+  // reflection
+  public static final Type SlotType      = initType("Slot",     ObjType);
+  public static final Type FieldType     = initType("Field",    SlotType);
+  public static final Type MethodType    = initType("Method",   SlotType);
+  public static final Type ParamType     = initType("Param",    ObjType);
+  public static final Type SymbolType    = initType("Symbol",   ObjType);
+
+  // resources
+  public static final Type UriSpaceType     = initType("UriSpace",     ObjType);
+  public static final Type RootUriSpaceType = initType("RootUriSpace", UriSpaceType);
+  public static final Type SysUriSpaceType  = initType("SysUriSpace",  UriSpaceType);
+  public static final Type DirUriSpaceType  = initType("DirUriSpace",  UriSpaceType);
+
+  // IO
+  public static final Type CharsetType      = initType("Charset",      ObjType);
+  public static final Type EndianType       = initType("Endian",       EnumType);
+  public static final Type InStreamType     = initType("InStream",     ObjType);
+  public static final Type SysInStreamType  = initType("SysInStream",  ObjType);
+  public static final Type OutStreamType    = initType("OutStream",    ObjType);
+  public static final Type SysOutStreamType = initType("SysOutStream", ObjType);
+  public static final Type FileType         = initType("File",         ObjType);
+  public static final Type LocalFileType    = initType("LocalFile",    FileType);
+  public static final Type ZipEntryFileType = initType("ZipEntryFile", FileType);
+  public static final Type BufType          = initType("Buf",          ObjType);
+  public static final Type MemBufType       = initType("MemBuf",       BufType);
+  public static final Type FileBufType      = initType("FileBuf",      BufType);
+  public static final Type MmapBufType      = initType("MmapBuf",      BufType);
+  public static final Type UriType          = initType("Uri",          ObjType);
+  public static final Type ZipType          = initType("Zip",          ObjType);
+
+  // actos
+  public static final Type ActorType        = initType("Actor",        ObjType);
+  public static final Type ActorPoolType    = initType("ActorPool",    ObjType);
+  public static final Type FutureType       = initType("Future",       ObjType);
+
+  // utils
+  public static final Type DependType       = initType("Depend",       ObjType);
+  public static final Type LogType          = initType("Log",          ObjType);
+  public static final Type LogLevelType     = initType("LogLevel",     EnumType);
+  public static final Type LogRecType       = initType("LogRec",       ObjType);
+  public static final Type LocaleType       = initType("Locale",       ObjType);
+  public static final Type MimeTypeType     = initType("MimeType",     ObjType);
+  public static final Type ProcessType      = initType("Process",      ObjType);
+  public static final Type RegexType        = initType("Regex",        ObjType);
+  public static final Type RegexMatcherType = initType("RegexMatcher", ObjType);
+  public static final Type ServiceType      = initType("Service",      ObjType);
+  public static final Type VersionType      = initType("Version",      ObjType);
+  public static final Type UnitType         = initType("Unit",         ObjType);
+  public static final Type UnsafeType       = initType("Unsafe",       ObjType);
+  public static final Type UuidType         = initType("Uuid",         ObjType);
+
+  // uri schemes
+  public static final Type UriSchemeType    = initType("UriScheme",    ObjType);
+  public static final Type FanSchemeType    = initType("FanScheme",    UriSchemeType);
+  public static final Type FileSchemeType   = initType("FileScheme",   UriSchemeType);
+
+  // exceptions
+  public static final Type ErrType               = initType("Err",               ObjType);
+  public static final Type ArgErrType            = initType("ArgErr",            ErrType);
+  public static final Type CancelledErrType      = initType("CancelledErr",      ErrType);
+  public static final Type CastErrType           = initType("CastErr",           ErrType);
+  public static final Type ConstErrType          = initType("ConstErr",          ErrType);
+  public static final Type IOErrType             = initType("IOErr",             ErrType);
+  public static final Type IndexErrType          = initType("IndexErr",          ErrType);
+  public static final Type InterruptedErrType    = initType("InterruptedErr",    ErrType);
+  public static final Type NameErrType           = initType("NameErr",           ErrType);
+  public static final Type NotImmutableErrType   = initType("NotImmutableErr",   ErrType);
+  public static final Type NullErrType           = initType("NullErr",           ErrType);
+  public static final Type ParseErrType          = initType("ParseErr",          ErrType);
+  public static final Type ReadonlyErrType       = initType("ReadonlyErr",       ErrType);
+  public static final Type TestErrType           = initType("TestErr",           ErrType);
+  public static final Type TimeoutErrType        = initType("TimeoutErr",        ErrType);
+  public static final Type UnknownPodErrType     = initType("UnknownPodErr",     ErrType);
+  public static final Type UnknownServiceErrType = initType("UnknownServiceErr", ErrType);
+  public static final Type UnknownSlotErrType    = initType("UnknownSlotErr",    ErrType);
+  public static final Type UnknownSymbolErrType  = initType("UnknownSymbolErr",  ErrType);
+  public static final Type UnknownTypeErrType    = initType("UnknownTypeErr",    ErrType);
+  public static final Type UnresolvedErrType     = initType("UnresolvedErr",     ErrType);
+  public static final Type UnsupportedErrType    = initType("UnsupportedErr",    ErrType);
+
+  // generic parameter types used with generic types List, Map, and Method
+  static final ClassType[] genericParamTypes = new ClassType[256];
+  public static final ClassType AType = initGeneric('A');
+  public static final ClassType BType = initGeneric('B');
+  public static final ClassType CType = initGeneric('C');
+  public static final ClassType DType = initGeneric('D');
+  public static final ClassType EType = initGeneric('E');
+  public static final ClassType FType = initGeneric('F');
+  public static final ClassType GType = initGeneric('G');
+  public static final ClassType HType = initGeneric('H');
+  public static final ClassType KType = initGeneric('K');
+  public static final ClassType LType = initGeneric('L');
+  public static final ClassType MType = initGeneric('M');
+  public static final ClassType RType = initGeneric('R');
+  public static final ClassType VType = initGeneric('V');
+  static { initGenericParamTypes(); }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields (loaded after type constants)
+//////////////////////////////////////////////////////////////////////////
+
+  /** Bootstrap environment */
+  public static BootEnv bootEnv = new BootEnv();
+
+  /** Current environment */
+  static Env curEnv = bootEnv;
+
+  /** "fan.usePrecompiledOnly" env var - loads bytecode straight from java */
+  public static final boolean usePrecompiledOnly = initEnvVar("fan.usePrecompiledOnly");
+
+  /** "fan.debug" env var used to generating debug attributes in bytecode */
+  public static final boolean debug = initEnvVar("fan.debug");
+
+  /** Absolute boot time */
+  public static final DateTime bootDateTime = initBootDateTime();
+
+  /** Relative boot time */
+  public static final Duration bootDuration = initBootDuration();
+
+//////////////////////////////////////////////////////////////////////////
+// Platform Init
+//////////////////////////////////////////////////////////////////////////
+
+  private static String initOs()
   {
-    String os = System.getProperty("os.name", "unknown");
-    os = sanitize(os);
-    if (os.contains("win"))   return "win32";
-    if (os.contains("mac"))   return "macosx";
-    if (os.contains("sunos")) return "solaris";
-    return os;
+    try
+    {
+      String os = System.getProperty("os.name", "unknown");
+      os = sanitize(os);
+      if (os.contains("win"))   return "win32";
+      if (os.contains("mac"))   return "macosx";
+      if (os.contains("sunos")) return "solaris";
+      return os;
+    }
+    catch (Throwable e)
+    {
+      throw initFail("os", e);
+    }
   }
 
-  private static String archInit()
+  private static String initArch()
   {
-    String arch = System.getProperty("os.arch", "unknown");
-    arch = sanitize(arch);
-    if (arch.contains("i386"))  return "x86";
-    if (arch.contains("amd64")) return "x86_64";
-    return arch;
+    try
+    {
+      String arch = System.getProperty("os.arch", "unknown");
+      arch = sanitize(arch);
+      if (arch.contains("i386"))  return "x86";
+      if (arch.contains("amd64")) return "x86_64";
+      return arch;
+    }
+    catch (Throwable e)
+    {
+      throw initFail("arch", e);
+    }
   }
 
   private static String sanitize(String s)
@@ -70,60 +251,33 @@ public final class Sys
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Fields
+// Dir Init
 //////////////////////////////////////////////////////////////////////////
 
-// TODO
-  public static final File HomeDir;
-  public static final File PodsDir;
-  public static final Pod  sysPod;
-
-  // if true then we disable FanClassLoader and all classes
-  // must be available precompiled into bytecode from the
-  // system's classloader (or webapp, etc); default is false
-  public static boolean usePrecompiledOnly;
-
-//////////////////////////////////////////////////////////////////////////
-// Boot
-//////////////////////////////////////////////////////////////////////////
-
-  static
+  private static File initHomeDir()
   {
     try
     {
-      // map key directories
-      HomeDir = sysPropToDir("fan.home", "FAN_HOME", null);
-      PodsDir = new File(HomeDir, "lib" + File.separator + "fan");
-
-      // check fan.usePrecompiledOnly
-      usePrecompiledOnly = System.getProperty("fan.usePrecompiledOnly", "false").equals("true");
-
-      // add shutdown hook - this is the only way to
-      // cleanup pod files marked deleteOnExit
-      /*
-      Runtime.getRuntime().addShutdownHook(new Thread("fan.Sys Shutdown Hook") {
-        public void run()
-        {
-          Iterator it = podsByName.values().iterator();
-          while (it.hasNext()) ((Pod)it.next()).shutdown();
-        }
-      });
-      */
-
-      // load sys pod
-      sysPod = Pod.doFind("sys", true, null, null);
+      return sysPropToDir("fan.home", "FAN_HOME", null);
     }
     catch (Throwable e)
     {
-      System.out.println("ERROR: Sys.static");
-      e.printStackTrace();
-      throw new RuntimeException("Cannot boot fan::Sys - " + e.toString());
+      throw initFail("homeDir", e);
     }
   }
 
-  /**
-   * Map a system property or environment variable to a local directory.
-   */
+  private static File initPodsDir()
+  {
+    try
+    {
+      return new File(homeDir, "lib" + File.separator + "fan");
+    }
+    catch (Throwable e)
+    {
+      throw initFail("podsDir", e);
+    }
+  }
+
   private static File sysPropToDir(String propKey, String envKey, String def)
   {
     // lookup system property
@@ -146,176 +300,34 @@ public final class Sys
     // check that val ends in trailing newline
     if (!val.endsWith("/")) val += "/";
 
-    // check if relative to home directory (fand, fant)
-    boolean checkExists = true;
-    if (val.startsWith("$home"))
-    {
-      val = new File(HomeDir, val.substring(5)).toString();
-      checkExists = false;
-    }
-
     // map to java.io.File and check that it is a valid directory
     File f = new File(val);
-    if (checkExists && (!f.exists() || !f.isDirectory()))
+    if (!f.exists() || !f.isDirectory())
       throw new RuntimeException("Invalid " + propKey + " dir: " + f);
     return f;
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Built-in Types
+// Init Sys Pod
 //////////////////////////////////////////////////////////////////////////
 
-  // the Eve of all types
-  public static final Type ObjType       = builtin("Obj",      null);
-
-  // basic primitives
-  public static final Type NumType       = builtin("Num",      ObjType);
-  public static final Type EnumType      = builtin("Enum",     ObjType);
-  public static final Type BoolType      = builtin("Bool",     ObjType);
-  public static final Type DurationType  = builtin("Duration", ObjType);
-  public static final Type FuncType      = builtin("Func",     ObjType);
-  public static final Type IntType       = builtin("Int",      NumType);
-  public static final Type DecimalType   = builtin("Decimal",  NumType);
-  public static final Type FloatType     = builtin("Float",    NumType);
-  public static final Type ListType      = builtin("List",     ObjType);
-  public static final Type MapType       = builtin("Map",      ObjType);
-  public static final Type MonthType     = builtin("Month",    EnumType);
-  public static final Type PodType       = builtin("Pod",      ObjType);
-  public static final Type RepoType      = builtin("Repo",     ObjType);
-  public static final Type RangeType     = builtin("Range",    ObjType);
-  public static final Type StrType       = builtin("Str",      ObjType);
-  public static final Type StrBufType    = builtin("StrBuf",   ObjType);
-  public static final Type TestType      = builtin("Test",     ObjType);
-  public static final Type DateTimeType  = builtin("DateTime", ObjType);
-  public static final Type DateType      = builtin("Date",     ObjType);
-  public static final Type TimeType      = builtin("Time",     ObjType);
-  public static final Type TimeZoneType  = builtin("TimeZone", ObjType);
-  public static final Type TypeType      = builtin("Type",     ObjType);
-  public static final Type WeekdayType   = builtin("Weekday",  EnumType);
-  public static final Type ThisType      = builtin("This",     ObjType);
-  public static final Type VoidType      = builtin("Void",     ObjType);
-  public static final Type EnvType       = builtin("Env",      ObjType);
-  public static final Type BootEnvType   = builtin("BootEnv",  EnvType);
-
-  // reflection
-  public static final Type SlotType      = builtin("Slot",     ObjType);
-  public static final Type FieldType     = builtin("Field",    SlotType);
-  public static final Type MethodType    = builtin("Method",   SlotType);
-  public static final Type ParamType     = builtin("Param",    ObjType);
-  public static final Type SymbolType    = builtin("Symbol",   ObjType);
-
-  // resources
-  public static final Type UriSpaceType     = builtin("UriSpace",     ObjType);
-  public static final Type RootUriSpaceType = builtin("RootUriSpace", UriSpaceType);
-  public static final Type SysUriSpaceType  = builtin("SysUriSpace",  UriSpaceType);
-  public static final Type DirUriSpaceType  = builtin("DirUriSpace",  UriSpaceType);
-
-  // IO
-  public static final Type CharsetType      = builtin("Charset",      ObjType);
-  public static final Type EndianType       = builtin("Endian",       EnumType);
-  public static final Type InStreamType     = builtin("InStream",     ObjType);
-  public static final Type SysInStreamType  = builtin("SysInStream",  ObjType);
-  public static final Type OutStreamType    = builtin("OutStream",    ObjType);
-  public static final Type SysOutStreamType = builtin("SysOutStream", ObjType);
-  public static final Type FileType         = builtin("File",         ObjType);
-  public static final Type LocalFileType    = builtin("LocalFile",    FileType);
-  public static final Type ZipEntryFileType = builtin("ZipEntryFile", FileType);
-  public static final Type BufType          = builtin("Buf",          ObjType);
-  public static final Type MemBufType       = builtin("MemBuf",       BufType);
-  public static final Type FileBufType      = builtin("FileBuf",      BufType);
-  public static final Type MmapBufType      = builtin("MmapBuf",      BufType);
-  public static final Type UriType          = builtin("Uri",          ObjType);
-  public static final Type ZipType          = builtin("Zip",          ObjType);
-
-  // actos
-  public static final Type ActorType        = builtin("Actor",        ObjType);
-  public static final Type ActorPoolType    = builtin("ActorPool",    ObjType);
-  public static final Type FutureType       = builtin("Future",       ObjType);
-
-  // utils
-  public static final Type DependType       = builtin("Depend",       ObjType);
-  public static final Type LogType          = builtin("Log",          ObjType);
-  public static final Type LogLevelType     = builtin("LogLevel",     EnumType);
-  public static final Type LogRecType       = builtin("LogRec",       ObjType);
-  public static final Type LocaleType       = builtin("Locale",       ObjType);
-  public static final Type MimeTypeType     = builtin("MimeType",     ObjType);
-  public static final Type ProcessType      = builtin("Process",      ObjType);
-  public static final Type RegexType        = builtin("Regex",        ObjType);
-  public static final Type RegexMatcherType = builtin("RegexMatcher", ObjType);
-  public static final Type ServiceType      = builtin("Service",      ObjType);
-  public static final Type VersionType      = builtin("Version",      ObjType);
-  public static final Type UnitType         = builtin("Unit",         ObjType);
-  public static final Type UnsafeType       = builtin("Unsafe",       ObjType);
-  public static final Type UuidType         = builtin("Uuid",         ObjType);
-
-  // uri schemes
-  public static final Type UriSchemeType    = builtin("UriScheme",    ObjType);
-  public static final Type FanSchemeType    = builtin("FanScheme",    UriSchemeType);
-  public static final Type FileSchemeType   = builtin("FileScheme",   UriSchemeType);
-
-  // exceptions
-  public static final Type ErrType               = builtin("Err",               ObjType);
-  public static final Type ArgErrType            = builtin("ArgErr",            ErrType);
-  public static final Type CancelledErrType      = builtin("CancelledErr",      ErrType);
-  public static final Type CastErrType           = builtin("CastErr",           ErrType);
-  public static final Type ConstErrType          = builtin("ConstErr",          ErrType);
-  public static final Type IOErrType             = builtin("IOErr",             ErrType);
-  public static final Type IndexErrType          = builtin("IndexErr",          ErrType);
-  public static final Type InterruptedErrType    = builtin("InterruptedErr",    ErrType);
-  public static final Type NameErrType           = builtin("NameErr",           ErrType);
-  public static final Type NotImmutableErrType   = builtin("NotImmutableErr",   ErrType);
-  public static final Type NullErrType           = builtin("NullErr",           ErrType);
-  public static final Type ParseErrType          = builtin("ParseErr",          ErrType);
-  public static final Type ReadonlyErrType       = builtin("ReadonlyErr",       ErrType);
-  public static final Type TestErrType           = builtin("TestErr",           ErrType);
-  public static final Type TimeoutErrType        = builtin("TimeoutErr",        ErrType);
-  public static final Type UnknownPodErrType     = builtin("UnknownPodErr",     ErrType);
-  public static final Type UnknownServiceErrType = builtin("UnknownServiceErr", ErrType);
-  public static final Type UnknownSlotErrType    = builtin("UnknownSlotErr",    ErrType);
-  public static final Type UnknownSymbolErrType  = builtin("UnknownSymbolErr",  ErrType);
-  public static final Type UnknownTypeErrType    = builtin("UnknownTypeErr",    ErrType);
-  public static final Type UnresolvedErrType     = builtin("UnresolvedErr",     ErrType);
-  public static final Type UnsupportedErrType    = builtin("UnsupportedErr",    ErrType);
-
-  // generic parameter types used with generic types List, Map, and Method
-  public static final ClassType[] GenericParameterTypes = new ClassType[256];
-  public static final ClassType AType, BType, CType, DType, EType, FType, GType,
-                                HType, KType, LType, MType, RType, VType;
-  static
+  static Pod initSysPod()
   {
-    GenericParameterTypes['A'] = AType = new ClassType(sysPod, "A", 0, null);  // A-H Params
-    GenericParameterTypes['B'] = BType = new ClassType(sysPod, "B", 0, null);
-    GenericParameterTypes['C'] = CType = new ClassType(sysPod, "C", 0, null);
-    GenericParameterTypes['D'] = DType = new ClassType(sysPod, "D", 0, null);
-    GenericParameterTypes['E'] = EType = new ClassType(sysPod, "E", 0, null);
-    GenericParameterTypes['F'] = FType = new ClassType(sysPod, "F", 0, null);
-    GenericParameterTypes['G'] = GType = new ClassType(sysPod, "G", 0, null);
-    GenericParameterTypes['H'] = HType = new ClassType(sysPod, "H", 0, null);
-    GenericParameterTypes['K'] = KType = new ClassType(sysPod, "K", 0, null);  // Key
-    GenericParameterTypes['L'] = LType = new ClassType(sysPod, "L", 0, null);  // Parameterized List
-    GenericParameterTypes['M'] = MType = new ClassType(sysPod, "M", 0, null);  // Parameterized Map
-    GenericParameterTypes['R'] = RType = new ClassType(sysPod, "R", 0, null);  // Return
-    GenericParameterTypes['V'] = VType = new ClassType(sysPod, "V", 0, null);  // Value
-
-    List noMixins = new List(TypeType, 0).ro();
-    for (int i=0; i<GenericParameterTypes.length; ++i)
+    try
     {
-      ClassType gp = GenericParameterTypes[i];
-      if (gp == null) continue;
-      gp.base = ObjType;
-      gp.mixins = noMixins;
+      return Pod.doFind("sys", true, null, null);
+    }
+    catch (Throwable e)
+    {
+      throw initFail("sysPod", e);
     }
   }
 
-  public static Type genericParameterType(String name)
-  {
-    if (name.length() == 1 && name.charAt(0) < GenericParameterTypes.length)
-      return GenericParameterTypes[name.charAt(0)];
-    else
-      return null;
-  }
+//////////////////////////////////////////////////////////////////////////
+// Init Types
+//////////////////////////////////////////////////////////////////////////
 
-  static Type builtin(String name, Type base)
+  static Type initType(String name, Type base)
   {
     try
     {
@@ -323,97 +335,103 @@ public final class Sys
     }
     catch (Throwable e)
     {
-      System.out.println("FATAL: Cannot init Sys builtin " + name);
-      e.printStackTrace();
+      throw initFail("type " + name, e);
+    }
+  }
+
+  private static ClassType initGeneric(int ch)
+  {
+    String name = String.valueOf((char)ch);
+    try
+    {
+      return genericParamTypes[ch] = new ClassType(sysPod, name, 0, null);
+    }
+    catch (Throwable e)
+    {
+      throw initFail("generic " + name, e);
+    }
+  }
+
+  private static void initGenericParamTypes()
+  {
+    List noMixins = new List(TypeType, 0).ro();
+    for (int i=0; i<genericParamTypes.length; ++i)
+    {
+      ClassType gp = genericParamTypes[i];
+      if (gp == null) continue;
+      gp.base = ObjType;
+      gp.mixins = noMixins;
+    }
+  }
+
+  public static Type genericParamType(String name)
+  {
+    if (name.length() == 1 && name.charAt(0) < genericParamTypes.length)
+      return genericParamTypes[name.charAt(0)];
+    else
       return null;
-    }
   }
 
-  public static final fan.sys.File homeDir = toLocalFile("homeDir", HomeDir);
-  public static final fan.sys.File workDir = homeDir;
-  public static final fan.sys.File tempDir = workDir.plus(Uri.fromStr("temp/"), false);
+//////////////////////////////////////////////////////////////////////////
+// Environment Variables
+//////////////////////////////////////////////////////////////////////////
 
-  private static fan.sys.File toLocalFile(String fieldName, File f)
+  private static boolean initEnvVar(String name)
   {
     try
     {
-      return new LocalFile(f, true).normalize();
+      return "true".equals(Env.cur().vars().get(name));
     }
-    catch (Throwable e)
+    catch (Exception e)
     {
-      System.out.println("FATAL: Cannot init Sys." + fieldName);
-      e.printStackTrace();
-      return null;
+      initWarn(name, e);
+      return false;
     }
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Java Versions
+// Boot Times
 //////////////////////////////////////////////////////////////////////////
 
-  /** Are we running 1.6 or greater */
-  public static boolean isJava1_6() { return javaVersion.compare(v1_6) >= 0; }
-
-  public static final Version javaVersion;
-  public static final Version v1_6 = Version.fromStr("1.6");
-  static
-  {
-    String verStr = System.getProperty("java.version");
-    Version ver = null;
-    try
-    {
-      for (int i=0; i<verStr.length(); ++i)
-      {
-        int c = verStr.charAt(i);
-        if (c == '.' || ('0' <= c && c <= '9')) continue;
-        verStr = verStr.substring(0, i);
-        break;
-      }
-      ver = Version.fromStr(verStr);
-    }
-    catch (Throwable e)
-    {
-      System.out.println("ERROR: Cannot parse java version: " + verStr);
-      System.out.println("  " + e);
-      ver = Version.fromStr("1.0");
-    }
-    javaVersion = ver;
-  }
-
-// TODO: final organization of this class a bootstrap?
-  public static BootEnv bootEnv = new BootEnv();
-  static Env curEnv = bootEnv;
-
-//////////////////////////////////////////////////////////////////////////
-// Touch
-//////////////////////////////////////////////////////////////////////////
-
-  static
+  private static Duration initBootDuration()
   {
     try
     {
-      DateTime.boot();
-      Duration.boot();
+      return Duration.now();
     }
     catch (Throwable e)
     {
-      e.printStackTrace();
+      throw initFail("bootDuration", e);
+    }
+  }
+
+  private static DateTime initBootDateTime()
+  {
+    try
+    {
+      return DateTime.now();
+    }
+    catch (Throwable e)
+    {
+      throw initFail("bootDuration", e);
     }
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Environment
+// Utils
 //////////////////////////////////////////////////////////////////////////
 
-  // constant for "fan.debug" environment variable used
-  // for generating debug attributes in bytecode
-  public static final boolean debug;
-  static
+  private static void initWarn(String field, Throwable e)
   {
-    boolean d = false;
-    try { d = "true".equals(Env.cur().vars().get("fan.debug")); }
-    catch (Exception e) { e.printStackTrace(); }
-    debug = d;
+    System.out.println("WARN: cannot init Sys." + field);
+    e.printStackTrace();
+  }
+
+  private static RuntimeException initFail(String field, Throwable e)
+  {
+    System.out.println("ERROR: cannot init Sys." + field);
+    e.printStackTrace();
+    throw new RuntimeException("Cannot boot fan: " + e.toString());
   }
 
 }

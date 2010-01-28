@@ -76,7 +76,7 @@ public final class DateTime
     }
   }
 
-  public static DateTime boot()  { return boot; }
+  public static DateTime boot()  { return Sys.bootDateTime; }
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor - Values
@@ -954,7 +954,6 @@ public final class DateTime
   private static long nowUniqueLast;
   private static AtomicLong nowTicksCounter = new AtomicLong();
   private static final String localeKey = "dateTime";
-  private static final DateTime boot = now();
 
   public static final DateTime defVal = make(2000, Month.jan, 1, 0, 0, 0, 0, TimeZone.utc());
 

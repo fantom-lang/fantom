@@ -108,12 +108,12 @@ public final class Duration
 
   public static Duration boot()
   {
-    return boot;
+    return Sys.bootDuration;
   }
 
   public static Duration uptime()
   {
-    return new Duration(System.nanoTime() - boot.ticks);
+    return new Duration(System.nanoTime() - boot().ticks);
   }
 
   private Duration(long ticks)
@@ -504,7 +504,6 @@ public final class Duration
   public static final long secPerDay  = 86400L;
   public static final long secPerHr   = 3600L;
   public static final long secPerMin  = 60L;
-  private static final Duration boot = now();
 
   public static final Duration defVal    = Zero;
   public static final Duration minVal    = make(FanInt.minVal);
