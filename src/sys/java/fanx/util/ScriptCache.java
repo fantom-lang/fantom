@@ -11,16 +11,16 @@ import java.util.HashMap;
 import fan.sys.*;
 
 /**
- * ScriptUtil manages script caching and compilation.
+ * ScriptCache manages caching and compilation of 'Env.compileScript'.
  */
-public class ScriptUtil
+public class ScriptCache
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Public
 //////////////////////////////////////////////////////////////////////////
 
-  public static Type compile(File file, Map options)
+  public Type compile(File file, Map options)
   {
     // normalize the file path as our cache key
     file = file.normalize();
@@ -65,7 +65,7 @@ public class ScriptUtil
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  private static String generatePodName(File f)
+  private String generatePodName(File f)
   {
     String base = f.basename();
     StringBuilder s = new StringBuilder(base.length()+6);
@@ -80,7 +80,7 @@ public class ScriptUtil
     return s.toString();
   }
 
-  private static Pod compile(String podName, File f, Map options)
+  private Pod compile(String podName, File f, Map options)
   {
     // use Fantom reflection to run compiler::Main.compileScript(File)
     Method m = Slot.findMethod("compiler::Main.compileScript", true);
@@ -91,7 +91,7 @@ public class ScriptUtil
 // CachedScript
 //////////////////////////////////////////////////////////////////////////
 
-  static CachedScript getCache(File file)
+  CachedScript getCache(File file)
   {
     synchronized (cache)
     {
@@ -111,7 +111,7 @@ public class ScriptUtil
     }
   }
 
-  static void putCache(File file, Type t)
+  void putCache(File file, Type t)
   {
     CachedScript c = new CachedScript();
     c.modified = file.modified();
@@ -121,7 +121,7 @@ public class ScriptUtil
     synchronized (cache) { cache.put(cacheKey(file), c); }
   }
 
-  static String cacheKey(File f)
+  String cacheKey(File f)
   {
     return f.toStr();
   }
@@ -149,8 +149,8 @@ public class ScriptUtil
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  static HashMap cache = new HashMap(300);
-  static Object counterLock = new Object();
-  static int counter = 0;
+  HashMap cache = new HashMap(300);
+  Object counterLock = new Object();
+  int counter = 0;
 
 }

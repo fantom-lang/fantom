@@ -25,8 +25,6 @@ abstract const class Env
 
   **
   ** Subclasses are constructed from a parent environment.
-  ** Default implementation of all virtual methods is to
-  ** delegate to the parent environment.
   **
   protected new make(Env parent := Env.cur)
 
@@ -36,7 +34,7 @@ abstract const class Env
 
   **
   ** Get the parent environment or null if this is the bootstrap
-  ** environment.  All virtual methods delegate to their parent by
+  ** environment.  Many virtual methods delegate to their parent by
   ** default.
   **
   Env? parent()
@@ -92,7 +90,8 @@ abstract const class Env
 
   **
   ** Get the command line arguments used to run the fan process
-  ** as an immutable List of strings.
+  ** as an immutable List of strings.  Default implementation
+  ** delegates to `parent`.
   **
   virtual Str[] args()
 
@@ -104,71 +103,111 @@ abstract const class Env
   **   2. Java system properties (Java VM only obviously)
   **   3. {homeDir}/lib/sys.props
   **
+  ** Default implementation delegates to `parent`.
+  **
   virtual Str:Str vars()
 
   **
   ** Poll for a platform dependent map of diagnostics name/value
   ** pairs for the current state of the VM.  Java platforms return
   ** key values from the 'java.lang.management' interface.
+  ** Default implementation delegates to `parent`.
   **
   virtual Str:Obj diagnostics()
 
   **
   ** Run the garbage collector.  No guarantee is made
-  ** to what the VM will actually do.
+  ** to what the VM will actually do.  Default implementation
+  ** delegates to `parent`.
   **
   virtual Void gc()
 
   **
   ** Get the local host name of the machine running the
-  ** virtual machine process.
+  ** virtual machine process.  Default implementation
+  ** delegates to `parent`.
   **
   virtual Str host()
 
   **
   ** Get the user name of the user account used to run the
-  ** virtual machine process.
+  ** virtual machine process.  Default implementation
+  ** delegates to `parent`.
   **
   virtual Str user()
 
   **
   ** Terminate the current virtual machine.
+  ** Default implementation delegates to `parent`.
   **
   virtual Void exit(Int status := 0)
 
   **
   ** Standard input stream.
+  ** Default implementation delegates to `parent`.
   **
   virtual InStream in()
 
   **
   ** Standard output stream.
+  ** Default implementation delegates to `parent`.
   **
   virtual OutStream out()
 
   **
   ** Standard error output stream.
+  ** Default implementation delegates to `parent`.
   **
   virtual OutStream err()
 
   **
   ** Get the home directory of Fantom installation.
+  ** Default implementation delegates to `parent`.
   **
   virtual File homeDir()
 
   **
   ** Get the working directory to use for saving compiled
-  ** pods and configuration information.
+  ** pods and configuration information.  Default implementation
+  ** delegates to `parent`.
   **
   virtual File workDir()
 
   **
   ** Get the temp directory to use for scratch files.
+  ** Default implementation delegates to `parent`.
   **
   virtual File tempDir()
 
 //////////////////////////////////////////////////////////////////////////
 // Resolution
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Find a file in the environment using a relative path such
+  ** as "etc/foo/config.props".  If the URI is not relative then
+  ** throw ArgErr.  If the file is not found in the environment
+  ** then throw IOErr or return null based on checked flag.  If
+  ** `findAllFiles` would return multiple matches, then this method
+  ** should always return the file with the highest priority.
+  ** Default implementation delegates to `parent`.
+  **
+  virtual File? findFile(Uri uri, Bool checked := true)
+
+  **
+  ** Find all the files in the environment which match a relative
+  ** path such as "etc/foo/config.props".  It is possible to have
+  ** multiple matches if the environment uses a search path model.
+  ** If the list contains more than one item, then the first file
+  ** has the highest priority and the last item has the lowest
+  ** priority.  If the URI is not relative then throw ArgErr.
+  ** Return empty list if the file is not found in environment.
+  ** Default implementation delegates to `parent`.
+  **
+  virtual File[] findAllFiles(Uri uri)
+
+//////////////////////////////////////////////////////////////////////////
+// State
 //////////////////////////////////////////////////////////////////////////
 
   **
@@ -189,27 +228,6 @@ abstract const class Env
   virtual Type compileScript(File f, [Str:Obj]? options := null)
 
   **
-  ** Find a file in the environment using a relative path such
-  ** as "etc/foo/config.props".  If the URI is not relative then
-  ** throw ArgErr.  If the file is not found in the environment
-  ** then throw IOErr or return null based on checked flag.  If
-  ** `findAllFiles` would return multiple matches, then this method
-  ** should always return the file with the highest priority.
-  **
-  virtual File? findFile(Uri uri, Bool checked := true)
-
-  **
-  ** Find all the files in the environment which match a relative
-  ** path such as "etc/foo/config.props".  It is possible to have
-  ** multiple matches if the environment uses a search path model.
-  ** If the list contains more than one item, then the first file
-  ** has the highest priority and the last item has the lowest
-  ** priority.  If the URI is not relative then throw ArgErr.
-  ** Return empty list if the file is not found in environment.
-  **
-  virtual File[] findAllFiles(Uri uri)
-
-  **
   ** Return a merged key/value map of all the prop files referenced
   ** by the uri via `findAllFiles`.  The files are parsed using
   ** `InStream.readProps` and merged according to their priority
@@ -221,7 +239,7 @@ abstract const class Env
   ** refresh is performed to check if any of the files have been
   ** modified.
   **
-  Str:Str props(Uri uri, Duration maxAge := 1min)
+  virtual Str:Str props(Uri uri, Duration maxAge := 1min)
 
 }
 
