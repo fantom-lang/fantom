@@ -22,7 +22,7 @@ internal class FindInFiles
     query := Combo { editable = true }
     uri   := Combo { editable = true }
     err   := Label { fg = Color.red; halign = Halign.right }
-    match := Button { mode = ButtonMode.check; text = Flux#.pod.loc("find.matchCase") }
+    match := Button { mode = ButtonMode.check; text = Flux.locale("find.matchCase") }
 
     history := FindHistory.load
     query.items = history.find
@@ -51,7 +51,7 @@ internal class FindInFiles
     }
     dlg := Dialog(frame)
     {
-      title = FindInFiles#.pod.loc("findInFiles.name")
+      title = Flux.locale("findInFiles.name")
       body  = content
       commands = [Dialog.ok, Dialog.cancel]
     }

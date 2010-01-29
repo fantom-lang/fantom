@@ -64,18 +64,18 @@ public final class Weekday
   public String localeAbbr() { return abbr(Locale.cur()); }
   public String abbr(Locale locale)
   {
-    return locale.get("sys", localeAbbrKey);
+    return Env.cur().locale(Sys.sysPod, localeAbbrKey, name(), locale);
   }
 
   public String localeFull() { return full(Locale.cur()); }
   public String full(Locale locale)
   {
-    return locale.get("sys", localeFullKey);
+    return Env.cur().locale(Sys.sysPod, localeFullKey, name(), locale);
   }
 
   public static Weekday localeStartOfWeek()
   {
-    return fromStr(Locale.cur().get("sys", "weekdayStart"));
+    return fromStr(Env.cur().locale(Sys.sysPod, "weekdayStart", "sun"));
   }
 
   final int ord;

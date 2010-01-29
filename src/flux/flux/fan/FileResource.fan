@@ -147,7 +147,7 @@ class FileResource : Resource
   internal Void newDir(Frame frame, File dir)
   {
     if (!dir.isDir) throw ArgErr("Not a directory: $dir")
-    newDir := promptFileName(frame, Pod.of(this).loc("newDir.name"), dir, "")
+    newDir := promptFileName(frame, Flux.locale("newDir.name"), dir, "")
     if (newDir == null) return
     uri := dir.uri + "$newDir/".toUri
     File(uri).create
@@ -158,7 +158,7 @@ class FileResource : Resource
   **
   internal Void duplicate(Frame frame, File src)
   {
-    name := promptFileName(frame, Pod.of(this).loc("duplicate.name"), src.parent, src.name)
+    name := promptFileName(frame, Flux.locale("duplicate.name"), src.parent, src.name)
     if (name == null) return
     target := src.parent + (src.isDir ? "$name/".toUri : name.toUri)
     src.copyTo(target)
@@ -169,7 +169,7 @@ class FileResource : Resource
   **
   internal Void rename(Frame frame, File src)
   {
-    name := promptFileName(frame, Pod.of(this).loc("rename.name"), src.parent, src.name)
+    name := promptFileName(frame, Flux.locale("rename.name"), src.parent, src.name)
     if (name == null) return
     src.rename(name)
   }

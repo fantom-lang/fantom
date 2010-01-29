@@ -42,7 +42,7 @@ internal class FindBar : ContentPane, TextEditorSupport
     matchCase = Button
     {
       mode = ButtonMode.check
-      text = Flux#.pod.loc("find.matchCase")
+      text = Flux.locale("find.matchCase")
       onAction.add |->| { updateHistory; find(null, true, true) }
       selected = history.matchCase
     }
@@ -54,7 +54,7 @@ internal class FindBar : ContentPane, TextEditorSupport
         center = GridPane
         {
           numCols = 5
-          ConstraintPane { minw=50; maxw=50; Label { text = Flux#.pod.loc("find.name") }, },
+          ConstraintPane { minw=50; maxw=50; Label { text = Flux.locale("find.name") }, },
           ConstraintPane { minw=200; maxw=200; findText, },
           InsetPane(0,0,0,8) { matchCase, },
           ToolBar
@@ -84,7 +84,7 @@ internal class FindBar : ContentPane, TextEditorSupport
       GridPane
       {
         numCols = 3
-        ConstraintPane { minw=50; maxw=50; Label { text = Flux#.pod.loc("replace.name") }, },
+        ConstraintPane { minw=50; maxw=50; Label { text = Flux.locale("replace.name") }, },
         ConstraintPane { minw=200; maxw=200; it.add(replaceText) },
         InsetPane(0,0,0,8)
         {
@@ -235,7 +235,7 @@ internal class FindBar : ContentPane, TextEditorSupport
         if (off != null)
         {
           richText.select(off, q.size)
-          setMsg("$matchStr - " + Flux#.pod.loc("find.wrapToTop"))
+          setMsg("$matchStr - " + Flux.locale("find.wrapToTop"))
           return
         }
       }
@@ -247,14 +247,14 @@ internal class FindBar : ContentPane, TextEditorSupport
         if (off != null)
         {
           richText.select(off, q.size)
-          setMsg("$matchStr - " + Flux#.pod.loc("find.wrapToBottom"))
+          setMsg("$matchStr - " + Flux.locale("find.wrapToBottom"))
           return
         }
       }
 
       // not found
       richText.selectClear
-      setMsg(Flux#.pod.loc("find.notFound"))
+      setMsg(Flux.locale("find.notFound"))
       enabled = false
     }
     finally
@@ -308,7 +308,7 @@ internal class FindBar : ContentPane, TextEditorSupport
       cmdNext.enabled       = false
       cmdReplace.enabled    = false
       cmdReplaceAll.enabled = false
-      setMsg(Flux#.pod.loc("find.notFound"))
+      setMsg(Flux.locale("find.notFound"))
     }
  }
 
@@ -336,7 +336,7 @@ internal class FindBar : ContentPane, TextEditorSupport
     cmdNext.enabled       = false
     cmdReplace.enabled    = false
     cmdReplaceAll.enabled = false
-    setMsg(Flux#.pod.loc("find.notFound"))
+    setMsg(Flux.locale("find.notFound"))
   }
 
   private Void setMsg(Str text)
@@ -348,8 +348,8 @@ internal class FindBar : ContentPane, TextEditorSupport
   private Str msgTotal()
   {
     return total == 1
-      ? "1 " + Flux#.pod.loc("find.match")
-      : "$total " + Flux#.pod.loc("find.matches")
+      ? "1 " + Flux.locale("find.match")
+      : "$total " + Flux.locale("find.matches")
   }
 
   private Void updateHistory()

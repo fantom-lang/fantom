@@ -441,7 +441,7 @@ public final class DateTime
     if (pattern == null)
     {
       if (locale == null) locale = Locale.cur();
-      pattern = locale.get("sys", localeKey, "D-MMM-YYYY WWW hh:mm:ss zzz");
+      pattern = Env.cur().locale(Sys.sysPod, localeKey, "D-MMM-YYYY WWW hh:mm:ss zzz", locale);
     }
 
     // process pattern

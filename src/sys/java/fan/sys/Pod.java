@@ -388,19 +388,6 @@ public class Pod
     return Env.cur().locale(this, key, def);
   }
 
-
-// TODO
-  public final String loc(String key)
-  {
-    return Locale.cur().doGet(this, name, key, Env.noDef);
-  }
-
-// TODO
-  public final String loc(String key, String def)
-  {
-    return Locale.cur().doGet(this, name, key, def);
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Load
 //////////////////////////////////////////////////////////////////////////
