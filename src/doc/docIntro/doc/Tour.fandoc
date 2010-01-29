@@ -27,7 +27,7 @@ Minor differences from Java or C# include:
     you can use 'Env.cur.out'.
   - Statements can be terminated with a newline (you can use
     a semicolon too)
-  - You can declare 'Str[]' args or access them from 'Sys.args'
+  - You can declare 'Str[]' args or access them from 'Env.args'
 
 Literals [#literals]
 ********************

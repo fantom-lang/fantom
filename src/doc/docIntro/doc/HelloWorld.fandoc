@@ -71,7 +71,7 @@ Pass the script file name to the 'fan' executable:
 
 Note that unlike Java or C# the arguments aren't required to be
 passed as a parameter to main.  You can declare a 'Str[]' parameter
-if you want or you can access them via [Sys.args]`sys::Sys.args`.
+if you want or you can access them via [Env.args]`sys::Env.args`.
 
 Checkout `docTools::Fan` for more details running Fantom scripts.
 Also see [unix setup]`docTools::Setup#executableUnix` and

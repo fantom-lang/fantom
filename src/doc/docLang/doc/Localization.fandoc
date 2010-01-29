@@ -37,15 +37,22 @@ locales include:
 
 When the Fantom VM is started it will create a default locale based on the
 underlying platform.  For example on a Java VM, the default Fantom locale
-will be initialized from 'java.util.Locale.getDefault' (which in turn is
+will be initialized from 'java.util.Locale' (which in turn is
 initialized from the operating system's default locale).
 
-Locales are configured as a thread local variable.  Use `sys::Locale.cur`
+Locales are configured as an actor local variable.  Use `sys::Locale.cur`
 and `sys::Locale.setCur` to get and set the current thread's locale.
 
 By convention 'Locale' is never passed as a parameter to Fantom APIs.  Rather
-the locale is implied by the current thread.  As a general rule APIs which
+the locale is implied by the current actor.  As a general rule APIs which
 are locale sensitive will include the term 'locale' in their method name.
+
+Use [Locale.use]`sys::Locale.use` to execute a body of code using a
+different locale:
+
+  echo(Locale.cur)
+  Locale("zh-CN").use {  echo(Locale.cur) }
+  echo(Locale.cur)
 
 Localized Properties [#props]
 *****************************
@@ -53,37 +60,37 @@ All the strings displayed to users should typically be pulled out into
 *localized props files* to enable easy language translation.  Each pod may
 define one localized property map with as many keys are desired.
 Localized properties are defined in [props files]`sys::InStream.readProps` as
-pod resource files under the '/locale' directory.  An example set of localized
+pod resource files under the 'locale' directory.  An example set of localized
 props files:
 
-   /locale/en.props
-   /locale/en-US.props
-   /locale/en-CA.props
-   /locale/fr.props
-   /locale/fr-CA.props
+   locale/en.props
+   locale/en-US.props
+   locale/en-CA.props
+   locale/fr.props
+   locale/fr-CA.props
 
-The `sys::Locale.get` API is used to lookup a localized property.  Assuming
-your pod name is "myApp", the following code would lookup some localized
-properties:
+The `sys::Env.locale` API is used to lookup a localized property.
+Typically you will use the [Pod.locale]`sys::Pod.locale` convenience
+method:
 
-  loc := Locale.cur
-  Button(loc.get("myApp", "ok"))
-  Button(loc.get("myApp", "cancel"))
+  Button(pod.locale("ok"))
+  Button(pod.locale("cancel"))
 
-You can also use the [Pod.loc]`sys::Pod.loc` convenience method to lookup
-a localized property for the current thread's locale:
+Looking up localization is delegated to the current [Env]`sys::Env`.
+But the standard resolution rules are:
 
-  Pod.of(this).loc("key")
-  FooBar#.pod.loc("key")
+  1. 'Env.props(pod, `locale/{locale}.props`)'
+  2. 'Env.props(pod, `locale/{lang}.props`)'
+  3. 'Env.props(pod, `locale/en.props`)'
+  4. Fallback to 'pod::key' unless 'def' specified
 
-The following rules are used to resolve a localized property:
-   1. Find the pod and use its resource files
-   2. Lookup via '/locale/{Locale.toStr}.props'
-   3. Lookup via '/locale/{Locale.lang}.props'
-   4. Lookup via '/locale/en.props'
-   5. If all else fails return the 'def' parameter which defaults to 'pod::key'
+[Env.props]`sys::Env.props` first looks in the pod's etc directory for
+overrides, then checks if the pod contains a resource file.
 
 Best practice is to ensure that all properties are mapped in 'en.props' file
 as your fallback defaults.  Then store localized translations in language
 files such as 'fr.props', 'de.props', etc.  Typically you will only use
 country specific files such as 'en-US' or 'en-GB' for regional terms.
+
+
+
