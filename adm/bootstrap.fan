@@ -19,12 +19,15 @@ class Bootstrap : AbstractMain
 // Env
 //////////////////////////////////////////////////////////////////////////
 
-  Str repo := "http://hg.fantom.org/repos/fan-1.0"
+  Str hgRepo := "http://hg.fantom.org/repos/fan-1.0"
   Str? hgVer
   Str? jdkVer
   File? jdkHome
   Str relVer
   File relHome
+
+  @opt="Skip hg pull step"
+  Bool skipPull := false
 
   @opt="Dir to clone repo and build"
   File devHome
@@ -67,7 +70,10 @@ class Bootstrap : AbstractMain
   Void initEnv()
   {
     // hgVer
-    hgVer = execToStr(["hg", "version"])
+    if (skipPull)
+      hgRepo = hgVer = "*** SKIP ***"
+    else
+      hgVer = execToStr(["hg", "version"])
 
     // javaVer
     jdkVer = execToStr(["javac", "-version"])
@@ -89,7 +95,7 @@ class Bootstrap : AbstractMain
   {
     echo("")
     echo("Bootstrap Environment:")
-    echo("  repo:      $repo")
+    echo("  hgRepo:    $hgRepo")
     echo("  hgVer:     $hgVer")
     echo("  jdkVer:    $jdkVer (need 1.6+)")
     echo("  jdkHome:   $jdkHome")
@@ -105,7 +111,7 @@ class Bootstrap : AbstractMain
 
   Void checks()
   {
-    if (!hgVer.contains("Mercurial"))
+    if (!hgVer.contains("Mercurial") && !skipPull)
       fatal("check that 'hg' is installed in your path")
 
     if (!jdkVer.contains("javac"))
@@ -139,13 +145,15 @@ class Bootstrap : AbstractMain
 
   Void hgPull()
   {
+    if (skipPull) return
+
     // ensure working dir exists
     devHome.create
 
     // clone or pull+update
     cmd := devHome.plus(`.hg/`).exists ?
-           ["hg", "pull", "-u", repo] :
-           ["hg", "clone", repo, devHome.osPath]
+           ["hg", "pull", "-u", hgRepo] :
+           ["hg", "clone", hgRepo, devHome.osPath]
 
     echo("")
     echo(cmd.join(" "))
