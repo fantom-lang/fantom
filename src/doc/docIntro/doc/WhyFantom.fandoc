@@ -259,26 +259,8 @@ composable software components.
 
 Fantom tackles concurrency using a couple techniques:
   - Immutability is built into the language (thread safe classes)
-  - Static fields must be immutable (no shared state)
-  - Threads include built-in message passing support (Erlang style concurrency)
-  - Resources may be mounted into a common UriSpace
-    as a "shared whiteboard"
-
-UriSpaces [#uriSpaces]
-************************
-Fantom embraces a [REST]`http://en.wikipedia.org/wiki/Representational_State_Transfer`
-design to provide a unified namespace which maps URIs to resource objects
-in an application.
-
-UriSpaces play an important role in concurrency by providing thread safe
-access to shared data.  Threads work with thread safe copies of uri space
-resources - sort of like a coarsely grained transactional memory database.
-
-UriSpaces include a standardized API for [CRUD]`http://en.wikipedia.org/wiki/Create%2C_read%2C_update_and_delete`,
-transactions, and querying.  Applications are built against the standard
-UriSpace APIs, and storage engines plug in to implement various CRUD
-strategies.  In the future, we'll be implementing UriSpaces which map to
-Web-based and cloud based resources (such as [Amazon's S3]`http://www.amazon.com/gp/browse.html?node=16427261`).
+  - Static fields must be immutable (no shared mutable state)
+  - Actors model for message passing (Erlang style concurrency)
 
 Little Things [#littleThings]
 *****************************

@@ -86,12 +86,6 @@ public final class Sys
   public static final Type ParamType     = initType("Param",    ObjType);
   public static final Type SymbolType    = initType("Symbol",   ObjType);
 
-  // resources
-  public static final Type UriSpaceType     = initType("UriSpace",     ObjType);
-  public static final Type RootUriSpaceType = initType("RootUriSpace", UriSpaceType);
-  public static final Type SysUriSpaceType  = initType("SysUriSpace",  UriSpaceType);
-  public static final Type DirUriSpaceType  = initType("DirUriSpace",  UriSpaceType);
-
   // IO
   public static final Type CharsetType      = initType("Charset",      ObjType);
   public static final Type EndianType       = initType("Endian",       EnumType);
@@ -432,6 +426,21 @@ public final class Sys
     System.out.println("ERROR: cannot init Sys." + field);
     e.printStackTrace();
     throw new RuntimeException("Cannot boot fan: " + e.toString());
+  }
+
+  /**
+   * Make a thread-safe copy of the specified object.
+   * If it is immutable, then just return it; otherwise
+   * we make a serialized copy.
+   */
+  public static Object safe(Object obj)
+  {
+    if (obj == null) return null;
+    if (FanObj.isImmutable(obj)) return obj;
+    Buf buf = new MemBuf(512);
+    buf.out.writeObj(obj);
+    buf.flip();
+    return buf.in.readObj();
   }
 
 }

@@ -39,7 +39,7 @@ class Boot : AbstractMain
           routes =
           [
             "index":  FileMod { file = homeDir + `demo/index.html` },
-            "flag":   FileMod { file = `fan:/sys/pod/icons/x32/flag.png`.get },
+            "flag":   FileMod { file = `fan://icons/x32/flag.png`.get },
             "doc":    FileMod { file = docDir },
             "logs":   FileMod { file = logDir },
             "upload": ScriptMod { file = homeDir + `demo/upload.fan` },

@@ -60,38 +60,19 @@ class NamingTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// fan:/sys/pod
+// fan:pod
 //////////////////////////////////////////////////////////////////////////
 
   Void testFanPod()
   {
-    verifySame(`fan:/sys/pod/sys`.get, Str#.pod)
-    verifySame(`fan:/sys/pod/testSys`.get, Pod.of(this))
-    verifySame(`fan:/sys/pod/testSys/res/test.txt`.get, Pod.of(this).files[`/res/test.txt`])
+    verifySame(`fan://sys`.get, Str#.pod)
+    verifySame(`fan://testSys`.get, typeof.pod)
+    verifySame(`fan://testSys/res/test.txt`.get, typeof.pod.files[`/res/test.txt`])
 
-    verifySame(`fan:/sys/pod/badpod`.get(null, false), null)
-    verifyErr(UnresolvedErr#) { `fan:/sys/pod/badpod`.get }
-    verifyErr(UnresolvedErr#) { `fan:/sys/pod/badpod`.get(null) }
-    verifyErr(UnresolvedErr#) { `fan:/sys/pod/badpod`.get(null, true) }
+    verifySame(`fan://badFooBarPod`.get(null, false), null)
+    verifyErr(UnresolvedErr#) { `fan://badFooBarPod`.get }
+    verifyErr(UnresolvedErr#) { `fan://badFooBarPod`.get(null) }
+    verifyErr(UnresolvedErr#) { `fan://badFooBarPod`.get(null, true) }
   }
-
-//////////////////////////////////////////////////////////////////////////
-// Base
-//////////////////////////////////////////////////////////////////////////
-
-  Void testWithBase()
-  {
-    p := Pod.of(this)
-    f := p.files[`/res/test.txt`]
-    verifySame(`fan:/sys/pod/testSys/res/test.txt`.get(null), f)
-    verifySame(`fan:/sys/pod/testSys/res/test.txt`.get(UriSpace.root), f)
-    verifySame(`fan:/sys/pod/testSys/res/test.txt`.get(p), f)
-    verifySame(`res/test.txt`.get(p), f)
-
-    verifyErr(UnresolvedErr#) { `res/test.txt`.get(null) }
-    verifyErr(UnresolvedErr#) { `res/test.txt`.get("foo") }
-    verifyErr(UnresolvedErr#) { `res/test.txt`.get(File.make(`rel`)) }
-  }
-
 
 }

@@ -38,6 +38,8 @@ const class JsDemoMod : WebMod
 
   override Void onGet()
   {
+// TODO
+echo("=====> $req.uri")
     name := req.modRel.path.first
     if (name == null)
       onIndex
@@ -93,7 +95,7 @@ const class JsDemoMod : WebMod
   Void onPodFile()
   {
     // serve up pod resources
-    File file := ("fan:/sys" + req.uri).toUri.get
+    File file := ("fan://" + req.uri[1..-1]).toUri.get
     if (!file.exists) { res.sendErr(404); return }
     FileWeblet(file).onService
   }
@@ -135,8 +137,8 @@ class ShowScript : Weblet
           if (hasRun) return;
           hasRun = true;
 
-          // load fresco
-          fan.sys.UriPodBase = '/pod/';
+          // load
+          fan.sys.UriPodBase = '';
           shell = ${entryPoint}.make();
           shell.open();
         }

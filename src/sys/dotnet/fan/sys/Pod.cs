@@ -214,7 +214,7 @@ namespace Fan.Sys
 
     public Uri uri()
     {
-      if (m_uri == null) m_uri = Uri.fromStr("fan:/sys/pod/" + m_name + "/");
+      if (m_uri == null) m_uri = Uri.fromStr("fan://" + m_name);
       return m_uri;
     }
 
@@ -343,6 +343,12 @@ namespace Fan.Sys
       if (m_files == null)
         m_files = fpod.m_store.podFiles();
       return m_files;
+    }
+
+    // TODO
+    public Fan.Sys.File file(Uri uri)
+    {
+      return (Fan.Sys.File)files().get(uri.sliceToPathAbs(Range.makeInclusive(1, -1)));
     }
 
   //////////////////////////////////////////////////////////////////////////

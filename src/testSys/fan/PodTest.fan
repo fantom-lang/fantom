@@ -21,7 +21,7 @@ class PodTest : Test
     pod := Pod.of(this)
     verifyEq(pod.name,  "testSys")
     verifyEq(pod.toStr, "testSys")
-    verifyEq(pod.uri,   `fan:/sys/pod/testSys/`)
+    verifyEq(pod.uri,   `fan://testSys`)
     verifySame(pod.uri.get, pod)
     verifySame(pod, Type.of(this).pod)
   }

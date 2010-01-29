@@ -181,12 +181,6 @@ namespace Fan.Sys
         ParamType       = builtin("Param",  ObjType);
         SymbolType      = builtin("Symbol",  ObjType);
 
-        // resources
-        UriSpaceType     = builtin("UriSpace",     ObjType);
-        RootUriSpaceType = builtin("RootUriSpace", UriSpaceType);
-        SysUriSpaceType  = builtin("SysUriSpace",  UriSpaceType);
-        DirUriSpaceType  = builtin("DirUriSpace",  UriSpaceType);
-
         // IO
         InStreamType     = builtin("InStream",     ObjType);
         SysInStreamType  = builtin("SysInStream",  ObjType);
@@ -395,6 +389,25 @@ namespace Fan.Sys
     }
 
   //////////////////////////////////////////////////////////////////////////
+  // Utils
+  //////////////////////////////////////////////////////////////////////////
+
+    /// <summary>
+    /// Make a thread-safe copy of the specified object.
+    /// If it is immutable, then just return it; otherwise
+    /// we make a serialized copy.
+    /// </summary>
+    public static object safe(object obj)
+    {
+      if (obj == null) return null;
+      if (FanObj.isImmutable(obj)) return obj;
+      Buf buf = new MemBuf(512);
+      buf.m_out.writeObj(obj);
+      buf.flip();
+      return buf.m_in.readObj();
+    }
+
+  //////////////////////////////////////////////////////////////////////////
   // Built-in Types
   //////////////////////////////////////////////////////////////////////////
 
@@ -436,12 +449,6 @@ namespace Fan.Sys
     public static readonly Type MethodType;
     public static readonly Type ParamType;
     public static readonly Type SymbolType;
-
-    // resources
-    public static readonly Type UriSpaceType;
-    public static readonly Type RootUriSpaceType;
-    public static readonly Type SysUriSpaceType;
-    public static readonly Type DirUriSpaceType;
 
     // IO
     public static readonly Type InStreamType;

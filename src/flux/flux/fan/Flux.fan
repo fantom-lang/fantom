@@ -81,7 +81,7 @@ class Flux
   // convenience for icons
   internal static Image icon(Uri uri)
   {
-    Image(("fan:/sys/pod/icons"+uri).toUri)
+    Image(("fan://icons"+uri).toUri)
   }
 
   ** Convenience for looking up a locale prop in the 'flux' pod.

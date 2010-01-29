@@ -607,21 +607,21 @@ class FwtDemo
 
   File scriptDir  := File.make(this.typeof->sourceFile.toStr.toUri).parent
 
-  Image backIcon    := Image(`fan:/sys/pod/icons/x16/arrowLeft.png`)
-  Image nextIcon    := Image(`fan:/sys/pod/icons/x16/arrowRight.png`)
-  Image cutIcon     := Image(`fan:/sys/pod/icons/x16/cut.png`)
-  Image copyIcon    := Image(`fan:/sys/pod/icons/x16/copy.png`)
-  Image pasteIcon   := Image(`fan:/sys/pod/icons/x16/paste.png`)
-  Image folderIcon  := Image(`fan:/sys/pod/icons/x16/folder.png`)
-  Image fileIcon    := Image(`fan:/sys/pod/icons/x16/file.png`)
-  Image audioIcon   := Image(`fan:/sys/pod/icons/x16/file.png`)
-  Image imageIcon   := Image(`fan:/sys/pod/icons/x16/file.png`)
-  Image videoIcon   := Image(`fan:/sys/pod/icons/x16/file.png`)
-  Image sysIcon     := Image(`fan:/sys/pod/icons/x16/file.png`)
-  Image prefsIcon   := Image(`fan:/sys/pod/icons/x16/file.png`)
-  Image refreshIcon := Image(`fan:/sys/pod/icons/x16/refresh.png`)
-  Image stopIcon    := Image(`fan:/sys/pod/icons/x16/err.png`)
-  Image cloudIcon   := Image(`fan:/sys/pod/icons/x16/cloud.png`)
+  Image backIcon    := Image(`fan://icons/x16/arrowLeft.png`)
+  Image nextIcon    := Image(`fan://icons/x16/arrowRight.png`)
+  Image cutIcon     := Image(`fan://icons/x16/cut.png`)
+  Image copyIcon    := Image(`fan://icons/x16/copy.png`)
+  Image pasteIcon   := Image(`fan://icons/x16/paste.png`)
+  Image folderIcon  := Image(`fan://icons/x16/folder.png`)
+  Image fileIcon    := Image(`fan://icons/x16/file.png`)
+  Image audioIcon   := Image(`fan://icons/x16/file.png`)
+  Image imageIcon   := Image(`fan://icons/x16/file.png`)
+  Image videoIcon   := Image(`fan://icons/x16/file.png`)
+  Image sysIcon     := Image(`fan://icons/x16/file.png`)
+  Image prefsIcon   := Image(`fan://icons/x16/file.png`)
+  Image refreshIcon := Image(`fan://icons/x16/refresh.png`)
+  Image stopIcon    := Image(`fan://icons/x16/err.png`)
+  Image cloudIcon   := Image(`fan://icons/x16/cloud.png`)
 }
 
 **************************************************************************
