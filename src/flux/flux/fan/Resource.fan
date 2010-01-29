@@ -112,7 +112,7 @@ abstract class Resource
   **
   virtual Menu? viewsMenu(Frame? frame, Event? event)
   {
-    menu := Menu { text = Pod.of(this).loc("views.name") }
+    menu := Menu { text = Flux.locale("views.name") }
     views.each |Type v, Int i|
     {
       viewUri := i == 0 ? uri : uri.plusQuery(["view":v.qname])

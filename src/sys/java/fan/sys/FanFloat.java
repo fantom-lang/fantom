@@ -337,7 +337,8 @@ public final class FanFloat
       if (self == Double.NEGATIVE_INFINITY) return df.getMinusSign() + df.getInfinity();
 
       // get default pattern if necessary
-      if (pattern == null) pattern = locale.get("sys", "float", "#,###.0##");
+      if (pattern == null)
+        pattern = Env.cur().locale(Sys.sysPod, "float", "#,###.0##");
 
       // TODO: if value is < 10^-3 or > 10^7 it will be
       // converted to exponent string, so just bail on that

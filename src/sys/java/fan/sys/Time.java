@@ -178,7 +178,7 @@ public final class Time
     if (pattern == null)
     {
       if (locale == null) locale = Locale.cur();
-      pattern = locale.get("sys", localeKey, "hh:mm:ss");
+      pattern = Env.cur().locale(Sys.sysPod, localeKey, "hh:mm:ss", locale);
     }
 
     // process pattern

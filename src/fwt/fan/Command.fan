@@ -98,7 +98,7 @@ class Command
   **
   ** Construct a localized command using the specified pod name
   ** and keyBase.  The command is initialized from the following
-  ** [localized]`sys::Locale.get` properties:
+  ** [localized]`sys::Env.locale` properties:
   **   - "{keyBase}.name.{plat}": text string for the command
   **   - "{keyBase}.icon.{plat}": uri for the icon image
   **   - "{keyBase}.accelerator.{plat}": string representation of Key
@@ -114,7 +114,7 @@ class Command
   ** On all platforms the command name would be "Back".  On Macs
   ** the accelerator would be 'Command+[', and all others it would
   ** be 'Alt+Left'.  If running on a Mac and an explicit ".mac"
-  ** property was not specified, then automatically swizzle Ctrl
+  ** property was not specified, then we automatically swizzle Ctrl
   ** to Command.
   **
   new makeLocale(Pod pod, Str keyBase, |Event event|? onInvoke := null)
@@ -122,15 +122,15 @@ class Command
     plat := Desktop.platform
 
     // name
-    name := pod.loc("${keyBase}.name.${plat}", null)
+    name := pod.locale("${keyBase}.name.${plat}", null)
     if (name == null)
-      name = pod.loc("${keyBase}.name")
+      name = pod.locale("${keyBase}.name")
     this.name = name
 
     // icon
-    locIcon := pod.loc("${keyBase}.icon.${plat}", null)
+    locIcon := pod.locale("${keyBase}.icon.${plat}", null)
     if (locIcon == null)
-      locIcon = pod.loc("${keyBase}.icon", null)
+      locIcon = pod.locale("${keyBase}.icon", null)
     try
     {
       if (locIcon != null)
@@ -139,10 +139,10 @@ class Command
     catch Command#.pod.log.err("Command: cannot load '${keyBase}.icon' => $locIcon")
 
     // accelerator
-    locAcc := pod.loc("${keyBase}.accelerator.${plat}", null)
+    locAcc := pod.locale("${keyBase}.accelerator.${plat}", null)
     locAccPlat := locAcc != null
     if (locAcc == null)
-      locAcc = pod.loc("${keyBase}.accelerator", null)
+      locAcc = pod.locale("${keyBase}.accelerator", null)
     try
     {
       if (locAcc != null)

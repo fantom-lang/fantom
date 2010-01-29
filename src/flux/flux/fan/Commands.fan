@@ -57,7 +57,7 @@ internal class Commands
   {
     return Menu
     {
-      text = Pod.of(this).loc("file.name")
+      text = Flux.locale("file.name")
       addCommand(newTab)
       addCommand(openLocation)
       addCommand(closeTab)
@@ -73,7 +73,7 @@ internal class Commands
   {
     return Menu
     {
-      text = Pod.of(this).loc("edit.name")
+      text = Flux.locale("edit.name")
       onOpen.add { onEditMenuOpen(it) }
       addCommand(undo)
       addCommand(redo)
@@ -104,7 +104,7 @@ internal class Commands
   {
     menu := Menu
     {
-      text = Pod.of(this).loc("view.name")
+      text = Flux.locale("view.name")
       onOpen.add { onViewMenuOpen(it) }
       addCommand(reload)
       addSep
@@ -126,7 +126,7 @@ internal class Commands
   {
     menu := Menu
     {
-      text = Pod.of(this).loc("history.name")
+      text = Flux.locale("history.name")
       onOpen.add { onHistoryMenuOpen(it) }
       addCommand(back)
       addCommand(forward)
@@ -143,7 +143,7 @@ internal class Commands
   {
     menu := Menu
     {
-      text = Pod.of(this).loc("tools.name")
+      text = Flux.locale("tools.name")
       addCommand(options)
       addCommand(refreshTools)
       addSep
@@ -158,7 +158,7 @@ internal class Commands
   {
     return Menu
     {
-      text = Pod.of(this).loc("help.name")
+      text = Flux.locale("help.name")
       addCommand(about)
     }
   }
@@ -219,8 +219,8 @@ internal class Commands
 
   Void onEditMenuOpen(Event event)
   {
-    undo := Pod.of(this).loc("undo.name")
-    redo := Pod.of(this).loc("redo.name")
+    undo := Flux.locale("undo.name")
+    redo := Flux.locale("redo.name")
 
     stack := frame.view.commandStack
     if (stack.listUndo.size > 0) undo = "$undo $stack.listUndo.last.name"
@@ -429,7 +429,7 @@ internal class ExitCommand : FluxCommand
     dirty := frame.views.findAll |View v->Bool| { return v.dirty }
     if (dirty.size > 0)
     {
-      grid := GridPane { Label { text=Pod.of(this).loc("saveChanges"); font=Desktop.sysFont.toBold },}
+      grid := GridPane { Label { text=Flux.locale("saveChanges"); font=Desktop.sysFont.toBold },}
       dirty.each |View v|
       {
         grid.add(InsetPane(0,0,0,8) {
@@ -826,13 +826,15 @@ internal class AboutCommand : FluxCommand
     {
       halignCells = Halign.center
       vgap = 0
-      Label { text = "Version ${Pod.of(this).version}"; font = small },
+      Label
+      {
+        text = "Version:  ${this.typeof.pod.version}
+                Home Dir:  ${Env.cur.homeDir}
+                Work Dir:  ${Env.cur.workDir}
+                Env:  ${Env.cur}"
+        font = small
+      },
     }
-    Repo.list.each |repo|
-    {
-      versionInfo.add(Label { text = "Repo $repo.name: ${repo.home}"; font = small })
-    }
-
     content := GridPane
     {
       halignCells = Halign.center
@@ -840,7 +842,7 @@ internal class AboutCommand : FluxCommand
       Label { text = "Flux"; font = big },
       versionInfo,
       Label { font = small; text =
-        "   Copyright (c) 2008, Brian Frank and Andy Frank
+        "   Copyright (c) 2008-2010, Brian Frank and Andy Frank
          Licensed under the Academic Free License version 3.0"
       },
     }

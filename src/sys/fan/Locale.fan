@@ -10,6 +10,8 @@
 ** Locale models a cultural language and region/country.
 ** See `docLang::Localization` for details.
 **
+** Also see `Env.locale` and `Pod.locale`.
+**
 @simple
 const class Locale
 {
@@ -85,23 +87,5 @@ const class Locale
   **   <country> := uppercase ISO 3166 two letter code
   **
   override Str toStr()
-
-//////////////////////////////////////////////////////////////////////////
-// Properties
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Resolve a localized property for the specified pod/key pair.
-  ** The following rules are used for resolution:
-  **   1. Find the pod and use its resource files
-  **   2. Lookup via '/locale/{Locale.toStr}.props'
-  **   3. Lookup via '/locale/{Locale.lang}.props'
-  **   4. Lookup via '/locale/en.props'
-  **   5. If all else fails return the def parameter which
-  **      defaults to 'pod::key'
-  **
-  ** Also see `Pod.loc`.
-  **
-  Str? get(Str pod, Str key, Str? def := "pod::key")
 
 }

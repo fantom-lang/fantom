@@ -411,7 +411,8 @@ public final class FanInt
     java.text.DecimalFormatSymbols df = locale.decimal();
 
     // get default pattern if necessary
-    if (pattern == null) pattern = locale.get("sys", "int", "#,###");
+    if (pattern == null)
+      pattern = Env.cur().locale(Sys.sysPod, "int", "#,###");
 
     // parse pattern and get digits
     NumPattern p = NumPattern.parse(pattern);

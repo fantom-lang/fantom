@@ -154,7 +154,7 @@ public final class Date
     if (pattern == null)
     {
       if (locale == null) locale = Locale.cur();
-      pattern = locale.get("sys", localeKey, "D-MMM-YYYY");
+      pattern = Env.cur().locale(Sys.sysPod, localeKey, "D-MMM-YYYY", locale);
     }
 
     // process pattern

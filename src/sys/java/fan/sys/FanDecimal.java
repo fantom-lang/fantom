@@ -156,7 +156,8 @@ public final class FanDecimal
     java.text.DecimalFormatSymbols df = locale.decimal();
 
     // get default pattern if necessary
-    if (pattern == null) pattern = locale.get("sys", "decimal", "#,###.0##");
+    if (pattern == null)
+      pattern = Env.cur().locale(Sys.sysPod, "decimal", "#,###.0##");
 
     // parse pattern and get digits
     NumPattern p = NumPattern.parse(pattern);

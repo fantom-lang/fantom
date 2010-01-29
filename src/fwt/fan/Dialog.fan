@@ -134,8 +134,8 @@ class Dialog : Window
                          Obj? details := null, Command[] commands := [ok])
   {
     // get localized props
-    title := pod.loc("${keyBase}.name")
-    locImage := pod.loc("${keyBase}.image")
+    title := pod.locale("${keyBase}.name")
+    locImage := pod.locale("${keyBase}.image")
     Image? image
     try { image = Image(locImage.toUri) } catch {}
 
