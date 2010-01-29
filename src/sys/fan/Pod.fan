@@ -74,7 +74,7 @@ final const class Pod
   Depend[] depends()
 
   **
-  ** Return the uri for this pod which if "fan:/sys/pod/{name}/".
+  ** Return the uri for this pod which if "fan://{name}".
   **
   Uri uri()
 

@@ -68,7 +68,7 @@ fan.sys.Endian.m_vals = fan.sys.List.make(fan.sys.Endian.$type,
 //
 fan.sys.Uri.parentRange = fan.sys.Range.make(0, -2, false);
 fan.sys.Uri.m_defVal = fan.sys.Uri.fromStr("");
-fan.sys.UriPodBase = "/sys/pod/";
+fan.sys.UriPodBase = "/pod/"; // TODO
 
 //
 // MimeType

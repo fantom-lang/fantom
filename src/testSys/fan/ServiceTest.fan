@@ -190,10 +190,6 @@ class ServiceTest : Test
       verifyEq(Service.find(t, false), null)
       verifyErr(UnknownServiceErr#) { Service.find(t) }
       verifyErr(UnknownServiceErr#) { Service.find(t, true) }
-
-      verifyEq(UriSpace.root.get(uri, false), null)
-      verifyErr(UnresolvedErr#) { UriSpace.root.get(uri) }
-      verifyErr(UnresolvedErr#) { UriSpace.root.get(uri, true) }
     }
     else
     {
@@ -202,10 +198,6 @@ class ServiceTest : Test
       verifySame(Service.find(t), s)
       verifySame(Service.find(t, false), s)
       verifySame(Service.find(t, true), s)
-
-      verifySame(UriSpace.root.get(uri), s)
-      verifySame(UriSpace.root.get(uri, false), s)
-      verifySame(UriSpace.root.get(uri, true), s)
     }
   }
 

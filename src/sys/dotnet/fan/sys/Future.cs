@@ -94,7 +94,7 @@ namespace Fan.Sys
       }
 
       // ensure immutable or safe copy
-      return UriSpace.safe(r);
+      return Sys.safe(r);
     }
 
     public void cancel()
@@ -112,7 +112,7 @@ namespace Fan.Sys
 
     internal void set(object r)
     {
-      r = UriSpace.safe(r);
+      r = Sys.safe(r);
       ArrayList wd;
       lock (this)
       {

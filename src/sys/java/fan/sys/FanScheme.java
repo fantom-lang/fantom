@@ -30,7 +30,20 @@ public class FanScheme
 
   public Object get(Uri uri, Object base)
   {
-    return UriSpace.root.get(uri.pathOnly(), true);
+    // don't support anything but relative fan: URIs right now
+    if (uri.auth() == null)
+      throw ArgErr.make("Invalid format for fan: URI - " + uri).val;
+
+    // lookup pod
+    String podName = (String)uri.auth();
+    Pod pod = Pod.find(podName, false);
+    if (pod == null) throw UnresolvedErr.make(uri.toStr()).val;
+    if (uri.pathStr().isEmpty()) return pod;
+
+    // dive into file of pod
+    File f = (File)pod.files().get(uri.pathOnly());
+    if (f == null) throw UnresolvedErr.make(uri.toStr()).val;
+    return f;
   }
 
 }

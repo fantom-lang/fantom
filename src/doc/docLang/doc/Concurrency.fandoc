@@ -30,12 +30,6 @@ The Fantom model of concurrency is based upon the following principles:
  - **Message Passing**: the actor  API is built around the idea
    of [passing messages]`Actors` between asynchronous workers;
 
- - **REST**: Fantom applications are built using a [UriSpace]`UriSpaces`
-   of resources identified with URIs.  UriSpaces provides a
-   *whiteboard* mechanism for multiple threads to share state.  You
-   might think of Fantom's REST model as coarsely grained transactional
-   memory (although it is much more than that).
-
 Immutability [#immutability]
 ****************************
 An object is said to be *immutable* if we can guarantee that once
@@ -79,17 +73,13 @@ You can check if an object is immutable via the
 
 Shared Objects [#sharedObjects]
 *******************************
-Both message passing and UriSpace resources provide a mechanism to share
-objects between threads.  For example, specific APIs which will pass an
-object to another thread include:
+Actors allow objects to be shared between threads.  Specific APIs
+which will pass an object to another thread include:
 
   - [Actor.send]`sys::Actor.send`
   - [Actor.sendLater]`sys::Actor.sendLater`
   - [Actor.sendWhenDone]`sys::Actor.sendWhenDone`
   - [Future.get]`sys::Future.get`
-  - [UriSpace.get]`sys::UriSpace.get`
-  - [UriSpace.create]`sys::UriSpace.create`
-  - [UriSpace.put]`sys::UriSpace.put`
 
 All of these APIs use the same pattern to safely pass an object
 between threads.  If an object is immutable then we can safely pass

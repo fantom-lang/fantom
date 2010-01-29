@@ -167,7 +167,7 @@ public class Pod
   {
     synchronized(podsByName)
     {
-      // TODO - eventually we need a faster way to load
+      //  eventually we need a faster way to load
       //  pod meta-data into memory without actually loading
       //  every pod into memory
       if (allPodsList == null)
@@ -229,7 +229,7 @@ public class Pod
 
   public final Uri uri()
   {
-    if (uri == null) uri = Uri.fromStr("fan:/sys/pod/" + name + "/");
+    if (uri == null) uri = Uri.fromStr("fan://" + name);
     return uri;
   }
 
@@ -493,45 +493,6 @@ public class Pod
     // lost cause
     throw UnknownTypeErr.make(podName + "::" + typeName).val;
   }
-
-  /*
-  void shutdown()
-  {
-    try
-    {
-      if (fpod != null && fpod.store != null)
-        fpod.store.close();
-    }
-    catch (Exception e)
-    {
-    }
-  }
-  */
-
-  /*
-  public static void dumpMem()
-  {
-    int numPods  = 0;
-    int numFreed = 0;
-    int numTypes = 0;
-    Iterator it = podsByName.values().iterator();
-    while (it.hasNext())
-    {
-      SoftReference ref = (SoftReference)it.next();
-      if (ref.get() != null)
-      {
-        numPods++;
-        numTypes += ((Pod)ref.get()).types.length;
-      }
-      else
-      {
-        numFreed++;
-      }
-    }
-    long mem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-    System.out.println(">>> Pods=" + numPods + "  Freed=" + numFreed + "  Types=" + numTypes + " Mem=" + mem/(1024L*1024L) + "MB");
-  }
-  */
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

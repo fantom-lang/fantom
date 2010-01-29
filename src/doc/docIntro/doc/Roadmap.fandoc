@@ -32,12 +32,6 @@ New Features [#newFeatures]
 The list of features on our radar for the next year or so (in no
 particular order):
 
-UriSpaces [#uriSpaces]
-========================
-The uri space APIs are a work in progress.  These APIs and the
-design will evolve as we plug new implementations into this framework
-such as HTTP-REST and cloud computing.
-
 Threadlocals [#threadlocals]
 ============================
 As we start to design libraries and applications with Fantom, it is clear

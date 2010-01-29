@@ -30,7 +30,20 @@ namespace Fan.Sys
 
     public override object get(Uri uri, object @base)
     {
-      return UriSpace.m_root.get(uri.pathOnly(), true);
+      // don't support anything but relative fan: URIs right now
+      if (uri.isPathAbs())
+        throw ArgErr.make("Invalid format for 'fan:pod' URI - " + uri).val;
+
+      // lookup pod
+      string podName = (string)uri.path().get(0);
+      Pod pod = Pod.find(podName, false);
+      if (pod == null) throw UnresolvedErr.make(uri.toStr()).val;
+      if (uri.path().size() == 1) return pod;
+
+      // dive into file of pod
+      File f = pod.file(uri);
+      if (f == null) throw UnresolvedErr.make(uri.toStr()).val;
+      return f;
     }
 
   }

@@ -150,7 +150,7 @@ class MixinTest : Test
   {
     // because Obj is actually a class in Java/C# and mixins are
     // implemented as interfaces - a mixin doesn't actually implement
-    // the fan::Obj type in the VM; the compiler works around this
+    // the sys::Obj type in the VM; the compiler works around this
     // by inserting an Obj in the appropiate places
 
     MxA? a := MxClsAB.make as MxA;

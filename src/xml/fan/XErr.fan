@@ -12,6 +12,8 @@
 const class XErr : Err
 {
 
+// TODO: add starting line of error - see issue 945
+
   **
   ** Construct with optional message, line number, and root cause.
   **

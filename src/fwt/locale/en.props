@@ -13,13 +13,13 @@ no.name=No
 details.name=Details
 
 err.name=Error
-err.image=fan:/sys/pod/icons/x32/err.png
+err.image=fan://icons/x32/err.png
 
 warn.name=Warning
-warn.image=fan:/sys/pod/icons/x32/warn.png
+warn.image=fan://icons/x32/warn.png
 
 info.name=Info
-info.image=fan:/sys/pod/icons/x32/question.png
+info.image=fan://icons/x32/question.png
 
 question.name=Question
-question.image=fan:/sys/pod/icons/x32/question.png
+question.image=fan://icons/x32/question.png
