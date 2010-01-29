@@ -30,7 +30,7 @@ the script using the following steps:
   3. if the method is not static then call on an instance
      created via [Type.make]`sys::Type.make`
   4. if the method has a 'Str[]' parameter then invoke it
-     with 'Sys.args', otherwise invoke with no arguments.
+     with 'Env.args', otherwise invoke with no arguments.
   5. if main returns an Int, return that as exit code
 
 The script file can declare more than one type declaration, however
@@ -62,7 +62,7 @@ The following steps are take to execute the method:
   4. if the method is not static then call on an instance
      created via [Type.make]`sys::Type.make`
   5. if the method has a 'Str[]' parameter then invoke it
-     with 'Sys.args', otherwise invoke with no arguments.
+     with 'Env.args', otherwise invoke with no arguments.
   6. if main returns an Int, return that as exit code
 
 See [HelloWorld]`docIntro::HelloWorld#pod` for an example of how
@@ -75,7 +75,7 @@ an Int, then it is returned as the exit code of the process, otherwise
 zero is returned (or non-zero if an exception is raised).
 
 The main method either takes no arguments or 'Str[]'.  You can access
-any arguments passed on the command line via  the [Sys.args]`sys::Sys.args`
+any arguments passed on the command line via  the [Env.args]`sys::Env.args`
 method.  All of these are valid main methods:
 
   Void make()
