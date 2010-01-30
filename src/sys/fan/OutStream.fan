@@ -61,7 +61,7 @@ class OutStream
   virtual This sync()
 
   **
-  ** Close the input stream.  This method is guaranteed to never
+  ** Close the output stream.  This method is guaranteed to never
   ** throw an IOErr.  Return true if the stream was closed successfully
   ** or false if the stream was closed abnormally.  Default implementation
   ** does nothing and returns true.
