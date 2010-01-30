@@ -34,7 +34,8 @@ abstract class BuildPod : BuildScript
   Str? podName
 
   **
-  ** Version of the pod - default is set to @buildVersion.  Required.
+  ** Version of the pod - default is set to `config` prop 'buildVersion'.
+  ** Required.
   **
   Version? version
 
@@ -72,7 +73,7 @@ abstract class BuildPod : BuildScript
   **
   internal override Void validate()
   {
-    if (version == null) version = @buildVersion.val
+    if (version == null) version = Version(config("buildVersion", "0"))
     if (outDir == null)  outDir  = (Env.cur.workDir + `lib/fan/`).uri
     ok := true
     ok = ok.and(validateReqField("podName"))
@@ -84,7 +85,7 @@ abstract class BuildPod : BuildScript
         podName == "compiler" || podName == "compilerJava")
     {
       if (Env.cur.homeDir == devHomeDir)
-        throw fatal("Must update @buildDevHome for bootstrap build")
+        throw fatal("Must update 'devHome' for bootstrap build")
     }
   }
 
@@ -157,6 +158,21 @@ abstract class BuildPod : BuildScript
   ** Default target is `compile`.
   **
   override Target defaultTarget() { target("compile") }
+
+//////////////////////////////////////////////////////////////////////////
+// DumpEnv
+//////////////////////////////////////////////////////////////////////////
+
+  @target="Dump env details to help build debugging"
+  override Void dumpEnv()
+  {
+    super.dumpEnv
+    log.printLine("  podDef:       $podDef")
+    log.printLine("  podName:      $podName")
+    log.printLine("  version:      $version")
+    log.printLine("  dependsDir:   $dependsDir")
+    log.printLine("  outDir:       $outDir")
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Compile

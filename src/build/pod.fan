@@ -29,25 +29,6 @@ pod build
   **
   Str target := ""
 
-//////////////////////////////////////////////////////////////////////////
-// Configuration
-//////////////////////////////////////////////////////////////////////////
-
-  ** Version to use by default for building pods (and other targets).
-  virtual Version buildVersion := Version("0.0.0")
-
-  ** Home directory of development installation - typically this
-  ** is boot repo.  But we override it for bootstrap builds.
-  virtual Uri? buildDevHome := null
-
-  ** Home directory of JDK installation - required for
-  ** Java related build tasks.
-  virtual Uri? buildJdkHome := null
-
-  ** Home directory of .NET installation - required for
-  ** .NET related build tasks.
-  virtual Uri? buildDotnetHome := null
-
 }
 
 

@@ -74,7 +74,7 @@ final const class Pod
   Depend[] depends()
 
   **
-  ** Return the uri for this pod which if "fan://{name}".
+  ** Uri for this pod which is always "fan://{name}".
   **
   Uri uri()
 

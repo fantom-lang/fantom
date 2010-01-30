@@ -24,15 +24,8 @@ class JdkTask : Task
     : super(script)
   {
     // jdkHomeDir
-    try
-    {
-      jdkHomeDir = @buildJdkHome.val.toFile
-      if (!jdkHomeDir.exists || !jdkHomeDir.isDir) throw Err.make
-    }
-    catch
-    {
-      throw fatal("Missing or invalid URI for @buildJdkHome: ${@buildJdkHome.val}")
-    }
+    jdkHomeDir = script.configDir("jdkHome") ?:
+      throw fatal("Must config build prop 'jdkHome'")
 
     // derived files
     jdkBinDir = jdkHomeDir + `bin/`
@@ -59,7 +52,7 @@ class JdkTask : Task
 //////////////////////////////////////////////////////////////////////////
 
   ** Home directory for jdk installation
-  ** configured via `@buildJdkHome`
+  ** configured via config prop 'jdkHome'
   File jdkHomeDir
 
   ** JDK bin for executables: {jdkHomeDir}/bin/

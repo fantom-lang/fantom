@@ -205,14 +205,14 @@ changes require some careful planning.
 
 Debugging [#debugging]
 **********************
-You can use the "dumpenv" build target to dump key aspects of your
+You can use the "dumpEnv" build target to dump key aspects of your
 build script environment.  You can run target on "buildall.fan", although
-a more concise report is to dumpenv on "buildboot.fan" and one of the
+a more concise report is to dumpEnv on "buildboot.fan" and one of the
 non bootstrap pods like "testSys/build.fan".
 
 On Windows you should see something like this:
 
-  C:\dev\fan\src>buildboot dumpenv
+  C:\dev\fan\src>buildboot dumpEnv
   ---------------
     scriptFile:  /C:/dev/fan/src/buildboot.fan [build::BuildGroup]
     fanHome:     /C:/dev/rel/
@@ -245,7 +245,7 @@ On Windows you should see something like this:
     devHomeDir:  /C:/dev/fan/
 
 
-  C:\dev\fan\src>testSys\build dumpenv
+  C:\dev\fan\src>testSys\build dumpEnv
   ---------------
     scriptFile:  /C:/dev/fan/src/testSys/build.fan [build::BuildPod]
     fanHome:     /c:/dev/fan/

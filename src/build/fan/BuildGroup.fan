@@ -141,10 +141,10 @@ abstract class BuildGroup : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   @target="Dump env details to help build debugging"
-  override Void dumpenv()
+  override Void dumpEnv()
   {
-    super.dumpenv
-    runOnChildren("dumpenv")
+    super.dumpEnv
+    runOnChildren("dumpEnv")
   }
 
 //////////////////////////////////////////////////////////////////////////
