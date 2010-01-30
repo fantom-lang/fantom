@@ -13,6 +13,17 @@ class EnvTest : Test
 {
 
 //////////////////////////////////////////////////////////////////////////
+// Setup/Cleanup
+//////////////////////////////////////////////////////////////////////////
+
+  File etcDir() { Env.cur.workDir + `etc/testSys/` }
+
+  override Void teardown()
+  {
+    etcDir.delete
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Args
 //////////////////////////////////////////////////////////////////////////
 
@@ -130,7 +141,7 @@ class EnvTest : Test
   {
     pod := typeof.pod
     uri := `foo/bar.props`
-    f := Env.cur.workDir + `etc/testSys/$uri`
+    f := etcDir + uri
     try
     {
       props := ["a":"alpha", "b":"beta"]
@@ -190,8 +201,8 @@ class EnvTest : Test
 
   Void testLocale()
   {
-    f1 := Env.cur.workDir + `etc/testSys/locale/en.props`
-    f2 := Env.cur.workDir + `etc/testSys/locale/en-US.props`
+    f1 := etcDir + `locale/en.props`
+    f2 := etcDir + `locale/en-US.props`
     try
     {
       f1.writeProps(["e":"e en etc", "f":"f en etc"])
