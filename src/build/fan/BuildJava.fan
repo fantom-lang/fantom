@@ -52,7 +52,7 @@ abstract class BuildJava : BuildScript
     if (jar.name == "sys.jar")
     {
       if (Env.cur.homeDir == devHomeDir)
-        throw fatal("Must update @buildDevHome for bootstrap build")
+        throw fatal("Must update 'devHome' for bootstrap build")
     }
   }
 
@@ -70,9 +70,9 @@ abstract class BuildJava : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   @target="Dump env details to help build debugging"
-  override Void dumpenv()
+  override Void dumpEnv()
   {
-    super.dumpenv
+    super.dumpEnv
 
     oldLevel := log.level
     log.level = LogLevel.silent

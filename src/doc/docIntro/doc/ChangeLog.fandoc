@@ -11,6 +11,10 @@
 - Locale.get => Env.locale
 - Remove UriSpace
 - Change syntax of 'fan:' URI scheme
+- Change flux options design
+- Change build symbols to be config props
+
+TODO: update bootstrap docs with dumpEnv
 
 *Build 1.0.49 (27 Jan 10)*
 - Obj.type => typeof

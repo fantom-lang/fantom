@@ -69,9 +69,9 @@ abstract class BuildCs : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   @target="Dump env details to help build debugging"
-  override Void dumpenv()
+  override Void dumpEnv()
   {
-    super.dumpenv
+    super.dumpEnv
 
     if (!isWindows)
     {

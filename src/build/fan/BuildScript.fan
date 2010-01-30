@@ -55,9 +55,9 @@ abstract class BuildScript
   const File scriptDir := scriptFile.parent
 
   ** Home directory of development installation.  By default this
-  ** value is initialized by `@buildDevHome`, otherwise 'Env.cur.homeDir'`
-  ** is used.
-  const File devHomeDir := resolveDevHomeDir
+  ** value is initialized by 'devHome' config prop, otherwise
+  ** `Env.cur.homeDir` is used.
+  const File devHomeDir := configDir("devHome", Env.cur.homeDir)
 
   ** {devHomeDir}/bin/
   const File binDir := devHomeDir + `bin/`
@@ -83,48 +83,54 @@ abstract class BuildScript
   ** Executable extension: ".exe" on Windows and "" on Unix.
   Str exeExt := ""
 
-  ** Compute value for devHomeDir field
-  private File resolveDevHomeDir()
+  **
+  ** Get a config property using the following rules:
+  **   1. `Env.cur.vars` with 'FAN_BUILD_$name.upper'
+  **   2. `Env.cur.config` for build pod
+  **   3. fallback to 'def' parameter
+  **
+  Str? config(Str name, Str? def := null)
   {
-    try
-    {
-      if (@buildDevHome.val != null)
-      {
-        f := File(@buildDevHome.val)
-        if (!f.exists || !f.isDir) throw Err()
-        return f
-      }
-    }
-    catch log.err("Invalid URI for @buildDevHome: ${@buildDevHome.val}")
-    return Env.cur.homeDir
+    Env.cur.vars["FAN_BUILD_$name.upper"] ?:
+    Env.cur.config(BuildScript#.pod, name, def)
   }
 
   **
-  ** Initialize the environment
+  ** Get a `config` prop which identifies a directory.
+  ** If the prop isn't configured or doesn't map to a
+  ** valid directory, then return def.
   **
+  File? configDir(Str name, File? def := null)
+  {
+    c := config(name)
+    if (c == null) return def
+    try
+    {
+      f := File(c.toUri)
+      if (!f.exists || !f.isDir) throw Err()
+      return f
+    }
+    catch (Err e) log.err("Invalid configDir URI for '$name': $c\n  $e")
+    return def
+  }
+
+  ** Initialize the environment
   internal virtual Void initEnv()
   {
     // are we running on a Window's box?
     isWindows = Env.cur.os == "win32"
     exeExt = isWindows ? ".exe" : ""
+  }
 
-    // debug
-    if (log.isDebug)
-    {
-      log.printLine("BuildScript Environment:")
-      log.printLine("  @buildVersion:    ${@buildVersion.val}")
-      log.printLine("  @buildDevHome:    ${@buildDevHome.val}")
-      log.printLine("  @buildJdkHome:    ${@buildJdkHome.val}")
-      log.printLine("  @buildDotnetHome: ${@buildDotnetHome.val}")
-      log.printLine("  scriptFile:       $scriptFile")
-      log.printLine("  scriptDir:        $scriptDir")
-      log.printLine("  devHomeDir:       $devHomeDir")
-      log.printLine("  binDir:           $binDir")
-      log.printLine("  libDir:           $libDir")
-      log.printLine("  libFanDir:        $libFanDir")
-      log.printLine("  libJavaDir:       $libJavaDir")
-      log.printLine("  libDotnetDir:     $libDotnetDir")
-    }
+  @target="Dump env details to help build debugging"
+  virtual Void dumpEnv()
+  {
+    log.printLine("---------------")
+    log.printLine("  scriptFile:   $scriptFile")
+    log.printLine("  typeof:       $typeof.base")
+    log.printLine("  env.homeDir:  $Env.cur.homeDir")
+    log.printLine("  env.workDir:  $Env.cur.workDir")
+    log.printLine("  devHomeDir:   $devHomeDir")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -207,21 +213,6 @@ abstract class BuildScript
   private Func toFunc(Method m) { return |->| { m.callOn(this, null) } }
 
 //////////////////////////////////////////////////////////////////////////
-// Debug Env Target
-//////////////////////////////////////////////////////////////////////////
-
-  @target="Dump env details to help build debugging"
-  virtual Void dumpenv()
-  {
-    log.out.printLine("---------------")
-    log.out.printLine("  scriptFile:   $scriptFile [$typeof.base]")
-    log.out.printLine("  Env.homeDir:  $Env.cur.homeDir")
-    log.out.printLine("  Env.workDir:  $Env.cur.workDir")
-    log.out.printLine("  devHomeDir:   $devHomeDir")
-    log.level = LogLevel.warn // suppress success message
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Arguments
 //////////////////////////////////////////////////////////////////////////
 
@@ -253,7 +244,7 @@ abstract class BuildScript
     for (i:=0; i<args.size; ++i)
     {
       arg := args[i]
-      if (arg == "-v") log.level = LogLevel.debug
+      if (arg == "-v") { log.level = LogLevel.debug; dumpEnv }
       else if (arg.startsWith("-")) log.warn("Unknown build option $arg")
       else
       {

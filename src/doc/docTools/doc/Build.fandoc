@@ -59,7 +59,7 @@ value is a string description.  To print the usage of this script use "-?":
     -? -help       print usage summary
     -v             verbose debug logging
   targets:
-    dumpenv        Dump env details to help build debugging
+    dumpEnv        Dump env details to help build debugging
     compile*       Compile everything
     clean          Clean it all up
 
@@ -200,8 +200,8 @@ If you don't have resource files you can omit 'podResDirs'.  See
 
 Typically the pod's version is set by the build script's
 [version]`build::BuildPod.version` field.  By default this is
-set to the global symbol '@build::buildVersion' configured in
-"etc/build/pod.fansym".
+set to the config property 'buildVersion' configured in
+"etc/build/config.props".
 
 
 

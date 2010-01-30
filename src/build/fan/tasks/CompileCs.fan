@@ -25,15 +25,8 @@ class CompileCs : Task
     : super(script)
   {
     // dotnetHomeDir
-    try
-    {
-      dotnetHomeDir = @buildDotnetHome.val.toFile
-      if (!dotnetHomeDir.exists || !dotnetHomeDir.isDir) throw Err()
-    }
-    catch
-    {
-      throw fatal("Missing or invalid URI for @buildDotnetHome: ${@buildDotnetHome.val}")
-    }
+    dotnetHomeDir = script.configDir("dotnetHome") ?:
+      throw fatal("Must config build prop 'dotnetHome'")
 
     // derived files
     cscExe = dotnetHomeDir + `csc.exe`
@@ -103,7 +96,7 @@ class CompileCs : Task
 //////////////////////////////////////////////////////////////////////////
 
   ** Home directory for .NET installation
-  ** configured via `@buildDotnetHome`
+  ** configured via config prop
   File? dotnetHomeDir
 
   ** C# compiler executable: {dotnetHomeDir}/csc.exe
