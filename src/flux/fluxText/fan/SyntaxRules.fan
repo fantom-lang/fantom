@@ -56,11 +56,9 @@ const class SyntaxRules
 
   internal static SyntaxRules load(SyntaxOptions options, File? f, Str? firstLine)
   {
-    extToRules := @extToRules.val
-
     // try file extension first
     SyntaxRules? rules := null
-    extToRulesName := extToRules[f?.ext?.lower ?: "not.found"]
+    extToRulesName := options.extToRules[f?.ext?.lower ?: "not.found"]
     if (extToRulesName != null)
     {
       rules = findRules(extToRulesName)
@@ -75,7 +73,7 @@ const class SyntaxRules
       cmd := toks[0].split('/').last.lower
       if (cmd == "env" && toks.size > 1)
         cmd = toks[1].split('/').last.lower
-      cmdToRulesName := extToRules[cmd]
+      cmdToRulesName := options.extToRules[cmd]
       rules = findRules(cmdToRulesName)
       if (rules != null) return rules
     }

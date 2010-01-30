@@ -1,0 +1,19 @@
+//
+// General purpose options.
+//
+// History:
+//   09 Aug 08  Brian Frank  Creation
+//
+
+using flux
+
+GeneralOptions
+{
+  ** Default uri to display on startup.  If not specified,
+  ** then we use fan home directory as home.
+  // homePage = `/foo`
+
+
+  ** Absolute paths for directories to index for Goto-File command.
+  // indexDirs = [`/dev/fan/src`]
+}

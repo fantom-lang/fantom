@@ -15,7 +15,7 @@ class SyntaxTest : Test
 // Setup
 //////////////////////////////////////////////////////////////////////////
 
-  const SyntaxOptions opt := SyntaxOptions()
+  const SyntaxOptions opt := SyntaxOptions.load
   const RichTextStyle t := opt.text
   const RichTextStyle s := opt.literal
   const RichTextStyle c := opt.comment
@@ -229,9 +229,9 @@ class SyntaxTest : Test
 
   Void verifyBrackets(Str ext, Str src, Int line, Int col, Obj[][] styling, Bool testReverse := true)
   {
-    doc := Doc(TextEditorOptions(),
-               SyntaxOptions(),
-               SyntaxRules.load(SyntaxOptions(), "foo.$ext".toUri.toFile, null))
+    doc := Doc(TextEditorOptions.load,
+               SyntaxOptions.load,
+               SyntaxRules.load(SyntaxOptions.load, "foo.$ext".toUri.toFile, null))
     doc.text = src
 
     a := doc.offsetAtLine(line) + col
@@ -254,9 +254,9 @@ class SyntaxTest : Test
 
   Void verifySyntax(Str ext, Str src, Obj[][] styling)
   {
-    doc := Doc(TextEditorOptions(),
-               SyntaxOptions(),
-               SyntaxRules.load(SyntaxOptions(), "foo.$ext".toUri.toFile, null))
+    doc := Doc(TextEditorOptions.load,
+               SyntaxOptions.load,
+               SyntaxRules.load(SyntaxOptions.load, "foo.$ext".toUri.toFile, null))
     doc.text = src
     verifySyntaxDoc(doc, styling)
   }

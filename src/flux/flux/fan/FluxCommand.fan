@@ -47,7 +47,7 @@ class FluxCommand : Command
     this.id = id
 
     // check for explicit binding
-    binding := @keyBindings.val[id]
+    binding := KeyOptions.load.bindings[id]
     try
     {
       if (binding != null) accelerator = Key(binding)

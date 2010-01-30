@@ -263,8 +263,8 @@ class Frame : Window
 @serializable
 internal class FrameState
 {
-  static FrameState load() { return Flux.loadSession("frame", FrameState#) }
-  Void save() { Flux.saveSession("frame", this) }
+  static FrameState load() { return Flux.loadOptions(Flux.pod, "session/frame", FrameState#) }
+  Void save() { Flux.saveOptions(Flux.pod, "session/frame", this) }
 
   Point? pos := null
   Size? size := Size(800, 600)

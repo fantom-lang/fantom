@@ -19,7 +19,7 @@ class FindHistory
   **
   static FindHistory load()
   {
-    return Flux.loadSession("find", FindHistory#)
+    return Flux.loadOptions(Flux.pod, "session/find", FindHistory#)
   }
 
   **
@@ -28,7 +28,7 @@ class FindHistory
   **
   This save()
   {
-    Flux.saveSession("find", this)
+    Flux.saveOptions(Flux.pod, "session/find", this)
     return this
   }
 
