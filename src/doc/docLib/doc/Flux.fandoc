@@ -78,8 +78,6 @@ Uri Resolution [#uriResolution]
 The step of navigation is to resolve the Uri to a normal Fantom 'Obj' using
 the standard [naming facilities]`docLang::Naming`.  This means that
 any Uri which has been mapped via a 'UriScheme' is available for navigation.
-You can plug application specific resources into flux using either of
-these techniques.
 
 Resource Resolution [#resourceResolution]
 =========================================

@@ -34,7 +34,7 @@ navigation history just like a browser.
 
 Unlike a normal browser, we leverage Fantom's built-in [naming]`docLang::Naming`
 framework.  This means we can use Flux to browser any Uri mapped into
-the Fantom's uri space including the file system, "fan:" namespaces, or any
+the Fantom's namespace including the file system, "fan:" namespaces, or any
 of the protocols plugged into Fantom via 'UriScheme'.
 
 When a user navigates to a uri, the uri is resolved into a Fantom object
@@ -63,16 +63,16 @@ But you'll find quite a number of useful features:
 
 Options [#options]
 ******************
-Flux options are stored in plain text files under "{repo}/etc/flux"
-and "{repo}/etc/fluxText".  In most cases editing these text file will
-be reloaded the next time a view is loaded.
+Flux options are stored in plain text fog files under "etc/flux" and
+"etc/fluxText".  In most cases editing the text file will be reloaded
+the next time a view is loaded.
 
 Key Bindings [#keyOptions]
 =========================
 All the commands in flux have a globally unique string id.  Common
 predefined commands have an id like "cut" or "save".  By default commands are
 configured as [localized props]`fwt::Command.makeLocale`.  But you
-can custom the key binding for any command via [@keyBindings]`@flux::keyBindings`.
+can custom the key binding for any command via [KeyOptions]`flux::KeyOptions`.
 
 Text Editor [#textEditorOptions]
 ================================
@@ -92,7 +92,7 @@ definition via [SyntaxOptions]`fluxText::SyntaxOptions`.  You also
 use SytnaxOptions to configure your font and color preferences.
 
 For example let's say we want to add support for "foolang".  First
-we edit "etc/fluxText/pod.fansym" to map the file extensions "foo" and
+we edit "etc/fluxText/syntax.fog" to map the file extensions "foo" and
 "foolang" to the definition stored in "etc/fluxText/syntax/foolang.fog":
 
   extToRules =
@@ -139,7 +139,7 @@ Tools [#tools]
 **************
 You can add your own commands into the Tools menu.  Tools are nothing
 but a Fantom script file which declares a `flux::FluxCommand` class.  The
-Tools menu structure reflects the "/etc/flux/tools/" directory.  Sub-directories
+Tools menu structure reflects the "etc/flux/tools/" directory.  Sub-directories
 are represented as sub-menus and scripts ending in ".fan" are the command
 menu items.  When the command is executed the script is compiled if out
 of date and the 'FluxCommand.invoke' is invoked.  Here is an example
@@ -175,7 +175,7 @@ line in the console with a blue underline to jump to that file
 location.
 
 If you wish to have an accelerator to your tool, then add the command
-to your "etc/flux/pod.fansym" file, where the key is "tools.{filename}":
+to your "etc/flux/keys.fog" file, where the key is "tools.{filename}":
 
   bindings =
   [
@@ -183,7 +183,7 @@ to your "etc/flux/pod.fansym" file, where the key is "tools.{filename}":
     ...
 
 Compiling Fantom  [#compilingFan]
-*********************************
+******************************
 The standard Fantom distribution includes a tools script called "Build".
 If you run this tool in any file which is under a directory which contains
 a "build.fan" script, it will run the build script with the default
@@ -200,7 +200,7 @@ marked with blue underlines in the console.  You can click the console
 to jump to that location, or use the JumpNext/JumpPrev commands to
 cycle thru the errors.
 
-Remember that "Build" is just a tool script in the "flux/tools" directory.
+Remember that "Build" is just a tool script in the "etc/flux/tools" directory.
 You can change the script, or use it as a template to define new scripts.
 
 Developing for Flux [#dev]

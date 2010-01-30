@@ -38,7 +38,7 @@ class FluxCommand : Command
   **
   ** The default accelerator is defined by the localized property
   ** definition.  But we allow the user to redefine key bindings
-  ** via `@keyBindings`.  This constructor automatically checks for
+  ** via `KeyOptions`.  This constructor automatically checks for
   ** additional key bindings.
   **
   new make(Str id, Pod pod := Flux#.pod)
