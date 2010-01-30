@@ -25,7 +25,7 @@ internal class Main
     // load first uri from configured homePage or command line
     if (args.isEmpty)
     {
-      f.load(@homePage.val)
+      f.load(GeneralOptions.load.homePage)
     }
     else
     {

@@ -738,7 +738,7 @@ internal class UpCommand : FluxCommand
 internal class HomeCommand : FluxCommand
 {
   new make() : super(CommandId.home) {}
-  override Void invoked(Event? event) { frame.load(@homePage.val) }
+  override Void invoked(Event? event) { frame.load(GeneralOptions.load.homePage) }
 }
 
 ** Open recent history dialog

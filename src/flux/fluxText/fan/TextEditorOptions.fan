@@ -9,7 +9,7 @@
 using flux
 
 **
-** TextEditorOptions configured from fluxText symbols.
+** TextEditorOptions configured general text document options.
 **
 @serializable
 const class TextEditorOptions
@@ -21,22 +21,30 @@ const class TextEditorOptions
   ** Note that loading text files will accept any combination
   ** of "\n", "\r", or "\r\n" - but that if the doc is saved
   ** then this line ending is applied.  Default is "\n".
-  const Str lineDelimiter := @lineDelimiter.val
+  const Str lineDelimiter := "\n"
 
   ** If true, then trailing whitespace on each text
   ** line is strip on save.  Default is true.
-  const Bool stripTrailingWhitespace := @stripTrailingWhitespace.val
+  const Bool stripTrailingWhitespace := true
 
   ** Number of spaces to use for a tab.  Default is 2.
-  const Int tabSpacing := @tabSpacing.val
+  const Int tabSpacing := 2
 
   ** If true, then all tabs to converted to space characters
   ** based on the configured `tabSpacing`.  The default is true.
-  const Bool convertTabsToSpaces := @convertTabsToSpaces.val
+  const Bool convertTabsToSpaces := true
 
   ** Default char encoding to use when load/saving
   ** text files.  Defaults to utf8.
-  const Charset charset := @charset.val
+  const Charset charset := Charset.utf8
 
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  internal static TextEditorOptions load()
+  {
+    return Flux.loadOptions(TextEditorOptions#.pod, "text-editor", TextEditorOptions#)
+  }
 }
 

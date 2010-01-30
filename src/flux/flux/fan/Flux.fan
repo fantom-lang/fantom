@@ -21,21 +21,24 @@ class Flux
   static const Log log := Flux#.pod.log
 
   **
-  ** Read an session options file into memory.  An option file is a
-  ** serialized object stored at "etc/flux/session/{name}.fog".
+  ** Read an session options file into memory.  An option file
+  ** is a serialized object stored at "etc/{pod}/{name}.fog".
   **
-  internal static Obj? loadSession(Str name, Type? t)
+  static Obj? loadOptions(Pod pod, Str name, Type? t)
   {
     [Str:CachedOptions]? options := Actor.locals["flux.options"]
     if (options == null) Actor.locals["flux.options"] = options = Str:CachedOptions[:]
 
     // check cache
-    cached := options[name]
+    path := "etc/${pod.name}/${name}.fog"
+    cached := options[path]
     if (cached != null && cached.file.modified == cached.modified)
       return cached.val
 
     // not cached or modified since we loaded cache
-    file := Env.cur.workDir + `etc/flux/session/${name}.fog`
+    pathUri := path.toUri
+    file := Env.cur.findFile(pathUri, false)
+    if (file == null) file = Env.cur.workDir + pathUri
     Obj? value := null
     try
     {
@@ -52,19 +55,20 @@ class Flux
     if (value == null) value = t?.make
 
     // update cache
-    options[name] = CachedOptions(file, value)
+    options[path] = CachedOptions(file, value)
 
     return value
   }
 
   **
   ** Save sessions options back to file. An option file is a
-  ** serialized object stored at "etc/flux/session/{name}.fog".
+  ** serialized object stored at "etc/{pod}/{name}.fog".
   ** Return true on success, false on failure.
   **
-  internal static Bool saveSession(Str name, Obj options)
+  static Bool saveOptions(Pod pod, Str name, Obj options)
   {
-    file := Env.cur.workDir + `etc/flux/session/${name}.fog`
+    uri := `etc/${pod.name}/${name}.fog`
+    file := Env.cur.workDir + uri
     try
     {
       log.debug("Save options: $file")
@@ -78,7 +82,10 @@ class Flux
     }
   }
 
-  // convenience for icons
+  ** convenience 'flux' pod
+  internal static const Pod pod := Flux#.pod
+
+  ** convenience for images loaded out of icons
   internal static Image icon(Uri uri)
   {
     Image(("fan://icons"+uri).toUri)

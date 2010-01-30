@@ -279,8 +279,8 @@ internal class NavBar : SideBar
 @serializable
 internal class NavBarState
 {
-  static NavBarState load() { return Flux.loadSession("navBar", NavBarState#) }
-  Void save() { Flux.saveSession("navBar", this) }
+  static NavBarState load() { return Flux.loadOptions(Flux.pod, "session/navBar", NavBarState#) }
+  Void save() { Flux.saveOptions(Flux.pod, "session/navBar", this) }
   Uri[] roots := Uri[,]
   Int? selected := null
 }

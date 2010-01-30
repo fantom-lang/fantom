@@ -94,7 +94,7 @@ internal const class FileIndex : Actor
   Void doRebuild()
   {
     Actor.locals["fileIndexMap"] = null
-    dirs := @indexDirs.val
+    dirs := GeneralOptions.load.indexDirs
     if (dirs.isEmpty) return
 
     map := Uri:FileItem[:]

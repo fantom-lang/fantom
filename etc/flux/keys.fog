@@ -1,0 +1,24 @@
+//
+// Key options
+//
+// History:
+//   29 Aug 08  Brian Frank  Creation
+//
+
+using flux
+
+KeyOptions
+{
+
+  ** Binding of command ids to key accelerators.  The keys of this
+  ** map are [FluxCommand.ids]`FluxCommand.id`.  See `CommandId` for
+  ** the commonly used predefined commmands.  The values of the map
+  ** are string representations of `Key`.  If a command is not mapped
+  ** in this table, then it defaults to the accelerator defined by
+  ** the command's localized props.
+  bindings =
+  [
+    "tools.Build": "F9",
+    "tools.DebugDump": "F12",
+  ]
+}
