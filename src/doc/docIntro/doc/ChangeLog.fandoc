@@ -13,6 +13,7 @@
 - Change syntax of 'fan:' URI scheme
 - Change flux options design
 - Change build symbols to be config props
+- Pod.files: now returns list, added Pod.file, now used 'fan:' URI
 
 TODO: update bootstrap docs with dumpEnv
 

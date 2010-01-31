@@ -346,11 +346,39 @@ public class Pod
 // Files
 //////////////////////////////////////////////////////////////////////////
 
-  public final Map files()
+  public final List files()
   {
-    if (files == null)
-      files = fpod.store.podFiles();
-    return files;
+    loadFiles();
+    return filesList;
+  }
+
+  public final fan.sys.File file(Uri uri) { return file(uri, true); }
+  public final fan.sys.File file(Uri uri, boolean checked)
+  {
+    loadFiles();
+    if (!uri.isPathAbs())
+      throw ArgErr.make("Pod.files Uri must be path abs: " + uri).val;
+    if (uri.auth() != null && !uri.toStr().startsWith(uri().toStr()))
+      throw ArgErr.make("Invalid base uri `" + uri + "` for `" + uri() + "`").val;
+    else
+      uri = this.uri().plus(uri);
+    fan.sys.File f = (fan.sys.File)filesMap.get(uri);
+    if (f != null || !checked) return f;
+    throw UnresolvedErr.make(uri.toStr()).val;
+  }
+
+  private void loadFiles()
+  {
+    synchronized (filesMap)
+    {
+      if (filesList != null) return;
+      this.filesList = (List)fpod.store.podFiles(uri()).toImmutable();
+      for (int i=0; i<filesList.sz(); ++i)
+      {
+        fan.sys.File f = (fan.sys.File)filesList.get(i);
+        filesMap.put(f.uri(), f);
+      }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -510,7 +538,8 @@ public class Pod
   ClassType[] types;
   HashMap typesByName;
   Class cls;
-  Map files;
+  List filesList;
+  HashMap filesMap = new HashMap(11);
   Log log;
   Object symbolsLock = new Object();
   HashMap symbols;

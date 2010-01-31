@@ -41,9 +41,7 @@ public class FanScheme
     if (uri.pathStr().isEmpty()) return pod;
 
     // dive into file of pod
-    File f = (File)pod.files().get(uri.pathOnly());
-    if (f == null) throw UnresolvedErr.make(uri.toStr()).val;
-    return f;
+    return pod.file(uri);
   }
 
 }

@@ -818,7 +818,7 @@ internal class AboutCommand : FluxCommand
   new make() : super(CommandId.about) {}
   override Void invoked(Event? event)
   {
-    icon  := Pod.find("icons").files[`/x48/flux.png`]
+    icon  := Pod.find("icons").file(`/x48/flux.png`)
     big   := Font { it.name=Desktop.sysFont.name; it.size=Desktop.sysFont.size+(Desktop.isMac ? 2 : 3); it.bold=true }
     small := Font { it.name=Desktop.sysFont.name; it.size=Desktop.sysFont.size-(Desktop.isMac ? 3 : 1) }
 

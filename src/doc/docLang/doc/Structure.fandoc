@@ -37,11 +37,12 @@ meta-data, plus any associated file resources.
 The `sys::Pod` type is the reflection API for working with pods installed in a
 given Fantom installation.  Code examples for common pod operations:
 
-  Pod.list                      // list the pods installed
-  Pod.find("acmeFoo")           // find a pod (throws exception if not found)
-  Pod.find("acmeFoo", false)    // find a pod (returns null if not found)
-  myPod.files[`/img/icon.png`]  // lookup a resource file in myPod
-  Pod.of(someObj)               // get the pod of an object
+  Pod.list                       // list the pods installed
+  Pod.find("acmeFoo")            // find a pod (throws exception if not found)
+  Pod.find("acmeFoo", false)     // find a pod (returns null if not found)
+  myPod.file(`/img/icon.png`)    // lookup a resource file in myPod
+  `fan://myPod/img/icon.png`.get // lookup a resource file in myPod
+  Pod.of(someObj)                // get the pod of an object
 
 See `Pods` chapter for more details.
 

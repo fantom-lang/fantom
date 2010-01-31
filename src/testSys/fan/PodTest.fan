@@ -103,17 +103,27 @@ class PodTest : Test
 
   Void testFiles()
   {
-    files := Pod.of(this).files
-    verify(files.containsKey(`/locale/en.props`))
-    verify(files.containsKey(`/locale/en-US.props`))
-    verify(files.containsKey(`/locale/es.props`))
-    verify(files.containsKey(`/locale/es-MX.props`))
+    pod := typeof.pod
+    verifyEq(pod.files.isImmutable, true)
+    verifySame(pod.files, pod.files)
 
-    f := Pod.of(this).files[`/res/test.txt`]
-    verify(f != null)
+    f := pod.file(`/locale/en.props`)
+    verifyEq(f.uri, `fan://testSys/locale/en.props`)
+    verifySame(f, pod.files.find {it.name=="en.props"})
+
+    f = pod.file(`fan://testSys/res/test.txt`)
+    verifyEq(f.uri, `fan://testSys/res/test.txt`)
     verifyEq(f.name, "test.txt")
     verifyEq(f.size, 19)
     verifyEq(f.readAllStr, "hello world\nline 2")
+
+    verifyErr(ArgErr#) { pod.file(`res/test.txt`) }
+    verifyErr(ArgErr#) { pod.file(`fan://foo/res/test.txt`) }
+    verifyErr(ArgErr#) { pod.file(`//testSys/res/test.txt`) }
+
+    verifyNull(pod.file(`fan://testSys/bad/file`, false))
+    verifyErr(UnresolvedErr#) { pod.file(`fan://testSys/bad/file`) }
+    verifyErr(UnresolvedErr#) { pod.file(`fan://testSys/bad/file`, true) }
   }
 
 //////////////////////////////////////////////////////////////////////////
