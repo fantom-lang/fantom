@@ -187,7 +187,7 @@ abstract const class Env
   ** Find a file in the environment using a relative path such
   ** as "etc/foo/config.props".  If the URI is not relative then
   ** throw ArgErr.  If the file is not found in the environment
-  ** then throw IOErr or return null based on checked flag.  If
+  ** then throw UnresolvedErr or return null based on checked flag.  If
   ** `findAllFiles` would return multiple matches, then this method
   ** should always return the file with the highest priority.
   ** Default implementation delegates to `parent`.
@@ -205,6 +205,24 @@ abstract const class Env
   ** Default implementation delegates to `parent`.
   **
   virtual File[] findAllFiles(Uri uri)
+
+  **
+  ** Resolve the pod file for the given pod name.  If the
+  ** name cannot be resovled to a pod, return null.  The
+  ** default implementation routes to `findFile` to look
+  ** in "lib/etc" directory.
+  **
+  virtual File? findPodFile(Str podName)
+
+  **
+  ** Return the list of pod names for all the pods currently installed
+  ** in this environemnt.  This method is used by `Pod.list` and for
+  ** constructing the type database.  Each of these names must be
+  ** resolvable by `findPodFile`.  The default implementation routes
+  ** to `fileFile` to look in the "lib/etc" directory and assumes a
+  ** naming convention of "{name}.pod".
+  **
+  virtual Str[] findAllPodNames()
 
 //////////////////////////////////////////////////////////////////////////
 // State

@@ -156,7 +156,7 @@ public class Fan
   static void version(String progName)
   {
     println(progName);
-    println("Copyright (c) 2006-2009, Brian Frank and Andy Frank");
+    println("Copyright (c) 2006-2010, Brian Frank and Andy Frank");
     println("Licensed under the Academic Free License version 3.0");
     println("");
     println("Java Runtime:");
@@ -167,13 +167,8 @@ public class Fan
     println("  java.home:       " + System.getProperty("java.home"));
     println("  fan.platform:    " + Env.cur().platform());
     println("  fan.version:     " + Sys.sysPod.version());
+    println("  fan.env:         " + Env.cur());
     println("");
-    println("Fantom Repos:");
-    for (int i=0; i<Repo.list().size(); ++i)
-    {
-      Repo repo = (Repo)Repo.list().get(i);
-      println("    " + FanStr.padr(repo.name()+": ", 15) + repo.home());
-    }
   }
 
   static void pods(String progName)

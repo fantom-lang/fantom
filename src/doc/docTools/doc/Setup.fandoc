@@ -66,7 +66,7 @@ can test which runtime is being used via "fan -version":
 
   C:\dev\fan>fan -version
   Fantom Launcher
-  Copyright (c) 2006-2009, Brian Frank and Andy Frank
+  Copyright (c) 2006-2010, Brian Frank and Andy Frank
   Licensed under the Academic Free License version 3.0
 
   Java Runtime:
@@ -76,9 +76,6 @@ can test which runtime is being used via "fan -version":
     java.vm.version: 11.3-b02
     java.home:       C:\Program Files\Java\jre6
     fan.version:     1.0.45
-
-  Fantom Repos:
-      boot:          file:/C:/dev/fan/
 
 Use "lib/sys.props" to configure which runtime is used by default.
 The value must be "java" or "dotnet":

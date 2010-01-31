@@ -23,6 +23,8 @@ public class Fant
 
   public int test(String[] patterns, boolean verbose)
   {
+    Sys.boot();
+
     long t1 = System.currentTimeMillis();
     for (int i=0; i<patterns.length; ++i)
       test(patterns[i], verbose);
@@ -290,7 +292,6 @@ public class Fant
   public static void main(final String[] args)
     throws Exception
   {
-    System.getProperties().put("fan.appDir", "$home/tmp/test/");
     System.exit(new Fant().run(args));
   }
 

@@ -13,8 +13,9 @@ import java.util.Map.Entry;
 import java.util.zip.*;
 import fan.sys.FanObj;
 import fan.sys.List;
+import fan.sys.LocalFile;
 import fan.sys.Log;
-import fan.sys.Repo;
+import fan.sys.Env;
 import fan.sys.Symbol;
 import fan.sys.Sys;
 import fan.sys.Version;
@@ -62,20 +63,20 @@ class Builder
    */
   void loadPods()
   {
+    Env env = Env.cur();
     ArrayList acc = new ArrayList();
-    Iterator it = Repo.findAllPods().entrySet().iterator();
-    while (it.hasNext())
+    List podNames = env.findAllPodNames();
+    for (int i=0; i<podNames.sz(); ++i)
     {
-      Entry entry = (Entry)it.next();
-      String n = (String)entry.getKey();
-      File f = (File)entry.getValue();
+      String n = (String)podNames.get(i);
       try
       {
+        File f = ((LocalFile)env.findPodFile(n)).toJava();
         acc.add(loadPod(n, f));
       }
       catch (Throwable e)
       {
-        log.err("Cannot load " + f, e);
+        log.err("Cannot load " + n, e);
       }
     }
     pods = (Pod[])acc.toArray(new Pod[acc.size()]);

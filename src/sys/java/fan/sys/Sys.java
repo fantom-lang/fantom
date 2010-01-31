@@ -175,10 +175,11 @@ public final class Sys
 //////////////////////////////////////////////////////////////////////////
 
   /** Bootstrap environment */
-  public static BootEnv bootEnv = new BootEnv();
+  public static final BootEnv bootEnv = new BootEnv();
 
   /** Current environment */
   static Env curEnv = bootEnv;
+  static { initEnv(); }
 
   /** "fan.usePrecompiledOnly" env var - loads bytecode straight from java */
   public static final boolean usePrecompiledOnly = initEnvVar("fan.usePrecompiledOnly");
@@ -367,6 +368,24 @@ public final class Sys
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Init Env
+//////////////////////////////////////////////////////////////////////////
+
+  private static void initEnv()
+  {
+    try
+    {
+      String var = (String)Env.cur().vars().get("FAN_ENV");
+      if (var == null) return;
+      curEnv = (Env)Type.find(var).make();
+    }
+    catch (Exception e)
+    {
+      initWarn("curEnv", e);
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Environment Variables
 //////////////////////////////////////////////////////////////////////////
 
@@ -442,5 +461,8 @@ public final class Sys
     buf.flip();
     return buf.in.readObj();
   }
+
+  /** Force sys class to load */
+  public static void boot() {}
 
 }
