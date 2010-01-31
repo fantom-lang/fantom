@@ -147,12 +147,25 @@ final const class Pod
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the map of all the resource files contained by this pod.
-  ** Resources are any files included in the pod's zip file excluding
-  ** fcode files.  The files are keyed by their Uri relative to the
-  ** root of the pod zip file.
+  ** List all the resource files contained by this pod.  Resources
+  ** are any files included in the pod's zip file excluding fcode
+  ** files.  The URI of these files is rooted by `uri`.  Use `file`
+  ** or `Uri.get` to lookup a resource file.
   **
-  Uri:File files()
+  File[] files()
+
+  **
+  ** Look up a resource file in this pod.  The URI must start
+  ** with the Pod's `uri` or be path absolute.  If the file cannot
+  ** be found then return null or throw UnresolvedErr based on checked
+  ** flag.
+  **
+  ** Examples:
+  **   Pod.find("icons").file(`/x16/cut.png`)
+  **   Pod.find("icons").file(`fan://icons/x16/cut.png`)
+  **   `fan://icons/x16/cut.png`.get
+  **
+  File? file(Uri uri, Bool checked := true)
 
 //////////////////////////////////////////////////////////////////////////
 // Doc

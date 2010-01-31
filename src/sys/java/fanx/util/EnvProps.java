@@ -39,8 +39,8 @@ public class EnvProps
 
   static Map readDef(Pod pod, Uri uri)
   {
-    uri = Uri.fromStr("/" + uri);
-    fan.sys.File f = (fan.sys.File)pod.files().get(uri);
+    uri = Uri.fromStr(pod.uri() + "/" + uri);
+    fan.sys.File f = (fan.sys.File)pod.file(uri, false);
     Map map = empty;
     try
     {

@@ -13,8 +13,8 @@ internal class FindInFilesTest : Test
   {
     Pod.of(this).files.each |File f|
     {
-      if (f.uri.toStr.startsWith("/test/files/"))
-        f.copyTo(tempDir + f.uri.toStr["/test/files/".size..-1].toUri)
+      if (f.uri.pathStr.startsWith("/test/files/"))
+        f.copyTo(tempDir + f.pathStr.toStr["/test/files/".size..-1].toUri)
     }
 
     results := FindInFiles.find("foo", tempDir+`alpha.txt`)

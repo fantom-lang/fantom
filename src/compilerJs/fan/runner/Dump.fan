@@ -24,7 +24,7 @@ class Dump
     line := args.size > 1 ? args[1].toInt : null
     cx   := args.size > 2 ? args[2].toInt : 4
 
-    Pod.find(pod).files[`/${pod}.js`].readAllLines.each |s,i|
+    Pod.find(pod).file(`/${pod}.js`).readAllLines.each |s,i|
     {
       // if lineNum specific print out a few lines before/after for context
       if (line != null && (line-i).abs > cx) return

@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.zip.*;
 import fan.sys.*;
 import fan.sys.File;
+import fan.sys.List;
 import fan.sys.Map;
 import fanx.util.*;
 
@@ -52,11 +53,11 @@ public class FStore
   }
 
   /**
-   * Return a map to use for Pod.files()
+   * Return a list to use for Pod.files()
    */
-  public Map podFiles()
+  public List podFiles(Uri podUri)
   {
-    Map map = new Map(Sys.UriType, Sys.FileType);
+    List list = new List(Sys.FileType);
     Enumeration en = zipFile.entries();
     while (en.hasMoreElements())
     {
@@ -64,10 +65,11 @@ public class FStore
       String name = entry.getName();
       if (name.endsWith(".fcode")) continue;
       if (name.endsWith(".class")) continue;
-      fan.sys.ZipEntryFile file = new fan.sys.ZipEntryFile(zipFile, entry);
-      map.set(file.uri(), file);
+      if (name.endsWith(".def") && !name.contains("/")) continue;
+      Uri uri = Uri.fromStr(podUri + "/" + LocalFile.fileNameToUriName(entry.getName()));
+      list.add(new fan.sys.ZipEntryFile(zipFile, entry, uri));
     }
-    return map;
+    return list;
   }
 
   /**

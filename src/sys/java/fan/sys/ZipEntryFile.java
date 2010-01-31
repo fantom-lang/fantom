@@ -18,18 +18,28 @@ public class ZipEntryFile
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public ZipEntryFile(java.util.zip.ZipFile parent, java.util.zip.ZipEntry entry)
+  public ZipEntryFile(java.util.zip.ZipFile parent, java.util.zip.ZipEntry entry, Uri uri)
   {
-    super(Uri.fromStr("/" + LocalFile.fileNameToUriName(entry.getName())));
+    super(uri);
     this.parent = parent;
     this.entry  = entry;
   }
 
+  public ZipEntryFile(java.util.zip.ZipFile parent, java.util.zip.ZipEntry entry)
+  {
+    this(parent, entry, entryUri(entry));
+  }
+
   public ZipEntryFile(Zip parent, java.util.zip.ZipEntry entry)
   {
-    super(Uri.fromStr("/" + LocalFile.fileNameToUriName(entry.getName())));
+    super(entryUri(entry));
     this.parent = parent;
     this.entry  = entry;
+  }
+
+  static Uri entryUri(java.util.zip.ZipEntry entry)
+  {
+    return Uri.fromStr("/" + LocalFile.fileNameToUriName(entry.getName()));
   }
 
 //////////////////////////////////////////////////////////////////////////

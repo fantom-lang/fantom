@@ -72,7 +72,7 @@ class Runner
     // eval dependecies
     pod.depends.each |Depend d|
     {
-      script := Pod.find(d.name).files["/${d.name}.js".toUri]
+      script := Pod.find(d.name).file("/${d.name}.js".toUri, false)
       if (script != null)
       {
         try engine.eval(script.readAllStr)
@@ -81,7 +81,7 @@ class Runner
     }
 
     // eval given pod
-    script := pod.files["/${pod.name}.js".toUri]
+    script := pod.file("/${pod.name}.js".toUri, false)
     if (script == null) throw Err("No script found in $pod.name")
     try engine.eval(script.readAllStr);
     catch (Err e) throw Err("Pod eval failed: $pod.name", e)
