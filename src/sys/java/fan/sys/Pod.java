@@ -108,7 +108,7 @@ public class Pod
     FPod fpod = null;
     try
     {
-      fpod = new FPod(null, null, null);
+      fpod = new FPod(null, null);
       fpod.readFully(new ZipInputStream(SysInStream.java(in)));
     }
     catch (Exception e)
@@ -135,13 +135,11 @@ public class Pod
     throws Exception
   {
     // handle sys specially for bootstrapping the VM
-    // otherwise delegate to repo
+    // otherwise delegate to Env.cur
     File file = null;
-    Object repo = null;
     if (name.equals("sys"))
     {
       file = new File(Sys.podsDir, name + ".pod");
-      repo = null; // can't load this class yet
     }
     else
     {
@@ -158,7 +156,7 @@ public class Pod
     if (!actualName.equals(name)) throw UnknownPodErr.make("Mismatch case: " + name + " != " + actualName).val;
 
     // read in the FPod tables
-    FPod fpod = new FPod(name, new java.util.zip.ZipFile(file), repo);
+    FPod fpod = new FPod(name, new java.util.zip.ZipFile(file));
     fpod.read();
     return fpod;
   }
@@ -200,7 +198,6 @@ public class Pod
   Pod(FPod fpod)
   {
     this.name = fpod.podName;
-    this.repo = fpod.repo;
     load(fpod);
   }
 
@@ -234,15 +231,7 @@ public class Pod
 
   public final String toStr() { return name; }
 
-//////////////////////////////////////////////////////////////////////////
-// Repo
-//////////////////////////////////////////////////////////////////////////
-
-  public Repo repo()
-  {
-    if (repo == null && name.equals("sys")) repo = Repo.boot();
-    return (Repo)repo;
-  }
+  public final boolean isScript() { return isScript; }
 
 //////////////////////////////////////////////////////////////////////////
 // Facets
@@ -544,8 +533,8 @@ public class Pod
   HashMap symbols;
   boolean docLoaded;
   Uri fansymUri;
+  public boolean isScript;
   public String doc;
-  Object repo;
 
 
 }

@@ -145,8 +145,7 @@ public class BootEnv
 
   public File homeDir() { return homeDir; }
 
-  // TODO
-  public File workDir() { return Repo.working().home(); }
+  public File workDir() { return homeDir; }
 
   public File tempDir() { return tempDir; }
 

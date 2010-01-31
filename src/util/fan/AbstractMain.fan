@@ -57,7 +57,7 @@ abstract class AbstractMain
   virtual Str appName()
   {
     t := Type.of(this)
-    if (t.pod.repo == null) return t->sourceFile->toUri->basename
+    if (t.pod.isScript) return t->sourceFile->toUri->basename
     if (t.name == "Main") return t.pod.name
     return t.name
   }
@@ -75,7 +75,7 @@ abstract class AbstractMain
   virtual File homeDir()
   {
     t := Type.of(this)
-    if (t.pod.repo == null)
+    if (t.pod.isScript)
       return File(t->sourceFile->toUri).parent
     else
       return Env.cur.workDir + `etc/${t.pod.name}/`

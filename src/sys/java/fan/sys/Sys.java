@@ -63,7 +63,6 @@ public final class Sys
   public static final Type MapType       = initType("Map",      ObjType);
   public static final Type MonthType     = initType("Month",    EnumType);
   public static final Type PodType       = initType("Pod",      ObjType);
-  public static final Type RepoType      = initType("Repo",     ObjType);
   public static final Type RangeType     = initType("Range",    ObjType);
   public static final Type StrType       = initType("Str",      ObjType);
   public static final Type StrBufType    = initType("StrBuf",   ObjType);
