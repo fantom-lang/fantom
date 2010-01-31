@@ -463,7 +463,7 @@ public class TypeDb
   static
   {
     String sep = File.separator;
-    dbFile = new File(Repo.working().homeJava(), "etc"+sep+"sys"+sep+"types.db");
+    dbFile = new File(Env.cur().workDir().osPath(), "etc"+sep+"sys"+sep+"types.db");
   }
 
   static Object lock = new Object();

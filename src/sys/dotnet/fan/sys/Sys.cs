@@ -159,7 +159,6 @@ namespace Fan.Sys
         MapType      = builtin("Map",      ObjType);
         MonthType    = builtin("Month",    EnumType);
         PodType      = builtin("Pod",      ObjType);
-        RepoType     = builtin("Repo",     ObjType);
         RangeType    = builtin("Range",    ObjType);
         StrType      = builtin("Str",      ObjType);
         StrBufType   = builtin("StrBuf",   ObjType);
@@ -428,7 +427,6 @@ namespace Fan.Sys
     public static readonly Type MapType;
     public static readonly Type MonthType;
     public static readonly Type PodType;
-    public static readonly Type RepoType;
     public static readonly Type RangeType;
     public static readonly Type StrType;
     public static readonly Type StrBufType;

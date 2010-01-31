@@ -15,7 +15,7 @@ using Fanx.Serial;
 namespace Fan.Sys
 {
   /// <summary>
-  /// Repo
+  /// Repo: TODO
   /// </summary>
   public sealed class Repo : FanObj
   {
@@ -50,7 +50,7 @@ namespace Fan.Sys
 
     public override string toStr()  { return m_name + " [" + m_home + "]";  }
 
-    public override Type @typeof()  { return Sys.RepoType;  }
+    public override Type @typeof()  { return null;  }
 
   //////////////////////////////////////////////////////////////////////////
   // Files
@@ -234,7 +234,7 @@ namespace Fan.Sys
 
         // list of all repos
         Repo[] array = (b == w) ? new Repo[] { b } : new Repo[] { w, b };
-        a = (List)new List(Sys.RepoType, array).toImmutable();
+        a = (List)new List(Sys.ObjType, array).toImmutable();
       }
       catch (Exception e) { Err.dumpStack(e); }
 

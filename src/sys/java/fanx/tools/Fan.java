@@ -182,15 +182,14 @@ public class Fan
     println("");
     println("Fantom Pods [" + (t2-t1)/1000000L + "ms]:");
 
-    println("  Pod                 Version   Repo");
-    println("  ---                 -------   ----");
+    println("  Pod                 Version");
+    println("  ---                 -------");
     for (int i=0; i<pods.sz(); ++i)
     {
       Pod pod = (Pod)pods.get(i);
       println("  " +
         FanStr.justl(pod.name(), 18L) + "  " +
-        FanStr.justl(pod.version().toString(), 8) + "  " +
-        pod.repo().name());
+        FanStr.justl(pod.version().toString(), 8));
     }
   }
 

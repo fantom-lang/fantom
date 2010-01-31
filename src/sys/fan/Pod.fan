@@ -83,16 +83,10 @@ final const class Pod
   **
   override Str toStr()
 
-//////////////////////////////////////////////////////////////////////////
-// Repo
-//////////////////////////////////////////////////////////////////////////
-
   **
-  ** Get the repo which was used to load this pod or null
-  ** if this pod was loaded outside the repository (such as
-  ** from a script).
+  ** Is this pod a script file instead of a pod file.
   **
-  Repo? repo()
+  Bool isScript()
 
 //////////////////////////////////////////////////////////////////////////
 // Facets

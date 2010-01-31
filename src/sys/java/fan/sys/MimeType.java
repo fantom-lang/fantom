@@ -184,7 +184,9 @@ public final class MimeType
     if (s == null) return null;
     try
     {
-      return (MimeType)Repo.readSymbolsCached(etcUri, Duration.oneMin).get(FanStr.lower(s));
+      String val = (String)Sys.sysPod.props(etcUri, Duration.oneMin).get(FanStr.lower(s));
+      if (val == null) return null;
+      return MimeType.fromStr(val);
     }
     catch (Exception e)
     {
@@ -194,7 +196,7 @@ public final class MimeType
     }
   }
 
-  static final Uri etcUri = Uri.fromStr("etc/sys/ext2mime.fansym");
+  static final Uri etcUri = Uri.fromStr("ext2mime.props");
 
 //////////////////////////////////////////////////////////////////////////
 // Identity

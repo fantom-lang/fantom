@@ -84,7 +84,7 @@ const class SyntaxRules
 
   private static SyntaxRules? findRules(Str name)
   {
-    file := Repo.findFile(`etc/fluxText/syntax/syntax-${name}.fog`, false)
+    file := Env.cur.findFile(`etc/fluxText/syntax/syntax-${name}.fog`, false)
     if (file == null) return null
     return file.readObj
   }

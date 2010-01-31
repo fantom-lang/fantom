@@ -192,7 +192,8 @@ abstract class BuildPod : BuildScript
     fanc.includeSrc = !podNodoc
     fanc.run
     compileJava
-    compileDotnet
+// TODO
+//    compileDotnet
     log.unindent
   }
 

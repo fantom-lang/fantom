@@ -98,6 +98,7 @@ public final class Symbol
 
   public Object val()
   {
+    /* TODO
     if (isVirtual())
     {
       if (pod.fansymUri == null) pod.fansymUri = Uri.fromStr("etc/" + pod.name + "/pod.fansym");
@@ -105,6 +106,7 @@ public final class Symbol
       Object val = overrides.get(name, notDefined);
       if (val != notDefined) return val;
     }
+    */
     return defVal();
   }
   private static final Object notDefined = "_not_defined_";

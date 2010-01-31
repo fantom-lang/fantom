@@ -77,8 +77,7 @@ public class Log
         byName.put(name, self);
 
         // check for initial level
-        Map logLevels = Repo.readSymbolsCached(Uri.fromStr("etc/sys/log.fansym"));
-        String val = (String)logLevels.get(name);
+        String val = (String)Sys.sysPod.props(Uri.fromStr("log.props"), Duration.oneMin).get(name);
         if (val != null) self.level = LogLevel.fromStr(val);
       }
     }
