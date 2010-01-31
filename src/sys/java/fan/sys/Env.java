@@ -103,6 +103,24 @@ public abstract class Env
     return parent.findAllFiles(uri);
   }
 
+  public File findPodFile(String name)
+  {
+    return findFile(Uri.fromStr("lib/fan/" + name + ".pod"), false);
+  }
+
+  public List findAllPodNames()
+  {
+    List acc = new List(Sys.StrType);
+    List files = findFile(Uri.fromStr("lib/fan/")).list();
+    for (int i=0; i<files.sz(); ++i)
+    {
+      File f = (File)files.get(i);
+      if (f.isDir() || !"pod".equals(f.ext())) continue;
+      acc.add(f.basename());
+    }
+    return acc;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////

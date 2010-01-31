@@ -208,12 +208,12 @@ public class TypeDb
 
   boolean checkUpToDate()
   {
-    Iterator it = Repo.findAllPods().entrySet().iterator();
-    while (it.hasNext())
+    Env env = Env.cur();
+    List podNames = env.findAllPodNames();
+    for (int i=0; i<podNames.sz(); ++i)
     {
-      Entry entry = (Entry)it.next();
-      String n = (String)entry.getKey();
-      File f = (File)entry.getValue();
+      String n = (String)podNames.get(i);
+      File f = ((LocalFile)env.findPodFile(n)).toJava();
 
       // check that pod wasn't added
       PodInfo p = (PodInfo)podsByName.get(n);

@@ -125,8 +125,8 @@ class EnvTest : Test
 
     // not found
     verifyEq(Env.cur.findFile(`etc/foo bar/no exist`, false), null)
-    verifyErr(IOErr#) { Env.cur.findFile(`etc/foo bar/no exist`) }
-    verifyErr(IOErr#) { Env.cur.findFile(`etc/foo bar/no exist`, true) }
+    verifyErr(UnresolvedErr#) { Env.cur.findFile(`etc/foo bar/no exist`) }
+    verifyErr(UnresolvedErr#) { Env.cur.findFile(`etc/foo bar/no exist`, true) }
 
     // findAllFiles
     verify(Env.cur.findAllFiles(`etc/sys/timezones.ftz`).size >= 1)

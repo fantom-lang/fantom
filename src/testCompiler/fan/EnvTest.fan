@@ -9,13 +9,13 @@
 using compiler
 
 **
-** RepoTest is used to define a new repo which is used to compile
-** new pods and then execute them in another process.
+** EnvTest is used to define a new working dir which is used to
+** compile new pods and then execute them in another process.
 **
-class RepoTest : Test
+class EnvTest : Test
 {
 
-  File repoHome := tempDir + `testrepo/`
+  File workHome := tempDir + `testenv/`
   File outFile  := tempDir + `test-output.txt`
   Str podA := "testAx" + Int.random(0..0xffff).toHex.upper
   Str podB := "testBx" + Int.random(0..0xffff).toHex.upper
@@ -38,7 +38,7 @@ class RepoTest : Test
 
   Void genPodA()
   {
-    dir := repoHome + `$podA/`
+    dir := workHome + `$podA/`
 
     // pod.fan
     podFile := (dir+`pod.fan`)
@@ -77,12 +77,12 @@ class RepoTest : Test
 
   Void genPodB()
   {
-    dir := repoHome + `$podB/`
+    dir := workHome + `$podB/`
 
     // pod.fan
     podFile := (dir+`pod.fan`)
     podFile.out.print(
-    """@podDepends=[Depend("sys 1.0"), Depend("$podA 1.0")]
+    """@podDepends=[Depend("sys 1.0"), Depend("util 1.0"), Depend("$podA 1.0")]
        @podSrcDirs=[`fan/`]
        pod $podB {}""").close
 
@@ -97,27 +97,23 @@ class RepoTest : Test
     // src.fan
     srcFile := dir+`fan/src.fan`
     srcFile.out.print(
-    """using $podA
+    """using util
+       using $podA
        class TheTest : Test
        {
-         // test repos
-         Void testRepos()
+         // test env
+         Void testEnv()
          {
-           verifyEq(Repo.list.size, 2)
-           verifySame(Repo.list[0], Repo.working)
-           verifySame(Repo.list[1], Repo.boot)
-           verifyEq(Repo.working.name, "working")
-           verifyEq(Repo.working.home.uri, `$repoHome`)
-           verifyEq(Repo.boot.name, "boot")
-           verifyEq(Repo.boot.home.uri, `$Repo.boot.home`)
+           verifyEq(Env.cur.typeof, PathEnv#)
+           env := (PathEnv)Env.cur
+           verifyEq(env.path.size, 2)
+           verifyEq(env.path[0].uri, `$workHome`)
+           verifyEq(env.path[1].uri, `$Env.cur.homeDir`)
          }
 
          // test pods
          Void testPods()
          {
-           verifySame(Pod.find("$podA").repo, Repo.working)
-           verifySame(Pod.find("$podB").repo, Repo.working)
-           verifySame(Pod.find("sys").repo,   Repo.boot)
            pods := Pod.list
            verify(pods.contains(Pod.find("$podA")))
            verify(pods.contains(Pod.find("$podB")))
@@ -141,7 +137,7 @@ class RepoTest : Test
            TheTest#.methods.each |m|
            {
              if (m.isStatic || m.isCtor || m.parent != TheTest#) return
-             echo("-- RepoTest: \${m.name}...")
+             echo("-- EnvTest: \${m.name}...")
              try
              {
                m.callOn(t, [,])
@@ -182,7 +178,7 @@ class RepoTest : Test
   Void compile(Str podName, File buildFile)
   {
     run(buildFile.osPath)
-    verify((repoHome + `lib/fan/${podName}.pod`).exists)
+    verify((workHome + `lib/fan/${podName}.pod`).exists)
   }
 
   Void run(Str target)
@@ -191,7 +187,8 @@ class RepoTest : Test
     exeExt := isWindows ? ".exe" : ""
     fan := "fan" + exeExt
     p := Process([fan, target])
-    p.env["FAN_REPO"] = repoHome.uri.relToAuth.toStr
+    p.env["FAN_ENV"]      = "util::PathEnv"
+    p.env["FAN_ENV_PATH"] = workHome.uri.relToAuth.toStr
     status := p.run.join
     verifyEq(status, 0)
   }

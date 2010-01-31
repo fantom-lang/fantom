@@ -145,8 +145,8 @@ public class Pod
     }
     else
     {
-      Repo.PodFile r = Repo.findPod(name);
-      if (r != null) { file = r.file; repo = r.repo; }
+      fan.sys.File f = Env.cur().findPodFile(name);
+      if (f != null) file = ((LocalFile)f).file;
     }
 
     // if null or doesn't exist then its a no go
@@ -172,12 +172,11 @@ public class Pod
       //  every pod into memory
       if (allPodsList == null)
       {
-        HashMap map = Repo.findAllPods();
-        List pods = new List(Sys.PodType, map.size());
-        Iterator it = map.keySet().iterator();
-        while (it.hasNext())
+        List names = Env.cur().findAllPodNames();
+        List pods = new List(Sys.PodType, names.sz());
+        for (int i=0; i<names.sz(); ++i)
         {
-          String name = (String)it.next();
+          String name = (String)names.get(i);
           try
           {
             pods.add(doFind(name, true, null, null));
@@ -188,7 +187,7 @@ public class Pod
             e.printStackTrace();
           }
         }
-        allPodsList = pods.sort().ro();
+        allPodsList = (List)pods.sort().toImmutable();
       }
       return allPodsList;
     }

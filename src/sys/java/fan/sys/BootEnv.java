@@ -194,7 +194,7 @@ public class BootEnv
     File f = homeDir.plus(uri, false);
     if (f.exists()) return f;
     if (!checked) return null;
-    throw IOErr.make("File not found in Env: " + uri).val;
+    throw UnresolvedErr.make("File not found in Env: " + uri).val;
   }
 
   public List findAllFiles(Uri uri)
