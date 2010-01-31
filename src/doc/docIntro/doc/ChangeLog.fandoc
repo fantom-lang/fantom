@@ -15,6 +15,7 @@
 - Change build symbols to be config props
 - Pod.files: now returns list, added Pod.file, now used 'fan:' URI
 - Repo replaced with util::PathEnv
+- Remove readSymbols, writeSymbols APIs
 
 TODO: update bootstrap docs with dumpEnv
 

@@ -393,32 +393,6 @@ public abstract class File
     }
   }
 
-  public final Map readSymbols()
-  {
-    InStream in = in();
-    try
-    {
-      return in.readSymbols();
-    }
-    finally
-    {
-      in.close();
-    }
-  }
-
-  public final void writeSymbols(Map symbols)
-  {
-    OutStream out = out();
-    try
-    {
-      out.writeSymbols(symbols);
-    }
-    finally
-    {
-      out.close();
-    }
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////

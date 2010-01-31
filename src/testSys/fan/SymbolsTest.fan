@@ -83,6 +83,7 @@ class SymbolsTest : Test
 // IO
 //////////////////////////////////////////////////////////////////////////
 
+/* TODO
   Void testIO()
   {
     verifyIO("", Str:Obj?[:])
@@ -130,6 +131,7 @@ class SymbolsTest : Test
     verifyEq(actual, expected)
     verifyEq(Buf().writeSymbols(actual).flip.readSymbols, expected)
   }
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Overrides

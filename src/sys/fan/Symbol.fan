@@ -65,11 +65,7 @@ final const class Symbol
   Obj? defVal()
 
   **
-  ** Get the current value of the symbol.  If this is a non-virtual
-  ** symbol, then this value is always the same as `defVal`.  Virtual
-  ** symbols may be configured via "etc/{podName}/pod.fansym" according
-  ** `Repo.readSymbolsCached`.  If a virtual symbol is not overridden
-  ** by a fansym file, then return `defVal`.
+  ** Get the current value of the symbol.
   **
   Obj? val()
 

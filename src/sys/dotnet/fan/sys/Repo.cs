@@ -142,20 +142,9 @@ namespace Fan.Sys
     public static Map readSymbols(Uri uri) { return readSymbols(findAllFiles(uri)); }
     public static Map readSymbols(List files)
     {
-      if (files.isEmpty())
-      {
-        if (emptySymbols == null)
-          emptySymbols = (Map)new Map(new MapType(Sys.StrType, Sys.ObjType.toNullable())).toImmutable();
-        return emptySymbols;
-      }
-      Map map = null;
-      for (int i=files.sz()-1; i>=0; --i)
-      {
-        InStream ins = ((File)files.get(i)).@in();
-        try { map = new ObjDecoder(ins, null).readSymbols(map); }
-        finally { ins.close(); }
-      }
-      return map;
+      if (emptySymbols == null)
+        emptySymbols = (Map)new Map(new MapType(Sys.StrType, Sys.ObjType.toNullable())).toImmutable();
+      return emptySymbols;
     }
 
     public static Map readSymbolsCached(Uri uri) { return readSymbolsCached(uri, Duration.m_oneMin); }
