@@ -248,12 +248,6 @@ namespace Fan.Sys
       return this;
     }
 
-    public virtual OutStream writeSymbols(Map symbols)
-    {
-      new ObjEncoder(this, null).writeSymbols(symbols);
-      return this;
-    }
-
     public virtual OutStream writeProps(Map props) { return writeProps(props, true); }
     public virtual OutStream writeProps(Map props, bool cls)
     {

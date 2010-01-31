@@ -44,19 +44,6 @@ public class ObjEncoder
 // Write
 //////////////////////////////////////////////////////////////////////////
 
-  public void writeSymbols(Map symbols)
-  {
-    indent = 2;
-    Iterator it = symbols.pairsIterator();
-    while (it.hasNext())
-    {
-      Entry entry = (Entry)it.next();
-      String key = (String)entry.getKey();
-      Object val = entry.getValue();
-      w(key).w("=").writeObj(val); w("\n");
-    }
-  }
-
   public void writeObj(Object obj)
   {
     if (obj == null)

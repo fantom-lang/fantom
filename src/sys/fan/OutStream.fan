@@ -183,12 +183,6 @@ class OutStream
   **
   This writeObj(Obj? obj, [Str:Obj]? options := null)
 
-  **
-  ** Write a set of name/serialized object pairs separated
-  ** by newline.  Throw IOErr on error.  Return this.
-  **
-  This writeSymbols(Str:Obj? symbols)
-
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////

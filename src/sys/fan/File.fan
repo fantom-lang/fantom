@@ -419,18 +419,6 @@ abstract const class File
   Void writeObj(Obj? obj, [Str:Obj]? options := null)
 
   **
-  ** Convenience for [in.readSymbols]`InStream.readSymbols`
-  ** The input stream is guaranteed to be closed.
-  **
-  Str:Obj? readSymbols()
-
-  **
-  ** Convenience for [out.writeSymbols]`OutStream.writeSymbols`
-  ** The output stream is guaranteed to be closed.
-  **
-  Void writeSymbols(Str:Obj? symbols)
-
-  **
   ** Return the platform's separator for names within
   ** in a path: backslash on Windows, forward slash on Unix.
   **

@@ -404,32 +404,6 @@ namespace Fan.Sys
       }
     }
 
-    public Map readSymbols()
-    {
-      InStream ins = @in();
-      try
-      {
-        return ins.readSymbols();
-      }
-      finally
-      {
-        ins.close();
-      }
-    }
-
-    public void writeSymbols(Map symbols)
-    {
-      OutStream outs = @out();
-      try
-      {
-        outs.writeSymbols(symbols);
-      }
-      finally
-      {
-        outs.close();
-      }
-    }
-
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
