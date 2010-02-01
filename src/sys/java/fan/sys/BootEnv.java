@@ -8,6 +8,7 @@
 package fan.sys;
 
 import java.lang.management.*;
+import java.net.*;
 import java.util.Iterator;
 import fanx.emit.*;
 import fanx.fcode.*;
@@ -35,7 +36,6 @@ public class BootEnv
     this.err     = new SysOutStream(System.err);
     this.homeDir = new LocalFile(Sys.homeDir, true).normalize();
     this.tempDir = homeDir.plus(Uri.fromStr("temp/"), false);
-    this.loader  = initLoader();
   }
 
   private static List initArgs()
@@ -91,11 +91,6 @@ public class BootEnv
   private static String initUser()
   {
     return System.getProperty("user.name", "unknown");
-  }
-
-  private FanClassLoader initLoader()
-  {
-    return new FanClassLoader(this, getClass().getClassLoader());
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -204,7 +199,7 @@ public class BootEnv
     try
     {
       FPodEmit emit = FPodEmit.emit(pod.fpod);
-      return loader.loadFan(emit.className.replace('/', '.'), emit.classFile);
+      return pod.classLoader.loadFan(emit.className.replace('/', '.'), emit.classFile);
     }
     catch (Exception e)
     {
@@ -226,7 +221,7 @@ public class BootEnv
       for (int i=0; i<emitted.length; ++i)
       {
         FTypeEmit e = emitted[i];
-        classes[i] = loader.loadFan(e.className.replace('/', '.'), e.classFile);
+        classes[i] = t.pod().classLoader.loadFan(e.className.replace('/', '.'), e.classFile);
       }
       return classes;
     }
@@ -250,7 +245,6 @@ public class BootEnv
   private final OutStream err;
   private final File homeDir;
   private final File tempDir;
-  private final FanClassLoader loader;
 
 }
 

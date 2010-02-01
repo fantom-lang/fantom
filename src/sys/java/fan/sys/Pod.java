@@ -198,6 +198,7 @@ public class Pod
   Pod(FPod fpod)
   {
     this.name = fpod.podName;
+    this.classLoader = new FanClassLoader(this);
     load(fpod);
   }
 
@@ -529,6 +530,7 @@ public class Pod
   static List allPodsList = null;
 
   final String name;
+  final FanClassLoader classLoader;
   Uri uri;
   FPod fpod;
   Version version;
@@ -546,6 +548,5 @@ public class Pod
   Uri fansymUri;
   public boolean isScript;
   public String doc;
-
 
 }
