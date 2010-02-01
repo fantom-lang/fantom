@@ -22,12 +22,12 @@ const class SqlService : Service
   ** - 'username' is the username for the database login.
   ** - 'password' is the password for the database login.
   ** - 'dialect' is the database specific dialect implementation.  If not
-  **   specified then MySqlDialect is assumed.
+  **   specified then GenericDialect is used.
   **
   new make(Str connection  := "",
            Str? username   := "",
            Str? password   := "",
-           Dialect dialect := MySqlDialect())
+           Dialect dialect := GenericDialect())
   {
     this.connection = connection
     this.username   = username
@@ -54,7 +54,7 @@ const class SqlService : Service
     Connection? conn := Actor.locals[id]
     if (conn == null)
     {
-      conn = Connection.open(connection, username, password)
+      conn = Connection.open(connection, username, password, dialect)
       Actor.locals[id] = conn
     }
     else
@@ -180,23 +180,14 @@ const class SqlService : Service
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Set the auto-commit state of this database.  If true, each
+  ** The auto-commit state of this database.  If true, each
   ** statement is committed as it is executed.  If false, statements
   ** are grouped into transactions and committed when 'commit'
   **
-  Void autoCommit(Bool val)
+  Bool autoCommit
   {
-    threadConnection.autoCommit = val
-  }
-
-  **
-  ** Test the auto-commit state of this database.  If true, each
-  ** statement is committed as it is executed.  If false, statements
-  ** are grouped into transactions and committed when 'commit'
-  **
-  Bool isAutoCommit()
-  {
-    return threadConnection.autoCommit
+    get { threadConnection.autoCommit }
+    set { threadConnection.autoCommit = it }
   }
 
   **

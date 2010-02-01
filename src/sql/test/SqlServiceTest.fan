@@ -20,11 +20,12 @@ class SqlServiceTest : Test
 
   once SqlService db()
   {
+    pod := typeof.pod
     return SqlService(
-      Env.cur.vars["sql.test.connection"],
-      Env.cur.vars["sql.test.username"],
-      Env.cur.vars["sql.test.password"],
-      Type.find(Env.cur.vars["sql.test.dialect"]).make)
+      pod.config("test.connection"),
+      pod.config("test.username"),
+      pod.config("test.password"),
+      Type.find(pod.config("test.dialect")).make)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -330,9 +331,9 @@ class SqlServiceTest : Test
 
   Void transactions()
   {
-    verifyEq(db.isAutoCommit, true)
-    db.autoCommit(false)
-    verifyEq(db.isAutoCommit, false)
+    verifyEq(db.autoCommit, true)
+    db.autoCommit = false
+    verifyEq(db.autoCommit, false)
     db.commit
 
     rows := query("select name from farmers order by name")

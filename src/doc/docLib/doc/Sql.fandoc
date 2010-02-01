@@ -22,16 +22,16 @@ be the most beneficial.
 
 Test Setup [#testSetup]
 ***********************
-The Sql tests use the following environment variables to
-determine the database configuration:
-  - 'sql.test.connection': connection/jdbc url string, defaults
+The Sql tests use the following config props to determine the
+database configuration:
+  - 'test.connection': connection/jdbc url string, defaults
     to "jdbc:mysql://localhost:3306/fantest"
-  - 'sql.test.username': defaults to "fantest"
-  - 'sql.test.password': defaults to "fantest"
-  - 'sql.test.dialect': qname for dialect type, defaults
+  - 'test.username': defaults to "fantest"
+  - 'test.password': defaults to "fantest"
+  - 'test.dialect': qname for dialect type, defaults
     to "sql::MySqlDialect"
 
-You can change these defaults via "lib/sys.props".
+You can change these defaults via "etc/sql/config.props".
 
 We've been testing with MySql 5.0.41 running InnoDB using "fantest"
 for the database name, user name, and password.  You can configure
@@ -43,7 +43,6 @@ To setup the fantest database and user account via the mysql command line:
   mysql> create user fantest identified by 'fantest';
   mysql> create database fantest;
   mysql> grant all privileges on fantest.* to fantest identified by 'fantest';
-
 
 Connections [#connections]
 **************************
@@ -69,10 +68,10 @@ the "jre/lib/ext" directory.  You can use 'fan -version' to
 locate your JRE directory.  For MySQL the driver is packaged
 up as something like "mysql-connector-java-5.0.6-bin.jar".
 
-2.  Ensure the JDBC class is loaded into memory.  The simplest
-way to preload the class is to define "sql.driver" in
-Fantom's "lib/sys.props".  For MySQL the sys prop would be:
-      sql.mysql.driver=com.mysql.jdbc.Driver
+2.  Ensure the JDBC class is loaded into memory.  The simplest way
+to preload the class is to define a config prop in "etc/sql/config.props"
+for your dialect:
+      sql::MySqlDialect.driver=com.mysql.jdbc.Driver
 
 3.  Create and start a SqlService instance using the JDBC URL for the
 'connection' parameter to the make method.
@@ -83,7 +82,7 @@ For example to create a SqlService for MySQL:
       db.open
 
 Connections in .NET [#dotnet]
-==========================
+=============================
 TODO
 
 Statements [#statements]

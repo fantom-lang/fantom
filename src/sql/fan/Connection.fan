@@ -27,7 +27,7 @@ internal class Connection
   ** is the 'java.sql.Connection' URL.  The JDBC driver class should
   ** be preloaded.
   **
-  static native Connection open(Str connSpec, Str? username, Str? password)
+  static native Connection open(Str connSpec, Str? username, Str? password, Dialect dialect)
 
   **
   ** Internal constructor.
