@@ -9,6 +9,8 @@ package fan.sys;
 
 import java.lang.management.*;
 import java.util.Iterator;
+import fanx.emit.*;
+import fanx.fcode.*;
 import fanx.util.*;
 
 /**
@@ -33,6 +35,7 @@ public class BootEnv
     this.err     = new SysOutStream(System.err);
     this.homeDir = new LocalFile(Sys.homeDir, true).normalize();
     this.tempDir = homeDir.plus(Uri.fromStr("temp/"), false);
+    this.loader  = initLoader();
   }
 
   private static List initArgs()
@@ -88,6 +91,11 @@ public class BootEnv
   private static String initUser()
   {
     return System.getProperty("user.name", "unknown");
+  }
+
+  private FanClassLoader initLoader()
+  {
+    return new FanClassLoader(this, getClass().getClassLoader());
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -188,6 +196,48 @@ public class BootEnv
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Java Env
+//////////////////////////////////////////////////////////////////////////
+
+  public Class loadPodClass(Pod pod)
+  {
+    try
+    {
+      FPodEmit emit = FPodEmit.emit(pod.fpod);
+      return loader.loadFan(emit.className.replace('/', '.'), emit.classFile);
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      throw new RuntimeException(e.toString());
+    }
+  }
+
+  /**
+   * Given a pod and a Fantom class formatted as its Java
+   * dotted classname, emit to a Java classfile.
+   */
+  public Class[] loadTypeClasses(ClassType t)
+  {
+    try
+    {
+      FTypeEmit[] emitted = FTypeEmit.emit(t, t.ftype);
+      Class[] classes = new Class[emitted.length];
+      for (int i=0; i<emitted.length; ++i)
+      {
+        FTypeEmit e = emitted[i];
+        classes[i] = loader.loadFan(e.className.replace('/', '.'), e.classFile);
+      }
+      return classes;
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      throw new RuntimeException(e.toString());
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
@@ -200,6 +250,7 @@ public class BootEnv
   private final OutStream err;
   private final File homeDir;
   private final File tempDir;
+  private final FanClassLoader loader;
 
 }
 

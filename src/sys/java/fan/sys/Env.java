@@ -17,7 +17,6 @@ public abstract class Env
   extends FanObj
 {
 
-
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
@@ -164,6 +163,31 @@ public abstract class Env
     // 4. Fallback to 'pod::key' unless 'def' specified
     if (def == noDef) return pod + "::" + key;
     return def;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Java Env
+//////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Load the Java class representation of Pod constants.
+   * Default implementation delegates to parent.
+   */
+  public Class loadPodClass(Pod pod)
+  {
+    return parent.loadPodClass(pod);
+  }
+
+  /**
+   * Load the Java class representations of a Fantom type:
+   *   - Fantom class => [class]
+   *   - Fantom mixin => [interface, body class]
+   *   - Fantom Err class => [class, val class]
+   * Default implementation delegates to parent.
+   */
+  public Class[] loadTypeClasses(ClassType t)
+  {
+    return parent.loadTypeClasses(t);
   }
 
 //////////////////////////////////////////////////////////////////////////

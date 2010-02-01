@@ -25,19 +25,6 @@ public abstract class FTypeEmit
 // Factory
 //////////////////////////////////////////////////////////////////////////
 
-  public static Class[] emitAndLoad(Type parent, FType ftype)
-    throws Exception
-  {
-    FTypeEmit[] emitted = emit(parent, ftype);
-    Class[] classes = new Class[emitted.length];
-    for (int i=0; i<emitted.length; ++i)
-    {
-      FTypeEmit e = emitted[i];
-      classes[i] = FanClassLoader.loadClass(e.className.replace('/', '.'), e.classFile);
-    }
-    return classes;
-  }
-
   public static FTypeEmit[] emit(Type parent, FType ftype)
     throws Exception
   {
