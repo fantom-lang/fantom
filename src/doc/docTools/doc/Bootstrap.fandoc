@@ -98,12 +98,12 @@ to compile these pods, we need to use our *rel* installation.
 Windows Substitutes [#subsWindows]
 ==================================
 To make this all work seamlessly on Windows, the Fantom launcher will
-look in "sys.props" to see if a substitute runtime should be used.
+look in "etc/sys/config.props" to see if a substitute runtime should be used.
 For example in our environment we map the following scripts to
 use the *rel* installation.
 
-  // lib/sys.props of your *dev* directory
-  fan.runtime.substitutes=                             \
+  // etc/sys/config.props of your *dev* directory
+  runtime.substitutes=                                 \
     /C:/dev/fan/src/buildall.fan       = C:\\dev\\rel  \
     /C:/dev/fan/src/buildboot.fan      = C:\\dev\\rel  \
     /C:/dev/fan/src/jfan/build.fan     = C:\\dev\\rel  \
@@ -117,11 +117,11 @@ runtime specified.  Turn on [launcher debugging]`Setup#debugging`
 to see exactly what is happening under the covers.
 
 Note that the extension used to run the build scripts needs to
-match the substitutes defined in the "sys.props".  If you set
+match the substitutes defined in the "config.props".  If you set
 your 'pathext' to include ".fan", then Windows will pass the extension
 into the launcher.  If you are running an alternate way you might
 need to explicitly specify the extension on your command line or
-change the extensions defined in "sys.props".
+change the extensions defined in "config.props".
 
 Unix Substitutes [#subsUnix]
 ============================
@@ -145,16 +145,15 @@ for the Java runtime).
 
 Version 2.0 or greater of .NET is required.
 
-In order to compile from source you will need to setup some system
+In order to compile from source you will need to setup some config
 properties to reference your JDK and .NET home directories:
 
-  fan.build.jdkHome=/C:/dev/tools/java/
-  fan.build.dotnetHome=/C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
+  jdkHome=/C:/dev/tools/java/
+  dotnetHome=/C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
 
 These paths should be formatted as file system Uris (not OS paths).
-These properties should be configured in "lib/sys.props" of **both**
-your *rel* and *dev* environments.
-
+These properties should be configured in "etc/build/config.props"
+of **both** your *rel* and *dev* environments.
 
 The .NET targets are automatically skipped if not running Windows.
 So you can ignore the .NET configuration on Unix platforms.
@@ -264,11 +263,11 @@ In summary, you want to make sure of a couple key things:
 
   1. setup your *rel* installation and never touch it (consider it readonly)
   2. ensure jdkHome and dotnetHome are configured in both *rel*
-     and *dev* lib/sys.props
-  3. ensure *rel* etc/build/pod.fansym buildDevHome points to your *dev* installation
+     and *dev* etc/build/config.props
+  3. ensure *rel* etc/build/config.props devHome points to your *dev* installation
   4. make sure your substitutes are configured correctly:
      a. on Unix make sure your FAN_SUBSTITUTE env points to the *rel* installation
-     b. on Windows make sure your *dev* lib/sys.props substitutes are configured
+     b. on Windows make sure your *dev* etc/sys/config.props substitutes are configured
   5. only put *dev* bin your path and always run your scripts from
      the *dev* installation
   6. never use a working repo for bootstrap (use only the boot repo)

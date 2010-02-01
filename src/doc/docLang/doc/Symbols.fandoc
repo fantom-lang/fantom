@@ -68,39 +68,4 @@ Symbol literals evaluate to the `sys::Symbol` instance itself:
   @transient.of       =>  sys::Bool
   @transient.defVal   =>  false
 
-Virtual Symbols [#virtual]
-**************************
-Virtual symbols are declared with the 'virtual' keyword.  Virtual symbols
-can be *overridden* at deployment time via configuration files.  Let's
-take our example above:
-
-  pod acme
-  {
-    virtual timeout := 10sec
-    virtual hosts := Str[,]
-  }
-
-In this example, we can write code which uses these symbols:
-
-  @hosts.val.each |host| { checkHost(host) }
-
-Then the symbol values can be configured using a fansym file named:
-  etc/{podName}/pod.fansym
-
-For example:
-
-  // etc/acme/pod.fansym
-  timeout=30sec
-  hosts=["hostA", "hostB"]
-
-The file itself is formatted as a list of name/serialized object pairs.
-See [Serialization]`Serialization#syntaxGrammar` for the formal definition
-of the file format.
-
-Symbol configuration files are backed by the `sys::Repo.readSymbolsCached`
-method.  This means that symbols can be configured across [multiple
-repos]`Repos#symbols` and merged together.  It also means that you can
-change a symbol config file at runtime and it will be automatically updated
-in a running VM.
-
 

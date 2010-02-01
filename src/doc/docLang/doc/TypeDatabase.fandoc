@@ -11,8 +11,8 @@ Overview
 The *type database* is a feature of the Fantom runtime which automatically
 maintains a database of all the installed pods and types.  The type
 database itself is stored in a binary file called "etc/sys/types.db" of
-the [working repo]`Repos`.  It is automatically rebuilt as needed if the
-runtime detects that the installed pods have been modified.
+the [Env.workDir]`sys::Env.workDir`.  It is automatically rebuilt as needed
+if the runtime detects that the installed pods have been modified.
 
 Facet Indexing [#facetIndexing]
 *******************************

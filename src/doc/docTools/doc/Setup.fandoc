@@ -41,7 +41,7 @@ Windows Setup [#windows]
 ************************
 The Fantom distribution includes a set of Win32 executables which
 allow you to configure which version of Java or .NET is being
-used via "lib/sys.props".
+used via "etc/sys/config.props".
 
 Executable Scripts [#executableWindows]
 =======================================
@@ -77,15 +77,15 @@ can test which runtime is being used via "fan -version":
     java.home:       C:\Program Files\Java\jre6
     fan.version:     1.0.45
 
-Use "lib/sys.props" to configure which runtime is used by default.
+Use "etc/sys/config.props" to configure which runtime is used by default.
 The value must be "java" or "dotnet":
 
   // runtime - either "java" or "dotnet"
-  fan.runtime=java
+  runtime=java
 
 You can override the system property using the "--D" option:
 
-  C:\dev\fan>fan -version --Dfan.runtime=dotnet
+  C:\dev\fan>fan -version --Druntime=dotnet
 
 You can also override the system property via the "fan_runtime"
 environmental variable:
@@ -98,14 +98,14 @@ Java Runtime [#javaRuntime]
 If running on Windows, the Fantom launcher will attempt to locate the current
 Java VM via the registry key "SOFTWARE\\JavaSoft\\Java Runtime Environment.CurrentVersion"
 similar to how "java.exe" works.  You can specify the path to the "jvm.dll"
-to use explicitly via the "fan.java.jvm" system property.  You can use
-"fan.java.options" to pass through options to the JVM such as memory
+to use explicitly via the "java.jvm" system property.  You can use
+"java.options" to pass through options to the JVM such as memory
 settings.
 
-  // lib/sys.props
-  fan.runtime=java
-  fan.java.jvm=c:\\dev\\tools\\java\\jre\\bin\\client\\jvm.dll
-  fan.java.options=-Xmx128M
+  // etc/sys/config.props
+  runtime=java
+  java.jvm=c:\\dev\\tools\\java\\jre\\bin\\client\\jvm.dll
+  java.options=-Xmx128M
 
 Fantom currently requires Java version 1.5 or greater to run.
 Java 1.6 or greater is required to compile from source.
@@ -152,8 +152,8 @@ or .NET environment working:
   --   args[1] = "-version"
   -- init
   --   fanHome = c:\dev\fan
-  --   sys.props:
-  --     fan.runtime=java
+  --   config.props:
+  --     runtime=java
   ...
 
 Java Extensions [#javaExt]
@@ -180,10 +180,11 @@ to get SWT working:
 
 You can easily test SWT support by attempting to run `Flux`.
 
-Repos [#repos]
-**************
+Env [#env]
+**********
 The default behavior of Fantom is to manage all its files under the
-installation directory.  This is called the *boot repo*.  But you can
-also organize your own working files under a different directory
-called the *working repo*.  See `docLang::Repos` for details.
+installation directory.  But you can boot Fantom using alternative
+environments to customize how your deployment is structured.
+See `docLang::Env` for details.
+
 
