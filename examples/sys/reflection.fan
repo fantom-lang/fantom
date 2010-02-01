@@ -38,7 +38,7 @@ class Reflection
     show(p.facets,                     "map of all pod facets")
     show(p.facet(@podBuildTime),       "lookup a pod facet")
     show(p.facet(@podBuildHost, "-"),  "lookup a pod facet with default")
-    show(p.files[`/img/icon.png`],     "lookup a resource file in myPod")
+    show(p.file(`/img/icon.png`, false), "lookup a resource file in myPod")
   }
 
   Void types()

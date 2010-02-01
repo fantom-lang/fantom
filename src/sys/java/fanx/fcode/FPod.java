@@ -26,10 +26,11 @@ public final class FPod
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public FPod(String podName, java.util.zip.ZipFile zipFile)
+  public FPod(String podName, FStore store)
   {
+    if (store != null) store.fpod = this;
     this.podName    = podName;
-    this.store      = zipFile == null ? null : new FStore(this, zipFile);
+    this.store      = store;
     this.names      = new FTable.Names(this);
     this.typeRefs   = new FTable.TypeRefs(this);
     this.fieldRefs  = new FTable.FieldRefs(this);

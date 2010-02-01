@@ -134,29 +134,40 @@ public class Pod
   public static FPod readFPod(String name)
     throws Exception
   {
-    // handle sys specially for bootstrapping the VM
-    // otherwise delegate to Env.cur
-    File file = null;
-    if (name.equals("sys"))
+    FStore store = null;
+
+    // otherwise if we are running with JarDistEnv use my own classloader
+    if (Sys.isJarDist)
     {
-      file = new File(Sys.podsDir, name + ".pod");
+      store = FStore.makeJarDist(Pod.class.getClassLoader());
     }
+
+    // handle sys specially for bootstrapping the VM
+    else if (name.equals("sys"))
+    {
+      store = FStore.makeZip(new File(Sys.podsDir, name + ".pod"));
+    }
+
+    // otherwise delete to Env.cur to find the pod file
     else
     {
+      File file = null;
       fan.sys.File f = Env.cur().findPodFile(name);
       if (f != null) file = ((LocalFile)f).file;
+
+      // if null or doesn't exist then its a no go
+      if (file == null || !file.exists()) throw UnknownPodErr.make(name).val;
+
+      // verify case since Windoze is case insensitive
+      String actualName = file.getCanonicalFile().getName();
+      actualName = actualName.substring(0, actualName.length()-4);
+      if (!actualName.equals(name)) throw UnknownPodErr.make("Mismatch case: " + name + " != " + actualName).val;
+
+      store = FStore.makeZip(file);
     }
 
-    // if null or doesn't exist then its a no go
-    if (file == null || !file.exists()) throw UnknownPodErr.make(name).val;
-
-    // verify case since Windoze is case insensitive
-    String actualName = file.getCanonicalFile().getName();
-    actualName = actualName.substring(0, actualName.length()-4);
-    if (!actualName.equals(name)) throw UnknownPodErr.make("Mismatch case: " + name + " != " + actualName).val;
-
     // read in the FPod tables
-    FPod fpod = new FPod(name, new java.util.zip.ZipFile(file));
+    FPod fpod = new FPod(name, store);
     fpod.read();
     return fpod;
   }

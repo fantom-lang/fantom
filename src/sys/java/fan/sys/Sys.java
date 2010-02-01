@@ -34,6 +34,9 @@ public final class Sys
   /** Env.platform constant */
   public static final String platform  = os + "-" + arch;
 
+  /** Booting from only a JAR distribution? */
+  public static final boolean isJarDist = initIsJarDist();
+
   /** BootEnv.homeDir */
   public static final File homeDir = initHomeDir();
 
@@ -77,6 +80,7 @@ public final class Sys
   public static final Type VoidType      = initType("Void",     ObjType);
   public static final Type EnvType       = initType("Env",      ObjType);
   public static final Type BootEnvType   = initType("BootEnv",  EnvType);
+  public static final Type JarDistEnvType = initType("JarDistEnv", EnvType);
 
   // reflection
   public static final Type SlotType      = initType("Slot",     ObjType);
@@ -248,6 +252,15 @@ public final class Sys
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Init isJarDist
+//////////////////////////////////////////////////////////////////////////
+
+  private static boolean initIsJarDist()
+  {
+    return System.getProperty("fan.jardist", "false").equals("true");
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Dir Init
 //////////////////////////////////////////////////////////////////////////
 
@@ -377,6 +390,12 @@ public final class Sys
   {
     try
     {
+      if (isJarDist)
+      {
+        curEnv = JarDistEnv.make();
+        return;
+      }
+
       String var = (String)Env.cur().vars().get("FAN_ENV");
       if (var == null) return;
       curEnv = (Env)Type.find(var).make();

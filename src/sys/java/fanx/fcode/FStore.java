@@ -19,7 +19,7 @@ import fanx.util.*;
 /**
  * FStore models IO streams to use for reading and writing pod files.
  */
-public class FStore
+public abstract class FStore
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -27,13 +27,21 @@ public class FStore
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * Construct a FStore to read.
+   * Construct a FStore to read from zipfile backing store.
    */
-  FStore(FPod fpod, java.util.zip.ZipFile zipFile)
+  public static FStore makeZip(java.io.File zipFile)
+    throws Exception
   {
-    this.fpod    = fpod;
-    this.zipFile = zipFile;
     if (zipFile == null) throw new IllegalStateException();
+    return new ZipStore(new java.util.zip.ZipFile(zipFile));
+  }
+
+  /**
+   * Construct a FStore to read from a JAR's ClassLoader resources.
+   */
+  public static FStore makeJarDist(ClassLoader loader)
+  {
+    return new JarDistStore(loader);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -41,41 +49,14 @@ public class FStore
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * List all the files available.
-   */
-  public String[] list()
-  {
-    ArrayList acc = new ArrayList();
-    Enumeration en = zipFile.entries();
-    while (en.hasMoreElements())
-      acc.add(((ZipEntry)en.nextElement()).getName());
-    return (String[])acc.toArray(new String[acc.size()]);
-  }
-
-  /**
    * Return a list to use for Pod.files()
    */
-  public List podFiles(Uri podUri)
-  {
-    List list = new List(Sys.FileType);
-    Enumeration en = zipFile.entries();
-    while (en.hasMoreElements())
-    {
-      ZipEntry entry = (ZipEntry)en.nextElement();
-      String name = entry.getName();
-      if (name.endsWith(".fcode")) continue;
-      if (name.endsWith(".class")) continue;
-      if (name.endsWith(".def") && !name.contains("/")) continue;
-      Uri uri = Uri.fromStr(podUri + "/" + LocalFile.fileNameToUriName(entry.getName()));
-      list.add(new fan.sys.ZipEntryFile(zipFile, entry, uri));
-    }
-    return list;
-  }
+  public abstract List podFiles(Uri podUri);
 
   /**
    * Convenience for read(path, false).
    */
-  public FStore.Input read(String path)
+  public final FStore.Input read(String path)
     throws IOException
   {
     return read(path, false);
@@ -85,56 +66,21 @@ public class FStore
    * Open an input stream for the specified logical path.
    * Return null if not found.
    */
-  public FStore.Input read(String path, boolean required)
-    throws IOException
-  {
-    ZipEntry entry = zipFile.getEntry(path);
-    if (entry == null)
-    {
-      if (required)
-        throw new IOException("Missing required file \"" + path + "\" in pod zip");
-      else
-        return null;
-    }
-    return new FStore.Input(fpod, zipFile.getInputStream(entry));
-  }
+  public abstract FStore.Input read(String path, boolean required)
+    throws IOException;
 
   /**
    * Read a file with the specified logical path into a memory
    * buffer.  Return null if not found.
    */
-  public Box readToBox(String path)
-    throws IOException
-  {
-    ZipEntry entry = zipFile.getEntry(path);
-    if (entry == null) return null;
-
-    int size = (int)entry.getSize();
-    byte[] buf = new byte[size];
-    int n = 0;
-
-    InputStream in = zipFile.getInputStream(entry);
-    try
-    {
-      while (n < size)
-        n += in.read(buf, n, size-n);
-    }
-    finally
-    {
-      try { in.close(); } catch (Exception e) {}
-    }
-
-    return new Box(buf);
-  }
+  public abstract Box readToBox(String path)
+    throws IOException;
 
   /**
    * Close underlying file.
    */
-  public void close()
-    throws IOException
-  {
-    zipFile.close();
-  }
+  public abstract void close()
+    throws IOException;
 
 //////////////////////////////////////////////////////////////////////////
 // FStore.Input
@@ -160,10 +106,143 @@ public class FStore
   }
 
 //////////////////////////////////////////////////////////////////////////
+// ZipStore
+//////////////////////////////////////////////////////////////////////////
+
+  static class ZipStore extends FStore
+  {
+    ZipStore(java.util.zip.ZipFile zipFile) { this.zipFile = zipFile; }
+
+    public List podFiles(Uri podUri)
+    {
+      List list = new List(Sys.FileType);
+      Enumeration en = zipFile.entries();
+      while (en.hasMoreElements())
+      {
+        ZipEntry entry = (ZipEntry)en.nextElement();
+        String name = entry.getName();
+        if (name.endsWith(".fcode")) continue;
+        if (name.endsWith(".class")) continue;
+        if (name.endsWith(".def") && !name.contains("/")) continue;
+        Uri uri = Uri.fromStr(podUri + "/" + LocalFile.fileNameToUriName(entry.getName()));
+        list.add(new fan.sys.ZipEntryFile(zipFile, entry, uri));
+      }
+      return list;
+    }
+
+    public FStore.Input read(String path, boolean required)
+      throws IOException
+    {
+      ZipEntry entry = zipFile.getEntry(path);
+      if (entry == null)
+      {
+        if (required)
+          throw new IOException("Missing required file \"" + path + "\" in pod zip");
+        else
+          return null;
+      }
+      return new FStore.Input(fpod, zipFile.getInputStream(entry));
+    }
+
+    public Box readToBox(String path)
+      throws IOException
+    {
+      ZipEntry entry = zipFile.getEntry(path);
+      if (entry == null) return null;
+
+      int size = (int)entry.getSize();
+      byte[] buf = new byte[size];
+      int n = 0;
+
+      InputStream in = zipFile.getInputStream(entry);
+      try
+      {
+        while (n < size)
+          n += in.read(buf, n, size-n);
+      }
+      finally
+      {
+        try { in.close(); } catch (Exception e) {}
+      }
+
+      return new Box(buf);
+    }
+
+    public void close()
+      throws IOException
+    {
+      zipFile.close();
+    }
+
+    final java.util.zip.ZipFile zipFile;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// JarDistStore
+//////////////////////////////////////////////////////////////////////////
+
+  static class JarDistStore extends FStore
+  {
+    JarDistStore(ClassLoader loader) { this.loader = loader; }
+
+    public List podFiles(Uri podUri)
+    {
+      List list = new List(Sys.FileType);
+      System.out.println("TODO JarStore.podFiles " + fpod.podName);
+      return list;
+    }
+
+    public FStore.Input read(String path, boolean required)
+      throws IOException
+    {
+      path = "reflect/" + fpod.podName + "/" + path;
+      InputStream in = loader.getResourceAsStream(path);
+      if (in == null)
+      {
+        if (required)
+          throw new IOException("Missing required file \"" + path + "\" in pod zip");
+        else
+          return null;
+      }
+      return new FStore.Input(fpod, in);
+    }
+
+    public Box readToBox(String path)
+      throws IOException
+    {
+      path = "reflect/" + fpod.podName + "/" + path;
+      InputStream in = loader.getResourceAsStream(path);
+      if (in == null) return null;
+
+      byte[] temp = new byte[1024];
+      Box box = new Box();
+
+      try
+      {
+        while (true)
+        {
+          int n = in.read(temp, 0, 1024);
+          if (n < 0) break;
+          box.append(temp, n);
+        }
+      }
+      finally
+      {
+        try { in.close(); } catch (Exception e) {}
+      }
+
+      return box;
+    }
+
+    public void close() {}
+
+    ClassLoader loader;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  final FPod fpod;
-  final java.util.zip.ZipFile zipFile;
+  FPod fpod;  // set by FPod in ctor
 
 }
