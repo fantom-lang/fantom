@@ -492,7 +492,7 @@ public class ClassType
       {
         try
         {
-          Class[] classes = FTypeEmit.emitAndLoad(this, ftype);
+          Class[] classes = Env.cur().loadTypeClasses(this);
           this.cls = classes[0];
           if (classes.length > 1)
             this.auxCls = classes[1];

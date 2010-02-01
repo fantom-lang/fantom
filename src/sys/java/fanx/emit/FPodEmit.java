@@ -24,34 +24,6 @@ public class FPodEmit
 // Factory
 //////////////////////////////////////////////////////////////////////////
 
-  public static Class emitAndLoad(FPod pod)
-  {
-
-    try
-    {
-      // lookup or load class
-      Class cls;
-      if (Sys.usePrecompiledOnly)
-      {
-        cls = Class.forName("fan." + pod.podName + ".$Pod");
-      }
-      else
-      {
-        FPodEmit emit = emit(pod);
-        cls = FanClassLoader.loadClass(emit.className.replace('/', '.'), emit.classFile);
-      }
-
-      // set literal fields
-      initFields(pod, cls);
-      return cls;
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-      throw new RuntimeException(e.toString());
-    }
-  }
-
   public static FPodEmit emit(FPod pod)
     throws Exception
   {

@@ -27,21 +27,15 @@ public class FanClassLoader
 // FanClassLoader
 //////////////////////////////////////////////////////////////////////////
 
-  public static Class loadClass(String name, Box classfile)
+  public Class loadFan(String name, Box classfile)
   {
-    if (Sys.usePrecompiledOnly)
-      throw new IllegalStateException("Attempt to use FanClassLoader under precompiled only mode");
-
-    if (classfile == null)
-      throw new IllegalStateException("null classfile");
-
     try
     {
       synchronized(pendingClasses)
       {
         pendingClasses.put(name, classfile);
       }
-      return classLoader.loadClass(name);
+      return loadClass(name);
     }
     catch (ClassNotFoundException e)
     {
@@ -54,16 +48,12 @@ public class FanClassLoader
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public FanClassLoader()
-  {
-    this(FanClassLoader.class.getClassLoader());
-  }
-
-  private FanClassLoader(ClassLoader parent)
+  public FanClassLoader(Env env, ClassLoader parent)
   {
     super(getExtUrls(), parent);
     try
     {
+      this.env = env;
       this.allPermissions = new AllPermission().newPermissionCollection();
       this.codeSource = new CodeSource(new java.net.URL("file://"), (CodeSigner[])null);
     }
@@ -229,9 +219,8 @@ public class FanClassLoader
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private static FanClassLoader classLoader = new FanClassLoader(FanClassLoader.class.getClassLoader());
-  private static HashMap pendingClasses = new HashMap(); // name -> Box
-
+  private Env env;
   private PermissionCollection allPermissions;
   private CodeSource codeSource;
+  private HashMap pendingClasses = new HashMap(); // name -> Box
 }

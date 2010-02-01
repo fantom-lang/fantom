@@ -453,7 +453,18 @@ public class Pod
   synchronized Class emit()
   {
     if (cls == null)
-      cls = FPodEmit.emitAndLoad(fpod);
+    {
+      try
+      {
+        cls = Env.cur().loadPodClass(this);
+        FPodEmit.initFields(fpod, cls);
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+        throw new RuntimeException(e.toString());
+      }
+    }
     return cls;
   }
 
