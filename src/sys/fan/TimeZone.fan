@@ -60,8 +60,8 @@ const class TimeZone
   **
   ** Get the current default TimeZone of the VM.  The default
   ** timezone is configured by the Java or .NET runtime or it
-  ** can be manually configured in "sys.props" with the key
-  ** "fan.timezone" and any value accepted by `fromStr`.  Once
+  ** can be manually configured in "etc/sys/config.props" with the
+  ** key "timezone" and any value accepted by `fromStr`.  Once
   ** Fantom is booted, the default timezone cannot be changed.
   **
   static TimeZone cur()

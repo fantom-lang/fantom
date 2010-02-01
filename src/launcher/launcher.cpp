@@ -31,7 +31,7 @@ const char* LAUNCHER_VERSION = "1.0 3-Jan-07";
 
 bool debug;                  // is debug turned on
 char fanHome[MAX_PATH];      // dir path of fan installation
-Prop* sysProps;              // {fanHome}\lib\sys.props
+Prop* sysProps;              // {fanHome}\etc\sys\config.props
 int fanArgc;                 // argument count to pass to Fan runtime
 char** fanArgv;              // argument values to pass to Fan runtime
 Runtime runtime;             // runtime to use
@@ -71,16 +71,16 @@ int init(int argc, char** argv)
   strcpy(fanHome, p);
   if (debug) printf("--   fanHome = %s\n", fanHome);
 
-  // parse sys.props
-  sprintf(p, "%s\\lib\\sys.props", fanHome);
+  // parse etc/sys/config.props
+  sprintf(p, "%s\\etc\\sys\\config.props", fanHome);
   sysProps = readProps(p);
   if (sysProps == NULL)
-    return err("Cannot read system props: \"%s\"", p);
+    printf("WARN: Cannot read config.props: \"%s\"", p);
 
   // debug props
   if (debug)
   {
-    printf("--   sys.props:\n");
+    printf("--   config.props:\n");
     for (Prop* p = sysProps; p != NULL; p = p->next)
       printf("--     %s=%s\n", p->name, p->val);
   }
@@ -133,7 +133,7 @@ int parseArgs(int argc, char** argv)
         {
           sysProps = setProp(sysProps, name, val);
           if (debug) printf("--   override prop %s=%s\n", name, val);
-          if (strcmp(name, "fan.runtime") == 0) cmdLineRuntime = val;
+          if (strcmp(name, "runtime") == 0) cmdLineRuntime = val;
         }
         continue;
       }
@@ -158,11 +158,11 @@ int parseArgs(int argc, char** argv)
 //////////////////////////////////////////////////////////////////////////
 
 /**
- * Check the "fan.runtime.substitutes" sys property which is used
+ * Check the "runtime.substitutes" sys property which is used
  * to specify an alternate Fan runtime to use for specific script
  * files - this is a bit of a hack so that we can cleanly manage
  * a "boot build" of the fan runtime with another fan runtime.  The
- * format of the "fan.runtime.substitutes" prop is a list of
+ * format of the "runtime.substitutes" prop is a list of
  * <scriptUri> "=" <runtimeUri> pairs separated by whitespace.  The
  * scriptUri identifies a file on the local machine in URI format
  * of a Fan script file.  The runtimeUri identifies the Fan home
@@ -178,7 +178,7 @@ int checkSubstitutes()
   const char* target = fanArgv[0];
 
   // check for system prop
-  const char* prop = getProp(sysProps, "fan.runtime.substitutes");
+  const char* prop = getProp(sysProps, "runtime.substitutes");
   if (prop == NULL) return 0;
 
   if (debug) printf("-- checkSubstitutes\n");
@@ -207,7 +207,7 @@ int checkSubstitutes()
     // sanity check
     if (strcmp(eq, "=") != 0)
     {
-      err("Invalid format for sys prop \"fan.runtime.substitutes\"\n");
+      err("Invalid format for sys prop \"runtime.substitutes\"\n");
       break;
     }
 
@@ -238,7 +238,7 @@ int checkSubstitutes()
  */
 int getRuntime()
 {
-  const char* rt = getProp(sysProps, "fan.runtime", "java");
+  const char* rt = getProp(sysProps, "runtime", "java");
 
   if (getenv("fan_runtime") != NULL)
     rt = getenv("fan_runtime");
@@ -250,7 +250,7 @@ int getRuntime()
 
   if (strcmp(rt, "java") == 0) runtime = JavaRuntime;
   else if (strcmp(rt, "dotnet") == 0) runtime = DotnetRuntime;
-  else return err("Unknown fan.runtime %s", rt);
+  else return err("Unknown runtime %s", rt);
 
   // force stub apps to always use the right runtime
   if (strcmp(FAN_TOOL, "Jstub") == 0) runtime = JavaRuntime;

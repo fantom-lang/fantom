@@ -41,11 +41,11 @@ int findJvmPath()
 {
   if (debug) printf("-- findJvmPath\n");
 
-  // first see if explicitly specified in sys.props
-  const char* prop = getProp(sysProps, "fan.java.jvm");
+  // first see if explicitly specified in config.props
+  const char* prop = getProp(sysProps, "java.jvm");
   if (prop != NULL)
   {
-    if (debug) printf("--   fan.java.jvm = %s\n", prop);
+    if (debug) printf("--   java.jvm = %s\n", prop);
     sprintf(jvmPath, prop);
     return 0;
   }
@@ -72,7 +72,7 @@ int findJvmPath()
 /**
  * Get the full list of options to pass to the Java VM which
  * are the required options set by the launcher, plus any additional
- * options configured in sys.props.
+ * options configured in etc/sys/config.props.
  */
 int initOptions()
 {
@@ -89,8 +89,8 @@ int initOptions()
   sprintf(optHome, "-Dfan.home=%s", fanHome);
   options[nOptions++].optionString = optHome;
 
-  // user specified options from sys.props
-  const char* prop = getProp(sysProps, "fan.java.options", "");
+  // user specified options from config.props
+  const char* prop = getProp(sysProps, "java.options", "");
   char* copy = new char[strlen(prop)+1];
   strcpy(copy, prop);
   char* tok = strtok(copy, " ");

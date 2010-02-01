@@ -65,22 +65,6 @@ public class BootEnv
         String val = System.getProperty(key);
         vars.set(key, val);
       }
-
-      // sys.properties
-      LocalFile f = new LocalFile(new java.io.File(Sys.homeDir, "lib" + java.io.File.separator + "sys.props"));
-      if (f.exists())
-      {
-        try
-        {
-          Map props = f.readProps();
-          vars.setAll(props);
-        }
-        catch (Exception e)
-        {
-          System.out.println("ERROR: Invalid props file: " + f);
-          System.out.println("  " + e);
-        }
-      }
     }
     catch (Throwable e)
     {

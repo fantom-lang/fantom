@@ -532,7 +532,7 @@ public final class TimeZone
     try
     {
       // first check system property, otherwise try to use Java timezone
-      String sysProp = (String)Env.cur().vars().get("fan.timezone");
+      String sysProp = Sys.sysConfig("timezone");
       if (sysProp != null)
       {
         cur = fromStr(sysProp);
