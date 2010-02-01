@@ -60,7 +60,7 @@ public final class TimeZone
     // try to load from database
     try
     {
-      tz = loadTimeZone(name);
+      tz = Sys.isJarDist ? loadFromJava(name) : loadTimeZone(name);
     }
     catch (Exception e)
     {
@@ -162,12 +162,6 @@ public final class TimeZone
     return rules[rules.length-1];
   }
 
-  // This is mostly for testing right.
-  java.util.TimeZone java()
-  {
-    return java.util.TimeZone.getTimeZone(name);
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Database
 //////////////////////////////////////////////////////////////////////////
@@ -227,6 +221,7 @@ public final class TimeZone
   static void loadIndex()
     throws IOException
   {
+    if (Sys.isJarDist) return;
     DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(dbFile)));
     try
     {
@@ -328,6 +323,27 @@ public final class TimeZone
     t.atTime    = f.readInt();
     t.atMode    = f.readByte();
     return t;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Java
+//////////////////////////////////////////////////////////////////////////
+
+  // This is mostly for testing right.
+  java.util.TimeZone java()
+  {
+    return java.util.TimeZone.getTimeZone(name);
+  }
+
+  // load from java.util (used when working with Jar Dist)
+  static TimeZone loadFromJava(String name)
+  {
+    // TODO
+    TimeZone tz = new TimeZone();
+    tz.name = name;
+    tz.fullName = name;
+    tz.rules = new Rule[] { new Rule() };
+    return tz;
   }
 
 //////////////////////////////////////////////////////////////////////////

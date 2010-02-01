@@ -104,9 +104,14 @@ public class Box
 
   public final void append(Box box)
   {
-    while (len + box.len >= buf.length) grow();
-    System.arraycopy(box.buf, 0, buf, len, box.len);
-    len += box.len;
+    append(box.buf, box.len);
+  }
+
+  public final void append(byte[] bytes, int bytesLen)
+  {
+    while (len + bytesLen >= buf.length) grow();
+    System.arraycopy(bytes, 0, buf, len, bytesLen);
+    len += bytesLen;
   }
 
   public final void skip(int num)

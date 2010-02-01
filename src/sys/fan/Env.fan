@@ -296,9 +296,9 @@ abstract const class Env
 }
 
 **************************************************************************
-** BootEnv
+** Env Implementations
 **************************************************************************
 
 internal const class BootEnv : Env {}
-
+internal const class JarDistEnv : Env {} // JVM only
 

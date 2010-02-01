@@ -19,6 +19,7 @@
 - sql::SqlService.autoCommit change to field
 - sql::Dialect - renamed some methods for consistency
 - lib/sys.props => etc/sys/config.props
+- JarDistEnv and JarDist build task
 
 TODO: update bootstrap docs with dumpEnv
 TODO: fix bootstrap.fan script
