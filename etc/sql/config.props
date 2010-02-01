@@ -1,0 +1,16 @@
+//
+// config.props
+//
+
+// JVM drivers; these are java classnames which are loaded
+// into the VM using Class.forName whenever the specified
+// dialect is used:
+//   {qname}.driver={classname}
+sql::MySqlDialect.driver=com.mysql.jdbc.Driver
+
+// test setup
+test.connection=jdbc:mysql://localhost:3306/fantest
+test.username=fantest
+test.password=fantest
+test.dialect=sql::MySqlDialect
+

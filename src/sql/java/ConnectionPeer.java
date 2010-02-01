@@ -28,10 +28,11 @@ public class ConnectionPeer
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
-  public static Connection open(String database, String username, String password)
+  public static Connection open(String database, String username, String password, Dialect dialect)
   {
     try
     {
+      loadDriver(dialect);
       Connection self = Connection.make();
       self.peer.jconn = DriverManager.getConnection(database, username, password);
       self.peer.openCount = 1;
@@ -239,33 +240,30 @@ public class ConnectionPeer
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Static Init
+// Load Driver
 //////////////////////////////////////////////////////////////////////////
 
-  static
+  /**
+   * Look for config key {dialect.qname}.driver and attempt to
+   * load it as Java classname to ensure driver is in memory.
+   */
+  static void loadDriver(Dialect d)
   {
     // preload the driver classes defined in sys.props, any
     // property that starts with "sql." and ends with ".driver"
     // is assumed to be a driver class name.
     try
     {
-      List envKeys = Env.cur().vars().keys();
-      int keyCount = envKeys.sz();
-      for (int i = 0; i < keyCount; i++)
+      String key = d.typeof().qname() + ".driver";
+      String val = Pod.find("sql").config(key);
+      if (val == null) return;
+      try
       {
-        String key = (String)envKeys.get(i);
-        if (!key.startsWith("sql.")) continue;
-        if (!key.endsWith(".driver")) continue;
-
-        String driver = (String)Env.cur().vars().get(key);
-        try
-        {
-          Class.forName(driver);
-        }
-        catch (Exception e)
-        {
-          System.out.println("WARNING: Cannot preload JDBC driver: " + driver);
-        }
+        Class.forName(val);
+      }
+      catch (Exception e)
+      {
+        System.out.println("WARNING: Cannot preload JDBC driver: " + key + "=" + val);
       }
     }
     catch (Exception e)
@@ -273,6 +271,10 @@ public class ConnectionPeer
       System.out.println(e);
     }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Static Init
+//////////////////////////////////////////////////////////////////////////
 
   static Type rowType;
   static List listOfRow;

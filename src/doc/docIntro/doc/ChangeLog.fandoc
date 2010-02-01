@@ -16,6 +16,8 @@
 - Pod.files: now returns list, added Pod.file, now used 'fan:' URI
 - Repo replaced with util::PathEnv
 - Remove readSymbols, writeSymbols APIs
+- sql::SqlService.autoCommit change to field
+- sql::Dialect - renamed some methods for consistency
 
 TODO: update bootstrap docs with dumpEnv
 

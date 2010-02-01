@@ -13,44 +13,40 @@
 abstract const class Dialect
 {
   **
-  ** Get the maximum length for table names for the database type.
+  ** Get the maximum length for table names for the database
+  ** type. Default is 64.
   **
-  abstract Int maxTableNameLength()
+  virtual Int maxTableNameSize() { 64 }
 
   **
-  ** Get the maximum length for index names for the database type.
+  ** Get the maximum length for index names for the database
+  ** type. Default is 64.
   **
-  abstract Int maxIndexNameLength()
+  virtual Int maxIndexNameSize() { 64 }
 
   **
   ** Get the db specific qualifier for a unique column.
   ** Default is "UNIQUE".
   **
-  virtual Str unique()
-  {
-    return "UNIQUE"
-  }
+  virtual Str unique() { "UNIQUE" }
 
   **
   ** Get the db specific qualifier for a column whose
   ** value cannot be null.  Default is "NOT NULL".
   **
-  virtual Str notNull()
-  {
-    return "NOT NULL"
-  }
+  virtual Str notNull() { "NOT NULL" }
 
   **
-  ** Get the database specific blob type for a blob
-  ** with the specified maximum length.
+  ** Get the database specific blob type for a blob with
+  ** the specified maximum length.  Default is "BLOB".
   **
-  abstract Str getBlobType(Int maxLen)
+  virtual Str blobType(Int maxLen) { "BLOB" }
 
   **
   ** Get the database specific clob type for a clob
-  ** with the specified maximum length.
+  ** with the specified maximum length.  Default is "TEXT".
   **
-  abstract Str getClobType(Int maxLen)
+  virtual Str clobType(Int maxLen) { "TEXT" }
 
   **
   ** Get the db specific qualifier for a column whose

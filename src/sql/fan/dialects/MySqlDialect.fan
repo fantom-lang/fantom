@@ -15,24 +15,18 @@ const class MySqlDialect : Dialect
   **
   ** The maximum length for a table name in MySQL is 64 characters.
   **
-  override Int maxTableNameLength()
-  {
-    return 64
-  }
+  override Int maxTableNameSize() { 64 }
 
   **
   ** The maximum length for an index name in MySQL is 64 characters.
   **
-  override Int maxIndexNameLength()
-  {
-    return 64
-  }
+  override Int maxIndexNameSize() { 64 }
 
   **
   ** Get the blob type to use for a blob with the specified
   ** maximum length.
   **
-  override Str getBlobType(Int maxLen)
+  override Str blobType(Int maxLen)
   {
     if (maxLen <= 255)
       return "TINYBLOB"
@@ -48,7 +42,7 @@ const class MySqlDialect : Dialect
   ** Get the clob type to use for a clob with the specified
   ** maximum length.
   **
-  override Str getClobType(Int maxLen)
+  override Str clobType(Int maxLen)
   {
     if (maxLen <= 255)
       return "TINYTEXT"
