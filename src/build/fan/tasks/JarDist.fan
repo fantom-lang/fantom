@@ -47,7 +47,7 @@ class JarDist : JdkTask
     main
     manifest
     jar
-    //cleanupTempDir
+    cleanupTempDir
     log.info("Success [$outFile]")
     log.unindent
   }
@@ -134,6 +134,14 @@ class JarDist : JdkTask
   private Void main()
   {
     log.info("Main")
+
+    // explicitly initialize all the pod constants
+    podInits := StrBuf();
+    podNames.each |podName|
+    {
+      podInits.add("""      Env.cur().loadPodClass(Pod.find("$podName"));\n""")
+    }
+
     // write out Main Java class
     file := tempDir + `fanjardist/Main.java`
     file.out.print(
@@ -143,12 +151,18 @@ class JarDist : JdkTask
          {
            public static void main(String[] args)
            {
-             System.getProperties().put("fan.jardist", "true");
-             System.getProperties().put("fan.home",    ".");
-             Sys.boot();
-             Sys.bootEnv.setArgs(args);
-             Method m = Slot.findMethod("$mainMethod");
-             m.call();
+             try
+             {
+               System.getProperties().put("fan.jardist", "true");
+               System.getProperties().put("fan.home",    ".");
+               Sys.boot();
+               Sys.bootEnv.setArgs(args);
+         $podInits
+               Method m = Slot.findMethod("$mainMethod");
+               m.call();
+             }
+             catch (Err.Val e) { e.err().trace(); }
+             catch (Throwable e) { e.printStackTrace(); }
            }
          }
          """).close

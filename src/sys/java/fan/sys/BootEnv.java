@@ -208,10 +208,6 @@ public class BootEnv
     }
   }
 
-  /**
-   * Given a pod and a Fantom class formatted as its Java
-   * dotted classname, emit to a Java classfile.
-   */
   public Class[] loadTypeClasses(ClassType t)
   {
     try
