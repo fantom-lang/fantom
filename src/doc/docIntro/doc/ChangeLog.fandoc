@@ -18,8 +18,10 @@
 - Remove readSymbols, writeSymbols APIs
 - sql::SqlService.autoCommit change to field
 - sql::Dialect - renamed some methods for consistency
+- lib/sys.props => etc/sys/config.props
 
 TODO: update bootstrap docs with dumpEnv
+TODO: fix bootstrap.fan script
 
 *Build 1.0.49 (27 Jan 10)*
 - Obj.type => typeof

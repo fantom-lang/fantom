@@ -36,7 +36,7 @@
   [`JavaScript`,    "compiling to JavaScript"],
 "Advanced",
   [`Deployment`,    "how to deploy pods and applications"],
-  [`Repos`,         "code repositories"],
+  [`Env`,           "customizing the Fantom environment"],
   [`Serialization`, "reading/writing objects"],
   [`Concurrency`,   "model for sharing data between threads"],
   [`Actors`,        "message passing concurrency"],
