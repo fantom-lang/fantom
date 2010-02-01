@@ -34,7 +34,7 @@ public class JarDistEnv
 
   public File findFile(Uri uri, boolean checked)
   {
-System.out.println("JarDistEnv.findFile " + uri);
+System.out.println("TODO JarDistEnv.findFile " + uri);
     if (!checked) return null;
     throw UnresolvedErr.make("File not found in Env: " + uri).val;
   }
@@ -54,13 +54,14 @@ System.out.println("JarDistEnv.findFile " + uri);
   {
     try
     {
-      String classname = "fan." + pod.name() + ".Pod$";
-      return getClass().getClassLoader().loadClass(classname);
+      String classname = "fan." + pod.name() + ".$Pod";
+      Class cls = getClass().getClassLoader().loadClass(classname);
+      pod.precompiled(cls);
+      return cls;
     }
     catch (Exception e)
     {
-      e.printStackTrace();
-      throw new RuntimeException(e.toString());
+      return super.loadPodClass(pod);
     }
   }
 
@@ -73,12 +74,13 @@ System.out.println("JarDistEnv.findFile " + uri);
     try
     {
       String classname = "fan." + t.pod().name() + "." + t.name();
-      return new Class[] { getClass().getClassLoader().loadClass(classname) };
+      Class cls = getClass().getClassLoader().loadClass(classname);
+      t.precompiled(cls);
+      return new Class[] { cls };
     }
     catch (Exception e)
     {
-      e.printStackTrace();
-      throw new RuntimeException(e.toString());
+      return super.loadTypeClasses(t);
     }
   }
 

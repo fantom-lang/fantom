@@ -14,13 +14,13 @@ using build
 **
 class Build : BuildScript
 {
-  @target="build util::Foo as a single JAR dist"
+  @target="build fansh pod as a single JAR dist"
   Void foo()
   {
     dist := JarDist(this)
-    dist.outFile = `./foo.jar`.toFile.normalize
-    dist.podNames = ["util"]
-    dist.mainMethod = "util::Foo.main"
+    dist.outFile = `./fansh.jar`.toFile.normalize
+    dist.podNames = Str["compiler", "fansh"]
+    dist.mainMethod = "fansh::Main.main"
     dist.run
   }
 }
