@@ -33,7 +33,7 @@ class FileTest : Test
   Void testWalk()
   {
     acc := File[,]
-    single := Env.cur.homeDir + `lib/sys.props`
+    single := Env.cur.homeDir + `etc/sys/config.props`
     single.walk { acc.add(it) }
     verifyEq(single, single)
 
@@ -41,7 +41,6 @@ class FileTest : Test
     lib := Env.cur.homeDir + `lib/`
     lib.walk { acc.add(it) }
     verify(acc.contains(lib))
-    verify(acc.contains(lib + `sys.props`))
     verify(acc.contains(lib + `fan/`))
     verify(acc.contains(lib + `fan/sys.pod`))
   }

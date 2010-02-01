@@ -41,7 +41,7 @@ public final class Sys
   public static final File podsDir = initPodsDir();
 
   /** {BootEnv.homeDir}/lib/fan/sys.pod */
-  public static final Pod  sysPod  = initSysPod();
+  public static final Pod sysPod = initSysPod();
 
 //////////////////////////////////////////////////////////////////////////
 // Fields (type constants)
@@ -175,22 +175,25 @@ public final class Sys
 
   /** Bootstrap environment */
   public static final BootEnv bootEnv = new BootEnv();
-
-  /** Current environment */
   static Env curEnv = bootEnv;
-  static { initEnv(); }
+
+  /** {BootEnv.homeDir}/etc/sys/config.props */
+  public static final Map sysConfig = initSysConfig();
 
   /** "fan.usePrecompiledOnly" env var - loads bytecode straight from java */
-  public static final boolean usePrecompiledOnly = initEnvVar("fan.usePrecompiledOnly");
+  public static final boolean usePrecompiledOnly = sysConfigBool("usePrecompiledOnly", false);
 
   /** "fan.debug" env var used to generating debug attributes in bytecode */
-  public static final boolean debug = initEnvVar("fan.debug");
+  public static final boolean debug = sysConfigBool("debug", false);
 
   /** Absolute boot time */
   public static final DateTime bootDateTime = initBootDateTime();
 
   /** Relative boot time */
   public static final Duration bootDuration = initBootDuration();
+
+  /** Current environment - do this after sys fully booted */
+  static { initEnv(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Platform Init
@@ -385,20 +388,45 @@ public final class Sys
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Environment Variables
+// Sys Config
 //////////////////////////////////////////////////////////////////////////
 
-  private static boolean initEnvVar(String name)
+  private static Map initSysConfig()
   {
     try
     {
-      return "true".equals(Env.cur().vars().get(name));
+      String sep = java.io.File.separator;
+      LocalFile f = new LocalFile(new java.io.File(homeDir, "etc" + sep + "sys" + sep + "config.props"));
+      if (f.exists())
+      {
+        try
+        {
+          return f.readProps();
+        }
+        catch (Exception e)
+        {
+          System.out.println("ERROR: Invalid props file: " + f);
+          System.out.println("  " + e);
+        }
+      }
     }
-    catch (Exception e)
+    catch (Throwable e)
     {
-      initWarn(name, e);
-      return false;
+      throw initFail("sysConfig", e);
     }
+    return new Map(StrType, StrType);
+  }
+
+  static String sysConfig(String name)
+  {
+    return (String)sysConfig.get(name);
+  }
+
+  static boolean sysConfigBool(String name, boolean def)
+  {
+    String val = sysConfig(name);
+    if (val != null) return val.equals("true");
+    return def;
   }
 
 //////////////////////////////////////////////////////////////////////////

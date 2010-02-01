@@ -29,7 +29,7 @@ class FluxUtilTest : Test
 
   Void testMarkParse()
   {
-    f := Env.cur.homeDir + `lib/sys.props`
+    f := Env.cur.homeDir + `etc/sys/config.props`
     verifyMark("${f.osPath}", f)
     verifyMark("${f.osPath} ${Env.cur.homeDir}", f)
     verifyMark("(${f.osPath})", f)

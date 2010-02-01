@@ -1,5 +1,8 @@
 //
-// config.props
+// Config: sql
+//
+// History:
+//   01 Feb 10  Brian Frank  Creation
 //
 
 // JVM drivers; these are java classnames which are loaded

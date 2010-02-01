@@ -15,7 +15,7 @@
 
 extern bool debug;               // is debug turned on
 extern char fanHome[MAX_PATH];   // dir path of fan installation
-extern Prop* sysProps;           // {fanHome}\lib\sys.props
+extern Prop* sysProps;           // {fanHome}/etc/sys/config.props
 extern int fanArgc;              // argument count to pass to Fan runtime
 extern char** fanArgv;           // argument values to pass to Fan runtime
 

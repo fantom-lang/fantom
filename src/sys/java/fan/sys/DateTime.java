@@ -40,7 +40,7 @@ public final class DateTime
   public static DateTime now()  { return now(toleranceDefault); }
   public static DateTime now(Duration tolerance)
   {
-    long now = (System.currentTimeMillis() - diffJava) * nsPerMilli;
+    long now = nowTicks();
 
     DateTime c = cached;
     if (tolerance != null && now - c.ticks <= tolerance.ticks)
@@ -52,7 +52,7 @@ public final class DateTime
   public static DateTime nowUtc()  { return nowUtc(toleranceDefault); }
   public static DateTime nowUtc(Duration tolerance)
   {
-    long now = (System.currentTimeMillis() - diffJava) * nsPerMilli;
+    long now = nowTicks();
 
     DateTime c = cachedUtc;
     if (tolerance != null && now - c.ticks <= tolerance.ticks)
@@ -63,7 +63,7 @@ public final class DateTime
 
   public static long nowTicks()
   {
-    return (System.currentTimeMillis() - diffJava) * nsPerMilli;
+    return fromJavaToTicks(System.currentTimeMillis());
   }
 
   public static long nowUnique()
@@ -855,11 +855,16 @@ public final class DateTime
 // Java
 //////////////////////////////////////////////////////////////////////////
 
+  public static long fromJavaToTicks(long millis)
+  {
+    return (millis - diffJava) * nsPerMilli;
+  }
+
   public static DateTime fromJava(long millis) { return fromJava(millis, TimeZone.cur); }
   public static DateTime fromJava(long millis, TimeZone tz)
   {
     if (millis <= 0) return null;
-    return new DateTime((millis-diffJava)*nsPerMilli, tz);
+    return new DateTime(fromJavaToTicks(millis), tz);
   }
 
   public long toJava() { return (ticks / nsPerMilli) + diffJava; }

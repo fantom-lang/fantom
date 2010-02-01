@@ -1,22 +1,27 @@
 //
-// sys.props
+// Config: sys
+//
+// History:
+//   01 Dec 05  Brian Frank  Creation
 //
 
 //////////////////////////////////////////////////////////////////////////
 // Fan
 //////////////////////////////////////////////////////////////////////////
 
-// runtime - either "java" or "dotnet"
-fan.runtime=java
+// Runtime - either "java" or "dotnet"
+runtime=java
 
 // Default timezone to use for VM - can be either the simple name
 // or the full name.  If not set explicitly, then the we will
 // attempt to query the timezone from the Java or .NET runtime
-// fan.timezone=New_York
+// This property can only be configured by bootstrap homeDir.
+// timezone=New_York
 
-// If fan.debug is set to true, then the runtime emits debug
+// If debug is set to true, then the runtime emits debug
 // information such as the LocalVariableTable for debuggers
-// fan.debug=true
+// This property can only be configured by bootstrap homeDir.
+// debug=true
 
 //////////////////////////////////////////////////////////////////////////
 // Java Runtime
@@ -26,12 +31,12 @@ fan.runtime=java
 // select the jvm runtime to use; if not set then we lookup
 // the Java VM to use in the registry under:
 //   \HKEY_LOCAL_MACHINE\Software\JavaSoft\JavaRuntimeEnvironment.CurrentVersion
-// fan.java.jvm=C:\\Program Files\\Java\\jre1.5.0_06\\bin\\client\\jvm.dll
-// fan.java.jvm=C:\\dev\\tools\\jdk16\\jre\\bin\\server\\jvm.dll
+// java.jvm=C:\\Program Files\\Java\\jre1.5.0_06\\bin\\client\\jvm.dll
+// java.jvm=C:\\dev\\tools\\jdk16\\jre\\bin\\server\\jvm.dll
 
 // Set this property to pass additional command line options to the Java VM.
 // The options should be listed together separated with a space.
-fan.java.options=-Xmx256M
+java.options=-Xmx256M
 
 //////////////////////////////////////////////////////////////////////////
 // Bootstrap Build
@@ -42,7 +47,7 @@ fan.java.options=-Xmx256M
 // build the rest of the system - we assume that a previous
 // stable "released" version of fan is installed at /dev/rel/
 // used only for Windows launcher, Unix uses fansubstitute script
-fan.runtime.substitutes=                             \
+runtime.substitutes=                                     \
   /C:/dev/fan/src/buildall.fan           = C:\\dev\\rel  \
   /C:/dev/fan/src/buildboot.fan          = C:\\dev\\rel  \
   /C:/dev/fan/src/sys/build.fan          = C:\\dev\\rel  \

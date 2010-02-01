@@ -101,7 +101,6 @@ abstract const class Env
   ** from the following sources from lowest priority to highest priority:
   **   1. shell environment variables
   **   2. Java system properties (Java VM only obviously)
-  **   3. {homeDir}/lib/sys.props
   **
   ** Default implementation delegates to `parent`.
   **
