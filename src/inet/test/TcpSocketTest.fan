@@ -36,8 +36,9 @@ class TcpSocketTest : Test
   {
     verifyBind(null, null)
     verifyBind(IpAddr.local, null)
-    verifyBind(null, 1972)
-    verifyBind(IpAddr.local, 1973)
+    port := (1200..9999).random
+    verifyBind(null, port)
+    verifyBind(IpAddr.local, port)
   }
 
   Void verifyBind(IpAddr? addr, Int? port)
