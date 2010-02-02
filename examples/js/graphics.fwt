@@ -64,7 +64,7 @@ class MyCanvas : Canvas
     g.brush = Color("#f88"); g.fillPolygon(polygon)
     g.brush = Color("#800"); g.drawPolygon(polygon)
 
-    img := Image(`/pod/icons/x16/folder.png`)
+    img := Image(`fan://icons/x16/folder.png`)
     g.drawImage(img, 220, 20)
     g.copyImage(img, Rect(0, 0, img.size.w, img.size.h), Rect(250, 30, 64, 64))
     g.drawImage(img.resize(Size(64, 64)), 320, 30)
@@ -77,7 +77,7 @@ class MyCanvas : Canvas
     finally g.pop
 
     // image brush
-    g.brush = Pattern(Image(`/pod/icons/x16/cloud.png`))
+    g.brush = Pattern(Image(`fan://icons/x16/cloud.png`))
     g.fillOval(390, 20, 80, 80)
     g.brush = Color.black
     g.pen = Pen { width = 1 }

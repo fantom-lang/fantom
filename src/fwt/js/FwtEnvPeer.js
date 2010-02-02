@@ -26,8 +26,9 @@ fan.fwt.FwtEnvPeer.nextMemUriStr = function()
 
 fan.fwt.FwtEnvPeer.loadImage = function(fanImg, widget)
 {
-  var uri = fanImg.m_uri.toStr();
-  var jsImg = fan.fwt.FwtEnvPeer.imgCache[uri]
+  var uri = fanImg.m_uri;
+  var key = uri.toStr();
+  var jsImg = fan.fwt.FwtEnvPeer.imgCache[key]
   if (!jsImg)
   {
     jsImg = document.createElement("img");
@@ -56,8 +57,12 @@ fan.fwt.FwtEnvPeer.loadImage = function(fanImg, widget)
       //else
       //  jsImg.attachEvent('onload', onload);
     }
-    jsImg.src = uri;
-    fan.fwt.FwtEnvPeer.imgCache[uri] = jsImg;
+    // swizzle fan: uris to http:
+    var src = (uri.scheme() == "fan")
+      ? fan.sys.UriPodBase + uri.host() + uri.pathStr()
+      : uri.toStr();
+    jsImg.src = src;
+    fan.fwt.FwtEnvPeer.imgCache[key] = jsImg;
   }
   return jsImg
 }
