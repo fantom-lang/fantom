@@ -57,3 +57,4 @@ runtime.substitutes=                                     \
   /C:/dev/fan/src/compiler/build.fan     = C:\\dev\\rel  \
   /C:/dev/fan/src/compilerJava/build.fan = C:\\dev\\rel  \
   /C:/dev/fan/src/build/build.fan        = C:\\dev\\rel
+

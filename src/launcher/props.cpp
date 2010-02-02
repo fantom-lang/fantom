@@ -102,7 +102,7 @@ char* makeTrimCopy(char* s, int num)
 Prop* readProps(const char* filename)
 {
   char name[512];
-  char val[512];
+  char val[4096];
   int nameNum = 0, valNum = 0;
   bool inVal = false;
   int inBlockComment = 0;
