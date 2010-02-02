@@ -169,15 +169,15 @@ class Bootstrap : AbstractMain
   {
     echo("")
     echo("Config etcs:")
-    updateEtc(relHome + `etc/build/pod.fansym`, "buildDevHome", devHome.uri)
-    updateEtc(relHome + `etc/build/pod.fansym`, "buildJdkHome", jdkHome.uri)
-    updateEtc(devHome + `etc/build/pod.fansym`, "buildJdkHome", jdkHome.uri)
+    updateEtc(relHome + `etc/build/config.props`, "devHome", devHome.uri)
+    updateEtc(relHome + `etc/build/config.props`, "jdkHome", jdkHome.uri)
+    updateEtc(devHome + `etc/build/config.props`, "jdkHome", jdkHome.uri)
   }
 
   Void updateEtc(File f, Str key, Uri val)
   {
     echo("  $f.osPath: $key=$val.toCode")
-    newLine := "$key=$val.toCode"
+    newLine := "$key=$val"
     lines := f.readAllLines
     i := lines.findIndex |line| { line.startsWith("$key=") || line.startsWith("//$key=") }
     if (i != null)
