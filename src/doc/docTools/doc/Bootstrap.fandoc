@@ -209,53 +209,12 @@ build script environment.  You can run target on "buildall.fan", although
 a more concise report is to dumpEnv on "buildboot.fan" and one of the
 non bootstrap pods like "testSys/build.fan".
 
-On Windows you should see something like this:
-
-  C:\dev\fan\src>buildboot dumpEnv
-  ---------------
-    scriptFile:  /C:/dev/fan/src/buildboot.fan [build::BuildGroup]
-    fanHome:     /C:/dev/rel/
-    devHomeDir:  /C:/dev/fan/
-  ---------------
-    scriptFile:  /C:/dev/fan/src/sys/build.fan [build::BuildPod]
-    fanHome:     /C:/dev/rel/
-    devHomeDir:  /C:/dev/fan/
-  ---------------
-    scriptFile:  /C:/dev/fan/src/jfan/build.fan [build::BuildJava]
-    fanHome:     /C:/dev/rel/
-    devHomeDir:  /C:/dev/fan/
-    javaHome:    /C:/dev/tools/java/
-  ---------------
-    scriptFile:  /C:/dev/fan/src/nfan/build.fan [build::BuildCs]
-    fanHome:     /C:/dev/rel/
-    devHomeDir:  /C:/dev/fan/
-    dotnetHome:  /C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
-  ---------------
-    scriptFile:  /C:/dev/fan/src/compiler/build.fan [build::BuildPod]
-    fanHome:     /C:/dev/rel/
-    devHomeDir:  /C:/dev/fan/
-  ---------------
-    scriptFile:  /C:/dev/fan/src/compilerJava/build.fan [build::BuildPod]
-    fanHome:     /C:/dev/rel/
-    devHomeDir:  /C:/dev/fan/
-  ---------------
-    scriptFile:  /C:/dev/fan/src/build/build.fan [build::BuildPod]
-    fanHome:     /C:/dev/rel/
-    devHomeDir:  /C:/dev/fan/
-
-
-  C:\dev\fan\src>testSys\build dumpEnv
-  ---------------
-    scriptFile:  /C:/dev/fan/src/testSys/build.fan [build::BuildPod]
-    fanHome:     /c:/dev/fan/
-    devHomeDir:  /c:/dev/fan/
-
 Key things to note about your environment:
   1. all scripts should be using *dev* for devHomeDir
   2. bootbuild scripts should be using *rel* for fanHome
   3. non-bootbuild scripts like testSys should be using *dev* for fanHome
-  4. verify javaHome for jfan/build.fan
-  5. verify dotnetHome for nfan/build.fan (if running on Windows)
+  4. verify javaHome for sys/javafan/build.fan
+  5. verify dotnetHome for sys/dotnet/build.fan (if running on Windows)
 
 Summary [#summary]
 ******************
