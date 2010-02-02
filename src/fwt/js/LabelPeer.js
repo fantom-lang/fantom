@@ -126,7 +126,13 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
       //}
     }
     img.border = "0";
-    img.src = this.m_image.m_uri;
+    // TODO FIXIT: dup from FwtEnvPeer.loadImage - need to make DRY
+    // swizzle fan: uris to http:
+    var uri = this.m_image.m_uri;
+    var src = (uri.scheme() == "fan")
+      ? fan.sys.UriPodBase + uri.host() + uri.pathStr()
+      : uri.toStr();
+    img.src = src;
     parent.appendChild(img);
   }
 

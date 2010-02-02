@@ -163,7 +163,11 @@ class Build : BuildScript
       s := line
       // line comments
       i := s.index("//")
-      if (i != null) s = s[0..<i]
+      if (i != null)
+      {
+        // skip uris
+        if (i==0 || s[i-1] != ':') s = s[0..<i]
+      }
       // block comments
       temp := s
       a := temp.index("/*")
