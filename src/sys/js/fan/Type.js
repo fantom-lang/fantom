@@ -115,16 +115,6 @@ fan.sys.Type.prototype.emptyList = function()
 fan.sys.Type.prototype.isNullable = function() { return false; }
 fan.sys.Type.prototype.toNonNullable = function() { return this; }
 
-fan.sys.Type.isMixin = function(mixin, that)
-{
-  if (mixin.equals(that)) return true;
-  var m = mixin.m_mixins;
-  for (var i=0; i<m.length; i++)
-    if (fan.sys.Type.isMixin(m[i], that))
-      return true;
-  return false;
-}
-
 fan.sys.Type.prototype.toNullable = function() { return this.m_nullable; }
 fan.sys.Type.prototype.toNonNullable = function() { return this; }
 
@@ -284,10 +274,25 @@ fan.sys.Type.prototype.is = function(that)
   }
 
   // check mixins
-  var m = this.mixins();
-  for (var i=0; i<m.size(); i++)
-    if (fan.sys.Type.isMixin(m.get(i), that)) return true;
+  var t = this;
+  while (t != null)
+  {
+    var m = t.mixins();
+    for (var i=0; i<m.size(); i++)
+      if (fan.sys.Type.checkMixin(m.get(i), that)) return true;
+    t = t.m_base;
+  }
 
+  return false;
+}
+
+fan.sys.Type.checkMixin = function(mixin, that)
+{
+  if (mixin.equals(that)) return true;
+  var m = mixin.m_mixins;
+  for (var i=0; i<m.length; i++)
+    if (fan.sys.Type.checkMixin(m[i], that))
+      return true;
   return false;
 }
 
