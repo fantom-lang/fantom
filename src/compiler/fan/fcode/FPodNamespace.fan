@@ -20,14 +20,14 @@ class FPodNamespace : CNamespace
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Make a FPod namespace which looks in the
-  ** specified directory to resolve pod files.
+  ** Make a FPod namespace which looks in the specified directory
+  ** to resolve pod files or null to delegate to 'Env.findPodFile'.
   **
-  new make(Compiler c, File dir)
+  new make(Compiler c, File? dir)
     : super(c)
   {
-    this.dir = dir
     init
+    this.dir = dir
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -40,7 +40,15 @@ class FPodNamespace : CNamespace
   protected override FPod? findPod(Str podName)
   {
     // try to find it
-    file := dir + (podName + ".pod").toUri
+    File? file
+    try
+    {
+      if (dir != null)
+        file = dir + `${podName}.pod`
+      else
+        file = Env.cur.findPodFile(podName)
+    }
+    catch return null
     if (!file.exists) return null
 
     // load it
@@ -53,6 +61,7 @@ class FPodNamespace : CNamespace
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  readonly File dir       // where we look for pod files
+  ** where to look for pod or null to delegate to Env.findPodFile
+  readonly File? dir
 
 }
