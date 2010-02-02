@@ -66,16 +66,16 @@ fan.sys.Pod.prototype.locale = function(key, def)
   if (key == "details.name") return "Details";
 
   if (key == "err.name") return "Error";
-  if (key == "err.image") return "/sys/pod/icons/x32/err.png";
+  if (key == "err.image") return "fan://icons/x32/err.png";
 
   if (key == "warn.name") return "Warning";
-  if (key == "warn.image") return "/sys/pod/icons/x32/warn.png";
+  if (key == "warn.image") return "fan://icons/x32/warn.png";
 
   if (key == "info.name") return "Info";
-  if (key == "info.image") return "/sys/pod/icons/x32/question.png";
+  if (key == "info.image") return "fan://icons/x32/question.png";
 
   if (key == "question.name") return "Question";
-  if (key == "question.image") return "/sys/pod/icons/x32/question.png";
+  if (key == "question.image") return "fan://icons/x32/question.png";
 
   return def;
 }
