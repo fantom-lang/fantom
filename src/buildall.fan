@@ -182,10 +182,11 @@ class Build : BuildGroup
   Void deleteNonDist()
   {
     Delete(this, devHomeDir+`tmp/`).run
+    Delete(this, devHomeDir+`temp/`).run
     Delete(this, devHomeDir+`lib/tmp/`).run
-    Delete(this, devHomeDir+`lib/types.db`).run
-    Delete(this, devHomeDir+`lib/tmp`).run
+    Delete(this, devHomeDir+`lib/temp/`).run
     Delete(this, devHomeDir+`src/sys/java/temp/`).run
+    Delete(this, devHomeDir+`etc/sys/types.db`).run
     Delete(this, devHomeDir+`etc/flux/session/`).run
     Delete(this, devHomeDir+`examples/web/demo/logs/`).run
 
