@@ -57,7 +57,14 @@ public final class Unit
     {
       // parse etc/sys/units.fog as big serialized list which contains
       // lists for each quantity (first item being the name)
-      List all = (List)Env.cur().findFile("etc/sys/units.fog").readObj();
+      String path = "etc/sys/units.fog";
+      InStream in;
+      if (Sys.isJarDist)
+        in = new SysInStream(Unit.class.getClassLoader().getResourceAsStream(path));
+      else
+        in = Env.cur().findFile(path).in();
+      List all = (List)in.readObj();
+      in.close();
 
       // map lists to quantity data structures
       List quantityNames = new List(Sys.StrType);

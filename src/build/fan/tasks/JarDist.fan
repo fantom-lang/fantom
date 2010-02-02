@@ -44,6 +44,7 @@ class JarDist : JdkTask
     initTempDir
     sysClasses
     podNames.each |name| { podClasses(name) }
+    etcFiles
     main
     manifest
     jar
@@ -114,10 +115,31 @@ class JarDist : JdkTask
     zip.contents.each |f|
     {
       if (f.isDir) return
-      if (f.ext != "def" && f.ext != "fcode") return
-      dest := tempDir + `reflect/${podName}/$f.name`
-      f.copyTo(dest, copyOpts)
+      if (f.ext == "def" || f.ext == "fcode")
+      {
+        dest := tempDir + "reflect/${podName}/${f.name}".toUri
+        f.copyTo(dest, copyOpts)
+      }
+      else if (f.ext == "props")
+      {
+        dest := tempDir + "etc/${podName}${f.pathStr}".toUri
+        f.copyTo(dest, copyOpts)
+      }
     }
+  }
+
+  private Void etcFiles()
+  {
+    copyEtcFile(`etc/sys/timezones.ftz`)
+    copyEtcFile(`etc/sys/ext2mime.props`)
+    copyEtcFile(`etc/sys/units.fog`)
+  }
+
+  private Void copyEtcFile(Uri uri)
+  {
+    src  := script.devHomeDir + uri
+    dest := tempDir + uri
+    src.copyTo(dest)
   }
 
   private Void manifest()

@@ -7,6 +7,9 @@
 //
 package fan.sys;
 
+import java.io.InputStream;
+import java.util.HashMap;
+
 /**
  * JarDistEnv
  */
@@ -32,9 +35,29 @@ public class JarDistEnv
 // Find Files
 //////////////////////////////////////////////////////////////////////////
 
+  public Map props(Pod pod, Uri uri, Duration maxAge)
+  {
+    String path = "etc/" + pod.name() + "/" + uri;
+    Map props = (Map)propsCache.get(path);
+    if (props == null)
+    {
+      InputStream in = JarDistEnv.class.getClassLoader().getResourceAsStream(path);
+      if (in != null)
+      {
+        InStream sysIn = new SysInStream(in);
+        props = sysIn.readProps();
+        sysIn.close();
+      }
+      if (props == null) props = new Map(Sys.StrType, Sys.StrType);
+      props = (Map)props.toImmutable();
+      propsCache.put(path, props);
+    }
+    return props;
+  }
+
   public File findFile(Uri uri, boolean checked)
   {
-System.out.println("TODO JarDistEnv.findFile " + uri);
+    System.out.println("WARN: JarDistEnv.findFile not implemented: " + uri);
     if (!checked) return null;
     throw UnresolvedErr.make("File not found in Env: " + uri).val;
   }
@@ -84,5 +107,10 @@ System.out.println("TODO JarDistEnv.findFile " + uri);
     }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  private HashMap propsCache = new HashMap();
 }
 

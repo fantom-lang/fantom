@@ -12,6 +12,7 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
@@ -60,7 +61,7 @@ public final class TimeZone
     // try to load from database
     try
     {
-      tz = Sys.isJarDist ? loadFromJava(name) : loadTimeZone(name);
+      tz = loadTimeZone(name);
     }
     catch (Exception e)
     {
@@ -221,8 +222,7 @@ public final class TimeZone
   static void loadIndex()
     throws IOException
   {
-    if (Sys.isJarDist) return;
-    DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(dbFile)));
+    DataInputStream in = openDb();
     try
     {
       // check magic "fantz 02"
@@ -284,45 +284,56 @@ public final class TimeZone
     tz.fullName  = fullName;
 
     // read time zone definition from database file
-    RandomAccessFile f = new RandomAccessFile(dbFile, "r");
+    DataInputStream in = openDb();
     try
     {
-      f.seek(indexOffsets[ix]);
-      int numRules = f.readUnsignedShort();
+      in.skip(indexOffsets[ix]);
+      int numRules = in.readUnsignedShort();
       tz.rules = new Rule[numRules];
       for (int i=0; i<numRules; ++i)
       {
         Rule r = tz.rules[i] = new Rule();
-        r.startYear = f.readUnsignedShort();
-        r.offset    = f.readInt();
-        r.stdAbbr   = f.readUTF();
-        r.dstOffset = f.readInt();
+        r.startYear = in.readUnsignedShort();
+        r.offset    = in.readInt();
+        r.stdAbbr   = in.readUTF();
+        r.dstOffset = in.readInt();
         if (r.dstOffset == 0) continue;
-        r.dstAbbr   = f.readUTF();
-        r.dstStart  = loadDstTime(f);
-        r.dstEnd    = loadDstTime(f);
+        r.dstAbbr   = in.readUTF();
+        r.dstStart  = loadDstTime(in);
+        r.dstEnd    = loadDstTime(in);
         if (i != 0 && tz.rules[i-1].startYear <= r.startYear)
           throw new java.io.IOException("TimeZone rules not sorted: " + name);
       }
     }
     finally
     {
-      f.close();
+      in.close();
     }
     return tz;
   }
 
-  static DstTime loadDstTime(RandomAccessFile f)
+  static DstTime loadDstTime(DataInputStream in)
     throws IOException
   {
     DstTime t = new DstTime();
-    t.mon       = f.readByte();
-    t.onMode    = f.readByte();
-    t.onWeekday = f.readByte();
-    t.onDay     = f.readByte();
-    t.atTime    = f.readInt();
-    t.atMode    = f.readByte();
+    t.mon       = in.readByte();
+    t.onMode    = in.readByte();
+    t.onWeekday = in.readByte();
+    t.onDay     = in.readByte();
+    t.atTime    = in.readInt();
+    t.atMode    = in.readByte();
     return t;
+  }
+
+  static DataInputStream openDb()
+    throws IOException
+  {
+    if (Sys.isJarDist)
+      return new DataInputStream(new BufferedInputStream(
+        TimeZone.class.getClassLoader().getResourceAsStream("etc/sys/timezones.ftz")));
+    else
+      return new DataInputStream(new BufferedInputStream(
+        new FileInputStream(dbFile)));
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -333,17 +344,6 @@ public final class TimeZone
   java.util.TimeZone java()
   {
     return java.util.TimeZone.getTimeZone(name);
-  }
-
-  // load from java.util (used when working with Jar Dist)
-  static TimeZone loadFromJava(String name)
-  {
-    // TODO
-    TimeZone tz = new TimeZone();
-    tz.name = name;
-    tz.fullName = name;
-    tz.rules = new Rule[] { new Rule() };
-    return tz;
   }
 
 //////////////////////////////////////////////////////////////////////////
