@@ -34,7 +34,8 @@ fan.sys.Method.prototype.$ctor = function(parent, name, flags)
 fan.sys.Method.prototype.invoke = function(instance, args)
 {
   var func = this.isStatic() ? eval(this.m_$qname) : instance[this.m_$name];
-  return func.apply(instance, args.m_values);
+  var vals = args==null ? [] : args.m_values;
+  return func.apply(instance, vals);
 }
 
 fan.sys.Method.prototype.$typeof = function()
