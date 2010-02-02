@@ -218,7 +218,7 @@ abstract const class Env
   ** in this environemnt.  This method is used by `Pod.list` and for
   ** constructing the type database.  Each of these names must be
   ** resolvable by `findPodFile`.  The default implementation routes
-  ** to `fileFile` to look in the "lib/etc" directory and assumes a
+  ** to `findFile` to look in the "lib/etc" directory and assumes a
   ** naming convention of "{name}.pod".
   **
   virtual Str[] findAllPodNames()

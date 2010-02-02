@@ -133,14 +133,14 @@ class Sending
           FilePart
           {
             headers["Content-Disposition"] = "inline"
-            file = icons.files[`/x16/sun.png`]
+            file = icons.file(`/x16/sun.png`)
           },
 
           // attachment 2
           FilePart
           {
             headers["Content-Disposition"] = "attachment; filename=image2.jpg"
-            file = icons.files[`/x16/moon.png`]
+            file = icons.file(`/x16/moon.png`)
           }
         ]
       }

@@ -56,7 +56,7 @@ abstract class BuildScript
 
   ** Home directory of development installation.  By default this
   ** value is initialized by 'devHome' config prop, otherwise
-  ** `Env.cur.homeDir` is used.
+  ** `sys::Env.homeDir` is used.
   const File devHomeDir := configDir("devHome", Env.cur.homeDir)
 
   ** {devHomeDir}/bin/
@@ -85,8 +85,8 @@ abstract class BuildScript
 
   **
   ** Get a config property using the following rules:
-  **   1. `Env.cur.vars` with 'FAN_BUILD_$name.upper'
-  **   2. `Env.cur.config` for build pod
+  **   1. `sys::Env.vars` with 'FAN_BUILD_$name.upper'
+  **   2. `sys::Env.config` for build pod
   **   3. fallback to 'def' parameter
   **
   Str? config(Str name, Str? def := null)

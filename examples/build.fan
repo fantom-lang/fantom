@@ -41,6 +41,7 @@ class Build : BuildScript
     "java/",         "java",
       "hello",       "Hello world with Java FFI",
       "swing",       "Swing application using Java FFI",
+      "buildjardist","Build fansh into a single JAR for deployment",
     "util/",         "util",
       "main",        "Working with util::AbstractMain",
     "web/",          "web",

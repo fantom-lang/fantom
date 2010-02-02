@@ -15,7 +15,7 @@ const class PathEnv : Env
 
   **
   ** Constructor initializes the search path using the
-  ** 'FAN_ENV_PATH' environment variable (see `Env.vars`).
+  ** 'FAN_ENV_PATH' environment variable (see `sys::Env.vars`).
   **
   new make() : super(Env.cur)
   {
@@ -46,7 +46,7 @@ const class PathEnv : Env
 
   **
   ** Search path of directories in priority order.  The
-  ** last item in the path is always the `Env.homeDir`
+  ** last item in the path is always the `sys::Env.homeDir`
   **
   const File[] path
 
