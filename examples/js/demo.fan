@@ -138,7 +138,7 @@ class ShowScript : Weblet
           hasRun = true;
 
           // load
-          fan.sys.UriPodBase = '';
+          fan.sys.UriPodBase = '/pod/';
           shell = ${entryPoint}.make();
           shell.open();
         }
