@@ -142,7 +142,8 @@ class Build : BuildGroup
   @target="create build zip file"
   Void zip()
   {
-    moniker := "fantom-${@buildVersion.val}"
+    ver := Pod.find("build").config("buildVersion")
+    moniker := "fantom-$ver"
     zip := CreateZip(this)
     {
       outFile = devHomeDir + `${moniker}.zip`
@@ -180,12 +181,13 @@ class Build : BuildGroup
   @target="delete non-distribution files"
   Void deleteNonDist()
   {
-    Delete.make(this, devHomeDir+`tmp/`).run
-    Delete.make(this, devHomeDir+`lib/tmp/`).run
-    Delete.make(this, devHomeDir+`lib/types.db`).run
-    Delete.make(this, devHomeDir+`lib/tmp`).run
-    Delete.make(this, devHomeDir+`src/sys/java/temp/`).run
-    Delete.make(this, devHomeDir+`etc/flux/session/`).run
+    Delete(this, devHomeDir+`tmp/`).run
+    Delete(this, devHomeDir+`lib/tmp/`).run
+    Delete(this, devHomeDir+`lib/types.db`).run
+    Delete(this, devHomeDir+`lib/tmp`).run
+    Delete(this, devHomeDir+`src/sys/java/temp/`).run
+    Delete(this, devHomeDir+`etc/flux/session/`).run
+    Delete(this, devHomeDir+`examples/web/demo/logs/`).run
 
     libJavaDir.list.each |File f|
     {
@@ -199,10 +201,10 @@ class Build : BuildGroup
 //////////////////////////////////////////////////////////////////////////
 
   @target="Dump env details to help debugging bootstrap"
-  override Void dumpenv()
+  override Void dumpEnv()
   {
-    super.dumpenv
-    spawnOnChildren("dumpenv")
+    super.dumpEnv
+    spawnOnChildren("dumpEnv")
   }
 
 //////////////////////////////////////////////////////////////////////////
