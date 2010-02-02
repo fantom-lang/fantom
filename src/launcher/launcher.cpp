@@ -27,7 +27,7 @@ typedef enum { JavaRuntime, DotnetRuntime } Runtime;
 // Globals
 //////////////////////////////////////////////////////////////////////////
 
-const char* LAUNCHER_VERSION = "1.0 3-Jan-07";
+const char* LAUNCHER_VERSION = "1.0.50 2-Feb-10";
 
 bool debug;                  // is debug turned on
 char fanHome[MAX_PATH];      // dir path of fan installation
