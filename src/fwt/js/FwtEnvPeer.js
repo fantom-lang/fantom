@@ -77,6 +77,7 @@ fan.fwt.FwtEnvPeer.prototype.imageResize = function(self, fanImg, size)
 
   // get the original js image
   var jsOrig = fan.fwt.FwtEnvPeer.loadImage(fanImg)
+  if (jsOrig.width == 0 || jsOrig.height == 0) return fanImg;
   if (jsOrig.width == size.m_w && jsOrig.height == size.m_h) return fanImg
 
   // create new js image which is resized version of the old by painting
