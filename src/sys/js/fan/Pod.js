@@ -54,7 +54,7 @@ fan.sys.Pod.prototype.findType = function(name, checked)
   return t;
 }
 
-fan.sys.Pod.prototype.loc = function(key, def)
+fan.sys.Pod.prototype.locale = function(key, def)
 {
   // TODO
   //if (def === undefined) def = key;

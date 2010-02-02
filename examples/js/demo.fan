@@ -38,8 +38,6 @@ const class JsDemoMod : WebMod
 
   override Void onGet()
   {
-// TODO
-echo("=====> $req.uri")
     name := req.modRel.path.first
     if (name == null)
       onIndex
