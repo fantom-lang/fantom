@@ -17,7 +17,7 @@ class JarDist : JdkTask
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Construct uninitialized javac task
+  ** Construct uninitialized task
   **
   new make(BuildScript script)
     : super(script)
@@ -221,7 +221,7 @@ class JarDist : JdkTask
   Str? mainMethod
 
   ** List of pods to compile into JAR; sys is always implied
-  Str[] podNames := Str["sys"]
+  Str[] podNames := Str[,]
 
   private File? tempDir       // initTempDir
   private File? manifestFile  // manifest

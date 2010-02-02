@@ -15,7 +15,7 @@ using build
 class Build : BuildScript
 {
   @target="build fansh pod as a single JAR dist"
-  Void foo()
+  Void dist()
   {
     dist := JarDist(this)
     dist.outFile = `./fansh.jar`.toFile.normalize
