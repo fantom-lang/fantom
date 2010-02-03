@@ -240,7 +240,7 @@
     u2 name  = "Facets"
     u2 count
     {
-      u2 symbol   // symbolRefs index
+      u2 type     // typeRefs index
       utf value   // serialized value
     } facets[count]
   }

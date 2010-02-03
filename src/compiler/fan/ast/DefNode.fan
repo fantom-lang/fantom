@@ -57,7 +57,7 @@ abstract class DefNode : Node
   {
     if (facets == null) facets = FacetDef[,]
     loc := this.loc
-    f := FacetDef(SymbolExpr.makeFor(loc, symbol), Expr.makeForLiteral(loc, ns, value))
+    f := FacetDef.makeOld(SymbolExpr.makeFor(loc, symbol), Expr.makeForLiteral(loc, ns, value))
     facets.add(f)
   }
 
