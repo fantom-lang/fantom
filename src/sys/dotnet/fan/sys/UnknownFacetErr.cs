@@ -12,40 +12,40 @@ using System.IO;
 namespace Fan.Sys
 {
   /// <summary>
-  /// UnknownSymbolErr
+  /// UnknownFacetErr
   /// </summary>
-  public class UnknownSymbolErr : Err
+  public class UnknownFacetErr : Err
   {
 
   //////////////////////////////////////////////////////////////////////////
   // Fantom Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static UnknownSymbolErr make() { return make("", (Err)null); }
-    public new static UnknownSymbolErr make(string msg) { return make(msg, (Err)null); }
-    public new static UnknownSymbolErr make(string msg, Err cause)
+    public new static UnknownFacetErr make() { return make("", (Err)null); }
+    public new static UnknownFacetErr make(string msg) { return make(msg, (Err)null); }
+    public new static UnknownFacetErr make(string msg, Err cause)
     {
-      UnknownSymbolErr err = new UnknownSymbolErr();
+      UnknownFacetErr err = new UnknownFacetErr();
       make_(err, msg, cause);
       return err;
     }
 
-    public static void make_(UnknownSymbolErr self) { make_(self, null);  }
-    public static void make_(UnknownSymbolErr self, string msg) { make_(self, msg, null); }
-    public static void make_(UnknownSymbolErr self, string msg, Err cause) { Err.make_(self, msg, cause); }
+    public static void make_(UnknownFacetErr self) { make_(self, null);  }
+    public static void make_(UnknownFacetErr self, string msg) { make_(self, msg, null); }
+    public static void make_(UnknownFacetErr self, string msg, Err cause) { Err.make_(self, msg, cause); }
 
   //////////////////////////////////////////////////////////////////////////
   // C# Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public UnknownSymbolErr(Err.Val val) : base(val) {}
-    public UnknownSymbolErr() : base(new UnknownSymbolErr.Val()) {}
+    public UnknownFacetErr(Err.Val val) : base(val) {}
+    public UnknownFacetErr() : base(new UnknownFacetErr.Val()) {}
 
   //////////////////////////////////////////////////////////////////////////
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type @typeof() { return Sys.UnknownSymbolErrType; }
+    public override Type @typeof() { return Sys.UnknownFacetErrType; }
 
   //////////////////////////////////////////////////////////////////////////
   // Val - C# Exception Type

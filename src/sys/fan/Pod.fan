@@ -132,8 +132,9 @@ final const class Pod
   **
   ** Find a symbol by its unqualified name.  If the symbol doesn't
   ** exist in this pod and checked is false then return null, otherwise
-  ** throw UnknownSymbolErr.
+  ** throw UnknownFacetErr.
   **
+  // TODO-FACET
   Symbol? symbol(Str name, Bool checked := true)
 
 //////////////////////////////////////////////////////////////////////////

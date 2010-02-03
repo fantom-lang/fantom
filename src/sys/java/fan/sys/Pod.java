@@ -289,7 +289,7 @@ public class Pod
   {
     Symbol s = (Symbol)loadSymbols().get(name);
     if (s != null) return s;
-    if (checked) throw UnknownSymbolErr.make(this.name + "::" + name).val;
+    if (checked) throw UnknownFacetErr.make(this.name + "::" + name).val;
     return null;
   }
 

@@ -206,11 +206,11 @@ fan.sys.UnknownSlotErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prot
 fan.sys.UnknownSlotErr.prototype.$typeof = function() { return fan.sys.UnknownSlotErr.$type; }
 fan.sys.UnknownSlotErr.make = function(msg, cause) { return new fan.sys.UnknownSlotErr(msg, cause); }
 
-// UnknownSymbolErr
-fan.sys.UnknownSymbolErr = fan.sys.Obj.$extend(fan.sys.Err);
-fan.sys.UnknownSymbolErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prototype.$ctor.call(this, msg, cause); }
-fan.sys.UnknownSymbolErr.prototype.$typeof = function() { return fan.sys.UnknownSymbolErr.$type; }
-fan.sys.UnknownSymbolErr.make = function(msg, cause) { return new fan.sys.UnknownSymbolErr(msg, cause); }
+// UnknownFacetErr
+fan.sys.UnknownFacetErr= fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.UnknownFacetErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prototype.$ctor.call(this, msg, cause); }
+fan.sys.UnknownFacetErr.prototype.$typeof = function() { return fan.sys.UnknownFacetErr.$type; }
+fan.sys.UnknownFacetErr.make = function(msg, cause) { return new fan.sys.UnknownFacetErr(msg, cause); }
 
 // UnknownTypeErr
 fan.sys.UnknownTypeErr = fan.sys.Obj.$extend(fan.sys.Err);
