@@ -59,7 +59,8 @@ class AttrAsm : CompilerSupport
         err("Facet value is not serializable: '$f.key' ($e.msg)", f.val.loc)
       }
     }
-    add(FConst.FacetsAttr, buf)
+    // TODO-FACETS
+    add("OldFacets", buf)
   }
 
 //////////////////////////////////////////////////////////////////////////
