@@ -49,9 +49,10 @@ class JavaPod : CPod
     return null
   }
 
+  // TODO-FACET
   override CSymbol? resolveSymbol(Str symbolName, Bool checked)
   {
-    if (checked) throw UnknownSymbolErr(name + "::" + symbolName)
+    if (checked) throw Err(name + "::" + symbolName)
     return null
   }
 
