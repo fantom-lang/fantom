@@ -10,7 +10,7 @@
 ** DocNodeId
 **************************************************************************
 
-enum DocNodeId
+enum class DocNodeId
 {
   text,
   doc,
@@ -266,7 +266,7 @@ class OrderedList : DocElem
 **
 ** OrderedListStyle
 **
-enum OrderedListStyle
+enum class OrderedListStyle
 {
   number,       // 1, 2, 3, 4
   upperAlpha,   // A, B, C, D

@@ -211,7 +211,7 @@ class EnumTest : Test
 
 }
 
-internal enum EnumAbc
+internal enum class EnumAbc
 {
   A, B, C
 
@@ -221,7 +221,7 @@ internal enum EnumAbc
 }
 
 @strA="y"
-enum Suits
+enum class Suits
 {
   clubs("black"),
   diamonds("red"),
@@ -233,7 +233,7 @@ enum Suits
   const Str color;
 }
 
-enum Foo
+enum class Foo
 {
   one,
   two,

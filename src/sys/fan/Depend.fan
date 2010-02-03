@@ -42,7 +42,7 @@
 **    "foo 1.2,1.4"  Any version of 1.2 or 1.4
 **
 @simple
-final class Depend
+final const class Depend
 {
 
 //////////////////////////////////////////////////////////////////////////

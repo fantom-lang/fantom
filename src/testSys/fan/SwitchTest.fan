@@ -249,7 +249,7 @@ class SwitchTest : Test
 // SwitchEnum
 //////////////////////////////////////////////////////////////////////////
 
-enum SwitchEnum
+enum class SwitchEnum
 {
   zero,
   one,

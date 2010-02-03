@@ -406,7 +406,7 @@ class StmtTest : CompilerTest
   Void testSwitchInternalEnum()
   {
    compile(
-     "enum Foo { a, b, c }
+     "enum class Foo { a, b, c }
       class Bar
       {
         static Int f(Foo foo)

@@ -90,7 +90,7 @@ class InheritTest : CompilerTest
       class H : ZipEntryFile {}
       class I : M {} // OK!
 
-      enum J : G { a }
+      enum class J : G { a }
 
       class K : C1, G {}
       class L : C1, Test, C2 {}
@@ -107,7 +107,7 @@ class InheritTest : CompilerTest
        12, 1, "Class 'F' cannot extend parameterized type '[sys::Int:$podName::C]'",
        14, 1, "Class 'G' cannot extend final class 'sys::Str'",
        15, 1, "Class 'H' cannot access internal scoped class 'sys::ZipEntryFile'",
-       18, 1, "Enum 'J' cannot extend class '$podName::G'",
+       18, 6, "Enum 'J' cannot extend class '$podName::G'",
        20, 1, "Invalid inheritance order, ensure class '$podName::G' comes first before mixins",
        21, 1, "Invalid inheritance order, ensure class 'sys::Test' comes first before mixins",
        22, 1, "Class 'N' cannot mixin class '$podName::K'",

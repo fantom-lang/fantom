@@ -9,7 +9,7 @@
 **
 ** Status enumeration indicates data quality.
 **
-enum Status
+enum class Status
 {
   ** Normal status condition.
   ok,

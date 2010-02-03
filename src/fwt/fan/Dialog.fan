@@ -348,7 +348,7 @@ internal class DialogCommand : Command
 ** Ids for internal predefined Dialog commands.
 **
 @js
-internal enum DialogCommandId
+internal enum class DialogCommandId
 {
   ok,
   cancel,

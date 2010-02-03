@@ -18,7 +18,7 @@ class EnumTest : CompilerTest
 
   Void testSimple()
   {
-    compile("enum Foo { a, b, c }")
+    compile("enum class Foo { a, b, c }")
 
     t := pod.types.first
     verifyEq(t.isEnum, true)
@@ -60,7 +60,7 @@ class EnumTest : CompilerTest
   Void testConstructor()
   {
     compile(
-     "enum Foo
+     "enum class Foo
       {
         a(10),
         b(11),
@@ -113,7 +113,7 @@ class EnumTest : CompilerTest
   Void testStaticInit()
   {
     compile(
-     "enum Foo
+     "enum class Foo
       {
         a, b, c
 
@@ -133,7 +133,7 @@ class EnumTest : CompilerTest
   Void testStaticInitClosure()
   {
     compile(
-     "enum Foo
+     "enum class Foo
       {
         a, b, c
 
@@ -160,30 +160,30 @@ class EnumTest : CompilerTest
     // InitEnum
     verifyErrors(
      "mixin X { static Int vals() {} abstract Str foo(); }
-      enum A { a; Void vals() {} }
-      enum B : X { a, b }
-      enum C { foo;  Str foo() { return null } }
-      enum D : X { foo }
-      enum E { a, b;  new myMake() {} }
-      enum F { a, b;  new make() {}  new make2() {} }
-      enum G { a, b;  new make() {} }
-      enum H { a, b;  private new make(Int o, Str n) : super(o, n) {} }
-      @simple enum I { a, b }
+      enum class A { a; Void vals() {} }
+      enum class B : X { a, b }
+      enum class C { foo;  Str foo() { return null } }
+      enum class D : X { foo }
+      enum class E { a, b;  new myMake() {} }
+      enum class F { a, b;  new make() {}  new make2() {} }
+      enum class G { a, b;  new make() {} }
+      enum class H { a, b;  private new make(Int o, Str n) : super(o, n) {} }
+      @simple enum class I { a, b }
       ",
        [
-         2, 13, "Enum 'vals' conflicts with slot",
-         3, 1,  "Enum 'vals' conflicts with inherited slot '$podName::X.vals'",
-         4, 16, "Enum 'foo' conflicts with slot",
-         5, 14, "Enum 'foo' conflicts with inherited slot '$podName::X.foo'",
-         6, 17, "Enum constructor must be named 'make'",
-         7, 32, "Enum constructor must be named 'make'",
-         8, 17, "Enum constructor must be private",
-         9, 17, "Enum constructor cannot call super constructor",
+         2, 19, "Enum 'vals' conflicts with slot",
+         3, 6,  "Enum 'vals' conflicts with inherited slot '$podName::X.vals'",
+         4, 22, "Enum 'foo' conflicts with slot",
+         5, 20, "Enum 'foo' conflicts with inherited slot '$podName::X.foo'",
+         6, 23, "Enum constructor must be named 'make'",
+         7, 38, "Enum constructor must be named 'make'",
+         8, 23, "Enum constructor must be private",
+         9, 23, "Enum constructor cannot call super constructor",
        ])
 
     // CheckErrors
     verifyErrors(
-     "@simple enum I { a, b }
+     "@simple enum class I { a, b }
       ",
        [
         1, 1, "Duplicate facet 'sys::simple'",

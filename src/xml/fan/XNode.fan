@@ -61,7 +61,7 @@ abstract class XNode
 **
 ** Enumerates the type of `XNode` and current node of `XParser`.
 **
-enum XNodeType
+enum class XNodeType
 {
   ** Document node type by `XDoc.nodeType`
   doc,

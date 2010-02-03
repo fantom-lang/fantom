@@ -42,7 +42,6 @@ SyntaxRules
     "default",
     "do",
     "else",
-    "enum",
     "false",
     "final",
     "finally",

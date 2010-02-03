@@ -14,7 +14,7 @@
 ** Enum for `Command.mode`.
 **
 @js
-enum CommandMode
+enum class CommandMode
 {
   push,
   toggle
@@ -38,7 +38,7 @@ enum CommandMode
 ** Enum for `Button.mode`.
 **
 @js
-enum ButtonMode
+enum class ButtonMode
 {
   check,
   push,
@@ -55,7 +55,7 @@ enum ButtonMode
 ** Enum for `MenuItem.mode`.
 **
 @js
-enum MenuItemMode
+enum class MenuItemMode
 {
   check,
   push,
@@ -72,7 +72,7 @@ enum MenuItemMode
 ** Enum for `Window.mode`.
 **
 @js
-enum WindowMode
+enum class WindowMode
 {
   modeless,
   windowModal,
@@ -88,7 +88,7 @@ enum WindowMode
 ** Enum for `FileDialog.mode`.
 **
 @js
-enum FileDialogMode
+enum class FileDialogMode
 {
   ** Display open dialog for single file
   openFile,
