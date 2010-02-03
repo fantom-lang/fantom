@@ -36,7 +36,7 @@ public class FType
     base   = in.u2();
     mixins = new int[in.u2()];
     for (int i=0; i<mixins.length; ++i) mixins[i] = in.u2();
-    flags  = in.u4();
+flags = FSymbol.flags(in);
     return this;
   }
 

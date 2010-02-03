@@ -56,6 +56,7 @@ public final class Sys
   // basic primitives
   public static final Type NumType       = initType("Num",      ObjType);
   public static final Type EnumType      = initType("Enum",     ObjType);
+  public static final Type FacetType     = initType("Facet",    ObjType);
   public static final Type BoolType      = initType("Bool",     ObjType);
   public static final Type DurationType  = initType("Duration", ObjType);
   public static final Type FuncType      = initType("Func",     ObjType);

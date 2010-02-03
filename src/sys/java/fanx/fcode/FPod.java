@@ -143,8 +143,16 @@ public final class FPod
       throw new IOException("Invalid magic");
 
     int version = in.u4();
+// TODO
+if (version == 0x1000045)
+{
+  //System.out.print("WARN: old fcode ver " + podName);
+}
+else
+{
     if (version != FConst.FCodeVersion)
       throw new IOException("Invalid version 0x" + Integer.toHexString(version));
+}
     this.version = version;
 
     podName = in.utf();
