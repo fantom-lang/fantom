@@ -16,11 +16,18 @@ class FacetDef : Node
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(SymbolExpr key, Expr val)
-    : super(key.loc)
+// TODO-FACET
+  new makeOld(SymbolExpr key, Expr val)
+    : super.make(key.loc)
   {
     this.key = key
     this.val = val
+  }
+
+  new make(Loc loc, CType type)
+    : super(loc)
+  {
+    this.type = type
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -29,15 +36,25 @@ class FacetDef : Node
 
   Void walk(Visitor v)
   {
-    key = key.walk(v)
-    val = val.walk(v)
+    if (key != null)
+    {
+      key = key.walk(v)
+      val = val.walk(v)
+    }
+    else
+    {
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Debug
 //////////////////////////////////////////////////////////////////////////
 
-  override Str toStr() { "$key=$val" }
+  override Str toStr()
+  {
+if (key != null) return "$key=$val"
+    return "@$type"
+  }
 
   override Void print(AstWriter out) { out.w(key).w("=").w(val).nl }
 
@@ -45,7 +62,8 @@ class FacetDef : Node
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  SymbolExpr key
-  Expr val
+  CType? type
+  SymbolExpr? key   // TODO-FACET
+  Expr? val         // TODO-FACET
 
 }

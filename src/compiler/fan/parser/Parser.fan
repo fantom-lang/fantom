@@ -799,7 +799,22 @@ public class Parser : CompilerSupport
     facets := FacetDef[,]
     while (curt === Token.at)
     {
-      key := symbolLiteral
+      loc := cur
+      consume
+// TODO-FACET
+if (curt !== Token.identifier) throw err("Expecting identifier")
+Str id := cur.val
+if (id[0].isUpper)
+{
+  // use new model
+  type := ctype
+  echo("NEW FACET MODEL $id!")
+  facets.add(FacetDef(loc, type))
+  continue
+}
+
+
+      key := symbolLiteral(loc)
       Expr? val
       if (curt === Token.assign)
       {
@@ -810,7 +825,7 @@ public class Parser : CompilerSupport
       {
         val = LiteralExpr(key.loc, ExprId.trueLiteral, ns.boolType, true)
       }
-      facets.add(FacetDef(key, val))
+      facets.add(FacetDef.makeOld(key, val))
     }
     return facets
   }
@@ -1552,16 +1567,13 @@ public class Parser : CompilerSupport
       case Token.itKeyword:       consume; return ItExpr(loc)
       case Token.trueKeyword:     consume; return LiteralExpr.makeTrue(loc, ns)
       case Token.pound:           consume; return SlotLiteralExpr(loc, curType, consumeId)
-      case Token.at:              return symbolLiteral
+      case Token.at:              loc = cur; consume; return symbolLiteral(loc)
     }
     throw err("Expected expression, not '" + cur + "'")
   }
 
-  private Expr symbolLiteral()
+  private Expr symbolLiteral(Loc loc)
   {
-    loc := cur
-    if (curt !== Token.at) throw err("Expecting '@' for symbol literal")
-    consume
     Str? podName := null
     name := consumeId
     if (curt === Token.doubleColon)

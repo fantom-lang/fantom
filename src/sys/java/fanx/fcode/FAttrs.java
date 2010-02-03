@@ -23,7 +23,7 @@ public class FAttrs
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  public Facets facets() { return Facets.make(facets); }
+  public Facets facets() { return Facets.make(oldFacets); }
 
 //////////////////////////////////////////////////////////////////////////
 // Read
@@ -40,7 +40,7 @@ public class FAttrs
 
 // TODO-FACETS
 if ((in.fpod.version == 0x1000045 && name == "Facets") ||
-    name.equals("OldFacets")) { attrs.facets(in); continue; }
+    name.equals("OldFacets")) { attrs.oldFacets(in); continue; }
 
       switch (name.charAt(0))
       {
@@ -48,7 +48,7 @@ if ((in.fpod.version == 0x1000045 && name == "Facets") ||
           if (name.equals(ErrTableAttr)) { attrs.errTable(in); continue; }
           break;
         case 'F':
-System.out.println("TODO: new facets!");
+          if (name.equals(FacetsAttr)) { attrs.facets(in); continue; }
           break;
         case 'L':
           if (name.equals(LineNumberAttr)) { attrs.lineNumber(in); continue; }
@@ -76,11 +76,28 @@ System.out.println("TODO: new facets!");
     HashMap map = new HashMap();
     for (int i=0; i<n; ++i)
     {
+      FTypeRef t = in.fpod.typeRef(in.u2());
+      String qname = t.podName + "::" + t.typeName;
+      String val = in.utf();
+System.out.println("NEW FACETS " + qname + " = '" + val + "'");
+      map.put(qname, val);
+    }
+    facets = map;
+  }
+
+// TODO-FACETS
+  private void oldFacets(FStore.Input in) throws IOException
+  {
+    in.u2();
+    int n = in.u2();
+    HashMap map = new HashMap();
+    for (int i=0; i<n; ++i)
+    {
       String qname = in.fpod.symbolRef(in.u2()).qname();
       Object val = Symbol.initVal(in.utf());
       map.put(qname, val);
     }
-    facets = map;
+    oldFacets = map;
   }
 
   private void lineNumber(FStore.Input in) throws IOException
@@ -107,6 +124,7 @@ System.out.println("TODO: new facets!");
   static final FAttrs none = new FAttrs();
 
   public FBuf errTable;
+  public HashMap oldFacets;  // TODO-FACETS
   public HashMap facets;
   public int lineNum;
   public FBuf lineNums;

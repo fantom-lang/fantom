@@ -553,6 +553,8 @@ class CheckErrors : CompilerStep
 
   Void checkFacet(FacetDef f)
   {
+// TODO-FACET
+if (f.key == null) return
     if (!f.val.ctype.fits(f.key.symbol.of))
       err("Wrong type for facet '@$f.key.qname': expected '$f.key.symbol.of' not '$f.val.ctype'", f.loc)
   }
