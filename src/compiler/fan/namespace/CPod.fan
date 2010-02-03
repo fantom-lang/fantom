@@ -41,9 +41,10 @@ mixin CPod
 
   **
   ** Lookup a symbol by its simple name.  If the symbol doesn't
-  ** exist and checked is true then throw UnknownSymbolErr
+  ** exist and checked is true then throw UnknownFacetErr
   ** otherwise return null.
   **
+  // TODO-FACET
   abstract CSymbol? resolveSymbol(Str name, Bool checked)
 
   **

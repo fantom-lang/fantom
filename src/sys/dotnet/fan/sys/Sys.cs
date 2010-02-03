@@ -241,7 +241,7 @@ namespace Fan.Sys
         UnknownSlotErrType    = builtin("UnknownSlotErr",    ErrType);
         UnknownTypeErrType    = builtin("UnknownTypeErr",    ErrType);
         UnknownServiceErrType = builtin("UnknownServiceErr", ErrType);
-        UnknownSymbolErrType  = builtin("UnknownSymbolErr",  ErrType);
+        UnknownFacetErrType   = builtin("UnknownFacetErr",   ErrType);
         UnresolvedErrType     = builtin("UnresolvedErr",     ErrType);
         UnsupportedErrType    = builtin("UnsupportedErr",    ErrType);
 
@@ -509,7 +509,7 @@ namespace Fan.Sys
     public static readonly Type UnknownSlotErrType;
     public static readonly Type UnknownTypeErrType;
     public static readonly Type UnknownServiceErrType;
-    public static readonly Type UnknownSymbolErrType;
+    public static readonly Type UnknownFacetErrType;
     public static readonly Type UnresolvedErrType;
     public static readonly Type UnsupportedErrType;
 

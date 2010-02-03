@@ -152,7 +152,7 @@ public final class Sys
   public static final Type UnknownPodErrType     = initType("UnknownPodErr",     ErrType);
   public static final Type UnknownServiceErrType = initType("UnknownServiceErr", ErrType);
   public static final Type UnknownSlotErrType    = initType("UnknownSlotErr",    ErrType);
-  public static final Type UnknownSymbolErrType  = initType("UnknownSymbolErr",  ErrType);
+  public static final Type UnknownFacetErrType   = initType("UnknownFacetErr",   ErrType);
   public static final Type UnknownTypeErrType    = initType("UnknownTypeErr",    ErrType);
   public static final Type UnresolvedErrType     = initType("UnresolvedErr",     ErrType);
   public static final Type UnsupportedErrType    = initType("UnsupportedErr",    ErrType);

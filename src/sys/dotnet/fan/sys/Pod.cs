@@ -273,7 +273,7 @@ namespace Fan.Sys
     {
       Symbol s = (Symbol)loadSymbols()[name];
       if (s != null) return s;
-      if (check) throw UnknownSymbolErr.make(this.m_name + "::" + name).val;
+      if (check) throw UnknownFacetErr.make(this.m_name + "::" + name).val;
       return null;
     }
 
