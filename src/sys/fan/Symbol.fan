@@ -19,8 +19,9 @@ final const class Symbol
   **
   ** Find a Symbol by it's qualified name "pod::name".  If the symbol
   ** doesn't exist and checked is false then return null, otherwise
-  ** throw UnknownPodErr or UnknownSymbolErr.
+  ** throw UnknownPodErr or UnknownFacetErr.
   **
+  // TODO-FACET
   static Symbol? find(Str qname, Bool checked := true)
 
   **

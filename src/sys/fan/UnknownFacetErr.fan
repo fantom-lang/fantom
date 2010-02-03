@@ -4,12 +4,13 @@
 //
 // History:
 //   14 May 09  Brian Frank  Creation
+//   03 Feb 09  Brian Frank  Rename from UnknownSymbolErr
 //
 
 **
-** UnknownSymbolErr indicates an attempt to access a non-existent symbol.
+** UnknownFacetErr indicates an attempt to access a undefined facet.
 **
-const class UnknownSymbolErr : Err
+const class UnknownFacetErr : Err
 {
 
   **

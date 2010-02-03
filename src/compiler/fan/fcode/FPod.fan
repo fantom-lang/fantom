@@ -74,7 +74,7 @@ final class FPod : CPod, FConst
   {
     s := fsymbols[name]
     if (s != null) return s
-    if (checked) throw UnknownSymbolErr("${this.name}::$name")
+    if (checked) throw Err("${this.name}::$name") // TODO-FACET
     return null
   }
 
