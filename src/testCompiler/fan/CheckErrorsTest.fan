@@ -22,8 +22,8 @@ class CheckErrorsTest : CompilerTest
     verifyErrors(
      "abstract mixin A {}
       final mixin B {}
-      abstract enum C { none }
-      const final enum D { none }
+      abstract enum class C { none }
+      const final enum class D { none }
       public public class E {}
       abstract internal abstract class F {}
       ",
@@ -630,7 +630,7 @@ class CheckErrorsTest : CompilerTest
 
       class Bar {}
       class Roo : Foo {}
-      enum Boo { none;  private Int x }
+      enum class Boo { none;  private Int x }
 
       const class Outside : Foo
       {
@@ -692,7 +692,7 @@ class CheckErrorsTest : CompilerTest
         30,  3, "Const type 'Foo' cannot contain once method 'p'",
 
         34,  1, "Non-const type 'Roo' cannot subclass const class 'Foo'",
-        35, 19, "Const type 'Boo' cannot contain non-const field 'x'",
+        35, 25, "Const type 'Boo' cannot contain non-const field 'x'",
 
         39, 22, "Cannot set const field '$podName::Foo.f'",
         40, 12, "Cannot set const field '$podName::Foo.b'",

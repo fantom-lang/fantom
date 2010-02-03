@@ -14,7 +14,7 @@
 ** Horizontal alignment: left, center, right, fill, or repeat.
 **
 @js
-enum Halign
+enum class Halign
 {
   left,
   center,
@@ -31,7 +31,7 @@ enum Halign
 ** Vertical alignment: top, center, bottom, fill, or repeat.
 **
 @js
-enum Valign
+enum class Valign
 {
   top,
   center,
@@ -48,7 +48,7 @@ enum Valign
 ** Horizontal or vertical.
 **
 @js
-enum Orientation
+enum class Orientation
 {
   horizontal,
   vertical

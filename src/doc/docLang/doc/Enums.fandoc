@@ -21,10 +21,10 @@ of possible values:
   - Enums may inherit zero or more mixins
   - Enums must have private constructors
 
-Enums are declared using the 'enum' keyword and must declare
-their range of values before any other slot declarations:
+Enums are declared using the 'enum' positional keyword and must
+declare their range of values before any other slot declarations:
 
-  enum Color { red, blue, green }
+  enum class Color { red, blue, green }
 
 Range [#range]
 **************
@@ -45,7 +45,7 @@ Consider this example to illustrate what happens under
 the covers:
 
   // what you write
-  enum Color { red, blue, green }
+  enum class Color { red, blue, green }
 
   // what the compiler generates
   class Color : Enum
@@ -70,7 +70,7 @@ must be initialized in the constructor.  Enum constructors must be
 private.  The following syntax is used to declare and call an
 enum constructor:
 
-  enum Suits
+  enum class Suits
   {
     clubs("black"),
     diamonds("red"),

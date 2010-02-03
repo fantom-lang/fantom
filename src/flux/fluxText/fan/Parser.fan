@@ -452,7 +452,7 @@ internal class Parser
 **************************************************************************
 
 ** Token represents a string of color coded chars
-internal enum Token
+internal enum class Token
 {
   text,
   bracket,

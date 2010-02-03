@@ -88,7 +88,6 @@ class UsingAndTypeScanner : CompilerSupport
           inClassHeader = false
         case Token.classKeyword:
         case Token.mixinKeyword:
-        case Token.enumKeyword:
           if (!inClassHeader)
           {
             inClassHeader = true;
@@ -149,11 +148,9 @@ class UsingAndTypeScanner : CompilerSupport
     typeDef := TypeDef(ns, tok, unit, name)
     unit.types.add(typeDef)
 
-    // set enum/mixin flag to use by Parser
+    // set mixin flag to use by Parser
     if (tok.kind === Token.mixinKeyword)
       typeDef.flags = typeDef.flags.or(FConst.Mixin)
-    else if (tok.kind === Token.enumKeyword)
-      typeDef.flags = typeDef.flags.or(FConst.Enum)
 
     // check for duplicate type names
     if (allTypes.containsKey(name))

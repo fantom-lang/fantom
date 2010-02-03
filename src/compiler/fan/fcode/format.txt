@@ -235,7 +235,7 @@
     buf value
   }
 
-  Facets // type|slot attribute
+  Facets // pod|type|slot attribute
   {
     u2 name  = "Facets"
     u2 count

@@ -97,7 +97,7 @@ class ParserTest : CompilerTest
 
   Void testSimpleEnum()
   {
-    parse("enum Foo { nil }")
+    parse("enum class Foo { nil }")
     verifyEq(unit.usings.size, 1)
     verifyEq(unit.usings[0].podName, "sys")
     verifyEq(t.isClass,    false)
@@ -161,8 +161,8 @@ class ParserTest : CompilerTest
 
   Void testEnumWithExtends()
   {
-    verifyErrors("enum Foo : Enum { nil }",
-      [1, 1, "Enum 'Foo' cannot extend class 'sys::Enum'"])
+    verifyErrors("enum class Foo : Enum { nil }",
+      [1, 6, "Enum 'Foo' cannot extend class 'sys::Enum'"])
   }
 
   Void testMixinWithExtends()
@@ -209,7 +209,7 @@ class ParserTest : CompilerTest
 
   Void testEnumWithMixins()
   {
-    parse("enum Foo : Bar {nil} mixin Bar {}")
+    parse("enum class Foo : Bar {nil} mixin Bar {}")
     verifyEq(unit.usings.size, 1)
     verifyEq(unit.usings[0].podName, "sys")
     verifyEq(t.isClass,    false)
@@ -248,7 +248,7 @@ class ParserTest : CompilerTest
     // no trailing semicolon; no args
     parse(
      "** leading comment
-      enum Foo
+      enum class Foo
       {
         a,
         b,
@@ -270,7 +270,7 @@ class ParserTest : CompilerTest
 
     // trailing semicolon; args
     parse(
-     "enum Foo
+     "enum class Foo
       {
         a(true),
         b(false);
@@ -288,7 +288,7 @@ class ParserTest : CompilerTest
   Void testDupEnums()
   {
     verifyErrors(
-     "enum Foo
+     "enum class Foo
       {
         a,
         b,

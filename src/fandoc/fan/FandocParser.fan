@@ -485,7 +485,7 @@ class FandocParser
 ** LineType
 **************************************************************************
 
-internal enum LineType
+internal enum class LineType
 {
   eof,         // end of file
   blank,       // space*

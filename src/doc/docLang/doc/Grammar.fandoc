@@ -43,7 +43,7 @@ Pod Def [#podDef]
 Type Def [#typeDef]
 *******************
 
-  <typeDef>        :=  <classDef> | <mixinDef> | <enumDef>
+  <typeDef>        :=  <classDef> | <mixinDef> | <enumDef> | <facetDef>
 
   <classDef>       :=  <classHeader> <classBody>
   <classHeader>    :=  [<doc>] <facets> <classFlags> "class" <id> [<inheritance>]
@@ -51,8 +51,12 @@ Type Def [#typeDef]
   <classBody>      :=  "{" <slotDefs> "}"
 
   <enumDef>        :=  <enumHeader> <enumBody>
-  <enumHeader>     :=  [<doc>] <facets> [<protection>] "enum" <id> [<inheritance>]
+  <enumHeader>     :=  [<doc>] <facets> [<protection>] "enum" "class" <id> [<inheritance>]
   <enumBody>       :=  "{" <enumValDefs> <slotDefs> "}"
+
+  <facetDef        :=  <facetHeader> <enumBody>
+  <facetHeader>    :=  [<doc>] <facets> [<protection>] "facet" "class" <id> [<inheritance>]
+  <facetBody>      :=  "{" <slotDefs> "}"
 
   <mixinDef>       :=  <mixinHeader> <mixinBody>
   <mixinHeader>    :=  [<doc>] <facets> [<protection>] "mixin" <id> [<inheritance>]
@@ -218,23 +222,27 @@ Misc [#misc]
 
 Keywords [#keywords]
 ********************
-  abstract      for              return
-  as            foreach          static
-  assert        if               super
-  break         internal         switch
-  case          is               this
-  catch         isnot            throw
-  class         mixin            true
-  const         native           try
-  continue      new              using
-  default       null             virtual
-  do            once             volatile
-  else          override         void
-  enum          private          while
-  false         protected
-  final         public
-  finally       readonly
+  abstract       foreach        return
+  as             if             static
+  assert         internal       super
+  break          is             switch
+  case           isnot          this
+  catch          it             throw
+  class          mixin          true
+  const          native         try
+  continue       new            using
+  default        null           virtual
+  do             once           volatile
+  else           override       void
+  false          private        while
+  final          protected
+  finally        public
+  for            readonly
 
+Position Keyword [#posKeywords]
+*******************************
+  enum
+  facet
 
 
 

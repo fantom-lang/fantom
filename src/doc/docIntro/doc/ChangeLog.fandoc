@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.51 (working)*
+- Change enum to positional keyword "enum class"
+
 *Build 1.0.50 (2 Feb 10)*
 - Pod.loc => locale
 - Locale.get => Env.locale

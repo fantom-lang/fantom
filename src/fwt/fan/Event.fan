@@ -124,7 +124,7 @@ class Event
 ** EventId identifies the type of widget `Event`.
 **
 @js
-enum EventId
+enum class EventId
 {
   unknown,
   focus,

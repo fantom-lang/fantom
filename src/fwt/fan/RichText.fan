@@ -379,7 +379,7 @@ const class RichTextStyle
 ** Defines how to paint the underline of a RichText segment.
 **
 @js
-enum RichTextUnderline
+enum class RichTextUnderline
 {
   none,
   single,

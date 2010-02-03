@@ -185,7 +185,7 @@ public class Parser : CompilerSupport
     isMixin := false
     isEnum  := false
 
-    // mixin, enum, or class
+    // mixin, enum class, or class
     if (curt === Token.mixinKeyword)
     {
       if (flags.and(FConst.Abstract) != 0) err("The 'abstract' modifier is implied on mixin", loc)
@@ -194,17 +194,17 @@ public class Parser : CompilerSupport
       isMixin = true
       consume
     }
-    else if (curt === Token.enumKeyword)
-    {
-      if (flags.and(FConst.Const) != 0) err("The 'const' modifier is implied on enum", loc)
-      if (flags.and(FConst.Final) != 0) err("The 'final' modifier is implied on enum", loc)
-      if (flags.and(FConst.Abstract) != 0) err("Cannot use 'abstract' modifier on enum", loc)
-      flags = flags.or(FConst.Enum + FConst.Const + FConst.Final)
-      isEnum = true
-      consume
-    }
     else
     {
+      if (curt === Token.identifier && cur.val == "enum")
+      {
+        if (flags.and(FConst.Const) != 0) err("The 'const' modifier is implied on enum", loc)
+        if (flags.and(FConst.Final) != 0) err("The 'final' modifier is implied on enum", loc)
+        if (flags.and(FConst.Abstract) != 0) err("Cannot use 'abstract' modifier on enum", loc)
+        flags = flags.or(FConst.Enum + FConst.Const + FConst.Final)
+        isEnum = true
+        consume
+      }
       consume(Token.classKeyword)
     }
 
