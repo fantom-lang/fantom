@@ -58,7 +58,11 @@ fan.fwt.LabelPeer.prototype.image$ = function(self, val)
 {
   this.m_image = val;
   if (val != null)
-    fan.fwt.FwtEnvPeer.loadImage(val, self)
+  {
+    var $this = this;
+    var func = function() { $this.needRebuild = true; }
+    fan.fwt.FwtEnvPeer.loadImage(val, self, func);
+  }
   this.needRebuild = true;
 }
 
@@ -81,7 +85,10 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
 fan.fwt.LabelPeer.prototype.needRebuild = true;
 fan.fwt.LabelPeer.prototype.rebuild = function(self)
 {
-  var parent = this.elem;
+  var parent = this.elem;      // parent elem
+  var uri  = this.$uri(self);  // uri if applicable
+  var text = null;             // text node
+  var img  = null;             // img node
 
   // remove old subtree
   while (parent.firstChild != null)
@@ -92,62 +99,73 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     delete child;
   }
 
-  // hook for "HyperlinkLabel"
-  if (self.m_uri != null)
-  {
-    var a = document.createElement("a");
-    a.href = self.m_uri.encode();
-    try
-    {
-      if (self.m_underline == fan.fresco.UnderlineMode.m_none) a.style.textDecoration = "none";
-      else if (self.m_underline == fan.fresco.UnderlineMode.m_hover)
-      {
-        a.style.textDecoration = "none";
-        a.onmouseover = function() { a.style.textDecoration = "underline"; }
-        a.onmouseout  = function() { a.style.textDecoration = "none"; }
-      }
-    }
-    catch (err) {} // ignore
-
-    parent.appendChild(a);
-    parent = a;
-  }
-
+  // setup image
   if (this.m_image != null)
   {
-    var img = document.createElement("img");
-    if (this.m_text.length > 0)
+    if (uri == null)
+      img = document.createElement("div");
+    else
     {
-      img.style.verticalAlign = "bottom";
-      img.style.paddingRight  = "3px";
-      // TODO: this requires widget to be relayed out cause prefSize has changed
-      //img.onload = function() {
-      //  img.style.paddingRight = Math.floor(img.height*3/16) + "px";
-      //}
+      img = document.createElement("a");
+      img.href = uri.uri;
     }
-    img.border = "0";
+    img.style.display = "inline-block";
+    img.style.verticalAlign = "middle";
+
     // TODO FIXIT: dup from FwtEnvPeer.loadImage - need to make DRY
     // swizzle fan: uris to http:
-    var uri = this.m_image.m_uri;
-    var src = (uri.scheme() == "fan")
-      ? fan.sys.UriPodBase + uri.host() + uri.pathStr()
-      : uri.toStr();
-    img.src = src;
+    var orig = this.m_image.m_uri;
+    var src  = (orig.scheme() == "fan")
+      ? fan.sys.UriPodBase + orig.host() + orig.pathStr()
+      : orig.toStr();
+
+    var imgElem = document.createElement("img");
+    imgElem.border = "0";
+    imgElem.src = src;
+
+    img.appendChild(imgElem);
     parent.appendChild(img);
   }
 
-  // to keep height consisten for empty labels
-  var text;
-  if (this.m_text == "" && this.m_image == null)
+  // setup text
+  if (this.m_text.length > 0)
   {
-    text = document.createElement("span");
-    text.innerHTML = "&nbsp;"
+    if (uri == null)
+      text = document.createElement("div");
+    else
+    {
+      text = document.createElement("a");
+      text.href = uri.uri;
+      switch (uri.underline)
+      {
+        case "none": text.style.textDecoration = "none"; break;
+        case "hover":
+          text.style.textDecoration = "none";
+          text.onmouseover = function() { text.style.textDecoration = "underline"; }
+          text.onmouseout  = function() { text.style.textDecoration = "none"; }
+          break;
+        default: console.log("# " + uri.underline);
+      }
+    }
+    if (this.m_fg != null) text.style.color = this.m_fg.toStr();
+    text.style.display = "inline-block";
+    text.style.verticalAlign = "middle";
+    text.appendChild(document.createTextNode(this.m_text));
+    parent.appendChild(text);
   }
-  else text = document.createTextNode(this.m_text);
-  parent.appendChild(text);
 
-  // apply fg to parent elem to make <a> color correctly
-  if (this.m_fg != null) parent.style.color = this.m_fg.toStr();
+  // if no img or text, using placeholder to force height
+  if (img == null && text == null)
+  {
+    var span = document.createElement("span");
+    span.innerHTML = "&nbsp;"
+    parent.appendChild(span);
+  }
+
+  // insert padding b/w img and text
+  if (img != null && text != null) img.style.paddingRight = "3px";
+
+  // apply style
   with (this.elem.style)
   {
     if (this.m_bg   != null) background = this.m_bg.toStr();
@@ -160,9 +178,13 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
       case fan.gfx.Halign.m_right:  textAlign = "right"; break;
       default:                      textAlign = "left"; break;
     }
-    whiteSpace = "nowrap";
     cursor = "default";
+    whiteSpace = "nowrap";
   }
 }
+
+// Backdoor hook to reuse Label for hyperlinks
+// { uri:<encoded-uri>, underline:[<css-underline>" }
+fan.fwt.LabelPeer.prototype.$uri = function(self) { return null; }
 
 
