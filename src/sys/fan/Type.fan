@@ -297,6 +297,11 @@ const class Type
   Bool isEnum()
 
   **
+  ** Return if this Type is an Facet type.
+  **
+  Bool isFacet()
+
+  **
   ** Return if this Type is marked final which means it may not be subclassed.
   **
   Bool isFinal()
