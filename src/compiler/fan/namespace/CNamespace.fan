@@ -112,6 +112,7 @@ abstract class CNamespace : CompilerSupport
     slotFindFunc       = sysMethod(slotType,   "findFunc")
     typeField          = sysMethod(typeType,   "field")
     typeMethod         = sysMethod(typeType,   "method")
+    funcCall           = sysMethod(funcType,   "call")
 
     // mock methods
     mockFlags := FConst.Public + FConst.Virtual
@@ -335,5 +336,6 @@ abstract class CNamespace : CompilerSupport
   readonly CMethod? funcEnterCtor
   readonly CMethod? funcExitCtor
   readonly CMethod? funcCheckInCtor
+  readonly CMethod? funcCall
 
 }

@@ -83,6 +83,7 @@ class Compiler
     Inherit(this).run
     DefaultCtor(this).run
     InitEnum(this).run
+    InitFacet(this).run
     InitClosures(this).run
     Normalize(this).run
     ResolveExpr(this).run

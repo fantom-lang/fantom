@@ -27,7 +27,7 @@ class DefaultCtor : CompilerStep
 
   override Void visitTypeDef(TypeDef t)
   {
-    if (t.isMixin || t.isEnum) return
+    if (t.isMixin || t.isEnum || t.isFacet) return
 
     hasCtor := t.methodDefs.any |MethodDef m->Bool| { return m.isCtor }
     if (hasCtor) return
