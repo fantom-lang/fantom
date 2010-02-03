@@ -24,8 +24,10 @@ class CheckErrorsTest : CompilerTest
       final mixin B {}
       abstract enum class C { none }
       const final enum class D { none }
-      public public class E {}
-      abstract internal abstract class F {}
+      abstract facet class E {}
+      const final facet class F {}
+      public public class G {}
+      abstract internal abstract class H {}
       ",
        [
          1,  10, "The 'abstract' modifier is implied on mixin",
@@ -33,8 +35,11 @@ class CheckErrorsTest : CompilerTest
          3,  10, "Cannot use 'abstract' modifier on enum",
          4,  13, "The 'const' modifier is implied on enum",
          4,  13, "The 'final' modifier is implied on enum",
-         5,   8, "Repeated modifier",
-         6,  19, "Repeated modifier",
+         5,  10, "Cannot use 'abstract' modifier on facet",
+         6,  13, "The 'const' modifier is implied on facet",
+         6,  13, "The 'final' modifier is implied on facet",
+         7,   8, "Repeated modifier",
+         8,  19, "Repeated modifier",
        ])
 
     // check errors stage

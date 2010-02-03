@@ -65,6 +65,7 @@ abstract class CNamespace : CompilerSupport
     objType      = sysType("Obj")
     boolType     = sysType("Bool")
     enumType     = sysType("Enum")
+    facetType    = sysType("Facet")
     intType      = sysType("Int")
     floatType    = sysType("Float")
     decimalType  = sysType("Decimal")
@@ -285,6 +286,7 @@ abstract class CNamespace : CompilerSupport
   readonly CType? objType
   readonly CType? boolType
   readonly CType? enumType
+  readonly CType? facetType
   readonly CType? intType
   readonly CType? floatType
   readonly CType? decimalType

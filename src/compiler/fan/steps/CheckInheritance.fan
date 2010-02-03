@@ -77,6 +77,10 @@ class CheckInheritance : CompilerStep
     if (t.isEnum && t.baseSpecified)
       err("Enum '$t.name' cannot extend class '$base'", t.loc)
 
+    // ensure facet doesn't extend class
+    if (t.isFacet && t.baseSpecified)
+      err("Facet '$t.name' cannot extend class '$base'", t.loc)
+
     // check extends a mixin
     if (base.isMixin)
       err("Class '$t.name' cannot extend mixin '$base'", t.loc)

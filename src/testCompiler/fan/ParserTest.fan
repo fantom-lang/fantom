@@ -165,6 +165,12 @@ class ParserTest : CompilerTest
       [1, 6, "Enum 'Foo' cannot extend class 'sys::Enum'"])
   }
 
+  Void testFacetWithExtends()
+  {
+    verifyErrors("facet class Foo : Unit {}",
+      [1, 7, "Facet 'Foo' cannot extend class 'sys::Unit'"])
+  }
+
   Void testMixinWithExtends()
   {
     verifyErrors("mixin Foo : Obj {}",

@@ -338,6 +338,11 @@ mixin CType
   Bool isEnum() { flags.and(FConst.Enum) != 0 }
 
   **
+  ** Return if this Type is an sys::Facet
+  **
+  Bool isFacet() { flags.and(FConst.Facet) != 0 }
+
+  **
   ** Return if this Type is abstract and cannot be instantiated.  This
   ** method will always return true if the type is a mixin.
   **
