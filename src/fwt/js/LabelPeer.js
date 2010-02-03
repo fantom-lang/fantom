@@ -144,7 +144,6 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
           text.onmouseover = function() { text.style.textDecoration = "underline"; }
           text.onmouseout  = function() { text.style.textDecoration = "none"; }
           break;
-        default: console.log("# " + uri.underline);
       }
     }
     if (this.m_fg != null) text.style.color = this.m_fg.toStr();
