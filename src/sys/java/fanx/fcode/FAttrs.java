@@ -37,13 +37,18 @@ public class FAttrs
     for (int i=0; i<n; ++i)
     {
       String name = in.name();
+
+// TODO-FACETS
+if ((in.fpod.version == 0x1000045 && name == "Facets") ||
+    name.equals("OldFacets")) { attrs.facets(in); continue; }
+
       switch (name.charAt(0))
       {
         case 'E':
           if (name.equals(ErrTableAttr)) { attrs.errTable(in); continue; }
           break;
         case 'F':
-          if (name.equals(FacetsAttr)) { attrs.facets(in); continue; }
+System.out.println("TODO: new facets!");
           break;
         case 'L':
           if (name.equals(LineNumberAttr)) { attrs.lineNumber(in); continue; }
