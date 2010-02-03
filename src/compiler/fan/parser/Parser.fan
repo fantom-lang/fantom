@@ -185,7 +185,7 @@ public class Parser : CompilerSupport
     isMixin := false
     isEnum  := false
 
-    // mixin, enum class, or class
+    // mixin
     if (curt === Token.mixinKeyword)
     {
       if (flags.and(FConst.Abstract) != 0) err("The 'abstract' modifier is implied on mixin", loc)
@@ -194,8 +194,11 @@ public class Parser : CompilerSupport
       isMixin = true
       consume
     }
+
+    // class
     else
     {
+      // enum class
       if (curt === Token.identifier && cur.val == "enum")
       {
         if (flags.and(FConst.Const) != 0) err("The 'const' modifier is implied on enum", loc)
@@ -203,6 +206,15 @@ public class Parser : CompilerSupport
         if (flags.and(FConst.Abstract) != 0) err("Cannot use 'abstract' modifier on enum", loc)
         flags = flags.or(FConst.Enum + FConst.Const + FConst.Final)
         isEnum = true
+        consume
+      }
+      // facet class
+      if (curt === Token.identifier && cur.val == "facet")
+      {
+        if (flags.and(FConst.Const) != 0) err("The 'const' modifier is implied on facet", loc)
+        if (flags.and(FConst.Final) != 0) err("The 'final' modifier is implied on facet", loc)
+        if (flags.and(FConst.Abstract) != 0) err("Cannot use 'abstract' modifier on facet", loc)
+        flags = flags.or(FConst.Facet + FConst.Const + FConst.Final)
         consume
       }
       consume(Token.classKeyword)
@@ -218,6 +230,7 @@ public class Parser : CompilerSupport
     def.doc    = doc
     def.facets = facets
     def.flags  = flags
+    if (def.isFacet) def.mixins.add(ns.facetType)
 
     // inheritance
     if (curt === Token.colon)
