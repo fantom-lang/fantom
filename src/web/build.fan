@@ -14,8 +14,12 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "web"
+    summary = "Standard weblet APIs for processing HTTP requests"
+    depends = ["sys 1.0", "inet 1.0"]
+    srcDirs = [`fan/`, `test/`]
+    docSrc  = true
   }
 }

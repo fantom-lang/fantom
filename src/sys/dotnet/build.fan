@@ -17,26 +17,23 @@ using build
 class Build : BuildCs
 {
 
-  override Void setup()
+  new make()
   {
-    if (devHomeDir == Env.cur.homeDir)
-      throw fatal("Must update etc/build/config.props devHome for bootstrap")
-
-    output = libDotnetDir + `sys.dll`
+    output = devHomeDir.uri + `lib/dotnet/sys.dll`
     targetType = "library"
 
-    dirs = [scriptDir + `fan/sys/`,
-            scriptDir + `fanx/emit/`,
-            scriptDir + `fanx/fcode/`,
-            scriptDir + `fanx/serial/`,
-            scriptDir + `fanx/test/`,
-            scriptDir + `fanx/tools/`,
-            scriptDir + `fanx/typedb/`,
-            scriptDir + `fanx/util/`,
-            scriptDir + `perwapi/`]
+    srcDirs = [`fan/sys/`,
+               `fanx/emit/`,
+               `fanx/fcode/`,
+               `fanx/serial/`,
+               `fanx/test/`,
+               `fanx/tools/`,
+               `fanx/typedb/`,
+               `fanx/util/`,
+               `perwapi/`]
 
-    libs = [libDotnetDir + `ICSharpCode.SharpZipLib.dll`,
-            libDotnetDir + `QUT.SymbolWriter.dll`]
+    libs = [devHomeDir.uri + `lib/dotnet/ICSharpCode.SharpZipLib.dll`,
+            devHomeDir.uri + `lib/dotnet/QUT.SymbolWriter.dll`]
   }
 
 }

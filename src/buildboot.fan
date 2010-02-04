@@ -23,14 +23,14 @@ using build
 class Build : BuildGroup
 {
 
-  override Void setup()
+  new make()
   {
     childrenScripts =
     [
       `sys/build.fan`,
       `sys/java/build.fan`,
       `sys/dotnet/build.fan`,
-      `sys/js/build.fan`,
+      //`sys/js/build.fan`, TODO-FACETS
       `compiler/build.fan`,
       `compilerJava/build.fan`,
       `build/build.fan`,

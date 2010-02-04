@@ -14,8 +14,14 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "webmod"
+    summary = "Standard library of WebMods"
+    depends = ["sys 1.0", "inet 1.0", "web 1.0", "util 1.0"]
+    srcDirs = [`fan/`]
+    docSrc  = true
   }
 }
+
+

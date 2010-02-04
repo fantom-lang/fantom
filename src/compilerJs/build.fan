@@ -14,8 +14,12 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "compilerJs"
+    summary = "Fantom to JavaScript Compiler"
+    depends = ["sys 1.0", "compiler 1.0", "build 1.0"]
+    srcDirs = [`fan/`, `fan/ast/`] // TODO-FACETS, `fan/runner/`]
+    docSrc  = true
   }
 }
