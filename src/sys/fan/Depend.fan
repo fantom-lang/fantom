@@ -41,7 +41,7 @@
 **    "foo 1.2-1.4"  Any version between 1.2 and 1.4 inclusive
 **    "foo 1.2,1.4"  Any version of 1.2 or 1.4
 **
-@simple
+@Serializable { simple = true }
 final const class Depend
 {
 

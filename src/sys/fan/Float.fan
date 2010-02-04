@@ -10,7 +10,7 @@
 **
 ** Float is used to represent a 64-bit floating point number.
 **
-@simple
+@Serializable { simple = true }
 const final class Float : Num
 {
 

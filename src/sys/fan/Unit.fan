@@ -39,7 +39,7 @@
 ** Fantom's model for units of measurement and the unit database are
 ** derived from the OASIS oBIX specification.
 **
-@simple
+@Serializable { simple = true }
 const class Unit
 {
 

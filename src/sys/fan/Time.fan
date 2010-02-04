@@ -10,7 +10,7 @@
 ** Time represents a time of day independent of a specific
 ** date or timezone.
 **
-@simple
+@Serializable { simple = true }
 const final class Time
 {
 
