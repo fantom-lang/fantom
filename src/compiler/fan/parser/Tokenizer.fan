@@ -957,7 +957,7 @@ class Tokenizer : CompilerSupport
 ** Quoted
 **************************************************************************
 
-internal enum Quoted
+internal enum class Quoted
 {
   normal("Str literal", true),
   triple("Str literal", true),

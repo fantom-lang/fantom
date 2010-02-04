@@ -46,7 +46,7 @@ class CompilerOutput
 **
 ** Input source from the file system - see `CompilerOutput`
 **
-enum CompilerOutputMode
+enum class CompilerOutputMode
 {
   transientPod,
   podFile,

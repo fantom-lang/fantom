@@ -638,7 +638,7 @@ class Case : Node
 ** StmtId
 **************************************************************************
 
-enum StmtId
+enum class StmtId
 {
   nop,
   expr,

@@ -1626,7 +1626,7 @@ class ThrowExpr : Expr
 **
 ** ExprId uniquely identifies the type of expr
 **
-enum ExprId
+enum class ExprId
 {
   nullLiteral,      // LiteralExpr
   trueLiteral,
@@ -1682,7 +1682,7 @@ enum ExprId
 ** ShortcutOp is a sub-id for ExprId.shortcut which identifies the
 ** an shortuct operation and it's method call
 **
-enum ShortcutOp
+enum class ShortcutOp
 {
   plus(2),
   minus(2),
