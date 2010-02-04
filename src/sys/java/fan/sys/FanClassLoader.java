@@ -222,7 +222,7 @@ public class FanClassLoader
   {
     public ExtClassLoader()
     {
-      super(new URL[0]);
+      super(new URL[0], FanClassLoader.class.getClassLoader());
       try
       {
         String sep = java.io.File.separator;
