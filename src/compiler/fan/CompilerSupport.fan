@@ -53,7 +53,7 @@ class CompilerSupport
   ** Get default compilation unit to use for synthetic definitions
   ** such as wrapper types.
   **
-  CompilationUnit syntheticsUnit() { c.pod.unit ?: c.pod.units.first }
+  CompilationUnit syntheticsUnit() { c.pod.units.first }
 
   **
   ** Convenience for compiler.types
@@ -138,7 +138,8 @@ class CompilerSupport
   ** all the warnings which might spew out while rebuilding
   ** the type database in the middle of a compile.
   **
-  static Type[] findByFacet(Symbol key, Obj facetVal, Obj? options := null)
+/* TODO-FACETS
+  static Type[] findByFacet(Type t)
   {
     log := Log.get("typedb")
     oldLevel := log.level
@@ -148,6 +149,7 @@ class CompilerSupport
     finally
       log.level = oldLevel
   }
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

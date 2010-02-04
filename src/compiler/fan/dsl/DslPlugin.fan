@@ -26,6 +26,13 @@ abstract class DslPlugin : CompilerSupport
   static DslPlugin? find(CompilerSupport c, Loc loc, CType anchorType)
   {
     qname := anchorType.qname
+
+if (qname == "sys::Str") return StrDslPlugin(c.compiler)
+if (qname == "sys::Regex") return RegexDslPlugin(c.compiler)
+c.err("TODO - DSL plugins hard coded!  '$qname'", loc)
+return null
+
+/* TODO-FACETS
     t := findByFacet(@compilerDsl, qname)
 
     if (t.size > 1)
@@ -50,6 +57,7 @@ abstract class DslPlugin : CompilerSupport
       c.errReport(CompilerErr("Cannot construct DSL plugin '$t.first'", loc, e))
       return null
     }
+*/
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -29,7 +29,6 @@ abstract class GenericType : CType
   override CPod pod()      { return ns.sysPod }
   override Str name()      { return base.name }
   override Str qname()     { return base.qname }
-  override Obj? facet(Str qname, Obj? def) { base.facet(qname, def) }
 
   override Bool isVal() { return false }
 
@@ -400,7 +399,6 @@ class GenericParameterType : CType
   override Str qname
   override Str signature() { return qname }
   override Int flags() { return FConst.Public }
-  override Obj? facet(Str qname, Obj? def) { def }
   override Bool isVal() { return false }
   override Bool isNullable() { return false }
   override once CType toNullable() { return NullableType(this) }
@@ -432,7 +430,6 @@ class ParameterizedField : CField
   override Str qname() { return generic.qname }
   override Str signature() { return generic.signature }
   override Int flags() { return generic.flags }
-  override Obj? facet(Str qname, Obj? def) { generic.facet(qname, def) }
 
   override CType fieldType
   override CMethod? getter
@@ -474,7 +471,6 @@ class ParameterizedMethod : CMethod
   override Str name()  { return generic.name }
   override Str qname() { return generic.qname }
   override Int flags() { return generic.flags }
-  override Obj? facet(Str qname, Obj? def) { generic.facet(qname, def) }
 
   override Bool isParameterized()  { return true }
 

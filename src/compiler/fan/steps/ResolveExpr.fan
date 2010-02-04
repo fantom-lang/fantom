@@ -39,17 +39,6 @@ class ResolveExpr : CompilerStep
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Symbol
-//////////////////////////////////////////////////////////////////////////
-
-  override Void exitSymbolDef(SymbolDef s)
-  {
-    // symbol type inference
-    if (s.ctype == null) s.ctype = s.val.ctype
-    super.exitSymbolDef(s)
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Method
 //////////////////////////////////////////////////////////////////////////
 
@@ -159,7 +148,6 @@ class ResolveExpr : CompilerStep
       case ExprId.slotLiteral:     return resolveSlotLiteral(expr)
       case ExprId.listLiteral:     return resolveList(expr)
       case ExprId.mapLiteral:      return resolveMap(expr)
-      case ExprId.symbolLiteral:   return resolveSymbol(expr)
       case ExprId.boolNot:
       case ExprId.cmpNull:
       case ExprId.cmpNotNull:      expr.ctype = ns.boolType
@@ -241,16 +229,6 @@ class ResolveExpr : CompilerStep
       v := Expr.commonType(ns, expr.vals)
       expr.ctype = MapType(k, v)
     }
-    return expr
-  }
-
-  **
-  ** Resolve symbol literal
-  **
-  private Expr resolveSymbol(SymbolExpr expr)
-  {
-    expr.ctype = ns.symbolType
-    expr.symbol = ResolveImports.resolveSymbol(this, curUnit, expr.podName, expr.name, expr.loc)
     return expr
   }
 

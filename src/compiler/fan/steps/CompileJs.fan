@@ -17,9 +17,13 @@ class CompileJs  : CompilerStep
 
   override Void run()
   {
-    // skip pods if @js facet not configured or outpout mode not js
-    if (!pod.hasMarkerFacet("sys::js") &&
-        compiler.input.output !== CompilerOutputMode.js) return
+// TODO-FACET
+return
+// skip pods if @js facet not configured or outpout mode not js
+//
+//if (!pod.hasMarkerFacet("sys::js") &&
+//        compiler.input.output !== CompilerOutputMode.js) return
+//
 
     // try to resolve plugin type
     t := Type.find("compilerJs::CompileJsPlugin", false)

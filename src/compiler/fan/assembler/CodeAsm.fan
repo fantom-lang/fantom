@@ -625,7 +625,6 @@ class CodeAsm : CompilerSupport
       case ExprId.uriLiteral:      uriLiteral(expr)
       case ExprId.typeLiteral:     typeLiteral(expr)
       case ExprId.slotLiteral:     slotLiteral(expr)
-      case ExprId.symbolLiteral:   symbolLiteral(expr)
       case ExprId.rangeLiteral:    rangeLiteral(expr)
       case ExprId.listLiteral:     listLiteral(expr)
       case ExprId.mapLiteral:      mapLiteral(expr)
@@ -719,11 +718,6 @@ class CodeAsm : CompilerSupport
       op(FOp.CallVirtual, fpod.addMethodRef(ns.typeField, 1))
     else
       op(FOp.CallVirtual, fpod.addMethodRef(ns.typeMethod, 1))
-  }
-
-  private Void symbolLiteral(SymbolExpr expr)
-  {
-    op(FOp.LoadSymbol, fpod.addSymbolRef(expr.symbol))
   }
 
   private Void rangeLiteral(RangeLiteralExpr r)

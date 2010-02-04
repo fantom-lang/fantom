@@ -175,9 +175,9 @@ class FPrinter : FConst
     buf.seek(0)
     buf.readU2.times
     {
-      key := pod.symbolRefStr(buf.readU2)
-      val := buf.readUtf
-      printLine("       $key=$val")
+      type := pod.typeRef(buf.readU2)
+      val  := buf.readUtf
+      printLine("       @" + (val.isEmpty ? type : val))
     }
   }
 

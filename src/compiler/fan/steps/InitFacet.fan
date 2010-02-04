@@ -105,6 +105,9 @@ class InitFacet : CompilerStep
     m.code.stmts.add(call.toStmt)
     m.code.stmts.add(ReturnStmt.makeSynthetic(loc))
     curType.addSlot(m)
+
+    // make Serializable
+    curType.addFacet(this, ns.sysPod.resolveType("Serializable", true))
   }
 
 //////////////////////////////////////////////////////////////////////////

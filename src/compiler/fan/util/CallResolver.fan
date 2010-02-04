@@ -66,7 +66,6 @@ class CallResolver : CompilerSupport
       resolveForeign
       constantFolding
       castForThisType
-      castForSymbolLiteral
       ffiCoercion
       safeToNullable
       return result
@@ -434,7 +433,7 @@ class CallResolver : CompilerSupport
     call := result as CallExpr
     if (call == null) return
 
-    // skip constant folding for testSys unless this is symbols
+    // skip constant folding for testSys
     if (curType != null && compiler.pod.name == "testSys") return
 
     result = ConstantFolder(compiler).fold(call)
@@ -465,36 +464,6 @@ class CallResolver : CompilerSupport
     result.ctype = base
     if (method.inheritedReturnType != base)
       result = TypeCheckExpr.coerce(result, base) { from = method.inheritedReturnType }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Cast for Symbol Literal
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** If the epxression base expression is a symbol literal
-  ** and we are calling one of the  value methods then we
-  ** know the value type at compile time.
-  **
-  private Void castForSymbolLiteral()
-  {
-    //  only care about methods on symbol literals
-    if (target == null || target.id !== ExprId.symbolLiteral) return
-    symbol := ((SymbolExpr)target).symbol
-    if (symbol == null) return
-
-    // only care about method val/defVal calls on the symbol literal
-    method := found as CMethod
-    if (method == null) return
-    if (method.qname != "sys::Symbol.val" &&
-        method.qname != "sys::Symbol.defVal") return
-
-    // the result of a method which returns This
-    // is always the base target type - if we aren't
-    // calling against the original declaring type
-    // then we also need an implicit cast operation
-    from := result.ctype
-    result = TypeCheckExpr.coerce(result, symbol.of) { it.from = from }
   }
 
 //////////////////////////////////////////////////////////////////////////

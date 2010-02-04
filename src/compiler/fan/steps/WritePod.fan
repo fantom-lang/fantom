@@ -107,7 +107,7 @@ class WritePod : CompilerStep
     if (path == null)
     {
       path = file.uri
-      path = path.relTo(input.podDef.parent.uri)
+      path = path.relTo(input.baseDir.uri)
     }
 
     try
@@ -136,26 +136,24 @@ class WritePod : CompilerStep
   }
 
   **
-  ** Pod fandoc follows same format as type apidocs except qname
-  ** is "{podName}::pod" and symbols are "{podName}::pod.{symbol}".
+  ** Pod fandoc TODO-FACETS
   **
   private Void writePodDoc(Zip zip)
   {
+    // TODO-FACETS
+    /*
     try
     {
       pod := compiler.pod
       out := zip.writeNext("doc/pod.apidoc".toUri)
       writeDoc(out, pod.name, pod)
-      pod.symbolDefs.each |SymbolDef s|
-      {
-        writeDoc(out, s.qname, s)
-      }
       out.close
     }
     catch (Err e)
     {
       throw errReport(CompilerErr("Cannot write pod fandoc", loc, e))
     }
+    */
   }
 
   **
@@ -209,6 +207,7 @@ class WritePod : CompilerStep
 
   private Void writeTypeDb(Zip zip)
   {
+  /* TODO-FACETS
     out := zip.writeNext(`/typedb.def`)
 
     // pod meta-data
@@ -253,10 +252,14 @@ class WritePod : CompilerStep
     types.each |TypeDef t| { writeTypeDbType(out, t, facetNameMap) }
 
     out.close
+*/
   }
 
   private FacetDef[] computeIndexedFacets(FacetDef[]? all, Str[] list, Str:Int map)
   {
+return noFacets
+
+/* TODO-FACETS
     // if no facets defined, this is easy
     if (all == null || all.size == 0)
       return noFacets
@@ -289,8 +292,10 @@ class WritePod : CompilerStep
     }
 
     return indexed
+*/
   }
 
+/* TODO-FACETS
   private Void writeTypeDbType(OutStream out, TypeDef t, Str:Int facetNames)
   {
     out.writeUtf(t.name)
@@ -305,6 +310,7 @@ class WritePod : CompilerStep
       out.writeUtf(f.val.serialize)
     }
   }
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

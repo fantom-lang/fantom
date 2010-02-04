@@ -81,7 +81,6 @@ abstract class CNamespace : CompilerSupport
     fieldType    = sysType("Field")
     methodType   = sysType("Method")
     rangeType    = sysType("Range")
-    symbolType   = sysType("Symbol")
     uriType      = sysType("Uri")
     voidType     = sysType("Void")
 
@@ -161,7 +160,11 @@ abstract class CNamespace : CompilerSupport
 
 
     // resolve the name by compilerBridge facet
-    t := findByFacet(@compilerBridge, name)
+// TODO-FACETS
+t := name == "java" ? [Type.find("compilerJava::JavaBridge")] :
+   throw CompilerErr("FFI hardcoded!", loc)
+
+//    t := findByFacet(@compilerBridge, name)
     if (t.size > 1)
       throw CompilerErr("Multiple FFI bridges available for '$name': $t", loc)
     if (t.size == 0)
@@ -303,7 +306,6 @@ abstract class CNamespace : CompilerSupport
   readonly CType? fieldType
   readonly CType? methodType
   readonly CType? rangeType
-  readonly CType? symbolType
   readonly CType? uriType
   readonly CType? voidType
 

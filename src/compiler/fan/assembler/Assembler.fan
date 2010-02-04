@@ -40,12 +40,6 @@ class Assembler : CompilerSupport, FConst
       fpod.ftypes.add(assembleType(t))
     }
 
-    fpod.fsymbols = Str:FSymbol[:]
-    pod.symbolDefs.each |SymbolDef s|
-    {
-      fpod.fsymbols[s.name] = assembleSymbol(s)
-    }
-
     return fpod
   }
 
@@ -54,16 +48,18 @@ class Assembler : CompilerSupport, FConst
     // add build facets
     try
     {
-      sys := ns.sysPod
-      pod.addFacet(this, sys.resolveSymbol("podBuildHost", true), Env.cur.host)
-      pod.addFacet(this, sys.resolveSymbol("podBuildUser", true), Env.cur.user)
-      pod.addFacet(this, sys.resolveSymbol("podBuildTime", true), DateTime.now)
+          sys := ns.sysPod
+// TODO-FACETS
+//      pod.addFacet(this, sys.("podBuildHost", true), Env.cur.host)
+//      pod.addFacet(this, sys.("podBuildUser", true), Env.cur.user)
+//      pod.addFacet(this, sys.("podBuildTime", true), DateTime.now)
     }
     catch (Err e) e.trace
 
-    asm := AttrAsm(compiler, fpod)
-    asm.facets(pod.facets)
-    return asm.attrs
+//    asm := AttrAsm(compiler, fpod)
+//    asm.facets(pod.facets)
+//    return asm.attrs
+return FAttr[,]
   }
 
   private FType assembleType(TypeDef def)
@@ -139,21 +135,6 @@ class Assembler : CompilerSupport, FConst
     m.fattrs = attrs.attrs
 
     return m;
-  }
-
-  private FSymbol assembleSymbol(SymbolDef def)
-  {
-    f := FSymbol(fpod)
-    f.ofIndex   = typeRef(def.of)
-    f.nameIndex = name(def.name)
-    f.flags     = def.flags
-
-    try
-      f.val = def.val.serialize
-    catch (CompilerErr e)
-      err("Symbol value is not serializable: '$def.name' ($e.msg)", def.val.loc)
-
-    return f
   }
 
 //////////////////////////////////////////////////////////////////////////

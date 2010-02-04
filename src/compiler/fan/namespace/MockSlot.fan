@@ -24,8 +24,6 @@ abstract class MockSlot : CSlot
   override Int flags
   override Str qname() { parent.qname + "." + name }
   override Str signature() { qname }
-
-  override Obj? facet(Str qname, Obj? def) { def }
 }
 
 **************************************************************************

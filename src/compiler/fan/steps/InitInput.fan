@@ -41,7 +41,6 @@ class InitInput : CompilerStep
   override Void run()
   {
     validateInput
-    initPodFacets
     initNamespace
     initPod
     initDepends
@@ -61,60 +60,6 @@ class InitInput : CompilerStep
       input.validate
     catch (CompilerErr err)
       throw errReport(err)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Pod Facets
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Init this step's podFacets field
-  **
-  private Void initPodFacets()
-  {
-    switch (input.mode)
-    {
-      case CompilerInputMode.str:  initPodFacetsStrMode
-      case CompilerInputMode.file: initPodFacetsFileMode
-      default: throw err("Unknown input mode $input.mode", null)
-    }
-  }
-
-  private Void initPodFacetsStrMode()
-  {
-    // if "pod.fan" as passed in then parse it
-    if (input.podStr != null)
-      parsePodFacets(Loc("pod.fan"), input.podStr)
-  }
-
-  private Void initPodFacetsFileMode()
-  {
-    // verify podDef exists
-    podDef := input.podDef
-    if (!podDef.exists) throw err("Invalid podDef: $podDef", null)
-
-    // parse pod facets
-    loc := Loc.makeFile(podDef)
-    parsePodFacets(loc, podDef.readAllStr)
-  }
-
-  private Void parsePodFacets(Loc loc, Str src)
-  {
-    try
-      podFacets = PodFacetsParser(loc, src).parse
-    catch (CompilerErr e)
-      throw errReport(e)
-    catch (Err e)
-      throw errReport(CompilerErr("Cannot parse pod facets: $e", loc, e))
-  }
-
-  private Obj? podFacet(Str qname, Obj def)
-  {
-    if (podFacets == null) return def
-    try
-      return podFacets.get(qname, false, def.typeof) ?: def
-    catch (CompilerErr e)
-      throw errReport(e)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -166,16 +111,11 @@ class InitInput : CompilerStep
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Init the compiler.pod with PodDef
+  ** Init 'compiler.pod' with PodDef
   **
   private Void initPod()
   {
-    // verify "pod.fan" matches podName passed in
     podName := input.podName
-    if (podFacets != null && podName!= podFacets.podName)
-      throw err("CompilerInput.podName does not match 'pod.fan': $podName != $podFacets.podName", podFacets.loc)
-
-    // init compiler fields
     compiler.pod   = PodDef(ns, Loc(podName), podName)
     compiler.isSys = podName == "sys"
   }
@@ -189,8 +129,7 @@ class InitInput : CompilerStep
   **
   private Void initDepends()
   {
-    // depends are specified with @podDepends facet
-    compiler.depends = podFacet("sys::podDepends", Depend[,])
+    compiler.depends = input.depends
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -205,12 +144,9 @@ class InitInput : CompilerStep
     if (input.mode !== CompilerInputMode.file) return
 
     // map pod facets to src/res files
-    compiler.srcFiles = findFiles("sys::podSrcDirs", "fan")
-    compiler.resFiles = findFiles("sys::podResDirs", null)
-    compiler.jsFiles  = findFiles("sys::podJsDirs",  "js")
-
-    // "pod.fan" is always implicit include in source
-    compiler.srcFiles.insert(0, input.podDef)
+    compiler.srcFiles = findFiles(input.srcDirs, "fan")
+    compiler.resFiles = findFiles(input.resDirs, null)
+    compiler.jsFiles  = findFiles(input.jsDirs,  "js")
 
     if (compiler.srcFiles.isEmpty && compiler.resFiles.isEmpty)
       throw err("No fan source files found", null)
@@ -227,15 +163,14 @@ class InitInput : CompilerStep
     log.info("FindSourceFiles [${compiler.srcFiles.size} files]")
   }
 
-  private File[] findFiles(Str qname, Str? ext)
+  private File[] findFiles(Uri[] uris, Str? ext)
   {
-    base := input.podDef
+    base := input.baseDir
     acc := File[,]
-    uris := (Uri[])podFacet(qname, Uri[,])
     uris.each |uri|
     {
       dir := base + uri
-      if (!dir.isDir) throw err("Invalid directory", Loc.makeFile(dir))
+      if (!dir.exists || !dir.isDir) throw err("Invalid directory", Loc.makeFile(dir))
       dir.list.each |file|
       {
         if (file.isDir) return
@@ -249,8 +184,7 @@ class InitInput : CompilerStep
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Loc loc                     // ctor
-  private CompilerInput input         // ctor
-  private PodFacetsParser? podFacets  // parsePodFacets
+  private Loc loc                // ctor
+  private CompilerInput input    // ctor
 
 }

@@ -36,7 +36,6 @@ class Tokenize : CompilerStep
 
   private Void runStrMode()
   {
-    if (input.podStr != null) tokenize(Loc("pod.fan"), input.podStr)
     tokenize(input.srcStrLoc, input.srcStr)
   }
 

@@ -33,9 +33,6 @@ class FType : CType
   override once Str qname() { return "${fpod.name}::${name}" }
   override Str signature() { return qname }
 
-  // TODO: we don't support facets in fcode yet
-  override Obj? facet(Str qname, Obj? def) { def }
-
   override CType? base
   {
     get

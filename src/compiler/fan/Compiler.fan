@@ -57,7 +57,7 @@ class Compiler
   **
   virtual CompilerOutput compile()
   {
-    log.info("Compile [${input.podName ?: input.podDef?.parent?.name}]")
+    log.info("Compile [${input.podName}]")
     log.indent
 
     frontend

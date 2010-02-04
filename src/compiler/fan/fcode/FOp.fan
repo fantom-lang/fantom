@@ -66,8 +66,7 @@ enum class FOp
   CatchErrStart      (FOpArg.TypeRef),    //  52  start catch block - leave typed Err on stack
   CatchEnd           (),                  //  53  start catch block - leave typed Err on stack
   FinallyStart       (),                  //  54  starting instruction of a finally block
-  FinallyEnd         (),                  //  55  ending instruction of a finally block
-  LoadSymbol         (FOpArg.SymbolRef)   //  56  load Symbol const by index onto stack
+  FinallyEnd         ()                   //  55  ending instruction of a finally block
 
   private new make(FOpArg arg := FOpArg.None) { this.arg = arg }
 
@@ -91,7 +90,6 @@ enum class FOpArg
   TypeRef,
   FieldRef,
   MethodRef,
-  SymbolRef,
   Jump,
   TypePair
 }
