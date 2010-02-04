@@ -88,7 +88,6 @@ public final class Sys
   public static final Type FieldType     = initType("Field",    SlotType);
   public static final Type MethodType    = initType("Method",   SlotType);
   public static final Type ParamType     = initType("Param",    ObjType);
-  public static final Type SymbolType    = initType("Symbol",   ObjType);
 
   // IO
   public static final Type CharsetType      = initType("Charset",      ObjType);
@@ -132,6 +131,12 @@ public final class Sys
   public static final Type UriSchemeType    = initType("UriScheme",    ObjType);
   public static final Type FanSchemeType    = initType("FanScheme",    UriSchemeType);
   public static final Type FileSchemeType   = initType("FileScheme",   UriSchemeType);
+
+  // facets
+  public static final Type TransientType      = initType("Transient",    ObjType);
+  public static final Type SerializableType   = initType("Serializable", ObjType);
+  public static final Type JsType             = initType("Js",           ObjType);
+  public static final Type NoDocType          = initType("NoDoc",        ObjType);
 
   // exceptions
   public static final Type ErrType               = initType("Err",               ObjType);

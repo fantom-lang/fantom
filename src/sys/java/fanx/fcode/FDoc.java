@@ -55,7 +55,7 @@ public class FDoc
       if (name == null)
         ((Pod)top).doc = doc;
       else
-        ((Pod)top).symbol(name, true).doc = doc;
+        throw new RuntimeException(key);
     }
     else
     {

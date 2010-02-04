@@ -22,8 +22,7 @@ public class FSlot
   protected void readCommon(FStore.Input in) throws IOException
   {
     name  = in.name();
-flags = FSymbol.flags(in);
-//    flags = in.u4();
+    flags = in.u4();
   }
 
   protected void readAttrs(FStore.Input in) throws IOException

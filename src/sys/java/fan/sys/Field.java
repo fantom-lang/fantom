@@ -93,7 +93,7 @@ public class Field
     catch (Exception e)
     {
       if (reflect == null)
-        throw Err.make("Field not mapped to java.lang.reflect correctly").val;
+        throw Err.make("Field not mapped to java.lang.reflect correctly " + qname()).val;
 
       throw Err.make(e).val;
     }

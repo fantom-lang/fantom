@@ -31,11 +31,6 @@ public class FAttrs
     for (int i=0; i<n; ++i)
     {
       String name = in.name();
-
-// TODO-FACETS
-if ((in.fpod.version == 0x1000045 && name == "Facets") ||
-    name.equals("OldFacets")) { attrs.oldFacets(in); continue; }
-
       switch (name.charAt(0))
       {
         case 'E':
@@ -74,23 +69,6 @@ if ((in.fpod.version == 0x1000045 && name == "Facets") ||
       f.type = in.u2();
       f.val  = in.utf();
     }
-  }
-
-// TODO-FACETS
-public Facets facets() { return Facets.make(oldFacets); }
-public HashMap oldFacets;
-  private void oldFacets(FStore.Input in) throws IOException
-  {
-    in.u2();
-    int n = in.u2();
-    HashMap map = new HashMap();
-    for (int i=0; i<n; ++i)
-    {
-      String qname = in.fpod.symbolRef(in.u2()).qname();
-      Object val = Symbol.initVal(in.utf());
-      map.put(qname, val);
-    }
-    oldFacets = map;
   }
 
   private void lineNumber(FStore.Input in) throws IOException

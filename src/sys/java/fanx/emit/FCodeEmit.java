@@ -139,7 +139,6 @@ public class FCodeEmit
         case FinallyStart:        finallyStart(); break;
         case FinallyEnd:          finallyEnd(); break;
 
-        case LoadSymbol:          loadSymbol(); break;
         default: throw new IllegalStateException(opcode < OpNames.length ? OpNames[opcode] : "bad opcode=" + opcode);
       }
     }
@@ -418,13 +417,6 @@ public class FCodeEmit
     code.op(DUP);
     code.op2(PUTSTATIC, fieldRef);
     code.mark(nonNull);
-  }
-
-  private void loadSymbol()
-  {
-    int index = u2();
-    int field = emit.field(podClass + ".S" + index + ":Lfan/sys/Symbol;");
-    code.op2(GETSTATIC, field);
   }
 
 //////////////////////////////////////////////////////////////////////////

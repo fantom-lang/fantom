@@ -110,9 +110,10 @@ public abstract class Slot
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
-  public Map facets() { return facets.map(); }
-  public Object facet(Symbol key) { return facets.get(key, null); }
-  public Object facet(Symbol key, Object def) { return facets.get(key, def); }
+  public List facets() { return facets.list(); }
+  public Facet facet(Type t) { return facets.get(t, true); }
+  public Facet facet(Type t, boolean c) { return facets.get(t, c); }
+  public final boolean hasFacet(Type t) { return facet(t, false) != null; }
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation

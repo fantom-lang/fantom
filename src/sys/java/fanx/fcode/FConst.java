@@ -124,7 +124,6 @@ public interface FConst
   public static final int CatchEnd        =  53; // ()        start catch block - leave typed Err on stack
   public static final int FinallyStart    =  54; // ()        starting instruction of a finally block
   public static final int FinallyEnd      =  55; // ()        ending instruction of a finally block
-  public static final int LoadSymbol      =  56; // (symbol)  load Symbol const by index onto stack
 
   public static final String[] OpNames =
   {
@@ -184,7 +183,6 @@ public interface FConst
     "CatchEnd",           //  53
     "FinallyStart",       //  54
     "FinallyEnd",         //  55
-    "LoadSymbol",         //  56
   };
 
   public static final int[] OpSkips =
@@ -245,7 +243,6 @@ public interface FConst
     0,  //  53 CatchEnd
     0,  //  54 FinallyStart
     0,  //  55 FinallyEnd
-    2,  //  56 LoadSymbol
   };
 
   public static final String[] OpSigs =
@@ -306,7 +303,6 @@ public interface FConst
     "()",         //  53 CatchEnd
     "()",         //  54 FinallyStart
     "()",         //  55 FinallyEnd
-    "(symbol)",   //  56 LoadSymbol
   };
 
 }

@@ -124,10 +124,6 @@ public class ObjDecoder
     if (curt == Token.LBRACKET)
       return readCollection(curField, peekType);
 
-    // @ is always literal
-    if (curt == Token.AT)
-      return readSymbolLiteral();
-
     // at this point all remaining options must start
     // with a type signature - if peekType is non-null
     // then we've already read the type signature
@@ -540,45 +536,6 @@ public class ObjDecoder
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Symbol
-//////////////////////////////////////////////////////////////////////////
-
-  /**
-   * symbolLiteral := "@" [podName "::"] symbolName
-   */
-  private Symbol readSymbolLiteral()
-  {
-    consume(Token.AT, "Expected '@' for symbol literal");
-
-    // parse identifier
-    String n = consumeId("Expected symbol name");
-
-    // check for using imported symbol
-    if (curt != Token.DOUBLE_COLON)
-    {
-      for (int i=0; i<numUsings; ++i)
-      {
-        Symbol s = usings[i].resolveSymbol(n);
-        if (s != null) return s;
-      }
-      throw err("Unresolved symbol name: " + n);
-    }
-
-    // must be fully qualified
-    consume(Token.DOUBLE_COLON, "Expected ::");
-    String symbolName = consumeId("Expected symbol name");
-
-    // resolve pod
-    Pod pod = Pod.find(n, false);
-    if (pod == null) throw err("Pod not found: " + n);
-
-    // resolve symbol
-    Symbol s = pod.symbol(symbolName, false);
-    if (s == null) throw err("Symbol not found: " + n + "::" + symbolName);
-    return s;
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Error Handling
 //////////////////////////////////////////////////////////////////////////
 
@@ -671,14 +628,12 @@ public class ObjDecoder
   static abstract class Using
   {
     abstract Type resolve(String name);
-    abstract Symbol resolveSymbol(String name);
   }
 
   static class UsingPod extends Using
   {
     UsingPod(Pod p) { pod = p; }
     Type resolve(String n) { return pod.type(n, false); }
-    Symbol resolveSymbol(String n) { return pod.symbol(n, false); }
     final Pod pod;
   }
 
@@ -686,7 +641,6 @@ public class ObjDecoder
   {
     UsingType(Type t, String n) { type = t; name = n; }
     Type resolve(String n) { return name.equals(n) ? type : null; }
-    Symbol resolveSymbol(String n) { return null; }
     final String name;
     final Type type;
   }
