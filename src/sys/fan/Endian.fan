@@ -9,7 +9,7 @@
 **
 ** Byte ordering.
 **
-enum Endian
+enum class Endian
 {
   ** Most significant byte first (network byte order)
   big,

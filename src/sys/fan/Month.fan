@@ -9,7 +9,7 @@
 **
 ** Enum for twelve months of the year.
 **
-enum Month
+enum class Month
 {
   ** January
   jan,

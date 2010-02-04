@@ -9,7 +9,7 @@
 **
 ** FOp provides all the fcode constants
 **
-enum FOp
+enum class FOp
 {
   Nop                (),                  //   0  no operation
   LoadNull           (),                  //   1  load null literal onto stack
@@ -78,7 +78,7 @@ enum FOp
 ** FOpArg
 **************************************************************************
 
-enum FOpArg
+enum class FOpArg
 {
   None,
   Int,

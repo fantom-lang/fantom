@@ -167,7 +167,7 @@ class CompilerInput
 **
 ** Input source from the file system
 **
-enum CompilerInputMode
+enum class CompilerInputMode
 {
   file,
   str

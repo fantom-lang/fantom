@@ -9,7 +9,7 @@
 **
 ** Enum for seven days of the week.
 **
-enum Weekday
+enum class Weekday
 {
   ** Sunday
   sun,
