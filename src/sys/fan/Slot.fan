@@ -157,18 +157,24 @@ abstract const class Slot
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return all the facets defined for this slot or an empty map
-  ** if no facets are defined.  If looking up a facet by name, then
+  ** Get the list of facets defined on this slot or return an empty
+  ** list if no facets are defined. If looking up a facet by type, then
   ** use the `facet` method which will provide better performance.
-  ** See the [Facets Doc]`docLang::Facets` for details.
+  ** See [Facets Doc]`docLang::Facets` for details.
   **
-  Symbol:Obj? facets()
+  Facet[] facets()
 
   **
-  ** Get a facet by symbol key, or return the 'def' is the facet is not
-  ** defined. See the [Facets Doc]`docLang::Facets` for details.
+  ** Get a facet by its type.  If not found on this slot then
+  ** return null or throw UnknownFacetErr based on check flag.
+  ** See [Facets Doc]`docLang::Facets` for details.
   **
-  Obj? facet(Symbol key, Obj? def := null)
+  Facet? facet(Type type, Bool checked := true)
+
+  **
+  ** Return if this type has the specified facet defined.
+  **
+  Bool hasFacet(Type type)
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation

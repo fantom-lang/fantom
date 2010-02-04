@@ -49,7 +49,8 @@ abstract const class UriScheme
 ** FanScheme
 **************************************************************************
 
-@uriScheme="fan"
+// TODO-FACETS
+//@UriScheme="fan"
 internal const class FanScheme : UriScheme
 {
   override Obj? get(Uri uri, Obj? base)
@@ -59,7 +60,8 @@ internal const class FanScheme : UriScheme
 ** FileScheme
 **************************************************************************
 
-@uriScheme="file"
+// TODO-FACETS
+//@UriScheme="file"
 internal const class FileScheme : UriScheme
 {
   override Obj? get(Uri uri, Obj? base)
