@@ -29,7 +29,7 @@
 ** For example:
 **   03f0e2bb-8f1a-c800-e1f8-00623f7473c4
 **
-@simple
+@Serializable { simple = true }
 const final class Uuid
 {
 

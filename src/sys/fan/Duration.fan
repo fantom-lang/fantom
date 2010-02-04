@@ -9,7 +9,7 @@
 **
 ** Duration represents a relative duration of time with nanosecond precision.
 **
-@simple
+@Serializable { simple = true }
 const final class Duration
 {
 

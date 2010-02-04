@@ -10,7 +10,7 @@
 ** Charset represents a specific character encoding used to decode
 ** bytes to Unicode characters, and encode Unicode characters to bytes.
 **
-@simple
+@Serializable { simple = true }
 const final class Charset
 {
 

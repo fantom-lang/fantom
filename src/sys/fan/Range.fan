@@ -12,7 +12,7 @@
 ** "start..end" for an inclusive end or "start..<end" for an exlusive
 ** range.
 **
-@simple
+@Serializable { simple = true }
 const final class Range
 {
 

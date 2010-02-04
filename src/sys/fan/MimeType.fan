@@ -10,7 +10,7 @@
 ** MimeType represents the parsed value of a Content-Type
 ** header per RFC 2045 section 5.1.
 **
-@simple
+@Serializable { simple = true }
 const final class MimeType
 {
 

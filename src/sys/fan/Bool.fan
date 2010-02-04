@@ -9,7 +9,7 @@
 **
 ** Bool represents a boolean condition of true or false.
 **
-@simple
+@Serializable { simple = true }
 const final class Bool
 {
 

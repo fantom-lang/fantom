@@ -11,7 +11,7 @@
 ** more precisely than a Float.  Decimal is the preferred
 ** numeric type for financial applications.
 **
-@simple
+@Serializable { simple = true }
 const final class Decimal : Num
 {
 

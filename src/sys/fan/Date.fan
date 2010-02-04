@@ -9,7 +9,7 @@
 **
 ** Date represents a day in time independent of a timezone.
 **
-@simple
+@Serializable { simple = true }
 const final class Date
 {
 

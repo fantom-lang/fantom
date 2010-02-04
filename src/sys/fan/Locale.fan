@@ -12,7 +12,7 @@
 **
 ** Also see `Env.locale` and `Pod.locale`.
 **
-@simple
+@Serializable { simple = true }
 const class Locale
 {
 

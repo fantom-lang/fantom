@@ -22,7 +22,7 @@
 ** "America/New_York".  The simple name is the city name only
 ** such as "New_York".
 **
-@simple
+@Serializable { simple = true }
 const class TimeZone
 {
 

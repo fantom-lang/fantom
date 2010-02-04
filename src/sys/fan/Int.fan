@@ -9,7 +9,7 @@
 **
 ** Int is used to represent a signed 64-bit integer.
 **
-@simple
+@Serializable { simple = true }
 const final class Int : Num
 {
 

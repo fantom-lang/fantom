@@ -14,7 +14,7 @@
 ** also models the date and time of an absolute instance against
 ** a specific `TimeZone`.
 **
-@simple
+@Serializable { simple = true }
 const final class DateTime
 {
 
