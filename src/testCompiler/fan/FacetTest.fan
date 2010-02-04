@@ -96,23 +96,41 @@ class FacetTest : CompilerTest
   Void testUsage()
   {
     compile(
-      """@Cool class Foo
-         {
-         }
+      """@A
+         @B { x = 77 }
+         @C { y = "foo"; z = [1, 2, 3] }
+         class Foo {}
 
-         facet class Cool {}
+         facet class A {}
+         facet class B { const Int x; const Int y }
+         facet class C { const Str x := "x"; const Str y := "y"; const Int[]? z }
          """)
 
     t := pod.type("Foo")
 
-    cool := pod.type("Cool")
-    coolDefVal := cool.field("defVal").get
+    a := pod.type("A")
+    av := t.facetNew(a)
+    aDefVal := a.field("defVal").get
+    verifySame(av, aDefVal)
+    verifySame(av, t.facetNew(a))
 
-    verifySame(t.facetNew(cool), coolDefVal)
-    verifySame(t.facetNew(cool), t.facetNew(cool))
+    b := pod.type("B")
+    bv := t.facetNew(b)
+    verifyEq(bv->x, 77)
+    verifyEq(bv->y, 0)
+    verifySame(bv, t.facetNew(b))
+
+    c := pod.type("C")
+    cv := t.facetNew(c)
+    verifyEq(cv->x, "x")
+    verifyEq(cv->y, "foo")
+    verifyEq(cv->z, [1, 2, 3])
+    verifySame(cv, t.facetNew(c))
 
     verify(t.facetsNew.isImmutable)
-    verify(t.facetsNew.contains(coolDefVal))
+    verify(t.facetsNew.contains(av))
+    verify(t.facetsNew.contains(bv))
+    verify(t.facetsNew.contains(cv))
     verifySame(t.facetsNew, t.facetsNew)
   }
 

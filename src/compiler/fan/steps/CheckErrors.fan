@@ -538,6 +538,8 @@ class CheckErrors : CompilerStep
 
   Void checkFacets(FacetDef[]? facets)
   {
+// TODO-FACET
+return
     if (facets == null) return
 
     // check each facet (and for dups)

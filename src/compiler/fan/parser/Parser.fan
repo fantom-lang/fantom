@@ -808,7 +808,20 @@ if (id[0].isUpper)
 {
   // use new model
   type := ctype
-  facets.add(FacetDef(loc, type))
+  f := FacetDef(loc, type)
+  if (curt === Token.lbrace)
+  {
+    consume(Token.lbrace)
+    while (curt === Token.identifier)
+    {
+      f.names.add(consumeId)
+      consume(Token.assign)
+      f.vals.add(expr)
+      endOfStmt
+    }
+    consume(Token.rbrace)
+  }
+  facets.add(f)
   continue
 }
 
