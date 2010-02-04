@@ -89,23 +89,6 @@ final const class Pod
   Bool isScript()
 
 //////////////////////////////////////////////////////////////////////////
-// Facets
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Return all the facets defined for this pod or an empty map
-  ** if no facets are defined.  See the [Facets Doc]`docLang::Facets`
-  ** for details.
-  **
-  Symbol:Obj? facets()
-
-  **
-  ** Get a facet by symbol key, or return the 'def' is the facet is not
-  ** defined.  See the [Facets Doc]`docLang::Facets` for details.
-  **
-  Obj? facet(Symbol key, Obj? def := null)
-
-//////////////////////////////////////////////////////////////////////////
 // Types
 //////////////////////////////////////////////////////////////////////////
 
@@ -119,23 +102,6 @@ final const class Pod
   ** is false then return null, otherwise throw UnknownTypeErr.
   **
   Type? type(Str name, Bool checked := true)
-
-//////////////////////////////////////////////////////////////////////////
-// Symbols
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** List of all the defined symbols.
-  **
-  Symbol[] symbols()
-
-  **
-  ** Find a symbol by its unqualified name.  If the symbol doesn't
-  ** exist in this pod and checked is false then return null, otherwise
-  ** throw UnknownFacetErr.
-  **
-  // TODO-FACET
-  Symbol? symbol(Str name, Bool checked := true)
 
 //////////////////////////////////////////////////////////////////////////
 // Resource Files

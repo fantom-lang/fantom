@@ -51,7 +51,8 @@ const class Type
   **
   ** See [Facet Indexing]`docLang::TypeDatabase#facetIndexing` for details.
   **
-  static Type[] findByFacet(Symbol key, Obj facetVal, Obj? options := null)
+// TODO-FACETS
+//  static Type[] findByFacet(Symbol key, Obj facetVal, Obj? options := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Naming
@@ -377,36 +378,24 @@ const class Type
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return all the facets defined for this slot or an empty map
-  ** if no facets are defined.  If 'inherited' is true, then this method
-  ** returns a map of all the facets of this type's `inheritance`.  If
-  ** looking up a facet by name, then use the `facet` method which will
-  ** provide better performance.  See the [Facets Doc]`docLang::Facets`
-  ** for details.
-  **
-  Symbol:Obj? facets(Bool inherited := false)
-
-  **
-  ** Get a facet by symbol key, or return the 'def' is the facet is not
-  ** defined.  If 'inherited' is true, then this type's `inheritance`
-  ** chain is searched.  See the [Facets Doc]`docLang::Facets` for details.
-  **
-  Obj? facet(Symbol key, Obj? def := null, Bool inherited := false)
-
-  **
   ** Get the list of facets defined on this type or return an empty
   ** list if no facets are defined. If looking up a facet by type, then
   ** use the `facet` method which will provide better performance.
   ** See [Facets Doc]`docLang::Facets` for details.
   **
-  Facet[] facetsNew()
+  Facet[] facets()
 
   **
   ** Get a facet by its type.  If not found on this type then
   ** return null or throw UnknownFacetErr based on check flag.
   ** See [Facets Doc]`docLang::Facets` for details.
   **
-  Facet? facetNew(Type type, Bool checked := true)
+  Facet? facet(Type type, Bool checked := true)
+
+  **
+  ** Return if this type has the specified facet defined.
+  **
+  Bool hasFacet(Type type)
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation
