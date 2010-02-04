@@ -15,8 +15,13 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "util"
+    summary = "Utilities"
+    depends = ["sys 1.0"]
+    srcDirs = [`fan/`]
+    docSrc  = true
   }
 }
+

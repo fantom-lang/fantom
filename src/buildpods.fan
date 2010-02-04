@@ -20,7 +20,7 @@ using build
 class Build : BuildGroup
 {
 
-  override Void setup()
+  new make()
   {
     childrenScripts =
     [
@@ -34,6 +34,7 @@ class Build : BuildGroup
       `fansh/build.fan`,
       `web/build.fan`,
       `webmod/build.fan`,
+/*
       `dom/build.fan`,
       `wisp/build.fan`,
       `fandoc/build.fan`,
@@ -48,6 +49,7 @@ class Build : BuildGroup
       `xml/build.fan`,
       `json/build.fan`,
       `obix/build.fan`,
+*/
     ]
   }
 

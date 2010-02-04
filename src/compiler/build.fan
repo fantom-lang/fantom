@@ -14,15 +14,35 @@ using build
 **
 class Build : BuildPod
 {
-
-  override Void setup()
+  new make()
   {
-    if (devHomeDir == Env.cur.homeDir)
-      throw fatal("Must update etc/build/config.props devHome for bootstrap")
-
     podName    = "compiler"
-    dependsDir = libFanDir.uri
-    outDir     = devHomeDir.plus(`lib/fan/`).uri
+    summary    = "Fantom compiler"
+    depends    = ["sys 1.0"]
+    srcDirs    = [`fan/`,
+                  `fan/assembler/`,
+                  `fan/ast/`,
+                  `fan/dsl/`,
+                  `fan/fcode/`,
+                  `fan/namespace/`,
+                  `fan/parser/`,
+                  `fan/steps/`,
+                  `fan/util/`]
+    docSrc     = true
+    dependsDir = devHomeDir.uri + `lib/fan/`
+    outDir     = devHomeDir.uri + `lib/fan/`
   }
-
 }
+
+/* TODO-FACETS
+  **
+  ** Facet used to bind a `DslPlugin` to a anchor type qname.
+  **
+  Str compilerDsl := ""
+
+  **
+  ** Facet used to bind a `CBridge` to FFI name.
+  **
+  Str compilerBridge := ""
+*/
+

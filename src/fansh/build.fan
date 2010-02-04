@@ -14,8 +14,12 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "fansh"
+    summary = "Interactive Fantom Shell"
+    depends = ["sys 1.0", "compiler 1.0"]
+    srcDirs = [`fan/`]
+    docSrc  = true
   }
 }

@@ -14,8 +14,13 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "testSys"
+    summary = "System and runtime test suite"
+    depends = ["sys 1.0"]
+    srcDirs = [`fan/`]
+    resDirs = [`res/`, `locale/`]
+    docApi  = false
   }
 }
