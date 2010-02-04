@@ -149,8 +149,8 @@ public class JavaType
     return null;
   }
 
-  public Map facets(boolean inherited) { return Facets.empty().map(); }
-  public Object facet(Symbol key, Object def, boolean inherited) { return def; }
+  public List facets() { return Facets.empty().list(); }
+  public Facet facet(Type t, boolean c) { return Facets.empty().get(t, c); }
 
   public String doc() { return null; }
 
@@ -315,8 +315,8 @@ public class JavaType
       if (transientFacets == null)
       {
         HashMap m = new HashMap();
-        m.put("sys::transient", Boolean.TRUE);
-        transientFacets = Facets.make(m);
+        m.put(Sys.TransientType, "");
+        transientFacets = new Facets(m);
       }
       facets = transientFacets;
     }

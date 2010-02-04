@@ -164,31 +164,6 @@ public abstract class FTable
   }
 
 //////////////////////////////////////////////////////////////////////////
-// SymbolRefs
-//////////////////////////////////////////////////////////////////////////
-
-  static class SymbolRefs extends FTable
-  {
-    SymbolRefs(FPod pod) { super(pod); }
-
-    public String toString(int index)
-    {
-      if (index == -1) return "null";
-      return ((FSymbolRef)table[index]).toString();
-    }
-
-    public FTable read(FStore.Input in) throws IOException
-    {
-      if (in == null) { size = 0; return this; }
-      size = in.u2();
-      table = new Object[size];
-      for (int i=0; i<size; ++i)
-        table[i] = FSymbolRef.read(in);
-      return this;
-    }
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Ints
 //////////////////////////////////////////////////////////////////////////
 

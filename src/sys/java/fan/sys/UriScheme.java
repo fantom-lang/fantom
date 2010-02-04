@@ -33,7 +33,11 @@ public abstract class UriScheme
     try
     {
       // lookup scheme type
-      Type t = (Type)Type.findByFacet("sys::uriScheme", scheme, true).first();
+// TODO-FACET
+//      Type t = (Type)Type.findByFacet("sys::uriScheme", scheme, true).first();
+Type t = null;
+if (scheme.equals("fan")) t = Sys.FanSchemeType;
+if (scheme.equals("file")) t = Sys.FileSchemeType;
       if (t == null) throw new Exception();
 
       // allocate instance

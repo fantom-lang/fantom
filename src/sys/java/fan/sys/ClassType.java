@@ -63,7 +63,6 @@ public class ClassType
     this.qname    = pod.name + "::" + name;
     this.nullable = new NullableType(this);
     this.flags    = flags;
-this.oldFacets = oldFacets;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -207,49 +206,12 @@ this.oldFacets = oldFacets;
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
-  public final Map facets(boolean inherited)
-  {
-    Map map = reflect().oldFacets.map();
-    if (inherited)
-    {
-      map = map.rw();
-      List inheritance = inheritance();
-      for (int i=0; i<inheritance.sz(); ++i)
-      {
-        Map x = ((Type)inheritance.get(i)).facets(false);
-        if (x.isEmpty()) continue;
-        Iterator it = x.pairsIterator();
-        while (it.hasNext())
-        {
-          Entry e = (Entry)it.next();
-          Symbol key = (Symbol)e.getKey();
-          if (map.get(key) == null) map.add(key, e.getValue());
-        }
-      }
-    }
-    return map;
-  }
-
-  public final Object facet(Symbol key, Object def, boolean inherited)
-  {
-    Object val = reflect().oldFacets.get(key, null);
-    if (val != null) return val;
-    if (!inherited) return def;
-    List inheritance = inheritance();
-    for (int i=0; i<inheritance.sz(); ++i)
-    {
-      val = ((Type)inheritance.get(i)).facet(key, null, false);
-      if (val != null) return val;
-    }
-    return def;
-  }
-
-  public List facetsNew()
+  public List facets()
   {
     return reflect().facets.list();
   }
 
-  public Facet facetNew(Type t, boolean c)
+  public Facet facet(Type t, boolean c)
   {
     return reflect().facets.get(t, c);
   }
@@ -359,7 +321,6 @@ this.oldFacets = oldFacets;
     this.facets      = Facets.mapFacets(pod, ftype.attrs.facets);
 
     // TODO-FACETS
-    this.oldFacets  = ftype.attrs.facets();
     this.lineNum    = ftype.attrs.lineNum;
     this.sourceFile = ftype.attrs.sourceFile;
   }
@@ -442,7 +403,9 @@ this.oldFacets = oldFacets;
   {
     String name = f.name.intern();
     Type fieldType = pod.type(f.type);
-    return new Field(this, name, f.flags, f.attrs.facets(), f.attrs.lineNum, fieldType);
+    Facets facets = Facets.mapFacets(pod, f.attrs.facets);
+    // TODO-FACETS
+    return new Field(this, name, f.flags, facets, f.attrs.lineNum, fieldType);
   }
 
   /**
@@ -460,7 +423,9 @@ this.oldFacets = oldFacets;
       int pflags = (p.def == null) ? 0 : Param.HAS_DEFAULT;
       params.add(new Param(p.name.intern(), pod.type(p.type), pflags));
     }
-    return new Method(this, name, m.flags, m.attrs.facets(), m.attrs.lineNum, returns, inheritedReturns, params);
+    Facets facets = Facets.mapFacets(pod, m.attrs.facets);
+    // TODO-FACETS
+    return new Method(this, name, m.flags, facets, m.attrs.lineNum, returns, inheritedReturns, params);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -717,7 +682,6 @@ catch (Exception e) { e.printStackTrace(); }
   final Type nullable;
   int lineNum;
   String sourceFile = "";
-Facets oldFacets;  // TODO-FACETS
   Facets facets;
   Type base;
   List mixins;

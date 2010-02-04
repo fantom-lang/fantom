@@ -68,13 +68,13 @@ public class ObjEncoder
     }
 
     Type type = FanObj.typeof(obj);
-    if (type.facet(symSimple, null, true) == Boolean.TRUE)
+    Serializable ser = (Serializable)type.facet(Sys.SerializableType, false);
+    if (ser != null)
     {
-      writeSimple(type, obj);
-    }
-    else if (type.facet(symSerializable, null, true) == Boolean.TRUE)
-    {
-      writeComplex(type, obj);
+      if (ser.simple)
+        writeSimple(type, obj);
+      else
+        writeComplex(type, obj, ser);
     }
     else
     {
@@ -98,7 +98,7 @@ public class ObjEncoder
 // Complex
 //////////////////////////////////////////////////////////////////////////
 
-  private void writeComplex(Type type, Object obj)
+  private void writeComplex(Type type, Object obj, Serializable ser)
   {
     wType(type);
 
@@ -112,8 +112,7 @@ public class ObjEncoder
       Field f = (Field)fields.get(i);
 
       // skip static, transient, and synthetic (once) fields
-      if (f.isStatic() || f.isSynthetic() ||
-          f.facet(symTransient, false) == Boolean.TRUE)
+      if (f.isStatic() || f.isSynthetic() || f.hasFacet(Sys.TransientType))
         continue;
 
       // get the value
@@ -141,7 +140,7 @@ public class ObjEncoder
     }
 
     // if collection
-    if (type.facet(symCollection, null, true) == Boolean.TRUE)
+    if (ser.collection)
       first = writeCollectionItems(type, obj, first);
 
     // if we output fields, then close braces
@@ -357,11 +356,6 @@ public class ObjEncoder
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
-
-  static final Symbol symSimple       = Sys.sysPod.symbol("simple");
-  static final Symbol symSerializable = Sys.sysPod.symbol("serializable");
-  static final Symbol symCollection   = Sys.sysPod.symbol("collection");
-  static final Symbol symTransient    = Sys.sysPod.symbol("transient");
 
   OutStream out;
   int level  = 0;

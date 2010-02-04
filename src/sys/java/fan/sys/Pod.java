@@ -247,20 +247,6 @@ public class Pod
   public final boolean isScript() { return isScript; }
 
 //////////////////////////////////////////////////////////////////////////
-// Facets
-//////////////////////////////////////////////////////////////////////////
-
-  public Map facets() { return toFacets().map(); }
-  public Object facet(Symbol key) { return toFacets().get(key, null); }
-  public Object facet(Symbol key, Object def) { return toFacets().get(key, def); }
-
-  private Facets toFacets()
-  {
-    if (facets == null) facets = fpod.attrs.facets();
-    return facets;
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Types
 //////////////////////////////////////////////////////////////////////////
 
@@ -273,55 +259,6 @@ public class Pod
     if (type != null) return type;
     if (checked) throw UnknownTypeErr.make(this.name + "::" + name).val;
     return null;
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Symbols
-//////////////////////////////////////////////////////////////////////////
-
-  public List symbols()
-  {
-    return new List(Sys.SymbolType, loadSymbols().values());
-  }
-
-  public Symbol symbol(String name) { return symbol(name, true); }
-  public Symbol symbol(String name, boolean checked)
-  {
-    Symbol s = (Symbol)loadSymbols().get(name);
-    if (s != null) return s;
-    if (checked) throw UnknownFacetErr.make(this.name + "::" + name).val;
-    return null;
-  }
-
-  private HashMap loadSymbols()
-  {
-    synchronized (symbolsLock)
-    {
-      if (symbols != null) return symbols;
-      symbols = new HashMap();
-
-      // read symbols from fcode format
-      try
-      {
-        fpod.readSymbols();
-        if (fpod.symbols == null) return symbols;
-      }
-      catch (java.io.IOException e)
-      {
-        throw IOErr.make("Error loading symbols.def", e).val;
-      }
-
-      // map to sys::Symbol instances
-      for (int i=0; i<fpod.symbols.length; ++i)
-      {
-        Symbol symbol = new Symbol(this, fpod.symbols[i]);
-        symbols.put(symbol.name, symbol);
-      }
-
-      // clear list from fpod, no longer needed
-      fpod.symbols = null;
-      return symbols;
-    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -456,10 +393,10 @@ public class Pod
       ClassType type = types[i];
       type.base = type(ftype.base);
 
-      List mixins = new List(typeType, ftype.mixins.length);
-      for (int j=0; j<ftype.mixins.length; ++j)
-        mixins.add(type(ftype.mixins[j]));
-      type.mixins = mixins.ro();
+      Object[] mixins = new Object[ftype.mixins.length];
+      for (int j=0; j<mixins.length; ++j)
+        mixins[j] = type(ftype.mixins[j]);
+      type.mixins = new List(typeType, mixins).ro();
     }
   }
 
@@ -547,15 +484,12 @@ public class Pod
   FPod fpod;
   Version version;
   List depends;
-  Facets facets;
   ClassType[] types;
   HashMap typesByName;
   Class cls;
   List filesList;
   HashMap filesMap = new HashMap(11);
   Log log;
-  Object symbolsLock = new Object();
-  HashMap symbols;
   boolean docLoaded;
   Uri fansymUri;
   public boolean isScript;

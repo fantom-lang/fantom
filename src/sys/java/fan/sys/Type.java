@@ -45,12 +45,14 @@ public abstract class Type
   public static Type find(String sig) { return TypeParser.load(sig, true, null); }
   public static Type find(String sig, boolean checked) { return TypeParser.load(sig, checked, null); }
 
+/* TODO-FACETS
   public static List findByFacet(Symbol key, Object facetVal) { return findByFacet(key.qname(), facetVal, null); }
   public static List findByFacet(Symbol key, Object facetVal, Object options) { return findByFacet(key.qname(), facetVal, options); }
   public static List findByFacet(String qname, Object facetVal, Object options)
   {
     return TypeDb.get().findByFacet(qname, facetVal, options);
   }
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Naming
@@ -304,18 +306,12 @@ public abstract class Type
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
-  // TODO-FACETS
-  public final Map facets() { return facets(false); }
-  public abstract Map facets(boolean inherited);
+  public abstract List facets();
 
-  public final Object facet(Symbol key) { return facet(key, null, false); }
-  public final Object facet(Symbol key, Object def) { return facet(key, def, false); }
-  public abstract Object facet(Symbol key, Object def, boolean inherited);
+  public final Facet facet(Type t) { return facet(t, true); }
+  public abstract Facet facet(Type t, boolean c);
 
-  public List facetsNew() { throw new RuntimeException("TODO-FACETS"); }
-
-  public final Facet facetNew(Type t) { return facetNew(t, true); }
-  public Facet facetNew(Type t, boolean c) { throw new RuntimeException("TODO-FACETS"); }
+  public final boolean hasFacet(Type t) { return facet(t, false) != null; }
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation

@@ -16,7 +16,6 @@ import fan.sys.List;
 import fan.sys.LocalFile;
 import fan.sys.Log;
 import fan.sys.Env;
-import fan.sys.Symbol;
 import fan.sys.Sys;
 import fan.sys.Version;
 import fanx.fcode.*;
@@ -263,6 +262,8 @@ class Builder
    */
   void indexFacets()
   {
+
+/* TODO-FACETS
     // the facet names to index is configured
     // by the pod level facet indexFacets
     HashMap facetNames = new HashMap();
@@ -294,6 +295,7 @@ class Builder
           addToIndex(indices[k], t);
       }
     }
+*/
   }
 
   void addToIndex(FacetIndex index, Type t)
@@ -577,10 +579,12 @@ class Builder
 
     List getSymbolList(String name)
     {
+      /* TODO-FACETS
       Object v = getObj(name);
       if (v == null) return null;
       if (v instanceof List && ((List)v).of() == Sys.SymbolType) return (List)v;
       log.warn("Expecting '" + loc + "@" + name + "' to be Symbol[], not " + FanObj.typeof(v));
+      */
       return null;
     }
 
