@@ -63,7 +63,7 @@ public class ClassType
     this.qname    = pod.name + "::" + name;
     this.nullable = new NullableType(this);
     this.flags    = flags;
-    this.facets   = facets;
+this.oldFacets = oldFacets;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -209,7 +209,7 @@ public class ClassType
 
   public final Map facets(boolean inherited)
   {
-    Map map = reflect().facets.map();
+    Map map = reflect().oldFacets.map();
     if (inherited)
     {
       map = map.rw();
@@ -232,7 +232,7 @@ public class ClassType
 
   public final Object facet(Symbol key, Object def, boolean inherited)
   {
-    Object val = reflect().facets.get(key, null);
+    Object val = reflect().oldFacets.get(key, null);
     if (val != null) return val;
     if (!inherited) return def;
     List inheritance = inheritance();
@@ -242,6 +242,16 @@ public class ClassType
       if (val != null) return val;
     }
     return def;
+  }
+
+  public List facetsNew()
+  {
+    return reflect().facets.list();
+  }
+
+  public Facet facetNew(Type t, boolean c)
+  {
+    return reflect().facets.get(t, c);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -331,7 +341,6 @@ public class ClassType
       merge(m, slots, nameToSlot, nameToIndex);
     }
 
-
     // break out into fields and methods
     List fields  = new List(Sys.FieldType,  slots.sz());
     List methods = new List(Sys.MethodType, slots.sz());
@@ -347,9 +356,10 @@ public class ClassType
     this.fields      = fields.trim();
     this.methods     = methods.trim();
     this.slotsByName = nameToSlot;
+    this.facets      = Facets.mapFacets(pod, ftype.attrs.facets);
 
-    // facets
-    this.facets     = ftype.attrs.facets();
+    // TODO-FACETS
+    this.oldFacets  = ftype.attrs.facets();
     this.lineNum    = ftype.attrs.lineNum;
     this.sourceFile = ftype.attrs.sourceFile;
   }
@@ -707,6 +717,7 @@ catch (Exception e) { e.printStackTrace(); }
   final Type nullable;
   int lineNum;
   String sourceFile = "";
+Facets oldFacets;  // TODO-FACETS
   Facets facets;
   Type base;
   List mixins;
