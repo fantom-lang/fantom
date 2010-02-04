@@ -67,7 +67,10 @@ if (f.key != null)
 }
 
       buf.writeI2(fpod.addTypeRef(f.type))
-      buf.writeUtf("")
+      try
+        buf.writeUtf(f.serialize)
+      catch (CompilerErr e)
+        err("Facet value is not serializable: '$f.type' ($e.msg)", f.val.loc)
       add(FConst.FacetsAttr, buf)
     }
   }

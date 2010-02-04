@@ -31,6 +31,23 @@ class FacetDef : Node
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Serialization
+//////////////////////////////////////////////////////////////////////////
+
+  Str serialize()
+  {
+    if (names.isEmpty) return ""
+    s := StrBuf()
+    s.add(type.qname).addChar('{')
+    names.each |n, i|
+    {
+      s.add(n).addChar('=').add(vals[i].serialize).addChar(';')
+    }
+    s.addChar('}')
+    return s.toStr
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Tree
 //////////////////////////////////////////////////////////////////////////
 
@@ -43,6 +60,7 @@ class FacetDef : Node
     }
     else
     {
+      vals = Expr.walkExprs(v, vals)
     }
   }
 
@@ -63,6 +81,9 @@ if (key != null) return "$key=$val"
 //////////////////////////////////////////////////////////////////////////
 
   CType? type
+  Str[] names := Str[,]
+  Expr[] vals := Expr[,]
+
   SymbolExpr? key   // TODO-FACET
   Expr? val         // TODO-FACET
 

@@ -67,9 +67,11 @@ public final class Facets
   {
     try
     {
+      // if no string use make/defVal
       if (s.length() == 0) return (Facet)type.make();
-System.out.println("TODO " + type + ": " + s);
-return (Facet)type.make();
+
+      // decode using normal Fantom serialization
+      return (Facet)ObjDecoder.decode(s);
     }
     catch (Throwable e)
     {
