@@ -50,64 +50,6 @@ public class Parser : CompilerSupport
   }
 
 //////////////////////////////////////////////////////////////////////////
-// PodDef
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Parse pod definition:
-  **
-  **   <podDef>      :=  <podHeader> "{" <symbolDefs> "}"
-  **   <podHeader>   :=  [<doc>] <facets> "pod" <id>
-  **   <symbolDefs>  :=  <symbolDef>*
-  **
-  Void parsePodDef()
-  {
-    usings
-    pod := compiler.pod
-    pod.unit = unit
-    pod.doc = doc
-    pod.facets = facets
-    loc := cur
-    if (consumeId != "pod") throw err("Expecting 'pod' keyword", loc)
-    podName := consumeId
-    consume(Token.lbrace)
-    while (curt !== Token.rbrace && curt !== Token.eof) symbolDef
-    consume(Token.rbrace)
-  }
-
-  **
-  ** Symbol definition:
-  **
-  **   <symbolDef> := [<type>] <id> ":=" <expr> <eos>
-  **
-  private Void symbolDef()
-  {
-    doc := doc()
-    if (curt === Token.eof || curt === Token.rbrace) return
-
-    loc   := cur
-    flags := symbolFlags
-    of    := tryType
-    name  := consumeId
-    consume(Token.defAssign)
-    val   := expr
-    endOfStmt
-    symbol := SymbolDef(loc, unit, of, name, flags, val)
-    symbol.doc = doc
-
-    if (pod.symbolDefs.containsKey(name))
-      err("Duplicate symbol name '$name'", loc)
-    else
-      pod.symbolDefs[name] = symbol
-  }
-
-  private Int symbolFlags()
-  {
-    if (curt === Token.virtualKeyword) { consume; return FConst.Virtual }
-    return 0
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Usings
 //////////////////////////////////////////////////////////////////////////
 
@@ -801,43 +743,22 @@ public class Parser : CompilerSupport
     {
       loc := cur
       consume
-// TODO-FACET
-if (curt !== Token.identifier) throw err("Expecting identifier")
-Str id := cur.val
-if (id[0].isUpper)
-{
-  // use new model
-  type := ctype
-  f := FacetDef(loc, type)
-  if (curt === Token.lbrace)
-  {
-    consume(Token.lbrace)
-    while (curt === Token.identifier)
-    {
-      f.names.add(consumeId)
-      consume(Token.assign)
-      f.vals.add(expr)
-      endOfStmt
-    }
-    consume(Token.rbrace)
-  }
-  facets.add(f)
-  continue
-}
-
-
-      key := symbolLiteral(loc)
-      Expr? val
-      if (curt === Token.assign)
+      if (curt !== Token.identifier) throw err("Expecting identifier")
+      type := ctype
+      f := FacetDef(loc, type)
+      if (curt === Token.lbrace)
       {
-        consume()
-        val = expr
+        consume(Token.lbrace)
+        while (curt === Token.identifier)
+        {
+          f.names.add(consumeId)
+          consume(Token.assign)
+          f.vals.add(expr)
+          endOfStmt
+        }
+        consume(Token.rbrace)
       }
-      else
-      {
-        val = LiteralExpr(key.loc, ExprId.trueLiteral, ns.boolType, true)
-      }
-      facets.add(FacetDef.makeOld(key, val))
+      facets.add(f)
     }
     return facets
   }
@@ -1550,7 +1471,7 @@ if (id[0].isUpper)
   **   <termBase>    :=  <literal> | <idExpr> | <closure> | <dsl>
   **   <literal>     :=  "null" | "this" | "super" | <bool> | <int> |
   **                     <float> | <str> | <duration> | <list> | <map> | <uri> |
-  **                     <typeLiteral> | <slotLiteral> | <symbolLiteral>
+  **                     <typeLiteral> | <slotLiteral>
   **   <typeLiteral> :=  <type> "#"
   **   <slotLiteral> :=  [<type>] "#" <id>
   **
@@ -1579,22 +1500,8 @@ if (id[0].isUpper)
       case Token.itKeyword:       consume; return ItExpr(loc)
       case Token.trueKeyword:     consume; return LiteralExpr.makeTrue(loc, ns)
       case Token.pound:           consume; return SlotLiteralExpr(loc, curType, consumeId)
-      case Token.at:              loc = cur; consume; return symbolLiteral(loc)
     }
     throw err("Expected expression, not '" + cur + "'")
-  }
-
-  private Expr symbolLiteral(Loc loc)
-  {
-    Str? podName := null
-    name := consumeId
-    if (curt === Token.doubleColon)
-    {
-      podName = name
-      consume
-      name = consumeId
-    }
-    return SymbolExpr(loc, podName, name)
   }
 
   **

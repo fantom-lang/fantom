@@ -43,7 +43,7 @@ class InitEnum : CompilerStep
     {
       addCtor
       addFromStr
-      t.addFacet(this, ns.sysPod.resolveSymbol("simple", true), true)
+      t.addFacet(this, ns.sysPod.resolveType("Serializable", true), ["simple":true])
 
       fields := FieldDef[,]
       t.enumDefs.each |EnumDef e| { fields.add(makeField(e)) }

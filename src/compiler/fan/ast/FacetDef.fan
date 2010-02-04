@@ -16,14 +16,6 @@ class FacetDef : Node
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-// TODO-FACET
-  new makeOld(SymbolExpr key, Expr val)
-    : super.make(key.loc)
-  {
-    this.key = key
-    this.val = val
-  }
-
   new make(Loc loc, CType type)
     : super(loc)
   {
@@ -53,28 +45,16 @@ class FacetDef : Node
 
   Void walk(Visitor v)
   {
-    if (key != null)
-    {
-      key = key.walk(v)
-      val = val.walk(v)
-    }
-    else
-    {
-      vals = Expr.walkExprs(v, vals)
-    }
+    vals = Expr.walkExprs(v, vals)
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Debug
 //////////////////////////////////////////////////////////////////////////
 
-  override Str toStr()
-  {
-if (key != null) return "$key=$val"
-    return "@$type"
-  }
+  override Str toStr() { names.isEmpty ? "@$type" : "@$serialize" }
 
-  override Void print(AstWriter out) { out.w(key).w("=").w(val).nl }
+  override Void print(AstWriter out) { out.w(toStr).nl }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
@@ -83,8 +63,4 @@ if (key != null) return "$key=$val"
   CType? type
   Str[] names := Str[,]
   Expr[] vals := Expr[,]
-
-  SymbolExpr? key   // TODO-FACET
-  Expr? val         // TODO-FACET
-
 }

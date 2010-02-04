@@ -24,8 +24,10 @@ class Main
   {
     input := CompilerInput.make
     input.podName        = podName
+    input.summary        = "script"
     input.version        = Version("0")
     input.log.level      = LogLevel.warn
+    input.includeDoc     = true
     input.isScript       = true
     input.srcStr         = file.readAllStr
     input.srcStrLoc      = Loc.makeFile(file)

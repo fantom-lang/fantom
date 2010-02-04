@@ -54,38 +54,6 @@ class CheckErrors : CompilerStep
 
   Void checkPodDef(PodDef pod)
   {
-    // facets
-    checkFacets(pod.facets)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// SymbolDef
-//////////////////////////////////////////////////////////////////////////
-
-  override Void enterSymbolDef(SymbolDef s)
-  {
-    // verify symbols don't conflict with types
-    if (pod.resolveType(s.name, false) != null)
-      err("Symbol name '$s.name' conflicts with type", s.loc)
-
-    // verify we don't use a restricted name
-    if (isRestrictedName(s.name))
-      err("Symbol name '$s.name' is restricted", s.loc)
-
-    // verify symbol type is immutable
-    if (!s.of.isConstFieldType || s.of.isFunc)
-      err("Symbol '$s.name' has non-const type '$s.of'", s.loc)
-
-    // verify symbol has correct type
-    coerce(s.val, s.of) |->|
-    {
-      err("'$s.val.toTypeStr' is not assignable to '$s.of'", s.val.loc)
-    }
-  }
-
-  static Bool isRestrictedName(Str name)
-  {
-    return name == "pod" || name == "index"
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -124,6 +92,12 @@ class CheckErrors : CompilerStep
 
     // check definite assignment of static fields
     checkDefiniteAssign(t.staticInit)
+  }
+
+  static Bool isRestrictedName(Str name)
+  {
+    // TODO-FACETS: disallow resources to have same name as types
+    return name == "pod" || name == "index"
   }
 
   private Void checkTypeFlags(TypeDef t)
@@ -545,20 +519,21 @@ return
     // check each facet (and for dups)
     for (i := 0; i < facets.size; ++i)
     {
+/*
       f := facets[i]
       checkFacet(f)
       for (j := i+1; j < facets.size; ++j)
         if (f.key.qname == facets[j].key.qname)
           err("Duplicate facet '$f.key.qname'", f.loc)
+*/
     }
   }
 
   Void checkFacet(FacetDef f)
   {
 // TODO-FACET
-if (f.key == null) return
-    if (!f.val.ctype.fits(f.key.symbol.of))
-      err("Wrong type for facet '@$f.key.qname': expected '$f.key.symbol.of' not '$f.val.ctype'", f.loc)
+//    if (!f.val.ctype.fits(f.key.symbol.of))
+//      err("Wrong type for facet '@$f.key.qname': expected '$f.key.symbol.of' not '$f.val.ctype'", f.loc)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1509,8 +1484,9 @@ if (f.key == null) return
         err("Internal type '$t' not accessible", loc)
     }
 
-    if (t.facet("sys::deprecated", null) == true)
-      warn("Deprecated type '$t'", loc)
+// TODO-FACETS
+//    if (t.facet("sys::deprecated", null) == true)
+//      warn("Deprecated type '$t'", loc)
   }
 
   private Void checkSlotProtection(CSlot slot, Loc loc, Bool setter := false)
@@ -1518,10 +1494,13 @@ if (f.key == null) return
     errMsg := slotProtectionErr(slot, setter)
     if (errMsg != null) err(errMsg, loc)
 
+// TODO-FACETS
+/*
     if (slot.facet("sys::deprecated", null) == true)
       warn("Deprecated slot '$slot.qname'", loc)
     else if (slot.parent.facet("sys::deprecated", null) == true)
       warn("Deprecated type '$slot.parent'", loc)
+*/
   }
 
   private Str? slotProtectionErr(CSlot slot, Bool setter := false)

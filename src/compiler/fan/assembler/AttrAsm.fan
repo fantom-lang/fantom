@@ -49,28 +49,11 @@ class AttrAsm : CompilerSupport
     buf.writeI2(facets.size)
     facets.each |FacetDef f|
     {
-
-// TODO-FACET
-if (f.key != null)
-{
-  buf.writeI2(fpod.addSymbolRef(f.key.symbol))
-  try
-  {
-    buf.writeUtf(f.val.serialize)
-  }
-  catch (CompilerErr e)
-  {
-    err("Facet value is not serializable: '$f.key' ($e.msg)", f.val.loc)
-  }
-  add("OldFacets", buf)
-  return
-}
-
       buf.writeI2(fpod.addTypeRef(f.type))
       try
         buf.writeUtf(f.serialize)
       catch (CompilerErr e)
-        err("Facet value is not serializable: '$f.type' ($e.msg)", f.val.loc)
+        err("Facet value is not serializable: '$f.type' ($e.msg)", f.loc)
       add(FConst.FacetsAttr, buf)
     }
   }

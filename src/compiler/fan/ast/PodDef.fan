@@ -9,7 +9,7 @@
 **
 ** PodDef models the pod being compiled.
 **
-class PodDef : DefNode, CPod
+class PodDef : Node, CPod
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -22,7 +22,6 @@ class PodDef : DefNode, CPod
     this.ns = ns
     this.name = name
     this.units = CompilationUnit[,]
-    this.symbolDefs = Str:SymbolDef[:] { ordered = true }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -39,14 +38,6 @@ class PodDef : DefNode, CPod
     return null
   }
 
-  override CSymbol? resolveSymbol(Str name, Bool checked)
-  {
-    s := symbolDefs[name]
-    if (s != null) return s
-    if (checked) throw Err("${this.name}::${name}")  // TODO-FACET
-    return null
-  }
-
   override CType[] types()
   {
     return typeDefs.vals
@@ -55,15 +46,6 @@ class PodDef : DefNode, CPod
 //////////////////////////////////////////////////////////////////////////
 // Tree
 //////////////////////////////////////////////////////////////////////////
-
-  Void walk(Visitor v, VisitDepth depth)
-  {
-    if (unit == null) return
-    v.enterUnit(unit)
-    walkFacets(v, depth)
-    symbolDefs.each |SymbolDef def| { def.walk(v, depth) }
-    v.exitUnit(unit)
-  }
 
   override Void print(AstWriter out)
   {
@@ -81,9 +63,7 @@ class PodDef : DefNode, CPod
 
   override readonly CNamespace ns   // compiler's namespace
   override readonly Str name        // simple pod name
-  CompilationUnit? unit             // "pod.fan" unit
   CompilationUnit[] units           // Tokenize
   [Str:TypeDef]? typeDefs           // ScanForUsingsAndTypes
-  Str:SymbolDef symbolDefs          // Parse of "symbols.fan"
 
 }

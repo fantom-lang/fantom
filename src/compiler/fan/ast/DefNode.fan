@@ -41,23 +41,33 @@ abstract class DefNode : Node
   Obj? facet(Str qname, Obj? def)
   {
     // TODO: should we map these by qname?
+/* FACET-TODO
     if (facets == null) return def
     f := facets.find |f| { f.key.qname == qname }
     if (f != null && f.val is LiteralExpr) return ((LiteralExpr)f.val).val
+*/
     return def
   }
 
   Bool hasMarkerFacet(Str qname)
   {
+/* FACET-TODO
     if (facets == null) return false
     return facets.any |f| { f.key.qname == qname && f.val.id === ExprId.trueLiteral }
+*/
+return true
   }
 
-  Void addFacet(CompilerSupport support, CSymbol symbol, Obj value)
+  Void addFacet(CompilerSupport support, CType type, [Str:Obj]? vals := null)
   {
     if (facets == null) facets = FacetDef[,]
     loc := this.loc
-    f := FacetDef.makeOld(SymbolExpr.makeFor(loc, symbol), Expr.makeForLiteral(loc, ns, value))
+    f := FacetDef(loc, type)
+    vals?.each |v, n|
+    {
+      f.names.add(n)
+      f.vals.add(Expr.makeForLiteral(loc, ns, v))
+    }
     facets.add(f)
   }
 
@@ -77,7 +87,7 @@ abstract class DefNode : Node
 //////////////////////////////////////////////////////////////////////////
 
   Str[]? doc          // lines of fandoc comment or null
-  Int flags := 0      // type/slot/symbol flags
+  Int flags := 0      // type/slot flags
   FacetDef[]? facets  // facet declarations or null
 
 }

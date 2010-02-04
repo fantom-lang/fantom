@@ -40,13 +40,6 @@ class ReflectType : CType
   override Str signature() { return t.signature }
   override Int flags()     { return (Int)t->flags }
 
-  override Obj? facet(Str qname, Obj? def)
-  {
-    sym := Symbol.find(qname, false)
-    if (sym == null) return null
-    return t.facet(sym, def)
-  }
-
   override readonly Bool isVal
 
   override Bool isNullable() { return false }

@@ -27,8 +27,7 @@ class CompilerInput
   Loc inputLoc := Loc("CompilerInput")
 
   **
-  ** Name of output pod - required for scripts and str mode.
-  ** For pods this is defined via podDef location of "pod.fan".
+  ** Name of output pod - required in all modes.
   **
   Str? podName
 
@@ -45,12 +44,28 @@ class CompilerInput
   Version? version
 
   **
+  ** Summary description for pod
+  **
+  Str? summary
+
+  **
+  ** List of this pod's dependencies used for both the
+  ** compiler checking and output in the pod's manifest.
+  **
+  Depend[] depends := Depend[,]
+
+  **
   ** The directory to look in for the dependency pod file (and
   ** potentially their recursive dependencies).  If null then we
   ** use the compiler's own pod definitions via reflection (which
   ** is more efficient).
   **
   File? dependsDir := null
+
+  **
+  ** Pod meta-data name/value pairs
+  **
+  Str:Str meta := Str:Str[:]
 
   **
   ** What type of output should be generated - the compiler
@@ -96,10 +111,28 @@ class CompilerInput
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Location of "pod.fan" which defines the pod meta-data
-  ** needed to compile the pod from source.
+  ** Base directory of source tree - this directory is used to create
+  ** the relative paths of the source and resource files in the pod zip.
   **
-  File? podDef
+  File? baseDir
+
+  **
+  ** List of directories relative to `baseDir` containing
+  ** fan source files (file mode only)
+  **
+  Uri[]? srcDirs := Uri[,]
+
+  **
+  ** List of directories relative to `baseDir` containing
+  ** resource files to include in the pod zip (file mode only)
+  **
+  Uri[] resDirs := Uri[,]
+
+  **
+  ** List of directories relative to `baseDir` containing
+  ** JavaScript files to include in the JavaScript output
+  **
+  Uri[] jsDirs := Uri[,]
 
 //////////////////////////////////////////////////////////////////////////
 // CompilerInputMode.str
@@ -109,12 +142,6 @@ class CompilerInput
   ** Fantom source code to compile (str mode only)
   **
   Str? srcStr
-
-  **
-  ** Fantom source code for "pod.fan" (str mode only)
-  ** For testing only!!!
-  **
-  @nodoc Str? podStr
 
   **
   ** Location to use for SourceFile facet (str mode only)
@@ -131,17 +158,20 @@ class CompilerInput
   **
   internal Void validate()
   {
+    validateReqField("podName")
     validateReqField("version")
+    validateReqField("summary")
     validateReqField("output")
     validateReqField("outDir")
     validateReqField("includeDoc")
     validateReqField("isTest")
     validateReqField("mode")
-    validateReqField("podName")
     switch (mode)
     {
       case CompilerInputMode.file:
-        validateReqField("podDef")
+        validateReqField("baseDir")
+        validateReqField("srcDirs")
+        validateReqField("resDirs")
       case CompilerInputMode.str:
         validateReqField("srcStr")
         validateReqField("srcStrLoc")

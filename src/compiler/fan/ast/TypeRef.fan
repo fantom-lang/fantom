@@ -35,7 +35,6 @@ class TypeRef : Node, CType
   override Str signature() { t.signature }
   override CType deref()   { t }
   override Bool isForeign() { t.isForeign }
-  override Obj? facet(Str qname, Obj? def) { t.facet(qname, def) }
   override Int flags()     { t.flags }
 
   override CType? base() { t.base }
