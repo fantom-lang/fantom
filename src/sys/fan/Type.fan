@@ -394,9 +394,17 @@ const class Type
   Obj? facet(Symbol key, Obj? def := null, Bool inherited := false)
 
   **
+  ** Get the list of facets defined on this type or return an empty
+  ** list if no facets are defined. If looking up a facet by type, then
+  ** use the `facet` method which will provide better performance.
+  ** See [Facets Doc]`docLang::Facets` for details.
+  **
+  Facet[] facetsNew()
+
+  **
   ** Get a facet by its type.  If not found on this type then
   ** return null or throw UnknownFacetErr based on check flag.
-  ** See the [Facets Doc]`docLang::Facets` for details.
+  ** See [Facets Doc]`docLang::Facets` for details.
   **
   Facet? facetNew(Type type, Bool checked := true)
 

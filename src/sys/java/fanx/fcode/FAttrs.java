@@ -20,12 +20,6 @@ public class FAttrs
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Access
-//////////////////////////////////////////////////////////////////////////
-
-  public Facets facets() { return Facets.make(oldFacets); }
-
-//////////////////////////////////////////////////////////////////////////
 // Read
 //////////////////////////////////////////////////////////////////////////
 
@@ -73,19 +67,18 @@ if ((in.fpod.version == 0x1000045 && name == "Facets") ||
   {
     in.u2();
     int n = in.u2();
-    HashMap map = new HashMap();
+    facets = new FFacet[n];
     for (int i=0; i<n; ++i)
     {
-      FTypeRef t = in.fpod.typeRef(in.u2());
-      String qname = t.podName + "::" + t.typeName;
-      String val = in.utf();
-System.out.println("NEW FACETS " + qname + " = '" + val + "'");
-      map.put(qname, val);
+      FFacet f = facets[i] = new FFacet();
+      f.type = in.u2();
+      f.val  = in.utf();
     }
-    facets = map;
   }
 
 // TODO-FACETS
+public Facets facets() { return Facets.make(oldFacets); }
+public HashMap oldFacets;
   private void oldFacets(FStore.Input in) throws IOException
   {
     in.u2();
@@ -118,14 +111,23 @@ System.out.println("NEW FACETS " + qname + " = '" + val + "'");
   }
 
 //////////////////////////////////////////////////////////////////////////
+// FFacet
+//////////////////////////////////////////////////////////////////////////
+
+  public static class FFacet
+  {
+    public int type;      // facet type qname index
+    public String val;    // serialized facet instance
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   static final FAttrs none = new FAttrs();
 
   public FBuf errTable;
-  public HashMap oldFacets;  // TODO-FACETS
-  public HashMap facets;
+  public FFacet[] facets;
   public int lineNum;
   public FBuf lineNums;
   public String sourceFile;

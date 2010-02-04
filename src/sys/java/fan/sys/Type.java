@@ -242,7 +242,7 @@ public abstract class Type
   public Object make(List args)
   {
     Method make = method("make", false);
-    if (make != null)
+    if (make != null && make.isPublic())
     {
       int numArgs = args == null ? 0 : args.sz();
       List params = make.params();
@@ -252,8 +252,11 @@ public abstract class Type
     }
 
     Slot defVal = slot("defVal", false);
-    if (defVal instanceof Field) return ((Field)defVal).get(null);
-    if (defVal instanceof Method) return ((Method)defVal).func.callList(null);
+    if (defVal.isPublic())
+    {
+      if (defVal instanceof Field) return ((Field)defVal).get(null);
+      if (defVal instanceof Method) return ((Method)defVal).func.callList(null);
+    }
 
     throw Err.make("Type missing 'make' or 'defVal' slots: " + this).val;
   }
@@ -301,12 +304,18 @@ public abstract class Type
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
+  // TODO-FACETS
   public final Map facets() { return facets(false); }
   public abstract Map facets(boolean inherited);
 
   public final Object facet(Symbol key) { return facet(key, null, false); }
   public final Object facet(Symbol key, Object def) { return facet(key, def, false); }
   public abstract Object facet(Symbol key, Object def, boolean inherited);
+
+  public List facetsNew() { throw new RuntimeException("TODO-FACETS"); }
+
+  public final Facet facetNew(Type t) { return facetNew(t, true); }
+  public Facet facetNew(Type t, boolean c) { throw new RuntimeException("TODO-FACETS"); }
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation

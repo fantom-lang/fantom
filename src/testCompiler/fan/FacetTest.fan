@@ -103,7 +103,17 @@ class FacetTest : CompilerTest
          facet class Cool {}
          """)
 
-    t := pod.types.first
+    t := pod.type("Foo")
+
+    cool := pod.type("Cool")
+    coolDefVal := cool.field("defVal").get
+
+    verifySame(t.facetNew(cool), coolDefVal)
+    verifySame(t.facetNew(cool), t.facetNew(cool))
+
+    verify(t.facetsNew.isImmutable)
+    verify(t.facetsNew.contains(coolDefVal))
+    verifySame(t.facetsNew, t.facetsNew)
   }
 
 //////////////////////////////////////////////////////////////////////////

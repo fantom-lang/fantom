@@ -11,6 +11,7 @@ package fan.sys;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import fanx.fcode.*;
 import fanx.serial.*;
 
 /**
@@ -18,6 +19,70 @@ import fanx.serial.*;
  */
 public final class Facets
 {
+
+  static Facets mapFacets(Pod pod, FAttrs.FFacet[] ffacets)
+  {
+    if (ffacets == null || ffacets.length == 0) return empty();
+    HashMap map = new HashMap(ffacets.length*3);
+    for (int i=0; i<ffacets.length; ++i)
+    {
+      FAttrs.FFacet ff = ffacets[i];
+      Type t = pod.type(ff.type);
+      map.put(t, ff.val);
+    }
+    return new Facets(map);
+  }
+
+  final synchronized List list()
+  {
+    if (list == null)
+    {
+      list = new List(Sys.FacetType, map.size());
+      Iterator it = map.keySet().iterator();
+      while (it.hasNext())
+      {
+        Type type = (Type)it.next();
+        list.add(get(type, true));
+      }
+      list = (List)list.toImmutable();
+    }
+    return list;
+  }
+
+  final synchronized Facet get(Type type, boolean checked)
+  {
+    Object val = map.get(type);
+    if (val instanceof Facet) return (Facet)val;
+    if (val instanceof String)
+    {
+      Facet f = decode(type, (String)val);
+      map.put(type, f);
+      return f;
+    }
+    if (checked) throw UnknownFacetErr.make(type.qname()).val;
+    return null;
+  }
+
+  final Facet decode(Type type, String s)
+  {
+    try
+    {
+      if (s.length() == 0) return (Facet)type.make();
+System.out.println("TODO " + type + ": " + s);
+return (Facet)type.make();
+    }
+    catch (Throwable e)
+    {
+      String msg = "ERROR: Cannot decode facet " + type + ": " + s;
+      System.out.println(msg);
+      e.printStackTrace();
+      map.remove(type);
+      throw IOErr.make(msg).val;
+    }
+  }
+
+
+// TODO-FACETS: all the old shit
 
 //////////////////////////////////////////////////////////////////////////
 // FCode
@@ -111,7 +176,7 @@ public final class Facets
   private static Facets empty;
   private static Map emptyMap;
 
-  /** String qname => immutable Obj or Symbol.EncodedVal */
-  private HashMap map;
+  private HashMap map;   // Type : String/Facet, lazy decoding
+  private List list;     // Facet[]
 
 }

@@ -808,7 +808,6 @@ if (id[0].isUpper)
 {
   // use new model
   type := ctype
-  echo("NEW FACET MODEL $id!")
   facets.add(FacetDef(loc, type))
   continue
 }
