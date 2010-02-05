@@ -12,7 +12,7 @@
 **
 ** See [docLib]`docLib::Fwt` for details.
 **
-@js
+@Js
 mixin Graphics
 {
 

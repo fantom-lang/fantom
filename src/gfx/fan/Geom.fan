@@ -13,7 +13,8 @@
 **
 ** Point represents a coordinate in the display space.
 **
-@js @simple
+@Js
+@Serializable { simple = true }
 const class Point
 {
   ** Default instance is 0, 0.
@@ -67,7 +68,8 @@ const class Point
 **
 ** Size represents the width and height of a rectangle.
 **
-@js @simple
+@Js
+@Serializable { simple = true }
 const class Size
 {
   ** Default instance is 0, 0.
@@ -118,7 +120,8 @@ const class Size
 **
 ** Represents the x,y coordinate and w,h size of a rectangle.
 **
-@js @simple
+@Js
+@Serializable { simple = true }
 const class Rect
 {
   ** Default instance is 0, 0, 0, 0.
@@ -200,7 +203,8 @@ const class Rect
 **
 ** Insets represent a number of pixels around the edge of a rectangle.
 **
-@js @simple
+@Js
+@Serializable { simple = true }
 const class Insets
 {
   ** Default instance 0, 0, 0, 0.
@@ -295,7 +299,7 @@ const class Insets
 ** Hints model heights/weight contraints.  Hint differs from Size
 ** in that 'w' or 'h' can be null.
 **
-@js
+@Js
 const class Hints
 {
 

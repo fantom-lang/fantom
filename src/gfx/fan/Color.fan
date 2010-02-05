@@ -10,7 +10,8 @@
 ** Models an ARGB color (alpha, red, green, blue).
 ** Color is also a solid `Brush`.
 **
-@js @simple
+@Js
+@Serializable { simple = true }
 const class Color : Brush
 {
 

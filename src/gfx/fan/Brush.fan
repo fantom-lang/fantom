@@ -13,7 +13,7 @@
 **   - `Gradient` used to paint a color gradient
 **   - `Pattern` used to paint with an image
 **
-@js
+@Js
 mixin Brush
 {
 }
@@ -25,7 +25,7 @@ mixin Brush
 **
 ** Fills a shape using a two color linear gradient.
 **
-@js
+@Js
 const class Gradient : Brush
 {
 
@@ -34,10 +34,10 @@ const class Gradient : Brush
   // probably expose something like GradientStop[]; but SWT doesn't
   // provide too much support
 
-  @nodoc const Point p1
-  @nodoc const Point p2
-  @nodoc const Color c1
-  @nodoc const Color c2
+  @NoDoc const Point p1
+  @NoDoc const Point p2
+  @NoDoc const Color c1
+  @NoDoc const Color c2
   private new make(Point p1, Color c1, Point p2, Color c2)
   {
     this.p1 = p1; this.c1 = c1
@@ -91,7 +91,8 @@ const class Gradient : Brush
 **
 ** Pattern is an brush for filling shapes with an image.
 **
-@js @serializable
+@Js
+@Serializable
 const class Pattern : Brush
 {
 

@@ -9,7 +9,8 @@
 **
 ** Pen defines how a shape is stroked.
 **
-@js @simple
+@Js
+@Serializable { simple = true }
 const class Pen
 {
 
