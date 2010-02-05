@@ -209,24 +209,19 @@ final class FPod : CPod, FConst
     writeProps(`/index.props`, index)
 
     // write non-empty tables
-    if (!names.isEmpty)      names.write(out(`/names.def`))
-    if (!typeRefs.isEmpty)   typeRefs.write(out(`/typeRefs.def`))
-    if (!fieldRefs.isEmpty)  fieldRefs.write(out(`/fieldRefs.def`))
-    if (!methodRefs.isEmpty) methodRefs.write(out(`/methodRefs.def`))
-    if (!ints.isEmpty)       ints.write(out(`/ints.def`))
-    if (!floats.isEmpty)     floats.write(out(`/floats.def`))
-    if (!decimals.isEmpty)   decimals.write(out(`/decimals.def`))
-    if (!strs.isEmpty)       strs.write(out(`/strs.def`))
-    if (!durations.isEmpty)  durations.write(out(`/durations.def`))
-    if (!uris.isEmpty)       uris.write(out(`/uris.def`))
-
-    // write pod meta-data
-    out := out(`/pod.def`)
-    writePodMeta(out)
-    out.close
+    if (!names.isEmpty)      names.write(out(`/fcode/names.def`))
+    if (!typeRefs.isEmpty)   typeRefs.write(out(`/fcode/typeRefs.def`))
+    if (!fieldRefs.isEmpty)  fieldRefs.write(out(`/fcode/fieldRefs.def`))
+    if (!methodRefs.isEmpty) methodRefs.write(out(`/fcode/methodRefs.def`))
+    if (!ints.isEmpty)       ints.write(out(`/fcode/ints.def`))
+    if (!floats.isEmpty)     floats.write(out(`/fcode/floats.def`))
+    if (!decimals.isEmpty)   decimals.write(out(`/fcode/decimals.def`))
+    if (!strs.isEmpty)       strs.write(out(`/fcode/strs.def`))
+    if (!durations.isEmpty)  durations.write(out(`/fcode/durations.def`))
+    if (!uris.isEmpty)       uris.write(out(`/fcode/uris.def`))
 
     // write type meta-data
-    out = this.out(`/types.def`)
+    out := this.out(`/fcode/types.def`)
     out.writeI2(ftypes.size)
     ftypes.each |FType t| { t.writeMeta(out) }
     out.close
@@ -239,12 +234,17 @@ final class FPod : CPod, FConst
 // Pod Meta
 //////////////////////////////////////////////////////////////////////////
 
+// TODO-FACETS
   Void readPodMeta(InStream in)
   {
+in.readU4
+in.readU4
+/*
     if (in.readU4 != FCodeMagic)
       throw IOErr("Invalid fcode magic number")
     if (in.readU4 != FCodeVersion)
       throw IOErr("Unsupported fcode version")
+*/
 
     name = in.readUtf
     version = Version.fromStr(in.readUtf)
@@ -253,19 +253,6 @@ final class FPod : CPod, FConst
   // TODO-FACETS
 fattrs := FAttr[,]
     in.readU2.times { fattrs.add(FAttr.make.read(in)) }
-  }
-
-  // TODO-FACETS
-  Void writePodMeta(OutStream out)
-  {
-    out.writeI4(FConst.FCodeMagic)
-    out.writeI4(FConst.FCodeVersion)
-    out.writeUtf(name)
-    out.writeUtf(version.toStr)
-    out.writeI2(depends.size)
-    depends.each |Depend d| { out.writeUtf(d.toStr) }
-    out.writeI2(0) //fattrs.size)
-//    fattrs.each |FAttr a| { a.write(out) }
   }
 
   Void writeProps(Uri uri, Str:Str props)

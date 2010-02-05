@@ -5,7 +5,19 @@
 // History:
 //   1 Jan 06  Brian Frank  Creation
 //   1 Jan 07  Brian Frank  Rework pod meta-data structure
+//   5 Feb 10  Brian Frank  New facet design with meta.props
 //
+
+//////////////////////////////////////////////////////////////////////////
+// Pod Meta
+//////////////////////////////////////////////////////////////////////////
+
+  meta.props
+
+  pod.name:      string name
+  pod.version:   version string formatted as sys::Version
+  pod.depends:   depends formatted as sys::Depend separated by semicolon
+  fcode.version: 1.0.51
 
 //////////////////////////////////////////////////////////////////////////
 // Name Pool
@@ -105,22 +117,6 @@
     u2 retType (typeRefs.def)
     u1 paramCount
     u2[paramCount] params (typeRefs.def)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Pod
-//////////////////////////////////////////////////////////////////////////
-
-  pod.def
-  {
-    u4  magic 0x0FC0DE05
-    u4  version 0x01_00_0015
-    utf podName
-    utf podVersion
-    u2  dependCount
-    utf[dependCount] depends
-    u2  attrCount
-    attr[attrCount] attrs
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -264,39 +260,3 @@
     u1[len] data
   }
 
-//////////////////////////////////////////////////////////////////////////
-// TypeDb
-//////////////////////////////////////////////////////////////////////////
-
-  typedb.def
-  {
-    u4  magic 0x0FC0DEDB
-    u4  version 0x01_00_0018
-    utf podName
-    utf podVersion
-    u2 facetNameCount
-    utf[] facetNames
-    typedbFacets facets
-    u2 typeCount
-    typedb[typeCount] types
-  }
-
-  typedb
-  {
-    utf name
-    utf base  (qname or "")
-    u2 mixinCount
-    utf mixin[mixinCount] (qname)
-    u4 flags
-    typedbFacets facets
-  }
-
-  typedbFacets
-  {
-    u2 facetCount
-    facets
-    {
-      u2 name    // facet name index
-      utf value  // serialized value
-    }
-  }

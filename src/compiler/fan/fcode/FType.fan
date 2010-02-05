@@ -163,7 +163,7 @@ class FType : CType
 
   Uri uri()
   {
-    return Uri.fromStr("/" + fpod.n(fpod.typeRef(self).typeName) + ".fcode")
+    return Uri.fromStr("/fcode/" + fpod.n(fpod.typeRef(self).typeName) + ".fcode")
   }
 
   Void write()

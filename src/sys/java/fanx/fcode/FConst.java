@@ -17,10 +17,7 @@ public interface FConst
 // Stuff
 //////////////////////////////////////////////////////////////////////////
 
-  public static final int FCodeMagic    = 0x0FC0DE05;
-  public static final int FCodeVersion  = 0x01000051;
-  public static final int TypeDbMagic   = 0x0FC0DEDB;
-  public static final int TypeDbVersion = 0x01000018;
+  public static final String FCodeVersion = "1.0.51";
 
 //////////////////////////////////////////////////////////////////////////
 // Flags

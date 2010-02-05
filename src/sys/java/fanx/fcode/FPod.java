@@ -11,6 +11,7 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 import fan.sys.*;
+import fan.sys.Map;
 import fanx.util.*;
 
 /**
@@ -67,16 +68,16 @@ public final class FPod
    */
   public void read() throws IOException
   {
-    names.read(store.read("names.def", true));
-    typeRefs.read(store.read("typeRefs.def"));
-    fieldRefs.read(store.read("fieldRefs.def"));
-    methodRefs.read(store.read("methodRefs.def"));
-
     // pod meta
-    readPodMeta(store.read("pod.def", true));
+    readPodMeta(store.read("meta.props", true));
+
+    names.read(store.read("fcode/names.def", true));
+    typeRefs.read(store.read("fcode/typeRefs.def"));
+    fieldRefs.read(store.read("fcode/fieldRefs.def"));
+    methodRefs.read(store.read("fcode/methodRefs.def"));
 
     // type meta
-    readTypeMeta(store.read("types.def", true));
+    readTypeMeta(store.read("fcode/types.def", true));
 
     // full fcode always lazy loaded in Type.reflect()
   }
@@ -114,51 +115,62 @@ public final class FPod
     while ((entry = zip.getNextEntry()) != null)
     {
       String name = entry.getName();
-
-      if (name.equals("meta.props")) readMeta(in);
-      else if (name.equals("names.def")) names.read(in);
-      else if (name.equals("typeRefs.def")) typeRefs.read(in);
-      else if (name.equals("fieldRefs.def")) fieldRefs.read(in);
-      else if (name.equals("methodRefs.def")) methodRefs.read(in);
-      else if (name.equals("pod.def")) readPodMeta(in);
-      else if (name.equals("types.def")) readTypeMeta(in);
-      else if (name.endsWith(".fcode")) readType(name, in);
-      else if (name.equals("ints.def")) literals.ints.read(in);
-      else if (name.equals("floats.def")) literals.floats.read(in);
-      else if (name.equals("decimals.def")) literals.decimals.read(in);
-      else if (name.equals("strs.def")) literals.strs.read(in);
-      else if (name.equals("durations.def")) literals.durations.read(in);
-      else if (name.equals("uris.def")) literals.uris.read(in);
+      if (name.equals("meta.props")) { readPodMeta(in); continue; }
+      else if (name.startsWith("fcode/") && name.endsWith(".fcode")) readType(name, in);
+      else if (name.equals("fcode/names.def")) names.read(in);
+      else if (name.equals("fcode/typeRefs.def")) typeRefs.read(in);
+      else if (name.equals("fcode/fieldRefs.def")) fieldRefs.read(in);
+      else if (name.equals("fcode/methodRefs.def")) methodRefs.read(in);
+      else if (name.equals("fcode/types.def")) readTypeMeta(in);
+      else if (name.equals("fcode/ints.def")) literals.ints.read(in);
+      else if (name.equals("fcode/floats.def")) literals.floats.read(in);
+      else if (name.equals("fcode/decimals.def")) literals.decimals.read(in);
+      else if (name.equals("fcode/strs.def")) literals.strs.read(in);
+      else if (name.equals("fcode/durations.def")) literals.durations.read(in);
+      else if (name.equals("fcode/uris.def")) literals.uris.read(in);
       else System.out.println("WARNING: unexpected file in pod: " + name);
     }
   }
 
-  private void readMeta(FStore.Input in) throws IOException
-  {
-    SysInStream sysIn = new SysInStream(in);
-    this.meta = sysIn.readProps();
-    sysIn.close();
-  }
-
   private void readPodMeta(FStore.Input in) throws IOException
   {
-    if (in.u4() != 0x0FC0DE05)
-      throw new IOException("Invalid magic");
 
-    int version = in.u4();
-    if (version != FConst.FCodeVersion)
-      throw new IOException("Invalid version 0x" + Integer.toHexString(version));
-    this.version = version;
+// TODO-FACETS
+if ("sys".equals(podName))
+{
+  podVersion = "1.0.51";
+  depends = new Depend[0];
+  fcodeVersion = FConst.FCodeVersion;
+  return;
+}
 
-    podName = in.utf();
-    podVersion = in.utf();
-    depends = new Depend[in.u2()];
-    for (int i=0; i<depends.length; ++i)
-      depends[i] = Depend.fromStr(in.utf());
+    SysInStream sysIn = new SysInStream(in);
+    meta = sysIn.readProps();
+    sysIn.close();
 
-    attrs = FAttrs.read(in);
 
-    in.close();
+    podName = meta("pod.name");
+    podVersion = meta("pod.version");
+
+    fcodeVersion = meta("fcode.version");
+    if (!FConst.FCodeVersion.equals(fcodeVersion))
+      throw new IOException("Invalid fcode version " + fcodeVersion);
+
+    String dependsStr = meta("pod.depends").trim();
+    if (dependsStr.length() == 0) depends = new Depend[0];
+    else
+    {
+      String[] toks = dependsStr.split(";");
+      depends = new Depend[toks.length];
+      for (int i=0; i<depends.length; ++i) depends[i] = Depend.fromStr(toks[i].trim());
+    }
+  }
+
+  private String meta(String key) throws IOException
+  {
+    String val = (String)meta.get(key);
+    if (val == null) throw new IOException("meta.prop missing " + key);
+    return val;
   }
 
   private void readTypeMeta(FStore.Input in) throws IOException
@@ -177,7 +189,7 @@ public final class FPod
     if (types == null || types.length == 0)
       throw new IOException("types.def must be defined first");
 
-    String typeName = name.substring(0, name.length()-".fcode".length());
+    String typeName = name.substring(6, name.length()-".fcode".length());
     for (int i=0; i<types.length; ++i)
     {
       String n = typeRef(types[i].self).typeName;
@@ -191,18 +203,17 @@ public final class FPod
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  public String podName;     // pod's unique name
-  public String podVersion;  // pod's version
-  public Depend[] depends;   // pod dependencies
-  public FAttrs attrs;       // pod attributes
-  public FStore store;       // store we using to read
-  public int version;        // fcode format version
-  public Object meta;        // meta Str:Str map
-  public FType[] types;      // pod's declared types
-  public FTable names;       // identifier names: foo
-  public FTable typeRefs;    // types refs:   [pod,type,variances*]
-  public FTable fieldRefs;   // fields refs:  [parent,name,type]
-  public FTable methodRefs;  // methods refs: [parent,name,ret,params*]
-  public FLiterals literals; // literal constants (on read fully or lazy load)
+  public String podName;      // pod's unique name
+  public String podVersion;   // pod's version
+  public Depend[] depends;    // pod dependencies
+  public String fcodeVersion; // fcode format version
+  public Map meta;            // meta Str:Str map
+  public FStore store;        // store we using to read
+  public FType[] types;       // pod's declared types
+  public FTable names;        // identifier names: foo
+  public FTable typeRefs;     // types refs:   [pod,type,variances*]
+  public FTable fieldRefs;    // fields refs:  [parent,name,type]
+  public FTable methodRefs;   // methods refs: [parent,name,ret,params*]
+  public FLiterals literals;  // literal constants (on read fully or lazy load)
 
 }

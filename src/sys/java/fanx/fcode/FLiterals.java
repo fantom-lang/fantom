@@ -43,12 +43,12 @@ public final class FLiterals
 
   public FLiterals read() throws IOException
   {
-    ints.read(fpod.store.read("ints.def"));
-    floats.read(fpod.store.read("floats.def"));
-    decimals.read(fpod.store.read("decimals.def"));
-    strs.read(fpod.store.read("strs.def"));
-    durations.read(fpod.store.read("durations.def"));
-    uris.read(fpod.store.read("uris.def"));
+    ints.read(fpod.store.read("fcode/ints.def"));
+    floats.read(fpod.store.read("fcode/floats.def"));
+    decimals.read(fpod.store.read("fcode/decimals.def"));
+    strs.read(fpod.store.read("fcode/strs.def"));
+    durations.read(fpod.store.read("fcode/durations.def"));
+    uris.read(fpod.store.read("fcode/uris.def"));
     return this;
   }
 

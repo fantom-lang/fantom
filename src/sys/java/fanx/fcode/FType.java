@@ -46,7 +46,7 @@ public class FType
 
   public String filename()
   {
-    return pod.typeRef(self).typeName + ".fcode";
+    return "fcode/" + pod.typeRef(self).typeName + ".fcode";
   }
 
   public void read() throws IOException
@@ -56,8 +56,8 @@ public class FType
 
   public void read(FStore.Input in) throws IOException
   {
-    if (in.fpod.version == 0)
-      throw new IOException("FStore.Input.version == 0");
+    if (in.fpod.fcodeVersion == null)
+      throw new IOException("FStore.Input.fcodeVersion == null");
 
     fields = new FField[in.u2()];
     for (int i=0; i<fields.length; ++i)
