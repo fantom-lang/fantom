@@ -59,6 +59,7 @@ class PodTest : Test
     sys := Pod.find("sys")
     verifyEq(sys.name, "sys")
     verifyEq(sys.depends.size, 0)
+    verifyMeta(sys)
 
     testSys := Pod.find("testSys")
     verifyEq(testSys.name, "testSys")
