@@ -20,7 +20,7 @@ abstract class BuildCs : BuildScript
   **
   ** Required output file created by the compiler.
   **
-  File? output
+  Uri? output
 
   **
   ** Required output type. Possible values are 'exe',
@@ -32,48 +32,39 @@ abstract class BuildCs : BuildScript
   ** Required list of directories to compile.  All C# source
   ** files in each directory will be compiled.
   **
-  File[]? dirs
+  Uri[]? srcDirs
 
   **
   ** List of libraries to link to.
   **
-  File[]? libs
-
-//////////////////////////////////////////////////////////////////////////
-// Setup
-//////////////////////////////////////////////////////////////////////////
+  Uri[] libs := Uri[,]
 
   **
-  ** Validate subclass constructor setup required meta-data.
+  ** Should we skip compiling .NET code?  Default only
+  ** runs C# compiler if running on Windows.
   **
-  internal override Void validate()
+  Bool skip := Env.cur.os != "win32"
+
+//////////////////////////////////////////////////////////////////////////
+// Validate
+//////////////////////////////////////////////////////////////////////////
+
+  private Void validate()
   {
-    ok := true
-    ok = ok.and(validateReqField("output"))
-    ok = ok.and(validateReqField("targetType"))
-    ok = ok.and(validateReqField("dirs"))
-    if (!ok) throw FatalBuildErr.make
+    if (output == null) throw fatal("Must set BuildCs.output")
+    if (targetType == null) throw fatal("Must set BuildCs.targetType")
+    if (srcDirs == null) throw fatal("Must set BuildCs.srcDirs")
   }
-
-//////////////////////////////////////////////////////////////////////////
-// BuildScript
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Default target is `compile`.
-  **
-  override Target defaultTarget() { return target("compile") }
 
 //////////////////////////////////////////////////////////////////////////
 // Dump Env
 //////////////////////////////////////////////////////////////////////////
 
-  @target="Dump env details to help build debugging"
   override Void dumpEnv()
   {
     super.dumpEnv
 
-    if (!isWindows)
+    if (skip)
     {
       log.out.printLine("  skipped (not windows)")
       return
@@ -82,9 +73,9 @@ abstract class BuildCs : BuildScript
     oldLevel := log.level
     log.level = LogLevel.silent
     try
-      log.out.printLine("  dotnetHome:  ${CompileCs(this).dotnetHomeDir}")
+      log.out.printLine("  dotnetHome:    ${CompileCs(this).dotnetHomeDir}")
     catch (Err e)
-      log.out.printLine("  dotnetHome:  $e")
+      log.out.printLine("  dotnetHome:    $e")
     finally
       log.level = oldLevel
   }
@@ -93,24 +84,29 @@ abstract class BuildCs : BuildScript
 // Compile
 //////////////////////////////////////////////////////////////////////////
 
-  @target="compile C# source into exe or dll"
+  **
+  ** Compile C# source into exe or dll
+  **
+  @Target
   Void compile()
   {
-    if (!isWindows)
+    if (skip)
     {
       log.info("skipping [${scriptDir.name}]")
       return
     }
+
+    validate
 
     log.info("compile [${scriptDir.name}]")
     log.indent
 
     // compile source
     csc := CompileCs(this)
-    csc.output = output
+    csc.output = output.toFile
     csc.targetType = targetType
-    csc.src  = dirs
-    csc.libs = libs
+    csc.src  = resolveDirs(srcDirs)
+    csc.libs = resolveFiles(libs)
     csc.run
 
     log.unindent
@@ -120,12 +116,15 @@ abstract class BuildCs : BuildScript
 // Clean
 //////////////////////////////////////////////////////////////////////////
 
-  @target="delete all intermediate and target files"
+  **
+  ** Delete all intermediate and target files
+  **
+  @Target
   Void clean()
   {
     log.info("clean [${scriptDir.name}]")
     log.indent
-    Delete(this, output).run
+    Delete(this, output.toFile).run
     log.unindent
   }
 
@@ -133,7 +132,10 @@ abstract class BuildCs : BuildScript
 // Full
 //////////////////////////////////////////////////////////////////////////
 
-  @target= "clean+compile"
+  **
+  ** Run clean, compile
+  **
+  @Target
   Void full()
   {
     clean

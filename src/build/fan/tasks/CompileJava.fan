@@ -47,8 +47,8 @@ class CompileJava : JdkTask
   **
   Void cpAddExtJars()
   {
-    cpAddJars(script.libJavaExtDir)
-    cpAddJars(script.libJavaExtPlatformDir)
+    cpAddJars(script.devHomeDir + `lib/java/ext/`)
+    cpAddJars(script.devHomeDir + `lib/java/ext/$Env.cur.platform/`)
   }
 
   **
