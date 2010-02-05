@@ -15,7 +15,7 @@ using build
 class Build : BuildGroup
 {
 
-  override Void setup()
+  new make()
   {
     childrenScripts =
     [

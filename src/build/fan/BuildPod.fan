@@ -67,31 +67,33 @@ abstract class BuildPod : BuildScript
   ** List of Uris relative to build script of directories containing
   ** the Fan source files to compile.
   **
-  Uri[] srcDirs := Uri[,]
+  Uri[]? srcDirs
 
   **
   ** List of Uris relative to build script of directories of resources
   ** files to package into pod zip file.  Optional.
   **
-  Uri[] resDirs := Uri[,]
+// TODO-FACETS nullable problem
+  Uri[]? resDirs := Uri[,]
 
   **
   ** List of Uris relative to build script of directories containing
   ** the Java source files to compile for Java native methods.
   **
-  Uri[] javaDirs := Uri[,]
+  Uri[]? javaDirs
 
   **
   ** List of Uris relative to build script of directories containing
   ** the C# source files to compile for .NET native methods.
   **
-  Uri[] dotnetDirs := Uri[,]
+  Uri[]? dotnetDirs
 
   **
   ** List of Uris relative to "pod.fan" of directories containing
   ** the JavaScript source files to compile for JavaScript native methods.
   **
-  Uri[] jsDirs := Uri[,]
+// TODO-FACETS nullable problem
+  Uri[]? jsDirs := Uri[,]
 
   **
   ** The directory to look in for the dependency pod file (and
@@ -202,8 +204,8 @@ abstract class BuildPod : BuildScript
   **
   virtual Void compileJava()
   {
+    if (this.javaDirs == null) return
     javaDirs := resolveDirs(this.javaDirs)
-    if (javaDirs.isEmpty) return
 
     log.info("javaNative [$podName]")
     log.indent
@@ -276,7 +278,7 @@ abstract class BuildPod : BuildScript
   **
   virtual Void compileDotnet()
   {
-    if (dotnetDirs.isEmpty) return
+    if (dotnetDirs == null) return
 
     if (Env.cur.os != "win32")
     {

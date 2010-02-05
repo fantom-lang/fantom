@@ -38,16 +38,16 @@ class Build : BuildGroup
       `wisp/build.fan`,
       `fandoc/build.fan`,
       `docCompiler/build.fan`,
-//      `sql/build.fan`,
+      `sql/build.fan`,
       `email/build.fan`,
       `gfx/build.fan`,
-//      `fwt/build.fan`,
+      `fwt/build.fan`,
       `icons/build.fan`,
 //      `flux/build.fan`,
       `xml/build.fan`,
       `json/build.fan`,
       `obix/build.fan`,
-//      `doc/build.fan`,
+      `doc/build.fan`,
     ]
   }
 

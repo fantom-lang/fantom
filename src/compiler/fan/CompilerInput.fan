@@ -125,19 +125,19 @@ class CompilerInput
   ** List of directories relative to `baseDir` containing
   ** fan source files (file mode only)
   **
-  Uri[]? srcDirs := Uri[,]
+  Uri[]? srcDirs
 
   **
   ** List of directories relative to `baseDir` containing
   ** resource files to include in the pod zip (file mode only)
   **
-  Uri[] resDirs := Uri[,]
+  Uri[]? resDirs
 
   **
   ** List of directories relative to `baseDir` containing
   ** JavaScript files to include in the JavaScript output
   **
-  Uri[] jsDirs := Uri[,]
+  Uri[]? jsDirs
 
 //////////////////////////////////////////////////////////////////////////
 // CompilerInputMode.str
@@ -175,8 +175,6 @@ class CompilerInput
     {
       case CompilerInputMode.file:
         validateReqField("baseDir")
-        validateReqField("srcDirs")
-        validateReqField("resDirs")
       case CompilerInputMode.str:
         validateReqField("srcStr")
         validateReqField("srcStrLoc")

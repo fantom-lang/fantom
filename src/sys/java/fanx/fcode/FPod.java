@@ -71,7 +71,7 @@ public final class FPod
     // pod meta
     readPodMeta(store.read("meta.props", true));
 
-    names.read(store.read("fcode/names.def", true));
+    names.read(store.read("fcode/names.def"));
     typeRefs.read(store.read("fcode/typeRefs.def"));
     fieldRefs.read(store.read("fcode/fieldRefs.def"));
     methodRefs.read(store.read("fcode/methodRefs.def"));
