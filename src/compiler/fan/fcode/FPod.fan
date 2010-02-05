@@ -207,8 +207,8 @@ final class FPod : CPod, FConst
     this.zip = zip
 
     // write pod meta, index props
-    writeProps(`/meta.props`, meta)
-    writeProps(`/index.props`, index)
+    writeMeta(`/meta.props`)
+    writeIndex(`/index.props`)
 
     // write non-empty tables
     if (!names.isEmpty)      names.write(out(`/fcode/names.def`))
@@ -232,12 +232,33 @@ final class FPod : CPod, FConst
     ftypes.each |FType t| { t.write }
   }
 
-  private Void writeProps(Uri uri, Str:Str props)
+  private Void writeMeta(Uri uri)
   {
-    if (props.isEmpty) return
     out := out(uri)
-    out.writeProps(props)
+    out.writeProps(meta)
     out.close
+  }
+
+  private Void writeIndex(Uri uri)
+  {
+    if (index.isEmpty) return
+    out := out(uri)
+    index.each |v, n|
+    {
+      if (v is Str)
+        prop(out, n, v)
+      else
+        ((Str[])v).each |vi| { prop(out, n, vi) }
+    }
+    out.close
+  }
+
+  private Void prop(OutStream out, Str n, Str v)
+  {
+    out.print(n.toCode(null, true))
+       .print("=")
+       .print(v.toCode(null, true))
+       .print("\n")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -268,7 +289,7 @@ final class FPod : CPod, FConst
   override Version version  // pod version
   Depend[]? depends         // pod dependencies
   Str:Str meta              // pod meta
-  Str:Str index             // pod index
+  Str:Obj index             // pod index
   Zip? zip                  // zipped storage
   FType[]? ftypes           // pod's declared types
   FTable names              // identifier names: foo

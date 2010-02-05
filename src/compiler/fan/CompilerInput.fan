@@ -68,9 +68,11 @@ class CompilerInput
   Str:Str meta := Str:Str[:]
 
   **
-  ** Pod indexing name/value pairs
+  ** Pod indexing name/value pairs.  The index values can be
+  ** a single Str or a Str[] if there are multiple values
+  ** mapped to one key.
   **
-  Str:Str index := Str:Str[:]
+  Str:Obj index := Str:Obj[:]
 
   **
   ** What type of output should be generated - the compiler

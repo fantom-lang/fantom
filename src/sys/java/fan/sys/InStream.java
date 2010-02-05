@@ -546,13 +546,16 @@ public class InStream
     return new ObjDecoder(this, options).readObj();
   }
 
-  public Map readProps()
+  public Map readProps() { return readProps(false); }
+  public Map readPropsListVals() { return readProps(true); }
+
+  private Map readProps(boolean listVals)  // listVals is Str:Str[]
   {
     Charset origCharset = charset();
     charset(Charset.utf8());
     try
     {
-      Map props = new Map(Sys.StrType, Sys.StrType);
+      Map props = new Map(Sys.StrType, listVals ? Sys.StrType.toListOf() : Sys.StrType);
 
       StringBuilder name = new StringBuilder();
       StringBuilder val = null;
@@ -575,7 +578,7 @@ public class InStream
           String n = FanStr.makeTrim(name);
           if (val != null)
           {
-            props.add(n, FanStr.makeTrim(val));
+            addProp(props, n, FanStr.makeTrim(val), listVals);
             name = new StringBuilder();
             val = null;
           }
@@ -661,7 +664,7 @@ public class InStream
 
       String n = FanStr.makeTrim(name);
       if (val != null)
-        props.add(n, FanStr.makeTrim(val));
+        addProp(props, n, FanStr.makeTrim(val), listVals);
       else if (n.length() > 0)
         throw IOErr.make("Invalid name/value pair [Line " + lineNum + "]").val;
 
@@ -671,6 +674,20 @@ public class InStream
     {
       try { close(); } catch (Exception e) { e.printStackTrace(); }
       charset(origCharset);
+    }
+  }
+
+  static void addProp(Map props, String n, String v, boolean listVals)
+  {
+    if (listVals)
+    {
+      List list =(List)props.get(n);
+      if (list == null) props.add(n, list = new List(Sys.StrType));
+      list.add(v);
+    }
+    else
+    {
+      props.add(n, v);
     }
   }
 

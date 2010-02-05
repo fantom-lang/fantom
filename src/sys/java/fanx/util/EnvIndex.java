@@ -88,7 +88,10 @@ public class EnvIndex
     {
       ZipEntry entry = zip.getEntry("index.props");
       if (entry != null)
-        addProps(index, new SysInStream(new BufferedInputStream(zip.getInputStream(entry))).readProps());
+      {
+        SysInStream in = new SysInStream(new BufferedInputStream(zip.getInputStream(entry)));
+        addProps(index, in.readPropsListVals());
+      }
     }
     finally
     {
@@ -102,10 +105,13 @@ public class EnvIndex
     while (it.hasNext())
     {
       Entry entry = (Entry)it.next();
-      String key = (String)entry.getKey();
-      List list = (List)index.get(key);
-      if (list == null) index.put(key, list = new List(Sys.StrType));
-      list.add(entry.getValue());
+      String key  = (String)entry.getKey();
+      List val    = (List)entry.getValue();
+      List master = (List)index.get(key);
+      if (master == null)
+        index.put(key, val);
+      else
+        master.addAll(val);
     }
   }
 
