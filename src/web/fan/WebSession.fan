@@ -14,7 +14,7 @@
 **
 ** See [docLib::Web]`docLib::Web#sessions`
 **
-@serializable
+@Serializable
 abstract class WebSession
 {
   **

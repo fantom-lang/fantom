@@ -9,6 +9,7 @@
 *Build 1.0.51 (working)*
 - Roll fcode version from 1.0.45 => 1.0.51
 - Change enum to positional keyword "enum class"
+- Rename build::Target => BuildTarget
 
 *Build 1.0.50 (2 Feb 10)*
 - Pod.loc => locale

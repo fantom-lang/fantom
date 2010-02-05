@@ -139,7 +139,7 @@ class JsonTest : Test
 ** SerialA
 **************************************************************************
 
-@serializable
+@Serializable
 internal class SerialA
 {
   Bool b := true
@@ -147,5 +147,5 @@ internal class SerialA
   Float f := 5f
   Str s := "string\n"
   Int[] ints  := [1, 2, 3]
-  @transient Int noGo := 99
+  @Transient Int noGo := 99
 }

@@ -135,6 +135,7 @@ class Evaluator
     ci := CompilerInput
     {
       podName     = shell == null ? "shWarmup" : "sh${shell.evalCount++}"
+      summary     = "eval"
       isScript    = true
       version     = Version.defVal
       log.level   = LogLevel.silent

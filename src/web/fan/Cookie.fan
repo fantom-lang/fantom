@@ -13,7 +13,7 @@
 ** and even 2109 isn't really supported by some of the major browsers.
 ** See `WebReq.cookies` and `WebRes.cookies`.
 **
-@js
+@Js
 const class Cookie
 {
 
