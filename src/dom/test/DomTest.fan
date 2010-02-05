@@ -8,7 +8,7 @@
 
 using web
 
-@nodoc
+@NoDoc
 class DomTest : Weblet
 {
   override Void onGet()
@@ -80,8 +80,8 @@ class DomTest : Weblet
   }
 }
 
-@js
-@nodoc
+@Js
+@NoDoc
 internal class DomTestClient
 {
   Void testAttrs()

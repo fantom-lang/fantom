@@ -151,6 +151,12 @@ abstract class BuildPod : BuildScript
   **
   virtual Void compileFan()
   {
+    // add my own meta
+    meta := this.meta.dup
+    meta["pod.docApi"] = docApi.toStr
+    meta["pod.docSrc"] = docSrc.toStr
+
+    // map my config to CompilerInput structure
     ci := CompilerInput()
     ci.inputLoc    = Loc.makeFile(scriptFile)
     ci.podName     = podName

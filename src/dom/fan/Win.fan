@@ -12,7 +12,7 @@
 **
 ** See [docLib]`docLib::Dom#win` for details.
 **
-@js
+@Js
 class Win
 {
 
