@@ -179,11 +179,11 @@ class InitInput : CompilerStep
     log.info("FindSourceFiles [${compiler.srcFiles.size} files]")
   }
 
-  private File[] findFiles(Uri[] uris, Str? ext)
+  private File[] findFiles(Uri[]? uris, Str? ext)
   {
     base := input.baseDir
     acc := File[,]
-    uris.each |uri|
+    uris?.each |uri|
     {
       dir := base + uri
       if (!dir.exists || !dir.isDir) throw err("Invalid directory", Loc.makeFile(dir))

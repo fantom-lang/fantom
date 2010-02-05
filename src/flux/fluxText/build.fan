@@ -17,5 +17,10 @@ class Build : BuildPod
   override Void setup()
   {
     podName = "fluxText"
+    summary = "Flux: Text Editor"
+    depends = ["sys 1.0", "gfx 1.0", "fwt 1.0", "flux 1.0"]
+    srcDirs = [`fan/`, `test/`]
+    resDirs = [`locale/`]
+    docSrc  = true
   }
 }
