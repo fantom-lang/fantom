@@ -153,25 +153,27 @@ final class FPod : CPod, FConst
   {
     echo("     FPod.reading [$zip.file]...")
 
-    // read tables
-    names.read(in(`/names.def`))
-    typeRefs.read(in(`/typeRefs.def`))
-    fieldRefs.read(in(`/fieldRefs.def`))
-    methodRefs.read(in(`/methodRefs.def`))
-    ints.read(in(`/ints.def`))
-    floats.read(in(`/floats.def`))
-    decimals.read(in(`/decimals.def`))
-    strs.read(in(`/strs.def`))
-    durations.read(in(`/durations.def`))
-    uris.read(in(`/uris.def`))
-
     // read pod meta-data
-    in := this.in(`/pod.def`)
-    readPodMeta(in)
-    in.close
+    meta = this.in(`/meta.props`).readProps
+    name = meta.get("pod.name") ?: throw IOErr("Missing meta pod.name")
+    version = Version(meta.get("pod.version"))
+    d := meta.get("pod.depends")
+    depends = d.isEmpty ? Depend[,] : d.split(';').map |s->Depend| { Depend(s) }
+
+    // read tables
+    names.read(in(`/fcode/names.def`))
+    typeRefs.read(in(`/fcode/typeRefs.def`))
+    fieldRefs.read(in(`/fcode/fieldRefs.def`))
+    methodRefs.read(in(`/fcode/methodRefs.def`))
+    ints.read(in(`/fcode/ints.def`))
+    floats.read(in(`/fcode/floats.def`))
+    decimals.read(in(`/fcode/decimals.def`))
+    strs.read(in(`/fcode/strs.def`))
+    durations.read(in(`/fcode/durations.def`))
+    uris.read(in(`/fcode/uris.def`))
 
     // read type meta-data
-    in = this.in(`/types.def`)
+    in := this.in(`/fcode/types.def`)
     ftypes = FType[,]
     ftypesByName = Str:FType[:]
     in.readU2.times
@@ -230,32 +232,7 @@ final class FPod : CPod, FConst
     ftypes.each |FType t| { t.write }
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Pod Meta
-//////////////////////////////////////////////////////////////////////////
-
-// TODO-FACETS
-  Void readPodMeta(InStream in)
-  {
-in.readU4
-in.readU4
-/*
-    if (in.readU4 != FCodeMagic)
-      throw IOErr("Invalid fcode magic number")
-    if (in.readU4 != FCodeVersion)
-      throw IOErr("Unsupported fcode version")
-*/
-
-    name = in.readUtf
-    version = Version.fromStr(in.readUtf)
-    depends = Depend[,]
-    in.readU2.times { depends.add(Depend.fromStr(in.readUtf)) }
-  // TODO-FACETS
-fattrs := FAttr[,]
-    in.readU2.times { fattrs.add(FAttr.make.read(in)) }
-  }
-
-  Void writeProps(Uri uri, Str:Str props)
+  private Void writeProps(Uri uri, Str:Str props)
   {
     if (props.isEmpty) return
     out := out(uri)

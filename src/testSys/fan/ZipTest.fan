@@ -26,19 +26,15 @@ class ZipTest : Test
     verify(z.contents.isRO)
 
     // open known file
-    sys := z.contents[`/pod.def`]
-    verifyEq(sys.uri, `/pod.def`)
-    in := sys.in
-    verifyEq(in.readU4, 0x0FC0DE05)
-    in.close
+    sys := z.contents[`/meta.props`]
+    verifyEq(sys.uri, `/meta.props`)
+    verifyEq(sys.in.readProps["pod.name"], "sys")
 
     // copy to local file
     x := sys.copyInto(tempDir)
-    verifyEq(x.name, "pod.def")
+    verifyEq(x.name, "meta.props")
     verifyEq(x.size, sys.size)
-    in = x.in
-    verifyEq(in.readU4, 0x0FC0DE05)
-    in.close
+    verifyEq(x.in.readProps["pod.name"], "sys")
 
     // verify errors
     verifyErr(IOErr#) { Zip.open(sys) }
