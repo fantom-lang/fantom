@@ -20,7 +20,6 @@ class Build : BuildGroup
     [
       `docIntro/build.fan`,
       `docLang/build.fan`,
-      `docLib/build.fan`,
       `docTools/build.fan`,
     ]
   }
