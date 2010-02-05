@@ -19,69 +19,66 @@ abstract class BuildScript
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Construction
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Construct a new build script.
-  **
-  new make()
-  {
-    initEnv
-    try
-    {
-      setup
-      validate
-      targets = makeTargets.ro
-    }
-    catch (Err err)
-    {
-      log.err("Error initializing script [$scriptFile.osPath]")
-      throw err
-    }
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Env
 //////////////////////////////////////////////////////////////////////////
 
+  **
   ** Log used for error reporting and tracing
+  **
   BuildLog log := BuildLog()
 
+  **
   ** The source file of this script
-  const File scriptFile := File(typeof->sourceFile.toStr.toUri)
+  **
+  const File scriptFile := File(typeof->sourceFile.toStr.toUri).normalize
 
+  **
   ** The directory containing the this script
+  **
   const File scriptDir := scriptFile.parent
 
+  **
   ** Home directory of development installation.  By default this
   ** value is initialized by 'devHome' config prop, otherwise
   ** `sys::Env.homeDir` is used.
+  **
   const File devHomeDir := configDir("devHome", Env.cur.homeDir)
 
-  ** {devHomeDir}/bin/
-  const File binDir := devHomeDir + `bin/`
+//////////////////////////////////////////////////////////////////////////
+// Targets
+//////////////////////////////////////////////////////////////////////////
 
-  ** {devHomeDir}/lib/
-  const File libDir := devHomeDir + `lib/`
+  **
+  ** Lookup a target by name.  If not found and checked is
+  ** false return null, otherwise throw an exception.
+  **
+  TargetMethod? target(Str name, Bool checked := true)
+  {
+    t := targets.find |t| { t.name == name }
+    if (t != null) return t
+    if (checked) throw Err("Target not found '$name' in $scriptFile")
+    return null
+  }
 
-  ** {devHomeDir}/lib/fan
-  const File libFanDir := devHomeDir + `lib/fan/`
+  **
+  ** Get the list of published targets for this script.  The
+  ** first target should be the default.  The list of targets
+  ** is defined by all the methods with the `Target` facet.
+  **
+  virtual once TargetMethod[] targets()
+  {
+    acc := TargetMethod[,]
+    typeof.methods.each |m|
+    {
+      if (!m.hasFacet(Target#)) return
+      acc.add(TargetMethod(this, m))
+    }
+    return acc
+  }
 
-  ** {devHomeDir}/lib/java
-  const File libJavaDir := devHomeDir + `lib/java/`
-
-  ** {devHomeDir}/lib/java/ext
-  const File libJavaExtDir := devHomeDir + `lib/java/ext/`
-
-  ** {devHomeDir}/lib/java/ext/{Env.cur.platform}
-  File libJavaExtPlatformDir := libJavaExtDir + `$Env.cur.platform/`
-
-  ** {devHomeDir}/lib/dotnet
-  const File libDotnetDir := devHomeDir + `lib/dotnet/`
-
-  ** Executable extension: ".exe" on Windows and "" on Unix.
-  Str exeExt := ""
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
 
   **
   ** Get a config property using the following rules:
@@ -114,28 +111,58 @@ abstract class BuildScript
     return def
   }
 
-  ** Initialize the environment
-  internal virtual Void initEnv()
+  **
+  ** Resolve a set of URIs to files relative to scriptDir.
+  **
+  internal File[] resolveFiles(Uri[] uris)
   {
-    // are we running on a Window's box?
-    isWindows = Env.cur.os == "win32"
-    exeExt = isWindows ? ".exe" : ""
+    uris.map |uri->File|
+    {
+      f := scriptDir + uri
+      if (!f.exists || f.isDir) throw fatal("Invalid file: $uri")
+      return f
+    }
   }
 
-  @target="Dump env details to help build debugging"
+  **
+  ** Resolve a set of URIs to directories relative to scriptDir.
+  **
+  internal File[] resolveDirs(Uri[] uris)
+  {
+    uris.map |uri->File|
+    {
+      f := scriptDir + uri
+      if (!f.exists || !f.isDir) throw fatal("Invalid dir: $uri")
+      return f
+    }
+  }
+
+  **
+  ** Dump script environment for debug.
+  **
   virtual Void dumpEnv()
   {
     log.printLine("---------------")
-    log.printLine("  scriptFile:   $scriptFile")
-    log.printLine("  typeof:       $typeof.base")
-    log.printLine("  env.homeDir:  $Env.cur.homeDir")
-    log.printLine("  env.workDir:  $Env.cur.workDir")
-    log.printLine("  devHomeDir:   $devHomeDir")
+    log.printLine("  scriptFile:    $scriptFile")
+    log.printLine("  typeof:        $typeof.base")
+    log.printLine("  env.homeDir:   $Env.cur.homeDir")
+    log.printLine("  env.workDir:   $Env.cur.workDir")
+    log.printLine("  devHomeDir:    $devHomeDir")
+    typeof.fields.each |f|
+    {
+      if (f.isPublic && !f.isStatic && f.parent != BuildScript#)
+        log.printLine("  " + (f.name+ ":").padr(14) + " " + f.get(this))
+    }
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Identity
-//////////////////////////////////////////////////////////////////////////
+  **
+  ** Log an error and return a FatalBuildErr instance
+  **
+  FatalBuildErr fatal(Str msg, Err? err := null)
+  {
+    log.err(msg, err)
+    return FatalBuildErr(msg, err)
+  }
 
   **
   ** Return this script's source file path.
@@ -146,73 +173,6 @@ abstract class BuildScript
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Targets
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Return the default target to execute when this script is run.
-  ** If this method is not overridden, then the default is to
-  ** return the first target declared in the script itself.
-  **
-  virtual Target defaultTarget()
-  {
-    targets := makeTargets
-    if (targets.isEmpty) throw Err("No targets declared")
-    def := targets.find |Target t->Bool| { !t.name.startsWith("dump") }
-    return def ?: targets.first
-  }
-
-  **
-  ** Lookup a target by name.  If not found and checked is
-  ** false return null, otherwise throw an exception.  This
-  ** method cannot be called until after the script has completed
-  ** its constructor.
-  **
-  Target? target(Str name, Bool checked := true)
-  {
-    if ((Obj?)targets == null) throw Err("script not setup yet")
-    t := targets.find |Target t->Bool| { return t.name == name }
-    if (t != null) return t
-    if (checked) throw Err("Target not found '$name' in $scriptFile")
-    return null
-  }
-
-  **
-  ** This callback is invoked by the 'BuildScript' constructor after
-  ** the call to `setup` to initialize the list of the targets this
-  ** script publishes.  The list of  targets is built from all the
-  ** methods annotated with the "target" facet.  The "target" facet
-  ** should have a string value with a description of what the target
-  ** does.
-  **
-  virtual Target[] makeTargets()
-  {
-    targets := Target[,]
-    typeof.methods.each |Method m|
-    {
-      description := m.facet(@target)
-      if (description == null) return
-
-      if (!(description is Str))
-      {
-        log.warn("Invalid target facet ${m.qname}@target")
-        return
-      }
-
-      if (m.params.size > 0 && !m.params.first.hasDefault)
-      {
-        log.warn("Invalid target method ${m.qname}")
-        return
-      }
-
-      targets.add(Target(this, m.name, description, toFunc(m)))
-    }
-    return targets
-  }
-
-  private Func toFunc(Method m) { return |->| { m.callOn(this, null) } }
-
-//////////////////////////////////////////////////////////////////////////
 // Arguments
 //////////////////////////////////////////////////////////////////////////
 
@@ -220,24 +180,21 @@ abstract class BuildScript
   ** Parse the arguments passed from the command line.
   ** Return true for success or false to end the script.
   **
-  private Bool parseArgs(Str[] args)
+  private TargetMethod[]? parseArgs(Str[] args)
   {
-    // check for usage
-    if (args.contains("-?") || args.contains("-help"))
-    {
-      usage
-      return false
-    }
+    // check for -? or -dumpEnv
+    if (args.contains("-?") || args.contains("-help")) { usage; return null }
+    if (args.contains("-dumpEnv")) { dumpEnv; return null }
 
     success := true
-    toRun = Target[,]
+    toRun := TargetMethod[,]
 
     // get published targetss
     published := targets
     if (published.isEmpty)
     {
       log.err("No targets available for script")
-      return false
+      return null
     }
 
     // process each argument
@@ -249,7 +206,7 @@ abstract class BuildScript
       else
       {
         // add target to our run list
-        target := published.find |Target t->Bool| { return t.name == arg }
+        target := published.find |t| { t.name == arg }
         if (target == null)
         {
           log.err("Unknown build target '$arg'")
@@ -261,13 +218,11 @@ abstract class BuildScript
         }
       }
     }
+    if (!success) return null
 
     // if no targets specified, then use the default
-    if (toRun.isEmpty)
-      toRun.add(defaultTarget)
-
-    // return success flag
-    return success
+    if (toRun.isEmpty) toRun.add(published.first)
+    return toRun
   }
 
   **
@@ -278,125 +233,16 @@ abstract class BuildScript
     log.printLine("usage: ")
     log.printLine("  build [options] <target>*")
     log.printLine("options:")
-    log.printLine("  -? -help       print usage summary")
-    log.printLine("  -v             verbose debug logging")
+    log.printLine("  -? -help       Print usage summary")
+    log.printLine("  -v             Verbose debug logging")
+    log.printLine("  -dumpEnv       Debug dump of script env")
     log.printLine("targets:")
-    def := defaultTarget
-    targets.each |Target t, Int i|
+    targets.each |t, i|
     {
-      n := t.name == def.name ? "${t.name}*" : "${t.name} "
-      log.print("  ${n.justl(14)} $t.description")
+      n := i == 0 ? "${t.name}*" : "${t.name} "
+      log.print("  ${n.justl(14)} $t.summary")
       log.printLine
     }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Setup
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** The setup callback is invoked before creating or processing of
-  ** any targets to ensure that the BuildScript is correctly initialized.
-  ** If the script cannot be setup then report errors via the log and
-  ** throw FatalBuildErr to terminate the script.
-  **
-  virtual Void setup()
-  {
-  }
-
-  **
-  ** Internal callback to validate setup
-  **
-  internal virtual Void validate()
-  {
-  }
-
-  **
-  ** Check that the specified field is non-null, if not
-  ** then log an error and return false.
-  **
-  internal Bool validateReqField(Str field)
-  {
-    val := typeof.field(field).get(this)
-    if (val != null) return true
-    log.err("Required field not set: '$field' [$toStr]")
-    return false
-  }
-
-  **
-  ** Convert a Uri to a directory and verify it exists.
-  **
-  internal File? resolveDir(Uri? uri, Bool nullOk := false)
-  {
-    return resolveUris([uri], nullOk, true)[0]
-  }
-
-  **
-  ** Convert a Uri to a file and verify it exists.
-  **
-  internal File? resolveFile(Uri? uri, Bool nullOk := false)
-  {
-    return resolveUris([uri], nullOk, false)[0]
-  }
-
-  **
-  ** Convert a list of Uris to directories and verify they all exist.
-  **
-  internal File?[] resolveDirs(Uri?[]? uris, Bool nullOk := false)
-  {
-    return resolveUris(uris, nullOk, true)
-  }
-
-  **
-  ** Convert a list of Uris to files and verify they all exist.
-  **
-  internal File?[] resolveFiles(Uri?[]? uris, Bool nullOk := false)
-  {
-    return resolveUris(uris, nullOk, false)
-  }
-
-  private File?[] resolveUris(Uri?[]? uris, Bool nullOk, Bool expectDir)
-  {
-    files := File?[,]
-    if (uris == null) return files
-
-    files.capacity = uris.size
-    ok := true
-    uris.each |Uri? uri|
-    {
-      if (uri == null)
-      {
-        if (!nullOk) throw FatalBuildErr("Unexpected null Uri")
-        files.add(null)
-        return
-      }
-
-      file := scriptDir + uri
-      if (!file.exists || file.isDir != expectDir )
-      {
-        ok = false
-        if (expectDir)
-          log.err("Invalid directory [$uri]")
-        else
-          log.err("Invalid file [$uri]")
-      }
-      files.add(file)
-    }
-    if (!ok) throw FatalBuildErr.make
-    return files
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Utils
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Log an error and return a FatalBuildErr instance
-  **
-  FatalBuildErr fatal(Str msg, Err? err := null)
-  {
-    log.err(msg, err)
-    return FatalBuildErr(msg, err)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -413,8 +259,9 @@ abstract class BuildScript
     success := false
     try
     {
-      if (!parseArgs(args)) return -1
-      toRun.each |Target t| { t.run }
+      targetsToRun := parseArgs(args)
+      if (targetsToRun == null) return 1
+      targetsToRun.each |t| { t.run }
       success = true
     }
     catch (FatalBuildErr err)
@@ -440,17 +287,5 @@ abstract class BuildScript
     return success ? 0 : -1
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  ** Targets available on this script (see `makeTargets`)
-  readonly Target[] targets := Target#.emptyList
-
-  ** Targets specified to run by command line
-  Target[]? toRun
-
-  ** Are we running on a Window's box
-  internal Bool isWindows
-
 }
+

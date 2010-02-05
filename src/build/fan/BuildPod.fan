@@ -18,26 +18,70 @@ abstract class BuildPod : BuildScript
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Pod Meta-Data
+// Env
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Location of "pod.fan" which defines the pod meta-data
-  ** needed to compile the pod from source.  By default this
-  ** is assumed to be a peer to the build script.
+  ** Required name of the pod.
   **
-  File? podDef
+  Str? podName := null
 
   **
-  ** Programatic name of the pod.  Required to match name in "pod.fan".
+  ** Required summary description of pod.
   **
-  Str? podName
+  Str? summary := null
 
   **
   ** Version of the pod - default is set to `config` prop 'buildVersion'.
-  ** Required.
   **
-  Version? version
+  Version version := Version(config("buildVersion", "0"))
+
+  **
+  ** List of dependencies for pod formatted as `sys::Depend`.
+  **
+  Str[] depends := Str[,]
+
+  **
+  ** Indicates if if fandoc API should be included in the documentation.
+  ** By default API *is* included.
+  **
+  Bool docApi := true
+
+  **
+  ** Indicates if if source code should be included in the documentation.
+  ** By default source code it *not* included.
+  **
+  Bool docSrc := false
+
+  **
+  ** List of Uris relative to build script of directories containing
+  ** the Fan source files to compile.
+  **
+  Uri[] srcDirs := Uri[,]
+
+  **
+  ** List of Uris relative to build script of directories of resources
+  ** files to package into pod zip file.  Optional.
+  **
+  Uri[] resDirs := Uri[,]
+
+  **
+  ** List of Uris relative to build script of directories containing
+  ** the Java source files to compile for Java native methods.
+  **
+  Uri[] javaDirs := Uri[,]
+
+  **
+  ** List of Uris relative to build script of directories containing
+  ** the C# source files to compile for .NET native methods.
+  **
+  Uri[] dotnetDirs := Uri[,]
+
+  **
+  ** List of Uris relative to "pod.fan" of directories containing
+  ** the JavaScript source files to compile for JavaScript native methods.
+  **
+  Uri[] jsDirs := Uri[,]
 
   **
   ** The directory to look in for the dependency pod file (and
@@ -47,131 +91,22 @@ abstract class BuildPod : BuildScript
   ** with this field - it is used by the 'build' and 'compiler'
   ** build scripts for bootstrap build.
   **
-  Uri? dependsDir
+  Uri? dependsDir := null
 
   **
   ** Directory to write pod file.  By default it goes into
-  ** "{Env.cur.workDir}/fan/lib"
+  ** "{Env.cur.workDir}/lib/fan/"
   **
-  Uri? outDir
+  Uri outDir := Env.cur.workDir.plus(`lib/fan/`).uri
 
 //////////////////////////////////////////////////////////////////////////
-// Setup
+// Validate
 //////////////////////////////////////////////////////////////////////////
 
-  **
-  ** Internal initialization before setup is called
-  **
-  internal override Void initEnv()
+  private Void validate()
   {
-    super.initEnv
-    podDef = scriptDir + `pod.fan`
-  }
-
-  **
-  ** Validate subclass constructor setup required meta-data.
-  **
-  internal override Void validate()
-  {
-    if (version == null) version = Version(config("buildVersion", "0"))
-    if (outDir == null)  outDir  = (Env.cur.workDir + `lib/fan/`).uri
-    ok := true
-    ok = ok.and(validateReqField("podName"))
-    if (!ok) throw FatalBuildErr.make
-
-    // boot strap checking - ensure that we aren't
-    // overwriting sys, build, or compiler
-    if (podName == "sys" || podName == "build" ||
-        podName == "compiler" || podName == "compilerJava")
-    {
-      if (Env.cur.homeDir == devHomeDir)
-        throw fatal("Must update 'devHome' for bootstrap build")
-    }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Pod Facets
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Parse the facets from the "pod.fan" source file.
-  **
-  PodFacetsParser podFacets()
-  {
-    if (podFacetsParser == null)
-    {
-      if (!podDef.exists) throw fatal("podDef does not exist: $podDef")
-      try
-        podFacetsParser = PodFacetsParser(Loc.makeFile(podDef), podDef.readAllStr).parse
-      catch (CompilerErr e)
-        throw fatal("$e.msg [$e.loc.toLocStr]")
-    }
-    return podFacetsParser
-  }
-  private PodFacetsParser? podFacetsParser
-
-  **
-  ** Pod facet `@sys::podDepends`
-  **
-  once Depend[] podDepends() { podFacets.get("sys::podDepends", false, Depend[]#) ?: Depend[,] }
-
-  **
-  ** Pod facet `@sys::podSrcDirs`
-  **
-  once Uri[]? podSrcDirs() { podFacets.get("sys::podSrcDirs", false, Uri[]#) }
-
-  **
-  ** Pod facet `@sys::podResDirs`
-  **
-  once Uri[]? podResDirs() { podFacets.get("sys::podResDirs", false, Uri[]#) }
-
-  **
-  ** Pod facet `@sys::podJavaDirs`
-  **
-  once Uri[]? podJavaDirs() { podFacets.get("sys::podJavaDirs", false, Uri[]#) }
-
-  **
-  ** Pod facet `@sys::podDotnetDirs`
-  **
-  once Uri[]? podDotnetDirs() { podFacets.get("sys::podDotnetDirs", false, Uri[]#) }
-
-  **
-  ** Pod facet `@sys::podJsDirs`
-  **
-  once Uri[]? podJsDirs() { podFacets.get("sys::podJsDirs", false, Uri[]#) }
-
-  **
-  ** Pod facet `@sys::js`
-  **
-  once Bool podJs() { podFacets.get("sys::js", false) == true }
-
-  **
-  ** Pod facet `@sys::nodoc`
-  **
-  once Bool podNodoc() { podFacets.get("sys::nodoc", false) == true }
-
-//////////////////////////////////////////////////////////////////////////
-// BuildScript
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Default target is `compile`.
-  **
-  override Target defaultTarget() { target("compile") }
-
-//////////////////////////////////////////////////////////////////////////
-// DumpEnv
-//////////////////////////////////////////////////////////////////////////
-
-  @target="Dump env details to help build debugging"
-  override Void dumpEnv()
-  {
-    super.dumpEnv
-    log.printLine("  podDef:       $podDef")
-    log.printLine("  podName:      $podName")
-    log.printLine("  version:      $version")
-    log.printLine("  dependsDir:   $dependsDir")
-    log.printLine("  outDir:       $outDir")
+    if (podName == null) throw fatal("Must set BuildPod.podName")
+    if (summary == null) throw fatal("Must set BuildPod.summary")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -182,19 +117,62 @@ abstract class BuildPod : BuildScript
   ** Compile the source into a pod file and all associated
   ** natives.  See `compileJava` and `compileDotnet`.
   **
-  @target="compile fan source into pod and all associated natives"
+  @Target
   virtual Void compile()
   {
+    validate
+
     log.info("compile [$podName]")
     log.indent
-    fanc := CompileFan(this)
-    fanc.includeDoc = !podNodoc
-    fanc.includeSrc = !podNodoc
-    fanc.run
+
+    compileFan
     compileJava
-// TODO
+// TODO-FACET
 //    compileDotnet
     log.unindent
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Compile Fan
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Compile Fan code into pod file
+  **
+  virtual Void compileFan()
+  {
+    ci := CompilerInput()
+    ci.inputLoc    = Loc.makeFile(scriptFile)
+    ci.podName     = podName
+    ci.summary     = summary
+    ci.version     = version
+    ci.depends     = depends.map |s->Depend| { Depend(s) }
+    ci.dependsDir  = dependsDir?.toFile
+    ci.baseDir     = scriptDir
+    ci.srcDirs     = srcDirs
+    ci.resDirs     = resDirs
+    ci.jsDirs      = jsDirs
+    ci.log         = log
+    ci.includeDoc  = docApi
+    ci.mode        = CompilerInputMode.file
+    ci.outDir      = outDir.toFile
+    ci.output      = CompilerOutputMode.podFile
+
+    try
+    {
+      Compiler(ci).compile
+    }
+    catch (CompilerErr err)
+     {
+      // all errors should already be logged by Compiler
+      throw FatalBuildErr()
+    }
+    catch (Err err)
+    {
+      log.err("Internal compiler error")
+      err.trace
+      throw FatalBuildErr.make
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -206,7 +184,8 @@ abstract class BuildPod : BuildScript
   **
   virtual Void compileJava()
   {
-    if (podJavaDirs == null) return
+    javaDirs := resolveDirs(this.javaDirs)
+    if (javaDirs.isEmpty) return
 
     log.info("javaNative [$podName]")
     log.indent
@@ -217,10 +196,10 @@ abstract class BuildPod : BuildScript
     jdk      := JdkTask(this)
     javaExe  := jdk.javaExe
     jarExe   := jdk.jarExe
-    curPod   := libFanDir + "${podName}.pod".toUri
-    curJar   := libJavaDir + "${podName}.jar".toUri
-    javaDirs := resolveDirs(podJavaDirs)
-    depends  := podDepends
+    libJava  := devHomeDir + `lib/java/`
+    curPod   := devHomeDir + `lib/fan/${podName}.pod`
+    curJar   := devHomeDir + `lib/java/${podName}.jar`
+    depends  := (Depend[])this.depends.map |s->Depend| { Depend(s) }
 
     // if there are no javaDirs we only only stubbing
     stubOnly := javaDirs.isEmpty
@@ -231,9 +210,9 @@ abstract class BuildPod : BuildScript
 
     // stub the pods fan classes into Java classfiles
     // by calling the JStub tool in the jsys runtime
-    stubDir := stubOnly ? libJavaDir : jtemp
+    stubDir := stubOnly ? libJava : jtemp
     Exec(this, [javaExe.osPath,
-                     "-cp", (libJavaDir + `sys.jar`).osPath,
+                     "-cp", (libJava + `sys.jar`).osPath,
                      "-Dfan.home=$Env.cur.workDir.osPath",
                      "fanx.tools.Jstub",
                      "-d", stubDir.osPath,
@@ -247,7 +226,7 @@ abstract class BuildPod : BuildScript
     javac.outDir = jtemp
     javac.cp.add(jtemp+"${podName}.jar".toUri)
     javac.cpAddExtJars
-    depends.each |Depend d| { javac.cp.add(libJavaDir+(d.name+".jar").toUri) }
+    depends.each |Depend d| { javac.cp.add(libJava+`${d.name}.jar`) }
     javac.src = javaDirs
     javac.run
 
@@ -279,9 +258,9 @@ abstract class BuildPod : BuildScript
   **
   virtual Void compileDotnet()
   {
-    if (podDotnetDirs == null) return
+    if (dotnetDirs.isEmpty) return
 
-    if (!isWindows)
+    if (Env.cur.os != "win32")
     {
       log.info("dotnetNative skipping [$podName]")
       return
@@ -292,11 +271,11 @@ abstract class BuildPod : BuildScript
 
     // env
     ntemp := scriptDir + `temp-dotnet/`
-    nstub := ntemp + "${podName}.dll".toUri
-    nout  := ntemp + "${podName}Native_.dll".toUri
-    ndirs := podDotnetDirs
-    nlibs := ["${libDotnetDir}sys.dll".toUri, nstub.uri]
-    nstubExe := binDir + `nstub`
+    nstub := ntemp + `${podName}.dll`
+    nout  := ntemp + `${podName}Native_.dll`
+    ndirs := resolveDirs(dotnetDirs)
+    nlibs := [devHomeDir+`lib/dotnet/sys.dll`, nstub]
+    nstubExe := devHomeDir + `bin/nstub`
 
     // start with a clean directory
     Delete(this, ntemp).run
@@ -310,14 +289,14 @@ abstract class BuildPod : BuildScript
     csc := CompileCs(this)
     csc.output = nout
     csc.targetType = "library"
-    csc.src  = resolveDirs(ndirs)
-    csc.libs = resolveFiles(nlibs)
+    csc.src  = ndirs
+    csc.libs = nlibs
     csc.run
 
     // append files to the pod zip (we use java's jar tool)
     jdk    := JdkTask(this)
     jarExe := jdk.jarExe
-    curPod := libFanDir + "${podName}.pod".toUri
+    curPod := devHomeDir + `lib/fan/${podName}.pod`
     Exec(this, [jarExe.osPath, "-fu", curPod.osPath, "-C", ntemp.osPath,
       "${podName}Native_.dll", "${podName}Native_.pdb"], ntemp).run
 
@@ -332,21 +311,21 @@ abstract class BuildPod : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Clean all targets which might be built for this pod.
+  ** Delete all intermediate and target files
   **
-  @target="delete all intermediate and target files"
+  @Target
   virtual Void clean()
   {
     log.info("clean [$podName]")
     log.indent
-    Delete(this, libFanDir+"${podName}.pod".toUri).run
-    Delete(this, libJavaDir+"${podName}.jar".toUri).run
-    Delete(this, libDotnetDir+"${podName}.dll".toUri).run
-    Delete(this, libDotnetDir+"${podName}.pdb".toUri).run
-    Delete(this, libDir+"tmp/${podName}.dll".toUri).run
-    Delete(this, libDir+"tmp/${podName}.pdb".toUri).run
-    Delete(this, scriptDir+"temp-java/".toUri).run
-    Delete(this, scriptDir+"temp-dotnet/".toUri).run
+    Delete(this, devHomeDir+`lib/fan/${podName}.pod`).run
+    Delete(this, devHomeDir+`lib/java/${podName}.jar`).run
+    Delete(this, devHomeDir+`lib/dotnet/${podName}.dll`).run
+    Delete(this, devHomeDir+`lib/dotnet/${podName}.pdb`).run
+    Delete(this, devHomeDir+`lib/tmp/${podName}.dll`).run
+    Delete(this, devHomeDir+`lib/tmp/${podName}.pdb`).run
+    Delete(this, scriptDir+`temp-java/`).run
+    Delete(this, scriptDir+`temp-dotnet/`).run
     log.unindent
   }
 
@@ -357,7 +336,7 @@ abstract class BuildPod : BuildScript
   **
   ** Build the HTML documentation
   **
-  @target="build fandoc HTML docs"
+  @Target
   virtual Void doc()
   {
     // use docCompiler reflectively
@@ -374,15 +353,16 @@ abstract class BuildPod : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Run the unit tests using 'fant' for this pod.
+  ** Run the unit tests using 'fant' for this pod
   **
-  @target="run fant for specified pod"
+  @Target
   virtual Void test()
   {
     log.info("test [$podName]")
     log.indent
 
-    fant := binDir + "fant$exeExt".toUri
+    exeExt := Env.cur.os == "win32" ? ".exe" : ""
+    fant := devHomeDir + `bin/fant$exeExt`
     Exec(this, [fant.osPath, podName]).run
 
     log.unindent
@@ -393,14 +373,13 @@ abstract class BuildPod : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Full performs `clean`, `compile`, and `test`.
+  ** Run clean, compile, and test
   **
-  @target="clean + compile + test"
+  @Target
   virtual Void full()
   {
     clean
     compile
     test
   }
-
 }

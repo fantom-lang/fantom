@@ -68,7 +68,7 @@ class JarDist : JdkTask
   private Void sysClasses()
   {
     log.info("Pod [sys]")
-    extractToTemp(script.libJavaDir + `sys.jar`)
+    extractToTemp(script.devHomeDir + `lib/java/sys.jar`)
     reflect("sys")
   }
 
@@ -79,7 +79,7 @@ class JarDist : JdkTask
     // stub into Java classfiles using JStub
     Exec(script,
       [javaExe.osPath,
-       "-cp", (script.libJavaDir + `sys.jar`).osPath,
+       "-cp", (script.devHomeDir + `lib/java/sys.jar`).osPath,
        "-Dfan.home=$Env.cur.workDir.osPath",
        "fanx.tools.Jstub",
        "-d", tempDir.osPath,
@@ -111,7 +111,7 @@ class JarDist : JdkTask
   private Void reflect(Str podName)
   {
     copyOpts := ["overwrite":true]
-    zip := Zip.open(script.libFanDir + `${podName}.pod`)
+    zip := Zip.open(script.devHomeDir + `lib/fan/${podName}.pod`)
     zip.contents.each |f|
     {
       if (f.isDir) return

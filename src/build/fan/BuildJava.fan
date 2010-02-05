@@ -20,7 +20,7 @@ abstract class BuildJava : BuildScript
   **
   ** Required target jar file to build
   **
-  File? jar
+  Uri? jar
 
   **
   ** Required list of dotted package names to compile.  Each of these
@@ -35,18 +35,13 @@ abstract class BuildJava : BuildScript
   Str? mainClass
 
 //////////////////////////////////////////////////////////////////////////
-// Setup
+// Validate
 //////////////////////////////////////////////////////////////////////////
 
-  **
-  ** Validate subclass constructor setup required meta-data.
-  **
-  internal override Void validate()
+  private Void validate()
   {
-    ok := true
-    ok = ok.and(validateReqField("jar"))
-    ok = ok.and(validateReqField("packages"))
-    if (!ok) throw FatalBuildErr.make
+    if (jar == null) throw fatal("Must set BuildJava.jar")
+    if (packages == null) throw fatal("Must set BuildJava.packages")
 
     // boot strap checking - ensure that we aren't overwriting sys.jar
     if (jar.name == "sys.jar")
@@ -57,19 +52,9 @@ abstract class BuildJava : BuildScript
   }
 
 //////////////////////////////////////////////////////////////////////////
-// BuildScript
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Default target is `compile`.
-  **
-  override Target defaultTarget() { return target("compile") }
-
-//////////////////////////////////////////////////////////////////////////
 // Dump Env
 //////////////////////////////////////////////////////////////////////////
 
-  @target="Dump env details to help build debugging"
   override Void dumpEnv()
   {
     super.dumpEnv
@@ -77,9 +62,9 @@ abstract class BuildJava : BuildScript
     oldLevel := log.level
     log.level = LogLevel.silent
     try
-      log.out.printLine("  javaHome:    ${JdkTask(this).jdkHomeDir}")
+      log.out.printLine("  javaHome:      ${JdkTask(this).jdkHomeDir}")
     catch (Err e)
-      log.out.printLine("  javaHome:    $e")
+      log.out.printLine("  javaHome:      $e")
     finally
       log.level = oldLevel
   }
@@ -88,9 +73,14 @@ abstract class BuildJava : BuildScript
 // Compile
 //////////////////////////////////////////////////////////////////////////
 
-  @target="compile Java source into jar"
+  **
+  ** Compile Java source into jar
+  **
+  @Target
   Void compile()
   {
+    validate
+
     log.info("compile [${scriptDir.name}]")
     log.indent
 
@@ -98,6 +88,7 @@ abstract class BuildJava : BuildScript
     jdk      := JdkTask(this)
     jarExe   := jdk.jarExe
     manifest := temp + `Manifest.mf`
+    jar      := this.jar.toFile
 
     // make temp dir
     CreateDir(this, temp).run
@@ -163,13 +154,16 @@ abstract class BuildJava : BuildScript
 // Clean
 //////////////////////////////////////////////////////////////////////////
 
-  @target="delete all intermediate and target files"
+  **
+  ** Delete all intermediate and target files
+  **
+  @Target
   Void clean()
   {
     log.info("clean [${scriptDir.name}]")
     log.indent
     Delete(this, scriptDir + `temp/`).run
-    Delete(this, jar).run
+    Delete(this, jar.toFile).run
     log.unindent
   }
 
@@ -177,7 +171,10 @@ abstract class BuildJava : BuildScript
 // Full
 //////////////////////////////////////////////////////////////////////////
 
-  @target="clean+compile"
+  **
+  ** Run clean, compile
+  **
+  @Target
   Void full()
   {
     clean

@@ -15,65 +15,41 @@
 abstract class BuildGroup : BuildScript
 {
 
-//////////////////////////////////////////////////////////////////////////
-// Meta-Data
-//////////////////////////////////////////////////////////////////////////
-
   **
   ** Required list of Uris relative to this scriptDir of
   ** Fantom build script files to group together.
   **
   Uri[] childrenScripts := Uri[,]
 
-//////////////////////////////////////////////////////////////////////////
-// Setup
-//////////////////////////////////////////////////////////////////////////
-
   **
-  ** Validate subclass constructor setup required meta-data.
+  ** Compiled children scripts
   **
-  internal override Void validate()
+  once BuildScript[] children()
   {
-    // validate required fields
-    ok := true
-    ok = ok.and(validateReqField("childrenScripts"))
-    if (!ok) throw FatalBuildErr.make
-
-    // compile script Uris into BuildScript instances
-    children = BuildScript[,]
-    resolveFiles(childrenScripts).each |File f|
+    acc := BuildScript[,]
+    childrenScripts.each |uri|
     {
+      f := scriptDir + uri
       log.debug("CompileScript [$f]")
       s := (BuildScript)FanScript(this, f).compile.types.first.make
       s.log = log
-      children.add(s)
+      acc.add(s)
     }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Targets
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Assume the default target is "compile".
-  **
-  override Target defaultTarget()
-  {
-    return target("compile")
+    return acc
   }
 
   **
-  ** BuildGroup publishes the union by name
-  ** of it's children script targets.
+  ** BuildGroup publishes the union by name of it's
+  ** children script targets plus any of its own targets.
   **
-  override Target[] makeTargets()
+  override once TargetMethod[] targets()
   {
     // get union of names in my children scripts
     Str[]? names := null
-    children.each |BuildScript child|
+    children.each |child|
     {
       // get all the target names in this subscript
-      Str[] n := child.targets.map |Target t->Str| { t.name }
+      Str[] n := child.targets.map |t| { t.name }
 
       // get union of names
       if (names == null)
@@ -82,26 +58,21 @@ abstract class BuildGroup : BuildScript
         names = names.union(n)
     }
 
-    // add my own targets, which trump children targets in toTarget
-    myTargets := super.makeTargets
-    myTargets.each |Target t| { if (!names.contains(t.name)) names.add(t.name) }
+    // map names to group targets
+    map := Str:TargetMethod[:] { ordered = true }
+    names.each |n| { map[n] = GroupTarget(this, n) }
+
+    // add my own targets, which trump children targets
+    typeof.methods.each |m|
+    {
+      if (!m.hasFacet(Target#)) return
+      map[m.name] = TargetMethod(this, m)
+    }
 
     // now create a Target for each name
-    return names.map |Str name->Target| { toTarget(name, myTargets) }
-  }
-
-  **
-  ** Make a target which will run the specified target
-  ** name on all my children scripts.
-  **
-  private Target toTarget(Str name, Target[] myTargets)
-  {
-    // my explicit targets trump children targets
-    myTarget := myTargets.find |Target t->Bool| { return t.name == name }
-    if (myTarget != null) return myTarget
-
-    // make a target which runs on the children scripts
-    return Target(this, name, "run '$name' on all children") |->| { runOnChildren(name) }
+    list := map.vals
+    list.moveTo(map["compile"], 0)
+    return list
   }
 
   **
@@ -110,7 +81,7 @@ abstract class BuildGroup : BuildScript
   **
   virtual Void runOnChildren(Str targetName)
   {
-    children.each |BuildScript child, Int i|
+    children.each |child|
     {
       target := child.target(targetName, false)
       if (target != null) target.run
@@ -125,33 +96,27 @@ abstract class BuildGroup : BuildScript
   **
   virtual Void spawnOnChildren(Str targetName)
   {
-    fanExe := (binDir + "fan$exeExt".toUri).osPath
-    children.each |BuildScript child, Int i|
+    exeExt := Env.cur.os == "win32" ? ".exe" : ""
+    fanExe := (devHomeDir + `bin/fan$exeExt`).osPath
+    children.each |child|
     {
       target := child.target(targetName)
       if (target != null)
-      {
         Exec(this, [fanExe, child.scriptFile.osPath, targetName]).run
-      }
     }
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Debug Env Target
-//////////////////////////////////////////////////////////////////////////
-
-  @target="Dump env details to help build debugging"
   override Void dumpEnv()
   {
     super.dumpEnv
-    runOnChildren("dumpEnv")
+    children.each |child| { child.dumpEnv }
   }
+}
 
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  ** Compiled children scripts
-  BuildScript[]? children
-
+internal class GroupTarget : TargetMethod
+{
+  new make(BuildGroup s, Str n) : super(s, BuildGroup#runOnChildren) { name = n }
+  override const Str name
+  override Str summary() { "Run '$name' on group" }
+  override Void run() { ((BuildGroup)script).runOnChildren(name) }
 }
