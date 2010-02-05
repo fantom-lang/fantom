@@ -1422,21 +1422,9 @@ public final class Uri
 // Empty Path/Query
 //////////////////////////////////////////////////////////////////////////
 
-  static List emptyPath()
-  {
-    List p = emptyPath;
-    if (p == null) p = emptyPath = (List)new List(Sys.StrType).toImmutable();
-    return p;
-  }
-  static List emptyPath;
+  static List emptyPath() { return Sys.StrType.emptyList(); }
 
-  static Map emptyQuery()
-  {
-    Map q = emptyQuery;
-    if (q == null) q = emptyQuery = (Map)new Map(Sys.StrType, Sys.StrType).toImmutable();
-    return q;
-  }
-  static Map emptyQuery;
+  static Map emptyQuery() { return Sys.emptyStrStrMap; }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

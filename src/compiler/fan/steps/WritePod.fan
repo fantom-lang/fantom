@@ -56,10 +56,6 @@ class WritePod : CompilerStep
       // write fpod data structures into zip file
       fpod.write(zip)
 
-      // write type db indices
-      if (!compiler.input.isScript)
-        writeTypeDb(zip)
-
       // write javascript
       if (compiler.js != null)
         writeStr(zip, `${podName}.js`, compiler.js)
@@ -200,117 +196,6 @@ class WritePod : CompilerStep
     }
     out.printLine
   }
-
-//////////////////////////////////////////////////////////////////////////
-// TypeDb
-//////////////////////////////////////////////////////////////////////////
-
-  private Void writeTypeDb(Zip zip)
-  {
-  /* TODO-FACETS
-    out := zip.writeNext(`/typedb.def`)
-
-    // pod meta-data
-    out.writeI4(FConst.TypeDbMagic)
-    out.writeI4(FConst.TypeDbVersion)
-    out.writeUtf(pod.name)
-    out.writeUtf(compiler.fpod.version.toStr)
-
-    // get pod facets we care about for typedb.def
-    podFacets := pod.facets.exclude |f| { f.key.qname.startsWith("sys::podBuild") }
-
-    // filter types
-    types := pod.typeDefs.findAll |TypeDef t->Bool| { !t.isSynthetic }
-
-    // compute list of all indexed facets
-    facetNameList := Str[,]
-    facetNameMap  := Str:Int[:]
-    podFacets.each |FacetDef f|
-    {
-      facetNameMap[f.key.qname] = facetNameList.size
-      facetNameList.add(f.key.qname)
-    }
-    types.each |TypeDef t|
-    {
-      t.indexedFacets = computeIndexedFacets(t.facets, facetNameList, facetNameMap)
-    }
-
-    // write facet names
-    out.writeI2(facetNameList.size)
-    facetNameList.each |Str n| { out.writeUtf(n) }
-
-    // write pod level facets
-    out.writeI2(podFacets.size)
-    podFacets.each |FacetDef f|
-    {
-      out.writeI2(facetNameMap[f.key.qname])
-      out.writeUtf(f.val.serialize)
-    }
-
-    // write types
-    out.writeI2(types.size)
-    types.each |TypeDef t| { writeTypeDbType(out, t, facetNameMap) }
-
-    out.close
-*/
-  }
-
-  private FacetDef[] computeIndexedFacets(FacetDef[]? all, Str[] list, Str:Int map)
-  {
-return noFacets
-
-/* TODO-FACETS
-    // if no facets defined, this is easy
-    if (all == null || all.size == 0)
-      return noFacets
-
-    // strip out commonly used facets that we know aren't indexed
-    // could eventually do a much better job here probably
-    indexed := all.findAll |f|
-    {
-      qname := f.key.qname
-      if (qname.startsWith("sys::"))
-      {
-        if (qname == "sys::js") return false
-        if (qname == "sys::simple") return false
-        if (qname == "sys::serializable") return false
-        if (qname == "sys::collection") return false
-        if (qname == "sys::nodoc") return false
-      }
-      return true
-    }
-
-    // map facet names into interned list/map
-    indexed.each |FacetDef f|
-    {
-      qname := f.key.qname
-      if (map[qname] == null)
-      {
-        map[qname] = list.size
-        list.add(qname)
-      }
-    }
-
-    return indexed
-*/
-  }
-
-/* TODO-FACETS
-  private Void writeTypeDbType(OutStream out, TypeDef t, Str:Int facetNames)
-  {
-    out.writeUtf(t.name)
-    out.writeUtf(t.base == null ? "" : t.base.qname)
-    out.writeI2(t.mixins.size)
-    t.mixins.each |CType m| { out.writeUtf(m.qname) }
-    out.writeI4(t.flags)
-    out.writeI2(t.indexedFacets.size)
-    t.indexedFacets.each |FacetDef f|
-    {
-      out.writeI2(facetNames[f.key.qname])
-      out.writeUtf(f.val.serialize)
-    }
-  }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

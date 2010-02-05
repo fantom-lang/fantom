@@ -183,6 +183,15 @@ public final class Sys
 // Fields (loaded after type constants)
 //////////////////////////////////////////////////////////////////////////
 
+  /** Empty Str:Obj? map */
+  public static final Map emptyStrObjMap = initEmptyStrMap(ObjType.toNullable());
+
+  /** Empty Str:Str map */
+  public static final Map emptyStrStrMap = initEmptyStrMap(StrType);
+
+  /** Empty Str:Type map */
+  public static final Map emptyStrTypeMap = initEmptyStrMap(TypeType);
+
   /** Bootstrap environment */
   public static final BootEnv bootEnv = new BootEnv();
   static Env curEnv = bootEnv;
@@ -413,6 +422,22 @@ public final class Sys
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Empty Maps
+//////////////////////////////////////////////////////////////////////////
+
+  private static Map initEmptyStrMap(Type v)
+  {
+    try
+    {
+      return (Map)new Map(StrType, v).toImmutable();
+    }
+    catch (Exception e)
+    {
+      throw initFail("emptyStrMap", e);
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Sys Config
 //////////////////////////////////////////////////////////////////////////
 
@@ -439,7 +464,7 @@ public final class Sys
     {
       throw initFail("sysConfig", e);
     }
-    return new Map(StrType, StrType);
+    return emptyStrStrMap;
   }
 
   static String sysConfig(String name)

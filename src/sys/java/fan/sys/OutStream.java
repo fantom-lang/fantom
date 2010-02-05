@@ -279,7 +279,7 @@ public class OutStream
     charset(Charset.utf8());
     try
     {
-      List keys = props.keys().sort();
+      List keys = props.keys();
       int size = keys.sz();
       for (int i=0; i<size; ++i)
       {

@@ -48,8 +48,7 @@ public class JarDistEnv
         props = sysIn.readProps();
         sysIn.close();
       }
-      if (props == null) props = new Map(Sys.StrType, Sys.StrType);
-      props = (Map)props.toImmutable();
+      props = (props == null) ? Sys.emptyStrStrMap : (Map)props.toImmutable();
       propsCache.put(path, props);
     }
     return props;
