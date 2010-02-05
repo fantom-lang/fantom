@@ -12,7 +12,7 @@
 **
 ** See [docLib]`docLib::Dom#elem` for details.
 **
-@js
+@Js
 class Event
 {
 

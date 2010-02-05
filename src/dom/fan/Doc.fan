@@ -14,7 +14,7 @@ using web
 **
 ** See [docLib]`docLib::Dom#doc` for details.
 **
-@js
+@Js
 class Doc
 {
 

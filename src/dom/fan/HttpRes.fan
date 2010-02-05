@@ -12,7 +12,7 @@
 **
 ** See [docLib]`docLib::Dom#xhr` for details.
 **
-@js
+@Js
 class HttpRes
 {
 

@@ -11,7 +11,7 @@
 **
 ** See [docLib]`docLib::Email` and [examples]`examples::email-sending`.
 **
-@serializable
+@Serializable
 abstract class EmailPart
 {
 

@@ -34,22 +34,20 @@ class Build : BuildGroup
       `fansh/build.fan`,
       `web/build.fan`,
       `webmod/build.fan`,
-/*
       `dom/build.fan`,
       `wisp/build.fan`,
       `fandoc/build.fan`,
       `docCompiler/build.fan`,
-      `doc/build.fan`,
-      `sql/build.fan`,
+//      `sql/build.fan`,
       `email/build.fan`,
       `gfx/build.fan`,
-      `fwt/build.fan`,
+//      `fwt/build.fan`,
       `icons/build.fan`,
-      `flux/build.fan`,
+//      `flux/build.fan`,
       `xml/build.fan`,
       `json/build.fan`,
       `obix/build.fan`,
-*/
+//      `doc/build.fan`,
     ]
   }
 

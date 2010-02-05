@@ -12,7 +12,7 @@
 **
 ** See [docLib]`docLib::Email` and [examples]`examples::email-sending`.
 **
-@serializable
+@Serializable
 class TextPart : EmailPart
 {
 

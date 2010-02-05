@@ -13,7 +13,7 @@ using inet
 **
 ** See [docLib]`docLib::Email` and [examples]`examples::email-sending`.
 **
-@serializable
+@Serializable
 class Email
 {
 
