@@ -12,6 +12,7 @@
 - Rename build::Target => BuildTarget
 - Refactor build script design for facets and pod meta-data
 - Refactor pod format meta.props and fcode sub-directory
+- Replace Type Database with Env pod indexing
 
 *Build 1.0.50 (2 Feb 10)*
 - Pod.loc => locale

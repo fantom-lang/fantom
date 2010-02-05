@@ -42,6 +42,16 @@ abstract class BuildPod : BuildScript
   Str[] depends := Str[,]
 
   **
+  ** Pod meta-data name/value pairs to compile into pod.  See `Pod.meta`.
+  **
+  Str:Str meta := Str:Str[:]
+
+  **
+  ** Pod index name/value pairs to compile into pod.  See `Env.index`.
+  **
+  Str:Str index := Str:Str[:]
+
+  **
   ** Indicates if if fandoc API should be included in the documentation.
   ** By default API *is* included.
   **
@@ -147,6 +157,8 @@ abstract class BuildPod : BuildScript
     ci.summary     = summary
     ci.version     = version
     ci.depends     = depends.map |s->Depend| { Depend(s) }
+    ci.meta        = meta
+    ci.index       = index
     ci.dependsDir  = dependsDir?.toFile
     ci.baseDir     = scriptDir
     ci.srcDirs     = srcDirs

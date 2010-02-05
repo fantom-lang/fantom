@@ -23,5 +23,6 @@ class Build : BuildPod
     javaDirs   = [`java/`]
     dotnetDirs = [`dotnet/`]
     docApi     = false
+    index      = ["testSys.mult": "testNative"]  // for testSys::EnvTest
   }
 }

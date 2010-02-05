@@ -286,4 +286,27 @@ class EnvTest : Test
     }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Index
+//////////////////////////////////////////////////////////////////////////
+
+  Void testIndex()
+  {
+    verifyIndex("testSys.bad", Str[,])
+    verifyIndex("testSys.single", ["works!"])
+
+    mult := ["testSys"]
+    if (Pod.find("testNative", false) != null) mult.add("testNative")
+    verifyIndex("testSys.mult", mult)
+  }
+
+  Void verifyIndex(Str key, Str[] expected)
+  {
+    actual := Env.cur.index(key)
+    // echo("==> $key  $actual  ?=  $expected")
+    verifyEq(actual.dup.sort, expected.sort)
+    verifyEq(actual.isImmutable, true)
+    verifySame(actual, Env.cur.index(key))
+  }
+
 }

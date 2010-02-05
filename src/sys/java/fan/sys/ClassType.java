@@ -16,7 +16,6 @@ import java.util.Map.Entry;
 import fanx.fcode.*;
 import fanx.emit.*;
 import fanx.serial.*;
-import fanx.typedb.*;
 import fanx.util.*;
 
 /**

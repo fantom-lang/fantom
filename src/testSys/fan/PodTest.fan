@@ -62,6 +62,7 @@ class PodTest : Test
     verifyMeta(sys)
 
     testSys := Pod.find("testSys")
+    verifyEq(testSys.meta["testSys.foo"], "got\n it \u0123")
     verifyEq(testSys.name, "testSys")
     verifyEq(testSys.depends.size, 1)
     verifyEq(testSys.depends[0].name, "sys")
@@ -142,6 +143,5 @@ class PodTest : Test
     verifySame(pod.props(`locale/en.props`, 1ms), pod.props(`locale/en.props`, 1ms))
     verifySame(pod.props(`not/found`, 1ms), pod.props(`not/found`, 1ms))
   }
-
 
 }
