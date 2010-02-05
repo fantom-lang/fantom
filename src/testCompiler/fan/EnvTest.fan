@@ -40,33 +40,32 @@ class EnvTest : Test
   {
     dir := workHome + `$podA/`
 
-    // pod.fan
-    podFile := (dir+`pod.fan`)
-    podFile.out.print(
-    """@podDepends=[Depend("sys 1.0")]
-       @podSrcDirs=[`fan/`]
-       @podIndexFacets=[@foo]
-       pod $podA
-       {
-         foo := ""
-       }""").close
-
     // build.fan
     buildFile := dir+`build.fan`
     buildFile.out.print(
     """class Build : build::BuildPod
        {
-         override Void setup() { podName = "$podA" }
+         new make()
+         {
+           podName = "$podA"
+           summary = "test pod A"
+           depends = ["sys 1.0"]
+           srcDirs = [`fan/`]
+         }
        }""").close
 
     // src.fan
     srcFile := dir+`fan/src.fan`
     srcFile.out.print(
-    """@foo="alpha"
+    """@Foo { val="alpha" }
        class A
        {
          static Str a() { return "a" }
-       }""").close
+       }
+
+       facet class Foo { const Str val := "" }
+
+       """).close
 
     compile(podA, buildFile)
   }
@@ -79,19 +78,18 @@ class EnvTest : Test
   {
     dir := workHome + `$podB/`
 
-    // pod.fan
-    podFile := (dir+`pod.fan`)
-    podFile.out.print(
-    """@podDepends=[Depend("sys 1.0"), Depend("util 1.0"), Depend("$podA 1.0")]
-       @podSrcDirs=[`fan/`]
-       pod $podB {}""").close
-
     // build.fan
     buildFile := dir+`build.fan`
     buildFile.out.print(
     """class Build : build::BuildPod
        {
-         override Void setup() { podName = "$podB" }
+         new make()
+         {
+           podName = "$podB"
+           summary = "test pod B"
+           depends = ["sys 1.0", "util 1.0", "$podA 1.0"]
+           srcDirs = [`fan/`]
+         }
        }""").close
 
     // src.fan
@@ -123,11 +121,13 @@ class EnvTest : Test
          // test facets
          Void testFacets()
          {
-           verifyEq(A#.facet(@foo), "alpha")
-           verifyEq(B#.facet(@foo), "beta")
+           verifyEq(A#.facet(Foo#)->val, "alpha")
+           verifyEq(B#.facet(Foo#)->val, "beta")
+           /* TODO-FACETS
            verifyEq(Type.findByFacet(@foo, "alpha"),[A#])
            verifyEq(Type.findByFacet(@foo, "beta"), [B#])
            verifyEq(Type.findByFacet(@foo, "????"), Type[,])
+           */
          }
 
          static Void main()
@@ -153,7 +153,7 @@ class EnvTest : Test
          }
        }
 
-       @foo="beta"
+       @Foo { val = "beta" }
        class B {}
        """).close
 
