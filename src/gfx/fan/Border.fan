@@ -9,7 +9,8 @@
 **
 ** Modes width, style, color, and radius of a rectangular border.
 **
-@js @simple
+@Js
+@Serializable { simple = true }
 const class Border
 {
 
@@ -228,7 +229,7 @@ const class Border
 ** BorderParser
 **************************************************************************
 
-@js
+@Js
 internal class BorderParser
 {
   new make(Str str) { this.str = str; next }

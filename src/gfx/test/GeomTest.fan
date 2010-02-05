@@ -9,7 +9,7 @@
 **
 ** GeomTest
 **
-@js
+@Js
 class GeomTest : Test
 {
 

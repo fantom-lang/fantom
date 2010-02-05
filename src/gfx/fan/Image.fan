@@ -9,7 +9,8 @@
 **
 ** Image represents a graphical image.
 **
-@js @simple
+@Js
+@Serializable { simple = true }
 const class Image
 {
 
@@ -71,7 +72,7 @@ const class Image
   ** constructor is used for subclasses and graphics toolkits.
   ** Developers should use `make` or `makeFile`.
   **
-  @nodoc new makeUri(Uri uri, |This|? f := null)
+  @NoDoc new makeUri(Uri uri, |This|? f := null)
   {
     this.uri = uri
     if (f != null) f(this)

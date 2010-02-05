@@ -9,7 +9,8 @@
 **
 ** Font models the rendering of text.
 **
-@js @simple
+@Js
+@Serializable { simple = true }
 const class Font
 {
 
@@ -30,7 +31,7 @@ const class Font
   ** bold/italic style.  This is internal for now, because eventually
   ** we should be able to collapse this and it-block into single ctor.
   **
-  @nodoc new makeFields(Str name, Int size := 12, Bool bold := false, Bool italic := false)
+  @NoDoc new makeFields(Str name, Int size := 12, Bool bold := false, Bool italic := false)
   {
     this.name = name
     this.size   = size

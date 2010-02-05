@@ -9,7 +9,7 @@
 **
 ** BorderTest
 **
-@js
+@Js
 class BorderTest : Test
 {
   const Int solid   := Border.styleSolid
