@@ -75,8 +75,7 @@ abstract class BuildPod : BuildScript
   ** List of Uris relative to build script of directories of resources
   ** files to package into pod zip file.  Optional.
   **
-// TODO-FACETS nullable problem
-  Uri[]? resDirs := Uri[,]
+  Uri[]? resDirs
 
   **
   ** List of Uris relative to build script of directories containing
@@ -94,8 +93,7 @@ abstract class BuildPod : BuildScript
   ** List of Uris relative to "pod.fan" of directories containing
   ** the JavaScript source files to compile for JavaScript native methods.
   **
-// TODO-FACETS nullable problem
-  Uri[]? jsDirs := Uri[,]
+  Uri[]? jsDirs
 
   **
   ** The directory to look in for the dependency pod file (and
