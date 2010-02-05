@@ -64,7 +64,7 @@ class PodDef : Node, CPod
   override readonly CNamespace ns   // compiler's namespace
   override readonly Str name        // simple pod name
   Str:Str meta := Str:Str[:]        // pod meta-data props
-  Str:Str index := Str:Str[:]       // pod index props
+  Str:Obj index := Str:Obj[:]       // pod index props (vals are Str or Str[])
   CompilationUnit[] units           // Tokenize
   [Str:TypeDef]? typeDefs           // ScanForUsingsAndTypes
 

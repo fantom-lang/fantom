@@ -20,7 +20,7 @@ class Build : BuildPod
     summary = "System and runtime test suite"
     depends = ["sys 1.0"]
     meta    = ["testSys.foo":"got\n it \u0123"]
-    index   = ["testSys.mult": "testSys", "testSys.single": "works!"]
+    index   = ["testSys.single": "works!", "testSys.mult": ["testSys-1","testSys-2"]]
     srcDirs = [`fan/`]
     resDirs = [`res/`, `locale/`]
     docApi  = false

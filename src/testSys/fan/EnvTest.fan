@@ -295,7 +295,7 @@ class EnvTest : Test
     verifyIndex("testSys.bad", Str[,])
     verifyIndex("testSys.single", ["works!"])
 
-    mult := ["testSys"]
+    mult := ["testSys-1", "testSys-2"]
     if (Pod.find("testNative", false) != null) mult.add("testNative")
     verifyIndex("testSys.mult", mult)
   }
@@ -306,6 +306,7 @@ class EnvTest : Test
     // echo("==> $key  $actual  ?=  $expected")
     verifyEq(actual.dup.sort, expected.sort)
     verifyEq(actual.isImmutable, true)
+    verifyEq(actual.typeof, Str[]#)
     verifySame(actual, Env.cur.index(key))
   }
 

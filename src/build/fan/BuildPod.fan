@@ -48,8 +48,10 @@ abstract class BuildPod : BuildScript
 
   **
   ** Pod index name/value pairs to compile into pod.  See `Env.index`.
+  ** The index values can be a single Str or a Str[] if there are
+  ** multiple values mapped to one key.
   **
-  Str:Str index := Str:Str[:]
+  Str:Obj index := Str:Obj[:]
 
   **
   ** Indicates if if fandoc API should be included in the documentation.
