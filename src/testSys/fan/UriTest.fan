@@ -9,7 +9,7 @@
 **
 ** UriTest
 **
-@js
+@Js
 class UriTest : Test
 {
 

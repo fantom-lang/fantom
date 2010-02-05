@@ -111,13 +111,6 @@ class SerializationTest : Test
     verifySer("using sys\nStr:Int?#", [Str:Int?]#)
     verifySer("using sys\n[Str:Int?][]#", [Str:Int?][]#)
     verifySer("using sys\n[Str:Int?][]?#", [Str:Int?][]?#)
-
-    // Symbol literals
-    verifySer("@sys::simple", @simple)
-    verifySer("@testSys::intA", @intA)
-    verifySer("using testSys\n @intB", @intB)
-    verifyErr(IOErr#) { "@crazyFooBad::bar".in.readObj }
-    verifyErr(IOErr#) { "@sys::foo".in.readObj }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -749,7 +742,7 @@ class SerializationTest : Test
 
     // verify writeObj via round trip
     doc := Buf.make.writeObj(expected, ["indent":2]).flip.readAllStr
-//Env.cur.out.printLine("-------------------")
+//echo("-------------------")
 //echo(doc)
     z := Buf.make.print(doc).flip.readObj
     verifyEq(z, expected)
@@ -779,7 +772,7 @@ class SerializationTest : Test
 ** SerA
 **************************************************************************
 
-@serializable
+@Serializable
 class SerA
 {
   new make(Str? s := null, Duration? d := null)
@@ -822,13 +815,15 @@ class SerA
   Num[]? nList
   [Int:Str]? isMap
   SerA[]? kids
-  @transient Str skip := "skip"
+  @Transient Str skip := "skip"
 }
 
 **************************************************************************
 ** SerB
 **************************************************************************
 
+// TODO-FACET: inheritance?
+@Serializable
 class SerB : SerA
 {
   new make() : super.make(null, null) {}
@@ -848,7 +843,7 @@ class SerB : SerA
 ** SerConst
 **************************************************************************
 
-@serializable
+@Serializable
 const class SerConst
 {
   new make(Int a := 0, Int[]? b := null, Int[][]? c := null)
@@ -884,7 +879,7 @@ const class SerConst
 ** SerListMap
 **************************************************************************
 
-@serializable
+@Serializable
 class SerListMap
 {
   override Int hash() { return map.hash }
@@ -910,7 +905,7 @@ class SerListMap
 ** SerSimple
 **************************************************************************
 
-@simple
+@Serializable { simple = true }
 class SerSimple
 {
   static SerSimple fromStr(Str s)
@@ -933,7 +928,7 @@ class SerSimple
 ** SerSynthetic
 **************************************************************************
 
-@serializable
+@Serializable
 class SerSynthetic
 {
   new make(Int a := 3) { this.a = a }
@@ -949,8 +944,7 @@ class SerSynthetic
 ** SerIntCollection
 **************************************************************************
 
-@serializable
-@collection
+@Serializable { collection = true }
 class SerIntCollection
 {
   This add(Int i) { list.add(i); return this }
@@ -963,15 +957,14 @@ class SerIntCollection
   }
   override Str toStr() { return name + " " + list.toStr }
   Str? name
-  @transient Int[] list := Int[,]
+  @Transient Int[] list := Int[,]
 }
 
 **************************************************************************
 ** SerFolder
 **************************************************************************
 
-@serializable
-@collection
+@Serializable { collection = true }
 class SerFolder
 {
   Void add(SerFolder x) { list.add(x) }
@@ -984,5 +977,5 @@ class SerFolder
   }
   override Str toStr() { return name + " " + list.toStr }
   Str? name
-  @transient SerFolder[] list := SerFolder[,]
+  @Transient SerFolder[] list := SerFolder[,]
 }

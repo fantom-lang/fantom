@@ -9,7 +9,7 @@
 **
 ** ListTest
 **
-@js
+@Js
 class ListTest : Test
 {
 

@@ -328,13 +328,11 @@ class NamespaceTest : CompilerTest
   {
     try
     {
-      podStr =
-      """@podDepends=[
-           Depend("sys 0+"),
-           Depend("jarJarBinks 1.0"),
-           Depend("testCompiler 99.0")]
-         pod $podName {}"""
-      compile("class Foo {}", LogLevel.silent, false)
+      compile("class Foo {}")
+      {
+        it.isScript = false
+        it.depends = [Depend("sys 0+"), Depend("jarJarBinks 1.0"), Depend("testCompiler 99.0")]
+      }
     }
     catch (CompilerErr e)
     {
@@ -350,10 +348,11 @@ class NamespaceTest : CompilerTest
   {
     try
     {
-      podStr =
-      """@podDepends=[Depend("compiler 0+")]
-         pod $podName {}"""
-      compile("class Foo {}", LogLevel.silent, false)
+      compile("class Foo {}")
+      {
+        it.isScript = false
+        it.depends  = [Depend("compiler 0+")]
+      }
     }
     catch (CompilerErr e)
     {
@@ -376,7 +375,7 @@ class NamespaceTest : CompilerTest
        [
          1,  1, "Using 'compiler' which is not a declared dependency for '$podName'",
          2,  1, "Using '$podName' is on pod being compiled",
-       ], false)
+       ]) { it.log.level = LogLevel.silent; it.isScript = false }
   }
 
   Void testInvalidQname()
@@ -390,7 +389,7 @@ class NamespaceTest : CompilerTest
       ",
        [
          3, 22, "Using 'compiler' which is not a declared dependency for '$podName'",
-       ], false)
+       ]) { it.log.level = LogLevel.silent; it.isScript = false }
   }
 
 //////////////////////////////////////////////////////////////////////////
