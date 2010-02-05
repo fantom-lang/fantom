@@ -14,8 +14,13 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
-    podName = "gfx"
+    podName  = "gfx"
+    summary  = "Graphics API"
+    depends  = ["sys 1.0"]
+    srcDirs  = [`fan/`, `test/`]
+    javaDirs = Uri[,]
+    docSrc   = true
   }
 }

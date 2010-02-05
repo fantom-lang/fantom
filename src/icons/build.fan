@@ -14,8 +14,12 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "icons"
+    summary = "Standard icons library"
+    depends = ["sys 1.0"]
+    resDirs = [`x16/`, `x32/`, `x48/`, `x256/`]
+    docApi  = false
   }
 }

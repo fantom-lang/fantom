@@ -15,8 +15,14 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "dom"
+    summary = "Web Browser DOM API"
+    depends = ["sys 1.0", "web 1.0"]
+    srcDirs = [`fan/`, `test/`]
+    jsDirs  = [`js/`]
+    docSrc  = true
   }
 }
+

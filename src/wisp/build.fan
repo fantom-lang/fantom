@@ -14,8 +14,13 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "wisp"
+    summary = "Wisp web Server"
+    depends = ["sys 1.0", "inet 1.0", "web 1.0"]
+    srcDirs = [`fan/`, `test/`]
+    docSrc  = true
   }
+
 }
