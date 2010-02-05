@@ -43,7 +43,6 @@ public class EnvScripts
 
     // compile the script
     Pod pod = compile(podName, file, options);
-    pod.isScript = true;
 
     // get the primary type
     List types = pod.types();

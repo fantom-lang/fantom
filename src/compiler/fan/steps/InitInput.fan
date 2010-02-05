@@ -115,9 +115,24 @@ class InitInput : CompilerStep
   **
   private Void initPod()
   {
-    podName := input.podName
-    compiler.pod   = PodDef(ns, Loc(podName), podName)
-    compiler.isSys = podName == "sys"
+    meta := Str:Str[:] { ordered = true }
+    meta["pod.name"]       = input.podName
+    meta["pod.version"]    = input.version.toStr
+    meta["pod.depends"]    = input.depends.join(";")
+    meta["pod.isScript"]   = input.isScript.toStr
+    meta["build.host"]     = Env.cur.host
+    meta["build.user"]     = Env.cur.user
+    meta["build.time"]     = DateTime.now.toStr
+    meta["build.compiler"] = typeof.pod.version.toStr
+    meta["build.platform"] = Env.cur.platform
+    meta.addAll(input.meta)
+
+    pod := PodDef(ns, input.inputLoc, input.podName)
+    pod.meta  = meta
+    pod.index = input.index
+
+    compiler.pod = pod
+    compiler.isSys = pod.name == "sys"
   }
 
 //////////////////////////////////////////////////////////////////////////

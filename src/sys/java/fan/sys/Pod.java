@@ -232,7 +232,7 @@ public class Pod
   public final List depends()
   {
     if (depends == null)
-      depends = new List(Sys.DependType, fpod.depends).ro();
+      depends = (List)new List(Sys.DependType, fpod.depends).toImmutable();
     return depends;
   }
 
@@ -244,7 +244,28 @@ public class Pod
 
   public final String toStr() { return name; }
 
-  public final boolean isScript() { return isScript; }
+  public final Map meta()
+  {
+    if (meta == null)
+    {
+      try
+      {
+        if (fpod.meta != null) meta = (Map)fpod.meta;
+        else
+        {
+          InStream in = new SysInStream(fpod.store.read("meta.props"));
+          meta = (Map)in.readProps().toImmutable();
+          in.close();
+        }
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+        meta = Sys.emptyStrStrMap;
+      }
+    }
+    return meta;
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Types
@@ -483,6 +504,7 @@ public class Pod
   Uri uri;
   FPod fpod;
   Version version;
+  Map meta;
   List depends;
   ClassType[] types;
   HashMap typesByName;
@@ -492,7 +514,6 @@ public class Pod
   Log log;
   boolean docLoaded;
   Uri fansymUri;
-  public boolean isScript;
   public String doc;
 
 }

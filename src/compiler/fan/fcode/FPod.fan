@@ -34,6 +34,8 @@ final class FPod : CPod, FConst
     this.strs       = FTable.makeStrs(this)
     this.durations  = FTable.makeDurations(this)
     this.uris       = FTable.makeStrs(this)
+    this.meta       = Str:Str[:]
+    this.index      = Str:Str[:]
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -202,6 +204,10 @@ final class FPod : CPod, FConst
   {
     this.zip = zip
 
+    // write pod meta, index props
+    writeProps(`/meta.props`, meta)
+    writeProps(`/index.props`, index)
+
     // write non-empty tables
     if (!names.isEmpty)      names.write(out(`/names.def`))
     if (!typeRefs.isEmpty)   typeRefs.write(out(`/typeRefs.def`))
@@ -244,10 +250,12 @@ final class FPod : CPod, FConst
     version = Version.fromStr(in.readUtf)
     depends = Depend[,]
     in.readU2.times { depends.add(Depend.fromStr(in.readUtf)) }
-    fattrs = FAttr[,]
+  // TODO-FACETS
+fattrs := FAttr[,]
     in.readU2.times { fattrs.add(FAttr.make.read(in)) }
   }
 
+  // TODO-FACETS
   Void writePodMeta(OutStream out)
   {
     out.writeI4(FConst.FCodeMagic)
@@ -256,8 +264,16 @@ final class FPod : CPod, FConst
     out.writeUtf(version.toStr)
     out.writeI2(depends.size)
     depends.each |Depend d| { out.writeUtf(d.toStr) }
-    out.writeI2(fattrs.size)
-    fattrs.each |FAttr a| { a.write(out) }
+    out.writeI2(0) //fattrs.size)
+//    fattrs.each |FAttr a| { a.write(out) }
+  }
+
+  Void writeProps(Uri uri, Str:Str props)
+  {
+    if (props.isEmpty) return
+    out := out(uri)
+    out.writeProps(props)
+    out.close
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -287,7 +303,8 @@ final class FPod : CPod, FConst
   override Str name         // pod's unique name
   override Version version  // pod version
   Depend[]? depends         // pod dependencies
-  FAttr[]? fattrs           // pod attributes
+  Str:Str meta              // pod meta
+  Str:Str index             // pod index
   Zip? zip                  // zipped storage
   FType[]? ftypes           // pod's declared types
   FTable names              // identifier names: foo

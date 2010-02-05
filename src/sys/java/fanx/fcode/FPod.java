@@ -115,7 +115,8 @@ public final class FPod
     {
       String name = entry.getName();
 
-      if (name.equals("names.def")) names.read(in);
+      if (name.equals("meta.props")) readMeta(in);
+      else if (name.equals("names.def")) names.read(in);
       else if (name.equals("typeRefs.def")) typeRefs.read(in);
       else if (name.equals("fieldRefs.def")) fieldRefs.read(in);
       else if (name.equals("methodRefs.def")) methodRefs.read(in);
@@ -132,22 +133,21 @@ public final class FPod
     }
   }
 
+  private void readMeta(FStore.Input in) throws IOException
+  {
+    SysInStream sysIn = new SysInStream(in);
+    this.meta = sysIn.readProps();
+    sysIn.close();
+  }
+
   private void readPodMeta(FStore.Input in) throws IOException
   {
     if (in.u4() != 0x0FC0DE05)
       throw new IOException("Invalid magic");
 
     int version = in.u4();
-// TODO-FACETS
-if (version == 0x1000045)
-{
-  //System.out.print("WARN: old fcode ver " + podName);
-}
-else
-{
     if (version != FConst.FCodeVersion)
       throw new IOException("Invalid version 0x" + Integer.toHexString(version));
-}
     this.version = version;
 
     podName = in.utf();
@@ -197,6 +197,7 @@ else
   public FAttrs attrs;       // pod attributes
   public FStore store;       // store we using to read
   public int version;        // fcode format version
+  public Object meta;        // meta Str:Str map
   public FType[] types;      // pod's declared types
   public FTable names;       // identifier names: foo
   public FTable typeRefs;    // types refs:   [pod,type,variances*]

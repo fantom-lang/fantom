@@ -205,7 +205,7 @@ public class JavaType
       mixins = new List(Sys.TypeType, interfaces.length);
       for (int i=0; i<interfaces.length; ++i)
         mixins.add(toFanType(interfaces[i]));
-      mixins = mixins.ro();
+      mixins = (List)mixins.toImmutable();
 
       // inheritance
       inheritance = ClassType.inheritance(this);
@@ -291,9 +291,9 @@ public class JavaType
     }
 
     // finish
-    this.slots = slots.ro();
-    this.fields = fields.ro();
-    this.methods = methods.ro();
+    this.slots = (List)slots.toImmutable();
+    this.fields = (List)fields.toImmutable();
+    this.methods = (List)methods.toImmutable();
     this.slotsByName = slotsByName;
     return this;
   }

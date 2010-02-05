@@ -171,8 +171,7 @@ public abstract class Type
 
   public Map params()
   {
-    if (noParams == null)
-      noParams = new Map(Sys.StrType, Sys.TypeType).ro();
+    if (noParams == null) noParams = Sys.emptyStrTypeMap;
     return (Map)noParams;
   }
 

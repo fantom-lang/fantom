@@ -68,6 +68,11 @@ class CompilerInput
   Str:Str meta := Str:Str[:]
 
   **
+  ** Pod indexing name/value pairs
+  **
+  Str:Str index := Str:Str[:]
+
+  **
   ** What type of output should be generated - the compiler
   ** can be used to generate a transient in-memory pod, write a
   ** pod zip file to disk, or generate JavaScript code.

@@ -69,25 +69,22 @@ class PodTest : Test
 
   Void verifyMeta(Pod pod)
   {
-/*
-TODO-FACETS
-    if (false)
-    {
-      echo("verifyMeta")
-      echo("  name    = $pod.name")
-      echo("  version = $pod.version")
-      echo("  depends = $pod.depends")
-      echo("  facets  = $pod.facets")
-    }
-
     verify(pod.version >= Version.fromStr("1.0.14"))
     verifyEq(pod.version.major, 1)
     verifyEq(pod.version.minor, 0)
+
     verify(pod.depends.isImmutable)
-    verifyType(pod.facets, [Symbol:Obj?]#)
-    verifyEq(pod.facets.findAll |v,s| { s.qname == "sys::podBuildTime" }.size, 1)
-    verifyType(pod.facet(@podBuildTime), DateTime#)
-*/
+    verifyEq(pod.depends.typeof, Depend[]#)
+
+    verify(pod.meta.isImmutable)
+    verifyEq(pod.meta.typeof, Str:Str#)
+
+    verifyEq(pod.meta["pod.name"], pod.name)
+    verifyEq(pod.meta["pod.version"], pod.version.toStr)
+    verify(pod.meta.containsKey("pod.depends"))
+    verify(pod.meta.containsKey("build.host"))
+    verify(pod.meta.containsKey("build.user"))
+    verify(pod.meta.containsKey("build.time"))
   }
 
 //////////////////////////////////////////////////////////////////////////

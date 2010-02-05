@@ -32,7 +32,8 @@ class Assembler : CompilerSupport, FConst
     fpod.name    = compiler.input.podName
     fpod.version = compiler.input.version
     fpod.depends = compiler.depends
-    fpod.fattrs  = assemblePodAttrs(fpod)
+    fpod.meta    = pod.meta
+    fpod.index   = pod.index
 
     fpod.ftypes = FType[,]
     types.each |TypeDef t|
@@ -41,25 +42,6 @@ class Assembler : CompilerSupport, FConst
     }
 
     return fpod
-  }
-
-  private FAttr[] assemblePodAttrs(FPod fpod)
-  {
-    // add build facets
-    try
-    {
-          sys := ns.sysPod
-// TODO-FACETS
-//      pod.addFacet(this, sys.("podBuildHost", true), Env.cur.host)
-//      pod.addFacet(this, sys.("podBuildUser", true), Env.cur.user)
-//      pod.addFacet(this, sys.("podBuildTime", true), DateTime.now)
-    }
-    catch (Err e) e.trace
-
-//    asm := AttrAsm(compiler, fpod)
-//    asm.facets(pod.facets)
-//    return asm.attrs
-return FAttr[,]
   }
 
   private FType assembleType(TypeDef def)

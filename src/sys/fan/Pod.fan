@@ -84,9 +84,9 @@ final const class Pod
   override Str toStr()
 
   **
-  ** Is this pod a script file instead of a pod file.
+  ** Get the meta name/value pairs for this pod.
   **
-  Bool isScript()
+  Str:Str meta()
 
 //////////////////////////////////////////////////////////////////////////
 // Types
