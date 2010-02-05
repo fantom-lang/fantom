@@ -168,7 +168,6 @@ class EnumTest : CompilerTest
       enum class F { a, b;  new make() {}  new make2() {} }
       enum class G { a, b;  new make() {} }
       enum class H { a, b;  private new make(Int o, Str n) : super(o, n) {} }
-      @simple enum class I { a, b }
       ",
        [
          2, 19, "Enum 'vals' conflicts with slot",
@@ -183,10 +182,10 @@ class EnumTest : CompilerTest
 
     // CheckErrors
     verifyErrors(
-     "@simple enum class I { a, b }
+     "@Serializable enum class I { a, b }
       ",
        [
-        1, 1, "Duplicate facet 'sys::simple'",
+        1, 1, "Duplicate facet 'sys::Serializable'",
        ])
   }
 }

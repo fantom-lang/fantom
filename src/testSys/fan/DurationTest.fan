@@ -9,7 +9,7 @@
 **
 ** DurationTest
 **
-@js
+@Js
 class DurationTest : Test
 {
 

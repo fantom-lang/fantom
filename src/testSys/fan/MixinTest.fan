@@ -380,7 +380,7 @@ class MixinTest : Test
 // Helper Types
 //////////////////////////////////////////////////////////////////////////
 
-@js
+@Js
 mixin MxA
 {
   static Str sa() { "sa" }
@@ -397,7 +397,7 @@ mixin MxA
   virtual This thisb() { this }
 }
 
-@js
+@Js
 mixin MxB
 {
   static Str sb() { "sb" }
@@ -406,7 +406,7 @@ mixin MxB
   abstract Str ab()
 }
 
-@js
+@Js
 mixin MxAB : MxA, MxB
 {
   override Str coa() { "11" }
@@ -414,7 +414,7 @@ mixin MxAB : MxA, MxB
   override This thisa() { throw UnresolvedErr() }
 }
 
-@js
+@Js
 class MxClsA : MxA
 {
   override Str aa() { return "aa" }
@@ -423,7 +423,7 @@ class MxClsA : MxA
   Str mxClsA() { return "MxClsA" }
 }
 
-@js
+@Js
 class MxClsAB : MxA, MxB
 {
   override Str aa() { return "aa" }

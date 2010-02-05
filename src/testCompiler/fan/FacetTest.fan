@@ -70,6 +70,7 @@ class FacetTest : CompilerTest
     verifyEq(t.isConst, true)
     verifyEq(t.base, Obj#)
     verifyEq(t.mixins, [Facet#])
+    verifyEq(t.hasFacet(Serializable#), true)
 
     ctor := t.method("make")
     verifyEq(ctor.isPublic, true)
@@ -98,8 +99,11 @@ class FacetTest : CompilerTest
     compile(
       """@A
          @B { x = 77 }
-         @C { y = "foo"; z = [1, 2, 3] }
-         class Foo {}
+         class Foo
+         {
+           @C { y = "foo"; z = [1, 2, 3] }
+           Int f
+         }
 
          facet class A {}
          facet class B { const Int x; const Int y }
@@ -107,31 +111,36 @@ class FacetTest : CompilerTest
          """)
 
     t := pod.type("Foo")
+    tf := t.field("f")
 
     a := pod.type("A")
-    av := t.facetNew(a)
+    av := t.facet(a)
     aDefVal := a.field("defVal").get
     verifySame(av, aDefVal)
-    verifySame(av, t.facetNew(a))
+    verifySame(av, t.facet(a))
+    verify(t.hasFacet(a))
 
     b := pod.type("B")
-    bv := t.facetNew(b)
+    bv := t.facet(b)
     verifyEq(bv->x, 77)
     verifyEq(bv->y, 0)
-    verifySame(bv, t.facetNew(b))
+    verifySame(bv, t.facet(b))
+    verify(t.hasFacet(b))
 
     c := pod.type("C")
-    cv := t.facetNew(c)
+    cv := tf.facet(c)
     verifyEq(cv->x, "x")
     verifyEq(cv->y, "foo")
     verifyEq(cv->z, [1, 2, 3])
-    verifySame(cv, t.facetNew(c))
+    verifySame(cv, tf.facet(c))
 
-    verify(t.facetsNew.isImmutable)
-    verify(t.facetsNew.contains(av))
-    verify(t.facetsNew.contains(bv))
-    verify(t.facetsNew.contains(cv))
-    verifySame(t.facetsNew, t.facetsNew)
+    verify(t.facets.isImmutable)
+    verify(t.facets.contains(av))
+    verify(t.facets.contains(bv))
+    verifySame(t.facets, t.facets)
+
+    verify(tf.facets.contains(cv))
+    verifySame(tf.facets, tf.facets)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -148,4 +157,19 @@ class FacetTest : CompilerTest
          1, 17, "Facet cannot declare constructors",
        ])
   }
+
+/* TODO-FACETS
+  Void testFacets()
+  {
+    // we really test facets in testSys::FacetsTest, we just verify errors here
+    podStr = "pod $podName { Obj? x := null }"
+    verifyErrors(
+      "@x=Env.cur.homeDir
+       class Foo {}",
+       [
+         1, 12, "Facet value is not serializable: '@x' ('call' not serializable)",
+       ])
+  }
+*/
+
 }

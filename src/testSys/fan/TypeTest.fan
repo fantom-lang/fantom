@@ -9,9 +9,10 @@
 **
 ** TypeTest
 **
-@js
-@testSysByStr=["alpha", "beta"]
-@testSysByType=[SerB#, MxB#]
+@Js
+// TODO-FACETS
+//@testSysByStr=["alpha", "beta"]
+//@testSysByType=[SerB#, MxB#]
 class TypeTest : Test
 {
 
@@ -71,6 +72,7 @@ class TypeTest : Test
 // TypeDb
 //////////////////////////////////////////////////////////////////////////
 
+/* TODO-FACET
   Void testFindByFacet()
   {
     verifyErr(Err#) { Type.findByFacet(@nodoc, "") }
@@ -110,6 +112,7 @@ class TypeTest : Test
     verifyEq(Type.findByFacet(@testSysByType, MxAB#, true), [TypeTest#])
     verifyEq(Type.findByFacet(@testSysByType, MxClsAB#, true), [TypeTest#])
   }
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Flags
@@ -131,6 +134,10 @@ class TypeTest : Test
     verifyEq(t.isEnum, false)
     verifyEq(EnumAbc#.isEnum, true)
     verifyEq(MxA#.isEnum, false)
+
+    // isFacet
+    verifyEq(StrA#.isFacet, true)
+    verifyEq(MxA#.isFacet, false)
 
     // isFinal
     verifyEq(Bool#.isFinal, true)

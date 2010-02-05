@@ -14,8 +14,14 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
-    podName = "testNative"
+    podName    = "testNative"
+    summary    = "Sys natives test suite"
+    depends    = ["sys 1.0"]
+    srcDirs    = [`fan/`]
+    javaDirs   = [`java/`]
+    dotnetDirs = [`dotnet/`]
+    docApi     = false
   }
 }

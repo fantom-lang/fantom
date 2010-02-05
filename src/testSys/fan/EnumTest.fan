@@ -201,12 +201,13 @@ class EnumTest : Test
 
   Void testFacets()
   {
-    verifyEq(EnumAbc#.facet(@simple), true)
-    verifyEq(EnumAbc#.facets, Symbol:Obj?[@simple:true])
+    verifyEq(EnumAbc#.hasFacet(Serializable#), true)
+    verifyEq(EnumAbc#.facet(Serializable#)->simple, true)
 
-    verifyEq(Suits#.facet(@simple), true)
-    verifyEq(Suits#.facet(@strA), "y")
-    verifyEq(Suits#.facets, Symbol:Obj?[@simple:true, @strA:"y"])
+    verifyEq(Suits#.hasFacet(Serializable#), true)
+    verifyEq(Suits#.facet(StrA#)->val, "y")
+    verify(Suits#.facets.contains(Suits#.facet(Serializable#)))
+    verify(Suits#.facets.contains(Suits#.facet(StrA#)))
   }
 
 }
@@ -220,7 +221,7 @@ internal enum class EnumAbc
   static const EnumAbc first := A
 }
 
-@strA="y"
+@StrA { val = "y" }
 enum class Suits
 {
   clubs("black"),

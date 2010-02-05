@@ -11,6 +11,7 @@ using compiler
 **
 ** SymbolsTest
 **
+/* TODO-FACETS
 class SymbolsTest : CompilerTest
 {
 
@@ -309,3 +310,4 @@ class SymbolsTest : CompilerTest
      ])
   }
 }
+*/

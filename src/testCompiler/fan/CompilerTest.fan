@@ -23,30 +23,31 @@ abstract class CompilerTest : Test
     curTestMethod.toStr.replace("::", "_").replace(".", "_") + "_" + podNameSuffix
   }
 
-  Void compile(Str src, LogLevel logLevel := LogLevel.warn, Bool isScript := true)
+  Void compile(Str src, |CompilerInput in|? f := null)
   {
     input := CompilerInput.make
     input.podName     = podName
+    input.summary     = "test"
     input.version     = Version.defVal
-    input.log.level   = logLevel
+    input.log.level   = LogLevel.err
     input.isTest      = true
-    input.isScript    = isScript
+    input.isScript    = true
     input.output      = CompilerOutputMode.transientPod
     input.mode        = CompilerInputMode.str
     input.srcStr      = src
-    input.podStr      = podStr
     input.srcStrLoc   = Loc.make("Script")
+    f?.call(input)
 
     compiler = Compiler.make(input)
     pod = compiler.compile.transientPod
     podNameSuffix++
   }
 
-  Void verifyErrors(Str src, Obj[] errors, Bool isScript := true)
+  Void verifyErrors(Str src, Obj[] errors, |CompilerInput in|? f := null)
   {
     try
     {
-      compile(src, LogLevel.silent, isScript)
+      compile(src) { f?.call(it); it.log.level = LogLevel.silent }
     }
     catch (CompilerErr e)
     {
@@ -56,7 +57,6 @@ abstract class CompilerTest : Test
       e.trace
       fail
     }
-    podStr = null
     doVerifyErrors(errors)
   }
 
@@ -74,20 +74,14 @@ abstract class CompilerTest : Test
     }
   }
 
-  Str symbolsStr
-  {
-    get { throw UnsupportedErr() }
-    set { podStr = "pod $podName {\n" + it + "\n}" }
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   Compiler? compiler      // compile()
   Pod? pod                // compiled pod
-  Str? podStr             // "pod.fan" to pass to compiler
   Int podNameSuffix := 0
   Bool dumpErrors := false
+  Depend[]? depends
 
 }
