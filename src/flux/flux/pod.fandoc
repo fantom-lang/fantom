@@ -87,12 +87,11 @@ If the object from uri resolution is already an instance of Resource, then
 we don't need to do anything special.
 
 If the object from uri resolution is not a Resource, then we search the
-type database for a Resource keyed by the '@fluxResource' facet for
-the object's type.  The 'FileResource' class is automatically registered
-to handle 'sys::File'.  For example to map an instance of 'AppRecord' to
-'AppResource':
+indexed props for a Resource keyed by the 'flux.resource.{qname}' prop for
+the object's type (and we search its base classes).  The 'FileResource'
+class is automatically registered to handle 'sys::File'.  For example to map
+an instance of 'AppRec' to 'AppResource':
 
-  @fluxResource=AppRecord#
   class AppResource : Resource
   {
     new (Uri uri, AppRecord rec) { this.uri = uri; this.rec = rec }
@@ -102,9 +101,12 @@ to handle 'sys::File'.  For example to map an instance of 'AppRecord' to
     AppRecord rec
   }
 
-If you map a Resource subclass using the '@fluxResource' facet,
-then you need to ensure that your 'make' constructor takes Uri as its
-first parameter, and the mapped object as its second parameter.
+  // build.fan
+  index = ["flux.resource.myPod::AppRec": "myPod::AppResource"]
+
+If you map a Resource subclass, then you need to ensure that your 'make'
+constructor takes Uri as its first parameter, and the mapped object as
+its second parameter.
 
 View Resolution [#viewResolution]
 =================================
@@ -114,29 +116,31 @@ The list of available views is deferred to the [Resource.views]`flux::Resource.v
 method.  The first view in the list should be default view.
 
 The default strategy for resolving views by 'Resource.views' is to
-query the type database for any 'View' keyed by the '@fluxView' facet on
+query index props for any 'View' keyed by the 'flux.view.{resource}' using
 the resource's type.  For example to register 'AppView' on 'AppResource':
 
-  @fluxView=AppResource#
   class AppView : View
   {
     override Void onLoad() { ... }
   }
 
+  // build.fan
+  index = ["flux.view.myPod::AppResource": "myPod::AppView"]
+
 If working with files, then you typically register a view
-[by MIME type]`flux::FileResource.views`:
+[by MIME type]`flux::FileResource.views`. The follow indexed prop
+keys are used:
 
   // register on text/*
-  @fluxViewMimeType="text"
-  internal class MyTextView : View
+  flux.view.mime.text
 
   // register on text/xml
-  @fluxViewMimeType="text/xml"
+  flux.view.mime.text/xml
   internal class MyXmlView : View
 
   // register on multiple MIME types
-  @fluxViewMimeType=["text/xml", "text/html"]
-  internal class MyHtmlView : View
+  flux.view.mime.text/xml
+  flux.view.mime.text/html
 
 View Query [#viewQuery]
 =======================
