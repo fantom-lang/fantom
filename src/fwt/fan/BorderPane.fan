@@ -12,7 +12,7 @@ using gfx
 **
 ** BorderPane is used paint a CSS styled border around a content widget.
 **
-@js
+@Js
 class BorderPane : Pane
 {
   **

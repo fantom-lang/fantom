@@ -12,7 +12,7 @@ using gfx
 ** SashPane lays out its children in a row or column with
 ** a sash control between each one to allow resizing.
 **
-@js
+@Js
 class SashPane : Widget
 {
 

@@ -11,7 +11,7 @@ using gfx
 **
 ** Table displays grid of rows and columns.
 **
-@js
+@Js
 class Table : Widget
 {
 
@@ -33,7 +33,7 @@ class Table : Widget
   ** Event fields:
   **   - `Event.index`: the row index.
   **
-  @transient readonly EventListeners onAction := EventListeners()
+  @Transient readonly EventListeners onAction := EventListeners()
 
   **
   ** Callback when selected rows change.
@@ -44,7 +44,7 @@ class Table : Widget
   ** Event fields:
   **   - `Event.index`: the primary selection row index.
   **
-  @transient readonly EventListeners onSelect := EventListeners()
+  @Transient readonly EventListeners onSelect := EventListeners()
 
   **
   ** Callback when user invokes a right click popup action.
@@ -61,7 +61,7 @@ class Table : Widget
   **     background popup.
   **   - `Event.pos`: the mouse position of the popup.
   **
-  @transient readonly EventListeners onPopup := EventListeners()
+  @Transient readonly EventListeners onPopup := EventListeners()
 
   **
   ** Horizontal scroll bar.
@@ -127,7 +127,7 @@ class Table : Widget
 **
 ** TableModel models the data of a table widget.
 **
-@js
+@Js
 mixin TableModel
 {
 

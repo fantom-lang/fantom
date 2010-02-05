@@ -13,7 +13,7 @@ using gfx
 ** input information from the user.  Dialog also contains
 ** convenience routines for opening message boxes.
 **
-@js
+@Js
 class Dialog : Window
 {
 
@@ -296,7 +296,7 @@ class Dialog : Window
 **
 ** Internal class used for predefined Dialog commands.
 **
-@js
+@Js
 internal class DialogCommand : Command
 {
   new make(DialogCommandId id, Obj? arg := null)
@@ -347,7 +347,7 @@ internal class DialogCommand : Command
 **
 ** Ids for internal predefined Dialog commands.
 **
-@js
+@Js
 internal enum class DialogCommandId
 {
   ok,

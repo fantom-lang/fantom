@@ -15,7 +15,8 @@ using gfx
 ** on the left or right edges are laid out with with their preferred
 ** width.  Any remaining space is given to the center component.
 **
-@js @collection=false
+@Js
+@Serializable  // override to not be collection
 class EdgePane : Pane
 {
 

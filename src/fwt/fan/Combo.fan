@@ -11,7 +11,7 @@ using gfx
 **
 ** Combo is a combination of a text field and a list drop down.
 **
-@js
+@Js
 class Combo : Widget
 {
 
@@ -32,7 +32,7 @@ class Combo : Widget
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onAction := EventListeners()
+  @Transient readonly EventListeners onAction := EventListeners()
 
   **
   ** Callback when either the text field or item is changed.
@@ -43,7 +43,7 @@ class Combo : Widget
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onModify := EventListeners()
+  @Transient readonly EventListeners onModify := EventListeners()
 
   **
   ** If true then the list is displayed in a drop down
@@ -77,13 +77,13 @@ class Combo : Widget
   **
   ** The currently selected index of `items` or null if no selection.
   **
-  @transient native Int? selectedIndex
+  @Transient native Int? selectedIndex
 
   **
   ** The currently selected item.  Items are matched
   ** to the `items` list using `index`.
   **
-  @transient Obj? selected
+  @Transient Obj? selected
   {
     get { i := selectedIndex; return i == null ? null : items[i] }
     set { i := index(it); if (i != null) selectedIndex = i }

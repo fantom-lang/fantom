@@ -12,7 +12,7 @@ using gfx
 ** Window is the base class for widgets which represent
 ** top level windows.
 **
-@js
+@Js
 class Window : ContentPane
 {
 
@@ -26,7 +26,7 @@ class Window : ContentPane
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onClose := EventListeners()
+  @Transient readonly EventListeners onClose := EventListeners()
 
   **
   ** Callback function when window becomes the active window
@@ -38,7 +38,7 @@ class Window : ContentPane
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onActive := EventListeners()
+  @Transient readonly EventListeners onActive := EventListeners()
 
   **
   ** Callback function when window becomes an inactive window
@@ -50,7 +50,7 @@ class Window : ContentPane
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onInactive := EventListeners()
+  @Transient readonly EventListeners onInactive := EventListeners()
 
   **
   ** Callback function when window is iconified to the taskbar.
@@ -61,7 +61,7 @@ class Window : ContentPane
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onIconified := EventListeners()
+  @Transient readonly EventListeners onIconified := EventListeners()
 
   **
   ** Callback function when window is deiconified from the taskbar.
@@ -72,7 +72,7 @@ class Window : ContentPane
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onDeiconified := EventListeners()
+  @Transient readonly EventListeners onDeiconified := EventListeners()
 
   **
   ** Window mode defines the modal state of the window:

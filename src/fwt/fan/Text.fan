@@ -9,7 +9,7 @@
 **
 ** Text is used to enter and modify text.
 **
-@js
+@Js
 class Text : TextWidget
 {
 
@@ -31,7 +31,7 @@ class Text : TextWidget
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onAction := EventListeners()
+  @Transient readonly EventListeners onAction := EventListeners()
 
   **
   ** Callback when the text is modified.
@@ -42,7 +42,7 @@ class Text : TextWidget
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onModify := EventListeners()
+  @Transient readonly EventListeners onModify := EventListeners()
 
   **
   ** True to make this a password text field which hides the

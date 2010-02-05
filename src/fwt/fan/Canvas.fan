@@ -11,7 +11,7 @@ using gfx
 **
 ** Canvas is a custom widget which paints itself.
 **
-@js
+@Js
 class Canvas : Widget
 {
 
