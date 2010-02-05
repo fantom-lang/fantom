@@ -7,10 +7,10 @@
 //
 
 **
-** DslPlugin is the base class for Domain Specific Language
-** plugins used to compile embedded DSLs.  Subclasses are registered
-** on the anchor type's qname with the "compilerDsl" facet and must
-** declare a constructor with a Compiler arg.
+** DslPlugin is the base class for Domain Specific Language plugins
+** used to compile embedded DSLs.  Subclasses are registered on
+** the anchor type's qname with the "compiler.dsl.{anchor}" indexed
+** prop and must declare a constructor with a Compiler arg.
 **
 abstract class DslPlugin : CompilerSupport
 {
@@ -25,15 +25,16 @@ abstract class DslPlugin : CompilerSupport
   **
   static DslPlugin? find(CompilerSupport c, Loc loc, CType anchorType)
   {
+    // handle built-in ones to avoid index rebuild
     qname := anchorType.qname
+    switch (qname)
+    {
+      case "sys::Str": return StrDslPlugin(c.compiler)
+      case "sys::Regex": return RegexDslPlugin(c.compiler)
+    }
 
-if (qname == "sys::Str") return StrDslPlugin(c.compiler)
-if (qname == "sys::Regex") return RegexDslPlugin(c.compiler)
-c.err("TODO - DSL plugins hard coded!  '$qname'", loc)
-return null
-
-/* TODO-FACETS
-    t := findByFacet(@compilerDsl, qname)
+    // lookup via indexed props
+    t := Env.cur.index("compiler.dsl.${qname}")
 
     if (t.size > 1)
     {
@@ -49,7 +50,7 @@ return null
 
     try
     {
-      return t.first.make([c.compiler])
+      return Type.find(t.first).make([c.compiler])
     }
     catch (Err e)
     {
@@ -57,7 +58,6 @@ return null
       c.errReport(CompilerErr("Cannot construct DSL plugin '$t.first'", loc, e))
       return null
     }
-*/
   }
 
 //////////////////////////////////////////////////////////////////////////

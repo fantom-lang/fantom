@@ -133,24 +133,6 @@ class CompilerSupport
       throw c.errs.first
   }
 
-  **
-  ** Convenience for `sys::Type.findByFacet` which disables
-  ** all the warnings which might spew out while rebuilding
-  ** the type database in the middle of a compile.
-  **
-/* TODO-FACETS
-  static Type[] findByFacet(Type t)
-  {
-    log := Log.get("typedb")
-    oldLevel := log.level
-    log.level = LogLevel.err
-    try
-      return Type.findByFacet(key, facetVal, options)
-    finally
-      log.level = oldLevel
-  }
-*/
-
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////

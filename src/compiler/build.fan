@@ -32,6 +32,12 @@ class Build : BuildPod
 // TODO-FACETS
 //    dependsDir = devHomeDir.uri + `lib/fan/`
     outDir     = devHomeDir.uri + `lib/fan/`
+    index =
+    [
+      // DSL plugins
+      "compiler.dsl.sys::Regex": "compiler::RegexDslPlugin",
+      "compiler.dsl.sys::Str": "compiler::StrDslPlugin"
+    ]
   }
 }
 
