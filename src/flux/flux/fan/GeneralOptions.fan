@@ -9,7 +9,7 @@
 **
 ** GeneralOptions is a catch-all for general purpose options.
 **
-@serializable
+@Serializable
 const class GeneralOptions
 {
 

@@ -260,7 +260,7 @@ class Frame : Window
 ** FrameState
 **************************************************************************
 
-@serializable
+@Serializable
 internal class FrameState
 {
   static FrameState load() { return Flux.loadOptions(Flux.pod, "session/frame", FrameState#) }

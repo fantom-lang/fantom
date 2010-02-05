@@ -11,7 +11,7 @@ using fwt
 
 **
 ** SideBar is a plugin used along side the main views.  SideBars
-** are registered in the type database via the '@fluxSideBar' facet.
+** are registered using the indexed prop "flux.sideBar={qname}".
 **
 abstract class SideBar : ContentPane
 {

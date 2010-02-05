@@ -10,7 +10,7 @@
 ** KeyOptions allow the user to redefine accelerators for
 ** the flux command set.
 **
-@serializable
+@Serializable
 const class KeyOptions
 {
 

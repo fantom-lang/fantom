@@ -12,7 +12,6 @@ using fwt
 **
 ** NavBar is the primary top level tree based navigation side bar.
 **
-@fluxSideBar
 internal class NavBar : SideBar
 {
 
@@ -276,7 +275,7 @@ internal class NavBar : SideBar
 ** NavBarState
 **************************************************************************
 
-@serializable
+@Serializable
 internal class NavBarState
 {
   static NavBarState load() { return Flux.loadOptions(Flux.pod, "session/navBar", NavBarState#) }
@@ -304,7 +303,7 @@ internal class NavTreeModel : TreeModel
 ** NavNode
 **************************************************************************
 
-@serializable
+@Serializable
 internal class NavNode
 {
   static NavNode[] map(Resource[] r)

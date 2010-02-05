@@ -12,8 +12,9 @@ using fwt
 **
 ** Resource represents the objects a user navigates, views, and
 ** edits in a flux application.  Resources are mapped to objects
-** via the '@fluxResource' facet - if keyed by this facet, then
-** subclass must define a 'make(Uri, Obj)' constructor.
+** via the indexed prop 'flux.resource.{target}={resource}', where
+** both "target" and "resource" are qualied type names.  Subclasses
+** must define a 'make(Uri, Obj)' constructor.
 **
 ** See `docLib::Flux` for details.
 **
@@ -32,7 +33,8 @@ abstract class Resource
   ** Resolve a uri into a resource:
   **   1.  Resolve uri to obj via `sys::Uri.get`
   **   2.  If obj is Resource, return it
-  **   3.  Resolve to obj type to resource type via '@fluxResource' facet
+  **   3.  Resolve to obj type to resource type via 'flux.resource.{qname}'
+  **       indexed property for type hierarchy
   **
   ** Throw UnresolvedErr if the uri can't be resolved, and UnsupportedErr
   ** if resource can't be mapped to a resource.
@@ -46,8 +48,8 @@ abstract class Resource
     if (obj is Resource) return obj
 
     // 3. map via fluxResource facet
-    rtype := Type.findByFacet(@fluxResource, Type.of(obj), true).first
-    if (rtype == null) throw UnsupportedErr("No resource mapping for ${Type.of(obj)}")
+    rtype := Flux.indexForInheritance("flux.resource.", obj.typeof).first
+    if (rtype == null) throw UnsupportedErr("No resource mapping for $obj.typeof")
     return rtype.make([uri, obj])
   }
 
@@ -92,9 +94,7 @@ abstract class Resource
   **
   virtual Type[] views()
   {
-    acc := Type.findByFacet(@fluxView, Type.of(this), true)
-    acc = acc.exclude |Type t->Bool| { return t.isAbstract }
-    return acc
+    Flux.indexForInheritance("flux.view.", typeof)
   }
 
   **

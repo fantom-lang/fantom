@@ -13,7 +13,7 @@ using flux
 **
 ** SyntaxOptions configures the syntax color coding.
 **
-@serializable
+@Serializable
 const class SyntaxOptions
 {
 

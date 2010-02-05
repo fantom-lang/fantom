@@ -22,5 +22,23 @@ class Build : BuildPod
     srcDirs = [`fan/`, `fan/views/`, `fan/sidebars/`, `test/`]
     resDirs = [`locale/`, `test/files/`, `test/files/sub/`]
     docSrc  = true
+
+    index  =
+    [
+      // uri scheme
+      "sys.uriScheme.flux": "flux::FluxScheme",
+
+      // sidebars
+      "flux.sideBar": ["flux::Console", "flux::NavBar"],
+
+      // resources
+      "flux.resource.sys::File": "flux::FileResource",
+
+      // views
+      "flux.view.flux::StartResource": "flux::StartView",
+      "flux.view.mime.x-directory": "flux::DirView",
+      "flux.view.mime.text/html": "flux::HtmlView",
+      "flux.view.mime.image": "flux::ImageView",
+    ]
   }
 }

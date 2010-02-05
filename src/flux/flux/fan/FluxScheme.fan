@@ -9,7 +9,6 @@
 **
 ** Used to implement flux application specific uris
 **
-@uriScheme="flux"
 internal const class FluxScheme : UriScheme
 {
 

@@ -11,7 +11,7 @@ using flux
 **
 ** TextEditorOptions configured general text document options.
 **
-@serializable
+@Serializable
 const class TextEditorOptions
 {
   ** Default constructor with it-block
