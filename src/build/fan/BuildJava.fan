@@ -76,7 +76,7 @@ abstract class BuildJava : BuildScript
   **
   ** Compile Java source into jar
   **
-  @Target
+  @Target { help = "Compile Java source into jar" }
   Void compile()
   {
     validate
@@ -121,7 +121,7 @@ abstract class BuildJava : BuildScript
 
     // jar up temp directory
     log.info("Jar [${jar.osPath}]")
-    Exec(this, [jarExe.osPath, "cfm", jar.osPath, manifest.osPath, "-C", temp.osPath, "."], temp).run
+    Exec(this, [jarExe, "cfm", jar.osPath, manifest.osPath, "-C", temp.osPath, "."], temp).run
 
     log.unindent
   }
@@ -157,7 +157,7 @@ abstract class BuildJava : BuildScript
   **
   ** Delete all intermediate and target files
   **
-  @Target
+  @Target { help = "Delete all intermediate and target files" }
   Void clean()
   {
     log.info("clean [${scriptDir.name}]")
@@ -174,7 +174,7 @@ abstract class BuildJava : BuildScript
   **
   ** Run clean, compile
   **
-  @Target
+  @Target { help = "Run clean, compile" }
   Void full()
   {
     clean

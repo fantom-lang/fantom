@@ -74,7 +74,7 @@ class CompileJava : JdkTask
     try
     {
       // build command
-      cmd := [javacExe.osPath]
+      cmd := [javacExe]
 
       cmd.addAll(params)
 

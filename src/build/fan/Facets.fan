@@ -8,9 +8,14 @@
 
 **
 ** Target facet is applied to a `BuildScript` method to
-** indicate it is a build target or goal.  The target summary
-** is the fandoc of the target method.
+** indicate it is a build target or goal.
 **
-facet class Target {}
+facet class Target
+{
+  **
+  ** String for usage help, should be a single short line summary of target
+  **
+  const Str help := ""
+}
 
 
