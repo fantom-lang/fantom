@@ -23,6 +23,7 @@ class Build : BuildPod
     podName = "sys"
     summary = "Fantom system runtime"
     srcDirs = [`fan/`]
+    resDirs = [`locale/`]
     docSrc  = true
     outDir  = devHomeDir.uri + `lib/fan/`
   }
