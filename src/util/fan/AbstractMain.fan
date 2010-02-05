@@ -10,9 +10,10 @@
 **
 ** AbstractMain provides conveniences for writing the main routine
 ** of an app. Command line arguments are configured as fields
-** with the '@arg' facet:
+** with the `Arg` facet:
 **
-**   @arg="source file to process"
+**   ** Source file to process
+**   @Arg
 **   File? src
 **
 ** Arguments are ordered by the field declaration order.  The
@@ -20,10 +21,10 @@
 ** numbers of arguments.
 **
 ** Command line options are configured as fields with
-** the '@opt' facet and with an optional '@optAliases' facet:
+** the `Opt` facet :
 **
-**   @opt="http port"
-**   @optAliases=["p"]
+**   ** HTTP port
+**   @Opt { aliases=["p"] }
 **   Int port := 8080
 **
 ** Bool fields should always default to false and are considered
@@ -82,10 +83,9 @@ abstract class AbstractMain
   }
 
   **
-  ** The help option '-help' or '-?' is used print usage.
+  ** Print usage help.
   **
-  @opt="print usage help"
-  @optAliases=["?"]
+  @Opt { aliases = ["?"] }
   Bool helpOpt := false
 
 //////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ abstract class AbstractMain
   **
   virtual Field[] argFields()
   {
-    Type.of(this).fields.findAll |f| { f.facet(@arg) != null }
+    Type.of(this).fields.findAll |f| { f.hasFacet(Arg#) }
   }
 
   **
@@ -105,7 +105,7 @@ abstract class AbstractMain
   **
   virtual Field[] optFields()
   {
-    Type.of(this).fields.findAll |f| { f.facet(@opt) != null }
+    Type.of(this).fields.findAll |f| { f.hasFacet(Opt#) }
   }
 
   **
@@ -147,8 +147,9 @@ abstract class AbstractMain
     {
       // if name doesn't match opt or any of its aliases then continue
       field := opts[i]
-      aliases := field.facet(@optAliases, Str[,]) as Str[]
-      if (optName(field) != n && !aliases.contains(n)) continue
+      facet := (Opt)field.facet(Opt#)
+      aliases := facet
+      if (optName(field) != n && !facet.aliases.contains(n)) continue
 
       // if field is a bool we always assume the true value
       if (field.type == Bool#)
@@ -273,22 +274,22 @@ abstract class AbstractMain
   private Str[] usageArg(Field field)
   {
     name := argName(field)
-    Str desc := field.facet(@arg)
-    return [name, desc]
+    summary := summary(field)
+    return [name, summary]
   }
 
   private Str[] usageOpt(Field field)
   {
     name := optName(field)
     def := field.get(Type.of(this).make)
-    Str desc := field.facet(@opt)
-    Str[] aliases := field.facet(@optAliases, Str[,])
+    summary := summary(field)
+    Str[] aliases := field.facet(Opt#)->aliases
 
     col1 := "-$name"
     if (!aliases.isEmpty) col1 += ", -" + aliases.join(", -")
     if (def != false) col1 += " <$field.type.name>"
 
-    col2 := desc
+    col2 := summary
     if (def != false && def != null) col2 += " (default $def)"
 
     return [col1, col2]
@@ -308,6 +309,17 @@ abstract class AbstractMain
     if (rows.isEmpty) return
     out.printLine(title)
     rows.each |row| { out.printLine("  ${row[0]}  ${row[1]}") }
+  }
+
+  private Str summary(Field field)
+  {
+    doc := field.doc
+    if (doc == null || doc.isEmpty) return ""
+    period := doc.index(". ")
+    if (period != null) doc = doc[0..<period]
+    if (doc.size > 70) doc = doc[0..70]
+    doc = doc.replace("\n", " ")
+    return doc
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -376,3 +388,20 @@ abstract class AbstractMain
   }
 
 }
+
+**
+** Facet for annotating an `AbstractMain` argument field.
+**
+facet class Arg
+{
+}
+
+**
+** Facet for annotating an `AbstractMain` option field.
+**
+facet class Opt
+{
+  ** Aliases for the option
+  const Str[] aliases := Str[,]
+}
+

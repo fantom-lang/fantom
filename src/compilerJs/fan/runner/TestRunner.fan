@@ -62,7 +62,7 @@ class TestRunner
     }
     else if (pod != null)
     {
-      p.types.each |t| { if (t.fits(Test#) && t.facet(@js,false)) runTests(t, "*") }
+      p.types.each |t| { if (t.fits(Test#) && t.hasFacet(Js#)) runTests(t, "*") }
     }
     else throw Err("Pattern not supported: $arg")
     t2 := Duration.now

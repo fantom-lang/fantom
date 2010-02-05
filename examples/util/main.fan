@@ -14,30 +14,29 @@ using util
 **
 class DemoMain : AbstractMain
 {
-  @opt="integer option"
-  Int int := 123
+  ** integer option
+  @Opt Int int := 123
 
-  @opt="string option"
-  Str? str
+  ** String option"
+  @Opt Str? str
 
-  @opt="date option"
-  Date? date
+  ** date option
+  @Opt Date? date
 
-  @opt="bool debug option"
-  @optAliases=["v"]
-  Bool debug := false
+  ** bool debug option
+  @Opt { aliases=["v"] } Bool debug := false
 
-  @opt="use Opt suffix to avoid naming conflicts"
-  Bool logOpt := false
+  ** use Opt suffix to avoid naming conflicts
+  @Opt Bool logOpt := false
 
-  @arg="1st argument"
-  File? arg1
+  ** 1st argument
+  @Arg File? arg1
 
-  @arg="2nd argument"
-  Str? arg2
+  ** 2n argument
+  @Arg Str? arg2
 
-  @arg="list argument"
-  Str[]? varArg
+  ** list argument
+  @Arg Str[]? varArg
 
   override Int run()
   {

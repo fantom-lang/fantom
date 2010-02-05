@@ -30,7 +30,6 @@ abstract class JsExpr : JsNode
       case ExprId.uriLiteral:      return JsUriLiteralExpr(s, expr)
       case ExprId.typeLiteral:     return JsTypeLiteralExpr(s, expr)
       case ExprId.slotLiteral:     return JsSlotLiteralExpr(s, expr)
-      case ExprId.symbolLiteral:   return JsSymbolLiteralExpr(s, expr)
       case ExprId.rangeLiteral:    return JsRangeLiteralExpr(s, expr)
       case ExprId.listLiteral:     return JsListLiteralExpr(s, expr)
       case ExprId.mapLiteral:      return JsMapLiteralExpr(s, expr)
@@ -328,23 +327,6 @@ class JsSlotLiteralExpr : JsExpr
   }
   JsTypeRef parent  // slot parent type
   Str name          // slot name
-}
-
-**************************************************************************
-** JsSymbolLiteralExpr
-**************************************************************************
-
-class JsSymbolLiteralExpr : JsExpr
-{
-  new make(CompilerSupport s, SymbolExpr x) : super(s)
-  {
-    this.qname = x.symbol.qname
-  }
-  override Void write(JsWriter out)
-  {
-    out.w("fan.sys.Symbol.find(\"$qname\")")
-  }
-  Str qname
 }
 
 **************************************************************************

@@ -22,10 +22,12 @@ class Build : BuildGroup
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Setup
+// BuildScript
 //////////////////////////////////////////////////////////////////////////
 
-  override Void setup()
+  const Version version := Version(Pod.find("build").config("buildVersion"))
+
+  new make()
   {
     childrenScripts =
     [
@@ -34,16 +36,23 @@ class Build : BuildGroup
     ]
   }
 
-  override Target[] makeTargets()
+  override TargetMethod[] targets()
   {
-    return BuildScript.super.makeTargets
+    acc := TargetMethod[,]
+    typeof.methods.each |m|
+    {
+      if (!m.hasFacet(Target#)) return
+      acc.add(TargetMethod(this, m))
+    }
+    return acc
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Compile
 //////////////////////////////////////////////////////////////////////////
 
-  @target="run compile on all pods"
+  ** Run 'compile' on all pods
+  @Target
   Void compile()
   {
     spawnOnChildren("compile")
@@ -53,7 +62,8 @@ class Build : BuildGroup
 // Clean
 //////////////////////////////////////////////////////////////////////////
 
-  @target="run clean on all pods"
+  ** Run 'clean' on all pods
+  @Target
   Void clean()
   {
     runOnChildren("clean")
@@ -63,10 +73,12 @@ class Build : BuildGroup
 // Test
 //////////////////////////////////////////////////////////////////////////
 
-  @target="run test on all pods"
+  ** Run 'test' on all pods
+  @Target
   Void test()
   {
-    fantExe := (binDir+"fant$exeExt".toUri).osPath
+// TODO-FACETS
+    fantExe := (devHomeDir + `bin/fant.exe`).osPath
     Exec.make(this, [fantExe, "-all"]).run
   }
 
@@ -74,7 +86,9 @@ class Build : BuildGroup
 // Doc
 //////////////////////////////////////////////////////////////////////////
 
-  @target="build fandoc HTML docs"
+  ** Build fandoc HTML docs
+/*  TODO-FACETS
+  @Target
   Void doc()
   {
     fanExe := (binDir+"fan$exeExt".toUri).osPath
@@ -88,12 +102,14 @@ class Build : BuildGroup
 
     Exec.make(this, [fanExe, "docCompiler", "-topindex"]).run
   }
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Full
 //////////////////////////////////////////////////////////////////////////
 
-  @target="run clean + compile + test on all pods"
+  ** Run clean, compile, test on all pods
+  @Target
   Void full()
   {
     clean
@@ -105,7 +121,8 @@ class Build : BuildGroup
 // Examples
 //////////////////////////////////////////////////////////////////////////
 
-  @target="build example HTML docs"
+/*
+//  @target="build example HTML docs"
   Void examples()
   {
     fanExe := (binDir+"fan$exeExt".toUri).osPath
@@ -116,7 +133,7 @@ class Build : BuildGroup
 // Superclean
 //////////////////////////////////////////////////////////////////////////
 
-  @target="delete lib dir"
+  //@target="delete lib dir"
   Void superclean()
   {
     // fanLib nuke it all
@@ -139,10 +156,9 @@ class Build : BuildGroup
 // Zip
 //////////////////////////////////////////////////////////////////////////
 
-  @target="create build zip file"
+//  @target="create build zip file"
   Void zip()
   {
-    ver := Pod.find("build").config("buildVersion")
     moniker := "fantom-$ver"
     zip := CreateZip(this)
     {
@@ -166,7 +182,7 @@ class Build : BuildGroup
 // Dist
 //////////////////////////////////////////////////////////////////////////
 
-  @target="build distributation full, test, doc"
+//  @target="build distributation full, test, doc"
   Void dist()
   {
     superclean
@@ -178,7 +194,7 @@ class Build : BuildGroup
     zip
   }
 
-  @target="delete non-distribution files"
+//  @target="delete non-distribution files"
   Void deleteNonDist()
   {
     Delete(this, devHomeDir+`tmp/`).run
@@ -196,16 +212,16 @@ class Build : BuildGroup
         Delete.make(this, f).run
     }
   }
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Debug Env
 //////////////////////////////////////////////////////////////////////////
 
-  @target="Dump env details to help debugging bootstrap"
   override Void dumpEnv()
   {
     super.dumpEnv
-    spawnOnChildren("dumpEnv")
+    spawnOnChildren("-dumpEnv")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -230,7 +246,8 @@ class Build : BuildGroup
 
   private Exec makeSpawnExec(Uri script, Str target)
   {
-    fanExe := (binDir + "fan$exeExt".toUri).osPath
+// TODO-FACETS
+    fanExe := (devHomeDir + `bin/fan.exe`).osPath
     return Exec.make(this, [fanExe, (scriptDir + script).osPath, target])
   }
 

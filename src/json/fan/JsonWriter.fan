@@ -35,22 +35,21 @@ internal class JsonWriter
     type := Type.of(obj)
 
     // if a simple, write it as a string
-    if (type.facet(@simple) == true)
+    ser := type.facet(Serializable#, false) as Serializable
+    if (ser == null) throw IOErr("Object type not serializable: $type")
+
+    if (ser.simple)
     {
       writeStr(obj.toStr)
       return
     }
-
-    // otherwise the object must be serializable
-    if (type.facet(@serializable) != true)
-      throw IOErr("Object type not serializable: $type")
 
     // serialize as JSON object
     this.out.writeChar(JsonToken.objectStart)
     type.fields.each |f, i|
     {
       if (i != 0) this.out.writeChar(JsonToken.comma).writeChar('\n')
-      if (f.isStatic || f.facet(@transient) == true) return
+      if (f.isStatic || f.hasFacet(Transient#) == true) return
       writePair(f.name, f.get(obj))
     }
     this.out.writeChar(JsonToken.objectEnd)
