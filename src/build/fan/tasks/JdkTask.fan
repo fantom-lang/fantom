@@ -28,11 +28,10 @@ class JdkTask : Task
       throw fatal("Must config build prop 'jdkHome'")
 
     // derived files
-    exeExt := Env.cur.os == "win32" ? ".exe" : ""
     jdkBinDir = jdkHomeDir + `bin/`
-    javaExe   = jdkBinDir  + `java$exeExt`
-    javacExe  = jdkBinDir  + `javac$exeExt`
-    jarExe    = jdkBinDir  + `jar$exeExt`
+    javaExe   = Exec.exePath(jdkBinDir + `java`)
+    javacExe  = Exec.exePath(jdkBinDir + `javac`)
+    jarExe    = Exec.exePath(jdkBinDir + `jar`)
     rtJar     = jdkHomeDir + `jre/lib/rt.jar`
   }
 
@@ -60,13 +59,13 @@ class JdkTask : Task
   File jdkBinDir
 
   ** Java runtime executable: {jdkBinDir}/java
-  File javaExe
+  Str javaExe
 
   ** Javac compiler executable: {jdkBinDir}/javac
-  File javacExe
+  Str javacExe
 
   ** Jar (Java Archive) executable: {jdkBinDir}/jar
-  File jarExe
+  Str jarExe
 
   ** Standard runtime library jar file: {jdkHomeDir}/jre/lib/rt.jar
   File rtJar

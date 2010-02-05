@@ -240,7 +240,7 @@ abstract class BuildScript
     targets.each |t, i|
     {
       n := i == 0 ? "${t.name}*" : "${t.name} "
-      log.print("  ${n.justl(14)} $t.summary")
+      log.print("  ${n.justl(14)} $t.help")
       log.printLine
     }
   }

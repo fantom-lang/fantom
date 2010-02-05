@@ -96,8 +96,7 @@ abstract class BuildGroup : BuildScript
   **
   virtual Void spawnOnChildren(Str targetName)
   {
-    exeExt := Env.cur.os == "win32" ? ".exe" : ""
-    fanExe := (devHomeDir + `bin/fan$exeExt`).osPath
+    fanExe := Exec.exePath(devHomeDir + `bin/fan`)
     children.each |child|
     {
       target := child.target(targetName)
@@ -117,6 +116,6 @@ internal class GroupTarget : TargetMethod
 {
   new make(BuildGroup s, Str n) : super(s, BuildGroup#runOnChildren) { name = n }
   override const Str name
-  override Str summary() { "Run '$name' on group" }
+  override Str help() { "Run '$name' on group" }
   override Void run() { ((BuildGroup)script).runOnChildren(name) }
 }

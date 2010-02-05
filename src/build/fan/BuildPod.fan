@@ -117,7 +117,7 @@ abstract class BuildPod : BuildScript
   ** Compile the source into a pod file and all associated
   ** natives.  See `compileJava` and `compileDotnet`.
   **
-  @Target
+  @Target { help = "Compile to pod file and associated natives" }
   virtual Void compile()
   {
     validate
@@ -211,12 +211,12 @@ abstract class BuildPod : BuildScript
     // stub the pods fan classes into Java classfiles
     // by calling the JStub tool in the jsys runtime
     stubDir := stubOnly ? libJava : jtemp
-    Exec(this, [javaExe.osPath,
-                     "-cp", (libJava + `sys.jar`).osPath,
-                     "-Dfan.home=$Env.cur.workDir.osPath",
-                     "fanx.tools.Jstub",
-                     "-d", stubDir.osPath,
-                     podName]).run
+    Exec(this, [javaExe,
+                "-cp", (libJava + `sys.jar`).osPath,
+                "-Dfan.home=$Env.cur.workDir.osPath",
+                "fanx.tools.Jstub",
+                "-d", stubDir.osPath,
+                podName]).run
 
     // if there are no javaDirs we only only stubbing
     if (stubOnly) return
@@ -231,17 +231,17 @@ abstract class BuildPod : BuildScript
     javac.run
 
     // extract stub jar into the temp directory
-    Exec(this, [jarExe.osPath, "-xf", jstub.osPath], jtemp).run
+    Exec(this, [jarExe, "-xf", jstub.osPath], jtemp).run
 
     // now we can nuke the stub jar (and manifest)
     Delete(this, jstub).run
     Delete(this, jtemp + `meta-inf/`).run
 
     // jar everything back up to lib/java/{pod}.jar
-    Exec(this, [jarExe.osPath, "cf", curJar.osPath, "-C", jtemp.osPath, "."], jtemp).run
+    Exec(this, [jarExe, "cf", curJar.osPath, "-C", jtemp.osPath, "."], jtemp).run
 
     // append files to the pod zip (we use java's jar tool)
-    Exec(this, [jarExe.osPath, "-fu", curPod.osPath, "-C", jtemp.osPath, "."], jtemp).run
+    Exec(this, [jarExe, "-fu", curPod.osPath, "-C", jtemp.osPath, "."], jtemp).run
 
     // cleanup temp
     Delete(this, jtemp).run
@@ -297,7 +297,7 @@ abstract class BuildPod : BuildScript
     jdk    := JdkTask(this)
     jarExe := jdk.jarExe
     curPod := devHomeDir + `lib/fan/${podName}.pod`
-    Exec(this, [jarExe.osPath, "-fu", curPod.osPath, "-C", ntemp.osPath,
+    Exec(this, [jarExe, "-fu", curPod.osPath, "-C", ntemp.osPath,
       "${podName}Native_.dll", "${podName}Native_.pdb"], ntemp).run
 
     // cleanup temp
@@ -313,7 +313,7 @@ abstract class BuildPod : BuildScript
   **
   ** Delete all intermediate and target files
   **
-  @Target
+  @Target { help = "Delete all intermediate and target files" }
   virtual Void clean()
   {
     log.info("clean [$podName]")
@@ -336,7 +336,7 @@ abstract class BuildPod : BuildScript
   **
   ** Build the HTML documentation
   **
-  @Target
+  @Target { help = "Build the HTML documentation" }
   virtual Void doc()
   {
     // use docCompiler reflectively
@@ -355,15 +355,14 @@ abstract class BuildPod : BuildScript
   **
   ** Run the unit tests using 'fant' for this pod
   **
-  @Target
+  @Target { help = "Run the pod unit tests via fant" }
   virtual Void test()
   {
     log.info("test [$podName]")
     log.indent
 
-    exeExt := Env.cur.os == "win32" ? ".exe" : ""
-    fant := devHomeDir + `bin/fant$exeExt`
-    Exec(this, [fant.osPath, podName]).run
+    fant := Exec.exePath(devHomeDir + `bin/fant`)
+    Exec(this, [fant, podName]).run
 
     log.unindent
   }
@@ -375,7 +374,7 @@ abstract class BuildPod : BuildScript
   **
   ** Run clean, compile, and test
   **
-  @Target
+  @Target { help = "Run clean, compile, and test" }
   virtual Void full()
   {
     clean

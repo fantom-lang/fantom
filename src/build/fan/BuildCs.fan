@@ -87,7 +87,7 @@ abstract class BuildCs : BuildScript
   **
   ** Compile C# source into exe or dll
   **
-  @Target
+  @Target { help = "Compile C# source into exe or dll" }
   Void compile()
   {
     if (skip)
@@ -119,7 +119,7 @@ abstract class BuildCs : BuildScript
   **
   ** Delete all intermediate and target files
   **
-  @Target
+  @Target { help = "Delete all intermediate and target files" }
   Void clean()
   {
     log.info("clean [${scriptDir.name}]")
@@ -135,7 +135,7 @@ abstract class BuildCs : BuildScript
   **
   ** Run clean, compile
   **
-  @Target
+  @Target { help = "Run clean, compile" }
   Void full()
   {
     clean

@@ -34,5 +34,17 @@ class Exec : Task
     }
   }
 
+  **
+  ** Given a executable file turn it into a path to use for Exec:
+  **   - if running on Window's add the '.exe' extension
+  **   - return `File.osPath`
+  **
+  static Str exePath(File exe)
+  {
+    path := exe.osPath
+    if (Env.cur.os == "win32") path += ".exe"
+    return path
+  }
+
   Process process
 }

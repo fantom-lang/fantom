@@ -51,18 +51,10 @@ class TargetMethod
   virtual Str name() { method.name }
 
   **
-  ** Description is used for usage summary, derived from method's fandoc.
+  ** Summary description for usage help, derived
+  ** from `Target` facet on method.
   **
-  virtual Str summary()
-  {
-    doc := method.doc
-    if (doc == null || doc.isEmpty) return ""
-    period := doc.index(". ")
-    if (period != null) doc = doc[0..<period]
-    if (doc.size > 70) doc = doc[0..70]
-    doc = doc.replace("\n", " ")
-    return doc
-  }
+  virtual Str help() { method.facet(Target#)->help }
 
   **
   ** Return name.

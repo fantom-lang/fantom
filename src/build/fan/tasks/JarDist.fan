@@ -78,7 +78,7 @@ class JarDist : JdkTask
 
     // stub into Java classfiles using JStub
     Exec(script,
-      [javaExe.osPath,
+      [javaExe,
        "-cp", (script.devHomeDir + `lib/java/sys.jar`).osPath,
        "-Dfan.home=$Env.cur.workDir.osPath",
        "fanx.tools.Jstub",
@@ -191,7 +191,7 @@ class JarDist : JdkTask
 
     // compile main
     Exec(script,
-      [javacExe.osPath,
+      [javacExe,
        "-cp", tempDir.osPath,
        "-d", tempDir.osPath,
        file.osPath], tempDir).run
@@ -203,7 +203,7 @@ class JarDist : JdkTask
     // jar everything back up outFile
     log.info("Jar [$outFile]")
     Exec(script,
-      [jarExe.osPath,
+      [jarExe,
        "cfm", outFile.osPath, manifestFile.osPath,
        "-C", tempDir.osPath,
        "."], tempDir).run
