@@ -89,8 +89,9 @@ abstract class Resource
   **
   ** Get the list of available `View` types for the resource.
   ** The first view should be the default view.  The default
-  ** implementation searches the type database for '@fluxView'
-  ** bindings to this resource type.
+  ** implementation searches the type database index props formatted
+  ** as "flux.view.{target}={view}", where "target" is this type (and
+  ** its inherited classes, and "view" is view type qname.
   **
   virtual Type[] views()
   {

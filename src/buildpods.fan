@@ -43,7 +43,7 @@ class Build : BuildGroup
       `gfx/build.fan`,
       `fwt/build.fan`,
       `icons/build.fan`,
-//      `flux/build.fan`,
+      `flux/build.fan`,
       `xml/build.fan`,
       `json/build.fan`,
       `obix/build.fan`,
