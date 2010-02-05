@@ -7,11 +7,12 @@
 //
 
 **
-** UriScheme are registered to handle a specific Uri
-** scheme such as "file" or "http".  All subclasses must
-** define the "uriScheme" facet with a value of a *lower
-** case* scheme name.  See [docLang]`docLang::Naming`
-** for the details of scheme handling works.
+** UriSchemes are registered to handle a specific Uri scheme such
+** as "file" or "http".  Scheme handlers are registered using the pod
+** index key "sys.uriScheme.{scheme}={qname}" where "scheme" is
+** lowercase scheme name and "qname" is the qualified type name
+** of the subclass.  See [docLang]`docLang::Naming` for the details
+** of scheme handling works.
 **
 abstract const class UriScheme
 {
@@ -49,8 +50,6 @@ abstract const class UriScheme
 ** FanScheme
 **************************************************************************
 
-// TODO-FACETS
-//@UriScheme="fan"
 internal const class FanScheme : UriScheme
 {
   override Obj? get(Uri uri, Obj? base)
@@ -60,8 +59,6 @@ internal const class FanScheme : UriScheme
 ** FileScheme
 **************************************************************************
 
-// TODO-FACETS
-//@UriScheme="file"
 internal const class FileScheme : UriScheme
 {
   override Obj? get(Uri uri, Obj? base)

@@ -14,8 +14,10 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "docLang"
+    summary = "Language documentation"
+    resDirs = [`doc/`]
   }
 }
