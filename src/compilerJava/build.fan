@@ -24,5 +24,6 @@ class Build : BuildPod
 // TODO-FACETS
 //    dependsDir = devHomeDir.uri + `lib/fan/`
     outDir     = devHomeDir.uri + `lib/fan/`
+    index      = ["compiler.bridge.java": "compilerJava::JavaBridge"]
   }
 }

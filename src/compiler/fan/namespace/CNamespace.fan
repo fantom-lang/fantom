@@ -158,13 +158,8 @@ abstract class CNamespace : CompilerSupport
     bridge := bridgeCache[name]
     if (bridge != null) return bridge
 
-
-    // resolve the name by compilerBridge facet
-// TODO-FACETS
-t := name == "java" ? [Type.find("compilerJava::JavaBridge")] :
-   throw CompilerErr("FFI hardcoded!", loc)
-
-//    t := findByFacet(@compilerBridge, name)
+    // resolve the compiler bridge using indexed props
+    t := Env.cur.index("compiler.bridge.${name}")
     if (t.size > 1)
       throw CompilerErr("Multiple FFI bridges available for '$name': $t", loc)
     if (t.size == 0)
@@ -172,7 +167,7 @@ t := name == "java" ? [Type.find("compilerJava::JavaBridge")] :
 
     // construct bridge instance
     try
-      bridge = t.first.make([compiler])
+      bridge = Type.find(t.first).make([compiler])
     catch (Err e)
       throw CompilerErr("Cannot construct FFI bridge '$t.first'", loc, e)
 

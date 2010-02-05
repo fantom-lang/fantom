@@ -12,8 +12,6 @@ using compiler
 ** JavaBridge is the compiler plugin for bringing Java
 ** classes into the Fantom type system.
 **
-// TODO-FACETS
-//@compilerBridge="java"
 class JavaBridge : CBridge
 {
 

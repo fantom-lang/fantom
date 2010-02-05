@@ -40,16 +40,3 @@ class Build : BuildPod
     ]
   }
 }
-
-/* TODO-FACETS
-  **
-  ** Facet used to bind a `DslPlugin` to a anchor type qname.
-  **
-  Str compilerDsl := ""
-
-  **
-  ** Facet used to bind a `CBridge` to FFI name.
-  **
-  Str compilerBridge := ""
-*/
-
