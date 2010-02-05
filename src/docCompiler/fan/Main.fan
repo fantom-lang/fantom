@@ -19,26 +19,25 @@ class Main : AbstractMain
 // Options
 //////////////////////////////////////////////////////////////////////////
 
-  @opt="print version information"
+  @Opt { help = "Print version information" }
   Bool version := false
 
-  @opt="compile top index"
+  @Opt { help = "Compile top index" }
   Bool topindex := false
 
-  @opt="verbose mode (more logging)"
-  @optAliases=["v"]
+  @Opt { help = "Verbose mode (more logging)"; aliases = ["v"] }
   Bool verbose := false
 
-  @opt="silent mode (no logging)"
+  @Opt { help = "Silent mode (no logging)" }
   Bool silent := false
 
-  @opt="output directory for pod file"
+  @Opt { help = "Output directory for pod file" }
   File? d := null
 
-  @opt="directory of source code"
+  @Opt { help = "Directory of source code" }
   File? src := null
 
-  @arg="pod name(s) to compile"
+  @Arg { help = "Pod name(s) to compile" }
   Str[] pods := Str[,]
 
 //////////////////////////////////////////////////////////////////////////

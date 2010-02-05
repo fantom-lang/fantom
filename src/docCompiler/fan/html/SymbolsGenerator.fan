@@ -23,7 +23,6 @@ class SymbolsGenerator : HtmlGenerator
     : super(compiler, loc, out)
   {
     this.pod = compiler.pod
-    this.symbols = pod.symbols.sort |a,b| { a.name <=> b.name }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -60,15 +59,18 @@ class SymbolsGenerator : HtmlGenerator
 
   Void writeFacets()
   {
+/* TODO-FACETS
     if (pod.facets.isEmpty) return
     out.print("<h2 id='facets'>Pod Facets</h2>\n")
     out.print("<pre class='podFacets'>")
     facets(pod.facets, false, false)
     out.print("</pre>\n")
+*/
   }
 
   Void writeSymbols()
   {
+/* TODO-FACETS
     if (symbols.isEmpty) return
     out.print("<div class='slots'>\n")
     out.print("<div class='detail'>\n")
@@ -97,10 +99,12 @@ class SymbolsGenerator : HtmlGenerator
     out.print("</dl>\n")
     out.print("</div>\n")
     out.print("</div>\n")
+*/
   }
 
   override Void sidebar()
   {
+/* TODO-FACETS
     if (symbols.isEmpty) return
     out.print("<h2>Symbols</h2>\n")
     out.print("<ul class='clean'>\n")
@@ -109,6 +113,7 @@ class SymbolsGenerator : HtmlGenerator
       out.print("  <li><a href='#$s.name'>$s.name</a></li>\n")
     }
     out.print("</ul>\n")
+*/
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -116,6 +121,5 @@ class SymbolsGenerator : HtmlGenerator
 //////////////////////////////////////////////////////////////////////////
 
   Pod pod
-  Symbol[] symbols
 
 }

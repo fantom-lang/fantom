@@ -14,8 +14,15 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "docCompiler"
+    summary = "Fantom documentation compiler"
+    depends = ["sys 1.0","compiler 1.0", "build 1.0", "util 1.0", "fandoc 1.0"]
+    srcDirs = [`fan/`, `fan/steps/`, `fan/html/`, `test/`]
+    resDirs = [`res/`]
+    docSrc  = true
   }
 }
+
+

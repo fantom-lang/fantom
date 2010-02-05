@@ -172,9 +172,10 @@ abstract class HtmlGenerator : HtmlDocWriter, DocCompilerSupport
 // Support
 //////////////////////////////////////////////////////////////////////////
 
-  Void facets(Symbol:Obj? facets, Bool wrap := true, Bool br := true)
+  Void facets(Facet[] facets, Bool wrap := true, Bool br := true)
   {
     if (facets.size == 0) return
+    /* TODO
     if (wrap) out.print("<p><code class='sig'>")
     facets.keys.each |s|
     {
@@ -186,8 +187,10 @@ abstract class HtmlGenerator : HtmlDocWriter, DocCompilerSupport
       out.print("\n")
     }
     if (wrap) out.print("</code></p>\n")
+    */
   }
 
+/*
   static Str facetValToStr(Obj? val)
   {
     // check if we can omit list type signature
@@ -210,6 +213,7 @@ abstract class HtmlGenerator : HtmlDocWriter, DocCompilerSupport
 
     return str
   }
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
