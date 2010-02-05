@@ -49,7 +49,7 @@ class TopIndexGenerator : HtmlGenerator
   {
     // get all pods to document
     pods := Pod.list.rw
-    pods = pods.exclude |p| { p.facet(@nodoc) == true }
+    pods = pods.exclude |p| { p.meta["pod.docApi"] == "false" }
 
     // get sensible order
     pods = pods.sort |a,b| { a.name.compareIgnoreCase(b.name) }

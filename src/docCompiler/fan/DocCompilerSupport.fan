@@ -32,7 +32,7 @@ mixin DocCompilerSupport
   **
   ** Return if we should be generating source code documentation.
   **
-  Bool docsrc() { compiler.pod.facet(@docsrc, false) == true }
+  Bool docsrc() { compiler.pod.meta["pod.docStr"] == "true" }
 
 //////////////////////////////////////////////////////////////////////////
 // Filters
@@ -43,14 +43,14 @@ mixin DocCompilerSupport
     if (t.isInternal) return false
     if (t.isSynthetic) return false
     if (t.fits(Test#) && t != Test#) return false
-    if (t.facet(@nodoc) == true) return false
+    if (t.hasFacet(NoDoc#)) return false
     return true
   }
 
   Bool showSlot(Type t, Slot s)
   {
     if (s.isSynthetic) return false
-    if (s.facet(@nodoc) == true) return false
+    if (t.hasFacet(NoDoc#)) return false
     return t == s.parent
   }
 

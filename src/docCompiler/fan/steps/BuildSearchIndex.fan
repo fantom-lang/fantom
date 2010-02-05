@@ -28,7 +28,7 @@ class BuildSearchIndex : DocCompilerStep
     first := true
     Pod.list.each |Pod p|
     {
-      if (p.facet(@nodoc) == true) return
+      if (p.meta["pod.docApi"] == "false") return
       p.types.each |Type t, Int i|
       {
         if (!showType(t)) return
