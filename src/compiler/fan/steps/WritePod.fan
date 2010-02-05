@@ -132,24 +132,14 @@ class WritePod : CompilerStep
   }
 
   **
-  ** Pod fandoc TODO-FACETS
+  ** If there is a pod.fandoc as peer to build.fan then
+  ** copy it into doc/pod.fandoc
   **
   private Void writePodDoc(Zip zip)
   {
-    // TODO-FACETS
-    /*
-    try
-    {
-      pod := compiler.pod
-      out := zip.writeNext("doc/pod.apidoc".toUri)
-      writeDoc(out, pod.name, pod)
-      out.close
-    }
-    catch (Err e)
-    {
-      throw errReport(CompilerErr("Cannot write pod fandoc", loc, e))
-    }
-    */
+    podDoc := compiler.input.baseDir + `pod.fandoc`
+    if (!podDoc.exists) return
+    writeRes(zip, podDoc, `doc/pod.fandoc`)
   }
 
   **
