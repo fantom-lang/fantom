@@ -14,7 +14,7 @@ using gfx
 ** rather they are accessed widgets which support scrolling via
 ** 'hbar' and 'vbar'.
 **
-@js
+@Js
 class ScrollBar : Widget
 {
 
@@ -32,7 +32,7 @@ class ScrollBar : Widget
   ** Event fields:
   **   - `Event.data`: new value of scroll bar
   **
-  @transient readonly EventListeners onModify := EventListeners()
+  @Transient readonly EventListeners onModify := EventListeners()
     { it.onModify = |->| { checkModifyListeners } }
   internal native Void checkModifyListeners()
 

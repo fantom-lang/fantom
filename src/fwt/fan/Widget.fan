@@ -25,7 +25,8 @@ using gfx
 **
 ** See [docLib]`docLib::Fwt` for details.
 **
-@js @serializable @collection
+@Js
+@Serializable { collection = true }
 abstract class Widget
 {
 
@@ -68,7 +69,7 @@ abstract class Widget
   **   - `Event.keyChar`: unicode character represented by key event
   **   - `Event.key`: key code including the modifiers
   **
-  @transient readonly EventListeners onKeyDown := EventListeners()
+  @Transient readonly EventListeners onKeyDown := EventListeners()
     { onModify = |->| { checkKeyListeners } }
   internal native Void checkKeyListeners()
 
@@ -83,7 +84,7 @@ abstract class Widget
   **   - `Event.keyChar`: unicode character represented by key event
   **   - `Event.key`: key code including the modifiers
   **
-  @transient readonly EventListeners onKeyUp := EventListeners()
+  @Transient readonly EventListeners onKeyUp := EventListeners()
     { onModify = |->| { checkKeyListeners } }
 
   **
@@ -97,7 +98,7 @@ abstract class Widget
   **   - `Event.count`: number of clicks
   **   - `Event.key`: key modifiers
   **
-  @transient readonly EventListeners onMouseDown := EventListeners()
+  @Transient readonly EventListeners onMouseDown := EventListeners()
 
   **
   ** Callback for mouse button released event on this widget.
@@ -110,7 +111,7 @@ abstract class Widget
   **   - `Event.count`: number of clicks
   **   - `Event.key`: key modifiers
   **
-  @transient readonly EventListeners onMouseUp := EventListeners()
+  @Transient readonly EventListeners onMouseUp := EventListeners()
 
   **
   ** Callback when mouse enters this widget's bounds.
@@ -121,7 +122,7 @@ abstract class Widget
   ** Event fields:
   **   - `Event.pos`: coordinate of mouse
   **
-  @transient readonly EventListeners onMouseEnter := EventListeners()
+  @Transient readonly EventListeners onMouseEnter := EventListeners()
 
   **
   ** Callback when mouse exits this widget's bounds.
@@ -132,7 +133,7 @@ abstract class Widget
   ** Event fields:
   **   - `Event.pos`: coordinate of mouse
   **
-  @transient readonly EventListeners onMouseExit := EventListeners()
+  @Transient readonly EventListeners onMouseExit := EventListeners()
 
   **
   ** Callback when mouse hovers for a moment over this widget.
@@ -143,7 +144,7 @@ abstract class Widget
   ** Event fields:
   **   - `Event.pos`: coordinate of mouse
   **
-  @transient readonly EventListeners onMouseHover := EventListeners()
+  @Transient readonly EventListeners onMouseHover := EventListeners()
 
   **
   ** Callback when mouse moves over this widget.
@@ -154,7 +155,7 @@ abstract class Widget
   ** Event fields:
   **   - `Event.pos`: coordinate of mouse
   **
-  @transient readonly EventListeners onMouseMove := EventListeners()
+  @Transient readonly EventListeners onMouseMove := EventListeners()
 
   **
   ** Callback when mouse wheel is scrolled and this widget has focus.
@@ -166,7 +167,7 @@ abstract class Widget
   **   - `Event.pos`: coordinate of mouse
   **   - `Event.count`: positive or negative number of scroll
   **
-  @transient readonly EventListeners onMouseWheel := EventListeners()
+  @Transient readonly EventListeners onMouseWheel := EventListeners()
 
   **
   ** Callback for focus gained event on this widget.
@@ -177,7 +178,7 @@ abstract class Widget
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onFocus := EventListeners()
+  @Transient readonly EventListeners onFocus := EventListeners()
     { onModify = |->| { checkFocusListeners } }
   internal native Void checkFocusListeners()
 
@@ -190,7 +191,7 @@ abstract class Widget
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onBlur := EventListeners()
+  @Transient readonly EventListeners onBlur := EventListeners()
     { onModify = |->| { checkFocusListeners } }
 
 //////////////////////////////////////////////////////////////////////////
@@ -216,13 +217,13 @@ abstract class Widget
   ** Position of this widget relative to its parent.
   ** If this a window, this is the position on the screen.
   **
-  @transient
+  @Transient
   native Point pos
 
   **
   ** Size of this widget.
   **
-  @transient
+  @Transient
   native Size size
 
   **
@@ -248,7 +249,7 @@ abstract class Widget
   **
   ** Get this widget's parent or null if not mounted.
   **
-  @transient readonly Widget? parent
+  @Transient readonly Widget? parent
   internal Void setParent(Widget p) { parent = p } // for Window.make
 
   **
@@ -370,7 +371,7 @@ abstract class Widget
 // Private
 //////////////////////////////////////////////////////////////////////////
 
-  @transient
+  @Transient
   internal Widget[] kids := Widget[,]
 
 }

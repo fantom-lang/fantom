@@ -11,7 +11,7 @@ using gfx
 **
 ** FwtEnv the gfx environment implementation for the Fantom Widget Toolkit.
 **
-@js
+@Js
 internal const class FwtEnv : GfxEnv
 {
 

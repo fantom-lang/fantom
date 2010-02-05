@@ -25,7 +25,7 @@ using gfx
 **
 ** See [docLib]`docLib::Fwt` for details.
 **
-@js
+@Js
 class Command
 {
 
@@ -52,7 +52,7 @@ class Command
   ** The function to invoke when the command is executed.  If
   ** empty, then `invoke` must be overridden.
   **
-  @transient readonly EventListeners onInvoke := EventListeners()
+  @Transient readonly EventListeners onInvoke := EventListeners()
 
   **
   ** The command mode determines who associated widgets are
@@ -337,7 +337,7 @@ final class CommandStack
   **
   ** Callback when command stack is modified.
   **
-  @transient readonly EventListeners onModify := EventListeners()
+  @Transient readonly EventListeners onModify := EventListeners()
 
   private Void fireModified() { onModify.fire(Event { id = EventId.modified }) }
 

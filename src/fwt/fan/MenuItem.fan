@@ -11,7 +11,7 @@ using gfx
 **
 ** MenuItem is an individual item on a Menu.
 **
-@js
+@Js
 class MenuItem : Widget
 {
 
@@ -41,7 +41,7 @@ class MenuItem : Widget
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onAction := EventListeners()
+  @Transient readonly EventListeners onAction := EventListeners()
 
   **
   ** Mode defines the menu item's style.  Normal items are

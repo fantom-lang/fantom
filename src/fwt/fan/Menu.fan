@@ -12,7 +12,7 @@ using gfx
 ** Menu contains MenuItems.  Menu is also itself a MenuItem
 ** when nested inside other Menus.
 **
-@js
+@Js
 class Menu : MenuItem
 {
 
@@ -31,7 +31,7 @@ class Menu : MenuItem
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onOpen:= EventListeners()
+  @Transient readonly EventListeners onOpen:= EventListeners()
 
   **
   ** Open this menu as a popup at the coordinates relative to

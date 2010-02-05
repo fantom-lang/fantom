@@ -9,7 +9,8 @@
 **
 ** Key models a keyboard key or key combination.
 **
-@js @simple
+@Js
+@Serializable { simple = true }
 const class Key
 {
 

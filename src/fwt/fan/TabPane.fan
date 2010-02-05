@@ -13,7 +13,7 @@ using gfx
 ** Tabs are added and removed using normal `Widget.add` and
 ** `Widget.remove`.
 **
-@js
+@Js
 class TabPane : Widget
 {
   **
@@ -26,7 +26,7 @@ class TabPane : Widget
   **   - `Event.index`: index of selected tab
   **   - `Event.data`: new active Tab instance
   **
-  @transient readonly EventListeners onSelect := EventListeners()
+  @Transient readonly EventListeners onSelect := EventListeners()
 
   **
   ** Get the list of installed tabs.  Tabs are added and
@@ -37,12 +37,12 @@ class TabPane : Widget
   **
   ** The currently selected index of `tabs`.
   **
-  @transient native Int? selectedIndex
+  @Transient native Int? selectedIndex
 
   **
   ** The currently selected tab.
   **
-  @transient Tab? selected
+  @Transient Tab? selected
   {
     get { i := selectedIndex; return i == null ? null : tabs[i] }
     set { i := index(it); if (i != null) selectedIndex = i }
@@ -74,7 +74,7 @@ class TabPane : Widget
 ** Tab is the child widget of a `TabPane`.  It is used to
 ** configure the tab's text, image, and content widget.
 **
-@js
+@Js
 class Tab : Widget
 {
 

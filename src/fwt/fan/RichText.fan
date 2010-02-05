@@ -12,7 +12,7 @@ using gfx
 ** RichText is used to view and edit text styled with
 ** different fonts and colors.
 **
-@js
+@Js
 class RichText : TextWidget
 {
 
@@ -35,7 +35,7 @@ class RichText : TextWidget
   ** Event fields:
   **   - `Event.data`: the `TextChange` instance.
   **
-  @transient readonly EventListeners onModify := EventListeners()
+  @Transient readonly EventListeners onModify := EventListeners()
 
   **
   ** Callback before the text is modified.  This gives listeners
@@ -52,7 +52,7 @@ class RichText : TextWidget
   **     can update 'newText' with the actual text to be inserted
   **     or set to null to cancel the modification.
   **
-  @transient readonly EventListeners onVerify := EventListeners()
+  @Transient readonly EventListeners onVerify := EventListeners()
 
   **
   ** Callback before a key event is processed.  This gives listeners
@@ -66,7 +66,7 @@ class RichText : TextWidget
   **   - `Event.keyChar`: unicode character represented by key event
   **   - `Event.key`: key code including the modifiers
   **
-  @transient readonly EventListeners onVerifyKey := EventListeners()
+  @Transient readonly EventListeners onVerifyKey := EventListeners()
 
   **
   ** Callback when the selection is modified.
@@ -78,7 +78,7 @@ class RichText : TextWidget
   **   - `Event.offset`: the starting offset
   **   - `Event.size`:   the number of chars selected
   **
-  @transient readonly EventListeners onSelect := EventListeners()
+  @Transient readonly EventListeners onSelect := EventListeners()
 
   **
   ** Callback when the caret position is modified.
@@ -89,7 +89,7 @@ class RichText : TextWidget
   ** Event fields:
   **   - `Event.offset`: the new caret offset
   **
-  @transient readonly EventListeners onCaret := EventListeners()
+  @Transient readonly EventListeners onCaret := EventListeners()
 
   **
   ** Horizontal scroll bar.
@@ -189,7 +189,7 @@ class RichText : TextWidget
 **
 ** RichTextModel models the document and styling of a `RichText` document.
 **
-@js
+@Js
 abstract class RichTextModel
 {
 
@@ -202,7 +202,7 @@ abstract class RichTextModel
   ** Event fields:
   **   - `Event.data`: the `TextChange`.
   **
-  @transient readonly EventListeners onModify := EventListeners()
+  @Transient readonly EventListeners onModify := EventListeners()
 
   **
   ** Get or set the entire text document.
@@ -333,7 +333,8 @@ abstract class RichTextModel
 ** Defines the font and color styling of a text
 ** segment in a `RichTextModel`.
 **
-@js @serializable
+@Js
+@Serializable
 const class RichTextStyle
 {
   **
@@ -378,7 +379,7 @@ const class RichTextStyle
 **
 ** Defines how to paint the underline of a RichText segment.
 **
-@js
+@Js
 enum class RichTextUnderline
 {
   none,

@@ -13,7 +13,7 @@ using gfx
 ** text and/or an image.  Buttons can also be used as the
 ** children of a `ToolBar`.
 **
-@js
+@Js
 class Button : Widget
 {
 
@@ -44,7 +44,7 @@ class Button : Widget
   ** Event fields:
   **   - none
   **
-  @transient readonly EventListeners onAction := EventListeners()
+  @Transient readonly EventListeners onAction := EventListeners()
 
   **
   ** Button mode defines the style: check, push, radio, or toggle.
