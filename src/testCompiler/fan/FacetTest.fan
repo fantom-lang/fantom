@@ -156,20 +156,42 @@ class FacetTest : CompilerTest
        [
          1, 17, "Facet cannot declare constructors",
        ])
-  }
 
-/* TODO-FACETS
-  Void testFacets()
-  {
-    // we really test facets in testSys::FacetsTest, we just verify errors here
-    podStr = "pod $podName { Obj? x := null }"
+    // CheckErrors
     verifyErrors(
-      "@x=Env.cur.homeDir
-       class Foo {}",
+     """@sys::Js @Js @NoDoc @NoDoc class Bar {}
+        class Foo
+        {
+          @Transient @sys::Transient Int a
+          @Str[] Int b
+          @Foo Int c
+          @A { a = 4; xyz = 5 } Int d
+        }
+
+        facet class A
+        {
+          const Str a := ""
+        }""",
+     [
+       1,  1, "Duplicate facet 'sys::Js'",
+       1, 14, "Duplicate facet 'sys::NoDoc'",
+       4,  3, "Duplicate facet 'sys::Transient'",
+       5,  3, "Not a facet type 'sys::Str[]'",
+       6,  3, "Not a facet type '$podName::Foo'",
+       7, 12, "Invalid type for facet field 'a': expected 'sys::Str' not 'sys::Int'",
+       7, 21, "Unknown facet field '$podName::A.xyz'",
+     ])
+
+    // Assemble
+    verifyErrors(
+      "@X { val = Env.cur.homeDir }
+       class Foo {}
+       facet class X { const Obj? val }
+       ",
        [
-         1, 12, "Facet value is not serializable: '@x' ('call' not serializable)",
+         1, 1, "Facet value is not serializable: '$podName::X' ('call' not serializable)",
        ])
   }
-*/
+
 
 }

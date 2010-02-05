@@ -512,28 +512,42 @@ class CheckErrors : CompilerStep
 
   Void checkFacets(FacetDef[]? facets)
   {
-// TODO-FACET
-return
     if (facets == null) return
 
     // check each facet (and for dups)
     for (i := 0; i < facets.size; ++i)
     {
-/*
       f := facets[i]
       checkFacet(f)
       for (j := i+1; j < facets.size; ++j)
-        if (f.key.qname == facets[j].key.qname)
-          err("Duplicate facet '$f.key.qname'", f.loc)
-*/
+        if (f.type.qname == facets[j].type.qname)
+          err("Duplicate facet '$f.type'", f.loc)
     }
   }
 
   Void checkFacet(FacetDef f)
   {
-// TODO-FACET
-//    if (!f.val.ctype.fits(f.key.symbol.of))
-//      err("Wrong type for facet '@$f.key.qname': expected '$f.key.symbol.of' not '$f.val.ctype'", f.loc)
+    // check that facet type is actually a facet
+    if (!f.type.fits(ns.facetType))
+      err("Not a facet type '$f.type'", f.loc)
+
+    // check facet field assignments
+    f.names.each |name, i|
+    {
+      val := f.vals[i]
+
+      // check that field exists
+      field := f.type.field(name)
+      if (field == null)
+      {
+        err("Unknown facet field '${f.type}.$name'", val.loc)
+        return
+      }
+
+      // check field type
+      if (!val.ctype.fits(field.fieldType))
+        err("Invalid type for facet field '$name': expected '$field.fieldType' not '$val.ctype'", val.loc)
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
