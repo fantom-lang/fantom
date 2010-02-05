@@ -134,36 +134,47 @@ public final class FPod
 
   private void readPodMeta(FStore.Input in) throws IOException
   {
-
-// TODO-FACETS
-if ("sys".equals(podName))
-{
-  podVersion = "1.0.51";
-  depends = new Depend[0];
-  fcodeVersion = FConst.FCodeVersion;
-  return;
-}
-
-    SysInStream sysIn = new SysInStream(in);
-    meta = sysIn.readProps();
-    sysIn.close();
-
-
-    podName = meta("pod.name");
-    podVersion = meta("pod.version");
-
-    fcodeVersion = meta("fcode.version");
-    if (!FConst.FCodeVersion.equals(fcodeVersion))
-      throw new IOException("Invalid fcode version " + fcodeVersion);
-
-    String dependsStr = meta("pod.depends").trim();
-    if (dependsStr.length() == 0) depends = new Depend[0];
+    // handle sys bootstrap specially using just java.util.Properties
+    String metaName;
+    if ("sys".equals(podName))
+    {
+      Properties props = new Properties();
+      props.load(in);
+      in.close();
+      metaName =  props.getProperty("pod.name");
+      podVersion = props.getProperty("pod.version");
+      fcodeVersion = props.getProperty("fcode.version");
+      depends = new Depend[0];
+      return;
+    }
     else
     {
-      String[] toks = dependsStr.split(";");
-      depends = new Depend[toks.length];
-      for (int i=0; i<depends.length; ++i) depends[i] = Depend.fromStr(toks[i].trim());
+      SysInStream sysIn = new SysInStream(in);
+      this.meta = (Map)sysIn.readProps().toImmutable();
+      sysIn.close();
+
+      metaName = meta("pod.name");
+      podVersion = meta("pod.version");
+
+      fcodeVersion = meta("fcode.version");
+      String dependsStr = meta("pod.depends").trim();
+      if (dependsStr.length() == 0) depends = new Depend[0];
+      else
+      {
+        String[] toks = dependsStr.split(";");
+        depends = new Depend[toks.length];
+        for (int i=0; i<depends.length; ++i) depends[i] = Depend.fromStr(toks[i].trim());
+      }
     }
+
+    // check meta name matches podName passed to ctor
+    if (podName == null) podName = metaName;
+    if (!podName.equals(metaName))
+      throw new IOException("Pod name mismatch " + podName + " != " + metaName);
+
+    // sanity checking
+    if (!FConst.FCodeVersion.equals(fcodeVersion))
+      throw new IOException("Invalid fcode version " + fcodeVersion);
   }
 
   private String meta(String key) throws IOException
