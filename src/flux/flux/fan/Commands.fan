@@ -110,7 +110,7 @@ internal class Commands
       addSep
     }
 
-    types := Type.findByFacet(@fluxSideBar, true)
+    types := Flux.qnamesToTypes(Env.cur.index("flux.sideBar"))
     types = types.dup.sort |Type a, Type b->Int| { return a.name <=> b.name }
     types.each |Type t|
     {

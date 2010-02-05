@@ -11,7 +11,7 @@ using flux
 **
 ** SyntaxRules defines the rules for parsing text for color coding.
 **
-@serializable
+@Serializable
 const class SyntaxRules
 {
 
@@ -94,7 +94,7 @@ const class SyntaxRules
 **
 ** Syntax rules for a string or character literal
 **
-@serializable
+@Serializable
 const class SyntaxStr
 {
   ** Token which delimits the start and end of the string.

@@ -12,7 +12,6 @@ using fwt
 **
 ** FileResource models a `sys::File` as a Flux resource.
 **
-@fluxResource=[File#]
 class FileResource : Resource
 {
 
@@ -90,10 +89,10 @@ class FileResource : Resource
 
     // first try exact mime type matching
     acc := Type[,]
-    acc.addAll(Type.findByFacet(@fluxViewMimeType, mime.toStr, true))
+    acc.addAll(Flux.qnamesToTypes(Env.cur.index("flux.view.mime.${mime.toStr}")))
 
     // then match by just media type
-    acc.addAll(Type.findByFacet(@fluxViewMimeType, mime.mediaType, true))
+    acc.addAll(Flux.qnamesToTypes(Env.cur.index("flux.view.mime.${mime.mediaType}")))
 
     // filter out abstract
     acc = acc.exclude |Type t->Bool| { return t.isAbstract }

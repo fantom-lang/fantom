@@ -155,13 +155,15 @@ SideBars [#sideBars]
 A `flux::SideBar` is a plugin which exists independent of resources
 and views.  Sidebars are widgets which may be opened along the left,
 bottom, or right edges of the view pane.  SideBars are registered
-with the '@fluxSideBar' facet.  A very simple sidebar:
+with the 'flux.sideBar' indexed prop.  A very simple sidebar:
 
-  @fluxSideBar
   class ExampleSideBar : SideBar
   {
     new make() { content = Label {"Example SideBar" } }
   }
+
+  // build.fan
+  index = ["flux.sideBar": "myPod::ExampleSideBar"]
 
 There is one instance of a SideBar per registered type for each Frame.
 The SideBar is instantiated in memory the first time the user shows it

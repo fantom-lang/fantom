@@ -12,7 +12,6 @@ using fwt
 **
 ** Console is used to run external programs and capture output.
 **
-@fluxSideBar
 class Console : SideBar
 {
 

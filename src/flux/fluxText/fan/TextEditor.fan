@@ -14,7 +14,6 @@ using flux
 ** TextEditor provides a syntax color coded editor for
 ** working with text files.
 **
-@fluxViewMimeType=["text"]
 class TextEditor : View
 {
 

@@ -97,6 +97,25 @@ class Flux
     Flux#.pod.locale(key)
   }
 
+  ** Map list of qualified type names to types
+  internal static Type[] qnamesToTypes(Str[] qnames)
+  {
+    qnames.map |qn->Type| { Type.find(qn) }
+  }
+
+  ** Given key like "flux.resource." find all indexed prop matches
+  ** for t, t.super, etc where the values are qualified type names
+  internal static Type[] indexForInheritance(Str base, Type? t)
+  {
+    acc := Type[,]
+    while (t != null)
+    {
+      acc.addAll(qnamesToTypes(Env.cur.index(base + t.qname)))
+      t = t.base
+    }
+    return acc
+  }
+
 }
 
 **************************************************************************

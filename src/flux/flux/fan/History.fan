@@ -13,7 +13,7 @@ using fwt
 ** History maintains the most recent navigation history
 ** of the entire application.
 **
-@serializable @collection
+@Serializable { collection = true }
 class History
 {
 
@@ -92,8 +92,8 @@ class History
     list.each(f)
   }
 
-  @transient private Int max := 40
-  @transient private HistoryItem[] list := HistoryItem[,]
+  @Transient private Int max := 40
+  @Transient private HistoryItem[] list := HistoryItem[,]
 }
 
 **************************************************************************
@@ -103,7 +103,7 @@ class History
 **
 ** HistoryItem stores information about navigation to a specific uri.
 **
-@serializable
+@Serializable
 const class HistoryItem
 {
   **

@@ -12,7 +12,6 @@ using fwt
 **
 ** StartView is the default splash screen view
 **
-@fluxView=[StartResource#]
 internal class StartView : View
 {
   override Void onLoad()

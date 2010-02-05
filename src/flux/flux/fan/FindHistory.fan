@@ -10,7 +10,7 @@
 ** FindHistory maintains the most recent find text
 ** queries for the entire application.
 **
-@serializable
+@Serializable
 class FindHistory
 {
 
@@ -95,7 +95,7 @@ class FindHistory
   **
   Bool matchCase := false
 
-  @transient private Int max := 20
+  @Transient private Int max := 20
   private Str[] findList := Str[,]
   private Uri[] dirList  := Uri[,]
 

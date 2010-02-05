@@ -14,7 +14,7 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "fluxText"
     summary = "Flux: Text Editor"
@@ -22,5 +22,6 @@ class Build : BuildPod
     srcDirs = [`fan/`, `test/`]
     resDirs = [`locale/`]
     docSrc  = true
+    index   = ["flux.view.mime.text": "fluxText::TextEditor"]
   }
 }
