@@ -114,6 +114,7 @@ class Builder
   void loadPod(Pod p, DataInputStream in)
     throws Exception
   {
+/*
     // magic
     if (in.readInt() != FConst.TypeDbMagic)
       throw new IOException("Invalid magic");
@@ -141,6 +142,7 @@ class Builder
     p.types = new Type[in.readUnsignedShort()];
     for (int i=0; i<p.types.length; ++i)
       p.types[i] = loadType(p, facetNames, in);
+*/
   }
 
   Type loadType(Pod p, String[] facetNames, DataInputStream in)

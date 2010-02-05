@@ -21,7 +21,8 @@ class Build : BuildPod
     depends    = ["sys 1.0", "compiler 1.0"]
     srcDirs    = [`fan/`]
     docSrc     = true
-    dependsDir = devHomeDir.uri + `lib/fan/`
+// TODO-FACETS
+//    dependsDir = devHomeDir.uri + `lib/fan/`
     outDir     = devHomeDir.uri + `lib/fan/`
   }
 }

@@ -16,10 +16,7 @@ mixin FConst
 // Stuff
 //////////////////////////////////////////////////////////////////////////
 
-  const static Int FCodeMagic    := 0x0FC0DE05
-  const static Int FCodeVersion  := 0x01000051
-  const static Int TypeDbMagic   := 0x0FC0DEDB
-  const static Int TypeDbVersion := 0x01000018
+  const static Str FCodeVersion := "1.0.51"
 
 //////////////////////////////////////////////////////////////////////////
 // Flags
