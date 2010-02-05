@@ -26,7 +26,6 @@ class Build : BuildJava
                 "fanx.fcode",
                 "fanx.interop",
                 "fanx.serial",
-                "fanx.typedb",
                 "fanx.test",
                 "fanx.tools",
                 "fanx.util"]

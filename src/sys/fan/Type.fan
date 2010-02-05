@@ -40,20 +40,6 @@ const class Type
   **
   static Type? find(Str qname, Bool checked := true)
 
-  **
-  ** Find all the types annotated with the specified facet symbol/value
-  ** pair.  The facet name must be declared as an indexed facet
-  ** by an installed pod, otherwise Err is thrown.  Return an empty
-  ** list of no matches found.
-  **
-  ** If 'facetVal' is a 'Type', then you may pass 'true' for 'options'
-  ** to check 'facetVals' inheritance hierarchy.
-  **
-  ** See [Facet Indexing]`docLang::TypeDatabase#facetIndexing` for details.
-  **
-// TODO-FACETS
-//  static Type[] findByFacet(Symbol key, Obj facetVal, Obj? options := null)
-
 //////////////////////////////////////////////////////////////////////////
 // Naming
 //////////////////////////////////////////////////////////////////////////

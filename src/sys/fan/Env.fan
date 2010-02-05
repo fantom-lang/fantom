@@ -245,6 +245,14 @@ abstract const class Env
   virtual Type compileScript(File f, [Str:Obj]? options := null)
 
   **
+  ** Lookup all the matching values for a pod indexed key.
+  ** If matches return the empty list.
+  **
+  ** TODO-FACETS
+  **
+  virtual Str[] index(Str key)
+
+  **
   ** Return a merged key/value map of all the prop files found
   ** using the following resolution rules:
   **   1. `Env.findAllFiles`: "etc/{pod}/{uri}"

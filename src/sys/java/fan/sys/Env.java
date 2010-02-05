@@ -132,6 +132,11 @@ public abstract class Env
     return scripts.compile(file, options);
   }
 
+  public List index(String key)
+  {
+    return index.get(key);
+  }
+
   public Map props(Pod pod, Uri uri, Duration maxAge)
   {
     return props.get(pod, uri, maxAge);
@@ -203,4 +208,5 @@ public abstract class Env
   private Env parent;
   private EnvScripts scripts = new EnvScripts();
   private EnvProps props = new EnvProps(this);
+  private EnvIndex index = new EnvIndex(this);
 }

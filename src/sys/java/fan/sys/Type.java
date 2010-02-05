@@ -16,7 +16,6 @@ import java.util.Map.Entry;
 import fanx.fcode.*;
 import fanx.emit.*;
 import fanx.serial.*;
-import fanx.typedb.*;
 import fanx.util.*;
 
 /**
@@ -44,15 +43,6 @@ public abstract class Type
 
   public static Type find(String sig) { return TypeParser.load(sig, true, null); }
   public static Type find(String sig, boolean checked) { return TypeParser.load(sig, checked, null); }
-
-/* TODO-FACETS
-  public static List findByFacet(Symbol key, Object facetVal) { return findByFacet(key.qname(), facetVal, null); }
-  public static List findByFacet(Symbol key, Object facetVal, Object options) { return findByFacet(key.qname(), facetVal, options); }
-  public static List findByFacet(String qname, Object facetVal, Object options)
-  {
-    return TypeDb.get().findByFacet(qname, facetVal, options);
-  }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Naming
