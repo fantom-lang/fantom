@@ -14,8 +14,10 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "docTools"
+    summary = "Documentation for command line tools"
+    resDirs = [`doc/`]
   }
 }

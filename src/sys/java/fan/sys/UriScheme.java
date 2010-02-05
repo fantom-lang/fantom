@@ -32,13 +32,16 @@ public abstract class UriScheme
 
     try
     {
-      // lookup scheme type
-// TODO-FACET
-//      Type t = (Type)Type.findByFacet("sys::uriScheme", scheme, true).first();
-Type t = null;
-if (scheme.equals("fan")) t = Sys.FanSchemeType;
-if (scheme.equals("file")) t = Sys.FileSchemeType;
-      if (t == null) throw new Exception();
+      // lookup scheme type (avoid building index for common types)
+      Type t = null;
+      if (scheme.equals("fan"))  t = Sys.FanSchemeType;
+      if (scheme.equals("file")) t = Sys.FileSchemeType;
+      if (t == null)
+      {
+        String qname = (String)Env.cur().index("sys.uriScheme." + scheme).first();
+        if (qname == null) throw UnresolvedErr.make().val;
+        t = Type.find(qname);
+      }
 
       // allocate instance
       UriScheme s = (UriScheme)t.make();
@@ -54,11 +57,11 @@ if (scheme.equals("file")) t = Sys.FileSchemeType;
 
       return s;
     }
-    catch (Throwable e)
-    {
-      if (!checked) return null;
-      throw UnresolvedErr.make("Unknown scheme: " + scheme).val;
-    }
+    catch (UnresolvedErr.Val e) {}
+    catch (Throwable e) { e.printStackTrace(); }
+
+    if (!checked) return null;
+    throw UnresolvedErr.make("Unknown scheme: " + scheme).val;
   }
 
 //////////////////////////////////////////////////////////////////////////

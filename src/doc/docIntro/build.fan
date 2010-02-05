@@ -14,8 +14,10 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "docIntro"
+    summary = "Overview and getting started with Fantom"
+    resDirs = [`doc/`]
   }
 }

@@ -10,13 +10,11 @@
 using build
 
 **
-** builddocs.fan
-**
+** doc/
 **
 class Build : BuildGroup
 {
-
-  override Void setup()
+  new make()
   {
     childrenScripts =
     [
@@ -26,5 +24,4 @@ class Build : BuildGroup
       `docTools/build.fan`,
     ]
   }
-
 }

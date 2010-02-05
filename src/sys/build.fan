@@ -26,5 +26,7 @@ class Build : BuildPod
     resDirs = [`locale/`]
     docSrc  = true
     outDir  = devHomeDir.uri + `lib/fan/`
+    index   = ["sys.uriScheme.fan": "sys::FanScheme",
+               "sys.uriScheme.file": "sys::FileScheme"]
   }
 }

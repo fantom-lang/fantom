@@ -57,7 +57,7 @@ facet class Transient {}
 **************************************************************************
 
 **
-** Used to annoate pods and types which should be compiled into JavaScript.
+** Used to annoate types which should be compiled into JavaScript.
 **
 facet class Js {}
 
@@ -66,96 +66,25 @@ facet class Js {}
 **************************************************************************
 
 **
-** This facet is used on pods, public types, and slots to indicate they should
+** This facet is used on public types and slots to indicate they should
 ** not be documented with automated tools such as [Fandoc]`docLib::Fandoc`.
 ** As a developer you should avoid using these types and slots since they
 ** are explicitly marked as not part of the public API.
 **
 facet class NoDoc {}
 
-/*
-
-**
-** Used on `UriScheme` subclasses to implement a URI scheme handler.
-** See [docLang]`docLang::Naming`.
-**
-Str uriScheme := ""
-
+**************************************************************************
+** Deprecated
+**************************************************************************
 
 **
 ** Indicates that a type or slot is obsolete
 **
-Bool deprecated := false
+facet class Deprecated
+{
+  **
+  ** Message for compiler output when deprecated type or slot is used.
+  **
+  const Str msg := ""
+}
 
-//////////////////////////////////////////////////////////////////////////
-// Pod Build-time Facets
-//////////////////////////////////////////////////////////////////////////
-
-**
-** Dependencies of the pod.
-**
-Depend[] podDepends := Depend[,]
-
-**
-** List of facet symbols to index for the type database.
-**
-** See [Facet Indexing]`docLang::TypeDatabase#facetIndexing` for details.
-**
-Symbol[] podIndexFacets := Symbol[,]
-
-**
-** List of Uris relative to "pod.fan" of directories containing
-** the Fan source files to compile.
-**
-Uri[]? podSrcDirs := null
-
-**
-** List of Uris relative to "pod.fan" of directories of resources
-** files to package into pod zip file.  Optional.
-**
-Uri[]? podResDirs := null
-
-**
-** List of Uris relative to "pod.fan" of directories containing
-** the Java source files to compile for Java native methods.
-**
-Uri[]? podJavaDirs := null
-
-**
-** List of Uris relative to "pod.fan" of directories containing
-** the C# source files to compile for .NET native methods.
-**
-Uri[]? podDotnetDirs := null
-
-**
-** List of Uris relative to "pod.fan" of directories containing
-** the JavaScript source files to compile for JavaScript native methods.
-**
-Uri[]? podJsDirs := null
-
-**
-** Pod facet for account used to build pod.
-** Facet is set automatically by compiler.
-**
-Str podBuildUser := ""
-
-**
-** Pod facet for host machine used to build pod
-** Facet is set automatically by compiler.
-**
-Str podBuildHost := ""
-
-**
-** Pod facet for time target was pod was built local to build host.
-** Facet is set automatically by compiler.
-**
-DateTime? podBuildTime := null
-
-**
-** This facet is used on pods to indicate whether the source code
-** should be included in the documentation.  By default source code
-** it *not* included.
-**
-Bool docsrc := false
-
-*/

@@ -56,15 +56,22 @@ following schemes:
 
 You can plug in your own scheme handling by subclassing 'UriScheme':
 
-  @uriScheme="custom"
   const class CustomScheme : UriScheme
   {
     override Obj? get(Uri uri, Obj? base) { ... }
   }
 
-The indexed '@uriScheme' facet is used to bind your class to a specific
-scheme - this string must be lower case.  You override the 'get' method
-to implement uri to object resolution.
+You override the 'get' method o implement uri to object resolution.
+
+To register your scheme, define a indexed prop formatted as:
+
+  sys.uriScheme.{scheme}={qname}
+
+Where scheme is the lower case scheme name and qname is the qualified
+name of your scheme type.  Indexed props are defined your build script,
+for example:
+
+  index = ["sys.uriScheme.fan": "sys::FanScheme"]
 
 Fan Scheme [#fanScheme]
 ***********************
