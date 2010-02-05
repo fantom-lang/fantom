@@ -14,12 +14,19 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "fwt"
+    summary = "Fantom Widget Toolkit"
+    depends  = ["sys 1.0", "gfx 1.0"]
+    srcDirs  = [`fan/`, `test/`]
+    javaDirs = [`java/`]
+    jsDirs   = [`js/`]
+    resDirs  = [`locale/`, `res/img/`, `res/javafx/`]
+    docSrc   = true
   }
 
-  @target="build native JavaFx files"
+  @Target { help = "Build native JavaFx files" }
   Void javafx()
   {
     log.info("javafx [$podName]")

@@ -14,8 +14,12 @@ using build
 **
 class Build : BuildPod
 {
-  override Void setup()
+  new make()
   {
     podName = "obix"
+    summary = "oBIX XML modeling and client and server REST"
+    depends = ["sys 1.0", "inet 1.0", "web 1.0", "xml 1.0"]
+    srcDirs = [`fan/`, `test/`]
+    docSrc  = true
   }
 }
