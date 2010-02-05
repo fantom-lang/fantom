@@ -9,8 +9,6 @@
 **
 ** RegexDslPlugin is used to create a Regex instance from a raw string.
 **
-// TODO-FACETS
-//@compilerDsl="sys::Regex"
 class RegexDslPlugin : DslPlugin
 {
 
