@@ -83,7 +83,7 @@ class ApiToHtmlGenerator : HtmlGenerator
   **
   Void actions()
   {
-    out.print("<h2>More Info</h2>\n")
+    out.print("<h2>Type</h2>\n")
     out.print("<ul class='clean'>\n")
     if (docsrc)
       out.print("  <li><a href='$source'>View Source</a></li>\n")

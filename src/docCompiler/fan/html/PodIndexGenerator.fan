@@ -80,7 +80,6 @@ class PodIndexGenerator : HtmlGenerator
     out.print("<div class='detail'>")
     p := doc.children.find |n| { n is Para }
     p?.write(this)
-    out.printLine("<a href='pod-doc.html'>Read more</a>")
     out.printLine("</div>")
   }
 
@@ -132,7 +131,7 @@ class PodIndexGenerator : HtmlGenerator
       {
         try
         {
-          doc = firstSentence(doc)
+          doc = HtmlDocUtil.firstSentence(doc)
           fandoc := FandocParser.make.parse("API for $t", doc.in)
           para := fandoc.children.first as Para
           para.children.each |DocNode child| { child.write(this) }
@@ -151,42 +150,22 @@ class PodIndexGenerator : HtmlGenerator
   ** Doc sidebar.
   override Void sidebar()
   {
+    // pod-level metadata
+    out.printLine(
+      "<h2>Pod</h2>
+        <ul class='clean'>
+         <li><a href='pod-doc.html'>PodDoc</a>
+        </ul>")
+
+    // all-type listing
     out.printLine("<h2>All Types</h2>")
     out.printLine("<ul class='clean'>")
-    out.printLine("<li><p><a href='pod-doc.html'>PodDoc</a></p></li>")
     types.each |t|
     {
       uri := compiler.uriMapper.map(t.qname, loc)
       out.printLine("<li><a href='$uri'>$t.name</a></li>")
     }
     out.printLine("</ul>")
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Support
-//////////////////////////////////////////////////////////////////////////
-
-  ** Return the first sentence found in the given str.
-  static Str firstSentence(Str s)
-  {
-    buf := StrBuf.make
-    for (i:=0; i<s.size; i++)
-    {
-      ch := s[i]
-      peek := i<s.size-1 ? s[i+1] : -1
-      if (ch == '.' && (peek == ' ' || peek == '\n'))
-      {
-        buf.addChar(ch)
-        break;
-      }
-      else if (ch == '\n')
-      {
-        if (peek == -1 || peek == ' ' || peek == '\n') break
-        else buf.addChar(' ')
-      }
-      else buf.addChar(ch)
-    }
-    return buf.toStr
   }
 
 //////////////////////////////////////////////////////////////////////////
