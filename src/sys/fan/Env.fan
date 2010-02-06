@@ -245,10 +245,11 @@ abstract const class Env
   virtual Type compileScript(File f, [Str:Obj]? options := null)
 
   **
-  ** Lookup all the matching values for a pod indexed key.
-  ** If matches return the empty list.
-  **
-  ** TODO-FACETS
+  ** Lookup all the matching values for a pod indexed key.  If no
+  ** matches are found return the empty list.  Indexed props are
+  ** declared in your pod's build script, and coalesced into a master
+  ** index by the current environment.  See [docLang]`docLang::Env#index`
+  ** for details.
   **
   virtual Str[] index(Str key)
 
@@ -272,7 +273,7 @@ abstract const class Env
   ** refresh is performed to check if any of the files have been
   ** modified.
   **
-  ** Also see `Pod.props`.
+  ** Also see `Pod.props` and `docLang::Env`.
   **
   virtual Str:Str props(Pod pod, Uri uri, Duration maxAge)
 
@@ -283,7 +284,7 @@ abstract const class Env
   **
   **   props(pod, `config.props`, 1min).get(key, def)
   **
-  ** Also see `Pod.config`.
+  ** Also see `Pod.config` and `docLang::Env`.
   **
   virtual Str? config(Pod pod, Str key, Str? def := null)
 
@@ -297,7 +298,7 @@ abstract const class Env
   **
   ** Where '{locale}' is `Locale.toStr` and '{lang}' is `Locale.lang`.
   **
-  ** Also see `Pod.locale`.
+  ** Also see `Pod.locale` and `docLang::Localization`.
   **
   virtual Str? locale(Pod pod, Str key, Str? def := "pod::key", Locale locale := Locale.cur)
 
