@@ -14,7 +14,7 @@ using build
 **
 class Build : BuildScript
 {
-  @target="build fansh pod as a single JAR dist"
+  @Target { help = "build fansh pod as a single JAR dist" }
   Void dist()
   {
     dist := JarDist(this)

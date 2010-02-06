@@ -50,7 +50,7 @@ class Build : BuildScript
       "demo",        "Illustrates some basic web APIs",
   ]
 
-  @target="Compile example code into HTML"
+  @Target { help = "Compile example code into HTML" }
   Void compile()
   {
     log.info("Compile code into HTML!")

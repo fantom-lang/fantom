@@ -30,7 +30,7 @@ class Build : BuildGroup
       `sys/build.fan`,
       `sys/java/build.fan`,
       `sys/dotnet/build.fan`,
-      //`sys/js/build.fan`, TODO-FACETS
+      `sys/js/build.fan`,
       `compiler/build.fan`,
       `compilerJava/build.fan`,
       `build/build.fan`,
