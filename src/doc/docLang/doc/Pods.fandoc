@@ -44,6 +44,7 @@ standardized keys:
   - 'pod.name': name of the pod
   - 'pod.version': [Version]`sys::Version` of the pod
   - 'pod.depends': list of semicolon separated [Depend]`sys::Depend` strings
+  - 'pod.summary': overview decription for pod
   - 'pod.isScript': was the pod compiled in script mode
   - 'pod.docSrc': should documentation include source code, see [BuildPod]`build::BuildPod.docSrc`
   - 'pod.docApi': should pod be included in documentation, see [BuildPod]`build::BuildPod.docApi`
