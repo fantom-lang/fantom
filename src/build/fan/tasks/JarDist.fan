@@ -115,9 +115,9 @@ class JarDist : JdkTask
     zip.contents.each |f|
     {
       if (f.isDir) return
-      if (f.ext == "def" || f.ext == "fcode")
+      if (f.name == "meta.props" || f.ext == "def" || f.ext == "fcode")
       {
-        dest := tempDir + "reflect/${podName}/${f.name}".toUri
+        dest := tempDir + "reflect/${podName}${f.pathStr}".toUri
         f.copyTo(dest, copyOpts)
       }
       else if (f.ext == "props")
