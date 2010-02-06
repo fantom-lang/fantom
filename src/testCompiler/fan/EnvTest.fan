@@ -51,6 +51,7 @@ class EnvTest : Test
            summary = "test pod A"
            depends = ["sys 1.0"]
            srcDirs = [`fan/`]
+           index   = ["testCompiler.envTest":"a"]
          }
        }""").close
 
@@ -89,6 +90,7 @@ class EnvTest : Test
            summary = "test pod B"
            depends = ["sys 1.0", "util 1.0", "$podA 1.0"]
            srcDirs = [`fan/`]
+           index   = ["testCompiler.envTest":"b"]
          }
        }""").close
 
@@ -123,11 +125,12 @@ class EnvTest : Test
          {
            verifyEq(A#.facet(Foo#)->val, "alpha")
            verifyEq(B#.facet(Foo#)->val, "beta")
-           /* TODO-FACETS
-           verifyEq(Type.findByFacet(@foo, "alpha"),[A#])
-           verifyEq(Type.findByFacet(@foo, "beta"), [B#])
-           verifyEq(Type.findByFacet(@foo, "????"), Type[,])
-           */
+         }
+
+         // test indexed props
+         Void testIndexedProps()
+         {
+           verifyEq(Env.cur.index("testCompiler.envTest").dup.sort, ["a", "b"])
          }
 
          static Void main()
