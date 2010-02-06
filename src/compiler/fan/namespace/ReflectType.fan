@@ -51,6 +51,15 @@ class ReflectType : CType
 
   override once CType toListOf() { return ListType(this) }
 
+  override CFacet? facet(Str qname)
+  {
+    try
+      return ReflectFacet.map(ns, t.facet(Type.find(qname), false))
+    catch (Err e)
+      e.trace
+    return null
+  }
+
   override Str:CSlot slots()
   {
     if (!slotsLoaded)

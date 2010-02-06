@@ -46,3 +46,47 @@ class FAttr : FConst
   Buf? data
 
 }
+
+**************************************************************************
+** FFacet
+**************************************************************************
+
+class FFacet : CFacet
+{
+  static FFacet[] decode(FPod fpod, FAttr[] fattrs)
+  {
+    attr := fattrs.find |a|
+    {
+      return fpod.n(a.name) == FConst.FacetsAttr
+    }
+    if (attr == null) return FFacet#.emptyList
+    num := attr.data.seek(0).readU2
+    ffacets := FFacet[,]; ffacets.capacity = num
+    num.times
+    {
+      qname := fpod.typeRef(attr.data.readU2).signature(fpod)
+      val   := attr.data.readUtf
+      ffacets.add(FFacet(qname, val))
+    }
+    return ffacets
+  }
+
+  new make(Str qn, Str v) { qname = qn; val = v }
+  override const Str qname
+  override Str toStr() { val.isEmpty ? qname : val }
+  override Obj? get(Str name)
+  {
+    // this is a bit hackish and doesn't handle default
+    // values but should work for simple cases like "msg"
+    try
+    {
+      s := val.index(name) + name.size + 1  // name=xxx
+      e := val.index(";", s+1) ?: val.size-1
+      v := val[s..<e]
+      return v.in.readObj
+    }
+    catch {}
+    return null
+  }
+  const Str val
+}

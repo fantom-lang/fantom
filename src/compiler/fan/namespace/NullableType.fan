@@ -36,6 +36,8 @@ class NullableType : CType
 
   override Bool isVal() { root.isVal }
 
+  override CFacet? facet(Str qname) { return root.facet(qname) }
+
   override Bool isNullable() { true }
   override CType toNullable() { this }
   override CType toNonNullable() { root }

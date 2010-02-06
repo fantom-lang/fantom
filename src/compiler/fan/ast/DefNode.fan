@@ -38,24 +38,10 @@ abstract class DefNode : Node
     }
   }
 
-  Obj? facet(Str qname, Obj? def)
+  CFacet? facet(Str qname)
   {
-    // TODO: should we map these by qname?
-/* FACET-TODO
-    if (facets == null) return def
-    f := facets.find |f| { f.key.qname == qname }
-    if (f != null && f.val is LiteralExpr) return ((LiteralExpr)f.val).val
-*/
-    return def
-  }
-
-  Bool hasMarkerFacet(Str qname)
-  {
-/* FACET-TODO
-    if (facets == null) return false
-    return facets.any |f| { f.key.qname == qname && f.val.id === ExprId.trueLiteral }
-*/
-return true
+    if (facets == null) return null
+    return facets.find |f| { f.type.qname == qname }
   }
 
   Void addFacet(CompilerSupport support, CType type, [Str:Obj]? vals := null)
