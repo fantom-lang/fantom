@@ -23,7 +23,6 @@ class Reflection
     slots
     methods
     fields
-    symbols
   }
 
   Void pods()
@@ -35,9 +34,8 @@ class Reflection
     show(Pod.find("bad", false),       "find a pod (returns null if not found)")
     show(p.name,                       "pod name")
     show(p.version,                    "pod version")
-    show(p.facets,                     "map of all pod facets")
-    show(p.facet(@podBuildTime),       "lookup a pod facet")
-    show(p.facet(@podBuildHost, "-"),  "lookup a pod facet with default")
+    show(p.meta,                       "all pod meta name/value metadata pairs")
+    show(p.meta["build.time"],         "lookup a pod metadata key")
     show(p.file(`/img/icon.png`, false), "lookup a resource file in myPod")
   }
 
@@ -63,11 +61,9 @@ class Reflection
     show(t.inheritance,                  "all the types inherited")
     show(t.signature,                    "formal type signature")
     show(t.make,                         "make an obj of type t")
-    show(t.facets,                       "map of all declared facets")
-    show(t.facets(true),                 "map of all inherited facets")
-    show(t.facet(@serializable),         "lookup facet")
-    show(t.facet(@transient, false),     "lookup facet with default")
-    show(t.facet(@serializable, null, true),  "lookup inherited facet")
+    show(t.facets,                       "list of all declared facets")
+    show(t.facet(Serializable#, false),  "lookup facet")
+    show(t.hasFacet(Serializable#),      "check if facet defined")
   }
 
   Void slots()
@@ -86,8 +82,8 @@ class Reflection
     show(s.parent,                     "declaring type")
     show(s.signature,                  "full signature of field or method")
     show(s.facets,                     "map of all facets")
-    show(s.facet(@transient),          "lookup facet")
-    show(s.facet(@nodoc, false),       "lookup facet with default")
+    show(s.facet(Transient#, false),   "lookup facet")
+    show(s.hasFacet(Transient#),       "check if facet defined")
   }
 
   Void methods()
@@ -125,21 +121,6 @@ class Reflection
     f.set(obj, "hi")                   // set instance field
     show(f.get(obj),                   "get instance field")
     show(Float#pi.get,                 "get static field")
-  }
-
-  Void symbols()
-  {
-    echo("\n--- symbols ---")
-    p := Pod.find("sys")
-    s := @uriScheme
-    show(p.symbol("transient"),        "lookup the symbol called x on somePod")
-    show(p.symbols,                    "list all the symbols on somePod")
-    show(Symbol.find("sys::transient"),"looukp a symbol by its qualified name")
-    show(@sys::transient,              "qualified symbol literal")
-    show(@transient,                   "unqualified symbol literal")
-    show(s.qname,                      "qualified name")
-    show(s.type,                       "type of symbol")
-    show(s.val,                        "value of symbol")
   }
 
   Void show(Obj? result, Str what)

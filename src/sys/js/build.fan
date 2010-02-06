@@ -17,7 +17,7 @@ class Build : BuildScript
 // Compile
 //////////////////////////////////////////////////////////////////////////
 
-  @target="compile javascript for sys pod"
+  @Target { help = "Compile javascript for sys pod" }
   Void compile()
   {
     log.info("compile [js]")
@@ -41,7 +41,7 @@ class Build : BuildScript
     // add into pod file
     jar := JdkTask.make(this).jarExe
     pod := devHomeDir + `lib/fan/sys.pod`
-    Exec.make(this, [jar.osPath, "fu", pod.osPath, "-C", tempDir.osPath, "."], tempDir).run
+    Exec.make(this, [jar, "fu", pod.osPath, "-C", tempDir.osPath, "."], tempDir).run
 
     tempDir.delete
   }
@@ -121,7 +121,7 @@ class Build : BuildScript
 // Clean
 //////////////////////////////////////////////////////////////////////////
 
-  @target="delete all intermediate and target files"
+  @Target { help = "Delete all intermediate and target files" }
   Void clean()
   {
     log.info("clean [js]")
@@ -129,20 +129,10 @@ class Build : BuildScript
   }
 
 //////////////////////////////////////////////////////////////////////////
-// CompileAll
-//////////////////////////////////////////////////////////////////////////
-
-  @target="alias for compile"
-  Void compileAll()
-  {
-    compile
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Full
 //////////////////////////////////////////////////////////////////////////
 
-  @target="clean+compile"
+  @Target { help = "Run clean, compile" }
   Void full()
   {
     clean

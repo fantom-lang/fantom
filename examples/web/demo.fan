@@ -11,7 +11,7 @@ using compiler
 **
 class Boot : AbstractMain
 {
-  @opt="http port"
+  @Opt { help = "http port" }
   Int port := 8080
 
   override Int run()

@@ -51,8 +51,7 @@ class Build : BuildGroup
 // Compile
 //////////////////////////////////////////////////////////////////////////
 
-  ** Run 'compile' on all pods
-  @Target
+  @Target { help = "Run 'compile' on all pods" }
   Void compile()
   {
     spawnOnChildren("compile")
@@ -62,8 +61,7 @@ class Build : BuildGroup
 // Clean
 //////////////////////////////////////////////////////////////////////////
 
-  ** Run 'clean' on all pods
-  @Target
+  @Target { help = "Run 'clean' on all pods" }
   Void clean()
   {
     runOnChildren("clean")
@@ -73,12 +71,10 @@ class Build : BuildGroup
 // Test
 //////////////////////////////////////////////////////////////////////////
 
-  ** Run 'test' on all pods
-  @Target
+  @Target { help = "Run 'test' on all pods" }
   Void test()
   {
-// TODO-FACETS
-    fantExe := (devHomeDir + `bin/fant.exe`).osPath
+    fantExe := Exec.exePath(devHomeDir + `bin/fant`)
     Exec.make(this, [fantExe, "-all"]).run
   }
 
@@ -86,12 +82,10 @@ class Build : BuildGroup
 // Doc
 //////////////////////////////////////////////////////////////////////////
 
-  ** Build fandoc HTML docs
-/*  TODO-FACETS
-  @Target
+  @Target { help = "Build fandoc HTML docs" }
   Void doc()
   {
-    fanExe := (binDir+"fan$exeExt".toUri).osPath
+    fanExe := Exec.exePath(devHomeDir + `bin/fan`)
     allBuildPodScripts.each |BuildPod script|
     {
       name := script.podName
@@ -102,14 +96,12 @@ class Build : BuildGroup
 
     Exec.make(this, [fanExe, "docCompiler", "-topindex"]).run
   }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Full
 //////////////////////////////////////////////////////////////////////////
 
-  ** Run clean, compile, test on all pods
-  @Target
+  @Target { help = "Run clean, compile, test on all pods" }
   Void full()
   {
     clean
@@ -121,11 +113,10 @@ class Build : BuildGroup
 // Examples
 //////////////////////////////////////////////////////////////////////////
 
-/*
-//  @target="build example HTML docs"
+  @Target { help = "Build example HTML docs" }
   Void examples()
   {
-    fanExe := (binDir+"fan$exeExt".toUri).osPath
+    fanExe := Exec.exePath(devHomeDir + `bin/fan`)
     Exec.make(this, [fanExe, (scriptDir+`../examples/build.fan`).osPath]).run
   }
 
@@ -133,17 +124,17 @@ class Build : BuildGroup
 // Superclean
 //////////////////////////////////////////////////////////////////////////
 
-  //@target="delete lib dir"
+  @Target { help = "Delete every intermediate we can think of" }
   Void superclean()
   {
     // fanLib nuke it all
-    Delete.make(this, libFanDir).run
+    Delete.make(this, devHomeDir + `lib/fan/`).run
 
     // doc nuke it all
     Delete.make(this, devHomeDir + `doc/`).run
 
     // javaLib (keep ext/)
-    libJavaDir.list.each |File f|
+    (devHomeDir + `lib/java/`).list.each |File f|
     {
       if (f.name != "ext")
         Delete.make(this, f).run
@@ -156,10 +147,10 @@ class Build : BuildGroup
 // Zip
 //////////////////////////////////////////////////////////////////////////
 
-//  @target="create build zip file"
+  @Target { help = "Create build zip file" }
   Void zip()
   {
-    moniker := "fantom-$ver"
+    moniker := "fantom-$version"
     zip := CreateZip(this)
     {
       outFile = devHomeDir + `${moniker}.zip`
@@ -170,7 +161,7 @@ class Build : BuildGroup
         if (f.name == ".hg")       return false
         if (f.name == ".hgignore") return false
         if (f.name == "tmp")       return false
-        // TODO: ship fandoc pod files?
+        if (f.name == "temp")      return false
         if (f.isDir) log.info("  $path")
         return true
       }
@@ -182,7 +173,7 @@ class Build : BuildGroup
 // Dist
 //////////////////////////////////////////////////////////////////////////
 
-//  @target="build distributation full, test, doc"
+  @Target { help = "Build fantom-1.0.xx.zip distribution" }
   Void dist()
   {
     superclean
@@ -194,7 +185,7 @@ class Build : BuildGroup
     zip
   }
 
-//  @target="delete non-distribution files"
+  @Target { help = "Delete non-distribution files" }
   Void deleteNonDist()
   {
     Delete(this, devHomeDir+`tmp/`).run
@@ -206,13 +197,12 @@ class Build : BuildGroup
     Delete(this, devHomeDir+`etc/flux/session/`).run
     Delete(this, devHomeDir+`examples/web/demo/logs/`).run
 
-    libJavaDir.list.each |File f|
+    (devHomeDir + `lib/java/`).list.each |File f|
     {
       if (f.name != "sys.jar" && f.name != "ext")
         Delete.make(this, f).run
     }
   }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Debug Env
@@ -246,8 +236,7 @@ class Build : BuildGroup
 
   private Exec makeSpawnExec(Uri script, Str target)
   {
-// TODO-FACETS
-    fanExe := (devHomeDir + `bin/fan.exe`).osPath
+    fanExe := Exec.exePath(devHomeDir + `bin/fan`)
     return Exec.make(this, [fanExe, (scriptDir + script).osPath, target])
   }
 
