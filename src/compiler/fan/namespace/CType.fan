@@ -463,7 +463,7 @@ mixin CType
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the facet for the given type, or null if not defined.
+  ** Get the facet keyed by given type, or null if not defined.
   **
   abstract CFacet? facet(Str qname)
 

@@ -25,6 +25,15 @@ abstract class ReflectSlot : CSlot
   override Str signature() { return slot.signature }
   override readonly Int flags
   abstract Slot slot()
+
+  override CFacet? facet(Str qname)
+  {
+    try
+      return ReflectFacet.map(ns, slot.facet(Type.find(qname), false))
+    catch (Err e)
+      e.trace
+    return null
+  }
 }
 
 **************************************************************************
