@@ -10,9 +10,6 @@
 ** TypeTest
 **
 @Js
-// TODO-FACETS
-//@testSysByStr=["alpha", "beta"]
-//@testSysByType=[SerB#, MxB#]
 class TypeTest : Test
 {
 
@@ -69,52 +66,6 @@ class TypeTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// TypeDb
-//////////////////////////////////////////////////////////////////////////
-
-/* TODO-FACET
-  Void testFindByFacet()
-  {
-    verifyErr(Err#) { Type.findByFacet(@nodoc, "") }
-
-    x := Type.findByFacet(@testSysByStr, "zeta")
-    verifyEq(x.size, 0)
-    verifyEq(x.isRO, true)
-
-    x = Type.findByFacet(@testSysByStr, "alpha")
-    verifyEq(x.size, 2)
-    verifyEq(x.isRO, true)
-    verify(x.contains(TypeTest#))
-    verify(x.contains(FacetsTest#))
-
-    x = Type.findByFacet(@testSysByStr, "beta")
-    verifyEq(x, [TypeTest#])
-
-    x = Type.findByFacet(@testSysByType, Str#)
-    verifyEq(x.size, 0)
-    verifyEq(x.isRO, true)
-
-    x = Type.findByFacet(@testSysByType, SerA#)
-    verifyEq(x, [FacetsTest#])
-
-    x = Type.findByFacet(@testSysByType, SerB#)
-    verifyEq(x, [TypeTest#])
-
-    x = Type.findByFacet(@testSysByType, SerB#, false)
-    verifyEq(x, [TypeTest#])
-
-    x = Type.findByFacet(@testSysByType, SerB#, true)
-    verifyEq(x.isRO, true)
-    verifyEq(x, [TypeTest#, FacetsTest#])
-
-    verifyEq(Type.findByFacet(@testSysByType, MxB#), [TypeTest#])
-    verifyEq(Type.findByFacet(@testSysByType, MxAB#), Type[,])
-    verifyEq(Type.findByFacet(@testSysByType, MxAB#, true), [TypeTest#])
-    verifyEq(Type.findByFacet(@testSysByType, MxClsAB#, true), [TypeTest#])
-  }
-*/
-
-//////////////////////////////////////////////////////////////////////////
 // Flags
 //////////////////////////////////////////////////////////////////////////
 
@@ -136,7 +87,7 @@ class TypeTest : Test
     verifyEq(MxA#.isEnum, false)
 
     // isFacet
-    verifyEq(StrA#.isFacet, true)
+    verifyEq(FacetM1#.isFacet, true)
     verifyEq(MxA#.isFacet, false)
 
     // isFinal

@@ -205,9 +205,9 @@ class EnumTest : Test
     verifyEq(EnumAbc#.facet(Serializable#)->simple, true)
 
     verifyEq(Suits#.hasFacet(Serializable#), true)
-    verifyEq(Suits#.facet(StrA#)->val, "y")
+    verifyEq(Suits#.facet(FacetS1#)->val, "y")
     verify(Suits#.facets.contains(Suits#.facet(Serializable#)))
-    verify(Suits#.facets.contains(Suits#.facet(StrA#)))
+    verify(Suits#.facets.contains(Suits#.facet(FacetS1#)))
   }
 
 }
@@ -221,7 +221,7 @@ internal enum class EnumAbc
   static const EnumAbc first := A
 }
 
-@StrA { val = "y" }
+@FacetS1 { val = "y" }
 enum class Suits
 {
   clubs("black"),
