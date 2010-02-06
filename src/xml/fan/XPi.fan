@@ -9,8 +9,6 @@
 **
 ** XML processing instruction node.
 **
-** See [docLib::Xml]`docLib::Xml`
-**
 class XPi : XNode
 {
 

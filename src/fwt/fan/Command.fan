@@ -23,7 +23,7 @@ using gfx
 ** both a menu item and a toolbar button, then disabling the
 ** command will disable both the menu item and toolbar button.
 **
-** See [docLib]`docLib::Fwt` for details.
+** See [pod doc]`pod-doc#commands` for details.
 **
 @Js
 class Command

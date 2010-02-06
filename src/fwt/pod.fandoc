@@ -21,7 +21,7 @@ The fwt defines the basic low level infrastructure for applications.
 framework for desktop apps.
 
 Widgets [#widgets]
-*****************
+******************
 The `fwt::Widget` class is the root of the widget class hierarchy.
 Widgets represent UI components such as buttons or text fields.
 

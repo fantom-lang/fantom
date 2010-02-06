@@ -9,7 +9,7 @@
 **
 ** EmailPart is the base class for parts within a multipart MIME document.
 **
-** See [docLib]`docLib::Email` and [examples]`examples::email-sending`.
+** See [pod doc]`pod-doc` and [examples]`examples::email-sending`.
 **
 @Serializable
 abstract class EmailPart

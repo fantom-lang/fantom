@@ -9,8 +9,6 @@
 **
 ** Models an XML element: its name, attributes, and children nodes.
 **
-** See [docLib::Xml]`docLib::Xml`
-**
 class XElem : XNode
 {
 

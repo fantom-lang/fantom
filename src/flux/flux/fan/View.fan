@@ -10,7 +10,8 @@ using fwt
 
 **
 ** View is a plugin designed to view or edit a `Resource`.
-** See `docLib::Flux` for details.
+**
+** See [pod doc]`pod-doc#views` for details.
 **
 abstract class View : ContentPane
 {

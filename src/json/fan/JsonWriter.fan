@@ -10,8 +10,6 @@
 ** JsonWriter writes out JSON.
 ** objects to and from Javascript Object Notation (JSON).
 **
-** See [docLib]`docLib::Json` for details.
-**
 internal class JsonWriter
 {
   internal new make(OutStream out)

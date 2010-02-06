@@ -12,7 +12,7 @@ using util
 **
 ** LogMod is used log requests according to the W3C extended log file format.
 **
-** See [docLib::WebMod]`docLib::WebMod#log`
+** See [pod doc]`pod-doc#log`
 **
 const class LogMod : WebMod
 {
@@ -42,7 +42,7 @@ const class LogMod : WebMod
 
   **
   ** Format of the log records as a string of #Fields names.
-  ** See [docLib::WebMod]`docLib::WebMod#log`
+  ** See [pod doc]`pod-doc#log`
   **
   const Str fields := "date time c-ip cs-method cs-uri-stem cs-uri-query sc-status time-taken cs(User-Agent) cs(Referer)"
 

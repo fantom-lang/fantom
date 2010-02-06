@@ -9,8 +9,6 @@
 **
 ** JsonToken represents the tokens in JSON.
 **
-** See [docLib]`docLib::Json` for details.
-**
 internal class JsonToken
 {
   internal static const Int objectStart := '{'

@@ -11,8 +11,6 @@
 ** A statement may be executed immediately or prepared and
 ** executed later with parameters.
 **
-** See `docLib::Sql`.
-**
 class Statement
 {
   **

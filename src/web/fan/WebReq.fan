@@ -11,7 +11,7 @@ using inet
 **
 ** WebReq encapsulates a web request.
 **
-** See [docLib::Web]`docLib::Web#webReq`
+** See [pod doc]`pod-doc#webReq`.
 **
 abstract class WebReq
 {

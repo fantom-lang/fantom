@@ -9,8 +9,6 @@
 **
 ** XText represents the character data inside an element.
 **
-** See [docLib::Xml]`docLib::Xml`
-**
 class XText : XNode
 {
 

@@ -10,8 +10,6 @@
 ** SqlService is the interface to a relational database.  It is const
 ** and all state is stored as thread local variables.
 **
-** See `docLib::Sql`.
-**
 const class SqlService : Service
 {
   **

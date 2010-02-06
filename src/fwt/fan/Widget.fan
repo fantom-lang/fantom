@@ -23,7 +23,7 @@ using gfx
 **
 ** Widget is the base class for all UI widgets.
 **
-** See [docLib]`docLib::Fwt` for details.
+** See [pod doc]`pod-doc#widgets` for details.
 **
 @Js
 @Serializable { collection = true }

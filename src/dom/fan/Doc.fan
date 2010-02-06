@@ -12,7 +12,7 @@ using web
 **
 ** Doc models the DOM document object.
 **
-** See [docLib]`docLib::Dom#doc` for details.
+** See [pod doc]`pod-doc#doc` for details.
 **
 @Js
 class Doc
