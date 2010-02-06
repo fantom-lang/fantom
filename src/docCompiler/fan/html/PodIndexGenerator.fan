@@ -97,7 +97,7 @@ class PodIndexGenerator : HtmlGenerator
     {
       if (t.isMixin) { mixins.add(t); return }
       if (t.isEnum)  { enums.add(t); return }
-      if (t.isFacet) { enums.add(t); return }
+      if (t.isFacet) { facets.add(t); return }
       if (t.fits(Err#)) { errs.add(t); return }
       classes.add(t)
     }
