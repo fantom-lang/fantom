@@ -6,13 +6,17 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.51 (working)*
+*Build 1.0.52 (working)*
+
+*Build 1.0.51 (6 Feb 10)*
 - Roll fcode version from 1.0.45 => 1.0.51
 - Change enum to positional keyword "enum class"
 - Rename build::Target => BuildTarget
 - Refactor build script design for facets and pod meta-data
 - Refactor pod format meta.props and fcode sub-directory
 - Replace Type Database with Env pod indexing
+- Move docLib chapter into their respectiive pods as pod-doc
+- #936: Symbols/Facet Redesign
 
 *Build 1.0.50 (2 Feb 10)*
 - Pod.loc => locale
