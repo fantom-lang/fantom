@@ -21,10 +21,11 @@ class SymbolsToHtml : DocCompilerStep
 
   Void run()
   {
-    log.debug("  Symbols [$compiler.pod]")
-    file := compiler.podOutDir + `pod-meta.html`
-    loc  := Loc("pod-meta.html")
-    SymbolsGenerator(compiler, loc, file.out).generate
+    echo("*** SYMBOLS NOT RUN ***")
+    //log.debug("  Symbols [$compiler.pod]")
+    //file := compiler.podOutDir + `pod-meta.html`
+    //loc  := Loc("pod-meta.html")
+    //SymbolsGenerator(compiler, loc, file.out).generate
   }
 
 }

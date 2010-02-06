@@ -19,7 +19,7 @@ class FandocToHtmlGenerator : HtmlGenerator
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(DocCompiler compiler, Loc loc, File file, Doc doc)
+  new make(DocCompiler compiler, Loc loc, File file, Doc? doc)
     : super(compiler, loc, file.out)
   {
     this.file = file
@@ -62,7 +62,7 @@ class FandocToHtmlGenerator : HtmlGenerator
   {
     // make a quick run thru to make sure we even
     // have any headers for the content sidebar
-    temp := doc.children.find |DocNode node->Bool| { return node is Heading }
+    temp := doc?.children?.find |DocNode node->Bool| { return node is Heading }
     if (temp == null) return
 
     // we found some so print them
@@ -142,7 +142,7 @@ class FandocToHtmlGenerator : HtmlGenerator
 //////////////////////////////////////////////////////////////////////////
 
   File file
-  Doc doc
+  Doc? doc
   Uri? prev   // prev link if exists
   Uri? next   // next link if exists
 
