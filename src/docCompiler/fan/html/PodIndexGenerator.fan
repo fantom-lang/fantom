@@ -68,6 +68,11 @@ class PodIndexGenerator : HtmlGenerator
   ** Write pod fandoc if applicable.
   Void writeDoc()
   {
+    meta := pod.meta["pod.summary"]
+    if (meta == null) return
+    out.printLine("<div class='detail'>$meta</div>")
+
+    /*
     // check for fandoc
     file := pod.file(`/doc/pod.fandoc`, false)
     if (file == null) return
@@ -81,6 +86,7 @@ class PodIndexGenerator : HtmlGenerator
     p := doc.children.find |n| { n is Para }
     p?.write(this)
     out.printLine("</div>")
+    */
   }
 
   ** Write type listing for this pod.
