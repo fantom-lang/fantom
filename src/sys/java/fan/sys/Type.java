@@ -243,7 +243,7 @@ public abstract class Type
     }
 
     Slot defVal = slot("defVal", false);
-    if (defVal.isPublic())
+    if (defVal != null && defVal.isPublic())
     {
       if (defVal instanceof Field) return ((Field)defVal).get(null);
       if (defVal instanceof Method) return ((Method)defVal).func.callList(null);

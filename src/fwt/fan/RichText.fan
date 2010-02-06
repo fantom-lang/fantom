@@ -13,6 +13,7 @@ using gfx
 ** different fonts and colors.
 **
 @Js
+@Serializable
 class RichText : TextWidget
 {
 
@@ -94,12 +95,12 @@ class RichText : TextWidget
   **
   ** Horizontal scroll bar.
   **
-  ScrollBar hbar := ScrollBar() { private set }
+  @Transient ScrollBar hbar := ScrollBar() { private set }
 
   **
   ** Vertical scroll bar.
   **
-  ScrollBar vbar := ScrollBar() { private set }
+  @Transient ScrollBar vbar := ScrollBar() { private set }
 
   **
   ** Backing data model of text document.

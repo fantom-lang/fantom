@@ -14,6 +14,7 @@ using gfx
 ** convenience routines for opening message boxes.
 **
 @Js
+@Serializable
 class Dialog : Window
 {
 

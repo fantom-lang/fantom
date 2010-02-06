@@ -26,7 +26,6 @@ using gfx
 ** See [pod doc]`pod-doc#widgets` for details.
 **
 @Js
-@Serializable { collection = true }
 abstract class Widget
 {
 

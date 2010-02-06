@@ -9,6 +9,7 @@
 **
 ** WebBrowser is used to display HTML text or view a URL.
 **
+@Serializable
 class WebBrowser : Widget
 {
 

@@ -12,6 +12,7 @@ using gfx
 ** MenuItem is an individual item on a Menu.
 **
 @Js
+@Serializable
 class MenuItem : Widget
 {
 

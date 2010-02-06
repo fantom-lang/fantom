@@ -13,6 +13,7 @@ using gfx
 ** top level windows.
 **
 @Js
+@Serializable
 class Window : ContentPane
 {
 

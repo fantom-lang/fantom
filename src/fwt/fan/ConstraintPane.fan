@@ -13,6 +13,7 @@ using gfx
 ** and height of its content widget.
 **
 @Js
+@Serializable
 class ConstraintPane : ContentPane
 {
 

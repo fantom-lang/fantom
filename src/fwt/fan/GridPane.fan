@@ -16,6 +16,7 @@ using gfx
 **   switch to per col/per row configuration
 **
 @Js
+@Serializable { collection = true }
 class GridPane : Pane
 {
 

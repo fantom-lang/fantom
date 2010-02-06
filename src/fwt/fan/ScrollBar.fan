@@ -15,6 +15,7 @@ using gfx
 ** 'hbar' and 'vbar'.
 **
 @Js
+@Serializable
 class ScrollBar : Widget
 {
 

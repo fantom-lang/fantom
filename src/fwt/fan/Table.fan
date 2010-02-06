@@ -12,6 +12,7 @@ using gfx
 ** Table displays grid of rows and columns.
 **
 @Js
+@Serializable
 class Table : Widget
 {
 
@@ -66,12 +67,12 @@ class Table : Widget
   **
   ** Horizontal scroll bar.
   **
-  ScrollBar hbar := ScrollBar() { private set }
+  @Transient ScrollBar hbar := ScrollBar() { private set }
 
   **
   ** Vertical scroll bar.
   **
-  ScrollBar vbar := ScrollBar() { private set }
+  @Transient ScrollBar vbar := ScrollBar() { private set }
 
   **
   ** Draw a border around the widget.  Default is true.  This

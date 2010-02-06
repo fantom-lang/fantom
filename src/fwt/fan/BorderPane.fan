@@ -13,6 +13,7 @@ using gfx
 ** BorderPane is used paint a CSS styled border around a content widget.
 **
 @Js
+@Serializable { collection = true }
 class BorderPane : Pane
 {
   **

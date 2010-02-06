@@ -12,6 +12,7 @@ using gfx
 ** Label displays text and/or an image.
 **
 @Js
+@Serializable
 class Label : Widget
 {
 
