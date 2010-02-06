@@ -21,24 +21,13 @@ Legend for Fantom BNF Grammar:
 Compilation Unit [#compilationUnit]
 ***********************************
 
-  <compilationUnit> :=  <podUnit> | <typeUnit>
-  <podUnit>         :=  <using*> <podDef>
-  <typeUnit>        :=  <using*> <typeDef>*
+  <compilationUnit> :=  <using*> <typeDef>*
   <using>           :=  <usingPod> | <usingType> | <usingAs>
   <usingPod>        :=  "using" <podSpec> <eos>
   <usingType>       :=  "using" <podSpec> "::" <id> <eos>
   <usingAs>         :=  "using" <podSpec> "::" <id> "as" <id> <eos>
   <podSpec>         :=  [ffi] <id> ("." <id>)*
   <ffi>             :=  "[" <id> "]"
-
-Pod Def [#podDef]
-*****************
-
-  <podDef>         :=  <podHeader> "{" <symbolDefs> "}"
-  <podHeader>      :=  [<doc>] <facets> "pod" <id>
-  <symbolDefs>     :=  <symbolDef>*
-  <symbolDef>      :=  [<doc>] <symbolFlags> [<type>] <id> ":=" <expr> <eos>
-  <symbolFlags>    := ["virtual"]
 
 Type Def [#typeDef]
 *******************
@@ -98,7 +87,9 @@ Facets [#facets]
 ****************
 
   <facets>        := <facet>*
-  <facet>         := "@" <id> "=" <expr>
+  <facet>         := "@" <simpleType> [<facetVals>]
+  <facetVals>     := "{" <facetVal> (<eos> <facetVal>)* "}"
+  <facetVal>      := <id> "=" <expr>
 
 Stmt [#stmt]
 ************
@@ -185,13 +176,12 @@ Expr [#expr]
   <callOp>         :=  "(" <args> ")" [<closure>]
   <literal>        :=  "null" | "this" | "super" | "it" |
                        <bool> | <int> | <float> | <decimal> | <str> |
-                       <duration> | <uri> | <list> | <map> | <symbolLiteral>
+                       <duration> | <uri> | <list> | <map>
   <list>           :=  [<type>] "[" <listItems> "]"
   <listItems>      :=  "," | (<expr> ("," <expr>)*)
   <map>            :=  [<mapType>] "[" <mapItems> "]"
   <mapItems>       :=  ":" | (<mapPair> ("," <mapPair>)*)
   <mapPair>        :=  <expr> ":" <expr>
-  <symbolLiteral>  :=  "@" [<id> "::"] <id>
 
 See `Literals` for grammar of the literal tokens.
 

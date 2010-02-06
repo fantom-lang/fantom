@@ -344,7 +344,7 @@ expression:
 To use this expression, the type must have a static method called 'fromStr' which
 takes a 'Str' parameter and returns an instance of itself.  The method may contain
 additional parameters if they have default values.  The type does not have to
-implement the `@sys::simple` facet to use this expression (although it does
+implement the `sys::Serializable` facet to use this expression (although it does
 if you want to serialize it).  Simple expressions are a subset of [construction
 calls]`Methods#constructionCalls`.
 

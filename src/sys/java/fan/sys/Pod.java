@@ -513,7 +513,6 @@ public class Pod
   HashMap filesMap = new HashMap(11);
   Log log;
   boolean docLoaded;
-  Uri fansymUri;
   public String doc;
 
 }

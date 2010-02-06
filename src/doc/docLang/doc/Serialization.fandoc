@@ -34,28 +34,29 @@ or other complexes).  You can also mark any complex type as a
 
 Serializable [#serializable]
 ****************************
-The `@sys::serializable` facet is used to mark types which are serialized
-as a complex.  By default a serializable object will serialize all of
-its non-static fields.  You can use the `@sys::transient` facet to
-annotate a field which should not be serialized.  A contrived example:
+The `sys::Serializable` facet is used to mark types which are serializable.
+By default a serializable object will serialize all of its non-static fields.
+You can use the `sys::Transient` facet to annotate a field which should not
+be serialized.  A contrived example:
 
-  @serializable
+  @Serializable
   class Rectangle
   {
     Int x; Int y
     Int w; Int h
-    @transient Int area
+    @Transient Int area
   }
 
 Simple [#simple]
 ****************
-The `@sys::simple` facet is used to mark types which are serialized atomically
-to and from a string representation.  The `sys::Obj.toStr` method must return a
-suitable string representation of the object.  Each simple type must also declare
-a static method called 'fromStr' which takes one or more parameters where the first
-parameter is a 'Str' and returns an instance of the object.  An example:
+Set the [Serializable.simple]`sys::Serializable.simple` field to mark a
+type which is serialized atomically to and from a string representation.
+The `sys::Obj.toStr` method must return a suitable string representation of
+the object.  Each simple type must also declare a static method called 'fromStr'
+which takes one or more parameters where the first parameter is a 'Str'
+and returns an instance of the object.  An example:
 
-  @simple
+  @Serializable { simple = true }
   class Point
   {
     static Point fromStr(Str s) { t := s.split(","); return make(t[0].toInt, t[1].toInt) }
@@ -67,9 +68,8 @@ parameter is a 'Str' and returns an instance of the object.  An example:
 
 Collection [#collection]
 ************************
-The `@sys::collection` facet is used to mark a type as a container of
-child objects.  It must always be used with the '@serializable' facet on complex
-types (never with the '@simple' facet).  Collections provide a concise syntax
+Set the [Serializable.collection]`sys::Serializable.collection` field to mark a
+type as a container of child objects. Collections provide a concise syntax
 for nesting zero or more children items in the same scope as any serialized fields.
 This allows you to nest configuration items and children inside one set of
 curly braces.  Every collection type must support an 'add' and 'each' method
@@ -192,7 +192,8 @@ case the field's default is used.  The syntax for a complex is:
 
 An example of a serializable class and an serialized instance:
 
-  @serializable class Person
+  @Serializable
+  class Person
   {
     Str name
     Int age
@@ -218,7 +219,8 @@ deserialization, the children are added back via the 'add' method.
 
 We can rewrite the 'Person' example above as a collection:
 
-  @serializable @collection class Person
+  @Serializable { collection = true }
+  class Person
   {
     Void add(Person kid) { kids.add(kid) }
     Void each(|Person kid| f) { kids.each(f) }
@@ -240,10 +242,6 @@ Grammar [#syntaxGrammar]
 ========================
 The formal grammar of the Fantom serialization formats:
 
-  // .fansym file format for list of name/obj pairs
-  fansymDoc := header (fansym*)
-  fansym    := id "=" obj eos
-
   // .fog file format for single object
   objDoc    := header obj
 
@@ -254,7 +252,7 @@ The formal grammar of the Fantom serialization formats:
   usingAs   := "using" id "::" id "as" id eos
   obj       := literal | simple | complex
   literal   := bool | int | float | decimal | str | duration | uri |
-               typeLiteral | symbolLiteral | list | map
+               typeLiteral | list | map
   simple    := type "(" str ")"
   complex   := type ["{" [children] "}"]
   children  := child [(eos|",") child]*

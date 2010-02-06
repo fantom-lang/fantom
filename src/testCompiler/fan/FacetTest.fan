@@ -98,10 +98,10 @@ class FacetTest : CompilerTest
   {
     compile(
       """@A
-         @B { x = 77 }
+         @$podName::B { x = 77 }
          class Foo
          {
-           @C { y = "foo"; z = [1, 2, 3] }
+           @sys::Transient @C { y = "foo"; z = [1, 2, 3] }
            Int f
          }
 
@@ -141,6 +141,8 @@ class FacetTest : CompilerTest
 
     verify(tf.facets.contains(cv))
     verifySame(tf.facets, tf.facets)
+    verify(tf.hasFacet(Transient#))
+    verifySame(tf.facet(Transient#), Transient.defVal)
   }
 
 //////////////////////////////////////////////////////////////////////////

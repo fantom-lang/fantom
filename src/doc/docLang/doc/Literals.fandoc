@@ -19,7 +19,6 @@ The following types have a literal syntax:
   - [sys::Uri]`#uri`
   - [sys::Type]`#type`
   - [sys::Slot]`#slot`
-  - [sys::Symbol]`#symbol`
   - [sys::Range]`#range`
   - [sys::List]`#list`
   - [sys::Map]`#map`
