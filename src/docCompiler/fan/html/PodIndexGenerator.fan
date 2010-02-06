@@ -22,81 +22,112 @@ class PodIndexGenerator : HtmlGenerator
   new make(DocCompiler compiler, Loc loc, OutStream out)
     : super(compiler, loc, out)
   {
-    sorter := |Type a, Type b -> Int| { return a.name.compareIgnoreCase(b.name) }
-    filter := |Type t -> Bool| { return showType(t) }
-
     this.pod = compiler.pod
-    this.types = pod.types.rw.sort(sorter).findAll(filter)
+    this.types = pod.types.rw.findAll |t| { showType(t) }
+    this.types = types.sort |a,b| { a.name.compareIgnoreCase(b.name) }
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Generator
 //////////////////////////////////////////////////////////////////////////
 
-  override Str title()
-  {
-    return pod.name
-  }
+  ** Doc title.
+  override Str title() { pod.name }
 
+  ** Doc header.
   override Void header()
   {
-    out.print("<ul>\n")
-    out.print("  <li><a href='../index.html'>$docHome</a></li>\n")
-    out.print("  <li>&gt;</li>\n")
-    out.print("  <li><a href='index.html'>$pod.name</a></li>\n")
-    out.print("</ul>\n")
+    out.printLine(
+      "<ul>
+        <li><a href='../index.html'>$docHome</a></li>
+        <li>&gt;</li>
+        <li><a href='index.html'>$pod.name</a></li>
+       </ul>")
   }
 
+  ** Doc content.
   override Void content()
   {
-    out.print("<div class='type'>\n")
+    out.printLine("<div class='type'>")
     writeOverview
     writeDoc
     writeTypes
-    out.print("</div>\n")
+    out.printLine("</div>")
   }
 
+  ** Write pod overview.
   Void writeOverview()
   {
-    out.print("<div class='overview'>\n")
-    out.print("<h2>pod</h2>\n")
-    out.print("<h1>$pod.name</h1>\n")
-    /*
-    depends := pod.depends
-    if (!depends.isEmpty)
-    {
-      out.print("<pre>\n")
-      depends.each |d| { out.print("<a href='../$d.name/index.html'>$d</a>\n") }
-      out.print("</pre>")
-    }
-    */
-    out.print("</div>\n")
+    out.printLine(
+      "<div class='overview'>
+        <h2>pod</h2>
+        <h1>$pod.name</h1>
+       </div>")
   }
 
+  ** Write pod fandoc if applicable.
   Void writeDoc()
   {
-    podDoc:= ApiToHtmlGenerator.docBody(pod.doc)
-    if (podDoc != null)
-    {
-      out.print("<div class='detail'>\n")
-      ApiToHtmlGenerator.fandoc(this, pod.name, podDoc)
-      out.print("</div>\n")
-    }
+    // check for fandoc
+    file := pod.file(`/doc/pod.fandoc`, false)
+    if (file == null) return
+
+    // compile fandoc
+    doc := FandocParser().parse(pod.name, file.in)
+    if (doc.children.isEmpty) return
+
+    // only display first paragraph
+    out.print("<div class='detail'>")
+    p := doc.children.find |n| { n is Para }
+    p?.write(this)
+    out.printLine("<a href='pod-doc.html'>Read more</a>")
+    out.printLine("</div>")
   }
 
+  ** Write type listing for this pod.
   Void writeTypes()
   {
-    out.print("<h2>Types</h2>\n")
-    out.print("<table>\n")
-    types.each |Type t, Int i|
+    // sort by type
+    mixins  := Type[,]
+    classes := Type[,]
+    enums   := Type[,]
+    facets  := Type[,]
+    errs    := Type[,]
+    types.each |t|
     {
-      // clip doc to first sentence
-      cls := i % 2 == 0 ? "even" : "odd"
-      doc := t.doc
+      if (t.isMixin) { mixins.add(t); return }
+      if (t.isEnum)  { enums.add(t); return }
+      if (t.isFacet) { enums.add(t); return }
+      if (t.fits(Err#)) { errs.add(t); return }
+      classes.add(t)
+    }
 
-      out.print("<tr class='$cls'>\n")
-      out.print("  <td><a href='${compiler.uriMapper.map(t.qname, loc)}'>$t.name</a></td>\n")
-      out.print("  <td>")
+    // list types
+    typeTable("Mixins", mixins)
+    typeTable("Classes", classes)
+    typeTable("Enums", enums)
+    typeTable("Facets", facets)
+    typeTable("Errs", errs)
+  }
+
+  ** Write out type-group table.
+  Void typeTable(Str header, Type[] list)
+  {
+    if (list.isEmpty) return
+    out.printLine("<h2>$header</h2>")
+    out.printLine("<table>")
+    list.each |t,i|
+    {
+      // apply zebra-stripping
+      cls := i % 2 == 0 ? "even" : "odd"
+      uri := compiler.uriMapper.map(t.qname, loc)
+      out.printLine(
+        "<tr class='$cls'>
+          <td><a href='$uri'>$t.name</a></td>
+          <td>")
+
+      // display type name along with first sentence of fandoc
+      doc := t.doc
       if (doc != null)
       {
         try
@@ -111,33 +142,31 @@ class PodIndexGenerator : HtmlGenerator
           compiler.log.err("Failed to generate fandoc for $t.qname")
         }
       }
-      out.print("</td>\n")
-      out.print("</tr>\n")
+      out.printLine("</td>")
+      out.printLine("</tr>")
     }
-    out.print("</table>\n")
+    out.printLine("</table>")
   }
 
+  ** Doc sidebar.
   override Void sidebar()
   {
-    out.print("<h2>Meta</h2>\n")
-    out.print("<ul class='clean'>\n")
-    out.print("<li><a href='pod-meta.html#facets'>Facets</a></li>\n")
-    out.print("<li><a href='pod-meta.html#symbols'>Symbols</a></li>\n")
-    out.print("</ul>\n")
-
-    out.print("<h2>Types</h2>\n")
-    out.print("<ul class='clean'>\n")
-    types.each |Type t|
+    out.printLine("<h2>All Types</h2>")
+    out.printLine("<ul class='clean'>")
+    out.printLine("<li><p><a href='pod-doc.html'>PodDoc</a></p></li>")
+    types.each |t|
     {
-      out.print("  <li><a href='${compiler.uriMapper.map(t.qname, loc)}'>$t.name</a></li>\n")
+      uri := compiler.uriMapper.map(t.qname, loc)
+      out.printLine("<li><a href='$uri'>$t.name</a></li>")
     }
-    out.print("</ul>\n")
+    out.printLine("</ul>")
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Methods
+// Support
 //////////////////////////////////////////////////////////////////////////
 
+  ** Return the first sentence found in the given str.
   static Str firstSentence(Str s)
   {
     buf := StrBuf.make
@@ -145,7 +174,6 @@ class PodIndexGenerator : HtmlGenerator
     {
       ch := s[i]
       peek := i<s.size-1 ? s[i+1] : -1
-
       if (ch == '.' && (peek == ' ' || peek == '\n'))
       {
         buf.addChar(ch)
@@ -153,15 +181,10 @@ class PodIndexGenerator : HtmlGenerator
       }
       else if (ch == '\n')
       {
-        if (peek == -1 || peek == ' ' || peek == '\n')
-          break;
-        else
-          buf.addChar(' ')
+        if (peek == -1 || peek == ' ' || peek == '\n') break
+        else buf.addChar(' ')
       }
-      else
-      {
-        buf.addChar(ch)
-      }
+      else buf.addChar(ch)
     }
     return buf.toStr
   }

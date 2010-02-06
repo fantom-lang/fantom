@@ -28,7 +28,9 @@ class FandocToHtml : DocCompilerStep
     File? indexFile := null
     compiler.pod.files.each |File file|
     {
-      if (file.name == "index.fog")
+      if (file.name == "pod.fandoc")  // handled in PodIndexToHtml
+        return
+      else if (file.name == "index.fog")
         indexFile = file
       else if (file.ext == "fandoc")
         fandocFiles.add(file)

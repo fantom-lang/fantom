@@ -156,6 +156,12 @@ class UriMapper : DocCompilerSupport
       return
     }
 
+    if (s == "pod-doc")
+    {
+      targetUri = toUri(pod, "pod-doc.html", frag)
+      return
+    }
+
     dot := s.index(".")
     if (dot != null)
     {
