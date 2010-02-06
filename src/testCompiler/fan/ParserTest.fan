@@ -161,8 +161,8 @@ class ParserTest : CompilerTest
 
   Void testEnumWithExtends()
   {
-    verifyErrors("enum class Foo : Enum { nil }",
-      [1, 6, "Enum 'Foo' cannot extend class 'sys::Enum'"])
+    verifyErrors("enum class Foo : Unit { nil }",
+      [1, 6, "Enum 'Foo' cannot extend class 'sys::Unit'"])
   }
 
   Void testFacetWithExtends()

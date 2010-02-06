@@ -183,7 +183,7 @@ public class Parser : CompilerSupport
     {
       // first inheritance type can be extends or mixin
       consume
-      first := typeRef
+      first := inheritType
       if (!first.isMixin)
         def.base = first
       else
@@ -193,7 +193,7 @@ public class Parser : CompilerSupport
       while (curt === Token.comma)
       {
         consume
-        def.mixins.add(typeRef)
+        def.mixins.add(inheritType)
       }
     }
 
@@ -239,15 +239,12 @@ public class Parser : CompilerSupport
     consume(Token.rbrace)
   }
 
-  private Void mixins(TypeDef def)
+  private CType inheritType()
   {
-    consume  // extends or mixin
-    def.mixins.add(typeRef)
-    while (curt === Token.comma)
-    {
-      consume
-      def.mixins.add(typeRef)
-    }
+    t := typeRef
+    if (t == ns.facetType) err("Cannot inherit 'Facet' explicitly", t.loc)
+    if (t == ns.enumType)  err("Cannot inherit 'Enum' explicitly", t.loc)
+    return t
   }
 
 //////////////////////////////////////////////////////////////////////////
