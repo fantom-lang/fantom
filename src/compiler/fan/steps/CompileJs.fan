@@ -17,13 +17,8 @@ class CompileJs  : CompilerStep
 
   override Void run()
   {
-// TODO-FACET
-return
-// skip pods if @js facet not configured or outpout mode not js
-//
-//if (!pod.hasMarkerFacet("sys::js") &&
-//        compiler.input.output !== CompilerOutputMode.js) return
-//
+    // short circuit if no types define the @Js facet
+    if (!needCompileJs) return
 
     // try to resolve plugin type
     t := Type.find("compilerJs::CompileJsPlugin", false)
@@ -36,6 +31,15 @@ return
     // do it!
     log.info("CompileJs")
     t.make([compiler])->run
+  }
+
+  Bool needCompileJs()
+  {
+    // in JS mode we force JS compilation
+    if (compiler.input.output === CompilerOutputMode.js) return true
+
+    // run JS compiler is any type has @Js facet
+    return compiler.types.any { it.hasFacet("sys::Js") }
   }
 
 }

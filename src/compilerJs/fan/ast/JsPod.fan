@@ -37,7 +37,7 @@ class JsPod : JsNode
       }
 
       // check for @js facet or explicit js output
-      if (def.hasMarkerFacet("sys::js") || jsOutput)
+      if (def.hasFacet("sys::Js") || jsOutput)
         types.add(JsType(s,def))
     }
   }
