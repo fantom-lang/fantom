@@ -52,7 +52,7 @@ class Build : BuildScript
     lib := devHomeDir + `lib/fan/`
     input := CompilerInput { dependsDir=lib }
     compiler := Compiler(input)
-    namespace := FPodNamespace(compiler, input.dependsDir)
+    namespace := FPodNamespace(compiler, null) // , input.dependsDir)
     return namespace.sysPod.types
   }
 

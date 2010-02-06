@@ -26,8 +26,8 @@ class FPodNamespace : CNamespace
   new make(Compiler c, File? dir)
     : super(c)
   {
-    init
     this.dir = dir
+    init
   }
 
 //////////////////////////////////////////////////////////////////////////
