@@ -319,7 +319,6 @@ public class ClassType
     this.slotsByName = nameToSlot;
     this.facets      = Facets.mapFacets(pod, ftype.attrs.facets);
 
-    // TODO-FACETS
     this.lineNum    = ftype.attrs.lineNum;
     this.sourceFile = ftype.attrs.sourceFile;
   }
@@ -403,7 +402,6 @@ public class ClassType
     String name = f.name.intern();
     Type fieldType = pod.type(f.type);
     Facets facets = Facets.mapFacets(pod, f.attrs.facets);
-    // TODO-FACETS
     return new Field(this, name, f.flags, facets, f.attrs.lineNum, fieldType);
   }
 
@@ -423,7 +421,6 @@ public class ClassType
       params.add(new Param(p.name.intern(), pod.type(p.type), pflags));
     }
     Facets facets = Facets.mapFacets(pod, m.attrs.facets);
-    // TODO-FACETS
     return new Method(this, name, m.flags, facets, m.attrs.lineNum, returns, inheritedReturns, params);
   }
 

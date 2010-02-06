@@ -822,7 +822,6 @@ class SerA
 ** SerB
 **************************************************************************
 
-// TODO-FACET: inheritance?
 @Serializable
 class SerB : SerA
 {
