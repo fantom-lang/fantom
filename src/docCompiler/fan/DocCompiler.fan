@@ -42,7 +42,6 @@ class DocCompiler
     SourceToHtml(this).run
     FandocToHtml(this).run
     PodIndexToHtml(this).run
-    SymbolsToHtml(this).run
     CopyResources(this, pod, podOutDir).run
     if (!errs.isEmpty) throw errs.last
   }
