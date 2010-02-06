@@ -221,7 +221,8 @@ formatted as inline code.
 
 pre>
   **APIs:**
-  - `sys::index`:  pod index
+  - `sys::index`: pod index
+  - `web::pod-doc`: pod documentation
   - `sys::Str`: API for type
   - `sys::Str.slice`: API for slot
   - `Int`: API for type (internal to pod)
@@ -232,12 +233,13 @@ pre>
   - `docLang::index`: pod index
   - `docLang::Closures`: chapter
   - `docLang::Closures#syntax`: anchor within chapter
-  - `Web`: chapter (internal to pod)
-  - `Web#WebReq`: anchor within chapter (internal to pod)
+  - `Env`: chapter (internal to pod)
+  - `Env#index`: anchor within chapter (internal to pod)
 <pre
 
 **APIs:**
-  - `sys::index`:  pod index
+  - `sys::index`: pod index
+  - `web::pod-doc`: pod documentation
   - `sys::Str`: API for type
   - `sys::Str.slice`: API for slot
   - `sys::Int`: API for type (internal to pod)
@@ -248,8 +250,8 @@ pre>
   - `docLang::index`: pod index
   - `docLang::Closures`: chapter
   - `docLang::Closures#syntax`: anchor within chapter
-  - `WebMod`: chapter (internal to pod)
-  - `WebMod#log`: anchor within chapter (internal to pod)
+  - [Env]`docLang::Env`: chapter (internal to pod)
+  - [Env#index]`docLang::Env#index`: anchor within chapter (internal to pod)
 
 Fandoc API [#api]
 *****************

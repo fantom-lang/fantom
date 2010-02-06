@@ -10,7 +10,7 @@
 **
 ** HttpReq models the request side of an XMLHttpRequest instance.
 **
-** See [pod doc]`pod-doc::xhr` for details.
+** See [pod doc]`pod-doc#xhr` for details.
 **
 @Js
 class HttpReq

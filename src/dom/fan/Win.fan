@@ -10,7 +10,7 @@
 **
 ** Win models the DOM window object.
 **
-** See [pod doc]`pod-doc::#win` for details.
+** See [pod doc]`pod-doc#win` for details.
 **
 @Js
 class Win

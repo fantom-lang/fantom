@@ -28,7 +28,7 @@ Configuration
 *************
 Wisp is easily configured by installing a root WebMod which is
 responsible for serving all requests to the server.  Typically
-you will install a composition [WebMod]`WebMod` to setup your
+you will install a composition [WebMod]`webmod::pod-doc` to setup your
 pipeline and routing configuration.
 
 See the following examples for how to setup a daemon script

@@ -17,8 +17,8 @@ building both desktop and HTML5 browser based applications:
   - UI layout
 
 The fwt defines the basic low level infrastructure for applications.
-`Flux` is built on top of the fwt to provide a more advanced application
-framework for desktop apps.
+[Flux]`flux::pod-doc` is built on top of the fwt to provide a more advanced
+application framework for desktop apps.
 
 Widgets [#widgets]
 ******************
