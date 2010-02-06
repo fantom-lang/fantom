@@ -119,6 +119,13 @@ abstract class BuildPod : BuildScript
   {
     if (podName == null) throw fatal("Must set BuildPod.podName")
     if (summary == null) throw fatal("Must set BuildPod.summary")
+
+    // boot strap checking
+    if (["sys", "build", "compiler", "compilerJava"].contains(podName))
+    {
+      if (Env.cur.homeDir == devHomeDir)
+        throw fatal("Must update 'devHome' for bootstrap build")
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

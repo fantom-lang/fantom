@@ -250,6 +250,7 @@ namespace Fanx.Fcode
 
     private void readPodMeta(FStore.Input input)
     {
+      /* TODO
       if (input.u4() != 0x0FC0DE05)
         throw new System.IO.IOException("Invalid magic");
 
@@ -265,6 +266,7 @@ namespace Fanx.Fcode
         m_depends[i] = Depend.fromStr(input.utf());
 
       m_attrs = FAttrs.read(input);
+      */
 
       input.Close();
     }

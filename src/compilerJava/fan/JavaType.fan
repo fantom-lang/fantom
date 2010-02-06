@@ -40,6 +40,8 @@ class JavaType : CType
   override readonly Str qname
   override Str signature() { return qname }
 
+  override CFacet? facet(Str qname) { return null }
+
   override CType? base { get { load; return *base } internal set}
   override CType[] mixins { get { load; return *mixins } internal set }
   override Int flags { get { load; return *flags } internal set }

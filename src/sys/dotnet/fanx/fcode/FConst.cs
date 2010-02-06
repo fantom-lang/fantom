@@ -18,10 +18,7 @@ public class FConst
 // Stuff
 //////////////////////////////////////////////////////////////////////////
 
-  public const int FCodeMagic    = 0x0FC0DE05;
-  public const int FCodeVersion  = 0x01000051;
-  public const int TypeDbMagic   = 0x0FC0DEDB;
-  public const int TypeDbVersion = 0x01000018;
+  public const string FCodeMagic = "1.0.51";
 
 //////////////////////////////////////////////////////////////////////////
 // Flags
@@ -125,7 +122,6 @@ public class FConst
   public const int CatchEnd         =  53; // ()        start catch block - leave typed Err on stack
   public const int FinallyStart     =  54; // ()        starting instruction of a finally block
   public const int FinallyEnd       =  55; // ()        ending instruction of a finally block
-  public const int LoadSymbol       =  56; // (symbol)  load Symbol const by index onto stack
 
   public static readonly string[] OpNames =
   {
@@ -185,7 +181,6 @@ public class FConst
     "CatchEnd",           //  53
     "FinallyStart",       //  54
     "FinallyEnd",         //  55
-    "LoadSymbol",         //  56
   };
 
   public static readonly int[] OpSkips =
@@ -246,7 +241,6 @@ public class FConst
     0,  //  53 CatchEnd
     0,  //  54 FinallyStart
     0,  //  55 FinallyEnd
-    2,  //  56 LoadSymbol
   };
 
   public static readonly string[] OpSigs =
@@ -307,7 +301,6 @@ public class FConst
     "()",         //  53 CatchEnd
     "()",         //  54 FinallyStart
     "()",         //  55 FinallyEnd
-    "(symbol)",   //  56 LoadSymbol
   };
 
 } // FConst
