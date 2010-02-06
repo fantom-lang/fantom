@@ -11,10 +11,11 @@ using web
 **
 ** WispSession
 **
+@Serializable
 internal class WispSession : WebSession
 {
 
-  internal new make(Str? id := null) : super(id) {}
+  new make(Str? id := null) : super(id) {}
 
   override Void delete()
   {
