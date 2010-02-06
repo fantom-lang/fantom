@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-Facets are a mechanism to annotate types and slots with meta-data.  Facets
+Facets are a mechanism to annotate types and slots with metadata.  Facets
 are similar to Java *annotations* or C# *attributes*.  A facet is a serialized
 instance of const class declared on a type or slot which implements the
 `sys::Facet` mixin.

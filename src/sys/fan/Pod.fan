@@ -85,6 +85,7 @@ final const class Pod
 
   **
   ** Get the meta name/value pairs for this pod.
+  ** See [docLang]`docLang::Pods#meta`.
   **
   Str:Str meta()
 

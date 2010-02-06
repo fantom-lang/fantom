@@ -24,7 +24,7 @@
   [`Methods`,       "deep dive into method slots"],
   [`Fields`,        "deep dive into field slots"],
   [`Inheritance`,   "rules for slot inheritance"],
-  [`Facets`,        "annotating types and slots with meta-data"],
+  [`Facets`,        "annotating types and slots with metadata"],
 "Functions",
   [`Functions`,     "functional programming"],
   [`Closures`,      "deep dive into closures"],

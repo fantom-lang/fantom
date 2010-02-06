@@ -37,7 +37,7 @@ the runtimes.  However some pods like 'inet' or 'fwt' need to bind the
 underlying platform with native methods.
 
 When you build a pod with native methods, it generates a normal pod file
-which is necessary for all the reflective meta-data.  But it also generates
+which is necessary for all the reflective metadata.  But it also generates
 a native file.  For Java natives this is a jar file under the "lib/java"
 directory.  For .NET natives a dll file is generated under "lib/dotnet".  Also
 see [docTools]`docTools::Build#buildPod` for how to build pods with native
