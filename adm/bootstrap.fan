@@ -26,10 +26,10 @@ class Bootstrap : AbstractMain
   Str relVer
   File relHome
 
-  @opt="Skip hg pull step"
+  @Opt { help = "Skip hg pull step" }
   Bool skipPull := false
 
-  @opt="Dir to clone repo and build"
+  @Opt { help = "Dir to clone repo and build" }
   File devHome
 
 //////////////////////////////////////////////////////////////////////////

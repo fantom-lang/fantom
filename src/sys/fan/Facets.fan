@@ -46,9 +46,10 @@ facet class Serializable
 **************************************************************************
 
 **
-** Transient is a facet used to annotate fields which should not be
-** serialized inside a [serializable]`#serializable` type.  See the
-** [Serialization Doc]`docLang::Serialization` for details.
+** Transient is a facet used to annotate fields which
+** should be serialized inside a `Serializable` type.
+** See the [Serialization Doc]`docLang::Serialization` for
+** details.
 **
 facet class Transient {}
 
