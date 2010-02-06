@@ -21,8 +21,7 @@ class Build : BuildPod
     depends    = ["sys 1.0", "compiler 1.0"]
     srcDirs    = [`fan/`]
     docSrc     = true
-// TODO-FACETS
-//    dependsDir = devHomeDir.uri + `lib/fan/`
+    dependsDir = devHomeDir.uri + `lib/fan/`
     outDir     = devHomeDir.uri + `lib/fan/`
     index      = ["compiler.bridge.java": "compilerJava::JavaBridge"]
   }

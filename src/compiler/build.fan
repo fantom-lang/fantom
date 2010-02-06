@@ -29,8 +29,7 @@ class Build : BuildPod
                   `fan/steps/`,
                   `fan/util/`]
     docSrc     = true
-// TODO-FACETS
-//    dependsDir = devHomeDir.uri + `lib/fan/`
+    dependsDir = devHomeDir.uri + `lib/fan/`
     outDir     = devHomeDir.uri + `lib/fan/`
     index =
     [

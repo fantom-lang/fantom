@@ -410,7 +410,7 @@ class GenericParameterType : CType
   override once CType toListOf() { return ListType(this) }
   override CType? base() { return ns.objType }
   override CType[] mixins() { return CType[,] }
-  override CFacet? facet(Str qname) { throw UnsupportedErr() }
+  override CFacet? facet(Str qname) { null }
   override Str:CSlot slots() { throw UnsupportedErr() }
 }
 
