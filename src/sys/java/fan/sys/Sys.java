@@ -137,6 +137,7 @@ public final class Sys
   public static final Type SerializableType   = initType("Serializable", ObjType);
   public static final Type JsType             = initType("Js",           ObjType);
   public static final Type NoDocType          = initType("NoDoc",        ObjType);
+  public static final Type DeprecatedType     = initType("Deprecated",   ObjType);
 
   // exceptions
   public static final Type ErrType               = initType("Err",               ObjType);

@@ -887,4 +887,39 @@ class MiscTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Deprecated
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDeprecated()
+  {
+    podName := this.podName
+    compile(
+     """class Foo
+        {
+          Obj? m01() { oldf }
+          Obj? m02() { oldm }
+          Obj? m03() { Old.m }
+          Obj? m04() { Old() }
+
+          @Deprecated Obj? oldf
+          @Deprecated { msg = "dont use!" } Obj? oldm() { null }
+        }
+
+        @Deprecated { msg = "hum bug" }
+        class Old
+        {
+          static Obj? m() { null }
+        }
+        """)
+
+       doVerifyErrors(
+       [
+          3, 16,  "Deprecated slot '$podName::Foo.oldf'",
+          4, 16,  "Deprecated slot '$podName::Foo.oldm' - dont use!",
+          5, 20,  "Deprecated type '$podName::Old' - hum bug",
+          6, 16,  "Deprecated type '$podName::Old' - hum bug",
+       ], compiler.warns)
+  }
+
 }
