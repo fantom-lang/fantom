@@ -9,9 +9,6 @@
 **
 ** FacetsTests
 **
-/* TODO-FACET
-@testSysByStr=["alpha"]
-@testSysByType=[SerA#]
 class FacetsTest : Test
 {
   Str? aField
@@ -23,152 +20,72 @@ class FacetsTest : Test
 
   Void testAttributes()
   {
-    verifyEq(Type.of(this)->lineNumber, 14)
-    verifyEq(Type.of(this)->sourceFile, "FacetsTest.fan")
+    verifyEq(typeof->lineNumber, 12)
+    verifyEq(typeof->sourceFile, "FacetsTest.fan")
 
     Field field := #aField
-    verifyEq(field->lineNumber, 16)
+    verifyEq(field->lineNumber, 14)
 
     Method method := #aMethod
-    verifyEq(method->lineNumber, 17)
+    verifyEq(method->lineNumber, 15)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Empty Facets
+//////////////////////////////////////////////////////////////////////////
+
+  Void testEmpty()
+  {
+    verifyEq(FacetsTest#.facets, Facet[,])
+    verifyEq(FacetsTest#.facets.isImmutable, true)
+    verifyEq(FacetsTest#.facet(NoDoc#, false), null)
+
+    verifyEq(FacetsTest#testEmpty.facets, Facet[,])
+    verifyEq(FacetsTest#testEmpty.facets.isImmutable, true)
+    verifyEq(FacetsTest#testEmpty.facet(NoDoc#, false), null)
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Type Facets
 //////////////////////////////////////////////////////////////////////////
 
-  Void testTypeFacetsA()
+  Void testTypeFacets()
   {
     t := FacetsA#
-    verifyEq(t.facets.isRO, true)
-    verifyType(t.facets, [Symbol:Obj?]#)
-    verifyEq(t.facets.size, 16)
-    verifyEq(t.facet(@transient), null)
-    verifyEq(t.facet(@transient, "!"), "!")
-    verifyErr(ReadonlyErr#) { t.facets.set(@transient, "!") }
-
-    verifyTypeFacet(t, @boolA, true)
-    verifyTypeFacet(t, @boolB, false)
-    verifyTypeFacet(t, @intA, 'c')
-    verifyTypeFacet(t, @strA, "a\tb\nc\u0abc!")
-    verifyTypeFacet(t, @floatA, 2.4f)
-    verifyTypeFacet(t, @durA, 3min)
-    verifyTypeFacet(t, @uriA, `foo.txt`)
-    verifyTypeFacet(t, @verA, Version.fromStr("2.3"))
-    verifyTypeFacet(t, @listA, Str[,])
-    verifyTypeFacet(t, @listB, [1, 2, 3])
-    verifyTypeFacet(t, @mapA, [2:"two", 3:"three"])
-    verifyTypeFacet(t, @floatB, Float.nan)
-    verifyTypeFacet(t, @floatC, Float.posInf)
-    verifyTypeFacet(t, @floatD, Float.negInf)
-    verifyTypeFacet(t, @monA, Month.jun)
-
-    t.facets.keys.each { verifySame(t.facet(it), t.facet(it)) }
+    verifyFacets(t, t.facets)
   }
 
-  Void testTypeFacetsB()
+  Void testSlotFacets()
   {
-    t := FacetsB#
-
-    verifyTypeFacet(t, @serialC, FacetsA {i=2; f=3f; s="gunslinger"})
-    verifyTypeFacet(t, @listD, [false, Version("8"), FacetsA {s="tull"}])
-    verifyTypeFacet(t, @listA, ["man", "in", "black"])
-
-    verifyNotSame(t.facet(@serialC), t.facet(@serialC))
-    verifyNotSame(t.facet(@listD), t.facet(@listD))
-    verifySame(t.facet(@listA), t.facet(@listA))
-    verifyNotSame(t.facets, t.facets)
+    s := FacetsA#i
+    verifyFacets(s, s.facets)
   }
 
-  Void verifyTypeFacet(Type t, Symbol key, Obj expected)
+  Void verifyFacets(Obj t, Facet[] facets)
   {
-    verifyEq(t.facet(key), expected)
-    verifyEq(t.facet(key, "!@#"), expected)
-    verifyEq(t.facets[key], expected)
-  }
+    verifyEq(facets.isImmutable, true)
+    verifyEq(facets.typeof, Facet[]#)
+    verifyEq(facets.size, 3)
 
-//////////////////////////////////////////////////////////////////////////
-// Slot Facets
-//////////////////////////////////////////////////////////////////////////
+    verifyEq(t->facet(Transient#, false), null)
+    verifyErr(UnknownFacetErr#) { t->facet(Transient#) }
+    verifyErr(UnknownFacetErr#) { t->facet(Transient#, true) }
 
-  Void testSlotFacets1()
-  {
-    f := FacetsA#.field("i")
-    verifyEq(f.facets.isRO, true)
-    verifyEq(f.facets.size, 3)
-    verifyType(f.facets, [Symbol:Obj?]#)
-    verifyEq(f.facet(@nodoc), null)
-    verifyEq(f.facet(@nodoc, "!"), "!")
-    verifyErr(ReadonlyErr#) { f.facets.set(@nodoc, "!") }
+    m1 := (FacetM1)t->facet(FacetM1#)
+    s1 := (FacetS1)t->facet(FacetS1#)
+    s2 := (FacetS2)t->facet(FacetS2#)
 
-    verifySlotFacet(f, @boolB, true)
-    verifySlotFacet(f, @intB, 4)
-    verifySlotFacet(f, @strA, "I")
-
-    // since values are immutable we should reuse
-    f.facets.keys.each { verifySame(f.facet(it), f.facet(it)) }
-  }
-
-  Void testSlotFacets2()
-  {
-    m := FacetsA#equals
-    verifySlotFacet(m, @boolA, true)
-  }
-
-  Void testSlotFacetsEmpty()
-  {
-    m := FacetsA#hash
-    verifyEq(m.facets.size, 0)
-    verifyEq(m.facet(@boolB), null)
-    verifyEq(m.facet(@boolB, "!"), "!")
-    verifyEq(m.facets.isImmutable, true)
-    verifySame(m.facets, m.facets)
-    verifySame(m.facets, Type.of(this).slot("testSlotFacetsEmpty").facets)
-  }
-
-  Void verifySlotFacet(Slot s, Symbol key, Obj expected)
-  {
-    verifyEq(s.facet(key), expected)
-    verifyEq(s.facet(key, "!@#"), expected)
-    verifyEq(s.facets[key], expected)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Inherited Facets
-//////////////////////////////////////////////////////////////////////////
-
-  Void testInherited()
-  {
-    t := FacetsB#
-    verifyEq(t.facet(@serialC,   null, false), FacetsA { i=2; f=3f; s="gunslinger" })
-    verifyEq(t.facet(@serialC,   null, true),  FacetsA { i=2; f=3f; s="gunslinger" })
-    verifyEq(t.facet(@strA, null, false), "foo")
-    verifyEq(t.facet(@strA, null, true),  "foo")
-
-    verifyEq(t.facet(@floatB, null, false), null)
-    verifyEq(t.facet(@floatB, null, true),  Float.nan)
-    verifyEq(t.facet(@serializable, null, false), null)
-    verifyEq(t.facet(@serializable, null, true),  true)
-
-    verifyEq(t.facet(@strB, null, false), null)
-    verifyEq(t.facet(@strB, null, true),  "ma")
-    verifyEq(t.facet(@intB, "x", false),  "x")
-    verifyEq(t.facet(@intB, null, true),  'b')
-
-    f := t.facets(true)
-    verifyEq(f.size, 20)
-    verifyEq(f[@serialC], FacetsA { i=2; it.f=3f; s="gunslinger" })
-    verifyEq(f[@listD],   [false, Version("8"), FacetsA { s="tull" }])
-    verifyEq(f[@listA],   ["man", "in", "black"])
-    verifyEq(f[@strA],    "foo")
-    verifyEq(f[@floatA],  2.4f)
-    verifyEq(f[@durA],    3min)
-    verifyEq(f[@monA],    Month.jun)
-    verifyEq(f[@strB],    "ma")
-    verifyEq(f[@intB],    'b')
-
-    f = t.facets(false)
-    verifyEq(f.size, 4)
+    verifySame(m1, FacetM1.defVal)
+    verifyEq(s1.val, "foo")
+    verifyEq(s2.b, false)
+    verifyEq(s2.i, 77)
+    verifyEq(s2.s, null)
+    verifyEq(s2.v, Version("9.0"))
+    verifyEq(s2.l, [1, 2, 3])
+    verify(facets.contains(m1))
+    verify(facets.contains(s1))
+    verify(facets.contains(s2))
+    verifySame(facets, t->facets)
   }
 
 }
@@ -177,57 +94,13 @@ class FacetsTest : Test
 ** FacetsA
 **************************************************************************
 
-@boolA
-@boolB=false
-@intA='c'
-@strA="a\tb\nc\u0abc!"
-@floatA=2.4f
-@durA=3min
-@uriA=`foo.txt`
-@verA=Version("2.3")
-@listA=Str[,]
-@listB=[1,2,3]
-@mapA=[2:"two", 3:"three"]
-@floatB=Float.nan
-@floatC=Float.posInf
-@floatD=Float.negInf
-@monA=Month.jun
-@serializable
+@FacetM1
+@FacetS1 { val = "foo" }
+@FacetS2 { i = 77; v = Version("9.0"); l = [1, 2, 3] }
 class FacetsA
 {
-  override Int hash() { return "$i + $f + $s".hash }
-
-  @boolA
-  override Bool equals(Obj? obj)
-  {
-    x := obj as FacetsA
-    if (x == null) return false
-    return i == x.i &&
-           f == x.f &&
-           s == x.s
-  }
-
-  @boolB @intB=4 @strA="I" Int i
-  Float f
-  Str? s
+  @FacetM1
+  @FacetS1 { val = "foo" }
+  @FacetS2 { i = 77; v = Version("9.0"); l = [1, 2, 3] }
+  Int i
 }
-
-**************************************************************************
-** FacetsB
-**************************************************************************
-
-@serialC=FacetsA { i=2; f=3f; s="gunslinger" }
-@listD=[false, Version("8"), FacetsA { s="tull" }]
-@listA=["man", "in", "black"]
-@strA="foo"
-class FacetsB : FacetsA, FacetsM
-{
-}
-
-**************************************************************************
-** FacetsM
-**************************************************************************
-
-@strB="ma" @intB='b' mixin FacetsM {}
-
-*/
