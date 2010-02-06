@@ -9,7 +9,7 @@
 **
 ** FacetDef models a facet declaration.
 **
-class FacetDef : Node
+class FacetDef : Node, CFacet
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -23,8 +23,19 @@ class FacetDef : Node
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Serialization
+// Facet
 //////////////////////////////////////////////////////////////////////////
+
+  override Str qname() { type.qname }
+
+  override Obj? get(Str name)
+  {
+    i := names.index(name)
+    if (i == null) return null
+    literal := vals[i] as LiteralExpr
+    if (literal != null) return null
+    return literal.val
+  }
 
   Str serialize()
   {
@@ -60,7 +71,7 @@ class FacetDef : Node
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  CType? type
+  CType type
   Str[] names := Str[,]
   Expr[] vals := Expr[,]
 }

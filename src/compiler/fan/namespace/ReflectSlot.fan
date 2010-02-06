@@ -114,3 +114,21 @@ class ReflectParam : CParam
   override readonly CType paramType
   readonly Param p
 }
+
+**************************************************************************
+** ReflectFacet
+**************************************************************************
+
+class ReflectFacet : CFacet
+{
+  static ReflectFacet? map(ReflectNamespace ns, Facet? f)
+  {
+    if (f == null) return null
+    return make(f)
+  }
+  private new make(Facet f) { this.f = f }
+  override Str qname() { f.typeof.qname }
+  override Obj? get(Str name) { f.typeof.field(name, false)?.get(f) }
+  override Str toStr() { f.toStr }
+  Facet f
+}

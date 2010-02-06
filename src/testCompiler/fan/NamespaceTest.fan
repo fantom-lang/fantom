@@ -43,18 +43,19 @@ class NamespaceTest : CompilerTest
     types := pod.types
 
     // get some useful types
-    int    := types.find |CType t->Bool| { return t.name == "Int" }
-    obj    := pod.resolveType("Obj",    true)
-    v      := pod.resolveType("Void",   true)
-    num    := pod.resolveType("Num",    true)
-    str    := pod.resolveType("Str",    true)
-    buf    := pod.resolveType("Buf",    true)
-    list   := pod.resolveType("List",   true)
-    map    := pod.resolveType("Map",    true)
-    method := pod.resolveType("Method", true)
-    func   := pod.resolveType("Func", true)
-    in     := pod.resolveType("InStream",  true)
-    out    := pod.resolveType("OutStream", true)
+    int     := types.find |CType t->Bool| { return t.name == "Int" }
+    obj     := pod.resolveType("Obj",     true)
+    v       := pod.resolveType("Void",    true)
+    num     := pod.resolveType("Num",     true)
+    str     := pod.resolveType("Str",     true)
+    buf     := pod.resolveType("Buf",     true)
+    list    := pod.resolveType("List",    true)
+    map     := pod.resolveType("Map",     true)
+    method  := pod.resolveType("Method",  true)
+    func    := pod.resolveType("Func",    true)
+    in      := pod.resolveType("InStream",true)
+    depend  := pod.resolveType("Depend",  true)
+    service := pod.resolveType("Service", true)
 
     // sys::Int
     verifySame(int.pod, pod)
@@ -70,18 +71,15 @@ class NamespaceTest : CompilerTest
     verifyEq(int.isMixin, false)
     verifyEq(int.isAbstract, false)
 
-    // sys::OutStream
-    // TODO test mixin
-    /*
-    verifySame(out.pod, pod)
-    verifyEq(out.name,  "OutStream")
-    verifyEq(out.qname, "sys::OutStream")
-    verifyEq(out.signature, "sys::OutStream")
-    verifyEq(out.base, obj)
-    verifyEq(out.mixins.size, 0)
-    verifyEq(out.isMixin, true)
-    verifyEq(out.isAbstract, true)
-    */
+    // sys::Service
+    verifySame(service.pod, pod)
+    verifyEq(service.name,  "Service")
+    verifyEq(service.qname, "sys::Service")
+    verifyEq(service.signature, "sys::Service")
+    verifyEq(service.base, obj)
+    verifyEq(service.mixins.size, 0)
+    verifyEq(service.isMixin, true)
+    verifyEq(service.isAbstract, true)
 
     // sys::Buf.charset
     cs := (CField)buf.slots["charset"]
@@ -118,10 +116,9 @@ class NamespaceTest : CompilerTest
     verifyEq(int.fits(num), true)
     verifyEq(int.fits(int), true)
     verifyEq(int.fits(buf), false)
-    verifyEq(out.fits(obj), true)
-    verifyEq(out.fits(out), true)
-    verifyEq(out.fits(buf), false)
-    // TODO - fits mixins would be nice test
+    verifyEq(service.fits(obj), true)
+    verifyEq(service.fits(service), true)
+    verifyEq(service.fits(buf), false)
 
     // generic
     verifySame(list.pod, pod)
@@ -298,6 +295,12 @@ class NamespaceTest : CompilerTest
     verifyEq(m.slot("call")->returnType, str)
     verifyEq(m.slot("call")->params->get(0)->paramType, int)
     verifyEq(m.slot("call")->params->get(1)->paramType, num)
+
+    // facets
+    f := depend.facet("sys::Serializable")
+    verifyNotNull(f)
+    verifyEq(f["simple"], true)
+    verifyEq(f["bad"], null)
   }
 
 //////////////////////////////////////////////////////////////////////////

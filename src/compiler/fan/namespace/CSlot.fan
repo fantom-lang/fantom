@@ -223,3 +223,19 @@ mixin CParam
   abstract CType paramType()
   abstract Bool hasDefault()
 }
+
+**************************************************************************
+** CFacet
+**************************************************************************
+
+**
+** CFacet models a facet definition in a CType or CSlot
+**
+mixin CFacet
+{
+  ** Qualified name of facet type
+  abstract Str qname()
+
+  ** Get the value of the given facet field or null if undefined.
+  abstract Obj? get(Str name)
+}
