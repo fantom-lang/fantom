@@ -61,9 +61,8 @@ You can plug in your own scheme handling by subclassing 'UriScheme':
     override Obj? get(Uri uri, Obj? base) { ... }
   }
 
-You override the 'get' method o implement uri to object resolution.
-
-To register your scheme, define a indexed prop formatted as:
+You override the 'get' method to implement uri to object resolution.  To
+register your scheme, define an [indexed prop]`Env#index` formatted as:
 
   sys.uriScheme.{scheme}={qname}
 

@@ -113,13 +113,13 @@ namespace Fanx.Typedb
     void loadPod(Pod p, DataReader input)
     {
       // magic
-      if (input.ReadInt() != FConst.TypeDbMagic)
-        throw new IOException("Invalid magic");
+      //if (input.ReadInt() != FConst.TypeDbMagic)
+      //  throw new IOException("Invalid magic");
 
       // typedb format version
       int version = input.ReadInt();
-      if (version != FConst.TypeDbVersion)
-        throw new IOException("Invalid version 0x" + version.ToString("X"));
+      //if (version != FConst.TypeDbVersion)
+      //  throw new IOException("Invalid version 0x" + version.ToString("X"));
 
       // pod name
       string podName = input.ReadUTF();
