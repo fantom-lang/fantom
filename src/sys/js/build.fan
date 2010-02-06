@@ -68,10 +68,6 @@ class Build : BuildScript
 
   private Void writeTypeInfo(OutStream out)
   {
-// TODO TEMP
-out.printLine("fan.sys.UnknownSymbolErr = fan.sys.Obj.\$extend(fan.sys.Obj);")
-out.printLine("fan.sys.UnknownSymbolErr.prototype.\$ctor = function() {}")
-
     log.debug("  TypeInfo")
 
     out.printLine("with (fan.sys.Pod.\$add('sys'))")
