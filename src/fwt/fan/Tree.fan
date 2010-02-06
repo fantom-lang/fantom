@@ -12,6 +12,7 @@ using gfx
 ** Tree displays a hierarchy of tree nodes which can be
 ** expanded and collapsed.
 **
+@Serializable
 class Tree : Widget
 {
 
@@ -66,12 +67,12 @@ class Tree : Widget
   **
   ** Horizontal scroll bar.
   **
-  ScrollBar hbar := ScrollBar() { private set }
+  @Transient ScrollBar hbar := ScrollBar() { private set }
 
   **
   ** Vertical scroll bar.
   **
-  ScrollBar vbar := ScrollBar() { private set }
+  @Transient ScrollBar vbar := ScrollBar() { private set }
 
   **
   ** Draw a border around the widget.  Default is true.  This

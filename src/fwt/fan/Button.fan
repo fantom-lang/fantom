@@ -14,6 +14,7 @@ using gfx
 ** children of a `ToolBar`.
 **
 @Js
+@Serializable
 class Button : Widget
 {
 

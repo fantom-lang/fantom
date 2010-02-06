@@ -13,6 +13,7 @@ using gfx
 ** when nested inside other Menus.
 **
 @Js
+@Serializable { collection = true }
 class Menu : MenuItem
 {
 

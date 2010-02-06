@@ -16,7 +16,7 @@ using gfx
 ** width.  Any remaining space is given to the center component.
 **
 @Js
-@Serializable  // override to not be collection
+@Serializable
 class EdgePane : Pane
 {
 

@@ -13,6 +13,7 @@ using gfx
 ** a sash control between each one to allow resizing.
 **
 @Js
+@Serializable { collection = true }
 class SashPane : Widget
 {
 

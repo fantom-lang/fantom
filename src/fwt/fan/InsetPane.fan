@@ -12,6 +12,7 @@ using gfx
 ** InsetPane creates padding along the four edges of its content.
 **
 @Js
+@Serializable
 class InsetPane : ContentPane
 {
 

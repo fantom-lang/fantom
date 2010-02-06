@@ -10,6 +10,7 @@
 ** Text is used to enter and modify text.
 **
 @Js
+@Serializable
 class Text : TextWidget
 {
 

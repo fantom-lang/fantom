@@ -14,6 +14,7 @@ using gfx
 ** `Widget.remove`.
 **
 @Js
+@Serializable { collection = true }
 class TabPane : Widget
 {
   **
@@ -75,6 +76,7 @@ class TabPane : Widget
 ** configure the tab's text, image, and content widget.
 **
 @Js
+@Serializable { collection = true }
 class Tab : Widget
 {
 

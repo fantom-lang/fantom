@@ -13,7 +13,7 @@ using gfx
 ** contain one child widget called 'content'.
 **
 @Js
-@Serializable // override to not be collection
+@Serializable
 class ContentPane : Pane
 {
 
