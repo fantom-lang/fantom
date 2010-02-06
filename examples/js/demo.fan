@@ -162,6 +162,7 @@ class ShowScript : Weblet
   {
     input := CompilerInput.make
     input.podName   = file.basename
+    input.summary   = ""
     input.version   = Version("0")
     input.log.level = LogLevel.err
     input.isScript  = true

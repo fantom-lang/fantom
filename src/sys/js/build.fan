@@ -9,6 +9,7 @@
 //
 
 using build
+using compiler
 
 class Build : BuildScript
 {
@@ -24,7 +25,7 @@ class Build : BuildScript
 
     sys   = scriptFile.parent + `fan/`
     fanx  = scriptFile.parent + `fanx/`
-    types = Pod.find("sys").types
+    types = resolveSysTypes
 
     tempDir := scriptFile.parent + `temp-js/`
     tempDir.delete
@@ -46,6 +47,15 @@ class Build : BuildScript
     tempDir.delete
   }
 
+  private CType[] resolveSysTypes()
+  {
+    lib := devHomeDir + `lib/fan/`
+    input := CompilerInput { dependsDir=lib }
+    compiler := Compiler(input)
+    namespace := FPodNamespace(compiler, input.dependsDir)
+    return namespace.sysPod.types
+  }
+
   private Void writeSys(OutStream out)
   {
     log.debug("  fan/")
@@ -58,21 +68,26 @@ class Build : BuildScript
 
   private Void writeTypeInfo(OutStream out)
   {
+// TODO TEMP
+out.printLine("fan.sys.UnknownSymbolErr = fan.sys.Obj.\$extend(fan.sys.Obj);")
+out.printLine("fan.sys.UnknownSymbolErr.prototype.\$ctor = function() {}")
+
     log.debug("  TypeInfo")
 
     out.printLine("with (fan.sys.Pod.\$add('sys'))")
     out.printLine("{")
 
     // filter out synthetic types from reflection
+    errType := types.find |t| { t.qname == "sys::Err" }
     reflect := types.findAll |t|
     {
       if (t.isSynthetic) return false
-      if (t.fits(Err#)) return true
+      if (t.fits(errType)) return true
       return (sys+`${t.name}.js`).exists
     }
 
     // Obj and Type must be defined first
-    i := reflect.index(Type#)
+    i := reflect.findIndex |t| { t.qname == "sys::Type" }
     reflect.insert(1, reflect.removeAt(i))
 
     // write all types first
@@ -90,7 +105,7 @@ class Build : BuildScript
     {
       if (t.fields.isEmpty && t.methods.isEmpty) return
       out.print("  fan.sys.${t.name}.\$type")
-      t.fields.each |f| { out.print(".\$af('$f.name',${f->flags},'$f.type.signature')") }
+      t.fields.each |f| { out.print(".\$af('$f.name',${f->flags},'$f.fieldType.signature')") }
       t.methods.each |m| { out.print(".\$am('$m.name',${m->flags})") }
       out.printLine(";")
     }
@@ -187,8 +202,8 @@ class Build : BuildScript
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  File? sys      // sys/fan/ dir
-  File? fanx     // sys/fanx/ dir
-  Type[]? types  // types to emit
+  File? sys       // sys/fan/ dir
+  File? fanx      // sys/fanx/ dir
+  CType[]? types  // types to emit
 
 }

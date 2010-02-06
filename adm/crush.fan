@@ -15,13 +15,14 @@ class Crush
 
   static Void main()
   {
-    if (Sys.args.size != 1)
+    args := Env.cur.args
+    if (args.size != 1)
     {
       echo("usage: crush <dir>")
-      Sys.exit(-1)
+      Env.cur.exit(-1)
     }
 
-    c := Crush() { root = Sys.args[0].toUri.toFile }
+    c := Crush() { root = args[0].toUri.toFile }
     c.run()
     echo("$c.count files crushed removing $c.bytes bytes")
   }
