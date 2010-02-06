@@ -91,7 +91,7 @@ create a directory structure organized as follows:
       Main.fan
 
 The contents of "build.fan" is the build script which defines your
-pod's meta-data:
+pod's metadata:
 
   class Build : build::BuildPod
   {

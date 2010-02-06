@@ -31,7 +31,7 @@ try use a naming convention which won't produce conflicts (see
 Pods are also the fundamental unit of deployment, versioning, and dependency
 management.  In this role pods are like Java JAR files or .NET DLLs.  A pod
 is a standard zip file which bundles the Fantom code for the pod's types,
-meta-data, plus any associated file resources.
+metadata, plus any associated file resources.
 
 The `sys::Pod` type is the reflection API for working with pods installed in a
 given Fantom installation.  Code examples for common pod operations:
