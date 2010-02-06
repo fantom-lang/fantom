@@ -38,12 +38,11 @@ the Fantom's namespace including the file system, "fan:" namespaces, or any
 of the protocols plugged into Fantom via 'UriScheme'.
 
 When a user navigates to a uri, the uri is resolved into a Fantom object
-via the standard [naming]`docLang::Naming` subsystem.  We call the
-resolved object a *resource*.  Then the runtime looks in the
-[type database]`docLang::TypeDatabase` to find all the *views* registered
-to view and edit the resource.  It is not uncommon for a resource to
-have multiple views, in which case the user can switch between them
-using the pull down on the right side of the locator bar.
+via the standard [naming]`docLang::Naming` subsystem.  We call the resolved
+object a *resource*.  Then the runtime uses [indexed props]`docLang::Env#index`
+to find all the *views* registered to view and edit the resource.  It is
+not uncommon for a resource to have multiple views, in which case the user
+can switch between them using the pull down on the right side of the locator bar.
 
 See `docLib::Flux` for the details regarding the navigation and
 the various APIs and framework hooks.

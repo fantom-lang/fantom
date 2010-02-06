@@ -292,15 +292,6 @@ enclosing class.  A slot literal resolves to a `sys::Field` or `sys::Method`.
 Slot literals have the same semantics as reflection via 'Type.slot' except
 they can be statically checked by the compiler.
 
-Symbol [#symbol]
-************
-You can create a symbol literal using the syntax:
-
-  @symbol
-  @somePod::symbol
-
-See [Symbols]`Symbols#literals` chapter for details.
-
 Range [#range]
 **************
 A `sys::Range` represents a contiguous range of integers from start to end.  Ranges

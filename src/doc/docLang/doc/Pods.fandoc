@@ -35,6 +35,7 @@ declare the pod's build time and runtime meta-data.
 
 Pod Facets [#facets]
 ********************
+TODO-FACETS
 All pods require '@podSrcDirs' facet and any pod which contains code requires
 the '@podDepends' facets.  A summary of commonly uses facets:
 
@@ -56,9 +57,6 @@ the '@podDepends' facets.  A summary of commonly uses facets:
 
   - [podJsDirs]`@sys::podJavaDirs`: list of file Uris relative to "pod.fan"
     which contain JavaScript source files for native code.
-
-  - [podIndexFacets]`@sys::podIndexFacets`: facets to index for [type
-    database]`TypeDatabase#facetIndexing`.
 
   - [js]`@sys::js`: indicates the pod contains types annotated with the '@js'
     facet which should be compiled to JavaScript during a full build.
