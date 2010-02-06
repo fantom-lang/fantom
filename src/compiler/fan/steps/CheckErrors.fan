@@ -1510,9 +1510,7 @@ class CheckErrors : CompilerStep
         err("Internal type '$t' not accessible", loc)
     }
 
-// TODO-FACETS
-//    if (t.facet("sys::deprecated", null) == true)
-//      warn("Deprecated type '$t'", loc)
+    checkDeprecated(t, loc)
   }
 
   private Void checkSlotProtection(CSlot slot, Loc loc, Bool setter := false)
@@ -1520,13 +1518,7 @@ class CheckErrors : CompilerStep
     errMsg := slotProtectionErr(slot, setter)
     if (errMsg != null) err(errMsg, loc)
 
-// TODO-FACETS
-/*
-    if (slot.facet("sys::deprecated", null) == true)
-      warn("Deprecated slot '$slot.qname'", loc)
-    else if (slot.parent.facet("sys::deprecated", null) == true)
-      warn("Deprecated type '$slot.parent'", loc)
-*/
+    checkDeprecated(slot, loc)
   }
 
   private Str? slotProtectionErr(CSlot slot, Bool setter := false)
@@ -1563,6 +1555,35 @@ class CheckErrors : CompilerStep
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Check for the deprecated facet where target is CType or CSlot
+  **
+  private Void checkDeprecated(Obj target, Loc loc)
+  {
+    // don't check inside of synthetic getter/setter
+    if (curMethod != null && curMethod.isSynthetic) return
+
+    // check both slot and its parent type
+    slot := target as CSlot
+    CFacet? f := null
+    if (slot != null)
+    {
+      f = slot.facet("sys::Deprecated")
+      if (f == null) target = slot.parent
+    }
+    if (f == null) f = ((CType)target).facet("sys::Deprecated")
+    if (f == null) return
+
+    // we got a deprecration warning - log it
+    kind := target is CType ? "type" : "slot"
+    qname := (Str)target->qname
+    msg := f["msg"] as Str ?: ""
+    if (!msg.isEmpty)
+      warn("Deprecated $kind '$qname' - $msg", loc)
+    else
+      warn("Deprecated $kind '$qname'", loc)
+  }
 
   **
   ** Ensure the specified expression is boxed to an object reference.

@@ -33,7 +33,7 @@ class FacetDef : Node, CFacet
     i := names.index(name)
     if (i == null) return null
     literal := vals[i] as LiteralExpr
-    if (literal != null) return null
+    if (literal == null) return null
     return literal.val
   }
 
