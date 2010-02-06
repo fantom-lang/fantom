@@ -157,6 +157,14 @@ class EnumTest : CompilerTest
 
   Void testErrors()
   {
+    verifyErrors(
+     """const class X : Enum {}
+        """,
+       [
+         1, 17, "Cannot inherit 'Enum' explicitly",
+       ])
+
+
     // InitEnum
     verifyErrors(
      "mixin X { static Int vals() {} abstract Str foo(); }

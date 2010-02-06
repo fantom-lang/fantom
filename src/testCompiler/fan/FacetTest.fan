@@ -151,6 +151,14 @@ class FacetTest : CompilerTest
 
   Void testErrors()
   {
+    // Parse
+    verifyErrors(
+     """const class X : Facet {}
+        """,
+       [
+         1, 17, "Cannot inherit 'Facet' explicitly",
+       ])
+
     // InitFacet
     verifyErrors(
      """facet class A { new make() {} }
@@ -173,7 +181,8 @@ class FacetTest : CompilerTest
         facet class A
         {
           const Str a := ""
-        }""",
+        }
+        """,
      [
        1,  1, "Duplicate facet 'sys::Js'",
        1, 14, "Duplicate facet 'sys::NoDoc'",
