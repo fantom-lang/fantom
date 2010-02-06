@@ -9,7 +9,7 @@
 Overview [#overview]
 ********************
 Flux is a framework for building general purpose desktop applications
-with the [fwt]`docLib::Fwt` toolkit.  This chapter covers how to use
+with the [fwt]`fwt::pod-doc` toolkit.  This chapter covers how to use
 the flux APIs for creating new applications and plugins. See
 [docTools]`docTools::Flux` for how to setup and use flux as an IDE.
 

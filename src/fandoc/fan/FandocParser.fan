@@ -10,7 +10,7 @@
 ** FandocParser translate fandoc text into an in-memory
 ** representation of the document.
 **
-** See [docLib::Fandoc]`docLib::Fandoc#api` for usage.
+** See [pod doc]`pod-doc#api` for usage.
 **
 class FandocParser
 {

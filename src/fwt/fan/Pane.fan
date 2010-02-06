@@ -14,7 +14,7 @@ using gfx
 **   1. Override prefSize to compute their preferred size
 **   2. Override onLayout to set the bounds of all their children
 **
-** See [docLib]`docLib::Fwt` for details.
+** See [pod doc]`pod-doc#panes` for details.
 **
 @Js
 abstract class Pane : Widget

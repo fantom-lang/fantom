@@ -38,7 +38,6 @@ Javadoc).  Manuals group a set of chapters on a subject:
   - [docIntro]`docIntro::index`: general purpose introductory material
   - [docLang]`docLang::index`: covers the language in depth
   - [docTools]`docTools::index`: command line tools, unit testing, build toolkit
-  - [docLib]`docLib::index`: details on various pod libraries
 
 In addition [examples]`examples::index` can be accessed as HTML.
 All examples are designed as complete stand alone programs which

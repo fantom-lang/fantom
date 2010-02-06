@@ -12,7 +12,7 @@
 ** values stored in a WebSession must be serializable.
 ** Get the current WebSession via `WebReq.session`.
 **
-** See [docLib::Web]`docLib::Web#sessions`
+** See [pod doc]`pod-doc#sessions`.
 **
 @Serializable
 abstract class WebSession

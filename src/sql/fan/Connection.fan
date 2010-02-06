@@ -9,8 +9,6 @@
 **
 ** Connection manages a logical connection to an SQL database.
 **
-** Refer to the [Sql docs]`docLib::Sql` for more details.
-**
 internal class Connection
 {
 

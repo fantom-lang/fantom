@@ -11,7 +11,7 @@ using web
 **
 ** PipelineMod routes seriallly through a list of sub-WebMods.
 **
-** See [docLib::WebMod]`docLib::WebMod#pipeline`
+** See [pod doc]`pod-doc#pipeline`
 **
 const class PipelineMod : WebMod
 {

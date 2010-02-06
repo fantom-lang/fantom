@@ -10,7 +10,7 @@
 **
 ** Elem models a DOM element object.
 **
-** See [docLib]`docLib::Dom#elem` for details.
+** See [pod doc]`pod-doc#elem` for details.
 **
 @Js
 class Elem

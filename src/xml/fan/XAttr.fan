@@ -10,8 +10,6 @@
 ** XAttr models an XML attribute in an element.  Attributes
 ** are immutable and may be shared across multiple XElem parents.
 **
-** See [docLib::Xml]`docLib::Xml`
-**
 const class XAttr
 {
 

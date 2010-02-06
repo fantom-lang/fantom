@@ -10,7 +10,7 @@ Overview [#overview]
 ********************
 The Fantom distribution includes a desktop tool called *flux*.  Flux
 is a framework for building general purpose desktop applications
-with the [fwt]`docLib::Fwt` toolkit.  The standard Fantom distribution
+with the [fwt]`fwt::pod-doc` toolkit.  The standard Fantom distribution
 includes with a set of flux plugins which provide basic IDE support
 for Fantom.
 
@@ -44,7 +44,7 @@ to find all the *views* registered to view and edit the resource.  It is
 not uncommon for a resource to have multiple views, in which case the user
 can switch between them using the pull down on the right side of the locator bar.
 
-See `docLib::Flux` for the details regarding the navigation and
+See `flux::pod-doc` for the details regarding the navigation and
 the various APIs and framework hooks.
 
 Text Editor [#textEditor]
@@ -205,5 +205,5 @@ You can change the script, or use it as a template to define new scripts.
 Developing for Flux [#dev]
 **************************
 Flux is itself a framework designed to be customized and extended with
-its plugin architecture.  See the `docLib::Flux` to learn how to use
+its plugin architecture.  See the `flux::pod-doc` to learn how to use
 the 'flux' APIs for creating your own plugins.

@@ -67,7 +67,7 @@ facet class Js {}
 
 **
 ** This facet is used on public types and slots to indicate they should
-** not be documented with automated tools such as [Fandoc]`docLib::Fandoc`.
+** not be documented with automated tools such as [Fandoc]`fandoc::pod-doc`.
 ** As a developer you should avoid using these types and slots since they
 ** are explicitly marked as not part of the public API.
 **

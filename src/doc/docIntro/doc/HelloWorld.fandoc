@@ -201,7 +201,7 @@ writing main routines.  It's primary purpose is to configure the web server
 to run on port 8080 and to use a simple webmod which defines how to
 process HTTP requests.
 
-The 'HelloMod' class subclasses [WebMod]`docLib::Web#webmod` which is Fantom's
+The 'HelloMod' class subclasses [WebMod]`web::pod-doc#webmod` which is Fantom's
 "servlet" API for servicing web requests.  It doesn't do much - sets
 the content type and writes the response text.
 

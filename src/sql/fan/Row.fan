@@ -9,8 +9,6 @@
 **
 ** Row models a row of a relational table.
 **
-** See `docLib::Sql`.
-**
 class Row
 {
 

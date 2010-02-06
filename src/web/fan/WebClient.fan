@@ -23,9 +23,7 @@ using inet
 ** connection).  There are also a series of convenience methods which
 ** make common cases easier.
 **
-** See [docLib::Web]`docLib::Web#webClient` and [examples]`examples::web-client`.
-**
-** Example [index]`examples::index`
+** See [pod doc]`pod-doc#webClient` and [examples]`examples::web-client`.
 **
 class WebClient
 {

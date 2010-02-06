@@ -9,7 +9,7 @@
 **
 ** WebRes encapsulates a response to a web request.
 **
-** See [docLib::Web]`docLib::Web#webRes`
+** See [pod doc]`pod-doc#webRes`
 **
 abstract class WebRes
 {

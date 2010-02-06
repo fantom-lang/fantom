@@ -9,8 +9,6 @@
 **
 ** JsonParser parses JSON.
 **
-** See [docLib]`docLib::Json` for details.
-**
 internal class JsonParser
 {
   new make(InStream in)

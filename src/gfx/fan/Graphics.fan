@@ -10,7 +10,7 @@
 ** Graphics is used to draw 2D graphics.  Targets might include
 ** display devices, printers, SVG/Canvas, or PDF.
 **
-** See [docLib]`docLib::Fwt` for details.
+** See [Fwt]`fwt::pod-doc#painting` for details.
 **
 @Js
 mixin Graphics

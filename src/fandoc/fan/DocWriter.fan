@@ -9,7 +9,7 @@
 **
 ** DocWriter is used to output a fandoc model using a series of callbacks.
 **
-** See [docLib::Fandoc]`docLib::Fandoc#api` for usage.
+** See [pod doc]`pod-doc#api` for usage.
 **
 mixin DocWriter
 {

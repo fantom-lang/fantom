@@ -11,7 +11,7 @@ using web
 **
 ** FileMod is a web module which publishes a file or directory.
 **
-** See [docLib::WebMod]`docLib::WebMod#file`
+** See [pod doc]`pod-doc#file`
 **
 const class FileMod : WebMod
 {

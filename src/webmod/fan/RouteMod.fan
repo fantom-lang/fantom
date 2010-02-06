@@ -11,7 +11,7 @@ using web
 **
 ** RouteMod routes a level of the URI path to sub-WebMods.
 **
-** See [docLib::WebMod]`docLib::WebMod#route`
+** See [pod doc]`pod-doc#route`
 **
 const class RouteMod : WebMod
 {

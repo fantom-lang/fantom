@@ -9,8 +9,6 @@
 **
 ** Serialization to/from Javascript Object Notation (JSON).
 **
-** See [docLib]`docLib::Json` for details.
-**
 class Json
 {
   **
@@ -24,8 +22,6 @@ class Json
   **   - Obj?[]
   **   - [simple]`docLang::Serialization#simple` (written as JSON string)
   **   - [serializable]`docLang::Serialization#serializable` (written as JSON object)
-  **
-  ** See [docLib]`docLib::Json` for details.
   **
   public static Void write(OutStream out, Obj? obj)
   {

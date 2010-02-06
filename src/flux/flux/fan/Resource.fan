@@ -16,7 +16,7 @@ using fwt
 ** both "target" and "resource" are qualied type names.  Subclasses
 ** must define a 'make(Uri, Obj)' constructor.
 **
-** See `docLib::Flux` for details.
+** See [pod doc]`pod-doc#resources` for details.
 **
 abstract class Resource
 {

@@ -11,7 +11,7 @@ using inet
 **
 ** Email models a top level MIME message.
 **
-** See [docLib]`docLib::Email` and [examples]`examples::email-sending`.
+** See [pod doc]`pod-doc` and [examples]`examples::email-sending`.
 **
 @Serializable
 class Email

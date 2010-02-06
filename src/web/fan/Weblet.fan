@@ -9,7 +9,7 @@
 **
 ** Weblet services a web request.
 **
-** See [docLib::Web]`docLib::Web#weblet`
+** See [pod doc]`pod-doc#weblet`.
 **
 mixin Weblet
 {

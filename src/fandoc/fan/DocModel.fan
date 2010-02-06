@@ -36,7 +36,7 @@ enum class DocNodeId
 ** DocNode is the base class for nodes in a fandoc model.
 ** There are two type of nodes:  DocElem and DocText.
 **
-** See [docLib::Fandoc]`docLib::Fandoc#api` for usage.
+** See [pod doc]`pod-doc#api` for usage.
 **
 abstract class DocNode
 {
@@ -69,7 +69,7 @@ abstract class DocNode
 **
 ** DocText segment.
 **
-** See [docLib::Fandoc]`docLib::Fandoc#api` for usage.
+** See [pod doc]`pod-doc#api` for usage.
 **
 class DocText : DocNode
 {
@@ -94,7 +94,7 @@ class DocText : DocNode
 **
 ** DocElem is a container node which models a branch of the doc tree.
 **
-** See [docLib::Fandoc]`docLib::Fandoc#api` for usage.
+** See [pod doc]`pod-doc#api` for usage.
 **
 abstract class DocElem : DocNode
 {
