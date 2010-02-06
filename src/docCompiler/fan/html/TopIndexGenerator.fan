@@ -69,6 +69,7 @@ class TopIndexGenerator : HtmlGenerator
     // APIs
     apis := TopIndexItem[,]
     pods.each |p| { if (isAPI(p)) apis.add(TopIndexItem(p)) }
+    apis.sort |a,b| { a.name.compareIgnoreCase(b.name) }
     listPods("APIs", apis)
   }
 
@@ -101,7 +102,7 @@ internal class TopIndexItem
   new make(Pod p)
   {
     name = p.name
-    doc = PodIndexGenerator.firstSentence(p.doc ?: "")
+    doc = HtmlDocUtil.firstSentence(p.meta["pod.summary"] ?: "")
   }
 
   new makeExplicit(Str n, Str d)

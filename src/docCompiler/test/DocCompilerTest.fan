@@ -63,7 +63,7 @@ class DocCompilerTest : Test
 
   Void verifySentence(Str para, Str sentence)
   {
-    verifyEq(PodIndexGenerator.firstSentence(para), sentence)
+    verifyEq(HtmlDocUtil.firstSentence(para), sentence)
   }
 
 }
