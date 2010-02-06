@@ -433,6 +433,7 @@ class ParameterizedField : CField
   override Str qname() { return generic.qname }
   override Str signature() { return generic.signature }
   override Int flags() { return generic.flags }
+  override CFacet? facet(Str qname) { generic.facet(qname) }
 
   override CType fieldType
   override CMethod? getter
@@ -474,6 +475,7 @@ class ParameterizedMethod : CMethod
   override Str name()  { return generic.name }
   override Str qname() { return generic.qname }
   override Int flags() { return generic.flags }
+  override CFacet? facet(Str qname) { generic.facet(qname) }
 
   override Bool isParameterized()  { return true }
 

@@ -31,6 +31,12 @@ abstract class FSlot : CSlot, FConst
   override Str name() { return fparent.fpod.n(nameIndex) }
   override Str qname() { return fparent.qname + "." + name }
 
+  override CFacet? facet(Str qname)
+  {
+    if (ffacets == null) ffacets = FFacet.decode(fparent.pod, fattrs)
+    return ffacets.find |f| { f.qname == qname }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // IO
 //////////////////////////////////////////////////////////////////////////
@@ -55,5 +61,6 @@ abstract class FSlot : CSlot, FConst
   override Int flags      // bitmask
   Int nameIndex           // name index
   FAttr[]? fattrs         // meta-data attributes
+  FFacet[]? ffacets       // facets
 
 }

@@ -78,6 +78,9 @@ class CheckErrors : CompilerStep
     if (isRestrictedName(t.name))
       err("Type name '$t.name' is restricted", t.loc)
 
+    // verify type name doesn't conflict with resource name
+    checkResConflicts(t)
+
     // if type extends from any FFI types then give bridge a hook
     foreign := t.foreignInheritance
     if (foreign != null) foreign.bridge.checkType(t)
@@ -96,8 +99,17 @@ class CheckErrors : CompilerStep
 
   static Bool isRestrictedName(Str name)
   {
-    // TODO-FACETS: disallow resources to have same name as types
+    // disallow types to conflict with docs URI
     return name == "pod" || name == "index"
+  }
+
+  private Void checkResConflicts(TypeDef t)
+  {
+    compiler.input.resDirs?.each |uri|
+    {
+      if (uri.path.first == t.name)
+        err("Resource `$uri` conflicts with type name '$t.name'", t.loc)
+    }
   }
 
   private Void checkTypeFlags(TypeDef t)

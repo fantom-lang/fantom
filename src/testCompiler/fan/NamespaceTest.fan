@@ -475,4 +475,17 @@ class NamespaceTest : CompilerTest
      ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Res Conflicts
+//////////////////////////////////////////////////////////////////////////
+
+  Void testResConflicts()
+  {
+    verifyErrors(
+     "class Foo {}",
+       [
+         1, 1, "Resource `Foo/` conflicts with type name 'Foo'",
+       ]) { resDirs = [`Foo/`] }
+  }
+
 }
