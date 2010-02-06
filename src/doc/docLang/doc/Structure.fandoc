@@ -8,18 +8,17 @@
 
 Overview [#overview]
 ********************
-Fantom software is structured using four primary abstractions:
+Fantom software is structured using three primary abstractions:
 
   - [Pods]`#pods`: modules of deployment and versioning
   - [Types]`#types`: basic units of object oriented type system
   - [Slots]`#slots`: fields and methods
-  - [Symbols]`#symbols`: statically typed, namespace aware name/value pairs
 
 These abstractions are organized into a three level namespace which
 uses the following syntax for qualified names:
+  - 'pod'
   - 'pod::Type'
   - 'pod::Type.slot'
-  - 'pod::symbol'
 
 Pods [#pods]
 ***********
@@ -132,20 +131,4 @@ which have a getter and setter, but no storage.
 The `sys::Field` API is used to work with fields reflectively at runtime.
 
 We'll take a deep dive into fields later in the `Fields` chapter.
-
-Symbols [#symbols]
-******************
-Symbols are well known name/value pairs declared within a pod.  Symbols
-are used as keys for [facets]`Facets` and also for statically typed
-configuration variables.  Symbols are always scoped within a pod and
-use the same convention as types for qualified naming: 'pod::symbol'.
-
-The `sys::Symbol` type is the reflection API for working with symbols
-at runtime.  Code examples for commonly used slot operations:
-
-  somePod.symbol(foo")         // lookup the symbol called foo in somePod
-  Symbol.find("myPod::foo")    // looukp a slot by its qualified name
-  @foo                         // symbol literal
-
-We'll examine symbols at length in the `Symbols` chapter.
 
