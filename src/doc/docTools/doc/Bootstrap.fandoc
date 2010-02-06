@@ -72,22 +72,18 @@ of Fantom installation.  For example if you rebuild jfan, then the output
 goes into "devHome/lib/java/sys.jar".  In the case of the *rel*
 installation we don't want this default because we will overwrite
 ourselves (which leads to some nasty problems).  So you need to set
-the *buildDevHome* symbol in "etc/build/pod.fansym" of your *rel* installation
+the *devHome* symbol in "etc/build/config.props" of your *rel* installation
 to reference the *dev* directory using a URI (not OS path):
 
   // Must be configured boot build in substitute/release installation
-  buildDevHome=`/C:/dev/fan/`
+  devHome=file:/C:/dev/fan/
 
 If you forget to do this, then you will get a build error which
 looks something like this:
 
-  C:\dev\fan\src>sys\build
-  Error: Must update etc/build/pod.fan devHome for bootstrap
-  Error: Error initializing script [C:\dev\fan\src\sys\build.fan]
-  build::FatalBuildErr: Must update etc/build/pod.fan devHome for bootstrap
-    build::BuildScript.fatal (BuildScript.fan:425)
-    build::BuildScript.fatal (BuildScript.fan)
-    ...
+  C:\dev\fan\src>sys\java\build
+  ERR: Must update 'devHome' for bootstrap build
+  BUILD FAILED [12ms]!
 
 Substitutes [#substitutes]
 **************************

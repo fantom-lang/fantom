@@ -42,12 +42,12 @@ abstract class BuildPod : BuildScript
   Str[] depends := Str[,]
 
   **
-  ** Pod meta-data name/value pairs to compile into pod.  See `Pod.meta`.
+  ** Pod meta-data name/value pairs to compile into pod.  See `sys::Pod.meta`.
   **
   Str:Str meta := Str:Str[:]
 
   **
-  ** Pod index name/value pairs to compile into pod.  See `Env.index`.
+  ** Pod index name/value pairs to compile into pod.  See `sys::Env.index`.
   ** The index values can be a single Str or a Str[] if there are
   ** multiple values mapped to one key.
   **
@@ -127,7 +127,7 @@ abstract class BuildPod : BuildScript
 
   **
   ** Compile the source into a pod file and all associated
-  ** natives.  See `compileJava` and `compileDotnet`.
+  ** natives.  See `compileFan`, `compileJava`, and `compileDotnet`.
   **
   @Target { help = "Compile to pod file and associated natives" }
   virtual Void compile()

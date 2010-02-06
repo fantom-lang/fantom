@@ -87,26 +87,22 @@ create a directory structure organized as follows:
 
   hello/
     build.fan
-    pod.fan
     fan/
       Main.fan
 
-The contents of "build.fan" is the build script:
+The contents of "build.fan" is the build script which defines your
+pod's meta-data:
 
   class Build : build::BuildPod
   {
-    override Void setup()
+    new make()
     {
       podName = "hello"
+      summary = "hello world pod"
+      depends = ["sys 1.0"]
+      srcDirs = [`fan/`]
     }
   }
-
-The contents of "pod.fan" declares the meta-data for your
-pod and which directories contain Fantom source files:
-
-  @podDepends  = [Depend("sys 1.0")]
-  @podSrcDirs  = [`fan/`]
-  pod hello {}
 
 The "fan/Main.fan" file declares a single class called "Main":
 

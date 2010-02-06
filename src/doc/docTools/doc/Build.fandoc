@@ -41,32 +41,31 @@ Let's create a build script called "buildtest.fan":
 
   class Build : BuildScript
   {
-    @target="Compile everything"
+    @Target { help = "Compile everything" }
     Void compile() { log.info("Compile away!") }
 
-    @target="Clean it all up"
+    @Target { help = "Clean it all up" }
     Void clean() { log.info("Clean away!") }
   }
 
-The script above defines two targets: compile and clean.  The
-targets are annotated with the [@target]`@build::target` facet - the
-value is a string description.  To print the usage of this script use "-?":
+The script above defines two targets: compile and clean.  The targets are
+annotated with the [@Target]`build::Target` facet. Set the help field
+to a short summary.  To print the usage of this script use "-?":
 
   C:\dev\fan\src>buildtest -?
   usage:
     build [options] <target>*
   options:
-    -? -help       print usage summary
-    -v             verbose debug logging
+    -? -help       Print usage summary
+    -v             Verbose debug logging
+    -dumpEnv       Debug dump of script env
   targets:
-    dumpEnv        Dump env details to help build debugging
     compile*       Compile everything
     clean          Clean it all up
 
 Note that the "compile" target is marked with an asterisk indicating
-it is the default target because it is the first one declared.  You can
-also explicitly override 'defaultTarget'.  If we invoke the script
-with no arguments the "compile" target is executed:
+it is the default target because it is the first one declared. If we
+invoke the script with no arguments the "compile" target is executed:
 
   C:\dev\fan\src>buildtest
   Compile away!
@@ -97,27 +96,25 @@ find handy:
     of the script itself
   - [scriptDir]`build::BuildScript.scriptDir`: the directory
     containing the script
-  - [binDir]`build::BuildScript.binDir`: bin directory of your
-    development environment for the current operating system
+  - [devHomeDir]`build::BuildScript.devHomeDir`: home directory
+    of your development Fantom environment
 
 Lifecycle [#lifecycle]
 **********************
 A build script lifecycle is composed of these steps:
 
-  1. Constructor is run and will immediately setup the environment
-     variables such as [log]`build::BuildScript.log` and
+  1. Base class constructor is run and will immediately setup the
+     environment variables such as [log]`build::BuildScript.log` and
      [scriptFile]`build::BuildScript.scriptFile`.
-  2. The [setup]`build::BuildScript.setup` callback is invoked
-     to give the script a chance to initialize itself
-  3. The [makeTargets]`build::BuildScript.makeTargets` callback
+  2. Your subclass constructor is run, which is where you
+     can configure your own scripts fields.
+  3. The [targets]`build::BuildScript.targets` callback
      is invoked to get the list of targets - most often you will
      let the default implementation build this list by searching
-     for methods which implement the '@target' facet.  Once
-     initialized the list of targets is available via the
-     [targets]`build::BuildScript.targets` field.
-  4. Command line parsed to find all the specified
-     targets, if no targets specified then we use
-     [defaultTarget]`build::BuildScript.defaultTarget`.
+     for methods which implement the '@Target' facet.
+  4. Command line parsed to find all the specified targets,
+     if no targets specified then we use the first target from
+     the 'targets' method..
   5. Each target method is invoked in the order specified
   6. If an exception is raised, the script fails and returns -1,
      otherwise 0 is returned.
@@ -148,7 +145,6 @@ By convention pod source directories are organized as follows:
 
   foo/
     build.fan
-    pod.fan
     fan/
       ClassAlpha.fan
       ClassBeta.fan
@@ -166,8 +162,8 @@ By convention pod source directories are organized as follows:
       resource-file.txt
 
 If you don't have tests or native code, then those directories
-aren't included.  The build script and pod file for our directory
-structure above would look like:
+aren't included.  The build script for our directory structure
+above would look like:
 
   // build.fan
   using build
@@ -176,26 +172,20 @@ structure above would look like:
     override Void setup()
     {
       podName = "foo"
+      summary = "Description of foo pod.  Foo is good."
+      depends    = ["sys 1.0+", "bar 1.1+"]
+      srcDirs    = [`fan/`, `test/`]
+      javaDirs   = [`java/`]
+      jsDirs     = [`js/`]
+      dotnetDirs = [`dotnet/`]
+      resDirs    = [`res/`]
     }
   }
 
-  // pod.fan
-  **
-  ** Description of foo pod.  Foo is good.
-  **
-  @podDepends    = [Depend("sys 1.0+"), Depend("bar 1.1+")]
-  @podSrcDirs    = [`fan/`, `test/`]
-  @podJavaDirs   = [`java/`]
-  @podJsDirs     = [`js/`]
-  @podDotnetDirs = [`dotnet/`]
-  @podResDirs    = [`res/`]
-  @js
-  pod foo {}
-
 Note that all the directories are specified as Uris relative
 to the script directory.  If you don't have native code, you can
-omit the 'podJavaDirs', 'podDotnetDirs', and 'podJsDirs' facets.
-If you don't have resource files you can omit 'podResDirs'.  See
+omit the 'javaDirs', 'dotnetDirs', and 'jsDirs' settings.
+If you don't have resource files you can omit 'resDirs'.  See
 [HelloWorld]`docIntro::HelloWorld#pod` for a simpler example.
 
 Typically the pod's version is set by the build script's
