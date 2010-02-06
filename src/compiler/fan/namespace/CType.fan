@@ -458,4 +458,18 @@ mixin CType
   **
   CMethod[] ctors() { return methods.findAll |CMethod m->Bool| { return m.isCtor } }
 
+//////////////////////////////////////////////////////////////////////////
+// Facets
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get the facet for the given type, or null if not defined.
+  **
+  abstract CFacet? facet(Str qname)
+
+  **
+  ** Return if the given facet is defined.
+  **
+  Bool hasFacet(Str qname) { facet(qname) != null }
+
 }
