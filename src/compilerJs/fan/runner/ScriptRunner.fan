@@ -54,6 +54,7 @@ class ScriptRunner
   {
     input := CompilerInput()
     input.podName   = "temp"
+    input.summary   = ""
     input.version   = Version("0")
     input.log.level = LogLevel.silent
     input.isScript  = true
