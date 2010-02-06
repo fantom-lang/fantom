@@ -13,56 +13,75 @@ are similar to Java *annotations* or C# *attributes*.  A facet is a serialized
 instance of const class declared on a type or slot which implements the
 `sys::Facet` mixin.
 
-Syntax [#syntax]
-****************
-Facets are defined as "@symbolName=value" prefixed before a pod, type,
-or slot definition:
+Facet Classes [#classes]
+************************
+Facets are defined as normal classes using the 'facet' positional keyword:
 
-  @serializable
-  @sys::js  // using qualified symbol
-  @icon=`/icons/account.png`
-  @version=Version("1.2")
-  @table=Table { name="Accounts"; autoCreate=true }
-  @todo=["fix it", "really fix it"]
-  class Account
+  // simple marker facet with no fields
+  facet class Indexed {}
+
+  // struct facet with one or more const fields
+  facet class Table
   {
+    const Str name := ""
+    const Bool autoCreate
   }
 
-The symbol can be qualified or unqualified (see [Symbols]`Symbols#literals`)
-The symbol type defines the valid type of a facet.  For example `@sys::uriScheme`
-if defined as a 'Str', therefore all facets which use this symbol must have
-a 'Str' value.
+All facets classes automatically inherit the `sys::Facet` mixin.  Facets
+are implied to be [const classes]`Classes#const` which means all their
+fields must be const.
 
-If the value is omitted as it is for 'serializable', then the value is assumed
-to be 'true'.  The other facets illustrate various value types: 'icon' is
-a 'Uri' literal, 'version' is a [simple]`Serialization#syntaxSimples`, 'table'
-is a [complex]`Serialization#syntaxComplex`, and 'todo' is a list.  You can
-create arbitrarily complex facet values through the [serialization]`Serialization`
-syntax.
+Facet classes are not allowed to define their own constructor.  Instead
+the compiler will generate one for you.  If your facet has fields, then
+it is implied to be [Serializable]`Serialization` and all its fields must
+be serializable types.
 
+The classes above will have the following synthetic definitions:
 
-API [#api]
-**********
+  // marker facet with no instance fields is singleton
+  const class Indexed : Facet
+  {
+    static const Indexed defVal := Indexed()
+    private new make() {}
+  }
+
+  // struct facet with instance fields gets it-block constructor
+  @Serializable
+  const class class Table : Facet
+  {
+    new make(|This|? f) { f?.call(this) }
+  }
+
+Annotations [#annotations]
+**************************
+Any type or slot can be annotated with facets using the '@' symbol:
+
+  @Indexed
+  @Table { name = "Employees"; autoCreate = true }
+  class Employee {}
+
+Struct facets assign their field values inside curly braces similiar to
+an [it-block]`Closures#itBlocks`.  Only simple literal expressions may
+be used in facet annotations which the compiler can determine how to
+serialize.
+
+Reflection [#reflection]
+************************
 Facets are available at runtime via the following methods:
-  - [Pod.facet]`sys::Pod.facet`
-  - [Pod.facets]`sys::Pod.facets`
   - [Type.facet]`sys::Type.facet`
   - [Type.facets]`sys::Type.facets`
+  - [Type.hasFacets]`sys::Type.hasFacet`
   - [Slot.facet]`sys::Slot.facet`
   - [Slot.facets]`sys::Slot.facets`
+  - [Slot.hasFacets]`sys::Slot.hasFacet`
 
-Always prefer the 'facet' method over 'facets' since it is much more
-efficient.  Some examples:
+Always prefer the 'facet' and 'hasFacet' methods over 'facets' since it is
+much more efficient.  Some examples:
 
-  // get a description string
-  Type.of(obj).facet(@description)
+  // check if a type is serializable, returns null if not
+  Serializable? ser := obj.typeof.facet(Serializable#, false)
 
-  // check if an object implements the simple facet
-  Type.of(obj).facet(@simple, false) == true
+  // check if a field is transient
+  field.hasFacet(Transient#)
 
-If querying type facets, you can use the 'inherited' parameter
-to search facets in the inheritance chain:
-
-  // check if an object or any of its super-types has the obsolete facet
-  Type.of(obj).facet(@obsolete, null, true)
 
