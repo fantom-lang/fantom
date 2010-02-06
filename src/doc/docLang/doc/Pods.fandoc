@@ -32,8 +32,8 @@ the [build script]`docTools::Build#buildPod`:
     }
   }
 
-During the build process fields like 'depends' and 'summary' are used by the
-compiler and used to generate the pod's metadata.  You can define your own additional
+During the build process fields like 'podName' and 'depends' are used by the
+compiler to generate the pod's metadata.  You can define your own additional
 name/value pairs with [BuildPod.meta]`build::BuildPod.meta`.  Plus the compiler
 will add its own metadata regarding when and where the pod was built.
 

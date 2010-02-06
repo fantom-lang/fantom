@@ -171,8 +171,8 @@ above would look like:
   {
     override Void setup()
     {
-      podName = "foo"
-      summary = "Description of foo pod.  Foo is good."
+      podName    = "foo"
+      summary    = "Description of foo pod.  Foo is good."
       depends    = ["sys 1.0+", "bar 1.1+"]
       srcDirs    = [`fan/`, `test/`]
       javaDirs   = [`java/`]
