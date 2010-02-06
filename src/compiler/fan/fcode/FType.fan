@@ -52,6 +52,12 @@ class FType : CType
     return isValType(qname)
   }
 
+  override CFacet? facet(Str qname)
+  {
+    if (ffacets == null) reflect
+    return ffacets.find |f| { f.qname == qname }
+  }
+
   override Str:CSlot slots
   {
     get
@@ -195,6 +201,8 @@ class FType : CType
     fattrs = FAttr[,]
     in.readU2.times { fattrs.add(FAttr.make.read(in)) }
 
+    ffacets = FFacet.decode(fpod, fattrs)
+
     in.close
   }
 
@@ -211,5 +219,6 @@ class FType : CType
   FField[]? ffields     // fields
   FMethod[]? fmethods   // methods
   FAttr[]? fattrs       // type attributes
+  FFacet[]? ffacets     // decoded facet attributes
 
 }

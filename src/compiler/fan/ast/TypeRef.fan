@@ -37,6 +37,8 @@ class TypeRef : Node, CType
   override Bool isForeign() { t.isForeign }
   override Int flags()     { t.flags }
 
+  override CFacet? facet(Str qname) { t.facet(qname) }
+
   override CType? base() { t.base }
   override CType[] mixins() { t.mixins }
   override Bool fits(CType that) { t.fits(that) }

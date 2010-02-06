@@ -42,6 +42,8 @@ abstract class GenericType : CType
 
   override CType[] mixins() { return CType[,] }
 
+  override CFacet? facet(Str qname) { return base.facet(qname) }
+
   override once Str:CSlot slots() { return parameterizeSlots }
 
 //////////////////////////////////////////////////////////////////////////
@@ -408,7 +410,8 @@ class GenericParameterType : CType
   override once CType toListOf() { return ListType(this) }
   override CType? base() { return ns.objType }
   override CType[] mixins() { return CType[,] }
-  override Str:CSlot slots() { throw UnsupportedErr.make }
+  override CFacet? facet(Str qname) { throw UnsupportedErr() }
+  override Str:CSlot slots() { throw UnsupportedErr() }
 }
 
 **************************************************************************
