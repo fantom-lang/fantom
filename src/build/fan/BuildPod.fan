@@ -90,7 +90,7 @@ abstract class BuildPod : BuildScript
   Uri[]? dotnetDirs
 
   **
-  ** List of Uris relative to "pod.fan" of directories containing
+  ** List of Uris relative to build script of directories containing
   ** the JavaScript source files to compile for JavaScript native methods.
   **
   Uri[]? jsDirs

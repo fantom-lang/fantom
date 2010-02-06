@@ -91,7 +91,7 @@ public class Parser : CompilerSupport
 
   **
   ** TypeDef:
-  **   <typeDef>      :=  <classDef> | <mixinDef> | <enumDef>
+  **   <typeDef>      :=  <classDef> | <mixinDef> | <enumDef> | <facetDef>
   **
   **   <classDef>     :=  <classHeader> <classBody>
   **   <classHeader>  :=  [<doc>] <facets> <typeFlags> "class" [<inheritance>]
@@ -101,6 +101,10 @@ public class Parser : CompilerSupport
   **   <enumDef>      :=  <enumHeader> <enumBody>
   **   <enumHeader>   :=  [<doc>] <facets> <protection> "enum" [<inheritance>]
   **   <enumBody>     :=  "{" <enumDefs> <slotDefs> "}"
+  **
+  **   <facetDef      :=  <facetHeader> <enumBody>
+  **   <facetHeader>  :=  [<doc>] <facets> [<protection>] "facet" "class" <id> [<inheritance>]
+  **   <facetBody>    :=  "{" <slotDefs> "}"
   **
   **   <mixinDef>     :=  <enumHeader> <enumBody>
   **   <mixinHeader>  :=  [<doc>] <facets> <protection> "mixin" [<inheritance>]
@@ -735,6 +739,13 @@ public class Parser : CompilerSupport
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
+  **
+  ** Facet definition:
+  **   <facets>     := <facet>*
+  **   <facet>      := "@" <simpleType> [<facetVals>]
+  **   <facetVals>  := "{" <facetVal> (<eos> <facetVal>)* "}"
+  **   <facetVal>   := <id> "=" <expr>
+  **
   private FacetDef[]? facets()
   {
     if (curt !== Token.at) return null

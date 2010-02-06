@@ -39,7 +39,7 @@ const final class MimeType
 
   **
   ** Map a case insensitive file extension to a MimeType.
-  ** This mapping is configured via "etc/sys/ext2mime.fansym".  If
+  ** This mapping is configured via "etc/sys/ext2mime.props".  If
   ** no mapping is available return null.
   **
   static MimeType? forExt(Str ext)

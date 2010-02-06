@@ -8,42 +8,27 @@
 
 Overview [#overview]
 ********************
-
 Fantom provides support for compiling to JavaScript and running in
 JavaScript VMs such as web browsers.  Most of the sys API is available,
 however not all pods and APIs are accessible due to limitations of the
 JavaScript VM enviornment.
 
-js facet [#jsFacet]
-**********************************************
+Js Facet [#jsFacet]
+*******************
+You must explictly mark types you intend to compile to JavaScript using
+the `sys::Js` facet:
 
-You must explictly mark types you intend to compile to JavaScript. You
-mark a type using the '@js' facet.
-
-  @js
+  @Js
   class GonnaBeJs
   {
     Void sayHi() { Win.cur.alert("Hello!") }
   }
 
-Compiling [#compiling]
-**********************************************
-
-To compile the types you've marked for JavaScript, add the [@js]`@sys::js`
-facet to your pod definition.
-
-  // pod.fan
-  @podDepends=[...]
-  @js
-  pod myPod {...}
-
 Natives [#natives]
-**********************************************
+******************
+To compile JavaScript natives, add the source directories to your
+build script using the [jsDirs]`build::BuildPod.jsDirs` field.
+See [Build Pod]`docTools::Build#buildPod` for an example.
 
-To compile JavaScript natives, add the source directories to your build
-script using the [@podJsDirs]`@sys::podJsDirs` facet.
-
-  // pod.fan
-  @podJsDirs =  [`js/`]
 
 TODO: document how JavaScript peers operate

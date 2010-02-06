@@ -72,7 +72,7 @@ of Fantom installation.  For example if you rebuild jfan, then the output
 goes into "devHome/lib/java/sys.jar".  In the case of the *rel*
 installation we don't want this default because we will overwrite
 ourselves (which leads to some nasty problems).  So you need to set
-the *devHome* symbol in "etc/build/config.props" of your *rel* installation
+the *devHome* prop in "etc/build/config.props" of your *rel* installation
 to reference the *dev* directory using a URI (not OS path):
 
   // Must be configured boot build in substitute/release installation
