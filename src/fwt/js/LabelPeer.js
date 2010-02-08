@@ -148,6 +148,8 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     }
     if (this.m_fg != null) text.style.color = this.m_fg.toStr();
     text.style.display = "inline-block";
+    text.style.position = "relative";
+    text.style.top = "-1px";
     text.style.verticalAlign = "middle";
     text.appendChild(document.createTextNode(this.m_text));
     parent.appendChild(text);
