@@ -169,7 +169,7 @@ above would look like:
   using build
   class Build : BuildPod
   {
-    override Void setup()
+    new make()
     {
       podName    = "foo"
       summary    = "Description of foo pod.  Foo is good."
