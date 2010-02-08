@@ -158,10 +158,10 @@ class Build : BuildGroup
       pathPrefix = "$moniker/".toUri
       filter = |File f, Str path->Bool|
       {
-        if (f.name == ".hg")       return false
-        if (f.name == ".hgignore") return false
-        if (f.name == "tmp")       return false
-        if (f.name == "temp")      return false
+        n := f.name
+        if (n.startsWith(".hg")) return false
+        if (n == "tmp") return false
+        if (n == "temp") return false
         if (f.isDir) log.info("  $path")
         return true
       }
