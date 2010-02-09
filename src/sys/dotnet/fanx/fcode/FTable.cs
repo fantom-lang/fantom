@@ -193,30 +193,6 @@ namespace Fanx.Fcode
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // SymbolRefs
-  //////////////////////////////////////////////////////////////////////////
-
-    internal class SymbolRefs : FTable
-    {
-      internal SymbolRefs(FPod pod) : base(pod) {}
-
-      public override string toString(int index)
-      {
-        if (index == -1) return "null";
-        return ((FSymbolRef)m_table[index]).qname();
-      }
-
-      public override FTable read(FStore.Input input)
-      {
-        if (input == null) { m_size = 0; return this; }
-        m_size = input.u2();
-        m_table = new object[m_size];
-        for (int i=0; i<m_size; i++)
-          m_table[i] = FSymbolRef.read(input);
-        return this;
-      }
-    }
-  //////////////////////////////////////////////////////////////////////////
   // Ints
   //////////////////////////////////////////////////////////////////////////
 

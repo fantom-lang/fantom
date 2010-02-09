@@ -49,7 +49,7 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
       this.assemblyName = assemblyName;
       if (stubName == null)
       {
-        string libPath = Fan.Sys.Sys.HomeDir + "/lib/tmp";
+        string libPath = Fan.Sys.Sys.m_homeDir + "/lib/tmp";
         if (!Directory.Exists(libPath))
           Directory.CreateDirectory(libPath);
         this.fileName = libPath + "/" +  assemblyName + ".dll";

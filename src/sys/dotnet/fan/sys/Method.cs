@@ -61,7 +61,7 @@ namespace Fan.Sys
     private static int toMask(Type parent, Type returns, List pars)
     {
       // we only use generics in Sys
-      if (parent.pod() != Sys.SysPod) return 0;
+      if (parent.pod() != Sys.m_sysPod) return 0;
 
       int p = returns.isGenericParameter() ? 1 : 0;
       for (int i=0; i<pars.sz(); ++i)

@@ -98,7 +98,7 @@ namespace Fan.Sys
 
     public static string toLocale(bool self)
     {
-      return Locale.cur().get("sys", self ? "boolTrue" : "boolFalse", toStr(self));
+      return Env.cur().locale(Sys.m_sysPod, self ? "boolTrue" : "boolFalse", toStr(self));
     }
 
   //////////////////////////////////////////////////////////////////////////

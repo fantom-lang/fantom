@@ -19,12 +19,6 @@ namespace Fanx.Fcode
   {
 
   //////////////////////////////////////////////////////////////////////////
-  // Access
-  //////////////////////////////////////////////////////////////////////////
-
-    public Facets facets() { return Facets.make(m_facets); }
-
-  //////////////////////////////////////////////////////////////////////////
   // Read
   //////////////////////////////////////////////////////////////////////////
 
@@ -69,16 +63,13 @@ namespace Fanx.Fcode
     {
       input.u2();
       int n = input.u2();
-      Hashtable map = new Hashtable();
+      m_facets = new FFacet[n];
       for (int i=0; i<n; ++i)
       {
-        string name = input.fpod.symbolRef(input.u2()).qname();
-        // TODO - optimize this like we do in Java, but
-        // there is a bootstrap problem in ObjDecoder
-        object val  = new Symbol.EncodedVal(input.utf());
-        map[name] = val;
+        FFacet f = m_facets[i] = new FFacet();
+        f.type = input.u2();
+        f.val  = input.utf();
       }
-      m_facets = map;
     }
 
     private void lineNumber(FStore.Input input)
@@ -99,13 +90,23 @@ namespace Fanx.Fcode
     }
 
   //////////////////////////////////////////////////////////////////////////
+  // FFacet
+  //////////////////////////////////////////////////////////////////////////
+
+    public class FFacet
+    {
+      public int type;      // facet type qname index
+      public string val;    // serialized facet instance
+    }
+
+  //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
     internal static readonly FAttrs none = new FAttrs();
 
     public FBuf m_errTable;
-    public Hashtable m_facets;
+    public FFacet[] m_facets;
     public int m_lineNum;
     public FBuf m_lineNums;
     public string m_sourceFile;

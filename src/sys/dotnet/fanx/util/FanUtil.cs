@@ -42,7 +42,7 @@ namespace Fanx.Util
     /// </summary>
     public static bool isDotnetRepresentation(Fan.Sys.Type t)
     {
-      if (t.pod() != Fan.Sys.Sys.SysPod) return false;
+      if (t.pod() != Fan.Sys.Sys.m_sysPod) return false;
       return t == Fan.Sys.Sys.ObjType   ||
              t == Fan.Sys.Sys.BoolType  ||
              t == Fan.Sys.Sys.StrType   ||

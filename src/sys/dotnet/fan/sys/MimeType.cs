@@ -182,7 +182,9 @@ namespace Fan.Sys
       if (s == null) return null;
       try
       {
-        return (MimeType)Repo.readSymbolsCached(etcUri, Duration.m_oneMin).get(FanStr.lower(s));
+        string val = (string)Sys.m_sysPod.props(m_etcUri, Duration.m_oneMin).get(FanStr.lower(s));
+        if (val == null) return null;
+        return MimeType.fromStr(val);
       }
       catch (System.Exception e)
       {
@@ -192,7 +194,7 @@ namespace Fan.Sys
       }
     }
 
-    static readonly Uri etcUri = Uri.fromStr("etc/sys/ext2mime.fansym");
+    static readonly Uri m_etcUri = Uri.fromStr("ext2mime.props");
 
   //////////////////////////////////////////////////////////////////////////
   // Identity

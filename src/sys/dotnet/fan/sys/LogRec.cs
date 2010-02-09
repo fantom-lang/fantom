@@ -55,7 +55,7 @@ namespace Fan.Sys
       return s.ToString();
     }
 
-    public void print() { print(Sys.@out()); }
+    public void print() { print(Env.cur().@out()); }
     public void print(OutStream @out)
     {
       lock (@out)

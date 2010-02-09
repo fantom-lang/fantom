@@ -59,7 +59,7 @@ namespace Fanx.Util
 
         // if the type is from the pod being loaded then return to the pod
         if (loadingPod != null && podName == loadingPod.name())
-          return loadingPod.findType(typeName, check);
+          return loadingPod.type(typeName, check);
 
         // do a straight lookup
         return find(podName, typeName, check);
@@ -84,7 +84,7 @@ namespace Fanx.Util
     {
       Pod pod = Pod.find(podName, check);
       if (pod == null) return null;
-      return pod.findType(typeName, check);
+      return pod.type(typeName, check);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -195,12 +195,12 @@ namespace Fanx.Util
       // check for generic parameter like sys::V
       if (typeName.Length == 1 && podName == "sys")
       {
-        Type type = Sys.genericParameterType(typeName);
+        Type type = Sys.genericParamType(typeName);
         if (type != null) return type;
       }
 
       if (loadingPod != null && podName == loadingPod.name())
-        return loadingPod.findType(typeName, check);
+        return loadingPod.type(typeName, check);
       else
         return find(podName, typeName, check);
     }

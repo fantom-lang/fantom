@@ -113,9 +113,10 @@ public virtual bool isConst() { return (m_flags & FConst.Const)     != 0; } // w
   // Facets
   //////////////////////////////////////////////////////////////////////////
 
-    public Map facets() { return m_facets.map(); }
-    public object facet(Symbol key) { return m_facets.get(key, null); }
-    public object facet(Symbol key, object def) { return m_facets.get(key, def); }
+    public List facets() { return m_facets.list(); }
+    public Facet facet(Type t) { return m_facets.get(t, true); }
+    public Facet facet(Type t, bool c) { return m_facets.get(t, c); }
+    public bool hasFacet(Type t) { return facet(t, false) != null; }
 
   //////////////////////////////////////////////////////////////////////////
   // Documentation

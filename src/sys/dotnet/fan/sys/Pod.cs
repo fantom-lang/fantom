@@ -91,7 +91,7 @@ namespace Fan.Sys
       FPod fpod = null;
       try
       {
-        fpod = new FPod(null, null, null);
+        fpod = new FPod(null, null);
         fpod.readFully(new ZipInputStream(SysInStream.dotnet(@in)));
       }
       catch (Exception e)
@@ -115,31 +115,38 @@ namespace Fan.Sys
 
     public static FPod readFPod(string name)
     {
+/* TODO-FACETS
+      FStore store = null;
+
       // handle sys specially for bootstrapping the VM
-      // otherwise delegate to repo
-      string podPath = null;
-      Object repo = null;
-      if (name == "sys")
+      if (name.equals("sys"))
       {
-        podPath = Sys.PodsDir + "/sys.pod";
-        repo = null; // can't load this class yet
+        store = FStore.makeZip(new File(Sys.m_podsDir, name + ".pod"));
       }
+
+      // otherwise delete to Env.cur to find the pod file
       else
       {
-        Repo.PodFile r = Repo.findPod(name);
-        if (r != null) { podPath = r.m_file.FullName; repo = r.m_repo; }
+        File file = null;
+        fan.sys.File f = Env.cur().findPodFile(name);
+        if (f != null) file = ((LocalFile)f).file;
+
+        // if null or doesn't exist then its a no go
+        if (file == null || !file.exists()) throw UnknownPodErr.make(name).val;
+
+        // verify case since Windoze is case insensitive
+        String actualName = file.getCanonicalFile().getName();
+        actualName = actualName.substring(0, actualName.length()-4);
+        if (!actualName.equals(name)) throw UnknownPodErr.make("Mismatch case: " + name + " != " + actualName).val;
+
+        store = FStore.makeZip(file);
       }
 
-      // check that pod file even exists
-      if (podPath == null || !System.IO.File.Exists(podPath)) throw UnknownPodErr.make(name).val;
-
-      // verify case since Windoze is case insensitive
-      // TODO - see Pod.java impl
-
       // read in the FPod tables
-      FPod fpod = new FPod(name, new ZipFile(podPath), repo);
+      FPod fpod = new FPod(name, store);
       fpod.read();
-      return fpod;
+  */
+      return null; //fpod;
     }
 
     public static List list()
@@ -151,12 +158,11 @@ namespace Fan.Sys
         //  every pod into memory
         if (m_allPodsList == null)
         {
-          Hashtable map = Repo.findAllPods();
-          List pods = new List(Sys.PodType, map.Count);
-          IDictionaryEnumerator en = map.GetEnumerator();
-          while (en.MoveNext())
+          List names = Env.cur().findAllPodNames();
+          List pods = new List(Sys.PodType);
+          for (int i=0; i<names.sz(); ++i)
           {
-            string name = (string)en.Key;
+            string name = (string)names.get(i);
             try
             {
               pods.add(doFind(name, true, null));
@@ -180,7 +186,6 @@ namespace Fan.Sys
     internal Pod(FPod fpod)
     {
       this.m_name = fpod.m_podName;
-      this.m_repo = fpod.m_repo;
       load(fpod);
     }
 
@@ -221,27 +226,33 @@ namespace Fan.Sys
     public override string toStr() { return m_name; }
 
   //////////////////////////////////////////////////////////////////////////
-  // Repo
-  //////////////////////////////////////////////////////////////////////////
-
-    public Repo repo()
-    {
-      if (m_repo == null && m_name == "sys") m_repo = Repo.boot();
-      return (Repo)m_repo;
-    }
-
-  //////////////////////////////////////////////////////////////////////////
   // Facets
   //////////////////////////////////////////////////////////////////////////
 
-    public Map facets() { return toFacets().map(); }
-    public object facet(Symbol key) { return toFacets().get(key, null); }
-    public object facet(Symbol key, object def) { return toFacets().get(key, def); }
-
-    private Facets toFacets()
+    public Map meta()
     {
-      if (m_facets == null) m_facets = fpod.m_attrs.facets();
-      return m_facets;
+      if (m_meta == null)
+      {
+        m_meta = Sys.m_emptyStrStrMap;
+        /* TODO-FACETS
+        try
+        {
+          if (fpod.meta != null) meta = (Map)fpod.meta;
+          else
+          {
+            InStream in = new SysInStream(fpod.store.read("meta.props"));
+            meta = (Map)in.readProps().toImmutable();
+            in.close();
+          }
+        }
+        catch (Exception e)
+        {
+          Err.dumpStack(e);
+          meta = Sys.m_emptyStrStrMap;
+        }
+      */
+      }
+      return m_meta;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -250,63 +261,13 @@ namespace Fan.Sys
 
     public List types() { return new List(Sys.TypeType, m_types); }
 
-    public Type findType(string name) { return findType(name, true); }
-    public Type findType(string name, bool check)
+    public Type type(string name) { return type(name, true); }
+    public Type type(string name, bool check)
     {
       Type type = (Type)typesByName[name];
       if (type != null) return type;
       if (check) throw UnknownTypeErr.make(this.m_name + "::" + name).val;
       return null;
-    }
-
-  //////////////////////////////////////////////////////////////////////////
-  // Symbols
-  //////////////////////////////////////////////////////////////////////////
-
-    public List symbols()
-    {
-      return new List(Sys.SymbolType, loadSymbols().Values);
-    }
-
-    public Symbol symbol(string name) { return symbol(name, true); }
-    public Symbol symbol(string name, bool check)
-    {
-      Symbol s = (Symbol)loadSymbols()[name];
-      if (s != null) return s;
-      if (check) throw UnknownFacetErr.make(this.m_name + "::" + name).val;
-      return null;
-    }
-
-    private Hashtable loadSymbols()
-    {
-      lock (m_symbolsLock)
-      {
-        if (m_symbols != null) return m_symbols;
-        m_symbols = new Hashtable();
-
-        // read symbols from fcode format
-        try
-        {
-          fpod.readSymbols();
-          if (fpod.m_symbols == null) return m_symbols;
-        }
-        catch (IOException e)
-        {
-          throw IOErr.make("Error loading symbols.def", e).val;
-        }
-
-        // map to sys::Symbol instances
-        for (int i=0; i<fpod.m_symbols.Length; ++i)
-        {
-          Symbol symbol = new Symbol(this, fpod.m_symbols[i]);
-          m_symbols[symbol.name()] = symbol;
-        }
-
-        // clear list from fpod, no longer needed
-        fpod.m_symbols = null;
-
-        return m_symbols;
-      }
     }
 
 //////////////////////////////////////////////////////////////////////////
@@ -338,17 +299,39 @@ namespace Fan.Sys
   // Files
   //////////////////////////////////////////////////////////////////////////
 
-    public Map files()
+    public List files()
     {
-      if (m_files == null)
-        m_files = fpod.m_store.podFiles();
-      return m_files;
+      loadFiles();
+      return m_filesList;
     }
 
-    // TODO
-    public Fan.Sys.File file(Uri uri)
+    public Fan.Sys.File file(Uri uri) { return file(uri, true); }
+    public Fan.Sys.File file(Uri uri, bool check)
     {
-      return (Fan.Sys.File)files().get(uri.sliceToPathAbs(Range.makeInclusive(1, -1)));
+      loadFiles();
+      if (!uri.isPathAbs())
+        throw ArgErr.make("Pod.files Uri must be path abs: " + uri).val;
+      if (uri.auth() != null && !uri.toStr().StartsWith(this.uri().toStr()))
+        throw ArgErr.make("Invalid base uri `" + uri + "` for `" + this.uri() + "`").val;
+      else
+        uri = this.uri().plus(uri);
+      Fan.Sys.File f = (Fan.Sys.File)m_filesMap[uri];
+      if (f != null || !check) return f;
+      throw UnresolvedErr.make(uri.toStr()).val;
+    }
+
+    private void loadFiles()
+    {
+      lock (m_filesMap)
+      {
+        if (m_filesList != null) return;
+        this.m_filesList = (List)fpod.m_store.podFiles(uri()).toImmutable();
+        for (int i=0; i<m_filesList.sz(); ++i)
+        {
+          Fan.Sys.File f = (Fan.Sys.File)m_filesList.get(i);
+          m_filesMap[f.uri()] = f;
+        }
+      }
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -361,14 +344,29 @@ namespace Fan.Sys
       return m_log;
     }
 
-    public string loc(string key)
+    public Map props(Uri uri, Duration maxAge)
     {
-      return Locale.cur().doGet(this, m_name, key, Locale.m_getNoDef);
+      return Env.cur().props(this, uri, maxAge);
     }
 
-    public string loc(string key, string def)
+    public string config(string key)
     {
-      return Locale.cur().doGet(this, m_name, key, def);
+      return Env.cur().config(this, key);
+    }
+
+    public string config(string key, string def)
+    {
+      return Env.cur().config(this, key, def);
+    }
+
+    public string locale(string key)
+    {
+      return Env.cur().locale(this, key);
+    }
+
+    public string locale(string key, string def)
+    {
+      return Env.cur().locale(this, key, def);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -454,7 +452,7 @@ namespace Fan.Sys
       string podName  = reference.podName;
       string typeName = reference.typeName;
       Pod pod = podName == m_name ? this : doFind(podName, true, null);
-      Type type = pod.findType(typeName, false);
+      Type type = pod.type(typeName, false);
       if (type != null)
       {
         if (reference.isNullable()) type = type.toNullable();
@@ -464,7 +462,7 @@ namespace Fan.Sys
        // handle generic parameter types (for sys pod only)
        if (m_name == "sys")
        {
-         type = Sys.genericParameterType(typeName);
+         type = Sys.genericParamType(typeName);
         if (type != null)
         {
           if (reference.isNullable()) type = type.toNullable();
@@ -514,16 +512,14 @@ namespace Fan.Sys
     internal FPod fpod;
     internal Version m_version;
     internal List m_depends;
-    internal Facets m_facets;
     internal ClassType[] m_types;
     internal Hashtable typesByName;
-    internal Map m_files;
+    internal List m_filesList;
+    internal Hashtable m_filesMap = new Hashtable(11);
+    internal Map m_meta;
     internal Hashtable locales = new Hashtable(4);
     internal Log m_log;
-    internal object m_symbolsLock = new object();
-    internal Hashtable m_symbols;
     internal bool m_docLoaded;
     public string m_doc;
-    internal object m_repo;
   }
 }

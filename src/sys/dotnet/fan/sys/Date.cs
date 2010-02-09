@@ -153,7 +153,7 @@ namespace Fan.Sys
       if (pattern == null)
       {
         if (locale == null) locale = Locale.cur();
-        pattern = locale.get("sys", m_localeKey, "D-MMM-YYYY");
+        pattern = Env.cur().locale(Sys.m_sysPod, m_localeKey, "D-MMM-YYYY", locale);
       }
 
       // process pattern

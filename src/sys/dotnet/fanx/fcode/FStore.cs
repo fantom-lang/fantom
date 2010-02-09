@@ -54,9 +54,9 @@ namespace Fanx.Fcode
     /// <summary>
     /// Return a map to use for Pod.files()
     /// </summary>
-    public Map podFiles()
+    public List podFiles(Fan.Sys.Uri podUri)
     {
-      Map map = new Map(Sys.UriType, Sys.FileType);
+      List list = new List(Sys.FileType);
       IEnumerator en = zipFile.GetEnumerator();
       while (en.MoveNext())
       {
@@ -64,10 +64,13 @@ namespace Fanx.Fcode
         string name = entry.Name;
         if (name.EndsWith(".fcode")) continue;
         if (name.EndsWith(".class")) continue;
+        if (name.EndsWith(".def") && !name.Contains("/")) continue;
+//        Fan.Sys.Uri uri = Fan.Sys.Uri.fromStr(podUri + "/" + LocalFile.fileNameToUriName(entry.getName()));
+// TODO-FACETS
         Fan.Sys.ZipEntryFile file = new Fan.Sys.ZipEntryFile(zipFile, entry);
-        map.set(file.uri(), file);
+        list.add(file);
       }
-      return map;
+      return list;
     }
 
     /// <summary>

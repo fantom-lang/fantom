@@ -32,9 +32,16 @@ namespace Fan.Sys
 
       try
       {
-        // lookup scheme type
-        Type t = (Type)Type.findByFacet("sys::uriScheme", scheme, true).first();
-        if (t == null) throw new System.Exception();
+        // lookup scheme type (avoid building index for common types)
+        Type t = null;
+        if (scheme == "fan")  t = Sys.FanSchemeType;
+        if (scheme == "file") t = Sys.FileSchemeType;
+        if (t == null)
+        {
+          string qname = (string)Env.cur().index("sys.uriScheme." + scheme).first();
+          if (qname == null) throw UnresolvedErr.make().val;
+          t = Type.find(qname);
+        }
 
         // allocate instance
         UriScheme s = (UriScheme)t.make();
@@ -50,11 +57,11 @@ namespace Fan.Sys
 
         return s;
       }
-      catch (System.Exception)
-      {
-        if (!check) return null;
-        throw UnresolvedErr.make("Unknown scheme: " + scheme).val;
-      }
+      catch (UnresolvedErr.Val) {}
+      catch (System.Exception e) { Err.dumpStack(e); }
+
+      if (!check) return null;
+      throw UnresolvedErr.make("Unknown scheme: " + scheme).val;
     }
 
   //////////////////////////////////////////////////////////////////////////

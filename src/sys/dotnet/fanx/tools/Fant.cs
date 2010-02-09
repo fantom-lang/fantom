@@ -95,7 +95,7 @@ namespace Fanx.Tools
     private Type[] tests(Pod pod, string testName)
     {
       // named test
-      if (testName != "*") return new Type[] { pod.findType(testName, true) };
+      if (testName != "*") return new Type[] { pod.type(testName, true) };
 
       // all types which subclass Test
       List all = pod.types();

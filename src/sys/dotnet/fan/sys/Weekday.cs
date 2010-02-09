@@ -67,21 +67,19 @@ namespace Fan.Sys
     public string localeAbbr() { return abbr(Locale.cur()); }
     public string abbr(Locale locale)
     {
-      return locale.get("sys", localeAbbrKey);
+      return Env.cur().locale(Sys.m_sysPod, localeAbbrKey, name(), locale);
     }
 
     public string localeFull() { return full(Locale.cur()); }
     public string full(Locale locale)
     {
-      return locale.get("sys", localeFullKey);
+      return Env.cur().locale(Sys.m_sysPod, localeFullKey, name(), locale);
     }
 
     public static Weekday localeStartOfWeek()
     {
-      return fromStr(Locale.cur().get("sys", localeStartKey));
+      return fromStr(Env.cur().locale(Sys.m_sysPod, "weekdayStart", "sun"));
     }
-
-    static readonly string localeStartKey = "weekdayStart";
 
     internal readonly int ord;
     readonly string localeAbbrKey;

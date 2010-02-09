@@ -51,9 +51,11 @@ namespace Fan.Sys
 
     private Locale(string str, string lang, string country)
     {
-      this.m_str     = str;
-      this.m_lang    = lang;
-      this.m_country = country;
+      this.m_str       = str;
+      this.m_lang      = lang;
+      this.m_country   = country;
+      this.m_strProps  = Uri.fromStr("locale/" + str + ".props");
+      this.m_langProps = Uri.fromStr("locale/" + lang + ".props");
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -133,102 +135,6 @@ namespace Fan.Sys
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Properties
-  //////////////////////////////////////////////////////////////////////////
-
-    public string get(string podName, string key)
-    {
-      return doGet(Pod.find(podName, false), podName, key, m_getNoDef);
-    }
-
-    public string get(string podName, string key, string def)
-    {
-      return doGet(Pod.find(podName, false), podName, key, def);
-    }
-
-    /**
-     *   1. Find the pod and use its resource files
-     *   2. Lookup via '/locale/{toStr}.props'
-     *   3. Lookup via '/locale/{lang}.props'
-     *   4. Lookup via '/locale/en.props'
-     *   5. If all else fails return 'pod::key'
-     */
-    internal string doGet(Pod pod, string podName, string key, string def)
-    {
-      // 1. Find the pod and use its resource files
-      if (pod != null)
-      {
-        // 2. Lookup via '/locale/{toStr}.props'
-        string val = tryProp(pod, key, m_str);
-        if (val != null) return val;
-
-        // 3. Lookup via '/locale/{lang}.props'
-        if (m_country != null)
-        {
-          val = tryProp(pod, key, m_lang);
-          if (val != null) return val;
-        }
-
-        // 4. Lookup via '/locale/en.props'
-        if (m_str != "en")
-        {
-          val = tryProp(pod, key, en);
-          if (val != null) return val;
-        }
-      }
-
-      // 5. If all else fails return def, which defaults to pod::key
-      if (def == m_getNoDef) return podName + "::" + key;
-      return def;
-    }
-
-    string tryProp(Pod pod, string key, string locale)
-    {
-      // get the props for the locale
-      Map props;
-      lock (pod.locales)
-      {
-        props = (Map)pod.locales[locale];
-      }
-
-      // if already loaded, lookup key
-      if (props != null) return (string)props.get(key);
-
-      // the props for this locale is not
-      // loaded yet, so let's load it!
-      Uri uri = Uri.fromStr("/locale/" + locale + ".props");
-      try
-      {
-        // resolve to file
-        File f = (File)pod.files().get(uri);
-
-        // if file found, then read into props
-        if (f != null)
-          props = f.readProps();
-        else
-          props = noProps;
-
-      }
-      catch (Exception e)
-      {
-        System.Console.WriteLine("ERROR: Cannot load " + uri);
-        Err.dumpStack(e);
-      }
-
-      // now map the loaded props back into the pod's cache
-      lock (pod.locales)
-      {
-        pod.locales[locale] = props;
-      }
-
-      // return result
-      return (string)props.get(key);
-    }
-
-    static readonly Map noProps = new Map(Sys.StrType, Sys.StrType).ro();
-    static readonly string en = "en";
-
-  //////////////////////////////////////////////////////////////////////////
   // Default Locale
   //////////////////////////////////////////////////////////////////////////
 
@@ -261,6 +167,8 @@ namespace Fan.Sys
     readonly string m_str;
     readonly string m_lang;
     readonly string m_country;
+    public readonly Uri m_strProps;    // `locale/{str}.props`
+    public readonly Uri m_langProps;   // `locale/{lang}.props`
     CultureInfo dotnetCulture;
     NumberFormatInfo m_dec;
 

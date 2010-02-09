@@ -216,7 +216,7 @@ namespace Fanx.Util
 
     public void dump(Fan.Sys.List args)
     {
-      Fan.Sys.OutStream @out = Fan.Sys.Sys.@out();
+      Fan.Sys.OutStream @out = Fan.Sys.Env.cur().@out();
       if (args != null && args.size() > 0)
         @out = (Fan.Sys.OutStream)args.get(0);
 

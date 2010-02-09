@@ -71,14 +71,14 @@ namespace Fanx.Tools
           return current[i];
 
       // otherwise load it from disk
-      string libDir = FileUtil.combine(Sys.HomeDir, "lib", "dotnet");
+      string libDir = FileUtil.combine(Sys.m_homeDir, "lib", "dotnet");
       string dll = FileUtil.combine(libDir, asmName + ".dll");
 
       FileInfo f = new FileInfo(dll);
       if (!f.Exists)
       {
         // check tmp dir
-        string tmpDir = FileUtil.combine(Sys.HomeDir, "lib", "tmp");
+        string tmpDir = FileUtil.combine(Sys.m_homeDir, "lib", "tmp");
         dll = FileUtil.combine(tmpDir, asmName + ".dll");
         f = new FileInfo(dll);
       }
@@ -151,8 +151,8 @@ namespace Fanx.Tools
     static void verifyDlls()
     {
       // get dirs
-      string podDir = FileUtil.combine(Sys.HomeDir, "lib", "fan");
-      string tmpDir = FileUtil.combine(Sys.HomeDir, "lib", "tmp");
+      string podDir = FileUtil.combine(Sys.m_homeDir, "lib", "fan");
+      string tmpDir = FileUtil.combine(Sys.m_homeDir, "lib", "tmp");
 
       // check our tmp dir - cleaning up out-of-date DLL and PDB files
       if (Directory.Exists(tmpDir))
@@ -160,7 +160,7 @@ namespace Fanx.Tools
         string[] tmp = Directory.GetFiles(tmpDir, "*.dll");
         Hashtable keep = new Hashtable();
 
-        string sysDll = FileUtil.combine(Sys.HomeDir, "lib", "dotnet", "sys.dll");
+        string sysDll = FileUtil.combine(Sys.m_homeDir, "lib", "dotnet", "sys.dll");
         DateTime sysModified = File.GetLastWriteTime(sysDll);
 
         if (debug)

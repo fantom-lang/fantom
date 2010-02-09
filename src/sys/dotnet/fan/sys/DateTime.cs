@@ -446,7 +446,7 @@ namespace Fan.Sys
       if (pattern == null)
       {
         if (locale == null) locale = Locale.cur();
-        pattern = locale.get("sys", localeKey);
+        pattern = Env.cur().locale(Sys.m_sysPod, m_localeKey, "D-MMM-YYYY WWW hh:mm:ss zzz", locale);
       }
 
       // process pattern
@@ -963,7 +963,7 @@ namespace Fan.Sys
     static readonly DateTime m_boot;
     static readonly object m_nowUniqueLock = new object();
     static long m_nowUniqueLast;
-    static readonly string localeKey = "dateTime";
+    static readonly string m_localeKey = "dateTime";
 
     public static readonly DateTime m_defVal = make(2000, Month.m_jan, 1, 0, 0, 0, 0, TimeZone.utc());
 

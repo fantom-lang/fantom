@@ -338,7 +338,8 @@ namespace Fan.Sys
       NumberFormatInfo df = locale.dec();
 
       // get default pattern if necessary
-      if (pattern == null) pattern = locale.get("sys", "int", "#,###");
+      if (pattern == null)
+        pattern = Env.cur().locale(Sys.m_sysPod, "int", "#,###");
 
       // parse pattern and get digits
       NumPattern p = NumPattern.parse(pattern);
