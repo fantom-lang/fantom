@@ -226,8 +226,7 @@ namespace Fan.Sys
     {
       try
       {
-return "";
-//        return sysPropToDir("fan.home", "FAN_HOME", null);
+        return sysPropToDir("fan.home", "FAN_HOME", null);
       }
       catch (Exception e)
       {
@@ -239,8 +238,7 @@ return "";
     {
       try
       {
-return "";
-//        return new File(m_homeDir, "lib" + File.separator + "fan");
+        return FileUtil.combine(m_homeDir, "lib", "fan");
       }
       catch (Exception e)
       {
@@ -248,19 +246,14 @@ return "";
       }
     }
 
-    private static File sysPropToDir(string propKey, string envKey, string def)
+    private static string sysPropToDir(string propKey, string envKey, string def)
     {
       // lookup system property
-// TODO-FACET
-/*
-//      string val = System.getProperty(propKey);
-string val = "";
+      string val = SysProps.getProperty(propKey);
 
       // fallback to environment variable
       if (val == null)
-        val = System.getenv(envKey);
-      if (val == null)
-        val = System.getenv(FanStr.lower(envKey));
+        val = Environment.GetEnvironmentVariable(envKey);
 
       // fallback to def if provides
       if (val == null && def != null)
@@ -270,16 +263,20 @@ string val = "";
       if (val == null)
         throw new Exception("Missing " + propKey + " system property or " + envKey + " env var");
 
-      // check that val ends in trailing newline
-      if (!val.endsWith("/")) val += "/";
+      // check if relative to home directory (fand, fant)
+      bool checkExists = true;
+      if (val.StartsWith("$home"))
+      {
+        val = FileUtil.combine(m_homeDir, val.Substring(6));
+        checkExists = false;
+      }
 
-      // map to java.io.File and check that it is a valid directory
-      File f = new File(val);
-      if (!f.exists() || !f.isDirectory())
-        throw new RuntimeException("Invalid " + propKey + " dir: " + f);
-      return f;
-*/
-return null;
+      // check that it is a valid directory
+      if (checkExists && !Directory.Exists(val))
+        throw new Exception("Invalid " + propKey + " dir: " + val);
+
+      // make sure path gets normalized
+      return new DirectoryInfo(val).FullName;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -391,10 +388,9 @@ return null;
     {
       try
       {
-//        string sep = java.io.File.separator;
-// TODO-FACETS
-//        LocalFile f = new LocalFile(new java.io.File(homeDir, "etc" + sep + "sys" + sep + "config.props"));
-LocalFile f = null;
+        string path = FileUtil.combine(m_homeDir, "etc", "sys", "config.props");
+        LocalFile f = new LocalFile(new FileInfo(path));
+
         if (f.exists())
         {
           try

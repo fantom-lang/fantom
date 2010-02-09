@@ -115,38 +115,36 @@ namespace Fan.Sys
 
     public static FPod readFPod(string name)
     {
-/* TODO-FACETS
       FStore store = null;
 
       // handle sys specially for bootstrapping the VM
-      if (name.equals("sys"))
+      if (name == "sys")
       {
-        store = FStore.makeZip(new File(Sys.m_podsDir, name + ".pod"));
+        store = new FStore(new ZipFile(FileUtil.combine(Sys.m_podsDir, name + ".pod")));
       }
 
-      // otherwise delete to Env.cur to find the pod file
+      // otherwise delegate to Env.cur to find the pod file
       else
       {
-        File file = null;
-        fan.sys.File f = Env.cur().findPodFile(name);
-        if (f != null) file = ((LocalFile)f).file;
+        FileSystemInfo file = null;
+        Fan.Sys.File f = Env.cur().findPodFile(name);
+        if (f != null) file = ((LocalFile)f).m_file;
 
         // if null or doesn't exist then its a no go
-        if (file == null || !file.exists()) throw UnknownPodErr.make(name).val;
+        if (file == null || !file.Exists) throw UnknownPodErr.make(name).val;
 
         // verify case since Windoze is case insensitive
-        String actualName = file.getCanonicalFile().getName();
-        actualName = actualName.substring(0, actualName.length()-4);
-        if (!actualName.equals(name)) throw UnknownPodErr.make("Mismatch case: " + name + " != " + actualName).val;
+        String actualName = file.Name; //getCanonicalFile().getName();
+        actualName = actualName.Substring(0, actualName.Length-4);
+        if (actualName != name) throw UnknownPodErr.make("Mismatch case: " + name + " != " + actualName).val;
 
-        store = FStore.makeZip(file);
+        store = new FStore(new ZipFile(file.FullName));
       }
 
       // read in the FPod tables
       FPod fpod = new FPod(name, store);
       fpod.read();
-  */
-      return null; //fpod;
+      return fpod;
     }
 
     public static List list()

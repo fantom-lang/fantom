@@ -28,9 +28,8 @@ namespace Fanx.Fcode
     /// <summary>
     /// Construct a FStore to read.
     /// </summary>
-    public FStore(FPod fpod, ZipFile zipFile)
+    public FStore(ZipFile zipFile)
     {
-      this.fpod    = fpod;
       this.zipFile = zipFile;
       if (zipFile == null) throw new Exception();
     }
@@ -91,7 +90,7 @@ namespace Fanx.Fcode
       if (entry == null)
       {
         if (required)
-          throw new Exception("Missing required file \"" + path + "\" in pod zup");
+          throw new Exception("Missing required file \"" + path + "\" in pod zip");
         else
           return null;
       }
@@ -216,7 +215,7 @@ namespace Fanx.Fcode
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    internal readonly FPod fpod;
+    internal FPod fpod;  // set in FPod ctor
     internal readonly ZipFile zipFile;
 
   }

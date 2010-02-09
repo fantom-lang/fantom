@@ -27,10 +27,11 @@ namespace Fanx.Fcode
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    public FPod(string podName, ZipFile zipFile)
+    public FPod(string podName, FStore store)
     {
+      if (store != null) store.fpod = this;
       this.m_podName    = podName;
-      this.m_store      = zipFile == null ? null : new FStore(this, zipFile);
+      this.m_store      = store;
       this.m_names      = new FTable.Names(this);
       this.m_typeRefs   = new FTable.TypeRefs(this);
       this.m_fieldRefs  = new FTable.FieldRefs(this);
@@ -182,16 +183,16 @@ namespace Fanx.Fcode
     /// </summary>
     public void read()
     {
-      m_names.read(m_store.read("names.def", true));
-      m_typeRefs.read(m_store.read("typeRefs.def"));
-      m_fieldRefs.read(m_store.read("fieldRefs.def"));
-      m_methodRefs.read(m_store.read("methodRefs.def"));
-
       // pod meta
-      readPodMeta(m_store.read("pod.def", true));
+      readPodMeta(m_store.read("meta.props", true));
+
+      m_names.read(m_store.read("fcode/names.def", true));
+      m_typeRefs.read(m_store.read("fcode/typeRefs.def"));
+      m_fieldRefs.read(m_store.read("fcode/fieldRefs.def"));
+      m_methodRefs.read(m_store.read("fcode/methodRefs.def"));
 
       // type meta
-      readTypeMeta(m_store.read("types.def", true));
+      readTypeMeta(m_store.read("fcode/types.def", true));
 
       // full fcode always lazy loaded in Type.reflect()
     }
