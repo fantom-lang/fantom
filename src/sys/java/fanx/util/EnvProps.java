@@ -41,7 +41,7 @@ public class EnvProps
   {
     uri = Uri.fromStr(pod.uri() + "/" + uri);
     fan.sys.File f = (fan.sys.File)pod.file(uri, false);
-    Map map = empty;
+    Map map = Sys.emptyStrStrMap;
     try
     {
       if (f != null) map = (Map)f.readProps().toImmutable();
@@ -106,7 +106,6 @@ public class EnvProps
       return false;
     }
 
-    Key key;          // Pod+Uri tuple
     long read;        // Duration.nowTicks when we read
     List files;       // list of files we read from
     long[] modified;  // timestamps of file when we read
@@ -117,8 +116,6 @@ public class EnvProps
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
-
-  public static final Map empty = (Map)new Map(new MapType(Sys.StrType, Sys.StrType)).toImmutable();
 
   private final Env env;
   private final HashMap cache = new HashMap();
