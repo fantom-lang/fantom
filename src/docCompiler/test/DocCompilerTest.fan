@@ -36,7 +36,7 @@ class DocCompilerTest : Test
   Void verifyLink(Type t, Str sig)
   {
     map  := |Type x->Uri| { return x.name.toUri }
-    test := ApiToHtmlGenerator.makeTypeLink(t, map)
+    test := HtmlDocUtil.makeTypeLink(t, map)
     verifyEq(test, sig, "$test != $sig   $t.signature")
   }
 
