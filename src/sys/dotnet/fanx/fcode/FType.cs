@@ -46,7 +46,7 @@ namespace Fanx.Fcode
 
     public string filename()
     {
-      return m_pod.typeRef(m_self).typeName + ".fcode";
+      return "fcode/" + m_pod.typeRef(m_self).typeName + ".fcode";
     }
 
     public void read()
