@@ -126,7 +126,8 @@ namespace Fan.Sys
       NumberFormatInfo df = locale.dec();
 
       // get default pattern if necessary
-      if (pattern == null) pattern = locale.get("sys", "decimal", "#,###.0##");
+      if (pattern == null)
+        pattern = Env.cur().locale(Sys.m_sysPod, "decimal", "#,###.0##");
 
       // parse pattern and get digits
       NumPattern p = NumPattern.parse(pattern);

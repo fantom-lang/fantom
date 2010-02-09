@@ -27,7 +27,7 @@ namespace Fanx.Fcode
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    public FPod(string podName, ZipFile zipFile, object repo)
+    public FPod(string podName, ZipFile zipFile)
     {
       this.m_podName    = podName;
       this.m_store      = zipFile == null ? null : new FStore(this, zipFile);
@@ -35,8 +35,6 @@ namespace Fanx.Fcode
       this.m_typeRefs   = new FTable.TypeRefs(this);
       this.m_fieldRefs  = new FTable.FieldRefs(this);
       this.m_methodRefs = new FTable.MethodRefs(this);
-      this.m_symbolRefs = new FTable.SymbolRefs(this);
-      this.m_repo       = repo;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -59,7 +57,6 @@ namespace Fanx.Fcode
     public FTypeRef typeRef(int index)  { return (FTypeRef)m_typeRefs.get(index); }
     public FTuple fieldRef(int index)   { return (FTuple)m_fieldRefs.get(index); }
     public FTuple methodRef(int index)  { return (FTuple)m_methodRefs.get(index); }
-    public FSymbolRef symbolRef(int index) { return (FSymbolRef)m_symbolRefs.get(index); }
 
   //////////////////////////////////////////////////////////////////////////
   // .NET Emit Utils
@@ -189,7 +186,6 @@ namespace Fanx.Fcode
       m_typeRefs.read(m_store.read("typeRefs.def"));
       m_fieldRefs.read(m_store.read("fieldRefs.def"));
       m_methodRefs.read(m_store.read("methodRefs.def"));
-      m_symbolRefs.read(m_store.read("symbolRefs.def"));
 
       // pod meta
       readPodMeta(m_store.read("pod.def", true));
@@ -235,8 +231,6 @@ namespace Fanx.Fcode
         else if (name == "strs.def") m_literals.m_strs.read(ins);
         else if (name == "durations.def") m_literals.m_durations.read(ins);
         else if (name == "uris.def") m_literals.m_uris.read(ins);
-        else if (name == "symbolRefs.def") m_symbolRefs.read(ins);
-        else if (name == "symbols.def") readSymbols(ins);
         else System.Console.WriteLine("WARNING: unexpected file in pod: " + name);
       }
     }
@@ -297,22 +291,6 @@ namespace Fanx.Fcode
       throw new System.IO.IOException("Unexpected fcode file: " + name);
     }
 
-    public void readSymbols()
-    {
-      if (m_symbols != null) return;  // aready read
-      FStore.Input input = m_store.read("symbols.def");
-      if (input == null) return; // none defined
-      readSymbols(input);
-    }
-
-    private void readSymbols(FStore.Input input)
-    {
-      m_symbols = new FSymbol[input.u2()];
-      for (int i=0; i<m_symbols.Length; ++i)
-        m_symbols[i] = new FSymbol(this).read(input);
-      input.Close();
-    }
-
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
@@ -324,15 +302,12 @@ namespace Fanx.Fcode
     public FStore m_store;        // store we using to read
     public int m_version;         // fcode format version
     public FType[] m_types;       // pod's declared types
-    public FSymbol[] m_symbols;   // pod's declared symbols
     public FTable m_names;        // identifier names: foo
     public FTable m_typeRefs;     // types refs:   [pod,type,variances*]
     public FTable m_fieldRefs;    // fields refs:  [parent,name,type]
     public FTable m_methodRefs;   // methods refs: [parent,name,ret,params*]
-    public FTable m_symbolRefs;   // symbol refs:  [pod,name]
     public FLiterals m_literals;  // literal constants (on read fully or lazy load)
     private NMethod[] m_ncalls;   // cached fan methodRef -> .NET method signatures
     private NField[] m_nfields;   // cached fan fieldRef  -> .NET field signatures
-    public object m_repo;         // sys::Repo or null is sys boot repo
   }
 }

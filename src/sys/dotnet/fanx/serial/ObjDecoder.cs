@@ -95,7 +95,7 @@ namespace Fanx.Serial
 
       consume();
       string typeName = consumeId("Expecting type name");
-      Type t = pod.findType(typeName, false);
+      Type t = pod.type(typeName, false);
       if (t == null) throw err("Unknown type: " + podName + "::" + typeName);
 
       if (curt == Token.AS)
@@ -124,10 +124,6 @@ namespace Fanx.Serial
       // [ is always list/map collection
       if (curt == Token.LBRACKET)
         return readCollection(curField, peekType);
-
-      // @ is always literal
-      if (curt == Token.AT)
-        return readSymbolLiteral();
 
       // at this point all remaining options must start
       // with a type signature - if peekType is non-null
@@ -542,48 +538,9 @@ namespace Fanx.Serial
       if (pod == null) throw err("Pod not found: " + n, line);
 
       // resolve type
-      Type type = pod.findType(typeName, false);
+      Type type = pod.type(typeName, false);
       if (type == null) throw err("Type not found: " + n+ "::" + typeName, line);
       return type;
-    }
-
-  //////////////////////////////////////////////////////////////////////////
-  // Symbol
-  //////////////////////////////////////////////////////////////////////////
-
-    /// <summary>
-    /// symbolLiteral := "@" [podName "::"] symbolName
-    /// </summary>
-    private Symbol readSymbolLiteral()
-    {
-      consume(Token.AT, "Expected '@' for symbol literal");
-
-      // parse identifier
-      string n = consumeId("Expected symbol name");
-
-      // check for using imported name
-      if (curt != Token.DOUBLE_COLON)
-      {
-        for (int i=0; i<numUsings; ++i)
-        {
-          Symbol s = usings[i].resolveSymbol(n);
-          if (s != null) return s;
-        }
-        throw err("Unresolved symbol name: " + n);
-      }
-
-      // must be fully qualified
-      consume(Token.DOUBLE_COLON, "Expected ::");
-      string symbolName = consumeId("Expected symbol name");
-
-      // resolve pod
-      Pod pod = Pod.find(n, false);
-      if (pod == null) throw err("Pod not found: " + n);
-
-      // resolve symbol
-      Symbol sym = pod.symbol(symbolName, false);
-      if (sym == null) throw err("Symbol not found: " + n+ "::" + symbolName);
-      return sym;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -679,14 +636,12 @@ namespace Fanx.Serial
     internal abstract class Using
     {
       internal abstract Type resolve(string name);
-      internal abstract Symbol resolveSymbol(string name);
     }
 
     internal class UsingPod : Using
     {
       internal UsingPod(Pod p) { pod = p; }
-      internal override Type resolve(string n) { return pod.findType(n, false); }
-      internal override Symbol resolveSymbol(string n) { return pod.symbol(n, false); }
+      internal override Type resolve(string n) { return pod.type(n, false); }
       Pod pod;
     }
 
@@ -694,7 +649,6 @@ namespace Fanx.Serial
     {
       internal UsingType(Type t, string n) { type = t; name = n; }
       internal override Type resolve(string n) { return name == n ? type : null; }
-      internal override Symbol resolveSymbol(string n) { return null; }
       string name;
       Type type;
     }

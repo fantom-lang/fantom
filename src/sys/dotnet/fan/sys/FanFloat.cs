@@ -228,7 +228,8 @@ namespace Fan.Sys
       if (self == System.Double.NegativeInfinity) return df.NegativeInfinitySymbol;
 
       // get default pattern if necessary
-      if (pattern == null) pattern = locale.get("sys", "float", "#,###.0##");
+      if (pattern == null)
+        pattern = Env.cur().locale(Sys.m_sysPod, "float", "#,###.0##");
 
       // parse pattern and get digits
       NumPattern p = NumPattern.parse(pattern);

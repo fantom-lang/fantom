@@ -11,7 +11,6 @@ using System.Runtime.CompilerServices;
 using Fanx.Emit;
 using Fanx.Fcode;
 using Fanx.Serial;
-using Fanx.Typedb;
 using Fanx.Util;
 
 namespace Fan.Sys
@@ -55,13 +54,6 @@ namespace Fan.Sys
 
     public static Type find(string sig) { return TypeParser.load(sig, true, null); }
     public static Type find(string sig, bool check) { return TypeParser.load(sig, check, null); }
-
-    public static List findByFacet(Symbol key, object facetVal) { return findByFacet(key.qname(), facetVal, null); }
-    public static List findByFacet(Symbol key, object facetVal, object options) { return findByFacet(key.qname(), facetVal, options); }
-    public static List findByFacet(string qname, object facetVal, object options)
-    {
-      return TypeDb.get().findByFacet(qname, facetVal, options);
-    }
 
   //////////////////////////////////////////////////////////////////////////
   // Naming
@@ -152,7 +144,7 @@ namespace Fan.Sys
     /// </summary>
     public virtual bool isGenericParameter()
     {
-      return pod() == Sys.SysPod && name().Length == 1;
+      return pod() == Sys.m_sysPod && name().Length == 1;
     }
 
     /// <summary>
@@ -312,12 +304,12 @@ namespace Fan.Sys
   // Facets
   //////////////////////////////////////////////////////////////////////////
 
-    public Map facets() { return facets(false); }
-    public abstract Map facets(bool inherited);
+    public abstract List facets();
 
-    public object facet(Symbol key) { return facet(key, null, false); }
-    public object facet(Symbol key, object def) { return facet(key, def, false); }
-    public abstract object facet(Symbol key, object def, bool inherited);
+    public Facet facet(Type t) { return facet(t, true); }
+    public abstract Facet facet(Type t, bool c);
+
+    public bool hasFacet(Type t) { return facet(t, false) != null; }
 
   //////////////////////////////////////////////////////////////////////////
   // Documentation

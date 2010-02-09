@@ -59,9 +59,12 @@ namespace Fan.Sys
     {
       try
       {
-        // parse lib/units.fog as big serialized list which contains
+        // parse etc/sys/units.fog as big serialized list which contains
         // lists for each quantity (first item being the name)
-        List all = (List)Repo.findFile("etc/sys/units.fog").readObj();
+        String path = "etc/sys/units.fog";
+        InStream input = Env.cur().findFile(path).@in();
+        List all = (List)input.readObj();
+        input.close();
 
         // map lists to quantity data structures
         List quantityNames = new List(Sys.StrType);

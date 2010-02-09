@@ -52,8 +52,6 @@ namespace Fanx.Emit
         emitter.emitField("Dur" + i, "Fan.Sys.Duration", fattr);
       for (int i=0; i<pod.m_literals.m_uris.size(); i++)
         emitter.emitField("U" + i, "Fan.Sys.Uri", fattr);
-      for (int i=0; i<pod.m_symbolRefs.size(); i++)
-        emitter.emitField("Sym" + i, "Fan.Sys.Symbol", fattr);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -65,9 +63,9 @@ namespace Fanx.Emit
       System.Type type = null;
       string name = FanUtil.toDotnetTypeName(pod.m_podName, "$Pod", false);
 
-      if (Sys.usePrecompiledOnly)
-        type = System.Type.GetType(name);
-      else
+      //if (Sys.usePrecompiledOnly)
+      //  type = System.Type.GetType(name);
+      //else
         type = assembly.GetType(name);
 
       initFields(pod, type);
@@ -90,8 +88,6 @@ namespace Fanx.Emit
         type.GetField("Dur"+i).SetValue(null, literals.m_durations.get(i));
       for (int i=0; i<literals.m_uris.size(); i++)
         type.GetField("U"+i).SetValue(null, literals.m_uris.get(i));
-      for (int i=0; i<pod.m_symbolRefs.size(); ++i)
-        type.GetField("Sym"+i).SetValue(null, pod.symbolRef(i).resolve());
     }
   }
 }

@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 using Fanx.Emit;
 using Fanx.Fcode;
 using Fanx.Serial;
-using Fanx.Typedb;
 using Fanx.Util;
 
 namespace Fan.Sys
@@ -207,40 +206,14 @@ namespace Fan.Sys
   // Facets
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Map facets(bool inherited)
+    public override List facets()
     {
-      Map map = ((ClassType)reflect()).m_facets.map();
-      if (inherited)
-      {
-        map = map.rw();
-        List inherit = inheritance();
-        for (int i=0; i<inherit.sz(); ++i)
-        {
-          Map x = ((Type)inherit.get(i)).facets(false);
-          if (x.isEmpty()) continue;
-          IDictionaryEnumerator en = x.pairsIterator();
-          while (en.MoveNext())
-          {
-            Symbol key = (Symbol)en.Key;
-            if (map.get(key) == null) map.add(key, en.Value);
-          }
-        }
-      }
-      return map;
+      return ((ClassType)reflect()).m_facets.list();
     }
 
-    public override sealed object facet(Symbol key, object def, bool inherited)
+    public override Facet facet(Type t, bool c)
     {
-      object val = ((ClassType)reflect()).m_facets.get(key, null);
-      if (val != null) return val;
-      if (!inherited) return def;
-      List inherit = inheritance();
-      for (int i=0; i<inherit.sz(); ++i)
-      {
-        val = ((Type)inherit.get(i)).facet(key, null, false);
-        if (val != null) return val;
-      }
-      return def;
+      return ((ClassType)reflect()).m_facets.get(t, c);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -355,9 +328,9 @@ namespace Fan.Sys
       this.m_fields      = fields.trim();
       this.m_methods     = methods.trim();
       this.m_slotsByName = nameToSlot;
+      this.m_facets      = Facets.mapFacets(m_pod, ftype.m_attrs.m_facets);
 
       // facets
-      this.m_facets     = m_ftype.m_attrs.facets();
       this.m_lineNum    = m_ftype.m_attrs.m_lineNum;
       this.m_sourceFile = m_ftype.m_attrs.m_sourceFile;
     }
@@ -441,7 +414,8 @@ namespace Fan.Sys
     {
       string name = String.Intern(f.m_name);
       Type fieldType = m_pod.findType(f.m_type);
-      return new Field(this, name, f.m_flags, f.m_attrs.facets(), f.m_attrs.m_lineNum, fieldType);
+      Facets facets = Facets.mapFacets(m_pod, f.m_attrs.m_facets);
+      return new Field(this, name, f.m_flags, facets, f.m_attrs.m_lineNum, fieldType);
     }
 
     /// <summary>
@@ -459,7 +433,8 @@ namespace Fan.Sys
         int pflags = (p.def == null) ? 0 : Param.HAS_DEFAULT;
         pars.add(new Param(String.Intern(p.name), m_pod.findType(p.type), pflags));
       }
-      return new Method(this, name, m.m_flags, m.m_attrs.facets(), m.m_attrs.m_lineNum, returnType, inheritedReturnType, pars);
+      Facets facets = Facets.mapFacets(m_pod, m.m_attrs.m_facets);
+      return new Method(this, name, m.m_flags, facets, m.m_attrs.m_lineNum, returnType, inheritedReturnType, pars);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -481,7 +456,7 @@ namespace Fan.Sys
 
         // if sys class, just load it by name
         string podName = m_pod.m_name;
-        if (podName == "sys" || Sys.usePrecompiledOnly)
+        if (podName == "sys")
         {
           try
           {
@@ -611,7 +586,7 @@ namespace Fan.Sys
         // methods that use non-Fantom signatures
         ParameterInfo[] pars = m.GetParameters();
         int numParams = pars.Length;
-        if (m_pod == Sys.SysPod)
+        if (m_pod == Sys.m_sysPod)
         {
           if (!checkAllFan(pars)) return;
           if (m_dotnetRepr)

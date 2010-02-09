@@ -52,8 +52,6 @@ namespace Fanx.Fcode
       string name = colon < 0 ? null : key.Substring(colon+1);
       if (name == null)
         ((Pod)top).m_doc = doc;
-      else
-        ((Pod)top).symbol(name, true).m_doc = doc;
     }
     else
     {

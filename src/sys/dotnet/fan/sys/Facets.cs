@@ -20,6 +20,91 @@ namespace Fan.Sys
   public sealed class Facets
   {
 
+    public static Facets empty()
+    {
+      Facets e = m_empty;
+      if (e != null) return e;
+      return m_empty = new Facets(new Hashtable());
+    }
+
+    public static Facets mapFacets(Pod pod, FAttrs.FFacet[] ffacets)
+    {
+      if (ffacets == null || ffacets.Length == 0) return empty();
+      Hashtable map = new Hashtable();
+      for (int i=0; i<ffacets.Length; ++i)
+      {
+        FAttrs.FFacet ff = ffacets[i];
+        Type t = pod.findType(ff.type);
+        map[t] = ff.val;
+      }
+      return new Facets(map);
+    }
+
+    private Facets(Hashtable map) { this.m_map = map; }
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public List list()
+    {
+      if (m_list == null)
+      {
+        m_list = new List(Sys.FacetType, m_map.Count);
+        IDictionaryEnumerator en = m_map.GetEnumerator();
+        while (en.MoveNext())
+        {
+          Type type = (Type)en.Key;
+          m_list.add(get(type, true));
+        }
+        m_list = (List)m_list.toImmutable();
+      }
+      return m_list;
+    }
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public Facet get(Type type, bool check)
+    {
+      object val = m_map[type];
+      if (val is Facet) return (Facet)val;
+      if (val is string)
+      {
+        Facet f = decode(type, (string)val);
+        m_map[type] = f;
+        return f;
+      }
+      if (check) throw UnknownFacetErr.make(type.qname()).val;
+      return null;
+    }
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public Facet decode(Type type, string s)
+    {
+      try
+      {
+        // if no string use make/defVal
+        if (s.Length == 0) return (Facet)type.make();
+
+        // decode using normal Fantom serialization
+        return (Facet)ObjDecoder.decode(s);
+      }
+      catch (System.Exception e)
+      {
+        string msg = "ERROR: Cannot decode facet " + type + ": " + s;
+        System.Console.WriteLine(msg);
+        Err.dumpStack(e);
+        m_map.Remove(type);
+        throw IOErr.make(msg).val;
+      }
+    }
+
+
+    private static Facets m_empty;
+
+    private Hashtable m_map;   // Type : String/Facet, lazy decoding
+    private List m_list;       // Facet[]
+
+  }
+
+/*
+
   //////////////////////////////////////////////////////////////////////////
   // FCode
   //////////////////////////////////////////////////////////////////////////
@@ -28,7 +113,8 @@ namespace Fan.Sys
     {
       MapType t = m_mapType;
       if (t != null) return t;
-      return m_mapType = new MapType(Sys.SymbolType, Sys.ObjType.toNullable());
+//      return m_mapType = new MapType(Sys.SymbolType, Sys.ObjType.toNullable());
+return null;
     }
 
     public static Facets empty()
@@ -59,13 +145,9 @@ namespace Fan.Sys
   // Access
   //////////////////////////////////////////////////////////////////////////
 
-    public object get(Symbol key, object def)
-    {
-      return get(key.qname(), def);
-    }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public object get(string qname, object def)
+    public Facet get(Type qname, bool check)
     {
       object val = m_map[qname];
       if (val == null) return def;
@@ -83,33 +165,9 @@ namespace Fan.Sys
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public Map map()
+    public List list()
     {
-      // optimize empty case which is the common case
-      if (m_map.Count == 0)
-      {
-        if (m_emptyMap == null) m_emptyMap = (Map)new Map(mapType()).toImmutable();
-        return m_emptyMap;
-      }
-
-      // map the names to Objs via the get() where
-      // we will decode as necessary; keep track if
-      // all the values are immutable
-      Map result = new Map(mapType());
-      string[] keys = new string[m_map.Count];
-      m_map.Keys.CopyTo(keys, 0);
-      foreach (string qname in keys)
-      {
-        Symbol key = Symbol.find(qname);
-        object val = get(qname, null);
-        result.set(key, val);
-      }
-      return result.ro();
-    }
-
-    public override string ToString()
-    {
-      return map().ToString();
+      return null;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -120,8 +178,8 @@ namespace Fan.Sys
     private static Facets m_empty;
     private static Map m_emptyMap;
 
-    /** String qname => immutable Obj or Symbol.EncodedVal */
     private Hashtable m_map;
   }
+  */
 }
 

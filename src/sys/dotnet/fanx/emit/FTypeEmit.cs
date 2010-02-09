@@ -140,7 +140,7 @@ namespace Fanx.Emit
 
       BufferedStream fin = new BufferedStream(pod.m_store.zipFile.GetInputStream(entry));
       FileStream fout = System.IO.File.Create(
-        FileUtil.combine(Fan.Sys.Sys.HomeDir, "lib", "tmp", filename));
+        FileUtil.combine(Fan.Sys.Sys.m_homeDir, "lib", "tmp", filename));
 
       byte[] b = new byte[4096];
       while (true)

@@ -28,7 +28,6 @@ class Build : BuildCs
                `fanx/serial/`,
                `fanx/test/`,
                `fanx/tools/`,
-               `fanx/typedb/`,
                `fanx/util/`,
                `perwapi/`]
 

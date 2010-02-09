@@ -15,14 +15,14 @@ namespace Fanx.Util
   /// <summary>
   /// ScriptUtil manages script caching and compilation.
   /// </summary>
-  public class ScriptUtil
+  public class EnvScripts
   {
 
   //////////////////////////////////////////////////////////////////////////
   // Public
   //////////////////////////////////////////////////////////////////////////
 
-    public static Type compile(File file, Map options)
+    public Type compile(File file, Map options)
     {
       // normalize the file path as our cache key
       file = file.normalize();
@@ -67,7 +67,7 @@ namespace Fanx.Util
   // Utils
   //////////////////////////////////////////////////////////////////////////
 
-    private static string generatePodName(File f)
+    private string generatePodName(File f)
     {
       string bse = f.basename();
       StringBuilder s = new StringBuilder(bse.Length+6);
@@ -82,7 +82,7 @@ namespace Fanx.Util
       return s.ToString();
     }
 
-    private static Pod compile(string podName, File f, Map options)
+    private Pod compile(string podName, File f, Map options)
     {
       // use Fantom reflection to run compiler::Main.compileScript(File)
       Method m = Slot.findMethod("compiler::Main.compileScript", true);
@@ -93,7 +93,7 @@ namespace Fanx.Util
   // CachedScript
   //////////////////////////////////////////////////////////////////////////
 
-    static CachedScript getCache(File file)
+    CachedScript getCache(File file)
     {
       lock (m_cache)
       {
@@ -113,7 +113,7 @@ namespace Fanx.Util
       }
     }
 
-    static void putCache(File file, Type t)
+    void putCache(File file, Type t)
     {
       CachedScript c = new CachedScript();
       c.modified = file.modified();
@@ -123,7 +123,7 @@ namespace Fanx.Util
       lock (m_cache) { m_cache[cacheKey(file)] = c; }
     }
 
-    static string cacheKey(File f)
+    string cacheKey(File f)
     {
       return f.toStr();
     }
@@ -139,7 +139,7 @@ namespace Fanx.Util
   // Option Utils
   //////////////////////////////////////////////////////////////////////////
 
-    static bool getOption(Map options, string key, bool def)
+    bool getOption(Map options, string key, bool def)
     {
       if (options == null) return def;
       Boolean x = (Boolean)options.get(key);
@@ -151,10 +151,10 @@ namespace Fanx.Util
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    static Hashtable m_cache = new Hashtable(300);
-    static string m_strForce = "force";
-    static object m_counterLock = new object();
-    static int m_counter = 0;
+    Hashtable m_cache = new Hashtable(300);
+    string m_strForce = "force";
+    object m_counterLock = new object();
+    int m_counter = 0;
 
   }
 }

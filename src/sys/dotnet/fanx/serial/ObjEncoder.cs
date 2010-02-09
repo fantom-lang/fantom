@@ -76,21 +76,23 @@ namespace Fanx.Serial
       }
 
       Type type = FanObj.@typeof(obj);
-      if (type.facet(symSimple, null, true) == Boolean.True)
+/* TODO-FACETS
+      Serializable ser = (Serializable)type.facet(Sys.SerializableType, false);
+      if (ser != null)
       {
-        writeSimple(type, obj);
-      }
-      else if (type.facet(symSerializable, null, true) == Boolean.True)
-      {
-        writeComplex(type, obj);
+        if (ser.simple)
+          writeSimple(type, obj);
+        else
+          writeComplex(type, obj, ser);
       }
       else
       {
+*/
         if (skipErrors)
           w("null /* Not serializable: ").w(type.qname()).w(" */");
         else
           throw IOErr.make("Not serializable: " + type).val;
-      }
+//      }
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -120,7 +122,7 @@ namespace Fanx.Serial
         Field f = (Field)fields.get(i);
 
         // skip static, transient, and synthetic (once) fields
-        if (f.isStatic() || f.isSynthetic() || f.facet(symTransient, false) == Boolean.True)
+        if (f.isStatic() || f.isSynthetic()) // TODO-FACETS || f.hasFacet(Sys.TransientType))
           continue;
 
         // get the value
@@ -148,8 +150,10 @@ namespace Fanx.Serial
       }
 
       // if collection
+/* TODO-FACETS
       if (type.facet(symCollection, null, true) == Boolean.True)
         first = writeCollectionItems(type, obj, first);
+*/
 
       // if we output fields, then close braces
       if (!first) { level--; wIndent().w('}'); }
@@ -284,7 +288,7 @@ namespace Fanx.Serial
 
     private bool isMultiLine(Type t)
     {
-      return t.pod() != Sys.SysPod;
+      return t.pod() != Sys.m_sysPod;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -369,11 +373,6 @@ namespace Fanx.Serial
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
-
-    static readonly Symbol symSimple       = Symbol.find("sys::simple");
-    static readonly Symbol symSerializable = Symbol.find("sys::serializable");
-    static readonly Symbol symCollection   = Symbol.find("sys::collection");
-    static readonly Symbol symTransient    = Symbol.find("sys::transient");
 
     OutStream @out;
     int level  = 0;

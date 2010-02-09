@@ -201,7 +201,7 @@ namespace Fan.Sys
     {
       if (m_tempDir == null)
       {
-        m_tempDir = Repo.working().home().plus(Uri.fromStr("tmp/test/"), false);
+        m_tempDir = Env.cur().tempDir().plus(Uri.fromStr("test/"), false);
         m_tempDir.delete();
         m_tempDir.create();
       }

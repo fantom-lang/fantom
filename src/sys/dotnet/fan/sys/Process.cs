@@ -238,8 +238,8 @@ namespace Fan.Sys
     private File m_dir;
     private Map m_env;
     private bool m_mergeErr = true;
-    private OutStream m_out = Sys.@out();
-    private OutStream m_err = Sys.err();
+    private OutStream m_out = Env.cur().@out();
+    private OutStream m_err = Env.cur().err();
     private InStream m_in   = null;
     private volatile System.Diagnostics.Process m_proc;
 

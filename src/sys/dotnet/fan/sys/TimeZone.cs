@@ -564,7 +564,7 @@ namespace Fan.Sys
   // Database Index
   //////////////////////////////////////////////////////////////////////////
 
-    static FileInfo dbFile = new FileInfo(Sys.HomeDir + "/etc/sys/timezones.ftz");
+    static FileInfo dbFile = new FileInfo(Sys.m_homeDir + "/etc/sys/timezones.ftz");
     static string[] prefixes = new string[0];
     static byte[] indexPrefixes = new byte[0];
     static string[] indexNames = new string[0];
@@ -602,7 +602,7 @@ namespace Fan.Sys
       try
       {
         // first check system property
-        string sysProp = (string)Sys.env().get("fan.timezone");
+        string sysProp = (string)Env.cur().vars().get("fan.timezone");
         if (sysProp != null)
         {
           m_cur = fromStr(sysProp);

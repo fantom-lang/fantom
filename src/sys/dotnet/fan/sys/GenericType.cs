@@ -79,8 +79,8 @@ namespace Fan.Sys
 
     internal abstract Map makeParams();
 
-    public override Map facets(bool inherited) { return m_base.facets(inherited); }
-    public override object facet(Symbol key, object def, bool inherited) { return m_base.facet(key, def, inherited); }
+    public override List facets() { return m_base.facets(); }
+    public override Facet facet(Type t, bool c) { return m_base.facet(t, c); }
 
     public override string doc() { return m_base.doc(); }
 

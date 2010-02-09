@@ -22,6 +22,491 @@ namespace Fan.Sys
   {
 
   //////////////////////////////////////////////////////////////////////////
+  // Fields (loaded before type constants)
+  //////////////////////////////////////////////////////////////////////////
+
+    /** Env.os constant */
+    public static readonly string m_os = initOs();
+
+    /** Env.arch constant */
+    public static readonly string m_arch = initArch();
+
+    /** Env.platform constant */
+    public static readonly string m_platform  = m_os + "-" + m_arch;
+
+    /** BootEnv.homeDir */
+    public static readonly string m_homeDir = initHomeDir();
+
+    /** {BootEnv.homeDir}/lib/fan/ */
+    public static readonly string m_podsDir = initPodsDir();
+
+    /** {BootEnv.homeDir}/lib/fan/sys.pod */
+    public static Pod m_sysPod = initSysPod();
+
+  //////////////////////////////////////////////////////////////////////////
+  // Fields (type constants)
+  //////////////////////////////////////////////////////////////////////////
+
+  // the Eve of all types
+  public static readonly Type ObjType         = initType("Obj");
+
+    // basic primitives
+    public static readonly Type NumType       = initType("Num");
+    public static readonly Type EnumType      = initType("Enum");
+    public static readonly Type FacetType     = initType("Facet");
+    public static readonly Type BoolType      = initType("Bool");
+    public static readonly Type DurationType  = initType("Duration");
+    public static readonly Type FuncType      = initType("Func");
+    public static readonly Type IntType       = initType("Int");
+    public static readonly Type DecimalType   = initType("Decimal");
+    public static readonly Type FloatType     = initType("Float");
+    public static readonly Type ListType      = initType("List");
+    public static readonly Type MapType       = initType("Map");
+    public static readonly Type MonthType     = initType("Month");
+    public static readonly Type PodType       = initType("Pod");
+    public static readonly Type RangeType     = initType("Range");
+    public static readonly Type StrType       = initType("Str");
+    public static readonly Type StrBufType    = initType("StrBuf");
+    public static readonly Type TestType      = initType("Test");
+    public static readonly Type DateTimeType  = initType("DateTime");
+    public static readonly Type DateType      = initType("Date");
+    public static readonly Type TimeType      = initType("Time");
+    public static readonly Type TimeZoneType  = initType("TimeZone");
+    public static readonly Type TypeType      = initType("Type");
+    public static readonly Type WeekdayType   = initType("Weekday");
+    public static readonly Type ThisType      = initType("This");
+    public static readonly Type VoidType      = initType("Void");
+    public static readonly Type EnvType       = initType("Env");
+    public static readonly Type BootEnvType   = initType("BootEnv");
+    public static readonly Type JarDistEnvType = initType("JarDistEnv");
+
+    // reflection
+    public static readonly Type SlotType      = initType("Slot");
+    public static readonly Type FieldType     = initType("Field");
+    public static readonly Type MethodType    = initType("Method");
+    public static readonly Type ParamType     = initType("Param");
+
+    // IO
+    public static readonly Type CharsetType      = initType("Charset");
+    public static readonly Type EndianType       = initType("Endian");
+    public static readonly Type InStreamType     = initType("InStream");
+    public static readonly Type SysInStreamType  = initType("SysInStream");
+    public static readonly Type OutStreamType    = initType("OutStream");
+    public static readonly Type SysOutStreamType = initType("SysOutStream");
+    public static readonly Type FileType         = initType("File");
+    public static readonly Type LocalFileType    = initType("LocalFile");
+    public static readonly Type ZipEntryFileType = initType("ZipEntryFile");
+    public static readonly Type BufType          = initType("Buf");
+    public static readonly Type MemBufType       = initType("MemBuf");
+    public static readonly Type FileBufType      = initType("FileBuf");
+    public static readonly Type MmapBufType      = initType("MmapBuf");
+    public static readonly Type UriType          = initType("Uri");
+    public static readonly Type ZipType          = initType("Zip");
+
+    // actos
+    public static readonly Type ActorType        = initType("Actor");
+    public static readonly Type ActorPoolType    = initType("ActorPool");
+    public static readonly Type FutureType       = initType("Future");
+
+    // utils
+    public static readonly Type DependType       = initType("Depend");
+    public static readonly Type LogType          = initType("Log");
+    public static readonly Type LogLevelType     = initType("LogLevel");
+    public static readonly Type LogRecType       = initType("LogRec");
+    public static readonly Type LocaleType       = initType("Locale");
+    public static readonly Type MimeTypeType     = initType("MimeType");
+    public static readonly Type ProcessType      = initType("Process");
+    public static readonly Type RegexType        = initType("Regex");
+    public static readonly Type RegexMatcherType = initType("RegexMatcher");
+    public static readonly Type ServiceType      = initType("Service");
+    public static readonly Type VersionType      = initType("Version");
+    public static readonly Type UnitType         = initType("Unit");
+    public static readonly Type UnsafeType       = initType("Unsafe");
+    public static readonly Type UuidType         = initType("Uuid");
+
+    // uri schemes
+    public static readonly Type UriSchemeType    = initType("UriScheme");
+    public static readonly Type FanSchemeType    = initType("FanScheme");
+    public static readonly Type FileSchemeType   = initType("FileScheme");
+
+    // facets
+    public static readonly Type TransientType      = initType("Transient");
+    public static readonly Type SerializableType   = initType("Serializable");
+    public static readonly Type JsType             = initType("Js");
+    public static readonly Type NoDocType          = initType("NoDoc");
+    public static readonly Type DeprecatedType     = initType("Deprecated");
+
+    // exceptions
+    public static readonly Type ErrType               = initType("Err");
+    public static readonly Type ArgErrType            = initType("ArgErr");
+    public static readonly Type CancelledErrType      = initType("CancelledErr");
+    public static readonly Type CastErrType           = initType("CastErr");
+    public static readonly Type ConstErrType          = initType("ConstErr");
+    public static readonly Type IOErrType             = initType("IOErr");
+    public static readonly Type IndexErrType          = initType("IndexErr");
+    public static readonly Type InterruptedErrType    = initType("InterruptedErr");
+    public static readonly Type NameErrType           = initType("NameErr");
+    public static readonly Type NotImmutableErrType   = initType("NotImmutableErr");
+    public static readonly Type NullErrType           = initType("NullErr");
+    public static readonly Type ParseErrType          = initType("ParseErr");
+    public static readonly Type ReadonlyErrType       = initType("ReadonlyErr");
+    public static readonly Type TestErrType           = initType("TestErr");
+    public static readonly Type TimeoutErrType        = initType("TimeoutErr");
+    public static readonly Type UnknownPodErrType     = initType("UnknownPodErr");
+    public static readonly Type UnknownServiceErrType = initType("UnknownServiceErr");
+    public static readonly Type UnknownSlotErrType    = initType("UnknownSlotErr");
+    public static readonly Type UnknownFacetErrType   = initType("UnknownFacetErr");
+    public static readonly Type UnknownTypeErrType    = initType("UnknownTypeErr");
+    public static readonly Type UnresolvedErrType     = initType("UnresolvedErr");
+    public static readonly Type UnsupportedErrType    = initType("UnsupportedErr");
+
+    // generic parameter types used with generic types List, Map, and Method
+    static  ClassType[] m_genericParamTypes = new ClassType[256];
+    public static readonly ClassType AType = initGeneric('A');
+    public static readonly ClassType BType = initGeneric('B');
+    public static readonly ClassType CType = initGeneric('C');
+    public static readonly ClassType DType = initGeneric('D');
+    public static readonly ClassType EType = initGeneric('E');
+    public static readonly ClassType FType = initGeneric('F');
+    public static readonly ClassType GType = initGeneric('G');
+    public static readonly ClassType HType = initGeneric('H');
+    public static readonly ClassType KType = initGeneric('K');
+    public static readonly ClassType LType = initGeneric('L');
+    public static readonly ClassType MType = initGeneric('M');
+    public static readonly ClassType RType = initGeneric('R');
+    public static readonly ClassType VType = initGeneric('V');
+    private static bool dummy1 = initGenericParamTypes();
+
+  //////////////////////////////////////////////////////////////////////////
+  // Fields (loaded after type constants)
+  //////////////////////////////////////////////////////////////////////////
+
+    /** Empty Str:Obj? map */
+    public static readonly Map m_emptyStrObjMap = initEmptyStrMap(ObjType.toNullable());
+
+    /** Empty Str:Str map */
+    public static readonly Map m_emptyStrStrMap = initEmptyStrMap(StrType);
+
+    /** Empty Str:Type map */
+    public static readonly Map m_emptyStrTypeMap = initEmptyStrMap(TypeType);
+
+    /** Bootstrap environment */
+// TODO-FACETS
+    public static readonly Env m_bootEnv; /*= new BootEnv();*/
+    internal static Env m_curEnv = m_bootEnv;
+
+    /** {BootEnv.homeDir}/etc/sys/config.props */
+    public static readonly Map m_sysConfig = initSysConfig();
+
+    /** "fan.debug" env var used to generating debug attributes in bytecode */
+    public static readonly bool m_debug = sysConfigBool("debug", false);
+
+    /** Absolute boot time */
+    public static readonly DateTime m_bootDateTime = initBootDateTime();
+
+    /** Relative boot time */
+    public static readonly Duration m_bootDuration = initBootDuration();
+
+    /** Current environment - do this after sys fully booted */
+    private static bool dummy2 = initEnv();
+
+  //////////////////////////////////////////////////////////////////////////
+  // Platform Init
+  //////////////////////////////////////////////////////////////////////////
+
+    // TODO: need to query 32-bit versus 64-bit, looks like you need WMI for this
+    private static string initOs() { return "win32"; }
+    private static string initArch() { return "x86"; }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Dir Init
+  //////////////////////////////////////////////////////////////////////////
+
+    private static string initHomeDir()
+    {
+      try
+      {
+return "";
+//        return sysPropToDir("fan.home", "FAN_HOME", null);
+      }
+      catch (Exception e)
+      {
+        throw initFail("homeDir", e);
+      }
+    }
+
+    private static string initPodsDir()
+    {
+      try
+      {
+return "";
+//        return new File(m_homeDir, "lib" + File.separator + "fan");
+      }
+      catch (Exception e)
+      {
+        throw initFail("podsDir", e);
+      }
+    }
+
+    private static File sysPropToDir(string propKey, string envKey, string def)
+    {
+      // lookup system property
+// TODO-FACET
+/*
+//      string val = System.getProperty(propKey);
+string val = "";
+
+      // fallback to environment variable
+      if (val == null)
+        val = System.getenv(envKey);
+      if (val == null)
+        val = System.getenv(FanStr.lower(envKey));
+
+      // fallback to def if provides
+      if (val == null && def != null)
+        val = def;
+
+      // if still not found then we're toast
+      if (val == null)
+        throw new Exception("Missing " + propKey + " system property or " + envKey + " env var");
+
+      // check that val ends in trailing newline
+      if (!val.endsWith("/")) val += "/";
+
+      // map to java.io.File and check that it is a valid directory
+      File f = new File(val);
+      if (!f.exists() || !f.isDirectory())
+        throw new RuntimeException("Invalid " + propKey + " dir: " + f);
+      return f;
+*/
+return null;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Init Sys Pod
+  //////////////////////////////////////////////////////////////////////////
+
+    static Pod initSysPod()
+    {
+      try
+      {
+        return Pod.doFind("sys", true, null);
+      }
+      catch (Exception e)
+      {
+        throw initFail("sysPod", e);
+      }
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Init Types
+  //////////////////////////////////////////////////////////////////////////
+
+    static Type initType(string name)
+    {
+      try
+      {
+        return m_sysPod.type(name, true);
+      }
+      catch (Exception e)
+      {
+        throw initFail("type " + name, e);
+      }
+    }
+
+    private static ClassType initGeneric(int ch)
+    {
+      string name = ""+(char)ch;
+      try
+      {
+        return m_genericParamTypes[ch] = new ClassType(m_sysPod, name, 0, null);
+      }
+      catch (Exception e)
+      {
+        throw initFail("generic " + name, e);
+      }
+    }
+
+    private static bool initGenericParamTypes()
+    {
+      List noMixins = new List(TypeType, 0).ro();
+      for (int i=0; i<m_genericParamTypes.Length; ++i)
+      {
+        ClassType gp = m_genericParamTypes[i];
+        if (gp == null) continue;
+        gp.m_base = ObjType;
+        gp.m_mixins = noMixins;
+      }
+      return true;
+    }
+
+    public static Type genericParamType(string name)
+    {
+      if (name.Length == 1 && name[0] < m_genericParamTypes.Length)
+        return m_genericParamTypes[name[0]];
+      else
+        return null;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Init Env
+  //////////////////////////////////////////////////////////////////////////
+
+    private static bool initEnv()
+    {
+      try
+      {
+        string var = (string)Env.cur().vars().get("FAN_ENV");
+        if (var == null) return true;
+        m_curEnv = (Env)Type.find(var).make();
+      }
+      catch (Exception e)
+      {
+        initWarn("curEnv", e);
+      }
+      return true;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Empty Maps
+  //////////////////////////////////////////////////////////////////////////
+
+    private static Map initEmptyStrMap(Type v)
+    {
+      try
+      {
+        return (Map)new Map(StrType, v).toImmutable();
+      }
+      catch (Exception e)
+      {
+        throw initFail("emptyStrMap", e);
+      }
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Sys Config
+  //////////////////////////////////////////////////////////////////////////
+
+    private static Map initSysConfig()
+    {
+      try
+      {
+//        string sep = java.io.File.separator;
+// TODO-FACETS
+//        LocalFile f = new LocalFile(new java.io.File(homeDir, "etc" + sep + "sys" + sep + "config.props"));
+LocalFile f = null;
+        if (f.exists())
+        {
+          try
+          {
+            return f.readProps();
+          }
+          catch (Exception e)
+          {
+            Console.WriteLine("ERROR: Invalid props file: " + f);
+            Console.WriteLine("  " + e);
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw initFail("sysConfig", e);
+      }
+      return m_emptyStrStrMap;
+    }
+
+    static string sysConfig(string name)
+    {
+      return (string)m_sysConfig.get(name);
+    }
+
+    static bool sysConfigBool(string name, bool def)
+    {
+      string val = sysConfig(name);
+      if (val != null) return val == "true";
+      return def;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Boot Times
+  //////////////////////////////////////////////////////////////////////////
+
+    private static Duration initBootDuration()
+    {
+      try
+      {
+        return Duration.now();
+      }
+      catch (Exception e)
+      {
+        throw initFail("bootDuration", e);
+      }
+    }
+
+    private static DateTime initBootDateTime()
+    {
+      try
+      {
+        return DateTime.now();
+      }
+      catch (Exception e)
+      {
+        throw initFail("bootDuration", e);
+      }
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Utils
+  //////////////////////////////////////////////////////////////////////////
+
+    private static void initWarn(string field, Exception e)
+    {
+      Console.WriteLine("WARN: cannot init Sys." + field);
+      Err.dumpStack(e);
+    }
+
+    private static Exception initFail(string field, Exception e)
+    {
+      Console.WriteLine("ERROR: cannot init Sys." + field);
+      Err.dumpStack(e);
+      throw new Exception("Cannot boot fan: " + e.ToString());
+    }
+
+    /**
+     * Make a thread-safe copy of the specified object.
+     * If it is immutable, then just return it; otherwise
+     * we make a serialized copy.
+     */
+    public static object safe(object obj)
+    {
+      if (obj == null) return null;
+      if (FanObj.isImmutable(obj)) return obj;
+      Buf buf = new MemBuf(512);
+      buf.writeObj(obj);
+      buf.flip();
+      return buf.readObj();
+    }
+
+    public static long nanoTime()
+    {
+      return System.DateTime.Now.Ticks * DateTime.nsPerTick;
+    }
+
+    public static void dumpStack()
+    {
+      System.Console.WriteLine(new System.Diagnostics.StackTrace(true));
+    }
+
+    /** Force sys class to load */
+    public static void boot() {}
+  }
+}
+
+
+
+/*
+
+  //////////////////////////////////////////////////////////////////////////
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
@@ -34,6 +519,8 @@ namespace Fan.Sys
     public static List args() { return m_args.ro(); }
 
     public static Map env() { return m_env; }
+
+internal static Env m_curEnv;
 
     public static Fan.Sys.File homeDir() { return m_homeDir; }
 
@@ -172,6 +659,8 @@ namespace Fan.Sys
         ThisType     = builtin("This",     ObjType);
         VoidType     = builtin("Void",     ObjType);
         WeekdayType  = builtin("Weekday",  EnumType);
+        EnvType      = builtin("Env",      ObjType);
+        BootEnvType  = builtin("BootEnv",  ObjType);
 
         // reflection
         SlotType        = builtin("Slot",   ObjType);
@@ -279,8 +768,8 @@ namespace Fan.Sys
         try
         {
           // predefined
-          m_env.set("os.name", Environment.OSVersion.Platform.ToString());
-          m_env.set("os.version", Environment.OSVersion.Version.ToString());
+          m_env.set("os.name", Environment.OSVersion.Platform.Tostring());
+          m_env.set("os.version", Environment.OSVersion.Version.Tostring());
 
           // environment variables
           IDictionary getenv = Environment.GetEnvironmentVariables();
@@ -293,7 +782,6 @@ namespace Fan.Sys
 
           // TODO - is there an equiv in C# for Java sys props?
           // TODO - is it System.Configuration.ConfigurationSettings?
-          /*
           // Java system properties
           it = System.getProperties().keySet().iterator();
           while (it.hasNext())
@@ -302,7 +790,6 @@ namespace Fan.Sys
             string val = System.getProperty(key);
             env.set(string.make(key), string.make(val));
           }
-          */
 
           // sys.properties
           LocalFile f = new LocalFile(new FileInfo(FileUtil.combine(HomeDir, "lib", "sys.props")));
@@ -440,6 +927,8 @@ namespace Fan.Sys
     public static readonly Type ThisType;
     public static readonly Type VoidType;
     public static readonly Type WeekdayType;
+    public static readonly Type EnvType;
+    public static readonly Type BootEnvType;
 
     // reflection
     public static readonly Type SlotType;
@@ -537,9 +1026,5 @@ namespace Fan.Sys
     public static readonly string m_userName;
     private static Map m_env;
 
-    // Compiler Utils
-    public static Type compile(Fan.Sys.File file) { return ScriptUtil.compile(file, null); }
-    public static Type compile(Fan.Sys.File file, Map options) { return ScriptUtil.compile(file, options); }
-
   }
-}
+*/

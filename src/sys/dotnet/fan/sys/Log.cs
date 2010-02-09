@@ -77,8 +77,7 @@ namespace Fan.Sys
           byName[name] = self;
 
           // check for initial level
-          Map logLevels = Repo.readSymbolsCached(Uri.fromStr("etc/sys/log.fansym"));
-          string val = (string)logLevels.get(name);
+          string val = (string)Sys.m_sysPod.props(Uri.fromStr("log.props"), Duration.m_oneMin).get(name);
           if (val != null) self.m_level = LogLevel.fromStr(val);
         }
       }

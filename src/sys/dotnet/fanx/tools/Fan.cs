@@ -27,8 +27,8 @@ namespace Fanx.Tools
     internal int execute(string target, string[] args)
     {
       // args
-      for (int i=0; i<args.Length; ++i)
-        Sys.m_args.add(args[i]);
+// TODO-FACETS
+//      Sys.m_bootEnv.setArgs(args);
 
       // first try as file name
       if (System.IO.File.Exists(target) && !Directory.Exists(target))
@@ -49,7 +49,8 @@ namespace Fanx.Tools
       Pod pod = null;
       try
       {
-        pod = Sys.compile(f).pod();
+        // TODO-FACETS
+//        pod = Env.cur().compileScript(f, options).pod();
       }
       catch (Err.Val e)
       {
@@ -117,7 +118,7 @@ namespace Fanx.Tools
       else if (((Param)pars.get(0)).of().@is(Sys.StrType.toListOf()) &&
                (pars.sz() == 1 || ((Param)pars.get(1)).hasDefault()))
       {
-        args = new List(Sys.ObjType, new object[] { Sys.args() });
+        args = new List(Sys.ObjType, new object[] { Env.cur().args() });
       }
       else
       {
@@ -158,15 +159,9 @@ namespace Fanx.Tools
       writeLine("");
       writeLine(".NET Runtime:");
       writeLine("  clr.version:  " + Environment.Version);
-      writeLine("  sys.platform: " + Sys.platform());
-      writeLine("  sys.version:  " + Sys.SysPod.version());
+      writeLine("  sys.platform: " + Sys.m_platform);
+      writeLine("  sys.version:  " + Sys.m_sysPod.version());
       writeLine("");
-      writeLine("Fantom Repos:");
-      for (int i=0; i<Repo.list().size(); ++i)
-      {
-        Repo repo = (Repo)Repo.list().get(i);
-        writeLine("    " + FanStr.padr(repo.name()+": ", 15) + repo.home());
-      }
     }
 
     static void pods(String progName)
@@ -180,15 +175,14 @@ namespace Fanx.Tools
       writeLine("");
       writeLine("Fantom Pods [" + (t2-t1)/1000000L + "ms]:");
 
-      writeLine("  Pod                 Version   Repo");
-      writeLine("  ---                 -------   ----");
+      writeLine("  Pod                 Version");
+      writeLine("  ---                 -------");
       for (int i=0; i<pods.sz(); ++i)
       {
         Pod pod = (Pod)pods.get(i);
         writeLine("  " +
           FanStr.justl(pod.name(), 18L) + "  " +
-          FanStr.justl(pod.version().toStr(), 8) + "  " +
-          pod.repo().name());
+          FanStr.justl(pod.version().toStr(), 8));
       }
     }
 

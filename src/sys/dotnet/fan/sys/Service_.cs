@@ -74,7 +74,7 @@ namespace Fan.Sys
 
     public static long hash(Service self)
     {
-      return Sys.idHash(self);
+      return Env.cur().idHash(self);
     }
 
     // TODO - there appears to be a bug in my
