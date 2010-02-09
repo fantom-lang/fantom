@@ -32,6 +32,7 @@ namespace Fan.Sys
       this.m_parent  = parent;
       this.m_scripts = new EnvScripts();
       this.m_props   = new EnvProps(this);
+      this.m_index   = new EnvIndex(this);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -62,57 +63,57 @@ namespace Fan.Sys
   // Virtuals
   //////////////////////////////////////////////////////////////////////////
 
-    public List args() { return m_parent.args(); }
+    public virtual List args() { return m_parent.args(); }
 
-    public Map vars()  { return m_parent.vars(); }
+    public virtual Map vars()  { return m_parent.vars(); }
 
-    public Map diagnostics() { return m_parent.diagnostics(); }
+    public virtual Map diagnostics() { return m_parent.diagnostics(); }
 
-    public void gc() { m_parent.gc(); }
+    public virtual void gc() { m_parent.gc(); }
 
-    public string host() { return m_parent.host(); }
+    public virtual string host() { return m_parent.host(); }
 
-    public string user() { return m_parent.user(); }
+    public virtual string user() { return m_parent.user(); }
 
-    public void exit() { this.exit(0); }
-    public void exit(long status) { m_parent.exit(status); }
+    public virtual void exit() { this.exit(0); }
+    public virtual void exit(long status) { m_parent.exit(status); }
 
-    public InStream @in() { return m_parent.@in(); }
+    public virtual InStream @in() { return m_parent.@in(); }
 
-    public OutStream @out() { return m_parent.@out(); }
+    public virtual OutStream @out() { return m_parent.@out(); }
 
-    public OutStream err() { return m_parent.err(); }
+    public virtual OutStream err() { return m_parent.err(); }
 
-    public File homeDir() { return m_parent.homeDir(); }
+    public virtual File homeDir() { return m_parent.homeDir(); }
 
-    public File workDir() { return m_parent.workDir(); }
+    public virtual File workDir() { return m_parent.workDir(); }
 
-    public File tempDir() { return m_parent.tempDir(); }
+    public virtual File tempDir() { return m_parent.tempDir(); }
 
   //////////////////////////////////////////////////////////////////////////
   // Resolution
   //////////////////////////////////////////////////////////////////////////
 
-    public File findFile(string uri) { return findFile(Uri.fromStr(uri), true); }
-    public File findFile(string uri, bool check) { return findFile(Uri.fromStr(uri), check); }
-    public File findFile(Uri uri) { return findFile(uri, true); }
-    public File findFile(Uri uri, bool check)
+    public virtual File findFile(string uri) { return findFile(Uri.fromStr(uri), true); }
+    public virtual File findFile(string uri, bool check) { return findFile(Uri.fromStr(uri), check); }
+    public virtual File findFile(Uri uri) { return findFile(uri, true); }
+    public virtual File findFile(Uri uri, bool check)
     {
       return m_parent.findFile(uri, check);
     }
 
-    public List findAllFiles(string uri) { return findAllFiles(Uri.fromStr(uri)); }
-    public List findAllFiles(Uri uri)
+    public virtual List findAllFiles(string uri) { return findAllFiles(Uri.fromStr(uri)); }
+    public virtual List findAllFiles(Uri uri)
     {
       return m_parent.findAllFiles(uri);
     }
 
-    public File findPodFile(string name)
+    public virtual File findPodFile(string name)
     {
       return findFile(Uri.fromStr("lib/fan/" + name + ".pod"), false);
     }
 
-    public List findAllPodNames()
+    public virtual List findAllPodNames()
     {
       List acc = new List(Sys.StrType);
       List files = findFile(Uri.fromStr("lib/fan/")).list();
@@ -129,33 +130,31 @@ namespace Fan.Sys
   // State
   //////////////////////////////////////////////////////////////////////////
 
-    public Type compileScript(File file) { return compileScript(file, null); }
-    public Type compileScript(File file, Map options)
+    public virtual Type compileScript(File file) { return compileScript(file, null); }
+    public virtual Type compileScript(File file, Map options)
     {
       return m_scripts.compile(file, options);
     }
 
-    public List index(string key)
+    public virtual List index(string key)
     {
-// TODO-FACETS
-//      return m_index.get(key);
-return null;
+      return m_index.get(key);
     }
 
-    public Map props(Pod pod, Uri uri, Duration maxAge)
+    public virtual Map props(Pod pod, Uri uri, Duration maxAge)
     {
       return m_props.get(pod, uri, maxAge);
     }
 
-    public string config(Pod pod, string key) { return config(pod, key, null); }
-    public string config(Pod pod, string key, string def)
+    public virtual string config(Pod pod, string key) { return config(pod, key, null); }
+    public virtual string config(Pod pod, string key, string def)
     {
       return (string)m_props.get(pod, m_configProps, Duration.m_oneMin).get(key, def);
     }
 
-    public string locale(Pod pod, string key) { return locale(pod, key, m_noDef, Locale.cur()); }
-    public string locale(Pod pod, string key, string def) { return locale(pod, key, def, Locale.cur()); }
-    public string locale(Pod pod, string key, string def, Locale locale)
+    public virtual string locale(Pod pod, string key) { return locale(pod, key, m_noDef, Locale.cur()); }
+    public virtual string locale(Pod pod, string key, string def) { return locale(pod, key, def, Locale.cur()); }
+    public virtual string locale(Pod pod, string key, string def, Locale locale)
     {
       object val;
       Duration maxAge = Duration.m_maxVal;
@@ -188,6 +187,6 @@ return null;
     private Env m_parent;
     private EnvScripts m_scripts;
     private EnvProps m_props;
-//    private EnvIndex m_index = new EnvIndex(this);
+    private EnvIndex m_index;
   }
 }
