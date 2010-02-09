@@ -114,16 +114,38 @@ namespace Fanx.Fcode
     /// <summary>
     /// FStore.Input is used to read from a FStore file.
     /// </summary>
-    public class Input : BinaryReader
+    public class Input : Stream //BinaryReader
     {
-      public Input(FPod fpod, Stream baseStream) : base(baseStream) { this.fpod = fpod; }
+      public Input(FPod fpod, Stream baseStream)
+      {
+        this.bs = baseStream;
+        this.fpod = fpod;
+      }
+
+      // Stream overrides
+      public override bool CanRead  { get { return bs.CanRead; }}
+      public override bool CanSeek  { get { return bs.CanSeek; }}
+      public override bool CanWrite { get { return bs.CanWrite; }}
+      public override long Length   { get { return bs.Length; }}
+      public override long Position
+      {
+        get { return bs.Position; }
+        set { bs.Position = value; }
+      }
+      public override void Flush() { bs.Flush(); }
+      public override long Seek(long off, SeekOrigin loc) { return bs.Seek(off, loc); }
+      public override void SetLength(long val) { bs.SetLength(val); }
+      public override int Read(byte[] buf, int off, int count) { return bs.Read(buf, off, count); }
+      public override void Write(byte[] buf, int off, int count) { bs.Write(buf, off, count); }
 
       public int u1()  { return ReadByte() & 0xff; }
+
       public int u2()
       {
         Read(buf, 0, 2);
         return ((buf[0] & 0xff) << 8) | (buf[1] & 0xff);
       }
+
       public int u4()
       {
         Read(buf, 0, 4);
@@ -132,6 +154,7 @@ namespace Fanx.Fcode
                ((buf[2] & 0xff) << 8) |
                 (buf[3] & 0xff);
       }
+
       public long u8()
       {
         Read(buf, 0, 8);
@@ -144,10 +167,12 @@ namespace Fanx.Fcode
                ((uint)(buf[6] & 0xff) <<  8) |
                ((uint)(buf[7] & 0xff));
       }
+
       public double f8()
       {
         return BitConverter.Int64BitsToDouble(u8());
       }
+
       public string utf()
       {
         // Java actually uses a modified UTF-8 encoding, so we
@@ -192,10 +217,12 @@ namespace Fanx.Fcode
 
         return s.ToString();
       }
+
       public string name()
       {
         return fpod.name(u2());
       }
+
       public int skip(int n)
       {
         byte[] buf = new byte[n];
@@ -207,6 +234,7 @@ namespace Fanx.Fcode
         return new IOException("Invalid UTF-8 encoding");
       }
 
+      Stream bs;
       public readonly FPod fpod;
       byte[] buf = new byte[8];
     }

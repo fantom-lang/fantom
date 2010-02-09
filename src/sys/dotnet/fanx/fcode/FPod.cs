@@ -245,25 +245,54 @@ namespace Fanx.Fcode
 
     private void readPodMeta(FStore.Input input)
     {
-      /* TODO
-      if (input.u4() != 0x0FC0DE05)
-        throw new System.IO.IOException("Invalid magic");
+      // handle sys bootstrap specially using just java.util.Properties
+      string metaName;
+      if ("sys" == m_podName)
+      {
+        Properties props = new Properties();
+        props.load(input);
+        input.Close();
+        metaName =  props.getProperty("pod.name");
+        m_podVersion = props.getProperty("pod.version");
+        m_fcodeVersion = props.getProperty("fcode.version");
+        m_depends = new Depend[0];
+        return;
+      }
+      else
+      {
+        SysInStream sysIn = new SysInStream(input);
+        this.m_meta = (Map)sysIn.readProps().toImmutable();
+        sysIn.close();
 
-      int version = input.u4();
-      if (version != FConst.FCodeVersion)
-        throw new System.IO.IOException("Invalid version 0x" + version.ToString("X").ToLower());
-      this.m_version = version;
+        metaName = meta("pod.name");
+        m_podVersion = meta("pod.version");
 
-      m_podName = input.utf();
-      m_podVersion = input.utf();
-      m_depends = new Depend[input.u2()];
-      for (int i=0; i<m_depends.Length; ++i)
-        m_depends[i] = Depend.fromStr(input.utf());
+        m_fcodeVersion = meta("fcode.version");
+        string dependsStr = meta("pod.depends").Trim();
+        if (dependsStr.Length == 0) m_depends = new Depend[0];
+        else
+        {
+          string[] toks = dependsStr.Split(';');
+          m_depends = new Depend[toks.Length];
+          for (int i=0; i<m_depends.Length; ++i) m_depends[i] = Depend.fromStr(toks[i].Trim());
+        }
+      }
 
-      m_attrs = FAttrs.read(input);
-      */
+      // check meta name matches podName passed to ctor
+      if (m_podName == null) m_podName = metaName;
+      if (m_podName != metaName)
+        throw new System.IO.IOException("Pod name mismatch " + m_podName + " != " + metaName);
 
-      input.Close();
+      // sanity checking
+      if (FConst.FCodeVersion != m_fcodeVersion)
+        throw new System.IO.IOException("Invalid fcode version " + m_fcodeVersion);
+    }
+
+    private string meta(string key)
+    {
+      string val = (string)m_meta.get(key);
+      if (val == null) throw new System.IO.IOException("meta.prop missing " + key);
+      return val;
     }
 
     private void readTypeMeta(FStore.Input input)
@@ -296,12 +325,12 @@ namespace Fanx.Fcode
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    public string m_podName;      // pod's unique name
-    public string m_podVersion;   // pod version
-    public Depend[] m_depends;    // pod dependencies
-    public FAttrs m_attrs;        // pod attributes
+    public string m_podName;       // pod's unique name
+    public string m_podVersion;    // pod version
+    public Depend[] m_depends;     // pod dependencies
+    public string m_fcodeVersion;  // fcode format version
+    public Map m_meta;             // meta Str:Str map
     public FStore m_store;        // store we using to read
-    public int m_version;         // fcode format version
     public FType[] m_types;       // pod's declared types
     public FTable m_names;        // identifier names: foo
     public FTable m_typeRefs;     // types refs:   [pod,type,variances*]

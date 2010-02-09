@@ -278,7 +278,7 @@ namespace Fan.Sys
     {
       try
       {
-        BinaryReader input = fpod.m_store.read("doc/pod.apidoc");
+        Stream input = fpod.m_store.read("doc/pod.apidoc");
         if (input != null)
         {
           try { FDoc.read(input, this); } finally { input.Close(); }

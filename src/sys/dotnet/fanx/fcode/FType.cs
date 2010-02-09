@@ -56,8 +56,8 @@ namespace Fanx.Fcode
 
     public void read(FStore.Input input)
     {
-      if (input.fpod.m_version == 0)
-        throw new IOException("FStore.Input.version == 0");
+      if (input.fpod.m_fcodeVersion == null)
+        throw new IOException("FStore.Input.version == null");
 
       m_fields = new FField[input.u2()];
       for (int i=0; i<m_fields.Length; i++)

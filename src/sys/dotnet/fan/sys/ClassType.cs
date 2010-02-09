@@ -226,7 +226,7 @@ namespace Fan.Sys
       {
         try
         {
-          BinaryReader input = m_pod.fpod.m_store.read("doc/" + m_name + ".apidoc");
+          Stream input = m_pod.fpod.m_store.read("doc/" + m_name + ".apidoc");
           if (input != null)
           {
             try { FDoc.read(input, this); } finally { input.Close(); }
