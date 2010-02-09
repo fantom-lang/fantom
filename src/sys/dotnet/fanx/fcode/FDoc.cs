@@ -22,9 +22,9 @@ namespace Fanx.Fcode
     /// <summary>
     /// Read a fandoc file and store the doc strings.
     /// </summary>
-    public static void read(BinaryReader input, object top)
+    public static void read(Stream input, object top)
     {
-      StreamReader r = new StreamReader(input.BaseStream, Encoding.UTF8);
+      StreamReader r = new StreamReader(input, Encoding.UTF8);
       string line;
       string key = null;
       StringBuilder s = new StringBuilder();

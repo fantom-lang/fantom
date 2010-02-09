@@ -291,7 +291,11 @@ namespace Fanx.Util
 
     static FanUtil()
     {
-      if (Fan.Sys.Sys.ObjType == null) Fan.Sys.Sys.dumpStack();
+      if (Fan.Sys.Sys.ObjType == null)
+      {
+        System.Console.WriteLine("FanUtil.staticInit: ObjType == null");
+        Fan.Sys.Sys.dumpStack();
+      }
 
       dotnetToFanTypes["System.Boolean"]     = Fan.Sys.Sys.BoolType;
       dotnetToFanTypes["System.Double"]      = Fan.Sys.Sys.FloatType;
