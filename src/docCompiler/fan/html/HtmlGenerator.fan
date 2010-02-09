@@ -175,45 +175,23 @@ abstract class HtmlGenerator : HtmlDocWriter, DocCompilerSupport
   Void facets(Facet[] facets, Bool wrap := true, Bool br := true)
   {
     if (facets.size == 0) return
-    /* TODO
     if (wrap) out.print("<p><code class='sig'>")
-    facets.keys.each |s|
+    facets = facets.dup.sort |a,b| { a.typeof.qname <=> b.typeof.qname }
+    facets.each |f|
     {
-      def := facetValToStr(facets[s])
-      uri := compiler.uriMapper.map("@$s.qname", loc)
-      out.print("@<a href='$uri'>$s.name</a>")
-      if (def != "true") out.print(" = $def")
+      link  := HtmlDocUtil.makeTypeLink(f.typeof) |x| { compiler.uriMapper.map(x.qname, loc) }
+      toStr := f is Serializable ? f.toStr : ""
+
+      // strip off type name
+      off := toStr.index("{")
+      if (off != null) toStr = toStr[off..-1].trim
+
+      out.print("@$link $toStr")
       if (br) out.print("<br/>")
       out.print("\n")
     }
     if (wrap) out.print("</code></p>\n")
-    */
   }
-
-/*
-  static Str facetValToStr(Obj? val)
-  {
-    // check if we can omit list type signature
-    // if every item has exact same type
-    list := val as Obj?[]
-    if (list != null && !list.isEmpty)
-    {
-      x := list.first
-      inferred := x == null ?
-                  list.all { it == null } :
-                  list.all { it != null && Type.of(x) == Type.of(it) }
-      if (inferred) return "[" + list.join(", ") { facetValToStr(it) } + "]"
-    }
-
-    // use serialization format
-    str := Buf().writeObj(val).flip.readAllStr
-
-    // strip sys:: of simple/list types
-    if (str.startsWith("sys::")) str = str[5..-1]
-
-    return str
-  }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

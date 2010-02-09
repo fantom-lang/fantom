@@ -383,7 +383,7 @@ vals := temp.get as Obj[]
   Void typeLink(Type t)
   {
     map := |Type x->Uri| { return compiler.uriMapper.map(x.qname, loc) }
-    out.print(makeTypeLink(t, map))
+    out.print(HtmlDocUtil.makeTypeLink(t, map))
   }
 
   **
@@ -393,58 +393,6 @@ vals := temp.get as Obj[]
   {
     href := compiler.uriMapper.map(s.parent.qname, loc) + "#" + s.name
     out.print("<a href='$href'>$s.qname</a>")
-  }
-
-  **
-  ** Make a type link out in the form <a href='type.uri'>type.name</a>.
-  **
-  static Str makeTypeLink(Type t, |Type->Uri| map)
-  {
-    if (!t.isGeneric)
-    {
-      p := t.params
-      if (p["L"] != null)
-      {
-        of := p["V"]
-        link := "${makeTypeLink(of,map)}[]"
-        if (t.isNullable) link += "?"
-        return link
-      }
-      if (p["M"] != null)
-      {
-        key := p["K"]
-        val := p["V"]
-        link := "${makeTypeLink(key,map)}:${makeTypeLink(val,map)}"
-        if (t.isNullable) link = "[" + link + "]?"
-        return link
-      }
-      if (p["R"] != null)
-      {
-        buf := StrBuf().addChar('|')
-        keys := p.keys.rw.sort |Str a, Str b -> Int| { return a <=> b }
-        keys.each |Str k, Int i|
-        {
-          if (k == "R") return
-          if (i > 0) buf.add(", ")
-          buf.add(makeTypeLink(p[k], map))
-        }
-        if (p["R"] != Void#) buf.add(" -> ").add(makeTypeLink(p["R"], map))
-        if (buf.size == 1) buf.add("->") // for |->|
-        buf.addChar('|')
-        if (t.isNullable) buf.add("?")
-        return buf.toStr
-      }
-    }
-
-    // Skip FFI types for now
-    if (t.toStr[0] == '[') return t.toStr
-
-    link := (t.pod.name == "sys" && t.name.size == 1) ?
-       "<a href='${map(Obj#)}'>$t.name</a>" :
-       "<a href='${map(t)}'>$t.name</a>"
-
-    if (t.isNullable) link += "?"
-    return link
   }
 
   **
