@@ -80,6 +80,7 @@ namespace Fanx.Util
         // parse key/val
         string key = line.Substring(0, off).Trim();
         string val = line.Substring(off+1, line.Length-off-1).Trim();
+        map[key] = val;
         line = reader.ReadLine();
       }
     }
