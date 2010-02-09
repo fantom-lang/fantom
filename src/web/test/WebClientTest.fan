@@ -96,12 +96,39 @@ class WebClientTest : Test
 
   Void testRedirects()
   {
-    origUri := `http://google.com`
+    // google redirect to www or country specific URL
+    verifyRedirect(`http://google.com`, null)
+
+    // pick a random URI from one of the pages on fantom.org;
+    // this both tests redirects and ensures that these URIs are
+    // always maintained
+    map :=
+    [
+      `/doc/docIntro/WhyFan.html`: `/doc/docIntro/WhyFantom.html`,
+      `/doc/docLib/Dom.html`:      `/doc/dom/pod-doc.html`,
+      `/doc/docLib/Email.html`:    `/doc/email/pod-doc.html`,
+      `/doc/docLib/Fandoc.html`:   `/doc/fandoc/pod-doc.html`,
+      `/doc/docLib/Flux.html`:     `/doc/flux/pod-doc.html`,
+      `/doc/docLib/Fwt.html`:      `/doc/fwt/pod-doc.html`,
+      `/doc/docLib/Json.html`:     `/doc/json/pod-doc.html`,
+      `/doc/docLib/Sql.html` :     `/doc/sql/pod-doc.html`,
+      `/doc/docLib/Web.html`:      `/doc/web/pod-doc.html`,
+      `/doc/docLib/WebMod.html`:   `/doc/webmod/pod-doc.html`,
+      `/doc/docLib/Wisp.html`:     `/doc/wisp/pod-doc.html`,
+      `/doc/docLib/Xml.html`:      `/doc/xml/pod-doc.html`,
+      `/doc/docLang/TypeDatabase.html`: `/doc/docLang/Env.html#index`,
+    ]
+    uri := map.keys.random
+    base := `http://fantom.org/`
+    verifyRedirect(base + uri, base + map[uri])
+  }
+
+  Void verifyRedirect(Uri origUri, Uri? expected)
+  {
     c := WebClient(origUri)
     try
     {
-      // disable auto redirects - should get a 3xx
-      // redirect to www or country specific URL
+      // disable auto redirects
       c.followRedirects = false
       c.writeReq.readRes
       verifyEq(c.resCode/100, 3)
@@ -112,6 +139,7 @@ class WebClientTest : Test
       c.writeReq.readRes
       verifyEq(c.resCode, 200)
       verifyNotEq(c.reqUri, origUri)
+      if (expected != null) verifyEq(c.reqUri, expected)
     }
     finally c.close
   }
@@ -139,6 +167,5 @@ class WebClientTest : Test
     }
     finally c.close
   }
-
 
 }

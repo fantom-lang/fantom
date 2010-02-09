@@ -364,7 +364,9 @@ class WebClient
 
     // redirect
     close
-    reqUri = Uri.decode(loc)
+    newUri := Uri.decode(loc)
+    if (!newUri.isAbs) newUri = reqUri + newUri
+    reqUri = newUri
     writeReq
     readRes
   }
