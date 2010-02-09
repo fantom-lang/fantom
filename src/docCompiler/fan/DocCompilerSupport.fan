@@ -32,7 +32,7 @@ mixin DocCompilerSupport
   **
   ** Return if we should be generating source code documentation.
   **
-  Bool docsrc() { compiler.pod.meta["pod.docStr"] == "true" }
+  Bool docsrc() { compiler.pod.meta["pod.docSrc"] == "true" }
 
 //////////////////////////////////////////////////////////////////////////
 // Filters
