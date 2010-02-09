@@ -27,8 +27,7 @@ namespace Fanx.Tools
     internal int execute(string target, string[] args)
     {
       // args
-// TODO-FACETS
-//      Sys.m_bootEnv.setArgs(args);
+      Sys.m_bootEnv.setArgs(args);
 
       // first try as file name
       if (System.IO.File.Exists(target) && !Directory.Exists(target))
@@ -49,8 +48,7 @@ namespace Fanx.Tools
       Pod pod = null;
       try
       {
-        // TODO-FACETS
-//        pod = Env.cur().compileScript(f, options).pod();
+        pod = Env.cur().compileScript(f).pod();
       }
       catch (Err.Val e)
       {
