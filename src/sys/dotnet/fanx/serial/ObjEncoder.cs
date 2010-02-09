@@ -76,23 +76,21 @@ namespace Fanx.Serial
       }
 
       Type type = FanObj.@typeof(obj);
-/* TODO-FACETS
       Serializable ser = (Serializable)type.facet(Sys.SerializableType, false);
       if (ser != null)
       {
-        if (ser.simple)
+        if (ser.m_simple)
           writeSimple(type, obj);
         else
           writeComplex(type, obj, ser);
       }
       else
       {
-*/
         if (skipErrors)
           w("null /* Not serializable: ").w(type.qname()).w(" */");
         else
           throw IOErr.make("Not serializable: " + type).val;
-//      }
+      }
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -108,7 +106,7 @@ namespace Fanx.Serial
   // Complex
   //////////////////////////////////////////////////////////////////////////
 
-    private void writeComplex(Type type, object obj)
+    private void writeComplex(Type type, object obj, Serializable ser)
     {
       wType(type);
 
@@ -122,7 +120,7 @@ namespace Fanx.Serial
         Field f = (Field)fields.get(i);
 
         // skip static, transient, and synthetic (once) fields
-        if (f.isStatic() || f.isSynthetic()) // TODO-FACETS || f.hasFacet(Sys.TransientType))
+        if (f.isStatic() || f.isSynthetic() || f.hasFacet(Sys.TransientType))
           continue;
 
         // get the value
@@ -150,10 +148,8 @@ namespace Fanx.Serial
       }
 
       // if collection
-/* TODO-FACETS
-      if (type.facet(symCollection, null, true) == Boolean.True)
+      if (ser.m_collection)
         first = writeCollectionItems(type, obj, first);
-*/
 
       // if we output fields, then close braces
       if (!first) { level--; wIndent().w('}'); }
