@@ -47,8 +47,8 @@ namespace Fan.Sys
   // Fields (type constants)
   //////////////////////////////////////////////////////////////////////////
 
-  // the Eve of all types
-  public static readonly Type ObjType         = initType("Obj");
+    // the Eve of all types
+    public static readonly Type ObjType = initType("Obj");
 
     // basic primitives
     public static readonly Type NumType       = initType("Num");
@@ -191,8 +191,7 @@ namespace Fan.Sys
     public static readonly Map m_emptyStrTypeMap = initEmptyStrMap(TypeType);
 
     /** Bootstrap environment */
-// TODO-FACETS
-    public static readonly Env m_bootEnv; /*= new BootEnv();*/
+    public static readonly BootEnv m_bootEnv = new BootEnv();
     internal static Env m_curEnv = m_bootEnv;
 
     /** {BootEnv.homeDir}/etc/sys/config.props */
