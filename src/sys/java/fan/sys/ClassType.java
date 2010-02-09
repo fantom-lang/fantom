@@ -444,7 +444,7 @@ public class ClassType
 
       // if sys class, just load it by name
       String podName = pod.name;
-      if (podName.equals("sys") || Sys.usePrecompiledOnly)
+      if (podName.equals("sys"))
       {
         try
         {

@@ -51,117 +51,117 @@ public final class Sys
 //////////////////////////////////////////////////////////////////////////
 
   // the Eve of all types
-  public static final Type ObjType       = initType("Obj",      null);
+  public static final Type ObjType       = initType("Obj");
 
   // basic primitives
-  public static final Type NumType       = initType("Num",      ObjType);
-  public static final Type EnumType      = initType("Enum",     ObjType);
-  public static final Type FacetType     = initType("Facet",    ObjType);
-  public static final Type BoolType      = initType("Bool",     ObjType);
-  public static final Type DurationType  = initType("Duration", ObjType);
-  public static final Type FuncType      = initType("Func",     ObjType);
-  public static final Type IntType       = initType("Int",      NumType);
-  public static final Type DecimalType   = initType("Decimal",  NumType);
-  public static final Type FloatType     = initType("Float",    NumType);
-  public static final Type ListType      = initType("List",     ObjType);
-  public static final Type MapType       = initType("Map",      ObjType);
-  public static final Type MonthType     = initType("Month",    EnumType);
-  public static final Type PodType       = initType("Pod",      ObjType);
-  public static final Type RangeType     = initType("Range",    ObjType);
-  public static final Type StrType       = initType("Str",      ObjType);
-  public static final Type StrBufType    = initType("StrBuf",   ObjType);
-  public static final Type TestType      = initType("Test",     ObjType);
-  public static final Type DateTimeType  = initType("DateTime", ObjType);
-  public static final Type DateType      = initType("Date",     ObjType);
-  public static final Type TimeType      = initType("Time",     ObjType);
-  public static final Type TimeZoneType  = initType("TimeZone", ObjType);
-  public static final Type TypeType      = initType("Type",     ObjType);
-  public static final Type WeekdayType   = initType("Weekday",  EnumType);
-  public static final Type ThisType      = initType("This",     ObjType);
-  public static final Type VoidType      = initType("Void",     ObjType);
-  public static final Type EnvType       = initType("Env",      ObjType);
-  public static final Type BootEnvType   = initType("BootEnv",  EnvType);
-  public static final Type JarDistEnvType = initType("JarDistEnv", EnvType);
+  public static final Type NumType       = initType("Num");
+  public static final Type EnumType      = initType("Enum");
+  public static final Type FacetType     = initType("Facet");
+  public static final Type BoolType      = initType("Bool");
+  public static final Type DurationType  = initType("Duration");
+  public static final Type FuncType      = initType("Func");
+  public static final Type IntType       = initType("Int");
+  public static final Type DecimalType   = initType("Decimal");
+  public static final Type FloatType     = initType("Float");
+  public static final Type ListType      = initType("List");
+  public static final Type MapType       = initType("Map");
+  public static final Type MonthType     = initType("Month");
+  public static final Type PodType       = initType("Pod");
+  public static final Type RangeType     = initType("Range");
+  public static final Type StrType       = initType("Str");
+  public static final Type StrBufType    = initType("StrBuf");
+  public static final Type TestType      = initType("Test");
+  public static final Type DateTimeType  = initType("DateTime");
+  public static final Type DateType      = initType("Date");
+  public static final Type TimeType      = initType("Time");
+  public static final Type TimeZoneType  = initType("TimeZone");
+  public static final Type TypeType      = initType("Type");
+  public static final Type WeekdayType   = initType("Weekday");
+  public static final Type ThisType      = initType("This");
+  public static final Type VoidType      = initType("Void");
+  public static final Type EnvType       = initType("Env");
+  public static final Type BootEnvType   = initType("BootEnv");
+  public static final Type JarDistEnvType = initType("JarDistEnv");
 
   // reflection
-  public static final Type SlotType      = initType("Slot",     ObjType);
-  public static final Type FieldType     = initType("Field",    SlotType);
-  public static final Type MethodType    = initType("Method",   SlotType);
-  public static final Type ParamType     = initType("Param",    ObjType);
+  public static final Type SlotType      = initType("Slot");
+  public static final Type FieldType     = initType("Field");
+  public static final Type MethodType    = initType("Method");
+  public static final Type ParamType     = initType("Param");
 
   // IO
-  public static final Type CharsetType      = initType("Charset",      ObjType);
-  public static final Type EndianType       = initType("Endian",       EnumType);
-  public static final Type InStreamType     = initType("InStream",     ObjType);
-  public static final Type SysInStreamType  = initType("SysInStream",  ObjType);
-  public static final Type OutStreamType    = initType("OutStream",    ObjType);
-  public static final Type SysOutStreamType = initType("SysOutStream", ObjType);
-  public static final Type FileType         = initType("File",         ObjType);
-  public static final Type LocalFileType    = initType("LocalFile",    FileType);
-  public static final Type ZipEntryFileType = initType("ZipEntryFile", FileType);
-  public static final Type BufType          = initType("Buf",          ObjType);
-  public static final Type MemBufType       = initType("MemBuf",       BufType);
-  public static final Type FileBufType      = initType("FileBuf",      BufType);
-  public static final Type MmapBufType      = initType("MmapBuf",      BufType);
-  public static final Type UriType          = initType("Uri",          ObjType);
-  public static final Type ZipType          = initType("Zip",          ObjType);
+  public static final Type CharsetType      = initType("Charset");
+  public static final Type EndianType       = initType("Endian");
+  public static final Type InStreamType     = initType("InStream");
+  public static final Type SysInStreamType  = initType("SysInStream");
+  public static final Type OutStreamType    = initType("OutStream");
+  public static final Type SysOutStreamType = initType("SysOutStream");
+  public static final Type FileType         = initType("File");
+  public static final Type LocalFileType    = initType("LocalFile");
+  public static final Type ZipEntryFileType = initType("ZipEntryFile");
+  public static final Type BufType          = initType("Buf");
+  public static final Type MemBufType       = initType("MemBuf");
+  public static final Type FileBufType      = initType("FileBuf");
+  public static final Type MmapBufType      = initType("MmapBuf");
+  public static final Type UriType          = initType("Uri");
+  public static final Type ZipType          = initType("Zip");
 
   // actos
-  public static final Type ActorType        = initType("Actor",        ObjType);
-  public static final Type ActorPoolType    = initType("ActorPool",    ObjType);
-  public static final Type FutureType       = initType("Future",       ObjType);
+  public static final Type ActorType        = initType("Actor");
+  public static final Type ActorPoolType    = initType("ActorPool");
+  public static final Type FutureType       = initType("Future");
 
   // utils
-  public static final Type DependType       = initType("Depend",       ObjType);
-  public static final Type LogType          = initType("Log",          ObjType);
-  public static final Type LogLevelType     = initType("LogLevel",     EnumType);
-  public static final Type LogRecType       = initType("LogRec",       ObjType);
-  public static final Type LocaleType       = initType("Locale",       ObjType);
-  public static final Type MimeTypeType     = initType("MimeType",     ObjType);
-  public static final Type ProcessType      = initType("Process",      ObjType);
-  public static final Type RegexType        = initType("Regex",        ObjType);
-  public static final Type RegexMatcherType = initType("RegexMatcher", ObjType);
-  public static final Type ServiceType      = initType("Service",      ObjType);
-  public static final Type VersionType      = initType("Version",      ObjType);
-  public static final Type UnitType         = initType("Unit",         ObjType);
-  public static final Type UnsafeType       = initType("Unsafe",       ObjType);
-  public static final Type UuidType         = initType("Uuid",         ObjType);
+  public static final Type DependType       = initType("Depend");
+  public static final Type LogType          = initType("Log");
+  public static final Type LogLevelType     = initType("LogLevel");
+  public static final Type LogRecType       = initType("LogRec");
+  public static final Type LocaleType       = initType("Locale");
+  public static final Type MimeTypeType     = initType("MimeType");
+  public static final Type ProcessType      = initType("Process");
+  public static final Type RegexType        = initType("Regex");
+  public static final Type RegexMatcherType = initType("RegexMatcher");
+  public static final Type ServiceType      = initType("Service");
+  public static final Type VersionType      = initType("Version");
+  public static final Type UnitType         = initType("Unit");
+  public static final Type UnsafeType       = initType("Unsafe");
+  public static final Type UuidType         = initType("Uuid");
 
   // uri schemes
-  public static final Type UriSchemeType    = initType("UriScheme",    ObjType);
-  public static final Type FanSchemeType    = initType("FanScheme",    UriSchemeType);
-  public static final Type FileSchemeType   = initType("FileScheme",   UriSchemeType);
+  public static final Type UriSchemeType    = initType("UriScheme");
+  public static final Type FanSchemeType    = initType("FanScheme");
+  public static final Type FileSchemeType   = initType("FileScheme");
 
   // facets
-  public static final Type TransientType      = initType("Transient",    ObjType);
-  public static final Type SerializableType   = initType("Serializable", ObjType);
-  public static final Type JsType             = initType("Js",           ObjType);
-  public static final Type NoDocType          = initType("NoDoc",        ObjType);
-  public static final Type DeprecatedType     = initType("Deprecated",   ObjType);
+  public static final Type TransientType      = initType("Transient");
+  public static final Type SerializableType   = initType("Serializable");
+  public static final Type JsType             = initType("Js");
+  public static final Type NoDocType          = initType("NoDoc");
+  public static final Type DeprecatedType     = initType("Deprecated");
 
   // exceptions
-  public static final Type ErrType               = initType("Err",               ObjType);
-  public static final Type ArgErrType            = initType("ArgErr",            ErrType);
-  public static final Type CancelledErrType      = initType("CancelledErr",      ErrType);
-  public static final Type CastErrType           = initType("CastErr",           ErrType);
-  public static final Type ConstErrType          = initType("ConstErr",          ErrType);
-  public static final Type IOErrType             = initType("IOErr",             ErrType);
-  public static final Type IndexErrType          = initType("IndexErr",          ErrType);
-  public static final Type InterruptedErrType    = initType("InterruptedErr",    ErrType);
-  public static final Type NameErrType           = initType("NameErr",           ErrType);
-  public static final Type NotImmutableErrType   = initType("NotImmutableErr",   ErrType);
-  public static final Type NullErrType           = initType("NullErr",           ErrType);
-  public static final Type ParseErrType          = initType("ParseErr",          ErrType);
-  public static final Type ReadonlyErrType       = initType("ReadonlyErr",       ErrType);
-  public static final Type TestErrType           = initType("TestErr",           ErrType);
-  public static final Type TimeoutErrType        = initType("TimeoutErr",        ErrType);
-  public static final Type UnknownPodErrType     = initType("UnknownPodErr",     ErrType);
-  public static final Type UnknownServiceErrType = initType("UnknownServiceErr", ErrType);
-  public static final Type UnknownSlotErrType    = initType("UnknownSlotErr",    ErrType);
-  public static final Type UnknownFacetErrType   = initType("UnknownFacetErr",   ErrType);
-  public static final Type UnknownTypeErrType    = initType("UnknownTypeErr",    ErrType);
-  public static final Type UnresolvedErrType     = initType("UnresolvedErr",     ErrType);
-  public static final Type UnsupportedErrType    = initType("UnsupportedErr",    ErrType);
+  public static final Type ErrType               = initType("Err");
+  public static final Type ArgErrType            = initType("ArgErr");
+  public static final Type CancelledErrType      = initType("CancelledErr");
+  public static final Type CastErrType           = initType("CastErr");
+  public static final Type ConstErrType          = initType("ConstErr");
+  public static final Type IOErrType             = initType("IOErr");
+  public static final Type IndexErrType          = initType("IndexErr");
+  public static final Type InterruptedErrType    = initType("InterruptedErr");
+  public static final Type NameErrType           = initType("NameErr");
+  public static final Type NotImmutableErrType   = initType("NotImmutableErr");
+  public static final Type NullErrType           = initType("NullErr");
+  public static final Type ParseErrType          = initType("ParseErr");
+  public static final Type ReadonlyErrType       = initType("ReadonlyErr");
+  public static final Type TestErrType           = initType("TestErr");
+  public static final Type TimeoutErrType        = initType("TimeoutErr");
+  public static final Type UnknownPodErrType     = initType("UnknownPodErr");
+  public static final Type UnknownServiceErrType = initType("UnknownServiceErr");
+  public static final Type UnknownSlotErrType    = initType("UnknownSlotErr");
+  public static final Type UnknownFacetErrType   = initType("UnknownFacetErr");
+  public static final Type UnknownTypeErrType    = initType("UnknownTypeErr");
+  public static final Type UnresolvedErrType     = initType("UnresolvedErr");
+  public static final Type UnsupportedErrType    = initType("UnsupportedErr");
 
   // generic parameter types used with generic types List, Map, and Method
   static final ClassType[] genericParamTypes = new ClassType[256];
@@ -199,9 +199,6 @@ public final class Sys
 
   /** {BootEnv.homeDir}/etc/sys/config.props */
   public static final Map sysConfig = initSysConfig();
-
-  /** "fan.usePrecompiledOnly" env var - loads bytecode straight from java */
-  public static final boolean usePrecompiledOnly = sysConfigBool("usePrecompiledOnly", false);
 
   /** "fan.debug" env var used to generating debug attributes in bytecode */
   public static final boolean debug = sysConfigBool("debug", false);
@@ -353,7 +350,7 @@ public final class Sys
 // Init Types
 //////////////////////////////////////////////////////////////////////////
 
-  static Type initType(String name, Type base)
+  static Type initType(String name)
   {
     try
     {

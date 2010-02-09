@@ -126,8 +126,8 @@ public abstract class Env
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public Type compileScript(fan.sys.File file) { return compileScript(file, null); }
-  public Type compileScript(fan.sys.File file, Map options)
+  public Type compileScript(File file) { return compileScript(file, null); }
+  public Type compileScript(File file, Map options)
   {
     return scripts.compile(file, options);
   }
