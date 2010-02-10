@@ -168,6 +168,7 @@ public class Fan
     println("  fan.platform:    " + Env.cur().platform());
     println("  fan.version:     " + Sys.sysPod.version());
     println("  fan.env:         " + Env.cur());
+    println("  fan.home:        " + Env.cur().homeDir().osPath());
     println("");
   }
 
