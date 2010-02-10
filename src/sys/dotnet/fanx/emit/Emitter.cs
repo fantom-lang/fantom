@@ -45,7 +45,6 @@ public Emitter(string assemblyName) : this(assemblyName, null) {}
 public void init(string assemblyName) { init(assemblyName, null); } // TODO
     public void init(string assemblyName, string stubName)
     {
-      this.start = System.Environment.TickCount;
       this.assemblyName = assemblyName;
       if (stubName == null)
       {
@@ -60,7 +59,7 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
         this.stubFileName = stubName;
       }
       peFile = new PEFile(fileName, assemblyName);
-      if (!debug)
+      if (!debug && !cache)
       {
         // Normally we have to write the dll to disk in order to get
         // the .pdb file.  But if we don't need that, we can just
@@ -78,8 +77,6 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
       if (stub)
       {
         peFile.WritePEFile(false);
-        //end = System.Environment.TickCount;
-        //System.Console.WriteLine("emit [" + assemblyName + "] in " + (end-start) + "ms");
         return null;
       }
       else if (debug)
@@ -92,15 +89,19 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
           peFile.MakeDebuggable(true, true);
           peFile.WritePEFile(true);
         }
-        //end = System.Environment.TickCount;
-        //System.Console.WriteLine("emit [" + assemblyName + "] in " + (end-start) + "ms");
+        return null;
+      }
+      else if (cache)
+      {
+        // if the file already exists, we'll just assume that
+        // file is valid, and reuse it - this can occur when
+        // multiple processes are running fan
+        if (!File.Exists(fileName)) peFile.WritePEFile(false);
         return null;
       }
       else
       {
         peFile.WritePEFile(false);
-        //end = System.Environment.TickCount;
-        //System.Console.WriteLine("emit " + assemblyName + " in " + (end-start) + "ms");
         return (buf as MemoryStream).ToArray();
       }
     }
@@ -414,9 +415,8 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
     public bool stub { get { return stubFileName != null; }}  // in stub mode?
     internal string stubFileName = null;                      // stub filename
 
-    private bool debug = true;    // is emitter in debug mode?
-    private long start = 0;       // start,end to measure emit duration
-    //private long end   = 0;
+    private bool cache = true;    // is assembly cached to disk?
+    private bool debug = false;   // is emitter in debug mode?
 
     private string assemblyName;  // name of this assbemly
     internal string fileName;     // filename of assembly
