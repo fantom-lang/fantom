@@ -8,8 +8,10 @@
 //
 
 using System.Collections;
+using System.IO;
 using System.Runtime.CompilerServices;
 using Fan.Sys;
+using ICSharpCode.SharpZipLib.Zip;
 
 /**
  * EnvIndex manages the coalescing of all the pod index.props
@@ -55,10 +57,8 @@ namespace Fanx.Util
         string n = (string)podNames.get(i);
         try
         {
-// TODO-FACETS
-//          File f = ((LocalFile)env.findPodFile(n)).toJava();
-//          loadPod(mutable, n, f);
-System.Console.WriteLine("EnvIndex.load " + n);
+          FileSystemInfo f = ((LocalFile)m_env.findPodFile(n)).toDotnet();
+          loadPod(mutable, n, f);
         }
         catch (System.Exception e)
         {
@@ -77,41 +77,39 @@ System.Console.WriteLine("EnvIndex.load " + n);
       this.m_index = immutable;
     }
 
-/*
-    private static void loadPod(HashMap index, String n, File f)
+    private static void loadPod(Hashtable index, string n, FileSystemInfo f)
     {
-      ZipFile zip = new ZipFile(f);
+      ZipFile zip = new ZipFile(f.FullName);
       try
       {
-        ZipEntry entry = zip.getEntry("index.props");
+        ZipEntry entry = zip.GetEntry("index.props");
         if (entry != null)
         {
-          SysInStream in = new SysInStream(new BufferedInputStream(zip.getInputStream(entry)));
-          addProps(index, in.readPropsListVals());
+          SysInStream input = new SysInStream(new BufferedStream(zip.GetInputStream(entry)));
+          addProps(index, input.readPropsListVals());
         }
       }
       finally
       {
-        zip.close();
+        zip.Close();
       }
     }
 
-    private static void addProps(HashMap index, Map props)
+    private static void addProps(Hashtable index, Map props)
     {
-      Iterator it = props.pairsIterator();
-      while (it.hasNext())
+      IDictionaryEnumerator en = props.pairsIterator();
+      while (en.MoveNext())
       {
-        Entry entry = (Entry)it.next();
-        String key  = (String)entry.getKey();
-        List val    = (List)entry.getValue();
-        List master = (List)index.get(key);
+        string key = (string)en.Key;
+        List val   = (List)en.Value;
+        List master = (List)index[key];
         if (master == null)
-          index.put(key, val);
+          index[key] = val;
         else
           master.addAll(val);
+
       }
     }
-    */
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
