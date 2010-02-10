@@ -113,7 +113,7 @@ namespace Fanx.Tools
       {
         args = null;
       }
-      else if (((Param)pars.get(0)).of().@is(Sys.StrType.toListOf()) &&
+      else if (((Param)pars.get(0)).type().@is(Sys.StrType.toListOf()) &&
                (pars.sz() == 1 || ((Param)pars.get(1)).hasDefault()))
       {
         args = new List(Sys.ObjType, new object[] { Env.cur().args() });

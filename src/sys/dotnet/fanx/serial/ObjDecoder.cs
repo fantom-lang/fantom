@@ -436,7 +436,7 @@ namespace Fanx.Serial
       if (t != null) return t;
       if (curField != null)
       {
-        Type ft = curField.of().toNonNullable();
+        Type ft = curField.type().toNonNullable();
         if (ft is ListType) return ((ListType)ft).m_v;
       }
       if (infer) return null;
@@ -460,7 +460,7 @@ namespace Fanx.Serial
 
       if (curField != null)
       {
-        Type ft = curField.of().toNonNullable();
+        Type ft = curField.type().toNonNullable();
         if (ft is MapType) return (MapType)ft;
       }
 

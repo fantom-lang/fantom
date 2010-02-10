@@ -140,7 +140,7 @@ namespace Fan.Sys
     internal Field parameterize(Field f)
     {
       // if not generic, short circuit and reuse original
-      Type of = f.of();
+      Type of = f.type();
       if (!of.isGenericParameter()) return f;
 
       // create new parameterized version
@@ -174,9 +174,9 @@ namespace Fan.Sys
       for (int i=0; i<m.m_params.sz(); i++)
       {
         Param p = (Param)m.m_params.get(i);
-        if (p.m_of.isGenericParameter())
+        if (p.m_type.isGenericParameter())
         {
-          pars.add(new Param(p.m_name, parameterize(p.m_of), p.m_mask));
+          pars.add(new Param(p.m_name, parameterize(p.m_type), p.m_mask));
         }
         else
         {

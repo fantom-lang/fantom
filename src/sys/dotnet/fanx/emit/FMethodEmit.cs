@@ -259,7 +259,7 @@ namespace Fanx.Emit
         for (int j=0; j<i; j++)
         {
           Param param = (Param)m.@params().get(j);
-          Type pt = param.of();
+          Type pt = param.type();
           string s = FanUtil.toDotnetTypeName(pt);
           myParams[j] = s;
           myParamNames[j] = param.name();
@@ -276,7 +276,7 @@ namespace Fanx.Emit
         {
           // push args
           Param param = (Param)m.@params().get(p);
-          FCodeEmit.loadVar(code, FanUtil.toDotnetStackType(param.of()), p+1);
+          FCodeEmit.loadVar(code, FanUtil.toDotnetStackType(param.type()), p+1);
         }
         PERWAPI.Method meth = emitter.findMethod(parent + "_", name, implParams, ret);
         code.MethInst(PERWAPI.MethodOp.call, meth);
@@ -339,7 +339,7 @@ namespace Fanx.Emit
         for (int j=0; j<i; j++)
         {
           Param param = (Param)m.@params().get(j);
-          Type pt = param.of();
+          Type pt = param.type();
           string s = FanUtil.toDotnetTypeName(pt);
           myParams[j] = s;
           myParamNames[j] = param.name();
@@ -355,7 +355,7 @@ namespace Fanx.Emit
         {
           // push args
           Param param = (Param)m.@params().get(p);
-          FCodeEmit.loadVar(code, FanUtil.toDotnetStackType(param.of()), p+1);
+          FCodeEmit.loadVar(code, FanUtil.toDotnetStackType(param.type()), p+1);
         }
         PERWAPI.Method meth = emitter.findMethod(impl, name, myParams, ret);
         code.MethInst(PERWAPI.MethodOp.call, meth);

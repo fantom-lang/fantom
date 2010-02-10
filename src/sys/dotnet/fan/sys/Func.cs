@@ -320,7 +320,7 @@ namespace Fan.Sys
 
       Type[] newParams = new Type[m_params.sz()-args.sz()];
       for (int i=0; i<newParams.Length; ++i)
-        newParams[i] = ((Param)m_params.get(args.sz()+i)).m_of;
+        newParams[i] = ((Param)m_params.get(args.sz()+i)).m_type;
 
       FuncType newType = new FuncType(newParams, this.m_returns);
       return new BindFunc(newType, this, args);
