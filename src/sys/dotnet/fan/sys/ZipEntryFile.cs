@@ -20,6 +20,13 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
+    public ZipEntryFile(ZipFile parent, ZipEntry entry, Uri uri)
+      : base(uri)
+    {
+      this.m_parent = parent;
+      this.m_entry  = entry;
+    }
+
     public ZipEntryFile(ZipFile parent, ZipEntry entry)
       : base(Uri.fromStr("/" + LocalFile.fileNameToUriName(entry.Name)))
     {

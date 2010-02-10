@@ -187,12 +187,6 @@ namespace Fan.Sys
       load(fpod);
     }
 
-    // used by ShimPod and Sys.stubSysPod
-    public Pod(string name)
-    {
-      this.m_name = name;
-    }
-
   //////////////////////////////////////////////////////////////////////////
   // Methods
   //////////////////////////////////////////////////////////////////////////
@@ -223,32 +217,25 @@ namespace Fan.Sys
 
     public override string toStr() { return m_name; }
 
-  //////////////////////////////////////////////////////////////////////////
-  // Facets
-  //////////////////////////////////////////////////////////////////////////
-
     public Map meta()
     {
       if (m_meta == null)
       {
-        m_meta = Sys.m_emptyStrStrMap;
-        /* TODO-FACETS
         try
         {
-          if (fpod.meta != null) meta = (Map)fpod.meta;
+          if (fpod.m_meta != null) m_meta = (Map)fpod.m_meta;
           else
           {
-            InStream in = new SysInStream(fpod.store.read("meta.props"));
-            meta = (Map)in.readProps().toImmutable();
-            in.close();
+            InStream input = new SysInStream(fpod.m_store.read("meta.props"));
+            m_meta = (Map)input.readProps().toImmutable();
+            input.close();
           }
         }
         catch (Exception e)
         {
           Err.dumpStack(e);
-          meta = Sys.m_emptyStrStrMap;
+          m_meta = Sys.m_emptyStrStrMap;
         }
-      */
       }
       return m_meta;
     }
