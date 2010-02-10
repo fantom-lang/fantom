@@ -342,7 +342,7 @@ namespace Fanx.Emit
     private void loadVar()
     {
       Reg reg = this.reg(u2());
-      loadVar(code, reg.stackType, reg.nindex);
+      loadVar(code, reg.stackType, reg.nindex, paramCount);
     }
 
     /// <summary>
