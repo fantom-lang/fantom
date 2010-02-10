@@ -38,12 +38,12 @@ namespace Fanx.Fcode
 
     public FLiterals read()
     {
-      m_ints.read(m_fpod.m_store.read("ints.def"));
-      m_floats.read(m_fpod.m_store.read("floats.def"));
-      m_decimals.read(m_fpod.m_store.read("decimals.def"));
-      m_strs.read(m_fpod.m_store.read("strs.def"));
-      m_durations.read(m_fpod.m_store.read("durations.def"));
-      m_uris.read(m_fpod.m_store.read("uris.def"));
+      m_ints.read(m_fpod.m_store.read("fcode/ints.def"));
+      m_floats.read(m_fpod.m_store.read("fcode/floats.def"));
+      m_decimals.read(m_fpod.m_store.read("fcode/decimals.def"));
+      m_strs.read(m_fpod.m_store.read("fcode/strs.def"));
+      m_durations.read(m_fpod.m_store.read("fcode/durations.def"));
+      m_uris.read(m_fpod.m_store.read("fcode/uris.def"));
       return this;
     }
 
