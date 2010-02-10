@@ -48,7 +48,7 @@ namespace Fan.Sys
       if (m_list == null)
       {
         m_list = new List(Sys.FacetType, m_map.Count);
-        IDictionaryEnumerator en = m_map.GetEnumerator();
+        IDictionaryEnumerator en = ((Hashtable)m_map.Clone()).GetEnumerator();
         while (en.MoveNext())
         {
           Type type = (Type)en.Key;
