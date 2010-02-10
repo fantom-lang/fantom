@@ -138,7 +138,7 @@ namespace Fan.Sys
 
       try
       {
-        m_reflect.SetValue(instance, value);
+        m_reflect.SetValue(instance, unbox(value));
       }
       catch (ArgumentException e)
       {
@@ -153,9 +153,22 @@ namespace Fan.Sys
       }
     }
 
+    object unbox(object val)
+    {
+      System.Type t = m_reflect.FieldType;
+      if (val is Boolean) return t == BoolType   ? ((Boolean)val).booleanValue() : val;
+      if (val is Double)  return t == DoubleType ? ((Double)val).doubleValue()   : val;
+      if (val is Long)    return t == Int64Type  ? ((Long)val).longValue()       : val;
+      return val;
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
+
+    static System.Type BoolType   = System.Type.GetType("System.Boolean");
+    static System.Type DoubleType = System.Type.GetType("System.Double");
+    static System.Type Int64Type  = System.Type.GetType("System.Int64");
 
     internal Type m_type;
     internal Method m_getter;
