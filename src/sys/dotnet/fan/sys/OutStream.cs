@@ -110,29 +110,49 @@ namespace Fan.Sys
     public virtual OutStream writeI2(long x)
     {
       int v = (int)x;
-      return this.w((v >> 8) & 0xFF)
-                 .w((v >> 0) & 0xFF);
+      if (m_bigEndian)
+        return this.w((v >> 8) & 0xFF)
+                   .w((v >> 0) & 0xFF);
+      else
+        return this.w((v >> 0) & 0xFF)
+                   .w((v >> 8) & 0xFF);
     }
 
-    public virtual OutStream writeI4(long x) { return writeI4((int)x); }
-    public virtual OutStream writeI4(int v)
+    public virtual OutStream writeI4(long x)
     {
-      return this.w((v >> 24) & 0xFF)
-                 .w((v >> 16) & 0xFF)
-                 .w((v >> 8)  & 0xFF)
-                 .w((v >> 0)  & 0xFF);
+      int v = (int)x;
+      if (m_bigEndian)
+        return this.w((v >> 24) & 0xFF)
+                   .w((v >> 16) & 0xFF)
+                   .w((v >> 8)  & 0xFF)
+                   .w((v >> 0)  & 0xFF);
+      else
+        return this.w((v >> 0)  & 0xFF)
+                   .w((v >> 8)  & 0xFF)
+                   .w((v >> 16) & 0xFF)
+                   .w((v >> 24) & 0xFF);
     }
 
     public virtual OutStream writeI8(long v)
     {
-      return this.w((int)(v >> 56) & 0xFF)
-                 .w((int)(v >> 48) & 0xFF)
-                 .w((int)(v >> 40) & 0xFF)
-                 .w((int)(v >> 32) & 0xFF)
-                 .w((int)(v >> 24) & 0xFF)
-                 .w((int)(v >> 16) & 0xFF)
-                 .w((int)(v >> 8)  & 0xFF)
-                 .w((int)(v >> 0)  & 0xFF);
+      if (m_bigEndian)
+        return this.w((int)(v >> 56) & 0xFF)
+                   .w((int)(v >> 48) & 0xFF)
+                   .w((int)(v >> 40) & 0xFF)
+                   .w((int)(v >> 32) & 0xFF)
+                   .w((int)(v >> 24) & 0xFF)
+                   .w((int)(v >> 16) & 0xFF)
+                   .w((int)(v >> 8)  & 0xFF)
+                   .w((int)(v >> 0)  & 0xFF);
+      else
+        return this.w((int)(v >> 0)  & 0xFF)
+                   .w((int)(v >> 8)  & 0xFF)
+                   .w((int)(v >> 16) & 0xFF)
+                   .w((int)(v >> 24) & 0xFF)
+                   .w((int)(v >> 32) & 0xFF)
+                   .w((int)(v >> 40) & 0xFF)
+                   .w((int)(v >> 48) & 0xFF)
+                   .w((int)(v >> 56) & 0xFF);
     }
 
     public virtual OutStream writeF4(double x)
