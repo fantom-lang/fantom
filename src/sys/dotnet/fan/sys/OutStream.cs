@@ -97,6 +97,16 @@ namespace Fan.Sys
       }
     }
 
+    public virtual Endian endian()
+    {
+      return m_bigEndian ? Endian.m_big : Endian.m_little;
+    }
+
+    public virtual void endian(Endian endian)
+    {
+      m_bigEndian = endian == Endian.m_big;
+    }
+
     public virtual OutStream writeI2(long x)
     {
       int v = (int)x;
@@ -470,6 +480,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     internal OutStream m_out;
+    internal bool m_bigEndian = true;
     internal Charset m_charset;
     internal Charset.Encoder m_charsetEncoder;
   }
