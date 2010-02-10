@@ -741,7 +741,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     internal InStream m_in;
-    internal bool m_bigEndian;
+    internal bool m_bigEndian = true;
     internal Charset m_charset;
     internal Charset.Decoder m_charsetDecoder;
     internal Charset.Encoder m_charsetEncoder;
