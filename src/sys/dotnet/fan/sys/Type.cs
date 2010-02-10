@@ -245,7 +245,7 @@ namespace Fan.Sys
     public virtual object make(List args)
     {
       Method make = method("make", false);
-      if (make != null)
+      if (make != null && make.isPublic())
       {
         int numArgs = args == null ? 0 : args.sz();
         List p = make.@params();
