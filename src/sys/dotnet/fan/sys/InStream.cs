@@ -219,7 +219,10 @@ namespace Fan.Sys
       int c1 = r();
       int c2 = r();
       if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream").val;
-      return c1 << 8 | c2;
+      if (m_bigEndian)
+        return c1 << 8 | c2;
+      else
+        return c2 << 8 | c1;
     }
 
     public virtual long readS2()
@@ -227,7 +230,10 @@ namespace Fan.Sys
       int c1 = r();
       int c2 = r();
       if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream").val;
-      return (short)(c1 << 8 | c2);
+      if (m_bigEndian)
+        return (short)(c1 << 8 | c2);
+      else
+        return (short)(c2 << 8 | c1);
     }
 
     public virtual long readU4()
@@ -237,22 +243,26 @@ namespace Fan.Sys
       long c3 = r();
       long c4 = r();
       if ((c1 | c2 | c3 | c4) < 0) throw IOErr.make("Unexpected end of stream").val;
-      return (c1 << 24) + (c2 << 16) + (c3 << 8) + c4;
+      if (m_bigEndian)
+        return (c1 << 24) + (c2 << 16) + (c3 << 8) + c4;
+      else
+        return (c4 << 24) + (c3 << 16) + (c2 << 8) + c1;
     }
 
-    public virtual long readS4() { return readInt(); }
-    public virtual int readInt()
+    public virtual long readS4()
     {
       int c1 = r();
       int c2 = r();
       int c3 = r();
       int c4 = r();
       if ((c1 | c2 | c3 | c4) < 0) throw IOErr.make("Unexpected end of stream").val;
-      return ((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
+      if (m_bigEndian)
+        return ((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
+      else
+        return ((c4 << 24) + (c3 << 16) + (c2 << 8) + c1);
     }
 
-    public virtual long readS8() { return readLong(); }
-    public virtual long readLong()
+    public virtual long readS8()
     {
       long c1 = r();
       long c2 = r();
@@ -263,18 +273,22 @@ namespace Fan.Sys
       long c7 = r();
       long c8 = r();
       if ((c1 | c2 | c3 | c4 | c5 | c6 | c7 | c8) < 0) throw IOErr.make("Unexpected end of stream").val;
-      return ((c1 << 56) + (c2 << 48) + (c3 << 40) + (c4 << 32) +
-              (c5 << 24) + (c6 << 16) + (c7 << 8) + c8);
+      if (m_bigEndian)
+        return ((c1 << 56) + (c2 << 48) + (c3 << 40) + (c4 << 32) +
+                (c5 << 24) + (c6 << 16) + (c7 << 8) + c8);
+      else
+        return ((c8 << 56) + (c7 << 48) + (c6 << 40) + (c5 << 32) +
+                (c4 << 24) + (c3 << 16) + (c2 << 8) + c1);
     }
 
     public virtual double readF4()
     {
-      return System.BitConverter.ToSingle(System.BitConverter.GetBytes(readInt()), 0);
+      return System.BitConverter.ToSingle(System.BitConverter.GetBytes(readS4()), 0);
     }
 
     public virtual double readF8()
     {
-      return System.BitConverter.Int64BitsToDouble(readLong());
+      return System.BitConverter.Int64BitsToDouble(readS8());
     }
 
     public virtual BigDecimal readDecimal()
