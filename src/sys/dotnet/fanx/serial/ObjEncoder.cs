@@ -140,7 +140,7 @@ namespace Fanx.Serial
         wIndent().w(f.name()).w('=');
 
         // field value
-        curFieldType = f.of().toNonNullable();
+        curFieldType = f.type().toNonNullable();
         writeObj(val);
         curFieldType = null;
 

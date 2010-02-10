@@ -50,10 +50,10 @@ namespace Fan.Sys
   // C# Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public Field(Type parent, string name, int flags, Facets facets, int lineNum, Type of)
+    public Field(Type parent, string name, int flags, Facets facets, int lineNum, Type type)
       : base(parent, name, flags, facets, lineNum)
     {
-      this.m_of = of;
+      this.m_type = type;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -62,9 +62,9 @@ namespace Fan.Sys
 
     public override Type @typeof()  { return Sys.FieldType;  }
 
-    public Type of() { return m_of; }
+    public Type type() { return m_type; }
 
-    public override string signature() { return m_of.toStr() + " " + m_name; }
+    public override string signature() { return m_type.toStr() + " " + m_name; }
 
     public override object trap(string name, List args)
     {
@@ -124,10 +124,10 @@ namespace Fan.Sys
         throw ReadonlyErr.make("Cannot set static field " + qname()).val;
 
       // check generic type (the .NET runtime will check non-generics)
-      if (m_of.isGenericInstance() && value != null)
+      if (m_type.isGenericInstance() && value != null)
       {
-        if (!@typeof(value).@is(m_of.toNonNullable()))
-          throw ArgErr.make("Wrong type for field " + qname() + ": " + m_of + " != " + @typeof(value)).val;
+        if (!@typeof(value).@is(m_type.toNonNullable()))
+          throw ArgErr.make("Wrong type for field " + qname() + ": " + m_type + " != " + @typeof(value)).val;
       }
 
       if (m_setter != null)
@@ -157,7 +157,7 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    internal Type m_of;
+    internal Type m_type;
     internal Method m_getter;
     internal Method m_setter;
     internal FieldInfo m_reflect;

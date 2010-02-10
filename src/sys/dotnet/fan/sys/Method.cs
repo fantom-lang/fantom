@@ -65,7 +65,7 @@ namespace Fan.Sys
 
       int p = returns.isGenericParameter() ? 1 : 0;
       for (int i=0; i<pars.sz(); ++i)
-        p |= ((Param)pars.get(i)).m_of.isGenericParameter() ? 1 : 0;
+        p |= ((Param)pars.get(i)).m_type.isGenericParameter() ? 1 : 0;
 
       int mask = 0;
       if (p != 0) mask |= GENERIC;
@@ -94,7 +94,7 @@ namespace Fan.Sys
       {
         if (i > 0) s.Append(", ");
         Param p = (Param)m_params.get(i);
-        s.Append(p.m_of).Append(' ').Append(p.m_name);
+        s.Append(p.m_type).Append(' ').Append(p.m_name);
       }
       s.Append(')');
       return s.ToString();
