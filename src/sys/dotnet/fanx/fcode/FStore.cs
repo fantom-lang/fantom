@@ -64,9 +64,8 @@ namespace Fanx.Fcode
         if (name.EndsWith(".fcode")) continue;
         if (name.EndsWith(".class")) continue;
         if (name.EndsWith(".def") && !name.Contains("/")) continue;
-//        Fan.Sys.Uri uri = Fan.Sys.Uri.fromStr(podUri + "/" + LocalFile.fileNameToUriName(entry.getName()));
-// TODO-FACETS
-        Fan.Sys.ZipEntryFile file = new Fan.Sys.ZipEntryFile(zipFile, entry);
+        Fan.Sys.Uri uri = Fan.Sys.Uri.fromStr(podUri + "/" + LocalFile.fileNameToUriName(entry.Name));
+        Fan.Sys.ZipEntryFile file = new Fan.Sys.ZipEntryFile(zipFile, entry, uri);
         list.add(file);
       }
       return list;
