@@ -210,6 +210,17 @@ namespace Fan.Sys
       return true;
     }
 
+    public Endian endian()
+    {
+      return m_out.endian();
+    }
+
+    public void endian(Endian endian)
+    {
+      m_out.endian(endian);
+      m_in.endian(endian);
+    }
+
     public Charset charset()
     {
       return m_out.charset();

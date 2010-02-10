@@ -183,6 +183,16 @@ namespace Fan.Sys
       return buf;
     }
 
+    public virtual Endian endian()
+    {
+      return m_bigEndian ? Endian.m_big : Endian.m_little;
+    }
+
+    public void endian(Endian endian)
+    {
+      m_bigEndian = endian == Endian.m_big;
+    }
+
     public virtual Long peek()
     {
       Long x = read();
@@ -703,6 +713,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     internal InStream m_in;
+    internal bool m_bigEndian;
     internal Charset m_charset;
     internal Charset.Decoder m_charsetDecoder;
     internal Charset.Encoder m_charsetEncoder;
