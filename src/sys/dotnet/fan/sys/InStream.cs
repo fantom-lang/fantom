@@ -370,6 +370,20 @@ namespace Fan.Sys
       return x;
     }
 
+    public virtual string readChars(long n)
+    {
+      if (n < 0) throw ArgErr.make("readChars n < 0: " + n).val;
+      if (n == 0) return "";
+      StringBuilder buf = new StringBuilder(256);
+      for (int i=(int)n; i>0; --i)
+      {
+        int ch = rChar();
+        if (ch < 0) throw IOErr.make("Unexpected end of stream").val;
+        buf.Append((char)ch);
+      }
+      return buf.ToString();
+    }
+
     public virtual string readLine() { return readLine(FanInt.Chunk); }
     public virtual string readLine(Long max)
     {

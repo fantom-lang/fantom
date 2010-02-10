@@ -332,6 +332,8 @@ namespace Fan.Sys
 
     public Long peekChar() { return m_in.peekChar(); }
 
+    public string readChars(long n) { return m_in.readChars(n); }
+
     public string readLine() { return m_in.readLine(); }
     public string readLine(Long max) { return m_in.readLine(max); }
 
