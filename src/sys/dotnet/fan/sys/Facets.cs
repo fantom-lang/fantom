@@ -95,91 +95,11 @@ namespace Fan.Sys
       }
     }
 
-
     private static Facets m_empty;
 
     private Hashtable m_map;   // Type : String/Facet, lazy decoding
     private List m_list;       // Facet[]
 
   }
-
-/*
-
-  //////////////////////////////////////////////////////////////////////////
-  // FCode
-  //////////////////////////////////////////////////////////////////////////
-
-    public static MapType mapType()
-    {
-      MapType t = m_mapType;
-      if (t != null) return t;
-//      return m_mapType = new MapType(Sys.SymbolType, Sys.ObjType.toNullable());
-return null;
-    }
-
-    public static Facets empty()
-    {
-      Facets e = m_empty;
-      if (e != null) return e;
-      return m_empty = new Facets(new Hashtable());
-    }
-
-    /// <summary>
-    /// This is the constructor used during decoding the pod
-    /// file. The values are all passed in as encoded Strings.
-    /// </summary>
-    public static Facets make(Hashtable src)
-    {
-      if (src == null || src.Count == 0) return empty();
-      return new Facets(src);
-
-    }
-
-  //////////////////////////////////////////////////////////////////////////
-  // Private Constructor
-  //////////////////////////////////////////////////////////////////////////
-
-    private Facets(Hashtable map) { this.m_map = map; }
-
-  //////////////////////////////////////////////////////////////////////////
-  // Access
-  //////////////////////////////////////////////////////////////////////////
-
-
-    [MethodImpl(MethodImplOptions.Synchronized)]
-    public Facet get(Type qname, bool check)
-    {
-      object val = m_map[qname];
-      if (val == null) return def;
-
-      // if we've already decoded, go with it
-      if (!(val is Symbol.EncodedVal)) return val;
-
-      // decode into an object
-      object obj = Symbol.decodeVal((Symbol.EncodedVal)val);
-
-      // if the object is immutable, then it safe to cache
-      if (FanObj.isImmutable(obj)) m_map[qname] = obj;
-
-      return obj;
-    }
-
-    [MethodImpl(MethodImplOptions.Synchronized)]
-    public List list()
-    {
-      return null;
-    }
-
-  //////////////////////////////////////////////////////////////////////////
-  // Fields
-  //////////////////////////////////////////////////////////////////////////
-
-    private static MapType m_mapType;
-    private static Facets m_empty;
-    private static Map m_emptyMap;
-
-    private Hashtable m_map;
-  }
-  */
 }
 
