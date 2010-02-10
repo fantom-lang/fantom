@@ -26,13 +26,16 @@ namespace Fan.Sys
     public static void make_(Env self) { make_(self, cur()); }
     public static void make_(Env self, Env parent) { self.m_parent = parent; }
 
-    public Env() {}
-    public Env(Env parent)
+    public Env()
     {
-      this.m_parent  = parent;
       this.m_scripts = new EnvScripts();
       this.m_props   = new EnvProps(this);
       this.m_index   = new EnvIndex(this);
+    }
+
+    public Env(Env parent) : this()
+    {
+      this.m_parent  = parent;
     }
 
   //////////////////////////////////////////////////////////////////////////
