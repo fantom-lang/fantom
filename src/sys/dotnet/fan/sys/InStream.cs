@@ -555,13 +555,16 @@ namespace Fan.Sys
       return new ObjDecoder(this, options).readObj();
     }
 
-    public virtual Map readProps()
+    public virtual Map readProps() { return readProps(false); }
+    public Map readPropsListVals() { return readProps(true); }
+
+    private Map readProps(bool listVals)  // listVals is Str:Str[]
     {
       Charset origCharset = charset();
       charset(Charset.utf8());
       try
       {
-        Map props = new Map(Sys.StrType, Sys.StrType);
+        Map props = new Map(Sys.StrType, listVals ? Sys.StrType.toListOf() : Sys.StrType);
 
         StringBuilder name = new StringBuilder();
         StringBuilder val = null;
@@ -584,7 +587,7 @@ namespace Fan.Sys
             string n = FanStr.makeTrim(name);
             if (val != null)
             {
-              props.add(n, FanStr.makeTrim(val));
+              addProp(props, n, FanStr.makeTrim(val), listVals);
               name = new StringBuilder();
               val = null;
             }
@@ -670,7 +673,7 @@ namespace Fan.Sys
 
         string nm = FanStr.makeTrim(name);
         if (val != null)
-          props.add(nm, FanStr.makeTrim(val));
+          addProp(props, nm, FanStr.makeTrim(val), listVals);
         else if (nm.Length > 0)
           throw IOErr.make("Invalid name/value pair [Line " + lineNum + "]").val;
 
@@ -680,6 +683,20 @@ namespace Fan.Sys
       {
         try { close(); } catch (System.Exception e) { Err.dumpStack(e); }
         charset(origCharset);
+      }
+    }
+
+    static void addProp(Map props, string n, string v, bool listVals)
+    {
+      if (listVals)
+      {
+        List list =(List)props.get(n);
+        if (list == null) props.add(n, list = new List(Sys.StrType));
+        list.add(v);
+      }
+      else
+      {
+        props.add(n, v);
       }
     }
 
