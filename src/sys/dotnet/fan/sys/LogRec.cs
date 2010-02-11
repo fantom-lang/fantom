@@ -34,7 +34,7 @@ namespace Fan.Sys
       self.m_time    = time;
       self.m_level   = level;
       self.m_logName = logName;
-      self.m_message = msg;
+      self.m_msg     = msg;
       self.m_err     = err;
     }
 
@@ -51,7 +51,7 @@ namespace Fan.Sys
       s.Append('[').Append(ts).Append(']')
        .Append(' ').Append('[').Append(m_level).Append(']')
        .Append(' ').Append('[').Append(m_logName).Append(']')
-       .Append(' ').Append(m_message);
+       .Append(' ').Append(m_msg);
       return s.ToString();
     }
 
@@ -72,7 +72,7 @@ namespace Fan.Sys
     public DateTime m_time;
     public LogLevel m_level;
     public string m_logName;
-    public string m_message;
+    public string m_msg;
     public Err m_err;
 
   }
