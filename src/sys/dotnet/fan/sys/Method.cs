@@ -477,6 +477,18 @@ namespace Fan.Sys
   // Reflection
   //////////////////////////////////////////////////////////////////////////
 
+    public int minParams()
+    {
+      if (m_minParams < 0)
+      {
+        int min = 0;
+        for (; min<m_params.sz(); ++min)
+          if (((Param)m_params.get(min)).hasDefault()) break;
+        m_minParams = min;
+      }
+      return m_minParams;
+    }
+
     private bool isInstance() { return (m_flags & (FConst.Static|FConst.Ctor)) == 0; }
 
     internal object invoke(object instance, object[] args)
@@ -570,6 +582,7 @@ namespace Fan.Sys
     internal int m_mask;
     internal Method m_generic;
     internal MethodInfo[] m_reflect;
+    private int m_minParams = -1;
 
   }
 }
