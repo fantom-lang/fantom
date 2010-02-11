@@ -205,7 +205,7 @@ namespace Fan.Sys
     public List depends()
     {
       if (m_depends == null)
-        m_depends = new List(Sys.DependType, fpod.m_depends).ro();
+        m_depends = (List)new List(Sys.DependType, fpod.m_depends).toImmutable();
       return m_depends;
     }
 
