@@ -23,11 +23,13 @@ namespace Fan.Sys
     public StrBufOutStream(StrBuf buf) : base(null)
     {
       m_sb = buf.sb;
+      m_charsetEncoder = strBufEncoder();
     }
 
     public StrBufOutStream() : base(null)
     {
       m_sb = new StringBuilder();
+      m_charsetEncoder = strBufEncoder();
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -41,6 +43,11 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public override OutStream w(int v)
+    {
+      throw UnsupportedErr.make("binary write on StrBuf output").val;
+    }
+
+    public override OutStream write(long x)
     {
       throw UnsupportedErr.make("binary write on StrBuf output").val;
     }
@@ -76,6 +83,31 @@ namespace Fan.Sys
     public override bool close()
     {
       return true;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Charset
+  //////////////////////////////////////////////////////////////////////////
+
+    static Charset.Encoder strBufEncoder()
+    {
+      if (m_strBufEncoder == null) m_strBufEncoder = new StrBufEncoder();
+      return m_strBufEncoder;
+    }
+
+    static Charset.Encoder m_strBufEncoder;
+
+    class StrBufEncoder : Charset.Encoder
+    {
+      public override void encode(char ch, OutStream output)
+      {
+        ((StrBufOutStream)output).m_sb.Append(ch);
+      }
+
+      public override void encode(char ch, InStream input)
+      {
+        throw UnsupportedErr.make("binary write on StrBuf output").val;
+      }
     }
 
   //////////////////////////////////////////////////////////////////////////

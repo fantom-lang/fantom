@@ -113,7 +113,7 @@ namespace Fanx.Fcode
     /// <summary>
     /// FStore.Input is used to read from a FStore file.
     /// </summary>
-    public class Input : Stream //BinaryReader
+    public class Input : Stream
     {
       public Input(FPod fpod, Stream baseStream)
       {
