@@ -66,6 +66,29 @@ const class Color : Brush
   }
 
   **
+  ** Make a new instance with the ARGB individual
+  ** components as integers between 0 and 255.
+  **
+  static Color makeArgb(Int a, Int r, Int g, Int b)
+  {
+    return make((a.and(0xff).shiftl(24))
+             .or(r.and(0xff).shiftl(16))
+             .or(g.and(0xff).shiftl(8))
+             .or(b.and(0xff)), true)
+  }
+
+  **
+  ** Make a new instance with the RGB individual
+  ** components as integers between 0 and 255.
+  **
+  static Color makeRgb(Int r, Int g, Int b)
+  {
+    return make((r.and(0xff).shiftl(16))
+             .or(g.and(0xff).shiftl(8))
+             .or(b.and(0xff)), false)
+  }
+
+  **
   ** Construct a color using HSV model (hue, saturation, value),
   ** also known as HSB (hue, saturation, brightness):
   **   - hue as 0.0 to 360.0

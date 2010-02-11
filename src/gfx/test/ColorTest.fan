@@ -18,26 +18,34 @@ class ColorTest : Test
     c := Color(0xaabbcc)
     verifyEq(c.argb,  0xffaabbcc)
     verifyEq(c.rgb,   0xaabbcc)
-    verifyEq(c.a,     0xff)
-    verifyEq(c.r,     0xaa)
-    verifyEq(c.g,     0xbb)
-    verifyEq(c.b,     0xcc)
-    verifyEq(c.toStr, "#aabbcc")
-
-    verifyEq(c, Color.fromStr(c.toStr))
-    verifyEq(c, Buf().writeObj(c).flip.readObj)
+    verifyColor(c, 0xff, 0xaa, 0xbb, 0xcc, "#aabbcc")
 
     c = Color(0xaabbccdd, true)
     verifyEq(c.argb,  0xaabbccdd)
     verifyEq(c.rgb,   0xbbccdd)
-    verifyEq(c.a,     0xaa)
-    verifyEq(c.r,     0xbb)
-    verifyEq(c.g,     0xcc)
-    verifyEq(c.b,     0xdd)
-    verifyEq(c.toStr, "#aabbccdd")
+    verifyColor(c, 0xaa, 0xbb, 0xcc, 0xdd, "#aabbccdd")
 
+    c = Color.makeArgb(1, 2, 3, 4)
+    verifyEq(c.argb,  0x01020304)
+    verifyEq(c.rgb,   0x020304)
+    verifyColor(c, 1, 2, 3, 4, "#01020304")
+
+    c = Color.makeRgb(0x33, 0x22, 0x11)
+    verifyEq(c.argb,  0xff332211)
+    verifyEq(c.rgb,   0x332211)
+    verifyColor(c, 0xff, 0x33, 0x22, 0x11, "#332211")
+  }
+
+  Void verifyColor(Color c, Int a, Int r, Int g, Int b, Str s)
+  {
+    verifyEq(c.a,     a)
+    verifyEq(c.r,     r)
+    verifyEq(c.g,     g)
+    verifyEq(c.b,     b)
+    verifyEq(c.toStr, s)
     verifyEq(c, Color.fromStr(c.toStr))
     verifyEq(c, Buf().writeObj(c).flip.readObj)
+    verifyEq(c, Color.makeArgb(a, r, g, b))
   }
 
   Void testFromStr()
