@@ -157,7 +157,6 @@ Expr [#expr]
   <namedSuper>     :=  <type> "." "super"
   <staticCall>     :=  <type> "." <idExpr>
   <dsl>            :=  <type> "<|" <anyChar>* "|>"
-  <closure>        :=  <funcType> "{" <stmts> "}"
   <simple>         :=  <type> "(" <expr> ")"
   <ctorBlock>      :=  <type> <itBlock>
   <termChain>      :=  <dotCall> | <dynCall> | <safeDotCall> | <safeDynCall> |
@@ -174,6 +173,7 @@ Expr [#expr]
   <args>           :=  [<expr> ("," <expr>)*]
   <indexExpr>      :=  "[" <expr> "]"
   <callOp>         :=  "(" <args> ")" [<closure>]
+
   <literal>        :=  "null" | "this" | "super" | "it" |
                        <bool> | <int> | <float> | <decimal> | <str> |
                        <duration> | <uri> | <list> | <map>
@@ -182,6 +182,11 @@ Expr [#expr]
   <map>            :=  [<mapType>] "[" <mapItems> "]"
   <mapItems>       :=  ":" | (<mapPair> ("," <mapPair>)*)
   <mapPair>        :=  <expr> ":" <expr>
+
+  <closure>        :=  <closureSig> "{" <stmts> "}"
+  <closureSig>     :=  "|" <closureParams> ["->" <type>] "|"
+  <closureParams>  :=  [<closureParam> ("," <closureParam>)*]
+  <closureParam>   :=  <formal> | <id>
 
 See `Literals` for grammar of the literal tokens.
 
@@ -195,7 +200,7 @@ Type [#type]
   <simpleType>     :=  <id> ["::" <id>]
   <listType>       :=  <type> "[]"
   <mapType>        :=  ["["] <type> ":" <type> ["]"]
-  <funcType>       :=  "|" [formals] "->" [type] "|"
+  <funcType>       :=  "|" [formals] ["->" <type>] "|"
   <formals>        :=  [<formal> ("," <formal>)*]
   <formal>         :=  <formalFull> | <formalInferred> | <formalTypeOnly>
   <formalFull>     :=  <type> <id>
