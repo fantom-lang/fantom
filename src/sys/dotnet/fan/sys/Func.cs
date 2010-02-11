@@ -355,10 +355,17 @@ namespace Fan.Sys
 
       public override object callList(List args)
       {
-        int origSize = m_orig.m_params.sz();
-        if (origSize == m_bound.sz()) return m_orig.callList(m_bound);
+        int origReq  = m_orig.m_params.sz();
+        int haveSize = m_bound.sz() + args.sz();
+        Method m = m_orig.method();
+        if (m != null)
+        {
+          origReq = m.minParams();
+          if (haveSize > origReq) origReq = haveSize;
+        }
+        if (origReq <= m_bound.sz()) return m_orig.callList(m_bound);
 
-        object[] temp = new object[origSize];
+        object[] temp = new object[haveSize];
         m_bound.copyInto(temp, 0, m_bound.sz());
         args.copyInto(temp, m_bound.sz(), temp.Length-m_bound.sz());
         return m_orig.callList(new List(Sys.ObjType, temp));
