@@ -31,19 +31,17 @@ namespace Fan.Sys
     public override object get(Uri uri, object @base)
     {
       // don't support anything but relative fan: URIs right now
-      if (uri.isPathAbs())
-        throw ArgErr.make("Invalid format for 'fan:pod' URI - " + uri).val;
+      if (uri.auth() == null)
+        throw ArgErr.make("Invalid format for fan: URI - " + uri).val;
 
       // lookup pod
-      string podName = (string)uri.path().get(0);
+      string podName = (string)uri.auth();
       Pod pod = Pod.find(podName, false);
       if (pod == null) throw UnresolvedErr.make(uri.toStr()).val;
-      if (uri.path().size() == 1) return pod;
+      if (uri.pathStr().Length == 0) return pod;
 
       // dive into file of pod
-      File f = pod.file(uri);
-      if (f == null) throw UnresolvedErr.make(uri.toStr()).val;
-      return f;
+      return pod.file(uri);
     }
 
   }
