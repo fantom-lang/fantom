@@ -218,25 +218,39 @@ namespace Fan.Sys
     public static string toLocale(double self) { return toLocale(self, null); }
     public static string toLocale(double self, string pattern)
     {
-      // get current locale
-      Locale locale = Locale.cur();
-      NumberFormatInfo df = locale.dec();
+      try
+      {
+        // get current locale
+        Locale locale = Locale.cur();
+        NumberFormatInfo df = locale.dec();
 
-      // handle special values
-      if (System.Double.IsNaN(self)) return df.NaNSymbol;
-      if (self == System.Double.PositiveInfinity) return df.PositiveInfinitySymbol;
-      if (self == System.Double.NegativeInfinity) return df.NegativeInfinitySymbol;
+        // handle special values
+        if (System.Double.IsNaN(self)) return df.NaNSymbol;
+        if (self == System.Double.PositiveInfinity) return df.PositiveInfinitySymbol;
+        if (self == System.Double.NegativeInfinity) return df.NegativeInfinitySymbol;
 
-      // get default pattern if necessary
-      if (pattern == null)
-        pattern = Env.cur().locale(Sys.m_sysPod, "float", "#,###.0##");
+        // get default pattern if necessary
+        if (pattern == null)
+          pattern = Env.cur().locale(Sys.m_sysPod, "float", "#,###.0##");
 
-      // parse pattern and get digits
-      NumPattern p = NumPattern.parse(pattern);
-      NumDigits d = new NumDigits(self);
+        // TODO: if value is < 10^-3 or > 10^7 it will be
+        // converted to exponent string, so just bail on that
+        string str = Double.toString(self);
+        if (str.IndexOf('E') > 0)
+          str = self.ToString("0.#########");
 
-      // route to common FanNum method
-      return FanNum.toLocale(p, d, df);
+        // parse pattern and get digits
+        NumPattern p = NumPattern.parse(pattern);
+        NumDigits d = new NumDigits(str);
+
+        // route to common FanNum method
+        return FanNum.toLocale(p, d, df);
+      }
+      catch (Exception e)
+      {
+        Err.dumpStack(e);
+        return self.ToString();
+      }
     }
 
   //////////////////////////////////////////////////////////////////////////

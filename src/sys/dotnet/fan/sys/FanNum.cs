@@ -150,17 +150,11 @@ namespace Fan.Sys
    */
   internal class NumDigits
   {
-    internal NumDigits(double d)
+    internal NumDigits(BigDecimal d) : this(d.ToString())
     {
-      init(d.ToString());
     }
 
-    internal NumDigits(BigDecimal d)
-    {
-      init(d.ToString());
-    }
-
-    private void init(string s)
+    internal NumDigits(string s)
     {
       digits = new char[s.Length+16];
 
