@@ -74,6 +74,7 @@ namespace Fan.Sys
     public bool isClass()     { return (flags() & (FConst.Enum|FConst.Mixin)) == 0; }
     public bool isConst()     { return (flags() & FConst.Const)     != 0; }
     public bool isEnum()      { return (flags() & FConst.Enum)      != 0; }
+    public bool isFacet()     { return (flags() & FConst.Facet)     != 0; }
     public bool isFinal()     { return (flags() & FConst.Final)     != 0; }
     public bool isInternal()  { return (flags() & FConst.Internal)  != 0; }
     public bool isMixin()     { return (flags() & FConst.Mixin)     != 0; }
