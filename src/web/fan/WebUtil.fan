@@ -332,6 +332,13 @@ class WebUtil
   **
   static Void jsMain(OutStream out, Str main, [Str:Str]? env := null)
   {
+    envStr := StrBuf()
+    if (env?.size > 0)
+    {
+      envStr.add("var env = fan.sys.Env.cur().m_vars;\n")
+      env.each |v,k| { envStr.add("  env.set('$k', '$v');\n") }
+    }
+
     out.printLine(
      "<script type='text/javascript'>
       //<![CDATA[
@@ -344,7 +351,7 @@ class WebUtil
         webJsMain_hasRun = true;
 
         // inject env vars
-        // TODO
+        $envStr.toStr
 
         // find main
         var qname = '$main';
