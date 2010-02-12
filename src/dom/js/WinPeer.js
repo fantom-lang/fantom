@@ -29,6 +29,11 @@ fan.dom.WinPeer.prototype.alert = function(self, obj)
   alert(obj);
 }
 
+fan.dom.WinPeer.prototype.viewport = function(self)
+{
+  return fan.gfx.Size.make(window.innerWidth, window.innerHeight);
+}
+
 fan.dom.WinPeer.prototype.uri = function(self)
 {
   return fan.sys.Uri.decode(window.location.toString());

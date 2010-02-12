@@ -19,7 +19,7 @@ class Build : BuildPod
   {
     podName = "dom"
     summary = "Web Browser DOM API"
-    depends = ["sys 1.0", "web 1.0"]
+    depends = ["sys 1.0", "web 1.0", "gfx 1.0"]
     srcDirs = [`fan/`, `test/`]
     jsDirs  = [`js/`]
     docSrc  = true
