@@ -32,6 +32,41 @@ fan.sys.Slot.prototype.$typeof = function() { return fan.sys.Slot.$type; }
 fan.sys.Slot.prototype.toStr = function() { return this.m_qname; }
 
 //////////////////////////////////////////////////////////////////////////
+// Management
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Slot.findMethod = function(qname, checked)
+{
+  var slot = fan.sys.Slot.find(qname, checked);
+  return fan.sys.ObjUtil.coerce(slot, fan.sys.Method.$type);
+}
+
+fan.sys.Slot.findField = function(qname, checked)
+{
+  var slot = fan.sys.Slot.find(qname, checked);
+  return fan.sys.ObjUtil.coerce(slot, fan.sys.Field.$type);
+}
+
+fan.sys.Slot.find = function(qname, checked)
+{
+  if (checked === undefined) checked = true;
+  var typeName, slotName;
+  try
+  {
+    var dot = qname.indexOf('.');
+    typeName = qname.substring(0, dot);
+    slotName = qname.substring(dot+1);
+  }
+  catch (e)
+  {
+    throw fan.sys.Err.make("Invalid slot qname \"" + qname + "\", use <pod>::<type>.<slot>");
+  }
+  var type = fan.sys.Type.find(typeName, checked);
+  if (type == null) return null;
+  return type.slot(slotName, checked);
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
