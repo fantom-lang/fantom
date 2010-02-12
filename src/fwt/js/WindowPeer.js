@@ -14,11 +14,20 @@ fan.fwt.WindowPeer.prototype.$ctor = function(self) {}
 
 fan.fwt.WindowPeer.prototype.open = function(self)
 {
+  // check for alt root
+  var rootId = fan.sys.Env.cur().vars().get("fwt.window.root")
+  if (rootId == null) this.root = document.body;
+  else
+  {
+    this.root = document.getElementById(rootId);
+    if (this.root == null) throw fan.sys.ArgErr.make("No root found");
+  }
+
   // mount shell we use to attach widgets to
   var shell = document.createElement("div")
   with (shell.style)
   {
-    position   = "fixed";
+    position   = this.root === document.body ? "fixed" : "absolute";
     top        = "0";
     left       = "0";
     width      = "100%";
@@ -30,7 +39,7 @@ fan.fwt.WindowPeer.prototype.open = function(self)
   var elem = this.emptyDiv();
   shell.appendChild(elem);
   this.attachTo(self, elem);
-  document.body.appendChild(shell);
+  this.root.appendChild(shell);
   self.relayout();
 }
 
