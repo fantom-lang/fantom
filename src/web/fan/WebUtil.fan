@@ -336,7 +336,14 @@ class WebUtil
     if (env?.size > 0)
     {
       envStr.add("var env = fan.sys.Env.cur().m_vars;\n")
-      env.each |v,k| { envStr.add("  env.set('$k', '$v');\n") }
+      env.each |v,k|
+      {
+        envStr.add("  ")
+        if (k == "sys.uriPodBase")
+          envStr.add("fan.sys.UriPodBase = '$v';\n")
+        else
+          envStr.add("env.set('$k', '$v');\n")
+      }
     }
 
     out.printLine(
