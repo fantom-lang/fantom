@@ -107,8 +107,7 @@ class ShowScript : Weblet
     if (!file.exists) { res.sendErr(404); return }
 
     compile
-    t := compiler.types[0]
-    entryPoint := "fan.${t.pod}.${t.name}"
+    main := compiler.types[0].qname
 
     res.headers["Content-Type"] = "text/html"
     out := res.out
@@ -125,33 +124,8 @@ class ShowScript : Weblet
        "body { font: 10pt Arial; }
         a { color: #00f; }
         ").styleEnd
-      out.script.w(js).w(
-       "var hasRun = false;
-        var shell  = null;
-        var doLoad = function()
-        {
-          // safari appears to have a problem calling this event
-          // twice, so make sure we short-circuit if already run
-          if (hasRun) return;
-          hasRun = true;
-
-          // load
-          fan.sys.UriPodBase = '/pod/';
-          shell = ${entryPoint}.make();
-          shell.open();
-        }
-        var doResize = function() { shell.relayout(); }
-        if (window.addEventListener)
-        {
-          window.addEventListener('load', doLoad, false);
-          window.addEventListener('resize', doResize, false);
-        }
-        else
-        {
-          window.attachEvent('onload', doLoad);
-          window.attachEvent('onresize', doResize);
-        }
-        ").scriptEnd
+      out.script.w(js).scriptEnd
+      WebUtil.jsMain(out, main)
     out.headEnd
     out.body
     out.bodyEnd
