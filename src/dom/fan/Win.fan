@@ -7,6 +7,8 @@
 //   8 Jul 09  Andy Frank  Split webappClient into sys/dom
 //
 
+using gfx
+
 **
 ** Win models the DOM window object.
 **
@@ -43,6 +45,11 @@ class Win
   ** Display a modal message box with the given text.
   **
   native Void alert(Obj obj)
+
+  **
+  ** Return the size of the window viewport in pixels.
+  **
+  native Size viewport()
 
 //////////////////////////////////////////////////////////////////////////
 // Uri

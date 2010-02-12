@@ -10,7 +10,19 @@
 
 fan.dom.ElemPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 
-fan.dom.ElemPeer.prototype.$ctor = function(self) {}
+//////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
+fan.dom.ElemPeer.prototype.$ctor = function(self)
+{
+  this.m_pos  = fan.gfx.Point.m_defVal;
+  this.m_size = fan.gfx.Size.m_defVal;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Attributes
+//////////////////////////////////////////////////////////////////////////
 
 fan.dom.ElemPeer.prototype.tagName = function(self) { return fan.sys.Str.lower(this.elem.nodeName); }
 
@@ -89,10 +101,45 @@ fan.dom.ElemPeer.prototype.set = function(self, name, val)
   else this.elem.setAttribute(name, val);
 }
 
-fan.dom.ElemPeer.prototype.x = function(self) { return this.elem.offsetLeft; }
-fan.dom.ElemPeer.prototype.y = function(self) { return this.elem.offsetTop; }
-fan.dom.ElemPeer.prototype.w = function(self) { return this.elem.offsetWidth; }
-fan.dom.ElemPeer.prototype.h = function(self) { return this.elem.offsetHeight; }
+//////////////////////////////////////////////////////////////////////////
+// Layout
+//////////////////////////////////////////////////////////////////////////
+
+fan.dom.ElemPeer.prototype.pos = function(self)
+{
+  var x = this.elem.offsetLeft;
+  var y = this.elem.offsetTop;
+  if (this.m_pos.m_x != x || this.m_pos.m_y != y)
+    this.m_pos = fan.gfx.Point.make(x, y);
+  return this.m_pos;
+}
+
+fan.dom.ElemPeer.prototype.pos$ = function(self, val)
+{
+  this.m_pos = fan.gfx.Point.make(val.m_x, val.m_y);
+  this.elem.style.left = val.m_x + "px";
+  this.elem.style.top  = val.m_y + "px";
+}
+
+fan.dom.ElemPeer.prototype.size = function(self)
+{
+  var w = this.elem.offsetWidth;
+  var h = this.elem.offsetHeight;
+  if (this.m_size.m_w != w || this.m_size.m_h != h)
+    this.m_size = fan.gfx.Size.make(w, h);
+  return this.m_size;
+}
+
+fan.dom.ElemPeer.prototype.size$ = function(self, val)
+{
+  this.m_size = fan.gfx.Size.make(val.m_w, val.m_h);
+  this.elem.style.width  = val.m_w + "px";
+  this.elem.style.height = val.m_h + "px";
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Tree
+//////////////////////////////////////////////////////////////////////////
 
 fan.dom.ElemPeer.prototype.parent = function(self)
 {

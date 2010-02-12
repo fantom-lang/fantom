@@ -117,8 +117,8 @@ class ShowScript : Weblet
       out.title.w("FWT Demo - $file.name").titleEnd
       out.includeJs(`/pod/sys/sys.js`)
       out.includeJs(`/pod/web/web.js`)
-      out.includeJs(`/pod/dom/dom.js`)
       out.includeJs(`/pod/gfx/gfx.js`)
+      out.includeJs(`/pod/dom/dom.js`)
       out.includeJs(`/pod/fwt/fwt.js`)
       out.style.w(
        "body { font: 10pt Arial; }

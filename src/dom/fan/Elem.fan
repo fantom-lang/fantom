@@ -7,6 +7,8 @@
 //   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
+using gfx
+
 **
 ** Elem models a DOM element object.
 **
@@ -104,28 +106,42 @@ class Elem
   native Void set(Str name, Obj? val)
 
 //////////////////////////////////////////////////////////////////////////
-// Size
+// Layout
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** The x position relative to the parent element in pixels.
+  ** Position of element relative to its parent in pixels.
   **
-  native Int x()
+  native Point pos
 
   **
-  ** The y position relative to the parent element in pixels.
+  ** Size of element in pixels.
   **
-  native Int y()
+  native Size size
 
   **
-  ** The width of this element in pixels.
+  ** Position and size of this widget relative to its parent, both
+  ** measured in pixels.
   **
-  native Int w()
+  Rect bounds
+  {
+    get { return Rect.makePosSize(pos, size) }
+    set { pos = it.pos; size = it.size }
+  }
 
-  **
-  ** The height of this element in pixels.
-  **
-  native Int h()
+  // TODO remove in 1.0.53
+
+  @Deprecated { msg="Use Elem.pos" }
+  Int x() { pos.x }
+
+  @Deprecated { msg="Use Elem.pos" }
+  Int y() { pos.y }
+
+  @Deprecated { msg="Use Elem.size" }
+  Int w() { size.w }
+
+  @Deprecated { msg="Use Elem.size" }
+  Int h() { size.h }
 
 //////////////////////////////////////////////////////////////////////////
 // Tree
