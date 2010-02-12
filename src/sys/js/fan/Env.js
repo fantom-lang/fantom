@@ -23,6 +23,7 @@ fan.sys.Env.cur = function()
 
 fan.sys.Env.prototype.$ctor = function()
 {
+  this.m_vars = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Str.$type);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -31,3 +32,8 @@ fan.sys.Env.prototype.$ctor = function()
 
 fan.sys.Env.prototype.runtime = function() { return "js"; }
 
+//////////////////////////////////////////////////////////////////////////
+// Virtuals
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Env.prototype.vars = function() { return this.m_vars; }
