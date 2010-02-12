@@ -33,6 +33,11 @@ class Cookies : Window
     }
   }
 
+  Void main()
+  {
+    open
+  }
+
   Void addCookie()
   {
     name  := Text { prefCols=40 }

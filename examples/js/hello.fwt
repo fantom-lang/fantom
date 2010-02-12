@@ -15,5 +15,10 @@ class Hello : Window
   {
     content = Label { text = "Hello World - FWT compiled into JavaScript!" }
   }
+
+  Void main()
+  {
+    open
+  }
 }
 

@@ -8,6 +8,7 @@
 
 *Build 1.0.52 (working)*
 - Color makeArgb, makeRgb
+- WebUtil.jsMain
 
 *Build 1.0.51 (6 Feb 10)*
 - Roll fcode version from 1.0.45 => 1.0.51

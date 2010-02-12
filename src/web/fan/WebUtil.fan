@@ -309,6 +309,62 @@ class WebUtil
   }
 
 //////////////////////////////////////////////////////////////////////////
+// JsMain
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Generate the method invocation code used to boostrap into
+  ** JavaScript from a webpage.  This *must* be called inside the
+  ** '<head>' tag for the page.  The main method will be invoked
+  ** using the 'onLoad' DOM event.
+  **
+  ** The 'main' argument can be either a type or method.  If no
+  ** method is specified, 'main' is used.  If the method is not
+  ** static, a new instance of type is created:
+  **
+  **   "foo::Instance"     =>  Instance().main()
+  **   "foo::Instance.bar" =>  Instance().bar()
+  **   "foo::Static"       =>  Static.main()
+  **   "foo::Static.bar"   =>  Static.bar()
+  **
+  ** If 'env' is specified, then vars will be added to and available
+  ** from `sys::Env.vars` on client-side.
+  **
+  static Void jsMain(OutStream out, Str main, [Str:Str]? env := null)
+  {
+    out.printLine(
+     "<script type='text/javascript'>
+      //<![CDATA[
+      var webJsMain_hasRun = false;
+      var doLoad = function()
+      {
+        // safari appears to have a problem calling this event
+        // twice, so make sure we short-circuit if already run
+        if (webJsMain_hasRun) return;
+        webJsMain_hasRun = true;
+
+        // inject env vars
+        // TODO
+
+        // find main
+        var qname = '$main';
+        var dot = qname.indexOf('.');
+        if (dot < 0) qname += '.main';
+        var main = fan.sys.Slot.findMethod(qname);
+
+        // invoke main
+        if (main.isStatic()) main.call();
+        else main.callOn(main.parent().make());
+      }
+      if (window.addEventListener)
+        window.addEventListener('load', doLoad, false);
+      else
+        window.attachEvent('onload', doLoad);
+      //]]>
+      </script>")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 

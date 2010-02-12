@@ -38,6 +38,11 @@ class Ajax : Window
     }
   }
 
+  Void main()
+  {
+    open
+  }
+
   Void disRes(HttpRes res)
   {
     Win.cur.alert(
