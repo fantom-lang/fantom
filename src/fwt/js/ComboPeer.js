@@ -39,6 +39,9 @@ fan.fwt.ComboPeer.prototype.m_text = "";
 
 fan.fwt.ComboPeer.prototype.create = function(parentElem)
 {
+  // make sure we force rebuild
+  this.needsRebuild = true;
+
   var select = document.createElement("select");
   var div = this.emptyDiv();
   div.appendChild(select);
