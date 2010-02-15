@@ -73,9 +73,10 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
   var $this = this;
   outer.onmousedown = function(event)
   {
-    if (!self.enabled()) return;
+    if (!self.enabled()) return false;
     $this.m_pressed = true;
     $this.repaint(self);
+    return false;
   }
 
   outer.onmouseout = function(event)
