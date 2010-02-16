@@ -43,3 +43,8 @@ fan.dom.WinPeer.prototype.hyperlink = function(self, uri)
 {
   window.location = uri.encode();
 }
+
+fan.dom.WinPeer.prototype.reload  = function(self, force)
+{
+  window.location.reload(force);
+}
