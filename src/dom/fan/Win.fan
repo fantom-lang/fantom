@@ -70,4 +70,13 @@ class Win
   **
   native Void reload(Bool force := false)
 
+//////////////////////////////////////////////////////////////////////////
+// Events
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Attach an event handler to the given event on this element.
+  **
+  native Void onEvent(Str type, Bool useCapture, |Event e| handler)
+
 }
