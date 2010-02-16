@@ -65,4 +65,9 @@ class Win
   **
   native Void hyperlink(Uri uri)
 
+  **
+  ** Reload the current page. Use 'force' to bypass browse cache.
+  **
+  native Void reload(Bool force := false)
+
 }

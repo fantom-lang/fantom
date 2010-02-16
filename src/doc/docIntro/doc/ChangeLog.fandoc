@@ -10,6 +10,7 @@
 - Color makeArgb, makeRgb
 - WebUtil.jsMain
 - Win.viewport
+- Win.reload
 - Elem: deprecate x,y,w,h; add pos, size, bounds
 - New concurrent pod
 
