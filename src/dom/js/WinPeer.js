@@ -67,16 +67,16 @@ fan.dom.WinPeer.prototype.reload  = function(self, force)
 
 fan.dom.WinPeer.prototype.onEvent = function(self, type, useCapture, handler)
 {
-  if (this.elem.addEventListener)
+  if (window.addEventListener)
   {
-    this.elem.addEventListener(type, function(e) {
-      handler(fan.dom.Event.make(e));
+    window.addEventListener(type, function(e) {
+      handler.call(fan.dom.Event.make(e));
     }, useCapture);
   }
   else
   {
-    this.elem.attachEvent('on'+type, function(e) {
-      handler(fan.dom.Event.make(e));
+    window.attachEvent('on'+type, function(e) {
+      handler.call(fan.dom.Event.make(e));
     });
   }
 }
