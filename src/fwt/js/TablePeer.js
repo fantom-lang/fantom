@@ -152,6 +152,13 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         var s = model.header(c);
         if (s.length == 0) fix.innerHTML = "&nbsp;"
         else fix.appendChild(document.createTextNode(s));
+        var halign = model.halign(c);
+        switch (halign)
+        {
+          case fan.gfx.Halign.m_left:   fix.style.textAlign = "left"; break;
+          case fan.gfx.Halign.m_center: fix.style.textAlign = "center"; break;
+          case fan.gfx.Halign.m_right:  fix.style.textAlign = "right"; break;
+        }
       }
       var th = document.createElement("th");
       with (th.style)
@@ -205,6 +212,13 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
           var bg = model.bg(c,r); if (bg != null) td.style.background = bg.toCss();
           var fg = model.fg(c,r); if (fg != null) td.style.color = fg.toCss();
           var font = model.font(c,r); if (font != null) td.style.font = font.toStr();
+          var halign = model.halign(c);
+          switch (halign)
+          {
+            case fan.gfx.Halign.m_left:   td.style.textAlign = "left"; break;
+            case fan.gfx.Halign.m_center: td.style.textAlign = "center"; break;
+            case fan.gfx.Halign.m_right:  td.style.textAlign = "right"; break;
+          }
         }
         else
         {
