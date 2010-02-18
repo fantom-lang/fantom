@@ -38,7 +38,7 @@ class PodDocGenerator : FandocToHtmlGenerator
 //////////////////////////////////////////////////////////////////////////
 
   ** Doc title.
-  override Str title() { "PodDoc" }
+  override Str title() { "$pod.name PodDoc" }
 
   ** PodDoc content.
   override Void content()
