@@ -240,6 +240,15 @@ are overriding a method using the 'override' keyword:
   Animal().talk   // prints generic
   Cat().talk      // prints meow
 
+By default when a subclass overrides a method, it is implied to be
+virtual - its own subclasses can override it again.  You can use 'final'
+keyword to prevent further overrides:
+
+  class Lion : Cat
+  {
+    override final Void talk() { echo("roar!") }
+  }
+
 Abstract Methods [#abstract]
 ****************************
 Abstract methods are virtual methods without an implementation.  They
