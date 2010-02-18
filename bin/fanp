@@ -4,5 +4,5 @@
 # fanp: fcode disassembler
 #
 
-. "${0%/*}/fanlaunch" 
-fanlaunch Fanp "$@"
+. "${0%/*}/fanlaunch"
+fanlaunch Fan "compiler::Fanp" "$@"
