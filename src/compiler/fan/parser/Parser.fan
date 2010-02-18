@@ -1258,13 +1258,13 @@ public class Parser : CompilerSupport
 
   **
   ** Equality expression:
-  **   <equalityExpr>  :=  <relationalExpr> (("==" | "!=" | "===" | "!==") <relationalExpr>)*
+  **   <equalityExpr>  :=  <relationalExpr> [("==" | "!=" | "===" | "!==") <relationalExpr>]
   **
   private Expr equalityExpr()
   {
     expr := relationalExpr
-    while (curt === Token.eq   || curt === Token.notEq ||
-           curt === Token.same || curt === Token.notSame)
+    if (curt === Token.eq   || curt === Token.notEq ||
+        curt === Token.same || curt === Token.notSame)
     {
       lhs := expr
       tok := consume.kind
@@ -1292,16 +1292,16 @@ public class Parser : CompilerSupport
   ** Relational expression:
   **   <relationalExpr> :=  <typeCheckExpr> | <compareExpr>
   **   <typeCheckExpr>  :=  <rangeExpr> [("is" | "as" | "isnot") <type>]
-  **   <compareExpr>    :=  <rangeExpr> (("<" | "<=" | ">" | ">=" | "<=>") <rangeExpr>)*
+  **   <compareExpr>    :=  <rangeExpr> [("<" | "<=" | ">" | ">=" | "<=>") <rangeExpr>]
   **
   private Expr relationalExpr()
   {
     expr := rangeExpr
-    while (curt === Token.isKeyword || curt === Token.isnotKeyword ||
-           curt === Token.asKeyword ||
-           curt === Token.lt || curt === Token.ltEq ||
-           curt === Token.gt || curt === Token.gtEq ||
-           curt === Token.cmp)
+    if (curt === Token.isKeyword || curt === Token.isnotKeyword ||
+        curt === Token.asKeyword ||
+        curt === Token.lt || curt === Token.ltEq ||
+        curt === Token.gt || curt === Token.gtEq ||
+        curt === Token.cmp)
     {
       switch (curt)
       {

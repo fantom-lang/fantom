@@ -134,10 +134,10 @@ Expr [#expr]
 
   <condOrExpr>     :=  <condAndExpr>  ("||" <condAndExpr>)*
   <condAndExpr>    :=  <equalityExpr> ("&&" <equalityExpr>)*
-  <equalityExpr>   :=  <relationalExpr> (("==" | "!=" | "===" | "!==") <relationalExpr>)*
+  <equalityExpr>   :=  <relationalExpr> [("==" | "!=" | "===" | "!==") <relationalExpr>]
   <relationalExpr> :=  <typeCheckExpr> | <compareExpr>
   <typeCheckExpr>  :=  <rangeExpr> [("is" | "as" | "isnot") <type>]
-  <compareExpr>    :=  <rangeExpr> (("<" | "<=" | ">" | ">=" | "<=>") <rangeExpr>)*
+  <compareExpr>    :=  <rangeExpr> [("<" | "<=" | ">" | ">=" | "<=>") <rangeExpr>]
   <rangeExpr>      :=  <addExpr> ((".." | "..<") <addExpr>)*
   <addExpr>        :=  <multExpr> (("+" | "-") <multExpr>)*
   <multExpr>       :=  <parenExpr> (("*" | "/" | "%") <parenExpr>)*
