@@ -214,15 +214,15 @@ fan.sys.OutStream.prototype.print = function(obj)
   return this.writeChars(s, 0, s.length);
 }
 
-/*
-public OutStream printLine() { return printLine(""); }
-public OutStream printLine(Object obj)
+fan.sys.OutStream.prototype.printLine = function(obj)
 {
-  String s = obj == null ? "null" : toStr(obj);
-  writeChars(s, 0, s.length());
-  return writeChar('\n');
+  if (obj === undefined) obj = "";
+  var s = obj == null ? "null" : fan.sys.ObjUtil.toStr(obj);
+  this.writeChars(s, 0, s.length);
+  return this.writeChar('\n');
 }
 
+/*
 public OutStream writeObj(Object obj) { return writeObj(obj, null); }
 public OutStream writeObj(Object obj, Map options)
 {
