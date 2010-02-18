@@ -197,28 +197,26 @@ public class StatementPeer
     }
   }
 
-  public long execute(Statement self, Map params)
+  public Object execute(Statement self, Map params)
   {
-    self.conn.peer.lastAutoGen = null;
     try
     {
       if (prepared)
       {
         setParameters(params);
-        long rows = ((PreparedStatement)stmt).executeUpdate();
-        ResultSet keys = stmt.getGeneratedKeys();
-        if (keys.next()) self.conn.peer.lastAutoGen = Long.valueOf(keys.getInt(1));
-        return rows;
+        int rows = ((PreparedStatement)stmt).executeUpdate();
+        return executeResult(self, rows);
       }
       else
       {
         stmt = self.conn.peer.jconn.createStatement();
         try
         {
-          int rc = stmt.executeUpdate(self.sql, java.sql.Statement.RETURN_GENERATED_KEYS);
-          ResultSet keys = stmt.getGeneratedKeys();
-          if (keys.next()) self.conn.peer.lastAutoGen = Long.valueOf(keys.getInt(1));
-          return rc;
+          int mode = self.conn.peer.supportsGetGenKeys ?
+             java.sql.Statement.RETURN_GENERATED_KEYS :
+             java.sql.Statement.NO_GENERATED_KEYS;
+          int rows = stmt.executeUpdate(self.sql, mode);
+          return executeResult(self, rows);
         }
         finally
         {
@@ -231,6 +229,26 @@ public class StatementPeer
       throw ConnectionPeer.err(ex);
     }
   }
+
+  private Object executeResult(Statement self, int rows)
+  {
+    try
+    {
+      if (self.conn.peer.supportsGetGenKeys)
+      {
+        ResultSet rs = stmt.getGeneratedKeys();
+        List keys = new List(Sys.IntType);
+        while (rs.next()) keys.add(rs.getLong(1));
+        if (!keys.isEmpty()) return keys;
+      }
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+    return Long.valueOf(rows);
+  }
+
 
   /**
    * Set the parameters for the underlying prepared statement

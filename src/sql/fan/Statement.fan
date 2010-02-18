@@ -43,10 +43,12 @@ class Statement
   native Void queryEach([Str:Obj]? params, |Row row| eachFunc)
 
   **
-  ** Execute a SQL statement and if applicable return
-  ** the number of rows modified.
+  ** Execute a SQL statement and if applicable return a result.
+  ** If the statement produced auto-generated keys, then return
+  ** an Int[] list of the keys generated, otherwise return number
+  ** of rows modified.
   **
-  native Int execute([Str:Obj]? params := null)
+  native Obj execute([Str:Obj]? params := null)
 
   **
   ** Close the statement.

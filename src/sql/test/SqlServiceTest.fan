@@ -242,7 +242,15 @@ class SqlServiceTest : Test
       return o.toStr
     }
     s += ")"
-    verifyEq(execute(s), 1)
+
+    // verify we got key back
+    Int[] keys := execute(s)
+    verifyEq(keys.size, 1)
+    verifyEq(keys.typeof, Int[]#)
+
+    // read with key and verify it is what we just wrote
+    farmer := db.sql("select * from farmers where farmer_id = $keys.first").query.first
+    verifyEq(farmer->name, row[0])
   }
 
   Void verifyFarmerCols(Row r)
@@ -405,7 +413,7 @@ class SqlServiceTest : Test
     return rows
   }
 
-  Int execute(Str sql)
+  Obj execute(Str sql)
   {
     // echo("  q> $sql")
     return db.sql(sql).execute
