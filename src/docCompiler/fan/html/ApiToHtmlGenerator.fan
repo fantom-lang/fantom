@@ -339,8 +339,8 @@ vals := temp.get as Obj[]
       else out.print("virtual ")
     }
 
+    if (s.isConst) out.print("const ")
     if (s.isStatic) out.print("static ")
-    else if (s.isConst) out.print("const ")
 
     if (s.isProtected) out.print("protected ")
     else if (s.isPrivate)   out.print("private ")
