@@ -22,7 +22,7 @@ class Build : BuildPod
     srcDirs  = [`fan/`, `test/`]
     javaDirs = [`java/`]
     jsDirs   = [`js/`]
-    resDirs  = [`locale/`, `res/img/`, `res/javafx/`]
+    resDirs  = [`locale/`, `res/javafx/`]
     docSrc   = true
   }
 
