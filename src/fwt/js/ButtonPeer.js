@@ -53,25 +53,17 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
 
 fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
 {
-  var outer = this.emptyDiv();
-  with (outer.style)
-  {
-    paddingRight = "6px";
-  }
-
-  var inner = document.createElement("div");
-  with (inner.style)
-  {
-    font       = this.m_font==null ? "bold 10pt Arial" : this.m_font.toStr();
-    color      = "#333";
-    textAlign  = "center";
-    cursor     = "default";
-    whiteSpace = "nowrap";
-    // use repaint for styles that change b/w pressed/unpressed
-  }
+  var div = this.emptyDiv();
+  var style = div.style;
+  style.border  = "1px solid #404040";
+  style.MozBorderRadius    = "4px";
+  style.webkitBorderRadius = "4px";
+  style.textAlign  = "center";
+  style.cursor     = "default";
+  style.whiteSpace = "nowrap";
 
   var $this = this;
-  outer.onmousedown = function(event)
+  div.onmousedown = function(event)
   {
     if (!self.enabled()) return false;
     $this.m_pressed = true;
@@ -79,14 +71,14 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
     return false;
   }
 
-  outer.onmouseout = function(event)
+  div.onmouseout = function(event)
   {
     if (!self.enabled()) return;
     $this.m_pressed = false;
     $this.repaint(self);
   }
 
-  outer.onmouseup = function(event)
+  div.onmouseup = function(event)
   {
     if (!self.enabled()) return;
     if ($this.m_pressed != true) return;  // mouseout before up
@@ -106,9 +98,8 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
     $this.repaint(self);
   }
 
-  outer.appendChild(inner)
-  parentElem.appendChild(outer);
-  return outer;
+  parentElem.appendChild(div);
+  return div;
 }
 
 fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
@@ -148,42 +139,23 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
   if (self.m_mode == fan.fwt.ButtonMode.m_push ||
       self.m_mode == fan.fwt.ButtonMode.m_toggle)
   {
-    var outer = this.elem;
-    var inner = outer.firstChild;
+    var div = this.elem;
+    var style = div.style;
     var pressed = this.m_pressed || this.m_selected;
 
     if (pressed)
     {
-      with (outer.style)
-      {
-        var x = outer.offsetWidth-6;
-        var uri = fan.sys.UriPodBase + "fwt/res/img/button-right.png";
-        background = "url(" + uri + ") no-repeat " + x + "px -25px";
-        height = "25px";
-      }
-      with (inner.style)
-      {
-        var uri = fan.sys.UriPodBase + "fwt/res/img/button-left.png";
-        background = "url(" + uri + ") no-repeat 0 -25px";
-        height = "25px";
-        padding = "5px 6px 0 12px";
-      }
+      style.padding = "4px 6px 2px 6px";
+      fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.makeLinear(
+        fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#ccc"),
+        fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#d9d9d9")));
     }
     else
     {
-      with (outer.style)
-      {
-        var uri = fan.sys.UriPodBase + "fwt/res/img/button-right.png";
-        background = "url(" + uri + ") no-repeat top right";
-        height = "25px";
-      }
-      with (inner.style)
-      {
-        var uri = fan.sys.UriPodBase + "fwt/res/img/button-left.png";
-        background = "url(" + uri + ") no-repeat";
-        height = "25px";
-        padding = "4px 6px 0 12px";
-      }
+      style.padding = "3px 6px";
+      fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.makeLinear(
+        fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#fefefe"),
+        fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#d0d0d0")));
     }
   }
 }
@@ -196,7 +168,7 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
   if (self.m_mode == fan.fwt.ButtonMode.m_push ||
       self.m_mode == fan.fwt.ButtonMode.m_toggle)
   {
-    var div = this.elem.firstChild;
+    var div = this.elem;
 
     // remove old text node
     while (div.firstChild != null)
@@ -210,10 +182,10 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
     // add new text node
     div.appendChild(document.createTextNode(this.m_text));
     div.style.color = this.m_enabled ? "#000" : "#999";
-    this.elem.style.borderColor =  this.m_enabled ? "#555" : "#999";
 
     // account for padding/border
-    w -= 6;
+    h -= 8;
+    w -= 14;
   }
   else if (self.m_mode == fan.fwt.ButtonMode.m_check ||
            self.m_mode == fan.fwt.ButtonMode.m_radio)
