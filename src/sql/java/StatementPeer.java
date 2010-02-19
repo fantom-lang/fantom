@@ -31,7 +31,7 @@ public class StatementPeer
     parse(self.sql);
     try
     {
-      stmt = self.conn.peer.jconn.prepareStatement(translated, java.sql.Statement.RETURN_GENERATED_KEYS);
+      stmt = self.conn.peer.jconn.prepareStatement(translated, autoGenKeyMode(self));
       prepared = true;
     }
     catch (SQLException ex)
@@ -212,10 +212,7 @@ public class StatementPeer
         stmt = self.conn.peer.jconn.createStatement();
         try
         {
-          int mode = self.conn.peer.supportsGetGenKeys ?
-             java.sql.Statement.RETURN_GENERATED_KEYS :
-             java.sql.Statement.NO_GENERATED_KEYS;
-          int rows = stmt.executeUpdate(self.sql, mode);
+          int rows = stmt.executeUpdate(self.sql, autoGenKeyMode(self));
           return executeResult(self, rows);
         }
         finally
@@ -228,6 +225,13 @@ public class StatementPeer
     {
       throw ConnectionPeer.err(ex);
     }
+  }
+
+  static int autoGenKeyMode(Statement self)
+  {
+    return self.conn.peer.supportsGetGenKeys ?
+           java.sql.Statement.RETURN_GENERATED_KEYS :
+           java.sql.Statement.NO_GENERATED_KEYS;
   }
 
   private Object executeResult(Statement self, int rows)
