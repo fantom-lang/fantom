@@ -568,3 +568,45 @@ fan.sys.Str.toCode = function(self, quote, escu)
   return s;
 }
 
+fan.sys.Str.toXml = function(self)
+{
+  var s = null;
+  var len = self.length;
+  for (var i=0; i<len; ++i)
+  {
+    var ch = self.charAt(i);
+    var c = self.charCodeAt(i);
+    if (c > 62)
+    {
+      if (s != null) s += ch;
+    }
+    else
+    {
+      var esc = fan.sys.Str.xmlEsc[c];
+      if (esc != null && (c != 62 || i==0 || self.charCodeAt(i-1) == 93))
+      {
+        if (s == null)
+        {
+          s = "";
+          s += self.substring(0,i);
+        }
+        s += esc;
+      }
+      else if (s != null)
+      {
+        s += ch;
+      }
+    }
+  }
+  if (s == null) return self;
+  return s;
+}
+
+fan.sys.Str.xmlEsc = [];
+fan.sys.Str.xmlEsc[38] = "&amp;";
+fan.sys.Str.xmlEsc[60] = "&lt;";
+fan.sys.Str.xmlEsc[62] = "&gt;";
+fan.sys.Str.xmlEsc[39] = "&apos;";
+fan.sys.Str.xmlEsc[34] = "&quot;";
+
+
