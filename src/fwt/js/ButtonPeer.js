@@ -153,9 +153,20 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
     else
     {
       style.padding = "3px 6px";
-      fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.makeLinear(
-        fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#fefefe"),
-        fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#d0d0d0")));
+      if (this.m_enabled)
+      {
+        style.color = "#000";
+        style.border = "1px solid #404040";
+        fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.makeLinear(
+          fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#fefefe"),
+          fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#d0d0d0")));
+      }
+      else
+      {
+        style.color = "#999";
+        style.border = "1px solid #999";
+        style.background = "#e0e0e0";
+      }
     }
   }
 }
@@ -181,7 +192,6 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
 
     // add new text node
     div.appendChild(document.createTextNode(this.m_text));
-    div.style.color = this.m_enabled ? "#000" : "#999";
 
     // account for padding/border
     h -= 8;
