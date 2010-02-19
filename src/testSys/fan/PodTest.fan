@@ -138,13 +138,13 @@ class PodTest : Test
   Void testProps()
   {
     pod := typeof.pod
-    verifyEq(pod.props(`locale/en.props`, 1ms)["a"], "a en")
-    verifyEq(pod.props(`locale/en.props`, 1ms).isImmutable, true)
+    verifyEq(pod.props(`res/podtest.props`, 1ms)["barney"], "stinson")
+    verifyEq(pod.props(`res/podtest.props`, 1ms).isImmutable, true)
 
     verifyEq(pod.props(`not/found`, 1ms).size, 0)
     verifyEq(pod.props(`not/found`, 1ms).isImmutable, true)
 
-    verifySame(pod.props(`locale/en.props`, 1ms), pod.props(`locale/en.props`, 1ms))
+    verifySame(pod.props(`res/podtest.props`, 1ms), pod.props(`res/podtest.props`, 1ms))
     verifySame(pod.props(`not/found`, 1ms), pod.props(`not/found`, 1ms))
   }
 
