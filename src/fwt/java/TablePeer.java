@@ -85,7 +85,7 @@ public class TablePeer
   public final Prop.IntsProp selected = new Prop.IntsProp(this)
   {
     public int[] get(Widget w) { return ((Table)w).getSelectionIndices(); }
-    public void set(Widget w, int[] v) { ((Table)w).select(v); }
+    public void set(Widget w, int[] v) { ((Table)w).setSelection(v); }
   };
 
 //////////////////////////////////////////////////////////////////////////
