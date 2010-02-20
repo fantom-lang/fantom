@@ -69,6 +69,13 @@ fan.dom.WinPeer.prototype.onEvent = function(self, type, useCapture, handler)
 {
   if (window.addEventListener)
   {
+    // trap hashchange for non-supporting browsers
+    if (type == "hashchange" && !("onhashchange" in window))
+    {
+      this.fakeHashChange(self, handler);
+      return;
+    }
+
     window.addEventListener(type, function(e) {
       handler.call(fan.dom.Event.make(e));
     }, useCapture);
@@ -79,5 +86,26 @@ fan.dom.WinPeer.prototype.onEvent = function(self, type, useCapture, handler)
       handler.call(fan.dom.Event.make(e));
     });
   }
+}
+
+fan.dom.WinPeer.prototype.fakeHashChange = function(self, handler)
+{
+  var getHash = function()
+  {
+    var href  = window.location.href;
+    var index = href.indexOf('#');
+    return index == -1 ? '' : href.substr(index+1);
+  }
+  var oldHash = getHash();
+  var checkHash = function()
+  {
+    var newHash = getHash();
+    if (oldHash != newHash)
+    {
+      oldHash = newHash;
+      handler.call(fan.dom.Event.make(null));
+    }
+  }
+  setInterval(checkHash, 100);
 }
 
