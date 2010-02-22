@@ -219,11 +219,14 @@ class UtilTest : Test
         -----------------------------41184676334--
         """
     buf := Buf()
+    numRead := 0
     WebUtil.parseMultiPart(s.replace("\n", "\r\n").in, boundary) |h, in|
     {
       in.pipe(buf.out)
+      numRead = in->numRead
     }
     verifyEq(buf.flip.readAllStr, "hello world")
+    verifyEq(numRead, 11)
   }
 
   // generate test files for testParseMultiPart

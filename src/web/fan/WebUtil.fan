@@ -603,6 +603,7 @@ internal class MultiPartInStream : InStream
   {
     if (pushback != null && !pushback.isEmpty) return pushback.pop
     if (!checkLine) return null
+    numRead += 1
     return curLine.read
   }
 
@@ -611,16 +612,20 @@ internal class MultiPartInStream : InStream
     if (pushback != null && !pushback.isEmpty && n > 0)
     {
       buf.write(pushback.pop)
+      numRead += 1
       return 1
     }
     if (!checkLine) return null
-    return curLine.readBuf(buf, n)
+    actualRead := curLine.readBuf(buf, n)
+    numRead += actualRead
+    return actualRead
   }
 
   override This unread(Int b)
   {
     if (pushback == null) pushback = Int[,]
     pushback.push(b)
+    numRead -= 1
     return this
   }
 
@@ -680,5 +685,6 @@ internal class MultiPartInStream : InStream
   Int[]? pushback     // stack for unread
   Bool endOfPart
   Bool endOfParts
+  Int numRead
 }
 
