@@ -208,6 +208,22 @@ class UtilTest : Test
       }
     }
 
+    // single item
+    boundary = "---------------------------41184676334"
+    s =
+     """-----------------------------41184676334
+        Content-Disposition: form-data; name=""; filename="something.txt"
+        Content-Type: text/plain
+
+        hello world
+        -----------------------------41184676334--
+        """
+    buf := Buf()
+    WebUtil.parseMultiPart(s.replace("\n", "\r\n").in, boundary) |h, in|
+    {
+      in.pipe(buf.out)
+    }
+    verifyEq(buf.flip.readAllStr, "hello world")
   }
 
   // generate test files for testParseMultiPart
