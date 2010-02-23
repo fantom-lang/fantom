@@ -21,7 +21,7 @@ class Boot : AbstractMain
     if (!logDir.exists) logDir.create
 
     // install sys log handler
-    sysLogger := FileLogger { file = logDir + `sys.log` }
+    sysLogger := FileLogger { dir = logDir; filename = "sys.log" }
     Log.addHandler |rec| { sysLogger.writeLogRec(rec) }
 
     // check if doc directory exists
@@ -51,7 +51,7 @@ class Boot : AbstractMain
       // steps to run after every request
       after =
       [
-        LogMod { file = logDir + `web.log` }
+        LogMod { dir = logDir; filename = "web.log" }
       ]
     }
 

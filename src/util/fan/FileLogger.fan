@@ -10,34 +10,42 @@
 ** FileLogger appends Str log entries to a file.  You
 ** can add a FileLogger as a Log handler:
 **
-**    sysLogger := FileLogger(scriptDir + `logs/sys.log`)
+**    sysLogger := FileLogger
+**    {
+**      dir = scriptDir
+**      filename = "sys-{YYMM}.log"
+**    }
 **    sysLogger.start
 **    Log.addHandler |rec| { sysLogger.writeLogRec(rec) }
 **
+** See `filename` for specifying a datetime pattern for your log files.
 **
 const class FileLogger : ActorPool
 {
 
   **
-  ** Constructor.
+  ** Constructor must set `dir` and `filename`
   **
-  new make(|This|? f := null) { if (f != null) f(this) }
-
-  **
-  ** File to append log records.  This value can be
-  ** configured as a const field, or by `open` method.
-  **
-  const File? file
-
-  **
-  ** Open the specified file to write for the file logger.
-  ** The file is used instead of the `file` field.  This method
-  ** must be called before attempting to write to the log.
-  **
-  Void open(File file)
+  new make(|This|? f := null)
   {
-    actor.send(file)
+    if (f != null) f(this)
+    if (dir === noDir) throw ArgErr("Must configure 'dir'")
+    if (filename.isEmpty) throw ArgErr("Must configure 'filename'")
   }
+
+  **
+  ** Directory used to store log file(s).
+  **
+  const File dir := noDir
+  private static const File noDir := File(`no-dir-configured`)
+
+  **
+  ** Log filename pattern.  The name may contain a pattern between
+  ** '{}' using the pattern format of `sys::DateTime.toLocale`.  For
+  ** example to maintain a log file per month, use a filename such
+  ** as "mylog-{YYYY-MM}.log".
+  **
+  const Str filename := ""
 
   **
   ** Append string log message to file.
@@ -60,53 +68,65 @@ const class FileLogger : ActorPool
   **
   internal Obj? receive(Obj msg)
   {
-    // if file message, this is an open()
-    file := this.file
-    write := true
-    if (msg is File)
+    try
     {
-      file = msg
-      write = false
-      Actor.locals["error"] = null
+      // get or initialize current state
+      state := Actor.locals["state"] as FileLoggerState
+      if (state == null)
+        Actor.locals["state"] = state = FileLoggerState(dir, filename)
+
+      // append to current file
+      state.out.printLine(msg).flush
     }
-
-    // if we are in error condition ignore
-    if (Actor.locals["error"] != null) return null
-
-    // open file if first time thru
-    OutStream? out := Actor.locals["out"]
-    if (out == null)
+    catch (Err e)
     {
-      // if no file configured
-      if (file == null)
-      {
-        Actor.locals["error"] = true
-        log.err("No file configured")
-        return null
-      }
-
-      // open it to append
-      try
-      {
-        if (!file.exists) file.create
-        out = file.out(true)
-        Actor.locals["out"] = out
-      }
-      catch (Err e)
-      {
-        Actor.locals["error"] = true
-        log.err("Cannot open log file: $file", e)
-        return null
-      }
+      log.err("FileLogger.receive", e)
     }
-
-    // append to file
-    if (write) out.printLine(msg).flush
-
     return null
   }
 
   private const static Log log := Log.get("logger")
   private const Actor actor := Actor(this) |msg| { receive(msg) }
 
+}
+
+internal class FileLoggerState
+{
+  new make(File dir, Str filename)
+  {
+    this.dir = dir
+    this.filename = filename
+    i := filename.index("{")
+    if (i != null)
+      this.pattern = filename[i+1 ..< filename.index("}")]
+    else
+      this.curOut = (dir + filename.toUri).out(true)
+  }
+
+  OutStream out()
+  {
+    // check if we need to open a new file
+    if (pattern != null && DateTime.now.toLocale(pattern) != curPattern)
+    {
+      // if we currently have a file open, then close it
+      curOut?.close
+
+      // open new file with new pattern
+      curPattern = DateTime.now.toLocale(pattern)
+      newName := filename[0..<filename.index("{")] +
+                 curPattern +
+                 filename[filename.index("}")+1..-1]
+      curFile := dir + newName.toUri
+      curOut = curFile.out(true)
+    }
+
+    // current output stream
+    return curOut
+  }
+
+  const Str filename
+  const File dir
+  Str? pattern
+  Str curPattern := ""
+  OutStream? curOut
 }
