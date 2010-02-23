@@ -26,8 +26,12 @@ const class LogMod : WebMod
   **
   new make(|This|? f := null)
   {
-    f?.call(this)
-    if (file === noFile) throw ArgErr("Must configure ${Type.of(this)}.file field")
+    if (f != null) f.call(this)
+    logger = FileLogger
+    {
+      it.dir      = this.dir
+      it.filename = this.filename
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,10 +39,18 @@ const class LogMod : WebMod
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Output log file.
+  ** Directory used to store log file(s).
   **
-  const File file := noFile
-  private static const File noFile := File(`no-file-configured`)
+  const File dir := noDir
+  private static const File noDir := File(`no-dir-configured`)
+
+  **
+  ** Log filename pattern.  The name may contain a pattern between
+  ** '{}' using the pattern format of `sys::DateTime.toLocale`.  For
+  ** example to maintain a log file per month, use a filename such
+  ** as "mylog-{YYYY-MM}.log".
+  **
+  const Str filename := ""
 
   **
   ** Format of the log records as a string of #Fields names.
@@ -52,9 +64,6 @@ const class LogMod : WebMod
 
   override Void onStart()
   {
-    // init logger
-    logger.open(file)
-
     // write prefix
     logger.writeStr("#Remark ==========================================================================")
     logger.writeStr("#Remark " + DateTime.now.toLocale)
@@ -186,6 +195,6 @@ const class LogMod : WebMod
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private const FileLogger logger := FileLogger()
+  private const FileLogger logger
 
 }

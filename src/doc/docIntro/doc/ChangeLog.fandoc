@@ -16,6 +16,7 @@
 - New concurrent pod
 - SqlService.lastAutoKey => Statement.execute
 - Tweak grammar to disallow chains comparison operators
+- Change config API for FileLogger and LogMod to allow datetime pattern
 
 *Build 1.0.51 (6 Feb 10)*
 - Roll fcode version from 1.0.45 => 1.0.51
