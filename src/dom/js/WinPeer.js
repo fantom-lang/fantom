@@ -39,7 +39,11 @@ fan.dom.WinPeer.prototype.alert = function(self, obj)
 
 fan.dom.WinPeer.prototype.viewport = function(self)
 {
-  return fan.gfx.Size.make(window.innerWidth, window.innerHeight);
+  return (typeof window.innerWidth != "undefined")
+    ? fan.gfx.Size.make(window.innerWidth, window.innerHeight)
+    : fan.gfx.Size.make(
+        document.documentElement.clientWidth,
+        document.documentElement.clientHeight);
 }
 
 //////////////////////////////////////////////////////////////////////////
