@@ -15,7 +15,6 @@
 **      dir = scriptDir
 **      filename = "sys-{YYMM}.log"
 **    }
-**    sysLogger.start
 **    Log.addHandler |rec| { sysLogger.writeLogRec(rec) }
 **
 ** See `filename` for specifying a datetime pattern for your log files.
