@@ -43,7 +43,7 @@ class Evaluator
     s.add("new make(Str:Obj s) { _scope = s }\n")
     s.add("Str:Obj? _scope\n")
     s.add("Obj? _eval() {\n")
-    scopeMap := Str:Obj[:]
+    scopeMap := Str:Obj?[:]
     if (shell != null)
     {
       shell.scope.each |Var v|
