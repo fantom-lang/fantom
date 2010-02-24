@@ -47,6 +47,7 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     padding    = "3px 6px";
     color      = "#fff";
     fontWeight = "bold";
+    textShadow = "0 1px 1px #1c1c1c";
     textAlign  = "center";
     borderTop    = "1px solid #8d8d8d";
     borderBottom = "1px solid #303030";
