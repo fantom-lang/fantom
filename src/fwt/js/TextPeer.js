@@ -10,51 +10,46 @@
  * TextPeer.
  */
 fan.fwt.TextPeer = fan.sys.Obj.$extend(fan.fwt.TextWidgetPeer);
-fan.fwt.TextPeer.prototype.$ctor = function(self) {}
+fan.fwt.TextPeer.prototype.$ctor = function(self)
+{
+  this.control = null;
+}
 
 fan.fwt.TextPeer.prototype.text = function(self) { return this.m_text; }
 fan.fwt.TextPeer.prototype.text$ = function(self, val, sync)
 {
   this.m_text = val;
-
   if (sync === undefined) sync = true;
-  if (sync && this.elem != null && this.elem.firstChild != null)
-    this.elem.firstChild.value = this.m_text;
+  if (sync && this.control != null) this.control.value = this.m_text;
 }
 fan.fwt.TextPeer.prototype.m_text = "";
 
-fan.fwt.TextPeer.prototype.sync = function(self)
+fan.fwt.TextPeer.prototype.create = function(parentElem, self)
 {
-  var text = this.elem.firstChild;
-
-  // do we need to create element?
-  if (text == null)
-  {
-    if (self.m_multiLine)
-    {
-      text = document.createElement("textarea");
-      //text.style.whiteSpace = "nowrap";
-    }
-    else { text = document.createElement("input"); text.type = "text"; }
-    this.elem.appendChild(text);
-  }
-
-  // sync control
-  text.value = this.m_text;
-  text.readOnly = !self.m_editable;
-  text.disabled = !this.m_enabled;
+  // create actual input element
   if (self.m_multiLine)
   {
-    // TODO - this differs a pixel or two by browser - so we'll need
-    // to go back and fine tune
-    text.style.width  = (this.m_size.m_w-6)+'px';
-    text.style.height = (this.m_size.m_h-7)+'px';
+    var text = document.createElement("textarea");
+    text.style.position = "absolute";
+    text.style.left     = "0px";
+    text.style.top      = "1px";
+    text.style.outline  = "none";
+    text.style.padding  = "2px";
+    text.style.resize   = "none";
+    this.control = text;
   }
   else
   {
-    // TODO - can we use CSS here for size??
-    text.size  = self.m_prefCols;
+    var text = document.createElement("input");
+    text.type = "text";
+    text.size = self.m_prefCols;
+    text.style.outline = "none";
+    text.style.padding = "1px 2px 2px 2px";
+    text.style.margin  = "0px";
+    this.control = text;
   }
+
+  // wire up event handler to keep text prop synchronized
   text.onkeyup = function(event)
   {
     // IE-ness
@@ -84,6 +79,47 @@ fan.fwt.TextPeer.prototype.sync = function(self)
       for (var i=0; i<list.size(); i++) list.get(i).call(me);
     }
   }
-  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
+
+  // inner div
+  var inner = document.createElement("div");
+  inner.style.borderTop = "1px solid #ccc";
+  inner.appendChild(this.control);
+
+  // container element
+  var div = this.emptyDiv();
+  div.style.borderBottom = "1px solid #d0d0d0";
+  div.style.borderLeft   = "1px solid #9d9d9d";
+  div.style.borderRight  = "1px solid #afafaf";
+  div.style.borderTop    = "1px solid #707070";
+  div.appendChild(inner);
+  parentElem.appendChild(div);
+  return div;
+}
+
+fan.fwt.TextPeer.prototype.sync = function(self)
+{
+  var text = this.control;
+
+  // sync control
+  text.value = this.m_text;
+  text.readOnly = !self.m_editable;
+  text.disabled = !this.m_enabled;
+
+  var fade = !self.m_editable || !this.m_enabled;
+  text.style.background = fade ? "#e4e4e4" : "#fff";
+  text.style.border     = fade ? "1px solid #d7d7d7" : "1px solid #f5f5f5";
+  text.style.borderBottom = "none";
+
+  // if textarea, we need to sync size
+  if (self.m_multiLine)
+  {
+    text.style.width  = (this.m_size.m_w - 8) + "px";
+    text.style.height = (this.m_size.m_h - 9) + "px";
+  }
+
+  // sync widget size
+  var w = this.m_size.m_w - 2;
+  var h = this.m_size.m_h - 2;
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
 }
 
