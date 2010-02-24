@@ -113,6 +113,7 @@ public class FanObj
 
   public static Object toImmutable(Object self)
   {
+    if (self == null) return null;
     if (self instanceof FanObj)
       return ((FanObj)self).toImmutable();
     else if (FanUtil.isJavaImmutable(self.getClass()))
