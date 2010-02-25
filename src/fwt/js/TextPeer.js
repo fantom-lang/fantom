@@ -116,7 +116,7 @@ fan.fwt.TextPeer.prototype.sync = function(self)
   if (self.m_multiLine)
   {
     text.style.width  = (this.m_size.m_w - 8) + "px";
-    text.style.height = (this.m_size.m_h - 9) + "px";
+    text.style.height = (this.m_size.m_h - 8) + "px";
   }
   else
   {
