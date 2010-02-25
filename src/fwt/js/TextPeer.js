@@ -112,11 +112,16 @@ fan.fwt.TextPeer.prototype.sync = function(self)
   text.style.border     = fade ? "1px solid #d7d7d7" : "1px solid #f5f5f5";
   text.style.borderBottom = "none";
 
-  // if textarea, we need to sync size
+  // sync input control size
   if (self.m_multiLine)
   {
     text.style.width  = (this.m_size.m_w - 8) + "px";
     text.style.height = (this.m_size.m_h - 9) + "px";
+  }
+  else
+  {
+    text.style.width  = (this.m_size.m_w - 8) + "px";
+    text.style.height = (this.m_size.m_h - 7) + "px";
   }
 
   // sync widget size
