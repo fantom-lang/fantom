@@ -135,3 +135,7 @@ fan.sys.Weekday.m_vals = fan.sys.List.make(fan.sys.Weekday.$type,
   fan.sys.Weekday.m_sat
 ]);
 
+//
+// Version
+//
+fan.sys.Version.m_defVal = fan.sys.Version.fromStr("0");
