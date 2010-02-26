@@ -278,6 +278,8 @@ namespace Fan.Sys
     public Buf printLine() { m_out.printLine(); return this; }
     public Buf printLine(object obj) { m_out.printLine(obj); return this; }
 
+    public Buf writeProps(Map props) { m_out.writeProps(props); return this; }
+
     public Buf writeObj(object obj) { m_out.writeObj(obj); return this; }
     public Buf writeObj(object obj, Map opt) { m_out.writeObj(obj, opt); return this; }
 
@@ -347,6 +349,8 @@ namespace Fan.Sys
 
     public string readAllStr() { return m_in.readAllStr(); }
     public string readAllStr(bool normalizeNewlines)  { return m_in.readAllStr(normalizeNewlines); }
+
+    public Map readProps() { return m_in.readProps(); }
 
     public object readObj() { return m_in.readObj(); }
     public object readObj(Map opt) { return m_in.readObj(opt); }

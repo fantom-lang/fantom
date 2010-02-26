@@ -588,11 +588,16 @@ class BufTest : Test
     acc := Str[,]; buf.eachLine |Str s| { acc.add(s) }
     verifyEq(acc, ["one", "two"])
 
+    // props
+    buf.clear.writeProps(["a":"Apple", "b":"Bear"])
+    verifyEq(buf.flip.readProps, ["a":"Apple", "b":"Bear"])
+
     // obj
     buf.clear.writeObj(3)
     verifyEq(buf.flip.readObj, 3)
     buf.clear.writeObj(3, ["dummy":true])
     verifyEq(buf.flip.readObj(["dummy":true]), 3)
+
   }
 
 //////////////////////////////////////////////////////////////////////////

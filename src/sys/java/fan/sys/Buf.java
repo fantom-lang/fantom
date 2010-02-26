@@ -272,6 +272,8 @@ public abstract class Buf
   public final Buf printLine() { out.printLine(); return this; }
   public final Buf printLine(Object obj) { out.printLine(obj); return this; }
 
+  public final Buf writeProps(Map props) { out.writeProps(props); return this; }
+
   public final Buf writeObj(Object obj) { out.writeObj(obj); return this; }
   public final Buf writeObj(Object obj, Map opt) { out.writeObj(obj, opt); return this; }
 
@@ -341,6 +343,8 @@ public abstract class Buf
 
   public final String readAllStr() { return in.readAllStr(); }
   public final String readAllStr(boolean normalizeNewlines)  { return in.readAllStr(normalizeNewlines); }
+
+  public final Map readProps() { return in.readProps(); }
 
   public final Object readObj() { return in.readObj(); }
   public final Object readObj(Map opt) { return in.readObj(opt); }
