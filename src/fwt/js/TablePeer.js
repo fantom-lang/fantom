@@ -126,7 +126,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       with (fix.style)
       {
         position     = "relative";
-        font         = "bold 8pt Arial";
+        font         = "bold " + fan.fwt.WidgetPeer.fontSmall;
         padding      = "4px 6px";
         textAlign    = "left";
         whiteSpace   = "nowrap";
@@ -184,9 +184,10 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       var td = document.createElement("td");
       with (td.style)
       {
-        padding     = "4px 6px";
-        textAlign   = "left";
-        whiteSpace  = "nowrap";
+        padding    = "4px 6px";
+        font       = fan.fwt.WidgetPeer.fontNormal;
+        textAlign  = "left";
+        whiteSpace = "nowrap";
         if (c < cols-1) borderRight = "1px solid #d9d9d9";
         else width = "100%";
       }

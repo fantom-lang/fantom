@@ -169,8 +169,8 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
   // apply style
   with (this.elem.style)
   {
-    if (this.m_bg   != null) background = this.m_bg.toStr();
-    if (this.m_font != null) font = this.m_font.toStr();
+    font = this.m_font==null ? fan.fwt.WidgetPeer.fontNormal : this.m_font.toStr();
+    if (this.m_bg != null) background = this.m_bg.toStr();
     switch (this.m_halign)
     {
       case fan.gfx.Halign.m_left:   textAlign = "left"; break;
