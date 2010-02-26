@@ -18,8 +18,9 @@ fan.fwt.WidgetPeer.prototype.$ctor = function(self) {}
 
 // try to match font to platform
 var __osx = navigator.userAgent.indexOf("Mac OS X") != -1;
-fan.fwt.WidgetPeer.fontNormal = __osx ? "12px Lucida Grande" : "10pt Arial";
-fan.fwt.WidgetPeer.fontSmall  = __osx ? "10px Lucida Grande" : "8pt Arial";
+fan.fwt.WidgetPeer.fontNormal    = __osx ? "12px Lucida Grande" : "13px Arial";
+fan.fwt.WidgetPeer.fontSmall     = __osx ? "10px Lucida Grande" : "11px Arial";
+fan.fwt.WidgetPeer.fontMonospace = __osx ? "12px Monaco"        : "12px Monaco";
 
 //////////////////////////////////////////////////////////////////////////
 // Layout
