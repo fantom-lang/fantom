@@ -315,6 +315,12 @@ class Buf
   This printLine(Obj? obj := "")
 
   **
+  ** Convenience for [out.writeProps]`OutStream.writeProps`
+  ** Return this.
+  **
+  This writeProps(Str:Str props)
+
+  **
   ** Convenience for [out.writeObj]`OutStream.writeObj`
   ** Return this.
   **
@@ -478,6 +484,11 @@ class Buf
   ** Convenience for [in.readAllStr]`InStream.readAllStr`
   **
   Str readAllStr(Bool normalizeNewlines := true)
+
+  **
+  ** Convenience for [in.readProps]`InStream.readProps`
+  **
+  Str:Str readProps()
 
   **
   ** Convenience for [in.readObj]`InStream.readObj`
