@@ -137,6 +137,10 @@ fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
 
 fan.fwt.ButtonPeer.prototype.repaint = function(self)
 {
+  // sometimes repaint() is getting called on removed
+  // widgets, so now just trap and ignore for now
+  if (this.elem == null) return;
+
   if (self.m_mode == fan.fwt.ButtonMode.m_push ||
       self.m_mode == fan.fwt.ButtonMode.m_toggle)
   {
