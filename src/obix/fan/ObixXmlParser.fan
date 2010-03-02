@@ -144,7 +144,7 @@ internal class ObixXmlParser
         case "range":       obj.range = ObixUtil.parseUri(attr.val)
         case "precision":   obj.precision = attr.val.toInt
         case "status":      obj.status = Status(attr.val)
-        case "tz":          if (obj.tz == null) obj.tz = TimeZone(attr.val)
+        case "tz":          if (obj.tz == null) obj.tz = parseTimeZone(attr.val)
         case "unit":        if (attr.val.startsWith("obix:units/")) obj.unit = Unit.find(attr.val[11..-1], false)
         case "writable":    obj.writable = attr.val.toBool
       }
@@ -181,6 +181,19 @@ internal class ObixXmlParser
     catch (Err e)
       throw err("Cannot parse <$elem.name> min/max: $valStr.toCode", e)
   }
+
+  private TimeZone? parseTimeZone(Str str)
+  {
+    tzSwizzles[str] ?: TimeZone(str)
+  }
+
+  private static const Str:TimeZone tzSwizzles :=
+  [
+    "EST": TimeZone("New_York"),    "EDT": TimeZone("New_York"),
+    "CST": TimeZone("Chicago"),     "CDT": TimeZone("Chicago"),
+    "MST": TimeZone("Denver"),      "MDT": TimeZone("Denver"),
+    "PST": TimeZone("Los_Angeles"), "PDT": TimeZone("Los_Angeles"),
+  ]
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
