@@ -24,7 +24,7 @@ class ObixClient
   **
   new make(Uri lobby, Str username, Str password)
   {
-    this.lobbyUri = lobby
+    this.lobbyUri = lobby.plusSlash
     this.username = username
     this.authHeader = "Basic " + "$username:$password".toBuf.toBase64
   }
@@ -120,7 +120,7 @@ class ObixClient
   {
     c := makeReq(uri, "GET")
     c.writeReq.readRes
-    if (c.resCode != 200) throw IOErr("Bad HTTP response: $c.resCode")
+    if (c.resCode != 200) throw IOErr("Bad HTTP response: $c.resCode $c.reqUri")
     return ObixObj.readXml(c.resIn)
   }
 
