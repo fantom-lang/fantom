@@ -138,6 +138,23 @@ public class Locale
     return javaDecimal;
   }
 
+  /** Get a month by lowercase abbr or full name for this locale */
+  Month monthByName(String name)
+  {
+    if (monthsByName == null)
+    {
+      java.util.HashMap map = new java.util.HashMap(31);
+      for (int i=0; i<Month.array.length; ++i)
+      {
+        Month m = Month.array[i];
+        map.put(FanStr.lower(m.abbr(this)), m);
+        map.put(FanStr.lower(m.full(this)), m);
+      }
+      monthsByName = map;
+    }
+    return (Month)monthsByName.get(name);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Default Locale
 //////////////////////////////////////////////////////////////////////////
@@ -177,5 +194,6 @@ public class Locale
   java.util.Locale javaLocale;
   java.text.Collator javaCollator;
   java.text.DecimalFormatSymbols javaDecimal;
+  java.util.HashMap monthsByName;
 
 }

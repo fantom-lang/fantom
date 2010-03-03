@@ -893,7 +893,7 @@ class DateTimeTest : Test
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  Void testLocale()
+  Void testToLocale()
   {
     // basic fields
     x := DateTime.make(2008, Month.feb, 5, 3, 7, 20, 123_000_000, ny)
@@ -978,31 +978,129 @@ class DateTimeTest : Test
     verifyErr(ArgErr#) { x.toLocale("sss") }
   }
 
+  Void testFromLocale()
+  {
+    verifyFromLocale("02-Jan-99 12:30PM", "DD-MMM-YY kk:mma", ny,
+                     DateTime(1999, Month.jan, 2, 12, 30, 0, 0, ny))
+
+    verifyFromLocale("3-MARCH-04 12:05:33AM", "D-MMMM-YY kk:mm:ssa", la,
+                     DateTime(2004, Month.mar, 3, 0, 5, 33, 0, la))
+
+    verifyFromLocale("2010-04-04T23:45:17.089", "YYYY-MM-DD'T'kk:mm:ss.F", ny,
+                     DateTime(2010, Month.apr, 4, 23, 45, 17, 89_000_000, ny))
+
+    verifyFromLocale("2010-04-04 and 23:45:17.000123004", "YYYY-MM-DD 'and' kk:mm:ss.F", ny,
+                     DateTime(2010, Month.apr, 4, 23, 45, 17, 123_004, ny))
+
+    // matches passed tz
+
+    verifyFromLocale("2010-03-04 13:00 -08:00", "YYYY-MM-DD kk:mm z", la,
+                     DateTime(2010, Month.mar, 4, 13, 0, 0, 0, la))
+
+    verifyFromLocale("2010-06-04 13:00 -07:00", "YYYY-MM-DD kk:mm z", la,
+                     DateTime(2010, Month.jun, 4, 13, 0, 0, 0, la))
+
+    verifyFromLocale("2010-03-04 13:00 PST", "YYYY-MM-DD kk:mm zzz", la,
+                     DateTime(2010, Month.mar, 4, 13, 0, 0, 0, la))
+
+    verifyFromLocale("2010-03-04 13:00 Los_Angeles", "YYYY-MM-DD kk:mm zzzz", la,
+                     DateTime(2010, Month.mar, 4, 13, 0, 0, 0, la))
+
+    verifyFromLocale("2010-03-04 13:00 Z", "YYYY-MM-DD kk:mm z", utc,
+                     DateTime(2010, Month.mar, 4, 13, 0, 0, 0, utc))
+
+    verifyFromLocale("2010-03-04 13:00 -05:00", "YYYY-MM-DD kk:mm z", ny,
+                     DateTime(2010, Month.mar, 4, 13, 0, 0, 0, ny))
+
+    // does not match passed tz
+
+    verifyFromLocale("2010-03-04 13:00 Z", "YYYY-MM-DD kk:mm z", la,
+                     DateTime(2010, Month.mar, 4, 13, 0, 0, 0, utc))
+
+    verifyFromLocale("2010-03-04 13:00 -04:00", "YYYY-MM-DD kk:mm z", la,
+                     DateTime(2010, Month.mar, 4, 13, 0, 0, 0, TimeZone("GMT+4")))
+
+    verifyFromLocale("2010-03-04 13:00 +11:00", "YYYY-MM-DD kk:mm z", la,
+                     DateTime(2010, Month.mar, 4, 13, 0, 0, 0, TimeZone("GMT-11")))
+
+    verifyFromLocale("2010-03-04 13:00 New_York", "YYYY-MM-DD kk:mm zzzz", la,
+                     DateTime(2010, Month.mar, 4, 13, 0, 0, 0, ny))
+
+    verifyFromLocale("2010-03-04 13:00 -04:00", "YYYY-MM-DD kk:mm z", ny, // std is -5
+                     DateTime(2010, Month.mar, 4, 13, 0, 0, 0, TimeZone("GMT+4")))
+
+    verifyFromLocale("2010-06-04 13:00 -08:00", "YYYY-MM-DD kk:mm z", la, // dst is -7
+                     DateTime(2010, Month.jun, 4, 13, 0, 0, 0, TimeZone("GMT+8")))
+
+    // cur timezone
+    verifyEq(DateTime.fromLocale("10-08-23 4:55", "YY-MM-DD k:mm"), DateTime(2010, Month.aug, 23, 4, 55, 0))
+
+    // errors
+    verifyNull(DateTime.fromLocale("adsfy", "YY-MM-DD k:mm", ny, false))
+    verifyErr(ParseErr#) { DateTime.fromLocale("xx-03-02 23:00", "YY-MM-DD k:mm") }
+    verifyErr(ParseErr#) { DateTime.fromLocale("03-02 23:00", "YY-MM-DD k:mm", ny, true) }
+  }
+
+  Void verifyFromLocale(Str s, Str pattern, TimeZone tz, DateTime expected)
+  {
+    actual := DateTime.fromLocale(s, pattern, tz)
+    verifyEq(actual, expected)
+    verifyEq(actual.tz, expected.tz)
+  }
+
   Void testDateLocale()
   {
     d := Date(2009, Month.jan, 10)
-    verifyEq(d.toLocale("D/M/YYYY"), "10/1/2009")
-    verifyEq(d.toLocale("WWW D-MMM-YYYY"), "Sat 10-Jan-2009")
+    verifyDateLocale(d, "D/M/YYYY", "10/1/2009")
+    verifyDateLocale(d, "WWW D-MMM-YYYY", "Sat 10-Jan-2009")
+
+    verifyDateLocale(Date(1999, Month.mar, 2), "D-MMMM-YY", "2-March-99")
+    verifyDateLocale(Date(2001, Month.oct, 23), "D-MMMM-YY", "23-October-01")
 
     d = Date(1776, Month.jul, 4)
-    verifyEq(d.toLocale("MMMM D, YYYY"), "July 4, 1776")
-    verifyEq(d.toLocale("MMMM DDD, YYYY"), "July 4th, 1776")
+    verifyDateLocale(d, "MMMM D, YYYY", "July 4, 1776")
+    verifyDateLocale(d, "MMMM DDD, YYYY", "July 4th, 1776")
 
     verifyEq(Date("2010-01-01").toLocale("DDD"), "1st")
     verifyEq(Date("2010-01-02").toLocale("DDD"), "2nd")
     verifyEq(Date("2010-01-03").toLocale("DDD"), "3rd")
     verifyEq(Date("2010-01-04").toLocale("DDD"), "4th")
+
+    verifyNull(Date.fromLocale("2-nomonth-1999", "D-MMMM-YYYY", false))
+    verifyErr(ParseErr#) { Date.fromLocale("xyz", "YY-MM-DD") }
+    verifyErr(ParseErr#) { Date.fromLocale("99-xxx-02", "YY-MMM-DD", true) }
+  }
+
+  Void verifyDateLocale(Date d, Str pattern, Str expected)
+  {
+    verifyEq(d.toLocale(pattern), expected)
+    verifyEq(Date.fromLocale(expected, pattern), d)
   }
 
   Void testTimeLocale()
   {
     t := Time(13, 2, 4, 123_000_678)
-    verifyEq(t.toLocale("h:mma"),  "13:02PM")
-    verifyEq(t.toLocale("k:mma"),  "1:02PM")
-    verifyEq(t.toLocale("kk:mma"), "01:02PM")
-    verifyEq(t.toLocale("k:mm:ss.F a"), "1:02:04.1 PM")
-    verifyEq(t.toLocale("h:mm:ss.ffffff"), "13:02:04.123000")
-    verifyEq(t.toLocale("h:mm:ss.FFFFFFFFF"), "13:02:04.123000678")
+    verifyTimeLocale(t, "h:mma",  "13:02PM", Time(13, 2))
+    verifyTimeLocale(t, "k:mma",  "1:02PM",  Time(13, 2))
+    verifyTimeLocale(t, "kk:mma", "01:02PM", Time(13, 2))
+    verifyTimeLocale(t, "k:mm:ss.F a", "1:02:04.1 PM", Time(13, 2, 4, 100_000_000))
+    verifyTimeLocale(t, "h:mm:ss.ffffff", "13:02:04.123000", Time(13, 2, 4, 123_000_000))
+    verifyTimeLocale(t, "h:mm:ss.FFFFFFFFF", "13:02:04.123000678")
+
+    verifyTimeLocale(Time(0, 0), "k:mm:ss a", "12:00:00 AM")
+    verifyTimeLocale(Time(0, 0, 3), "k:mm:ss a", "12:00:03 AM")
+    verifyTimeLocale(Time(11, 59, 59), "k:mm:ss a", "11:59:59 AM")
+    verifyTimeLocale(Time(12, 0), "k:mm:ss a", "12:00:00 PM")
+
+    verifyNull(Time.fromLocale("xx:yy", "kk:mm", false))
+    verifyErr(ParseErr#) { Time.fromLocale("3x:33", "kk:mm") }
+    verifyErr(ParseErr#) { Time.fromLocale("10:7x", "kk:mm", true) }
+  }
+
+  Void verifyTimeLocale(Time t, Str pattern, Str expected, Time fromLocale := t)
+  {
+    verifyEq(t.toLocale(pattern), expected)
+    verifyEq(Time.fromLocale(expected, pattern), fromLocale)
   }
 
 //////////////////////////////////////////////////////////////////////////
