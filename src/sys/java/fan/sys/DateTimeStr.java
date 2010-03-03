@@ -377,22 +377,20 @@ class DateTimeStr
         case 'M':
           switch (n)
           {
-            /* TODO
-            case 4:
-              s.append(mon.full(locale()));
-              break;
-            case 3:
-              s.append(mon.abbr(locale()));
-              break;
-            */
-            default:
-              mon = Month.array[parseInt(n)-1];
-              break;
+            case 4:  mon = parseMon(); break;
+            case 3:  mon = parseMon(); break;
+            default: mon = Month.array[parseInt(n)-1]; break;
           }
           break;
 
         case 'D':
-          day = parseInt(n);
+          if (n != 3) day = parseInt(n);
+          else
+          {
+            // suffix like st, nd, th
+            day = parseInt(1);
+            skipWord();
+          }
           break;
 
         case 'h':
@@ -410,7 +408,18 @@ class DateTimeStr
 
         case 'a':
           int amPm = str.charAt(pos); pos += 2;
-          if (amPm == 'P' || amPm == 'p') hour += 12;
+          if (amPm == 'P' || amPm == 'p')
+          {
+            if (hour < 12) hour += 12;
+          }
+          else
+          {
+            if (hour == 12) hour = 0;
+          }
+          break;
+
+        case 'W':
+          skipWord();
           break;
 
         case 'f':
@@ -431,6 +440,16 @@ class DateTimeStr
           {
             case 1:  parseTzOffset(); break;
             default: parseTzName();
+          }
+          break;
+
+        case '\'':
+          while (true)
+          {
+            int expected = pattern.charAt(++i);
+            if (expected == '\'') break;
+            int actual = str.charAt(pos++);
+            if (actual != expected) throw new RuntimeException();
           }
           break;
 
@@ -475,6 +494,21 @@ class DateTimeStr
     return -1;
   }
 
+  private Month parseMon()
+  {
+    StringBuilder s = new StringBuilder();
+    while (pos < str.length())
+    {
+      int ch = str.charAt(pos);
+      if ('a' <= ch && ch <= 'z') { s.append((char)ch); pos++; continue; }
+      if ('A' <= ch && ch <= 'Z') { s.append((char)FanInt.lower(ch)); pos++; continue; }
+      break;
+    }
+    Month m = locale().monthByName(s.toString());
+    if (m == null) throw new RuntimeException();
+    return m;
+  }
+
   private void parseTzOffset()
   {
     int ch = str.charAt(pos++);
@@ -507,7 +541,7 @@ class DateTimeStr
       if (('a' <= ch && ch <= 'z') ||
           ('A' <= ch && ch <= 'Z') ||
           ('0' <= ch && ch <= '9') ||
-          ch == '+' || ch == '-')
+          ch == '+' || ch == '-' || ch == '_')
       {
         s.append((char)ch);
         pos++;
@@ -515,6 +549,18 @@ class DateTimeStr
       else break;
     }
     tzName = s.toString();
+  }
+
+  private void skipWord()
+  {
+    while (pos < str.length())
+    {
+      int ch = str.charAt(pos);
+      if (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z'))
+        pos++;
+      else
+        break;
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
