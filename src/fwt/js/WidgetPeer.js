@@ -56,6 +56,7 @@ fan.fwt.WidgetPeer.prototype.posOnDisplay = function(self)
   var p = self.parent();
   while (p != null)
   {
+    if (p instanceof fan.fwt.Tab) p = p.parent();
     x += p.peer.m_pos.m_x;
     y += p.peer.m_pos.m_y;
     if (p instanceof fan.fwt.Dialog)
