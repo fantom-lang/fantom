@@ -134,6 +134,13 @@ const final class Time
   **
   Str toLocale(Str? pattern := null)
 
+  **
+  ** Parse a string into a Time using the given pattern.  If
+  ** string is not a valid format then return null or raise ParseErr
+  ** based on checked flag.  See `toLocale` for pattern syntax.
+  **
+  static Time? fromLocale(Str str, Str pattern, Bool checked := true)
+
 //////////////////////////////////////////////////////////////////////////
 // ISO 8601
 //////////////////////////////////////////////////////////////////////////

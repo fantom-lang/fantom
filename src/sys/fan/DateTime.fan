@@ -275,6 +275,18 @@ const final class DateTime
   **
   Str toLocale(Str? pattern := null)
 
+  **
+  ** Parse a string into a DateTime using the given pattern.  If
+  ** string is not a valid format then return null or raise ParseErr
+  ** based on checked flag.  See `toLocale` for pattern syntax.
+  **
+  ** The timezone is inferred from the zone pattern, or else the
+  ** given 'tz' parameter is used for the timezone.  If only a zone
+  ** offset is available and it doesn't match the expected for the
+  ** 'tz' parameter, then use a "GMT+/-" timezone.
+  **
+  static DateTime? fromLocale(Str str, Str pattern, TimeZone tz := TimeZone.cur, Bool checked := true)
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////

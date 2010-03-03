@@ -132,6 +132,13 @@ const final class Date
   **
   Str toLocale(Str? pattern := null)
 
+  **
+  ** Parse a string into a Date using the given pattern.  If
+  ** string is not a valid format then return null or raise ParseErr
+  ** based on checked flag.  See `toLocale` for pattern syntax.
+  **
+  static Date? fromLocale(Str str, Str pattern, Bool checked := true)
+
 //////////////////////////////////////////////////////////////////////////
 // ISO 8601
 //////////////////////////////////////////////////////////////////////////

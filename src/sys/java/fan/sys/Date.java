@@ -157,104 +157,13 @@ public final class Date
       pattern = Env.cur().locale(Sys.sysPod, localeKey, "D-MMM-YYYY", locale);
     }
 
-    // process pattern
-    StringBuilder s = new StringBuilder();
-    int len = pattern.length();
-    for (int i=0; i<len; ++i)
-    {
-      // character
-      int c = pattern.charAt(i);
+    return new DateTimeStr(pattern, locale, this).format();
+  }
 
-      // literals
-      if (c == '\'')
-      {
-        while (true)
-        {
-          ++i;
-          if (i >= len) throw ArgErr.make("Invalid pattern: unterminated literal").val;
-          c = pattern.charAt(i);
-          if (c == '\'') break;
-          s.append((char)c);
-        }
-        continue;
-      }
-
-      // character count
-      int n = 1;
-      while (i+1<len && pattern.charAt(i+1) == c) { ++i; ++n; }
-
-      // switch
-      boolean invalidNum = false;
-      switch (c)
-      {
-        case 'Y':
-          int year = getYear();
-          switch (n)
-          {
-            case 2:  year %= 100; if (year < 10) s.append('0');
-            case 4:  s.append(year); break;
-            default: invalidNum = true;
-          }
-          break;
-
-        case 'M':
-          Month mon = month();
-          switch (n)
-          {
-            case 4:
-              if (locale == null) locale = Locale.cur();
-              s.append(mon.full(locale));
-              break;
-            case 3:
-              if (locale == null) locale = Locale.cur();
-              s.append(mon.abbr(locale));
-              break;
-            case 2:  if (mon.ord+1 < 10) s.append('0');
-            case 1:  s.append(mon.ord+1); break;
-            default: invalidNum = true;
-          }
-          break;
-
-        case 'D':
-          int day = getDay();
-          switch (n)
-          {
-            case 3:  s.append(day).append(DateTime.daySuffix(day)); break;
-            case 2:  if (day < 10) s.append('0');
-            case 1:  s.append(day); break;
-            default: invalidNum = true;
-          }
-          break;
-
-        case 'W':
-          Weekday weekday = weekday();
-          switch (n)
-          {
-            case 4:
-              if (locale == null) locale = Locale.cur();
-              s.append(weekday.full(locale));
-              break;
-            case 3:
-              if (locale == null) locale = Locale.cur();
-              s.append(weekday.abbr(locale));
-              break;
-            default: invalidNum = true;
-          }
-          break;
-
-        default:
-          if (FanInt.isAlpha(c))
-            throw ArgErr.make("Invalid pattern: unsupported char '" + (char)c + "'").val;
-
-          s.append((char)c);
-      }
-
-      // if invalid number of characters
-      if (invalidNum)
-        throw ArgErr.make("Invalid pattern: unsupported num '" + (char)c + "' (x" + n + ")").val;
-    }
-
-    return s.toString();
+  public static Date fromLocale(String s, String pattern) { return fromLocale(s, pattern, true); }
+  public static Date fromLocale(String s ,String pattern, boolean checked)
+  {
+    return new DateTimeStr(pattern, null).parseDate(s, checked);
   }
 
 //////////////////////////////////////////////////////////////////////////
