@@ -1,0 +1,550 @@
+//
+// Copyright (c) 2010, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   3 Mar 10  Brian Frank  Creation
+//
+package fan.sys;
+
+/**
+ * DateTimeStr is used to format/parse DateTime, Date, and Time
+ * using the standard pattern syntax.
+ */
+class DateTimeStr
+{
+
+//////////////////////////////////////////////////////////////////////////
+// Constructors
+//////////////////////////////////////////////////////////////////////////
+
+  DateTimeStr(String pattern, Locale locale, DateTime dt)
+  {
+    this.pattern = pattern;
+    this.locale  = locale;
+    this.year    = dt.getYear();
+    this.mon     = dt.month();
+    this.day     = dt.getDay();
+    this.hour    = dt.getHour();
+    this.min     = dt.getMin();
+    this.sec     = dt.getSec();
+    this.ns      = dt.getNanoSec();
+    this.weekday = dt.weekday();
+    this.tz      = dt.tz();
+    this.dst     = dt.dst();
+  }
+
+  DateTimeStr(String pattern, Locale locale, Date d)
+  {
+    this.pattern = pattern;
+    this.locale  = locale;
+    this.year    = d.getYear();
+    this.mon     = d.month();
+    this.day     = d.getDay();
+    try { this.weekday = d.weekday(); } catch (Exception e) {}
+  }
+
+  DateTimeStr(String pattern, Locale locale, Time t)
+  {
+    this.pattern = pattern;
+    this.locale  = locale;
+    this.hour    = t.getHour();
+    this.min     = t.getMin();
+    this.sec     = t.getSec();
+    this.ns      = t.getNanoSec();
+  }
+
+  DateTimeStr(String pattern, Locale locale)
+  {
+    this.pattern = pattern;
+    this.locale  = locale;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Formatting
+//////////////////////////////////////////////////////////////////////////
+
+  public String format()
+  {
+    StringBuilder s = new StringBuilder();
+    int len = pattern.length();
+    for (int i=0; i<len; ++i)
+    {
+      // character
+      int c = pattern.charAt(i);
+
+      // literals
+      if (c == '\'')
+      {
+        while (true)
+        {
+          ++i;
+          if (i >= len) throw ArgErr.make("Invalid pattern: unterminated literal").val;
+          c = pattern.charAt(i);
+          if (c == '\'') break;
+          s.append((char)c);
+        }
+        continue;
+      }
+
+      // character count
+      int n = 1;
+      while (i+1<len && pattern.charAt(i+1) == c) { ++i; ++n; }
+
+      // switch
+      boolean invalidNum = false;
+      switch (c)
+      {
+        case 'Y':
+          int y = this.year;
+          switch (n)
+          {
+            case 2:  y %= 100; if (y < 10) s.append('0');
+            case 4:  s.append(y); break;
+            default: invalidNum = true;
+          }
+          break;
+
+        case 'M':
+          switch (n)
+          {
+            case 4:
+              s.append(mon.full(locale()));
+              break;
+            case 3:
+              s.append(mon.abbr(locale()));
+              break;
+            case 2:  if (mon.ordinal()+1 < 10L) s.append('0');
+            case 1:  s.append(mon.ordinal()+1); break;
+            default: invalidNum = true;
+          }
+          break;
+
+        case 'D':
+          switch (n)
+          {
+            case 3:  s.append(day).append(daySuffix(day)); break;
+            case 2:  if (day < 10) s.append('0');
+            case 1:  s.append(day); break;
+            default: invalidNum = true;
+          }
+          break;
+
+        case 'W':
+          switch (n)
+          {
+            case 4:
+              if (locale == null) locale = Locale.cur();
+              s.append(weekday.full(locale));
+              break;
+            case 3:
+              if (locale == null) locale = Locale.cur();
+              s.append(weekday.abbr(locale));
+              break;
+            default: invalidNum = true;
+          }
+          break;
+
+        case 'h':
+        case 'k':
+          int h = this.hour;
+          if (c == 'k')
+          {
+            if (h == 0) h = 12;
+            else if (h > 12) h -= 12;
+          }
+          switch (n)
+          {
+            case 2:  if (h < 10) s.append('0');
+            case 1:  s.append(h); break;
+            default: invalidNum = true;
+          }
+          break;
+
+        case 'm':
+          switch (n)
+          {
+            case 2:  if (min < 10) s.append('0');
+            case 1:  s.append(min); break;
+            default: invalidNum = true;
+          }
+          break;
+
+        case 's':
+          switch (n)
+          {
+            case 2:  if (sec < 10) s.append('0');
+            case 1:  s.append(sec); break;
+            default: invalidNum = true;
+          }
+          break;
+
+        case 'a':
+          switch (n)
+          {
+            case 1:  s.append(hour < 12 ? "AM" : "PM"); break;
+            default: invalidNum = true;
+          }
+          break;
+
+        case 'f':
+        case 'F':
+          int req = 0, opt = 0; // required, optional
+          if (c == 'F') opt = n;
+          else
+          {
+            req = n;
+            while (i+1<len && pattern.charAt(i+1) == 'F') { ++i; ++opt; }
+          }
+          int frac = ns;
+          for (int x=0, tenth=100000000; x<9; ++x)
+          {
+            if (req > 0) req--;
+            else
+            {
+              if (frac == 0 || opt <= 0) break;
+              opt--;
+            }
+            s.append(frac/tenth);
+            frac %= tenth;
+            tenth /= 10;
+          }
+          break;
+
+        case 'z':
+          TimeZone.Rule rule = tz.rule(year);
+          switch (n)
+          {
+            case 1:
+              int offset = rule.offset;
+              if (dst) offset += rule.dstOffset;
+              if (offset == 0) { s.append('Z'); break; }
+              if (offset < 0) { s.append('-'); offset = -offset; }
+              else { s.append('+'); }
+              int zh = offset / 3600;
+              int zm = (offset % 3600) / 60;
+              if (zh < 10) s.append('0'); s.append(zh).append(':');
+              if (zm < 10) s.append('0'); s.append(zm);
+              break;
+            case 3:
+              s.append(dst ? rule.dstAbbr : rule.stdAbbr);
+              break;
+            case 4:
+              s.append(tz.name());
+              break;
+            default:
+              invalidNum = true;
+              break;
+          }
+          break;
+
+        default:
+          if (FanInt.isAlpha(c))
+            throw ArgErr.make("Invalid pattern: unsupported char '" + (char)c + "'").val;
+
+          // don't display symbol between ss.FFF if fractions is zero
+          if (i+1<len && pattern.charAt(i+1) == 'F' && ns == 0)
+            break;
+
+          s.append((char)c);
+      }
+
+      // if invalid number of characters
+      if (invalidNum)
+        throw ArgErr.make("Invalid pattern: unsupported num of '" + (char)c + "' (x" + n + ")").val;
+    }
+
+    return s.toString();
+  }
+
+  private static String daySuffix(int day)
+  {
+    // eventually need localization
+    switch (day)
+    {
+      case 1: return "st";
+      case 2: return "nd";
+      case 3: return "rd";
+      default: return "th";
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Parse
+//////////////////////////////////////////////////////////////////////////
+
+  DateTime parseDateTime(String s, TimeZone defTz, boolean checked)
+  {
+    try
+    {
+      // parse into fields
+      tzOffset = Integer.MAX_VALUE;
+      parse(s);
+
+      // now figure out what timezone to use
+      TimeZone.Rule defRule = defTz.rule(year);
+      if (tzName != null)
+      {
+        // use defTz if tzName was specified and matches any variations of defTz
+        if (tzName.equals(defTz.name()) ||
+            tzName.equals(defRule.stdAbbr) ||
+            tzName.equals(defRule.dstAbbr))
+        {
+          tz = defTz;
+        }
+
+        // try to map tzName to TimeZone, use defTz as fallback
+        else
+        {
+          tz = TimeZone.fromStr(tzName, false);
+          if (tz == null) tz = defTz;
+        }
+      }
+
+      // if tzOffset was specified...
+      else if (tzOffset != Integer.MAX_VALUE)
+      {
+        // figure out what expected offset was for defTz
+        int time = hour*3600 + min*60 + sec;
+        int defOffset = defRule.offset + TimeZone.dstOffset(defRule, year, (int)mon.ordinal(), day, time);
+
+        // if specified offset matches expected offset for defTz then
+        // use defTz, otherwise use a vanilla GMT+/- timezone
+        if (tzOffset == defOffset)
+          tz = defTz;
+        else
+          tz = TimeZone.fromGmtOffset(tzOffset);
+      }
+
+      // no tzName or tzOffset specified, use defTz
+      else tz = defTz;
+
+      // construct DateTime
+      return new DateTime(year, (int)mon.ordinal(), day, hour, min, sec, ns, tzOffset, tz);
+    }
+    catch (Exception e) {}
+    if (checked) throw ParseErr.make("DateTime", s).val;
+    return null;
+  }
+
+  Date parseDate(String s, boolean checked)
+  {
+    try
+    {
+      parse(s);
+      return new Date(year, (int)mon.ordinal(), day);
+    }
+    catch (Exception e) {}
+    if (checked) throw ParseErr.make("Date", s).val;
+    return null;
+  }
+
+  Time parseTime(String s, boolean checked)
+  {
+    try
+    {
+      parse(s);
+      return new Time(hour, min, sec, ns);
+    }
+    catch (Exception e) {}
+    if (checked) throw ParseErr.make("Time", s).val;
+    return null;
+  }
+
+  private void parse(String s)
+  {
+    this.str = s;
+    this.pos = 0;
+    int len = pattern.length();
+    for (int i=0; i<len; ++i)
+    {
+      // character
+      int c = pattern.charAt(i);
+
+      // character count
+      int n = 1;
+      while (i+1<len && pattern.charAt(i+1) == c) { ++i; ++n; }
+
+      // switch
+      switch (c)
+      {
+        case 'Y':
+          year = parseInt(n);
+          if (year < 30) year += 2000;
+          else if (year < 100) year += 1900;
+          break;
+
+        case 'M':
+          switch (n)
+          {
+            /* TODO
+            case 4:
+              s.append(mon.full(locale()));
+              break;
+            case 3:
+              s.append(mon.abbr(locale()));
+              break;
+            */
+            default:
+              mon = Month.array[parseInt(n)-1];
+              break;
+          }
+          break;
+
+        case 'D':
+          day = parseInt(n);
+          break;
+
+        case 'h':
+        case 'k':
+          hour = parseInt(n);
+          break;
+
+        case 'm':
+          min = parseInt(n);
+          break;
+
+        case 's':
+          sec = parseInt(n);
+          break;
+
+        case 'a':
+          int amPm = str.charAt(pos); pos += 2;
+          if (amPm == 'P' || amPm == 'p') hour += 12;
+          break;
+
+        case 'f':
+        case 'F':
+          ns = 0;
+          int tenth = 100000000;
+          while (true)
+          {
+            int digit = parseOptDigit();
+            if (digit < 0) break;
+            ns += tenth * digit;
+            tenth /= 10;
+          }
+          break;
+
+        case 'z':
+          switch (n)
+          {
+            case 1:  parseTzOffset(); break;
+            default: parseTzName();
+          }
+          break;
+
+        default:
+          int match = str.charAt(pos++);
+          if (match != c) throw new RuntimeException();
+      }
+
+    }
+  }
+
+  private int parseInt(int n)
+  {
+    // parse n digits
+    int num = 0;
+    for (int i=0; i<n; ++i) num = num*10 + parseReqDigit();
+
+    // one char like 'k' really implies one or two digits
+    if (n == 1)
+    {
+      int digit = parseOptDigit();
+      if (digit >= 0) num = num*10 + digit;
+    }
+
+    return num;
+  }
+
+  private int parseReqDigit()
+  {
+    int ch = str.charAt(pos++);
+    if ('0' <= ch && ch <= '9') return ch - '0';
+    throw new RuntimeException();
+  }
+
+  private int parseOptDigit()
+  {
+    if (pos < str.length())
+    {
+      int ch = str.charAt(pos);
+      if ('0' <= ch && ch <= '9') { pos++; return ch - '0'; }
+    }
+    return -1;
+  }
+
+  private void parseTzOffset()
+  {
+    int ch = str.charAt(pos++);
+    boolean neg;
+    switch (ch)
+    {
+      case '-': neg = true; break;
+      case '+': neg = false; break;
+      case 'Z': tzOffset = 0; return;
+      default: throw new RuntimeException();
+    }
+
+    int hr = parseInt(1);
+    int min = 0;
+    if (pos < str.length() && str.charAt(pos) == ':')
+    {
+      pos++;
+      min = parseInt(1);
+    }
+    tzOffset = hr*3600 + min*60;
+    if (neg) tzOffset = -tzOffset;
+  }
+
+  private void parseTzName()
+  {
+    StringBuilder s = new StringBuilder();
+    while (pos < str.length())
+    {
+      int ch = str.charAt(pos);
+      if (('a' <= ch && ch <= 'z') ||
+          ('A' <= ch && ch <= 'Z') ||
+          ('0' <= ch && ch <= '9') ||
+          ch == '+' || ch == '-')
+      {
+        s.append((char)ch);
+        pos++;
+      }
+      else break;
+    }
+    tzName = s.toString();
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  private Locale locale()
+  {
+    if (locale == null) locale = Locale.cur();
+    return locale;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  final String pattern;
+  int year;
+  Month mon;
+  int day;
+  int hour;
+  int min;
+  int sec;
+  int ns;
+  Weekday weekday;
+  TimeZone tz;
+  String tzName;
+  int tzOffset;
+  boolean dst;
+  Locale locale;
+  String str;  // when parsing
+  int pos;     // index in str for parse
+}

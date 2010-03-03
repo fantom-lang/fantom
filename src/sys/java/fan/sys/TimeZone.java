@@ -100,6 +100,15 @@ public final class TimeZone
     return cur;
   }
 
+  /** Get generic GMT offset where offset is in seconds */
+  static TimeZone fromGmtOffset(int offset)
+  {
+    if (offset == 0)
+      return TimeZone.utc();
+    else
+      return TimeZone.fromStr("GMT" + (offset < 0 ? "+" : "-") + Math.abs(offset)/3600);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Obj
 //////////////////////////////////////////////////////////////////////////
