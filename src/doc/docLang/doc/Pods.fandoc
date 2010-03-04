@@ -52,6 +52,6 @@ standardized keys:
   - 'build.time': compile time formatted as [DateTime]`sys::DateTime.toStr`
   - 'build.platform':  compile env platform formatted as [Env.platform]`sys::Env.platform`
   - 'build.host': compile env host name, see [Env.host]`sys::Env.host`
-  - 'build.user': compile env user name, see [Env.host]`sys::Env.user`
+  - 'build.user': compile env user name, see [Env.user]`sys::Env.user`
   - 'build.compiler': compiler pod version
 

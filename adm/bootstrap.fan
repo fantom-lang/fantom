@@ -19,18 +19,20 @@ class Bootstrap : AbstractMain
 // Env
 //////////////////////////////////////////////////////////////////////////
 
+  @Opt { help = "Mercurial repository to clone" }
   Str hgRepo := "http://hg.fantom.org/repos/fan-1.0"
-  Str? hgVer
-  Str? jdkVer
-  File? jdkHome
-  Str relVer
-  File relHome
 
   @Opt { help = "Skip hg pull step" }
   Bool skipPull := false
 
   @Opt { help = "Dir to clone repo and build" }
   File devHome
+
+  Str? hgVer
+  Str? jdkVer
+  File? jdkHome
+  Str relVer
+  File relHome
 
 //////////////////////////////////////////////////////////////////////////
 // Construction

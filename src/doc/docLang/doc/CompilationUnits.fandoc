@@ -85,7 +85,7 @@ bone-headed things like importing 'sys::Str' as 'S' (we've tried to keep
 key type names short to being with).
 
 The 'sys' pod is automatically imported into every compilation unit - in
-fact it is a compiler error is you try to import manually.
+fact it is a compiler error if you try to import 'sys' explicitly.
 
 Comments [#comments]
 ********************
