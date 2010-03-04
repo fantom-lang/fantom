@@ -15,6 +15,7 @@ using gfx
 ** bigger than the preferred area, the content child will fill the
 ** available space.
 **
+@Js
 @Serializable
 class ScrollPane : ContentPane
 {
