@@ -155,7 +155,7 @@ fan.dom.ElemPeer.prototype.children = function(self)
   for (var i=0; i<kids.length; i++)
     if (kids[i].nodeType == 1)
       list.push(fan.dom.ElemPeer.make(kids[i]));
-  return list;
+  return fan.sys.List.make(fan.dom.Elem.$type, list);
 }
 
 fan.dom.ElemPeer.prototype.first = function(self)

@@ -20,7 +20,7 @@ class DomTest : Weblet
     out.head
       .title.w("Dom Test").titleEnd
       .includeJs(`/pod/sys/sys.js`)
-      .includeJs(`/pod/dom/dom.js`)
+      .includeJs(`/pod/gfx/gfx.js`)
       .includeJs(`/pod/dom/dom.js`)
       .style.w(
        ".hidden { display: none; }")
