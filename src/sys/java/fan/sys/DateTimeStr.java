@@ -320,9 +320,11 @@ class DateTimeStr
       // construct DateTime
       return new DateTime(year, (int)mon.ordinal(), day, hour, min, sec, ns, tzOffset, tz);
     }
-    catch (Exception e) {}
-    if (checked) throw ParseErr.make("DateTime", s).val;
-    return null;
+    catch (Exception e)
+    {
+      if (checked) throw ParseErr.make("DateTime: s", Err.make(e)).val;
+      return null;
+    }
   }
 
   Date parseDate(String s, boolean checked)
@@ -332,9 +334,11 @@ class DateTimeStr
       parse(s);
       return new Date(year, (int)mon.ordinal(), day);
     }
-    catch (Exception e) {}
-    if (checked) throw ParseErr.make("Date", s).val;
-    return null;
+    catch (Exception e)
+    {
+      if (checked) throw ParseErr.make("Date: s", Err.make(e)).val;
+      return null;
+    }
   }
 
   Time parseTime(String s, boolean checked)
@@ -344,9 +348,11 @@ class DateTimeStr
       parse(s);
       return new Time(hour, min, sec, ns);
     }
-    catch (Exception e) {}
-    if (checked) throw ParseErr.make("Time", s).val;
-    return null;
+    catch (Exception e)
+    {
+      if (checked) throw ParseErr.make("Time: s", Err.make(e)).val;
+      return null;
+    }
   }
 
   private void parse(String s)
@@ -447,13 +453,15 @@ class DateTimeStr
             int expected = pattern.charAt(++i);
             if (expected == '\'') break;
             int actual = str.charAt(pos++);
-            if (actual != expected) throw new RuntimeException();
+            if (actual != expected)
+              throw new RuntimeException("Expected '" + (char)expected + "', not '" + (char)actual + "' [pos " + pos +"]");
           }
           break;
 
         default:
           int match = str.charAt(pos++);
-          if (match != c) throw new RuntimeException();
+          if (match != c)
+            throw new RuntimeException("Expected '" + (char)c + "' literal char, not '" + (char)match + "' [pos " + pos +"]");
       }
 
     }
@@ -479,7 +487,7 @@ class DateTimeStr
   {
     int ch = str.charAt(pos++);
     if ('0' <= ch && ch <= '9') return ch - '0';
-    throw new RuntimeException();
+    throw new RuntimeException("Expected digit, not '" + (char)ch + "' [pos " + (pos-1) + "]");
   }
 
   private int parseOptDigit()
@@ -503,7 +511,7 @@ class DateTimeStr
       break;
     }
     Month m = locale().monthByName(s.toString());
-    if (m == null) throw new RuntimeException();
+    if (m == null) throw new RuntimeException("Invalid month: " + s);
     return m;
   }
 
@@ -516,7 +524,7 @@ class DateTimeStr
       case '-': neg = true; break;
       case '+': neg = false; break;
       case 'Z': tzOffset = 0; return;
-      default: throw new RuntimeException();
+      default: throw new RuntimeException("Unexpected tz offset char: " + (char)ch + " [pos " + (pos-1) + "]");
     }
 
     int hr = parseInt(1);
