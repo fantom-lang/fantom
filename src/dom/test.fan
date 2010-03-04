@@ -63,7 +63,7 @@ const class DomTestMod : WebMod
   {
     // serve up pod resources
     if (req.method != "GET") { res.sendErr(501); return }
-    File file := ("fan://" + req.uri).toUri.get
+    File file := ("fan://" + req.uri.toStr["/pod/".size..-1]).toUri.get
     if (!file.exists) { res.sendErr(404); return }
     FileWeblet(file).onService
   }
