@@ -95,6 +95,15 @@ namespace Fan.Sys
       return m_cur;
     }
 
+    /** Get generic GMT offset where offset is in seconds */
+    public static TimeZone fromGmtOffset(int offset)
+    {
+      if (offset == 0)
+        return TimeZone.utc();
+      else
+        return TimeZone.fromStr("GMT" + (offset < 0 ? ("+" + (-offset/3600)) : ("-" + (offset/3600))));
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Obj
   //////////////////////////////////////////////////////////////////////////

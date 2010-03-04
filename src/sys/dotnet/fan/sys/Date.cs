@@ -156,105 +156,13 @@ namespace Fan.Sys
         pattern = Env.cur().locale(Sys.m_sysPod, m_localeKey, "D-MMM-YYYY", locale);
       }
 
-      // process pattern
-      StringBuilder s = new StringBuilder();
-      int len = pattern.Length;
-      for (int i=0; i<len; ++i)
-      {
-        // character
-        int c = pattern[i];
+      return new DateTimeStr(pattern, locale, this).format();
+    }
 
-        // literals
-        if (c == '\'')
-        {
-          while (true)
-          {
-            ++i;
-            if (i >= len) throw ArgErr.make("Invalid pattern: unterminated literal").val;
-            c = pattern[i];
-            if (c == '\'') break;
-            s.Append((char)c);
-          }
-          continue;
-        }
-
-        // character count
-        int n = 1;
-        while (i+1<len && pattern[i+1] == c) { ++i; ++n; }
-
-        // switch
-        bool invalidNum = false;
-        switch (c)
-        {
-          case 'Y':
-            int year = getYear();
-            switch (n)
-            {
-              case 2:  year %= 100; if (year < 10) s.Append('0'); s.Append(year); break;
-              case 4:  s.Append(year); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'M':
-            Month mon = month();
-            switch (n)
-            {
-              case 4:
-                if (locale == null) locale = Locale.cur();
-                s.Append(mon.full(locale));
-                break;
-              case 3:
-                if (locale == null) locale = Locale.cur();
-                s.Append(mon.abbr(locale));
-                break;
-              case 2:  if (mon.ord+1 < 10) s.Append('0'); s.Append(mon.ord+1); break;
-              case 1:  s.Append(mon.ord+1); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'D':
-            int day = getDay();
-            switch (n)
-            {
-              case 3:  s.Append(day); s.Append(DateTime.daySuffix(day)); break;
-              case 2:  if (day < 10) s.Append('0'); s.Append(day); break;
-              case 1:  s.Append(day); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'W':
-            Weekday week = weekday();
-            switch (n)
-            {
-              case 4:
-                if (locale == null) locale = Locale.cur();
-                s.Append(week.full(locale));
-                break;
-              case 3:
-                if (locale == null) locale = Locale.cur();
-                s.Append(week.abbr(locale));
-                break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          default:
-            if (FanInt.isAlpha(c))
-              throw ArgErr.make("Invalid pattern: unsupported char '" + (char)c + "'").val;
-
-            s.Append((char)c);
-            break;
-        }
-
-        // if invalid number of characters
-        if (invalidNum)
-          throw ArgErr.make("Invalid pattern: unsupported num '" + (char)c + "' (x" + n + ")").val;
-      }
-
-      return s.ToString();
+    public static Date fromLocale(string s, string pattern) { return fromLocale(s, pattern, true); }
+    public static Date fromLocale(string s, string pattern, bool check)
+    {
+      return new DateTimeStr(pattern, null).parseDate(s, check);
     }
 
   //////////////////////////////////////////////////////////////////////////

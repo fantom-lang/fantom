@@ -8,6 +8,7 @@
 
 using System;
 using System.Globalization;
+using System.Collections;
 
 namespace Fan.Sys
 {
@@ -134,6 +135,23 @@ namespace Fan.Sys
       return m_dec;
     }
 
+    /** Get a month by lowercase abbr or full name for this locale */
+    internal Month monthByName(string name)
+    {
+      if (m_monthsByName == null)
+      {
+        Hashtable map = new Hashtable();
+        for (int i=0; i<Month.array.Length; ++i)
+        {
+          Month m = Month.array[i];
+          map[FanStr.lower(m.abbr(this))] = m;
+          map[FanStr.lower(m.full(this))] = m;
+        }
+        m_monthsByName = map;
+      }
+      return (Month)m_monthsByName[name];
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Default Locale
   //////////////////////////////////////////////////////////////////////////
@@ -171,6 +189,7 @@ namespace Fan.Sys
     public readonly Uri m_langProps;   // `locale/{lang}.props`
     CultureInfo dotnetCulture;
     NumberFormatInfo m_dec;
+    Hashtable m_monthsByName;
 
   }
 }

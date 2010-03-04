@@ -91,9 +91,9 @@ namespace Fan.Sys
       return new DateTime((int)year, month.ord, (int)day, (int)hour, (int)min, (int)sec, ns, System.Int32.MaxValue, tz);
     }
 
-    private DateTime(int year, int month, int day,
-                     int hour, int min, int sec,
-                     long ns,  int knownOffset, TimeZone tz)
+    internal DateTime(int year, int month, int day,
+                      int hour, int min, int sec,
+                      long ns,  int knownOffset, TimeZone tz)
     {
       if (year < 1901 || year > 2099) throw ArgErr.make("year " + year).val;
       if (month < 0 || month > 11)    throw ArgErr.make("month " + month).val;
@@ -323,11 +323,7 @@ namespace Fan.Sys
         if (iso)
         {
           if (i < s.Length) throw new System.Exception();
-          if (offset == 0)
-            tz = TimeZone.utc();
-          else
-            tz = TimeZone.fromStr("GMT" +
-              (offset < 0 ? ("+" + (-offset/3600)) : ("-" + (offset/3600))));
+          tz = TimeZone.fromGmtOffset(offset);
         }
         else
         {
@@ -449,218 +445,14 @@ namespace Fan.Sys
         pattern = Env.cur().locale(Sys.m_sysPod, m_localeKey, "D-MMM-YYYY WWW hh:mm:ss zzz", locale);
       }
 
-      // process pattern
-      StringBuilder s = new StringBuilder();
-      int len = pattern.Length;
-      for (int i=0; i<len; ++i)
-      {
-        // character
-        int c = pattern[i];
-
-        // literals
-        if (c == '\'')
-        {
-          while (true)
-          {
-            ++i;
-            if (i >= len) throw ArgErr.make("Invalid pattern: unterminated literal").val;
-            c = pattern[i];
-            if (c == '\'') break;
-            s.Append((char)c);
-          }
-          continue;
-        }
-
-        // character count
-        int n = 1;
-        while (i+1<len && pattern[i+1] == c) { ++i; ++n; }
-
-        // switch
-        bool invalidNum = false;
-        switch (c)
-        {
-          case 'Y':
-            int year = getYear();
-            switch (n)
-            {
-              case 2:  year %= 100; if (year < 10) s.Append('0'); s.Append(year); break;
-              case 4:  s.Append(year); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'M':
-            Month mon = month();
-            switch (n)
-            {
-              case 4:
-                if (locale == null) locale = Locale.cur();
-                s.Append(mon.full(locale));
-                break;
-              case 3:
-                if (locale == null) locale = Locale.cur();
-                s.Append(mon.abbr(locale));
-                break;
-              case 2:  if (mon.ord+1 < 10) s.Append('0'); s.Append(mon.ord+1); break;
-              case 1:  s.Append(mon.ord+1); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'D':
-            int day = getDay();
-            switch (n)
-            {
-              case 3:  s.Append(day); s.Append(daySuffix(day)); break;
-              case 2:  if (day < 10) s.Append('0'); s.Append(day); break;
-              case 1:  s.Append(day); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'W':
-            Weekday wd = weekday();
-            switch (n)
-            {
-              case 4:
-                if (locale == null) locale = Locale.cur();
-                s.Append(wd.full(locale));
-                break;
-              case 3:
-                if (locale == null) locale = Locale.cur();
-                s.Append(wd.abbr(locale));
-                break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'h':
-          case 'k':
-            int hour = getHour();
-            if (c == 'k')
-            {
-              if (hour == 0) hour = 12;
-              else if (hour > 12) hour -= 12;
-            }
-            switch (n)
-            {
-              case 2:  if (hour < 10) s.Append('0'); s.Append(hour); break;
-              case 1:  s.Append(hour); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'm':
-            int min = getMin();
-            switch (n)
-            {
-              case 2:  if (min < 10) s.Append('0'); s.Append(min); break;
-              case 1:  s.Append(min); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 's':
-            int sec = getSec();
-            switch (n)
-            {
-              case 2:  if (sec < 10) s.Append('0'); s.Append(sec); break;
-              case 1:  s.Append(sec); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'a':
-            switch (n)
-            {
-              case 1:  s.Append(getHour() < 12 ? "AM" : "PM"); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'f':
-          case 'F':
-            int req = 0, opt = 0; // required, optional
-            if (c == 'F') opt = n;
-            else
-            {
-              req = n;
-              while (i+1<len && pattern[i+1] == 'F') { ++i; ++opt; }
-            }
-            int frac = getNanoSec();
-            for (int x=0, tenth=100000000; x<9; ++x)
-            {
-              if (req > 0) req--;
-              else
-              {
-                if (frac == 0 || opt <= 0) break;
-                opt--;
-              }
-              s.Append(frac/tenth);
-              frac %= tenth;
-              tenth /= 10;
-            }
-            break;
-
-          case 'z':
-            TimeZone.Rule rule = m_tz.rule(getYear());
-            bool dst = getDST();
-            switch (n)
-            {
-              case 1:
-                int offset = rule.offset;
-                if (dst) offset += rule.dstOffset;
-                if (offset == 0) { s.Append('Z'); break; }
-                if (offset < 0) { s.Append('-'); offset = -offset; }
-                else { s.Append('+'); }
-                int zh = offset / 3600;
-                int zm = (offset % 3600) / 60;
-                if (zh < 10) s.Append('0'); s.Append(zh).Append(':');
-                if (zm < 10) s.Append('0'); s.Append(zm);
-                break;
-              case 3:
-                s.Append(dst ? rule.dstAbbr : rule.stdAbbr);
-                break;
-              case 4:
-                s.Append(m_tz.name());
-                break;
-              default:
-                invalidNum = true;
-                break;
-            }
-            break;
-
-          default:
-            if (FanInt.isAlpha(c))
-              throw ArgErr.make("Invalid pattern: unsupported char '" + (char)c + "'").val;
-
-            // don't display symbol between ss.FFF if fractions is zero
-            if (i+1<len && pattern[i+1] == 'F' && getNanoSec() == 0)
-              break;
-
-            s.Append((char)c);
-            break;
-        }
-
-        // if invalid number of characters
-        if (invalidNum)
-          throw ArgErr.make("Invalid pattern: unsupported num '" + (char)c + "' (x" + n + ")").val;
-
-      }
-
-      return s.ToString();
+      return new DateTimeStr(pattern, locale, this).format();
     }
 
-    internal static string daySuffix(int day)
+    public static DateTime fromLocale(string s, string pattern) { return fromLocale(s, pattern, TimeZone.cur(), true); }
+    public static DateTime fromLocale(string s, string pattern, TimeZone tz) { return fromLocale(s, pattern, tz, true); }
+    public static DateTime fromLocale(string s, string pattern, TimeZone tz, bool check)
     {
-      // eventually need localization
-      switch (day)
-      {
-        case 1: return "st";
-        case 2: return "nd";
-        case 3: return "rd";
-        default: return "th";
-      }
+      return new DateTimeStr(pattern, null).parseDateTime(s, tz, check);
     }
 
   //////////////////////////////////////////////////////////////////////////
