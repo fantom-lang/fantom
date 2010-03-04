@@ -54,4 +54,9 @@ class Event
   **
   native Bool shift()
 
+  **
+  ** Meta-data for this event instance.
+  **
+  Str:Obj? meta := Str:Obj?[:]
+
 }
