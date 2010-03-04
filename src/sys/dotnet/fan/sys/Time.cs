@@ -181,122 +181,13 @@ namespace Fan.Sys
         pattern = Env.cur().locale(Sys.m_sysPod, m_localeKey, "hh:mm:ss", locale);
       }
 
-      // process pattern
-      StringBuilder s = new StringBuilder();
-      int len = pattern.Length;
-      for (int i=0; i<len; ++i)
-      {
-        // character
-        int c = pattern[i];
+      return new DateTimeStr(pattern, locale, this).format();
+    }
 
-        // literals
-        if (c == '\'')
-        {
-          while (true)
-          {
-            ++i;
-            if (i >= len) throw ArgErr.make("Invalid pattern: unterminated literal").val;
-            c = pattern[i];
-            if (c == '\'') break;
-            s.Append((char)c);
-          }
-          continue;
-        }
-
-        // character count
-        int n = 1;
-        while (i+1<len && pattern[i+1] == c) { ++i; ++n; }
-
-        // switch
-        bool invalidNum = false;
-        switch (c)
-        {
-          case 'h':
-          case 'k':
-            int hour = getHour();
-            if (c == 'k')
-            {
-              if (hour == 0) hour = 12;
-              else if (hour > 12) hour -= 12;
-            }
-            switch (n)
-            {
-              case 2:  if (hour < 10) s.Append('0'); s.Append(hour); break;
-              case 1:  s.Append(hour); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'm':
-            int min = getMin();
-            switch (n)
-            {
-              case 2:  if (min < 10) s.Append('0'); s.Append(min); break;
-              case 1:  s.Append(min); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 's':
-            int sec = getSec();
-            switch (n)
-            {
-              case 2:  if (sec < 10) s.Append('0'); s.Append(sec); break;
-              case 1:  s.Append(sec); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'a':
-            switch (n)
-            {
-              case 1:  s.Append(getHour() < 12 ? "AM" : "PM"); break;
-              default: invalidNum = true; break;
-            }
-            break;
-
-          case 'f':
-          case 'F':
-            int req = 0, opt = 0; // required, optional
-            if (c == 'F') opt = n;
-            else
-            {
-              req = n;
-              while (i+1<len && pattern[i+1] == 'F') { ++i; ++opt; }
-            }
-            int frac = getNanoSec();
-            for (int x=0, tenth=100000000; x<9; ++x)
-            {
-              if (req > 0) req--;
-              else
-              {
-                if (frac == 0 || opt <= 0) break;
-                opt--;
-              }
-              s.Append(frac/tenth);
-              frac %= tenth;
-              tenth /= 10;
-            }
-            break;
-
-          default:
-            if (FanInt.isAlpha(c))
-              throw ArgErr.make("Invalid pattern: unsupported char '" + (char)c + "'").val;
-
-            // don't display symbol between ss.FFF if fractions is zero
-            if (i+1<len && pattern[i+1] == 'F' && getNanoSec() == 0)
-              break;
-
-            s.Append((char)c);
-            break;
-        }
-
-        // if invalid number of characters
-        if (invalidNum)
-          throw ArgErr.make("Invalid pattern: unsupported num '" + (char)c + "' (x" + n + ")").val;
-      }
-
-      return s.ToString();
+    public static Time fromLocale(string s, string pattern) { return fromLocale(s, pattern, true); }
+    public static Time fromLocale(string s, string pattern, bool check)
+    {
+      return new DateTimeStr(pattern, null).parseTime(s, check);
     }
 
   //////////////////////////////////////////////////////////////////////////

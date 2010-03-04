@@ -446,7 +446,7 @@ public final class DateTime
 
   public static DateTime fromLocale(String s, String pattern) { return fromLocale(s, pattern, TimeZone.cur(), true); }
   public static DateTime fromLocale(String s, String pattern, TimeZone tz) { return fromLocale(s, pattern, tz, true); }
-  public static DateTime fromLocale(String s ,String pattern, TimeZone tz, boolean checked)
+  public static DateTime fromLocale(String s, String pattern, TimeZone tz, boolean checked)
   {
     return new DateTimeStr(pattern, null).parseDateTime(s, tz, checked);
   }

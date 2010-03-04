@@ -185,7 +185,7 @@ public final class Time
   }
 
   public static Time fromLocale(String s, String pattern) { return fromLocale(s, pattern, true); }
-  public static Time fromLocale(String s ,String pattern, boolean checked)
+  public static Time fromLocale(String s, String pattern, boolean checked)
   {
     return new DateTimeStr(pattern, null).parseTime(s, checked);
   }

@@ -161,7 +161,7 @@ public final class Date
   }
 
   public static Date fromLocale(String s, String pattern) { return fromLocale(s, pattern, true); }
-  public static Date fromLocale(String s ,String pattern, boolean checked)
+  public static Date fromLocale(String s, String pattern, boolean checked)
   {
     return new DateTimeStr(pattern, null).parseDate(s, checked);
   }

@@ -134,12 +134,10 @@ class DateTimeStr
           switch (n)
           {
             case 4:
-              if (locale == null) locale = Locale.cur();
-              s.append(weekday.full(locale));
+              s.append(weekday.full(locale()));
               break;
             case 3:
-              if (locale == null) locale = Locale.cur();
-              s.append(weekday.abbr(locale));
+              s.append(weekday.abbr(locale()));
               break;
             default: invalidNum = true;
           }
