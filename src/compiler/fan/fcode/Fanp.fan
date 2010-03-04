@@ -25,6 +25,46 @@ class Fanp
     else printSlot(Slot.find(target))
   }
 
+  Void executeFile(Str? target)
+  {
+    scriptFile := File.os(file)
+    input := CompilerInput()
+    {
+      podName        = "script"
+      summary        = "script"
+      version        = Version("0")
+      log.level      = LogLevel.warn
+      includeDoc     = true
+      isScript       = true
+      srcStr         = scriptFile.readAllStr
+      srcStrLoc      = Loc.makeFile(scriptFile)
+      mode           = CompilerInputMode.str
+      output         = CompilerOutputMode.transientPod
+    }
+    compiler = Compiler(input)
+    compiler.compile
+
+    pod := compiler.output.transientPod
+
+    if (target == null)
+    {
+      printPod(pod)
+      return
+    }
+
+    dot := target.index(".")
+    if (dot < 0)
+    {
+      printType(pod.type(target))
+    }
+    else
+    {
+      typeName := target[0..<dot]
+      slotName := target[dot+1..-1]
+      printSlot(pod.type(typeName).slot(slotName))
+    }
+  }
+
   Void printPod(Pod pod)
   {
     p := printer(pod)
@@ -63,11 +103,18 @@ class Fanp
 
   FPod fpod(Str podName)
   {
-    c := Compiler(CompilerInput()) // dummy compiler
-    ns := FPodNamespace(c, null)
-    FPod fpod := ns.resolvePod(podName, null)
-    fpod.readFully
-    return fpod
+    if (file == null)
+    {
+      c := Compiler(CompilerInput()) // dummy compiler
+      ns := FPodNamespace(c, null)
+      FPod fpod := ns.resolvePod(podName, null)
+      fpod.readFully
+      return fpod
+    }
+    else
+    {
+      return compiler.fpod
+    }
   }
 
   FType ftype(FPod pod, Str typeName)
@@ -124,6 +171,11 @@ class Fanp
       else if (a == "-c") { showCode    = true }
       else if (a == "-l") { showLines   = true }
       else if (a == "-i") { showIndex   = true }
+      else if (a == "-f")
+      {
+        i += 1
+        file = args[i]
+      }
       else if (a[0] == '-')
       {
         echo("WARNING: Unknown option $a")
@@ -134,8 +186,9 @@ class Fanp
       }
     }
 
-    if (target == null) { help; return }
-    execute(target)
+    if (target == null && file == null) { help; return }
+    if (file == null) execute(target)
+    else executeFile(target)
   }
 
   Void help()
@@ -151,6 +204,7 @@ class Fanp
     echo("  -c             print code buffers");
     echo("  -l             print line number table");
     echo("  -i             print table indexes in code");
+    echo("  -f <file>      disassemble from script file");
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -166,9 +220,11 @@ class Fanp
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  Compiler? compiler
   Bool showTables := false
   Bool showCode   := false
   Bool showLines  := false
   Bool showIndex  := false
+  Str? file
 
 }
