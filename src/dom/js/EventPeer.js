@@ -33,9 +33,9 @@ fan.dom.EventPeer.prototype.toStr = function(self)
     "]";
 }
 
-fan.dom.EventPeer.make = function(self, event)
+fan.dom.EventPeer.make = function(event)
 {
-  var wrap = new fan.dom.EventPeer();
-  if (event != null) wrap.event = event;
-  return wrap;
+  var x = fan.dom.Event.make();
+  x.peer.event = event;
+  return x;
 }

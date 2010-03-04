@@ -1,0 +1,53 @@
+//
+// Copyright (c) 2010, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   4 Mar 10  Andy Frank  Creation
+//
+
+using dom
+using gfx
+using fwt
+
+class BeforeUnload : Window
+{
+  new make() : super(null, null)
+  {
+    modified := false
+
+    Win.cur.onEvent("beforeunload", false) |event|
+    {
+      if (modified)
+       event.meta["beforeunloadMsg"] = "Text field was modified!"
+    }
+
+    content = BorderPane
+    {
+      insets = Insets(24)
+      GridPane
+      {
+        vgap = 12
+        Label
+        {
+          text = "If the text field is modified, refreshing the page
+                  should prompt for confirmation"
+        },
+        Text
+        {
+          text = "Change me to get prompt!"
+          prefCols = 40
+          onModify.add { modified=true }
+        },
+        Button
+        {
+          text = "Refresh"
+          onAction.add { Win.cur.reload }
+        },
+      },
+    }
+  }
+
+  Void main() { open }
+}
+

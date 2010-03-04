@@ -71,6 +71,22 @@ fan.dom.WinPeer.prototype.reload  = function(self, force)
 
 fan.dom.WinPeer.prototype.onEvent = function(self, type, useCapture, handler)
 {
+  var f = function(e)
+  {
+    var evt = fan.dom.EventPeer.make(e);
+    handler.call(evt);
+
+    if (type == "beforeunload")
+    {
+      var msg = evt.m_meta.get("beforeunloadMsg");
+      if (msg != null)
+      {
+        e.returnValue = msg;
+        return msg;
+      }
+    }
+  }
+
   if (window.addEventListener)
   {
     // trap hashchange for non-supporting browsers
@@ -80,15 +96,11 @@ fan.dom.WinPeer.prototype.onEvent = function(self, type, useCapture, handler)
       return;
     }
 
-    window.addEventListener(type, function(e) {
-      handler.call(fan.dom.Event.make(e));
-    }, useCapture);
+    window.addEventListener(type, f, useCapture);
   }
   else
   {
-    window.attachEvent('on'+type, function(e) {
-      handler.call(fan.dom.Event.make(e));
-    });
+    window.attachEvent('on'+type, f);
   }
 }
 
@@ -107,7 +119,7 @@ fan.dom.WinPeer.prototype.fakeHashChange = function(self, handler)
     if (oldHash != newHash)
     {
       oldHash = newHash;
-      handler.call(fan.dom.Event.make(null));
+      handler.call(fan.dom.EventPeer.make(null));
     }
   }
   setInterval(checkHash, 100);
