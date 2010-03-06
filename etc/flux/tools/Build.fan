@@ -73,8 +73,8 @@ class Build : FluxCommand
     f := buildFile.parent
     while (f.path.size > 0)
     {
-      libDir := f+`lib/fan/`
-      if (libDir.exists) { fanHome = f; return true }
+      binDir := f + `bin/fan.exe`
+      if (binDir.exists) { fanHome = f; return true }
       f = f.parent
     }
 
