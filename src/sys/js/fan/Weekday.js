@@ -80,4 +80,9 @@ fan.sys.Weekday.prototype.full = function(locale)
   }
 }
 
+// TODO FIXIT
+fan.sys.Weekday.localeStartOfWeek = function()
+{
+  return fan.sys.Weekday.m_sun;
+}
 
