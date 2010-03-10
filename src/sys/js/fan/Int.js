@@ -50,7 +50,7 @@ fan.sys.Int.parseDecimal = function(s)
     if (ch >= 48 && ch <= 57) continue;
     throw new Error("Illegal decimal char " + s.charAt(i));
   }
-  return parseInt(s);
+  return parseInt(s, 10);
 }
 
 fan.sys.Int.parseHex = function(s)
