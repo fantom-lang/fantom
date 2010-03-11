@@ -41,30 +41,17 @@ public final class MimeType
           if (s.equals("text/plain")) return textPlain;
           if (s.equals("text/html"))  return textHtml;
           if (s.equals("text/xml"))   return textXml;
+          if (s.equals("text/plain; charset=utf-8")) return textPlainUtf8;
+          if (s.equals("text/html; charset=utf-8"))  return textHtmlUtf8;
+          if (s.equals("text/xml; charset=utf-8"))   return textXmlUtf8;
           break;
         case 'x':
           if (s.equals("x-directory/normal")) return dir;
           break;
       }
 
-      int slash = s.indexOf('/');
-      String media = s.substring(0, slash);
-      String sub = s.substring(slash+1, s.length());
-      Map params = emptyParams();
-
-      int semi = sub.indexOf(';');
-      if (semi > 0)
-      {
-        params = doParseParams(sub, semi+1);
-        sub = sub.substring(0, semi).trim();
-      }
-
-      MimeType r  = new MimeType();
-      r.str       = s;
-      r.mediaType = FanStr.lower(media);
-      r.subType   = FanStr.lower(sub);
-      r.params    = params.ro();
-      return r;
+      // parse
+      return parse(s);
     }
     catch (ParseErr.Val e)
     {
@@ -76,6 +63,28 @@ public final class MimeType
       if (!checked) return null;
       throw ParseErr.make("MimeType",  s).val;
     }
+  }
+
+  private static MimeType parse(String s)
+  {
+    int slash = s.indexOf('/');
+    String media = s.substring(0, slash);
+    String sub = s.substring(slash+1, s.length());
+    Map params = emptyParams();
+
+    int semi = sub.indexOf(';');
+    if (semi > 0)
+    {
+      params = doParseParams(sub, semi+1);
+      sub = sub.substring(0, semi).trim();
+    }
+
+    MimeType r  = new MimeType();
+    r.str       = s;
+    r.mediaType = FanStr.lower(media);
+    r.subType   = FanStr.lower(sub);
+    r.params    = params.ro();
+    return r;
   }
 
   public static Map parseParams(String s) { return parseParams(s, true); }
@@ -278,30 +287,19 @@ public final class MimeType
   static Map emptyQuery;
 
 //////////////////////////////////////////////////////////////////////////
-// Predefined
-//////////////////////////////////////////////////////////////////////////
-
-  static MimeType predefined(String media, String sub)
-  {
-    MimeType t = new MimeType();
-    t.mediaType = media;
-    t.subType = sub;
-    t.params = emptyParams();
-    t.str = media + "/" + sub;
-    return t;
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  static final MimeType imagePng   = predefined("image", "png");
-  static final MimeType imageGif   = predefined("image", "gif");
-  static final MimeType imageJpeg  = predefined("image", "jpeg");
-  static final MimeType textPlain  = predefined("text", "plain");
-  static final MimeType textHtml   = predefined("text", "html");
-  static final MimeType textXml    = predefined("text", "xml");
-  static final MimeType dir        = predefined("x-directory", "normal");
+  static final MimeType imagePng   = parse("image/png");
+  static final MimeType imageGif   = parse("image/gif");
+  static final MimeType imageJpeg  = parse("image/jpeg");
+  static final MimeType textPlain  = parse("text/plain");
+  static final MimeType textHtml   = parse("text/html");
+  static final MimeType textXml    = parse("text/xml");
+  static final MimeType dir        = parse("x-directory/normal");
+  static final MimeType textPlainUtf8 = parse("text/plain; charset=utf-8");
+  static final MimeType textHtmlUtf8  = parse("text/html; charset=utf-8");
+  static final MimeType textXmlUtf8   = parse("text/xml; charset=utf-8");
 
   private String mediaType;
   private String subType;

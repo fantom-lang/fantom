@@ -43,7 +43,7 @@ const class DomTestMod : WebMod
   Void onIndex()
   {
     if (req.method != "GET") { res.sendErr(501); return }
-    res.headers["Content-Type"] = "text/html"
+    res.headers["Content-Type"] = "text/html; charset=utf-8"
     out := res.out
     out.docType
     out.html

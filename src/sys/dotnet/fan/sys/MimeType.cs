@@ -39,30 +39,16 @@ namespace Fan.Sys
             if (s == "text/plain") return m_textPlain;
             if (s == "text/html")  return m_textHtml;
             if (s == "text/xml")   return m_textXml;
+            if (s == "text/plain; charset=utf-8") return m_textPlainUtf8;
+            if (s == "text/html; charset=utf-8")  return m_textHtmlUtf8;
+            if (s == "text/xml; charset=utf-8")   return m_textXmlUtf8;
             break;
           case 'x':
             if (s == "x-directory/normal") return m_dir;
             break;
         }
 
-        int slash = s.IndexOf('/');
-        string media = s.Substring(0, slash);
-        string sub = s.Substring(slash+1);
-        Map pars = emptyParams();
-
-        int semi = sub.IndexOf(';');
-        if (semi > 0)
-        {
-          pars = doParseParams(sub, semi+1);
-          sub = sub.Substring(0, semi).Trim();
-        }
-
-        MimeType r    = new MimeType();
-        r.m_str       = s;
-        r.m_mediaType = FanStr.lower(media);
-        r.m_subType   = FanStr.lower(sub);
-        r.m_params    = pars.ro();
-        return r;
+        return parse(s);
       }
       catch (ParseErr.Val e)
       {
@@ -74,6 +60,28 @@ namespace Fan.Sys
         if (!check) return null;
         throw ParseErr.make("MimeType",  s).val;
       }
+    }
+
+    private static MimeType parse(string s)
+    {
+      int slash = s.IndexOf('/');
+      string media = s.Substring(0, slash);
+      string sub = s.Substring(slash+1);
+      Map pars = emptyParams();
+
+      int semi = sub.IndexOf(';');
+      if (semi > 0)
+      {
+        pars = doParseParams(sub, semi+1);
+        sub = sub.Substring(0, semi).Trim();
+      }
+
+      MimeType r    = new MimeType();
+      r.m_str       = s;
+      r.m_mediaType = FanStr.lower(media);
+      r.m_subType   = FanStr.lower(sub);
+      r.m_params    = pars.ro();
+      return r;
     }
 
     public static Map parseParams(string s) { return parseParams(s, true); }
@@ -277,30 +285,19 @@ namespace Fan.Sys
     static Map m_emptyQuery;
 
   //////////////////////////////////////////////////////////////////////////
-  // Predefined
-  //////////////////////////////////////////////////////////////////////////
-
-    static MimeType predefined(string media, string sub)
-    {
-      MimeType t = new MimeType();
-      t.m_mediaType = media;
-      t.m_subType = sub;
-      t.m_params = emptyParams();
-      t.m_str = media + "/" + sub;
-      return t;
-    }
-
-  //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    internal static MimeType m_imagePng   = predefined("image", "png");
-    internal static MimeType m_imageGif   = predefined("image", "gif");
-    internal static MimeType m_imageJpeg  = predefined("image", "jpeg");
-    internal static MimeType m_textPlain  = predefined("text", "plain");
-    internal static MimeType m_textHtml   = predefined("text", "html");
-    internal static MimeType m_textXml    = predefined("text", "xml");
-    internal static MimeType m_dir        = predefined("x-directory", "normal");
+    internal static MimeType m_imagePng   = parse("image/png");
+    internal static MimeType m_imageGif   = parse("image/gif");
+    internal static MimeType m_imageJpeg  = parse("image/jpeg");
+    internal static MimeType m_textPlain  = parse("text/plain");
+    internal static MimeType m_textHtml   = parse("text/html");
+    internal static MimeType m_textXml    = parse("text/xml");
+    internal static MimeType m_dir        = parse("x-directory/normal");
+    internal static MimeType m_textPlainUtf8 = parse("text/plain; charset=utf-8");
+    internal static MimeType m_textHtmlUtf8  = parse("text/html; charset=utf-8");
+    internal static MimeType m_textXmlUtf8   = parse("text/xml; charset=utf-8");
 
     private string m_mediaType;
     private string m_subType;
