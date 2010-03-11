@@ -60,7 +60,7 @@ class UriTest : Test
     verifyEq(uri.name,     "c.txt")
     verifyEq(uri.basename, "c")
     verifyEq(uri.ext,      "txt")
-    verifyEq(uri.mimeType, MimeType.fromStr("text/plain"))
+    verifyEq(uri.mimeType, MimeType.fromStr("text/plain; charset=utf-8"))
     verifyEq(uri.query,    ["a":"b", "c":"d"])
     verifyEq(uri.queryStr, "a=b&c=d")
     verifyEq(uri.frag,     "frag")
