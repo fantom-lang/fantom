@@ -91,7 +91,7 @@ Override the "Content-Type" header to specify another MIME type:
 
   TextPart
   {
-    headers["Content-Type"] = "text/html"
+    headers["Content-Type"] = "text/html; charset=utf-8"
     text = "this is <b>bold</b> and <i>italics</i>!"
   }
 

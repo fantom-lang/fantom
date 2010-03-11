@@ -40,6 +40,10 @@ class MimeTypeTest : Test
     verifyPredefined("text", "html")
     verifyPredefined("text", "xml")
     verifyPredefined("x-directory", "normal")
+
+    verifyPredefinedText("text/plain; charset=utf-8")
+    verifyPredefinedText("text/html; charset=utf-8")
+    verifyPredefinedText("text/xml; charset=utf-8")
   }
 
   Void verifyPredefined(Str media, Str sub)
@@ -51,6 +55,18 @@ class MimeTypeTest : Test
     verifyEq(m.params.isRO, true)
     verifyEq(m.params.size, 0)
     verifySame(m, MimeType(m.toStr))
+  }
+
+  Void verifyPredefinedText(Str mime)
+  {
+    m := MimeType(mime)
+    verifyEq(m.mediaType, "text")
+    verifyEq(m.params.isRO, true)
+    verifyEq(m.toStr, mime)
+    verifyEq(m.params["charset"], "utf-8")
+    verifyEq(m.params["Charset"], "utf-8")
+    verifyEq(m.params["CHARSET"], "utf-8")
+    verifySame(m, MimeType(mime))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -132,9 +148,9 @@ class MimeTypeTest : Test
 
   Void testForExt()
   {
-    verifyEq(MimeType.forExt("txt"), MimeType("text/plain"))
-    verifyEq(MimeType.forExt("xml"), MimeType("text/xml"))
-    verifyEq(MimeType.forExt("XML"), MimeType("text/xml"))
+    verifyEq(MimeType.forExt("txt"), MimeType("text/plain; charset=utf-8"))
+    verifyEq(MimeType.forExt("xml"), MimeType("text/xml; charset=utf-8"))
+    verifyEq(MimeType.forExt("XML"), MimeType("text/xml; charset=utf-8"))
     verifyEq(MimeType.forExt("gif"), MimeType("image/gif"))
     verifyEq(MimeType.forExt("foobar"), null)
     //verifyEq(MimeType.forExt(null), null)

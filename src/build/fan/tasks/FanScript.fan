@@ -14,6 +14,10 @@ using compiler
 **
 class FanScript : Task
 {
+  **
+  ** Make with script name, arguments are Fantom arguments
+  ** passed to main method (**not** command line string arguments)
+  **
   new make(BuildScript script, File file, Obj[]? args := null)
     : super(script)
   {
