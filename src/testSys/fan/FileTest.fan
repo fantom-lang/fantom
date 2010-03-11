@@ -153,7 +153,7 @@ class FileTest : Test
     verifyEq(e.name, "file.txt")
     verifyEq(e.basename, "file")
     verifyEq(e.ext, "txt")
-    verifyEq(e.mimeType, MimeType.fromStr("text/plain"))
+    verifyEq(e.mimeType, MimeType.fromStr("text/plain; charset=utf-8"))
     verifyEq(e.uri.path.last, "file.txt")
     verifyEq(e.path.last, "file.txt")
     verifyEq(e.uri.relToAuth.toStr, e.pathStr)
