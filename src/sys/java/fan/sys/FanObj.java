@@ -206,7 +206,8 @@ public class FanObj
 
   public static void echo(Object obj)
   {
-    System.out.println(obj);
+    if (obj == null) obj = "null";
+    System.out.println(toStr(obj));
   }
 
 }
