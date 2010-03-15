@@ -89,7 +89,8 @@ const final class Float : Num
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return true if same float value.  Unlike Java, NaN equals NaN.
+  ** Return true if same float value.  Like Java, NaN != NaN.
+  ** Also see `compare`.
   **
   override Bool equals(Obj? obj)
 
