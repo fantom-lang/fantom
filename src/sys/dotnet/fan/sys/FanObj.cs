@@ -188,7 +188,8 @@ namespace Fan.Sys
 
     public static void echo(object obj)
     {
-      System.Console.WriteLine(obj);
+      if (obj == null) obj = "null";
+      System.Console.WriteLine(toStr(obj));
     }
   }
 }
