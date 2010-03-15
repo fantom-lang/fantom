@@ -112,7 +112,17 @@ class JsPod : JsNode
       //out.w("  \$$i")
       out.w("  fan.${t.pod}.${t.name}.\$type")
       t.fields.each |f| { out.w(".\$af('$f.name',$f.flags,'$f.ftype.sig')") }
-      t.methods.each |m| { if (!m.isFieldAccessor) out.w(".\$am('$m.name',$m.flags)") }
+      t.methods.each |m|
+      {
+        if (m.isFieldAccessor) return
+        out.w(".\$am('$m.name',$m.flags,fan.sys.List.make(fan.sys.Param.\$type,[")
+        m.params.each |p,i|
+        {
+          if (i > 0) out.w(",")
+          out.w("new fan.sys.Param('$p.name','$p.paramType.sig',$p.hasDef)")
+        }
+        out.w("]))")
+      }
       out.w(";").nl
     }
     out.w("}").nl

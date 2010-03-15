@@ -124,30 +124,26 @@ fan.sys.Type.prototype.toNonNullable = function() { return this; }
 
 fan.sys.Type.prototype.make = function(args)
 {
-  // return defVal if cached
-  if (this.m_$defVal != null) return this.m_$defVal;
+  if (args === undefined) args = null;
 
-  // look for defVal and cache if exists
-  var obj = eval(this.m_$qname);
-  if (obj.m_defVal != null) { this.m_$defVal = obj.m_defVal; return obj.m_defVal; }
-
-  // call make with args
-  if (args === undefined) return obj.make();
-  var a = args;
-  switch (args.length)
+  var make = this.method("make", false);
+  if (make != null && make.isPublic())
   {
-    case 0: return obj.make();
-    case 1: return obj.make(a[0]);
-    case 2: return obj.make(a[0], a[1]);
-    case 3: return obj.make(a[0], a[1], a[2]);
-    case 4: return obj.make(a[0], a[1], a[2], a[3]);
-    case 5: return obj.make(a[0], a[1], a[2], a[3], a[4]);
-    case 6: return obj.make(a[0], a[1], a[2], a[3], a[4], a[5]);
-    case 7: return obj.make(a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
-    case 8: return obj.make(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
-    case 9: return obj.make(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
-    default: throw fan.sys.Err.make("10+ args not yet implemented");
+    var numArgs = args == null ? 0 : args.sz();
+    var params = make.params();
+    if ((numArgs == params.size()) ||
+        (numArgs < params.size() && params.get(numArgs).hasDefault()))
+      return make.invoke(null, args);
   }
+
+  var defVal = this.slot("defVal", false);
+  if (defVal != null && defVal.isPublic())
+  {
+    if (defVal instanceof fan.sys.Field) return defVal.get(null);
+    if (defVal instanceof fan.sys.Method) return defVal.invoke(null, null);
+  }
+
+  throw Err.make("Type missing 'make' or 'defVal' slots: " + this).val;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -211,9 +207,9 @@ fan.sys.Type.prototype.field = function(name, checked)
 }
 
 // addMethod
-fan.sys.Type.prototype.$am = function(name, flags)
+fan.sys.Type.prototype.$am = function(name, flags, params)
 {
-  var m = new fan.sys.Method(this, name, flags);
+  var m = new fan.sys.Method(this, name, flags, params);
   this.m_slots[name] = m;
   return this;
 }

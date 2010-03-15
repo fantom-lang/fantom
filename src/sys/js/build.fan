@@ -64,6 +64,7 @@ class Build : BuildScript
       f := sys + `${t.name}.js`
       if (f.exists) append(f, out)
     }
+    append(sys + `Sys.js`, out)
   }
 
   private Void writeTypeInfo(OutStream out)
@@ -94,6 +95,9 @@ class Build : BuildScript
       mixins := t.mixins.join(",") |m| { "'$m.pod::$m.name'" }
       flags  := t->flags
       out.printLine("  fan.sys.${t.name}.\$type = $adder('$t.name',$base,[$mixins],$flags);")
+
+      // init generic types after Type
+      if (t.name == "Type") out.printLine("  fan.sys.Sys.initGenericParamTypes();")
     }
 
     // then write slot info
@@ -102,7 +106,17 @@ class Build : BuildScript
       if (t.fields.isEmpty && t.methods.isEmpty) return
       out.print("  fan.sys.${t.name}.\$type")
       t.fields.each |f| { out.print(".\$af('$f.name',${f->flags},'$f.fieldType.signature')") }
-      t.methods.each |m| { out.print(".\$am('$m.name',${m->flags})") }
+      t.methods.each |m|
+      {
+        params := StrBuf().add("fan.sys.List.make(fan.sys.Param.\$type,[")
+        m.params.each |p,j|
+        {
+          if (j > 0) params.add(",")
+          params.add("new fan.sys.Param('$p.name','$p.paramType.signature',$p.hasDefault)")
+        }
+        params.add("])")
+        out.print(".\$am('$m.name',${m->flags},$params)")
+      }
       out.printLine(";")
     }
 
