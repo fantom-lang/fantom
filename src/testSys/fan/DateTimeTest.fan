@@ -9,6 +9,7 @@
 **
 ** DateTimeTest
 **
+@Js
 class DateTimeTest : Test
 {
 

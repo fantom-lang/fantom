@@ -50,12 +50,24 @@ class BuildTz
 
   Bool include(Str name)
   {
-    if (name == "Etc/UTC") return true
-    if (name == "America/New_York") return true
-    if (name == "America/Chicago") return true
-    if (name == "America/Denver") return true
-    if (name == "America/Los_Angeles") return true
+    if (name == "UTC") return true
+    if (name == "New_York") return true
+    if (name == "Chicago") return true
+    if (name == "Denver") return true
+    if (name == "Los_Angeles") return true
     if (name.contains("GMT")) return true
+
+    // timezones used in testSys
+    if (name == "London") return true
+    if (name == "Amsterdam") return true
+    if (name == "Kiev") return true
+    if (name == "Sao_Paulo") return true
+    if (name == "Sydney") return true
+    if (name == "Riga") return true
+    if (name == "Jerusalem") return true
+    if (name == "St_Johns") return true
+    if (name == "Godthab") return true
+
     return false
   }
 
@@ -67,18 +79,22 @@ class BuildTz
 
     try
     {
-      // check magic "fantz 01"
+      // check magic "fantz 02"
       magic := in.readS8
-      if (magic != 0x66616e747a203031)
+      if (magic != 0x66616e747a203032)
         throw IOErr("Invalid magic 0x$magic.toHex");
       in.readUtf
 
+      // load prefixes
+      numPrefixes := in.readU1
+      numPrefixes.times { prefixes.add(in.readUtf) }
+
       // load the name/offset pairs and verify in sort order
-      num := in.readU4
+      num := in.readU2
       num.times |i|
       {
+        indexPrefixes.add(in.readU1)
         indexNames.add(in.readUtf)
-        indexTypes.add(in.read)
         indexOffsets.add(in.readU4)
         if (i != 0 && (indexNames[i-1] <=> indexNames[i]) >= 0)
           throw IOErr("Index not sorted");
@@ -87,21 +103,27 @@ class BuildTz
     finally { in.close }
   }
 
-  Void loadTimeZone(Str tz, OutStream out)
+  Void loadTimeZone(Str x, OutStream out)
   {
+    name  := x
+    slash := x.indexr("/")
+    if (slash != null) name = name[slash+1..-1]
+
     // find index, which maps the file offset
-    ix := indexNames.binarySearch(tz)
+    ix := indexNames.binarySearch(name)
     if (ix < 0) return
     seekOffset := indexOffsets[ix]
+
+    // map full name
+    fullName := name
+    prefix   := prefixes[indexPrefixes[ix].and(0xff)]
+    if (prefix.size != 0) fullName = "$prefix/$name"
+    if (slash != null && x != fullName) throw Err("Unexpected")
 
     // read time zone definition from database file
     buf := db.mmap("rw", seekOffset)
     try
     {
-      name     := buf.readUtf();
-      fullName := buf.readUtf();
-      numRules := buf.readU2();
-
       out.printLine(
        "// $fullName
         tz = new fan.sys.TimeZone();
@@ -109,6 +131,7 @@ class BuildTz
         tz.m_fullName = \"$fullName\";
         tz.m_rules = [];")
 
+      numRules := buf.readU2();
       numRules.times
       {
         startYear := buf.readU2();
@@ -159,7 +182,8 @@ class BuildTz
   }
 
   File? db
-  Str[] indexNames   := Str[,]
-  Int[] indexTypes   := Int[,]
-  Int[] indexOffsets := Int[,]
+  Str[] prefixes      := Str[,]
+  Int[] indexPrefixes := Int[,]
+  Str[] indexNames    := Str[,]
+  Int[] indexOffsets  := Int[,]
 }
