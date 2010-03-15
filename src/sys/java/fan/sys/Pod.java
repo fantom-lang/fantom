@@ -292,8 +292,8 @@ public class Pod
     {
       try
       {
-        java.io.InputStream in = fpod.store.read("doc/pod.apidoc");
-        if (in != null) { try { FDoc.read(in, this); } finally { in.close(); } }
+        java.io.InputStream in = fpod.store.read("doc/pod.fandoc");
+        if (in != null) doc = SysInStream.make(in, Long.valueOf(1024L)).readAllStr();
       }
       catch (Exception e) { e.printStackTrace(); }
       docLoaded = true;

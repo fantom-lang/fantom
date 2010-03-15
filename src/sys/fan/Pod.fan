@@ -134,10 +134,9 @@ final const class Pod
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return the raw fandoc for this pod or null if not available.
-  ** If there is additional documentation meta-data available it is
-  ** included an the start of the string as a series of "@name=value"
-  ** lines.
+  ** Return the fandoc chapter for this pod or null if not available.
+  ** To get the summary string for the pod use:
+  **   pod.meta["pod.summary"]
   **
   Str? doc()
 
