@@ -265,11 +265,8 @@ namespace Fan.Sys
     {
       try
       {
-        Stream input = fpod.m_store.read("doc/pod.apidoc");
-        if (input != null)
-        {
-          try { FDoc.read(input, this); } finally { input.Close(); }
-        }
+        Stream input = fpod.m_store.read("doc/pod.fandoc");
+        if (input != null) m_doc = SysInStream.make(input, Long.valueOf(1024L)).readAllStr();
       }
       catch (Exception e)
       {
