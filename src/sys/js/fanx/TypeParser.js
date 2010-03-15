@@ -124,9 +124,8 @@ fanx_TypeParser.prototype.loadBasic = function()
   // check for generic parameter like sys::V
   if (typeName.length == 1 && podName == "sys")
   {
-    //var type = Sys.genericParameterType(typeName);
-    //if (type != null) return type;
-throw fan.sys.Err.make("TODO - generic paramaters");
+    var type = fan.sys.Sys.genericParamType(typeName);
+    if (type != null) return type;
   }
 
   return fanx_TypeParser.find(podName, typeName, this.checked);
@@ -229,7 +228,6 @@ fanx_TypeParser.load = function(sig, checked)
   }
   catch (err)
   {
-//println(err);
     throw fan.sys.Err.make(err);
   }
 }

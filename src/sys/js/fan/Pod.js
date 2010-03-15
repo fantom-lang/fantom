@@ -49,6 +49,7 @@ fan.sys.Pod.prototype.findType = function(name, checked)
   if (t == null && checked)
   {
     //fan.sys.ObjUtil.echo("UnknownType: " + this.m_name + "::" + name);
+    //println("# UnknownType: " + this.m_name + "::" + name);
     throw fan.sys.UnknownTypeErr.make(this.m_name + "::" + name);
   }
   return t;
