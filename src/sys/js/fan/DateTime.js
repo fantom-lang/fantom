@@ -145,6 +145,7 @@ fan.sys.DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
   // commit
   var instance = new fan.sys.DateTime();
   instance.m_ticks = ticks;
+  instance.m_ns    = ns;
   instance.m_tz    = tz;
   instance.m_fields   = fields;
   return instance;
@@ -397,8 +398,9 @@ fan.sys.DateTime.prototype.sec = function()
 }
 fan.sys.DateTime.prototype.nanoSec = function()
 {
-  var rem = this.m_ticks >= 0 ? this.m_ticks : this.m_ticks - fan.sys.DateTime.yearTicks[0];
-  return rem % fan.sys.DateTime.nsPerSec;
+  //var rem = this.m_ticks >= 0 ? this.m_ticks : this.m_ticks - fan.sys.DateTime.yearTicks[0];
+  //return rem % fan.sys.DateTime.nsPerSec;
+  return this.m_ns;
 }
 fan.sys.DateTime.prototype.weekday = function() { return fan.sys.Weekday.m_vals.get((this.m_fields >> 28) & 0x7); }
 fan.sys.DateTime.prototype.tz = function() { return this.m_tz; }
