@@ -269,6 +269,15 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+fan.fwt.WidgetPeer.addCss = function(css)
+{
+  var style = document.createElement("style");
+  style.type = "text/css";
+  if (style.styleSheet) style.styleSheet.cssText = css;
+  else style.appendChild(document.createTextNode(css));
+  document.getElementsByTagName("head")[0].appendChild(style);
+}
+
 fan.fwt.WidgetPeer.setBg = function(elem, brush)
 {
   with (elem.style)
