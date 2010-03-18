@@ -80,13 +80,6 @@ fan.fwt.TablePeer.prototype.needRebuild = true;
 
 fan.fwt.TablePeer.prototype.sync = function(self)
 {
-  // check if table needs to be rebuilt
-  if (this.needRebuild)
-  {
-    this.rebuild(self);
-    this.needRebuild = false;
-  }
-
   // no border if content not visible
   if (this.m_size.m_w == 0 || this.m_size.m_h == 0 && !this.inPrefSize)
     this.elem.style.borderWidth = "0px";
@@ -97,6 +90,13 @@ fan.fwt.TablePeer.prototype.sync = function(self)
   var w = this.m_size.m_w - 2;
   var h = this.m_size.m_h - 2;
   fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
+
+  // check if table needs to be rebuilt
+  if (this.needRebuild && w>0 && h>0)
+  {
+    this.rebuild(self);
+    this.needRebuild = false;
+  }
 }
 
 fan.fwt.TablePeer.prototype.rebuild = function(self)
@@ -114,6 +114,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   var model = self.m_model;
   var rows  = model.numRows();
   var cols  = model.numCols();
+  var widgets = [];
 
   if (this.m_headerVisible)
   {
@@ -225,28 +226,8 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         }
         else
         {
-          // custom widget
-          if (widget.peer.elem != null)
-          {
-            // detach and reattach in case it moved
-            widget.peer.elem.parentNode.removeChild(widget.peer.elem);
-            td.appendChild(widget.peer.elem);
-          }
-          else
-          {
-            // attach new widget
-            var elem = widget.peer.create(td);
-            widget.peer.attachTo(widget, elem);
-            // nuke abs positiong
-            with (elem.style)
-            {
-              position = "static";
-              left     = null;
-              top      = null;
-              width    = null;
-              height   = null;
-            }
-          }
+          // stash widget to add later
+          widgets.push({ col:c, row:r, widget:widget });
         }
       }
       tr.appendChild(td);
@@ -265,8 +246,64 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   }
   table.appendChild(tbody);
 
+  // add widgets after tbody has been added so
+  // prefSize will work correctly
+  for (var i=0; i<widgets.length; i++)
+  {
+    var w = widgets[i];
+    var tr = tbody.childNodes[w.row+1];
+    var td = tr.childNodes[w.col+1];
+    this.attachWidget(td, w.widget)
+  }
+
   // sync selection
   this.selection.select(this.m_selected);
+}
+
+fan.fwt.TablePeer.prototype.attachWidget = function(td, widget)
+{
+  // custom widget
+  if (widget.peer.elem != null)
+  {
+    // detach and reattach in case it moved
+    widget.peer.elem.parentNode.removeChild(widget.peer.elem);
+    td.appendChild(widget.peer.elem);
+  }
+  else
+  {
+    // attach new widget
+    var elem = widget.peer.create(td, widget);
+    widget.peer.attachTo(widget, elem);
+    var pref = widget.prefSize();
+    var w = pref.m_w;
+    var h = pref.m_h;
+
+    // TODO FIXIT: workaround for lazy-load of images and relayout
+    if (widget instanceof fan.fwt.Label)
+    {
+      var img = widget.image();
+      if (img != null)
+      {
+        var key = img.m_uri.toStr();
+        var cached = fan.fwt.FwtEnvPeer.imgCache[key];
+        if (cached && cached.width == 0)
+        {
+          w += 16;
+          h = Math.max(h, 16);
+        }
+      }
+    }
+
+    // nuke abs positiong
+    with (elem.style)
+    {
+      position = "static";
+      left     = null;
+      top      = null;
+      width    = w + "px";
+      height   = h + "px";
+    }
+  }
 }
 
 fan.fwt.TablePeer.prototype.makeArrowDown = function()
