@@ -202,6 +202,9 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       }
       else
       {
+        // always apply background override
+        var bg = model.bg(c,r); if (bg != null) td.style.background = bg.toCss();
+
         var widget = null;
         if (model.widget) widget = model.widget(c,r);
         if (widget == null)
@@ -210,7 +213,6 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
           td.appendChild(document.createTextNode(model.text(c,r)));
 
           // style overrides
-          var bg = model.bg(c,r); if (bg != null) td.style.background = bg.toCss();
           var fg = model.fg(c,r); if (fg != null) td.style.color = fg.toCss();
           var font = model.font(c,r); if (font != null) td.style.font = font.toStr();
           var halign = model.halign(c);
