@@ -275,17 +275,32 @@ class StrTest : Test
     s := "abc\u00fb"
     verifyEq(s.size, 4)
 
-    verifyEq(s[0], 97)
-    verifyEq(s[1], 98)
-    verifyEq(s[2], 99)
-    verifyEq(s[3], 0xfb)
+    verifyGet(s, 0, 97)
+    verifyGet(s, 1, 98)
+    verifyGet(s, 2, 99)
+    verifyGet(s, 3, 0xfb)
+    verifyGet(s, 4, -1)
 
-    verifyEq(s[-1], 0xfb)
-    verifyEq(s[-2], 'c')
-    verifyEq(s[-3], 'b')
-    verifyEq(s[-4], 'a')
+    verifyGet(s, -1, 0xfb)
+    verifyGet(s, -2, 'c')
+    verifyGet(s, -3, 'b')
+    verifyGet(s, -4, 'a')
+    verifyGet(s, -5, -1)
+  }
 
-    // TODO: err on out of index
+  Void verifyGet(Str s, Int i, Int expected)
+  {
+    if (expected > 0)
+    {
+      verifyEq(s[i], expected)
+      verifyEq(s.get(i), expected)
+    }
+    else
+    {
+      verifyErr(IndexErr#) { x := s[i] }
+      verifyEq(s.getSafe(i), 0)
+      verifyEq(s.getSafe(i, ' '), ' ')
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

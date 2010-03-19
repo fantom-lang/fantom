@@ -125,9 +125,31 @@ public class FanStr
 
   public static long get(String self, long index)
   {
-    int i = (int)index;
-    if (i < 0) i = self.length()+i;
-    return self.charAt(i);
+    try
+    {
+      int i = (int)index;
+      if (i < 0) i = self.length()+i;
+      return self.charAt(i);
+    }
+    catch (IndexOutOfBoundsException e)
+    {
+      throw IndexErr.make(index).val;
+    }
+  }
+
+  public static long getSafe(String self, long index) { return getSafe(self, index, 0); }
+  public static long getSafe(String self, long index, long def)
+  {
+    try
+    {
+      int i = (int)index;
+      if (i < 0) i = self.length()+i;
+      return self.charAt(i);
+    }
+    catch (IndexOutOfBoundsException e)
+    {
+      return def;
+    }
   }
 
   public static String slice(String self, Range r)
