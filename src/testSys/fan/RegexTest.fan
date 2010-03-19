@@ -9,6 +9,7 @@
 **
 ** RegexTest
 **
+@Js
 class RegexTest : Test
 {
 
