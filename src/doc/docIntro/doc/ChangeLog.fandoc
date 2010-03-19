@@ -7,18 +7,17 @@
 **************************************************************************
 
 *Build 1.0.52 (working)*
-- Color makeArgb, makeRgb
+- Color: makeArgb, makeRgb
 - WebUtil.jsMain
-- Win.viewport
-- Win.reload
-- Win.onEvent
+- Win: viewport, reload, onEvent
 - Elem: deprecate x,y,w,h; add pos, size, bounds
 - New concurrent pod
 - SqlService.lastAutoKey => Statement.execute
-- Tweak grammar to disallow chains comparison operators
+- Tweak grammar to disallow chaining comparison operators
 - Change config API for FileLogger and LogMod to allow datetime pattern
 - Date/Time fromLocale - parsing with pattern
 - Default all ext2mime.props to assume charset=utf-8
+- Str: getSafe
 
 *Build 1.0.51 (6 Feb 10)*
 - Roll fcode version from 1.0.45 => 1.0.51

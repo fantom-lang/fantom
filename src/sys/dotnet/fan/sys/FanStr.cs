@@ -135,9 +135,31 @@ namespace Fan.Sys
 
     public static long get(string self, long index)
     {
-      int i = (int)index;
-      if (i < 0) i = self.Length+i;
-      return self[i];
+      try
+      {
+        int i = (int)index;
+        if (i < 0) i = self.Length+i;
+        return self[i];
+      }
+      catch (System.IndexOutOfRangeException)
+      {
+        throw IndexErr.make(index).val;
+      }
+    }
+
+    public static long getSafe(String self, long index) { return getSafe(self, index, 0); }
+    public static long getSafe(String self, long index, long def)
+    {
+      try
+      {
+        int i = (int)index;
+        if (i < 0) i = self.Length+i;
+        return self[i];
+      }
+      catch (System.IndexOutOfRangeException)
+      {
+        return def;
+      }
     }
 
     public static string slice(string self, Range r)
