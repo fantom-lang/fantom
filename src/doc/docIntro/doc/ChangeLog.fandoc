@@ -18,6 +18,7 @@
 - Date/Time fromLocale - parsing with pattern
 - Default all ext2mime.props to assume charset=utf-8
 - Str: getSafe
+- Add util::CsvInStream and util::CsvOutStream
 
 *Build 1.0.51 (6 Feb 10)*
 - Roll fcode version from 1.0.45 => 1.0.51
