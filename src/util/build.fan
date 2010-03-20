@@ -20,7 +20,7 @@ class Build : BuildPod
     podName = "util"
     summary = "Utilities"
     depends = ["sys 1.0"]
-    srcDirs = [`fan/`]
+    srcDirs = [`fan/`, `test/`]
     docSrc  = true
   }
 }
