@@ -128,7 +128,7 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
   }
 
   // setup text
-  if (this.m_text.length > 0)
+  if (this.m_image == null || this.m_text.length > 0)
   {
     if (uri == null)
       text = document.createElement("div");
@@ -151,16 +151,11 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     text.style.position = "relative";
     text.style.top = "-1px";
     text.style.verticalAlign = "middle";
-    text.appendChild(document.createTextNode(this.m_text));
+    if (this.m_text.length > 0)
+      text.appendChild(document.createTextNode(this.m_text));
+    else
+      text.innerHTML = "&nbsp;";  // to force height of empty labels
     parent.appendChild(text);
-  }
-
-  // if no img or text, using placeholder to force height
-  if (img == null && text == null)
-  {
-    var span = document.createElement("span");
-    span.innerHTML = "&nbsp;"
-    parent.appendChild(span);
   }
 
   // insert padding b/w img and text
