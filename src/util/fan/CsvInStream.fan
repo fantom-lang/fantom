@@ -20,6 +20,7 @@
 **
 ** Also see `CsvOutStream`.
 **
+@Js
 class CsvInStream : InStream
 {
 

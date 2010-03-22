@@ -16,6 +16,7 @@
 **
 ** Also see `CsvInStream`.
 **
+@Js
 class CsvOutStream : OutStream
 {
 

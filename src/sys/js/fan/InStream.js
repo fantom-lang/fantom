@@ -17,7 +17,7 @@ fan.sys.InStream = fan.sys.Obj.$extend(fan.sys.Obj);
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.InStream.prototype.$ctor = function() { this.$in = null; }
-fan.sys.InStream.prototype.make$ = function($in) { this.$in = $in; }
+fan.sys.InStream.make$ = function(self, $in) { self.$in = $in; }
 
 //////////////////////////////////////////////////////////////////////////
 // InStream
