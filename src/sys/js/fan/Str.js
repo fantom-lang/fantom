@@ -45,11 +45,23 @@ fan.sys.Str.$typeof = function(self) { return fan.sys.Str.$type; }
 // Operators
 //////////////////////////////////////////////////////////////////////////
 
-
 fan.sys.Str.get = function(self, index)
 {
   if (index < 0) index += self.length;
+  if (index < 0 || index >= self.length) throw fan.sys.IndexErr.make(index);
   return self.charCodeAt(index);
+}
+
+fan.sys.Str.getSafe = function(self, index, def)
+{
+  if (def === undefined) def = 0;
+  try
+  {
+    if (index < 0) index += self.length;
+    if (index < 0 || index >= self.length) throw new Error();
+    return self.charCodeAt(index);
+  }
+  catch (err) { return def; }
 }
 
 fan.sys.Str.slice = function(self, range)
