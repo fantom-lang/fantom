@@ -9,6 +9,7 @@
 **
 ** CsvTest
 **
+@Js
 class CsvTest : Test
 {
 

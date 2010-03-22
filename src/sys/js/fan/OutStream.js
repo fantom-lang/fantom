@@ -16,7 +16,7 @@ fan.sys.OutStream = fan.sys.Obj.$extend(fan.sys.Obj);
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.OutStream.prototype.$ctor = function() { this.out = null; }
-fan.sys.OutStream.prototype.make$ = function(out) { this.out = out; }
+fan.sys.OutStream.make$ = function(self, out) { self.out = out; }
 
 //////////////////////////////////////////////////////////////////////////
 // Obj
