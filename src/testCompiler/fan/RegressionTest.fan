@@ -297,4 +297,23 @@ class RegressionTest : CompilerTest
     verifyEq(t.field("y").type.signature, "${pod.name}::Foo[]?[]?[]?")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #994 java.lang.VerifyError on broken code
+//////////////////////////////////////////////////////////////////////////
+
+  Void test994()
+  {
+    verifyErrors(
+     "class Foo {
+       Str x() { echo(3).toStr }
+       Str y() { echo(3)?.toStr }
+       Str z() { echo(3)->toStr }
+      }",
+       [
+         2, 20, "Cannot call method on Void",
+         3, 21, "Cannot call method on Void",
+         4, 21, "Cannot call method on Void",
+       ])
+  }
+
 }
