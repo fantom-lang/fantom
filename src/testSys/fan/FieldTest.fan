@@ -317,6 +317,28 @@ class FieldTest : Test
     verifyEq(x.g.typeof, Str:Duration#)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// FieldNotSet
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFieldNotSet()
+  {
+    // make1
+    ok := FieldNotSetTest.make1 { a = "a"; b = "b"; c = "c" }
+    verifyErr(FieldNotSetErr#) { x := FieldNotSetTest.make1() }
+    verifyErr(FieldNotSetErr#) { x := FieldNotSetTest.make1 {} }
+    verifyErr(FieldNotSetErr#) { x := FieldNotSetTest.make1 { b = "b"; c = "c" } }
+    verifyErr(FieldNotSetErr#) { x := FieldNotSetTest.make1 { a = "a"; c = "c" } }
+    verifyErr(FieldNotSetErr#) { x := FieldNotSetTest.make1 { a = "a"; b = "b"; } }
+    verifyErr(FieldNotSetErr#) { x := FieldNotSetTest.make1 { a = "a" } }
+
+    // make2
+    ok = FieldNotSetTest.make2(true) {}
+    ok = FieldNotSetTest.make2(false) { a = "a"; b = "b"; c = "c" }
+    verifyErr(FieldNotSetErr#) { x := FieldNotSetTest.make2(false) { a = "a" } }
+    verifyErr(FieldNotSetErr#) { x := FieldNotSetTest.make2(false) { a = "a"; b = "b" } }
+  }
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -356,5 +378,31 @@ class FieldInferTest
   Str:Int e := [:]
   Str:Num? f := [:]
   Str:Obj? g := Str:Duration[:]
+}
+
+//////////////////////////////////////////////////////////////////////////
+// FieldNotSetTest
+//////////////////////////////////////////////////////////////////////////
+
+class FieldNotSetTest
+{
+  new make1(|This|? f := null) { f?.call(this) }
+
+  new make2(Bool flag, |This| f)
+  {
+    if (flag)
+    {
+      a = b = c = "set"
+    }
+    else
+    {
+      f(this)
+    }
+  }
+
+  const Str a
+  Str b
+  Str c
+  Str? x
 }
 

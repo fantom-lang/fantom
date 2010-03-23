@@ -511,6 +511,13 @@ class CheckErrors : CompilerStep
         return fe.field.qname == f.qname
       }
       if (definite) return
+
+      // if we didn't have a definite assignment on an it-block
+      // constructor that is ok, we just mark the field as requiring
+      // a runtime check in ConstChecks step
+      if (m != null && m.isItBlockCtor) { f.requiresNullCheck = true; return }
+
+      // report error
       if (isStaticInit)
         err("Non-nullable field '$f.name' must be assigned in static initializer", f.loc)
       else

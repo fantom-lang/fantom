@@ -83,6 +83,7 @@ abstract class CNamespace : CompilerSupport
     rangeType    = sysType("Range")
     uriType      = sysType("Uri")
     voidType     = sysType("Void")
+    fieldNotSetErrType = sysType("FieldNotSetErr")
 
     // methods
     objTrap            = sysMethod(objType,    "trap")
@@ -112,6 +113,7 @@ abstract class CNamespace : CompilerSupport
     typeField          = sysMethod(typeType,   "field")
     typeMethod         = sysMethod(typeType,   "method")
     funcCall           = sysMethod(funcType,   "call")
+    fieldNotSetErrMake = sysMethod(fieldNotSetErrType, "make")
 
     // mock methods
     mockFlags := FConst.Public + FConst.Virtual
@@ -303,6 +305,7 @@ abstract class CNamespace : CompilerSupport
   readonly CType? rangeType
   readonly CType? uriType
   readonly CType? voidType
+  readonly CType? fieldNotSetErrType
 
   readonly CMethod? objTrap
   readonly CMethod? objWith
@@ -334,5 +337,6 @@ abstract class CNamespace : CompilerSupport
   readonly CMethod? funcExitCtor
   readonly CMethod? funcCheckInCtor
   readonly CMethod? funcCall
+  readonly CMethod? fieldNotSetErrMake
 
 }

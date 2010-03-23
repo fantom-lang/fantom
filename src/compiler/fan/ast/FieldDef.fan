@@ -110,5 +110,6 @@ public class FieldDef : SlotDef, CField
   MethodDef? set            // setter MethodDef
   CField? concreteBase      // if I override a concrete virtual field
   CType? inheritedRet       // if covariant override of method
+  Bool requiresNullCheck    // flags that ctor needs runtime check to ensure it-block set it
 
 }
