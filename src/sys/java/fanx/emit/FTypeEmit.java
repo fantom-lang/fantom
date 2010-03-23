@@ -335,10 +335,10 @@ public abstract class FTypeEmit
   static int jflags(int fflags)
   {
     int jflags = 0;
-    if ((fflags & FConst.Private)   != 0) { /* package private */ }
+    if ((fflags & FConst.Private)   != 0) { /* package private */ }  // have to be internal to access private field members in mixins
     if ((fflags & FConst.Protected) != 0) jflags |= EmitConst.PUBLIC;
     if ((fflags & FConst.Public)    != 0) jflags |= EmitConst.PUBLIC;
-    if ((fflags & FConst.Internal)  != 0) { /* package private */ }
+    if ((fflags & FConst.Internal)  != 0) jflags |= EmitConst.PUBLIC; // have to be public b/c mixin interfaces are forced public
     if ((fflags & FConst.Abstract)  != 0) jflags |= EmitConst.ABSTRACT;
     if ((fflags & FConst.Static)    != 0) jflags |= EmitConst.STATIC;
     if ((fflags & FConst.Mixin)     != 0) jflags |= EmitConst.INTERFACE;
