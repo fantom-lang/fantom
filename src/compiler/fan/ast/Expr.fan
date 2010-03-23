@@ -1496,7 +1496,8 @@ class ClosureExpr : Expr
   {
     code := m.code.stmts
     if (code.size != 2) return
-    if (code.first.id !== StmtId.expr) return
+    if (code[0].id !== StmtId.expr) return
+    if (code[1].id !== StmtId.returnStmt) return
     if (!((ReturnStmt)code.last).isSynthetic) return
     expr := ((ExprStmt)code.first).expr
     code.set(0, ReturnStmt.makeSynthetic(expr.loc, expr))
