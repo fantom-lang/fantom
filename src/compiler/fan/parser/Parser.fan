@@ -2083,6 +2083,11 @@ public class Parser : CompilerSupport
       consume(Token.lbracket)
       consume(Token.rbracket)
       t = t.toListOf
+      if (curt === Token.question && !cur.whitespace)
+      {
+        consume(Token.question)
+        t = t.toNullable
+      }
     }
 
     // check for type?:type map (illegal)
