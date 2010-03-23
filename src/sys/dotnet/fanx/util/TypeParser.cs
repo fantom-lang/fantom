@@ -142,6 +142,11 @@ namespace Fanx.Util
         Consume('[');
         Consume(']');
         type = type.toListOf();
+        if (cur == '?')
+        {
+          Consume('?');
+          type = type.toNullable();
+        }
       }
 
       // nullable

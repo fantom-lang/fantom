@@ -278,4 +278,23 @@ class RegressionTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1033 Why is not avilable type "Obj[]?[]"
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1033()
+  {
+     compile(
+       "class Foo
+        {
+          Str[]?[] x := [[\"x\"]]
+          Foo[]?[]?[]? y
+        }
+        ")
+
+    t := pod.types[0]
+    verifyEq(t.field("x").type.signature, "sys::Str[]?[]")
+    verifyEq(t.field("y").type.signature, "${pod.name}::Foo[]?[]?[]?")
+  }
+
 }

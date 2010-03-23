@@ -149,6 +149,11 @@ public class TypeParser
       consume('[');
       consume(']');
       type = type.toListOf();
+      if (cur == '?')
+      {
+        consume('?');
+        type = type.toNullable();
+      }
     }
 
     // nullable
