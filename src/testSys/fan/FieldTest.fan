@@ -301,6 +301,22 @@ class FieldTest : Test
     verifyErr(ReadonlyErr#) { ConstMakeSetTest#.make([Field.makeSetFunc([ConstMakeSetTest#z: this])]) }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Field Inference
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFieldInference()
+  {
+    x := FieldInferTest()
+    verifyEq(x.a.typeof, Str[]#)
+    verifyEq(x.b.typeof, Str?[]#)
+    verifyEq(x.c.typeof, Str[]#)
+    verifyEq(x.d.typeof, Int?[]#)
+    verifyEq(x.e.typeof, Str:Int#)
+    verifyEq(x.f.typeof, Str:Num?#)
+    verifyEq(x.g.typeof, Str:Duration#)
+  }
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -324,5 +340,21 @@ const class ConstMakeSetTest
   const Int x
   const Str? y := "foo"
   const Obj? z
+}
+
+//////////////////////////////////////////////////////////////////////////
+// FieldInferTest
+//////////////////////////////////////////////////////////////////////////
+
+class FieldInferTest
+{
+  Str[]  a  := [,]
+  Str?[]? b := [null, "x"]
+  Obj[]  c  := Str[,]
+  Num[]? d  := Int?[,]
+
+  Str:Int e := [:]
+  Str:Num? f := [:]
+  Str:Obj? g := Str:Duration[:]
 }
 

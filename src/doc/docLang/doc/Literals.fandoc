@@ -355,6 +355,12 @@ you will specify a type - for example 'Str[,]' is an empty list
 of strings.  If a type is not specified, then the empty list
 evaluates to a 'Obj?[,]'.
 
+If a list literal without an explicit type is used as a field initializer,
+then it infers its type from the field's declared type:
+
+   Str[] names := [,]     // initial value inferred to be Str[,]
+   Num[] nums  := Int[,]  // initial value is Int[,]
+
 Map [#map]
 **********
 The `sys::Map` class stores a set of key/value pairs using a hash
@@ -398,3 +404,9 @@ map which will store null:
 The type 'Int:Str?' is a map with 'Int' keys and 'Str?' values.  However
 the type '[Int:Str]?' is map of 'Int:Str' where the map variable itself
 might be null.
+
+If a map literal without an explicit type is used as a field initializer,
+then it infers its type from the field's declared type:
+
+   Str:File[] files := [:]   // initial value inferred as Str:File[:]
+
