@@ -320,6 +320,9 @@ class LiteralExpr : Expr
   new makeFalse(Loc loc, CNamespace ns)
     : this.make(loc, ExprId.falseLiteral, ns.boolType, false) {}
 
+  new makeStr(Loc loc, CNamespace ns, Str val)
+    : this.make(loc, ExprId.strLiteral, ns.strType, val) {}
+
   static LiteralExpr makeDefaultLiteral(Loc loc, CNamespace ns, CType ctype)
   {
     if (!ctype.isNullable())

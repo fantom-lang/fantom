@@ -145,6 +145,7 @@ public final class Sys
   public static final Type CancelledErrType      = initType("CancelledErr");
   public static final Type CastErrType           = initType("CastErr");
   public static final Type ConstErrType          = initType("ConstErr");
+  public static final Type FieldNotSetErrType    = initType("FieldNotSetErr");
   public static final Type IOErrType             = initType("IOErr");
   public static final Type IndexErrType          = initType("IndexErr");
   public static final Type InterruptedErrType    = initType("InterruptedErr");

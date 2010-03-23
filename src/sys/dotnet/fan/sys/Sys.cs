@@ -142,6 +142,7 @@ namespace Fan.Sys
     public static readonly Type CancelledErrType      = initType("CancelledErr");
     public static readonly Type CastErrType           = initType("CastErr");
     public static readonly Type ConstErrType          = initType("ConstErr");
+    public static readonly Type FieldNotSetErrType    = initType("FieldNotSetErr");
     public static readonly Type IOErrType             = initType("IOErr");
     public static readonly Type IndexErrType          = initType("IndexErr");
     public static readonly Type InterruptedErrType    = initType("InterruptedErr");

@@ -79,6 +79,17 @@ class MethodDef : SlotDef, CMethod
   Bool isOnce() { flags.and(Parser.Once) != 0 }
 
   **
+  ** Return if this is a constructor with an it-block as last parameter
+  **
+  Bool isItBlockCtor()
+  {
+    if (!isCtor || params.isEmpty) return false
+    lastArg := params.last.paramType.deref.toNonNullable as FuncType
+    if (lastArg == null || lastArg.params.size != 1) return false
+    return true
+  }
+
+  **
   ** Make and add a MethodVar for a local variable.
   **
   MethodVar addLocalVarForDef(LocalDefStmt def, Block? scope)

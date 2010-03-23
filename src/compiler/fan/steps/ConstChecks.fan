@@ -4,12 +4,14 @@
 //
 // History:
 //    9 Apr 09  Brian Frank  Creation
+//   23 Mar 10  Brian Frank  FieldNotSetErr checks
 //
 
 **
 ** ConstChecks adds hooks into constructors and it-blocks
 ** to ensure that an attempt to set a const field will throw
-** ConstErr if not in the objects constructor.
+** ConstErr if not in the objects constructor.  We also use
+** this step to insert the runtime checks for non-nullable fields.
 **
 ** For each it-block which sets const fields:
 **
@@ -25,7 +27,8 @@
 **   {
 **     f?.enterCtor(this)
 **     ...
-**     f?.exitCtor()  // for every return
+**     checksField$Foo()  // if non-nullable fields need runtime checks
+**     f?.exitCtor()      // for every return
 **     return
 **   }
 **
@@ -53,9 +56,16 @@ class ConstChecks : CompilerStep
     // walk all the closures
     compiler.closures.each |ClosureExpr c| { processClosure(c) }
 
-    // walk all the constructors
+    // walk all the types
     types.each |TypeDef t|
     {
+      this.curType = t
+
+      // get all the fields which require runtime checks, and if there
+      // are any, then generate a fieldCheck method to call on ctor exit
+      this.fieldCheck = genFieldCheck(t)
+
+      // walk all the constructors
       t.ctorDefs.each |MethodDef ctor| { processCtor(ctor) }
     }
   }
@@ -83,12 +93,12 @@ class ConstChecks : CompilerStep
   private Void processCtor(MethodDef ctor)
   {
     // only process constructors with an it-block as last arg
-    if (ctor.params.isEmpty) return
-    lastArg := ctor.params.last.paramType.deref.toNonNullable as FuncType
-    if (lastArg == null || lastArg.params.size != 1) return
+    if (!ctor.isItBlockCtor) return
+
+    // set current state
     this.curCtor = ctor
 
-    // add enterCtor
+    // add func?.enterCtor(this)
     loc := ctor.loc
     enter := CallExpr.makeWithMethod(loc, LocalVarExpr(loc, itBlockVar), ns.funcEnterCtor, [ThisExpr(loc)])
     enter.isSafe = true
@@ -103,17 +113,62 @@ class ConstChecks : CompilerStep
   {
     if (stmt.id !== StmtId.returnStmt) return null
     loc := stmt.loc
-    exit := CallExpr.makeWithMethod(loc, LocalVarExpr(loc, itBlockVar), ns.funcExitCtor)
-    exit.isSafe = true
-    exit.noLeave
-    return [exit.toStmt, stmt]
+
+    // insert call to func?.exitCtor()
+    exit1 := CallExpr.makeWithMethod(loc, LocalVarExpr(loc, itBlockVar), ns.funcExitCtor)
+    exit1.isSafe = true
+    exit1.noLeave
+    if (fieldCheck == null) return [exit1.toStmt, stmt]
+
+    // if needed insert call to this.fieldCheck()
+    exit2 := CallExpr.makeWithMethod(loc, ThisExpr(loc), fieldCheck)
+    exit2.noLeave
+    return [exit1.toStmt, exit2.toStmt, stmt]
   }
 
   private MethodVar itBlockVar() { curCtor.vars[curCtor.params.size-1] }
+
+  private MethodDef? genFieldCheck(TypeDef t)
+  {
+    // find any fields which were marked as requiring a
+    // runtime check during the CheckErrors step
+    checkedFields := t.fieldDefs.findAll |f| { f.requiresNullCheck  }
+    if (checkedFields.isEmpty) return null
+
+    // add check for each field which requires runtime null check
+    loc := t.loc
+    block := Block(loc)
+    checkedFields.each |FieldDef f|
+    {
+      // field == null
+      condExpr := UnaryExpr(loc, ExprId.cmpNull, Token.same,
+                            FieldExpr(loc, ThisExpr(loc), f, false))
+
+      // throw FieldNotSet(f.qname)
+      throwExpr := ThrowStmt(loc, CallExpr.makeWithMethod(loc, null, ns.fieldNotSetErrMake,
+                             [LiteralExpr.makeStr(loc, ns, f.qname)]))
+
+      // if (condExpr) throwExpr
+      trueBlock := Block(loc)
+      trueBlock.stmts.add(throwExpr)
+      block.stmts.add(IfStmt(loc, condExpr, trueBlock))
+    }
+    block.stmts.add(ReturnStmt.makeSynthetic(loc))
+
+    // create checkFields method
+    m := MethodDef(loc, t)
+    m.flags = FConst.Private.or(FConst.Synthetic)
+    m.name  = "checkFields\$" + t.name
+    m.ret   = ns.voidType
+    m.code  = block
+    t.addSlot(m)
+    return m
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   MethodDef? curCtor
+  MethodDef? fieldCheck
 }
