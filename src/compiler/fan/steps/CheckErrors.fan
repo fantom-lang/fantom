@@ -1099,6 +1099,13 @@ class CheckErrors : CompilerStep
 
     name := m.name
 
+    // can't call method on Void
+    if (call.target != null && call.target.ctype.isVoid)
+    {
+      err("Cannot call method on Void", call.loc)
+      return
+    }
+
     // check protection scope
     checkSlotProtection(call.method, call.loc)
 

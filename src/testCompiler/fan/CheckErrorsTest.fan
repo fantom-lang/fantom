@@ -1581,6 +1581,7 @@ class CheckErrorsTest : CompilerTest
          9, 12, "Invalid type '|->sys::This|?'",
         10, 15, "'null' is not assignable to 'sys::Void?'",
         10, 15, "Cannot use Void as local variable type",
+        10, 33, "Cannot call method on Void",
         11, 15, "Cannot use This as local variable type",
         12, 15, "Invalid type 'sys::Void[]?'",
         13, 15, "Invalid type '|sys::This->sys::Void|?'",
