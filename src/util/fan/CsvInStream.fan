@@ -8,7 +8,7 @@
 
 **
 ** CsvInStream is used to read delimiter-separated values
-** as specified by RFC 4180:
+** as specified by RFC 4180.  Format details:
 **   - rows are delimited by a newline
 **   - cells are separated by `delimiter` char
 **   - cells may be quoted with '"' character
