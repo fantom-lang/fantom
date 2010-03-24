@@ -119,7 +119,7 @@ class SerializationTest : Test
     verifyEq(x.menuBar.children.first->text, "File")
     verifyType(x.content, Label#)
     verifyEq(x.content->text, "content")
-    verifyEq(x.children, Widget[x.content, x.menuBar])
+    verifyEq(x.children.dup.sort, Widget[x.content, x.menuBar].sort)
 
     x = verifySer(short, full)
     verifyType(x.menuBar, Menu#)
@@ -127,7 +127,7 @@ class SerializationTest : Test
     verifyEq(x.menuBar.children.first->text, "File")
     verifyType(x.content, Label#)
     verifyEq(x.content->text, "content")
-    verifyEq(x.children, Widget[x.menuBar, x.content])
+    verifyEq(x.children.dup.sort, Widget[x.menuBar, x.content].sort)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -151,7 +151,7 @@ class SerializationTest : Test
 
     verifyType(x.left, Label#)
     verifyType(x.right, Label#)
-    verifyEq(x.children, Widget[x.left, x.right])
+    verifyEq(x.children.dup.sort, Widget[x.left, x.right].sort)
     verifyEq(x.left->text, "left")
     verifyEq(x.right->text, "right")
   }
