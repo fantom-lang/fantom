@@ -9,6 +9,8 @@
 
 using build
 
+// TODO: json has been replaced by util API
+
 **
 ** Build: json
 **
@@ -19,7 +21,8 @@ class Build : BuildPod
     podName = "json"
     summary = "JSON (Javascript Object Notation) serialization"
     depends = ["sys 1.0"]
-    srcDirs = [`fan/`, `test/`]
+//    srcDirs = [`fan/`, `test/`]
+srcDirs = [`fan/`]
     docSrc  = true
   }
 }
