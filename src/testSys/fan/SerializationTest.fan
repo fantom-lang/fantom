@@ -415,6 +415,21 @@ class SerializationTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Lists
+//////////////////////////////////////////////////////////////////////////
+
+  Void testItBlocks()
+  {
+    verifySer("""testSys::SerItBlock {a="A"}""", SerItBlock { a = "A"; b = "unset" })
+    verifySer("""testSys::SerItBlock {a="A"; b="B"}""", SerItBlock { a = "A"; b = "B" })
+    verifySer("""testSys::SerItBlock {a="A"; c="C"}""", SerItBlock { a = "A"; b = "unset"; c="C" })
+    verifySer("""testSys::SerItBlock {a="A"; c="C", b="X"}""", SerItBlock { a = "A"; b = "X"; c="C" })
+    obj := verifySer("""testSys::SerItBlock {a="A"; d=[1, 2, 3]}""", SerItBlock { a = "A"; b = "unset"; d = [1, 2, 3] })
+    verifyEq(obj->d.isImmutable, true)
+    verifyErr(IOErr#) { verifySer("""testSys::SerItBlock {}""", null) }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Collections
 //////////////////////////////////////////////////////////////////////////
 
@@ -977,4 +992,28 @@ class SerFolder
   override Str toStr() { return name + " " + list.toStr }
   Str? name
   @Transient SerFolder[] list := SerFolder[,]
+}
+
+**************************************************************************
+** SerItBlock
+**************************************************************************
+
+@Serializable
+const class SerItBlock
+{
+  new make(|This|? f)
+  {
+    f?.call(this)
+    if ((Obj?)b == null) b = "unset"
+  }
+  const Str a
+  const Str b
+  const Str? c
+  const Int[]? d
+  override Int hash() { a.hash }
+  override Bool equals(Obj? obj)
+  {
+    if (obj isnot SerItBlock) return false
+    return a == obj->a && b == obj->b && c == obj->c && d == obj->d
+  }
 }
