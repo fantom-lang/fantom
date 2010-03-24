@@ -218,13 +218,12 @@ public class ObjDecoder
     boolean setAfterCtor = true;
     try
     {
-      // if last parameter is an function then pass toSet
+      // if first parameter is an function then pass toSet
       // as an it-block for setting the fields
-      Param lastParam = (Param)makeCtor.params().last();
-      if (lastParam != null && lastParam.type().fits(Sys.FuncType))
+      Param p = (Param)makeCtor.params().first();
+      if (args == null && p != null && p.type().fits(Sys.FuncType))
       {
-        if (args == null) args = new List(Sys.ObjType);
-        args = args.dup().add(Field.makeSetFunc(toSet));
+        args = new List(Sys.ObjType).add(Field.makeSetFunc(toSet));
         setAfterCtor = false;
       }
 
