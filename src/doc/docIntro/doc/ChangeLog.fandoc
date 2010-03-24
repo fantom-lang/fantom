@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.52 (working)*
+*Build 1.0.52 (24 Mar 10)*
 - Color: makeArgb, makeRgb
 - WebUtil.jsMain
 - Win: viewport, reload, onEvent
@@ -19,6 +19,15 @@
 - Default all ext2mime.props to assume charset=utf-8
 - Str: getSafe
 - Add util::CsvInStream and util::CsvOutStream
+- #762: fix sql API for auto-generated keys
+- #832: Runtime checking of non-nullable fields
+- #949: IllegalAccess in mixin field override
+- #986: Field initializer List and Map type inference
+- #994: java.lang.VerifyError on broken code
+- #995: If statement returned in a closure - Internal compiler error
+- #1032: Move json to util to match csv API
+- #1033: Why is not avilable type "Obj[]?[]" ?
+- #1036: Serialization of const fields
 
 *Build 1.0.51 (6 Feb 10)*
 - Roll fcode version from 1.0.45 => 1.0.51
