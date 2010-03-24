@@ -10,6 +10,8 @@ package fanx.serial;
 import fan.sys.*;
 import fanx.util.*;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 /**
  * ObjDecoder parses an object tree from an input stream.
@@ -191,29 +193,78 @@ public class ObjDecoder
    */
   private Object readComplex(int line, Type t, boolean root)
   {
-    // make instance
+    Map toSet = new Map(Sys.FieldType, Sys.ObjType.toNullable());
+    List toAdd = new List(Sys.ObjType.toNullable());
+
+    // read fields/collection into toSet/toAdd
+    readComplexFields(t, toSet, toAdd);
+
+    // get the make constructor
+    Method makeCtor = t.method("make", false);
+    if (makeCtor == null || !makeCtor.isPublic())
+      throw err("Missing public constructor " + t.qname() + ".make", line);
+
+    // get argument lists
+    List args = null;
+    if (root && options != null)
+      args = (List)options.get("makeArgs");
+
+    // construct object
     Object obj = null;
+    boolean setAfterCtor = true;
     try
     {
-      List args = null;
-      if (root && options != null)
-        args = (List)options.get("makeArgs");
-      obj = t.make(args);
+      // if last parameter is an function then pass toSet
+      // as an it-block for setting the fields
+      Param lastParam = (Param)makeCtor.params().last();
+      if (lastParam != null && lastParam.type().fits(Sys.FuncType))
+      {
+        if (args == null) args = new List(Sys.ObjType);
+        args = args.dup().add(Field.makeSetFunc(toSet));
+        setAfterCtor = false;
+      }
+
+      // invoke make to construct object
+      obj = makeCtor.callList(args);
     }
     catch (Throwable e)
     {
-      throw IOErr.make("Cannot make " + t + ": " + e + " [Line " + line + "]", e).val;
+      throw err("Cannot make " + t + ": " + e, line, e);
     }
 
-    // check for braces
-    if (curt != Token.LBRACE) return obj;
+    // set fields (if not passed to ctor as it-block)
+    if (setAfterCtor && toSet.size() > 0)
+    {
+      Iterator it = toSet.pairsIterator();
+      while (it.hasNext())
+      {
+        Entry e = (Entry)it.next();
+        complexSet(obj, (Field)e.getKey(), e.getValue(), line);
+      }
+    }
+
+    // add
+    if (toAdd.size() > 0)
+    {
+      Method addMethod = t.method("add", false);
+      if (addMethod == null) throw err("Method not found: " + t.qname() + ".add", line);
+      for (int i=0; i<toAdd.sz(); ++i)
+        complexAdd(t, obj, addMethod, toAdd.get(i), line);
+    }
+
+    return obj;
+  }
+
+  private void readComplexFields(Type t, Map toSet, List toAdd)
+  {
+    if (curt != Token.LBRACE) return;
     consume();
 
     // fields and/or collection items
     while (curt != Token.RBRACE)
     {
       // try to read "id =" to see if we have a field
-      line = tokenizer.line;
+      int line = tokenizer.line;
       boolean readField = false;
       if (curt == Token.ID)
       {
@@ -222,7 +273,7 @@ public class ObjDecoder
         {
           // we have "id =" so read field
           consume();
-          readComplexField(t, obj, line, name);
+          readComplexSet(t, line, name, toSet);
           readField = true;
         }
         else
@@ -234,32 +285,15 @@ public class ObjDecoder
       }
 
       // if we didn't read a field, we assume a collection item
-      if (!readField) readComplexAdd(t, obj, line);
+      if (!readField) readComplexAdd(t, line, toAdd);
 
       if (curt == Token.COMMA) consume();
       else endOfStmt(line);
     }
     consume(Token.RBRACE, "Expected '}'");
-
-    return obj;
   }
 
-  void readComplexAdd(Type t, Object obj, int line)
-  {
-    Object val = readObj(null, null, false);
-    Method m = t.method("add", false);
-    if (m == null) throw err("Method not found: " + t.qname() + ".add", line);
-    try
-    {
-      m.invoke(obj, new Object[] { val });
-    }
-    catch (Throwable e)
-    {
-      throw IOErr.make("Cannot call " + t.qname() + ".add: " + e + " [Line " + line + "]", e).val;
-    }
-  }
-
-  void readComplexField(Type t, Object obj, int line, String name)
+  void readComplexSet(Type t, int line, String name, Map toSet)
   {
     // resolve field
     Field field = t.field(name, false);
@@ -268,7 +302,22 @@ public class ObjDecoder
     // parse value
     Object val = readObj(field, null, false);
 
-    // set field value (skip const check)
+    try
+    {
+      // if const field, then make val immutable
+      if (field.isConst()) val = OpUtil.toImmutable(val);
+    }
+    catch (Throwable ex)
+    {
+      throw err("Cannot make object const for " + field.qname() + ": " + ex, line, ex);
+    }
+
+    // add to map
+    toSet.set(field, val);
+  }
+
+  void complexSet(Object obj, Field field, Object val, int line)
+  {
     try
     {
       if (field.isConst())
@@ -276,9 +325,29 @@ public class ObjDecoder
       else
         field.set(obj, val);
     }
-    catch (Throwable e)
+    catch (Throwable ex)
     {
-      throw IOErr.make("Cannot set field " + t.qname() + "." + name + ": " + e + " [Line " + line + "]", e).val;
+      throw err("Cannot set field " + field.qname() + ": " + ex, line, ex);
+    }
+  }
+
+  void readComplexAdd(Type t, int line, List toAdd)
+  {
+    Object val = readObj(null, null, false);
+
+    // add to list
+    toAdd.add(val);
+  }
+
+  void complexAdd(Type t, Object obj, Method addMethod, Object val, int line)
+  {
+    try
+    {
+      addMethod.invoke(obj, new Object[] { val });
+    }
+    catch (Throwable ex)
+    {
+      throw err("Cannot call " + t.qname() + ".add: " + ex, line, ex);
     }
   }
 
@@ -542,9 +611,10 @@ public class ObjDecoder
   /**
    * Create error reporting exception.
    */
-  static RuntimeException err(String msg, int line)
+  static RuntimeException err(String msg, int line) { return err(msg, line, null); }
+  static RuntimeException err(String msg, int line, Throwable e)
   {
-    return IOErr.make(msg + " [Line " + line + "]").val;
+    return IOErr.make(msg + " [Line " + line + "]", e).val;
   }
 
   /**

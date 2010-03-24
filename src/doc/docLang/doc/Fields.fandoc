@@ -322,6 +322,20 @@ meet one of the following criteria:
 Matching rules apply to static fields which must be set by all code
 paths in the static initializer.
 
+As a special case, a constructor which takes an it-block as the last
+parameter allows definite assignment to be postponed to runtime.  The
+it-block is required to set every non-nullable field or a 'FieldNotSetErr'
+is raised at runtime.  Consider this example:
+
+   class Foo
+   {
+     new make(|This| f) { f(this) }
+     Str name
+   }
+
+   Foo {}                   // throws FieldNotSetErr
+   Foo { name = "Brian" }   // ok
+
 Overriding a Method [#overrideMethod]
 *************************************
 A field's getter may be used to override a virtual method which has
