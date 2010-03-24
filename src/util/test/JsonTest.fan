@@ -40,7 +40,7 @@ class JsonTest : Test
     verifyBasics("[1]", Obj?[1])
     verifyBasics("[1,2.0]", Obj?[1,2f])
     verifyBasics("[1,2,3]", Obj?[1,2,3])
-    verifyBasics("{}", Str:Obj?[:])
+    verifyBasics("[3, 4.0, null, \"hi\"]", [3, 4.0f, null, "hi"])
 
     // objects
     verifyBasics(Str<|{}|>, Str:Obj?[:])
@@ -131,6 +131,68 @@ class JsonTest : Test
     verifyEq(JsonOutStream.writeJsonToStr(obj), expected)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Misc
+//////////////////////////////////////////////////////////////////////////
+
+  public Void testRaw()
+  {
+    // make raw json
+    buf := StrBuf.make
+    buf.add("\n{\n  \"type\"\n:\n\"Foobar\",\n \n\n\"age\"\n:\n34,    \n\n\n\n")
+    buf.add("\t\"nested\"\t:  \n{\t \"ids\":[3.28, 3.14, 2.14],  \t\t\"dead\":false\n\n,")
+    buf.add("\t\n \"friends\"\t:\n null\t  \n}\n\t\n}")
+    str := buf.toStr
+
+    // parse
+    Str:Obj? map := JsonInStream(str.in).readJson
+
+    // verify
+    verifyEq(map["type"], "Foobar")
+    verifyEq(map["age"], 34)
+    inner := (Str:Obj?) map["nested"]
+    verifyNotEq(inner, null)
+    verifyEq(inner["dead"], false)
+    verifyEq(inner["friends"], null)
+    list := (List)inner["ids"]
+    verifyNotEq(list, null)
+    verifyEq(list.size, 3)
+    verifyEq(map["friends"], null)
+  }
+
+  public Void testEscapes()
+  {
+    Str:Obj obj := JsonInStream(
+      Str<|{
+           "foo"   : "bar\nbaz",
+           "bar"   : "_\r \t \u0abc \\ \/_",
+           "baz"   : "\"hi\"",
+           "num"   : 1234,
+           "bool"  : true,
+           "float" : 2.4,
+           "dollar": "$100 \u00f7",
+           "a\nb"  : "crazy key"
+           }|>.in).readJson
+
+    f := |->|
+    {
+      verifyEq(obj["foo"], "bar\nbaz")
+      verifyEq(obj["bar"], "_\r \t \u0abc \\ /_")
+      verifyEq(obj["baz"], Str<|"hi"|>)
+      verifyEq(obj["num"], 1234)
+      verifyEq(obj["bool"], true)
+      verify(2.4f.approx(obj["float"]))
+      verifyEq(obj["dollar"], "\$100 \u00f7")
+      verifyEq(obj["a\nb"], "crazy key")
+      verifyEq(obj.keys.join(","), "foo,bar,baz,num,bool,float,dollar,a\nb")
+    }
+
+    f()
+    buf := Buf()
+    JsonOutStream(buf.out).writeJson(obj)
+    obj = JsonInStream(buf.flip.in).readJson
+    f()
+  }
 }
 
 **************************************************************************

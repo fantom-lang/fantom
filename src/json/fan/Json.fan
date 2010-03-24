@@ -9,6 +9,7 @@
 **
 ** Serialization to/from Javascript Object Notation (JSON).
 **
+@Deprecated { msg = "Use new 'util' APIs" }
 class Json
 {
   **
@@ -35,7 +36,7 @@ class Json
   public static Str writeToStr(Obj? obj)
   {
     buf := StrBuf()
-    write(buf.out, obj)
+    JsonWriter(buf.out).write(obj)
     return buf.toStr
   }
 
