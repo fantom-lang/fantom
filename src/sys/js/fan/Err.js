@@ -119,6 +119,12 @@ fan.sys.ConstErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prototype.
 fan.sys.ConstErr.prototype.$typeof = function() { return fan.sys.ConstErr.$type; }
 fan.sys.ConstErr.make = function(msg, cause) { return new fan.sys.ConstErr(msg, cause); }
 
+// FieldNotSetErr
+fan.sys.FieldNotSetErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.FieldNotSetErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prototype.$ctor.call(this, msg, cause); }
+fan.sys.FieldNotSetErr.prototype.$typeof = function() { return fan.sys.FieldNotSetErr.$type; }
+fan.sys.FieldNotSetErr.make = function(msg, cause) { return new fan.sys.FieldNotSetErr(msg, cause); }
+
 // IndexErr
 fan.sys.IndexErr = fan.sys.Obj.$extend(fan.sys.Err);
 fan.sys.IndexErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prototype.$ctor.call(this, msg, cause); }
