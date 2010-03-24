@@ -185,6 +185,10 @@ namespace Fanx.Serial
       }
     }
 
+  //////////////////////////////////////////////////////////////////////////
+  // Complex
+  //////////////////////////////////////////////////////////////////////////
+
     /// <summary>
     /// complex := type [fields]
     /// fields  := "{" field (eos field)* "}"
@@ -192,29 +196,77 @@ namespace Fanx.Serial
     /// </summary>
     private object readComplex(int line, Type t, bool root)
     {
-      // make instance
+      Map toSet = new Map(Sys.FieldType, Sys.ObjType.toNullable());
+      List toAdd = new List(Sys.ObjType.toNullable());
+
+      // read fields/collection into toSet/toAdd
+      readComplexFields(t, toSet, toAdd);
+
+      // get the make constructor
+      Method makeCtor = t.method("make", false);
+      if (makeCtor == null || !makeCtor.isPublic())
+        throw err("Missing public constructor " + t.qname() + ".make", line);
+
+      // get argument lists
+      List args = null;
+      if (root && options != null)
+        args = (List)options.get("makeArgs");
+
+      // construct object
       object obj = null;
+      bool setAfterCtor = true;
       try
       {
-        List args = null;
-        if (root && options != null)
-          args = (List)options.get("makeArgs");
-        obj = t.make(args);
+        // if last parameter is an function then pass toSet
+        // as an it-block for setting the fields
+        Param lastParam = (Param)makeCtor.@params().last();
+        if (lastParam != null && lastParam.type().fits(Sys.FuncType))
+        {
+          if (args == null) args = new List(Sys.ObjType);
+          args = args.dup().add(Field.makeSetFunc(toSet));
+          setAfterCtor = false;
+        }
+
+        // invoke make to construct object
+        obj = makeCtor.callList(args);
       }
       catch (System.Exception e)
       {
-        throw IOErr.make("Cannot make " + t + ": " + e + " [Line " + line + "]", e).val;
+        throw err("Cannot make " + t + ": " + e, line, e);
       }
 
-      // check for braces
-      if (curt != Token.LBRACE) return obj;
+      // set fields (if not passed to ctor as it-block)
+      if (setAfterCtor && toSet.size() > 0)
+      {
+        IDictionaryEnumerator en = toSet.pairsIterator();
+        while (en.MoveNext())
+        {
+          complexSet(obj, (Field)en.Key, en.Value, line);
+        }
+      }
+
+      // add
+      if (toAdd.size() > 0)
+      {
+        Method addMethod = t.method("add", false);
+        if (addMethod == null) throw err("Method not found: " + t.qname() + ".add", line);
+        for (int i=0; i<toAdd.sz(); ++i)
+          complexAdd(t, obj, addMethod, toAdd.get(i), line);
+      }
+
+      return obj;
+    }
+
+    private void readComplexFields(Type t, Map toSet, List toAdd)
+    {
+      if (curt != Token.LBRACE) return;
       consume();
 
       // fields and/or collection items
       while (curt != Token.RBRACE)
       {
         // try to read "id =" to see if we have a field
-        line = tokenizer.m_line;
+        int line = tokenizer.m_line;
         bool readField = false;
         if (curt == Token.ID)
         {
@@ -223,7 +275,7 @@ namespace Fanx.Serial
           {
             // we have "id =" so read field
             consume();
-            readComplexField(t, obj, line, name);
+            readComplexSet(t, line, name, toSet);
             readField = true;
           }
           else
@@ -235,32 +287,15 @@ namespace Fanx.Serial
         }
 
         // if we didn't read a field, we assume a collection item
-        if (!readField) readComplexAdd(t, obj, line);
+        if (!readField) readComplexAdd(t, line, toAdd);
 
         if (curt == Token.COMMA) consume();
         else endOfStmt(line);
       }
       consume(Token.RBRACE, "Expected '}'");
-
-      return obj;
     }
 
-    void readComplexAdd(Type t, object obj, int line)
-    {
-      object val = readObj(null, null, false);
-      Method m = t.method("add", false);
-      if (m == null) throw err("Method not found: " + t.qname() + ".add", line);
-      try
-      {
-        m.invoke(obj, new object[] { val });
-      }
-      catch (System.Exception e)
-      {
-        throw IOErr.make("Cannot call " + t.qname() + ".add: " + e + " [Line " + line + "]", e).val;
-      }
-    }
-
-    void readComplexField(Type t, object obj, int line, string name)
+    void readComplexSet(Type t, int line, string name, Map toSet)
     {
       // resolve field
       Field field = t.field(name, false);
@@ -269,17 +304,52 @@ namespace Fanx.Serial
       // parse value
       object val = readObj(field, null, false);
 
-      // set field value (skip const check)
+      try
+      {
+        // if const field, then make val immutable
+        if (field.isConst()) val = OpUtil.toImmutable(val);
+      }
+      catch (System.Exception ex)
+      {
+        throw err("Cannot make object const for " + field.qname() + ": " + ex, line, ex);
+      }
+
+      // add to map
+      toSet.set(field, val);
+    }
+
+    void complexSet(object obj, Field field, object val, int line)
+    {
       try
       {
         if (field.isConst())
           field.set(obj, OpUtil.toImmutable(val), false);
         else
-          field.set(obj, val, false);
+          field.set(obj, val);
       }
-      catch (System.Exception e)
+      catch (System.Exception ex)
       {
-        throw IOErr.make("Cannot set field " + t.qname() + "." + name + ": " + e + " [Line " + line + "]", e).val;
+        throw err("Cannot set field " + field.qname() + ": " + ex, line, ex);
+      }
+    }
+
+    void readComplexAdd(Type t, int line, List toAdd)
+    {
+      object val = readObj(null, null, false);
+
+      // add to list
+      toAdd.add(val);
+    }
+
+    void complexAdd(Type t, object obj, Method addMethod, object val, int line)
+    {
+      try
+      {
+        addMethod.invoke(obj, new object[] { val });
+      }
+      catch (System.Exception ex)
+      {
+        throw err("Cannot call " + t.qname() + ".add: " + ex, line, ex);
       }
     }
 
@@ -550,9 +620,10 @@ namespace Fanx.Serial
     /// <summary>
     /// Create error reporting exception.
     /// </summary>
-    internal static System.Exception err(string msg, int line)
+    internal static System.Exception err(string msg, int line) { return err(msg, line, null); }
+    internal static System.Exception err(string msg, int line, System.Exception ex)
     {
-      return IOErr.make(msg + " [Line " + line + "]").val;
+      return IOErr.make(msg + " [Line " + line + "]", ex).val;
     }
 
     /// <summary>

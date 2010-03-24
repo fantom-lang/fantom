@@ -47,6 +47,25 @@ be serialized.  A contrived example:
     @Transient Int area
   }
 
+A serializable object must support a 'make' constructor which either takes no
+parameters or takes an it-block.  If the constructor takes an it-block then
+the field values are passed in using [Field.makeSetFunc]`sys::Field.makeSetFunc`
+and the object is given a chance to perform validation.  For example:
+
+  @Serializable
+  const class Rec
+  {
+    new make(|This| f)
+    {
+      f(this)
+      if (id <= 0) throw ArgErr("id <= 0")
+    }
+    const Int id
+  }
+
+  "Rec { id = 3 }".in.readObj  // ok
+  "Rec {}".in.readObj          // throws ArgErr
+
 Simple [#simple]
 ****************
 Set the [Serializable.simple]`sys::Serializable.simple` field to mark a
