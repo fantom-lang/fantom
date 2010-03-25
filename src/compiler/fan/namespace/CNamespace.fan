@@ -121,7 +121,7 @@ abstract class CNamespace : CompilerSupport
     funcExitCtor    = MockMethod(funcType, "exitCtor",    mockFlags, voidType, CType[,])
     funcCheckInCtor = MockMethod(funcType, "checkInCtor", mockFlags, voidType, [objType])
 
-    itBlockType = FuncType.makeItBlock(objType)
+    itBlockType = FuncType.makeItBlock(objType.toNullable)
     itBlockType.inferredSignature = true
   }
 
