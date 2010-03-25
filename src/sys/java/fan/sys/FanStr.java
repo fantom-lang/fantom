@@ -343,13 +343,13 @@ public class FanStr
     if (f.params.sz() == 1)
     {
       for (int i=0; i<len ; ++i)
-        if (f.call(Long.valueOf(self.charAt(i))) == Boolean.TRUE)
+        if (f.callBool(Long.valueOf(self.charAt(i))))
           return true;
     }
     else
     {
       for (int i=0; i<len ; ++i)
-        if (f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i)) == Boolean.TRUE)
+        if (f.callBool(Long.valueOf(self.charAt(i)), Long.valueOf(i)))
           return true;
     }
     return false;
@@ -361,13 +361,13 @@ public class FanStr
     if (f.params.sz() == 1)
     {
       for (int i=0; i<len ; ++i)
-        if (f.call(Long.valueOf(self.charAt(i))) == Boolean.FALSE)
+        if (!f.callBool(Long.valueOf(self.charAt(i))))
           return false;
     }
     else
     {
       for (int i=0; i<len ; ++i)
-        if (f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i)) == Boolean.FALSE)
+        if (!f.callBool(Long.valueOf(self.charAt(i)), Long.valueOf(i)))
           return false;
     }
     return true;
