@@ -935,6 +935,9 @@ class ListTest : Test
     // typed assign
     Int[] a := list.findAll |Int v->Bool| { return v.toStr.size == 1 }
     verifyEq(a, [0])
+
+    // regression test for #1039
+    verifyEq(["x", null].findAll { it != null }, Str?["x"])
   }
 
 //////////////////////////////////////////////////////////////////////////
