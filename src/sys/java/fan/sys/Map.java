@@ -362,7 +362,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call(val, key) == Boolean.TRUE)
+      if (f.callBool(val, key))
         return val;
     }
     return null;
@@ -377,7 +377,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call(val, key) == Boolean.TRUE)
+      if (f.callBool(val, key))
         acc.set(key, val);
     }
     return acc;
@@ -392,7 +392,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call(val, key) == Boolean.FALSE)
+      if (!f.callBool(val, key))
         acc.set(key, val);
     }
     return acc;
@@ -407,7 +407,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call(val, key) == Boolean.TRUE)
+      if (f.callBool(val, key))
         return true;
     }
     return false;
@@ -422,7 +422,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call(val, key) == Boolean.FALSE)
+      if (!f.callBool(val, key))
         return false;
     }
     return true;

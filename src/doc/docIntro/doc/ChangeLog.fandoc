@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.53 (working)*
+- Fix boxed boolean JVM checks
+
 *Build 1.0.52 (24 Mar 10)*
 - Color: makeArgb, makeRgb
 - WebUtil.jsMain

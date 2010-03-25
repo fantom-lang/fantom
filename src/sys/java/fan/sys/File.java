@@ -239,7 +239,7 @@ public abstract class File
     }
     else if (exclude instanceof Func)
     {
-      if (((Func)exclude).call(this) == Boolean.TRUE) return;
+      if (((Func)exclude).callBool(this)) return;
     }
 
     // check for overwrite
@@ -247,11 +247,11 @@ public abstract class File
     {
       if (overwrite instanceof Boolean)
       {
-        if (overwrite == Boolean.FALSE) return;
+        if (!((Boolean)overwrite).booleanValue()) return;
       }
       else if (overwrite instanceof Func)
       {
-        if (((Func)overwrite).call(this) == Boolean.FALSE) return;
+        if (!((Func)overwrite).callBool(this)) return;
       }
       else
       {

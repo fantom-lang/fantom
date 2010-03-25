@@ -613,13 +613,13 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        if (f.call(values[i]) == Boolean.TRUE)
+        if (f.callBool(values[i]))
           return values[i];
     }
     else
     {
       for (int i=0; i<size; ++i)
-        if (f.call(values[i], Long.valueOf(i)) == Boolean.TRUE)
+        if (f.callBool(values[i], Long.valueOf(i)))
           return values[i];
     }
     return null;
@@ -631,7 +631,7 @@ public final class List
     {
       for (int i=0; i<size; ++i)
       {
-        if (f.call(values[i]) == Boolean.TRUE)
+        if (f.callBool(values[i]))
           return Long.valueOf(i);
       }
     }
@@ -640,7 +640,7 @@ public final class List
       for (int i=0; i<size; ++i)
       {
         Long pos = Long.valueOf(i);
-        if (f.call(values[i], pos) == Boolean.TRUE)
+        if (f.callBool(values[i], pos))
           return pos;
       }
     }
@@ -653,13 +653,13 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        if (f.call(values[i]) == Boolean.TRUE)
+        if (f.callBool(values[i]))
           acc.add(values[i]);
     }
     else
     {
       for (int i=0; i<size; ++i)
-        if (f.call(values[i], Long.valueOf(i)) == Boolean.TRUE)
+        if (f.callBool(values[i], Long.valueOf(i)))
           acc.add(values[i]);
     }
     return acc;
@@ -683,13 +683,13 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        if (f.call(values[i]) != Boolean.TRUE)
+        if (!f.callBool(values[i]))
           acc.add(values[i]);
     }
     else
     {
       for (int i=0; i<size; ++i)
-        if (f.call(values[i], Long.valueOf(i)) != Boolean.TRUE)
+        if (!f.callBool(values[i], Long.valueOf(i)))
           acc.add(values[i]);
     }
     return acc;
@@ -700,13 +700,13 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        if (f.call(values[i]) == Boolean.TRUE)
+        if (f.callBool(values[i]))
           return true;
     }
     else
     {
       for (int i=0; i<size; ++i)
-        if (f.call(values[i], Long.valueOf(i)) == Boolean.TRUE)
+        if (f.callBool(values[i], Long.valueOf(i)))
           return true;
     }
     return false;
@@ -717,13 +717,13 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        if (f.call(values[i]) != Boolean.TRUE)
+        if (!f.callBool(values[i]))
           return false;
     }
     else
     {
       for (int i=0; i<size; ++i)
-        if (f.call(values[i], Long.valueOf(i)) != Boolean.TRUE)
+        if (!f.callBool(values[i], Long.valueOf(i)))
           return false;
     }
     return true;
