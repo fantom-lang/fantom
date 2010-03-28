@@ -497,7 +497,10 @@ public class Parser : CompilerSupport
     // readonly is syntatic sugar for { private set }
     if (flags.and(Readonly) != 0)
     {
-      field.set.flags = field.set.flags.and(ProtectionMask).or(FConst.Private)
+      if (field.isConst)
+        err("Invalid combination of 'readonly' and 'const' modifiers", loc)
+      else
+        field.set.flags = field.set.flags.and(ProtectionMask).or(FConst.Private)
     }
 
     endOfStmt
