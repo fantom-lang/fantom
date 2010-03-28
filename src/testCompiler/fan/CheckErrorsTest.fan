@@ -440,6 +440,7 @@ class CheckErrorsTest : CompilerTest
         Int f02 { override get { return f02 } }
         Int f03 { internal override get { return f03 } }
         Int f04 { override set {} }
+        const readonly Int f05
       }
       ",
        [
@@ -447,6 +448,7 @@ class CheckErrorsTest : CompilerTest
          4,  13, "Cannot use modifiers on field getter",
          5,  13, "Cannot use modifiers on field getter",
          6,  13, "Cannot use modifiers on field setter except to narrow protection",
+         7,   3, "Invalid combination of 'readonly' and 'const' modifiers", // #1043
        ])
 
     // check errors stage
