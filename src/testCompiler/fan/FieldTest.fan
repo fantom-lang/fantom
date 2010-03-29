@@ -147,7 +147,7 @@ class FieldTest : CompilerTest
        "mixin Mixin
         {
           static Int mgeta() { return s }
-          static Int mgets() { return *s }
+          //static Int mgets() { return *s } not allowed
 
           static const Int s := 5
           static const Int? x
@@ -172,7 +172,7 @@ class FieldTest : CompilerTest
     verify(m.field("s").isStatic)
     verifyEq(m.field("s").get, 5)
     verifyEq(m.method("mgeta").call, 5)
-    verifyEq(m.method("mgets").call, 5)
+    //verifyEq(m.method("mgets").call, 5)
 
     obj := f.make
     verifyEq(f.field("s").get, 5)
