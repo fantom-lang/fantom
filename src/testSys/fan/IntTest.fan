@@ -240,18 +240,30 @@ class IntTest : Test
 
   Void testBitwise()
   {
-    x := 0xffff;
+    // not
     verifyEq(0x3bc7.not.and(0xffff), 0xc438)
+
+    // and
     verifyEq(0xff.and(0x0f), 0x0f)
-    verifyEq(0xf1.and(0x0f), 0x01)
-    verifyEq(0xa0.or(0x0b),  0xab)
+    verifyEq(0xf1->and(0x0f), 0x01)
+
+    // xor
     verifyEq(0x03.xor(0x02), 0x01)
-    verifyEq(0xff.xor(0x17), 0xe8)
+    verifyEq(0xff->xor(0x17), 0xe8)
+
+    // or
+    verifyEq(0xa0.or(0x0b),  0xab)
+    verifyEq(0xaabbcc->or(0xff000000), 0xffaabbcc)
+
+    // shiftl
     verifyEq(0x01.shiftl(1), 0x02)
-    verifyEq(0x0a.shiftl(4), 0xa0)
+    verifyEq(0x0a->shiftl(4), 0xa0)
+
+    // shiftr
     verifyEq(0x80.shiftr(1), 0x40)
     verifyEq(0x80.shiftr(3), 0x10)
-    verifyEq(0xaabbcc.or(0xff000000), 0xffaabbcc)
+    verifyEq(0xabcd_0000_1111_0000.shiftr(4), 0x0abc_d000_0111_1000)
+    verifyEq(0xabcd_0000_1111_0000->shiftr(4), 0x0abc_d000_0111_1000)
   }
 
 //////////////////////////////////////////////////////////////////////////

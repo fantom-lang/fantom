@@ -105,7 +105,7 @@ namespace Fan.Sys
     public static long or        (long self, long x) { return self | x; }
     public static long xor       (long self, long x) { return self ^ x; }
     public static long shiftl    (long self, long x) { return self << ((int)x); }
-    public static long shiftr    (long self, long x) { return self >> ((int)x); }
+    public static long shiftr    (long self, long x) { return (long)((ulong)self >> (int)x); }
     public static long increment (long self)         { return self+1; }
     public static long decrement (long self)         { return self-1; }
 

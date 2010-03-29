@@ -349,7 +349,7 @@ public class FMethodRef
   static Special intXor    = new SpecialOp(LXOR);
   static Special intNegate = new SpecialOp(LNEG);
   static Special intShiftl = new SpecialOp2(L2I, LSHL);
-  static Special intShiftr = new SpecialOp2(L2I, LSHR);
+  static Special intShiftr = new SpecialOp2(L2I, LUSHR);
 
   static HashMap intSpecials = new HashMap();
   static
