@@ -1257,15 +1257,24 @@ class CheckErrors : CompilerStep
       if (!field.isConst && field.parent != curType && field.parent != enclosing)
       {
         err("Field storage for '$field.qname' not accessible", f.loc)
+        return
       }
 
       // sanity check that field has storage
-      else if (!field.isStorage)
+      if (!field.isStorage)
       {
         if (field is FieldDef && ((FieldDef)field).concreteBase != null)
           err("Field storage of inherited field '${field->concreteBase->qname}' not accessible (might try super)", f.loc)
         else
           err("Invalid storage access of field '$field.qname' which doesn't have storage", f.loc)
+        return
+      }
+
+      // cannot use storage operator in mixin
+      if (enclosing.isMixin && !curMethod.isSynthetic)
+      {
+        err("Field storage not accessible in mixin '$field.qname'", f.loc)
+        return
       }
     }
   }

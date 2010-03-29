@@ -562,8 +562,12 @@ class CheckErrorsTest : CompilerTest
          3,  3, "Mixin field 'a' must be abstract",
          4,  3, "Mixin field 'b' must be abstract",
          5,  3, "Abstract field 'c' cannot have getter or setter",
+         5, 33, "Field storage not accessible in mixin '$podName::MixIt.c'",
          6,  3, "Abstract field 'd' cannot have getter or setter",
+         6, 26, "Field storage not accessible in mixin '$podName::MixIt.d'",
          7,  3, "Abstract field 'e' cannot have getter or setter",
+         7, 33, "Field storage not accessible in mixin '$podName::MixIt.e'",
+         7, 44, "Field storage not accessible in mixin '$podName::MixIt.e'",
          8,  3, "Mixin field 'f' must be abstract",
          9, 21, "Abstract field 'g' cannot have initializer",
 
@@ -731,11 +735,19 @@ class CheckErrorsTest : CompilerTest
         override Int r01 { set { *r01 = it } }
       }
 
+      mixin M
+      {
+        abstract Int x
+        Void foo() { *x = 2 }
+        Int bar() { *x }
+      }
+
       class Root
       {
         Int r00
         virtual Int r01
       }
+
       ",
        [
          3, 22, "Field storage for '$podName::Root.r00' not accessible",
@@ -747,6 +759,9 @@ class CheckErrorsTest : CompilerTest
          8, 38, "Cannot use field accessor inside accessor itself - use '*' operator",
 
         10, 28, "Field storage of inherited field '$podName::Root.r01' not accessible (might try super)",
+
+        16, 16, "Field storage not accessible in mixin '$podName::M.x'",
+        17, 15, "Field storage not accessible in mixin '$podName::M.x'",
        ])
   }
 
