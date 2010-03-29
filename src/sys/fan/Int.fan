@@ -152,7 +152,9 @@ const final class Int : Num
   Int shiftl(Int b)
 
   **
-  ** Bitwise right shift of this by b.
+  ** Bitwise right shift of this by b.  Zero is shifted into the
+  ** highest bits performing like an unsigned shift.  This is equivalent
+  ** to the Java '>>>' operator.
   **
   Int shiftr(Int b)
 

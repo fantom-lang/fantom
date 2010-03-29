@@ -173,7 +173,7 @@ public final class FanInt
 
   public static long shiftr(long self, long x)
   {
-    return self >> x;
+    return self >>> x;
   }
 
 //////////////////////////////////////////////////////////////////////////
