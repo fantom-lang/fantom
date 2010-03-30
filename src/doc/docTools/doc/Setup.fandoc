@@ -93,6 +93,8 @@ environmental variable:
   C:\dev\fan>set fan_runtime=dotnet
   C:\dev\fan>fan -version
 
+The runtime option is only available on Windows.
+
 Java Runtime [#javaRuntime]
 ===========================
 If running on Windows, the Fantom launcher will attempt to locate the current

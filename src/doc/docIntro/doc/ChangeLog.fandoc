@@ -9,6 +9,7 @@
 *Build 1.0.53 (working)*
 - Fix boxed boolean JVM checks
 - Make Int.shiftr unsigned (Java >>> operator)
+- Add etc/sys/config.props support to fanlaunch bash script
 
 *Build 1.0.52 (24 Mar 10)*
 - Color: makeArgb, makeRgb
