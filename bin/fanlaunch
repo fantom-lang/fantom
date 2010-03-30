@@ -62,11 +62,18 @@ if [ -z "$FAN_JAVA" ] ; then
   fi
 fi
 
+# read a single line property from $FAN_HOME/etc/sys/config.props
+function read_prop()
+{
+  eval "$1='`sed '/^\#/d' $FAN_HOME/etc/sys/config.props | sed '/^\/\//d' | grep \"$2=\"  | tail -n 1 | sed 's/^.*=//;s/^[[:space:]]*//;s/[[:space:]]*$//'`'"
+}
+
 # Launcher function
 fanlaunch()
 {
   export FAN_HOME
   FAN_MAIN=fanx.tools.$1
   shift
-  $FAN_JAVA $osFlags -Xmx256M $libPath -cp "$FAN_CP" -Dfan.home="$FAN_HOME" $FAN_MAIN "$@"
+  read_prop JAVA_OPTIONS java.options
+  $FAN_JAVA $osFlags $JAVA_OPTIONS $libPath -cp "$FAN_CP" -Dfan.home="$FAN_HOME" $FAN_MAIN "$@"
 }
