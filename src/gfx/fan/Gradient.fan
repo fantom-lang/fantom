@@ -297,7 +297,7 @@ const class GradientStop
   ** Position of the stop with unit defined by `unit`
   const Int pos
 
-  ** Unit of `pos` which must be `Gradient.percent` or `Gradient.pixl`
+  ** Unit of `pos` which must be `Gradient.percent` or `Gradient.pixel`
   const Unit unit
 
   **
