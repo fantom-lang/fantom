@@ -19,6 +19,7 @@ using sys::Unit
 [
   "dimensionless",
   Unit("percent; %"),
+  Unit("pixel; px"),
   Unit("decibel; db"),
   Unit("power_factor; pf"),
   Unit("pH"),

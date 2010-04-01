@@ -768,9 +768,7 @@ class GraphicsDemo : Canvas
 
     g.antialias = true
 
-    g.brush = Gradient.makeLinear(
-      Point.make(0,0), Color.white,
-      Point.make(w,h), Color.make(0x66_66_66))
+    g.brush = Gradient("top left, #fff, #666")
     g.fillRect(0, 0, w, h)
 
     g.brush = Color.black; g.drawRect(0, 0, w-1, h-1)
@@ -844,9 +842,7 @@ class GraphicsDemo : Canvas
     y = sysColor(g, y, Desktop.sysListSelFg, "sysListSelFg")
 
     // rect/text with gradients
-    g.brush = Gradient.makeLinear(
-      Point.make(260,120), Color.blue,
-      Point.make(260+200,120+200), Color.red)
+    g.brush = Gradient("top left, #00f, #f00")
     g.pen = Pen { width=20; join = Pen.joinRound }
     g.drawRect(270, 130, 180, 180)
     6.times |Int i| { g.drawText("Gradients!", 300, 150+i*20) }
@@ -907,25 +903,13 @@ class GraphicsDemo : Canvas
     g.brush = Color("#00f"); g.fillRect(90, 90, 30, 30);
     // gradients
     g.alpha = 255
-    g.brush = Gradient.makeLinear(
-      Point.make(0,0), Color.red, Point.make(0,120), Color.white)
-      g.fillRect(120, 0, 20, 120)
-    g.brush = Gradient.makeLinear(
-      Point.make(0,0), Color.red, Point.make(0,120), Color("#80ffffff"))
-      g.fillRect(140, 0, 20, 120)
-    g.brush = Gradient.makeLinear(
-      Point.make(0,0), Color("#80ff0000"), Point.make(0,120), Color("#80ffffff"))
-      g.fillRect(160, 0, 20, 120)
-    g.brush = Gradient.makeLinear(
-      Point.make(0,0), Color.red, Point.make(0,120), Color.white)
-    g.alpha = 128 // set alpha after setting gradient
-      g.fillRect(180, 0, 20, 120)
-    g.brush = Gradient.makeLinear(
-      Point.make(0,0), Color.red, Point.make(0,120), Color("#80ffffff"))
-      g.fillRect(200, 0, 20, 120)
-    g.brush = Gradient.makeLinear(
-      Point.make(0,0), Color("#80ff0000"), Point.make(0,120), Color("#80ffffff"))
-      g.fillRect(220, 0, 20, 120)
+    g.brush = Gradient("top, #f00, #fff");           g.fillRect(120, 0, 20, 120)
+    g.brush = Gradient("top, #f00, #80ffffff");      g.fillRect(140, 0, 20, 120)
+    g.brush = Gradient("top, #80ff0000, #80ffffff"); g.fillRect(160, 0, 20, 120)
+    g.brush = Gradient("top, #f00, #fff");
+      g.alpha = 128; /* set alpha after gradient */  g.fillRect(180, 0, 20, 120)
+    g.brush = Gradient("top, #f00, #80ffffff");      g.fillRect(200, 0, 20, 120)
+    g.brush = Gradient("top, #80ff0000, #80ffffff"); g.fillRect(220, 0, 20, 120)
   }
 
   Int sysColor(Graphics g, Int y, Color c, Str name)
