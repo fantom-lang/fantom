@@ -95,20 +95,7 @@ internal const class WispActor : Actor
     try { res.close } catch (Err e) { e.trace }
 
     // return if using persistent connections
-    return success && isPersistent(req)
-  }
-
-  **
-  ** Return if the request indicates use of persistent connections.
-  ** If using 1.0 or if the connection header is not "close" then we
-  ** assume persistent connections.
-  **
-  Bool isPersistent(WispReq req)
-  {
-    conn := req.headers.get("Connection", "")
-    if (conn.equalsIgnoreCase("Keep-Alive")) return true
-    if (conn.equalsIgnoreCase("Close")) return false
-    return req.version.minor > 0
+    return success && res.isPersistent
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -181,7 +168,15 @@ internal const class WispActor : Actor
     // init response - set predefined headers
     res.headers["Server"] = wispVer
     res.headers["Date"] = DateTime.now.toHttpStr
-    res.headers["Connection"] = "keep-alive"
+
+    // if using HTTP 1.1 and client specified using keep-alives,
+    // then setup response to be persistent for pipelining
+    if (req.version === ver11 &&
+        req.headers.get("Connection", "").equalsIgnoreCase("keep-alive"))
+    {
+      res.isPersistent = true
+      res.headers["Connection"] = "keep-alive"
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

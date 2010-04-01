@@ -176,8 +176,21 @@ internal class WispRes : WebRes
     sout := socket.out
     if (content)
     {
-      cout := WebUtil.makeContentOutStream(*headers, sout)
-      if (cout != null) webOut = WebOutStream(cout)
+      // if using persistent connections we have to ensure out
+      // socket stream is wrapped as either a FixedOutStream or
+      // ChunkedOutStream so that close doesn't close the underlying
+      // socket stream
+      if (isPersistent)
+      {
+        cout := WebUtil.makeContentOutStream(*headers, sout)
+        if (cout != null) webOut = WebOutStream(cout)
+      }
+
+      // if not using persistent connections, use raw socket stream
+      else
+      {
+        webOut = WebOutStream(sout)
+      }
     }
 
     // write response line and headers
@@ -205,5 +218,6 @@ internal class WispRes : WebRes
   internal WispService service
   internal TcpSocket socket
   internal WebOutStream? webOut
+  internal Bool isPersistent
 
 }
