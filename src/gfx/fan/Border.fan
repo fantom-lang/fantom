@@ -268,7 +268,7 @@ internal class BorderParser
       if (str[n] == ' ' || str[n] == ',') break
     tok = str[s ..< n]
 
-    // stip trailing whitespace
+    // strip trailing whitespace
     while (n < size && str[n] == ' ') ++n
 
     // check if we have a comma, if so skip it and return true

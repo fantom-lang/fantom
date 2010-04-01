@@ -50,7 +50,8 @@ public class FwtGraphics implements Graphics
       }
       else if (brush instanceof Gradient)
       {
-        Pattern p = pattern(fwt, (Gradient)brush);
+        // can't really map SWT model to CSS model well
+        Pattern p = pattern(fwt, (Gradient)brush, 0, 0, 100, 100);
         gc.setForegroundPattern(p);
         gc.setBackgroundPattern(p);
       }
@@ -72,20 +73,47 @@ public class FwtGraphics implements Graphics
     }
   }
 
-  private Pattern pattern(Fwt fwt, Gradient g)
+  private Pattern pattern(Fwt fwt, Gradient g, float vx, float vy, float vw, float vh)
   {
-    int a1 = (int)g.c1.a();
-    int a2 = (int)g.c2.a();
+    // only support two gradient stops
+    GradientStop s1 = (GradientStop)g.stops.get(0);
+    GradientStop s2 = (GradientStop)g.stops.get(-1L);
+    boolean xPercent = g.xUnit == Gradient.percent;
+    boolean yPercent = g.yUnit == Gradient.percent;
+
+    // start
+    float x1 = vx + g.x;
+    float y1 = vy + g.y;
+
+    // handle percentages
+    if (xPercent) x1 = vx + vw * g.x/100f;
+    if (yPercent) y1 = vy + vh * g.y/100f;
+
+    // handle just basic cases of horitizontal and vertical right now
+    float x2 = x1 + vw;
+    float y2 = y1 + vh;
+    if (xPercent && yPercent)
+    {
+      x2 = vx + vw * (100f - g.x)/100f;
+      y2 = vy + vh * (100f - g.y)/100f;
+    }
+
+    // System.out.println(g + "[" + vx + "," + vy + "," + vw + "," + vh + "]");
+    // System.out.println("  => " + x1 + "," + y1 + "  " + x2 + "," + y2);
+
+    // alpha
+    int a1 = (int)s1.color.a();
+    int a2 = (int)s2.color.a();
     if (alpha != 255)
     {
       a1 = (int)((alpha * a1) / 255);
       a2 = (int)((alpha * a2) / 255);
     }
+
     return new Pattern(fwt.display,
-        (float)g.p1.x, (float)g.p1.y,
-        (float)g.p2.x, (float)g.p2.y,
-        fwt.color(g.c1), a1,
-        fwt.color(g.c2), a2);
+        x1, y1, x2, y2,
+        fwt.color(s1.color), a1,
+        fwt.color(s2.color), a2);
   }
 
   private Pattern pattern(Fwt fwt, fan.gfx.Pattern p)
@@ -189,7 +217,20 @@ public class FwtGraphics implements Graphics
 
   public Graphics fillRect(long x, long y, long w, long h)
   {
-    gc.fillRectangle((int)x, (int)y, (int)w, (int)h);
+    // this is one case where we optimize gradients for view rect
+    if (brush instanceof Gradient)
+    {
+      Fwt fwt = Fwt.get();
+      Pattern newbg = pattern(fwt, (Gradient)brush, x, y, w, h);
+      Pattern oldbg = gc.getBackgroundPattern();
+      gc.setBackgroundPattern(newbg);
+      gc.fillRectangle((int)x, (int)y, (int)w, (int)h);
+      gc.setBackgroundPattern(oldbg);
+    }
+    else
+    {
+      gc.fillRectangle((int)x, (int)y, (int)w, (int)h);
+    }
     return this;
   }
 

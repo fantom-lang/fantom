@@ -34,6 +34,7 @@ class Build : BuildScript
       "clock",       "FWT combined with Actors",
       "richtext",    "Basic RichText document model",
       "scrollpane",  "Using ScrollPane",
+      "gradient",    "Gradients (at least what SWT supports)",
     "email/",        "email",
       "sending",     "Sending email via SMTP",
     "js/",           "js",

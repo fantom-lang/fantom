@@ -53,3 +53,17 @@ enum class Orientation
   horizontal,
   vertical
 }
+
+**************************************************************************
+** GradientMode.
+**************************************************************************
+
+**
+** Linear or radial
+**
+@Js
+enum class GradientMode
+{
+  linear,
+  radial
+}
