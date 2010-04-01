@@ -9,6 +9,7 @@
 **
 ** UnitTest
 **
+@Js
 class UnitTest : Test
 {
 
