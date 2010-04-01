@@ -280,41 +280,61 @@ fan.fwt.WidgetPeer.addCss = function(css)
 
 fan.fwt.WidgetPeer.setBg = function(elem, brush)
 {
-  with (elem.style)
+  var style = elem.style;
+  if (brush == null) { style.background = "none"; return; }
+  if (brush instanceof fan.gfx.Color) { style.background = brush.toCss(); return; }
+  if (brush instanceof fan.gfx.Gradient)
   {
-    if (brush == null) { background = "none"; return; }
-    if (brush instanceof fan.gfx.Color) { background = brush.toCss(); return; }
-    if (brush instanceof fan.gfx.Gradient)
+    var std    = "";  // CSS3 format
+    var webkit = "";  // -webkit format
+
+    // build pos
+    std += brush.m_x + brush.m_xUnit.m_symbol + " " +
+           brush.m_y + brush.m_yUnit.m_symbol + ", ";
+
+    // try to find end-point
+    webkit = std;
+    webkit += "50% 100%, "; // TODO FIXIT
+
+    // build stops
+    var stops = brush.m_stops;
+    for (var i=0; i<stops.size(); i++)
     {
-      var c1 = brush.m_c1.toCss();
-      var c2 = brush.m_c2.toCss();
+      var stop = stops.get(i);
+      var color = stop.m_color.toCss();
 
       // set background to first stop for fallback if gradeints not supported
-      background = c1;
+      if (i == 0) background = color;
 
-      // IE throws here, so trap and use filter in catch
-      try
-      {
-        backgroundImage = "-moz-linear-gradient(top, " + c1 + ", " + c2 + ")";
-        backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(" + c1 + "), to(" + c2 + "))";
-      }
-      catch (err)
-      {
-        filter = "progid:DXImageTransform.Microsoft.Gradient(" +
-          "StartColorStr=" + c1 + ", EndColorStr=" + c2 + ")";
-      }
-
-      return;
+      if (i > 0) { std += ", "; webkit += ", "; }
+      std    += color + " " + stop.m_pos + stop.m_unit.m_symbol;
+      webkit += "color-stop(" + (stop.m_pos/100) + ", " + color + ")";
     }
-    if (brush instanceof fan.gfx.Pattern)
+
+    // apply styles
+    // IE throws here, so trap and use filter in catch
+    try
     {
-      var str = "";
-      var bg  = brush.m_bg;
-      if (bg != null) str += bg.toCss() + ' ';
-      str += 'url(' + brush.m_image.m_uri + ') repeat-x';
-      background = str;
-      return;
+      style.background = "linear-gradient(" + std + ")";
+      style.background = "-moz-linear-gradient(" + std + ")";
+      style.background = "-webkit-gradient(linear, " + webkit + ")";
     }
+    catch (err)
+    {
+      //filter = "progid:DXImageTransform.Microsoft.Gradient(" +
+      //  "StartColorStr=" + c1 + ", EndColorStr=" + c2 + ")";
+    }
+
+    return;
+  }
+  if (brush instanceof fan.gfx.Pattern)
+  {
+    var str = "";
+    var bg  = brush.m_bg;
+    if (bg != null) str += bg.toCss() + ' ';
+    str += 'url(' + brush.m_image.m_uri + ') repeat-x';
+    style.background = str;
+    return;
   }
 }
 
