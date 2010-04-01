@@ -25,7 +25,7 @@ class WebClientTest : Test
 
   Void testGetFixed()
   {
-    // use skyfoundry.com assuming simple static HTML page served by Apache
+    // use skyfoundry.com assuming simple static HTML page served by nginx
     c := WebClient(`http://skyfoundry.com`)
     verify(!c.isConnected)
     try
@@ -39,8 +39,8 @@ class WebClientTest : Test
       verifyEq(c.resHeaders.caseInsensitive, true)
 
       // response headers
-      verify(c.resHeader("server").contains("Apache"))
-      verify(c.resHeader("SERVER", true).contains("Apache"))
+      verify(c.resHeader("server").contains("nginx"))
+      verify(c.resHeader("SERVER", true).contains("nginx"))
       verifyEq(c.resHeader("foo-bar", false), null)
       verifyErr(Err#) { c.resHeader("foo-bar") }
       verifyErr(Err#) { c.resHeader("foo-bar", true) }
@@ -110,7 +110,7 @@ class WebClientTest : Test
       `/doc/docLib/Fandoc.html`:   `/doc/fandoc/pod-doc.html`,
       `/doc/docLib/Flux.html`:     `/doc/flux/pod-doc.html`,
       `/doc/docLib/Fwt.html`:      `/doc/fwt/pod-doc.html`,
-      `/doc/docLib/Json.html`:     `/doc/json/pod-doc.html`,
+      `/doc/docLib/Json.html`:     `/doc/util/pod-doc.html#json`,
       `/doc/docLib/Sql.html` :     `/doc/sql/pod-doc.html`,
       `/doc/docLib/Web.html`:      `/doc/web/pod-doc.html`,
       `/doc/docLib/WebMod.html`:   `/doc/webmod/pod-doc.html`,
