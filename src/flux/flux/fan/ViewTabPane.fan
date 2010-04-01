@@ -159,6 +159,9 @@ internal class TabBar : Canvas
     return Size(100, ph)
   }
 
+  const Gradient bgActive   := Gradient("top, $Desktop.sysLightShadow, $Desktop.sysBg")
+  const Gradient bgInactive := Gradient("top, $Desktop.sysBg, $Desktop.sysNormShadow")
+
   override Void onPaint(Graphics g)
   {
     w  := size.w
@@ -166,8 +169,6 @@ internal class TabBar : Canvas
     tx := 0
 
     outline := Desktop.sysNormShadow
-    bgActive := gradient(Desktop.sysLightShadow, Desktop.sysBg, h)
-    bgInactive := gradient(Desktop.sysBg, Desktop.sysNormShadow, h)
 
     tabBounds.clear
 
@@ -213,11 +214,6 @@ internal class TabBar : Canvas
       tabBounds.add(Rect(tx,ty,tw,th))
       tx += tw
     }
-  }
-
-  Gradient gradient(Color c1, Color c2, Int h)
-  {
-    return Gradient.makeLinear(Point(0,0), c1, Point(0,h), c2)
   }
 
   Void pressed(Event event)

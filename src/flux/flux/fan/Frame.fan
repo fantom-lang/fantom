@@ -295,8 +295,8 @@ internal class StatusBarBorder : Canvas
   override Size prefSize(Hints hints := Hints.defVal) { return Size(100,4) }
   override Void onPaint(Graphics g)
   {
-    g.brush = Gradient.makeLinear(Point(0,0), Desktop.sysNormShadow,
-      Point(0,size.h), Desktop.sysBg);
+    g.brush = gradient
     g.fillRect(0, 0, size.w, size.h)
   }
+  const Gradient gradient := Gradient("top, $Desktop.sysNormShadow, $Desktop.sysBg")
 }
