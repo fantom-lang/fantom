@@ -226,6 +226,7 @@ public class FwtGraphics implements Graphics
       gc.setBackgroundPattern(newbg);
       gc.fillRectangle((int)x, (int)y, (int)w, (int)h);
       gc.setBackgroundPattern(oldbg);
+      newbg.dispose();
     }
     else
     {
