@@ -136,9 +136,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         if (c < cols-1) borderRight = "1px solid #a5a5a5";
         if (c < 0) height = "100%";
       }
-      fan.fwt.WidgetPeer.setBg(fix, fan.gfx.Gradient.makeLinear(
-        fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#dbdbdb"),
-        fan.gfx.Point.make(0,0), fan.gfx.Color.fromStr("#bbb")));
+      fan.fwt.WidgetPeer.setBg(fix, fan.gfx.Gradient.fromStr("top, #dbdbdb, #bbb"));
       if (c < 0)
       {
         fix.innerHTML = "&nbsp;";
