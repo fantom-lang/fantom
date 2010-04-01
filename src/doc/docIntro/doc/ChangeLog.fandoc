@@ -11,6 +11,7 @@
 - Make Int.shiftr unsigned (Java >>> operator)
 - Add etc/sys/config.props support to fanlaunch bash script
 - Rewrite gfx::Gradient to support CSS3 model
+- Add Map.ordered support to .NET runtime
 
 *Build 1.0.52 (24 Mar 10)*
 - Color: makeArgb, makeRgb

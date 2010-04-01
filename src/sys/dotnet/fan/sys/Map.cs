@@ -9,6 +9,7 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
+using System.Collections.Specialized;
 using System.Text;
 using Fanx.Serial;
 
@@ -37,7 +38,7 @@ namespace Fan.Sys
     {
     }
 
-    public Map(MapType type, Hashtable map)
+    public Map(MapType type, IDictionary map)
     {
       if (type == null || map == null)
       {
@@ -90,7 +91,8 @@ namespace Fan.Sys
 
     public bool containsKey(object key)
     {
-      return (key == null) ? false : m_map.ContainsKey(key);
+      if (key == null) return false;
+      return m_map.Contains(key);
     }
 
     public List keys()
@@ -217,7 +219,7 @@ namespace Fan.Sys
     public Map dup()
     {
       Map dup = new Map(m_type);
-      dup.m_map = (Hashtable)this.m_map.Clone();
+      dup.m_map = cloneMap(this.m_map);
       return dup;
     }
 
@@ -239,6 +241,9 @@ namespace Fan.Sys
       if (m_map.Count != 0)
         throw UnsupportedErr.make("Map not empty").val;
 
+      if (v && ordered())
+        throw UnsupportedErr.make("Map cannot be caseInsensitive and ordered").val;
+
       if (this.m_caseInsensitive == v) return;
       this.m_caseInsensitive = v;
 
@@ -250,15 +255,25 @@ namespace Fan.Sys
 
     public bool ordered()
     {
-      throw UnsupportedErr.make("Not yet implemented").val;
+      return m_map is OrderedDictionary;
     }
 
     public void ordered(bool v)
     {
-      // TODO
-      // http://hg.fantom.org/repos/fan-1.0?cs=bc1b2c7e511f
+      modify();
 
-      throw UnsupportedErr.make("Not yet implemented").val;
+      if (m_map.Count != 0)
+        throw UnsupportedErr.make("Map not empty").val;
+
+      if (v && caseInsensitive())
+        throw UnsupportedErr.make("Map cannot be caseInsensitive and ordered").val;
+
+      if (ordered() == v) return;
+
+      if (v)
+        m_map = new OrderedDictionary();
+      else
+        m_map = new Hashtable();
     }
 
     public object def() { return m_def; }
@@ -277,7 +292,7 @@ namespace Fan.Sys
         if (!m_type.Equals(@typeof(that)))
           return false;
 
-        Hashtable thatMap = ((Map)that).m_map;
+        IDictionary thatMap = ((Map)that).m_map;
         if (m_map.Count != thatMap.Count)
           return false;
 
@@ -533,7 +548,7 @@ namespace Fan.Sys
       if (!m_isReadonly) return this;
 
       Map rw = new Map(m_type);
-      rw.m_map = (Hashtable)m_map.Clone();
+      rw.m_map = cloneMap(m_map);
       rw.m_isReadonly = false;
       rw.m_readonlyMap = this;
       rw.m_caseInsensitive = m_caseInsensitive;
@@ -566,8 +581,11 @@ namespace Fan.Sys
       if (m_immutable) return this;
 
       // make safe copy
-      Hashtable temp = m_caseInsensitive
-        ? new Hashtable(new CIEqualityComparer()) : new Hashtable();
+      IDictionary temp;
+      if (caseInsensitive()) temp = new Hashtable(new CIEqualityComparer());
+      else if (ordered()) temp = new OrderedDictionary();
+      else temp = new Hashtable();
+
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
@@ -606,7 +624,7 @@ namespace Fan.Sys
       // it so it remains m_immutable
       if (m_readonlyMap != null)
       {
-        m_readonlyMap.m_map = (Hashtable)m_map.Clone();
+        m_readonlyMap.m_map = cloneMap(m_map);
         m_readonlyMap = null;
       }
     }
@@ -623,6 +641,19 @@ namespace Fan.Sys
     public IEnumerator keysEnumerator()
     {
       return m_map.Keys.GetEnumerator();
+    }
+
+    internal IDictionary cloneMap(IDictionary dict)
+    {
+      if (dict is Hashtable) return (IDictionary)((Hashtable)dict).Clone();
+      if (dict is OrderedDictionary)
+      {
+        OrderedDictionary dup = new OrderedDictionary();
+        IDictionaryEnumerator en = dict.GetEnumerator();
+        while (en.MoveNext()) dup[en.Key] = en.Value;
+        return dup;
+      }
+      throw new Exception(dict.ToString());
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -647,7 +678,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     private MapType m_type;
-    private Hashtable m_map;
+    private IDictionary m_map;
     private Map m_readonlyMap;
     private bool m_isReadonly;
     private bool m_immutable;
