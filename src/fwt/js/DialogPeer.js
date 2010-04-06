@@ -56,7 +56,7 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     webkitBorderTopLeftRadius  = "4px";
     webkitBorderTopRightRadius = "4px";
   }
-  fan.fwt.WidgetPeer.setBg(tbar, fan.gfx.Gradient.fromStr("top, #6f6f6f, #535353"));
+  fan.fwt.WidgetPeer.setBg(tbar, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #6f6f6f, #535353"));
   var content = this.emptyDiv();
   with (content.style)
   {

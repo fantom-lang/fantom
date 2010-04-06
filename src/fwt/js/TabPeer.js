@@ -53,11 +53,11 @@ fan.fwt.TabPeer.prototype.sync = function(self)
 
   if (selected)
   {
-    fan.fwt.WidgetPeer.setBg(elem, fan.gfx.Gradient.fromStr("top, #f8f8f8, #eee"));
+    fan.fwt.WidgetPeer.setBg(elem, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #f8f8f8, #eee"));
   }
   else
   {
-    fan.fwt.WidgetPeer.setBg(elem, fan.gfx.Gradient.fromStr("top, #eee, #ccc"));
+    fan.fwt.WidgetPeer.setBg(elem, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #eee, #ccc"));
   }
 
   // account for border/padding

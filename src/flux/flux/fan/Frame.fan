@@ -298,5 +298,5 @@ internal class StatusBarBorder : Canvas
     g.brush = gradient
     g.fillRect(0, 0, size.w, size.h)
   }
-  const Gradient gradient := Gradient("top, $Desktop.sysNormShadow, $Desktop.sysBg")
+  const Gradient gradient := Gradient("0% 0%, 0% 100%, $Desktop.sysNormShadow, $Desktop.sysBg")
 }
