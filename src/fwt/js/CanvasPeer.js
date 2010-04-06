@@ -48,6 +48,7 @@ fan.fwt.CanvasPeer.prototype.sync = function(self)
 
     // repaint canvas using Canvas.onPaint callback
     var g = new fan.fwt.Graphics();
+    g.size = this.m_size;
     g.cx = c.getContext("2d");
     g.cx.lineWidth = 1;
     g.cx.lineCap = "square";

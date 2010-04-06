@@ -78,25 +78,22 @@ public class FwtGraphics implements Graphics
     // only support two gradient stops
     GradientStop s1 = (GradientStop)g.stops.get(0);
     GradientStop s2 = (GradientStop)g.stops.get(-1L);
-    boolean xPercent = g.xUnit == Gradient.percent;
-    boolean yPercent = g.yUnit == Gradient.percent;
+    boolean x1Percent = g.x1Unit == Gradient.percent;
+    boolean y1Percent = g.y1Unit == Gradient.percent;
+    boolean x2Percent = g.x2Unit == Gradient.percent;
+    boolean y2Percent = g.y2Unit == Gradient.percent;
 
     // start
-    float x1 = vx + g.x;
-    float y1 = vy + g.y;
+    float x1 = vx + g.x1;
+    float y1 = vy + g.y1;
+    float x2 = vx + g.x2;
+    float y2 = vy + g.y2;
 
     // handle percentages
-    if (xPercent) x1 = vx + vw * g.x/100f;
-    if (yPercent) y1 = vy + vh * g.y/100f;
-
-    // handle just basic cases of horitizontal and vertical right now
-    float x2 = x1 + vw;
-    float y2 = y1 + vh;
-    if (xPercent && yPercent)
-    {
-      x2 = vx + vw * (100f - g.x)/100f;
-      y2 = vy + vh * (100f - g.y)/100f;
-    }
+    if (x1Percent) x1 = vx + vw * g.x1/100f;
+    if (y1Percent) y1 = vy + vh * g.y1/100f;
+    if (x2Percent) x2 = vx + vw * g.x2/100f;
+    if (y2Percent) y2 = vy + vh * g.y2/100f;
 
     // System.out.println(g + "[" + vx + "," + vy + "," + vw + "," + vh + "]");
     // System.out.println("  => " + x1 + "," + y1 + "  " + x2 + "," + y2);

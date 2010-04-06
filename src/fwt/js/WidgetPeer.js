@@ -288,13 +288,19 @@ fan.fwt.WidgetPeer.setBg = function(elem, brush)
     var std    = "";  // CSS3 format
     var webkit = "";  // -webkit format
 
+    // TODO FIXIT:
+    var angle = "-90deg";
+
     // build pos
-    std += brush.m_x + brush.m_xUnit.m_symbol + " " +
-           brush.m_y + brush.m_yUnit.m_symbol + ", ";
+    std += brush.m_x1 + brush.m_x1Unit.m_symbol + " " +
+           brush.m_y1 + brush.m_y1Unit.m_symbol + " " +
+           angle;
 
     // try to find end-point
-    webkit = std;
-    webkit += "50% 100%, "; // TODO FIXIT
+    webkit = brush.m_x1 + brush.m_x1Unit.m_symbol + " " +
+             brush.m_y1 + brush.m_y1Unit.m_symbol + "," +
+             brush.m_x2 + brush.m_x2Unit.m_symbol + " " +
+             brush.m_y2 + brush.m_y2Unit.m_symbol;
 
     // build stops
     var stops = brush.m_stops;
@@ -306,9 +312,8 @@ fan.fwt.WidgetPeer.setBg = function(elem, brush)
       // set background to first stop for fallback if gradeints not supported
       if (i == 0) background = color;
 
-      if (i > 0) { std += ", "; webkit += ", "; }
-      std    += color + " " + stop.m_pos + stop.m_unit.m_symbol;
-      webkit += "color-stop(" + (stop.m_pos/100) + ", " + color + ")";
+      std    += "," + color + " " + (stop.m_pos * 100) + "%";
+      webkit += ",color-stop(" + stop.m_pos + ", " + color + ")";
     }
 
     // apply styles
