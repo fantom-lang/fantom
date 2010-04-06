@@ -79,7 +79,7 @@ Slot Def [#slotDef]
 
   <ctorDef>        :=  <facets> <ctorFlags> "new" <id> "(" <params> ")" [ctorChain] <methodBody>
   <ctorFlags>      :=  [<protection>]
-  <ctorChain>      :=  <ctorChainThis> | <ctorChainSuper>
+  <ctorChain>      :=  ":" <ctorChainThis> | <ctorChainSuper>
   <ctorChainThis>  :=  "this" "." <id> "(" <args> ")"
   <ctorChainSuper> :=  "super" ["." <id>] "(" <args> ")"
 
