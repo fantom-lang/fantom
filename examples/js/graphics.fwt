@@ -32,7 +32,7 @@ class MyCanvas : Canvas
 
     g.antialias = true
 
-    g.brush = Gradient("top left, #fff, #666")
+    g.brush = Gradient("0% 0%, 100% 100%, #fff, #666")
     g.fillRect(0, 0, w, h)
 
     g.brush = Color.black; g.drawRect(0, 0, w-1, h-1)
@@ -106,7 +106,7 @@ class MyCanvas : Canvas
     y = sysColor(g, y, Desktop.sysListSelFg, "sysListSelFg")
 
     // rect/text with gradients
-    g.brush = Gradient("top left, #00f, #f00")
+    g.brush = Gradient("260px 120px, 460px 320px, #00f, #f00")
     g.pen = Pen { width=20; join = Pen.joinRound }
     g.drawRect(270, 130, 180, 180)
     6.times |Int i| { g.drawText("Gradients!", 300, 150+i*20) }
@@ -167,13 +167,13 @@ class MyCanvas : Canvas
     g.brush = Color("#00f"); g.fillRect(90, 90, 30, 30);
     // gradients
     g.alpha = 255
-    g.brush = Gradient("top, #f00, #fff");           g.fillRect(120, 0, 20, 120)
-    g.brush = Gradient("top, #f00, #80ffffff");      g.fillRect(140, 0, 20, 120)
-    g.brush = Gradient("top, #80ff0000, #80ffffff"); g.fillRect(160, 0, 20, 120)
-    g.brush = Gradient("top, #f00, #fff");
+    g.brush = Gradient("0px 0px, 0px 120px, #f00, #fff");           g.fillRect(120, 0, 20, 120)
+    g.brush = Gradient("0px 0px, 0px 120px, #f00, #80ffffff");      g.fillRect(140, 0, 20, 120)
+    g.brush = Gradient("0px 0px, 0px 120px, #80ff0000, #80ffffff"); g.fillRect(160, 0, 20, 120)
+    g.brush = Gradient("0px 0px, 0px 120px, #f00, #fff");
       g.alpha = 128; /* set alpha after gradient */  g.fillRect(180, 0, 20, 120)
-    g.brush = Gradient("top, #f00, #80ffffff");      g.fillRect(200, 0, 20, 120)
-    g.brush = Gradient("top, #80ff0000, #80ffffff"); g.fillRect(220, 0, 20, 120)
+    g.brush = Gradient("0px 0px, 0px 120px, #f00, #80ffffff");      g.fillRect(200, 0, 20, 120)
+    g.brush = Gradient("0px 0px, 0px 120px, #80ff0000, #80ffffff"); g.fillRect(220, 0, 20, 120)
   }
 
   Int sysColor(Graphics g, Int y, Color c, Str name)

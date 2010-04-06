@@ -159,8 +159,8 @@ internal class TabBar : Canvas
     return Size(100, ph)
   }
 
-  const Gradient bgActive   := Gradient("top, $Desktop.sysLightShadow, $Desktop.sysBg")
-  const Gradient bgInactive := Gradient("top, $Desktop.sysBg, $Desktop.sysNormShadow")
+  const Gradient bgActive   := Gradient("0% 0%, 0% 100%, $Desktop.sysLightShadow, $Desktop.sysBg")
+  const Gradient bgInactive := Gradient("0% 0%, 0% 100%, $Desktop.sysBg, $Desktop.sysNormShadow")
 
   override Void onPaint(Graphics g)
   {
