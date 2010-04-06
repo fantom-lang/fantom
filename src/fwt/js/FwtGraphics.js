@@ -14,7 +14,8 @@ fan.fwt.Graphics = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.fwt.Graphics.prototype.$ctor = function() {}
 
-fan.fwt.Graphics.prototype.cx = null
+fan.fwt.Graphics.prototype.size = null;
+fan.fwt.Graphics.prototype.cx = null;
 
 // Brush brush
 fan.fwt.Graphics.prototype.m_brush = null
@@ -30,9 +31,26 @@ fan.fwt.Graphics.prototype.brush$  = function(b)
   }
   else if (b instanceof fan.gfx.Gradient)
   {
-    var style = this.cx.createLinearGradient(b.m_p1.m_x, b.m_p1.m_y, b.m_p2.m_x, b.m_p2.m_y);
-    style.addColorStop(0, b.m_c1.toCss());
-    style.addColorStop(1, b.m_c2.toCss());
+    var x1 = b.m_x1;
+    var y1 = b.m_y1;
+    var x2 = b.m_x2;
+    var y2 = b.m_y2;
+
+    // handle percent
+    if (b.m_x1Unit.m_symbol == "%") x1 = this.size.m_w * (x1 / 100);
+    if (b.m_y1Unit.m_symbol == "%") y1 = this.size.m_h * (y1 / 100);
+    if (b.m_x2Unit.m_symbol == "%") x2 = this.size.m_w * (x2 / 100);
+    if (b.m_y2Unit.m_symbol == "%") y2 = this.size.m_h * (y2 / 100);
+
+    // add stops
+    var style = this.cx.createLinearGradient(x1, y1, x2, y2);
+    var stops = b.m_stops;
+    for (var i=0; i<stops.size(); i++)
+    {
+      var s = stops.get(i);
+      style.addColorStop(s.m_pos, s.m_color.toCss());
+    }
+
     this.cx.fillStyle = style;
     this.cx.strokeStyle = style;
   }
