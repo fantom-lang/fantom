@@ -267,7 +267,7 @@ const class GradientStop
   ** Color for the stop
   const Color color
 
-  ** Position of the stop with unit defined by `unit`
+  ** Position of the stop within range (0f..1f)
   const Float pos
 
   **
