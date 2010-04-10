@@ -26,9 +26,9 @@ internal class FindInFilesTest : Test
     verifyMark(results[0], "alpha.txt", 1, 1)
     verifyMark(results[1], "beta.java", 3, 10)
     verifyMark(results[2], "beta.java", 3, 13)
-    verifyMark(results[3], "gamma.fan", 3, 3)
-    verifyMark(results[4], "gamma.fan", 3, 9)
-    verifyMark(results[5], "gamma.fan", 6, 3)
+    verifyMark(results[3], "gamma.txt", 3, 3)
+    verifyMark(results[4], "gamma.txt", 3, 9)
+    verifyMark(results[5], "gamma.txt", 6, 3)
 
     results = FindInFiles.find("", tempDir)
     verifyEq(results.size, 0)
