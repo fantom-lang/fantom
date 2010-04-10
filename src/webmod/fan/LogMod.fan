@@ -69,7 +69,7 @@ const class LogMod : WebMod
     logger.writeStr("#Remark " + DateTime.now.toLocale)
     logger.writeStr("#Version 1.0")
     logger.writeStr("#Software ${Type.of(this)} ${Pod.of(this).version}")
-    logger.writeStr("#Start-Date " + DateTime.nowUtc.toLocale("DD-MM-YYYY hh:mm:ss"))
+    logger.writeStr("#Start-Date " + DateTime.nowUtc.toLocale("YYYY-MM-DD hh:mm:ss"))
     logger.writeStr("#Fields $fields")
   }
 
@@ -134,7 +134,7 @@ const class LogMod : WebMod
 
   internal static Str formatDate(WebReq req, WebRes res)
   {
-    return DateTime.nowUtc.toLocale("DD-MM-YYYY")
+    return DateTime.nowUtc.toLocale("YYYY-MM-DD")
   }
 
   internal static Str formatTime(WebReq req, WebRes res)
