@@ -14,7 +14,7 @@
 ** Every enum class implicitly has the following slots auto-generated
 ** by the compiler:
 **   - a static const field for each name in the enum's range.
-**   - a static field called "values" which contains the list of
+**   - a static field called "vals" which contains the list of
 **     discrete values indexed by ordinal.
 **   - a static method called "fromStr" which maps an enum name
 **     to an enum instance
