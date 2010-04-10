@@ -367,7 +367,7 @@ public class Fwt
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Display display = new Display(); // SWT display
+  Display display = Display.getCurrent() == null ? new Display() : Display.getCurrent(); // SWT display
   HashMap colors = new HashMap();  // Int rgb   -> Color
   HashMap fonts = new HashMap();   // fwt::Font  -> Font
   HashMap images = new HashMap();  // Uri -> Image

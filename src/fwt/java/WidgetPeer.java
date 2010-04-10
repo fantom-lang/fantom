@@ -329,18 +329,24 @@ public class WidgetPeer
     return control != null;
   }
 
-  public final void attach(fan.fwt.Widget self)
+  public final void attach(fan.fwt.Widget self) { attach(self, null); }
+  public final void attach(fan.fwt.Widget self, Widget parentControl)
   {
     // short circuit if I'm already attached
     if (control != null) return;
 
-    // short circuit if my parent isn't attached
-    fan.fwt.Widget parentWidget = self.parent();
-    if (parentWidget == null || parentWidget.peer.control == null) return;
+    // if parent wasn't explictly specified use my fwt parent
+    fan.fwt.Widget parentWidget = null;
+    if (parentControl == null)
+    {
+      // short circuit if my parent isn't attached
+      parentWidget = self.parent();
+      if (parentWidget == null || parentWidget.peer.control == null) return;
+      parentControl = parentWidget.peer.control;
+    }
 
     // create control and initialize
     // TODO: need to rework this cluster f**k
-    Widget parentControl = parentWidget.peer.control;
     if (parentControl instanceof TabItem)
     {
       TabItem item = (TabItem)parentControl;
@@ -355,7 +361,7 @@ public class WidgetPeer
     }
 
     // callback on parent
-    parentWidget.peer.childAdded(self);
+    if (parentWidget != null) parentWidget.peer.childAdded(self);
   }
 
   void childAdded(fan.fwt.Widget child) {}
