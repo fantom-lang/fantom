@@ -68,6 +68,7 @@ const class Gradient : Brush
   **   <pos>           :=  <int> <unit> // no space allowed between
   **   <stop>          :=  <color> [<float>]  // 0f..1f
   **   <color>         :=  #AARRGGBB, #RRGGBB, #RGB
+  **   <unit>          :=  "px" | "%"
   **
   ** The general format is a start and end position followed by a comma list of
   ** gradient stops.  The start and end positions are x, y coordinates (% or pixel).
