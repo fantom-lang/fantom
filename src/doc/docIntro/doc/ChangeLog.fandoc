@@ -13,6 +13,7 @@
 - Rewrite gfx::Gradient to support CSS3 model
 - Add Map.ordered support to .NET runtime
 - FWT patch to allow mounting under arbitrary SWT widgets
+- Make java primitive wrappers and java.lang.Class immutable
 
 *Build 1.0.52 (24 Mar 10)*
 - Color: makeArgb, makeRgb
