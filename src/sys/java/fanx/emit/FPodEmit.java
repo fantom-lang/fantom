@@ -58,7 +58,7 @@ public class FPodEmit
     for (int i=0; i<fpod.typeRefs.size(); ++i)
     {
       FTypeRef t = fpod.typeRef(i);
-      if (t.isFFI()) cls.getField("Type" + i).set(null, JavaType.make(t.podName, t.typeName));
+      if (t.isFFI()) cls.getField("Type" + i).set(null, Env.cur().loadJavaType(t.podName, t.typeName));
     }
   }
 

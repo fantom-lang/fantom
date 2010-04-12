@@ -40,7 +40,7 @@ public class FanUtil
     }
 
     // map to a FFI Java class
-    return JavaType.make(cls);
+    return Env.cur().loadJavaType(cls);
   }
 
   private static HashMap javaToFanTypes = new HashMap();
@@ -59,11 +59,13 @@ public class FanUtil
     javaToFanTypes.put("java.lang.Double",     Sys.FloatType);
     javaToFanTypes.put("java.math.BigDecimal", Sys.DecimalType);
 
+/*
     javaToFanTypes.put("byte",  JavaType.ByteType);
     javaToFanTypes.put("short", JavaType.ShortType);
     javaToFanTypes.put("char",  JavaType.CharType);
     javaToFanTypes.put("int",   JavaType.IntType);
     javaToFanTypes.put("float", JavaType.FloatType);
+*/
   }
 
   /**

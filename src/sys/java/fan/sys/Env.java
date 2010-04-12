@@ -197,6 +197,75 @@ public abstract class Env
     return parent.loadTypeClasses(t);
   }
 
+  /**
+   * Load the Java class of a FFI JavaType.
+   * Default implementation delegates to parent.
+   */
+  public Class loadJavaClass(String className)
+    throws Exception
+  {
+    return parent.loadJavaClass(className);
+  }
+
+  /**
+   * Given a Java class, get its FFI JavaType mapping.  This
+   * method is called by FanUtil.toFanType.  JavaTypes are be
+   * cached by classname once loaded.
+   */
+  public final JavaType loadJavaType(Class cls)
+  {
+    // at this point we shouldn't have any native fan type
+    String clsName = cls.getName();
+    if (clsName.startsWith("fan.")) throw new IllegalStateException(clsName);
+
+    // cache all the java types statically
+    synchronized (javaTypeCache)
+    {
+      // if cached use that one
+      JavaType t = (JavaType)javaTypeCache.get(clsName);
+      if (t != null) return t;
+
+      // create a new one
+      t = new JavaType(this, cls);
+      javaTypeCache.put(clsName, t);
+      return t;
+    }
+  }
+
+  /**
+   * Given a Java FFI qname (pod and type name), get its FFI JavaType
+   * mapping.  JavaTypes are cached once loaded.  This method is
+   * kept as light weight as possible since it is used to stub all
+   * the FFI references at pod load time (avoid loading classes).
+   * The JavaType will delegate to `loadJavaClass` when it is time
+   * to load the Java class mapped by the FFI type.
+   */
+  public final JavaType loadJavaType(String podName, String typeName)
+  {
+    // we shouldn't be using this method for pure Fantom types
+    if (!podName.startsWith("[java]"))
+      throw ArgErr.make("Unsupported FFI type: " + podName + "::" + typeName).val;
+
+    // ensure unnormalized "[java] package::Type" isn't used (since
+    // it took me an hour to track down a bug related to this)
+    if (podName.length() >= 7 && podName.charAt(6) == ' ')
+      throw ArgErr.make("Java FFI qname cannot contain space: " + podName + "::" + typeName).val;
+
+    // cache all the java types statically
+    synchronized (javaTypeCache)
+    {
+      // if cached use that one
+      String clsName =  JavaType.toClassName(podName, typeName);
+      JavaType t = (JavaType)javaTypeCache.get(clsName);
+      if (t != null) return t;
+
+      // create a new one
+      t = new JavaType(this, podName, typeName);
+      javaTypeCache.put(clsName, t);
+      return t;
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
@@ -209,4 +278,5 @@ public abstract class Env
   private EnvScripts scripts = new EnvScripts();
   private EnvProps props = new EnvProps(this);
   private EnvIndex index = new EnvIndex(this);
+  private HashMap javaTypeCache = new HashMap();  // String class name => JavaType
 }
