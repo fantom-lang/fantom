@@ -14,79 +14,27 @@ import fanx.util.*;
 
 /**
  * JavaType wraps a Java class as a Fantom type for FFI reflection.
+ * Use Env methods to load JavaTypes.
  */
 public class JavaType
   extends Type
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Factory
+// Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  /**
-   * Make for a given Java class.  This is only used to map FFI Java types.
-   * See FanUtil.toFanType for mapping any class to a sys::Type.
-   */
-  public static JavaType make(Class cls)
+  JavaType(Env env, String podName, String typeName)
   {
-    // at this point we shouldn't have any native fan type
-    String clsName = cls.getName();
-    if (clsName.startsWith("fan.")) throw new IllegalStateException(clsName);
-
-    // cache all the java types statically
-    synchronized (cache)
-    {
-      // if cached use that one
-      JavaType t = (JavaType)cache.get(clsName);
-      if (t != null) return t;
-
-      // create a new one
-      t = new JavaType(cls);
-      cache.put(clsName, t);
-      return t;
-    }
-  }
-
-  /**
-   * Make for a given FFI qname.  We want to keep this as light weight
-   * as possible since it is used to stub all the FFI references at
-   * pod load time.
-   */
-  public static JavaType make(String podName, String typeName)
-  {
-    // we shouldn't be using this method for pure Fantom types
-    if (!podName.startsWith("[java]"))
-      throw ArgErr.make("Unsupported FFI type: " + podName + "::" + typeName).val;
-
-    // ensure unnormalized "[java] package::Type" isn't used (since
-    // it took me an hour to track down a bug related to this)
-    if (podName.length() >= 7 && podName.charAt(6) == ' ')
-      throw ArgErr.make("Java FFI qname cannot contain space: " + podName + "::" + typeName).val;
-
-    // cache all the java types statically
-    synchronized (cache)
-    {
-      // if cached use that one
-      String clsName =  toClassName(podName, typeName);
-      JavaType t = (JavaType)cache.get(clsName);
-      if (t != null) return t;
-
-      // create a new one
-      t = new JavaType(podName, typeName);
-      cache.put(clsName, t);
-      return t;
-    }
-  }
-
-  private JavaType(String podName, String typeName)
-  {
+    this.env = env;
     this.podName = podName;
     this.typeName = typeName;
     this.cls = null;
   }
 
-  private JavaType(Class cls)
+  JavaType(Env env, Class cls)
   {
+    this.env = env;
     if (cls.getPackage() == null)
       this.podName = "[java]";
     else
@@ -171,7 +119,7 @@ public class JavaType
     try
     {
       if (cls == null)
-        cls = Class.forName(toClassName(podName, typeName));
+        cls = env.loadJavaClass(toClassName(podName, typeName));
       return cls;
     }
     catch (Exception e)
@@ -578,15 +526,17 @@ public class JavaType
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private static final HashMap cache = new HashMap(); // String -> JavaType
   private static Facets transientFacets;
 
+/*
   public static final JavaType ByteType  = make(byte.class);
   public static final JavaType ShortType = make(short.class);
   public static final JavaType CharType  = make(char.class);
   public static final JavaType IntType   = make(int.class);
   public static final JavaType FloatType = make(float.class);
+*/
 
+  private Env env;             // ctor
   private String podName;      // ctor
   private String typeName;     // ctor
   private Type nullable;       // toNullable()

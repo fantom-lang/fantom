@@ -16,6 +16,7 @@
 - Make java primitive wrappers and java.lang.Class immutable
 - Fix LogRec.print to return Void (to match Java/C# signatures)
 - Fix FileLogger to include stack trace and use new non-null fields checks
+- Rework JavaTypes to delegate to Env for caching and loading
 
 *Build 1.0.52 (24 Mar 10)*
 - Color: makeArgb, makeRgb
