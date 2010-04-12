@@ -25,8 +25,8 @@ class WebClientTest : Test
 
   Void testGetFixed()
   {
-    // use skyfoundry.com assuming simple static HTML page served by nginx
-    c := WebClient(`http://skyfoundry.com`)
+    // use skyfoundry.com assuming simple static image page
+    c := WebClient(`http://skyfoundry.com/pub/img/database.png`)
     verify(!c.isConnected)
     try
     {
@@ -47,9 +47,10 @@ class WebClientTest : Test
 
       // fixed content-length
       len := c.resHeader("Content-Length").toInt
-      html := c.resBuf
-      verifyEq(html.size, len)
-      verify(html.readAllStr.startsWith("<!DOCTYPE html"))
+      png := c.resBuf
+      verifyEq(png[1].toChar, "P")
+      verifyEq(png[2].toChar, "N")
+      verifyEq(png[3].toChar, "G")
     }
     finally c.close
   }
