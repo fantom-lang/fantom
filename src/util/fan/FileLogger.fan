@@ -28,15 +28,12 @@ const class FileLogger : ActorPool
   new make(|This|? f := null)
   {
     if (f != null) f(this)
-    if (dir === noDir) throw ArgErr("Must configure 'dir'")
-    if (filename.isEmpty) throw ArgErr("Must configure 'filename'")
   }
 
   **
   ** Directory used to store log file(s).
   **
-  const File dir := noDir
-  private static const File noDir := File(`no-dir-configured`)
+  const File dir
 
   **
   ** Log filename pattern.  The name may contain a pattern between
@@ -44,14 +41,14 @@ const class FileLogger : ActorPool
   ** example to maintain a log file per month, use a filename such
   ** as "mylog-{YYYY-MM}.log".
   **
-  const Str filename := ""
+  const Str filename
 
   **
   ** Append string log message to file.
   **
   Void writeLogRec(LogRec rec)
   {
-    actor.send(rec.toStr)
+    actor.send(rec)
   }
 
   **
@@ -75,7 +72,17 @@ const class FileLogger : ActorPool
         Actor.locals["state"] = state = FileLoggerState(dir, filename)
 
       // append to current file
-      state.out.printLine(msg).flush
+      if (msg is LogRec)
+      {
+        rec := (LogRec)msg
+        state.out.printLine(rec)
+        if (rec.err != null) rec.err.trace(state.out)
+        state.out.flush
+      }
+      else
+      {
+        state.out.printLine(msg).flush
+      }
     }
     catch (Err e)
     {

@@ -14,6 +14,8 @@
 - Add Map.ordered support to .NET runtime
 - FWT patch to allow mounting under arbitrary SWT widgets
 - Make java primitive wrappers and java.lang.Class immutable
+- Fix LogRec.print to return Void (to match Java/C# signatures)
+- Fix FileLogger to include stack trace and use new non-null fields checks
 
 *Build 1.0.52 (24 Mar 10)*
 - Color: makeArgb, makeRgb
