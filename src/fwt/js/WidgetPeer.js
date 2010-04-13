@@ -269,6 +269,14 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+fan.fwt.WidgetPeer.uriToImageSrc = function(uri)
+{
+  if (uri.scheme() == "fan")
+    return fan.sys.UriPodBase + uri.host() + uri.pathStr()
+  else
+    return uri.toStr();
+}
+
 fan.fwt.WidgetPeer.addCss = function(css)
 {
   var style = document.createElement("style");

@@ -27,13 +27,11 @@ fan.sys.Obj = function() {};
 fan.sys.Obj.$init = {};
 fan.sys.Obj.$extend = function(base)
 {
-  //function f() { this.$ctor.apply(this, arguments); }
   function f()
   {
     if (arguments.length > 0 && arguments[0] === fan.sys.Obj.$init) return;
     this.$ctor.apply(this, arguments);
   }
-  //f.prototype = new base;
   f.prototype = new base(fan.sys.Obj.$init)
   f.prototype.constructor = f;
   return f;

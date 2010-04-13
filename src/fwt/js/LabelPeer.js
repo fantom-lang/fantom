@@ -112,16 +112,9 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     img.style.display = "inline-block";
     img.style.verticalAlign = "middle";
 
-    // TODO FIXIT: dup from FwtEnvPeer.loadImage - need to make DRY
-    // swizzle fan: uris to http:
-    var orig = this.m_image.m_uri;
-    var src  = (orig.scheme() == "fan")
-      ? fan.sys.UriPodBase + orig.host() + orig.pathStr()
-      : orig.toStr();
-
     var imgElem = document.createElement("img");
     imgElem.border = "0";
-    imgElem.src = src;
+    imgElem.src = fan.fwt.WidgetPeer.uriToImageSrc(this.m_image.m_uri);
 
     img.appendChild(imgElem);
     parent.appendChild(img);

@@ -6,6 +6,29 @@
 //   29 May 09  Andy Frank  Creation
 //
 
+//
+// TableModel extensions
+//
+//  fan.fwt.TableModel.prototype.$uri = function(col,row) { return null; }
+//  fan.fwt.TableModel.prototype.$onMouseDown = function(col,row) {}
+//
+
+// Inject table CSS
+fan.fwt.WidgetPeer.addCss(
+  "table.__fwt_table td {" +
+  " padding: 4px 6px;" +
+  " font: " + fan.fwt.WidgetPeer.fontNormal + ";" +
+  " text-align: left;" +
+  " white-space: nowrap;" +
+  " border-right: 1px solid #d9d9d9;" +
+  "}" +
+  "table.__fwt_table td:last-child {" +
+  " width: 100%;" +
+  " border-right: none;" +
+  "}" +
+  "table.__fwt_table td img { float: left; }" +
+  "table.__fwt_table td span { margin-left: 3px; }");
+
 /**
  * TablePeer.
  */
@@ -44,26 +67,28 @@ fan.fwt.TablePeer.prototype.prefSize = function(self, hints)
   return pref;
 }
 
-fan.fwt.TablePeer.prototype.create = function(parentElem)
+fan.fwt.TablePeer.prototype.create = function(parentElem, self)
 {
   // make sure we force rebuild
   this.needRebuild = true;
 
   var table = document.createElement("table");
-  with (table.style)
-  {
-    overflow = "auto";
-    width  = "100%";
-    borderSpacing = "0";
-  }
+  table.className = "__fwt_table";
+  var style = table.style;
+  style.overflow = "auto";
+  style.width  = "100%";
+  style.borderSpacing = "0";
 
   var div = this.emptyDiv();
-  with (div.style)
-  {
-    border     = "1px solid #404040";
-    overflow   = "auto";
-    background = "#fff";
-  }
+  style = div.style;
+  style.border     = "1px solid #404040";
+  style.overflow   = "auto";
+  style.background = "#fff";
+
+  var $this = this;
+  table.addEventListener("mousedown", function(event) {
+    $this.$onMouseDown(self, event);
+  }, false);
 
   div.appendChild(table);
   parentElem.appendChild(div);
@@ -114,7 +139,6 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   var model = self.m_model;
   var rows  = model.numRows();
   var cols  = model.numCols();
-  var widgets = [];
 
   if (this.m_headerVisible)
   {
@@ -176,20 +200,9 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   for (var r=0; r<rows; r++)
   {
     var tr = document.createElement("tr");
-    if (r % 2 == 0) tr.style.background  = "#f1f5fa";
-
     for (var c=-1; c<cols; c++)
     {
       var td = document.createElement("td");
-      with (td.style)
-      {
-        padding    = "4px 6px";
-        font       = fan.fwt.WidgetPeer.fontNormal;
-        textAlign  = "left";
-        whiteSpace = "nowrap";
-        if (c < cols-1) borderRight = "1px solid #d9d9d9";
-        else width = "100%";
-      }
       if (c < 0)
       {
         // selection checkbox
@@ -201,31 +214,48 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       }
       else
       {
-        // always apply background override
-        var bg = model.bg(c,r); if (bg != null) td.style.background = bg.toCss();
+        var node = td;
 
-        var widget = null;
-        if (model.widget) widget = model.widget(c,r);
-        if (widget == null)
+        // cell hyperlink
+        var uri = null;
+        if (model.$uri) uri = model.$uri(c,r);
+        if (uri != null)
         {
-          // normal text node
-          td.appendChild(document.createTextNode(model.text(c,r)));
-
-          // style overrides
-          var fg = model.fg(c,r); if (fg != null) td.style.color = fg.toCss();
-          var font = model.font(c,r); if (font != null) td.style.font = font.toStr();
-          var halign = model.halign(c);
-          switch (halign)
-          {
-            case fan.gfx.Halign.m_left:   td.style.textAlign = "left"; break;
-            case fan.gfx.Halign.m_center: td.style.textAlign = "center"; break;
-            case fan.gfx.Halign.m_right:  td.style.textAlign = "right"; break;
-          }
+          var a = document.createElement("a");
+          a.href = uri.encode();
+          node.appendChild(a);
+          node = a;
         }
-        else
+
+        // cell image
+        var img = model.image(c,r);
+        if (img != null)
         {
-          // stash widget to add later
-          widgets.push({ col:c, row:r, widget:widget });
+          var imgElem = document.createElement("img");
+          imgElem.src = fan.fwt.WidgetPeer.uriToImageSrc(img.m_uri);
+          node.appendChild(imgElem);
+        }
+
+        // cell text
+        var text = model.text(c,r);
+        if (img != null && text.length > 0)
+        {
+          var span = document.createElement("span");
+          span.appendChild(document.createTextNode(text));
+          node.appendChild(span);
+        }
+        else node.appendChild(document.createTextNode(text));
+
+        // style overrides
+        var fg = model.fg(c,r); if (fg != null) td.style.color = fg.toCss();
+        var bg = model.bg(c,r); if (bg != null) td.style.background = bg.toCss();
+        var font = model.font(c,r); if (font != null) td.style.font = font.toStr();
+        var halign = model.halign(c);
+        switch (halign)
+        {
+          case fan.gfx.Halign.m_left:   td.style.textAlign = "left"; break;
+          case fan.gfx.Halign.m_center: td.style.textAlign = "center"; break;
+          case fan.gfx.Halign.m_right:  td.style.textAlign = "right"; break;
         }
       }
       tr.appendChild(td);
@@ -244,63 +274,35 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   }
   table.appendChild(tbody);
 
-  // add widgets after tbody has been added so
-  // prefSize will work correctly
-  for (var i=0; i<widgets.length; i++)
-  {
-    var w = widgets[i];
-    var tr = tbody.childNodes[w.row+1];
-    var td = tr.childNodes[w.col+1];
-    this.attachWidget(td, w.widget)
-  }
-
   // sync selection
   this.selection.select(this.m_selected);
 }
 
-fan.fwt.TablePeer.prototype.attachWidget = function(td, widget)
+fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
 {
-  // custom widget
-  if (widget.peer.elem != null)
+  var target = event.target;
+  if (target.tagName == "IMG") target = target.parentNode;
+  if (target.tagName == "TD")
   {
-    // detach and reattach in case it moved
-    widget.peer.elem.parentNode.removeChild(widget.peer.elem);
-    td.appendChild(widget.peer.elem);
-  }
-  else
-  {
-    // attach new widget
-    var elem = widget.peer.create(td, widget);
-    widget.peer.attachTo(widget, elem);
-    var pref = widget.prefSize();
-    var w = pref.m_w;
-    var h = pref.m_h;
+    // find cell address
+    var col = target.cellIndex - 1;
+    var row = target.parentNode.rowIndex - 1;
+    if (col < 0 || row < 0) return;
 
-    // TODO FIXIT: workaround for lazy-load of images and relayout
-    if (widget instanceof fan.fwt.Label)
-    {
-      var img = widget.image();
-      if (img != null)
-      {
-        var key = img.m_uri.toStr();
-        var cached = fan.fwt.FwtEnvPeer.imgCache[key];
-        if (cached && cached.width == 0)
-        {
-          w += 16;
-          h = Math.max(h, 16);
-        }
-      }
-    }
+    // check for valid callback
+    var model = self.m_model;
+    if (!model.$onMouseDown) return;
 
-    // nuke abs positiong
-    with (elem.style)
-    {
-      position = "static";
-      left     = null;
-      top      = null;
-      width    = w + "px";
-      height   = h + "px";
-    }
+    // find pos relative to widget
+    var dis = this.posOnDisplay(self);
+    var rel = fan.gfx.Point.make(event.clientX-dis.m_x, event.clientY-dis.m_y);
+
+    // fire event
+    var evt = fan.fwt.Event.make();
+    evt.m_id = fan.fwt.EventId.m_mouseDown;
+    evt.m_pos = rel;
+    evt.m_widget = self;
+    model.$onMouseDown(evt, col, row);
   }
 }
 

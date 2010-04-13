@@ -57,11 +57,7 @@ fan.fwt.FwtEnvPeer.loadImage = function(fanImg, widget)
       //else
       //  jsImg.attachEvent('onload', onload);
     }
-    // swizzle fan: uris to http:
-    var src = (uri.scheme() == "fan")
-      ? fan.sys.UriPodBase + uri.host() + uri.pathStr()
-      : uri.toStr();
-    jsImg.src = src;
+    jsImg.src = fan.fwt.WidgetPeer.uriToImageSrc(uri);
     fan.fwt.FwtEnvPeer.imgCache[key] = jsImg;
   }
   return jsImg
