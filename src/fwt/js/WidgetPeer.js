@@ -20,7 +20,7 @@ fan.fwt.WidgetPeer.prototype.$ctor = function(self) {}
 var __osx = navigator.userAgent.indexOf("Mac OS X") != -1;
 fan.fwt.WidgetPeer.fontNormal    = __osx ? "12px Lucida Grande" : "13px Arial";
 fan.fwt.WidgetPeer.fontSmall     = __osx ? "10px Lucida Grande" : "11px Arial";
-fan.fwt.WidgetPeer.fontMonospace = __osx ? "12px Monaco"        : "12px Monaco";
+fan.fwt.WidgetPeer.fontMonospace = __osx ? "12px Monaco"        : "12px Courier New";
 
 //////////////////////////////////////////////////////////////////////////
 // Layout
