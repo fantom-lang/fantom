@@ -35,6 +35,8 @@ namespace Fan.Sys
 
     public Type returns() { return m_returns; }
 
+    public long arity() { return m_params.size(); }
+
     public List @params() { return m_params.ro(); }
 
     public override abstract bool isImmutable();

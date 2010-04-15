@@ -52,6 +52,11 @@ final class Func
   Type returns()
 
   **
+  ** Convenience for 'params.size'
+  **
+  Int arity()
+
+  **
   ** Get the formal parameters of the function.
   **
   Param[] params()
