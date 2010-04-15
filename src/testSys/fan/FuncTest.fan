@@ -133,6 +133,7 @@ class FuncTest : Test
   {
     args := Str[,]
     expected := ""
+    verifyEq(f.params.size, f.arity)
     f.params.size.times |Int i|
     {
       ch := ('a' + i).toChar

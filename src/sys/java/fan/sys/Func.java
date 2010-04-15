@@ -35,6 +35,8 @@ public abstract class Func
 
   public Type returns() { return returns; }
 
+  public long arity() { return params.size(); }
+
   public List params() { return params.ro(); }
 
   public abstract boolean isImmutable();
