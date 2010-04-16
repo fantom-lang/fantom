@@ -152,7 +152,12 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
   }
 
   // insert padding b/w img and text
-  if (img != null && text != null) img.style.paddingRight = "3px";
+  if (img != null && text != null)
+  {
+    var hgap = this.$hgap(self);
+    if (hgap == null) hgap = 3;
+    img.style.paddingRight = hgap + "px";
+  }
 
   // apply style
   with (this.elem.style)
@@ -172,8 +177,11 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
   }
 }
 
+// Backdoor hook to override hgap b/w image and text
+fan.fwt.LabelPeer.prototype.$hgap = function(self) { return null; }
+
 // Backdoor hook to reuse Label for hyperlinks
-// { uri:<encoded-uri>, underline:[<css-underline>" }
+// { uri:<encoded-uri>, underline:<css-underline>" }
 fan.fwt.LabelPeer.prototype.$uri = function(self) { return null; }
 
 
