@@ -300,9 +300,10 @@ public final class Duration
 
     StringBuilder s = new StringBuilder();
     if (days > 0) s.append(days).append(days == 1 ? "day " : "days ");
-    if (days > 0 || hr > 0) s.append(hr).append("hr ");
-    s.append(min).append("min ");
-    s.append(sec).append("sec");
+    if (hr > 0)   s.append(hr).append("hr ");
+    if (min > 0)  s.append(min).append("min ");
+    if (sec > 0)  s.append(sec).append("sec ");
+    s.setLength(s.length()-1);
     return s.toString();
   }
 
