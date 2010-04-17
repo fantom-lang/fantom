@@ -245,10 +245,10 @@ fan.sys.Duration.prototype.toLocale = function()
 
   var s = '';
   if (days > 0) s += days + (days == 1 ? "day " : "days ");
-  if (days > 0 || hr > 0) s += hr + "hr ";
-  s += min + "min ";
-  s += sec + "sec";
-  return s;
+  if (hr  > 0) s += hr + "hr ";
+  if (min > 0) s += min + "min ";
+  if (sec > 0) s += sec + "sec ";
+  return s.substring(0, s.length-1);
 }
 
 //////////////////////////////////////////////////////////////////////////
