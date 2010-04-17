@@ -248,7 +248,9 @@ class DurationTest : Test
     verifyEq((5min+2sec).toLocale, "5min 2sec")
     verifyEq((10hr + 5min+2sec).toLocale, "10hr 5min 2sec")
     verifyEq((1day + 10hr + 5min+2sec).toLocale, "1day 10hr 5min 2sec")
-    verifyEq((3day + 55sec).toLocale, "3days 0hr 0min 55sec")
+    verifyEq((3day + 55sec).toLocale, "3days 55sec")
+    verifyEq(5min.toLocale, "5min")
+    verifyEq((1day+2min).toLocale, "1day 2min")
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -307,9 +307,10 @@ namespace Fan.Sys
 
       s = new StringBuilder();
       if (days > 0) s.Append(days).Append(days == 1 ? "day " : "days ");
-      if (days > 0 || hr > 0) s.Append(hr).Append("hr ");
-      s.Append(min).Append("min ");
-      s.Append(sec).Append("sec");
+      if (hr > 0)   s.Append(hr).Append("hr ");
+      if (min > 0)  s.Append(min).Append("min ");
+      if (sec > 0)  s.Append(sec).Append("sec ");
+      s.Length = s.Length - 1;
       return s.ToString();
     }
 
