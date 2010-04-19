@@ -15,6 +15,29 @@
 
 // Inject table CSS
 fan.fwt.WidgetPeer.addCss(
+  // th
+  "table.__fwt_table th {" +
+  " margin: 0px;" +
+  " padding: 0px;" +
+  " border: none;" +
+  "}" +
+  "table.__fwt_table th:last-child { width:100% }" +
+  "table.__fwt_table th > div {" +
+  " position:relative;" +
+  " font: bold " + fan.fwt.WidgetPeer.fontSmall + ";" +
+  " padding: 3px 6px;" +
+  " text-align: left;" +
+  " white-space: nowrap;" +
+  " border-right: 1px solid #bdbdbd;" +
+  " border-bottom: 1px solid #5e5e5e;" +
+  " cursor: default;" +
+  " background: -moz-linear-gradient(top, #f9f9f9, #eee 50%, #e1e1e1 50%, #f5f5f5);" +
+  " background: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0,#f9f9f9), " +
+  "   color-stop(0.5,#eee), color-stop(0.5,#e1e1e1), color-stop(1,#f5f5f5));" +
+  "}" +
+  "table.__fwt_table th:last-child > div { border-right:none; }" +
+  "table.__fwt_table th:first-child > div { height: 100%; }" +
+  // td
   "table.__fwt_table td {" +
   " padding: 4px 6px;" +
   " font: " + fan.fwt.WidgetPeer.fontNormal + ";" +
@@ -29,6 +52,7 @@ fan.fwt.WidgetPeer.addCss(
   "table.__fwt_table td img { float: left; }" +
   "table.__fwt_table td span { margin-left: 3px; }" +
   "table.__fwt_table tr:nth-child(even) { background:#f1f5fa; }" +
+  // selected
   "table.__fwt_table tr.selected { color:#fff; background:#3d80df; }" +
   "table.__fwt_table tr.selected td { border-color:#346dbe; }" +
   "table.__fwt_table tr.selected a { color:#fff; }");
@@ -152,19 +176,6 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       // we have to embed a div inside our th to make
       // the borders overlap correctly
       var fix = document.createElement("div");
-      with (fix.style)
-      {
-        position     = "relative";
-        font         = "bold " + fan.fwt.WidgetPeer.fontSmall;
-        padding      = "4px 6px";
-        textAlign    = "left";
-        whiteSpace   = "nowrap";
-        borderBottom = "1px solid #404040";
-        cursor = "default";
-        if (c < cols-1) borderRight = "1px solid #a5a5a5";
-        if (c < 0) height = "100%";
-      }
-      fan.fwt.WidgetPeer.setBg(fix, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #dbdbdb, #bbb"));
       if (c < 0)
       {
         fix.innerHTML = "&nbsp;";
@@ -188,13 +199,6 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         }
       }
       var th = document.createElement("th");
-      with (th.style)
-      {
-        margin  = "0px";
-        padding = "0px";
-        border  = "none";
-        if (c == cols-1) width = "100%";
-      }
       th.appendChild(fix);
       tr.appendChild(th);
     }
