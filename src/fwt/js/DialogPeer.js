@@ -24,8 +24,8 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     width      = "100%";
     height     = "100%";
     background = "#000";
-    opacity    = "0.3";
-    filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=30);"
+    opacity    = "0.25";
+    filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=25);"
   }
 
   // mount shell we use to attach widgets to
@@ -43,20 +43,20 @@ fan.fwt.DialogPeer.prototype.open = function(self)
   var tbar = this.emptyDiv();
   with (tbar.style)
   {
-    height     = "16px";
-    padding    = "3px 6px";
+    height     = "18px";
+    padding    = "4px 6px";
     color      = "#fff";
     font       = "bold " + fan.fwt.WidgetPeer.fontNormal;
-    textShadow = "0 1px 1px #1c1c1c";
+    //textShadow = "0 -1px 1px #1c1c1c";
     textAlign  = "center";
-    borderTop    = "1px solid #8d8d8d";
-    borderBottom = "1px solid #303030";
+    borderTop    = "1px solid #7c7c7c";
+    borderBottom = "1px solid #282828";
     MozBorderRadiusTopleft     = "4px";
     MozBorderRadiusTopright    = "4px";
     webkitBorderTopLeftRadius  = "4px";
     webkitBorderTopRightRadius = "4px";
   }
-  fan.fwt.WidgetPeer.setBg(tbar, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #6f6f6f, #535353"));
+  fan.fwt.WidgetPeer.setBg(tbar, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #707070, #5a5a5a 0.5, #525252 0.5, #484848"));
   var content = this.emptyDiv();
   with (content.style)
   {
@@ -131,7 +131,7 @@ fan.fwt.DialogPeer.prototype.sync = function(self)
   var tbar  = dlg.firstChild;
   var pref  = content.prefSize();
 
-  var th = 24;
+  var th = 28;
   var w  = pref.m_w;
   var h  = pref.m_h + th;
   var x  = Math.floor((shell.offsetWidth - w) / 2);
