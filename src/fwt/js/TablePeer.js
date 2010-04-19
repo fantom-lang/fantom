@@ -27,7 +27,11 @@ fan.fwt.WidgetPeer.addCss(
   " border-right: none;" +
   "}" +
   "table.__fwt_table td img { float: left; }" +
-  "table.__fwt_table td span { margin-left: 3px; }");
+  "table.__fwt_table td span { margin-left: 3px; }" +
+  "table.__fwt_table tr:nth-child(even) { background:#f1f5fa; }" +
+  "table.__fwt_table tr.selected { color:#fff; background:#3d80df; }" +
+  "table.__fwt_table tr.selected td { border-color:#346dbe; }" +
+  "table.__fwt_table tr.selected a { color:#fff; }");
 
 /**
  * TablePeer.
@@ -411,15 +415,8 @@ fan.fwt.TableSelection.prototype.select = function(rows)
         break;
       }
 
-    var bg = on ? "#3d80df" : (row%2==0 ? "#f1f5fa" : "")
-    var fg = on ? "#fff"    : "";
-    var br = on ? "#346dbe" : "#d9d9d9";
-
+    tr.className = on ? "selected" : "";
     tr.firstChild.firstChild.checked = on;
-    tr.style.background = bg;
-    tr.style.color = fg;
-    for (var c=0; c<tr.childNodes.length-1; c++)
-      tr.childNodes[c].style.borderColor = br;
   }
   return fan.sys.List.make(fan.sys.Int.$type, selected);
 }
