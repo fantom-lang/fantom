@@ -263,26 +263,28 @@ public class StatementPeer
     if (!prepared)
       throw SqlErr.make("Statement has not been prepared.").val;
     PreparedStatement pstmt = (PreparedStatement)stmt;
-    try
+
+    Iterator i = paramMap.entrySet().iterator();
+    while (i.hasNext())
     {
-      Iterator i = paramMap.entrySet().iterator();
-      while (i.hasNext())
+      java.util.Map.Entry entry = (java.util.Map.Entry)i.next();
+      String key = (String)entry.getKey();
+      Object value = params.get(key);
+      Object jobj = fanToJava(value);
+      int[] locs = (int[])entry.getValue();
+      for (int j = 0; j < locs.length; j++)
       {
-        java.util.Map.Entry entry = (java.util.Map.Entry)i.next();
-        String key = (String)entry.getKey();
-        Object value = params.get(key);
-        Object jobj = fanToJava(value);
-        int[] locs = (int[])entry.getValue();
-        for (int j = 0; j < locs.length; j++)
+        // System.out.println("pstmt.setObject: " + locs[j] + " -> " + jobj.getClass().getName());
+        try
         {
-          //System.out.println("pstmt.setObject: " + locs[j] + " -> " + jobj.getClass().getName());
           pstmt.setObject(locs[j], jobj);
         }
+        catch (SQLException e)
+        {
+          throw SqlErr.make("Param name='" + key + "' class='" + value.getClass().getName() + "'; " +
+                            e.getMessage(), Err.make(e)).val;
+        }
       }
-    }
-    catch (SQLException ex)
-    {
-      throw ConnectionPeer.err(ex);
     }
   }
 
