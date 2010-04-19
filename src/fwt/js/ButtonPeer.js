@@ -151,7 +151,7 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
     if (pressed)
     {
       style.padding = "4px 6px 2px 6px";
-      fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #ccc, #d9d9d9"));
+      fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #b7b7b7, #c8c8c8 0.10, #cecece 0.10, #d9d9d9"));
     }
     else
     {
@@ -160,7 +160,7 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
       {
         style.color = "#000";
         style.border = "1px solid #404040";
-        fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #fefefe, #d0d0d0"));
+        fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #fefefe, #d8d8d8 0.90, #d1d1d1 0.90, #b9b9b9"));
       }
       else
       {
