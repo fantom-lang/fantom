@@ -182,7 +182,7 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     for (var k in override.map)
     {
       var v = override.map[k];
-      s.setProperty(k,v);
+      s.setProperty(k,v,"");
     }
   }
 }
