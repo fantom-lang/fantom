@@ -160,25 +160,38 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
   }
 
   // apply style
-  with (this.elem.style)
+  var s = this.elem.style;
+  s.font = this.m_font==null ? fan.fwt.WidgetPeer.fontNormal : this.m_font.toStr();
+  if (this.m_bg != null) s.background = this.m_bg.toStr();
+  switch (this.m_halign)
   {
-    font = this.m_font==null ? fan.fwt.WidgetPeer.fontNormal : this.m_font.toStr();
-    if (this.m_bg != null) background = this.m_bg.toStr();
-    switch (this.m_halign)
+    case fan.gfx.Halign.m_left:   s.textAlign = "left"; break;
+    case fan.gfx.Halign.m_fill:   s.textAlign = "left"; break;
+    case fan.gfx.Halign.m_center: s.textAlign = "center"; break;
+    case fan.gfx.Halign.m_right:  s.textAlign = "right"; break;
+    default:                      s.textAlign = "left"; break;
+  }
+  s.cursor = "default";
+  s.whiteSpace = "nowrap";
+
+  // override style
+  var override = this.$style(self);
+  if (override != null && text != null)
+  {
+    s = text.style;
+    for (var k in override.map)
     {
-      case fan.gfx.Halign.m_left:   textAlign = "left"; break;
-      case fan.gfx.Halign.m_fill:   textAlign = "left"; break;
-      case fan.gfx.Halign.m_center: textAlign = "center"; break;
-      case fan.gfx.Halign.m_right:  textAlign = "right"; break;
-      default:                      textAlign = "left"; break;
+      var v = override.map[k];
+      s.setProperty(k,v);
     }
-    cursor = "default";
-    whiteSpace = "nowrap";
   }
 }
 
-// Backdoor hook to override hgap b/w image and text
+// Backdoor hook to override hgap b/w image and text [returns Int?]
 fan.fwt.LabelPeer.prototype.$hgap = function(self) { return null; }
+
+// Backdoor hook to override text style [returns [Str:Str]?]
+fan.fwt.LabelPeer.prototype.$style = function(self) { return null; }
 
 // Backdoor hook to reuse Label for hyperlinks
 // { uri:<encoded-uri>, underline:<css-underline>" }
