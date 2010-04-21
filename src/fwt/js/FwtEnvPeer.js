@@ -36,20 +36,13 @@ fan.fwt.FwtEnvPeer.loadImage = function(fanImg, widget)
     {
       var onload = function()
       {
-        // TODO - easiest and most reliable is to relayout
-        // whole window - but might be better to queue relayouts
-        // depending on how native browser optimizes reflows
-
-        // 29 Jul 09 - still had bugs, introducing a small delay
-        // seems to work more reliably.  But we need to rework all
-        // the relayout code to use a coalescing queue I think, so
-        // this is probably just temporary.
-        var f = function()
+        // mark that we need relayout
+        var win = widget.window()
+        if (win != null)
         {
-          var win = widget.window();
-          if (win != null) win.relayout();
+          fan.fwt.FwtEnvPeer.$win = win;
+          fan.fwt.FwtEnvPeer.$needRelayout = true;
         }
-        setTimeout(f, 50);
       }
       if (jsImg.addEventListener)
         jsImg.onload = onload;
@@ -62,6 +55,19 @@ fan.fwt.FwtEnvPeer.loadImage = function(fanImg, widget)
   }
   return jsImg
 }
+
+// Relayout handling for async image loading
+fan.fwt.FwtEnvPeer.$win = null;
+fan.fwt.FwtEnvPeer.$needRelayout = false;
+fan.fwt.FwtEnvPeer.$checkRelayout = function()
+{
+  if (!fan.fwt.FwtEnvPeer.$needRelayout) return;
+  if (fan.fwt.FwtEnvPeer.$win == null) return;
+  console.log("# FwtEnvPeer.relayout");
+  fan.fwt.FwtEnvPeer.$needRelayout = false;
+  fan.fwt.FwtEnvPeer.$win.relayout();
+}
+setInterval(fan.fwt.FwtEnvPeer.$checkRelayout, 50);
 
 // Size imageSize(Image img)
 fan.fwt.FwtEnvPeer.prototype.imageSize = function(self, fanImg)
