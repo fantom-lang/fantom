@@ -63,7 +63,6 @@ fan.fwt.FwtEnvPeer.$checkRelayout = function()
 {
   if (!fan.fwt.FwtEnvPeer.$needRelayout) return;
   if (fan.fwt.FwtEnvPeer.$win == null) return;
-  console.log("# FwtEnvPeer.relayout");
   fan.fwt.FwtEnvPeer.$needRelayout = false;
   fan.fwt.FwtEnvPeer.$win.relayout();
 }
