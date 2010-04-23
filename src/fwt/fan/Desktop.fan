@@ -77,9 +77,23 @@ class Desktop
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the default system font.
+  ** Get the default system font. The system font is used for
+  ** text in menus, dialogs, and full-size controls.
   **
   static native Font sysFont()
+
+  **
+  ** Get the default small system font. The small font is used
+  ** for informative text, column headings in tables, help tags,
+  ** and for small controls.
+  **
+  static native Font sysFontSmall()
+
+  **
+  ** Get the default view system font. The view font is used in
+  ** controls like Tree and Table.
+  **
+  static native Font sysFontView()
 
   **
   ** Get the default system mono-spaced font.

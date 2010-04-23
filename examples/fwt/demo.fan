@@ -824,10 +824,14 @@ class GraphicsDemo : Canvas
 
     // system font/colors
     y := 20
-    g.font = Desktop.sysFont
     g.brush = Color.black
+    g.font = Desktop.sysFont
     g.drawText("sysFont: $Desktop.sysFont.toStr", 480, y)
-    y += 20
+    g.font = Desktop.sysFontSmall
+    g.drawText("sysFontSmall: $Desktop.sysFontSmall.toStr", 480, y+15)
+    g.font = Desktop.sysFontView
+    g.drawText("sysFont: $Desktop.sysFontView.toStr", 480, y+30)
+    y += 60
     g.font = Font("9pt Arial")
     y = sysColor(g, y, Desktop.sysDarkShadow, "sysDarkShadow")
     y = sysColor(g, y, Desktop.sysNormShadow, "sysNormShadow")
@@ -871,7 +875,7 @@ class GraphicsDemo : Canvas
     g.drawText("Font Metrics", tx, ty)
 
     // alpha
-    g.translate(430, 40)
+    g.translate(430, 80)
     // checkerboard bg
     g.brush = Color.white
     g.fillRect(0, 0, 240, 120)
