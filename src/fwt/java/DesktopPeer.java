@@ -118,7 +118,26 @@ public class DesktopPeer
     }
     return sysFont;
   }
-  private static fan.gfx.Font sysFont;
+
+  public static fan.gfx.Font sysFontSmall()
+  {
+    if (sysFontSmall == null)
+    {
+      fan.gfx.Font sys = fan.fwt.Desktop.sysFont();
+      sysFontSmall = sys.toSize(sys.size-2);
+    }
+    return sysFontSmall;
+  }
+
+  public static fan.gfx.Font sysFontView()
+  {
+    if (sysFontView == null)
+    {
+      fan.gfx.Font sys = fan.fwt.Desktop.sysFont();
+      sysFontView = Fwt.isMac() ? sys.toSize(sys.size-1) : sys;
+    }
+    return sysFontView;
+  }
 
   public static fan.gfx.Font sysFontMonospace()
   {
@@ -130,6 +149,10 @@ public class DesktopPeer
     }
     return sysFontMonospace;
   }
+
+  private static fan.gfx.Font sysFont;
+  private static fan.gfx.Font sysFontSmall;
+  private static fan.gfx.Font sysFontView;
   private static fan.gfx.Font sysFontMonospace;
 
 //////////////////////////////////////////////////////////////////////////
