@@ -24,7 +24,7 @@ fan.fwt.WidgetPeer.addCss(
   "table.__fwt_table th:last-child { width:100% }" +
   "table.__fwt_table th > div {" +
   " position:relative;" +
-  " font: bold " + fan.fwt.WidgetPeer.fontSmall + ";" +
+  " font: bold " + fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFontSmall) + ";" +
   " padding: 3px 6px;" +
   " text-align: left;" +
   " white-space: nowrap;" +
@@ -39,8 +39,8 @@ fan.fwt.WidgetPeer.addCss(
   "table.__fwt_table th:first-child > div { height: 100%; }" +
   // td
   "table.__fwt_table td {" +
-  " padding: 4px 6px;" +
-  " font: " + fan.fwt.WidgetPeer.fontNormal + ";" +
+  " padding: 3px 6px;" +
+  " font: " + fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFontView) + ";" +
   " text-align: left;" +
   " white-space: nowrap;" +
   " border-right: 1px solid #d9d9d9;" +
@@ -257,7 +257,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         // style overrides
         var fg = model.fg(c,r); if (fg != null) td.style.color = fg.toCss();
         var bg = model.bg(c,r); if (bg != null) td.style.background = bg.toCss();
-        var font = model.font(c,r); if (font != null) td.style.font = font.toStr();
+        var font = model.font(c,r); if (font != null) td.style.font = fan.fwt.WidgetPeer.fontToCss(font);
         var halign = model.halign(c);
         switch (halign)
         {

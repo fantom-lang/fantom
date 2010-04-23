@@ -53,7 +53,7 @@ fan.fwt.CanvasPeer.prototype.sync = function(self)
     g.cx.lineWidth = 1;
     g.cx.lineCap = "square";
     g.cx.textBaseline = "top";
-    g.cx.font = fan.fwt.DesktopPeer.$sysFont.toStr();
+    g.cx.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
     self.onPaint(g);
   }
   else

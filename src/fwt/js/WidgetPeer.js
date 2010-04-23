@@ -13,16 +13,6 @@ fan.fwt.WidgetPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.fwt.WidgetPeer.prototype.$ctor = function(self) {}
 
 //////////////////////////////////////////////////////////////////////////
-// Font Setup
-//////////////////////////////////////////////////////////////////////////
-
-// try to match font to platform
-var __osx = navigator.userAgent.indexOf("Mac OS X") != -1;
-fan.fwt.WidgetPeer.fontNormal    = __osx ? "12px Lucida Grande" : "13px Arial";
-fan.fwt.WidgetPeer.fontSmall     = __osx ? "10px Lucida Grande" : "11px Arial";
-fan.fwt.WidgetPeer.fontMonospace = __osx ? "12px Monaco"        : "12px Courier New";
-
-//////////////////////////////////////////////////////////////////////////
 // Layout
 //////////////////////////////////////////////////////////////////////////
 
@@ -268,6 +258,16 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
+
+fan.fwt.WidgetPeer.fontToCss = function(font)
+{
+  var s = "";
+  if (font.m_bold)   s += "bold ";
+  if (font.m_italic) s += "italic ";
+  s += font.m_size + "px ";
+  s += font.m_name;
+  return s;
+}
 
 fan.fwt.WidgetPeer.uriToImageSrc = function(uri)
 {

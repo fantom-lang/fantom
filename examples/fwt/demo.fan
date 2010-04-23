@@ -828,9 +828,9 @@ class GraphicsDemo : Canvas
     g.font = Desktop.sysFont
     g.drawText("sysFont: $Desktop.sysFont.toStr", 480, y)
     g.font = Desktop.sysFontSmall
-    g.drawText("sysFontSmall: $Desktop.sysFontSmall.toStr", 480, y+15)
+    g.drawText("sysFontSmall: $Desktop.sysFontSmall.toStr", 480, y+18)
     g.font = Desktop.sysFontView
-    g.drawText("sysFont: $Desktop.sysFontView.toStr", 480, y+30)
+    g.drawText("sysFontView: $Desktop.sysFontView.toStr", 480, y+30)
     y += 60
     g.font = Font("9pt Arial")
     y = sysColor(g, y, Desktop.sysDarkShadow, "sysDarkShadow")

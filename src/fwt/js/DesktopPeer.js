@@ -13,8 +13,10 @@ fan.fwt.DesktopPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.fwt.DesktopPeer.prototype.$ctor = function(self) {}
 
 fan.fwt.DesktopPeer.platform  = function() { return "browser"; }
-fan.fwt.DesktopPeer.isWindows = function() { return false; }
-fan.fwt.DesktopPeer.isMac     = function() { return false; }
+fan.fwt.DesktopPeer.isWindows = function() { return !fan.fwt.DesktopPeer.$isMac; }
+fan.fwt.DesktopPeer.isMac     = function() { return fan.fwt.DesktopPeer.$isMac; }
+
+fan.fwt.DesktopPeer.$isMac = navigator.userAgent.indexOf("Mac OS X") != -1;
 
 // TODO
 //fan.fwt.DesktopPeer.bounds()
@@ -35,8 +37,17 @@ fan.fwt.DesktopPeer.isMac     = function() { return false; }
 
 fan.fwt.DesktopPeer.sysFont = function()
 {
-  // TODO - grab CSS from body elem?
   return fan.fwt.DesktopPeer.$sysFont;
+}
+
+fan.fwt.DesktopPeer.sysFontSmall = function()
+{
+  return fan.fwt.DesktopPeer.$sysFontSmall;
+}
+
+fan.fwt.DesktopPeer.sysFontView = function()
+{
+  return fan.fwt.DesktopPeer.$sysFontView;
 }
 
 fan.fwt.DesktopPeer.sysFontMonospace = function()
@@ -44,8 +55,10 @@ fan.fwt.DesktopPeer.sysFontMonospace = function()
   return fan.fwt.DesktopPeer.$sysFontMonospace;
 }
 
-fan.fwt.DesktopPeer.$sysFont = fan.gfx.Font.fromStr("10pt Arial");
-fan.fwt.DesktopPeer.$sysFontMonospace = fan.gfx.Font.fromStr("9pt Courier");
+fan.fwt.DesktopPeer.$sysFont = fan.gfx.Font.fromStr("13pt Lucida Grande, Tahoma, Arial");
+fan.fwt.DesktopPeer.$sysFontSmall = fan.gfx.Font.fromStr("11pt Lucida Grande, Tahoma, Arial");
+fan.fwt.DesktopPeer.$sysFontView = fan.gfx.Font.fromStr("12pt Lucida Grande, Tahoma, Arial");
+fan.fwt.DesktopPeer.$sysFontMonospace = fan.gfx.Font.fromStr("9pt Monaco, Courier New");
 
 //////////////////////////////////////////////////////////////////////////
 // System Colors

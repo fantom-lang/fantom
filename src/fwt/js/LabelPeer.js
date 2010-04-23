@@ -161,7 +161,7 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
 
   // apply style
   var s = this.elem.style;
-  s.font = this.m_font==null ? fan.fwt.WidgetPeer.fontNormal : this.m_font.toStr();
+  s.font = fan.fwt.WidgetPeer.fontToCss(this.m_font==null ? fan.fwt.DesktopPeer.$sysFont : this.m_font);
   if (this.m_bg != null) s.background = this.m_bg.toStr();
   switch (this.m_halign)
   {
