@@ -55,7 +55,7 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
 {
   var div = this.emptyDiv();
   var style = div.style;
-  style.font = this.m_font==null ? fan.fwt.WidgetPeer.fontNormal : this.m_font.toStr();
+  style.font = fan.fwt.WidgetPeer.fontToCss(this.m_font==null ? fan.fwt.DesktopPeer.$sysFont : this.m_font);
   style.border  = "1px solid #404040";
   style.MozBorderRadius    = "4px";
   style.webkitBorderRadius = "4px";
@@ -112,7 +112,7 @@ fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
   var div = this.emptyDiv();
   with (div.style)
   {
-    font = this.m_font==null ? fan.fwt.WidgetPeer.fontNormal : this.m_font.toStr();
+    font = fan.fwt.WidgetPeer.fontToCss(this.m_font==null ? fan.fwt.DesktopPeer.$sysFon : this.m_font);
     whiteSpace = "nowrap";
   }
   div.appendChild(check);

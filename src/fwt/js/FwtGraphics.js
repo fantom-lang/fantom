@@ -87,7 +87,7 @@ fan.fwt.Graphics.prototype.font   = function() { return this.m_font }
 fan.fwt.Graphics.prototype.font$  = function(f)
 {
   this.m_font = f;
-  this.cx.font = f.toStr();
+  this.cx.font = fan.fwt.WidgetPeer.fontToCss(f);
 }
 
 // Bool antialias

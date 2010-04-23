@@ -40,16 +40,15 @@ fan.fwt.TabPeer.prototype.sync = function(self)
     $self.m_parent.relayout();
   }
 
-  with (elem.style)
-  {
-    cursor  = "default";
-    padding = "6px 12px";
-    border  = "1px solid #404040";
-    if (selected) borderBottom = "1px solid #eee";
-    MozBorderRadius = "5px 5px 0 0";
-    webkitBorderTopLeftRadius  = "5px";
-    webkitBorderTopRightRadius = "5px";
-  }
+  var css = elem.style;
+  css.cursor  = "default";
+  css.padding = "6px 12px";
+  css.border  = "1px solid #404040";
+  css.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
+  if (selected) css.borderBottom = "1px solid #eee";
+  css.MozBorderRadius = "5px 5px 0 0";
+  css.webkitBorderTopLeftRadius  = "5px";
+  css.webkitBorderTopRightRadius = "5px";
 
   if (selected)
   {
