@@ -114,25 +114,25 @@ fan.fwt.FwtEnvPeer.fontCx = null;
 fan.fwt.FwtEnvPeer.prototype.fontHeight = function(self, font)
 {
   // fudge this as 150% of size
-  return Math.round(font.m_size * 1.5);
+  return Math.round((font.m_size-3) * 1.5);
 }
 
 fan.fwt.FwtEnvPeer.prototype.fontAscent = function(self, font)
 {
   // fudge this as 100% of size
-  return font.m_size
+  return font.m_size-3
 }
 
 fan.fwt.FwtEnvPeer.prototype.fontDescent = function(self, font)
 {
   // fudge this as 30% of size
-  return Math.round(font.m_size * 0.3);
+  return Math.round((font.m_size-3) * 0.3);
 }
 
 fan.fwt.FwtEnvPeer.prototype.fontLeading = function(self, font)
 {
   // fudge this as 16% of size
-  return Math.round(font.m_size * 0.16);
+  return Math.round((font.m_size-3) * 0.16);
 }
 
 fan.fwt.FwtEnvPeer.prototype.fontWidth = function(self, font, str)
@@ -144,7 +144,7 @@ fan.fwt.FwtEnvPeer.prototype.fontWidth = function(self, font, str)
     {
       fan.fwt.FwtEnvPeer.fontCx = document.createElement("canvas").getContext("2d");
     }
-    fan.fwt.FwtEnvPeer.fontCx.font = font.toStr()
+    fan.fwt.FwtEnvPeer.fontCx.font = fan.fwt.WidgetPeer.fontToCss(font);
     return fan.fwt.FwtEnvPeer.fontCx.measureText(str).width;
   }
   catch (err)
