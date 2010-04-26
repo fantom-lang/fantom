@@ -112,7 +112,7 @@ fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
   var div = this.emptyDiv();
   with (div.style)
   {
-    font = fan.fwt.WidgetPeer.fontToCss(this.m_font==null ? fan.fwt.DesktopPeer.$sysFon : this.m_font);
+    font = fan.fwt.WidgetPeer.fontToCss(this.m_font==null ? fan.fwt.DesktopPeer.$sysFont : this.m_font);
     whiteSpace = "nowrap";
   }
   div.appendChild(check);
