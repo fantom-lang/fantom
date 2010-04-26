@@ -37,6 +37,16 @@ fan.sys.Method.prototype.invoke = function(instance, args)
     ? eval(this.m_$qname)
     : instance[this.m_$name];
   var vals = args==null ? [] : args.m_values;
+
+  // if not found, assume this is primitive that needs
+  // to map into a static call
+  if (func == null && instance != null)
+  {
+    func = eval(this.m_$qname);
+    vals.splice(0, 1, instance);
+    instance = null;
+  }
+
   return func.apply(instance, vals);
 }
 
