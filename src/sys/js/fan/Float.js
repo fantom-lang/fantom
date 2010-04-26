@@ -113,6 +113,12 @@ fan.sys.Float.fromStr = function(s, checked)
   return fan.sys.Float.make(parseFloat(s));
 }
 
+fan.sys.Float.toLocale = function(self)
+{
+  // TODO FIXIT
+  return fan.sys.Float.toStr(self);
+}
+
 fan.sys.Float.toStr = function(self)
 {
   if (isNaN(self)) return "NaN";
