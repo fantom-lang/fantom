@@ -113,7 +113,28 @@ fan.sys.ObjUtil.$typeof = function(obj)
 fan.sys.ObjUtil.trap = function(obj, name, args)
 {
   if (obj instanceof fan.sys.Obj) return obj.trap(name, args);
-  throw fan.sys.Err.make("ObjUtil.trap primitive support incomplete");
+  else return fan.sys.ObjUtil.doTrap(obj, name, args, fan.sys.Type.toFanType(obj));
+}
+
+fan.sys.ObjUtil.doTrap = function(obj, name, args, type)
+{
+  var slot = type.slot(name, true);
+  if (slot instanceof fan.sys.Method)
+  {
+    return slot.invoke(obj, args);
+  }
+  else
+  {
+    var argSize = (args == null) ? 0 : args.size();
+    if (argSize == 0) return slot.get(obj);
+    if (argSize == 1) // one arg -> setter
+    {
+      var val = args.get(0);
+      slot.set(obj, val);
+      return val;
+    }
+    throw fan.sys.ArgErr.make("Invalid number of args to get or set field '" + name + "'");
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////
