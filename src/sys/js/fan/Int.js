@@ -66,6 +66,11 @@ fan.sys.Int.parseHex = function(s)
   return parseInt(s, 16);
 }
 
+fan.sys.Int.toLocale = function(self)
+{
+  return self.toString();
+}
+
 fan.sys.Int.toStr = function(self)
 {
   return self.toString();
