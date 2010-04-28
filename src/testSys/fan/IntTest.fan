@@ -658,8 +658,16 @@ class IntTest : Test
     verifyToLocale(123_456_789, "#,####", "1,2345,6789")
     verifyToLocale(123_456_789, "#,###",  "123,456,789")
     verifyToLocale(-123_456_789, "#,##",  "-1,23,45,67,89")
-    verifyToLocale(Int.maxVal, "#,###",   "9,223,372,036,854,775,807")
-    verifyToLocale(Int.minVal, "#,###",   "-9,223,372,036,854,775,808")
+    if (js)
+    {
+      verifyToLocale(Int.maxVal, "#,###",   "9,007,199,254,740,992")
+      verifyToLocale(Int.minVal, "#,###",   "-9,007,199,254,740,992")
+    }
+    else
+    {
+      verifyToLocale(Int.maxVal, "#,###",   "9,223,372,036,854,775,807")
+      verifyToLocale(Int.minVal, "#,###",   "-9,223,372,036,854,775,808")
+    }
 
     verifyToLocale(4, "0",   "4")
     verifyToLocale(4, "00",  "04")

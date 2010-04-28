@@ -137,3 +137,49 @@ fan.sys.Float.toCode = function(self)
   return s + "f";
 }
 
+/////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Float.toLocale = function(self, pattern)
+{
+  if (pattern === undefined) pattern = null;
+  try
+  {
+    // get current locale
+// TODO FIXIT
+//    Locale locale = Locale.cur();
+//    java.text.DecimalFormatSymbols df = locale.decimal();
+    var df = null;
+
+    // handle special values
+    if (isNaN(self)) return "NaN"; /*df.getNaN();*/
+    if (self == fan.sys.Float.m_posInf) return "INF"; /*df.getInfinity();*/
+    if (self == fan.sys.Float.m_negInf) return "-INF"; /*df.getMinusSign() + df.getInfinity()*/
+
+    // get default pattern if necessary
+    if (pattern == null)
+// TODO FIXIT
+//      pattern = Env.cur().locale(Sys.sysPod, "float", "#,###.0##");
+      pattern = "#,###.0##";
+
+    // TODO: if value is < 10^-3 or > 10^7 it will be
+    // converted to exponent string, so just bail on that
+// TODO FIXIT
+    var string = ''+self;
+//    if (string.indexOf('E') > 0)
+//      string = new java.text.DecimalFormat("0.#########").format(self);
+
+    // parse pattern and get digits
+    var p = fan.sys.NumPattern.parse(pattern);
+    var d = fan.sys.NumDigits.makeStr(string);
+
+    // route to common FanNum method
+    return fan.sys.Num.toLocale(p, d, df);
+  }
+  catch (err)
+  {
+    fan.sys.ObjUtil.echo(err);
+    return ''+self;
+  }
+}
