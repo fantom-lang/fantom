@@ -66,11 +66,6 @@ fan.sys.Int.parseHex = function(s)
   return parseInt(s, 16);
 }
 
-fan.sys.Int.toLocale = function(self)
-{
-  return self.toString();
-}
-
 fan.sys.Int.toStr = function(self)
 {
   return self.toString();
@@ -256,7 +251,6 @@ fan.sys.Int.toDateTime = function(self, tz)
     : fan.sys.DateTime.makeTicks(self, tz);
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 // CharMap
 //////////////////////////////////////////////////////////////////////////
@@ -287,4 +281,54 @@ for (var i=48; i<=57; ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.DIGIT;
 for (var i=48; i<=57;  ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.HEX;
 for (var i=97; i<=102; ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.HEX;
 for (var i=65; i<=70;  ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.HEX;
+
+//////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Int.toLocale = function(self, pattern)
+{
+  if (pattern === undefined) pattern = null;
+
+  // if pattern is "B" format as bytes
+  if (pattern != null && pattern.length == 1 && pattern.charAt(0) == 'B')
+    return fan.sys.Int.toLocaleBytes(self);
+
+  // get current locale
+// TODO FIXIT
+//  Locale locale = Locale.cur();
+//  java.text.DecimalFormatSymbols df = locale.decimal();
+   var df = null;
+
+  // get default pattern if necessary
+  if (pattern == null)
+// TODO FIXIT
+//    pattern = Env.cur().locale(Sys.sysPod, "int", "#,###");
+    pattern = "#,###";
+
+  // parse pattern and get digits
+  var p = fan.sys.NumPattern.parse(pattern);
+  var d = fan.sys.NumDigits.makeLong(self);
+
+  // route to common FanNum method
+  return fan.sys.Num.toLocale(p, d, df);
+}
+
+fan.sys.Int.toLocaleBytes = function(b)
+{
+  var KB = fan.sys.Int.m_KB;
+  var MB = fan.sys.Int.m_MB;
+  var GB = fan.sys.Int.m_GB;
+  if (b < KB)    return b + "B";
+  if (b < 10*KB) return fan.sys.Float.toLocale(b/KB, "#.#") + "KB";
+  if (b < MB)    return Math.round(b/KB) + "KB";
+  if (b < 10*MB) return fan.sys.Float.toLocale(b/MB, "#.#") + "MB";
+  if (b < GB)    return Math.round(b/MB) + "MB";
+  if (b < 10*GB) return fan.sys.Float.toLocale(b/GB, "#.#") + "GB";
+  return Math.round(b/fan.sys.Int.m_GB) + "GB";
+}
+fan.sys.Int.m_KB = 1024;
+fan.sys.Int.m_MB = 1024*1024;
+fan.sys.Int.m_GB = 1024*1024*1024;
+
 
