@@ -224,30 +224,6 @@ public class TablePeer
     }
   }
 
-  public void sortEvent(Event e)
-  {
-    Table table = (Table)this.control;
-    final fan.fwt.Table self = (fan.fwt.Table)this.self;
-
-    // map selected column to an index; can't find a freaking
-    // way to easily map TableColumn to an index
-    TableColumn col = (TableColumn)e.widget;
-    Long sortCol = null;
-    for (int i=0; i<table.getColumnCount(); ++i)
-      if (table.getColumn(i) == col) { sortCol = Long.valueOf(i); break; }
-
-    // figure out sorting up or down
-    SortMode sortMode = SortMode.up;
-    if (sortCol == self.view().sortCol())
-      sortMode = self.view().sortMode().toggle();
-
-    // do it!
-    table.setSortColumn(col);
-    table.setSortDirection(sortMode == SortMode.up ? SWT.UP : SWT.DOWN);
-    self.view().sort(sortCol, sortMode);
-    refreshAll(self);
-  }
-
   public void rebuild()
   {
     // TODO: need to figure out how to sync
@@ -270,6 +246,46 @@ public class TablePeer
 
     // rows
     table.setItemCount((int)model.numRows());
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Sorting
+//////////////////////////////////////////////////////////////////////////
+
+  public void sort(fan.fwt.Table self, Long col, SortMode mode)
+  {
+    // update view
+    self.view().sort(col, mode);
+
+    // update SWT control
+    Table table = (Table)this.control;
+    if (table != null)
+    {
+      if (col != null) table.setSortColumn(table.getColumn(col.intValue()));
+      table.setSortDirection(mode == SortMode.up ? SWT.UP : SWT.DOWN);
+      refreshAll(self);
+    }
+  }
+
+  public void sortEvent(Event e)
+  {
+    Table table = (Table)this.control;
+    final fan.fwt.Table self = (fan.fwt.Table)this.self;
+
+    // map selected column to an index; can't find a freaking
+    // way to easily map TableColumn to an index
+    TableColumn col = (TableColumn)e.widget;
+    Long sortCol = null;
+    for (int i=0; i<table.getColumnCount(); ++i)
+      if (table.getColumn(i) == col) { sortCol = Long.valueOf(i); break; }
+
+    // figure out sorting up or down
+    SortMode sortMode = SortMode.up;
+    if (sortCol == self.view().sortCol())
+      sortMode = self.view().sortMode().toggle();
+
+    // do it
+    sort(self, sortCol, sortMode);
   }
 
 //////////////////////////////////////////////////////////////////////////
