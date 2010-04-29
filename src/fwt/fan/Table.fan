@@ -128,7 +128,8 @@ class Table : Widget
   **
   ** Show or hide the given column.  Changing visibility of columns
   ** does not modify the indexing of TableModel, it only changes how
-  ** the model is viewed.  See `isColVisible`.
+  ** the model is viewed.  See `isColVisible`.  This method does not
+  ** automatically refresh table, call `refreshAll` when complete.
   **
   Void setColVisible(Int col, Bool visible) { view.setColVisible(col, visible) }
 
@@ -148,9 +149,10 @@ class Table : Widget
   ** the table is ordered by its natural order of the table model.
   ** Sort order is determined by `TableModel.sortCompare`.  Sorting
   ** does not modify the indexing of TableModel, it only changes how
-  ** the model is viewed.  Also see `sortCol` and `sortMode`.
+  ** the model is viewed.  Also see `sortCol` and `sortMode`.  This
+  ** method automatically refreshes the table.
   **
-  Void sort(Int? col, SortMode mode := SortMode.up) { view.sort(col, mode) }
+  native Void sort(Int? col, SortMode mode := SortMode.up)
 
   **
   ** The view wraps the table model to implement the row/col mapping
