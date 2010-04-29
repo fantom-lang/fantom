@@ -663,9 +663,20 @@ class DirTableModel : TableModel
     switch (col)
     {
       case 0:  return f.name
-      case 1:  s := f.size; return s == null ? "" : s/1024 +"KB"
+      case 1:  return f.size?.toLocale("B") ?: ""
       case 2:  return f.modified.toLocale
       default: return "?"
+    }
+  }
+  override Int sortCompare(Int col, Int row1, Int row2)
+  {
+    a := dir[row1]
+    b := dir[row2]
+    switch (col)
+    {
+      case 1:  return a.size <=> b.size
+      case 2:  return a.modified <=> b.modified
+      default: return super.sortCompare(col, row1, row2)
     }
   }
   override Image? image(Int col, Int row)

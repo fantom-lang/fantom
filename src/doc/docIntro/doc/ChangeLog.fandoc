@@ -20,6 +20,8 @@
 - Func.arity
 - Implement Int/Float toLocale for javascript
 - Remove deprecated dom::Elem.x/y/w/h methods
+- TableModel and TreeModel changed from mixin to abstract class
+- Table sorting and column visibility
 
 *Build 1.0.52 (24 Mar 10)*
 - Color: makeArgb, makeRgb

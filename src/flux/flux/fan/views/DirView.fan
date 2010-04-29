@@ -78,6 +78,18 @@ internal class DirViewModel : TableModel
     }
   }
 
+  override Int sortCompare(Int col, Int row1, Int row2)
+  {
+    a := files[row1]
+    b := files[row2]
+    switch (col)
+    {
+      case 1:  return a.file.size <=> b.file.size
+      case 2:  return a.file.modified <=> b.file.modified
+      default: return super.sortCompare(col, row1, row2)
+    }
+  }
+
   override Image? image(Int col, Int row)
   {
     return (col == 0) ? files[row].icon : null
