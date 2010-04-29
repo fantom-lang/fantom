@@ -129,20 +129,6 @@ class Elem
     set { pos = it.pos; size = it.size }
   }
 
-  // TODO remove in 1.0.53
-
-  @Deprecated { msg="Use Elem.pos" }
-  Int x() { pos.x }
-
-  @Deprecated { msg="Use Elem.pos" }
-  Int y() { pos.y }
-
-  @Deprecated { msg="Use Elem.size" }
-  Int w() { size.w }
-
-  @Deprecated { msg="Use Elem.size" }
-  Int h() { size.h }
-
 //////////////////////////////////////////////////////////////////////////
 // Tree
 //////////////////////////////////////////////////////////////////////////
