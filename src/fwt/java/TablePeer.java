@@ -97,7 +97,6 @@ public class TablePeer
     Table c = (Table)this.control;
 
     TableModel model = model();
-    if (model == null) return;
 
     c.removeAll();
     c.setItemCount((int)model.numRows());
@@ -146,14 +145,13 @@ public class TablePeer
     {
       case SWT.SetData:     handleSetData(event); break;
       case SWT.MenuDetect:  handleMenuDetect(event); break;
-      default: System.out.println("WARNING: TreePeer.handleEvent: " + event);
+      default: System.out.println("WARNING: TablePeer.handleEvent: " + event);
     }
   }
 
   private void handleSetData(Event event)
   {
     TableModel model = model();
-    if (model == null) return;
 
     Fwt fwt = Fwt.get();
     TableItem item = (TableItem)event.item;
@@ -226,6 +224,30 @@ public class TablePeer
     }
   }
 
+  public void sortEvent(Event e)
+  {
+    Table table = (Table)this.control;
+    final fan.fwt.Table self = (fan.fwt.Table)this.self;
+
+    // map selected column to an index; can't find a freaking
+    // way to easily map TableColumn to an index
+    TableColumn col = (TableColumn)e.widget;
+    Long sortCol = null;
+    for (int i=0; i<table.getColumnCount(); ++i)
+      if (table.getColumn(i) == col) { sortCol = Long.valueOf(i); break; }
+
+    // figure out sorting up or down
+    SortMode sortMode = SortMode.up;
+    if (sortCol == self.view().sortCol())
+      sortMode = self.view().sortMode().toggle();
+
+    // do it!
+    table.setSortColumn(col);
+    table.setSortDirection(sortMode == SortMode.up ? SWT.UP : SWT.DOWN);
+    self.view().sort(sortCol, sortMode);
+    refreshAll(self);
+  }
+
   public void rebuild()
   {
     // TODO: need to figure out how to sync
@@ -233,7 +255,6 @@ public class TablePeer
 
     // get model
     TableModel model = model();
-    if (model == null) return;
 
     // build columns
     int numCols = (int)model.numCols();
@@ -242,6 +263,7 @@ public class TablePeer
       long col = i;
       Long pw = model.prefWidth(col);
       TableColumn tc = new TableColumn(table, style(model.halign(col)));
+      tc.addListener(SWT.Selection, sortListener);
       tc.setText(model.header(col));
       tc.setWidth(pw == null ? 100 : pw.intValue());
     }
@@ -263,7 +285,7 @@ public class TablePeer
 
   public TableModel model()
   {
-    return ((fan.fwt.Table)this.self).model;
+    return ((fan.fwt.Table)this.self).view();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -271,4 +293,5 @@ public class TablePeer
 //////////////////////////////////////////////////////////////////////////
 
   int curNumCol = -1;
+  Listener sortListener = new Listener() { public void handleEvent(Event e) { sortEvent(e); } };
 }

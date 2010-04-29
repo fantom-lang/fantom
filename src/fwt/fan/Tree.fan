@@ -90,7 +90,7 @@ class Tree : Widget
   **
   ** Backing data model of tree.
   **
-  TreeModel? model
+  TreeModel model := TreeModel()
 
   **
   ** Select the given item in the tree.
@@ -139,13 +139,12 @@ class Tree : Widget
 **
 ** TreeModel models the data of a tree widget.
 **
-mixin TreeModel
+class TreeModel
 {
-
   **
   ** Get root nodes.
   **
-  abstract Obj[] roots()
+  virtual Obj[] roots() { [,] }
 
   **
   ** Get the text to display for specified node.

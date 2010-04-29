@@ -99,3 +99,22 @@ enum class FileDialogMode
   ** Display open directory dialog
   openDir
 }
+
+**************************************************************************
+** SortMode.
+**************************************************************************
+
+**
+** Enum for `Table.sortMode`.
+**
+@Js
+enum class SortMode
+{
+  ** Sort ascending from smallest to largest
+  up,
+  ** Sort descending from largest to smallest
+  down
+
+  ** If up then return down; if down return up.
+  SortMode toggle() { this === up ? down : up }
+}
