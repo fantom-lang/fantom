@@ -123,6 +123,12 @@ fan.fwt.TablePeer.prototype.create = function(parentElem, self)
   return div;
 }
 
+fan.fwt.TablePeer.prototype.sort = function(self, col, mode)
+{
+  self.view().sort(col, mode);
+  this.refreshAll(self);
+}
+
 fan.fwt.TablePeer.prototype.refreshAll = function(self)
 {
   this.needRebuild = true;
@@ -164,9 +170,11 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   // build new content
   var $this = this;
   var tbody = document.createElement("tbody");
-  var model = self.m_model;
-  var rows  = model.numRows();
-  var cols  = model.numCols();
+  //var model = self.m_model;
+  var view  = self.view();
+  var rows  = view.numRows();
+  var cols  = view.numCols();
+  var sortCol = self.sortCol();
 
   if (this.m_headerVisible)
   {
@@ -180,22 +188,31 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       {
         fix.innerHTML = "&nbsp;";
         var arrow  = this.makeArrowDown();
-        arrow.style.top  = "10px";
+        arrow.style.top  = "9px";
         arrow.style.left = "14px";
         fix.appendChild(arrow);
         fix.onmousedown = function() { $this.support.popup(); }
       }
       else
       {
-        var s = model.header(c);
+        var s = view.header(c);
         if (s.length == 0) fix.innerHTML = "&nbsp;"
         else fix.appendChild(document.createTextNode(s));
-        var halign = model.halign(c);
+        var halign = view.halign(c);
         switch (halign)
         {
           case fan.gfx.Halign.m_left:   fix.style.textAlign = "left"; break;
           case fan.gfx.Halign.m_center: fix.style.textAlign = "center"; break;
           case fan.gfx.Halign.m_right:  fix.style.textAlign = "right"; break;
+        }
+        if (c === sortCol)
+        {
+          var down = self.sortMode() == fan.fwt.SortMode.m_up;
+          var arrow  = this.makeArrowDown(down);
+          arrow.style.top  = "9px";
+          arrow.style.right = "9px";
+          fix.style.paddingRight = "12px";
+          fix.appendChild(arrow);
         }
       }
       var th = document.createElement("th");
@@ -226,7 +243,8 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
 
         // cell hyperlink
         var uri = null;
-        if (model.$uri) uri = model.$uri(c,r);
+// TODO
+//        if (model.$uri) uri = model.$uri(c,r);
         if (uri != null)
         {
           var a = document.createElement("a");
@@ -236,7 +254,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         }
 
         // cell image
-        var img = model.image(c,r);
+        var img = view.image(c,r);
         if (img != null)
         {
           var imgElem = document.createElement("img");
@@ -245,7 +263,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         }
 
         // cell text
-        var text = model.text(c,r);
+        var text = view.text(c,r);
         if (img != null && text.length > 0)
         {
           var span = document.createElement("span");
@@ -255,10 +273,10 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         else node.appendChild(document.createTextNode(text));
 
         // style overrides
-        var fg = model.fg(c,r); if (fg != null) td.style.color = fg.toCss();
-        var bg = model.bg(c,r); if (bg != null) td.style.background = bg.toCss();
-        var font = model.font(c,r); if (font != null) td.style.font = fan.fwt.WidgetPeer.fontToCss(font);
-        var halign = model.halign(c);
+        var fg = view.fg(c,r); if (fg != null) td.style.color = fg.toCss();
+        var bg = view.bg(c,r); if (bg != null) td.style.background = bg.toCss();
+        var font = view.font(c,r); if (font != null) td.style.font = fan.fwt.WidgetPeer.fontToCss(font);
+        var halign = view.halign(c);
         switch (halign)
         {
           case fan.gfx.Halign.m_left:   td.style.textAlign = "left"; break;
@@ -289,6 +307,21 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
 fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
 {
   var target = event.target;
+
+  // header events
+  if (target.tagName == "DIV") target = target.parentNode;
+  if (target.tagName == "TH")
+  {
+    var col = target.cellIndex - 1;
+    if (col < 0) return;
+
+    var old = self.sortCol();
+    var mode = old === col ? self.sortMode().toggle() : fan.fwt.SortMode.m_up;
+    self.sort(col, mode);
+  }
+
+/*
+  // cell events
   if (target.tagName == "IMG") target = target.parentNode;
   if (target.tagName == "TD")
   {
@@ -312,27 +345,34 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
     evt.m_widget = self;
     model.$onMouseDown(evt, col, row);
   }
+*/
 }
 
-fan.fwt.TablePeer.prototype.makeArrowDown = function()
+fan.fwt.TablePeer.prototype.makeArrowDown = function(down)
 {
+  if (down === undefined) down = true;
+  var s = down ? 0 : 2;
+  var d = down ? 1 : -1;
+
   var div = document.createElement("div");
   div.style.position = "absolute";
   div.width  = "5px";
   div.height = "3px";
 
   var dot = null;
-  dot = this.makeDot(); dot.style.top="0px"; dot.style.left="0px"; div.appendChild(dot);
-  dot = this.makeDot(); dot.style.top="0px"; dot.style.left="1px"; div.appendChild(dot);
-  dot = this.makeDot(); dot.style.top="0px"; dot.style.left="2px"; div.appendChild(dot);
-  dot = this.makeDot(); dot.style.top="0px"; dot.style.left="3px"; div.appendChild(dot);
-  dot = this.makeDot(); dot.style.top="0px"; dot.style.left="4px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="0px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="1px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="2px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="3px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="4px"; div.appendChild(dot);
+  s += d;
 
-  dot = this.makeDot(); dot.style.top="1px"; dot.style.left="1px"; div.appendChild(dot);
-  dot = this.makeDot(); dot.style.top="1px"; dot.style.left="2px"; div.appendChild(dot);
-  dot = this.makeDot(); dot.style.top="1px"; dot.style.left="3px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="1px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="2px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="3px"; div.appendChild(dot);
+  s += d;
 
-  dot = this.makeDot(); dot.style.top="2px"; dot.style.left="2px"; div.appendChild(dot);
+  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="2px"; div.appendChild(dot);
   return div;
 }
 
@@ -458,7 +498,7 @@ fan.fwt.TableSupport.prototype.popup = function()
     function(it)
     {
       var rows = [];
-      var len  = table.model().numRows();
+      var len  = table.view().numRows();
       for (var i=0; i<len; i++) rows.push(i);
       table.peer.m_selected = table.peer.selection.select(rows);
       table.peer.selection.notify(0);
@@ -488,7 +528,7 @@ fan.fwt.TableSupport.prototype.popup = function()
     selectNone.enabled$(false);
   }
 
-  if (table.model().numRows() == 0) xport.enabled$(false);
+  if (table.view().numRows() == 0) xport.enabled$(false);
 
   var menu = fan.fwt.Menu.make();
   menu.add(selectAll);
