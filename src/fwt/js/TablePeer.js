@@ -416,7 +416,15 @@ fan.fwt.TableSelection.prototype.toggle = function(event)
     }
     else
     {
-      list = this.table.peer.m_selected.m_values;
+      // find cur selected rows
+      list = [];
+      var view = this.table.view();
+      var orig = this.table.peer.m_selected.m_values;
+      for (var i=0; i<orig.length; i++)
+        for (var j=0; j<view.m_rows.size(); j++)
+          if (orig[i] == view.m_rows.get(j))
+            list.push(j);
+
       var found = false;
       for (var i=0; i<list.length; i++)
         if (list[i] == row)
@@ -439,6 +447,7 @@ fan.fwt.TableSelection.prototype.toggle = function(event)
 fan.fwt.TableSelection.prototype.select = function(rows)
 {
   var selected = [];
+  var view  = this.table.view();
   var tbody = this.table.peer.elem.firstChild.firstChild;
   var start = this.table.peer.m_headerVisible ? 1 : 0; // skip th row
   for (var i=start; i<tbody.childNodes.length; i++)
@@ -453,13 +462,14 @@ fan.fwt.TableSelection.prototype.select = function(rows)
       if (row == rows[s])
       {
         on = true;
-        selected.push(row);
+        selected.push(view.m_rows.get(row));
         break;
       }
 
     tr.className = on ? "selected" : "";
     tr.firstChild.firstChild.checked = on;
   }
+  selected.sort();
   return fan.sys.List.make(fan.sys.Int.$type, selected);
 }
 
