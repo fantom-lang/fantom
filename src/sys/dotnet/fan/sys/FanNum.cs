@@ -308,7 +308,7 @@ namespace Fan.Sys
             if (dec)
               { minFrac++; maxFrac++; }
             else
-              minInt++;
+              { minInt++; if (comma) group++; }
             break;
           case '#':
             if (dec)
