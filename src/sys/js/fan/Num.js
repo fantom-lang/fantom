@@ -302,7 +302,7 @@ fan.sys.NumPattern.make = function(s)
         if (decimal)
           { minFrac++; maxFrac++; }
         else
-          minInt++;
+          { minInt++; if (comma) group++; }
         break;
       case '#':
         if (decimal)
