@@ -23,12 +23,15 @@ class JsField : JsSlot
     if (!isNative)
     {
       defVal := "null"
-      switch (ftype.qname)
+      if (!ftype.isNullable)
       {
-        case "fan.sys.Bool":    defVal = "false"
-        case "fan.sys.Decimal": defVal = "fan.sys.Decimal.make(0)"
-        case "fan.sys.Float":   defVal = "fan.sys.Float.make(0)"
-        case "fan.sys.Int":     defVal = "0"
+        switch (ftype.qname)
+        {
+          case "fan.sys.Bool":    defVal = "false"
+          case "fan.sys.Decimal": defVal = "fan.sys.Decimal.make(0)"
+          case "fan.sys.Float":   defVal = "fan.sys.Float.make(0)"
+          case "fan.sys.Int":     defVal = "0"
+        }
       }
 
       out.w(parent)
