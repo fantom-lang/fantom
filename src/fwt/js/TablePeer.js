@@ -207,7 +207,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         }
         if (c === sortCol)
         {
-          var down = self.sortMode() == fan.fwt.SortMode.m_up;
+          var down = self.sortMode() == fan.fwt.SortMode.m_down;
           var arrow  = this.makeArrowDown(down);
           arrow.style.top  = "9px";
           arrow.style.right = "9px";
