@@ -170,7 +170,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   // build new content
   var $this = this;
   var tbody = document.createElement("tbody");
-  //var model = self.m_model;
+  var model = self.m_model;
   var view  = self.view();
   var rows  = view.numRows();
   var cols  = view.numCols();
@@ -243,8 +243,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
 
         // cell hyperlink
         var uri = null;
-// TODO
-//        if (model.$uri) uri = model.$uri(c,r);
+        if (model.$uri) uri = model.$uri(view.m_cols.get(c), view.m_rows.get(r));
         if (uri != null)
         {
           var a = document.createElement("a");
@@ -320,7 +319,6 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
     self.sort(col, mode);
   }
 
-/*
   // cell events
   if (target.tagName == "IMG") target = target.parentNode;
   if (target.tagName == "TD")
@@ -332,6 +330,7 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
 
     // check for valid callback
     var model = self.m_model;
+    var view  = self.view();
     if (!model.$onMouseDown) return;
 
     // find pos relative to widget
@@ -343,9 +342,8 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
     evt.m_id = fan.fwt.EventId.m_mouseDown;
     evt.m_pos = rel;
     evt.m_widget = self;
-    model.$onMouseDown(evt, col, row);
+    model.$onMouseDown(evt, view.m_cols.get(col), view.m_rows.get(row));
   }
-*/
 }
 
 fan.fwt.TablePeer.prototype.makeArrowDown = function(down)
