@@ -594,7 +594,9 @@ class FloatTest : Test
     verifyLocale(1.0f, "#,###.0", "1.0")
     verifyLocale(12.0f, "#,###.0", "12.0")
     verifyLocale(123.0f, "#,###.0", "123.0")
+    verifyLocale(123.0f, "#,##0",   "123")
     verifyLocale(1234.0f, "#,###.0", "1,234.0")
+    verifyLocale(1234.0f, "#,##0",   "1,234")
     verifyLocale(12345.0f, "#,###.0", "12,345.0")
     verifyLocale(123456.0f, "#,###.0", "123,456.0")
     verifyLocale(1234567.0f, "#,###.0", "1,234,567.0")
@@ -606,6 +608,7 @@ class FloatTest : Test
     verifyLocale(-12345000.0f, "#,##,##.0", "-12,34,50,00.0")
     verifyLocale(2.34E+11f, "###,###.0", "234,000,000,000.0")
     verifyLocale(-2.34E+11f, "###,###,###.0", "-234,000,000,000.0")
+    verifyLocale(-2.34E+11f, "###,###,#00.0", "-234,000,000,000.0")
 
     // zero
     verifyLocale(0f, "#.0", ".0")

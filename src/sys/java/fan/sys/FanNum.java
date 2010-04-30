@@ -304,7 +304,7 @@ final class NumPattern
           if (decimal)
             { minFrac++; maxFrac++; }
           else
-            minInt++;
+            { minInt++; if (comma) group++; }
           break;
         case '#':
           if (decimal)
