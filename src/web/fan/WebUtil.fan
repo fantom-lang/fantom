@@ -335,7 +335,7 @@ class WebUtil
     envStr := StrBuf()
     if (env?.size > 0)
     {
-      envStr.add("var env = fan.sys.Env.cur().m_vars;\n")
+      envStr.add("var env = fan.sys.Map.make(fan.sys.Str.\$type, fan.sys.Str.\$type);\n")
       env.each |v,k|
       {
         envStr.add("  ")
@@ -359,6 +359,7 @@ class WebUtil
 
         // inject env vars
         $envStr.toStr
+        fan.sys.Env.cur().\$setVars(env);
 
         // find main
         var qname = '$main';
