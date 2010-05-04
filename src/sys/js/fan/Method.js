@@ -47,6 +47,8 @@ fan.sys.Method.prototype.invoke = function(instance, args)
     instance = null;
   }
 
+  // TODO FIXIT: if func is null - most likley native
+  // method hasn't been implemented
   return func.apply(instance, vals);
 }
 

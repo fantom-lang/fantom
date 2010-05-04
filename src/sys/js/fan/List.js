@@ -701,6 +701,21 @@ fan.sys.List.prototype.toStr = function()
   return s;
 }
 
+fan.sys.List.prototype.toCode = function()
+{
+  var s = '';
+  s += this.m_of.signature();
+  s += '[';
+  if (this.m_size == 0) s += ',';
+  for (var i=0; i<this.m_size; ++i)
+  {
+    if (i > 0) s += ', ';
+    s += fan.sys.ObjUtil.trap(this.m_values[i], "toCode", null);
+  }
+  s += ']';
+  return s;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Readonly
 //////////////////////////////////////////////////////////////////////////

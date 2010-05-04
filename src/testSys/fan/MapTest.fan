@@ -9,6 +9,7 @@
 **
 ** MapTest
 **
+@Js
 class MapTest : Test
 {
 
