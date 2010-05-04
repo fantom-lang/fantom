@@ -13,6 +13,27 @@
 fan.sys.Pod = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
+// Management
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Pod.of = function(obj)
+{
+  return fan.sys.Type.of(obj).pod();
+}
+
+fan.sys.Pod.list = function()
+{
+  if (fan.sys.Pod.$list == null)
+  {
+    var pods = fan.sys.Pod.$pods;
+    var list = fan.sys.List.make(fan.sys.Pod.$type);
+    for (var n in pods) list.add(pods[n]);
+    fan.sys.Pod.$list = list.sort().toImmutable();
+  }
+  return fan.sys.Pod.$list;
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
@@ -26,10 +47,24 @@ fan.sys.Pod.prototype.$ctor = function(name)
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.Pod.prototype.$typeof = function() { return fan.sys.Pod.$type; }
+
 fan.sys.Pod.prototype.name = function()
 {
   return this.m_name;
 }
+
+fan.sys.Pod.prototype.uri = function()
+{
+  if (this.m_uri == null) this.m_uri = fan.sys.Uri.fromStr("fan://" + this.m_name);
+  return this.m_uri;
+}
+
+fan.sys.Pod.prototype.toStr = function() { return this.m_name; }
+
+//////////////////////////////////////////////////////////////////////////
+// Types
+//////////////////////////////////////////////////////////////////////////
 
 fan.sys.Pod.prototype.types = function()
 {
@@ -81,10 +116,6 @@ fan.sys.Pod.prototype.locale = function(key, def)
   return def;
 }
 
-fan.sys.Pod.prototype.$typeof = function() { return fan.sys.Pod.$type; }
-
-fan.sys.Pod.prototype.toStr = function() { return this.m_name; }
-
 // addType
 fan.sys.Pod.prototype.$at = function(name, baseQname, mixins, flags)
 {
@@ -107,11 +138,6 @@ fan.sys.Pod.prototype.$am = function(name, baseQname, mixins, flags)
 //////////////////////////////////////////////////////////////////////////
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
-
-fan.sys.Pod.list = function()
-{
-  return fan.sys.Pod.$pods;
-}
 
 fan.sys.Pod.find = function(name, checked)
 {

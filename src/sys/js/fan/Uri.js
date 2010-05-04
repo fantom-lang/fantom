@@ -746,9 +746,15 @@ fan.sys.Uri.prototype.encode = function()
   return this.m_encoded = new fan.sys.UriEncoder(this, true).encode();
 }
 
-// TODO - TEMP FIX FOR GFX::IMAGE
 fan.sys.Uri.prototype.get = function()
 {
+  if (this.m_scheme == "fan")
+  {
+    if (this.m_path.size() == 0)
+      return fan.sys.Pod.find(this.m_host);
+  }
+
+  // TODO - TEMP FIX FOR GFX::IMAGE
   return fan.sys.File.make();
 }
 

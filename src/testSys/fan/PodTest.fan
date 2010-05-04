@@ -9,6 +9,7 @@
 **
 ** PodTest
 **
+@Js
 class PodTest : Test
 {
 
