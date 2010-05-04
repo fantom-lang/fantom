@@ -9,6 +9,7 @@
 **
 ** LocaleTest
 **
+@Js
 class LocaleTest : Test
 {
   Locale? orig
@@ -81,6 +82,9 @@ class LocaleTest : Test
     {
     }
     verifyEq(Locale.cur.toStr, "zh-TW")
+
+    // actors not supported in javascript
+    if (Env.cur.runtime == "js") return
 
     // create actor that accepts
     // messages to change its own locale
