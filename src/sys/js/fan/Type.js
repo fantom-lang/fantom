@@ -430,6 +430,7 @@ fan.sys.ListType.prototype.$ctor = function(v)
 
 fan.sys.ListType.prototype.base = function() { return fan.sys.List.$type; }
 fan.sys.ListType.prototype.signature = function() { return this.v.signature() + '[]'; }
+fan.sys.ListType.prototype.$slot = function(name) { return fan.sys.List.$type.$slot(name); }
 fan.sys.ListType.prototype.equals = function(that)
 {
   if (that instanceof fan.sys.ListType)
@@ -503,6 +504,8 @@ fan.sys.MapType.prototype.equals = function(that)
 
 fan.sys.MapType.prototype.is = function(that)
 {
+  if (that.isNullable()) that = that.m_root;
+
   if (that instanceof fan.sys.MapType)
   {
     return this.k.is(that.k) && this.v.is(that.v);
@@ -526,7 +529,7 @@ fan.sys.MapType.prototype.as = function(obj, that)
     return obj;
 
   //if (that instanceof fan.sys.NullableType &&
-  //    that.m_root instanceof fan.sys.ListType)
+  //    that.m_root instanceof fan.sys.MapType)
   //  that = that.m_root;
 
   return objType.is(that) ? obj : null;
