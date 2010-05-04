@@ -78,8 +78,9 @@ fan.sys.Map.prototype.get = function(key, defVal)
 
 fan.sys.Map.prototype.containsKey = function(key)
 {
+  var hash = this.hashKey(key);
   for (var k in this.keyMap)
-    if (fan.sys.ObjUtil.equals(this.keyMap[k], key))
+    if (k == hash)
       return true;
   return false;
 }
@@ -107,7 +108,7 @@ fan.sys.Map.prototype.set = function(key, val)
     throw fan.sys.NotImmutableErr.make("key is not immutable: " + fan.sys.ObjUtil.$typeof(key));
 
   var k = this.hashKey(key);
-  this.keyMap[k] = key;
+  if (this.keyMap[k] == null) this.keyMap[k] = key;
   this.valMap[k] = val;
   return this;
 }
@@ -225,6 +226,9 @@ fan.sys.Map.prototype.dup = function()
   var dup = fan.sys.Map.make(this.m_type.k, this.m_type.v);
   for (k in this.keyMap) dup.keyMap[k] = this.keyMap[k];
   for (k in this.valMap) dup.valMap[k] = this.valMap[k];
+  dup.m_caseInsensitive = this.m_caseInsensitive;
+  dup.m_ordered = this.m_ordered;
+  dup.m_def = this.m_def;
   return dup;
 }
 
@@ -488,6 +492,8 @@ fan.sys.Map.prototype.rw = function()
   if (!this.m_readonly) return this;
 
   var rw = this.dup();
+  rw.m_caseInsensitive = this.m_caseInsensitive;
+  rw.m_ordered = this.m_ordered;
   rw.m_readonly = false;
   rw.m_def = this.m_def;
   return rw;
@@ -498,6 +504,8 @@ fan.sys.Map.prototype.ro = function()
   if (this.m_readonly) return this;
 
   var ro = this.dup();
+  ro.m_caseInsensitive = this.m_caseInsensitive;
+  ro.m_ordered = this.m_ordered;
   ro.m_readonly = true;
   ro.m_def = this.m_def;
   return ro;
@@ -512,6 +520,8 @@ fan.sys.Map.prototype.toImmutable = function()
   var ro = fan.sys.Map.make(this.m_type.k, this.m_type.v);
   for (k in this.keyMap) ro.keyMap[k] = this.keyMap[k];
   for (k in this.valMap) ro.valMap[k] = fan.sys.ObjUtil.toImmutable(this.valMap[k]);
+  ro.m_caseInsensitive = this.m_caseInsensitive;
+  ro.m_ordered = this.m_ordered;
   ro.m_readonly = true;
   ro.m_immutable = true;
   ro.m_def = this.m_def;
