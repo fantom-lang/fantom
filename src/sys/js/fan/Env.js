@@ -23,7 +23,15 @@ fan.sys.Env.cur = function()
 
 fan.sys.Env.prototype.$ctor = function()
 {
-  this.m_vars = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Str.$type);
+  this.m_args = fan.sys.List.make(fan.sys.Str.$type).toImmutable();
+  this.m_vars = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Str.$type).toImmutable();
+}
+
+fan.sys.Env.prototype.$setVars = function(vars)
+{
+  if (vars.$typeof().toStr() != "[sys::Str:sys::Str]")
+    throw fan.sys.ArgErr("Invalid type");
+  this.m_vars = vars.toImmutable();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,5 +43,7 @@ fan.sys.Env.prototype.runtime = function() { return "js"; }
 //////////////////////////////////////////////////////////////////////////
 // Virtuals
 //////////////////////////////////////////////////////////////////////////
+
+fan.sys.Env.prototype.args = function() { return this.m_args; }
 
 fan.sys.Env.prototype.vars = function() { return this.m_vars; }
