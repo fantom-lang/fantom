@@ -179,10 +179,11 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
   if (override != null && text != null)
   {
     s = text.style;
-    for (var k in override.map)
+    for (var k in override.keyMap)
     {
-      var v = override.map[k];
-      s.setProperty(k,v,"");
+      var key = override.keyMap[k];
+      var val = override.valMap[k];
+      s.setProperty(key, val, "");
     }
   }
 }
