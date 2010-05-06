@@ -53,6 +53,7 @@ class TestRunner
     // create engine and eval pods
     p := Pod.find(pod)
     evalPod(p)
+    evalLocale(p)
 
     // run tests
     t1 := Duration.now
@@ -77,6 +78,22 @@ class TestRunner
   {
     if (engine == null) engine = ScriptEngineManager().getEngineByName("js");
     Runner.evalPodScript(engine, p)
+  }
+
+  Void evalLocale(Pod p)
+  {
+    try
+    {
+      if (p.name != "testSys") return
+      buf := StrBuf()
+      props := JsProps(buf.out)
+      props.writeLocale(p, Locale("en"))
+      props.writeLocale(p, Locale("en-US"))
+      props.writeLocale(p, Locale("es"))
+      props.writeLocale(p, Locale("es-MX"))
+      engine.eval(buf.toStr)
+    }
+    catch (Err e) throw Err("Locale eval failed: $p.name", e)
   }
 
   Void results()

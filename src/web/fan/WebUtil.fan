@@ -344,6 +344,7 @@ class WebUtil
         else
           envStr.add("env.set('$k', '$v');\n")
       }
+      envStr.add("fan.sys.Env.cur().\$setVars(env);\n")
     }
 
     out.printLine(
@@ -359,7 +360,6 @@ class WebUtil
 
         // inject env vars
         $envStr.toStr
-        fan.sys.Env.cur().\$setVars(env);
 
         // find main
         var qname = '$main';
