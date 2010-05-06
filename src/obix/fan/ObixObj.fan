@@ -26,7 +26,7 @@ class ObixObj
     set
     {
       if (parent != null) throw UnsupportedErr("cannot set name while parented")
-      this.*name = it
+      this.&name = it
     }
   }
 
@@ -62,7 +62,7 @@ class ObixObj
     set
     {
       if (!ObixUtil.elemNames[it]) throw ArgErr("Invalid elemName: $it")
-      this.*elemName = it
+      this.&elemName = it
     }
   }
 
@@ -136,19 +136,19 @@ class ObixObj
     set
     {
       // TODO: clean this up
-      if (elemName == "enum" && it is Str) { *val = it; return }
+      if (elemName == "enum" && it is Str) { &val = it; return }
       if (it != null)
       {
         elem := ObixUtil.valTypeToElemName[Type.of(it)]
         if (elem == null) throw ArgErr("Invalid val type: ${Type.of(it)}")
-        this.*elemName = elem
+        this.&elemName = elem
         if (it is DateTime && tz == null)
         {
           tz := ((DateTime)it).tz
           if (!tz.fullName.startsWith("Etc/")) this.tz = tz
         }
       }
-      *val = it
+      &val = it
     }
   }
 

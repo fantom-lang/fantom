@@ -12,7 +12,7 @@ Fantom's expression syntax is very similar to C, Java, C# and company.
 Operators in order of precedence:
 
   - Primary: '(x)   x.y   x.y()   x->y()   x?.y   x?.y()   x?->y()   x[y]'
-  - Unary: '++x   --x   x++   x--  !x   +x   -x   (T)x   &x()  *x'
+  - Unary: '++x   --x   x++   x--  !x   +x   -x   (T)x   &x'
   - Multiplicative: '*   /   %'
   - Additive: '+   -'
   - Range: '..   ..<'
@@ -412,5 +412,5 @@ Fantom has a couple other operators which will be discussed later:
   - [Dynamic invoke]`Methods#dynamicInvoke` operator '->' is used to call
     a method without compile time type checking.
 
-  - [Field storage]`Fields#accessors` operator '*' is used to access a field's
+  - [Field storage]`Fields#accessors` operator '&' is used to access a field's
     raw storage without going through its getter/setter methods.

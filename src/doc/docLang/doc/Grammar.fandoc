@@ -168,7 +168,7 @@ Expr [#expr]
   <safeDynCall>    :=  "?->" <idExpr>
   <idExpr>         :=  <local> | <field> | <call>
   <local>          :=  <id>
-  <field>          :=  ["*"] <id>
+  <field>          :=  ["&"] <id>
   <call>           :=  <id> ["(" <args> ")"] [<closure>]
   <args>           :=  [<expr> ("," <expr>)*]
   <indexExpr>      :=  "[" <expr> "]"

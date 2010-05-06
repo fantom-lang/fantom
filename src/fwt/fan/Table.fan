@@ -159,7 +159,7 @@ class Table : Widget
   ** from the view coordinate space to the model coordinate space based
   ** on column visibility and row sort order.
   **
-  internal TableView view := TableView(this) { get { *view.sync } }
+  internal TableView view := TableView(this) { get { &view.sync } }
 }
 
 **************************************************************************

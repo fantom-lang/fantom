@@ -83,7 +83,7 @@ class Event
   ** to the menu item to open.  Setting this field to a nonnull
   ** value implicitly consumes the event.
   **
-  Menu? popup { set { *popup = it; if (it != null) consume } }
+  Menu? popup { set { &popup = it; if (it != null) consume } }
 
   **
   ** Has this event been "consumed"?  Once an event

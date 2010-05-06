@@ -49,13 +49,13 @@ class WebClient
   **
   Uri reqUri := ``
   {
-    set { if (!it.isAbs) throw ArgErr("Request URI not absolute: `$it`"); *reqUri = it }
+    set { if (!it.isAbs) throw ArgErr("Request URI not absolute: `$it`"); &reqUri = it }
   }
 
   **
   ** The HTTP method for the request.  Defaults to "GET".
   **
-  Str reqMethod := "GET" { set { *reqMethod = it.upper } }
+  Str reqMethod := "GET" { set { &reqMethod = it.upper } }
 
   **
   ** HTTP version to use for request must be 1.0 or 1.1.

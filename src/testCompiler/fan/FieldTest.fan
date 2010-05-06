@@ -24,15 +24,15 @@ class FieldTest : CompilerTest
        "class Foo
         {
           Int geta() { return x }
-          Int gets() { return *x }
+          Int gets() { return &x }
 
           Void seta(Int v) { x = v }
-          Void sets(Int v) { *x = v }
+          Void sets(Int v) { &x = v }
 
           Int x := 3
           {
-            get { xGets++; return *x }
-            set { xSets++; this.*x = it }
+            get { xGets++; return &x }
+            set { xSets++; this.&x = it }
           }
 
           Int xGets := 0
@@ -76,8 +76,8 @@ class FieldTest : CompilerTest
       {
         Int a := 2
         {
-          get { return *a != 2 ? *a : -1 }
-          set { aset = it; *a = it }
+          get { return &a != 2 ? &a : -1 }
+          set { aset = it; &a = it }
         }
         Int aset := 0
 
@@ -92,15 +92,15 @@ class FieldTest : CompilerTest
         static Int getb() { return Foo.make.b }
         static Foo setb() { foo := Foo.make; foo.b = 99; return foo }
 
-        static Int getc()  { return make.*c }
+        static Int getc()  { return make.&c }
         static Int getca() { return make.c }
-        static Bar setc()  { bar := make; bar.*c = 123; return bar }
+        static Bar setc()  { bar := make; bar.&c = 123; return bar }
         static Bar setca() { bar := make; bar.c = 321; return bar }
 
         Int c := 3
         {
-          get { return *c != 3 ? *c : 5 }
-          set { *c = it; ctrap = it }
+          get { return &c != 3 ? &c : 5 }
+          set { &c = it; ctrap = it }
         }
         Int ctrap := 0
       }")
@@ -147,7 +147,7 @@ class FieldTest : CompilerTest
        "mixin Mixin
         {
           static Int mgeta() { return s }
-          //static Int mgets() { return *s } not allowed
+          //static Int mgets() { return &s } not allowed
 
           static const Int s := 5
           static const Int? x
@@ -157,7 +157,7 @@ class FieldTest : CompilerTest
         class Foo : Mixin
         {
           Int geta() { return a }
-          Int gets() { return *a }
+          Int gets() { return &a }
 
           override Int a { get { return s } }
         }")
@@ -194,13 +194,13 @@ class FieldTest : CompilerTest
         // storage
         Int a
         Int b := 99
-        Int c { get { return *c } }
-        Int d { set { *d = it } }
-        Int e { get { return *e } set { *e = it } }
+        Int c { get { return &c } }
+        Int d { set { &d = it } }
+        Int e { get { return &e } set { &e = it } }
         Int f { get { return 2 } }
         Int g { set { } }
         Int h { get { return 777 } set {} }
-        Void hs() { *h = 2 }
+        Void hs() { &h = 2 }
 
         // no storage
         Int o { get { return 2 } set {} }
@@ -261,7 +261,7 @@ class FieldTest : CompilerTest
      "class Foo
       {
         Int geta() { return x }
-        Int gets() { return *x }
+        Int gets() { return &x }
 
         virtual Int x := 3
       }
@@ -319,8 +319,8 @@ class FieldTest : CompilerTest
 
         virtual Int x
         {
-          get { aGets++; return *x }
-          set { aSets++; *x = it }
+          get { aGets++; return &x }
+          set { aSets++; &x = it }
         }
         Int aGets := 0
         Int aSets := 0
@@ -469,7 +469,7 @@ class FieldTest : CompilerTest
     compile(
      "class A
       {
-        virtual Int x { get { return *y } set { *y = it } }
+        virtual Int x { get { return &y } set { &y = it } }
         Int y
       }
 
@@ -517,9 +517,9 @@ class FieldTest : CompilerTest
     verifyErrors(
      "class Foo
       {
-        Void m00(Int x) { *x = 3 }
-        Int m01(Str x) { return x.*size  }
-        Int m02(Str x) { return *whereAreYou  }
+        Void m00(Int x) { &x = 3 }
+        Int m01(Str x) { return x.&size  }
+        Int m02(Str x) { return &whereAreYou  }
         Int m03() { return f() }
         Int m04() { return this.f() }
         Void m05() { f(3) }
@@ -530,8 +530,8 @@ class FieldTest : CompilerTest
       }
       ",
        [
-         3, 21, "Invalid use of field storage operator '*'",
-         4, 29, "Invalid use of field storage operator '*'",
+         3, 21, "Invalid use of field storage operator '&'",
+         4, 29, "Invalid use of field storage operator '&'",
          5, 27, "Unknown variable 'whereAreYou'",
          6, 22, "Expected method, not field '$podName::Foo.f'",
          7, 27, "Expected method, not field '$podName::Foo.f'",

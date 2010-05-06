@@ -927,17 +927,17 @@ class InheritTest : CompilerTest
 
         static Str:Int getb(B b)
         {
-          return [\"p0\":b.*p0, \"p1\":b.*p1, \"p2\":b.*p2, \"p3\":b.*p3]
+          return [\"p0\":b.&p0, \"p1\":b.&p1, \"p2\":b.&p2, \"p3\":b.&p3]
         }
 
         $setaCode
 
         static Void setb(B b, Str:Int m)
         {
-          b.*p0 = m[\"p0\"]
-          b.*p1 = m[\"p1\"]
-          b.*p2 = m[\"p2\"]
-          b.*p3 = m[\"p3\"]
+          b.&p0 = m[\"p0\"]
+          b.&p1 = m[\"p1\"]
+          b.&p2 = m[\"p2\"]
+          b.&p3 = m[\"p3\"]
         }
 
         static Bool getCounts(B b, Int expected)
@@ -954,9 +954,9 @@ class InheritTest : CompilerTest
 
         // abstract method -> field
         override Int p0 := 101
-        override Int p1 := 102 { get { p1_get++; return *p1 } }
-        override Int p2 := 103 { get { p2_get++; return *p2 } set { p2_set++; *p2 = it } }
-        override Int p3 := 104 { set { p3_set++; *p3 = it } }
+        override Int p1 := 102 { get { p1_get++; return &p1 } }
+        override Int p2 := 103 { get { p2_get++; return &p2 } set { p2_set++; &p2 = it } }
+        override Int p3 := 104 { set { p3_set++; &p3 = it } }
         Int p1_get := 0
         Int p2_get := 0
         Int p2_set := 0
@@ -1218,7 +1218,7 @@ class InheritTest : CompilerTest
       {
         override const Str a { get { return 5 } }
         override const Str b { set {} }
-        override const Str c { get { return 5 } set { *c = 6 } }
+        override const Str c { get { return 5 } set { &c = 6 } }
       }
 
       class A

@@ -380,7 +380,7 @@ class ResolveExpr : CompilerStep
     if (resolved.id !== ExprId.field)
     {
       if (resolved.ctype !== ns.error)
-        err("Invalid use of field storage operator '*'", var.loc)
+        err("Invalid use of field storage operator '&'", var.loc)
       return resolved
     }
 

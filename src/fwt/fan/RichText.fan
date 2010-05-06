@@ -112,10 +112,10 @@ class RichText : TextWidget
     set
     {
       if (attached) throw Err("Cannot change model once widget is attached")
-      old := this.*model
+      old := this.&model
       if (old != null) old.onModify.remove(onModelModifyFunc)
       if (it != null) it.onModify.add(onModelModifyFunc)
-      this.*model = it
+      this.&model = it
     }
   }
 

@@ -1495,7 +1495,9 @@ public class Parser : CompilerSupport
 
     switch (curt)
     {
-      case Token.star:            return idExpr(null, false, false)
+// TODO
+case Token.star:            return idExpr(null, false, false)
+      case Token.amp:             return idExpr(null, false, false)
       case Token.identifier:      return idExpr(null, false, false)
       case Token.intLiteral:      return LiteralExpr(loc, ExprId.intLiteral, ns.intType, consume.val)
       case Token.floatLiteral:    return LiteralExpr(loc, ExprId.floatLiteral, ns.floatType, consume.val)
@@ -1654,7 +1656,15 @@ public class Parser : CompilerSupport
   {
     loc := cur
 
-    if (curt == Token.star)
+// TODO
+if (curt == Token.star)
+{
+  warn("Use & instead of * for storage operator", cur)
+  consume
+  return UnknownVarExpr.makeStorage(loc, target, consumeId)
+}
+
+    if (curt == Token.amp)
     {
       consume
       return UnknownVarExpr.makeStorage(loc, target, consumeId)

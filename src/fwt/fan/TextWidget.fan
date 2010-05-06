@@ -185,8 +185,8 @@ class TextChange
   {
     get
     {
-      if (*oldNumNewlines == null) *oldNumNewlines = oldText?.numNewlines
-      return *oldNumNewlines
+      if (&oldNumNewlines == null) &oldNumNewlines = oldText?.numNewlines
+      return &oldNumNewlines
     }
   }
 
@@ -196,8 +196,8 @@ class TextChange
   {
     get
     {
-      if (*newNumNewlines == null) *newNumNewlines = newText?.numNewlines
-      return *newNumNewlines
+      if (&newNumNewlines == null) &newNumNewlines = newText?.numNewlines
+      return &newNumNewlines
     }
   }
 

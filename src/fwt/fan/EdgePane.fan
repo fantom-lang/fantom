@@ -27,27 +27,27 @@ class EdgePane : Pane
   **
   ** Top widget is laid out with preferred height.
   **
-  Widget? top { set { remove(*top).add(it); *top = it } }
+  Widget? top { set { remove(&top).add(it); &top = it } }
 
   **
   ** Bottom widget is laid out with preferred height.
   **
-  Widget? bottom { set { remove(*bottom).add(it); *bottom = it } }
+  Widget? bottom { set { remove(&bottom).add(it); &bottom = it } }
 
   **
   ** Left widget is laid out with preferred width.
   **
-  Widget? left  { set { remove(*left).add(it); *left = it } }
+  Widget? left  { set { remove(&left).add(it); &left = it } }
 
   **
   ** Right widget is laid out with preferred width.
   **
-  Widget? right { set { remove(*right).add(it); *right = it } }
+  Widget? right { set { remove(&right).add(it); &right = it } }
 
   **
   ** Center widget gets any remaining space in the center.
   **
-  Widget? center { set { remove(*center).add(it); *center = it } }
+  Widget? center { set { remove(&center).add(it); &center = it } }
 
 //////////////////////////////////////////////////////////////////////////
 // Layout

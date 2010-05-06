@@ -67,7 +67,7 @@ class FluxCommand : Command
   **
   Frame? frame
   {
-    get { return *frame ?: Desktop.focus?.window }
+    get { return &frame ?: Desktop.focus?.window }
     internal set
   }
 
