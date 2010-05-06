@@ -316,4 +316,14 @@ class RegressionTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1066 Double ?? are allowed when defining type which should not
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1066()
+  {
+    verifyErrors("class Foo { Int?? test }",
+       [ 1, 17, "Type cannot have multiple '?'"])
+  }
+
 }
