@@ -138,6 +138,19 @@ abstract class BuildScript
   }
 
   **
+  ** Resolve a set of URIs to files/dirs relative to scriptDir.
+  **
+  internal File[] resolveFilesOrDirs(Uri[] uris)
+  {
+    uris.map |uri->File|
+    {
+      f := scriptDir + uri
+      if (!f.exists) throw fatal("Invalid file: $uri")
+      return f
+    }
+  }
+
+  **
   ** Dump script environment for debug.
   **
   virtual Void dumpEnv()

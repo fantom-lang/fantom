@@ -30,6 +30,13 @@ abstract class BuildJava : BuildScript
   Str[]? packages
 
   **
+  ** List of files to include in compiler classpath.  The core
+  ** Java rt.jar is always implied and should not be specified.
+  ** These URIs are relative to the script dir.
+  **
+  Uri[]? cp
+
+  **
   ** Main class name to add to manifest if not null.
   **
   Str? mainClass
@@ -106,6 +113,7 @@ abstract class BuildJava : BuildScript
     javac := CompileJava(this)
     javac.src = outOfDate
     javac.cp.add(temp)
+    if (cp != null) javac.cp.addAll(resolveFilesOrDirs(cp))
     javac.outDir = temp
     javac.run
 
