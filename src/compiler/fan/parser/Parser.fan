@@ -2089,6 +2089,8 @@ if (curt == Token.star)
     {
       consume(Token.question)
       t = t.toNullable
+      if (curt === Token.question && !cur.whitespace)
+        throw err("Type cannot have multiple '?'")
     }
 
     // trailing [] for lists
