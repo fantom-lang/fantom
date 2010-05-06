@@ -853,9 +853,10 @@ public class Parser : CompilerSupport
     localType := tryType
 
     // type followed by identifier must be local variable declaration
-    if (localType != null && curt === Token.identifier)
+    if (localType != null)
     {
-      return localDefStmt(loc, localType, isEndOfStmt)
+      if (curt === Token.identifier) return localDefStmt(loc, localType, isEndOfStmt)
+      if (curt === Token.defAssign) throw err("Expected local variable identifier")
     }
     reset(mark)
 
