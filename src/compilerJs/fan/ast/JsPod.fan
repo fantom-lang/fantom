@@ -17,6 +17,7 @@ class JsPod : JsNode
   {
     this.name  = pod.name
     this.types = JsType[,]
+    this.props = JsProps[,]
 
     // build native map
     this.natives = Str:File[:]
@@ -39,6 +40,17 @@ class JsPod : JsNode
       // check for @js facet or explicit js output
       if (def.hasFacet("sys::Js") || jsOutput)
         types.add(JsType(s,def))
+    }
+
+    // resource files
+    baseDir := s.compiler.input.baseDir
+    if (baseDir != null)
+    {
+      s.compiler.resFiles.each |file|
+      {
+        uri := file.uri.relTo(baseDir.uri)
+        props.add(JsProps(pod, file, uri, s))
+      }
     }
   }
 
@@ -67,6 +79,10 @@ class JsPod : JsNode
       out.minify(in)
       in.close
     }
+
+    // include locale/en.props
+    p := props.find |p| { p.uri == `locale/en.props` }
+    p?.write(out)
   }
 
   Void writePeer(JsWriter out, JsType t)
@@ -131,5 +147,6 @@ class JsPod : JsNode
   Str name           // pod name
   JsType[] types     // types in this pod
   Str:File natives   // natives
+  JsProps[] props    // prop files in this pod
 }
 
