@@ -1181,6 +1181,9 @@ class ParserTest : CompilerTest
     verifyErrors("class Foo { Void a(Str?:Str bad) {} }",
       [1,  23, "Map type cannot have nullable key type"])
 
+    verifyErrors("class Foo { Void a(Str? :Str bad) {} }",
+      [1,  25, "Map type cannot have nullable key type"])
+
     t = parseType("[Int:Str]")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Map")
