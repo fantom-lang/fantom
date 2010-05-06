@@ -106,9 +106,15 @@ class ShowScript : Weblet
   {
     if (!file.exists) { res.sendErr(404); return }
 
+    // compile script into js
     compile
     main := compiler.types[0].qname
 
+    // compile locale props
+    loc := StrBuf()
+    JsProps(loc.out).writeLocale(Pod.find("fwt"))
+
+    // write page
     res.headers["Content-Type"] = "text/html"
     out := res.out
     out.docType
@@ -124,7 +130,10 @@ class ShowScript : Weblet
        "body { font: 10pt Arial; }
         a { color: #00f; }
         ").styleEnd
-      out.script.w(js).scriptEnd
+      out.script
+        .w(loc)
+        .w(js)
+        .scriptEnd
       WebUtil.jsMain(out, main)
     out.headEnd
     out.body

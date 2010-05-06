@@ -59,6 +59,8 @@ fan.sys.Duration.m_defVal    = fan.sys.Duration.make(0);
 fan.sys.Duration.m_minVal    = fan.sys.Duration.make(fan.sys.Int.m_minVal);
 fan.sys.Duration.m_maxVal    = fan.sys.Duration.make(fan.sys.Int.m_maxVal);
 fan.sys.Duration.m_oneDay    = fan.sys.Duration.make(fan.sys.Duration.nsPerDay);
+fan.sys.Duration.m_oneMin    = fan.sys.Duration.make(fan.sys.Duration.nsPerMin);
+fan.sys.Duration.m_oneSec    = fan.sys.Duration.make(fan.sys.Duration.nsPerSec);
 fan.sys.Duration.m_negOneDay = fan.sys.Duration.make(-fan.sys.Duration.nsPerDay);
 fan.sys.Duration.m_boot      = fan.sys.Duration.now();
 
@@ -150,4 +152,12 @@ fan.sys.Weekday.m_vals = fan.sys.List.make(fan.sys.Weekday.$type,
 // Version
 //
 fan.sys.Version.m_defVal = fan.sys.Version.fromStr("0");
+
+//
+// Env
+//
+fan.sys.Env.m_configProps   = fan.sys.Uri.fromStr("config.props");
+fan.sys.Env.m_localeEnProps = fan.sys.Uri.fromStr("locale/en.props");
+
+
 
