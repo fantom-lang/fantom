@@ -76,8 +76,8 @@ The syntax for declaring a getter or setter is similar to C# properties:
   {
     Int id := 0
     {
-      get { echo("get id"); return *id }
-      set { echo("set id"); *id = it }
+      get { echo("get id"); return &id }
+      set { echo("set id"); &id = it }
     }
   }
 
@@ -90,15 +90,15 @@ Inside the setter, the 'it' keyword references the new value being
 assigned to the field.  If you need to use 'it' inside a closure, then
 assign to a local variable:
 
-  set { newVal := it; 3.times { echo(newVal) }; this.*f = newVal }
+  set { newVal := it; 3.times { echo(newVal) }; this.&f = newVal }
 
-The '*' storage operator is used to access the raw storage of the
-field (think about like C dereference operator).  The '*' operator is used
+The '&' storage operator is used to access the raw storage of the
+field (think about like C dereference operator).  The '&' operator is used
 when you wish to access the storage location of the field without going
-through the accessor method.  You can use the '*' operator in any of your
+through the accessor method.  You can use the '&' operator in any of your
 class's methods, but only the declaring class is permitted direct access
-using the '*' operator (it is like storage is always 'private' scoped).
-Inside the accessor itself you are required to use the '*' operator (otherwise
+using the '&' operator (it is like storage is always 'private' scoped).
+Inside the accessor itself you are required to use the '&' operator (otherwise
 you would likely end up with infinite recursion).
 
 Note that ':=' field initialization always sets storage directly without
@@ -111,7 +111,7 @@ In most cases, the compiler automatically declares storage memory for
 your field.  However if the compiler detects that a field's storage
 is never accessed then no memory is allocated.  We call these *calculated
 fields*.  Calculated fields must declare both an explicit getter and
-setter which does not use the '*' operator to access the field.  Note
+setter which does not use the '&' operator to access the field.  Note
 that assigning an initial value using ':=' implicitly uses the storage
 operator and will allocate storage.
 
@@ -202,7 +202,7 @@ You can narrow the scope of the setter as follows:
   class Thing
   {
     Int id { protected set }
-    Str name { internal set { *name = it } }
+    Str name { internal set { &name = it } }
   }
 
 In the example above the fields 'id' and 'name' are publicly
@@ -305,7 +305,7 @@ A field may be declared abstract:
 An abstract field is basically just an abstract getter and setter that
 a subclass must override.  Abstract fields have no storage and cannot
 have an initial value.  Overrides of abstract fields are given storage
-accessed via the '*' operator (this is different than overriding a
+accessed via the '&' operator (this is different than overriding a
 normal virtual field).
 
 Definite Assignment [#definiteAssignment]

@@ -24,14 +24,14 @@ class ContentPane : Pane
   **
   ** The content child widget.
   **
-  Widget? content { set { remove(*content); Widget.super.add(it); *content = it } }
+  Widget? content { set { remove(&content); Widget.super.add(it); &content = it } }
 
   **
   ** If this the first widget added, then assume it the content.
   **
   override This add(Widget? child)
   {
-    if (*content == null) *content=child
+    if (&content == null) &content=child
     super.add(child)
     return this
   }

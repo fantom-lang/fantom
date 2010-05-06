@@ -1244,7 +1244,7 @@ class CheckErrors : CompilerStep
 
       // check that we aren't using an field accessor inside of itself
       if (curMethod != null && (field.getter === curMethod || field.setter === curMethod))
-        err("Cannot use field accessor inside accessor itself - use '*' operator", f.loc)
+        err("Cannot use field accessor inside accessor itself - use '&' operator", f.loc)
     }
 
     // if accessing storage directly

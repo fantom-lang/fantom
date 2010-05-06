@@ -141,11 +141,11 @@ getter or setter which you can override:
   class Person
   {
     Str name
-    Int age { set { checkAge(val); *age = it } }
+    Int age { set { checkAge(val); &age = it } }
   }
 
 The 'it' keyword denotes the value being used to set the field.  The
-syntax '*age' denotes that we are setting the actual storage location
+syntax '&age' denotes that we are setting the actual storage location
 for the age field (not using the setter).
 
 Methods [#methods]
