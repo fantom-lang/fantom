@@ -44,6 +44,14 @@ const class FileLogger : ActorPool
   const Str filename
 
   **
+  ** Callback called each time the file logger opens an existing
+  ** or new log file.  Callback should write any header information
+  ** to the given output stream.  The callback will occur on the logger's
+  ** actor, so take care not incur additional actor messaging.
+  **
+  const |OutStream|? onOpen
+
+  **
   ** Append string log message to file.
   **
   Void writeLogRec(LogRec rec)
@@ -69,7 +77,7 @@ const class FileLogger : ActorPool
       // get or initialize current state
       state := Actor.locals["state"] as FileLoggerState
       if (state == null)
-        Actor.locals["state"] = state = FileLoggerState(dir, filename)
+        Actor.locals["state"] = state = FileLoggerState(this)
 
       // append to current file
       if (msg is LogRec)
@@ -98,15 +106,16 @@ const class FileLogger : ActorPool
 
 internal class FileLoggerState
 {
-  new make(File dir, Str filename)
+  new make(FileLogger logger)
   {
-    this.dir = dir
-    this.filename = filename
+    this.logger   = logger
+    this.dir      = logger.dir
+    this.filename = logger.filename
     i := filename.index("{")
     if (i != null)
       this.pattern = filename[i+1 ..< filename.index("}")]
     else
-      this.curOut = (dir + filename.toUri).out(true)
+      open(dir + filename.toUri)
   }
 
   OutStream out()
@@ -123,13 +132,24 @@ internal class FileLoggerState
                  curPattern +
                  filename[filename.index("}")+1..-1]
       curFile := dir + newName.toUri
-      curOut = curFile.out(true)
+      return open(curFile)
     }
 
     // current output stream
     return curOut
   }
 
+  OutStream open(File curFile)
+  {
+    this.curOut = curFile.out(true)
+    try
+      logger.onOpen?.call(this.curOut)
+    catch (Err e)
+      curOut.printLine("ERROR: FileLogger.onOpen\n${e.traceToStr}")
+    return this.curOut
+  }
+
+  const FileLogger logger
   const Str filename
   const File dir
   Str? pattern

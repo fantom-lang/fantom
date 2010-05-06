@@ -31,6 +31,7 @@ const class LogMod : WebMod
     {
       it.dir      = this.dir
       it.filename = this.filename
+      it.onOpen   = |out| { onOpen(out) }
     }
   }
 
@@ -62,15 +63,15 @@ const class LogMod : WebMod
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
-  override Void onStart()
+  private Void onOpen(OutStream out)
   {
     // write prefix
-    logger.writeStr("#Remark ==========================================================================")
-    logger.writeStr("#Remark " + DateTime.now.toLocale)
-    logger.writeStr("#Version 1.0")
-    logger.writeStr("#Software ${Type.of(this)} ${Pod.of(this).version}")
-    logger.writeStr("#Start-Date " + DateTime.nowUtc.toLocale("YYYY-MM-DD hh:mm:ss"))
-    logger.writeStr("#Fields $fields")
+    out.printLine("#Remark ==========================================================================")
+    out.printLine("#Remark " + DateTime.now.toLocale)
+    out.printLine("#Version 1.0")
+    out.printLine("#Software ${Type.of(this)} ${Pod.of(this).version}")
+    out.printLine("#Start-Date " + DateTime.nowUtc.toLocale("YYYY-MM-DD hh:mm:ss"))
+    out.printLine("#Fields $fields")
   }
 
   override Void onStop()
