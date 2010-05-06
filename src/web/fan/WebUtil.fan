@@ -336,6 +336,7 @@ class WebUtil
     if (env?.size > 0)
     {
       envStr.add("var env = fan.sys.Map.make(fan.sys.Str.\$type, fan.sys.Str.\$type);\n")
+      envStr.add("env.caseInsensitive\$(true);\n")
       env.each |v,k|
       {
         envStr.add("  ")
