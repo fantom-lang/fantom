@@ -86,11 +86,11 @@ class TestRunner
     {
       if (p.name != "testSys") return
       buf := StrBuf()
-      props := JsProps(buf.out)
-      props.writeLocale(p, Locale("en"))
-      props.writeLocale(p, Locale("en-US"))
-      props.writeLocale(p, Locale("es"))
-      props.writeLocale(p, Locale("es-MX"))
+      out := buf.out
+      JsProps.writeProps(p, `locale/en-US.props`, out)
+      JsProps.writeProps(p, `locale/es.props`, out)
+      JsProps.writeProps(p, `locale/es-MX.props`, out)
+      engine.eval(buf.toStr)
       engine.eval(buf.toStr)
     }
     catch (Err e) throw Err("Locale eval failed: $p.name", e)
