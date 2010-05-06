@@ -2115,6 +2115,7 @@ if (curt == Token.star)
     // check for ":" for map type
     if (curt === Token.colon)
     {
+      if (t.isNullable) throw err("Map type cannot have nullable key type")
       consume(Token.colon)
       key := t
       val := ctype
