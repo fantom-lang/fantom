@@ -35,8 +35,8 @@ fan.sys.Env.prototype.$ctor = function()
 
 fan.sys.Env.prototype.$setVars = function(vars)
 {
-  if (vars.$typeof().toStr() != "[sys::Str:sys::Str]") throw fan.sys.ArgErr("Invalid type");
-  if (!vars.caseInsensitive()) throw fan.sys.ArgErr("Map must be caseInsensitive");
+  if (vars.$typeof().toStr() != "[sys::Str:sys::Str]") throw fan.sys.ArgErr.make("Invalid type");
+  if (!vars.caseInsensitive()) throw fan.sys.ArgErr.make("Map must be caseInsensitive");
   this.m_vars = vars.toImmutable();
 }
 

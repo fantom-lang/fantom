@@ -196,7 +196,7 @@ fan.sys.Int.shiftr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1
 
 fan.sys.Int.toChar = function(self)
 {
-  if (self < 0 || self > 0xFFFF) throw new Err("Invalid unicode char: " + self);
+  if (self < 0 || self > 0xFFFF) throw fan.sys.Err.make("Invalid unicode char: " + self);
   return String.fromCharCode(self);
 }
 
