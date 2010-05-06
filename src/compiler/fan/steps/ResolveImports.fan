@@ -45,14 +45,20 @@ class ResolveImports : CompilerStep
     // process each unit for Import.pod
     units.each |CompilationUnit unit|
     {
-      resolveImports(unit)
+      try
+        resolveImports(unit)
+      catch (CompilerErr e)
+        errReport(e)
     }
     bombIfErr
 
     // process each unit for CompilationUnit.importedTypes
     units.each |CompilationUnit unit|
     {
-      resolveImportedTypes(unit)
+      try
+        resolveImportedTypes(unit)
+      catch (CompilerErr e)
+        errReport(e)
     }
     bombIfErr
 
