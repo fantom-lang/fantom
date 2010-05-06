@@ -53,7 +53,6 @@ class TestRunner
     // create engine and eval pods
     p := Pod.find(pod)
     evalPod(p)
-    evalLocale(p)
 
     // run tests
     t1 := Duration.now
@@ -78,19 +77,33 @@ class TestRunner
   {
     if (engine == null) engine = ScriptEngineManager().getEngineByName("js");
     Runner.evalPodScript(engine, p)
+    if (p.name == "testSys") evalTestSys(p)
   }
 
-  Void evalLocale(Pod p)
+  private Void evalTestSys(Pod p)
   {
     try
     {
       if (p.name != "testSys") return
       buf := StrBuf()
       out := buf.out
+
+      // locales
       JsProps.writeProps(p, `locale/en-US.props`, out)
       JsProps.writeProps(p, `locale/es.props`, out)
       JsProps.writeProps(p, `locale/es-MX.props`, out)
-      engine.eval(buf.toStr)
+
+      // timezones
+      JsTimeZone(TimeZone("London")).write(out)
+      JsTimeZone(TimeZone("Amsterdam")).write(out)
+      JsTimeZone(TimeZone("Kiev")).write(out)
+      JsTimeZone(TimeZone("Sao_Paulo")).write(out)
+      JsTimeZone(TimeZone("Sydney")).write(out)
+      JsTimeZone(TimeZone("Riga")).write(out)
+      JsTimeZone(TimeZone("Jerusalem")).write(out)
+      JsTimeZone(TimeZone("St_Johns")).write(out)
+      JsTimeZone(TimeZone("Godthab")).write(out)
+
       engine.eval(buf.toStr)
     }
     catch (Err e) throw Err("Locale eval failed: $p.name", e)

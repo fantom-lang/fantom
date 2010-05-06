@@ -117,6 +117,13 @@ public final class TimeZone
 
   public Type typeof() { return Sys.TimeZoneType; }
 
+  public Object trap(String name, List args)
+  {
+    // private undocumented access
+    if (name.equals("rules")) return rules();
+    return super.trap(name, args);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
@@ -170,6 +177,40 @@ public final class TimeZone
 
     // return oldest rule
     return rules[rules.length-1];
+  }
+
+  private List rules()
+  {
+    List list = new List(Sys.ObjType);
+    for (int i=0; i<rules.length; i++)
+    {
+      Rule r = rules[i];
+      Map map = new Map(Sys.StrType, Sys.ObjType);
+      map.set("startYear", Long.valueOf(r.startYear));
+      map.set("offset",    Long.valueOf(r.offset));
+      map.set("stdAbbr",   r.stdAbbr);
+      map.set("dstOffset", Long.valueOf(r.dstOffset));
+      if (r.dstOffset != 0)
+      {
+        map.set("dstAbbr",  r.dstAbbr);
+        map.set("dstStart", dstTimeToMap(r.dstStart));
+        map.set("dstEnd",   dstTimeToMap(r.dstEnd));
+      }
+      list.add(map);
+    }
+    return list;
+  }
+
+  private Map dstTimeToMap(DstTime t)
+  {
+    Map map = new Map(Sys.StrType, Sys.ObjType);
+    map.set("mon",       Long.valueOf(t.mon));
+    map.set("onMode",    Long.valueOf(t.onMode));
+    map.set("onWeekday", Long.valueOf(t.onWeekday));
+    map.set("onDay",     Long.valueOf(t.onDay));
+    map.set("atTime",    Long.valueOf(t.atTime));
+    map.set("atMode",    Long.valueOf(t.atMode));
+    return map;
   }
 
 //////////////////////////////////////////////////////////////////////////
