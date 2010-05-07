@@ -81,9 +81,23 @@ class TypeParser
     if (cur == '|')
       t = loadFunc
 
-    // [...] is map
+    // [ is either [ffi]xxx or [K:V] map
     else if (cur == '[')
-      t = loadMap
+    {
+      ffi := true
+      for (i:=pos+1; i<len; ++i)
+      {
+        ch := sig[i]
+        if (isIdChar(ch)) continue
+        ffi = (ch == ']')
+        break
+      }
+
+      if (ffi)
+        t = loadFFI
+      else
+        t = loadMap
+    }
 
     // otherwise must be basic[]
     else
@@ -147,13 +161,33 @@ class TypeParser
     return FuncType(params, names, ret)
   }
 
+  private CType loadFFI()
+  {
+    // [java]foo.bar.foo
+    start := pos
+    while (cur != ':' || peek != ':') consume
+    //podName := sig[start..<pos]
+
+    consume(':')
+    consume(':')
+
+    // Baz or [Baz
+    //start = pos
+    while (cur == '[') consume
+    while (isIdChar(cur)) consume
+    //typeName := sig[start..<pos]
+    qname := sig[start..<pos]
+
+    return ns.resolveType(qname);
+  }
+
   private CType loadBasic()
   {
     start := pos
-    while (cur.isAlphaNum || cur == '_') consume
+    while (cur != ':' || peek != ':') consume
     consume(':')
     consume(':')
-    while (cur.isAlphaNum || cur == '_') consume
+    while (isIdChar(cur)) consume
     qname := sig[start..<pos]
     return ns.resolveType(qname)
   }
@@ -170,9 +204,14 @@ class TypeParser
     peek = pos+1 < len ? sig[pos+1] : 0
   }
 
+  private static Bool isIdChar(Int ch)
+  {
+    ch.isAlphaNum || ch == '_'
+  }
+
   private ArgErr err()
   {
-    return ArgErr("Invalid type signature '" + sig + "'")
+    ArgErr("Invalid type signature '" + sig + "'")
   }
 
 //////////////////////////////////////////////////////////////////////////
