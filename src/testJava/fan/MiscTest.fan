@@ -70,4 +70,34 @@ class MiscTest : JavaTest
     verifyEq(obj->foo, 1)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #965 Compiler TypeParser doesn't handle Java FFI
+//////////////////////////////////////////////////////////////////////////
+
+  Void test965()
+  {
+    aPod := podName
+    compile(
+     "using [java] java.util::Date as JDate
+      class Foo
+      {
+        static JDate[] a() { [JDate(123456789)] }
+        static Void b(|JDate?|? f) { f(JDate(987654321)) }
+      }")
+
+    depends = [Depend("sys 1.0"), Depend("$aPod 0+")]
+    compile(
+     "using $aPod
+      using [java] java.util::Date as JavaDate
+      class Bar
+      {
+        JavaDate a() { Foo.a.first }
+        JavaDate b() { x := null; Foo.b |y| { x = y }; return x }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->a->getTime, 123456789)
+    verifyEq(obj->b->getTime, 987654321)
+  }
+
 }
