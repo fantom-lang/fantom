@@ -53,7 +53,7 @@ fan.sys.Bool.toStr  = function(self) { return self ? "true" : "false"; }
 fan.sys.Bool.toCode = function(self) { return self ? "true" : "false"; }
 fan.sys.Bool.toLocale = function(self)
 {
-  var key = self ? "boolTrue" : "boolFalse"
-  return fan.sys.Locale.cur().get("sys", key, fan.sys.Bool.toStr(self));
+  var key = self ? "boolTrue" : "boolFalse";
+  return fan.sys.Env.cur().locale(fan.sys.Pod.find("sys"), key, fan.sys.Bool.toStr(self));
 }
 
