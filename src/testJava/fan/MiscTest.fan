@@ -128,4 +128,25 @@ class MiscTest : JavaTest
     verifyEq(obj->test4(obj), "4")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1077 Safe invoke with int
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1077()
+  {
+    compile(
+     """using [java] java.util::List
+        using [java] java.util::ArrayList
+        class Foo
+        {
+          Obj? foo(List? list) { list?.size }
+          Obj? test1() { foo(ArrayList()) }
+          Obj? test2() { foo(null) }
+        }""")
+
+    obj := pod.types.first.make
+    verifyEq(obj->test1, 0)
+    verifyEq(obj->test2, null)
+  }
+
 }

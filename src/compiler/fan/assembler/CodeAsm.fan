@@ -1212,7 +1212,7 @@ class CodeAsm : CompilerSupport
       // stack for null check from above (if a leave)
       endLabel := jump(FOp.Jump)
       backpatch(isNullLabel)
-      opType(FOp.Pop, call.ctype)
+      opType(FOp.Pop, target.ctype)
       if (call.leave) op(FOp.LoadNull)
       backpatch(endLabel)
     }
