@@ -21,48 +21,50 @@ class JavaType : CType
   **
   ** Construct with loaded Type.
   **
-  new make(JavaPod pod, Str name)
+  new make(JavaPod pod, Str name, CType? primitiveNullable := null)
   {
     this.pod    = pod
     this.name   = name
     this.qname  = pod.name + "::" + name
     this.base   = ns.objType
     this.mixins = CType[,]
+    this.primitiveNullable = primitiveNullable
   }
 
 //////////////////////////////////////////////////////////////////////////
 // CType
 //////////////////////////////////////////////////////////////////////////
 
-  override CNamespace ns() { return pod.ns }
+  override CNamespace ns() { pod.ns }
   override readonly JavaPod pod
   override readonly Str name
   override readonly Str qname
-  override Str signature() { return qname }
+  override Str signature() { qname }
 
-  override CFacet? facet(Str qname) { return null }
+  override CFacet? facet(Str qname) { null }
 
   override CType? base { get { load; return *base } internal set}
   override CType[] mixins { get { load; return *mixins } internal set }
   override Int flags { get { load; return *flags } internal set }
 
-  override Bool isForeign() { return true }
-  override Bool isSupported() { return arrayRank <= 1 } // multi-dimensional arrays unsupported
+  override Bool isForeign() { true }
+  override Bool isSupported() { arrayRank <= 1 } // multi-dimensional arrays unsupported
 
-  override Bool isVal() { return false }
+  override Bool isVal() { pod is JavaPrimitives }
 
-  override Bool isNullable() { return false }
-  override once CType toNullable() { return NullableType(this) }
+  override Bool isNullable() { false }
+  override once CType toNullable() { primitiveNullable ?: NullableType(this) }
+  private CType? primitiveNullable
 
-  override Bool isGeneric() { return false }
-  override Bool isParameterized() { return false }
-  override Bool isGenericParameter() { return false }
+  override Bool isGeneric() { false }
+  override Bool isParameterized() { false }
+  override Bool isGenericParameter() { false }
 
-  override once CType toListOf() { return ListType(this) }
+  override once CType toListOf() { ListType(this) }
 
   override readonly Str:CSlot slots { get { load; return *slots } }
 
-  override CSlot? slot(Str name) { return slots[name] }
+  override CSlot? slot(Str name) { slots[name] }
 
   ** Handle the case where a field and method have the same
   ** name; in this case the field will always be first with

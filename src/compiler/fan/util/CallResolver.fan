@@ -66,8 +66,8 @@ class CallResolver : CompilerSupport
       resolveForeign
       constantFolding
       castForThisType
-      ffiCoercion
       safeToNullable
+      ffiCoercion
       return result
     }
     catch (CompilerErr err)
@@ -467,6 +467,22 @@ class CallResolver : CompilerSupport
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Safe to Nullable
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** If the epxression is a safe call using "?.", then
+  ** the resulting expression type is nullable.
+  **
+  private Void safeToNullable()
+  {
+    if (expr.isSafe)
+    {
+      result.ctype = result.ctype.toNullable
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // FFI Coercion
 //////////////////////////////////////////////////////////////////////////
 
@@ -489,20 +505,6 @@ class CallResolver : CompilerSupport
         }
       }
     }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Safe to Nullable
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** If the epxression is a safe call using "?.", then
-  ** the resulting expression type is nullable.
-  **
-  private Void safeToNullable()
-  {
-    if (expr.isSafe)
-      result.ctype = result.ctype.toNullable
   }
 
 //////////////////////////////////////////////////////////////////////////
