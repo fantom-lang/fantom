@@ -69,6 +69,16 @@ class JavaMethod : JavaSlot, CMethod
       return JavaParam("p$i", t)
     }
   }
+
+  ** Does given method have the exact same signature (ignoring declaring class)
+  Bool sigsEqual(JavaMethod m)
+  {
+    this.name == m.name &&
+    this.params.size == m.params.size &&
+    this.returnType == m.returnType &&
+    this.flags == m.flags &&
+    this.params.all |p, i| { p.paramType == m.params[i].paramType }
+  }
 }
 
 **************************************************************************

@@ -187,6 +187,15 @@ public class InteropTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Class+Interfaces
+//////////////////////////////////////////////////////////////////////////
+
+  public static interface ComboA { String foo(String x); }
+  public static interface ComboB { String foo(String x); }
+  public static abstract class ComboC { public abstract String foo(String x); }
+  public static abstract class ComboD extends ComboC implements ComboA, ComboB {}
+
+//////////////////////////////////////////////////////////////////////////
 // JavaOverrides
 //////////////////////////////////////////////////////////////////////////
 
@@ -218,5 +227,4 @@ public class InteropTest
   {
     public String[] swap(String[] x);
   }
-
 }

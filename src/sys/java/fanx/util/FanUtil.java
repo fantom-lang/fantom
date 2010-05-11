@@ -80,19 +80,25 @@ public class FanUtil
   private static HashMap javaImmutables = new HashMap();
   static
   {
-    javaImmutables.put("java.lang.Boolean",    Boolean.TRUE);
-    javaImmutables.put("java.lang.Byte",       Boolean.TRUE);
-    javaImmutables.put("java.lang.Character",  Boolean.TRUE);
-    javaImmutables.put("java.lang.Class",      Boolean.TRUE);
-    javaImmutables.put("java.lang.Double",     Boolean.TRUE);
-    javaImmutables.put("java.lang.Float",      Boolean.TRUE);
-    javaImmutables.put("java.lang.Integer",    Boolean.TRUE);
-    javaImmutables.put("java.lang.Long",       Boolean.TRUE);
-    javaImmutables.put("java.lang.Package",    Boolean.TRUE);
-    javaImmutables.put("java.lang.Short",      Boolean.TRUE);
-    javaImmutables.put("java.lang.String",     Boolean.TRUE);
-    javaImmutables.put("java.math.BigDecimal", Boolean.TRUE);
-    javaImmutables.put("java.math.BigInteger", Boolean.TRUE);
+    // java.lang
+    javaImmutables.put("java.lang.Boolean",             Boolean.TRUE);
+    javaImmutables.put("java.lang.Byte",                Boolean.TRUE);
+    javaImmutables.put("java.lang.Character",           Boolean.TRUE);
+    javaImmutables.put("java.lang.Class",               Boolean.TRUE);
+    javaImmutables.put("java.lang.Double",              Boolean.TRUE);
+    javaImmutables.put("java.lang.Float",               Boolean.TRUE);
+    javaImmutables.put("java.lang.Integer",             Boolean.TRUE);
+    javaImmutables.put("java.lang.Long",                Boolean.TRUE);
+    javaImmutables.put("java.lang.Package",             Boolean.TRUE);
+    javaImmutables.put("java.lang.Short",               Boolean.TRUE);
+    javaImmutables.put("java.lang.String",              Boolean.TRUE);
+    // java.lang.reflect
+    javaImmutables.put("java.lang.reflect.Constructor", Boolean.TRUE);
+    javaImmutables.put("java.lang.reflect.Field",       Boolean.TRUE);
+    javaImmutables.put("java.lang.reflect.Method",      Boolean.TRUE);
+    // java.math
+    javaImmutables.put("java.math.BigDecimal",          Boolean.TRUE);
+    javaImmutables.put("java.math.BigInteger",          Boolean.TRUE);
   }
 
   /**

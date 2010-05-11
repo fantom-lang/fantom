@@ -100,4 +100,32 @@ class MiscTest : JavaTest
     verifyEq(obj->b->getTime, 987654321)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1067 compilerJava - findMethods() patch
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1067()
+  {
+    compile(
+     """using [java] fanx.test::InteropTest\$ComboA as ComboA
+        using [java] fanx.test::InteropTest\$ComboB as ComboB
+        using [java] fanx.test::InteropTest\$ComboC as ComboC
+        using [java] fanx.test::InteropTest\$ComboD as ComboD
+        class Foo : ComboD
+        {
+          override Str? foo(Str? x) { x }
+          Str? test1(ComboA a) { a.foo("1") }
+          Str? test2(ComboB b) { b.foo("2") }
+          Str? test3(ComboC c) { c.foo("3") }
+          Str? test4(ComboD d) { d.foo("4") }
+        }""")
+
+    obj := pod.types.first.make
+    verifyEq(obj->foo("0"), "0")
+    verifyEq(obj->test1(obj), "1")
+    verifyEq(obj->test2(obj), "2")
+    verifyEq(obj->test3(obj), "3")
+    verifyEq(obj->test4(obj), "4")
+  }
+
 }
