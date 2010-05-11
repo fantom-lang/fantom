@@ -13,7 +13,6 @@ using [java] java.lang.reflect::Constructor as JCtor
 using [java] java.lang.reflect::Field as JField
 using [java] java.lang.reflect::Method as JMethod
 using [java] java.lang.reflect::Modifier as JModifier
-using [java] java.util
 using [java] fanx.util
 
 **
@@ -65,10 +64,10 @@ internal class JavaReflect
   **
   static JField[] findFields(Class? cls)
   {
-    acc := HashMap() // mutable keys
+    acc := JField:JField[:]
 
     // first add all the public fields
-    cls.getFields.each |JField j| { acc.put(j, j) }
+    cls.getFields.each |JField j| { acc[j] = j }
 
     // do protected fields working back up the hierarchy; don't
     // worry about interfaces b/c they can declare protected members
@@ -77,14 +76,12 @@ internal class JavaReflect
       cls.getDeclaredFields.each |JField j|
       {
         if (!JModifier.isProtected(j.getModifiers)) return
-        if (acc[j] == null) acc.put(j, j)
+        if (acc[j] == null) acc[j] = j
       }
       cls = cls.getSuperclass
     }
 
-    list := JField[,]
-    for (iter := acc.values.iterator; iter.hasNext; ) list.add(iter.next)
-    return list
+    return acc.vals
   }
 
   **
@@ -93,10 +90,10 @@ internal class JavaReflect
   **
   static JMethod[] findMethods(Class? cls)
   {
-    acc := HashMap() // mutable keys
+    acc := JMethod:JMethod[:]
 
     // first add all the public methods
-    cls.getMethods.each |JMethod j| { acc.put(j, j) }
+    cls.getMethods.each |JMethod j| { acc[j] = j }
 
     // do protected methods working back up the hierarchy; don't
     // worry about interfaces b/c they can declare protected members
@@ -105,14 +102,12 @@ internal class JavaReflect
       cls.getDeclaredMethods.each |JMethod j|
       {
         if (!JModifier.isProtected(j.getModifiers)) return
-        if (acc[j] == null) acc.put(j, j)
+        if (acc[j] == null) acc[j] = j
       }
       cls = cls.getSuperclass
     }
 
-    list := JMethod[,]
-    for (iter := acc.values.iterator; iter.hasNext; ) list.add(iter.next)
-    return list
+    return acc.vals
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -175,6 +170,13 @@ internal class JavaReflect
     // the overloads as linked list on that
     JavaSlot? x := slots.get(name)
     if (x == null) { slots.add(name, m); return }
+
+    // check the linked list for methods with the exact same
+    // signature (this can happen by inheriting abstract methods
+    // from multiple interfaces)
+    for (p := x; p != null; p = p.next)
+      if (p is JavaMethod && m.sigsEqual(p))
+        return
 
     // create linked list of overloads
     m.next = x.next
