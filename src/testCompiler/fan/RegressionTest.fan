@@ -326,4 +326,22 @@ class RegressionTest : CompilerTest
        [ 1, 17, "Type cannot have multiple '?'"])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1056 It-block parameters have incorrect reflection signature
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1056()
+  {
+    compile(
+      "class Foo
+       {
+         new make(|This| f) {}
+         Void bar(|This|? f) {}
+       }")
+
+    t := pod.types[0]
+    //verifyEq(t.method("make").params[0].type, |This|#)
+    verifyEq(t.method("bar").params[0].type, |This|?#)
+  }
+
 }
