@@ -762,6 +762,12 @@ class SerializationTest : Test
     z := Buf.make.print(doc).flip.readObj
     verifyEq(z, expected)
 
+    // verify StrBuf
+    sb := StrBuf()
+    StrBufWrapOutStream(sb.out).writeObj(expected)
+    verifyEq(sb.toStr.in.readObj, expected)
+
+
     return x
   }
 

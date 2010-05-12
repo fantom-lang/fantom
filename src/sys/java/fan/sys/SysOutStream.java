@@ -77,6 +77,13 @@ public class SysOutStream
     }
   }
 
+  public OutStream writeChar(long c) { return writeChar((char)c); }
+  public OutStream writeChar(char c)
+  {
+    charsetEncoder.encode(c, this);
+    return this;
+  }
+
   public OutStream flush()
   {
     try

@@ -18,7 +18,7 @@ class WebOutStreamTest : Test
 
   Void testGeneral()
   {
-    buf := Buf.make
+    buf := StrBuf()
     out := WebOutStream(buf.out)
 
     out.w("foo")
@@ -436,21 +436,36 @@ class WebOutStreamTest : Test
 
   Void verifyEsc(Obj? input, Str match)
   {
-    buf := Buf.make
+    buf := Buf()
     out := WebOutStream(buf.out)
     out.esc(input)
     verifyEq(buf.flip.readAllStr, match)
+
+    sb  := StrBuf()
+    out = WebOutStream(sb.out)
+    out.esc(input)
+    verifyEq(sb.toStr, match)
   }
 
 //////////////////////////////////////////////////////////////////////////
 // verifyOut
 //////////////////////////////////////////////////////////////////////////
 
-  Void verifyOut(Buf buf, Str? match)
+  Void verifyOut(Obj bufOrStrBuf, Str? match)
   {
-    buf.flip
-    verifyEq(buf.readLine, match)
-    buf.clear
+    if (bufOrStrBuf is Buf)
+    {
+      buf := (Buf)bufOrStrBuf
+      buf.flip
+      verifyEq(buf.readLine, match)
+      buf.clear
+    }
+    else
+    {
+      buf := (StrBuf)bufOrStrBuf
+      verifyEq(buf.toStr, match)
+      buf.clear
+    }
   }
 
 }

@@ -117,12 +117,21 @@ class CsvTest : Test
     in.eachRow |row| { verifyEq(row, expected[i++]) }
     verifyEq(i, expected.size)
 
-    // CsvOutStream
+    // CsvOutStream via Buf
     buf := Buf()
     out := CsvOutStream(buf.out)
     out.delimiter = in.delimiter
     expected.each |row| { out.writeRow(row) }
     str := buf.flip.readAllStr
+    in = CsvInStream(str.in); f(in)
+    verifyEq(in.readAllRows, expected)
+
+    // CsvOutStream via StrBuf
+    sb := StrBuf()
+    out = CsvOutStream(sb.out)
+    out.delimiter = in.delimiter
+    expected.each |row| { out.writeRow(row) }
+    str = sb.toStr
     in = CsvInStream(str.in); f(in)
     verifyEq(in.readAllRows, expected)
   }

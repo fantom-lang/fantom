@@ -207,4 +207,35 @@ class StrBufTest : Test
     verifyEq(s.toStr, expected)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Wrapped OutputStream
+//////////////////////////////////////////////////////////////////////////
+
+  Void testOutWrap()
+  {
+    buf := StrBuf()
+    out := StrBufWrapOutStream(buf.out)
+
+    // writeChar, writeChars, print, printLine
+    out.writeChar('a');           verifyEq(buf.toStr, "a")
+    out.writeChars("bc");         verifyEq(buf.toStr, "abc")
+    out.writeChars("xde", 1);     verifyEq(buf.toStr, "abcde")
+    out.writeChars("xfgx", 1, 2); verifyEq(buf.toStr, "abcdefg")
+    out.print("hi");              verifyEq(buf.toStr, "abcdefghi")
+    out.printLine("j");           verifyEq(buf.toStr, "abcdefghij\n")
+
+    // writeProps
+    buf.clear
+    out.writeProps(["k":"x\ty"]);  verifyEq(buf.toStr, "k=x\\ty\n")
+
+    // writeXml
+    buf.clear
+    out.writeXml("<foo>");  verifyEq(buf.toStr, "&lt;foo>")
+  }
+
+}
+
+internal class StrBufWrapOutStream : OutStream
+{
+  new make(OutStream out) : super(out) {}
 }
