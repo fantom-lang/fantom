@@ -25,6 +25,7 @@
 - Improve Map support under JavaScript
 - Fix FileLogger/LogMod to write headers on open of new files per day/month
 - Compiler support for native classes
+- Allow CompilerInput to specify a custom CNamespace
 
 *Build 1.0.52 (24 Mar 10)*
 - Color: makeArgb, makeRgb
