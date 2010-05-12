@@ -5,7 +5,7 @@
 // History:
 //   28 Mar 09  Brian Frank  Creation
 //
-package fanx.util;
+package fan.concurrent;
 
 /**
  * Scheduler is used to schedule work to be run after an elapsed

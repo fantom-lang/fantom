@@ -7,6 +7,7 @@
 //
 
 using compiler
+using concurrent
 
 **
 ** Fantom Shell

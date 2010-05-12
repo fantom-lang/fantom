@@ -6,6 +6,8 @@
 //   31 May 09  Brian Frank  Creation
 //
 
+using concurrent
+
 **
 ** FileIndex is used to keep a working index of the files
 ** we care about (those in your Goto Into nav sidebar).

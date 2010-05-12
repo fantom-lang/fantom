@@ -18,7 +18,7 @@ class Build : BuildPod
   {
     podName    = "inet"
     summary    = "IP networking"
-    depends    = ["sys 1.0"]
+    depends    = ["sys 1.0", "concurrent 1.0"]
     srcDirs    = [`fan/`, `test/`]
     javaDirs   = [`java/`]
     dotnetDirs = [`dotnet/`]

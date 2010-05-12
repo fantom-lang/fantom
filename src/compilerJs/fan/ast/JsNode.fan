@@ -7,6 +7,7 @@
 //
 
 using compiler
+using concurrent
 
 **
 ** JsNode translates a compiler::Node into the equivalent JavaScript

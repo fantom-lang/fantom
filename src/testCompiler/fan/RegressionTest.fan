@@ -21,7 +21,8 @@ class RegressionTest : CompilerTest
   Void test528()
   {
      compile(
-       "class Foo
+       "using concurrent
+        class Foo
         {
           Str test()
           {

@@ -59,6 +59,7 @@ class ConstChecks : CompilerStep
     // walk all the types
     types.each |TypeDef t|
     {
+      if (t.isNative) return
       this.curType = t
 
       // get all the fields which require runtime checks, and if there

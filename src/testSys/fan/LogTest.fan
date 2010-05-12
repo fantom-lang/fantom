@@ -6,6 +6,8 @@
 //   3 Jul 06  Brian Frank  Creation
 //
 
+using concurrent
+
 **
 ** LogTest
 **

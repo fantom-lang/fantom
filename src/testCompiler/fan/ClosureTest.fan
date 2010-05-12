@@ -7,6 +7,7 @@
 //
 
 using compiler
+using concurrent
 
 **
 ** ClosureTest
@@ -198,7 +199,8 @@ class ClosureTest : CompilerTest
   Void testField1()
   {
     compile(
-     "class Foo
+     "using concurrent
+      class Foo
       {
         |->| c1 := |->| { s=\"c1\" };
         |Str x| c2 := |Str x| { s=x };

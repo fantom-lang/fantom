@@ -5,8 +5,9 @@
 // History:
 //   26 Mar 09  Brian Frank  Creation
 //
-package fan.sys;
+package fan.concurrent;
 
+import fan.sys.*;
 import java.util.ArrayList;
 
 /**
@@ -32,7 +33,12 @@ public final class Future
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type typeof() { return Sys.FutureType; }
+  public Type typeof()
+  {
+    if (type == null) type = Type.find("concurrent::Future");
+    return type;
+  }
+  private static Type type;
 
 //////////////////////////////////////////////////////////////////////////
 // Future

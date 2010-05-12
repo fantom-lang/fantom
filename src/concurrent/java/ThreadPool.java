@@ -5,7 +5,7 @@
 // History:
 //   27 Mar 09  Brian Frank  Creation
 //
-package fanx.util;
+package fan.concurrent;
 
 import java.util.LinkedList;
 import java.util.HashMap;

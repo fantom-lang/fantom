@@ -6,6 +6,8 @@
 //   30 Apr 09  Brian Frank  Creation
 //
 
+using concurrent
+
 **
 ** GfxEnv models an implementation of the gfx graphics API.
 **

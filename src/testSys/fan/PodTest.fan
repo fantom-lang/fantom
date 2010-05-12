@@ -69,8 +69,9 @@ class PodTest : Test
     verifyEq(testSys.meta["pod.docApi"], "false")
     verifyEq(testSys.meta["pod.docSrc"], "false")
     verifyEq(testSys.name, "testSys")
-    verifyEq(testSys.depends.size, 1)
+    verifyEq(testSys.depends.size, 2)
     verifyEq(testSys.depends[0].name, "sys")
+    verifyEq(testSys.depends[1].name, "concurrent")
     verifyMeta(testSys)
   }
 

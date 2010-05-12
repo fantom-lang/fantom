@@ -18,7 +18,7 @@ class Build : BuildPod
   {
     podName = "fwt"
     summary = "Fantom Widget Toolkit"
-    depends  = ["sys 1.0", "gfx 1.0"]
+    depends  = ["sys 1.0", "concurrent 1.0", "gfx 1.0"]
     srcDirs  = [`fan/`, `test/`]
     javaDirs = [`java/`]
     jsDirs   = [`js/`]

@@ -12,7 +12,7 @@
 **
 ** See [docLang::Actors]`docLang::Actors`
 **
-const class ActorPool
+native const class ActorPool
 {
 
   **

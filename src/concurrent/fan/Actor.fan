@@ -12,7 +12,7 @@
 ** See [docLang::Actors]`docLang::Actors` and
 ** [examples]`examples::sys-actors`.
 **
-const class Actor
+native const class Actor
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -27,8 +27,7 @@ const class Actor
   ** NotImmutableErr is thrown.  If receive is null, then you must subclass
   ** Actor and override the `receive` method.
   **
-// TODO 1.0.48: 2nd arg causes compiler crash
-  new make(ActorPool pool, |Obj?, Obj? -> Obj?|? receive := null)
+  new make(ActorPool pool, |Obj? -> Obj?|? receive := null)
 
   **
   ** Create an actor with a coalescing message loop.  This constructor
@@ -53,11 +52,10 @@ const class Actor
   ** an internal lock on the queue.  So the functions must be efficient
   ** and never attempt to interact with other actors.
   **
-// TODO 1.0.48: 2nd arg causes compiler crash
   new makeCoalescing(ActorPool pool,
                      |Obj? msg -> Obj?|? toKey,
                      |Obj? orig, Obj? incoming -> Obj?|? coalesce,
-                     |Obj?, Obj? -> Obj? |? receive := null)
+                     |Obj? -> Obj? |? receive := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Messaging
