@@ -373,6 +373,11 @@ mixin CType
   **
   Bool isSynthetic() { flags.and(FConst.Synthetic) != 0 }
 
+  **
+  ** Is the entire class implemented in native code?
+  **
+  Bool isNative() { flags.and(FConst.Native) != 0 }
+
 //////////////////////////////////////////////////////////////////////////
 // Conveniences
 //////////////////////////////////////////////////////////////////////////

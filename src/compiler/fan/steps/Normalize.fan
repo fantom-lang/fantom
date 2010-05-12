@@ -246,7 +246,7 @@ class Normalize : CompilerStep
     t.methodDefs.each |MethodDef m|
     {
       if (!m.isCtor) return
-      if (compiler.isSys) return
+      if (t.isNative) return
       if (m.ctorChain != null && m.ctorChain.target.id === ExprId.thisExpr) return
       call := CallExpr.makeWithMethod(m.loc, ThisExpr(m.loc), ii)
       m.code.stmts.insert(0, call.toStmt)

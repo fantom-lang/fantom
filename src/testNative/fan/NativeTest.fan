@@ -12,6 +12,14 @@
 class NativeTest : Test
 {
 
+  Void testNativeClass()
+  {
+    x := NativeClass()
+    verifyEq(x.typeof, NativeClass#)
+    verifyEq(x.typeof.method("add").returns, Int#)
+    verifyEq(x.add(2, 3), 5)
+  }
+
   Void testFields()
   {
     verifyFields(Native())

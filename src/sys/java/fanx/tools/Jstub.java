@@ -52,6 +52,8 @@ public class Jstub
       for (int i=0; i<types.length; ++i)
       {
         ClassType type = types[i];
+        if (type.isNative()) continue;
+
         FTypeEmit[] emitted = type.emitToClassFiles();
 
         // write to jar

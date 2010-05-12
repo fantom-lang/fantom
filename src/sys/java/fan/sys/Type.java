@@ -59,15 +59,16 @@ public abstract class Type
 // Flags
 //////////////////////////////////////////////////////////////////////////
 
-  public final boolean isAbstract() { return (flags() & FConst.Abstract) != 0; }
-  public final boolean isClass() { return (flags() & (FConst.Enum|FConst.Mixin)) == 0; }
-  public final boolean isConst() { return (flags() & FConst.Const) != 0; }
-  public final boolean isEnum() { return (flags() & FConst.Enum) != 0; }
-  public final boolean isFacet() { return (flags() & FConst.Facet) != 0; }
-  public final boolean isFinal() { return (flags() & FConst.Final) != 0; }
-  public final boolean isInternal() { return (flags() & FConst.Internal) != 0; }
-  public final boolean isMixin() { return (flags() & FConst.Mixin) != 0; }
-  public final boolean isPublic() { return (flags() & FConst.Public) != 0; }
+  public final boolean isAbstract()  { return (flags() & FConst.Abstract) != 0; }
+  public final boolean isClass()     { return (flags() & (FConst.Enum|FConst.Mixin)) == 0; }
+  public final boolean isConst()     { return (flags() & FConst.Const) != 0; }
+  public final boolean isEnum()      { return (flags() & FConst.Enum) != 0; }
+  public final boolean isFacet()     { return (flags() & FConst.Facet) != 0; }
+  public final boolean isFinal()     { return (flags() & FConst.Final) != 0; }
+  public final boolean isInternal()  { return (flags() & FConst.Internal) != 0; }
+  public final boolean isMixin()     { return (flags() & FConst.Mixin) != 0; }
+  public final boolean isNative()    { return (flags() & FConst.Native) != 0; }
+  public final boolean isPublic()    { return (flags() & FConst.Public) != 0; }
   public final boolean isSynthetic() { return (flags() & FConst.Synthetic) != 0; }
   abstract int flags();
 
