@@ -18,7 +18,7 @@ class Build : BuildPod
   {
     podName = "fansh"
     summary = "Interactive Fantom Shell"
-    depends = ["sys 1.0", "compiler 1.0"]
+    depends = ["sys 1.0", "compiler 1.0", "concurrent 1.0"]
     srcDirs = [`fan/`]
     docSrc  = true
   }

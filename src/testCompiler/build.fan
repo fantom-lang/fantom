@@ -18,7 +18,7 @@ class Build : BuildPod
   {
     podName = "testCompiler"
     summary = "Test suite for compiler"
-    depends = ["sys 1.0", "compiler 1.0"]
+    depends = ["sys 1.0", "compiler 1.0", "concurrent 1.0"]
     srcDirs = [`fan/`]
     docApi  = false
   }

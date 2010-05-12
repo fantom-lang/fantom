@@ -11,6 +11,7 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.util.*;
 import fan.sys.*;
+import fan.concurrent.*;
 import fan.sys.List;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Color;

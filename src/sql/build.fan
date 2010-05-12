@@ -18,7 +18,7 @@ class Build : BuildPod
   {
     podName  = "sql"
     summary  = "Relational database access"
-    depends  = ["sys 1.0"]
+    depends  = ["sys 1.0", "concurrent 1.0"]
     srcDirs  = [`fan/`, `fan/dialects/`, `test/`]
     javaDirs = [`java/`]
     docSrc   = true

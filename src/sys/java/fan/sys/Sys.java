@@ -106,11 +106,6 @@ public final class Sys
   public static final Type UriType          = initType("Uri");
   public static final Type ZipType          = initType("Zip");
 
-  // actos
-  public static final Type ActorType        = initType("Actor");
-  public static final Type ActorPoolType    = initType("ActorPool");
-  public static final Type FutureType       = initType("Future");
-
   // utils
   public static final Type DependType       = initType("Depend");
   public static final Type LogType          = initType("Log");

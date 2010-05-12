@@ -7,6 +7,8 @@
 //   1 Dec 09  Brian Frank  Rename BootScript to AbstractMain
 //
 
+using concurrent
+
 **
 ** AbstractMain provides conveniences for writing the main routine
 ** of an app. Command line arguments are configured as fields

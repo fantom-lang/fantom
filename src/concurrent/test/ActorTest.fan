@@ -116,8 +116,8 @@ class ActorTest : Test
 
     // serializable
     f = a.send("serial")
-    verifyEq(f.get, SerA { i = 123_321 })
-    verifyEq(f.get, SerA { i = 123_321 })
+    verifyEq(f.get, SerMsg { i = 123_321 })
+    verifyEq(f.get, SerMsg { i = 123_321 })
     verifyNotSame(f.get, f.get)
     verify(f.isDone)
 
@@ -137,7 +137,7 @@ class ActorTest : Test
     switch (msg)
     {
       case "const":   return constObj
-      case "serial":  return SerA { i = 123_321 }
+      case "serial":  return SerMsg { i = 123_321 }
       case "throw":   throw UnknownServiceErr()
       case "mutable": return Buf()
       default: return "?"
@@ -669,3 +669,16 @@ class ActorTest : Test
   }
 
 }
+
+**************************************************************************
+** SerA
+**************************************************************************
+
+@Serializable
+class SerMsg
+{
+  override Int hash() { i }
+  override Bool equals(Obj? that) { that is SerMsg && i == that->i }
+  Int i := 7
+}
+

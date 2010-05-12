@@ -5,10 +5,10 @@
 // History:
 //   26 Mar 09  Brian Frank  Creation
 //
-package fan.sys;
+package fan.concurrent;
 
+import fan.sys.*;
 import java.util.HashMap;
-import fanx.util.ThreadPool;
 
 /**
  * Actor is a worker who processes messages asynchronously.
@@ -38,7 +38,7 @@ public class Actor
       throw NullErr.make("pool is null").val;
 
     // check receive method
-    if (receive == null && self.typeof() == Sys.ActorType)
+    if (receive == null && self.typeof().qname().equals("concurrent::Actor"))
       throw ArgErr.make("must supply receive func or subclass Actor").val;
     if (receive != null) receive = (Func)receive.toImmutable();
 
@@ -75,7 +75,12 @@ public class Actor
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type typeof() { return Sys.ActorType; }
+  public Type typeof()
+  {
+    if (type == null) type = Type.find("concurrent::Actor");
+    return type;
+  }
+  private static Type type;
 
 //////////////////////////////////////////////////////////////////////////
 // Actor
@@ -221,7 +226,7 @@ public class Actor
     }
     catch (Err.Val e)
     {
-      future.err(e.err);
+      future.err(e.err());
     }
     catch (Throwable e)
     {

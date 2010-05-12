@@ -7,6 +7,8 @@
 //   26 Mar 09  Brian Frank  Split from old ThreadTest
 //
 
+using concurrent
+
 **
 ** ServiceTest
 **

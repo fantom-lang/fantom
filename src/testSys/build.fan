@@ -18,7 +18,7 @@ class Build : BuildPod
   {
     podName = "testSys"
     summary = "System and runtime test suite"
-    depends = ["sys 1.0"]
+    depends = ["sys 1.0", "concurrent 1.0"]
     meta    = ["testSys.foo":"got\n it \u0123"]
     index   = ["testSys.single": "works!", "testSys.mult": ["testSys-1","testSys-2"]]
     srcDirs = [`fan/`]

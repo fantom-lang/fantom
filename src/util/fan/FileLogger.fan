@@ -6,6 +6,8 @@
 //   8 Apr 08  Brian Frank  Creation
 //
 
+using concurrent
+
 **
 ** FileLogger appends Str log entries to a file.  You
 ** can add a FileLogger as a Log handler:

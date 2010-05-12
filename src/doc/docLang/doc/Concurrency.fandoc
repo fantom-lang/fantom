@@ -76,10 +76,10 @@ Shared Objects [#sharedObjects]
 Actors allow objects to be shared between threads.  Specific APIs
 which will pass an object to another thread include:
 
-  - [Actor.send]`sys::Actor.send`
-  - [Actor.sendLater]`sys::Actor.sendLater`
-  - [Actor.sendWhenDone]`sys::Actor.sendWhenDone`
-  - [Future.get]`sys::Future.get`
+  - [Actor.send]`concurrent::Actor.send`
+  - [Actor.sendLater]`concurrent::Actor.sendLater`
+  - [Actor.sendWhenDone]`concurrent::Actor.sendWhenDone`
+  - [Future.get]`concurrent::Future.get`
 
 All of these APIs use the same pattern to safely pass an object
 between threads.  If an object is immutable then we can safely pass

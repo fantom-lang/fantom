@@ -5,10 +5,9 @@
 // History:
 //   26 Mar 09  Brian Frank  Creation
 //
-package fan.sys;
+package fan.concurrent;
 
-import fanx.util.ThreadPool;
-import fanx.util.Scheduler;
+import fan.sys.*;
 
 /**
  * Controller for a group of actors which manages their execution
@@ -43,7 +42,12 @@ public class ActorPool
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type typeof() { return Sys.ActorPoolType; }
+  public Type typeof()
+  {
+    if (type == null) type = Type.find("concurrent::ActorPool");
+    return type;
+  }
+  private static Type type;
 
 //////////////////////////////////////////////////////////////////////////
 // ActorPool

@@ -283,7 +283,7 @@ public class Err
 // Rebasing
 //////////////////////////////////////////////////////////////////////////
 
-  Val rebase()
+  public Val rebase()
   {
     actual = new RebaseException();
     return val;

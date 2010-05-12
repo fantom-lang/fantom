@@ -12,7 +12,7 @@
 **
 ** See [docLang::Actors]`docLang::Actors`
 **
-final const class Future
+native final const class Future
 {
 
   **

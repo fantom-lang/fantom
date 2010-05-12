@@ -6,6 +6,8 @@
 //   03 Nov 07  Brian Frank  Creation
 //
 
+using concurrent
+
 **
 ** LocaleTest
 **

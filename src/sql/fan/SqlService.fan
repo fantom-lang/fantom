@@ -6,6 +6,8 @@
 //   12 Jan 08  John Sublett  Creation
 //
 
+using concurrent
+
 **
 ** SqlService is the interface to a relational database.  It is const
 ** and all state is stored as thread local variables.

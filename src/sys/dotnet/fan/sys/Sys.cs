@@ -103,11 +103,6 @@ namespace Fan.Sys
     public static readonly Type UriType          = initType("Uri");
     public static readonly Type ZipType          = initType("Zip");
 
-    // actos
-    public static readonly Type ActorType        = initType("Actor");
-    public static readonly Type ActorPoolType    = initType("ActorPool");
-    public static readonly Type FutureType       = initType("Future");
-
     // utils
     public static readonly Type DependType       = initType("Depend");
     public static readonly Type LogType          = initType("Log");
@@ -679,11 +674,6 @@ internal static Env m_curEnv;
         ZipEntryFileType = builtin("ZipEntryFile", FileType);
         ZipType          = builtin("Zip",          ObjType);
         EndianType       = builtin("Endian",       EnumType);
-
-        // actos
-        ActorType        = builtin("Actor",        ObjType);
-        ActorPoolType    = builtin("ActorPool",    ObjType);
-        FutureType       = builtin("Future",       ObjType);
 
         // utils
         DependType       = builtin("Depend",       ObjType);

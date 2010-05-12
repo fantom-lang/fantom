@@ -9,20 +9,20 @@
 Overview [#overview]
 ********************
 Fantom includes an [actor framework]`http://en.wikipedia.org/wiki/Actor_model`
-for concurrency.  [Actors]`sys::Actor` are light weight objects which
+for concurrency.  [Actors]`concurrent::Actor` are light weight objects which
 asynchronously process work on a background thread.  Actors are given
 work by sending them asynchronous message.  Actor's then process those
 messages on background threads controlled by an [ActorPool]`#pools`.
 
 Actors [#actors]
 ****************
-The [Actor]`sys::Actor` class is used to define new actors.  All actors
+The [Actor]`concurrent::Actor` class is used to define new actors.  All actors
 are constructed within an [ActorPool]`#pools` which defines how the
 actor is executed.
 
 Actors may define their receive behavior in one of two ways:
   1. Pass a function to the Actor's constructor
-  2. Subclass 'Actor' and override [receive]`sys::Actor.receive`
+  2. Subclass 'Actor' and override [receive]`concurrent::Actor.receive`
 
 Here are two simple examples of an actor which receives an Int
 message and returns the increment:
@@ -51,7 +51,7 @@ Actors are [const classes]`Classes#const` which means they must be
 immutable.  This lets you pass actor references between actors, but
 you can't maintain any mutable state in the actor's fields.
 Instead you can store the actor's "mutable world state" in
-[Actor.locals]`sys::Actor.locals`.  Actor locals is a string/object
+[Actor.locals]`concurrent::Actor.locals`.  Actor locals is a string/object
 map which works like a thread local - a unique map is used for every
 actor.  To prevent naming collisions, you should prefix your map
 keys with your pod name:
@@ -89,24 +89,24 @@ case a serialized copy of the object is passed.  If a message is
 neither immutable or serializable, then 'IOErr' is thrown.
 
 Messages are sent to an actor using of three methods:
-  - [send]`sys::Actor.send`: enqueues the message immediately
-  - [sendLater]`sys::Actor.sendLater`: enqueues the message
+  - [send]`concurrent::Actor.send`: enqueues the message immediately
+  - [sendLater]`concurrent::Actor.sendLater`: enqueues the message
     after a period of time has elapsed
-  - [sendWhenDone]`sys::Actor.sendWhenDone`: enqueues the message
+  - [sendWhenDone]`concurrent::Actor.sendWhenDone`: enqueues the message
     once another message completes processing
 
 Futures [#futures]
 ******************
-All three send methods return a [Future]`sys::Future` which may
+All three send methods return a [Future]`concurrent::Future` which may
 used to access the result of that message.  You can poll for the
-result using [isDone]`sys::Future.isDone` - a future
+result using [isDone]`concurrent::Future.isDone` - a future
 enters the done state by one of three transitions:
   - The actor processes the message and returns a result
   - The actor raises an exception while processing the message
-  - The future is cancelled (see [cancel]`sys::Future.cancel`)
+  - The future is cancelled (see [cancel]`concurrent::Future.cancel`)
 
 Once a future enters the done state, the result is available via
-the [get]`sys::Future.get` method.  If the future is not done,
+the [get]`concurrent::Future.get` method.  If the future is not done,
 then calling 'get' will block the caller until the future becomes
 done.  A timeout may be used to block for a fixed period of time.
 Calling 'get' results in one of these outcomes:
@@ -127,7 +127,7 @@ requests themselves.
 
 Timers [#timers]
 ****************
-The [sendLater]`sys::Actor.sendLater` method can be used to setup
+The [sendLater]`concurrent::Actor.sendLater` method can be used to setup
 a timer.  Timers post a message back to the actor's queue when they
 expire.  Example:
 
@@ -144,7 +144,7 @@ the timer or poll/block until the message has been processed.
 
 Chaining [#chaining]
 ********************
-The [sendWhenDone]`sys::Actor.sendWhenDone` method is used to
+The [sendWhenDone]`concurrent::Actor.sendWhenDone` method is used to
 deliver a message once another message has completed processing.
 Using 'sendWhenDone' allows asynchronous message chaining.  Consider
 this code:
@@ -169,7 +169,7 @@ into a single message to save ourselves some work.  For example, it is
 common in windowing systems to maintain a single union of all the dirty
 portions of a window rather than of a bunch of little rectangles.  An
 actor can have its messages automatically coalesced using the
-[makeCoalescing]`sys::Actor.makeCoalescing` constructor.
+[makeCoalescing]`concurrent::Actor.makeCoalescing` constructor.
 
 Let's look at an example:
 
@@ -217,7 +217,7 @@ its IO based on how fast the processors could work.
 
 Actor Pools [#pools]
 **********************
-All actor's are created within an [ActorPool]`sys::ActorPool`.
+All actor's are created within an [ActorPool]`concurrent::ActorPool`.
 ActorPools manage the execution of actors using a shared thread pool.
 
 As messages are sent to actors, they are allocated a thread to perform
@@ -235,15 +235,15 @@ until one of its actors is sent a message.  If all of a pool's
 actors finish processing their messages, then after a linger period
 all of that pool's threads be freed.
 
-An ActorPool can be manually shutdown using the [stop]`sys::ActorPool.stop`
+An ActorPool can be manually shutdown using the [stop]`concurrent::ActorPool.stop`
 method.  Once 'stop' is called, the pool enters the *stopped* state and
 actors within the pool may not receive any more messages.  However all
 pending messages are allowed to continue processing.  Once all pending
 messages have been processed, the pool enters the *done* state.  Use the
-[join]`sys::ActorPool.join` method to block until an ActorPool has
+[join]`concurrent::ActorPool.join` method to block until an ActorPool has
 fully shutdown.
 
-The [kill]`sys::ActorPool.kill` method can be used to perform an unorderly
+The [kill]`concurrent::ActorPool.kill` method can be used to perform an unorderly
 shutdown.  Unlike 'stop', kill doesn't give actors a chance to finish
 processing their pending message queues - all pending messages are cancelled.
 Actors which are currently  executing a message are interrupted (which may

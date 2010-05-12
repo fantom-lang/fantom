@@ -18,7 +18,7 @@ class Build : BuildPod
   {
     podName  = "gfx"
     summary  = "Graphics API"
-    depends  = ["sys 1.0"]
+    depends  = ["sys 1.0", "concurrent 1.0"]
     srcDirs  = [`fan/`, `test/`]
     javaDirs = Uri[,]
     docSrc   = true

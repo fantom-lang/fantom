@@ -6,6 +6,7 @@
 //   27 Jun 07  Brian Frank  Creation
 //
 
+using concurrent
 using inet
 using web
 
@@ -41,7 +42,7 @@ internal class WispRes : WebRes
     {
       checkUncommitted
       if (statusMsg[it] == null) throw Err("Unknown status code: $it");
-      *statusCode = it
+      &statusCode = it
     }
   }
 
@@ -52,7 +53,7 @@ internal class WispRes : WebRes
   **
   override Str:Str headers := Str:Str[:]
   {
-    get { checkUncommitted; return *headers }
+    get { checkUncommitted; return &headers }
   }
 
   **
@@ -62,7 +63,7 @@ internal class WispRes : WebRes
   **
   override Cookie[] cookies := Cookie[,]
   {
-    get { checkUncommitted; return *cookies }
+    get { checkUncommitted; return &cookies }
   }
 
   **
@@ -182,7 +183,7 @@ internal class WispRes : WebRes
       // socket stream
       if (isPersistent)
       {
-        cout := WebUtil.makeContentOutStream(*headers, sout)
+        cout := WebUtil.makeContentOutStream(&headers, sout)
         if (cout != null) webOut = WebOutStream(cout)
       }
 
@@ -195,8 +196,8 @@ internal class WispRes : WebRes
 
     // write response line and headers
     sout.print("HTTP/1.1 ").print(statusCode).print(" ").print(statusMsg[statusCode]).print("\r\n");
-    *headers.each |Str v, Str k| { sout.print(k).print(": ").print(v).print("\r\n") };
-    *cookies.each |Cookie c| { sout.print("Set-Cookie: ").print(c).print("\r\n") }
+    &headers.each |Str v, Str k| { sout.print(k).print(": ").print(v).print("\r\n") };
+    &cookies.each |Cookie c| { sout.print("Set-Cookie: ").print(c).print("\r\n") }
     sout.print("\r\n").flush
   }
 
