@@ -20,17 +20,13 @@ class NamespaceTest : CompilerTest
 
   Void testReflect()
   {
-    c := Compiler(CompilerInput())
-    ns := ReflectNamespace(c)
-    c.ns = ns
+    ns := ReflectNamespace()
     verifySys(ns)
   }
 
   Void testFPod()
   {
-    c := Compiler(CompilerInput())
-    ns := FPodNamespace(c, Env.cur.homeDir + `lib/fan/`)
-    c.ns = ns
+    ns := FPodNamespace(Env.cur.homeDir + `lib/fan/`)
     verifySys(ns)
   }
 

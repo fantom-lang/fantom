@@ -86,7 +86,7 @@ abstract class GenericType : CType
     }
     else
     {
-      if (nn.name.size != 1) throw ns.err("Cannot parameterize $t.qname", null)
+      if (nn.name.size != 1) throw Err("Cannot parameterize $t.qname")
       t = doParameterize(nn.name[0])
     }
     return nullable ? t.toNullable : t

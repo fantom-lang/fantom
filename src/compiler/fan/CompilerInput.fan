@@ -55,12 +55,10 @@ class CompilerInput
   Depend[] depends := Depend[,]
 
   **
-  ** The directory to look in for the dependency pod file (and
-  ** potentially their recursive dependencies).  If null then we
-  ** use the compiler's own pod definitions via reflection (which
-  ** is more efficient).
+  ** Namespace used to resolve dependency pods/types.
+  ** Default implementation uses reflection of the compiler's VM.
   **
-  File? dependsDir := null
+  CNamespace ns := ReflectNamespace()
 
   **
   ** Pod meta-data name/value pairs
