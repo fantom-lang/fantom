@@ -22,10 +22,10 @@ class JavaBridge : CBridge
   **
   ** Construct a JavaBridge for current environment
   **
-  new make(Compiler c)
+  new make(Compiler c, ClassPath cp := ClassPath.makeForCurrent)
     : super(c)
   {
-    this.cp = ClassPath.makeForCurrent
+    this.cp = cp
   }
 
 //////////////////////////////////////////////////////////////////////////

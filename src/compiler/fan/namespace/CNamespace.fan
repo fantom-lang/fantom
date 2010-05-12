@@ -151,6 +151,23 @@ abstract class CNamespace
     bridge := bridgeCache[name]
     if (bridge != null) return bridge
 
+    // delegate to findBridge
+    bridge = findBridge(compiler, name, loc)
+
+    // put into cache
+    bridgeCache[name] = bridge
+    return bridge
+  }
+  private Str:CBridge bridgeCache := Str:CBridge[:]  // keyed by pod name
+
+  **
+  ** Subclass hook to resolve a FFI name to a CBridge implementation.
+  ** Throw CompilerErr if there is a problem resolving the bridge.
+  ** The default implementation attempts to resolve the indexed
+  ** property "compiler.bridge.$name" to a Type qname.
+  **
+  protected virtual CBridge findBridge(Compiler compiler, Str name, Loc? loc)
+  {
     // resolve the compiler bridge using indexed props
     t := Env.cur.index("compiler.bridge.${name}")
     if (t.size > 1)
@@ -160,15 +177,10 @@ abstract class CNamespace
 
     // construct bridge instance
     try
-      bridge = Type.find(t.first).make([compiler])
+      return Type.find(t.first).make([compiler])
     catch (Err e)
       throw CompilerErr("Cannot construct FFI bridge '$t.first'", loc, e)
-
-    // put into cache
-    bridgeCache[name] = bridge
-    return bridge
   }
-  private Str:CBridge bridgeCache := Str:CBridge[:]  // keyed by pod name
 
   **
   ** Attempt to import the specified pod name against our
