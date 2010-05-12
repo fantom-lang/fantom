@@ -475,10 +475,16 @@ class ParserTest : XmlTest
     // verify actual is expected
     verifyDoc(actual, expected)
 
-    // verify round trip
+    // verify round trip via Buf
     buf := Buf()
     actual.write(buf.out)
     roundtrip := XParser(buf.flip.readAllStr.in).parseDoc
+    verifyDoc(roundtrip, expected)
+
+    // verify round trip via StrBuf
+    sb := StrBuf()
+    actual.write(sb.out)
+    roundtrip = XParser(sb.toStr.in).parseDoc
     verifyDoc(roundtrip, expected)
 
     return actual

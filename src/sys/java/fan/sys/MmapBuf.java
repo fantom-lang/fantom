@@ -241,6 +241,18 @@ public class MmapBuf
       return this;
     }
 
+    public OutStream writeChar(long c)
+    {
+      charsetEncoder.encode((char)c, this);
+      return this;
+    }
+
+    public OutStream writeChar(char c)
+    {
+      charsetEncoder.encode(c, this);
+      return this;
+    }
+
     public OutStream flush()
     {
       MmapBuf.this.flush();
