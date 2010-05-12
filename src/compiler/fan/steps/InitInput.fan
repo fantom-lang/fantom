@@ -71,39 +71,8 @@ class InitInput : CompilerStep
   **
   private Void initNamespace()
   {
-    checkDependsDir
-    if (input.dependsDir == null)
-      compiler.ns = ReflectNamespace(compiler)
-    else
-      compiler.ns = FPodNamespace(compiler, input.dependsDir)
-  }
-
-  **
-  ** If dependsDir is not null, then check it out.
-  ** This is used for bootstrap to use fcode instead of
-  ** reflection for dependencies.
-  **
-  private Void checkDependsDir()
-  {
-    // if null then we are using
-    // compiler's own pods via reflection
-    dir := input.dependsDir
-    if (dir == null) return
-
-    // check that it isn't the same as boot repo, in
-    // which case we're better off using reflection
-    if (dir.normalize == (Env.cur.homeDir + `lib/fan/`).normalize)
-    {
-      input.dependsDir = null
-      return
-    }
-
-    // check that fan pods directory exists
-    if (!dir.exists) throw err("Invalid dependsDir: $dir", loc)
-
-    // save it away
-    input.dependsDir = dir
-    log.info("Depends [$dir]")
+    compiler.ns = input.ns
+    input.ns.c = compiler
   }
 
 //////////////////////////////////////////////////////////////////////////

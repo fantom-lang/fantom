@@ -21,7 +21,8 @@ class NamespaceTest : JavaTest
   Void testReflect()
   {
     compiler := Compiler(CompilerInput())
-    ns := ReflectNamespace(compiler)
+    ns := ReflectNamespace()
+    ns->c = compiler
     compiler.ns = ns
 
     // java.lang

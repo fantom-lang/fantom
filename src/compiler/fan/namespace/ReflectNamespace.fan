@@ -21,8 +21,7 @@ class ReflectNamespace : CNamespace
   **
   ** Construct a ReflectNamespace
   **
-  new make(Compiler c)
-    : super(c)
+  new make()
   {
     this.pods = Str:ReflectPod[:]
     init

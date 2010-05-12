@@ -12,17 +12,8 @@
 ** and slots between the entities currently being compiled and the
 ** entities being imported from pre-compiled pods.
 **
-abstract class CNamespace : CompilerSupport
+abstract class CNamespace
 {
-
-//////////////////////////////////////////////////////////////////////////
-// Construction
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Construct with associated compiler.
-  **
-  new make(Compiler c) : super(c) {}
 
 //////////////////////////////////////////////////////////////////////////
 // Initialization
@@ -256,6 +247,14 @@ abstract class CNamespace : CompilerSupport
     if (t == null) throw UnknownTypeErr("sys::$id")
     return t
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Compiler
+//////////////////////////////////////////////////////////////////////////
+
+  ** Used for resolveBridge only
+  internal Compiler compiler() { c ?: throw Err("Compiler not associated with CNamespace") }
+  internal Compiler? c
 
 //////////////////////////////////////////////////////////////////////////
 // Dependencies

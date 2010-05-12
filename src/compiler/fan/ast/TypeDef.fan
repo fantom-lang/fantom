@@ -104,7 +104,7 @@ class TypeDef : DefNode, CType
     // sanity check
     name := s.name
     if (hasSlot(name))
-      throw ns.err("Internal error: duplicate slot $name", loc)
+      throw Err("Internal error: duplicate slot $name [$loc.toLocStr]")
 
     // add to all slots table
     slotMap[name] = s
@@ -137,9 +137,9 @@ class TypeDef : DefNode, CType
   {
     // sanity checks
     if (oldSlot.name != newSlot.name)
-      throw ns.err("Not same names: $oldSlot != $newSlot", loc)
+      throw Err("Internal error: not same names: $oldSlot != $newSlot [$loc.toLocStr]")
     if (slotMap[oldSlot.name] !== oldSlot)
-      throw ns.err("Old slot not mapped: $oldSlot", loc)
+      throw Err("Internal error: old slot not mapped: $oldSlot [$loc.toLocStr]")
 
     // remap in slotMap table
     name := oldSlot.name

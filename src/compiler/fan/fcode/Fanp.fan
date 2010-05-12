@@ -105,8 +105,7 @@ class Fanp
   {
     if (file == null)
     {
-      c := Compiler(CompilerInput()) // dummy compiler
-      ns := FPodNamespace(c, null)
+      ns := FPodNamespace(null)
       FPod fpod := ns.resolvePod(podName, null)
       fpod.readFully
       return fpod

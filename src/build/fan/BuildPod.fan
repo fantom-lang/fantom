@@ -174,7 +174,6 @@ abstract class BuildPod : BuildScript
     ci.depends     = depends.map |s->Depend| { Depend(s) }
     ci.meta        = meta
     ci.index       = index
-    ci.dependsDir  = dependsDir?.toFile
     ci.baseDir     = scriptDir
     ci.srcDirs     = srcDirs
     ci.resDirs     = resDirs
@@ -184,6 +183,13 @@ abstract class BuildPod : BuildScript
     ci.mode        = CompilerInputMode.file
     ci.outDir      = outDir.toFile
     ci.output      = CompilerOutputMode.podFile
+
+    if (dependsDir != null)
+    {
+      f := dependsDir.toFile
+      if (!f.exists) throw fatal("Invalid dependsDir: $f")
+      ci.ns = FPodNamespace(f)
+    }
 
     try
     {
