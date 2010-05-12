@@ -48,7 +48,6 @@ class CheckErrorsTest : CompilerTest
       private class B {}
       protected class C {}
       virtual static class D {}
-      native class E {}
       readonly class F {}
       once class G {}
       public internal class H {}
@@ -60,11 +59,10 @@ class CheckErrorsTest : CompilerTest
          3, 11, "Cannot use 'protected' modifier on type",
          4, 16, "Cannot use 'static' modifier on type",
          4, 16, "Cannot use 'virtual' modifier on type",
-         5,  8, "Cannot use 'native' modifier on type",
-         6, 10, "Cannot use 'readonly' modifier on type",
-         7,  6, "Cannot use 'once' modifier on type",
-         8, 17, "Invalid combination of 'public' and 'internal' modifiers",
-         9, 16, "Invalid combination of 'abstract' and 'final' modifiers",
+         5, 10, "Cannot use 'readonly' modifier on type",
+         6,  6, "Cannot use 'once' modifier on type",
+         7, 17, "Invalid combination of 'public' and 'internal' modifiers",
+         8, 16, "Invalid combination of 'abstract' and 'final' modifiers",
        ])
   }
 

@@ -30,7 +30,6 @@ public class Parser : CompilerSupport
     this.tokens    = unit.tokens
     this.numTokens = unit.tokens.size
     this.closures  = closures
-    this.isSys     = compiler.isSys
     reset(0)
   }
 
@@ -125,6 +124,7 @@ public class Parser : CompilerSupport
     // <flags>
     flags := flags(false)
     if (flags.and(ProtectionMask.not) == 0) flags = flags.or(FConst.Public)
+    if (compiler.isSys) flags = flags.or(FConst.Native)
 
     // local working variables
     loc     := cur
@@ -662,7 +662,7 @@ public class Parser : CompilerSupport
     consume(Token.rparen)
 
     // if no body expected
-    if (isSys) flags = flags.or(FConst.Native)
+    if (parent.isNative) flags = flags.or(FConst.Native)
     if (flags.and(FConst.Abstract) != 0 || flags.and(FConst.Native) != 0)
     {
       if (curt === Token.lbrace)
@@ -2153,7 +2153,7 @@ if (curt == Token.star)
     if (types == null || types.isEmpty)
     {
       // handle sys generic parameters
-      if (isSys && id.size == 1)
+      if (compiler.isSys && id.size == 1)
         return ns.genericParameter(id)
 
       // not found in imports
@@ -2377,7 +2377,6 @@ if (curt == Token.star)
   private Token? curt             // current token type
   private TokenVal? peek          // next token
   private Token? peekt            // next token type
-  private Bool isSys              // are we parsing the sys pod itself
   private Bool inFieldInit        // are we currently in a field initializer
   private TypeDef? curType        // current TypeDef scope
   private SlotDef? curSlot        // current SlotDef scope

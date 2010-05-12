@@ -86,7 +86,7 @@ class CheckErrors : CompilerStep
     if (foreign != null) foreign.bridge.checkType(t)
 
     // check some knuckle head doesn't override type
-    if (t.slotDef("typeof") != null && !compiler.isSys)
+    if (t.slotDef("typeof") != null && !isSys)
       err("Cannot override Obj.typeof()", t.slotDef("typeof").loc)
 
     // check inheritance
@@ -119,7 +119,6 @@ class CheckErrors : CompilerStep
 
     // these modifiers are never allowed on a type
     if (flags.and(FConst.Ctor) != 0)      err("Cannot use 'new' modifier on type", loc)
-    if (flags.and(FConst.Native) != 0)    err("Cannot use 'native' modifier on type", loc)
     if (flags.and(Parser.Once) != 0)      err("Cannot use 'once' modifier on type", loc)
     if (flags.and(FConst.Override) != 0)  err("Cannot use 'override' modifier on type", loc)
     if (flags.and(FConst.Private) != 0)   err("Cannot use 'private' modifier on type", loc)

@@ -32,26 +32,16 @@ Compilation Unit [#compilationUnit]
 Type Def [#typeDef]
 *******************
 
-  <typeDef>        :=  <classDef> | <mixinDef> | <enumDef> | <facetDef>
+  <typeDef>        :=  <classDef> | <mixinDef> | <facetDef> | <enumDef>
 
-  <classDef>       :=  <classHeader> <classBody>
-  <classHeader>    :=  [<doc>] <facets> <classFlags> "class" <id> [<inheritance>]
-  <classFlags>     :=  <classFlag>*
-  <classFlag>      :=  <protection> | "abstract" | "final" | "const"
-  <classBody>      :=  "{" <slotDefs> "}"
+  <classDef>       :=  <typeHeader> "class" <id> [<inheritance>] "{" <slotDefs> "}"
+  <mixinDef>       :=  <typeHeader> "mixin" <id> [<inheritance>] "{" <slotDefs> "}"
+  <facetDef>       :=  <typeHeader> "facet" "class" <id> [<inheritance>] "{" <slotDefs> "}"
+  <enumDef>        :=  <typeHeader> "enum" "class" <id> [<inheritance>] "{" <enumValDefs> <slotDefs> "}"
 
-  <enumDef>        :=  <enumHeader> <enumBody>
-  <enumHeader>     :=  [<doc>] <facets> [<protection>] "enum" "class" <id> [<inheritance>]
-  <enumBody>       :=  "{" <enumValDefs> <slotDefs> "}"
-
-  <facetDef        :=  <facetHeader> <enumBody>
-  <facetHeader>    :=  [<doc>] <facets> [<protection>] "facet" "class" <id> [<inheritance>]
-  <facetBody>      :=  "{" <slotDefs> "}"
-
-  <mixinDef>       :=  <mixinHeader> <mixinBody>
-  <mixinHeader>    :=  [<doc>] <facets> [<protection>] "mixin" <id> [<inheritance>]
-  <mixinBody>      :=  "{" <slotDefs> "}"
-
+  <typeHeader>     :=  [<doc>] <facets> <typeFlags>
+  <typeFlags>      :=  <typeFlag>*
+  <typeFlag>       :=  <protection> | "abstract" | "final" | "const" | "native"
   <protection>     :=  "public" | "protected" | "private" | "internal"
   <inheritance>    :=  ":" <typeList>
 
