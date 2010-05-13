@@ -101,22 +101,29 @@ class UsingAndTypeScanner : CompilerSupport
   {
     u := Using(tok)
 
-    // using [ffi]
-    u.podName = ""
-    if (curt === Token.lbracket)
+    // using "some pod name"
+    if (curt === Token.strLiteral)
     {
-      consume
-      u.podName = "[" + consumeId + "]"
-      consume(Token.rbracket)
-
+      u.podName = consume(Token.strLiteral).val
     }
-
-    // using [ffi] pod
-    u.podName += consumeId
-    while (curt === Token.dot) // allow dots in pod name
+    else
     {
-      consume
-      u.podName += "." + consumeId
+      // using [ffi]
+      u.podName = ""
+      if (curt === Token.lbracket)
+      {
+        consume
+        u.podName = "[" + consumeId + "]"
+        consume(Token.rbracket)
+      }
+
+      // using [ffi] pod
+      u.podName += consumeId
+      while (curt === Token.dot) // allow dots in pod name
+      {
+        consume
+        u.podName += "." + consumeId
+      }
     }
 
     // using [ffi] pod::type

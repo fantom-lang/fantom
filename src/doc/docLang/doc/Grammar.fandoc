@@ -26,8 +26,8 @@ Compilation Unit [#compilationUnit]
   <usingPod>        :=  "using" <podSpec> <eos>
   <usingType>       :=  "using" <podSpec> "::" <id> <eos>
   <usingAs>         :=  "using" <podSpec> "::" <id> "as" <id> <eos>
-  <podSpec>         :=  [ffi] <id> ("." <id>)*
-  <ffi>             :=  "[" <id> "]"
+  <podSpec>         :=  <id> | <str> | <ffiPodSpec>
+  <ffiPodSpec>      := "[" <id> "]" <id> ("." <id>)*
 
 Type Def [#typeDef]
 *******************
