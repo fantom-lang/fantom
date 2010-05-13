@@ -118,6 +118,7 @@ class ShowScript : Weblet
     out.head
       out.title.w("FWT Demo - $file.name").titleEnd
       out.includeJs(`/pod/sys/sys.js`)
+      out.includeJs(`/pod/concurrent/concurrent.js`)
       out.includeJs(`/pod/web/web.js`)
       out.includeJs(`/pod/gfx/gfx.js`)
       out.includeJs(`/pod/dom/dom.js`)
