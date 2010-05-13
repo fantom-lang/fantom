@@ -62,8 +62,12 @@ class JsPod : JsNode
     // write types
     types.each |t|
     {
-      t.write(out)
-      if (t.hasNatives) writePeer(out, t)
+      if (t.isNative) writePeer(out, t, false)
+      else
+      {
+        t.write(out)
+        if (t.hasNatives) writePeer(out, t, true)
+      }
     }
 
     // write type info
@@ -85,9 +89,9 @@ class JsPod : JsNode
     p?.write(out)
   }
 
-  Void writePeer(JsWriter out, JsType t)
+  Void writePeer(JsWriter out, JsType t, Bool isPeer)
   {
-    key  := "${t.peer.name}Peer.js"
+    key  := isPeer ? "${t.peer.name}Peer.js" : "${t.name}.js"
     file := natives[key]
     if (file == null)
     {
