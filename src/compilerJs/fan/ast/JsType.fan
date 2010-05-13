@@ -22,6 +22,7 @@ class JsType : JsNode
     this.sig         = def.signature
     this.flags       = def.flags
     this.peer        = findPeer(s, def)
+    this.isNative    = def.isNative
     this.hasNatives  = null != def.slots.find |n| { n.isNative && n.parent.qname == def.qname }
     this.isMixin     = def.isMixin
     this.isSynthetic = def.isSynthetic
@@ -113,6 +114,7 @@ class JsType : JsNode
   Bool isMixin           // is this type a mixin
   Bool isSynthetic       // is type synthetic
   JsTypeRef? peer        // peer type if has one
+  Bool isNative          // is this a full native class
   Bool hasNatives        // does type have any native slots directly
   JsTypeRef[] mixins     // mixins for this type
   JsMethod[] methods     // methods
