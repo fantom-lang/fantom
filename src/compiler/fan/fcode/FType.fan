@@ -37,8 +37,8 @@ class FType : CType
   {
     get
     {
-      if (*base == null) *base = fpod.toType(fbase)
-      return *base
+      if (&base == null) &base = fpod.toType(fbase)
+      return &base
     }
   }
 

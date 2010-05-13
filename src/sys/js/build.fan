@@ -39,6 +39,9 @@ class Build : BuildScript
     writeSysSupport(out)
     out.close
 
+    // close sys.pod FPod.zip to release lock so we can rejar that file
+    types.first.pod->zip->close
+
     // add into pod file
     jar := JdkTask.make(this).jarExe
     pod := devHomeDir + `lib/fan/sys.pod`
@@ -50,10 +53,8 @@ class Build : BuildScript
   private CType[] resolveSysTypes()
   {
     lib := devHomeDir + `lib/fan/`
-    input := CompilerInput { dependsDir=lib }
-    compiler := Compiler(input)
-    namespace := FPodNamespace(compiler, null) // , input.dependsDir)
-    return namespace.sysPod.types
+    ns := FPodNamespace(lib)
+    return ns.sysPod.types
   }
 
   private Void writeSys(OutStream out)

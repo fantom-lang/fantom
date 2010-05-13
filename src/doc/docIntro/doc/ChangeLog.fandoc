@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.53 (working)*
+*Build 1.0.53 (13 May 10)*
 - Fix boxed boolean JVM checks
 - Make Int.shiftr unsigned (Java >>> operator)
 - Add etc/sys/config.props support to fanlaunch bash script
@@ -26,6 +26,24 @@
 - Fix FileLogger/LogMod to write headers on open of new files per day/month
 - Compiler support for native classes
 - Allow CompilerInput to specify a custom CNamespace
+- #569: docCompiler gives |Obj| for |This| it-block
+- #965: Compiler TypeParser doesn't handle Java FFI
+- #977: New concurrent pod (move Actor)
+- #1031: StrBufOutStream does not delegate correctly
+- #1039: It not typed as Obj? correctly
+- #1045: Compiler check error for LoadMixinInstance
+- #1051: Gradient API
+- #1053: HTTP 1.0 request using chunked transfer encoding
+- #1055: Misc BNF grammar problems
+- #1056: It-block parameters have incorrect reflection signature
+- #1057: compiler bug in exprOrLocalDefStmt
+- #1060: Ensure Map types don't have nullable keys
+- #1066: Double ?? are allowed when defining type which should not
+- #1067: compilerJava - findMethods() patch
+- #1073: Storage operator
+- #1077: VerifyError when Safe Invoke is used to call java method returning int
+- #1079: ResolveImports: catch CompilerErr around resolveImportedTypes() call
+- #1080: BuildJava should allow specifiybg custom classpath/jars
 
 *Build 1.0.52 (24 Mar 10)*
 - Color: makeArgb, makeRgb

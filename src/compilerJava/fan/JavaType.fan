@@ -43,9 +43,9 @@ class JavaType : CType
 
   override CFacet? facet(Str qname) { null }
 
-  override CType? base { get { load; return *base } }
-  override CType[] mixins { get { load; return *mixins } }
-  override Int flags { get { load; return *flags } }
+  override CType? base { get { load; return &base } }
+  override CType[] mixins { get { load; return &mixins } }
+  override Int flags { get { load; return &flags } }
 
   override Bool isForeign() { true }
   override Bool isSupported() { arrayRank <= 1 } // multi-dimensional arrays unsupported
@@ -62,7 +62,7 @@ class JavaType : CType
 
   override once CType toListOf() { ListType(this) }
 
-  override readonly Str:CSlot slots { get { load; return *slots } }
+  override readonly Str:CSlot slots { get { load; return &slots } }
 
   override CSlot? slot(Str name) { slots[name] }
 
