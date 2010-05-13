@@ -58,7 +58,7 @@ class InteropTest : JavaTest
   Void testPrimitiveInstanceFields()
   {
     compile(
-     "using [java] fanx.test
+     "using \"[java]fanx.test\"
       class Foo
       {
         Obj init() { return InteropTest() { numl(9999) } }

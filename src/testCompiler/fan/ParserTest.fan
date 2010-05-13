@@ -22,7 +22,7 @@ class ParserTest : CompilerTest
   {
     parse(
      "using compiler::Compiler         // explicit using
-      using compiler::Loc as XLoc      // as from sys
+      using \"compiler\"::Loc as XLoc      // as from sys
       using $podName::Int as MyInt     // as from me vs sys
       using $podName::Float            // me overrides sys
       class Foo {}

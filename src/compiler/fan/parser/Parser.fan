@@ -56,12 +56,12 @@ public class Parser : CompilerSupport
   ** Parse <using>* - note that we are just skipping them because
   ** they are already parsed by ScanForUsingsAndTypes.
   **
-  **   <using>     :=  <usingPod> | <usingType> | <usingAs>
-  **   <usingPod>  :=  "using" <podSpec> <eos>
-  **   <usingType> :=  "using" <podSpec> "::" <id> <eos>
-  **   <usingAs>   :=  "using" <podSpec> "::" <id> "as" <id> <eos>
-  **   <podSpec>   :=  [ffi] <id> ("." <id>)*
-  **   <ffi>       :=  "[" <id> "]"
+  **   <using>       :=  <usingPod> | <usingType> | <usingAs>
+  **   <usingPod>    :=  "using" <podSpec> <eos>
+  **   <usingType>   :=  "using" <podSpec> "::" <id> <eos>
+  **   <usingAs>     :=  "using" <podSpec> "::" <id> "as" <id> <eos>
+  **   <podSpec>     :=  <id> | <str> | <ffiPodSpec>
+  **   <ffiPodSpec>  := "[" <id> "]" <id> ("." <id>)*
   **
   private Void usings()
   {
@@ -72,9 +72,16 @@ public class Parser : CompilerSupport
   private Void skipUsing()
   {
     consume(Token.usingKeyword)
-    if (curt === Token.lbracket) { consume; consumeId; consume(Token.rbracket) }
-    consumeId
-    while (curt === Token.dot) { consume; consumeId }
+
+    // <str> | <id> | "[" <id> "]" <id> ("." <id>)*
+    if (curt === Token.strLiteral) consume
+    else
+    {
+      if (curt === Token.lbracket) { consume; consumeId; consume(Token.rbracket) }
+      consumeId
+      while (curt === Token.dot) { consume; consumeId }
+    }
+
     if (curt === Token.doubleColon)
     {
       consume; consumeId
