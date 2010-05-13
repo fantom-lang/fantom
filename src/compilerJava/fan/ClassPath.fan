@@ -101,7 +101,7 @@ class ClassPath
   **
   ** Load the map of package:class[] by walking every entry
   **
-  private Str:Str[] loadClasses()
+  protected virtual Str:Str[] loadClasses()
   {
     acc := Str:Str[][:]
     entries.each |File f|  { loadEntry(acc, f) }

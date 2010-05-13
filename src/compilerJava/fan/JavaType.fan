@@ -43,9 +43,9 @@ class JavaType : CType
 
   override CFacet? facet(Str qname) { null }
 
-  override CType? base { get { load; return *base } internal set}
-  override CType[] mixins { get { load; return *mixins } internal set }
-  override Int flags { get { load; return *flags } internal set }
+  override CType? base { get { load; return *base } }
+  override CType[] mixins { get { load; return *mixins } }
+  override Int flags { get { load; return *flags } }
 
   override Bool isForeign() { true }
   override Bool isSupported() { arrayRank <= 1 } // multi-dimensional arrays unsupported
@@ -139,7 +139,7 @@ class JavaType : CType
     else
     {
       // map Java members to slots using Java reflection
-      JavaReflect.load(this, slots)
+      pod.bridge.loadType(this, slots)
 
       // merge in sys::Obj slots
       ns.objType.slots.each |CSlot s|

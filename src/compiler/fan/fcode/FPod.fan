@@ -19,7 +19,7 @@ final class FPod : CPod, FConst
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(FPodNamespace? ns, Str podName, Zip? zip)
+  new make(CNamespace? ns, Str podName, Zip? zip)
   {
     if (ns != null) this.ns = ns
     this.name       = podName
@@ -151,7 +151,7 @@ final class FPod : CPod, FConst
   **
   Void read()
   {
-    echo("     FPod.reading [$zip.file]...")
+    // echo("     FPod.reading [$zip.file]...")
 
     // read pod meta-data
     meta = this.in(`/meta.props`).readProps
