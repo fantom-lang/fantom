@@ -1301,7 +1301,7 @@ class TypeCheckExpr : Expr
   }
 
   ** From type if coerce
-  CType? from { get { return *from ?: target.ctype } }
+  CType? from { get { return &from ?: target.ctype } }
 
   Expr target
   CType check    // to type if coerce

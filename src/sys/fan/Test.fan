@@ -115,7 +115,7 @@ abstract class Test
   ** Examples:
   **   verifyErr(ParseErr#) { Int.fromStr("@#!") }
   **
-  Void verifyErr(Type errType, |This| c)
+  Void verifyErr(Type errType, |Test| c)
 
   **
   ** Throw a test failure exception.  If msg is non-null, include
