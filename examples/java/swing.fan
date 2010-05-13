@@ -9,6 +9,7 @@
 
 using [java] javax.swing
 using [java] java.awt.event
+using concurrent
 
 **
 ** Simple Swing app using Java FFI
