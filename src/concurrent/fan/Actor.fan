@@ -12,6 +12,7 @@
 ** See [docLang::Actors]`docLang::Actors` and
 ** [examples]`examples::sys-actors`.
 **
+@Js
 native const class Actor
 {
 
