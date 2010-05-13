@@ -13,7 +13,7 @@ using compiler
 **
 class JsMethod : JsSlot
 {
-  new make(CompilerSupport s, MethodDef m) : super(s, m)
+  new make(JsCompilerSupport s, MethodDef m) : super(s, m)
   {
     this.parentPeer = JsType.findPeer(s, m.parent)
     this.isCtor     = m.isCtor
@@ -42,9 +42,9 @@ class JsMethod : JsSlot
              }").nl
 
       // write factory make$ method
-      thisName = "self"
+      support.thisName = "self"
       writeMethod(out, "$name\$", ctorParams)
-      thisName = "this"
+      support.thisName = "this"
     }
     else if (isSetter) writeMethod(out, "$name\$", params)
     else writeMethod(out, name, params)
@@ -71,7 +71,7 @@ class JsMethod : JsSlot
     }
 
     // closure support
-    if (hasClosure) out.w("var \$this = $thisName;").nl
+    if (hasClosure) out.w("var \$this = $support.thisName;").nl
 
     if (isNative)
     {
@@ -134,7 +134,7 @@ class JsMethod : JsSlot
 **
 class JsMethodParam : JsNode
 {
-  new make(CompilerSupport s, CParam p) : super(s)
+  new make(JsCompilerSupport s, CParam p) : super(s)
   {
     this.name = vnameToJs(p.name)
     this.paramType = JsTypeRef(s, p.paramType)
@@ -142,12 +142,12 @@ class JsMethodParam : JsNode
     if (hasDef) this.defVal = JsExpr.makeFor(s, p->def)
   }
 
-  new makeThis(CompilerSupport s) : super.make(s)
+  new makeThis(JsCompilerSupport s) : super.make(s)
   {
     this.name = "this"
   }
 
-  new makeSelf(CompilerSupport s) : super.make(s)
+  new makeSelf(JsCompilerSupport s) : super.make(s)
   {
     this.name = "self"
   }

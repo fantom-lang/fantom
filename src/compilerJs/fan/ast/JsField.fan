@@ -13,7 +13,7 @@ using compiler
 **
 class JsField : JsSlot
 {
-  new make(CompilerSupport s, FieldDef f) : super(s, f)
+  new make(JsCompilerSupport s, FieldDef f) : super(s, f)
   {
     this.ftype = JsTypeRef(s, f.fieldType)
   }

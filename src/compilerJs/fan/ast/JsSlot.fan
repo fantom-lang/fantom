@@ -13,7 +13,7 @@ using compiler
 **
 abstract class JsSlot : JsNode
 {
-  new make(CompilerSupport s, SlotDef def) : super(s)
+  new make(JsCompilerSupport s, SlotDef def) : super(s)
   {
     this.parent     = qnameToJs(def.parentDef)
     this.name       = vnameToJs(def.name)
@@ -40,7 +40,7 @@ abstract class JsSlot : JsNode
 **
 class JsSlotRef : JsNode
 {
-  new make(CompilerSupport cs, CSlot s) : super(cs)
+  new make(JsCompilerSupport cs, CSlot s) : super(cs)
   {
     this.parent     = qnameToJs(s.parent)
     this.name       = vnameToJs(s.name)
