@@ -25,7 +25,7 @@ internal class JavaReflect
   ** Map class meta-data and Java members to Fantom slots
   ** for the specified JavaType
   **
-  static Void load(JavaType self, Str:CSlot slots)
+  static Void loadType(JavaType self, Str:CSlot slots)
   {
     // map to Java class
     cls := toJavaClass(self)
