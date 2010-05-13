@@ -28,7 +28,7 @@ class CompileJsPlugin : CompilerStep
   override Void run()
   {
     buf := StrBuf()
-    jsPod = JsPod(this, pod, types)
+    jsPod = JsPod(JsCompilerSupport(this), pod, types)
     jsPod.write(JsWriter(buf.out))
     compiler.jsPod = jsPod
     compiler.js    = buf.toStr

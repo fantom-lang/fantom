@@ -13,7 +13,7 @@ using compiler
 **
 class JsProps : JsNode
 {
-  new make(PodDef pod, File file, Uri uri, CompilerSupport s) : super(s)
+  new make(PodDef pod, File file, Uri uri, JsCompilerSupport s) : super(s)
   {
     this.pod  = pod
     this.file = file

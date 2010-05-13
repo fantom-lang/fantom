@@ -7,7 +7,6 @@
 //
 
 using compiler
-using concurrent
 
 **
 ** JsNode translates a compiler::Node into the equivalent JavaScript
@@ -20,7 +19,7 @@ abstract class JsNode
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(CompilerSupport support)
+  new make(JsCompilerSupport support)
   {
     this.support = support
   }
@@ -110,7 +109,7 @@ abstract class JsNode
     "sys::Num":     true,
     "sys::Str":     true
   ]
-
+/*
   **
   ** The name of the 'this' var.
   **
@@ -129,7 +128,7 @@ abstract class JsNode
     Actor.locals["compilerJs.lastId"] = id + 1
     return "\$_u$id"
   }
-
-  CompilerSupport support
+*/
+  JsCompilerSupport support
 
 }

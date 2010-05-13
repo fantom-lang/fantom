@@ -7,14 +7,13 @@
 //
 
 using compiler
-using concurrent
 
 **
 ** JsType
 **
 class JsType : JsNode
 {
-  new make(CompilerSupport s, TypeDef def) : super(s)
+  new make(JsCompilerSupport s, TypeDef def) : super(s)
   {
     this.base        = JsTypeRef(s, def.base)
     this.qname       = qnameToJs(def)
@@ -38,7 +37,7 @@ class JsType : JsNode
     }
   }
 
-  static JsTypeRef? findPeer(CompilerSupport cs, CType def)
+  static JsTypeRef? findPeer(JsCompilerSupport cs, CType def)
   {
     CType? t := def
     while (t != null)
@@ -131,20 +130,15 @@ class JsType : JsNode
 **
 class JsTypeRef : JsNode
 {
-  static JsTypeRef make(CompilerSupport cs, CType ref)
+  static JsTypeRef make(JsCompilerSupport cs, CType ref)
   {
-    Str:JsTypeRef map := Actor.locals["compilerJs.typeRef"] ?: Str:JsTypeRef[:]
     key := ref.signature
-    js  := map[key]
-    if (js == null)
-    {
-      map[key] = js = JsTypeRef.makePriv(cs, ref)
-      Actor.locals["compilerJs.typeRef"] = map
-    }
+    js  := cs.typeRef[key]
+    if (js == null) cs.typeRef[key] = js = JsTypeRef.makePriv(cs, ref)
     return js
   }
 
-  private new makePriv(CompilerSupport cs, CType ref) : super.make(cs)
+  private new makePriv(JsCompilerSupport cs, CType ref) : super.make(cs)
   {
     this.qname = qnameToJs(ref)
     this.pod   = ref.pod.name

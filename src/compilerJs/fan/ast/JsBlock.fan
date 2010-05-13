@@ -13,7 +13,7 @@ using compiler
 **
 class JsBlock : JsNode
 {
-  new make(CompilerSupport support, Block block) : super(support)
+  new make(JsCompilerSupport support, Block block) : super(support)
   {
     this.stmts = block.stmts.map |s->JsStmt| { JsStmt.makeFor(support, s) }
   }

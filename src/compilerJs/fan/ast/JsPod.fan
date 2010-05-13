@@ -13,7 +13,7 @@ using compiler
 **
 class JsPod : JsNode
 {
-  new make(CompilerSupport s, PodDef pod, TypeDef[] defs) : super(s)
+  new make(JsCompilerSupport s, PodDef pod, TypeDef[] defs) : super(s)
   {
     this.name  = pod.name
     this.types = JsType[,]

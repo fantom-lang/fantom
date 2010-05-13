@@ -13,9 +13,9 @@ using compiler
 **
 abstract class JsStmt : JsNode
 {
-  new make(CompilerSupport s) : super(s) {}
+  new make(JsCompilerSupport s) : super(s) {}
 
-  static JsStmt makeFor(CompilerSupport s, Stmt stmt)
+  static JsStmt makeFor(JsCompilerSupport s, Stmt stmt)
   {
     switch (stmt.id)
     {
@@ -42,7 +42,7 @@ abstract class JsStmt : JsNode
 
 class JsNoOpStmt : JsStmt
 {
-  new make(CompilerSupport s) : super(s) {}
+  new make(JsCompilerSupport s) : super(s) {}
   override Void write(JsWriter out) {}
 }
 
@@ -52,7 +52,7 @@ class JsNoOpStmt : JsStmt
 
 class JsExprStmt : JsStmt
 {
-  new make(CompilerSupport s, ExprStmt stmt) : super(s)
+  new make(JsCompilerSupport s, ExprStmt stmt) : super(s)
   {
     this.expr = JsExpr.makeFor(s, stmt.expr)
   }
@@ -69,7 +69,7 @@ class JsExprStmt : JsStmt
 
 class JsLocalDefStmt : JsStmt
 {
-  new make(CompilerSupport s, LocalDefStmt lds) : super(s)
+  new make(JsCompilerSupport s, LocalDefStmt lds) : super(s)
   {
     this.name = lds.name
     this.init = (lds.init != null) ? JsExpr.makeFor(s, lds.init) : null
@@ -90,7 +90,7 @@ class JsLocalDefStmt : JsStmt
 
 class JsIfStmt : JsStmt
 {
-  new make(CompilerSupport s, IfStmt fs) : super(s)
+  new make(JsCompilerSupport s, IfStmt fs) : super(s)
   {
     this.cond = JsExpr.makeFor(s, fs.condition)
     this.trueBlock  = JsBlock(s, fs.trueBlock)
@@ -127,7 +127,7 @@ class JsIfStmt : JsStmt
 
 class JsReturnStmt : JsStmt
 {
-  new make(CompilerSupport s, ReturnStmt rs) : super(s)
+  new make(JsCompilerSupport s, ReturnStmt rs) : super(s)
   {
     expr = (rs.expr != null) ? JsExpr.makeFor(s, rs.expr) : null
   }
@@ -149,7 +149,7 @@ class JsReturnStmt : JsStmt
 
 class JsThrowStmt : JsStmt
 {
-  new make(CompilerSupport s, ThrowStmt ts) : super(s)
+  new make(JsCompilerSupport s, ThrowStmt ts) : super(s)
   {
     this.expr = JsExpr.makeFor(s, ts.exception)
   }
@@ -167,7 +167,7 @@ class JsThrowStmt : JsStmt
 
 class JsForStmt : JsStmt
 {
-  new make(CompilerSupport s, ForStmt fs) : super(s)
+  new make(JsCompilerSupport s, ForStmt fs) : super(s)
   {
     this.init   = (fs.init != null) ? JsStmt.makeFor(s, fs.init) : null
     this.cond   = (fs.condition != null) ? JsExpr.makeFor(s, fs.condition) : null
@@ -199,7 +199,7 @@ class JsForStmt : JsStmt
 
 class JsWhileStmt : JsStmt
 {
-  new make(CompilerSupport s, WhileStmt ws) : super(s)
+  new make(JsCompilerSupport s, WhileStmt ws) : super(s)
   {
     this.cond  = JsExpr.makeFor(s, ws.condition)
     this.block = JsBlock(s, ws.block)
@@ -225,7 +225,7 @@ class JsWhileStmt : JsStmt
 
 class JsBreakStmt : JsStmt
 {
-  new make(CompilerSupport s) : super(s) {}
+  new make(JsCompilerSupport s) : super(s) {}
   override Void write(JsWriter out) { out.w("break") }
 }
 
@@ -235,7 +235,7 @@ class JsBreakStmt : JsStmt
 
 class JsContinueStmt : JsStmt
 {
-  new make(CompilerSupport s) : super(s) {}
+  new make(JsCompilerSupport s) : super(s) {}
   override Void write(JsWriter out) { out.w("continue") }
 }
 
@@ -245,7 +245,7 @@ class JsContinueStmt : JsStmt
 
 class JsTryStmt : JsStmt
 {
-  new make(CompilerSupport s, TryStmt ts) : super(s)
+  new make(JsCompilerSupport s, TryStmt ts) : super(s)
   {
     this.block  = (ts.block != null) ? JsBlock(s, ts.block) : null
     this.catches = ts.catches.map |c->JsCatch| { JsCatch(s, c) }
@@ -276,7 +276,7 @@ class JsTryStmt : JsStmt
 
   private Void writeCatches(JsWriter out)
   {
-    var := unique
+    var := support.unique
     hasTyped    := catches.any |c| { c.qname != null }
     hasCatchAll := catches.any |c| { c.qname == null }
 
@@ -343,9 +343,9 @@ class JsTryStmt : JsStmt
 
 class JsCatch : JsNode
 {
-  new make(CompilerSupport s, Catch c) : super(s)
+  new make(JsCompilerSupport s, Catch c) : super(s)
   {
-    this.var   = c.errVariable ?: unique
+    this.var   = c.errVariable ?: support.unique
     this.qname = (c.errType != null) ? qnameToJs(c.errType) : null
     this.block = (c.block != null) ? JsBlock(s, c.block) : null
   }
@@ -364,7 +364,7 @@ class JsCatch : JsNode
 
 class JsSwitchStmt : JsStmt
 {
-  new make(CompilerSupport s, SwitchStmt ss) : super(s)
+  new make(JsCompilerSupport s, SwitchStmt ss) : super(s)
   {
     this.cond  = JsExpr.makeFor(s, ss.condition)
     this.cases = ss.cases.map |c->JsCase| { JsCase(s, c) }
@@ -373,7 +373,7 @@ class JsSwitchStmt : JsStmt
 
   override Void write(JsWriter out)
   {
-    var := unique
+    var := support.unique
     out.w("var $var = "); cond.write(out); out.w(";").nl
     cases.each |c, i|
     {
@@ -418,7 +418,7 @@ class JsSwitchStmt : JsStmt
 
 class JsCase : JsNode
 {
-  new make(CompilerSupport s, Case c) : super(s)
+  new make(JsCompilerSupport s, Case c) : super(s)
   {
     this.cases = c.cases.map |ex->JsExpr| { JsExpr.makeFor(s, ex) }
     this.block = (c.block != null) ? JsBlock(s, c.block) : null
