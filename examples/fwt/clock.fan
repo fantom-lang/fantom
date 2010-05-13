@@ -1,5 +1,6 @@
 #! /usr/bin/env fan
 
+using concurrent
 using fwt
 using gfx
 

@@ -10,7 +10,7 @@
 ** Actor is a worker who processes messages asynchronously.
 **
 ** See [docLang::Actors]`docLang::Actors` and
-** [examples]`examples::sys-actors`.
+** [examples]`examples::concurrent-actors`.
 **
 @Js
 native const class Actor
