@@ -24,8 +24,9 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     width      = "100%";
     height     = "100%";
     background = "#000";
-    opacity    = "0.25";
+    opacity    = "0.0";
     filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=25);"
+    webkitTransition = "100ms";
   }
 
   // mount shell we use to attach widgets to
@@ -72,6 +73,8 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     webkitBorderTopRightRadius = "5px";
     MozBoxShadow    = "0 5px 12px #404040";
     webkitBoxShadow = "0 5px 12px #404040";
+    webkitTransform = "scale(0.75)";
+    opacity = "0.0";
   }
   tbar.appendChild(document.createTextNode(this.m_title));
   dlg.appendChild(tbar);
@@ -85,6 +88,12 @@ fan.fwt.DialogPeer.prototype.open = function(self)
   // cache elements so we can remove when we close
   this.$mask = mask;
   this.$shell = shell;
+
+  // animate open
+  mask.style.opacity = "0.25";
+  dlg.style.webkitTransition = "-webkit-transform 100ms, opacity 100ms";
+  dlg.style.webkitTransform = "scale(1.0)";
+  dlg.style.opacity = "1.0";
 
   // try to focus first form element
   var elem = fan.fwt.DialogPeer.findFormControl(content);
@@ -116,9 +125,22 @@ fan.fwt.DialogPeer.findFormControl = function(node)
 
 fan.fwt.DialogPeer.prototype.close = function(self, result)
 {
-  if (this.$shell) this.$shell.parentNode.removeChild(this.$shell);
-  if (this.$mask) this.$mask.parentNode.removeChild(this.$mask);
-  fan.fwt.WindowPeer.prototype.close.call(this, self, result);
+  // animate close
+  if (this.$shell)
+  {
+    var dlg = this.$shell.firstChild;
+    dlg.style.opacity = "0.0";
+    dlg.style.webkitTransform = "scale(0.75)";
+    this.$mask.style.opacity = "0.0";
+  }
+
+  // allow animation to complete
+  var $this = this;
+  setTimeout(function() {
+    if ($this.$shell) $this.$shell.parentNode.removeChild($this.$shell);
+    if ($this.$mask) $this.$mask.parentNode.removeChild($this.$mask);
+    fan.fwt.WindowPeer.prototype.close.call($this, self, result);
+  }, 100);
 }
 
 fan.fwt.DialogPeer.prototype.sync = function(self)
