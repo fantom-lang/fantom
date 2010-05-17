@@ -10,6 +10,7 @@
 
 using build
 using compiler
+using compilerJs
 
 class Build : BuildScript
 {
@@ -37,6 +38,7 @@ class Build : BuildScript
     writeFanx(out)
     writeTypeInfo(out)
     writeSysSupport(out)
+    writeTimezones(out)
     out.close
 
     // close sys.pod FPod.zip to release lock so we can rejar that file
@@ -134,7 +136,26 @@ class Build : BuildScript
     append(sys + `Sha1.js`, out)
     append(sys + `StrInStream.js`, out)
     append(sys + `staticInit.js`, out)
-    append(sys + `timezones.js`, out)
+  }
+
+  private Void writeTimezones(OutStream out)
+  {
+    log.debug("  TimeZones")
+
+    // default zones
+    ["UTC", "New_York", "Chicago", "Denver", "Los_Angeles"].each |n|
+    {
+      log.debug("    $n")
+      JsTimeZone(TimeZone(n)).write(out)
+    }
+
+    // include GMT zones
+    TimeZone.listNames.each |n|
+    {
+      if (!n.contains("GMT")) return
+      log.debug("    $n")
+      JsTimeZone(TimeZone(n)).write(out)
+    }
   }
 
   private Void writeFanx(OutStream out)
