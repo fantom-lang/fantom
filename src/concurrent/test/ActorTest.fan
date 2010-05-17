@@ -675,7 +675,7 @@ class ActorTest : Test
 **************************************************************************
 
 @Serializable
-class SerMsg
+internal class SerMsg
 {
   override Int hash() { i }
   override Bool equals(Obj? that) { that is SerMsg && i == that->i }
