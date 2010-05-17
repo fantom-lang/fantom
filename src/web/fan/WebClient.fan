@@ -294,10 +294,14 @@ class WebClient
     out := socket.out
     reqOutStream = WebUtil.makeContentOutStream(reqHeaders, out)
 
+    // host authority header
+    host := reqUri.host
+    if (reqUri.port != null && reqUri.port != 80) host += ":$reqUri.port"
+
     // send request
     out.print(reqMethod).print(" ").print(reqUri.relToAuth.encode)
        .print(" HTTP/").print(reqVersion).print("\r\n")
-    out.print("Host: ").print(reqUri.host).print("\r\n")
+    out.print("Host: ").print(host).print("\r\n")
     reqHeaders.each |Str v, Str k| { out.print(k).print(": ").print(v).print("\r\n") }
     out.print("\r\n")
     out.flush
