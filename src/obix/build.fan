@@ -20,6 +20,7 @@ class Build : BuildPod
     summary = "oBIX XML modeling and client and server REST"
     depends = ["sys 1.0", "inet 1.0", "web 1.0", "xml 1.0"]
     srcDirs = [`fan/`, `test/`]
+    resDirs = [`res/`]
     docSrc  = true
   }
 }
