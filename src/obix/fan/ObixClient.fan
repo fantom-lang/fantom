@@ -65,8 +65,8 @@ class ObixClient
   ObixObj readLobby()
   {
     lobby := read(lobbyUri)
-    aboutUri = lobby.get("about").href
-    batchUri = lobby.get("batch").href
+    aboutUri = lobby.get("about", false)?.href
+    batchUri = lobby.get("batch", false)?.href
     return lobby
   }
 

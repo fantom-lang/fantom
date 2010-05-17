@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.54 (incomplete)*
+- Fix WebClient to report port number in Host header
+
 *Build 1.0.53 (13 May 10)*
 - Fix boxed boolean JVM checks
 - Make Int.shiftr unsigned (Java >>> operator)
