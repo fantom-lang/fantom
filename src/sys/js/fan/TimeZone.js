@@ -24,12 +24,12 @@ fan.sys.TimeZone.prototype.$ctor = function()
 
 fan.sys.TimeZone.listNames = function()
 {
-  return fan.sys.List.ro(fan.sys.TimeZone.names);
+  return fan.sys.List.make(fan.sys.Str.$type, fan.sys.TimeZone.names).ro();
 }
 
 fan.sys.TimeZone.listFullNames = function()
 {
-  return fan.sys.List.ro(fan.sys.TimeZone.fullNames);
+  return fan.sys.List.make(fan.sys.Str.$type, fan.sys.TimeZone.fullNames).ro();
 }
 
 fan.sys.TimeZone.fromStr = function(name, checked)
