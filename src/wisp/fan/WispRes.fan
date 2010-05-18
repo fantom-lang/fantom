@@ -195,10 +195,19 @@ internal class WispRes : WebRes
     }
 
     // write response line and headers
-    sout.print("HTTP/1.1 ").print(statusCode).print(" ").print(statusMsg[statusCode]).print("\r\n");
+    sout.print("HTTP/1.1 ").print(statusCode).print(" ").print(toStatusMsg).print("\r\n");
     &headers.each |Str v, Str k| { sout.print(k).print(": ").print(v).print("\r\n") };
     &cookies.each |Cookie c| { sout.print("Set-Cookie: ").print(c).print("\r\n") }
     sout.print("\r\n").flush
+  }
+
+  private Str toStatusMsg()
+  {
+    // special temp hook for WebSocket
+    if (statusCode == 101 && &headers["Upgrade"] == "WebSocket")
+      return "Web Socket Protocol Handshake"
+    else
+      return statusMsg[statusCode]
   }
 
   **
