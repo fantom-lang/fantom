@@ -76,6 +76,7 @@ public abstract class Type
   {
     // private undocumented access
     if (name.equals("flags")) return Long.valueOf(flags());
+    if (name.equals("toClass")) return toClass();
     return super.trap(name, args);
   }
 
