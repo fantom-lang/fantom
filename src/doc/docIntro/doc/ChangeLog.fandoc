@@ -11,6 +11,7 @@
 - Fix WebClient to report port number in Host header
 - ObixMod abstract base class for server side functionality
 - Support for WebSocket Protocol Handshake HTTP 101 response
+- List.unique,union,intersection support in js
 
 *Build 1.0.53 (13 May 10)*
 - Fix boxed boolean JVM checks
