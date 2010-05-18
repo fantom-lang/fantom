@@ -632,6 +632,87 @@ fan.sys.List.prototype.min = function(f)
   return min;
 }
 
+fan.sys.List.prototype.unique = function()
+{
+  var dups = fan.sys.Map.make(fan.sys.Obj.$type, fan.sys.Obj.$type);
+  var acc = fan.sys.List.make(this.m_of);
+  for (var i=0; i<this.m_size; ++i)
+  {
+    var v = this.m_values[i];
+    var key = v;
+    if (key == null) key = "__null_key__";
+    if (dups.get(key) == null)
+    {
+      dups.set(key, this);
+      acc.add(v);
+    }
+  }
+  return acc;
+}
+
+fan.sys.List.prototype.union = function(that)
+{
+  var dups = fan.sys.Map.make(fan.sys.Obj.$type, fan.sys.Obj.$type);
+  var acc = fan.sys.List.make(this.m_of);
+
+  // first me
+  for (var i=0; i<this.m_size; ++i)
+  {
+    var v = this.m_values[i];
+    var key = v;
+    if (key == null) key = "__null_key__";
+    if (dups.get(key) == null)
+    {
+      dups.set(key, this);
+      acc.add(v);
+    }
+  }
+
+  // then him
+  for (var i=0; i<that.m_size; ++i)
+  {
+    var v = that.m_values[i];
+    var key = v;
+    if (key == null) key = "__null_key__";
+    if (dups.get(key) == null)
+    {
+      dups.set(key, this);
+      acc.add(v);
+    }
+  }
+
+  return acc;
+}
+
+fan.sys.List.prototype.intersection = function(that)
+{
+  // put other list into map
+  var dups = fan.sys.Map.make(fan.sys.Obj.$type, fan.sys.Obj.$type);
+  for (var i=0; i<that.m_size; ++i)
+  {
+    var v = that.m_values[i];
+    var key = v;
+    if (key == null) key = "__null_key__";
+    dups.set(key, this);
+  }
+
+  // now walk this list and accumulate
+  // everything found in the dups map
+  var acc = fan.sys.List.make(this.m_of);
+  for (var i=0; i<this.m_size; ++i)
+  {
+    var v = this.m_values[i];
+    var key = v;
+    if (key == null) key = "__null_key__";
+    if (dups.get(key) != null)
+    {
+      acc.add(v);
+      dups.remove(key);
+    }
+  }
+  return acc;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
