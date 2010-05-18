@@ -134,6 +134,15 @@ The special primitives above are not directly supported by the Fantom type syste
 Therefore you cannot use them as local variables or in field or method signatures.
 They are *always* coerced to/from their Fantom representation.
 
+Reflection [#reflection]
+************************
+All Java objects maintain a `sys::Type` represtation to provide Fantom
+style reflection.  You can use a dynamic call to 'toClass' to get the
+'java.lang.Class' of a 'sys::Type':
+
+  ArrayList#            // evaluates to sys::Type
+  ArrayList#->toClass   // evaluates to java.lang.Class
+
 Arrays [#arrays]
 ****************
 Arrays of Objects are implicitly boxed/unboxed as Fantom 'sys::List'.

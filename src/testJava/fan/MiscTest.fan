@@ -149,4 +149,23 @@ class MiscTest : JavaTest
     verifyEq(obj->test2, null)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1096 Expose java.lang.Class access on Type
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1096()
+  {
+    compile(
+     """using [java] java.lang
+        using [java] java.util::ArrayList
+        class Foo
+        {
+          Class a() { ArrayList#->toClass }
+          Class b() { Class.forName("java.util.ArrayList") }
+        }""")
+
+    obj := pod.types.first.make
+    verifyEq(obj->a, obj->b)
+  }
+
 }
