@@ -17,6 +17,12 @@ using web
 **   {modBase}/about   about object
 **   {modBase}/batch   batch operation
 **
+** All other URIs to the mod are automatically handled
+** by the following callbacks:
+**  - GET: `onRead`
+**  - PUT: `onWrite`
+**  - POST: `onInvoke`
+**
 const abstract class ObixMod : WebMod
 {
 
@@ -47,20 +53,77 @@ const abstract class ObixMod : WebMod
 // Service
 //////////////////////////////////////////////////////////////////////////
 
-  override Void onGet()
+  override Void onService()
   {
+    // handle special built-in URIs
     uri := req.modRel
-    if (uri == `xsl`) { onGetXsl; return }
+    cmd := uri.path.getSafe(0)
+    switch (cmd)
+    {
+      case null:    onLobby; return
+      case "about": onAbout; return
+      case "xsl":   onXsl;   return
+    }
+
+    ObixObj? result
     try
-      respond(read(uri))
+    {
+      // route to callback
+      switch (req.method)
+      {
+        case "GET":    result = onRead(uri)
+        // case "PUT":    result = onWrite(uri, arg)
+        // case "INVOKE": result = onInvoke(uri, arg)
+        default:       res.sendErr(501)
+      }
+    }
     catch (UnresolvedErr e)
+    {
       res.sendErr(404)
+      return
+    }
+    catch (Err e)
+    {
+      e.trace
+      res.sendErr(500, e.traceToStr)
+      return
+    }
+
+    // return response
+    respond(result)
   }
 
-  private Void onGetXsl()
+  private Void onLobby()
+  {
+    if (req.method != "GET") { res.sendErr(501); return }
+    respond(lobby)
+  }
+
+  private Void onAbout()
+  {
+    if (req.method != "GET") { res.sendErr(501); return }
+    respond(about)
+  }
+
+  private Void onXsl()
   {
     file := ObixMod#.pod.file(`/res/xsl.xml`)
-    FileWeblet(file).onGet
+    FileWeblet(file).onService
+  }
+
+  private Void respond(ObixObj obj)
+  {
+    buf := Buf()
+    out := buf.out
+    out.print("<?xml version='1.0' encoding='UTF-8'?>\n")
+    out.print("<?xml-stylesheet type='text/xsl' href='").print(req.modBase).print("xsl'?>\n")
+    obj.writeXml(out)
+    buf.flip
+
+    res.headers["Content-Type"] = "text/xml"
+    res.headers["Content-Length"] = buf.size.toStr
+    res.out.writeBuf(buf)
+    res.out.close
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -69,44 +132,29 @@ const abstract class ObixMod : WebMod
 
   **
   ** Return the ObixObj representation of the given URI for
-  ** the application or return 'super.read' for default handling.
-  ** The URI is relative to the ObixMod base - see `web::WebReq.modRel`
-  ** Throw UnresolvedErr if URI doesn't map to a valid object.
+  ** the application.  The URI is relative to the ObixMod
+  ** base - see `web::WebReq.modRel`.  Throw UnresolvedErr
+  ** if URI doesn't map to a valid object.  The resulting
+  ** object must have its href set to the proper absolute
+  ** URI according to 5.2 of the oBIX specification.
   **
-  virtual ObixObj read(Uri uri)
-  {
-    // {base} => lobby
-    if (uri.path.size == 0) return lobby
-
-    // {base}/about => about
-    if (uri.path.size == 1 && uri.path[0] == "about") return about
-
-    // doesn't exist
-    throw UnresolvedErr(uri.toStr)
-  }
+  abstract ObixObj onRead(Uri uri)
 
   **
   ** Write the value for the given URI and return the new
-  ** representation or return 'super.write' for default handling.
-  ** The URI is relative to the ObixMod base - see `web::WebReq.modRel`
-  ** Throw UnresolvedErr if URI doesn't map to a valid object.
-  ** Throw ReadonlyErr if URI doesn't map to a writable object.
+  ** representation.  The URI is relative to the ObixMod
+  ** base - see `web::WebReq.modRel`.  Throw UnresolvedErr if URI
+  ** doesn't map to a valid object.  Throw ReadonlyErr if
+  ** URI doesn't map to a writable object.
   **
-  virtual ObixObj write(Uri uri, ObixObj val)
-  {
-    throw UnresolvedErr(uri.toStr)
-  }
+  abstract ObixObj onWrite(Uri uri, ObixObj val)
 
   **
-  ** Invoke the operation for the given URI and return the
-  ** result or return 'super.write' for default handling.  The
-  ** URI is relative to the ObixMod base - see `web::WebReq.modRel`
+  ** Invoke the operation for the given URI and return the result.
+  ** The URI is relative to the ObixMod base - see `web::WebReq.modRel`
   ** Throw UnresolvedErr if URI doesn't map to a valid operation.
   **
-  virtual ObixObj invoke(Uri uri, ObixObj arg)
-  {
-    throw UnresolvedErr(uri.toStr)
-  }
+  abstract ObixObj onInvoke(Uri uri, ObixObj arg)
 
 //////////////////////////////////////////////////////////////////////////
 // Overrides
@@ -156,25 +204,6 @@ const abstract class ObixMod : WebMod
   private const Str aboutProductName
   private const Str aboutProductVer
   private const Uri aboutProductUrl
-
-//////////////////////////////////////////////////////////////////////////
-// Utils
-//////////////////////////////////////////////////////////////////////////
-
-  private Void respond(ObixObj obj)
-  {
-    buf := Buf()
-    out := buf.out
-    out.print("<?xml version='1.0' encoding='UTF-8'?>\n")
-    out.print("<?xml-stylesheet type='text/xsl' href='").print(req.modBase).print("xsl'?>\n")
-    obj.writeXml(out)
-    buf.flip
-
-    res.headers["Content-Type"] = "text/xml"
-    res.headers["Content-Length"] = buf.size.toStr
-    res.out.writeBuf(buf)
-    res.out.close
-  }
 
 }
 
