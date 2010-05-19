@@ -237,6 +237,16 @@ class ObixObj
   }
 
   **
+  ** Get the first child returned by `list` or null.
+  **
+  ObixObj? first() { kidsHead }
+
+  **
+  ** Get the last child returned by `list` or null.
+  **
+  ObixObj? last() { kidsTail }
+
+  **
   ** Iterate each of the children objects.
   **
   Void each(|ObixObj child| f)
