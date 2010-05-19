@@ -71,10 +71,10 @@ const abstract class ObixMod : WebMod
       // route to callback
       switch (req.method)
       {
-        case "GET":    result = onRead(uri)
-        // case "PUT":    result = onWrite(uri, arg)
-        // case "INVOKE": result = onInvoke(uri, arg)
-        default:       res.sendErr(501)
+        case "GET":  result = onRead(uri)
+        case "PUT":  result = onWrite(uri, readReqObj)
+        case "POST": result = onInvoke(uri, readReqObj)
+        default:     res.sendErr(501); return
       }
     }
     catch (UnresolvedErr e)
@@ -90,19 +90,19 @@ const abstract class ObixMod : WebMod
     }
 
     // return response
-    respond(result)
+    writeResObj(result)
   }
 
   private Void onLobby()
   {
     if (req.method != "GET") { res.sendErr(501); return }
-    respond(lobby)
+    writeResObj(lobby)
   }
 
   private Void onAbout()
   {
     if (req.method != "GET") { res.sendErr(501); return }
-    respond(about)
+    writeResObj(about)
   }
 
   private Void onXsl()
@@ -111,7 +111,13 @@ const abstract class ObixMod : WebMod
     FileWeblet(file).onService
   }
 
-  private Void respond(ObixObj obj)
+  private ObixObj readReqObj()
+  {
+    str := req.in.readAllStr
+    return ObixObj.readXml(str.in)
+  }
+
+  private Void writeResObj(ObixObj obj)
   {
     buf := Buf()
     out := buf.out

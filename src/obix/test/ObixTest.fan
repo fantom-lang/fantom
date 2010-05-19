@@ -57,6 +57,8 @@ abstract class ObixTest : Test
       verifySame(bk.parent, b)
       verifyObj(ak, bk)
     }
+    verifySame(a.first, alist.first)
+    verifySame(a.last,  alist.last)
   }
 
   **
