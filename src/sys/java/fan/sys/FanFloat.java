@@ -63,7 +63,6 @@ public final class FanFloat
     if (obj instanceof Double)
     {
       double x = ((Double)obj).doubleValue();
-      if (Double.isNaN(self)) return Double.isNaN(x);
       return self == x;
     }
     return false;
@@ -73,7 +72,7 @@ public final class FanFloat
   public static boolean approx(double self, double that, Double tolerance)
   {
     // need this to check +inf, -inf, and nan
-    if (equals(self, that)) return true;
+    if (compare(self, that) == 0) return true;
 
     double t;
     if (tolerance == null)
@@ -83,9 +82,9 @@ public final class FanFloat
     return Math.abs(self - that) <= t;
   }
 
-  public static long compare(double self, Object obj)
+  public static long compare(double self, Object obj) { return compare(self, ((Double)obj).doubleValue()); }
+  public static long compare(double self, double that)
   {
-    double that = ((Double)obj).doubleValue();
     if (Double.isNaN(self))
     {
       return (Double.isNaN(that)) ? 0 : -1;

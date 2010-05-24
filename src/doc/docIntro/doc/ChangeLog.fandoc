@@ -12,6 +12,7 @@
 - ObixMod abstract base class for server side functionality
 - Support for WebSocket Protocol Handshake HTTP 101 response
 - List.unique,union,intersection support in js
+- Fix Float.equals to work consistent with == operator
 
 *Build 1.0.53 (13 May 10)*
 - Fix boxed boolean JVM checks

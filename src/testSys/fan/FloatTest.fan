@@ -85,6 +85,14 @@ class FloatTest : Test
     verify(Float.nan != Float.posInf)
     verify(Float.nan != Float.negInf)
     verify(Float.nan != Float.nan)
+
+    verifyFalse(Float.nan.equals(0.0f))
+    verifyFalse(4f.equals(Float.nan))
+    verifyFalse(Float.nan.equals(Float.posInf))
+    verifyFalse(Float.nan.equals(Float.negInf))
+    verifyFalse(Float.nan.equals(Float.nan))
+    verify(Float.posInf.equals(Float.posInf))
+    verify(Float.negInf.equals(Float.negInf))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -172,6 +180,30 @@ class FloatTest : Test
     verifyEq(Float.posInf.compare(Float.nan), 1)
     verifyEq(Float.negInf <=> Float.nan, 1)
     verifyEq(Float.nan <=> -9999f, -1)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Specials (NaN, Inf)
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSpecial()
+  {
+    verifySpecial(0f, 0f, true, 0)
+    verifySpecial(Float.posInf, Float.posInf, true, 0)
+    verifySpecial(Float.negInf, Float.negInf, true, 0)
+    verifySpecial(Float.nan, Float.nan, false, 0)
+
+    verifySpecial(Float.nan, 0f, false, -1)
+    verifySpecial(0f, Float.nan, false, +1)
+  }
+
+  Void verifySpecial(Float a, Float b, Bool eq, Int cmp)
+  {
+    verifyEq(a == b, eq)
+    verifyEq(a != b, !eq)
+    verifyEq(a.equals(b), eq)
+    verifyEq(a <=> b, cmp)
+    if (cmp == 0) verify(a.approx(b))
   }
 
 //////////////////////////////////////////////////////////////////////////
