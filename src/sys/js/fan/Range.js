@@ -64,6 +64,39 @@ fan.sys.Range.prototype.end   = function() { return this.m_end; }
 fan.sys.Range.prototype.inclusive = function() { return !this.m_exclusive; }
 fan.sys.Range.prototype.exclusive = function() { return this.m_exclusive; }
 
+fan.sys.Range.prototype.isEmpty = function()
+{
+  return this.m_exclusive && this.m_start == this.m_end;
+}
+
+fan.sys.Range.prototype.min = function()
+{
+  if (this.isEmpty()) return null;
+  if (this.m_end < this.m_start) return this.m_exclusive ? this.m_end+1 : this.m_end;
+  return this.m_start;
+}
+
+fan.sys.Range.prototype.max = function()
+{
+  if (this.isEmpty()) return null;
+  if (this.m_end < this.m_start) return this.m_start;
+  return this.m_exclusive ? this.m_end-1 : this.m_end;
+}
+
+fan.sys.Range.prototype.first = function()
+{
+  if (this.isEmpty()) return null;
+  return this.m_start;
+}
+
+fan.sys.Range.prototype.last = function()
+{
+  if (this.isEmpty()) return null;
+  if (!this.m_exclusive) return this.m_end;
+  if (this.m_start < this.m_end) return this.m_end-1;
+  return this.m_end+1;
+}
+
 fan.sys.Range.prototype.contains = function(i)
 {
   if (this.m_start < this.m_end)
@@ -80,6 +113,12 @@ fan.sys.Range.prototype.contains = function(i)
     else
       return this.m_end <= i && i <= this.m_start;
   }
+}
+
+fan.sys.Range.prototype.offset = function(offset)
+{
+  if (offset == 0) return this;
+  return fan.sys.Range.make(this.m_start+offset, this.m_end+offset, this.m_exclusive);
 }
 
 fan.sys.Range.prototype.each = function(func)
