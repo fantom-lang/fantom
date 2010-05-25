@@ -13,6 +13,7 @@
 - Support for WebSocket Protocol Handshake HTTP 101 response
 - List.unique,union,intersection support in js
 - Fix Float.equals to work consistent with == operator
+- Flush out Float/Range API in js
 
 *Build 1.0.53 (13 May 10)*
 - Fix boxed boolean JVM checks
