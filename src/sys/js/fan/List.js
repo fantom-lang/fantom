@@ -739,6 +739,18 @@ fan.sys.List.prototype.sortr = function(f)
   return this;
 }
 
+fan.sys.List.prototype.moveTo = function(item, toIndex)
+{
+  this.modify();
+  var curIndex = this.index(item);
+  if (curIndex == null) return this;
+  if (curIndex == toIndex) return this;
+  this.removeAt(curIndex);
+  if (toIndex == -1) return this.add(item);
+  if (toIndex < 0) ++toIndex;
+  return this.insert(toIndex, item);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////

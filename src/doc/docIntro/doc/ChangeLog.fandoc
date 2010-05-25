@@ -11,7 +11,7 @@
 - Fix WebClient to report port number in Host header
 - ObixMod abstract base class for server side functionality
 - Support for WebSocket Protocol Handshake HTTP 101 response
-- List.unique,union,intersection support in js
+- List.unique,union,intersection,moveTo support in js
 - Fix Float.equals to work consistent with == operator
 - Flush out Float/Range API in js
 
