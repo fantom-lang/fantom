@@ -25,7 +25,7 @@ fan.sys.Float.m_negInf = fan.sys.Float.make(Number.NEGATIVE_INFINITY);
 fan.sys.Float.m_nan    = fan.sys.Float.make(Number.NaN);
 fan.sys.Float.m_e      = fan.sys.Float.make(Math.E);
 fan.sys.Float.m_pi     = fan.sys.Float.make(Math.PI);
-fan.sys.Float.m_defVal = 0;
+fan.sys.Float.m_defVal = fan.sys.Float.make(0);
 
 //
 // Num

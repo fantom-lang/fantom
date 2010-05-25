@@ -286,8 +286,16 @@ class FloatTest : Test
     verifyEq(4.0f.toInt, 4)
     verify(73939.9555f.toFloat == 73939.9555f)
     verifyEq(-5.66e12f.toDecimal <=> -5.66e12d, 0)
-    verifyEq(Float.posInf.toInt, 0x7fff_ffff_ffff_ffff)
-    verifyEq(Float.negInf.toInt, 0x8000_0000_0000_0000)
+    if (Env.cur.runtime == "js")
+    {
+      verifyEq(Float.posInf.toInt, 9007199254740992)
+      verifyEq(Float.negInf.toInt, -9007199254740992)
+    }
+    else
+    {
+      verifyEq(Float.posInf.toInt, 0x7fff_ffff_ffff_ffff)
+      verifyEq(Float.negInf.toInt, 0x8000_0000_0000_0000)
+    }
     verifyEq(Float.nan.toInt, 0)
   }
 
@@ -336,7 +344,10 @@ class FloatTest : Test
     verifyEq(3.5f.round, 4.0f)
     verifyEq(3.6f.round, 4.0f)
     verifyEq(3.9f.round, 4.0f)
-    verifyEq(4.0456e32f.round, 4.0456e32f)
+    if (Env.cur.runtime != "js")
+    {
+      verifyEq(4.0456e32f.round, 4.0456e32f)
+    }
 
     // exp
     verify(1f.exp.approx(Float.e))
