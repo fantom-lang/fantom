@@ -38,7 +38,6 @@ fan.sys.Float.equals = function(self, that)
 {
   if (that != null && self.$fanType === that.$fanType)
   {
-    if (isNaN(self) || isNaN(that)) return false;
     return self.valueOf() == that.valueOf();
   }
   return false;
@@ -50,18 +49,19 @@ fan.sys.Float.compare = function(self, that)
   if (that == null) return 1;
   if (isNaN(self)) return isNaN(that) ? 0 : -1;
   if (isNaN(that)) return 1;
-  if (self < that) return -1; return self.valueOf() == that.valueOf() ? 0 : 1;
+  if (self < that) return -1;
+  return self.valueOf() == that.valueOf() ? 0 : 1;
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Math
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Float.abs = function(self) { return Math.abs(self); }
+fan.sys.Float.abs = function(self) { return fan.sys.Float.make(Math.abs(self)); }
 fan.sys.Float.approx = function(self, that, tolerance)
 {
   // need this to check +inf, -inf, and nan
-  if (fan.sys.Float.equals(self, that)) return true;
+  if (fan.sys.Float.compare(self, that) == 0) return true;
   var t = tolerance == null
     ? Math.min(Math.abs(self/1e6), Math.abs(that/1e6))
     : tolerance;
@@ -78,23 +78,30 @@ fan.sys.Float.negate = function(self) { return fan.sys.Float.make(-self); }
 fan.sys.Float.pow   = function(self, exp) { return fan.sys.Float.make(Math.pow(self, exp)); }
 fan.sys.Float.round = function(self) { return fan.sys.Float.make(Math.round(self)); }
 fan.sys.Float.sqrt  = function(self) { return fan.sys.Float.make(Math.sqrt(self)); }
+fan.sys.Float.random = function() { return fan.sys.Float.make(Math.random()); }
 
 // arithmetic
 fan.sys.Float.plus  = function(a,b) { return fan.sys.Float.make(a+b); }
 fan.sys.Float.minus = function(a,b) { return fan.sys.Float.make(a-b); }
 fan.sys.Float.mult  = function(a,b) { return fan.sys.Float.make(a*b); }
 fan.sys.Float.div   = function(a,b) { return fan.sys.Float.make(a/b); }
+fan.sys.Float.mod   = function(a,b) { return fan.sys.Float.make(a%b); }
+fan.sys.Float.increment = function(self) { return fan.sys.Float.make(self+1); }
+fan.sys.Float.decrement = function(self) { return fan.sys.Float.make(self-1); }
 
 // Trig
-fan.sys.Float.acos  = function(self) { return Math.acos(self); }
-fan.sys.Float.asin  = function(self) { return Math.asin(self); }
-fan.sys.Float.atan  = function(self) { return Math.atan(self); }
-fan.sys.Float.atan2 = function(y, x) { return Math.atan2(y, x); }
-fan.sys.Float.cos   = function(self) { return Math.cos(self); }
-fan.sys.Float.sin   = function(self) { return Math.sin(self); }
-fan.sys.Float.tan   = function(self) { return Math.tan(self); }
-fan.sys.Float.toDegrees = function(self) { return self * 180 / Math.PI; }
-fan.sys.Float.toRadians = function(self) { return self * Math.PI / 180; }
+fan.sys.Float.acos  = function(self) { return fan.sys.Float.make(Math.acos(self)); }
+fan.sys.Float.asin  = function(self) { return fan.sys.Float.make(Math.asin(self)); }
+fan.sys.Float.atan  = function(self) { return fan.sys.Float.make(Math.atan(self)); }
+fan.sys.Float.atan2 = function(y, x) { return fan.sys.Float.make(Math.atan2(y, x)); }
+fan.sys.Float.cos   = function(self) { return fan.sys.Float.make(Math.cos(self)); }
+fan.sys.Float.sin   = function(self) { return fan.sys.Float.make(Math.sin(self)); }
+fan.sys.Float.tan   = function(self) { return fan.sys.Float.make(Math.tan(self)); }
+fan.sys.Float.toDegrees = function(self) { return fan.sys.Float.make(self * 180 / Math.PI); }
+fan.sys.Float.toRadians = function(self) { return fan.sys.Float.make(self * Math.PI / 180); }
+fan.sys.Float.cosh  = function(self) { return fan.sys.Float.make(0.5 * (Math.exp(self) + Math.exp(-self))); }
+fan.sys.Float.sinh  = function(self) { return fan.sys.Float.make(0.5 * (Math.exp(self) - Math.exp(-self))); }
+fan.sys.Float.tanh  = function(self) { return fan.sys.Float.make((Math.exp(2*self)-1) / (Math.exp(2*self)+1)); }
 
 //////////////////////////////////////////////////////////////////////////
 // Str
@@ -111,12 +118,6 @@ fan.sys.Float.fromStr = function(s, checked)
     throw fan.sys.ParseErr.make("Float", s);
   }
   return fan.sys.Float.make(parseFloat(s));
-}
-
-fan.sys.Float.toLocale = function(self)
-{
-  // TODO FIXIT
-  return fan.sys.Float.toStr(self);
 }
 
 fan.sys.Float.toStr = function(self)

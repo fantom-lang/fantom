@@ -18,7 +18,7 @@ fan.sys.ObjUtil.hash = function(obj)
   return 0;
 }
 
-fan.sys.ObjUtil.equals = function(a, b)
+fan.sys.ObjUtil.equals = function(a, b, op)
 {
   if (a == null) return b == null;
   if (a instanceof fan.sys.Obj) return a.equals(b);
@@ -34,7 +34,7 @@ fan.sys.ObjUtil.equals = function(a, b)
   return a === b;
 }
 
-fan.sys.ObjUtil.compare = function(a, b)
+fan.sys.ObjUtil.compare = function(a, b, op)
 {
   if (a instanceof fan.sys.Obj)
   {
@@ -43,6 +43,7 @@ fan.sys.ObjUtil.compare = function(a, b)
   }
   else if (a != null && a.$fanType != null)
   {
+    if (op === true && (isNaN(a) || isNaN(b))) return Number.NaN;
     return fan.sys.Float.compare(a, b);
   }
   else
@@ -59,11 +60,11 @@ fan.sys.ObjUtil.compare = function(a, b)
   }
 }
 
-fan.sys.ObjUtil.compareNE = function(a,b) { return !fan.sys.ObjUtil.equals(a,b) }
-fan.sys.ObjUtil.compareLT = function(a,b) { return fan.sys.ObjUtil.compare(a,b) <  0 }
-fan.sys.ObjUtil.compareLE = function(a,b) { return fan.sys.ObjUtil.compare(a,b) <= 0 }
-fan.sys.ObjUtil.compareGE = function(a,b) { return fan.sys.ObjUtil.compare(a,b) >= 0 }
-fan.sys.ObjUtil.compareGT = function(a,b) { return fan.sys.ObjUtil.compare(a,b) >  0 }
+fan.sys.ObjUtil.compareNE = function(a,b) { return !fan.sys.ObjUtil.equals(a,b); }
+fan.sys.ObjUtil.compareLT = function(a,b) { return fan.sys.ObjUtil.compare(a,b,true) <  0; }
+fan.sys.ObjUtil.compareLE = function(a,b) { return fan.sys.ObjUtil.compare(a,b,true) <= 0; }
+fan.sys.ObjUtil.compareGE = function(a,b) { return fan.sys.ObjUtil.compare(a,b,true) >= 0; }
+fan.sys.ObjUtil.compareGT = function(a,b) { return fan.sys.ObjUtil.compare(a,b,true) >  0; }
 
 //////////////////////////////////////////////////////////////////////////
 // Type
