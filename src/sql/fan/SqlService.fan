@@ -47,9 +47,9 @@ const class SqlService : Service
   ** it can be accessed.  'open' may be called multiple times.
   ** Each time 'open' is called, a counter is incremented.  The
   ** database will not be closed until 'close' has been called
-  ** for each call to 'open'.
+  ** for each call to 'open'.  Return this.
   **
-  SqlService open()
+  This open()
   {
     Connection? conn := Actor.locals[id]
     if (conn == null)
