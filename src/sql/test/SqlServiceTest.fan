@@ -399,6 +399,17 @@ class SqlServiceTest : Test
     result = stmt.query(["name":"Alice"])
     verifyEq(result[0]->x, "Alice")
     verifyEq(result[0]->y, 21)
+
+    // Statement.limit
+    stmt = db.sql("select name from farmers")
+    verifyEq(stmt.query.size, 5)
+    verifyEq(stmt.limit, null)
+    stmt.limit = 3
+    verifyEq(stmt.limit, 3)
+    verifyEq(stmt.query.size, 3)
+    stmt.limit = null
+    verifyEq(stmt.limit, null)
+    verifyEq(stmt.query.size, 5)
   }
 
 //////////////////////////////////////////////////////////////////////////
