@@ -53,8 +53,8 @@ fan.fwt.WidgetPeer.addCss(
   "table.__fwt_table td span { margin-left: 3px; }" +
   "table.__fwt_table tr:nth-child(even) { background:#f1f5fa; }" +
   // selected
-  "table.__fwt_table tr.selected { color:#fff; background:#3d80df; }" +
-  "table.__fwt_table tr.selected td { border-color:#346dbe; }" +
+  "table.__fwt_table tr.selected { background:#3d80df; }" +
+  "table.__fwt_table tr.selected td { color:#fff !important; border-color:#346dbe; }" +
   "table.__fwt_table tr.selected a { color:#fff; }");
 
 /**
