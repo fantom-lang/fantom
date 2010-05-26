@@ -68,4 +68,12 @@ class Statement
   ** The SQL text used to create this statement.
   **
   readonly Str sql
+
+  **
+  ** Maximum number of rows returned when this statement is
+  ** executed.  If limit is exceeded rows are silently dropped.
+  ** A value of null indicates no limit.
+  **
+  native Int? limit
+
 }

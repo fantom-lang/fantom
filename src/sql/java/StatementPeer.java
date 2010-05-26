@@ -31,8 +31,8 @@ public class StatementPeer
     parse(self.sql);
     try
     {
-      stmt = self.conn.peer.jconn.prepareStatement(translated, autoGenKeyMode(self));
       prepared = true;
+      createStatement(self);
     }
     catch (SQLException ex)
     {
@@ -53,7 +53,7 @@ public class StatementPeer
       }
       else
       {
-        stmt = self.conn.peer.jconn.createStatement();
+        createStatement(self);
         rs = stmt.executeQuery(self.sql);
       }
 
@@ -181,7 +181,7 @@ public class StatementPeer
       }
       else
       {
-        stmt = self.conn.peer.jconn.createStatement();
+        createStatement(self);
         rs = stmt.executeQuery(self.sql);
       }
 
@@ -209,7 +209,7 @@ public class StatementPeer
       }
       else
       {
-        stmt = self.conn.peer.jconn.createStatement();
+        createStatement(self);
         try
         {
           int rows = stmt.executeUpdate(self.sql, autoGenKeyMode(self));
@@ -330,6 +330,28 @@ public class StatementPeer
     {
       throw ConnectionPeer.err(ex);
     }
+  }
+
+  public Long limit(Statement self)
+  {
+    return limit <= 0 ? null : Long.valueOf(limit);
+  }
+
+  public void limit(Statement self, Long limit)
+  {
+    this.limit = 0;
+    if (limit != null && limit.longValue() < Integer.MAX_VALUE)
+      this.limit = limit.intValue();
+  }
+
+  private void createStatement(Statement self)
+    throws SQLException
+  {
+    if (prepared)
+      stmt = self.conn.peer.jconn.prepareStatement(translated, autoGenKeyMode(self));
+    else
+      stmt = self.conn.peer.jconn.createStatement();
+    if (limit > 0) stmt.setMaxRows(limit);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -535,4 +557,5 @@ public class StatementPeer
   private String             translated;
   private java.sql.Statement stmt;
   private HashMap            paramMap;
+  private int                limit = 0;
 }
