@@ -361,7 +361,6 @@ fan.sys.Unit.m_dims       = {}; // Dimension -> Dimension
 fan.sys.Unit.m_quantities = {}; // String -> List
 fan.sys.Unit.m_quantityNames;
 fan.sys.Unit.m_dimensionless = new fan.sys.Dimension();
-
 fan.sys.Unit.m_dims[fan.sys.Unit.m_dimensionless.toString()] =  fan.sys.Unit.m_dimensionless;
-fan.sys.Unit.m_quantityNames = fan.sys.Unit.loadDatabase();
+
 
