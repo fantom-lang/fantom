@@ -48,7 +48,7 @@ fi
 # Set FAN_CP classpath if not already set
 if [ -z "$FAN_CP" -o ! -d "$FAN_CP" ] ; then
   # always put sys.jar in classpath
-  FAN_CP=$FAN_HOME/lib/java/sys.jar
+  FAN_CP="$FAN_HOME/lib/java/sys.jar"
 fi
 
 # Set FAN_JAVA if not already set
@@ -65,15 +65,15 @@ fi
 # read a single line property from $FAN_HOME/etc/sys/config.props
 function read_prop()
 {
-  eval "$1='`sed '/^\#/d' $FAN_HOME/etc/sys/config.props | sed '/^\/\//d' | grep \"$2=\"  | tail -n 1 | sed 's/^.*=//;s/^[[:space:]]*//;s/[[:space:]]*$//'`'"
+  eval "$1='`sed '/^\#/d' "$FAN_HOME/etc/sys/config.props" | sed '/^\/\//d' | grep \"$2=\"  | tail -n 1 | sed 's/^.*=//;s/^[[:space:]]*//;s/[[:space:]]*$//'`'"
 }
 
 # Launcher function
 fanlaunch()
 {
   export FAN_HOME
-  FAN_MAIN=fanx.tools.$1
+  FAN_MAIN="fanx.tools.$1"
   shift
   read_prop JAVA_OPTIONS java.options
-  $FAN_JAVA $osFlags $JAVA_OPTIONS $libPath -cp "$FAN_CP" -Dfan.home="$FAN_HOME" $FAN_MAIN "$@"
+  "$FAN_JAVA" $osFlags $JAVA_OPTIONS $libPath -cp "$FAN_CP" -Dfan.home="$FAN_HOME" "$FAN_MAIN" "$@"
 }
