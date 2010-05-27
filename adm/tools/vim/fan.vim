@@ -1,6 +1,6 @@
 " Vim syntax file
-" Language:     Fan
-" Last Change:  2008 Aug 27
+" Language:     Fantom
+" Last Change:  2010 May 27
 " Based on Java syntax file by Claudio Fleiner <claudio@fleiner.com>
 
 " Quit when a syntax file was already loaded
@@ -32,7 +32,7 @@ syn keyword fanField      	readonly
 syn keyword fanExceptions	throw try catch finally
 syn keyword fanAssert		assert
 syn keyword fanTypedef		class enum mixin
-syn match   fanFacet            "@[_$a-zA-Z][_$a-zA-Z0-9_]*\>"
+syn match   fanFacet            "@[_a-zA-Z][_a-zA-Z0-9_]*\>"
 syn keyword fanBranch		break continue
 syn keyword fanScopeDecl	public internal protected private abstract
 
@@ -54,15 +54,6 @@ syn cluster fanTop add=fanExternal,fanError,fanConditional,fanRepeat,fanBoolean,
 
 " Comments
 syn keyword fanTodo		 contained TODO FIXME XXX
-if exists("fan_comment_strings")
-  syn region  fanCommentString    contained start=+"+ end=+"+ end=+$+ end=+\*/+me=s-1,he=s-1 contains=fanSpecial,fanCommentStar,fanSpecialChar,@Spell
-  syn region  fanComment2String   contained start=+"+  end=+$\|"+  contains=fanSpecial,fanSpecialChar,@Spell
-  syn match   fanCommentCharacter contained "'\\[^']\{1,6\}'" contains=fanSpecialChar
-  syn match   fanCommentCharacter contained "'\\''" contains=fanSpecialChar
-  syn match   fanCommentCharacter contained "'[^\\]'"
-  syn cluster fanCommentSpecial add=fanCommentString,fanCommentCharacter,fanNumber
-  syn cluster fanCommentSpecial2 add=fanComment2String,fanCommentCharacter,fanNumber
-endif
 syn region  fanComment		 start="/\*"  end="\*/" contains=@fanCommentSpecial,fanTodo,fanComment,@Spell
 syn match   fanCommentStar      contained "^\s*\*[^/]"me=e-1
 syn match   fanCommentStar      contained "^\s*\*$"
@@ -78,12 +69,15 @@ syn cluster fanTop add=fanComment,fanLineComment,fanDocComment
 syn match   fanComment		 "/\*\*/"
 
 " Strings and constants
-syn match   fanSpecialError     contained "\\."
-syn match   fanSpecialCharError contained "[^']"
-syn match   fanSpecialChar      contained "\\\([4-9]\d\|[0-3]\d\d\|[\"\\'ntbrf]\|u\x\{4\}\)"
-syn match   fanStringSubst      contained "\$[A-Za-z][A-Za-z_]*"
-syn match   fanStringSubst      contained "\${[A-Za-z][A-Za-z._]*}"
-syn region  fanString		start=+"+ end=+"+ end=+$+ contains=fanSpecialChar,fanSpecialError,fanStringSubst,@Spell
+syn match   fanSpecialError    	 	contained "\\."
+syn match   fanSpecialCharError 	contained "[^']"
+syn match   fanSpecialChar      	contained "\\\([4-9]\d\|[0-3]\d\d\|[\"\\'ntbrf]\|u\x\{4\}\|\$\)"
+syn match   fanStringSubst      	contained "\$[A-Za-z][A-Za-z_.]*"
+syn match   fanStringSubst      	contained "\${[^}]*}"
+syn region  fanString		start=+"+ end=+"+ contains=fanSpecialChar,fanSpecialError,fanStringSubst,@Spell
+syn region  fanTripleString	start=+"""+ end=+"""+ contains=fanSpecialChar,fanSpecialError,fanStringSubst,@Spell
+syn region  fanDSL		start=+<|+ end=+|>+ 
+syn match   fanUri		 "`[^`]*`"
 syn match   fanCharacter	 "'[^']*'" contains=fanSpecialChar,fanSpecialCharError
 syn match   fanCharacter	 "'\\''" contains=fanSpecialChar
 syn match   fanCharacter	 "'[^\\]'"
@@ -114,9 +108,12 @@ if version >= 508 || !exists("did_fan_syn_inits")
   hi def link fanSpecial		Special
   hi def link fanSpecialError		Error
   hi def link fanSpecialCharError	Error
+  hi def link fanTripleString		String
   hi def link fanString			String
+  hi def link fanDSL			String
+  hi def link fanCharacter		String
   hi def link fanStringSubst		Identifier
-  hi def link fanCharacter		Character
+  hi def link fanUri			SpecialChar
   hi def link fanSpecialChar		SpecialChar
   hi def link fanNumber			Number
   hi def link fanError			Error
