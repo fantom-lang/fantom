@@ -154,6 +154,11 @@ fan.sys.Weekday.m_vals = fan.sys.List.make(fan.sys.Weekday.$type,
 fan.sys.Version.m_defVal = fan.sys.Version.fromStr("0");
 
 //
+// Unit
+//
+fan.sys.Unit.m_quantityNames = fan.sys.Unit.loadDatabase();
+
+//
 // Env
 //
 fan.sys.Env.m_configProps   = fan.sys.Uri.fromStr("config.props");
