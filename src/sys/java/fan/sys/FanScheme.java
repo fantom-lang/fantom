@@ -38,7 +38,7 @@ public class FanScheme
     String podName = (String)uri.auth();
     Pod pod = Pod.find(podName, false);
     if (pod == null) throw UnresolvedErr.make(uri.toStr()).val;
-    if (uri.pathStr().isEmpty()) return pod;
+    if (uri.pathStr().length() == 0) return pod;
 
     // dive into file of pod
     return pod.file(uri);
