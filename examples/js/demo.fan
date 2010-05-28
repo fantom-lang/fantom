@@ -111,7 +111,7 @@ class ShowScript : Weblet
     main := compiler.types[0].qname
 
     // write page
-    res.headers["Content-Type"] = "text/html"
+    res.headers["Content-Type"] = "text/html; charset=utf-8"
     out := res.out
     out.docType
     out.html
