@@ -1,17 +1,12 @@
 " Vim syntax file
 " Language:     Fantom
+" Maintainer:   Kamil Toman <kamil.toman@gmail.com>
 " Last Change:  2010 May 27
 " Based on Java syntax file by Claudio Fleiner <claudio@fleiner.com>
 
 " Quit when a syntax file was already loaded
-if !exists("main_syntax")
-  if version < 600
-    syntax clear
-  elseif exists("b:current_syntax")
-    finish
-  endif
-  " we define it here so that included files can test for it
-  let main_syntax='fan'
+if exists("b:current_syntax")
+  finish
 endif
 
 " keyword definitions
@@ -89,60 +84,49 @@ syn match   fanNumber		 "\<\d\+\([eE][-+]\=\d\+\)\=[fFdD]\>"
 syn cluster fanTop add=fanString,fanCharacter,fanNumber,fanSpecial,fanStringError
 
 " The default highlighting.
-if version >= 508 || !exists("did_fan_syn_inits")
-  if version < 508
-    let did_fan_syn_inits = 1
-  endif
-  hi def link fanBranch			Conditional
-  hi def link fanLabel			Label
-  hi def link fanUserLabel		Label
-  hi def link fanConditional		Conditional
-  hi def link fanRepeat			Repeat
-  hi def link fanExceptions		Exception
-  hi def link fanAssert			Statement
-  hi def link fanStorageClass		StorageClass
-  hi def link fanSlot        		StorageClass
-  hi def link fanField        		StorageClass
-  hi def link fanScopeDecl		StorageClass
-  hi def link fanBoolean		Boolean
-  hi def link fanSpecial		Special
-  hi def link fanSpecialError		Error
-  hi def link fanSpecialCharError	Error
-  hi def link fanTripleString		String
-  hi def link fanString			String
-  hi def link fanDSL			String
-  hi def link fanCharacter		String
-  hi def link fanStringSubst		Identifier
-  hi def link fanUri			SpecialChar
-  hi def link fanSpecialChar		SpecialChar
-  hi def link fanNumber			Number
-  hi def link fanError			Error
-  hi def link fanStringError		Error
-  hi def link fanStatement		Statement
-  hi def link fanOperator		Operator
-  hi def link fanLongOperator		Operator
-  hi def link fanComment		Comment
-  hi def link fanDocComment		Comment
-  hi def link fanLineComment		Comment
-  hi def link fanConstant		Constant
-  hi def link fanTypedef		Typedef
-  hi def link fanTodo			Todo
-  hi def link fanFacet                  PreProc
+hi def link fanBranch			Conditional
+hi def link fanLabel			Label
+hi def link fanUserLabel		Label
+hi def link fanConditional		Conditional
+hi def link fanRepeat			Repeat
+hi def link fanExceptions		Exception
+hi def link fanAssert			Statement
+hi def link fanStorageClass		StorageClass
+hi def link fanSlot        		StorageClass
+hi def link fanField        		StorageClass
+hi def link fanScopeDecl		StorageClass
+hi def link fanBoolean		Boolean
+hi def link fanSpecial		Special
+hi def link fanSpecialError		Error
+hi def link fanSpecialCharError	Error
+hi def link fanTripleString		String
+hi def link fanString			String
+hi def link fanDSL			String
+hi def link fanCharacter		String
+hi def link fanStringSubst		Identifier
+hi def link fanUri			SpecialChar
+hi def link fanSpecialChar		SpecialChar
+hi def link fanNumber			Number
+hi def link fanError			Error
+hi def link fanStringError		Error
+hi def link fanStatement		Statement
+hi def link fanOperator		Operator
+hi def link fanLongOperator		Operator
+hi def link fanComment		Comment
+hi def link fanDocComment		Comment
+hi def link fanLineComment		Comment
+hi def link fanConstant		Constant
+hi def link fanTypedef		Typedef
+hi def link fanTodo			Todo
+hi def link fanFacet                  PreProc
 
-  hi def link fanCommentTitle		SpecialComment
-  hi def link fanCommentStar		SpecialComment
-  hi def link fanType			Identifier
-  hi def link fanExternal		Include
+hi def link fanCommentTitle		SpecialComment
+hi def link fanCommentStar		SpecialComment
+hi def link fanType			Identifier
+hi def link fanExternal		Include
 
-  hi def link fanSpaceError		Error
-endif
+hi def link fanSpaceError		Error
 
 let b:current_syntax = "fan"
 
-if main_syntax == 'fan'
-  unlet main_syntax
-endif
-
-let b:spell_options="contained"
-
-" vim: ts=4
+" vim: ts=8
