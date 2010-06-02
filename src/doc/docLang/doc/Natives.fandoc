@@ -138,7 +138,7 @@ Native methods are always routed to the peer:
     public static FooPeer make(Foo self) { return new FooPeer(); }
 
     // instance methods always take implicit self
-    public String add(Foo self, boolean x) { return "a"; }
+    public String a(Foo self, boolean x) { return "a"; }
 
     // static methods are just normal statics with matching signatures
     public void b(long x) {}
