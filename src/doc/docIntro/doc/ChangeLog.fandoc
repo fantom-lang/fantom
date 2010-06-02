@@ -16,6 +16,7 @@
 - Flush out Float/Range API in js
 - Add sql::Statement.limit
 - Ensure "{fan}/lib/java/ext" added to Java FFI classpath
+- Flush out docLang::Native chapter
 
 *Build 1.0.53 (13 May 10)*
 - Fix boxed boolean JVM checks
