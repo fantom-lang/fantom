@@ -144,6 +144,10 @@ Native methods are always routed to the peer:
     public void b(long x) {}
   }
 
+  // JavaScript
+  fan.mypod.FooPeer.prototype.a = function(self, x) { return "a"; }
+  fan.mypod.FooPeer.b = function(x) {}
+
 All non-static methods and fields will pass the Fantom instance as an
 implicit first argument.  This lets you use a singleton peer for all
 instances.  Typically you will only allocate a peer instance if you
@@ -161,7 +165,7 @@ the Fantom getter/setter to the peer class:
     native Str? f
   }
 
-  // Java or C#
+  // Java
   class FooPeer
   {
     public static FooPeer make(Foo self) { return new FooPeer(); }
@@ -169,6 +173,20 @@ the Fantom getter/setter to the peer class:
     public void f(Foo t, String v) { f = v; }
     String f;
   }
+
+  // C#
+  class FooPeer
+  {
+    public static FooPeer make(Foo self) { return new FooPeer(); }
+    public string f(Foo t) { return m_f; }
+    public void f(Foo t, String v) { m_f = v; }
+    string m_f;
+  }
+
+  // JavaScript
+  fan.mypod.FooPeer.prototype.m_f = "";
+  fan.mypod.FooPeer.prototype.f   = function(t) { return this.m_f; }
+  fan.mypod.FooPeer.prototype.f$  = function(t, v) { this.m_f = v; }
 
 Native fields can be virtual or override a superclass, but
 cannot be const, static, or abstract.
