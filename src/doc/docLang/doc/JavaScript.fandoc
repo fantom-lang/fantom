@@ -30,5 +30,3 @@ To compile JavaScript natives, add the source directories to your
 build script using the [jsDirs]`build::BuildPod.jsDirs` field.
 See [Build Pod]`docTools::Build#buildPod` for an example.
 
-
-TODO: document how JavaScript peers operate
