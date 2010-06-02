@@ -49,9 +49,11 @@ class ClassPath
     }
 
     // {java}lib/ext
-    ext := lib + `ext/`
-    ext.list.each |File extJar| { if (extJar.ext == "jar") entries.add(extJar) }
-
+    // {fan}lib/java/ext
+    // {fan}lib/java/ext/{plat}
+    addJars(entries, lib + `ext/`)
+    addJars(entries, Env.cur.homeDir + `lib/java/ext/`)
+    addJars(entries, Env.cur.homeDir + `lib/java/ext/${Env.cur.platform}/`)
 
     // -classpath
     Env.cur.vars.get("java.class.path", "").split(File.pathSep[0]).each |Str path|
@@ -61,6 +63,11 @@ class ClassPath
     }
 
     return make(entries)
+  }
+
+  private static Void addJars(File[] entries, File dir)
+  {
+    dir.list.each |f| { if (f.ext == "jar") entries.add(f) }
   }
 
   **
