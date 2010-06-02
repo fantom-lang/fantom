@@ -109,7 +109,9 @@ looks for packages and classes using the Fantom runtime classpath.  This include
   1. jars found in "sun.boot.class.path"
   2. {java}lib/rt.jar (only if step above fails to find anything)
   3. {java}lib/ext/*.jar
-  4. jars found in "java.class.path" system property
+  4. {fan}lib/java/ext/*.jar
+  5. {fan}lib/java/ext/{Env.platform}/*.jar
+  6. jars found in "java.class.path" system property
 
 In order to use a class found in the classpath, 'compilerJava' uses Java
 reflection and resolves the class via 'Class.forName' with the current classloader.
