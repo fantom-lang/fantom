@@ -479,23 +479,18 @@ namespace Fan.Sys
     public DateTime toTimeZone(TimeZone tz)
     {
       if (m_tz == tz) return this;
-      if (tz == TimeZone.m_rel) return toRel();
+      if (tz == TimeZone.m_rel || this.m_tz == TimeZone.m_rel)
+      {
+        return new DateTime(getYear(), getMonth(), getDay(),
+                            getHour(), getMin(), getSec(), getNanoSec(),
+                            System.Int32.MaxValue, tz);
+      }
       return makeTicks(m_ticks, tz);
     }
 
-    public DateTime toUtc()
-    {
-      if (m_tz == TimeZone.m_utc) return this;
-      return makeTicks(m_ticks, TimeZone.m_utc);
-    }
+    public DateTime toUtc() { return toTimeZone(TimeZone.m_utc); }
 
-    public DateTime toRel()
-    {
-      if (this.m_tz == TimeZone.m_rel) return this;
-      return new DateTime(getYear(), getMonth(), getDay(),
-                          getHour(), getMin(), getSec(), getNanoSec(),
-                          0, TimeZone.m_rel);
-    }
+    public DateTime toRel() { return toTimeZone(TimeZone.m_rel); }
 
     public DateTime floor(Duration accuracy)
     {
