@@ -295,7 +295,15 @@ const final class DateTime
   ** Convert this DateTime to the specific timezone.  The
   ** absolute point time as ticks remains the same, but the
   ** date and time fields will be converted to represent the
-  ** new time zone.
+  ** new time zone.  However if the given tz is `TimeZone.rel`
+  ** then the resulting DateTime has the same day and time,
+  ** but normalized to a zero based UTC offset.  Also see `toUtc`
+  ** and `toRel`.
+  **
+  ** Example:
+  **   dt := DateTime("2010-06-03T10:30:00-04:00 New_York")
+  **   dt.toUtc  =>  2010-06-03T14:30:00Z UTC
+  **   dt.toRel  =>  2010-06-03T10:30:00Z Rel
   **
   DateTime toTimeZone(TimeZone tz)
 
@@ -303,6 +311,11 @@ const final class DateTime
   ** Convenience for 'toTimeZone(TimeZone.utc)'.
   **
   DateTime toUtc()
+
+  **
+  ** Convenience for 'toTimeZone(TimeZone.rel)'.
+  **
+  DateTime toRel()
 
   **
   ** Return the delta between this and the given time.

@@ -395,6 +395,7 @@ namespace Fan.Sys
     public int getYear() { return (m_fields & 0xff) + 1900; }
 
     public Month month() { return Month.array[(m_fields >> 8) & 0xf]; }
+    private int getMonth() { return (m_fields >> 8) & 0xf; }
 
     public long day() { return (m_fields >> 12) & 0x1f; }
     public int getDay() { return (m_fields >> 12) & 0x1f; }
@@ -478,6 +479,7 @@ namespace Fan.Sys
     public DateTime toTimeZone(TimeZone tz)
     {
       if (m_tz == tz) return this;
+      if (tz == TimeZone.m_rel) return toRel();
       return makeTicks(m_ticks, tz);
     }
 
@@ -485,6 +487,14 @@ namespace Fan.Sys
     {
       if (m_tz == TimeZone.m_utc) return this;
       return makeTicks(m_ticks, TimeZone.m_utc);
+    }
+
+    public DateTime toRel()
+    {
+      if (this.m_tz == TimeZone.m_rel) return this;
+      return new DateTime(getYear(), getMonth(), getDay(),
+                          getHour(), getMin(), getSec(), getNanoSec(),
+                          0, TimeZone.m_rel);
     }
 
     public DateTime floor(Duration accuracy)

@@ -392,6 +392,7 @@ public final class DateTime
   public final int getYear() { return (fields & 0xff) + 1900; }
 
   public final Month month() { return Month.array[(fields >> 8) & 0xf]; }
+  private final int getMonth() { return (fields >> 8) & 0xf; }
 
   public final long day() { return (fields >> 12) & 0x1f; }
   public final int getDay() { return (fields >> 12) & 0x1f; }
@@ -474,6 +475,7 @@ public final class DateTime
   public final DateTime toTimeZone(TimeZone tz)
   {
     if (this.tz == tz) return this;
+    if (tz == TimeZone.rel) return toRel();
     return makeTicks(ticks, tz);
   }
 
@@ -481,6 +483,14 @@ public final class DateTime
   {
     if (this.tz == TimeZone.utc) return this;
     return makeTicks(ticks, TimeZone.utc);
+  }
+
+  public final DateTime toRel()
+  {
+    if (this.tz == TimeZone.rel) return this;
+    return new DateTime(getYear(), getMonth(), getDay(),
+                        getHour(), getMin(), getSec(), getNanoSec(),
+                        0, TimeZone.rel);
   }
 
   public final DateTime floor(Duration accuracy)

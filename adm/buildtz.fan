@@ -64,15 +64,16 @@ class Build : BuildScript
 // Compile
 //////////////////////////////////////////////////////////////////////////
 
-  override Target defaultTarget() { return target("compile") }
-
-  @target="compile tz database"
+  @Target { help = "compile tz database" }
   Void compile()
   {
     log.info("compile [$srcDir]")
 
     // parse input files into rules and zones
     srcUris.each |Uri uri| { parse(uri) }
+
+    // find Etc/UTC and make copy for Etc/Rel
+    addEtcRel
 
     // normalize zone items and rules
     normalize
@@ -222,6 +223,29 @@ class Build : BuildScript
     "May":Month.may, "Jun":Month.jun, "Jul":Month.jul, "Aug":Month.aug,
     "Sep":Month.sep, "Oct":Month.oct, "Nov":Month.nov, "Dec":Month.dec
   ].toImmutable
+
+//////////////////////////////////////////////////////////////////////////
+// Etc/Rel
+//////////////////////////////////////////////////////////////////////////
+
+  Void addEtcRel()
+  {
+    utc := zones.find |zone| { zone.name == "Etc/UTC" }
+    if (utc.items.size != 1) throw Err();
+    if (utc.rules != null) throw Err();
+    rel := Zone
+    {
+      name = "Etc/Rel"
+      items = [ZoneItem
+      {
+        format = "Rel";
+        offset = utc.items.first.offset
+        rule   = utc.items.first.rule
+        until  = utc.items.first.until
+      }]
+    }
+    zones.add(rel)
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Normalize

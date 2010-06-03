@@ -17,6 +17,7 @@
 - Add sql::Statement.limit
 - Ensure "{fan}/lib/java/ext" added to Java FFI classpath
 - Flush out docLang::Native chapter
+- Etc/Rel TimeZone
 
 *Build 1.0.53 (13 May 10)*
 - Fix boxed boolean JVM checks

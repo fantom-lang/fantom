@@ -90,6 +90,11 @@ namespace Fan.Sys
       return m_utc;
     }
 
+    public static TimeZone rel()
+    {
+      return m_rel;
+    }
+
     public static TimeZone cur()
     {
       return m_cur;
@@ -581,6 +586,7 @@ namespace Fan.Sys
 
     static Hashtable cache = new Hashtable(); // string -> TimeZone
     internal static TimeZone m_utc;
+    internal static TimeZone m_rel;
     internal static TimeZone m_cur = null;
 
     static TimeZone()
@@ -604,8 +610,19 @@ namespace Fan.Sys
         System.Console.WriteLine("ERROR: Cannot init UTC timezone");
         Err.dumpStack(e);
 
-        m_utc.m_name = m_utc.m_fullName = "UTC";
-        m_utc.rules = new Rule[] { new Rule() };
+        m_utc = loadFallback("Etc/UTC", "UTC");
+      }
+
+      try
+      {
+        m_rel = fromStr("Etc/Rel");
+      }
+      catch (Exception e)
+      {
+        System.Console.WriteLine("ERROR: Cannot init Rel timezone");
+        Err.dumpStack(e);
+
+        m_rel = loadFallback("Etc/Rel", "Rel");
       }
 
       try
@@ -632,6 +649,15 @@ namespace Fan.Sys
 
         m_cur = m_utc;
       }
+    }
+
+    private static TimeZone loadFallback(string fullName, string name)
+    {
+      TimeZone tz = new TimeZone();
+      tz.m_name = name;
+      tz.m_fullName = fullName;
+      tz.rules = new Rule[] { new Rule() };
+      return tz;
     }
 
   //////////////////////////////////////////////////////////////////////////
