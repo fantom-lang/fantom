@@ -1419,6 +1419,19 @@ class DateTimeTest : Test
     verifySame(r.dst, false)
     verifySame(r.tz,  TimeZone.rel)
     verifyEq(r.ticks, r.toUtc.ticks)
+
+    y := r.toTimeZone(x.tz)
+    verifyEq(x, y)
+    verifyEq(x.year,  y.year)
+    verifyEq(x.month, y.month)
+    verifyEq(x.day,   y.day)
+    verifyEq(x.hour,  y.hour)
+    verifyEq(x.min,   y.min)
+    verifyEq(x.sec,   y.sec)
+    verifyEq(x.nanoSec, y.nanoSec)
+    verifyEq(x.weekday, y.weekday)
+    verifySame(x.dst, x.dst)
+    verifySame(x.tz,  y.tz)
   }
 
   Void verifyRelCmp(Str aStr, Str bStr, Int cmp)

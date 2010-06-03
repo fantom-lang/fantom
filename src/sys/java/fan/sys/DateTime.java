@@ -475,23 +475,21 @@ public final class DateTime
   public final DateTime toTimeZone(TimeZone tz)
   {
     if (this.tz == tz) return this;
-    if (tz == TimeZone.rel) return toRel();
-    return makeTicks(ticks, tz);
+    if (tz == TimeZone.rel || this.tz == TimeZone.rel)
+    {
+      return new DateTime(getYear(), getMonth(), getDay(),
+                          getHour(), getMin(), getSec(), getNanoSec(),
+                          Integer.MAX_VALUE, tz);
+    }
+    else
+    {
+      return makeTicks(ticks, tz);
+    }
   }
 
-  public final DateTime toUtc()
-  {
-    if (this.tz == TimeZone.utc) return this;
-    return makeTicks(ticks, TimeZone.utc);
-  }
+  public final DateTime toUtc() { return toTimeZone(TimeZone.utc); }
 
-  public final DateTime toRel()
-  {
-    if (this.tz == TimeZone.rel) return this;
-    return new DateTime(getYear(), getMonth(), getDay(),
-                        getHour(), getMin(), getSec(), getNanoSec(),
-                        0, TimeZone.rel);
-  }
+  public final DateTime toRel() { return toTimeZone(TimeZone.rel); }
 
   public final DateTime floor(Duration accuracy)
   {
