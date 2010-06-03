@@ -453,6 +453,7 @@ class DateTimeTest : Test
     verify(names.contains("Los_Angeles"))
     verify(names.contains("London"))
     verify(names.contains("UTC"))
+    verify(names.contains("Rel"))
     verify(!names.contains("America/New_York"))
 
     names = TimeZone.listFullNames
@@ -461,39 +462,23 @@ class DateTimeTest : Test
     verify(names.contains("America/Los_Angeles"))
     verify(names.contains("Europe/London"))
     verify(names.contains("Etc/UTC"))
+    verify(names.contains("Etc/Rel"))
     verify(!names.contains("New_York"))
 
     verify(TimeZone.fromStr("foo bar", false) == null)
     verifyErr(ParseErr#) { TimeZone.fromStr("foo bar") }
 
-    x := TimeZone.fromStr("America/New_York")
-    verifyEq(x.name,  "New_York")
-    verifyEq(x.toStr, "New_York")
-    verifyEq(x.fullName, "America/New_York")
-    verifyEq(x.stdAbbr(2007), "EST")
-    verifyEq(x.dstAbbr(2007), "EDT")
-    verifyEq(x.offset(2007), -5hr)
-    verifyEq(x.dstOffset(2007), 1hr)
-    verifySame(TimeZone.fromStr("New_York"), x)
+    verifySame(TimeZone.utc, TimeZone.fromStr("UTC"))
+    verifySame(TimeZone.rel, TimeZone.fromStr("Rel"))
 
-    x = TimeZone.fromStr("Phoenix")
-    verifyEq(x.name,  "Phoenix")
-    verifyEq(x.toStr, "Phoenix")
-    verifyEq(x.fullName, "America/Phoenix")
-    verifyEq(x.stdAbbr(2007), "MST")
-    verifyEq(x.dstAbbr(2007), null)
-    verifyEq(x.offset(2007), -7hr)
-    verifyEq(x.dstOffset(2007), null)
-    verifySame(TimeZone.fromStr("America/Phoenix"), x)
-
-    x = TimeZone.fromStr("Asia/Calcutta")
-    verifyEq(x.stdAbbr(2007), "IST")
-    verifyEq(x.dstAbbr(2007), null)
-    verifyEq(x.offset(2007), 5.5hr)
-    verifyEq(x.dstOffset(2007), null)
+    verifyTimeZone("America/New_York", "EST",  -5hr, "EDT", 1hr)
+    verifyTimeZone("America/Phoenix",  "MST",  -7hr, null,  null)
+    verifyTimeZone("Asia/Calcutta",    "IST", 5.5hr, null,  null)
+    verifyTimeZone("Etc/UTC",          "UTC",   0hr, null,  null)
+    verifyTimeZone("Etc/Rel",          "Rel",   0hr, null,  null)
 
     // no slashes
-    x = TimeZone.fromStr("EST")
+    x := TimeZone.fromStr("EST")
     verifyEq(x.name, "EST")
     verifyEq(x.fullName, "EST")
 
@@ -504,6 +489,21 @@ class DateTimeTest : Test
     verifySame(TimeZone.fromStr("America/Kentucky/Louisville"), TimeZone.fromStr("Louisville"))
 
     verifyEq(TimeZone.fromStr("Asia/New_York", false), null)
+  }
+
+  Void verifyTimeZone(Str fullName, Str stdAbbr, Duration offset, Str? dstAbbr, Duration? dstOffset)
+  {
+    name := fullName[fullName.index("/")+1 .. -1]
+
+    x := TimeZone.fromStr(fullName)
+    verifySame(TimeZone.fromStr(name), x)
+    verifyEq(x.name, name)
+    verifyEq(x.toStr, name)
+    verifyEq(x.fullName, fullName)
+    verifyEq(x.stdAbbr(2010), stdAbbr)
+    verifyEq(x.dstAbbr(2010), dstAbbr)
+    verifyEq(x.offset(2010), offset)
+    verifyEq(x.dstOffset(2010), dstOffset)
   }
 
   Void testToTimeZone()
@@ -1386,6 +1386,53 @@ class DateTimeTest : Test
     verifyEq(d.isYesterday, false)
     verifyEq(d.isToday,     false)
     verifyEq(d.isTomorrow,  false)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Rel Normalization
+//////////////////////////////////////////////////////////////////////////
+
+  Void testRel()
+  {
+    now := DateTime.now
+    verifyRel(now, now.toRel)
+    verifyRel(now, now.toTimeZone(TimeZone.rel))
+
+    verifyRelCmp("2010-06-03T12:00:00-04:00 New_York", "2010-06-03T12:00:00-05:00 Chicago", 0)
+    verifyRelCmp("2010-06-03T12:00:00-04:00 New_York", "2010-06-03T11:00:00-05:00 Chicago", 1)
+    verifyRelCmp("2010-06-03T12:00:00-04:00 New_York", "2010-06-03T12:00:00+08:00 Taipei", 0)
+  }
+
+  Void verifyRel(DateTime x, DateTime r)
+  {
+    verifySame(r.toRel, r)
+    verifySame(r.toTimeZone(TimeZone.rel), r)
+
+    verifyEq(x.year,  r.year)
+    verifyEq(x.month, r.month)
+    verifyEq(x.day,   r.day)
+    verifyEq(x.hour,  r.hour)
+    verifyEq(x.min,   r.min)
+    verifyEq(x.sec,   r.sec)
+    verifyEq(x.nanoSec, r.nanoSec)
+    verifyEq(x.weekday, r.weekday)
+    verifySame(r.dst, false)
+    verifySame(r.tz,  TimeZone.rel)
+    verifyEq(r.ticks, r.toUtc.ticks)
+  }
+
+  Void verifyRelCmp(Str aStr, Str bStr, Int cmp)
+  {
+    a := DateTime(aStr).toRel
+    b := DateTime(bStr).toRel
+
+    verifyEq(a <=> b, cmp)
+
+    if (cmp == 0) verifyEq(a, b)
+    else verifyNotEq(a, b)
+
+    if (cmp < 0) verify(a < b)
+    if (cmp > 0) verify(a > b)
   }
 
 }

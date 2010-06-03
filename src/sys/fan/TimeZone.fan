@@ -53,9 +53,16 @@ const class TimeZone
   static TimeZone? fromStr(Str name, Bool checked := true)
 
   **
-  ** Get the time zone which represents UTC.
+  ** UTC time zone instance is "Etc/Utc".
   **
   static TimeZone utc()
+
+  **
+  ** Relative time zone instance is "Etc/Rel".  The relative timezone
+  ** has a zero offset like UTC, but is used to normalize by time of
+  ** day versus absolute time.  See `DateTime.toRel`.
+  **
+  static TimeZone rel()
 
   **
   ** Get the current default TimeZone of the VM.  The default

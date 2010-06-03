@@ -95,6 +95,11 @@ public final class TimeZone
     return utc;
   }
 
+  public static TimeZone rel()
+  {
+    return rel;
+  }
+
   public static TimeZone cur()
   {
     return cur;
@@ -564,6 +569,7 @@ public final class TimeZone
 
   static HashMap cache = new HashMap(); // String -> TimeZone
   static TimeZone utc;
+  static TimeZone rel;
   static TimeZone cur;
 
 //////////////////////////////////////////////////////////////////////////
@@ -590,9 +596,18 @@ public final class TimeZone
     {
       System.out.println("ERROR: Cannot init UTC timezone");
       e.printStackTrace();
+      utc = loadFallback("Etc/UTC", "UTC");
+    }
 
-      utc.name = utc.fullName = "UTC";
-      utc.rules = new Rule[] { new Rule() };
+    try
+    {
+      rel = fromStr("Etc/Rel");
+    }
+    catch (Throwable e)
+    {
+      System.out.println("ERROR: Cannot init Rel timezone");
+      e.printStackTrace();
+      rel = loadFallback("Etc/Rel", "Rel");
     }
 
     try
@@ -615,6 +630,15 @@ public final class TimeZone
 
       cur = utc;
     }
+  }
+
+  private static TimeZone loadFallback(String fullName, String name)
+  {
+    TimeZone tz = new TimeZone();
+    tz.name = name;
+    tz.fullName = fullName;
+    tz.rules = new Rule[] { new Rule() };
+    return tz;
   }
 
   /**
