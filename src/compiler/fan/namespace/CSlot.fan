@@ -13,7 +13,7 @@
 **
 mixin CSlot
 {
-  virtual CNamespace ns() { return parent.ns }
+  virtual CNamespace ns() { parent.ns }
   abstract CType parent()
   abstract Str name()
   abstract Str qname()
@@ -55,18 +55,18 @@ mixin CSlot
   ** declared in another language.  See `usesForeign` to check if the
   ** slot uses any FFI types in its signature.
   **
-  virtual Bool isForeign() { return false }
+  virtual Bool isForeign() { false }
 
   **
   ** Return if this slot is foreign or uses any foreign types in its signature.
   **
-  Bool usesForeign() { return usesBridge != null }
+  Bool usesForeign() { usesBridge != null }
 
   **
   ** If this a foreign function return the bridge.  See `usesForeign` to
   ** check if the slot uses any FFI types in its signature.
   **
-  virtual CBridge? bridge() { return parent.pod.bridge }
+  virtual CBridge? bridge() { parent.pod.bridge }
 
   **
   ** Return the bridge if this slot is foreign or uses any foreign
@@ -99,18 +99,18 @@ mixin CField : CSlot
   **
   ** Does this field covariantly override a method?
   **
-  Bool isCovariant() { return isOverride && fieldType != inheritedReturnType }
+  Bool isCovariant() { isOverride && fieldType != inheritedReturnType }
 
   **
   ** Is this field typed with a generic parameter.
   **
-  Bool isGeneric() { return fieldType.isGenericParameter }
+  Bool isGeneric() { fieldType.isGenericParameter }
 
   **
   ** Is this field the parameterization of a generic field,
   ** with the generic type replaced with a real type.
   **
-  virtual Bool isParameterized() { return false }
+  virtual Bool isParameterized() { false }
 
   **
   ** Return the bridge if this slot is foreign or uses any foreign
@@ -153,7 +153,7 @@ mixin CMethod : CSlot
   ** Does this method have a covariant return type (we
   ** don't count This returns as covariant)
   **
-  Bool isCovariant() { return isOverride && !returnType.isThis && returnType != inheritedReturnType }
+  Bool isCovariant() { isOverride && !returnType.isThis && returnType != inheritedReturnType }
 
   **
   ** Return the bridge if this slot is foreign or uses any foreign
@@ -163,25 +163,25 @@ mixin CMethod : CSlot
   {
     if (bridge != null) return bridge
     if (returnType.bridge != null) return returnType.bridge
-    return params.eachWhile |CParam p->CBridge?| { return p.paramType.bridge }
+    return params.eachWhile |CParam p->CBridge?| { p.paramType.bridge }
   }
 
   **
   ** Does this method contains generic parameters in its signature.
   **
-  virtual Bool isGeneric() { return false }
+  virtual Bool isGeneric() { false }
 
   **
   ** Is this method the parameterization of a generic method,
   ** with all the generic parameters filled in with real types.
   **
-  virtual Bool isParameterized() { return false }
+  virtual Bool isParameterized() { false }
 
   **
   ** If isParameterized is true, then return the generic
   ** method which this method parameterizes, otherwise null
   **
-  virtual CMethod? generic() { return null }
+  virtual CMethod? generic() { null }
 
   static Bool calcGeneric(CMethod m)
   {
@@ -197,7 +197,7 @@ mixin CMethod : CSlot
   Str nameAndParamTypesToStr()
   {
     return name + "(" +
-      params.join(", ", |CParam p->Str| { return p.paramType.inferredAs.signature }) +
+      params.join(", ", |CParam p->Str| { p.paramType.inferredAs.signature }) +
       ")"
   }
 

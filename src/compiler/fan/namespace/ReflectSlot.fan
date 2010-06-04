@@ -13,17 +13,10 @@
 **
 abstract class ReflectSlot : CSlot
 {
-  new make(Slot slot)
-  {
-    this.flags = (Int)slot->flags // undocumented trap
-  }
-
-  override abstract ReflectNamespace ns()  // covariant redefinition
-  override abstract ReflectType parent()   // covariant redefinition
-  override Str name()      { return slot.name }
-  override Str qname()     { return slot.qname }
-  override Str signature() { return slot.signature }
-  override readonly Int flags
+  override Str name()       { slot.name }
+  override Str qname()      { slot.qname }
+  override Str signature()  { slot.signature }
+  override once Int flags() { slot->flags } // undocumented trap
   abstract Slot slot()
 
   override CFacet? facet(Str qname)
@@ -42,9 +35,9 @@ abstract class ReflectSlot : CSlot
 
 class ReflectField : ReflectSlot, CField
 {
-  new make(ReflectType parent, Field f)
-    : super(f)
+  new make(ReflectNamespace ns, CType parent, Field f)
   {
+    this.ns = ns
     this.parent = parent
     this.f = f
     this.fieldType = ns.importType(f.type)
@@ -52,10 +45,10 @@ class ReflectField : ReflectSlot, CField
     set := (Method?)f->setter; if (set != null) this.setter = ns.importMethod(set)
   }
 
-  override ReflectNamespace ns() { return parent.ns }
-  override ReflectType parent
+  override ReflectNamespace ns
+  override CType parent
 
-  override Slot slot() { return f }
+  override Slot slot() { f }
 
   override CType inheritedReturnType()
   {
@@ -75,9 +68,9 @@ class ReflectField : ReflectSlot, CField
 
 class ReflectMethod : ReflectSlot, CMethod
 {
-  new make(ReflectType parent, Method m)
-    : super(m)
+  new make(ReflectNamespace ns, CType parent, Method m)
   {
+    this.ns = ns
     this.parent = parent
     this.m = m
     this.returnType = ns.importType(m.returns)
@@ -85,10 +78,10 @@ class ReflectMethod : ReflectSlot, CMethod
     this.isGeneric = calcGeneric(this)
   }
 
-  override ReflectNamespace ns() { return parent.ns }
-  override ReflectType parent
+  override ReflectNamespace ns
+  override CType parent
 
-  override Slot slot() { return m }
+  override Slot slot() { m }
 
   override CType inheritedReturnType()
   {
@@ -117,8 +110,8 @@ class ReflectParam : CParam
     this.paramType = ns.importType(p.type)
   }
 
-  override Str name() { return p.name }
-  override Bool hasDefault() { return p.hasDefault }
+  override Str name() { p.name }
+  override Bool hasDefault() { p.hasDefault }
 
   override readonly CType paramType
   readonly Param p
