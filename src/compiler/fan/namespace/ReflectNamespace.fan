@@ -68,7 +68,7 @@ class ReflectNamespace : CNamespace
   **
   CType[] importTypes(Type[] t)
   {
-    return t.map |Type x->CType| { importType(x) }
+    t.map |Type x->CType| { importType(x) }
   }
 
   **
@@ -87,7 +87,7 @@ class ReflectNamespace : CNamespace
   **
   CField importField(Field f)
   {
-    return ReflectField((ReflectType)importType(f.parent), f)
+    ReflectField(this, importType(f.parent), f)
   }
 
   **
@@ -95,7 +95,7 @@ class ReflectNamespace : CNamespace
   **
   CMethod importMethod(Method m)
   {
-    return ReflectMethod((ReflectType)importType(m.parent), m)
+    ReflectMethod(this, importType(m.parent), m)
   }
 
 //////////////////////////////////////////////////////////////////////////
