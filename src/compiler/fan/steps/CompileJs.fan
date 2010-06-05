@@ -38,6 +38,9 @@ class CompileJs  : CompilerStep
     // in JS mode we force JS compilation
     if (compiler.input.output === CompilerOutputMode.js) return true
 
+    // if any JS directories were specified force JS compilation
+    if (compiler.jsFiles != null && !compiler.jsFiles.isEmpty) return true
+
     // run JS compiler is any type has @Js facet
     return compiler.types.any { it.hasFacet("sys::Js") }
   }
