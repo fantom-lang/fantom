@@ -50,10 +50,24 @@ const class WispService : Service
 
   internal Void listen()
   {
+    // loop until we successfully bind to port
     listener := TcpListener()
-    listener.bind(null, port)
+    while (true)
+    {
+      try
+      {
+        listener.bind(null, port)
+        break
+      }
+      catch (Err e)
+      {
+        log.err("WispService cannot bind to port ${port}", e)
+        Actor.sleep(10sec)
+      }
+    }
     log.info("WispService started on port ${port}")
 
+    // loop until stopped accepting incoming TCP connections
     while (!listenerPool.isStopped)
     {
       socket := listener.accept
@@ -65,6 +79,11 @@ const class WispService : Service
   internal const ActorPool processorPool  := ActorPool()
   internal const WispSessionMgr sessionMgr := WispSessionMgr()
 
+  static Void main()
+  {
+    WispService { port = 8080 }.start
+    Actor.sleep(Duration.maxVal)
+  }
 }
 
 

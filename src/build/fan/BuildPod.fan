@@ -161,9 +161,12 @@ abstract class BuildPod : BuildScript
   virtual Void compileFan()
   {
     // add my own meta
-    meta := this.meta.dup
+    meta := this.meta.dup { ordered = true }
     meta["pod.docApi"] = docApi.toStr
     meta["pod.docSrc"] = docSrc.toStr
+    meta["pod.native.java"]   = (javaDirs   != null && !javaDirs.isEmpty).toStr
+    meta["pod.native.dotnet"] = (dotnetDirs != null && !dotnetDirs.isEmpty).toStr
+    meta["pod.native.js"]     = (jsDirs     != null && !jsDirs.isEmpty).toStr
 
     // map my config to CompilerInput structure
     ci := CompilerInput()

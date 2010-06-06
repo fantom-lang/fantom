@@ -68,7 +68,7 @@ class JarDist : JdkTask
   private Void sysClasses()
   {
     log.info("Pod [sys]")
-    extractToTemp(script.devHomeDir + `lib/java/sys.jar`)
+    extractClassfilesToTemp(script.devHomeDir + `lib/java/sys.jar`)
     reflect("sys")
   }
 
@@ -76,31 +76,59 @@ class JarDist : JdkTask
   {
     log.info("Pod [$podName]")
 
-    // stub into Java classfiles using JStub
-    Exec(script,
-      [javaExe,
-       "-cp", (script.devHomeDir + `lib/java/sys.jar`).osPath,
-       "-Dfan.home=$Env.cur.workDir.osPath",
-       "fanx.tools.Jstub",
-       "-d", tempDir.osPath,
-       podName]).run
+    // open as zip and
+    podFile := script.devHomeDir + `lib/fan/${podName}.pod`
+    podZip  := Zip.open(podFile)
+    meta := podZip.contents[`/meta.props`].readProps
+    podZip.close
 
-    // stub is "tempDir/{pod}.jar" - extract to tempDir and then delete it
-    jar := tempDir + `${podName}.jar`
-    extractToTemp(jar)
-    jar.delete
+    // double check dependencies; for basic sanity check
+    // we just check names not version numbers
+    meta.get("pod.depends", "").split(';').each |dependStr|
+    {
+      if (dependStr.isEmpty) return
+      depend := Depend(dependStr)
+      if (!podNames.contains(depend.name) && depend.name != "sys")
+        throw fatal("Missing dependency for '$podName': $depend")
+    }
+
+    // if pod already has its java native code, then the pod
+    // zip should already contain all the classfiles, otherwise
+    // we need to kick off a JStub
+    if (meta["pod.native.java"] == "true")
+    {
+      log.info("  Extract pre-stubbed classfiles")
+      extractClassfilesToTemp(podFile)
+    }
+    else
+    {
+      log.info("  JStub to classfiles")
+      // stub into Java classfiles using JStub
+      Exec(script,
+        [javaExe,
+         "-cp", (script.devHomeDir + `lib/java/sys.jar`).osPath,
+         "-Dfan.home=$Env.cur.workDir.osPath",
+         "fanx.tools.Jstub",
+         "-d", tempDir.osPath,
+         podName]).run
+
+      // stub is "tempDir/{pod}.jar" - extract to tempDir and then delete it
+      jar := tempDir + `${podName}.jar`
+      extractClassfilesToTemp(jar)
+      jar.delete
+    }
 
     reflect(podName)
   }
 
-  private Void extractToTemp(File zipFile)
+  private Void extractClassfilesToTemp(File zipFile)
   {
     zip := Zip.open(zipFile)
     copyOpts := ["overwrite":true]
     zip.contents.each |f|
     {
       if (f.isDir) return
-      if (f.name.lower == "manifest.mf") return
+      if (f.ext != "class") return
       path := f.uri.toStr[1..-1]
       dest := tempDir + path.toUri
       f.copyTo(dest, copyOpts)

@@ -15,12 +15,22 @@ using build
 class Build : BuildScript
 {
   @Target { help = "build fansh pod as a single JAR dist" }
-  Void dist()
+  Void distFansh()
   {
     dist := JarDist(this)
     dist.outFile = `./fansh.jar`.toFile.normalize
-    dist.podNames = Str["compiler", "fansh"]
+    dist.podNames = Str["compiler", "concurrent", "fansh"]
     dist.mainMethod = "fansh::Main.main"
+    dist.run
+  }
+
+  @Target { help = "build wisp pod as a single JAR dist" }
+  Void distWisp()
+  {
+    dist := JarDist(this)
+    dist.outFile = `./wisp.jar`.toFile.normalize
+    dist.podNames = Str["concurrent", "inet", "util", "web", "webmod", "wisp"]
+    dist.mainMethod = "wisp::WispService.main"
     dist.run
   }
 }
