@@ -44,7 +44,7 @@ abstract class BuildPod : BuildScript
   **
   ** Pod meta-data name/value pairs to compile into pod.  See `sys::Pod.meta`.
   **
-  Str:Str meta := Str:Str[:]
+  Str:Str meta := Str:Str[:] { ordered = true }
 
   **
   ** Pod index name/value pairs to compile into pod.  See `sys::Env.index`.
@@ -161,7 +161,7 @@ abstract class BuildPod : BuildScript
   virtual Void compileFan()
   {
     // add my own meta
-    meta := this.meta.dup { ordered = true }
+    meta := this.meta.dup
     meta["pod.docApi"] = docApi.toStr
     meta["pod.docSrc"] = docSrc.toStr
     meta["pod.native.java"]   = (javaDirs   != null && !javaDirs.isEmpty).toStr
