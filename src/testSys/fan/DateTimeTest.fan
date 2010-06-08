@@ -815,8 +815,11 @@ class DateTimeTest : Test
     d := DateTime.makeTicks(8035200123_000000, utc)
     verifyEq(d.toStr, "2000-04-03T00:00:00.123Z UTC")
 
-    d = DateTime.makeTicks(278744523000_000089, ny)
-    verifyEq(d.toStr, "2008-10-31T01:02:03.000000089-04:00 New_York")
+    if (Env.cur.runtime != "js")
+    {
+      d = DateTime.makeTicks(278744523000_000089, ny)
+      verifyEq(d.toStr, "2008-10-31T01:02:03.000000089-04:00 New_York")
+    }
 
     d = DateTime.makeTicks(215589723000_000000, ny)
     verifyEq(d.toStr, "2006-10-31T01:02:03-05:00 New_York")

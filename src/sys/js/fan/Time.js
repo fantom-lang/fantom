@@ -273,14 +273,14 @@ pattern = "hh:mm:ss";
   return s;
 }
 
+fan.sys.Time.prototype.toCode = function()
+{
+  if (this.equals(fan.sys.Time.m_defVal)) return "Time.defVal";
+  return "Time(\"" + this.toString() + "\")";
+}
+
 fan.sys.Time.prototype.isMidnight = function()
 {
   return this.equals(fan.sys.Time.m_defVal);
 }
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-fan.sys.Time.m_defVal = new fan.sys.Time(0, 0, 0, 0);
 

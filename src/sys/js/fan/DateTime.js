@@ -351,7 +351,10 @@ fan.sys.DateTime.fromStr = function(s, checked, iso)
     }
 
     //return fan.sys.DateTime.make(year, fan.sys.Month.m_vals.get(month), day, hour, min, sec, ns, offset, tz);
-    return fan.sys.DateTime.make(year, fan.sys.Month.m_vals.get(month), day, hour, min, sec, ns, tz);
+
+    // use local var to capture any exceptions
+    var instance = fan.sys.DateTime.make(year, fan.sys.Month.m_vals.get(month), day, hour, min, sec, ns, tz);
+    return instance;
   }
   catch (err)
   {
@@ -801,6 +804,16 @@ fan.sys.DateTime.fromIso = function(s, checked)
 {
   if (checked === undefined) checked = true;
   return fan.sys.DateTime.fromStr(s, checked, true);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Misc
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.DateTime.prototype.toCode = function()
+{
+  if (this.equals(fan.sys.DateTime.m_defVal)) return "DateTime.defVal";
+  return "DateTime(\"" + this.toString() + "\")";
 }
 
 //////////////////////////////////////////////////////////////////////////
