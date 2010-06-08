@@ -124,7 +124,7 @@ fan.sys.Month.m_vals = fan.sys.List.make(fan.sys.Month.$type,
   fan.sys.Month.m_oct,
   fan.sys.Month.m_nov,
   fan.sys.Month.m_dec
-]);
+]).toImmutable();
 
 //
 // Weekday
@@ -146,7 +146,43 @@ fan.sys.Weekday.m_vals = fan.sys.List.make(fan.sys.Weekday.$type,
   fan.sys.Weekday.m_thu,
   fan.sys.Weekday.m_fri,
   fan.sys.Weekday.m_sat
-]);
+]).toImmutable();
+
+//
+// TimeZone
+//
+// Etc/UTC
+tz = new fan.sys.TimeZone();
+tz.m_name = "UTC";
+tz.m_fullName = "Etc/UTC";
+tz.m_rules = [];
+rule = new fan.sys.TimeZone$Rule();
+ rule.startYear = 1995;
+ rule.offset = 0;
+ rule.stdAbbr = "UTC";
+ rule.dstOffset = 0;
+ tz.m_rules.push(rule);
+fan.sys.TimeZone.cache["UTC"] = tz;
+fan.sys.TimeZone.cache["Etc/UTC"] = tz;
+fan.sys.TimeZone.names.push("UTC");
+fan.sys.TimeZone.fullNames.push("Etc/UTC");
+fan.sys.TimeZone.m_utc = tz;
+
+// Etc/Rel
+tz.m_name = "Rel";
+tz.m_fullName = "Etc/Rel";
+tz.m_rules = [new fan.sys.TimeZone$Rule()];
+fan.sys.TimeZone.cache["Rel"] = tz;
+fan.sys.TimeZone.cache["Etc/Rel"] = tz;
+fan.sys.TimeZone.names.push("Rel");
+fan.sys.TimeZone.fullNames.push("Etc/Rel");
+fan.sys.TimeZone.m_rel = tz;
+
+//
+// DateTime
+//
+fan.sys.DateTime.m_defVal = fan.sys.DateTime.make(
+  2000, fan.sys.Month.m_jan, 1, 0, 0, 0, 0, fan.sys.TimeZone.utc());
 
 //
 // Version

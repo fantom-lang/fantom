@@ -195,11 +195,14 @@ class DateTimeTest : Test
     verify(a !== b)
     verify(b === DateTime.nowUtc)
 
-    Actor.sleep(200ms)
-    verify(b === DateTime.nowUtc)
+    if (Env.cur.runtime != "js")
+    {
+      Actor.sleep(200ms)
+      verify(b === DateTime.nowUtc)
 
-    c := DateTime.now(180ms)
-    verify(b !== c)
+      c := DateTime.now(180ms)
+      verify(b !== c)
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1115,6 +1118,8 @@ class DateTimeTest : Test
 
   Void testJava()
   {
+    if (Env.cur.runtime != "java") return
+
     x := DateTime.fromJava(1227185341155, ny)
     verifyEq(x.tz, ny)
     verifyEq(x.year, 2008)

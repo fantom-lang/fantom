@@ -691,6 +691,12 @@ fan.sys.DateTime.prototype.toRel = function()
   return this.toTimeZone(fan.sys.TimeZone.m_rel);
 }
 
+fan.sys.DateTime.prototype.floor = function(accuracy)
+{
+  if (this.m_ticks % accuracy.m_ticks == 0) return this;
+  return fan.sys.DateTime.makeTicks(this.m_ticks - (this.m_ticks % accuracy.m_ticks), this.m_tz);
+}
+
 fan.sys.DateTime.prototype.isMidnight = function()
 {
   return this.hour() == 0 && this.min() == 0 && this.sec() == 0 && this.nanoSec() == 0;

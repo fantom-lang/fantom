@@ -49,20 +49,16 @@ fan.sys.TimeZone.fromStr = function(name, checked)
 
 fan.sys.TimeZone.defVal = function()
 {
-  return fan.sys.TimeZone.utc();
+  return fan.sys.TimeZone.m_utc;
 }
 
 fan.sys.TimeZone.utc = function()
 {
-  if (fan.sys.TimeZone.m_utc == null)
-    fan.sys.TimeZone.m_utc = fan.sys.TimeZone.fromStr("UTC");
   return fan.sys.TimeZone.m_utc;
 }
 
 fan.sys.TimeZone.rel = function()
 {
-  if (fan.sys.TimeZone.m_rel == null)
-    fan.sys.TimeZone.m_rel = fan.sys.TimeZone.fromStr("Rel");
   return fan.sys.TimeZone.m_rel;
 }
 
