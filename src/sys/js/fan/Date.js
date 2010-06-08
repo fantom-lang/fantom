@@ -121,7 +121,7 @@ fan.sys.Date.prototype.plus = function(d)
   var month = this.m_month;
   var day = this.m_day;
 
-  var numDays = Math.floor(ticks / fan.sys.Duration.nsPerDay);
+  var numDays = fan.sys.Int.div(ticks, fan.sys.Duration.nsPerDay);
   var dayIncr = numDays < 0 ? +1 : -1;
   while (numDays != 0)
   {
