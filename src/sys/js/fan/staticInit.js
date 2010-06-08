@@ -169,6 +169,7 @@ fan.sys.TimeZone.fullNames.push("Etc/UTC");
 fan.sys.TimeZone.m_utc = tz;
 
 // Etc/Rel
+tz = new fan.sys.TimeZone();
 tz.m_name = "Rel";
 tz.m_fullName = "Etc/Rel";
 tz.m_rules = [new fan.sys.TimeZone$Rule()];
@@ -181,6 +182,8 @@ fan.sys.TimeZone.m_rel = tz;
 //
 // DateTime
 //
+fan.sys.Time.m_defVal = new fan.sys.Time(0, 0, 0, 0);
+fan.sys.Date.m_defVal = new fan.sys.Date(2000, 0, 1);
 fan.sys.DateTime.m_defVal = fan.sys.DateTime.make(
   2000, fan.sys.Month.m_jan, 1, 0, 0, 0, 0, fan.sys.TimeZone.utc());
 
