@@ -30,6 +30,7 @@ fan.sys.Num.toInt = function(val)
   if (isNaN(val)) return 0;
   if (val == Number.POSITIVE_INFINITY) return fan.sys.Int.m_maxVal;
   if (val == Number.NEGATIVE_INFINITY) return fan.sys.Int.m_minVal;
+  if (val < 0) return Math.ceil(val);
   return Math.floor(val);
 }
 
