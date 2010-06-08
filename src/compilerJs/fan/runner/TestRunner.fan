@@ -103,6 +103,7 @@ class TestRunner
       JsTimeZone(TimeZone("Jerusalem")).write(out)
       JsTimeZone(TimeZone("St_Johns")).write(out)
       JsTimeZone(TimeZone("Godthab")).write(out)
+      JsTimeZone(TimeZone("Taipei")).write(out)
 
       engine.eval(buf.toStr)
     }

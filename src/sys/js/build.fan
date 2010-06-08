@@ -156,6 +156,19 @@ class Build : BuildScript
       log.debug("    $n")
       JsTimeZone(TimeZone(n)).write(out)
     }
+
+    // TODO FIXIT: remove in 1.0.54 when bootstrap has Rel
+    log.debug("    Rel")
+    out.printLine(
+      """tz = new fan.sys.TimeZone();
+         tz.m_name = "Rel";
+         tz.m_fullName = "Etc/Rel";
+         tz.m_rules = [new fan.sys.TimeZone\$Rule()];
+         fan.sys.TimeZone.cache["Rel"] = tz;
+         fan.sys.TimeZone.cache["Etc/Rel"] = tz;
+         fan.sys.TimeZone.names.push("Rel");
+         fan.sys.TimeZone.fullNames.push("Etc/Rel");
+         fan.sys.TimeZone.m_rel = tz;""")
   }
 
   private Void writeFanx(OutStream out)

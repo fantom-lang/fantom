@@ -254,6 +254,10 @@ fan.sys.DateTime.makeTicks = function(ticks, tz)
   // compute weekday
   var weekday = (fan.sys.DateTime.firstWeekday(year, month) + day - 1) % 7;
 
+  // compute nanos
+  var rem = ticks >= 0 ? ticks : ticks - fan.sys.DateTime.yearTicks[0];
+  instance.m_ns = rem % fan.sys.DateTime.nsPerSec;
+
   // fields
   var fields = 0;
   fields |= ((year-1900) & 0xff) << 0;
@@ -660,13 +664,26 @@ fan.sys.DateTime.prototype.plus = function(duration)
 fan.sys.DateTime.prototype.toTimeZone = function(tz)
 {
   if (this.m_tz == tz) return this;
-  return fan.sys.DateTime.makeTicks(this.m_ticks, tz);
+  if (tz == fan.sys.TimeZone.m_rel || this.m_tz == fan.sys.TimeZone.m_rel)
+  {
+    return fan.sys.DateTime.make(
+      this.year(), this.month(), this.day(),
+      this.hour(), this.min(), this.sec(), this.nanoSec(), tz);
+  }
+  else
+  {
+    return fan.sys.DateTime.makeTicks(this.m_ticks, tz);
+  }
 }
 
 fan.sys.DateTime.prototype.toUtc = function()
 {
-  if (this.m_tz == fan.sys.TimeZone.m_utc) return this;
-  return fan.sys.DateTime.makeTicks(this.m_ticks, fan.sys.TimeZone.m_utc);
+  return this.toTimeZone(fan.sys.TimeZone.m_utc);
+}
+
+fan.sys.DateTime.prototype.toRel = function()
+{
+  return this.toTimeZone(fan.sys.TimeZone.m_rel);
 }
 
 fan.sys.DateTime.prototype.isMidnight = function()
