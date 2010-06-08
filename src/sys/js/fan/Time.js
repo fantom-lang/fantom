@@ -250,7 +250,7 @@ pattern = "hh:mm:ss";
             if (frac == 0 || opt <= 0) break;
             opt--;
           }
-          s += Math.floor(frac / tenth);
+          s += fan.sys.Int.div(frac, tenth);
           frac %= tenth;
           tenth /= 10;
         }
@@ -290,6 +290,35 @@ fan.sys.Time.fromIso = function(s, checked)
 //////////////////////////////////////////////////////////////////////////
 // Misc
 //////////////////////////////////////////////////////////////////////////
+
+fan.sys.Time.fromDuration = function(d)
+{
+  var ticks = d.m_ticks;
+  if (ticks == 0) return fan.sys.Time.m_defVal;
+
+  if (ticks < 0 || ticks > fan.sys.Duration.nsPerDay )
+    throw fan.sys.ArgErr.make("Duration out of range: " + d);
+
+  var hour = fan.sys.Int.div(ticks, fan.sys.Duration.nsPerHr);  ticks %= fan.sys.Duration.nsPerHr;
+  var min  = fan.sys.Int.div(ticks, fan.sys.Duration.nsPerMin); ticks %= fan.sys.Duration.nsPerMin;
+  var sec  = fan.sys.Int.div(ticks, fan.sys.Duration.nsPerSec); ticks %= fan.sys.Duration.nsPerSec;
+  var ns   = ticks;
+
+  return new fan.sys.Time(hour, min, sec, ns);
+}
+
+fan.sys.Time.prototype.toDuration = function()
+{
+  return fan.sys.Duration.make(this.m_hour*fan.sys.Duration.nsPerHr +
+                               this.m_min*fan.sys.Duration.nsPerMin +
+                               this.m_sec*fan.sys.Duration.nsPerSec +
+                               this.m_ns);
+}
+
+fan.sys.Time.prototype.toDateTime = function(d, tz)
+{
+  return fan.sys.DateTime.makeDT(d, this, tz);
+}
 
 fan.sys.Time.prototype.toCode = function()
 {

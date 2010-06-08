@@ -162,7 +162,7 @@ fan.sys.DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
 
 fan.sys.DateTime.makeDT = function(d, t, tz)
 {
-  if (tz === undefined) tz = TimeZone.cur();
+  if (tz === undefined) tz = fan.sys.TimeZone.cur();
   return fan.sys.DateTime.make(
     d.year(), d.month(), d.day(),
     t.hour(), t.min(), t.sec(), t.nanoSec(), tz);
@@ -208,7 +208,7 @@ fan.sys.DateTime.makeTicks = function(ticks, tz)
     if (rem < 0) rem += fan.sys.DateTime.nsPerYear;
 
     // compute day of the year
-    var dayOfYear = Math.floor(rem/fan.sys.DateTime.nsPerDay);
+    var dayOfYear = fan.sys.Int.div(rem, fan.sys.DateTime.nsPerDay);
     rem %= fan.sys.DateTime.nsPerDay;
 
     // use lookup tables map day of year to month and day
@@ -225,7 +225,7 @@ fan.sys.DateTime.makeTicks = function(ticks, tz)
 
     // if dstOffset is set to max, then this is
     // the third time thru the loop: std->dst->std
-    if (fan.sys.Int.equals(dstOffset, fan.sys.Int.m_maxVal)) { dstOffset = 0; break; }
+    if (dstOffset == fan.sys.Int.m_maxVal) { dstOffset = 0; break; }
 
     // if dstOffset is non-zero we have run this
     // loop twice to recompute the date for dst
@@ -235,7 +235,7 @@ fan.sys.DateTime.makeTicks = function(ticks, tz)
       // recompute to see if dst wall time pushed us back
       // into dst - if so then run through the loop a third
       // time to get us back to standard time
-      if (rule.isWallTime() && fan.sys.TimeZone.dstOffset(rule, year, month, day, Math.floor(rem/fan.sys.DateTime.nsPerSec)) == 0)
+      if (rule.isWallTime() && fan.sys.TimeZone.dstOffset(rule, year, month, day, fan.sys.Int.div(rem, fan.sys.DateTime.nsPerSec)) == 0)
       {
         ticks -= dstOffset * fan.sys.DateTime.nsPerSec;
         dstOffset = fan.sys.Int.m_maxVal;
@@ -247,14 +247,14 @@ fan.sys.DateTime.makeTicks = function(ticks, tz)
     // first time in loop; check for daylight saving time,
     // and if dst is in effect then re-run this loop with
     // modified working ticks
-    dstOffset = fan.sys.TimeZone.dstOffset(rule, year, month, day, Math.floor(rem/fan.sys.DateTime.nsPerSec));
+    dstOffset = fan.sys.TimeZone.dstOffset(rule, year, month, day, fan.sys.Int.div(rem, fan.sys.DateTime.nsPerSec));
     if (dstOffset == 0) break;
     ticks += dstOffset * fan.sys.DateTime.nsPerSec;
   }
 
   // compute time of day
-  var hour = Math.floor(rem / fan.sys.DateTime.nsPerHour);  rem %= fan.sys.DateTime.nsPerHour;
-  var min  = Math.floor(rem / fan.sys.DateTime.nsPerMin);   rem %= fan.sys.DateTime.nsPerMin;
+  var hour = fan.sys.Int.div(rem, fan.sys.DateTime.nsPerHour);  rem %= fan.sys.DateTime.nsPerHour;
+  var min  = fan.sys.Int.div(rem, fan.sys.DateTime.nsPerMin);   rem %= fan.sys.DateTime.nsPerMin;
 
   // compute weekday
   var weekday = (fan.sys.DateTime.firstWeekday(year, month) + day - 1) % 7;
@@ -406,7 +406,7 @@ fan.sys.DateTime.prototype.min = function() { return (this.m_fields >> 22) & 0x3
 fan.sys.DateTime.prototype.sec = function()
 {
   var rem = this.m_ticks >= 0 ? this.m_ticks : this.m_ticks - fan.sys.DateTime.yearTicks[0];
-  return Math.floor((rem % fan.sys.DateTime.nsPerMin) / fan.sys.DateTime.nsPerSec);
+  return fan.sys.Int.div((rem % fan.sys.DateTime.nsPerMin),  fan.sys.DateTime.nsPerSec);
 }
 fan.sys.DateTime.prototype.nanoSec = function()
 {
@@ -584,7 +584,7 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
             if (frac == 0 || opt <= 0) break;
             opt--;
           }
-          s += Math.floor(frac/tenth);
+          s += fan.sys.Int.div(frac, tenth);
           frac %= tenth;
           tenth /= 10;
         }
@@ -775,7 +775,7 @@ fan.sys.DateTime.ticksToYear = function(ticks)
 {
   // estimate the year to get us in the ball park, then
   // match the exact year using the yearTicks lookup table
-  var year = Math.floor(ticks/fan.sys.DateTime.nsPerYear) + 2000;
+  var year = fan.sys.Int.div(ticks, fan.sys.DateTime.nsPerYear) + 2000;
   if (fan.sys.DateTime.yearTicks[year-1900] > ticks) year--;
   return year;
 }

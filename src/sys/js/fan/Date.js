@@ -191,6 +191,19 @@ fan.sys.Date.prototype.numDays = function(year, mon)
     return fan.sys.DateTime.daysInMon[mon];
 }
 
+fan.sys.Date.prototype.firstOfMonth = function()
+{
+  if (this.m_day == 1) return this;
+  return new fan.sys.Date(this.m_year, this.m_month, 1);
+}
+
+fan.sys.Date.prototype.lastOfMonth = function()
+{
+  var last = this.month().numDays(this.m_year);
+  if (this.m_day == last) return this;
+  return new fan.sys.Date(this.m_year, this.m_month, last);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Static
 //////////////////////////////////////////////////////////////////////////
