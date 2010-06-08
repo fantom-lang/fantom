@@ -35,10 +35,9 @@ fan.sys.Time.make = function(hour, min, sec, ns)
   return new fan.sys.Time(hour, min, sec, ns);
 }
 
-fan.sys.Time.now = function()
+fan.sys.Time.now = function(tz)
 {
-  var d = new Date();
-  return new fan.sys.Time(d.getHours(), d.getMinutes(), d.getSeconds());
+  return fan.sys.DateTime.makeTicks(fan.sys.DateTime.nowTicks(), tz).time();
 }
 
 fan.sys.Time.fromStr = function(s, checked)

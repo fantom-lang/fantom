@@ -151,11 +151,14 @@ class DateTimeTest : Test
     verify(a !== b)
     verify(b === DateTime.now)
 
-    Actor.sleep(200ms)
-    verify(b === DateTime.now)
+    if (Env.cur.runtime != "js")
+    {
+      Actor.sleep(200ms)
+      verify(b === DateTime.now)
 
-    c := DateTime.now(180ms)
-    verify(b !== c)
+      c := DateTime.now(180ms)
+      verify(b !== c)
+    }
 
     verifyEq(Date.today, DateTime.now.date)
     verifyEq(Date.today(TimeZone.utc), DateTime.nowUtc.date)
