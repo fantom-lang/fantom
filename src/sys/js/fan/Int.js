@@ -168,7 +168,12 @@ fan.sys.Int.decrement = function(self) { return self-1; }
 fan.sys.Int.plus  = function(a, b) { return a + b; }
 fan.sys.Int.minus = function(a, b) { return a - b; }
 fan.sys.Int.mult  = function(a, b) { return a * b; }
-fan.sys.Int.div   = function(a, b) { return Math.floor(a / b); }
+fan.sys.Int.div   = function(a, b)
+{
+  var r = a / b;
+  if (r < 0) return Math.ceil(r);
+  return Math.floor(r);
+}
 fan.sys.Int.mod   = function(a, b) { return a % b; }
 
 fan.sys.Int.pow = function(self, pow)

@@ -166,6 +166,7 @@ class IntTest : Test
 
     verifyEq(-16/4, -4)
     verifyEq(16 / 5, 3)
+    verifyEq(-6/4, -1)
     x = 20 / 2; x /= -5; verifyEq(x, -2)
 
     verifyEq(21%-6, 3)
@@ -276,6 +277,7 @@ class IntTest : Test
     verifyEq(9.toDecimal, 9d)
     verifyEq(-123456789.toDecimal, -123456789d)
     verifyEq(-7.toInt, -7)
+    verifyEq((-2.3f).toInt, -2)
     verify(93757393754.toInt == 93757393754)
   }
 
