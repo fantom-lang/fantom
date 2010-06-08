@@ -41,7 +41,7 @@ fan.sys.DateTime.now = function(tolerance)
     tolerance = fan.sys.DateTime.toleranceDefault;
   }
 
-  var now = (new Date().getTime() - fan.sys.DateTime.diffJs) * fan.sys.DateTime.nsPerMilli;
+  var now = fan.sys.DateTime.nowTicks();
 
   if (fan.sys.DateTime.cached == null)
     fan.sys.DateTime.cached = fan.sys.DateTime.makeTicks(0, fan.sys.TimeZone.cur());
@@ -64,7 +64,7 @@ fan.sys.DateTime.nowUtc = function(tolerance)
     tolerance = fan.sys.DateTime.toleranceDefault;
   }
 
-  var now = (new Date().getTime() - fan.sys.DateTime.diffJs) * fan.sys.DateTime.nsPerMilli;
+  var now = fan.sys.DateTime.nowTicks();
 
   if (fan.sys.DateTime.cachedUtc == null)
     fan.sys.DateTime.cachedUtc = fan.sys.DateTime.makeTicks(0, fan.sys.TimeZone.utc());
@@ -75,6 +75,11 @@ fan.sys.DateTime.nowUtc = function(tolerance)
 
   fan.sys.DateTime.cachedUtc = fan.sys.DateTime.makeTicks(now, fan.sys.TimeZone.utc());
   return fan.sys.DateTime.cachedUtc;
+}
+
+fan.sys.DateTime.nowTicks = function()
+{
+  return (new Date().getTime() - fan.sys.DateTime.diffJs) * fan.sys.DateTime.nsPerMilli
 }
 
 fan.sys.DateTime.boot = function()
