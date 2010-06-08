@@ -602,7 +602,8 @@ class DateTimeTest : Test
     verifyDateTime(13478400000_000000, utc, 2000, jun, 5,  0, 0, 0, mon, std)
     verifyDateTime(16156800000_000000, utc, 2000, jul, 6,  0, 0, 0, thu, std)
     verifyDateTime(18921600000_000000, utc, 2000, aug, 7,  0, 0, 0, mon, std)
-    verifyDateTime(21686400123_456789, utc, 2000, sep, 8,  0, 0, 0, fri, std, null, 123_456_789)
+    if (Env.cur.runtime != "js")
+      verifyDateTime(21686400123_456789, utc, 2000, sep, 8,  0, 0, 0, fri, std, null, 123_456_789)
     verifyDateTime(24364800000_000000, utc, 2000, oct, 9,  0, 0, 0, mon, std)
     verifyDateTime(27129600000_000000, utc, 2000, nov, 10, 0, 0, 0, fri, std)
     verifyDateTime(29808000000_000000, utc, 2000, dec, 11, 0, 0, 0, mon, std, 346)
@@ -623,7 +624,8 @@ class DateTimeTest : Test
     verifyDateTime(86400000_000000, utc, 2000, jan, 2, 0, 0, 0, sun, std)
 
     // right now as I code this
-    verifyDateTime(245209531000_000099, ny, 2007, oct, 8, 21, 45, 31, mon, dst, null, 99)
+    if (Env.cur.runtime != "js")
+      verifyDateTime(245209531000_000099, ny, 2007, oct, 8, 21, 45, 31, mon, dst, null, 99)
 
     // Halloween 2008 (dst)
     verifyDateTime(278744523000_000000, ny, 2008, oct, 31, 1, 2, 3, fri, dst)
