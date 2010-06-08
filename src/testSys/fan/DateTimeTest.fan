@@ -1253,7 +1253,7 @@ class DateTimeTest : Test
     x := Date.today.midnight
     verifyEq(x.isMidnight, true)
     verifyEq(x.time.isMidnight, true)
-    x = x + 1ns
+    x = (Env.cur.runtime == "js") ? x+100ns : x+1ns
     verifyEq(x.isMidnight, false)
     verifyEq(x.time.isMidnight, false)
   }

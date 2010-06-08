@@ -700,6 +700,11 @@ fan.sys.DateTime.prototype.floor = function(accuracy)
   return fan.sys.DateTime.makeTicks(this.m_ticks - (this.m_ticks % accuracy.m_ticks), this.m_tz);
 }
 
+fan.sys.DateTime.prototype.midnight = function()
+{
+  return fan.sys.DateTime.make(this.year(), this.month(), this.day(), 0, 0, 0, 0, this.m_tz);
+}
+
 fan.sys.DateTime.prototype.isMidnight = function()
 {
   return this.hour() == 0 && this.min() == 0 && this.sec() == 0 && this.nanoSec() == 0;

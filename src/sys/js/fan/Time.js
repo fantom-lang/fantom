@@ -77,12 +77,14 @@ fan.sys.Time.fromStr = function(s, checked)
     // verify everything has been parsed
     if (i < s.length) throw new Error();
 
-    return new fan.sys.Time(hour, min, sec, ns);
+    // use local var to capture any exceptions
+    var instance = new fan.sys.Time(hour, min, sec, ns);
+    return instance;
   }
   catch (err)
   {
     if (!checked) return null;
-    throw fan.sys.ParseErr.make("Time", s).val;
+    throw fan.sys.ParseErr.make("Time", s);
   }
 }
 
@@ -272,6 +274,22 @@ pattern = "hh:mm:ss";
 
   return s;
 }
+
+//////////////////////////////////////////////////////////////////////////
+// ISO 8601
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Time.prototype.toIso = function() { return this.toStr(); }
+
+fan.sys.Time.fromIso = function(s, checked)
+{
+  if (checked === undefined) checked = true;
+  return fan.sys.Time.fromStr(s, checked);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Misc
+//////////////////////////////////////////////////////////////////////////
 
 fan.sys.Time.prototype.toCode = function()
 {
