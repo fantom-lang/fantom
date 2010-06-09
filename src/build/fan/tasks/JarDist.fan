@@ -78,6 +78,7 @@ class JarDist : JdkTask
 
     // open as zip and
     podFile := script.devHomeDir + `lib/fan/${podName}.pod`
+    if (!podFile.exists) throw Err("Pod not found: $podFile")
     podZip  := Zip.open(podFile)
     meta := podZip.contents[`/meta.props`].readProps
     podZip.close
