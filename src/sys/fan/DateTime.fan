@@ -404,8 +404,8 @@ const final class DateTime
   ** false return null, otherwise throw ParseErr.  The following formats
   ** are supported:
   **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]
-  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]+HH::MM
-  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]-HH::MM
+  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]+HH:MM
+  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]-HH:MM
   **
   ** If a timezone offset is specified, then one the predefined "Etc/GMT+x"
   ** timezones are used for the result:
