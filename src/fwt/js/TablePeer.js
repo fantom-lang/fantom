@@ -66,7 +66,7 @@ fan.fwt.TablePeer.injectCss = function()
     " width: 100%;" +
     " border-right: none;" +
     "}" +
-    "table.__fwt_table td img { float: left; }" +
+    "table.__fwt_table td img { float:left; border:0; }" +
     "table.__fwt_table td span { margin-left: 3px; }" +
     "table.__fwt_table tr:nth-child(even) { background:#f1f5fa; }" +
     // selected
