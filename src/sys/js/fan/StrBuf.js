@@ -148,6 +148,11 @@ fan.sys.StrBufOutStream.prototype.w = function(v)
   throw fan.sys.UnsupportedErr.make("binary write on StrBuf output");
 }
 
+fan.sys.StrBufOutStream.prototype.write = function(x)
+{
+  throw fan.sys.UnsupportedErr.make("binary write on StrBuf output");
+}
+
 fan.sys.StrBufOutStream.prototype.writeBuf = function(buf, n)
 {
   throw fan.sys.UnsupportedErr.make("binary write on StrBuf output");
