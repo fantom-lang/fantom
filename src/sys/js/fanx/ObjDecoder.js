@@ -576,7 +576,7 @@ fanx_ObjDecoder.prototype.endOfStmt = function(lastLine)
 
 fanx_ObjDecoder.decode = function(s)
 {
-  return new fanx_ObjDecoder(InStream.makeForStr(s), null).readObj();
+  return new fanx_ObjDecoder(fan.sys.InStream.makeForStr(s), null).readObj();
 }
 
 fanx_ObjDecoder.err = function(msg, line)
