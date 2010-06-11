@@ -222,14 +222,14 @@ fan.sys.OutStream.prototype.printLine = function(obj)
   return this.writeChar('\n');
 }
 
-/*
-public OutStream writeObj(Object obj) { return writeObj(obj, null); }
-public OutStream writeObj(Object obj, Map options)
+fan.sys.OutStream.prototype.writeObj = function(obj, options)
 {
-  new ObjEncoder(this, options).writeObj(obj);
+  if (options === undefined) options = null;
+  new fanx_ObjEncoder(this, options).writeObj(obj);
   return this;
 }
 
+/*
 public OutStream writeProps(Map props) { return writeProps(props, true); }
 public OutStream writeProps(Map props, boolean close)
 {
