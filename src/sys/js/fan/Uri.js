@@ -739,6 +739,11 @@ fan.sys.Uri.prototype.toLocale = function()
   return this.m_str;
 }
 
+fan.sys.Uri.prototype.$literalEncode = function(out)
+{
+  out.wStrLiteral(this.m_str, '`');
+}
+
 fan.sys.Uri.prototype.encode = function()
 {
   var x = this.m_encoded;
