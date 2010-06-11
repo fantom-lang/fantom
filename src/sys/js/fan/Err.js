@@ -227,12 +227,12 @@ fan.sys.UnknownTypeErr.make = function(msg, cause) { return new fan.sys.UnknownT
 // UnresolvedErr
 fan.sys.UnresolvedErr = fan.sys.Obj.$extend(fan.sys.Err);
 fan.sys.UnresolvedErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prototype.$ctor.call(this, msg, cause); }
-fan.sys.UnresolvedErr.prototype.$typeof = function() { return fan.sys.UnresolvedErr.type; }
+fan.sys.UnresolvedErr.prototype.$typeof = function() { return fan.sys.UnresolvedErr.$type; }
 fan.sys.UnresolvedErr.make = function(msg, cause) { return new fan.sys.UnresolvedErr(msg, cause); }
 
 // UnsupportedErr
 fan.sys.UnsupportedErr = fan.sys.Obj.$extend(fan.sys.Err);
 fan.sys.UnsupportedErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prototype.$ctor.call(this, msg, cause); }
-fan.sys.UnsupportedErr.prototype.$typeof = function() { return fan.sys.UnsupportedErr.type; }
+fan.sys.UnsupportedErr.prototype.$typeof = function() { return fan.sys.UnsupportedErr.$type; }
 fan.sys.UnsupportedErr.make = function(msg, cause) { return new fan.sys.UnsupportedErr(msg, cause); }
 
