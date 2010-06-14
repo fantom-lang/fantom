@@ -12,128 +12,168 @@
  */
 fan.sys.Log = fan.sys.Obj.$extend(fan.sys.Obj);
 
-fan.sys.Log.prototype.$ctor = function() {}
-fan.sys.Log.prototype.$typeof = function() { return fan.sys.Log.$type; }
-
-fan.sys.Log.prototype.err  = function(msg, err) { this.log(msg, err); }
-fan.sys.Log.prototype.info = function(msg, err) { this.log(msg, err); }
-fan.sys.Log.prototype.warn = function(msg, err) { this.log(msg, err); }
-
-fan.sys.Log.prototype.log = function(msg, err)
-{
-  try
-  {
-    console.log(msg);
-  }
-  catch (err) {}  // no console support
-}
-
-fan.sys.Log.make = function(name, register)
-{
-  var log = new fan.sys.Log();
-  log.name = name;
-  log.register = register;
-  return log;
-}
-
-fan.sys.Log.get = function(name)
-{
-  var log = fan.sys.Log.$cache[name];
-  if (log == null)
-  {
-    log = fan.sys.Log.make(name, true);
-    fan.sys.Log.$cache[name] = log;
-  }
-  return log;
-}
-
-fan.sys.Log.$cache = [];
-
-/*************************************************************************
- * LogLevel
- ************************************************************************/
-
-fan.sys.LogLevel = fan.sys.Obj.$extend(fan.sys.Enum);
-
-//////////////////////////////////////////////////////////////////////////
-// Constructor
-//////////////////////////////////////////////////////////////////////////
-
-fan.sys.LogLevel.prototype.$ctor = function(ordinal, name)
-{
-  this.make$(ordinal, name);
-}
-
-fan.sys.LogLevel.prototype.$typeof = function()
-{
-  return fan.sys.LogLevel.$type;
-}
-
-//////////////////////////////////////////////////////////////////////////
-// Range
-//////////////////////////////////////////////////////////////////////////
-
-fan.sys.LogLevel.m_debug  = new fan.sys.LogLevel(0, "debug");
-fan.sys.LogLevel.m_info   = new fan.sys.LogLevel(1, "info");
-fan.sys.LogLevel.m_warn   = new fan.sys.LogLevel(2, "warn");
-fan.sys.LogLevel.m_err    = new fan.sys.LogLevel(3, "err");
-fan.sys.LogLevel.m_silent = new fan.sys.LogLevel(4, "silent");
-
-fan.sys.LogLevel.m_vals =
-[
-  fan.sys.LogLevel.m_debug,
-  fan.sys.LogLevel.m_info,
-  fan.sys.LogLevel.m_warn,
-  fan.sys.LogLevel.m_err,
-  fan.sys.LogLevel.m_silent
-]
-
-/*************************************************************************
- * LogRec
- ************************************************************************/
-
-fan.sys.LogRec = fan.sys.Obj.$extend(fan.sys.Obj);
-
-fan.sys.LogRec.prototype.$ctor = function() {}
-fan.sys.LogRec.prototype.$typeof = function() { return fan.sys.LogRec.$type; }
-
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.LogRec.make = function(time, level, logName, msg, err)
+fan.sys.Log.prototype.$ctor = function()
 {
-  if (err === undefined) err = null;
-  var self = new fan.sys.LogRec();
-  self.m_time    = time;
-  self.m_level   = level;
-  self.m_logName = logName;
-  self.m_msg     = msg;
-  self.m_err     = err;
+  this.m_name  = null;
+  this.m_level = fan.sys.LogLevel.m_info;
+}
+
+fan.sys.Log.list = function()
+{
+  return fan.sys.List.make(fan.sys.Log.$type, fan.sys.Log.m_byName).ro();
+}
+
+fan.sys.Log.find = function(name, checked)
+{
+  if (checked === undefined) checked = true;
+  var log = fan.sys.Log.m_byName[name];
+  if (log != null) return log;
+  if (checked) throw fan.sys.Err.make("Unknown log: " + name);
+  return null;
+}
+
+fan.sys.Log.get = function(name)
+{
+  var log = fan.sys.Log.m_byName[name];
+  if (log != null) return log;
+  return fan.sys.Log.make(name, true);
+}
+
+fan.sys.Log.make = function(name, register)
+{
+  var self = new fan.sys.Log();
+  fan.sys.Log.make$(self, name, register);
   return self;
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Methods
-//////////////////////////////////////////////////////////////////////////
-
-fan.sys.LogRec.prototype.toStr = function()
+fan.sys.Log.make$ = function(self, name, register)
 {
-  var ts = "todo"; //((DateTime)time).toLocale("hh:mm:ss DD-MMM-YY");
-  return '[' + ts + '] [' + this.m_level + '] [' + this.m_logName + '] ' + this.m_msg;
-}
+  // verify valid name
+  fan.sys.Uri.checkName(name);
+  self.m_name = name;
 
-fan.sys.LogRec.prototype.print = function(out)
-{
-  // TODO
-  //if (out === undefined) out = ???
-  //out.printLine(toStr());
-  //if (err != null) err.trace(out, 2, true);
-  try
+  // if register
+  if (register)
   {
-    console.log(this.toStr());
-    if (err != null) err.trace(); // echo routes to console too
+    // verify unique
+    if (fan.sys.Log.m_byName[name] != null)
+      throw fan.sys.ArgErr.make("Duplicate log name: " + name);
+
+    // init and put into map
+    fan.sys.Log.m_byName[name] = self;
+
+    // check for initial level
+// TODO FIXIT
+//    var val = (String)Sys.sysPod.props(Uri.fromStr("log.props"), Duration.oneMin).get(name);
+//    if (val != null) self.level = LogLevel.fromStr(val);
   }
-  catch (err) {}  // no console support}
 }
+
+fan.sys.Log.m_byName = [];
+
+//////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Log.prototype.$typeof = function() { return fan.sys.Log.$type; }
+
+fan.sys.Log.prototype.toStr = function() { return this.m_name; }
+
+fan.sys.Log.prototype.name = function() { return this.m_name; }
+
+//////////////////////////////////////////////////////////////////////////
+// Severity Level
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Log.prototype.level = function()
+{
+  return this.m_level;
+}
+
+fan.sys.Log.prototype.level$ = function(level)
+{
+  if (level == null) throw fan.sys.ArgErr.make("level cannot be null");
+  this.m_level = level;
+}
+
+fan.sys.Log.prototype.enabled = function(level)
+{
+  return this.m_level.m_ordinal <= level.m_ordinal;
+}
+
+fan.sys.Log.prototype.isEnabled = function(level)
+{
+  return this.enabled(level);
+}
+
+fan.sys.Log.prototype.isErr = function()   { return this.isEnabled(fan.sys.LogLevel.m_err); }
+fan.sys.Log.prototype.isWarn = function()  { return this.isEnabled(fan.sys.LogLevel.m_warn); }
+fan.sys.Log.prototype.isInfo = function()  { return this.isEnabled(fan.sys.LogLevel.m_info); }
+fan.sys.Log.prototype.isDebug = function() { return this.isEnabled(fan.sys.LogLevel.m_debug); }
+
+//////////////////////////////////////////////////////////////////////////
+// Logging
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Log.prototype.err = function(msg, err)
+{
+  this.log(fan.sys.LogRec.make(fan.sys.DateTime.now(), fan.sys.LogLevel.m_err, this.m_name, msg, err));
+}
+
+fan.sys.Log.prototype.warn = function(msg, err)
+{
+  this.log(fan.sys.LogRec.make(fan.sys.DateTime.now(), fan.sys.LogLevel.m_warn, this.m_name, msg, err));
+}
+
+fan.sys.Log.prototype.info = function(msg, err)
+{
+  this.log(fan.sys.LogRec.make(fan.sys.DateTime.now(), fan.sys.LogLevel.m_info, this.m_name, msg, err));
+}
+
+fan.sys.Log.prototype.debug = function(msg, err)
+{
+  this.log(fan.sys.LogRec.make(fan.sys.DateTime.now(), fan.sys.LogLevel.m_debug, this.m_name, msg, err));
+}
+
+fan.sys.Log.prototype.log = function(rec)
+{
+  if (!this.enabled(rec.m_level)) return;
+
+  for (var i=0; i<fan.sys.Log.m_handlers.length; ++i)
+  {
+    try { fan.sys.Log.m_handlers[i].call(rec); }
+    catch (e) { fan.sys.Err.make(e).trace(); }
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Handlers
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Log.handlers = function()
+{
+  return fan.sys.List.make(fan.sys.Func.$type, fan.sys.Log.m_handlers).ro();
+}
+
+fan.sys.Log.addHandler = function(func)
+{
+  if (!func.isImmutable()) throw fan.sys.NotImmutableErr.make("handler must be immutable");
+  fan.sys.Log.m_handlers.push(func);
+}
+
+fan.sys.Log.removeHandler = function(func)
+{
+  var index = null;
+  for (var i=0; i<fan.sys.Log.m_handlers.length; i++)
+    if (fan.sys.Log.m_handlers[i] == func) { index=i; break }
+
+  if (index == null) return;
+  fan.sys.Log.m_handlers.splice(index, 1);
+}
+
+fan.sys.Log.m_handlers = [];
 

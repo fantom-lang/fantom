@@ -137,3 +137,12 @@ fan.sys.Pod.$add = function(name)
 }
 fan.sys.Pod.$pods = [];
 
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Pod.prototype.log = function()
+{
+  if (this.m_log == null) this.m_log = fan.sys.Log.get(this.m_name);
+  return this.m_log;
+}

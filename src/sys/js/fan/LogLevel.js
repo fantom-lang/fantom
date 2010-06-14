@@ -17,7 +17,13 @@ fan.sys.LogLevel = fan.sys.Obj.$extend(fan.sys.Enum);
 
 fan.sys.LogLevel.prototype.$ctor = function(ordinal, name)
 {
-  this.make$(ordinal, name);
+  fan.sys.Enum.make$(this, ordinal, name);
+}
+
+fan.sys.LogLevel.fromStr = function(name, checked)
+{
+  if (checked === undefined) checked = true;
+  return fan.sys.Enum.doFromStr(fan.sys.LogLevel.$type, name, checked);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -29,21 +35,3 @@ fan.sys.LogLevel.prototype.$typeof = function()
   return fan.sys.LogLevel.$type;
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Static
-//////////////////////////////////////////////////////////////////////////
-
-fan.sys.LogLevel.m_debug  = new fan.sys.LogLevel(0,  "debug");
-fan.sys.LogLevel.m_info   = new fan.sys.LogLevel(1,  "info");
-fan.sys.LogLevel.m_warn   = new fan.sys.LogLevel(2,  "warn");
-fan.sys.LogLevel.m_err    = new fan.sys.LogLevel(3,  "err");
-fan.sys.LogLevel.m_silent = new fan.sys.LogLevel(4,  "silent");
-
-fan.sys.LogLevel.m_vals =
-[
-  fan.sys.LogLevel.m_debug,
-  fan.sys.LogLevel.m_info,
-  fan.sys.LogLevel.m_warn,
-  fan.sys.LogLevel.m_err,
-  fan.sys.LogLevel.m_silent
-];
