@@ -34,7 +34,9 @@ class UriMapper : DocCompilerSupport
 
   **
   ** Given a fandoc uri string, map it to a relative URL
-  ** to the resource's HTML.
+  ** to the resource's HTML by setting targetUri, targetIsCode
+  ** and targetIsSlot fields.  If the URI cannot be mapped
+  ** then an error is logged.
   **
   Uri map(Str fandocUri, Loc loc)
   {
@@ -83,10 +85,12 @@ class UriMapper : DocCompilerSupport
     // map
     try
     {
-      if (fandocUri.contains("::"))
-        mapPod
-      else
-        mapTypeOrFile(compiler.pod, this.fandocUri)
+      targetUri = doMap(fandocUri, loc)
+      if (targetUri == null)
+      {
+        errReport(CompilerErr("Cannot map uri '$fandocUri'", loc))
+        targetUri = fandocUri.toUri
+      }
 
       // cache for next time
       if (!targetIsSlot)
@@ -103,6 +107,21 @@ class UriMapper : DocCompilerSupport
     }
 
     // return result
+    return targetUri
+  }
+
+  **
+  ** Given a fandoc uri string, map it to a relative URL to the
+  ** resource's HTML or return null if it cannot be mapped.
+  ** If the fandocUri should be formatted as using a code font
+  ** then set `targetIsCode`.
+  **
+  virtual Uri? doMap(Str fandocUri, Loc loc)
+  {
+    if (fandocUri.contains("::"))
+      mapPod
+    else if (compiler.pod != null)
+      mapTypeOrFile(compiler.pod, this.fandocUri)
     return targetUri
   }
 
