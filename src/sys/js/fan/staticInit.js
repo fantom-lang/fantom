@@ -95,6 +95,35 @@ fan.sys.MimeType.m_textXml   = fan.sys.MimeType.predefined("text", "xml");
 fan.sys.MimeType.m_dir       = fan.sys.MimeType.predefined("x-directory", "normal");
 
 //
+// LogLevel
+//
+fan.sys.LogLevel.m_debug  = new fan.sys.LogLevel(0, "debug");
+fan.sys.LogLevel.m_info   = new fan.sys.LogLevel(1, "info");
+fan.sys.LogLevel.m_warn   = new fan.sys.LogLevel(2, "warn");
+fan.sys.LogLevel.m_err    = new fan.sys.LogLevel(3, "err");
+fan.sys.LogLevel.m_silent = new fan.sys.LogLevel(4, "silent");
+
+fan.sys.LogLevel.m_vals = fan.sys.List.make(fan.sys.LogLevel.$type,
+[
+  fan.sys.LogLevel.m_debug,
+  fan.sys.LogLevel.m_info,
+  fan.sys.LogLevel.m_warn,
+  fan.sys.LogLevel.m_err,
+  fan.sys.LogLevel.m_silent
+]).toImmutable();
+
+//
+// Log
+//
+// TODO FIXTI
+//fan.sys.Log.m_handlers.push(fan.sys.LogRec.$type.method("print", true).func());
+fan.sys.Log.m_handlers.push(fan.sys.Func.make(
+  fan.sys.List.make(fan.sys.Param.$type, new fan.sys.Param("rec", fan.sys.LogRec.$type, false)),
+  fan.sys.Void.$type,
+  function(rec) { rec.print(); }
+));
+
+//
 // Month
 //
 fan.sys.Month.m_jan = new fan.sys.Month(0,  "jan");

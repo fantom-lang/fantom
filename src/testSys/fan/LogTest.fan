@@ -11,6 +11,7 @@ using concurrent
 **
 ** LogTest
 **
+@Js
 class LogTest : Test
 {
 
@@ -288,6 +289,7 @@ class LogTest : Test
 // TestLog
 //////////////////////////////////////////////////////////////////////////
 
+@Js
 const class TestLog : Log
 {
   new make(Str name, Bool reg) : super(name, reg) {}
