@@ -212,7 +212,7 @@ invoke is always nullable:
 
 Type Checking [#typeChecking]
 *****************************
-The cast operator is used perform a type conversion.  The cast syntax uses
+The cast operator is used to perform a type conversion.  The cast syntax uses
 parenthesis like C languages - such as '(Int)x'.  If a type cast fails
 at runtime, then a `sys::CastErr` exception is raised.
 
