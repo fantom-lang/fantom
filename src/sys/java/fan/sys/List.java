@@ -788,6 +788,7 @@ public final class List
 
   public final List unique()
   {
+    if (size <= 1) return dup();
     HashMap dups = new HashMap(size*3);
     List acc = new List(of, size);
     for (int i=0; i<size; ++i)
