@@ -105,7 +105,7 @@ class CheckErrors : CompilerStep
 
   private Void checkResConflicts(TypeDef t)
   {
-    compiler.input.resDirs?.each |uri|
+    compiler.input.resFiles?.each |uri|
     {
       if (uri.path.first == t.name)
         err("Resource `$uri` conflicts with type name '$t.name'", t.loc)
