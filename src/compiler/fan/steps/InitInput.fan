@@ -130,9 +130,9 @@ class InitInput : CompilerStep
     if (input.mode !== CompilerInputMode.file) return
 
     // map pod facets to src/res files
-    compiler.srcFiles = findFiles(input.srcDirs, "fan")
-    compiler.resFiles = findFiles(input.resDirs, null)
-    compiler.jsFiles  = findFiles(input.jsDirs,  "js")
+    compiler.srcFiles = findFiles(input.srcFiles, "fan")
+    compiler.resFiles = findFiles(input.resFiles, null)
+    compiler.jsFiles  = findFiles(input.jsFiles,  "js")
 
     if (compiler.srcFiles.isEmpty && compiler.resFiles.isEmpty)
       throw err("No fan source files found", null)
@@ -155,12 +155,19 @@ class InitInput : CompilerStep
     acc := File[,]
     uris?.each |uri|
     {
-      dir := base + uri
-      if (!dir.exists || !dir.isDir) throw err("Invalid directory", Loc.makeFile(dir))
-      dir.list.each |file|
+      f := base + uri
+      if (!f.exists) throw err("Invalid file or directory", Loc.makeFile(f))
+      if (f.isDir)
       {
-        if (file.isDir) return
-        if (ext == null || file.ext == ext) acc.add(file)
+        f.list.each |kid|
+        {
+          if (kid.isDir) return
+          if (ext == null || kid.ext == ext) acc.add(kid)
+        }
+      }
+      else
+      {
+        acc.add(f)
       }
     }
     return acc

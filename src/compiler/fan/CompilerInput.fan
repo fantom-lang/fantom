@@ -122,22 +122,30 @@ class CompilerInput
   File? baseDir
 
   **
-  ** List of directories relative to `baseDir` containing
-  ** fan source files (file mode only)
+  ** List of Fantom source files or directories containing Fantom
+  ** source files to compile.  Uris are relative to `baseDir`.  This
+  ** field is used only in file mode.
   **
-  Uri[]? srcDirs
+  Uri[]? srcFiles
 
   **
-  ** List of directories relative to `baseDir` containing
-  ** resource files to include in the pod zip (file mode only)
+  ** List of resource files or directories containing resource files
+  ** to include in the pod zip.  Uris are relative to `baseDir`.
+  ** This field is used only in file mode.
   **
-  Uri[]? resDirs
+  Uri[]? resFiles
 
   **
-  ** List of directories relative to `baseDir` containing
-  ** JavaScript files to include in the JavaScript output
+  ** List of JavaScript files or directories containing JavaScript files
+  ** to include in the JavaScript output.  Uris are relative to `baseDir`.
+  ** This field is used only in file mode.
   **
-  Uri[]? jsDirs
+  Uri[]? jsFiles
+
+// TODO
+@Deprecated Uri[] srcDirs { get { srcFiles } set { srcFiles = it } }
+@Deprecated Uri[] resDirs { get { resFiles } set { resFiles = it } }
+@Deprecated Uri[] jsDirs  { get { jsFiles }  set { jsFiles = it } }
 
 //////////////////////////////////////////////////////////////////////////
 // CompilerInputMode.str

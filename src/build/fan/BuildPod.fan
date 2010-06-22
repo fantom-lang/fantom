@@ -178,9 +178,9 @@ abstract class BuildPod : BuildScript
     ci.meta        = meta
     ci.index       = index
     ci.baseDir     = scriptDir
-    ci.srcDirs     = srcDirs
-    ci.resDirs     = resDirs
-    ci.jsDirs      = jsDirs
+    ci.srcFiles    = srcDirs
+    ci.resFiles    = resDirs
+    ci.jsFiles     = jsDirs
     ci.log         = log
     ci.includeDoc  = docApi
     ci.mode        = CompilerInputMode.file
