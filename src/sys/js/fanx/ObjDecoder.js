@@ -397,7 +397,7 @@ fanx_ObjDecoder.prototype.toListOfType = function(t, curField, infer)
   if (t != null) return t;
   if (curField != null)
   {
-    var ft = curField.of().toNonNullable();
+    var ft = curField.type().toNonNullable();
     if (ft instanceof fan.sys.ListType) return ft.v;
   }
   if (infer) return null;
@@ -418,7 +418,7 @@ fanx_ObjDecoder.prototype.toMapType = function(t, curField, infer)
 
   if (curField != null)
   {
-    var ft = curField.of().toNonNullable();
+    var ft = curField.type().toNonNullable();
     if (ft instanceof fan.sys.MapType) return ft;
   }
 
