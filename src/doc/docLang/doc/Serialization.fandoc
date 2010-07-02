@@ -78,7 +78,7 @@ and returns an instance of the object.  An example:
   @Serializable { simple = true }
   class Point
   {
-    static Point fromStr(Str s) { t := s.split(","); return make(t[0].toInt, t[1].toInt) }
+    static Point fromStr(Str s) { t := s.split(','); return make(t[0].toInt, t[1].toInt) }
     new make(Int x, Int y) { this.x = x; this.y = y }
     override Str toStr() { return "$x,$y" }
     Int x := 0
