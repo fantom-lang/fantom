@@ -149,17 +149,18 @@ class Bootstrap : AbstractMain
   {
     if (skipPull) return
 
-    // ensure working dir exists
-    devHome.create
-
     // clone or pull+update
-    cmd := devHome.plus(`.hg/`).exists ?
-           ["hg", "pull", "-u", hgRepo] :
-           ["hg", "clone", hgRepo, devHome.osPath]
+    if(devHome.plus(`.hg/`).exists)
+      runPullCmd(["hg", "pull", "-u", hgRepo], devHome)
+    else
+      runPullCmd(["hg", "clone", hgRepo, devHome.osPath], devHome.parent)
+  }
 
+  Void runPullCmd(Str[] cmd, File workDir)
+  {
     echo("")
     echo(cmd.join(" "))
-    r := Process(cmd, devHome).run.join
+    r := Process(cmd, workDir).run.join
     if (r != 0) fatal("could not hg clone/pull repo")
   }
 
