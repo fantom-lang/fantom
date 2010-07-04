@@ -182,6 +182,18 @@ namespace Fan.Sys
             }
             break;
 
+          case 'S':
+            if (sec != 0 || ns != 0)
+            {
+              switch (n)
+              {
+                case 2:  if (sec < 10) s.Append('0'); s.Append(sec); break;
+                case 1:  s.Append(sec); break;
+                default: invalidNum = true; break;
+              }
+            }
+            break;
+
           case 'a':
             switch (n)
             {
@@ -245,9 +257,17 @@ namespace Fan.Sys
             if (FanInt.isAlpha(c))
               throw ArgErr.make("Invalid pattern: unsupported char '" + (char)c + "'").val;
 
-            // don't display symbol between ss.FFF if fractions is zero
-            if (i+1<len && pattern[i+1] == 'F' && ns == 0)
-              break;
+             // check for symbol skip
+            if (i+1 < len)
+            {
+              int next = pattern[i+1];
+
+              // don't display symbol between ss.FFF if fractions is zero
+              if (next  == 'F' && ns == 0) break;
+
+              // don't display symbol between mm:SS if secs is zero
+              if (next == 'S' && sec == 0 && ns == 0) break;
+            }
 
             s.Append((char)c);
             break;
@@ -360,6 +380,7 @@ namespace Fan.Sys
       this.str = s;
       this.pos = 0;
       int len = pattern.Length;
+      bool skippedLast = false;
       for (int i=0; i<len; ++i)
       {
         // character
@@ -410,6 +431,10 @@ namespace Fan.Sys
             sec = parseInt(n);
             break;
 
+          case 'S':
+            if (!skippedLast) sec = parseInt(n);
+            break;
+
           case 'a':
             int amPm = str[pos]; pos += 2;
             if (amPm == 'P' || amPm == 'p')
@@ -426,8 +451,10 @@ namespace Fan.Sys
             skipWord();
             break;
 
+
           case 'f':
           case 'F':
+            if (c == 'F' && skippedLast) break;
             ns = 0;
             int tenth = 100000000;
             while (true)
@@ -458,7 +485,19 @@ namespace Fan.Sys
             break;
 
           default:
-            int match = str[pos++];
+            int match = pos+1 < str.Length ? str[pos++] : 0;
+
+            // handle skipped symbols
+            if (i+1 < pattern.Length)
+            {
+              int next = pattern[i+1];
+              if (next == 'F' || next == 'S')
+              {
+                if (match != c) { skippedLast = true;  break; }
+              }
+            }
+
+            skippedLast = false;
             if (match != c) throw new Exception();
             break;
         }
