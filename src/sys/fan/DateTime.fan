@@ -254,6 +254,7 @@ const final class DateTime
   **   mm     Two digit minutes (0-59)   04, 45
   **   s      One digit seconds (0-59)   4, 45
   **   ss     Two digit seconds (0-59)   04, 45
+  **   SS     Optional seconds (only if non-zero)
   **   f*     Fractional secs trailing zeros
   **   F*     Fractional secs no trailing zeros
   **   a      AM/PM marker               AM, PM

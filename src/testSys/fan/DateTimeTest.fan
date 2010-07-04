@@ -958,6 +958,17 @@ class DateTimeTest : Test
     x = DateTime.makeTicks(291718800000_000000, kiev)
     verifyEq(x.toLocale("z|zzz|zzzz"), "+03:00|EEST|Kiev")
 
+    // optional secs
+    x = DateTime.make(2007, Month.jun, 17, 1, 2, 3, 123_456_789, utc)
+    verifyEq(x.toLocale("hh:mm:SS"), "01:02:03")
+    verifyEq(x.toLocale("hh:mm:SS.FFF"), "01:02:03.123")
+    x = DateTime.make(2007, Month.jun, 17, 1, 2, 0, 123_456_789, utc)
+    verifyEq(x.toLocale("hh:mm:SS"), "01:02:00")
+    verifyEq(x.toLocale("hh:mm:SS.FFF"), "01:02:00.123")
+    x = DateTime.make(2007, Month.jun, 17, 1, 2, 0, 0, utc)
+    verifyEq(x.toLocale("hh:mm:SS"), "01:02")
+    verifyEq(x.toLocale("hh:mm:SS.FFF"), "01:02")
+
     // fractions
     x = DateTime.make(2007, Month.jun, 17, 1, 2, 3, 123_456_789, utc)
     verifyEq(x.toLocale("f, ff, fff, ffff, fffff"), "1, 12, 123, 1234, 12345")
@@ -1005,6 +1016,26 @@ class DateTimeTest : Test
 
     verifyFromLocale("2010-04-04 and 23:45:17.000123004", "YYYY-MM-DD 'and' kk:mm:ss.F", ny,
                      DateTime(2010, Month.apr, 4, 23, 45, 17, 123_004, ny))
+
+    // test various combos of SS and FFF
+
+    verifyFromLocale("2010-07-04 23:45:17", "YYYY-MM-DD kk:mm:ss.F", ny,
+                     DateTime(2010, Month.jul, 4, 23, 45, 17, 0, ny))
+
+    verifyFromLocale("2010-07-04 23:45:17", "YYYY-MM-DD kk:mm:SS.F", ny,
+                     DateTime(2010, Month.jul, 4, 23, 45, 17, 0, ny))
+
+    verifyFromLocale("2010-07-04 23:45", "YYYY-MM-DD kk:mm:SS.FFF", ny,
+                     DateTime(2010, Month.jul, 4, 23, 45, 0, 0, ny))
+
+    verifyFromLocale("2010-07-04 23:45:17.052 Los_Angles", "YYYY-MM-DD kk:mm:ss.F", la,
+                     DateTime(2010, Month.jul, 4, 23, 45, 17, 52_000_000, la))
+
+    verifyFromLocale("2010-07-04 23:45:17 Los_Angles", "YYYY-MM-DD kk:mm:SS.F", la,
+                     DateTime(2010, Month.jul, 4, 23, 45, 17, 0, la))
+
+    verifyFromLocale("2010-07-04 23:45 Los_Angles", "YYYY-MM-DD kk:mm:SS.F", la,
+                     DateTime(2010, Month.jul, 4, 23, 45, 0, 0, la))
 
     // matches passed tz
 
@@ -1100,6 +1131,11 @@ class DateTimeTest : Test
     verifyTimeLocale(t, "k:mm:ss.F a", "1:02:04.1 PM", Time(13, 2, 4, 100_000_000))
     verifyTimeLocale(t, "h:mm:ss.ffffff", "13:02:04.123000", Time(13, 2, 4, 123_000_000))
     verifyTimeLocale(t, "h:mm:ss.FFFFFFFFF", "13:02:04.123000678")
+
+    verifyTimeLocale(Time(1, 2), "hh:mm:SS", "01:02")
+    verifyTimeLocale(Time(1, 2, 3), "hh:mm:SS", "01:02:03")
+    verifyTimeLocale(Time(1, 2, 0, 400_000_000), "hh:mm:SS", "01:02:00", Time(1, 2))
+    verifyTimeLocale(Time(1, 2, 0, 400_000_000), "hh:mm:SS.FF", "01:02:00.4")
 
     verifyTimeLocale(Time(0, 0), "k:mm:ss a", "12:00:00 AM")
     verifyTimeLocale(Time(0, 0, 3), "k:mm:ss a", "12:00:03 AM")
