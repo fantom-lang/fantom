@@ -134,11 +134,19 @@ internal class ObixUtil
     catch {}
 
     tz := elem.get("tz", false)
-    if (tz != null)
-      return DateTime.fromStr("$s $tz", true)
-    else
-      return DateTime.fromIso(s, true)
+    if (tz == null) return DateTime.fromIso(s, true)
+    swizzle := tzSwizzles[tz]
+    if (swizzle != null) tz = swizzle.name
+    return DateTime.fromStr("$s $tz", true)
   }
+
+  internal static const Str:TimeZone tzSwizzles :=
+  [
+    "EST": TimeZone("New_York"),    "EDT": TimeZone("New_York"),
+    "CST": TimeZone("Chicago"),     "CDT": TimeZone("Chicago"),
+    "MST": TimeZone("Denver"),      "MDT": TimeZone("Denver"),
+    "PST": TimeZone("Los_Angeles"), "PDT": TimeZone("Los_Angeles"),
+  ]
 
 //////////////////////////////////////////////////////////////////////////
 // Element -> Default Value
