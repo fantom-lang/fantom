@@ -184,16 +184,8 @@ internal class ObixXmlParser
 
   private TimeZone? parseTimeZone(Str str)
   {
-    tzSwizzles[str] ?: TimeZone(str)
+    ObixUtil.tzSwizzles[str] ?: TimeZone(str)
   }
-
-  private static const Str:TimeZone tzSwizzles :=
-  [
-    "EST": TimeZone("New_York"),    "EDT": TimeZone("New_York"),
-    "CST": TimeZone("Chicago"),     "CDT": TimeZone("Chicago"),
-    "MST": TimeZone("Denver"),      "MDT": TimeZone("Denver"),
-    "PST": TimeZone("Los_Angeles"), "PDT": TimeZone("Los_Angeles"),
-  ]
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
