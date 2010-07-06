@@ -344,6 +344,15 @@ namespace Fan.Sys
   // Iterators
   //////////////////////////////////////////////////////////////////////////
 
+    public static List chars(string self)
+    {
+      int len = self.Length;
+      if (len == 0) return Sys.IntType.emptyList();
+      Long[] chars = new Long[len];
+      for (int i=0; i<len; ++i) chars[i] = Long.valueOf(self[i]);
+      return new List(Sys.IntType, chars);
+    }
+
     public static void each(string self, Func f)
     {
       int len = self.Length;

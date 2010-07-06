@@ -212,6 +212,11 @@ const final class Str
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Get the characters in this string as a list of integer code points.
+  **
+  Int[] chars()
+
+  **
   ** Call the specified function for every char in the starting
   ** with index 0 and incrementing up to size-1.
   **
