@@ -308,6 +308,15 @@ public class FanStr
 // Iterators
 //////////////////////////////////////////////////////////////////////////
 
+  public static List chars(String self)
+  {
+    int len = self.length();
+    if (len == 0) return Sys.IntType.emptyList();
+    Long[] chars = new Long[len];
+    for (int i=0; i<len; ++i) chars[i] = Long.valueOf(self.charAt(i));
+    return new List(Sys.IntType, chars);
+  }
+
   public static void each(String self, Func f)
   {
     int len = self.length();
