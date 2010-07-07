@@ -1000,7 +1000,7 @@ class CheckErrorsTest : CompilerTest
         static Obj m23(Str x) { return (Num)x }
         static Obj m24(Str x) { return x is Num}
         static Obj m25(Str x) { return x isnot Type }
-        static Obj m26(Str x) { return x as Num }
+        static Obj? m26(Str x) { return x as Num }
         static Obj m27() { return Bar.make }
         static Obj m28() { return \"x=\$v\" }
         static Obj m29() { return 5 + v }
@@ -1046,7 +1046,7 @@ class CheckErrorsTest : CompilerTest
        26, 34, "Inconvertible types 'sys::Str' and 'sys::Num'",
        27, 34, "Inconvertible types 'sys::Str' and 'sys::Num'",
        28, 34, "Inconvertible types 'sys::Str' and 'sys::Type'",
-       29, 34, "Inconvertible types 'sys::Str' and 'sys::Num'",
+       29, 35, "Inconvertible types 'sys::Str' and 'sys::Num'",
        30, 33, "Calling constructor on abstract class",
        31, 29, "Invalid args plus(sys::Obj?), not (sys::Void)",
        32, 29, "Invalid args plus(sys::Int), not (sys::Void)",
@@ -1319,7 +1319,7 @@ class CheckErrorsTest : CompilerTest
        ])
   }
 
-  Void testNullableNullLiteral()
+  Void testAlwaysNullable()
   {
     // errors
     verifyErrors(
@@ -1329,12 +1329,22 @@ class CheckErrorsTest : CompilerTest
         Void m01(Obj x) { x = null }
         Void m02() { Int x := null }
         Void m03() { m01(null) }
+        Str m04(Obj? x) { x?.toStr }
+        Str m05(Obj? x) { x?->toStr }
+        Str m06(Obj? x) { x as Str }
+        Int m07(Foo? x) { x?.f }
+
+        Int f
       }",
        [
          3, 22, "Cannot return 'null' as 'sys::Int'",
          4, 25, "'null' is not assignable to 'sys::Obj'",
          5, 25, "'null' is not assignable to 'sys::Int'",
          6, 16, "Invalid args m01(sys::Obj), not (null)",
+         7, 24, "Cannot return 'sys::Str?' as 'sys::Str'",
+         8, 25, "Cannot return 'sys::Obj?' as 'sys::Str'",
+         9, 21, "Cannot return 'sys::Str?' as 'sys::Str'",
+        10, 24, "Cannot return 'sys::Int?' as 'sys::Int'",
        ])
   }
 

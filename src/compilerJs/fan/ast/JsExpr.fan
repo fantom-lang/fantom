@@ -180,7 +180,7 @@ class JsIntLiteralExpr : JsExpr
 {
   new make(JsCompilerSupport s, LiteralExpr x) : super(s)
   {
-    this.val = x.val as Int
+    this.val = x.val
   }
   override Void write(JsWriter out)
   {
@@ -197,7 +197,7 @@ class JsFloatLiteralExpr : JsExpr
 {
   new make(JsCompilerSupport s, LiteralExpr x) : super(s)
   {
-    this.val = x.val as Float
+    this.val = x.val
   }
   override Void write(JsWriter out)
   {
@@ -214,7 +214,7 @@ class JsDecimalLiteralExpr : JsExpr
 {
   new make(JsCompilerSupport s, LiteralExpr x) : super(s)
   {
-    this.val = x.val as Decimal
+    this.val = x.val
   }
   override Void write(JsWriter out)
   {
@@ -231,7 +231,7 @@ class JsStrLiteralExpr : JsExpr
 {
   new make(JsCompilerSupport s, LiteralExpr x) : super(s)
   {
-    this.val = x.val as Str
+    this.val = x.val
     this.esc = val.toCode('\"', true)[1..-2]  // remove outer quotes
   }
   override Void write(JsWriter out)
@@ -250,7 +250,7 @@ class JsDurationLiteralExpr : JsExpr
 {
   new make(JsCompilerSupport s, LiteralExpr x) : super(s)
   {
-    this.val = x.val as Duration
+    this.val = x.val
   }
   override Void write(JsWriter out)
   {

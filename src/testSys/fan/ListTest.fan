@@ -176,7 +176,7 @@ class ListTest : Test
     strs := (Str[])x  // no runtime check
     verifyErr(CastErr#) { strs[2].size }
 
-    strs = x as Str[] // no runtime check
+    strs = (Str[])(x as Str[]) // no runtime check
     verifyNotNull(strs)
     verifyErr(CastErr#) { strs[2].size }
   }
