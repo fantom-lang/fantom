@@ -20,6 +20,15 @@ import fanx.util.StrUtil;
 public class FanStr
 {
 
+  public static String fromChars(List chars)
+  {
+    if (chars.sz() == 0) return "";
+    StringBuilder s = new StringBuilder(chars.sz());
+    for (int i=0; i<chars.sz(); ++i)
+      s.append((char)((Long)chars.get(i)).longValue());
+    return s.toString();
+  }
+
   public static String makeTrim(StringBuilder s)
   {
     int start = 0;

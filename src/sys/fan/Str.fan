@@ -13,7 +13,7 @@ const final class Str
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Constructor
+// Construction
 //////////////////////////////////////////////////////////////////////////
 
   **
@@ -25,6 +25,12 @@ const final class Str
   ** Default value is "".
   **
   const static Str defVal
+
+  **
+  ** Construct a string from a list of unicode code points.
+  ** Also see `chars`.
+  **
+  static Str fromChars(Int[] chars)
 
 //////////////////////////////////////////////////////////////////////////
 // Obj Overrides
@@ -213,6 +219,7 @@ const final class Str
 
   **
   ** Get the characters in this string as a list of integer code points.
+  ** Also see `fromChars`.
   **
   Int[] chars()
 

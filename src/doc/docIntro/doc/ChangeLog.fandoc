@@ -20,7 +20,7 @@
 - Etc/Rel TimeZone
 - Change CompilerInput to accept files or dirs
 - Support for SS optional seconds in DateTime and Time formatting
-- Str.chars
+- Str: chars, fromChars
 
 *Build 1.0.53 (13 May 10)*
 - Fix boxed boolean JVM checks

@@ -27,6 +27,15 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
+    public static string fromChars(List chars)
+    {
+      if (chars.sz() == 0) return "";
+      StringBuilder s = new StringBuilder(chars.sz());
+      for (int i=0; i<chars.sz(); ++i)
+        s.Append((char)((Long)chars.get(i)).longValue());
+      return s.ToString();
+    }
+
     public static string makeTrim(StringBuilder s)
     {
       int start = 0;

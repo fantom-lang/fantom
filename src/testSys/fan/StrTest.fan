@@ -559,9 +559,16 @@ class StrTest : Test
 
   Void testChars()
   {
-    verifyEq("".chars, Int[,])
-    verifyEq("a".chars, ['a'])
-    verifyEq("ab".chars, ['a', 'b'])
+    verifyChars("", Int[,])
+    verifyChars("a", ['a'])
+    verifyChars("a b", ['a', ' ', 'b'])
+    verifyChars("\u345F", [0x345F])
+  }
+
+  Void verifyChars(Str s, Int[] chars)
+  {
+    verifyEq(s.chars, chars)
+    verifyEq(Str.fromChars(chars), s)
   }
 
 //////////////////////////////////////////////////////////////////////////
