@@ -103,11 +103,16 @@ specified:
   Str   // never stores null
   Str?  // might store null
 
-The compiler prevents obvious mistakes like using the 'null' literal
-when a non-nullable type is expected.  Additional checks are implicitly
-done at runtime when coercing a nullable type to a non-nullable type.
-This allows your code to fail fast at the point where null bug was introduced
-versus propagating into unrelated code.
+The compiler prevents obvious mistakes when using a nullable expression
+when a non-nullable type is expected:
+  - null literal
+  - safe invoke method call or field access
+  - 'as' operator
+
+Additional checks are implicitly done at runtime when coercing a nullable
+type to a non-nullable type.  This allows your code to fail fast at
+the point where null bug was introduced versus propagating into
+unrelated code.
 
 Value-Types [#valueTypes]
 *************************

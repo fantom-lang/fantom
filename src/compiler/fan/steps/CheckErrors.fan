@@ -1664,8 +1664,9 @@ class CheckErrors : CompilerStep
       return expr
     }
 
-    // if expr is null literal, verify expected type is nullable
-    if (expr.id === ExprId.nullLiteral)
+    // if expr is always nullable (null literal, safe invoke, as),
+    // then verify expected type is nullable
+    if (expr.isAlwaysNullable)
     {
       if (!expected.isNullable) onErr()
       return expr

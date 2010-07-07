@@ -306,14 +306,14 @@ class RegressionTest : CompilerTest
   {
     verifyErrors(
      "class Foo {
-       Str x() { echo(3).toStr }
-       Str y() { echo(3)?.toStr }
-       Str z() { echo(3)->toStr }
+       Str? x() { echo(3).toStr }
+       Str? y() { echo(3)?.toStr }
+       Str? z() { echo(3)->toStr }
       }",
        [
-         2, 20, "Cannot call method on Void",
-         3, 21, "Cannot call method on Void",
-         4, 21, "Cannot call method on Void",
+         2, 21, "Cannot call method on Void",
+         3, 22, "Cannot call method on Void",
+         4, 22, "Cannot call method on Void",
        ])
   }
 

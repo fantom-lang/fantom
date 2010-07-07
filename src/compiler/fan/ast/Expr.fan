@@ -81,6 +81,12 @@ abstract class Expr : Node
   virtual Bool isDefiniteAssign(|Expr lhs->Bool| f) { false }
 
   **
+  ** Return if this expression is guaranteed to sometimes
+  ** return a null result (safe invoke, as, etc)
+  **
+  virtual Bool isAlwaysNullable() { false }
+
+  **
   ** Assignments to instance fields require a temporary local variable.
   **
   virtual Bool assignRequiresTempVar() { false }
@@ -333,6 +339,8 @@ class LiteralExpr : Expr
     }
     return makeNull(loc, ns)
   }
+
+  override Bool isAlwaysNullable() { id === ExprId.nullLiteral }
 
   override Int? asTableSwitchCase()
   {
@@ -695,6 +703,8 @@ abstract class NameExpr : Expr
     this.name   = name
     this.isSafe = false
   }
+
+  override Bool isAlwaysNullable() { isSafe }
 
   override Void walkChildren(Visitor v)
   {
@@ -1268,6 +1278,8 @@ class TypeCheckExpr : Expr
   {
     return id === ExprId.coerce && target.isStmt
   }
+
+  override Bool isAlwaysNullable() { id === ExprId.asExpr }
 
   override Str serialize()
   {
