@@ -221,9 +221,17 @@ class CallResolver : CompilerSupport
     if (found is CField && found.isForeign)
       found = found.parent.method(name)
 
-    // if we resolve a method call against a field that is an error
+    // if we resolve a method call against a field that is an error,
+    // unless the field is a function in which case this is sugar
+    // for field.call(...)
     if (found is CField)
-      throw err("Expected method, not field '$errSig'", loc)
+    {
+      field := (CField)found
+      if (field.fieldType.isFunc)
+        isFuncFieldCall = true
+      else
+        throw err("Expected method, not field '$errSig'", loc)
+    }
 
     return found
   }
@@ -288,6 +296,11 @@ class CallResolver : CompilerSupport
     if (found is CField)
     {
       result = resolveToFieldExpr
+      if (isFuncFieldCall)
+      {
+        callMethod := ((CField)found).fieldType.method("call")
+        result = CallExpr.makeWithMethod(loc, result, callMethod, args)
+      }
     }
     else
     {
@@ -518,6 +531,7 @@ class CallResolver : CompilerSupport
   Expr? target         // target base or null
   Str name             // slot name to resolve
   Bool isVar           // are we resolving simple variable
+  Bool isFuncFieldCall // is this a field.call(...) on func field
   Expr[] args          // arguments or null if simple variable
   CType? base          // resolveBase()
   CType? baseIt        // resolveBase()
