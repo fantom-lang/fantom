@@ -199,6 +199,10 @@ fan.sys.Int.shiftr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.Int.toInt = function(val) { return val; }
+fan.sys.Int.toFloat = function(val) { return fan.sys.Float.make(val); }
+fan.sys.Int.toDecimal = function(val) { return fan.sys.Decimal.make(val); }
+
 fan.sys.Int.toChar = function(self)
 {
   if (self < 0 || self > 0xFFFF) throw fan.sys.Err.make("Invalid unicode char: " + self);
