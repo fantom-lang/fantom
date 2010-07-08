@@ -1668,8 +1668,11 @@ class CheckErrors : CompilerStep
     // then verify expected type is nullable
     if (expr.isAlwaysNullable)
     {
-      if (!expected.isNullable) onErr()
-      return expr
+      if (!expected.isNullable) { onErr(); return expr }
+
+      // null literals don't need cast to nullable types,
+      // otherwise // fall-thru to apply coercion
+      if (expr.id === ExprId.nullLiteral) return expr
     }
 
     // if the expression fits to type, that is ok
