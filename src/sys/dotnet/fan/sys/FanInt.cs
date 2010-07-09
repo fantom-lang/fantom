@@ -8,6 +8,7 @@
 
 using System;
 using System.Globalization;
+using System.Text;
 using Fanx.Serial;
 
 namespace Fan.Sys
@@ -307,8 +308,9 @@ namespace Fan.Sys
 
     public static bool equalsIgnoreCase(long self, long ch)
     {
-      long val = self;
-      return (val | 0x20L) == (ch | 0x20L);
+      if ('A' <= self && self <= 'Z') self |= 0x20;
+      if ('A' <= ch   && ch   <= 'Z') ch   |= 0x20;
+      return self == ch;
     }
 
     internal static readonly byte[] charMap = new byte[128];
@@ -405,10 +407,15 @@ namespace Fan.Sys
       long val = self;
       string s = val.ToString("X").ToLower();
       if (width != null && s.Length < width.intValue())
-        s = zeros[width.intValue()-s.Length] + s;
+      {
+        StringBuilder sb = new StringBuilder(width.intValue());
+        int zeros = width.intValue() - s.Length;
+        for (int i=0; i<zeros; ++i) sb.Append('0');
+        sb.Append(s);
+        s = sb.ToString();
+      }
       return s;
     }
-    static string[] zeros = new string[16];
 
     public static string toStr(long self)
     {
@@ -479,11 +486,6 @@ namespace Fan.Sys
       for (int i='0'; i<='9'; i++) charMap[i] |= HEX;
       for (int i='a'; i<='f'; i++) charMap[i] |= HEX;
       for (int i='A'; i<='F'; i++) charMap[i] |= HEX;
-
-      // Zeros
-      zeros[0] = "";
-      for (int i=1; i<zeros.Length; ++i)
-        zeros[i] = zeros[i-1] + "0";
     }
 
   }

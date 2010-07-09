@@ -51,7 +51,7 @@ const class Method : Slot
   Obj? callList(Obj?[]? args)
 
   ** Convenience for 'func.callOn'
-  Obj? callOn(Obj? target, Obj[]? args)
+  Obj? callOn(Obj? target, Obj?[]? args)
 
   ** Convenience for 'func.call'
   Obj? call(Obj? a := null, Obj? b := null, Obj? c := null, Obj? d := null,
