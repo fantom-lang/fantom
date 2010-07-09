@@ -32,6 +32,11 @@ namespace Fan.Sys
       {
         return Long.valueOf(Convert.ToInt64(s, (int)radix));
       }
+      catch (ArgumentException)
+      {
+        if (!check) return null;
+        throw ParseErr.make("Int", s).val;
+      }
       catch (OverflowException)
       {
         if (!check) return null;
@@ -258,9 +263,9 @@ namespace Fan.Sys
       else
       {
         if ((charMap[val] & DIGIT) != 0) return true;
-        int x = val-10;
-        if ('a' <= val && val <= 'a'+x) return true;
-        if ('A' <= val && val <= 'A'+x) return true;
+        int x = r - 10;
+        if ('a' <= val && val < 'a'+x) return true;
+        if ('A' <= val && val < 'A'+x) return true;
         return false;
       }
     }
