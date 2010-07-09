@@ -21,6 +21,7 @@
 - Change CompilerInput to accept files or dirs
 - Support for SS optional seconds in DateTime and Time formatting
 - Str: chars, fromChars
+- Change Obj.typeof to be non-virtual
 
 *Build 1.0.53 (13 May 10)*
 - Fix boxed boolean JVM checks

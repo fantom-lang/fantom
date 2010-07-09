@@ -122,10 +122,9 @@ abstract class Obj
 
   **
   ** Get the 'Type' instance which represents this object's class.
-  ** Also see`Type.of` or `Pod.of`.  This method cannot be overridden
-  ** manually.
+  ** Also see`Type.of` or `Pod.of`.
   **
-  virtual Type typeof()
+  Type typeof()
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
