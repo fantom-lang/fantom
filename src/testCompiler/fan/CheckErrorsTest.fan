@@ -95,20 +95,12 @@ class CheckErrorsTest : CompilerTest
     verifyErrors(
      "class A { Type typeof }
       class B { Type typeof() { return Str# } }
+      class C { override Type typeof() { return Str# } }
       ",
        [
-         1, 11, "Must specify override keyword to override 'sys::Obj.typeof'",
-         2, 11, "Must specify override keyword to override 'sys::Obj.typeof'",
-       ])
-
-    // check errors stage
-    verifyErrors(
-     "class A { override Type typeof }
-      class B { override Type typeof() { return Str# } }
-      ",
-       [
-         1, 11, "Cannot override Obj.typeof()",
-         2, 11, "Cannot override Obj.typeof()",
+         1, 11, "Cannot override non-virtual slot 'sys::Obj.typeof'",
+         2, 11, "Cannot override non-virtual slot 'sys::Obj.typeof'",
+         3, 11, "Cannot override non-virtual slot 'sys::Obj.typeof'",
        ])
   }
 
