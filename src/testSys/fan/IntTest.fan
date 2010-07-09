@@ -471,7 +471,7 @@ class IntTest : Test
     verifyEq('a'.equalsIgnoreCase('b'), false)
     verifyEq('a'.equalsIgnoreCase('A'), true)
     verifyEq('Z'.equalsIgnoreCase('z'), true)
-    verifyEq('Z'.equalsIgnoreCase('!'), false)
+    verifyEq('^'.equalsIgnoreCase('~'), false)
     Locale.fromStr("tr").use
     {
       verifyEq('I'.equalsIgnoreCase('i'), true)
@@ -531,6 +531,7 @@ class IntTest : Test
     verifyEq(255.toHex, "ff")
     verifyEq(255.toHex(4), "00ff")
     verifyEq(0.toHex(10), "0000000000")
+    verifyEq(1.toHex(20), "00000000000000000001")
     if (!js)
     {
       verifyEq(0x123456789abcdef.toHex, "123456789abcdef")

@@ -41,4 +41,9 @@ final class Param
   **
   Bool hasDefault()
 
+  **
+  ** Return "$type $name"
+  **
+  override Str toStr()
+
 }

@@ -257,7 +257,7 @@ final class List
   ** ReadonlyErr if readonly.  Throw IndexErr if range illegal.
   ** Return this (*not* the removed items).
   **
-  This removeRange(Range r)
+  L removeRange(Range r)
 
   **
   ** Remove all items from the list and set size to 0.  Return this.

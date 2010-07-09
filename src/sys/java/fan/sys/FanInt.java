@@ -363,7 +363,9 @@ public final class FanInt
 
   public static boolean equalsIgnoreCase(long self, long ch)
   {
-    return (self | 0x20L) == (ch | 0x20L);
+    if ('A' <= self && self <= 'Z') self |= 0x20;
+    if ('A' <= ch   && ch   <= 'Z') ch   |= 0x20;
+    return self == ch;
   }
 
   static final byte[] charMap = new byte[128];
@@ -474,11 +476,15 @@ public final class FanInt
   {
     String s = Long.toHexString(self);
     if (width != null && s.length() < width.intValue())
-      s = zeros[width.intValue()-s.length()] + s;
+    {
+      StringBuilder sb = new StringBuilder(width.intValue());
+      int zeros = width.intValue() - s.length();
+      for (int i=0; i<zeros; ++i) sb.append('0');
+      sb.append(s);
+      s = sb.toString();
+    }
     return s;
   }
-  static String[] zeros = new String[16];
-  static { zeros[0] = ""; for (int i=1; i<zeros.length; ++i) zeros[i] = zeros[i-1] + "0"; }
 
   public static String toStr(long self)
   {
