@@ -18,7 +18,8 @@ const final class Int : Num
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Parse a Str into a Int using the specified radix.
+  ** Parse a Str into a Int using the specified radix.  Unless
+  ** the radix is 10, then a leading minus sign is illegal.
   ** If invalid format and checked is false return null,
   ** otherwise throw ParseErr.
   **

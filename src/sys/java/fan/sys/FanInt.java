@@ -28,10 +28,10 @@ public final class FanInt
   {
     try
     {
-      if (radix == 16)
-        return parseHex(s);
-      else
-        return Long.valueOf(s, (int)radix);
+      if (radix == 16) return parseHex(s);
+      if (radix == 10) return Long.valueOf(s);
+      if (s.charAt(0) == '-') throw new NumberFormatException();
+      return Long.valueOf(s, (int)radix);
     }
     catch (NumberFormatException e)
     {
@@ -317,9 +317,9 @@ public final class FanInt
     else
     {
       if ((charMap[val] & DIGIT) != 0) return true;
-      int x = val-10;
-      if ('a' <= val && val <= 'a'+x) return true;
-      if ('A' <= val && val <= 'A'+x) return true;
+      int x = radix - 10;
+      if ('a' <= val && val < 'a'+x) return true;
+      if ('A' <= val && val < 'A'+x) return true;
       return false;
     }
   }

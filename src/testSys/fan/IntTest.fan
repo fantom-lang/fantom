@@ -350,6 +350,11 @@ class IntTest : Test
     verifyEq('g'.isDigit(16), false)
     verifyEq('G'.isDigit(17), true)
     verifyEq('G'.isDigit(16), false)
+
+    verifyEq('h'.isDigit(17), false)
+    verifyEq('h'.isDigit(18), true)
+    verifyEq('H'.isDigit(17), false)
+    verifyEq('H'.isDigit(18), true)
   }
 
   Void verifyChar(Int char, Str pattern)
@@ -559,11 +564,13 @@ class IntTest : Test
     {
       verifyEq(Int.fromStr("aabbccdd00112233", 16), 0xaabbccdd00112233)
       verifyEq(Int.fromStr("80BF3ecA63100DdE", 16), 0x80bf3eca63100dde)
+      verifyEq(Int.fromStr("10111", 2), 0x17)
     }
     verifyEq(Int.fromStr("badz", 16, false), null)
     verifyErr(ParseErr#) { Int.fromStr("x") }
     verifyErr(ParseErr#) { Int.fromStr("3", 2, true) }
     verifyErr(ParseErr#) { Int.fromStr("3g", 16, true) }
+    verifyErr(ParseErr#) { Int.fromStr("-10111", 2) }
   }
 
 //////////////////////////////////////////////////////////////////////////
