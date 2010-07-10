@@ -16,7 +16,7 @@
 **
 ** The Fantom time zone database and naming model is based on the
 ** [ZoneInfo database]`http://www.twinsun.com/tz/tz-link.htm` used
-** by UNIX and Java (also known as the Olsen database).  All time
+** by UNIX and Java (also known as the Olson database).  All time
 ** zones have both a simple `name` and a `fullName`.  The 'fullName'
 ** is the full identifier used in the zoneinfo database such as
 ** "America/New_York".  The simple name is the city name only
@@ -36,7 +36,7 @@ const class TimeZone
   static Str[] listNames()
 
   **
-  ** List all zoneinfo (Olsen database) full names of the
+  ** List all zoneinfo (Olson database) full names of the
   ** time zones available in the local time zone database.
   ** This list is the full names only such as "America/New_York"
   ** and "Europe/London".
