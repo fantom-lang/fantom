@@ -19,7 +19,7 @@ class Loc
     this.col  = col
   }
 
-  new makeFile(File? file)
+  new makeFile(File? file, Int? line := null, Int? col := null)
   {
     if (file != null)
     {
@@ -29,6 +29,8 @@ class Loc
       else
         this.file = file.pathStr
     }
+    this.line = line
+    this.col  = col
   }
 
   new makeUninit()
