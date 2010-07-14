@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.54 (incomplete)*
+*Build 1.0.54 (14 Jul 10)*
 - Support for Java FFI Type->toClass
 - Fix WebClient to report port number in Host header
 - ObixMod abstract base class for server side functionality
@@ -22,6 +22,9 @@
 - Support for SS optional seconds in DateTime and Time formatting
 - Str: chars, fromChars
 - Change Obj.typeof to be non-virtual
+- #895: Allow () operator to be used on func fields
+- #1112: JarDist omitting .class file
+- #1127: Expand scope of illegal nullable to non-nullable errors
 
 *Build 1.0.53 (13 May 10)*
 - Fix boxed boolean JVM checks
