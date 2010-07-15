@@ -71,12 +71,12 @@ public class Pod
           // dependency check, keep track of what we are loading
           // via depends checking to prevent a cyclic dependency
           // from putting us into an infinite loop
-          if (resolving == null) resolving = new HashMap();
-          resolving.put(name, name);
+          HashMap thisResolving = new HashMap();
+          thisResolving.put(name, name);
           for (int i=0; i<fpod.depends.length; ++i)
           {
             Depend d = fpod.depends[i];
-            Pod dpod = doFind(d.name(), false, null, resolving);
+            Pod dpod = doFind(d.name(), false, null, thisResolving);
             if (dpod == null)
               throw new Exception("Missing dependency for '" + name + "': " + d);
             if (!d.match(dpod.version()))
