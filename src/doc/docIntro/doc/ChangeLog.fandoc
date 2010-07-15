@@ -6,6 +6,8 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.55 (working)*
+
 *Build 1.0.54 (14 Jul 10)*
 - Support for Java FFI Type->toClass
 - Fix WebClient to report port number in Host header

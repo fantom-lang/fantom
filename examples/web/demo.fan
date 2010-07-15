@@ -16,7 +16,7 @@ class Boot : AbstractMain
 
   override Int run()
   {
-    // create log dir is it doesn't exist
+    // create log dir if it doesn't exist
     logDir := homeDir + `demo/logs/`
     if (!logDir.exists) logDir.create
 
