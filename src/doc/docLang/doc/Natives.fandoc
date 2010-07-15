@@ -1,5 +1,5 @@
 **************************************************************************
-** title:      Native
+** title:      Natives
 ** author:     Brian Frank
 ** created:    22 Jun 07
 ** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
@@ -41,6 +41,8 @@ header:
   {
     new make(Str arg) {}
     Int add(Int a, Int b)
+    Str? a
+    const Str b := "const"
   }
 
 All methods are assumed to be native and must not have a body.  There
@@ -70,6 +72,14 @@ Java implementation would look like:
 
     // methods
     public long add(long a, long b) { return a + b; }
+
+    // mutable field
+    public String a() { return a; }
+    public void a(String it) { a = it; }
+    private String a;
+
+    // const field
+    public String b = "const";
   }
 
 Native Peers
@@ -141,7 +151,7 @@ Native methods are always routed to the peer:
     public String a(Foo self, boolean x) { return "a"; }
 
     // static methods are just normal statics with matching signatures
-    public void b(long x) {}
+    public static void b(long x) {}
   }
 
   // JavaScript
