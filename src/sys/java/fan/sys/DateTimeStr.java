@@ -192,7 +192,17 @@ class DateTimeStr
         case 'a':
           switch (n)
           {
-            case 1:  s.append(hour < 12 ? "AM" : "PM"); break;
+            case 1:  s.append(hour < 12 ? "a"  : "p"); break;
+            case 2:  s.append(hour < 12 ? "am" : "pm"); break;
+            default: invalidNum = true;
+          }
+          break;
+
+        case 'A':
+          switch (n)
+          {
+            case 1:  s.append(hour < 12 ? "A"  : "P"); break;
+            case 2:  s.append(hour < 12 ? "AM" : "PM"); break;
             default: invalidNum = true;
           }
           break;
@@ -436,7 +446,8 @@ class DateTimeStr
           break;
 
         case 'a':
-          int amPm = str.charAt(pos); pos += 2;
+        case 'A':
+          int amPm = str.charAt(pos); pos += n;
           if (amPm == 'P' || amPm == 'p')
           {
             if (hour < 12) hour += 12;

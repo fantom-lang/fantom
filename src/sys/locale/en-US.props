@@ -7,5 +7,5 @@
 //////////////////////////////////////////////////////////////////////////
 
 // default toLocale patterns
-dateTime=D-MMM-YYYY WWW k:mm:ssa zzz
-time=k:mma
+dateTime=D-MMM-YYYY WWW k:mm:ssAA zzz
+time=k:mmAA

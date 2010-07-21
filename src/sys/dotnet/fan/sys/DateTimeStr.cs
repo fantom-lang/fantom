@@ -197,7 +197,17 @@ namespace Fan.Sys
           case 'a':
             switch (n)
             {
-              case 1:  s.Append(hour < 12 ? "AM" : "PM"); break;
+              case 1:  s.Append(hour < 12 ? "a"  : "p"); break;
+              case 2:  s.Append(hour < 12 ? "am" : "pm"); break;
+              default: invalidNum = true; break;
+            }
+            break;
+
+          case 'A':
+            switch (n)
+            {
+              case 1:  s.Append(hour < 12 ? "A"  : "P"); break;
+              case 2:  s.Append(hour < 12 ? "AM" : "PM"); break;
               default: invalidNum = true; break;
             }
             break;
@@ -436,7 +446,8 @@ namespace Fan.Sys
             break;
 
           case 'a':
-            int amPm = str[pos]; pos += 2;
+          case 'A':
+            int amPm = str[pos]; pos += n;
             if (amPm == 'P' || amPm == 'p')
             {
               if (hour < 12) hour += 12;
