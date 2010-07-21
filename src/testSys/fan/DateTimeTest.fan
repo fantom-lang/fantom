@@ -915,7 +915,7 @@ class DateTimeTest : Test
     verifyEq(x.toLocale("M, MM, MMM, MMMM"), "2, 02, Feb, February")
     verifyEq(x.toLocale("D, DD, DDD"), "5, 05, 5th")
     verifyEq(x.toLocale("WWW WWWW"), "Tue Tuesday")
-    verifyEq(x.toLocale("h, hh, k, kk, a"), "3, 03, 3, 03, AM")
+    verifyEq(x.toLocale("h, hh, k, kk, a, aa, A, AA"), "3, 03, 3, 03, a, am, A, AM")
     verifyEq(x.toLocale("m, mm"), "7, 07")
     verifyEq(x.toLocale("s, ss"), "20, 20")
     verifyEq(x.toLocale("f, ff, fff, ffff, fffff"), "1, 12, 123, 1230, 12300")
@@ -942,11 +942,20 @@ class DateTimeTest : Test
 
     // 12-hour AM/PM
     x = DateTime.make(2007, Month.may, 9, 0, 5, 0, 0, ny)
-    verifyEq(x.toLocale("kk:mma"), "12:05AM")
+    verifyEq(x.toLocale("kk:mma"),  "12:05a")
+    verifyEq(x.toLocale("kk:mmaa"), "12:05am")
+    verifyEq(x.toLocale("kk:mmA"),  "12:05A")
+    verifyEq(x.toLocale("kk:mmAA"), "12:05AM")
     x = DateTime.make(2007, Month.may, 9, 12, 0, 0, 0, ny)
-    verifyEq(x.toLocale("kk:mma"), "12:00PM")
+    verifyEq(x.toLocale("kk:mma"),  "12:00p")
+    verifyEq(x.toLocale("kk:mmaa"), "12:00pm")
+    verifyEq(x.toLocale("kk:mmA"),  "12:00P")
+    verifyEq(x.toLocale("kk:mmAA"), "12:00PM")
     x = DateTime.make(2007, Month.may, 9, 23, 12, 00, 0, ny)
-    verifyEq(x.toLocale("kk:mma"), "11:12PM")
+    verifyEq(x.toLocale("kk:mma"),  "11:12p")
+    verifyEq(x.toLocale("kk:mmaa"), "11:12pm")
+    verifyEq(x.toLocale("kk:mmA"),  "11:12P")
+    verifyEq(x.toLocale("kk:mmAA"), "11:12PM")
 
     // time zones
     x = DateTime.make(2007, Month.jun, 17, 1, 2, 3, 0, utc)
@@ -986,7 +995,7 @@ class DateTimeTest : Test
     // literals
     x = DateTime.make(2007, Month.may, 9, 15, 30, 0, 0, ny)
     verifyEq(x.toLocale("YYMMDD'T'hhmm"), "070509T1530")
-    verifyEq(x.toLocale("'It is' k:mma!"), "It is 3:30PM!")
+    verifyEq(x.toLocale("'It is' k:mmaa!"), "It is 3:30pm!")
 
     // errors
     verifyErr(ArgErr#) { x.toLocale("Y") }
@@ -998,17 +1007,17 @@ class DateTimeTest : Test
     verifyErr(ArgErr#) { x.toLocale("WWWWW") }
     verifyErr(ArgErr#) { x.toLocale("hhh") }
     verifyErr(ArgErr#) { x.toLocale("kkk") }
-    verifyErr(ArgErr#) { x.toLocale("aa") }
+    verifyErr(ArgErr#) { x.toLocale("aaa") }
     verifyErr(ArgErr#) { x.toLocale("mmm") }
     verifyErr(ArgErr#) { x.toLocale("sss") }
   }
 
   Void testFromLocale()
   {
-    verifyFromLocale("02-Jan-99 12:30PM", "DD-MMM-YY kk:mma", ny,
+    verifyFromLocale("02-Jan-99 12:30PM", "DD-MMM-YY kk:mmAA", ny,
                      DateTime(1999, Month.jan, 2, 12, 30, 0, 0, ny))
 
-    verifyFromLocale("3-MARCH-04 12:05:33AM", "D-MMMM-YY kk:mm:ssa", la,
+    verifyFromLocale("3-MARCH-04 12:05:33am", "D-MMMM-YY kk:mm:ssaa", la,
                      DateTime(2004, Month.mar, 3, 0, 5, 33, 0, la))
 
     verifyFromLocale("2010-04-04T23:45:17.089", "YYYY-MM-DD'T'kk:mm:ss.F", ny,
@@ -1125,10 +1134,11 @@ class DateTimeTest : Test
   Void testTimeLocale()
   {
     t := Time(13, 2, 4, 123_000_678)
-    verifyTimeLocale(t, "h:mma",  "13:02PM", Time(13, 2))
-    verifyTimeLocale(t, "k:mma",  "1:02PM",  Time(13, 2))
-    verifyTimeLocale(t, "kk:mma", "01:02PM", Time(13, 2))
-    verifyTimeLocale(t, "k:mm:ss.F a", "1:02:04.1 PM", Time(13, 2, 4, 100_000_000))
+    verifyTimeLocale(t, "h:mmAA",  "13:02PM", Time(13, 2))
+    verifyTimeLocale(t, "k:mmaa",  "1:02pm",  Time(13, 2))
+    verifyTimeLocale(t, "kk:mma",  "01:02p", Time(13, 2))
+    verifyTimeLocale(t, "kk:mmA",  "01:02P", Time(13, 2))
+    verifyTimeLocale(t, "k:mm:ss.F AA", "1:02:04.1 PM", Time(13, 2, 4, 100_000_000))
     verifyTimeLocale(t, "h:mm:ss.ffffff", "13:02:04.123000", Time(13, 2, 4, 123_000_000))
     verifyTimeLocale(t, "h:mm:ss.FFFFFFFFF", "13:02:04.123000678")
 
@@ -1137,10 +1147,10 @@ class DateTimeTest : Test
     verifyTimeLocale(Time(1, 2, 0, 400_000_000), "hh:mm:SS", "01:02:00", Time(1, 2))
     verifyTimeLocale(Time(1, 2, 0, 400_000_000), "hh:mm:SS.FF", "01:02:00.4")
 
-    verifyTimeLocale(Time(0, 0), "k:mm:ss a", "12:00:00 AM")
-    verifyTimeLocale(Time(0, 0, 3), "k:mm:ss a", "12:00:03 AM")
-    verifyTimeLocale(Time(11, 59, 59), "k:mm:ss a", "11:59:59 AM")
-    verifyTimeLocale(Time(12, 0), "k:mm:ss a", "12:00:00 PM")
+    verifyTimeLocale(Time(0, 0), "k:mm:ss AA", "12:00:00 AM")
+    verifyTimeLocale(Time(0, 0, 3), "k:mm:ss a", "12:00:03 a")
+    verifyTimeLocale(Time(11, 59, 59), "k:mm:ss A", "11:59:59 A")
+    verifyTimeLocale(Time(12, 0), "k:mm:ss aa", "12:00:00 pm")
 
     verifyNull(Time.fromLocale("xx:yy", "kk:mm", false))
     verifyErr(ParseErr#) { Time.fromLocale("3x:33", "kk:mm") }

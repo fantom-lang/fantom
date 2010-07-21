@@ -257,7 +257,10 @@ const final class DateTime
   **   SS     Optional seconds (only if non-zero)
   **   f*     Fractional secs trailing zeros
   **   F*     Fractional secs no trailing zeros
-  **   a      AM/PM marker               AM, PM
+  **   a      Lower case a/p for am/pm   a, p
+  **   aa     Lower case am/pm           am, pm
+  **   A      Upper case A/P for am/pm   A, P
+  **   AA     Upper case AM/PM           AM, PM
   **   z      Time zone offset           Z, +03:00 (ISO 8601, XML Schema)
   **   zzz    Time zone abbr             EST, EDT
   **   zzzz   Time zone name             New_York
@@ -272,7 +275,8 @@ const final class DateTime
   **   DD/MMM/YY                   =>  06/Jan/09
   **   MMMM D, YYYY                =>  January 16, 2009
   **   hh:mm:ss.fff zzzz           =>  09:58:54.845 New_York
-  **   k:mma                       =>  9:58AM
+  **   k:mma                       =>  9:58a
+  **   k:mmAA                      =>  9:58AM
   **
   Str toLocale(Str? pattern := null)
 

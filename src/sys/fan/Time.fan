@@ -127,7 +127,10 @@ const final class Time
   **   SS     Optional seconds (only if non-zero)
   **   f*     Fractional secs trailing zeros
   **   F*     Fractional secs no trailing zeros
-  **   a      AM/PM marker               AM, PM
+  **   a      Lower case a/p for am/pm   a, p
+  **   aa     Lower case am/pm           am, pm
+  **   A      Upper case A/P for am/pm   A, P
+  **   AA     Upper case AM/PM           AM, PM
   **   'xyz'  Literal characters
   **
   ** A symbol immediately preceding a "F" pattern with a no
