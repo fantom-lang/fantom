@@ -227,7 +227,17 @@ pattern = "hh:mm:ss";
       case 'a':
         switch (n)
         {
-          case 1:  s += this.hour() < 12 ? "AM" : "PM"; break;
+          case 1:  s += this.hour() < 12 ? "a" : "p"; break;
+          case 2:  s += this.hour() < 12 ? "am" : "pm"; break;
+          default: invalidNum = true;
+        }
+        break;
+
+      case 'A':
+        switch (n)
+        {
+          case 1:  s += this.hour() < 12 ? "A"  : "P"; break;
+          case 2:  s += this.hour() < 12 ? "AM" : "PM"; break;
           default: invalidNum = true;
         }
         break;
