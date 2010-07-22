@@ -68,10 +68,10 @@ fan.sys.Uri.encodeQuery = function(map)
 {
   var buf  = "";
   var keys = map.keys();
-  var len  = keys.length;
+  var len  = keys.size();
   for (var i=0; i<len; i++)
   {
-    var key = keys[i];
+    var key = keys.get(i);
     var val = map.get(key);
     if (buf.length > 0) buf += '&';
     buf = fan.sys.Uri.encodeQueryStr(buf, key);
@@ -1176,10 +1176,10 @@ fan.sys.Uri.prototype.plusQuery = function(q)
 
   var s = "";
   var keys = merge.keys();
-  for (var i=0; i<keys.length; i++)
+  for (var i=0; i<keys.size(); i++)
   {
     if (s.length > 0) s += '&';
-    var key = keys[i];
+    var key = keys.get(i);
     var val = merge.get(key);
     s = fan.sys.Uri.appendQueryStr(s, key);
     s += '=';
