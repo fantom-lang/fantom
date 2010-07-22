@@ -184,8 +184,8 @@ fan.fwt.Graphics.prototype.oval = function(x, y, w, h)
   var kappa = 4 * ((Math.sqrt(2) -1) / 3);
   var rx = w/2;
   var ry = h/2;
-  var cx = x+rx;
-  var cy = y+ry;
+  var cx = x+rx+0.5;
+  var cy = y+ry+0.5;
 
   this.cx.beginPath();
   this.cx.moveTo(cx, cy - ry);
