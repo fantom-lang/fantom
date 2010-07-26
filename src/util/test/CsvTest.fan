@@ -79,6 +79,14 @@ class CsvTest : Test
       [["long", "line1\nline2"]])
       {}
 
+    // embedded newlines
+    verifyCsv(
+      Str<|long with empty lines,"line1
+
+           line2"|>,
+      [["long with empty lines", "line1\n\nline2"]])
+      {}
+
     // multiple embedded newlines
     verifyCsv(
       Str<|first;"a
