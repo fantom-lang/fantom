@@ -186,6 +186,7 @@ namespace Fan.Sys
   // Utils
   //////////////////////////////////////////////////////////////////////////
 
+    public static void echo() { echo(""); }
     public static void echo(object obj)
     {
       if (obj == null) obj = "null";

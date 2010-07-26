@@ -204,6 +204,7 @@ public class FanObj
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+  public static void echo() { echo(""); }
   public static void echo(Object obj)
   {
     if (obj == null) obj = "null";
