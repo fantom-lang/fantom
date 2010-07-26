@@ -36,7 +36,7 @@ runtime=java
 
 // Set this property to pass additional command line options to the Java VM.
 // The options should be listed together separated with a space.
-java.options=-Xmx256M
+java.options=-Xmx512M
 
 //////////////////////////////////////////////////////////////////////////
 // Bootstrap Build
