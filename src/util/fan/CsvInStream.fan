@@ -139,14 +139,15 @@ class CsvInStream : InStream
       ch := line.getSafe(pos++, 0)
 
       // if we've reached the end of a line, then this quoted
-      // cell spans multiple lines so consume the next line
-      if (ch == 0)
+      // cell spans multiple lines so consume all empty lines 
+      // and the next non-empty line
+      while (ch == 0)
       {
         this.pos = 0
         this.line = readLine
         if (line == null) throw IOErr("Unexpected end of file in multi-line quoted cell")
         s.addChar('\n')
-        ch = line[pos++]
+        ch = line.getSafe(pos++, 0)
       }
 
       // if not quote, add it to our cell string
