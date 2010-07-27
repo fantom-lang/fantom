@@ -97,47 +97,6 @@ fan.sys.Unit.quantity = function(quantity)
   return list;
 }
 
-fan.sys.Unit.loadDatabase = function()
-{
-  return fan.sys.List.make(fan.sys.Str.$type, []);
-  /*
-  try
-  {
-    // parse etc/sys/units.fog as big serialized list which contains
-    // lists for each quantity (first item being the name)
-    String path = "etc/sys/units.fog";
-    InStream in;
-    if (Sys.isJarDist)
-      in = new SysInStream(Unit.class.getClassLoader().getResourceAsStream(path));
-    else
-      in = Env.cur().findFile(path).in();
-    List all = (List)in.readObj();
-    in.close();
-
-    // map lists to quantity data structures
-    List quantityNames = new List(Sys.StrType);
-    for (int i=0; i<all.sz(); ++i)
-    {
-      List q = (List)all.get(i);
-      String name = (String)q.get(0);
-      q.removeAt(0);
-      q = (List)q.toImmutable();
-      quantityNames.add(name);
-      quantities.put(name, q);
-    }
-
-    // return quantity names
-    return (List)quantityNames.toImmutable();
-  }
-  catch (Throwable e)
-  {
-    System.out.println("WARNING: Cannot load etc/sys/units.fog");
-    e.printStackTrace();
-    return (List)new List(Sys.StrType).toImmutable();
-  }
-  */
-}
-
 //////////////////////////////////////////////////////////////////////////
 // Parsing
 //////////////////////////////////////////////////////////////////////////
@@ -166,23 +125,23 @@ fan.sys.Unit.parseUnit = function(s)
 {
   var name = s;
   var c = s.indexOf(';');
-  if (c < 0) return fan.sys.Unit.make(name, name, fan.sys.Unit.m_dimensionless, 1, 0);
+  if (c < 0) return fan.sys.Unit.make(name, name, fan.sys.Unit.m_dimensionless, fan.sys.Float.make(1), fan.sys.Float.make(0));
 
   name = fan.sys.Str.trim(s.substring(0, c));
   var symbol = s = fan.sys.Str.trim(s.substring(c+1));
   c = s.indexOf(';');
-  if (c < 0) return fan.sys.Unit.make(name, symbol, fan.sys.Unit.m_dimensionless, 1, 0);
+  if (c < 0) return fan.sys.Unit.make(name, symbol, fan.sys.Unit.m_dimensionless, fan.sys.Float.make(1), fan.sys.Float.make(0));
 
   symbol = fan.sys.Str.trim(s.substring(0, c));
   if (symbol.length == 0) symbol = name;
   var dim = s = fan.sys.Str.trim(s.substring(c+1));
   c = s.indexOf(';');
-  if (c < 0) return fan.sys.Unit.make(name, symbol, fan.sys.Unit.parseDim(dim), 1, 0);
+  if (c < 0) return fan.sys.Unit.make(name, symbol, fan.sys.Unit.parseDim(dim), fan.sys.Float.make(1), fan.sys.Float.make(0));
 
   dim = fan.sys.Str.trim(s.substring(0, c));
   var scale = s = fan.sys.Str.trim(s.substring(c+1));
   c = s.indexOf(';');
-  if (c < 0) return fan.sys.Unit.make(name, symbol, fan.sys.Unit.parseDim(dim), fan.sys.Float.fromStr(scale), 0);
+  if (c < 0) return fan.sys.Unit.make(name, symbol, fan.sys.Unit.parseDim(dim), fan.sys.Float.fromStr(scale), fan.sys.Float.make(0));
 
   scale = fan.sys.Str.trim(s.substring(0, c));
   var offset = fan.sys.Str.trim(s.substring(c+1));
