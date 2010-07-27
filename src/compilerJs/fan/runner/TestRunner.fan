@@ -105,6 +105,9 @@ class TestRunner
       JsTimeZone(TimeZone("Godthab")).write(out)
       JsTimeZone(TimeZone("Taipei")).write(out)
 
+      // unit db
+      JsUnitDatabase().write(out)
+
       engine.eval(buf.toStr)
     }
     catch (Err e) throw Err("Locale eval failed: $p.name", e)

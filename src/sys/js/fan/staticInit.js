@@ -224,7 +224,7 @@ fan.sys.Version.m_defVal = fan.sys.Version.fromStr("0");
 //
 // Unit
 //
-fan.sys.Unit.m_quantityNames = fan.sys.Unit.loadDatabase();
+fan.sys.Unit.m_quantityNames = fan.sys.List.make(fan.sys.Str.$type, []);
 
 //
 // Env
