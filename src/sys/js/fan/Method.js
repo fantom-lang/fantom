@@ -33,7 +33,7 @@ fan.sys.Method.prototype.$ctor = function(parent, name, flags, params)
 
 fan.sys.Method.prototype.invoke = function(instance, args)
 {
-  var func = (this.isCtor() || this.isStatic() )
+  var func = (this.isCtor() || this.isStatic())
     ? eval(this.m_$qname)
     : instance[this.m_$name];
   var vals = args==null ? [] : args.m_values;
@@ -72,6 +72,6 @@ fan.sys.Method.prototype.call = function()
     args = Array.prototype.slice.call(args).slice(1);
   }
 
-  return this.invoke(instance, args);
+  return this.invoke(instance, fan.sys.List.make(fan.sys.Obj.$type, args));
 }
 
