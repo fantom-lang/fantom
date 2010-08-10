@@ -71,6 +71,9 @@ class FileWeblet : Weblet
   **
   override Void onGet()
   {
+    // if file doesn't exist
+    if (!file.exists) { res.sendErr(404); return }
+
     // set identity headers
     res.headers["ETag"] = etag
     res.headers["Last-Modified"] = modified.toHttpStr
