@@ -141,7 +141,7 @@ pitfalls.  Fantom takes a middle of the road approach called mixins.
 Mixins are essentially Java or C# interfaces that can have method
 implementations.  To avoid some of the pitfalls of true
 multiple inheritance, mixins restrict features such as fields
-which store state.  Mixins are a very nice feature in the Fan
+which store state.  Mixins are a very nice feature in the Fantom
 toolbox when it comes to designing your object oriented models.
 
 Modularity [#modularity]
@@ -241,7 +241,7 @@ tasks include mostly noise which makes for very ugly, verbose declarative
 programming.  For this reason, you often find the declarative parts of
 a Java or C# application shoved off into XML files.
 
-Fantom incorporates declarative programming right into the language.  Fan
+Fantom incorporates declarative programming right into the language.  Fantom
 supports a literal syntax for lists, maps, ranges, uris, and durations.
 Fantom also includes a text serialization syntax which is human readable and
 writable.  The serialization syntax is a clean subset of the programming
