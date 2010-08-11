@@ -1,0 +1,150 @@
+//
+// Copyright (c) 2010, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   10 Oct 10  Andy Frank  Creation
+//
+
+using dom
+using gfx
+using fwt
+using web
+
+class StorageTest : Window
+{
+  new make() : super(null, null)
+  {
+    content = SashPane
+    {
+      weights = [50,50]
+      StoragePane("Session Storage", Win.cur.sessionStorage),
+      StoragePane("Local Storage",   Win.cur.localStorage),
+    }
+  }
+
+  Void main() { open }
+}
+
+class StoragePane : InsetPane
+{
+  new make(Str dis, Storage storage) : super(24)
+  {
+    this.storage = storage
+    this.table   = Table { model=StorageModel(storage) }
+
+    content = EdgePane
+    {
+      top = InsetPane(0,0,12,0) {
+        GridPane {
+          numCols = 4
+          hgap    = 12
+          Label  { text=dis; font=Desktop.sysFont.toSize(15).toBold },
+          Button { text="Add";    onAction.add { onAdd    }},
+          Button { text="Remove"; onAction.add { onRemove }},
+          Button { text="Clear";  onAction.add { onClear  }},
+        },
+      }
+      center = table
+    }
+  }
+
+  Void onAdd()
+  {
+    name  := Text { prefCols=40 }
+    value := Text { prefCols=40 }
+    dlg   := Dialog(window)
+    {
+      it.title = "Add"
+      it.body = GridPane
+      {
+        numCols = 2
+        Label { text="Name"  }, name,
+        Label { text="Value" }, value,
+      }
+      it.commands = Dialog.okCancel
+    }
+    dlg.onClose.add |e|
+    {
+      if (e.data != Dialog.ok) return
+      try
+      {
+        storage[name.text] = value.text
+        table.refreshAll
+      }
+      catch (Err err) Dialog.openErr(window, "Add failed", err)
+    }
+    dlg.open
+  }
+
+  Void onRemove()
+  {
+    name := Text { prefCols=40 }
+    dlg  := Dialog(window)
+    {
+      it.title = "Remove"
+      it.body = GridPane
+      {
+        numCols = 2
+        Label { text="Name" }, name,
+      }
+      it.commands = Dialog.okCancel
+    }
+    dlg.onClose.add |e|
+    {
+      if (e.data != Dialog.ok) return
+      try
+      {
+        storage.remove(name.text)
+        table.refreshAll
+      }
+      catch (Err err) Dialog.openErr(window, "Remove failed", err)
+    }
+    dlg.open
+  }
+
+  Void onClear()
+  {
+    dlg := Dialog(window)
+    {
+      it.title = "Clear"
+      it.body = Label
+      {
+        image = Image(`fan://icons/x32/warn.png`)
+        text  = "Clear all contents from storage?"
+      }
+      it.commands = Dialog.okCancel
+    }
+    dlg.onClose.add |e|
+    {
+      if (e.data != Dialog.ok) return
+      try
+      {
+        storage.clear
+        table.refreshAll
+      }
+      catch (Err err) Dialog.openErr(window, "Clear failed", err)
+    }
+    dlg.open
+  }
+
+  Storage storage
+  Table table
+}
+
+class StorageModel : TableModel
+{
+  new make(Storage storage) { this.storage = storage }
+  override Int numRows() { return storage.size }
+  override Int numCols() { return cols.size }
+  override Str header(Int col) { return cols[col] }
+  override Str text(Int col, Int row)
+  {
+    key := storage.key(row)
+    return col==0 ? key : storage[key]
+  }
+  Str[] cols := ["Name", "Value"]
+  Storage storage
+}
+
+
