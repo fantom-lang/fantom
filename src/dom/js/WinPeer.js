@@ -125,3 +125,27 @@ fan.dom.WinPeer.prototype.fakeHashChange = function(self, handler)
   setInterval(checkHash, 100);
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Storage
+//////////////////////////////////////////////////////////////////////////
+
+fan.dom.WinPeer.prototype.sessionStorage = function(self)
+{
+  if (this.$sessionStorage == null)
+  {
+    this.$sessionStorage = fan.dom.Storage.make();
+    this.$sessionStorage.peer.$instance = window.sessionStorage;
+  }
+  return this.$sessionStorage;
+}
+
+fan.dom.WinPeer.prototype.localStorage = function(self)
+{
+  if (this.$localStorage == null)
+  {
+    this.$localStorage = fan.dom.Storage.make();
+    this.$localStorage.peer.$instance = window.localStorage;
+  }
+  return this.$localStorage;
+}
+

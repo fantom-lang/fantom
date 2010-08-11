@@ -26,10 +26,21 @@ one-to-one:
 Win [#win]
 ==========
 
+  // basics
   win := Win.cur       // get current Win instance
   win.alert("Hello!")  // display a modal dialog
   win.uri              // the URI for this page
   win.hyperlink(uri)   // hyperlink to new page
+  win.viewport         // get size of window viewport
+
+  // event handlers
+  win.onEvent("hashchange", false) |e| { Win.cur.alert("hashchanged!") }
+
+  // storage
+  win.localStorage["bar"]         // return value for bar from local storage
+  win.localStorage["foo"] = 25    // store foo:25 in local storage
+  win.localStorage.remove("foo")  // remove foo from local storage
+  win.localStorage.clear          // clear all contents from local storage
 
 Doc [#doc]
 ==========
@@ -49,8 +60,6 @@ Elem [#elem]
   elem.tagName              // tag name of this element
 
   // CSS
-  elem.style                     // CSS style object for this element
-  elem.computedStyle             // computed style for this element
   elem.className                 // return the current class name(s)
   elem.hasClassName("alpha")     // does this element have the given class name?
   elem.addClassName("beta")      // add a new class name to any current class names
@@ -70,10 +79,7 @@ Elem [#elem]
   elem.checked            // true/false for checkboxes
 
   // position and size
-  elem.x                  // x position within parent
-  elem.y                  // y position within parent
-  elem.w                  // width of elment
-  elem.h                  // height of element
+  elem.bounds             // pos and size of element
 
   // event handlers
   elem.onEvent("click", false) |e| { Win.cur.alert("$e.target clicked!") }

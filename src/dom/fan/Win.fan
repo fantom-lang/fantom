@@ -79,4 +79,18 @@ class Win
   **
   native Void onEvent(Str type, Bool useCapture, |Event e| handler)
 
+//////////////////////////////////////////////////////////////////////////
+// Storage
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return session storage instance for window.
+  **
+  native Storage sessionStorage()
+
+  **
+  ** Return local storage instance for window.
+  **
+  native Storage localStorage()
+
 }
