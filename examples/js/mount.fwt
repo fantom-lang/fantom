@@ -21,7 +21,7 @@ class FwtMountDemoWin : Window
     {
       insets = Insets(12)
       border = Border("2 #080 10")
-      Label { text="And this is our FWT widget!" },
+      Label { text="And this is our FWT widget! (run w/ mount.fan - NOT demo.fan)" },
     }
   }
 
