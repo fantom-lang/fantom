@@ -8,7 +8,7 @@
 
 *Build 1.0.55 (working)*
 - Enhance DateTime/Time pattern for AM/PM
-- dom: Win.sessionStore, Win.localStore
+- dom: Win.sessionStore, Win.localStore, Doc.title
 
 *Build 1.0.54 (14 Jul 10)*
 - Support for Java FFI Type->toClass

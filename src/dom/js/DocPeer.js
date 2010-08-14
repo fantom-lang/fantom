@@ -11,6 +11,9 @@
 fan.dom.DocPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.dom.DocPeer.prototype.$ctor = function(self) {}
 
+fan.dom.DocPeer.prototype.title  = function(self) { return document.title; }
+fan.dom.DocPeer.prototype.title$ = function(self, val) { document.title = val; }
+
 fan.dom.DocPeer.prototype.body = function(self)
 {
   return fan.dom.ElemPeer.make(document.body);
