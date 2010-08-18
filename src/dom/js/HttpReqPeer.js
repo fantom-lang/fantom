@@ -58,13 +58,13 @@ fan.dom.HttpReqPeer.makeRes = function(xhr)
 
 fan.dom.HttpReqPeer.prototype.encodeForm = function(self, form)
 {
-  var encode = function(orig) { return escape(orig).replace(/\+/g, "%2B"); }
   var content = ""
   var k = form.keys();
   for (var i=0; i<k.size(); i++)
   {
     if (i > 0) content += "&";
-    content += encode(k.get(i)) + "=" + encode(form.get(k.get(i)));
+    content += encodeURIComponent(k.get(i)) + "=" +
+               encodeURIComponent(form.get(k.get(i)));
   }
   return content;
 }
