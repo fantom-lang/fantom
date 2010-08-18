@@ -5,7 +5,7 @@ const class UploadMod : WebMod
   override Void onGet()
   {
     res.statusCode = 200
-    res.headers["Content-Type"] = "text/html"
+    res.headers["Content-Type"] = "text/html; charset=utf-8"
     out := res.out
     out.html.body
     out.w("<a href='/'>Index</a>").hr

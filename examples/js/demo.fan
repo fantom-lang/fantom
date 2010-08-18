@@ -58,7 +58,7 @@ const class JsDemoMod : WebMod
 
   Void onIndex()
   {
-    res.headers["Content-Type"] = "text/html"
+    res.headers["Content-Type"] = "text/html; charset=utf-8"
     out := res.out
     out.docType
     out.html

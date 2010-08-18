@@ -11,7 +11,7 @@ const class DumpMod : WebMod
     if (s["testcounter"] == 10) s.delete
 
     res.statusCode = 200
-    res.headers["Content-Type"] = "text/html"
+    res.headers["Content-Type"] = "text/html; charset=utf-8"
     res.out.printLine("<a href='/'>Index</a> |")
     res.out.printLine("<a href='/dump'>/dump</a> |")
     res.out.printLine("<a href='/dump/'>/dump/</a> |")
