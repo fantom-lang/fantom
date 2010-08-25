@@ -53,6 +53,14 @@ fan.sys.Float.compare = function(self, that)
   return self.valueOf() == that.valueOf() ? 0 : 1;
 }
 
+/////////////////////////////////////////////////////////////////////////
+// Conversion
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Float.toInt = function(val) { return (val<0) ? Math.ceil(val) : Math.floor(val); }
+fan.sys.Float.toFloat = function(val) { return val; }
+fan.sys.Float.toDecimal = function(val) { return fan.sys.Decimal.make(val); }
+
 //////////////////////////////////////////////////////////////////////////
 // Math
 //////////////////////////////////////////////////////////////////////////
@@ -192,3 +200,4 @@ fan.sys.Float.toLocale = function(self, pattern)
     return ''+self;
   }
 }
+
