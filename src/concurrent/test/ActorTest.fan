@@ -218,11 +218,13 @@ class ActorTest : Test
     verifyErr(Err#) { pool.join }
     verifyErr(Err#) { pool.join(5sec) }
 
-    // join with timeout
+    // join with timeout (depending on the underlying resolution
+    // of the system timer and what is happening on the OS, this
+    // may fail occasionally)
     t1 := Duration.now
     verifyErr(TimeoutErr#) { pool.stop.join(100ms) }
     t2 := Duration.now
-    verify(t2 - t1 <= 120ms)
+    verify(t2 - t1 <= 140ms)
     verifyEq(pool.isStopped, true)
     verifyEq(pool.isDone, false)
 
