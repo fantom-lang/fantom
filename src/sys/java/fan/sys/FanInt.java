@@ -202,7 +202,11 @@ public final class FanInt
   {
     if (pow < 0) throw ArgErr.make("pow < 0").val;
     long result = 1;
-    for (int i=0; i<pow; ++i) result *= self;
+    for (; pow>0; pow>>=1)
+    {
+      if ((pow&1) == 1) result *= self;
+      self *= self;
+    }
     return result;
   }
 
