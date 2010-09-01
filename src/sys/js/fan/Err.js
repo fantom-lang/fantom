@@ -30,15 +30,6 @@ fan.sys.Err.make$ = function(self, msg, cause)
   self.m_stack = new Error().stack;
 }
 
-fan.sys.Err._toName = function(f)
-{
-  if (f.name) return f.name;
-  var def = f.toString().split("\n")[0];
-  var exp = /^function ([^\s(]+).+/;
-  if (exp.test(def)) return def.split("\n")[0].replace(exp, "$1") || "anonymous";
-  return "anonymous";
-}
-
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
