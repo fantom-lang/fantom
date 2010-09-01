@@ -155,6 +155,24 @@ fan.sys.Test.prototype.$typeof = function()
 }
 
 //////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+//fan.sys.Test.prototype.trap(String name, List args)
+
+fan.sys.Test.prototype.tempDir = function()
+{
+  if (this.m_tempDir == null && fan.sys.Env.$rhino)
+  {
+    var x = fan.sys.Env.cur().tempDir();
+    this.m_tempDir = x.plus(fan.sys.Uri.fromStr("test/"), false);
+    this.m_tempDir.$delete();
+    this.m_tempDir.create();
+  }
+  return this.m_tempDir;
+}
+
+//////////////////////////////////////////////////////////////////////////
 // TestException
 //////////////////////////////////////////////////////////////////////////
 
