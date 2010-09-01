@@ -107,7 +107,7 @@ fan.sys.Env.prototype.locale = function(pod, key, def, locale)
   if (val != null) return val;
 
   // 4. Fallback to 'pod::key' unless 'def' specified
-  if (def === fan.sys.Env.noDef ) return pod + "::" + key;
+  if (def === fan.sys.Env.noDef) return pod + "::" + key;
   return def;
 }
 
