@@ -770,7 +770,8 @@ class JsShortcutExpr : JsCallExpr
   {
     this.symbol    = se.opToken.symbol
     this.isAssign  = se.isAssign
-    this.isPostfixLeave = se.isPostfixLeave
+    this.isIndexedAssign = se is IndexedAssignExpr
+    this.isPostfixLeave  = se.isPostfixLeave
 
     switch (symbol)
     {
@@ -781,7 +782,8 @@ class JsShortcutExpr : JsCallExpr
       case ">":  name = "compareGT"
     }
 
-    if (isAssign) assignTarget = findAssignTarget(target, se.loc)
+    if (isAssign)        assignTarget = findAssignTarget(target, se.loc)
+    if (isIndexedAssign) assignIndex  = findIndexedAssign(target, se.loc).args[0]
   }
 
   private JsExpr findAssignTarget(JsExpr expr, Loc loc)
@@ -792,8 +794,21 @@ class JsShortcutExpr : JsCallExpr
     throw support.err("No base Expr found", loc)
   }
 
+  private JsShortcutExpr findIndexedAssign(JsExpr expr, Loc loc)
+  {
+    if (expr is JsShortcutExpr) return expr
+    t := Type.of(expr).field("target", false)
+    if (t != null) return findIndexedAssign(t.get(expr), loc)
+    throw support.err("No base Expr found", loc)
+  }
+
   override Void write(JsWriter out)
   {
+    if (isIndexedAssign)
+    {
+      doWriteIndexedAssign(out)
+      return
+    }
     if (isPostfixLeave)
     {
       var := support.unique
@@ -819,10 +834,31 @@ class JsShortcutExpr : JsCallExpr
     super.write(out)
   }
 
+  Void doWriteIndexedAssign(JsWriter out)
+  {
+    newVal := support.unique
+    oldVal := support.unique
+    ref    := support.unique
+    index  := support.unique
+    old    := support.thisName
+    support.thisName = "\$this"
+    out.w("(function(\$this) {")
+    out.w(" var $ref = ");    assignTarget.write(out); out.w(";")
+    out.w(" var $index = ");  assignIndex.write(out);  out.w(";")
+    out.w(" var $newVal = "); super.write(out);        out.w(";")
+    if (isPostfixLeave) out.w(" var $oldVal = ${ref}.get($index);");
+    out.w(" ${ref}.set($index,$newVal);")
+    out.w(" return ").w(isPostfixLeave ? oldVal : newVal).w(";")
+    out.w(" })($old)")
+    support.thisName = old
+  }
+
   Str symbol            // the shortcut token symbol
   Bool isAssign         // does this expr assign
+  Bool isIndexedAssign  // is indexed assign
   Bool isPostfixLeave   // is postfix expr
   JsExpr? assignTarget  // target of assignment
+  JsExpr? assignIndex   // indexed assign: index
 }
 
 **************************************************************************
