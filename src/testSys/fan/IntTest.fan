@@ -263,8 +263,12 @@ class IntTest : Test
     // shiftr
     verifyEq(0x80.shiftr(1), 0x40)
     verifyEq(0x80.shiftr(3), 0x10)
-    verifyEq(0xabcd_0000_1111_0000.shiftr(4), 0x0abc_d000_0111_1000)
-    verifyEq(0xabcd_0000_1111_0000->shiftr(4), 0x0abc_d000_0111_1000)
+
+    if (Env.cur.runtime != "js")
+    {
+      verifyEq(0xabcd_0000_1111_0000.shiftr(4), 0x0abc_d000_0111_1000)
+      verifyEq(0xabcd_0000_1111_0000->shiftr(4), 0x0abc_d000_0111_1000)
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
