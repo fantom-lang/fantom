@@ -39,6 +39,7 @@ class Build : BuildScript
     writeTypeInfo(out)
     writeSysSupport(out)
     writeTimezones(out)
+    writeSysProps(out)
     out.close
 
     // close sys.pod FPod.zip to release lock so we can rejar that file
@@ -164,6 +165,24 @@ class Build : BuildScript
   {
     log.debug("  fanx/")
     fanx.listFiles.each |f| { append(f, out) }
+  }
+
+  private Void writeSysProps(OutStream out)
+  {
+    log.debug("  Props")
+    writeProps(`locale/en.props`, out)
+    writeProps(`locale/en-US.props`, out)
+  }
+
+  private Void writeProps(Uri uri, OutStream out)
+  {
+    log.debug("    $uri")
+    key  := "sys:$uri"
+    file := devHomeDir + `src/sys/$uri`
+    out.printLine("with (fan.sys.Env.cur().\$props($key.toCode))")
+    out.printLine("{")
+    file.in.readProps.each |v,k| { out.printLine("  set($k.toCode,$v.toCode);") }
+    out.printLine("}")
   }
 
 //////////////////////////////////////////////////////////////////////////
