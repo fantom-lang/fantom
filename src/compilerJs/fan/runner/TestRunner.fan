@@ -184,7 +184,7 @@ class TestRunner
           try
           {
             var test = ${js}.make();
-            test.${m.name}();831
+            test.${m.name}();
             return test.verifyCount;
           }
           catch (err)
