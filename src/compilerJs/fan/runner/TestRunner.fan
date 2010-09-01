@@ -184,15 +184,19 @@ class TestRunner
           try
           {
             var test = ${js}.make();
-            test.${m.name}();
+            test.${m.name}();831
             return test.verifyCount;
           }
           catch (err)
           {
-            if (err == undefined) err = 'Undefined error';
-            var file = err.fileName;   if (file == null) file = 'Unknown';
-            var line = err.lineNumber; if (line == null) line = 'Unknown';
-            println(err + ' (' + file + ':' + line + ')');
+            if (err == undefined) println('Undefined error');
+            else if (err.trace) err.trace();
+            else
+            {
+              var file = err.fileName;   if (file == null) file = 'Unknown';
+              var line = err.lineNumber; if (line == null) line = 'Unknown';
+              println(err + ' (' + file + ':' + line + ')');
+            }
             return -1;
           }
         }
