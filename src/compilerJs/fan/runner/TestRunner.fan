@@ -176,6 +176,11 @@ class TestRunner
   {
     try
     {
+      // env dirs
+      homeDir := Env.cur.homeDir
+      workDir := Env.cur.workDir
+      tempDir := Env.cur.tempDir
+
       // TODO - setup/teardown
       js  := "fan.${m.parent.pod}.${m.parent.name}"
       ret := engine.eval(
@@ -183,6 +188,10 @@ class TestRunner
         {
           try
           {
+            fan.sys.Env.cur().m_homeDir = fan.sys.File.osPath($homeDir.osPath.toCode);
+            fan.sys.Env.cur().m_workDir = fan.sys.File.osPath($workDir.osPath.toCode);
+            fan.sys.Env.cur().m_tempDir = fan.sys.File.osPath($tempDir.osPath.toCode);
+
             var test = ${js}.make();
             test.${m.name}();
             return test.verifyCount;

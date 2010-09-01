@@ -42,6 +42,10 @@ fan.sys.Env.prototype.$setVars = function(vars)
 
 fan.sys.Env.noDef = "_Env_nodef_";
 
+// check if running under Rhino (Java VM)
+fan.sys.Env.$rhino = false;
+try { if (java.io.File) fan.sys.Env.$rhino = true; } catch (err) {}
+
 //////////////////////////////////////////////////////////////////////////
 // Obj
 //////////////////////////////////////////////////////////////////////////
@@ -69,6 +73,12 @@ fan.sys.Env.prototype.runtime = function() { return "js"; }
 fan.sys.Env.prototype.args = function() { return this.m_args; }
 
 fan.sys.Env.prototype.vars = function() { return this.m_vars; }
+
+fan.sys.Env.prototype.homeDir = function() { return this.m_homeDir; }
+
+fan.sys.Env.prototype.workDir = function() { return this.m_workDir; }
+
+fan.sys.Env.prototype.tempDir = function() { return this.m_tempDir; }
 
 //////////////////////////////////////////////////////////////////////////
 // State
