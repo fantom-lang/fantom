@@ -227,13 +227,8 @@ fan.sys.Int.toHex = function(self, width)
   // pad width
   if (width != null && s.length < width)
   {
-    if (fan.sys.Int.$zeros == null)
-    {
-      fan.sys.Int.$zeros = [""];
-      for (var i=1; i<16; i++)
-        fan.sys.Int.$zeros[i] = fan.sys.Int.$zeros[i-1] + "0";
-    }
-    s = fan.sys.Int.$zeros[width-s.length] + s;
+    var zeros = width - s.length;
+    for (var i=0; i<zeros; ++i) s = '0' + s;
   }
 
   return s;
