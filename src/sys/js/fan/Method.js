@@ -43,7 +43,7 @@ fan.sys.Method.prototype.invoke = function(instance, args)
   if (func == null && instance != null)
   {
     func = eval(this.m_$qname);
-    vals.splice(0, 1, instance);
+    vals.splice(0, 0, instance);
     instance = null;
   }
 
