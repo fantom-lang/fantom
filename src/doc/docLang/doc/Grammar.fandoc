@@ -150,18 +150,19 @@ Expr [#expr]
   <typeLiteral>    :=  <type> "#"
   <slotLiteral>    :=  [<type>] "#" <id>
   <namedSuper>     :=  <type> "." "super"
-  <staticCall>     :=  <type> "." <idExpr>
+  <staticCall>     :=  <type> "." <slotExpr>
   <dsl>            :=  <type> "<|" <anyChar>* "|>"
   <simple>         :=  <type> "(" <expr> ")"
   <ctorBlock>      :=  <type> <itBlock>
   <termChain>      :=  <dotCall> | <dynCall> | <safeDotCall> | <safeDynCall> |
                        <indexExpr> | <callOp> | <itBlock>
   <itBlock>        :=  "{" <stmts> "}"
-  <dotCall>        :=  "." <idExpr>
-  <dynCall>        :=  "->" <idExpr>
-  <safeDotCall>    :=  "?." <idExpr>
-  <safeDynCall>    :=  "?->" <idExpr>
-  <idExpr>         :=  <local> | <field> | <call>
+  <dotCall>        :=  "." <slotExpr>
+  <dynCall>        :=  "->" <slotExpr>
+  <safeDotCall>    :=  "?." <slotExpr>
+  <safeDynCall>    :=  "?->" <slotExpr>
+  <idExpr>         :=  <local> | <slotExpr>
+  <slotExpr>       :=  <field> | <call>
   <local>          :=  <id>
   <field>          :=  ["&"] <id>
   <call>           :=  <id> ["(" <args> ")"] [<closure>]
