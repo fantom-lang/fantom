@@ -142,11 +142,6 @@ class CompilerInput
   **
   Uri[]? jsFiles
 
-// TODO
-@Deprecated Uri[] srcDirs { get { srcFiles } set { srcFiles = it } }
-@Deprecated Uri[] resDirs { get { resFiles } set { resFiles = it } }
-@Deprecated Uri[] jsDirs  { get { jsFiles }  set { jsFiles = it } }
-
 //////////////////////////////////////////////////////////////////////////
 // CompilerInputMode.str
 //////////////////////////////////////////////////////////////////////////

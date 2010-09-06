@@ -98,7 +98,7 @@ class NamespaceTest : CompilerTest
     verifySame(echo.returnType, v)
     verifyEq(echo.params[0].name, "x")
     verifyEq(echo.params[0].paramType, obj.toNullable)
-    verifyEq(echo.params[0].hasDefault, false)
+    verifyEq(echo.params[0].hasDefault, true)
 
     // slots -> Int.hash
     hash := slots["hash"] as CMethod
