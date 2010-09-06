@@ -481,7 +481,7 @@ class NamespaceTest : CompilerTest
      "class Foo {}",
        [
          1, 1, "Resource `Foo/` conflicts with type name 'Foo'",
-       ]) { resDirs = [`Foo/`] }
+       ]) { resFiles = [`Foo/`] }
   }
 
 }
