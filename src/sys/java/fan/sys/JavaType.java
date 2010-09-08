@@ -35,11 +35,19 @@ public class JavaType
   JavaType(Env env, Class cls)
   {
     this.env = env;
-    if (cls.getPackage() == null)
-      this.podName = "[java]";
+    if (cls.isArray() && cls.getComponentType().isPrimitive())
+    {
+      this.podName = "[java]fanx.interop";
+      this.typeName = FanStr.capitalize(cls.getComponentType().getSimpleName()) + "Array";
+    }
     else
-      this.podName = "[java]" + cls.getPackage().getName();
-    this.typeName = cls.getSimpleName();
+    {
+      if (cls.getPackage() == null)
+        this.podName = "[java]";
+      else
+        this.podName = "[java]" + cls.getPackage().getName();
+      this.typeName = cls.getSimpleName();
+    }
     this.cls = cls;
   }
 
@@ -509,9 +517,7 @@ public class JavaType
    */
   static String toClassName(String podName, String typeName)
   {
-    if (podName.length() == 6) return typeName;
-    if (podName.charAt(6) == ' ') throw new IllegalStateException();
-    return podName.substring(6) + "." + typeName;
+    return FanUtil.toJavaClassName(podName, typeName);
   }
 
   /**
