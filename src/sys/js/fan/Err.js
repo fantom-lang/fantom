@@ -62,9 +62,46 @@ fan.sys.Err.prototype.trace = function()
 fan.sys.Err.prototype.traceToStr = function()
 {
   var s = this.$typeof() + ": " + this.m_msg;
-  if (this.m_stack != null) s += "\n" + this.m_stack;
+  if (this.m_stack != null) s += "\n" + fan.sys.Err.cleanTrace(this.m_stack);
   if (this.m_cause != null) s += "\n  Caused by: " + this.m_cause.traceToStr();
   return s;
+}
+
+fan.sys.Err.cleanTrace = function(orig)
+{
+  var stack = [];
+  var lines = orig.split('\n');
+  for (var i=0; i<lines.length; i++)
+  {
+    var line = lines[i];
+    if (line.indexOf("@") != -1)
+    {
+      // firefox
+      var about = line.lastIndexOf("@");
+      var slash = line.lastIndexOf("/");
+      if (slash != -1)
+      {
+        // TODO FIXIT
+        var func = "Unknown"; // line.substring(0, about)
+        var sub = "  at " + func + " (" + line.substr(slash+1) + ")";
+        stack.push(sub);
+      }
+    }
+    else if (line.charAt(line.length-1) == ')')
+    {
+      // chrome
+      var paren = line.lastIndexOf("(");
+      var slash = line.lastIndexOf("/");
+      var sub   = line.substring(0, paren+1) + line.substr(slash+1);
+      stack.push(sub);
+    }
+    else
+    {
+      // add orig
+      stack.push(line)
+    }
+  }
+  return stack.join("\n");
 }
 
 //////////////////////////////////////////////////////////////////////////
