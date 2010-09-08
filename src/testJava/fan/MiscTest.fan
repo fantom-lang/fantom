@@ -168,4 +168,23 @@ class MiscTest : JavaTest
     verifyEq(obj->a, obj->b)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1190 compile error on list of java arrays
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1190()
+  {
+    compile(
+     """using [java] fanx.interop
+        class Foo
+        {
+          Obj[] x() { [ByteArray(0)] }
+        }""")
+
+    obj := pod.types.first.make
+    verifyEq(obj->x.typeof.toStr, "[java]fanx.interop::ByteArray?[]")
+    verifyEq(obj->x->first.typeof.toStr, "[java]fanx.interop::ByteArray")
+  }
+
+
 }

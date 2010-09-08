@@ -280,14 +280,14 @@ public class FanUtil
     // primitives: [java]fanx.interop
     if (podName.equals("[java]fanx.interop"))
     {
-      if (typeName.equals("BooleanArray")) return sig ? "[Z" : "[boolean";
-      if (typeName.equals("ByteArray"))    return sig ? "[B" : "[byte";
-      if (typeName.equals("ShortArray"))   return sig ? "[S" : "[short";
-      if (typeName.equals("CharArray"))    return sig ? "[C" : "[char";
-      if (typeName.equals("IntArray"))     return sig ? "[I" : "[int";
-      if (typeName.equals("LongArray"))    return sig ? "[J" : "[long";
-      if (typeName.equals("FloatArray"))   return sig ? "[F" : "[float";
-      if (typeName.equals("DoubleArray"))  return sig ? "[D" : "[double";
+      if (typeName.equals("BooleanArray")) return "[Z";
+      if (typeName.equals("ByteArray"))    return "[B";
+      if (typeName.equals("ShortArray"))   return "[S";
+      if (typeName.equals("CharArray"))    return "[C";
+      if (typeName.equals("IntArray"))     return "[I";
+      if (typeName.equals("LongArray"))    return "[J";
+      if (typeName.equals("FloatArray"))   return "[F";
+      if (typeName.equals("DoubleArray"))  return "[D";
     }
 
     // buffer for signature
