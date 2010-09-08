@@ -669,6 +669,7 @@ class ExprTest : CompilerTest
 
   Void testCallOperatorErrors()
   {
+    // ResolveExpr step
     verifyErrors(
      "class Foo
       {
@@ -684,11 +685,25 @@ class ExprTest : CompilerTest
         static Void m9(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int j) {}
       }",
       [
-        3, 26, "Cannot call local variable 'x' like a function",
-        4, 28, "Cannot call local variable 'x' like a function",
-        5, 30, "Cannot call local variable 'x' like a function",
+        3, 26, "Cannot use () call operator on non-func type 'sys::Str'",
+        4, 28, "Cannot use () call operator on non-func type 'sys::Str'",
+        5, 30, "Cannot use () call operator on non-func type 'sys::Int'",
         9,  5, "Tough luck - cannot use () operator with more than 8 arguments, use call(List)",
       ])
+
+    // CheckErrors step
+    verifyErrors(
+      "class Foo
+       {
+         Int call(Int a, Int b) { a + b }
+         Void test1(Foo f) { f(2, 3) }
+         Void test2(Foo f) { this(2, 3) }
+         Void test3()      { Foo()(2, 3) }
+       }
+       ",
+       [ 4, 23, "Cannot use () call operator on non-func type '$podName::Foo'",
+         5, 23, "Cannot use () call operator on non-func type '$podName::Foo'",
+         6, 23, "Cannot use () call operator on non-func type '$podName::Foo'"])
   }
 
 //////////////////////////////////////////////////////////////////////////

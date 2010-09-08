@@ -1194,6 +1194,10 @@ class CheckErrors : CompilerStep
       if (call.target.ctype.isVal || call.method.parent.isVal)
         call.target = coerce(call.target, call.method.parent) |->| {}
     }
+
+    // ensure call operator target() not used on non-function types
+    if (call.isCallOp && !call.target.ctype.isFunc)
+      err("Cannot use () call operator on non-func type '$call.target.ctype'", call.target.loc)
   }
 
   private Void checkField(FieldExpr f)

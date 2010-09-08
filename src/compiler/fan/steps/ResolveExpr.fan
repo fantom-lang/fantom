@@ -461,15 +461,6 @@ class ResolveExpr : CompilerStep
         return closure.toWith(binding)
     }
 
-    // if binding isn't a sys::Func then no can do
-    if (!binding.ctype.fits(ns.funcType))
-    {
-      if (binding.ctype != ns.error)
-        err("Cannot call local variable '$call.name' like a function", call.loc)
-      call.ctype = ns.error
-      return call
-    }
-
     // can only handle zero to eight arguments; I could wrap up the
     // arguments into a List and use call(List) - but methods with
     // that many arguments are just inane so tough luck
@@ -483,7 +474,16 @@ class ResolveExpr : CompilerStep
     // invoking the () operator on a sys::Func is syntactic
     // sugar for invoking one of the Func.call methods
     callMethod := binding.ctype.method("call")
-    return CallExpr.makeWithMethod(call.loc, binding, callMethod, call.args)
+    if (callMethod == null)
+    {
+      if (binding.ctype != ns.error)
+        err("Cannot use () call operator on non-func type '$binding.ctype'", call.loc)
+      call.ctype = ns.error
+      return call
+    }
+    call = CallExpr.makeWithMethod(call.loc, binding, callMethod, call.args)
+    call.isCallOp = true
+    return call
   }
 
   **
