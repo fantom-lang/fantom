@@ -28,19 +28,27 @@ class CheckParamDefs : CompilerStep
 
   override Void visitMethodDef(MethodDef m)
   {
-    // unless there are two or more defaults don't bother
+    // unless there aren't any defaults don't bother
     params := m.paramDefs
     num := params.size
-    if (num <= 1 || params[-2].def == null)
+    if (num == 0 || params[-1].def == null)
       return
 
     // if a def expr calculates a local used after it,
     // then we need to insert a store (local set)
-    (num-1).times |Int i|
+    num.times |Int i|
     {
       if (params[i].def == null) return
-      if (usedInSuccDef(params, i))
+      used := usedInSuccDef(params, i)
+      if (used != null)
       {
+        // handle error case of foo(x := x)
+        if (used == params[i])
+        {
+          err("Param default '$used.name' cannot access itself", used.loc)
+          return
+        }
+
         param := params[i]
         var   := m.vars[i]
         loc   := param.loc
@@ -52,16 +60,16 @@ class CheckParamDefs : CompilerStep
     }
   }
 
-  Bool usedInSuccDef(ParamDef[] params, Int index)
+  ParamDef? usedInSuccDef(ParamDef[] params, Int index)
   {
     this.name = params[index].name
-    for (i:=index+1; i<params.size; ++i)
+    for (i:=index; i<params.size; ++i)
     {
       this.used = false
       params[i].def.walk(this)
-      if (this.used) return true
+      if (this.used) return params[i]
     }
-    return false
+    return null
   }
 
   override Expr visitExpr(Expr expr)

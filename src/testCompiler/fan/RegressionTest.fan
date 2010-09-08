@@ -345,4 +345,19 @@ class RegressionTest : CompilerTest
     verifyEq(t.method("bar").params[0].type, |This|?#)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1191 Param default expr cannot access itself
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1191()
+  {
+    verifyErrors(
+      "class Foo {
+         static Int x(Int a := a) { a }
+         static Int y(Int a, Int b := 1+b) { a +  b }
+       }",
+       [ 2, 16, "Param default 'a' cannot access itself",
+         3, 23, "Param default 'b' cannot access itself"])
+  }
+
 }
