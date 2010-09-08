@@ -1280,7 +1280,27 @@ namespace Fan.Sys
 
     public string toCode()
     {
-      return "`" + m_str + "`";
+      StringBuilder s = new StringBuilder(m_str.Length+4);
+      s.Append('`');
+
+      int len = m_str.Length;
+      for (int i=0; i<len; ++i)
+      {
+        int c = m_str[i];
+        switch (c)
+        {
+          case '\n': s.Append('\\').Append('n'); break;
+          case '\r': s.Append('\\').Append('r'); break;
+          case '\f': s.Append('\\').Append('f'); break;
+          case '\t': s.Append('\\').Append('t'); break;
+          case '`':  s.Append('\\').Append('`'); break;
+          case '$':  s.Append('\\').Append('$'); break;
+          default:   s.Append((char)c); break;
+        }
+      }
+
+      // closing quote
+      return s.Append('`').ToString();
     }
 
   //////////////////////////////////////////////////////////////////////////

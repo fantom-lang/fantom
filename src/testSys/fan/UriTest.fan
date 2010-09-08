@@ -1102,6 +1102,8 @@ class UriTest : Test
   Void testToCode()
   {
     verifyEq(`/foo/bar baz?p=q`.toCode, "`/foo/bar baz?p=q`")
+    verifyEq(`foo\#2#frag`.toCode, Str<|`foo\#2#frag`|>)
+    verifyEq(`foo \$ bar \\ baz \` qoo`.toCode, Str<|`foo \$ bar \\ baz \` qoo`|>)
   }
 
 //////////////////////////////////////////////////////////////////////////

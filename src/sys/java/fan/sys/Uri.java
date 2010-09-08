@@ -1278,7 +1278,27 @@ public final class Uri
 
   public String toCode()
   {
-    return "`" + str + "`";
+    StringBuilder s = new StringBuilder(str.length()+4);
+    s.append('`');
+
+    int len = str.length();
+    for (int i=0; i<len; ++i)
+    {
+      int c = str.charAt(i);
+      switch (c)
+      {
+        case '\n': s.append('\\').append('n'); break;
+        case '\r': s.append('\\').append('r'); break;
+        case '\f': s.append('\\').append('f'); break;
+        case '\t': s.append('\\').append('t'); break;
+        case '`':  s.append('\\').append('`'); break;
+        case '$':  s.append('\\').append('$'); break;
+        default:   s.append((char)c);
+      }
+    }
+
+    // closing quote
+    return s.append('`').toString();
   }
 
 //////////////////////////////////////////////////////////////////////////

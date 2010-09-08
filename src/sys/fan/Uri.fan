@@ -586,7 +586,8 @@ const final class Uri
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get this Uri as a Fantom code literal.
+  ** Get this Uri as a Fantom code literal.  This method will
+  ** escape the "$" interpolation character.
   **
   Str toCode()
 

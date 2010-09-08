@@ -140,7 +140,7 @@ Expr [#expr]
   <castExpr>       :=  "(" <type> ")" <parenExpr>
   <groupedExpr>    :=  "(" <expr> ")" <termChain>*
   <unaryExpr>      :=  <prefixExpr> | <termExpr> | <postfixExpr>
-  <prefixExpr>     :=  ("!" | "+" | "-" | "&" | "++" | "--") <parenExpr>
+  <prefixExpr>     :=  ("!" | "+" | "-" | "++" | "--") <parenExpr>
   <postfixExpr>    :=  <termExpr> ("++" | "--")
 
   <termExpr>       :=  <termBase> <termChain>*

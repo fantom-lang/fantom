@@ -726,7 +726,24 @@ fan.sys.Uri.prototype.equals = function(that)
 
 fan.sys.Uri.prototype.toCode = function()
 {
-  return '`' + this.m_str + '`';
+  s = '`';
+  var len = this.m_str.length;
+  for (var i=0; i<len; ++i)
+  {
+    var c = this.m_str.charAt(i);
+    switch (c)
+    {
+      case '\n': s += '\\' + 'n'; break;
+      case '\r': s += '\\' + 'r'; break;
+      case '\f': s += '\\' + 'f'; break;
+      case '\t': s += '\\' + 't'; break;
+      case '`':  s += '\\' + '`'; break;
+      case '$':  s += '\\' + '$'; break;
+      default:  s += c;
+    }
+  }
+  s += '`';
+  return s;
 }
 
 fan.sys.Uri.prototype.toStr = function()
