@@ -360,4 +360,25 @@ class RegressionTest : CompilerTest
          3, 23, "Param default 'b' cannot access itself"])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Require ++/-- to be on same li
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1150()
+  {
+    compile(
+      "class Foo {
+         Void foo(Int x) { }
+         Int test1(Int x)
+         {
+           foo(x)
+           ++x
+           return x
+         }
+       }")
+
+    obj := pod.types[0].make
+    verifyEq(obj->test1(4), 5)
+  }
+
 }

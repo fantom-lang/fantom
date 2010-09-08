@@ -1441,7 +1441,7 @@ public class Parser : CompilerSupport
       return ShortcutExpr.makeUnary(loc, tokt, parenExpr)
     }
 
-    if (tokt === Token.increment || tokt === Token.decrement)
+    if (tokt.isIncrementOrDecrement)
     {
       consume
       return ShortcutExpr.makeUnary(loc, tokt, parenExpr)
@@ -1449,8 +1449,10 @@ public class Parser : CompilerSupport
 
     expr := termExpr
 
+    // postfix ++/-- must be on the same line
     tokt = curt
-    if (tokt === Token.increment || tokt == Token.decrement)
+    tok = cur
+    if (tokt.isIncrementOrDecrement && !tok.newline)
     {
       consume
       shortcut := ShortcutExpr.makeUnary(loc, tokt, expr)
