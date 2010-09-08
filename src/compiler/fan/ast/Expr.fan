@@ -850,6 +850,7 @@ class CallExpr : NameExpr
   Bool isDynamic      // true if this is a -> dynamic call
   Bool isCtorChain    // true if this is MethodDef.ctorChain call
   Bool noParens       // was this call accessed without parens
+  Bool isCallOp       // was this 'target()' (instead of 'target.name()')
   CMethod? method     // resolved method
   override Bool synthetic := false
 }

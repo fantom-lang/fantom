@@ -1753,6 +1753,7 @@ public class Parser : CompilerSupport
   {
     loc := cur
     call := CallExpr(loc)
+    call.isCallOp = true
     call.target = target
     callArgs(call)
     call.name = "call"
