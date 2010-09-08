@@ -726,7 +726,7 @@ fan.sys.Uri.prototype.equals = function(that)
 
 fan.sys.Uri.prototype.toCode = function()
 {
-  s = '`';
+  var s = '`';
   var len = this.m_str.length;
   for (var i=0; i<len; ++i)
   {
