@@ -947,9 +947,9 @@ class ShortcutExpr : CallExpr
     return op === ShortcutOp.eq || op === ShortcutOp.cmp
   }
 
-  override Bool isStmt() { return isAssign || op === ShortcutOp.set }
+  override Bool isStmt() { isAssign || op === ShortcutOp.set }
 
-  Bool isAssign() { return opToken.isAssign }
+  Bool isAssign() { opToken.isAssign || opToken.isIncrementOrDecrement }
 
   Bool isStrConcat()
   {

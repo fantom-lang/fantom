@@ -155,9 +155,7 @@ enum class Token
     {
       this.symbol   = symbol
       this.keyword  = false
-      this.isAssign = name.startsWith("assign") ||
-                      name == "increment" ||
-                      name == "decrement"
+      this.isAssign = name.startsWith("assign")
     }
   }
 
@@ -224,11 +222,19 @@ enum class Token
   **
   Bool isProtectionKeyword()
   {
-    return this === publicKeyword || this === protectedKeyword ||
-           this === internalKeyword || this === privateKeyword
+    this === publicKeyword || this === protectedKeyword ||
+    this === internalKeyword || this === privateKeyword
   }
 
-  override Str toStr() { return symbol }
+  **
+  ** Return if -- or ++
+  **
+  Bool isIncrementOrDecrement()
+  {
+    this === Token.increment || this === Token.decrement
+  }
+
+  override Str toStr() { symbol }
 
 //////////////////////////////////////////////////////////////////////////
 // Keyword Lookup

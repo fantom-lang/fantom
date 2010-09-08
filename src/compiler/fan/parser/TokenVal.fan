@@ -69,7 +69,7 @@ class TokenVal : Loc
   **
   Bool isCallOpenParen()
   {
-    return kind === Token.lparen && !newline
+    kind === Token.lparen && !newline
   }
 
   **
@@ -85,7 +85,7 @@ class TokenVal : Loc
   **
   Bool isIndexOpenBracket()
   {
-    return kind === Token.lbracket && !newline
+    kind === Token.lbracket && !newline
   }
 
   Token kind      // enum for Token type
