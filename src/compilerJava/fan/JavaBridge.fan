@@ -414,8 +414,27 @@ class JavaBridge : CBridge
     if (actual is FuncType && expected.isMixin && expected.toNonNullable is JavaType)
       return coerceFuncToInterface(expr, expected.toNonNullable, onErr)
 
+    // handle special classes and interfaces for built-in Fantom
+    // classes which actually map directly to Java built-in types
+    if (actual.isBool    && boolTypes.contains(expected.toNonNullable.signature)) return box(expr)
+    if (actual.isInt     && intTypes.contains(expected.toNonNullable.signature)) return box(expr)
+    if (actual.isFloat   && floatTypes.contains(expected.toNonNullable.signature)) return box(expr)
+    if (actual.isDecimal && decimalTypes.contains(expected.toNonNullable.signature)) return expr
+    if (actual.isStr     && strTypes.contains(expected.toNonNullable.signature)) return expr
+
      // use normal Fantom coercion behavior
     return super.coerce(expr, expected, onErr)
+  }
+
+  **
+  ** Ensure value type is boxed.
+  **
+  private Expr box(Expr expr)
+  {
+    if (expr.ctype.isVal)
+      return TypeCheckExpr.coerce(expr, expr.ctype.toNullable)
+    else
+      return expr
   }
 
   **
@@ -704,6 +723,35 @@ class JavaBridge : CBridge
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
+
+  const static Str[] boolTypes := Str[
+    "[java]java.io::Serializable",
+    "[java]java.lang::Comparable",
+  ]
+
+  const static Str[] intTypes := Str[
+    "[java]java.lang::Number",
+    "[java]java.io::Serializable",
+    "[java]java.lang::Comparable",
+  ]
+
+  const static Str[] floatTypes := Str[
+    "[java]java.lang::Number",
+    "[java]java.io::Serializable",
+    "[java]java.lang::Comparable",
+  ]
+
+  const static Str[] decimalTypes := Str[
+    "[java]java.lang::Number",
+    "[java]java.io::Serializable",
+    "[java]java.lang::Comparable",
+  ]
+
+  const static Str[] strTypes := Str[
+    "[java]java.io::Serializable",
+    "[java]java.lang::CharSequence",
+    "[java]java.lang::Comparable",
+  ]
 
   readonly JavaPrimitives primitives := JavaPrimitives(this)
   readonly ClassPath cp

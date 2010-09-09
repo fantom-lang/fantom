@@ -743,4 +743,59 @@ class InteropTest : JavaTest
     verifyEq(obj->m07, Int:Str[3:"x"])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Built-ins
+//////////////////////////////////////////////////////////////////////////
+
+  Void testBuiltins()
+  {
+    compile(
+     """using [java] fanx.test
+        class Foo
+        {
+          // Str <=> java.lang.String
+          Obj s00() { InteropTest.charSequence("hello") }
+          Obj s01() { InteropTest.serializable("x") === (Obj?)"x" }
+          Obj s02() { InteropTest.comparable("a", "b") }
+
+          // Bool <=> java.lang.Bool
+          Obj b00() { InteropTest.serializable(true) }
+          Obj b01() { InteropTest.comparable(false, false) }
+
+          // Int <=> java.lang.Long
+          Obj i00() { InteropTest.serializable(5) == (Obj?)5 }
+          Obj i01() { InteropTest.number(5) == (Obj?)5 }
+          Obj i02() { InteropTest.comparable(6, 3) }
+
+          // Float <=> java.lang.Double
+          Obj f00() { InteropTest.serializable(5f) == (Obj?)5f }
+          Obj f01() { InteropTest.number(5f) == (Obj?)5f }
+          Obj f02() { InteropTest.comparable(6f, 6f) }
+
+          // Decimal <=> java.math.BigDecimal
+          Obj d00() { InteropTest.serializable(5d) == (Obj?)5d }
+          Obj d01() { InteropTest.number(5d) == (Obj?)5d }
+          Obj d02() { InteropTest.comparable(2d, 3d) }
+        }""")
+
+    obj := pod.types.first.make
+    verifyEq(obj->s00, 5)
+    verifyEq(obj->s01, true)
+    verifyEq(obj->s02, -1)
+
+    verifyEq(obj->b00, true)
+    verifyEq(obj->b01, 0)
+
+    verifyEq(obj->i00, true)
+    verifyEq(obj->i01, true)
+    verifyEq(obj->i02, 1)
+
+    verifyEq(obj->f00, true)
+    verifyEq(obj->f01, true)
+    verifyEq(obj->f02, 0)
+
+    verifyEq(obj->d00, true)
+    verifyEq(obj->d01, true)
+    verifyEq(obj->d02, -1)
+  }
 }
