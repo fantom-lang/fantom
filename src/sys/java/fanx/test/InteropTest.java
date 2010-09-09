@@ -10,6 +10,7 @@ package fanx.test;
 import java.util.*;
 import java.io.*;
 import java.math.*;
+import java.text.*;
 import fanx.util.*;
 
 /**
@@ -103,6 +104,9 @@ public class InteropTest
   public InteropTest[] array1() { return new InteropTest[] { a, b, c}; }
 
   public void array1(InteropTest[] x) { a = x[0]; b = x[1]; c = x[2]; }
+
+  public SimpleDateFormat[] formats;
+  public String[] strings;
 
 //////////////////////////////////////////////////////////////////////////
 // Primitive Arrays
