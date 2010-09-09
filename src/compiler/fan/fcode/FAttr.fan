@@ -44,7 +44,6 @@ class FAttr : FConst
 
   Int name    // name index
   Buf? data
-
 }
 
 **************************************************************************
@@ -53,12 +52,8 @@ class FAttr : FConst
 
 class FFacet : CFacet
 {
-  static FFacet[] decode(FPod fpod, FAttr[] fattrs)
+  static FFacet[] decode(FPod fpod, FAttr? attr)
   {
-    attr := fattrs.find |a|
-    {
-      return fpod.n(a.name) == FConst.FacetsAttr
-    }
     if (attr == null) return FFacet#.emptyList
     num := attr.data.seek(0).readU2
     ffacets := FFacet[,]; ffacets.capacity = num

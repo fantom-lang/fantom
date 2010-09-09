@@ -31,9 +31,14 @@ abstract class FSlot : CSlot, FConst
   override Str name() { return fparent.fpod.n(nameIndex) }
   override Str qname() { return fparent.qname + "." + name }
 
+  FAttr? attr(Str name)
+  {
+    fattrs.find |a| { fparent.pod.n(a.name) == name }
+  }
+
   override CFacet? facet(Str qname)
   {
-    if (ffacets == null) ffacets = FFacet.decode(fparent.pod, fattrs)
+    if (ffacets == null) ffacets = FFacet.decode(fparent.pod, attr(FConst.FacetsAttr))
     return ffacets.find |f| { f.qname == qname }
   }
 

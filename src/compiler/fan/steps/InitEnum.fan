@@ -180,6 +180,7 @@ class InitEnum : CompilerStep
     f.name      = def.name
     f.fieldType = curType
     f.init      = init
+    f.enumDef   = def
     return f
   }
 

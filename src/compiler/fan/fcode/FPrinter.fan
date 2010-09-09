@@ -157,6 +157,7 @@ class FPrinter : FConst
     if (name == LineNumberAttr)  lineNumberAttr(attr)
     if (name == LineNumbersAttr) lineNumbersAttr(attr)
     if (name == FacetsAttr)      facetsAttr(attr)
+    if (name == EnumOrdinalAttr) enumOrdinalAttr(attr)
   }
 
   Void sourceFileAttr(FAttr attr)
@@ -179,6 +180,11 @@ class FPrinter : FConst
       val  := buf.readUtf
       printLine("       @" + (val.isEmpty ? type : val))
     }
+  }
+
+ Void enumOrdinalAttr(FAttr attr)
+  {
+    printLine("       $attr.u2")
   }
 
   Void errTableAttr(FAttr attr)

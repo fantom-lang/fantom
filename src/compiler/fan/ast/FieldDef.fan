@@ -111,5 +111,6 @@ public class FieldDef : SlotDef, CField
   CField? concreteBase      // if I override a concrete virtual field
   CType? inheritedRet       // if covariant override of method
   Bool requiresNullCheck    // flags that ctor needs runtime check to ensure it-block set it
+  EnumDef? enumDef          // if an enum name/ordinal pair
 
 }
