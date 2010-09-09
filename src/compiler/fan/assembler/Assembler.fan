@@ -78,6 +78,7 @@ class Assembler : CompilerSupport, FConst
     attrs := AttrAsm(compiler, fpod)
     attrs.lineNumber(def.loc.line)
     attrs.facets(def.facets)
+    if (def.enumDef != null) attrs.enumOrdinal(def.enumDef.ordinal)
     f.fattrs = attrs.attrs
 
     return f;

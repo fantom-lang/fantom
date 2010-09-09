@@ -19,7 +19,7 @@ class GenFConst < Env
 
  @@stuff = [
 
-  "FCodeVersion  = \"1.0.51\"",
+  "FCodeVersion = \"1.0.51\";",
 
  ]
 
@@ -75,6 +75,7 @@ class GenFConst < Env
   "LineNumbersAttr  = \"LineNumbers\";",
   "SourceFileAttr   = \"SourceFile\";",
   "ParamDefaultAttr = \"ParamDefault\";",
+  "EnumOrdinalAttr  = \"EnumOrdinal\";",
 
  ]
 
@@ -182,7 +183,7 @@ end
 ** FOpArg
 **************************************************************************
 
-enum FOpArg
+enum class FOpArg
 {
   None,
   Int,
@@ -209,7 +210,7 @@ FAN_OP_FOOTER
       f << "// Stuff\n"
       f << "//////////////////////////////////////////////////////////////////////////\n"
       f << "\n"
-      @@stuff.each {|s| f << "  const static Int #{s.gsub('=', ':=').gsub(';', '')}\n"}
+      @@stuff.each {|s| f << "  const static Str #{s.gsub('=', ':=').gsub(';', '')}\n"}
       f << "\n"
       f << "//////////////////////////////////////////////////////////////////////////\n"
       f << "// Flags\n"
@@ -250,7 +251,7 @@ FAN_OP_FOOTER
 
     filename = File.join(@src_compiler, "fan", "fcode", "FOp.fan")
     File.open(filename, "w") do |f|
-      f << fanHeader("enum", "FOp")
+      f << fanHeader("enum class", "FOp")
       @@opcodes.each_index do |i|
         line = @@opcodes[i];
         line, comment = line.split("//")
@@ -313,7 +314,7 @@ JAVA_HEADER
       f << "// Stuff\n"
       f << "//////////////////////////////////////////////////////////////////////////\n"
       f << "\n"
-      @@stuff.each {|s| f << "  public static final int #{s}\n"}
+      @@stuff.each {|s| f << "  public static final String #{s}\n"}
       f << "\n"
       f << "//////////////////////////////////////////////////////////////////////////\n"
       f << "// Flags\n"
@@ -420,7 +421,7 @@ NET_HEADER
       f << "// Stuff\n"
       f << "//////////////////////////////////////////////////////////////////////////\n"
       f << "\n"
-      @@stuff.each {|s| f << "  public const int #{s}\n"}
+      @@stuff.each {|s| f << "  public const string #{s}\n"}
       f << "\n"
       f << "//////////////////////////////////////////////////////////////////////////\n"
       f << "// Flags\n"

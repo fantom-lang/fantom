@@ -33,6 +33,11 @@ class FType : CType
   override once Str qname() { return "${fpod.name}::${name}" }
   override Str signature() { return qname }
 
+  FAttr? attr(Str name)
+  {
+    fattrs.find |a| { fpod.n(a.name) == name }
+  }
+
   override CType? base
   {
     get
@@ -201,7 +206,7 @@ class FType : CType
     fattrs = FAttr[,]
     in.readU2.times { fattrs.add(FAttr.make.read(in)) }
 
-    ffacets = FFacet.decode(fpod, fattrs)
+    ffacets = FFacet.decode(fpod, attr(FConst.FacetsAttr))
 
     in.close
   }

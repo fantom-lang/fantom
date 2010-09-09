@@ -1049,8 +1049,12 @@ class FieldExpr : NameExpr
           fieldDef := field as FieldDef
           enumDef := fieldDef.parentDef.enumDef(field.name)
           if (enumDef != null) return enumDef.ordinal
+        case FField#:
+          ffield := field as FField
+          attr := ffield.attr(FConst.EnumOrdinalAttr)
+          if (attr != null) return attr.u2
         default:
-          throw CompilerErr("Invalid field for tableswitch: " + field.typeof, loc)
+          throw Err("Invalid field for tableswitch: $field.typeof $loc.toLocStr")
       }
     }
     return null
