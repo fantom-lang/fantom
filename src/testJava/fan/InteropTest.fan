@@ -316,7 +316,8 @@ class InteropTest : JavaTest
   Void testArrays()
   {
     compile(
-     """using [java] fanx.test
+     """using [java] fanx.interop
+        using [java] fanx.test
         using [java] java.text
         class Foo
         {
@@ -334,6 +335,13 @@ class InteropTest : JavaTest
           SimpleDateFormat?[]? getFormats() { x.formats }
           Void setFormats() { x.formats = [SimpleDateFormat("yyyy")] }
           SimpleDateFormat? firstFormat() { x.formats?.first }
+
+          Str?[]? getStrs() { x.strings }
+          Void setStrs() { x.strings = ["a", "b"] }
+
+          Obj? getInts() { x.ints }
+          Int getIntsAt(Int i) { x.ints[i] }
+          Void setInts() { x.ints = IntArray(2); x.ints.set(0, 10); x.ints.set(1, 20) }
         }""")
 
     obj := pod.types.first.make
@@ -371,7 +379,7 @@ class InteropTest : JavaTest
     verifySame(obj->b, origb)
     verifySame(obj->c, origa)
 
-    // set entire array
+    // set entire SimpleDateFormat array
     verifyEq(obj->getFormats, null)
     verifyEq(obj->firstFormat, null)
     obj->setFormats
@@ -380,6 +388,18 @@ class InteropTest : JavaTest
     verifyEq(obj->getFormats->first->toPattern, "yyyy")
     verifyEq(obj->firstFormat.typeof.signature, "[java]java.text::SimpleDateFormat")
     verifyEq(obj->firstFormat->toPattern, "yyyy")
+
+    // set entire Strings array
+    verifyEq(obj->getStrs, null)
+    obj->setStrs
+    verifyEq(obj->getStrs, Str?["a", "b"])
+
+    // set entire ints array
+    verifyEq(obj->getInts, null)
+    obj->setInts
+    verifyEq(obj->getInts.typeof.signature, "[java]fanx.interop::IntArray")
+    verifyEq(obj->getIntsAt(0), 10)
+    verifyEq(obj->getIntsAt(1), 20)
   }
 
 //////////////////////////////////////////////////////////////////////////
