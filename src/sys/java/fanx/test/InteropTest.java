@@ -107,6 +107,7 @@ public class InteropTest
 
   public SimpleDateFormat[] formats;
   public String[] strings;
+  public int[] ints;
 
 //////////////////////////////////////////////////////////////////////////
 // Primitive Arrays
