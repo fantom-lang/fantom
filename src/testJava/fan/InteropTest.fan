@@ -714,27 +714,33 @@ class InteropTest : JavaTest
       using [java] fanx.interop
       class Foo
       {
+        // java.util.List => List
+        Obj m00() { a := ArrayList(); a.add(1); a.add(2); return Interop.toFan(a) }
+        Obj m01() { a := ArrayList(); a.add(1); a.add(2); return Interop.toFan(a, Int#) }
+
         // Iterator => List
-        Obj m00() { a := ArrayList(); a.add(3); a.add(4); return Interop.toFan(a.iterator()) }
-        Obj m01() { a := ArrayList(); a.add(3); a.add(4); return Interop.toFan(a.iterator(), Int#) }
+        Obj m02() { a := ArrayList(); a.add(3); a.add(4); return Interop.toFan(a.iterator()) }
+        Obj m03() { a := ArrayList(); a.add(3); a.add(4); return Interop.toFan(a.iterator(), Int#) }
 
         // Enumeration => List
-        Obj m02() { a := Vector(); a.add(3); a.add(4); return Interop.toFan(a.elements()) }
-        Obj m03() { a := Vector(); a.add(3); a.add(4); return Interop.toFan(a.elements(), Int#) }
+        Obj m04() { a := Vector(); a.add(3); a.add(4); return Interop.toFan(a.elements()) }
+        Obj m05() { a := Vector(); a.add(3); a.add(4); return Interop.toFan(a.elements(), Int#) }
 
         // HashMap => Map
-        Obj m04() { a := HashMap(); a.put(3, \"x\"); return Interop.toFan(a) }
-        Obj m05() { a := HashMap(); a.put(3, \"x\"); return Interop.toFan(a, Int:Str#) }
+        Obj m06() { a := HashMap(); a.put(3, \"x\"); return Interop.toFan(a) }
+        Obj m07() { a := HashMap(); a.put(3, \"x\"); return Interop.toFan(a, Int:Str#) }
       }
       ")
 
     obj := pod.types.first.make
-    verifyEq(obj->m00, Obj?[3, 4])
-    verifyEq(obj->m01, Int[3, 4])
+    verifyEq(obj->m00, Obj?[1, 2])
+    verifyEq(obj->m01, Int[1, 2])
     verifyEq(obj->m02, Obj?[3, 4])
     verifyEq(obj->m03, Int[3, 4])
-    verifyEq(obj->m04, Obj:Obj?[3:"x"])
-    verifyEq(obj->m05, Int:Str[3:"x"])
+    verifyEq(obj->m04, Obj?[3, 4])
+    verifyEq(obj->m05, Int[3, 4])
+    verifyEq(obj->m06, Obj:Obj?[3:"x"])
+    verifyEq(obj->m07, Int:Str[3:"x"])
   }
 
 }

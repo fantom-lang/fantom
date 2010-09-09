@@ -105,6 +105,22 @@ public class Interop
 //////////////////////////////////////////////////////////////////////////
 
   /**
+   * Convert a java.util.List to a sys::List with a type of Obj?[].
+   */
+  public static List toFan(java.util.List list)
+  {
+    return toFan(list.iterator(), Sys.ObjType.toNullable());
+  }
+
+  /**
+   * Convert a java.util.List to a sys::List of the specified type.
+   */
+  public static List toFan(java.util.List list, Type of)
+  {
+    return toFan(list.iterator(), of);
+  }
+
+  /**
    * Convert a java.util.Enumeration to a sys::List with a type of Obj?[].
    */
   public static List toFan(Enumeration e)
