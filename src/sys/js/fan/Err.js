@@ -101,7 +101,7 @@ fan.sys.Err.cleanTrace = function(orig)
       stack.push(line)
     }
   }
-  return stack.join("\n");
+  return stack.join("\n") + "\n";
 }
 
 //////////////////////////////////////////////////////////////////////////
