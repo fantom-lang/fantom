@@ -361,6 +361,9 @@ then it infers its type from the field's declared type:
    Str[] names := [,]     // initial value inferred to be Str[,]
    Num[] nums  := Int[,]  // initial value is Int[,]
 
+See [Appendix]`Appendix#typeInference` for the formal rules used for type
+inference of lists.
+
 Map [#map]
 **********
 The `sys::Map` class stores a set of key/value pairs using a hash
@@ -409,4 +412,7 @@ If a map literal without an explicit type is used as a field initializer,
 then it infers its type from the field's declared type:
 
    Str:File[] files := [:]   // initial value inferred as Str:File[:]
+
+See [Appendix]`Appendix#typeInference` for the formal rules used for type
+inference of maps.
 

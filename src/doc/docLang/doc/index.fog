@@ -44,6 +44,7 @@
   [`Localization`,  "localization APIs"],
   [`DSLs`,          "domain specific language and compiler plugins"],
 "Appendix",
+  [`Appendix`,      "additional detailed notes"],
   [`Conventions`,   "coding conventions we use"],
   [`Grammar`,       "formal BNF syntax grammar"],
 ]
