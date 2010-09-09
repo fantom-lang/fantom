@@ -296,21 +296,82 @@ mixin CType
       if (types[1].isNothing) return types[0]
     }
 
-    if (types.isEmpty) return ns.objType.toNullable
-    nullable := types[0].isNullable
-    best := types[0].toNonNullable
+    // special handling for zero or one types
+    if (types.size == 0) return ns.objType.toNullable
+    if (types.size == 1) return types.first
+
+    // first-pass iteration is used to:
+    //   - check if any one of the types is nullable
+    //   - check if any of the types is a parameterized generic
+    //   - normalize our types to non-nullable
+    nullable := false
+    parameterized := false
+    types = types.dup
+    types.each |t, i|
+    {
+      if (t.isParameterized) parameterized = true
+      if (t.isNullable) nullable = true
+      types[i] = t.toNonNullable
+    }
+
+    // if any one of the items is parameterized then we handle it
+    // specially, otherwise we find the most common class
+    best := parameterized ?
+            commonParameterized(ns, types) :
+            commonClass(ns, types)
+
+    // if any one of the items was nullable, then whole result is nullable
+    return nullable ? best.toNullable : best
+  }
+
+  private static CType commonClass(CNamespace ns, CType[] types)
+  {
+    best := types[0]
     for (Int i:=1; i<types.size; ++i)
     {
       t := types[i]
-      if (t.isNullable) { nullable = true; t = t.toNonNullable }
       while (!t.fits(best))
       {
         bestBase := best.base
-        if (bestBase == null) return nullable ? ns.objType.toNullable : ns.objType
+        if (bestBase == null) return ns.objType
         best = bestBase
       }
     }
-    return nullable ? best.toNullable : best
+    return best
+  }
+
+  private static CType commonParameterized(CNamespace ns, CType[] types)
+  {
+    // we only support common inference on parameterized lists
+    // since they are one dimensional in their parameterization,
+    // all other inference is based strictly on exact type
+    allList := true
+    allMap  := true
+    allFunc := true
+    types.each |t|
+    {
+      allList = allList && t is ListType
+      allMap  = allMap  && t is MapType
+      allFunc = allFunc && t is FuncType
+    }
+    if (allList) return commonList(ns, types)
+    if (allMap)  return commonExact(ns, types, ns.mapType)
+    if (allFunc) return commonExact(ns, types, ns.funcType)
+    return ns.objType
+  }
+
+  private static CType commonList(CNamespace ns, ListType[] types)
+  {
+    vTypes := types.map |t->CType| { t.v }
+    return common(ns, vTypes).toListOf
+  }
+
+  private static CType commonExact(CNamespace ns, CType[] types, CType fallback)
+  {
+    // we only infer func types based strictly on exact type
+    first := types[0]
+    exact := types.all |t| { first == t }
+    return exact ? first : fallback
   }
 
 //////////////////////////////////////////////////////////////////////////

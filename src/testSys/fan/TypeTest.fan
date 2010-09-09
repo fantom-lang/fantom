@@ -283,4 +283,92 @@ class TypeTest : Test
     verifyEq(v.mixins.ro, Type[,])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Inference
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInference()
+  {
+    verifyEq([2].typeof,   Int[]#)
+    verifyEq([num].typeof, Num[]#)
+    verifyEq([a].typeof,   TiA[]#)
+    verifyEq([an].typeof,  TiA?[]#)
+
+    verifyEq([2, 3].typeof,   Int[]#)
+    verifyEq([2f, 3].typeof,  Num[]#)
+    verifyEq([3, 2f].typeof,  Num[]#)
+    verifyEq([3, num].typeof, Num[]#)
+    verifyEq([num, 3].typeof, Num[]#)
+
+    verifyEq([a, a, a].typeof,  TiA[]#)
+    verifyEq([b, bn, b].typeof, TiB?[]#)
+    verifyEq([c, c, c].typeof,  TiC[]#)
+    verifyEq([a, b, c].typeof,  TiA[]#)
+    verifyEq([c, b, a].typeof,  TiA[]#)
+    verifyEq([c, b, b].typeof,  TiB[]#)
+    verifyEq([cn, b, b].typeof, TiB?[]#)
+    verifyEq([b, c, bn].typeof, TiB?[]#)
+    verifyEq([b, c, m].typeof,  Obj[]#)
+    verifyEq([c, mn, c].typeof, Obj?[]#)
+
+    verifyEq([[2], [3]].typeof,   Int[][]#)
+    verifyEq([[2f], [3]].typeof,  Num[][]#)
+    verifyEq([[3], [2f]].typeof,  Num[][]#)
+    verifyEq([[3], [num]].typeof, Num[][]#)
+    verifyEq([[num], [3]].typeof, Num[][]#)
+
+    verifyEq([[a], [a, b], [a]].typeof,  TiA[][]#)
+    verifyEq([[b], [bn, b], [b]].typeof, TiB?[][]#)
+    verifyEq([[c], [c], [c]].typeof,  TiC[][]#)
+    verifyEq([[a], [b], [c, c]].typeof,  TiA[][]#)
+    verifyEq([[c], [b, c], [a]].typeof,  TiA[][]#)
+    verifyEq([[c], [b], [b]].typeof,  TiB[][]#)
+    verifyEq([[cn], [b], [b]].typeof, TiB?[][]#)
+    verifyEq([[b], [c], [bn]].typeof, TiB?[][]#)
+    verifyEq([[b], [c], [m]].typeof,  Obj[][]#)
+    verifyEq([[c], [mn, m], [c]].typeof, Obj?[][]#)
+
+    verifyEq([ [[b],[c]], [[cn]]  ].typeof, TiB?[][][]#)
+
+    verifyEq([func1, func1].typeof,  |->Int|[]#)
+    verifyEq([func1n, func1].typeof, |->Int|?[]#)
+    verifyEq([func1, func1n].typeof, |->Int|?[]#)
+    verifyEq([func1, func2].typeof,  Func[]#)
+    verifyEq([func1n, func2].typeof, Func?[]#)
+
+    verifyEq([1:a, 2:a].typeof,  [Int:TiA]#)
+    verifyEq([1:an, 2:a].typeof, [Int:TiA?]#)
+    verifyEq([1:a, 2:an].typeof, [Int:TiA?]#)
+    verifyEq([1:b, 2:c].typeof,  [Int:TiB]#)
+    verifyEq([1:b, 2:cn].typeof,  [Int:TiB?]#)
+
+    verifyEq([[1:b, 2:cn], [1:b, 2:cn]].typeof,  [Int:TiB?][]#)
+    verifyEq([[1:b, 2:c], [1:b, 2:cn]].typeof,  Map[]#)
+    verifyEq([[1:b, 2:a], [1:b, 2:c]].typeof,  Map[]#)
+    verifyEq([[1:b, 2:a], [1:b, 2:cn]].typeof,  Map[]#)
+    verifyEq([[1:b, 2:a], [1:b, 2:cn], null].typeof,  Map?[]#)
+  }
+
+  private Num  num() { 4 }
+  private TiA  a()   { TiA() }
+  private TiA? an()  { TiA() }
+  private TiB  b()   { TiB() }
+  private TiB? bn()  { TiB() }
+  private TiC  c()   { TiC() }
+  private TiC? cn()  { TiC() }
+  private TiM  m()   { TiC() }
+  private TiM? mn()  { TiC() }
+  private |->Int| func1()   { |->Int| {3} }
+  private |->Int|? func1n() { |->Int| {3} }
+  private |->Num| func2()   { |->Num| {3} }
 }
+
+**************************************************************************
+** Inference Types
+**************************************************************************
+
+internal class TiA {}
+internal class TiB : TiA, TiM {}
+internal class TiC : TiB {}
+internal mixin TiM {}
+
