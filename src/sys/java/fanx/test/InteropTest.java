@@ -8,6 +8,7 @@
 package fanx.test;
 
 import java.util.*;
+import java.io.*;
 import java.math.*;
 import fanx.util.*;
 
@@ -227,4 +228,14 @@ public class InteropTest
   {
     public String[] swap(String[] x);
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Builtin Extra Types
+//////////////////////////////////////////////////////////////////////////
+
+  public static int charSequence(CharSequence x) { return x.length(); }
+  public static Serializable serializable(Serializable x) { return x; }
+  public static int comparable(Comparable a, Comparable b) { return a.compareTo(b); }
+  public static Number number(Number x) { return x; }
+
 }
