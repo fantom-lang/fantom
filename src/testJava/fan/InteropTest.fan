@@ -316,20 +316,25 @@ class InteropTest : JavaTest
   Void testArrays()
   {
     compile(
-     "using [java] fanx.test
-      class Foo
-      {
-        InteropTest x := InteropTest().initArray
-        InteropTest a() { return x.a }
-        InteropTest b() { return x.b }
-        InteropTest c() { return x.c }
+     """using [java] fanx.test
+        using [java] java.text
+        class Foo
+        {
+          InteropTest x := InteropTest().initArray
+          InteropTest a() { return x.a }
+          InteropTest b() { return x.b }
+          InteropTest c() { return x.c }
 
-        InteropTest[] get1a() { return x.array1 }
-        Obj get1b() { return x.array1 }
-        Obj[] get1c() { return x.array1 }
+          InteropTest[] get1a() { return x.array1 }
+          Obj get1b() { return x.array1 }
+          Obj[] get1c() { return x.array1 }
 
-        Void set1(InteropTest[] a) { x.array1(a) }
-      }")
+          Void set1(InteropTest[] a) { x.array1(a) }
+
+          SimpleDateFormat?[]? getFormats() { x.formats }
+          Void setFormats() { x.formats = [SimpleDateFormat("yyyy")] }
+          SimpleDateFormat? firstFormat() { x.formats?.first }
+        }""")
 
     obj := pod.types.first.make
 
@@ -353,7 +358,7 @@ class InteropTest : JavaTest
     verifyEq(a.of.qname, "[java]fanx.test::InteropTest")
     verifySame(a[0], obj->a)
 
-    // set one dimension array
+    // set one dimension array items
     origa := obj->a
     origb := obj->b
     origc := obj->c
@@ -365,6 +370,16 @@ class InteropTest : JavaTest
     verifySame(obj->a, origc)
     verifySame(obj->b, origb)
     verifySame(obj->c, origa)
+
+    // set entire array
+    verifyEq(obj->getFormats, null)
+    verifyEq(obj->firstFormat, null)
+    obj->setFormats
+    verifyEq(obj->getFormats->size, 1)
+    verifyEq(obj->getFormats->first.typeof.signature, "[java]java.text::SimpleDateFormat")
+    verifyEq(obj->getFormats->first->toPattern, "yyyy")
+    verifyEq(obj->firstFormat.typeof.signature, "[java]java.text::SimpleDateFormat")
+    verifyEq(obj->firstFormat->toPattern, "yyyy")
   }
 
 //////////////////////////////////////////////////////////////////////////

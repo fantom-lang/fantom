@@ -311,9 +311,19 @@ class ResolveExpr : CompilerStep
   private Expr resolveAssign(BinaryExpr expr)
   {
     // if lhs has synthetic coercion we need to remove it;
-    // this can occur when resolving a FFI field
-    if (expr.lhs.id == ExprId.coerce && expr.lhs.synthetic)
-      expr.lhs = ((TypeCheckExpr)expr.lhs).target
+    // this can occur when resolving a FFI field - in order
+    // for this to work there are only two possible allowed
+    // coercions: 1) a TypeCheckExpr or 2) a CallExpr where
+    // the non-coerced expression is the last argument
+    if (expr.lhs.synthetic)
+    {
+      if (expr.lhs.id === ExprId.coerce)
+        expr.lhs = ((TypeCheckExpr)expr.lhs).target
+      else if (expr.lhs.id === ExprId.call)
+        expr.lhs = ((CallExpr)expr.lhs).args.last
+      else
+        throw Err("Unexpected LHS synthetic expr: $expr [$expr.loc.toLocStr]")
+    }
 
     // check for left hand side the [] shortcut, because []= is set
     shortcut := expr.lhs as ShortcutExpr

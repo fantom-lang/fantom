@@ -41,6 +41,7 @@ public final class List
 
   public static List make(Type of, Object[] values)
   {
+    if (values == null) return null;
     return new List(of, values);
   }
 

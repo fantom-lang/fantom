@@ -45,6 +45,13 @@ abstract class CBridge : CompilerSupport
   ** the expression is not type compatible run the onErr function.
   ** Default implementation provides standard Fantom coercion.
   **
+  ** If the bridge is going to coerce 'expr' into a new expression,
+  ** then it should mark the resulting expression as synthetic.
+  ** A synthetic expression must be "undoable":
+  **   - TypeCheckExpr where target is uncoerced expr
+  **   - CallExpr where last argument is uncoerced expr
+  ** See ResolveExpr.resolveAssign for more details.
+  **
   virtual Expr coerce(Expr expr, CType expected, |->| onErr)
   {
     return CheckErrors.doCoerce(expr, expected, onErr)

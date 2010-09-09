@@ -517,7 +517,9 @@ class JavaBridge : CBridge
   {
     loc := expr.loc
     ofExpr := LiteralExpr(loc, ExprId.typeLiteral, ns.typeType, of)
-    return CallExpr.makeWithMethod(loc, null, listMakeFromArray, [ofExpr, expr])
+    call := CallExpr.makeWithMethod(loc, null, listMakeFromArray, [ofExpr, expr])
+    call.synthetic = true
+    return call
   }
 
   **
@@ -573,7 +575,9 @@ class JavaBridge : CBridge
     }
 
     // replace expr with FuncWrapperX(expr)
-    return CallExpr.makeWithMethod(loc, null, ctor, [expr])
+    call := CallExpr.makeWithMethod(loc, null, ctor, [expr])
+    call.synthetic = true
+    return call
   }
 
   **
@@ -680,7 +684,7 @@ class JavaBridge : CBridge
       parent = this.ns.listType
       name = "make"
       flags = FConst.Public + FConst.Static
-      returnType = this.ns.listType
+      returnType = this.ns.listType.toNullable
       params =
       [
         JavaParam("of", this.ns.typeType),
