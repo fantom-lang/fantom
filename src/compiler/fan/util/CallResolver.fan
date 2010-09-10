@@ -204,27 +204,20 @@ class CallResolver : CompilerSupport
     // if base is the error type, short circuit
     if (base === ns.error) return null
 
-    // if simple variable access attempt to lookup as field first,
-    // then as method if that fails (only matters in case of FFI)
-    if (isVar) return base.field(name) ?: base.method(name)
+    // attempt to resolve the slot by name
+    found := base.slot(name)
+    if (found == null) return null
 
-    // lookup as method
-    CSlot? found := base.method(name) ?: base.field(name)
-
-    // if we found a FFI field, then try to lookup a method
-    // overloaded by that name; this is a bit hacked b/c since
-    // we don't support overloaded methods in the AST we are
-    // routing this call to the FFI type (such as JavaType);
-    // but this only works if all of our overloads are actually
-    // declared by that class (since we don't support overriding
-    // overloaded methods we can elimate the interface case)
-    if (found is CField && found.isForeign)
-      found = found.parent.method(name)
+    // if the resolved slot is on a FFI type then we have to
+    // delegate back to bridge because we might support both methods
+    // and fields overloaded by the same name
+    if (found.isForeign)
+      found = found.parent.bridge.resolveSlotAccess(base, name, isVar)
 
     // if we resolve a method call against a field that is an error,
     // unless the field is a function in which case this is sugar
     // for field.call(...)
-    if (found is CField)
+    if (found is CField && !isVar)
     {
       field := (CField)found
       if (field.fieldType.isFunc)

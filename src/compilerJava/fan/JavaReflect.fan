@@ -42,14 +42,16 @@ internal class JavaReflect
         mixins.add(toFanType(self.bridge, c).toNonNullable)
       catch (UnknownTypeErr e)
         errUnknownType(e)
-
-      if (c.getName == "java.lang.annotation.Annotation")
-        mixins.add(self.ns.facetType)
     }
+    if (cls.isAnnotation) mixins.add(self.ns.facetType)
     self.mixins = mixins
 
     // map Java modifiers to Fantom flags
     self.flags = toClassFlags(cls.getModifiers)
+
+    // map Annotation element methods as fields so that
+    // it looks like a Fantom facet
+    if (cls.isAnnotation) mapAnnotationFields(cls, self, slots)
 
     // map Java fields to CSlots (public and protected)
     findFields(cls).each |JField j| { mapField(self, slots, j) }
@@ -184,6 +186,33 @@ internal class JavaReflect
     // create linked list of overloads
     m.next = x.next
     x.next = m
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Annotations
+//////////////////////////////////////////////////////////////////////////
+
+  static Void mapAnnotationFields(Class cls, JavaType self, Str:CSlot slots)
+  {
+    // Java annotations declare their "elements" as abstract public
+    // methods, but in Fantom facets are declared with const fields;
+    // so we here we fake it out so that a Java annotation type looks
+    // like a Fantom facet from the compiler's perspective
+    cls.getDeclaredMethods.each |JMethod m|
+    {
+      if (!JModifier.isPublic(m.getModifiers)) return
+      if (!JModifier.isAbstract(m.getModifiers)) return
+      try
+      {
+        fan := JavaField()
+        fan.parent = self
+        fan.name = m.getName
+        fan.flags = FConst.Public.or(FConst.Const)
+        fan.fieldType = toFanType(self.bridge, m.getReturnType)
+        slots.set(fan.name, fan)
+      }
+      catch (UnknownTypeErr e) errUnknownType(e)
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

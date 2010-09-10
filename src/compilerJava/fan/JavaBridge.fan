@@ -122,6 +122,40 @@ class JavaBridge : CBridge
   }
 
   **
+  ** Given a dot operator slot access on the given foreign
+  ** base type, determine the appopriate slot to use based on
+  ** whether parens were used
+  **   base.name    =>  noParens = true
+  **   base.name()  =>  noParens = false
+  **
+  ** In Java a given name could be bound to both a field and
+  ** a method.  In this case we only resolve the field if
+  ** no parens are used.  We also handle the special case of
+  ** Java annotations here because their element methods are
+  ** also mapped as Fantom fields (instance based mixin field).
+  **
+  override CSlot? resolveSlotAccess(CType base, Str name, Bool noParens)
+  {
+    // first try to resolve as a field
+    field := base.field(name)
+    if (field != null)
+    {
+      // if no () we used and this isn't an annotation field
+      if (noParens && (field.isStatic || !base.isMixin))
+        return field
+
+      // if we did find a field, then make sure we use that
+      // field's parent type to resolve a method (becuase the
+      // base type might be a sub-class of a Java type in which
+      // case it is unware of field/method overloads)
+      return field.parent.method(name)
+    }
+
+    // lookup method
+    return base.method(name)
+  }
+
+  **
   ** Resolve a method call: try to find the best match
   ** and apply any coercions needed.
   **

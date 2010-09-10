@@ -71,6 +71,15 @@ abstract class CBridge : CompilerSupport
   abstract Expr resolveConstructorChain(CallExpr call)
 
   **
+  ** Given a dot operator slot access on the given foreign
+  ** base type, determine the appopriate slot to use based on
+  ** whether parens were used
+  **   base.name    =>  noParens = true
+  **   base.name()  =>  noParens = false
+  **
+  abstract CSlot? resolveSlotAccess(CType base, Str name, Bool noParens)
+
+  **
   ** Resolve a method call.  Type check the arguments
   ** and insert any conversions needed.
   **
