@@ -15,75 +15,93 @@ class AnnotationsTest : JavaTest
   Void test()
   {
     compile(
-     """using sys::Test
-        using [java] java.lang
-        using [java] fanx.interop
-        using [java] fanx.test
-
-        @TestAnnoA
-        class Test
-        {
-          new make(Test t) { this.testRef = t }
-
-          Void test()
-          {
-            testType
-            testField
-            testMethod
-          }
-
-          Void testType()
-          {
-            // Fantom side
-            verifyEq(typeof.facets.size, 1)
-            f := typeof.facets[0]
-            verifyEq(f.typeof.qname, "[java]fanx.test::TestAnnoA")
-            verify(typeof.facet(TestAnnoA#) != null)
-
-            // Java side
-            cls := Interop.getClass(this)
-            verifyEq(cls.getAnnotations.size, 1)
-            verify(cls.getAnnotations[0]  is TestAnnoA)
-          }
-
-          Void testField()
-          {
-            // Fantom side
-            verifyEq(#field.facets.size, 1)
-            f := #field.facets[0]
-            verifyEq(f.typeof.qname, "[java]fanx.test::TestAnnoA")
-            verify(#field.facet(TestAnnoA#) != null)
-
-            // Java side
-            jf := Interop.getClass(this).getField("field")
-            verifyEq(jf.getAnnotations.size, 1)
-            verify(jf.getAnnotations[0] is TestAnnoA)
-          }
-
-          Void testMethod()
-          {
-            // Fantom side
-            verifyEq(#method.facets.size, 1)
-            f := #method.facets[0]
-            verifyEq(f.typeof.qname, "[java]fanx.test::TestAnnoA")
-            verify(#method.facet(TestAnnoA#) != null)
-
-            // Java side
-            jm := Interop.getClass(this).getMethod("method", Class[,])
-            verifyEq(jm.getAnnotations.size, 1)
-            verify(jm.getAnnotations[0] is TestAnnoA)
-          }
+     Str<|using sys::Test
+          using [java] java.lang
+          using [java] fanx.interop
+          using [java] fanx.test
 
           @TestAnnoA
-          Str? field
+          @TestAnnoB { value = "it works!" }
+          @TestAnnoC
+          {
+            b = true
+            s = "!"
+          }
+          class Test
+          {
+            @TestAnnoA
+            @TestAnnoB { value = "it works!" }
+            Str? field
 
-          @TestAnnoA
-          Void method() {}
+            @TestAnnoA
+            @TestAnnoB { value = "it works!" }
+            Void method() {}
 
-          Void verifyEq(Obj? a, Obj? b) { testRef.verifyEq(a, b) }
-          Void verify(Bool c) { testRef.verify(c) }
-          Test? testRef
-        }""")
+            new make(Test t) { this.testRef = t }
+
+            Void test()
+            {
+              testType
+              testField
+              testMethod
+            }
+
+            Void testType()
+            {
+              cls := Interop.getClass(this)
+              verifyEq(cls.getAnnotations.size, 3)
+
+              verifyA(typeof.facet(TestAnnoA#), cls.getAnnotation(TestAnnoA#->toClass))
+              verifyB(typeof.facet(TestAnnoB#), cls.getAnnotation(TestAnnoB#->toClass))
+              verifyC(typeof.facet(TestAnnoC#), cls.getAnnotation(TestAnnoC#->toClass))
+            }
+
+            Void testField()
+            {
+              jf := Interop.getClass(this).getField("field")
+              verifyEq(jf.getAnnotations.size, 2)
+
+              verifyA(#field.facet(TestAnnoA#), jf.getAnnotation(TestAnnoA#->toClass))
+              verifyB(#field.facet(TestAnnoB#), jf.getAnnotation(TestAnnoB#->toClass))
+            }
+
+            Void testMethod()
+            {
+              jm := Interop.getClass(this).getMethod("method", Class[,])
+              verifyEq(jm.getAnnotations.size, 2)
+
+              verifyA(#method.facet(TestAnnoA#), jm.getAnnotation(TestAnnoA#->toClass))
+              verifyB(#method.facet(TestAnnoB#), jm.getAnnotation(TestAnnoB#->toClass))
+            }
+
+            Void verifyA(Obj fan, TestAnnoA java)
+            {
+              //echo("---> verifyA $fan  $java")
+              verifyEq(fan.typeof.qname, "[java]fanx.test::TestAnnoA")
+              verify(java is TestAnnoA)
+            }
+
+            Void verifyB(Obj fan, TestAnnoB java)
+            {
+              //echo("---> verifyB $fan  $java")
+              verifyEq(fan.typeof.qname, "[java]fanx.test::TestAnnoB")
+              verify(java is TestAnnoB)
+              verifyEq(java.value, "it works!")
+            }
+
+            Void verifyC(Obj fan, TestAnnoC java)
+            {
+              //echo("---> verifyC $fan  $java")
+              verifyEq(fan.typeof.qname, "[java]fanx.test::TestAnnoC")
+              verify(java is TestAnnoC)
+              verifyEq(java.b, true)
+              verifyEq(java.s, "!")
+            }
+
+            Void verifyEq(Obj? a, Obj? b) { testRef.verifyEq(a, b) }
+            Void verify(Bool c) { testRef.verify(c) }
+            Test? testRef
+          }|>)
 
     obj := pod.types.first.make([this])
     obj->test
