@@ -150,6 +150,7 @@ public class JavaType
 
       // flags
       flags = FanUtil.classModifiersToFanFlags(cls.getModifiers());
+      if (cls.isAnnotation()) flags |= FConst.Const;
 
       // superclass is base class
       Class superclass = cls.getSuperclass();

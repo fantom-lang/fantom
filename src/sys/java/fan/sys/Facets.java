@@ -75,6 +75,9 @@ public final class Facets
   {
     try
     {
+      // if Java annotation
+      if (type instanceof JavaType) return new JavaFacet((JavaType)type, s);
+
       // if no string use make/defVal
       if (s.length() == 0) return (Facet)type.make();
 
@@ -90,7 +93,6 @@ public final class Facets
       throw IOErr.make(msg).val;
     }
   }
-
 
   private static Facets empty;
 
