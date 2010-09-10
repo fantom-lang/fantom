@@ -563,7 +563,7 @@ class CheckErrors : CompilerStep
       }
 
       // check field type
-      if (!val.ctype.fits(field.fieldType))
+      if (!val.ctype.fits(field.fieldType.inferredAs))
         err("Invalid type for facet field '$name': expected '$field.fieldType' not '$val.ctype'", val.loc)
     }
   }
