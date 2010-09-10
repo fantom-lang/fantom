@@ -136,11 +136,15 @@ public abstract class FTypeEmit
    */
   private void emitAttributes(FAttrs attrs)
   {
+    // source file
     if (attrs.sourceFile != null)
     {
       AttrEmit attr = emitAttr("SourceFile");
       attr.info.u2(utf(attrs.sourceFile));
     }
+
+    // any Java facets get emitted as annotations
+    FFacetEmit.emitType(this, pod, attrs);
   }
 
   /**
@@ -149,7 +153,10 @@ public abstract class FTypeEmit
   protected void emit(FField f)
   {
     if ((f.flags & FConst.Storage) != 0)
-      emitField(f.name, pod.typeRef(f.type).jsig(), jflags(f.flags));
+    {
+      FieldEmit fe = emitField(f.name, pod.typeRef(f.type).jsig(), jflags(f.flags));
+      FFacetEmit.emitField(fe, pod, f.attrs);
+    }
   }
 
   /**
@@ -167,22 +174,25 @@ public abstract class FTypeEmit
     if (name.equals("instance$init")) { emitInstanceInit(m); return; }
 
     // handle native/constructor/normal method
-    MethodEmit me;
+    MethodEmit me = null;
     if (isNative)
     {
-      new FMethodEmit(this, m).emitNative();
+      me = new FMethodEmit(this, m).emitNative();
     }
     else if (isCtor)
     {
       if (parent.base().isJava())
-        new FMethodEmit(this, m).emitCtorWithJavaSuper();
+        me = new FMethodEmit(this, m).emitCtorWithJavaSuper();
       else
-        new FMethodEmit(this, m).emitCtor();
+        me = new FMethodEmit(this, m).emitCtor();
     }
     else
     {
-      new FMethodEmit(this, m).emitStandard();
+      me = new FMethodEmit(this, m).emitStandard();
     }
+
+    // Java annotations
+    FFacetEmit.emitMethod(me, pod, m.attrs);
   }
 
   protected void emitInstanceInit(FMethod m)
