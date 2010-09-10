@@ -34,7 +34,7 @@ public final class Facets
     {
       FAttrs.FFacet ff = ffacets[i];
       Type t = pod.type(ff.type);
-      map.put(t, ff.val);
+      if (!t.isJava()) map.put(t, ff.val);
     }
     return new Facets(map);
   }
@@ -75,9 +75,6 @@ public final class Facets
   {
     try
     {
-      // if Java annotation
-      if (type instanceof JavaType) return new JavaFacet((JavaType)type, s);
-
       // if no string use make/defVal
       if (s.length() == 0) return (Facet)type.make();
 

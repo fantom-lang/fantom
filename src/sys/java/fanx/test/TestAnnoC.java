@@ -12,12 +12,13 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TestAnnoC
 {
-  int i()     default 0;
-  long l()    default 0L;
-  float f()   default 0f;
-  double d()  default 0d;
-  byte b()    default 0;
-  short s()   default 0;
-  boolean bool();
-  String str();
+  boolean bool()   default false;
+  int i()          default 0;
+  long l()         default 0L;
+  float f()        default 0f;
+  double d()       default 0d;
+  byte b()         default 0;
+  short s()        default 0;
+  Thread.State e() default Thread.State.NEW;
+  String str()     default "";
 }

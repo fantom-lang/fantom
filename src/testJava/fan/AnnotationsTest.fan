@@ -54,51 +54,61 @@ class AnnotationsTest : JavaTest
 
             Void testType()
             {
+              verifyEq(typeof.facets.size, 0)
+              verifyErr(UnknownFacetErr#) { this.typeof.facet(TestAnnoA#) }
+              verifyErr(UnknownFacetErr#) { this.typeof.facet(TestAnnoB#) }
+              verifyErr(UnknownFacetErr#) { this.typeof.facet(TestAnnoC#) }
+
               cls := Interop.getClass(this)
               verifyEq(cls.getAnnotations.size, 3)
 
-              verifyA(typeof.facet(TestAnnoA#), cls.getAnnotation(TestAnnoA#->toClass))
-              verifyB(typeof.facet(TestAnnoB#), cls.getAnnotation(TestAnnoB#->toClass))
-              verifyC(typeof.facet(TestAnnoC#), cls.getAnnotation(TestAnnoC#->toClass))
+              verifyA(cls.getAnnotation(TestAnnoA#->toClass))
+              verifyB(cls.getAnnotation(TestAnnoB#->toClass))
+              verifyC(cls.getAnnotation(TestAnnoC#->toClass))
             }
 
             Void testField()
             {
+              verifyEq(#field.facets.size, 0)
+              verifyErr(UnknownFacetErr#) { #field.facet(TestAnnoA#) }
+              verifyErr(UnknownFacetErr#) { #field.facet(TestAnnoB#) }
+
               jf := Interop.getClass(this).getField("field")
               verifyEq(jf.getAnnotations.size, 2)
 
-              verifyA(#field.facet(TestAnnoA#), jf.getAnnotation(TestAnnoA#->toClass))
-              verifyB(#field.facet(TestAnnoB#), jf.getAnnotation(TestAnnoB#->toClass))
+              verifyA(jf.getAnnotation(TestAnnoA#->toClass))
+              verifyB(jf.getAnnotation(TestAnnoB#->toClass))
             }
 
             Void testMethod()
             {
+              verifyEq(#method.facets.size, 0)
+              verifyErr(UnknownFacetErr#) { #method.facet(TestAnnoA#) }
+              verifyErr(UnknownFacetErr#) { #method.facet(TestAnnoB#) }
+
               jm := Interop.getClass(this).getMethod("method", Class[,])
               verifyEq(jm.getAnnotations.size, 2)
 
-              verifyA(#method.facet(TestAnnoA#), jm.getAnnotation(TestAnnoA#->toClass))
-              verifyB(#method.facet(TestAnnoB#), jm.getAnnotation(TestAnnoB#->toClass))
+              verifyA(jm.getAnnotation(TestAnnoA#->toClass))
+              verifyB(jm.getAnnotation(TestAnnoB#->toClass))
             }
 
-            Void verifyA(Obj fan, TestAnnoA java)
+            Void verifyA(TestAnnoA java)
             {
               //echo("---> verifyA $fan  $java")
-              verifyEq(fan.typeof.qname, "[java]fanx.test::TestAnnoA")
               verify(java is TestAnnoA)
             }
 
-            Void verifyB(Obj fan, TestAnnoB java)
+            Void verifyB(TestAnnoB java)
             {
               //echo("---> verifyB $fan  $java")
-              verifyEq(fan.typeof.qname, "[java]fanx.test::TestAnnoB")
               verify(java is TestAnnoB)
               verifyEq(java.value, "it works!")
             }
 
-            Void verifyC(Obj fan, TestAnnoC java)
+            Void verifyC(TestAnnoC java)
             {
               //echo("---> verifyC $fan  $java")
-              verifyEq(fan.typeof.qname, "[java]fanx.test::TestAnnoC")
               verify(java is TestAnnoC)
               verifyEq(java.bool, true)
               verifyEq(java.str,  "!")
@@ -111,6 +121,7 @@ class AnnotationsTest : JavaTest
             }
 
             Void verifyEq(Obj? a, Obj? b) { testRef.verifyEq(a, b) }
+            Void verifyErr(Type t, |Test| f) { testRef.verifyErr( t, f) }
             Void verify(Bool c) { testRef.verify(c) }
             Test? testRef
           }|>)

@@ -11,6 +11,7 @@
 - dom: Win.sessionStore, Win.localStore, Doc.title
 - Remove obsolete support for '*' field storage operator
 - Add EnumOrdinalAttr to fcode format for enum fields
+- Java annotations support
 
 *Build 1.0.54 (14 Jul 10)*
 - Support for Java FFI Type->toClass

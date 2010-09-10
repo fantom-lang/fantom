@@ -348,3 +348,39 @@ use a Fantom function whenever a 'Runnable' is expected:
 
 The standard rules for coercion between Java and Fantom types apply for how
 the function implements the interface's method.
+
+Annotations [#annotations]
+**************************
+Java annotations are imported into the Fantom type system as a special case
+of [facets]`Facets`.  Fantom classes and slots may be annotated with a Java
+annotation using the standard facet syntax:
+
+  // Java annotations
+  public @interface AnnoA {}
+  public @interface AnnoB { String value(); }
+  public @interface AnnoC { int i();  String s(); }
+
+  // Fantom syntax
+  @AnnoA
+  @AnnoB { value = "foo" }
+  @AnnoC { i = 34; s = "bar" }
+  class Fantom {}
+
+Assuming the annotation has a runtime retention policy, annotations added
+to a Fantom type or slot are available for Java reflection.  However, the
+annotation will **not** be reflected in the Fantom type system as a facet.
+
+The following annotation element types are currently supported:
+
+  Java                     Fantom
+  ----                     -------
+  boolean                  sys::Bool
+  byte, short, int, long   sys::Int
+  float, double            sys::Float
+  String                   sys::Str
+  enum                     not supported yet
+  Class                    not supported yet
+  arrays of above          not supported yet
+
+
+
