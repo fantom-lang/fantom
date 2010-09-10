@@ -208,7 +208,15 @@ public class FanObj
   public static void echo(Object obj)
   {
     if (obj == null) obj = "null";
-    System.out.println(toStr(obj));
+    String str = toStr(obj);
+    try
+    {
+      Env.cur().out().printLine(str);
+    }
+    catch (Throwable e)
+    {
+      System.out.println(str);
+    }
   }
 
 }
