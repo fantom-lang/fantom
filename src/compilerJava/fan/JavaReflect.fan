@@ -32,16 +32,19 @@ internal class JavaReflect
 
     // map superclass
     if (cls.getSuperclass != null)
-      self.base = toFanType(self.bridge, cls.getSuperclass)
+      self.base = toFanType(self.bridge, cls.getSuperclass).toNonNullable
 
     // map interfaces to mixins
     mixins := CType[,]
     cls.getInterfaces.each |Class c|
     {
       try
-        mixins.add(toFanType(self.bridge, c))
+        mixins.add(toFanType(self.bridge, c).toNonNullable)
       catch (UnknownTypeErr e)
         errUnknownType(e)
+
+      if (c.getName == "java.lang.annotation.Annotation")
+        mixins.add(self.ns.facetType)
     }
     self.mixins = mixins
 
