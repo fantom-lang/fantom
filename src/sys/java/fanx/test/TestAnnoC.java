@@ -16,6 +16,8 @@ public @interface TestAnnoC
   long l()    default 0L;
   float f()   default 0f;
   double d()  default 0d;
-  boolean b();
-  String s();
+  byte b()    default 0;
+  short s()   default 0;
+  boolean bool();
+  String str();
 }

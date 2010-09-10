@@ -24,8 +24,14 @@ class AnnotationsTest : JavaTest
           @TestAnnoB { value = "it works!" }
           @TestAnnoC
           {
-            b = true
-            s = "!"
+            bool = true
+            str  = "!"
+            i    = 123
+            b    = -50
+            s    = 1000
+            l    = 456
+            f    = 2f
+            d    = -66f
           }
           class Test
           {
@@ -94,8 +100,14 @@ class AnnotationsTest : JavaTest
               //echo("---> verifyC $fan  $java")
               verifyEq(fan.typeof.qname, "[java]fanx.test::TestAnnoC")
               verify(java is TestAnnoC)
-              verifyEq(java.b, true)
-              verifyEq(java.s, "!")
+              verifyEq(java.bool, true)
+              verifyEq(java.str,  "!")
+              verifyEq(java.i,    123)
+              verifyEq(java.b,    -50)
+              verifyEq(java.s,    1000)
+              verifyEq(java.l,    456)
+              verifyEq(java.f,    2f)
+              verifyEq(java.d,    -66f)
             }
 
             Void verifyEq(Obj? a, Obj? b) { testRef.verifyEq(a, b) }

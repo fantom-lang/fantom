@@ -85,12 +85,26 @@ class FFacetEmit
       FAttrs.FFacet facet = facets[i];
       FTypeRef type = pod.typeRef(facet.type);
       if (type.isFFI())
-        encode(info, type, facet.val);
+      {
+        try
+        {
+          encode(info, type, facet.val);
+        }
+        catch (Exception e)
+        {
+          throw new RuntimeException(e.toString(), e);
+        }
+      }
     }
   }
 
   private void encode(Box info, FTypeRef type, String val)
+    throws Exception
   {
+    // reset type class
+    this.curType  = type;
+    this.curClass = null;
+
     // parse value into name/value elements
     Elem[] elems = parseElems(val);
 
@@ -103,27 +117,77 @@ class FFacetEmit
   }
 
   private void encodeElem(Box info, FTypeRef type, Elem elem)
+    throws Exception
   {
     // element_name_index
     info.u2(emit.utf(elem.name));
 
     // element_value_pairs
     Object v = elem.val;
-    if (v instanceof Boolean) { encodeBool(info, (Boolean)v); return; }
-    if (v instanceof String)  { encodeStr(info, (String)v); return; }
+    if (v instanceof String)  { encodeStr(info, elem);   return; }
+    if (v instanceof Boolean) { encodeBool(info, elem);  return; }
+    if (v instanceof Long)    { encodeInt(info, elem);   return; }
+    if (v instanceof Double)  { encodeFloat(info, elem); return; }
     throw new RuntimeException("Unsupported annotation element type '" + type + "." + elem.name + "': " + elem.val.getClass().getName());
   }
 
-  private void encodeBool(Box info, Boolean val)
+  private void encodeStr(Box info, Elem elem)
   {
+    String val = (String)elem.val;
+    info.u1('s');
+    info.u2(emit.utf(val));
+  }
+
+  private void encodeBool(Box info, Elem elem)
+  {
+    Boolean val = (Boolean)elem.val;
     info.u1('Z');
     info.u2(emit.intConst(val.booleanValue() ? 1 : 0));
   }
 
-  private void encodeStr(Box info, String val)
+  private void encodeInt(Box info, Elem elem)
+    throws Exception
   {
-    info.u1('s');
-    info.u2(emit.utf(val));
+    Long val = (Long)elem.val;
+    Class cls = curClassElemType(elem.name);
+
+    if (cls == int.class)
+    {
+      info.u1('I');
+      info.u2(emit.intConst(Integer.valueOf(val.intValue())));
+    }
+    else if (cls == short.class)
+    {
+      info.u1('S');
+      info.u2(emit.intConst(Integer.valueOf(val.intValue())));
+    }
+    else if (cls == byte.class)
+    {
+      info.u1('B');
+      info.u2(emit.intConst(Integer.valueOf(val.intValue())));
+    }
+    else
+    {
+      info.u1('J');
+      info.u2(emit.longConst(val));
+    }
+  }
+
+  private void encodeFloat(Box info, Elem elem)
+    throws Exception
+  {
+    Double val = (Double)elem.val;
+    Class cls = curClassElemType(elem.name);
+    if (cls == double.class)
+    {
+      info.u1('D');
+      info.u2(emit.doubleConst(val));
+    }
+    else
+    {
+      info.u1('F');
+      info.u2(emit.floatConst(Float.valueOf(val.floatValue())));
+    }
   }
 
   private Elem[] parseElems(String val)
@@ -146,6 +210,24 @@ class FFacetEmit
     return (Elem[])acc.toArray(new Elem[acc.size()]);
   }
 
+  private Class curClassElemType(String name)
+    throws Exception
+  {
+    return curClass().getMethod(name, new Class[0]).getReturnType();
+  }
+
+  private Class curClass()
+    throws Exception
+  {
+    if (curClass == null)
+      curClass = Env.cur().loadJavaClass(curType.jname().replace("/", "."));
+    return curClass;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Elem
+//////////////////////////////////////////////////////////////////////////
+
   static class Elem
   {
     Elem(String name, Object val) { this.name = name; this.val = val; }
@@ -163,4 +245,6 @@ class FFacetEmit
   private final FPod pod;
   private final FAttrs.FFacet[] facets;
   private final int num;
+  private FTypeRef curType;
+  private Class curClass;
 }
