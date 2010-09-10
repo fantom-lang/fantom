@@ -7,4 +7,9 @@
 //
 package fanx.test;
 
-public @interface TestAnnoA {}
+import java.lang.annotation.*;
+
+@Retention(RetentionPolicy.RUNTIME)
+public @interface TestAnnoA
+{
+}

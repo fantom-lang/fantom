@@ -59,13 +59,15 @@ public class FMethodEmit
   /**
    * Emit a standard instance/static class method.
    */
-  public void emitStandard()
+  public MethodEmit emitStandard()
   {
     // emit method
     MethodEmit main = doEmit();
 
     // emit param default wrappers
     emitWrappers(main);
+
+    return main;
   }
 
   /**
@@ -83,7 +85,7 @@ public class FMethodEmit
    * routed to the ctor factory, and CallCtor opcodes are routed
    * to the ctor body.
    */
-  public void emitCtor()
+  public MethodEmit emitCtor()
   {
     String ctorName = this.name;
 
@@ -105,7 +107,7 @@ public class FMethodEmit
     this.ret  = emit.pod.typeRef(emit.type.self);
     this.code = null;
     int init = emit.method(selfName+ ".<init>()V");
-    emitCtorFactory(init, body, method.paramCount);
+    MethodEmit factory = emitCtorFactory(init, body, method.paramCount);
 
     // emit separate factory for each method with default
     // parameters: note each factory allocs the object and
@@ -116,6 +118,9 @@ public class FMethodEmit
     for (int i=0; i<method.paramCount; ++i)
       if (method.vars[i].def != null)
         emitCtorFactory(init, wrappers[i], i);
+
+    // return static factory as our primary Java method
+    return factory;
   }
 
   /**
@@ -126,7 +131,7 @@ public class FMethodEmit
    *     static Foo make(long a) { return make$(new Foo(), a) }
    *     static Foo make(long a, Object b) { return make$(new Foo(), a, b) }
    */
-  private void emitCtorFactory(int init, MethodEmit body, int paramLen)
+  private MethodEmit emitCtorFactory(int init, MethodEmit body, int paramLen)
   {
     this.paramLen = paramLen;
     MethodEmit factory = doEmit();
@@ -139,6 +144,7 @@ public class FMethodEmit
     code.maxStack  = code.maxLocals + 2;
     code.op2(INVOKESTATIC, body.ref());
     code.op(ARETURN);
+    return factory;
   }
 
   /**
@@ -152,7 +158,7 @@ public class FMethodEmit
    *     static Foo make(String a) { return new Foo(a) }
    *     Foo(String a) { ... }
    */
-  public void emitCtorWithJavaSuper()
+  public MethodEmit emitCtorWithJavaSuper()
   {
     String ctorName = this.name;
 
@@ -181,12 +187,13 @@ public class FMethodEmit
 
     // emit factory default parameter wrappers
     emitWrappers(factory);
+    return factory;
   }
 
   /**
    * Emit a native method
    */
-  public void emitNative()
+  public MethodEmit emitNative()
   {
     // emit an empty method
     this.code = null;
@@ -219,6 +226,7 @@ public class FMethodEmit
 
     // emit default parameter wrappers
     emitWrappers(main);
+    return main;
   }
 
 
