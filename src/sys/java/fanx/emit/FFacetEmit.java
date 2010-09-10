@@ -11,6 +11,7 @@ import java.util.*;
 import fan.sys.*;
 import fan.sys.List;
 import fanx.fcode.*;
+import fanx.serial.*;
 import fanx.util.*;
 
 /**
@@ -90,14 +91,73 @@ class FFacetEmit
 
   private void encode(Box info, FTypeRef type, String val)
   {
+    // parse value into name/value elements
+    Elem[] elems = parseElems(val);
+
+    // annotation type
     int cls = emit.cls(type.jname());
     info.u2(cls);
-    info.u2(0);
+    info.u2(elems.length);
+    for (int i=0; i<elems.length; ++i)
+      encodeElem(info, type, elems[i]);
+  }
+
+  private void encodeElem(Box info, FTypeRef type, Elem elem)
+  {
+    // element_name_index
+    info.u2(emit.utf(elem.name));
+
+    // element_value_pairs
+    Object v = elem.val;
+    if (v instanceof Boolean) { encodeBool(info, (Boolean)v); return; }
+    if (v instanceof String)  { encodeStr(info, (String)v); return; }
+    throw new RuntimeException("Unsupported annotation element type '" + type + "." + elem.name + "': " + elem.val.getClass().getName());
+  }
+
+  private void encodeBool(Box info, Boolean val)
+  {
+    info.u1('Z');
+    info.u2(emit.intConst(val.booleanValue() ? 1 : 0));
+  }
+
+  private void encodeStr(Box info, String val)
+  {
+    info.u1('s');
+    info.u2(emit.utf(val));
+  }
+
+  private Elem[] parseElems(String val)
+  {
+    if (val.length() == 0) return noElems;
+
+    // TODO: temp hack to parse serialized Fantom object
+    // without real Fantom type to use
+    ArrayList acc = new ArrayList();
+    val= val.substring(val.indexOf('{')+1, val.length()-2);
+    StringTokenizer st = new StringTokenizer(val, ";");
+    while (st.hasMoreTokens())
+    {
+      String pair = st.nextToken();
+      int eq = pair.indexOf('=');
+      String n  = pair.substring(0, eq);
+      String v = pair.substring(eq+1);
+      acc.add(new Elem(n, ObjDecoder.decode(v)));
+    }
+    return (Elem[])acc.toArray(new Elem[acc.size()]);
+  }
+
+  static class Elem
+  {
+    Elem(String name, Object val) { this.name = name; this.val = val; }
+    String name;
+    Object val;
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
+
+  static final Elem[] noElems = new Elem[0];
 
   private final Emitter emit;
   private final FPod pod;
