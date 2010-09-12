@@ -131,6 +131,7 @@ class FFacetEmit
     if (v instanceof Long)    { encodeInt(info, elem);   return; }
     if (v instanceof Double)  { encodeFloat(info, elem); return; }
     if (v instanceof Enum)    { encodeEnum(info, elem);  return; }
+    if (v instanceof Type)    { encodeType(info, elem);  return; }
     throw new RuntimeException("Unsupported annotation element type '" + type + "." + elem.name + "': " + elem.val.getClass().getName());
   }
 
@@ -200,6 +201,14 @@ class FFacetEmit
     info.u1('e');
     info.u2(emit.utf(e.getClass().getName()));
     info.u2(emit.utf(e.toString()));
+  }
+
+  private void encodeType(Box info, Elem elem)
+    throws Exception
+  {
+    Type t = (Type)elem.val;
+    info.u1('c');
+    info.u2(emit.utf(FanUtil.toJavaMemberSig(t)));
   }
 
 //////////////////////////////////////////////////////////////////////////
