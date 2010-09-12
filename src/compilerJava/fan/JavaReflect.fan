@@ -129,6 +129,7 @@ internal class JavaReflect
       fan.parent = self
       fan.name = java.getName
       fan.flags = toMemberFlags(mods)
+      if (java.isEnumConstant()) fan.flags = fan.flags.or(FConst.Enum)
       fan.fieldType = toFanType(self.bridge, java.getType)
       slots.set(fan.name, fan)
     }

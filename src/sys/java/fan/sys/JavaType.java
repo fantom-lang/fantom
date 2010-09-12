@@ -278,6 +278,9 @@ public class JavaType
       facets = transientFacets;
     }
 
+    // map Java enum constants as Fantom enum constants
+    if (java.isEnumConstant()) flags |= FConst.Enum;
+
     Field fan = new Field(parent, name, flags, facets, -1, of);
     fan.reflect = java;
     return fan;

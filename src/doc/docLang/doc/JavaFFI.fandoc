@@ -378,7 +378,7 @@ The following annotation element types are currently supported:
   byte, short, int, long   sys::Int
   float, double            sys::Float
   String                   sys::Str
-  enum                     not supported yet
+  enum                     Java FFI enum field access
   Class                    not supported yet
   arrays of above          not supported yet
 

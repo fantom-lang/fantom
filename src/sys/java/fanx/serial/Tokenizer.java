@@ -86,6 +86,7 @@ public class Tokenizer
         case '#':   consume(); return Token.POUND;
         case '?':   consume(); return Token.QUESTION;
         case '@':   consume(); return Token.AT;
+        case '$':   consume(); return Token.DOLLAR;
         case '.':
           if (peekt == DIGIT) return number(false);
           consume();

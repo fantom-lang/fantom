@@ -19,6 +19,7 @@ class AnnotationsTest : JavaTest
           using [java] java.lang
           using [java] fanx.interop
           using [java] fanx.test
+          using [java] java.lang::Thread$State as ThreadState
 
           @TestAnnoA
           @TestAnnoB { value = "it works!" }
@@ -32,6 +33,7 @@ class AnnotationsTest : JavaTest
             l    = 456
             f    = 2f
             d    = -66f
+            e    = ThreadState.BLOCKED
           }
           class Test
           {
@@ -118,6 +120,7 @@ class AnnotationsTest : JavaTest
               verifyEq(java.l,    456)
               verifyEq(java.f,    2f)
               verifyEq(java.d,    -66f)
+              verifyEq(java.e,    ThreadState.BLOCKED)
             }
 
             Void verifyEq(Obj? a, Obj? b) { testRef.verifyEq(a, b) }
