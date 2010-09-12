@@ -209,7 +209,10 @@ internal class JavaReflect
         fan.parent = self
         fan.name = m.getName
         fan.flags = FConst.Public.or(FConst.Const)
-        fan.fieldType = toFanType(self.bridge, m.getReturnType)
+        if (m.getReturnType.getName == "java.lang.Class")
+          fan.fieldType = self.ns.typeType
+        else
+          fan.fieldType = toFanType(self.bridge, m.getReturnType)
         slots.set(fan.name, fan)
       }
       catch (UnknownTypeErr e) errUnknownType(e)

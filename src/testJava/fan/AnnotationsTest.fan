@@ -17,6 +17,7 @@ class AnnotationsTest : JavaTest
     compile(
      Str<|using sys::Test
           using [java] java.lang
+          using [java] java.lang.annotation
           using [java] fanx.interop
           using [java] fanx.test
           using [java] java.lang::Thread$State as ThreadState
@@ -25,15 +26,18 @@ class AnnotationsTest : JavaTest
           @TestAnnoB { value = "it works!" }
           @TestAnnoC
           {
-            bool = true
-            str  = "!"
-            i    = 123
-            b    = -50
-            s    = 1000
-            l    = 456
-            f    = 2f
-            d    = -66f
-            e    = ThreadState.BLOCKED
+            bool  = true
+            i     = 123
+            b     = -50
+            s     = 1000
+            l     = 456
+            f     = 2f
+            d     = -66f
+            str1  = "!"
+            enum1 = ElementType.PACKAGE
+            enum2 = ThreadState.BLOCKED
+            cls1  = Str#
+            cls2  = Class#
           }
           class Test
           {
@@ -113,14 +117,17 @@ class AnnotationsTest : JavaTest
               //echo("---> verifyC $fan  $java")
               verify(java is TestAnnoC)
               verifyEq(java.bool, true)
-              verifyEq(java.str,  "!")
               verifyEq(java.i,    123)
               verifyEq(java.b,    -50)
               verifyEq(java.s,    1000)
               verifyEq(java.l,    456)
               verifyEq(java.f,    2f)
               verifyEq(java.d,    -66f)
-              verifyEq(java.e,    ThreadState.BLOCKED)
+              verifyEq(java.str1,  "!")
+              verifyEq(java.enum1, ElementType.PACKAGE)
+              verifyEq(java.enum2, ThreadState.BLOCKED)
+              verifyEq(java.cls1.getName, "java.lang.String")
+              verifyEq(java.cls2.getName, "java.lang.Class")
             }
 
             Void verifyEq(Obj? a, Obj? b) { testRef.verifyEq(a, b) }

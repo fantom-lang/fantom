@@ -374,12 +374,12 @@ The following annotation element types are currently supported:
 
   Java                     Fantom
   ----                     -------
-  boolean                  sys::Bool
-  byte, short, int, long   sys::Int
-  float, double            sys::Float
-  String                   sys::Str
+  boolean                  sys::Bool literal
+  byte, short, int, long   sys::Int literal
+  float, double            sys::Float literal
+  String                   sys::Str literal
+  Class                    sys::Type literal
   enum                     Java FFI enum field access
-  Class                    not supported yet
   arrays of above          not supported yet
 
 
