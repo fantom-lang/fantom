@@ -122,7 +122,7 @@ public class ObjDecoder
       return val;
     }
 
-    // [ is always list/map collection
+    // [ is always list/map collection (or map/FFI type)
     if (curt == Token.LBRACKET)
       return readCollection(curField, peekType);
 
@@ -169,7 +169,12 @@ public class ObjDecoder
     t.finish();
     Method m = t.method("fromStr", false);
     if (m == null)
-      throw err("Missing method: " + t.qname() + ".fromStr", line);
+    {
+      // fallback to valueOf for java.lang.Enums
+      if (t instanceof JavaType) m = t.method("valueOf", false);
+      if (m == null)
+        throw err("Missing method: " + t.qname() + ".fromStr", line);
+    }
 
     // invoke parse method to translate into instance
     try
@@ -366,17 +371,18 @@ public class ObjDecoder
     // opening [
     consume(Token.LBRACKET, "Expecting '['");
 
-    // if this could be a map type signature:
+    // if this could be a map/FFI type signature:
     //    [qname:qname]
     //    [qname:qname][]
     //    [qname:qname][][] ...
+    //    [java]foo.bar
     // or it could just be the type signature of
     // of a embedded simple, complex, or list
     Type peekType = null;
     if (curt == Token.ID && t == null)
     {
       // peek at the type
-      peekType = readType();
+      peekType = readType(true);
 
       // if we have [mapType] then this is non-inferred type signature
       if (curt == Token.RBRACKET && peekType instanceof MapType)
@@ -388,6 +394,10 @@ public class ObjDecoder
         if (curt == Token.POUND) { consume(); return t; }
         consume(Token.LBRACKET, "Expecting '['");
       }
+
+      // if the type was a FFI JavaType, this isn't a collection
+      if (peekType != null && peekType.isJava())
+        return readObj(curField, peekType, false);
     }
 
     // handle special case of [,]
@@ -549,7 +559,7 @@ public class ObjDecoder
   private Type readType() { return readType(false); }
   private Type readType(boolean lbracket)
   {
-    Type t = readSimpleType();
+    Type t = readSimpleType(lbracket);
     if (curt == Token.QUESTION)
     {
       consume();
@@ -576,11 +586,26 @@ public class ObjDecoder
   /**
    * qname := [podName "::"] typeName
    */
-  private Type readSimpleType()
+  private Type readSimpleType(boolean lbracket)
   {
     // parse identifier
     int line = tokenizer.line;
     String n = consumeId("Expected type signature");
+    boolean ffi = false;
+
+    // handle [java]foo.bar
+    if (n.equals("java") && lbracket)
+    {
+      ffi = true;
+      consume(Token.RBRACKET, "Expected ] in Java FFI [java]");
+      n = "[java]" + consumeId("Expected Java FFI type name");
+      while (curt == Token.DOT || curt == Token.DOLLAR)
+      {
+        String symbol = Token.toString(curt);
+        consume();
+        n += symbol + consumeId("Expected Java FFI type name");
+      }
+    }
 
     // check for using imported name
     if (curt != Token.DOUBLE_COLON)
@@ -596,6 +621,17 @@ public class ObjDecoder
     // must be fully qualified
     consume(Token.DOUBLE_COLON, "Expected ::");
     String typeName = consumeId("Expected type name");
+
+    // handle Outer$Inner for Java FFI
+    if (curt == Token.DOLLAR)
+    {
+      String symbol = Token.toString(curt);
+      consume();
+      typeName += symbol + consumeId("Expected Java FFI type name");
+    }
+
+    // if Java FFI, then don't optimize pod/type lookup
+    if (ffi) return Type.find(n + "::" + typeName);
 
     // resolve pod
     Pod pod = Pod.find(n, false);

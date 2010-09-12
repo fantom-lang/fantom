@@ -7,6 +7,7 @@
 //
 package fanx.emit;
 
+import java.lang.Enum;
 import java.util.*;
 import fan.sys.*;
 import fan.sys.List;
@@ -80,21 +81,22 @@ class FFacetEmit
   private void doEmit(Box info)
   {
     info.u2(num);
-    for (int i=0; i <facets.length; ++i)
+    try
     {
-      FAttrs.FFacet facet = facets[i];
-      FTypeRef type = pod.typeRef(facet.type);
-      if (type.isFFI())
+      for (int i=0; i <facets.length; ++i)
       {
-        try
-        {
-          encode(info, type, facet.val);
-        }
-        catch (Exception e)
-        {
-          throw new RuntimeException(e.toString(), e);
-        }
+        FAttrs.FFacet facet = facets[i];
+        FTypeRef type = pod.typeRef(facet.type);
+        if (type.isFFI()) encode(info, type, facet.val);
       }
+    }
+    catch (Exception e)
+    {
+      System.out.println("ERROR: Cannot emit annotations for " + emit.className);
+      System.out.println("  Facet type: " + curType);
+      e.printStackTrace();
+      info.len = 0;
+      info.u2(0);
     }
   }
 
@@ -128,6 +130,7 @@ class FFacetEmit
     if (v instanceof Boolean) { encodeBool(info, elem);  return; }
     if (v instanceof Long)    { encodeInt(info, elem);   return; }
     if (v instanceof Double)  { encodeFloat(info, elem); return; }
+    if (v instanceof Enum)    { encodeEnum(info, elem);  return; }
     throw new RuntimeException("Unsupported annotation element type '" + type + "." + elem.name + "': " + elem.val.getClass().getName());
   }
 
@@ -190,7 +193,39 @@ class FFacetEmit
     }
   }
 
+  private void encodeEnum(Box info, Elem elem)
+    throws Exception
+  {
+    Enum e = (Enum)elem.val;
+    info.u1('e');
+    info.u2(emit.utf(e.getClass().getName()));
+    info.u2(emit.utf(e.toString()));
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  private Class curClassElemType(String name)
+    throws Exception
+  {
+    return curClass().getMethod(name, new Class[0]).getReturnType();
+  }
+
+  private Class curClass()
+    throws Exception
+  {
+    if (curClass == null)
+      curClass = Env.cur().loadJavaClass(curType.jname().replace("/", "."));
+    return curClass;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Parsing
+//////////////////////////////////////////////////////////////////////////
+
   private Elem[] parseElems(String val)
+    throws Exception
   {
     if (val.length() == 0) return noElems;
 
@@ -205,23 +240,22 @@ class FFacetEmit
       int eq = pair.indexOf('=');
       String n  = pair.substring(0, eq);
       String v = pair.substring(eq+1);
-      acc.add(new Elem(n, ObjDecoder.decode(v)));
+      acc.add(new Elem(n, parseElemVal(n, v)));
     }
     return (Elem[])acc.toArray(new Elem[acc.size()]);
   }
 
-  private Class curClassElemType(String name)
+  private Object parseElemVal(String name, String val)
     throws Exception
   {
-    return curClass().getMethod(name, new Class[0]).getReturnType();
-  }
-
-  private Class curClass()
-    throws Exception
-  {
-    if (curClass == null)
-      curClass = Env.cur().loadJavaClass(curType.jname().replace("/", "."));
-    return curClass;
+    try
+    {
+      return ObjDecoder.decode(val);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Cannot parse " + curType + "." + name + " = " + val + "\n  " + e, e);
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

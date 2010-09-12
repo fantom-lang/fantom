@@ -45,8 +45,10 @@ public class Token
   public static final int POUND            = 22;  //  #
   public static final int QUESTION         = 23;  //  ?
   public static final int AT               = 24;  //  @
-  public static final int AS               = 25;  //  as
-  public static final int USING            = 26;  //  using
+  public static final int DOLLAR           = 25;  //  $
+  public static final int AS               = 26;  //  as
+  public static final int USING            = 27;  //  using
+  public static final int JAVA_FFI         = 28;  //  [java]
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
@@ -95,6 +97,7 @@ public class Token
       case POUND:            return "#";
       case QUESTION:         return "?";
       case AT:               return "@";
+      case DOLLAR:           return "$";
       case AS:               return "as";
       case USING:            return "using";
       default:               return "Token[" + type + "]";
