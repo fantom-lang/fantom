@@ -2214,6 +2214,8 @@ public class Parser : CompilerSupport
       consume
       if (curt !== Token.pipe || cur.whitespace)
         ret = ctype
+      else if (!params.isEmpty) // use errReport to avoid suppression
+        errReport(CompilerErr("Expecting function return type", cur))
     }
 
     // closing pipe
