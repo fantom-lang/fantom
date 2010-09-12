@@ -361,7 +361,7 @@ class RegressionTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Require ++/-- to be on same li
+// Require ++/-- to be on same line
 //////////////////////////////////////////////////////////////////////////
 
   Void test1150()
@@ -379,6 +379,16 @@ class RegressionTest : CompilerTest
 
     obj := pod.types[0].make
     verifyEq(obj->test1(4), 5)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Don't allow |A->| function signatures #1204
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1204()
+  {
+    verifyErrors("class Foo { Void m(|Str->| x) {} }",
+      [1, 26, "Expecting function return type"])
   }
 
 }
