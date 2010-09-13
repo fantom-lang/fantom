@@ -231,7 +231,23 @@ public class BootEnv
   public Class loadJavaClass(String className)
     throws Exception
   {
-    return Class.forName(className);
+    // handle primitives, these don't get handled by URLClassLoader
+    if (className.charAt(0) == '[' && className.length() == 2)
+    {
+      switch (className.charAt(1))
+      {
+        case 'Z': return boolean[].class;
+        case 'B': return byte[].class;
+        case 'S': return short[].class;
+        case 'I': return int[].class;
+        case 'J': return long[].class;
+        case 'F': return float[].class;
+        case 'D': return double[].class;
+      }
+    }
+
+    // route to extention classloader
+    return FanClassLoader.extClassLoader.loadClass(className);
   }
 
 //////////////////////////////////////////////////////////////////////////
