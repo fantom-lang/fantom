@@ -41,12 +41,29 @@ class FacetDef : Node, CFacet
   {
     if (names.isEmpty) return ""
     s := StrBuf()
-    s.add(type.qname).addChar('{')
-    names.each |n, i|
+
+    // serialized FFI types as name/value map for easy parsing
+    if (type.isForeign)
     {
-      s.add(n).addChar('=').add(vals[i].serialize).addChar(';')
+      s.addChar('[')
+      names.each |n, i|
+      {
+        s.add(n.toCode).addChar(':').add(vals[i].serialize).addChar(',')
+      }
+      s.addChar(']')
     }
-    s.addChar('}')
+
+    // serialize normal Fantom types as a complex
+    else
+    {
+      s.add(type.qname).addChar('{')
+      names.each |n, i|
+      {
+        s.add(n).addChar('=').add(vals[i].serialize).addChar(';')
+      }
+      s.addChar('}')
+    }
+
     return s.toStr
   }
 

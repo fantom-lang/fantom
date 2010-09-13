@@ -23,7 +23,7 @@ class AnnotationsTest : JavaTest
           using [java] java.lang::Thread$State as ThreadState
 
           @TestAnnoA
-          @TestAnnoB { value = "it works!" }
+          @TestAnnoB { value = "it;\nworks!" }
           @TestAnnoC
           {
             bool    = true
@@ -33,7 +33,7 @@ class AnnotationsTest : JavaTest
             l       = 456
             f       = 2f
             d       = -66f
-            str1    = "!"
+            str1    = "foo;bar"
             enum1   = ElementType.PACKAGE
             enum2   = ThreadState.BLOCKED
             cls1    = Str#
@@ -52,11 +52,11 @@ class AnnotationsTest : JavaTest
           class Test
           {
             @TestAnnoA
-            @TestAnnoB { value = "it works!" }
+            @TestAnnoB { value = "it;\nworks!" }
             Str? field
 
             @TestAnnoA
-            @TestAnnoB { value = "it works!" }
+            @TestAnnoB { value = "it;\nworks!" }
             Void method() {}
 
             new make(Test t) { this.testRef = t }
@@ -119,7 +119,7 @@ class AnnotationsTest : JavaTest
             {
               //echo("---> verifyB $fan  $java")
               verify(java is TestAnnoB)
-              verifyEq(java.value, "it works!")
+              verifyEq(java.value, "it;\nworks!")
             }
 
             Void verifyC(TestAnnoC java)
@@ -133,7 +133,7 @@ class AnnotationsTest : JavaTest
               verifyEq(java.l,    456)
               verifyEq(java.f,    2f)
               verifyEq(java.d,    -66f)
-              verifyEq(java.str1,  "!")
+              verifyEq(java.str1,  "foo;bar")
               verifyEq(java.enum1, ElementType.PACKAGE)
               verifyEq(java.enum2, ThreadState.BLOCKED)
               verifyEq(java.cls1.getName, "java.lang.String")
