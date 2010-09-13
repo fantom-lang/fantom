@@ -22,6 +22,8 @@
 ** "America/New_York".  The simple name is the city name only
 ** such as "New_York".
 **
+** Also see [docLang]`docLang::DateTime`.
+**
 @Serializable { simple = true }
 const class TimeZone
 {
@@ -60,7 +62,8 @@ const class TimeZone
   **
   ** Relative time zone instance is "Etc/Rel".  The relative timezone
   ** has a zero offset like UTC, but is used to normalize by time of
-  ** day versus absolute time.  See `DateTime.toRel`.
+  ** day versus absolute time.  See `DateTime.toRel` and
+  ** [docLang]`docLang::DateTime#relTimeZone`.
   **
   static TimeZone rel()
 

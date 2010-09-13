@@ -1,0 +1,190 @@
+**************************************************************************
+** title:      DateTime
+** author:     Brian Frank
+** created:    13 Sep 10
+** copyright:  Copyright (c) 2010, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The following sys types are used to represent and work with time:
+  - `sys::Duration`: period of time measured in nanosecond ticks
+  - `sys::DateTime`: an absolute period of time relative to a specific timezone
+  - `sys::TimeZone`: represents the rules for UTC offset and daylight savings
+    time according to zoneinfo database
+  - `sys::Date`: a calendar date independent of any time of day
+  - `sys::Time`: a time of day independent of any calendar date
+  - `sys::Month`: enum for months of the year
+  - `sys::Weekday`: enum for days of the week
+
+All these classes are immutable [const classes]`http://fantom.org/doc/docLang/Classes.html#const`.
+
+Ticks [#ticks]
+**************
+The basic unit of Fantom time is the nanosecond *tick*.  Both Duration
+and DateTime have a 'ticks' method and a constructor which takes a number
+of ticks.
+
+In the case of Durations, ticks are relative.  The 'Duration.now' method
+can be used to track elapsed time independent of wall-clock time.  If you
+are measuring relative periods of time, you should always prefer 'Duration.now'
+because it advances consistently independent of changes to the system clock.
+It is not uncommon for computers to automatically adjust their clocks periodically
+by several seconds or even minutes which can skew wall-time measurements.  In
+the Java runtime 'Duration.now' maps to 'System.nanoTime'.
+
+Ticks in DateTime use an epoch of midnight 1-Jan-2000 UTC.  Dates before 2000
+use negative ticks.  Although the Unix epoch is 1970, we thought since Fantom
+was born in 2005 we might as well use the millennium as the epoch.
+
+DateTime [#dateTime]
+********************
+Absolute time is represented as a number of nanosecond ticks relative to
+the 1-Jan-2000 epoch.  Ticks are a good representation of time for computers,
+but as humans we think about time as years, months, days, hours, minutes, etc.
+The translation from ticks to human time is always relative to a given timezone.
+For example 337,350,600,000,000,000 ticks represents 8:30am 9-Sep-2010 in
+New York time, but it is  1:30pm in London time.  It is the exact same instant
+in absolute time, but the human time representation is different based on our
+timezone perspective.
+
+The 'DateTime' class encapsulates an absolute time in ticks relative to a given
+timezone.  Although absolute time and timezone human time are two different
+concepts, it is convenient to bundle them into a single class.  In practice
+knowing the timezone of a given timestamp is often quite important.  Countless
+problems are caused when time has an ambiguous timezone association.  For
+example ISO 8601 time representation provides for an UTC offset, but that is
+never enough to actually figure out the timezone.  In Fantom we require a
+unambiguous timezone be associated with every DateTime and it is part of
+the canonical serialized representation.
+
+The DateTime class provides nice simple APIs for accessing the human time
+elements which are relative to the associated timezone:
+
+    d := DateTime.now
+    echo("$d.day $d.month $d.year | $d.hour $d.min | $d.tz")
+    echo("$d.date | $d.time")
+
+    // outputs on a computer in EDT
+    9 sep 2010 | 8 58 | New_York
+    2010-09-09 | 08:58:54.668
+
+Note that the 'tz' method is used to get the associated `sys::TimeZone`.
+You can also construct DateTimes with an explicit timezone or easily convert
+between timezones:
+
+    echo(DateTime.now)
+    echo(DateTime.nowUtc)
+    echo(DateTime.now.toTimeZone(TimeZone("Taipei")))
+
+     // outputs
+     2010-09-09T09:00:41.09-04:00 New_York
+     2010-09-09T13:00:41.106Z UTC
+     2010-09-09T21:00:41.09+08:00 Taipei
+
+Localization and Formatting [#localization]
+*******************************************
+All three classes Date, Time, and DateTime support a 'toLocale' and
+'fromLocale' method which can be used to parse/format using a string pattern.
+The [pattern language]`sys::DateTime.toLocale` is similar to that used by
+Java's SimpleDateFormat.  But Fantom supports some extra features and
+adheres to the following conventions:
+  - capitalized letters are for date fields (year, month, day, weekday)
+  - lower case letters are used for time fields (hour, minutes, seconds)
+  - optional seconds and fractional seconds are capitalized (S and F)
+
+Couple simple examples:
+
+   DateTime.now.toLocale("kk:mmaa")              =>  09:10am
+   DateTime.now.toLocale("DDD 'of' MMMM, YYYY")  =>  9th of September, 2010
+
+TimeZone [#timeZone]
+********************
+In Fantom we use the term *timezone* to encapsulate two concepts: offset
+from UTC and daylight saving time rules.  For example, US Eastern Standard
+Time is -5hrs from UTC.  But between 2am on the second Sunday of March
+and 2am on the first Sunday in November is daylight savings time (DST) and
+is -4hrs from UTC.
+
+Because timezones are such a critical aspect of DateTime representation,
+Fantom requires a comprehensive model and database of timezones.  Timezones
+are quite problematic for computers because they are a political abstraction
+versus a scientific abstraction.  This means that a given region might change
+its timezone rules (either UTC offset of DST  rules) over time.  For example,
+in 2007 the US changed the dates for when DST starts and ends.  This means
+that computing a date in 2000 uses different rules than 2010 (we call
+these *historical timezones*).
+
+Luckily there is a database which keeps track of these rules across regions
+and time.  We use the [zoneinfo]`http://en.wikipedia.org/wiki/Zoneinfo`
+database which is used by Unix and some versions of Java.  In Fantom we
+compile  a subset of the zoneinfo database into a binary representation
+using the "adm/buildtz.fan" script.  The database is stored in "etc/sys".
+Due to the size of the database, we use random access IO to load timezones
+on demand.  In JavaScript, the JsTimeZone class is used to define which
+timezone definitions are sent to the browser.
+
+The zoneinfo database uses a convention of naming timezones as "Continent/City".
+For example, US Eastern time is canonically identified as "America/New_York".
+Since there are no duplicate city names between continents, the city name
+also works as a canonical identifier.  Since the timezone is always included
+during serialization, we use the city name only as the canonical identifier.
+In the API this is distinguished as [name]`sys::TimeZone.name` and
+[fullName]`sys::TimeZone.fullName`.
+
+Relative TimeZone [#relTimeZone]
+================================
+In most cases we wish to compare time absolutely.  For example if looking
+at a log file, we would generally expect to see events from multiple timezones
+ordered by absolute time.  But sometimes we wish to compare times by their
+human time.  The special timezone "Rel"  is used for this purpose.  Any
+conversion to/from "Rel" preserves the timezone representation and changes
+the absolute ticks.
+
+Here is a simple program to demonstrate:
+
+    pattern := "DD-MM-YYYY hh:mm zzz"
+    a := DateTime.fromLocale("01-09-2010 03:00 Los_Angeles", pattern)
+    b := DateTime.fromLocale("01-09-2010 03:00 Chicago", pattern)
+    echo("$a ?= $b => ${a==b}")
+    a = a.toRel
+    b = b.toRel
+    echo("$a ?= $b => ${a==b}")
+
+    // outputs
+    2010-09-01T03:00:00-07:00 Los_Angeles ?= 2010-09-01T03:00:00-05:00 Chicago => false
+    2010-09-01T03:00:00Z Rel ?= 2010-09-01T03:00:00Z Rel => true
+
+Trade-offs [#tradeoffs]
+***********************
+Like any software development, engineering these APIs requires making trade-offs.
+We hope to make trade-offs which solve most use cases with a simple, easy-to-use
+API.  But of course its a matter of perspective based your own personal
+use cases :-)  But it is worthwhile to consider the trade-offs.
+
+All the Fantom time APIs are based on a nanosecond tick.  A 64-bit integer can
+store between +/-292 years.  So by using nanoseconds as the unit of a tick, we
+have made a trade-off optimized in favor of programs which require nanosecond
+precision versus programs which work with time spans of 100s years.  It is also
+worth noting that JavaScript treats all numbers as a 64-bit floating point
+number, so nanosecond precision is lost when working with large Durations or
+DateTimes.
+
+Fantom's dates are based on the [Gregorian calendar]`http://en.wikipedia.org/wiki/Gregorian_calendar`
+which isn't the only calendar system in use.  But for practical purposes,
+using the Gregorian system hits 99.9% use case without adding complications.
+
+The actual UTC time scale uses leap seconds to keep the calendar in sync
+with solar time.  But in general computer systems don't take leap seconds
+into account and Fantom doesn't either.  From a practical perspective this
+makes it easy to convert between Fantom ticks and other representations
+such as Java millis.
+
+By building date and time classes into the core 'sys' pod, we don't provide
+all the hooks and functionality which might be required for everybody.  But
+this is a trade-off.  Our first priority is to have core representations which
+all APIs can use without additional dependencies.  But we also feel that the
+APIs we have are a sweet spot for probably just about every use case.  But of
+course anybody could create additional APIs in new pods.
+

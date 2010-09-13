@@ -43,6 +43,7 @@
   [`Logging`,       "logging APIs"],
   [`Localization`,  "localization APIs"],
   [`DSLs`,          "domain specific language and compiler plugins"],
+  [`DateTime`,      "date and time APIs"],
 "Appendix",
   [`Appendix`,      "additional detailed notes"],
   [`Conventions`,   "coding conventions we use"],
