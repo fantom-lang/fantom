@@ -14,6 +14,8 @@
 ** also models the date and time of an absolute instance against
 ** a specific `TimeZone`.
 **
+** Also see [docLang]`docLang::DateTime`.
+**
 @Serializable { simple = true }
 const final class DateTime
 {
@@ -317,6 +319,7 @@ const final class DateTime
 
   **
   ** Convenience for 'toTimeZone(TimeZone.rel)'.
+  ** See [docLang]`docLang::DateTime#relTimeZone`.
   **
   DateTime toRel()
 

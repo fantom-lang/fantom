@@ -9,6 +9,8 @@
 **
 ** Duration represents a relative duration of time with nanosecond precision.
 **
+** Also see [docLang]`docLang::DateTime`.
+**
 @Serializable { simple = true }
 const final class Duration
 {
