@@ -6,14 +6,26 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.55 (working)*
+*Build 1.0.55 (13 Sep 2010)*
 - Enhance DateTime/Time pattern for AM/PM
 - dom: Win.sessionStore, Win.localStore, Doc.title
 - Remove obsolete support for '*' field storage operator
 - Add EnumOrdinalAttr to fcode format for enum fields
 - Java annotations support
+- Add DateTime chapter to docLang
+- #668: Java FFI - use Java annotations
+- #863: Java FFI issue: Failed to assign an value to arrays of Objects through FFI
+- #1114: Invalid field for tableswitch: compiler::FField
+- #1150: Require ++/-- to be on same line
+- #1183: Str as CharSequence and sys::List as java List
+- #1190: compile error on list of java arrays
+- #1191: Param default expr cannot access itself
+- #1192: Formalize type inference rules with parameterized generics
+- #1194: Disallow () call operator on non-func types
+- #1204: Don't allow |A->| function signatures
+- #1208: BootEnv should use ext classloader
 
-*Build 1.0.54 (14 Jul 10)*
+*Build 1.0.54 (14 Jul 2010)*
 - Support for Java FFI Type->toClass
 - Fix WebClient to report port number in Host header
 - ObixMod abstract base class for server side functionality
@@ -33,7 +45,7 @@
 - #1112: JarDist omitting .class file
 - #1127: Expand scope of illegal nullable to non-nullable errors
 
-*Build 1.0.53 (13 May 10)*
+*Build 1.0.53 (13 May 2010)*
 - Fix boxed boolean JVM checks
 - Make Int.shiftr unsigned (Java >>> operator)
 - Add etc/sys/config.props support to fanlaunch bash script
@@ -72,7 +84,7 @@
 - #1079: ResolveImports: catch CompilerErr around resolveImportedTypes() call
 - #1080: BuildJava should allow specifiybg custom classpath/jars
 
-*Build 1.0.52 (24 Mar 10)*
+*Build 1.0.52 (24 Mar 2010)*
 - Color: makeArgb, makeRgb
 - WebUtil.jsMain
 - Win: viewport, reload, onEvent
@@ -95,7 +107,7 @@
 - #1033: Why is not avilable type "Obj[]?[]" ?
 - #1036: Serialization of const fields
 
-*Build 1.0.51 (6 Feb 10)*
+*Build 1.0.51 (6 Feb 2010)*
 - Roll fcode version from 1.0.45 => 1.0.51
 - Change enum to positional keyword "enum class"
 - Rename build::Target => TargetMethod
@@ -105,7 +117,7 @@
 - Move docLib chapter into their respectiive pods as pod-doc
 - #936: Symbols/Facet Redesign
 
-*Build 1.0.50 (2 Feb 10)*
+*Build 1.0.50 (2 Feb 2010)*
 - Pod.loc => locale
 - Locale.get => Env.locale
 - Remove UriSpace
@@ -125,7 +137,7 @@
 - #952: Jar Dist
 - #953: Fanp can't find a pod in a custom ${FAN_REPO}
 
-*Build 1.0.49 (27 Jan 10)*
+*Build 1.0.49 (27 Jan 2010)*
 - Obj.type => typeof
 - List added: containsAny, moveTo
 - List removed: containsSame, containsAllSame
@@ -155,7 +167,7 @@
 - #922: Don't allow one char scheme names in File(Uri)
 - #927: List API Changes
 
-*Build 1.0.48 (21 Dec 09)*
+*Build 1.0.48 (21 Dec 2009)*
 - Fix List.insertAll error checking
 - Int.toLocale "B" pattern for formatting size in bytes
 - Add sys::deprecated facet and compiler warnings
@@ -186,7 +198,7 @@
 - #875: Add 1-step bootstrap script
 - #876: Source Doc Changes
 
-*Build 1.0.47 (17 Nov 09)*
+*Build 1.0.47 (17 Nov 2009)*
 - Rename Fan to Fantom!
 - Range fromStr, isEmpty, min, max, first, last
 - List.eachrWhile
@@ -216,7 +228,7 @@
 - #788: Coercion of indexed assignment shortcut
 - #806: can't read MapType from ObjectDeserializer
 
-*Build 1.0.46 (8 Sep 09)*
+*Build 1.0.46 (8 Sep 2009)*
 - Closure variable redesign
 - Change JavaScript field naming model
 - gfx::Border
@@ -237,7 +249,7 @@
 - #712: UI enhancements
 - #721: Cookbook versus Examples
 
-*Build 1.0.45 (24 Jul 09)*
+*Build 1.0.45 (24 Jul 2009)*
 - Roll fcode version code 0x01_00_0034 => 0x01_00_0045
 - LoadSymbol opcode
 - Change field storage operator from "@" => "*"
@@ -259,7 +271,7 @@
 - #663: wisp sluggish via apachebench
 - #664: Nullable params w/out name in func sig
 
-*Build 1.0.44 (25 Jun 09)*
+*Build 1.0.44 (25 Jun 2009)*
 - Fix bug in WebReq.absUri
 - Fix webappClient to use Uri instead of Str
 - Remove old webServlet code
@@ -280,7 +292,7 @@
 - #618: Ambiguous method call on java object
 - #629: NoClassDefFoundError when accessing public static final field with JavaFFI
 
-*Build 1.0.43 (28 May 09)*
+*Build 1.0.43 (28 May 2009)*
 - FWT port to JavaScript
 - Change default for value type local variables
 - Remove support for "..." range literals (replaced with "..<")
@@ -292,7 +304,7 @@
 - #578: Uri Interpolation
 - #595: Definite assignment of non-nullable fields
 
-*Build 1.0.42 (13 May 09)*
+*Build 1.0.42 (13 May 2009)*
 - Tweaks to flux
 - Loosen restrictions on it/this ambiguity errors
 - webappClient::Effect
@@ -336,7 +348,7 @@
 - #591: Flux: View menu in NavBar for .fan files doesn't show
 - #592: Proposal: Method/Func call
 
-*Build 1.0.41 (11 Apr 09)*
+*Build 1.0.41 (11 Apr 2009)*
 - It-Blocks
 - Comma operator for it.add
 - Closure type inference
@@ -349,7 +361,7 @@
 - Rename def => defVal: Point, Size, Rect, Insets, Hints, Pen
 - Rename Locale.with => use
 
-*Build 1.0.40 (2 Apr 09)*
+*Build 1.0.40 (2 Apr 2009)*
 - Added sys::Actor API
 - Added sys::Service API
 - Renamed UnknownThreadErr to UnknownServiceErr
@@ -359,7 +371,7 @@
 - ScrollBar added
 - ProgressBar.value renamed val
 
-*Build 1.0.39 (25 Mar 09)*
+*Build 1.0.39 (25 Mar 2009)*
 - Remove dynamic types
 - Redesign sql::Row API
 - Int: minValue/maxValue -> minVal/maxVal
@@ -388,7 +400,7 @@
 - Reflection fix to inherit concrete slot over abstract slot if two choices
 - Fix buildall.pods to bootstrap correctly on Unix
 
-*Build 1.0.38 (15 Feb 09)*
+*Build 1.0.38 (15 Feb 2009)*
 - Str: in, toBuf, toDisplayName, fromDisplayName
 - Buf: dup, fill, hmac
 - Duration, DateTime, Date, Time: toIso, fromIso
@@ -422,7 +434,7 @@
 - Compiler fix for construction call against fromStr in super class
 - Compiler fix to check for dup method params and dup enum defs
 
-*Build 1.0.37 (11 Jan 09)*
+*Build 1.0.37 (11 Jan 2009)*
 - Java FFI: array overrides of methods which use primitives or arrays
 - Java FFI: coerce sys::Func to Java interface with one abstract method
 - New sys::Date and sys::Time APIs
@@ -440,7 +452,7 @@
 - Optimize common MimeTypes to be interned
 - BuildScript dumpenv target
 
-*Build 1.0.36 (13 Dec 08)*
+*Build 1.0.36 (13 Dec 2008)*
 - Java FFI
 - Use 'dotnet' to denote .NET instead of 'net'
 - Initial json API
@@ -451,7 +463,7 @@
 - List, Map eachBreak -> eachWhile
 - Emacs support adm/tools/emacs/fan-mode.el
 
-*Build 1.0.35 (14 Nov 08)*
+*Build 1.0.35 (14 Nov 2008)*
 - Update documentation for nullable and value types
 - New docLib::Fwt chapter
 - New docLang::Deployment chapter
@@ -473,7 +485,7 @@
 - Flux: highlight current line
 - Flux: show short filenames in console instead of full paths
 
-*Build 1.0.34 (24 Oct 08)*
+*Build 1.0.34 (24 Oct 2008)*
 - Roll fcode version for value-type support
 - Bool, Int, Float are now value types
 - Disallow covariance with value types
@@ -483,7 +495,7 @@
 - Java runtime maps sys::Float to primitive double
 - Change semanatics of Float.nan compare to match JVM
 
-*Build 1.0.33 (13 Oct 08)*
+*Build 1.0.33 (13 Oct 2008)*
 - Java runtime: fan.sys.Obj -> java.lang.Object
 - Java runtime: fan.sys.Bool -> java.lang.Boolean
 - Java runtime: fan.sys.Int -> java.lang.Long
@@ -497,7 +509,7 @@
 - Change fwt::Image constructors
 - Add icons to flux history items
 
-*Build 1.0.32 (20 Sep 08)*
+*Build 1.0.32 (20 Sep 2008)*
 - Remove support for old type literal syntax
 - Add adm/tools with fan support for various editors
 - Remove haven pod
@@ -532,7 +544,7 @@
 - New fwt text selection and clipboard APIs
 - Flux prototype!
 
-*Build 1.0.31 (24 Aug 08)*
+*Build 1.0.31 (24 Aug 2008)*
 - New leading whitespace rules for multi-line Str literals
 - Upgrade SWT to 3.4
 - Using statement support in serialization files
@@ -546,7 +558,7 @@
 - Key eventing and accelerators
 - New fwt::CommandStack API
 
-*Build 1.0.30 (30 Jul 08)*
+*Build 1.0.30 (30 Jul 2008)*
 - Short construction call syntax Type(args)
 - FWT widgets: Combo, Tree, RichText
 - fwt::Command
@@ -562,7 +574,7 @@
 - New type literal syntax: Type#
 - Slot literals: Type#slot or #slot
 
-*Build 1.0.29 (18 Jul 08)*
+*Build 1.0.29 (18 Jul 2008)*
 - New isnot operator
 - New null convenience operators: ?: ?. ?->
 - New FWT widgets: WebBrowser, Text, InsetPane, SashPane
@@ -578,7 +590,7 @@
 - Str.split(Str) => Str.split(Int,Bool)
 - Compiler implicitly generates toImmutable for const List/Map/Type fields
 
-*Build 1.0.28 (25 Jun 08)*
+*Build 1.0.28 (25 Jun 2008)*
 - Fix bug in threading flow control
 - Map.def
 - Update unix scripts to use bash
@@ -593,7 +605,7 @@
 - Rename some of the shortcut operators methods
 - New fwt pod which wraps SWT
 
-*Build 1.0.27 (28 May 08)*
+*Build 1.0.27 (28 May 2008)*
 - Fix this return for mixins
 - Sanity check for bootstrap build
 - sys::MimeType, Uri.mimeType, File.mimeType
@@ -608,7 +620,7 @@
 - Log.setLevel() => Log.modified
 - File.setModified() => File.modified
 
-*Build 1.0.26 (26 Apr 08)*
+*Build 1.0.26 (26 Apr 2008)*
 - Require f suffix for float literals
 - Decimal type and literal syntax
 - Decimal API enhancements: InStream, OutStream, Num, Str
@@ -618,17 +630,17 @@
 - Allow this and super keywords in string interpolation
 - Fix various fandoc bugs seen on discussion forum
 
-*Build 1.0.25 (16 Apr 08)*
+*Build 1.0.25 (16 Apr 2008)*
 - Fix Unix build problems
 - Sys.env is now case insensitive map
 - File.pathSep
 - Skip .NET compiles if not on Windows
 
-*Build 1.0.24 (14 Apr 08)*
+*Build 1.0.24 (14 Apr 2008)*
 - Cleanup old ruby scripts
 - Cleanup docs
 
-*Build 1.0.23 (14 Apr 08)*
+*Build 1.0.23 (14 Apr 2008)*
 - Weekday, Month increment/decrement
 - Enhance webapp steps
 - File support for checkSlash
@@ -639,7 +651,7 @@
 - Sys.diagnostics (mem, threads, classes)
 - Uri queryPlus and escaping fixes
 
-*Build 1.0.22 (30 Mar 08)*
+*Build 1.0.22 (30 Mar 2008)*
 - web::Cookie support
 - WebSession support
 - Once methods
@@ -649,7 +661,7 @@
 - New Cookbook chapters: Reflection
 - Unix launcher scripts
 
-*Build 1.0.21 (10 Mar 08)*
+*Build 1.0.21 (10 Mar 2008)*
 - Haven ORM engine
 - Type immutability
 - Doc meta-data, doc default expressions
@@ -663,13 +675,13 @@
 - Sys.compile and script caching
 - Coverage for .NET sysTests 364/375 - 97%
 
-*Build 1.0.20 (13 Jan 08)*
+*Build 1.0.20 (13 Jan 2008)*
 - Fan shell
 - Type literal support in serialization syntax
 - More docs (docTools, docIntro)
 - Rework build scripts to use facets
 
-*Build 1.0.19 (30 Dec 07)*
+*Build 1.0.19 (30 Dec 2007)*
 - Basic fand bootstrap
 - Tweaks to InStream.readObj
 - Logging APIs
@@ -684,7 +696,7 @@
 - Pod level user defined facets
 - Type database
 
-*Build 1.0.18 (13 Dec 07)*
+*Build 1.0.18 (13 Dec 2007)*
 - Int, Str, Month, Weekday, DateTime localization methods
 - DateTime string encoding/decoding
 - Resource and MemResource APIs
@@ -693,7 +705,7 @@
 - Pretty stack traces
 - Tons of new documentation
 
-*Build 1.0.17 (5 Nov 07)*
+*Build 1.0.17 (5 Nov 2007)*
 - Obj auto-casts to anything
 - Use serialization for thread messaging when not immutable
 - Dynamic methods
@@ -704,22 +716,22 @@
 - Locale API
 - Rename parse -> fromStr
 
-*Build 1.0.16 (11 Sep 07)*
+*Build 1.0.16 (11 Sep 2007)*
 - Facets completed
 - Override implies virtual fix
 - Roll fcode version to support method var attributes
 
-*Build 1.0.15 (5 Sep 07)*
+*Build 1.0.15 (5 Sep 2007)*
 - Serialization support
 - Simple literals
 - With-blocks
 - Refactor fcode attributes
 - New facet design
 
-*Build 1.0.14 (12 Aug 07)*
+*Build 1.0.14 (12 Aug 2007)*
 - Add maxStack to fcode format
 
-*Build 1.0.13 (4 Aug 07)*
+*Build 1.0.13 (4 Aug 2007)*
 - Indexed assignment expressions: x[y] += z
 - Buf no longer mixins InStream and OutStream
 - InStream and OutStream changed from mixins to classes
@@ -730,23 +742,23 @@
 - Uri decoding/encoding
 - Fix maxLocals, maxStack in emitter
 
-*Build 1.0.12 (17 Jul 07)*
+*Build 1.0.12 (17 Jul 2007)*
 - InStream.eachLine
 - Covariant field overrides of methods
 
-*Build 1.0.11 (10 Jul 07)*
+*Build 1.0.11 (10 Jul 2007)*
 - Java runtime dependency checking
 - Compiler dependency checking
 - MethodParam->Param, fieldField->of, paramType->of, returnType->returns
 - Split Func out of Method
 
-*Build 1.0.10 (7 Jul 07)*
+*Build 1.0.10 (7 Jul 2007)*
 - Remove all the old Java based compiler code
 - Change Int intern to -256 to 1024
 - Major refactoring of compiler - fcode now implements namespace mixins
 - Ability to compile against any arbitrary dependsDir
 
-*Build 1.0.9 (1 Jul 07)*
+*Build 1.0.9 (1 Jul 2007)*
 - Add: List.containsAll
 - Remove: Type.sourceFile, Type.lineNumber, Slot.lineNumber
 - Hidden: Field.getter, Field.setter
@@ -756,7 +768,7 @@
 - New sql pod using JDBC
 - New chapters: docLang::DynamicTypes, docLib::Sql
 
-*Build 1.0.8 (30 Jun 07)*
+*Build 1.0.8 (30 Jun 2007)*
 - Add doc target to buildall script
 - Add StrBuf.remove, buff up test suite
 - DocLang chapters: Expressions, Statements, Exceptions,
@@ -765,7 +777,7 @@
 - Changes to web API
 - New wisp pod with simple web server implementation
 
-*Build 1.0.7 (12 May 07)*
+*Build 1.0.7 (12 May 2007)*
 - New inet pod
 - IpAddress, TcpSocket, TcpServerSocket
 - Str.equalsIgnoreCase, compareIgnoreCase, any, all
@@ -779,13 +791,13 @@
 - Doc chapters: docIntro::Overview, docLang::Literal
 - .NET runtime support for most of sysTest
 
-*Build 1.0.6 (5 Feb 07)*
+*Build 1.0.6 (5 Feb 2007)*
 - Make sys::Err const
 - Obj.isImmutable, List.toImmutable, Map.toImmutable
 - Slot.isConst for thread-safe methods
 - Thread API
 
-*Build 1.0.5 (21 Jan 07)*
+*Build 1.0.5 (21 Jan 2007)*
 - Use () operator on sys::Methods as callx() shortcut
 - Curried methods
 - Use soft references for pod cache
@@ -793,7 +805,7 @@
 - Float constants changed to static const fields
 - Fan.exe now uses Fan compiler to run scripts
 
-*Build 1.0.4 (14 Jan 07)*
+*Build 1.0.4 (14 Jan 2007)*
 - Virtual fields
 - Move field accessor generation to Parser
 - Fix closures in field accessor methods
@@ -801,20 +813,20 @@
 - Optimize if(true), if(false)
 - Fix indirect mixin router emitting
 
-*Build 1.0.3 (8 Jan 07)*
+*Build 1.0.3 (8 Jan 2007)*
 - Fan launcher options (--v and --D)
 - Refactor Sys methods into respective classes
 - Field storage '@' operator
 - Storage fcode flag
 
-*Build 1.0.2 (1 Jan 07)*
+*Build 1.0.2 (1 Jan 2007)*
 - New pod format for pod meta-data and facets
 
-*Build 1.0.1 (1 Jan 07)*
+*Build 1.0.1 (1 Jan 2007)*
 - First official build
 - Both old Ruby build scripts and new Fan build scripts
 
-*Dec 06*
+*Dec 2006*
 - CLR protected region support
 - Try finally blocks
 - Virtual fields (mixins support abstract fields)
@@ -826,28 +838,28 @@
 - Launcher C++ executables for Win32
 - Transition from Ruby build scripts to Fan build scripts
 
-*Nov 06*
+*Nov 2006*
 - Deprecate DupDown (dup_x1) opcode
 - Nested closure support
 - List.dup(), Map.dup()
 - Not a statement checking
 - Protection scope checking
 
-*Oct 06*
+*Oct 2006*
 - Props file and Sys.env
 - Constant folding in compiler
 - Compiler can finally compile itself!
 
-*Sep 06*
+*Sep 2006*
 - First Fandoc goes live on fandev.org
 - Precompiled Java bytecode mode
 
-*Aug 06*
+*Aug 2006*
 - Fan compiler does first end-to-end compile
 - Fanp disassembler ported from Java to Fan
 - Zip API
 
-*Jul 06*
+*Jul 2006*
 - Parser rewritten in Fan
 - Version API
 - Using/import statements
@@ -855,7 +867,7 @@
 - Uri API, refactor File to use Uri
 - Stub Time API
 
-*Jun 06*
+*Jun 2006*
 - Dynamic '->' call operator
 - Try/catch blocks
 - Initial web API
@@ -863,38 +875,38 @@
 - CompareNull, CompareNotNull opcodes
 - Tokenizer rewritten in Fan
 
-*May 06*
+*May 2006*
 - Refactor Err to use Fan type system
 - Math methods for Int, Float
 - Switch statement
 - New character methods for Int, Str
 
-*Apr 06*
+*Apr 2006*
 - Tomcat integration
 - Field accessors
 - Enums
 - Charset I/O support
 
-*Mar 06*
+*Mar 2006*
 - Native methods
 - Superclass constructor chaining
 - Closures
 - I/O, List, and Map APIs
 - Mixins
 
-*Feb 06*
+*Feb 2006*
 - Refactor to use fcode intermediate format
 - Refactor local variables for .NET emit
 - Fandoc comments
 
-*Jan 06*
+*Jan 2006*
 - Generic types
 - Support for 'is' and 'as' operators
 - Type literals
 - Method parameter defaults
 - Unit test harness
 
-*Dec 05*
+*Dec 2005*
 - Redesign to use pure OO (everything boxed)
 - Type inference for locals
 - Duration literals
@@ -903,13 +915,13 @@
 - Comparision operators
 - Constructors
 
-*Nov 05*
+*Nov 2005*
 - Casting
 - Primitive operators and auto-boxing (since removed)
 - String concat, unary operators, assignment operators
 - Local variables
 
-*Oct 05*
+*Oct 2005*
 - Original jblock and nblock native method design
 - Methods
 - Fields
@@ -919,7 +931,7 @@
 - If, throw statements
 - Class aliasing (original Java/.NET integration strategy)
 
-*Sep 05*
+*Sep 2005*
 - Begin work on Java version of Fan parser
 - Compiler emits straight to Java bytecode or .NET IL
 - Basic expr compilation
