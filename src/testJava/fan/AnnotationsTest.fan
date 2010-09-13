@@ -26,18 +26,28 @@ class AnnotationsTest : JavaTest
           @TestAnnoB { value = "it works!" }
           @TestAnnoC
           {
-            bool  = true
-            i     = 123
-            b     = -50
-            s     = 1000
-            l     = 456
-            f     = 2f
-            d     = -66f
-            str1  = "!"
-            enum1 = ElementType.PACKAGE
-            enum2 = ThreadState.BLOCKED
-            cls1  = Str#
-            cls2  = Class#
+            bool    = true
+            i       = 123
+            b       = -50
+            s       = 1000
+            l       = 456
+            f       = 2f
+            d       = -66f
+            str1    = "!"
+            enum1   = ElementType.PACKAGE
+            enum2   = ThreadState.BLOCKED
+            cls1    = Str#
+            cls2    = Class#
+            bools   = [true, false, true]
+            bytes   = [2, 3]
+            shorts  = [20, 30]
+            ints    = [200, 300]
+            longs   = [2000, 3000]
+            floats  = [200f, 300f]
+            doubles = [2000f, 3000f]
+            strs    = ["foo", "bar"]
+            enums   = [ElementType.FIELD, ElementType.METHOD]
+            classes = [Thread#, Annotation#]
           }
           class Test
           {
@@ -128,6 +138,47 @@ class AnnotationsTest : JavaTest
               verifyEq(java.enum2, ThreadState.BLOCKED)
               verifyEq(java.cls1.getName, "java.lang.String")
               verifyEq(java.cls2.getName, "java.lang.Class")
+
+              verifyEq(java.bools.size, 3)
+              verifyEq(java.bools[0], true)
+              verifyEq(java.bools[1], false)
+              verifyEq(java.bools[2], true)
+
+              verifyEq(java.bytes.size, 2)
+              verifyEq(java.bytes[0], 2)
+              verifyEq(java.bytes[1], 3)
+
+              verifyEq(java.shorts.size, 2)
+              verifyEq(java.shorts[0], 20)
+              verifyEq(java.shorts[1], 30)
+
+              verifyEq(java.ints.size, 2)
+              verifyEq(java.ints[0], 200)
+              verifyEq(java.ints[1], 300)
+
+              verifyEq(java.longs.size, 2)
+              verifyEq(java.longs[0], 2000)
+              verifyEq(java.longs[1], 3000)
+
+              verifyEq(java.floats.size, 2)
+              verifyEq(java.floats[0], 200f)
+              verifyEq(java.floats[1], 300f)
+
+              verifyEq(java.doubles.size, 2)
+              verifyEq(java.doubles[0], 2000f)
+              verifyEq(java.doubles[1], 3000f)
+
+              verifyEq(java.strs.size, 2)
+              verifyEq(java.strs[0], "foo")
+              verifyEq(java.strs[1], "bar")
+
+              verifyEq(java.classes.size, 2)
+              verifyEq(java.classes[0]->getName, "java.lang.Thread")
+              verifyEq(java.classes[1]->getName, "java.lang.annotation.Annotation")
+
+              verifyEq(java.enums.size, 2)
+              verifyEq(java.enums[0], ElementType.FIELD)
+              verifyEq(java.enums[1], ElementType.METHOD)
             }
 
             Void verifyEq(Obj? a, Obj? b) { testRef.verifyEq(a, b) }

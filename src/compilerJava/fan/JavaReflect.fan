@@ -199,6 +199,7 @@ internal class JavaReflect
     // methods, but in Fantom facets are declared with const fields;
     // so we here we fake it out so that a Java annotation type looks
     // like a Fantom facet from the compiler's perspective
+    ns := self.ns
     cls.getDeclaredMethods.each |JMethod m|
     {
       if (!JModifier.isPublic(m.getModifiers)) return
@@ -209,10 +210,19 @@ internal class JavaReflect
         fan.parent = self
         fan.name = m.getName
         fan.flags = FConst.Public.or(FConst.Const)
-        if (m.getReturnType.getName == "java.lang.Class")
-          fan.fieldType = self.ns.typeType
-        else
-          fan.fieldType = toFanType(self.bridge, m.getReturnType)
+        switch (m.getReturnType.getName)
+        {
+          case "java.lang.Class":    fan.fieldType = ns.typeType
+          case "[Ljava.lang.Class;": fan.fieldType = ns.typeType.toListOf
+          case "[Z":                 fan.fieldType = ns.boolType.toListOf
+          case "[B":
+          case "[S":
+          case "[I":
+          case "[J":                 fan.fieldType = ns.intType.toListOf
+          case "[F":
+          case "[D":                 fan.fieldType = ns.floatType.toListOf
+          default:                   fan.fieldType = toFanType(self.bridge, m.getReturnType)
+        }
         slots.set(fan.name, fan)
       }
       catch (UnknownTypeErr e) errUnknownType(e)

@@ -380,7 +380,7 @@ The following annotation element types are currently supported:
   String                   sys::Str literal
   Class                    sys::Type literal
   enum                     Java FFI enum field access
-  arrays of above          not supported yet
+  arrays of above          sys::List literal of above
 
 
 

@@ -29,4 +29,15 @@ public @interface TestAnnoC
 
   Class cls1()      default Object.class;
   Class cls2()      default Object.class;
+
+  boolean[] bools()     default {};
+  int[] ints()          default {};
+  long[] longs()        default {};
+  float[] floats()      default {};
+  double[] doubles()    default {};
+  byte[] bytes()        default {};
+  short[] shorts()      default {};
+  String[] strs()       default {};
+  ElementType[] enums() default {};
+  Class[] classes()     default {};
 }
