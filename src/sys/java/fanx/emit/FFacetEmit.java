@@ -115,16 +115,16 @@ class FFacetEmit
     info.u2(cls);
     info.u2(elems.length);
     for (int i=0; i<elems.length; ++i)
-      encodeElem(info, type, elems[i]);
+    {
+      Elem elem = elems[i];
+      info.u2(emit.utf(elem.name));   // element_name_index
+      encodeVal(info, elem);          // element_value_pairs
+    }
   }
 
-  private void encodeElem(Box info, FTypeRef type, Elem elem)
+  private void encodeVal(Box info, Elem elem)
     throws Exception
   {
-    // element_name_index
-    info.u2(emit.utf(elem.name));
-
-    // element_value_pairs
     Object v = elem.val;
     if (v instanceof String)  { encodeStr(info, elem);   return; }
     if (v instanceof Boolean) { encodeBool(info, elem);  return; }
@@ -132,7 +132,8 @@ class FFacetEmit
     if (v instanceof Double)  { encodeFloat(info, elem); return; }
     if (v instanceof Enum)    { encodeEnum(info, elem);  return; }
     if (v instanceof Type)    { encodeType(info, elem);  return; }
-    throw new RuntimeException("Unsupported annotation element type '" + type + "." + elem.name + "': " + elem.val.getClass().getName());
+    if (v instanceof List)    { encodeList(info, elem);  return; }
+    throw new RuntimeException("Unsupported annotation element type '" + curType + "." + elem.name + "': " + elem.val.getClass().getName());
   }
 
   private void encodeStr(Box info, Elem elem)
@@ -153,19 +154,18 @@ class FFacetEmit
     throws Exception
   {
     Long val = (Long)elem.val;
-    Class cls = curClassElemType(elem.name);
-
-    if (cls == int.class)
+    Class type = elem.type();
+    if (type == int.class)
     {
       info.u1('I');
       info.u2(emit.intConst(Integer.valueOf(val.intValue())));
     }
-    else if (cls == short.class)
+    else if (type == short.class)
     {
       info.u1('S');
       info.u2(emit.intConst(Integer.valueOf(val.intValue())));
     }
-    else if (cls == byte.class)
+    else if (type == byte.class)
     {
       info.u1('B');
       info.u2(emit.intConst(Integer.valueOf(val.intValue())));
@@ -181,16 +181,16 @@ class FFacetEmit
     throws Exception
   {
     Double val = (Double)elem.val;
-    Class cls = curClassElemType(elem.name);
-    if (cls == double.class)
-    {
-      info.u1('D');
-      info.u2(emit.doubleConst(val));
-    }
-    else
+    Class type = elem.type();
+    if (type == float.class)
     {
       info.u1('F');
       info.u2(emit.floatConst(Float.valueOf(val.floatValue())));
+    }
+    else
+    {
+      info.u1('D');
+      info.u2(emit.doubleConst(val));
     }
   }
 
@@ -211,22 +211,15 @@ class FFacetEmit
     info.u2(emit.utf(FanUtil.toJavaMemberSig(t)));
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Utils
-//////////////////////////////////////////////////////////////////////////
-
-  private Class curClassElemType(String name)
+  private void encodeList(Box info, Elem elem)
     throws Exception
   {
-    return curClass().getMethod(name, new Class[0]).getReturnType();
-  }
-
-  private Class curClass()
-    throws Exception
-  {
-    if (curClass == null)
-      curClass = Env.cur().loadJavaClass(curType.jname().replace("/", "."));
-    return curClass;
+    List list = (List)elem.val;
+    Class of = elem.type().getComponentType();
+    info.u1('[');
+    info.u2(list.sz());
+    for (int i=0; i<list.sz(); ++i)
+     encodeVal(info, new Elem(elem.name, list.get(i), of));
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -268,14 +261,36 @@ class FFacetEmit
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  Class curClass()
+    throws Exception
+  {
+    if (curClass == null)
+      curClass = Env.cur().loadJavaClass(curType.jname().replace("/", "."));
+    return curClass;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Elem
 //////////////////////////////////////////////////////////////////////////
 
-  static class Elem
+  class Elem
   {
-    Elem(String name, Object val) { this.name = name; this.val = val; }
+    Elem(String n, Object v) { name = n; val = v; }
+    Elem(String n, Object v, Class t) { name = n; val = v; type = t; }
+
+    Class type() throws Exception
+    {
+      if (type == null)
+        type = curClass().getMethod(name, new Class[0]).getReturnType();
+      return type;
+    }
+
     String name;
     Object val;
+    Class type;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -284,10 +299,10 @@ class FFacetEmit
 
   static final Elem[] noElems = new Elem[0];
 
-  private final Emitter emit;
-  private final FPod pod;
-  private final FAttrs.FFacet[] facets;
-  private final int num;
-  private FTypeRef curType;
-  private Class curClass;
+  private final Emitter emit;       // class emitter
+  private final FPod pod;           // pod being emitted
+  private final FAttrs.FFacet[] facets; // all the facets (java and non-java)
+  private final int num;            // num of Java annotations in facets
+  private FTypeRef curType;         // current facet type
+  private Class curClass;           // current facet class
 }
