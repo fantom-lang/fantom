@@ -9,8 +9,10 @@ package fanx.emit;
 
 import java.lang.Enum;
 import java.util.*;
+import java.util.Map.Entry;
 import fan.sys.*;
 import fan.sys.List;
+import fan.sys.Map;
 import fanx.fcode.*;
 import fanx.serial.*;
 import fanx.util.*;
@@ -226,25 +228,25 @@ class FFacetEmit
 // Parsing
 //////////////////////////////////////////////////////////////////////////
 
-  private Elem[] parseElems(String val)
+  private Elem[] parseElems(String str)
     throws Exception
   {
-    if (val.length() == 0) return noElems;
+    // empty string is a marker annotation
+    if (str.length() == 0) return noElems;
 
-    // TODO: temp hack to parse serialized Fantom object
-    // without real Fantom type to use
-    ArrayList acc = new ArrayList();
-    val= val.substring(val.indexOf('{')+1, val.length()-2);
-    StringTokenizer st = new StringTokenizer(val, ";");
-    while (st.hasMoreTokens())
+    // Fantom compiler encodes FFI facets as map string name/value pairs
+    Map map = (Map)ObjDecoder.decode(str);
+    Elem[] acc = new Elem[map.sz()];
+    int n = 0;
+    Iterator it = map.pairsIterator();
+    while (it.hasNext())
     {
-      String pair = st.nextToken();
-      int eq = pair.indexOf('=');
-      String n  = pair.substring(0, eq);
-      String v = pair.substring(eq+1);
-      acc.add(new Elem(n, parseElemVal(n, v)));
+      Entry e = (Entry)it.next();
+      String name = (String)e.getKey();
+      Object val  = e.getValue();
+      acc[n++] = new Elem(name, val);
     }
-    return (Elem[])acc.toArray(new Elem[acc.size()]);
+    return acc;
   }
 
   private Object parseElemVal(String name, String val)

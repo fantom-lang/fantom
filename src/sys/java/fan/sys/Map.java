@@ -602,6 +602,8 @@ public final class Map
 // Java
 //////////////////////////////////////////////////////////////////////////
 
+  public int sz() { return map.size(); }
+
   public Iterator pairsIterator()
   {
     if (map instanceof CIHashMap)
