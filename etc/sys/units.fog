@@ -24,7 +24,7 @@ using sys::Unit
   Unit("power_factor; pf"),
   Unit("pH"),
   Unit("percent_relative_humidity; %RH"),
-  Unit("grams_of_water_per_kilogram_dry_air; gH20/kgAir"),
+  Unit("grams_of_water_per_kilogram_dry_air; gH\u2082O/kgAir"),
   Unit("volts_per_degree_kelvin; V/K"),
   Unit("degree_days_celsius; ºdaysC"),
   Unit("degree_days_fahrenheit; ºdaysF"),
@@ -63,7 +63,7 @@ using sys::Unit
 // angular momentum (kg1*m2*sec-1)
 [
   "angular momentum",
-  Unit("joule_second; J-s; kg1*m2*sec-1"),
+  Unit("joule_second; Js; kg1*m2*sec-1"),
 ],
 
 // angular velocity (sec-1)
@@ -157,7 +157,7 @@ using sys::Unit
 // electrical resistivity (kg1*m3*sec-3*A-2)
 [
   "electrical resistivity",
-  Unit("ohm_meter; Ω-m; kg1*m3*sec-3*A-2"),
+  Unit("ohm_meter; Ωm; kg1*m3*sec-3*A-2"),
 ],
 
 // energy (kg1*m2*sec-2)
@@ -165,42 +165,42 @@ using sys::Unit
   "energy",
   Unit("joule; J; kg1*m2*sec-2"),
   Unit("kilojoule; kJ; kg1*m2*sec-2; 1000.0"),
-  Unit("watt_hour; W-hr; kg1*m2*sec-2; 3600.0"),
-  Unit("kilowatt_hour; kW-hr; kg1*m2*sec-2; 3600000.0"),
-  Unit("megawatt_hour; MW-hr; kg1*m2*sec-2; 3.6E9"),
+  Unit("watt_hour; Wh; kg1*m2*sec-2; 3600.0"),
+  Unit("kilowatt_hour; kWh; kg1*m2*sec-2; 3600000.0"),
+  Unit("megawatt_hour; MWh; kg1*m2*sec-2; 3.6E9"),
   Unit("btu; BTU; kg1*m2*sec-2; 1054.852"),
   Unit("kilobtu; kBTU; kg1*m2*sec-2; 1054852.0"),
   Unit("megabtu; MBTU; kg1*m2*sec-2; 1.054852E9"),
-  Unit("horsepower_hour; hp-hr; kg1*m2*sec-2; 2686088.6"),
+  Unit("horsepower_hour; hph; kg1*m2*sec-2; 2686088.6"),
   Unit("calorie; cal; kg1*m2*sec-2; 4.184"),
   Unit("therm; ; kg1*m2*sec-2; 1.05506E8"),
-  Unit("tons_refrigeration_hour; tR-hr; kg1*m2*sec-2; 1.26606708E7"),
+  Unit("tons_refrigeration_hour; tonrefh; kg1*m2*sec-2; 1.26606708E7"),
   Unit("megajoule; MJ; kg1*m2*sec-2; 1000000.0"),
-  Unit("newton_meter; N-m; kg1*m2*sec-2"),
+  Unit("newton_meter; Nm; kg1*m2*sec-2"),
 ],
 
 // apparent energy (kg1*m2*sec-2)
 [
   "apparent energy",
-  Unit("volt_ampere_hour; VA-hr; kg1*m2*sec-2; 3600.0"),
-  Unit("kilovolt_ampere_hour; kVA-hr; kg1*m2*sec-2; 3600000.0"),
-  Unit("megavolt_ampere_hour; MVA-hr; kg1*m2*sec-2; 3.6E9"),
+  Unit("volt_ampere_hour; VAh; kg1*m2*sec-2; 3600.0"),
+  Unit("kilovolt_ampere_hour; kVAh; kg1*m2*sec-2; 3600000.0"),
+  Unit("megavolt_ampere_hour; MVAh; kg1*m2*sec-2; 3.6E9"),
 ],
 
 // reactive energy (kg1*m2*sec-2)
 [
   "reactive energy",
-  Unit("volt_ampere_reactive_hour; VAR-hr; kg1*m2*sec-2; 3600.0"),
-  Unit("kilovolt_ampere_reactive_hour; kVAR-hr; kg1*m2*sec-2; 3600000.0"),
-  Unit("megavolt_ampere_reactive_hour; MVAR-hr; kg1*m2*sec-2; 3.6E9"),
+  Unit("volt_ampere_reactive_hour; VARh; kg1*m2*sec-2; 3600.0"),
+  Unit("kilovolt_ampere_reactive_hour; kVARh; kg1*m2*sec-2; 3600000.0"),
+  Unit("megavolt_ampere_reactive_hour; MVARh; kg1*m2*sec-2; 3.6E9"),
 ],
 
 // energy consumption (kg1*sec-2)
 [
   "energy consumption",
   Unit("joules_per_square_meter; J/m²; kg1*sec-2"),
-  Unit("kilowatt_hours_per_square_meter; kW-hr/m²; kg1*sec-2; 3600000.0"),
-  Unit("kilowatt_hours_per_square_foot; kW-hr/ft²; kg1*sec-2; 3.8750077500155E7"),
+  Unit("kilowatt_hours_per_square_meter; kWh/m²; kg1*sec-2; 3600000.0"),
+  Unit("kilowatt_hours_per_square_foot; kWh/ft²; kg1*sec-2; 3.8750077500155E7"),
   Unit("megajoules_per_square_meter; MJ/m²; kg1*sec-2; 1000000.0"),
   Unit("megajoules_per_square_foot; MJ/ft²; kg1*sec-2; 1.076391041671E7"),
   Unit("newtons_per_meter; N/m; kg1*sec-2"),
@@ -240,7 +240,7 @@ using sys::Unit
   Unit("megahertz; MHz; sec-1; 1000000.0"),
   Unit("per_minute; /min; sec-1; 0.016666666666666666"),
   Unit("per_second; /s; sec-1"),
-  Unit("per_hour; /hr; sec-1; 2.777777777777778E-4"),
+  Unit("per_hour; /h; sec-1; 2.777777777777778E-4"),
   Unit("percent_per_second; %/s; sec-1"),
 ],
 
@@ -255,11 +255,11 @@ using sys::Unit
 [
   "heating rate",
   Unit("degrees_kelvin_per_second; K/s; sec-1*K1"),
-  Unit("degrees_celsius_per_hour; ºC/hr; sec-1*K1; 2.777777777777778E-4"),
+  Unit("degrees_celsius_per_hour; ºC/h; sec-1*K1; 2.777777777777778E-4"),
   Unit("degrees_celsius_per_minute; ºC/min; sec-1*K1; 0.016666666666666666"),
-  Unit("degrees_fahrenheit_per_hour; ºF/hr; sec-1*K1; 1.5432098765432E-4"),
+  Unit("degrees_fahrenheit_per_hour; ºF/h; sec-1*K1; 1.5432098765432E-4"),
   Unit("degrees_fahrenheit_per_minute; ºF/min; sec-1*K1; 0.0092592592592593"),
-  Unit("degrees_kelvin_per_hour; K/hr; sec-1*K1; 2.777777777777778E-4"),
+  Unit("degrees_kelvin_per_hour; K/h; sec-1*K1; 2.777777777777778E-4"),
   Unit("degrees_kelvin_per_minute; K/min; sec-1*K1; 0.016666666666666666"),
 ],
 
@@ -345,19 +345,19 @@ using sys::Unit
   "mass flow",
   Unit("kilograms_per_second; kg/s; kg1*sec-1"),
   Unit("kilograms_per_minute; kg/min; kg1*sec-1; 0.016666666666666666"),
-  Unit("kilograms_per_hour; kg/hr; kg1*sec-1; 2.777777777777778E-4"),
+  Unit("kilograms_per_hour; kg/h; kg1*sec-1; 2.777777777777778E-4"),
   Unit("pounds_per_minute; lb/min; kg1*sec-1; 0.007559872833333333"),
-  Unit("pounds_per_hour; lb/hr; kg1*sec-1; 1.2599788055555556E-4"),
+  Unit("pounds_per_hour; lb/h; kg1*sec-1; 1.2599788055555556E-4"),
   Unit("pounds_per_second; lb/s; kg1*sec-1; 0.45359237"),
   Unit("grams_per_second; g/s; kg1*sec-1; 0.0010"),
   Unit("grams_per_minute; g/min; kg1*sec-1; 1.6666666666666667E-5"),
-  Unit("metric_tons_per_hour; ton/hr; kg1*sec-1; 0.2777777777777778"),
+  Unit("metric_tons_per_hour; ton/h; kg1*sec-1; 0.2777777777777778"),
 ],
 
 // momentum (kg1*m1*sec-1)
 [
   "momentum",
-  Unit("newton_second; N-s; kg1*m1*sec-1"),
+  Unit("newton_second; Ns; kg1*m1*sec-1"),
 ],
 
 // power (kg1*m2*sec-3)
@@ -368,11 +368,11 @@ using sys::Unit
   Unit("kilowatt; kW; kg1*m2*sec-3; 1000.0"),
   Unit("megawatt; MW; kg1*m2*sec-3; 1000000.0"),
   Unit("gigawatt; GW; kg1*m2*sec-3; 1.0E9"),
-  Unit("btus_per_hour; BTU/hr; kg1*m2*sec-3; 0.292875"),
+  Unit("btus_per_hour; BTU/h; kg1*m2*sec-3; 0.292875"),
   Unit("horsepower; hp; kg1*m2*sec-3; 745.7"),
-  Unit("foot_pounds_per_second; ft-lbs/sec; kg1*m2*sec-3; 1.355818"),
-  Unit("tons_refrigeration; tR; kg1*m2*sec-3; 3516.853"),
-  Unit("kilobtus_per_hour; kBTU/hr; kg1*m2*sec-3; 293.07107017222"),
+  Unit("foot_pounds_per_second; ftlbs/sec; kg1*m2*sec-3; 1.355818"),
+  Unit("tons_refrigeration; tonref; kg1*m2*sec-3; 3516.853"),
+  Unit("kilobtus_per_hour; kBTU/h; kg1*m2*sec-3; 293.07107017222"),
 ],
 
 // apparent power (kg1*m2*sec-3)
@@ -464,7 +464,7 @@ using sys::Unit
   Unit("tenths_second; ds; sec1; 0.1"),
   Unit("second; s; sec1"),
   Unit("minute; min; sec1; 60.0"),
-  Unit("hour; hr; sec1; 3600.0"),
+  Unit("hour; h; sec1; 3600.0"),
   Unit("day; ; sec1; 86400.0"),
   Unit("week; wk; sec1; 604800.0"),
   Unit("julian_month; mo; sec1; 2629800.0"),
