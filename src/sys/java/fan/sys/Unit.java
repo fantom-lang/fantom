@@ -104,40 +104,37 @@ public final class Unit
     catch (Throwable e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Unit", str).val;
+      String msg = str;
+      if (e instanceof ParseErr.Val) msg += ": " + ((ParseErr.Val)e).err.msg();
+      throw ParseErr.make("Unit", msg).val;
     }
     return define(unit);
   }
 
   /**
    * Parse an un-interned unit:
-   *   unit := <name> [";" <symbol> [";" <dim> [";" <scale> [";" <offset>]]]]
+   *   unit := <ids> [";" <dim> [";" <scale> [";" <offset>]]]
    */
   private static Unit parseUnit(String s)
   {
-    String name = s;
+    String idStrs = s;
     int c = s.indexOf(';');
-    if (c < 0) return new Unit(name, name, dimensionless, 1, 0);
+    if (c > 0) idStrs = s.substring(0, c);
+    List ids = FanStr.split(idStrs, Long.valueOf(','));
+    if (c < 0) return new Unit(ids, dimensionless, 1, 0);
 
-    name = s.substring(0, c).trim();
-    String symbol = s = s.substring(c+1).trim();
-    c = s.indexOf(';');
-    if (c < 0) return new Unit(name, symbol, dimensionless, 1, 0);
-
-    symbol = s.substring(0, c).trim();
-    if (symbol.length() == 0) symbol = name;
     String dim = s = s.substring(c+1).trim();
     c = s.indexOf(';');
-    if (c < 0) return new Unit(name, symbol, parseDim(dim), 1, 0);
+    if (c < 0) return new Unit(ids, parseDim(dim), 1, 0);
 
     dim = s.substring(0, c).trim();
     String scale = s = s.substring(c+1).trim();
     c = s.indexOf(';');
-    if (c < 0) return new Unit(name, symbol, parseDim(dim), Double.parseDouble(scale), 0);
+    if (c < 0) return new Unit(ids, parseDim(dim), Double.parseDouble(scale), 0);
 
     scale = s.substring(0, c).trim();
     String offset = s.substring(c+1).trim();
-    return new Unit(name, symbol, parseDim(dim), Double.parseDouble(scale), Double.parseDouble(offset));
+    return new Unit(ids, parseDim(dim), Double.parseDouble(scale), Double.parseDouble(offset));
   }
 
   /**
@@ -164,7 +161,7 @@ public final class Unit
       if (r.startsWith("K"))   { dim.K   = Byte.parseByte(r.substring(1).trim()); continue; }
       if (r.startsWith("A"))   { dim.A   = Byte.parseByte(r.substring(1).trim()); continue; }
       if (r.startsWith("cd"))  { dim.cd  = Byte.parseByte(r.substring(2).trim()); continue; }
-      throw new RuntimeException("Bad ratio '" + r + "'");
+      throw ParseErr.make("Bad ratio '" + r + "'").val;
     }
 
     // intern
@@ -189,19 +186,27 @@ public final class Unit
   {
     synchronized (units)
     {
-      // lookup by name
-      Unit existing = (Unit)units.get(unit.name);
-
-      // if we have an existing check if compatible
-      if (existing != null)
+      // lookup by one of its ids
+      for (int i=0; i<unit.ids.sz(); ++i)
       {
-        if (!existing.isCompatibleDefinition(unit))
-          throw Err.make("Attempt to define incompatible units: " + existing + " != " + unit).val;
-        return existing;
+        String id = (String)unit.ids.get(i);
+
+        // if we have an existing check if compatible
+        Unit existing = (Unit)units.get(id);
+        if (existing != null)
+        {
+          if (!existing.isCompatibleDefinition(unit))
+            throw Err.make("Attempt to define incompatible units: " + existing + " != " + unit).val;
+          return existing;
+        }
       }
 
       // this is a new definition
-      units.put(unit.name, unit);
+      for (int i=0; i<unit.ids.sz(); ++i)
+      {
+        String id = (String)unit.ids.get(i);
+        units.put(id, unit);
+      }
       return unit;
     }
   }
@@ -213,7 +218,7 @@ public final class Unit
    */
   private boolean isCompatibleDefinition(Unit x)
   {
-    return symbol.equals(x.symbol) &&
+    return ids.equals(x.ids) &&
            dim == x.dim &&
            FanFloat.approx(scale, x.scale) &&
            FanFloat.approx(offset, x.offset);
@@ -222,13 +227,30 @@ public final class Unit
   /**
    * Private constructor.
    */
-  private Unit(String name, String symbol, Dimension dim, double scale, double offset)
+  private Unit(List ids, Dimension dim, double scale, double offset)
   {
-    this.name   = name;
-    this.symbol = symbol;
+    this.ids    = checkIds(ids);
     this.dim    = dim;
     this.scale  = scale;
     this.offset = offset;
+  }
+
+  static List checkIds(List ids)
+  {
+    if (ids.sz() == 0) throw ParseErr.make("No unit ids defined").val;
+    for (int i=0; i<ids.sz(); ++i) checkId((String)ids.get(i));
+    return (List)ids.toImmutable();
+  }
+
+  static void checkId(String id)
+  {
+    if (id.length() == 0) throw ParseErr.make("Invalid unit id length 0").val;
+    for (int i=0; i<id.length(); ++i)
+    {
+      int c = id.charAt(i);
+      if (FanInt.isAlpha(c) || c == '_' || c == '%' || c == '/' || c > 128) continue;
+      throw ParseErr.make("Invalid unit id " + id + " (invalid char '" + (char)c + "')").val;
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -248,8 +270,11 @@ public final class Unit
     if (str == null)
     {
       StringBuilder s = new StringBuilder();
-      s.append(name);
-      s.append("; ").append(symbol);
+      for (int i=0; i<ids.sz(); ++i)
+      {
+        if (i > 0) s.append(", ");
+        s.append(ids.get(i));
+      }
       if (dim != dimensionless)
       {
         s.append("; ").append(dim);
@@ -264,9 +289,11 @@ public final class Unit
     return str;
   }
 
-  public final String name() { return name; }
+  public final List ids() { return ids; }
 
-  public final String symbol() { return symbol; }
+  public final String name() { return (String)ids.first(); }
+
+  public final String symbol() { return (String)ids.last(); }
 
   public final double scale() { return scale; }
 
@@ -355,8 +382,7 @@ public final class Unit
     quantityNames = loadDatabase();
   }
 
-  private final String name;
-  private final String symbol;
+  private final List ids;
   private final double scale;
   private final double offset;
   private final Dimension dim;
