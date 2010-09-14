@@ -300,15 +300,15 @@ fan.fwt.WidgetPeer.setBg = function(elem, brush)
     var angle = "-90deg";
 
     // build pos
-    std += brush.m_x1 + brush.m_x1Unit.m_symbol + " " +
-           brush.m_y1 + brush.m_y1Unit.m_symbol + " " +
+    std += brush.m_x1 + brush.m_x1Unit.symbol() + " " +
+           brush.m_y1 + brush.m_y1Unit.symbol() + " " +
            angle;
 
     // try to find end-point
-    webkit = brush.m_x1 + brush.m_x1Unit.m_symbol + " " +
-             brush.m_y1 + brush.m_y1Unit.m_symbol + "," +
-             brush.m_x2 + brush.m_x2Unit.m_symbol + " " +
-             brush.m_y2 + brush.m_y2Unit.m_symbol;
+    webkit = brush.m_x1 + brush.m_x1Unit.symbol() + " " +
+             brush.m_y1 + brush.m_y1Unit.symbol() + "," +
+             brush.m_x2 + brush.m_x2Unit.symbol() + " " +
+             brush.m_y2 + brush.m_y2Unit.symbol();
 
     // build stops
     var stops = brush.m_stops;
