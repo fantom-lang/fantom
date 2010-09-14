@@ -304,6 +304,7 @@ mixin CType
     //   - check if any one of the types is nullable
     //   - check if any of the types is a parameterized generic
     //   - normalize our types to non-nullable
+    mixins := false
     nullable := false
     parameterized := false
     types = types.dup
@@ -311,14 +312,19 @@ mixin CType
     {
       if (t.isParameterized) parameterized = true
       if (t.isNullable) nullable = true
+      if (t.isMixin) mixins = true
       types[i] = t.toNonNullable
     }
 
     // if any one of the items is parameterized then we handle it
     // specially, otherwise we find the most common class
-    best := parameterized ?
-            commonParameterized(ns, types) :
-            commonClass(ns, types)
+    CType? best
+    if (parameterized)
+      best = commonParameterized(ns, types)
+    else if (mixins)
+      best = commonMixin(ns, types)
+    else
+      best = commonClass(ns, types)
 
     // if any one of the items was nullable, then whole result is nullable
     return nullable ? best.toNullable : best
@@ -338,6 +344,14 @@ mixin CType
       }
     }
     return best
+  }
+
+  private static CType commonMixin(CNamespace ns, CType[] types)
+  {
+    // mixins must all be same type or else we fallback to Obj
+    first := types[0]
+    allSame := types.all |t| { t == first }
+    return allSame ? first : ns.objType
   }
 
   private static CType commonParameterized(CNamespace ns, CType[] types)
