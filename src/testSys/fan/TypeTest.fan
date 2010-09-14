@@ -308,8 +308,15 @@ class TypeTest : Test
     verifyEq([c, b, b].typeof,  TiB[]#)
     verifyEq([cn, b, b].typeof, TiB?[]#)
     verifyEq([b, c, bn].typeof, TiB?[]#)
+
     verifyEq([b, c, m].typeof,  Obj[]#)
     verifyEq([c, mn, c].typeof, Obj?[]#)
+    verifyEq([m, m].typeof,     TiM[]#)
+    verifyEq([m, mn].typeof,    TiM?[]#)
+    verifyEq([mn, m].typeof,    TiM?[]#)
+    verifyEq([m, on].typeof,    Obj?[]#)
+    verifyEq([on, m].typeof,    Obj?[]#)
+    verifyEq([on, on].typeof,   TiO?[]#)
 
     verifyEq([[2], [3]].typeof,   Int[][]#)
     verifyEq([[2f], [3]].typeof,  Num[][]#)
@@ -358,6 +365,7 @@ class TypeTest : Test
   private TiC? cn()  { TiC() }
   private TiM  m()   { TiC() }
   private TiM? mn()  { TiC() }
+  private TiO? on()  { null }
   private |->Int| func1()   { |->Int| {3} }
   private |->Int|? func1n() { |->Int| {3} }
   private |->Num| func2()   { |->Num| {3} }
@@ -371,4 +379,5 @@ internal class TiA {}
 internal class TiB : TiA, TiM {}
 internal class TiC : TiB {}
 internal mixin TiM {}
+internal mixin TiO : TiM {}
 
