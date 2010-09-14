@@ -227,7 +227,7 @@ using sys::Unit
 [
   "force",
   Unit("newton; N; kg1*m1*sec-2"),
-  Unit("pound_force; lb; kg1*m1*sec-2; 4.448222"),
+  Unit("pound_force; lbf; kg1*m1*sec-2; 4.448222"),
 ],
 
 // frequency (sec-1)
@@ -260,7 +260,7 @@ using sys::Unit
   Unit("degrees_fahrenheit_per_hour; ºF/hr; sec-1*K1; 1.5432098765432E-4"),
   Unit("degrees_fahrenheit_per_minute; ºF/min; sec-1*K1; 0.0092592592592593"),
   Unit("degrees_kelvin_per_hour; K/hr; sec-1*K1; 2.777777777777778E-4"),
-  Unit("degrees_kelvin_per_minute; ºC/min; sec-1*K1; 0.016666666666666666"),
+  Unit("degrees_kelvin_per_minute; K/min; sec-1*K1; 0.016666666666666666"),
 ],
 
 // illuminance (m-2*cd1)
@@ -399,11 +399,11 @@ using sys::Unit
   Unit("bar; ; kg1*m-1*sec-2; 100000.0"),
   Unit("atmosphere; atm; kg1*m-1*sec-2; 101317.1"),
   Unit("pounds_per_square_inch; psi; kg1*m-1*sec-2; 6894.73"),
-  Unit("centimeters_of_water; cm/wc; kg1*m-1*sec-2; 98.0665"),
-  Unit("inches_of_water; in/wc; kg1*m-1*sec-2; 248.84"),
-  Unit("millimeters_of_mercury; mm Hg; kg1*m-1*sec-2; 133.322368421"),
-  Unit("centimeters_of_mercury; cm Hg; kg1*m-1*sec-2; 1333.22368421"),
-  Unit("inches_of_mercury; in Hg; kg1*m-1*sec-2; 3386.38815789"),
+  Unit("centimeters_of_water; cmH\u2082O; kg1*m-1*sec-2; 98.0665"),
+  Unit("inches_of_water; inH\u2082O; kg1*m-1*sec-2; 248.84"),
+  Unit("millimeters_of_mercury; mmHg; kg1*m-1*sec-2; 133.322368421"),
+  Unit("centimeters_of_mercury; cmHg; kg1*m-1*sec-2; 1333.22368421"),
+  Unit("inches_of_mercury; inHg; kg1*m-1*sec-2; 3386.38815789"),
   Unit("hectopascal; hPa; kg1*m-1*sec-2; 100.0"),
   Unit("millibar; mbar; kg1*m-1*sec-2; 100.0"),
 ],
@@ -412,12 +412,12 @@ using sys::Unit
 [
   "specific energy",
   Unit("joules_per_kilogram; J/kg; m2*sec-2"),
-  Unit("joules_per_kilogram_dry_air; J/kg; m2*sec-2"),
+  Unit("joules_per_kilogram_dry_air; J/kg_dry; m2*sec-2"),
   Unit("btus_per_pound; btu/lb; m2*sec-2; 2326.0"),
-  Unit("btus_per_pound_dry_air; btu/lb; m2*sec-2; 2326.0"),
+  Unit("btus_per_pound_dry_air; btu/lb_dry; m2*sec-2; 2326.0"),
   Unit("kilojoules_per_kilogram; kJ/kg; m2*sec-2; 1000.0"),
-  Unit("kilojoules_per_kilogram_dry_air; kJ/kg; m2*sec-2; 1000.0"),
-  Unit("megajoules_per_kilogram_dry_air; MJ/kg; m2*sec-2; 1000000.0"),
+  Unit("kilojoules_per_kilogram_dry_air; kJ/kg_dry; m2*sec-2; 1000.0"),
+  Unit("megajoules_per_kilogram_dry_air; MJ/kg_dry; m2*sec-2; 1000000.0"),
 ],
 
 // specific entropy (m2*sec-2*K-1)
@@ -479,7 +479,7 @@ using sys::Unit
   Unit("kilometers_per_hour; km/hr; m1*sec-1; 0.277778"),
   Unit("miles_per_hour; mph; m1*sec-1; 0.447027"),
   Unit("feet_per_second; ft/s; m1*sec-1; 0.3048"),
-  Unit("feet_per_minute; ft/s; m1*sec-1; 0.00508"),
+  Unit("feet_per_minute; ft/min; m1*sec-1; 0.00508"),
   Unit("millimeters_per_second; mm/s; m1*sec-1; 0.0010"),
   Unit("millimeters_per_minute; mm/min; m1*sec-1; 1.6666666666666667E-5"),
   Unit("meters_per_minute; m/min; m1*sec-1; 0.016666666666666666"),
@@ -501,7 +501,7 @@ using sys::Unit
   Unit("gallon; gal; m3; 0.003785"),
   Unit("quart; qt; m3; 9.46E-4"),
   Unit("pint; pt; m3; 4.73E-4"),
-  Unit("fluid_ounce; fl oz; m3; 2.95729E-5"),
+  Unit("fluid_ounce; fl_oz; m3; 2.95729E-5"),
   Unit("imperial_gallon; galUK; m3; 0.004546092"),
 ],
 
