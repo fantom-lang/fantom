@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.56 (working)*
+- Redesign Unit to be keyed by arbitrary ids list including symbols
+
 *Build 1.0.55 (13 Sep 2010)*
 - Enhance DateTime/Time pattern for AM/PM
 - dom: Win.sessionStore, Win.localStore, Doc.title

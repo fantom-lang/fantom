@@ -19,44 +19,56 @@ class UnitTest : Test
 
   Void testParse()
   {
-    verifyParse("test_1;t1;kg2*m-3;33;100",
-      "test_1", "t1", ["kg":2, "m":-3], 33f, 100f)
+    verifyParse("test_one,tone;kg2*m-3;33;100",
+      ["test_one", "tone"], ["kg":2, "m":-3], 33f, 100f)
 
-    verifyParse("test_2 ; t2 ;  kg1 * m 2 * sec3*K4*A5*mol6*cd7 ; -99 ;  -77",
-      "test_2", "t2", ["kg":1, "m":2, "sec":3, "K":4, "A":5, "mol":6, "cd":7], -99f, -77f)
+    verifyParse("test_two , ttwo ;  kg1 * m 2 * sec3*K4*A5*mol6*cd7 ; -99 ;  -77",
+      ["test_two", "ttwo"], ["kg":1, "m":2, "sec":3, "K":4, "A":5, "mol":6, "cd":7], -99f, -77f)
 
-    verifyParse("test_3; t3; sec1; 1E10",
-      "test_3", "t3", ["sec":1], 1E10f, 0f)
+    verifyParse("test_three, tthree; sec1; 1E10",
+      ["test_three", "tthree"], ["sec":1], 1E10f, 0f)
 
-    verifyParse("test_4; t4; m-9",
-      "test_4", "t4", ["m":-9], 1f, 0f)
+    verifyParse("test_four, tfour; m-9",
+      ["test_four", "tfour"], ["m":-9], 1f, 0f)
 
-    verifyParse("test_5; t5",
-      "test_5", "t5", Str:Int[:], 1f, 0f)
+    verifyParse("test_five,test/five, testfive, tfive",
+      ["test_five", "test/five", "testfive", "tfive"], Str:Int[:], 1f, 0f)
 
-    verifyParse("test_6",
-      "test_6", "test_6", Str:Int[:], 1f, 0f)
+    verifyParse("test_six",
+      ["test_six"], Str:Int[:], 1f, 0f)
 
-    verifyParse("test_7;;kg2",
-      "test_7", "test_7", ["kg":2], 1f, 0f)
+    verifyParse("test_seven;kg2",
+      ["test_seven"], ["kg":2], 1f, 0f)
 
-    verifyErr(ParseErr#) { Unit("test_8;t8;foo2") }
-    verifyErr(ParseErr#) { Unit("test_8;t8;m2;xx") }
-    verifyErr(ParseErr#) { Unit("test_8;t8;m2;5;#") }
+    // bad identifiers
+    verifyErr(ParseErr#) { Unit(";kg22") }
+    verifyErr(ParseErr#) { Unit("test_bad,;kg22") }
+    verifyErr(ParseErr#) { Unit("test_bad,foo bar;kg22") }
+    verifyErr(ParseErr#) { Unit("test_bad,foo-bar;kg22") }
+    verifyErr(ParseErr#) { Unit("test_bad,foo+bar;kg22") }
+    verifyErr(ParseErr#) { Unit("test_bad,foo#bar;kg22") }
+    verifyErr(ParseErr#) { Unit("test_bad,foo(bar);kg22") }
 
-    verifyEq(Unit.find("test_8", false), null)
-    verifyErr(Err#) { Unit.find("test_8") }
-    verifyErr(Err#) { Unit.find("test_8", true) }
+    // bad dimensions/scales
+    verifyErr(ParseErr#) { Unit("test_bad,t8;foo2") }
+    verifyErr(ParseErr#) { Unit("test_bad,t8;m2;xx") }
+    verifyErr(ParseErr#) { Unit("test_bad,t8;m2;5;#") }
+
+    verifyEq(Unit.find("test_bad", false), null)
+    verifyErr(Err#) { Unit.find("test_bad") }
+    verifyErr(Err#) { Unit.find("test_bad", true) }
   }
 
-  Void verifyParse(Str s, Str n, Str sym, Str:Int dim, Float scale, Float offset := 0f)
+  Void verifyParse(Str s, Str[] ids, Str:Int dim, Float scale, Float offset := 0f)
   {
     // parse
     u := Unit(s)
 
     // verify identity
-    verifyEq(u.name, n)
-    verifyEq(u.symbol, sym)
+    verifyEq(u.ids.isImmutable, true)
+    verifyEq(u.ids, ids)
+    verifyEq(u.name, ids.first)
+    verifyEq(u.symbol, ids.last)
     verifyEq(u.scale, scale)
     verifyEq(u.offset, offset)
     verifyEq(u, u)
@@ -68,19 +80,19 @@ class UnitTest : Test
     // verify additional parses are interned
     verifySame(Unit(s), u)
     verifySame(Unit(s), u)
-    verifyErr(Err#) { Unit("$n; foobar") }
-    verifyErr(Err#) { Unit("$n; $sym; m-33*A33") }
+    verifyErr(Err#) { Unit("$ids.first, foobar") }
+    verifyErr(Err#) { Unit("$ids.last; m-33*A33") }
 
     // verify round trip
     verifySame(Unit(u.toStr), u)
 
     // verify dim ordering doesn't matter
     dimStr := dim.keys.sort.join("*") |Str k->Str| { return "$k${dim[k]}" }
-    verifySame(Unit("$n;$sym;$dimStr;$scale;$offset"), u)
+    verifySame(Unit(ids.join(",") + ";$dimStr;$scale;$offset"), u)
 
     // verify defined
     verify(Unit.list.contains(u))
-    verifySame(Unit.find(n), u)
+    ids.each |id| { verifySame(Unit.find(id), u) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -90,11 +102,14 @@ class UnitTest : Test
   Void testDatabase()
   {
     m := Unit.find("meter")
+    verifyEq(m.ids.isImmutable, true)
+    verifyEq(m.ids, ["meter", "m"])
     verifyEq(m.name, "meter")
     verifyEq(m.symbol, "m")
     verifyEq(m.m, 1)
 
-    m3 := Unit.find("cubic_meter")
+    m3 := Unit.find("m\u00b3")
+    verifyEq(m3.ids, ["cubic_meter", "m\u00b3"])
     verifyEq(m3.name, "cubic_meter")
     verifyEq(m3.symbol, "m\u00b3")
     verifyEq(m3.m, 3)

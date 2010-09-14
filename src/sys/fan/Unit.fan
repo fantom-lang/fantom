@@ -9,17 +9,30 @@
 **
 ** Unit models a unit of measurement.  Units are represented as:
 **
-**  - name: identifier for the unit within the VM.  Units are typically
-**    defined in the unit database "etc/sys/units.fog" or can be defined
-**    by the 'fromStr' method
+**  - ids: each unit has one or more unique identifiers for the unit
+**    within the VM.  Units are typically defined in the unit database
+**    "etc/sys/units.fog" or can be defined by the 'fromStr' method.
+**    Every id assigned to a unit must be unique within the VM.
 **
-**  - symbol: the abbreviated symbol - for example "kilogram" has
-**    the symbol "kg"
+**  - name: the first identifier in the ids list is called the *name*
+**    and should be a descriptive summary of the unit using words separated
+**    by underbar
+**
+**  - symbol: the last identifier in the ids list should be the
+**    abbreviated symbol; for example "kilogram" has the symbol "kg".
+**    In units with only one id, the symbol is the same as the name.
 **
 **  - dimension: defines the ratio of the seven SI base units: m, kg,
 **    sec, A, K, mol, and cd
 **
 **  - scale/factor: defines the normalization equations for unit conversion
+**
+** A unit identifier is limited to the following characters:
+**  - any Unicode char over 128
+**  - ASCII letters 'a'-'z' and 'A'-'Z'
+**  - underbar '_'
+**  - division sign'/'
+**  - percent sign '%'
 **
 ** Units with equal dimensions are considered to the measure the same
 ** physical quantity.  This is not always true, but good enough for
@@ -52,9 +65,10 @@ const class Unit
   ** and checked is false return null, otherwise throw ParseErr.
   ** The string format of a unit is:
   **
-  **   unit   := <name> [";" <symbol> [";" <dim> [";" <scale> [";" <offset>]]]]
-  **   name   := <str>
-  **   symbol := <str>
+  **   unit   := <ids> [";" <dim> [";" <scale> [";" <offset>]]]
+  **   names  := <ids> ("," <id>)*
+  **   id     := <idChar>*
+  **   idChar := 'a'-'z' | 'A'-'Z' | '_' | '%' | '/' | any char > 128
   **   dim    := <ratio> ["*" <ratio>]*   // no whitespace allowed
   **   ratio  := <base> <exp>
   **   base   := "kg" | "m" | "sec" | "K" | "A" | "mol" | "cd"
@@ -69,9 +83,10 @@ const class Unit
   static Unit? fromStr(Str s, Bool checked := true)
 
   **
-  ** Find a unit by its name if it has been defined in this VM.  If the
-  ** unit isn't defined yet and checked is false then return null, otherwise
-  ** throw Err.  Any units declared in "etc/sys/units.fog" are implicitly defined.
+  ** Find a unit by one of its identifiers if it has been defined in this
+  ** VM.  If the unit isn't defined yet and checked is false then return
+  ** null,otherwise throw Err.  Any units declared in "etc/sys/units.fog"
+  ** are implicitly defined.
   **
   static Unit? find(Str s, Bool checked := true)
 
@@ -118,13 +133,20 @@ const class Unit
   override Str toStr()
 
   **
-  ** Return the identifier of this unit.
+  ** Return the list of programatic identifiers for this unit.
+  ** The first item is always `name` and the last is always `symbol`.
+  **
+  Str[] ids()
+
+  **
+  ** Return the primary name identifier of this unit.
+  ** This is always the first item in `ids`.
   **
   Str name()
 
   **
-  ** Return the abbreviated symbol for this unit.  If the
-  ** symbol was not defined then return `name`.
+  ** Return the abbreviated symbol for this unit.
+  ** This is always the last item in `ids`.
   **
   Str symbol()
 
