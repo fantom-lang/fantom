@@ -112,7 +112,9 @@ fan.sys.Unit.fromStr = function(str, checked)
   catch (e)
   {
     if (!checked) return null;
-    throw fan.sys.ParseErr.make("Unit", str);
+    var msg = str;
+    if (e instanceof fan.sys.ParseErr) msg += ": " + e.m_msg;
+    throw fan.sys.ParseErr.make("Unit", msg);
   }
   return fan.sys.Unit.define(unit);
 }
@@ -123,29 +125,24 @@ fan.sys.Unit.fromStr = function(str, checked)
  */
 fan.sys.Unit.parseUnit = function(s)
 {
-  var name = s;
+  var idStrs = s;
   var c = s.indexOf(';');
-  if (c < 0) return fan.sys.Unit.make(name, name, fan.sys.Unit.m_dimensionless, fan.sys.Float.make(1), fan.sys.Float.make(0));
+  if (c > 0) idStrs = s.substring(0, c);
+  var ids = fan.sys.Str.split(idStrs, 44); // ','
+  if (c < 0) return fan.sys.Unit.make(ids, fan.sys.Unit.m_dimensionless, fan.sys.Float.make(1), fan.sys.Float.make(0));
 
-  name = fan.sys.Str.trim(s.substring(0, c));
-  var symbol = s = fan.sys.Str.trim(s.substring(c+1));
-  c = s.indexOf(';');
-  if (c < 0) return fan.sys.Unit.make(name, symbol, fan.sys.Unit.m_dimensionless, fan.sys.Float.make(1), fan.sys.Float.make(0));
-
-  symbol = fan.sys.Str.trim(s.substring(0, c));
-  if (symbol.length == 0) symbol = name;
   var dim = s = fan.sys.Str.trim(s.substring(c+1));
   c = s.indexOf(';');
-  if (c < 0) return fan.sys.Unit.make(name, symbol, fan.sys.Unit.parseDim(dim), fan.sys.Float.make(1), fan.sys.Float.make(0));
+  if (c < 0) return fan.sys.Unit.make(ids, fan.sys.Unit.parseDim(dim), fan.sys.Float.make(1), fan.sys.Float.make(0));
 
   dim = fan.sys.Str.trim(s.substring(0, c));
   var scale = s = fan.sys.Str.trim(s.substring(c+1));
   c = s.indexOf(';');
-  if (c < 0) return fan.sys.Unit.make(name, symbol, fan.sys.Unit.parseDim(dim), fan.sys.Float.fromStr(scale), fan.sys.Float.make(0));
+  if (c < 0) return fan.sys.Unit.make(ids, fan.sys.Unit.parseDim(dim), fan.sys.Float.fromStr(scale), fan.sys.Float.make(0));
 
   scale = fan.sys.Str.trim(s.substring(0, c));
   var offset = fan.sys.Str.trim(s.substring(c+1));
-  return fan.sys.Unit.make(name, symbol, fan.sys.Unit.parseDim(dim), fan.sys.Float.fromStr(scale), fan.sys.Float.fromStr(offset));
+  return fan.sys.Unit.make(ids, fan.sys.Unit.parseDim(dim), fan.sys.Float.fromStr(scale), fan.sys.Float.fromStr(offset));
 }
 
 /**
@@ -172,7 +169,7 @@ fan.sys.Unit.parseDim = function(s)
     if (fan.sys.Str.startsWith(r, "K"))   { dim.K   = fan.sys.Int.fromStr(fan.sys.Str.trim(r.substring(1))); continue; }
     if (fan.sys.Str.startsWith(r, "A"))   { dim.A   = fan.sys.Int.fromStr(fan.sys.Str.trim(r.substring(1))); continue; }
     if (fan.sys.Str.startsWith(r, "cd"))  { dim.cd  = fan.sys.Int.fromStr(fan.sys.Str.trim(r.substring(2))); continue; }
-    throw new Error("Bad ratio '" + r + "'");
+    throw fan.sys.ParseErr.make("Bad ratio '" + r + "'");
   }
 
   // intern
@@ -193,20 +190,28 @@ fan.sys.Unit.parseDim = function(s)
  */
 fan.sys.Unit.define = function(unit)
 {
-  // lookup by name
-  var existing = fan.sys.Unit.m_units[unit.m_name];
-
-  // if we have an existing check if compatible
-  if (existing != null)
+  // lookup by one of its ids
+  for (var i=0; i<unit.m_ids.size(); ++i)
   {
-    if (!existing.isCompatibleDefinition(unit))
-      throw fan.sys.Err.make("Attempt to define incompatible units: " + existing + " != " + unit);
-    return existing;
-  }
+    var id = unit.m_ids.get(i);
 
-  // this is a new definition
-  fan.sys.Unit.m_units[unit.m_name] = unit;
-  return unit;
+    // if we have an existing check if compatible
+    var existing = fan.sys.Unit.m_units[id];
+    if (existing != null)
+    {
+      if (!existing.isCompatibleDefinition(unit))
+        throw fan.sys.Err.make("Attempt to define incompatible units: " + existing + " != " + unit);
+      return existing;
+    }
+
+    // this is a new definition
+    for (var i=0; i<unit.m_ids.size(); ++i)
+    {
+      var id = unit.m_ids.get(i);
+      fan.sys.Unit.m_units[id] = unit;
+    }
+    return unit;
+  }
 }
 
 /**
@@ -224,7 +229,7 @@ println(" --3: " + (fan.sys.Float.approx(this.m_scale, x.m_scale)) + "  " + this
 println(" --4: " + (fan.sys.Float.approx(this.m_offset, x.m_offset)));
 */
 
-  return this.m_symbol == x.m_symbol &&
+  return this.m_ids.equals(x.m_ids) &&
          this.m_dim == x.m_dim &&
          fan.sys.Float.approx(this.m_scale, x.m_scale) &&
          fan.sys.Float.approx(this.m_offset, x.m_offset);
@@ -233,15 +238,33 @@ println(" --4: " + (fan.sys.Float.approx(this.m_offset, x.m_offset)));
 /**
  * Private constructor.
  */
-fan.sys.Unit.make = function(name, symbol, dim, scale, offset)
+fan.sys.Unit.make = function(ids, dim, scale, offset)
 {
   var instance = new fan.sys.Unit();
-  instance.m_name   = name;
-  instance.m_symbol = symbol;
+  instance.m_ids    = fan.sys.Unit.checkIds(ids);
   instance.m_dim    = dim;
   instance.m_scale  = scale;
   instance.m_offset = offset;
   return instance;
+}
+
+fan.sys.Unit.checkIds = function(ids)
+{
+  if (ids.size() == 0) throw fan.sys.ParseErr.make("No unit ids defined");
+  for (var i=0; i<ids.size(); ++i) fan.sys.Unit.checkId(ids.get(i));
+  return ids.toImmutable();
+}
+
+fan.sys.Unit.checkId = function(id)
+{
+  if (id.length == 0) throw fan.sys.ParseErr.make("Invalid unit id length 0");
+  for (var i=0; i<id.length; ++i)
+  {
+    var code = id.charCodeAt(i);
+    var ch   = id.charAt(i);
+    if (fan.sys.Int.isAlpha(code) || ch == '_' || ch == '%' || ch == '/' || code > 128) continue;
+    throw fan.sys.ParseErr.make("Invalid unit id " + id + " (invalid char '" + ch + "')");
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -259,8 +282,11 @@ fan.sys.Unit.prototype.toStr = function()
   if (this.m_str == null)
   {
     var s = "";
-    s += this.m_name;
-    s += "; " + this.m_symbol;
+    for (var i=0; i<this.m_ids.size(); ++i)
+    {
+      if (i > 0) s += ", ";
+      s += this.m_ids.get(i);
+    }
     if (this.m_dim != fan.sys.Unit.m_dimensionless)
     {
       s += "; " + this.m_dim;
@@ -275,9 +301,11 @@ fan.sys.Unit.prototype.toStr = function()
   return this.m_str;
 }
 
-fan.sys.Unit.prototype.name = function() { return this.m_name; }
+fan.sys.Unit.prototype.ids = function() { return this.m_ids; }
 
-fan.sys.Unit.prototype.symbol = function() { return this.m_symbol; }
+fan.sys.Unit.prototype.name = function() { return this.m_ids.first(); }
+
+fan.sys.Unit.prototype.symbol = function() { return this.m_ids.last(); }
 
 fan.sys.Unit.prototype.scale = function() { return this.m_scale; }
 
