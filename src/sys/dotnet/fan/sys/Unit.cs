@@ -115,29 +115,24 @@ namespace Fan.Sys
      */
     private static Unit parseUnit(string s)
     {
-      string name = s;
+      string idStrs = s;
       int c = s.IndexOf(';');
-      if (c < 0) return new Unit(name, name, m_dimensionless, 1, 0);
+      if (c > 0) idStrs = s.Substring(0, c);
+      List ids = FanStr.split(idStrs, Long.valueOf(','));
+      if (c < 0) return new Unit(ids, m_dimensionless, 1, 0);
 
-      name = s.Substring(0, c).Trim();
-      string symbol = s = s.Substring(c+1).Trim();
-      c = s.IndexOf(';');
-      if (c < 0) return new Unit(name, symbol, m_dimensionless, 1, 0);
-
-      symbol = s.Substring(0, c).Trim();
-      if (symbol.Length == 0) symbol = name;
       string dim = s = s.Substring(c+1).Trim();
       c = s.IndexOf(';');
-      if (c < 0) return new Unit(name, symbol, parseDim(dim), 1, 0);
+      if (c < 0) return new Unit(ids, parseDim(dim), 1, 0);
 
       dim = s.Substring(0, c).Trim();
       string scale = s = s.Substring(c+1).Trim();
       c = s.IndexOf(';');
-      if (c < 0) return new Unit(name, symbol, parseDim(dim), Double.parseDouble(scale), 0);
+      if (c < 0) return new Unit(ids, parseDim(dim), Double.parseDouble(scale), 0);
 
       scale = s.Substring(0, c).Trim();
       string offset = s.Substring(c+1).Trim();
-      return new Unit(name, symbol, parseDim(dim), Double.parseDouble(scale), Double.parseDouble(offset));
+      return new Unit(ids, parseDim(dim), Double.parseDouble(scale), Double.parseDouble(offset));
     }
 
     /**
@@ -189,19 +184,24 @@ namespace Fan.Sys
     {
       lock (m_units)
       {
-        // lookup by name
-        Unit existing = (Unit)m_units[unit.m_name];
-
-        // if we have an existing check if compatible
-        if (existing != null)
+        // lookup by its ids
+        for (int i=0; i<unit.m_ids.sz(); ++i)
         {
-          if (!existing.isCompatibleDefinition(unit))
-            throw Err.make("Attempt to define incompatible units: " + existing + " != " + unit).val;
-          return existing;
+          string id = (string)unit.m_ids.get(i);
+
+          // if we have an existing check if compatible
+          Unit existing = (Unit)m_units[id];
+          if (existing != null)
+          {
+            if (!existing.isCompatibleDefinition(unit))
+              throw Err.make("Attempt to define incompatible units: " + existing + " != " + unit).val;
+            return existing;
+          }
         }
 
         // this is a new definition
-        m_units[unit.m_name] = unit;
+        for (int i=0; i<unit.m_ids.sz(); ++i)
+           m_units[(string)unit.m_ids.get(i)] = unit;
         return unit;
       }
     }
@@ -213,7 +213,7 @@ namespace Fan.Sys
      */
     private bool isCompatibleDefinition(Unit x)
     {
-      return m_symbol.Equals(x.m_symbol) &&
+      return m_ids.Equals(x.m_ids) &&
              m_dim == x.m_dim &&
              FanFloat.approx(m_scale, x.m_scale) &&
              FanFloat.approx(m_offset, x.m_offset);
@@ -222,13 +222,30 @@ namespace Fan.Sys
     /**
      * Private constructor.
      */
-    private Unit(string name, string symbol, Dimension dim, double scale, double offset)
+    private Unit(List ids, Dimension dim, double scale, double offset)
     {
-      this.m_name   = name;
-      this.m_symbol = symbol;
+      this.m_ids    = checkIds(ids);
       this.m_dim    = dim;
       this.m_scale  = scale;
       this.m_offset = offset;
+    }
+
+    static List checkIds(List ids)
+    {
+      if (ids.sz() == 0) throw ParseErr.make("No unit ids defined").val;
+      for (int i=0; i<ids.sz(); ++i) checkId((string)ids.get(i));
+      return (List)ids.toImmutable();
+    }
+
+    static void checkId(string id)
+    {
+      if (id.Length == 0) throw ParseErr.make("Invalid unit id length 0").val;
+      for (int i=0; i<id.Length; ++i)
+      {
+        int c = id[i];
+        if (FanInt.isAlpha(c) || c == '_' || c == '%' || c == '/' || c > 128) continue;
+        throw ParseErr.make("Invalid unit id " + id + " (invalid char '" + (char)c + "')").val;
+      }
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -248,8 +265,11 @@ namespace Fan.Sys
       if (m_str == null)
       {
         StringBuilder s = new StringBuilder();
-        s.Append(m_name);
-        s.Append("; ").Append(m_symbol);
+        for (int i=0; i<m_ids.sz(); ++i)
+        {
+          if (i > 0) s.Append(", ");
+          s.Append((string)m_ids.get(i));
+        }
         if (m_dim != m_dimensionless)
         {
           s.Append("; ").Append(m_dim);
@@ -264,9 +284,11 @@ namespace Fan.Sys
       return m_str;
     }
 
-    public string name() { return m_name; }
+    public List ids() { return m_ids; }
 
-    public string symbol() { return m_symbol; }
+    public string name() { return (string)m_ids.first(); }
+
+    public string symbol() { return (string)m_ids.last(); }
 
     public double scale() { return m_scale; }
 
@@ -355,8 +377,7 @@ namespace Fan.Sys
       m_quantityNames = loadDatabase();
     }
 
-    private readonly string m_name;
-    private readonly string m_symbol;
+    private readonly List m_ids;
     private readonly double m_scale;
     private readonly double m_offset;
     private readonly Dimension m_dim;
