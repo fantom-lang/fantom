@@ -234,7 +234,7 @@ const class Gradient : Brush
     try
       return Unit.find(name)
     catch (Err e)
-      return Unit.fromStr("$name;$symbol")
+      return Unit.fromStr("$name,$symbol")
   }
 
   ** white 0% to black 100%
