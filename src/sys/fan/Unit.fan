@@ -4,6 +4,7 @@
 //
 // History:
 //   19 Dec 08  Brian Frank  Creation
+//   15 Sep 10  Brian Frank  Significant rework of API
 //
 
 **
@@ -11,16 +12,18 @@
 **
 **  - ids: each unit has one or more unique identifiers for the unit
 **    within the VM.  Units are typically defined in the unit database
-**    "etc/sys/units.fog" or can be defined by the 'fromStr' method.
+**    "etc/sys/units.txt" or can be via by the `define` method.
 **    Every id assigned to a unit must be unique within the VM.
 **
 **  - name: the first identifier in the ids list is called the *name*
 **    and should be a descriptive summary of the unit using words separated
-**    by underbar
+**    by underbar such as "miles_per_hour".
 **
 **  - symbol: the last identifier in the ids list should be the
 **    abbreviated symbol; for example "kilogram" has the symbol "kg".
 **    In units with only one id, the symbol is the same as the name.
+**    Units with exponents should use Unicode superscript chars, not
+**    ASCII digits.
 **
 **  - dimension: defines the ratio of the seven SI base units: m, kg,
 **    sec, A, K, mol, and cd
@@ -57,13 +60,12 @@ const class Unit
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Construction
+// Unit Database
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Parse the string format of a Unit instance.  If invalid format
-  ** and checked is false return null, otherwise throw ParseErr.
-  ** The string format of a unit is:
+  ** Define a new Unit definition in the VM's unit database
+  ** using the following string format:
   **
   **   unit   := <ids> [";" <dim> [";" <scale> [";" <offset>]]]
   **   names  := <ids> ("," <id>)*
@@ -76,29 +78,28 @@ const class Unit
   **   scale  := <float>
   **   offset := <float>
   **
-  ** If the unit is not defined yet, this method defines the unit for the VM.
-  ** If a compatible unit is already defined by the name then it is returned.  If an
-  ** incompatible unit is already defined by the name then Err is thrown.
+  ** If the format is incorrect or any identifiers are already
+  ** defined then throw an exception.
   **
-  static Unit? fromStr(Str s, Bool checked := true)
+  static Unit define(Str s)
 
   **
   ** Find a unit by one of its identifiers if it has been defined in this
   ** VM.  If the unit isn't defined yet and checked is false then return
-  ** null,otherwise throw Err.  Any units declared in "etc/sys/units.fog"
+  ** null, otherwise throw Err.  Any units declared in "etc/sys/units.txt"
   ** are implicitly defined.
   **
-  static Unit? find(Str s, Bool checked := true)
+  static Unit? fromStr(Str s, Bool checked := true)
 
   **
   ** List all the units currently defined in the VM.  Any units
-  ** declared in "etc/sys/units.fog" are implicitly defined.
+  ** declared in "etc/sys/units.txt" are implicitly defined.
   **
   static Unit[] list()
 
   **
   ** List the quantity names used to organize the unit database in
-  ** "etc/sys/units.fog".  Quantities are merely a convenient mechanism
+  ** "etc/sys/units.txt".  Quantities are merely a convenient mechanism
   ** to organize the unit database - there is no guarantee that they
   ** include all current VM definitions.
   **
@@ -106,7 +107,7 @@ const class Unit
 
   **
   ** Get the units organized under a specific quantity name in the
-  ** unit database "etc/sys/units.fog".  Quantities are merely a convenient
+  ** unit database "etc/sys/units.txt".  Quantities are merely a convenient
   ** mechanism to organize the unit database - there is no guarantee that
   ** they include all current VM definitions.
   **
@@ -128,7 +129,7 @@ const class Unit
   override Int hash()
 
   **
-  ** Return the string format of this unit. See `fromStr` for the format.
+  ** Return `symbol`.
   **
   override Str toStr()
 
@@ -166,6 +167,11 @@ const class Unit
   ** normalized unit is always zero.
   **
   Float offset()
+
+  **
+  ** Return string format as specified by `define`.
+  **
+  Str definition()
 
 //////////////////////////////////////////////////////////////////////////
 // Dimension
