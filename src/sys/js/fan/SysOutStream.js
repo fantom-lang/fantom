@@ -30,6 +30,7 @@ fan.sys.SysOutStream.toBuffered = function(out, bufSize)
 
 fan.sys.SysOutStream.prototype.$ctor = function(out)
 {
+  fan.sys.OutStream.prototype.$ctor.call(this);
   this.out = out;
 }
 
@@ -72,8 +73,7 @@ fan.sys.SysOutStream.prototype.writeBuf = function(buf, n)
 
 fan.sys.SysOutStream.prototype.writeChar = function(c)
 {
-  //charsetEncoder.encode(c, this);
-  this.out.writeChar(c);
+  this.m_charset.m_encoder.encodeOut(c, this);
   return this;
 }
 
@@ -110,6 +110,7 @@ fan.sys.SysOutStream.prototype.close = function()
 fan.sys.LocalFileOutStream = fan.sys.Obj.$extend(fan.sys.SysOutStream);
 fan.sys.LocalFileOutStream.prototype.$ctor = function(out, fd)
 {
+  fan.sys.SysOutStream.prototype.$ctor.call(this);
   this.out = out;
   this.fd = fd;
 }

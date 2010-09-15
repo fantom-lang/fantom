@@ -56,14 +56,14 @@ fan.sys.Buf.prototype.seek = function(pos)
   var size = this.size();
   if (pos < 0) pos = size + pos;
   if (pos < 0 || pos > size) throw fan.sys.IndexErr.make(pos);
-  pos(pos);
+  this.pos$(pos);
   return this;
 }
 
 fan.sys.Buf.prototype.flip = function()
 {
   this.size(this.pos());
-  this.pos(0);
+  this.pos$(0);
   return this;
 }
 
@@ -87,7 +87,7 @@ fan.sys.Buf.prototype.slice = function(range)
   this.getBytes(s, slice, 0, n);
 
   var result = new fan.sys.MemBuf(slice, n);
-  //result.charset(charset());
+  result.charset$(this.m_out.charset());
   return result;
 }
 
@@ -98,7 +98,7 @@ fan.sys.Buf.prototype.dup = function()
   this.getBytes(0, copy, 0, size);
 
   var result = new MemBuf(copy, size);
-  //result.charset(charset());
+  result.charset$(this.m_out.charset());
   return result;
 }
 
@@ -122,8 +122,8 @@ fan.sys.Buf.prototype.trim = function()
 
 fan.sys.Buf.prototype.clear = function()
 {
-  this.pos(0);
-  this.size(0);
+  this.pos$(0);
+  this.size$(0);
   return this;
 }
 
@@ -142,10 +142,10 @@ fan.sys.Buf.prototype.charset = function()
   return this.m_out.charset();
 }
 
-fan.sys.Buf.prototype.charset = function(charset)
+fan.sys.Buf.prototype.charset$ = function(charset)
 {
-  this.m_out.charset(charset);
-  this.m_in.charset(charset);
+  this.m_out.charset$(charset);
+  this.m_in.charset$(charset);
 }
 
 fan.sys.Buf.prototype.fill = function(b, times)
@@ -163,8 +163,7 @@ fan.sys.Buf.prototype.out = function() { return this.m_out; }
 
 fan.sys.Buf.prototype.write = function(b) { this.m_out.write(b); return this; }
 
-//fan.sys.Buf.prototype.writeBuf = function(other) { this.m_out.writeBuf(other); return this; }
-//fan.sys.Buf.prototype.writeBuf = function(other, n) { this.m_out.writeBuf(other, n); return this; }
+fan.sys.Buf.prototype.writeBuf = function(other, n) { this.m_out.writeBuf(other, n); return this; }
 
 fan.sys.Buf.prototype.writeI2 = function(x) { this.m_out.writeI2(x); return this; }
 
@@ -184,23 +183,15 @@ fan.sys.Buf.prototype.writeUtf = function(x) { this.m_out.writeUtf(x); return th
 
 fan.sys.Buf.prototype.writeChar = function(c) { this.m_out.writeChar(c); return this; }
 
-//fan.sys.Buf.prototype.writeChars = function(s) { this.m_out.writeChars(s); return this; }
-//fan.sys.Buf.prototype.writeChars = function(s, off) { this.m_out.writeChars(s, off); return this; }
-//fan.sys.Buf.prototype.writeChars = function(s, off, len) { this.m_out.writeChars(s, off, len); return this; }
+fan.sys.Buf.prototype.writeChars = function(s, off, len) { this.m_out.writeChars(s, off, len); return this; }
 
 fan.sys.Buf.prototype.print = function(obj) { this.m_out.print(obj); return this; }
 
-//fan.sys.Buf.prototype.printLine = function() { this.m_out.printLine(); return this; }
-//fan.sys.Buf.prototype.printLine = function(obj) { this.m_out.printLine(obj); return this; }
+fan.sys.Buf.prototype.printLine = function(obj) { this.m_out.printLine(obj); return this; }
 
-fan.sys.Buf.prototype.writeObj = function(obj, opt)
-{
-  if (opt === undefined) opt = null;
-  this.m_out.writeObj(obj, opt); return this;
-}
+fan.sys.Buf.prototype.writeObj = function(obj, opt) { this.m_out.writeObj(obj, opt); return this; }
 
-//fan.sys.Buf.prototype.writeXml = function(s) { this.m_out.writeXml(s, 0); return this; }
-//fan.sys.Buf.prototype.writeXml = function(s, flags) { this.m_out.writeXml(s, flags); return this; }
+fan.sys.Buf.prototype.writeXml = function(s, flags) { this.m_out.writeXml(s, flags); return this; }
 
 //////////////////////////////////////////////////////////////////////////
 // InStream
@@ -250,28 +241,23 @@ fan.sys.Buf.prototype.unreadChar = function(c) { this.m_in.unreadChar(c); return
 
 fan.sys.Buf.prototype.peekChar = function() { return this.m_in.peekChar(); }
 
-//fan.sys.Buf.prototype.readLine = function() { return this.m_in.readLine(); }
-//fan.sys.Buf.prototype.readLine = function(max) { return this.m_in.readLine(max); }
+fan.sys.Buf.prototype.readChars = function(n) { return this.m_in.readChars(n); }
 
-//fan.sys.Buf.prototype.readStrToken = function() { return this.m_in.readStrToken(); }
-//fan.sys.Buf.prototype.readStrToken = function(Long max) { return this.m_in.readStrToken(max); }
-//fan.sys.Buf.prototype.readStrToken = function(Long max, Func f) { return this.m_in.readStrToken(FanInt.Chunk, f); }
+fan.sys.Buf.prototype.readLine = function(max) { return this.m_in.readLine(max); }
+
+fan.sys.Buf.prototype.readStrToken = function(max, f) { return this.m_in.readStrToken(max, f); }
 
 fan.sys.Buf.prototype.readAllLines = function() { return this.m_in.readAllLines(); }
 
 fan.sys.Buf.prototype.eachLine = function(f) { this.m_in.eachLine(f); }
 
-fan.sys.Buf.prototype.readAllStr = function(normalizeNewlines)
-{
-  if (normalizeNewlines === undefined) normalizeNewlines = true;
-  return this.m_in.readAllStr(normalizeNewlines);
-}
+fan.sys.Buf.prototype.readAllStr = function(normNewlines) { return this.m_in.readAllStr(normNewlines); }
 
-fan.sys.Buf.prototype.readObj = function(opt)
-{
-  if (opt === undefined) opt = null;
-  return this.m_in.readObj(opt);
-}
+fan.sys.Buf.prototype.readObj = function(opt) { return this.m_in.readObj(opt); }
+
+fan.sys.Buf.prototype.readProps = function() { return this.m_in.readProps(); }
+
+fan.sys.Buf.prototype.writeProps = function(props, close) { return this.m_out.writeProps(props, close); }
 
 //////////////////////////////////////////////////////////////////////////
 // Hex
