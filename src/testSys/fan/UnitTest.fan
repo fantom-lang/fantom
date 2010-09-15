@@ -118,14 +118,18 @@ class UnitTest : Test
 
     quantities := Unit.quantities
     verify(quantities.size > 0)
-    verify(quantities.isRO)
+    verify(quantities.isImmutable)
     verifyType(quantities, Str[]#)
 
     verify(quantities.contains("length"))
     verify(Unit.quantity("length").contains(m))
+    verifyEq(Unit.quantity("length").of, Unit#)
+    verify(Unit.quantity("length").isImmutable)
 
     verify(quantities.contains("volume"))
     verify(Unit.quantity("volume").contains(m3))
+
+    verifyNotNull(Unit.quantity(quantities.last))
   }
 
 //////////////////////////////////////////////////////////////////////////
