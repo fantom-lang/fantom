@@ -54,7 +54,7 @@ fan.sys.LocalFile.makeUri = function(uri, file)
 
 fan.sys.LocalFile.fileToUri = function(file, isDir, scheme)
 {
-  var path = file.getPath();
+  var path = fan.sys.Str.javaToJs(file.getPath());
   var len = path.length;
   var s = "";
 
@@ -148,7 +148,10 @@ fan.sys.LocalFile.prototype.size = function()
 
 //public void modified(DateTime time) { file.setLastModified(time.toJava()); }
 
-fan.sys.LocalFile.prototype.osPath = function() { return this.m_file.getPath(); }
+fan.sys.LocalFile.prototype.osPath = function()
+{
+  return fan.sys.Str.javaToJs(this.m_file.getPath());
+}
 
 fan.sys.LocalFile.prototype.parent = function()
 {

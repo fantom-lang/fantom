@@ -622,4 +622,14 @@ fan.sys.Str.xmlEsc[62] = "&gt;";
 fan.sys.Str.xmlEsc[39] = "&apos;";
 fan.sys.Str.xmlEsc[34] = "&quot;";
 
+//////////////////////////////////////////////////////////////////////////
+// Rhino
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Str.javaToJs = function(java)
+{
+  var js = "";
+  for(var i=0; i<java.length(); ++i) js += String.fromCharCode(java.charAt(i));
+  return js;
+}
 
