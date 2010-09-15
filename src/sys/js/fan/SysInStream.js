@@ -25,6 +25,7 @@ fan.sys.SysInStream.make = function(ins, bufSize)
 
 fan.sys.SysInStream.prototype.$ctor = function(ins)
 {
+  fan.sys.InStream.prototype.$ctor.call(this);
   this.m_in = ins;
 }
 
@@ -49,6 +50,17 @@ fan.sys.SysInStream.prototype.r = function()
   {
     throw fan.sys.IOErr.make(e);
   }
+}
+
+fan.sys.SysInStream.prototype.readChar = function()
+{
+  var c = this.rChar()
+  return (c < 0) ? null : c;
+}
+
+fan.sys.SysInStream.prototype.rChar = function()
+{
+  return this.m_charset.m_encoder.decode(this);
 }
 
 fan.sys.SysInStream.prototype.readBuf = function(buf, n)

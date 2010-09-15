@@ -17,9 +17,9 @@ fan.sys.MemBuf = fan.sys.Obj.$extend(fan.sys.Buf);
 
 fan.sys.MemBuf.prototype.$ctor = function(buf, size)
 {
-  this.m_buf  = [];
+  this.m_buf  = (buf  !== undefined) ? buf  : [];
+  this.m_size = (size !== undefined) ? size : 0;
   this.m_pos  = 0;
-  this.m_size = 0;
   this.m_out  = new fan.sys.MemBufOutStream(this);
   this.m_in   = new fan.sys.MemBufInStream(this);
 }
@@ -42,124 +42,69 @@ fan.sys.MemBuf.prototype.$typeof = function() { return fan.sys.MemBuf.$type; }
 // Buf Support
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.MemBuf.prototype.size = function()
-{
-  return this.m_size;
-}
+fan.sys.MemBuf.prototype.size = function() { return this.m_size; }
+fan.sys.MemBuf.prototype.size$ = function(x) { this.m_size = x; }
 
-/*
-fan.sys.MemBuf.prototype.size(long x)
-{
-  int newSize = (int)x;
-  if (newSize > buf.length)
-  {
-    byte[] temp = new byte[newSize];
-    System.arraycopy(buf, 0, temp, 0, buf.length);
-    buf  = temp;
-  }
-  size = newSize;
-}
-*/
+fan.sys.MemBuf.prototype.pos = function() { return this.m_pos; }
+fan.sys.MemBuf.prototype.pos$ = function(x) { this.m_pos = x; }
 
-fan.sys.MemBuf.prototype.pos = function()
-{
-  return this.m_pos;
-}
-
-fan.sys.MemBuf.prototype.pos = function(x)
-{
-  this.m_pos = x;
-}
-
-/*
 fan.sys.MemBuf.prototype.getByte = function(pos)
 {
-  return buf[(int)pos] & 0xFF;
+  return this.m_buf[pos] & 0xFF;
 }
 
-final void setByte(long pos, int x)
+fan.sys.MemBuf.prototype.setByte = function(pos, x)
 {
-  buf[(int)pos] = (byte)x;
+  this.m_buf[pos] = x & 0xFF;
 }
 
-final void getBytes(long pos, byte[] dest, int off, int len)
+fan.sys.MemBuf.prototype.getBytes = function(pos, dest, off, len)
 {
-  System.arraycopy(this.buf, (int)pos, dest, off, len);
+  // TODO FIXIT
+  //System.arraycopy(this.buf, (int)pos, dest, off, len);
+  return this.m_buf.slice(pos, pos+len);
 }
 
-final void pipeTo(byte[] dst, int dstPos, int len)
+//////////////////////////////////////////////////////////////////////////
+// Java IO Streams (Rhino)
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.MemBuf.prototype.pipeTo = function(dst, len)
 {
-  if (pos + len > size) throw IOErr.make("Not enough bytes to write").val;
-  System.arraycopy(buf, pos, dst, dstPos, len);
-  pos += len;
+  if (this.m_pos+len > this.m_size) throw fan.sys.IOErr.make("Not enough bytes to write");
+  var byteArray = this.cpMemToJavaBuffer(len)
+  dst.write(byteArray, 0, len);
+  this.m_pos += len;
 }
 
-final void pipeTo(OutputStream dst, long lenLong)
-  throws IOException
+fan.sys.MemBuf.prototype.pipeFrom = function(src, len)
 {
-  int len = (int)lenLong;
-  if (pos + len > size) throw IOErr.make("Not enough bytes to write").val;
-  dst.write(buf, pos, len);
-  pos += len;
-}
-
-final void pipeTo(RandomAccessFile dst, long lenLong)
-  throws IOException
-{
-  int len = (int)lenLong;
-  if (pos + len > size) throw IOErr.make("Not enough bytes to write").val;
-  dst.write(buf, pos, len);
-  pos += len;
-}
-
-final void pipeTo(ByteBuffer dst, int len)
-{
-  if (pos + len > size) throw IOErr.make("Not enough bytes to write").val;
-  dst.put(buf, pos, len);
-  pos += len;
-}
-
-final void pipeFrom(byte[] src, int srcPos, int len)
-{
-  grow(pos+len);
-  System.arraycopy(src, srcPos, buf, pos, len);
-  pos += len;
-  size = pos;
-}
-
-final long pipeFrom(InputStream src, long lenLong)
-  throws IOException
-{
-  int len = (int)lenLong;
-  grow(pos+len);
-  int read = src.read(buf, pos, len);
-  if (read < 0) return -1;
-  pos  += read;
-  size = pos;
+  var byteArray = new java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, len);
+  var read = src.read(byteArray, 0, len);
+   if (read < 0) return -1;
+  this.cpJavaBufferToMem(byteArray, read);
+  this.m_pos += read;
+  this.m_size = this.m_pos;
   return read;
 }
 
-final long pipeFrom(RandomAccessFile src, long lenLong)
-  throws IOException
+fan.sys.MemBuf.prototype.cpMemToJavaBuffer = function(len)
 {
-  int len = (int)lenLong;
-  grow(pos+len);
-  int read = src.read(buf, pos, len);
-  if (read < 0) return -1;
-  pos += read;
-  size = pos;
-  return read;
+  var bytes = new java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, len);
+  for (var i=0; i<len; ++i)
+  {
+    var b = this.m_buf[this.m_pos+i];
+    if (b > 127) b |= 0xFFFFFF00;
+    bytes[i] = b;
+  }
+  return bytes;
 }
 
-final int pipeFrom(ByteBuffer src, int len)
+fan.sys.MemBuf.prototype.cpJavaBufferToMem = function(bytes, len)
 {
-  grow(pos+len);
-  src.get(buf, pos, len);
-  pos += len;
-  size = pos;
-  return len;
+  for (var i=0; i<len; ++i)
+    this.m_buf[this.m_pos+i] = bytes[i] & 0xFF;
 }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Buf API

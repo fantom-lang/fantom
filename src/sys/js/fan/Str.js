@@ -253,6 +253,21 @@ fan.sys.Str.capitalize = function(self)
   return self;
 }
 
+fan.sys.Str.decapitalize = function(self)
+{
+  if (self.length > 0)
+  {
+    var ch = self.charCodeAt(0);
+    if (65 <= ch && ch <= 90)
+    {
+      s = String.fromCharCode(ch | 0x20);
+      s += self.substring(1)
+      return s;
+    }
+  }
+  return self;
+}
+
 fan.sys.Str.toDisplayName = function(self)
 {
   if (self.length == 0) return "";
@@ -435,7 +450,22 @@ fan.sys.Str.replace = function(self, oldstr, newstr)
   return self.split(oldstr).join(newstr);
 }
 
-// numNewLines
+fan.sys.Str.numNewlines = function(self)
+{
+  var numLines = 0;
+  var len = self.length;
+  for (var i=0; i<len; ++i)
+  {
+    var c = self.charCodeAt(i);
+    if (c == 10) numLines++;
+    else if (c == 13)
+    {
+      numLines++;
+      if (i+1<len && self.charCodeAt(i+1) == 10) i++;
+    }
+  }
+  return numLines;
+}
 
 fan.sys.Str.isAscii = function(self)
 {
@@ -520,10 +550,26 @@ fan.sys.Str.toInt = function(self, radix, checked) { return fan.sys.Int.fromStr(
 fan.sys.Str.$in = function(self) { return fan.sys.InStream.makeForStr(self); }
 fan.sys.Str.toUri = function(self) { return fan.sys.Uri.fromStr(self); }
 
-fan.sys.Str.toBuf = function(self)//, Charset charset := Charset.utf8)
+fan.sys.Str.chars = function(self)
 {
+  var ch = fan.sys.List.make(fan.sys.Int.$type, []);
+  for (var i=0; i<self.length; i++) ch.add(self.charCodeAt(i));
+  return ch;
+}
+
+fan.sys.Str.fromChars = function(ch)
+{
+  var i, s = '';
+  for (i=0; i<ch.size(); i++) s += String.fromCharCode(ch.get(i));
+  return s;
+}
+
+fan.sys.Str.toBuf = function(self, charset)
+{
+  if (charset === undefined) charset = fan.sys.Charset.utf8();
+
   var buf = new fan.sys.MemBuf();
-  //buf.charset(charset);
+  buf.charset$(charset);
   buf.print(self);
   return buf.flip();
 }

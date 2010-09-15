@@ -30,33 +30,38 @@ fan.sys.StrInStream.prototype.$ctor = function(str)
 
 fan.sys.StrInStream.prototype.read = function()
 {
-  var b = this.readChar();
-  return (b < 0) ? null : (b & 0xff);
+  var b = this.rChar();
+  return (b < 0) ? null : b & 0xFF;
 }
 
 fan.sys.StrInStream.prototype.readBuf = function(buf, n)
 {
-  var nval = n;
-  for (var i=0; i<nval; ++i)
+  for (var i=0; i<n; ++i)
   {
-    var c = this.readChar();
-    if (c < 0) return i;
-    buf.out.w(c);
+    var c = this.rChar();
+    if (c < 0) return i == 0 ? null : i;
+    buf.out().writeChar(c);
   }
   return n;
 }
 
 fan.sys.StrInStream.prototype.unread = function(c)
 {
-  return unreadChar(c);
+  return this.unreadChar(c);
+}
+
+fan.sys.StrInStream.prototype.rChar = function()
+{
+  if (this.pushback != null && this.pushback.length > 0)
+    return this.pushback.pop();
+  if (this.pos >= this.size) return -1;
+  return this.str.charCodeAt(this.pos++);
 }
 
 fan.sys.StrInStream.prototype.readChar = function()
 {
-  if (this.pushback != null && this.pushback.length > 0)
-    return this.pushback.pop();
-  if (this.pos >= this.size) return null;
-  return this.str.charCodeAt(this.pos++);
+  var c = this.rChar();
+  return (c < 0) ? null : c;
 }
 
 fan.sys.StrInStream.prototype.unreadChar = function(c)

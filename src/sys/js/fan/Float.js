@@ -138,10 +138,10 @@ fan.sys.Float.toStr = function(self)
 
 fan.sys.Float.encode = function(self, out)
 {
-  if (isNaN(self)) out.w("sys::Float(\"NaN\")");
-  else if (self == fan.sys.Float.m_posInf) out.w("sys::Float(\"INF\")");
-  else if (self == fan.sys.Float.m_negInf) out.w("sys::Float(\"-INF\")");
-  else out.w(""+self).w("f");
+  if (isNaN(self)) out.writeChars("sys::Float(\"NaN\")");
+  else if (self == fan.sys.Float.m_posInf) out.writeChars("sys::Float(\"INF\")");
+  else if (self == fan.sys.Float.m_negInf) out.writeChars("sys::Float(\"-INF\")");
+  else out.writeChars(""+self).writeChars("f");
 }
 
 fan.sys.Float.toCode = function(self)

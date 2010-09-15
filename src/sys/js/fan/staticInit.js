@@ -77,6 +77,13 @@ fan.sys.Endian.m_vals = fan.sys.List.make(fan.sys.Endian.$type,
 ]);
 
 //
+// OutStream
+//
+fan.sys.OutStream.m_xmlEscNewlines = 0x01;
+fan.sys.OutStream.m_xmlEscQuotes   = 0x02;
+fan.sys.OutStream.m_xmlEscUnicode  = 0x04;
+
+//
 // Uri
 //
 fan.sys.Uri.parentRange = fan.sys.Range.make(0, -2, false);
