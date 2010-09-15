@@ -119,12 +119,15 @@ fan.sys.Unit.define = function(str)
   // register
 
   // check that none of the units are defined
+  // TODO FIXIT: allow units to be redefined for JavaScript
+  /*
   for (var i=0; i<unit.m_ids.size(); ++i)
   {
     var id = unit.m_ids.get(i);
     if (fan.sys.Unit.m_units[id] != null)
       throw fan.sys.Err.make("Unit id already defined: " + id);
   }
+  */
 
   // this is a new definition
   for (var i=0; i<unit.m_ids.size(); ++i)
