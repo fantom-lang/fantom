@@ -129,7 +129,7 @@ volt_ampere_reactive_hour, VARh; kg1*m2*sec-2; 3600.0
 kilovolt_ampere_reactive_hour, kVARh; kg1*m2*sec-2; 3600000.0
 megavolt_ampere_reactive_hour, MVARh; kg1*m2*sec-2; 3.6E9
 
--- energy consumption (kg1*sec-2)
+-- energy by area (kg1*sec-2)
 joules_per_square_meter, J/m²; kg1*sec-2
 kilowatt_hours_per_square_meter, kWh/m²; kg1*sec-2; 3600000.0
 kilowatt_hours_per_square_foot, kWh/ft²; kg1*sec-2; 3.8750077500155E7
@@ -188,8 +188,8 @@ candelas_per_square_meter, cd/m²; m-2*cd1
 henry, H; kg1*m2*sec-2*A-2
 
 -- irradiance (kg1*sec-3)
-watts_per_square_meter, W/m²; kg1*sec-3
-watts_per_square_foot, W/ft²; kg1*sec-3; 10.76391041671
+watts_per_square_meter_irradiance, W/m²_irr; kg1*sec-3
+watts_per_square_foot_irradiance, W/ft²_irr; kg1*sec-3; 10.76391041671
 
 -- length (m1)
 meter, m; m1
@@ -252,6 +252,11 @@ horsepower, hp; kg1*m2*sec-3; 745.7
 foot_pounds_per_second, ftlbs/sec; kg1*m2*sec-3; 1.355818
 tons_refrigeration, tonref; kg1*m2*sec-3; 3516.853
 kilobtus_per_hour, kBTU/h; kg1*m2*sec-3; 293.07107017222
+
+-- power by area (kg1*sec-3)
+watts_per_square_meter, W/m²; kg1*sec-3
+kilowatts_per_square_meter, kW/m²; kg1*sec-3; 1000.0
+kilowatts_per_square_foot, kW/ft²; kg1*sec-3; 10763.9104
 
 -- apparent power (kg1*m2*sec-3)
 volt_ampere, VA; kg1*m2*sec-3
