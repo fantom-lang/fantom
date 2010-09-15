@@ -65,7 +65,8 @@ public final class Unit
         in = Env.cur().findFile(path).in();
 
       // parse each line
-      List curQuantity = null;
+      String curQuantityName = null;
+      List curQuantityList = null;
       String line;
       while ((line = in.readLine()) != null)
       {
@@ -76,10 +77,10 @@ public final class Unit
         // quanity sections delimited as "-- name (dim)"
         if (line.startsWith("--"))
         {
-          String qname = line.substring(2, line.indexOf('(')).trim();
-          curQuantity = new List(Sys.UnitType);
-          quantities.put(qname, curQuantity);
-          quantityNames.add(qname);
+          if (curQuantityName != null) quantities.put(curQuantityName, curQuantityList.toImmutable());
+          curQuantityName = line.substring(2, line.indexOf('(')).trim();
+          curQuantityList = new List(Sys.UnitType);
+          quantityNames.add(curQuantityName);
           continue;
         }
 
@@ -87,7 +88,7 @@ public final class Unit
         try
         {
           Unit unit = Unit.define(line);
-          curQuantity.add(unit);
+          curQuantityList.add(unit);
         }
         catch (Exception e)
         {
@@ -95,6 +96,7 @@ public final class Unit
           System.out.println("  " + e);
         }
       }
+      quantities.put(curQuantityName, curQuantityList.toImmutable());
     }
     catch (Throwable e)
     {

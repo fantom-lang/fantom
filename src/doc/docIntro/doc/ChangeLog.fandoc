@@ -8,6 +8,8 @@
 
 *Build 1.0.56 (working)*
 - Redesign Unit to be keyed by arbitrary ids list including symbols
+- Redesign Unit definition: fromStr -> define, find -> fromStr
+- Redesign unit database as simple text file
 
 *Build 1.0.55 (13 Sep 2010)*
 - Enhance DateTime/Time pattern for AM/PM
