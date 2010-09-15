@@ -9,6 +9,7 @@
 **
 ** StreamTest
 **
+@Js
 class StreamTest : Test
 {
 
@@ -172,33 +173,36 @@ class StreamTest : Test
     out.writeI4(-67800)
     out.writeI4(2_147_483_647)
     out.writeI4(-2_147_483_648)
-    out.writeI8(0x0123_4567_89ab_cdef)
-    out.writeI8(0xff00_0300_8001_0050)
-    out.writeI8(0x7fff_ffff_ffff_ffff)
-    out.writeI8(0)
-    out.writeI8(-1)
-    out.writeI8(-2)
-    out.writeF4(0.0f)
-    out.writeF4(-1.0f)
-    out.writeF4(1.0f)
-    out.writeF4(0.0005f)
-    out.writeF4(-960.05f)
-    out.writeF4(128e22f)
-    out.writeF4(-128e22f)
-    out.writeF4(Float.nan)
-    out.writeF4(Float.posInf)
-    out.writeF4(Float.negInf)
-    out.writeF8(0.0f)
-    out.writeF8(-1.0f)
-    out.writeF8(2.0f)
-    out.writeF8(71.9003e30f)
-    out.writeF8(-0.000000074f)
-    out.writeF8(3.12456789f)
-    out.writeF8(Float.nan)
-    out.writeF8(Float.posInf)
-    out.writeF8(Float.negInf)
-    out.writeDecimal(-123.456d)
-    out.writeDecimal(61e-20)
+    if (Env.cur.runtime != "js")
+    {
+      out.writeI8(0x0123_4567_89ab_cdef)
+      out.writeI8(0xff00_0300_8001_0050)
+      out.writeI8(0x7fff_ffff_ffff_ffff)
+      out.writeI8(0)
+      out.writeI8(-1)
+      out.writeI8(-2)
+      out.writeF4(0.0f)
+      out.writeF4(-1.0f)
+      out.writeF4(1.0f)
+      out.writeF4(0.0005f)
+      out.writeF4(-960.05f)
+      out.writeF4(128e22f)
+      out.writeF4(-128e22f)
+      out.writeF4(Float.nan)
+      out.writeF4(Float.posInf)
+      out.writeF4(Float.negInf)
+      out.writeF8(0.0f)
+      out.writeF8(-1.0f)
+      out.writeF8(2.0f)
+      out.writeF8(71.9003e30f)
+      out.writeF8(-0.000000074f)
+      out.writeF8(3.12456789f)
+      out.writeF8(Float.nan)
+      out.writeF8(Float.posInf)
+      out.writeF8(Float.negInf)
+      out.writeDecimal(-123.456d)
+      out.writeDecimal(61e-20)
+    }
     out.writeBool(false)
     out.writeBool(true)
     out.writeUtf("")
@@ -214,12 +218,18 @@ class StreamTest : Test
     if (out.endian !== Endian.little) throw Err()
     out.writeI2(0xaabb)
     out.writeI4(0xaabbccdd)
-    out.writeI8(0xaabbccdd11223344)
+    if (Env.cur.runtime != "js")
+    {
+      out.writeI8(0xaabbccdd11223344)
+    }
     out.writeI2(0xaabb)
     out.writeI2(-2398)
     out.writeI4(0xaabbccdd)
     out.writeI4(-123_456)
-    out.writeI8(0xaabbccdd11223344)
+    if (Env.cur.runtime != "js")
+    {
+      out.writeI8(0xaabbccdd11223344)
+    }
     out.endian = Endian.big
     if (out.endian !== Endian.big) throw Err()
 
@@ -262,33 +272,36 @@ class StreamTest : Test
     test.verifyEq(in.readS4, -67800)
     test.verifyEq(in.readS4, 2_147_483_647)
     test.verifyEq(in.readS4, -2_147_483_648)
-    test.verifyEq(in.readS8, 0x0123_4567_89ab_cdef)
-    test.verifyEq(in.readS8, 0xff00_0300_8001_0050)
-    test.verifyEq(in.readS8, 0x7fff_ffff_ffff_ffff)
-    test.verifyEq(in.readS8, 0)
-    test.verifyEq(in.readS8, -1)
-    test.verifyEq(in.readS8, -2)
-    test.verifyEq(in.readF4, 0.0f)
-    test.verifyEq(in.readF4, -1.0f)
-    test.verifyEq(in.readF4, 1.0f)
-    test.verify(in.readF4.approx(0.0005f))
-    test.verify(in.readF4.approx(-960.05f))
-    test.verify(in.readF4.approx(128e22f))
-    test.verify(in.readF4.approx(-128e22f))
-    test.verifyEq(in.readF4, Float.nan)
-    test.verifyEq(in.readF4, Float.posInf)
-    test.verifyEq(in.readF4, Float.negInf)
-    test.verifyEq(in.readF8, 0.0f)
-    test.verifyEq(in.readF8, -1.0f)
-    test.verifyEq(in.readF8, 2.0f)
-    test.verify(in.readF8.approx(71.9003e30f))
-    test.verify(in.readF8.approx(-0.000000074f))
-    test.verify(in.readF8.approx(3.12456789f))
-    test.verifyEq(in.readF8, Float.nan)
-    test.verifyEq(in.readF8, Float.posInf)
-    test.verifyEq(in.readF8, Float.negInf)
-    test.verifyEq(in.readDecimal, -123.456d)
-    test.verifyEq(in.readDecimal, 61e-20)
+    if (Env.cur.runtime != "js")
+    {
+      test.verifyEq(in.readS8, 0x0123_4567_89ab_cdef)
+      test.verifyEq(in.readS8, 0xff00_0300_8001_0050)
+      test.verifyEq(in.readS8, 0x7fff_ffff_ffff_ffff)
+      test.verifyEq(in.readS8, 0)
+      test.verifyEq(in.readS8, -1)
+      test.verifyEq(in.readS8, -2)
+      test.verifyEq(in.readF4, 0.0f)
+      test.verifyEq(in.readF4, -1.0f)
+      test.verifyEq(in.readF4, 1.0f)
+      test.verify(in.readF4.approx(0.0005f))
+      test.verify(in.readF4.approx(-960.05f))
+      test.verify(in.readF4.approx(128e22f))
+      test.verify(in.readF4.approx(-128e22f))
+      test.verifyEq(in.readF4, Float.nan)
+      test.verifyEq(in.readF4, Float.posInf)
+      test.verifyEq(in.readF4, Float.negInf)
+      test.verifyEq(in.readF8, 0.0f)
+      test.verifyEq(in.readF8, -1.0f)
+      test.verifyEq(in.readF8, 2.0f)
+      test.verify(in.readF8.approx(71.9003e30f))
+      test.verify(in.readF8.approx(-0.000000074f))
+      test.verify(in.readF8.approx(3.12456789f))
+      test.verifyEq(in.readF8, Float.nan)
+      test.verifyEq(in.readF8, Float.posInf)
+      test.verifyEq(in.readF8, Float.negInf)
+      test.verifyEq(in.readDecimal, -123.456d)
+      test.verifyEq(in.readDecimal, 61e-20)
+    }
     test.verifyEq(in.readBool, false)
     test.verifyEq(in.readBool, true)
     test.verifyEq(in.readUtf, "")
@@ -301,7 +314,10 @@ class StreamTest : Test
     // little endian
     test.verifyEq(in.readU2, 0xbbaa)
     test.verifyEq(in.readU4, 0xddccbbaa)
-    test.verifyEq(in.readS8, 0x44332211ddccbbaa)
+    if (Env.cur.runtime != "js")
+    {
+      test.verifyEq(in.readS8, 0x44332211ddccbbaa)
+    }
     test.verifySame(in.endian, Endian.big)
     in.endian = Endian.little
     test.verifySame(in.endian, Endian.little)
@@ -309,7 +325,10 @@ class StreamTest : Test
     test.verifyEq(in.readS2, -2398)
     test.verifyEq(in.readU4, 0xaabbccdd)
     test.verifyEq(in.readS4, -123_456)
-    test.verifyEq(in.readS8, 0xaabbccdd11223344)
+    if (Env.cur.runtime != "js")
+    {
+      test.verifyEq(in.readS8, 0xaabbccdd11223344)
+    }
     in.endian = Endian.big
     test.verifySame(in.endian, Endian.big)
 
@@ -329,9 +348,12 @@ class StreamTest : Test
       test.verifyErr(IOErr#) { in.readS2 }
       test.verifyErr(IOErr#) { in.readU4 }
       test.verifyErr(IOErr#) { in.readS4 }
-      test.verifyErr(IOErr#) { in.readS8 }
-      test.verifyErr(IOErr#) { in.readF4 }
-      test.verifyErr(IOErr#) { in.readF8 }
+      if (Env.cur.runtime != "js")
+      {
+        test.verifyErr(IOErr#) { in.readS8 }
+        test.verifyErr(IOErr#) { in.readF4 }
+        test.verifyErr(IOErr#) { in.readF8 }
+      }
       test.verifyErr(IOErr#) { in.readUtf}
     }
   }
