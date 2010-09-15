@@ -80,7 +80,10 @@ class UnitTest : Test
     dim.each |Int v, Str x| { verifyEq(u.trap(x, null), v) }
 
     // verify additional definitions throw
-    verifyErr(Err#) { Unit.define(s) }
+    if (Env.cur.runtime != "js")
+    {
+      verifyErr(Err#) { Unit.define(s) }
+    }
 
     // verify round trip
     verifySame(Unit(u.name), u)

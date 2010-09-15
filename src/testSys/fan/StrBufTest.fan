@@ -9,6 +9,7 @@
 **
 ** StrBufTest
 **
+@Js
 class StrBufTest : Test
 {
 
@@ -235,6 +236,7 @@ class StrBufTest : Test
 
 }
 
+@Js
 internal class StrBufWrapOutStream : OutStream
 {
   new make(OutStream out) : super(out) {}
