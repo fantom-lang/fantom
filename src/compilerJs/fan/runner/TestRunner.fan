@@ -188,9 +188,9 @@ class TestRunner
         {
           try
           {
-            fan.sys.Env.cur().m_homeDir = fan.sys.File.osPath($homeDir.osPath.toCode);
-            fan.sys.Env.cur().m_workDir = fan.sys.File.osPath($workDir.osPath.toCode);
-            fan.sys.Env.cur().m_tempDir = fan.sys.File.osPath($tempDir.osPath.toCode);
+            fan.sys.Env.cur().m_homeDir = fan.sys.File.os($homeDir.osPath.toCode);
+            fan.sys.Env.cur().m_workDir = fan.sys.File.os($workDir.osPath.toCode);
+            fan.sys.Env.cur().m_tempDir = fan.sys.File.os($tempDir.osPath.toCode);
 
             var test = ${js}.make();
             test.${m.name}();
