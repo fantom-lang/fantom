@@ -20,8 +20,8 @@ public final class Unit
 // Database
 //////////////////////////////////////////////////////////////////////////
 
-  public static Unit find(String name) { return find(name, true); }
-  public static Unit find(String name, boolean checked)
+  public static Unit fromStr(String name) { return fromStr(name, true); }
+  public static Unit fromStr(String name, boolean checked)
   {
     synchronized (units)
     {
@@ -53,49 +53,65 @@ public final class Unit
 
   private static List loadDatabase()
   {
+    InStream in = null;
+    List quantityNames = new List(Sys.StrType);
     try
     {
-      // parse etc/sys/units.fog as big serialized list which contains
-      // lists for each quantity (first item being the name)
-      String path = "etc/sys/units.fog";
-      InStream in;
+      // open etc/sys/units.txt
+      String path = "etc/sys/units.txt";
       if (Sys.isJarDist)
         in = new SysInStream(Unit.class.getClassLoader().getResourceAsStream(path));
       else
         in = Env.cur().findFile(path).in();
-      List all = (List)in.readObj();
-      in.close();
 
-      // map lists to quantity data structures
-      List quantityNames = new List(Sys.StrType);
-      for (int i=0; i<all.sz(); ++i)
+      // parse each line
+      List curQuantity = null;
+      String line;
+      while ((line = in.readLine()) != null)
       {
-        List q = (List)all.get(i);
-        String name = (String)q.get(0);
-        q.removeAt(0);
-        q = (List)q.toImmutable();
-        quantityNames.add(name);
-        quantities.put(name, q);
-      }
+        // skip comment and blank lines
+        line = line.trim();
+        if (line.startsWith("//") || line.length() == 0) continue;
 
-      // return quantity names
-      return (List)quantityNames.toImmutable();
+        // quanity sections delimited as "-- name (dim)"
+        if (line.startsWith("--"))
+        {
+          String qname = line.substring(2, line.indexOf('(')).trim();
+          curQuantity = new List(Sys.UnitType);
+          quantities.put(qname, curQuantity);
+          quantityNames.add(qname);
+          continue;
+        }
+
+        // must be a unit
+        try
+        {
+          Unit unit = Unit.define(line);
+          curQuantity.add(unit);
+        }
+        catch (Exception e)
+        {
+          System.out.println("WARNING: Init unit in etc/sys/units.txt: " + line);
+          System.out.println("  " + e);
+        }
+      }
     }
     catch (Throwable e)
     {
-      System.out.println("WARNING: Cannot load etc/sys/units.fog");
+      try { in.close(); } catch (Exception e2) {}
+      System.out.println("WARNING: Cannot load etc/sys/units.txt");
       e.printStackTrace();
-      return (List)new List(Sys.StrType).toImmutable();
     }
+    return (List)quantityNames.toImmutable();
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Parsing
+// Definition
 //////////////////////////////////////////////////////////////////////////
 
-  public static Unit fromStr(String str) { return fromStr(str, true); }
-  public static Unit fromStr(String str, boolean checked)
+  public static Unit define(String str)
   {
+    // parse
     Unit unit = null;
     try
     {
@@ -103,12 +119,30 @@ public final class Unit
     }
     catch (Throwable e)
     {
-      if (!checked) return null;
       String msg = str;
       if (e instanceof ParseErr.Val) msg += ": " + ((ParseErr.Val)e).err.msg();
       throw ParseErr.make("Unit", msg).val;
     }
-    return define(unit);
+
+    // register
+    synchronized (units)
+    {
+      // check that none of the units are defined
+      for (int i=0; i<unit.ids.sz(); ++i)
+      {
+        String id = (String)unit.ids.get(i);
+        if (units.get(id) != null) throw Err.make("Unit id already defined: " + id).val;
+      }
+
+      // this is a new definition
+      for (int i=0; i<unit.ids.sz(); ++i)
+      {
+        String id = (String)unit.ids.get(i);
+        units.put(id, unit);
+      }
+    }
+
+    return unit;
   }
 
   /**
@@ -174,56 +208,6 @@ public final class Unit
     }
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Definition
-//////////////////////////////////////////////////////////////////////////
-
-  /**
-   * Define a new unit.  If the unit is already defined then we check
-   * that it is compatible with our existing definition and intern it.
-   */
-  private static Unit define(Unit unit)
-  {
-    synchronized (units)
-    {
-      // lookup by one of its ids
-      for (int i=0; i<unit.ids.sz(); ++i)
-      {
-        String id = (String)unit.ids.get(i);
-
-        // if we have an existing check if compatible
-        Unit existing = (Unit)units.get(id);
-        if (existing != null)
-        {
-          if (!existing.isCompatibleDefinition(unit))
-            throw Err.make("Attempt to define incompatible units: " + existing + " != " + unit).val;
-          return existing;
-        }
-      }
-
-      // this is a new definition
-      for (int i=0; i<unit.ids.sz(); ++i)
-      {
-        String id = (String)unit.ids.get(i);
-        units.put(id, unit);
-      }
-      return unit;
-    }
-  }
-
-  /**
-   * Return if this unit is compatible with the other unit's definition.
-   * We provide a little flexibility on the scale and offset because
-   * doubles are so imprecise.
-   */
-  private boolean isCompatibleDefinition(Unit x)
-  {
-    return ids.equals(x.ids) &&
-           dim == x.dim &&
-           FanFloat.approx(scale, x.scale) &&
-           FanFloat.approx(offset, x.offset);
-  }
-
   /**
    * Private constructor.
    */
@@ -265,29 +249,7 @@ public final class Unit
 
   public final Type typeof() { return Sys.UnitType; }
 
-  public String toStr()
-  {
-    if (str == null)
-    {
-      StringBuilder s = new StringBuilder();
-      for (int i=0; i<ids.sz(); ++i)
-      {
-        if (i > 0) s.append(", ");
-        s.append(ids.get(i));
-      }
-      if (dim != dimensionless)
-      {
-        s.append("; ").append(dim);
-        if (scale != 1.0 || offset != 0.0)
-        {
-          s.append("; ").append(scale);
-          if (offset != 0.0) s.append("; ").append(offset);
-        }
-      }
-      str = s.toString();
-    }
-    return str;
-  }
+  public final String toStr() { return (String)ids.last(); }
 
   public final List ids() { return ids; }
 
@@ -298,6 +260,26 @@ public final class Unit
   public final double scale() { return scale; }
 
   public final double offset() { return offset; }
+
+  public final String definition()
+  {
+    StringBuilder s = new StringBuilder();
+    for (int i=0; i<ids.sz(); ++i)
+    {
+      if (i > 0) s.append(", ");
+      s.append(ids.get(i));
+    }
+    if (dim != dimensionless)
+    {
+      s.append("; ").append(dim);
+      if (scale != 1.0 || offset != 0.0)
+      {
+        s.append("; ").append(scale);
+        if (offset != 0.0) s.append("; ").append(offset);
+      }
+    }
+    return s.toString();
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Dimension
@@ -386,6 +368,5 @@ public final class Unit
   private final double scale;
   private final double offset;
   private final Dimension dim;
-  private String str;
 
 }

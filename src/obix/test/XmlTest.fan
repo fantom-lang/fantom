@@ -393,8 +393,8 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="a"; val=0; unit=Unit.find("meter") },
-         ObixObj { name="b"; val=0; unit=Unit.find("fahrenheit") },
+         ObixObj { name="a"; val=0; unit=Unit("meter") },
+         ObixObj { name="b"; val=0; unit=Unit("fahrenheit") },
          ObixObj { name="c"; val=0 },
        })
    }

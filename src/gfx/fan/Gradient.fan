@@ -232,9 +232,9 @@ const class Gradient : Brush
   private static Unit loadUnit(Str name, Str symbol)
   {
     try
-      return Unit.find(name)
+      return Unit(name)
     catch (Err e)
-      return Unit.fromStr("$name,$symbol")
+      return Unit.define("$name,$symbol")
   }
 
   ** white 0% to black 100%

@@ -14,55 +14,55 @@ class UnitTest : Test
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Parse
+// Define
 //////////////////////////////////////////////////////////////////////////
 
-  Void testParse()
+  Void testDefine()
   {
-    verifyParse("test_one,tone;kg2*m-3;33;100",
+    verifyDefine("test_one,tone;kg2*m-3;33;100",
       ["test_one", "tone"], ["kg":2, "m":-3], 33f, 100f)
 
-    verifyParse("test_two , ttwo ;  kg1 * m 2 * sec3*K4*A5*mol6*cd7 ; -99 ;  -77",
+    verifyDefine("test_two , ttwo ;  kg1 * m 2 * sec3*K4*A5*mol6*cd7 ; -99 ;  -77",
       ["test_two", "ttwo"], ["kg":1, "m":2, "sec":3, "K":4, "A":5, "mol":6, "cd":7], -99f, -77f)
 
-    verifyParse("test_three, tthree; sec1; 1E10",
+    verifyDefine("test_three, tthree; sec1; 1E10",
       ["test_three", "tthree"], ["sec":1], 1E10f, 0f)
 
-    verifyParse("test_four, tfour; m-9",
+    verifyDefine("test_four, tfour; m-9",
       ["test_four", "tfour"], ["m":-9], 1f, 0f)
 
-    verifyParse("test_five,test/five, testfive, tfive",
+    verifyDefine("test_five,test/five, testfive, tfive",
       ["test_five", "test/five", "testfive", "tfive"], Str:Int[:], 1f, 0f)
 
-    verifyParse("test_six",
+    verifyDefine("test_six",
       ["test_six"], Str:Int[:], 1f, 0f)
 
-    verifyParse("test_seven;kg2",
+    verifyDefine("test_seven;kg2",
       ["test_seven"], ["kg":2], 1f, 0f)
 
     // bad identifiers
-    verifyErr(ParseErr#) { Unit(";kg22") }
-    verifyErr(ParseErr#) { Unit("test_bad,;kg22") }
-    verifyErr(ParseErr#) { Unit("test_bad,foo bar;kg22") }
-    verifyErr(ParseErr#) { Unit("test_bad,foo-bar;kg22") }
-    verifyErr(ParseErr#) { Unit("test_bad,foo+bar;kg22") }
-    verifyErr(ParseErr#) { Unit("test_bad,foo#bar;kg22") }
-    verifyErr(ParseErr#) { Unit("test_bad,foo(bar);kg22") }
+    verifyErr(ParseErr#) { Unit.define(";kg22") }
+    verifyErr(ParseErr#) { Unit.define("test_bad,;kg22") }
+    verifyErr(ParseErr#) { Unit.define("test_bad,foo bar;kg22") }
+    verifyErr(ParseErr#) { Unit.define("test_bad,foo-bar;kg22") }
+    verifyErr(ParseErr#) { Unit.define("test_bad,foo+bar;kg22") }
+    verifyErr(ParseErr#) { Unit.define("test_bad,foo#bar;kg22") }
+    verifyErr(ParseErr#) { Unit.define("test_bad,foo(bar);kg22") }
 
     // bad dimensions/scales
-    verifyErr(ParseErr#) { Unit("test_bad,t8;foo2") }
-    verifyErr(ParseErr#) { Unit("test_bad,t8;m2;xx") }
-    verifyErr(ParseErr#) { Unit("test_bad,t8;m2;5;#") }
+    verifyErr(ParseErr#) { Unit.define("test_bad,t8;foo2") }
+    verifyErr(ParseErr#) { Unit.define("test_bad,t8;m2;xx") }
+    verifyErr(ParseErr#) { Unit.define("test_bad,t8;m2;5;#") }
 
-    verifyEq(Unit.find("test_bad", false), null)
-    verifyErr(Err#) { Unit.find("test_bad") }
-    verifyErr(Err#) { Unit.find("test_bad", true) }
+    verifyEq(Unit.fromStr("test_bad", false), null)
+    verifyErr(Err#) { Unit("test_bad") }
+    verifyErr(Err#) { Unit.fromStr("test_bad", true) }
   }
 
-  Void verifyParse(Str s, Str[] ids, Str:Int dim, Float scale, Float offset := 0f)
+  Void verifyDefine(Str s, Str[] ids, Str:Int dim, Float scale, Float offset := 0f)
   {
-    // parse
-    u := Unit(s)
+    // define
+    u := Unit.define(s)
 
     // verify identity
     verifyEq(u.ids.isImmutable, true)
@@ -72,27 +72,24 @@ class UnitTest : Test
     verifyEq(u.scale, scale)
     verifyEq(u.offset, offset)
     verifyEq(u, u)
+    verifyEq(u.definition.contains(ids.join(", ")), true)
     verifyEq(u.hash, u.toStr.hash)
-    zeroes := ["kg", "m", "sec", "K", "A", "mol", "cd"].exclude |Str k->Bool| { return dim.keys.contains(k) }
+    verifyEq(u.toStr, u.symbol)
+    zeroes := ["kg", "m", "sec", "K", "A", "mol", "cd"].exclude |k| { dim.keys.contains(k) }
     zeroes.each |Str x| { verifyEq(u.trap(x, null), 0) }
     dim.each |Int v, Str x| { verifyEq(u.trap(x, null), v) }
 
-    // verify additional parses are interned
-    verifySame(Unit(s), u)
-    verifySame(Unit(s), u)
-    verifyErr(Err#) { Unit("$ids.first, foobar") }
-    verifyErr(Err#) { Unit("$ids.last; m-33*A33") }
+    // verify additional definitions throw
+    verifyErr(Err#) { Unit.define(s) }
 
     // verify round trip
+    verifySame(Unit(u.name), u)
+    verifySame(Unit(u.symbol), u)
     verifySame(Unit(u.toStr), u)
-
-    // verify dim ordering doesn't matter
-    dimStr := dim.keys.sort.join("*") |Str k->Str| { return "$k${dim[k]}" }
-    verifySame(Unit(ids.join(",") + ";$dimStr;$scale;$offset"), u)
 
     // verify defined
     verify(Unit.list.contains(u))
-    ids.each |id| { verifySame(Unit.find(id), u) }
+    ids.each |id| { verifySame(Unit(id), u) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -101,14 +98,14 @@ class UnitTest : Test
 
   Void testDatabase()
   {
-    m := Unit.find("meter")
+    m := Unit("meter")
     verifyEq(m.ids.isImmutable, true)
     verifyEq(m.ids, ["meter", "m"])
     verifyEq(m.name, "meter")
     verifyEq(m.symbol, "m")
     verifyEq(m.m, 1)
 
-    m3 := Unit.find("m\u00b3")
+    m3 := Unit("m\u00b3")
     verifyEq(m3.ids, ["cubic_meter", "m\u00b3"])
     verifyEq(m3.name, "cubic_meter")
     verifyEq(m3.symbol, "m\u00b3")
@@ -137,12 +134,12 @@ class UnitTest : Test
 
   Void testConversionLength()
   {
-    m  := Unit.find("meter")
-    km := Unit.find("kilometer")
-    mm := Unit.find("millimeter")
-    in := Unit.find("inch")
-    ft := Unit.find("foot")
-    mi := Unit.find("mile")
+    m  := Unit("meter")
+    km := Unit("kilometer")
+    mm := Unit("millimeter")
+    in := Unit("inch")
+    ft := Unit("foot")
+    mi := Unit("mile")
 
     verifyConv(1f, m, 0.001f, km)
     verifyConv(1f, m, 1000f, mm)
@@ -156,27 +153,27 @@ class UnitTest : Test
     verifyConv(1f, mi, 5280f, ft)
     verifyConv(70f, mm, 2.75590551f, in)
 
-    verifyErr(Err#) { verifyConv(60f, m, 1f, Unit.find("cubic_meter")) }
+    verifyErr(Err#) { verifyConv(60f, m, 1f, Unit("cubic_meter")) }
   }
 
   Void testConversionTime()
   {
-    sec := Unit.find("second")
-    min := Unit.find("minute")
-    hr  := Unit.find("hour")
+    sec := Unit("second")
+    min := Unit("minute")
+    hr  := Unit("hour")
 
     verifyConv(60f, sec, 1f, min)
     verifyConv(60f, min, 1f, hr)
     verifyConv(2.5f, hr, 150f, min)
 
-    verifyErr(Err#) { verifyConv(60f, sec, 1f, Unit.find("meter")) }
+    verifyErr(Err#) { verifyConv(60f, sec, 1f, Unit("meter")) }
   }
 
   Void testConversionTemp()
   {
-    k := Unit.find("kelvin")
-    c := Unit.find("celsius")
-    f := Unit.find("fahrenheit")
+    k := Unit("kelvin")
+    c := Unit("celsius")
+    f := Unit("fahrenheit")
 
     verifyConv(0f, c, 273.15f, k)
     verifyConv(273.15f, k, 32f, f)
@@ -191,6 +188,18 @@ class UnitTest : Test
     actual := fromUnit.convertTo(from, toUnit)
     //echo("$from $fromUnit.symbol -> $to $toUnit.symbol ?= " + actual)
     verify(actual.approx(to))
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Serialization
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSerialization()
+  {
+    mph := Unit("miles_per_hour")
+    s := Buf().writeObj(mph).flip.readAllStr
+    verifyEq(s, Str<|sys::Unit("mph")|>)
+    verifySame(s.in.readObj, mph)
   }
 
 }
