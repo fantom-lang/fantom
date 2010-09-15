@@ -13,32 +13,55 @@ class JsUnitDatabase
 {
   Void write(OutStream out)
   {
-    // parse etc/sys/units.fog as big serialized list which contains
-    // lists for each quantity (first item being the name)
-    in  := Env.cur.findFile(`etc/sys/units.fog`).in
-    all := (Obj[])in.readObj
-    in.close
+    // open etc/sys/units.txt
+    in := Env.cur.findFile(`etc/sys/units.txt`).in
 
-    // map lists to quantity data structures
-    all.each |obj|
+    // parse each line
+    curQuantityName := ""
+    in.readAllLines.each |line|
     {
-      q := (Obj[])obj
-      n := q.removeAt(0)
+      // skip comment and blank lines
+      line = line.trim
+      if (line.startsWith("//") || line.size == 0) return
 
-      // quanity
-      out.printLine(
-        "// $n
-         fan.sys.Unit.m_quantityNames.add('$n');
-         with (fan.sys.Unit.m_quantities['$n'] = fan.sys.List.make(fan.sys.Unit.\$type))
-         {")
+      // quanity sections delimited as "-- name (dim)"
+      if (line.startsWith("--"))
+      {
+        name := line[2..<line.index("(")].trim
+        if (name != curQuantityName)
+        {
+          // close off last def
+          if (curQuantityName.size > 0)
+          {
+            out.printLine("}")
+            writeImmutable(out, curQuantityName)
+          }
 
-      // units
-      q.each |Unit u| { out.printLine(" add(fan.sys.Unit.fromStr('$u'));") }
-      out.printLine("}")
+          // start new def
+          curQuantityName = name
+          out.printLine(
+            "// $curQuantityName
+             fan.sys.Unit.m_quantityNames.add('$curQuantityName');
+             with (fan.sys.Unit.m_quantities['$curQuantityName'] = fan.sys.List.make(fan.sys.Unit.\$type))
+             {")
+        }
+        return
+      }
+
+      // add unit
+      out.printLine(" add(fan.sys.Unit.define('$line'));")
     }
 
     // finish up
+    out.printLine("}")
+    writeImmutable(out, curQuantityName)
     out.printLine("fan.sys.Unit.m_quantityNames = fan.sys.Unit.m_quantityNames.toImmutable();")
+  }
+
+  private Void writeImmutable(OutStream out, Str quantityName)
+  {
+    out.printLine("fan.sys.Unit.m_quantities['$quantityName'] = " +
+                  "fan.sys.Unit.m_quantities['$quantityName'].toImmutable();")
   }
 }
 

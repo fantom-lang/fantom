@@ -69,7 +69,7 @@ fan.sys.Unit.prototype.$typeof = function() { return fan.sys.Unit.$type; }
 // Database
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Unit.find = function(name, checked)
+fan.sys.Unit.fromStr = function(name, checked)
 {
   if (checked === undefined) checked = true;
   var unit = fan.sys.Unit.m_units[name];
@@ -101,9 +101,9 @@ fan.sys.Unit.quantity = function(quantity)
 // Parsing
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Unit.fromStr = function(str, checked)
+fan.sys.Unit.define = function(str)
 {
-  if (checked === undefined) checked = true
+  // parse
   var unit = null;
   try
   {
@@ -111,12 +111,29 @@ fan.sys.Unit.fromStr = function(str, checked)
   }
   catch (e)
   {
-    if (!checked) return null;
     var msg = str;
     if (e instanceof fan.sys.ParseErr) msg += ": " + e.m_msg;
     throw fan.sys.ParseErr.make("Unit", msg);
   }
-  return fan.sys.Unit.define(unit);
+
+  // register
+
+  // check that none of the units are defined
+  for (var i=0; i<unit.m_ids.size(); ++i)
+  {
+    var id = unit.m_ids.get(i);
+    if (fan.sys.Unit.m_units[id] != null)
+      throw fan.sys.Err.make("Unit id already defined: " + id);
+  }
+
+  // this is a new definition
+  for (var i=0; i<unit.m_ids.size(); ++i)
+  {
+    var id = unit.m_ids.get(i);
+    fan.sys.Unit.m_units[id] = unit;
+  }
+
+  return unit;
 }
 
 /**
@@ -180,61 +197,6 @@ fan.sys.Unit.parseDim = function(s)
   return dim;
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Definition
-//////////////////////////////////////////////////////////////////////////
-
-/**
- * Define a new unit.  If the unit is already defined then we check
- * that it is compatible with our existing definition and intern it.
- */
-fan.sys.Unit.define = function(unit)
-{
-  // lookup by one of its ids
-  for (var i=0; i<unit.m_ids.size(); ++i)
-  {
-    var id = unit.m_ids.get(i);
-
-    // if we have an existing check if compatible
-    var existing = fan.sys.Unit.m_units[id];
-    if (existing != null)
-    {
-      if (!existing.isCompatibleDefinition(unit))
-        throw fan.sys.Err.make("Attempt to define incompatible units: " + existing + " != " + unit);
-      return existing;
-    }
-
-    // this is a new definition
-    for (var i=0; i<unit.m_ids.size(); ++i)
-    {
-      var id = unit.m_ids.get(i);
-      fan.sys.Unit.m_units[id] = unit;
-    }
-    return unit;
-  }
-}
-
-/**
- * Return if this unit is compatible with the other unit's definition.
- * We provide a little flexibility on the scale and offset because
- * doubles are so imprecise.
- */
-fan.sys.Unit.prototype.isCompatibleDefinition = function(x)
-{
-/*
-println("####: " + x);
-println(" --1: " + (this.m_symbol == x.m_symbol));
-println(" --2: " + (this.m_dim == x.m_dim));
-println(" --3: " + (fan.sys.Float.approx(this.m_scale, x.m_scale)) + "  " + this.m_scale + "/" + x.m_scale);
-println(" --4: " + (fan.sys.Float.approx(this.m_offset, x.m_offset)));
-*/
-
-  return this.m_ids.equals(x.m_ids) &&
-         this.m_dim == x.m_dim &&
-         fan.sys.Float.approx(this.m_scale, x.m_scale) &&
-         fan.sys.Float.approx(this.m_offset, x.m_offset);
-}
-
 /**
  * Private constructor.
  */
@@ -277,29 +239,7 @@ fan.sys.Unit.prototype.hash = function() { return fan.sys.Str.hash(this.toStr())
 
 fan.sys.Unit.prototype.$typeof = function() { return fan.sys.Unit.$type; }
 
-fan.sys.Unit.prototype.toStr = function()
-{
-  if (this.m_str == null)
-  {
-    var s = "";
-    for (var i=0; i<this.m_ids.size(); ++i)
-    {
-      if (i > 0) s += ", ";
-      s += this.m_ids.get(i);
-    }
-    if (this.m_dim != fan.sys.Unit.m_dimensionless)
-    {
-      s += "; " + this.m_dim;
-      if (this.m_scale != 1.0 || this.m_offset != 0.0)
-      {
-        s += "; " + this.m_scale;
-        if (this.m_offset != 0.0) s += "; " + this.m_offset;
-      }
-    }
-    this.m_str = s;
-  }
-  return this.m_str;
-}
+fan.sys.Unit.prototype.toStr = function() { return this.m_ids.last(); }
 
 fan.sys.Unit.prototype.ids = function() { return this.m_ids; }
 
@@ -310,6 +250,26 @@ fan.sys.Unit.prototype.symbol = function() { return this.m_ids.last(); }
 fan.sys.Unit.prototype.scale = function() { return this.m_scale; }
 
 fan.sys.Unit.prototype.offset = function() { return this.m_offset; }
+
+fan.sys.Unit.prototype.definition = function()
+{
+  var s = "";
+  for (var i=0; i<this.m_ids.size(); ++i)
+  {
+    if (i > 0) s += ", ";
+    s += this.m_ids.get(i);
+  }
+  if (this.m_dim != fan.sys.Unit.m_dimensionless)
+  {
+    s += "; " + this.m_dim;
+    if (this.m_scale != 1.0 || this.m_offset != 0.0)
+    {
+      s += "; " + this.m_scale;
+      if (this.m_offset != 0.0) s += "; " + this.m_offset;
+    }
+  }
+  return s;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Dimension
