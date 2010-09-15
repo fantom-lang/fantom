@@ -184,9 +184,9 @@ public class Test
   static String s(Object obj)
   {
     if (obj == null) return "null";
-    if (obj instanceof String) return FanStr.toCode((String)obj);
+    if (obj instanceof String) return FanStr.toCode((String)obj) + " [sys::Str]";
     if (obj instanceof List) return ((List)obj).of().toString() + obj;
-    return toStr(obj);
+    return toStr(obj) + " [" + FanObj.typeof(obj) + "]";
   }
 
 //////////////////////////////////////////////////////////////////////////
