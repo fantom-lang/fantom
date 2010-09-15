@@ -105,12 +105,12 @@ Comments [#comments]
         Void doSomethingCool() {}
       }
 
-  - Break logical sections up using line of 75 '/' chars:
+  - Break logical sections up using line of 74 '/' chars:
       //////////////////////////////////////////////////////////////////////////
       // Section
       //////////////////////////////////////////////////////////////////////////
 
-  - Use line of 75 '*' chars to separate classes in a single source file:
+  - Use line of 74 '*' chars to separate classes in a single source file:
       **************************************************************************
       ** NewClass
       **************************************************************************

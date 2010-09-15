@@ -18,11 +18,11 @@ pH
 percent_relative_humidity, %RH
 grams_of_water_per_kilogram_dry_air, gH₂O/kgAir
 volts_per_degree_kelvin, V/K
-degree_days_celsius, ºdaysC
-degree_days_fahrenheit, ºdaysF
+degree_days_celsius, °daysC
+degree_days_fahrenheit, °daysF
 percent_obscuration_per_foot, %obsc/ft
 percent_obscuration_per_meter, %obsc/m
-psi_per_degree_fahrenheit, psi/ºF
+psi_per_degree_fahrenheit, psi/°F
 square_meters_per_newton, m²/N
 watts_per_square_meter_degree_kelvin, W/m²K
 ampere_square_meter, Am²
@@ -148,9 +148,9 @@ megajoules_per_kilogram_dry_air, MJ/kg_dry; m2*sec-2; 1000000.0
 calorie_per_gram, cal/g; m2*sec-2; 4184.0
 
 -- entropy (kg1*m2*sec-2*K-1)
-joules_per_degree_kelvin, J/ºK; kg1*m2*sec-2*K-1
-kilojoules_per_degree_kelvin, kJ/ºK; kg1*m2*sec-2*K-1; 1000.0
-megajoules_per_degree_kelvin, MJ/ºK; kg1*m2*sec-2*K-1; 1000000.0
+joules_per_degree_kelvin, J/°K; kg1*m2*sec-2*K-1
+kilojoules_per_degree_kelvin, kJ/°K; kg1*m2*sec-2*K-1; 1000.0
+megajoules_per_degree_kelvin, MJ/°K; kg1*m2*sec-2*K-1; 1000000.0
 
 -- force (kg1*m1*sec-2)
 newton, N; kg1*m1*sec-2
@@ -173,10 +173,10 @@ grams_per_square_meter, g/m²; kg1*m-2; 0.0010
 
 -- heating rate (sec-1*K1)
 degrees_kelvin_per_second, K/s; sec-1*K1
-degrees_celsius_per_hour, ºC/h; sec-1*K1; 2.777777777777778E-4
-degrees_celsius_per_minute, ºC/min; sec-1*K1; 0.016666666666666666
-degrees_fahrenheit_per_hour, ºF/h; sec-1*K1; 1.5432098765432E-4
-degrees_fahrenheit_per_minute, ºF/min; sec-1*K1; 0.0092592592592593
+degrees_celsius_per_hour, °C/h; sec-1*K1; 2.777777777777778E-4
+degrees_celsius_per_minute, °C/min; sec-1*K1; 0.016666666666666666
+degrees_fahrenheit_per_hour, °F/h; sec-1*K1; 1.5432098765432E-4
+degrees_fahrenheit_per_minute, °F/min; sec-1*K1; 0.0092592592592593
 degrees_kelvin_per_hour, K/h; sec-1*K1; 2.777777777777778E-4
 degrees_kelvin_per_minute, K/min; sec-1*K1; 0.016666666666666666
 
@@ -283,23 +283,23 @@ hectopascal, hPa; kg1*m-1*sec-2; 100.0
 millibar, mbar; kg1*m-1*sec-2; 100.0
 
 -- specific entropy (m2*sec-2*K-1)
-joules_per_kilogram_degree_kelvin, J/kgºK; m2*sec-2*K-1
+joules_per_kilogram_degree_kelvin, J/kg°K; m2*sec-2*K-1
 
 -- surface tension (kg1*sec-2)
 newtons_per_meter, N/m; kg1*sec-2
 
 -- temperature (K1)
-fahrenheit, ºF; K1; 0.5555555555555556; 255.37222222222223
-celsius, ºC; K1; 1.0; 273.15
+fahrenheit, °F; K1; 0.5555555555555556; 255.37222222222223
+celsius, °C; K1; 1.0; 273.15
 kelvin, K; K1
 
 -- temperature differential (K1)
-fahrenheit_degrees, ΔºF; K1; 0.5555555555555556
-celsius_degrees, ΔºC; K1
+fahrenheit_degrees, Δ°F; K1; 0.5555555555555556
+celsius_degrees, Δ°C; K1
 kelvin_degrees, ΔK; K1
 
 -- thermal conductivity (kg1*m1*sec-3*K-1)
-watts_per_meter_degree_kelvin, W/mºK; kg1*m1*sec-3*K-1
+watts_per_meter_degree_kelvin, W/m°K; kg1*m1*sec-3*K-1
 
 -- time (sec1)
 nanosecond, ns; sec1; 1.0E-9
@@ -307,9 +307,9 @@ microsecond, us; sec1; 1.0E-6
 millisecond, ms; sec1; 0.0010
 hundredths_second, cs; sec1; 0.01
 tenths_second, ds; sec1; 0.1
-second, s; sec1
+second, sec, s; sec1
 minute, min; sec1; 60.0
-hour, h; sec1; 3600.0
+hour, hr, h; sec1; 3600.0
 day; sec1; 86400.0
 week, wk; sec1; 604800.0
 julian_month, mo; sec1; 2629800.0
