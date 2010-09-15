@@ -35,7 +35,7 @@ fan.sys.File.make = function(uri, checkSlash)
   return new fan.sys.File();
 }
 
-fan.sys.File.osPath = function(osPath)
+fan.sys.File.os = function(osPath)
 {
   // if running under rhino, return local instance
   if (fan.sys.Env.$rhino)
