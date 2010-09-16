@@ -556,11 +556,13 @@ class JsCondExpr : JsExpr
   }
   override Void write(JsWriter out)
   {
+    out.w("(")
     operands.each |op,i|
     {
       if (i>0 && i<operands.size) out.w(" $symbol ")
       op.write(out)
     }
+    out.w(")")
   }
   Str symbol
   JsExpr[] operands
