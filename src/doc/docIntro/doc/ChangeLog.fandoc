@@ -11,6 +11,7 @@
 - Redesign Unit definition: fromStr -> define, find -> fromStr
 - Redesign unit database as simple text file
 - js: Full Charset and Stream support
+- compilerJs: Wrap CondExpr in parens to preserve grouping
 
 *Build 1.0.55 (13 Sep 2010)*
 - Enhance DateTime/Time pattern for AM/PM
