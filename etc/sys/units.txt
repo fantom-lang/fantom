@@ -318,14 +318,14 @@ year, yr; sec1; 3.1536E7
 -- velocity (m1*sec-1)
 meters_per_second, m/s; m1*sec-1
 kilometers_per_second, km/s; m1*sec-1; 1000.0
-kilometers_per_hour, km/hr; m1*sec-1; 0.277778
+kilometers_per_hour, km/h; m1*sec-1; 0.277778
 miles_per_hour, mph; m1*sec-1; 0.447027
 feet_per_second, ft/s; m1*sec-1; 0.3048
 feet_per_minute, ft/min; m1*sec-1; 0.00508
 millimeters_per_second, mm/s; m1*sec-1; 0.0010
 millimeters_per_minute, mm/min; m1*sec-1; 1.6666666666666667E-5
 meters_per_minute, m/min; m1*sec-1; 0.016666666666666666
-meters_per_hour, m/hr; m1*sec-1; 2.777777777777778E-4
+meters_per_hour, m/h; m1*sec-1; 2.777777777777778E-4
 
 -- volume (m3)
 cubic_meter, m³; m3
@@ -352,7 +352,7 @@ cubic_feet_per_minute, cfm; m3*sec-1; 4.719474432E-4
 imperial_gallons_per_minute, galUK/min; m3*sec-1; 0.004546092
 liters_per_minute, L/min; m3*sec-1; 1.6666666666666667E-5
 gallons_per_minute, gal/min; m3*sec-1; 6.30901964E-5
-cubic_meters_per_hour, m³/hr; m3*sec-1; 2.777777777777778E-4
-liters_per_hour, L/hr; m3*sec-1; 2.7777777777777776E-7
+cubic_meters_per_hour, m³/h; m3*sec-1; 2.777777777777778E-4
+liters_per_hour, L/h; m3*sec-1; 2.7777777777777776E-7
 cubic_meters_per_minute, m³/min; m3*sec-1; 0.016666666666666666
 
