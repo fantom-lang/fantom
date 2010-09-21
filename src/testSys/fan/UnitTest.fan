@@ -13,6 +13,10 @@
 class UnitTest : Test
 {
 
+  const static Str deg  := "\u00b0"
+  const static Str exp2 := "\u00b2"
+  const static Str exp3 := "\u00b3"
+
 //////////////////////////////////////////////////////////////////////////
 // Define
 //////////////////////////////////////////////////////////////////////////
@@ -108,16 +112,19 @@ class UnitTest : Test
     verifyEq(m.symbol, "m")
     verifyEq(m.m, 1)
 
-    m3 := Unit("m\u00b3")
-    verifyEq(m3.ids, ["cubic_meter", "m\u00b3"])
+    m3 := Unit("m${exp3}")
+    verifyEq(m3.ids, ["cubic_meter", "m${exp3}"])
     verifyEq(m3.name, "cubic_meter")
-    verifyEq(m3.symbol, "m\u00b3")
+    verifyEq(m3.symbol, "m${exp3}")
     verifyEq(m3.m, 3)
 
     all := Unit.list
     verifyType(all, Unit[]#)
     verify(all.contains(m))
     verify(all.contains(m3))
+    n := 0
+    all.each |u| { if (u === m) n++ }
+    verifyEq(n, 1)
 
     quantities := Unit.quantities
     verify(quantities.size > 0)
@@ -209,4 +216,38 @@ class UnitTest : Test
     verifySame(s.in.readObj, mph)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Mult/Div
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMult()
+  {
+    verifyMult("m", "m", "m${exp2}")
+    verifyMult("ft", "ft", "ft${exp2}")
+    verifyMult("ft", "ft${exp2}", "ft${exp3}")
+    verifyMult("kW", "h", "kWh")
+    verifyMult("BTU/h", "h", "BTU")
+    verifyErr(Err#) { x := Unit("ft") * Unit("L") }
+  }
+
+  Void verifyMult(Str a, Str b, Str prod)
+  {
+    verifySame(Unit(a) * Unit(b), Unit(prod))
+  }
+
+  Void testDiv()
+  {
+    verifyDiv("km", "h", "km/h")
+    verifyDiv("mile", "h", "mph")
+    verifyDiv("kW", "ft\u00b2", "kW/ft${exp2}")
+    verifyDiv("kWh", "m\u00b2", "kWh/m${exp2}")
+    verifyDiv("${deg}C", "min", "${deg}C/min")
+    verifyDiv("ft${exp3}", "min", "cfm")
+    verifyErr(Err#) { x := Unit("ft") / Unit("${deg}C/min") }
+  }
+
+  Void verifyDiv(Str a, Str b, Str quotient)
+  {
+    verifySame(Unit(a) / Unit(b), Unit(quotient))
+  }
 }
