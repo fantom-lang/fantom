@@ -25,9 +25,9 @@ namespace Fan.Sys
     public static Unit fromStr(string name) { return fromStr(name, true); }
     public static Unit fromStr(string name, bool check)
     {
-      lock (m_units)
+      lock (m_byId)
       {
-        Unit unit = (Unit)m_units[name];
+        Unit unit = (Unit)m_byId[name];
         if (unit != null || !check) return unit;
         throw Err.make("Unit not found: " + name).val;
       }
@@ -35,11 +35,9 @@ namespace Fan.Sys
 
     public static List list()
     {
-      lock (m_units)
+      lock (m_list)
       {
-        Unit[] vals = new Unit[m_units.Count];
-        m_units.Values.CopyTo(vals, 0);
-        return new List(Sys.UnitType, vals);
+        return m_list.dup().ro();
       }
     }
 
@@ -127,18 +125,19 @@ namespace Fan.Sys
       }
 
       // register
-      lock (m_units)
+      lock (m_byId)
       {
         // lookup by its ids
         for (int i=0; i<unit.m_ids.sz(); ++i)
         {
           string id = (string)unit.m_ids.get(i);
-          if (m_units[id] != null) throw Err.make("Unit id is already defined: " + id).val;
+          if (m_byId[id] != null) throw Err.make("Unit id is already defined: " + id).val;
         }
 
         // this is a new definition
         for (int i=0; i<unit.m_ids.sz(); ++i)
-           m_units[(string)unit.m_ids.get(i)] = unit;
+           m_byId[(string)unit.m_ids.get(i)] = unit;
+        m_list.add(unit);
       }
 
       return unit;
@@ -198,13 +197,7 @@ namespace Fan.Sys
       }
 
       // intern
-      lock (m_dims)
-      {
-        Dimension cached = (Dimension)m_dims[dim];
-        if (cached != null) return cached;
-        m_dims[dim] = dim;
-        return dim;
-      }
+      return dim.intern();
     }
 
     /**
@@ -334,8 +327,153 @@ namespace Fan.Sys
         s.Append(key).Append(val);
       }
 
+      public Dimension add(Dimension b)
+      {
+        Dimension r = new Dimension();
+        r.kg  = (sbyte)(kg  + b.kg);
+        r.m   = (sbyte)(m   + b.m);
+        r.sec = (sbyte)(sec + b.sec);
+        r.K   = (sbyte)(K   + b.K);
+        r.A   = (sbyte)(A   + b.A);
+        r.mol = (sbyte)(mol + b.mol);
+        r.cd  = (sbyte)(cd  + b.cd);
+        return r;
+      }
+
+      public Dimension subtract(Dimension b)
+      {
+        Dimension r = new Dimension();
+        r.kg  = (sbyte)(kg  - b.kg);
+        r.m   = (sbyte)(m   - b.m);
+        r.sec = (sbyte)(sec - b.sec);
+        r.K   = (sbyte)(K   - b.K);
+        r.A   = (sbyte)(A   - b.A);
+        r.mol = (sbyte)(mol - b.mol);
+        r.cd  = (sbyte)(cd  - b.cd);
+        return r;
+      }
+
+      public Dimension intern()
+      {
+        lock (m_dims)
+        {
+          Dimension cached = (Dimension)m_dims[this];
+          if (cached != null) return cached;
+          m_dims[this] = this;
+          return this;
+        }
+      }
+
       internal string str;
       internal sbyte kg, m, sec, K, A, mol, cd;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Arithmetic
+  //////////////////////////////////////////////////////////////////////////
+
+    public Unit mult(Unit b)
+    {
+      lock (m_combos)
+      {
+        Combo key = new Combo(this, "*", b);
+        Unit r = (Unit)m_combos[key];
+        if (r == null)
+        {
+          r = findMult(this, b);
+          m_combos[key] = r;
+        }
+        return r;
+      }
+    }
+
+    private static Unit findMult(Unit a, Unit b)
+    {
+      // compute dim/scale of a * b
+      Dimension dim = a.m_dim.add(b.m_dim).intern();
+      double scale = a.m_scale * b.m_scale;
+
+      // find all the matches
+      Unit[] matches = match(dim, scale);
+      if (matches.Length == 1) return matches[0];
+
+      // right how our technique for resolving multiple matches is lame
+      string expectedName = a.name() + "_" + b.name();
+      for (int i=0; i<matches.Length; ++i)
+        if (matches[i].name() == expectedName)
+          return matches[i];
+
+      // for now just give up
+      throw Err.make("Cannot match to db: " + a + " * " + b).val;
+    }
+
+    public Unit div(Unit b)
+    {
+      lock (m_combos)
+      {
+        Combo key = new Combo(this, "/", b);
+        Unit r = (Unit)m_combos[key];
+        if (r == null)
+        {
+          r = findDiv(this, b);
+          m_combos[key] = r;
+        }
+        return r;
+      }
+    }
+
+    public Unit findDiv(Unit a, Unit b)
+    {
+      // compute dim/scale of a / b
+      Dimension dim = a.m_dim.subtract(b.m_dim).intern();
+      double scale = a.m_scale / b.m_scale;
+
+      // find all the matches
+      Unit[] matches = match(dim, scale);
+      if (matches.Length == 1) return matches[0];
+
+      // right how our technique for resolving multiple matches is lame
+      string expectedName = a.name() + "_per_" + b.name();
+      for (int i=0; i<matches.Length; ++i)
+        if (matches[i].name().Contains(expectedName))
+          return matches[i];
+
+      // for now just give up
+      throw Err.make("Cannot match to db: " + a + " / " + b).val;
+    }
+
+    private static Unit[] match(Dimension dim, double scale)
+    {
+      ArrayList acc = new ArrayList();
+      lock (m_list)
+      {
+        for (int i=0; i<m_list.sz(); ++i)
+        {
+          Unit x = (Unit)m_list.get(i);
+          if (x.m_dim == dim && approx(x.m_scale, scale))
+            acc.Add(x);
+        }
+      }
+      return (Unit[])acc.ToArray(System.Type.GetType("Fan.Sys.Unit"));
+    }
+
+    private static bool approx(double a, double b)
+    {
+      // pretty loose with our approximation because the database
+      // doesn't have super great resolution for some normalizations
+      if (a == b) return true;
+      double t = Math.Min( Math.Abs(a/1e3), Math.Abs(b/1e3) );
+      return Math.Abs(a - b) <= t;
+    }
+
+    internal class Combo
+    {
+      internal Combo(Unit a, String op, Unit b) { this.a  = a; this.op = op; this.b  = b; }
+      public override int GetHashCode() { return a.GetHashCode() ^ op.GetHashCode() ^ (b.GetHashCode() << 13); }
+      public override bool Equals(object that) { Combo x = (Combo)that; return a == x.a && op == x.op && b == x.b; }
+      readonly Unit a;
+      readonly string op;
+      readonly Unit b;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -352,11 +490,13 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private static readonly Hashtable m_units = new Hashtable(); // string name -> Unit
+    private static readonly List m_list = new List(Sys.UnitType);
+    private static readonly Hashtable m_byId = new Hashtable(); // string id -> Unit
     private static readonly Hashtable m_dims = new Hashtable(); // Dimension -> Dimension
     private static readonly Hashtable m_quantities = new Hashtable(); // string -> List
     private static readonly List m_quantityNames;
     private static readonly Dimension m_dimensionless = new Dimension();
+    private static readonly Hashtable m_combos = new Hashtable(); // Combo -> Unit
     static Unit()
     {
       m_dims[m_dimensionless] = m_dimensionless;
