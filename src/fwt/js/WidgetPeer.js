@@ -193,6 +193,30 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, l
   }
 }
 
+fan.fwt.WidgetPeer.toKey = function(event)
+{
+  var key = fan.fwt.WidgetPeer.keyCodeToKey(event.keyCode);
+  if (event.shiftKey)   key = key.plus(fan.fwt.Key.m_shift);
+  if (event.altKey)     key = key.plus(fan.fwt.Key.m_alt);
+  if (event.ctrlKey)    key = key.plus(fan.fwt.Key.m_ctrl);
+  // TODO FIXIT
+  //if (event.commandKey) key = key.plus(Key.command);
+  return key;
+}
+
+fan.fwt.WidgetPeer.keyCodeToKey = function(keyCode)
+{
+  // TODO FIXIT: map rest of non-alpha keys
+  switch (keyCode)
+  {
+    case 38: return fan.fwt.Key.m_up;
+    case 40: return fan.fwt.Key.m_down;
+    case 37: return fan.fwt.Key.m_left;
+    case 39: return fan.fwt.Key.m_right;
+    default: return fan.fwt.Key.fromMask(keyCode);
+  }
+}
+
 fan.fwt.WidgetPeer.prototype.checkKeyListeners = function(self) {}
 
 fan.fwt.WidgetPeer.prototype.create = function(parentElem, self)
