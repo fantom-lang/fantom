@@ -8,7 +8,6 @@
 package fan.sys;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ArrayList;
 
 /**
@@ -458,7 +457,7 @@ public final class Unit
       for (int i=0; i<list.sz(); ++i)
       {
         Unit x = (Unit)list.get(i);
-        if (x.dim == dim && approx(scale, x.scale))
+        if (x.dim == dim && approx(x.scale, scale))
           acc.add(x);
       }
     }
@@ -471,9 +470,7 @@ public final class Unit
     // doesn't have super great resolution for some normalizations
     if (a == b) return true;
     double t = Math.min( Math.abs(a/1e3), Math.abs(b/1e3) );
-    boolean x = Math.abs(a - b) <= t;
-    //System.out.println("    approx " + a + " ~= " + b + "  t=" + t + " diff=" + (a-b) + " => " + x);
-    return x;
+    return Math.abs(a - b) <= t;
   }
 
   static class Combo
