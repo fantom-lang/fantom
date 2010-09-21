@@ -10,6 +10,7 @@
 - Redesign Unit to be keyed by arbitrary ids list including symbols
 - Redesign Unit definition: fromStr -> define, find -> fromStr
 - Redesign unit database as simple text file
+- Add Unit.mult, Unit.div
 - js: Full Charset and Stream support
 - compilerJs: Wrap CondExpr in parens to preserve grouping
 

@@ -8,6 +8,8 @@
 package fan.sys;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * Unit
@@ -23,9 +25,9 @@ public final class Unit
   public static Unit fromStr(String name) { return fromStr(name, true); }
   public static Unit fromStr(String name, boolean checked)
   {
-    synchronized (units)
+    synchronized (byId)
     {
-      Unit unit = (Unit)units.get(name);
+      Unit unit = (Unit)byId.get(name);
       if (unit != null || !checked) return unit;
       throw Err.make("Unit not found: " + name).val;
     }
@@ -33,9 +35,9 @@ public final class Unit
 
   public static List list()
   {
-    synchronized (units)
+    synchronized (list)
     {
-      return new List(Sys.UnitType, units.values().toArray());
+      return list.dup().ro();
     }
   }
 
@@ -127,21 +129,22 @@ public final class Unit
     }
 
     // register
-    synchronized (units)
+    synchronized (byId)
     {
       // check that none of the units are defined
       for (int i=0; i<unit.ids.sz(); ++i)
       {
         String id = (String)unit.ids.get(i);
-        if (units.get(id) != null) throw Err.make("Unit id already defined: " + id).val;
+        if (byId.get(id) != null) throw Err.make("Unit id already defined: " + id).val;
       }
 
       // this is a new definition
       for (int i=0; i<unit.ids.sz(); ++i)
       {
         String id = (String)unit.ids.get(i);
-        units.put(id, unit);
+        byId.put(id, unit);
       }
+      list.add(unit);
     }
 
     return unit;
@@ -201,13 +204,7 @@ public final class Unit
     }
 
     // intern
-    synchronized (dims)
-    {
-      Dimension cached = (Dimension)dims.get(dim);
-      if (cached != null) return cached;
-      dims.put(dim, dim);
-      return dim;
-    }
+    return dim.intern();
   }
 
   /**
@@ -337,8 +334,156 @@ public final class Unit
       s.append(key).append(val);
     }
 
+    public Dimension add(Dimension b)
+    {
+      Dimension r = new Dimension();
+      r.kg  = (byte)(kg  + b.kg);
+      r.m   = (byte)(m   + b.m);
+      r.sec = (byte)(sec + b.sec);
+      r.K   = (byte)(K   + b.K);
+      r.A   = (byte)(A   + b.A);
+      r.mol = (byte)(mol + b.mol);
+      r.cd  = (byte)(cd  + b.cd);
+      return r;
+    }
+
+    public Dimension subtract(Dimension b)
+    {
+      Dimension r = new Dimension();
+      r.kg  = (byte)(kg  - b.kg);
+      r.m   = (byte)(m   - b.m);
+      r.sec = (byte)(sec - b.sec);
+      r.K   = (byte)(K   - b.K);
+      r.A   = (byte)(A   - b.A);
+      r.mol = (byte)(mol - b.mol);
+      r.cd  = (byte)(cd  - b.cd);
+      return r;
+    }
+
+    public Dimension intern()
+    {
+      // intern
+      synchronized (dims)
+      {
+        Dimension cached = (Dimension)dims.get(this);
+        if (cached != null) return cached;
+        dims.put(this, this);
+        return this;
+      }
+    }
+
     String str;
     byte kg, m, sec, K, A, mol, cd;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Arithmetic
+//////////////////////////////////////////////////////////////////////////
+
+  public final Unit mult(Unit b)
+  {
+    synchronized (combos)
+    {
+      Combo key = new Combo(this, "*", b);
+      Unit r = (Unit)combos.get(key);
+      if (r == null)
+      {
+        r = findMult(this, b);
+        combos.put(key, r);
+      }
+      return r;
+    }
+  }
+
+  private static Unit findMult(Unit a, Unit b)
+  {
+    // compute dim/scale of a * b
+    Dimension dim = a.dim.add(b.dim).intern();
+    double scale = a.scale * b.scale;
+
+    // find all the matches
+    Unit[] matches = match(dim, scale);
+    if (matches.length == 1) return matches[0];
+
+    // right how our technique for resolving multiple matches is lame
+    String expectedName = a.name() + "_" + b.name();
+    for (int i=0; i<matches.length; ++i)
+      if (matches[i].name().equals(expectedName))
+        return matches[i];
+
+    // for now just give up
+    throw Err.make("Cannot match to db: " + a + " * " + b).val;
+  }
+
+  public final Unit div(Unit b)
+  {
+    synchronized (combos)
+    {
+      Combo key = new Combo(this, "/", b);
+      Unit r = (Unit)combos.get(key);
+      if (r == null)
+      {
+        r = findDiv(this, b);
+        combos.put(key, r);
+      }
+      return r;
+    }
+  }
+
+  public final Unit findDiv(Unit a, Unit b)
+  {
+    // compute dim/scale of a / b
+    Dimension dim = a.dim.subtract(b.dim).intern();
+    double scale = a.scale / b.scale;
+
+    // find all the matches
+    Unit[] matches = match(dim, scale);
+    if (matches.length == 1) return matches[0];
+
+    // right how our technique for resolving multiple matches is lame
+    String expectedName = a.name() + "_per_" + b.name();
+    for (int i=0; i<matches.length; ++i)
+      if (matches[i].name().contains(expectedName))
+        return matches[i];
+
+    // for now just give up
+    throw Err.make("Cannot match to db: " + a + " / " + b).val;
+  }
+
+  private static Unit[] match(Dimension dim, double scale)
+  {
+    ArrayList acc = new ArrayList();
+    synchronized (list)
+    {
+      for (int i=0; i<list.sz(); ++i)
+      {
+        Unit x = (Unit)list.get(i);
+        if (x.dim == dim && approx(scale, x.scale))
+          acc.add(x);
+      }
+    }
+    return (Unit[])acc.toArray(new Unit[acc.size()]);
+  }
+
+  private static boolean approx(double a, double b)
+  {
+    // pretty loose with our approximation because the database
+    // doesn't have super great resolution for some normalizations
+    if (a == b) return true;
+    double t = Math.min( Math.abs(a/1e3), Math.abs(b/1e3) );
+    boolean x = Math.abs(a - b) <= t;
+    //System.out.println("    approx " + a + " ~= " + b + "  t=" + t + " diff=" + (a-b) + " => " + x);
+    return x;
+  }
+
+  static class Combo
+  {
+    Combo(Unit a, String op, Unit b) { this.a  = a; this.op = op; this.b  = b; }
+    public int hashCode() { return a.hashCode() ^ op.hashCode() ^ (b.hashCode() << 13); }
+    public boolean equals(Object that) { Combo x = (Combo)that; return a == x.a && op == x.op && b == x.b; }
+    final Unit a;
+    final String op;
+    final Unit b;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -355,9 +500,11 @@ public final class Unit
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private static final HashMap units = new HashMap(); // String name -> Unit
+  private static final List list = new List(Sys.UnitType);
+  private static final HashMap byId = new HashMap(); // String id-> Unit
   private static final HashMap dims = new HashMap(); // Dimension -> Dimension
   private static final HashMap quantities = new HashMap(); // String -> List
+  private static final HashMap combos = new HashMap();  // Combo -> Unit
   private static final List quantityNames;
   private static final Dimension dimensionless = new Dimension();
   static
