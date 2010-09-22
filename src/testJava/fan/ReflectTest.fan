@@ -295,4 +295,41 @@ class ReflectTest : JavaTest
     verifyEq(x->overload1(this), "(Object)")
     verifyEq(x->overload1("foo"), "(String)")
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Mix
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMix()
+  {
+    compile(
+     "using [java] java.util
+
+      class Foo
+      {
+        Random x := Random()
+        Random? y
+        Random a() { a }
+        Random? b() { null }
+        Void c(Random x) {}
+        Void d(Random? x) {}
+      }")
+
+    t := pod.types.first
+    verifyMixRandom(t.field("x").type, false)
+    verifyMixRandom(t.field("y").type, true)
+    verifyMixRandom(t.method("a").returns, false)
+    verifyMixRandom(t.method("b").returns, true)
+    verifyMixRandom(t.method("c").params[0].type, false)
+    verifyMixRandom(t.method("d").params[0].type, true)
+  }
+
+  Void verifyMixRandom(Type t, Bool nullable)
+  {
+    verifyEq(t.isNullable, nullable)
+    if (nullable)
+      verifyEq(t.signature, "[java]java.util::Random?")
+    else
+      verifyEq(t.signature, "[java]java.util::Random")
+  }
 }
