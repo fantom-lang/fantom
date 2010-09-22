@@ -721,8 +721,11 @@ class CheckErrorsTest : CompilerTest
         Int f00 { get { return f00 } }
         Int f01 { set { f01 = it } }
         Int f02 { get { return f02 } set { f02 = it } }
+        Int f03 { get { return f02 } set { this.f02 = it } }
+        Int f04 { set { child.f04 = it } } // ok
 
         override Int r01 { set { &r01 = it } }
+        Foo? child
       }
 
       mixin M
@@ -748,10 +751,10 @@ class CheckErrorsTest : CompilerTest
          8, 26, "Cannot use field accessor inside accessor itself - use '&' operator",
          8, 38, "Cannot use field accessor inside accessor itself - use '&' operator",
 
-        10, 28, "Field storage of inherited field '$podName::Root.r01' not accessible (might try super)",
+        12, 28, "Field storage of inherited field '$podName::Root.r01' not accessible (might try super)",
 
-        16, 16, "Field storage not accessible in mixin '$podName::M.x'",
-        17, 15, "Field storage not accessible in mixin '$podName::M.x'",
+        19, 16, "Field storage not accessible in mixin '$podName::M.x'",
+        20, 15, "Field storage not accessible in mixin '$podName::M.x'",
        ])
   }
 

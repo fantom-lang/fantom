@@ -1246,7 +1246,8 @@ class CheckErrors : CompilerStep
       f.useAccessor = useFieldAccessor(field)
 
       // check that we aren't using an field accessor inside of itself
-      if (curMethod != null && (field.getter === curMethod || field.setter === curMethod))
+      if (curMethod != null && (field.getter === curMethod || field.setter === curMethod) &&
+          (f.target == null || f.target.id == ExprId.thisExpr))
         err("Cannot use field accessor inside accessor itself - use '&' operator", f.loc)
     }
 
