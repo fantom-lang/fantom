@@ -14,12 +14,22 @@ class KeyTest : Test
 
   Void testMake()
   {
-    v := Version("1.0")
     verifyKey(Key.a, "A", [Key.a])
     verifyKey(Key.alt, "Alt", [Key.alt])
     verifyKey(Key.num7+Key.alt, "Alt+7", [Key.alt,Key.num7])
     verifyKey(Key.ctrl+Key.f3, "Ctrl+F3", [Key.ctrl,Key.f3])
     verifyKey(Key("Alt+Command+R"), "Alt+Command+R", [Key.alt, Key.command, Key.r])
+    verifyKey(Key("Q+Shift"), "Shift+Q", [Key.shift, Key.q])
+
+    verifyEq(Key("Alt+Up"), Key("Up+Alt"))
+    verifySame(Key("Alt+Up").list[0], Key.alt)
+    verifySame(Key("Up+Alt").list[1], Key.up)
+    verifySame(Key("Alt+2").primary, Key.num2)
+    verifySame(Key("Ctrl+F1+Shift").primary, Key.f1)
+    verifySame(Key("Ctrl+F1+Shift").list[0], Key.shift)
+    verifySame(Key("Ctrl+F1+Shift").list[1], Key.ctrl)
+    verifySame(Key("Ctrl+F1+Shift").list[2], Key.f1)
+    verifySame(Key("W").primary, Key.w)
   }
 
   Void testPlus()

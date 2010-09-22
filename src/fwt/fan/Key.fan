@@ -184,7 +184,7 @@ const class Key
         }
         mask = mask.or(part.mask)
       }
-      return makeNew(mask, s)
+      return makeNew(mask, null)
     }
     catch {}
     if (checked) throw ParseErr("Invalid Key: $s")
@@ -261,6 +261,11 @@ const class Key
   {
     toStr.split('+').map |Str tok->Key| { fromStr(tok) }
   }
+
+  **
+  ** Decompose the key into its primary key (without modifiers).
+  **
+  Key primary() { fromMask(mask.and(modifierMask.not)) }
 
   **
   ** Return a Key instance with only the modifiers.
