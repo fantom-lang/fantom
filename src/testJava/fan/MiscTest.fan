@@ -186,5 +186,22 @@ class MiscTest : JavaTest
     verifyEq(obj->x->first.typeof.toStr, "[java]fanx.interop::ByteArray")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1213 Java FFI coercion to handle null literal
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1213()
+  {
+    compile(
+     """using [java] fanx.test::InteropTest\$FuncC as FuncC
+        class Foo : FuncC
+        {
+          override Str?[]? swap(Str?[]? x) { return null }
+        }""")
+
+    obj := pod.types.first.make
+    verifyEq(obj->swap(null),  null)
+  }
+
 
 }

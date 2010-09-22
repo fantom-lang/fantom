@@ -428,6 +428,10 @@ class JavaBridge : CBridge
     expected = expected.deref
     if (actual == expected) return expr
 
+    // handle null literal
+    if (expr.id === ExprId.nullLiteral && expected.isNullable)
+      return expr
+
     // handle Fantom to Java primitives
     if (expected.pod == primitives)
       return coerceToPrimitive(expr, expected, onErr)
