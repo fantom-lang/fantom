@@ -181,7 +181,7 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, l
       evt.m_pos = rel;
       evt.m_widget = self;
       //evt.count =
-      //evt.key =
+      evt.m_key = fan.fwt.WidgetPeer.toKey(e);
       meth.call(evt);
       return false;
     }
@@ -195,10 +195,14 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, l
 
 fan.fwt.WidgetPeer.toKey = function(event)
 {
-  var key = fan.fwt.WidgetPeer.keyCodeToKey(event.keyCode);
-  if (event.shiftKey)   key = key.plus(fan.fwt.Key.m_shift);
-  if (event.altKey)     key = key.plus(fan.fwt.Key.m_alt);
-  if (event.ctrlKey)    key = key.plus(fan.fwt.Key.m_ctrl);
+  // find primary key
+  var key = null;
+  if (event.keyCode != null && event.keyCode > 0)
+    key = fan.fwt.WidgetPeer.keyCodeToKey(event.keyCode);
+
+  if (event.shiftKey)   key = key==null ? fan.fwt.Key.m_shift : key.plus(fan.fwt.Key.m_shift);
+  if (event.altKey)     key = key==null ? fan.fwt.Key.m_alt   : key.plus(fan.fwt.Key.m_alt);
+  if (event.ctrlKey)    key = key==null ? fan.fwt.Key.m_ctrl  : key.plus(fan.fwt.Key.m_ctrl);
   // TODO FIXIT
   //if (event.commandKey) key = key.plus(Key.command);
   return key;
