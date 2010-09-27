@@ -12,7 +12,7 @@ buildVersion=1.0.55
 //devHome=file:/C:/dev/fan/
 
 // Windows setup
-jdkHome=/C:/dev/tools/java/
+jdkHome=/C:/Program Files/Java/jdk1.6.0_21/
 dotnetHome=/C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
 
 // Mac setup

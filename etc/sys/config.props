@@ -32,7 +32,7 @@ runtime=java
 // the Java VM to use in the registry under:
 //   \HKEY_LOCAL_MACHINE\Software\JavaSoft\JavaRuntimeEnvironment.CurrentVersion
 // java.jvm=C:\\Program Files\\Java\\jre1.5.0_06\\bin\\client\\jvm.dll
-// java.jvm=C:\\dev\\tools\\jdk16\\jre\\bin\\server\\jvm.dll
+// java.jvm=E:\\tools\\jdk16\\jre\\bin\\server\\jvm.dll
 
 // Set this property to pass additional command line options to the Java VM.
 // The options should be listed together separated with a space.
@@ -48,13 +48,13 @@ java.options=-Xmx512M
 // stable "released" version of fan is installed at /dev/rel/
 // used only for Windows launcher, Unix uses fansubstitute script
 runtime.substitutes=                                     \
-  /C:/dev/fan/src/buildall.fan           = C:\\dev\\rel  \
-  /C:/dev/fan/src/buildboot.fan          = C:\\dev\\rel  \
-  /C:/dev/fan/src/sys/build.fan          = C:\\dev\\rel  \
-  /C:/dev/fan/src/sys/java/build.fan     = C:\\dev\\rel  \
-  /C:/dev/fan/src/sys/js/build.fan       = C:\\dev\\rel  \
-  /C:/dev/fan/src/sys/dotnet/build.fan   = C:\\dev\\rel  \
-  /C:/dev/fan/src/compiler/build.fan     = C:\\dev\\rel  \
-  /C:/dev/fan/src/compilerJava/build.fan = C:\\dev\\rel  \
-  /C:/dev/fan/src/build/build.fan        = C:\\dev\\rel
+  /E:/fan/src/buildall.fan           = E:\\rel  \
+  /E:/fan/src/buildboot.fan          = E:\\rel  \
+  /E:/fan/src/sys/build.fan          = E:\\rel  \
+  /E:/fan/src/sys/java/build.fan     = E:\\rel  \
+  /E:/fan/src/sys/js/build.fan       = E:\\rel  \
+  /E:/fan/src/sys/dotnet/build.fan   = E:\\rel  \
+  /E:/fan/src/compiler/build.fan     = E:\\rel  \
+  /E:/fan/src/compilerJava/build.fan = E:\\rel  \
+  /E:/fan/src/build/build.fan        = E:\\rel
 
