@@ -129,7 +129,7 @@ fan.sys.Type.prototype.make = function(args)
   var make = this.method("make", false);
   if (make != null && make.isPublic())
   {
-    var numArgs = args == null ? 0 : args.sz();
+    var numArgs = args == null ? 0 : args.size();
     var params = make.params();
     if ((numArgs == params.size()) ||
         (numArgs < params.size() && params.get(numArgs).hasDefault()))
