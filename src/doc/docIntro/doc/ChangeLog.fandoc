@@ -13,6 +13,7 @@
 - Add Unit.mult, Unit.div
 - js: Full Charset and Stream support
 - compilerJs: Wrap CondExpr in parens to preserve grouping
+- #1233: Widget.layout
 
 *Build 1.0.55 (13 Sep 2010)*
 - Enhance DateTime/Time pattern for AM/PM

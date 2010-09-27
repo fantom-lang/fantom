@@ -145,6 +145,7 @@ class SerializationTest : Test
         }
         right=fwt::Label
         {
+          layout=gfx::Valign(\"bottom\")
           text=\"right\"
         }
       }")
@@ -154,6 +155,7 @@ class SerializationTest : Test
     verifyEq(x.children.dup.sort, Widget[x.left, x.right].sort)
     verifyEq(x.left->text, "left")
     verifyEq(x.right->text, "right")
+    verifyEq(x.right->layout, Valign.bottom)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -173,6 +175,7 @@ class SerializationTest : Test
         },
         fwt::Label
         {
+          layout=\"fill\"
           text=\"b\"
           bg=gfx::Color(\"#a1b2c3d4\")
         },
@@ -184,6 +187,7 @@ class SerializationTest : Test
     verifyEq(x.children[0]->fg, Color(0xaabbcc))
     verifyEq(x.children[1]->text, "b")
     verifyEq(x.children[1]->bg, Color(0xa1b2c3d4, true))
+    verifyEq(x.children[1]->layout, "fill")
   }
 
 //////////////////////////////////////////////////////////////////////////
