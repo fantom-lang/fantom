@@ -145,6 +145,10 @@ class Console : SideBar
       proc.out = ConsoleOutStream(params.frameId)
       proc.run.join
     }
+    catch (Err e)
+    {
+      e.trace
+    }
     finally
     {
       Desktop.callAsync |->| { execDone(params.frameId) }
@@ -157,7 +161,14 @@ class Console : SideBar
   **
   internal static Void execWrite(Str frameId, Str str)
   {
-    Frame.findById(frameId).console.append(str)
+    try
+    {
+      Frame.findById(frameId).console.append(str)
+    }
+    catch (Err e)
+    {
+      e.trace
+    }
   }
 
   **
@@ -165,10 +176,17 @@ class Console : SideBar
   **
   internal static Void execDone(Str frameId)
   {
-    frame := Frame.findById(frameId)
-    console := frame.console
-    console.busy = false
-    frame.marks = console.model.toMarks
+    try
+    {
+      frame := Frame.findById(frameId)
+      console := frame.console
+      console.busy = false
+      frame.marks = console.model.toMarks
+    }
+    catch (Err e)
+    {
+      e.trace
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -201,6 +219,10 @@ class Console : SideBar
     {
       results := (Str[])method.call(params)
       results.each |Str s| { Desktop.callAsync |->| { execWrite(params.frameId, s) } }
+    }
+    catch (Err e)
+    {
+      e.trace
     }
     finally
     {
