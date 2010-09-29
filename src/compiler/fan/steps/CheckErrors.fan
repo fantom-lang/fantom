@@ -1189,7 +1189,7 @@ class CheckErrors : CompilerStep
     // if calling a method on a value-type, ensure target is
     // coerced to non-null; we don't do this for comparisons
     // and safe calls since they are handled specially
-    if (call.target != null && !call.isCompare && !call.isSafe)
+    if (call.target != null && !call.isCompare && !call.isSafe && !call.method.isStatic)
     {
       if (call.target.ctype.isVal || call.method.parent.isVal)
         call.target = coerce(call.target, call.method.parent) |->| {}

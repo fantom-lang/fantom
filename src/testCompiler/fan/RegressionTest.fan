@@ -391,4 +391,24 @@ class RegressionTest : CompilerTest
       [1, 26, "Expecting function return type"])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Obj.echo on primitive #1238
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1238()
+  {
+    compile(
+      """class Foo
+         {
+           Void i(Bool f) { if (f) Int.echo("i") }
+           Void f(Bool f) { if (f) Float.echo("f") }
+           Void s(Bool f) { if (f) Str.echo("s") }
+         }""")
+
+    obj := pod.types[0].make
+    obj->i(false)
+    obj->f(false)
+    obj->s(false)
+  }
+
 }
