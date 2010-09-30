@@ -50,9 +50,9 @@ class Button : Widget
   **
   ** Button mode defines the style: check, push, radio, or toggle.
   ** If the button is a child of a ToolBar then you can also use
-  ** sep; plus radio and toggle mean the same thing.  The default
-  ** is push.  This field cannot be changed once the button is
-  ** constructed.
+  ** sep and check/toggle have same behavior.  Radio buttons are grouped
+  ** by separator in a ToolBar.  The default is push.  This field
+  ** cannot be changed once the button is constructed.
   **
   const ButtonMode mode := ButtonMode.push
 
