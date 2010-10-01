@@ -233,7 +233,7 @@ class TableModel
   ** Compare two cells when sorting the given col.  Return -1,
   ** 0, or 1 according to the same semanatics as `sys::Obj.compare`.
   ** Default behavior sorts `text` using `sys::Str.localeCompare`.
-  ** See `Table.sort`.
+  ** See `fwt::Table.sort`.
   **
   virtual Int sortCompare(Int col, Int row1, Int row2)
   {
