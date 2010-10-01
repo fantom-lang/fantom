@@ -24,12 +24,15 @@ fan.dom.EventPeer.prototype.alt   = function(self) { return this.event.altKey; }
 fan.dom.EventPeer.prototype.ctrl  = function(self) { return this.event.ctrlKey; }
 fan.dom.EventPeer.prototype.shift = function(self) { return this.event.shiftKey; }
 
+fan.dom.EventPeer.prototype.button = function(self) { return this.event.button; }
+
 fan.dom.EventPeer.prototype.toStr = function(self)
 {
   return "Event[" +
     "target:" + this.target() +
     ", x:" + this.x() + ", y:" + this.y() +
     ", alt:" + this.alt() + ", ctrl:" + this.ctrl() + ", shift:" + this.shift() +
+    ", button:" + this.button() +
     "]";
 }
 
