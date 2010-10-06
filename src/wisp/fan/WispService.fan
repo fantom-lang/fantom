@@ -11,7 +11,12 @@ using web
 using inet
 
 **
-** Wisp implementation of WebService.
+** Simple web server services HTTP requests on a configured port
+** to a top-level root WebMod.  A given instance of WispService can
+** be only be used through one start/stop lifecycle.
+**
+** Example:
+**   WispService { port = 8080; root = MyWebMod() }.start
 **
 const class WispService : Service
 {
@@ -36,22 +41,25 @@ const class WispService : Service
 
   override Void onStart()
   {
+    if (listenerPool.isStopped) throw Err("WispService is already stopped, use to new instance to restart")
     Actor(listenerPool, |->| { listen }).send(null)
     root.onStart
   }
 
   override Void onStop()
   {
-    root.onStop
-    listenerPool.stop
-    processorPool.stop
-    sessionMgr.stop
+    try root.onStop;            catch (Err e) log.err("WispService stop root WebMod", e)
+    try tcpListener.val->close; catch (Err e) log.err("WispService stop listener socket", e)
+    try listenerPool.stop;      catch (Err e) log.err("WispService stop listener pool", e)
+    try processorPool.stop;     catch (Err e) log.err("WispService stop processor pool", e)
+    try sessionMgr.stop;        catch (Err e) log.err("WispService stop session manager", e)
   }
 
   internal Void listen()
   {
     // loop until we successfully bind to port
     listener := TcpListener()
+    this.tcpListener.val = listener
     while (true)
     {
       try
@@ -70,16 +78,29 @@ const class WispService : Service
     // loop until stopped accepting incoming TCP connections
     while (!listenerPool.isStopped)
     {
-      socket := listener.accept
-      WispActor(this, socket).send(null)
+      try
+      {
+        socket := listener.accept
+        WispActor(this, socket).send(null)
+      }
+      catch (Err e)
+      {
+        if (!listenerPool.isStopped)
+          log.err("WispService accept on ${port}", e)
+      }
     }
+
+    // socket should be closed by onStop, but do it again to be really sure
+    try { listener.close } catch {}
+    log.info("WispService stopped on port ${port}")
   }
 
-  internal const ActorPool listenerPool   := ActorPool()
-  internal const ActorPool processorPool  := ActorPool()
+  internal const ActorPool listenerPool    := ActorPool()
+  internal const AtomicRef tcpListener     := AtomicRef()
+  internal const ActorPool processorPool   := ActorPool()
   internal const WispSessionMgr sessionMgr := WispSessionMgr()
 
-  static Void main()
+  @NoDoc static Void main()
   {
     WispService { port = 8080 }.start
     Actor.sleep(Duration.maxVal)
