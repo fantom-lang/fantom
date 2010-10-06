@@ -51,6 +51,7 @@ mixin DocCompilerSupport
   {
     if (s.isSynthetic) return false
     if (t.hasFacet(NoDoc#)) return false
+    if (s.hasFacet(NoDoc#)) return false
     return t == s.parent
   }
 

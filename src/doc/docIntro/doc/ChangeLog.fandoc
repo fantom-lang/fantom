@@ -14,6 +14,7 @@
 - js: Full Charset and Stream support
 - compilerJs: Wrap CondExpr in parens to preserve grouping
 - #1233: Widget.layout
+- #1248: Fix WispService shutdown to release port
 
 *Build 1.0.55 (13 Sep 2010)*
 - Enhance DateTime/Time pattern for AM/PM
