@@ -42,7 +42,7 @@ class JsonOutStream : OutStream
   **   - [simple]`docLang::Serialization#simple` (written as JSON string)
   **   - [serializable]`docLang::Serialization#serializable` (written as JSON object)
   **
-  Void writeJson(Obj? obj)
+  This writeJson(Obj? obj)
   {
          if (obj is Str)  writeJsonStr(obj)
     else if (obj is Num)  writeJsonNum(obj)
@@ -51,6 +51,7 @@ class JsonOutStream : OutStream
     else if (obj is List) writeJsonList(obj)
     else if (obj == null) writeJsonNull
     else writeJsonObj(obj)
+    return this
   }
 
   private Void writeJsonObj(Obj obj)
