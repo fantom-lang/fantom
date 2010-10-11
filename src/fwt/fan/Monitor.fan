@@ -40,5 +40,10 @@ class Monitor
   **
   native Rect screenBounds()
 
+  **
+  ** Dots per inch horizontal/vertical of this monitor.
+  **
+  native Size dpi()
+
 
 }
