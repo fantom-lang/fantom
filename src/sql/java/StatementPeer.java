@@ -229,7 +229,7 @@ public class StatementPeer
 
   static int autoGenKeyMode(Statement self)
   {
-    return self.conn.peer.supportsGetGenKeys ?
+    return self.conn.peer.supportsGetGenKeys && FanStr.indexIgnoreCase(self.sql, "insert") != null ?
            java.sql.Statement.RETURN_GENERATED_KEYS :
            java.sql.Statement.NO_GENERATED_KEYS;
   }
@@ -477,7 +477,8 @@ public class StatementPeer
         boolean valid =
           ((ch >= 'a') && (ch <= 'z')) ||
           ((ch >= 'A') && (ch <= 'Z')) ||
-          ((ch >= '0') && (ch <= '9'));
+          ((ch >= '0') && (ch <= '9')) ||
+          (ch == '_');
         if (!valid)
         {
           if (ch == '\'')
