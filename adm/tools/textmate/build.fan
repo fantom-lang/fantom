@@ -133,14 +133,40 @@ internal class BuildOutStream : OutStream
   override This write(Int b)
   {
     str := Buf().write(b).flip.readAllStr.toXml.replace(" ", "&nbsp;")
-    echo("$str<br/>")
+    echo("$str")
     return this
   }
 
   override This writeBuf(Buf b, Int n := b.remaining)
   {
-    str := Buf().writeBuf(b, n).flip.readAllStr.toXml.replace(" ", "&nbsp;")
-    echo("$str<br/>")
+    str  := Buf().writeBuf(b, n).flip.readAllStr.toXml.replace(" ", "&nbsp;")
+    line := checkLine(str)
+    echo("$line<br/>")
     return this
+  }
+  
+  private Str checkLine(Str s)
+  {
+    if (s.contains("BUILD&nbsp;SUCCESS")) return "<span style='color:#080'>$s</span>"
+    if (s.contains("BUILD&nbsp;FAILED"))  return "<span style='color:red'>$s</span>"
+    if (s.contains(".fan("))
+    {
+      openParen  := s.index(".fan(")
+      closeParen := s.index(")", openParen)
+      comma      := s.index(",", openParen)
+      
+      line  := s[openParen+5..<comma]
+      col   := s[comma+1..<closeParen]
+
+      slash := s.indexr("/", openParen)
+      path  := s[0..openParen+3]
+      file  := path[slash+1..-1]
+      err   := s[closeParen+1..-1]
+      
+      return "<span style='white-space:nowrap;'>
+                <a href='txmt://open?url=file://$path&line=$line&column=$col'>$file</a>($line,$col)$err
+                </span>"
+    }
+    return s
   }
 }
