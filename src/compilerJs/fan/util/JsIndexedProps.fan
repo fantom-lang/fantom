@@ -27,10 +27,20 @@ class JsIndexedProps
       addToIndex(pod, index)
     }
 
+    out.printLine(
+      "(function() 
+       {
+         var i = fan.sys.Map.make(fan.sys.Str.\$type, new fan.sys.ListType(fan.sys.Str.\$type));")
+
     index.each |vals, key|
     {
-      writePair(out, key, vals)
+      v := vals.join(",") |v| { v.toCode }
+      out.printLine("  i.set(\"$key\", fan.sys.List.make(fan.sys.Str.\$type, [$v]));")
     }
+    
+    out.printLine(
+      "  fan.sys.Env.cur().\$setIndex(i);
+       })();")  
   }
 
   private Void addToIndex(Pod pod,  Str:Str[] index)
@@ -48,12 +58,6 @@ class JsIndexedProps
       if (list == null) index[key] = [val]
       else list.add(val)
     }
-  }
-
-  private Void writePair(OutStream out, Str key, Str[] vals)
-  {
-    // TODO
-    out.printLine("// $key: $vals")
   }
 
   static Void main(Str[] args)

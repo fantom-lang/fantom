@@ -11,6 +11,7 @@ using concurrent
 **
 ** EnvTest
 **
+@Js
 class EnvTest : Test
 {
 

@@ -25,12 +25,21 @@ fan.sys.Env.prototype.$ctor = function()
 {
   this.m_args = fan.sys.List.make(fan.sys.Str.$type).toImmutable();
 
+  this.m_index = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.List.$type);
+  this.m_index = this.m_index.toImmutable();
+
   this.m_vars = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Str.$type)
   this.m_vars.caseInsensitive$(true);
   this.m_vars = this.m_vars.toImmutable();
 
   // pod props map, keyed by pod.name
   this.m_props = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Map.$type);
+}
+
+fan.sys.Env.prototype.$setIndex = function(index)
+{
+  if (index.$typeof().toStr() != "[sys::Str:sys::Str[]]") throw fan.sys.ArgErr.make("Invalid type");
+  this.m_index = index.toImmutable();
 }
 
 fan.sys.Env.prototype.$setVars = function(vars)
@@ -83,6 +92,11 @@ fan.sys.Env.prototype.tempDir = function() { return this.m_tempDir; }
 //////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////
+
+fan.sys.Env.prototype.index = function(key)
+{
+  return this.m_index.get(key, fan.sys.Str.$type.emptyList());    
+}
 
 fan.sys.Env.prototype.props = function(pod, uri, maxAge)
 {
