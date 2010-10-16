@@ -88,6 +88,9 @@ class TestRunner
       buf := StrBuf()
       out := buf.out
 
+      // index
+      JsIndexedProps().write(out, [Pod.find("testSys")])
+
       // locales
       JsProps.writeProps(p, `locale/en-US.props`, out)
       JsProps.writeProps(p, `locale/es.props`, out)
