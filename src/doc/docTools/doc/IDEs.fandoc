@@ -42,13 +42,18 @@ can be found in the standard list of plugin from IntelliJ UI.
   - [Home Page]`http://wiki.jfrog.org/confluence/display/FANP/Home`
   - [Download]`http://plugins.intellij.net/plugin/?id=4241`
 
+TextMate Bundle (msl) [#textmate]
+*********************************
+Fantom bundle for TextMate:
+
+ - [Home Page]`http://github.com/martinlau/fantom-textmate-bundle`
+
 Text Editors  [#textEditors]
 ****************************
 The Fantom distro contains configuration files for many common text editors
 under "adm/tools" including:
   - Emacs
   - jEedit
-  - TextMate
   - TextPad
   - Vim
 
