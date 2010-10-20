@@ -141,7 +141,7 @@ public abstract class Slot
   Type parent;
   final Facets facets;
   public String doc;
-  int lineNum;
+  public final int lineNum;
 
 
 }

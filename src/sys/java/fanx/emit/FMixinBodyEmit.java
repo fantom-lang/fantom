@@ -39,6 +39,7 @@ public class FMixinBodyEmit
     this.selfName = jname(type.self);
     for (int i=0; i<type.fields.length; ++i)  emit(type.fields[i]);
     for (int i=0; i<type.methods.length; ++i) emit(type.methods[i]);
+    emitAttributes(type.attrs);
     emitTypeConstFields();
     return classFile = pack();
   }

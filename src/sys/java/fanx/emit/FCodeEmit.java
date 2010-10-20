@@ -228,7 +228,11 @@ public class FCodeEmit
   {
     if (fmethod == null) return;
     FBuf flines = fmethod.attrs.lineNums;
-    if (flines == null) return;
+    if (flines == null)
+    {
+      code.emitLineNumber(fmethod.attrs.lineNum);
+      return;
+    }
 
     int len = flines.len;
     byte[] buf = flines.buf;
