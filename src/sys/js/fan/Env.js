@@ -53,7 +53,6 @@ fan.sys.Env.noDef = "_Env_nodef_";
 
 // check if running under Rhino (Java VM)
 fan.sys.Env.$rhino = false;
-try { if (java.io.File) fan.sys.Env.$rhino = true; } catch (err) {}
 
 //////////////////////////////////////////////////////////////////////////
 // Obj
