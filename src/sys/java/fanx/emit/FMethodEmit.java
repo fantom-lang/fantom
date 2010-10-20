@@ -42,6 +42,7 @@ public class FMethodEmit
     this.isNative = (method.flags & FConst.Native) != 0;
     this.ret      = emit.pod.typeRef(method.inheritedRet); // we don't actually use Java covariance
     this.selfName = emit.selfName;
+    this.lineNum  = method.attrs.lineNum;
   }
 
   /**
@@ -144,6 +145,7 @@ public class FMethodEmit
     code.maxStack  = code.maxLocals + 2;
     code.op2(INVOKESTATIC, body.ref());
     code.op(ARETURN);
+    code.emitLineNumber(lineNum);
     return factory;
   }
 
@@ -184,6 +186,7 @@ public class FMethodEmit
     code.maxStack  = code.maxLocals + 2;
     code.op2(INVOKESPECIAL, body.ref());
     code.op(ARETURN);
+    code.emitLineNumber(lineNum);
 
     // emit factory default parameter wrappers
     emitWrappers(factory);
@@ -314,6 +317,9 @@ public class FMethodEmit
       code.op(FCodeEmit.returnOp(FanUtil.toJavaStackType(m.returns())));
       code.maxLocals = jindex;
       code.maxStack = jindex+1;  // leave room for wide return
+
+      // use line number of class header
+      code.emitLineNumber(emit.lineNum);
     }
   }
 
@@ -480,6 +486,7 @@ public class FMethodEmit
   int paramLen;      // number of parameters to use
   String sig;        // last java signature emitted
   MethodEmit me;     // last java method emitted
+  int lineNum;       // line number of method (or zero)
 
 
 }

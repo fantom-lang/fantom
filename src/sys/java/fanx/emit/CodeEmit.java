@@ -59,6 +59,19 @@ public class CodeEmit
     return attr;
   }
 
+  /**
+   * Emit a LineNumberTable attribute where the entire
+   * method body has one line number.
+   */
+  public void emitLineNumber(int lineNum)
+  {
+    if (lineNum <= 0) return;
+    AttrEmit attr = emitAttr("LineNumberTable");
+    attr.info.u2(1);       // attribute_length
+    attr.info.u2(0);       // start_pc
+    attr.info.u2(lineNum); // line_number
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Pack
 //////////////////////////////////////////////////////////////////////////
@@ -203,6 +216,18 @@ public class CodeEmit
         ((AttrEmit)attrs.get(i)).pack(info);
       }
     }
+
+    // debug to see where lineNums are not being emitted
+    /*
+    boolean lineNums = false;
+    for (int i=0; attrs != null && i<attrs.size(); ++i)
+    {
+      AttrEmit a = (AttrEmit)attrs.get(i);
+      String n = emit.utfToStr(a.name);
+      if (n.equals("LineNumberTable")) { lineNums = true; break; }
+    }
+    if (!lineNums) System.out.println(">> " + method.sig);
+    */
 
     // now the info box is correctly populated, do
     // normal attribute packing
