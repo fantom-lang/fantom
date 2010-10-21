@@ -457,6 +457,7 @@ fan.fwt.TableSelection.prototype.toggle = function(event)
 
 fan.fwt.TableSelection.prototype.select = function(rows)
 {
+  if (rows instanceof fan.sys.List) rows = rows.m_values;
   var selected = [];
   var view  = this.table.view();
   var tbody = this.table.peer.elem.firstChild.firstChild;
