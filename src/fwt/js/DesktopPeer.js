@@ -58,7 +58,7 @@ fan.fwt.DesktopPeer.sysFontMonospace = function()
 fan.fwt.DesktopPeer.$sysFont = fan.gfx.Font.fromStr("13pt Lucida Grande, Tahoma, Arial");
 fan.fwt.DesktopPeer.$sysFontSmall = fan.gfx.Font.fromStr("11pt Lucida Grande, Tahoma, Arial");
 fan.fwt.DesktopPeer.$sysFontView = fan.gfx.Font.fromStr("12pt Lucida Grande, Tahoma, Arial");
-fan.fwt.DesktopPeer.$sysFontMonospace = fan.gfx.Font.fromStr("9pt Monaco, Courier New");
+fan.fwt.DesktopPeer.$sysFontMonospace = fan.gfx.Font.fromStr("12pt Monaco, Courier New");
 
 //////////////////////////////////////////////////////////////////////////
 // System Colors
