@@ -36,7 +36,7 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
     text.style.outline  = "none";
     text.style.padding  = "2px";
     text.style.resize   = "none";
-    text.style.font     = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
+    text.style.font     = fan.fwt.WidgetPeer.fontToCss(this.m_font);
     this.control = text;
   }
   else
@@ -47,7 +47,7 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
     text.style.outline = "none";
     text.style.padding = "1px 2px 2px 2px";
     text.style.margin  = "0px";
-    text.style.font    = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
+    text.style.font    = fan.fwt.WidgetPeer.fontToCss(this.m_font);
     this.control = text;
   }
 
