@@ -287,7 +287,7 @@ public class FMethodEmit
   {
     String parent  = "fan/" + m.parent().pod().name() + "/" + m.parent().name();
     String name    = m.name();
-    int jflags     = emit.jflags(m.flags()) | PUBLIC;
+    int jflags     = emit.jflags(m.flags()) | PUBLIC | SYNTHETIC;
     List params    = m.params();
     int paramCount = params.sz();
 
