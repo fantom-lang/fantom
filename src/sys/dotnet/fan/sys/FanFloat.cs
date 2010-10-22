@@ -100,6 +100,11 @@ namespace Fan.Sys
       }
     }
 
+    public static bool isNaN(double self)
+    {
+      return System.Double.IsNaN(self);
+    }
+
     public static long hash(double self)
     {
       return bits(self);
