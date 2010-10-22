@@ -99,6 +99,11 @@ public final class FanFloat
     }
   }
 
+  public static boolean isNaN(double self)
+  {
+    return Double.isNaN(self);
+  }
+
   public static long hash(double self)
   {
     return bits(self);

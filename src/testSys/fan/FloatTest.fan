@@ -93,6 +93,10 @@ class FloatTest : Test
     verifyFalse(Float.nan.equals(Float.nan))
     verify(Float.posInf.equals(Float.posInf))
     verify(Float.negInf.equals(Float.negInf))
+
+    verifyEq(Float.nan.isNaN, true)
+    verifyEq(55f.isNaN, false)
+    verifyEq(Float.negInf.isNaN, false)
   }
 
 //////////////////////////////////////////////////////////////////////////

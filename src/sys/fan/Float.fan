@@ -85,7 +85,7 @@ const final class Float : Num
   const static Float pi
 
 //////////////////////////////////////////////////////////////////////////
-// Obj Overrides
+// Identity
 //////////////////////////////////////////////////////////////////////////
 
   **
@@ -123,6 +123,11 @@ const final class Float : Num
   **   Float.nan <= Float.nan   =>  false
   **
   override Int compare(Obj obj)
+
+  **
+  ** Return if this is Float.nan.  Also see `compare`.
+  **
+  Bool isNaN()
 
   **
   ** Return bits().
