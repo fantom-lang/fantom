@@ -278,7 +278,7 @@ class WebClient
   This writeReq()
   {
     // sanity checks
-    if (!reqUri.isAbs) throw Err("reqUri is not absolute: `$reqUri`")
+    if (!reqUri.isAbs || reqUri.scheme == null || reqUri.host == null) throw Err("reqUri is not absolute: `$reqUri`")
     if (!reqHeaders.caseInsensitive) throw Err("reqHeaders must be case insensitive")
     if (reqHeaders.containsKey("Host")) throw Err("reqHeaders must not define 'Host'")
 
