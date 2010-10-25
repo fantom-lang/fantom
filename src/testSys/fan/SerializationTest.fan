@@ -510,6 +510,42 @@ class SerializationTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Collection Inference
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCollectionInference()
+  {
+    verifyCollectionInference(SerCollectionInference { a = [,] })
+    verifyCollectionInference(SerCollectionInference { a = ["foo"] })
+
+    verifyCollectionInference(SerCollectionInference { b = [,] })
+    verifyCollectionInference(SerCollectionInference { b = [4] })
+
+    verifyCollectionInference(SerCollectionInference { x = [:] })
+    verifyCollectionInference(SerCollectionInference { x = ["x":5f] })
+
+    verifyCollectionInference(SerCollectionInference { y = [`s`:null, `t`:""] })
+
+    verifyCollectionInference(SerCollectionInference { w = "foo" }, Str#)
+    verifyCollectionInference(SerCollectionInference { w = ["foo"] }, Str[]#)
+    verifyCollectionInference(SerCollectionInference { w = ["", null] }, Str?[]#)
+    verifyCollectionInference(SerCollectionInference { w = ["a":3, "b":4f] }, Str:Num#)
+  }
+
+  SerCollectionInference verifyCollectionInference(SerCollectionInference s, Type? w := null)
+  {
+    sb := StrBuf()
+    sb.out.writeObj(s)
+    s = sb.toStr.in.readObj
+    if (s.a != null) verifyEq(s.a.typeof, Str[]#)
+    if (s.b != null) verifyEq(s.b.typeof, Num?[]#)
+    if (s.x != null) verifyEq(s.x.typeof, [Str:Num]#)
+    if (s.y != null) verifyEq(s.y.typeof, [Uri:Str?]#)
+    if (s.w != null) verifyEq(s.w.typeof, w)
+    return s
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Using
 //////////////////////////////////////////////////////////////////////////
 
@@ -1023,3 +1059,18 @@ const class SerItBlock
     return a == obj->a && b == obj->b && c == obj->c && d == obj->d
   }
 }
+
+**************************************************************************
+** SerCollectionInference
+**************************************************************************
+
+@Serializable
+class SerCollectionInference
+{
+  Str[]? a
+  Num?[]? b
+  [Str:Num]? x
+  [Uri:Str?]? y
+  Obj? w
+}
+
