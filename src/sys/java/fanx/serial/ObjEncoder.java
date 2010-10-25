@@ -193,7 +193,7 @@ public class ObjEncoder
 
     // figure out if we can use an inferred type
     boolean inferred = false;
-    if (list.typeof() == curFieldType)
+    if (curFieldType != null && curFieldType.fits(Sys.ListType))
     {
       inferred = true;
     }
@@ -237,7 +237,7 @@ public class ObjEncoder
 
     // figure out if we can use an inferred type
     boolean inferred = false;
-    if (t.equals(curFieldType))
+    if (curFieldType != null && curFieldType.fits(Sys.MapType))
     {
       inferred = true;
     }

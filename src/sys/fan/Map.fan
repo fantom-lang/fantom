@@ -11,6 +11,7 @@
 **
 ** See [examples]`examples::sys-maps`.
 **
+@Serializable
 final class Map
 {
 

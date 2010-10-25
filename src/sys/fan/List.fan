@@ -11,6 +11,7 @@
 **
 ** See [examples]`examples::sys-lists`.
 **
+@Serializable
 final class List
 {
 
