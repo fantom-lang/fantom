@@ -271,8 +271,8 @@ plate code:
   {
     get
     {
-      if (*fullName == null) *fullName = "$firstName  $lastName"
-      return *fullName
+      if (&fullName == null) &fullName = "$firstName  $lastName"
+      return &fullName
     }
   }
 
