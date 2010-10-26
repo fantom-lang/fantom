@@ -116,6 +116,13 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     imgElem.border = "0";
     imgElem.src = fan.fwt.WidgetPeer.uriToImageSrc(this.m_image.m_uri);
 
+    var imgSize = this.$imageSize();
+    if (imgSize != null) 
+    {
+      imgElem.style.width  = imgSize.m_w  + "px";
+      imgElem.style.height = imgSize.m_h + "px";
+    }
+
     img.appendChild(imgElem);
     parent.appendChild(img);
   }
@@ -190,6 +197,9 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
 
 // Backdoor hook to override hgap b/w image and text [returns Int?]
 fan.fwt.LabelPeer.prototype.$hgap = function(self) { return null; }
+
+// Backdoor hook to override image size [returns Size?]
+fan.fwt.LabelPeer.prototype.$imageSize = function(self) { return null; }
 
 // Backdoor hook to override text style [returns [Str:Str]?]
 fan.fwt.LabelPeer.prototype.$style = function(self) { return null; }
