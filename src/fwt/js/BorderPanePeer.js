@@ -69,9 +69,26 @@ fan.fwt.BorderPanePeer.prototype.sync = function(self)
       webkitBorderBottomLeftRadius  = b.m_radiusBottomLeft + "px";
     }
   }
+  
+  // override style
+  var override = this.$style(self);
+  if (override != null)
+  {
+    s = this.elem.style;
+    for (var k in override.keyMap)
+    {
+      var key = override.keyMap[k];
+      var val = override.valMap[k];
+      s.setProperty(key, val, "");
+    }
+  }
 
+  // sync size
   var w = this.m_size.m_w - b.m_widthLeft - b.m_widthRight;
   var h = this.m_size.m_h - b.m_widthTop - b.m_widthBottom;
   fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
 }
+
+// Backdoor hook to override style [returns [Str:Str]?]
+fan.fwt.BorderPanePeer.prototype.$style = function(self) { return null; }
 
