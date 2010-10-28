@@ -111,7 +111,8 @@ public final class Date
 
   public final String toStr()
   {
-    return toLocale("YYYY-MM-DD");
+    if (str == null) str = toLocale("YYYY-MM-DD");
+    return str;
   }
 
   public Type typeof()
@@ -304,5 +305,6 @@ public final class Date
   final short year;
   final byte month;
   final byte day;
+  private String str;
 
 }
