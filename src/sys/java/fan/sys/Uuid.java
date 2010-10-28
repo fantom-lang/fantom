@@ -187,6 +187,7 @@ public final class Uuid
       // first try MAC address
       try { return resolveMacAddr(); }
       catch (NoSuchMethodError e) {}  // ignore if not on 1.6
+      catch (NoSuchElementException e) {}  // ignore if no network interfaces
       catch (Throwable e) { e.printStackTrace(); }
 
       // then try local IP address
@@ -208,7 +209,7 @@ public final class Uuid
         byte[] mac = net.getHardwareAddress();
         if (mac != null) return toLong(mac);
       }
-      throw new Exception();
+      throw new NoSuchElementException();
     }
 
     private long resolveIpAddr()
