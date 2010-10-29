@@ -172,8 +172,8 @@ class UriTest : Test
       ["a":"b", "":"x"])
 
     verifyQueryEncoding(
-      "=x;=foo;alpha=beta;=z;foo=bar",
-      ["alpha":"beta", "":"z", "foo":"bar"])
+      "=x;alpha=beta;q=z;foo=bar",
+      ["alpha":"beta", "":"x", "q":"z", "foo":"bar"])
   }
 
   Void verifyQueryEncoding(Str encoded, Str:Str q, Bool exact := true)
@@ -442,6 +442,7 @@ class UriTest : Test
     verifyQuery(`?alpha=b;;&;&`, "alpha=b;;&;&", ["alpha":"b"])
     verifyQuery(`?alpha=b&c`, "alpha=b&c", Str:Str["alpha":"b", "c":"true"])
     verifyQuery(`?a=b&;&charlie;`, "a=b&;&charlie;", Str:Str["a":"b", "charlie":"true"])
+    verifyQuery(`?x=1&x=2&y=9&x=3`, "x=1&x=2&y=9&x=3", Str:Str["x":"1,2,3", "y":"9"])
   }
 
   Void verifyQuery(Uri uri, Str? queryStr, Str:Str query)
