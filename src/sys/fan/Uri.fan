@@ -371,7 +371,9 @@ const final class Uri
   ** the "&" or ";" characters.  If a pair contains the "=", then
   ** it is split into a key and value, otherwise the value defaults
   ** to "true".  If delimiters such as "&", "=", or ";" are in the
-  ** keys or values, then they are *not* escaped.
+  ** keys or values, then they are *not* escaped.  If duplicate keys
+  ** are detected, then the values are concatenated together with a
+  ** comma.
   **
   ** Examples:
   **   `http://host/path?query`.query  =>  ["query":"true"]
@@ -380,6 +382,7 @@ const final class Uri
   **   `?a=b&c=d`.query                =>  ["a":"b", "c":"d"]
   **   `?a=b;;c=d;`.query              =>  ["a":"b", "c":"d"]
   **   `?a=b;;c`.query                 =>  ["a":"b", "c":"true"]
+  **   `?x=1&x=2&x=3`.query            =>  ["x":"1,2,3"]
   **
   Str:Str query()
 

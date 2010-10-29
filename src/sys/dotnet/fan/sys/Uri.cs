@@ -460,10 +460,21 @@ namespace Fan.Sys
 
       private void addQueryParam(Map map, string q, int start, int eq, int end, bool escaped)
       {
+        string key, val;
         if (start == eq && q[start] != '=')
-          map.set(toQueryStr(q, start, end, escaped), "true");
+        {
+          key = toQueryStr(q, start, end, escaped);
+          val = "true";
+        }
         else
-          map.set(toQueryStr(q, start, eq, escaped), toQueryStr(q, eq+1, end, escaped));
+        {
+          key = toQueryStr(q, start, eq, escaped);
+          val = toQueryStr(q, eq+1, end, escaped);
+        }
+
+        string dup = (string)map.get(key);
+        if (dup != null) val = dup + "," + val;
+        map.set(key, val);
       }
 
       private string toQueryStr(string q, int start, int end, bool escaped)

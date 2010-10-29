@@ -486,9 +486,19 @@ fan.sys.UriDecoder.prototype.parseQuery = function(q)
 fan.sys.UriDecoder.prototype.addQueryParam = function(map, q, start, eq, end, escaped)
 {
   if (start == eq && q.charAt(start) != '=')
-    map.set(this.toQueryStr(q, start, end, escaped), "true");
+  {
+    key = this.toQueryStr(q, start, end, escaped);
+    val = "true";
+  }
   else
-    map.set(this.toQueryStr(q, start, eq, escaped), this.toQueryStr(q, eq+1, end, escaped));
+  {
+    key = this.toQueryStr(q, start, eq, escaped);
+    val = this.toQueryStr(q, eq+1, end, escaped);
+  }
+
+  dup = map.get(key, null)
+  if (dup !== undefined) val = dup + "," + val
+  map.set(key, val)
 }
 
 fan.sys.UriDecoder.prototype.toQueryStr = function(q, start, end, escaped)
