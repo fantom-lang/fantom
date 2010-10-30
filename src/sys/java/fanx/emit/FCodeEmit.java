@@ -840,6 +840,7 @@ public class FCodeEmit
     switch (retStackType)
     {
       case 'A': return ARETURN;
+      case 'F': return FRETURN;
       case 'D': return DRETURN;
       case 'I': return IRETURN;
       case 'J': return LRETURN;
