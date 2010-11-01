@@ -363,20 +363,30 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
     var view  = self.view();
     if (!model.$onMouseDown) return;
 
-    // find pos relative to cell
+    // find pos on display
     var dis = this.posOnDisplay(self);
-    var table = this.elem.firstChild;
-    var tr = table.rows[row+1];
-    var td = tr.cells[col+1];
-    var rx = event.clientX-dis.m_x-td.offsetLeft;
-    var ry = event.clientY-dis.m_y-td.offsetTop;
+    var posOnDis = fan.gfx.Point.make(event.clientX-dis.m_x, event.clientY-dis.m_y);
+    
+    // find pos relative to cell
+    var div   = this.elem;
+    var table = div.firstChild;
+    var tr  = table.rows[row+1];
+    var td  = tr.cells[col+1];
+    var rx  = posOnDis.m_x - td.offsetLeft + div.scrollLeft;
+    var ry  = posOnDis.m_y - tr.offsetTop  + div.scrollTop;
     var rel = fan.gfx.Point.make(rx, ry);
+
+    // data map
+    var data = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Obj.$type);
+    data.set("posOnDisplay", posOnDis);
+    data.set("cellSize",     fan.gfx.Size.make(td.offsetWidth, td.offsetHeight));
 
     // fire event
     var evt = fan.fwt.Event.make();
     evt.m_id = fan.fwt.EventId.m_mouseDown;
     evt.m_pos = rel;
     evt.m_widget = self;
+    evt.m_data = data;
     model.$onMouseDown(evt, view.m_cols.get(col), view.m_rows.get(row));
   }
 }
