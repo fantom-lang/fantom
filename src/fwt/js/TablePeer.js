@@ -363,9 +363,14 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
     var view  = self.view();
     if (!model.$onMouseDown) return;
 
-    // find pos relative to widget
+    // find pos relative to cell
     var dis = this.posOnDisplay(self);
-    var rel = fan.gfx.Point.make(event.clientX-dis.m_x, event.clientY-dis.m_y);
+    var table = this.elem.firstChild;
+    var tr = table.rows[row+1];
+    var td = tr.cells[col+1];
+    var rx = event.clientX-dis.m_x-td.offsetLeft;
+    var ry = event.clientY-dis.m_y-td.offsetTop;
+    var rel = fan.gfx.Point.make(rx, ry);
 
     // fire event
     var evt = fan.fwt.Event.make();
