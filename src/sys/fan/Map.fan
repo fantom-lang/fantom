@@ -121,7 +121,7 @@ final class Map
   ** m in this map.  Keys in m not yet mapped are added and keys already
   ** mapped are overwritten.  Return this.  Throw ReadonlyErr if readonly.
   ** Also see `addAll`.  This method is semanatically equivalent to:
-  **   m.each |K k, V v| { this.set(k, v) }
+  **   m.each |v, k| { this.set(k, v) }
   **
   M setAll(M m)
 
@@ -131,7 +131,7 @@ final class Map
   ** will fail (any previous keys will remain mapped potentially leaving
   ** this map in an inconsistent state).  Return this.  Throw ReadonlyErr if
   ** readonly.  Also see `setAll`. This method is semanatically equivalent to:
-  **   m.each |K k, V v| { this.add(k, v) }
+  **   m.each |v, k| { this.add(k, v) }
   **
   M addAll(M m)
 
