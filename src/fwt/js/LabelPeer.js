@@ -79,6 +79,12 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
     this.rebuild(self);
     this.needRebuild = false;
   }
+  if (this.$softClip(self))
+  {
+    var i = this.m_image==null ? 0 : 1;
+    var text = this.elem.childNodes[i];
+    text.style.width = this.m_size.m_w + "px";
+  }
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
 
@@ -147,6 +153,11 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
       }
     }
     if (this.m_fg != null) text.style.color = this.m_fg.toStr();
+    if (this.$softClip(self))
+    {
+      text.style.overflow = "hidden";
+      text.style.textOverflow = "ellipsis";
+    }    
     text.style.display = "inline-block";
     text.style.position = "relative";
     text.style.top = "-1px";
@@ -197,6 +208,9 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
 
 // Backdoor hook to override hgap b/w image and text [returns Int?]
 fan.fwt.LabelPeer.prototype.$hgap = function(self) { return null; }
+
+// Backdoor hook to override soft clipping [returns Bool]
+fan.fwt.LabelPeer.prototype.$softClip = function(self) { return false; }
 
 // Backdoor hook to override image size [returns Size?]
 fan.fwt.LabelPeer.prototype.$imageSize = function(self) { return null; }
