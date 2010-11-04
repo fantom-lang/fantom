@@ -47,8 +47,8 @@ fan.fwt.WidgetPeer.prototype.posOnDisplay = function(self)
   while (p != null)
   {
     if (p instanceof fan.fwt.Tab) p = p.parent();
-    x += p.peer.m_pos.m_x;
-    y += p.peer.m_pos.m_y;
+    x += p.peer.m_pos.m_x - p.peer.elem.scrollLeft;
+    y += p.peer.m_pos.m_y - p.peer.elem.scrollTop;
     if (p instanceof fan.fwt.Dialog)
     {
       var dlg = p.peer.elem.parentNode;
