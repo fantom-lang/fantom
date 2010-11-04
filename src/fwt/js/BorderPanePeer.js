@@ -15,6 +15,14 @@ fan.fwt.BorderPanePeer.prototype.$ctor = function(self)
   fan.fwt.PanePeer.prototype.$ctor.call(this, self);
 }
 
+// TODO FIXIT: bad hack to workaround Win/Chrome's horrific alpha-mask bugs
+fan.fwt.BorderPane.$isWinChrome = false;
+(function() {
+  var ua = window.navigator.userAgent;
+  if (ua.indexOf("Windows") != -1 && ua.indexOf(" Chrome/") != -1)
+    fan.fwt.BorderPane.$isWinChrome = true;
+})();    
+
 fan.fwt.BorderPanePeer.prototype.relayout = function(self)
 {
   // short-circuit if not mounted
@@ -79,6 +87,25 @@ fan.fwt.BorderPanePeer.prototype.sync = function(self)
     {
       var key = override.keyMap[k];
       var val = override.valMap[k];
+      
+      // skip for Chrome until working properly
+      if (fan.fwt.BorderPane.$isWinChrome)
+      {
+        if (key == "-webkit-box-shadow")
+        {
+          var temp = "";
+          var list = val.split(",")
+          for (var i=0; i<list.length; i++)
+          {
+            if (temp.length > 0) temp += ",";
+            if (list[i].indexOf("inset") == -1)
+              temp += list[i];
+          }
+          if (temp.length == 0) continue;
+          val = temp;
+        }         
+      }
+      
       s.setProperty(key, val, "");
     }
   }
