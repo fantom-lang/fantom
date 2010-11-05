@@ -77,13 +77,16 @@ class Bootstrap : AbstractMain
     else
       hgVer = execToStr(["hg", "version"])
 
-    // javaVer
-    jdkVer = execToStr(["javac", "-version"])
-
     // javaHome
     javaHome := Env.cur.vars.find |v, k| { k.lower == "java_home" }
     if (javaHome != null)
       jdkHome = File.os(javaHome).normalize
+
+    // javaVer: either must be in path or vai java_home env var
+    if (jdkHome == null)
+      jdkVer = execToStr(["javac", "-version"])
+    else
+      jdkVer = execToStr([(jdkHome+`bin/javac`).osPath, "-version"])
 
     // devHome
     devHome = devHome.uri.plusSlash.toFile.normalize
