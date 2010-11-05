@@ -833,4 +833,47 @@ class InteropTest : JavaTest
     verifyEq(obj->d01, true)
     verifyEq(obj->d02, -1)
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Primitive Routers
+//////////////////////////////////////////////////////////////////////////
+
+  Void testPrimitiveRouters()
+  {
+    compile(
+     """using [java] fanx.test::InteropTest\$PrimitiveRouters as PrimitiveRouters
+        mixin Router : PrimitiveRouters
+        {
+          override Bool z(Bool x) { return x }
+          override Int b(Int x) { return x }
+          override Int c(Int x) { return x }
+          override Int s(Int x) { return x }
+          override Int i(Int x) { return x }
+          override Int j(Int x) { return x }
+          override Float f(Float x) { return x }
+          override Float d(Float x) { return x }
+        }
+
+        class Foo : Router
+        {
+          Bool testz() { z(true) == true }
+          Bool testb() { b(3) == 3 }
+          Bool tests() { s(333) == 333 }
+          Bool testi() { i(1234567) == 1234567 }
+          Bool testj() { j(1234567) == 1234567 }
+          Bool testf() { f(4f) == 4f }
+          Bool testd() { d(11f) == 11f }
+        }""")
+
+    obj := pod.types.last.make
+    verify(obj->testz)
+    verify(obj->testb)
+    verify(obj->tests)
+    verify(obj->testi)
+    verify(obj->testj)
+    verify(obj->testf)
+    verify(obj->testd)
+  }
+
 }
+

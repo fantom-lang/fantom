@@ -215,6 +215,18 @@ public class InteropTest
     BigDecimal[] addDecimal(BigDecimal[] a, BigDecimal d);
   }
 
+  public static interface PrimitiveRouters
+  {
+    public abstract boolean z(boolean x);
+    public abstract byte b(byte x);
+    public abstract char c(char x);
+    public abstract short s(short x);
+    public abstract int i(int x);
+    public abstract long j(long x);
+    public abstract float f(float x);
+    public abstract double d(double x);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Funcs
 //////////////////////////////////////////////////////////////////////////
