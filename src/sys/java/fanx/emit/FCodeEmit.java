@@ -842,10 +842,13 @@ public class FCodeEmit
       case 'A': return ARETURN;
       case 'F': return FRETURN;
       case 'D': return DRETURN;
-      case 'I': return IRETURN;
       case 'J': return LRETURN;
+      case 'B':
+      case 'C':
+      case 'S':
+      case 'Z':
+      case 'I': return IRETURN;
       case 'V': return RETURN;
-      case 'Z': return IRETURN;
       default: throw new IllegalStateException(""+(char)retStackType);
     }
   }

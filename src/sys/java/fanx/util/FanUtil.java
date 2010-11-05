@@ -353,6 +353,20 @@ public class FanUtil
       if (t == Sys.BoolType)  return 'I';
       if (t == Sys.IntType)   return 'J';
       if (t == Sys.FloatType) return 'D';
+      if (t.isJava() && t.podName().equals("[java]"))
+      {
+        // FFI primitives
+        if (t.name().equals("byte"))    return 'I';
+        if (t.name().equals("char"))    return 'I';
+        if (t.name().equals("short"))   return 'I';
+        if (t.name().equals("int"))     return 'I';
+        if (t.name().equals("float"))   return 'F';
+
+        // fail-safe
+        if (t.name().equals("long"))    return 'L';
+        if (t.name().equals("boolean")) return 'F';
+        if (t.name().equals("double"))  return 'D';
+      }
     }
     return 'A';
   }
