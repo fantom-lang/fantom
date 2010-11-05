@@ -9,9 +9,7 @@
 **
 ** Services are used to publish functionality in a VM for use by
 ** other software components.  The service registry for the VM is
-** keyed by public types each service implements.  Service are
-** automatically mapped into the namespace under "/sys/service/{qname}"
-** for all their public types.
+** keyed by public types each service implements.
 **
 ** The following table illustrates the service lifecycle:
 **
