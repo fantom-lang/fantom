@@ -396,9 +396,9 @@ class SlotLiteralExpr : Expr
     this.name = name
   }
 
-  //override Str serialize() { "$parent.signature#name" }
+  override Str serialize() { "$parent.signature#${name}" }
 
-  override Str toStr() { "$parent.signature#name" }
+  override Str toStr() { "$parent.signature#${name}" }
 
   CType parent
   Str name

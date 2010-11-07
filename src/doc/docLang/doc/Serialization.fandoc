@@ -175,6 +175,7 @@ as defined by the Fantom programming language:
   - [sys::Duration]`Literals#duration`
   - [sys::Uri]`Literals#uri`
   - [sys::Type]`Literals#type`
+  - [sys::Slot]`Literals#slot`
   - [sys::List]`Literals#list`
   - [sys::Map]`Literals#map`
 
@@ -271,7 +272,7 @@ The formal grammar of the Fantom serialization formats:
   usingAs   := "using" id "::" id "as" id eos
   obj       := literal | simple | complex
   literal   := bool | int | float | decimal | str | duration | uri |
-               typeLiteral | list | map
+               typeLiteral | slotLiteral | list | map
   simple    := type "(" str ")"
   complex   := type ["{" [children] "}"]
   children  := child [(eos|",") child]*

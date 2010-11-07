@@ -8,13 +8,14 @@
 
 using System;
 using Fanx.Fcode;
+using Fanx.Serial;
 
 namespace Fan.Sys
 {
   /// <summary>
   /// Slot models a member field or method of a Type.
   /// </summary>
-  public abstract class Slot : FanObj
+  public abstract class Slot : FanObj, Literal
   {
 
   //////////////////////////////////////////////////////////////////////////
@@ -134,6 +135,11 @@ public virtual bool isConst() { return (m_flags & FConst.Const)     != 0; } // w
   //////////////////////////////////////////////////////////////////////////
 
     public override string toStr() { return m_qname; }
+
+    public void encode(ObjEncoder @out)
+    {
+      m_parent.encode(@out); @out.w(m_name);
+    }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields

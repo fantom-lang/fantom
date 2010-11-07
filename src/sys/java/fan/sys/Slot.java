@@ -8,12 +8,14 @@
 package fan.sys;
 
 import fanx.fcode.*;
+import fanx.serial.*;
 
 /**
  * Slot models a member field or method of a Type.
  */
 public abstract class Slot
   extends FanObj
+  implements Literal
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -130,6 +132,12 @@ public abstract class Slot
 //////////////////////////////////////////////////////////////////////////
 
   public String toStr() { return qname; }
+
+  public void encode(ObjEncoder out)
+  {
+    parent.encode(out);
+    out.w(name);
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

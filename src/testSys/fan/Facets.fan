@@ -21,4 +21,6 @@ facet class FacetS2
   const Str? s
   const Version? v
   const Int[]? l
+  const Type? type
+  const Slot? slot
 }

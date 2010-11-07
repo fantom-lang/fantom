@@ -82,6 +82,8 @@ class FacetsTest : Test
     verifyEq(s2.s, null)
     verifyEq(s2.v, Version("9.0"))
     verifyEq(s2.l, [1, 2, 3])
+    verifySame(s2.type, Str#)
+    verifySame(s2.slot, Float#nan)
     verify(facets.contains(m1))
     verify(facets.contains(s1))
     verify(facets.contains(s2))
@@ -96,11 +98,11 @@ class FacetsTest : Test
 
 @FacetM1
 @FacetS1 { val = "foo" }
-@FacetS2 { i = 77; v = Version("9.0"); l = [1, 2, 3] }
+@FacetS2 { i = 77; v = Version("9.0"); l = [1, 2, 3]; type = Str#; slot = Float#nan }
 class FacetsA
 {
   @FacetM1
   @FacetS1 { val = "foo" }
-  @FacetS2 { i = 77; v = Version("9.0"); l = [1, 2, 3] }
+  @FacetS2 { i = 77; v = Version("9.0"); l = [1, 2, 3]; type = Str#; slot = Float#nan }
   Int i
 }
