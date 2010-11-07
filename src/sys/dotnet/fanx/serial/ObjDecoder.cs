@@ -138,7 +138,7 @@ namespace Fanx.Serial
       if (curt == Token.LPAREN)
         return readSimple(line, t);
       else if (curt == Token.POUND)
-        return readTypeLiteral(line, t);
+        return readTypeOrSlotLiteral(line, t);
       else if (curt == Token.LBRACKET)
         return readCollection(curField, t);
       else
@@ -147,11 +147,20 @@ namespace Fanx.Serial
 
     /// <summary>
     /// typeLiteral := type "#"
+    /// slotLiteral := type "#" id
     /// </summary>
-    private object readTypeLiteral(int line, Type t)
+    private object readTypeOrSlotLiteral(int line, Type t)
     {
       consume(Token.POUND, "Expected '#' for type literal");
-      return t;
+      if (curt == Token.ID)
+      {
+        string slotName = consumeId("slot literal name");
+        return t.slot(slotName);
+      }
+      else
+      {
+        return t;
+      }
     }
 
     /// <summary>

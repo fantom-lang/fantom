@@ -111,6 +111,11 @@ class SerializationTest : Test
     verifySer("using sys\nStr:Int?#", [Str:Int?]#)
     verifySer("using sys\n[Str:Int?][]#", [Str:Int?][]#)
     verifySer("using sys\n[Str:Int?][]?#", [Str:Int?][]?#)
+
+    // Slot literals
+    verifySer("sys::Str#replace", Str#replace)
+    verifySer("sys::Float#pi", Float#pi)
+    verifySer("testSys::SerializationTest#testLiterals", #testLiterals)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -802,7 +807,6 @@ class SerializationTest : Test
     sb := StrBuf()
     StrBufWrapOutStream(sb.out).writeObj(expected)
     verifyEq(sb.toStr.in.readObj, expected)
-
 
     return x
   }
