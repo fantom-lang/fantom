@@ -185,31 +185,27 @@ class ResolveExpr : CompilerStep
   private Expr resolveLocaleLiteral(LocaleLiteralExpr expr)
   {
     loc := expr.loc
-    pattern := expr.pattern
-
-    // parse podName::key=defVal
-    Str? podName := null
-    Str? def := null
-    key := pattern
-    eq := pattern.index("=");  if (eq != null) { key = pattern[0..<eq]; def = pattern[eq+1..-1] }
-    colons := key.index("::"); if (colons != null) { podName = key[0..<colons]; key = key[colons+2..-1] }
 
     // cannot define def with explicit podName
-    if (podName != null && def != null)
+    if (expr.podName != null && expr.def != null)
       err("Locale literal cannot specify both qualified pod and default value", loc)
 
-    // cannot specify using current pod if script
-    if (podName == null && compiler.input.isScript)
+    // cannot specify using current pod if output is not pod
+    outputMode := compiler.input.output
+    if (expr.podName == null && outputMode != CompilerOutputMode.podFile)
       err("Scripts cannot define non-qualified locale literals", loc)
 
+    // if we have a def, then add to compiler to merge into locale/en.props
+    if (expr.def != null) compiler.localeDefs.add(expr)
+
     // Pod.find(podName) or curType#.pod
-    podTarget := podName != null ?
-      CallExpr.makeWithMethod(loc, null, ns.podFind, [LiteralExpr.makeStr(loc, ns, podName)]) :
+    podTarget := expr.podName != null ?
+      CallExpr.makeWithMethod(loc, null, ns.podFind, [LiteralExpr.makeStr(loc, ns, expr.podName)]) :
       CallExpr.makeWithMethod(loc, LiteralExpr(loc, ExprId.typeLiteral, ns.typeType, curType), ns.typePod)
 
     // podTarget.locale(key [, def])
-    args := [LiteralExpr.makeStr(loc, ns, key)]
-    if (def != null) args.add(LiteralExpr.makeStr(loc, ns, def))
+    args := [LiteralExpr.makeStr(loc, ns, expr.key)]
+    if (expr.def != null) args.add(LiteralExpr.makeStr(loc, ns, expr.def))
     return CallExpr.makeWithMethod(loc, podTarget, ns.podLocale, args)
   }
 

@@ -317,10 +317,13 @@ class EnvTest : Test
     }
 
     // with definition
-    /* TODO
-    verifyEq("$<envTest.x=Foo>", "Foo")
-    verifyEq("$<envTest.x>",     "Foo")
-    */
+    verifyEq("$<envTest.def1=Def 1>",    "Def 1")
+    verifyEq("$<envTest.def1>",          "Def 1")
+    verifyEq("$<testSys::envTest.def1>", "Def 1")
+    verifyEq(typeof.pod.locale("envTest.def1"), "Def 1")
+
+    verifyEq("$<envTest.def2=Def 2>",    "Def 2")
+    verifyEq(typeof.pod.locale("envTest.def2"), "Def 2")
   }
 
 //////////////////////////////////////////////////////////////////////////

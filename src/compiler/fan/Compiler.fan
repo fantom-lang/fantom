@@ -39,12 +39,13 @@ class Compiler
     if ((Obj?)input.log == null)
       throw ArgErr("CompilerInput.log is null")
 
-    this.input    = input
-    this.log      = input.log
-    this.errs     = CompilerErr[,]
-    this.warns    = CompilerErr[,]
-    this.depends  = Depend[,]
-    this.wrappers = Str:CField[:]
+    this.input      = input
+    this.log        = input.log
+    this.errs       = CompilerErr[,]
+    this.warns      =  CompilerErr[,]
+    this.depends    = Depend[,]
+    this.wrappers   = Str:CField[:]
+    this.localeDefs = LocaleLiteralExpr[,]
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -89,6 +90,7 @@ class Compiler
     ResolveExpr(this).run
     CheckErrors(this).run
     CheckParamDefs(this).run
+    LocaleProps(this).run
     CompileJs(this).run
     ClosureVars(this).run
     ClosureToImmutable(this).run
@@ -124,6 +126,8 @@ class Compiler
   Str:CField wrappers       // ClosureVars
   Obj? jsPod                // CompileJs (JavaScript AST)
   Str? js                   // CompileJs (JavaScript code)
+  LocaleLiteralExpr[] localeDefs  // ResolveExpr.resolveLocaleLiteral
+  Str? localeProps          // LocaleProps
   FPod? fpod                // Assemble
   CompilerOutput? output    // GenerateOutput
 
