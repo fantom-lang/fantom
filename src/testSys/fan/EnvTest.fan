@@ -289,6 +289,40 @@ class EnvTest : Test
     }
   }
 
+  Void testLocaleLiterals()
+  {
+    Locale("en").use
+    {
+      // existing key
+      verifyEq("$<a>", "a en")
+      verifyEq("_$<a>", "_a en")
+      verifyEq("_$<a>_", "_a en_")
+      verifyEq("$<a>_", "a en_")
+    }
+
+    Locale("es-MX").use
+    {
+      // existing key
+      var := "hi!"
+      verifyEq("$<a>", "a es-MX")
+      verifyEq("${var}_$<b>", "hi!_b es")
+      verifyEq("_$<c>_", "_c es_")
+      verifyEq("$<d>_$var", "d en_hi!")
+
+      // qualified
+      verifyEq("$<testSys::a>", "a es-MX")
+      verifyEq("_$<testSys::b>", "_b es")
+      verifyEq("_$<testSys::c>_", "_c es_")
+      verifyEq("$<testSys::d>_", "d en_")
+    }
+
+    // with definition
+    /* TODO
+    verifyEq("$<envTest.x=Foo>", "Foo")
+    verifyEq("$<envTest.x>",     "Foo")
+    */
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Index
 //////////////////////////////////////////////////////////////////////////

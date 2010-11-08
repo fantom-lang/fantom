@@ -381,6 +381,26 @@ class LiteralExpr : Expr
 }
 
 **************************************************************************
+** LocaleLiteralExpr
+**************************************************************************
+
+**
+** LocaleLiteralExpr
+**
+class LocaleLiteralExpr: Expr
+{
+  new make(Loc loc, Str pattern)
+    : super(loc, ExprId.localeLiteral)
+  {
+    this.pattern = pattern
+  }
+
+  override Str toStr() { "<${pattern}>" }
+
+  Str pattern
+}
+
+**************************************************************************
 ** SlotLiteralExpr
 **************************************************************************
 
@@ -1625,6 +1645,7 @@ enum class ExprId
   durationLiteral,
   uriLiteral,
   typeLiteral,
+  localeLiteral,    // LocaleLiteralExpr
   slotLiteral,      // SlotLiteralExpr
   rangeLiteral,     // RangeLiteralExpr
   listLiteral,      // ListLiteralExpr

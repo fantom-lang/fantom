@@ -25,6 +25,7 @@ enum class Token
   durationLiteral ("Duration literal"),
   uriLiteral      ("Uri literal"),
   dsl             ("DSL"),
+  localeLiteral   ("Locale literal"),
 
   // operators
   dot("."),
