@@ -188,6 +188,22 @@ String interpolation makes string formatting easier to read and write.
 Fantom coding convention is to always use string interpolation rather than
 concatenation.
 
+Locale Literals [#localeLiterals]
+=================================
+Str interpolation supports a special syntax to easily work with localized
+strings:
+
+  // qualified pod::key
+  "$<pod::key>"  =>  Pod.find("pod").locale("key")
+
+  // lookup key within current pod
+  "$<key>" =>  EnclosingType#.pod.locale("key")
+
+  // lookup key and automatically add key to `locale/en.props`
+  "$<key=Text>"  =>  EnclosingType#.pod.locale("key", "Text")
+
+Refer to [Localization]`Localization#localeLiterals` for in in-depth discussion.
+
 Triple Quotes [#tripleQuotes]
 =============================
 Fantom also supports '"""' triple quoted string literals.  These work exactly

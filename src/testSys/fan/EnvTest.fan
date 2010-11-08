@@ -322,8 +322,8 @@ class EnvTest : Test
     verifyEq("$<testSys::envTest.def1>", "Def 1")
     verifyEq(typeof.pod.locale("envTest.def1"), "Def 1")
 
-    verifyEq("$<envTest.def2=Def 2>",    "Def 2")
-    verifyEq(typeof.pod.locale("envTest.def2"), "Def 2")
+    verifyEq("$<envTest.def2=Def 2\nLine 2 75 \u00B0 F>", "Def 2\nLine 2 75 \u00B0 F")
+    verifyEq(typeof.pod.locale("envTest.def2"),           "Def 2\nLine 2 75 \u00B0 F")
   }
 
 //////////////////////////////////////////////////////////////////////////
