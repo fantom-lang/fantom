@@ -67,6 +67,7 @@ abstract class CNamespace
     mapType      = sysType("Map")
     funcType     = sysType("Func")
     errType      = sysType("Err")
+    podType      = sysType("Pod")
     typeType     = sysType("Type")
     slotType     = sysType("Slot")
     fieldType    = sysType("Field")
@@ -101,6 +102,9 @@ abstract class CNamespace
     rangeMakeExclusive = sysMethod(rangeType,  "makeExclusive")
     slotFindMethod     = sysMethod(slotType,   "findMethod")
     slotFindFunc       = sysMethod(slotType,   "findFunc")
+    podFind            = sysMethod(podType,    "find")
+    podLocale          = sysMethod(podType,    "locale")
+    typePod            = sysMethod(typeType,   "pod")
     typeField          = sysMethod(typeType,   "field")
     typeMethod         = sysMethod(typeType,   "method")
     funcCall           = sysMethod(funcType,   "call")
@@ -309,6 +313,7 @@ abstract class CNamespace
   readonly CType? mapType
   readonly CType? funcType
   readonly CType? errType
+  readonly CType? podType
   readonly CType? typeType
   readonly CType? slotType
   readonly CType? fieldType
@@ -342,6 +347,9 @@ abstract class CNamespace
   readonly CMethod? rangeMakeExclusive
   readonly CMethod? slotFindMethod
   readonly CMethod? slotFindFunc
+  readonly CMethod? podFind
+  readonly CMethod? podLocale
+  readonly CMethod? typePod
   readonly CMethod? typeField
   readonly CMethod? typeMethod
   readonly CMethod? funcEnterCtor

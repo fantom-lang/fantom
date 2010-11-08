@@ -331,6 +331,7 @@ public class Pod
     synchronized (filesMap)
     {
       if (filesList != null) return;
+      if (fpod.store == null) throw Err.make("Not backed by pod file: " + name).val;
       this.filesList = (List)fpod.store.podFiles(uri()).toImmutable();
       for (int i=0; i<filesList.sz(); ++i)
       {

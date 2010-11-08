@@ -1513,6 +1513,7 @@ public class Parser : CompilerSupport
       case Token.strLiteral:      return LiteralExpr(loc, ExprId.strLiteral, ns.strType, consume.val)
       case Token.durationLiteral: return LiteralExpr(loc, ExprId.durationLiteral, ns.durationType, consume.val)
       case Token.uriLiteral:      return LiteralExpr(loc, ExprId.uriLiteral, ns.uriType, consume.val)
+      case Token.localeLiteral:   return LocaleLiteralExpr(loc, consume.val)
       case Token.lbracket:        return collectionLiteralExpr(loc, null)
       case Token.falseKeyword:    consume; return LiteralExpr.makeFalse(loc, ns)
       case Token.nullKeyword:     consume; return LiteralExpr.makeNull(loc, ns)

@@ -450,6 +450,7 @@ class Tokenizer : CompilerSupport
   ** expression.  We make this look like a stream of tokens
   ** such that:
   **   "a ${b} c" -> "a " + b + " c"
+  **   "a $<b> c" -> "a " + LocaleExpr("b") + " c"
   ** Return true if more in the string literal.
   **
   private Bool interpolation(Int line, Int col, Str s, Quoted q)
@@ -472,6 +473,33 @@ class Tokenizer : CompilerSupport
         if (tok.kind == Token.rbrace) break
         tokens.add(tok)
       }
+      line = this.line; col = this.col
+      tokens.add(makeVirtualToken(line, col, Token.rparen))
+    }
+
+    // if < this is a localized literal <xxxx>
+    else if (cur == '<')
+    {
+      line = this.line; col = this.col
+      tokens.add(makeVirtualToken(line, col, Token.lparenSynthetic))
+      consume
+      buf := StrBuf()
+      while (true)
+      {
+        if (endOfQuoted(q) || cur == 0) throw err("Unexpected end of $q, missing >")
+        if (cur == '\n') throw err("Unexpected newline, missing >")
+        if (cur == '>') break
+        buf.addChar(cur)
+        consume
+      }
+      consume
+
+      tok := TokenVal(Token.localeLiteral, buf.toStr)
+      tok.file = filename
+      tok.line = line
+      tok.col  = col
+      tokens.add(tok)
+
       line = this.line; col = this.col
       tokens.add(makeVirtualToken(line, col, Token.rparen))
     }
