@@ -1975,6 +1975,9 @@ public class Parser : CompilerSupport
     // closure anonymous class name: class$slot$count
     name := "${curType.name}\$${curSlot.name}\$${closureCount++}"
 
+    // verify func types has named parameters
+    if (funcType.unnamed) err("Closure parameters must be named", loc)
+
     // create closure
     closure := ClosureExpr(loc, curType, curSlot, curClosure, funcType, name)
 
@@ -2194,11 +2197,12 @@ public class Parser : CompilerSupport
 
     // params, must be one if no ->
     inferred := false
-    if (curt !== Token.arrow) inferred = funcTypeFormal(params, names)
+    unnamed := [false]
+    if (curt !== Token.arrow) inferred = funcTypeFormal(params, names, unnamed)
     while (curt === Token.comma)
     {
       consume
-      inferred = inferred.or(funcTypeFormal(params, names))
+      inferred = inferred.or(funcTypeFormal(params, names, unnamed))
     }
 
     // if we see ?-> in a function type, that means |X?->ret|
@@ -2224,19 +2228,25 @@ public class Parser : CompilerSupport
 
     ft := FuncType(params, names, ret)
     ft.inferredSignature = inferred
+    ft.unnamed = unnamed.first
     return ft
   }
 
-  private Bool funcTypeFormal(CType[] params, Str[] names)
+  private Bool funcTypeFormal(CType[] params, Str[] names, Bool[] unnamed)
   {
     t := tryType
     if (t != null)
     {
       params.add(t)
       if (curt === Token.identifier)
+      {
         names.add(consumeId)
+      }
       else
+      {
         names.add("_" + ('a'+names.size).toChar)
+        unnamed[0] = true
+      }
       return false
     }
     else

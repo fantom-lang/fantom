@@ -373,6 +373,7 @@ class FuncType : GenericType
   readonly CType[] params  // a, b, c ...
   readonly Str[] names     // parameter names
   readonly CType ret       // return type
+  Bool unnamed             // where any names auto-generated
   override readonly Str signature   // |a,b..n->r|
   override readonly Bool isGenericParameter
   Bool inferredSignature   // were one or more parameters inferred
