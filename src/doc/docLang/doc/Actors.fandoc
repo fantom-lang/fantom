@@ -221,13 +221,16 @@ All actor's are created within an [ActorPool]`concurrent::ActorPool`.
 ActorPools manage the execution of actors using a shared thread pool.
 
 As messages are sent to actors, they are allocated a thread to perform
-their work.  In the current implementation, an ActorPool will
-create up to 100 threads, after which actor's must wait for a thread
-to free up.  Once a thread frees up, then it is used to process the
-next actor.  If no actor's have pending work, then the thread lingers
-for a few seconds before being released back to the operating system.  In
-this model an ActorPool utilizes between zero and a peak of 100 threads
-depending on how many actor's currently have work.
+their work.  An ActorPool will create up to 100 threads, after which
+actor's must wait for a thread to free up.  Once a thread frees up, then
+it is used to process the next actor.  If no actor's have pending work,
+then the thread lingers for a few seconds before being released back to
+the operating system.  In this model an ActorPool utilizes between zero
+and a peak of 100 threads depending on how many of the pool's actors
+currently have work. You can tweak the peak limit by setting
+[Actor.maxThreads]`concurrent::ActorPool.maxThreads`:
+
+  ActorPool { maxThreads = 10 }
 
 An ActorPool is immediately considered *running* as soon as it is
 constructed.  However, it doesn't actually spawn its first thread

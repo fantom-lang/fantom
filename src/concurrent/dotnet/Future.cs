@@ -34,7 +34,12 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type @typeof() { return Sys.FutureType; }
+    public override Type @typeof()
+    {
+      if (m_type == null) m_type = Type.find("concurrent::Future");
+      return m_type;
+    }
+    private static Type m_type;
 
   //////////////////////////////////////////////////////////////////////////
   // Future

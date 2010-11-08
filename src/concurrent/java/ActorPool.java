@@ -21,21 +21,27 @@ public class ActorPool
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static ActorPool make()
+  public static ActorPool make() { return make(null); }
+  public static ActorPool make(Func func)
   {
     ActorPool self = new ActorPool();
-    make$(self);
+    make$(self, func);
     return self;
   }
 
-  public static void make$(ActorPool self)
+  public static void make$(ActorPool self) { make$(self, null); }
+  public static void make$(ActorPool self, Func itBlock)
   {
-  }
+    if (itBlock != null)
+    {
+      itBlock.enterCtor(self);
+      itBlock.call(self);
+      itBlock.exitCtor();
+    }
+    if (self.maxThreads < 1) throw ArgErr.make("ActorPool.maxThreads must be >= 1, not " + self.maxThreads).val;
 
-  public ActorPool()
-  {
-    threadPool = new ThreadPool(100);
-    scheduler = new Scheduler();
+    self.threadPool = new ThreadPool((int)self.maxThreads);
+    self.scheduler = new Scheduler();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -128,8 +134,9 @@ public class ActorPool
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private final ThreadPool threadPool;
-  private final Scheduler scheduler;
+  private ThreadPool threadPool;
+  private Scheduler scheduler;
   volatile boolean killed;
+  public long maxThreads = 100;
 
 }
