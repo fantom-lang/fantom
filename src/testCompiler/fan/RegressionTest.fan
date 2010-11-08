@@ -411,4 +411,21 @@ class RegressionTest : CompilerTest
     obj->s(false)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Ensure closure parameters are named #1284
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1284()
+  {
+    verifyErrors(
+      "class Foo {
+         Obj m02() { |Str x, Str?| {} }
+         Obj m03() { |Str->Int| {4} }
+         Void m04() { [1,2].each |Obj| {} }
+       }",
+      [2, 15, "Closure parameters must be named",
+       3, 15, "Closure parameters must be named",
+       4, 27, "Closure parameters must be named"])
+  }
+
 }

@@ -504,7 +504,7 @@ class MiscTest : CompilerTest
         Void d(|Int, Str| f) {}
         Void e(|Duration| f) {}
         Void f(|Duration->Int| f) {}
-        Void x() { a |Int, Str| { } }
+        Void x() { a |Int x, Str y| { } }
       }")
 
     t := pod.types.first
