@@ -60,6 +60,10 @@ class WritePod : CompilerStep
       if (compiler.js != null)
         writeStr(zip, `${podName}.js`, compiler.js)
 
+      // if explicit locale props
+      if (compiler.localeProps != null)
+        writeStr(zip, `locale/en.props`, compiler.localeProps)
+
       // write resource files
       compiler.resFiles.each |File f| { writeRes(zip, f) }
 
@@ -105,6 +109,11 @@ class WritePod : CompilerStep
       path = file.uri
       path = path.relTo(input.baseDir.uri)
     }
+
+    // if locale/en.props and we have explicit definition
+    // from LocaleProps then skip it
+    if (path == `locale/en.props` && compiler.localeProps != null)
+      return
 
     try
     {

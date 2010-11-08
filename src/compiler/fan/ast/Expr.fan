@@ -385,7 +385,7 @@ class LiteralExpr : Expr
 **************************************************************************
 
 **
-** LocaleLiteralExpr
+** LocaleLiteralExpr: podName::key=defVal
 **
 class LocaleLiteralExpr: Expr
 {
@@ -393,11 +393,28 @@ class LocaleLiteralExpr: Expr
     : super(loc, ExprId.localeLiteral)
   {
     this.pattern = pattern
+    this.key = pattern
+    eq := pattern.index("=")
+    if (eq != null)
+    {
+      this.key = pattern[0..<eq]
+      this.def = pattern[eq+1..-1]
+    }
+
+    colons := key.index("::")
+    if (colons != null)
+    {
+      this.podName = key[0..<colons]
+      this.key     = key[colons+2..-1]
+    }
   }
 
   override Str toStr() { "<${pattern}>" }
 
   Str pattern
+  Str key
+  Str? podName
+  Str? def
 }
 
 **************************************************************************
