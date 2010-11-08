@@ -428,4 +428,16 @@ class RegressionTest : CompilerTest
        4, 27, "Closure parameters must be named"])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Variable name conflict with import type #1297
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1297()
+  {
+    verifyErrors(
+      "class Foo { Void m() { Str Str := foo; Int? Foo } }",
+      [1, 24, "Variable name conflicts with imported type 'sys::Str'",
+       1, 40, "Variable name conflicts with imported type '$podName::Foo'",])
+  }
+
 }
