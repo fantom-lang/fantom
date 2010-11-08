@@ -918,7 +918,13 @@ public class Parser : CompilerSupport
   **
   private LocalDefStmt localDefStmt(Loc loc, CType? localType, Bool isEndOfStmt)
   {
-    stmt := LocalDefStmt(loc, localType, consumeId)
+    // verify name doesn't conflict with an import type
+    name := consumeId
+    conflict := unit.importedTypes[name]
+    if (conflict != null && conflict.size > 0)
+      err("Variable name conflicts with imported type '$conflict.first'", loc)
+
+    stmt := LocalDefStmt(loc, localType, name)
 
     if (curt === Token.defAssign || curt === Token.assign)
     {
