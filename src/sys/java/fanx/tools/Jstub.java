@@ -9,6 +9,7 @@ package fanx.tools;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.zip.*;
 import fan.sys.*;
@@ -30,7 +31,7 @@ public class Jstub
   /**
    * Stub the specified pod
    */
-  public void stub(String podName, File outDir)
+  public void stub(String podName)
     throws Exception
   {
     System.out.println("    Java Stub [" + podName + "]");
@@ -40,7 +41,7 @@ public class Jstub
     ClassType[] types = (ClassType[])pod.types().toArray(new ClassType[pod.types().sz()]);
 
     // open jar file
-    ZipOutputStream out = new ZipOutputStream(new FileOutputStream(new File(outDir, podName + ".jar")));
+    ZipOutputStream out = nozip ? null : new ZipOutputStream(new FileOutputStream(new File(outDir, podName + ".jar")));
     try
     {
       // emit pod - we have to read back the pod here because normal
@@ -65,14 +66,17 @@ public class Jstub
       }
 
       // write manifest
-      out.putNextEntry(new ZipEntry("meta-inf/Manifest.mf"));
-      out.write("Manifest-Version: 1.0\n".getBytes());
-      out.write("Created-By: Fantom Java Stub\n".getBytes());
-      out.closeEntry();
+      if (out != null)
+      {
+        out.putNextEntry(new ZipEntry("meta-inf/Manifest.mf"));
+        out.write("Manifest-Version: 1.0\n".getBytes());
+        out.write("Created-By: Fantom Java Stub\n".getBytes());
+        out.closeEntry();
+      }
     }
     finally
     {
-      try { out.close(); } catch (Exception e) {}
+      try { if (out != null) out.close(); } catch (Exception e) {}
     }
   }
 
@@ -81,9 +85,22 @@ public class Jstub
   {
     String path = className + ".class";
     if (verbose) System.out.println("  " + path);
-    out.putNextEntry(new ZipEntry(path));
-    out.write(classFile.buf, 0, classFile.len);
-    out.closeEntry();
+    if (out != null)
+    {
+      // zip mode
+      out.putNextEntry(new ZipEntry(path));
+      out.write(classFile.buf, 0, classFile.len);
+      out.closeEntry();
+    }
+    else
+    {
+      // nozip mode
+      File f = new File(outDir, path);
+      if (!f.getParentFile().exists()) f.getParentFile().mkdirs();
+      OutputStream fout = new FileOutputStream(f);
+      fout.write(classFile.buf, 0, classFile.len);
+      fout.close();
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -97,7 +114,6 @@ public class Jstub
     throws Exception
   {
     ArrayList pods = new ArrayList();
-    File outDir = new File(".");
 
     if (args.length == 0) { help(); return -1; }
 
@@ -114,6 +130,10 @@ public class Jstub
       else if (a == "-v")
       {
         verbose = true;
+      }
+      else if (a == "-nozip")
+      {
+        nozip = true;
       }
       else if (a == "-d")
       {
@@ -137,7 +157,7 @@ public class Jstub
     if (pods.size() == 0) { help(); return -1; }
 
     for (int i=0; i<pods.size(); ++i)
-      stub((String)pods.get(i), outDir);
+      stub((String)pods.get(i));
     return 0;
   }
 
@@ -148,11 +168,12 @@ public class Jstub
   {
     System.out.println("Java Stub");
     System.out.println("Usage:");
-    System.out.println("  jstub [options] <pod> ...");
+    System.out.println("  jstub [options] <pod> [<pod2> ...]");
     System.out.println("Options:");
     System.out.println("  -help, -h, -?  print usage help");
     System.out.println("  -d             output directory");
     System.out.println("  -v             verbose mode");
+    System.out.println("  -nozip         generate classfiles instead of zip");
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -170,5 +191,7 @@ public class Jstub
 //////////////////////////////////////////////////////////////////////////
 
   boolean verbose;
+  File outDir = new File(".");
+  boolean nozip = false;
 
 }
