@@ -15,6 +15,10 @@
 @Js
 native const class ActorPool
 {
+  **
+  ** It-block constructor
+  **
+  new make(|This|? f := null)
 
   **
   ** Return true if this pool has been stopped or killed.  Once a
@@ -62,5 +66,12 @@ native const class ActorPool
   ** pool is not stopped.  Return this.
   **
   This join(Duration? timeout := null)
+
+  **
+  ** Max number of threads which are used by this pool
+  ** for concurrent actor execution.  This value must be
+  ** at least one or greater.
+  **
+  const Int maxThreads := 100
 
 }

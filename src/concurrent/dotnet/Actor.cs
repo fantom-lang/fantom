@@ -39,7 +39,7 @@ namespace Fan.Sys
         throw NullErr.make("pool is null").val;
 
       // check receive method
-      if (receive == null && self.@typeof() == Sys.ActorType)
+      if (receive == null && self.@typeof().qname() == "concurrent::Actor")
         throw ArgErr.make("must supply receive func or subclass Actor").val;
       if (receive != null && !receive.isImmutable())
         throw NotImmutableErr.make("Receive func not immutable: " + receive).val;
@@ -80,7 +80,12 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type @typeof() { return Sys.ActorType; }
+    public override Type @typeof()
+    {
+      if (m_type == null) m_type = Type.find("concurrent::Actor");
+      return m_type;
+    }
+    private static Type m_type;
 
   //////////////////////////////////////////////////////////////////////////
   // Actor

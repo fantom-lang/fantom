@@ -30,6 +30,11 @@ class ActorTest : Test
     mutable := |Obj? msg->Obj?| { fail; return null }
     verifyErr(ArgErr#) { x := Actor(pool) }
     verifyErr(NotImmutableErr#) { x := Actor(pool, mutable) }
+
+    verifyEq(ActorPool().maxThreads, 100)
+    verifyEq(ActorPool() { maxThreads = 2 }.maxThreads, 2)
+    verifyErr(ArgErr#) { x := ActorPool() { maxThreads = 0 } }
+    verifyErr(ConstErr#) { x := ActorPool(); x.with { maxThreads = 0 } }
   }
 
 //////////////////////////////////////////////////////////////////////////

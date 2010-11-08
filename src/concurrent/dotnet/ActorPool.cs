@@ -21,28 +21,39 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static ActorPool make()
+    public static ActorPool make() { return make(null); }
+    public static ActorPool make(Func itBlock)
     {
       ActorPool self = new ActorPool();
-      make_(self);
+      make_(self, itBlock);
       return self;
     }
 
-    public static void make_(ActorPool self)
+    public static void make_(ActorPool self) { make_(self, null); }
+    public static void make_(ActorPool self, Func itBlock)
     {
-    }
+      if (itBlock != null)
+      {
+        itBlock.enterCtor(self);
+        itBlock.call(self);
+        itBlock.exitCtor();
+      }
+      if (self.m_maxThreads < 1) throw ArgErr.make("ActorPool.maxThreads must be >= 1, not " + self.m_maxThreads).val;
 
-    public ActorPool()
-    {
-      m_threadPool = new ThreadPool(100);
-      m_scheduler = new Scheduler();
+      self.m_threadPool = new ThreadPool((int)self.m_maxThreads);
+      self.m_scheduler = new Scheduler();
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type @typeof() { return Sys.ActorPoolType; }
+    public override Type @typeof()
+    {
+      if (m_type == null) m_type = Type.find("concurrent::ActorPool");
+      return m_type;
+    }
+    private static Type m_type;
 
   //////////////////////////////////////////////////////////////////////////
   // ActorPool
@@ -123,9 +134,10 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private readonly ThreadPool m_threadPool;
-    private readonly Scheduler m_scheduler;
+    private ThreadPool m_threadPool;
+    private Scheduler m_scheduler;
     internal volatile bool m_killed;
+    public long m_maxThreads = 100;
 
   }
 }

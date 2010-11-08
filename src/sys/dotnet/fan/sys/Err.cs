@@ -177,7 +177,7 @@ namespace Fan.Sys
   // Rebasing
   //////////////////////////////////////////////////////////////////////////
 
-    internal Val rebase()
+    public Val rebase()
     {
       m_actual = new RebaseException();
       return val;
@@ -195,7 +195,7 @@ namespace Fan.Sys
     {
       public override string Message { get { return m_err.ToString(); }}
       public Err err() { return m_err; }
-      internal Err m_err;
+      public Err m_err;
     }
 
   //////////////////////////////////////////////////////////////////////////
