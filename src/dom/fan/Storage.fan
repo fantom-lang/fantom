@@ -42,11 +42,13 @@ class Storage
   **
   ** Return Obj stored under this key, or null if key does not exist.
   **
+  @Operator
   native Obj? get(Str key)
 
   **
   ** Store value under this key.
   **
+  @Operator
   native Void set(Str key, Obj val)
 
   **
