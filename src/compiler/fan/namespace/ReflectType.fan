@@ -77,6 +77,8 @@ class ReflectType : CType
     return slotMap
   }
 
+  override once COperators operators() { COperators(this) }
+
   override CSlot? slot(Str name)
   {
     cs := slotMap[name]

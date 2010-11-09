@@ -538,6 +538,11 @@ mixin CType
   **
   CMethod[] ctors() { return methods.findAll |CMethod m->Bool| { return m.isCtor } }
 
+  **
+  ** Get operators lookup structure
+  **
+  abstract COperators operators()
+
 //////////////////////////////////////////////////////////////////////////
 // Facets
 //////////////////////////////////////////////////////////////////////////

@@ -26,12 +26,12 @@ class Row
   **
   ** Get column value.
   **
-  native Obj? get(Col col)
+  @Operator native Obj? get(Col col)
 
   **
   ** Set a column value.
   **
-  native Void set(Col col, Obj? val)
+  @Operator native Void set(Col col, Obj? val)
 
   **
   ** Trap is used to get or set a column by name.

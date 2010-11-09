@@ -1069,7 +1069,8 @@ class CheckErrorsTest : CompilerTest
         Void m08(Foo a) { this++ }
 
         Int i() { return 3 }
-        Foo plus(Foo a) { return this }
+        @Operator Foo plus(Foo a) { return this }
+        @Operator Int plusInt(Int x) { x }
         Void increment() {}
       }",
        [

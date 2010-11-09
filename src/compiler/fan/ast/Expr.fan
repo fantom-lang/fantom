@@ -982,7 +982,7 @@ class ShortcutExpr : CallExpr
 
   Bool isStrConcat()
   {
-    return opToken == Token.plus && (target.ctype.isStr || args.first.ctype.isStr)
+    return opToken == Token.plus && args.size == 1 && (target.ctype.isStr || args.first.ctype.isStr)
   }
 
   override Str toStr()
@@ -1700,27 +1700,36 @@ enum class ExprId
 **
 enum class ShortcutOp
 {
-  plus(2),
-  minus(2),
-  mult(2),
-  div(2),
-  mod(2),
-  negate(1),
-  increment(1),
-  decrement(1),
-  eq(2, "equals"),
-  cmp(2, "compare"),
-  get(2),
-  set(2)
+  plus(2, "+"),
+  minus(2, "-"),
+  mult(2, "*"),
+  div(2, "/"),
+  mod(2, "%"),
+  negate(1, "-"),
+  increment(1, "++"),
+  decrement(1, "--"),
+  eq(2, "==", "equals"),
+  cmp(2, "<=>", "compare"),
+  get(2, "[]"),
+  set(2, "[]=")
 
-  private new make(Int degree, Str? methodName := null)
+  private new make(Int degree, Str symbol, Str? methodName := null)
   {
     this.degree = degree
+    this.symbol = symbol
     this.methodName = methodName == null ? name : methodName
     this.isOperator = methodName == null
+  }
+
+  Str formatErr(CType lhs, CType rhs)
+  {
+    if (this === get) return "$lhs.qname [ $rhs.qname ]"
+    if (this === set) return "$lhs.qname [ $rhs.qname ]="
+    return "$lhs.qname $symbol $rhs.qname"
   }
 
   const Int degree
   const Str methodName
   const Bool isOperator
+  const Str symbol
 }

@@ -64,6 +64,8 @@ class JavaType : CType
 
   override readonly Str:CSlot slots { get { load; return &slots } }
 
+  override once COperators operators() { COperators(this) }
+
   override CSlot? slot(Str name) { slots[name] }
 
   ** Handle the case where a field and method have the same

@@ -63,6 +63,7 @@ class TypeRef : Node, CType
   override CField? field(Str name) { t.field(name) }
   override CMethod? method(Str name) { t.method(name) }
   override Str:CSlot slots() { t.slots }
+  override COperators operators() { t.operators }
 
 //////////////////////////////////////////////////////////////////////////
 // Debug
