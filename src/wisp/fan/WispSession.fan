@@ -43,7 +43,7 @@ internal const class WispSessionMgr : ActorPool
 
   const Duration houseKeepingPeriod := 1min
 
-  new make()
+  new make(|This|? f := null) : super(f)
   {
     actor.sendLater(houseKeepingPeriod, "_houseKeeping")
   }
