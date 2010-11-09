@@ -249,3 +249,14 @@ mixin CFacet
   ** Get the value of the given facet field or null if undefined.
   abstract Obj? get(Str name)
 }
+
+**
+** Simple implementation for a marker facet
+**
+const class MarkerFacet : CFacet
+{
+  new make(Str qname) { this.qname = qname }
+  override const Str qname
+  override Obj? get(Str name) { null }
+
+}

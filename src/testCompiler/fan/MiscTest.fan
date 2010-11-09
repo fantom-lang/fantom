@@ -340,7 +340,7 @@ class MiscTest : CompilerTest
     verifyErrors(
       "class Foo
        {
-         Str get(Str s) { return s}
+         @Operator Str get(Str s) { return s}
          Void bar(Str s) { this[s] += s }
        }
        ",

@@ -46,6 +46,8 @@ abstract class GenericType : CType
 
   override once Str:CSlot slots() { return parameterizeSlots }
 
+  override once COperators operators() { COperators(this) }
+
 //////////////////////////////////////////////////////////////////////////
 // Parameterize
 //////////////////////////////////////////////////////////////////////////
@@ -413,6 +415,7 @@ class GenericParameterType : CType
   override CType[] mixins() { return CType[,] }
   override CFacet? facet(Str qname) { null }
   override Str:CSlot slots() { throw UnsupportedErr() }
+  override COperators operators() { ns.objType.operators }
 }
 
 **************************************************************************

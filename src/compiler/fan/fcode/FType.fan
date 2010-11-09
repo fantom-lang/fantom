@@ -73,6 +73,8 @@ class FType : CType
   }
   private [Str:CSlot]? slotsCached
 
+  override once COperators operators() { COperators(this) }
+
   override Bool isNullable() { return false }
 
   override once CType toNullable() { return NullableType(this) }

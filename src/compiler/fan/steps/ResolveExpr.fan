@@ -571,28 +571,22 @@ class ResolveExpr : CompilerStep
     if (expr.isAssign && expr.target.id === ExprId.shortcut)
       return resolveIndexedAssign(expr)
 
-    // if a binary operation
-    if (expr.args.size == 1)
+    // string concat is always optimized, and performs a bit
+    // different since a non-string can be used as the lhs
+    if (expr.isStrConcat)
     {
-      // extract lhs and rhs
-      lhs := expr.target
-      rhs := expr.args.first
+      expr.ctype  = ns.strType
+      expr.method = ns.strPlus
+      return ConstantFolder(compiler).fold(expr)
+    }
 
-      // if arg is Range, then get() is really slice()
-      if (expr.op === ShortcutOp.get && rhs.ctype.isRange)
-      {
-        // TODO: add method resolution
-        expr.name = "getRange"
-      }
-
-      // string concat is always optimized, and performs a bit
-      // different since a non-string can be used as the lhs
-      if (expr.isStrConcat)
-      {
-        expr.ctype  = ns.strType
-        expr.method = ns.strPlus
-        return ConstantFolder(compiler).fold(expr)
-      }
+    // if a binary operation
+    if (expr.args.size == 1 && expr.op.isOperator)
+    {
+      method := resolveBinaryOperator(expr)
+      if (method == null) { expr.ctype = ns.error; return expr }
+      expr.method = method
+      expr.name   = method.name
     }
 
     // resolve the call, if optimized, then return it immediately
@@ -619,6 +613,50 @@ class ResolveExpr : CompilerStep
     }
 
     return expr
+  }
+
+  **
+  ** Given a shortcut method such as 'lhs op rhs' figure
+  ** out which method to use for the operator symbol.
+  **
+  private CMethod? resolveBinaryOperator(ShortcutExpr expr)
+  {
+    op := expr.op
+    lhs := expr.target.ctype
+    rhs := expr.args.first
+
+    if (lhs === ns.error || rhs.ctype === ns.error) return null
+
+    // get matching operators for the method name
+    matches := lhs.operators.find(op.methodName)
+
+    // if multiple matches, attempt to narrow by argument type
+    if (matches.size > 1)
+    {
+      matches = matches.findAll |m|
+      {
+        if (m.params.size != 1) return false
+        paramType := m.params.first.paramType
+        match := true
+        CheckErrors.coerce(rhs, paramType, |->| { match = false })
+        return match
+      }
+    }
+
+    // if no matches bail
+    if (matches.isEmpty)
+    {
+      err("No operator method found: ${op.formatErr(lhs, rhs.ctype)}", expr.loc)
+      return null
+    }
+
+    // if we have one match, we are golden
+    if (matches.size == 1) return matches.first
+
+    // still have an ambiguous operator method call
+    names := (matches.map |CMethod m->Str| { m.name }).join(", ")
+    err("Ambiguous operator method: ${op.formatErr(lhs, rhs.ctype)} ($names)", expr.loc)
+    return null
   }
 
   **

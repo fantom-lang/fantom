@@ -63,6 +63,7 @@ class NullableType : CType
   override Bool fits(CType t) { root.fits(t) }
 
   override Str:CSlot slots() { return root.slots }
+  override COperators operators() { return root.operators }
 
   override Bool isValid() { root.isValid }
 

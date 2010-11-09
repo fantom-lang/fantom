@@ -108,13 +108,13 @@ facet class Deprecated
 **   div          /     binary
 **   mod          %     binary
 **   get          []    binary
-**   set          []    ternary
+**   set          []=   ternary
 **
-** In the case of binary/tenary operator multiple methods may
+** In the case of binary operators multiple methods may
 ** be declared for a given symbol as long as every method starts
 ** with correct name, for example "plus" and "plusInt".  For
-** unary operators there can only be one method and it must
-** be named exactly "negate", "increment", or "decrement".
+** unary/ternary operators there can only be one method and it must
+** be named exactly "negate", "increment", "decrement", or "set".
 **
 facet class Operator {}
 

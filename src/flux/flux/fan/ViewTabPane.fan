@@ -221,7 +221,7 @@ internal class TabBar : Canvas
     if (event.id == EventId.mouseDown && event.button == 1)
     {
       close := false
-      tab := tabBounds.eachWhile |Rect r, Int i->Obj?|
+      Int? tab := tabBounds.eachWhile |Rect r, Int i->Int?|
       {
         if (r.contains(event.pos.x, event.pos.y))
         {

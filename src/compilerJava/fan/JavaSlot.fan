@@ -70,6 +70,18 @@ class JavaMethod : JavaSlot, CMethod
     }
   }
 
+  override CFacet? facet(Str qname)
+  {
+    // automatically give get/set methods the Operator facet
+    if (qname == "sys::Operator")
+    {
+      if ((name == "get" && params.size == 1) ||
+          (name == "set" && params.size == 2))
+        return MarkerFacet(qname)
+    }
+    return null
+  }
+
   ** Does given method have the exact same signature (ignoring declaring class)
   Bool sigsEqual(JavaMethod m)
   {

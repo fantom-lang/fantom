@@ -1635,7 +1635,7 @@ class CheckErrors : CompilerStep
   ** Coerce the target expression to the specified type.  If
   ** the expression is not type compatible run the onErr function.
   **
-  Expr coerce(Expr expr, CType expected, |->| onErr)
+  static Expr coerce(Expr expr, CType expected, |->| onErr)
   {
     // route to bridge for FFI coercion if either side if foreign
     if (expected.isForeign) return expected.bridge.coerce(expr, expected, onErr)

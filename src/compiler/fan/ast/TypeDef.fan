@@ -72,6 +72,11 @@ class TypeDef : DefNode, CType
   override Str:CSlot slots() { return slotMap }
 
   **
+  ** Cached COperators map
+  **
+  override once COperators operators() { COperators(this) }
+
+  **
   ** Add a slot to the type definition.  The method is used to add
   ** SlotDefs declared by this type as well as slots inherited by
   ** this type.
