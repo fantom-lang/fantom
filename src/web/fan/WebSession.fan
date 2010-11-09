@@ -14,45 +14,34 @@
 **
 ** See [pod doc]`pod-doc#sessions`.
 **
-@Serializable
 abstract class WebSession
 {
   **
-  ** Construct with optional id.
-  **
-  new make(Str? id := null)
-  {
-    if (id != null) this.id = id
-  }
-
-  **
   ** Get the unique id used to identify this session.
   **
-  const Str id := ""
+  abstract Str id()
 
   **
   ** Return `id`.
   **
-  override Str toStr() { return id }
+  override Str toStr() { id }
 
   **
   ** Convenience for 'map.get(name, def)'.
   **
-  @Operator
-  Obj? get(Str name, Obj? def := null) { return map.get(name, def) }
+  @Operator Obj? get(Str name, Obj? def := null) { map.get(name, def) }
 
   **
   ** Convenience for 'map.set(name, val)'.
   **
-  @Operator
-  Void set(Str name, Obj? val) { map[name] = val }
+  @Operator Void set(Str name, Obj? val) { map[name] = val }
 
   **
   ** Application name/value pairs which are persisted
   ** between HTTP requests.  The values stored in this
   ** map must be serializable.
   **
-  readonly Str:Obj? map := Str:Obj?[:]
+  abstract Str:Obj? map()
 
   **
   ** Delete this web session which clears both the user

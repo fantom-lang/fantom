@@ -36,6 +36,11 @@ const class WispService : Service
   **
   const WebMod root := WispDefaultMod()
 
+  **
+  ** Pluggable interface for managing web session state.
+  ** Default implementation stores sessions in main memory.
+  **
+  const WispSessionStore sessionStore := MemWispSessionStore()
 
   new make(|This|? f := null) { if (f != null) f(this) }
 
@@ -43,6 +48,7 @@ const class WispService : Service
   {
     if (listenerPool.isStopped) throw Err("WispService is already stopped, use to new instance to restart")
     Actor(listenerPool, |->| { listen }).send(null)
+    sessionStore.onStart
     root.onStart
   }
 
@@ -52,7 +58,7 @@ const class WispService : Service
     try tcpListener.val->close; catch (Err e) log.err("WispService stop listener socket", e)
     try listenerPool.stop;      catch (Err e) log.err("WispService stop listener pool", e)
     try processorPool.stop;     catch (Err e) log.err("WispService stop processor pool", e)
-    try sessionMgr.stop;        catch (Err e) log.err("WispService stop session manager", e)
+    try sessionStore.onStop;    catch (Err e) log.err("WispService stop session store", e)
   }
 
   internal Void listen()
@@ -98,7 +104,6 @@ const class WispService : Service
   internal const ActorPool listenerPool    := ActorPool()
   internal const AtomicRef tcpListener     := AtomicRef()
   internal const ActorPool processorPool   := ActorPool()
-  internal const WispSessionMgr sessionMgr := WispSessionMgr()
 
   @NoDoc static Void main()
   {

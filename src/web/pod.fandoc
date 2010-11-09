@@ -115,10 +115,10 @@ WebSessions [#sessions]
 The `web::WebSession` class models the client session which allows you to
 persist state between HTTP requests.  WebSessions in Fantom are cookie
 based using the cookie name "fanws".  The default session implementation
-stores sessions in memory for up to one hour, then clears them from
+stores sessions in memory for up to 24 hours, then clears them from
 the cache - session state is not persisted between VM restarts.
 
-WebSession provides a 'Str:Obj' map to store arbitrary name/value pairs.
+WebSession provides a 'Str:Obj?' map to store arbitrary name/value pairs.
 You can use the [map]`web::WebSession.map`, [get]`web::WebSession.get`,
 or [set]`web::WebSession.set` methods to manage session state.  You
 can use [delete]`web::WebSession.delete` to explicitly delete the session
