@@ -23,6 +23,9 @@
 **     false for isImmutable, but will provide a toImmutable method which
 **     attempts to bind to the current variables by calling toImmutable
 **     on each one
+**   - Functions created by [Func.bind]`sys::Func.bind` are immutable if
+**     the original function is immutable *and* every bound argument is
+**     immutable
 **
 ** The definition of a *final variable* is a variable which is never reassigned
 ** after it is initialized.  Any variable which is reassigned is considered
@@ -106,6 +109,9 @@ final class Func
   ** Create a new function by binding the specified arguments to
   ** this function's parameters.  The new function which takes the
   ** remaining unbound parameters.
+  **
+  ** The resulting function is immutable if this function is
+  ** immutable and all the args are immutable.
   **
   Func bind(Obj?[] args)
 

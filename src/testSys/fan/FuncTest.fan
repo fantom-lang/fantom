@@ -179,6 +179,39 @@ class FuncTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Bind.isImmutable
+//////////////////////////////////////////////////////////////////////////
+
+  Void testBindIsImmutable()
+  {
+    // start off with immutable function
+    f0 := |Obj? a, Obj b| {}
+    verifyEq(f0.isImmutable, true)
+    verifyEq(f0.bind([null]).isImmutable, true)
+    verifyEq(f0.bind(["hi"]).isImmutable, true)
+    verifyEq(f0.bind(["hi", 4]).isImmutable, true)
+    verifyEq(f0.bind([this]).isImmutable, false)
+    verifyEq(f0.bind(["hi", this]).isImmutable, false)
+
+    // start off with mutable function
+    f1 := |Obj? a| { echo(this) }
+    verifyEq(f1.isImmutable, false)
+    verifyEq(f1.bind([null]).isImmutable, false)
+    verifyEq(f1.bind(["x"]).isImmutable, false)
+    verifyEq(f1.bind([this]).isImmutable, false)
+
+    // method with const class
+    f2 := Int#toHex.func
+    verifyEq(f2.isImmutable, true)
+    verifyEq(f2.bind([33]).isImmutable, true)
+
+    // method with non-const class
+    f3 := #testBindIsImmutable.func
+    verifyEq(f3.isImmutable, true)
+    verifyEq(f3.bind([this]).isImmutable, false)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Curry Signatures
 //////////////////////////////////////////////////////////////////////////
 

@@ -172,10 +172,7 @@ namespace Fan.Sys
 
       public override Method method() { return m; }
 
-      public override bool isImmutable()
-      {
-        return m.isStatic() || m.m_parent.isConst();
-      }
+      public override bool isImmutable() { return true; }
 
       public override object callList(List args)
       {
