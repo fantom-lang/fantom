@@ -46,7 +46,7 @@ final class StrBuf
   ** Negative indexes may be used to access from the end of the string buffer.
   ** This method is accessed via the [] operator.
   **
-  Int get(Int index)
+  @Operator Int get(Int index)
 
   **
   ** Replace the existing character at index in this buffer.
@@ -54,7 +54,7 @@ final class StrBuf
   ** the string buffer.  This method is accessed via the []
   ** operator.  Return this.
   **
-  This set(Int index, Int ch)
+  @Operator This set(Int index, Int ch)
 
   **
   ** Add x.toStr to the end of this buffer.  If x is null then

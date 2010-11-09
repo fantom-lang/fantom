@@ -332,7 +332,7 @@ const final class DateTime
   **   elapsed   := DateTime.now - startTime
   **   yesterday := DateTime.now + -1day
   **
-  Duration minus(DateTime time)
+  @Operator Duration minus(DateTime time)
 
   **
   ** Add (or subtract if duration is negative) a duration
@@ -345,7 +345,7 @@ const final class DateTime
   **   nextHour := DateTime.now + 1hr
   **   prevHour := DateTime.now + -1hr
   **
-  DateTime plus(Duration duration)
+  @Operator DateTime plus(Duration duration)
 
   **
   ** Return a new DateTime with this time's nanosecond ticks truncated

@@ -125,27 +125,27 @@ const final class Duration
   **
   ** Negative of this.  Shortcut is -a.
   **
-  Duration negate()
+  @Operator Duration negate()
 
   **
   ** Multiply this with b.  Shortcut is a*b.
   **
-  Duration mult(Float b)
+  @Operator Duration mult(Float b)
 
   **
   ** Divide this by b.  Shortcut is a/b.
   **
-  Duration div(Float b)
+  @Operator Duration div(Float b)
 
   **
   ** Add this with b.  Shortcut is a+b.
   **
-  Duration plus(Duration b)
+  @Operator Duration plus(Duration b)
 
   **
   ** Subtract b from this.  Shortcut is a-b.
   **
-  Duration minus(Duration b)
+  @Operator Duration minus(Duration b)
 
   **
   ** Absolute value - if this is a negative duration,

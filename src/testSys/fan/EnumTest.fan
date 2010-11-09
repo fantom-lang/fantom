@@ -192,7 +192,7 @@ class EnumTest : Test
 
     // get
     verifyEq(EnumAbc#.field("A").get(null), EnumAbc.A)
-    verifyEq(EnumAbc#.field("B")[null], EnumAbc.B)
+    verifyEq(EnumAbc#.field("B").get(null), EnumAbc.B)
   }
 
 //////////////////////////////////////////////////////////////////////////

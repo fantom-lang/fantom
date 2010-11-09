@@ -133,7 +133,7 @@ class XElem : XNode
   ** If the attribute is not found and checked is false then
   ** return null otherwise throw XErr.
   **
-  Str? get(Str name, Bool checked := true)
+  @Operator Str? get(Str name, Bool checked := true)
   {
     return attr(name, checked)?.val
   }

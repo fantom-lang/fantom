@@ -210,7 +210,7 @@ abstract const class File
   **   File(`a/b/`) + `c` => File(`a/b/c`)
   **   File(`a/b`) + `c`  => File(`a/c`)
   **
-  abstract File plus(Uri path, Bool checkSlash := true)
+  @Operator abstract File plus(Uri path, Bool checkSlash := true)
 
 //////////////////////////////////////////////////////////////////////////
 // Management

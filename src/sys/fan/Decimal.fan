@@ -62,42 +62,42 @@ const final class Decimal : Num
   **
   ** Negative of this.  Shortcut is -a.
   **
-  Decimal negate()
+  @Operator Decimal negate()
 
   **
   ** Multiply this with b.  Shortcut is a*b.
   **
-  Decimal mult(Decimal b)
+  @Operator Decimal mult(Decimal b)
 
   **
   ** Divide this by b.  Shortcut is a/b.
   **
-  Decimal div(Decimal b)
+  @Operator Decimal div(Decimal b)
 
   **
   ** Return remainder of this divided by b.  Shortcut is a%b.
   **
-  Decimal mod(Decimal b)
+  @Operator Decimal mod(Decimal b)
 
   **
   ** Add this with b.  Shortcut is a+b.
   **
-  Decimal plus(Decimal b)
+  @Operator Decimal plus(Decimal b)
 
   **
   ** Subtract b from this.  Shortcut is a-b.
   **
-  Decimal minus(Decimal b)
+  @Operator Decimal minus(Decimal b)
 
   **
   ** Increment by one.  Shortcut is ++a or a++.
   **
-  Decimal increment()
+  @Operator Decimal increment()
 
   **
   ** Decrement by one.  Shortcut is --a or a--.
   **
-  Decimal decrement()
+  @Operator Decimal decrement()
 
 /////////////////////////////////////////////////////////////////////////
 // Math

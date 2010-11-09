@@ -133,6 +133,7 @@ public final class Sys
   public static final Type JsType             = initType("Js");
   public static final Type NoDocType          = initType("NoDoc");
   public static final Type DeprecatedType     = initType("Deprecated");
+  public static final Type OperatorType       = initType("Operator");
 
   // exceptions
   public static final Type ErrType               = initType("Err");

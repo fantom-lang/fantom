@@ -104,7 +104,7 @@ final class List
   ** get method is accessed via the [] shortcut operator.  Throw
   ** IndexErr if index is out of range.  This method is readonly safe.
   **
-  V get(Int index)
+  @Operator V get(Int index)
 
   **
   ** Get the item at the specified index, but if index is out of
@@ -128,7 +128,10 @@ final class List
   **   list[0..<2]  => [0, 1]
   **   list[1..-2]  => [1, 2]
   **
-  L slice(Range range)
+  @Operator L getRange(Range range)
+
+  ** TODO: use `getRange`
+  /*@Deprecated*/ L slice(Range range)
 
   **
   ** Return if this list contains the specified item.
@@ -196,7 +199,7 @@ final class List
   ** then size, then manually set size larger.  Return this.  Throw
   ** IndexErr if index is out of range.  Throw ReadonlyErr if readonly.
   **
-  L set(Int index, V item)
+  @Operator L set(Int index, V item)
 
   **
   ** Add the specified item to the end of the list.  The item will have

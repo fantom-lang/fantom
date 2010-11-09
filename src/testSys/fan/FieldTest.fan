@@ -171,7 +171,7 @@ class FieldTest : Test
     // reflect - getter
     verifyEq(f.get(this), 0);
       verifyEq(getCounter, 1); verifyEq(setCounter, 0);
-    verifyEq(f[this], 0);
+    verifyEq(f.get(this), 0);
       verifyEq(getCounter, 2); verifyEq(setCounter, 0);
     verifyEq(f->getter->call(this), 0);
       verifyEq(getCounter, 3); verifyEq(setCounter, 0);
@@ -179,7 +179,7 @@ class FieldTest : Test
       verifyEq(getCounter, 4); verifyEq(setCounter, 0);
 
     // reflect - setter
-    f[this] = 5
+    f.set(this, 5)
       verifyEq(&count, 5); verifyEq(getCounter, 4); verifyEq(setCounter, 1);
     f.set(this, 7)
       verifyEq(&count, 7); verifyEq(getCounter, 4); verifyEq(setCounter, 2);

@@ -204,7 +204,7 @@ class ObixObj
   ** Get a child by name.  If not found and checked is true
   ** then throw NameErr, otherwise null.
   **
-  ObixObj? get(Str name, Bool checked := true)
+  @Operator ObixObj? get(Str name, Bool checked := true)
   {
     child := kidsByName?.get(name)
     if (child != null) return child

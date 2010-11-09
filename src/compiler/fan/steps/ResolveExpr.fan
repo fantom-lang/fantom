@@ -581,8 +581,8 @@ class ResolveExpr : CompilerStep
       // if arg is Range, then get() is really slice()
       if (expr.op === ShortcutOp.get && rhs.ctype.isRange)
       {
-        expr.op = ShortcutOp.slice
-        expr.name = "slice"
+        // TODO: add method resolution
+        expr.name = "getRange"
       }
 
       // string concat is always optimized, and performs a bit
@@ -598,6 +598,13 @@ class ResolveExpr : CompilerStep
     // resolve the call, if optimized, then return it immediately
     result := resolveCall(expr)
     if (result !== expr) return result
+
+    // check that method has Operator facet
+    if (expr.method != null && expr.op.isOperator && !expr.method.hasFacet("sys::Operator"))
+    {
+      // TODO: turn this into an error
+      warn("Mising Operator facet: $expr.method.qname", expr.loc)
+    }
 
     // the comparision operations are special case that call a method
     // that return an Int, but leave a Bool on the stack (we also handle

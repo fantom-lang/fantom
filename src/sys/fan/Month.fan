@@ -39,12 +39,12 @@ enum class Month
   **
   ** Return the month after this month.
   **
-  Month increment()
+  @Operator Month increment()
 
   **
   ** Return the month before this month.
   **
-  Month decrement()
+  @Operator Month decrement()
 
   **
   ** Return the number of days in this month for the specified year.

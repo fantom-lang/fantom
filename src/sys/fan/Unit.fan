@@ -220,13 +220,13 @@ const class Unit
   ** Match the product of this and b against current database definitions.
   ** If an unambiguous match cannot be made then throw Err.
   **
-  Unit mult(Unit that)
+  @Operator Unit mult(Unit that)
 
   **
   ** Match quotient of this divided by b against current database definitions.
   ** If an unambiguous match cannot be made then throw Err.
   **
-  Unit div(Unit b)
+  @Operator Unit div(Unit b)
 
 //////////////////////////////////////////////////////////////////////////
 // Conversion
