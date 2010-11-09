@@ -38,11 +38,13 @@ abstract class WebSession
   **
   ** Convenience for 'map.get(name, def)'.
   **
+  @Operator
   Obj? get(Str name, Obj? def := null) { return map.get(name, def) }
 
   **
   ** Convenience for 'map.set(name, val)'.
   **
+  @Operator
   Void set(Str name, Obj? val) { map[name] = val }
 
   **

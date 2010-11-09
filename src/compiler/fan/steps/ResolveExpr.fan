@@ -595,10 +595,7 @@ class ResolveExpr : CompilerStep
 
     // check that method has Operator facet
     if (expr.method != null && expr.op.isOperator && !expr.method.hasFacet("sys::Operator"))
-    {
-      // TODO: turn this into an error
-      warn("Mising Operator facet: $expr.method.qname", expr.loc)
-    }
+      err("Mising Operator facet: $expr.method.qname", expr.loc)
 
     // the comparision operations are special case that call a method
     // that return an Int, but leave a Bool on the stack (we also handle
