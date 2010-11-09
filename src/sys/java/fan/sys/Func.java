@@ -345,8 +345,27 @@ public abstract class Func
     public String name()  { return getClass().getName(); }
     public Type typeof()  { return type; }
     public String  toStr() { return type.signature(); }
-    public boolean isImmutable() { return false; }
     public Method method() { return null; }
+
+    public boolean isImmutable()
+    {
+      if (this.isImmutable == null)
+      {
+        boolean isImmutable = false;
+        if (orig.isImmutable())
+        {
+          isImmutable = true;
+          for (int i=0; i<bound.sz(); ++i)
+          {
+            Object obj = bound.get(i);
+            if (obj != null && !FanObj.isImmutable(obj))
+              { isImmutable = false; break; }
+          }
+        }
+        this.isImmutable = Boolean.valueOf(isImmutable);
+      }
+      return this.isImmutable.booleanValue();
+    }
 
     // this isn't a very optimized implementation
     public final Object call() { return callList(new List(Sys.ObjType, new Object[] {})); }
@@ -390,6 +409,7 @@ public abstract class Func
     final FuncType type;
     final Func orig;
     final List bound;
+    private Boolean isImmutable;
   }
 
 //////////////////////////////////////////////////////////////////////////

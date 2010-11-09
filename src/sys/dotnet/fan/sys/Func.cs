@@ -341,8 +341,27 @@ namespace Fan.Sys
       public string  name()  { return GetType().Name; }
       public override Type @typeof()  { return m_type; }
       public override string  toStr() { return m_type.signature(); }
-      public override bool isImmutable() { return false; }
       public override Method method() { return null; }
+
+      public override bool isImmutable()
+      {
+        if (this.m_isImmutable == null)
+        {
+          bool isImmutable = false;
+          if (m_orig.isImmutable())
+          {
+            isImmutable = true;
+            for (int i=0; i<m_bound.sz(); ++i)
+            {
+              object obj = m_bound.get(i);
+              if (obj != null && !FanObj.isImmutable(obj))
+                { isImmutable = false; break; }
+            }
+          }
+          this.m_isImmutable = Boolean.valueOf(isImmutable);
+        }
+        return this.m_isImmutable.booleanValue();
+      }
 
       // this isn't a very optimized implementation
       public override object call() { return callList(new List(Sys.ObjType, new object[] {})); }
@@ -383,9 +402,10 @@ namespace Fan.Sys
         return m_orig.callList(new List(Sys.ObjType, temp));
       }
 
-      readonly FuncType m_type;
-      readonly Func m_orig;
-      readonly List m_bound;
+      private readonly FuncType m_type;
+      private readonly Func m_orig;
+      private readonly List m_bound;
+      private Boolean m_isImmutable;
     }
 
   //////////////////////////////////////////////////////////////////////////

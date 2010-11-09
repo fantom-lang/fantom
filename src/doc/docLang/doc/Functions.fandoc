@@ -233,6 +233,9 @@ Immutability works as follows:
     false for isImmutable, but will provide a toImmutable method which
     attempts to bind to the current variables by calling toImmutable
     on each one
+  - Functions created by [Func.bind]`sys::Func.bind` are immutable if
+    the original function is immutable *and* every bound argument is
+    immutable
 
 The definition of a *final variable* is a variable which is never reassigned
 after it is initialized.  Any variable which is reassigned is considered
