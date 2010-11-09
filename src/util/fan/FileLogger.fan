@@ -27,10 +27,7 @@ const class FileLogger : ActorPool
   **
   ** Constructor must set `dir` and `filename`
   **
-  new make(|This|? f := null)
-  {
-    if (f != null) f(this)
-  }
+  new make(|This|? f := null) : super(f) {}
 
   **
   ** Directory used to store log file(s).
