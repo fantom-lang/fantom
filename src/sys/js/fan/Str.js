@@ -64,7 +64,7 @@ fan.sys.Str.getSafe = function(self, index, def)
   catch (err) { return def; }
 }
 
-fan.sys.Str.slice = function(self, range)
+fan.sys.Str.getRange = function(self, range)
 {
   var size = self.length;
   var s = range.$start(size);
