@@ -75,7 +75,7 @@ fan.sys.Buf.prototype.get = function(pos)
   return this.getByte(pos);
 }
 
-fan.sys.Buf.prototype.slice = function(range)
+fan.sys.Buf.prototype.getRange = function(range)
 {
   var size = this.size();
   var s = range.$start(size);

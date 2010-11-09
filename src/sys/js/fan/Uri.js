@@ -899,8 +899,8 @@ fan.sys.Uri.prototype.parent = function()
   // if just a simple filename, then no parent
   if (this.m_path.size() == 1 && !this.isPathAbs() && !this.isDir()) return null;
 
-  // use slice
-  return this.slice(fan.sys.Uri.parentRange);
+  // use getRange
+  return this.getRange(fan.sys.Uri.parentRange);
 }
 
 fan.sys.Uri.prototype.pathOnly = function()
@@ -920,9 +920,9 @@ fan.sys.Uri.prototype.pathOnly = function()
   return fan.sys.Uri.makeSections(t);
 }
 
-fan.sys.Uri.prototype.sliceToPathAbs = function(range) { return this.slice(range, true); }
+fan.sys.Uri.prototype.getRangeToPathAbs = function(range) { return this.getRange(range, true); }
 
-fan.sys.Uri.prototype.slice = function(range, forcePathAbs)
+fan.sys.Uri.prototype.getRange = function(range, forcePathAbs)
 {
   if (forcePathAbs === undefined) forcePathAbs = false;
 
@@ -940,7 +940,7 @@ fan.sys.Uri.prototype.slice = function(range, forcePathAbs)
   if (head && tail && (!forcePathAbs || this.isPathAbs())) return this;
 
   var t = new fan.sys.UriSections();
-  t.path = this.m_path.slice(range);
+  t.path = this.m_path.getRange(range);
 
   var sb = "";
   if ((head && this.isPathAbs()) || forcePathAbs) sb += '/';
@@ -1032,7 +1032,7 @@ fan.sys.Uri.prototype.relTo = function(base)
   else
   {
     // slice my path
-    t.path = this.m_path.slice(fan.sys.Range.makeInclusive(d, -1));
+    t.path = this.m_path.getRange(fan.sys.Range.makeInclusive(d, -1));
 
     // insert .. backup if needed
     var backup = base.m_path.size() - d;

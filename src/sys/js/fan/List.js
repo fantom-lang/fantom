@@ -76,7 +76,7 @@ fan.sys.List.prototype.getSafe = function(index, def)
   return this.m_values[index];
 }
 
-fan.sys.List.prototype.slice = function(range)
+fan.sys.List.prototype.getRange = function(range)
 {
   var s = range.$start(this.m_size);
   var e = range.$end(this.m_size);
