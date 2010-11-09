@@ -34,7 +34,7 @@ internal class WispReq : WebReq
   override Int remotePort() { return socket.remotePort }
   override Str:Str headers := nullHeaders
   override Uri uri := ``
-  override once WebSession session() { service.sessionMgr.load(this) }
+  override once WebSession session() { service.sessionStore.doLoad(this) }
 
   override InStream in()
   {

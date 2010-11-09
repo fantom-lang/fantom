@@ -196,7 +196,7 @@ internal const class WispActor : Actor
     finally
     {
       // save session if accessed
-      service.sessionMgr.save
+      service.sessionStore.doSave
 
       // cleanup thread locals
       Actor.locals.remove("web.req")
