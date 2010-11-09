@@ -89,3 +89,32 @@ facet class Deprecated
   const Str msg := ""
 }
 
+**************************************************************************
+** Operator
+**************************************************************************
+
+**
+** Used on methods to indicate method may be used an operator.
+** The operator symbol is determined by the method name:
+**
+**   prefix     symbol  degree
+**   ------     ------  ------
+**   negate       -     unary
+**   increment    ++    unary
+**   decrement    --    unary
+**   plus         +     binary
+**   minus        -     binary
+**   mult         *     binary
+**   div          /     binary
+**   mod          %     binary
+**   get          []    binary
+**   set          []    ternary
+**
+** In the case of binary/tenary operator multiple methods may
+** be declared for a given symbol as long as every method starts
+** with correct name, for example "plus" and "plusInt".  For
+** unary operators there can only be one method and it must
+** be named exactly "negate", "increment", or "decrement".
+**
+facet class Operator {}
+

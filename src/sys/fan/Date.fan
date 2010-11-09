@@ -173,7 +173,19 @@ const final class Date
   ** Example:
   **   Date(2008, Month.feb, 28) + 2day  =>  2008-03-01
   **
-  Date plus(Duration days)
+  @Operator Date plus(Duration days)
+
+/*
+  **
+  ** Subtract the specified number of days to this date to get a date in
+  ** the future.  Throw ArgErr if 'days' parameter it not an even number
+  ** of days.
+  **
+  ** Example:
+  **   Date(2008, Month.feb, 28) - 2day  =>  2008-02-26
+  **
+  @Operator Date minus(Duration days)
+*/
 
   **
   ** Return the delta between this and the given date.  The result is
@@ -183,7 +195,7 @@ const final class Date
   ** Example:
   **   Date(2009, Month.jan, 5) - Date(2009, Month.jan, 2)  =>  3day
   **
-  Duration minus(Date days)
+  @Operator Duration minus(Date days)
 
   **
   ** Get the first day of this Date's current month.

@@ -86,42 +86,42 @@ const final class Int : Num
   **
   ** Negative of this.  Shortcut is -a.
   **
-  Int negate()
+  @Operator Int negate()
 
   **
   ** Multiply this with b.  Shortcut is a*b.
   **
-  Int mult(Int b)
+  @Operator Int mult(Int b)
 
   **
   ** Divide this by b.  Shortcut is a/b.
   **
-  Int div(Int b)
+  @Operator Int div(Int b)
 
   **
   ** Return remainder of this divided by b.  Shortcut is a%b.
   **
-  Int mod(Int b)
+  @Operator Int mod(Int b)
 
   **
   ** Add this with b.  Shortcut is a+b.
   **
-  Int plus(Int b)
+  @Operator Int plus(Int b)
 
   **
   ** Subtract b from this.  Shortcut is a-b.
   **
-  Int minus(Int b)
+  @Operator Int minus(Int b)
 
   **
   ** Increment by one.  Shortcut is ++a or a++.
   **
-  Int increment()
+  @Operator Int increment()
 
   **
   ** Decrement by one.  Shortcut is --a or a--.
   **
-  Int decrement()
+  @Operator Int decrement()
 
 //////////////////////////////////////////////////////////////////////////
 // Bitwise

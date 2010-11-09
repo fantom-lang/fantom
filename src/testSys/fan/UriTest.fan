@@ -610,7 +610,7 @@ class UriTest : Test
       verifySame(slice, uri)
     verifyUriEq(slice, expected)
 
-    pa := uri.sliceToPathAbs(r)
+    pa := uri.getRangeToPathAbs(r)
     if (expected.isPathAbs)
       verifyEq(pa, expected)
     else

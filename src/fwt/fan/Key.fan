@@ -313,7 +313,7 @@ const class Key
   ** Throws ArgErr if neither this nor x returns true
   ** true for `isModifier`.
   **
-  Key plus(Key x)
+  @Operator Key plus(Key x)
   {
     if (!isModifier && !x.isModifier) throw ArgErr("Neither is modifier: $this + $x")
     return makeNew(mask.or(x.mask), null)

@@ -135,7 +135,7 @@ class Buf
   ** method is accessed via the [] shortcut operator.  Throw IndexErr
   ** if index out of range.
   **
-  Int get(Int index)
+  @Operator Int get(Int index)
 
   **
   ** Return a new buffer containing the bytes in the specified absolute
@@ -153,7 +153,10 @@ class Buf
   **   buf[0..<2]  => 0x[aabb]
   **   buf[1..-2]  => 0x[bbcc]
   **
-  Buf slice(Range range)
+  @Operator Buf getRange(Range range)
+
+  ** TODO: use `getRange`
+  @Deprecated Buf slice(Range range)
 
   **
   ** Create a new buffer in memory which deeply clones this buffer.
@@ -170,7 +173,7 @@ class Buf
   ** buffer.  The set method is accessed via the []= shortcut operator.
   ** Return this.  Throw IndexErr if index is out of range.
   **
-  This set(Int index, Int byte)
+  @Operator This set(Int index, Int byte)
 
   **
   ** Read the buffer for a fresh read by reseting the buffer's pos

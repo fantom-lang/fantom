@@ -161,7 +161,8 @@ public class FanStr
     }
   }
 
-  public static String slice(String self, Range r)
+  public static String slice(String self, Range r) { return getRange(self, r); }
+  public static String getRange(String self, Range r)
   {
     int size = self.length();
 

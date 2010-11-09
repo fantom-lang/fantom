@@ -98,12 +98,12 @@ class Elem
   ** Get an attribute by name.  If not found return
   ** the specificed default value.
   **
-  native Obj? get(Str name, Obj? def := null)
+  @Operator native Obj? get(Str name, Obj? def := null)
 
   **
   ** Set an attribute to the given value.
   **
-  native Void set(Str name, Obj? val)
+  @Operator native Void set(Str name, Obj? val)
 
 //////////////////////////////////////////////////////////////////////////
 // Layout

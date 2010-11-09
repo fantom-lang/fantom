@@ -29,12 +29,12 @@ enum class Weekday
   **
   ** Return the day after this weekday.
   **
-  Weekday increment()
+  @Operator Weekday increment()
 
   **
   ** Return the day before this weekday.
   **
-  Weekday decrement()
+  @Operator Weekday decrement()
 
   **
   ** Return the weekday as a localized string according to the

@@ -67,7 +67,7 @@ final class Map
   ** it defaults to the `def` field.  This method is readonly safe.
   ** Shortcut is 'a[key]'.
   **
-  V? get(K key, V? def := this.def)
+  @Operator V? get(K key, V? def := this.def)
 
   **
   ** Return if the specified key is mapped.
@@ -98,7 +98,7 @@ final class Map
   ** does not return true for Obj.isImmutable, then throw NotImmutableErr.
   ** If key is null throw NullErr.  Throw ReadonlyErr if readonly.
   **
-  M set(K key, V val)
+  @Operator M set(K key, V val)
 
   **
   ** Add the specified key/value pair to the map.  If the key is

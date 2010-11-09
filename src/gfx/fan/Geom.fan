@@ -328,18 +328,16 @@ const class Hints
 
   ** Add the given w and h to this hint's dimensions.  If a hint
   ** dimension is null, then the resulting dimension is null too.
-  Hints plus(Size size)
+  @Operator Hints plus(Size size)
   {
-    return make(w == null ? null : w + size.w,
-                h == null ? null : h + size.h)
+    make(w == null ? null : w + size.w, h == null ? null : h + size.h)
   }
 
   ** Subtract the given w and h from this hint's dimensions.  If a hint
   ** dimension is null, then the resulting dimension is null too.
-  Hints minus(Size size)
+  @Operator Hints minus(Size size)
   {
-    return make(w == null ? null : w - size.w,
-                h == null ? null : h - size.h)
+    make(w == null ? null : w - size.w, h == null ? null : h - size.h)
   }
 
   ** Suggested width or null if no contraints

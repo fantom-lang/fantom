@@ -899,31 +899,23 @@ class CallExpr : NameExpr
 **
 ** ShortcutExpr is used for operator expressions which are a shortcut
 ** to a method call:
-**   a + b    => a.plus(b)
-**   a - b    => a.minus(b)
-**   a * b    => a.mult(b)
-**   a / b    => a.div(b)
-**   a % b    => a.mod(b)
-**   a[b]     => a.get(b)
-**   a[b] = c => a.set(b, c)
-**   a[b]     => a.slice(b) if b is Range
-**   a[b] = c => a.splice(b, c) if b is Range
-**   a << b   => a.lshift(b)
-**   a >> b   => a.rshift(b)
-**   a & b    => a.and(b)
-**   a | b    => a.or(b)
-**   a ^ b    => a.xor(b)
-**   ~a       => a.inverse()
-**   -a       => a.negate()
-**   ++a, a++ => a.increment()
-**   --a, a-- => a.decrement()
-**   a == b   => a.equals(b)
-**   a != b   => ! a.equals(b)
-**   a <=>    => a.compare(b)
-**   a > b    => a.compare(b) > 0
-**   a >= b   => a.compare(b) >= 0
-**   a < b    => a.compare(b) < 0
-**   a <= b   => a.compare(b) <= 0
+**   a + b     =>  a.plus(b)
+**   a - b     =>  a.minus(b)
+**   a * b     =>  a.mult(b)
+**   a / b     =>  a.div(b)
+**   a % b     =>  a.mod(b)
+**   a[b]      =>  a.get(b)
+**   a[b] = c  =>  a.set(b, c)
+**   -a        =>  a.negate()
+**   ++a, a++  =>  a.increment()
+**   --a, a--  =>  a.decrement()
+**   a == b    =>  a.equals(b)
+**   a != b    =>  ! a.equals(b)
+**   a <=>     =>  a.compare(b)
+**   a > b     =>  a.compare(b) > 0
+**   a >= b    =>  a.compare(b) >= 0
+**   a < b     =>  a.compare(b) < 0
+**   a <= b    =>  a.compare(b) <= 0
 **
 class ShortcutExpr : CallExpr
 {
@@ -1719,15 +1711,16 @@ enum class ShortcutOp
   eq(2, "equals"),
   cmp(2, "compare"),
   get(2),
-  set(2),
-  slice(2)
+  set(2)
 
   private new make(Int degree, Str? methodName := null)
   {
     this.degree = degree
     this.methodName = methodName == null ? name : methodName
+    this.isOperator = methodName == null
   }
 
   const Int degree
   const Str methodName
+  const Bool isOperator
 }

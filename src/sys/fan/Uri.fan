@@ -467,7 +467,10 @@ const final class Uri
   **   `/a/b/c/`[1..<2]              =>  `b/`
   **   `/a`[0..-2]                   =>  `/`
   **
-  Uri slice(Range r)
+  @Operator Uri getRange(Range r)
+
+  ** TODO: use `getRange`
+  @Deprecated Uri slice(Range r)
 
   **
   ** Return a slice of this Uri's path using the same semantics
@@ -475,11 +478,14 @@ const final class Uri
   ** a leading slash in the path such that `isPathAbs` returns true.
   **
   ** Examples:
-  **   `/a/b/c/`.sliceToPathAbs(0..1)  =>  `/a/b/`
-  **   `/a/b/c/`.sliceToPathAbs(1..2)  =>  `/b/c/`
-  **   `/a/b/c/`.sliceToPathAbs(1..<2) =>  `/b/`
+  **   `/a/b/c/`.getRangeToPathAbs(0..1)  =>  `/a/b/`
+  **   `/a/b/c/`.getRangeToPathAbs(1..2)  =>  `/b/c/`
+  **   `/a/b/c/`.getRangeToPathAbs(1..<2) =>  `/b/`
   **
-  Uri sliceToPathAbs(Range r)
+  Uri getRangeToPathAbs(Range r)
+
+  ** TODO: use `getRangeToPathAbs`
+  @Deprecated Uri sliceToPathAbs(Range r)
 
   **
   ** Return a new Uri with the specified Uri appended to this Uri.
@@ -495,7 +501,7 @@ const final class Uri
   **   `a/b/c`  + `../../../d`            =>  `../d`
   **   `a/b/c/` + `../../../d`            =>  `d`
   **
-  Uri plus(Uri toAppend)
+  @Operator Uri plus(Uri toAppend)
 
   **
   ** Return a new Uri with a single path name appended to this

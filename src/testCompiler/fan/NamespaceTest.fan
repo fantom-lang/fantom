@@ -295,8 +295,8 @@ class NamespaceTest : CompilerTest
     // facets
     f := depend.facet("sys::Serializable")
     verifyNotNull(f)
-    verifyEq(f["simple"], true)
-    verifyEq(f["bad"], null)
+    verifyEq(f.get("simple"), true)
+    verifyEq(f.get("bad"), null)
   }
 
 //////////////////////////////////////////////////////////////////////////

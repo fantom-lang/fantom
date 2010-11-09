@@ -142,7 +142,8 @@ public abstract class Buf
     return getByte(pos);
   }
 
-  public final Buf slice(Range range)
+  public final Buf slice(Range range) { return getRange(range); }
+  public final Buf getRange(Range range)
   {
     long size = size();
     long s = range.start(size);

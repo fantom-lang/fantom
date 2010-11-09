@@ -915,7 +915,9 @@ public final class Uri
   }
 
   public Uri slice(Range range) { return slice(range, false); }
+  public Uri getRange(Range range) { return slice(range, false); }
 
+  public Uri getRangeToPathAbs(Range range) { return slice(range, true); }
   public Uri sliceToPathAbs(Range range) { return slice(range, true); }
 
   private Uri slice(Range range, boolean forcePathAbs)

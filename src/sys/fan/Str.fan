@@ -183,7 +183,7 @@ const final class Str
   ** This method is accessed via the [] operator.  Throw IndexErr if the
   ** index is out of range.
   **
-  Int get(Int index)
+  @Operator Int get(Int index)
 
   **
   ** Get the character at the zero based index as a Unicode code point.
@@ -206,12 +206,15 @@ const final class Str
   **   "abcd"[1..-2]  => "bc"
   **   "abcd"[4..-1]  => ""
   **
-  Str slice(Range range)
+  @Operator Str getRange(Range range)
+
+  ** TODO: use `getRange`
+  /*@Deprecated*/ Str slice(Range range)
 
   **
   ** Concat the value of obj.toStr
   **
-  Str plus(Obj? obj)
+  @Operator Str plus(Obj? obj)
 
 //////////////////////////////////////////////////////////////////////////
 // Iterators

@@ -141,42 +141,42 @@ const final class Float : Num
   **
   ** Negative of this.  Shortcut is -a.
   **
-  Float negate()
+  @Operator Float negate()
 
   **
   ** Multiply this with b.  Shortcut is a*b.
   **
-  Float mult(Float b)
+  @Operator Float mult(Float b)
 
   **
   ** Divide this by b.  Shortcut is a/b.
   **
-  Float div(Float b)
+  @Operator Float div(Float b)
 
   **
   ** Return remainder of this divided by b.  Shortcut is a%b.
   **
-  Float mod(Float b)
+  @Operator Float mod(Float b)
 
   **
   ** Add this with b.  Shortcut is a+b.
   **
-  Float plus(Float b)
+  @Operator Float plus(Float b)
 
   **
   ** Subtract b from this.  Shortcut is a-b.
   **
-  Float minus(Float b)
+  @Operator Float minus(Float b)
 
   **
   ** Increment by one.  Shortcut is ++a or a++.
   **
-  Float increment()
+  @Operator Float increment()
 
   **
   ** Decrement by one.  Shortcut is --a or a--.
   **
-  Float decrement()
+  @Operator Float decrement()
 
 /////////////////////////////////////////////////////////////////////////
 // Math
