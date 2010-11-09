@@ -157,6 +157,11 @@ abstract class WebReq
   abstract InStream in()
 
   **
+  ** Access to socket options for this request.
+  **
+  abstract SocketOptions socketOptions()
+
+  **
   ** Stash allows you to stash objects on the WebReq object
   ** in order to pass data b/w Weblets while processing
   ** this request.

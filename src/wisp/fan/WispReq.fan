@@ -42,6 +42,8 @@ internal class WispReq : WebReq
     return webIn
   }
 
+  override SocketOptions socketOptions() { socket.options }
+
   static const Version nullVersion := Version("0")
   static const Str:Str nullHeaders := Str:Str[:]
 
