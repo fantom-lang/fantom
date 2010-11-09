@@ -456,7 +456,7 @@ public final class DateTime
 // Operators
 //////////////////////////////////////////////////////////////////////////
 
-  public Duration minus(DateTime time)
+  public Duration minusDateTime(DateTime time)
   {
     return Duration.make(ticks-time.ticks);
   }
@@ -466,6 +466,13 @@ public final class DateTime
     long d = duration.ticks;
     if (d == 0) return this;
     return makeTicks(ticks+d, tz);
+  }
+
+  public DateTime minus(Duration duration)
+  {
+    long d = duration.ticks;
+    if (d == 0) return this;
+    return makeTicks(ticks-d, tz);
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -1071,7 +1071,7 @@ class CheckErrorsTest : CompilerTest
         Int i() { return 3 }
         @Operator Foo plus(Foo a) { return this }
         @Operator Int plusInt(Int x) { x }
-        Void increment() {}
+        @Operator Void increment() {}
       }",
        [
          4, 21, "Left hand side is not assignable",

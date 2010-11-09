@@ -422,13 +422,16 @@ class DateTimeTest : Test
   {
     now := DateTime.now
 
-    yesterday := now + -1day
+    yesterday1 := now + -1day
+    yesterday2 := now - 1day
     tomorrow := now + 1day
 
-    verifyEq(now.ticks - yesterday.ticks, 1day.ticks)
+    verifyEq(now.ticks - yesterday1.ticks, 1day.ticks)
+    verifyEq(now.ticks - yesterday2.ticks, 1day.ticks)
     verifyEq(now.ticks - tomorrow.ticks, -1day.ticks)
 
-    verifyEq(now - yesterday, 1day)
+    verifyEq(now - yesterday1, 1day)
+    verifyEq(now - yesterday2, 1day)
     verifyEq(now - tomorrow, -1day)
   }
 
@@ -1384,12 +1387,14 @@ class DateTimeTest : Test
 
     verifyErr(ArgErr#) { x := Date.today + 22hr }
     verifyErr(ArgErr#) { x := Date.today + -13min }
+    verifyErr(ArgErr#) { x := Date.today - 23hr }
   }
 
   Void verifyDateMath(Date a, Date b, Duration diff)
   {
     verifyEq(a + diff, b)
     verifyEq(b + -diff, a)
+    verifyEq(b - diff, a)
     verifyEq(b - a, diff)
     verifyEq(a - b, -diff)
   }

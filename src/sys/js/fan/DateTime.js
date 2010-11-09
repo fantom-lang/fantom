@@ -663,7 +663,7 @@ fan.sys.DateTime.daySuffix = function(day)
 // Operators
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.DateTime.prototype.minus = function(time)
+fan.sys.DateTime.prototype.minusDateTime = function(time)
 {
   return fan.sys.Duration.make(this.m_ticks-time.m_ticks);
 }
@@ -673,6 +673,13 @@ fan.sys.DateTime.prototype.plus = function(duration)
   var d = duration.m_ticks;
   if (d == 0) return this;
   return fan.sys.DateTime.makeTicks(this.m_ticks+d, this.m_tz);
+}
+
+fan.sys.DateTime.prototype.minus = function(duration)
+{
+  var d = duration.m_ticks;
+  if (d == 0) return this;
+  return fan.sys.DateTime.makeTicks(this.m_ticks-d, this.m_tz);
 }
 
 //////////////////////////////////////////////////////////////////////////
