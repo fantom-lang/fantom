@@ -175,27 +175,24 @@ const final class Date
   **
   @Operator Date plus(Duration days)
 
-/*
   **
   ** Subtract the specified number of days to this date to get a date in
-  ** the future.  Throw ArgErr if 'days' parameter it not an even number
+  ** the past.  Throw ArgErr if 'days' parameter it not an even number
   ** of days.
   **
   ** Example:
   **   Date(2008, Month.feb, 28) - 2day  =>  2008-02-26
   **
   @Operator Date minus(Duration days)
-*/
 
   **
-  ** Return the delta between this and the given date.  The result is
-  ** always an exact multiple of 24 hour days.  If you wish to subtract a
-  ** Duration, use the `plus` method with a negative duration.
+  ** Return the delta between this and the given date.  The
+  ** result is always an exact multiple of 24 hour days.
   **
   ** Example:
   **   Date(2009, Month.jan, 5) - Date(2009, Month.jan, 2)  =>  3day
   **
-  @Operator Duration minus(Date days)
+  @Operator Duration minusDate(Date days)
 
   **
   ** Get the first day of this Date's current month.

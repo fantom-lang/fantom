@@ -460,7 +460,7 @@ namespace Fan.Sys
   // Operators
   //////////////////////////////////////////////////////////////////////////
 
-    public Duration minus(DateTime time)
+    public Duration minusDateTime(DateTime time)
     {
       return Duration.make(m_ticks-time.m_ticks);
     }
@@ -470,6 +470,13 @@ namespace Fan.Sys
       long d = duration.m_ticks;
       if (d == 0) return this;
       return makeTicks(m_ticks+d, m_tz);
+    }
+
+    public DateTime minus(Duration duration)
+    {
+      long d = duration.m_ticks;
+      if (d == 0) return this;
+      return makeTicks(m_ticks-d, m_tz);
     }
 
   //////////////////////////////////////////////////////////////////////////

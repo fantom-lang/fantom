@@ -325,27 +325,33 @@ const final class DateTime
 
   **
   ** Return the delta between this and the given time.
-  ** If you wish to subtract a Duration, use the `plus`
-  ** method with a negative duration.
   **
   ** Example:
-  **   elapsed   := DateTime.now - startTime
-  **   yesterday := DateTime.now + -1day
+  **   elapsed := DateTime.now - startTime
   **
-  @Operator Duration minus(DateTime time)
+  @Operator Duration minusDateTime(DateTime time)
 
   **
-  ** Add (or subtract if duration is negative) a duration
-  ** to compute a new time.  This method works off absolute
-  ** time, so adding 1days means to add 24 hours to the ticks.
-  ** This might be a different time of day if on a DST boundry.
-  ** Use `Date.plus` for daily increments and decrements.
+  ** Add a duration to compute a new time.  This method works
+  ** off absolute time, so adding 1days means to add 24 hours to
+  ** the ticks.  This might be a different time of day if on
+  ** a DST boundry.  Use `Date.plus` for daily increments.
   **
   ** Example:
   **   nextHour := DateTime.now + 1hr
-  **   prevHour := DateTime.now + -1hr
   **
   @Operator DateTime plus(Duration duration)
+
+  **
+  ** Subtract a duration to compute a new time.  This method works
+  ** off absolute time, so subtracting 1days means to subtract 24
+  ** hours from the ticks.  This might be a different time of day if
+  ** on a DST boundry.  Use `Date.minus` for daily increments.
+  **
+  ** Example:
+  **   prevHour := DateTime.now - 1hr
+  **
+  @Operator DateTime minus(Duration duration)
 
   **
   ** Return a new DateTime with this time's nanosecond ticks truncated

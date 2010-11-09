@@ -152,7 +152,12 @@ fan.sys.Date.prototype.plus = function(d)
   return new fan.sys.Date(year, month, day);
 }
 
-fan.sys.Date.prototype.minus = function(that)
+fan.sys.Date.prototype.minus = function(d)
+{
+  return this.plus(d.negate());
+}
+
+fan.sys.Date.prototype.minusDate = function(that)
 {
   // short circuit if equal
   if (this.equals(that)) return fan.sys.Duration.m_defVal;

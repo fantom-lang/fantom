@@ -178,10 +178,11 @@ namespace Fan.Sys
   // Past/Future
   //////////////////////////////////////////////////////////////////////////
 
-    public Date plus(Duration d)
+    public Date plus(Duration d) { return plus(d.m_ticks); }
+    public Date minus(Duration d) { return plus(-d.m_ticks); }
+    private Date plus(long ticks)
     {
       // check even number of days
-      long ticks = d.m_ticks;
       if (ticks % Duration.nsPerDay != 0)
         throw ArgErr.make("Duration must be even num of days").val;
 
@@ -220,7 +221,7 @@ namespace Fan.Sys
       return new Date(year, month, day);
     }
 
-    public Duration minus(Date that)
+    public Duration minusDate(Date that)
     {
       // short circuit if equal
       if (this.Equals(that)) return Duration.Zero;
