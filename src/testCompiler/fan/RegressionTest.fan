@@ -28,8 +28,8 @@ class RegressionTest : CompilerTest
           {
             key := \"testCompiler.528\"
             Actor.locals[key] = \"\"
-            2.times |Int i| { 1.times |Int j| { Actor.locals[key] = Actor.locals[key] + i.toStr + \",\" } }
-            3.times |Int i| { 2.times |Int j| { Actor.locals[key] = Actor.locals[key] + i.toStr + \",\"} }
+            2.times |Int i| { 1.times |Int j| { Actor.locals[key] = Actor.locals[key].toStr + i.toStr + \",\" } }
+            3.times |Int i| { 2.times |Int j| { Actor.locals[key] = Actor.locals[key].toStr + i.toStr + \",\"} }
             return Actor.locals[key]
           }
         }
@@ -118,7 +118,7 @@ class RegressionTest : CompilerTest
         Str:Obj bindings := [
           \"print\": |Obj[] args|
           {
-            args.each |arg| { result += arg + \",\" }
+            args.each |arg| { result += arg.toStr + \",\" }
           }
         ]
         Str result := \"\"

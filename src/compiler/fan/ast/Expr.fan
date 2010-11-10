@@ -959,31 +959,19 @@ class ShortcutExpr : CallExpr
     this.isPostfixLeave = from.isPostfixLeave
   }
 
-  override Bool assignRequiresTempVar()
-  {
-    return isAssignable
-  }
+  override Bool assignRequiresTempVar() { isAssignable }
 
   override Obj? assignTarget() { isAssign ? target : null }
 
-  override Bool isAssignable()
-  {
-    return op === ShortcutOp.get
-  }
+  override Bool isAssignable() { op === ShortcutOp.get }
 
-  override Bool isCompare()
-  {
-    return op === ShortcutOp.eq || op === ShortcutOp.cmp
-  }
+  override Bool isCompare() { op === ShortcutOp.eq || op === ShortcutOp.cmp }
 
   override Bool isStmt() { isAssign || op === ShortcutOp.set }
 
   Bool isAssign() { opToken.isAssign || opToken.isIncrementOrDecrement }
 
-  Bool isStrConcat()
-  {
-    return opToken == Token.plus && args.size == 1 && (target.ctype.isStr || args.first.ctype.isStr)
-  }
+  Bool isStrConcat() { opToken == Token.plus && args.size == 1 && target.ctype.isStr }
 
   override Str toStr()
   {

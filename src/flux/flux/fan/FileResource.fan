@@ -216,12 +216,7 @@ class FileResource : Resource
   **
   static Str sizeToStr(Int? size)
   {
-    if (size == null) return ""
-    if (size == 0) return "0KB"
-    if (size < kb) return "1KB"
-    if (size < mb) return (size/kb) + "KB"
-    if (size < gb) return (size/mb) + "MB"
-    return (size/gb) + "GB"
+    size == null ? "" : size.toLocale("B")
   }
   private static const Int kb := 1024
   private static const Int mb := 1024*1024

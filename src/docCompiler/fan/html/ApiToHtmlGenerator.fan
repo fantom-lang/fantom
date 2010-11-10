@@ -391,7 +391,7 @@ vals := temp.get as Obj[]
   **
   Void slotLink(Slot s)
   {
-    href := compiler.uriMapper.map(s.parent.qname, loc) + "#" + s.name
+    href := compiler.uriMapper.map(s.parent.qname, loc).toStr + "#" + s.name
     out.print("<a href='$href'>$s.qname</a>")
   }
 

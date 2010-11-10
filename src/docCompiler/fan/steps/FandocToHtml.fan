@@ -65,7 +65,7 @@ class FandocToHtml : DocCompilerStep
     try
     {
       doc := FandocParser().parse(inFile.name, inFile.in)
-      loc := Loc(compiler.pod + "::" + inFile.name)
+      loc := Loc("${compiler.pod}::${inFile.name}")
 
       outFile := compiler.podOutDir + `${inFile.basename}.html`
       FandocToHtmlGenerator(compiler, loc, outFile, doc).generate

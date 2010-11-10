@@ -385,7 +385,7 @@ class SqlServiceTest : Test
     stmt = db.sql("select name, age from farmers where age > @age").prepare
     result = stmt.query(["age":30])
     verifyEq(result.size, 3)
-    result.each |Obj row| { verify(result[0]->age > 30, result[0]->age + " <= 30") }
+    result.each |Obj row| { verify(result[0]->age > 30, result[0]->age.toStr + " <= 30") }
     stmt.close()
 
     stmt = db.sql("select name, age from farmers where name = @name and age = @age").prepare
