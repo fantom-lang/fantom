@@ -488,7 +488,7 @@ class ExprTest : CompilerTest
   {
     verifyExpr("\"\$a \$b\"", "4 5", 4, 5)
     verifyExpr("\"x\" + a", "x7", 7)
-    verifyExpr("a + \"x\"", "7x", 7)
+    verifyExpr("a + \"x\"", "7x", "7")
 
     verifyExpr("a += \"y\"", "xy", "x")
   }
