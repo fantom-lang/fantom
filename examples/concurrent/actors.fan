@@ -49,7 +49,7 @@ class Actors
     {
       if (msg == "current") return Actor.locals["counter"]
       if (msg == "reset") { Actor.locals["counter"] = 0; return null }
-      Actor.locals["counter"] = 1 + Actor.locals["counter"]
+      Actor.locals["counter"] = 1 + (Int)Actor.locals["counter"]
       return null  // ignored
     }
 

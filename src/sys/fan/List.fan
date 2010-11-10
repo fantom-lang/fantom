@@ -131,7 +131,7 @@ final class List
   @Operator L getRange(Range range)
 
   ** TODO: use `getRange`
-  /*@Deprecated*/ L slice(Range range)
+  @Deprecated L slice(Range range)
 
   **
   ** Return if this list contains the specified item.
