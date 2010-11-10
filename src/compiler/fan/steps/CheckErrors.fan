@@ -1621,7 +1621,7 @@ class CheckErrors : CompilerStep
     // we got a deprecration warning - log it
     kind := target is CType ? "type" : "slot"
     qname := (Str)target->qname
-    msg := f["msg"] as Str ?: ""
+    msg := f.get("msg") as Str ?: ""
     if (!msg.isEmpty)
       warn("Deprecated $kind '$qname' - $msg", loc)
     else

@@ -94,7 +94,7 @@ class Doc : RichTextModel
   override Int offsetAtLine(Int lineIndex)
   {
     Int r := text.splitLines[0..<lineIndex]
-      .reduce(0) |Obj o, Str line->Int| { return line.size+o+1 }
+      .reduce(0) |Int o, Str line->Int| { return line.size+o+1 }
     log.debug("offsetAtLine($lineIndex) => $r")
     return r
   }

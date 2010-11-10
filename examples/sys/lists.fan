@@ -151,7 +151,7 @@ class Lists
   {
     echo("\n--- reduce ---")
     x := [12, 13, 14]
-    show(x.reduce(0) |r, v| { v + r }, "sum list of ints 39")
+    show(x.reduce(0) |r, v| { v.plus(r) }, "sum list of ints 39")
   }
 
   Void sorting()

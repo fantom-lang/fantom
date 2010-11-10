@@ -101,7 +101,7 @@ class FTable
   **
   ** Get the object identified by the specified 16-bit index.
   **
-  Obj get(Int index)
+  @Operator Obj get(Int index)
   {
     return table[index]
   }
