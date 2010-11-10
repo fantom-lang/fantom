@@ -1067,7 +1067,7 @@ class CheckErrorsTest : CompilerTest
         Int i() { return 3 }
         @Operator Foo plus(Foo a) { return this }
         @Operator Int plusInt(Int x) { x }
-        @Operator Void increment() {}
+        @Operator Int increment() { 3 }
       }",
        [
          4, 21, "Left hand side is not assignable",
@@ -1732,4 +1732,37 @@ class CheckErrorsTest : CompilerTest
          43, 3, "Non-nullable field 'x' must be assigned in constructor 'm12'",
        ])
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Operators
+//////////////////////////////////////////////////////////////////////////
+
+  Void testOperators()
+  {
+    verifyErrors(
+      "class Foo
+       {
+         @Operator Int plu03() { 5 }
+         @Operator Void plusFoo(Int x) { }
+         @Operator Foo negate(Int x) { this }
+         @Operator Int plus06() { 5 }
+         @Operator Int minus07(Int x, Int y) { 5 }
+         @Operator Foo get08() { this }
+         @Operator Void set(Int x) { }
+         @Operator Void setFoo(Int x, Int y) { }
+         @Operator Int get11(Int x, Int y := 0) { y } // ok
+       }",
+       [
+         3, 3,  "Operator method 'plu03' has invalid name",
+         4, 3,  "Operator method 'plusFoo' cannot return Void",
+         5, 3,  "Operator method 'negate' has wrong number of parameters",
+         6, 3,  "Operator method 'plus06' has wrong number of parameters",
+         7, 3,  "Operator method 'minus07' has wrong number of parameters",
+         8, 3,  "Operator method 'get08' has wrong number of parameters",
+         9, 3,  "Operator method 'set' has wrong number of parameters",
+        10, 3,  "Operator method 'setFoo' has invalid name",
+       ])
+  }
+
 }
+

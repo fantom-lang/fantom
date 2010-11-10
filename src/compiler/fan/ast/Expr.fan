@@ -1711,7 +1711,7 @@ enum class ShortcutOp
   eq(2, "==", "equals"),
   cmp(2, "<=>", "compare"),
   get(2, "[]"),
-  set(2, "[]=")
+  set(3, "[]=")
 
   private new make(Int degree, Str symbol, Str? methodName := null)
   {
@@ -1719,6 +1719,15 @@ enum class ShortcutOp
     this.symbol = symbol
     this.methodName = methodName == null ? name : methodName
     this.isOperator = methodName == null
+  }
+
+  static ShortcutOp? fromPrefix(Str prefix) { prefixes[prefix] }
+  private static const Str:ShortcutOp prefixes
+  static
+  {
+    m := Str:ShortcutOp[:]
+    vals.each |val| { m[val.methodName] = val }
+    prefixes = m
   }
 
   Str formatErr(CType lhs, CType rhs)
