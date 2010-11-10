@@ -39,7 +39,6 @@ a specific method:
    a % b     =>  a.mod(b)
    a[b]      =>  a.get(b)
    a[b] = c  =>  a.set(b, c)
-   a[b]      =>  a.slice(b) if b is Range
    -a        =>  a.negate()
    ++a, a++  =>  a = a.increment()
    --a, a--  =>  a = a.decrement()
@@ -54,11 +53,8 @@ a specific method:
 
 For example say we have two variables 'a' and 'b' both of type 'Int'.
 Then the expression 'a+b' is really just syntax sugar for calling
-`sys::Int.plus` as 'a.plus(b)'.  'Bool', 'Int', 'Float', and 'Decimal'
-map all the shortcut operators just as you would expect them.  If you
-try to use a shortcut operator with a type that doesn't support the
-corresponding method or with an invalid parameter type, then you
-will get a likewise compiler error.
+`sys::Int.plus` as 'a.plus(b)'.  See [Method Operators]`Methods#operators`
+for a detailed discussion.
 
 Prefix and Postfix Operators [#prefixPostfix]
 =============================================
@@ -252,12 +248,12 @@ Depending on how it is used, the '[]' operator maps to three different shortcuts
 
    a[b]      =>  a.get(b)
    a[b] = c  =>  a.set(b, c)
-   a[b]      =>  a.slice(b) if b is Range
+   a[b]      =>  a.getRange(b) if b is Range
 
 Typically 'a[b]' is a shortcut for calling 'a.get(b)'.  For example the
 `sys::List.get` method allows you to lookup a list item by it's 'Int'
-index.  Whenever a class supports a 'get' method with one argument you
-can use '[]' as a shortcut.  Consider this code:
+index.  Whenever a class supports a 'get' operator method you can
+use '[]' as a shortcut.  Consider this code:
 
   list := ["a", "b", "c"]
   list.get(2)
@@ -277,7 +273,7 @@ these two lines of code have identical behavior:
   map["tmj"] = "Too Much Joy"
 
 If the '[]' operator is used with a `sys::Range` index, then we
-map to the 'a.slice(b)' method rather than 'a.get(b)'.  Slicing is
+map to the 'a.getRange(b)' method which performs a slice.  Slicing is
 used to create sub-strings and sub-lists.  Some example code which
 creates sub-strings:
 

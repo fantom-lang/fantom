@@ -97,24 +97,26 @@ facet class Deprecated
 ** Used on methods to indicate method may be used an operator.
 ** The operator symbol is determined by the method name:
 **
-**   prefix     symbol  degree
-**   ------     ------  ------
-**   negate       -     unary
-**   increment    ++    unary
-**   decrement    --    unary
-**   plus         +     binary
-**   minus        -     binary
-**   mult         *     binary
-**   div          /     binary
-**   mod          %     binary
-**   get          []    binary
-**   set          []=   ternary
+**   prefix     symbol    degree
+**   ------     ------    ------
+**   negate     -a        unary
+**   increment  ++a       unary
+**   decrement  --a       unary
+**   plus       a + b     binary
+**   minus      a - b     binary
+**   mult       a * b     binary
+**   div        a / b     binary
+**   mod        a % b     binary
+**   get        a[b]      binary
+**   set        a[b] = c  ternary
 **
 ** In the case of binary operators multiple methods may
 ** be declared for a given symbol as long as every method starts
 ** with correct name, for example "plus" and "plusInt".  For
 ** unary/ternary operators there can only be one method and it must
 ** be named exactly "negate", "increment", "decrement", or "set".
+**
+** See [docLang]`docLang::Methods#operators` for additional details.
 **
 facet class Operator {}
 
