@@ -3,7 +3,7 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   4 Feb 10  Brian Frank  Creation
+//   8 Nov 10  Brian Frank  Creation
 //
 package fan.sys;
 

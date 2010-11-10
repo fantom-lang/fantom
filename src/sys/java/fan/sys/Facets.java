@@ -21,9 +21,21 @@ public final class Facets
 {
   public static Facets empty()
   {
-    Facets e = empty;
-    if (e != null) return e;
-    return empty = new Facets(new HashMap());
+    Facets x = emptyVal;
+    if (x == null) x = emptyVal = new Facets(new HashMap());
+    return x;
+  }
+
+  public static Facets makeTransient()
+  {
+    Facets x = transientVal;
+    if (x == null)
+    {
+      HashMap m = new HashMap();
+      m.put(Sys.TransientType, "");
+      x = transientVal = new Facets(m);
+    }
+    return x;
   }
 
   static Facets mapFacets(Pod pod, FAttrs.FFacet[] ffacets)
@@ -39,7 +51,7 @@ public final class Facets
     return new Facets(map);
   }
 
-  Facets(HashMap map) { this.map = map; }
+  private Facets(HashMap map) { this.map = map; }
 
   final synchronized List list()
   {
@@ -91,7 +103,35 @@ public final class Facets
     }
   }
 
-  private static Facets empty;
+  final Facets dup()
+  {
+    return new Facets((HashMap)map.clone());
+  }
+
+  final void inherit(Facets facets)
+  {
+    if (facets.map.size() == 0) return;
+    list = null;
+    Iterator it = facets.map.entrySet().iterator();
+    while (it.hasNext())
+    {
+      Entry entry = (Entry)it.next();
+      Type key = (Type)entry.getKey();
+
+      // if already mapped skipped
+      if (map.get(key) != null) continue;
+
+      // if not an inherited facet skip it
+      FacetMeta meta = (FacetMeta)key.facet(Sys.FacetMetaType, false);
+      if (meta == null || !meta.inherited) continue;
+
+      // inherit
+      map.put(key, entry.getValue());
+    }
+  }
+
+  private static Facets emptyVal;
+  private static Facets transientVal;
 
   private HashMap map;   // Type : String/Facet, lazy decoding
   private List list;     // Facet[]

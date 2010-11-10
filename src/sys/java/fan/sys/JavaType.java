@@ -268,15 +268,7 @@ public class JavaType
 
     // map Java transients to facets
     if (Modifier.isTransient(java.getModifiers()))
-    {
-      if (transientFacets == null)
-      {
-        HashMap m = new HashMap();
-        m.put(Sys.TransientType, "");
-        transientFacets = new Facets(m);
-      }
-      facets = transientFacets;
-    }
+      facets = Facets.makeTransient();
 
     // map Java enum constants as Fantom enum constants
     if (java.isEnumConstant()) flags |= FConst.Enum;
@@ -535,8 +527,6 @@ public class JavaType
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
-
-  private static Facets transientFacets;
 
 /*
   public static final JavaType ByteType  = make(byte.class);

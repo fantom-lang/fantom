@@ -18,6 +18,7 @@
 **
 ** See the [Serialization Doc]`docLang::Serialization` for details.
 **
+@FacetMeta { inherited = true }
 facet class Serializable
 {
   **
@@ -119,4 +120,20 @@ facet class Deprecated
 ** See [docLang]`docLang::Methods#operators` for additional details.
 **
 facet class Operator {}
+
+**************************************************************************
+** FacetUsage
+**************************************************************************
+
+**
+** Facet meta-data applied to facet classes.
+**
+facet class FacetMeta
+{
+  **
+  ** Indicates whether the facet is inherited by sub-types.
+  ** See [docLang]`docLang::Facets#inheritance` for additional details.
+  **
+  const Bool inherited := false
+}
 

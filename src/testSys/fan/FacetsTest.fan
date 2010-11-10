@@ -90,6 +90,50 @@ class FacetsTest : Test
     verifySame(facets, t->facets)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Inheritance
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInheritance()
+  {
+    /*
+    echo("M2: " + FacetsM2#.facets)
+    echo("C1: " + FacetsC1#.facets)
+    echo("C2: " + FacetsC2#.facets)
+    */
+
+    // M2: from M1 not F1, yes F3; self F2
+    verifyEq(FacetsM2#.facets.size, 2)
+    verifyNotNull(FacetsM2#.facets.find { it.typeof == FacetsF2# })
+    verifyNotNull(FacetsM2#.facets.find { it.typeof == FacetsF3# })
+    verifyEq(FacetsM2#.facet(FacetsF1#, false), null)
+    verifyEq(FacetsM2#.facet(FacetsF3#)->n, "FacetsM1")
+    verifyEq(FacetsM2#.facet(FacetsF2#)->n, "FacetsM2")
+
+    // C1: from M3 yes F4, from self F3
+    verifyEq(FacetsC1#.facets.size, 2)
+    verifyNotNull(FacetsC1#.facets.find { it.typeof == FacetsF3# })
+    verifyNotNull(FacetsC1#.facets.find { it.typeof == FacetsF4# })
+    verifyEq(FacetsC1#.facet(FacetsF1#, false), null)
+    verifyEq(FacetsC1#.facet(FacetsF2#, false), null)
+    verifyEq(FacetsC1#.facet(FacetsF3#)->n, "FacetsC1")
+    verifyEq(FacetsC1#.facet(FacetsF4#)->n, "FacetsM3")
+
+    // C1: from C2 F4, F4; self: F1
+    verifyEq(FacetsC2#.facets.size, 3)
+    verifyNotNull(FacetsC2#.facets.find { it.typeof == FacetsF3# })
+    verifyNotNull(FacetsC2#.facets.find { it.typeof == FacetsF4# })
+    verifyNotNull(FacetsC2#.facets.find { it.typeof == FacetsF1# })
+    verifyEq(FacetsC2#.facet(FacetsF2#, false), null)
+    verifyEq(FacetsC2#.facet(FacetsF1#)->n,  "FacetsC2")
+    verifyEq(FacetsC2#.facet(FacetsF3#)->n, "FacetsC1")
+    verifyEq(FacetsC2#.facet(FacetsF4#)->n, "FacetsM3")
+
+    // sanity
+    verifyEq(FacetsC2#.facets.isImmutable, true)
+    verifySame(FacetsC2#.facets, FacetsC2#.facets)
+  }
+
 }
 
 **************************************************************************
@@ -106,3 +150,30 @@ class FacetsA
   @FacetS2 { i = 77; v = Version("9.0"); l = [1, 2, 3]; type = Str#; slot = Float#nan }
   Int i
 }
+
+**************************************************************************
+** FacetsInherit
+**************************************************************************
+
+facet class FacetsF1 { const Str? n }
+facet class FacetsF2 { const Str? n }
+@FacetMeta { inherited = true } facet class FacetsF3 { const Str? n }
+@FacetMeta { inherited = true } facet class FacetsF4 { const Str? n }
+@FacetMeta { inherited = true } facet class FacetsF5 { const Str? n }
+
+@FacetsF1 { n = "FacetsM1" }
+@FacetsF3 { n = "FacetsM1" }
+mixin FacetsM1 {}
+
+@FacetsF2 { n = "FacetsM2" }
+mixin FacetsM2 : FacetsM1 {}
+
+@FacetsF4 { n = "FacetsM3" }
+mixin FacetsM3 {}
+
+@FacetsF3 { n = "FacetsC1" }
+class FacetsC1 : FacetsM2, FacetsM3 {}
+
+@FacetsF1 { n = "FacetsC2" }
+class  FacetsC2 : FacetsC1 {}
+
