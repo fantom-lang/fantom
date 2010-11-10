@@ -207,12 +207,31 @@ public class ClassType
 
   public List facets()
   {
-    return reflect().facets.list();
+    if (inheritedFacets == null) loadFacets();
+    return inheritedFacets .list();
   }
 
   public Facet facet(Type t, boolean c)
   {
-    return reflect().facets.get(t, c);
+    if (inheritedFacets == null) loadFacets();
+    return inheritedFacets.get(t, c);
+  }
+
+  private void loadFacets()
+  {
+    reflect();
+    Facets f = myFacets.dup();
+    List inheritance = inheritance();
+    for (int i=0; i<inheritance.sz(); ++i)
+    {
+      Object x = inheritance.get(i);
+      if (x instanceof ClassType)
+      {
+        ClassType superType = (ClassType)x;
+        f.inherit(superType.reflect().myFacets);
+      }
+    }
+    inheritedFacets = f;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -317,7 +336,7 @@ public class ClassType
     this.fields      = fields.trim();
     this.methods     = methods.trim();
     this.slotsByName = nameToSlot;
-    this.facets      = Facets.mapFacets(pod, ftype.attrs.facets);
+    this.myFacets    = Facets.mapFacets(pod, ftype.attrs.facets);
 
     this.lineNum    = ftype.attrs.lineNum;
     this.sourceFile = ftype.attrs.sourceFile;
@@ -678,7 +697,6 @@ catch (Exception e) { e.printStackTrace(); }
   final Type nullable;
   int lineNum;
   String sourceFile = "";
-  Facets facets;
   Type base;
   List mixins;
   List inheritance;
@@ -691,6 +709,8 @@ catch (Exception e) { e.printStackTrace(); }
   List methods;
   List slots;
   HashMap slotsByName;  // String:Slot
+  Facets myFacets;
+  Facets inheritedFacets;  // handled in loadFacets
 
   // available when emitted
   Class cls;         // main Java class representation

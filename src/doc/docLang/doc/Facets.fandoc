@@ -84,4 +84,18 @@ much more efficient.  Some examples:
   // check if a field is transient
   field.hasFacet(Transient#)
 
+Inheritance [#inheritance]
+**************************
+You can annotate a facet class with the `sys::FacetMeta` facet to
+declare that a type-level facet should be inherited:
+
+  @FacetMeta { inherited = true }
+  facet class F {}
+
+  @F class A {}
+  class B : A {}
+
+In the example above the class 'B' will inherit the facet 'F'.  Facet
+inheritance works on any type (class or mixin) in the [inheritance
+hierarchy]`sys::Type.inheritance`.
 

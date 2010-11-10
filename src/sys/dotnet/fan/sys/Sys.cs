@@ -130,6 +130,8 @@ namespace Fan.Sys
     public static readonly Type JsType             = initType("Js");
     public static readonly Type NoDocType          = initType("NoDoc");
     public static readonly Type DeprecatedType     = initType("Deprecated");
+    public static readonly Type OperatorType       = initType("Operator");
+    public static readonly Type FacetMetaType      = initType("FacetMeta");
 
     // exceptions
     public static readonly Type ErrType               = initType("Err");
