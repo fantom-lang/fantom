@@ -339,6 +339,9 @@ class CheckErrors : CompilerStep
     // check ctors call super (or another this) ctor
     if (m.isCtor) checkCtor(m)
 
+    // if method has operator facet, check it
+    if (m.hasFacet("sys::Operator")) checkOperatorMethod(m)
+
     // check types used in signature
     if (!m.isAccessor)
     {
@@ -522,6 +525,19 @@ class CheckErrors : CompilerStep
       else
         err("Non-nullable field '$f.name' must be assigned in constructor '$m.name'", m.loc)
     }
+  }
+
+  private Void checkOperatorMethod(MethodDef m)
+  {
+    prefix := COperators.toPrefix(m.name)
+    if (prefix == null) { err("Operator method '$m.name' has invalid name", m.loc); return }
+    op := ShortcutOp.fromPrefix(prefix)
+
+    if (m.returnType.isVoid && op !== ShortcutOp.set)
+      err("Operator method '$m.name' cannot return Void", m.loc)
+
+    if (m.params.size+1 != op.degree && !(m.params.getSafe(op.degree-1)?.hasDefault ?: false))
+      err("Operator method '$m.name' has wrong number of parameters", m.loc)
   }
 
 //////////////////////////////////////////////////////////////////////////
