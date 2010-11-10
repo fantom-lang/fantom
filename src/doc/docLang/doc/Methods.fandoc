@@ -200,25 +200,46 @@ This allows you to call the 'add' method with 2, 3, or 4 arguments:
   add(3, 4, 5)     // same as add(3, 4, 5, 0)
   add(3, 4)        // same as add(3, 4, 0, 0)
 
-Shortcuts [#shortcuts]
+Operators [#operators]
 **********************
-Fantom supports operator overloading using *shortcut methods*.  Basically
-any method that uses one of the predefined shortcut method signatures
-can be invoked via its associated operator.  For example if you wish
-to create a class that supports 'Str' indexing using the '[]' operator
-you would just write a 'get' and 'set' method:
+Fantom supports operator overloading using *operator methods*.
+Operator methods are just normal methods which are annotated with
+the [@Operator]`sys::Operator` marker facet.  The following naming
+conventions are enforced for determining which operator is used
+by the method:
 
-  class FlightManifest
+   prefix     symbol    degree
+   ------     ------    ------
+   negate     -a        unary
+   increment  ++a       unary
+   decrement  --a       unary
+   plus       a + b     binary
+   minus      a - b     binary
+   mult       a * b     binary
+   div        a / b     binary
+   mod        a % b     binary
+   get        a[b]      binary
+   set        a[b] = c  ternary
+
+In the case of the unary and ternary operators the method name must
+match exactly.  For the binary operators, the method must only start
+with the given name.  This allows binary operators to be overloaded
+by parameter type:
+
+  class Foo
   {
-    Passenger get(Str name) { ... }
-    Void set(Str name, Passenger p) { ...}
+    @Operator Int plusInt(Int x) { ... }
+    @Operator Float plusFloat(Float x) { ... }
   }
 
-  kate := flight815["Kate Austen"]  // kate := flight815.get("Kate Austen")
-  flight815["Hugo Reyes"] = hugo    // flight815.set("Hugo Reyes", hugo)
+  Foo + Int    =>  calls Foo.plusInt and yields Int
+  Foo + Float  =>  calls Foo.plusFloat and yields Float
 
-See [Shortcut Operators]`Expressions#shortcuts` for the full mapping of
-operators to method signatures.
+The compiler performs method resolution of operators using a very
+simple algorithm.  If there are multiple potential matches the
+compiler will report an error indicating the operator resolves
+ambiguously.  The compiler does *not* take class hierarchy
+into account to attempt to find the "best" match.
 
 Virtual Methods [#virtual]
 **************************
