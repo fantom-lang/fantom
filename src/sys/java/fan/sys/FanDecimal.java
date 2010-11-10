@@ -68,45 +68,31 @@ public final class FanDecimal
 // Operators
 //////////////////////////////////////////////////////////////////////////
 
-  public static BigDecimal negate(BigDecimal self)
-  {
-    return self.negate();
-  }
+  public static BigDecimal negate(BigDecimal self) { return self.negate(); }
 
-  public static BigDecimal mult(BigDecimal self, BigDecimal x)
-  {
-    return self.multiply(x);
-  }
+  public static BigDecimal increment(BigDecimal self) { return self.add(BigDecimal.ONE); }
 
-  public static BigDecimal div(BigDecimal self, BigDecimal x)
-  {
-    return self.divide(x);
-  }
+  public static BigDecimal decrement(BigDecimal self) { return self.subtract(BigDecimal.ONE); }
 
-  public static BigDecimal mod(BigDecimal self, BigDecimal x)
-  {
-    return self.remainder(x);
-  }
+  public static BigDecimal mult(BigDecimal self, BigDecimal x) { return self.multiply(x); }
+  public static BigDecimal multInt(BigDecimal self, long x) { return self.multiply(BigDecimal.valueOf(x)); }
+  public static BigDecimal multFloat(BigDecimal self, double x) { return self.multiply(BigDecimal.valueOf(x)); }
 
-  public static BigDecimal plus(BigDecimal self, BigDecimal x)
-  {
-    return self.add(x);
-  }
+  public static BigDecimal div(BigDecimal self, BigDecimal x) { return self.divide(x); }
+  public static BigDecimal divInt(BigDecimal self, long x) { return self.divide(BigDecimal.valueOf(x)); }
+  public static BigDecimal divFloat(BigDecimal self, double x) { return self.divide(BigDecimal.valueOf(x)); }
 
-  public static BigDecimal minus(BigDecimal self, BigDecimal x)
-  {
-    return self.subtract(x);
-  }
+  public static BigDecimal mod(BigDecimal self, BigDecimal x) { return self.remainder(x); }
+  public static BigDecimal modInt(BigDecimal self, long x) { return self.remainder(BigDecimal.valueOf(x)); }
+  public static BigDecimal modFloat(BigDecimal self, double x) { return self.remainder(BigDecimal.valueOf(x)); }
 
-  public static BigDecimal increment(BigDecimal self)
-  {
-    return self.add(BigDecimal.ONE);
-  }
+  public static BigDecimal plus(BigDecimal self, BigDecimal x) { return self.add(x); }
+  public static BigDecimal plusInt(BigDecimal self, long x) { return self.add(BigDecimal.valueOf(x)); }
+  public static BigDecimal plusFloat(BigDecimal self, double x) { return self.add(BigDecimal.valueOf(x)); }
 
-  public static BigDecimal decrement(BigDecimal self)
-  {
-    return self.subtract(BigDecimal.ONE);
-  }
+  public static BigDecimal minus(BigDecimal self, BigDecimal x) { return self.subtract(x); }
+  public static BigDecimal minusInt(BigDecimal self, long x) { return self.subtract(BigDecimal.valueOf(x)); }
+  public static BigDecimal minusFloat(BigDecimal self, double x) { return self.subtract(BigDecimal.valueOf(x)); }
 
 //////////////////////////////////////////////////////////////////////////
 // Math

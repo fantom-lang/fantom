@@ -8,6 +8,7 @@
 //
 package fan.sys;
 
+import java.math.*;
 import fanx.serial.*;
 
 /**
@@ -102,79 +103,47 @@ public final class FanInt
 // Operators
 //////////////////////////////////////////////////////////////////////////
 
-  public static long negate(long self)
-  {
-    return -self;
-  }
+  public static long negate(long self) { return -self; }
 
-  public static long mult(long self, long x)
-  {
-    return self * x;
-  }
+  public static long increment(long self) { return self+1; }
 
-  public static long div(long self, long x)
-  {
-    return self / x;
-  }
+  public static long decrement(long self) { return self-1; }
 
-  public static long mod(long self, long x)
-  {
-    return self % x;
-  }
+  public static long mult(long self, long x) { return self * x; }
+  public static double multFloat(long self, double x) { return (double)self * x; }
+  public static BigDecimal multDecimal(long self, BigDecimal x) { return BigDecimal.valueOf(self).multiply(x); }
 
-  public static long plus(long self, long x)
-  {
-    return self + x;
-  }
+  public static long div(long self, long x) { return self / x; }
+  public static double divFloat(long self, double x) { return (double)self / x; }
+  public static BigDecimal divDecimal(long self, BigDecimal x) { return BigDecimal.valueOf(self).divide(x); }
 
-  public static long minus(long self, long x)
-  {
-    return self - x;
-  }
+  public static long mod(long self, long x) { return self % x; }
+  public static double modFloat(long self, double x) { return (double)self % x; }
+  public static BigDecimal modDecimal(long self, BigDecimal x) { return BigDecimal.valueOf(self).remainder(x); }
 
-  public static long increment(long self)
-  {
-    return self+1;
-  }
+  public static long plus(long self, long x) { return self + x; }
+  public static double plusFloat(long self, double x) { return (double)self + x; }
+  public static BigDecimal plusDecimal(long self, BigDecimal x) { return BigDecimal.valueOf(self).add(x); }
 
-  public static long decrement(long self)
-  {
-    return self-1;
-  }
+  public static long minus(long self, long x) { return self - x; }
+  public static double minusFloat(long self, double x) { return (double)self - x; }
+  public static BigDecimal minusDecimal(long self, BigDecimal x) { return BigDecimal.valueOf(self).subtract(x); }
 
 //////////////////////////////////////////////////////////////////////////
 // Bitwise
 //////////////////////////////////////////////////////////////////////////
 
-  public static long not(long self)
-  {
-    return ~self;
-  }
+  public static long not(long self) { return ~self; }
 
-  public static long and(long self, long x)
-  {
-    return self & x;
-  }
+  public static long and(long self, long x) { return self & x; }
 
-  public static long or(long self, long x)
-  {
-    return self | x;
-  }
+  public static long or(long self, long x) { return self | x; }
 
-  public static long xor(long self, long x)
-  {
-    return self ^ x;
-  }
+  public static long xor(long self, long x) { return self ^ x; }
 
-  public static long shiftl(long self, long x)
-  {
-    return self << x;
-  }
+  public static long shiftl(long self, long x) { return self << x; }
 
-  public static long shiftr(long self, long x)
-  {
-    return self >>> x;
-  }
+  public static long shiftr(long self, long x) { return self >>> x; }
 
 //////////////////////////////////////////////////////////////////////////
 // Math

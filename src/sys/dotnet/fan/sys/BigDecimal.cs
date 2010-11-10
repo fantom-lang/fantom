@@ -41,6 +41,26 @@ namespace Fan.Sys
       return BigDecimal.valueOf(val * that.val);
     }
 
+    public BigDecimal divide(BigDecimal that)
+    {
+      return BigDecimal.valueOf(val / that.val);
+    }
+
+    public BigDecimal remainder(BigDecimal that)
+    {
+      return BigDecimal.valueOf(val % that.val);
+    }
+
+    public BigDecimal add(BigDecimal that)
+    {
+      return BigDecimal.valueOf(val + that.val);
+    }
+
+    public BigDecimal subtract(BigDecimal that)
+    {
+      return BigDecimal.valueOf(val - that.val);
+    }
+
     public decimal decimalValue() { return val; }
     public override int intValue() { return (int)val; }
     public override long longValue() { return (long)val; }

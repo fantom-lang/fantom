@@ -947,9 +947,9 @@ class ListTest : Test
   Void testReduce()
   {
     list := [3, 4, 5]
-    verifyEq(list.reduce(0) |Obj r, Int v->Obj| { return v*2 + (Int)r }, 24)
-    verifyEq(list.reduce(0) |Obj r, Int v->Obj| { return v*2 + r }, 24)
-    verifyEq(list.reduce(10) |Obj r, Int v, Int i->Obj| { return v + (Int)r + i }, 25)
+    verifyEq(list.reduce(0) |Int r, Int v->Obj| { return v*2 + (Int)r }, 24)
+    verifyEq(list.reduce(0) |Int r, Int v->Obj| { return v*2 + r }, 24)
+    verifyEq(list.reduce(10) |Int r, Int v, Int i->Obj| { return v + (Int)r + i }, 25)
   }
 
 //////////////////////////////////////////////////////////////////////////

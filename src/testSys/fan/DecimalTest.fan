@@ -106,10 +106,14 @@ class DecimalTest : Test
     verifyEq(3d*-2d, -6d)
     verifyEq(-2d*3d, -6d)
     verifyEq(-3d*-2d, 6d)
+    verifyEq(6.0d * 2, 12.0d)
+    verifyEq(6.0d * 0.5f, 3.00d)
     x=2d*2d; x*=3d; verifyEq(x, 12d)
 
     verifyEq(-16d/4d, -4d)
     verifyEq(16d / 5d, 3.2d)
+    verifyEq(15d / 5,  3d)
+    verifyEq(15d / 5f, 3d)
     x = 20d / 2d; x /= -5d; verifyEq(x, -2d)
 
     verifyEq(21d%-6d, 3d)
@@ -119,10 +123,14 @@ class DecimalTest : Test
 
     verifyEq(2d + 3d,  5d)
     verifyEq(2d + -1d, 1d)
+    verifyEq(2d + 44,  46d)
+    verifyEq(2.0d + 44f, 46.0d)
     x= 4d + 3d; x+=5d; verifyEq(x, 12d)
 
     verifyEq(0.7d - 0.3d,  0.4d)
     verifyEq(2.0d - 3.0d, -1.0d)
+    verifyEq(7d - 3d,  4d)
+    verifyEq(7.0d - 2f,  5.0d)
     x=5d - 2d; x-=-3d; verifyEq(x, 6d)
   }
 
