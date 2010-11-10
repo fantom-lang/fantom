@@ -94,12 +94,28 @@ fan.sys.Float.sqrt  = function(self) { return fan.sys.Float.make(Math.sqrt(self)
 fan.sys.Float.random = function() { return fan.sys.Float.make(Math.random()); }
 
 // arithmetic
-fan.sys.Float.plus  = function(a,b) { return fan.sys.Float.make(a+b); }
-fan.sys.Float.minus = function(a,b) { return fan.sys.Float.make(a-b); }
-fan.sys.Float.mult  = function(a,b) { return fan.sys.Float.make(a*b); }
-fan.sys.Float.div   = function(a,b) { return fan.sys.Float.make(a/b); }
-fan.sys.Float.mod   = function(a,b) { return fan.sys.Float.make(a%b); }
+fan.sys.Float.plus     = function(a,b) { return fan.sys.Float.make(a+b); }
+fan.sys.Float.plusInt  = function(a,b) { return fan.sys.Float.make(a+b); }
+fan.sys.Float.plusDecimal = function(a,b) { return fan.sys.Decimal.make(a+b); }
+
+fan.sys.Float.minus        = function(a,b) { return fan.sys.Float.make(a-b); }
+fan.sys.Float.minusInt     = function(a,b) { return fan.sys.Float.make(a-b); }
+fan.sys.Float.minusDecimal = function(a,b) { return fan.sys.Decimal.make(a-b); }
+
+fan.sys.Float.mult        = function(a,b) { return fan.sys.Float.make(a*b); }
+fan.sys.Float.multInt     = function(a,b) { return fan.sys.Float.make(a*b); }
+fan.sys.Float.multDecimal = function(a,b) { return fan.sys.Decimal.make(a*b); }
+
+fan.sys.Float.div        = function(a,b) { return fan.sys.Float.make(a/b); }
+fan.sys.Float.divInt     = function(a,b) { return fan.sys.Float.make(a/b); }
+fan.sys.Float.divDecimal = function(a,b) { return fan.sys.Decimal.make(a/b); }
+
+fan.sys.Float.mod        = function(a,b) { return fan.sys.Float.make(a%b); }
+fan.sys.Float.modInt     = function(a,b) { return fan.sys.Float.make(a%b); }
+fan.sys.Float.modDecimal = function(a,b) { return fan.sys.Decimal.make(a%b); }
+
 fan.sys.Float.increment = function(self) { return fan.sys.Float.make(self+1); }
+
 fan.sys.Float.decrement = function(self) { return fan.sys.Float.make(self-1); }
 
 // Trig

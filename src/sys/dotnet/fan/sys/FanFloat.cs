@@ -63,8 +63,12 @@ namespace Fan.Sys
       if (obj is double)
       {
         double x = (double)obj;
-        if (System.Double.IsNaN(self)) return System.Double.IsNaN(x);
+        //if (System.Double.IsNaN(self)) return System.Double.IsNaN(x);
         return self == x;
+      }
+      if (obj is Double)
+      {
+        return self == ((Double)obj).doubleValue();
       }
       return false;
     }
@@ -129,14 +133,31 @@ namespace Fan.Sys
   // Operators
   //////////////////////////////////////////////////////////////////////////
 
-    public static double negate    (double self)           { return -self; }
-    public static double mult      (double self, double x) { return self * x; }
-    public static double div       (double self, double x) { return self / x; }
-    public static double mod       (double self, double x) { return self % x; }
-    public static double plus      (double self, double x) { return self + x; }
-    public static double minus     (double self, double x) { return self - x; }
-    public static double increment (double self)           { return self+1; }
-    public static double decrement (double self)           { return self-1; }
+    public static double negate(double self) { return -self; }
+
+    public static double increment(double self) { return self + 1.0; }
+
+    public static double decrement(double self) { return self - 1.0; }
+
+    public static double mult(double self, double x) { return self * x; }
+    public static double multInt(double self, long x) { return self * (double)x; }
+    public static BigDecimal multDecimal(double self, BigDecimal x) { return BigDecimal.valueOf(self).multiply(x); }
+
+    public static double div(double self, double x) { return self / x; }
+    public static double divInt(double self, long x) { return self / (double)x; }
+    public static BigDecimal divDecimal(double self, BigDecimal x) { return BigDecimal.valueOf(self).divide(x); }
+
+    public static double mod(double self, double x) { return self % x; }
+    public static double modInt(double self, long x) { return self % (double)x; }
+    public static BigDecimal modDecimal(double self, BigDecimal x) { return BigDecimal.valueOf(self).remainder(x); }
+
+    public static double plus(double self, double x) { return self + x; }
+    public static double plusInt(double self, long x) { return self + (double)x; }
+    public static BigDecimal plusDecimal(double self, BigDecimal x) { return BigDecimal.valueOf(self).add(x); }
+
+    public static double minus(double self, double x) { return self - x; }
+    public static double minusInt(double self, long x) { return self - (double)x; }
+    public static BigDecimal minusDecimal(double self, BigDecimal x) { return BigDecimal.valueOf(self).subtract(x); }
 
   //////////////////////////////////////////////////////////////////////////
   // Math

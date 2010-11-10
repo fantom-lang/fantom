@@ -83,45 +83,71 @@ const final class Int : Num
 // Operations
 //////////////////////////////////////////////////////////////////////////
 
-  **
+  ////////// unary //////////
+
   ** Negative of this.  Shortcut is -a.
-  **
   @Operator Int negate()
 
-  **
-  ** Multiply this with b.  Shortcut is a*b.
-  **
-  @Operator Int mult(Int b)
-
-  **
-  ** Divide this by b.  Shortcut is a/b.
-  **
-  @Operator Int div(Int b)
-
-  **
-  ** Return remainder of this divided by b.  Shortcut is a%b.
-  **
-  @Operator Int mod(Int b)
-
-  **
-  ** Add this with b.  Shortcut is a+b.
-  **
-  @Operator Int plus(Int b)
-
-  **
-  ** Subtract b from this.  Shortcut is a-b.
-  **
-  @Operator Int minus(Int b)
-
-  **
   ** Increment by one.  Shortcut is ++a or a++.
-  **
   @Operator Int increment()
 
-  **
   ** Decrement by one.  Shortcut is --a or a--.
-  **
   @Operator Int decrement()
+
+  ////////// mult //////////
+
+  ** Multiply this with b.  Shortcut is a*b.
+  @Operator Int mult(Int b)
+
+  ** Multiply this with b.  Shortcut is a*b.
+  @Operator Float multFloat(Float b)
+
+  ** Multiply this with b.  Shortcut is a*b.
+  @Operator Decimal multDecimal(Decimal b)
+
+  ////////// div //////////
+
+  ** Divide this by b.  Shortcut is a/b.
+  @Operator Int div(Int b)
+
+  ** Divide this by b.  Shortcut is a/b.
+  @Operator Float divFloat(Float b)
+
+  ** Divide this by b.  Shortcut is a/b.
+  @Operator Decimal divDecimal(Decimal b)
+
+  ////////// mod //////////
+
+  ** Return remainder of this divided by b.  Shortcut is a%b.
+  @Operator Int mod(Int b)
+
+  ** Return remainder of this divided by b.  Shortcut is a%b.
+  @Operator Float modFloat(Float b)
+
+  ** Return remainder of this divided by b.  Shortcut is a%b.
+  @Operator Decimal modDecimal(Decimal b)
+
+  ////////// plus //////////
+
+  ** Add this with b.  Shortcut is a+b.
+  @Operator Int plus(Int b)
+
+  ** Add this with b.  Shortcut is a+b.
+  @Operator Float plusFloat(Float b)
+
+  ** Add this with b.  Shortcut is a+b.
+  @Operator Decimal plusDecimal(Decimal b)
+
+  ////////// minus //////////
+
+  ** Subtract b from this.  Shortcut is a-b.
+  @Operator Int minus(Int b)
+
+  ** Subtract b from this.  Shortcut is a-b.
+  @Operator Float minusFloat(Float b)
+
+  ** Subtract b from this.  Shortcut is a-b.
+  @Operator Decimal minusDecimal(Decimal b)
 
 //////////////////////////////////////////////////////////////////////////
 // Bitwise

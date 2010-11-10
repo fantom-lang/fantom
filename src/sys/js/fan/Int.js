@@ -165,16 +165,30 @@ fan.sys.Int.negate    = function(self) { return -self; }
 fan.sys.Int.increment = function(self) { return self+1; }
 fan.sys.Int.decrement = function(self) { return self-1; }
 
-fan.sys.Int.plus  = function(a, b) { return a + b; }
-fan.sys.Int.minus = function(a, b) { return a - b; }
-fan.sys.Int.mult  = function(a, b) { return a * b; }
-fan.sys.Int.div   = function(a, b)
+fan.sys.Int.plus        = function(a, b) { return a + b; }
+fan.sys.Int.plusFloat   = function(a, b) { return fan.sys.Float.make(a + b); }
+fan.sys.Int.plusDecimal = function(a, b) { return fan.sys.Decimal.make(a + b); }
+
+fan.sys.Int.minus        = function(a, b) { return a - b; }
+fan.sys.Int.minusFloat   = function(a, b) { return fan.sys.Float.make(a - b); }
+fan.sys.Int.minusDecimal = function(a, b) { return fan.sys.Decimal.make(a - b); }
+
+fan.sys.Int.mult         = function(a, b) { return a * b; }
+fan.sys.Int.multFloat    = function(a, b) { return fan.sys.Float.make(a * b); }
+fan.sys.Int.multDecimal  = function(a, b) { return fan.sys.Decimal.make(a * b); }
+
+fan.sys.Int.div = function(a, b)
 {
   var r = a / b;
   if (r < 0) return Math.ceil(r);
   return Math.floor(r);
 }
-fan.sys.Int.mod   = function(a, b) { return a % b; }
+fan.sys.Int.divFloat   = function(a, b) { return fan.sys.Float.make(fan.sys.Int.div(a, b)); }
+fan.sys.Int.divDecimal = function(a, b) { return fan.sys.Decimal.make(fan.sys.Int.div(a, b)); }
+
+fan.sys.Int.mod        = function(a, b) { return a % b; }
+fan.sys.Int.modFloat   = function(a, b) { return fan.sys.Float.make(a % b); }
+fan.sys.Int.modDecimal = function(a, b) { return fan.sys.Decimal.make(a % b); }
 
 fan.sys.Int.pow = function(self, pow)
 {

@@ -998,10 +998,8 @@ class CheckErrorsTest : CompilerTest
         static Obj? m26(Str x) { return x as Num }
         static Obj m27() { return Bar.make }
         static Obj m28() { return \"x=\$v\" }
-        static Obj m29() { return 5 + v }
-        static Obj m30() { return 5 + 8ns }
-        static Obj? m31(Obj x) { return x as Foo? }
-        static Obj? m32(Obj x) { return x as Str[]? }
+        static Obj? m29(Obj x) { return x as Foo? }
+        static Obj? m30(Obj x) { return x as Str[]? }
 
         static Void v() {}
 
@@ -1044,10 +1042,8 @@ class CheckErrorsTest : CompilerTest
        29, 35, "Inconvertible types 'sys::Str' and 'sys::Num'",
        30, 33, "Calling constructor on abstract class",
        31, 29, "Invalid args plus(sys::Obj?), not (sys::Void)",
-       32, 29, "Invalid args plus(sys::Int), not (sys::Void)",
-       33, 29, "Invalid args plus(sys::Int), not (sys::Duration)",
-       34, 35, "Cannot use 'as' operator with nullable type '$podName::Foo?'",
-       35, 35, "Cannot use 'as' operator with nullable type 'sys::Str[]?'",
+       32, 35, "Cannot use 'as' operator with nullable type '$podName::Foo?'",
+       33, 35, "Cannot use 'as' operator with nullable type 'sys::Str[]?'",
     ])
   }
 

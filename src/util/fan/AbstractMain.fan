@@ -298,7 +298,7 @@ abstract class AbstractMain
   private Str[][] usagePad(Str[][] rows)
   {
     if (rows.isEmpty) return rows
-    max := rows.map |row| { row[0].size }.max
+    Int max := rows.map |row| { row[0].size }.max
     pad := 20.min(2 + max)
     rows.each |row| { row[0] = row[0].padr(pad) }
     return rows
