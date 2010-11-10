@@ -287,6 +287,16 @@ public class FMethodRef
     int op1, op2;
   }
 
+  /**
+   * SpecialOp4 maps directly to four no arg opcodes.
+   */
+  static class SpecialOp4 implements Special
+  {
+    SpecialOp4(int op1, int op2, int op3, int op4) { this.op1 = op1; this.op2 = op2; this.op3 = op3; this.op4 = op4; }
+    public void emit(FMethodRef m, CodeEmit code) { code.op(op1); code.op(op2); code.op(op3); code.op(op4); }
+    int op1, op2, op3, op4;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Special Statics on Type
 //////////////////////////////////////////////////////////////////////////
@@ -339,53 +349,67 @@ public class FMethodRef
 // Int Specials
 //////////////////////////////////////////////////////////////////////////
 
-  static Special intPlus   = new SpecialOp(LADD);
-  static Special intMinus  = new SpecialOp(LSUB);
-  static Special intMult   = new SpecialOp(LMUL);
-  static Special intDiv    = new SpecialOp(LDIV);
-  static Special intMod    = new SpecialOp(LREM);
-  static Special intAnd    = new SpecialOp(LAND);
-  static Special intOr     = new SpecialOp(LOR);
-  static Special intXor    = new SpecialOp(LXOR);
-  static Special intNegate = new SpecialOp(LNEG);
-  static Special intShiftl = new SpecialOp2(L2I, LSHL);
-  static Special intShiftr = new SpecialOp2(L2I, LUSHR);
+  static Special intPlus       = new SpecialOp(LADD);
+  static Special intPlusFloat  = new SpecialOp4(DUP2_X2, POP2, L2D, DADD);
+  static Special intMinus      = new SpecialOp(LSUB);
+  static Special intMult       = new SpecialOp(LMUL);
+  static Special intMultFloat  = new SpecialOp4(DUP2_X2, POP2, L2D, DMUL);
+  static Special intDiv        = new SpecialOp(LDIV);
+  static Special intMod        = new SpecialOp(LREM);
+  static Special intAnd        = new SpecialOp(LAND);
+  static Special intOr         = new SpecialOp(LOR);
+  static Special intXor        = new SpecialOp(LXOR);
+  static Special intNegate     = new SpecialOp(LNEG);
+  static Special intShiftl     = new SpecialOp2(L2I, LSHL);
+  static Special intShiftr     = new SpecialOp2(L2I, LUSHR);
 
   static HashMap intSpecials = new HashMap();
   static
   {
-    intSpecials.put("negate", intNegate);
-    intSpecials.put("plus",   intPlus);
-    intSpecials.put("minus",  intMinus);
-    intSpecials.put("mult",   intMult);
-    intSpecials.put("div",    intDiv);
-    intSpecials.put("mod",    intMod);
-    intSpecials.put("and",    intAnd);
-    intSpecials.put("or",     intOr);
-    intSpecials.put("xor",    intXor);
-    intSpecials.put("shiftl", intShiftl);
-    intSpecials.put("shiftr", intShiftr);
+    intSpecials.put("negate",     intNegate);
+    intSpecials.put("plus",       intPlus);
+    intSpecials.put("plusFloat",  intPlusFloat);
+    intSpecials.put("minus",      intMinus);
+    intSpecials.put("mult",       intMult);
+    intSpecials.put("multFloat",  intMultFloat);
+    intSpecials.put("div",        intDiv);
+    intSpecials.put("mod",        intMod);
+    intSpecials.put("and",        intAnd);
+    intSpecials.put("or",         intOr);
+    intSpecials.put("xor",        intXor);
+    intSpecials.put("shiftl",     intShiftl);
+    intSpecials.put("shiftr",     intShiftr);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Float Specials
 //////////////////////////////////////////////////////////////////////////
 
-  static Special floatPlus   = new SpecialOp(DADD);
-  static Special floatMinus  = new SpecialOp(DSUB);
-  static Special floatMult   = new SpecialOp(DMUL);
-  static Special floatDiv    = new SpecialOp(DDIV);
-  static Special floatMod    = new SpecialOp(DREM);
+  static Special floatPlus      = new SpecialOp(DADD);
+  static Special floatPlusInt   = new SpecialOp2(L2D, DADD);
+  static Special floatMinus     = new SpecialOp(DSUB);
+  static Special floatMinusInt  = new SpecialOp2(L2D, DSUB);
+  static Special floatMult      = new SpecialOp(DMUL);
+  static Special floatMultInt   = new SpecialOp2(L2D, DMUL);
+  static Special floatDiv       = new SpecialOp(DDIV);
+  static Special floatDivInt    = new SpecialOp2(L2D, DDIV);
+  static Special floatMod       = new SpecialOp(DREM);
+  static Special floatModInt    = new SpecialOp2(L2D, DREM);
   static Special floatNegate = new SpecialOp(DNEG);
 
   static HashMap floatSpecials = new HashMap();
   static
   {
-    floatSpecials.put("plus",   floatPlus);
-    floatSpecials.put("minus",  floatMinus);
-    floatSpecials.put("mult",   floatMult);
-    floatSpecials.put("div",    floatDiv);
-    floatSpecials.put("mod",    floatMod);
+    floatSpecials.put("plus",     floatPlus);
+    floatSpecials.put("plusInt",  floatPlusInt);
+    floatSpecials.put("minus",    floatMinus);
+    floatSpecials.put("minusInt", floatMinusInt);
+    floatSpecials.put("mult",     floatMult);
+    floatSpecials.put("multInt",  floatMultInt);
+    floatSpecials.put("div",      floatDiv);
+    floatSpecials.put("divInt",   floatDivInt);
+    floatSpecials.put("mod",      floatMod);
+    floatSpecials.put("modInt",   floatModInt);
     floatSpecials.put("negate", floatNegate);
   }
 
