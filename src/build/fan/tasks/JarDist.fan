@@ -175,14 +175,14 @@ class JarDist : JdkTask
   private Void etcFiles()
   {
     copyEtcFile(`etc/sys/timezones.ftz`)
-    copyEtcFile(`etc/sys/ext2mime.props`)
+    copyEtcFile(`etc/sys/ext2mime.props`, `res/sys/ext2mime.props`)
     copyEtcFile(`etc/sys/units.txt`)
   }
 
-  private Void copyEtcFile(Uri uri)
+  private Void copyEtcFile(Uri uri, Uri destUri := uri)
   {
     src  := script.devHomeDir + uri
-    dest := tempDir + uri
+    dest := tempDir + destUri
     src.copyTo(dest)
   }
 

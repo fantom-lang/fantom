@@ -37,7 +37,7 @@ public class JarDistEnv
 
   public Map props(Pod pod, Uri uri, Duration maxAge)
   {
-    String path = "etc/" + pod.name() + "/" + uri;
+    String path = "res/" + pod.name() + "/" + uri;
     Map props = (Map)propsCache.get(path);
     if (props == null)
     {
