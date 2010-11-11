@@ -34,7 +34,7 @@ public abstract class Slot
     String typeName, slotName;
     try
     {
-      int dot = qname.indexOf('.');
+      int dot = qname.lastIndexOf('.');
       typeName = qname.substring(0, dot);
       slotName = qname.substring(dot+1);
     }
