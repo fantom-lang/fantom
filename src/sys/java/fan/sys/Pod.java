@@ -332,7 +332,16 @@ public class Pod
     {
       if (filesList != null) return;
       if (fpod.store == null) throw Err.make("Not backed by pod file: " + name).val;
-      this.filesList = (List)fpod.store.podFiles(uri()).toImmutable();
+      List list;
+      try
+      {
+        this.filesList = (List)fpod.store.podFiles(uri()).toImmutable();
+      }
+      catch (java.io.IOException e)
+      {
+        e.printStackTrace();
+        throw Err.make(e).val;
+      }
       for (int i=0; i<filesList.sz(); ++i)
       {
         fan.sys.File f = (fan.sys.File)filesList.get(i);

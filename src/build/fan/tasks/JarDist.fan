@@ -148,6 +148,7 @@ class JarDist : JdkTask
   private Void reflect(Str podName)
   {
     copyOpts := ["overwrite":true]
+    resources := Str[,]
     zip := Zip.open(script.devHomeDir + `lib/fan/${podName}.pod`)
     zip.contents.each |f|
     {
@@ -157,12 +158,18 @@ class JarDist : JdkTask
         dest := tempDir + "reflect/${podName}${f.pathStr}".toUri
         f.copyTo(dest, copyOpts)
       }
-      else if (f.ext == "props")
+      else
       {
-        dest := tempDir + "etc/${podName}${f.pathStr}".toUri
+        // decide if this is a resource file we should bundle
+        if (f.ext == "class") return
+        if (f.ext == "apidoc") return
+
+        resources.add(f.pathStr)
+        dest := tempDir + "res/${podName}${f.pathStr}".toUri
         f.copyTo(dest, copyOpts)
       }
     }
+    (tempDir + `res/${podName}/res-manifest.txt`).out.print(resources.join("\n")).close
   }
 
   private Void etcFiles()
@@ -233,6 +240,8 @@ class JarDist : JdkTask
        "-d", tempDir.osPath,
        file.osPath], tempDir).run
 
+    // delete source file once we have compiled into .class file
+    Delete(script, file).run
   }
 
   private Void jar()
