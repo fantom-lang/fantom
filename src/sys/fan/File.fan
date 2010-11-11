@@ -463,7 +463,7 @@ internal const class LocalFile : File
 
 internal const class ZipEntryFile : File
 {
-  private new init()
+  internal new init()
   override Bool exists()
   override Int? size()
   override DateTime? modified
@@ -481,3 +481,13 @@ internal const class ZipEntryFile : File
   override InStream in(Int? bufferSize := 4096)
   override OutStream out(Bool append := false, Int? bufferSize := 4096)
 }
+
+**************************************************************************
+** ClassLoaderFile
+**************************************************************************
+
+internal const class ClassLoaderFile : ZipEntryFile
+{
+  internal new init()
+}
+

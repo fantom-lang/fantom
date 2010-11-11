@@ -105,6 +105,7 @@ public final class Sys
   public static final Type MmapBufType      = initType("MmapBuf");
   public static final Type UriType          = initType("Uri");
   public static final Type ZipType          = initType("Zip");
+  public static final Type ClassLoaderFileType = initType("ClassLoaderFile");
 
   // utils
   public static final Type DependType       = initType("Depend");
