@@ -54,6 +54,6 @@ class Build : BuildScript
     dist.run
 
     // test example:
-    java -cp lib\java\ext\win32-x86_64\swt.jar;fwtTest.jar fanjardist.Main
+    // java -cp lib\java\ext\win32-x86_64\swt.jar;fwtTest.jar fanjardist.Main
   }
 }
