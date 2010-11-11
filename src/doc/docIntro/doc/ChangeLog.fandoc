@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.56 (working)*
+*Build 1.0.56 (11 Nov 2010)*
 - Redesign Unit to be keyed by arbitrary ids list including symbols
 - Redesign Unit definition: fromStr -> define, find -> fromStr
 - Redesign unit database as simple text file
@@ -17,8 +17,24 @@
 - fwt::Monitor.dpi
 - WebReq.socketOptions
 - Remove deprecated json pod (use util)
+- #604: Operator overloading with multiple types
+- #1153: Wisp session data in db
+- #1212: overriding methods returning nullable java type
+- #1213: Returning null as Java array
+- #1215: Compiler error when setter method invokes the same setter of another instance
 - #1233: Widget.layout
 - #1248: Fix WispService shutdown to release port
+- #1263: Serialization of List/Map fields always use field type
+- #1268: Slot literal serialization
+- #1271: Java FFI mixin routers with primitives
+- #1273: Localization string interpolation
+- #1276: Uri.decodeQuery does not handle duplicate keys
+- #1279: ActorPool.maxThreads
+- #1284: Ensure closure parameters are named
+- #1287: JarDist accessing fan:// resources
+- #1293: Facet inheritance
+- #1297: Report variable names which conflict with imported types
+- #1301: Func.bind immutability
 
 *Build 1.0.55 (13 Sep 2010)*
 - Enhance DateTime/Time pattern for AM/PM
