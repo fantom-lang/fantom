@@ -38,10 +38,13 @@ public abstract class FStore
 
   /**
    * Construct a FStore to read from a JAR's ClassLoader resources.
+   * If podName doesn't exist then throw UnknownPodErr.
    */
-  public static FStore makeJarDist(ClassLoader loader)
+  public static FStore makeJarDist(ClassLoader loader, String podName)
   {
-    return new JarDistStore(loader);
+    JarDistStore store = new JarDistStore(loader);
+    if (store.hasPod(podName)) return store;
+    throw UnknownPodErr.make(podName).val;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -185,6 +188,15 @@ public abstract class FStore
   static class JarDistStore extends FStore
   {
     JarDistStore(ClassLoader loader) { this.loader = loader; }
+
+    public boolean hasPod(String podName)
+    {
+      String path = "reflect/" + podName + "/meta.props";
+      InputStream in = loader.getResourceAsStream(path);
+      if (in == null) return false;
+      try { in.close(); } catch (Exception e) {}
+      return true;
+    }
 
     public List podFiles(Uri podUri)
       throws IOException
