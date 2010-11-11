@@ -96,7 +96,7 @@ public class Fan
 
     try
     {
-      int dot = target.indexOf('.');
+      int dot = target.lastIndexOf('.');
       Type type   = Type.find(target.substring(0, dot), true);
       Method main = type.method(target.substring(dot+1), true);
       return callMain(type, main);

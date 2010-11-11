@@ -33,4 +33,14 @@ class Build : BuildScript
     dist.mainMethod = "wisp::WispService.main"
     dist.run
   }
+
+  @Target { help = "build testSys pod as a single JAR dist" }
+  Void distTestSys()
+  {
+    dist := JarDist(this)
+    dist.outFile = `./testSys.jar`.toFile.normalize
+    dist.podNames = Str["concurrent", "testSys"]
+    dist.mainMethod = "[java]fanx.tools::Fant.fanMain"
+    dist.run
+  }
 }

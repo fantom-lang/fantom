@@ -33,13 +33,8 @@ class JarDist : JdkTask
   **
   override Void run()
   {
-    // basic sanity checking
-    if (podNames.isEmpty) throw fatal("Not configured: JarDist.podNames")
-    if (podNames.contains("sys")) throw fatal("sys is implied in JarDist.podNames")
-    if (outFile == null) throw fatal("Not configured: JarDist.outFile")
-    if (mainMethod == null) throw fatal("Not configured: JarDist.mainMethod")
-
     log.info("JarDist")
+    verifyConfig
     log.indent
     initTempDir
     sysClasses
@@ -51,6 +46,19 @@ class JarDist : JdkTask
     cleanupTempDir
     log.info("Success [$outFile]")
     log.unindent
+  }
+
+  private Void verifyConfig()
+  {
+    if (podNames.isEmpty) throw fatal("Not configured: JarDist.podNames")
+    if (podNames.contains("sys")) throw fatal("sys is implied in JarDist.podNames")
+    if (outFile == null) throw fatal("Not configured: JarDist.outFile")
+    if (mainMethod == null) throw fatal("Not configured: JarDist.mainMethod")
+
+    m := Slot.findMethod(mainMethod, false)
+    if (m == null) throw fatal("mainMethod not found: $mainMethod")
+    if (!m.isStatic) throw fatal("mainMethod not static: $mainMethod")
+    if (!m.params.isEmpty) throw fatal("mainMethod must have no params: $mainMethod")
   }
 
   private Void initTempDir()

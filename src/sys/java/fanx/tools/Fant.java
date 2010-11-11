@@ -289,6 +289,13 @@ public class Fant
 // Main
 //////////////////////////////////////////////////////////////////////////
 
+  /** Used by fan "[java]fanx.tools::Fant.fanMain" */
+  public static void fanMain() throws Exception
+  {
+    List args = Env.cur().args();
+    main((String[])args.toArray(new String[args.sz()]));
+  }
+
   public static void main(final String[] args)
     throws Exception
   {
