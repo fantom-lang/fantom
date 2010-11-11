@@ -43,4 +43,17 @@ class Build : BuildScript
     dist.mainMethod = "[java]fanx.tools::Fant.fanMain"
     dist.run
   }
+
+  @Target { help = "build FWT test app as JAR; must put swt.jar into classpath!" }
+  Void distFwtTest()
+  {
+    dist := JarDist(this)
+    dist.outFile = `./fwtTest.jar`.toFile.normalize
+    dist.podNames = Str["concurrent", "gfx", "fwt"]
+    dist.mainMethod = "fwt::FwtTestMain.main"
+    dist.run
+
+    // test example:
+    java -cp lib\java\ext\win32-x86_64\swt.jar;fwtTest.jar fanjardist.Main
+  }
 }
