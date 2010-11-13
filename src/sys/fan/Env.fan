@@ -8,7 +8,7 @@
 //
 
 **
-** Env defines a pluggable class used boot and manage a Fantom
+** Env defines a pluggable class used to boot and manage a Fantom
 ** runtime environment.
 **
 abstract const class Env
