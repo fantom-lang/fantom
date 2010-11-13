@@ -430,11 +430,11 @@ class SqlServiceTest : Test
     return db.sql(sql).execute
   }
 
-  Void verifyCol(Col col, Int index, Str name, Type of, Str sqlType)
+  Void verifyCol(Col col, Int index, Str name, Type type, Str sqlType)
   {
     verifyEq(col.index, index)
     verifyEq(col.name, name)
-    verifySame(col.of, of)
+    verifySame(col.type, type)
     verifyEq(col.sqlType.upper, sqlType.upper)
   }
 
