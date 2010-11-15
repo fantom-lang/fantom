@@ -165,6 +165,30 @@ public class ConnectionPeer
     }
   }
 
+  public Map meta(Connection self)
+  {
+    if (meta != null) return meta;
+    try
+    {
+      Map map = new Map(Sys.StrType, Sys.ObjType.toNullable());
+      DatabaseMetaData data = jconn.getMetaData();
+
+      map.set("productName", data.getDatabaseProductName());
+      map.set("productVersion", Version.fromStr(""+data.getDatabaseMajorVersion()+"."+data.getDatabaseMinorVersion()));
+      map.set("productVersionStr", data.getDatabaseProductVersion());
+
+      map.set("driverName", data.getDriverName());
+      map.set("driverVersion", Version.fromStr(""+data.getDriverMajorVersion()+"."+data.getDriverMinorVersion()));
+      map.set("driverVersionStr", data.getDriverVersion());
+
+      return this.meta = (Map)map.toImmutable();
+    }
+    catch (SQLException e)
+    {
+      throw err(e);
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Transactions
 //////////////////////////////////////////////////////////////////////////
@@ -298,6 +322,7 @@ public class ConnectionPeer
 //////////////////////////////////////////////////////////////////////////
 
   java.sql.Connection jconn;
+  Map meta;
   int openCount;
   boolean supportsGetGenKeys;
 }
