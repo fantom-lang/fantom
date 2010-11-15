@@ -373,7 +373,7 @@ method called "add".  Any expression inside an it-block suffixed with a
 comma is assumed to be a call to 'it.add':
 
   a,       =>  it.add(a)
-  a, b,    =>  it.add(a).add(b)
+  a, b     =>  it.add(a).add(b)
   a, b, c  =>  it.add(a).add(b).add(c)
 
 Note the comma operator chains the calls to 'add', therefore the 'add'
