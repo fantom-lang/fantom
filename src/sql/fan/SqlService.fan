@@ -154,6 +154,12 @@ const class SqlService : Service
     return threadConnection.tableRow(tableName)
   }
 
+  ** TODO: temp hack until we figure out issue #1318
+  @NoDoc Str:Obj? meta()
+  {
+    threadConnection.meta
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Statement
 //////////////////////////////////////////////////////////////////////////
