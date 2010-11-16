@@ -28,7 +28,7 @@ class JsIndexedProps
     }
 
     out.printLine(
-      "(function() 
+      "(function()
        {
          var i = fan.sys.Map.make(fan.sys.Str.\$type, new fan.sys.ListType(fan.sys.Str.\$type));")
 
@@ -37,10 +37,10 @@ class JsIndexedProps
       v := vals.join(",") |v| { v.toCode }
       out.printLine("  i.set(\"$key\", fan.sys.List.make(fan.sys.Str.\$type, [$v]));")
     }
-    
+
     out.printLine(
       "  fan.sys.Env.cur().\$setIndex(i);
-       })();")  
+       })();")
   }
 
   private Void addToIndex(Pod pod,  Str:Str[] index)
@@ -65,4 +65,5 @@ class JsIndexedProps
     make.write(Env.cur.out)
   }
 }
+
 

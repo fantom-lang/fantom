@@ -123,7 +123,7 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     imgElem.src = fan.fwt.WidgetPeer.uriToImageSrc(this.m_image.m_uri);
 
     var imgSize = this.$imageSize();
-    if (imgSize != null) 
+    if (imgSize != null)
     {
       imgElem.style.width  = imgSize.m_w  + "px";
       imgElem.style.height = imgSize.m_h + "px";
@@ -157,7 +157,7 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     {
       text.style.overflow = "hidden";
       text.style.textOverflow = "ellipsis";
-    }    
+    }
     text.style.display = "inline-block";
     text.style.position = "relative";
     text.style.top = "-1px";
@@ -221,5 +221,6 @@ fan.fwt.LabelPeer.prototype.$style = function(self) { return null; }
 // Backdoor hook to reuse Label for hyperlinks
 // { uri:<encoded-uri>, underline:<css-underline>" }
 fan.fwt.LabelPeer.prototype.$uri = function(self) { return null; }
+
 
 

@@ -21,7 +21,7 @@ fan.fwt.BorderPane.$isWinChrome = false;
   var ua = window.navigator.userAgent;
   if (ua.indexOf("Windows") != -1 && ua.indexOf(" Chrome/") != -1)
     fan.fwt.BorderPane.$isWinChrome = true;
-})();    
+})();
 
 fan.fwt.BorderPanePeer.prototype.relayout = function(self)
 {
@@ -77,7 +77,7 @@ fan.fwt.BorderPanePeer.prototype.sync = function(self)
       webkitBorderBottomLeftRadius  = b.m_radiusBottomLeft + "px";
     }
   }
-  
+
   // override style
   var override = this.$style(self);
   if (override != null)
@@ -87,7 +87,7 @@ fan.fwt.BorderPanePeer.prototype.sync = function(self)
     {
       var key = override.keyMap[k];
       var val = override.valMap[k];
-      
+
       // skip for Chrome until working properly
       if (fan.fwt.BorderPane.$isWinChrome)
       {
@@ -103,9 +103,9 @@ fan.fwt.BorderPanePeer.prototype.sync = function(self)
           }
           if (temp.length == 0) continue;
           val = temp;
-        }         
+        }
       }
-      
+
       s.setProperty(key, val, "");
     }
   }
@@ -118,4 +118,5 @@ fan.fwt.BorderPanePeer.prototype.sync = function(self)
 
 // Backdoor hook to override style [returns [Str:Str]?]
 fan.fwt.BorderPanePeer.prototype.$style = function(self) { return null; }
+
 
