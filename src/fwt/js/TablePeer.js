@@ -67,7 +67,7 @@ fan.fwt.TablePeer.injectCss = function()
     " border-right: none;" +
     "}" +
     "table.__fwt_table td img { float:left; border:0; width:16px; }" +
-    "table.__fwt_table td img.right { float:right }" + 
+    "table.__fwt_table td img.right { float:right }" +
     "table.__fwt_table td img + span { margin-left:3px; }" +
     "table.__fwt_table td img.right + span { margin-left:0; margin-right:6px; }" +
     "table.__fwt_table tr:nth-child(even) { background:#f1f5fa; }" +
@@ -274,8 +274,8 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         if (img != null)
         {
           imgElem = document.createElement("img");
-          imgElem.src = fan.fwt.WidgetPeer.uriToImageSrc(img.m_uri);          
-          
+          imgElem.src = fan.fwt.WidgetPeer.uriToImageSrc(img.m_uri);
+
           // image align
           var halignImg = fan.gfx.Halign.m_left;
           if (model.$halignImage) halignImg = model.$halignImage(view.m_cols.get(c));
@@ -291,10 +291,10 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
           if (text.length > 0)
           {
             var span = document.createElement("span");
-            
+
             // workaround for Firefox float "bug"
-            if (isFirefox && imgElem.className == "right") 
-              span.style.marginRight = "22px"; 
+            if (isFirefox && imgElem.className == "right")
+              span.style.marginRight = "22px";
 
             span.appendChild(document.createTextNode(text));
             node.appendChild(span);
@@ -366,7 +366,7 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
     // find pos on display
     var dis = this.posOnDisplay(self);
     var posOnDis = fan.gfx.Point.make(event.clientX-dis.m_x, event.clientY-dis.m_y);
-    
+
     // find pos relative to cell
     var div   = this.elem;
     var table = div.firstChild;
@@ -643,4 +643,5 @@ fan.fwt.TableSupport.prototype.escape = function(str)
 
   return str;
 }
+
 

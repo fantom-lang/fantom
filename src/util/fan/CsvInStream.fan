@@ -139,7 +139,7 @@ class CsvInStream : InStream
       ch := line.getSafe(pos++, 0)
 
       // if we've reached the end of a line, then this quoted
-      // cell spans multiple lines so consume all empty lines 
+      // cell spans multiple lines so consume all empty lines
       // and the next non-empty line
       while (ch == 0)
       {
@@ -166,3 +166,4 @@ class CsvInStream : InStream
   private Int pos
 
 }
+

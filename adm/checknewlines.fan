@@ -2,44 +2,36 @@
 class CheckNewlines
 {
 
-  Str[] exts := ["fan", "java", "cs", "fandoc", "props", "fog", "js" ]
+  Str[] exts := ["fan", "java", "cs", "fandoc", "props", "fog", "js", "css" ]
 
   Void check(File f)
   {
     if (f.ext == null) return
     if (!exts.contains(f.ext)) return
 
-    notUtf8 := false
-    Str? s := null
-    Str[]? lines := null
-    try
-    {
-      s = f.readAllStr(false)
-    }
-    catch (IOErr e)
-    {
-      echo("File not UTF-8: $f")
-      in := f.in { charset = Charset.fromStr("ISO-8859-1") }
-      lines = in.readAllLines
-      notUtf8 = true
-    }
+    s := f.readAllStr
+    lines := s.splitLines
 
-    if (notUtf8 || s.containsChar('\r'))
+    if (s.containsChar('\r') || lines.any{it.endsWith(" ")})
     {
       echo("Fix newlines: $f")
-      if (lines == null) lines = f.readAllLines
       out := f.out
-      lines.each |line, i|
-      {
-        if (line.any |ch| { ch > 128 }) echo("  Non-ASCII: ${i+1}: $line")
-        out.print(line.trimEnd).print("\n")
-      }
+      lines.each |line| { out.print(line.trimEnd).print("\n") }
       out.close
+      numFixed++
     }
 
-    if (s != null && s.containsChar('\t')) echo("CONTAINS TABS: $f")
+    if (s.containsChar('\t')) echo("CONTAINS TABS: $f")
   }
 
-  Void main() { (Sys.homeDir).walk(&check) }
+  Void main(Str[] args)
+  {
+    if (args.isEmpty) throw Err("Usage: checknewlines <dir>")
+    root := args.first.toUri.toFile
+    if (!root.exists) throw Err("Root dir not found: $root")
+    root.walk |file| { check(file) }
+    echo("### Fixed $numFixed ###")
+  }
 
+  Int numFixed
 }

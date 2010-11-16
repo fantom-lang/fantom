@@ -94,7 +94,7 @@ fan.sys.Env.prototype.tempDir = function() { return this.m_tempDir; }
 
 fan.sys.Env.prototype.index = function(key)
 {
-  return this.m_index.get(key, fan.sys.Str.$type.emptyList());    
+  return this.m_index.get(key, fan.sys.Str.$type.emptyList());
 }
 
 fan.sys.Env.prototype.props = function(pod, uri, maxAge)
@@ -144,4 +144,5 @@ fan.sys.Env.prototype.$props = function(key)
   }
   return map;
 }
+
 

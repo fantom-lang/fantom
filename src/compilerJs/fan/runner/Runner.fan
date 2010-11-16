@@ -77,7 +77,7 @@ class Runner
       {
         try engine.eval(script.readAllStr)
         catch (Err e) throw Err("Pod eval failed: $d.name", e)
-        
+
         // instruct that we are running under JVM
         if (d.name == "sys") engine.eval("fan.sys.Env.\$rhino = true;");
       }
@@ -90,4 +90,5 @@ class Runner
     catch (Err e) throw Err("Pod eval failed: $pod.name", e)
   }
 }
+
 
