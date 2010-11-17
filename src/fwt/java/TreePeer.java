@@ -64,7 +64,7 @@ public class TreePeer
     if (Fwt.isWindows())
     {
       // don't use dotted lines because they offend Andy's sense of taste
-      Fwt.osSet(t, Fwt.os("GWL_STYLE"), Fwt.osGet(t, Fwt.os("GWL_STYLE")) ^ Fwt.os("TVS_HASLINES"));
+      // Fwt.osSet(t, Fwt.os("GWL_STYLE"), Fwt.osGet(t, Fwt.os("GWL_STYLE")) ^ Fwt.os("TVS_HASLINES"));
     }
 
     this.control = t;
