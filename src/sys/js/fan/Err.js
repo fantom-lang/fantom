@@ -166,7 +166,7 @@ fan.sys.FieldNotSetErr.make = function(msg, cause) { return new fan.sys.FieldNot
 fan.sys.IndexErr = fan.sys.Obj.$extend(fan.sys.Err);
 fan.sys.IndexErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prototype.$ctor.call(this, msg, cause); }
 fan.sys.IndexErr.prototype.$typeof = function() { return fan.sys.IndexErr.$type; }
-fan.sys.IndexErr.make = function(msg, cause) { return new fan.sys.IndexErr(msg, cause); }
+fan.sys.IndexErr.make = function(msg, cause) { return new fan.sys.IndexErr(""+msg, cause); }
 
 // InterruptedErr
 fan.sys.InterruptedErr = fan.sys.Obj.$extend(fan.sys.Err);
