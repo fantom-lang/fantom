@@ -371,6 +371,11 @@ public final class Unit
       }
     }
 
+    public boolean isDimensionless()
+    {
+      return toString().length() == 0;
+    }
+
     String str;
     byte kg, m, sec, K, A, mol, cd;
   }
@@ -396,6 +401,10 @@ public final class Unit
 
   private static Unit findMult(Unit a, Unit b)
   {
+    // if either is dimensionless give up immediately
+    if (a.dim.isDimensionless() || b.dim.isDimensionless())
+      throw Err.make("Cannot compute dimensionless: " + a + " * " + b).val;
+
     // compute dim/scale of a * b
     Dimension dim = a.dim.add(b.dim).intern();
     double scale = a.scale * b.scale;
@@ -431,6 +440,10 @@ public final class Unit
 
   public final Unit findDiv(Unit a, Unit b)
   {
+    // if either is dimensionless give up immediately
+    if (a.dim.isDimensionless() || b.dim.isDimensionless())
+      throw Err.make("Cannot compute dimensionless: " + a + " / " + b).val;
+
     // compute dim/scale of a / b
     Dimension dim = a.dim.subtract(b.dim).intern();
     double scale = a.scale / b.scale;
