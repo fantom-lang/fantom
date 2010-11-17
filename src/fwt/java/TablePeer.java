@@ -92,9 +92,18 @@ public class TablePeer
 // Native Methods
 //////////////////////////////////////////////////////////////////////////
 
+  public void refreshRows(fan.fwt.Table self, List indices)
+  {
+    Table c = (Table)this.control;
+    if (c == null) return;
+
+    c.clear(indices.toInts());
+  }
+
   public void refreshAll(fan.fwt.Table self)
   {
     Table c = (Table)this.control;
+    if (c == null) return;
 
     TableModel model = model();
 
