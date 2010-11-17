@@ -148,6 +148,11 @@ fan.fwt.TablePeer.prototype.refreshAll = function(self)
   self.relayout();
 }
 
+fan.fwt.TablePeer.prototype.refreshRows = function(self, indices)
+{
+  this.refreshAll();
+}
+
 fan.fwt.TablePeer.prototype.needRebuild = true;
 
 fan.fwt.TablePeer.prototype.sync = function(self)

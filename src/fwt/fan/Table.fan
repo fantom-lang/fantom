@@ -98,6 +98,11 @@ class Table : Widget
   native Bool headerVisible
 
   **
+  ** Update the rows at the selected indices
+  **
+  native Void refreshRows(Int[] indices)
+
+  **
   ** Update the entire table's contents from the model.
   **
   native Void refreshAll()
