@@ -45,7 +45,9 @@ public class SqlUtil
     switch (sql)
     {
       case Types.CHAR:
+      case Types.NCHAR:
       case Types.VARCHAR:
+      case Types.NVARCHAR:
       case Types.LONGVARCHAR:
         return Sys.StrType;
 
