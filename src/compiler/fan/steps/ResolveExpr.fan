@@ -198,10 +198,12 @@ class ResolveExpr : CompilerStep
     // if we have a def, then add to compiler to merge into locale/en.props
     if (expr.def != null) compiler.localeDefs.add(expr)
 
-    // Pod.find(podName) or curType#.pod
+    // Pod.find(podName) or inType#.pod
+    inType := this.curType
+    if (inType.isClosure) inType = inType.closure.enclosingType
     podTarget := expr.podName != null ?
       CallExpr.makeWithMethod(loc, null, ns.podFind, [LiteralExpr.makeStr(loc, ns, expr.podName)]) :
-      CallExpr.makeWithMethod(loc, LiteralExpr(loc, ExprId.typeLiteral, ns.typeType, curType), ns.typePod)
+      CallExpr.makeWithMethod(loc, LiteralExpr(loc, ExprId.typeLiteral, ns.typeType, inType), ns.typePod)
 
     // podTarget.locale(key [, def])
     args := [LiteralExpr.makeStr(loc, ns, expr.key)]
