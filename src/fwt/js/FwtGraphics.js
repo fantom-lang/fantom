@@ -14,6 +14,7 @@ fan.fwt.Graphics = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.fwt.Graphics.prototype.$ctor = function() {}
 
+fan.fwt.Graphics.prototype.widget = null;
 fan.fwt.Graphics.prototype.size = null;
 fan.fwt.Graphics.prototype.cx = null;
 
@@ -236,7 +237,7 @@ fan.fwt.Graphics.prototype.drawText = function (s, x, y)
 // This drawImage(Image image, Int x, Int y)
 fan.fwt.Graphics.prototype.drawImage = function (fanImg, x, y)
 {
-  var jsImg = fan.fwt.FwtEnvPeer.loadImage(fanImg);
+  var jsImg = fan.fwt.FwtEnvPeer.loadImage(fanImg, this.widget);
   if (jsImg.width > 0 && jsImg.height > 0)
     this.cx.drawImage(jsImg, x, y)
   return this;
