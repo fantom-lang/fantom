@@ -115,7 +115,8 @@ fan.sys.Err.make = function(err, cause)
   {
     var m = err.message;
     if (m.indexOf(" from null") != -1) return fan.sys.NullErr.make(m, cause);
-
+    if (m.indexOf(" of null")   != -1) return fan.sys.NullErr.make(m, cause);
+    
     // TODO
     //  EvalError
     //  RangeError

@@ -739,6 +739,20 @@ fan.sys.List.prototype.sortr = function(f)
   return this;
 }
 
+fan.sys.List.prototype.reverse = function()
+{
+  this.modify();
+  var mid = this.m_size/2;
+  for (var i=0; i<mid; ++i)
+  {
+    var a = this.m_values[i];
+    var b = this.m_values[this.m_size-i-1];
+    this.m_values[i] = b;
+    this.m_values[this.m_size-i-1] = a;
+  }
+  return this;
+}
+
 fan.sys.List.prototype.moveTo = function(item, toIndex)
 {
   this.modify();
