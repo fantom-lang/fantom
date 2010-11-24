@@ -40,8 +40,8 @@ Let's assume this top level route mapping:
   {
     routes =
     [
-      "favicon.ico": `pub/icon.png`,
-      "stuff":       `pub/`
+      "favicon.ico": FileMod { file=`pub/icon.png`.toFile },
+      "stuff":       FileMod { file=`pub/`.toFile }
     ]
   }
 
