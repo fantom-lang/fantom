@@ -77,8 +77,5 @@ Fan Scheme [#fanScheme]
 The Fantom runtime includes support for the "fan:" scheme which is
 used to identify objects related to the Fantom namespace:
 
-  fan://pod                =>  sys::Pod
-  fan://pod/Type           =>  sys::Type
-  fan://pod/Type#slot      =>  sys::Slot (Field or Method)
   fan://pod/dir/file.txt   =>  sys:Pod.file (resource file)
 
