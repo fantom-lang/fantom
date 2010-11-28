@@ -141,12 +141,26 @@ public class Fan
       ex.err().trace();
       return -1;
     }
+    finally
+    {
+      cleanup();
+    }
   }
 
   static int toResult(Object obj)
   {
     if (obj instanceof Long) return ((Long)obj).intValue();
     return 0;
+  }
+
+  static void cleanup()
+  {
+    try
+    {
+       Env.cur().out().flush();
+       Env.cur().err().flush();
+    }
+    catch (Throwable e) {}
   }
 
 //////////////////////////////////////////////////////////////////////////
