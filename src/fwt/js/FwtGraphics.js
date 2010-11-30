@@ -216,14 +216,42 @@ fan.fwt.Graphics.prototype.fillOval = function(x, y, w, h)
 // This drawArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
 fan.fwt.Graphics.prototype.drawArc = function(x, y, w, h, startAngle, arcAngle)
 {
-  // TODO
+  // TODO FIXIT: support for elliptical arc curves
+  var cx  = x + (w/2);
+  var cy  = y + (h/2);
+  var rad = Math.min(w/2, h/2);
+  var sa  = Math.PI / 180 * startAngle;
+  var ea  = Math.PI / 180 * (startAngle + arcAngle);
+
+  this.cx.beginPath();
+  this.cx.arc(cx, cy, rad, -sa, -ea, true);
+  this.cx.stroke();
   return this;
 }
 
 // This fillArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
 fan.fwt.Graphics.prototype.fillArc = function(x, y, w, h, startAngle, arcAngle)
 {
-  // TODO
+  // TODO FIXIT: support for elliptical arc curves
+  var cx = x + (w/2);
+  var cy = y + (h/2);
+  var radius = Math.min(w/2, h/2);
+
+  var startRads = Math.PI / 180 * startAngle;
+  var x1 = cx + (Math.cos(-startRads) * radius);
+  var y1 = cy + (Math.sin(-startRads) * radius);
+
+  var endRads = Math.PI / 180 * (startAngle + arcAngle);
+  var x2 = cx + (Math.cos(-endRads) * radius);
+  var y2 = cy + (Math.sin(-endRads) * radius);
+
+  this.cx.beginPath();
+  this.cx.moveTo(cx, cy);
+  this.cx.lineTo(x1, y1);
+  this.cx.arc(cx, cy, radius, -startRads, -endRads, true);
+  this.cx.lineTo(x2, y2);
+  this.cx.closePath();
+  this.cx.fill();
   return this;
 }
 
