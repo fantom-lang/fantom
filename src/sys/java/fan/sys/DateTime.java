@@ -332,6 +332,11 @@ public final class DateTime
 
       return new DateTime(year, month, day, hour, min, sec, ns, offset, tz);
     }
+    catch (ParseErr.Val e)
+    {
+      if (!checked) return null;
+      throw e;
+    }
     catch (Exception e)
     {
       if (!checked) return null;
