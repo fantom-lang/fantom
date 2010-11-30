@@ -238,7 +238,7 @@ public class StatementPeer
   {
     try
     {
-      if (self.conn.peer.supportsGetGenKeys)
+      if (autoGenKeyMode(self) == java.sql.Statement.RETURN_GENERATED_KEYS)
       {
         ResultSet rs = stmt.getGeneratedKeys();
         List keys = new List(Sys.IntType);
