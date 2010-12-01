@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 /**
  * TimeZone
@@ -67,6 +69,22 @@ public final class TimeZone
     {
       e.printStackTrace();
       throw IOErr.make("Cannot load from timezone database: " + name).val;
+    }
+
+    // if not found, check aliases
+    if (tz == null)
+    {
+      if (aliases == null) loadAliases();
+      String alias = (String)aliases.get(name);
+      if (alias != null)
+      {
+        tz = fromStr(alias);  // better be found
+        synchronized (cache)
+        {
+          cache.put(name, tz);
+          return tz;
+        }
+      }
     }
 
     // if found, then cache and return
@@ -216,6 +234,46 @@ public final class TimeZone
     map.set("atTime",    Long.valueOf(t.atTime));
     map.set("atMode",    Long.valueOf(t.atMode));
     return map;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Aliases
+//////////////////////////////////////////////////////////////////////////
+
+  private static void loadAliases()
+  {
+    HashMap map = new HashMap();
+    try
+    {
+      // read as props file
+      String sep = java.io.File.separator;
+      Map props = Env.cur().props(Sys.sysPod, Uri.fromStr("timezone-aliases.props"), Duration.Zero);
+
+      // map both simple name and full names to aliases map
+      Iterator it = props.pairsIterator();
+      while (it.hasNext())
+      {
+        Entry e = (Entry)it.next();
+        String key = (String)e.getKey();
+        String val = (String)e.getValue();
+
+        // map by fullName
+        map.put(key, val);
+
+        // map by simple name
+        int slash = key.lastIndexOf('/');
+        if (slash > 0) map.put(key.substring(slash+1), val);
+      }
+    }
+    catch (Throwable e)
+    {
+      System.out.println("ERROR: Cannot read timezone-aliases.props");
+      e.printStackTrace();
+    }
+
+    // save to field and force memory barrier sync
+    TimeZone.aliases = map;
+    synchronized(TimeZone.aliases) {}
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -566,6 +624,7 @@ public final class TimeZone
   static byte[] indexPrefixes = new byte[0];
   static String[] indexNames  = new String[0];
   static int[] indexOffsets   = new int[0];
+  static HashMap aliases;
 
   static HashMap cache = new HashMap(); // String -> TimeZone
   static TimeZone utc;

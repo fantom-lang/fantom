@@ -46,11 +46,17 @@ const class TimeZone
   static Str[] listFullNames()
 
   **
-  ** Find a time zone by name from the built-in database.
-  ** Either the simple name like "New_York" or the zoneinfo
-  ** full name "America/New_York" may be used.  If the time zone
-  ** doesn't exist and checked is false then return
-  ** null, otherwise throw ParseErr.
+  ** Find a time zone by name from the built-in database:
+  **   1. First check for simple name like "New_York" or
+  **      the zoneinfo full name "America/New_York"
+  **   2. Attempt to match against timezone aliases, if a
+  **      match is found return the canonical TimeZone instance
+  **   3. If no matches are found and checked is false then
+  **      return null, otherwise throw ParseErr.
+  **
+  ** Also see:
+  **   - [TimeZone database]`docLang::DateTime#timeZone`
+  **   - [TimeZone aliases]`docLang::DateTime#timeZoneAliases`
   **
   static TimeZone? fromStr(Str name, Bool checked := true)
 

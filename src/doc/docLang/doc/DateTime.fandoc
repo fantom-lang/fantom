@@ -133,6 +133,22 @@ during serialization, we use the city name only as the canonical identifier.
 In the API this is distinguished as [name]`sys::TimeZone.name` and
 [fullName]`sys::TimeZone.fullName`.
 
+TimeZone Aliases [#timeZoneAliases]
+===================================
+Over time timezone names might change.  Often these changes are for political
+reasons: "Calcutta" became "Kolkata" and "Saigon" became "Ho_Chi_Minh".
+The obsolete timezone names are mapped as *timezone aliases* by the
+configuration file "etc/sys/timezone-aliases.props".  This file is generated
+from the tzinfo "backward" file.
+
+When 'TimeZone.fromStr' is called, if the name cannot be mapped to a real
+TimeZone then the name is checked against the aliases.  If it is mapped
+to an alias name (either by simple name or full name), then the canonical
+TimeZone is returned.  For example:
+
+  TimeZone("Asia/Saigon")  =>  Asia/Ho_Chi_Minh
+  TimeZone("Saigon")       =>  Asia/Ho_Chi_Minh
+
 Relative TimeZone [#relTimeZone]
 ================================
 In most cases we wish to compare time absolutely.  For example if looking
