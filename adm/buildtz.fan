@@ -25,6 +25,13 @@ using build
 **
 ** Refer to TimeZone.java for the time zone binary database format.
 **
+** Conversion Notes Nov-2010
+** -------------------------
+**   - southamerica was non-ASCII, resaved as UTF-8
+**   - Africa/Cairo has too many rules for 2010, just picked last one
+**   - Asia/Gaza was out of order and all weird, got rid of 2010 only
+**   - America/Resolute - got rid of 2006 since DST without offset
+**
 class Build : BuildScript
 {
 
@@ -33,7 +40,7 @@ class Build : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   // directory of input files
-  Uri srcDir := `/dev/tools/tz/`
+  Uri srcDir := `/stuff/tzinfo/`
 
   // input files from Olsen database
   Uri[] srcUris :=
