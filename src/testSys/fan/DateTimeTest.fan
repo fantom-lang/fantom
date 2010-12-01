@@ -535,6 +535,29 @@ class DateTimeTest : Test
     verifyEq(x.ticks, y.ticks)
   }
 
+  Void testTimeZoneAliases()
+  {
+    verifyTimeZoneAlias("Asia/Saigon", "Asia/Ho_Chi_Minh")
+    verifyTimeZoneAlias("Saigon", "Asia/Ho_Chi_Minh")
+
+    verifyTimeZoneAlias("Australia/Victoria", "Australia/Melbourne")
+    verifyTimeZoneAlias("Victoria", "Australia/Melbourne")
+
+    verifyTimeZoneAlias("America/Argentina/ComodRivadavia", "America/Argentina/Catamarca")
+    verifyTimeZoneAlias("ComodRivadavia", "America/Argentina/Catamarca")
+  }
+
+  Void verifyTimeZoneAlias(Str alias, Str canonicalFull)
+  {
+    tz := TimeZone(canonicalFull)
+    canonicalName := canonicalFull[canonicalFull.indexr("/")+1..-1]
+    verifyEq(tz.fullName, canonicalFull)
+    verifyEq(tz.name, canonicalName)
+    verifySame(TimeZone(alias), tz)
+    verifyEq(TimeZone(alias).fullName, canonicalFull)
+    verifyEq(TimeZone(alias).name, canonicalName)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Leap Year
 //////////////////////////////////////////////////////////////////////////
