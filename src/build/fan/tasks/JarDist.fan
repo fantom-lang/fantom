@@ -175,6 +175,7 @@ class JarDist : JdkTask
   private Void etcFiles()
   {
     copyEtcFile(`etc/sys/timezones.ftz`)
+    copyEtcFile(`etc/sys/timezone-aliases.props`, `res/sys/timezone-aliases.props`)
     copyEtcFile(`etc/sys/ext2mime.props`, `res/sys/ext2mime.props`)
     copyEtcFile(`etc/sys/units.txt`)
   }
