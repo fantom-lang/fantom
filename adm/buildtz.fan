@@ -127,7 +127,7 @@ class Build : BuildScript
       val := map[key]
       simpleName := val[val.indexr("/")+1..-1]
       if (key == simpleName) echo("  Skipping $key == $simpleName")
-      out.printLine("$key=$simpleName")
+      else out.printLine("$key=$simpleName")
     }
     out.close
   }
