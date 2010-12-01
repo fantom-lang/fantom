@@ -482,7 +482,7 @@ class DateTimeTest : Test
 
     verifyTimeZone("America/New_York", "EST",  -5hr, "EDT", 1hr)
     verifyTimeZone("America/Phoenix",  "MST",  -7hr, null,  null)
-    verifyTimeZone("Asia/Calcutta",    "IST", 5.5hr, null,  null)
+    verifyTimeZone("Asia/Kolkata",     "IST", 5.5hr, null,  null)
     verifyTimeZone("Etc/UTC",          "UTC",   0hr, null,  null)
     verifyTimeZone("Etc/Rel",          "Rel",   0hr, null,  null)
 
@@ -686,16 +686,12 @@ class DateTimeTest : Test
     verifyDateTime(309751200000_000000, kiev, 2009, oct, 25, 4, 0, 0, sun, std)
 
     // Brazil (southern hemisphere with wall dst, and midnight dst)
+    //  2008 DST starts on October 19, 2008 and ends February 15, 2009
     verifyDateTime(252511200000_000000, brazil, 2008, jan, 1, 12, 0, 0, tue, dst)
-    verifyDateTime(257090400000_000000, brazil, 2008, feb, 23, 12, 0, 0, sat, dst)
-    verifyDateTime(257133599000_000000, brazil, 2008, feb, 23, 23, 59, 59, sat, dst)
-    verifyDateTime(257137199000_000000, brazil, 2008, feb, 23, 23, 59, 59, sat, std, null, 0, false)
-    verifyDateTime(257180400000_000000, brazil, 2008, feb, 24, 12, 0, 0, sun, std)
-    verifyDateTime(257266800000_000000, brazil, 2008, feb, 25, 12, 0, 0, mon, std)
-    verifyDateTime(257698800000_000000, brazil, 2008, mar, 1, 12, 0, 0, sat, std)
-    verifyDateTime(278906400000_000000, brazil, 2008, nov, 1, 23, 0, 0, sat, std)
-    verifyDateTime(278910000000_000000, brazil, 2008, nov, 2, 1,  0, 0, sun, dst)
-    verifyDateTime(278949600000_000000, brazil, 2008, nov, 2, 12, 0, 0, sun, dst)
+    verifyDateTime(277700340000_000000, brazil, 2008, oct, 18, 23, 59, 0, sat, std)
+    verifyDateTime(277700400000_000000, brazil, 2008, oct, 19, 1, 0, 0, sun, dst)
+    verifyDateTime(287978340000_000000, brazil, 2009, feb, 14, 23, 59, 0, sat, dst)
+    verifyDateTime(287985600000_000000, brazil, 2009, feb, 15, 1, 0, 0, sun, std)
 
     // New South Wales (south hemisphere, standard (non-wall) time dst)
     verifyDateTime(246815999000_000000, aust, 2007, oct, 28, 1, 59, 59, sun, std)
@@ -763,6 +759,7 @@ class DateTimeTest : Test
   {
     func := |DateTime dt|
     {
+      // echo("-- verify $dt " + (dt.dst ? "DST" : "STD"))
       verifySame(dt.tz, tz)
       verifyEq(dt.ticks,   ticks)
       verifyEq(dt.year,    year)

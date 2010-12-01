@@ -8,6 +8,7 @@
 
 *Build 1.0.57 (working)*
 - Rename sql::Col.of => type
+- Update timezone database
 
 *Build 1.0.56 (11 Nov 2010)*
 - Redesign Unit to be keyed by arbitrary ids list including symbols
