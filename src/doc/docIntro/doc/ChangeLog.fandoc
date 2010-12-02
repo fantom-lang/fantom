@@ -10,6 +10,7 @@
 - Rename sql::Col.of => type
 - Update timezone database
 - Add support for timezone aliases (tzinfo backward list)
+- FileMod: remove requirement that file exists, just return 404
 
 *Build 1.0.56 (11 Nov 2010)*
 - Redesign Unit to be keyed by arbitrary ids list including symbols
