@@ -312,7 +312,11 @@ public abstract class File
   public File rename(String newName)
   {
     if (isDir()) newName += "/";
-    return moveTo(parent().plus(newName));
+    File parent = parent();
+    if (parent == null)
+      return moveTo(File.make(Uri.fromStr(newName)));
+    else
+      return moveTo(parent.plus(newName));
   }
 
 //////////////////////////////////////////////////////////////////////////
