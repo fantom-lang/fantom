@@ -32,7 +32,6 @@ public class ConnectionPeer
   {
     try
     {
-      loadDriver(dialect);
       Connection self = Connection.make();
       self.peer.jconn = DriverManager.getConnection(database, username, password);
       self.peer.openCount = 1;
@@ -260,30 +259,29 @@ public class ConnectionPeer
 // Load Driver
 //////////////////////////////////////////////////////////////////////////
 
-  /**
-   * Look for config key {dialect.qname}.driver and attempt to
-   * load it as Java classname to ensure driver is in memory.
-   */
-  static void loadDriver(Dialect d)
+  static { loadDrivers(); }
+
+  static void loadDrivers()
   {
-    // preload the driver classes defined in sys.props, any
-    // property that starts with "sql." and ends with ".driver"
-    // is assumed to be a driver class name.
     try
     {
-      String key = d.typeof().qname() + ".driver";
-      String val = Pod.find("sql").config(key);
+      String val = Pod.find("sql").config("java.drivers");
       if (val == null) return;
-      try
+      String[] classNames = val.split(",");
+      for (int i=0; i<classNames.length; ++i)
       {
-        Class.forName(val);
-      }
-      catch (Exception e)
-      {
-        System.out.println("WARNING: Cannot preload JDBC driver: " + key + "=" + val);
+        String className = classNames[i].trim();
+        try
+        {
+          Class.forName(className);
+        }
+        catch (Exception e)
+        {
+          System.out.println("WARNING: Cannot preload JDBC driver: " + className);
+        }
       }
     }
-    catch (Exception e)
+    catch (Throwable e)
     {
       System.out.println(e);
     }

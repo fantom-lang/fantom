@@ -69,9 +69,10 @@ locate your JRE directory.  For MySQL the driver is packaged
 up as something like "mysql-connector-java-5.0.6-bin.jar".
 
 2.  Ensure the JDBC class is loaded into memory.  The simplest way
-to preload the class is to define a config prop in "etc/sql/config.props"
-for your dialect:
-      sql::MySqlDialect.driver=com.mysql.jdbc.Driver
+to preload the class is to ensure the classname is defined in
+"etc/sql/config.props" :
+
+      java.drivers=com.mysql.jdbc.Driver,oracle.jdbc.driver.OracleDriver
 
 3.  Create and start a SqlService instance using the JDBC URL for the
 'connection' parameter to the make method.
@@ -80,10 +81,6 @@ For example to create a SqlService for MySQL:
 
 4. Open the database for the current thread.
       db.open
-
-Connections in .NET [#dotnet]
-=============================
-TODO
 
 Statements [#statements]
 ************************
