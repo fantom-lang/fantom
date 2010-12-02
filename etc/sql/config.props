@@ -5,11 +5,10 @@
 //   01 Feb 10  Brian Frank  Creation
 //
 
-// JVM drivers; these are java classnames which are loaded
-// into the VM using Class.forName whenever the specified
-// dialect is used:
-//   {qname}.driver={classname}
-sql::MySqlDialect.driver=com.mysql.jdbc.Driver
+// Java JDBC drivers; these are java classnames separated by a
+// comma which are loaded into the VM using Class.forName on
+// startup
+java.drivers=com.mysql.jdbc.Driver
 
 // test setup
 test.connection=jdbc:mysql://localhost:3306/fantest

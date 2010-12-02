@@ -8,6 +8,7 @@
 
 *Build 1.0.57 (working)*
 - Rename sql::Col.of => type
+- Change how JDBC classes are preloaded by sql
 - Update timezone database
 - Add support for timezone aliases (tzinfo backward list)
 - FileMod: remove requirement that file exists, just return 404
