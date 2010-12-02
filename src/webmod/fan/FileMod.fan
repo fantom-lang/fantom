@@ -16,21 +16,15 @@ using web
 const class FileMod : WebMod
 {
   **
-  ** Constructor with it-block.
+  ** Constructor with it-block, must set `file`
   **
-  new make(|This|? f)
-  {
-    f?.call(this)
-    if (file === noFile) throw ArgErr("Must configure ${Type.of(this)}.file field")
-    if (!file.exists) throw ArgErr("${Type.of(this)}.file does not exist: $file")
-  }
+  new make(|This|? f) { f?.call(this) }
 
   **
   ** File or directory to publish.  This field must be
   ** configured in the constructor's it-block.
   **
-  const File? file := noFile
-  private static const File noFile := File(`no-file-configured`)
+  const File file
 
   override Void onService()
   {
