@@ -68,20 +68,19 @@ const final class Bool
   Bool not()
 
   **
-  ** Bitwise "and" of this and b.  Shortcut is a&b.  Note boolean bitwise
-  ** "and" does not short circuit like logical "and" (&& operator).
+  ** Bitwise "and" of this and b.  Note this method does not
+  ** short circuit like logical '&&' operator.
   **
   Bool and(Bool b)
 
   **
-  ** Bitwise "or" of this and b.  Shortcut is a|b.  Note boolean bitwise
-  ** "or" does not short circuit like logical "or" (|| operator).
+  ** Bitwise "or" of this and b.  Note this method does not
+  ** short circuit like logical '||' operator.
   **
   Bool or(Bool b)
 
   **
-  ** Bitwise "exclusive-or" of this and b.  Shortcut is a^b.  Note this
-  ** operator does not short circuit like && or ||.
+  ** Bitwise "exclusive-or" of this and b.
   **
   Bool xor(Bool b)
 
