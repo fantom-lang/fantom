@@ -739,7 +739,7 @@ class ResolveExpr : CompilerStep
     {
       result := plugin.compile(expr)
       if (result === expr) return result
-      return visitExpr(result)
+      return result.walk(this)
     }
     catch (CompilerErr e)
     {
