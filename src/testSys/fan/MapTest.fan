@@ -273,8 +273,10 @@ class MapTest : Test
     verifyEq(m.get(0, "?"), "?")
     verifyEq(m.get(2, "?"), "two")
     verifyEq(m.get(9, "?"), "?") // mapped, but null returns def
+    verifyErr(ArgErr#) { m.add(5, "err") }
+    verifyErr(ArgErr#) { m.add(9, "err") }
 
-    m.add(9, "nine") // add overwrites null
+    m.set(9, "nine")
     verifyEq(m, Int:Str?[2:"two", 5:"five", 9:"nine"])
     verifyEq(m[0], null)
     verifyEq(m[2], "two")
@@ -380,23 +382,29 @@ class MapTest : Test
 
   Void testGetOrAdd()
   {
-    m := Str:Str[:]
+    m := Str:Str?[:]
     verifyEq(m.getOrAdd("a") {"_a_"}, "_a_")
     verifyEq(m.getOrAdd("a") {"_x_"}, "_a_")
     verifyEq(m.getOrAdd("a") {throw Err()}, "_a_")
-    verifyEq(m, ["a":"_a_"])
+    verifyEq(m, Str:Str?["a":"_a_"])
 
     verifyEq(m.getOrAdd("b") {"_${it}_"}, "_b_")
     verifyEq(m.getOrAdd("c") |k| {"_${k}_"}, "_c_")
-    verifyEq(m, ["a":"_a_", "b":"_b_", "c":"_c_"])
+    verifyEq(m, Str:Str?["a":"_a_", "b":"_b_", "c":"_c_"])
 
     verifyEq(m.getOrAdd("b") {throw Err()}, "_b_")
+
+    verifyEq(m.getOrAdd("x") {null}, null)
+    verifyEq(m, ["a":"_a_", "b":"_b_", "c":"_c_", "x":null])
+    verifyEq(m.getOrAdd("x") {throw Err()}, null)
+    verifyEq(m.getOrAdd("x") {"_x_"}, null)
+    verifyEq(m, Str:Str?["a":"_a_", "b":"_b_", "c":"_c_", "x":null])
 
     ro := m.ro
     verifyEq(ro.getOrAdd("a") { throw Err() }, "_a_")
     verifyEq(m.getOrAdd("d") { "_${it}_" }, "_d_")
-    verifyEq(m, ["a":"_a_", "b":"_b_", "c":"_c_", "d":"_d_"])
-    verifyEq(ro, ["a":"_a_", "b":"_b_", "c":"_c_"])
+    verifyEq(m, Str:Str?["a":"_a_", "b":"_b_", "c":"_c_", "d":"_d_", "x":null])
+    verifyEq(ro, Str:Str?["a":"_a_", "b":"_b_", "c":"_c_", "x":null])
     verifyErr(ReadonlyErr#) { ro.getOrAdd("d") { "x" } }
   }
 
