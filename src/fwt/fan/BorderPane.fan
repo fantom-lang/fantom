@@ -20,7 +20,7 @@ class BorderPane : ContentPane
   ** Border to paint around the edge of the content.
   ** Default is zero pixels.
   **
-  Border border := Border("0")
+  Border border := Border.defVal
 
   **
   ** Background to paint under content, or null for transparent.

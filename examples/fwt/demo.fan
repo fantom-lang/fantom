@@ -300,7 +300,7 @@ class FwtDemo
   {
     b := BorderPane
     {
-      border = Border.defVal
+      border = Border("#000")
       insets = Insets(10)
       content = Box { color = Color.blue }
     }

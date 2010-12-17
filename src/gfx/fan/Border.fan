@@ -61,9 +61,9 @@ const class Border
   private static const Color black := Color(0)
 
   **
-  ** Default is 1 pixel solid black border with no radius.
+  ** Default is zero pixel border.
   **
-  static const Border defVal := make {}
+  static const Border defVal := Border("0")
 
   **
   ** Construct with it-block
