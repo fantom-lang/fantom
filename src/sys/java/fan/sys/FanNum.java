@@ -211,6 +211,7 @@ class NumDigits
   boolean zeroFrac(int maxFrac)
   {
     int until = decimal + maxFrac;
+    if (until >= digits.length) return true;
     for (int i=decimal; i<until; ++i) if (digits[i] != '0') return false;
     return true;
   }
@@ -316,6 +317,8 @@ final class NumPattern
           decimal = true;
           optInt  = last == '#';
           break;
+        default:
+          throw ArgErr.make("Invalid pattern char '" + (char)c + "': " + s).val;
       }
       last = c;
     }
