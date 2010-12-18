@@ -13,12 +13,15 @@ the file system.  By convention the source tree of a pod is structured
 as follows:
 
   podxyz/
-    +- fan/       // ".fan" source files
-    +- java/      // ".java" Java native peers
-    +- dotnet/    // ".cs" C# native peers
-    +- res/       // resources to bundle with pod
-    +- test/      // ".fan" unit tests
-    +- build.fan  // build script for pod
+    +- fan/        // ".fan" source files
+    +- java/       // ".java" Java native peers
+    +- js/         // ".js" JavaScript native peers
+    +- dotnet/     // ".cs" C# native peers
+    +- res/        // resources to bundle with pod
+    +- locale/     // localization files
+    +- test/       // ".fan" unit tests
+    +- build.fan   // build script for pod
+    +- pod.fandoc  // pod level documentation
 
 Each of those directories may contain arbitrary sub-directories under it,
 although it is not required.

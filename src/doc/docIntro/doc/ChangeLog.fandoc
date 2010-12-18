@@ -13,6 +13,7 @@
 - Add support for timezone aliases (tzinfo backward list)
 - FileMod: remove requirement that file exists, just return 404
 - Fix Map.add, getOrAdd handling of null values
+- Change Border.defVal from 1 to 0 width
 
 *Build 1.0.56 (11 Nov 2010)*
 - Redesign Unit to be keyed by arbitrary ids list including symbols
