@@ -19,6 +19,26 @@ fan.sys.Buf = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.sys.Buf.prototype.$ctor = function() {}
 fan.sys.Buf.make = function(capacity) { return new fan.sys.MemBuf(); }
 
+fan.sys.Buf.random = function(size)
+{
+  var buf = [];
+  for (var i=0; i<size;)
+  {
+    var x = Math.random() * 4294967296;
+    buf[i++] = (0xff & (x >> 24));
+    if (i < size)
+    {
+      buf[i++] = (0xff & (x >> 16));
+      if (i < size)
+      {
+        buf[i++] = (0xff & (x >> 8));
+        if (i < size) buf[i++] = (0xff & x);
+      }
+    }
+  }
+  return fan.sys.MemBuf.makeBytes(buf);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Obj
 //////////////////////////////////////////////////////////////////////////
