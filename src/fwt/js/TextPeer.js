@@ -42,7 +42,7 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
   else
   {
     var text = document.createElement("input");
-    text.type = "text";
+    text.type = self.m_password ? "password" : "text";
     text.size = self.m_prefCols;
     text.style.outline = "none";
     text.style.padding = "1px 2px 2px 2px";
