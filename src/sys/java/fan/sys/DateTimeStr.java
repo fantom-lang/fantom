@@ -506,7 +506,7 @@ class DateTimeStr
             int next = pattern.charAt(i+1);
             if (next == 'F' || next == 'S')
             {
-              if (match != c) { skippedLast = true;  break; }
+              if (match != c) { skippedLast = true; --pos; break; }
             }
           }
 

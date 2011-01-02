@@ -1066,6 +1066,12 @@ class DateTimeTest : Test
     verifyFromLocale("2010-07-04 23:45:17 Los_Angles", "YYYY-MM-DD kk:mm:SS.F", la,
                      DateTime(2010, Month.jul, 4, 23, 45, 17, 0, la))
 
+    verifyFromLocale("2010-07-04 23:45:13.2 Los_Angles", "YYYY-MM-DD kk:mm:SS.F", la,
+                     DateTime(2010, Month.jul, 4, 23, 45, 13, 200_000_000, la))
+
+    verifyFromLocale("2010-07-04 23:45:13.2 Los_Angles", "YYYY-MM-DD kk:mm:SS.FFF", la,
+                     DateTime(2010, Month.jul, 4, 23, 45, 13, 200_000_000, la))
+
     verifyFromLocale("2010-07-04 23:45 Los_Angles", "YYYY-MM-DD kk:mm:SS.F", la,
                      DateTime(2010, Month.jul, 4, 23, 45, 0, 0, la))
 
@@ -1111,6 +1117,16 @@ class DateTimeTest : Test
 
     // cur timezone
     verifyEq(DateTime.fromLocale("10-08-23 4:55", "YY-MM-DD k:mm"), DateTime(2010, Month.aug, 23, 4, 55, 0))
+
+    // more SS and FF tests
+    verifyEq(DateTime.fromLocale("2011-01-02T12:37:07.372-05:00 New_York", "YYYY-MM-DD'T'hh:mm:SS.FFFFFFFFFz zzzz"),
+                        DateTime("2011-01-02T12:37:07.372-05:00 New_York"))
+
+    verifyEq(DateTime.fromLocale("2011-01-02T12:37:02-05:00 New_York", "YYYY-MM-DD'T'hh:mm:SS.FFFFFFFFFz zzzz"),
+                        DateTime("2011-01-02T12:37:02-05:00 New_York"))
+
+    verifyEq(DateTime.fromLocale("2011-01-02T12:37-05:00 New_York", "YYYY-MM-DD'T'hh:mm:SS.FFFFFFFFFz zzzz"),
+                        DateTime("2011-01-02T12:37:00-05:00 New_York"))
 
     // errors
     verifyNull(DateTime.fromLocale("adsfy", "YY-MM-DD k:mm", ny, false))
