@@ -483,7 +483,7 @@ public final class FanInt
 
   public static void times(long self, Func f)
   {
-    if (f.params.sz() == 0)
+    if (f.arity() == 0)
     {
       for (long i=0; i<self; ++i) f.call();
     }

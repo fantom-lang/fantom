@@ -16,6 +16,7 @@
 - Change Border.defVal from 1 to 0 width
 - Tighten up Num toLocale to reject invalid patterns
 - Add Subtype Substitution section to docLang::TypeSystem chapter
+- Improve closure performance making Func.params lazily loaded
 
 TODO: fix @Operator facet on sys types
 

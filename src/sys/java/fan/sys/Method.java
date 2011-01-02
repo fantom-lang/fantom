@@ -38,20 +38,11 @@ public class Method
   {
     super(parent, name, flags, facets, lineNum);
 
-    List fparams = params.ro();
-    if ((flags & (FConst.Static|FConst.Ctor)) == 0)
-    {
-      Object[] temp = new Object[params.sz()+1];
-      temp[0] = new Param("this", parent, 0);
-      params.copyInto(temp, 1, params.sz());
-      fparams = new List(Sys.ParamType, temp);
-    }
-
-    this.func = new MethodFunc(returns, fparams);
     this.params = params;
     this.inheritedReturns = inheritedReturns;
     this.mask = (generic != null) ? 0 : toMask(parent, returns, params);
     this.generic = generic;
+    this.func = new MethodFunc(returns);
   }
 
   /**
@@ -88,7 +79,7 @@ public class Method
   public String signature()
   {
     StringBuilder s = new StringBuilder();
-    s.append(func.returns).append(' ').append(name).append('(');
+    s.append(returns()).append(' ').append(name).append('(');
     for (int i=0; i<params.sz(); ++i)
     {
       if (i > 0) s.append(", ");
@@ -162,7 +153,32 @@ public class Method
 
   class MethodFunc extends Func
   {
-    MethodFunc(Type returns, List params) { super(returns, params); }
+    MethodFunc(Type returns) { this.returns = returns; }
+
+    public Type returns() { return returns; }
+    private final Type returns;
+
+    public long arity() { return params().size(); }
+
+    public List params()
+    {
+      // lazy load functions param
+      if (fparams == null)
+      {
+        List mparams = Method.this.params;
+        List fparams = mparams;
+        if ((flags & (FConst.Static|FConst.Ctor)) == 0)
+        {
+          Object[] temp = new Object[mparams.sz()+1];
+          temp[0] = new Param("this", parent, 0);
+          mparams.copyInto(temp, 1, mparams.sz());
+          fparams = new List(Sys.ParamType, temp);
+        }
+        this.fparams = fparams.ro();
+      }
+      return fparams;
+    }
+    private List fparams;
 
     public Method method() { return Method.this; }
 
@@ -480,7 +496,7 @@ public class Method
 
       // compuate min/max parameters - reflect contains all the method versions
       // with full params at index zero, and full defaults at reflect.length-1
-      int max = params.sz();
+      int max = this.params().sz();
       if (!isStatic) max--;
       int min = max-reflect.length+1;
 

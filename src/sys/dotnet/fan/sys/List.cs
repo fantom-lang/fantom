@@ -504,7 +504,7 @@ namespace Fan.Sys
 
     public void each(Func f)
     {
-      if (f.m_params.sz() == 1)
+      if (f.arity() == 1)
       {
         for (int i=0; i<m_size; i++)
           f.call(m_values[i]);
@@ -518,7 +518,7 @@ namespace Fan.Sys
 
     public void eachr(Func f)
     {
-      if (f.m_params.sz() == 1)
+      if (f.arity() == 1)
       {
         for (int i=m_size-1; i>=0; i--)
           f.call(m_values[i]);
@@ -537,7 +537,7 @@ namespace Fan.Sys
       int n = e - s + 1;
       if (n < 0) throw IndexErr.make(r).val;
 
-      if (f.m_params.sz() == 1)
+      if (f.arity() == 1)
       {
         for (int i=s; i<=e; ++i)
           f.call(m_values[i]);

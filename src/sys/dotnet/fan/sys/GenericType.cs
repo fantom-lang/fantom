@@ -165,10 +165,10 @@ namespace Fan.Sys
       List pars = new List(Sys.ParamType, m.m_params.sz());
 
       // parameterize return type
-      if (func.m_returns.isGenericParameter())
-        ret = parameterize(func.m_returns);
+      if (func.returns().isGenericParameter())
+        ret = parameterize(func.returns());
       else
-        ret = func.m_returns;
+        ret = func.returns();
 
       // narrow pars (or just reuse if not parameterized)
       for (int i=0; i<m.m_params.sz(); i++)

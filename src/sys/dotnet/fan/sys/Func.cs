@@ -15,29 +15,16 @@ namespace Fan.Sys
   {
 
   //////////////////////////////////////////////////////////////////////////
-  // Constructor
-  //////////////////////////////////////////////////////////////////////////
-
-    /// <summary>
-    /// Constructor.
-    /// </summary>
-    public Func(Type returns, List pars)
-    {
-      this.m_returns = returns;
-      this.m_params  = pars;
-    }
-
-  //////////////////////////////////////////////////////////////////////////
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
     public override Type @typeof() { return Sys.FuncType; }
 
-    public Type returns() { return m_returns; }
+    public abstract Type returns();
 
-    public long arity() { return m_params.size(); }
+    public abstract long arity();
 
-    public List @params() { return m_params.ro(); }
+    public abstract List @params();
 
     public override abstract bool isImmutable();
 
@@ -73,15 +60,6 @@ namespace Fan.Sys
     public static readonly int MaxIndirectParams = 8;  // max callX()
 
     /// <summary>
-    /// Constructor used by Indirect.
-    /// </summary>
-    protected Func(FuncType funcType)
-    {
-      this.m_returns = funcType.m_ret;
-      this.m_params  = funcType.toMethodParams();
-    }
-
-    /// <summary>
     /// Indirect is the base class for the IndirectX classes, which are
     /// used as the common base classes for closures and general purpose
     /// functions.  An Indirect method takes a funcType for it's type,
@@ -89,7 +67,7 @@ namespace Fan.Sys
     /// </summary>
     public abstract class Indirect : Func
     {
-      protected Indirect(FuncType type) : base(type) { this.m_type = type; }
+      protected Indirect(FuncType type) { this.m_type = type; }
 
       public string name() { return GetType().Name; }
       public override Type @typeof()  { return m_type; }
@@ -97,6 +75,15 @@ namespace Fan.Sys
       public override bool isImmutable() { return false; }
       public override Method method() { return null; }
       public Err.Val tooFewArgs(int given) { return Err.make("Too few arguments: " + given + " < " + m_type.m_params.Length).val; }
+
+      public override Type returns() { return m_type.m_ret; }
+      public override long arity() { return m_type.m_params.Length; }
+      public override List @params()
+      {
+        // lazily build params list
+        if (m_params == null) m_params = m_type.toMethodParams().ro();
+        return m_params;
+      }
 
       public override object callOn(object obj, List args)
       {
@@ -106,6 +93,7 @@ namespace Fan.Sys
       }
 
       FuncType m_type;
+      private List m_params;
     }
 
     public abstract class Indirect0 : Indirect
@@ -290,10 +278,9 @@ namespace Fan.Sys
       }
     }
 
-    internal class Wrapper : Func
+    internal class Wrapper : Indirect
     {
-      internal Wrapper(FuncType t, Func orig) : base(t) { m_type = t; m_orig = orig; }
-      public override Type @typeof()  { return m_type; }
+      internal Wrapper(FuncType t, Func orig) : base(t) { m_orig = orig; }
       public override bool isImmutable() { return m_orig.isImmutable(); }
       public override Method method() { return m_orig.method(); }
       public override object callOn(object target, List args) { return m_orig.callOn(target, args); }
@@ -307,7 +294,6 @@ namespace Fan.Sys
       public override object call(object a, object b, object c, object d, object e, object f) { return m_orig.call(a, b, c, d, e, f); }
       public override object call(object a, object b, object c, object d, object e, object f, object g) { return m_orig.call(a, b, c, d, e, f, g); }
       public override object call(object a, object b, object c, object d, object e, object f, object g, object h) { return m_orig.call(a, b, c, d, e, f, g, h); }
-      FuncType m_type;
       Func m_orig;
     }
 
@@ -318,29 +304,25 @@ namespace Fan.Sys
     public Func bind(List args)
     {
       if (args.sz() == 0) return this;
-      if (args.sz() > m_params.sz()) throw ArgErr.make("args.size > params.size").val;
+      if (args.sz() > @params().sz()) throw ArgErr.make("args.size > params.size").val;
 
-      Type[] newParams = new Type[m_params.sz()-args.sz()];
+      Type[] newParams = new Type[@params().sz()-args.sz()];
       for (int i=0; i<newParams.Length; ++i)
-        newParams[i] = ((Param)m_params.get(args.sz()+i)).m_type;
+        newParams[i] = ((Param)@params().get(args.sz()+i)).m_type;
 
-      FuncType newType = new FuncType(newParams, this.m_returns);
+      FuncType newType = new FuncType(newParams, this.returns());
       return new BindFunc(newType, this, args);
     }
 
-    internal class BindFunc : Func
+    internal class BindFunc : Indirect
     {
       internal BindFunc (FuncType type, Func orig, List bound)
         : base(type)
       {
-        this.m_type  = type;
         this.m_orig  = orig;
         this.m_bound = bound.ro();
       }
 
-      public string  name()  { return GetType().Name; }
-      public override Type @typeof()  { return m_type; }
-      public override string  toStr() { return m_type.signature(); }
       public override Method method() { return null; }
 
       public override bool isImmutable()
@@ -376,7 +358,7 @@ namespace Fan.Sys
 
       public override object callList(List args)
       {
-        int origReq  = m_orig.m_params.sz();
+        int origReq  = m_orig.@params().sz();
         int haveSize = m_bound.sz() + args.sz();
         Method m = m_orig.method();
         if (m != null)
@@ -394,7 +376,7 @@ namespace Fan.Sys
 
       public override object callOn(object obj, List args)
       {
-        int origSize = m_orig.m_params.sz();
+        int origSize = m_orig.@params().sz();
         object[] temp = new object[origSize];
         m_bound.copyInto(temp, 0, m_bound.sz());
         temp[m_bound.sz()] = obj;
@@ -402,7 +384,6 @@ namespace Fan.Sys
         return m_orig.callList(new List(Sys.ObjType, temp));
       }
 
-      private readonly FuncType m_type;
       private readonly Func m_orig;
       private readonly List m_bound;
       private Boolean m_isImmutable;
@@ -418,9 +399,5 @@ namespace Fan.Sys
     internal static readonly FuncType type2 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType }, Sys.ObjType);
     internal static readonly FuncType type3 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType);
     internal static readonly FuncType type4 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType);
-
-    internal readonly Type m_returns;
-    internal readonly List m_params;
-
   }
 }
