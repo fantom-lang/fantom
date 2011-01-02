@@ -155,6 +155,14 @@ public class FanObj
 
   public Object with(Func f) { f.call(this); return this; }
 
+  public static Object trap(Object self, String name)
+  {
+    if (self instanceof FanObj)
+      return ((FanObj)self).trap(name, (List)null);
+    else
+      return doTrap(self, name, null, typeof(self));
+  }
+
   public static Object trap(Object self, String name, List args)
   {
     if (self instanceof FanObj)
@@ -163,6 +171,7 @@ public class FanObj
       return doTrap(self, name, args, typeof(self));
   }
 
+  public Object trap(String name) { return doTrap(this, name, null, typeof()); }
   public Object trap(String name, List args) { return doTrap(this, name, args, typeof()); }
 
   private static Object doTrap(Object self, String name, List args, Type type)
