@@ -387,3 +387,57 @@ version of 'sort' would be:
 
 Function signatures are covered in yet more detail in the `Functions`
 chapter.
+
+Subtype Substitution [#subtypeSubstition]
+*****************************************
+The [Liskov Substitution Principle]`http://en.wikipedia.org/wiki/Liskov_substitution_principle`
+defines that a subtype may be substituted for a super type and the
+behavior remains unchanged.  As a general rule this principle applies
+to the Fantom type system and standard library.
+
+Substitution rules are used to determine if type A is assignable to type B.
+During compilation we use these rules for checking variable assignment,
+field assignment, and method call parameters.  These rules are also used
+by the [is/isnot/as]`Expressions#typeChecking` operators and
+the `sys::Type.fits` method.
+
+Fantom's subtyping substitution rules are defined as follows where
+A fits B if:
+
+  1. A is B
+  2. A is a class which extends class B
+  3. A is a class which implements mixin B
+  4. A is a mixin which implements mixin B
+  5. A and B are sys::List type where all apply:
+     a. A:V fits B:V
+  6. A and B are sys::Map types where all apply:
+     a. A:K fits B:K
+     b. A:V fits B:V
+  7. A and B are sys::Func types where all apply:
+     a. B:R is Void or A:R fits B:R
+     b. A airty <= B arity (number of parameters)
+     c. B param i fits A param i for each parameter position i
+
+Note function types have special "reverse" substitution rules,
+see [Functions chapter]`Functions#typeCompatibility` for more
+extensive discussion.
+
+Nullability is handled specially in that all cases above, non-nullable
+type A fits nullable B.  However nullability is not considered by the
+'is' family of operators, nor by 'Type.fits'.
+
+Note that collection types List and Map allow contra-variance similar
+to how Java arrays work.  For example 'Int[]' is considered substitutable
+for 'Num[]'.  For the List getter methods this is true.  However, for
+add/set methods this is not true, since one might add 'Float' to a 'Num[]',
+but this would be illegal for an 'Int[]'. Despite this hole, we still
+make this trade-off for pragmatic reasons since most public APIs use
+readonly or immutable lists so extensively.
+
+However note that in the JVM implementation, Lists are backed by the
+a Java array of the appropriate type, which in general will perform
+runtime checks during set/add operations.  However, there is no absolute
+guarantee that contra-variant set/adds will be checked.
+
+
+
