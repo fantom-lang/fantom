@@ -63,6 +63,25 @@ class TypeTest : Test
     verifyEq(Decimal?#.isVal, false)
     verifyEq(Str#.isVal,      false)
     verifyEq(Str?#.isVal,     false)
+
+    Obj? x := true
+    verifyEq(x is Obj,  true);  verifyEq(x isnot Obj,  false); verifyEq(x as Obj,  true)
+    verifyEq(x is Bool, true);  verifyEq(x isnot Bool, false); verifyEq(x as Bool, true)
+    verifyEq(x is Num,  false); verifyEq(x isnot Num,  true);  verifyEq(x as Num,  null)
+    verifyEq(x is Int,  false); verifyEq(x isnot Int,  true);  verifyEq(x as Int,  null)
+
+    x = 123
+    verifyEq(x is Obj,  true);  verifyEq(x isnot Obj,  false); verifyEq(x as Obj,  123)
+    verifyEq(x is Bool, false); verifyEq(x isnot Bool, true);  verifyEq(x as Bool, null)
+    verifyEq(x is Num,  true);  verifyEq(x isnot Num,  false); verifyEq(x as Num,  123)
+    verifyEq(x is Int,  true);  verifyEq(x isnot Int,  false); verifyEq(x as Int,  123)
+
+    x = 123f
+    verifyEq(x is Obj,  true);  verifyEq(x isnot Obj,  false); verifyEq(x as Obj,  123f)
+    verifyEq(x is Bool, false); verifyEq(x isnot Bool, true);  verifyEq(x as Bool, null)
+    verifyEq(x is Num,  true);  verifyEq(x isnot Num,  false); verifyEq(x as Num,  123f)
+    verifyEq(x is Int,  false); verifyEq(x isnot Int,  true);  verifyEq(x as Int,  null)
+    verifyEq(x is Float, true); verifyEq(x isnot Float,false); verifyEq(x as Float,123f)
   }
 
 //////////////////////////////////////////////////////////////////////////

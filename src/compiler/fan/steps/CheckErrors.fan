@@ -1361,16 +1361,9 @@ class CheckErrors : CompilerStep
     if (!check.fits(target) && !target.fits(check) && !check.isMixin && !target.isMixin)
       err("Inconvertible types '$target' and '$check'", expr.loc)
 
-    // don't allow is, as, isnot (everything but coerce) to be
-    // used with value type expressions
-    if (expr.id != ExprId.coerce)
-    {
-      if (target.isVal)
-      {
-        err("Cannot use '$expr.opStr' operator on value type '$target'", expr.loc)
-        return
-      }
-    }
+    // box value types for is, as, isnot (everything but coerce)
+    if (expr.id != ExprId.coerce && target.isVal)
+      expr.target = box(expr.target)
 
     // don't allow as with nullable
     if (expr.id === ExprId.asExpr && check.isNullable)
