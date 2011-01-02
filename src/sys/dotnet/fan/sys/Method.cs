@@ -89,7 +89,7 @@ namespace Fan.Sys
     public override string signature()
     {
       StringBuilder s = new StringBuilder();
-      s.Append(m_func.m_returns).Append(' ').Append(m_name).Append('(');
+      s.Append(m_func.returns()).Append(' ').Append(m_name).Append('(');
       for (int i=0; i<m_params.sz(); ++i)
       {
         if (i > 0) s.Append(", ");
@@ -164,11 +164,21 @@ namespace Fan.Sys
     internal class MethodFunc : Func
     {
       internal MethodFunc(Method method, Type returns, List pars)
-        : base (returns, pars)
       {
-        this.m = method;
+        this.m         = method;
+        this.m_returns = returns;
+        this.m_params  = pars;
       }
+
       private Method m;
+      private Type m_returns;
+      private List m_params;
+
+      public override Type returns() { return m_returns; }
+
+      public override long arity() { return m_params.size(); }
+
+      public override List @params() { return m_params; }
 
       public override Method method() { return m; }
 

@@ -163,13 +163,14 @@ public abstract class GenericType
     List params = new List(Sys.ParamType, m.params.sz());
 
     // parameterize return type
-    if (func.returns.isGenericParameter())
-      ret = parameterize(func.returns);
+    if (func.returns().isGenericParameter())
+      ret = parameterize(func.returns());
     else
-      ret = func.returns;
+      ret = func.returns();
 
     // narrow params (or just reuse if not parameterized)
-    for (int i=0; i<m.params.sz(); ++i)
+    int arity = m.params().sz();
+    for (int i=0; i<arity; ++i)
     {
       Param p = (Param)m.params.get(i);
       if (p.type.isGenericParameter())

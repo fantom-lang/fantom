@@ -173,7 +173,7 @@ public final class Map
       for (int i=0; i<list.sz(); ++i)
         set(list.get(i), list.get(i));
     }
-    else if (f.params.sz() == 1)
+    else if (f.arity() == 1)
     {
       for (int i=0; i<list.sz(); ++i)
         set(f.call(list.get(i)), list.get(i));
@@ -195,7 +195,7 @@ public final class Map
       for (int i=0; i<list.sz(); ++i)
         add(list.get(i), list.get(i));
     }
-    else if (f.params.sz() == 1)
+    else if (f.arity() == 1)
     {
       for (int i=0; i<list.sz(); ++i)
         add(f.call(list.get(i)), list.get(i));

@@ -15,29 +15,16 @@ public abstract class Func
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Constructor
-//////////////////////////////////////////////////////////////////////////
-
-  /**
-   * Constructor
-   */
-  public Func(Type returns, List params)
-  {
-    this.returns = returns;
-    this.params  = params;
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
   public Type typeof() { return Sys.FuncType; }
 
-  public Type returns() { return returns; }
+  public abstract Type returns();
 
-  public long arity() { return params.size(); }
+  public abstract long arity();
 
-  public List params() { return params.ro(); }
+  public abstract List params();
 
   public abstract boolean isImmutable();
 
@@ -76,15 +63,6 @@ public abstract class Func
   public static final int MaxIndirectParams = 8;  // max callX()
 
   /**
-   * Constructor used by Indirect.
-   */
-  protected Func(FuncType funcType)
-  {
-    this.returns = funcType.ret;
-    this.params  = funcType.toMethodParams();
-  }
-
-  /**
    * Indirect is the base class for the IndirectX classes, which are
    * used as the common base classes for closures and general purpose
    * functions.  An Indirect method takes a funcType for it's type,
@@ -92,16 +70,25 @@ public abstract class Func
    */
   public static abstract class Indirect extends Func
   {
-    protected Indirect(FuncType type) { super(type); this.type = type; }
+    protected Indirect(FuncType type) { this.type = type; }
 
     public String  name()  { return getClass().getName(); }
-    public Type typeof()  { return type; }
+    public Type typeof()   { return type; }
     public String  toStr() { return type.signature(); }
     public boolean isImmutable() { return false; }
     public Method method() { return null; }
     public Err.Val tooFewArgs(int given) { return Err.make("Too few arguments: " + given + " < " + type.params.length).val; }
 
-    public final Object callOn(Object obj, List args)
+    public Type returns() { return type.ret; }
+    public long arity() { return type.params.length; }
+    public List params()
+    {
+      // lazily build params list
+      if (params == null) params  = type.toMethodParams().ro();
+      return params;
+    }
+
+    public Object callOn(Object obj, List args)
     {
       Object[] array = new Object[args.sz()+1];
       array[0] = obj;
@@ -110,6 +97,7 @@ public abstract class Func
     }
 
     FuncType type;
+    private List params;
   }
 
   public static abstract class Indirect0 extends Indirect
@@ -294,10 +282,9 @@ public abstract class Func
     }
   }
 
-  static class Wrapper extends Func
+  static class Wrapper extends Indirect
   {
-    Wrapper(FuncType t, Func orig) { super(t); this.type = t; this.orig = orig; }
-    public Type typeof()  { return type; }
+    Wrapper(FuncType t, Func orig) { super(t); this.orig = orig; }
     public final boolean isImmutable() { return orig.isImmutable(); }
     public final Method method() { return orig.method(); }
     public final Object callOn(Object target, List args) { return orig.callOn(target, args); }
@@ -311,7 +298,6 @@ public abstract class Func
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f) { return orig.call(a, b, c, d, e, f); }
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return orig.call(a, b, c, d, e, f, g); }
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return orig.call(a, b, c, d, e, f, g, h); }
-    FuncType type;
     Func orig;
   }
 
@@ -322,30 +308,24 @@ public abstract class Func
   public final Func bind(List args)
   {
     if (args.sz() == 0) return this;
-    if (args.sz() > params.sz()) throw ArgErr.make("args.size > params.size").val;
+    if (args.sz() > params().sz()) throw ArgErr.make("args.size > params.size").val;
 
-    Type[] newParams = new Type[params.sz()-args.sz()];
+    Type[] newParams = new Type[params().sz()-args.sz()];
     for (int i=0; i<newParams.length; ++i)
-      newParams[i] = ((Param)params.get(args.sz()+i)).type;
+      newParams[i] = ((Param)params().get(args.sz()+i)).type;
 
-    FuncType newType = new FuncType(newParams, this.returns);
+    FuncType newType = new FuncType(newParams, this.returns());
     return new BindFunc(newType, this, args);
   }
 
-  static class BindFunc extends Func
+  static class BindFunc extends Indirect
   {
     BindFunc(FuncType type, Func orig, List bound)
     {
       super(type);
-      this.type  = type;
       this.orig  = orig;
       this.bound = bound.ro();
     }
-
-    public String name()  { return getClass().getName(); }
-    public Type typeof()  { return type; }
-    public String  toStr() { return type.signature(); }
-    public Method method() { return null; }
 
     public boolean isImmutable()
     {
@@ -380,7 +360,7 @@ public abstract class Func
 
     public Object callList(List args)
     {
-      int origReq  = orig.params.sz();
+      int origReq  = (int)orig.arity();
       int haveSize = bound.sz() + args.sz();
       Method m = orig.method();
       if (m != null)
@@ -398,7 +378,7 @@ public abstract class Func
 
     public final Object callOn(Object obj, List args)
     {
-      int origSize = orig.params.sz();
+      int origSize = (int)orig.arity();
       Object[] temp = new Object[origSize];
       bound.copyInto(temp, 0, bound.sz());
       temp[bound.sz()] = obj;
@@ -406,7 +386,6 @@ public abstract class Func
       return orig.callList(new List(Sys.ObjType, temp));
     }
 
-    final FuncType type;
     final Func orig;
     final List bound;
     private Boolean isImmutable;
@@ -423,6 +402,4 @@ public abstract class Func
   static final FuncType type3 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType);
   static final FuncType type4 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType);
 
-  final Type returns;
-  final List params;
 }
