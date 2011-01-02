@@ -202,7 +202,7 @@ class XElem : XNode
   ** a XElem, XText, or XPi and is added a child node.  If the child node
   ** is already parented, then throw ArgErr.  Return this.
   **
-  This add(Obj child)
+  @Operator This add(Obj child)
   {
     if (child is XAttr)
     {

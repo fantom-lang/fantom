@@ -1027,7 +1027,7 @@ class SerIntCollection
 @Serializable { collection = true }
 class SerFolder
 {
-  Void add(SerFolder x) { list.add(x) }
+  @Operator This add(SerFolder x) { list.add(x); return this }
   Void each(|SerFolder i| f) { list.each(f) }
   override Int hash() { return list.hash }
   override Bool equals(Obj? obj)

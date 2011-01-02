@@ -901,7 +901,7 @@ public class Parser : CompilerSupport
   **
   private Expr itAdd(Expr e)
   {
-    e = CallExpr(e.loc, ItExpr(cur), "add") { args.add(e) }
+    e = CallExpr(e.loc, ItExpr(cur), "add") { args.add(e); isItAdd = true }
     while (true)
     {
       consume(Token.comma)

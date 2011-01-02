@@ -888,6 +888,7 @@ class CallExpr : NameExpr
   Bool isCtorChain    // true if this is MethodDef.ctorChain call
   Bool noParens       // was this call accessed without parens
   Bool isCallOp       // was this 'target()' (instead of 'target.name()')
+  Bool isItAdd        // if using comma operator
   CMethod? method     // resolved method
   override Bool synthetic := false
 }
@@ -1699,7 +1700,8 @@ enum class ShortcutOp
   eq(2, "==", "equals"),
   cmp(2, "<=>", "compare"),
   get(2, "[]"),
-  set(3, "[]=")
+  set(3, "[]="),
+  add(2, ",")
 
   private new make(Int degree, Str symbol, Str? methodName := null)
   {

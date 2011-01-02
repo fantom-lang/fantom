@@ -60,7 +60,8 @@ final class StrBuf
   ** Add x.toStr to the end of this buffer.  If x is null then
   ** the string "null" is inserted.  Return this.
   **
-  This add(Obj? x)
+//  @Operator This add(Obj? x)
+This add(Obj? x)
 
   **
   ** Optimized implementation for add(ch.toChar).  Return this.

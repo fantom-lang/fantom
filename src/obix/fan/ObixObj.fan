@@ -258,7 +258,7 @@ class ObixObj
   ** Add a child object.  Throw ArgErr if this child is
   ** already parented or has a duplicate name.  Return this.
   **
-  This add(ObixObj kid)
+  @Operator This add(ObixObj kid)
   {
     // sanity checks
     if (kid.parent != null || kid.prev != null || kid.next != null)

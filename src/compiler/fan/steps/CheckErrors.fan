@@ -533,6 +533,9 @@ class CheckErrors : CompilerStep
     if (prefix == null) { err("Operator method '$m.name' has invalid name", m.loc); return }
     op := ShortcutOp.fromPrefix(prefix)
 
+    if (m.name == "add" && !m.returnType.isThis)
+      err("Operator method '$m.name' must return This", m.loc)
+
     if (m.returnType.isVoid && op !== ShortcutOp.set)
       err("Operator method '$m.name' cannot return Void", m.loc)
 
@@ -1214,6 +1217,10 @@ class CheckErrors : CompilerStep
     // ensure call operator target() not used on non-function types
     if (call.isCallOp && !call.target.ctype.isFunc)
       err("Cannot use () call operator on non-func type '$call.target.ctype'", call.target.loc)
+
+    // ensure @Operator when using add as it-block comma operator
+    if (call.isItAdd && !call.method.hasFacet("sys::Operator"))
+      err("Missing Operator facet: $call.method.qname", call.loc)
   }
 
   private Void checkField(FieldExpr f)

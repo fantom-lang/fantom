@@ -288,7 +288,7 @@ abstract class Widget
   ** Add a child widget.  If child is null, then do nothing.
   ** If child is already parented throw ArgErr.  Return this.
   **
-  virtual This add(Widget? child)
+  @Operator virtual This add(Widget? child)
   {
     if (child == null) return this
     if (child.parent != null)

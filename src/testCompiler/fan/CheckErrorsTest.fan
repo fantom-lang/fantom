@@ -1739,6 +1739,7 @@ class CheckErrorsTest : CompilerTest
          @Operator Void set(Int x) { }
          @Operator Void setFoo(Int x, Int y) { }
          @Operator Int get11(Int x, Int y := 0) { y } // ok
+         @Operator Foo add(Obj x) { this }
        }",
        [
          3, 3,  "Operator method 'plu03' has invalid name",
@@ -1749,6 +1750,7 @@ class CheckErrorsTest : CompilerTest
          8, 3,  "Operator method 'get08' has wrong number of parameters",
          9, 3,  "Operator method 'set' has wrong number of parameters",
         10, 3,  "Operator method 'setFoo' has invalid name",
+        12, 3,  "Operator method 'add' must return This",
        ])
   }
 
