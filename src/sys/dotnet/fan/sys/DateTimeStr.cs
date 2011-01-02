@@ -504,7 +504,7 @@ namespace Fan.Sys
               int next = pattern[i+1];
               if (next == 'F' || next == 'S')
               {
-                if (match != c) { skippedLast = true;  break; }
+                if (match != c) { skippedLast = true; --pos; break; }
               }
             }
 
