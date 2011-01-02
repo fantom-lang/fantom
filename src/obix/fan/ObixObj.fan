@@ -216,7 +216,7 @@ class ObixObj
   ** If the name maps to a child object, then return that
   ** child's value.  Otherwise route to 'Obj.trap'.
   **
-  override Obj? trap(Str name, Obj?[]? args)
+  override Obj? trap(Str name, Obj?[]? args := null)
   {
     child := kidsByName?.get(name)
     if (child != null) return child.val

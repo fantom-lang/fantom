@@ -46,17 +46,17 @@ class CallTest : Test
     // Obj.toStr
     verifyEq(obj->toStr, c.toStr)
     verifyEq(c.name,  "toStr")
-    verifyEq(c.args,  [,])
+    verifyEq(c.args,  null)
 
     // no arg
     verifyEq(obj->m0, "m0()")
     verifyEq(c.name,  "m0")
-    verifyEq(c.args,  [,])
+    verifyEq(c.args,  null)
 
     // no arg
     verifyEq(obj->m0(), "m0()")
     verifyEq(c.name,  "m0")
-    verifyEq(c.args,  [,])
+    verifyEq(c.args,  null)
 
     // one arg
     verifyEq(obj->m1("x"), "m1(x)")
@@ -71,12 +71,12 @@ class CallTest : Test
     // static
     verifyEq(obj->s0(), "s0()")
     verifyEq(c.name,  "s0")
-    verifyEq(c.args,  [,])
+    verifyEq(c.args,  null)
 
     // field get
     verifyEq(obj->f, "f")
     verifyEq(c.name,  "f")
-    verifyEq(c.args,  [,])
+    verifyEq(c.args,  null)
 
     // field set
     verifyEq(obj->f = "foo", "foo")
@@ -87,7 +87,7 @@ class CallTest : Test
     // static field get
     verifyEq(obj->sf, "sf")
     verifyEq(c.name,  "sf")
-    verifyEq(c.args,  [,])
+    verifyEq(c.args,  null)
 
     // closure arg
     verifyEq([0, 1, 2]->find |Int x->Bool| { return x == 2 }, 2)
@@ -125,7 +125,7 @@ class CallB : CallA
 
 class CallDynamic
 {
-  override Obj? trap(Str name, Obj?[]? args)
+  override Obj? trap(Str name, Obj?[]? args := null)
   {
     this.name = name
     this.args = args

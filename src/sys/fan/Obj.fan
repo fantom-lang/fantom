@@ -71,7 +71,8 @@ abstract class Obj
   **
   ** Trap a dynamic call for handling.  Dynamic calls are invoked
   ** with the -> shortcut operator:
-  **   a->x        a.trap("x", [,])
+  **   a->x        a.trap("x", null)
+  **   a->x()      a.trap("x", null)
   **   a->x = b    a.trap("x", [b])
   **   a->x(b)     a.trap("x", [b])
   **   a->x(b, c)  a.trap("x", [b, c])
@@ -82,7 +83,7 @@ abstract class Obj
   ** is one, set the field and return args[0].  Otherwise throw
   ** UnknownSlotErr.
   **
-  virtual Obj? trap(Str name, Obj?[]? args)
+  virtual Obj? trap(Str name, Obj?[]? args := null)
 
   **
   ** This method called whenever an it-block is applied to

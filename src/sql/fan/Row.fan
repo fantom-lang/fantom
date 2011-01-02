@@ -36,9 +36,9 @@ class Row
   **
   ** Trap is used to get or set a column by name.
   **
-  override Obj? trap(Str name, Obj?[]? args)
+  override Obj? trap(Str name, Obj?[]? args := null)
   {
-    if (args.size == 0) { return get(col(name)) }
+    if (args == null || args.size == 0) { return get(col(name)) }
     if (args.size == 1) { set(col(name), args.first); return null }
     return super.trap(name, args)
   }

@@ -1224,14 +1224,20 @@ class CodeAsm : CompilerSupport
     op(FOp.LoadStr, fpod.strs.add(call.name))
 
     // args Obj[]
-    // TODO: don't need to create whole new Obj[] when no arguments
-    op(FOp.LoadInt,  fpod.ints.add(call.args.size))
-    op(FOp.CallNew,  fpod.addMethodRef(ns.listMakeObj))
-    add := fpod.addMethodRef(ns.listAdd)
-    call.args.each |Expr arg|
+    if (call.args.isEmpty)
     {
-      expr(arg)
-      op(FOp.CallVirtual, add)
+      op(FOp.LoadNull)
+    }
+    else
+    {
+      op(FOp.LoadInt,  fpod.ints.add(call.args.size))
+      op(FOp.CallNew,  fpod.addMethodRef(ns.listMakeObj))
+      add := fpod.addMethodRef(ns.listAdd)
+      call.args.each |Expr arg|
+      {
+        expr(arg)
+        op(FOp.CallVirtual, add)
+      }
     }
 
     // Obj.trap
