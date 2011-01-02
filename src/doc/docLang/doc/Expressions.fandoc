@@ -252,8 +252,9 @@ Depending on how it is used, the '[]' operator maps to three different shortcuts
 
 Typically 'a[b]' is a shortcut for calling 'a.get(b)'.  For example the
 `sys::List.get` method allows you to lookup a list item by it's 'Int'
-index.  Whenever a class supports a 'get' operator method you can
-use '[]' as a shortcut.  Consider this code:
+index.  Whenever a class supports a 'get' operator method which is
+annotated with the '@Operator' facet you can use '[]' as a shortcut.
+Consider this code:
 
   list := ["a", "b", "c"]
   list.get(2)

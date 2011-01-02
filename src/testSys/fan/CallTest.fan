@@ -48,8 +48,18 @@ class CallTest : Test
     verifyEq(c.name,  "toStr")
     verifyEq(c.args,  null)
 
+    // Obj.toStr
+    verifyEq(obj.trap("toStr"), c.toStr)
+    verifyEq(c.name,  "toStr")
+    verifyEq(c.args,  null)
+
     // no arg
     verifyEq(obj->m0, "m0()")
+    verifyEq(c.name,  "m0")
+    verifyEq(c.args,  null)
+
+    // no arg
+    verifyEq(obj.trap("m0"), "m0()")
     verifyEq(c.name,  "m0")
     verifyEq(c.args,  null)
 
@@ -62,6 +72,11 @@ class CallTest : Test
     verifyEq(obj->m1("x"), "m1(x)")
     verifyEq(c.name,  "m1")
     verifyEq(c.args,  Obj?["x"])
+
+    // one arg
+    verifyEq(obj.trap("m1", ["x"]), "m1(x)")
+    verifyEq(c.name,  "m1")
+    verifyEq(c.args,  ["x"])
 
     // two arg
     verifyEq(obj->m2("x", "y"), "m2(x, y)")

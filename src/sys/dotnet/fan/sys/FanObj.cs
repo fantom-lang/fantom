@@ -144,6 +144,7 @@ namespace Fan.Sys
 
     public virtual object with(Func f) { f.call(this); return this; }
 
+    public static object trap(object self, string name) { return trap(self, name, null); }
     public static object trap(object self, string name, List args)
     {
       if (self is FanObj)
@@ -152,6 +153,7 @@ namespace Fan.Sys
         return doTrap(self, name, args, @typeof(self));
     }
 
+    public virtual object trap(string name) { return doTrap(this, name, null, @typeof()); }
     public virtual object trap(string name, List args) { return doTrap(this, name, args, @typeof()); }
 
     private static object doTrap(object self, string name, List args, Type type)
