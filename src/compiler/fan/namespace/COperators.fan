@@ -48,7 +48,7 @@ class COperators
   }
 
   private static const Str[] prefixes := ["get", "plus", "minus", "mult", "div", "mod"]
-  private static const Str:Str exacts := Str:Str[:].setList(prefixes).setList(["set", "negate", "increment", "decrement"])
+  private static const Str:Str exacts := Str:Str[:].setList(prefixes).setList(["set", "negate", "increment", "decrement", "add"])
 
   readonly CType parent
   private readonly Str:CMethod[] byPrefix := [:]

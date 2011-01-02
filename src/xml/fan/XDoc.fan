@@ -78,7 +78,7 @@ class XDoc : XNode
   ** is defined as the `root` element, otherwise the child must be
   ** a `XPi`.  Return this.
   **
-  This add(Obj child)
+  @Operator This add(Obj child)
   {
     if (child is XElem) { root = child; return this }
     pi := (XPi)child

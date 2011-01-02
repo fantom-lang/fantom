@@ -57,7 +57,7 @@ class TabPane : Widget
   **
   ** Only `Tab` children may be added.
   **
-  override This add(Widget? kid)
+  @Operator override This add(Widget? kid)
   {
     if (kid isnot Tab)
       throw ArgErr("Child of TabPane must be Tab, not ${Type.of(kid)}")

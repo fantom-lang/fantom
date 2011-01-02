@@ -378,7 +378,8 @@ comma is assumed to be a call to 'it.add':
   a, b, c  =>  it.add(a).add(b).add(c)
 
 Note the comma operator chains the calls to 'add', therefore the 'add'
-method must return a chainable type (typically 'This').
+method must be annotated with the '@Operator' facet and return the
+chainable type 'This'.
 
 Here is an FWT example:
 

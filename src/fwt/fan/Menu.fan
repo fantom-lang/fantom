@@ -61,7 +61,7 @@ class Menu : MenuItem
     add(item)
   }
 
-  override This add(Widget? kid)
+  @Operator override This add(Widget? kid)
   {
     if (kid isnot MenuItem)
       throw ArgErr("Child of Menu must be MenuItem, not ${Type.of(kid)}")

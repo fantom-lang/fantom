@@ -29,7 +29,7 @@ class ContentPane : Pane
   **
   ** If this the first widget added, then assume it the content.
   **
-  override This add(Widget? child)
+  @Operator override This add(Widget? child)
   {
     if (&content == null) &content=child
     super.add(child)

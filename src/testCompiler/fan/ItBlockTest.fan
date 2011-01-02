@@ -199,7 +199,7 @@ class ItBlockTest : CompilerTest
 
       class Foo
       {
-        This add(Int i) { list.add(i); return this }
+        @Operator This add(Int i) { list.add(i); return this }
         Int a := 'a'
         Int b := 'b'
         Int[] list := Int[,]
@@ -208,7 +208,7 @@ class ItBlockTest : CompilerTest
 
       class Widget
       {
-        This add(Widget w) { kids.add(w); return this }
+        @Operator This add(Widget w) { kids.add(w); return this }
         Str? name
         Widget[] kids := Widget[,]
         Foo foo := Foo { a = 11; b = 22 }
@@ -589,11 +589,14 @@ class ItBlockTest : CompilerTest
         static Obj j() { return A { return } }     // return not allowed
         static Obj k() { return |C c| { c.x = 3 } }          // const outside it-block
         static Obj l() { c := C(); return |->| { c.x = 3 } }  // const outside it-block
+        static Obj m() { return D { A.make, } }    // missing @Op facet
+        static Obj n() { return D { A { x=3 }, } } // missing @Op facet
       }
 
       class A { Int x; Int y}
-      class B { B add(A x) { return this } }
+      class B { @Operator This add(A x) { return this } }
       class C { const Int x }
+      class D { This add(A x) { return this } }
       ",
       [ 3, 31, "Not a statement",
         4, 31, "Invalid args add($podName::A), not (sys::Int)",
@@ -605,6 +608,8 @@ class ItBlockTest : CompilerTest
        12, 31, "Cannot use return inside it-block",
        13, 37, "Cannot set const field '$podName::C.x'",
        14, 46, "Cannot set const field '$podName::C.x'",
+       15, 33, "Missing Operator facet: $podName::D.add",
+       16, 31, "Missing Operator facet: $podName::D.add",
       ])
   }
 
