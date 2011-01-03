@@ -624,8 +624,8 @@ const final class Str
 
   **
   ** Create an input stream to read characters from the this string.
-  ** If binary reads are made from the string, then each character
-  ** is read as a one byte ASCII char.
+  ** The input stream is designed only to read character data.  Attempts
+  ** to perform binary reads will throw UnsupportedErr.
   **
   InStream in()
 
