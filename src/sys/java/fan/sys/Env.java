@@ -71,9 +71,6 @@ public abstract class Env
 
   public String user() { return parent.user(); }
 
-  public void exit() { this.exit(0); }
-  public void exit(long status) { parent.exit(status); }
-
   public InStream in() { return parent.in(); }
 
   public OutStream out() { return parent.out(); }
@@ -85,6 +82,13 @@ public abstract class Env
   public File workDir() { return parent.workDir(); }
 
   public File tempDir() { return parent.tempDir(); }
+
+  public void exit() { this.exit(0); }
+  public void exit(long status) { parent.exit(status); }
+
+  public void addShutdownHook(Func f) { parent.addShutdownHook(f); }
+
+  public boolean removeShutdownHook(Func f) { return parent.removeShutdownHook(f); }
 
 //////////////////////////////////////////////////////////////////////////
 // Resolution
