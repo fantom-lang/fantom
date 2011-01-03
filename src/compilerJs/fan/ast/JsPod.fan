@@ -135,7 +135,7 @@ class JsPod : JsNode
       t.methods.each |m|
       {
         if (m.isFieldAccessor) return
-        out.w(".\$am('$m.name',$m.flags,fan.sys.List.make(fan.sys.Param.\$type,[")
+        out.w(".\$am('$m.name',$m.flags,'$m.ret.sig',fan.sys.List.make(fan.sys.Param.\$type,[")
         m.params.each |p,i|
         {
           if (i > 0) out.w(",")

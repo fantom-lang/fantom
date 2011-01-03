@@ -394,9 +394,9 @@ class TypeTest : Test
 ** Inference Types
 **************************************************************************
 
-internal class TiA {}
-internal class TiB : TiA, TiM {}
-internal class TiC : TiB {}
-internal mixin TiM {}
-internal mixin TiO : TiM {}
+@Js internal class TiA {}
+@Js internal class TiB : TiA, TiM {}
+@Js internal class TiC : TiB {}
+@Js internal mixin TiM {}
+@Js internal mixin TiO : TiM {}
 
