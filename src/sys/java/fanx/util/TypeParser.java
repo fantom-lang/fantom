@@ -269,6 +269,7 @@ public class TypeParser
 
   private void consume()
   {
+    if (pos > len + 10) throw new RuntimeException("Unexpected end of string");
     cur = peek;
     pos++;
     peek = pos+1 < len ? sig.charAt(pos+1) : 0;
