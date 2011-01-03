@@ -54,18 +54,25 @@ const class WispService : Service
 
   override Void onStop()
   {
-    try root.onStop;            catch (Err e) log.err("WispService stop root WebMod", e)
-    try tcpListener.val->close; catch (Err e) log.err("WispService stop listener socket", e)
-    try listenerPool.stop;      catch (Err e) log.err("WispService stop listener pool", e)
-    try processorPool.stop;     catch (Err e) log.err("WispService stop processor pool", e)
-    try sessionStore.onStop;    catch (Err e) log.err("WispService stop session store", e)
+    try root.onStop;         catch (Err e) log.err("WispService stop root WebMod", e)
+    try closeTcpListener;    catch (Err e) log.err("WispService stop listener socket", e)
+    try listenerPool.stop;   catch (Err e) log.err("WispService stop listener pool", e)
+    try processorPool.stop;  catch (Err e) log.err("WispService stop processor pool", e)
+    try sessionStore.onStop; catch (Err e) log.err("WispService stop session store", e)
+  }
+
+  private Void closeTcpListener()
+  {
+    Unsafe unsafe := tcpListenerRef.val
+    TcpListener listener := unsafe.val
+    listener.close
   }
 
   internal Void listen()
   {
     // loop until we successfully bind to port
     listener := TcpListener()
-    this.tcpListener.val = listener
+    tcpListenerRef.val = Unsafe(listener)
     while (true)
     {
       try
@@ -87,7 +94,7 @@ const class WispService : Service
       try
       {
         socket := listener.accept
-        WispActor(this, socket).send(null)
+        WispActor(this).send(Unsafe(socket))
       }
       catch (Err e)
       {
@@ -102,7 +109,7 @@ const class WispService : Service
   }
 
   internal const ActorPool listenerPool    := ActorPool()
-  internal const AtomicRef tcpListener     := AtomicRef()
+  internal const AtomicRef tcpListenerRef  := AtomicRef()
   internal const ActorPool processorPool   := ActorPool()
 
   @NoDoc static Void main()

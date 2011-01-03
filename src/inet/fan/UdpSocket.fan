@@ -9,12 +9,7 @@
 **
 ** UdpSocket manages a UDP/IP datagram endpoint.
 **
-** Note: UdpSocket is marked as a const class to give protocol developers
-** the flexibility to process sockets on multiple threads.  However UdpSocket
-** is inherently thread unsafe - therefore it is the developers responsibility
-** to use this API in a thread safe manner.
-**
-const class UdpSocket
+class UdpSocket
 {
 
 //////////////////////////////////////////////////////////////////////////
