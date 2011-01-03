@@ -440,4 +440,15 @@ class RegressionTest : CompilerTest
        1, 40, "Variable name conflicts with imported type '$podName::Foo'",])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Coerce as to value type #1307
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1307()
+  {
+    verifyErrors(
+      "class Foo { Int m(Obj x) { (x as Int) + 3 } }",
+      [1, 29, "Cannot coerce 'sys::Int?' to 'sys::Int'"])
+  }
+
 }

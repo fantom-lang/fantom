@@ -1211,7 +1211,12 @@ class CheckErrors : CompilerStep
     if (call.target != null && !call.isCompare && !call.isSafe && !call.method.isStatic)
     {
       if (call.target.ctype.isVal || call.method.parent.isVal)
-        call.target = coerce(call.target, call.method.parent) |->| {}
+      {
+        call.target = coerce(call.target, call.method.parent) |->|
+        {
+          err("Cannot coerce '$call.target.ctype' to '$call.method.parent'", call.target.loc)
+        }
+      }
     }
 
     // ensure call operator target() not used on non-function types

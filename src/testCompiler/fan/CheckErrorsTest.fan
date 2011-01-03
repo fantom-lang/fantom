@@ -1304,6 +1304,7 @@ class CheckErrorsTest : CompilerTest
          7,  8, "Null-safe operator on left hand side of assignment",
          8, 10, "Null-safe operator on left hand side of assignment",
          9,  8, "Null-safe operator on left hand side of assignment",
+         9,  8, "Cannot coerce 'sys::Int?' to 'sys::Int'",
         10,  5, "Cannot use null-safe call on non-nullable type '$podName::Foo'",
         11, 13, "Cannot use null-safe access on non-nullable type '$podName::Foo'",
         13, 13, "Cannot use '?:' operator on non-nullable type '$podName::Foo'",
