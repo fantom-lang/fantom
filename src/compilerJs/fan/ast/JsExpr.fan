@@ -607,7 +607,8 @@ class JsCallExpr : JsExpr
 {
   new make(JsCompilerSupport s, CallExpr ce) : super(s)
   {
-    this.name   = vnameToJs(ce.method.name)
+    this.method = JsMethodRef(s, ce.method)
+    this.name   = method.name
     this.args   = ce.args.map |a->JsExpr| { JsExpr.makeFor(s, a) }
     this.isSafe = ce.isSafe
     this.isMock = ce.method is MockMethod
@@ -744,6 +745,7 @@ class JsCallExpr : JsExpr
     if (isDynamic) out.w("])")
   }
 
+  JsMethodRef method     // method ref
   JsExpr? target         // call target
   JsTypeRef? targetType  // call target type
   JsTypeRef? parent      // method parent type
@@ -873,25 +875,25 @@ class JsFieldExpr : JsExpr
   {
     if (fe.target != null) this.target = JsExpr.makeFor(s, fe.target)
     this.parent = JsTypeRef(s, fe.field.parent)
-    this.name   = vnameToJs(fe.name)
+    this.field  = JsFieldRef(s, fe.field)
     this.useAccessor = fe.useAccessor
   }
   override Void write(JsWriter out)
   {
     if (target == null) parent.write(out)
     else target.write(out)
-    if (name == "\$this") return // skip $this ref for closures
+    if (field.name == "\$this") return // skip $this ref for closures
     out.w(".")
     if (useAccessor)
     {
-      out.w("$name")
+      out.w("$field.name")
       if (!isSet) out.w("()")
     }
-    else out.w("m_$name")
+    else out.w("m_$field.name")
   }
   JsExpr? target       // field target
   JsTypeRef parent     // field parent type
-  Str name             // field name
+  JsFieldRef field     // field
   Bool useAccessor     // false if access using '*' storage operator
   Bool isSet := false  // transiently use for setters
 }

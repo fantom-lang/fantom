@@ -43,3 +43,14 @@ class JsField : JsSlot
   JsTypeRef ftype  // field type
 }
 
+**************************************************************************
+** JsFieldRef
+**************************************************************************
+
+**
+** JsFieldRef
+**
+class JsFieldRef : JsSlotRef
+{
+  new make(JsCompilerSupport s, CField f) : super(s, f) {}
+}
