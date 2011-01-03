@@ -27,6 +27,7 @@ fan.sys.Method.prototype.$ctor = function(parent, name, flags, returns, params)
   this.m_func    = new fan.sys.MethodFunc(this, returns);
   this.m_$name   = this.$name(name);
   this.m_$qname  = this.m_parent.m_$qname + '.' + this.m_$name;
+  this.m_facets  = fan.sys.Facet.$type.emptyList();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -116,4 +117,15 @@ fan.sys.MethodFunc.prototype.call = function()
   return this.m_method.call.apply(this.m_method, arguments);
 }
 
+fan.sys.MethodFunc.prototype.callList = function(args)
+{
+  println("### MethodFunc.callList");
+  return this.m_func.apply(null, args.m_values);
+}
+
+fan.sys.MethodFunc.prototype.callOn = function(obj, args)
+{
+  println("### MethodFunc.callOn");
+  return this.m_func.apply(obj, args.m_values);
+}
 

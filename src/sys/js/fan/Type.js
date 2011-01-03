@@ -33,6 +33,12 @@ fan.sys.Type.prototype.$ctor = function(qname, base, mixins, flags)
     this.m_mixins = acc.ro();
   }
 
+  // facets
+  if (fan.sys.Facet.$type != null)
+  {
+    this.m_facets = fan.sys.Facet.$type.emptyList();
+  }
+
   var s = qname.split("::");
   this.m_qname    = qname;
   this.m_pod      = fan.sys.Pod.find(s[0]);
@@ -291,6 +297,18 @@ fan.sys.Type.checkMixin = function(mixin, that)
     if (fan.sys.Type.checkMixin(m[i], that))
       return true;
   return false;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Facets
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Type.prototype.facets = function() { return this.m_facets; }
+fan.sys.Type.prototype.hasFacet = function(type) { return false; }
+fan.sys.Type.prototype.facet = function(type, checked)
+{
+  if (checked === undefined) checked = true;
+  return null;
 }
 
 //////////////////////////////////////////////////////////////////////////

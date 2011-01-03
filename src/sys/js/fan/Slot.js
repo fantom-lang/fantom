@@ -94,6 +94,18 @@ fan.sys.Slot.prototype.isSynthetic = function() { return (this.m_flags & fan.sys
 fan.sys.Slot.prototype.isVirtual = function()   { return (this.m_flags & fan.sys.FConst.Virtual)   != 0; }
 
 //////////////////////////////////////////////////////////////////////////
+// Facets
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Slot.prototype.facets = function() { return this.m_facets; }
+fan.sys.Slot.prototype.hasFacet = function(type) { return false; }
+fan.sys.Slot.prototype.facet = function(type, checked)
+{
+  if (checked === undefined) checked = true;
+  return null;
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Util
 //////////////////////////////////////////////////////////////////////////
 
