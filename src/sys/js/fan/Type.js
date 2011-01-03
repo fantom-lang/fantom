@@ -550,6 +550,7 @@ fan.sys.FuncType = fan.sys.Obj.$extend(fan.sys.Type);
 
 fan.sys.FuncType.prototype.$ctor = function(params, ret)
 {
+  this.m_base = fan.sys.Obj.$type;
   this.params = params;
   this.ret = ret;
   this.m_mixins = [];

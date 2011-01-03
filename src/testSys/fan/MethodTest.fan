@@ -9,6 +9,7 @@
 **
 ** MethodTest
 **
+@Js
 class MethodTest : Test
 {
 
