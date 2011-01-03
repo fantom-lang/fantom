@@ -100,6 +100,12 @@ class CsvTest : Test
       [["first", "a\nb \"quote\"\nc;\nd"],
        ["second", "\"\nline2\nline3\n"]])
       { it.delimiter = ';' }
+
+    // unicode
+    verifyCsv(
+      "\u0420\u0443\u0441\u0441\u043a\u043e\u0435,\u0441\u043b\u043e\u0432\u043e",
+      [["\u0420\u0443\u0441\u0441\u043a\u043e\u0435", "\u0441\u043b\u043e\u0432\u043e"]])
+      {}
   }
 
   Void verifyCsv(Str src, Str[][] expected, |CsvInStream| f)

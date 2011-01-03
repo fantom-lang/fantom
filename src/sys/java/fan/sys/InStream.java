@@ -72,7 +72,10 @@ public class InStream
    */
   public int rChar()
   {
-    return charsetDecoder.decode(this);
+    if (in != null)
+      return in.rChar();
+    else
+      return charsetDecoder.decode(this);
   }
 
   /**
@@ -358,13 +361,17 @@ public class InStream
 
   public Long readChar()
   {
+    if (in != null) return in.readChar();
     int ch = charsetDecoder.decode(this);
     return ch < 0 ? null : Long.valueOf(ch);
   }
 
   public InStream unreadChar(long c)
   {
-    charsetEncoder.encode((char)c, this);
+    if (in != null)
+      in.unreadChar(c);
+    else
+      charsetEncoder.encode((char)c, this);
     return this;
   }
 
