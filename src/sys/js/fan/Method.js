@@ -24,6 +24,7 @@ fan.sys.Method.prototype.$ctor = function(parent, name, flags, returns, params)
   this.m_flags   = flags;
   this.m_returns = returns;
   this.m_params  = params;
+  this.m_func    = new fan.sys.MethodFunc(this, returns);
   this.m_$name   = this.$name(name);
   this.m_$qname  = this.m_parent.m_$qname + '.' + this.m_$name;
 }
@@ -76,3 +77,43 @@ fan.sys.Method.prototype.call = function()
 
   return this.invoke(instance, fan.sys.List.make(fan.sys.Obj.$type, args));
 }
+
+
+/*************************************************************************
+ * MethodFunc
+ ************************************************************************/
+
+fan.sys.MethodFunc = fan.sys.Obj.$extend(fan.sys.Func);
+fan.sys.MethodFunc.prototype.$ctor = function(method, returns)
+{
+  this.m_method = method;
+  this.m_returns = returns;
+}
+fan.sys.MethodFunc.prototype.returns = function() { return this.m_returns; }
+fan.sys.MethodFunc.prototype.arity = function() { return this.params().size(); }
+fan.sys.MethodFunc.prototype.params = function()
+{
+  // lazy load functions param
+  if (this.m_fparams == null)
+  {
+    var mparams = this.m_method.m_params;
+    var fparams = mparams;
+    if ((this.m_method.m_flags & (fan.sys.FConst.Static|fan.sys.FConst.Ctor)) == 0)
+    {
+      var temp = [];
+      temp[0] = new fan.sys.Param("this", this.m_parent, 0);
+      fparams = fan.sys.List.make(fan.sys.Param.$typeof, temp.concat(mparams));
+    }
+    this.m_fparams = fparams.ro();
+  }
+  return this.m_fparams;
+}
+fan.sys.MethodFunc.prototype.method = function() { return this.m_method; }
+fan.sys.MethodFunc.prototype.isImmutable = function() { return true; }
+
+fan.sys.MethodFunc.prototype.call = function()
+{
+  return this.m_method.call.apply(this.m_method, arguments);
+}
+
+
