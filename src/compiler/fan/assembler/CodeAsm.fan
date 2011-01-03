@@ -1454,8 +1454,11 @@ class CodeAsm : CompilerSupport
         op(FOp.StoreVar, c.tempVar.register)
     }
 
-    // if we have a coercion then uncoerce
+    // if we have a coercion then uncoerce,
+    // otherwise perform coerce to ensure we
+    // have right type to store back to variable
     if (coerce != null) coerceOp(coerce.check, var.ctype)
+    else coerceOp(c.ctype, var.ctype)
 
     // save the variable back
     switch (var.id)
