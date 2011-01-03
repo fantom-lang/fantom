@@ -9,7 +9,8 @@
 **
 ** Random provides different implementation of random number
 ** generators with more flexibility than the methods available
-** in sys.
+** in sys.  Also see `sys::Int.random`, `sys::Float.random`,
+** `sys::Range.random`, and `sys::List.random`.
 **
 abstract class Random
 {
