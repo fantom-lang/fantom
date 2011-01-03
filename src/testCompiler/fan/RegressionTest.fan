@@ -446,6 +446,12 @@ class RegressionTest : CompilerTest
 
   Void test1307()
   {
+    // ResolveExpr step
+    verifyErrors(
+      "class Foo { Int m(Obj x) { 3 + (x as Int) } }",
+      [1, 28, "No operator method found: sys::Int + sys::Int?"])
+
+    // CheckErrors step
     verifyErrors(
       "class Foo { Int m(Obj x) { (x as Int) + 3 } }",
       [1, 29, "Cannot coerce 'sys::Int?' to 'sys::Int'"])

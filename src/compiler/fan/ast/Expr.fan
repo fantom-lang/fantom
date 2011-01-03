@@ -1722,9 +1722,9 @@ enum class ShortcutOp
 
   Str formatErr(CType lhs, CType rhs)
   {
-    if (this === get) return "$lhs.qname [ $rhs.qname ]"
-    if (this === set) return "$lhs.qname [ $rhs.qname ]="
-    return "$lhs.qname $symbol $rhs.qname"
+    if (this === get) return "$lhs [ $rhs ]"
+    if (this === set) return "$lhs [ $rhs ]="
+    return "$lhs $symbol $rhs"
   }
 
   const Int degree
