@@ -987,10 +987,13 @@ class StreamTest : Test
     verifyEq(in.readChar, '_')
     verifyEq(in.readChar, 0xabcd)
     verifyEq(in.readChar, '!')
-    verifyEq(in.read, 'x')
-    verifyEq(in.readBuf(buf, 2), 2); buf.flip; verifyEq(buf.readAllStr, "yz")
-    in.unread('@')
-    buf.clear; verifyEq(in.readBuf(buf, 2), 1); buf.flip; verifyEq(buf.readAllStr, "@")
+    verifyErr(UnsupportedErr#) { in.read }
+    verifyEq(in.readChar, 'x')
+    verifyErr(UnsupportedErr#) { in.readBuf(buf, 2) }
+    verifyErr(UnsupportedErr#) { in.unread(32) }
+    verifyEq(in.readChars(2), "yz")
+    in.unreadChar('@')
+    verifyEq(in.readChar, '@')
     verifyEq(in.readChar, null)
     verifyEq(in.close(), true)
   }

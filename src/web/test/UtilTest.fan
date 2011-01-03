@@ -63,7 +63,7 @@ class UtilTest : Test
       "Coalesce: a,b\r\n" +
       "Coalesce: c\r\n" +
       "Coalesce:  d\r\n" +
-      "\r\n").in
+      "\r\n").toBuf.in
 
      headers := WebUtil.parseHeaders(in)
      verifyEq(headers.caseInsensitive, true)
@@ -82,11 +82,11 @@ class UtilTest : Test
     str := "3\r\nxyz\r\nB\r\nhello there\r\n0\r\n\r\n"
 
     // readAllStr
-    in := WebUtil.makeChunkedInStream(str.in)
+    in := WebUtil.makeChunkedInStream(str.toBuf.in)
     verifyEq(in.readAllStr, "xyzhello there")
 
     // readBuf chunks
-    in = WebUtil.makeChunkedInStream(str.in)
+    in = WebUtil.makeChunkedInStream(str.toBuf.in)
     buf := Buf()
     verifyEq(in.readBuf(buf.clear, 20), 3)
     verifyEq(buf.flip.readAllStr, "xyz")
@@ -95,13 +95,13 @@ class UtilTest : Test
     verifyEq(in.readBuf(buf.clear, 20), null)
 
     // readBufFully
-    in = WebUtil.makeChunkedInStream(str.in)
+    in = WebUtil.makeChunkedInStream(str.toBuf.in)
     in.readBufFully(buf.clear, 14)
     verifyEq(buf.readAllStr, "xyzhello there")
     verifyEq(in.read, null)
 
     // unread
-    in = WebUtil.makeChunkedInStream(str.in)
+    in = WebUtil.makeChunkedInStream(str.toBuf.in)
     verifyEq(in.read, 'x')
     verifyEq(in.read, 'y')
     in.unread('?')
@@ -111,7 +111,7 @@ class UtilTest : Test
     verifyEq(buf.readAllStr, "12zhello there")
 
     // fixed chunked stream
-    in = WebUtil.makeFixedInStream("abcdefgh".in, 3)
+    in = WebUtil.makeFixedInStream("abcdefgh".toBuf.in, 3)
     verifyEq(in.readAllStr, "abc")
   }
 
@@ -159,7 +159,7 @@ class UtilTest : Test
        """
 
     boundary := "----WebKitFormBoundaryvx0NalAyBZjdpZAe"
-    WebUtil.parseMultiPart(s.replace("\n", "\r\n").in, boundary) |h, in|
+    WebUtil.parseMultiPart(s.replace("\n", "\r\n").toBuf.in, boundary) |h, in|
     {
       verify(h["Content-Disposition"].startsWith("form-data"))
       verifyEq(in.readAllStr, "")
@@ -220,7 +220,7 @@ class UtilTest : Test
         """
     buf := Buf()
     numRead := 0
-    WebUtil.parseMultiPart(s.replace("\n", "\r\n").in, boundary) |h, in|
+    WebUtil.parseMultiPart(s.replace("\n", "\r\n").toBuf.in, boundary) |h, in|
     {
       in.pipe(buf.out)
       numRead = in->numRead
