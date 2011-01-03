@@ -445,7 +445,7 @@ vals := temp.get as Obj[]
       // the stream we used for parseDefs
 
       in := text.in
-      while (in.peek == '@')
+      while (in.peekChar == '@')
       {
         echo("WARNING: should be using docBody!")
         in.readLine // eat def args if they exist
@@ -454,7 +454,7 @@ vals := temp.get as Obj[]
       doc := FandocParser().parse("API for $qname", in)
       doc.children.each |DocNode child| { child.write(gen) }
     }
-    catch { gen.out.print("<p>$text<p>\n") }
+    catch (Err e) { e.trace; gen.out.print("<p>$text<p>\n") }
   }
 
 //////////////////////////////////////////////////////////////////////////

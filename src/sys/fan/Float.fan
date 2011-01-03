@@ -45,6 +45,7 @@ const final class Float : Num
 
   **
   ** Generate a random float between 0.0 inclusive and 1.0 exclusive.
+  ** Also see `Int.random`, `Range.random`, `List.random`, and `util::Random`.
   **
   static Float random()
 

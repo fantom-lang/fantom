@@ -178,6 +178,8 @@ const final class Range
 
   **
   ** Convenience for [Int.random(this)]`Int.random`.
+  ** Also see `Int.random`, `Float.random`, `List.random`,
+  ** and `util::Random`.
   **
   Int random()
 

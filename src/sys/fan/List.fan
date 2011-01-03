@@ -620,7 +620,8 @@ L add(V item)
 
   **
   ** Return a random item from the list.  If the list is empty
-  ** return null.  This method is readonly safe.  See `Int.random`.
+  ** return null.  This method is readonly safe.  Also see
+  ** `Int.random`, `Float.random`, `Range.random`, and `util::Random`.
   **
   V? random()
 

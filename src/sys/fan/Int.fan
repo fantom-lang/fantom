@@ -29,8 +29,8 @@ const final class Int : Num
   ** Generate a random number.  If range is null then all 2^64
   ** integer values (both negative and positive) are produced with
   ** equal probability.  If range is non-null, then the result
-  ** is guaranteed to be inclusive of the range.  Also see
-  ** `Float.random`, `Range.random`, and `List.random`.
+  ** is guaranteed to be inclusive of the range.  Also see `Float.random` ,
+  ** `Range.random` , `List.random` , and `util::Random`.
   **
   ** Examples:
   **   r := Int.random
