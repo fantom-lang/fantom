@@ -87,8 +87,8 @@ class UdpSocketTest : Test
   {
     // launch server
     s := UdpSocket.make.bind(null, null)
-    sactor := Actor(ActorPool()) |->| { runServer(s) }
-    sfuture := sactor.send(null)
+    sactor := Actor(ActorPool()) |msg| { runServer(msg->val) }
+    sfuture := sactor.send(Unsafe(s))
     Actor.sleep(50ms)
 
     // connect

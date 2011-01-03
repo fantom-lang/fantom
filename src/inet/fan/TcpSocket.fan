@@ -9,12 +9,7 @@
 **
 ** TcpSocket manages a TCP/IP endpoint.
 **
-** Note: TcpSocket is marked as a const class to give protocol developers
-** the flexibility to process sockets on multiple threads.  However TcpSocket
-** is inherently thread unsafe - therefore it is the developers responsibility
-** to use this API in a thread safe manner.
-**
-const class TcpSocket
+class TcpSocket
 {
 
 //////////////////////////////////////////////////////////////////////////

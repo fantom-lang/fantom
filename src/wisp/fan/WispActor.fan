@@ -20,11 +20,10 @@ internal const class WispActor : Actor
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(WispService service, TcpSocket socket)
+  new make(WispService service)
     : super(service.processorPool)
   {
     this.service = service
-    this.socket  = socket
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -36,6 +35,7 @@ internal const class WispActor : Actor
   **
   override Obj? receive(Obj? msg)
   {
+    TcpSocket socket := ((Unsafe)msg).val
     try
     {
       // before we do anything set a receive timeout in case
@@ -45,7 +45,7 @@ internal const class WispActor : Actor
       // loop processing requests with on this socket as
       // long as a persistent connection is being used and
       // we don't have any errors
-      while (process) {}
+      while (process(socket)) {}
     }
     catch (Err e) { e.trace }
     finally { try { socket.close } catch {} }
@@ -57,7 +57,7 @@ internal const class WispActor : Actor
   ** was processed successfully and that a persistent connection is being
   ** used. Return false on error or if the socket should be shutdown.
   **
-  Bool process()
+  Bool process(TcpSocket socket)
   {
     // allocate request, response
     req := WispReq(service, socket)
@@ -211,7 +211,7 @@ internal const class WispActor : Actor
   **
   ** Send back 500 Internal server error.
   **
-  private Void internalServerErr(WebReq req, WebRes res, Err err)
+  private Void internalServerErr(WispReq req, WispRes res, Err err)
   {
     try
     {
@@ -221,7 +221,7 @@ internal const class WispActor : Actor
       // this by attempting to flush the socket
       if (err is IOErr)
       {
-        try { socket.out.flush } catch { return }
+        try { req.socket.out.flush } catch { return }
       }
 
       // log internal error
@@ -250,5 +250,4 @@ internal const class WispActor : Actor
   static const Str wispVer   := "Wisp/" + WispActor#.pod.version
 
   const WispService service
-  const TcpSocket socket
 }

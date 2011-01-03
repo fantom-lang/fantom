@@ -10,7 +10,7 @@
 ** IpAddr models both IPv4 and IPv6 numeric addresses as well
 ** as provide DNS hostname resolution.
 **
-final class IpAddr
+final const class IpAddr
 {
 
 //////////////////////////////////////////////////////////////////////////

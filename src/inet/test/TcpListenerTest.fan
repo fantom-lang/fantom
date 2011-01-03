@@ -78,6 +78,7 @@ class TcpListenerTest : Test
   Void testAccept()
   {
     listener := TcpListener.make.bind(null, null)
+    port := listener.localPort
 
     t1 := Duration.now
     listener.options.receiveTimeout = 100ms
@@ -85,7 +86,7 @@ class TcpListenerTest : Test
     t2 := Duration.now
     verify(50ms < t2-t1 && t2-t1 < 200ms, (t2-t1).toLocale)
 
-    actor := Actor(ActorPool()) |msg->Obj| { runClient(listener.localPort) }
+    actor := Actor(ActorPool()) { runClient(port) }
     future := actor.send(null)
 
     // accept
