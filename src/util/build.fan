@@ -17,11 +17,12 @@ class Build : BuildPod
 {
   new make()
   {
-    podName = "util"
-    summary = "Utilities"
-    depends = ["sys 1.0", "concurrent 1.0"]
-    srcDirs = [`fan/`, `test/`]
-    docSrc  = true
+    podName  = "util"
+    summary  = "Utilities"
+    depends  = ["sys 1.0", "concurrent 1.0"]
+    srcDirs  = [`fan/`, `test/`]
+    javaDirs = [`java/`]
+    docSrc   = true
   }
 }
 
