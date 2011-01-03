@@ -15,20 +15,36 @@ abstract class JsSlot : JsNode
 {
   new make(JsCompilerSupport s, SlotDef def) : super(s)
   {
-    this.parent     = qnameToJs(def.parentDef)
-    this.name       = vnameToJs(def.name)
-    this.flags      = def.flags
-    this.isAbstract = def.isAbstract
-    this.isStatic   = def.isStatic
-    this.isNative   = def.isNative
+    this.parent      = qnameToJs(def.parentDef)
+    this.name        = vnameToJs(def.name)
+    this.flags       = def.flags
+    this.isAbstract  = def.isAbstract
+    this.isStatic    = def.isStatic
+    this.isNative    = def.isNative
+    this.isSynthetic = def.isSynthetic
+    this.isPrivate   = def.isPrivate
+    this.isInternal  = def.isInternal
+    checkName
   }
 
-  Str parent      // qname of slot parent
-  Str name        // slot name
-  Int flags       // slot flags
-  Bool isAbstract // is slot abstract
-  Bool isStatic   // is slot static
-  Bool isNative   // is slot native
+  private Void checkName()
+  {
+    if (isPrivate && !isSynthetic && !isStatic)
+    {
+      q := parent.replace("::", "_").replace(".", "_")
+      this.name = "_${q}_${name}_"
+    }
+  }
+
+  Str parent        // qname of slot parent
+  Str name          // slot name
+  Int flags         // slot flags
+  Bool isAbstract   // is slot abstract
+  Bool isSynthetic  // is slot syntethi
+  Bool isStatic     // is slot static
+  Bool isNative     // is slot native
+  Bool isPrivate    // is slot private
+  Bool isInternal   // is slot internal
 }
 
 **************************************************************************
@@ -42,10 +58,24 @@ class JsSlotRef : JsNode
 {
   new make(JsCompilerSupport cs, CSlot s) : super(cs)
   {
-    this.parent     = qnameToJs(s.parent)
-    this.name       = vnameToJs(s.name)
-    this.isAbstract = s.isAbstract
-    this.isStatic   = s.isStatic
+    this.parent      = qnameToJs(s.parent)
+    this.name        = vnameToJs(s.name)
+    this.flags       = s.flags
+    this.isAbstract  = s.isAbstract
+    this.isSynthetic = s.isSynthetic
+    this.isStatic    = s.isStatic
+    this.isPrivate   = s.isPrivate
+    this.isInternal  = s.isInternal
+    checkName
+  }
+
+  private Void checkName()
+  {
+    if (isPrivate && !isSynthetic && !isStatic)
+    {
+      q := parent.replace("::", "_").replace(".", "_")
+      this.name = "_${q}_${name}_"
+    }
   }
 
   override Void write(JsWriter out)
@@ -53,10 +83,14 @@ class JsSlotRef : JsNode
     out.w(name)
   }
 
-  Str parent      // qname of slot parent
-  Str name        // qname of type ref
-  Bool isAbstract // is slot abstract
-  Bool isStatic   // is slot static
+  Str parent        // qname of slot parent
+  Str name          // qname of type ref
+  Int flags         // slot flags
+  Bool isAbstract   // is slot abstract
+  Bool isSynthetic  // is slot syntethic
+  Bool isStatic     // is slot static
+  Bool isPrivate    // is slot private
+  Bool isInternal   // is slot internal
 }
 
 
