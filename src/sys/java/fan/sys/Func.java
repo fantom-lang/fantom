@@ -84,9 +84,28 @@ public abstract class Func
     public List params()
     {
       // lazily build params list
-      if (params == null) params  = type.toMethodParams().ro();
+      if (params == null)
+      {
+        // check if emitter overrided the paramNames() method
+        String namesList = paramNames();
+        String[] names = namesList == null ? null : namesList.split(",");
+
+        // build list backing store array
+        Param[] arr = new Param[type.params.length];
+        for (int i=0; i<arr.length; ++i)
+        {
+          String n = names == null ? FanStr.ascii['a'+i] : names[i];
+          arr[i] = new Param(n, type.params[i], 0);
+        }
+
+        // save away as read-only list
+        params = new List(Sys.ParamType, arr).ro();
+      }
       return params;
     }
+
+    /** Hook for closure emit */
+    public String paramNames() { return null; }
 
     public Object callOn(Object obj, List args)
     {
@@ -97,7 +116,7 @@ public abstract class Func
     }
 
     FuncType type;
-    private List params;
+    List params;
   }
 
   public static abstract class Indirect0 extends Indirect
@@ -325,6 +344,13 @@ public abstract class Func
       super(type);
       this.orig  = orig;
       this.bound = bound.ro();
+    }
+
+    public List params()
+    {
+      if (params == null)
+        this.params = orig.params().getRange(Range.makeInclusive(bound.size(), -1)).ro();
+      return params;
     }
 
     public boolean isImmutable()

@@ -212,35 +212,39 @@ class FuncTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Curry Signatures
+// Bind Signatures
 //////////////////////////////////////////////////////////////////////////
 
-  Void testCurrySig()
+  Void testBindSig()
   {
     Func f := |Bool b, Int i, Float f, Str s->Str| { return "$b $i $f $s" }
     verifyEq(Type.of(f).signature, "|sys::Bool,sys::Int,sys::Float,sys::Str->sys::Str|")
-    verifyEq(f.params[0].type, Bool#)
-    verifyEq(f.params[1].type, Int#)
-    verifyEq(f.params[2].type, Float#)
-    verifyEq(f.params[3].type, Str#)
+    verifyEq(f.params.isRO, true)
+    verifyParam(f.params[0], "b", Bool#)
+    verifyParam(f.params[1], "i", Int#)
+    verifyParam(f.params[2], "f", Float#)
+    verifyParam(f.params[3], "s", Str#)
     verifyEq(f.returns, Str#)
 
     g := f.bind([true])
     verifyEq(Type.of(g).signature, "|sys::Int,sys::Float,sys::Str->sys::Str|")
-    verifyEq(g.params[0].type, Int#)
-    verifyEq(g.params[1].type, Float#)
-    verifyEq(g.params[2].type, Str#)
+    verifyEq(g.params.isRO, true)
+    verifyParam(g.params[0], "i", Int#)
+    verifyParam(g.params[1], "f", Float#)
+    verifyParam(g.params[2], "s", Str#)
     verifyEq(g.returns, Str#)
 
     h := f.bind([true, 9, 4f])
     verifyEq(Type.of(h).signature, "|sys::Str->sys::Str|")
-    verifyEq(h.params[0].type, Str#)
+    verifyEq(h.params.isRO, true)
+    verifyParam(h.params[0], "s", Str#)
     verifyEq(h.returns, Str#)
 
     i := g.bind([7])
     verifyEq(Type.of(i).signature, "|sys::Float,sys::Str->sys::Str|")
-    verifyEq(i.params[0].type, Float#)
-    verifyEq(i.params[1].type, Str#)
+    verifyEq(h.params.isRO, true)
+    verifyParam(i.params[0], "f", Float#)
+    verifyParam(i.params[1], "s", Str#)
     verifyEq(i.returns, Str#)
 
     verifyEq(f.call(false, 8, 3f, "x"), "false 8 3.0 x")
@@ -252,6 +256,12 @@ class FuncTest : Test
 
     verifyErr(ArgErr#) { f.bind([true, 8, 8f, "x", "y"]) }
     verifyErr(ArgErr#) { i.bind([8f, "x", null]) }
+  }
+
+  Void verifyParam(Param p, Str n, Type t)
+  {
+    verifyEq(p.name, n)
+    verifyEq(p.type, t)
   }
 
 //////////////////////////////////////////////////////////////////////////

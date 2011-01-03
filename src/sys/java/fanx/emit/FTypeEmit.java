@@ -195,6 +195,10 @@ public abstract class FTypeEmit
 
     // Java annotations
     FFacetEmit.emitMethod(me, pod, m.attrs);
+
+    // if closure doCall, emit its params names for reflection
+    if (funcType != null && name.equals("doCall"))
+      emitFuncParamNames(m);
   }
 
   protected void emitInstanceInit(FMethod m)
@@ -286,6 +290,25 @@ public abstract class FTypeEmit
       String fieldName = (String)it.next();
       emitField(fieldName, "Lfan/sys/Type;", EmitConst.PRIVATE|EmitConst.STATIC);
     }
+  }
+
+  void emitFuncParamNames(FMethod m)
+  {
+    // build up string list of param names
+    StringBuilder s = new StringBuilder(m.paramCount * 16);
+    for (int i=0; i<m.paramCount; ++i)
+    {
+      if (i > 0) s.append(',');
+      s.append(m.vars[i].name);
+    }
+
+    // override Func$Indirect.paramNames method
+    MethodEmit me = emitMethod("paramNames", "()Ljava/lang/String;", EmitConst.PUBLIC);
+    CodeEmit code = me.emitCode();
+    code.maxLocals = 1;
+    code.maxStack  = 1;
+    code.op2(LDC_W, strConst(s.toString()));
+    code.op(ARETURN);
   }
 
 //////////////////////////////////////////////////////////////////////////
