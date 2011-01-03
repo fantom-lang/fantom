@@ -207,9 +207,10 @@ fan.sys.Type.prototype.field = function(name, checked)
 }
 
 // addMethod
-fan.sys.Type.prototype.$am = function(name, flags, params)
+fan.sys.Type.prototype.$am = function(name, flags, returns, params)
 {
-  var m = new fan.sys.Method(this, name, flags, params);
+  var r = fanx_TypeParser.load(returns);
+  var m = new fan.sys.Method(this, name, flags, r, params);
   this.m_slots[name] = m;
   return this;
 }

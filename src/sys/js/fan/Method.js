@@ -16,15 +16,16 @@ fan.sys.Method = fan.sys.Obj.$extend(fan.sys.Slot);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Method.prototype.$ctor = function(parent, name, flags, params)
+fan.sys.Method.prototype.$ctor = function(parent, name, flags, returns, params)
 {
-  this.m_parent = parent;
-  this.m_name   = name;
-  this.m_qname  = parent.qname() + "." + name;
-  this.m_flags  = flags;
-  this.m_params = params;
-  this.m_$name  = this.$name(name);
-  this.m_$qname = this.m_parent.m_$qname + '.' + this.m_$name;
+  this.m_parent  = parent;
+  this.m_name    = name;
+  this.m_qname   = parent.qname() + "." + name;
+  this.m_flags   = flags;
+  this.m_returns = returns;
+  this.m_params  = params;
+  this.m_$name   = this.$name(name);
+  this.m_$qname  = this.m_parent.m_$qname + '.' + this.m_$name;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,8 +54,9 @@ fan.sys.Method.prototype.invoke = function(instance, args)
 }
 
 fan.sys.Method.prototype.$typeof = function() { return fan.sys.Method.$type; }
-//fan.sys.Method.prototype.returns = function() { this.m_returns; }
+fan.sys.Method.prototype.returns = function() { return this.m_returns; }
 fan.sys.Method.prototype.params  = function() { return this.m_params.ro(); }
+fan.sys.Method.prototype.func = function() { return this.m_func; }
 
 //////////////////////////////////////////////////////////////////////////
 // Call Conveniences
@@ -74,4 +76,3 @@ fan.sys.Method.prototype.call = function()
 
   return this.invoke(instance, fan.sys.List.make(fan.sys.Obj.$type, args));
 }
-
