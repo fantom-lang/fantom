@@ -24,15 +24,15 @@ abstract class JsSlot : JsNode
     this.isSynthetic = def.isSynthetic
     this.isPrivate   = def.isPrivate
     this.isInternal  = def.isInternal
-    checkName
+    //checkName
   }
 
   private Void checkName()
   {
     if (isPrivate && !isSynthetic && !isStatic)
     {
-      q := parent.replace("::", "_").replace(".", "_")
-      this.name = "_${q}_${name}_"
+      s := parent.split('.')
+      this.name = "_${s[1]}_${s[2]}_${name}_"
     }
   }
 
@@ -66,15 +66,15 @@ class JsSlotRef : JsNode
     this.isStatic    = s.isStatic
     this.isPrivate   = s.isPrivate
     this.isInternal  = s.isInternal
-    checkName
+    //checkName
   }
 
   private Void checkName()
   {
     if (isPrivate && !isSynthetic && !isStatic)
     {
-      q := parent.replace("::", "_").replace(".", "_")
-      this.name = "_${q}_${name}_"
+      s := parent.split('.')
+      this.name = "_${s[1]}_${s[2]}_${name}_"
     }
   }
 
