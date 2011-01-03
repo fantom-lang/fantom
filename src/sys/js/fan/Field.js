@@ -27,6 +27,7 @@ fan.sys.Field.prototype.$ctor = function(parent, name, flags, type)
   this.m_$qname = this.m_parent.m_$qname + '.m_' + this.m_$name;
   this.m_getter = null;
   this.m_setter = null;
+  this.m_facets = fan.sys.Facet.$type.emptyList();
 }
 
 //////////////////////////////////////////////////////////////////////////

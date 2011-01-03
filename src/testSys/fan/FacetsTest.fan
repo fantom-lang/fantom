@@ -9,6 +9,7 @@
 **
 ** FacetsTests
 **
+@Js
 class FacetsTest : Test
 {
   Str? aField
