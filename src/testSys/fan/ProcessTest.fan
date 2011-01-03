@@ -100,11 +100,15 @@ class ProcessTest : Test
 
   Process makeProc(Str[] args := Str[,])
   {
-    cmd := (Env.cur.homeDir + (isWindows ? `bin/fan.exe` : `bin/fan`)).osPath
-    return Process([cmd, Type.of(this).qname].addAll(args))
+    Process([fanCmd, typeof.qname].addAll(args))
   }
 
-  Bool isWindows() { return Env.cur.os == "win32" }
+  static Str fanCmd()
+  {
+    (Env.cur.homeDir + (isWindows ? `bin/fan.exe` : `bin/fan`)).osPath
+  }
+
+  static Bool isWindows() { return Env.cur.os == "win32" }
 
 //////////////////////////////////////////////////////////////////////////
 // Process Spawned

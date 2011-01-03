@@ -10,6 +10,7 @@ package fan.sys;
 import java.lang.management.*;
 import java.net.*;
 import java.util.Iterator;
+import java.util.HashMap;
 import fanx.emit.*;
 import fanx.fcode.*;
 import fanx.util.*;
@@ -122,8 +123,6 @@ public class BootEnv
 
   public void gc() { System.gc(); }
 
-  public void exit(long status) { System.exit((int)status); }
-
   public InStream in() { return in; }
 
   public OutStream out() { return out; }
@@ -135,6 +134,44 @@ public class BootEnv
   public File workDir() { return homeDir; }
 
   public File tempDir() { return tempDir; }
+
+//////////////////////////////////////////////////////////////////////////
+// Exit and Shutdown Hooks
+//////////////////////////////////////////////////////////////////////////
+
+  public void exit(long status) { System.exit((int)status); }
+
+  public void addShutdownHook(Func f)
+  {
+    if (!f.isImmutable()) throw NotImmutableErr.make().val;
+    Thread thread = new ShutdownHookThread(f);
+    shutdownHooks.put(f, thread);
+    Runtime.getRuntime().addShutdownHook(thread);
+  }
+
+  public boolean removeShutdownHook(Func f)
+  {
+    Thread thread = (Thread)shutdownHooks.get(f);
+    if (thread == null) return false;
+    return Runtime.getRuntime().removeShutdownHook(thread);
+  }
+
+  static class ShutdownHookThread extends Thread
+  {
+    ShutdownHookThread(Func func) { this.func = func; }
+    public void run()
+    {
+      try
+      {
+        func.call();
+      }
+      catch (Throwable e)
+      {
+        e.printStackTrace();
+      }
+    }
+    private final Func func;
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Diagnostics
@@ -263,6 +300,7 @@ public class BootEnv
   private final OutStream err;
   private final File homeDir;
   private final File tempDir;
+  private final HashMap shutdownHooks = new HashMap();  // Func => Thread
 
 }
 

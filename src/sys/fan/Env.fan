@@ -136,12 +136,6 @@ abstract const class Env
   virtual Str user()
 
   **
-  ** Terminate the current virtual machine.
-  ** Default implementation delegates to `parent`.
-  **
-  virtual Void exit(Int status := 0)
-
-  **
   ** Standard input stream.
   ** Default implementation delegates to `parent`.
   **
@@ -301,6 +295,31 @@ abstract const class Env
   ** Also see `Pod.locale` and `docLang::Localization`.
   **
   virtual Str? locale(Pod pod, Str key, Str? def := "pod::key", Locale locale := Locale.cur)
+
+//////////////////////////////////////////////////////////////////////////
+// Exiting and Shutdown Hooks
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Terminate the current virtual machine.
+  ** Default implementation delegates to `parent`.
+  **
+  virtual Void exit(Int status := 0)
+
+  **
+  ** Add a function to be called on VM shutdown.  Throw
+  ** NotImmutableErr if the function is not immutable.
+  ** Default implementation delegates to `parent`.
+  **
+  virtual Void addShutdownHook(|->| hook)
+
+  **
+  ** Remove a shutdown hook function which was added
+  ** by `addShutdownHook`.  Remove true if hook had been
+  ** previously added and was unregistered, false otherwise.
+  ** Default implementation delegates to `parent`.
+  **
+  virtual Bool removeShutdownHook(|->| hook)
 
 }
 

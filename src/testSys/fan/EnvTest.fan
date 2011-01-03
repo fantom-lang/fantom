@@ -350,4 +350,51 @@ class EnvTest : Test
     verifySame(actual, Env.cur.index(key))
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Shutdown Hooks
+//////////////////////////////////////////////////////////////////////////
+
+  Void testShutdownHooks()
+  {
+    // start off with some basic sanity checks
+    verifyErr(NotImmutableErr#) { Env.cur.addShutdownHook |->| { echo(this) } }
+
+    // launch external proc: "fan testSys::EnvShutdownHookTest"
+    buf := Buf()
+    process := Process([ProcessTest.fanCmd, EnvShutdownHookTest#.qname])
+    process.out = buf.out
+    process.run.join
+
+    // verify expected output
+    s := buf.flip.readAllStr.trim
+    lines := s.splitLines.map { it[it.index("[test]")..-1] }.sort
+    verifyEq(lines.join("\n"),
+             "[test] shutdown 1
+              [test] shutdown 2
+              [test] shutdown 3")
+  }
+
+}
+
+public class EnvShutdownHookTest
+{
+  static Void main()
+  {
+    // use log which synchronized output
+    log := Log.get("test")
+
+    f1 := |->| { log.info("shutdown 1") }
+    f2 := |->| { log.info("shutdown 2") }
+    f3 := |->| { log.info("shutdown 3") }
+    f4 := |->| { log.info("shutdown 4") }
+    f5 := |->| { log.info("shutdown 5") }
+
+    Env.cur.addShutdownHook(f1)
+    Env.cur.addShutdownHook(f2)
+    Env.cur.addShutdownHook(f3)
+    Env.cur.addShutdownHook(f4)
+
+    if (Env.cur.removeShutdownHook(f4) != true) echo("f4 error!")
+    if (Env.cur.removeShutdownHook(f5) != false) echo("f5 error!")
+  }
 }
