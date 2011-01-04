@@ -43,7 +43,7 @@ class JsTimeZone
 
       if (dstOffset != 0)
       {
-        dstAbbr := r["stdAbbr"]
+        dstAbbr := r["dstAbbr"]
         out.printLine(""" rule.dstAbbr = "$dstAbbr";""")
         out.print(" rule.dstStart = "); writeDstTime(r["dstStart"], out)
         out.print(" rule.dstEnd = "); writeDstTime(r["dstEnd"], out)
