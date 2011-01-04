@@ -40,28 +40,13 @@ class SqlConn
   native Bool isClosed()
 
 //////////////////////////////////////////////////////////////////////////
-// Reflection
+// Data
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Does the specified table exist in the database?
+  ** Get the database meta-data
   **
-  native Bool tableExists(Str tableName)
-
-  **
-  ** List the tables in the database.
-  **
-  native Str[] tables()
-
-  **
-  ** Get a column meta-data for for the specified table
-  ** as a prototype row instance.
-  **
-  native Row tableRow(Str tableName)
-
-//////////////////////////////////////////////////////////////////////////
-// Statement
-//////////////////////////////////////////////////////////////////////////
+  native SqlMeta meta()
 
   **
   ** Create a statement for this database.
@@ -95,6 +80,5 @@ class SqlConn
 
   // TODO
   internal Int openCount
-  @NoDoc native Str:Obj? meta()
 
 }
