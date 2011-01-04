@@ -19,6 +19,8 @@ fan.sys.Weekday = fan.sys.Obj.$extend(fan.sys.Enum);
 fan.sys.Weekday.prototype.$ctor = function(ordinal, name)
 {
   fan.sys.Enum.make$(this, ordinal, name);
+  this.m_localeAbbrKey = name + "Abbr";
+  this.m_localeFullKey = name + "Full";
 }
 
 fan.sys.Weekday.fromStr = function(name, checked)
@@ -48,41 +50,37 @@ fan.sys.Weekday.prototype.$typeof = function()
   return fan.sys.Weekday.$type;
 }
 
-// TODO FIXIT
-fan.sys.Weekday.prototype.localeAbbr = function() { return this.abbr(null); }
+fan.sys.Weekday.prototype.toLocale = function(pattern)
+{
+  if (pattern === undefined) pattern = null;
+  if (pattern == null) return this.localeAbbr();
+  if (fan.sys.Str.isEveryChar(pattern, 87)) // 'W'
+  {
+    switch (pattern.length)
+    {
+      case 3: return this.localeAbbr();
+      case 4: return this.localeFull();
+    }
+  }
+  throw fan.sys.ArgErr.make("Invalid pattern: " + pattern);
+}
+
+fan.sys.Weekday.prototype.localeAbbr = function() { return this.abbr(fan.sys.Locale.cur()); }
 fan.sys.Weekday.prototype.abbr = function(locale)
 {
-  switch (this.m_ordinal)
-  {
-    case 0:  return "Sun";
-    case 1:  return "Mon";
-    case 2:  return "Tue";
-    case 3:  return "Wed";
-    case 4:  return "Thu";
-    case 5:  return "Fri";
-    case 6:  return "Sat";
-  }
+  var pod = fan.sys.Pod.find("sys");
+  return fan.sys.Env.cur().locale(pod, this.m_localeAbbrKey, this.name(), locale);
 }
 
-// TODO FIXIT
-fan.sys.Weekday.prototype.localeFull = function() { return this.full(null); }
+fan.sys.Weekday.prototype.localeFull = function() { return this.full(fan.sys.Locale.cur()); }
 fan.sys.Weekday.prototype.full = function(locale)
 {
-  switch (this.m_ordinal)
-  {
-    case 0:  return "Sundary";
-    case 1:  return "Monday";
-    case 2:  return "Tuesday";
-    case 3:  return "Wednesday";
-    case 4:  return "Thursday";
-    case 5:  return "Friday";
-    case 6:  return "Saturday";
-  }
+  var pod = fan.sys.Pod.find("sys");
+  return fan.sys.Env.cur().locale(pod, this.m_localeFullKey, this.name(), locale);
 }
 
-// TODO FIXIT
 fan.sys.Weekday.localeStartOfWeek = function()
 {
-  return fan.sys.Weekday.m_sun;
+  var pod = fan.sys.Pod.find("sys");
+  return fan.sys.Weekday.fromStr(fan.sys.Env.cur().locale(pod, "weekdayStart", "sun"));
 }
-
