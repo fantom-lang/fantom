@@ -10,6 +10,7 @@
 ** Dialect encapsulates database specific behaviors for common database
 ** functions.
 **
+@Deprecated { msg = "Use by SqlMeta" }
 abstract const class Dialect
 {
   **
