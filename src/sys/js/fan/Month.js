@@ -19,6 +19,8 @@ fan.sys.Month = fan.sys.Obj.$extend(fan.sys.Enum);
 fan.sys.Month.prototype.$ctor = function(ordinal, name)
 {
   fan.sys.Enum.make$(this, ordinal, name);
+  this.m_localeAbbrKey = name + "Abbr";
+  this.m_localeFullKey = name + "Full";
 }
 
 fan.sys.Month.fromStr = function(name, checked)
@@ -56,45 +58,33 @@ fan.sys.Month.prototype.$typeof = function()
   return fan.sys.Month.$type;
 }
 
-// TODO FIXIT
-fan.sys.Month.prototype.localeAbbr = function() { return this.abbr(null); }
+fan.sys.Month.prototype.toLocale = function(pattern)
+{
+  if (pattern === undefined) pattern = null;
+  if (pattern == null) return this.localeAbbr();
+  if (fan.sys.Str.isEveryChar(pattern, 77)) // 'M'
+  {
+    switch (pattern.length)
+    {
+      case 1: return ""+(this.m_ordinal+1);
+      case 2: return this.m_ordinal < 9 ? "0" + (this.m_ordinal+1) : ""+(this.m_ordinal+1);
+      case 3: return this.localeAbbr();
+      case 4: return this.localeFull();
+    }
+  }
+  throw fan.sys.ArgErr.make("Invalid pattern: " + pattern);
+}
+
+fan.sys.Month.prototype.localeAbbr = function() { return this.abbr(fan.sys.Locale.cur()); }
 fan.sys.Month.prototype.abbr = function(locale)
 {
-  switch (this.m_ordinal)
-  {
-    case 0:  return "Jan";
-    case 1:  return "Feb";
-    case 2:  return "Mar";
-    case 3:  return "Apr";
-    case 4:  return "May";
-    case 5:  return "Jun";
-    case 6:  return "Jul";
-    case 7:  return "Aug";
-    case 8:  return "Sep";
-    case 9:  return "Oct";
-    case 10: return "Nov";
-    case 11: return "Dec";
-  }
+  var pod = fan.sys.Pod.find("sys");
+  return fan.sys.Env.cur().locale(pod, this.m_localeAbbrKey, this.name(), locale);
 }
 
-// TODO FIXIT
-fan.sys.Month.prototype.localeFull = function() { return this.abbr(null); }
+fan.sys.Month.prototype.localeFull = function() { return this.full(fan.sys.Locale.cur()); }
 fan.sys.Month.prototype.full = function(locale)
 {
-  switch (this.m_ordinal)
-  {
-    case 0:  return "January";
-    case 1:  return "February";
-    case 2:  return "March";
-    case 3:  return "April";
-    case 4:  return "May";
-    case 5:  return "June";
-    case 6:  return "July";
-    case 7:  return "August";
-    case 8:  return "September";
-    case 9:  return "October";
-    case 10: return "November";
-    case 11: return "December";
-  }
+  var pod = fan.sys.Pod.find("sys");
+  return fan.sys.Env.cur().locale(pod, this.m_localeFullKey, this.name(), locale);
 }
-

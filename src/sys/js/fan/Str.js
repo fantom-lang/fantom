@@ -530,6 +530,14 @@ fan.sys.Str.isAlphaNum = function(self)
   return true;
 }
 
+fan.sys.Str.isEveryChar = function(self, ch)
+{
+  var len = self.length;
+  for (var i=0; i<len; ++i)
+    if (self.charCodeAt(i) != ch) return false;
+  return true;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////
