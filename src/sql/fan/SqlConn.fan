@@ -7,45 +7,40 @@
 //
 
 **
-** Connection manages a logical connection to an SQL database.
+** SqlConn models a connection to a relational database.
 **
-internal class Connection
+class SqlConn
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Lifecycle
+// Connection
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Open a connection to a SQL database.  Throw 'Err' on failure.
+  ** Open a connection to the database specified by the given
+  ** JDBC uri and username/password credentials.  Raise exception
+  ** if connection cannot be established.
   **
-  ** In a Java platform, the connection is opened using JDBC.  The
-  ** connSpec Str specifies the an implementation specific string
-  ** for connecting to the database.  In the Java runtime, this
-  ** is the 'java.sql.Connection' URL.  The JDBC driver class should
-  ** be preloaded.
-  **
-  static native Connection open(Str connSpec, Str? username, Str? password, Dialect dialect)
+  native static SqlConn open(Str uri, Str? username, Str? password)
 
-  **
-  ** Internal constructor.
-  **
+  ** Internal constructor
   internal new make() {}
 
   **
-  ** Return if this connection has been closed.
-  **
-  native Bool isClosed()
-
-  **
-  ** Close the connection.  This method is guaranteed to never throw
-  ** an 'Err'.  Return true if the connection was closed successfully
-  ** or 'false' if closed abnormally.
+  ** Close the database connection.  Closing a connection already
+  ** closed is a no-op.  This method is guaranteed to never throw
+  ** an exception.  Return true if the connection was closed
+  ** successfully or 'false' if closed abnormally.
   **
   native Bool close()
 
+  **
+  ** Return if `close` has been called.
+  **
+  native Bool isClosed()
+
 //////////////////////////////////////////////////////////////////////////
-// Database metadata
+// Reflection
 //////////////////////////////////////////////////////////////////////////
 
   **
@@ -54,50 +49,35 @@ internal class Connection
   native Bool tableExists(Str tableName)
 
   **
-  ** List the tables in the database.  Returns a list of the
-  ** table names.
+  ** List the tables in the database.
   **
   native Str[] tables()
 
   **
-  ** Get a default row instance for the specified table.  The
-  ** result has a field for each table column.
+  ** Get a column meta-data for for the specified table
+  ** as a prototype row instance.
   **
   native Row tableRow(Str tableName)
 
-  ** TODO: temp hack until we figure out issue #1318
-  native Str:Obj? meta()
-
 //////////////////////////////////////////////////////////////////////////
-// Statements
+// Statement
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Create a statement for this connection.
+  ** Create a statement for this database.
   **
-  Statement sql(Str sql)
-  {
-    return Statement(this, sql)
-  }
+  Statement sql(Str sql) { Statement(this, sql) }
 
 //////////////////////////////////////////////////////////////////////////
 // Transactions
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** If auto commit is 'true', then each statement is executed
-  ** immediately.  Otherwise statements are executed inside a
-  ** transaction which is terminated by a call to 'commit'
-  ** or 'rollback'.  Auto commit defaults to 'true'.
+  ** If auto-commit is true then each statement is executed and committed
+  ** as an individual transaction.  Otherwise statements are grouped into
+  ** transaction which must be closed via `commit` or `rollback`.
   **
-  Bool autoCommit
-  {
-    get { return getAutoCommit }
-    set { setAutoCommit(it) }
-  }
-  private native Bool getAutoCommit()
-  private native Void setAutoCommit(Bool b)
-
+  native Bool autoCommit
 
   **
   ** Commit all the changes made inside the current transaction.
@@ -110,17 +90,11 @@ internal class Connection
   native Void rollback()
 
 //////////////////////////////////////////////////////////////////////////
-// Open count
+// Obsolete
 //////////////////////////////////////////////////////////////////////////
 
-  **
-  ** Increment the open count.
-  **
-  internal native Int increment()
-
-  **
-  ** Decrement the open count.
-  **
-  internal native Int decrement()
+  // TODO
+  internal Int openCount
+  @NoDoc native Str:Obj? meta()
 
 }

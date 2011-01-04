@@ -116,6 +116,7 @@ class SqlServiceTest : Test
         }
         catch (Err e)
         {
+          e.trace
         }
       }
 

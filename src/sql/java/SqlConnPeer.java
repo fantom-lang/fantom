@@ -10,31 +10,29 @@ package fan.sql;
 import java.sql.*;
 import java.util.StringTokenizer;
 import fan.sys.*;
-import fan.sql.Connection;
 
-public class ConnectionPeer
+public class SqlConnPeer
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Peer Factory
 //////////////////////////////////////////////////////////////////////////
 
-  public static ConnectionPeer make(Connection fan)
+  public static SqlConnPeer make(SqlConn fan)
   {
-    return new ConnectionPeer();
+    return new SqlConnPeer();
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
-  public static Connection open(String database, String username, String password, Dialect dialect)
+  public static SqlConn open(String uri, String user, String pass)
   {
     try
     {
-      Connection self = Connection.make();
-      self.peer.jconn = DriverManager.getConnection(database, username, password);
-      self.peer.openCount = 1;
+      SqlConn self = SqlConn.make();
+      self.peer.jconn = DriverManager.getConnection(uri, user, pass);
       self.peer.supportsGetGenKeys = self.peer.jconn.getMetaData().supportsGetGeneratedKeys();
       return self;
     }
@@ -44,7 +42,7 @@ public class ConnectionPeer
     }
   }
 
-  public boolean isClosed(Connection self)
+  public boolean isClosed(SqlConn self)
   {
     try
     {
@@ -56,7 +54,7 @@ public class ConnectionPeer
     }
   }
 
-  public boolean close(Connection self)
+  public boolean close(SqlConn self)
   {
     try
     {
@@ -74,7 +72,7 @@ public class ConnectionPeer
 // Database metadata
 //////////////////////////////////////////////////////////////////////////
 
-  public boolean tableExists(Connection self, String tableName)
+  public boolean tableExists(SqlConn self, String tableName)
   {
     try
     {
@@ -95,7 +93,7 @@ public class ConnectionPeer
     }
   }
 
-  public List tables(Connection self)
+  public List tables(SqlConn self)
   {
     try
     {
@@ -123,7 +121,7 @@ public class ConnectionPeer
     }
   }
 
-  public Row tableRow(Connection self, String tableName)
+  public Row tableRow(SqlConn self, String tableName)
   {
     try
     {
@@ -164,7 +162,7 @@ public class ConnectionPeer
     }
   }
 
-  public Map meta(Connection self)
+  public Map meta(SqlConn self)
   {
     if (meta != null) return meta;
     try
@@ -192,7 +190,7 @@ public class ConnectionPeer
 // Transactions
 //////////////////////////////////////////////////////////////////////////
 
-  public boolean getAutoCommit(Connection self)
+  public boolean autoCommit(SqlConn self)
   {
     try
     {
@@ -204,7 +202,7 @@ public class ConnectionPeer
     }
   }
 
-  public void setAutoCommit(Connection self, boolean b)
+  public void autoCommit(SqlConn self, boolean b)
   {
     try
     {
@@ -216,7 +214,7 @@ public class ConnectionPeer
     }
   }
 
-  public void commit(Connection self)
+  public void commit(SqlConn self)
   {
     try
     {
@@ -228,7 +226,7 @@ public class ConnectionPeer
     }
   }
 
-  public void rollback(Connection self)
+  public void rollback(SqlConn self)
   {
     try
     {
@@ -238,21 +236,6 @@ public class ConnectionPeer
     {
       throw err(e);
     }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Open Count
-//////////////////////////////////////////////////////////////////////////
-
-  public long increment(Connection self)
-  {
-    return ++openCount;
-  }
-
-  public long decrement(Connection self)
-  {
-    if (openCount != 0) openCount--;
-    return openCount;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -288,25 +271,6 @@ public class ConnectionPeer
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Static Init
-//////////////////////////////////////////////////////////////////////////
-
-  static Type rowType;
-  static List listOfRow;
-  static
-  {
-    try
-    {
-      rowType = Type.find("sql::Row", true);
-      listOfRow = new List(Sys.TypeType, new Type[] { rowType });
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
@@ -321,6 +285,5 @@ public class ConnectionPeer
 
   java.sql.Connection jconn;
   Map meta;
-  int openCount;
   boolean supportsGetGenKeys;
 }

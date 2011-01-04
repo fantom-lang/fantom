@@ -11,7 +11,6 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import fan.sys.*;
-import fan.sql.Connection;
 import fan.sql.Statement;
 
 public class StatementPeer
@@ -36,7 +35,7 @@ public class StatementPeer
     }
     catch (SQLException ex)
     {
-      throw ConnectionPeer.err(ex);
+      throw SqlConnPeer.err(ex);
     }
     return self;
   }
@@ -61,7 +60,7 @@ public class StatementPeer
     }
     catch (SQLException ex)
     {
-      throw ConnectionPeer.err(ex);
+      throw SqlConnPeer.err(ex);
     }
     finally
     {
@@ -189,7 +188,7 @@ public class StatementPeer
     }
     catch (SQLException ex)
     {
-      throw ConnectionPeer.err(ex);
+      throw SqlConnPeer.err(ex);
     }
     finally
     {
@@ -223,7 +222,7 @@ public class StatementPeer
     }
     catch (SQLException ex)
     {
-      throw ConnectionPeer.err(ex);
+      throw SqlConnPeer.err(ex);
     }
   }
 
@@ -328,7 +327,7 @@ public class StatementPeer
     }
     catch (SQLException ex)
     {
-      throw ConnectionPeer.err(ex);
+      throw SqlConnPeer.err(ex);
     }
   }
 

@@ -16,7 +16,7 @@ class Statement
   **
   ** Make a new statement with the specified SQL text.
   **
-  internal new make(Connection conn, Str sql)
+  internal new make(SqlConn conn, Str sql)
   {
     this.conn = conn
     this.sql = sql
@@ -62,12 +62,12 @@ class Statement
   **
   ** The connection that this statement uses.
   **
-  internal readonly Connection conn
+  internal readonly SqlConn conn
 
   **
   ** The SQL text used to create this statement.
   **
-  readonly Str sql
+  const Str sql
 
   **
   ** Maximum number of rows returned when this statement is
