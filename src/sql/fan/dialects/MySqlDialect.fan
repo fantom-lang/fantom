@@ -9,6 +9,7 @@
 **
 ** MySql database specific dialect.
 **
+@Deprecated { msg = "Use by SqlMeta" }
 const class MySqlDialect : Dialect
 {
 

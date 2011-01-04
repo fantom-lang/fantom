@@ -9,6 +9,7 @@
 **
 ** GenericDialect is what we use when we don't know the dialect.
 **
+@Deprecated { msg = "Use by SqlMeta" }
 const class GenericDialect : Dialect
 {
 }

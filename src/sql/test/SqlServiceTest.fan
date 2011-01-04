@@ -22,10 +22,10 @@ class SqlServiceTest : Test
   {
     pod := typeof.pod
     return SqlService(
-      pod.config("test.connection"),
-      pod.config("test.username"),
-      pod.config("test.password"),
-      Type.find(pod.config("test.dialect")).make)
+      pod.config("test.uri")      ?: throw Err("Missing 'sql::test.uri' config prop"),
+      pod.config("test.username") ?: throw Err("Missing 'sql::test.username' config prop"),
+      pod.config("test.password") ?: throw Err("Missing 'sql::test.password' config prop"),
+      GenericDialect())
   }
 
 //////////////////////////////////////////////////////////////////////////

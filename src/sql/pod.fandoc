@@ -14,22 +14,16 @@ with relational databases.  Its basic goals in life:
 
  - Connections: manage interaction with the database
  - Statements: execute SQL statements
- - Map Queries: map query results into Fantom objects
-
-NOTE: the 'sql' API is pretty basic right now - it is just enough
-to get us started.  Please let us know which enhancements would
-be the most beneficial.
+ - Model: model meta-data and relational tables
 
 Test Setup [#testSetup]
 ***********************
-The Sql tests use the following config props to determine the
+The sql tests use the following config props to determine the
 database configuration:
-  - 'test.connection': connection/jdbc url string, defaults
+  - 'test.uri': connection/jdbc url string, defaults
     to "jdbc:mysql://localhost:3306/fantest"
   - 'test.username': defaults to "fantest"
   - 'test.password': defaults to "fantest"
-  - 'test.dialect': qname for dialect type, defaults
-    to "sql::MySqlDialect"
 
 You can change these defaults via "etc/sql/config.props".
 
@@ -46,15 +40,9 @@ To setup the fantest database and user account via the mysql command line:
 
 Connections [#connections]
 **************************
-Connections are managed by the SqlService.  A SqlService instance
-represents a database instance.  To open and close connections to the
-database, simply call the SqlService [open]`sql::SqlService.open` and
-[close]`sql::SqlService.close` methods.  A thread may only open an
-instance of SqlService once.  Subsequent calls to [open]`sql::SqlService.open`
-in the same thread simply increment the open count for the database.  A call to
-[close]`sql::SqlService.close` decrements the open count.  When the
-open count for a thread is zero, the connection to the database
-is closed.
+Connections are managed by the `sql::SqlConn` class.  To open and close connections
+to the database, simply call the [SqlConn.open]`sql::SqlConn.open` and
+[SqlConn.close]`sql::SqlConn.close` methods.
 
 Connections in Java [#java]
 ===========================
@@ -74,17 +62,13 @@ to preload the class is to ensure the classname is defined in
 
       java.drivers=com.mysql.jdbc.Driver,oracle.jdbc.driver.OracleDriver
 
-3.  Create and start a SqlService instance using the JDBC URL for the
-'connection' parameter to the make method.
-For example to create a SqlService for MySQL:
-      db := SqlService("jdbc:mysql://localhost:3306/fantest", "fantest", "fantest")
+3. Open a SqlConn instance using the JDBC URL:
 
-4. Open the database for the current thread.
-      db.open
+      db := SqlConn.open("jdbc:mysql://localhost:3306/fantest", "fantest", "fantest")
 
 Statements [#statements]
 ************************
-SQL statements are created using the [SqlService.sql]`sql::SqlService.sql`
+SQL statements are created using the [SqlConn.sql]`sql::SqlConn.sql`
 method.  After a statement has been created, it can be executed immediately
 by calling [execute]`sql::Statement.execute` or it can be prepared for later
 execution by calling [prepare]`sql::Statement.prepare`.

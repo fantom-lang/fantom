@@ -12,6 +12,7 @@ using concurrent
 ** SqlService is the interface to a relational database.  It is const
 ** and all state is stored as thread local variables.
 **
+@Deprecated { msg = "Use by SqlConn" }
 const class SqlService : Service
 {
   **

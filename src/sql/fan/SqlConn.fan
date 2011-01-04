@@ -7,7 +7,7 @@
 //
 
 **
-** SqlConn models a connection to a relational database.
+** SqlConn manages a connection to a relational database.
 **
 class SqlConn
 {
