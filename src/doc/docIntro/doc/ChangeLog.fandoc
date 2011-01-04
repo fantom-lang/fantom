@@ -17,6 +17,7 @@
 - Tighten up Num toLocale to reject invalid patterns
 - Add Subtype Substitution section to docLang::TypeSystem chapter
 - Improve closure performance making Func.params lazily loaded
+- js: Complete DateTime/Date/Time toLocale/fromLocale
 
 TODO: fix @Operator facet on sys types
 

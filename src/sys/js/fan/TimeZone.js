@@ -70,6 +70,14 @@ fan.sys.TimeZone.cur = function()
   return fan.sys.TimeZone.m_cur;
 }
 
+fan.sys.TimeZone.fromGmtOffset = function(offset)
+{
+  if (offset == 0)
+    return fan.sys.TimeZone.utc();
+  else
+    return fan.sys.TimeZone.fromStr("GMT" + (offset < 0 ? "+" : "-") + fan.sys.Int.div(Math.abs(offset), 3600));
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Obj
 //////////////////////////////////////////////////////////////////////////
