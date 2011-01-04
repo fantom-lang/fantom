@@ -26,9 +26,9 @@ fan.sys.DateTime.$ctor = function()
   //String tzName;
   //int tzOffset;
   //boolean dst;
-  var locale = null;
-  //var str = "";  // when parsing
-  //var pos = 0;   // index in str for parse
+  this.loc  = null;
+  this.str  = "";  // when parsing
+  this.pos  = 0;   // index in str for parse
 }
 
 
@@ -36,7 +36,7 @@ fan.sys.DateTimeStr.makeDateTime = function(pattern, locale, dt)
 {
   var x = new fan.sys.DateTimeStr();
   x.pattern = pattern;
-  x.locale  = locale;
+  x.loc     = locale;
   x.year    = dt.year();
   x.mon     = dt.month();
   x.day     = dt.day();
@@ -54,10 +54,10 @@ fan.sys.DateTimeStr.makeDate = function(pattern, locale, d)
 {
   var x = new fan.sys.DateTimeStr();
   x.pattern = pattern;
-  x.locale  = locale;
-  x.year    = d.getYear();
+  x.loc     = locale;
+  x.year    = d.year();
   x.mon     = d.month();
-  x.day     = d.getDay();
+  x.day     = d.day();
   try { x.weekday = d.weekday(); } catch (e) {}
   return x;
 }
@@ -66,7 +66,7 @@ fan.sys.DateTimeStr.makeTime = function(pattern, locale, t)
 {
   var x = new fan.sys.DateTimeStr();
   x.pattern = pattern;
-  x.locale  = locale;
+  x.loc     = locale;
   x.hour    = t.hour();
   x.min     = t.min();
   x.sec     = t.sec();
@@ -78,7 +78,7 @@ fan.sys.DateTimeStr.make = function(pattern, locale)
 {
   var x = new fan.sys.DateTimeStr();
   x.pattern = pattern;
-  x.locale  = locale;
+  x.loc     = locale;
   return x;
 }
 
@@ -381,21 +381,21 @@ DateTime parseDateTime(String s, TimeZone defTz, boolean checked)
     return null;
   }
 }
+*/
 
-Date parseDate(String s, boolean checked)
+fan.sys.DateTimeStr.prototype.parseDate = function(s, checked)
 {
   try
   {
-    parse(s);
-    return new Date(year, (int)mon.ordinal(), day);
+    this.parse(s);
+    return fan.sys.Date.make(this.year, this.mon, this.day);
   }
-  catch (Exception e)
+  catch (err)
   {
-    if (checked) throw ParseErr.make("Date", s, Err.make(e)).val;
+    if (checked) throw fan.sys.ParseErr.make("Date", s, fan.sys.Err.make(err));
     return null;
   }
 }
-*/
 
 fan.sys.DateTimeStr.prototype.parseTime = function(s, checked)
 {
@@ -656,6 +656,6 @@ fan.sys.DateTimeStr.prototype.skipWord = function()
 
 fan.sys.DateTimeStr.prototype.locale = function()
 {
-  if (this.locale == null) this.locale = fan.sys.Locale.cur();
-  return this.locale;
+  if (this.loc == null) this.loc = fan.sys.Locale.cur();
+  return this.loc;
 }
