@@ -51,15 +51,16 @@ const class SqlService : Service
   **
   This open()
   {
-    Connection? conn := Actor.locals[id]
+    SqlConn? conn := Actor.locals[id]
     if (conn == null)
     {
-      conn = Connection.open(connection, username, password, dialect)
+      conn = SqlConn.open(connection, username, password)
+      conn.openCount = 1
       Actor.locals[id] = conn
     }
     else
     {
-      conn.increment
+      conn.openCount++
     }
 
     return this
@@ -68,9 +69,9 @@ const class SqlService : Service
   **
   ** Get the connection to this database for the current thread.
   **
-  private Connection? threadConnection(Bool checked := true)
+  private SqlConn? threadConnection(Bool checked := true)
   {
-    Connection? conn := Actor.locals[id]
+    SqlConn? conn := Actor.locals[id]
     if (conn == null)
     {
       if (checked)
@@ -103,10 +104,11 @@ const class SqlService : Service
   **
   Void close()
   {
-    Connection? conn := Actor.locals[id]
+    SqlConn? conn := Actor.locals[id]
     if (conn != null)
     {
-      if (conn.decrement == 0)
+      conn.openCount = (conn.openCount - 1).max(0)
+      if (conn.openCount <= 0)
       {
         conn.close
         Actor.locals.remove(id)
@@ -133,7 +135,7 @@ const class SqlService : Service
   **
   Bool tableExists(Str tableName)
   {
-    return threadConnection.tableExists(tableName)
+    threadConnection.tableExists(tableName)
   }
 
   **
@@ -142,7 +144,7 @@ const class SqlService : Service
   **
   Str[] tables()
   {
-    return threadConnection.tables();
+    threadConnection.tables();
   }
 
   **
@@ -151,10 +153,9 @@ const class SqlService : Service
   **
   Row tableRow(Str tableName)
   {
-    return threadConnection.tableRow(tableName)
+    threadConnection.tableRow(tableName)
   }
 
-  ** TODO: temp hack until we figure out issue #1318
   @NoDoc Str:Obj? meta()
   {
     threadConnection.meta
@@ -169,7 +170,7 @@ const class SqlService : Service
   **
   Statement sql(Str sql)
   {
-    return threadConnection.sql(sql)
+    threadConnection.sql(sql)
   }
 
 //////////////////////////////////////////////////////////////////////////
