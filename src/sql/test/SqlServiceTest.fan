@@ -41,6 +41,7 @@ class SqlServiceTest : Test
 
       db.open
       verify(!db.isClosed)
+      verifyMeta
       dropTables
       createTable
       insertTable
@@ -94,6 +95,29 @@ class SqlServiceTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Verify Meta
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Drop all tables in the database
+  **
+  Void verifyMeta()
+  {
+    // call each SqlMeta no-arg method
+    debug := false
+    if (debug)  echo("=== SqlMeta ===")
+    meta := db.meta
+    meta.typeof.methods.each |m|
+    {
+      if (m.parent != SqlMeta#) return
+      if (m.isCtor || !m.isPublic) return
+      if (m.params.size > 0) return
+      val := m.callOn(meta,[,])
+      if (debug) echo("$m.name: " + val)
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Drop Tables
 //////////////////////////////////////////////////////////////////////////
 
@@ -102,12 +126,14 @@ class SqlServiceTest : Test
   **
   Void dropTables()
   {
+    verifyEq(db.tableExists("foo_bar_should_not_exist"), false)
     Str[] tables := db.tables.dup
     while (tables.size != 0)
     {
       Int dropped := 0
       tables.each |Str tableName|
       {
+        verifyEq(db.tableExists(tableName), true)
         try
         {
           db.sql("drop table $tableName").execute

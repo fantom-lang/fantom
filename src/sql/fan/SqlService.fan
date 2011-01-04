@@ -135,7 +135,7 @@ const class SqlService : Service
   **
   Bool tableExists(Str tableName)
   {
-    threadConnection.tableExists(tableName)
+    threadConnection.meta.tableExists(tableName)
   }
 
   **
@@ -144,7 +144,7 @@ const class SqlService : Service
   **
   Str[] tables()
   {
-    threadConnection.tables();
+    threadConnection.meta.tables();
   }
 
   **
@@ -153,10 +153,13 @@ const class SqlService : Service
   **
   Row tableRow(Str tableName)
   {
-    threadConnection.tableRow(tableName)
+    threadConnection.meta.tableRow(tableName)
   }
 
-  @NoDoc Str:Obj? meta()
+  **
+  ** Get the database meta-data
+  **
+  SqlMeta meta()
   {
     threadConnection.meta
   }
