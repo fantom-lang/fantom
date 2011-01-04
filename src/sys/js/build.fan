@@ -136,6 +136,7 @@ class Build : BuildScript
     append(sys + `ObjUtil.js`, out)
     append(sys + `Sha1.js`, out)
     append(sys + `StrInStream.js`, out)
+    append(sys + `DateTimeStr.js`, out)
     append(sys + `staticInit.js`, out)
   }
 
