@@ -62,36 +62,10 @@ fan.sys.Date.prototype.toIso = function()
   return this.toStr();
 }
 
-fan.sys.Date.prototype.toLocale = function(pattern)
-{
-  // TODO
-  var s = "" + this.m_day + "-";
-  switch (this.m_month)
-  {
-    case 0:  s += "Jan"; break;
-    case 1:  s += "Feb"; break;
-    case 2:  s += "Mar"; break;
-    case 3:  s += "Apr"; break;
-    case 4:  s += "May"; break;
-    case 5:  s += "Jun"; break;
-    case 6:  s += "Jul"; break;
-    case 7:  s += "Aug"; break;
-    case 8:  s += "Sep"; break;
-    case 9:  s += "Oct"; break;
-    case 10: s += "Nov"; break;
-    case 11: s += "Dec"; break;
-  }
-  s += "-" + this.m_year;
-  return s;
-}
-
 fan.sys.Date.prototype.toStr = function()
 {
-  // TODO
-  var y = this.m_year;
-  var m = this.m_month+1;
-  var d = this.m_day;
-  return y + "-" + (m < 10 ? "0"+m : m) + "-" + (d < 10 ? "0"+d : d);
+  if (this.m_str == null) this.m_str = this.toLocale("YYYY-MM-DD");
+  return this.m_str;
 }
 
 fan.sys.Date.prototype.year  = function() { return this.m_year; }
@@ -207,6 +181,31 @@ fan.sys.Date.prototype.lastOfMonth = function()
   var last = this.month().numDays(this.m_year);
   if (this.m_day == last) return this;
   return new fan.sys.Date(this.m_year, this.m_month, last);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Date.prototype.toLocale = function(pattern)
+{
+  if (pattern === undefined) pattern = null;
+
+  // locale specific default
+  var locale = null;
+  if (pattern == null)
+  {
+    if (locale == null) locale = fan.sys.Locale.cur();
+    var pod = fan.sys.Pod.find("sys");
+    pattern = fan.sys.Env.cur().locale(pod, "date", "D-MMM-YYYY", locale);
+  }
+  return fan.sys.DateTimeStr.makeDate(pattern, locale, this).format();
+}
+
+fan.sys.Date.fromLocale = function(s, pattern, checked)
+{
+  if (checked === undefined) checked = true;
+  return fan.sys.DateTimeStr.make(pattern, null).parseDate(s, checked);
 }
 
 //////////////////////////////////////////////////////////////////////////
