@@ -21,11 +21,11 @@ fan.sys.DateTime.$ctor = function()
   this.min  = 0;
   this.sec  = 0;
   this.ns   = 0;
-  this.weekday = null;
-  //TimeZone tz;
-  //String tzName;
-  //int tzOffset;
-  //boolean dst;
+  this.weekday  = null;
+  this.tz       = null;
+  this.tzName   = null;
+  this.tzOffset = 0;
+  this.dst  = 0;
   this.loc  = null;
   this.str  = "";  // when parsing
   this.pos  = 0;   // index in str for parse
@@ -102,7 +102,7 @@ fan.sys.DateTimeStr.prototype.format = function()
       {
         ++i;
         if (i >= len) throw fan.sys.ArgErr.make("Invalid pattern: unterminated literal");
-        c = pattern.charAt(i);
+        c = this.pattern.charAt(i);
         if (c == '\'') break;
         s += c;
       }
@@ -254,32 +254,30 @@ fan.sys.DateTimeStr.prototype.format = function()
         break;
 
       case 'z':
-        /*
-        TimeZone.Rule rule = tz.rule(year);
+        var rule = this.tz.rule(this.year);
         switch (n)
         {
           case 1:
-            int offset = rule.offset;
-            if (dst) offset += rule.dstOffset;
-            if (offset == 0) { s.append('Z'); break; }
-            if (offset < 0) { s.append('-'); offset = -offset; }
-            else { s.append('+'); }
-            int zh = offset / 3600;
-            int zm = (offset % 3600) / 60;
-            if (zh < 10) s.append('0'); s.append(zh).append(':');
-            if (zm < 10) s.append('0'); s.append(zm);
+            var offset = rule.offset;
+            if (this.dst) offset += rule.dstOffset;
+            if (offset == 0) { s += 'Z'; break; }
+            if (offset < 0) { s += '-'; offset = -offset; }
+            else { s += '+'; }
+            var zh = Math.floor(offset / 3600);
+            var zm = Math.floor((offset % 3600) / 60);
+            if (zh < 10) s += '0'; s += zh + ':';
+            if (zm < 10) s += '0'; s += zm;
             break;
           case 3:
-            s.append(dst ? rule.dstAbbr : rule.stdAbbr);
+            s += this.dst ? rule.dstAbbr : rule.stdAbbr;
             break;
           case 4:
-            s.append(tz.name());
+            s += this.tz.name();
             break;
           default:
             invalidNum = true;
             break;
         }
-        */
         break;
 
       default:
@@ -325,63 +323,61 @@ fan.sys.DateTimeStr.daySuffix = function(day)
 // Parse
 //////////////////////////////////////////////////////////////////////////
 
-/*
-DateTime parseDateTime(String s, TimeZone defTz, boolean checked)
+fan.sys.DateTimeStr.prototype.parseDateTime = function(s, defTz, checked)
 {
   try
   {
     // parse into fields
-    tzOffset = Integer.MAX_VALUE;
-    parse(s);
+    this.tzOffset = null;
+    this.parse(s);
 
     // now figure out what timezone to use
-    TimeZone.Rule defRule = defTz.rule(year);
-    if (tzName != null)
+    var defRule = defTz.rule(this.year);
+    if (this.tzName != null)
     {
       // use defTz if tzName was specified and matches any variations of defTz
-      if (tzName.equals(defTz.name()) ||
-          tzName.equals(defRule.stdAbbr) ||
-          tzName.equals(defRule.dstAbbr))
+      if (this.tzName == defTz.name() ||
+          this.tzName == defRule.stdAbbr ||
+          this.tzName == defRule.dstAbbr)
       {
-        tz = defTz;
+        this.tz = defTz;
       }
 
       // try to map tzName to TimeZone, use defTz as fallback
       else
       {
-        tz = TimeZone.fromStr(tzName, false);
-        if (tz == null) tz = defTz;
+        this.tz = fan.sys.TimeZone.fromStr(this.tzName, false);
+        if (this.tz == null) this.tz = defTz;
       }
     }
 
     // if tzOffset was specified...
-    else if (tzOffset != Integer.MAX_VALUE)
+    else if (this.tzOffset != null)
     {
       // figure out what expected offset was for defTz
-      int time = hour*3600 + min*60 + sec;
-      int defOffset = defRule.offset + TimeZone.dstOffset(defRule, year, (int)mon.ordinal(), day, time);
+      var time = this.hour*3600 + this.min*60 + this.sec;
+      var defOffset = defRule.offset + fan.sys.TimeZone.dstOffset(defRule, this.year, this.mon.ordinal(), this.day, time);
 
       // if specified offset matches expected offset for defTz then
       // use defTz, otherwise use a vanilla GMT+/- timezone
-      if (tzOffset == defOffset)
-        tz = defTz;
+      if (this.tzOffset == defOffset)
+        this.tz = defTz;
       else
-        tz = TimeZone.fromGmtOffset(tzOffset);
+        this.tz = fan.sys.TimeZone.fromGmtOffset(this.tzOffset);
     }
 
     // no tzName or tzOffset specified, use defTz
-    else tz = defTz;
+    else this.tz = defTz;
 
     // construct DateTime
-    return new DateTime(year, (int)mon.ordinal(), day, hour, min, sec, ns, tzOffset, tz);
+    return fan.sys.DateTime.doMake(this.year, this.mon, this.day, this.hour, this.min, this.sec, this.ns, this.tzOffset, this.tz);
   }
-  catch (Exception e)
+  catch (err)
   {
-    if (checked) throw ParseErr.make("DateTime", s, Err.make(e)).val;
+    if (checked) throw fan.sys.ParseErr.make("DateTime", s, fan.sys.Err.make(err));
     return null;
   }
 }
-*/
 
 fan.sys.DateTimeStr.prototype.parseDate = function(s, checked)
 {
@@ -505,13 +501,11 @@ fan.sys.DateTimeStr.prototype.parse = function(s)
         break;
 
       case 'z':
-        /*
         switch (n)
         {
           case 1:  this.parseTzOffset(); break;
           default: this.parseTzName();
         }
-        */
         break;
 
       case '\'':
@@ -593,49 +587,47 @@ fan.sys.DateTimeStr.prototype.parseMon = function()
   return m;
 }
 
-/*
-*fan.sys.DateTimeStr.prototype.parseTzOffset()
+fan.sys.DateTimeStr.prototype.parseTzOffset = function()
 {
-  int ch = str.charAt(pos++);
-  boolean neg;
+  var ch = this.str.charAt(this.pos++);
+  var neg = false;
   switch (ch)
   {
     case '-': neg = true; break;
     case '+': neg = false; break;
-    case 'Z': tzOffset = 0; return;
-    default: throw new RuntimeException("Unexpected tz offset char: " + (char)ch + " [pos " + (pos-1) + "]");
+    case 'Z': this.tzOffset = 0; return;
+    default: throw fan.sys.Err.make("Unexpected tz offset char: " + ch + " [pos " + (this.pos-1) + "]");
   }
 
-  int hr = parseInt(1);
-  int min = 0;
-  if (pos < str.length() && str.charAt(pos) == ':')
+  var hr = this.parseInt(1);
+  var min = 0;
+  if (this.pos < this.str.length && this.str.charAt(this.pos) == ':')
   {
-    pos++;
-    min = parseInt(1);
+    this.pos++;
+    min = this.parseInt(1);
   }
-  tzOffset = hr*3600 + min*60;
-  if (neg) tzOffset = -tzOffset;
+  this.tzOffset = hr*3600 + min*60;
+  if (neg) this.tzOffset = -this.tzOffset;
 }
 
-fan.sys.DateTimeStr.prototype.parseTzName()
+fan.sys.DateTimeStr.prototype.parseTzName = function()
 {
-  StringBuilder s = new StringBuilder();
-  while (pos < str.length())
+  var s = "";
+  while (this.pos < this.str.length)
   {
-    int ch = str.charAt(pos);
-    if (('a' <= ch && ch <= 'z') ||
-        ('A' <= ch && ch <= 'Z') ||
-        ('0' <= ch && ch <= '9') ||
-        ch == '+' || ch == '-' || ch == '_')
+    var ch = this.str.charCodeAt(this.pos);
+    if ((97 <= ch && ch <= 122) ||
+        (65 <= ch && ch <= 90) ||
+        (48 <= ch && ch <= 57) ||
+        ch == 43 || ch == 45 || ch == 95)
     {
-      s.append((char)ch);
-      pos++;
+      s += String.fromCharCode(ch);
+      this.pos++;
     }
     else break;
   }
-  tzName = s.toString();
+  this.tzName = s;
 }
-*/
 
 fan.sys.DateTimeStr.prototype.skipWord = function()
 {
@@ -648,7 +640,6 @@ fan.sys.DateTimeStr.prototype.skipWord = function()
       break;
   }
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 // Utils

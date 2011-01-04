@@ -95,6 +95,11 @@ fan.sys.DateTime.prototype.$ctor = function() {}
 
 fan.sys.DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
 {
+  return fan.sys.DateTime.doMake(year, month, day, hour, min, sec, ns, undefined, tz);
+}
+
+fan.sys.DateTime.doMake = function(year, month, day, hour, min, sec, ns, knownOffset, tz)
+{
   if (sec === undefined) sec = 0;
   if (ns  === undefined) ns = 0;
   if (tz  === undefined) tz = fan.sys.TimeZone.cur();
@@ -119,20 +124,20 @@ fan.sys.DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
   // adjust for timezone and dst (we might know the UTC offset)
   var rule = tz.rule(year);
   var dst;
-  //if (fan.sys.Int.equal(knownOffset, fan.sys.Int.m_maxVal))
-  //{
+  if (knownOffset == null)
+  {
     // don't know offset so compute from timezone rule
     ticks -= rule.offset * fan.sys.DateTime.nsPerSec;
     var dstOffset = fan.sys.TimeZone.dstOffset(rule, year, month, day, timeInSec);
     if (dstOffset != 0) ticks -= dstOffset * fan.sys.DateTime.nsPerSec;
     dst = dstOffset != 0;
-  //}
-  //else
-  //{
-  //  // we known offset, still need to use rule to compute if in dst
-  //  ticks -= (long)knownOffset * fan.sys.DateTime.nsPerSec;
-  //  dst = knownOffset != rule.offset;
-  //}
+  }
+  else
+  {
+    // we known offset, still need to use rule to compute if in dst
+    ticks -= knownOffset * fan.sys.DateTime.nsPerSec;
+    dst = knownOffset != rule.offset;
+  }
 
   // compute weekday
   var weekday = (fan.sys.DateTime.firstWeekday(year, month) + day - 1) % 7;
@@ -225,7 +230,7 @@ fan.sys.DateTime.makeTicks = function(ticks, tz)
 
     // if dstOffset is set to max, then this is
     // the third time thru the loop: std->dst->std
-    if (dstOffset == fan.sys.Int.m_maxVal) { dstOffset = 0; break; }
+    if (dstOffset == null) { dstOffset = 0; break; }
 
     // if dstOffset is non-zero we have run this
     // loop twice to recompute the date for dst
@@ -238,7 +243,7 @@ fan.sys.DateTime.makeTicks = function(ticks, tz)
       if (rule.isWallTime() && fan.sys.TimeZone.dstOffset(rule, year, month, day, fan.sys.Int.div(rem, fan.sys.DateTime.nsPerSec)) == 0)
       {
         ticks -= dstOffset * fan.sys.DateTime.nsPerSec;
-        dstOffset = fan.sys.Int.m_maxVal;
+        dstOffset = null;
         continue;
       }
       break;
@@ -428,236 +433,24 @@ fan.sys.DateTime.prototype.dayOfYear = function() { return fan.sys.DateTime.dayO
 fan.sys.DateTime.prototype.toLocale = function(pattern, locale)
 {
   if (pattern === undefined) pattern = null;
-  if (locale === undefined) locale = null;
+  if (locale  === undefined) locale = null;
 
   // locale specific default
   if (pattern == null)
   {
-//    if (locale == null) locale = Locale.cur();
-//    pattern = locale.get("sys", localeKey, "D-MMM-YYYY WWW hh:mm:ss zzz");
-pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
+    if (locale == null) locale = fan.sys.Locale.cur();
+    var pod = fan.sys.Pod.find("sys");
+    pattern = fan.sys.Env.cur().locale(pod, "dateTime", "D-MMM-YYYY WWW hh:mm:ss zzz", locale);
   }
 
-  // process pattern
-  var s = '';
-  var len = pattern.length;
-  for (var i=0; i<len; ++i)
-  {
-    // character
-    var c = pattern.charAt(i);
-
-    // literals
-    if (c == '\'')
-    {
-      while (true)
-      {
-        ++i;
-        if (i >= len) throw fan.sys.ArgErr.make("Invalid pattern: unterminated literal");
-        c = pattern.charAt(i);
-        if (c == '\'') break;
-        s += c;
-      }
-      continue;
-    }
-
-    // character count
-    var n = 1;
-    while (i+1<len && pattern.charAt(i+1) == c) { ++i; ++n; }
-
-    // switch
-    var invalidNum = false;
-    switch (c)
-    {
-      case 'Y':
-        var year = this.year();
-        switch (n)
-        {
-          case 2:  year %= 100; if (year < 10) s += '0';
-          case 4:  s += year; break;
-          default: invalidNum = true;
-        }
-        break;
-
-      case 'M':
-        var mon = this.month();
-        switch (n)
-        {
-          case 4:
-            if (locale == null) locale = fan.sys.Locale.cur();
-            s += mon.full(locale);
-            break;
-          case 3:
-            if (locale == null) locale = fan.sys.Locale.cur();
-            s += mon.abbr(locale);
-            break;
-          case 2:  if (mon.m_ordinal+1 < 10) s += '0';
-          case 1:  s += mon.m_ordinal+1; break;
-          default: invalidNum = true;
-        }
-        break;
-
-      case 'D':
-        var day = this.day();
-        switch (n)
-        {
-          case 3:  s += day + fan.sys.DateTime.daySuffix(day); break;
-          case 2:  if (day < 10) s += '0';
-          case 1:  s += day; break;
-          default: invalidNum = true;
-        }
-        break;
-
-      case 'W':
-        var weekday = this.weekday();
-        switch (n)
-        {
-          case 4:
-            if (locale == null) locale = fan.sys.Locale.cur();
-            s += weekday.full(locale);
-            break;
-          case 3:
-            if (locale == null) locale = fan.sys.Locale.cur();
-            s += weekday.abbr(locale);
-            break;
-          default: invalidNum = true;
-        }
-        break;
-
-      case 'h':
-      case 'k':
-        var hour = this.hour();
-        if (c == 'k')
-        {
-          if (hour == 0) hour = 12;
-          else if (hour > 12) hour -= 12;
-        }
-        switch (n)
-        {
-          case 2:  if (hour < 10) s += '0';
-          case 1:  s += hour; break;
-          default: invalidNum = true;
-        }
-        break;
-
-      case 'm':
-        var min = this.min();
-        switch (n)
-        {
-          case 2:  if (min < 10) s += '0';
-          case 1:  s += min; break;
-          default: invalidNum = true;
-        }
-        break;
-
-      case 's':
-        var sec = this.sec();
-        switch (n)
-        {
-          case 2:  if (sec < 10) s += '0';
-          case 1:  s += sec; break;
-          default: invalidNum = true;
-        }
-        break;
-
-      case 'a':
-        switch (n)
-        {
-          case 1:  s += this.hour() < 12 ? "a" : "p"; break;
-          case 2:  s += this.hour() < 12 ? "am" : "pm"; break;
-          default: invalidNum = true;
-        }
-        break;
-
-      case 'A':
-        switch (n)
-        {
-          case 1:  s += this.hour() < 12 ? "A"  : "P"; break;
-          case 2:  s += this.hour() < 12 ? "AM" : "PM"; break;
-          default: invalidNum = true;
-        }
-        break;
-
-      case 'f':
-      case 'F':
-        var req = 0, opt = 0; // required, optional
-        if (c == 'F') opt = n;
-        else
-        {
-          req = n;
-          while (i+1<len && pattern.charAt(i+1) == 'F') { ++i; ++opt; }
-        }
-        var frac = this.nanoSec();
-        for (var x=0, tenth=100000000; x<9; ++x)
-        {
-          if (req > 0) req--;
-          else
-          {
-            if (frac == 0 || opt <= 0) break;
-            opt--;
-          }
-          s += fan.sys.Int.div(frac, tenth);
-          frac %= tenth;
-          tenth /= 10;
-        }
-        break;
-
-      case 'z':
-        var rule = this.m_tz.rule(this.year());
-        var dst = this.dst();
-        switch (n)
-        {
-          case 1:
-            var offset = rule.offset;
-            if (dst) offset += rule.dstOffset;
-            if (offset == 0) { s += 'Z'; break; }
-            if (offset < 0) { s += '-'; offset = -offset; }
-            else { s += '+'; }
-            var zh = offset / 3600;
-            var zm = (offset % 3600) / 60;
-            if (zh < 10) s += '0'; s += zh + ':';
-            if (zm < 10) s += '0'; s += zm;
-            break;
-          case 3:
-            s += dst ? rule.dstAbbr : rule.stdAbbr;
-            break;
-          case 4:
-            s += this.m_tz.name();
-            break;
-          default:
-            invalidNum = true;
-            break;
-        }
-        break;
-
-      default:
-        if (fan.sys.Int.isAlpha(c.charCodeAt(0)))
-          throw ArgErr.make("Invalid pattern: unsupported char '" + c + "'").val;
-
-        // don't display symbol between ss.FFF if fractions is zero
-        if (i+1<len && pattern.charAt(i+1) == 'F' && this.nanoSec() == 0)
-          break;
-
-        s += c;
-    }
-
-    // if invalid number of characters
-    if (invalidNum)
-      throw fan.sys.ArgErr.make("Invalid pattern: unsupported num of '" + c + "' (x" + n + ")");
-  }
-
-  return s;
+  return fan.sys.DateTimeStr.makeDateTime(pattern, locale, this).format();
 }
 
-fan.sys.DateTime.daySuffix = function(day)
+fan.sys.DateTime.fromLocale = function(s, pattern, tz, checked)
 {
-  // eventually need localization
-  switch (day)
-  {
-    case 1: return "st";
-    case 2: return "nd";
-    case 3: return "rd";
-    default: return "th";
-  }
+  if (tz === undefined) tz = fan.sys.TimeZone.cur();
+  if (checked === undefined) checked = true;
+  return fan.sys.DateTimeStr.make(pattern, null).parseDateTime(s, tz, checked);
 }
 
 //////////////////////////////////////////////////////////////////////////
