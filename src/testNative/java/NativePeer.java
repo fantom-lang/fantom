@@ -8,6 +8,7 @@
 package fan.testNative;
 
 import fan.sys.*;
+import bar.baz.*;
 
 /**
  * Verify Java native integration
@@ -70,4 +71,15 @@ public class NativePeer
   Long fA = 444L;
   String fV = "fV";
 
+  public static void runPlatformTests(Test test)
+  {
+    // basic sanity check
+    test.verifyEq(Env.cur().runtime(), "java");
+
+    // verify FanClassLoader loads non-Fan classes from my pod
+    Foo foo = new Foo();
+    test.verifyEq(foo.toString(), "bar.baz.Foo");
+    test.verifyEq(foo.today(), Date.today());
+    test.verifyEq(new Foo.Inner().toString(), "Foo.Inner!");
+  }
 }

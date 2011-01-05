@@ -94,6 +94,11 @@ class NativeTest : Test
     verifyEq(n.subfX, 777)
     verifyEq(n.subGetPeerZ, 888)
   }
+
+  Void testPlatform()
+  {
+    Native.runPlatformTests(this)
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -142,6 +147,8 @@ class Native : NativeBase
   native static Str sdefs1(Str a := "x")
   native static Str sdefs2(Str a := "x", Str b := "y")
   native static Str sdefs3(Str a, Str b := "y", Str c := "z")
+
+  native static Void runPlatformTests(Test test)
 
   Int x := 6
   Int y := 1234
