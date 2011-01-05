@@ -38,6 +38,36 @@ public class SqlUtil
   }
 
   /**
+   * Get a JDBC Java object for the specified Fan object.
+   */
+  public static Object fanToSqlObj(Object value)
+  {
+    Object jobj = value;
+
+    if (value instanceof DateTime)
+    {
+      DateTime dt = (DateTime)value;
+      jobj = new Timestamp(dt.toJava());
+    }
+    else if (value instanceof fan.sys.Date)
+    {
+      fan.sys.Date d = (fan.sys.Date)value;
+      jobj = new java.sql.Date((int)d.year()-1900, (int)d.month().ordinal(), (int)d.day());
+    }
+    else if (value instanceof fan.sys.Time)
+    {
+      fan.sys.Time t = (fan.sys.Time)value;
+      jobj = new java.sql.Time((int)t.hour(), (int)t.min(), (int)t.sec());
+    }
+    else if (value instanceof MemBuf)
+    {
+      jobj = ((MemBuf)value).buf;
+    }
+
+    return jobj;
+  }
+
+  /**
    * Map an java.sql.Types code to a Fan type.
    */
   public static Type sqlToFanType(int sql)
@@ -64,6 +94,10 @@ public class SqlUtil
       case Types.FLOAT:
       case Types.DOUBLE:
         return Sys.FloatType;
+
+      case Types.DECIMAL:
+      case Types.NUMERIC:
+        return Sys.DecimalType;
 
       case Types.BINARY:
       case Types.VARBINARY:
@@ -121,6 +155,10 @@ public class SqlUtil
         if (rs.wasNull()) return null;
         return Double.valueOf(f);
 
+      case Types.DECIMAL:
+      case Types.NUMERIC:
+        return rs.getBigDecimal(col);
+
       case Types.BINARY:
       case Types.VARBINARY:
       case Types.LONGVARBINARY:
@@ -159,6 +197,10 @@ public class SqlUtil
       case Types.FLOAT:
       case Types.DOUBLE:
         return new ToFanFloat();
+
+      case Types.DECIMAL:
+      case Types.NUMERIC:
+        return new ToFanDecimal();
 
       case Types.BINARY:
       case Types.VARBINARY:
@@ -228,6 +270,15 @@ public class SqlUtil
       double f = rs.getDouble(col);
       if (rs.wasNull()) return null;
       return Double.valueOf(f);
+    }
+  }
+
+  public static class ToFanDecimal extends SqlToFan
+  {
+    public Object toObj(ResultSet rs, int col)
+      throws SQLException
+    {
+      return rs.getBigDecimal(col);
     }
   }
 
