@@ -170,6 +170,7 @@ class SqlServiceTest : Test
       ducks     bigint,
       height    float,
       weight    double,
+      bigdec    decimal(2,1),
       dt        datetime,
       d         date,
       t         time,
@@ -179,28 +180,11 @@ class SqlServiceTest : Test
     row := db.tableRow("farmers")
     cols := row.cols
 
-    verifyEq(cols.size, 14)
+    verifyEq(cols.size, 15)
     verifyEq(cols.isRO, true)
     verifyEq(cols is Col[], true)
     verifyType(cols, Col[]#)
     verifyFarmerCols(row)
-
-    /*
-    verifyCol(row.col("farmer_id"),     0,  "farmer_id", Int#,   "int")
-    verifyCol(row.col("name", false),   1,  "name",      Str#,   "varchar")
-    verifyCol(row.col("married", true), 2,  "married",   Bool#,  "bit")
-    verifyCol(row.col("pet"),           3,  "pet",       Str#,   "varchar")
-    verifyCol(row.col("ss"),            4,  "ss",        Str#,   "char")
-    verifyCol(row.col("age"),           5,  "age",       Int#,   "tinyint")
-    verifyCol(row.col("pigs"),          6,  "pigs",      Int#,   "smallint")
-    verifyCol(row.col("cows"),          7,  "cows",      Int#,   "int")
-    verifyCol(row.col("ducks"),         8,  "ducks",     Int#,   "bigint")
-    verifyCol(row.col("height"),        9,  "height",    Float#, "float")
-    verifyCol(row.col("weight"),        10, "weight",    Float#, "double")
-    verifyCol(row.col("dt"),            11, "dt",        DateTime#, "datetime")
-    verifyCol(row.col("d"),             12, "d",         Date#,  "date")
-    verifyCol(row.col("t"),             13, "t",         Time#,  "time")
-    */
 
     verifyEq(row.col("foobar", false), null)
     verifyErr(ArgErr#) { row.col("foobar") }
@@ -218,11 +202,11 @@ class SqlServiceTest : Test
     date := Date("1972-09-10")
     time := Time("14:31:55")
     data := [
-      [1, "Alice",   false, "Pooh",     "abcd", 21,   1,   80,  null, 5.3f,  120f, dt, date, time],
-      [2, "Brian",   true,  "Haley",    "1234", 35,   2,   99,   5,   5.7f,  140f, dt, date, time],
-      [3, "Charlie", null,  "Addi",     null,   null, 3,   44,   7,   null, 6.1f,  dt, date, time],
-      [4, "Donny",   true,  null,       "wxyz", 40,  null, null, 8,   null, null,  dt, date, time],
-      [5, "John",    true,  "Berkeley", "5678", 35,  null, null, 8,   null, null,  dt, date, time],
+      [1, "Alice",   false, "Pooh",     "abcd", 21,   1,   80,  null, 5.3f,  120f, 3.2d, dt, date, time],
+      [2, "Brian",   true,  "Haley",    "1234", 35,   2,   99,   5,   5.7f,  140f, 1.5d, dt, date, time],
+      [3, "Charlie", null,  "Addi",     null,   null, 3,   44,   7,   null, 6.1f,  2.0d, dt, date, time],
+      [4, "Donny",   true,  null,       "wxyz", 40,  null, null, 8,   null, null,  5.0d, dt, date, time],
+      [5, "John",    true,  "Berkeley", "5678", 35,  null, null, 8,   null, null,  5.7d, dt, date, time],
     ]
     data.each |Obj[] row| { insertFarmer(row[1..-1]) }
 
@@ -249,6 +233,7 @@ class SqlServiceTest : Test
     verifyEq(f->ducks,    null)
     verifyEq(f->height,   5.3f)
     verifyEq(f->weight,   120.0f)
+    verifyEq(f->bigdec,   3.2d)
     verifyEq(f->dt,       dt)
     verifyEq(f->d,        date)
     verifyEq(f->t,        time)
@@ -258,7 +243,7 @@ class SqlServiceTest : Test
 
   Void insertFarmer(Obj[] row)
   {
-    s := "insert farmers (name, married, pet, ss, age, pigs, cows, ducks, height, weight, dt, d, t) values ("
+    s := "insert farmers (name, married, pet, ss, age, pigs, cows, ducks, height, weight, bigdec, dt, d, t) values ("
     s += row.join(", ") |Obj? o->Str|
     {
       if (o == null)     return "null"
@@ -282,24 +267,23 @@ class SqlServiceTest : Test
 
   Void verifyFarmerCols(Row r)
   {
-    verifyEq(r.cols.size, 14)
+    verifyEq(r.cols.size, 15)
     verifyEq(r.cols.isRO, true)
-// TODO
-//    verifyCol(t.fields[0],  0,  "farmer_id", Int#,   "INT")
+    verifyCol(r.cols[0],  0,  "farmer_id", Int#,   "INT")
     verifyCol(r.cols[1],  1,  "name",      Str#,   "VARCHAR")
     verifyCol(r.cols[2],  2,  "married",   Bool#,  "BIT")
     verifyCol(r.cols[3],  3,  "pet",       Str#,   "VARCHAR")
     verifyCol(r.cols[4],  4,  "ss",        Str#,   "CHAR")
     verifyCol(r.cols[5],  5,  "age",       Int#,   "TINYINT")
     verifyCol(r.cols[6],  6,  "pigs",      Int#,   "SMALLINT")
-// TODO
-//    verifyCol(t.fields[7],  7,  "cows",      Int#,   "INT")
+    verifyCol(r.cols[7],  7,  "cows",      Int#,   "INT")
     verifyCol(r.cols[8],  8,  "ducks",     Int#,   "BIGINT")
     verifyCol(r.cols[9],  9,  "height",    Float#, "FLOAT")
     verifyCol(r.cols[10], 10, "weight",    Float#, "DOUBLE")
-    verifyCol(r.cols[11], 11, "dt",        DateTime#, "DATETIME")
-    verifyCol(r.cols[12], 12, "d",         Date#,  "DATE")
-    verifyCol(r.cols[13], 13, "t",         Time#,  "TIME")
+    verifyCol(r.cols[11], 11, "bigdec",    Decimal#, "DECIMAL")
+    verifyCol(r.cols[12], 12, "dt",        DateTime#, "DATETIME")
+    verifyCol(r.cols[13], 13, "d",         Date#,  "DATE")
+    verifyCol(r.cols[14], 14, "t",         Time#,  "TIME")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -379,7 +363,7 @@ class SqlServiceTest : Test
     verifyEq(rows[3]->name, "Donny")
     verifyEq(rows[4]->name, "John")
 
-    insertFarmer(["Bad", false, "Bad",  "bad!", 21, 1, 80, null, 5.3f, 120f, DateTime.now, Date.today, Time.now])
+    insertFarmer(["Bad", false, "Bad",  "bad!", 21, 1, 80, null, 5.3f, 120f, 7.7d, DateTime.now, Date.today, Time.now])
     db.rollback
     rows = query("select name from farmers order by name")
     verifyEq(rows.size, 5)
@@ -462,7 +446,14 @@ class SqlServiceTest : Test
     verifyEq(col.index, index)
     verifyEq(col.name, name)
     verifySame(col.type, type)
-    verifyEq(col.sqlType.upper, sqlType.upper)
+    if (sqlType == "INT")
+    {
+      verify(col.sqlType.upper == "INT" || col.sqlType.upper == "INTEGER", col.sqlType)
+    }
+    else
+    {
+      verifyEq(col.sqlType.upper, sqlType.upper)
+    }
   }
 
   Void verifyRow(Row r, Obj[] cells)
@@ -493,6 +484,7 @@ internal class Farmer
   Num? ducks
   Float height
   Float weight
+  Decimal? bigdec
   DateTime? dt
   Date? d
   Time? t

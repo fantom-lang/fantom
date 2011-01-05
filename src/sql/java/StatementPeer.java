@@ -67,6 +67,7 @@ public class StatementPeer
       try { if (!prepared) stmt.close(); } catch (Exception ex) {}
     }
   }
+
   /**
    * Invoke the 'eachFunc' on every row in the result.
    */
@@ -269,7 +270,7 @@ public class StatementPeer
       java.util.Map.Entry entry = (java.util.Map.Entry)i.next();
       String key = (String)entry.getKey();
       Object value = params.get(key);
-      Object jobj = fanToJava(value);
+      Object jobj = SqlUtil.fanToSqlObj(value);
       int[] locs = (int[])entry.getValue();
       for (int j = 0; j < locs.length; j++)
       {
@@ -287,37 +288,6 @@ public class StatementPeer
     }
   }
 
-  /**
-   * Get a Java object for the specified fan object.
-   */
-  private Object fanToJava(Object value)
-  {
-    Object jobj = value;
-
-    // TODO: there's got to be a better way, it'll
-    // probably shake out in the ORM design
-    if (value instanceof DateTime)
-    {
-      DateTime dt = (DateTime)value;
-      jobj = new Timestamp(dt.toJava());
-    }
-    else if (value instanceof fan.sys.Date)
-    {
-      fan.sys.Date d = (fan.sys.Date)value;
-      jobj = new java.sql.Date((int)d.year()-1900, (int)d.month().ordinal(), (int)d.day());
-    }
-    else if (value instanceof fan.sys.Time)
-    {
-      fan.sys.Time t = (fan.sys.Time)value;
-      jobj = new java.sql.Time((int)t.hour(), (int)t.min(), (int)t.sec());
-    }
-    else if (value instanceof MemBuf)
-    {
-      jobj = ((MemBuf)value).buf;
-    }
-
-    return jobj;
-  }
 
   public void close(Statement self)
   {
