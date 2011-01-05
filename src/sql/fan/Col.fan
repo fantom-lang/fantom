@@ -39,9 +39,11 @@ const class Col
   const Type of // TODO
 
   ** Type of the column.
+  ** See [type mapping]`pod-doc#typeMapping`.
   const Type type
 
   ** The type of the column as defined by the SQL database.
+  ** See [type mapping]`pod-doc#typeMapping`.
   const Str sqlType
 
 }

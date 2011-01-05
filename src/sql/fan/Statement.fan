@@ -10,6 +10,7 @@
 ** Statement is an executable statement for a specific database.
 ** A statement may be executed immediately or prepared and
 ** executed later with parameters.
+** See [pod-doc]`pod-doc#statements`.
 **
 class Statement
 {

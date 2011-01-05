@@ -8,6 +8,7 @@
 
 **
 ** SqlConn manages a connection to a relational database.
+** See [pod-doc]`pod-doc#connections`.
 **
 class SqlConn
 {
@@ -20,6 +21,7 @@ class SqlConn
   ** Open a connection to the database specified by the given
   ** JDBC uri and username/password credentials.  Raise exception
   ** if connection cannot be established.
+  ** See [pod-doc]`pod-doc#connections`.
   **
   native static SqlConn open(Str uri, Str? username, Str? password)
 
