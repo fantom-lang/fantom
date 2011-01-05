@@ -113,7 +113,6 @@ Or to iterate through the rows:
         lastPublished = lastPublished.max(row->year)
       }
 
-
 sql::Row [#row]
 ===============
 The rows for a given query result all share a list of [sql::Cols]`sql::Col`
@@ -130,3 +129,38 @@ row using the 'get(Col)' or with [dynamic invoke]`docLang::Methods#dynamicInvoke
 
 If you have a large query result, using 'get(Col)' provides a little
 better performance.
+
+SQL/Fantom Type Mapping [#typeMapping]
+**************************************
+The following type specifies the mapping of SQL types to Fantom types:
+
+  SQL Type       Fantom Type
+  --------       -----------
+  CHAR           sys::Str
+  VARCHAR        sys::Str
+  LONGVARCHAR    sys::Str
+
+  BIT            sys::Bool
+
+  TINYINT        sys::Int
+  SMALLINT       sys::Int
+  INTEGER        sys::Int
+  BIGINT         sys::Int
+
+  REAL           sys::Float
+  FLOAT          sys::Float
+  DOUBLE         sys::Float
+
+  DECIMAL        sys::Decimal
+  NUMERIC        sys::Decimal
+
+  BINARY         sys::Buf
+  VARBINARY      sys::Buf
+  LONGVARBINARY  sys::Buf
+
+  TIMESTAMP      sys::DateTime
+  DATE           sys::Date
+  TIME           sys::Time
+
+  catch-all      sys::Str
+
