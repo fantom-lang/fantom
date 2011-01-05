@@ -38,9 +38,12 @@ underlying platform with native methods.
 
 When you build a pod with native methods, it generates a normal pod file
 which is necessary for all the reflective metadata.  But it also generates
-a native file.  For Java natives this is a jar file under the "lib/java"
-directory.  For .NET natives a dll file is generated under "lib/dotnet".  Also
-see [docTools]`docTools::Build#buildPod` for how to build pods with native
+additional native targets:
+  - Java: classfiles are compiled and added to the pod zip (see [JavaFFI]`JavaFFI#deployment`)
+  - JavaScript: JavaScript source file is added to pod (see [JavaScript]`JavaScript#deployment`)
+  - DotNet: DLL is added to lib/dotnet for the pod
+
+Also see [docTools]`docTools::Build#buildPod` for how to build pods with native
 code.
 
 Dependencies [#depends]

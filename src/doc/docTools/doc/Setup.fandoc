@@ -169,6 +169,8 @@ The platform directory is used for JARs which vary by platform.  For
 example the SWT JARs are distributed in platform specific directories.
 You can verify your platform running "fan -version".
 
+Also see [JavaFFI]`docLang::JavaFFI#deployment`.
+
 SWT Support [#swt]
 ******************
 The Fantom distribution ships with SWT support for a a couple common
