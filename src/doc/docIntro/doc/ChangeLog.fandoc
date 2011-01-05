@@ -19,6 +19,7 @@
 - Improve closure performance making Func.params lazily loaded
 - js: Complete DateTime/Date/Time toLocale/fromLocale
 - sql: add support for sys::Decimal type
+- js: Deployment and running docs
 
 TODO: fix @Operator facet on sys types
 
