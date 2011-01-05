@@ -43,8 +43,6 @@ directory.  For .NET natives a dll file is generated under "lib/dotnet".  Also
 see [docTools]`docTools::Build#buildPod` for how to build pods with native
 code.
 
-Note: natives have been obseleted by the [Java FFI]`JavaFFI`.
-
 Dependencies [#depends]
 ***********************
 All pods have an explicit set of dependencies on other pods.  All

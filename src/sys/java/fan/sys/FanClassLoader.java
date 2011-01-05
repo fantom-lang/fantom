@@ -92,6 +92,10 @@ public class FanClassLoader
       cls = findFanClass(name);
       if (cls != null) return cls;
 
+      // look in my own pod zip file for class
+      cls = findPrecompiledClass(name, null);
+      if (cls != null) return cls;
+
       // fallback to default URLClassLoader loader
       // implementation which searches my ext jars
       return super.findClass(name);
@@ -137,7 +141,7 @@ public class FanClassLoader
     }
 
     // see if we can find a precompiled class
-    Class cls = findPrecompiledClass(name, podName, typeName);
+    Class cls = findPrecompiledClass(name, typeName);
     if (cls != null) return cls;
 
     // ensure pod is emitted with our constant pool before
@@ -164,12 +168,12 @@ public class FanClassLoader
     return t.emit();
   }
 
-  private Class findPrecompiledClass(String name, String podName, String typeName)
+  private Class findPrecompiledClass(String name, String fanTypeName)
   {
     if (pod.fpod.store == null) return null;
     try
     {
-      String path = "fan/" + podName + "/" + typeName + ".class";
+      String path = name.replace('.', '/') + ".class";
       Box precompiled = pod.fpod.store.readToBox(path);
       if (precompiled == null) return null;
 
@@ -178,11 +182,12 @@ public class FanClassLoader
       // if the precompiled class is a fan type, then we need
       // to finish the emit process since we skipped the normal
       // code path thru Type.emit() for fcode to bytecode generation
-      ClassType type = (ClassType)pod.type(typeName, false);
-      if (type != null) type.precompiled(cls);
-
-      // if the class is a precompiled Pod type
-      else if (typeName.equals("$Pod")) pod.precompiled(cls);
+      if (fanTypeName != null)
+      {
+        ClassType type = (ClassType)pod.type(fanTypeName, false);
+        if (type != null) type.precompiled(cls);
+        else if (fanTypeName.equals("$Pod")) pod.precompiled(cls);
+      }
 
       return cls;
     }

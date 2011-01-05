@@ -216,7 +216,7 @@ abstract class BuildPod : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Compile native Java jar file if podJavaDirs is configured
+  ** Compile native Java jar file if javaDirs is configured
   **
   virtual Void compileJava()
   {
@@ -290,7 +290,7 @@ abstract class BuildPod : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Compile native .NET assembly is podDotnetDirs configured
+  ** Compile native .NET assembly dotnetDirs configured
   **
   virtual Void compileDotnet()
   {

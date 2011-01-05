@@ -21,14 +21,14 @@ class FacetsTest : Test
 
   Void testAttributes()
   {
-    verifyEq(typeof->lineNumber, 12)
+    verifyEq(typeof->lineNumber, 13)
     verifyEq(typeof->sourceFile, "FacetsTest.fan")
 
     Field field := #aField
-    verifyEq(field->lineNumber, 14)
+    verifyEq(field->lineNumber, 15)
 
     Method method := #aMethod
-    verifyEq(method->lineNumber, 15)
+    verifyEq(method->lineNumber, 16)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -37,9 +37,9 @@ class FacetsTest : Test
 
   Void testEmpty()
   {
-    verifyEq(FacetsTest#.facets, Facet[,])
-    verifyEq(FacetsTest#.facets.isImmutable, true)
-    verifyEq(FacetsTest#.facet(NoDoc#, false), null)
+    verifyEq(DependTest#.facets, Facet[,])
+    verifyEq(DependTest#.facets.isImmutable, true)
+    verifyEq(DependTest#.facet(NoDoc#, false), null)
 
     verifyEq(FacetsTest#testEmpty.facets, Facet[,])
     verifyEq(FacetsTest#testEmpty.facets.isImmutable, true)
