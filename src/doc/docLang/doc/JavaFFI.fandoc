@@ -120,6 +120,24 @@ found using:
 
   fan compilerJava::ClassPath
 
+Deployment [#deployment]
+************************
+During runtime on the JVM, the Fantom uses a classloader per pod.
+Classes are resolved as follows:
+  1. Classfile is contained in the pod zip:
+     a. Fantom type 'foo::Bar' maps to precompiled classfile fan/foo/Bar.class"
+     b. Java type 'acme.foo.Bar' maps to "acme/foo/Bar.class"
+  2. Fantom type 'foo::Bar' is loaded as follows:
+     a. first resolve pod file "foo.pod" via `Env`
+     b. emit classfile from "fcode/Bar.fcode"
+  3. Search extension jars in "{fan.home}/lib/java/ext"
+  4. Search extension jars in "{fan.home}/lib/java/ext/{platform}" (see [Env]`sys::Env.platform`)
+  5. System classloader which typically includes "{java.home}/lib/ext"
+
+You can bundle Java code in a pod zip file and it will be visible to classes
+within your pod.  However other pods will only have visibility to your Fantom
+classes in that pod (not other Java classes).
+
 Primitives [#primitives]
 ************************
 The special Java primitives 'boolean', 'long', and 'double' are implicitly
@@ -381,6 +399,5 @@ The following annotation element types are currently supported:
   Class                    sys::Type literal
   enum                     Java FFI enum field access
   arrays of above          sys::List literal of above
-
 
 
