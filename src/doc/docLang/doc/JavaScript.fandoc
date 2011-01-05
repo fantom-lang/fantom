@@ -11,11 +11,11 @@ Overview [#overview]
 Fantom provides support for compiling to JavaScript and running in
 JavaScript VMs such as web browsers.  Most of the sys API is available,
 however not all pods and APIs are accessible due to limitations of the
-JavaScript VM enviornment.
+JavaScript VM environment.
 
 Js Facet [#jsFacet]
 *******************
-You must explictly mark types you intend to compile to JavaScript using
+You must explicitly mark types you intend to compile to JavaScript using
 the `sys::Js` facet:
 
   @Js
@@ -30,3 +30,81 @@ To compile JavaScript natives, add the source directories to your
 build script using the [jsDirs]`build::BuildPod.jsDirs` field.
 See [Build Pod]`docTools::Build#buildPod` for an example.
 
+TODO: flush out details
+
+Deployment [#deployment]
+************************
+The JavaScript compiler works by translating Fantom source code directly
+to JavaScript source code at compile time.  This differs from the JVM/CLR,
+which [work]`docLang::Deployment` by using an intermediate format and
+translating to the target platform at runtime.
+
+All Fantom source code in a pod marked as '@Js' will be compiled to a single
+JavaScript source file.  This file will also include reflection information
+and other meta-data needed at runtime.  The file is named '<podname>.js' and
+is packaged into the root directory of the pod file.
+
+Running [#running]
+******************
+You can run JavaScript compiled from Fantom by loading the pod's JavaScript
+source file into any JavaScript VM.  There are no special requirements, other
+than loading the pods in the correct dependency order.
+
+Testing [#runningTesting]
+=========================
+If you simply want to run your [Tests]`docTools::Fant` from the command line,
+the Java runtime provides a built-in test framework using Rhino (requires
+Java 1.6+):
+
+  fan compilerJs::TestRunner
+
+The test runner has the same semantics as the normal 'fant' tool, but will
+load and execute your pod's source and tests in the Rhino scripting engine.
+
+Browsers [#runningBrowsers]
+===========================
+Running Fantom JavaScript in the browser requires a bit more work. First you
+must expose the pods' JavaScript source files as URIs from your server.  The
+simplest mechanism is to use [FileWeblet]`web::FileWeblet`:
+
+  file := `fan://$podName/${podName}.js`.get
+  if (!file.exists) { res.sendErr(404); return }
+  FileWeblet(file).onService
+
+Then you must load the pods in the correct dependency order in your '<head>'
+tag.  Finally, to "mount" the JavaScript runtime, invoke
+[WebUtil.jsMain]`web::WebUtil.jsMain`:
+
+  out.head
+    out.title.w("My Page").titleEnd
+    out.includeJs(`/pod/sys/sys.js`)
+    out.includeJs(`/pod/concurrent/concurrent.js`)
+    out.includeJs(`/pod/web/web.js`)
+    out.includeJs(`/pod/gfx/gfx.js`)
+    out.includeJs(`/pod/dom/dom.js`)
+    out.includeJs(`/pod/fwt/fwt.js`)
+    out.includeJs(`/pod/myPod/myPod.js`)
+    WebUtil.jsMain(out, "myPod::Main")
+    out.headEnd
+
+A complete example is available in [js-demo]`/doc/examples/js-demo.html`.
+Note that this example illustrates dynamically compiling code into the page.
+This is not required (or normal).  The only requirement is to load your pods
+and invoke 'WebUtil.jsMain'.  There is also no requirement that
+[fwt]`fwt::index` be used. You can simply run plain JavaScript, or interact
+with the DOM directly with the [dom]`dom::index` pod.
+
+Running outside of Fantom [#runningNonFantom]
+=============================================
+While running or serving Fantom JavaScript is easiest from a Fantom runtime,
+there is no requirement for that.  You must first load the pods' JavaScript
+source into your VM (in order), or expose them from your web server using the
+pod zipfiles.
+
+Once the pods have been loaded and interpreted by your VM or the browser's VM,
+you can launch any class using this syntax:
+
+  fan.<myPod>.<myType>.<method>
+
+  fan.myPod.MyType.staticMain();           // invoke a static method
+  fan.myPod.MyType.make().instanceMain();  // invoke method from instance
