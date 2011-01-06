@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.57 (working)*
+*Build 1.0.57 (6 Jan 2011)*
 - Rename sql::Col.of => type
 - Change how JDBC classes are preloaded by sql
 - Update timezone database
@@ -22,9 +22,20 @@
 - js: Deployment and running docs
 - Add sys locale files for most major languages
 - Remove deprecated slice methods (replaced by getRange)
-
-TODO: fix @Operator facet on sys types
-
+- #430: Bundle Java classes in pod
+- #1260: Seeding the random number generator
+- #1307: VerifyError with as/+ operator combo
+- #1308: Closures param names are not available at runtime
+- #1313: Require Operator facet on add for comma operator
+- #1314: Env.addShutdownHook
+- #1316: BorderPane not a subclass of ContentPane?
+- #1318: Sql API changes
+- #1326: Support for is/as operators on value-types
+- #1328: Str.in not working properly with Unicode
+- #1344: fansh doesn't handle Java FFI variables
+- #1345: Coerce in shortcut assignments
+- #1348: Make inet Sockets non-const classes
+- #1363: Obj.trap support for default args of null
 
 *Build 1.0.56 (11 Nov 2010)*
 - Redesign Unit to be keyed by arbitrary ids list including symbols

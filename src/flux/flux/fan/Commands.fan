@@ -843,7 +843,7 @@ internal class AboutCommand : FluxCommand
       Label { text = "Flux"; font = big },
       versionInfo,
       Label { font = small; text =
-        "   Copyright (c) 2008-2010, Brian Frank and Andy Frank
+        "   Copyright (c) 2008-2011, Brian Frank and Andy Frank
          Licensed under the Academic Free License version 3.0"
       },
     }

@@ -224,7 +224,7 @@ pre>
   - `sys::index`: pod index
   - `web::pod-doc`: pod documentation
   - `sys::Str`: API for type
-  - `sys::Str.slice`: API for slot
+  - `sys::Str.getRange`: API for slot
   - `Int`: API for type (internal to pod)
   - `Int.toHex` API for slot (internal to pod)
   - [now]`sys::Duration.now` API with achor text
@@ -241,7 +241,7 @@ pre>
   - `sys::index`: pod index
   - `web::pod-doc`: pod documentation
   - `sys::Str`: API for type
-  - `sys::Str.slice`: API for slot
+  - `sys::Str.getRange`: API for slot
   - `sys::Int`: API for type (internal to pod)
   - `sys::Int.toHex` API for slot (internal to pod)
   - [now]`sys::Duration.now` API with achor text

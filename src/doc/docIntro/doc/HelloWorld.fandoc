@@ -19,7 +19,7 @@ If things are working correctly you should be able to run "fan -version":
 
   C:\dev\fan\bin>fan -version
   Fantom Launcher
-  Copyright (c) 2006-2010, Brian Frank and Andy Frank
+  Copyright (c) 2006-2011, Brian Frank and Andy Frank
   Licensed under the Academic Free License version 3.0
 
   Java Runtime:
