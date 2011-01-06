@@ -533,7 +533,7 @@ class CheckErrors : CompilerStep
     if (prefix == null) { err("Operator method '$m.name' has invalid name", m.loc); return }
     op := ShortcutOp.fromPrefix(prefix)
 
-    if (m.name == "add" && !m.returnType.isThis)
+    if (m.name == "add" && !m.returnType.isThis && !isSys)
       err("Operator method '$m.name' must return This", m.loc)
 
     if (m.returnType.isVoid && op !== ShortcutOp.set)
