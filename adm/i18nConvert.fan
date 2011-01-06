@@ -15,7 +15,7 @@ class Main
   [
     // TODO
     "el",   // Greek not mapping months/weekdays?
-    "uk",   // Not parsing right???
+    "uk",   // Do by hand, not parsing right
 
     // configured to skip for now
     "aa",   // Afar
@@ -69,8 +69,6 @@ class Main
     "la",   // Latin
     "lg",   // Igbo language locale for Nigeria
     "li",   // Limburgan
-    "lt",   // Lithuanian
-    "lv",   // Latvian
     "mk",   // Macedonian
     "mi",   // Maori
     "mt",   // Maltese
@@ -90,7 +88,6 @@ class Main
     "shs",  // Secwepemctsin (Shuswap) language locale for Canada
     "si",   // Sindhi
     "sid",  // Sidama language locale for Ethiopia.
-    "sl",   // Slovenian
     "so",   // Sotho
     "ss",   // Swati
     "st",   // Sotho, Southern
@@ -115,11 +112,11 @@ class Main
   {
     locFilename := args.size > 0 ? args[0] : "locales/"
     outDirName := args.size > 1 ? args[1] : "out2/"
-    outDir := File(outDirName.toUri)
+    outDir := File.os(outDirName).uri.plusSlash.toFile
     if (outDir.exists) outDir.delete
     outDir.create
 
-    top := File(locFilename.toUri)
+    top := File.os(locFilename).uri.plusSlash.toFile
     prefix := (top.isDir) ? top.pathStr : (top.parent?.pathStr ?: "")
 
     numFiles := 0
