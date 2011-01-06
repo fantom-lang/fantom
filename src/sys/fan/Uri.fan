@@ -471,7 +471,7 @@ const final class Uri
 
   **
   ** Return a slice of this Uri's path using the same semantics
-  ** as `slice`.  However this method ensures that the result has
+  ** as `getRange`.  However this method ensures that the result has
   ** a leading slash in the path such that `isPathAbs` returns true.
   **
   ** Examples:
