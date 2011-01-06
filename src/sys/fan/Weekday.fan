@@ -65,8 +65,14 @@ enum class Weekday
   ** Get the first day of the week for the current locale.
   ** For example in the United States, 'sun' is considered
   ** the start of the week.  Configured by 'sys::weekdayStart'
-  ** localized property.
+  ** localized property.  Also see `localeVals`.
   **
   static Weekday localeStartOfWeek()
+
+  **
+  ** Get the days of the week ordered according to the
+  ** locale's start of the week.  Also see `localeStartOfWeek`.
+  **
+  static Weekday[] localeVals()
 
 }

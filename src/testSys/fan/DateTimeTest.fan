@@ -399,6 +399,17 @@ class DateTimeTest : Test
     verifyWeekdayLocale(Weekday.fri, "Fri", "Friday")
     verifyWeekdayLocale(Weekday.sat, "Sat", "Saturday")
 
+    verifyEq(Weekday.localeVals, Weekday.vals)
+    verifyEq(Weekday.localeVals.isImmutable, true)
+    verifySame(Weekday.localeVals, Weekday.localeVals)
+
+    Locale.fromStr("fi", false).use
+    {
+      verifyEq(Weekday.localeVals, [Weekday.mon, Weekday.tue, Weekday.wed, Weekday.thu, Weekday.fri, Weekday.sat, Weekday.sun])
+      verifyEq(Weekday.localeVals.isImmutable, true)
+      verifySame(Weekday.localeVals, Weekday.localeVals)
+    }
+
     verifyErr(ArgErr#) { Weekday.sun.toLocale("") }
     verifyErr(ArgErr#) { Weekday.sun.toLocale("W") }
     verifyErr(ArgErr#) { Weekday.sun.toLocale("WWWWW") }

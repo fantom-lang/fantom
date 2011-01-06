@@ -78,6 +78,21 @@ public final class Weekday
     return fromStr(Env.cur().locale(Sys.sysPod, "weekdayStart", "sun"));
   }
 
+  public static List localeVals()
+  {
+    Weekday start = localeStartOfWeek();
+    List list = localeVals[start.ord];
+    if (list == null)
+    {
+      list = new List(Sys.WeekdayType, 7);
+      for (int i=0; i<7; ++i)
+        list.add(array[(i + start.ord) % 7]);
+      localeVals[start.ord] = (List)list.toImmutable();
+    }
+    return list;
+  }
+  private static final List[] localeVals = new List[7];
+
   final int ord;
   final String localeAbbrKey;
   final String localeFullKey;

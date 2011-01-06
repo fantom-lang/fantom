@@ -81,6 +81,21 @@ namespace Fan.Sys
       return fromStr(Env.cur().locale(Sys.m_sysPod, "weekdayStart", "sun"));
     }
 
+    public static List localeVals()
+    {
+      Weekday start = localeStartOfWeek();
+      List list = m_localeVals[start.ord];
+      if (list == null)
+      {
+        list = new List(Sys.WeekdayType, 7);
+        for (int i=0; i<7; ++i)
+          list.add(array[(i + start.ord) % 7]);
+        m_localeVals[start.ord] = (List)list.toImmutable();
+      }
+      return list;
+    }
+    private static List[] m_localeVals = new List[7];
+
     internal readonly int ord;
     readonly string localeAbbrKey;
     readonly string localeFullKey;
