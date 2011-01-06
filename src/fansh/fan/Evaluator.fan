@@ -32,24 +32,28 @@ class Evaluator
 // Eval
 //////////////////////////////////////////////////////////////////////////
 
-  Void eval(Str line)
+  Bool eval(Str line)
   {
     // generate source for class which maps
     // local variables to scope map
     s := StrBuf()
-    shell.usings.each |u| { s.add(u).add("\n") }
+    shell.usings.each |u| { s.add("using ").add(u.target).add("\n") }
 
-    s.add("class FanshEval {\n")
-    s.add("new make(Str:Obj s) { _scope = s }\n")
-    s.add("Str:Obj? _scope\n")
-    s.add("Obj? _eval() {\n")
+    s.add(
+      """class FanshEval
+         {
+           new make(Str:Obj s) { _scope = s }
+           Str:Obj? _scope
+           Obj? _eval()
+           {
+         """)
     scopeMap := Str:Obj?[:]
     if (shell != null)
     {
       shell.scope.each |Var v|
       {
-        sig := v.of.toNullable.signature
-        s.add("  $v.name := ($sig)_scope[\"$v.name\"];\n")
+        sig := typeSig(v.of)
+        s.add("    $sig $v.name := _scope[\"$v.name\"];\n")
         scopeMap[v.name] = v.val
       }
     }
@@ -63,7 +67,7 @@ class Evaluator
     {
       local = Var.make
       local.name = line[0..line.index(":=")-1].trim.split.last
-      compile(srcPrefix + "$line; return $local.name } }")
+      compile(srcPrefix + "    $line;\n    return $local.name\n  }\n}")
       if (pod != null)
         local.of = localDefType()
     }
@@ -79,27 +83,27 @@ class Evaluator
       {
         local = shell.findInScope(name)
         if (local != null)
-          compile(srcPrefix + "$expr; } }")
+          compile(srcPrefix + "    $expr\n  }\n}")
       }
     }
 
     // assuming we didn't have anything fishy regarding local variables,
     // then first try - this will fail if line is a Void expression
     if (pod == null)
-      compile(srcPrefix + "return $line } }")
+      compile(srcPrefix + "    return $line\n  }\n}")
 
     // if that failed, try again assuming line is a void expression
     if (pod == null)
-      compile(srcPrefix + "$line; return \"__void__\"; } }")
+      compile(srcPrefix + "    $line;\n    return \"__void__\"\n  }\n}")
 
     // if no shell, this is a warmup
-    if (shell == null) return
+    if (shell == null) return false
 
     // if we still don't have a compile, report errors and bail
     if (pod == null)
     {
       reportCompilerErrs
-      return
+      return false
     }
 
     // evaluate by calling eval
@@ -114,7 +118,7 @@ class Evaluator
     catch (Err e)
     {
       reportEvalErr(e)
-      return
+      return false
     }
 
     // print result
@@ -127,10 +131,38 @@ class Evaluator
       local.val = result
       shell.scope[local.name] = local
     }
+
+    return true
+  }
+
+  private Str typeSig(Type t)
+  {
+    // handle parameterized generics
+    if (!t.params.isEmpty) return t.toNullable.signature
+
+    // FFI types aren't qualified
+    if (t.signature.startsWith("["))
+    {
+      // see if we are FFI using as
+      a := shell.usings.find |u| { u.matchAs(t) }
+      if (a != null) return "${a.asTo}?"
+
+      // use unqualified name
+      return "${t.name}?"
+    }
+
+    // use qualified nullable type
+    return t.toNullable.signature
   }
 
   private Void compile(Str source)
   {
+    /*
+    echo("================================")
+    echo(source)
+    echo("================================")
+    */
+
     // setup compiler input
     ci := CompilerInput
     {

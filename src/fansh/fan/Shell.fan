@@ -134,7 +134,7 @@ class Shell
   {
     out.printLine
     out.printLine("Current Usings:")
-    usings.each |u| { out.printLine("  $u") }
+    usings.each |u| { out.printLine("  $u.target") }
     out.printLine
     out.printLine("Current Scope:")
     scope.vals.sort.each |v| { out.printLine("  $v.of $v.name = $v.val") }
@@ -146,15 +146,11 @@ class Shell
   **
   Void addUsing(Str line)
   {
-    try
-    {
-      s := line["using ".size..-1]
-      if (s.contains(" as ")) s= s[0..<s.index(" as")]
-      if (s.contains("::")) Type.find(s); else Pod.find(s)
-      echo("Add using: $line")
-      usings.add(line)
-    }
-    catch (Err e) echo("  Invalid using: $e")
+    s := line["using ".size..-1].trim
+    u := Use(s)
+    usings.add(u)
+    ok := Evaluator(this).eval("Add using: $line".toCode)
+    if (!ok) usings.remove(u)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -175,7 +171,7 @@ class Shell
   internal Bool isAlive := true
   internal Int evalCount := 0
   internal Str:Var scope := Str:Var[:]
-  internal Str[] usings := Str[,]
+  internal Use[] usings := Use[,]
 
 }
 
@@ -190,6 +186,33 @@ internal class Var
   Type of := Obj#
   Str? name
   Obj? val
+}
+
+**************************************************************************
+** Use
+**************************************************************************
+
+internal class Use
+{
+  new make(Str target)
+  {
+    this.target = target
+    if (target.contains(" as "))
+    {
+      asFrom = target[0.. target.index(" as ")].trim.replace(" ", "")
+      asTo   = target[target.index(" as ")+4..-1].trim
+    }
+  }
+
+  Bool matchAs(Type t)
+  {
+    sig := t.toNonNullable.signature
+    return asFrom == sig
+  }
+
+  const Str target
+  const Str? asFrom
+  const Str? asTo
 }
 
 **************************************************************************
