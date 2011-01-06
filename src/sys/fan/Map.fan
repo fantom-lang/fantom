@@ -106,8 +106,7 @@ final class Map
   ** does not return true for Obj.isImmutable, then throw NotImmutableErr.
   ** If key is null throw NullErr.  Throw ReadonlyErr if readonly.
   **
-//  @Operator M add(K key, V val)
-M add(K key, V val)
+  M add(K key, V val)
 
   **
   ** Get the value for the specified key, or if it doesn't exist

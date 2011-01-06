@@ -203,8 +203,7 @@ final class List
   ** an index of size.  Size is incremented by 1.  Return this.  Throw
   ** ReadonlyErr if readonly.
   **
-//  @Operator L add(V item)
-L add(V item)
+  @Operator L add(V item)
 
   **
   ** Add all the items in the specified list to the end of this list.
