@@ -169,7 +169,7 @@ namespace Fan.Sys
       return m_values[i];
     }
 
-    public List slice(Range r)
+    public List getRange(Range r)
     {
       try
       {

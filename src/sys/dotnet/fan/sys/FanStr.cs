@@ -171,7 +171,7 @@ namespace Fan.Sys
       }
     }
 
-    public static string slice(string self, Range r)
+    public static string getRange(string self, Range r)
     {
       int size = self.Length;
 

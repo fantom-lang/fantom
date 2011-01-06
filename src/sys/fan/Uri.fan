@@ -419,7 +419,7 @@ const final class Uri
   **
   ** Return the parent directory of this Uri or null if a parent
   ** path cannot be computed from this Uri.  If the path is not
-  ** empty, then this method is equivalent to 'slice(0..-2)'.
+  ** empty, then this method is equivalent to 'getRange(0..-2)'.
   **
   ** Examples:
   **   `http://foo/a/b/c?q#f`.parent  =>  `http://foo/a/b/`
@@ -469,9 +469,6 @@ const final class Uri
   **
   @Operator Uri getRange(Range r)
 
-  ** TODO: use `getRange`
-  @Deprecated Uri slice(Range r)
-
   **
   ** Return a slice of this Uri's path using the same semantics
   ** as `slice`.  However this method ensures that the result has
@@ -483,9 +480,6 @@ const final class Uri
   **   `/a/b/c/`.getRangeToPathAbs(1..<2) =>  `/b/`
   **
   Uri getRangeToPathAbs(Range r)
-
-  ** TODO: use `getRangeToPathAbs`
-  @Deprecated Uri sliceToPathAbs(Range r)
 
   **
   ** Return a new Uri with the specified Uri appended to this Uri.

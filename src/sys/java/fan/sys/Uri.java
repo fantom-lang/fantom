@@ -894,7 +894,7 @@ public final class Uri
     if (path.sz() == 1 && !isPathAbs() && !isDir()) return null;
 
     // use slice
-    return slice(parentRange);
+    return slice(parentRange, false);
   }
 
   public Uri pathOnly()
@@ -914,11 +914,9 @@ public final class Uri
     return new Uri(t);
   }
 
-  public Uri slice(Range range) { return slice(range, false); }
   public Uri getRange(Range range) { return slice(range, false); }
 
   public Uri getRangeToPathAbs(Range range) { return slice(range, true); }
-  public Uri sliceToPathAbs(Range range) { return slice(range, true); }
 
   private Uri slice(Range range, boolean forcePathAbs)
   {
@@ -936,7 +934,7 @@ public final class Uri
     if (head && tail && (!forcePathAbs || isPathAbs())) return this;
 
     Sections t = new Sections();
-    t.path = path.slice(range);
+    t.path = path.getRange(range);
 
     StringBuilder sb = new StringBuilder(pathStr.length());
     if ((head && isPathAbs()) || forcePathAbs) sb.append('/');
@@ -1028,7 +1026,7 @@ public final class Uri
     else
     {
       // slice my path
-      t.path = this.path.slice(Range.makeInclusive(d, -1));
+      t.path = this.path.getRange(Range.makeInclusive(d, -1));
 
       // insert .. backup if needed
       int backup = base.path.sz() - d;
