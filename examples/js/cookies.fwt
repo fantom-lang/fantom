@@ -89,7 +89,9 @@ class CookieModel : TableModel
   override Str text(Int col, Int row)
   {
     key := keys[row]
-    return col==0 ? key : Buf.fromBase64(map[key]).readAllStr
+    val := map[key]
+    try { val=Buf.fromBase64(val).readAllStr } catch {}
+    return col==0 ? key : val
   }
   Str[] cols := ["Name", "Value"]
   Str[] keys
