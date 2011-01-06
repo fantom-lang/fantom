@@ -84,3 +84,18 @@ fan.sys.Weekday.localeStartOfWeek = function()
   var pod = fan.sys.Pod.find("sys");
   return fan.sys.Weekday.fromStr(fan.sys.Env.cur().locale(pod, "weekdayStart", "sun"));
 }
+
+fan.sys.Weekday.localeVals = function()
+{
+  var start = fan.sys.Weekday.localeStartOfWeek();
+  var list = fan.sys.Weekday.m_localeVals[start.m_ordinal];
+  if (list == null)
+  {
+    list = fan.sys.List.make(fan.sys.Weekday.$type);
+    for (var i=0; i<7; ++i)
+      list.add(fan.sys.Weekday.m_vals.get((i + start.m_ordinal) % 7));
+    fan.sys.Weekday.m_localeVals[start.m_ordinal] = list.toImmutable();
+  }
+  return list;
+}
+fan.sys.Weekday.m_localeVals = [];
