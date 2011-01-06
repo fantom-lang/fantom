@@ -155,9 +155,6 @@ class Buf
   **
   @Operator Buf getRange(Range range)
 
-  ** TODO: use `getRange`
-  @Deprecated Buf slice(Range range)
-
   **
   ** Create a new buffer in memory which deeply clones this buffer.
   **

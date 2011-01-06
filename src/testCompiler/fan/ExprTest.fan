@@ -71,8 +71,8 @@ class ExprTest : CompilerTest
     verifyExpr("|Str a->Bool|#", |Str a->Bool|#)
 
     // type
-    verifyExpr("Str#slice", Str#.method("slice"))
-    verifyExpr("sys::Str#slice", Str#.method("slice"))
+    verifyExpr("Str#getRange", Str#.method("getRange"))
+    verifyExpr("sys::Str#getRange", Str#.method("getRange"))
     verifyExpr("Str[]#add", Str[]#.method("add"))
     verifyExpr("Str:Int#caseInsensitive", Str:Int#.field("caseInsensitive"))
     verifyExpr("|Str a->Bool|#call.returns", Bool#)

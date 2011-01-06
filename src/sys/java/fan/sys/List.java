@@ -178,7 +178,6 @@ public final class List
     return values[i];
   }
 
-  public final List slice(Range r) { return getRange(r); }
   public final List getRange(Range r)
   {
     try

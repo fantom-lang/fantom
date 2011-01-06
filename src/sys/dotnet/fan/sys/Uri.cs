@@ -896,7 +896,7 @@ namespace Fan.Sys
       if (m_path.sz() == 1 && !isPathAbs() && !isDir()) return null;
 
       // use slice
-      return slice(parentRange);
+      return getRange(parentRange);
     }
 
     public Uri pathOnly()
@@ -916,9 +916,9 @@ namespace Fan.Sys
       return new Uri(t);
     }
 
-    public Uri slice(Range range) { return slice(range, false); }
+    public Uri getRange(Range range) { return slice(range, false); }
 
-    public Uri sliceToPathAbs(Range range) { return slice(range, true); }
+    public Uri getRangeToPathAbs(Range range) { return slice(range, true); }
 
     private Uri slice(Range range, bool forcePathAbs)
     {
@@ -936,7 +936,7 @@ namespace Fan.Sys
       if (head && tail && (!forcePathAbs || isPathAbs())) return this;
 
       Sections t = new Sections();
-      t.path = m_path.slice(range);
+      t.path = m_path.getRange(range);
 
       StringBuilder sb = new StringBuilder(m_pathStr.Length);
       if ((head && isPathAbs()) || forcePathAbs) sb.Append('/');
@@ -1028,7 +1028,7 @@ namespace Fan.Sys
       else
       {
         // slice my path
-        t.path = this.m_path.slice(Range.makeInclusive(d, -1));
+        t.path = this.m_path.getRange(Range.makeInclusive(d, -1));
 
         // insert .. backup if needed
         int backup = baseUri.m_path.sz() - d;

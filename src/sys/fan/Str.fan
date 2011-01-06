@@ -208,9 +208,6 @@ const final class Str
   **
   @Operator Str getRange(Range range)
 
-  ** TODO: use `getRange`
-  @Deprecated Str slice(Range range)
-
   **
   ** Concat the value of obj.toStr
   **

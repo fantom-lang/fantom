@@ -21,6 +21,7 @@
 - sql: add support for sys::Decimal type
 - js: Deployment and running docs
 - Add sys locale files for most major languages
+- Remove deprecated slice methods (replaced by getRange)
 
 TODO: fix @Operator facet on sys types
 

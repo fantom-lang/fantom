@@ -148,7 +148,7 @@ namespace Fan.Sys
       return getByte(pos);
     }
 
-    public Buf slice(Range range)
+    public Buf getRange(Range range)
     {
       long size = getSize();
       long s = range.start(size);
