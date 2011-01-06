@@ -92,6 +92,7 @@ class TestRunner
       JsIndexedProps().write(out, [Pod.find("testSys")])
 
       // locales
+      JsProps.writeProps(Pod.find("sys"), `locale/fi.props`, out)
       JsProps.writeProps(p, `locale/en-US.props`, out)
       JsProps.writeProps(p, `locale/es.props`, out)
       JsProps.writeProps(p, `locale/es-MX.props`, out)
