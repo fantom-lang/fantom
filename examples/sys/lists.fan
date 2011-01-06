@@ -56,7 +56,7 @@ class Lists
     show(list[2],            "convenience for list.get(2), returns 'c'")
     show(list[-1],           "last item 'd'")
     show(list[-3],           "item at size-3, returns 'b'")
-    show(list.slice(0..2),   "slice 0 to 1 inclusive, returns [a,b,c]")
+    show(list.getRange(0..2),"getRange 0 to 1 inclusive, returns [a,b,c]")
     show(list[0..2],         "convenience for list.slice(0..2)")
     show(list[0..<2],        "slice 0 to 2 exclusive [a,b]")
     show(list[-3..-1],       "slice size-3 to size-1 inclusive [b,c,d]")
