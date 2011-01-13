@@ -154,8 +154,11 @@ fan.fwt.DialogPeer.prototype.sync = function(self)
   var pref  = content.prefSize();
 
   var th = 28;
-  var w  = pref.m_w;
-  var h  = pref.m_h + th;
+  var pw = Math.min(pref.m_w, shell.offsetWidth-24);
+  var ph = Math.min(pref.m_h, shell.offsetHeight-24-th);
+
+  var w  = pw;
+  var h  = ph + th;
   var x  = Math.floor((shell.offsetWidth - w) / 2);
   var y  = Math.floor((shell.offsetHeight - h) / 2);
 
@@ -169,7 +172,7 @@ fan.fwt.DialogPeer.prototype.sync = function(self)
   }
 
   this.pos$(this, fan.gfx.Point.make(0, th));
-  this.size$(this, fan.gfx.Size.make(pref.m_w, pref.m_h));
+  this.size$(this, fan.gfx.Size.make(pw, ph));
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
 
