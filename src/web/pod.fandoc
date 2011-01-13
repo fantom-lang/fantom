@@ -24,7 +24,7 @@ Server side web APIs are organized into the primary classes:
   - [Weblet]`web::Weblet`: an entity which processes a web
     request.
   - [WebMod]`web::WebMod`: a web module which may be composed with
-    other modules to built up a web solution.
+    other modules to build up a web solution.
 
 WebClient [#webClient]
 **********************
@@ -49,8 +49,8 @@ Weblets [#weblet]
 Pretty much anything that touches a HTTP request should be implement
 `web::Weblet`.  The lifecycle of a Weblet is quite simple:
   - all web requests are guaranteed to be called on their own
-    thread with the thread locals "web.req" and "web.res"
-  - 'req'/'res': the current thread's 'WebReq' and 'WebRes' are
+    actor/thread with the actor locals "web.req" and "web.res"
+  - 'req' and 'res': the current actor's 'WebReq' and 'WebRes' are
     available with these methods - so there no need to pass the
     request and response around
   - 'onService': the 'onService' method can be overridden directly to
