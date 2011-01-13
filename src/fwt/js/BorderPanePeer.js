@@ -62,7 +62,14 @@ fan.fwt.BorderPanePeer.prototype.sync = function(self)
     borderBottomColor = b.m_colorBottom.toCss();
     borderLeftColor   = b.m_colorLeft.toCss();
 
-    if (this.elem.style.MozBorderRadius != undefined)
+    if (this.elem.style.borderRadius != undefined)
+    {
+      borderTopLeftRadius     = b.m_radiusTopLeft + "px";
+      borderTopRightRadius    = b.m_radiusTopRight + "px";
+      borderBottomRightRadius = b.m_radiusBottomRight + "px";
+      borderBottomLeftRadius  = b.m_radiusBottomLeft + "px";
+    }
+    else if (this.elem.style.MozBorderRadius != undefined)
     {
       MozBorderRadiusTopleft     = b.m_radiusTopLeft + "px";
       MozBorderRadiusTopright    = b.m_radiusTopRight + "px";
