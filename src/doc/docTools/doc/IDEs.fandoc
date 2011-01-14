@@ -23,24 +23,14 @@ Fantom as well as Java, Javascript, CSS, HTML, XML, Subversion, Mercurial.
   - [Screencast]`http://www.colar.net/fanide/fansuite2.htm`
   - [Download]`http://fanide.colar.net/install`
 
-Eclipse (xored) [#eclipse]
-**************************
-Early access to Fantom support for Eclipse:
+Eclipse F4 (xored software, Inc.) [#eclipse]
+********************************************
+F4 is an Eclipse-based IDE for Fantom which is written mostly in Fantom
+itself. It can be installed as a set of plugins via Eclipse update site
+or as a standalone application:
 
-  - [Home Page]`http://kb.xored.com/display/FDT/Home`
-  - [Install Instructions]`http://kb.xored.com/display/FDT/Installation+Instructions`
-  - [Downloads]`http://download.xored.com/fanide/`
-  - [Screencast: Install]`http://media.xored.com/fan/Fan-IDE_install.swf`
-  - [Screencast: Basic Features]`http://media.xored.com/Fan-IDE_part1.swf`
-  - [Screencast: Advanced Features]`http://media.xored.com/Fan-IDE_part2.swf`
-
-IntelliJ Fan4Idea (JFrog) [#intellij]
-*************************************
-Fantom programming language plugin for IntelliJ IDEA.  Fan4Idea
-can be found in the standard list of plugin from IntelliJ UI.
-
-  - [Home Page]`http://wiki.jfrog.org/confluence/display/FANP/Home`
-  - [Download]`http://plugins.intellij.net/plugin/?id=4241`
+  - [Home Page]`http://xored.com/fantom`
+  - [Download]`http://xored.com/fantom/download`
 
 TextMate Bundle (msl) [#textmate]
 *********************************
