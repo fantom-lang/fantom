@@ -9,6 +9,7 @@
 **
 ** ProgressBar displays a progess bar.
 **
+@Js
 @Serializable
 class ProgressBar : Widget
 {
