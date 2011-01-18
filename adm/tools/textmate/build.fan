@@ -4,7 +4,7 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   12 Oct 10 Andy Frank  Creation - my bday!!
+//   12 Oct 10  Andy Frank  Creation - my bday!!
 //
 
 **
@@ -17,12 +17,12 @@ class Build
     args := Env.cur.args
     if (args.size != 1)
     {
-      Env.cur.out.printLine("Usage: build <directory>")  
+      Env.cur.out.printLine("Usage: build <directory>")
       Env.cur.exit(-1)
     }
     Build { dir=args.first }.build
   }
-  
+
   **
   ** Find nearest build.fan file and build pod.
   **
@@ -30,7 +30,6 @@ class Build
   {
     if (!findBuildFile) Env.cur.exit(-1)
     if (!findFanHome)   Env.cur.exit(-1)
-    if (!checkFanHome)  Env.cur.exit(-1)
     exec
   }
 
@@ -49,7 +48,7 @@ class Build
     if (!f.isDir) f = f.parent
     while (f.path.size > 0)
     {
-      buildFile = f + `build.fan`      
+      buildFile = f + `build.fan`
       if (buildFile.exists) return true
       f = f.parent
     }
@@ -84,25 +83,6 @@ class Build
   }
 
   **
-  ** Check that we aren't trying to compile a core pod for the
-  ** Fan installation being used by Flux itself since that could
-  ** lead to some weird errors.
-  **
-  Bool checkFanHome()
-  {
-    // if different installations then we're ok
-    if (fanHome.normalize != Env.cur.homeDir.normalize)
-      return true
-
-    // check for one of the core pods
-    if (!corePods.contains(buildFile.parent.name))
-      return true
-
-    Env.cur.out.printLine("Cannot compile core pod using Fan installation for Flux itself: $fanHome")
-    return false
-  }
-
-  **
   ** Execute the build.fan script.
   **
   Void exec()
@@ -111,11 +91,8 @@ class Build
     cmd  := [fan.osPath, buildFile.osPath]
     proc := Process(cmd)
     proc.out = BuildOutStream()
-    proc.run.join    
+    proc.run.join
   }
-  
-  static const Str[] corePods := ["sys", "jfan", "nfan",
-    "build", "compile", "fwt", "flux", "fluxText"]
 
   Str? dir
   File? buildFile
@@ -129,7 +106,7 @@ class Build
 internal class BuildOutStream : OutStream
 {
   new make() : super(null) {}
-  
+
   override This write(Int b)
   {
     str := Buf().write(b).flip.readAllStr.toXml.replace(" ", "&nbsp;")
@@ -144,7 +121,7 @@ internal class BuildOutStream : OutStream
     echo("$line<br/>")
     return this
   }
-  
+
   private Str checkLine(Str s)
   {
     if (s.contains("BUILD&nbsp;SUCCESS")) return "<span style='color:#080'>$s</span>"
@@ -154,7 +131,7 @@ internal class BuildOutStream : OutStream
       openParen  := s.index(".fan(")
       closeParen := s.index(")", openParen)
       comma      := s.index(",", openParen)
-      
+
       line  := s[openParen+5..<comma]
       col   := s[comma+1..<closeParen]
 
@@ -162,7 +139,7 @@ internal class BuildOutStream : OutStream
       path  := s[0..openParen+3]
       file  := path[slash+1..-1]
       err   := s[closeParen+1..-1]
-      
+
       return "<span style='white-space:nowrap;'>
                 <a href='txmt://open?url=file://$path&line=$line&column=$col'>$file</a>($line,$col)$err
                 </span>"
