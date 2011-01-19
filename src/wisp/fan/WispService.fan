@@ -55,8 +55,8 @@ const class WispService : Service
   override Void onStop()
   {
     try root.onStop;         catch (Err e) log.err("WispService stop root WebMod", e)
-    try closeTcpListener;    catch (Err e) log.err("WispService stop listener socket", e)
     try listenerPool.stop;   catch (Err e) log.err("WispService stop listener pool", e)
+    try closeTcpListener;    catch (Err e) log.err("WispService stop listener socket", e)
     try processorPool.stop;  catch (Err e) log.err("WispService stop processor pool", e)
     try sessionStore.onStop; catch (Err e) log.err("WispService stop session store", e)
   }
@@ -89,7 +89,7 @@ const class WispService : Service
     log.info("WispService started on port ${port}")
 
     // loop until stopped accepting incoming TCP connections
-    while (!listenerPool.isStopped)
+    while (!listenerPool.isStopped && !listener.isClosed)
     {
       try
       {
@@ -98,7 +98,7 @@ const class WispService : Service
       }
       catch (Err e)
       {
-        if (!listenerPool.isStopped)
+        if (!listenerPool.isStopped && !listener.isClosed)
           log.err("WispService accept on ${port}", e)
       }
     }
