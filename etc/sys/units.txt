@@ -39,6 +39,21 @@ steradian, sr
 nephelometric_turbidity_units, ntu
 formazin_nephelometric_unit, fnu
 
+-- currency (null)
+australian_dollar, AUD
+british_pound, GBP, £
+canadian_dollar, CAD
+chinese_yuan, CNY, 元
+euro, EUR, €
+indian_rupee, INR
+japanese_yen, JPY, ¥
+russian_ruble, RUB, руб
+south_korean_won, KRW, ₩
+swedish_krona, SEK, kr
+swiss_franc, CHF, Fr
+taiwan_dollar, TWD
+us_dollar, USD, $
+
 -- acceleration (m1*sec-2)
 meters_per_second_sqared, m/s²; m1*sec-2
 

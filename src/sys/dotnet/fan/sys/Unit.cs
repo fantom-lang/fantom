@@ -224,7 +224,7 @@ namespace Fan.Sys
       for (int i=0; i<id.Length; ++i)
       {
         int c = id[i];
-        if (FanInt.isAlpha(c) || c == '_' || c == '%' || c == '/' || c > 128) continue;
+        if (FanInt.isAlpha(c) || c == '_' || c == '%' || c == '$' || c == '/' || c > 128) continue;
         throw ParseErr.make("Invalid unit id " + id + " (invalid char '" + (char)c + "')").val;
       }
     }

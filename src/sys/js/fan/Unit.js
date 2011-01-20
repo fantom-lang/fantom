@@ -227,7 +227,7 @@ fan.sys.Unit.checkId = function(id)
   {
     var code = id.charCodeAt(i);
     var ch   = id.charAt(i);
-    if (fan.sys.Int.isAlpha(code) || ch == '_' || ch == '%' || ch == '/' || code > 128) continue;
+    if (fan.sys.Int.isAlpha(code) || ch == '_' || ch == '%' || ch == '$' || ch == '/' || code > 128) continue;
     throw fan.sys.ParseErr.make("Invalid unit id " + id + " (invalid char '" + ch + "')");
   }
 }
