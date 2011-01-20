@@ -36,6 +36,7 @@
 **  - underbar '_'
 **  - division sign'/'
 **  - percent sign '%'
+**  - dollar sign '$'
 **
 ** Units with equal dimensions are considered to the measure the same
 ** physical quantity.  This is not always true, but good enough for
