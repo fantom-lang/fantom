@@ -51,15 +51,12 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
     this.control = text;
   }
 
-  // wire up event handler to keep text prop synchronized
-  text.onkeyup = function(event)
+  // wire up event handlers to keep text prop synchronized
+  var $this = this;
+  text.onkeyup = function(e)
   {
-    // IE-ness
-    var target = event ? event.target : window.event.srcElement;
-    var event  = event ? event : window.event;
-
-    // sync control value to widget
-    self.peer.text$(self, target.value, false);
+    // fire onModify
+    $this.fireModify(self);
 
     // fire onAction
     if (event.keyCode == 13 && self.m_onAction.size() > 0)
@@ -70,17 +67,11 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
       var list = self.m_onAction.list();
       for (var i=0; i<list.size(); i++) list.get(i).call(ae);
     }
-
-    // fire onModify
-    if (self.m_onModify.size() > 0)
-    {
-      var me = fan.fwt.Event.make();
-      me.m_id = fan.fwt.EventId.m_modified;
-      me.m_widget = self;
-      var list = self.m_onModify.list();
-      for (var i=0; i<list.size(); i++) list.get(i).call(me);
-    }
   }
+  // cut/paste events fire before input.value is set, so use a small delay
+  // to allow value to be set so it can be synced to m_text
+  text.onpaste = function(event) { setTimeout(function() { $this.fireModify(self); }, 10); }
+  text.oncut   = function(event) { setTimeout(function() { $this.fireModify(self); }, 10); }
 
   // inner div
   var inner = document.createElement("div");
@@ -96,6 +87,25 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
   div.appendChild(inner);
   parentElem.appendChild(div);
   return div;
+}
+
+fan.fwt.TextPeer.prototype.fireModify = function(self)
+{
+  // short-circuit if not modified
+  if (this.m_text == this.control.value) return;
+
+  // sync control value to widget
+  this.text$(self, this.control.value, false);
+
+  // fire onModify
+  if (self.m_onModify.size() > 0)
+  {
+    var me = fan.fwt.Event.make();
+    me.m_id = fan.fwt.EventId.m_modified;
+    me.m_widget = self;
+    var list = self.m_onModify.list();
+    for (var i=0; i<list.size(); i++) list.get(i).call(me);
+  }
 }
 
 fan.fwt.TextPeer.prototype.sync = function(self)
