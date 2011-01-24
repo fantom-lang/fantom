@@ -112,8 +112,12 @@ fan.fwt.TextPeer.prototype.sync = function(self)
 {
   var text = this.control;
 
+  // setting value will force cursor to end of text, so only
+  // set if different to avoid relayout "bugs" where cursor
+  // jumps unexpectedly
+  if (text.value != this.m_text) text.value = this.m_text;
+
   // sync control
-  text.value = this.m_text;
   text.readOnly = !self.m_editable;
   text.disabled = !this.m_enabled;
 
