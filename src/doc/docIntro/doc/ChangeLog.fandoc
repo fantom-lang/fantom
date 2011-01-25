@@ -10,6 +10,7 @@
 - Weekday.localeVals
 - js: fwt::ProgressBar
 - Add major world currencies to units database
+- Add service shutdown hook to AbstractMain
 
 *Build 1.0.57 (6 Jan 2011)*
 - Rename sql::Col.of => type
