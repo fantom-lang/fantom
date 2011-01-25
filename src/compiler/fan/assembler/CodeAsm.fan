@@ -1630,12 +1630,14 @@ class CodeAsm : CompilerSupport
   **
   private Void line(Loc loc)
   {
-    line := loc.line
-    if (line == null || lastLine == line) return
+    line   := loc.line
+    offset := code.size
+    if (line == null || lastLine == line || lastOffset == offset) return
     lineCount++
-    lines.writeI2(code.size)
+    lines.writeI2(offset)
     lines.writeI2(line)
     lastLine = line
+    lastOffset = offset
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1651,6 +1653,7 @@ class CodeAsm : CompilerSupport
   Buf lines
   Int lineCount
   Int lastLine := -1
+  Int lastOffset := -1
   Loop[] loopStack
 
   // protected region fields
