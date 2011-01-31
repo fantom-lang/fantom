@@ -372,8 +372,21 @@ fan.fwt.WidgetPeer.setBg = function(elem, brush)
   {
     var str = "";
     var bg  = brush.m_bg;
+    var uri = fan.fwt.WidgetPeer.uriToImageSrc(brush.m_image.m_uri);
+
+    // bg-color
     if (bg != null) str += bg.toCss() + ' ';
-    str += 'url(' + brush.m_image.m_uri + ') repeat-x';
+
+    // image
+    str += 'url(' + uri + ')';
+
+    // repeat
+    if (brush.m_halign == fan.gfx.Halign.m_repeat && brush.m_valign == fan.gfx.Valign.m_repeat) str += ' repeat';
+    else if (brush.m_halign == fan.gfx.Halign.m_repeat) str += ' repeat-x';
+    else if (brush.m_valign == fan.gfx.Valign.m_repeat) str += ' repeat-y';
+    else str += ' no-repeat';
+
+    // set style
     style.background = str;
     return;
   }
