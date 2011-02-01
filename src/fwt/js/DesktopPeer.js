@@ -23,6 +23,12 @@ fan.fwt.DesktopPeer.$isMac = navigator.userAgent.indexOf("Mac OS X") != -1;
 //fan.fwt.DesktopPeer.focus()
 //fan.fwt.DesktopPeer.callAsync(|->| f)
 
+fan.fwt.DesktopPeer.callLater = function(delay, f)
+{
+  var func = function() { f.call() }
+  setTimeout(func, delay.toMillis());
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Dispose
 //////////////////////////////////////////////////////////////////////////

@@ -36,6 +36,7 @@ class Build : BuildScript
       "richtext",    "Basic RichText document model",
       "scrollpane",  "Using ScrollPane",
       "gradient",    "Gradients (at least what SWT supports)",
+      "timer",       "Timer using Desktop.callLater",
     "email/",        "email",
       "sending",     "Sending email via SMTP",
     "js/",           "js",
