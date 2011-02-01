@@ -53,6 +53,15 @@ class Desktop
   **
   static native Void callAsync(|->| f)
 
+  **
+  ** Call the specified function on the UI thread's event loop
+  ** after a timer period has expired.  If this call is being made
+  ** on a thread which is not the UI thread, then the function
+  ** must be immutable.  If on the UI thread, then it is ok for
+  ** the function to be mutable.
+  **
+  static native Void callLater(Duration delay, |->| f)
+
 //////////////////////////////////////////////////////////////////////////
 // Dispose
 //////////////////////////////////////////////////////////////////////////

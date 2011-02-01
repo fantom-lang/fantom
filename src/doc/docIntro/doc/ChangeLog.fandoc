@@ -11,6 +11,7 @@
 - js: fwt::ProgressBar
 - Add major world currencies to units database
 - Add service shutdown hook to AbstractMain
+- Desktop.callLater
 
 *Build 1.0.57 (6 Jan 2011)*
 - Rename sql::Col.of => type
