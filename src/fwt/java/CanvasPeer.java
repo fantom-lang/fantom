@@ -35,10 +35,7 @@ public class CanvasPeer
 
   public Widget create(Widget parent)
   {
-    Canvas c = new Canvas((Composite)parent, 0)
-    {
-      public void drawBackground(GC gc, int x, int y, int w, int h) {}
-    };
+    Canvas c = new Canvas((Composite)parent, SWT.NO_BACKGROUND);
     c.addPaintListener(this);
     return c;
   }
