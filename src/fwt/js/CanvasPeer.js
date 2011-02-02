@@ -50,6 +50,7 @@ fan.fwt.CanvasPeer.prototype.sync = function(self)
     var g = new fan.fwt.Graphics();
     g.widget = self;
     g.size = this.m_size;
+    g.m_clip = self.bounds();
     g.cx = c.getContext("2d");
     g.cx.save();
     g.cx.lineWidth = 1;

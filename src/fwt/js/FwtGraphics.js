@@ -17,6 +17,7 @@ fan.fwt.Graphics.prototype.$ctor = function() {}
 fan.fwt.Graphics.prototype.widget = null;
 fan.fwt.Graphics.prototype.size = null;
 fan.fwt.Graphics.prototype.cx = null;
+fan.fwt.Graphics.prototype.m_clip = null;
 
 // Brush brush
 fan.fwt.Graphics.prototype.m_brush = null
@@ -290,6 +291,7 @@ fan.fwt.Graphics.prototype.translate = function (x, y)
 // This clip(Rect r)
 fan.fwt.Graphics.prototype.clip = function (rect)
 {
+  this.m_clip = this.m_clip.intersection(rect);
   this.cx.beginPath();
   this.cx.moveTo(rect.m_x, rect.m_y);
   this.cx.lineTo(rect.m_x+rect.m_w, rect.m_y);
@@ -298,6 +300,12 @@ fan.fwt.Graphics.prototype.clip = function (rect)
   this.cx.closePath();
   this.cx.clip();
   return this
+}
+
+// Rect clipBounds()
+fan.fwt.Graphics.prototype.clipBounds = function ()
+{
+  return this.m_clip;
 }
 
 // Void push()
@@ -310,6 +318,7 @@ fan.fwt.Graphics.prototype.push = function ()
   state.font      = this.m_font;
   state.antialias = this.m_antialias;
   state.alpha     = this.m_alpha;
+  state.clip      = this.m_clip;
   this.stack.push(state);
 }
 
@@ -323,6 +332,7 @@ fan.fwt.Graphics.prototype.pop = function ()
   this.m_font      = state.font;
   this.m_antialias = state.antialias;
   this.m_alpha     = state.alpha;
+  this.m_clip      = state.clip;
 }
 
 // Void dispose()

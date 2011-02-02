@@ -127,8 +127,15 @@ mixin Graphics
   **
   ** Set the clipping area to the intersection of the
   ** current clipping region and the specified rectangle.
+  ** Also see `clipBounds`.
   **
   abstract This clip(Rect r)
+
+  **
+  ** Get the bounding rectangle of the current clipping area.
+  ** Also see `clip`.
+  **
+  abstract Rect clipBounds()
 
   **
   ** Push the current graphics state onto an internal
