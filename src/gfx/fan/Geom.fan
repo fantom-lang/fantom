@@ -165,6 +165,42 @@ const class Rect
            y >= this.y && y <= this.y+h
   }
 
+  ** Return true if this rectangle intersects any portion of that rectangle
+  Bool intersects(Rect that)
+  {
+    ax1 := this.x; ay1 := this.y; ax2 := ax1 + this.w; ay2 := ay1 + this.h
+    bx1 := that.x; by1 := that.y; bx2 := bx1 + that.w; by2 := by1 + that.h
+    return !(ax2 <= bx1 || bx2 <= ax1 || ay2 <= by1 || by2 <= ay1)
+  }
+
+  ** Compute the intersection between this rectangle and that rectangle.
+  ** If there is no intersection, then return `defVal`.
+  Rect intersection(Rect that)
+  {
+    ax1 := this.x; ay1 := this.y; ax2 := ax1 + this.w; ay2 := ay1 + this.h
+    bx1 := that.x; by1 := that.y; bx2 := bx1 + that.w; by2 := by1 + that.h
+    rx1 := ax1.max(bx1); rx2 := ax2.min(bx2)
+    ry1 := ay1.max(by1); ry2 := ay2.min(by2)
+    rw := rx2 - rx1
+    rh := ry2 - ry1
+    if (rw <= 0 || rh <= 0) return defVal
+    return make(rx1, ry1, rw, rh)
+  }
+
+  ** Compute the union between this rectangle and that rectangle,
+  ** which is the bounding box that exactly contains both rectangles.
+  Rect union(Rect that)
+  {
+    ax1 := this.x; ay1 := this.y; ax2 := ax1 + this.w; ay2 := ay1 + this.h
+    bx1 := that.x; by1 := that.y; bx2 := bx1 + that.w; by2 := by1 + that.h
+    rx1 := ax1.min(bx1); rx2 := ax2.max(bx2)
+    ry1 := ay1.min(by1); ry2 := ay2.max(by2)
+    rw := rx2 - rx1
+    rh := ry2 - ry1
+    if (rw <= 0 || rh <= 0) return defVal
+    return make(rx1, ry1, rw, rh)
+  }
+
   ** Return '"x,y,w,h"'
   override Str toStr() { return "$x,$y,$w,$h" }
 
