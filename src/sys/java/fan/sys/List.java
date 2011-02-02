@@ -961,6 +961,19 @@ public final class List
     return values[i % size];
   }
 
+  public final List shuffle()
+  {
+    modify();
+    for (int i=0; i<size; ++i)
+    {
+      int randi = FanInt.random.nextInt(size);
+      Object temp = values[i];
+      values[i] = values[randi];
+      values[randi] = temp;
+    }
+    return this;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////
