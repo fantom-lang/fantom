@@ -62,6 +62,7 @@ class GeomTest : Test
     verifyNotEq(Rect(1, 2, 0, 4), Rect(1, 2, 3, 4))
     verifyNotEq(Rect(1, 2, 3, 0), Rect(1, 2, 3, 4))
 
+    // contains
     r := Rect(2,2,6,6)
     verify(r.contains(4,4))
     verify(r.contains(2,4))
@@ -72,6 +73,22 @@ class GeomTest : Test
     verify(!r.contains(2,9))
     verify(!r.contains(1,5))
 
+    // intersection
+    verifyIntersection(Rect(0, 5, 10, 10), Rect(5, 10, 15, 10), Rect(5, 10, 5, 5))
+    verifyIntersection(Rect(0, 5, 15, 15), Rect(5, 10, 20, 5), Rect(5, 10, 10, 5))
+    verifyIntersection(Rect(10, 0, 5, 20), Rect(5, 10, 20, 5), Rect(10, 10, 5, 5))
+    verifyIntersection(Rect(0, 0, 20, 20), Rect(5, 5, 5, 10), Rect(5, 5, 5, 10))
+    verifyIntersection(Rect(0, 0, 15, 10), Rect(0, 5, 15, 15), Rect(0, 5, 15, 5))
+    verifyIntersection(Rect(0, 0, 5, 5), Rect(10, 10, 5, 5), Rect.defVal)
+    verifyIntersection(Rect(5, 5, 5, 5), Rect(0, 10, 15, 5), Rect.defVal)
+    verifyIntersection(Rect(0, 0, 15, 5), Rect(0, 5, 15, 15), Rect.defVal)
+
+    // union
+    verifyUnion(Rect(0, 0, 5, 5), Rect(10, 15, 10, 5), Rect(0, 0, 20, 20))
+    verifyUnion(Rect(10, 5, 5, 20), Rect(0, 10, 25, 5), Rect(0, 5, 25, 20))
+    verifyUnion(Rect(0, 10, 10, 5), Rect(5, 20, 15, 5), Rect(0, 10, 20, 15))
+    verifyUnion(Rect(5, 10, 5, 5), Rect(15, 5, 5, 20), Rect(5, 5, 15, 20))
+
     verifyEq(Rect.fromStr("3,4,5,6"), Rect(3,4,5,6))
     verifyEq(Rect.fromStr("-1 , -2, -3  , -4"), Rect(-1,-2,-3,-4))
     verifyEq(Rect.fromStr("3,4,5", false), null)
@@ -80,6 +97,24 @@ class GeomTest : Test
 
     verifySer(Rect(1, 2, 3, 4))
     verifySer(Rect(-1, 2, -3, 4))
+  }
+
+  Void verifyIntersection(Rect a, Rect b, Rect r)
+  {
+    verifyEq(a.intersection(b), r)
+    verifyEq(b.intersection(a), r)
+    verifyEq(a.intersects(b), r != Rect.defVal)
+    verifyEq(b.intersects(a), r != Rect.defVal)
+  }
+
+  Void verifyUnion(Rect a, Rect b, Rect r)
+  {
+    verifyEq(a.union(a), a)
+    verifyEq(a.union(b), r)
+    verifyEq(b.union(a), r)
+    verifyEq(a.intersects(r), true); verifyEq(r.intersects(a), true)
+    verifyEq(b.intersects(r), true); verifyEq(r.intersects(b), true)
+    verifyEq(r.intersects(r), true)
   }
 
   Void testInsets()
