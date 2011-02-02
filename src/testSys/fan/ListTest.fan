@@ -1275,6 +1275,39 @@ class ListTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Shuffle
+//////////////////////////////////////////////////////////////////////////
+
+  Void testShuffle()
+  {
+    // empty
+    verifyEq([,].shuffle, [,])
+
+    // one
+    x := [2]
+    verifySame(x.shuffle, x)
+    verifyEq(x.shuffle, [2])
+
+    // combos
+    verifyShuffle([1, 2], 2)
+    verifyShuffle([1, 2, 3], 6)
+    verifyShuffle([1, 2, 3, 4], 24)
+  }
+
+  Void verifyShuffle(List x, Int expectedCombos)
+  {
+    combos := Str:Str[:]
+    for (i := 0; true; ++i)
+    {
+      if (i > 10000) fail
+      x.shuffle
+      s := x.join(",")
+      combos[s] = s
+      if (combos.size == expectedCombos) { verify(true); break }
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Str
 //////////////////////////////////////////////////////////////////////////
 
@@ -1431,6 +1464,7 @@ class ListTest : Test
     verifyErr(ReadonlyErr#) { r.sortr }
     verifyErr(ReadonlyErr#) { r.reverse }
     verifyErr(ReadonlyErr#) { r.swap(0, 1) }
+    verifyErr(ReadonlyErr#) { r.shuffle }
 
     // verify rw detaches ro
     x.add("d")

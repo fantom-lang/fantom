@@ -875,6 +875,20 @@ namespace Fan.Sys
       return m_values[i % m_size];
     }
 
+    public List shuffle()
+    {
+      modify();
+      for (int i=0; i<m_size; ++i)
+      {
+        int randi = (int)FanInt.random() % m_size;
+        if (randi < 0) randi = -randi;
+        object temp = m_values[i];
+        m_values[i] = m_values[randi];
+        m_values[randi] = temp;
+      }
+      return this;
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Conversion
   //////////////////////////////////////////////////////////////////////////
