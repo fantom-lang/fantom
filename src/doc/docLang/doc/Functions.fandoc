@@ -120,7 +120,7 @@ natural:
 
   class WidgetEvent {}
   class ButtonEvent : WidgetEvent {}
-  addButtonListener(|ButtonEvent evt| callback)
+  addButtonListener(|ButtonEvent event| callback)
 
 In the code above 'ButtonEvent' is a subclass of 'WidgetEvent'.
 We've got a method which registers a callback to invoke when a button
@@ -128,9 +128,9 @@ is pressed - the argument passed to the callback will be a 'ButtonEvent'.
 However, if we happen to have a function that accepts any 'WidgetEvent',
 then it will quite happily accept 'ButtonEvent' arguments:
 
-  static void anyWidgetCallback(WidgetEvent evt) { ... }
+  anyWidgetCallback := |WidgetEvent event| {...}
 
-  button.addButtonListener(&anyWidgetCallback)
+  button.addButtonListener(anyWidgetCallback)
 
 This is what is meant by functions being the "flip side" of normal
 type checking.  Where normal type checking accepts any *specialization*
