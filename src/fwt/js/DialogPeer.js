@@ -95,6 +95,9 @@ fan.fwt.DialogPeer.prototype.open = function(self)
   dlg.style.webkitTransform = "scale(1.0)";
   dlg.style.opacity = "1.0";
 
+  // attach transition for dialog resizes
+  dlg.style.webkitTransition = "top 250ms, left 250ms, width 250ms, height 250ms";
+
   // try to focus first form element
   var elem = fan.fwt.DialogPeer.findFormControl(content);
   if (elem != null)
@@ -129,6 +132,7 @@ fan.fwt.DialogPeer.prototype.close = function(self, result)
   if (this.$shell)
   {
     var dlg = this.$shell.firstChild;
+    dlg.style.webkitTransition = "-webkit-transform 100ms, opacity 100ms";
     dlg.style.opacity = "0.0";
     dlg.style.webkitTransform = "scale(0.75)";
     this.$mask.style.opacity = "0.0";
