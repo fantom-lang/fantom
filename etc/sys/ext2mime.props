@@ -29,7 +29,7 @@ java=text/plain
 jpeg=image/jpeg
 jpg=image/jpeg
 log=text/plain; charset=utf-8
-js=text/plain; charset=utf-8
+js=text/javascript; charset=utf-8
 mp3=audio/mpeg3
 mpeg=video/mpeg
 obix=text/xml; charset=utf-8
