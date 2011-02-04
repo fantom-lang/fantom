@@ -247,8 +247,8 @@ const final class Str
   ** this string.  If this string is empty, return false.
   **
   ** Example:
-  **   "Foo".any |Int c->Bool| { return c.isUpper } => true
-  **   "foo".any |Int c->Bool| { return c.isUpper } => false
+  **   "Foo".any |c| { c.isUpper } => true
+  **   "foo".any |c| { c.isUpper } => false
   **
   Bool any(|Int ch, Int index->Bool| c)
 
@@ -257,8 +257,8 @@ const final class Str
   ** this string.  If this string is empty, return true.
   **
   ** Example:
-  **   "Bar".all |Int c->Bool| { return c.isUpper } => false
-  **   "BAR".any |Int c->Bool| { return c.isUpper } => true
+  **   "Bar".all |c| { c.isUpper } => false
+  **   "BAR".all |c| { c.isUpper } => true
   **
   Bool all(|Int ch, Int index->Bool| c)
 
