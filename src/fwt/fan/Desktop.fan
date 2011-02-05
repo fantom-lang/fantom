@@ -16,6 +16,11 @@ using gfx
 @Js
 class Desktop
 {
+  **
+  ** Set the application name for this FWT instance.  This must
+  ** be configured before any FWT objects are created.
+  **
+  static native Void appName(Str name)
 
   **
   ** Get the platform name: "windows", "mac"

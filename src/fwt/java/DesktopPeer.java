@@ -34,6 +34,11 @@ public class DesktopPeer
 // Native methods
 //////////////////////////////////////////////////////////////////////////
 
+  public static void appName(String name)
+  {
+    Display.setAppName(name);
+  }
+
   public static String platform()
   {
     if (Fwt.isWindows()) return "windows";
