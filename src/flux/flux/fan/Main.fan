@@ -15,6 +15,8 @@ internal class Main
 {
   static Void main(Str[] args)
   {
+    Desktop.appName("Flux")
+
     // touch classes to load
     FileIndex.instance.rebuild
 
