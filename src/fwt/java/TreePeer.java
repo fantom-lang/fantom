@@ -56,6 +56,8 @@ public class TreePeer
     t.addSelectionListener(this);
     t.setMenu(new Menu(t));
 
+    if (self.bg != null) t.setBackground(Fwt.get().color(self.bg));
+
     ScrollBar hbar = t.getHorizontalBar();
     ScrollBar vbar = t.getVerticalBar();
     if (hbar != null) ((ScrollBarPeer)self.hbar().peer).attachToScrollable(t, hbar);
@@ -115,6 +117,19 @@ public class TreePeer
     TreeItem item = item(node);
     if (item == null) return;
     c.select(item);
+  }
+
+  public boolean isExpanded(fan.fwt.Tree self, Object node)
+  {
+    Tree c = (Tree)this.control;
+
+    TreeModel model = model();
+    if (model == null) return false;
+
+    TreeItem item = item(node);
+    if (item == null) return false;
+
+    return item.getExpanded();
   }
 
   public void setExpanded(fan.fwt.Tree self, Object node, boolean expanded)

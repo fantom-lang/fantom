@@ -75,6 +75,11 @@ class Tree : Widget
   @Transient ScrollBar vbar := ScrollBar() { private set }
 
   **
+  ** Background color of tree, or null for platform default.
+  **
+  const Color? bg := null
+
+  **
   ** Draw a border around the widget.  Default is true.  This
   ** field cannot be changed once the widget is constructed.
   **
@@ -101,6 +106,11 @@ class Tree : Widget
   ** Get and set the selected nodes.
   **
   native Obj[] selected
+
+  **
+  ** Return the expanded state for this node.
+  **
+  native Bool isExpanded(Obj node)
 
   **
   ** Set the expanded state for this node.
@@ -139,6 +149,7 @@ class Tree : Widget
 **
 ** TreeModel models the data of a tree widget.
 **
+@Js
 class TreeModel
 {
   **
