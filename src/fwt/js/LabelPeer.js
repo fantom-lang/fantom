@@ -157,6 +157,7 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     {
       text.style.overflow = "hidden";
       text.style.textOverflow = "ellipsis";
+      text.title = this.m_text;
     }
     text.style.display = "inline-block";
     text.style.position = "relative";
