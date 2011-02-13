@@ -39,7 +39,7 @@ header:
 
   native class Foo
   {
-    new make(Str arg) {}
+    new make(Str arg)
     Int add(Int a, Int b)
     Str? a
     const Str b := "const"
@@ -60,7 +60,7 @@ Java implementation would look like:
     }
 
     // constructor implementation called by subclasses
-    public static void make$(Foo self, Str arg) {}
+    public static void make$(Foo self, String arg) {}
 
     // boiler plate for reflection
     public Type typeof()
