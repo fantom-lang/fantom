@@ -36,8 +36,9 @@ final class Process
   Str[] command
 
   **
-  ** Environment variables to pass to new process.  This
-  ** map is initialized with the current process environment.
+  ** Environment variables to pass to new process as a mutable
+  ** map of string key/value pairs.  This map is initialized
+  ** with the current process environment.
   **
   Str:Str env()
 
