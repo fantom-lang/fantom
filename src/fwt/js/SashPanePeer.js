@@ -53,7 +53,7 @@ fan.fwt.SashPanePeer.prototype.sync = function(self)
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
 
-fan.fwt.SashPanePeer.prototype.doHoriz = function(self)
+fan.fwt.SashPanePeer.prototype.doVert = function(self)
 {
   var w  = this.m_size.m_w;
   var h  = this.m_size.m_h;
@@ -77,7 +77,7 @@ fan.fwt.SashPanePeer.prototype.doHoriz = function(self)
   }
 }
 
-fan.fwt.SashPanePeer.prototype.doVert = function(self)
+fan.fwt.SashPanePeer.prototype.doHoriz = function(self)
 {
   var w  = this.m_size.m_w;
   var h  = this.m_size.m_h;
