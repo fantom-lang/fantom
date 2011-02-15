@@ -12,6 +12,7 @@
 **
 ** See [pod doc]`pod-doc#json` for details.
 **
+@Js
 class JsonInStream : InStream
 {
   **
@@ -264,6 +265,7 @@ class JsonInStream : InStream
 **
 ** JsonToken represents the tokens in JSON.
 **
+@Js
 internal class JsonToken
 {
   internal static const Int objectStart := '{'
