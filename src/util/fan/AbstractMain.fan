@@ -93,7 +93,7 @@ abstract class AbstractMain
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get all the fields annotated with the '@arg' facet.
+  ** Get all the fields annotated with the [@Arg]`Arg` facet.
   **
   virtual Field[] argFields()
   {
@@ -101,7 +101,7 @@ abstract class AbstractMain
   }
 
   **
-  ** Get all the fields annotated with the '@opt' facet.
+  ** Get all the fields annotated with the [@Opt]`Opt` facet.
   **
   virtual Field[] optFields()
   {
