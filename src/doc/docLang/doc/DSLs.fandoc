@@ -49,7 +49,6 @@ You can write your own DSLs by subclassing `compiler::DslPlugin`.
 See the 'RegexDslPlugin' class as a simple example to get
 started:
 
-  @compilerDsl="sys::Regex"
   class RegexDslPlugin : DslPlugin
   {
     new make(Compiler c) : super(c) {}
@@ -58,10 +57,13 @@ started:
     {
       regexType := ns.resolveType("sys::Regex")
       fromStr := regexType.method("fromStr")
-      args := [LiteralExpr.makeFor(dsl.location, ns, dsl.src)]
-      return CallExpr.makeWithMethod(dsl.location, null, fromStr, args)
+      args := [Expr.makeForLiteral(dsl.loc, ns, dsl.src)]
+      return CallExpr.makeWithMethod(dsl.loc, null, fromStr, args)
     }
   }
+
+  // register in indexed props in build script
+  index = ["compiler.dsl.sys::Regex": "compiler::RegexDslPlugin"]
 
 Note: writing plugins requires accessing the compiler APIs.
 This API has a very large surface area, so we cannot guarantee
