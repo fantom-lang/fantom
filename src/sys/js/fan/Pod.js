@@ -77,7 +77,7 @@ fan.sys.Pod.prototype.types = function()
   return this.$typesArray;
 }
 
-fan.sys.Pod.prototype.findType = function(name, checked)
+fan.sys.Pod.prototype.type = function(name, checked)
 {
   if (checked === undefined) checked = true;
   var t = this.m_types[name];

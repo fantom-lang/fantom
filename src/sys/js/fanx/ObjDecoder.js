@@ -67,7 +67,7 @@ fanx_ObjDecoder.prototype.readUsing = function()
 
   this.consume();
   var typeName = this.consumeId("Expecting type name");
-  var t = pod.findType(typeName, false);
+  var t = pod.type(typeName, false);
   if (t == null) throw this.err("Unknown type: " + podName + "::" + typeName);
 
   if (this.curt == fanx_Token.AS)
@@ -495,7 +495,7 @@ fanx_ObjDecoder.prototype.readSimpleType = function()
   if (pod == null) throw this.err("Pod not found: " + n, line);
 
   // resolve type
-  var type = pod.findType(typeName, false);
+  var type = pod.type(typeName, false);
   if (type == null) throw fanx_ObjDecoder.err("Type not found: " + n + "::" + typeName, line);
   return type;
 }
@@ -593,7 +593,7 @@ fanx_ObjDecoder.defaultMapType = null;
 function fanx_UsingPod(p) { this.pod = p; }
 fanx_UsingPod.prototype.resolve = function(n)
 {
-  return this.pod.findType(n, false);
+  return this.pod.type(n, false);
 }
 
 function fanx_UsingType(t,n) { this.type = t; this.name = n; }
