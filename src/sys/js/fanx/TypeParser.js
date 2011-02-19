@@ -236,7 +236,7 @@ fanx_TypeParser.find = function(podName, typeName, checked)
 {
   var pod = fan.sys.Pod.find(podName, checked);
   if (pod == null) return null;
-  return pod.findType(typeName, checked);
+  return pod.type(typeName, checked);
 }
 
 fanx_TypeParser.cache = [];
