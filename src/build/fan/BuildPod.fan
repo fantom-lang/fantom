@@ -105,11 +105,26 @@ abstract class BuildPod : BuildScript
   **
   Uri? dependsDir := null
 
+  ** Deprecated - TODO
+  @Deprecated { msg = "Use outPodDir" }
+  Uri outDir
+  {
+    get { outPodDir }
+    set { outPodDir = it }
+  }
+
   **
-  ** Directory to write pod file.  By default it goes into
+  ** Directory to output pod file.  By default it goes into
   ** "{Env.cur.workDir}/lib/fan/"
   **
-  Uri outDir := Env.cur.workDir.plus(`lib/fan/`).uri
+  Uri outPodDir := Env.cur.workDir.plus(`lib/fan/`).uri
+
+  **
+  ** Directory to output documentation (docs always get placed in sub-directory
+  ** named by pod).  By default it goes into
+  ** "{Env.cur.workDir}/doc/"
+  **
+  Uri outDocDir := Env.cur.workDir.plus(`doc/`).uri
 
 //////////////////////////////////////////////////////////////////////////
 // Validate
@@ -184,7 +199,7 @@ abstract class BuildPod : BuildScript
     ci.log         = log
     ci.includeDoc  = docApi
     ci.mode        = CompilerInputMode.file
-    ci.outDir      = outDir.toFile
+    ci.outDir      = outPodDir.toFile
     ci.output      = CompilerOutputMode.podFile
 
     if (dependsDir != null)
@@ -368,7 +383,7 @@ abstract class BuildPod : BuildScript
   {
     // use docCompiler reflectively
     docCompiler := Type.find("docCompiler::Main").make
-    docCompiler->d    = devHomeDir + `doc/`
+    docCompiler->d    = outDocDir.toFile
     docCompiler->src  = scriptDir
     docCompiler->pods = [podName]
     Int r := docCompiler->run
