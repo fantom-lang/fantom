@@ -17,6 +17,7 @@
 - Graphics.clipBounds
 - Desktop.appName
 - Tree.bg, Tree.isExpanded
+- dom: Win.open, Win.close, Doc.out
 
 *Build 1.0.57 (6 Jan 2011)*
 - Rename sql::Col.of => type
