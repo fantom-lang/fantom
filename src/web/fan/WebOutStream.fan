@@ -9,6 +9,7 @@
 **
 ** WebOutStream provides methods for generating XML and XHTML content.
 **
+@Js
 class WebOutStream : OutStream
 {
 

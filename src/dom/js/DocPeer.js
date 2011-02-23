@@ -9,26 +9,29 @@
 //
 
 fan.dom.DocPeer = fan.sys.Obj.$extend(fan.sys.Obj);
-fan.dom.DocPeer.prototype.$ctor = function(self) {}
+fan.dom.DocPeer.prototype.$ctor = function(self)
+{
+  this.doc = null;
+}
 
-fan.dom.DocPeer.prototype.title  = function(self) { return document.title; }
-fan.dom.DocPeer.prototype.title$ = function(self, val) { document.title = val; }
+fan.dom.DocPeer.prototype.title  = function(self) { return this.doc.title; }
+fan.dom.DocPeer.prototype.title$ = function(self, val) { this.doc.title = val; }
 
 fan.dom.DocPeer.prototype.body = function(self)
 {
-  return fan.dom.ElemPeer.make(document.body);
+  return fan.dom.ElemPeer.make(this.doc.body);
 }
 
 fan.dom.DocPeer.prototype.elem = function(self, id)
 {
-  var elem = document.getElementById(id);
+  var elem = this.doc.getElementById(id);
   if (elem == null) return null;
   return fan.dom.ElemPeer.make(elem);
 }
 
 fan.dom.DocPeer.prototype.createElem = function(self, tagName, attribs)
 {
-  var elem = document.createElement(tagName);
+  var elem = this.doc.createElement(tagName);
   var wrap = fan.dom.ElemPeer.make(elem);
   if (attribs != null)
   {
@@ -39,6 +42,83 @@ fan.dom.DocPeer.prototype.createElem = function(self, tagName, attribs)
   return wrap;
 }
 
-fan.dom.DocPeer.prototype.getCookiesStr = function(self) { return document.cookie; }
-fan.dom.DocPeer.prototype.addCookieStr = function(self,c) { document.cookie = c; }
+fan.dom.DocPeer.prototype.out = function(self)
+{
+  return fan.web.WebOutStream.make(new fan.dom.DocOutStream(this.doc));
+}
 
+fan.dom.DocPeer.prototype.getCookiesStr = function(self) { return this.doc.cookie; }
+fan.dom.DocPeer.prototype.addCookieStr = function(self,c) { this.doc.cookie = c; }
+
+/*************************************************************************
+ * DocOutStream
+ ************************************************************************/
+
+fan.dom.DocOutStream = fan.sys.Obj.$extend(fan.sys.OutStream);
+fan.dom.DocOutStream.prototype.$ctor = function(doc) { this.doc = doc; }
+
+fan.dom.DocOutStream.prototype.w = function(v)
+{
+  throw fan.sys.UnsupportedErr.make("binary write on Doc output");
+}
+
+fan.dom.DocOutStream.prototype.write = function(x)
+{
+  throw fan.sys.UnsupportedErr.make("binary write on Doc output");
+}
+
+fan.dom.DocOutStream.prototype.writeBuf = function(buf, n)
+{
+  throw fan.sys.UnsupportedErr.make("binary write on Doc output");
+}
+
+fan.dom.DocOutStream.prototype.writeI2 = function(x)
+{
+  throw fan.sys.UnsupportedErr.make("binary write on Doc output");
+}
+
+fan.dom.DocOutStream.prototype.writeI4 = function(x)
+{
+  throw fan.sys.UnsupportedErr.make("binary write on Doc output");
+}
+
+fan.dom.DocOutStream.prototype.writeI8 = function(x)
+{
+  throw fan.sys.UnsupportedErr.make("binary write on Doc output");
+}
+
+fan.dom.DocOutStream.prototype.writeF4 = function(x)
+{
+  throw fan.sys.UnsupportedErr.make("binary write on Doc output");
+}
+
+fan.dom.DocOutStream.prototype.writeF8 = function(x)
+{
+  throw fan.sys.UnsupportedErr.make("binary write on Doc output");
+}
+
+fan.dom.DocOutStream.prototype.writeUtf = function(x)
+{
+  throw fan.sys.UnsupportedErr.make("modified UTF-8 format write on StrBuf output");
+}
+
+fan.dom.DocOutStream.prototype.writeChar = function(c)
+{
+  this.doc.write(String.fromCharCode(c));
+}
+
+fan.dom.DocOutStream.prototype.writeChars = function(s, off, len)
+{
+  if (off === undefined) off = 0;
+  if (len === undefined) len = s.length-off;
+  this.doc.write(s.substr(off, len));
+  return this;
+}
+
+fan.dom.DocOutStream.prototype.flush = function() { return this; }
+
+fan.dom.DocOutStream.prototype.close = function()
+{
+  this.doc.close();
+  return true;
+}
