@@ -185,6 +185,24 @@ class Doc : DocElem
     out.docEnd(this)
   }
 
+  **
+  ** Recursively walk th document to build an order list of the
+  ** multi-level headings which can serve as a "table of contents"
+  ** for the document.
+  **
+  Heading[] findHeadings()
+  {
+    acc := Heading[,]
+    doFindHeadings(acc, this)
+    return acc
+  }
+
+  private Void doFindHeadings(Heading[] acc, DocElem elem)
+  {
+    if (elem is Heading) acc.add(elem)
+    elem.children.each |kid| { if (kid is DocElem) doFindHeadings(acc, kid) }
+  }
+
   Str:Str meta := Str:Str[:]
 }
 
@@ -400,4 +418,3 @@ class Image : DocElem
   Str uri
   Str alt
 }
-
