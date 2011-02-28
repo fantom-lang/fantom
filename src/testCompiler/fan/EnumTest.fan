@@ -106,6 +106,35 @@ class EnumTest : CompilerTest
     verifyEq(v.get->get(2), c.get)
   }
 
+  Void testCtorFunc()
+  {
+    compile(
+     "enum class Foo
+      {
+        a(|Int i->Int| { i+1 }),
+        b(|Int i->Int| { i+2 }),
+        c(|Int i->Int| { i+3 })
+
+        private new make(|Int->Int| f) { this.f = f; this.x = f(ordinal) }
+
+        Int call(Int x) { f(x) }
+
+        const Int x
+        const |Int->Int| f
+      }")
+
+    Obj[] vals := pod.types.first.field("vals").get(null)
+    verifyEq(vals[0]->ordinal, 0)
+    verifyEq(vals[0]->x,       1)
+    verifyEq(vals[0]->call(4), 5)
+    verifyEq(vals[1]->ordinal, 1)
+    verifyEq(vals[1]->x,       3)
+    verifyEq(vals[1]->call(4), 6)
+    verifyEq(vals[2]->ordinal, 2)
+    verifyEq(vals[2]->x,       5)
+    verifyEq(vals[2]->call(4), 7)
+  }
+
 /////////////////////////////////////////////////////////////////////////
 // Static Init
 //////////////////////////////////////////////////////////////////////////

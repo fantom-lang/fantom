@@ -217,12 +217,14 @@ public class Parser : CompilerSupport
     // start class body
     consume(Token.lbrace)
 
+    // open current type
+    curType = def
+    closureCount = 0
+
     // if enum, parse values
     if (isEnum) enumDefs(def)
 
     // slots
-    curType = def
-    closureCount = 0
     while (true)
     {
       doc = this.doc
@@ -239,6 +241,8 @@ public class Parser : CompilerSupport
         def.addSlot(slot)
       }
     }
+
+    // close cur type
     closureCount = null
     curType = null
 
@@ -325,6 +329,14 @@ public class Parser : CompilerSupport
   **
   private Void enumDefs(TypeDef def)
   {
+    // create static$init to wrap enums in case
+    // they have closures
+    sInit := MethodDef.makeStaticInit(def.loc, def, null)
+    sInit.code = Block(def.loc)
+    def.addSlot(sInit)
+    curSlot = sInit
+
+    // parse each enum def
     ordinal := 0
     def.enumDefs.add(enumDef(ordinal++))
     while (curt === Token.comma)
@@ -336,6 +348,9 @@ public class Parser : CompilerSupport
       def.enumDefs.add(enumDef)
     }
     endOfStmt
+
+    // clear static$init scope
+    curSlot = null
   }
 
   **
