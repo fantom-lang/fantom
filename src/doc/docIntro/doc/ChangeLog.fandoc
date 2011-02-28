@@ -18,6 +18,7 @@
 - Desktop.appName
 - Tree.bg, Tree.isExpanded
 - dom: Win.open, Win.close, Doc.out
+- Mark GfxEnv as NoDoc
 
 *Build 1.0.57 (6 Jan 2011)*
 - Rename sql::Col.of => type
