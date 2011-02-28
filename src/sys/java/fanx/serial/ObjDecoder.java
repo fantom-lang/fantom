@@ -153,7 +153,7 @@ public class ObjDecoder
   private Object readTypeOrSlotLiteral(int line, Type t)
   {
     consume(Token.POUND, "Expected '#' for type literal");
-    if (curt == Token.ID)
+    if (curt == Token.ID && !isEndOfStmt(line))
     {
       String slotName = consumeId("slot literal name");
       return t.slot(slotName);
@@ -725,6 +725,16 @@ public class ObjDecoder
   private void consume()
   {
     curt = tokenizer.next();
+  }
+
+  /**
+   * Is current token part of the next statement?
+   */
+  private boolean isEndOfStmt(int lastLine)
+  {
+    if (curt == Token.EOF) return true;
+    if (curt == Token.SEMICOLON) return true;
+    return lastLine < tokenizer.line;
   }
 
   /**
