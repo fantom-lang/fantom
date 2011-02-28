@@ -37,9 +37,13 @@ fan.fwt.DesktopPeer.callLater = function(delay, f)
 // Dispose
 //////////////////////////////////////////////////////////////////////////
 
-//fan.fwt.DesktopPeer.disposeColor(Color c)
-//fan.fwt.DesktopPeer.disposeFont(Font f)
-//fan.fwt.DesktopPeer.disposeImage(Image i)
+fan.fwt.DesktopPeer.disposeColor = function(fanColor) {}
+fan.fwt.DesktopPeer.disposeFont = function(fanFont) {}
+fan.fwt.DesktopPeer.disposeImage = function(fanImg)
+{
+  // remove image from cache to allow GC free it
+  fan.fwt.FwtEnvPeer.imgCache[fanImg.m_uri.toStr()] = null
+}
 
 //////////////////////////////////////////////////////////////////////////
 // System Fonts

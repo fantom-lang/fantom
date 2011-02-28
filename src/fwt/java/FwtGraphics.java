@@ -23,8 +23,13 @@ public class FwtGraphics implements Graphics
 {
   public FwtGraphics(PaintEvent e)
   {
-    this.gc = e.gc;
-    clip(Rect.make(e.x, e.y, e.width, e.height));
+    this(e.gc, e.x, e.y, e.width, e.height);
+  }
+
+  public FwtGraphics(GC gc, int x, int y, int w, int h)
+  {
+    this.gc = gc;
+    clip(Rect.make(x, y, w, h));
   }
 
   public Brush brush()

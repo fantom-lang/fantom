@@ -19,6 +19,24 @@ fan.fwt.Graphics.prototype.size = null;
 fan.fwt.Graphics.prototype.cx = null;
 fan.fwt.Graphics.prototype.m_clip = null;
 
+// canvas - <canvas> element
+// bounds - fan.gfx.Rect
+// f - JS function(fan.fwt.Graphics)
+fan.fwt.Graphics.prototype.paint = function(canvas, bounds, f)
+{
+  this.size = bounds.size();
+  this.m_clip = bounds;
+  this.cx = canvas.getContext("2d");
+  this.cx.save();
+  this.cx.lineWidth = 1;
+  this.cx.lineCap = "square";
+  this.cx.textBaseline = "top";
+  this.cx.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
+  this.cx.clearRect(bounds.m_x, bounds.m_y, bounds.m_w, bounds.m_h);
+  f(this);
+  this.cx.restore();
+}
+
 // Brush brush
 fan.fwt.Graphics.prototype.m_brush = null
 fan.fwt.Graphics.prototype.brush   = function() { return this.m_brush }

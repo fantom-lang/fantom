@@ -34,6 +34,21 @@ const class Image
   }
 
   **
+  ** Create a new image which is painted by the given function.
+  **
+  ** Example:
+  **   Image.makePainted(Size(100, 100)) |g|
+  **   {
+  **     g.brush = Color.green
+  **     g.fillRect(0, 0, 100, 100)
+  **   }
+  **
+  static Image makePainted(Size size, |Graphics| f)
+  {
+    GfxEnv.cur.imagePaint(size, f)
+  }
+
+  **
   ** Create an image to load from file.  If checked is true and the
   ** file doesn't exist then throw an exception.  If checked is false
   ** then return null.  The supported file formats are based on
