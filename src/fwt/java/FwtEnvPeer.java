@@ -70,11 +70,35 @@ public class FwtEnvPeer
     gc.drawImage(s, 0, 0, sw, sh, 0, 0, rw, rh);
     gc.dispose();
 
-    // return new gfx::Image backed by new SWT image
+    return toFanImage(resultSwt);
+  }
+
+  public fan.gfx.Image imagePaint(FwtEnv self, fan.gfx.Size size, Func f)
+  {
+    int w = (int)size.w;
+    int h = (int)size.h;
+    Fwt fwt = Fwt.get();
+
+    Image img = new Image(fwt.display, w, h);
+    FwtGraphics g = new FwtGraphics(new GC(img), 0, 0, w, h);
+    try
+    {
+      f.call(g);
+      return toFanImage(img);
+    }
+    finally
+    {
+      g.dispose();
+    }
+  }
+
+  // return new gfx::Image backed by new SWT image
+  private fan.gfx.Image toFanImage(Image swtImage)
+  {
     Uri uri = Uri.fromStr("mem-" + Uuid.make());
-    fan.gfx.Image resultFan = fan.gfx.Image.makeUri(uri);
-    fwt.images.put(uri, resultSwt);
-    return resultFan;
+    fan.gfx.Image fanImage = fan.gfx.Image.makeUri(uri);
+    Fwt.get().images.put(uri, swtImage);
+    return fanImage;
   }
 
 //////////////////////////////////////////////////////////////////////////

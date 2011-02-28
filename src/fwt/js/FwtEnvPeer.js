@@ -119,6 +119,33 @@ fan.fwt.FwtEnvPeer.prototype.imageResize = function(self, fanImg, size)
   return fan.gfx.Image.makeUri(uri);
 }
 
+// Image imagePaint(Size size, |Graphics| f)
+fan.fwt.FwtEnvPeer.prototype.imagePaint = function(self, size, f)
+{
+  // generate a unique uri as the key for the new image
+  var uri = fan.fwt.FwtEnvPeer.nextMemUriStr();
+
+  // create temp canvas
+  var canvas = document.createElement("canvas");
+  canvas.width = size.m_w;
+  canvas.height = size.m_h;
+
+  // paint image content on the canvas
+  var g = new fan.fwt.Graphics();
+  g.paint(canvas, fan.gfx.Rect.make(0, 0, size.m_w, size.m_h), function() { f.call(g) })
+
+  // create new image based on canvas content
+  var dataUrl = canvas.toDataURL("image/png");
+  var jsNew = document.createElement("img");
+  jsNew.src = dataUrl;
+
+  // put new image into the image with our auto-gen uri key
+  fan.fwt.FwtEnvPeer.imgCache[uri] = jsNew;
+
+  // create new Fan wrapper which references jsNew via uri
+  return fan.gfx.Image.makeUri(uri);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Font
 //////////////////////////////////////////////////////////////////////////

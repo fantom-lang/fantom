@@ -49,6 +49,11 @@ abstract const class GfxEnv
   **
   abstract Image imageResize(Image img, Size size)
 
+  **
+  ** Create a new image which is painted by the given function.
+  **
+  abstract Image imagePaint(Size size, |Graphics| f)
+
 //////////////////////////////////////////////////////////////////////////
 // Font Support
 //////////////////////////////////////////////////////////////////////////
@@ -85,6 +90,5 @@ abstract const class GfxEnv
   ** with this font for this environment.
   **
   abstract Int fontWidth(Font f, Str s)
-
 
 }
