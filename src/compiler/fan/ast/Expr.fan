@@ -293,7 +293,7 @@ abstract class Expr : Node
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  readonly ExprId id      // expression type identifier
+  const ExprId id         // expression type identifier
   CType? ctype            // type expression resolves to
   Bool leave := true { protected set } // leave this expression on the stack
 }

@@ -56,10 +56,10 @@ class ReflectField : ReflectSlot, CField
     else return getter.inheritedReturnType
   }
 
-  override readonly CType fieldType
-  override readonly CMethod? getter
-  override readonly CMethod? setter
-  readonly Field f
+  override CType fieldType { private set }
+  override CMethod? getter { private set }
+  override CMethod? setter { private set }
+  Field f                  { private set }
 }
 
 **************************************************************************
@@ -92,10 +92,10 @@ class ReflectMethod : ReflectSlot, CMethod
       return returnType
   }
 
-  override readonly CType returnType
-  override readonly CParam[] params
-  override readonly Bool isGeneric
-  readonly Method m
+  override CType returnType { private set }
+  override CParam[] params  { private set }
+  override Bool isGeneric   { private set }
+  Method m                  { private set }
 }
 
 **************************************************************************
@@ -113,8 +113,8 @@ class ReflectParam : CParam
   override Str name() { p.name }
   override Bool hasDefault() { p.hasDefault }
 
-  override readonly CType paramType
-  readonly Param p
+  override CType paramType { private set }
+  Param p                  { private set }
 }
 
 **************************************************************************

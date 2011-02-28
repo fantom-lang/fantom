@@ -285,77 +285,77 @@ abstract class CNamespace
 // Predefined
 //////////////////////////////////////////////////////////////////////////
 
-  readonly CPod? sysPod
+  CPod? sysPod { private set }
 
   // generic parameters like sys::K, sys::V
-  readonly [Str:CType]? genericParams
+  [Str:CType]? genericParams { private set }
 
   // place holder type used for resolve errors
-  readonly CType? error
+  CType? error { private set }
 
   // place holder type used to indicate nothing (like throw expr)
-  readonly CType? nothingType
+  CType? nothingType { private set }
 
   // generic type for it block until we can infer type
-  readonly FuncType? itBlockType
+  FuncType? itBlockType { private set }
 
-  readonly CType? objType
-  readonly CType? boolType
-  readonly CType? enumType
-  readonly CType? facetType
-  readonly CType? intType
-  readonly CType? floatType
-  readonly CType? decimalType
-  readonly CType? strType
-  readonly CType? strBufType
-  readonly CType? durationType
-  readonly CType? listType
-  readonly CType? mapType
-  readonly CType? funcType
-  readonly CType? errType
-  readonly CType? podType
-  readonly CType? typeType
-  readonly CType? slotType
-  readonly CType? fieldType
-  readonly CType? methodType
-  readonly CType? rangeType
-  readonly CType? uriType
-  readonly CType? voidType
-  readonly CType? fieldNotSetErrType
+  CType? objType              { private set }
+  CType? boolType             { private set }
+  CType? enumType             { private set }
+  CType? facetType            { private set }
+  CType? intType              { private set }
+  CType? floatType            { private set }
+  CType? decimalType          { private set }
+  CType? strType              { private set }
+  CType? strBufType           { private set }
+  CType? durationType         { private set }
+  CType? listType             { private set }
+  CType? mapType              { private set }
+  CType? funcType             { private set }
+  CType? errType              { private set }
+  CType? podType              { private set }
+  CType? typeType             { private set }
+  CType? slotType             { private set }
+  CType? fieldType            { private set }
+  CType? methodType           { private set }
+  CType? rangeType            { private set }
+  CType? uriType              { private set }
+  CType? voidType             { private set }
+  CType? fieldNotSetErrType   { private set }
 
-  readonly CMethod? objTrap
-  readonly CMethod? objWith
-  readonly CMethod? objToImmutable
-  readonly CMethod? boolNot
-  readonly CMethod? intIncrement
-  readonly CMethod? intDecrement
-  readonly CMethod? intPlus
-  readonly CMethod? floatPlus
-  readonly CMethod? floatMinus
-  readonly CMethod? strPlus
-  readonly CMethod? strBufMake
-  readonly CMethod? strBufAdd
-  readonly CMethod? strBufToStr
-  readonly CMethod? listMake
-  readonly CMethod? listMakeObj
-  readonly CMethod? listAdd
-  readonly CMethod? mapMake
-  readonly CMethod? mapSet
-  readonly CMethod? enumOrdinal
-  readonly CMethod? funcBind
-  readonly CMethod? rangeMakeInclusive
-  readonly CMethod? rangeMakeExclusive
-  readonly CMethod? slotFindMethod
-  readonly CMethod? slotFindFunc
-  readonly CMethod? podFind
-  readonly CMethod? podLocale
-  readonly CMethod? typePod
-  readonly CMethod? typeField
-  readonly CMethod? typeMethod
-  readonly CMethod? funcEnterCtor
-  readonly CMethod? funcExitCtor
-  readonly CMethod? funcCheckInCtor
-  readonly CMethod? funcCall
-  readonly CMethod? fieldNotSetErrMake
+  CMethod? objTrap            { private set }
+  CMethod? objWith            { private set }
+  CMethod? objToImmutable     { private set }
+  CMethod? boolNot            { private set }
+  CMethod? intIncrement       { private set }
+  CMethod? intDecrement       { private set }
+  CMethod? intPlus            { private set }
+  CMethod? floatPlus          { private set }
+  CMethod? floatMinus         { private set }
+  CMethod? strPlus            { private set }
+  CMethod? strBufMake         { private set }
+  CMethod? strBufAdd          { private set }
+  CMethod? strBufToStr        { private set }
+  CMethod? listMake           { private set }
+  CMethod? listMakeObj        { private set }
+  CMethod? listAdd            { private set }
+  CMethod? mapMake            { private set }
+  CMethod? mapSet             { private set }
+  CMethod? enumOrdinal        { private set }
+  CMethod? funcBind           { private set }
+  CMethod? rangeMakeInclusive { private set }
+  CMethod? rangeMakeExclusive { private set }
+  CMethod? slotFindMethod     { private set }
+  CMethod? slotFindFunc       { private set }
+  CMethod? podFind            { private set }
+  CMethod? podLocale          { private set }
+  CMethod? typePod            { private set }
+  CMethod? typeField          { private set }
+  CMethod? typeMethod         { private set }
+  CMethod? funcEnterCtor      { private set }
+  CMethod? funcExitCtor       { private set }
+  CMethod? funcCheckInCtor    { private set }
+  CMethod? funcCall           { private set }
+  CMethod? fieldNotSetErrMake { private set }
 
 }

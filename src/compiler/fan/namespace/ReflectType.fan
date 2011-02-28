@@ -40,7 +40,7 @@ class ReflectType : CType
   override Str signature() { return t.signature }
   override Int flags()     { return (Int)t->flags }
 
-  override readonly Bool isVal
+  override const Bool isVal
 
   override Bool isNullable() { return false }
   override once CType toNullable() { return NullableType(this) }
@@ -95,10 +95,10 @@ class ReflectType : CType
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  readonly Type t
-  override readonly ReflectPod pod
-  override readonly CType? base
-  override readonly CType[] mixins
+  const Type t
+  override ReflectPod pod { private set }
+  override CType? base    { private set }
+  override CType[] mixins { private set }
   private Str:CSlot slotMap := Str:CSlot[:]
   private Bool slotsLoaded := false
 

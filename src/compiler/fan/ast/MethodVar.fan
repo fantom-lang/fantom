@@ -52,7 +52,7 @@ class MethodVar
   Bool usedInClosure  // local used by closure within containing method
   MethodVar? shadows  // if closure var, this is the variable in parent scope we shadow
   CField? wrapField   // if wrapped onto heap this is 'Wrapper.val' field
-  readonly Bool isReassigned // keeps track of reassigment assignment (we don't count initial local assign)
+  Bool isReassigned   // keeps track of reassigment assignment (we don't count initial local assign)
   MethodVar? paramWrapper  // wrapper local var if param has to be wrapped
 
 }
