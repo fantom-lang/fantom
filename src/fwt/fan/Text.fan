@@ -32,7 +32,7 @@ class Text : TextWidget
   ** Event fields:
   **   - none
   **
-  @Transient readonly EventListeners onAction := EventListeners()
+  @Transient EventListeners onAction := EventListeners() { private set }
 
   **
   ** Callback when the text is modified.
@@ -43,7 +43,7 @@ class Text : TextWidget
   ** Event fields:
   **   - none
   **
-  @Transient readonly EventListeners onModify := EventListeners()
+  @Transient EventListeners onModify := EventListeners() { private set }
 
   **
   ** True to make this a password text field which hides the

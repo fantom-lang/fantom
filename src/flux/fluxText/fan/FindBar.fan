@@ -390,7 +390,7 @@ internal class FindBar : ContentPane, TextEditorSupport
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  override readonly TextEditor editor
+  override TextEditor editor { private set }
   private Int caretPos
 
   private Widget findPane

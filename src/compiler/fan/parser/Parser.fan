@@ -520,9 +520,15 @@ public class Parser : CompilerSupport
     if (flags.and(Readonly) != 0)
     {
       if (field.isConst)
+      {
         err("Invalid combination of 'readonly' and 'const' modifiers", loc)
+      }
       else
+      {
+        // TODO
+        warn("'readonly' is deprecated, use '{ private set }'", loc)
         field.set.flags = field.set.flags.and(ProtectionMask).or(FConst.Private)
+      }
     }
 
     endOfStmt

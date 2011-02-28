@@ -63,7 +63,7 @@ class Statement
   **
   ** The connection that this statement uses.
   **
-  internal readonly SqlConn conn
+  internal SqlConn conn { private set }
 
   **
   ** The SQL text used to create this statement.

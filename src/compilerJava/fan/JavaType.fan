@@ -36,9 +36,9 @@ class JavaType : CType
 //////////////////////////////////////////////////////////////////////////
 
   override CNamespace ns() { pod.ns }
-  override readonly JavaPod pod
-  override readonly Str name
-  override readonly Str qname
+  override JavaPod pod
+  override const Str name
+  override const Str qname
   override Str signature() { qname }
 
   override CFacet? facet(Str qname) { null }
@@ -62,7 +62,7 @@ class JavaType : CType
 
   override once CType toListOf() { ListType(this) }
 
-  override readonly Str:CSlot slots { get { load; return &slots } }
+  override Str:CSlot slots { get { load; return &slots } private set }
 
   override once COperators operators() { COperators(this) }
 

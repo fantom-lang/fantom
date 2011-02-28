@@ -22,8 +22,6 @@ internal class LocatorBar : Canvas
     onMouseUp.add { onViewPopup(it) }
   }
 
-  readonly Frame frame
-
   Void load(Resource r)
   {
     icon = r.icon
@@ -106,6 +104,7 @@ internal class LocatorBar : Canvas
 
   const Insets textInsets := Insets(4,4,4,22)
   const Insets viewInsets := Insets(4,13,4,4)
+  Frame frame
   Image? icon
   Text uriText := Text { onAction.add { goDefaultView(it) }; border = false }
   Str view := "Views"

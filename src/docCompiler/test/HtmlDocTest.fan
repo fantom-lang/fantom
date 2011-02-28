@@ -56,14 +56,6 @@ abstract class HtmlDocTest
   internal Int field_internalGet_privateSet { private set }
 
   //
-  // readonly
-  //
-
-  readonly Int field_public_readonly
-  protected readonly Int field_protected_readonly
-  internal readonly Int field_internal_readonly
-
-  //
   // const
   //
   const Int field_public_const

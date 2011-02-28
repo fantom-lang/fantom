@@ -36,7 +36,7 @@ class RichText : TextWidget
   ** Event fields:
   **   - `Event.data`: the `TextChange` instance.
   **
-  @Transient readonly EventListeners onModify := EventListeners()
+  @Transient EventListeners onModify := EventListeners() { private set }
 
   **
   ** Callback before the text is modified.  This gives listeners
@@ -53,7 +53,7 @@ class RichText : TextWidget
   **     can update 'newText' with the actual text to be inserted
   **     or set to null to cancel the modification.
   **
-  @Transient readonly EventListeners onVerify := EventListeners()
+  @Transient EventListeners onVerify := EventListeners() { private set }
 
   **
   ** Callback before a key event is processed.  This gives listeners
@@ -67,7 +67,7 @@ class RichText : TextWidget
   **   - `Event.keyChar`: unicode character represented by key event
   **   - `Event.key`: key code including the modifiers
   **
-  @Transient readonly EventListeners onVerifyKey := EventListeners()
+  @Transient EventListeners onVerifyKey := EventListeners() { private set }
 
   **
   ** Callback when the selection is modified.
@@ -79,7 +79,7 @@ class RichText : TextWidget
   **   - `Event.offset`: the starting offset
   **   - `Event.size`:   the number of chars selected
   **
-  @Transient readonly EventListeners onSelect := EventListeners()
+  @Transient EventListeners onSelect := EventListeners() { private set }
 
   **
   ** Callback when the caret position is modified.
@@ -90,7 +90,7 @@ class RichText : TextWidget
   ** Event fields:
   **   - `Event.offset`: the new caret offset
   **
-  @Transient readonly EventListeners onCaret := EventListeners()
+  @Transient EventListeners onCaret := EventListeners() { private set }
 
   **
   ** Horizontal scroll bar.
@@ -203,7 +203,7 @@ abstract class RichTextModel
   ** Event fields:
   **   - `Event.data`: the `TextChange`.
   **
-  @Transient readonly EventListeners onModify := EventListeners()
+  @Transient EventListeners onModify := EventListeners() { private set }
 
   **
   ** Get or set the entire text document.

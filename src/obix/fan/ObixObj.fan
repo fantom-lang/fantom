@@ -179,7 +179,7 @@ class ObixObj
   **
   ** Parent object or null if unparented.
   **
-  readonly ObixObj? parent
+  ObixObj? parent { private set }
 
   **
   ** Return is size is zero.

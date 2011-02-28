@@ -34,7 +34,7 @@ class Table : Widget
   ** Event fields:
   **   - `Event.index`: the row index.
   **
-  @Transient readonly EventListeners onAction := EventListeners()
+  @Transient EventListeners onAction := EventListeners() { private set }
 
   **
   ** Callback when selected rows change.
@@ -45,7 +45,7 @@ class Table : Widget
   ** Event fields:
   **   - `Event.index`: the primary selection row index.
   **
-  @Transient readonly EventListeners onSelect := EventListeners()
+  @Transient EventListeners onSelect := EventListeners() { private set }
 
   **
   ** Callback when user invokes a right click popup action.
@@ -62,7 +62,7 @@ class Table : Widget
   **     background popup.
   **   - `Event.pos`: the mouse position of the popup.
   **
-  @Transient readonly EventListeners onPopup := EventListeners()
+  @Transient EventListeners onPopup := EventListeners() { private set }
 
   **
   ** Horizontal scroll bar.
@@ -353,7 +353,7 @@ internal class TableView : TableModel
   private Int[] rows := [,]   // view to base row index mapping
   private Int[] cols := [,]   // view to base col index mapping
   private Bool[] vis := [,]   // visible
-  readonly Int? sortCol
-  readonly SortMode sortMode := SortMode.up
+  internal Int? sortCol { private set }
+  internal SortMode sortMode := SortMode.up { private set }
 }
 

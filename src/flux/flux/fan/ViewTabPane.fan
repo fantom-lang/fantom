@@ -29,21 +29,6 @@ internal class ViewTabPane : Pane
   }
 
   **
-  ** Associated flux frame.
-  **
-  readonly Frame frame
-
-  **
-  ** Get the active tab.
-  **
-  readonly ViewTab active
-
-  **
-  ** Get a listing of all the tabs.
-  **
-  readonly ViewTab[] tabs
-
-  **
   ** Get a listing of all the tabs mapped to views.
   **
   View[] views()
@@ -138,8 +123,10 @@ internal class ViewTabPane : Pane
     active.relayout
   }
 
+  internal Frame frame { private set }
+  internal ViewTab active { private set }
+  internal ViewTab[] tabs { private set }
   private TabBar tbar
-
 }
 
 **************************************************************************

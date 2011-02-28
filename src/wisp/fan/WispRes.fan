@@ -72,7 +72,7 @@ internal class WispRes : WebRes
   ** modify its status code or headers.  A response is committed the
   ** first time that `out` is called.
   **
-  override readonly Bool isCommitted := false
+  override Bool isCommitted := false { private set }
 
   **
   ** Return the WebOutStream for this response.  The first time this
@@ -140,7 +140,7 @@ internal class WispRes : WebRes
   **
   ** Return if this response is complete - see `done`.
   **
-  override readonly Bool isDone := false
+  override Bool isDone := false { private set }
 
   **
   ** Done is called to indicate that that response is complete

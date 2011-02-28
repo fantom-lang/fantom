@@ -34,7 +34,7 @@ class Tree : Widget
   ** Event fields:
   **   - `Event.data`: the `TreeModel` node object
   **
-  @Transient readonly EventListeners onAction := EventListeners()
+  @Transient EventListeners onAction := EventListeners() { private set }
 
   **
   ** Callback when selected nodes change.
@@ -45,7 +45,7 @@ class Tree : Widget
   ** Event fields:
   **   - `Event.data`: the primary selection node object.
   **
-  @Transient readonly EventListeners onSelect := EventListeners()
+  @Transient EventListeners onSelect := EventListeners() { private set }
 
   **
   ** Callback when user invokes a right click popup action.
@@ -62,7 +62,7 @@ class Tree : Widget
   **     'null' if this is a background popup.
   **   - `Event.pos`: the mouse position of the popup.
   **
-  @Transient readonly EventListeners onPopup := EventListeners()
+  @Transient EventListeners onPopup := EventListeners() { private set }
 
   **
   ** Horizontal scroll bar.

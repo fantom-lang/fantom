@@ -38,12 +38,12 @@ class TargetMethod
   **
   ** Return the parent build script associated with this task.
   **
-  readonly BuildScript script
+  BuildScript script { private set }
 
   **
   ** Method to invoke when this target is executed.
   **
-  readonly Method method
+  Method method { private set }
 
   **
   ** Method of the target.

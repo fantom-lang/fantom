@@ -27,7 +27,7 @@ class Window : ContentPane
   ** Event fields:
   **   - none
   **
-  @Transient readonly EventListeners onClose := EventListeners()
+  @Transient EventListeners onClose := EventListeners() { private set }
 
   **
   ** Callback function when window becomes the active window
@@ -39,7 +39,7 @@ class Window : ContentPane
   ** Event fields:
   **   - none
   **
-  @Transient readonly EventListeners onActive := EventListeners()
+  @Transient EventListeners onActive := EventListeners() { private set }
 
   **
   ** Callback function when window becomes an inactive window
@@ -51,7 +51,7 @@ class Window : ContentPane
   ** Event fields:
   **   - none
   **
-  @Transient readonly EventListeners onInactive := EventListeners()
+  @Transient EventListeners onInactive := EventListeners() { private set }
 
   **
   ** Callback function when window is iconified to the taskbar.
@@ -62,7 +62,7 @@ class Window : ContentPane
   ** Event fields:
   **   - none
   **
-  @Transient readonly EventListeners onIconified := EventListeners()
+  @Transient EventListeners onIconified := EventListeners() { private set }
 
   **
   ** Callback function when window is deiconified from the taskbar.
@@ -73,7 +73,7 @@ class Window : ContentPane
   ** Event fields:
   **   - none
   **
-  @Transient readonly EventListeners onDeiconified := EventListeners()
+  @Transient EventListeners onDeiconified := EventListeners() { private set }
 
   **
   ** Window mode defines the modal state of the window:

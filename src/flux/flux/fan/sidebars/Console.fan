@@ -109,7 +109,7 @@ class Console : SideBar
   **
   ** Return true if the console is busy executing a job.
   **
-  readonly Bool busy := false
+  private Bool busy := false
 
   **
   ** Execute an external process and capture its output

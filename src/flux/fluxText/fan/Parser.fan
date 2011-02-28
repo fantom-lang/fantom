@@ -510,7 +510,7 @@ internal class BlockOpen : Block
   override Str toStr() { return name }
 
   override Obj[]? stylingOverride
-  readonly Parser parser
+  Parser parser { private set }
   const Str? name
 }
 
@@ -538,7 +538,7 @@ internal class BlockClose : Block
 
   override Str toStr() { return "$open.name:$pos" }
 
-  readonly BlockOpen open
+  BlockOpen open { private set }
   const Int pos
   Line? cachedLineOnClose
 }
