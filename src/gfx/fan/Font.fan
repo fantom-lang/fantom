@@ -195,35 +195,32 @@ const class Font
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get height of this font for `GfxEnv.cur`.  The height
-  ** is the pixels is the sum of ascent, descent, and leading.
+  ** Get height of this font which is the pixels is the sum of
+  ** ascent, descent, and leading.
   **
   Int height() { GfxEnv.cur.fontHeight(this) }
 
   **
-  ** Get ascent of this font on `GfxEnv.cur`.  The ascent
-  ** is the distance in pixels from baseline to top of chars, not
-  ** including any leading area.
+  ** Get ascent of this font which is the distance in pixels from
+  ** baseline to top of chars, not including any leading area.
   **
   Int ascent() { GfxEnv.cur.fontAscent(this) }
 
   **
-  ** Get descent of this font on `GfxEnv.cur`.  The descent
-  ** is the distance in pixels from baseline to bottom of chars, not
-  ** including any leading area.
+  ** Get descent of this font which is the distance in pixels from
+  ** baseline to bottom of chars, not including any leading area.
   **
   Int descent() { GfxEnv.cur.fontDescent(this) }
 
   **
-  ** Get leading of this font on `GfxEnv.cur`.  The leading
-  ** area is the distance in pixels above the ascent which may include
-  ** accents and other marks.
+  ** Get leading of this font which is the distance in pixels above
+  ** the ascent which may include accents and other marks.
   **
   Int leading() { GfxEnv.cur.fontLeading(this) }
 
   **
   ** Get the width of the string in pixels when painted
-  ** with this font on `GfxEnv.cur`.
+  ** with this font.
   **
   Int width(Str s) { GfxEnv.cur.fontWidth(this, s) }
 

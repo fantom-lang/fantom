@@ -11,6 +11,7 @@ using concurrent
 **
 ** GfxEnv models an implementation of the gfx graphics API.
 **
+@NoDoc
 @Js
 abstract const class GfxEnv
 {
