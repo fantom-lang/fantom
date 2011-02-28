@@ -152,7 +152,7 @@ namespace Fanx.Serial
     private object readTypeOrSlotLiteral(int line, Type t)
     {
       consume(Token.POUND, "Expected '#' for type literal");
-      if (curt == Token.ID)
+      if (curt == Token.ID && !isEndOfStmt(line))
       {
         string slotName = consumeId("slot literal name");
         return t.slot(slotName);
@@ -694,6 +694,16 @@ namespace Fanx.Serial
     private void consume()
     {
       curt = tokenizer.next();
+    }
+
+    /// <summary>
+    /// Is current token part of the next statement?
+    /// </summary>
+    private bool isEndOfStmt(int lastLine)
+    {
+      if (curt == Token.EOF) return true;
+      if (curt == Token.SEMICOLON) return true;
+      return lastLine < tokenizer.m_line;
     }
 
     /// <summary>

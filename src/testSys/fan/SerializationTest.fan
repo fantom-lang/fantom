@@ -784,6 +784,33 @@ class SerializationTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Type/Slot Literals Boundary Conditions
+//////////////////////////////////////////////////////////////////////////
+
+  Void testTypeSlotLiterals()
+  {
+    x := SerTypeSlotLiterals()
+    s := StrBuf() { out.writeObj(x).close }.toStr
+
+    y := s.in.readObj as SerTypeSlotLiterals
+    verifyEq(y.a, Str#)
+    verifyEq(y.b, 77)
+    verifyEq(y.c, Int#plus)
+    verifyEq(y.d, Str#replace)
+    verifyEq(y.e, SerTypeSlotLiterals#)
+    verifyEq(y.f, SerTypeSlotLiterals#f)
+    verifyEq(y.g, 88)
+
+    SerTypeSlotLiterals z :=
+     """using sys
+        using testSys
+        SerTypeSlotLiterals { c = Duration#make; a = InStream#; d = Test#verify }""".in.readObj
+    verifyEq(z.a, InStream#)
+    verifyEq(z.c, Duration#make)
+    verifyEq(z.d, Test#verify)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
@@ -1077,4 +1104,21 @@ class SerCollectionInference
   [Uri:Str?]? y
   Obj? w
 }
+
+**************************************************************************
+** SerCollectionInference
+**************************************************************************
+
+@Serializable
+class SerTypeSlotLiterals
+{
+  Type a := Str#
+  Int  b := 77
+  Slot c := Int#plus
+  Slot d := Str#replace
+  Type e := SerTypeSlotLiterals#
+  Slot f :=  SerTypeSlotLiterals#f
+  Int  g := 88
+}
+
 
