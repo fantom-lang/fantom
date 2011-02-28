@@ -71,5 +71,5 @@ class NullableType : CType
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  readonly CType root
+  CType root { private set }
 }

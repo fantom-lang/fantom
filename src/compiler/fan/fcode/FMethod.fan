@@ -162,7 +162,7 @@ class FMethodVar : FConst, CParam
 
   FPod fpod() { return fmethod.fparent.fpod }
 
-  readonly FMethod fmethod
+  FMethod fmethod
   Int nameIndex    // name index
   Int typeRef      // typeRef index
   Int flags        // method variable flags

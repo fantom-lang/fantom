@@ -18,13 +18,13 @@ class ReflectPod : CPod
     this.pod = pod
   }
 
-  override readonly ReflectNamespace ns
+  override ReflectNamespace ns { private set }
 
   override Str name() { return pod.name }
 
   override Version version() { return pod.version }
 
-  override readonly CType[] types
+  override CType[] types
   {
     get
     {
@@ -35,6 +35,7 @@ class ReflectPod : CPod
       }
       return typeMap.vals
     }
+    private set
   }
 
   override ReflectType? resolveType(Str typeName, Bool checked)
@@ -55,7 +56,7 @@ class ReflectPod : CPod
     return rt
   }
 
-  readonly Pod pod
+  Pod pod { private set }
   private Str:ReflectType typeMap := Str:ReflectType[:]
   private Bool loadedAllTypes := false
 

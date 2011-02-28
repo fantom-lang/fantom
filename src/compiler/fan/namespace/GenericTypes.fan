@@ -112,7 +112,7 @@ abstract class GenericType : CType
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  override readonly CType? base
+  override CType? base { private set }
 }
 
 **************************************************************************
@@ -167,8 +167,8 @@ class ListType : GenericType
 
   override Bool isValid() { v.isValid }
 
-  readonly CType v         // value type
-  override readonly Str signature   // v[]
+  CType v { private set }        // value type
+  override const Str signature   // v[]
 
 }
 
@@ -226,9 +226,9 @@ class MapType : GenericType
 
   override Bool isValid() { k.isValid && v.isValid }
 
-  readonly CType k         // keytype
-  readonly CType v         // value type
-  override readonly Str signature   // [k:v]
+  CType k { private set }        // keytype
+  CType v { private set }        // value type
+  override const Str signature   // [k:v]
 
 }
 
@@ -372,12 +372,12 @@ class FuncType : GenericType
     (ret.isVoid || ret.isValid) && params.all |CType p->Bool| { p.isValid }
   }
 
-  readonly CType[] params  // a, b, c ...
-  readonly Str[] names     // parameter names
-  readonly CType ret       // return type
-  Bool unnamed             // where any names auto-generated
-  override readonly Str signature   // |a,b..n->r|
-  override readonly Bool isGenericParameter
+  CType[] params { private set } // a, b, c ...
+  Str[] names    { private set } // parameter names
+  CType ret      { private set } // return type
+  Bool unnamed                   // where any names auto-generated
+  override const Str signature   // |a,b..n->r|
+  override const Bool isGenericParameter
   Bool inferredSignature   // were one or more parameters inferred
 }
 
@@ -446,8 +446,8 @@ class ParameterizedField : CField
 
   override Bool isParameterized() { return true }
 
-  override readonly CType parent
-  readonly CField generic
+  override CType parent { private set }
+  CField generic { private set }
 }
 
 **************************************************************************
@@ -485,11 +485,11 @@ class ParameterizedMethod : CMethod
 
   override CType inheritedReturnType()  { return generic.inheritedReturnType }
 
-  override readonly CType parent
-  override readonly Str signature
-  override readonly CMethod? generic
-  override readonly CType returnType
-  override readonly CParam[] params
+  override CType parent     { private set }
+  override Str signature    { private set }
+  override CMethod? generic { private set }
+  override CType returnType { private set }
+  override CParam[] params  { private set }
 }
 
 **************************************************************************
@@ -508,6 +508,6 @@ class ParameterizedMethodParam : CParam
   override Bool hasDefault() { return generic.hasDefault }
   override Str toStr() { return "$paramType $name" }
 
-  override readonly CType paramType
-  readonly CParam generic
+  override CType paramType { private set }
+  CParam generic { private set }
 }

@@ -61,6 +61,6 @@ class FPodNamespace : CNamespace
 //////////////////////////////////////////////////////////////////////////
 
   ** where to look for pod or null to delegate to Env.findPodFile
-  readonly File? dir
+  const File? dir
 
 }

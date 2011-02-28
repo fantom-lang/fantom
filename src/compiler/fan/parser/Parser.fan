@@ -516,7 +516,7 @@ public class Parser : CompilerSupport
       genSyntheticGet(field)
     }
 
-    // readonly is syntatic sugar for { private set }
+    // TODO readonly is syntatic sugar for { private set }
     if (flags.and(Readonly) != 0)
     {
       if (field.isConst)

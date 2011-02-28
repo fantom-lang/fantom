@@ -349,12 +349,12 @@ class TypeDef : DefNode, CType
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  override readonly CNamespace ns  // compiler's namespace
-  readonly CompilationUnit unit    // parent unit
-  override readonly CPod pod       // parent pod
-  override readonly Str name       // simple class name
-  override readonly Str qname      // podName::name
-  override readonly Bool isVal     // is this a value type (Bool, Int, etc)
+  override CNamespace ns           // compiler's namespace
+  CompilationUnit unit             // parent unit
+  override CPod pod                // parent pod
+  override const Str name          // simple class name
+  override const Str qname         // podName::name
+  override const Bool isVal        // is this a value type (Bool, Int, etc)
   Bool baseSpecified := true       // was base assigned from source code
   override CType? base             // extends class
   override CType[] mixins          // mixin types

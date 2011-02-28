@@ -62,7 +62,7 @@ abstract class FSlot : CSlot, FConst
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  readonly FType fparent  // parent type
+  FType fparent           // parent type
   override Int flags      // bitmask
   Int nameIndex           // name index
   FAttr[]? fattrs         // meta-data attributes
