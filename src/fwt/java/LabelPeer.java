@@ -48,7 +48,7 @@ public class LabelPeer extends WidgetPeer
   public final Prop.StrProp text = new Prop.StrProp(this, "")
   {
     public String get(Widget w) { return text.val; } // CLabel doesn't perserve my text
-    public void set(Widget w, String v) { ((CLabel)w).setText(v); }
+    public void set(Widget w, String v) { text.val = v; ((CLabel)w).setText(v); }
   };
 
   // Image image := null
