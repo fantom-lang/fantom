@@ -288,7 +288,7 @@ internal class TextEditorController : TextEditorSupport
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  override readonly TextEditor editor
+  override TextEditor editor { private set }
   Int caretLine
   Int caretCol
   Bool inUndo := false

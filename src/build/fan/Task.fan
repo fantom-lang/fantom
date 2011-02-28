@@ -45,7 +45,7 @@ abstract class Task
   **
   ** Return the parent build script associated with this task.
   **
-  readonly BuildScript script
+  BuildScript script { private set }
 
   **
   ** Convenience for script.log

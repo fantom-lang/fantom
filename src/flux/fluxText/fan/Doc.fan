@@ -464,9 +464,14 @@ class Doc : RichTextModel
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  readonly TextEditorOptions options // text options for current document
-  readonly SyntaxOptions syntax      // syntax options for current document
-  readonly SyntaxRules rules         // syntax rules for current document
+  ** Text options for current document
+  TextEditorOptions options { private set }
+
+  ** Syntax options for current document
+  SyntaxOptions syntax { private set }
+
+  ** Syntax rules for current document
+  SyntaxRules rules { private set }
 
   internal Int size := 0             // total char count
   internal Line[] lines := Line[,]   // lines

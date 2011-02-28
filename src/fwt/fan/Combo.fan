@@ -33,7 +33,7 @@ class Combo : Widget
   ** Event fields:
   **   - none
   **
-  @Transient readonly EventListeners onAction := EventListeners()
+  @Transient EventListeners onAction := EventListeners() { private set }
 
   **
   ** Callback when either the text field or item is changed.
@@ -44,7 +44,7 @@ class Combo : Widget
   ** Event fields:
   **   - none
   **
-  @Transient readonly EventListeners onModify := EventListeners()
+  @Transient EventListeners onModify := EventListeners() { private set }
 
   **
   ** If true then the list is displayed in a drop down

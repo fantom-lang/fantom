@@ -347,12 +347,6 @@ vals := temp.get as Obj[]
     else if (s.isInternal)  out.print("internal ")
 
     if (s.isNative) out.print("native ")
-
-    if (s.isField)
-    {
-      Method? z := s->setter
-      if (z != null && !s.isPrivate && z.isPrivate) out.print("readonly ")
-    }
   }
 
   **
@@ -367,9 +361,6 @@ vals := temp.get as Obj[]
     if (f.isProtected && s.isProtected) return
     if (f.isPrivate   && s.isPrivate)   return
     if (f.isInternal  && s.isInternal)  return
-
-    // this case handled already in slotModifers() by writing 'readonly'
-    if (!f.isPrivate && s.isPrivate) return
 
     // if we made this far, they must be different
     out.print(" { ")

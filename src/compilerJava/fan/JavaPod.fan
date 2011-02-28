@@ -26,9 +26,9 @@ class JavaPod : CPod
 
   override CNamespace ns() { return bridge.ns }
 
-  override readonly Str name
+  override const Str name
 
-  readonly Str packageName
+  const Str packageName
 
   override Version version() { return Version("0") }
 

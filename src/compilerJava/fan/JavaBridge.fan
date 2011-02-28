@@ -795,8 +795,9 @@ class JavaBridge : CBridge
     "[java]java.lang::Comparable",
   ]
 
-  readonly JavaPrimitives primitives := JavaPrimitives(this)
-  readonly ClassPath cp
+  JavaPrimitives primitives := JavaPrimitives(this)
+  ClassPath cp
+
   private Str:CMethod funcWrappers := Str:CMethod[:]  // funcType+method:ctor
 
 }

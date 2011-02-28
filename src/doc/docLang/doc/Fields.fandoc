@@ -221,7 +221,7 @@ setter.
 Readonly Fields [#readonly]
 ***************************
 It is quite common to publically expose a field's getter, but to
-hide the setter.  This could be done by narrowing the field's
+hide the setter.  This can be done by narrowing the field's
 setter to be 'private' as the following code illustrates:
 
   class Thing
@@ -229,20 +229,6 @@ setter to be 'private' as the following code illustrates:
     Int id { private set }
     internal Int count { private set }
   }
-
-You can accomplish the same thing a little easier using
-the 'readonly' keyword:
-
-  class Thing
-  {
-    readonly Int id
-    internal readonly Int count
-  }
-
-The 'readonly' syntax provides the exact same semantics as narrowing
-the setter to private.  Note that const fields are truly immutable - they
-always reference the same immutable instance.  Readonly fields do not
-imply anything about immutability - they only make the setter private.
 
 Virtual Fields [#virtual]
 *************************

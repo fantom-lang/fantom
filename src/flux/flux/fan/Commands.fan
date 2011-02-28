@@ -304,58 +304,58 @@ internal class Commands
 // Commands
 //////////////////////////////////////////////////////////////////////////
 
-  readonly Frame frame
+  internal Frame frame
 
   // File
-  readonly FluxCommand newTab := NewTabCommand()
-  readonly FluxCommand openLocation := OpenLocationCommand()
-  readonly FluxCommand closeTab := CloseTabCommand()
-  readonly FluxCommand save := SaveCommand()
-  readonly FluxCommand saveAll := SaveAllCommand()
-  readonly FluxCommand exit := ExitCommand()
+  internal FluxCommand newTab := NewTabCommand()
+  internal FluxCommand openLocation := OpenLocationCommand()
+  internal FluxCommand closeTab := CloseTabCommand()
+  internal FluxCommand save := SaveCommand()
+  internal FluxCommand saveAll := SaveAllCommand()
+  internal FluxCommand exit := ExitCommand()
 
   // Edit
-  readonly FluxCommand undo := UndoCommand()
-  readonly FluxCommand redo := RedoCommand()
-  readonly FluxCommand cut := CutCommand()
-  readonly FluxCommand copy := CopyCommand()
-  readonly FluxCommand paste := PasteCommand()
-  readonly FluxCommand find := ViewManagedCommand(CommandId.find)
-  readonly FluxCommand findNext := ViewManagedCommand(CommandId.findNext)
-  readonly FluxCommand findPrev := ViewManagedCommand(CommandId.findPrev)
-  readonly FluxCommand findInFiles := FindInFilesCommand()
-  readonly FluxCommand replace := ViewManagedCommand(CommandId.replace)
-  readonly FluxCommand replaceInFiles := ReplaceInFilesCommand()
-  readonly FluxCommand goto := ViewManagedCommand(CommandId.goto)
-  readonly FluxCommand gotoFile := GotoFileCommand()
-  readonly FluxCommand jumpNext := JumpNextCommand()
-  readonly FluxCommand jumpPrev := JumpPrevCommand()
-  readonly FluxCommand selectAll := SelectAllCommand()
+  internal FluxCommand undo := UndoCommand()
+  internal FluxCommand redo := RedoCommand()
+  internal FluxCommand cut := CutCommand()
+  internal FluxCommand copy := CopyCommand()
+  internal FluxCommand paste := PasteCommand()
+  internal FluxCommand find := ViewManagedCommand(CommandId.find)
+  internal FluxCommand findNext := ViewManagedCommand(CommandId.findNext)
+  internal FluxCommand findPrev := ViewManagedCommand(CommandId.findPrev)
+  internal FluxCommand findInFiles := FindInFilesCommand()
+  internal FluxCommand replace := ViewManagedCommand(CommandId.replace)
+  internal FluxCommand replaceInFiles := ReplaceInFilesCommand()
+  internal FluxCommand goto := ViewManagedCommand(CommandId.goto)
+  internal FluxCommand gotoFile := GotoFileCommand()
+  internal FluxCommand jumpNext := JumpNextCommand()
+  internal FluxCommand jumpPrev := JumpPrevCommand()
+  internal FluxCommand selectAll := SelectAllCommand()
 
   // View
-  readonly FluxCommand reload  := ReloadCommand()
+  internal FluxCommand reload  := ReloadCommand()
 
   // History
-  readonly FluxCommand back := BackCommand()
-  readonly FluxCommand forward := ForwardCommand()
-  readonly FluxCommand up := UpCommand()
-  readonly FluxCommand home := HomeCommand()
-  readonly FluxCommand recent := RecentCommand()
+  internal FluxCommand back := BackCommand()
+  internal FluxCommand forward := ForwardCommand()
+  internal FluxCommand up := UpCommand()
+  internal FluxCommand home := HomeCommand()
+  internal FluxCommand recent := RecentCommand()
 
   // Tools
-  readonly FluxCommand options := OptionsCommand()
-  readonly FluxCommand refreshTools := RefreshToolsCommand()
+  internal FluxCommand options := OptionsCommand()
+  internal FluxCommand refreshTools := RefreshToolsCommand()
 
   // Help
-  readonly FluxCommand about := AboutCommand()
+  internal FluxCommand about := AboutCommand()
 
   // misc fields
-  readonly ViewManagedCommand[] viewManaged
-  readonly Str:FluxCommand byId
-  readonly Int historyMenuSize
-  readonly Menu? toolsMenu
-  readonly Int toolsMenuSize
-  readonly File toolsDir := Env.cur.homeDir +`etc/flux/tools/`
+  internal ViewManagedCommand[] viewManaged
+  internal Str:FluxCommand byId
+  internal Int historyMenuSize
+  internal Menu? toolsMenu
+  internal Int toolsMenuSize
+  internal File toolsDir := Env.cur.homeDir +`etc/flux/tools/`
 }
 
 //////////////////////////////////////////////////////////////////////////

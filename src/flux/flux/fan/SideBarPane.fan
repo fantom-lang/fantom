@@ -127,7 +127,7 @@ internal class SideBarPane : ContentPane
     }
   }
 
-  readonly Frame frame
+  Frame frame
   SideBar[] sideBars := SideBar[,]
   SashPane left  := SashPane { it.visible=false; it.orientation = Orientation.vertical }
   SashPane right := SashPane { it.visible=false; it.orientation = Orientation.vertical }

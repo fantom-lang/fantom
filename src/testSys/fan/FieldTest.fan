@@ -273,9 +273,9 @@ class FieldTest : Test
   Int flagsPublicPrivateSet { private set }
   protected Int flagsProtectedInternalSet { get; internal set; }
 
-  readonly public Int flagsReadonlyPublic
-  protected readonly Int flagsReadonlyProtected
-  readonly internal Int flagsReadonlyInternal
+  public Int flagsReadonlyPublic { private set }
+  protected Int flagsReadonlyProtected { private set }
+  internal Int flagsReadonlyInternal { private set }
 
 //////////////////////////////////////////////////////////////////////////
 // makeSetFunc

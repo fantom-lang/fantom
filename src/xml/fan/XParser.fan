@@ -210,7 +210,7 @@ class XParser
   **
   ** Get the root document node.
   **
-  readonly XDoc doc := XDoc()
+  XDoc doc := XDoc() { private set }
 
   **
   ** Get the current node type constant which is always the
@@ -221,14 +221,14 @@ class XParser
   **   - `XNodeType.pi`
   **   - null indicates end of stream
   **
-  readonly XNodeType? nodeType
+  XNodeType? nodeType { private set }
 
   **
   ** Get the depth of the current element with the document.
   ** A depth of zero indicates the root element.  A depth
   ** of -1 indicates a position before or after the root element.
   **
-  readonly Int depth := -1
+  Int depth := -1 { private set }
 
   **
   ** Get the current element if `nodeType` is 'elemStart' or
@@ -281,12 +281,12 @@ class XParser
   **
   ** Current one based line number.
   **
-  readonly Int line := 1
+  Int line := 1 { private set }
 
   **
   ** Current one based column number.
   **
-  readonly Int col := 1
+  Int col := 1 { private set }
 
   **
   ** Close the underlying input stream.  Return true if the stream
