@@ -186,10 +186,9 @@ class Dialog : Window
   ** Construct dialog.
   **
   new make(Window? parent, |This|? f := null)
-    : super(parent)
+    : super(parent, f)
   {
     icon = parent?.icon
-    if (f != null) f(this)
   }
 
   **
