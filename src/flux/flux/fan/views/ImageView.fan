@@ -53,6 +53,8 @@ internal class ImageViewWidget : Canvas
   new make(Image image) { this.image = image }
   override Void onPaint(Graphics g)
   {
+    g.brush = Color.white
+    g.fillRect(0, 0, size.w, size.h)
     g.drawImage(image, 8, 8)
   }
   Image image

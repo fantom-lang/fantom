@@ -379,6 +379,9 @@ internal class EditList : Canvas
 
   override Void onPaint(Graphics g)
   {
+    g.brush = Desktop.sysBg
+    g.fillRect(0, 0, size.w, size.h)
+    g.brush = Desktop.sysFg
     g.font = font
     items.each |Str item, Int i|
     {
