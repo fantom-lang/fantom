@@ -633,3 +633,9 @@ fan.sys.FuncType.prototype.as = function(that)
   return that;
 }
 
+fan.sys.FuncType.prototype.toNullable = function()
+{
+  if (this.m_nullable == null) this.m_nullable = new fan.sys.NullableType(this);
+  return this.m_nullable;
+}
+
