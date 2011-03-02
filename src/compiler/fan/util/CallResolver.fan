@@ -34,9 +34,10 @@ class CallResolver : CompilerSupport
     call := expr as CallExpr
     if (call != null)
     {
-      this.isVar = false
-      this.args  = call.args
-      this.found = call.method
+      this.isVar   = false
+      this.isItAdd = call.isItAdd
+      this.args    = call.args
+      this.found   = call.method
     }
     else
     {
@@ -191,8 +192,10 @@ class CallResolver : CompilerSupport
       else
       {
         ct := target as CallExpr
-        if (name == "add" && ct != null && ct.target?.id === ExprId.itExpr && ct.method != null)
+        if (ct != null && ct.isItAdd)
           throw err("'$ct.method.qname' must return This", loc)
+        else if (this.isItAdd)
+          throw err("No comma operator method found: '$errSig'", loc)
         else
           throw err("Unknown method '$errSig'", loc)
       }
@@ -523,6 +526,7 @@ class CallResolver : CompilerSupport
   Loc loc              // location of original expression
   Expr? target         // target base or null
   Str name             // slot name to resolve
+  Bool isItAdd         // are we resolving "," it-block add
   Bool isVar           // are we resolving simple variable
   Bool isFuncFieldCall // is this a field.call(...) on func field
   Expr[] args          // arguments or null if simple variable
