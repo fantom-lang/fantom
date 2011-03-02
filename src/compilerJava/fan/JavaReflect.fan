@@ -95,10 +95,10 @@ internal class JavaReflect
   **
   static JMethod[] findMethods(Class? cls)
   {
-    acc := JMethod:JMethod[:]
+    acc := Str:JMethod[:]
 
     // first add all the public methods
-    cls.getMethods.each |JMethod j| { acc[j] = j }
+    cls.getMethods.each |JMethod j| { acc[jmethodKey(j)] = j }
 
     // do protected methods working back up the hierarchy; don't
     // worry about interfaces b/c they can declare protected members
@@ -107,12 +107,30 @@ internal class JavaReflect
       cls.getDeclaredMethods.each |JMethod j|
       {
         if (!JModifier.isProtected(j.getModifiers)) return
-        if (acc[j] == null) acc[j] = j
+        key := jmethodKey(j)
+        if (acc[key] == null) acc[key] = j
       }
       cls = cls.getSuperclass
     }
 
     return acc.vals
+  }
+
+  **
+  ** Create hash key for java.lang.reflect.Method which takes
+  ** into account name and parameter signatures but not declaring class
+  **
+  static Str jmethodKey(JMethod method)
+  {
+    s := StrBuf()
+    s.add(method.getName).addChar('(')
+    method.getParameterTypes.each |Class p, Int i|
+    {
+      if (i > 0) s.addChar(',')
+      s.add(p.getName)
+    }
+    s.addChar(')')
+    return s.toStr
   }
 
 //////////////////////////////////////////////////////////////////////////
