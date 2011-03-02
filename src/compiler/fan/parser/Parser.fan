@@ -912,6 +912,8 @@ public class Parser : CompilerSupport
     // report error
     if (id != null && curt === Token.identifier && (peekt === Token.defAssign || peekt === Token.assign))
       throw err("Unknown type '$id' for local declaration", loc)
+    else if (id == null && curt === Token.defAssign)
+      throw err("Left hand side of ':=' must be identifier", loc)
     else
       throw err("Expected expression statement", loc)
   }
@@ -1221,6 +1223,9 @@ public class Parser : CompilerSupport
       condition := expr
       consume(Token.question)
       trueExpr := ifExprBody
+      // nice error checking for Foo? x :=
+      if (curt === Token.defAssign && expr.id === ExprId.unknownVar && trueExpr.id === ExprId.unknownVar)
+        throw err("Unknown type '$expr' for local declaration", expr.loc)
       consume(Token.colon)
       falseExpr := ifExprBody
       expr = TernaryExpr(condition, trueExpr, falseExpr)
@@ -1798,6 +1803,10 @@ public class Parser : CompilerSupport
   {
     loc := cur
     consume(Token.lbracket)
+
+    // nice error for BadType[,]
+    if (curt === Token.comma && target.id === ExprId.unknownVar)
+      throw err("Unknown type '$target' for list literal", target.loc)
 
     // otherwise this must be a standard single key index
     expr := expr

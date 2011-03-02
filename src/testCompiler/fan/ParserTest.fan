@@ -1377,6 +1377,26 @@ class ParserTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Misc Err Messages
+//////////////////////////////////////////////////////////////////////////
+
+  ** Nicer parse time error messages (#1407)
+  Void testBetterErrMsgs()
+  {
+    verifyErrors("class Foo { Void f() { a := BadType[,] } }",
+      [1, 29, "Unknown type 'BadType' for list literal"])
+
+    verifyErrors("class Foo { Void f() { BadType a := null } }",
+      [1, 24, "Unknown type 'BadType' for local declaration"])
+
+    verifyErrors("class Foo { Void f() { BadType? a := null } }",
+      [1, 24, "Unknown type 'BadType' for local declaration"])
+
+    verifyErrors("class Foo { Void f() { this.a := null } }",
+      [1, 24, "Left hand side of ':=' must be identifier"])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Util
 //////////////////////////////////////////////////////////////////////////
 
