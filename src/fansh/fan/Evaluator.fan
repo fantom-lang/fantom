@@ -137,9 +137,6 @@ class Evaluator
 
   private Str typeSig(Type t)
   {
-    // handle parameterized generics
-    if (!t.params.isEmpty) return t.toNullable.signature
-
     // FFI types aren't qualified
     if (t.signature.startsWith("["))
     {
@@ -152,7 +149,7 @@ class Evaluator
     }
 
     // use qualified nullable type
-    return t.toNullable.signature
+    return t.signature
   }
 
   private Void compile(Str source)
