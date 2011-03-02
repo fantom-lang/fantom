@@ -203,5 +203,19 @@ class MiscTest : JavaTest
     verifyEq(obj->swap(null),  null)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1396 Java subclass visibility disallows overriding
+//////////////////////////////////////////////////////////////////////////
 
+  Void test1396()
+  {
+    compile(
+     """using [java] fanx.test::InteropTest\$PublicOverride as PubOverride
+        class Bar : PubOverride {}
+        class Foo : PubOverride { override Str? foo() { "override" } }
+        """)
+
+    verifyEq(pod.types[0].make->foo, "public")
+    verifyEq(pod.types[1].make->foo, "override")
+  }
 }

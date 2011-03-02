@@ -227,6 +227,16 @@ public class InteropTest
     public abstract double d(double x);
   }
 
+  public static class ProtectedOverride
+  {
+    protected String foo() { return "protected"; }
+  }
+
+  public static class PublicOverride extends ProtectedOverride
+  {
+    public String foo() { return "public"; }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Funcs
 //////////////////////////////////////////////////////////////////////////
