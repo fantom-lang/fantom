@@ -283,6 +283,7 @@ public abstract class File
       {
         out.close();
       }
+      copyPermissions(this, to);
     }
   }
 
@@ -293,6 +294,24 @@ public abstract class File
       throw ArgErr.make("Not a dir: `" + dir + "`").val;
 
     return copyTo(dir.plusNameOf(this), options);
+  }
+
+  private static void copyPermissions(File from, File to)
+  {
+    // if both are LocaleFiles, try to hack the file
+    // permissions until we get 1.7 support
+    try
+    {
+      if (from instanceof LocalFile && to instanceof LocalFile)
+      {
+        java.io.File jfrom = ((LocalFile)from).file;
+        java.io.File jto = ((LocalFile)to).file;
+        jto.setReadable(jfrom.canRead(), false);
+        jto.setWritable(jfrom.canWrite(), false);
+        jto.setExecutable(jfrom.canExecute(), false);
+      }
+    }
+    catch (NoSuchMethodError e) {}  // ignore if not on 1.6
   }
 
 //////////////////////////////////////////////////////////////////////////
