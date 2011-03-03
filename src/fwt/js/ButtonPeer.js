@@ -59,6 +59,7 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
   style.border  = "1px solid #404040";
   style.MozBorderRadius    = "4px";
   style.webkitBorderRadius = "4px";
+  style.borderRadius       = "4px";
   style.textAlign  = "center";
   style.cursor     = "default";
   style.whiteSpace = "nowrap";

@@ -26,6 +26,7 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     background = "#000";
     opacity    = "0.0";
     filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=25);"
+    MozTransition    = "100ms";
     webkitTransition = "100ms";
   }
 
@@ -56,6 +57,7 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     MozBorderRadiusTopright    = "4px";
     webkitBorderTopLeftRadius  = "4px";
     webkitBorderTopRightRadius = "4px";
+    borderRadius = "4px 4px 0 0";
   }
   fan.fwt.WidgetPeer.setBg(tbar, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #707070, #5a5a5a 0.5, #525252 0.5, #484848"));
   var content = this.emptyDiv();
@@ -71,8 +73,11 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     MozBorderRadiusTopright    = "5px";
     webkitBorderTopLeftRadius  = "5px";
     webkitBorderTopRightRadius = "5px";
+    borderRadius    = "5px 5px 0 0";
     MozBoxShadow    = "0 5px 12px #404040";
     webkitBoxShadow = "0 5px 12px #404040";
+    boxShadow       = "0 5px 12px #404040";
+    MozTransform    = "scale(0.75)";
     webkitTransform = "scale(0.75)";
     opacity = "0.0";
   }
@@ -91,11 +96,14 @@ fan.fwt.DialogPeer.prototype.open = function(self)
 
   // animate open
   mask.style.opacity = "0.25";
+  dlg.style.MozTransition    = "-moz-transform 100ms, opacity 100ms";
+  dlg.style.MozTransform     = "scale(1.0)";
   dlg.style.webkitTransition = "-webkit-transform 100ms, opacity 100ms";
-  dlg.style.webkitTransform = "scale(1.0)";
+  dlg.style.webkitTransform  = "scale(1.0)";
   dlg.style.opacity = "1.0";
 
   // attach transition for dialog resizes
+  dlg.style.MozTransition    = "top 250ms, left 250ms, width 250ms, height 250ms";
   dlg.style.webkitTransition = "top 250ms, left 250ms, width 250ms, height 250ms";
 
   // try to focus first form element
@@ -132,8 +140,10 @@ fan.fwt.DialogPeer.prototype.close = function(self, result)
   if (this.$shell)
   {
     var dlg = this.$shell.firstChild;
+    dlg.style.MozTransition = "-moz-transform 100ms, opacity 100ms";
     dlg.style.webkitTransition = "-webkit-transform 100ms, opacity 100ms";
     dlg.style.opacity = "0.0";
+    dlg.style.MozTransform = "scale(0.75)";
     dlg.style.webkitTransform = "scale(0.75)";
     this.$mask.style.opacity = "0.0";
   }
