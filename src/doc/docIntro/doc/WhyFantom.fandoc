@@ -104,13 +104,14 @@ Interestingly enough while Fantom is trying to make programs less
 strongly typed, the Java and C# languages are moving to be more strongly
 typed.  Generic types illustrate this trend - a feature added to
 both Java and C# in the not so distant past.  A fully parameterized
-type system introduces a great deal of complexity, but we do not believe
-that the extra complexity is justified.
+type system introduces a great deal of complexity - we are
+trying hard to find the [right balance]`http://fantom.org/sidewalk/topic/1433`
+between value and complexity.
 
-Fantom takes a limited approach to generics.  There is no support for
-user defined generics.  However, three built-in classes 'List', 'Map',
-and 'Func' can be parameterized using a special syntax.  For example
-a list of 'Ints' in Fantom is declared as 'Int[]' using the familiar
+Currently Fantom takes a limited approach to generics.  There is no
+support for user defined generics yet.  However, three built-in classes
+'List', 'Map', and 'Func' can be parameterized using a special syntax.  For
+example a list of 'Ints' in Fantom is declared as 'Int[]' using the familiar
 array type syntax of Java and C#.  This trade-off seems to hit the
 sweet spot where generics make sense without complicating the overall
 type system.

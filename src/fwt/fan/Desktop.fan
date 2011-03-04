@@ -20,7 +20,10 @@ class Desktop
   ** Set the application name for this FWT instance.  This must
   ** be configured before any FWT objects are created.
   **
-  static native Void appName(Str name)
+  ** TODO: potentially move this into new FwtApp class, also
+  **   want to handle how closing all windows works on OS X
+  **
+  @NoDoc static native Void appName(Str name)
 
   **
   ** Get the platform name: "windows", "mac"
