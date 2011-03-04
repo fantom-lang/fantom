@@ -149,7 +149,7 @@ fan.sys.Type.prototype.make = function(args)
     if (defVal instanceof fan.sys.Method) return defVal.invoke(null, null);
   }
 
-  throw Err.make("Type missing 'make' or 'defVal' slots: " + this).val;
+  throw fan.sys.Err.make("Type missing 'make' or 'defVal' slots: " + this);
 }
 
 //////////////////////////////////////////////////////////////////////////
