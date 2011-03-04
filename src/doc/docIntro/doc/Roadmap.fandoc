@@ -9,10 +9,10 @@
 Current Status [#status]
 ************************
 Fantom is currently in development of its initial 1.0 release.  The core
-language and Java runtime are quite stable.  JavaScript support is alpha
-quality.  The .NET runtime is almost there, but not quite.  At this
-point, we are building out system APIs for concurrency, database
-access, and web applications.
+language and Java runtime are solid and used in production environments
+today. JavaScript support is beta quality - we use it oursevles in our
+commerical product, but it isn't quite complete.  The .NET runtime is
+best classified as a prototype, it is not recommended for production yet.
 
 Stability [#stability]
 **********************
@@ -24,74 +24,32 @@ still needs to be wrung out in lots of different applications.
 We can't promise that we won't make breaking language or API changes.  We
 need the freedom to change things as we learn what does and does not work.
 However in practice, we've made very few breaking changes over the past
-year.  Be aware of APIs which are still evolving such as concurrency,
-uri spaces, webapp and javascript support - these are the most likely to change.
+year.
 
-New Features [#newFeatures]
+Future Work [#futureWork]
 ***************************
-The list of features on our radar for the next year or so (in no
-particular order):
+Random list of ideas for future work we have on our radar, or that
+we would like to see receive community attention:
 
-Threadlocals [#threadlocals]
-============================
-As we start to design libraries and applications with Fantom, it is clear
-that we are relying on thread locals to a much greater extent than in
-our past lives.  Today thread locals are stored in a big map which
-is ok, but we can do better.  The plan is to add support for a 'threadlocal'
-keyword which will let you declare thread locals much like you would
-a static field.  With that feature, many APIs can be reworked - for
-example Weblet can declare req/res as thread locals.
+IDE Support
+===========
+By far and awaw the biggest requirement for a successful ecosystem is
+awesome tooling.  The community is doing a great job addressing IDE
+tooling, and if you are interested please get involved!
 
-See [design proposal]`http://fantom.org/sidewalk/topic/204`
-
-.NET Runtime [#dotnet]
-======================
-Some of the .NET runtime is incomplete:
-  - We need to get the 'sql' APIs working on .NET (if you want to help let us know).
-  - Performance needs to be improved
-
-.NET FFI [#dotnetFFI]
-=================================================
-Fantom includes a [Java FFI]`docLang::JavaFFI.html` for seamlessly working
-with Java libraries.  But we still need to implement the .NET FFI.  If
-you would like to help please let us know.
-
-Email [#email]
-==============
-Basic support for SMTP, POP3, and probably IMAP is required.  This
-work will include standardized APIs for modeling multi-part email
-messages.  Current plan is to write these protocols cleanly from
-scratch rather than wrap something like JavaMail.  SMTP is done,
-still need POP3 and MIME decoding.
-
-Sys APIs [#sys]
-===============
-Some of the 'sys' APIs are incomplete, such as 'Regex'.
-
-Web APIs [#web]
-===============
-The 'web' APIs are incomplete: "http" UriScheme and HTTPS.
-
-Web App [#webapp]
-===============
-The web application framework is just an early prototype and will
-be evolving.
-
-Crypto [#crypto]
+Web Repositories
 ================
-We need standardized APIs for cryptographic operations and algorithms.
-This work will include support for the SSL protocol.
+Fantom is growing and we are quickly reaching a point where a Fantom
+like "CPAN" would really help for managing and distributing pods.
 
-IDE Support [#ide]
-==================
-We aren't IDE users ourselves, so this isn't our highest priority.
-But we realize it is a requirement for a successful ecosystem, so
-we'll be keeping our eye on this one.  Help is always welcome.
+Crypto
+======
+We need standardized APIs for cryptographic operations and algorithms. This
+work will include support for the SSL protocol.
 
-Web Server Integration [#webServers]
-====================================
-All of our initial work with the 'web' API has been with our
-own web server implementation (wisp).  Although the plan is to
-eventually plug the 'web' API into Java servlet based containers,
-into IIS, and to have a mod_fantom for Apache.
+.NET and Alternate Runtimes
+===========================
+The focus of the core Fantom team is Java and JavaScript support.  If you
+are interested in the .NET or other runtimes please get involved!
+
 

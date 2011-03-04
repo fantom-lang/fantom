@@ -244,14 +244,9 @@ and a special [type signature]`#mapSignature` syntax.
 
 Generics [#generics]
 ********************
-Another feature eschewed by Fantom is user defined generics.  We fall into
-that camp which finds generics a wicked, complicated solution to a
-narrow range of problems.  For example generics are great for collections,
-but the mental gymnastics required to digest declarations like
-'Class Enum<E extends Enum<E>>' are too much for us.
-
-Although there isn't a general purpose generics mechanism, Fantom does use
-generics in a limited fashion.  Specifically three classes use generics:
+Although there isn't a general purpose generics mechanism yet, Fantom
+does use generics in a limited fashion.  Specifically three classes use
+generics:
 
   - [List]`#listSignature`
   - [Map]`#mapSignature`
