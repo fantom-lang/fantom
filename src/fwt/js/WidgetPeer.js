@@ -54,6 +54,7 @@ fan.fwt.WidgetPeer.prototype.posOnDisplay = function(self)
       var dlg = p.peer.elem.parentNode;
       x += dlg.offsetLeft;
       y += dlg.offsetTop;
+      break; // dialogs are always relative to Window origin
     }
     p = p.parent();
   }
