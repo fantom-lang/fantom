@@ -28,6 +28,22 @@ If you want to jump right in and start coding:
   - [Examples]`examples::index`: snippets of example
     code for common tasks
 
+Community Resources [#communityResources]
+*****************************************
+  - [Fanzy Online Playground]`http://www.fanzy.net/` is a great site
+    to learn and try out code right from your web browser
+
+  - [Rosetta Code]`http://rosettacode.org/wiki/Category:Fantom`: code
+    samples in Fantom with comparisons to other languages
+
+  - [langref.ord]`http://langref.org/fantom/solved`: lots of code samples for
+    different problem sets
+
+  - `http://learningfantom.blogspot.com/`
+
+Also see [IDE page]`docTools::IDEs` for an overview of the various
+community projects providing Fantom tooling.
+
 Documentation Organization [#organization]
 ******************************************
 All documentation and APIs are organized into modules called *pods*.
@@ -60,4 +76,11 @@ The place to ask questions and submit feedback is the
 [discussion group]`http://fantom.org/sidewalk/topic/`.
 Or you can [contact us]`Faq#contact` directly.  Let us know
 what you think!
+
+If you are itching to contribute code, please take a look at the
+[open tickets]`http://fantom.org/sidewalk/ticket/?state=open`
+or [roadmap]`Roadmap#futureWork` to find what might interest
+you.
+
+
 

@@ -23,7 +23,7 @@ Fantom as well as Java, Javascript, CSS, HTML, XML, Subversion, Mercurial.
   - [Screencast]`http://www.colar.net/fanide/fansuite2.htm`
   - [Download]`http://fanide.colar.net/install`
 
-Eclipse F4 (xored software, Inc.) [#eclipse]
+Eclipse F4 (xored software) [#eclipse]
 ********************************************
 F4 is an Eclipse-based IDE for Fantom which is written mostly in Fantom
 itself. It can be installed as a set of plugins via Eclipse update site
