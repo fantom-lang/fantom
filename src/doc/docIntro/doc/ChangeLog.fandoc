@@ -6,7 +6,8 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.58 (working)*
+*Build 1.0.58 (4 Mar 2011)*
+- Remove deprecated sql APIs (#1318)
 - Weekday.localeVals
 - js: fwt::ProgressBar
 - Add major world currencies to units database
@@ -15,11 +16,18 @@
 - List.shuffle
 - Rect.intersects, intersection, union
 - Graphics.clipBounds
-- Desktop.appName
 - Tree.bg, Tree.isExpanded
 - dom: Win.open, Win.close, Doc.out
 - Mark GfxEnv as NoDoc
 - Image.makePainted
+- #1139: File.copy: maintain permissions
+- #1156: Image API enhancements
+- #1369: Deprecate readonly keyword
+- #1375: Serialization type/slot reads too far
+- #1384: [fansh] Variables are always nullable
+- #1396: Java subclass method visibility widening disallows Fantom overriding
+- #1407: Better Error Messages
+- #1415: Cannot pass a closure to the enum class constructor
 
 *Build 1.0.57 (6 Jan 2011)*
 - Rename sql::Col.of => type
