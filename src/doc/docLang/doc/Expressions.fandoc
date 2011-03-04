@@ -386,7 +386,7 @@ Here is an FWT example:
   Menu
   {
     text = "File"
-    MenuItem { text = "Open"; onSelect=#open.func } },
+    MenuItem { text = "Open"; onSelect=#open.func },
     MenuItem { text = "Save"; onSelect=#save.func },
   }
 
