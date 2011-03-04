@@ -20,7 +20,6 @@ const class Col
   {
     this.index   = index
     this.name    = name
-    this.of      = type
     this.type    = type
     this.sqlType = sqlType
   }
@@ -33,10 +32,6 @@ const class Col
 
   ** Name of the column.
   const Str name
-
-  ** Type of the column.
-  @Deprecated { msg = "Use Col.type" }
-  const Type of // TODO
 
   ** Type of the column.
   ** See [type mapping]`pod-doc#typeMapping`.
