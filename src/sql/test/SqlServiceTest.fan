@@ -7,26 +7,12 @@
 //
 
 **
-** SqlServiceTest: this is not actually a Test.  It defines
-** all common database tests and is used by the database
-** specific tests.
+** SqlServiceTest (maybe rename from old test)
 **
 class SqlServiceTest : Test
 {
 
-//////////////////////////////////////////////////////////////////////////
-// Setup
-//////////////////////////////////////////////////////////////////////////
-
-  once SqlService db()
-  {
-    pod := typeof.pod
-    return SqlService(
-      pod.config("test.uri")      ?: throw Err("Missing 'sql::test.uri' config prop"),
-      pod.config("test.username") ?: throw Err("Missing 'sql::test.username' config prop"),
-      pod.config("test.password") ?: throw Err("Missing 'sql::test.password' config prop"),
-      GenericDialect())
-  }
+  SqlConn? db
 
 //////////////////////////////////////////////////////////////////////////
 // Top
@@ -34,13 +20,9 @@ class SqlServiceTest : Test
 
   Void test()
   {
+    open
     try
     {
-      if (!checkDb) return
-      openCount
-
-      db.open
-      verify(!db.isClosed)
       verifyMeta
       dropTables
       createTable
@@ -64,34 +46,14 @@ class SqlServiceTest : Test
 // Open
 //////////////////////////////////////////////////////////////////////////
 
-  Bool checkDb()
+  Void open()
   {
-    try
-    {
-      db.open
-      db.close
-      return true
-    }
-    catch (Err e)
-    {
-      echo("**")
-      echo("** WARNING: Cannot perform SqlServiceTest without available database: ${Type.of(db)}")
-      echo("**          $e")
-      echo("**")
-      return false
-    }
-  }
-
-  Void openCount()
-  {
-    verify(db.isClosed)
-    db.open
-    verify(!db.isClosed)
-    db.open
-    db.close
-    verify(!db.isClosed)
-    db.close
-    verify(db.isClosed)
+    pod  := typeof.pod
+    uri  := pod.config("test.uri")      ?: throw Err("Missing 'sql::test.uri' config prop")
+    user := pod.config("test.username") ?: throw Err("Missing 'sql::test.username' config prop")
+    pass := pod.config("test.password") ?: throw Err("Missing 'sql::test.password' config prop")
+    db = SqlConn.open(uri, user, pass)
+    verifyEq(db.isClosed, false)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -126,14 +88,14 @@ class SqlServiceTest : Test
   **
   Void dropTables()
   {
-    verifyEq(db.tableExists("foo_bar_should_not_exist"), false)
-    Str[] tables := db.tables.dup
+    verifyEq(db.meta.tableExists("foo_bar_should_not_exist"), false)
+    Str[] tables := db.meta.tables.dup
     while (tables.size != 0)
     {
       Int dropped := 0
       tables.each |Str tableName|
       {
-        verifyEq(db.tableExists(tableName), true)
+        verifyEq(db.meta.tableExists(tableName), true)
         try
         {
           db.sql("drop table $tableName").execute
@@ -177,7 +139,7 @@ class SqlServiceTest : Test
       primary key (farmer_id))
       ").execute
 
-    row := db.tableRow("farmers")
+    row := db.meta.tableRow("farmers")
     cols := row.cols
 
     verifyEq(cols.size, 15)
@@ -335,10 +297,10 @@ class SqlServiceTest : Test
         //verifyEq(row.type.field(f.name), null)
         col := row.col(f.name)
         verify(col != null)
-        if (f.name == "farmer_id") verifyEq(col.of, Int#)
-        if (f.name == "married") verifyEq(col.of, Bool#)
-        if (f.name == "pet") verifyEq(col.of, Str#)
-        if (f.name == "height") verifyEq(col.of, Float#)
+        if (f.name == "farmer_id") verifyEq(col.type, Int#)
+        if (f.name == "married") verifyEq(col.type, Bool#)
+        if (f.name == "pet") verifyEq(col.type, Str#)
+        if (f.name == "height") verifyEq(col.type, Float#)
       }
       i++
     }
