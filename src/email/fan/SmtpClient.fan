@@ -81,7 +81,7 @@ class SmtpClient
       readExts(res)
 
       // authenticate if configured
-      if (username != null && password != null && auths != null)
+      if (username != null && password != null && auths != null && !auths.isEmpty)
         authenticate
     }
     catch (Err e)
