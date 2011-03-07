@@ -83,17 +83,17 @@ public class TreePeer
   public void selected(fan.fwt.Tree self, List v) { selected.set((List)v); }
   public final Prop.Custom selected = new Prop.Custom(this)
   {
-    void syncToControl() { set(val); }
-    void syncFromControl() { get(); }
+    public void syncToControl() { set(val); }
+    public void syncFromControl() { get(); }
 
-    Object get()
+    public Object get()
     {
       if (control == null) return val;
       val = nodes(((Tree)control).getSelection());
       return val.ro();
     }
 
-    void set(Object v)
+    public void set(Object v)
     {
       val = (List)v;
       if (control == null) return;

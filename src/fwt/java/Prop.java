@@ -34,20 +34,20 @@ public abstract class Prop
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  Prop(WidgetPeer peer)
+  public Prop(WidgetPeer peer)
   {
     this.peer = peer;
   }
 
-  abstract void syncToControl();
+  public abstract void syncToControl();
 
-  abstract void syncFromControl();
+  public abstract void syncFromControl();
 
 //////////////////////////////////////////////////////////////////////////
 // BoolProp
 //////////////////////////////////////////////////////////////////////////
 
-  static abstract class BoolProp extends Prop
+  public static abstract class BoolProp extends Prop
   {
     BoolProp(WidgetPeer peer, boolean def)
     {
@@ -55,17 +55,17 @@ public abstract class Prop
       this.val = def;
     }
 
-    void syncToControl() { set(val); }
+    public void syncToControl() { set(val); }
 
-    void syncFromControl() { val = get(); }
+    public void syncFromControl() { val = get(); }
 
-    boolean get()
+    public boolean get()
     {
       Widget w = peer.control;
       return w == null ? val : get(w);
     }
 
-    void set(boolean v)
+    public void set(boolean v)
     {
       Widget w = peer.control;
       if (w == null)
@@ -84,7 +84,7 @@ public abstract class Prop
 // IntProp
 //////////////////////////////////////////////////////////////////////////
 
-  static abstract class IntProp extends Prop
+  public static abstract class IntProp extends Prop
   {
     IntProp(WidgetPeer peer, int def) { this(peer, def, false); }
     IntProp(WidgetPeer peer, int def, boolean negIsNull)
@@ -93,11 +93,11 @@ public abstract class Prop
       this.val = Long.valueOf(def);
     }
 
-    void syncToControl() { set(val); }
+    public void syncToControl() { set(val); }
 
-    void syncFromControl() { val = get(); }
+    public void syncFromControl() { val = get(); }
 
-    Long get()
+    public Long get()
     {
       Widget w = peer.control;
       if (w == null) return val;
@@ -106,7 +106,7 @@ public abstract class Prop
       return Long.valueOf(i);
     }
 
-    void set(Long v)
+    public void set(Long v)
     {
       Widget w = peer.control;
       if (w == null)
@@ -126,7 +126,7 @@ public abstract class Prop
 // StrProp
 //////////////////////////////////////////////////////////////////////////
 
-  static abstract class StrProp extends Prop
+  public static abstract class StrProp extends Prop
   {
     StrProp(WidgetPeer peer, String def)
     {
@@ -134,17 +134,17 @@ public abstract class Prop
       this.val = def;
     }
 
-    void syncToControl() { set(val); }
+    public void syncToControl() { set(val); }
 
-    void syncFromControl() { val = get(); }
+    public void syncFromControl() { val = get(); }
 
-    String get()
+    public String get()
     {
       Widget w = peer.control;
       return w == null ? val : get(w);
     }
 
-    void set(String v)
+    public void set(String v)
     {
       Widget w = peer.control;
       if (w == null)
@@ -163,15 +163,15 @@ public abstract class Prop
 // PosProp
 //////////////////////////////////////////////////////////////////////////
 
-  static class PosProp extends Prop
+  public static class PosProp extends Prop
   {
     PosProp(WidgetPeer peer) { super(peer); }
 
-    void syncToControl() { set(val); }
+    public void syncToControl() { set(val); }
 
-    void syncFromControl() { val = get(); }
+    public void syncFromControl() { val = get(); }
 
-    fan.gfx.Point get()
+    public fan.gfx.Point get()
     {
       if (peer.control instanceof Control)
       {
@@ -186,7 +186,7 @@ public abstract class Prop
       return val;
     }
 
-    void set(fan.gfx.Point v)
+    public void set(fan.gfx.Point v)
     {
       val = v;
       if (peer.control instanceof Control)
@@ -203,15 +203,15 @@ public abstract class Prop
 // SizeProp
 //////////////////////////////////////////////////////////////////////////
 
-  static class SizeProp extends Prop
+  public static class SizeProp extends Prop
   {
-    SizeProp(WidgetPeer peer) { super(peer); }
+    public SizeProp(WidgetPeer peer) { super(peer); }
 
-    void syncToControl() { set(val); }
+    public void syncToControl() { set(val); }
 
-    void syncFromControl() { val = get(); }
+    public void syncFromControl() { val = get(); }
 
-    Size get()
+    public Size get()
     {
       if (peer.control instanceof Control)
       {
@@ -226,7 +226,7 @@ public abstract class Prop
       return val;
     }
 
-    void set(Size v)
+    public void set(Size v)
     {
       val = v;
       if (peer.control instanceof Control)
@@ -243,20 +243,20 @@ public abstract class Prop
 // ItemsProp
 //////////////////////////////////////////////////////////////////////////
 
-  static abstract class ItemsProp extends Prop
+  public static abstract class ItemsProp extends Prop
   {
-    ItemsProp(WidgetPeer peer)
+    public ItemsProp(WidgetPeer peer)
     {
       super(peer);
     }
 
-    void syncToControl() { set(val); }
+    public void syncToControl() { set(val); }
 
-    void syncFromControl() {}
+    public void syncFromControl() {}
 
-    List get() { return val; }
+    public List get() { return val; }
 
-    void set(List v)
+    public void set(List v)
     {
       val = v.ro();
       Widget w = peer.control;
@@ -273,18 +273,18 @@ public abstract class Prop
 // IntsProp
 //////////////////////////////////////////////////////////////////////////
 
-  static abstract class IntsProp extends Prop
+  public static abstract class IntsProp extends Prop
   {
-    IntsProp(WidgetPeer peer)
+    public IntsProp(WidgetPeer peer)
     {
       super(peer);
     }
 
-    void syncToControl() { set(val); }
+    public void syncToControl() { set(val); }
 
-    void syncFromControl() { val = get(); }
+    public void syncFromControl() { val = get(); }
 
-    List get()
+    public List get()
     {
       Widget w = peer.control;
       if (w == null) return val;
@@ -294,7 +294,7 @@ public abstract class Prop
       return val;
     }
 
-    void set(List v)
+    public void set(List v)
     {
       Widget w = peer.control;
       val = v == null ? null : v.ro();
@@ -312,20 +312,20 @@ public abstract class Prop
 // ColorProp
 //////////////////////////////////////////////////////////////////////////
 
-  static abstract class ColorProp extends Prop
+  public static abstract class ColorProp extends Prop
   {
-    ColorProp(WidgetPeer peer)
+    public ColorProp(WidgetPeer peer)
     {
       super(peer);
     }
 
-    void syncToControl() { set(val); }
+    public void syncToControl() { set(val); }
 
-    void syncFromControl() {}
+    public void syncFromControl() {}
 
-    fan.gfx.Color get() { return val; }
+    public fan.gfx.Color get() { return val; }
 
-    void set(fan.gfx.Color v)
+    public void set(fan.gfx.Color v)
     {
       val = v;
       Widget w = peer.control;
@@ -342,20 +342,20 @@ public abstract class Prop
 // ImageProp
 //////////////////////////////////////////////////////////////////////////
 
-  static abstract class ImageProp extends Prop
+  public static abstract class ImageProp extends Prop
   {
-    ImageProp(WidgetPeer peer)
+    public ImageProp(WidgetPeer peer)
     {
       super(peer);
     }
 
-    void syncToControl() { set(val); }
+    public void syncToControl() { set(val); }
 
-    void syncFromControl() {}
+    public void syncFromControl() {}
 
-    fan.gfx.Image get() { return val; }
+    public fan.gfx.Image get() { return val; }
 
-    void set(fan.gfx.Image v)
+    public void set(fan.gfx.Image v)
     {
       val = v;
       Widget w = peer.control;
@@ -372,20 +372,20 @@ public abstract class Prop
 // FontProp
 //////////////////////////////////////////////////////////////////////////
 
-  static abstract class FontProp extends Prop
+  public static abstract class FontProp extends Prop
   {
-    FontProp(WidgetPeer peer)
+    public FontProp(WidgetPeer peer)
     {
       super(peer);
     }
 
-    void syncToControl() { set(val); }
+    public void syncToControl() { set(val); }
 
-    void syncFromControl() {}
+    public void syncFromControl() {}
 
-    fan.gfx.Font get() { return val; }
+    public fan.gfx.Font get() { return val; }
 
-    void set(fan.gfx.Font v)
+    public void set(fan.gfx.Font v)
     {
       val = v;
       Widget w = peer.control;
@@ -402,20 +402,20 @@ public abstract class Prop
 // KeyProp
 //////////////////////////////////////////////////////////////////////////
 
-  static abstract class KeyProp extends Prop
+  public static abstract class KeyProp extends Prop
   {
-    KeyProp(WidgetPeer peer)
+    public KeyProp(WidgetPeer peer)
     {
       super(peer);
     }
 
-    void syncToControl() { set(val); }
+    public void syncToControl() { set(val); }
 
-    void syncFromControl() {}
+    public void syncFromControl() {}
 
-    fan.fwt.Key get() { return val; }
+    public fan.fwt.Key get() { return val; }
 
-    void set(fan.fwt.Key v)
+    public void set(fan.fwt.Key v)
     {
       val = v;
       Widget w = peer.control;
@@ -432,21 +432,21 @@ public abstract class Prop
 // HalignProp
 //////////////////////////////////////////////////////////////////////////
 
-  static abstract class HalignProp extends Prop
+  public static abstract class HalignProp extends Prop
   {
-    HalignProp(WidgetPeer peer, Halign def)
+    public HalignProp(WidgetPeer peer, Halign def)
     {
       super(peer);
       this.val = def;
     }
 
-    void syncToControl() { set(val); }
+    public void syncToControl() { set(val); }
 
-    void syncFromControl() {}
+    public void syncFromControl() {}
 
-    Halign get() { return val;  }
+    public Halign get() { return val;  }
 
-    void set(Halign v)
+    public void set(Halign v)
     {
       val = v;
       Widget w = peer.control;
@@ -463,11 +463,11 @@ public abstract class Prop
 // CustomProp
 //////////////////////////////////////////////////////////////////////////
 
-  static abstract class Custom extends Prop
+  public static abstract class Custom extends Prop
   {
-    Custom(WidgetPeer peer) { super(peer); }
-    abstract Object get();
-    abstract void set(Object val);
+    public Custom(WidgetPeer peer) { super(peer); }
+    public abstract Object get();
+    public abstract void set(Object val);
   }
 
 //////////////////////////////////////////////////////////////////////////

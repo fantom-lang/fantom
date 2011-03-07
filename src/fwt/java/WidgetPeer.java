@@ -49,9 +49,19 @@ public class WidgetPeer
 // Accessors
 //////////////////////////////////////////////////////////////////////////
 
+  public fan.fwt.Widget self()
+  {
+    return self;
+  }
+
   public fan.fwt.Widget parent()
   {
     return self.parent();
+  }
+
+  public Widget control()
+  {
+    return control;
   }
 
   public Widget parentControl()
