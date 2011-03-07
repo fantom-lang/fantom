@@ -239,6 +239,32 @@ public class FwtGraphics implements Graphics
     return this;
   }
 
+  public Graphics drawRoundRect(long x, long y, long w, long h, long wArc, long hArc)
+  {
+    gc.drawRoundRectangle((int)x, (int)y, (int)w, (int)h, (int)wArc, (int)hArc);
+    return this;
+  }
+
+  public Graphics fillRoundRect(long x, long y, long w, long h, long wArc, long hArc)
+  {
+    // this is one case where we optimize gradients for view rect
+    if (brush instanceof Gradient)
+    {
+      Fwt fwt = Fwt.get();
+      Pattern newbg = pattern(fwt, (Gradient)brush, x, y, w, h);
+      Pattern oldbg = gc.getBackgroundPattern();
+      gc.setBackgroundPattern(newbg);
+      gc.fillRoundRectangle((int)x, (int)y, (int)w, (int)h, (int)wArc, (int)hArc);
+      gc.setBackgroundPattern(oldbg);
+      newbg.dispose();
+    }
+    else
+    {
+      gc.fillRoundRectangle((int)x, (int)y, (int)w, (int)h, (int)wArc, (int)hArc);
+    }
+    return this;
+  }
+
   public Graphics drawOval(long x, long y, long w, long h)
   {
     gc.drawOval((int)x, (int)y, (int)w, (int)h);
