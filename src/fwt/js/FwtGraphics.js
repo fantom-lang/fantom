@@ -197,6 +197,37 @@ fan.fwt.Graphics.prototype.fillRect = function(x, y, w, h)
   return this;
 }
 
+// This drawRoundRect(Int x, Int y, Int w, Int h, Int wArc, Int hArc)
+fan.fwt.Graphics.prototype.drawRoundRect = function(x, y, w, h, wArc, hArc)
+{
+  this.pathRoundRect(x, y, w, h, wArc, hArc)
+  this.cx.stroke();
+  return this;
+}
+
+// This fillRoundRect(Int x, Int y, Int w, Int h, Int wArc, Int hArc)
+fan.fwt.Graphics.prototype.fillRoundRect = function(x, y, w, h, wArc, hArc)
+{
+  this.pathRoundRect(x, y, w, h, wArc, hArc)
+  this.cx.fill();
+  return this;
+}
+
+// generate path for a rounded rectangle
+fan.fwt.Graphics.prototype.pathRoundRect = function(x, y, w, h, wArc, hArc)
+{
+  this.cx.beginPath();
+  this.cx.moveTo(x + wArc, y);
+  this.cx.lineTo(x + w - wArc, y);
+  this.cx.quadraticCurveTo(x + w, y, x + w, y + hArc);
+  this.cx.lineTo(x + w, y + h - hArc);
+  this.cx.quadraticCurveTo(x + w, y + h , x + w - wArc, y + h);
+  this.cx.lineTo(x + wArc, y + h);
+  this.cx.quadraticCurveTo(x, y + h , x, y + h - hArc);
+  this.cx.lineTo(x, y + hArc);
+  this.cx.quadraticCurveTo(x, y, x + wArc, y);
+}
+
 // helper
 fan.fwt.Graphics.prototype.oval = function(x, y, w, h)
 {

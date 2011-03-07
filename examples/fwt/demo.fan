@@ -24,7 +24,7 @@ class FwtDemo
     Window
     {
       title = "FWT Demo"
-      size = Size(800, 600)
+      size = Size(900, 600)
       menuBar = makeMenuBar
       content = EdgePane
       {
@@ -809,10 +809,18 @@ class GraphicsDemo : Canvas
       Point(70, 420),
       Point(90, 380)])
 
+    // polygon - triangle
     polygon := [Point(180, 380), Point(140, 440), Point(220, 440)]
     g.pen = Pen("1")
     g.brush = Color("#f88"); g.fillPolygon(polygon)
     g.brush = Color("#800"); g.drawPolygon(polygon)
+
+    // rounded rect
+    g.brush = Color("#f88")
+    g.fillRoundRect(240, 380, 100, 60, 30, 15)
+    g.pen = Pen("2")
+    g.brush = Color.blue
+    g.drawRoundRect(240, 380, 100, 60, 30, 15)
 
     img := demo.folderIcon
     g.drawImage(img, 220, 20)

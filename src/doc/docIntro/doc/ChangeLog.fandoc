@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.59 (working)*
+- Graphics drawRoundRect, fillRoundRect
+
 *Build 1.0.58 (4 Mar 2011)*
 - Remove deprecated sql APIs (#1318)
 - Weekday.localeVals
