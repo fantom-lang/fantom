@@ -90,6 +90,9 @@ class CsvInStream : InStream
     this.pos = 0
     while (pos < line.size) cells.add(parseCell)
 
+    // handle if last character was delimiter
+    if (!line.isEmpty && line[-1] == delimiter) cells.add("")
+
     // save away width and return cells
     this.rowWidth = cells.size
     return cells
@@ -126,6 +129,7 @@ class CsvInStream : InStream
 
     // skip delimiter and return result
     ++pos
+    if (end < start) return ""
     return line[start..end]
   }
 

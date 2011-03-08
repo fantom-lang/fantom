@@ -106,13 +106,30 @@ class CsvTest : Test
       "\u0420\u0443\u0441\u0441\u043a\u043e\u0435,\u0441\u043b\u043e\u0432\u043e",
       [["\u0420\u0443\u0441\u0441\u043a\u043e\u0435", "\u0441\u043b\u043e\u0432\u043e"]])
       {}
+
+    // leading/trailing commas
+    verifyCsv(
+      Str<|a,b,c,d
+           a,b,c,
+           a,b,,
+           a,,,
+           ,,,
+           ,b,c,d|>,
+      [["a", "b", "c", "d"],
+       ["a", "b", "c", ""],
+       ["a", "b", "", ""],
+       ["a", "", "", ""],
+       ["", "", "", ""],
+       ["", "b", "c", "d"]])
+      {}
   }
 
   Void verifyCsv(Str src, Str[][] expected, |CsvInStream| f)
   {
     // readAllRows
     in := CsvInStream(src.in); f(in)
-    verifyEq(in.readAllRows, expected)
+    x := in.readAllRows
+    verifyEq(x, expected)
 
     // readRow
     i := 0
