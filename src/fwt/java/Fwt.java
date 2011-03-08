@@ -15,6 +15,7 @@ import fan.concurrent.*;
 import fan.sys.List;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -73,6 +74,7 @@ public class Fwt
     display.dispose();
     disposeAllColors();
     disposeAllFonts();
+    disposeAllCursors();
     disposeAllImages();
     disposeScratchGC();
   }
@@ -181,6 +183,86 @@ public class Fwt
     Iterator it = (Iterator)fonts.values().iterator();
     while (it.hasNext()) ((Font)it.next()).dispose();
     fonts.clear();
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Cursor
+//////////////////////////////////////////////////////////////////////////
+
+  /**
+  * Map a Fan Cursor to a SWT Cursor.
+  */
+  public Cursor cursor(fan.fwt.Cursor c)
+  {
+    if (c == null) return null;
+    Cursor swtCursor = (Cursor)cursors.get(c);
+    if (swtCursor == null)
+    {
+      if (c.image != null)
+      {
+        Image swtImage = image(c.image);
+        swtCursor = new Cursor(display, swtImage.getImageData(), (int)c.x, (int)c.y);
+      }
+      else
+      {
+        swtCursor = new Cursor(display, cursorStyle(c));
+      }
+      cursors.put(c, swtCursor);
+    }
+    return swtCursor;
+  }
+
+  /**
+  * Return SWT style of Fan cursor
+  */
+  public int cursorStyle(fan.fwt.Cursor c)
+  {
+  if (cursorStyles == null)
+  {
+      cursorStyles = new HashMap();
+      cursorStyles.put(fan.fwt.Cursor.defVal,     SWT.CURSOR_ARROW);
+      cursorStyles.put(fan.fwt.Cursor.pointer,    SWT.CURSOR_HAND);
+      cursorStyles.put(fan.fwt.Cursor.text,       SWT.CURSOR_IBEAM);
+      cursorStyles.put(fan.fwt.Cursor.crosshair,  SWT.CURSOR_CROSS);
+      cursorStyles.put(fan.fwt.Cursor.wait,       SWT.CURSOR_WAIT);
+      cursorStyles.put(fan.fwt.Cursor.help,       SWT.CURSOR_HELP);
+      cursorStyles.put(fan.fwt.Cursor.progress,   SWT.CURSOR_APPSTARTING);
+      cursorStyles.put(fan.fwt.Cursor.move,       SWT.CURSOR_SIZEALL);
+      cursorStyles.put(fan.fwt.Cursor.notAllowed, SWT.CURSOR_NO);
+      cursorStyles.put(fan.fwt.Cursor.nResize,    SWT.CURSOR_SIZEN);
+      cursorStyles.put(fan.fwt.Cursor.sResize,    SWT.CURSOR_SIZES);
+      cursorStyles.put(fan.fwt.Cursor.wResize,    SWT.CURSOR_SIZEW);
+      cursorStyles.put(fan.fwt.Cursor.eResize,    SWT.CURSOR_SIZEE);
+      cursorStyles.put(fan.fwt.Cursor.swResize,   SWT.CURSOR_SIZESW);
+      cursorStyles.put(fan.fwt.Cursor.seResize,   SWT.CURSOR_SIZESE);
+      cursorStyles.put(fan.fwt.Cursor.nwResize,   SWT.CURSOR_SIZENW);
+      cursorStyles.put(fan.fwt.Cursor.neResize,   SWT.CURSOR_SIZENE);
+  }
+  return (Integer)cursorStyles.get(c);
+  }
+
+  /**
+  * Dispose the SWT cursor for the Fan Cursor.
+  */
+  public void dispose(fan.fwt.Cursor c)
+  {
+    if (c == null) return;
+    Cursor x = (Cursor)cursors.get(c);
+  if (x != null)
+  {
+    x.dispose();
+    cursors.remove(c);
+  }
+  }
+
+  /**
+  * Dispose all cached cursors.
+  */
+  public void disposeAllCursors()
+  {
+    Iterator it = (Iterator)cursors.values().iterator();
+  while (it.hasNext()) ((Cursor)it.next()).dispose();
+  cursors.clear();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -372,6 +454,8 @@ public class Fwt
   HashMap colors = new HashMap();  // Int rgb   -> Color
   HashMap fonts = new HashMap();   // fwt::Font  -> Font
   HashMap images = new HashMap();  // Uri -> Image
+  HashMap cursors = new HashMap(); // fwt::Cursor -> Cursor
+  HashMap cursorStyles; // fwt::Cursor -> Integer
   GC scratchGC;
   List monitors;
   fan.fwt.Monitor primaryMonitor;

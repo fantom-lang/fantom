@@ -24,7 +24,7 @@ class FwtDemo
     Window
     {
       title = "FWT Demo"
-      size = Size(900, 600)
+      size = Size(1000, 600)
       menuBar = makeMenuBar
       content = EdgePane
       {
@@ -43,6 +43,7 @@ class FwtDemo
           Tab { text = "Window";         InsetPane { makeWindow, }, },
           Tab { text = "Serialization";  InsetPane { makeSerialization, }, },
           Tab { text = "Eventing";       InsetPane { makeEventing, }, },
+          Tab { text = "Cursors";        InsetPane { makeCursors, }, },
           Tab { text = "Graphics";       InsetPane { makeGraphics, }, },
         }
       }
@@ -539,6 +540,23 @@ class FwtDemo
   }
 
   **
+  ** Build a pane to trace events
+  **
+  Widget makeCursors()
+  {
+    return GridPane
+    {
+      numCols = 3
+      grid := it
+      Cursor.predefined.each |Cursor c|
+      {
+        grid.add(CursorDemo { text = c.toStr(); cursor = c})
+      }
+      grid.add(CursorDemo { text = "custom"; cursor = Cursor(refreshIcon, 8, 8)})
+    }
+  }
+
+  **
   ** Build a pane showing how to use Graphics
   **
   Widget makeGraphics()
@@ -760,6 +778,50 @@ class EventDemo : Canvas
 
   Str? name
   FwtDemo? demo
+}
+
+**************************************************************************
+** CursorDemo
+**************************************************************************
+
+class CursorDemo : Canvas
+{
+  new make()
+  {
+    d := |e| { dump(e) }
+    onMouseEnter.add(d)
+    onMouseExit.add(d)
+    onMouseMove.add(d)
+  }
+
+  override Size prefSize(Hints hints := Hints.defVal) { return Size.make(150, 30) }
+
+  override Void onPaint(Graphics g)
+  {
+    w := size.w; h := size.h
+    font := Desktop.sysFont
+    g.brush = Color.white
+    g.fillRect(0, 0, w - 1, h - 1)
+    g.brush = Color.black
+    g.drawRect(0, 0, w - 1, h - 1)
+    g.font = font
+    g.drawText(text, (w - font.width(text)) / 2, (h - font.height()) / 2)
+    if (p != null)
+    {
+      g.brush = Color.red
+      g.drawLine(p.x - 10, p.y - 10, p.x + 10, p.y + 10)
+      g.drawLine(p.x - 10, p.y + 10, p.x + 10, p.y - 10)
+    }
+  }
+
+  Void dump(Event event)
+  {
+    p = event.id != EventId.mouseExit ? event.pos : null
+    repaint
+  }
+
+  Str? text
+  Point? p
 }
 
 **************************************************************************

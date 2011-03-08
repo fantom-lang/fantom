@@ -1,0 +1,70 @@
+//
+// Copyright (c) 2011, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   07 Mar 11  Yuri Strot  Creation
+//
+
+using gfx
+using fwt
+
+class Cursors : Window
+{
+  new make() : super(null, null)
+  {
+    content = GridPane
+    {
+      numCols = 3
+      grid := it
+      Cursor.predefined.each |Cursor c|
+      {
+        grid.add(CursorDemo { text = c.toStr(); it.cursor = c })
+      }
+      c := Image(`fan://icons/x16/refresh.png`)
+      grid.add(CursorDemo { text = "custom"; it.cursor = Cursor(c, 8, 8)})
+    }
+  }
+
+  Void main() { open }
+}
+
+class CursorDemo : Canvas
+{
+  new make()
+  {
+    d := |e| { dump(e) }
+    onMouseEnter.add(d)
+    onMouseExit.add(d)
+    onMouseMove.add(d)
+  }
+
+  override Size prefSize(Hints hints := Hints.defVal) { return Size.make(150, 30) }
+
+  override Void onPaint(Graphics g)
+  {
+    w := size.w; h := size.h
+    font := Desktop.sysFont
+    g.brush = Color.white
+    g.fillRect(0, 0, w - 1, h - 1)
+    g.brush = Color.black
+    g.drawRect(0, 0, w - 1, h - 1)
+    g.font = font
+    g.drawText(text, (w - font.width(text)) / 2, (h - font.height()) / 2)
+    if (p != null)
+    {
+      g.brush = Color.red
+      g.drawLine(p.x - 10, p.y - 10, p.x + 10, p.y + 10)
+      g.drawLine(p.x - 10, p.y + 10, p.x + 10, p.y - 10)
+    }
+  }
+
+  Void dump(Event event)
+  {
+    p = event.id != EventId.mouseExit ? event.pos : null
+    repaint
+  }
+
+  Str? text
+  Point? p
+}

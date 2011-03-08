@@ -7,6 +7,7 @@
 **************************************************************************
 
 *Build 1.0.59 (working)*
+- fwt::Cursor API
 - Graphics drawRoundRect, fillRoundRect
 
 *Build 1.0.58 (4 Mar 2011)*
