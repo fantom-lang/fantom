@@ -35,6 +35,11 @@ internal class Commands
           viewManaged.add(cmd)
       }
     }
+
+    // build tools search path (homeDir and maybe also workDir)
+    this.toolsDirs = [Env.cur.homeDir +`etc/flux/tools/`]
+    if (Env.cur.homeDir != Env.cur.workDir)
+      this.toolsDirs.add(Env.cur.workDir +`etc/flux/tools/`)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -284,7 +289,7 @@ internal class Commands
     }
 
     // add new menu items
-    addToolScripts(toolsMenu, toolsDir, true)
+    toolsDirs.each |dir| { addToolScripts(toolsMenu, dir, true) }
   }
 
   Void addToolScripts(Menu menu, File f, Bool top := false)
@@ -355,7 +360,7 @@ internal class Commands
   internal Int historyMenuSize
   internal Menu? toolsMenu
   internal Int toolsMenuSize
-  internal File toolsDir := Env.cur.homeDir +`etc/flux/tools/`
+  internal File[] toolsDirs
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -768,7 +773,7 @@ internal class RecentCommand : FluxCommand
 internal class OptionsCommand : FluxCommand
 {
   new make() : super(CommandId.options) {}
-  override Void invoked(Event? event) { frame.load((Env.cur.homeDir+`etc/flux/`).uri) }
+  override Void invoked(Event? event) { frame.load((Env.cur.workDir+`etc/flux/`).uri) }
 }
 
 ** Refresh the tools menu
