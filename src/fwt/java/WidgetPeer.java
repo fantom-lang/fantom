@@ -49,11 +49,6 @@ public class WidgetPeer
 // Accessors
 //////////////////////////////////////////////////////////////////////////
 
-  public fan.fwt.Widget self()
-  {
-    return self;
-  }
-
   public fan.fwt.Widget parent()
   {
     return self.parent();
@@ -569,7 +564,7 @@ public class WidgetPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  fan.fwt.Widget self;
+  public fan.fwt.Widget self;
   Widget control;
   Key modifiers;
   boolean activeKeyListener   = false;
