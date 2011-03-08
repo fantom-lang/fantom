@@ -49,7 +49,7 @@ public abstract class Prop
 
   public static abstract class BoolProp extends Prop
   {
-    BoolProp(WidgetPeer peer, boolean def)
+    public BoolProp(WidgetPeer peer, boolean def)
     {
       super(peer);
       this.val = def;
@@ -77,7 +77,7 @@ public abstract class Prop
     public abstract boolean get(Widget w);
     public abstract void set(Widget w, boolean v);
 
-    boolean val;
+    protected boolean val;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -86,8 +86,8 @@ public abstract class Prop
 
   public static abstract class IntProp extends Prop
   {
-    IntProp(WidgetPeer peer, int def) { this(peer, def, false); }
-    IntProp(WidgetPeer peer, int def, boolean negIsNull)
+    public IntProp(WidgetPeer peer, int def) { this(peer, def, false); }
+    public IntProp(WidgetPeer peer, int def, boolean negIsNull)
     {
       super(peer);
       this.val = Long.valueOf(def);
@@ -118,8 +118,8 @@ public abstract class Prop
     public abstract int get(Widget w);
     public abstract void set(Widget w, int v);
 
-    Long val;
-    boolean negIsNull;
+    protected Long val;
+    protected boolean negIsNull;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -128,7 +128,7 @@ public abstract class Prop
 
   public static abstract class StrProp extends Prop
   {
-    StrProp(WidgetPeer peer, String def)
+    public StrProp(WidgetPeer peer, String def)
     {
       super(peer);
       this.val = def;
@@ -156,7 +156,7 @@ public abstract class Prop
     public abstract String get(Widget w);
     public abstract void set(Widget w, String v);
 
-    String val;
+    protected String val;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -165,7 +165,7 @@ public abstract class Prop
 
   public static class PosProp extends Prop
   {
-    PosProp(WidgetPeer peer) { super(peer); }
+    public PosProp(WidgetPeer peer) { super(peer); }
 
     public void syncToControl() { set(val); }
 
@@ -196,7 +196,7 @@ public abstract class Prop
       }
     }
 
-    fan.gfx.Point val = fan.gfx.Point.defVal;
+    protected fan.gfx.Point val = fan.gfx.Point.defVal;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -236,7 +236,7 @@ public abstract class Prop
       }
     }
 
-    Size val = Size.defVal;
+    protected Size val = Size.defVal;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -266,7 +266,7 @@ public abstract class Prop
 
     public abstract void set(Widget w, String[] v);
 
-    List val = new List(Sys.ObjType).ro();
+    protected List val = new List(Sys.ObjType).ro();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -305,7 +305,7 @@ public abstract class Prop
     public abstract int[] get(Widget w);
     public abstract void set(Widget w, int[] v);
 
-    List val = new List(Sys.IntType).ro();
+    protected List val = new List(Sys.IntType).ro();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -335,7 +335,7 @@ public abstract class Prop
 
     public abstract void set(Widget w, Color v);
 
-    fan.gfx.Color val;
+    protected fan.gfx.Color val;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -365,7 +365,7 @@ public abstract class Prop
 
     public abstract void set(Widget w, Image v);
 
-    fan.gfx.Image val;
+    protected fan.gfx.Image val;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -395,7 +395,7 @@ public abstract class Prop
 
     public abstract void set(Widget w, Font v);
 
-    fan.gfx.Font val;
+    protected fan.gfx.Font val;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -425,7 +425,7 @@ public abstract class Prop
 
     public abstract void set(Widget w, int v);
 
-    fan.fwt.Key val;
+    protected fan.fwt.Key val;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -456,7 +456,7 @@ public abstract class Prop
 
     public abstract void set(Widget w, int v);
 
-    Halign val;
+    protected Halign val;
   }
 
 //////////////////////////////////////////////////////////////////////////
