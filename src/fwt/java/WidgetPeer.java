@@ -108,6 +108,10 @@ public class WidgetPeer
     }
   };
 
+  public Cursor cursor(fan.fwt.Widget self) { return cursor.get(); }
+  public void cursor(fan.fwt.Widget self, Cursor v) { cursor.set(v); }
+  public final Prop.CursorProp cursor = new Prop.CursorProp(this);
+
   // Size size
   public fan.gfx.Point pos(fan.fwt.Widget self) { return pos.get(); }
   public void pos(fan.fwt.Widget self, fan.gfx.Point v) { pos.set(v); onPosChange(); }

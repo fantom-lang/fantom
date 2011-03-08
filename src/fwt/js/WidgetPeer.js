@@ -100,6 +100,14 @@ fan.fwt.WidgetPeer.prototype.visible = function(self) { return this.m_visible; }
 fan.fwt.WidgetPeer.prototype.visible$ = function(self, val) { this.m_visible = val; }
 fan.fwt.WidgetPeer.prototype.m_visible = true;
 
+fan.fwt.WidgetPeer.prototype.cursor = function(self) { return this.m_cursor; }
+fan.fwt.WidgetPeer.prototype.cursor$ = function(self, cursor)
+{
+  this.m_cursor = cursor;
+  if (this.elem != null) this.sync(self);
+}
+fan.fwt.WidgetPeer.prototype.m_cursor = null;
+
 fan.fwt.WidgetPeer.prototype.pos = function(self) { return this.m_pos; }
 fan.fwt.WidgetPeer.prototype.pos$ = function(self, val) { this.m_pos = val; }
 fan.fwt.WidgetPeer.prototype.m_pos = fan.gfx.Point.make(0,0);
@@ -281,6 +289,24 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
     top     = this.m_pos.m_y  + "px";
     width   = w + "px";
     height  = h + "px";
+
+    // set up cursor
+    var c = this.m_cursor;
+    if (c != null)
+    {
+      var image = c.m_image;
+      if (image != null)
+      {
+        var str = 'url(' + fan.fwt.WidgetPeer.uriToImageSrc(image.m_uri) + ')';
+        str += ' ' + c.m_x;
+        str += ' ' + c.m_y;
+        str += ', inherit';
+        cursor = str;
+      }
+      else cursor = this.m_cursor.toStr();
+    }
+    // use 'inherit' value if no cursor specified. It equals to skip property blank
+    else cursor = "inherit";
   }
 }
 

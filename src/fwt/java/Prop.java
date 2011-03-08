@@ -309,6 +309,32 @@ public abstract class Prop
   }
 
 //////////////////////////////////////////////////////////////////////////
+// CursorProp
+//////////////////////////////////////////////////////////////////////////
+
+  public static class CursorProp extends Prop
+  {
+    public CursorProp(WidgetPeer peer) { super(peer); }
+
+    public void syncToControl() { set(val); }
+
+    public void syncFromControl() { val = get(); }
+
+    public Cursor get() { return val; }
+
+    public void set(Cursor v)
+    {
+      val = v;
+      if (peer.control instanceof Control)
+      {
+        ((Control)peer.control).setCursor(Fwt.get().cursor(val));
+      }
+    }
+
+    protected Cursor val = null;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // ColorProp
 //////////////////////////////////////////////////////////////////////////
 
