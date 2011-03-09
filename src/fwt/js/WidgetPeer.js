@@ -290,6 +290,7 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
     width   = w + "px";
     height  = h + "px";
 
+    /*
     // set up cursor
     var c = this.m_cursor;
     if (c != null)
@@ -307,6 +308,7 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
     }
     // use 'inherit' value if no cursor specified. It equals to skip property blank
     else cursor = "inherit";
+    */
   }
 }
 
