@@ -547,7 +547,7 @@ fan.sys.InStream.prototype.readProps = function()
           while (true)
           {
             peek = this.rChar();
-            if (peek == 32 || peek == 09) continue;
+            if (peek == 32 || peek == 9) continue;
             this.unreadChar(peek);
             break;
           }

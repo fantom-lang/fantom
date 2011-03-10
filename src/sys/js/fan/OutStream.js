@@ -250,7 +250,7 @@ fan.sys.OutStream.prototype.writePropStr = function(s)
     {
       case 10: this.writeChar(92).writeChar(110); continue;
       case 13: this.writeChar(92).writeChar(114); continue;
-      case 09: this.writeChar(92).writeChar(116); continue;
+      case  9: this.writeChar(92).writeChar(116); continue;
       case 92: this.writeChar(92).writeChar(92); continue;
     }
 
