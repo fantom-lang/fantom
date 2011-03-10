@@ -400,8 +400,14 @@ public class InStream
   public String readLine(Long max)
   {
     // max limit
-    int maxChars = (max != null) ? max.intValue() : Integer.MAX_VALUE;
-    if (maxChars <= 0) return "";
+    int maxChars = Integer.MAX_VALUE;
+    if (max != null)
+    {
+      long maxLong = max.longValue();
+      if (maxLong <= 0) throw ArgErr.make("Invalid max: " + max).val;
+      if (maxLong < Integer.MAX_VALUE)
+        maxChars = (int)maxLong;
+    }
 
     // read first char, if at end of file bail
     int c = rChar();

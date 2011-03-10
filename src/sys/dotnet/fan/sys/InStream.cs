@@ -402,8 +402,14 @@ namespace Fan.Sys
     public virtual string readLine(Long max)
     {
       // max limit
-      int maxChars = (max != null) ? max.intValue() : System.Int32.MaxValue;
-      if (maxChars <= 0) return string.Empty;
+      int maxChars = System.Int32.MaxValue;
+      if (max != null)
+      {
+        long maxLong = max.longValue();
+        if (maxLong <= 0) throw ArgErr.make("Invalid max: " + max).val;
+        if (maxLong < System.Int32.MaxValue)
+          maxChars = (int)maxLong;
+      }
 
       // read first char, if at end of file bail
       int c = rChar();
