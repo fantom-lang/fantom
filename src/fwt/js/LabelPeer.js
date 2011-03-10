@@ -83,7 +83,8 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
   {
     var i = this.m_image==null ? 0 : 1;
     var text = this.elem.childNodes[i];
-    text.style.width = this.m_size.m_w + "px";
+    if (this.m_size.m_w > 0) // skip if prefSize not calc yet
+      text.style.width = this.m_size.m_w + "px";
   }
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
