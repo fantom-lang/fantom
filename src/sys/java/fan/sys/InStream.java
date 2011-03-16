@@ -404,7 +404,8 @@ public class InStream
     if (max != null)
     {
       long maxLong = max.longValue();
-      if (maxLong <= 0) throw ArgErr.make("Invalid max: " + max).val;
+      if (maxLong == 0L) return "";
+      if (maxLong < 0L) throw ArgErr.make("Invalid max: " + max).val;
       if (maxLong < Integer.MAX_VALUE)
         maxChars = (int)maxLong;
     }
