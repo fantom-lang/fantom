@@ -406,7 +406,8 @@ namespace Fan.Sys
       if (max != null)
       {
         long maxLong = max.longValue();
-        if (maxLong <= 0) throw ArgErr.make("Invalid max: " + max).val;
+        if (maxLong == 0L) return "";
+        if (maxLong < 0) throw ArgErr.make("Invalid max: " + max).val;
         if (maxLong < System.Int32.MaxValue)
           maxChars = (int)maxLong;
       }
