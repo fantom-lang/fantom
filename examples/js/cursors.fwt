@@ -13,16 +13,51 @@ class Cursors : Window
 {
   new make() : super(null, null)
   {
-    content = GridPane
+    content = InsetPane(12)
     {
-      numCols = 3
-      grid := it
-      Cursor.predefined.each |Cursor c|
+      GridPane
       {
-        grid.add(CursorDemo { text = c.toStr(); it.cursor = c })
-      }
-      c := Image(`fan://icons/x16/refresh.png`)
-      grid.add(CursorDemo { text = "custom"; it.cursor = Cursor(c, 8, 8)})
+        vgap = 24
+        GridPane
+        {
+          numCols = 3
+          grid := it
+          Cursor.predefined.each |Cursor c|
+          {
+            grid.add(CursorDemo { text = c.toStr(); it.cursor = c })
+          }
+          c := Image(`fan://icons/x16/refresh.png`)
+          grid.add(CursorDemo { text = "custom"; it.cursor = Cursor(c, 8, 8)})
+        },
+        GridPane
+        {
+          hgap = 12
+          numCols = 4
+          Button { text="Default" },
+          Button { text="Crosshair"; it.cursor=Cursor.crosshair },
+          Label { text="Default" },
+          Label { text="Crosshair"; it.cursor=Cursor.crosshair },
+        },
+        GridPane
+        {
+          hgap = 12
+          numCols = 2
+          BorderPane
+          {
+            border = Border("#080")
+            insets = Insets(24)
+            it.cursor = Cursor.wait
+            Label { bg=Color("#cfc"); text="Inherit | Wait" },
+          },
+          BorderPane
+          {
+            border = Border("#800")
+            insets = Insets(24)
+            it.cursor = Cursor.wait
+            Label { bg=Color("#fcc"); text="Override | Help"; it.cursor=Cursor.help },
+          },
+        },
+      },
     }
   }
 

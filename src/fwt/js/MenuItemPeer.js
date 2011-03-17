@@ -28,11 +28,12 @@ fan.fwt.MenuItemPeer.prototype.image   = function(self) { return this.m_image; }
 fan.fwt.MenuItemPeer.prototype.image$  = function(self, val) { this.m_image = val; }
 fan.fwt.MenuItemPeer.prototype.m_image = null;
 
+fan.fwt.MenuItemPeer.prototype.m_$defCursor = "default";
+
 fan.fwt.MenuItemPeer.prototype.create = function(parentElem, self)
 {
   var div = this.emptyDiv();
   div.style.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
-  div.style.cursor = "default";
   div.style.padding = "1px 4px";
   div.style.whiteSpace = "nowrap";
 

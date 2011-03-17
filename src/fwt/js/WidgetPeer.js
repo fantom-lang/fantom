@@ -88,33 +88,39 @@ fan.fwt.WidgetPeer.prototype.pack = function(self)
   return self;
 }
 
+fan.fwt.WidgetPeer.prototype.m_enabled = true;
 fan.fwt.WidgetPeer.prototype.enabled = function(self) { return this.m_enabled; }
 fan.fwt.WidgetPeer.prototype.enabled$ = function(self, val)
 {
   this.m_enabled = val;
   if (this.elem != null) this.sync(self);
 }
-fan.fwt.WidgetPeer.prototype.m_enabled = true;
 
+fan.fwt.WidgetPeer.prototype.m_visible = true;
 fan.fwt.WidgetPeer.prototype.visible = function(self) { return this.m_visible; }
 fan.fwt.WidgetPeer.prototype.visible$ = function(self, val) { this.m_visible = val; }
-fan.fwt.WidgetPeer.prototype.m_visible = true;
 
-fan.fwt.WidgetPeer.prototype.cursor = function(self) { return this.m_cursor; }
-fan.fwt.WidgetPeer.prototype.cursor$ = function(self, cursor)
-{
-  this.m_cursor = cursor;
-  if (this.elem != null) this.sync(self);
-}
+fan.fwt.WidgetPeer.prototype.m_$defCursor = "auto";
 fan.fwt.WidgetPeer.prototype.m_cursor = null;
+fan.fwt.WidgetPeer.prototype.cursor = function(self) { return this.m_cursor; }
+fan.fwt.WidgetPeer.prototype.cursor$ = function(self, val)
+{
+  this.m_cursor = val;
+  if (this.elem != null)
+  {
+    this.elem.style.cursor = val != null
+      ? fan.fwt.WidgetPeer.cursorToCss(val)
+      : this.m_$defCursor;
+  }
+}
 
+fan.fwt.WidgetPeer.prototype.m_pos = fan.gfx.Point.make(0,0);
 fan.fwt.WidgetPeer.prototype.pos = function(self) { return this.m_pos; }
 fan.fwt.WidgetPeer.prototype.pos$ = function(self, val) { this.m_pos = val; }
-fan.fwt.WidgetPeer.prototype.m_pos = fan.gfx.Point.make(0,0);
 
+fan.fwt.WidgetPeer.prototype.m_size = fan.gfx.Size.make(0,0);
 fan.fwt.WidgetPeer.prototype.size = function(self) { return this.m_size; }
 fan.fwt.WidgetPeer.prototype.size$ = function(self, val) { this.m_size = val; }
-fan.fwt.WidgetPeer.prototype.m_size = fan.gfx.Size.make(0,0);
 
 //////////////////////////////////////////////////////////////////////////
 // Focus
@@ -144,6 +150,7 @@ fan.fwt.WidgetPeer.prototype.attach = function(self)
   // create control and initialize
   var elem = this.create(parent.peer.elem, self);
   this.attachTo(self, elem);
+  self.cursor$(this.m_cursor);
 
   // callback on parent
   //parent.peer.childAdded(self);
@@ -289,26 +296,6 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
     top     = this.m_pos.m_y  + "px";
     width   = w + "px";
     height  = h + "px";
-
-    /*
-    // set up cursor
-    var c = this.m_cursor;
-    if (c != null)
-    {
-      var image = c.m_image;
-      if (image != null)
-      {
-        var str = 'url(' + fan.fwt.WidgetPeer.uriToImageSrc(image.m_uri) + ')';
-        str += ' ' + c.m_x;
-        str += ' ' + c.m_y;
-        str += ', inherit';
-        cursor = str;
-      }
-      else cursor = this.m_cursor.toStr();
-    }
-    // use 'inherit' value if no cursor specified. It equals to skip property blank
-    else cursor = "inherit";
-    */
   }
 }
 
@@ -324,6 +311,20 @@ fan.fwt.WidgetPeer.fontToCss = function(font)
   s += font.m_size + "px ";
   s += font.m_name;
   return s;
+}
+
+fan.fwt.WidgetPeer.cursorToCss = function(cursor)
+{
+  // predefined cursor
+  var img = cursor.m_image;
+  if (img == null) return cursor.toStr();
+
+  // image cursor
+  var s = "url(" + fan.fwt.WidgetPeer.uriToImageSrc(img.m_uri) + ")";
+  s += " " + cursor.m_x;
+  s += " " + cursor.m_y;
+  s += ", auto";
+  return s
 }
 
 fan.fwt.WidgetPeer.uriToImageSrc = function(uri)
