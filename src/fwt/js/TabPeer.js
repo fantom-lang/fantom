@@ -12,17 +12,19 @@
 fan.fwt.TabPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
 fan.fwt.TabPeer.prototype.$ctor = function(self) {}
 
+fan.fwt.TabPeer.prototype.m_text = "";
 fan.fwt.TabPeer.prototype.text = function(self) { return this.m_text; }
 fan.fwt.TabPeer.prototype.text$ = function(self, val) { this.m_text = val; }
-fan.fwt.TabPeer.prototype.m_text = "";
 
+fan.fwt.TabPeer.prototype.m_image = null;
 fan.fwt.TabPeer.prototype.image = function(self) { return this.m_image; }
 fan.fwt.TabPeer.prototype.image$ = function(self, val)
 {
   this.m_image = val;
   fan.fwt.FwtEnvPeer.loadImage(val, self)
 }
-fan.fwt.TabPeer.prototype.m_image = null;
+
+fan.fwt.TabPeer.prototype.m_$defCursor = "default";
 
 fan.fwt.TabPeer.prototype.sync = function(self)
 {
@@ -41,7 +43,6 @@ fan.fwt.TabPeer.prototype.sync = function(self)
   }
 
   var css = elem.style;
-  css.cursor  = "default";
   css.padding = "6px 12px";
   css.border  = "1px solid #404040";
   css.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);

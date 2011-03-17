@@ -45,6 +45,8 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
   // TODO - sep
 }
 
+fan.fwt.ButtonPeer.prototype.m_$defCursor = "default";
+
 fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
 {
   var div = this.emptyDiv();
@@ -55,7 +57,6 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
   style.webkitBorderRadius = "4px";
   style.borderRadius       = "4px";
   style.textAlign  = "center";
-  style.cursor     = "default";
   style.whiteSpace = "nowrap";
 
   var $this = this;

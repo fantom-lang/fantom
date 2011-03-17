@@ -66,6 +66,8 @@ fan.fwt.LabelPeer.prototype.image$ = function(self, val)
   this.needRebuild = true;
 }
 
+fan.fwt.LabelPeer.prototype.m_$defCursor = "default";
+
 fan.fwt.LabelPeer.prototype.create = function(parentElem, self)
 {
   this.needRebuild = true; // make sure we force rebuild
@@ -191,7 +193,6 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     case fan.gfx.Halign.m_right:  s.textAlign = "right"; break;
     default:                      s.textAlign = "left"; break;
   }
-  s.cursor = "default";
   s.whiteSpace = "nowrap";
 
   // override style
