@@ -1755,5 +1755,38 @@ class CheckErrorsTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Null Compares
+//////////////////////////////////////////////////////////////////////////
+
+  Void testNullCompares()
+  {
+    verifyErrors(
+      "class Foo
+       {
+         new make(Foo foo, |This| f)
+         {
+           if (s != null) return // line 5 ok
+           if (foo.s != null) return  // line 6 not okay
+           if (Env.cur.homeDir == null) return // not okay
+           x := s
+           if (x != null) return // not okay
+         }
+
+         Void foo()
+         {
+           if (s != null) return // not okay
+         }
+
+         const Str s
+       }",
+       [
+         6, 13,  "Comparison of non-nullable type 'sys::Str' to null",
+         7, 17, "Comparison of non-nullable type 'sys::File' to null",
+         9, 9, "Comparison of non-nullable type 'sys::Str' to null",
+        14, 9,  "Comparison of non-nullable type 'sys::Str' to null",
+       ])
+  }
+
 }
 

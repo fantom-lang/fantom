@@ -39,7 +39,7 @@ const class RouteMod : WebMod
     route := routes[name ?: "index"]
     if (route == null) { res.sendErr(404); return }
 
-    // dive into sub-WebMode
+    // dive into sub-WebMod
     req.mod = route
     if (name != null) req.modBase = req.modBase + `$name/`
     route.onService

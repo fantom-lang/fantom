@@ -30,7 +30,7 @@ class Build : BuildPod
                   `fan/util/`]
     docSrc     = true
     dependsDir = devHomeDir.uri + `lib/fan/`
-    outDir     = devHomeDir.uri + `lib/fan/`
+    outPodDir  = devHomeDir.uri + `lib/fan/`
     index =
     [
       // DSL plugins
