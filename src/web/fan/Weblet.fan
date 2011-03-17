@@ -24,7 +24,7 @@ mixin Weblet
   ** The WebReq instance for this current web request.  Raise an exception
   ** if the current actor thread is not serving a web request.
   **
-  WebReq req()
+  virtual WebReq req()
   {
     try
       return Actor.locals["web.req"]
@@ -36,7 +36,7 @@ mixin Weblet
   ** The WebRes instance for this current web request.  Raise an exception
   ** if the current actor thread is not serving a web request.
   **
-  WebRes res()
+  virtual WebRes res()
   {
     try
       return Actor.locals["web.res"]
