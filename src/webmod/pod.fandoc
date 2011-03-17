@@ -141,11 +141,12 @@ field names are supported:
 If any unknown fields are specified or not available then "-" is logged.
 The default format is:
 
-  date time c-ip cs-method cs-uri-stem cs-uri-query
-    sc-status time-taken cs(User-Agent) cs(Referer)
+  date time c-ip cs(X-Real-IP) cs-method cs-uri-stem cs-uri-query
+  sc-status time-taken cs(User-Agent) cs(Referer)
 
 Example log record with this format:
 
-  18-04-2008 01:42:54 127.0.0.1 GET / - 304 1 "Mozilla/5.0 (Windows; U;
-    Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13"
-    "http://localhost:8080/dir/index.html"
+  2011-02-25 03:22:45 0:0:0:0:0:0:0:1 - GET /doc - 200 247
+    "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/8.0.552.237 Safari/534.10"
+    "http://localhost/tag"
+

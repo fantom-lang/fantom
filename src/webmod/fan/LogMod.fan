@@ -49,7 +49,7 @@ const class LogMod : WebMod
   ** Log filename pattern.  The name may contain a pattern between
   ** '{}' using the pattern format of `sys::DateTime.toLocale`.  For
   ** example to maintain a log file per month, use a filename such
-  ** as "mylog-{YYYY-MM}.log".
+  ** as "web-{YYYY-MM}.log".
   **
   const Str filename := ""
 
@@ -57,7 +57,7 @@ const class LogMod : WebMod
   ** Format of the log records as a string of #Fields names.
   ** See [pod doc]`pod-doc#log`
   **
-  const Str fields := "date time c-ip cs-method cs-uri-stem cs-uri-query sc-status time-taken cs(User-Agent) cs(Referer)"
+  const Str fields := "date time c-ip cs(X-Real-IP) cs-method cs-uri-stem cs-uri-query sc-status time-taken cs(User-Agent) cs(Referer)"
 
 //////////////////////////////////////////////////////////////////////////
 // Lifecycle
