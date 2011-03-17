@@ -22,6 +22,6 @@ class Build : BuildPod
     srcDirs    = [`fan/`, `fan/tasks/`]
     docSrc     = true
     dependsDir = devHomeDir.uri + `lib/fan/`
-    outDir     = devHomeDir.plus(`lib/fan/`).uri
+    outPodDir  = devHomeDir.plus(`lib/fan/`).uri
   }
 }

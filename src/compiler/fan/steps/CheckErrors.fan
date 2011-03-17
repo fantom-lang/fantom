@@ -891,9 +891,21 @@ class CheckErrors : CompilerStep
 
   private Void checkCompareNull(UnaryExpr expr)
   {
+    // check if operand is nullable, if so its ok
     t := expr.operand.ctype
-    if (!t.isNullable)
-      err("Comparison of non-nullable type '$t' to null", expr.loc)
+    if (t.isNullable) return
+
+    // check if operand is inside it-block ctor
+    if (curMethod != null && curMethod.isItBlockCtor)
+    {
+      // check that operand is this.{field} access
+      field := expr.operand as FieldExpr
+      if (field != null && field.target != null && field.target.id == ExprId.thisExpr)
+        return
+    }
+
+    // if we made it here, compirson to null is an error
+    err("Comparison of non-nullable type '$t' to null", expr.loc)
   }
 
   private Void checkBools(CondExpr expr)

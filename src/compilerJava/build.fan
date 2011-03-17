@@ -22,7 +22,7 @@ class Build : BuildPod
     srcDirs    = [`fan/`]
     docSrc     = true
     dependsDir = devHomeDir.uri + `lib/fan/`
-    outDir     = devHomeDir.uri + `lib/fan/`
+    outPodDir  = devHomeDir.uri + `lib/fan/`
     index      = ["compiler.bridge.java": "compilerJava::JavaBridge"]
   }
 }
