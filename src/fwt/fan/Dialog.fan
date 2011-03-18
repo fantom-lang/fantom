@@ -55,7 +55,7 @@ class Dialog : Window
   ** is passed, then it should close the dialog as appropiate with
   ** the result object.
   **
-  Command[]? commands := [ok]
+  Command[]? commands
 
 //////////////////////////////////////////////////////////////////////////
 // Predefined Commands
