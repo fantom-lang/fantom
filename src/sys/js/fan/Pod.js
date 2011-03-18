@@ -49,7 +49,7 @@ fan.sys.Pod.prototype.$ctor = function(name)
 
 fan.sys.Pod.prototype.$typeof = function() { return fan.sys.Pod.$type; }
 
-fan.sys.Pod.prototype.name = function()
+fan.sys.Pod.prototype.$name = function()
 {
   return this.m_name;
 }

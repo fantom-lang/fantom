@@ -77,7 +77,7 @@ abstract class JsNode
     return name;
   }
 
-  // must keep in sync with fan.sys.Slot.prototype.$name
+  // must keep in sync with fan.sys.Slot.prototype.$$name
   private const Str:Bool vnames :=
   [
     "char":   true,
@@ -85,6 +85,7 @@ abstract class JsNode
     "fan":    true,
     "import": true,
     "in":     true,
+    "name":   true,
     "typeof": true,
     "var":    true,
     "with":   true

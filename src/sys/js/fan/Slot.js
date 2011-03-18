@@ -72,7 +72,7 @@ fan.sys.Slot.find = function(qname, checked)
 
 fan.sys.Slot.prototype.parent = function() { return this.m_parent; }
 fan.sys.Slot.prototype.qname = function() { return this.m_qname; }
-fan.sys.Slot.prototype.name = function() { return this.m_name; }
+fan.sys.Slot.prototype.$name = function() { return this.m_name; }
 fan.sys.Slot.prototype.isField = function() { return this instanceof fan.sys.Field; }
 fan.sys.Slot.prototype.isMethod = function() { return this instanceof fan.sys.Method; }
 
@@ -109,7 +109,7 @@ fan.sys.Slot.prototype.facet = function(type, checked)
 // Util
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Slot.prototype.$name = function(n)
+fan.sys.Slot.prototype.$$name = function(n)
 {
   // must keep in sync with compilerJs::JsNode
   switch (n)
@@ -119,6 +119,7 @@ fan.sys.Slot.prototype.$name = function(n)
     case "fan":    return "$fan";
     case "import": return "$import";
     case "in":     return "$in";
+    case "name":   return "$name";
     case "typeof": return "$typeof";
     case "var":    return "$var";
     case "with":   return "$with";

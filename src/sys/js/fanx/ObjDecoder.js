@@ -138,7 +138,7 @@ fanx_ObjDecoder.prototype.readSimple = function(line, t)
 
 // TEMP
 //var script = t.qname().replace("::","_") + ".fromStr('" + str + "')";
-var script = "fan." + t.pod().name() + "." + t.name() + ".fromStr('" + str + "')";
+var script = "fan." + t.pod().$name() + "." + t.$name() + ".fromStr('" + str + "')";
 return eval(script);
 
   // lookup the fromString method

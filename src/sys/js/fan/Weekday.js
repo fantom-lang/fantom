@@ -69,14 +69,14 @@ fan.sys.Weekday.prototype.localeAbbr = function() { return this.abbr(fan.sys.Loc
 fan.sys.Weekday.prototype.abbr = function(locale)
 {
   var pod = fan.sys.Pod.find("sys");
-  return fan.sys.Env.cur().locale(pod, this.m_localeAbbrKey, this.name(), locale);
+  return fan.sys.Env.cur().locale(pod, this.m_localeAbbrKey, this.$name(), locale);
 }
 
 fan.sys.Weekday.prototype.localeFull = function() { return this.full(fan.sys.Locale.cur()); }
 fan.sys.Weekday.prototype.full = function(locale)
 {
   var pod = fan.sys.Pod.find("sys");
-  return fan.sys.Env.cur().locale(pod, this.m_localeFullKey, this.name(), locale);
+  return fan.sys.Env.cur().locale(pod, this.m_localeFullKey, this.$name(), locale);
 }
 
 fan.sys.Weekday.localeStartOfWeek = function()

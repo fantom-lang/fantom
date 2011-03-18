@@ -309,7 +309,7 @@ fan.fwt.WidgetPeer.fontToCss = function(font)
   if (font.m_bold)   s += "bold ";
   if (font.m_italic) s += "italic ";
   s += font.m_size + "px ";
-  s += font.m_name;
+  s += font.m_$name;
   return s;
 }
 

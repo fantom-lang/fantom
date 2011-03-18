@@ -845,7 +845,7 @@ fan.sys.Uri.prototype.isPathOnly = function()
          this.m_userInfo == null && this.m_queryStr == null && this.m_frag == null;
 }
 
-fan.sys.Uri.prototype.name = function()
+fan.sys.Uri.prototype.$name = function()
 {
   if (this.m_path.size() == 0) return "";
   return this.m_path.last();
@@ -853,7 +853,7 @@ fan.sys.Uri.prototype.name = function()
 
 fan.sys.Uri.prototype.basename = function()
 {
-  var n = this.name();
+  var n = this.$name();
   var dot = n.lastIndexOf('.');
   if (dot < 2)
   {
@@ -866,7 +866,7 @@ fan.sys.Uri.prototype.basename = function()
 
 fan.sys.Uri.prototype.ext = function()
 {
-  var n = this.name();
+  var n = this.$name();
   var dot = n.lastIndexOf('.');
   if (dot < 2)
   {

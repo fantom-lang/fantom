@@ -83,7 +83,7 @@ fan.sys.Log.prototype.$typeof = function() { return fan.sys.Log.$type; }
 
 fan.sys.Log.prototype.toStr = function() { return this.m_name; }
 
-fan.sys.Log.prototype.name = function() { return this.m_name; }
+fan.sys.Log.prototype.$name = function() { return this.m_name; }
 
 //////////////////////////////////////////////////////////////////////////
 // Severity Level

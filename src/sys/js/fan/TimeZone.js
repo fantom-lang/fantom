@@ -90,7 +90,7 @@ fan.sys.TimeZone.prototype.$typeof = function() { return fan.sys.TimeZone.$type;
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.TimeZone.prototype.name = function () { return this.m_name; }
+fan.sys.TimeZone.prototype.$name = function () { return this.m_name; }
 
 fan.sys.TimeZone.prototype.fullName = function() { return this.m_fullName; }
 
