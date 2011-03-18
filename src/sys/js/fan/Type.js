@@ -56,7 +56,7 @@ fan.sys.Type.prototype.$ctor = function(qname, base, mixins, flags)
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.Type.prototype.pod = function() { return this.m_pod; }
-fan.sys.Type.prototype.name = function() { return this.m_name; }
+fan.sys.Type.prototype.$name = function() { return this.m_name; }
 fan.sys.Type.prototype.qname = function() { return this.m_qname; }
 fan.sys.Type.prototype.signature = function() { return this.m_qname; }
 
@@ -403,7 +403,7 @@ fan.sys.NullableType.prototype.$ctor = function(root)
 }
 
 fan.sys.NullableType.prototype.pod = function() { return this.m_root.pod(); }
-fan.sys.NullableType.prototype.name = function() { return this.m_root.name(); }
+fan.sys.NullableType.prototype.$name = function() { return this.m_root.$name(); }
 fan.sys.NullableType.prototype.qname = function() { return this.m_root.qname(); }
 fan.sys.NullableType.prototype.signature = function() { return this.m_signature; }
 fan.sys.NullableType.prototype.flags = function() { return this.m_root.flags(); }

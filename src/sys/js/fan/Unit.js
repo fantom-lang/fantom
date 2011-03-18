@@ -246,7 +246,7 @@ fan.sys.Unit.prototype.toStr = function() { return this.m_ids.last(); }
 
 fan.sys.Unit.prototype.ids = function() { return this.m_ids; }
 
-fan.sys.Unit.prototype.name = function() { return this.m_ids.first(); }
+fan.sys.Unit.prototype.$name = function() { return this.m_ids.first(); }
 
 fan.sys.Unit.prototype.symbol = function() { return this.m_ids.last(); }
 

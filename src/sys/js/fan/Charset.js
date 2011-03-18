@@ -102,7 +102,7 @@ fan.sys.Charset.fromStr = function(name, checked)
 }
 
 fan.sys.Charset.defVal = function() { return fan.sys.Charset.utf8(); }
-fan.sys.Charset.prototype.name = function() { return this.m_name; }
+fan.sys.Charset.prototype.$name = function() { return this.m_name; }
 fan.sys.Charset.prototype.hash = function() { return 0; }
 fan.sys.Charset.prototype.equals = function(that)
 {
@@ -112,7 +112,7 @@ fan.sys.Charset.prototype.equals = function(that)
   }
   return false;
 }
-fan.sys.Charset.prototype.toStr = function() { return this.name(); }
+fan.sys.Charset.prototype.toStr = function() { return this.$name(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Charset.Encoder

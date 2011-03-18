@@ -50,7 +50,7 @@ fan.sys.Buf.prototype.equals = function(that)
 
 fan.sys.Buf.prototype.toStr = function()
 {
-  return this.$typeof().name() + "(pos=" + this.pos() + " size=" + this.size() + ")";
+  return this.$typeof().$name() + "(pos=" + this.pos() + " size=" + this.size() + ")";
 }
 
 fan.sys.Buf.prototype.$typeof = function()

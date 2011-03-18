@@ -131,11 +131,11 @@ class JsPod : JsNode
       if (t.fields.isEmpty && t.methods.isEmpty) return
       //out.w("  \$$i")
       out.w("  fan.${t.pod}.${t.name}.\$type")
-      t.fields.each |f| { out.w(".\$af('$f.name',$f.flags,'$f.ftype.sig')") }
+      t.fields.each |f| { out.w(".\$af('$f.origName',$f.flags,'$f.ftype.sig')") }
       t.methods.each |m|
       {
         if (m.isFieldAccessor) return
-        out.w(".\$am('$m.name',$m.flags,'$m.ret.sig',fan.sys.List.make(fan.sys.Param.\$type,[")
+        out.w(".\$am('$m.origName',$m.flags,'$m.ret.sig',fan.sys.List.make(fan.sys.Param.\$type,[")
         m.params.each |p,i|
         {
           if (i > 0) out.w(",")

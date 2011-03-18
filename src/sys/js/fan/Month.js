@@ -79,12 +79,12 @@ fan.sys.Month.prototype.localeAbbr = function() { return this.abbr(fan.sys.Local
 fan.sys.Month.prototype.abbr = function(locale)
 {
   var pod = fan.sys.Pod.find("sys");
-  return fan.sys.Env.cur().locale(pod, this.m_localeAbbrKey, this.name(), locale);
+  return fan.sys.Env.cur().locale(pod, this.m_localeAbbrKey, this.$name(), locale);
 }
 
 fan.sys.Month.prototype.localeFull = function() { return this.full(fan.sys.Locale.cur()); }
 fan.sys.Month.prototype.full = function(locale)
 {
   var pod = fan.sys.Pod.find("sys");
-  return fan.sys.Env.cur().locale(pod, this.m_localeFullKey, this.name(), locale);
+  return fan.sys.Env.cur().locale(pod, this.m_localeFullKey, this.$name(), locale);
 }

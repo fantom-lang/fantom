@@ -25,7 +25,7 @@ fan.sys.Method.prototype.$ctor = function(parent, name, flags, returns, params)
   this.m_returns = returns;
   this.m_params  = params;
   this.m_func    = new fan.sys.MethodFunc(this, returns);
-  this.m_$name   = this.$name(name);
+  this.m_$name   = this.$$name(name);
   this.m_$qname  = this.m_parent.m_$qname + '.' + this.m_$name;
   this.m_facets  = fan.sys.Facet.$type.emptyList();
 }

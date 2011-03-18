@@ -99,7 +99,7 @@ fan.sys.Env.prototype.index = function(key)
 
 fan.sys.Env.prototype.props = function(pod, uri, maxAge)
 {
-  var key = pod.name() + ':' + uri.toStr();
+  var key = pod.$name() + ':' + uri.toStr();
   return this.$props(key);
 }
 

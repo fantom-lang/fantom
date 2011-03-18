@@ -66,6 +66,6 @@ fan.sys.Enum.prototype.compare = function(that)
 fan.sys.Enum.prototype.$typeof = function()    { return fan.sys.Enum.$type; }
 fan.sys.Enum.prototype.toStr = function()   { return this.m_name; }
 fan.sys.Enum.prototype.ordinal = function() { return this.m_ordinal; }
-fan.sys.Enum.prototype.name = function()    { return this.m_name; }
+fan.sys.Enum.prototype.$name = function()    { return this.m_name; }
 
 

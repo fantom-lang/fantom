@@ -16,6 +16,7 @@ abstract class JsSlot : JsNode
   new make(JsCompilerSupport s, SlotDef def) : super(s)
   {
     this.parent      = qnameToJs(def.parentDef)
+    this.origName    = def.name
     this.name        = vnameToJs(def.name)
     this.flags       = def.flags
     this.isAbstract  = def.isAbstract
@@ -37,6 +38,7 @@ abstract class JsSlot : JsNode
   }
 
   Str parent        // qname of slot parent
+  Str origName      // unescaped slot name
   Str name          // slot name
   Int flags         // slot flags
   Bool isAbstract   // is slot abstract
