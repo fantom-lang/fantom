@@ -340,11 +340,19 @@ public class LocalFile
       if (size == null) size = size();
 
       // traverse the various Java APIs
-      RandomAccessFile fp = new RandomAccessFile(file, rw);
-      FileChannel chan = fp.getChannel();
-      MappedByteBuffer mmap = chan.map(mm, pos, size.longValue());
-
-      return new MmapBuf(this, mmap);
+      RandomAccessFile fp = null;
+      FileChannel chan = null;
+      try
+      {
+        fp = new RandomAccessFile(file, rw);
+        chan = fp.getChannel();
+        return new MmapBuf(this, chan.map(mm, pos, size.longValue()));
+      }
+      finally
+      {
+        if (chan != null) chan.close();
+        if (fp != null) fp.close();
+      }
     }
     catch (java.io.IOException e)
     {
