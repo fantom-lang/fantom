@@ -1169,6 +1169,16 @@ class DateTimeTest : Test
     verifyEq(Date("2010-01-02").toLocale("DDD"), "2nd")
     verifyEq(Date("2010-01-03").toLocale("DDD"), "3rd")
     verifyEq(Date("2010-01-04").toLocale("DDD"), "4th")
+    verifyEq(Date("2010-01-11").toLocale("DDD"), "11th")
+    verifyEq(Date("2010-01-12").toLocale("DDD"), "12th")
+    verifyEq(Date("2010-01-13").toLocale("DDD"), "13th")
+    verifyEq(Date("2010-01-20").toLocale("DDD"), "20th")
+    verifyEq(Date("2010-01-21").toLocale("DDD"), "21st")
+    verifyEq(Date("2010-01-22").toLocale("DDD"), "22nd")
+    verifyEq(Date("2010-01-23").toLocale("DDD"), "23rd")
+    verifyEq(Date("2010-01-24").toLocale("DDD"), "24th")
+    verifyEq(Date("2010-01-30").toLocale("DDD"), "30th")
+    verifyEq(Date("2010-01-31").toLocale("DDD"), "31st")
 
     verifyNull(Date.fromLocale("2-nomonth-1999", "D-MMMM-YYYY", false))
     verifyErr(ParseErr#) { Date.fromLocale("xyz", "YY-MM-DD") }

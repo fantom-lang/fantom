@@ -287,13 +287,21 @@ class DateTimeStr
 
   private static String daySuffix(int day)
   {
-    // eventually need localization
+    // eventually need localization (or just skip if not english)
     switch (day)
     {
-      case 1: return "st";
-      case 2: return "nd";
-      case 3: return "rd";
-      default: return "th";
+      case 1:
+      case 21:
+      case 31:
+        return "st";
+      case 2:
+      case 22:
+        return "nd";
+      case 3:
+      case 23:
+        return "rd";
+      default:
+        return "th";
     }
   }
 
