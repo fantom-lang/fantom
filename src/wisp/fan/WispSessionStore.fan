@@ -47,7 +47,7 @@ const mixin WispSessionStore
     else
     {
       ws = WispSession(Uuid.make.toStr, Str:Obj?[:])
-      WispRes res := Actor.locals["web.res"]
+      WebRes res := Actor.locals["web.res"]
       res.cookies.add(Cookie("fanws", ws.id))
     }
 
