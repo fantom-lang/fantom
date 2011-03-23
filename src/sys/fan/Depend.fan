@@ -19,7 +19,8 @@
 **   <versionSimple> := <version>
 **   <versionPlus>   := <version> space* "+"
 **   <versionRange>  := <version> space* "-" space* <version>
-**   <version>       := <digit> ["." <digit>]*
+**   <version>       := <digits> ["." <digits>]*
+**   <digits>        := <digit> [<digits>]*
 **   <digit>         := "0" - "9"
 **
 ** Note a simple version constraint such as "foo 1.2" really means
