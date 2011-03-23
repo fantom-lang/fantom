@@ -15,6 +15,9 @@
 - compilerJs: escape "name" for slots
 - compilerJs: fix reflection for escaped slot names
 - Fix Date.toLocale for DDD
+- WebOutStream.label
+- js: fwt::Button.image support, ButtonMod.sep support
+- js: fwt::ToolBar
 
 *Build 1.0.58 (4 Mar 2011)*
 - Remove deprecated sql APIs (#1318)
