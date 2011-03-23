@@ -11,6 +11,7 @@ using gfx
 **
 ** ToolBar contains a bar of Button children.
 **
+@Js
 @Serializable { collection = true }
 class ToolBar : Widget
 {
