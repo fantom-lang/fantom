@@ -159,7 +159,7 @@ class Shell
 
   internal Var? findInScope(Str name)
   {
-    return scope.find |Var v->Bool| { echo("$v ?= $name"); return v.name == name }
+    return scope.find |Var v->Bool| { v.name == name }
   }
 
 //////////////////////////////////////////////////////////////////////////

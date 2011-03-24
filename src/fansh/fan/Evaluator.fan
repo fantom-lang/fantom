@@ -138,17 +138,17 @@ class Evaluator
   private Str typeSig(Type t)
   {
     // FFI types aren't qualified
-    if (t.signature.startsWith("["))
+    if (t.pod == null)
     {
       // see if we are FFI using as
       a := shell.usings.find |u| { u.matchAs(t) }
-      if (a != null) return "${a.asTo}?"
+      if (a != null) return a.asTo + (t.isNullable ? "?" : "")
 
       // use unqualified name
-      return "${t.name}?"
+      return "${t.name}" + (t.isNullable ? "?" : "")
     }
 
-    // use qualified nullable type
+    // use qualified type
     return t.signature
   }
 
