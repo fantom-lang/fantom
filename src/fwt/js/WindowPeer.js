@@ -41,6 +41,9 @@ fan.fwt.WindowPeer.prototype.open = function(self)
   this.attachTo(self, elem);
   this.root.appendChild(shell);
   self.relayout();
+
+  // attach resize listener
+  window.addEventListener("resize", function() { self.relayout(); }, false);
 }
 
 fan.fwt.WindowPeer.prototype.close = function(self, result)
