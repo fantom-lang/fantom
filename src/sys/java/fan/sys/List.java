@@ -298,7 +298,7 @@ public final class List
     for (int i=0; i<size; ++i)
     {
       Object obj = values[i];
-      if (obj != null) hash ^= hash(obj);
+      hash = (31*hash) + (obj == null ? 0 : hash(obj));
     }
     return hash;
   }
@@ -966,7 +966,7 @@ public final class List
     modify();
     for (int i=0; i<size; ++i)
     {
-      int randi = FanInt.random.nextInt(size);
+      int randi = FanInt.random.nextInt(i+1);
       Object temp = values[i];
       values[i] = values[randi];
       values[randi] = temp;
