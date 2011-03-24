@@ -9,7 +9,7 @@
 **
 ** Param represents one parameter definition of a Func (or Method).
 **
-final class Param
+final const class Param
 {
 
 //////////////////////////////////////////////////////////////////////////
