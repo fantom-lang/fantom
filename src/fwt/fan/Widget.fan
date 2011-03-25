@@ -308,6 +308,16 @@ abstract class Widget
   }
 
   **
+  ** Add all widgets in list by calling `add` on each widget.
+  ** Return this.
+  **
+  virtual This addAll(Widget?[] children)
+  {
+    children.each |kid| { add(kid) }
+    return this
+  }
+
+  **
   ** Remove a child widget.  If child is null, then do
   ** nothing.  If this widget is not the child's current
   ** parent throw ArgErr.  Return this.
