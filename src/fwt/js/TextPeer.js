@@ -59,7 +59,7 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
     $this.fireModify(self);
 
     // fire onAction
-    if (event.keyCode == 13 && self.m_onAction.size() > 0)
+    if (e.keyCode == 13 && self.m_onAction.size() > 0)
     {
       var ae = fan.fwt.Event.make();
       ae.m_id = fan.fwt.EventId.m_action;
