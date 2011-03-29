@@ -136,6 +136,24 @@ fan.fwt.DialogPeer.findFormControl = function(node)
 
 fan.fwt.DialogPeer.prototype.close = function(self, result)
 {
+  // backdoor to trap validation errs
+  if (self.m_onValidate != null && fan.fwt.DialogPeer.$isCommit(result))
+  {
+    var event      = fan.fwt.Event.make();
+    event.m_widget = self;
+    event.m_id     = fan.fwt.EventId.m_verify;
+    event.m_data   = result;
+
+    var list = self.m_onValidate.list();
+    for (var i=0; i<list.size(); i++) list.get(i).call(event);
+    if (self.m_invalid == true)
+    {
+      self.m_invalid = false;
+      self.relayout();
+      return;
+    }
+  }
+
   // animate close
   if (this.$shell)
   {
@@ -155,6 +173,14 @@ fan.fwt.DialogPeer.prototype.close = function(self, result)
     if ($this.$mask) $this.$mask.parentNode.removeChild($this.$mask);
     fan.fwt.WindowPeer.prototype.close.call($this, self, result);
   }, 100);
+}
+
+fan.fwt.DialogPeer.$isCommit = function(result)
+{
+  var id = result.m_id;
+  if (id == fan.fwt.DialogCommandId.m_ok)  return true;
+  if (id == fan.fwt.DialogCommandId.m_yes) return true;
+  return false;
 }
 
 fan.fwt.DialogPeer.prototype.sync = function(self)
