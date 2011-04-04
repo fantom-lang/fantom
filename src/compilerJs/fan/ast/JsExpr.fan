@@ -876,13 +876,23 @@ class JsFieldExpr : JsExpr
     if (fe.target != null) this.target = JsExpr.makeFor(s, fe.target)
     this.parent = JsTypeRef(s, fe.field.parent)
     this.field  = JsFieldRef(s, fe.field)
+    this.isSafe = fe.isSafe
     this.useAccessor = fe.useAccessor
   }
   override Void write(JsWriter out)
   {
-    if (target == null) parent.write(out)
-    else target.write(out)
-    if (field.name == "\$this") return // skip $this ref for closures
+    if (isSafe)
+    {
+      v := support.unique
+      out.w("(function() { var $v=")
+      writeTarget(out)
+      out.w("; return ($v==null) ? null : $v")
+    }
+    else
+    {
+      writeTarget(out)
+      if (field.name == "\$this") return // skip $this ref for closures
+    }
     out.w(".")
     if (useAccessor)
     {
@@ -890,11 +900,18 @@ class JsFieldExpr : JsExpr
       if (!isSet) out.w("()")
     }
     else out.w("m_$field.name")
+    if (isSafe) out.w("}())")
+  }
+  private Void writeTarget(JsWriter out)
+  {
+    if (target == null) parent.write(out)
+    else target.write(out)
   }
   JsExpr? target       // field target
   JsTypeRef parent     // field parent type
   JsFieldRef field     // field
   Bool useAccessor     // false if access using '*' storage operator
+  Bool isSafe          // is safe nav
   Bool isSet := false  // transiently use for setters
 }
 
