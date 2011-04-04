@@ -172,10 +172,9 @@ public final class List
   public final Object getSafe(long index) { return getSafe(index, null); }
   public final Object getSafe(long index, Object def)
   {
-    int i = (int)index;
-    if (i < 0) i = size + i;
-    if (i >= size || i < 0) return def;
-    return values[i];
+    if (index < 0) index = size + index;
+    if (index >= size || index < 0) return def;
+    return values[(int)index];
   }
 
   public final List getRange(Range r)

@@ -163,10 +163,9 @@ namespace Fan.Sys
     public object getSafe(long index) { return getSafe(index, null); }
     public object getSafe(long index, object def)
     {
-      int i = (int)index;
-      if (i < 0) i = m_size + i;
-      if (i >= m_size || i < 0) return def;
-      return m_values[i];
+      if (index < 0) index = m_size + index;
+      if (index >= m_size || index < 0) return def;
+      return m_values[(int)index];
     }
 
     public List getRange(Range r)

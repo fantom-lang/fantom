@@ -278,6 +278,9 @@ class ListTest : Test
     verifyGet(["a", "b"], -2, "a")
     (-10..-3).each |i| { verifyGetErr(Str[,], i) }
     (2..10).each |i| { verifyGetErr(Str[,], i) }
+
+    // underflow
+    verifyEq(["a"].getSafe(0xffff_ffff), null)
   }
 
   Void verifyGet(Str[] list, Int i, Str expected)
