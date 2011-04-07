@@ -335,7 +335,7 @@ public final class FanFloat
       // converted to exponent string, so just bail on that
       String string = Double.toString(self);
       if (string.indexOf('E') > 0)
-        string = new java.text.DecimalFormat("0.#########").format(self);
+        string = new java.text.DecimalFormat("0.#########", df).format(self);
 
       // parse pattern and get digits
       NumPattern p = NumPattern.parse(pattern);

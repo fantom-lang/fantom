@@ -710,17 +710,20 @@ class FloatTest : Test
     verifyLocale(Float.pi, "0.0000", "3.1416")
     verifyLocale(Float.pi, "0.00000", "3.14159")
 
-    verifyEq(0.0003f.toLocale("0.0##"), "0.0")
-    verifyEq(0.0003f.toLocale("0.0###"), "0.0003")
-    verifyEq(0.0000003f.toLocale("0.######"), "0")
-    verifyEq(0.0000003f.toLocale("0.#######"), "0.0000003")
-
-    // specials
-    if (Env.cur.vars["java.home"] != null)
+    Locale("en-US").use
     {
-      verifyLocale(Float.nan, "#.#", "\ufffd")
-      verifyLocale(Float.posInf, "#.#", "\u221e")
-      verifyLocale(Float.negInf, "#.#", "-\u221e")
+      verifyEq(0.0003f.toLocale("0.0##"), "0.0")
+      verifyEq(0.0003f.toLocale("0.0###"), "0.0003")
+      verifyEq(0.0000003f.toLocale("0.######"), "0")
+      verifyEq(0.0000003f.toLocale("0.#######"), "0.0000003")
+
+      // specials
+      if (Env.cur.vars["java.home"] != null)
+      {
+        verifyLocale(Float.nan, "#.#", "\ufffd")
+        verifyLocale(Float.posInf, "#.#", "\u221e")
+        verifyLocale(Float.negInf, "#.#", "-\u221e")
+      }
     }
 
     // default, alternate locale
@@ -732,7 +735,6 @@ class FloatTest : Test
   {
     Locale("en-US").use
     {
-      //echo("====> $f $pattern ?= $expected")
       actual := f.toLocale(pattern)
       //echo("   ==> $actual ?= $expected")
       verifyEq(actual, expected)
