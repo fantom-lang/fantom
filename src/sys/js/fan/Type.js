@@ -293,8 +293,8 @@ fan.sys.Type.checkMixin = function(mixin, that)
 {
   if (mixin.equals(that)) return true;
   var m = mixin.m_mixins;
-  for (var i=0; i<m.length; i++)
-    if (fan.sys.Type.checkMixin(m[i], that))
+  for (var i=0; i<m.size(); i++)
+    if (fan.sys.Type.checkMixin(m.get(i), that))
       return true;
   return false;
 }
