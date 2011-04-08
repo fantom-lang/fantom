@@ -882,7 +882,7 @@ public class FanStr
         case '\'': if (q == '\'') s.append('\\').append('\''); else s.append((char)c); break;
         case '$':  s.append('\\').append('$'); break;
         default:
-          if (escu && c > 127)
+          if (c < ' ' || (escu && c > 127))
           {
             s.append('\\').append('u')
              .append((char)hex((c>>12)&0xf))

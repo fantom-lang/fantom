@@ -1147,6 +1147,8 @@ class StrTest : Test
     verifyEq("a".toCode('`'), "`a`")
     verifyEq("a".toCode('!'), "!a!")
 
+    verifyEq("\u0000 \u001F".toCode, Str<|"\u0000 \u001f"|>)
+
     verifyEq("(\n \r \f \t \\ \$ ` ' \" \u0278 \u7abc)".toCode, "\"(\\n \\r \\f \\t \\\\ \\\$ ` ' \\\" \u0278 \u7abc)\"")
     verifyEq("(\n \r \f \t \\ \$ ` ' \" \u0278 \u7abc)".toCode('\''), "'(\\n \\r \\f \\t \\\\ \\\$ ` \\' \" \u0278 \u7abc)'")
     verifyEq("(\n \r \f \t \\ \$ ` ' \" \u0278 \u7abc)".toCode('`'), "`(\\n \\r \\f \\t \\\\ \\\$ \\` ' \" \u0278 \u7abc)`")
