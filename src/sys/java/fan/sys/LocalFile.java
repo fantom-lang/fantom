@@ -282,6 +282,13 @@ public class LocalFile
     if (dest.exists())
       throw IOErr.make("moveTo already exists: " + to).val;
 
+    if (!file.isDirectory())
+    {
+      File destParent = dest.parent();
+      if (destParent != null && !destParent.exists())
+        destParent.create();
+    }
+
     if (!file.renameTo(dest.file))
       throw IOErr.make("moveTo failed: " + to).val;
 
