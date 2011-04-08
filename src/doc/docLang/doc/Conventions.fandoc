@@ -58,6 +58,7 @@ Common Names [#commonNames]
   - Prefer ro/RO to Ro
   - Prefer rw/RW to Rw
   - Prefer size to length or count
+  - Prefer username to userName
   - Prefer val to value
   - Prefer warn to warning
   - Prefer xml/Xml to XML
