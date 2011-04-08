@@ -600,8 +600,9 @@ const final class Str
   ** defaults to '"').  If quote is null then the return is unquoted.
   ** This method will backslash escape the following characters:
   ** '\n \r \f \t \\ $'.  If the quote character is the double quote,
-  ** single quote, or backtick then it is escaped too.  If 'escapeUnicode'
-  ** is true then any character over 127 is also escaped as '\uXXXX'.
+  ** single quote, or backtick then it is escaped too.  Control chars
+  ** less than 0x20 are escaped as '\uXXXX'.  If 'escapeUnicode' is
+  ** true then any char over 0x7F it is escaped as '\uXXXX'.
   **
   Str toCode(Int? quote := '"', Bool escapeUnicode := false)
 
