@@ -881,12 +881,15 @@ class JsFieldExpr : JsExpr
   }
   override Void write(JsWriter out)
   {
+    old := support.thisName
     if (isSafe)
     {
       v := support.unique
-      out.w("(function() { var $v=")
+      support.thisName = "\$this"
+      out.w("(function(\$this) { var $v=")
       writeTarget(out)
       out.w("; return ($v==null) ? null : $v")
+      support.thisName = old
     }
     else
     {
@@ -900,7 +903,7 @@ class JsFieldExpr : JsExpr
       if (!isSet) out.w("()")
     }
     else out.w("m_$field.name")
-    if (isSafe) out.w("}())")
+    if (isSafe) out.w("}($old))")
   }
   private Void writeTarget(JsWriter out)
   {
