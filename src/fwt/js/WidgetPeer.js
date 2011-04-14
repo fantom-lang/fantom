@@ -187,14 +187,23 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, l
     var func = function(e)
     {
       // find pos relative to widget
-      var dis = peer.posOnDisplay(self);
-      var rel = fan.gfx.Point.make(e.clientX-dis.m_x, e.clientY-dis.m_y);
+      var dis  = peer.posOnDisplay(self);
+      var mx   = e.clientX - dis.m_x;
+      var my   = e.clientY - dis.m_y;
+
+      // make sure to rel against window root
+      var win = self.window();
+      if (win != null && win.peer.root != null)
+      {
+        mx -= win.peer.root.offsetLeft;
+        my -= win.peer.root.offsetTop;
+      }
 
       // TODO - need to fix for IE
       // TODO - only valid for mouseDown - so need to clean up this code
       var evt = fan.fwt.Event.make();
       evt.m_id = evtId;
-      evt.m_pos = rel;
+      evt.m_pos = fan.gfx.Point.make(mx, my);
       evt.m_widget = self;
       //evt.count =
       evt.m_key = fan.fwt.WidgetPeer.toKey(e);
