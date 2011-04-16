@@ -92,6 +92,31 @@ public class Test
   {
     if (!OpUtil.compareEQ(expected, actual))
     {
+      // if we have two multi-line strings display line in error
+      if (expected instanceof String && actual instanceof String)
+      {
+        List eLines = FanStr.splitLines((String)expected);
+        List aLines = FanStr.splitLines((String)actual);
+        if (eLines.sz() > 1 || aLines.sz() > 1)
+        {
+          if (eLines.sz() != aLines.sz())
+          {
+            msg = "Expected " + eLines.sz() + " lines, actual " + aLines.sz() + " lines";
+          }
+          else
+          {
+            for (int i=0; i<eLines.sz(); ++i)
+            {
+              if (!eLines.get(i).equals(aLines.get(i)))
+              {
+                msg = "Line " + (i+1) + ": " + FanStr.toCode((String)eLines.get(i)) + " != " + FanStr.toCode((String)aLines.get(i));
+                break;
+              }
+            }
+          }
+        }
+      }
+
       if (msg == null) msg = s(expected) + " != " + s(actual);
       fail(msg);
     }

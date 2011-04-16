@@ -22,6 +22,7 @@
 - fwt::Widget.addAll
 - Str.toCode escape control chars
 - Fix File.moveTo to create parent directory if needed
+- Improve Test.verifyEq failure msg for multi-line strings
 
 *Build 1.0.58 (4 Mar 2011)*
 - Remove deprecated sql APIs (#1318)
