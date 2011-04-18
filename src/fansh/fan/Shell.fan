@@ -39,6 +39,8 @@ class Shell
       line = line.trim
       if (line.size == 0) continue
 
+echo("# [$line]")
+
       // check if line maps to predefined command
       if (command(line)) continue
 

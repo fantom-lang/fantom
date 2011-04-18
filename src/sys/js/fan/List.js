@@ -724,7 +724,7 @@ fan.sys.List.prototype.sort = function(f)
   if (f != null)
     this.m_values.sort(function(a,b) { return f.call(a,b) });
   else
-    this.m_values.sort();
+    this.m_values.sort(function(a,b) { return fan.sys.ObjUtil.compare(a,b,false) });
   return this;
 }
 
@@ -735,7 +735,7 @@ fan.sys.List.prototype.sortr = function(f)
   if (f != null)
     this.m_values.sort(function(a,b) { return f.call(b,a) });
   else
-    this.m_values.sort().reverse();
+    this.m_values.sort(function(a,b) { return fan.sys.ObjUtil.compare(b,a,false) });
   return this;
 }
 
