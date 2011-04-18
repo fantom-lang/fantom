@@ -50,7 +50,9 @@ fan.sys.Int.parseDecimal = function(s)
     if (ch >= 48 && ch <= 57) continue;
     throw new Error("Illegal decimal char " + s.charAt(i));
   }
-  return parseInt(s, 10);
+  var x = parseInt(s, 10);
+  if (isNaN(x)) throw new Error("Invalid number");
+  return x;
 }
 
 fan.sys.Int.parseHex = function(s)
@@ -63,7 +65,9 @@ fan.sys.Int.parseHex = function(s)
     if (ch >= 97 && ch <= 102) continue;
     throw new Error("Illegal hex char " + s.charAt(i));
   }
-  return parseInt(s, 16);
+  var x = parseInt(s, 16);
+  if (isNaN(x)) throw new Error("Invalid number");
+  return x;
 }
 
 fan.sys.Int.toStr = function(self)
