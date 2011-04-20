@@ -18,7 +18,7 @@ class Build : BuildPod
   {
     podName = "compilerJs"
     summary = "Fantom to JavaScript Compiler"
-    depends = ["sys 1.0", "compiler 1.0", "build 1.0"]
+    depends = ["sys 1.0", "compiler 1.0"]
     srcDirs = [`fan/`, `fan/ast/`, `fan/runner/`, `fan/util/`]
     docSrc  = true
   }
