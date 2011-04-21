@@ -104,6 +104,28 @@ fan.sys.SysOutStream.prototype.close = function()
 }
 
 /*************************************************************************
+ * ConsoleOutStream
+ ************************************************************************/
+
+fan.sys.ConsoleOutStream = fan.sys.Obj.$extend(fan.sys.OutStream);
+fan.sys.ConsoleOutStream.prototype.$ctor = function()
+{
+  fan.sys.OutStream.prototype.$ctor.call(this);
+  this.m_buf = "";
+}
+fan.sys.ConsoleOutStream.prototype.$typeof = function() { return fan.sys.SysOutStream.$type; }
+fan.sys.ConsoleOutStream.prototype.write = function(v)
+{
+  if (v == 10) this.flush();
+  else this.m_buf += String.fromCharCode(v)
+}
+fan.sys.ConsoleOutStream.prototype.flush = function()
+{
+  if (this.m_buf.length > 0 && console) console.log(this.m_buf);
+  this.m_buf = "";
+}
+
+/*************************************************************************
  * LocalFileOutStream
  ************************************************************************/
 
