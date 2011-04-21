@@ -110,6 +110,14 @@ fan.fwt.MenuPeer.prototype.relayout = function(self)
   var w = pw;
   var h = ph;
 
+  // adjust for window root
+  var win = this.$parent.window();
+  if (win != null && win.peer.root != null)
+  {
+    x += win.peer.root.offsetLeft;
+    y += win.peer.root.offsetTop;
+  }
+
   // check if we need to swap dir
   var shell = this.elem.parentNode;
   if (x+w >= shell.offsetWidth-4)  x = pp.m_x + ps.m_w - w -1;
