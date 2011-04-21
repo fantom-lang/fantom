@@ -34,6 +34,9 @@ fan.sys.Env.prototype.$ctor = function()
 
   // pod props map, keyed by pod.name
   this.m_props = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Map.$type);
+
+  // env.out
+  this.m_out = new fan.sys.SysOutStream(new fan.sys.ConsoleOutStream());
 }
 
 fan.sys.Env.prototype.$setIndex = function(index)
@@ -81,6 +84,8 @@ fan.sys.Env.prototype.runtime = function() { return "js"; }
 fan.sys.Env.prototype.args = function() { return this.m_args; }
 
 fan.sys.Env.prototype.vars = function() { return this.m_vars; }
+
+fan.sys.Env.prototype.out = function() { return this.m_out; }
 
 fan.sys.Env.prototype.homeDir = function() { return this.m_homeDir; }
 
