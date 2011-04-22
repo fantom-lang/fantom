@@ -138,6 +138,17 @@ public class WidgetPeer
     return size(s);
   }
 
+  public fan.gfx.Point posOnWindow(fan.fwt.Widget self)
+  {
+    if (!(control instanceof Control)) return null;
+    fan.fwt.Window window = self.window();
+    if (window == null || !(window.peer.control instanceof Control)) return null;
+    Control widgetControl = (Control)control;
+    Control windowControl = (Control)window.peer.control;
+    Point pt = Fwt.get().display.map(widgetControl, windowControl, 0, 0);
+    return point(pt);
+  }
+
   public fan.gfx.Point posOnDisplay(fan.fwt.Widget self)
   {
     if (!(control instanceof Control)) return null;

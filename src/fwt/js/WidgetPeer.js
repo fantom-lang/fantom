@@ -39,7 +39,7 @@ fan.fwt.WidgetPeer.prototype.relayout = function(self)
   return self;
 }
 
-fan.fwt.WidgetPeer.prototype.posOnDisplay = function(self)
+fan.fwt.WidgetPeer.prototype.posOnWindow = function(self)
 {
   var x = this.m_pos.m_x;
   var y = this.m_pos.m_y;
@@ -59,6 +59,12 @@ fan.fwt.WidgetPeer.prototype.posOnDisplay = function(self)
     p = p.parent();
   }
   return fan.gfx.Point.make(x, y);
+}
+
+fan.fwt.WidgetPeer.prototype.posOnDisplay = function(self)
+{
+  //equals to posOnWindow for now
+  return this.posOnWindow(self);
 }
 
 fan.fwt.WidgetPeer.prototype.prefSize = function(self, hints)
@@ -187,7 +193,7 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, l
     var func = function(e)
     {
       // find pos relative to widget
-      var dis  = peer.posOnDisplay(self);
+      var dis  = peer.posOnWindow(self);
       var mx   = e.clientX - dis.m_x;
       var my   = e.clientY - dis.m_y;
 

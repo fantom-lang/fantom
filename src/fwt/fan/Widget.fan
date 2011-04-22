@@ -249,6 +249,12 @@ abstract class Widget
   }
 
   **
+  ** Get the position of this widget relative to the window.
+  ** If not on mounted on the screen then return null.
+  **
+  native Point? posOnWindow()
+
+  **
   ** Get the position of this widget on the screen coordinate's
   ** system.  If not on mounted on the screen then return null.
   **
