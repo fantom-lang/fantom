@@ -103,7 +103,7 @@ fan.fwt.MenuPeer.prototype.relayout = function(self)
     ph += mh;
   }
 
-  var pp = this.$parent.posOnDisplay();
+  var pp = this.$parent.posOnWindow();
   var ps = this.$parent.size();
   var x = pp.m_x + this.$point.m_x;
   var y = pp.m_y + this.$point.m_y;
