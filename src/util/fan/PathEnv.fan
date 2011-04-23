@@ -65,10 +65,10 @@ const class PathEnv : Env
   **
   override File? findFile(Uri uri, Bool checked := true)
   {
-    if (!uri.isRel) throw ArgErr("Uri must be rel: $uri")
+    if (uri.isPathAbs) throw ArgErr("Uri must be rel: $uri")
     result := path.eachWhile |dir|
     {
-      f := dir + uri
+      f := dir.plus(uri, false)
       return f.exists ? f : null
     }
     if (result != null) return result
