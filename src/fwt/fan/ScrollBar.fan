@@ -20,9 +20,22 @@ class ScrollBar : Widget
 {
 
   **
-  ** Internal constructor.
+  ** Default constructor.
   **
-  internal new make() {}
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
+
+  **
+  ** Internal constructor for scroll bars created
+  ** natively as part of some scrollable component
+  **
+  internal new makeNative(Orientation orientation)
+  {
+    this.orientation = orientation
+    this.isNative = true
+  }
 
   **
   ** Callback when scroll bar value is modified.
@@ -41,7 +54,7 @@ class ScrollBar : Widget
   **
   ** Horizontal or vertical.
   **
-  native Orientation orientation()
+  const Orientation orientation := Orientation.horizontal
 
   **
   ** The current value of the scroll bar.
@@ -67,5 +80,11 @@ class ScrollBar : Widget
   ** Page increment size relative to difference between min and max.
   **
   native Int page
+
+  **
+  ** Native scroll bars are part of a scrollable widget like
+  ** ScrollPane or Table and might not be backed by a real widget.
+  **
+  internal const Bool isNative
 
 }

@@ -67,12 +67,12 @@ class Tree : Widget
   **
   ** Horizontal scroll bar.
   **
-  @Transient ScrollBar hbar := ScrollBar() { private set }
+  @Transient ScrollBar hbar := ScrollBar.makeNative(Orientation.horizontal) { private set }
 
   **
   ** Vertical scroll bar.
   **
-  @Transient ScrollBar vbar := ScrollBar() { private set }
+  @Transient ScrollBar vbar := ScrollBar.makeNative(Orientation.vertical) { private set }
 
   **
   ** Background color of tree, or null for platform default.

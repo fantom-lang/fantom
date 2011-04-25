@@ -31,12 +31,12 @@ class ScrollPane : ContentPane
   **
   ** Horizontal scroll bar.
   **
-  @Transient ScrollBar hbar := ScrollBar() { private set }
+  @Transient ScrollBar hbar := ScrollBar.makeNative(Orientation.horizontal) { private set }
 
   **
   ** Vertical scroll bar.
   **
-  @Transient ScrollBar vbar := ScrollBar() { private set }
+  @Transient ScrollBar vbar := ScrollBar.makeNative(Orientation.vertical) { private set }
 
   **
   ** Draw a border around the widget.  Default is true.  This
