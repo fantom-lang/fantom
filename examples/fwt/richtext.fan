@@ -32,11 +32,11 @@ class RichTextDemo
         {
           model=doc
           font = doc.defFont
-          //hbar.onModify.add(&onScroll("hbar"))
-          //vbar.onModify.add(&onScroll("vbar"))
-          //onVerify.add |Event e| { echo("verify: $e.data") }
-          //onVerifyKey.add |Event e| { echo("verify: $e") }
-          //onSelect.add |Event e| { echo(e) }
+          //hbar.onModify.add |e| { onScroll("hbar", e) }
+          //vbar.onModify.add |e| { onScroll("vbar", e) }
+          //onVerify.add |e| { echo("verify: $e.data") }
+          //onVerifyKey.add |e| { echo("verify: $e") }
+          //onSelect.add |e| { echo(e) }
         },
       },;
       size = Size(600,600)

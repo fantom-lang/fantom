@@ -408,29 +408,29 @@ class FwtDemo
     {
       multi = true
       model = DirTreeModel { demo = this }
-      onAction.add |Event e| { echo(e) }
-      onSelect.add |Event e| { echo(e); echo("selected=${e->widget->selected}") }
-      onPopup.add |Event e|  { echo(e); e.popup = makePopup }
-      // onMouseMove.add |Event e| { echo(e.pos + ": " + e->widget->nodeAt(e.pos)) }
-      // hbar.onModify.add(&onScroll("Tree.hbar"))
-      // vbar.onModify.add(&onScroll("Tree.vbar"))
+      onAction.add |e| { echo(e) }
+      onSelect.add |e| { echo(e); echo("selected=${e->widget->selected}") }
+      onPopup.add |e|  { echo(e); e.popup = makePopup }
+      // onMouseMove.add |e| { echo(e.pos + ": " + e->widget->nodeAt(e.pos)) }
+      // hbar.onModify.add |e| { onScroll("Tree.hbar", e) }
+      // vbar.onModify.add |e| { onScroll("Tree.vbar", e) }
     }
 
     table := Table
     {
       multi = true
       model = DirTableModel { demo = this; dir = File.os(".").list }
-      onAction.add |Event e| { echo(e) }
-      onSelect.add |Event e| { echo(e); echo("selected=${e->widget->selected}") }
-      onPopup.add |Event e|  { echo(e); e.popup = makePopup }
-      // onMouseMove.add |Event e| { Int? row := e->widget->rowAt(e.pos); Int? col := e->widget->colAt(e.pos); echo("Row: $row Col: $col " + ((row != null && col != null) ? e->widget->model->text(col, row) : "")) }
-      // hbar.onModify.add(&onScroll("Table.hbar"))
-      // vbar.onModify.add(&onScroll("Table.vbar"))
+      onAction.add |e| { echo(e) }
+      onSelect.add |e| { echo(e); echo("selected=${e->widget->selected}") }
+      onPopup.add |e|  { echo(e); e.popup = makePopup }
+      // onMouseMove.add |e| { Int? row := e->widget->rowAt(e.pos); Int? col := e->widget->colAt(e.pos); echo("Row: $row Col: $col " + ((row != null && col != null) ? e->widget->model->text(col, row) : "")) }
+      // hbar.onModify.add |e| { onScroll("Tree.hbar", e) }
+      // vbar.onModify.add |e| { onScroll("Tree.vbar", e) }
     }
 
     updateTable := |File dir| { table.model->dir = dir.list; table.refreshAll }
-    tree.onAction.add  |Event e| { updateTable(e.data) }
-    table.onAction.add |Event e| { updateTable(table.model->dir->get(e.index)) }
+    tree.onAction.add  |e| { updateTable(e.data) }
+    table.onAction.add |e| { updateTable(table.model->dir->get(e.index)) }
 
     return SashPane
     {
