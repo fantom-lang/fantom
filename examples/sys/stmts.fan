@@ -29,12 +29,12 @@ class Stmts
 
     // single if with no else
     b := true
-    if (true)
+    if (b)
       echo("b is true")
 
     // if/else
     b = false
-    if (true)
+    if (b)
       echo("b is true")
     else
       echo("b is false")
