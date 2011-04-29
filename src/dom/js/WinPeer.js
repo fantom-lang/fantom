@@ -114,7 +114,9 @@ fan.dom.WinPeer.prototype.reload  = function(self, force)
 // History
 //////////////////////////////////////////////////////////////////////////
 
-fan.dom.WinPeer.prototype.pushState = function(self, title, uri, map)
+fan.dom.WinPeer.prototype.hisBack      = function(self) { this.win.history.back(); }
+fan.dom.WinPeer.prototype.hisForward   = function(self) { this.win.history.forward(); }
+fan.dom.WinPeer.prototype.hisPushState = function(self, title, uri, map)
 {
   // TODO FIXIT: serializtaion
   var array = [];

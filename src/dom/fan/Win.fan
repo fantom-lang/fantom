@@ -90,13 +90,23 @@ class Win
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Go to previous page in session history.
+  **
+  native Void hisBack()
+
+  **
+  ** Go to next page in the session history.
+  **
+  native Void hisForward()
+
+  **
   ** Push a new history item onto the history stack. Use 'onpopstate'
   ** to listen for changes:
   **
   **   // Event.meta contains state map passed into pushState
   **   Win.cur.onEvent("popstate", false) |e| { echo("# state: $e.meta") }
   **
-  native Void pushState(Str title, Uri uri, Str:Obj map)
+  native Void hisPushState(Str title, Uri uri, Str:Obj map)
 
 //////////////////////////////////////////////////////////////////////////
 // Events
