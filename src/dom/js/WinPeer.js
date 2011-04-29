@@ -111,6 +111,24 @@ fan.dom.WinPeer.prototype.reload  = function(self, force)
 }
 
 //////////////////////////////////////////////////////////////////////////
+// History
+//////////////////////////////////////////////////////////////////////////
+
+fan.dom.WinPeer.prototype.pushState = function(self, title, uri, map)
+{
+  // TODO FIXIT: serializtaion
+  var array = [];
+  map.each(fan.sys.Func.make(
+    fan.sys.List.make(fan.sys.Param.$type, [
+      new fan.sys.Param("val","sys::Obj",false),
+      new fan.sys.Param("key","sys::Str",false)
+    ]),
+    fan.sys.Void.$type,
+    function(val,key) { array[key] = val }));
+  this.win.history.pushState(array, title, uri.encode());
+}
+
+//////////////////////////////////////////////////////////////////////////
 // EventTarget
 //////////////////////////////////////////////////////////////////////////
 
@@ -119,6 +137,13 @@ fan.dom.WinPeer.prototype.onEvent = function(self, type, useCapture, handler)
   var f = function(e)
   {
     var evt = fan.dom.EventPeer.make(e);
+    if (type == "popstate")
+    {
+      // copy state object into Event.meta
+      // TODO FIXIT: deserializtaion
+      var array = e.state;
+      for (var key in array) evt.m_meta.set(key, array[key]);
+    }
     handler.call(evt);
 
     if (type == "beforeunload")
