@@ -1168,7 +1168,7 @@ class StrTest : Test
     verifySame("x>\u01bc".toXml, "x>\u01bc")
     verifyEq(">".toXml, "&gt;")
     verifyEq("]>".toXml, "]&gt;")
-    verifyEq("<>&\"'".toXml, "&lt;>&amp;&quot;&apos;")
+    verifyEq("<>&\"'".toXml, "&lt;>&amp;&quot;&#39;")
     verifyEq("foo&".toXml, "foo&amp;")
     verifyEq("foo&bar".toXml, "foo&amp;bar")
     verifyEq("&bar".toXml, "&amp;bar")

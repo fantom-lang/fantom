@@ -980,7 +980,7 @@ namespace Fan.Sys
       m_xmlEsc['&']  = "&amp;";
       m_xmlEsc['<']  = "&lt;";
       m_xmlEsc['>']  = "&gt;";
-      m_xmlEsc['\''] = "&apos;";
+      m_xmlEsc['\''] = "&#39;";
       m_xmlEsc['"']  = "&quot;";
     }
 
