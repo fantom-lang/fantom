@@ -1046,7 +1046,7 @@ class StreamTest : Test
 
     // optional quotes
     verifyXml("a='aval' b=\"bval\"", "a='aval' b=\"bval\"", 0)
-    verifyXml("a='aval' b=\"bval\"", "a=&apos;aval&apos; b=&quot;bval&quot;", q)
+    verifyXml("a='aval' b=\"bval\"", "a=&#39;aval&#39; b=&quot;bval&quot;", q)
 
     // optional newlines
     verifyXml("x\n y\r z", "x\n y\r z", 0)

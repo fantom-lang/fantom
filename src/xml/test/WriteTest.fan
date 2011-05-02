@@ -147,7 +147,7 @@ class WriteTest : XmlTest
     verifyWrite(x, "<x foo='&lt;AT&amp;T>'/>")
 
     x = XElem("x").addAttr("foo", "quot=\" \n apos='")
-    verifyWrite(x, "<x foo='quot=&quot; &#x0a; apos=&apos;'/>")
+    verifyWrite(x, "<x foo='quot=&quot; &#x0a; apos=&#39;'/>")
 
     x = XElem("x").add(XText("'hi' & <there>\n \"line2\""))
     verifyWrite(x, "<x>'hi' &amp; &lt;there>\n \"line2\"</x>")
