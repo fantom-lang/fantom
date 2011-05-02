@@ -435,10 +435,9 @@ namespace Fan.Sys
             else
             {
               enc.encode('&', this);
-              enc.encode('a', this);
-              enc.encode('p', this);
-              enc.encode('o', this);
-              enc.encode('s', this);
+              enc.encode('#', this);
+              enc.encode('3', this);
+              enc.encode('9', this);
               enc.encode(';', this);
             }
             break;

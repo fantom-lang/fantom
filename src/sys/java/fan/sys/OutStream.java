@@ -399,7 +399,7 @@ public class OutStream
           break;
         case '\'':
           if (!escQuotes) writeChar(ch);
-          else writeChar('&').writeChar('a').writeChar('p').writeChar('o').writeChar('s').writeChar(';');
+          else writeChar('&').writeChar('#').writeChar('3').writeChar('9').writeChar(';');
           break;
 
         // default

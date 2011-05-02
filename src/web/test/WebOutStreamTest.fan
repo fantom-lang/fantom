@@ -435,7 +435,7 @@ class WebOutStreamTest : Test
     verifyEsc("x>\u01bc", "x>\u01bc")
     verifyEsc(">", "&gt;")
     verifyEsc("]>", "]&gt;")
-    verifyEsc("<>&\"'", "&lt;>&amp;&quot;&apos;")
+    verifyEsc("<>&\"'", "&lt;>&amp;&quot;&#39;")
     verifyEsc("foo&", "foo&amp;")
     verifyEsc("foo&bar", "foo&amp;bar")
     verifyEsc("&bar", "&amp;bar")
