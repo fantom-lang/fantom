@@ -944,7 +944,7 @@ public class FanStr
     xmlEsc['&']  = "&amp;";
     xmlEsc['<']  = "&lt;";
     xmlEsc['>']  = "&gt;";
-    xmlEsc['\''] = "&apos;";
+    xmlEsc['\''] = "&#39;";
     xmlEsc['"']  = "&quot;";
   }
 

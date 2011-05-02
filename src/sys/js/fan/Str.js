@@ -673,7 +673,7 @@ fan.sys.Str.xmlEsc = [];
 fan.sys.Str.xmlEsc[38] = "&amp;";
 fan.sys.Str.xmlEsc[60] = "&lt;";
 fan.sys.Str.xmlEsc[62] = "&gt;";
-fan.sys.Str.xmlEsc[39] = "&apos;";
+fan.sys.Str.xmlEsc[39] = "&#39;";
 fan.sys.Str.xmlEsc[34] = "&quot;";
 
 //////////////////////////////////////////////////////////////////////////
