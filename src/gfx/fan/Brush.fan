@@ -14,7 +14,7 @@
 **   - `Pattern` used to paint with an image
 **
 @Js
-mixin Brush
+const mixin Brush
 {
 }
 

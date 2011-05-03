@@ -28,7 +28,7 @@ class WebClientTest : Test
   Void testGetFixed()
   {
     // use skyfoundry.com assuming simple static image page
-    c := WebClient(`http://skyfoundry.com/pub/img/database.png`)
+    c := WebClient(`http://skyfoundry.com/res/img/database.png`)
     verify(!c.isConnected)
     try
     {

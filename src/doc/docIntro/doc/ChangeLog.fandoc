@@ -25,6 +25,8 @@
 - Improve Test.verifyEq failure msg for multi-line strings
 - Stand alone fwt::ScrollBar support
 - dom::Win.hisBack, hisForward, hisPushState
+- Str.toXml/OutputStream.esc change &apos; -> &#39;
+- Make gfx::Brush const
 
 *Build 1.0.58 (4 Mar 2011)*
 - Remove deprecated sql APIs (#1318)
