@@ -1,0 +1,62 @@
+using gfx
+using fwt
+
+class EventDemo : Canvas
+{
+  new make()
+  {
+    d := |e| { dump(e) }
+    onMouseUp.add(d)
+    onMouseDown.add(d)
+    onMouseEnter.add(d)
+    onMouseExit.add(d)
+    onMouseMove.add(d)
+    onMouseWheel.add(d)
+
+    // Not supported
+    // onMouseHover.add(d)
+    // onFocus.add(d)
+    // onBlur.add(d)
+    // onKeyUp.add(d)
+    // onKeyDown.add(d)
+  }
+
+  override Size prefSize(Hints hints := Hints.defVal) { return Size.make(100, 100) }
+
+  override Void onPaint(Graphics g)
+  {
+    w := size.w
+    h := size.h
+
+    g.brush = Color.black
+    g.drawRect(0, 0, w-1, h-1)
+    g.drawText(name, 45, 40)
+  }
+
+  Void dump(Event event)
+  {
+    if (event.id == EventId.focus || event.id == EventId.blur)
+      repaint
+
+    echo("$name> $event")
+  }
+
+  static Void main()
+  {
+    Window
+    {
+      content = InsetPane
+      {
+        content = GridPane
+        {
+          EventDemo { name = "A" },
+          EventDemo { name = "B" },
+          EventDemo { name = "C" },
+        }
+      }
+      size = Size(400, 400)
+    }.open
+  }
+
+  Str? name
+}

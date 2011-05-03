@@ -173,7 +173,7 @@ fan.fwt.WidgetPeer.prototype.attachTo = function(self, elem)
   this.attachEvents(self, fan.fwt.EventId.m_mouseMove,  elem, "mousemove",  self.m_onMouseMove.list());
   this.attachEvents(self, fan.fwt.EventId.m_mouseUp,    elem, "mouseup",    self.m_onMouseUp.list());
   //this.attachEvents(self, fan.fwt.EventId.m_mouseHover, elem, "mousehover", self.m_onMouseHover.list());
-  //this.attachEvents(self, fan.fwt.EventId.m_mouseWheel, elem, "mousewheel", self.m_onMouseWheel.list());
+  this.attachEvents(self, fan.fwt.EventId.m_mouseWheel, elem, "mousewheel", self.m_onMouseWheel.list());
 
   // recursively attach my children
   var kids = self.m_kids;
@@ -205,22 +205,45 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, l
         my -= win.peer.root.offsetTop;
       }
 
-      // TODO - need to fix for IE
-      // TODO - only valid for mouseDown - so need to clean up this code
+      // cache event type
+      var isClickEvent = evtId == fan.fwt.EventId.m_mouseDown ||
+                         evtId == fan.fwt.EventId.m_mouseUp;
+      var isWheelEvent = evtId == fan.fwt.EventId.m_mouseWheel;
+
+      // create fwt::Event and invoke handler
       var evt = fan.fwt.Event.make();
-      evt.m_id = evtId;
-      evt.m_pos = fan.gfx.Point.make(mx, my);
+      evt.m_id     = evtId;
+      evt.m_pos    = fan.gfx.Point.make(mx, my);
       evt.m_widget = self;
-      //evt.count =
-      evt.m_key = fan.fwt.WidgetPeer.toKey(e);
+      evt.m_key    = fan.fwt.WidgetPeer.toKey(e);
+      if (isClickEvent)
+      {
+        evt.m_button = e.button + 1;
+        evt.m_count  = 1;  // for now only support single click
+      }
+      if (isWheelEvent)
+      {
+        // try to normalize delta (neg val is scroll up/left)
+        var axis  = e.axis ? e.axis : 2;                  // 1=xaxis; 2=yaxis
+        var delta = e.detail ? e.detail : -e.wheelDelta;  // ? Firefox : Rest
+        if (delta % 120 == 0) delta = delta / 40;         // Safari/IE
+
+        // truncate to integer value and try to set axis
+        delta = delta > 0 ? Math.ceil(delta) : Math.floor(delta);
+        evt.m_button = 1;  // always set to middle button?
+        evt.m_delta = axis == 1
+          ? fan.gfx.Point.make(delta, 0)
+          : fan.gfx.Point.make(0, delta);
+      }
       meth.call(evt);
       return false;
     }
 
-    if (elem.addEventListener)
-      elem.addEventListener(event, func, false);
-    else
-      elem.attachEvent("on"+event, func);
+    // special handler for firefox
+    if (event == "mousewheel" && fan.fwt.DesktopPeer.$isFirefox) event = "DOMMouseScroll";
+
+    // attach event handelr
+    elem.addEventListener(event, func, false);
   }
 }
 
