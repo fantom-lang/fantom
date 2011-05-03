@@ -69,6 +69,12 @@ class Event
   Point? pos
 
   **
+  ** Delta value of event.  For mouse wheel events this is the
+  ** amount the mouse wheel has traveled.
+  **
+  Point? delta
+
+  **
   ** Number of mouse clicks.
   **
   Int? count
@@ -109,6 +115,7 @@ class Event
     if (key != null)     s.join("key=").add(key)
     if (pos != null)     s.join("pos=").add(pos)
     if (count != null)   s.join("count=").add(count)
+    if (delta != null)   s.join("delta=").add(delta)
     if (data != null)    s.join("data=").add(data)
     if (consumed)        s.join("consumed")
     s.add(" }")
