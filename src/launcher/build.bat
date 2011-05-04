@@ -9,13 +9,22 @@ rem   the VC directory:
 rem     http://forums.microsoft.com/MSDN/ShowPost.aspx?PostID=7004&SiteID=1
 rem
 rem   Environment variables which must be passed in:
-rem      VCINSTALLDIR - Microsoft Visual Studio C++ (use vcvars32.bat)
+rem      VCINSTALLDIR - Microsoft Visual Studio C++ (use vcvarsall.bat)
+rem      WIN_SDK      - Microsoft Windows SDK directory
 rem      fan_home     - home directory of Fan installation
 rem      java_home    - home directory of installed JDK
 rem
 
+if NOT DEFINED VCINSTALLDIR (
+  echo ERROR: VCINSTALLDIR not defined!!!
+  GOTO end)
+
+if NOT DEFINED WIN_SDK (
+  echo ERROR: WIN_SDK not defined!!!
+  GOTO end)
+
 rem sdk is the Windows PlatformSDK dir (we assume installed under VC)
-set sdk=%VCINSTALLDIR%\PlatformSDK
+set sdk=%WIN_SDK%
 set ndk=%VCINSTALLDIR%\..\SDK\v2.0
 
 rem compiler setup
@@ -32,6 +41,7 @@ rem compile each executable
 %compile% /DFAN_TOOL="\"Fan\"" /DFAN_MAIN="\"compiler::Fanp\"" /Fe%fan_home%\bin\fanp.exe
 %compile% /DFAN_TOOL="\"Fan\"" /DFAN_MAIN="\"fansh::Main\"" /Fe%fan_home%\bin\fansh.exe
 %compile% /DFAN_TOOL="\"Fan\"" /DFAN_MAIN="\"flux::Main\""  /Fe%fan_home%\bin\flux.exe
+%compile% /DFAN_TOOL="\"Fan\"" /DFAN_MAIN="\"fanr::Main\""  /Fe%fan_home%\bin\fanr.exe
 
 rem cleanup
 del *.obj
@@ -41,3 +51,6 @@ echo
 echo **
 echo ** SUCCESS!
 echo **
+
+:end
+
