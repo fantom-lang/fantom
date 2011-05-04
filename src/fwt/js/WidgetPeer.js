@@ -223,17 +223,8 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, l
       }
       if (isWheelEvent)
       {
-        // try to normalize delta (neg val is scroll up/left)
-        var axis  = e.axis ? e.axis : 2;                  // 1=xaxis; 2=yaxis
-        var delta = e.detail ? e.detail : -e.wheelDelta;  // ? Firefox : Rest
-        if (delta % 120 == 0) delta = delta / 40;         // Safari/IE
-
-        // truncate to integer value and try to set axis
-        delta = delta > 0 ? Math.ceil(delta) : Math.floor(delta);
         evt.m_button = 1;  // always set to middle button?
-        evt.m_delta = axis == 1
-          ? fan.gfx.Point.make(delta, 0)
-          : fan.gfx.Point.make(0, delta);
+        evt.m_delta = fan.fwt.WidgetPeer.toWheelDelta(e);
       }
       meth.call(evt);
       return false;
@@ -245,6 +236,40 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(self, evtId, elem, event, l
     // attach event handelr
     elem.addEventListener(event, func, false);
   }
+}
+
+fan.fwt.WidgetPeer.toWheelDelta = function(e)
+{
+  var wx = 0;
+  var wy = 0;
+
+  if (e.wheelDeltaX != null)
+  {
+    // WebKit
+    wx = -e.wheelDeltaX;
+    wy = -e.wheelDeltaY;
+
+    // Safari
+    if (wx % 120 == 0) wx = wx / 40;
+    if (wy % 120 == 0) wy = wy / 40;
+  }
+  else if (e.wheelDelta != null)
+  {
+    // IE
+    wy = -e.wheelDelta;
+    if (wy % 120 == 0) wy = wy / 40;
+  }
+  else if (e.detail != null)
+  {
+    // Firefox
+    wx = e.axis == 1 ? e.detail : 0;
+    wy = e.axis == 2 ? e.detail : 0;
+  }
+
+  // make sure we have ints and return
+  wx = wx > 0 ? Math.ceil(wx) : Math.floor(wx);
+  wy = wy > 0 ? Math.ceil(wy) : Math.floor(wy);
+  return fan.gfx.Point.make(wx, wy);
 }
 
 fan.fwt.WidgetPeer.toKey = function(event)
