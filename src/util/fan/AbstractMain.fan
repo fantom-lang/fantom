@@ -213,14 +213,6 @@ abstract class AbstractMain
     return f.name
   }
 
-  private Void updateField(Field f, Str tok)
-  {
-    Obj? val := tok
-    if (f.type.toNonNullable != Str#)
-      val = f.type.method("fromStr").call(tok)
-    f.set(this, val)
-  }
-
   private Obj? parseVal(Type of, Str tok)
   {
     of = of.toNonNullable
