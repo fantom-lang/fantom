@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#
+# fanr: Fan Repository Manager
+#
+
+. "${0%/*}/fanlaunch"
+fanlaunch Fan fanr "$@"
