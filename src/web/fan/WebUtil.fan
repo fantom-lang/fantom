@@ -340,10 +340,11 @@ class WebUtil
       env.each |v,k|
       {
         envStr.add("  ")
+        v = v.toCode('\'')
         if (k == "sys.uriPodBase")
-          envStr.add("fan.sys.UriPodBase = '$v';\n")
+          envStr.add("fan.sys.UriPodBase = $v;\n")
         else
-          envStr.add("env.set('$k', '$v');\n")
+          envStr.add("env.set('$k', $v);\n")
       }
       envStr.add("fan.sys.Env.cur().\$setVars(env);\n")
     }
