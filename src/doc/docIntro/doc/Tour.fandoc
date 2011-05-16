@@ -340,9 +340,9 @@ serialization to build up arbitrarily complex object structures
 in code.  Plus it makes serialized objects easy for us humans
 to read and write:
 
-  @serializable class Person
+  @Serializable class Person
   {
-    Str name
+    Str? name
     Int age
     Person[]? children
   }
