@@ -739,6 +739,24 @@ fan.sys.List.prototype.sortr = function(f)
   return this;
 }
 
+fan.sys.List.prototype.binarySearch = function(key, f)
+{
+  var c = f != null
+    ? function(a,b) { return f.call(a,b) }
+    : function(a,b) { return fan.sys.ObjUtil.compare(a,b,false) };
+  var low = 0;
+  var high = this.m_size - 1;
+  while (low <= high)
+  {
+    var mid = Math.floor((low + high) / 2);
+    var cmp = c(this.m_values[mid], key);
+    if (cmp < 0) low = mid + 1;
+    else if (cmp > 0) high = mid - 1;
+    else return mid;
+  }
+  return -(low + 1);
+}
+
 fan.sys.List.prototype.reverse = function()
 {
   this.modify();
