@@ -249,7 +249,7 @@ abstract class BuildPod : BuildScript
     jarExe   := jdk.jarExe
     sysJar   := devHomeDir + `lib/java/sys.jar`
     libFan   := devHomeDir + `lib/fan/`
-    curPod   := devHomeDir + `lib/fan/${podName}.pod`
+    curPod   := outPodDir.toFile + `${podName}.pod`
     depends  := (Depend[])this.depends.map |s->Depend| { Depend(s) }
 
     // stub the pods fan classes into Java classfiles
@@ -257,7 +257,7 @@ abstract class BuildPod : BuildScript
     jtemp.create
     Exec(this, [javaExe,
                 "-cp", sysJar.osPath,
-                "-Dfan.home=$Env.cur.workDir.osPath",
+                "-Dfan.home=$devHomeDir.osPath",
                 "fanx.tools.Jstub",
                 "-d", jtemp.osPath,
                 podName]).run
