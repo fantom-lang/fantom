@@ -56,6 +56,9 @@ public class FType
 
   public void read(FStore.Input in) throws IOException
   {
+    if (in == null)
+      throw new IOException("Cannot read fcode: " +  pod.typeRef(self).signature);
+
     if (in.fpod.fcodeVersion == null)
       throw new IOException("FStore.Input.fcodeVersion == null");
 
