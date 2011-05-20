@@ -896,6 +896,27 @@ public final class List
     return -(low + 1);
   }
 
+  public final long binaryFind(Func f)
+  {
+    Object[] values = this.values;
+    int low = 0, high = size-1;
+    boolean oneArg = f.arity() == 1;
+    while (low <= high)
+    {
+      int probe = (low + high) >> 1;
+      Object val = values[probe];
+      Object res = oneArg ? f.call(val) : f.call(val, Long.valueOf(probe));
+      long cmp = ((Long)res).longValue();
+      if (cmp > 0)
+        low = probe + 1;
+      else if (cmp < 0)
+        high = probe - 1;
+      else
+        return probe;
+    }
+    return -(low + 1);
+  }
+
   public final List reverse()
   {
     modify();

@@ -575,6 +575,16 @@ final class List
   Int binarySearch(V key, |V a, V b->Int|? c := null)
 
   **
+  ** Find an element in the list using a binary search algorithm. The specified
+  ** comparator function returns a negative integer, zero, or a positive integer
+  ** if the desired object is less than, equal to, or greater than specified item.
+  ** The list must be sorted in ascending order according to the specified
+  ** comparator function. If the key is not found, then return a negative value
+  ** which is '-(insertation point) - 1'.
+  **
+  Int binaryFind(|V item, Int index->Int| c)
+
+  **
   ** Reverse the order of the items of this list in-place.  Return this.
   ** Throw ReadonlyErr if readonly.
   **

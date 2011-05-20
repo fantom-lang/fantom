@@ -742,16 +742,26 @@ fan.sys.List.prototype.sortr = function(f)
 fan.sys.List.prototype.binarySearch = function(key, f)
 {
   var c = f != null
-    ? function(a,b) { return f.call(a,b) }
-    : function(a,b) { return fan.sys.ObjUtil.compare(a,b,false) };
+    ? function(item,index) { return f.call(key,item) }
+    : function(item,index) { return fan.sys.ObjUtil.compare(key,item,false) };
+  return this.doBinaryFind(c);
+}
+
+fan.sys.List.prototype.binaryFind = function(f)
+{
+  return this.doBinaryFind(f.m_func);
+}
+
+fan.sys.List.prototype.doBinaryFind = function(f)
+{
   var low = 0;
   var high = this.m_size - 1;
   while (low <= high)
   {
     var mid = Math.floor((low + high) / 2);
-    var cmp = c(this.m_values[mid], key);
-    if (cmp < 0) low = mid + 1;
-    else if (cmp > 0) high = mid - 1;
+    var cmp = f(this.m_values[mid], mid);
+    if (cmp > 0) low = mid + 1;
+    else if (cmp < 0) high = mid - 1;
     else return mid;
   }
   return -(low + 1);
