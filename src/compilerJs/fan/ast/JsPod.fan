@@ -73,6 +73,10 @@ class JsPod : JsNode
     // write type info
     writeTypeInfo(out)
 
+    // write locale/en.props
+    p := props.find |p| { p.uri == `locale/en.props` }
+    p?.write(out)
+
     // write static init
     types.each |t| { t.writeStatic(out) }
 
@@ -83,10 +87,6 @@ class JsPod : JsNode
       out.minify(in)
       in.close
     }
-
-    // include locale/en.props
-    p := props.find |p| { p.uri == `locale/en.props` }
-    p?.write(out)
   }
 
   Void writePeer(JsWriter out, JsType t, Bool isPeer)
