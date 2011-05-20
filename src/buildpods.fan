@@ -34,6 +34,7 @@ class Build : BuildGroup
       `inet/build.fan`,
       `fansh/build.fan`,
       `web/build.fan`,
+      `fanr/build.fan`,
       `webmod/build.fan`,
       `wisp/build.fan`,
       `fandoc/build.fan`,
