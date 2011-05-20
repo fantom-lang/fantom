@@ -29,6 +29,7 @@
 - Make gfx::Brush const
 - js: fwt::Widget.onMouseWheel support
 - Initial fanr support
+- List.binaryFind
 
 *Build 1.0.58 (4 Mar 2011)*
 - Remove deprecated sql APIs (#1318)

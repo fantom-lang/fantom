@@ -1207,6 +1207,29 @@ class ListTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Binary Find
+//////////////////////////////////////////////////////////////////////////
+
+  Void testBinaryFind()
+  {
+    // list of list of numbers sorted by sum
+    x := [[2, 2], [1, 2, 3], [3, 4], [8]]
+    sum := |Int r, Int v->Int| { r + v }
+    // calculate sum by item
+    f := |Int[] item->Int| { item.reduce(0, sum) }
+    // find element by sum
+    verifyEq(x.binaryFind { 0 - f(it) }, -1)
+    verifyEq(x.binaryFind { 5 - f(it) }, -2)
+    verifyEq(x.binaryFind { 7 - f(it) },  2)
+    verifyEq(x.binaryFind { 9 - f(it) }, -5)
+    // find element by index
+    x.each |Int[] val, Int index|
+    {
+      verifyEq(index, x.binaryFind |Int[] v, Int i->Int| { index - i })
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Reverse
 //////////////////////////////////////////////////////////////////////////
 
