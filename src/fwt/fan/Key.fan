@@ -265,12 +265,20 @@ const class Key
   **
   ** Decompose the key into its primary key (without modifiers).
   **
-  Key primary() { fromMask(mask.and(modifierMask.not)) }
+  Key primary() { fromMask(mask.and(modifierUnmask)) }
 
   **
   ** Return a Key instance with only the modifiers.
   **
-  Key modifiers() { fromMask(mask.and(modifierMask)) }
+  Key modifiers()
+  {
+    key := none
+    if (isAlt)     key += alt
+    if (isShift)   key += shift
+    if (isCtrl)    key += ctrl
+    if (isCommand) key += command
+    return key
+  }
 
   **
   ** Is this instance is a modifier which may be combined
@@ -316,6 +324,8 @@ const class Key
   @Operator Key plus(Key x)
   {
     if (!isModifier && !x.isModifier) throw ArgErr("Neither is modifier: $this + $x")
+    if (mask == 0) return x
+    if (x.mask == 0) return this
     return makeNew(mask.or(x.mask), null)
   }
 
