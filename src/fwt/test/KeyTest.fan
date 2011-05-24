@@ -72,4 +72,25 @@ class KeyTest : Test
     verifyEq(x.replace(Key.ctrl, Key.command), Key("Shift+Command+Left"))
   }
 
+  Void testModifiers()
+  {
+    verifyEq(Key("T").primary, Key("T"))
+    verifyEq(Key("T").modifiers.mask, 0)
+    verifyEq(Key("T").modifiers.isAlt, false)
+    verifyEq(Key("T").modifiers.isShift, false)
+    verifyEq(Key("T").modifiers.isCommand, false)
+
+    verifyEq(Key("T+Shift").primary, Key("T"))
+    verifyEq(Key("T+Shift").modifiers, Key("Shift"))
+    verifyEq(Key("T+Shift").modifiers.isAlt, false)
+    verifyEq(Key("T+Shift").modifiers.isShift, true)
+    verifyEq(Key("T+Shift").modifiers.isCommand, false)
+
+    verifyEq(Key("Left+Shift+Alt").primary, Key("Left"))
+    verifyEq(Key("Left+Shift+Alt").modifiers, Key("Shift+Alt"))
+    verifyEq(Key("Left+Shift+Alt").modifiers.isAlt, true)
+    verifyEq(Key("Left+Shift+Alt").modifiers.isShift, true)
+    verifyEq(Key("Left+Shift+Alt").modifiers.isCommand, false)
+  }
+
 }
