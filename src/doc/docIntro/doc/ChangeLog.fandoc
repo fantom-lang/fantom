@@ -49,7 +49,7 @@
 - #1156: Image API enhancements
 - #1369: Deprecate readonly keyword
 - #1375: Serialization type/slot reads too far
-- #1384: [fansh] Variables are always nullable
+- #1384: fansh Variables are always nullable
 - #1396: Java subclass method visibility widening disallows Fantom overriding
 - #1407: Better Error Messages
 - #1415: Cannot pass a closure to the enum class constructor
