@@ -120,14 +120,14 @@ class SmtpClient
     try
     {
       // MAIL command
-      writeReq("MAIL From:$email.from")
+      writeReq("MAIL From:" + MimeUtil.toAddrSpec(email.from))
       res := readRes
       if (res.code != 250) throw SmtpErr.makeRes(res)
 
       // RCPT for each to address
       email.recipients.each |Str to|
       {
-        writeReq("RCPT To:$to")
+        writeReq("RCPT To:" + MimeUtil.toAddrSpec(to))
         res = readRes
         if (res.code != 250) throw SmtpErr.makeRes(res)
       }

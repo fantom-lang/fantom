@@ -24,21 +24,25 @@ class Email
 
   **
   ** From email address.
+  ** See `MimeUtil.toAddrSpec` for address formatting.
   **
   Str? from
 
   **
   ** List of "to" email addresses.
+  ** See `MimeUtil.toAddrSpec` for address formatting.
   **
   Str[]? to
 
   **
   ** List of "cc" email addresses.
+  ** See `MimeUtil.toAddrSpec` for address formatting.
   **
   Str[]? cc
 
   **
   ** List of "bcc" email addresses.
+  ** See `MimeUtil.toAddrSpec` for address formatting.
   **
   Str[]? bcc
 
