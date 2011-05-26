@@ -30,6 +30,7 @@
 - js: fwt::Widget.onMouseWheel support
 - Initial fanr support
 - List.binaryFind
+- js: fwt::Widget support for add/remove EventListeners after Widget creation
 
 *Build 1.0.58 (4 Mar 2011)*
 - Remove deprecated sql APIs (#1318)
