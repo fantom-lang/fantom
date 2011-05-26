@@ -533,9 +533,20 @@ class FwtDemo
   {
     return GridPane
     {
-      EventDemo { name = "A"; demo = this },
-      EventDemo { name = "B"; demo = this },
-      EventDemo { name = "C"; demo = this },
+      numCols = 2
+      hgap = 36
+      GridPane
+      {
+        EventDemo { name = "A"; demo = this },
+        EventDemo { name = "B"; demo = this },
+        EventDemo { name = "C"; demo = this },
+      },
+      ConsumeEventDemo("container")
+      {
+        bg = Color.blue
+        content = Label { text = "Text"; bg = Color.white }
+        ConsumeEventDemo.listen(content, "label")
+      },
     }
   }
 
@@ -778,6 +789,35 @@ class EventDemo : Canvas
 
   Str? name
   FwtDemo? demo
+}
+
+**************************************************************************
+** ConsumeEventDemo
+**************************************************************************
+
+class ConsumeEventDemo : BorderPane
+{
+  new make(Str name)
+  {
+    listen(this, name)
+    insets = Insets(50)
+  }
+
+  static Void listen(Widget w, Str name)
+  {
+    d := |e| { dump(e, name) }
+    w.onMouseUp.add(d)
+    w.onMouseDown.add(d)
+    w.onMouseEnter.add(d)
+    w.onMouseExit.add(d)
+    w.onMouseWheel.add(d)
+  }
+
+  static Void dump(Event event, Str name)
+  {
+    echo("$name> $event")
+    event.consume()
+  }
 }
 
 **************************************************************************
