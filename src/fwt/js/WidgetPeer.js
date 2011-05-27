@@ -303,7 +303,7 @@ fan.fwt.WidgetPeer.prototype.attachEventListener = function(self, type, evtId, l
     if (isClickEvent)
     {
       evt.m_button = e.button + 1;
-      evt.m_count  = 1;  // for now only support single click
+      evt.m_count  = fan.fwt.WidgetPeer.processMouseClicks(peer, evt);
     }
     if (isWheelEvent)
     {
@@ -329,6 +329,43 @@ fan.fwt.WidgetPeer.prototype.attachEventListener = function(self, type, evtId, l
 
   // attach event handler
   this.elem.addEventListener(type, func, false);
+}
+
+fan.fwt.WidgetPeer.processMouseClicks = function(peer, e)
+{
+  // init mouse clicks if not defined
+  if (peer.mouseClicks == null)
+  {
+    peer.mouseClicks = {
+      last: new Date().getTime(),
+      pos:  e.m_pos,
+      cur:  1
+    };
+    return peer.mouseClicks.cur;
+  }
+
+  // only process on mousedown
+  if (e.m_id != fan.fwt.EventId.m_mouseDown)
+    return peer.mouseClicks.cur;
+
+  // verify pos and frequency
+  var now  = new Date().getTime();
+  var diff = now - peer.mouseClicks.last;
+  if (diff < 600 && peer.mouseClicks.pos.equals(e.m_pos))
+  {
+    // increment click count
+    peer.mouseClicks.cur++;
+  }
+  else
+  {
+    // reset handler
+    peer.mouseClicks.pos = e.m_pos;
+    peer.mouseClicks.cur = 1;
+  }
+
+  // update ts and return result
+  peer.mouseClicks.last = now;
+  return peer.mouseClicks.cur;
 }
 
 fan.fwt.WidgetPeer.toWheelDelta = function(e)
