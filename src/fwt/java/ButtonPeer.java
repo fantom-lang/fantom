@@ -13,6 +13,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swt.events.*;
@@ -96,10 +97,10 @@ public class ButtonPeer
 // Eventing
 //////////////////////////////////////////////////////////////////////////
 
-  public void mouseDown(MouseEvent se)
+  public void handleEvent(Event se)
   {
-    lastMousePos = fan.gfx.Point.make(se.x, se.y);
-    super.mouseDown(se);
+    if (se.type == SWT.MouseDown) lastMousePos = fan.gfx.Point.make(se.x, se.y);
+    super.handleEvent(se);
   }
 
   public void widgetSelected(SelectionEvent event)
