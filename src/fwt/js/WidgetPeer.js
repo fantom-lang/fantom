@@ -307,7 +307,14 @@ fan.fwt.WidgetPeer.prototype.attachEventListener = function(self, type, evtId, l
 
     // invoke handlers
     var list = listeners.list();
-    for (var i=0; i<list.m_size; i++) list.get(i).call(evt);
+    for (var i=0; i<list.m_size; i++)
+    {
+      list.get(i).call(evt);
+      if (evt.m_consumed) break;
+    }
+
+    // prevent bubbling
+    e.stopPropagation();
     return false;
   }
 
