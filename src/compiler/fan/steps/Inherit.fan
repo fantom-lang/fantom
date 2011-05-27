@@ -324,6 +324,10 @@ class Inherit : CompilerStep
         throw err("Cannot use covariance with value types '$base.qname' - '$rt' != '$ft'", loc)
     }
 
+    // check that field isn't static
+    if (def.isStatic)
+      throw err("Cannot override virtual method with static field '$def.name'", loc)
+
     // check that method has no parameters
     if (!base.params.isEmpty)
       throw err("Field '$def.name' cannot override method with params '$base.qname'", loc)
