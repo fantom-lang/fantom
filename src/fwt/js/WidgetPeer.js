@@ -134,6 +134,12 @@ fan.fwt.WidgetPeer.prototype.size$ = function(self, val) { this.m_size = val; }
 
 fan.fwt.WidgetPeer.prototype.focus = function(self)
 {
+  if (this.elem != null) this.elem.focus();
+}
+
+fan.fwt.WidgetPeer.prototype.hasFocus = function(self)
+{
+  return this.elem != null && this.elem === document.activeElement;
 }
 
 //////////////////////////////////////////////////////////////////////////
