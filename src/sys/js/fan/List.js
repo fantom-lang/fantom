@@ -781,6 +781,15 @@ fan.sys.List.prototype.reverse = function()
   return this;
 }
 
+fan.sys.List.prototype.swap = function(a, b)
+{
+  // modify in set()
+  var temp = this.get(a);
+  this.set(a, this.get(b));
+  this.set(b, temp);
+  return this;
+}
+
 fan.sys.List.prototype.moveTo = function(item, toIndex)
 {
   this.modify();
@@ -791,6 +800,46 @@ fan.sys.List.prototype.moveTo = function(item, toIndex)
   if (toIndex == -1) return this.add(item);
   if (toIndex < 0) ++toIndex;
   return this.insert(toIndex, item);
+}
+
+fan.sys.List.prototype.flatten = function()
+{
+  var acc = fan.sys.List.make(fan.sys.Obj.$type.toNullable());
+  this.doFlatten(acc);
+  return acc;
+}
+
+fan.sys.List.prototype.doFlatten = function(acc)
+{
+  for (var i=0; i<this.m_size; ++i)
+  {
+    var item = this.m_values[i];
+    if (item instanceof fan.sys.List)
+      item.doFlatten(acc);
+    else
+      acc.add(item);
+  }
+}
+
+fan.sys.List.prototype.random = function()
+{
+  if (this.m_size == 0) return null;
+  var i = Math.floor(Math.random() * 4294967296);
+  if (i < 0) i = -i;
+  return this.m_values[i % this.m_size];
+}
+
+fan.sys.List.prototype.shuffle = function()
+{
+  this.modify();
+  for (var i=0; i<this.m_size; ++i)
+  {
+    var randi = Math.floor(Math.random() * (i+1));
+    var temp = this.m_values[i];
+    this.m_values[i] = this.m_values[randi];
+    this.m_values[randi] = temp;
+  }
+  return this;
 }
 
 //////////////////////////////////////////////////////////////////////////
