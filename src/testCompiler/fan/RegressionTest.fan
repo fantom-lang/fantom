@@ -511,6 +511,25 @@ class RegressionTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Super without call
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1474()
+  {
+    verifyErrors(
+      """class Foo {
+           Void m00() { echo(super) }
+           Void m01() { echo(Obj.super) }
+           Void m02() { x := super }
+           Void m03() { x := Obj.super }
+         }""",
+      [2, 26, "Expected '.' dot after 'super' keyword",
+       3, 30, "Expected '.' dot after 'super' keyword",
+       4, 27, "Expected '.' dot after 'super' keyword",
+       5, 31, "Expected '.' dot after 'super' keyword"])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Override with static field
 //////////////////////////////////////////////////////////////////////////
 
