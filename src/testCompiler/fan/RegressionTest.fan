@@ -510,4 +510,16 @@ class RegressionTest : CompilerTest
     t = obj->tB; verifyEq(t.typeof.name, "B"); verifyEq(t->x, -4)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Override with static field
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1497()
+  {
+    verifyErrors(
+      """mixin Parent { abstract Str name() }
+         class Child : Parent { override static const Str name := "Child" }""",
+      [2, 24, "Cannot override virtual method with static field 'name'"])
+  }
+
 }
