@@ -410,6 +410,13 @@ class CheckErrors : CompilerStep
         err("Mixins cannot have once methods", m.loc)
     }
 
+    // mixins cannot have native methods
+    if (flags.and(FConst.Native) != 0)
+    {
+      if (curType.isMixin)
+        err("Mixins cannot have native methods", m.loc)
+    }
+
     // normalize method flags after checking
     if (m.flags.and(FConst.Static) != 0)
       m.flags = flags.or(FConst.Const);
