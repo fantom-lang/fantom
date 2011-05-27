@@ -797,7 +797,7 @@ class EventDemo : Canvas
 
 class ConsumeEventDemo : BorderPane
 {
-  new make(Str name)
+  new make(Str name := "foo")
   {
     listen(this, name)
     insets = Insets(50)
