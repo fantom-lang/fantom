@@ -179,7 +179,7 @@ to get SWT working:
   1. Verify your platform identifier using "fan -version" (see
      `sys::Env.platform`)
   2. Download your platform's "swt.jar" from
-     [eclipse.org]`http://download.eclipse.org/eclipse/downloads/drops/R-3.6.1-201009090800/index.php#SWT`
+     [eclipse.org]`http://download.eclipse.org/eclipse/downloads/`
   3. Put "swt.jar" into '{home}/lib/java/ext/{platform}/swt.jar'
 
 You can easily test SWT support by attempting to run `Flux`.
