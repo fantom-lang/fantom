@@ -706,7 +706,6 @@ class ParserTest : CompilerTest
 
     // terms
     expr = verifyExpr("this", ExprId.thisExpr)
-    expr = verifyExpr("super", ExprId.superExpr)
     expr = verifyExpr("x", ExprId.unknownVar); verifyEq(expr->name, "x")
 
     // call

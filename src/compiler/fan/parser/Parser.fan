@@ -1549,7 +1549,7 @@ public class Parser : CompilerSupport
       case Token.lbracket:        return collectionLiteralExpr(loc, null)
       case Token.falseKeyword:    consume; return LiteralExpr.makeFalse(loc, ns)
       case Token.nullKeyword:     consume; return LiteralExpr.makeNull(loc, ns)
-      case Token.superKeyword:    consume; return SuperExpr(loc)
+      case Token.superKeyword:    consume; if (curt !== Token.dot) err("Expected '.' dot after 'super' keyword"); return SuperExpr(loc)
       case Token.thisKeyword:     consume; return ThisExpr(loc)
       case Token.itKeyword:       consume; return ItExpr(loc)
       case Token.trueKeyword:     consume; return LiteralExpr.makeTrue(loc, ns)
@@ -1580,6 +1580,7 @@ public class Parser : CompilerSupport
       if (curt === Token.superKeyword)
       {
         consume
+        if (curt !== Token.dot) err("Expected '.' dot after 'super' keyword")
         return SuperExpr(loc, ctype)
       }
       else

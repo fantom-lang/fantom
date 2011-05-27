@@ -1060,7 +1060,7 @@ class CheckErrorsTest : CompilerTest
         Void m03(Int a) { i += a }
         Void m04(Int a) { i++ }
         Void m05(Foo a) { this = a }
-        Void m06(Foo a) { super = a }
+        //Void m06(Foo a) { super = a }
         Void m07(Foo a) { this += a }
         Void m08(Foo a) { this++ }
 
@@ -1076,7 +1076,7 @@ class CheckErrorsTest : CompilerTest
          7, 21, "Target is not assignable",
          8, 21, "Target is not assignable",
          9, 21, "Left hand side is not assignable",
-        10, 21, "Left hand side is not assignable",
+        //10, 21, "Left hand side is not assignable",
         11, 21, "Target is not assignable",
         12, 21, "Target is not assignable",
        ])
