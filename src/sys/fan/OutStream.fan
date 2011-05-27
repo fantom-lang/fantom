@@ -76,7 +76,7 @@ class OutStream
   ** Byte order mode for binary writes.
   ** Default is `Endian.big` (network byte order).
   **
-  virtual Endian endian
+  Endian endian
 
   **
   ** Write two bytes as a 16-bit number using configured `endian`.  This method
@@ -138,7 +138,7 @@ class OutStream
   ** The current charset used to encode Unicode characters into
   ** bytes.  The default charset should always be UTF-8.
   **
-  virtual Charset charset
+  Charset charset
 
   **
   ** Write one or more bytes to the stream for the specified Unicode
@@ -158,13 +158,13 @@ class OutStream
   ** Convenience for 'writeChars(obj.toStr)'.  If obj is null,
   ** then print the string "null".  Return this.
   **
-  virtual This print(Obj? s)
+  This print(Obj? s)
 
   **
   ** Convenience for 'writeChars(obj.toStr + "\n")'.  If obj
   ** is null then print the string "null\n".  Return this.
   **
-  virtual This printLine(Obj? obj := "")
+  This printLine(Obj? obj := "")
 
   **
   ** Write a serialized object from the stream according to

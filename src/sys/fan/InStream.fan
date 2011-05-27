@@ -99,7 +99,7 @@ class InStream
   ** Byte order mode for binary reads.
   ** Default is `Endian.big` (network byte order).
   **
-  virtual Endian endian
+  Endian endian
 
   **
   ** Peek at the next byte to be read without actually consuming
@@ -209,7 +209,7 @@ class InStream
   ** The current charset used to decode bytes into Unicode
   ** characters.  The default charset should always be UTF-8.
   **
-  virtual Charset charset
+  Charset charset
 
   **
   ** Read a single Unicode character from the stream using the

@@ -162,7 +162,7 @@ class InheritTest : CompilerTest
        class SubOut : OutStream
        {
          override Void close() { }
-         This printLine(Obj x := \"\") { return this }
+         This flush() { this }
          override This write() { return this }
          override This writeBool(Bool x) { return this }
        }
@@ -217,7 +217,7 @@ class InheritTest : CompilerTest
 
         // imported inherits
         41, 3, "Return type mismatch in override of 'sys::OutStream.close' - 'sys::Bool' != 'sys::Void'",
-        42, 3, "Must specify override keyword to override 'sys::OutStream.printLine'",
+        42, 3, "Must specify override keyword to override 'sys::OutStream.flush'",
         43, 3, "Parameter mismatch in override of 'sys::OutStream.write' - 'write(sys::Int)' != 'write()'",
         44, 3, "Cannot override non-virtual slot 'sys::OutStream.writeBool'",
 
