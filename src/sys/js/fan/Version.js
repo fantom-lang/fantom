@@ -123,6 +123,8 @@ fan.sys.Version.prototype.toStr = function()
 
 fan.sys.Version.prototype.segments = function() { return this.m_segments; }
 
+fan.sys.Version.prototype.segment = function(index) { return this.m_segments.get(index); }
+
 fan.sys.Version.prototype.major = function() { return this.m_segments.get(0); }
 
 fan.sys.Version.prototype.minor = function()
