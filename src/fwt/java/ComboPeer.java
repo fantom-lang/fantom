@@ -19,7 +19,7 @@ import org.eclipse.swt.events.*;
 
 public class ComboPeer
   extends WidgetPeer
-  implements Listener, ModifyListener
+  implements ModifyListener
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -96,6 +96,8 @@ public class ComboPeer
     fan.fwt.Combo self = (fan.fwt.Combo)this.self;
     if (event.type == SWT.DefaultSelection)
       self.onAction().fire(event(EventId.action));
+    else
+      super.handleEvent(event);
   }
 
   public void modifyText(ModifyEvent event)

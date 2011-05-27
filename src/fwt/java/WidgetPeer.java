@@ -299,6 +299,7 @@ public class WidgetPeer
       case SWT.MouseHorizontalWheel:
         fireMouseEvent(self.onMouseWheel(), EventId.mouseWheel, se, 0, point(-se.count, 0));
         break;
+      default: System.out.println("WARNING: WidgetPeer.handleEvent: " + se);
     }
   }
 

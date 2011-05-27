@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Widget;
 
 public class TablePeer
   extends WidgetPeer
-  implements Listener, SelectionListener
+  implements SelectionListener
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -154,7 +154,7 @@ public class TablePeer
     {
       case SWT.SetData:     handleSetData(event); break;
       case SWT.MenuDetect:  handleMenuDetect(event); break;
-      default: System.out.println("WARNING: TablePeer.handleEvent: " + event);
+      default:              super.handleEvent(event); break;
     }
   }
 
