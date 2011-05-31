@@ -13,6 +13,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import fan.sys.*;
+import fanx.util.*;
 
 /**
  * Interop defines for converting between Fantom and Java for common types.
@@ -30,6 +31,24 @@ public class Interop
   public static Class getClass(Object obj)
   {
     return obj.getClass();
+  }
+
+  /**
+   * Convert java.lang.Class to sys::Type.
+   */
+  public static Type toFan(Class cls)
+  {
+    return FanUtil.toFanType(cls, true);
+  }
+
+  /**
+   * Convert sys::Type to java.lang.Class.  You
+   * can also access this functionality using the
+   * trap operator "->toClass" on Type.
+   */
+  public static Class toJava(Type type)
+  {
+    return type.toClass();
   }
 
 //////////////////////////////////////////////////////////////////////////
