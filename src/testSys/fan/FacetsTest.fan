@@ -37,13 +37,13 @@ class FacetsTest : Test
 
   Void testEmpty()
   {
-    verifyEq(DependTest#.facets, Facet[,])
-    verifyEq(DependTest#.facets.isImmutable, true)
-    verifyEq(DependTest#.facet(NoDoc#, false), null)
+    verifyEq(ZipTest#.facets, Facet[,])
+    verifyEq(ZipTest#.facets.isImmutable, true)
+    verifyEq(ZipTest#.facet(NoDoc#, false), null)
 
-    verifyEq(FacetsTest#testEmpty.facets, Facet[,])
-    verifyEq(FacetsTest#testEmpty.facets.isImmutable, true)
-    verifyEq(FacetsTest#testEmpty.facet(NoDoc#, false), null)
+    verifyEq(ZipTest#testOpen.facets, Facet[,])
+    verifyEq(ZipTest#testOpen.facets.isImmutable, true)
+    verifyEq(ZipTest#testOpen.facet(NoDoc#, false), null)
   }
 
 //////////////////////////////////////////////////////////////////////////

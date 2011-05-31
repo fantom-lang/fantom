@@ -496,7 +496,8 @@ class CheckErrors : CompilerStep
 
     // get fields which:
     //   - instance or static fields based on ctor or static {}
-    //   - aren't abstract, override, or native
+    //   - aren't abstract or native
+    //   - override of abstract (no concrete base)
     //   - not a calculated field (has storage)
     //   - have a non-nullable, non-value type
     //   - don't have have an init expression
@@ -504,7 +505,8 @@ class CheckErrors : CompilerStep
     fields := curType.fieldDefs.findAll |FieldDef f->Bool|
     {
       f.isStatic == isStaticInit &&
-      !f.isAbstract && !f.isOverride && !f.isNative && f.isStorage &&
+      !f.isAbstract && !f.isNative && f.isStorage &&
+      (!f.isOverride || f.concreteBase == null) &&
       !f.fieldType.isNullable && !f.fieldType.isVal && f.init == null
     }
     if (fields.isEmpty) return
