@@ -424,6 +424,8 @@ fan.sys.Map.prototype.map = function(f)
   var r = f.returns();
   if (r == fan.sys.Void.$type) r = fan.sys.Obj.$type.toNullable();
   var acc = fan.sys.Map.make(this.m_type.k, r);
+  if (this.ordered()) acc.ordered(true);
+  if (this.caseInsensitive()) acc.caseInsensitive(true);
   for (var k in this.keyMap)
   {
     var key = this.keyMap[k];

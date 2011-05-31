@@ -1013,6 +1013,26 @@ class MapTest : Test
     map := [0:"zero", 1:"one", 2:"two"]
     c := map.map |Str v->Str| { "($v)" }
     verifyEq(c, [0:"(zero)", 1:"(one)", 2:"(two)"])
+
+    // ordered
+    m := Str:Str[:]
+    m.ordered = true
+    m["foo"] = "foo"
+    m["bar"] = "bar"
+    m["zoo"] = "zoo"
+    m["who"] = "who"
+    m = m.map |v->Str| { v.upper }
+    verifyEq(m.ordered, true)
+    verifyEq(m.vals, ["FOO", "BAR", "ZOO", "WHO"])
+
+    // case insensitive
+    m = Str:Str[:]
+    m.caseInsensitive = true
+    m["foo"] = "foo"
+    m["bar"] = "bar"
+    m = m.map |v->Str| { v.upper }
+    verifyEq(m.caseInsensitive, true)
+    verifyEq(m["Foo"], "FOO")
   }
 
 //////////////////////////////////////////////////////////////////////////

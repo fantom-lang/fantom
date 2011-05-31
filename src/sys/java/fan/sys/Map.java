@@ -442,6 +442,8 @@ public final class Map
     Type r = f.returns();
     if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
     Map acc = new Map(type.k, r);
+    if (this.ordered()) acc.ordered(true);
+    if (this.caseInsensitive()) acc.caseInsensitive(true);
     Iterator it = pairsIterator();
     while (it.hasNext())
     {
