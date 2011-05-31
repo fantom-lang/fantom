@@ -163,6 +163,12 @@ style reflection.  You can use a dynamic call to 'toClass' to get the
   ArrayList#            // evaluates to sys::Type
   ArrayList#->toClass   // evaluates to java.lang.Class
 
+You can also use the 'fanx.interop.Interop' class to convert between
+'java.lang.Class' of a 'sys::Type':
+
+  Interop.toFan(cls)     // evaluates to sys::Type
+  Interop.toJava(type)   // evaluates to java.lang.Class
+
 Arrays [#arrays]
 ****************
 Arrays of Objects are implicitly boxed/unboxed as Fantom 'sys::List'.

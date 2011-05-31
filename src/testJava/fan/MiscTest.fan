@@ -218,4 +218,27 @@ class MiscTest : JavaTest
     verifyEq(pod.types[0].make->foo, "public")
     verifyEq(pod.types[1].make->foo, "override")
   }
+
+//////////////////////////////////////////////////////////////////////////
+// #1496 Expose java.lang.Class access on Type
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1496()
+  {
+    compile(
+     """using [java] java.lang
+        using [java] java.util
+        using [java] fanx.interop
+        class Foo
+        {
+          Class a1() { ArrayList#->toClass }
+          Class a2() { Interop.toJava(ArrayList#) }
+          Type b1() { Interop.toFan(a1) }
+          Type b2() { ArrayList# }
+        }""")
+
+    obj := pod.types.first.make
+    verifySame(obj->a1, obj->a1)
+    verifySame(obj->b2, obj->b2)
+  }
 }
