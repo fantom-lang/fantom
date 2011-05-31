@@ -143,12 +143,12 @@ internal class JavaReflect
     if (!JModifier.isPublic(mods) && !JModifier.isProtected(mods)) return
     try
     {
-      fan := JavaField()
-      fan.parent = self
-      fan.name = java.getName
-      fan.flags = toMemberFlags(mods)
+      fan := JavaField(
+        self,
+        java.getName,
+        toMemberFlags(mods),
+        toFanType(self.bridge, java.getType))
       if (java.isEnumConstant()) fan.flags = fan.flags.or(FConst.Enum)
-      fan.fieldType = toFanType(self.bridge, java.getType)
       slots.set(fan.name, fan)
     }
     catch (UnknownTypeErr e) errUnknownType(e)
@@ -160,11 +160,11 @@ internal class JavaReflect
     if (!JModifier.isPublic(mods) && !JModifier.isProtected(mods)) return
     try
     {
-      fan := JavaMethod()
-      fan.parent = self
-      fan.name = java.getName
-      fan.flags = toMemberFlags(mods)
-      fan.returnType = toFanType(self.bridge, java.getReturnType)
+      fan := JavaMethod(
+        self,
+        java.getName,
+        toMemberFlags(mods),
+        toFanType(self.bridge, java.getReturnType))
       fan.setParamTypes(toFanTypes(self.bridge, java.getParameterTypes))
       addSlot(slots, fan.name, fan)
     }
@@ -177,11 +177,11 @@ internal class JavaReflect
     if (!JModifier.isPublic(mods) && !JModifier.isProtected(mods)) return
     try
     {
-      fan := JavaMethod()
-      fan.parent = self
-      fan.name = "<init>"
-      fan.flags = toMemberFlags(mods).or(FConst.Ctor)
-      fan.returnType = self
+      fan := JavaMethod(
+        self,
+        "<init>",
+        toMemberFlags(mods).or(FConst.Ctor),
+        self)
       fan.setParamTypes(toFanTypes(self.bridge, java.getParameterTypes))
       addSlot(slots, fan.name, fan)
     }
@@ -217,33 +217,39 @@ internal class JavaReflect
     // methods, but in Fantom facets are declared with const fields;
     // so we here we fake it out so that a Java annotation type looks
     // like a Fantom facet from the compiler's perspective
-    ns := self.ns
     cls.getDeclaredMethods.each |JMethod m|
     {
       if (!JModifier.isPublic(m.getModifiers)) return
       if (!JModifier.isAbstract(m.getModifiers)) return
       try
       {
-        fan := JavaField()
-        fan.parent = self
-        fan.name = m.getName
-        fan.flags = FConst.Public.or(FConst.Const)
-        switch (m.getReturnType.getName)
-        {
-          case "java.lang.Class":    fan.fieldType = ns.typeType
-          case "[Ljava.lang.Class;": fan.fieldType = ns.typeType.toListOf
-          case "[Z":                 fan.fieldType = ns.boolType.toListOf
-          case "[B":
-          case "[S":
-          case "[I":
-          case "[J":                 fan.fieldType = ns.intType.toListOf
-          case "[F":
-          case "[D":                 fan.fieldType = ns.floatType.toListOf
-          default:                   fan.fieldType = toFanType(self.bridge, m.getReturnType)
-        }
+
+        fan := JavaField(
+          self,
+          m.getName,
+          FConst.Public.or(FConst.Const),
+          toAnnotationType(self, m))
         slots.set(fan.name, fan)
       }
       catch (UnknownTypeErr e) errUnknownType(e)
+    }
+  }
+
+  private static CType toAnnotationType(JavaType self, JMethod m)
+  {
+    ns := self.ns
+    switch (m.getReturnType.getName)
+    {
+      case "java.lang.Class":    return ns.typeType
+      case "[Ljava.lang.Class;": return ns.typeType.toListOf
+      case "[Z":                 return ns.boolType.toListOf
+      case "[B":
+      case "[S":
+      case "[I":
+      case "[J":                 return ns.intType.toListOf
+      case "[F":
+      case "[D":                 return ns.floatType.toListOf
+      default:                   return toFanType(self.bridge, m.getReturnType)
     }
   }
 

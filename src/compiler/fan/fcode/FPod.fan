@@ -19,9 +19,10 @@ final class FPod : CPod, FConst
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(CNamespace? ns, Str podName, Zip? zip)
+  new make(CNamespace ns, Str podName, Zip? zip)
   {
-    if (ns != null) this.ns = ns
+    this.ns         = ns
+    this.version    = Version.defVal
     this.name       = podName
     this.zip        = zip
     this.names      = FTable.makeStrs(this)

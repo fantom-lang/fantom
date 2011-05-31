@@ -36,7 +36,7 @@ class JavaPod : CPod
 
   override Bool isForeign() { return true }
 
-  override CType[] types
+  override CType[] types := [,]
 
   override JavaType? resolveType(Str typeName, Bool checked)
   {

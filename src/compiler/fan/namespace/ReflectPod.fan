@@ -24,18 +24,14 @@ class ReflectPod : CPod
 
   override Version version() { return pod.version }
 
-  override CType[] types
+  override CType[] types()
   {
-    get
+    if (!loadedAllTypes)
     {
-      if (!loadedAllTypes)
-      {
-        loadedAllTypes = true
-        pod.types.each |Type t| { resolveType(t.name, true) }
-      }
-      return typeMap.vals
+      loadedAllTypes = true
+      pod.types.each |Type t| { resolveType(t.name, true) }
     }
-    private set
+    return typeMap.vals
   }
 
   override ReflectType? resolveType(Str typeName, Bool checked)
