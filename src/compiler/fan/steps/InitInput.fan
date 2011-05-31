@@ -93,7 +93,9 @@ class InitInput : CompilerStep
     meta["fcode.version"]  = FConst.FCodeVersion
     meta["build.host"]     = Env.cur.host
     meta["build.user"]     = Env.cur.user
-    meta["build.time"]     = DateTime.now.toStr
+// TODO: remove for build 1.0.60
+meta["build.time"] = DateTime.now.toStr
+    meta["build.ts"]       = DateTime.now.toStr
     meta["build.compiler"] = typeof.pod.version.toStr
     meta["build.platform"] = Env.cur.platform
     meta.addAll(input.meta)

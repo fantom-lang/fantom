@@ -52,7 +52,7 @@ standardized keys:
   - 'pod.native.dotnet': does pad use native .NET code (true or false)
   - 'pod.native.js': does pad use native JavaScript code (true or false)
   - 'fcode.version': binary format version of the fcode
-  - 'build.time': compile time formatted as [DateTime]`sys::DateTime.toStr`
+  - 'build.ts': compile time in local timezone formatted as [DateTime]`sys::DateTime.toStr`
   - 'build.platform':  compile env platform formatted as [Env.platform]`sys::Env.platform`
   - 'build.host': compile env host name, see [Env.host]`sys::Env.host`
   - 'build.user': compile env user name, see [Env.user]`sys::Env.user`
