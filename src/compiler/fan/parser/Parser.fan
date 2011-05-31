@@ -287,7 +287,6 @@ public class Parser : CompilerSupport
         case Token.privateKeyword:   flags = flags.or(FConst.Private);   protection = true
         case Token.protectedKeyword: flags = flags.or(FConst.Protected); protection = true
         case Token.publicKeyword:    flags = flags.or(FConst.Public);    protection = true
-        case Token.readonlyKeyword:  flags = flags.or(Readonly) // Parser only flag
         case Token.staticKeyword:    flags = flags.or(FConst.Static)
         case Token.virtualKeyword:   flags = flags.or(FConst.Virtual)
         default:                     done = true
@@ -514,21 +513,6 @@ public class Parser : CompilerSupport
     {
       defGet(field)
       genSyntheticGet(field)
-    }
-
-    // TODO readonly is syntatic sugar for { private set }
-    if (flags.and(Readonly) != 0)
-    {
-      if (field.isConst)
-      {
-        err("Invalid combination of 'readonly' and 'const' modifiers", loc)
-      }
-      else
-      {
-        // TODO
-        warn("'readonly' is deprecated, use '{ private set }'", loc)
-        field.set.flags = field.set.flags.and(ProtectionMask).or(FConst.Private)
-      }
     }
 
     endOfStmt
@@ -2409,8 +2393,7 @@ public class Parser : CompilerSupport
   // These are flags used only by the parser we merge with FConst
   // flags by starting from most significant bit and working down
   const static Int Once     := 0x8000_0000
-  const static Int Readonly := 0x4000_0000
-  const static Int ParserFlagsMask := Readonly
+  const static Int ParserFlagsMask := 0
 
   // Bitwise and this mask to clear all protection scope flags
   const static Int ProtectionMask := (FConst.Public).or(FConst.Protected).or(FConst.Private).or(FConst.Internal).not

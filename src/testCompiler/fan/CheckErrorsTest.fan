@@ -48,7 +48,6 @@ class CheckErrorsTest : CompilerTest
       private class B {}
       protected class C {}
       virtual static class D {}
-      readonly class F {}
       once class G {}
       public internal class H {}
       abstract final class I {}
@@ -59,10 +58,9 @@ class CheckErrorsTest : CompilerTest
          3, 11, "Cannot use 'protected' modifier on type",
          4, 16, "Cannot use 'static' modifier on type",
          4, 16, "Cannot use 'virtual' modifier on type",
-         5, 10, "Cannot use 'readonly' modifier on type",
-         6,  6, "Cannot use 'once' modifier on type",
-         7, 17, "Invalid combination of 'public' and 'internal' modifiers",
-         8, 16, "Invalid combination of 'abstract' and 'final' modifiers",
+         5,  6, "Cannot use 'once' modifier on type",
+         6, 17, "Invalid combination of 'public' and 'internal' modifiers",
+         7, 16, "Invalid combination of 'abstract' and 'final' modifiers",
        ])
   }
 
@@ -158,7 +156,7 @@ class CheckErrorsTest : CompilerTest
                 private   Int fPrivate   // can't mix virtual+private
 
         public            Int fPublicProtected { protected set }
-        readonly public   Int fPublicReadonly
+        public            Int fPublicReadonly { private set }
         protected         Int fProtectedInternal { internal set }
       }
 
@@ -426,19 +424,17 @@ class CheckErrorsTest : CompilerTest
     verifyErrors(
      "abstract class Foo
       {
-        readonly readonly Int f01
+        private private Int f01
         Int f02 { override get { return f02 } }
         Int f03 { internal override get { return f03 } }
         Int f04 { override set {} }
-        const readonly Int f05
       }
       ",
        [
-         3,  12, "Repeated modifier",
+         3,  11, "Repeated modifier",
          4,  13, "Cannot use modifiers on field getter",
          5,  13, "Cannot use modifiers on field getter",
          6,  13, "Cannot use modifiers on field setter except to narrow protection",
-         7,   3, "Invalid combination of 'readonly' and 'const' modifiers", // #1043
        ])
 
     // check errors stage
@@ -785,7 +781,7 @@ class CheckErrorsTest : CompilerTest
       {
         final Void m00() {}
         const Void m01() {}
-        readonly Void m02() {}
+        // readonly Void unused() {}
 
         public protected Void m10() {}
         public private Void m11() {}
@@ -829,7 +825,6 @@ class CheckErrorsTest : CompilerTest
        [
          3,  3, "Cannot use 'final' modifier on method",
          4,  3, "Cannot use 'const' modifier on method",
-         5,  3, "Cannot use 'readonly' modifier on method",
 
          7,  3, "Invalid combination of 'public' and 'protected' modifiers",
          8,  3, "Invalid combination of 'public' and 'private' modifiers",

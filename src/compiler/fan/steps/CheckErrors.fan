@@ -125,7 +125,6 @@ class CheckErrors : CompilerStep
     if (flags.and(FConst.Protected) != 0) err("Cannot use 'protected' modifier on type", loc)
     if (flags.and(FConst.Static) != 0)    err("Cannot use 'static' modifier on type", loc)
     if (flags.and(FConst.Virtual) != 0)   err("Cannot use 'virtual' modifier on type", loc)
-    if (flags.and(Parser.Readonly) != 0)  err("Cannot use 'readonly' modifier on type", loc)
 
     // check invalid protection combinations
     checkProtectionFlags(flags, loc)
@@ -371,7 +370,6 @@ class CheckErrors : CompilerStep
     // these modifiers are never allowed on a method
     if (flags.and(FConst.Final) != 0)     err("Cannot use 'final' modifier on method", loc)
     if (flags.and(FConst.Const) != 0)     err("Cannot use 'const' modifier on method", loc)
-    if (flags.and(Parser.Readonly) != 0)  err("Cannot use 'readonly' modifier on method", loc)
 
     // check invalid protection combinations
     checkProtectionFlags(flags, loc)
