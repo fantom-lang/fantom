@@ -92,7 +92,7 @@ class PodTest : Test
     verify(pod.meta.containsKey("pod.depends"))
     verify(pod.meta.containsKey("build.host"))
     verify(pod.meta.containsKey("build.user"))
-    verify(pod.meta.containsKey("build.time"))
+    verify(pod.meta.containsKey("build.ts"))
   }
 
 //////////////////////////////////////////////////////////////////////////
