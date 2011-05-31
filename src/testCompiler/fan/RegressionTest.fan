@@ -541,4 +541,16 @@ class RegressionTest : CompilerTest
       [2, 24, "Cannot override virtual method with static field 'name'"])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Overriden non-nullable fields not checked
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1482()
+  {
+    verifyErrors(
+      """abstract class A { abstract Str x }
+         class B : A { override Str x }""",
+      [2, 1, "Non-nullable field 'x' must be assigned in constructor 'make'"])
+  }
+
 }
