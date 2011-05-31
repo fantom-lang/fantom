@@ -472,6 +472,8 @@ namespace Fan.Sys
       Type r = f.returns();
       if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
       Map acc = new Map(m_type.m_k, r);
+      if (this.ordered()) acc.ordered(true);
+      if (this.caseInsensitive()) acc.caseInsensitive(true);
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
