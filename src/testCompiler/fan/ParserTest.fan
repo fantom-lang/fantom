@@ -323,7 +323,7 @@ class ParserTest : CompilerTest
         Int d := 0 { get {} set {} }
         abstract Bool e
         Bool f := true
-        readonly Int g := 5 { get {} }
+        Int g := 5 { get {} private set }
       }")
 
     verifyEq(t.slotDefs.size, 21)

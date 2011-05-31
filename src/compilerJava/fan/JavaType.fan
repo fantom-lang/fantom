@@ -62,7 +62,7 @@ class JavaType : CType
 
   override once CType toListOf() { ListType(this) }
 
-  override Str:CSlot slots { get { load; return &slots } private set }
+  override Str:CSlot slots := [:] { get { load; return &slots } private set }
 
   override once COperators operators() { COperators(this) }
 
@@ -271,14 +271,12 @@ class JavaType : CType
   **
   once CMethod newMethod()
   {
-    return JavaMethod
-    {
-      it.parent = this
-      it.name = "<new>"
-      it.flags = FConst.Ctor + FConst.Public
-      it.returnType = this
-      it.params = JavaParam[,]
-    }
+    return JavaMethod(
+      this,
+      "<new>",
+      FConst.Ctor + FConst.Public,
+      this,
+      JavaParam[,])
   }
 
   **
@@ -288,14 +286,12 @@ class JavaType : CType
   **
   static CMethod classLiteral(JavaBridge bridge, CType base)
   {
-    return JavaMethod
-    {
-      it.parent = base
-      it.name = "<class>"
-      it.flags = FConst.Public + FConst.Static
-      it.returnType = bridge.classType
-      it.params = JavaParam[,]
-    }
+    return JavaMethod(
+      base,
+      "<class>",
+      FConst.Public + FConst.Static,
+      bridge.classType,
+      JavaParam[,])
   }
 
 //////////////////////////////////////////////////////////////////////////

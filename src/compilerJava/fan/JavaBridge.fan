@@ -717,18 +717,15 @@ class JavaBridge : CBridge
   **
   once CMethod listMakeFromArray()
   {
-    return JavaMethod
-    {
-      parent = this.ns.listType
-      name = "make"
-      flags = FConst.Public + FConst.Static
-      returnType = this.ns.listType.toNullable
-      params =
+    return JavaMethod(
+      this.ns.listType,
+      "make",
+      FConst.Public + FConst.Static,
+      this.ns.listType.toNullable,
       [
         JavaParam("of", this.ns.typeType),
         JavaParam("array", objectArrayType)
-      ]
-    }
+      ])
   }
 
   **
@@ -736,14 +733,12 @@ class JavaBridge : CBridge
   **
   once CMethod listAsArray()
   {
-    return JavaMethod
-    {
-      parent = this.ns.listType
-      name = "asArray"
-      flags = FConst.Public
-      returnType = objectArrayType
-      params = [JavaParam("cls", classType)]
-    }
+    return JavaMethod(
+      this.ns.listType,
+      "asArray",
+      FConst.Public,
+      objectArrayType,
+      [JavaParam("cls", classType)])
   }
 
   **

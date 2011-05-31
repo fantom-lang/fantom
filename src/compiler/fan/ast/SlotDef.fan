@@ -46,7 +46,7 @@ abstract class SlotDef : DefNode, CSlot
 //////////////////////////////////////////////////////////////////////////
 
   TypeDef parentDef             // parent TypeDef
-  override Str name             // slot name
+  override Str name := "?"      // slot name
   Bool overridden := false      // set by Inherit when successfully overridden
 
 }

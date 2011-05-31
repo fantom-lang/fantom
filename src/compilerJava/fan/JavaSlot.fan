@@ -13,6 +13,13 @@ using compiler
 **
 abstract class JavaSlot : CSlot
 {
+  new make(CType parent, Str name, Int flags)
+  {
+    this.parent = parent
+    this.name   = name
+    this.flags  = flags
+  }
+
   override CNamespace ns() { return parent.ns }
   override CType parent
   override Str name
@@ -36,6 +43,12 @@ abstract class JavaSlot : CSlot
 **
 class JavaField : JavaSlot, CField
 {
+  new make(CType parent, Str name, Int flags, CType type)
+    : super(parent, name, flags)
+  {
+    this.fieldType = type
+  }
+
   override CType fieldType
   override CMethod? getter
   override CMethod? setter
@@ -54,6 +67,13 @@ class JavaField : JavaSlot, CField
 **
 class JavaMethod : JavaSlot, CMethod
 {
+  new make(CType parent, Str name, Int flags, CType ret, CParam[] params := [,])
+    : super(parent, name, flags)
+  {
+    this.returnType = ret
+    this.params = params
+  }
+
   override CType parent
   override CType returnType
   override CParam[] params
@@ -64,10 +84,7 @@ class JavaMethod : JavaSlot, CMethod
 
   Void setParamTypes(CType[] types)
   {
-    params = types.map |CType t, Int i->CParam|
-    {
-      return JavaParam("p$i", t)
-    }
+    params = types.map |CType t, Int i->CParam| { JavaParam("p$i", t) }
   }
 
   override CFacet? facet(Str qname)

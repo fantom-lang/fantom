@@ -22,6 +22,7 @@ public class FieldDef : SlotDef, CField
   {
     this.name = name
     this.flags = flags
+    this.fieldType = parent.ns.errType
   }
 
 //////////////////////////////////////////////////////////////////////////

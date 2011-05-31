@@ -27,7 +27,7 @@ class Assembler : CompilerSupport, FConst
 
   FPod assemblePod()
   {
-    fpod = FPod(null, pod.name, null)
+    fpod = FPod(ns, pod.name, null)
 
     fpod.name    = compiler.input.podName
     fpod.version = compiler.input.version

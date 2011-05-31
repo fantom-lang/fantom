@@ -63,13 +63,10 @@ class FType : CType
     return ffacets.find |f| { f.qname == qname }
   }
 
-  override Str:CSlot slots
+  override Str:CSlot slots()
   {
-    get
-    {
-      if (slotsCached == null) reflect
-      return slotsCached
-    }
+    if (slotsCached == null) reflect
+    return slotsCached
   }
   private [Str:CSlot]? slotsCached
 
