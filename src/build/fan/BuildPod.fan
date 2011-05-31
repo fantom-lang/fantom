@@ -105,14 +105,6 @@ abstract class BuildPod : BuildScript
   **
   Uri? dependsDir := null
 
-  ** Deprecated - TODO
-  @Deprecated { msg = "Use outPodDir" }
-  Uri outDir
-  {
-    get { outPodDir }
-    set { outPodDir = it }
-  }
-
   **
   ** Directory to output pod file.  By default it goes into
   ** "{Env.cur.workDir}/lib/fan/"
