@@ -28,7 +28,7 @@ class Dump
     {
       // if lineNum specific print out a few lines before/after for context
       if (line != null && (line-i).abs > cx) return
-      echo("${i.toStr.padl(4)}: $s")
+      echo("${(i+1).toStr.padl(4)}: $s")
     }
   }
 

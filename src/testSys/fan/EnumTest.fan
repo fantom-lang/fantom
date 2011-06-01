@@ -9,6 +9,7 @@
 **
 ** EnumTest
 **
+@Js
 class EnumTest : Test
 {
 
@@ -212,6 +213,7 @@ class EnumTest : Test
 
 }
 
+@Js
 internal enum class EnumAbc
 {
   A, B, C
@@ -221,6 +223,7 @@ internal enum class EnumAbc
   static const EnumAbc first := A
 }
 
+@Js
 @FacetS1 { val = "y" }
 enum class Suits
 {
@@ -234,6 +237,7 @@ enum class Suits
   const Str color;
 }
 
+@Js
 enum class Foo
 {
   one,

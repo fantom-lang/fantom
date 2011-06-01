@@ -62,3 +62,6 @@ fan.sys.Func.prototype.call = function() { return this.m_func.apply(null, argume
 fan.sys.Func.prototype.callList = function(args) { return this.m_func.apply(null, args.m_values); }
 fan.sys.Func.prototype.callOn = function(obj, args) { return this.m_func.apply(obj, args.m_values); }
 
+fan.sys.Func.prototype.enterCtor = function(obj) {}
+fan.sys.Func.prototype.exitCtor = function() {}
+fan.sys.Func.prototype.checkInCtor = function(obj) {}

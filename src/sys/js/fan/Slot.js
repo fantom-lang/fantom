@@ -22,6 +22,7 @@ fan.sys.Slot.prototype.$ctor = function()
   this.m_qname  = null;
   this.m_name   = null;
   this.m_flags  = null;
+  this.m_facets = null;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -97,12 +98,12 @@ fan.sys.Slot.prototype.isVirtual = function()   { return (this.m_flags & fan.sys
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Slot.prototype.facets = function() { return this.m_facets; }
-fan.sys.Slot.prototype.hasFacet = function(type) { return false; }
+fan.sys.Slot.prototype.facets = function() { return this.m_facets.list(); }
+fan.sys.Slot.prototype.hasFacet = function(type) { return this.facets(type, false) != null; }
 fan.sys.Slot.prototype.facet = function(type, checked)
 {
   if (checked === undefined) checked = true;
-  return null;
+  return this.m_facets.get(type, checked);
 }
 
 //////////////////////////////////////////////////////////////////////////

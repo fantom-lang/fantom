@@ -19,6 +19,7 @@ abstract class JsSlot : JsNode
     this.origName    = def.name
     this.name        = vnameToJs(def.name)
     this.flags       = def.flags
+    this.facets      = def.facets?.map |f| { JsFacet(s, f) } ?: [,]
     this.isAbstract  = def.isAbstract
     this.isStatic    = def.isStatic
     this.isNative    = def.isNative
@@ -41,6 +42,7 @@ abstract class JsSlot : JsNode
   Str origName      // unescaped slot name
   Str name          // slot name
   Int flags         // slot flags
+  JsFacet[] facets  // slot facets
   Bool isAbstract   // is slot abstract
   Bool isSynthetic  // is slot syntethi
   Bool isStatic     // is slot static

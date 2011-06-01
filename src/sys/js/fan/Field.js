@@ -13,10 +13,31 @@
 fan.sys.Field = fan.sys.Obj.$extend(fan.sys.Slot);
 
 //////////////////////////////////////////////////////////////////////////
+// Factories
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Field.makeSetFunc = function(map)
+{
+  return fan.sys.Func.make(
+    fan.sys.List.make(fan.sys.Param.$type),
+    fan.sys.Void.$type,
+    function(obj)
+    {
+      var keys = map.keys();
+      for (var i=0; i<keys.size(); i++)
+      {
+        var field = keys.get(i);
+        var val = map.get(field);
+        field.set(obj, val, false); //, obj != inCtor);
+      }
+    });
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Field.prototype.$ctor = function(parent, name, flags, type)
+fan.sys.Field.prototype.$ctor = function(parent, name, flags, type, facets)
 {
   this.m_parent = parent;
   this.m_name   = name;
@@ -27,7 +48,7 @@ fan.sys.Field.prototype.$ctor = function(parent, name, flags, type)
   this.m_$qname = this.m_parent.m_$qname + '.m_' + this.m_$name;
   this.m_getter = null;
   this.m_setter = null;
-  this.m_facets = fan.sys.Facet.$type.emptyList();
+  this.m_facets = new fan.sys.Facets(facets);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -76,27 +97,17 @@ fan.sys.Field.prototype.set = function(instance, value, checkConst)
   {
     if (checkConst)
       throw fan.sys.ReadonlyErr.make("Cannot set const field " + this.m_qname);
-    else if (value != null && !isImmutable(value))
+    else if (value != null && !fan.sys.ObjUtil.isImmutable(value))
       throw fan.sys.ReadonlyErr.make("Cannot set const field " + this.m_qname + " with mutable value");
   }
 
-  // TODO
   // check static
-  //if ((flags & FConst.Static) != 0 && !parent.isJava())
-  //  throw ReadonlyErr.make("Cannot set static field " + qname()).val;
+  if ((this.m_flags & fan.sys.FConst.Static) != 0) // && !parent.isJava())
+    throw fan.sys.ReadonlyErr.make("Cannot set static field " + this.m_qname);
 
-  // TODO
   // check type
-  //if (of.isGenericInstance() && value != null)
-  //{
-  //  if (!type(value).is(of.toNonNullable()))
-  //    throw ArgErr.make("Wrong type for field " + qname() + ": " + of + " != " + type(value)).val;
-  //}
-  if (value != null)
-  {
-    if (!fan.sys.ObjUtil.$typeof(value).is(this.m_type))
-      throw fan.sys.ArgErr.make("Wrong type for field " + this.m_qname + ": " + this.m_type + " != " + fan.sys.ObjUtil.$typeof(value));
-  }
+  if (value != null && !fan.sys.ObjUtil.$typeof(value).is(this.m_type.toNonNullable()))
+    throw fan.sys.ArgErr.make("Wrong type for field " + this.m_qname + ": " + this.m_type + " != " + fan.sys.ObjUtil.$typeof(value));
 
   // TODO
   //if (setter != null)
@@ -117,7 +128,7 @@ fan.sys.Field.prototype.set = function(instance, value, checkConst)
     if (setter != null)
       setter.call(instance, value);
     else
-      instance["m"+this.m_$name] = value;
+      instance["m_"+this.m_$name] = value;
   }
 }
 

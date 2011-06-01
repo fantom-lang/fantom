@@ -631,8 +631,8 @@ class JsCallExpr : JsExpr
       this.targetType = ce.target.ctype == null ? parent : JsTypeRef(s, ce.target.ctype)
     }
 
-    // force these methods to route thru ObjUtil
-    if (name == "equals" || name == "compare") isObj = true
+    // force these methods to route thru ObjUtil if not a super.xxx expr
+    if ((name == "equals" || name == "compare") && (target isnot JsSuperExpr)) isObj = true
 
     // use isMock as hook to skip instance inits
     if (name.startsWith("instance\$init\$")) isMock = true
