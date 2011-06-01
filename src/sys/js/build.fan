@@ -100,9 +100,9 @@ class Build : BuildScript
       adder  := t.isMixin ? "\$am" : "\$at"
       base   := t.base == null ? "null" : "'$t.base.qname'"
       mixins := t.mixins.join(",") |m| { "'$m.pod::$m.name'" }
-      // facets
+      facets := toFacets(t->ffacets)
       flags  := t->flags
-      out.printLine("  fan.sys.${t.name}.\$type = $adder('$t.name',$base,[$mixins],{},$flags);")
+      out.printLine("  fan.sys.${t.name}.\$type = $adder('$t.name',$base,[$mixins],{$facets},$flags);")
 
       // init generic types after Type
       if (t.name == "Type") out.printLine("  fan.sys.Sys.initGenericParamTypes();")
@@ -113,9 +113,14 @@ class Build : BuildScript
     {
       if (t.fields.isEmpty && t.methods.isEmpty) return
       out.print("  fan.sys.${t.name}.\$type")
-      t.fields.each |f| { out.print(".\$af('$f.name',${f->flags},'$f.fieldType.signature',{})") }
+      t.fields.each |f|
+      {
+        facets := toFacets(f->ffacets)
+        out.print(".\$af('$f.name',${f->flags},'$f.fieldType.signature',{$facets})")
+      }
       t.methods.each |m|
       {
+        facets := toFacets(m->ffacets)
         params := StrBuf().add("fan.sys.List.make(fan.sys.Param.\$type,[")
         m.params.each |p,j|
         {
@@ -123,7 +128,7 @@ class Build : BuildScript
           params.add("new fan.sys.Param('$p.name','$p.paramType.signature',$p.hasDefault)")
         }
         params.add("])")
-        out.print(".\$am('$m.name',${m->flags},'${m.returnType.signature}',$params,{})")
+        out.print(".\$am('$m.name',${m->flags},'${m.returnType.signature}',$params,{$facets})")
       }
       out.printLine(";")
     }
@@ -189,6 +194,11 @@ class Build : BuildScript
     out.printLine("{")
     file.in.readProps.each |v,k| { out.printLine("  set($k.toCode,$v.toCode);") }
     out.printLine("}")
+  }
+
+  private Str toFacets(FFacet[]? facets)
+  {
+    facets == null ? "" : facets.join(",") |f| { "'$f.qname':$f.val.toCode" }
   }
 
 //////////////////////////////////////////////////////////////////////////
