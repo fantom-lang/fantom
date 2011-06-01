@@ -180,6 +180,7 @@ class Normalize : CompilerStep
     // error checking
     if (m.ret.isVoid) err("Once method '$m.name' cannot return Void", loc)
     if (!m.params.isEmpty) err("Once method '$m.name' cannot have parameters", loc)
+    if (m.ret.isForeign) err("Once method cannot be used with FFI type '$m.ret'", loc)
 
     // generate storage field
     f := FieldDef(loc, curType)
@@ -231,11 +232,9 @@ class Normalize : CompilerStep
     ifStmt := IfStmt(loc, cond, trueBlock)
     m.code.add(ifStmt)
 
-    // return (RetType)name$Store
+    // return <name$Store>, we'll insert cast in CheckErrors.coerce
     retStmt := ReturnStmt.makeSynthetic(loc)
-    retStmt.expr = TypeCheckExpr.coerce(
-      f.makeAccessorExpr(loc, false),
-      m.ret)
+    retStmt.expr = f.makeAccessorExpr(loc, false)
     m.code.add(retStmt)
   }
 
