@@ -241,4 +241,22 @@ class MiscTest : JavaTest
     verifySame(obj->a1, obj->a1)
     verifySame(obj->b2, obj->b2)
   }
+
+//////////////////////////////////////////////////////////////////////////
+// #1512 FFI 'override once' with array
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1512()
+  {
+    verifyErrors(
+     """using [java] fanx.test::InteropTest\$Once as Once
+        class Foo : Once
+        {
+          override once Int i() { (Int)123 }
+          override once Str?[]? array() { ["f", "f", "i"] }
+        }""",
+        [4, 3, "Once method cannot be used with FFI type '[java]::int'",
+         5, 3, "Once method cannot be used with FFI type '[java]java.lang::[String?'"])
+  }
+
 }
