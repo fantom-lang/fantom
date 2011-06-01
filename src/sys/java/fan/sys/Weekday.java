@@ -58,7 +58,7 @@ public final class Weekday
         case 4: return localeFull();
       }
     }
-    throw ArgErr.make("Invalid pattern: " + pattern).val;
+    throw ArgErr.make("Invalid pattern: " + pattern);
   }
 
   public String localeAbbr() { return abbr(Locale.cur()); }

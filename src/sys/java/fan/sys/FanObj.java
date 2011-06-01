@@ -73,6 +73,8 @@ public class FanObj
   {
     if (self instanceof FanObj)
       return ((FanObj)self).toStr();
+    else if (self instanceof Err)
+      return ((Err)self).toStr();
     else if (self.getClass() == java.lang.Double.class)
       return FanFloat.toStr(((java.lang.Double)self).doubleValue());
     else
@@ -89,6 +91,8 @@ public class FanObj
     if (self instanceof FanObj)
       return ((FanObj)self).isImmutable();
     else if (self == null)
+      return true;
+    else if (self instanceof Err)
       return true;
     else
       return FanUtil.isJavaImmutable(self.getClass());
@@ -107,7 +111,7 @@ public class FanObj
       // are tricky to debug just make sure we dump some diagnostics
       Err err = Err.make("Calling Obj.isImmutable in static initializers before type are available");
       err.trace();
-      throw err.val;
+      throw err;
     }
   }
 
@@ -116,21 +120,25 @@ public class FanObj
     if (self == null) return null;
     if (self instanceof FanObj)
       return ((FanObj)self).toImmutable();
+    else if (self instanceof Err)
+      return self;
     else if (FanUtil.isJavaImmutable(self.getClass()))
       return self;
-    throw NotImmutableErr.make(self.getClass().getName()).val;
+    throw NotImmutableErr.make(self.getClass().getName());
   }
 
   public Object toImmutable()
   {
     if (typeof().isConst()) return this;
-    throw NotImmutableErr.make(typeof().toString()).val;
+    throw NotImmutableErr.make(typeof().toString());
   }
 
   public static Type typeof(Object self)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).typeof();
+    else if (self instanceof Err)
+      return ((Err)self).typeof();
     else
       return FanUtil.toFanType(self.getClass(), true);
   }
@@ -205,7 +213,7 @@ public class FanObj
         return val;
       }
 
-      throw ArgErr.make("Invalid number of args to get or set field '" + name + "'").val;
+      throw ArgErr.make("Invalid number of args to get or set field '" + name + "'");
     }
   }
 

@@ -39,7 +39,7 @@ public class Test
   public Method curTestMethod()
   {
     if (curTestMethod == null)
-      throw Err.make("No test currently executing for " + typeof()).val;
+      throw Err.make("No test currently executing for " + typeof());
     return curTestMethod;
   }
 
@@ -176,11 +176,11 @@ public class Test
     {
       f.call(this);
     }
-    catch (Err.Val e)
+    catch (Err e)
     {
       if (verbose) System.out.println("  verifyErr: " + e);
-      if (e.err().typeof() == errType) { verifyCount++; return; }
-      fail(e.err().typeof() + " thrown, expected " + errType);
+      if (e.typeof() == errType) { verifyCount++; return; }
+      fail(e.typeof() + " thrown, expected " + errType);
     }
     catch (Throwable e)
     {
@@ -201,9 +201,9 @@ public class Test
   private RuntimeException err(String msg)
   {
     if (msg == null)
-      return TestErr.make("Test failed").val;
+      return TestErr.make("Test failed");
     else
-      return TestErr.make("Test failed: " + msg).val;
+      return TestErr.make("Test failed: " + msg);
   }
 
   static String s(Object obj)

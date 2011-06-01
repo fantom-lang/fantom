@@ -79,7 +79,7 @@ class DateTimeStr
         while (true)
         {
           ++i;
-          if (i >= len) throw ArgErr.make("Invalid pattern: unterminated literal").val;
+          if (i >= len) throw ArgErr.make("Invalid pattern: unterminated literal");
           c = pattern.charAt(i);
           if (c == '\'') break;
           s.append((char)c);
@@ -260,7 +260,7 @@ class DateTimeStr
 
         default:
           if (FanInt.isAlpha(c))
-            throw ArgErr.make("Invalid pattern: unsupported char '" + (char)c + "'").val;
+            throw ArgErr.make("Invalid pattern: unsupported char '" + (char)c + "'");
 
           // check for symbol skip
           if (i+1 < len)
@@ -279,7 +279,7 @@ class DateTimeStr
 
       // if invalid number of characters
       if (invalidNum)
-        throw ArgErr.make("Invalid pattern: unsupported num of '" + (char)c + "' (x" + n + ")").val;
+        throw ArgErr.make("Invalid pattern: unsupported num of '" + (char)c + "' (x" + n + ")");
     }
 
     return s.toString();
@@ -360,7 +360,7 @@ class DateTimeStr
     }
     catch (Exception e)
     {
-      if (checked) throw ParseErr.make("DateTime", s, Err.make(e)).val;
+      if (checked) throw ParseErr.make("DateTime", s, Err.make(e));
       return null;
     }
   }
@@ -374,7 +374,7 @@ class DateTimeStr
     }
     catch (Exception e)
     {
-      if (checked) throw ParseErr.make("Date", s, Err.make(e)).val;
+      if (checked) throw ParseErr.make("Date", s, Err.make(e));
       return null;
     }
   }
@@ -388,7 +388,7 @@ class DateTimeStr
     }
     catch (Exception e)
     {
-      if (checked) throw ParseErr.make("Time", s, Err.make(e)).val;
+      if (checked) throw ParseErr.make("Time", s, Err.make(e));
       return null;
     }
   }

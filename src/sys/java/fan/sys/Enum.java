@@ -28,7 +28,7 @@ public abstract class Enum
 
   public static void make$(Enum self, long ordinal, String name)
   {
-    if (name == null) throw new NullErr().val;
+    if (name == null) throw NullErr.make();
     self.ordinal = ordinal;
     self.name    = name;
   }
@@ -48,7 +48,7 @@ public abstract class Enum
       }
     }
     if (!checked) return null;
-    throw ParseErr.make(t.qname(), name).val;
+    throw ParseErr.make(t.qname(), name);
   }
 
 //////////////////////////////////////////////////////////////////////////

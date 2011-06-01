@@ -60,7 +60,7 @@ public class LocalFile
   public static java.io.File uriToFile(Uri uri)
   {
     if (uri.scheme() != null && !uri.scheme().equals("file"))
-      throw ArgErr.make("Invalid Uri scheme for local file: " + uri).val;
+      throw ArgErr.make("Invalid Uri scheme for local file: " + uri);
     return new java.io.File(uriToPath(uri));
   }
 
@@ -125,12 +125,12 @@ public class LocalFile
       if (file.isDirectory())
       {
         if (!uri.isDir())
-          throw IOErr.make("Must use trailing slash for dir: " + uri).val;
+          throw IOErr.make("Must use trailing slash for dir: " + uri);
       }
       else
       {
         if (uri.isDir())
-          throw IOErr.make("Cannot use trailing slash for file: " + uri).val;
+          throw IOErr.make("Cannot use trailing slash for file: " + uri);
       }
     }
   }
@@ -203,7 +203,7 @@ public class LocalFile
     }
     catch (java.io.IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -230,14 +230,14 @@ public class LocalFile
     if (file.exists())
     {
       if (file.isDirectory())
-        throw IOErr.make("Already exists as dir: " + file).val;
+        throw IOErr.make("Already exists as dir: " + file);
     }
 
     java.io.File parent = file.getParentFile();
     if (parent != null && !parent.exists())
     {
       if (!parent.mkdirs())
-        throw IOErr.make("Cannot create dir: " + parent).val;
+        throw IOErr.make("Cannot create dir: " + parent);
     }
 
     try
@@ -247,7 +247,7 @@ public class LocalFile
     }
     catch (java.io.IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -256,12 +256,12 @@ public class LocalFile
     if (file.exists())
     {
       if (!file.isDirectory())
-        throw IOErr.make("Already exists as file: " + file).val;
+        throw IOErr.make("Already exists as file: " + file);
     }
     else
     {
       if (!file.mkdirs())
-        throw IOErr.make("Cannot create dir: " + file).val;
+        throw IOErr.make("Cannot create dir: " + file);
     }
   }
 
@@ -270,17 +270,17 @@ public class LocalFile
     if (isDir() != to.isDir())
     {
       if (isDir())
-        throw ArgErr.make("moveTo must be dir `" + to + "`").val;
+        throw ArgErr.make("moveTo must be dir `" + to + "`");
       else
-        throw ArgErr.make("moveTo must not be dir `" + to + "`").val;
+        throw ArgErr.make("moveTo must not be dir `" + to + "`");
     }
 
     if (!(to instanceof LocalFile))
-      throw IOErr.make("Cannot move LocalFile to " + to.typeof()).val;
+      throw IOErr.make("Cannot move LocalFile to " + to.typeof());
     LocalFile dest = (LocalFile)to;
 
     if (dest.exists())
-      throw IOErr.make("moveTo already exists: " + to).val;
+      throw IOErr.make("moveTo already exists: " + to);
 
     if (!file.isDirectory())
     {
@@ -290,7 +290,7 @@ public class LocalFile
     }
 
     if (!file.renameTo(dest.file))
-      throw IOErr.make("moveTo failed: " + to).val;
+      throw IOErr.make("moveTo failed: " + to);
 
     return to;
   }
@@ -307,7 +307,7 @@ public class LocalFile
     }
 
     if (!file.delete())
-      throw IOErr.make("Cannot delete: " + file).val;
+      throw IOErr.make("Cannot delete: " + file);
   }
 
   public File deleteOnExit()
@@ -328,7 +328,7 @@ public class LocalFile
     }
     catch (java.io.IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -341,7 +341,7 @@ public class LocalFile
       if (mode.equals("r"))       { rw = "r";  mm = MapMode.READ_ONLY; }
       else if (mode.equals("rw")) { rw = "rw"; mm = MapMode.READ_WRITE; }
       else if (mode.equals("p"))  { rw = "rw"; mm = MapMode.PRIVATE; }
-      else throw ArgErr.make("Invalid mode: " + mode).val;
+      else throw ArgErr.make("Invalid mode: " + mode);
 
       // if size is null, use file size
       if (size == null) size = size();
@@ -363,7 +363,7 @@ public class LocalFile
     }
     catch (java.io.IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -375,7 +375,7 @@ public class LocalFile
     }
     catch (java.io.IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -391,7 +391,7 @@ public class LocalFile
     }
     catch (java.io.IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -413,7 +413,7 @@ public class LocalFile
       }
       catch (java.io.IOException e)
       {
-        throw IOErr.make(e).val;
+        throw IOErr.make(e);
       }
     }
 

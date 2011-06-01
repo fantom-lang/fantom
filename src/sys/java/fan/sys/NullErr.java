@@ -35,22 +35,15 @@ public class NullErr
 // Java Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static Err.Val makeCoerce() { return make("Coerce to non-null", (Err)null).val; }
+  public static NullErr makeCoerce() { return make("Coerce to non-null", (Err)null); }
 
-  public NullErr(Err.Val val) { super(val); }
-  public NullErr() { super(new NullErr.Val()); }
-  public NullErr(Throwable actual) { super(new NullErr.Val(), actual); }
+  public NullErr() {}
+  public NullErr(Throwable actual) { super(actual); }
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
   public Type typeof() { return Sys.NullErrType; }
-
-//////////////////////////////////////////////////////////////////////////
-// Val - Java Exception Type
-//////////////////////////////////////////////////////////////////////////
-
-  public static class Val extends Err.Val {}
 
 }

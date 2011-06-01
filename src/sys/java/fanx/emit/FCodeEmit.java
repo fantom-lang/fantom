@@ -170,7 +170,7 @@ public class FCodeEmit
    * Process error table (if specified).  We handle catches of Err using
    * a catch any (0 class index).  We also need to add extra entries into
    * the exception table for special exceptions - for example NullErr get's
-   * mapped as fan.sys.NullErr$Val and java.lang.NullPointerException.
+   * mapped as fan.sys.NullErr and java.lang.NullPointerException.
    */
   private void errTable()
   {
@@ -202,7 +202,7 @@ public class FCodeEmit
       }
       else
       {
-        int jtype = emit.cls(typeRef.jname() + "$Val");
+        int jtype = emit.cls(typeRef.jname());
         java.u2(jtype);
         String javaEx = Err.fanToJava(typeRef.jname());
         if (javaEx != null)
@@ -963,7 +963,7 @@ public class FCodeEmit
       code.op(DUP);
       int nonnull = code.branch(IFNONNULL);
       if (parent.NullErrMakeCoerce == 0)
-        parent.NullErrMakeCoerce = emit.method("fan/sys/NullErr.makeCoerce()Lfan/sys/Err$Val;");
+        parent.NullErrMakeCoerce = emit.method("fan/sys/NullErr.makeCoerce()Lfan/sys/NullErr;");
       code.op2(INVOKESTATIC, parent.NullErrMakeCoerce);
       code.op(ATHROW);
       code.mark(nonnull);
@@ -1067,8 +1067,6 @@ public class FCodeEmit
 
   private void doThrow()
   {
-    if (parent.ErrVal == 0) parent.ErrVal = emit.field("fan/sys/Err.val:Lfan/sys/Err$Val;");
-    code.op2(GETFIELD, parent.ErrVal);
     code.op(ATHROW);
   }
 

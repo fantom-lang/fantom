@@ -46,7 +46,7 @@ public class FwtEnvPeer
     // get SWT image
     Fwt fwt = Fwt.get();
     Image s = fwt.image(f);
-    if (s == null) throw Err.make("Image not valid or not loaded yet").val;
+    if (s == null) throw Err.make("Image not valid or not loaded yet");
 
     // if image already matches requested resize, return it
     Rectangle sbounds = s.getBounds();

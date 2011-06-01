@@ -47,7 +47,7 @@ public final class FPod
     for (int i=0; i<types.length; ++i)
       if (typeRef(types[i].self).typeName.equals(name))
         return types[i];
-    throw UnknownTypeErr.make(name).val;
+    throw UnknownTypeErr.make(name);
   }
 
 //////////////////////////////////////////////////////////////////////////

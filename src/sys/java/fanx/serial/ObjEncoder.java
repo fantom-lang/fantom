@@ -81,7 +81,7 @@ public class ObjEncoder
       if (skipErrors)
         w("null /* Not serializable: ").w(type.qname()).w(" */");
       else
-        throw IOErr.make("Not serializable: " + type).val;
+        throw IOErr.make("Not serializable: " + type);
     }
   }
 
@@ -155,7 +155,7 @@ public class ObjEncoder
   {
     // lookup each method
     Method m = type.method("each", false);
-    if (m == null) throw IOErr.make("Missing " + type.qname() + ".each").val;
+    if (m == null) throw IOErr.make("Missing " + type.qname() + ".each");
 
     // call each(it)
     EachIterator it = new EachIterator(first);

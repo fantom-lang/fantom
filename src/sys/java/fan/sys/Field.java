@@ -93,9 +93,9 @@ public class Field
     catch (Exception e)
     {
       if (reflect == null)
-        throw Err.make("Field not mapped to java.lang.reflect correctly " + qname()).val;
+        throw Err.make("Field not mapped to java.lang.reflect correctly " + qname());
 
-      throw Err.make(e).val;
+      throw Err.make(e);
     }
   }
 
@@ -112,20 +112,20 @@ public class Field
     if ((flags & FConst.Const) != 0)
     {
       if (checkConst)
-        throw ReadonlyErr.make("Cannot set const field " + qname()).val;
+        throw ReadonlyErr.make("Cannot set const field " + qname());
       else if (value != null && !isImmutable(value))
-        throw ReadonlyErr.make("Cannot set const field " + qname() + " with mutable value").val;
+        throw ReadonlyErr.make("Cannot set const field " + qname() + " with mutable value");
     }
 
     // check static
     if ((flags & FConst.Static) != 0 && !parent.isJava())
-      throw ReadonlyErr.make("Cannot set static field " + qname()).val;
+      throw ReadonlyErr.make("Cannot set static field " + qname());
 
     // check generic type (the Java runtime will check non-generics)
     if (type.isGenericInstance() && value != null)
     {
       if (!typeof(value).is(type.toNonNullable()))
-        throw ArgErr.make("Wrong type for field " + qname() + ": " + type + " != " + typeof(value)).val;
+        throw ArgErr.make("Wrong type for field " + qname() + ": " + type + " != " + typeof(value));
     }
 
     if (setter != null)
@@ -143,14 +143,14 @@ public class Field
     }
     catch (IllegalArgumentException e)
     {
-      throw ArgErr.make(e).val;
+      throw ArgErr.make(e);
     }
     catch (Exception e)
     {
       if (reflect == null)
-        throw Err.make("Field not mapped to java.lang.reflect correctly").val;
+        throw Err.make("Field not mapped to java.lang.reflect correctly");
 
-      throw Err.make(e).val;
+      throw Err.make(e);
     }
   }
 

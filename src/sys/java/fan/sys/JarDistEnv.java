@@ -58,7 +58,7 @@ public class JarDistEnv
   {
     System.out.println("WARN: JarDistEnv.findFile not implemented: " + uri);
     if (!checked) return null;
-    throw UnresolvedErr.make("File not found in Env: " + uri).val;
+    throw UnresolvedErr.make("File not found in Env: " + uri);
   }
 
   public List findAllFiles(Uri uri)

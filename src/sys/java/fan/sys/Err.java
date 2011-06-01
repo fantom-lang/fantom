@@ -14,7 +14,7 @@ import java.util.*;
  * Err
  */
 public class Err
-  extends FanObj
+  extends RuntimeException
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ public class Err
     // with the mapping used below for FCodeEmit.errTable()
     // and tested in TryTest
     if (ex == null) return null;
-    if (ex instanceof Val)                       return ((Val)ex).err;
+    if (ex instanceof Err) return (Err)ex;
     if (ex instanceof NullPointerException)      return new NullErr(ex);
     if (ex instanceof ClassCastException)        return new CastErr(ex);
     if (ex instanceof IndexOutOfBoundsException) return new IndexErr(ex);
@@ -40,7 +40,7 @@ public class Err
     if (ex instanceof IOException)               return new IOErr(ex);
     if (ex instanceof InterruptedException)      return new InterruptedErr(ex);
     if (ex instanceof UnsupportedOperationException)  return new UnsupportedErr(ex);
-    return new Err(new Err.Val(), ex);
+    return new Err(ex);
   }
 
   /**
@@ -75,7 +75,7 @@ public class Err
   public static Err make(String msg) { return make(msg, (Err)null); }
   public static Err make(String msg, Err cause)
   {
-    Err err = new Err(new Err.Val());
+    Err err = new Err();
     make$(err, msg, cause);
     return err;
   }
@@ -84,7 +84,7 @@ public class Err
   public static void make$(Err self, String msg) { make$(self, msg, null); }
   public static void make$(Err self, String msg, Err cause)
   {
-    if (msg == null) throw NullErr.make("msg is null").val;
+    if (msg == null) throw NullErr.make("msg is null");
     self.msg = msg;
     self.cause = cause;
   }
@@ -94,25 +94,20 @@ public class Err
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * All subclasses must call this constructor with their
-   * typed Val exception which the real Java exception we use.
-   */
-  public Err(Val val)
-  {
-    this.val = val;
-    val.err = this;
-  }
-
-  /**
    * This constructor is used by special subclasses which provide
    * a transparent mapping between Java and Fantom exception types.
    */
-  public Err(Val val, Throwable actual)
+  public Err(Throwable actual)
   {
-    this.val = val;
-    val.err = this;
     this.actual = actual;
     this.msg = actual.toString();
+  }
+
+  /**
+   * No argument constructor.
+   */
+  public Err()
+  {
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -148,7 +143,7 @@ public class Err
   public Err trace(OutStream out, Map opt, int indent, boolean useActual)
   {
     // map exception to stack trace
-    Throwable ex = actual != null && useActual ? actual : val;
+    Throwable ex = actual != null && useActual ? actual : this;
     StackTraceElement[] elems = ex.getStackTrace();
 
     // extract options
@@ -276,17 +271,17 @@ public class Err
   public Throwable toJava()
   {
     if (actual != null) return actual;
-    return val;
+    return this;
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Rebasing
 //////////////////////////////////////////////////////////////////////////
 
-  public Val rebase()
+  public Err rebase()
   {
     actual = new RebaseException();
-    return val;
+    return this;
   }
 
   public static class RebaseException extends RuntimeException
@@ -294,21 +289,9 @@ public class Err
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Val
-//////////////////////////////////////////////////////////////////////////
-
-  public static class Val extends RuntimeException
-  {
-    public String toString() { return err.toString(); }
-    public Err err() { return err; }
-    Err err;
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  public final Val val;
   String msg = "";
   Err cause;
   Throwable actual;

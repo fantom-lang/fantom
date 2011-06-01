@@ -64,7 +64,7 @@ public class Process
   {
     checkRun();
     if (v != null && (!v.exists() || !v.isDir()))
-      throw ArgErr.make("Invalid working directory: " + v).val;
+      throw ArgErr.make("Invalid working directory: " + v);
     this.dir = v;
   }
 
@@ -150,26 +150,26 @@ public class Process
     catch (Throwable e)
     {
       this.proc = null;
-      throw Err.make(e).val;
+      throw Err.make(e);
     }
   }
 
   public final long join()
   {
-    if (proc == null) throw Err.make("Process not running").val;
+    if (proc == null) throw Err.make("Process not running");
     try
     {
       return proc.waitFor();
     }
     catch (Throwable e)
     {
-      throw Err.make(e).val;
+      throw Err.make(e);
     }
   }
 
   private void checkRun()
   {
-    if (proc != null) throw Err.make("Process already run").val;
+    if (proc != null) throw Err.make("Process already run");
   }
 
 //////////////////////////////////////////////////////////////////////////

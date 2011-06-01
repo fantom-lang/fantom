@@ -59,7 +59,7 @@ public class SysOutStream
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -73,7 +73,7 @@ public class SysOutStream
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -93,7 +93,7 @@ public class SysOutStream
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 

@@ -32,12 +32,12 @@ public class FanScheme
   {
     // don't support anything but relative fan: URIs right now
     if (uri.auth() == null)
-      throw ArgErr.make("Invalid format for fan: URI - " + uri).val;
+      throw ArgErr.make("Invalid format for fan: URI - " + uri);
 
     // lookup pod
     String podName = (String)uri.auth();
     Pod pod = Pod.find(podName, false);
-    if (pod == null) throw UnresolvedErr.make(uri.toStr()).val;
+    if (pod == null) throw UnresolvedErr.make(uri.toStr());
     if (uri.pathStr().length() == 0) return pod;
 
     // dive into file of pod

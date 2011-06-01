@@ -48,7 +48,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -60,7 +60,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -72,7 +72,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -84,7 +84,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -100,7 +100,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -115,7 +115,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -128,7 +128,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -140,7 +140,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -185,7 +185,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -197,7 +197,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -248,7 +248,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -265,7 +265,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -310,7 +310,7 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -337,11 +337,11 @@ public class FileBuf
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
     catch (NoSuchAlgorithmException e)
     {
-      throw ArgErr.make("Unknown digest algorthm: " + algorithm).val;
+      throw ArgErr.make("Unknown digest algorthm: " + algorithm);
     }
   }
 
@@ -372,7 +372,7 @@ public class FileBuf
       }
       catch (IOException e)
       {
-        throw IOErr.make(e).val;
+        throw IOErr.make(e);
       }
     }
 
@@ -385,7 +385,7 @@ public class FileBuf
       }
       catch (IOException e)
       {
-        throw IOErr.make(e).val;
+        throw IOErr.make(e);
       }
     }
 
@@ -423,7 +423,7 @@ public class FileBuf
       }
       catch (IOException e)
       {
-        throw IOErr.make(e).val;
+        throw IOErr.make(e);
       }
     }
 
@@ -437,7 +437,7 @@ public class FileBuf
       }
       catch (IOException e)
       {
-        throw IOErr.make(e).val;
+        throw IOErr.make(e);
       }
     }
 
@@ -454,7 +454,7 @@ public class FileBuf
       }
       catch (IOException e)
       {
-        throw IOErr.make(e).val;
+        throw IOErr.make(e);
       }
     }
 
@@ -469,7 +469,7 @@ public class FileBuf
       }
       catch (IOException e)
       {
-        throw IOErr.make(e).val;
+        throw IOErr.make(e);
       }
     }
   }

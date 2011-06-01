@@ -31,7 +31,7 @@ public abstract class Func
   public Object toImmutable()
   {
     if (isImmutable()) return this;
-    throw NotImmutableErr.make("Func").val;
+    throw NotImmutableErr.make("Func");
   }
 
   public abstract Method method();
@@ -77,7 +77,7 @@ public abstract class Func
     public String  toStr() { return type.signature(); }
     public boolean isImmutable() { return false; }
     public Method method() { return null; }
-    public Err.Val tooFewArgs(int given) { return Err.make("Too few arguments: " + given + " < " + type.params.length).val; }
+    public Err tooFewArgs(int given) { return Err.make("Too few arguments: " + given + " < " + type.params.length); }
 
     public Type returns() { return type.ret; }
     public long arity() { return type.params.length; }
@@ -156,7 +156,7 @@ public abstract class Func
     {
       if (it == inCtor) return;
       String msg = it == null ? "null" : FanObj.typeof(it).qname();
-      throw ConstErr.make(msg).val;
+      throw ConstErr.make(msg);
     }
 
     Object inCtor;
@@ -297,7 +297,7 @@ public abstract class Func
     }
     catch (ClassCastException e)
     {
-      throw ArgErr.make("Not a Func type: " + t).val;
+      throw ArgErr.make("Not a Func type: " + t);
     }
   }
 
@@ -327,7 +327,7 @@ public abstract class Func
   public final Func bind(List args)
   {
     if (args.sz() == 0) return this;
-    if (args.sz() > params().sz()) throw ArgErr.make("args.size > params.size").val;
+    if (args.sz() > params().sz()) throw ArgErr.make("args.size > params.size");
 
     Type[] newParams = new Type[params().sz()-args.sz()];
     for (int i=0; i<newParams.length; ++i)

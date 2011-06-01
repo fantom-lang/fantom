@@ -140,7 +140,7 @@ public class WindowPeer
   public Object open(Window self)
   {
     // if already open
-    if (control != null) throw Err.make("Window already open").val;
+    if (control != null) throw Err.make("Window already open");
 
     // initialize with clean slate
     result = null;

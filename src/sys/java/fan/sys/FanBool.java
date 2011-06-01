@@ -28,7 +28,7 @@ public final class FanBool
     if (s.equals("true")) return Boolean.TRUE;
     if (s.equals("false")) return Boolean.FALSE;
     if (!checked) return null;
-    throw ParseErr.make("Bool", s).val;
+    throw ParseErr.make("Bool", s);
   }
 
 //////////////////////////////////////////////////////////////////////////

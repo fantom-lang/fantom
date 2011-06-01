@@ -33,22 +33,22 @@ public class StrInStream
 
   public int r()
   {
-    throw UnsupportedErr.make("Binary read on Str.in").val;
+    throw UnsupportedErr.make("Binary read on Str.in");
   }
 
   public Long read()
   {
-    throw UnsupportedErr.make("Binary read on Str.in").val;
+    throw UnsupportedErr.make("Binary read on Str.in");
   }
 
   public Long readBuf(Buf buf, long n)
   {
-    throw UnsupportedErr.make("Binary read on Str.in").val;
+    throw UnsupportedErr.make("Binary read on Str.in");
   }
 
   public InStream unread(long c)
   {
-    throw UnsupportedErr.make("Binary read on Str.in").val;
+    throw UnsupportedErr.make("Binary read on Str.in");
   }
 
   public int rChar()

@@ -47,7 +47,7 @@ public final class Range
     }
     catch (Exception e) {}
     if (!checked) return null;
-    throw ParseErr.make("Range", s).val;
+    throw ParseErr.make("Range", s);
   }
 
   private Range(long start, long end, boolean exclusive)
@@ -234,7 +234,7 @@ public final class Range
   {
     int x = (int)start;
     if (x < 0) x = size + x;
-    if (x > size) throw IndexErr.make(this).val;
+    if (x > size) throw IndexErr.make(this);
     return x;
   }
 
@@ -242,7 +242,7 @@ public final class Range
   {
     long x = start;
     if (x < 0) x = size + x;
-    if (x > size) throw IndexErr.make(this).val;
+    if (x > size) throw IndexErr.make(this);
     return x;
   }
 
@@ -251,7 +251,7 @@ public final class Range
     int x = (int)end;
     if (x < 0) x = size + x;
     if (exclusive) x--;
-    if (x >= size) throw IndexErr.make(this).val;
+    if (x >= size) throw IndexErr.make(this);
     return x;
   }
 
@@ -260,7 +260,7 @@ public final class Range
     long x = end;
     if (x < 0) x = size + x;
     if (exclusive) x--;
-    if (x >= size) throw IndexErr.make(this).val;
+    if (x >= size) throw IndexErr.make(this);
     return x;
   }
 

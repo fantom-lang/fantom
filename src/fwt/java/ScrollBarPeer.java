@@ -38,7 +38,7 @@ public class ScrollBarPeer
   void attachToScrollable(Scrollable scrollable, ScrollBar control)
   {
     if (!self().isNative)
-      throw ArgErr.make("ScrollBar isn't native and can't be attached").val;
+      throw ArgErr.make("ScrollBar isn't native and can't be attached");
     scroll = new ScrollBarWrapper(scrollable);
     attachTo(control);
   }
@@ -47,7 +47,7 @@ public class ScrollBarPeer
   public Widget create(Widget parent)
   {
     if (self().isNative)
-      throw ArgErr.make("ScrollBar is native and can't be created").val;
+      throw ArgErr.make("ScrollBar is native and can't be created");
     scroll = new SliderWrapper();
     int style = self().orientation == Orientation.horizontal ? SWT.HORIZONTAL : SWT.VERTICAL;
     return new Slider((Composite)parent, style);

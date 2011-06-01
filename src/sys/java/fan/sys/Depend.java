@@ -30,7 +30,7 @@ public final class Depend
     catch (Throwable e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Depend", str).val;
+      throw ParseErr.make("Depend", str);
     }
   }
 

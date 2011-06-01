@@ -60,7 +60,7 @@ public abstract class GenericType
   {
     Slot slot = (Slot)reflect().slotsByName.get(name);
     if (slot != null) return slot;
-    if (checked) throw UnknownSlotErr.make(this.qname() + "." + name).val;
+    if (checked) throw UnknownSlotErr.make(this.qname() + "." + name);
     return null;
   }
 

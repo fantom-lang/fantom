@@ -142,7 +142,7 @@ public class FanStr
     }
     catch (IndexOutOfBoundsException e)
     {
-      throw IndexErr.make(index).val;
+      throw IndexErr.make(index);
     }
   }
 
@@ -167,7 +167,7 @@ public class FanStr
 
     int s = r.start(size);
     int e = r.end(size);
-    if (e+1 < s) throw IndexErr.make(r).val;
+    if (e+1 < s) throw IndexErr.make(r);
 
     return self.substring(s, e+1);
   }

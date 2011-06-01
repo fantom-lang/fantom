@@ -71,7 +71,7 @@ public final class Duration
     catch (Exception e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Duration",  s).val;
+      throw ParseErr.make("Duration",  s);
     }
   }
 
@@ -412,7 +412,7 @@ public final class Duration
     catch(Exception e)
     {
       if (!checked) return null;
-      throw ParseErr.make("ISO 8601 Duration",  s).val;
+      throw ParseErr.make("ISO 8601 Duration",  s);
     }
   }
 

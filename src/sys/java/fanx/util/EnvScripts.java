@@ -53,7 +53,7 @@ public class EnvScripts
       if (t.isPublic()) break;
     }
     if (t == null)
-      throw Err.make("Script file defines no public classes: " +  file).val;
+      throw Err.make("Script file defines no public classes: " +  file);
 
     // put it into the cache
     putCache(file, t);

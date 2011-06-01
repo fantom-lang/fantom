@@ -160,8 +160,8 @@ public class Fant
     {
       System.out.println();
       System.out.println("ERROR: Cannot make test " + type);
-      if (e instanceof Err.Val)
-        ((Err.Val)e).err().trace();
+      if (e instanceof Err)
+        ((Err)e).trace();
       else
         e.printStackTrace();
       return -1;
@@ -178,8 +178,8 @@ public class Fant
     {
       System.out.println();
       System.out.println("TEST FAILED");
-      if (e instanceof Err.Val)
-        ((Err.Val)e).err().trace();
+      if (e instanceof Err)
+        ((Err)e).trace();
       else
         e.printStackTrace();
       return -1;
@@ -192,8 +192,8 @@ public class Fant
       }
       catch (Throwable e)
       {
-        if (e instanceof Err.Val)
-          ((Err.Val)e).err().trace();
+        if (e instanceof Err)
+          ((Err)e).trace();
         else
           e.printStackTrace();
       }

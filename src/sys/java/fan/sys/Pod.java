@@ -90,7 +90,7 @@ public class Pod
         return (Pod)ref.get();
       }
     }
-    catch (UnknownPodErr.Val e)
+    catch (UnknownPodErr e)
     {
       if (!checked) return null;
       throw e;
@@ -99,7 +99,7 @@ public class Pod
     {
       e.printStackTrace();
       if (!checked) return null;
-      throw UnknownPodErr.make(name, Err.make(e)).val;
+      throw UnknownPodErr.make(name, Err.make(e));
     }
   }
 
@@ -113,7 +113,7 @@ public class Pod
     }
     catch (Exception e)
     {
-      throw Err.make(e).val;
+      throw Err.make(e);
     }
 
     String name = fpod.podName;
@@ -122,7 +122,7 @@ public class Pod
       // check for duplicate pod name
       SoftReference ref = (SoftReference)podsByName.get(name);
       if (ref != null && ref.get() != null)
-        throw Err.make("Duplicate pod name: " + name).val;
+        throw Err.make("Duplicate pod name: " + name);
 
       // create Pod and add to master table
       Pod pod = new Pod(fpod);
@@ -156,12 +156,12 @@ public class Pod
       if (f != null) file = ((LocalFile)f).file;
 
       // if null or doesn't exist then its a no go
-      if (file == null || !file.exists()) throw UnknownPodErr.make(name).val;
+      if (file == null || !file.exists()) throw UnknownPodErr.make(name);
 
       // verify case since Windoze is case insensitive
       String actualName = file.getCanonicalFile().getName();
       actualName = actualName.substring(0, actualName.length()-4);
-      if (!actualName.equals(name)) throw UnknownPodErr.make("Mismatch case: " + name + " != " + actualName).val;
+      if (!actualName.equals(name)) throw UnknownPodErr.make("Mismatch case: " + name + " != " + actualName);
 
       store = FStore.makeZip(file);
     }
@@ -278,7 +278,7 @@ public class Pod
   {
     Type type = (Type)typesByName.get(name);
     if (type != null) return type;
-    if (checked) throw UnknownTypeErr.make(this.name + "::" + name).val;
+    if (checked) throw UnknownTypeErr.make(this.name + "::" + name);
     return null;
   }
 
@@ -316,14 +316,14 @@ public class Pod
   {
     loadFiles();
     if (!uri.isPathAbs())
-      throw ArgErr.make("Pod.files Uri must be path abs: " + uri).val;
+      throw ArgErr.make("Pod.files Uri must be path abs: " + uri);
     if (uri.auth() != null && !uri.toStr().startsWith(uri().toStr()))
-      throw ArgErr.make("Invalid base uri `" + uri + "` for `" + uri() + "`").val;
+      throw ArgErr.make("Invalid base uri `" + uri + "` for `" + uri() + "`");
     else
       uri = this.uri().plus(uri);
     fan.sys.File f = (fan.sys.File)filesMap.get(uri);
     if (f != null || !checked) return f;
-    throw UnresolvedErr.make(uri.toStr()).val;
+    throw UnresolvedErr.make(uri.toStr());
   }
 
   private void loadFiles()
@@ -331,7 +331,7 @@ public class Pod
     synchronized (filesMap)
     {
       if (filesList != null) return;
-      if (fpod.store == null) throw Err.make("Not backed by pod file: " + name).val;
+      if (fpod.store == null) throw Err.make("Not backed by pod file: " + name);
       List list;
       try
       {
@@ -340,7 +340,7 @@ public class Pod
       catch (java.io.IOException e)
       {
         e.printStackTrace();
-        throw Err.make(e).val;
+        throw Err.make(e);
       }
       for (int i=0; i<filesList.sz(); ++i)
       {
@@ -406,7 +406,7 @@ public class Pod
       // add to my data structures
       types[i] = type;
       if (typesByName.put(type.name, type) != null)
-        throw Err.make("Invalid pod: " + name + " type already defined: " + type.name).val;
+        throw Err.make("Invalid pod: " + name + " type already defined: " + type.name);
     }
 
     // get TypeType to use for mixin List (we need to handle case
@@ -503,7 +503,7 @@ public class Pod
     }
 
     // lost cause
-    throw UnknownTypeErr.make(podName + "::" + typeName).val;
+    throw UnknownTypeErr.make(podName + "::" + typeName);
   }
 
 //////////////////////////////////////////////////////////////////////////

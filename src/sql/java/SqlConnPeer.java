@@ -176,7 +176,7 @@ public class SqlConnPeer
 
   static RuntimeException err(SQLException e)
   {
-    return SqlErr.make(e.getMessage(), Err.make(e)).val;
+    return SqlErr.make(e.getMessage(), Err.make(e));
   }
 
 //////////////////////////////////////////////////////////////////////////

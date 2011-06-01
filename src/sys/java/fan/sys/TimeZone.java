@@ -68,7 +68,7 @@ public final class TimeZone
     catch (Exception e)
     {
       e.printStackTrace();
-      throw IOErr.make("Cannot load from timezone database: " + name).val;
+      throw IOErr.make("Cannot load from timezone database: " + name);
     }
 
     // if not found, check aliases
@@ -99,7 +99,7 @@ public final class TimeZone
     }
 
     // not found
-    if (checked) throw ParseErr.make("TimeZone not found: " + name).val;
+    if (checked) throw ParseErr.make("TimeZone not found: " + name);
     return null;
   }
 

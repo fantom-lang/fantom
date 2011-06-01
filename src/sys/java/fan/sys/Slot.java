@@ -40,7 +40,7 @@ public abstract class Slot
     }
     catch (Exception e)
     {
-      throw Err.make("Invalid slot qname \"" + qname + "\", use <pod>::<type>.<slot>").val;
+      throw Err.make("Invalid slot qname \"" + qname + "\", use <pod>::<type>.<slot>");
     }
     Type type = Type.find(typeName, checked);
     if (type == null) return null;

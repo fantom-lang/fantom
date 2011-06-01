@@ -32,7 +32,7 @@ public final class FanDecimal
     catch (NumberFormatException e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Decimal",  s).val;
+      throw ParseErr.make("Decimal",  s);
     }
   }
 

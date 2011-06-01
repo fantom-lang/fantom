@@ -47,7 +47,7 @@ public final class List
 
   public List(Type of, Object[] values)
   {
-    if (of == null) { Thread.dumpStack(); throw new NullErr().val; }
+    if (of == null) { Thread.dumpStack(); throw NullErr.make(); }
     this.of = of;
     this.values = values;
     this.size = values.length;
@@ -55,7 +55,7 @@ public final class List
 
   public List(Type of, Object[] values, int size)
   {
-    if (of == null) { Thread.dumpStack(); throw new NullErr().val; }
+    if (of == null) { Thread.dumpStack(); throw NullErr.make(); }
     this.of = of;
     this.values = values;
     this.size = size;
@@ -63,21 +63,21 @@ public final class List
 
   public List(Type of, int capacity)
   {
-    if (of == null) { Thread.dumpStack(); throw new NullErr().val; }
+    if (of == null) { Thread.dumpStack(); throw NullErr.make(); }
     this.of = of;
     this.values = capacity == 0 ? empty : newArray(capacity);
   }
 
   public List(Type of)
   {
-    if (of == null) { Thread.dumpStack(); throw new NullErr().val; }
+    if (of == null) { Thread.dumpStack(); throw NullErr.make(); }
     this.of = of;
     this.values = empty;
   }
 
   public List(Type of, Collection collection)
   {
-    if (of == null) { Thread.dumpStack(); throw new NullErr().val; }
+    if (of == null) { Thread.dumpStack(); throw NullErr.make(); }
     this.of = of;
     this.size = collection.size();
     this.values = collection.toArray(newArray(size));
@@ -124,7 +124,7 @@ public final class List
     int newSize = (int)s;
     if (newSize > size)
     {
-      if (!of.isNullable()) throw ArgErr.make("Cannot grow non-nullable list of " + of).val;
+      if (!of.isNullable()) throw ArgErr.make("Cannot grow non-nullable list of " + of);
       Object[] temp = newArray(newSize);
       System.arraycopy(values, 0, temp, 0, size);
       values = temp;
@@ -148,7 +148,7 @@ public final class List
   {
     modify();
     int newCapacity = (int)c;
-    if (newCapacity < size) throw ArgErr.make("capacity < size").val;
+    if (newCapacity < size) throw ArgErr.make("capacity < size");
     Object[] temp = newArray(newCapacity);
     System.arraycopy(values, 0, temp, 0, size);
     values = temp;
@@ -160,12 +160,12 @@ public final class List
     {
       int i = (int)index;
       if (i < 0) i = size + i;
-      if (i >= size) throw IndexErr.make(index).val;
+      if (i >= size) throw IndexErr.make(index);
       return values[i];
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
-      throw IndexErr.make(index).val;
+      throw IndexErr.make(index);
     }
   }
 
@@ -184,7 +184,7 @@ public final class List
       int s = r.start(size);
       int e = r.end(size);
       int n = e - s + 1;
-      if (n < 0) throw IndexErr.make(r).val;
+      if (n < 0) throw IndexErr.make(r);
 
       List acc = new List(of, n);
       acc.size = n;
@@ -193,7 +193,7 @@ public final class List
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
-      throw IndexErr.make(r).val;
+      throw IndexErr.make(r);
     }
   }
 
@@ -224,7 +224,7 @@ public final class List
     if (size == 0) return null;
     int start = (int)off;
     if (start < 0) start = size + start;
-    if (start >= size) throw IndexErr.make(off).val;
+    if (start >= size) throw IndexErr.make(off);
 
     try
     {
@@ -247,7 +247,7 @@ public final class List
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
-      throw IndexErr.make(off).val;
+      throw IndexErr.make(off);
     }
   }
 
@@ -257,7 +257,7 @@ public final class List
     if (size == 0) return null;
     int start = (int)off;
     if (start < 0) start = size + start;
-    if (start >= size) throw IndexErr.make(off).val;
+    if (start >= size) throw IndexErr.make(off);
 
     try
     {
@@ -268,7 +268,7 @@ public final class List
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
-      throw IndexErr.make(off).val;
+      throw IndexErr.make(off);
     }
   }
 
@@ -327,17 +327,17 @@ public final class List
     {
       int i = (int)index;
       if (i < 0) i = size + i;
-      if (i >= size) throw IndexErr.make(index).val;
+      if (i >= size) throw IndexErr.make(index);
       values[i] = value;
       return this;
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
-      throw IndexErr.make(index).val;
+      throw IndexErr.make(index);
     }
     catch (ArrayStoreException e)
     {
-      throw CastErr.make("Setting '" + FanObj.typeof(value) + "' into '" + of + "[]'").val;
+      throw CastErr.make("Setting '" + FanObj.typeof(value) + "' into '" + of + "[]'");
     }
   }
 
@@ -358,7 +358,7 @@ public final class List
     // modify in insert(int, Obj)
     int i = (int)index;
     if (i < 0) i = size + i;
-    if (i > size) throw IndexErr.make(index).val;
+    if (i > size) throw IndexErr.make(index);
     return insert(i, value);
   }
 
@@ -377,7 +377,7 @@ public final class List
     }
     catch (ArrayStoreException e)
     {
-      throw CastErr.make("Adding '" + FanObj.typeof(value) + "' into '" + of + "[]'").val;
+      throw CastErr.make("Adding '" + FanObj.typeof(value) + "' into '" + of + "[]'");
     }
   }
 
@@ -386,7 +386,7 @@ public final class List
     // modify in insertAll(int, List)
     int i = (int)index;
     if (i < 0) i = size + i;
-    if (i > size || i < 0) throw IndexErr.make(index).val;
+    if (i > size || i < 0) throw IndexErr.make(index);
     return insertAll(i, list);
   }
 
@@ -424,7 +424,7 @@ public final class List
     modify();
     int i = (int)index;
     if (i < 0) i = size + i;
-    if (i >= size) throw IndexErr.make(index).val;
+    if (i >= size) throw IndexErr.make(index);
     Object old = values[i];
     if (i < size-1)
       System.arraycopy(values, i+1, values, i, size-i-1);
@@ -438,7 +438,7 @@ public final class List
     int s = r.start(size);
     int e = r.end(size);
     int n = e - s + 1;
-    if (n < 0) throw IndexErr.make(r).val;
+    if (n < 0) throw IndexErr.make(r);
 
     int shift = size-s-n;
     if (shift > 0) System.arraycopy(values, s+n, values, s, shift);
@@ -450,7 +450,7 @@ public final class List
   private void grow(int desiredSize)
   {
     int desired = (int)desiredSize;
-    if (desired < 1) throw Err.make("desired " + desired + " < 1").val;
+    if (desired < 1) throw Err.make("desired " + desired + " < 1");
     int newSize = Math.max(desired, size*2);
     if (newSize < 10) newSize = 10;
     Object[] temp = newArray(newSize);
@@ -552,7 +552,7 @@ public final class List
     int s = r.start(size);
     int e = r.end(size);
     int n = e - s + 1;
-    if (n < 0) throw IndexErr.make(r).val;
+    if (n < 0) throw IndexErr.make(r);
 
     if (f.arity() == 1)
     {
@@ -1072,12 +1072,12 @@ public final class List
   {
     try
     {
-      if (i >= size) throw IndexErr.make(""+i).val;
+      if (i >= size) throw IndexErr.make(""+i);
       return values[i];
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
-      throw IndexErr.make(""+i).val;
+      throw IndexErr.make(""+i);
     }
   }
 
@@ -1133,7 +1133,7 @@ public final class List
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
-      throw IndexErr.make().val;
+      throw IndexErr.make();
     }
   }
 
@@ -1146,7 +1146,7 @@ public final class List
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
-      throw IndexErr.make().val;
+      throw IndexErr.make();
     }
   }
 
@@ -1159,7 +1159,7 @@ public final class List
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
-      throw IndexErr.make().val;
+      throw IndexErr.make();
     }
   }
 
@@ -1276,7 +1276,7 @@ public final class List
         else if (item instanceof Map)
           item = ((Map)item).toImmutable();
         else if (!isImmutable(item))
-          throw NotImmutableErr.make("Item [" + i + "] not immutable " + typeof(item)).val;
+          throw NotImmutableErr.make("Item [" + i + "] not immutable " + typeof(item));
       }
       temp[i] = item;
     }
@@ -1292,7 +1292,7 @@ public final class List
   {
     // if readonly then throw readonly exception
     if (readonly)
-      throw ReadonlyErr.make("List is readonly").val;
+      throw ReadonlyErr.make("List is readonly");
 
     // if we have a cached readonlyList, then detach
     // it so it remains immutable

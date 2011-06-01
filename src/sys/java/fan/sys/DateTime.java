@@ -94,13 +94,13 @@ public final class DateTime
            int hour, int min, int sec,
            long ns,  int knownOffset, TimeZone tz)
   {
-    if (year < 1901 || year > 2099) throw ArgErr.make("year " + year).val;
-    if (month < 0 || month > 11)    throw ArgErr.make("month " + month).val;
-    if (day < 1 || day > numDaysInMonth(year, month)) throw ArgErr.make("day " + day).val;
-    if (hour < 0 || hour > 23)      throw ArgErr.make("hour " + hour).val;
-    if (min < 0 || min > 59)        throw ArgErr.make("min " + min).val;
-    if (sec < 0 || sec > 59)        throw ArgErr.make("sec " + sec).val;
-    if (ns < 0 || ns > 999999999L)  throw ArgErr.make("ns " + ns).val;
+    if (year < 1901 || year > 2099) throw ArgErr.make("year " + year);
+    if (month < 0 || month > 11)    throw ArgErr.make("month " + month);
+    if (day < 1 || day > numDaysInMonth(year, month)) throw ArgErr.make("day " + day);
+    if (hour < 0 || hour > 23)      throw ArgErr.make("hour " + hour);
+    if (min < 0 || min > 59)        throw ArgErr.make("min " + min);
+    if (sec < 0 || sec > 59)        throw ArgErr.make("sec " + sec);
+    if (ns < 0 || ns > 999999999L)  throw ArgErr.make("ns " + ns);
 
     // compute ticks for UTC
     int dayOfYear = dayOfYear(year, month, day);
@@ -171,7 +171,7 @@ public final class DateTime
   {
     // check boundary conditions 1901 to 2099
     if (ticks < minTicks || ticks >= maxTicks)
-      throw ArgErr.make("Ticks out of range 1901 to 2099").val;
+      throw ArgErr.make("Ticks out of range 1901 to 2099");
 
     // save ticks, time zone
     this.ticks = ticks;
@@ -332,7 +332,7 @@ public final class DateTime
 
       return new DateTime(year, month, day, hour, min, sec, ns, offset, tz);
     }
-    catch (ParseErr.Val e)
+    catch (ParseErr e)
     {
       if (!checked) return null;
       throw e;
@@ -340,7 +340,7 @@ public final class DateTime
     catch (Exception e)
     {
       if (!checked) return null;
-      throw ParseErr.make("DateTime", s).val;
+      throw ParseErr.make("DateTime", s);
     }
   }
 
@@ -539,7 +539,7 @@ public final class DateTime
   {
     // argument checking
     checkYear(year);
-    if (pos == 0) throw ArgErr.make("Pos is zero").val;
+    if (pos == 0) throw ArgErr.make("Pos is zero");
 
     // compute the weekday of the 1st of this month (0-6)
     int firstWeekday = firstWeekday(year, mon);
@@ -552,7 +552,7 @@ public final class DateTime
       int day = weekday - firstWeekday + 1;
       if (day <= 0) day = 8 - firstWeekday + weekday;
       day += (pos-1)*7;
-      if (day > numDays) throw ArgErr.make("Pos out of range " + pos).val;
+      if (day > numDays) throw ArgErr.make("Pos out of range " + pos);
       return day;
     }
     else
@@ -562,7 +562,7 @@ public final class DateTime
       if (off < 0) off = 7 + off;
       off -= (pos+1)*7;
       int day = numDays - off;
-      if (day < 1) throw ArgErr.make("Pos out of range " + pos).val;
+      if (day < 1) throw ArgErr.make("Pos out of range " + pos);
       return day;
     }
   }
@@ -619,7 +619,7 @@ public final class DateTime
   static void checkYear(int year)
   {
     if (year < 1901 || year > 2099)
-      throw ArgErr.make("Year out of range " + year).val;
+      throw ArgErr.make("Year out of range " + year);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -650,7 +650,7 @@ public final class DateTime
     }
 
     if (!checked) return null;
-    throw ParseErr.make("Invalid HTTP DateTime: '" + s + "'").val;
+    throw ParseErr.make("Invalid HTTP DateTime: '" + s + "'");
   }
 
   private static final SimpleDateFormat httpFormats[] =

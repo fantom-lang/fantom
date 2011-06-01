@@ -43,7 +43,7 @@ public final class Uuid
     catch (Throwable e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Uuid", str).val;
+      throw ParseErr.make("Uuid", str);
     }
   }
 
@@ -55,7 +55,7 @@ public final class Uuid
     }
     catch (Throwable e)
     {
-      throw Err.make(e).val;
+      throw Err.make(e);
     }
   }
 

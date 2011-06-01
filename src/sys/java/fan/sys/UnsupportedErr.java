@@ -35,23 +35,13 @@ public class UnsupportedErr
 // Java Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public UnsupportedErr(Err.Val val) { super(val); }
-  public UnsupportedErr() { super(new UnsupportedErr.Val()); }
-  public UnsupportedErr(Throwable actual) { super(new UnsupportedErr.Val(), actual); }
+  public UnsupportedErr() {}
+  public UnsupportedErr(Throwable actual) { super(actual); }
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Type typeof()
-  {
-    return Sys.UnsupportedErrType;
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Val - Java Exception Type
-//////////////////////////////////////////////////////////////////////////
-
-  public static class Val extends Err.Val {}
+  public Type typeof() { return Sys.UnsupportedErrType; }
 
 }

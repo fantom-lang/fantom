@@ -49,7 +49,7 @@ public class RichTextPeer
   {
     RichText self = (RichText)this.self;
     this.model = self.model();
-    if (model == null) throw Err.make("RichText.model is null").val;
+    if (model == null) throw Err.make("RichText.model is null");
 
     int style = self.multiLine ? SWT.MULTI: SWT.SINGLE;
     if (!self.editable) style |= SWT.READ_ONLY;

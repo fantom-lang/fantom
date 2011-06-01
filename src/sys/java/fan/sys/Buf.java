@@ -122,7 +122,7 @@ public abstract class Buf
   {
     long size = size();
     if (pos < 0) pos = size + pos;
-    if (pos < 0 || pos > size) throw IndexErr.make(pos).val;
+    if (pos < 0 || pos > size) throw IndexErr.make(pos);
     pos(pos);
     return this;
   }
@@ -138,7 +138,7 @@ public abstract class Buf
   {
     long size = size();
     if (pos < 0) pos = size + pos;
-    if (pos < 0 || pos >= size) throw IndexErr.make(pos).val;
+    if (pos < 0 || pos >= size) throw IndexErr.make(pos);
     return getByte(pos);
   }
 
@@ -148,7 +148,7 @@ public abstract class Buf
     long s = range.start(size);
     long e = range.end(size);
     int n = (int)(e - s + 1);
-    if (n < 0) throw IndexErr.make(range).val;
+    if (n < 0) throw IndexErr.make(range);
 
     byte[] slice = new byte[n];
     getBytes(s, slice, 0, n);
@@ -177,7 +177,7 @@ public abstract class Buf
   {
     long size = size();
     if (pos < 0) pos = size + pos;
-    if (pos < 0 || pos >= size) throw IndexErr.make(pos).val;
+    if (pos < 0 || pos >= size) throw IndexErr.make(pos);
     setByte(pos, (int)b);
     return this;
   }
@@ -355,7 +355,7 @@ public abstract class Buf
 
   public String toHex()
   {
-    throw UnsupportedErr.make(typeof()+".toHex").val;
+    throw UnsupportedErr.make(typeof()+".toHex");
   }
 
   public static Buf fromHex(String str)
@@ -378,7 +378,7 @@ public abstract class Buf
         int c1 = s.charAt(i);
         n1 = c1 < 128 ? hexInv[c1] : -1;
       }
-      if (n1 < 0) throw IOErr.make("Invalid hex str").val;
+      if (n1 < 0) throw IOErr.make("Invalid hex str");
 
       buf[size++] = (byte)((n0 << 4) | n1);
     }
@@ -401,7 +401,7 @@ public abstract class Buf
 
   public String toBase64()
   {
-    throw UnsupportedErr.make(typeof()+".toBase64").val;
+    throw UnsupportedErr.make(typeof()+".toBase64");
   }
 
   public static Buf fromBase64(String s)
@@ -450,12 +450,12 @@ public abstract class Buf
 
   public Buf toDigest(String algorithm)
   {
-    throw UnsupportedErr.make(typeof()+".toDigest").val;
+    throw UnsupportedErr.make(typeof()+".toDigest");
   }
 
   public Buf hmac(String algorithm, Buf key)
   {
-    throw UnsupportedErr.make(typeof()+".hmac").val;
+    throw UnsupportedErr.make(typeof()+".hmac");
   }
 
 //////////////////////////////////////////////////////////////////////////

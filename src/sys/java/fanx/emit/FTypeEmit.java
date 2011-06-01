@@ -41,16 +41,6 @@ public abstract class FTypeEmit
 
       return new FTypeEmit[] { iemit, bemit };
     }
-    else if (parent.is(Sys.ErrType))
-    {
-      FErrEmit emitErr = new FErrEmit(parent, ftype);
-      emitErr.emit();
-
-      FErrValEmit emitErrVal = new FErrValEmit(parent, ftype);
-      emitErrVal.emit();
-
-      return new FTypeEmit[] { emitErr, emitErrVal };
-    }
     else
     {
       FClassEmit emit = new FClassEmit(parent, ftype);
@@ -426,7 +416,6 @@ public abstract class FTypeEmit
   int FloatBox, FloatUnbox;
   int IsViaType;
   int ErrMake;
-  int ErrVal;
   int TypeToNullable;
   int NullErrMakeCoerce;
 

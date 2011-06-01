@@ -101,7 +101,7 @@ public class JavaType
   {
     Slot slot = (Slot)initSlots().slotsByName.get(name);
     if (slot != null) return slot;
-    if (checked) throw UnknownSlotErr.make(qname() + "." + name).val;
+    if (checked) throw UnknownSlotErr.make(qname() + "." + name);
     return null;
   }
 
@@ -132,7 +132,7 @@ public class JavaType
     }
     catch (Exception e)
     {
-      throw UnknownTypeErr.make("Cannot map Fantom type to Java class: " + qname(), e).val;
+      throw UnknownTypeErr.make("Cannot map Fantom type to Java class: " + qname(), e);
     }
   }
 
@@ -313,11 +313,11 @@ public class JavaType
   {
     // right now we don't support constructors with arguments
     if (args != null && args.sz() > 0)
-      throw UnsupportedErr.make("Cannot call make with args on Java type: " + this).val;
+      throw UnsupportedErr.make("Cannot call make with args on Java type: " + this);
 
     // route to Class.newInstance
     try { return toClass().newInstance(); }
-    catch (Exception e) { throw Err.make(e).val; }
+    catch (Exception e) { throw Err.make(e); }
   }
 
   /**
@@ -398,12 +398,12 @@ public class JavaType
       if (best == null) { best = x; continue; }
       if (isMoreSpecific(best, x)) continue;
       if (isMoreSpecific(x, best)) { best = x; continue; }
-      throw ArgErr.make("Ambiguous method call '" + m.name + "'").val;
+      throw ArgErr.make("Ambiguous method call '" + m.name + "'");
     }
     if (best != null) return best;
 
     // no matches
-    throw ArgErr.make("No matching method '" + m.name + "' for arguments").val;
+    throw ArgErr.make("No matching method '" + m.name + "' for arguments");
   }
 
   /**

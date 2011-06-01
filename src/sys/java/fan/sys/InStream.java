@@ -99,7 +99,7 @@ public class InStream
     catch (NullPointerException e)
     {
       if (in == null)
-        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream").val;
+        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream");
       else
         throw e;
     }
@@ -114,7 +114,7 @@ public class InStream
     catch (NullPointerException e)
     {
       if (in == null)
-        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream").val;
+        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream");
       else
         throw e;
     }
@@ -130,7 +130,7 @@ public class InStream
     catch (NullPointerException e)
     {
       if (in == null)
-        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream").val;
+        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream");
       else
         throw e;
     }
@@ -171,7 +171,7 @@ public class InStream
     while (got < total)
     {
       Long r = readBuf(buf, total-got);
-      if (r == null || r.longValue() == 0) throw IOErr.make("Unexpected end of stream").val;
+      if (r == null || r.longValue() == 0) throw IOErr.make("Unexpected end of stream");
       got += r.longValue();
     }
 
@@ -199,14 +199,14 @@ public class InStream
   public long readU1()
   {
     int c = r();
-    if (c < 0) throw IOErr.make("Unexpected end of stream").val;
+    if (c < 0) throw IOErr.make("Unexpected end of stream");
     return c;
   }
 
   public long readS1()
   {
     int c = r();
-    if (c < 0) throw IOErr.make("Unexpected end of stream").val;
+    if (c < 0) throw IOErr.make("Unexpected end of stream");
     return (byte)c;
   }
 
@@ -214,7 +214,7 @@ public class InStream
   {
     int c1 = r();
     int c2 = r();
-    if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream").val;
+    if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream");
     if (bigEndian)
       return c1 << 8 | c2;
     else
@@ -225,7 +225,7 @@ public class InStream
   {
     int c1 = r();
     int c2 = r();
-    if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream").val;
+    if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream");
     if (bigEndian)
       return (short)(c1 << 8 | c2);
     else
@@ -238,7 +238,7 @@ public class InStream
     long c2 = r();
     long c3 = r();
     long c4 = r();
-    if ((c1 | c2 | c3 | c4) < 0) throw IOErr.make("Unexpected end of stream").val;
+    if ((c1 | c2 | c3 | c4) < 0) throw IOErr.make("Unexpected end of stream");
     if (bigEndian)
       return (c1 << 24) + (c2 << 16) + (c3 << 8) + c4;
     else
@@ -251,7 +251,7 @@ public class InStream
     int c2 = r();
     int c3 = r();
     int c4 = r();
-    if ((c1 | c2 | c3 | c4) < 0) throw IOErr.make("Unexpected end of stream").val;
+    if ((c1 | c2 | c3 | c4) < 0) throw IOErr.make("Unexpected end of stream");
     if (bigEndian)
       return ((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
     else
@@ -268,7 +268,7 @@ public class InStream
     long c6 = r();
     long c7 = r();
     long c8 = r();
-    if ((c1 | c2 | c3 | c4 | c5 | c6 | c7 | c8) < 0) throw IOErr.make("Unexpected end of stream").val;
+    if ((c1 | c2 | c3 | c4 | c5 | c6 | c7 | c8) < 0) throw IOErr.make("Unexpected end of stream");
     if (bigEndian)
       return ((c1 << 56) + (c2 << 48) + (c3 << 40) + (c4 << 32) +
               (c5 << 24) + (c6 << 16) + (c7 << 8) + c8);
@@ -294,7 +294,7 @@ public class InStream
   public boolean readBool()
   {
     int n = r();
-    if (n < 0) throw IOErr.make("Unexpected end of stream").val;
+    if (n < 0) throw IOErr.make("Unexpected end of stream");
     return n != 0;
   }
 
@@ -303,7 +303,7 @@ public class InStream
     // read two-byte length
     int len1 = r();
     int len2 = r();
-    if ((len1 | len2) < 0) throw IOErr.make("Unexpected end of stream").val;
+    if ((len1 | len2) < 0) throw IOErr.make("Unexpected end of stream");
     int utflen = len1 << 8 | len2;
 
     char[] buf = new char[utflen]; // char buffer we read into
@@ -314,7 +314,7 @@ public class InStream
     while (bnum < utflen)
     {
       c = r(); bnum++;
-      if (c < 0) throw IOErr.make("Unexpected end of stream").val;
+      if (c < 0) throw IOErr.make("Unexpected end of stream");
       switch (c >> 4) {
         case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
           /* 0xxxxxxx*/
@@ -322,24 +322,24 @@ public class InStream
           break;
         case 12: case 13:
           /* 110x xxxx   10xx xxxx*/
-          if (bnum >= utflen) throw IOErr.make("UTF encoding error").val;
+          if (bnum >= utflen) throw IOErr.make("UTF encoding error");
           c2 = r(); bnum++;
-          if (c2 < 0) throw IOErr.make("Unexpected end of stream").val;
-          if ((c2 & 0xC0) != 0x80) throw IOErr.make("UTF encoding error").val;
+          if (c2 < 0) throw IOErr.make("Unexpected end of stream");
+          if ((c2 & 0xC0) != 0x80) throw IOErr.make("UTF encoding error");
           buf[cnum++]=(char)(((c & 0x1F) << 6) | (c2 & 0x3F));
           break;
         case 14:
           /* 1110 xxxx  10xx xxxx  10xx xxxx */
-          if (bnum+1 >= utflen) throw IOErr.make("UTF encoding error").val;
+          if (bnum+1 >= utflen) throw IOErr.make("UTF encoding error");
           c2 = r(); bnum++;
           c3 = r(); bnum++;
-          if ((c2|c3) < 0) throw IOErr.make("Unexpected end of stream").val;
-          if (((c2 & 0xC0) != 0x80) || ((c3 & 0xC0) != 0x80))  throw IOErr.make("UTF encoding error").val;
+          if ((c2|c3) < 0) throw IOErr.make("Unexpected end of stream");
+          if (((c2 & 0xC0) != 0x80) || ((c3 & 0xC0) != 0x80))  throw IOErr.make("UTF encoding error");
           buf[cnum++]=(char)(((c & 0x0F) << 12) | ((c2 & 0x3F) << 6) | ((c3 & 0x3F) << 0));
           break;
         default:
           /* 10xx xxxx,  1111 xxxx */
-          throw IOErr.make("UTF encoding error").val;
+          throw IOErr.make("UTF encoding error");
       }
     }
 
@@ -384,13 +384,13 @@ public class InStream
 
   public String readChars(long n)
   {
-    if (n < 0) throw ArgErr.make("readChars n < 0: " + n).val;
+    if (n < 0) throw ArgErr.make("readChars n < 0: " + n);
     if (n == 0) return "";
     StringBuilder buf = new StringBuilder(256);
     for (int i=(int)n; i>0; --i)
     {
       int ch = rChar();
-      if (ch < 0) throw IOErr.make("Unexpected end of stream").val;
+      if (ch < 0) throw IOErr.make("Unexpected end of stream");
       buf.append((char)ch);
     }
     return buf.toString();
@@ -405,7 +405,7 @@ public class InStream
     {
       long maxLong = max.longValue();
       if (maxLong == 0L) return "";
-      if (maxLong < 0L) throw ArgErr.make("Invalid max: " + max).val;
+      if (maxLong < 0L) throw ArgErr.make("Invalid max: " + max);
       if (maxLong < Integer.MAX_VALUE)
         maxChars = (int)maxLong;
     }
@@ -597,7 +597,7 @@ public class InStream
             val = null;
           }
           else if (n.length() > 0)
-            throw IOErr.make("Invalid name/value pair [Line " + lineNum + "]").val;
+            throw IOErr.make("Invalid name/value pair [Line " + lineNum + "]");
           lineNum++;
           continue;
         }
@@ -663,10 +663,10 @@ public class InStream
             int n2 = hex(rChar());
             int n1 = hex(rChar());
             int n0 = hex(rChar());
-            if (n3 < 0 || n2 < 0 || n1 < 0 || n0 < 0) throw IOErr.make("Invalid hex value for \\uxxxx [Line " +  lineNum + "]").val;
+            if (n3 < 0 || n2 < 0 || n1 < 0 || n0 < 0) throw IOErr.make("Invalid hex value for \\uxxxx [Line " +  lineNum + "]");
             c = ((n3 << 12) | (n2 << 8) | (n1 << 4) | n0);
           }
-          else throw IOErr.make("Invalid escape sequence [Line " + lineNum + "]").val;
+          else throw IOErr.make("Invalid escape sequence [Line " + lineNum + "]");
         }
 
         // normal character
@@ -680,7 +680,7 @@ public class InStream
       if (val != null)
         addProp(props, n, FanStr.makeTrim(val), listVals);
       else if (n.length() > 0)
-        throw IOErr.make("Invalid name/value pair [Line " + lineNum + "]").val;
+        throw IOErr.make("Invalid name/value pair [Line " + lineNum + "]");
 
       return props;
     }
@@ -739,7 +739,7 @@ public class InStream
         {
           if (toPipeVal - total < bufSize) bufSize = toPipeVal - total;
           Long n = readBuf(buf.clear(), bufSize);
-          if (n == null) throw IOErr.make("Unexpected end of stream").val;
+          if (n == null) throw IOErr.make("Unexpected end of stream");
           out.writeBuf(buf.flip(), buf.remaining());
           total += n;
         }

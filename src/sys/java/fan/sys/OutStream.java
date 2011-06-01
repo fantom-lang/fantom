@@ -69,7 +69,7 @@ public class OutStream
     catch (NullPointerException e)
     {
       if (out == null)
-        throw UnsupportedErr.make(typeof().qname() + " wraps null OutStream").val;
+        throw UnsupportedErr.make(typeof().qname() + " wraps null OutStream");
       else
         throw e;
     }
@@ -86,7 +86,7 @@ public class OutStream
     catch (NullPointerException e)
     {
       if (out == null)
-        throw UnsupportedErr.make(typeof().qname() + " wraps null OutStream").val;
+        throw UnsupportedErr.make(typeof().qname() + " wraps null OutStream");
       else
         throw e;
     }
@@ -188,7 +188,7 @@ public class OutStream
     }
 
     // sanity check
-    if (utflen > 65536) throw IOErr.make("String too big").val;
+    if (utflen > 65536) throw IOErr.make("String too big");
 
     // write length as 2 byte value
     w((utflen >>> 8) & 0xFF);

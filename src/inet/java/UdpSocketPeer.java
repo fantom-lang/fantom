@@ -27,7 +27,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -103,7 +103,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -118,7 +118,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -137,12 +137,12 @@ public class UdpSocketPeer
     if (isConnected())
     {
       if (addr != null || port != null)
-        throw ArgErr.make("Address and port must be null to send while connected").val;
+        throw ArgErr.make("Address and port must be null to send while connected");
     }
     else
     {
       if (addr == null || port == null)
-        throw ArgErr.make("Address or port is null").val;
+        throw ArgErr.make("Address or port is null");
       datagram.setAddress(addr.peer.java);
       datagram.setPort(port.intValue());
     }
@@ -154,7 +154,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
 
     // lastly drain buff
@@ -181,7 +181,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
 
     // update packet with received message
@@ -232,7 +232,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -244,7 +244,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -256,7 +256,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -268,7 +268,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -280,7 +280,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -292,7 +292,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -304,7 +304,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -316,7 +316,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -330,7 +330,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -345,7 +345,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -357,7 +357,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -369,7 +369,7 @@ public class UdpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 

@@ -479,7 +479,7 @@ public class Method
       }
       catch (Exception e)
       {
-        throw Err.make("Method not mapped to java.lang.reflect correctly " + qname()).val;
+        throw Err.make("Method not mapped to java.lang.reflect correctly " + qname());
       }
     }
 
@@ -503,11 +503,11 @@ public class Method
       // do checking
       if (isStatic || isCallOn)
       {
-        if (args < min) throw ArgErr.make("Too few arguments: " + args + " < " + min+".."+max).val;
+        if (args < min) throw ArgErr.make("Too few arguments: " + args + " < " + min+".."+max);
       }
       else
       {
-        if (args < min+1) throw ArgErr.make("Too few arguments: " + args + " < instance+" + min+".."+max).val;
+        if (args < min+1) throw ArgErr.make("Too few arguments: " + args + " < instance+" + min+".."+max);
         args--;
       }
 
@@ -553,19 +553,19 @@ public class Method
     }
     catch (IllegalArgumentException e)
     {
-      throw ArgErr.make(e).val;
+      throw ArgErr.make(e);
     }
     catch (InvocationTargetException e)
     {
-      if (e.getCause() instanceof Err.Val)
-        throw (Err.Val)e.getCause();
+      if (e.getCause() instanceof Err)
+        throw (Err)e.getCause();
       else
-        throw Err.make(e.getCause()).val;
+        throw Err.make(e.getCause());
     }
     catch (Exception e)
     {
       if (reflect == null)
-        throw Err.make("Method not mapped to java.lang.reflect correctly " + qname()).val;
+        throw Err.make("Method not mapped to java.lang.reflect correctly " + qname());
 
       /*
       System.out.println("ERROR:      " + signature());
@@ -579,7 +579,7 @@ public class Method
       */
 
 
-      throw Err.make("Cannot call '" + this + "': " + e).val;
+      throw Err.make("Cannot call '" + this + "': " + e);
     }
   }
 

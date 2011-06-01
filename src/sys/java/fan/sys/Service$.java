@@ -39,7 +39,7 @@ public class Service$
     {
       Node node = (Node)byType.get(qname);
       if (node != null) return node.service;
-      if (checked) throw UnknownServiceErr.make(qname).val;
+      if (checked) throw UnknownServiceErr.make(qname);
       return null;
     }
   }

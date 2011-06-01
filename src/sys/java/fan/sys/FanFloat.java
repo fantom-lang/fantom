@@ -36,7 +36,7 @@ public final class FanFloat
     catch (NumberFormatException e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Float", s).val;
+      throw ParseErr.make("Float", s);
     }
   }
 

@@ -155,7 +155,7 @@ public class SqlMetaPeer
       }
 
       if (colIndex == 0)
-        throw SqlErr.make("Table not found: " + tableName).val;
+        throw SqlErr.make("Table not found: " + tableName);
 
       Row row = Row.make();
       row.peer.cols = new Cols(cols);
@@ -184,7 +184,7 @@ public class SqlMetaPeer
 
   static RuntimeException err(SQLException e)
   {
-    return SqlErr.make(e.getMessage(), Err.make(e)).val;
+    return SqlErr.make(e.getMessage(), Err.make(e));
   }
 
 //////////////////////////////////////////////////////////////////////////

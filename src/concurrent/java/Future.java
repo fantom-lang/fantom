@@ -87,13 +87,13 @@ public final class Future
             }
 
             // if we still aren't done this is a timeout
-            if ((state & DONE) == 0) throw TimeoutErr.make("Future.get timed out").val;
+            if ((state & DONE) == 0) throw TimeoutErr.make("Future.get timed out");
           }
         }
 
         // if canceled throw CancelErr
         if (state == DONE_CANCEL)
-          throw CancelledErr.make("message canceled").val;
+          throw CancelledErr.make("message canceled");
 
         // if error was raised, raise it to caller
         if (state == DONE_ERR)
@@ -105,7 +105,7 @@ public final class Future
     }
     catch (InterruptedException e)
     {
-      throw InterruptedErr.make(e).val;
+      throw InterruptedErr.make(e);
     }
 
     // ensure immutable or safe copy

@@ -37,10 +37,10 @@ public final class Time
 
   Time(int hour, int min, int sec, int ns)
   {
-    if (hour < 0 || hour > 23)     throw ArgErr.make("hour " + hour).val;
-    if (min < 0 || min > 59)       throw ArgErr.make("min " + min).val;
-    if (sec < 0 || sec > 59)       throw ArgErr.make("sec " + sec).val;
-    if (ns < 0 || ns > 999999999)  throw ArgErr.make("ns " + ns).val;
+    if (hour < 0 || hour > 23)     throw ArgErr.make("hour " + hour);
+    if (min < 0 || min > 59)       throw ArgErr.make("min " + min);
+    if (sec < 0 || sec > 59)       throw ArgErr.make("sec " + sec);
+    if (ns < 0 || ns > 999999999)  throw ArgErr.make("ns " + ns);
 
     this.hour = (byte)hour;
     this.min  = (byte)min;
@@ -88,7 +88,7 @@ public final class Time
     catch (Exception e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Time", s).val;
+      throw ParseErr.make("Time", s);
     }
   }
 
@@ -209,7 +209,7 @@ public final class Time
     if (ticks == 0) return defVal;
 
     if (ticks < 0 || ticks > Duration.nsPerDay )
-      throw ArgErr.make("Duration out of range: " + d).val;
+      throw ArgErr.make("Duration out of range: " + d);
 
     int hour = (int)(ticks / Duration.nsPerHr);  ticks %= Duration.nsPerHr;
     int min  = (int)(ticks / Duration.nsPerMin); ticks %= Duration.nsPerMin;
