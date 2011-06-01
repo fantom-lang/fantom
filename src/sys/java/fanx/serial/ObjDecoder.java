@@ -190,13 +190,13 @@ public class ObjDecoder
     {
       return m.invoke(null, new Object[] { str });
     }
-    catch (ParseErr.Val e)
+    catch (ParseErr e)
     {
-      throw ParseErr.make(e.err().msg() + " [Line " + line + "]").val;
+      throw ParseErr.make(e.msg() + " [Line " + line + "]");
     }
     catch (Throwable e)
     {
-      throw ParseErr.make(e.toString() + " [Line " + line + "]", e).val;
+      throw ParseErr.make(e.toString() + " [Line " + line + "]", e);
     }
   }
 
@@ -662,7 +662,7 @@ public class ObjDecoder
   static RuntimeException err(String msg, int line) { return err(msg, line, null); }
   static RuntimeException err(String msg, int line, Throwable e)
   {
-    return IOErr.make(msg + " [Line " + line + "]", e).val;
+    return IOErr.make(msg + " [Line " + line + "]", e);
   }
 
   /**

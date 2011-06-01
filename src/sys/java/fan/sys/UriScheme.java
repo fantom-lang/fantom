@@ -39,7 +39,7 @@ public abstract class UriScheme
       if (t == null)
       {
         String qname = (String)Env.cur().index("sys.uriScheme." + scheme).first();
-        if (qname == null) throw UnresolvedErr.make().val;
+        if (qname == null) throw UnresolvedErr.make();
         t = Type.find(qname);
       }
 
@@ -57,18 +57,18 @@ public abstract class UriScheme
 
       return s;
     }
-    catch (UnresolvedErr.Val e) {}
+    catch (UnresolvedErr e) {}
     catch (Throwable e) { e.printStackTrace(); }
 
     if (!checked) return null;
-    throw UnresolvedErr.make("Unknown scheme: " + scheme).val;
+    throw UnresolvedErr.make("Unknown scheme: " + scheme);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static UriScheme make() { throw Err.make("UriScheme is abstract").val; }
+  public static UriScheme make() { throw Err.make("UriScheme is abstract"); }
 
   public static void make$(UriScheme self) {}
 

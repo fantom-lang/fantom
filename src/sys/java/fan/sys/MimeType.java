@@ -53,7 +53,7 @@ public final class MimeType
       // parse
       return parse(s);
     }
-    catch (ParseErr.Val e)
+    catch (ParseErr e)
     {
       if (!checked) return null;
       throw e;
@@ -61,7 +61,7 @@ public final class MimeType
     catch (Exception e)
     {
       if (!checked) return null;
-      throw ParseErr.make("MimeType",  s).val;
+      throw ParseErr.make("MimeType",  s);
     }
   }
 
@@ -94,7 +94,7 @@ public final class MimeType
     {
       return doParseParams(s, 0);
     }
-    catch (ParseErr.Val e)
+    catch (ParseErr e)
     {
       if (!checked) return null;
       throw e;
@@ -102,7 +102,7 @@ public final class MimeType
     catch (Exception e)
     {
       if (!checked) return null;
-      throw ParseErr.make("MimeType params",  s).val;
+      throw ParseErr.make("MimeType params",  s);
     }
   }
 
@@ -121,7 +121,7 @@ public final class MimeType
       int c = s.charAt(i);
 
       if (c == '(' && !inQuotes)
-        throw ParseErr.make("MimeType", s, "comments not supported").val;
+        throw ParseErr.make("MimeType", s, "comments not supported");
 
       if (c == '=' && !inQuotes)
       {

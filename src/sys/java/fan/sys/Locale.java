@@ -42,7 +42,7 @@ public class Locale
     {
     }
     if (!checked) return null;
-    throw ParseErr.make("Locale", s).val;
+    throw ParseErr.make("Locale", s);
   }
 
   private Locale(String str, String lang, String country)
@@ -65,7 +65,7 @@ public class Locale
 
   public static void setCur(Locale locale)
   {
-    if (locale == null) throw NullErr.make().val;
+    if (locale == null) throw NullErr.make();
     cur.set(locale);
   }
 

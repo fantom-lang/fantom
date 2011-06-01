@@ -37,7 +37,7 @@ public final class FanInt
     catch (NumberFormatException e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Int", s).val;
+      throw ParseErr.make("Int", s);
     }
   }
 
@@ -66,7 +66,7 @@ public final class FanInt
     long start = r.start();
     long end   = r.end();
     if (r.inclusive()) ++end;
-    if (end <= start) throw ArgErr.make("Range end < start: " + r).val;
+    if (end <= start) throw ArgErr.make("Range end < start: " + r);
     return start + (v % (end-start));
   }
   static final java.util.Random random = new java.security.SecureRandom();
@@ -169,7 +169,7 @@ public final class FanInt
 
   public static long pow(long self, long pow)
   {
-    if (pow < 0) throw ArgErr.make("pow < 0").val;
+    if (pow < 0) throw ArgErr.make("pow < 0");
     long result = 1;
     for (; pow>0; pow>>=1)
     {
@@ -439,7 +439,7 @@ public final class FanInt
 
   public static String toChar(long self)
   {
-    if (self < 0 || self > 0xFFFF) throw Err.make("Invalid unicode char: " + self).val;
+    if (self < 0 || self > 0xFFFF) throw Err.make("Invalid unicode char: " + self);
     if (self < FanStr.ascii.length) return FanStr.ascii[(int)self];
     return String.valueOf((char)self);
   }
@@ -469,7 +469,7 @@ public final class FanInt
   {
     if (base == 10) return String.valueOf(self);
     if (base == 16) return "0x" + Long.toHexString(self);
-    throw ArgErr.make("Invalid base " + base).val;
+    throw ArgErr.make("Invalid base " + base);
   }
 
   public static Duration toDuration(long self) { return Duration.make(self); }

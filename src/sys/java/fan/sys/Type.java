@@ -173,7 +173,7 @@ public abstract class Type
     if (this == Sys.ListType)
     {
       Type v = (Type)params.get("V");
-      if (v == null) throw ArgErr.make("List.parameterize - V undefined").val;
+      if (v == null) throw ArgErr.make("List.parameterize - V undefined");
       return v.toListOf();
     }
 
@@ -181,15 +181,15 @@ public abstract class Type
     {
       Type v = (Type)params.get("V");
       Type k = (Type)params.get("K");
-      if (v == null) throw ArgErr.make("Map.parameterize - V undefined").val;
-      if (k == null) throw ArgErr.make("Map.parameterize - K undefined").val;
+      if (v == null) throw ArgErr.make("Map.parameterize - V undefined");
+      if (k == null) throw ArgErr.make("Map.parameterize - K undefined");
       return new MapType(k, v);
     }
 
     if (this == Sys.FuncType)
     {
       Type r = (Type)params.get("R");
-      if (r == null) throw ArgErr.make("Map.parameterize - R undefined").val;
+      if (r == null) throw ArgErr.make("Map.parameterize - R undefined");
       ArrayList p = new ArrayList();
       for (int i='A'; i<='H'; ++i)
       {
@@ -200,7 +200,7 @@ public abstract class Type
       return new FuncType((Type[])p.toArray(new Type[p.size()]), r);
     }
 
-    throw UnsupportedErr.make("not generic: " + this).val;
+    throw UnsupportedErr.make("not generic: " + this);
   }
 
   public final synchronized Type toListOf()
@@ -252,7 +252,7 @@ public abstract class Type
       if (defVal instanceof Method) return ((Method)defVal).func.callList(null);
     }
 
-    throw Err.make("Type missing 'make' or 'defVal' slots: " + this).val;
+    throw Err.make("Type missing 'make' or 'defVal' slots: " + this);
   }
 
 //////////////////////////////////////////////////////////////////////////

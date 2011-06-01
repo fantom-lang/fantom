@@ -13,20 +13,6 @@ class ErrTest : Test
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Type
-//////////////////////////////////////////////////////////////////////////
-
-  Void testType()
-  {
-    err := Err.make
-    verifySame(Type.of(err), Err#)
-    verifySame(Type.of(err).base, Obj#)
-    verifyEq(Type.of(err).qname, "sys::Err")
-    verify(err is Err)
-    verify(err is Obj)
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Trace
 //////////////////////////////////////////////////////////////////////////
 
@@ -56,9 +42,9 @@ class ErrTest : Test
 
     verifyEq(lines[0], err.toStr)
     verifyEq(lines[1], "  testSys::ErrTest.testTrace (ErrTest.fan:$line)")
-    verifyEq(lines[2], "  testSys::ErrTest.c (ErrTest.fan:35)")
-    verifyEq(lines[3], "  testSys::ErrTest.b (ErrTest.fan:34)")
-    verifyEq(lines[4], "  testSys::ErrTest.a (ErrTest.fan:33)")
+    verifyEq(lines[2], "  testSys::ErrTest.c (ErrTest.fan:21)")
+    verifyEq(lines[3], "  testSys::ErrTest.b (ErrTest.fan:20)")
+    verifyEq(lines[4], "  testSys::ErrTest.a (ErrTest.fan:19)")
 
     if (err.cause != null)
     {
@@ -99,6 +85,72 @@ class ErrTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Type
+//////////////////////////////////////////////////////////////////////////
+
+  Void testType()
+  {
+    err := Err()
+    verifySame(err.typeof, Err#)
+    verifySame(err.typeof.base, Obj#)
+    verifyEq(err.typeof.qname, "sys::Err")
+    verify(err is Err)
+    verify(err is Obj)
+
+    err = CastErr("foo")
+    verifySame(err.typeof, CastErr#)
+    verifySame(err.typeof.base, Err#)
+    verifySame(err.typeof.base.base, Obj#)
+    verifyEq(err.typeof.qname, "sys::CastErr")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Obj
+//////////////////////////////////////////////////////////////////////////
+
+  Void testObj()
+  {
+    a := CastErr("a")
+    b := CastErr("b")
+    c := TestIOErr("c")
+
+    // sys::CastErr
+    verifyEq(a.isImmutable, true)
+    verifyEq(a.toStr, "sys::CastErr: a")
+    verifyEq(a.typeof, CastErr#)
+    verifySame(a.toImmutable, a)
+
+    // sys::TestIOErr
+    verifyEq(c.isImmutable, true)
+    verifyEq(c.toStr, "testSys::TestIOErr: c")
+    verifyEq(c.typeof, TestIOErr#)
+    verifySame(c.toImmutable, c)
+
+    verifyEq(a, a)
+    verifyNotEq(a, b)
+    verifyNotEq(a.hash, c.hash)
+
+    verifyEq(a.compare(b), -1)
+    verifyEq(a.compare(a), 0)
+    verifyEq(b.compare(a), 1)
+    verifyEq(a < b, true)
+    verifyEq(a >= b, false)
+    verifyEq(a == b, false)
+
+    verifyEq(a->toStr, "sys::CastErr: a")
+    verifyEq(c->toStr, "testSys::TestIOErr: c")
+    verifyEq(a->msg, "a")
+    verifyEq(a->cause, null)
+    verifyEq(a->typeof, CastErr#)
+    verifySame(a->toImmutable, a)
+    verifyErr(UnknownSlotErr#) { a->fooBar }
+
+    withObj := null
+    a.with |x| { withObj = a }
+    verifySame(a, withObj)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Consturctors
 //////////////////////////////////////////////////////////////////////////
 
@@ -116,10 +168,10 @@ class ErrTest : Test
     verifyEq(err.cause, null)
     verifyEq(err.toStr, "sys::Err: foo")
 
-    err = Err.make("foo", cause)
+    err = IOErr("foo", cause)
     verifyEq(err.msg, "foo")
     verifySame(err.cause, cause)
-    verifyEq(err.toStr, "sys::Err: foo")
+    verifyEq(err.toStr, "sys::IOErr: foo")
   }
 
 //////////////////////////////////////////////////////////////////////////

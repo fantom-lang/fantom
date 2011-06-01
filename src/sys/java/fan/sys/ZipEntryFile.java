@@ -72,7 +72,7 @@ public class ZipEntryFile
 
   public void modified(DateTime time)
   {
-    throw IOErr.make("ZipEntryFile is readonly").val;
+    throw IOErr.make("ZipEntryFile is readonly");
   }
 
   public String osPath()
@@ -98,7 +98,7 @@ public class ZipEntryFile
   public File plus(Uri uri, boolean checkSlash)
   {
     // TODO
-    throw UnsupportedErr.make("ZipEntryFile.plus").val;
+    throw UnsupportedErr.make("ZipEntryFile.plus");
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -107,22 +107,22 @@ public class ZipEntryFile
 
   public File create()
   {
-    throw IOErr.make("ZipEntryFile is readonly").val;
+    throw IOErr.make("ZipEntryFile is readonly");
   }
 
   public File moveTo(File to)
   {
-    throw IOErr.make("ZipEntryFile is readonly").val;
+    throw IOErr.make("ZipEntryFile is readonly");
   }
 
   public void delete()
   {
-    throw IOErr.make("ZipEntryFile is readonly").val;
+    throw IOErr.make("ZipEntryFile is readonly");
   }
 
   public File deleteOnExit()
   {
-    throw IOErr.make("ZipEntryFile is readonly").val;
+    throw IOErr.make("ZipEntryFile is readonly");
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -131,12 +131,12 @@ public class ZipEntryFile
 
   public Buf open(String mode)
   {
-    throw UnsupportedErr.make("ZipEntryFile.open").val;
+    throw UnsupportedErr.make("ZipEntryFile.open");
   }
 
   public Buf mmap(String mode, long pos, Long size)
   {
-    throw UnsupportedErr.make("ZipEntryFile.mmap").val;
+    throw UnsupportedErr.make("ZipEntryFile.mmap");
   }
 
   public InStream in(Long bufSize)
@@ -163,13 +163,13 @@ public class ZipEntryFile
     }
     catch (java.io.IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
   public OutStream out(boolean append, Long bufSize)
   {
-    throw IOErr.make("ZipEntryFile is readonly").val;
+    throw IOErr.make("ZipEntryFile is readonly");
   }
 
 //////////////////////////////////////////////////////////////////////////

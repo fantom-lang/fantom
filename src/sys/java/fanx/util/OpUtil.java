@@ -186,7 +186,7 @@ public class OpUtil
     if (FanObj.isImmutable(obj)) return obj;
     if (obj instanceof List)   return ((List)obj).toImmutable();
     if (obj instanceof Map)    return ((Map)obj).toImmutable();
-    throw NotImmutableErr.make(FanObj.typeof(obj).toStr()).val;
+    throw NotImmutableErr.make(FanObj.typeof(obj).toStr());
   }
 
 }

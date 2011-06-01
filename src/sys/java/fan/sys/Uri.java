@@ -30,15 +30,15 @@ public final class Uri
     {
       return new Uri(new Decoder(s, false).decode());
     }
-    catch (ParseErr.Val e)
+    catch (ParseErr e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Uri",  s, e.err.msg()).val;
+      throw ParseErr.make("Uri", s, e.msg());
     }
     catch (Exception e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Uri",  s).val;
+      throw ParseErr.make("Uri",  s);
     }
   }
 
@@ -49,15 +49,15 @@ public final class Uri
     {
       return new Uri(new Decoder(s, true).decode());
     }
-    catch (ParseErr.Val e)
+    catch (ParseErr e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Uri",  s, e.err.msg()).val;
+      throw ParseErr.make("Uri",  s, e.msg());
     }
     catch (Exception e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Uri",  s).val;
+      throw ParseErr.make("Uri",  s);
     }
   }
 
@@ -71,13 +71,13 @@ public final class Uri
     {
       return new Decoder(s, true).decodeQuery();
     }
-    catch (ArgErr.Val e)
+    catch (ArgErr e)
     {
-      throw ArgErr.make("Invalid Uri query: `" + s + "`: " + e.err.msg()).val;
+      throw ArgErr.make("Invalid Uri query: `" + s + "`: " + e.msg());
     }
     catch (Exception e)
     {
-      throw ArgErr.make("Invalid Uri query: `" + s + "`").val;
+      throw ArgErr.make("Invalid Uri query: `" + s + "`");
     }
   }
 
@@ -900,7 +900,7 @@ public final class Uri
   public Uri pathOnly()
   {
     if (pathStr == null)
-      throw Err.make("Uri has no path: " + this).val;
+      throw Err.make("Uri has no path: " + this);
 
     if (scheme == null && userInfo == null && host == null &&
         port == null && queryStr == null && frag == null)
@@ -921,13 +921,13 @@ public final class Uri
   private Uri slice(Range range, boolean forcePathAbs)
   {
     if (pathStr == null)
-      throw Err.make("Uri has no path: " + this).val;
+      throw Err.make("Uri has no path: " + this);
 
     int size = path.sz();
     int s = range.start(size);
     int e = range.end(size);
     int n = e - s + 1;
-    if (n < 0) throw IndexErr.make(range).val;
+    if (n < 0) throw IndexErr.make(range);
 
     boolean head = (s == 0);
     boolean tail = (e == size-1);
@@ -1251,20 +1251,20 @@ public final class Uri
     Uri uri = this;
     if (scheme == null)
     {
-      if (base == null) throw UnresolvedErr.make("Relative uri with no base: " + this).val;
+      if (base == null) throw UnresolvedErr.make("Relative uri with no base: " + this);
       Uri baseUri = null;
       try
       {
         baseUri = (Uri)trap(base, "uri", null);
         if (baseUri == null)
-          throw UnresolvedErr.make("Base object's uri is null: " + this).val;
+          throw UnresolvedErr.make("Base object's uri is null: " + this);
       }
       catch (Throwable e)
       {
-        throw UnresolvedErr.make("Cannot access base '" + FanObj.typeof(base) + ".uri' to normalize: " + this, e).val;
+        throw UnresolvedErr.make("Cannot access base '" + FanObj.typeof(base) + ".uri' to normalize: " + this, e);
       }
       if (baseUri.scheme == null)
-        throw UnresolvedErr.make("Base object's uri is not absolute: " + baseUri).val;
+        throw UnresolvedErr.make("Base object's uri is not absolute: " + baseUri);
       uri = baseUri.plus(this);
     }
 
@@ -1276,7 +1276,7 @@ public final class Uri
     {
       return scheme.get(uri, base);
     }
-    catch (UnresolvedErr.Val e)
+    catch (UnresolvedErr e)
     {
       if (checked) throw e;
       return null;
@@ -1344,7 +1344,7 @@ public final class Uri
   public static void checkName(String name)
   {
     if (!isName(name))
-      throw NameErr.make(name).val;
+      throw NameErr.make(name);
   }
 
   static boolean isUpper(int c)
@@ -1362,7 +1362,7 @@ public final class Uri
 
   static RuntimeException err(String msg)
   {
-    return ParseErr.make(msg).val;
+    return ParseErr.make(msg);
   }
 
 //////////////////////////////////////////////////////////////////////////

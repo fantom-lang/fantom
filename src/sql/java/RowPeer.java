@@ -33,7 +33,7 @@ public class RowPeer
   {
     Col col = cols.get(name);
     if (col != null) return col;
-    if (checked) throw ArgErr.make("Col not found: " + name).val;
+    if (checked) throw ArgErr.make("Col not found: " + name);
     return null;
   }
 

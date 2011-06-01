@@ -38,7 +38,7 @@ public class ActorPool
       itBlock.call(self);
       itBlock.exitCtor();
     }
-    if (self.maxThreads < 1) throw ArgErr.make("ActorPool.maxThreads must be >= 1, not " + self.maxThreads).val;
+    if (self.maxThreads < 1) throw ArgErr.make("ActorPool.maxThreads must be >= 1, not " + self.maxThreads);
 
     self.threadPool = new ThreadPool((int)self.maxThreads);
     self.scheduler = new Scheduler();
@@ -87,7 +87,7 @@ public class ActorPool
   public final ActorPool join() { return join(null); }
   public final ActorPool join(Duration timeout)
   {
-    if (!isStopped()) throw Err.make("ActorPool is not stopped").val;
+    if (!isStopped()) throw Err.make("ActorPool is not stopped");
     long ms = timeout == null ? Long.MAX_VALUE : timeout.millis();
     try
     {
@@ -95,9 +95,9 @@ public class ActorPool
     }
     catch (InterruptedException e)
     {
-      throw InterruptedErr.make(e).val;
+      throw InterruptedErr.make(e);
     }
-    throw TimeoutErr.make("ActorPool.join timed out").val;
+    throw TimeoutErr.make("ActorPool.join timed out");
   }
 
   public Object trap(String name, List args)

@@ -32,7 +32,7 @@ public final class Zip
     {
       // only support local files
       if (!(f instanceof LocalFile))
-        throw IOErr.make("Only local files supported: " + f).val;
+        throw IOErr.make("Only local files supported: " + f);
 
       // open the file
       this.file = (LocalFile)f;
@@ -40,7 +40,7 @@ public final class Zip
     }
     catch (java.io.IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -104,7 +104,7 @@ public final class Zip
 
   public File readNext()
   {
-    if (zipIn == null) throw UnsupportedErr.make("Zip not opened for reading").val;
+    if (zipIn == null) throw UnsupportedErr.make("Zip not opened for reading");
     try
     {
       ZipEntry entry = zipIn.getNextEntry();
@@ -113,16 +113,16 @@ public final class Zip
     }
     catch (java.io.IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
   public OutStream writeNext(Uri path) { return writeNext(path, DateTime.now()); }
   public OutStream writeNext(Uri path, DateTime modifyTime)
   {
-    if (zipOut == null) throw UnsupportedErr.make("Zip not opened for writing").val;
-    if (path.frag() != null) throw ArgErr.make("Path must not contain fragment: " + path).val;
-    if (path.queryStr() != null) throw ArgErr.make("Path must not contain query: " + path).val;
+    if (zipOut == null) throw UnsupportedErr.make("Zip not opened for writing");
+    if (path.frag() != null) throw ArgErr.make("Path must not contain fragment: " + path);
+    if (path.queryStr() != null) throw ArgErr.make("Path must not contain query: " + path);
     try
     {
       String zipPath = path.toString();
@@ -148,13 +148,13 @@ public final class Zip
     }
     catch (java.io.IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
   public boolean finish()
   {
-    if (zipOut == null) throw UnsupportedErr.make("Zip not opened for writing").val;
+    if (zipOut == null) throw UnsupportedErr.make("Zip not opened for writing");
     try
     {
       zipOut.finish();

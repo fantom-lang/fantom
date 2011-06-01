@@ -55,7 +55,7 @@ public abstract class File
     java.io.File d = null;
     if (dir != null)
     {
-      if (!(dir instanceof LocalFile)) throw IOErr.make("Dir is not on local file system: " + dir).val;
+      if (!(dir instanceof LocalFile)) throw IOErr.make("Dir is not on local file system: " + dir);
       d = ((LocalFile)dir).file;
     }
 
@@ -65,7 +65,7 @@ public abstract class File
     }
     catch (java.io.IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -186,13 +186,13 @@ public abstract class File
 
   public File createFile(String name)
   {
-    if (!isDir()) throw IOErr.make("Not a directory: " + this).val;
+    if (!isDir()) throw IOErr.make("Not a directory: " + this);
     return this.plus(Uri.fromStr(name)).create();
   }
 
   public File createDir(String name)
   {
-    if (!isDir()) throw IOErr.make("Not a directory: " + this).val;
+    if (!isDir()) throw IOErr.make("Not a directory: " + this);
     if (!name.endsWith("/")) name = name + "/";
     return this.plus(Uri.fromStr(name)).create();
   }
@@ -212,9 +212,9 @@ public abstract class File
     if (isDir() != to.isDir())
     {
       if (isDir())
-        throw ArgErr.make("copyTo must be dir `" + to + "`").val;
+        throw ArgErr.make("copyTo must be dir `" + to + "`");
       else
-        throw ArgErr.make("copyTo must not be dir `" + to + "`").val;
+        throw ArgErr.make("copyTo must not be dir `" + to + "`");
     }
 
     // options
@@ -255,7 +255,7 @@ public abstract class File
       }
       else
       {
-        throw IOErr.make("No overwrite policy for `" + to + "`").val;
+        throw IOErr.make("No overwrite policy for `" + to + "`");
       }
     }
 
@@ -291,7 +291,7 @@ public abstract class File
   public File copyInto(File dir, Map options)
   {
     if (!dir.isDir())
-      throw ArgErr.make("Not a dir: `" + dir + "`").val;
+      throw ArgErr.make("Not a dir: `" + dir + "`");
 
     return copyTo(dir.plusNameOf(this), options);
   }
@@ -323,7 +323,7 @@ public abstract class File
   public File moveInto(File dir)
   {
     if (!dir.isDir())
-      throw ArgErr.make("Not a dir: `" + dir + "`").val;
+      throw ArgErr.make("Not a dir: `" + dir + "`");
 
     return moveTo(dir.plusNameOf(this));
   }

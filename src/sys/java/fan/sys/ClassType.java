@@ -101,7 +101,7 @@ public class ClassType
   {
     Slot slot = (Slot)reflect().slotsByName.get(name);
     if (slot != null) return slot;
-    if (checked) throw UnknownSlotErr.make(this.qname + "." + name).val;
+    if (checked) throw UnknownSlotErr.make(this.qname + "." + name);
     return null;
   }
 
@@ -293,7 +293,7 @@ public class ClassType
       catch (IOException e)
       {
         e.printStackTrace();
-        throw IOErr.make("Cannot read " + qname + " from pod", e).val;
+        throw IOErr.make("Cannot read " + qname + " from pod", e);
       }
     }
 
@@ -473,7 +473,7 @@ public class ClassType
         catch (Exception e)
         {
           e.printStackTrace();
-          throw Err.make("Cannot load precompiled class: " + qname, e).val;
+          throw Err.make("Cannot load precompiled class: " + qname, e);
         }
       }
 
@@ -490,7 +490,7 @@ public class ClassType
         catch (Exception e)
         {
           e.printStackTrace();
-          throw Err.make("Cannot emit: " + qname, e).val;
+          throw Err.make("Cannot emit: " + qname, e);
         }
       }
 
@@ -510,8 +510,6 @@ public class ClassType
     {
       if (isMixin())
         this.auxCls = cls.getClassLoader().loadClass(cls.getName()+"$");
-      else if (is(Sys.ErrType))
-        this.auxCls = cls.getClassLoader().loadClass(cls.getName()+"$Val");
     }
     catch (Exception e)
     {
@@ -563,7 +561,7 @@ catch (Exception e) { e.printStackTrace(); }
     catch (Throwable e)
     {
       e.printStackTrace();
-      throw Err.make("Cannot emitFinish: " + qname + "." + finishing, e).val;
+      throw Err.make("Cannot emitFinish: " + qname + "." + finishing, e);
     }
     finally
     {

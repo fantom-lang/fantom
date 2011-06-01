@@ -35,7 +35,7 @@ public class IpAddrPeer
     }
     catch (UnknownHostException e)
     {
-      throw UnknownHostErr.make(e.getMessage()).val;
+      throw UnknownHostErr.make(e.getMessage());
     }
   }
 
@@ -51,7 +51,7 @@ public class IpAddrPeer
     }
     catch (UnknownHostException e)
     {
-      throw UnknownHostErr.make(e.getMessage()).val;
+      throw UnknownHostErr.make(e.getMessage());
     }
   }
 
@@ -65,7 +65,7 @@ public class IpAddrPeer
     }
     catch (UnknownHostException e)
     {
-      throw ArgErr.make(e.getMessage()).val;
+      throw ArgErr.make(e.getMessage());
     }
   }
 

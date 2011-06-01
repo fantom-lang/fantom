@@ -44,7 +44,7 @@ public abstract class FStore
   {
     JarDistStore store = new JarDistStore(loader);
     if (store.hasPod(podName)) return store;
-    throw UnknownPodErr.make(podName).val;
+    throw UnknownPodErr.make(podName);
   }
 
 //////////////////////////////////////////////////////////////////////////

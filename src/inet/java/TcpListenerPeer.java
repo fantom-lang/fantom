@@ -27,7 +27,7 @@ public class TcpListenerPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -85,7 +85,7 @@ public class TcpListenerPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -100,7 +100,7 @@ public class TcpListenerPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -129,7 +129,7 @@ public class TcpListenerPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -141,7 +141,7 @@ public class TcpListenerPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -153,7 +153,7 @@ public class TcpListenerPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -165,7 +165,7 @@ public class TcpListenerPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -179,7 +179,7 @@ public class TcpListenerPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -194,7 +194,7 @@ public class TcpListenerPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 

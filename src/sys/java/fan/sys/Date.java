@@ -34,8 +34,8 @@ public final class Date
 
   Date(int year, int month, int day)
   {
-    if (month < 0 || month > 11)    throw ArgErr.make("month " + month).val;
-    if (day < 1 || day > DateTime.numDaysInMonth(year, month)) throw ArgErr.make("day " + day).val;
+    if (month < 0 || month > 11)    throw ArgErr.make("month " + month);
+    if (day < 1 || day > DateTime.numDaysInMonth(year, month)) throw ArgErr.make("day " + day);
 
     this.year  = (short)year;
     this.month = (byte)month;
@@ -61,7 +61,7 @@ public final class Date
     catch (Exception e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Date", s).val;
+      throw ParseErr.make("Date", s);
     }
   }
 
@@ -187,7 +187,7 @@ public final class Date
   {
     // check even number of days
     if (ticks % Duration.nsPerDay != 0)
-      throw ArgErr.make("Duration must be even num of days").val;
+      throw ArgErr.make("Duration must be even num of days");
 
     int year = this.year;
     int month = this.month;

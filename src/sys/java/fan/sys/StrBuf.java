@@ -105,7 +105,7 @@ public class StrBuf
     String s = (x == null) ? "null" : toStr(x);
     int i = (int)index;
     if (i < 0) i = sb.length()+i;
-    if (i > sb.length()) throw IndexErr.make(index).val;
+    if (i > sb.length()) throw IndexErr.make(index);
     sb.insert(i, s);
     return this;
   }
@@ -114,7 +114,7 @@ public class StrBuf
   {
     int i = (int)index;
     if (i < 0) i = sb.length()+i;
-    if (i >= sb.length()) throw IndexErr.make(index).val;
+    if (i >= sb.length()) throw IndexErr.make(index);
     sb.delete(i, i+1);
     return this;
   }
@@ -124,7 +124,7 @@ public class StrBuf
     int s = r.start(sb.length());
     int e = r.end(sb.length());
     int n = e - s + 1;
-    if (n < 0) throw IndexErr.make(r).val;
+    if (n < 0) throw IndexErr.make(r);
     sb.delete(s, e+1);
     return this;
   }

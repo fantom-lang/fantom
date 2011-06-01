@@ -47,7 +47,7 @@ public final class Map
 
   public Map(MapType type, HashMap map)
   {
-    if (type == null || map == null) { Thread.dumpStack(); throw new NullErr().val; }
+    if (type == null || map == null) { Thread.dumpStack(); throw NullErr.make(); }
     this.type = type;
     this.map  = map;
   }
@@ -112,9 +112,9 @@ public final class Map
   {
     modify();
     if (key == null)
-      throw NullErr.make("key is null").val;
+      throw NullErr.make("key is null");
     if (!isImmutable(key))
-      throw NotImmutableErr.make("key is not immutable: " + typeof(key)).val;
+      throw NotImmutableErr.make("key is not immutable: " + typeof(key));
     map.put(key, value);
     return this;
   }
@@ -123,11 +123,11 @@ public final class Map
   {
     modify();
     if (key == null)
-      throw NullErr.make("key is null").val;
+      throw NullErr.make("key is null");
     if (!isImmutable(key))
-      throw NotImmutableErr.make("key is not immutable: " + typeof(key)).val;
+      throw NotImmutableErr.make("key is not immutable: " + typeof(key));
     if (map.containsKey(key))
-      throw ArgErr.make("Key already mapped: " + key).val;
+      throw ArgErr.make("Key already mapped: " + key);
     map.put(key, value);
     return this;
   }
@@ -238,13 +238,13 @@ public final class Map
     modify();
 
     if (type.k != Sys.StrType)
-      throw UnsupportedErr.make("Map not keyed by Str: " + type).val;
+      throw UnsupportedErr.make("Map not keyed by Str: " + type);
 
     if (map.size() != 0)
-      throw UnsupportedErr.make("Map not empty").val;
+      throw UnsupportedErr.make("Map not empty");
 
     if (v && ordered())
-      throw UnsupportedErr.make("Map cannot be caseInsensitive and ordered").val;
+      throw UnsupportedErr.make("Map cannot be caseInsensitive and ordered");
 
     if (caseInsensitive() == v) return;
 
@@ -264,10 +264,10 @@ public final class Map
     modify();
 
     if (map.size() != 0)
-      throw UnsupportedErr.make("Map not empty").val;
+      throw UnsupportedErr.make("Map not empty");
 
     if (v && caseInsensitive())
-      throw UnsupportedErr.make("Map cannot be caseInsensitive and ordered").val;
+      throw UnsupportedErr.make("Map cannot be caseInsensitive and ordered");
 
     if (ordered() == v) return;
 
@@ -282,7 +282,7 @@ public final class Map
   {
     modify();
     if (v != null && !isImmutable(v))
-      throw NotImmutableErr.make("def must be immutable: " + typeof(v)).val;
+      throw NotImmutableErr.make("def must be immutable: " + typeof(v));
     this.def = v;
   }
 
@@ -585,7 +585,7 @@ public final class Map
   {
     // if readonly then throw readonly exception
     if (readonly)
-      throw ReadonlyErr.make("Map is readonly").val;
+      throw ReadonlyErr.make("Map is readonly");
 
     // if we have a cached readonlyMap, then detach
     // it so it remains immutable

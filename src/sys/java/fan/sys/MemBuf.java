@@ -95,7 +95,7 @@ public final class MemBuf
 
   public final void pipeTo(byte[] dst, int dstPos, int len)
   {
-    if (pos + len > size) throw IOErr.make("Not enough bytes to write").val;
+    if (pos + len > size) throw IOErr.make("Not enough bytes to write");
     System.arraycopy(buf, pos, dst, dstPos, len);
     pos += len;
   }
@@ -104,7 +104,7 @@ public final class MemBuf
     throws IOException
   {
     int len = (int)lenLong;
-    if (pos + len > size) throw IOErr.make("Not enough bytes to write").val;
+    if (pos + len > size) throw IOErr.make("Not enough bytes to write");
     dst.write(buf, pos, len);
     pos += len;
   }
@@ -113,14 +113,14 @@ public final class MemBuf
     throws IOException
   {
     int len = (int)lenLong;
-    if (pos + len > size) throw IOErr.make("Not enough bytes to write").val;
+    if (pos + len > size) throw IOErr.make("Not enough bytes to write");
     dst.write(buf, pos, len);
     pos += len;
   }
 
   public final void pipeTo(ByteBuffer dst, int len)
   {
-    if (pos + len > size) throw IOErr.make("Not enough bytes to write").val;
+    if (pos + len > size) throw IOErr.make("Not enough bytes to write");
     dst.put(buf, pos, len);
     pos += len;
   }
@@ -178,7 +178,7 @@ public final class MemBuf
   public final void capacity(long c)
   {
     int newCapacity = (int)c;
-    if (newCapacity < size) throw ArgErr.make("capacity < size").val;
+    if (newCapacity < size) throw ArgErr.make("capacity < size");
     byte[] temp = new byte[newCapacity];
     System.arraycopy(buf, 0, temp, 0, Math.min(size, newCapacity));
     buf = temp;
@@ -250,7 +250,7 @@ public final class MemBuf
     }
     catch (NoSuchAlgorithmException e)
     {
-      throw ArgErr.make("Unknown digest algorthm: " + algorithm).val;
+      throw ArgErr.make("Unknown digest algorthm: " + algorithm);
     }
   }
 
@@ -265,7 +265,7 @@ public final class MemBuf
     }
     catch (NoSuchAlgorithmException e)
     {
-      throw ArgErr.make("Unknown digest algorthm: " + algorithm).val;
+      throw ArgErr.make("Unknown digest algorthm: " + algorithm);
     }
 
     // get secret key bytes
@@ -289,7 +289,7 @@ public final class MemBuf
     }
     catch (ClassCastException e)
     {
-      throw UnsupportedErr.make("key parameter must be memory buffer").val;
+      throw UnsupportedErr.make("key parameter must be memory buffer");
     }
 
     // RFC 2104:
@@ -348,7 +348,7 @@ public final class MemBuf
     }
     catch (Exception e)
     {
-      throw Err.make(e).val;
+      throw Err.make(e);
     }
   }
 

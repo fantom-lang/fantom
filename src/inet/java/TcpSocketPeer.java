@@ -97,7 +97,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -113,7 +113,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -129,13 +129,13 @@ public class TcpSocketPeer
 
   public InStream in(TcpSocket fan)
   {
-    if (in == null) throw IOErr.make("not connected").val;
+    if (in == null) throw IOErr.make("not connected");
     return in;
   }
 
   public OutStream out(TcpSocket fan)
   {
-    if (out == null) throw IOErr.make("not connected").val;
+    if (out == null) throw IOErr.make("not connected");
     return out;
   }
 
@@ -171,7 +171,7 @@ public class TcpSocketPeer
 
   public void setInBufferSize(TcpSocket fan, Long v)
   {
-    if (in != null) throw Err.make("Must set inBufferSize before connection").val;
+    if (in != null) throw Err.make("Must set inBufferSize before connection");
     inBufSize = (v == null) ? 0 : v.intValue();
   }
 
@@ -182,7 +182,7 @@ public class TcpSocketPeer
 
   public void setOutBufferSize(TcpSocket fan, Long v)
   {
-    if (in != null) throw Err.make("Must set outBufSize before connection").val;
+    if (in != null) throw Err.make("Must set outBufSize before connection");
     outBufSize = (v == null) ? 0 : v.intValue();
   }
 
@@ -204,7 +204,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -216,7 +216,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -228,7 +228,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -240,7 +240,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -252,7 +252,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -264,7 +264,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -276,7 +276,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -288,7 +288,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -302,7 +302,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -317,7 +317,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -331,7 +331,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -346,7 +346,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -358,7 +358,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -370,7 +370,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -382,7 +382,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 
@@ -394,7 +394,7 @@ public class TcpSocketPeer
     }
     catch (IOException e)
     {
-      throw IOErr.make(e).val;
+      throw IOErr.make(e);
     }
   }
 

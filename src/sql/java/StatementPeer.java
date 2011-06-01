@@ -261,7 +261,7 @@ public class StatementPeer
   private void setParameters(Map params)
   {
     if (!prepared)
-      throw SqlErr.make("Statement has not been prepared.").val;
+      throw SqlErr.make("Statement has not been prepared.");
     PreparedStatement pstmt = (PreparedStatement)stmt;
 
     Iterator i = paramMap.entrySet().iterator();
@@ -282,7 +282,7 @@ public class StatementPeer
         catch (SQLException e)
         {
           throw SqlErr.make("Param name='" + key + "' class='" + value.getClass().getName() + "'; " +
-                            e.getMessage(), Err.make(e)).val;
+                            e.getMessage(), Err.make(e));
         }
       }
     }
@@ -430,7 +430,7 @@ public class StatementPeer
       current++;
 
       if (current == len)
-        throw SqlErr.make("Invalid parameter.  Parameter name required.").val;
+        throw SqlErr.make("Invalid parameter.  Parameter name required.");
 
       int ch = sql.charAt(current);
       // @@ means we really wanted @
@@ -466,7 +466,7 @@ public class StatementPeer
       }
 
       if (current == start+1)
-        throw SqlErr.make("Invalid parameter.  Parameter name required.").val;
+        throw SqlErr.make("Invalid parameter.  Parameter name required.");
 
       return sql.substring(start, current);
     }
@@ -478,7 +478,7 @@ public class StatementPeer
       current++;
 
       if (current == len)
-        throw SqlErr.make("Unterminated quoted text.  Expecting '.").val;
+        throw SqlErr.make("Unterminated quoted text.  Expecting '.");
 
       while (current != len)
       {
@@ -494,7 +494,7 @@ public class StatementPeer
       }
 
       if (end == -1)
-        throw SqlErr.make("Unterminated quoted text. Expecting '.").val;
+        throw SqlErr.make("Unterminated quoted text. Expecting '.");
 
       if (current == len)
         mode = MODE_END;

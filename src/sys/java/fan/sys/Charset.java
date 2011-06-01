@@ -44,7 +44,7 @@ public class Charset
     catch (Exception e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Charset", name, e.toString()).val;
+      throw ParseErr.make("Charset", name, e.toString());
     }
   }
 
@@ -129,17 +129,17 @@ public class Charset
           /* 110x xxxx   10xx xxxx*/
           c2 = in.r();
           if ((c2 & 0xC0) != 0x80)
-            throw IOErr.make("Invalid UTF-8 encoding").val;
+            throw IOErr.make("Invalid UTF-8 encoding");
           return ((c & 0x1F) << 6) | (c2 & 0x3F);
         case 14:
           /* 1110 xxxx  10xx xxxx  10xx xxxx */
           c2 = in.r();
           c3 = in.r();
           if (((c2 & 0xC0) != 0x80) || ((c3 & 0xC0) != 0x80))
-            throw IOErr.make("Invalid UTF-8 encoding").val;
+            throw IOErr.make("Invalid UTF-8 encoding");
           return (((c & 0x0F) << 12) | ((c2 & 0x3F) << 6) | ((c3 & 0x3F) << 0));
         default:
-          throw IOErr.make("Invalid UTF-8 encoding").val;
+          throw IOErr.make("Invalid UTF-8 encoding");
       }
     }
   }
@@ -248,7 +248,7 @@ public class Charset
   {
     public void encode(char c, OutStream out)
     {
-      if (c > 0xFF) throw IOErr.make("Invalid ISO-8859-1 char").val;
+      if (c > 0xFF) throw IOErr.make("Invalid ISO-8859-1 char");
       out.w((c >>> 0) & 0xFF);
     }
 
@@ -339,9 +339,9 @@ public class Charset
       CoderResult r;
       encoder.reset();
       r = encoder.encode(cbuf, bbuf, true);
-      if (r.isError()) throw IOErr.make("Invalid " + charset.name + " encoding").val;
+      if (r.isError()) throw IOErr.make("Invalid " + charset.name + " encoding");
       r = encoder.flush(bbuf);
-      if (r.isError()) throw IOErr.make("Invalid " + charset.name + " encoding").val;
+      if (r.isError()) throw IOErr.make("Invalid " + charset.name + " encoding");
 
       // drain from internal byte buffer to fan buf
       bbuf.flip();
@@ -363,9 +363,9 @@ public class Charset
       CoderResult r;
       encoder.reset();
       r = encoder.encode(cbuf, bbuf, true);
-      if (r.isError()) throw IOErr.make("Invalid " + charset.name + " encoding").val;
+      if (r.isError()) throw IOErr.make("Invalid " + charset.name + " encoding");
       r = encoder.flush(bbuf);
-      if (r.isError()) throw IOErr.make("Invalid " + charset.name + " encoding").val;
+      if (r.isError()) throw IOErr.make("Invalid " + charset.name + " encoding");
 
       // drain from internal byte buffer to fan buf
       bbuf.flip();
@@ -438,7 +438,7 @@ public class Charset
         CoderResult r = decoder.decode(bbuf, cbuf, false);
 
         if (r.isError())
-          throw IOErr.make("Invalid " + charset.name + " encoding").val;
+          throw IOErr.make("Invalid " + charset.name + " encoding");
 
         bbuf.compact();
         cbuf.flip();

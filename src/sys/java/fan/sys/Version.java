@@ -54,7 +54,7 @@ public final class Version
     if (!valid || segments.sz() == 0)
     {
       if (checked)
-        throw ParseErr.make("Version", s).val;
+        throw ParseErr.make("Version", s);
       else
         return null;
     }
@@ -67,7 +67,7 @@ public final class Version
     boolean valid = segments.sz() > 0;
     for (int i=0; i<segments.sz(); ++i)
       if (((Long)segments.get(i)).longValue() < 0) valid = false;
-    if (!valid) throw ArgErr.make("Invalid Version: '" + segments + "'").val;
+    if (!valid) throw ArgErr.make("Invalid Version: '" + segments + "'");
     return new Version(segments);
   }
 

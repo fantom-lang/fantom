@@ -28,7 +28,7 @@ public final class Unit
     {
       Unit unit = (Unit)byId.get(name);
       if (unit != null || !checked) return unit;
-      throw Err.make("Unit not found: " + name).val;
+      throw Err.make("Unit not found: " + name);
     }
   }
 
@@ -48,7 +48,7 @@ public final class Unit
   public static List quantity(String quantity)
   {
     List list = (List)quantities.get(quantity);
-    if (list == null) throw Err.make("Unknown unit database quantity: " + quantity).val;
+    if (list == null) throw Err.make("Unknown unit database quantity: " + quantity);
     return list;
   }
 
@@ -123,8 +123,8 @@ public final class Unit
     catch (Throwable e)
     {
       String msg = str;
-      if (e instanceof ParseErr.Val) msg += ": " + ((ParseErr.Val)e).err.msg();
-      throw ParseErr.make("Unit", msg).val;
+      if (e instanceof ParseErr) msg += ": " + ((ParseErr)e).msg();
+      throw ParseErr.make("Unit", msg);
     }
 
     // register
@@ -134,7 +134,7 @@ public final class Unit
       for (int i=0; i<unit.ids.sz(); ++i)
       {
         String id = (String)unit.ids.get(i);
-        if (byId.get(id) != null) throw Err.make("Unit id already defined: " + id).val;
+        if (byId.get(id) != null) throw Err.make("Unit id already defined: " + id);
       }
 
       // this is a new definition
@@ -199,7 +199,7 @@ public final class Unit
       if (r.startsWith("K"))   { dim.K   = Byte.parseByte(r.substring(1).trim()); continue; }
       if (r.startsWith("A"))   { dim.A   = Byte.parseByte(r.substring(1).trim()); continue; }
       if (r.startsWith("cd"))  { dim.cd  = Byte.parseByte(r.substring(2).trim()); continue; }
-      throw ParseErr.make("Bad ratio '" + r + "'").val;
+      throw ParseErr.make("Bad ratio '" + r + "'");
     }
 
     // intern
@@ -219,19 +219,19 @@ public final class Unit
 
   static List checkIds(List ids)
   {
-    if (ids.sz() == 0) throw ParseErr.make("No unit ids defined").val;
+    if (ids.sz() == 0) throw ParseErr.make("No unit ids defined");
     for (int i=0; i<ids.sz(); ++i) checkId((String)ids.get(i));
     return (List)ids.toImmutable();
   }
 
   static void checkId(String id)
   {
-    if (id.length() == 0) throw ParseErr.make("Invalid unit id length 0").val;
+    if (id.length() == 0) throw ParseErr.make("Invalid unit id length 0");
     for (int i=0; i<id.length(); ++i)
     {
       int c = id.charAt(i);
       if (FanInt.isAlpha(c) || c == '_' || c == '%' || c == '/' || c == '$' || c > 128) continue;
-      throw ParseErr.make("Invalid unit id " + id + " (invalid char '" + (char)c + "')").val;
+      throw ParseErr.make("Invalid unit id " + id + " (invalid char '" + (char)c + "')");
     }
   }
 
@@ -403,7 +403,7 @@ public final class Unit
   {
     // if either is dimensionless give up immediately
     if (a.dim.isDimensionless() || b.dim.isDimensionless())
-      throw Err.make("Cannot compute dimensionless: " + a + " * " + b).val;
+      throw Err.make("Cannot compute dimensionless: " + a + " * " + b);
 
     // compute dim/scale of a * b
     Dimension dim = a.dim.add(b.dim).intern();
@@ -420,7 +420,7 @@ public final class Unit
         return matches[i];
 
     // for now just give up
-    throw Err.make("Cannot match to db: " + a + " * " + b).val;
+    throw Err.make("Cannot match to db: " + a + " * " + b);
   }
 
   public final Unit div(Unit b)
@@ -442,7 +442,7 @@ public final class Unit
   {
     // if either is dimensionless give up immediately
     if (a.dim.isDimensionless() || b.dim.isDimensionless())
-      throw Err.make("Cannot compute dimensionless: " + a + " / " + b).val;
+      throw Err.make("Cannot compute dimensionless: " + a + " / " + b);
 
     // compute dim/scale of a / b
     Dimension dim = a.dim.subtract(b.dim).intern();
@@ -459,7 +459,7 @@ public final class Unit
         return matches[i];
 
     // for now just give up
-    throw Err.make("Cannot match to db: " + a + " / " + b).val;
+    throw Err.make("Cannot match to db: " + a + " / " + b);
   }
 
   private static Unit[] match(Dimension dim, double scale)
@@ -502,7 +502,7 @@ public final class Unit
 
   public final double convertTo(double scalar, Unit to)
   {
-    if (dim != to.dim) throw Err.make("Incovertable units: " + this + " and " + to).val;
+    if (dim != to.dim) throw Err.make("Incovertable units: " + this + " and " + to);
     return ((scalar * this.scale + this.offset) - to.offset) / to.scale;
   }
 

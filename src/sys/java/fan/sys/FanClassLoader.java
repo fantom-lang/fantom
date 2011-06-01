@@ -59,7 +59,7 @@ public class FanClassLoader
     catch (ClassNotFoundException e)
     {
       e.printStackTrace();
-      throw Err.make("Cannot load class: " + name, e).val;
+      throw Err.make("Cannot load class: " + name, e);
     }
   }
 
@@ -152,9 +152,8 @@ public class FanClassLoader
 
     // if the type name ends with $ then this is a mixin body
     // class being used before we have loaded the mixin interface,
-    // so load them both, then we should it registered by name;
-    // same goes for $Val for Err value types
-    if (typeName.endsWith("$") || typeName.endsWith("$Val"))
+    // so load them both
+    if (typeName.endsWith("$"))
     {
       int strip = typeName.endsWith("$") ? 1 : 4;
       ClassType t = (ClassType)pod.type(typeName.substring(0, typeName.length()-strip), true);

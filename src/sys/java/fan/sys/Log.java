@@ -36,7 +36,7 @@ public class Log
     {
       Log log = (Log)byName.get(name);
       if (log != null) return log;
-      if (checked) throw Err.make("Unknown log: " + name).val;
+      if (checked) throw Err.make("Unknown log: " + name);
       return null;
     }
   }
@@ -71,7 +71,7 @@ public class Log
       {
         // verify unique
         if (byName.get(name) != null)
-          throw ArgErr.make("Duplicate log name: " + name).val;
+          throw ArgErr.make("Duplicate log name: " + name);
 
         // init and put into map
         byName.put(name, self);
@@ -113,7 +113,7 @@ public class Log
 
   public final void level(LogLevel level)
   {
-    if (level == null) throw ArgErr.make("level cannot be null").val;
+    if (level == null) throw ArgErr.make("level cannot be null");
     this.level = level;
   }
 
@@ -197,7 +197,7 @@ public class Log
   public static void addHandler(Func func)
   {
     if (!func.isImmutable())
-      throw NotImmutableErr.make("handler must be immutable").val;
+      throw NotImmutableErr.make("handler must be immutable");
 
     synchronized (lock)
     {

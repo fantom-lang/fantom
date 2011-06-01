@@ -248,12 +248,12 @@ public abstract class Env
   {
     // we shouldn't be using this method for pure Fantom types
     if (!podName.startsWith("[java]"))
-      throw ArgErr.make("Unsupported FFI type: " + podName + "::" + typeName).val;
+      throw ArgErr.make("Unsupported FFI type: " + podName + "::" + typeName);
 
     // ensure unnormalized "[java] package::Type" isn't used (since
     // it took me an hour to track down a bug related to this)
     if (podName.length() >= 7 && podName.charAt(6) == ' ')
-      throw ArgErr.make("Java FFI qname cannot contain space: " + podName + "::" + typeName).val;
+      throw ArgErr.make("Java FFI qname cannot contain space: " + podName + "::" + typeName);
 
     // cache all the java types statically
     synchronized (javaTypeCache)

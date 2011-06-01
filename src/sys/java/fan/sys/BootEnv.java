@@ -143,7 +143,7 @@ public class BootEnv
 
   public void addShutdownHook(Func f)
   {
-    if (!f.isImmutable()) throw NotImmutableErr.make().val;
+    if (!f.isImmutable()) throw NotImmutableErr.make();
     Thread thread = new ShutdownHookThread(f);
     shutdownHooks.put(f, thread);
     Runtime.getRuntime().addShutdownHook(thread);
@@ -213,11 +213,11 @@ public class BootEnv
 
   public File findFile(Uri uri, boolean checked)
   {
-    if (uri.isPathAbs()) throw ArgErr.make("Uri must be relative: " + uri).val;
+    if (uri.isPathAbs()) throw ArgErr.make("Uri must be relative: " + uri);
     File f = homeDir.plus(uri, false);
     if (f.exists()) return f;
     if (!checked) return null;
-    throw UnresolvedErr.make("File not found in Env: " + uri).val;
+    throw UnresolvedErr.make("File not found in Env: " + uri);
   }
 
   public List findAllFiles(Uri uri)

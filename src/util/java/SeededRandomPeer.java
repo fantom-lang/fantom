@@ -34,7 +34,7 @@ public class SeededRandomPeer
     long start = r.start();
     long end   = r.end();
     if (r.inclusive()) ++end;
-    if (end <= start) throw ArgErr.make("Range end < start: " + r).val;
+    if (end <= start) throw ArgErr.make("Range end < start: " + r);
     return start + (v % (end-start));
   }
 

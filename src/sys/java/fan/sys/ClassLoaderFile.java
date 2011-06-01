@@ -56,7 +56,7 @@ public class ClassLoaderFile
 
   public void modified(DateTime time)
   {
-    throw IOErr.make("ClassLoaderFile is readonly").val;
+    throw IOErr.make("ClassLoaderFile is readonly");
   }
 
   public String osPath()
@@ -81,7 +81,7 @@ public class ClassLoaderFile
 
   public File plus(Uri uri, boolean checkSlash)
   {
-    throw UnsupportedErr.make("ClassLoaderFile.plus").val;
+    throw UnsupportedErr.make("ClassLoaderFile.plus");
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -90,22 +90,22 @@ public class ClassLoaderFile
 
   public File create()
   {
-    throw IOErr.make("ClassLoaderFile is readonly").val;
+    throw IOErr.make("ClassLoaderFile is readonly");
   }
 
   public File moveTo(File to)
   {
-    throw IOErr.make("ClassLoaderFile is readonly").val;
+    throw IOErr.make("ClassLoaderFile is readonly");
   }
 
   public void delete()
   {
-    throw IOErr.make("ClassLoaderFile is readonly").val;
+    throw IOErr.make("ClassLoaderFile is readonly");
   }
 
   public File deleteOnExit()
   {
-    throw IOErr.make("ClassLoaderFile is readonly").val;
+    throw IOErr.make("ClassLoaderFile is readonly");
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -114,12 +114,12 @@ public class ClassLoaderFile
 
   public Buf open(String mode)
   {
-    throw UnsupportedErr.make("ClassLoaderFile.open").val;
+    throw UnsupportedErr.make("ClassLoaderFile.open");
   }
 
   public Buf mmap(String mode, long pos, Long size)
   {
-    throw UnsupportedErr.make("ClassLoaderFile.mmap").val;
+    throw UnsupportedErr.make("ClassLoaderFile.mmap");
   }
 
   public InStream in(Long bufSize)
@@ -137,7 +137,7 @@ public class ClassLoaderFile
 
   public OutStream out(boolean append, Long bufSize)
   {
-    throw IOErr.make("ClassLoaderFile is readonly").val;
+    throw IOErr.make("ClassLoaderFile is readonly");
   }
 
 //////////////////////////////////////////////////////////////////////////

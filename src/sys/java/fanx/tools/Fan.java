@@ -55,11 +55,11 @@ public class Fan
     {
       pod = Env.cur().compileScript(f, options).pod();
     }
-    catch (Err.Val e)
+    catch (Err e)
     {
       System.out.println("ERROR: cannot compile script");
       if (!e.getClass().getName().startsWith("fan.compiler"))
-        e.err().trace();
+        e.trace();
       return -1;
     }
     catch (Exception e)
@@ -136,9 +136,9 @@ public class Fan
       else
         return toResult(m.callOn(t.make(), args));
     }
-    catch (Err.Val ex)
+    catch (Err ex)
     {
-      ex.err().trace();
+      ex.trace();
       return -1;
     }
     finally

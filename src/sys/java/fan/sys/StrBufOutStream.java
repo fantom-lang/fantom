@@ -44,17 +44,17 @@ public class StrBufOutStream
 
   public OutStream w(int v)
   {
-    throw UnsupportedErr.make("Binary write on StrBuf.out").val;
+    throw UnsupportedErr.make("Binary write on StrBuf.out");
   }
 
   public OutStream write(long x)
   {
-    throw UnsupportedErr.make("Binary write on StrBuf.out").val;
+    throw UnsupportedErr.make("Binary write on StrBuf.out");
   }
 
   public OutStream writeBuf(Buf buf, long n)
   {
-    throw UnsupportedErr.make("Binary write on StrBuf.out").val;
+    throw UnsupportedErr.make("Binary write on StrBuf.out");
   }
 
   public OutStream writeChar(char c)
@@ -94,7 +94,7 @@ public class StrBufOutStream
 
     public void encode(char ch, InStream out)
     {
-      throw UnsupportedErr.make("Binary write on StrBuf.out").val;
+      throw UnsupportedErr.make("Binary write on StrBuf.out");
     }
   };
 

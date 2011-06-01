@@ -52,7 +52,7 @@ public class TypeParser
       }
       catch (Exception e)
       {
-        throw ArgErr.make("Invalid type signature '" + sig + "', use <pod>::<type>").val;
+        throw ArgErr.make("Invalid type signature '" + sig + "', use <pod>::<type>");
       }
 
       // if podName starts with [java] this is a direct Java type
@@ -72,13 +72,13 @@ public class TypeParser
     {
       return new TypeParser(sig, checked, loadingPod).loadTop();
     }
-    catch (Err.Val e)
+    catch (Err e)
     {
       throw e;
     }
     catch (Exception e)
     {
-      throw err(sig).val;
+      throw err(sig);
     }
   }
 
@@ -111,7 +111,7 @@ public class TypeParser
   private Type loadTop()
   {
     Type type = load();
-    if (cur != 0) throw err().val;
+    if (cur != 0) throw err();
     return type;
   }
 
@@ -263,7 +263,7 @@ public class TypeParser
 
   private void consume(int expected)
   {
-    if (cur != expected) throw err().val;
+    if (cur != expected) throw err();
     consume();
   }
 

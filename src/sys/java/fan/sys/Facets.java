@@ -79,7 +79,7 @@ public final class Facets
       map.put(type, f);
       return f;
     }
-    if (checked) throw UnknownFacetErr.make(type.qname()).val;
+    if (checked) throw UnknownFacetErr.make(type.qname());
     return null;
   }
 
@@ -99,7 +99,7 @@ public final class Facets
       System.out.println(msg);
       e.printStackTrace();
       map.remove(type);
-      throw IOErr.make(msg).val;
+      throw IOErr.make(msg);
     }
   }
 

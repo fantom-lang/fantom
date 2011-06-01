@@ -59,11 +59,11 @@ public final class RegexMatcher
     }
     catch (IllegalStateException e)
     {
-      throw Err.make(e.getMessage()).val;
+      throw Err.make(e.getMessage());
     }
     catch (IndexOutOfBoundsException e)
     {
-      throw IndexErr.make(group).val;
+      throw IndexErr.make(group);
     }
   }
 
@@ -76,11 +76,11 @@ public final class RegexMatcher
     }
     catch (IllegalStateException e)
     {
-      throw Err.make(e.getMessage()).val;
+      throw Err.make(e.getMessage());
     }
     catch (IndexOutOfBoundsException e)
     {
-      throw IndexErr.make(group).val;
+      throw IndexErr.make(group);
     }
   }
 
@@ -93,11 +93,11 @@ public final class RegexMatcher
     }
     catch (IllegalStateException e)
     {
-      throw Err.make(e.getMessage()).val;
+      throw Err.make(e.getMessage());
     }
     catch (IndexOutOfBoundsException e)
     {
-      throw IndexErr.make(group).val;
+      throw IndexErr.make(group);
     }
   }
 

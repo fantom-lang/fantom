@@ -35,11 +35,11 @@ public class Actor
   {
     // check pool
     if (pool == null)
-      throw NullErr.make("pool is null").val;
+      throw NullErr.make("pool is null");
 
     // check receive method
     if (receive == null && self.typeof().qname().equals("concurrent::Actor"))
-      throw ArgErr.make("must supply receive func or subclass Actor").val;
+      throw ArgErr.make("must supply receive func or subclass Actor");
     if (receive != null) receive = (Func)receive.toImmutable();
 
     // init
@@ -114,7 +114,7 @@ public class Actor
     }
     catch (InterruptedException e)
     {
-      throw InterruptedErr.make(e).val;
+      throw InterruptedErr.make(e);
     }
   }
 
@@ -137,7 +137,7 @@ public class Actor
     msg = Sys.safe(msg);
 
     // don't deliver new messages to a stopped pool
-    if (pool.isStopped()) throw Err.make("ActorPool is stopped").val;
+    if (pool.isStopped()) throw Err.make("ActorPool is stopped");
 
     // get the future instance to manage this message's lifecycle
     Future f = new Future(msg);
@@ -224,9 +224,9 @@ public class Actor
       if (pool.killed) { future.cancel(); return; }
       future.set(receive(future.msg));
     }
-    catch (Err.Val e)
+    catch (Err e)
     {
-      future.err(e.err());
+      future.err(e);
     }
     catch (Throwable e)
     {

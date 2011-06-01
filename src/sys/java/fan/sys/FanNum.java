@@ -318,7 +318,7 @@ final class NumPattern
           optInt  = last == '#';
           break;
         default:
-          throw ArgErr.make("Invalid pattern char '" + (char)c + "': " + s).val;
+          throw ArgErr.make("Invalid pattern char '" + (char)c + "': " + s);
       }
       last = c;
     }

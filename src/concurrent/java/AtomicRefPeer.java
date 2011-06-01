@@ -26,19 +26,19 @@ public final class AtomicRefPeer
 
   public final void val(AtomicRef self, Object v)
   {
-    if (!FanObj.isImmutable(v)) throw NotImmutableErr.make().val;
+    if (!FanObj.isImmutable(v)) throw NotImmutableErr.make();
     val.set(v);
   }
 
   public final Object getAndSet(AtomicRef self, Object v)
   {
-    if (!FanObj.isImmutable(v)) throw NotImmutableErr.make().val;
+    if (!FanObj.isImmutable(v)) throw NotImmutableErr.make();
     return val.getAndSet(v);
   }
 
   public final boolean compareAndSet(AtomicRef self, Object expect, Object update)
   {
-    if (!FanObj.isImmutable(update)) throw NotImmutableErr.make().val;
+    if (!FanObj.isImmutable(update)) throw NotImmutableErr.make();
     return val.compareAndSet(expect, update);
   }
 

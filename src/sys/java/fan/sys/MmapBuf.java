@@ -187,7 +187,7 @@ public class MmapBuf
 
   public void capacity(long x)
   {
-    throw UnsupportedErr.make("mmap capacity fixed").val;
+    throw UnsupportedErr.make("mmap capacity fixed");
   }
 
   public final Buf flush()
@@ -204,12 +204,12 @@ public class MmapBuf
 
   public final String toHex()
   {
-    throw UnsupportedErr.make().val;
+    throw UnsupportedErr.make();
   }
 
   public Buf toDigest(String algorithm)
   {
-    throw UnsupportedErr.make().val;
+    throw UnsupportedErr.make();
   }
 
 //////////////////////////////////////////////////////////////////////////

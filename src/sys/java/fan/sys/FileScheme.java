@@ -32,7 +32,7 @@ public class FileScheme
   {
     File f = File.make(uri, false);
     if (f.exists()) return f;
-    throw UnresolvedErr.make(uri).val;
+    throw UnresolvedErr.make(uri);
   }
 
 }

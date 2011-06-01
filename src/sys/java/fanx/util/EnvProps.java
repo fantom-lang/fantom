@@ -31,7 +31,7 @@ public class EnvProps
   {
     List files = env.findAllFiles(Uri.fromStr("etc/" + key.pod + "/" + key.uri));
     if (cp != null && !cp.isStale(files)) return cp;
-    if (key.uri.isPathAbs()) throw ArgErr.make("Env.props Uri must be relative: " + key.uri).val;
+    if (key.uri.isPathAbs()) throw ArgErr.make("Env.props Uri must be relative: " + key.uri);
     cp = new CachedProps(key, files);
     cache.put(key, cp);
     return cp;
