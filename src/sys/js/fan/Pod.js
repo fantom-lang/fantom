@@ -96,12 +96,12 @@ fan.sys.Pod.prototype.locale = function(key, def)
 }
 
 // addType
-fan.sys.Pod.prototype.$at = function(name, baseQname, mixins, flags)
+fan.sys.Pod.prototype.$at = function(name, baseQname, mixins, facets, flags)
 {
   var qname = this.m_name + "::" + name;
   if (this.m_types[name] != null)
     throw fan.sys.Err.make("Type already exists " + qname);
-  var t = new fan.sys.Type(qname, baseQname, mixins, flags);
+  var t = new fan.sys.Type(qname, baseQname, mixins, facets, flags);
   this.m_types[name] = t;
   return t;
 }

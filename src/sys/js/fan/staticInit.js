@@ -7,6 +7,11 @@
 //
 
 //
+// Pod
+//
+fan.sys.Pod.$sysPod = fan.sys.Pod.find("sys");
+
+//
 // Bool
 //
 fan.sys.Bool.m_defVal = false;

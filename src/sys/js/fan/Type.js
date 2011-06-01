@@ -19,7 +19,7 @@ fan.sys.Type = fan.sys.Obj.$extend(fan.sys.Obj);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Type.prototype.$ctor = function(qname, base, mixins, flags)
+fan.sys.Type.prototype.$ctor = function(qname, base, mixins, facets, flags)
 {
   // workaround for inhertiance
   if (qname === undefined) return;
@@ -33,18 +33,13 @@ fan.sys.Type.prototype.$ctor = function(qname, base, mixins, flags)
     this.m_mixins = acc.ro();
   }
 
-  // facets
-  if (fan.sys.Facet.$type != null)
-  {
-    this.m_facets = fan.sys.Facet.$type.emptyList();
-  }
-
   var s = qname.split("::");
   this.m_qname    = qname;
   this.m_pod      = fan.sys.Pod.find(s[0]);
   this.m_name     = s[1];
   this.m_base     = base == null ? null : fan.sys.Type.find(base);
   this.m_slots    = [];
+  this.m_myFacets = new fan.sys.Facets(facets);
   this.m_flags    = flags;
   this.m_$qname   = 'fan.' + this.m_pod + '.' + this.m_name;
   this.m_isMixin  = false;
@@ -105,6 +100,92 @@ fan.sys.Type.prototype.toStr = function()     { return this.signature(); }
 fan.sys.Type.prototype.toLocale = function()  { return this.signature(); }
 fan.sys.Type.prototype.$typeof = function()   { return fan.sys.Type.$type; }
 
+//////////////////////////////////////////////////////////////////////////
+// Nullable
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Type.prototype.isNullable = function() { return false; }
+fan.sys.Type.prototype.toNonNullable = function() { return this; }
+
+fan.sys.Type.prototype.toNullable = function() { return this.m_nullable; }
+fan.sys.Type.prototype.toNonNullable = function() { return this; }
+
+//////////////////////////////////////////////////////////////////////////
+// Generics
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Type.prototype.isGenericType = function()
+{
+  return this == fan.sys.List.$type ||
+         this == fan.sys.Map.$type ||
+         this == fan.sys.Func.$type;
+}
+
+fan.sys.Type.prototype.isGenericInstance = function() { false }
+
+fan.sys.Type.prototype.isGenericParameter = function()
+{
+  return this.pod() == fan.sys.Pod.$sysPod && this.$name().length == 1;
+}
+
+/*
+fan.sys.Type.prototype.getRawType = function()
+{
+  if (!isGenericParameter()) return this;
+  if (this == Sys.LType) return Sys.ListType;
+  if (this == Sys.MType) return Sys.MapType;
+  if (this instanceof ListType) return Sys.ListType;
+  if (this instanceof MapType)  return Sys.MapType;
+  if (this instanceof FuncType) return Sys.FuncType;
+  return Sys.ObjType;
+}
+*/
+
+fan.sys.Type.isGeneric = function() { return this.isGenericType(); }
+
+/*
+public Map params()
+{
+  if (noParams == null) noParams = Sys.emptyStrTypeMap;
+  return (Map)noParams;
+}
+
+public Type parameterize(Map params)
+{
+  if (this == Sys.ListType)
+  {
+    Type v = (Type)params.get("V");
+    if (v == null) throw ArgErr.make("List.parameterize - V undefined").val;
+    return v.toListOf();
+  }
+
+  if (this == Sys.MapType)
+  {
+    Type v = (Type)params.get("V");
+    Type k = (Type)params.get("K");
+    if (v == null) throw ArgErr.make("Map.parameterize - V undefined").val;
+    if (k == null) throw ArgErr.make("Map.parameterize - K undefined").val;
+    return new MapType(k, v);
+  }
+
+  if (this == Sys.FuncType)
+  {
+    Type r = (Type)params.get("R");
+    if (r == null) throw ArgErr.make("Map.parameterize - R undefined").val;
+    ArrayList p = new ArrayList();
+    for (int i='A'; i<='H'; ++i)
+    {
+      Type x = (Type)params.get(FanStr.ascii[i]);
+      if (x == null) break;
+      p.add(x);
+    }
+    return new FuncType((Type[])p.toArray(new Type[p.size()]), r);
+  }
+
+  throw UnsupportedErr.make("not generic: " + this).val;
+}
+*/
+
 fan.sys.Type.prototype.toListOf = function()
 {
   if (this.m_listOf == null) this.m_listOf = new fan.sys.ListType(this);
@@ -117,12 +198,6 @@ fan.sys.Type.prototype.emptyList = function()
     this.$emptyList = fan.sys.List.make(this).toImmutable();
   return this.$emptyList;
 }
-
-fan.sys.Type.prototype.isNullable = function() { return false; }
-fan.sys.Type.prototype.toNonNullable = function() { return this; }
-
-fan.sys.Type.prototype.toNullable = function() { return this.m_nullable; }
-fan.sys.Type.prototype.toNonNullable = function() { return this; }
 
 //////////////////////////////////////////////////////////////////////////
 // Make
@@ -213,22 +288,22 @@ fan.sys.Type.prototype.field = function(name, checked)
 }
 
 // addMethod
-fan.sys.Type.prototype.$am = function(name, flags, returns, params)
+fan.sys.Type.prototype.$am = function(name, flags, returns, params, facets)
 {
   var r = fanx_TypeParser.load(returns);
-  var m = new fan.sys.Method(this, name, flags, r, params);
+  var m = new fan.sys.Method(this, name, flags, r, params, facets);
   this.m_slots[name] = m;
   return this;
 }
 
 // addField
-fan.sys.Type.prototype.$af = function(name, flags, of)
+fan.sys.Type.prototype.$af = function(name, flags, of, facets)
 {
   // TODO: Map.def - not sure how to handle this yet
   if (of == 'sys::V?') return this;
 
   var t = fanx_TypeParser.load(of);
-  var f = new fan.sys.Field(this, name, flags, t);
+  var f = new fan.sys.Field(this, name, flags, t, facets);
   this.m_slots[name] = f;
   return this;
 }
@@ -250,11 +325,51 @@ fan.sys.Type.prototype.mixins = function()
   return this.m_mixins;
 }
 
+fan.sys.Type.prototype.inheritance = function()
+{
+  if (this.m_inheritance == null) this.m_inheritance = fan.sys.Type.$inheritance(this);
+  return this.m_inheritance;
+}
 
-// TODO
-//fan.sys.Type.prototype.inheritance = function()
-//{
-//}
+fan.sys.Type.$inheritance = function(self)
+{
+  var map = {};
+  var acc = fan.sys.List.make(fan.sys.Type.$type);
+
+  // handle Void as a special case
+  if (self == fan.sys.Void.$type)
+  {
+    acc.add(self);
+    return acc.trim().ro();
+  }
+
+  // add myself
+  map[self.qname()] = self;
+  acc.add(self);
+
+  // add my direct inheritance inheritance
+  fan.sys.Type.addInheritance(self.base(), acc, map);
+  var mixins = self.mixins();
+  for (var i=0; i<mixins.size(); ++i)
+    fan.sys.Type.addInheritance(mixins.get(i), acc, map);
+
+  return acc.trim().ro();
+}
+
+fan.sys.Type.addInheritance = function(t, acc, map)
+{
+  if (t == null) return;
+  var ti = t.inheritance();
+  for (var i=0; i<ti.size(); ++i)
+  {
+    var x = ti.get(i);
+    if (map[x.qname()] == null)
+    {
+      map[x.qname()] = x;
+      acc.add(x);
+    }
+  }
+}
 
 fan.sys.Type.prototype.fits = function(that) { return this.is(that); }
 fan.sys.Type.prototype.is = function(that)
@@ -303,12 +418,34 @@ fan.sys.Type.checkMixin = function(mixin, that)
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Type.prototype.facets = function() { return this.m_facets; }
-fan.sys.Type.prototype.hasFacet = function(type) { return false; }
+fan.sys.Type.prototype.hasFacet = function(type)
+{
+  return this.facet(type, false) != null;
+}
+
+fan.sys.Type.prototype.facets = function()
+{
+  if (this.m_inheritedFacets == null) this.loadFacets();
+  return this.m_inheritedFacets.list();
+}
+
 fan.sys.Type.prototype.facet = function(type, checked)
 {
   if (checked === undefined) checked = true;
-  return null;
+  if (this.m_inheritedFacets == null) this.loadFacets();
+  return this.m_inheritedFacets.get(type, checked);
+}
+
+fan.sys.Type.prototype.loadFacets = function()
+{
+  var f = this.m_myFacets.dup();
+  var inheritance = this.inheritance();
+  for (var i=0; i<inheritance.size(); ++i)
+  {
+    var x = inheritance.get(i);
+    if (x.m_myFacets) f.inherit(x.m_myFacets);
+  }
+  this.m_inheritedFacets = f;
 }
 
 //////////////////////////////////////////////////////////////////////////

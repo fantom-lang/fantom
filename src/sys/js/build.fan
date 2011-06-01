@@ -69,6 +69,7 @@ class Build : BuildScript
       if (f.exists) append(f, out)
     }
     append(sys + `Sys.js`, out)
+    append(sys + `Facets.js`, out)
   }
 
   private Void writeTypeInfo(OutStream out)
@@ -79,11 +80,13 @@ class Build : BuildScript
     out.printLine("{")
 
     // filter out synthetic types from reflection
-    errType := types.find |t| { t.qname == "sys::Err" }
-    reflect := types.findAll |t|
+    errType   := types.find |t| { t.qname == "sys::Err" }
+    facetType := types.find |t| { t.qname == "sys::Facet" }
+    reflect   := types.findAll |t|
     {
       if (t.isSynthetic) return false
       if (t.fits(errType)) return true
+      if (t.fits(facetType)) return true
       return (sys+`${t.name}.js`).exists
     }
 
@@ -97,8 +100,9 @@ class Build : BuildScript
       adder  := t.isMixin ? "\$am" : "\$at"
       base   := t.base == null ? "null" : "'$t.base.qname'"
       mixins := t.mixins.join(",") |m| { "'$m.pod::$m.name'" }
+      // facets
       flags  := t->flags
-      out.printLine("  fan.sys.${t.name}.\$type = $adder('$t.name',$base,[$mixins],$flags);")
+      out.printLine("  fan.sys.${t.name}.\$type = $adder('$t.name',$base,[$mixins],{},$flags);")
 
       // init generic types after Type
       if (t.name == "Type") out.printLine("  fan.sys.Sys.initGenericParamTypes();")
@@ -109,7 +113,7 @@ class Build : BuildScript
     {
       if (t.fields.isEmpty && t.methods.isEmpty) return
       out.print("  fan.sys.${t.name}.\$type")
-      t.fields.each |f| { out.print(".\$af('$f.name',${f->flags},'$f.fieldType.signature')") }
+      t.fields.each |f| { out.print(".\$af('$f.name',${f->flags},'$f.fieldType.signature',{})") }
       t.methods.each |m|
       {
         params := StrBuf().add("fan.sys.List.make(fan.sys.Param.\$type,[")
@@ -119,7 +123,7 @@ class Build : BuildScript
           params.add("new fan.sys.Param('$p.name','$p.paramType.signature',$p.hasDefault)")
         }
         params.add("])")
-        out.print(".\$am('$m.name',${m->flags},'${m.returnType.signature}',$params)")
+        out.print(".\$am('$m.name',${m->flags},'${m.returnType.signature}',$params,{})")
       }
       out.printLine(";")
     }
@@ -131,6 +135,7 @@ class Build : BuildScript
   {
     log.debug("  fan/ [support]")
     append(sys + `FConst.js`, out)
+    append(sys + `Facets.js`, out)
     append(sys + `MemBufStream.js`, out)
     append(sys + `Md5.js`, out)
     append(sys + `ObjUtil.js`, out)

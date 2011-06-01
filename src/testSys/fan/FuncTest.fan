@@ -9,6 +9,7 @@
 **
 ** FuncTest
 **
+@Js
 class FuncTest : Test
 {
 

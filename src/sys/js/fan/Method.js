@@ -16,7 +16,7 @@ fan.sys.Method = fan.sys.Obj.$extend(fan.sys.Slot);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Method.prototype.$ctor = function(parent, name, flags, returns, params)
+fan.sys.Method.prototype.$ctor = function(parent, name, flags, returns, params, facets)
 {
   this.m_parent  = parent;
   this.m_name    = name;
@@ -27,7 +27,7 @@ fan.sys.Method.prototype.$ctor = function(parent, name, flags, returns, params)
   this.m_func    = new fan.sys.MethodFunc(this, returns);
   this.m_$name   = this.$$name(name);
   this.m_$qname  = this.m_parent.m_$qname + '.' + this.m_$name;
-  this.m_facets  = fan.sys.Facet.$type.emptyList();
+  this.m_facets  = new fan.sys.Facets(facets);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -79,6 +79,16 @@ fan.sys.Method.prototype.call = function()
   return this.invoke(instance, fan.sys.List.make(fan.sys.Obj.$type, args));
 }
 
+fan.sys.Method.prototype.callList = function(args)
+{
+  var instance = null;
+  if (!this.isStatic() && (this.m_flags & fan.sys.FConst.Static == 0))
+  {
+    instance = args.get(0);
+    args = args.getSlice(1, -1);
+  }
+  return this.invoke(instance, args);
+}
 
 /*************************************************************************
  * MethodFunc

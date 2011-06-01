@@ -121,8 +121,9 @@ class JsPod : JsNode
       adder  := t.isMixin ? "\$am" : "\$at"
       base   := "$t.base.pod::$t.base.name"
       mixins := t.mixins.join(",") |m| { "'$m.pod::$m.name'" }
+      facets := t.facets.join(",") |f| { "'$f.type.sig':$f.val.toCode" }
       flags  := t->flags
-      out.w("  fan.${t.pod}.${t.name}.\$type = $adder('$t.name','$base',[$mixins],$flags);").nl
+      out.w("  fan.${t.pod}.${t.name}.\$type = $adder('$t.name','$base',[$mixins],{$facets},$flags);").nl
     }
 
     // then write slot info
@@ -131,20 +132,22 @@ class JsPod : JsNode
       if (t.fields.isEmpty && t.methods.isEmpty) return
       //out.w("  \$$i")
       out.w("  fan.${t.pod}.${t.name}.\$type")
-      t.fields.each |f| { out.w(".\$af('$f.origName',$f.flags,'$f.ftype.sig')") }
+      t.fields.each |f|
+      {
+        facets := f.facets.join(",") |x| { "'$x.type.sig':$x.val.toCode" }
+        out.w(".\$af('$f.origName',$f.flags,'$f.ftype.sig',{$facets})")
+      }
       t.methods.each |m|
       {
         if (m.isFieldAccessor) return
-        out.w(".\$am('$m.origName',$m.flags,'$m.ret.sig',fan.sys.List.make(fan.sys.Param.\$type,[")
-        m.params.each |p,i|
-        {
-          if (i > 0) out.w(",")
-          out.w("new fan.sys.Param('$p.name','$p.paramType.sig',$p.hasDef)")
-        }
-        out.w("]))")
+        params := m.params.join(",") |p| { "new fan.sys.Param('$p.name','$p.paramType.sig',$p.hasDef)" }
+        facets := m.facets.join(",") |f| { "'$f.type.sig':$f.val.toCode" }
+        out.w(".\$am('$m.origName',$m.flags,'$m.ret.sig',fan.sys.List.make(fan.sys.Param.\$type,[$params]),{$facets})")
       }
       out.w(";").nl
     }
+
+    // end with block
     out.w("}").nl
   }
 

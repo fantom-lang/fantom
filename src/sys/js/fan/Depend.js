@@ -56,7 +56,7 @@ fan.sys.Depend.prototype.hash = function()
 
 fan.sys.Depend.prototype.$typeof = function()
 {
-  return Sys.DependType.$type;
+  return fan.sys.Depend.$type;
 }
 
 fan.sys.Depend.prototype.toStr = function()

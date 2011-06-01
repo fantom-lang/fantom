@@ -26,8 +26,9 @@ class JsType : JsNode
     this.hasNatives  = null != def.slots.find |n| { n.isNative && n.parent.qname == def.qname }
     this.isMixin     = def.isMixin
     this.isSynthetic = def.isSynthetic
-    this.mixins      = def.mixins.map |TypeRef r->JsTypeRef| { JsTypeRef(s, r) }
-    this.fields      = def.fieldDefs.map |FieldDef f->JsField| { JsField(s, f) }
+    this.facets      = def.facets?.map |f| { JsFacet(s, f) } ?: [,]
+    this.mixins      = def.mixins.map |r| { JsTypeRef(s, r) }
+    this.fields      = def.fieldDefs.map |f| { JsField(s, f) }
     if (def.staticInit != null) this.staticInit = def.staticInit.name
 
     this.methods = JsMethod[,]
@@ -116,6 +117,7 @@ class JsType : JsNode
   JsTypeRef? peer        // peer type if has one
   Bool isNative          // is this a full native class
   Bool hasNatives        // does type have any native slots directly
+  JsFacet[] facets       // facets for this type
   JsTypeRef[] mixins     // mixins for this type
   JsMethod[] methods     // methods
   JsField[] fields       // fields

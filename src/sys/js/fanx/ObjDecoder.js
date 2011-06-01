@@ -18,9 +18,6 @@ function fanx_ObjDecoder(input, options)
   this.usings = [];
   this.numUsings = 0;
   this.consume();
-
-  fanx_ObjDecoder.defaultMapType =
-    new fan.sys.MapType(fan.sys.Obj.$type, fan.sys.Obj.$type);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,11 +70,11 @@ fanx_ObjDecoder.prototype.readUsing = function()
   if (this.curt == fanx_Token.AS)
   {
     this.consume();
-    typeName = consumeId("Expecting using as name");
+    typeName = this.consumeId("Expecting using as name");
   }
 
   this.endOfStmt(line);
-  return new UsingType(t, typeName);
+  return new fanx_UsingType(t, typeName);
 }
 
 /**
@@ -110,7 +107,7 @@ fanx_ObjDecoder.prototype.$readObj = function(curField, peekType, root)
   if (this.curt == fanx_Token.LPAREN)
     return this.readSimple(line, t);
   else if (this.curt == fanx_Token.POUND)
-    return this.readTypeLiteral(line, t);
+    return this.readTypeOrSlotLiteral(line, t);
   else if (this.curt == fanx_Token.LBRACKET)
     return this.readCollection(curField, t);
   else
@@ -119,11 +116,20 @@ fanx_ObjDecoder.prototype.$readObj = function(curField, peekType, root)
 
 /**
  * typeLiteral := type "#"
+ * slotLiteral := type "#" id
  */
-fanx_ObjDecoder.prototype.readTypeLiteral = function(line, t)
+fanx_ObjDecoder.prototype.readTypeOrSlotLiteral = function(line, t)
 {
   this.consume(fanx_Token.POUND, "Expected '#' for type literal");
-  return t;
+  if (this.curt == fanx_Token.ID && !this.isEndOfStmt(line))
+  {
+    var slotName = this.consumeId("slot literal name");
+    return t.slot(slotName);
+  }
+  else
+  {
+    return t;
+  }
 }
 
 /**
@@ -136,10 +142,17 @@ fanx_ObjDecoder.prototype.readSimple = function(line, t)
   var str = this.consumeStr("Expected string literal for simple");
   this.consume(fanx_Token.RPAREN, "Expected ) in simple");
 
-// TEMP
-//var script = t.qname().replace("::","_") + ".fromStr('" + str + "')";
-var script = "fan." + t.pod().$name() + "." + t.$name() + ".fromStr('" + str + "')";
-return eval(script);
+  // TEMP
+  try
+  {
+    var script = "fan." + t.pod().$name() + "." + t.$name() + ".fromStr('" + str + "')";
+    var val = eval(script);
+    return val;
+  }
+  catch (e)
+  {
+    throw fan.sys.ParseErr.make(e.toString() + " [Line " + this.line + "]", e);
+  }
 
   // lookup the fromString method
 // TODO
@@ -163,6 +176,10 @@ return eval(script);
 //    }
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Complex
+//////////////////////////////////////////////////////////////////////////
+
 /**
  * complex := type [fields]
  * fields  := "{" field (eos field)* "}"
@@ -170,29 +187,78 @@ return eval(script);
  */
 fanx_ObjDecoder.prototype.readComplex = function(line, t, root)
 {
-  // make instance
+  var toSet = fan.sys.Map.make(fan.sys.Field.$type, fan.sys.Obj.$type.toNullable());
+  var toAdd = fan.sys.List.make(fan.sys.Obj.$type.toNullable());
+
+  // read fields/collection into toSet/toAdd
+  this.readComplexFields(t, toSet, toAdd);
+
+  // get the make constructor
+  var makeCtor = t.method("make", false);
+  if (makeCtor == null || !makeCtor.isPublic())
+    throw this.err("Missing public constructor " + t.qname() + ".make", line);
+
+  // get argument lists
+  var args = null;
+  if (root && this.options != null)
+    args = this.options.get("makeArgs");
+
+  // construct object
   var obj = null;
+  var setAfterCtor = true;
   try
   {
-    var args = null;
-    if (root && this.options != null)
-      args = this.options.get("makeArgs");
-    obj = t.make(args);
+    // if first parameter is an function then pass toSet
+    // as an it-block for setting the fields
+    var p = makeCtor.params().first();
+    if (args == null && p != null && p.type().fits(fan.sys.Func.$type))
+    {
+      args = fan.sys.List.make(fan.sys.Obj.$type).add(fan.sys.Field.makeSetFunc(toSet));
+      setAfterCtor = false;
+    }
+
+    // invoke make to construct object
+    obj = makeCtor.callList(args);
   }
   catch (e)
   {
-    throw fan.sys.IOErr.make("Cannot make " + t + ": " + e + " [Line " + line + "]", e);
+    throw this.err("Cannot make " + t + ": " + e, line, e);
   }
 
-  // check for braces
-  if (this.curt != fanx_Token.LBRACE) return obj;
+  // set fields (if not passed to ctor as it-block)
+  if (setAfterCtor && toSet.size() > 0)
+  {
+    var keys = toSet.keys();
+    for (var i=0; i<keys.size(); i++)
+    {
+      var field = keys.get(i);
+      var val = toSet.get(field);
+      this.complexSet(obj, field, val, line);
+    }
+  }
+
+  // add
+  if (toAdd.size() > 0)
+  {
+    var addMethod = t.method("add", false);
+    if (addMethod == null) throw this.err("Method not found: " + t.qname() + ".add", line);
+    for (var i=0; i<toAdd.size(); ++i)
+      this.complexAdd(t, obj, addMethod, toAdd.get(i), line);
+  }
+
+  return obj;
+}
+
+fanx_ObjDecoder.prototype.readComplexFields = function(t, toSet, toAdd)
+{
+  if (this.curt != fanx_Token.LBRACE) return;
   this.consume();
 
   // fields and/or collection items
   while (this.curt != fanx_Token.RBRACE)
   {
     // try to read "id =" to see if we have a field
-    line = this.tokenizer.line;
+    var line = this.tokenizer.line;
     var readField = false;
     if (this.curt == fanx_Token.ID)
     {
@@ -201,7 +267,7 @@ fanx_ObjDecoder.prototype.readComplex = function(line, t, root)
       {
         // we have "id =" so read field
         this.consume();
-        this.readComplexField(t, obj, line, name);
+        this.readComplexSet(t, line, name, toSet);
         readField = true;
       }
       else
@@ -213,32 +279,15 @@ fanx_ObjDecoder.prototype.readComplex = function(line, t, root)
     }
 
     // if we didn't read a field, we assume a collection item
-    if (!readField) this.readComplexAdd(t, obj, line);
+    if (!readField) this.readComplexAdd(t, line, toAdd);
 
     if (this.curt == fanx_Token.COMMA) this.consume();
     else this.endOfStmt(line);
   }
   this.consume(fanx_Token.RBRACE, "Expected '}'");
-
-  return obj;
 }
 
-fanx_ObjDecoder.prototype.readComplexAdd = function(t, obj, line)
-{
-  var val = this.$readObj(null, null, false);
-  var m = t.method("add", false);
-  if (m == null) throw this.err("Method not found: " + t.qname() + ".add", line);
-  try
-  {
-    m.invoke(obj, [val]);
-  }
-  catch (err)
-  {
-    throw fan.sys.IOErr.make("Cannot call " + t.qname() + ".add: " + err + " [Line " + line + "]", err);
-  }
-}
-
-fanx_ObjDecoder.prototype.readComplexField = function(t, obj, line, name)
+fanx_ObjDecoder.prototype.readComplexSet = function(t, line, name, toSet)
 {
   // resolve field
   var field = t.field(name, false);
@@ -247,17 +296,52 @@ fanx_ObjDecoder.prototype.readComplexField = function(t, obj, line, name)
   // parse value
   var val = this.$readObj(field, null, false);
 
-  // set field value (skip const check)
+  try
+  {
+    // if const field, then make val immutable
+    if (field.isConst()) val = fan.sys.ObjUtil.toImmutable(val);
+  }
+  catch (ex)
+  {
+    throw this.err("Cannot make object const for " + field.qname() + ": " + ex, line, ex);
+  }
+
+  // add to map
+  toSet.set(field, val);
+}
+
+fanx_ObjDecoder.prototype.complexSet = function(obj, field, val, line)
+{
   try
   {
     if (field.isConst())
-      field.set(obj, OpUtil.toImmutable(val), false);
+      field.set(obj, fan.sys.ObjUtil.toImmutable(val), false);
     else
       field.set(obj, val);
   }
-  catch (err)
+  catch (ex)
   {
-    throw fan.sys.IOErr.make("Cannot set field " + t.qname() + "." + name + ": " + err + " [Line " + line + "]", err);
+    throw this.err("Cannot set field " + field.qname() + ": " + ex, line, ex);
+  }
+}
+
+fanx_ObjDecoder.prototype.readComplexAdd = function(t, line, toAdd)
+{
+  var val = this.$readObj(null, null, false);
+
+  // add to list
+  toAdd.add(val);
+}
+
+fanx_ObjDecoder.prototype.complexAdd = function(t, obj, addMethod, val, line)
+{
+  try
+  {
+    addMethod.invoke(obj, fan.sys.List.make(fan.sys.Obj.$type, [val]));
+  }
+  catch (ex)
+  {
+    throw this.err("Cannot call " + t.qname() + ".add: " + ex, line, ex);
   }
 }
 
@@ -291,8 +375,14 @@ fanx_ObjDecoder.prototype.readCollection = function(curField, t)
       t = peekType; peekType = null;
       this.consume();
       while (this.curt == fanx_Token.LRBRACKET) { this.consume(); t = t.toListOf(); }
+      if (this.curt == fanx_Token.QUESTION) { this.consume(); t = t.toNullable(); }
+      if (this.curt == fanx_Token.POUND) { this.consume(); return t; }
       this.consume(fanx_Token.LBRACKET, "Expecting '['");
     }
+
+    // if the type was a FFI JavaType, this isn't a collection
+//    if (peekType != null && peekType.isJava())
+//      return this.$readObj(curField, peekType, false);
   }
 
   // handle special case of [,]
@@ -349,41 +439,40 @@ fanx_ObjDecoder.prototype.readList = function(of, first)
  * map     := "[" mapPair ("," mapPair)* "]"
  * mapPair := obj ":" + obj
  */
-// TODO
-/*
-readMap = function(mapType, firstKey)
+fanx_ObjDecoder.prototype.readMap = function(mapType, firstKey)
 {
-  // setup accumulator
-  HashMap map = new HashMap();
+  // create map
+  var map = mapType == null
+    ? fan.sys.Map.make(fan.sys.Obj.$type, fan.sys.Obj.$type.toNullable())
+    : fan.sys.Map.make(mapType);
 
   // finish first pair
-  consume(fanx_Token.COLON, "Expected ':'");
-  map.put(firstKey, this.$readObj(null, null, false));
+  this.consume(fanx_Token.COLON, "Expected ':'");
+  map.set(firstKey, this.$readObj(null, null, false));
 
   // parse map pairs
-  while (curt != fanx_Token.RBRACKET)
+  while (this.curt != fanx_Token.RBRACKET)
   {
-    consume(fanx_Token.COMMA, "Expected ','");
-    if (curt == fanx_Token.RBRACKET) break;
-    Object key = this.$readObj(null, null, false);
-    consume(fanx_Token.COLON, "Expected ':'");
-    Object val = this.$readObj(null, null, false);
-    map.put(key, val);
+    this.consume(fanx_Token.COMMA, "Expected ','");
+    if (this.curt == fanx_Token.RBRACKET) break;
+    var key = this.$readObj(null, null, false);
+    this.consume(fanx_Token.COLON, "Expected ':'");
+    var val = this.$readObj(null, null, false);
+    map.set(key, val);
   }
-  consume(fanx_Token.RBRACKET, "Expected ']'");
+  this.consume(fanx_Token.RBRACKET, "Expected ']'");
 
   // infer type if necessary
   if (mapType == null)
   {
-    int size = map.size();
-    Type k = Type.common(map.keySet().toArray(new Object[size]), size);
-    Type v = Type.common(map.values().toArray(new Object[size]), size);
-    mapType = new fan.sys.MapType(k, v);
+    var size = map.size();
+    var k = fan.sys.Type.common(map.keys().m_values);
+    var v = fan.sys.Type.common(map.vals().m_values);
+    map.m_type = new fan.sys.MapType(k, v);
   }
 
-  return fan.sys.Map.make((fan.sys.MapType)mapType, map);
-},
-*/
+  return map;
+}
 
 /**
  * Figure out the type of the list:
@@ -401,7 +490,7 @@ fanx_ObjDecoder.prototype.toListOfType = function(t, curField, infer)
     if (ft instanceof fan.sys.ListType) return ft.v;
   }
   if (infer) return null;
-  return fan.sys.Obj.$type.toNullable(); //Sys.ObjType.toNullable();
+  return fan.sys.Obj.$type.toNullable();
 }
 
 /**
@@ -423,6 +512,10 @@ fanx_ObjDecoder.prototype.toMapType = function(t, curField, infer)
   }
 
   if (infer) return null;
+
+  if (fanx_ObjDecoder.defaultMapType == null)
+    fanx_ObjDecoder.defaultMapType =
+      new fan.sys.MapType(fan.sys.Obj.$type, fan.sys.Obj.$type.toNullable());
   return fanx_ObjDecoder.defaultMapType;
 }
 
@@ -496,7 +589,7 @@ fanx_ObjDecoder.prototype.readSimpleType = function()
 
   // resolve type
   var type = pod.type(typeName, false);
-  if (type == null) throw fanx_ObjDecoder.err("Type not found: " + n + "::" + typeName, line);
+  if (type == null) throw this.err("Type not found: " + n + "::" + typeName, line);
   return type;
 }
 
@@ -557,6 +650,16 @@ fanx_ObjDecoder.prototype.verify = function(type, expected)
 {
   if (this.curt != type)
     throw this.err(expected + ", not '" + fanx_Token.toString(this.curt) + "'");
+}
+
+/**
+ * Is current token part of the next statement?
+ */
+fanx_ObjDecoder.prototype.isEndOfStmt = function(lastLine)
+{
+  if (this.curt == fanx_Token.EOF) return true;
+  if (this.curt == fanx_Token.SEMICOLON) return true;
+  return lastLine < this.tokenizer.line;
 }
 
 /**

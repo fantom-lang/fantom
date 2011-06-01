@@ -9,6 +9,7 @@
 **
 ** SerializationTest
 **
+@Js
 class SerializationTest : Test
 {
 
@@ -29,14 +30,20 @@ class SerializationTest : Test
     verifySer("5", 5)
     verifySer("5_000", 5000)
     verifySer("0xabcd_0123_4567", 0xabcd_0123_4567)
-    verifySer("9223372036854775807", 9223372036854775807)
-    verifySer("-9223372036854775808", -9223372036854775807-1)
+    if (!js)
+    {
+      verifySer("9223372036854775807", 9223372036854775807)
+      verifySer("-9223372036854775808", -9223372036854775807-1)
+    }
     verifySer("-987", -987)
     verifySer("'A'", 'A')
     verifySer("'\u0c45'", 0xc45)
     verifyErr(IOErr#) { verifySer("0x", 0) }
-    verifyErr(IOErr#) { verifySer("9223372036854775808", 0) }
-    verifyErr(IOErr#) { verifySer("-9223372036854775809", 0) }
+    if (!js)
+    {
+      verifyErr(IOErr#) { verifySer("9223372036854775808", 0) }
+      verifyErr(IOErr#) { verifySer("-9223372036854775809", 0) }
+    }
 
     // Float literals
     verifySer("3f", 3f)
@@ -49,7 +56,11 @@ class SerializationTest : Test
     verifySer("2e10f", 2e10f)
     verifySer("-8e-9f", -8e-9f)
     verifySer("-8.4E-6F", -8.4E-6f)
-    verifySer("sys::Float(\"NaN\")", Float.nan)
+    if (!js)
+    {
+      // TODO FIXIT
+      verifySer("sys::Float(\"NaN\")", Float.nan)
+    }
     verifySer("sys::Float(\"INF\")", Float.posInf)
     verifySer("sys::Float(\"-INF\")", Float.negInf)
     verifyErr(IOErr#) { verifySer("3e", null) }
@@ -66,10 +77,13 @@ class SerializationTest : Test
     verifySer("123_4567_890.123_456", 123_4567_890.123_456d)
     verifySer("-123_4567_890.123_456", -123_4567_890.123_456d)
     verifySer("7.9e28", 7.9e28)
-    verifySer("9223372036854775800d", 9223372036854775800d)
-    verifySer("9223372036854775809d", 9223372036854775809d)
-    verifySer("92233720368547758091234d", 92233720368547758091234d)
-    verifySer("-92233720368547758091234.678d", -92233720368547758091234.678d)
+    if (!js)
+    {
+      verifySer("9223372036854775800d", 9223372036854775800d)
+      verifySer("9223372036854775809d", 9223372036854775809d)
+      verifySer("92233720368547758091234d", 92233720368547758091234d)
+      verifySer("-92233720368547758091234.678d", -92233720368547758091234.678d)
+    }
 
     // String literals
     verifySer("\"\"", "")
@@ -854,12 +868,14 @@ class SerializationTest : Test
     }
   }
 
+  const Bool js := Env.cur.runtime == "js"
 }
 
 **************************************************************************
 ** SerA
 **************************************************************************
 
+@Js
 @Serializable
 class SerA
 {
@@ -910,6 +926,7 @@ class SerA
 ** SerB
 **************************************************************************
 
+@Js
 @Serializable
 class SerB : SerA
 {
@@ -930,6 +947,7 @@ class SerB : SerA
 ** SerConst
 **************************************************************************
 
+@Js
 @Serializable
 const class SerConst
 {
@@ -966,6 +984,7 @@ const class SerConst
 ** SerListMap
 **************************************************************************
 
+@Js
 @Serializable
 class SerListMap
 {
@@ -992,6 +1011,7 @@ class SerListMap
 ** SerSimple
 **************************************************************************
 
+@Js
 @Serializable { simple = true }
 class SerSimple
 {
@@ -1015,6 +1035,7 @@ class SerSimple
 ** SerSynthetic
 **************************************************************************
 
+@Js
 @Serializable
 class SerSynthetic
 {
@@ -1031,6 +1052,7 @@ class SerSynthetic
 ** SerIntCollection
 **************************************************************************
 
+@Js
 @Serializable { collection = true }
 class SerIntCollection
 {
@@ -1051,6 +1073,7 @@ class SerIntCollection
 ** SerFolder
 **************************************************************************
 
+@Js
 @Serializable { collection = true }
 class SerFolder
 {
@@ -1071,6 +1094,7 @@ class SerFolder
 ** SerItBlock
 **************************************************************************
 
+@Js
 @Serializable
 const class SerItBlock
 {
@@ -1095,6 +1119,7 @@ const class SerItBlock
 ** SerCollectionInference
 **************************************************************************
 
+@Js
 @Serializable
 class SerCollectionInference
 {
@@ -1109,6 +1134,7 @@ class SerCollectionInference
 ** SerCollectionInference
 **************************************************************************
 
+@Js
 @Serializable
 class SerTypeSlotLiterals
 {
