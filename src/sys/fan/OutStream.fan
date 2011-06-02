@@ -227,7 +227,7 @@ class OutStream
 internal class SysOutStream : OutStream
 {
   override This write(Int byte)
-  override This writeBuf(Buf buf, Int n)
+  override This writeBuf(Buf buf, Int n := buf.remaining)
   override This flush()
   override Bool close()
 }

@@ -96,7 +96,7 @@ class CompilerSupport
   **
   ** Create, log, and return a CompilerErr.
   **
-  virtual CompilerErr err(Str msg, Loc? loc)
+  virtual CompilerErr err(Str msg, Loc? loc := null)
   {
     if (suppressErr) throw SuppressedErr.make
     return errReport(CompilerErr(msg, loc))
@@ -105,7 +105,7 @@ class CompilerSupport
   **
   ** Create, log, and return a warning CompilerErr.
   **
-  virtual CompilerErr warn(Str msg, Loc? loc)
+  virtual CompilerErr warn(Str msg, Loc? loc := null)
   {
     if (suppressErr) throw SuppressedErr.make
     return errReport(CompilerErr(msg, loc, null, LogLevel.warn))
