@@ -236,13 +236,13 @@ fan.dom.ElemPeer.prototype.onEvent = function(self, type, useCapture, handler)
   if (this.elem.addEventListener)
   {
     this.elem.addEventListener(type, function(e) {
-      handler.call(fan.dom.EventPeer.make(e));
+      handler.call(fan.dom.DomEventPeer.make(e));
     }, useCapture);
   }
   else
   {
     this.elem.attachEvent('on'+type, function(e) {
-      handler.call(fan.dom.EventPeer.make(e));
+      handler.call(fan.dom.DomEventPeer.make(e));
     });
   }
 }

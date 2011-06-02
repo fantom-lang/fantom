@@ -204,6 +204,6 @@ class Elem
   **
   ** Attach an event handler to the given event on this element.
   **
-  native Void onEvent(Str type, Bool useCapture, |Event e| handler)
+  native Void onEvent(Str type, Bool useCapture, |DomEvent e| handler)
 
 }
