@@ -19,6 +19,7 @@ fan.sys.List = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.sys.List.make = function(of, values)
 {
+  if (of == null) throw fan.sys.NullErr();
   if (values === undefined) values = [];
 
   var self = new fan.sys.List();
@@ -898,6 +899,12 @@ fan.sys.List.prototype.toCode = function()
   }
   s += ']';
   return s;
+}
+
+fan.sys.List.prototype.$literalEncode = function(out)
+{
+  // route back to obj encoder
+  out.writeList(this);
 }
 
 //////////////////////////////////////////////////////////////////////////

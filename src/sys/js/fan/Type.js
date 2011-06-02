@@ -99,6 +99,7 @@ fan.sys.Type.prototype.log = function()       { return fan.sys.Log.get(this.m_po
 fan.sys.Type.prototype.toStr = function()     { return this.signature(); }
 fan.sys.Type.prototype.toLocale = function()  { return this.signature(); }
 fan.sys.Type.prototype.$typeof = function()   { return fan.sys.Type.$type; }
+fan.sys.Type.prototype.$literalEncode = function(out)  { out.w(this.signature()).w("#"); }
 
 //////////////////////////////////////////////////////////////////////////
 // Nullable
@@ -321,7 +322,7 @@ fan.sys.Type.prototype.mixins = function()
 {
   // lazy-build mxins list for Obj and Type
   if (this.m_mixins == null)
-    this.m_mixins = fan.sys.List.make(fan.sys.Type.$type, []).ro();
+    this.m_mixins = fan.sys.Type.$type.emptyList();
   return this.m_mixins;
 }
 
@@ -407,7 +408,7 @@ fan.sys.Type.prototype.is = function(that)
 fan.sys.Type.checkMixin = function(mixin, that)
 {
   if (mixin.equals(that)) return true;
-  var m = mixin.m_mixins;
+  var m = mixin.mixins();
   for (var i=0; i<m.size(); i++)
     if (fan.sys.Type.checkMixin(m.get(i), that))
       return true;
@@ -568,8 +569,8 @@ fan.sys.NullableType.prototype.methods = function() { return this.m_root.methods
 fan.sys.NullableType.prototype.slots = function() { return this.m_root.slots(); }
 fan.sys.NullableType.prototype.slot = function(name, checked) { return this.m_root.slot(name, checked); }
 
-fan.sys.NullableType.prototype.facets = function(inherited) { return this.m_root.facets(inherited); }
-fan.sys.NullableType.prototype.facet = function(key, def, inherited) { return this.m_root.facet(key, def, inherited); }
+fan.sys.NullableType.prototype.facets = function() { return this.m_root.facets(); }
+fan.sys.NullableType.prototype.facet = function(type, checked) { return this.m_root.facet(type, checked); }
 
 fan.sys.NullableType.prototype.doc = function() { return this.m_root.doc(); }
 
@@ -581,7 +582,7 @@ fan.sys.ListType = fan.sys.Obj.$extend(fan.sys.Type)
 fan.sys.ListType.prototype.$ctor = function(v)
 {
   this.v = v;
-  this.m_mixins = [];
+  this.m_mixins = fan.sys.Type.$type.emptyList();
 }
 
 fan.sys.ListType.prototype.base = function() { return fan.sys.List.$type; }
@@ -632,6 +633,9 @@ fan.sys.ListType.prototype.toNullable = function()
   return this.m_nullable;
 }
 
+fan.sys.ListType.prototype.facets = function() { return fan.sys.List.$type.facets(); }
+fan.sys.ListType.prototype.facet = function(type, checked) { return fan.sys.List.$type.facet(type, checked); }
+
 /*************************************************************************
  * MapType
  ************************************************************************/
@@ -642,7 +646,7 @@ fan.sys.MapType.prototype.$ctor = function(k, v)
 {
   this.k = k;
   this.v = v;
-  this.m_mixins = [];
+  this.m_mixins = fan.sys.Type.$type.emptyList();
 }
 
 fan.sys.MapType.prototype.signature = function()
@@ -697,6 +701,9 @@ fan.sys.MapType.prototype.toNullable = function()
   return this.m_nullable;
 }
 
+fan.sys.MapType.prototype.facets = function() { return fan.sys.Map.$type.facets(); }
+fan.sys.MapType.prototype.facet = function(type, checked) { return fan.sys.Map.$type.facet(type, checked); }
+
 /*************************************************************************
  * FuncType
  ************************************************************************/
@@ -711,7 +718,7 @@ fan.sys.FuncType.prototype.$ctor = function(params, ret)
   this.m_base   = fan.sys.Obj.$type;
   this.params   = params;
   this.ret      = ret;
-  this.m_mixins = [];
+  this.m_mixins = fan.sys.Type.$type.emptyList();
 }
 
 fan.sys.FuncType.prototype.signature = function()
@@ -776,3 +783,5 @@ fan.sys.FuncType.prototype.toNullable = function()
   return this.m_nullable;
 }
 
+fan.sys.FuncType.prototype.facets = function() { return fan.sys.Func.$type.facets(); }
+fan.sys.FuncType.prototype.facet = function(type, checked) { return fan.sys.Func.$type.facet(type, checked); }

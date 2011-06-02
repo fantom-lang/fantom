@@ -36,6 +36,8 @@
 - js: fwt::Event.count,consume support, fixes for event bubbling
 - js: sys::Depend implementation
 - Change pod meta "build.time" -> "build.ts"
+- js: Facet support
+- js: full readObj/writeObj serialization support
 
 *Build 1.0.58 (4 Mar 2011)*
 - Remove deprecated sql APIs (#1318)
