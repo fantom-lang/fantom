@@ -193,7 +193,7 @@ fan.sys.Duration.prototype.toStr = function()
   return ns + "ns";
 }
 
-fan.sys.Duration.prototype.$literalEncode = function(out) { out.writeChars(this.toStr()); }
+fan.sys.Duration.prototype.$literalEncode = function(out) { out.w(this.toStr()); }
 
 fan.sys.Duration.prototype.toCode = function() { return this.toStr(); }
 

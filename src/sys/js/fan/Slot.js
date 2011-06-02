@@ -31,6 +31,11 @@ fan.sys.Slot.prototype.$ctor = function()
 
 fan.sys.Slot.prototype.$typeof = function() { return fan.sys.Slot.$type; }
 fan.sys.Slot.prototype.toStr = function() { return this.m_qname; }
+fan.sys.Slot.prototype.$literalEncode = function(out)
+{
+  this.m_parent.$literalEncode(out);
+  out.w(this.m_name);
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Management
@@ -99,7 +104,7 @@ fan.sys.Slot.prototype.isVirtual = function()   { return (this.m_flags & fan.sys
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.Slot.prototype.facets = function() { return this.m_facets.list(); }
-fan.sys.Slot.prototype.hasFacet = function(type) { return this.facets(type, false) != null; }
+fan.sys.Slot.prototype.hasFacet = function(type) { return this.facet(type, false) != null; }
 fan.sys.Slot.prototype.facet = function(type, checked)
 {
   if (checked === undefined) checked = true;

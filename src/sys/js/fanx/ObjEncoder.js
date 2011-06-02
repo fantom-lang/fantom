@@ -58,22 +58,19 @@ fanx_ObjEncoder.prototype.writeObj = function(obj)
     obj.$literalEncode(this);
     return;
   }
-
-fan.sys.ObjUtil.echo(">>>> ObjEncoder.writeObj Serializable not implemented!");
-
   var type = fan.sys.ObjUtil.$typeof(obj);
-  var ser = null;//type.facet(fan.sys.Serializable.$type, false);
+  var ser = type.facet(fan.sys.Serializable.$type, false);
   if (ser != null)
   {
-  //  if (ser.simple)
-  //    writeSimple(type, obj);
-  //  else
-  //    writeComplex(type, obj, ser);
+    if (ser.m_simple)
+      this.writeSimple(type, obj);
+    else
+      this.writeComplex(type, obj, ser);
   }
   else
   {
-    if (this.skipErrors)
-      this.w("null /* Not serializable: ").w(type.qname()).w(" */");
+    if (this.skipErrors) // NOTE: /* not playing nice in str - escape as unicode char
+      this.w("null /\u002A Not serializable: ").w(type.qname()).w(" */");
     else
       throw fan.sys.IOErr.make("Not serializable: " + type);
   }
@@ -93,183 +90,176 @@ fanx_ObjEncoder.prototype.writeSimple = function(type, obj)
 // Complex
 //////////////////////////////////////////////////////////////////////////
 
-/*
-private void writeComplex(Type type, Object obj, Serializable ser)
+fanx_ObjEncoder.prototype.writeComplex = function(type, obj, ser)
 {
-  wType(type);
+  this.wType(type);
 
-  boolean first = true;
-  Object defObj = null;
-  if (skipDefaults) defObj = FanObj.typeof(obj).make();
+  var first = true;
+  var defObj = null;
+  if (this.skipDefaults) defObj = fan.sys.ObjUtil.$typeof(obj).make();
 
-  List fields = type.fields();
-  for (int i=0; i<fields.sz(); ++i)
+  var fields = type.fields();
+  for (var i=0; i<fields.size(); ++i)
   {
-    Field f = (Field)fields.get(i);
+    var f = fields.get(i);
 
     // skip static, transient, and synthetic (once) fields
-    if (f.isStatic() || f.isSynthetic() || f.hasFacet(Sys.TransientType))
+    if (f.isStatic() || f.isSynthetic() || f.hasFacet(fan.sys.Transient.$type))
       continue;
 
     // get the value
-    Object val = f.get(obj);
+    var val = f.get(obj);
 
     // if skipping defaults
     if (defObj != null)
     {
-      Object defVal = f.get(defObj);
-      if (OpUtil.compareEQ(val, defVal)) continue;
+      var defVal = f.get(defObj);
+      if (fan.sys.ObjUtil.equals(val, defVal)) continue;
     }
 
     // if first then open braces
-    if (first) { w('\n').wIndent().w('{').w('\n'); level++; first = false; }
+    if (first) { this.w('\n').wIndent().w('{').w('\n'); this.level++; first = false; }
 
     // field name =
-    wIndent().w(f.name()).w('=');
+    this.wIndent().w(f.$name()).w('=');
 
     // field value
-    curFieldType = f.type().toNonNullable();
-    writeObj(val);
-    curFieldType = null;
+    this.curFieldType = f.type().toNonNullable();
+    this.writeObj(val);
+    this.curFieldType = null;
 
-    w('\n');
+    this.w('\n');
   }
 
   // if collection
-  if (ser.collection)
-    first = writeCollectionItems(type, obj, first);
+  if (ser.m_collection)
+    first = this.writeCollectionItems(type, obj, first);
 
   // if we output fields, then close braces
-  if (!first) { level--; wIndent().w('}'); }
+  if (!first) { this.level--; this.wIndent().w('}'); }
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Collection (@collection)
 //////////////////////////////////////////////////////////////////////////
 
-private boolean writeCollectionItems(Type type, Object obj, boolean first)
+fanx_ObjEncoder.prototype.writeCollectionItems = function(type, obj, first)
 {
   // lookup each method
-  Method m = type.method("each", false);
-  if (m == null) throw IOErr.make("Missing " + type.qname() + ".each").val;
+  var m = type.method("each", false);
+  if (m == null) throw fan.sys.IOErr.make("Missing " + type.qname() + ".each");
 
   // call each(it)
-  EachIterator it = new EachIterator(first);
-  m.invoke(obj, new Object[] { it });
-  return it.first;
-}
+  var enc = this;
+  var it  = fan.sys.Func.make(
+    fan.sys.List.make(fan.sys.Param.$type),
+    fan.sys.Void.$type,
+    function(obj)
+    {
+      if (first) { enc.w('\n').wIndent().w('{').w('\n'); enc.level++; first = false; }
+      enc.wIndent();
+      enc.writeObj(obj);
+      enc.w(',').w('\n');
+      return null;
+    });
 
-static final FuncType eachIteratorType = new FuncType(new Type[] { Sys.ObjType }, Sys.VoidType);
-
-class EachIterator extends Func.Indirect1
-{
-  EachIterator (boolean first) { super(eachIteratorType); this.first = first; }
-  public Object call(Object obj)
-  {
-    if (first) { w('\n').wIndent().w('{').w('\n'); level++; first = false; }
-    wIndent();
-    writeObj(obj);
-    w(',').w('\n');
-    return null;
-  }
-  boolean first;
+  m.invoke(obj, fan.sys.List.make(fan.sys.Obj.$type, [it]));
+  return first;
 }
 
 //////////////////////////////////////////////////////////////////////////
 // List
 //////////////////////////////////////////////////////////////////////////
 
-public void writeList(List list)
+fanx_ObjEncoder.prototype.writeList = function(list)
 {
   // get of type
-  Type of = list.of();
+  var of = list.of();
 
   // decide if we're going output as single or multi-line format
-  boolean nl = isMultiLine(of);
+  var nl = this.isMultiLine(of);
 
   // figure out if we can use an inferred type
-  boolean inferred = false;
-  if (list.typeof() == curFieldType)
+  var inferred = false;
+  if (this.curFieldType != null && (this.curFieldType instanceof fan.sys.ListType))
   {
     inferred = true;
   }
 
   // clear field type, so it doesn't get used for inference again
-  curFieldType = null;
+  this.curFieldType = null;
 
   // if we don't have an inferred type, then prefix of type
-  if (!inferred) wType(of);
+  if (!inferred) this.wType(of);
 
   // handle empty list
-  int size = list.sz();
-  if (size == 0) { w("[,]"); return; }
+  var size = list.size();
+  if (size == 0) { this.w("[,]"); return; }
 
   // items
-  if (nl) w('\n').wIndent();
-  w('[');
-  level++;
-  for (int i=0; i<size; ++i)
+  if (nl) this.w('\n').wIndent();
+  this.w('[');
+  this.level++;
+  for (var i=0; i<size; ++i)
   {
-    if (i > 0) w(',');
-     if (nl) w('\n').wIndent();
-    writeObj(list.get(i));
+    if (i > 0) this.w(',');
+     if (nl) this.w('\n').wIndent();
+    this.writeObj(list.get(i));
   }
-  level--;
-  if (nl) w('\n').wIndent();
-  w(']');
+  this.level--;
+  if (nl) this.w('\n').wIndent();
+  this.w(']');
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Map
 //////////////////////////////////////////////////////////////////////////
 
-public void writeMap(Map map)
+fanx_ObjEncoder.prototype.writeMap = function(map)
 {
   // get k,v type
-  MapType t = (MapType)map.typeof();
+  var t = map.$typeof();
 
   // decide if we're going output as single or multi-line format
-  boolean nl = isMultiLine(t.k) || isMultiLine(t.v);
+  var nl = this.isMultiLine(t.k) || this.isMultiLine(t.v);
 
   // figure out if we can use an inferred type
-  boolean inferred = false;
-  if (t.equals(curFieldType))
+  var inferred = false;
+  if (this.curFieldType != null && (this.curFieldType instanceof fan.sys.MapType))
   {
     inferred = true;
   }
 
   // clear field type, so it doesn't get used for inference again
-  curFieldType = null;
+  this.curFieldType = null;
 
   // if we don't have an inferred type, then prefix of type
-  if (!inferred) wType(t);
+  if (!inferred) this.wType(t);
 
   // handle empty map
-  if (map.isEmpty()) { w("[:]"); return; }
+  if (map.isEmpty()) { this.w("[:]"); return; }
 
   // items
-  level++;
-  w('[');
-  boolean first = true;
-  Iterator it = map.pairsIterator();
-  while (it.hasNext())
+  this.level++;
+  this.w('[');
+  var first = true;
+  var keys = map.keys();
+  for (var i=0; i<keys.size(); i++)
   {
-    Entry e = (Entry)it.next();
-    if (first) first = false; else w(',');
-    if (nl) w('\n').wIndent();
-    Object key = e.getKey();
-    Object val = e.getValue();
-    writeObj(key); w(':'); writeObj(val);
+    if (first) first = false; else this.w(',');
+    if (nl) this.w('\n').wIndent();
+    var key = keys.get(i);
+    var val = map.get(key);
+    this.writeObj(key); this.w(':'); this.writeObj(val);
   }
-  w(']');
-  level--;
+  this.w(']');
+  this.level--;
 }
 
-private boolean isMultiLine(Type t)
+fanx_ObjEncoder.prototype.isMultiLine = function(t)
 {
-  return t.pod() != Sys.sysPod;
+  return t.pod() != fan.sys.Pod.$sysPod;
 }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Output
@@ -306,7 +296,7 @@ fanx_ObjEncoder.prototype.wStrLiteral = function(s, quote)
 
 fanx_ObjEncoder.prototype.wIndent = function()
 {
-  var num = level*indent;
+  var num = this.level * this.indent;
   for (var i=0; i<num; ++i) this.w(' ');
   return this;
 }
