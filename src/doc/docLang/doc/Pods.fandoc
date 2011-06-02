@@ -38,8 +38,22 @@ name/value pairs with [BuildPod.meta]`build::BuildPod.meta`.  Plus the compiler
 will add its own metadata regarding when and where the pod was built.
 
 Metadata is stored "/meta.props" in the pod zip file. The [Pod.meta]`sys::Pod.meta`
-method is used to access a pod's metadata at runtime.  The following are the
-standardized keys:
+method is used to access a pod's metadata at runtime.
+
+The following are the standardized user defined keys:
+  - 'org.name': name of the organization who developed the pod;
+    the name should be a unique string name used consistently across all pods
+  - 'org.uri': web site URL of the organization
+  - 'proj.name': name of the project which groups one or pods;
+    should be a unique string name used consistently across all pods
+  - 'proj.uri': web site URL of the project
+  - 'license.name': name of the license used by the project which should
+    be "Commercial" or one of the long names defined by
+    [OSI]`http://www.opensource.org/licenses/alphabetical`
+  - 'vcs.name': name of the version control system: "Mercurial", "Git", "Subversion"
+  - 'vcs.uri': URI of the public version control repository
+
+The following are the standardized keys automatically defined by compiler:
 
   - 'pod.name': name of the pod
   - 'pod.version': [Version]`sys::Version` of the pod
