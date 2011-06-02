@@ -345,7 +345,8 @@ abstract const class File
 
   **
   ** Memory map the region of the file specified by 'pos' and 'size'.
-  ** The file is paged into virtual memory on demand.  Modes are:
+  ** If size is null, then use the file's size as a default.  The
+  ** file is paged into virtual memory on demand.  Modes are:
   **   - "r": map the file for reading only.  Throws IOErr
   **     if file does not exist.
   **   - "rw": open the file for reading and writing; create

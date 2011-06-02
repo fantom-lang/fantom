@@ -269,11 +269,15 @@ public class MmapBuf
     public Long read() { int n = r(); return n < 0 ? null : FanInt.pos[n]; }
     public int r()
     {
+      if (mmap.remaining() <= 0) return -1;
       return mmap.get() & 0xff;
     }
 
     public Long readBuf(Buf other, long n)
     {
+      int left = mmap.remaining();
+      if (left <= 0) return null;
+      if (left < n) n = left;
       int read = other.pipeFrom(mmap, (int)n);
       if (read < 0) return null;
       return Long.valueOf(read);
