@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.59 (working)*
+*Build 1.0.59 (2 Jun 2011)*
 - Remove support for deprecated 'readonly' keyword
 - fwt::Cursor API
 - Graphics drawRoundRect, fillRoundRect
@@ -40,6 +40,26 @@
 - js: full readObj/writeObj serialization support
 - Add standard pod meta tags for org, proj, license, and vcs
 - Rename dom::Event -> dom::DomEvent
+- #717: Err extend RuntimeException
+- #1331: Fix set assignment to work with value types
+- #1390: js: List of numbers sorting differs
+- #1419: js: safe field access
+- #1427: js: fwt.window.root possible error
+- #1448: Mmaped Buf end of stream issue
+- #1471: js: List.binarySearch and List.shuffle are missing
+- #1474: Ensure 'super' only used with slot call
+- #1477: Report error if mixin has native methods
+- #1480: Map#map doesn't preserve ordered/caseInsensitive
+- #1482: Overriden non-nullable fields can be left uninitialized
+- #1496: fanx.interop.Interop.toFan/toJava
+- #1497: override with static field
+- #1501: ensure override has matching param default state
+- #1509: Horizontal mouse wheel support
+- #1512: ffi 'override once' with array
+- #1526: Virtual methods in OutStream
+- #1534: Build problem when using java native code and PathEnv
+- #1543: Key.fromMask doesn't work for complex modifier
+- #1545: email "from" field error
 
 *Build 1.0.58 (4 Mar 2011)*
 - Remove deprecated sql APIs (#1318)
