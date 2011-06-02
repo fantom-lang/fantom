@@ -3,15 +3,16 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   25 Feb 09  Andy Frank  Creation
-//   8 Jul 09   Andy Frank  Split webappClient into sys/dom
+//   25 Feb 2009  Andy Frank  Creation
+//    8 Jul 2009  Andy Frank  Split webappClient into sys/dom
+//    2 Jun 2011  Andy Frank  Rename to DomEvent
 //
 
 **
-** Event models the DOM event object.
+** DomEvent models the DOM event object.
 **
 @Js
-class Event
+class DomEvent
 {
 
 //////////////////////////////////////////////////////////////////////////

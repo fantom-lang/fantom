@@ -39,6 +39,7 @@
 - js: Facet support
 - js: full readObj/writeObj serialization support
 - Add standard pod meta tags for org, proj, license, and vcs
+- Rename dom::Event -> dom::DomEvent
 
 *Build 1.0.58 (4 Mar 2011)*
 - Remove deprecated sql APIs (#1318)
