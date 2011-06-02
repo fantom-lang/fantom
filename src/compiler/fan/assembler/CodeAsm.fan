@@ -1469,8 +1469,9 @@ class CodeAsm : CompilerSupport
         storeField((FieldExpr)var)
       case ExprId.shortcut:
         set := (CMethod)c->setMethod
-        // if calling setter we have to ensure unboxed
-        if (c.ctype.isVal && coerce == null) coerceOp(c.ctype, ns.objType)
+        setParam := (set.isParameterized ? set.generic : set).params[1].paramType
+        // if calling setter check if we need to boxed
+        if (c.ctype.isVal && !setParam.isVal && coerce == null) coerceOp(c.ctype, setParam)
         op(FOp.CallVirtual, fpod.addMethodRef(set, 2))
         if (!set.returnType.isVoid) opType(FOp.Pop, set.returnType)
       default:
