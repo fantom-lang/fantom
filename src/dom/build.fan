@@ -19,6 +19,13 @@ class Build : BuildPod
   {
     podName = "dom"
     summary = "Web Browser DOM API"
+    meta    = ["org.name":     "Fantom",
+               "org.uri":      "http://fantom.org/",
+               "proj.name":    "Fantom Core",
+               "proj.uri":     "http://fantom.org/",
+               "license.name": "Academic Free License 3.0",
+               "vcs.name":     "Mercurial",
+               "vcs.uri":      "http://hg.fantom.org/fan-1.0/"]
     depends = ["sys 1.0", "web 1.0", "gfx 1.0"]
     srcDirs = [`fan/`, `test/`]
     jsDirs  = [`js/`]
