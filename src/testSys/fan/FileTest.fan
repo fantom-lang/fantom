@@ -581,6 +581,24 @@ class FileTest : Test
 
     b.close
     fb.close
+
+    // write a file of known size
+    (dir + `foo.txt`).out.print("alpha\nbeta").close
+    b = (dir + `foo.txt`).mmap("r", 0)
+    verifyEq(b.read, 'a')
+    verifyEq(b.readChar, 'l')
+    verifyEq(b.readLine, "pha")
+    verifyEq(b.readLine, "beta")
+    verifyEq(b.readLine, null)
+    verifyEq(b.read, null)
+    verifyEq(b.readChar, null)
+    b.close
+    b = (dir + `foo.txt`).mmap("r", 0)
+    m.clear
+    verifyEq(b.readBuf(m, 100), 10)
+    verifyEq(m.flip.readAllStr, "alpha\nbeta")
+    verifyEq(b.readBuf(m, 100), null)
+    b.close
   }
 
   Void verifyRegion(Buf a, Int apos, Buf b, Int bpos, Int len)
