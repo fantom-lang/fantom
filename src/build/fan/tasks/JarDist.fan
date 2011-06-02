@@ -228,7 +228,7 @@ class JarDist : JdkTask
                Method m = Slot.findMethod("$mainMethod");
                m.call();
              }
-             catch (Err.Val e) { e.err().trace(); }
+             catch (Err e) { e.trace(); }
              catch (Throwable e) { e.printStackTrace(); }
            }
          }

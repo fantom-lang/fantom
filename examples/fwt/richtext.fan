@@ -58,7 +58,7 @@ class RichTextDemo
 **
 class Doc : RichTextModel
 {
-  override Str text
+  override Str text := ""
 
   const Log log := Log.get("Doc")
 
