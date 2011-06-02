@@ -18,6 +18,13 @@ class Build : BuildPod
   {
     podName    = "build"
     summary    = "Fantom build utility"
+    meta       = ["org.name":     "Fantom",
+                  "org.uri":      "http://fantom.org/",
+                  "proj.name":    "Fantom Core",
+                  "proj.uri":     "http://fantom.org/",
+                  "license.name": "Academic Free License 3.0",
+                  "vcs.name":     "Mercurial",
+                  "vcs.uri":      "http://hg.fantom.org/fan-1.0/"]
     depends    = ["sys 1.0", "compiler 1.0"]
     srcDirs    = [`fan/`, `fan/tasks/`]
     docSrc     = true
