@@ -126,7 +126,7 @@ kilowatt_hour, kWh; kg1*m2*sec-2; 3600000.0
 megawatt_hour, MWh; kg1*m2*sec-2; 3.6E9
 btu, BTU; kg1*m2*sec-2; 1054.852
 kilobtu, kBTU; kg1*m2*sec-2; 1054852.0
-megabtu, MBTU; kg1*m2*sec-2; 1.054852E9
+megabtu, MBTU, MMBTU; kg1*m2*sec-2; 1.054852E9
 horsepower_hour, hph; kg1*m2*sec-2; 2686088.6
 calorie, cal; kg1*m2*sec-2; 4.184
 therm; kg1*m2*sec-2; 1.05506E8
@@ -364,6 +364,7 @@ milliliters_per_second, mL/s; m3*sec-1; 1.0E-6
 liters_per_second, L/s; m3*sec-1; 0.0010
 cubic_feet_per_second, cfs; m3*sec-1; 0.028317
 cubic_feet_per_minute, cfm; m3*sec-1; 4.719474432E-4
+kilocubic_feet_per_minute, kcfm; m3*sec-1; 0.4719474432
 imperial_gallons_per_minute, galUK/min; m3*sec-1; 0.004546092
 liters_per_minute, L/min; m3*sec-1; 1.6666666666666667E-5
 gallons_per_minute, gal/min; m3*sec-1; 6.30901964E-5
