@@ -1393,6 +1393,9 @@ class ParserTest : CompilerTest
 
     verifyErrors("class Foo { Void f() { this.a := null } }",
       [1, 24, "Left hand side of ':=' must be identifier"])
+
+    verifyErrors("class Foo { Void f() { x := BadType#.qname } }",
+      [1, 29, "Unknown type 'BadType' for type literal"])
   }
 
 //////////////////////////////////////////////////////////////////////////

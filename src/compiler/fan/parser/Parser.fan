@@ -1724,6 +1724,11 @@ public class Parser : CompilerSupport
       return call
     }
 
+    // at this point we are parsing a single identifier, but
+    // if it looks like it was expected to be a type we can
+    // provide a more meaningful error
+    if (curt === Token.pound) throw err("Unknown type '$name' for type literal", loc)
+
     return UnknownVarExpr(loc, target, name) { isSafe = safeCall }
   }
 
