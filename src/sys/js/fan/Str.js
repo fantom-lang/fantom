@@ -615,7 +615,7 @@ fan.sys.Str.toCode = function(self, quote, escu)
       default:
         var hex  = function(x) { return "0123456789abcdef".charAt(x); }
         var code = c.charCodeAt(0);
-        if (escu && code > 127)
+        if (code < 32 || (escu && code > 127))
         {
           s += '\\' + 'u'
             + hex((code>>12)&0xf)
