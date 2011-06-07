@@ -61,9 +61,8 @@ if [ -z "$FAN_JAVA" ] ; then
     exit 1
   fi
 fi
-
 # read a single line property from $FAN_HOME/etc/sys/config.props
-function read_prop()
+read_prop()
 {
   eval "$1='`sed '/^\#/d' "$FAN_HOME/etc/sys/config.props" | sed '/^\/\//d' | grep \"$2=\"  | tail -n 1 | sed 's/^[^=]*=//;s/^[[:space:]]*//;s/[[:space:]]*$//'`'"
 }
