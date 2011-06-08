@@ -107,12 +107,12 @@ fan.fwt.ScrollBarPeer.prototype.create = function(parentElem, self)
 
     peer.m_val = newVal;
     // fire onModify
-    if (self.m_onModify.size() > 0)
+    if (self.onModify().size() > 0)
     {
       var me = fan.fwt.Event.make();
       me.m_id = fan.fwt.EventId.m_modified;
       me.m_widget = self;
-      var list = self.m_onModify.list();
+      var list = self.onModify().list();
       for (var i=0; i<list.size(); i++) list.get(i).call(me);
     }
   }

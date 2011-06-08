@@ -59,12 +59,12 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
     $this.fireModify(self);
 
     // fire onAction
-    if (e.keyCode == 13 && self.m_onAction.size() > 0)
+    if (e.keyCode == 13 && self.onAction().size() > 0)
     {
       var ae = fan.fwt.Event.make();
       ae.m_id = fan.fwt.EventId.m_action;
       ae.m_widget = self;
-      var list = self.m_onAction.list();
+      var list = self.onAction().list();
       for (var i=0; i<list.size(); i++) list.get(i).call(ae);
     }
   }
@@ -98,12 +98,12 @@ fan.fwt.TextPeer.prototype.fireModify = function(self)
   this.text$(self, this.control.value, false);
 
   // fire onModify
-  if (self.m_onModify.size() > 0)
+  if (self.onModify().size() > 0)
   {
     var me = fan.fwt.Event.make();
     me.m_id = fan.fwt.EventId.m_modified;
     me.m_widget = self;
-    var list = self.m_onModify.list();
+    var list = self.onModify().list();
     for (var i=0; i<list.size(); i++) list.get(i).call(me);
   }
 }

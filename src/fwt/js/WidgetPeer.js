@@ -230,13 +230,13 @@ fan.fwt.WidgetPeer.prototype.detach = function(self)
 fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
 {
   // sync event handlers
-  this.checkEventListener(self, 0x01, "mouseover",  fan.fwt.EventId.m_mouseEnter, self.m_onMouseEnter);
-  this.checkEventListener(self, 0x02, "mouseout",   fan.fwt.EventId.m_mouseExit,  self.m_onMouseExit);
-  this.checkEventListener(self, 0x04, "mousedown",  fan.fwt.EventId.m_mouseDown,  self.m_onMouseDown);
-  this.checkEventListener(self, 0x08, "mousemove",  fan.fwt.EventId.m_mouseMove,  self.m_onMouseMove);
-  this.checkEventListener(self, 0x10, "mouseup",    fan.fwt.EventId.m_mouseUp,    self.m_onMouseUp);
-//this.checkEventListener(self, 0x20, "mousehover", fan.fwt.EventId.m_mouseHover, self.m_onMouseHover);
-  this.checkEventListener(self, 0x40, "mousewheel", fan.fwt.EventId.m_mouseWheel, self.m_onMouseWheel);
+  this.checkEventListener(self, 0x01, "mouseover",  fan.fwt.EventId.m_mouseEnter, self.onMouseEnter());
+  this.checkEventListener(self, 0x02, "mouseout",   fan.fwt.EventId.m_mouseExit,  self.onMouseExit());
+  this.checkEventListener(self, 0x04, "mousedown",  fan.fwt.EventId.m_mouseDown,  self.onMouseDown());
+  this.checkEventListener(self, 0x08, "mousemove",  fan.fwt.EventId.m_mouseMove,  self.onMouseMove());
+  this.checkEventListener(self, 0x10, "mouseup",    fan.fwt.EventId.m_mouseUp,    self.onMouseUp());
+//this.checkEventListener(self, 0x20, "mousehover", fan.fwt.EventId.m_mouseHover, self.onMouseHover());
+  this.checkEventListener(self, 0x40, "mousewheel", fan.fwt.EventId.m_mouseWheel, self.onMouseWheel());
 
   // sync bounds
   with (this.elem.style)

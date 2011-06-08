@@ -52,7 +52,7 @@ class Command
   ** The function to invoke when the command is executed.  If
   ** empty, then `invoke` must be overridden.
   **
-  @Transient EventListeners onInvoke := EventListeners() { private set }
+  once EventListeners onInvoke() { EventListeners() }
 
   **
   ** The command mode determines who associated widgets are
@@ -337,7 +337,7 @@ final class CommandStack
   **
   ** Callback when command stack is modified.
   **
-  @Transient EventListeners onModify := EventListeners() { private set }
+  once EventListeners onModify() { EventListeners() }
 
   private Void fireModified() { onModify.fire(Event { id = EventId.modified }) }
 

@@ -52,7 +52,7 @@ fan.fwt.WindowPeer.prototype.close = function(self, result)
   event.m_id   = fan.fwt.EventId.m_close;
   event.m_data = result;
 
-  var list = self.m_onClose.list();
+  var list = self.onClose().list();
   for (var i=0; i<list.size(); i++) list.get(i).call(event);
 }
 

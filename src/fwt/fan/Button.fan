@@ -45,7 +45,7 @@ class Button : Widget
   ** Event fields:
   **   - none
   **
-  @Transient EventListeners onAction := EventListeners() { private set }
+  once EventListeners onAction() { EventListeners() }
 
   **
   ** Button mode defines the style: check, push, radio, or toggle.

@@ -46,9 +46,11 @@ class ScrollBar : Widget
   ** Event fields:
   **   - `Event.data`: new value of scroll bar
   **
-  @Transient EventListeners onModify := EventListeners()
-    { it.onModify = |->| { checkModifyListeners } }
-    { private set }
+  once EventListeners onModify()
+  {
+    EventListeners() { it.onModify = |->| { checkModifyListeners } }
+  }
+
   internal native Void checkModifyListeners()
 
   **

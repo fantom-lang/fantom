@@ -77,9 +77,11 @@ abstract class Widget
   **   - `Event.keyChar`: unicode character represented by key event
   **   - `Event.key`: key code including the modifiers
   **
-  @Transient EventListeners onKeyDown := EventListeners()
-    { onModify = |->| { checkKeyListeners } }
-    { private set }
+  once EventListeners onKeyDown()
+  {
+    EventListeners() { onModify = |->| { checkKeyListeners } }
+  }
+
   internal native Void checkKeyListeners()
 
   **
@@ -93,9 +95,10 @@ abstract class Widget
   **   - `Event.keyChar`: unicode character represented by key event
   **   - `Event.key`: key code including the modifiers
   **
-  @Transient EventListeners onKeyUp := EventListeners()
-    { onModify = |->| { checkKeyListeners } }
-    { private set }
+  once EventListeners onKeyUp()
+  {
+    EventListeners() { onModify = |->| { checkKeyListeners } }
+  }
 
   **
   ** Callback for mouse button pressed event on this widget.
@@ -108,7 +111,7 @@ abstract class Widget
   **   - `Event.count`: number of clicks
   **   - `Event.key`: key modifiers
   **
-  @Transient EventListeners onMouseDown := EventListeners() { private set }
+  once EventListeners onMouseDown() { EventListeners() }
 
   **
   ** Callback for mouse button released event on this widget.
@@ -121,7 +124,7 @@ abstract class Widget
   **   - `Event.count`: number of clicks
   **   - `Event.key`: key modifiers
   **
-  @Transient EventListeners onMouseUp := EventListeners() { private set }
+  once EventListeners onMouseUp() { EventListeners() }
 
   **
   ** Callback when mouse enters this widget's bounds.
@@ -132,7 +135,7 @@ abstract class Widget
   ** Event fields:
   **   - `Event.pos`: coordinate of mouse
   **
-  @Transient EventListeners onMouseEnter := EventListeners() { private set }
+  once EventListeners onMouseEnter() { EventListeners() }
 
   **
   ** Callback when mouse exits this widget's bounds.
@@ -143,7 +146,7 @@ abstract class Widget
   ** Event fields:
   **   - `Event.pos`: coordinate of mouse
   **
-  @Transient EventListeners onMouseExit := EventListeners() { private set }
+  once EventListeners onMouseExit() { EventListeners() }
 
   **
   ** Callback when mouse hovers for a moment over this widget.
@@ -154,7 +157,7 @@ abstract class Widget
   ** Event fields:
   **   - `Event.pos`: coordinate of mouse
   **
-  @Transient EventListeners onMouseHover := EventListeners() { private set }
+  once EventListeners onMouseHover() { EventListeners() }
 
   **
   ** Callback when mouse moves over this widget.
@@ -165,7 +168,7 @@ abstract class Widget
   ** Event fields:
   **   - `Event.pos`: coordinate of mouse
   **
-  @Transient EventListeners onMouseMove := EventListeners() { private set }
+  once EventListeners onMouseMove() { EventListeners() }
 
   **
   ** Callback when mouse wheel is scrolled and this widget has focus.
@@ -177,7 +180,7 @@ abstract class Widget
   **   - `Event.pos`: coordinate of mouse
   **   - `Event.count`: positive or negative number of scroll
   **
-  @Transient EventListeners onMouseWheel := EventListeners() { private set }
+  once EventListeners onMouseWheel() { EventListeners() }
 
   **
   ** Callback for focus gained event on this widget.
@@ -188,9 +191,11 @@ abstract class Widget
   ** Event fields:
   **   - none
   **
-  @Transient EventListeners onFocus := EventListeners()
-    { onModify = |->| { checkFocusListeners } }
-    { private set }
+  once EventListeners onFocus()
+  {
+    EventListeners() { onModify = |->| { checkFocusListeners } }
+  }
+
   internal native Void checkFocusListeners()
 
   **
@@ -202,9 +207,10 @@ abstract class Widget
   ** Event fields:
   **   - none
   **
-  @Transient EventListeners onBlur := EventListeners()
-    { onModify = |->| { checkFocusListeners } }
-    { private set }
+  once EventListeners onBlur()
+  {
+    EventListeners() { onModify = |->| { checkFocusListeners } }
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Focus

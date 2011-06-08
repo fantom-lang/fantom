@@ -34,7 +34,7 @@ class Table : Widget
   ** Event fields:
   **   - `Event.index`: the row index.
   **
-  @Transient EventListeners onAction := EventListeners() { private set }
+  once EventListeners onAction() { EventListeners() }
 
   **
   ** Callback when selected rows change.
@@ -45,7 +45,7 @@ class Table : Widget
   ** Event fields:
   **   - `Event.index`: the primary selection row index.
   **
-  @Transient EventListeners onSelect := EventListeners() { private set }
+  once EventListeners onSelect() { EventListeners() }
 
   **
   ** Callback when user invokes a right click popup action.
@@ -62,7 +62,7 @@ class Table : Widget
   **     background popup.
   **   - `Event.pos`: the mouse position of the popup.
   **
-  @Transient EventListeners onPopup := EventListeners() { private set }
+  once EventListeners onPopup() { EventListeners() }
 
   **
   ** Horizontal scroll bar.

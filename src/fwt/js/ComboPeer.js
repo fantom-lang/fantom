@@ -90,12 +90,12 @@ fan.fwt.ComboPeer.prototype.sync = function(self)
     self.selectedIndex$(select.selectedIndex);
 
     // fire onModify
-    if (self.m_onModify.size() > 0)
+    if (self.onModify().size() > 0)
     {
       var me = fan.fwt.Event.make();
       me.m_id = fan.fwt.EventId.m_modified;
       me.m_widget = self;
-      var list = self.m_onModify.list();
+      var list = self.onModify().list();
       for (var i=0; i<list.size(); i++) list.get(i).call(me);
     }
   }

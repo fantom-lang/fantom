@@ -26,7 +26,7 @@ class WebBrowser : Widget
   ** Event fields:
   **   - `Event.data`: the `sys::Uri` of the new page.
   **
-  @Transient EventListeners onHyperlink := EventListeners() { private set }
+  once EventListeners onHyperlink() { EventListeners() }
 
   **
   ** Navigate to the specified URI.

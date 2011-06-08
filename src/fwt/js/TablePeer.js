@@ -526,13 +526,13 @@ fan.fwt.TableSelection.prototype.select = function(rows)
 
 fan.fwt.TableSelection.prototype.notify = function(primaryIndex)
 {
-  if (this.table.m_onSelect.size() > 0)
+  if (this.table.onSelect().size() > 0)
   {
     var se      = fan.fwt.Event.make();
     se.m_id     = fan.fwt.EventId.m_select;
     se.m_index  = primaryIndex;
     se.m_widget = this.table;
-    var listeners = this.table.m_onSelect.list();
+    var listeners = this.table.onSelect().list();
     for (var i=0; i<listeners.size(); i++) listeners.get(i).call(se);
   }
 }

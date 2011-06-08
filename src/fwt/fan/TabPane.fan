@@ -27,7 +27,7 @@ class TabPane : Widget
   **   - `Event.index`: index of selected tab
   **   - `Event.data`: new active Tab instance
   **
-  @Transient EventListeners onSelect := EventListeners() { private set }
+  once EventListeners onSelect() { EventListeners() }
 
   **
   ** Get the list of installed tabs.  Tabs are added and
