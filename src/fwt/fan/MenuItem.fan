@@ -42,7 +42,7 @@ class MenuItem : Widget
   ** Event fields:
   **   - none
   **
-  @Transient EventListeners onAction := EventListeners() { private set }
+  once EventListeners onAction() { EventListeners() }
 
   **
   ** Mode defines the menu item's style.  Normal items are

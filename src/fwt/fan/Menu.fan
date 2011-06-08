@@ -32,7 +32,7 @@ class Menu : MenuItem
   ** Event fields:
   **   - none
   **
-  @Transient EventListeners onOpen:= EventListeners() { private set }
+  once EventListeners onOpen() { EventListeners() }
 
   **
   ** Open this menu as a popup at the coordinates relative to

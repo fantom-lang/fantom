@@ -36,7 +36,7 @@ class RichText : TextWidget
   ** Event fields:
   **   - `Event.data`: the `TextChange` instance.
   **
-  @Transient EventListeners onModify := EventListeners() { private set }
+  once EventListeners onModify() { EventListeners() }
 
   **
   ** Callback before the text is modified.  This gives listeners
@@ -53,7 +53,7 @@ class RichText : TextWidget
   **     can update 'newText' with the actual text to be inserted
   **     or set to null to cancel the modification.
   **
-  @Transient EventListeners onVerify := EventListeners() { private set }
+  once EventListeners onVerify() { EventListeners() }
 
   **
   ** Callback before a key event is processed.  This gives listeners
@@ -67,7 +67,7 @@ class RichText : TextWidget
   **   - `Event.keyChar`: unicode character represented by key event
   **   - `Event.key`: key code including the modifiers
   **
-  @Transient EventListeners onVerifyKey := EventListeners() { private set }
+  once EventListeners onVerifyKey() { EventListeners() }
 
   **
   ** Callback when the selection is modified.
@@ -79,7 +79,7 @@ class RichText : TextWidget
   **   - `Event.offset`: the starting offset
   **   - `Event.size`:   the number of chars selected
   **
-  @Transient EventListeners onSelect := EventListeners() { private set }
+  once EventListeners onSelect() { EventListeners() }
 
   **
   ** Callback when the caret position is modified.
@@ -90,7 +90,7 @@ class RichText : TextWidget
   ** Event fields:
   **   - `Event.offset`: the new caret offset
   **
-  @Transient EventListeners onCaret := EventListeners() { private set }
+  once EventListeners onCaret() { EventListeners() }
 
   **
   ** Horizontal scroll bar.
@@ -203,7 +203,7 @@ abstract class RichTextModel
   ** Event fields:
   **   - `Event.data`: the `TextChange`.
   **
-  @Transient EventListeners onModify := EventListeners() { private set }
+  once EventListeners onModify() { EventListeners() }
 
   **
   ** Get or set the entire text document.
