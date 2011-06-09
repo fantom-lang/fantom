@@ -66,7 +66,7 @@ fan.fwt.TablePeer.injectCss = function()
     " width: 100%;" +
     " border-right: none;" +
     "}" +
-    "table.__fwt_table td img { float:left; border:0; width:16px; }" +
+    "table.__fwt_table td img { float:left; border:0; width:16px; height:16px; }" +
     "table.__fwt_table td img.right { float:right }" +
     "table.__fwt_table td img + span { margin-left:3px; }" +
     "table.__fwt_table td img.right + span { margin-left:0; margin-right:6px; }" +
@@ -75,6 +75,12 @@ fan.fwt.TablePeer.injectCss = function()
     "table.__fwt_table tr.selected { background:#3d80df; }" +
     "table.__fwt_table tr.selected td { color:#fff !important; background:#3d80df !important; border-color:#346dbe; }" +
     "table.__fwt_table tr.selected a { color:#fff; }");
+
+  if (fan.fwt.DesktopPeer.$isIE || fan.fwt.DesktopPeer.$isFirefox)
+    fan.fwt.WidgetPeer.addCss("table.__fwt_table td img + span { margin-right:16px; }");
+
+  if (fan.fwt.DesktopPeer.$isIE)
+    fan.fwt.WidgetPeer.addCss("table.__fwt_table td img.right + span { margin-right:25px; }");
 }
 
 // TODO
