@@ -1,0 +1,10 @@
+//
+// Config: web
+//
+// History:
+//   10 Jun 11  Brian Frank  Creation
+//
+
+// default WebClient proxy URI formatted as "http://{host}[:port]"
+// proxy=http://hostname:8080/
+

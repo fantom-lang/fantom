@@ -180,6 +180,22 @@ class WebClient
   **
   Bool followRedirects := true
 
+  **
+  ** If non-null, then all requests are routed through this
+  ** proxy address (host and port).  Default is configured
+  ** in "etc/web/config.props" with the key "proxy".
+  **
+  Uri? proxy := proxyDef
+
+  private static Uri? proxyDef()
+  {
+    try
+      return WebClient#.pod.config("proxy")?.toUri
+    catch (Err e)
+      e.trace
+    return null
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Get
 //////////////////////////////////////////////////////////////////////////
@@ -286,20 +302,24 @@ class WebClient
     if (!isConnected)
     {
       socket = TcpSocket()
+      connUri := proxy ?: reqUri
       if (options != null) socket.options.copyFrom(this.options)
-      socket.connect(IpAddr(reqUri.host), reqUri.port ?: 80)
+      socket.connect(IpAddr(connUri.host), connUri.port ?: 80)
     }
 
-    // figure out if/how we are streaming out content body
-    out := socket.out
-    reqOutStream = WebUtil.makeContentOutStream(reqHeaders, out)
+    // request uri is absolute if proxy, relative otherwise
+    reqPath := (proxy != null ? reqUri : reqUri.relToAuth).encode
 
     // host authority header
     host := reqUri.host
     if (reqUri.port != null && reqUri.port != 80) host += ":$reqUri.port"
 
+    // figure out if/how we are streaming out content body
+    out := socket.out
+    reqOutStream = WebUtil.makeContentOutStream(reqHeaders, out)
+
     // send request
-    out.print(reqMethod).print(" ").print(reqUri.relToAuth.encode)
+    out.print(reqMethod).print(" ").print(reqPath)
        .print(" HTTP/").print(reqVersion).print("\r\n")
     out.print("Host: ").print(host).print("\r\n")
     reqHeaders.each |Str v, Str k| { out.print(k).print(": ").print(v).print("\r\n") }
