@@ -32,9 +32,9 @@
 **
 ** A unit identifier is limited to the following characters:
 **  - any Unicode char over 128
-**  - ASCII letters 'a'-'z' and 'A'-'Z'
+**  - ASCII letters 'a' - 'z' and 'A' - 'Z'
 **  - underbar '_'
-**  - division sign'/'
+**  - division sign '/'
 **  - percent sign '%'
 **  - dollar sign '$'
 **
