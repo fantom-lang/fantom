@@ -20,11 +20,15 @@ class JsProps : JsNode
     this.uri  = uri
   }
 
-  static Void writeProps(Pod pod, Uri uri, OutStream out)
+  static Void writeProps(Pod pod, Uri uri, OutStream out, Bool checked := true)
   {
     base := `fan://$pod.name/`
     file := pod.files.find |f| { f.uri.relTo(base) == uri }
-    if (file == null) throw Err("File not found $pod: $uri")
+    if (file == null)
+    {
+      if (!checked) return
+      throw Err("File not found $pod: $uri")
+    }
     doWrite(pod.name, file, uri, JsWriter(out))
   }
 
