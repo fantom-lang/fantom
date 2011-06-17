@@ -92,10 +92,10 @@ class TestRunner
       JsIndexedProps().write(out, [Pod.find("testSys")])
 
       // locales
-      JsProps.writeProps(Pod.find("sys"), `locale/fi.props`, out)
-      JsProps.writeProps(p, `locale/en-US.props`, out)
-      JsProps.writeProps(p, `locale/es.props`, out)
-      JsProps.writeProps(p, `locale/es-MX.props`, out)
+      JsProps.writeProps(out, Pod.find("sys"), `locale/fi.props`, 1sec)
+      JsProps.writeProps(out, p, `locale/en-US.props`, 1sec)
+      JsProps.writeProps(out, p, `locale/es.props`, 1sec)
+      JsProps.writeProps(out, p, `locale/es-MX.props`, 1sec)
 
       // timezones
       JsTimeZone(TimeZone("London")).write(out)
