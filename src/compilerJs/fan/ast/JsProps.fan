@@ -20,30 +20,24 @@ class JsProps : JsNode
     this.uri  = uri
   }
 
-  static Void writeProps(Pod pod, Uri uri, OutStream out, Bool checked := true)
-  {
-    base := `fan://$pod.name/`
-    file := pod.files.find |f| { f.uri.relTo(base) == uri }
-    if (file == null)
-    {
-      if (!checked) return
-      throw Err("File not found $pod: $uri")
-    }
-    doWrite(pod.name, file, uri, JsWriter(out))
-  }
-
   override Void write(JsWriter out)
   {
-    doWrite(pod.name, file, uri, out)
+    doWrite(pod.name, uri, file.in.readProps, out)
   }
 
-  private static Void doWrite(Str pod, File file, Uri uri, JsWriter out)
+  static Void writeProps(OutStream out, Pod pod, Uri uri, Duration maxAge)
+  {
+    props := Env.cur.props(pod, uri, maxAge)
+    if (!props.isEmpty) doWrite(pod.name, uri, props, JsWriter(out))
+  }
+
+  private static Void doWrite(Str pod, Uri uri, Str:Str props, JsWriter out)
   {
     key := "$pod:$uri"
     out.w("with (fan.sys.Env.cur().\$props($key.toCode))").nl
     out.w("{").nl
     out.indent
-    file.in.readProps.each |v,k| { out.w("set($k.toCode,$v.toCode);").nl }
+    props.each |v,k| { out.w("set($k.toCode,$v.toCode);").nl }
     out.unindent
     out.w("}").nl
   }
