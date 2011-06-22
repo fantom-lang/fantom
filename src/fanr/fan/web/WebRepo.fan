@@ -35,6 +35,16 @@ internal const class WebRepo : Repo
 
   override const Uri uri
 
+  override Str:Str ping()
+  {
+    // prepare query
+    c := prepare(`ping`)
+    c.writeReq.readRes
+
+    // parse json response
+    return parseRes(c)
+  }
+
   override PodSpec[] query(Str query, Int numVersions := 1)
   {
     // prepare query

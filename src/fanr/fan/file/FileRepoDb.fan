@@ -24,7 +24,7 @@ internal class FileRepoDb
     this.repo = repo
     this.dir  = repo.dir
     this.log  = Log.get("fanr")
-this.log.level = LogLevel.debug // TODO
+    // this.log.level = LogLevel.debug
   }
 
 //////////////////////////////////////////////////////////////////////////
