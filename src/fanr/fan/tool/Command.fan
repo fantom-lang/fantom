@@ -88,6 +88,14 @@ abstract class Command
       throw err("Cannot init repo: $repoUri", e)
   }
 
+  ** Option to dump full stack trace on errors
+  @CommandOpt
+  {
+    name   = "errTrace"
+    help   = "Dump error stack traces"
+  }
+  Bool errTrace
+
 //////////////////////////////////////////////////////////////////////////
 // Initialization
 //////////////////////////////////////////////////////////////////////////

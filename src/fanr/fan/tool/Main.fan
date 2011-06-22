@@ -54,8 +54,13 @@ class Main
     }
     catch (Err e)
     {
-      cmd.out.printLine("ERROR: Internal error")
-      e.trace(cmd.out)
+      cmd.out.printLine("ERROR: $cmd.name command failed")
+      if (cmd.errTrace) e.trace(cmd.out)
+      else
+      {
+        cmd.out.printLine("  $e")
+        cmd.out.printLine("  use -errTrace for full stack trace")
+      }
       return 1
     }
   }
