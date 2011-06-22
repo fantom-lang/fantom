@@ -63,7 +63,14 @@ internal const class WebRepo : Repo
 
   override PodSpec publish(File podFile)
   {
-    throw UnsupportedErr()
+    // post file
+    c := prepare(`publish`)
+    c.postFile(podFile)
+
+    // parse json response
+    jsonRes := parseRes(c)
+    Str:Str jsonSpec := jsonRes["published"] ?: throw Err("Missing 'published' in JSON response")
+    return PodSpec(jsonSpec, null)
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -50,15 +50,40 @@ abstract class Command
     out.printLine("WARN: $msg")
   }
 
-  ** Log an error message to `out` and return an exception which
-  ** may be used to unwind the stack back to main which returns
-  ** non-zero
+  ** Throw an exception which may be used to unwind the stack
+  ** back to main to indicate command failed and return non-zero
   Err err(Str msg, Err? cause := null)
   {
-    out.printLine
-    out.printLine("ERROR: $msg")
-    if (cause != null) cause.trace(out)
-    return CommandErr(msg)
+    return CommandErr(msg, cause)
+  }
+
+  ** Pretty print a list of pod versions (of same pod) to output stream
+  internal Void printPodVersions(PodSpec[] versions)
+  {
+    top := versions.sortr.first
+
+    // ensure summary isn't too long
+    summary := top.summary
+    if (summary.size > 100) summary = summary[0..100] + "..."
+
+    // figure out alignment padding for versions
+    verPad := 6
+    versions.each |x| { verPad = verPad.max(x.version.toStr.size) }
+
+    // print it
+    out.printLine(top.name)
+    out.printLine("  $summary")
+    versions.each |x|
+    {
+      // build details as "ts, size"
+      details := StrBuf()
+      if (x.ts != null) details.join(x.ts.date.toLocale("DD-MMM-YYYY"), ", ")
+      if (x.size != null) details.join(x.size.toLocale("B"), ", ")
+
+      // print version info line
+      verStr := x.version.toStr.padr(verPad)
+      out.printLine("  $verStr ($details)")
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -333,7 +358,7 @@ abstract class Command
 **
 internal const class CommandErr : Err
 {
-  new make(Str msg) : super(msg) {}
+  new make(Str msg, Err? cause) : super(msg, cause) {}
 }
 
 **************************************************************************

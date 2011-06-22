@@ -40,6 +40,7 @@ internal class PublishCmd : Command
     findFile
     parseSpec
     publish
+    printResult
   }
 
   private Void findFile()
@@ -60,19 +61,24 @@ internal class PublishCmd : Command
   private Void parseSpec()
   {
     try
-      this.spec = PodSpec.load(file)
+      this.srcSpec = PodSpec.load(file)
     catch (Err e)
       throw err("Invalid or corrupt pod file: $file", e)
   }
 
   private Void publish()
   {
-    try
-      repo.publish(file)
-    catch (Err e)
-      throw err("Cannot publish $spec", e)
+    pubSpec = repo.publish(file)
   }
 
-  private File? file      // findFile
-  private PodSpec? spec   // parseSpec
+  private Void printResult()
+  {
+    out.printLine("Publish success:")
+    out.printLine
+    printPodVersions([pubSpec])
+  }
+
+  private File? file         // findFile
+  private PodSpec? srcSpec   // parseSpec
+  private PodSpec? pubSpec   // publish
 }
