@@ -14,12 +14,13 @@ using util
 ** publishing a repo over HTTP to be used by 'WebRepo'. URI
 ** namespace:
 **
-**    Method   Uri                    Operation
-**    ------   --------------------   ---------
-**    GET      {base}/ping            ping meta-data
-**    GET      {base}/query?{query}   pod query
-**    POST     {base}/query           pod query
-**    POST     {base}/publish         publish pod
+**    Method   Uri                      Operation
+**    ------   --------------------     ---------
+**    GET      {base}/ping              ping meta-data
+**    GET      {base}/query?{query}     pod query
+**    POST     {base}/query             pod query
+**    GET      {base}/pod/{name}/{ver}  pod download
+**    POST     {base}/publish           publish pod
 **
 ** HTTP Headers
 **    "Fan-NumVersions"   query version limit
@@ -61,15 +62,13 @@ const class WebRepoMod : WebMod
   {
     try
     {
-      // ensure URI is formatted as {base}/{cmd}
-      uri := req.modRel
-      if (uri.path.size != 1) { sendNotFoundErr; return }
-      cmd := uri.path.first
-
       // route to correct command
-      if (cmd == "ping")    { onPing; return }
-      if (cmd == "query")   { onQuery; return }
-      if (cmd == "publish") { onPublish; return }
+      path := req.modRel.path
+      cmd := path.getSafe(0) ?: "?"
+      if (cmd == "ping"    && path.size == 1) { onPing; return }
+      if (cmd == "query"   && path.size == 1) { onQuery; return }
+      if (cmd == "pod"     && path.size == 3) { onPod(path[1], path[2]); return }
+      if (cmd == "publish" && path.size == 1) { onPublish; return }
       sendNotFoundErr
     }
     catch (Err e)
@@ -124,6 +123,23 @@ const class WebRepoMod : WebMod
     out.printLine("""{"pods":[""")
     pods.each |pod, i| { printPodSpecJson(out, pod, i+1 < pods.size) }
     out.printLine("]}")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Read Pod
+//////////////////////////////////////////////////////////////////////////
+
+  private Void onPod(Str podName, Str podVer)
+  {
+    // lookup pod that matches name/version
+    query := "$podName $podVer"
+    spec := repo.query(query, 100).find |p| { p.version.toStr == podVer }
+    if (spec == null)  { sendErr(404, "No pod match: $query"); return }
+
+    // pipe repo stream to response stream
+    res.headers["Content-Type"] = "application/zip"
+    if (spec.size != null) res.headers["Content-Length"] = spec.size.toStr
+    repo.read(spec).pipe(res.out, spec.size)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -189,7 +205,7 @@ const class WebRepoMod : WebMod
 
   private Void sendBadMethodErr()
   {
-    sendErr(501, "Method not implemented")
+    sendErr(501, "Method not implemented: $req.method")
   }
 
   private Void sendErr(Int code, Str msg)

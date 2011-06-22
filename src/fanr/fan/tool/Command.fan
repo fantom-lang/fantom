@@ -57,6 +57,22 @@ abstract class Command
     return CommandErr(msg, cause)
   }
 
+  ** Ask for y/n confirmation or skip if '-y' option specified.
+  Bool confirm(Str msg)
+  {
+    if (skipConfirm) return true
+    out.printLine
+    out.print("$msg [y/n]: ").flush
+    r := Env.cur.in.readLine
+    return r.lower.startsWith("y")
+  }
+
+  ** Pretty print a pod versions to output stream
+  internal Void printPodVersion(PodSpec version)
+  {
+    printPodVersions([version])
+  }
+
   ** Pretty print a list of pod versions (of same pod) to output stream
   internal Void printPodVersions(PodSpec[] versions)
   {
@@ -120,6 +136,14 @@ abstract class Command
     help   = "Dump error stack traces"
   }
   Bool errTrace
+
+  ** Option to skip confirmation (auto yes)
+  @CommandOpt
+  {
+    name   = "y"
+    help   = "Skip confirmation"
+  }
+  Bool skipConfirm
 
 //////////////////////////////////////////////////////////////////////////
 // Initialization

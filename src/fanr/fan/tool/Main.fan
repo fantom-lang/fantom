@@ -18,6 +18,7 @@ class Main
     ConfigCmd(),
     PingCmd(),
     QueryCmd(),
+    InstallCmd(),
     PublishCmd(),
   ]
 
