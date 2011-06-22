@@ -16,6 +16,7 @@ class Main
   [
     HelpCmd(),
     ConfigCmd(),
+    PingCmd(),
     QueryCmd(),
     PublishCmd(),
   ]

@@ -53,6 +53,12 @@ internal const class FileRepo : Repo
 
   override const Uri uri
 
+  override Str:Str ping()
+  {
+    ["fanr.type":    typeof.toStr,
+     "fanr.version": FileRepo#.pod.version.toStr]
+  }
+
   override PodSpec[] query(Str query, Int numVersions := 1)
   {
     msg := FileRepoMsg(FileRepoMsg.query, query, numVersions)

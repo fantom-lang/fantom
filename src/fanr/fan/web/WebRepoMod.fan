@@ -7,6 +7,7 @@
 //
 
 using web
+using util
 
 **
 ** WebRepoMod implements basic server side functionality for
@@ -15,6 +16,7 @@ using web
 **
 **    Method   Uri                    Operation
 **    ------   --------------------   ---------
+**    GET      {base}/ping            ping meta-data
 **    GET      {base}/query?{query}   pod query
 **    POST     {base}/query           pod query
 **
@@ -38,6 +40,14 @@ const class WebRepoMod : WebMod
   ** Repository to publish on the web, typically a local FileRepo.
   const Repo repo
 
+  ** Meta-data to include in ping requests.  If customized,
+  ** then be sure to include standard props defined by `Repo.ping`.
+  const Str:Str pingMeta :=
+  [
+    "fanr.type":   WebRepo#.toStr,
+    "fanr.version": WebRepoMod#.pod.version.toStr
+  ]
+
   ** Service
   override Void onService()
   {
@@ -49,6 +59,7 @@ const class WebRepoMod : WebMod
       cmd := uri.path.first
 
       // route to correct command
+      if (cmd == "ping")  { onPing; return }
       if (cmd == "query") { onQuery; return }
       sendNotFoundErr
     }
@@ -58,13 +69,19 @@ const class WebRepoMod : WebMod
     }
   }
 
+  private Void onPing()
+  {
+    res.headers["Content-Type"] = "text/plain"
+    JsonOutStream(res.out).writeJson(pingMeta).flush
+  }
+
   private Void onQuery()
   {
     // query can be GET query part or POST body
     Str? query
     switch (req.method)
     {
-      case "GET":  query = req.uri.queryStr
+      case "GET":  query = req.uri.queryStr ?: throw Err("Missing '?query' in URI")
       case "POST": query = req.in.readAllStr
       default:     sendErr(501, "Method not implemented"); return
     }
@@ -110,7 +127,7 @@ const class WebRepoMod : WebMod
 
   private Void sendNotFoundErr()
   {
-    sendErr(404, "Resource not found")
+    sendErr(404, "Resource not found: $req.modRel")
   }
 
   private Void sendErr(Int code, Str msg)
