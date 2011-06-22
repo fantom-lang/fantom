@@ -19,6 +19,12 @@ fan.fwt.CanvasPeer.prototype.create = function(parentElem)
   return fan.fwt.WidgetPeer.prototype.create.call(this, parentElem);
 }
 
+fan.fwt.CanvasPeer.prototype.toPng = function()
+{
+  if (!this.hasCanvas) return null;
+  return this.elem.firstChild.toDataURL("image/png");
+}
+
 fan.fwt.CanvasPeer.prototype.sync = function(self)
 {
   // short-circuit if not properly layed out
