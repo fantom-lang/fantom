@@ -39,6 +39,7 @@ internal class PublishCmd : Command
   {
     findFile
     parseSpec
+    if (!confirm("Publish $srcSpec")) return
     publish
     printResult
   }

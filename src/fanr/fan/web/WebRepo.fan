@@ -61,6 +61,18 @@ internal const class WebRepo : Repo
     return pods
   }
 
+  override InStream read(PodSpec spec)
+  {
+    // prepare query
+    c := prepare(`pod/$spec.name/$spec.version`)
+    c.writeReq.readRes
+
+    // if not 200, then assume a JSON error message
+    if (c.resCode != 200) parseRes(c)
+
+    return c.resIn
+  }
+
   override PodSpec publish(File podFile)
   {
     // post file

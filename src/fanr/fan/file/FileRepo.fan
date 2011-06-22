@@ -66,6 +66,11 @@ internal const class FileRepo : Repo
     return r.val
   }
 
+  override InStream read(PodSpec spec)
+  {
+    specToFile(spec).in
+  }
+
   override PodSpec publish(File podFile)
   {
     msg := FileRepoMsg(FileRepoMsg.publish, podFile)
@@ -79,6 +84,15 @@ internal const class FileRepo : Repo
     db := Actor.locals["fanr.file.db"] as FileRepoDb
     if (db == null)  Actor.locals["fanr.file.db"] = db = FileRepoDb(this)
     return db.dispatch(msg)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  internal File specToFile(PodSpec spec)
+  {
+    dir + `${spec.name}/${spec.toStr}.pod`
   }
 
 //////////////////////////////////////////////////////////////////////////

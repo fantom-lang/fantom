@@ -168,7 +168,7 @@ internal class FileRepoDb
     spec := PodSpec.load(inputFile)
 
     // get dest file in our db and verify it doesnt already exist
-    dbFile := specToFile(spec)
+    dbFile := repo.specToFile(spec)
     if (dbFile.exists) throw Err("Pod already published: $spec")
 
     // copy it
@@ -190,15 +190,6 @@ internal class FileRepoDb
 
     // return spec
     return spec
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Utils
-//////////////////////////////////////////////////////////////////////////
-
-  private File specToFile(PodSpec spec)
-  {
-    dir + `${spec.name}/${spec.toStr}.pod`
   }
 
 //////////////////////////////////////////////////////////////////////////

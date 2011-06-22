@@ -36,6 +36,11 @@ abstract const class Repo
   ** the current (highest) version.
   abstract PodSpec[] query(Str query, Int numVersions := 1)
 
+  ** Open an input stream to read the specified pod version.
+  ** Callers should ensure that the stream is drained and
+  ** closed as quickly as possible.
+  abstract InStream read(PodSpec pod)
+
   ** Publish the given pod file.  If successful return the
   ** spec for newly added pod.  Throw err if the pod is
   ** malformed or already published in the database.
