@@ -482,56 +482,46 @@ class WebOutStream : OutStream
 // table
 //////////////////////////////////////////////////////////////////////////
 
-  **
   ** Start a <table> tag.
-  **
   This table(Str? attrs := null) { return tag("table", attrs).nl }
 
-  **
   ** End a <table> tag.
-  **
   This tableEnd() { return tagEnd("table").nl }
 
-//////////////////////////////////////////////////////////////////////////
-// tr
-//////////////////////////////////////////////////////////////////////////
+  ** Start a <thead> tag.
+  This thead(Str? attrs := null) { return tag("thead", attrs).nl }
 
-  **
+  ** End a <thead> tag.
+  This theadEnd() { return tagEnd("thead").nl }
+
+  ** Start a <tbody> tag.
+  This tbody(Str? attrs := null) { return tag("tbody", attrs).nl }
+
+  ** End a <tbody> tag.
+  This tbodyEnd() { return tagEnd("tbody").nl }
+
+  ** Start a <tfoot> tag.
+  This tfoot(Str? attrs := null) { return tag("tfoot", attrs).nl }
+
+  ** End a <tfoot> tag.
+  This tfootEnd() { return tagEnd("tfoot").nl }
+
   ** Start a <tr> tag.
-  **
   This tr(Str? attrs := null) { return tag("tr", attrs).nl }
 
-  **
   ** End a <tr> tag.
-  **
   This trEnd() { return tagEnd("tr").nl }
 
-//////////////////////////////////////////////////////////////////////////
-// th
-//////////////////////////////////////////////////////////////////////////
-
-  **
   ** Start a <th> tag.
-  **
   This th(Str? attrs := null) { return tag("th", attrs) }
 
-  **
   ** End a <th> tag.
-  **
   This thEnd() { return tagEnd("th").nl }
 
-//////////////////////////////////////////////////////////////////////////
-// td
-//////////////////////////////////////////////////////////////////////////
-
-  **
   ** Start a <td> tag.
-  **
   This td(Str? attrs := null) { return tag("td", attrs) }
 
-  **
   ** End a <td> tag.
-  **
   This tdEnd() { return tagEnd("td").nl }
 
 //////////////////////////////////////////////////////////////////////////
