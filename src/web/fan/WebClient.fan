@@ -281,6 +281,26 @@ class WebClient
     return this
   }
 
+  **
+  ** Post a file to the URI.  If Content-Type header is not already
+  ** set, then it is set from the file extension's MIME type.  Upon
+  ** completion the response is ready to be read.
+  **
+  This postFile(File file)
+  {
+    reqMethod = "POST"
+    ct := reqHeaders["Content-Type"]
+    if (ct == null)
+      reqHeaders["Content-Type"] = file.mimeType?.toStr ?: "application/octet-stream"
+    if (file.size != null)
+      reqHeaders["Content-Length"] = file.size.toStr
+    writeReq
+    file.in.pipe(reqOut, file.size)
+    reqOut.close
+    readRes
+    return this
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Service
 //////////////////////////////////////////////////////////////////////////
