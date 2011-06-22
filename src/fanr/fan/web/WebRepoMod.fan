@@ -10,7 +10,7 @@ using web
 
 **
 ** WebRepoMod implements basic server side functionality for
-** publishing a repo over HTTP to be used by `WebRepo`. URI
+** publishing a repo over HTTP to be used by 'WebRepo'. URI
 ** namespace:
 **
 **    Method   Uri                    Operation
@@ -20,6 +20,15 @@ using web
 **
 ** HTTP Headers
 **    "Fan-NumVersions"   query version limit
+**
+** Response codes:
+**   - 2xx:  okay
+**   - 4xx:  client side error (bad request)
+**   - 5xx:  server side error
+**
+** Responses are returned in JSON:
+**   - query: '{"pods":[{...},{...}]}'
+**   - error: '{"err":"something bad happened"}'
 **
 const class WebRepoMod : WebMod
 {
@@ -32,14 +41,21 @@ const class WebRepoMod : WebMod
   ** Service
   override Void onService()
   {
-    // ensure URI is formatted as {base}/{cmd}
-    uri := req.modRel
-    if (uri.path.size != 1) { res.sendErr(404); return }
-    cmd := uri.path.first
+    try
+    {
+      // ensure URI is formatted as {base}/{cmd}
+      uri := req.modRel
+      if (uri.path.size != 1) { sendNotFoundErr; return }
+      cmd := uri.path.first
 
-    // route to correct command
-    if (cmd == "query") { onQuery; return }
-    res.sendErr(404)
+      // route to correct command
+      if (cmd == "query") { onQuery; return }
+      sendNotFoundErr
+    }
+    catch (Err e)
+    {
+      sendErr(500, e.toStr)
+    }
   }
 
   private Void onQuery()
@@ -50,12 +66,58 @@ const class WebRepoMod : WebMod
     {
       case "GET":  query = req.uri.queryStr
       case "POST": query = req.in.readAllStr
-      default:     res.sendErr(501); return
+      default:     sendErr(501, "Method not implemented"); return
     }
 
     // get options
-    numVersions := Int.fromStr(req.headers["Fan-NumVersions"] ?: "1", 10, false) ?: 1
+    numVersions := Int.fromStr(req.headers["Fan-NumVersions"] ?: "3", 10, false) ?: 3
 
-throw Err("TODO")
+    // do the query
+    PodSpec[]? pods := null
+    try
+    {
+      pods = repo.query(query, numVersions)
+    }
+    catch (ParseErr e)
+    {
+      sendErr(400, e.toStr)
+      return
+    }
+
+    // print results in json format
+    res.headers["Content-Type"] = "text/plain"
+    out := res.out
+    out.printLine("""{"pods":[""")
+    pods.each |pod, i|
+    {
+      out.printLine("{")
+      keys := pod.meta.keys
+      keys.moveTo("pod.name", 0)
+      keys.moveTo("pod.version", 1)
+      keys.each |k, j|
+      {
+        v := pod.meta[k]
+        out.print(k.toCode).print(":").print(v.toCode).printLine(j+1<keys.size?",":"")
+      }
+      out.printLine(i+1 < pods.size ? "}," : "}")
+    }
+    out.printLine("]}")
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Error handling
+//////////////////////////////////////////////////////////////////////////
+
+  private Void sendNotFoundErr()
+  {
+    sendErr(404, "Resource not found")
+  }
+
+  private Void sendErr(Int code, Str msg)
+  {
+    res.statusCode = code
+    res.headers["Content-Type"] = "text/plain"
+    res.out.printLine("""{"err":$msg.toCode}""")
+  }
+
 }

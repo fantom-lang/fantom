@@ -234,7 +234,6 @@ class QueryTest : Test
 
   Void verifyInclude(Str query, PodSpec spec, Bool expected)
   {
-echo("==> $query")
     verifyEq(Query(query).include(spec), expected)
   }
 
