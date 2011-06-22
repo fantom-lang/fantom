@@ -9,6 +9,7 @@
 *Build 1.0.60 (working)*
 - WebClient.proxy support
 - JsProps.writeProps: include etc/xxx files
+- WebOutStream: thead, tbody, tfoot
 
 *Build 1.0.59 (2 Jun 2011)*
 - Remove support for deprecated 'readonly' keyword
