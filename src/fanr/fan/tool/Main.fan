@@ -17,6 +17,7 @@ class Main
     HelpCmd(),
     ConfigCmd(),
     PingCmd(),
+    EnvCmd(),
     QueryCmd(),
     InstallCmd(),
     PublishCmd(),
