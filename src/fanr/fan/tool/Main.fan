@@ -20,6 +20,7 @@ class Main
     EnvCmd(),
     QueryCmd(),
     InstallCmd(),
+    UninstallCmd(),
     PublishCmd(),
   ]
 

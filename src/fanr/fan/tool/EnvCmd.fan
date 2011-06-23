@@ -3,7 +3,7 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   22 Jun 11  Brian Frank  Creation
+//   23 Jun 11  Brian Frank  Creation
 //
 
 **
@@ -38,7 +38,7 @@ internal class EnvCmd : Command
   override Void run()
   {
     // perform query
-    specs := findAll(query)
+    specs := findAll(query, out)
 
     // handle no pods found
     if (specs.isEmpty)
@@ -54,10 +54,20 @@ internal class EnvCmd : Command
     }
   }
 
-  private PodSpec[] findAll(Str query)
+  internal static PodSpec[] findAll(Str query, OutStream out)
   {
     q := Query.fromStr(query)
     env := Env.cur
+
+    // optimize one exact pod name (no wildcards)
+    if (q.parts.size == 1 && q.parts[0].isNameExact)
+    {
+      file := env.findPodFile(q.parts[0].namePattern)
+      if (file == null) return PodSpec[,]
+      return [PodSpec.load(file)]
+    }
+
+    // search thru all of them
     acc := PodSpec[,]
     env.findAllPodNames.each |name|
     {

@@ -25,6 +25,7 @@
 **   <metas>         := <meta>*
 **   <meta>          := <metaName> [<metaOp> <scalar>]
 **   <metaName>      := <id> "." <id> ("." <id>)*
+**   <metaOp>        := "==" | "!=" | "~=" | "<" | "<=" | ">=" | ">"
 **
 **   <scalar>        := <int> | <date> | <version> | <str>
 **   <int>           := ["-"] (<digit> | "_")*
@@ -98,6 +99,8 @@ internal const class QueryPart
   const Depend? version
   const QueryMeta[] metas
   private const Regex? nameRegex
+
+  Bool isNameExact() { nameRegex == null }
 
   override Int hash() { namePattern.hash }
 
@@ -227,7 +230,7 @@ internal enum class QueryOp
 {
   has   ("has"),
   eq    ("=="),
-  notEq ("=="),
+  notEq ("!="),
   like  ("~="),
   lt    ("<"),
   ltEq  ("<="),
