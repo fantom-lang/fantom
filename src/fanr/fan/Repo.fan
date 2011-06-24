@@ -25,8 +25,8 @@ abstract const class Repo
   abstract Uri uri()
 
   ** Ping the repo and return summary props.  Standard props include:
-  **   - fanr.type: qname of Repo implementation class
-  **   - fanr.version: version string of 'fanr' pod being used
+  **   - 'fanr.type': qname of Repo implementation class
+  **   - 'fanr.version': version string of 'fanr' pod being used
   abstract Str:Str ping()
 
   ** Find pod versions which match query.  The 'numVersions'

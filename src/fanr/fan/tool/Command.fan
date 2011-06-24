@@ -38,12 +38,6 @@ abstract class Command
   ** Stdout for printing command output
   OutStream out := Env.cur.out
 
-  ** Print a message to `out`
-  Void info(Str msg)
-  {
-    out.printLine(msg)
-  }
-
   ** Log a warning to `out`
   Void warn(Str msg)
   {

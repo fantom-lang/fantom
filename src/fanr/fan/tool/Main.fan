@@ -9,6 +9,7 @@
 **
 ** Command line main for 'fanr'
 **
+@NoDoc
 class Main
 {
   ** Map of command names to command types

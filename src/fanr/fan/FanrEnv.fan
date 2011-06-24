@@ -15,7 +15,7 @@ class FanrEnv
   ** Constructor for given `sys::Env`
   new make(Env env := Env.cur) { this.env = env }
 
-  ** Env instance wrapped
+  ** Env instance we are wrapping
   const Env env
 
   ** Find a pod by name in local environment and return as PodSpec
@@ -29,7 +29,7 @@ class FanrEnv
   }
 
   ** Match a set of pods in local environment and return as PodSpecs
-  PodSpec[] query(Str query, OutStream logOut := Env.cur.out)
+  PodSpec[] query(Str query)
   {
     q := Query.fromStr(query)
 
