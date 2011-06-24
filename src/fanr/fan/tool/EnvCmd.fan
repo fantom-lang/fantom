@@ -38,7 +38,7 @@ internal class EnvCmd : Command
   override Void run()
   {
     // perform query
-    specs := findAll(query, out)
+    specs := env.query(query)
 
     // handle no pods found
     if (specs.isEmpty)
@@ -52,34 +52,6 @@ internal class EnvCmd : Command
     {
       printPodVersion(spec)
     }
-  }
-
-  internal static PodSpec[] findAll(Str query, OutStream out)
-  {
-    q := Query.fromStr(query)
-    env := Env.cur
-
-    // optimize one exact pod name (no wildcards)
-    if (q.parts.size == 1 && q.parts[0].isNameExact)
-    {
-      file := env.findPodFile(q.parts[0].namePattern)
-      if (file == null) return PodSpec[,]
-      return [PodSpec.load(file)]
-    }
-
-    // search thru all of them
-    acc := PodSpec[,]
-    env.findAllPodNames.each |name|
-    {
-      try
-      {
-        file := env.findPodFile(name)
-        spec := PodSpec.load(file)
-        if (q.include(spec)) acc.add(spec)
-      }
-      catch (Err e) out.printLine("ERROR: Cannot query pod: $name\n  $e")
-    }
-    return acc
   }
 
 }
