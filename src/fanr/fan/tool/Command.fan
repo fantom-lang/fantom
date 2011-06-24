@@ -129,6 +129,9 @@ abstract class Command
       throw err("Cannot init repo: $repoUri", e)
   }
 
+  ** Get the local environment to use this command
+  once FanrEnv env() { FanrEnv() }
+
   ** Option to dump full stack trace on errors
   @CommandOpt
   {
