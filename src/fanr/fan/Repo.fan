@@ -8,6 +8,7 @@
 
 **
 ** Repo models a database of pod versions
+** See [docFanr]`docFanr::Concepts#repos`.
 **
 abstract const class Repo
 {

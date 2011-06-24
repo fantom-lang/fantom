@@ -1,0 +1,108 @@
+**************************************************************************
+** title:      Queries
+** author:     Brian Frank
+** created:    24 Jun 11
+** copyright:  Copyright (c) 2011, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The fanr query language is used as the standard syntax for specifying a
+group of pods:
+  - to query pods in a repo
+  - to query pods in the local env
+  - to specify pods to install from a repo
+  - to specify pods to uninstall frmo local env
+
+The general format of a query string is:
+
+    nameFilter [versionFilter] [metaFilter]
+
+If you want to perform multiple queries at once you can separate them with a comma.
+
+Name Filters
+************
+Name filter is simple string with optional "*" wildcard:
+
+  sidewalk     // match the pod name "sidewalk"
+  sidewalk*    // match any pod name which starts with sidewalk
+  a*           // match any pod starting with "a"
+  *            // match any pod
+
+Version Filters
+***************
+The version filter is optional.  If omitted, we assume we are matching
+current version.  The version syntax reuses the `sys::Depend` syntax:
+
+  foo 1.2       // any version of foo 1.2 with any build or patch number
+  foo 1.2.64    // any version of foo 1.2.64 with any patch number
+  foo 1.2+      // any version of foo 1.2 or greater
+  foo 1.2-1.4   // any version between 1.2 and 1.4 inclusive
+  foo 1.2,1.4   // any version of 1.2 or 1.4
+
+So in simple cases the query language is a clean superset of the
+Depend syntax.  This means its easy to find a dependency.  If we assume
+that the '-n' option limits the number of matching results, we can query
+the best match for a dependency like this:
+
+  fanr query -n 1 "foo 1.0"
+
+We can also build up a compact filter to query which new patches
+available for my current local installation:
+
+  fanr query -n 1 "a 1.0.34, b 1.0.34, c 1.2.66, d 1.2.67"
+
+This would return latest patch versions of my specific versions
+of 'a', 'b', 'c', and 'd'.
+
+Meta Filters
+************
+You can perform queries on arbitrary [pod metadata]`docLang::Pods#meta` props:
+
+  org.name == SkyFoundry   // any pod where org.ame == "SkyFoundry"
+  org.name ~= SkyFoundry   // orgName.lower.contains("SkyFoundry".lower)
+  pod.docSrc               // pod.docSrc is present and not "false"
+  build.ts >= 2011-05-01   // build time on or after May 1st
+
+In the case of the comparison operators '< <= => >', the right hand is
+a scalar that implies how to parse the prop value:
+
+  DateTime <=> Date
+  Version  <=> Version
+  Int      <=> Int
+
+Grammar [#grammar]
+******************
+The formal grammar of fanr queries:
+
+   <query>         := <part> ("," <part>)*
+   <part>          := <namePattern> [<versions>] [<metas>]
+
+   <namePattern>   := <nameChar> (<nameChar>)*
+   <nameChar>      := <idChar> | "*"
+
+   <versions>      := <version> ("," <version>)*
+   <version>       := <versionSimple> | <versionPlus> | <versionRange>
+   <versionSimple> := <version>
+   <versionPlus>   := <version> space* "+"
+   <versionRange>  := <version> space* "-" space* <version>
+
+   <metas>         := <meta>*
+   <meta>          := <metaName> [<metaOp> <scalar>]
+   <metaName>      := <id> "." <id> ("." <id>)*
+   <metaOp>        := "==" | "!=" | "~=" | "<" | "<=" | ">=" | ">"
+
+   <scalar>        := <int> | <date> | <version> | <str>
+   <int>           := ["-"] (<digit> | "_")*
+   <date>          := YYYY-MM-DD
+   <version>       := <digit> "." <digit> ("." <digit>)*
+   <str>           := <strQuote> <strChar> <strQuote>
+   <strQuote>      := """ | "'"
+   <strChar>       := same escapes as Fantom
+
+   <id>            := <idChar> (<idChar>)*
+   <id>            := <alpha> | <digit> | "_"
+   <alpha>         := ("a" - "z") | ("A" - "Z")
+   <digit>         := "0" - "9"
+

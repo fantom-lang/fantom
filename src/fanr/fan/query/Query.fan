@@ -8,37 +8,7 @@
 
 **
 ** Query models a parsed query against the pod database.
-**
-** Formal grammar for query language:
-**   <query>         := <part> ("," <part>)*
-**   <part>          := <namePattern> [<versions>] [<metas>]
-**
-**   <namePattern>   := <nameChar> (<nameChar>)*
-**   <nameChar>      := <idChar> | "*"
-**
-**   <versions>      := <version> ("," <version>)*
-**   <version>       := <versionSimple> | <versionPlus> | <versionRange>
-**   <versionSimple> := <version>
-**   <versionPlus>   := <version> space* "+"
-**   <versionRange>  := <version> space* "-" space* <version>
-**
-**   <metas>         := <meta>*
-**   <meta>          := <metaName> [<metaOp> <scalar>]
-**   <metaName>      := <id> "." <id> ("." <id>)*
-**   <metaOp>        := "==" | "!=" | "~=" | "<" | "<=" | ">=" | ">"
-**
-**   <scalar>        := <int> | <date> | <version> | <str>
-**   <int>           := ["-"] (<digit> | "_")*
-**   <date>          := YYYY-MM-DD
-**   <version>       := <digit> "." <digit> ("." <digit>)*
-**   <str>           := <strQuote> <strChar> <strQuote>
-**   <strQuote>      := """ | "'"
-**   <strChar>       := same escapes as Fantom
-**
-**   <id>            := <idChar> (<idChar>)*
-**   <id>            := <alpha> | <digit> | "_"
-**   <alpha>         := ("a" - "z") | ("A" - "Z")
-**   <digit>         := "0" - "9"
+** See `docFanr::Queries` for details and formal grammer.
 **
 internal const class Query
 {

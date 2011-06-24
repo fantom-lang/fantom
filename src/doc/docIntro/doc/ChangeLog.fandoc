@@ -11,6 +11,8 @@
 - JsProps.writeProps: include etc/xxx files
 - WebOutStream: thead, tbody, tfoot
 - WebClient: postFile
+- Finish up fanr infrastructure
+- New docFanr chapter
 
 *Build 1.0.59 (2 Jun 2011)*
 - Remove support for deprecated 'readonly' keyword

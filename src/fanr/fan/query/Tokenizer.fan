@@ -8,6 +8,7 @@
 
 **
 ** Tokenizer for fanr query language.
+** See `docFanr::Queries` for details and formal grammer.
 **
 internal class Tokenizer
 {

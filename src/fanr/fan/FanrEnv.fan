@@ -7,8 +7,8 @@
 //
 
 **
-** FanrRepo models the local environment that we install to
-** and publish from.
+** FanrRepo models the local environment that we install to and publish from.
+** See [docFanr]`docFanr::Concepts#env`.
 **
 class FanrEnv
 {
@@ -58,5 +58,5 @@ class FanrEnv
     return acc
   }
 
-  Str:PodSpec? byName := [:]   // pods loaded by name
+  private Str:PodSpec? byName := [:]   // pods loaded by name
 }
