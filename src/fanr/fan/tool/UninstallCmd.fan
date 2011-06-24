@@ -48,13 +48,20 @@ internal class UninstallCmd : Command
       return
     }
 
-// calculate dependencies
-// TODO
-
     // format to output
+    out.printLine
     specs.sort.each |spec|
     {
       printPodVersion(spec)
+    }
+
+    // ensure uninstall won't break any depends
+    out.printLine
+    if (!checkDepends(specs))
+    {
+      out.printLine
+      out.printLine("Cannot uninstall without breaking above dependencies")
+      return
     }
 
     // confirm
@@ -68,6 +75,33 @@ internal class UninstallCmd : Command
     specs.each |spec| { delete(spec) }
     out.printLine
     out.printLine("Uninstall successful ($specs.size pods)")
+  }
+
+  private Bool checkDepends(PodSpec[] specs)
+  {
+    // map specs by name
+    map := Str:PodSpec[:].setList(specs) |s| { s.name }
+
+    // walk thru all install pods not in our spec list
+    ok := true
+    env.queryAll.each |pod|
+    {
+      // if this pod in our uninstall list, then skip it
+      if (map[pod.name] != null) return
+
+      // we are keeping this guy, so make sure that none
+      // of the pods to uninstall are in its depend list
+      pod.depends.each |d|
+      {
+        if (map[d.name] != null)
+        {
+          out.printLine("ERROR: '$pod.name' depends on '$d.name'")
+          ok = false
+        }
+      }
+    }
+
+    return ok
   }
 
   private Void delete(PodSpec spec)

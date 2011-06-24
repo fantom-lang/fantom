@@ -41,11 +41,11 @@ class FanrEnv
     }
 
     // search thru all of them
-    return allPods.findAll |p| { q.include(p) }
+    return queryAll.findAll |p| { q.include(p) }
   }
 
-  ** Lazily load all pods as PodSpecs
-  private once PodSpec[] allPods()
+  ** Lazily load all installed pods as PodSpecs
+  once PodSpec[] queryAll()
   {
     acc := PodSpec[,]
     env.findAllPodNames.each |name|
