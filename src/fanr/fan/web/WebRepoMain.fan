@@ -13,6 +13,7 @@ using util
 ** WebRepoMain is a super simple daemon that exposes a
 ** file based repository on an HTTP port.
 **
+@NoDoc
 class WebRepoMain : AbstractMain
 {
   @Opt { help = "http port" }

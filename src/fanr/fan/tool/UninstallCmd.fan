@@ -39,7 +39,7 @@ internal class UninstallCmd : Command
   override Void run()
   {
     // perform query
-    specs := env.query(query, out)
+    specs := env.query(query)
 
     // handle no pods found
     if (specs.isEmpty)
