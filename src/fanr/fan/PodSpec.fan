@@ -8,6 +8,7 @@
 
 **
 ** PodSpec models a specific pod version
+** See [docFanr]`docFanr::Concepts#podSpec`.
 **
 const class PodSpec
 {

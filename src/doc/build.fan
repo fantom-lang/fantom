@@ -21,6 +21,7 @@ class Build : BuildGroup
       `docIntro/build.fan`,
       `docLang/build.fan`,
       `docTools/build.fan`,
+      `docFanr/build.fan`,
     ]
   }
 }

@@ -1,0 +1,71 @@
+**************************************************************************
+** title:      Concepts
+** author:     Brian Frank
+** created:    24 Jun 11
+** copyright:  Copyright (c) 2011, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The [fanr]`fanr::index` pod provides standardized infrastructure for
+package management for the Fantom ecosystem:
+  - standard API for Fantom repositories which are databases of pods
+  - implementation for file based repositories
+  - implementation for web based repositories (client and server)
+  - command line tool for installing pods from repositories
+
+Repos [#repos]
+**************
+A *repo* is a Fantom pod repository.  Repos are an abstraction for
+any database of [pods]`docLang::Pods`.  Repos may store multiple versions
+of each pod.  The `fanr::Repo` API defines the standard interface
+for working with a repository.  Two standard implementations are
+provided:
+  - [FileRepo]`FileRepos`: file system based repository
+  - [WebRepo]`WebRepos`: web based repository which is
+    accessed over a simple HTTP protocol
+
+All repos are identified with a URI - the 'file:' URI scheme maps to FileRepo
+and 'http:' scheme maps to WebRepo.  You can create your own custom
+repo implementations too.    To open a Repo using a given URI:
+
+  Repo.makeForUri(`file:/fantom-repo/`)
+
+PodSpec [#podSpec]
+******************
+We model a given pod version with the `fanr::PodSpec` class.  A pod
+spec maps to a specific pod file with a unique version and its [pod
+metadata]`docLang::Pods#meta` which includes its summary description
+and dependencies.
+
+Env [#env]
+**********
+We use the term *env* to describe the local Fantom environment which is
+modeled by the `sys::Env` API.  In the fanr architecture we wrap the
+system Env class with the `fanr::FanrEnv` class.  This API is responsible
+for modeling pod files with the 'PodSpec' API without necessarily having
+to load pods into memory via the reflection APIs.
+
+Actions [#actions]
+******************
+When performing package management tasks we are always working with
+one repo and one env.  The local env is always the environment being
+used by the fanr tools.  The repo is typically configured in "etc/fanr/config.props",
+although may be overridden using a command line option.
+
+All interactions with a repo or the local env use a dedicated
+[query language]`Queries` that lets us query by pod name, version, or
+any pod meta-data.
+
+Here are the basic commands we use for working with fanr:
+
+  - **query**: performing queries against repo
+  - **env**: performing queries against local env
+  - **publish**: upload pods 'env => repo'
+  - **install**: download pods 'repo => env'
+  - **uninstall**: delete pods from local env
+
+These operations are covered in more detail in the `Tool` chapter.
+
+
