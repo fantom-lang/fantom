@@ -141,9 +141,9 @@ public class Process
       this.proc = builder.start();
 
       // now launch threads to pipe std out, in, and err
-      new PipeInToOut("out", proc.getInputStream(), out).start();
-      if (!mergeErr) new PipeInToOut("err", proc.getErrorStream(), err).start();
-      if (in != null) new PipeOutToIn(proc, proc.getOutputStream(), in).start();
+      new PipeInToOut(this, "out", proc.getInputStream(), out).start();
+      if (!mergeErr) new PipeInToOut(this, "err", proc.getErrorStream(), err).start();
+      if (in != null) new PipeOutToIn(this, proc.getOutputStream(), in).start();
 
       return this;
     }
@@ -167,9 +167,31 @@ public class Process
     }
   }
 
+  public final Process kill()
+  {
+    if (proc == null) throw Err.make("Process not running");
+    proc.destroy();
+    return this;
+  }
+
   private void checkRun()
   {
     if (proc != null) throw Err.make("Process already run");
+  }
+
+  boolean isAlive()
+  {
+    // hacky to use exception for flow control, but there
+    // doesn't seem to be any other way to check state
+    try
+    {
+      proc.exitValue();
+      return false;
+    }
+    catch (IllegalThreadStateException e)
+    {
+      return true;
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -178,12 +200,12 @@ public class Process
 
   static class PipeInToOut extends java.lang.Thread
   {
-    PipeInToOut(String name, InputStream in, OutStream out)
+    PipeInToOut(Process proc, String name, InputStream in, OutStream out)
     {
       super("Process." +  name);
-      this.in = in;
-      if (out != null)
-        this.out = SysOutStream.java(out);
+      this.proc = proc;
+      this.in   = in;
+      this.out  = out == null ? null : SysOutStream.java(out);
     }
 
     public void run()
@@ -199,13 +221,14 @@ public class Process
         }
         catch (Throwable e)
         {
-          e.printStackTrace();
+          if (proc.isAlive()) e.printStackTrace();
         }
       }
     }
 
-    InputStream in;
-    OutputStream out;
+    final Process proc;
+    final InputStream in;
+    final OutputStream out;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -214,7 +237,7 @@ public class Process
 
   static class PipeOutToIn extends java.lang.Thread
   {
-    PipeOutToIn(java.lang.Process proc, OutputStream out, InStream in)
+    PipeOutToIn(Process proc, OutputStream out, InStream in)
     {
       super("Process.in");
       this.proc = proc;
@@ -225,7 +248,7 @@ public class Process
     public void run()
     {
       byte[] temp = new byte[256];
-      while (procIsAlive())
+      while (true)
       {
         try
         {
@@ -236,27 +259,14 @@ public class Process
         }
         catch (Throwable e)
         {
-          e.printStackTrace();
+          if (proc.isAlive()) e.printStackTrace();
         }
       }
     }
 
-    boolean procIsAlive()
-    {
-       try
-       {
-         proc.exitValue();
-         return false;
-       }
-       catch (IllegalThreadStateException e)
-       {
-         return true;
-       }
-    }
-
-    java.lang.Process proc;
-    OutputStream out;
-    InputStream in;
+    final Process proc;
+    final OutputStream out;
+    final InputStream in;
   }
 
 //////////////////////////////////////////////////////////////////////////
