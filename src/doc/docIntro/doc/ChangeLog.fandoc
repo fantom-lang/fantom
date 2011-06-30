@@ -13,6 +13,7 @@
 - WebClient: postFile
 - Finish up fanr infrastructure
 - New docFanr chapter
+- Process.kill and bit of Java rework
 
 *Build 1.0.59 (2 Jun 2011)*
 - Remove support for deprecated 'readonly' keyword

@@ -94,4 +94,9 @@ final class Process
   **
   Int join()
 
+  **
+  ** Kill this process.  Returns this.
+  **
+  This kill()
+
 }

@@ -180,6 +180,13 @@ namespace Fan.Sys
       }
     }
 
+   public Process kill()
+   {
+     if (m_proc == null) throw Err.make("Process not running").val;
+     proc.Kill();
+     return this;
+   }
+
     private void checkRun()
     {
       if (m_proc != null) throw Err.make("Process already run").val;
