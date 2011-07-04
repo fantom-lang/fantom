@@ -282,7 +282,7 @@ abstract class AbstractMain
     if (def != false) col1 += " <$field.type.name>"
 
     col2 := help
-    if (def != false && def != null) col2 += " (default $def)"
+    if (def != false && def != null && def != "") col2 += " (default $def)"
 
     return [col1, col2]
   }
