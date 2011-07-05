@@ -118,7 +118,7 @@ abstract class Command
       throw err("No repoUri available: use -r or set 'repo' in etc/fanr/config.props")
 
     try
-      return Repo.makeForUri(repoUri)
+      return Repo.makeForUri(repoUri, username, password)
     catch (Err e)
       throw err("Cannot init repo: $repoUri", e)
   }
@@ -141,6 +141,22 @@ abstract class Command
     help   = "Skip confirmation"
   }
   Bool skipConfirm
+
+  ** Username for authentication
+  @CommandOpt
+  {
+    name   = "u"
+    help   = "Username for authentication"
+  }
+  Str? username
+
+  ** Password for authentication
+  @CommandOpt
+  {
+    name   = "p"
+    help   = "Password for authentication"
+  }
+  Str? password
 
 //////////////////////////////////////////////////////////////////////////
 // Initialization
