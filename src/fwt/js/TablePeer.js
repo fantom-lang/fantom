@@ -581,7 +581,7 @@ fan.fwt.TableSupport.prototype.popup = function()
     }));
 
   var xport = fan.fwt.MenuItem.make();
-  xport.text$("Export");
+  xport.text$("Show CSV");
   xport.onAction().add(fan.sys.Func.make(
     fan.sys.List.make(fan.sys.Param.$type, [new fan.sys.Param("it","fwt::Event",false)]),
     fan.sys.Void.$type,
@@ -637,7 +637,7 @@ fan.fwt.TableSupport.prototype.exportTable = function()
   cons.content$(text);
 
   var dlg = fan.fwt.Dialog.make(this.table.window());
-  dlg.title$("Export");
+  dlg.title$("Show CSV");
   dlg.body$(cons);
   dlg.commands$(fan.sys.List.make(fan.sys.Obj.$type, [fan.fwt.Dialog.ok()]));
   dlg.open();
