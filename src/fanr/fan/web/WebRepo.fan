@@ -8,6 +8,7 @@
 
 using web
 using util
+using concurrent
 
 **
 ** WebRepo is a client implementation of a repository over HTTP
@@ -26,7 +27,7 @@ internal const class WebRepo : Repo
   {
     this.uri = uri.plusSlash
     this.username = username
-    this.password = password
+    this.password = password ?: ""
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,7 +39,7 @@ internal const class WebRepo : Repo
   override Str:Str ping()
   {
     // prepare query
-    c := prepare(`ping`)
+    c := prepare("GET", `ping`)
     c.writeReq.readRes
 
     // parse json response
@@ -48,7 +49,7 @@ internal const class WebRepo : Repo
   override PodSpec[] query(Str query, Int numVersions := 1)
   {
     // prepare query
-    c := prepare(`query`)
+    c := prepare("POST", `query`)
     c.reqHeaders["Fan-NumVersions"] = numVersions.toStr
     c.postStr(query)
 
@@ -64,7 +65,7 @@ internal const class WebRepo : Repo
   override InStream read(PodSpec spec)
   {
     // prepare query
-    c := prepare(`pod/$spec.name/$spec.version`)
+    c := prepare("GET", `pod/$spec.name/$spec.version`)
     c.writeReq.readRes
 
     // if not 200, then assume a JSON error message
@@ -76,7 +77,7 @@ internal const class WebRepo : Repo
   override PodSpec publish(File podFile)
   {
     // post file
-    c := prepare(`publish`)
+    c := prepare("POST", `publish`)
     c.postFile(podFile)
 
     // parse json response
@@ -89,12 +90,89 @@ internal const class WebRepo : Repo
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  private WebClient prepare(Uri path)
+  private WebClient prepare(Str method, Uri path)
   {
     c := WebClient(uri+path)
-    c.reqHeaders["Fanr-Uri"] = c.reqUri.relToAuth.encode
-    if (username != null) c.reqHeaders["Fanr-Username"] = username
+    c.reqMethod = method
+    if (username != null) sign(c)
     return c
+  }
+
+  private Void sign(WebClient c)
+  {
+    // first time we need to query server for algorithms and
+    // user salt so we can sign our requests
+    if (this.secret.val == null) initForSigning
+    secret := Buf.fromBase64(this.secret.val)
+
+    // add signing headers which are included in signature
+    c.reqHeaders["Fanr-Username"]           = username
+    c.reqHeaders["Fanr-SecretAlgorithm"]    = secretAlgorithm.val
+    c.reqHeaders["Fanr-SignatureAlgorithm"] = "HMAC-SHA1"
+    c.reqHeaders["Fanr-Ts"]                 = (DateTime.nowUtc + tsSkew.val).toStr
+
+    // compute signature and add header
+    s := toSignatureBody(c.reqMethod, c.reqUri, c.reqHeaders)
+    c.reqHeaders["Fanr-Signature"] = s.hmac("SHA1",secret).toBase64
+  }
+
+  internal static Buf toSignatureBody(Str method, Uri uri, Str:Str headers)
+  {
+    s := Buf()
+    s.printLine(method.upper)
+    s.printLine(uri.encode.lower)
+    keys := headers.keys.findAll |key|
+    {
+      key = key.lower
+      return key.startsWith("fanr-") && key != "fanr-signature"
+    }
+    keys.sort.each |key|
+    {
+      s.print(key.lower).print(":").printLine(headers[key])
+    }
+    return s
+  }
+
+  private Void initForSigning()
+  {
+    // if we don't have HMAC, then first thing we need to do is
+    // ping server to get the salt for our username
+    c := WebClient(uri+`auth?$username`)
+    c.writeReq.readRes
+    res := parseRes(c)
+
+    // get timestamp and store away delta so our requests
+    // are in-sync even if our clocks are not
+    ts := DateTime.fromStr(res["ts"] ?: throw Err("Response missing 'ts'"))
+    tsSkew.val = ts - DateTime.now
+
+    // check signature algorithms, we only support HMAC-SHA1 so
+    // if server doesn't support that we have to give up now
+    sigAlgorithms := res["signatureAlgorithms"] as Str ?: throw Err("Response missing 'signatureAlgorithms'")
+    if (sigAlgorithms.split(',').find |a| { a.upper == "HMAC-SHA1" } == null)
+      throw Err("Unsupported signature algorithms: $sigAlgorithms")
+
+    // compute secret using secret algorithm
+    secretAlgorithms := res["secretAlgorithms"] as Str ?: throw Err("Response missing 'secretAlgorithms'")
+    secret.val = secretAlgorithms.split(',').eachWhile |a|
+    {
+      // save current normalized algorithm name
+      secretAlgorithm.val = a = a.upper
+
+      if (a == "PASSWORD")
+      {
+        return Buf().print(password).toBase64
+      }
+
+      if (a.upper == "SALTED-HMAC-SHA1")
+      {
+        salt := res["salt"] ?: throw Err("Response missing 'salt'")
+        return Buf().print("$username:$salt").hmac("SHA-1", password.toBuf).toBase64
+      }
+
+      return null
+    }
+    if (secret.val == null) throw Err("Unsupported secret algorithms: $secretAlgorithms")
   }
 
   private Str:Obj? parseRes(WebClient c)
@@ -123,8 +201,11 @@ internal const class WebRepo : Repo
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private const Str? username
-  private const Str? password
+  private const Str? username                        // user name
+  private const Str password                         // plain text password
+  private const AtomicRef secret := AtomicRef(null)  // base64 string
+  private const AtomicRef secretAlgorithm := AtomicRef(null)  // algorithm we picked for secret
+  private const AtomicRef tsSkew := AtomicRef(0sec)  // diff b/w my clock and server clock
 }
 
 internal const class RemoteErr : Err

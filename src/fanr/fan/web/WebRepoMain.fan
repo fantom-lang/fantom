@@ -19,13 +19,26 @@ class WebRepoMain : AbstractMain
   @Opt { help = "http port" }
   Int port := 8080
 
+  @Opt { help = "username to use for authentication"; aliases=["u"] }
+  Str? username
+
+  @Opt { help = "password to use for authentication"; aliases=["p"] }
+  Str? password := ""
+
   @Arg { help = "local repo to publish" }
   Str? localRepo
 
   override Int run()
   {
+    if (username != null) log.info("Running with authentication")
+
     // create web repo
-    mod := WebRepoMod { it.repo = Repo.makeForUri(localRepo.toUri) }
+    mod := WebRepoMod
+    {
+      it.repo = Repo.makeForUri(localRepo.toUri)
+      if (username != null)
+        it.auth = SimpleWebRepoAuth(username, password)
+    }
 
     // use reflection to create WispService
     wispType := Type.find("wisp::WispService")

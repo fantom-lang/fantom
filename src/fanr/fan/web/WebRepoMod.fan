@@ -21,6 +21,7 @@ using util
 **    POST     {base}/query             pod query
 **    GET      {base}/pod/{name}/{ver}  pod download
 **    POST     {base}/publish           publish pod
+**    GET      {base}/auth?{username}   authentication info
 **
 ** HTTP Headers
 **    "Fan-NumVersions"   query version limit
@@ -42,6 +43,10 @@ const class WebRepoMod : WebMod
   ** Repository to publish on the web, typically a local FileRepo.
   const Repo repo
 
+  ** Authentication and authorization plug-in.
+  ** Default is to make everything completely public.
+  const WebRepoAuth auth := PublicWebRepoAuth()
+
   ** Meta-data to include in ping requests.  If customized,
   ** then be sure to include standard props defined by `Repo.ping`.
   const Str:Str pingMeta :=
@@ -62,13 +67,18 @@ const class WebRepoMod : WebMod
   {
     try
     {
+      // if user was specified, then authenticate to user object
+      user := authenticate
+      if (res.isDone) return
+
       // route to correct command
       path := req.modRel.path
       cmd := path.getSafe(0) ?: "?"
-      if (cmd == "ping"    && path.size == 1) { onPing; return }
-      if (cmd == "query"   && path.size == 1) { onQuery; return }
-      if (cmd == "pod"     && path.size == 3) { onPod(path[1], path[2]); return }
-      if (cmd == "publish" && path.size == 1) { onPublish; return }
+      if (cmd == "ping"    && path.size == 1) { onPing(user); return }
+      if (cmd == "query"   && path.size == 1) { onQuery(user); return }
+      if (cmd == "pod"     && path.size == 3) { onPod(path[1], path[2], user); return }
+      if (cmd == "publish" && path.size == 1) { onPublish(user); return }
+      if (cmd == "auth"    && path.size == 1) { onAuth(user); return }
       sendNotFoundErr
     }
     catch (Err e)
@@ -77,11 +87,60 @@ const class WebRepoMod : WebMod
     }
   }
 
+  private Obj? authenticate()
+  {
+    // if username header wasn't specified, then assume public request
+    username := req.headers["Fanr-Username"]
+    if (username == null) return null
+
+    // check that user name is valid
+    user := auth.user(username)
+    if (user == null)
+    {
+      sendErr(403, "Invalid username: $username")
+      return null
+    }
+
+    // get signature headers
+    signAlgorithm   := getRequiredHeader("Fanr-SignatureAlgorithm")
+    secretAlgorithm := getRequiredHeader("Fanr-SecretAlgorithm").upper
+    signature       := getRequiredHeader("Fanr-Signature")
+    ts              := DateTime.fromStr(getRequiredHeader("Fanr-Ts"))
+
+    // check timestamp is in ball-park of now to prevent replay
+    // attacks, but give some fudge since clocks are never in sync
+    if ((now - ts).abs > 15min)
+    {
+      sendErr(403, "Invalid timestamp window for signature: $ts != $now")
+      return null
+    }
+
+    // verify signature algorithm (we currently only support one algorithm)
+    if (signAlgorithm != "HMAC-SHA1")
+    {
+      sendErr(403, "Unsupported signature algorithm: $signAlgorithm")
+      return null
+    }
+
+    // verify signature which in effect is the password verification
+    s := WebRepo.toSignatureBody(req.method, req.absUri, req.headers)
+    secret := auth.secret(user, secretAlgorithm)
+    expectedSignature := s.hmac("SHA-1", secret).toBase64
+    if (expectedSignature != signature)
+    {
+      sendErr(403, "Invalid password (invalid signature)")
+      return null
+    }
+
+    // at this point we have authenticated the user
+    return user
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Ping
 //////////////////////////////////////////////////////////////////////////
 
-  private Void onPing()
+  private Void onPing(Obj? user)
   {
     res.headers["Content-Type"] = "text/plain"
     JsonOutStream(res.out).writeJson(pingMeta).flush
@@ -91,7 +150,7 @@ const class WebRepoMod : WebMod
 // Query
 //////////////////////////////////////////////////////////////////////////
 
-  private Void onQuery()
+  private Void onQuery(Obj? user)
   {
     // query can be GET query part or POST body
     Str? query
@@ -129,7 +188,7 @@ const class WebRepoMod : WebMod
 // Read Pod
 //////////////////////////////////////////////////////////////////////////
 
-  private Void onPod(Str podName, Str podVer)
+  private Void onPod(Str podName, Str podVer, Obj? user)
   {
     // lookup pod that matches name/version
     query := "$podName $podVer"
@@ -146,7 +205,7 @@ const class WebRepoMod : WebMod
 // Publish
 //////////////////////////////////////////////////////////////////////////
 
-  private Void onPublish()
+  private Void onPublish(Obj? user)
   {
     if (req.method != "POST") { sendBadMethodErr; return }
 
@@ -181,6 +240,34 @@ const class WebRepoMod : WebMod
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Auth
+//////////////////////////////////////////////////////////////////////////
+
+  private Void onAuth(Obj? reqUser)
+  {
+    if (req.method != "GET") { sendBadMethodErr; return }
+
+    username     := req.uri.queryStr ?: "*"
+    user         := auth.user(username)
+    salt         := auth.salt(user)
+    secrets      := auth.secretAlgorithms.join(",")
+    signatures   := auth.signatureAlgorithms.join(",")
+    allowQuery   := auth.allowQuery(user, null)
+    allowInstall := auth.allowInstall(user, null)
+    allowPublish := auth.allowPublish(user, null)
+
+    res.headers["Content-Type"] = "text/plain"
+    out := res.out
+    out.printLine("""{""")
+    out.printLine(""" "username":$username.toCode,""")
+    out.printLine(""" "salt":$salt.toCode,""")
+    out.printLine(""" "secretAlgorithms":$secrets.toCode,""")
+    out.printLine(""" "signatureAlgorithms":$signatures.toCode,""")
+    out.printLine(""" "ts":$now.toStr.toCode""")
+    out.printLine("""}""")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Response/Error Handling
 //////////////////////////////////////////////////////////////////////////
 
@@ -198,6 +285,11 @@ const class WebRepoMod : WebMod
     out.printLine(comma ? "}," : "}")
   }
 
+  private Str getRequiredHeader(Str key)
+  {
+    req.headers[key] ?: throw Err("Missing required header $key.toCode")
+  }
+
   private Void sendNotFoundErr()
   {
     sendErr(404, "Resource not found: $req.modRel")
@@ -213,6 +305,9 @@ const class WebRepoMod : WebMod
     res.statusCode = code
     res.headers["Content-Type"] = "text/plain"
     res.out.printLine("""{"err":$msg.toCode}""")
+    res.done
   }
+
+  private DateTime now() { DateTime.nowUtc(null) }
 
 }
