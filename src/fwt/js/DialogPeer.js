@@ -94,17 +94,14 @@ fan.fwt.DialogPeer.prototype.open = function(self)
   this.$mask = mask;
   this.$shell = shell;
 
-  // animate open
+  // animate open and dialog resizes
   mask.style.opacity = "0.25";
-  dlg.style.MozTransition    = "-moz-transform 100ms, opacity 100ms";
+  var tx = "-transform 100ms, opacity 100ms, top 250ms, left 250ms, width 250ms, height 250ms";
+  dlg.style.MozTransition    = "-moz" + tx;
   dlg.style.MozTransform     = "scale(1.0)";
-  dlg.style.webkitTransition = "-webkit-transform 100ms, opacity 100ms";
+  dlg.style.webkitTransition = "-webkit" + tx;
   dlg.style.webkitTransform  = "scale(1.0)";
   dlg.style.opacity = "1.0";
-
-  // attach transition for dialog resizes
-  dlg.style.MozTransition    = "top 250ms, left 250ms, width 250ms, height 250ms";
-  dlg.style.webkitTransition = "top 250ms, left 250ms, width 250ms, height 250ms";
 
   // try to focus first form element
   var elem = fan.fwt.DialogPeer.findFormControl(content);
