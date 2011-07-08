@@ -74,10 +74,10 @@ const class WebRepoMod : WebMod
       // route to correct command
       path := req.modRel.path
       cmd := path.getSafe(0) ?: "?"
-      if (cmd == "ping"    && path.size == 1) { onPing(user); return }
       if (cmd == "query"   && path.size == 1) { onQuery(user); return }
       if (cmd == "pod"     && path.size == 3) { onPod(path[1], path[2], user); return }
       if (cmd == "publish" && path.size == 1) { onPublish(user); return }
+      if (cmd == "ping"    && path.size == 1) { onPing(user); return }
       if (cmd == "auth"    && path.size == 1) { onAuth(user); return }
       sendNotFoundErr
     }
@@ -97,7 +97,7 @@ const class WebRepoMod : WebMod
     user := auth.user(username)
     if (user == null)
     {
-      sendErr(403, "Invalid username: $username")
+      sendUnauthErr("Invalid username: $username")
       return null
     }
 
@@ -111,14 +111,14 @@ const class WebRepoMod : WebMod
     // attacks, but give some fudge since clocks are never in sync
     if ((now - ts).abs > 15min)
     {
-      sendErr(403, "Invalid timestamp window for signature: $ts != $now")
+      sendUnauthErr("Invalid timestamp window for signature: $ts != $now")
       return null
     }
 
     // verify signature algorithm (we currently only support one algorithm)
     if (signAlgorithm != "HMAC-SHA1")
     {
-      sendErr(403, "Unsupported signature algorithm: $signAlgorithm")
+      sendUnauthErr("Unsupported signature algorithm: $signAlgorithm")
       return null
     }
 
@@ -128,7 +128,7 @@ const class WebRepoMod : WebMod
     expectedSignature := s.hmac("SHA-1", secret).toBase64
     if (expectedSignature != signature)
     {
-      sendErr(403, "Invalid password (invalid signature)")
+      sendUnauthErr("Invalid password (invalid signature)")
       return null
     }
 
@@ -142,8 +142,12 @@ const class WebRepoMod : WebMod
 
   private Void onPing(Obj? user)
   {
+    // add "ts" to configured meta
+    props := pingMeta.dup
+    props["ts"] =  DateTime.now.toStr
+
     res.headers["Content-Type"] = "text/plain"
-    JsonOutStream(res.out).writeJson(pingMeta).flush
+    JsonOutStream(res.out).writeJson(props).flush
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -152,6 +156,9 @@ const class WebRepoMod : WebMod
 
   private Void onQuery(Obj? user)
   {
+    // if user can't query any pods, immediately bail
+    if (!auth.allowQuery(user, null)) { sendForbiddenErr(user); return }
+
     // query can be GET query part or POST body
     Str? query
     switch (req.method)
@@ -288,6 +295,17 @@ const class WebRepoMod : WebMod
   private Str getRequiredHeader(Str key)
   {
     req.headers[key] ?: throw Err("Missing required header $key.toCode")
+  }
+
+  private Void sendUnauthErr(Str msg)
+  {
+    sendErr(401, msg)
+  }
+
+  private Void sendForbiddenErr(Obj? user)
+  {
+    if (user == null) sendErr(401, "Authentication required")
+    else sendErr(403, "Not allowed")
   }
 
   private Void sendNotFoundErr()

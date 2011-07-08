@@ -15,6 +15,11 @@ using util
 **
 const abstract class WebRepoAuth
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Authentication
+//////////////////////////////////////////////////////////////////////////
+
   ** What algorithms are supported to compute the "secret" to use
   ** for digital signatures.  They should be sorted from most
   ** preferred to least preferred.  Standard values are:
@@ -45,6 +50,10 @@ const abstract class WebRepoAuth
   ** See `secretAlgorithms` for list of algorithms (parameter is guaranteed
   ** to be in all upper case).
   abstract Buf secret(Obj? user, Str algorithm)
+
+//////////////////////////////////////////////////////////////////////////
+// Permissions
+//////////////////////////////////////////////////////////////////////////
 
   ** Is the given user allowed to query the given pod?
   ** If pod is null, return if user is allowed to query anything.
