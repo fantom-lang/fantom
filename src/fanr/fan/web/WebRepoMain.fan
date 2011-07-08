@@ -40,14 +40,20 @@ class WebRepoMain : AbstractMain
         it.auth = SimpleWebRepoAuth(username, password)
     }
 
-    // use reflection to create WispService
-    wispType := Type.find("wisp::WispService")
-    wispPort := wispType.field("port")
-    wispRoot := wispType.field("root")
-    wisp := wispType.make([Field.makeSetFunc([wispPort: this.port, wispRoot: mod])])
+    // create WispService
+    wisp := makeWispService(mod, this.port)
 
     // run service
     return runServices([wisp])
   }
-}
 
+  internal static Service makeWispService(WebMod mod, Int port)
+  {
+    // use reflection to create WispService
+    wispType := Type.find("wisp::WispService")
+    wispPort := wispType.field("port")
+    wispRoot := wispType.field("root")
+    return wispType.make([Field.makeSetFunc([wispPort: port, wispRoot: mod])])
+  }
+
+}
