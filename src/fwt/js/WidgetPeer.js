@@ -230,13 +230,15 @@ fan.fwt.WidgetPeer.prototype.detach = function(self)
 fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
 {
   // sync event handlers
-  this.checkEventListener(self, 0x01, "mouseover",  fan.fwt.EventId.m_mouseEnter, self.onMouseEnter());
-  this.checkEventListener(self, 0x02, "mouseout",   fan.fwt.EventId.m_mouseExit,  self.onMouseExit());
-  this.checkEventListener(self, 0x04, "mousedown",  fan.fwt.EventId.m_mouseDown,  self.onMouseDown());
-  this.checkEventListener(self, 0x08, "mousemove",  fan.fwt.EventId.m_mouseMove,  self.onMouseMove());
-  this.checkEventListener(self, 0x10, "mouseup",    fan.fwt.EventId.m_mouseUp,    self.onMouseUp());
-//this.checkEventListener(self, 0x20, "mousehover", fan.fwt.EventId.m_mouseHover, self.onMouseHover());
-  this.checkEventListener(self, 0x40, "mousewheel", fan.fwt.EventId.m_mouseWheel, self.onMouseWheel());
+  this.checkEventListener(self, 0x001, "mouseover",  fan.fwt.EventId.m_mouseEnter, self.onMouseEnter());
+  this.checkEventListener(self, 0x002, "mouseout",   fan.fwt.EventId.m_mouseExit,  self.onMouseExit());
+  this.checkEventListener(self, 0x004, "mousedown",  fan.fwt.EventId.m_mouseDown,  self.onMouseDown());
+  this.checkEventListener(self, 0x008, "mousemove",  fan.fwt.EventId.m_mouseMove,  self.onMouseMove());
+  this.checkEventListener(self, 0x010, "mouseup",    fan.fwt.EventId.m_mouseUp,    self.onMouseUp());
+//this.checkEventListener(self, 0x020, "mousehover", fan.fwt.EventId.m_mouseHover, self.onMouseHover());
+  this.checkEventListener(self, 0x040, "mousewheel", fan.fwt.EventId.m_mouseWheel, self.onMouseWheel());
+  this.checkEventListener(self, 0x080, "keydown",    fan.fwt.EventId.m_keyDown,    self.onKeyDown());
+  this.checkEventListener(self, 0x100, "keyup",      fan.fwt.EventId.m_keyUp,      self.onKeyUp());
 
   // sync bounds
   with (this.elem.style)
@@ -293,6 +295,7 @@ fan.fwt.WidgetPeer.prototype.attachEventListener = function(self, type, evtId, l
     var isClickEvent = evtId == fan.fwt.EventId.m_mouseDown ||
                        evtId == fan.fwt.EventId.m_mouseUp;
     var isWheelEvent = evtId == fan.fwt.EventId.m_mouseWheel;
+    var isMouseEvent = type.indexOf("mouse") != -1;
 
     // create fwt::Event and invoke handler
     var evt = fan.fwt.Event.make();
@@ -320,12 +323,15 @@ fan.fwt.WidgetPeer.prototype.attachEventListener = function(self, type, evtId, l
     }
 
     // prevent bubbling
-    e.stopPropagation();
+    if (evt.m_consumed || isMouseEvent) e.stopPropagation();
     return false;
   }
 
   // special handler for firefox
   if (type == "mousewheel" && fan.fwt.DesktopPeer.$isFirefox) type = "DOMMouseScroll";
+
+  // add tabindex for key events
+  if (type == "keydown" || type == "keyup") this.elem.tabIndex = 0;
 
   // attach event handler
   this.elem.addEventListener(type, func, false);
@@ -474,6 +480,9 @@ fan.fwt.WidgetPeer.addCss = function(css)
   else style.appendChild(document.createTextNode(css));
   document.getElementsByTagName("head")[0].appendChild(style);
 }
+
+// disable focus outlines on div.tabIndex elements
+fan.fwt.WidgetPeer.addCss("div:focus { outline:0; }");
 
 fan.fwt.WidgetPeer.setBg = function(elem, brush)
 {
