@@ -72,9 +72,13 @@ fan.fwt.TablePeer.injectCss = function()
     "table.__fwt_table td img.right + span { margin-left:0; margin-right:6px; }" +
     "table.__fwt_table tr:nth-child(even) { background:#f1f5fa; }" +
     // selected
-    "table.__fwt_table tr.selected { background:#3d80df; }" +
-    "table.__fwt_table tr.selected td { color:#fff !important; background:#3d80df !important; border-color:#346dbe; }" +
-    "table.__fwt_table tr.selected a { color:#fff; }");
+    "div.__fwt_table:focus { outline:0; }" +
+    "div.__fwt_table:focus tr.selected { background:#3d80df; }" +
+    "div.__fwt_table:focus tr.selected td { color:#fff !important; background:#3d80df !important; border-color:#346dbe; }" +
+    "div.__fwt_table:focus tr.selected a { color:#fff; }" +
+    "div.__fwt_table tr.selected { background:#cbcbcb; }" +
+    "div.__fwt_table tr.selected td { color:#000 !important; background:#cbcbcb !important; border-color:#aaa; }" +
+    "div.__fwt_table tr.selected a { color:#000; }");
 
   if (fan.fwt.DesktopPeer.$isIE || fan.fwt.DesktopPeer.$isFirefox)
     fan.fwt.WidgetPeer.addCss("table.__fwt_table td img + span { margin-right:16px; }");
@@ -127,6 +131,8 @@ fan.fwt.TablePeer.prototype.create = function(parentElem, self)
   style.borderSpacing = "0";
 
   var div = this.emptyDiv();
+  div.className = "__fwt_table";
+  div.tabIndex = 0;
   style = div.style;
   style.border     = "1px solid #9f9f9f";
   style.overflow   = "auto";
@@ -135,6 +141,10 @@ fan.fwt.TablePeer.prototype.create = function(parentElem, self)
   var $this = this;
   table.addEventListener("mousedown", function(event) {
     $this.$onMouseDown(self, event);
+  }, false);
+
+  div.addEventListener("keydown", function(event) {
+    $this.$onKeyDown(self, event);
   }, false);
 
   div.appendChild(table);
@@ -259,6 +269,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       {
         // selection checkbox
         var cb = document.createElement("input");
+        cb.tabIndex = -1;
         cb.type = "checkbox";
         var $this = this;
         cb.onclick = function(event) { $this.selection.toggle(event ? event : window.event) };
@@ -400,6 +411,57 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
     evt.m_data = data;
     model.$onMouseDown(evt, view.m_cols.get(col), view.m_rows.get(row));
   }
+}
+
+fan.fwt.TablePeer.prototype.$onKeyDown = function(self, event)
+{
+  // only handle up/down
+  var key = event.keyCode;
+  if (key != 38 && key != 40) return;
+
+  // consume event
+  event.stopPropagation();
+
+  // if table is empty, short-circuit here
+  var rows = self.model().numRows();
+  if (self.model().numRows() == 0) return;
+
+  // update new selection
+  var sel   = self.selected();
+  var list  = sel.m_values;
+  var first = sel.first();
+  var last  = sel.last();
+  var shift = event.shiftKey;
+
+  if (sel.size() == 0)
+  {
+    list = [0];
+    this.keySelPivot = 0;
+  }
+  else if (!shift)
+  {
+         if (key == 38) list = [Math.max(0, first-1)];
+    else if (key == 40) list = [Math.min(first+1, rows-1)];
+    this.keySelPivot = list[0];
+  }
+  else
+  {
+    if (sel.size() == 1) this.keySelPivot = first;
+    if (key == 38)
+    {
+      if (last > this.keySelPivot) list = list.slice(0, -1);
+      else { if (first-1 >= 0) list.push(first-1); }
+    }
+    else if (key == 40)
+    {
+      if (first < this.keySelPivot) list = list.slice(1, list.length);
+      else  { if (last+1 < rows) list.push(last+1); }
+    }
+  }
+
+  this.m_selected = fan.sys.List.make(fan.sys.Int.$type, list).sort();
+  this.selection.select(this.m_selected);
+  this.selection.notify(this.m_selected.first());
 }
 
 fan.fwt.TablePeer.prototype.makeArrowDown = function(down)
