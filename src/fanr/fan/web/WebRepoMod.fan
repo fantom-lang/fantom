@@ -183,6 +183,9 @@ const class WebRepoMod : WebMod
       return
     }
 
+    // filter out any pods the user is not allowed to query
+    pods = pods.findAll |pod| { auth.allowQuery(user, pod) }
+
     // print results in json format
     res.headers["Content-Type"] = "text/plain"
     out := res.out

@@ -32,7 +32,7 @@ class WebRepoTest : Test
     fr := FileRepo(tempDir.uri)
     fr.publish(Env.cur.homeDir + `lib/fan/web.pod`)
     fr.publish(Env.cur.homeDir + `lib/fan/wisp.pod`)
-    fr.publish(Env.cur.homeDir + `lib/fan/util.pod`)
+    fr.publish(Env.cur.homeDir + `lib/fan/util.pod`) // no one allowed to query
 
     // wrap with WebRepoMod
     mod := WebRepoMod
@@ -121,12 +121,9 @@ class WebRepoTest : Test
   Void doVerifyQuery(Repo r)
   {
     pods := r.query("*").sort
-    verifyEq(pods.size, 3)
-    verifyEq(pods[0].name, "util")
-    verifyEq(pods[1].name, "web")
-    verifyEq(pods[2].name, "wisp")
-
-// TODO verify per pod security
+    verifyEq(pods.size, 2)
+    verifyEq(pods[0].name, "web")
+    verifyEq(pods[1].name, "wisp")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -174,6 +171,10 @@ internal const class TestWebRepoAuth : SimpleWebRepoAuth
   new make(Str u, Str p) : super(u, p) {}
   const AtomicBool allowPublic := AtomicBool(false)
   const AtomicBool allowUser   := AtomicBool(false)
-  override Bool allowQuery(Obj? u, PodSpec? p) { allowPublic.val  || (u != null && allowUser.val) }
+  override Bool allowQuery(Obj? u, PodSpec? p)
+  {
+    if (p?.name == "util") return false
+    return allowPublic.val  || (u != null && allowUser.val)
+  }
 }
 
