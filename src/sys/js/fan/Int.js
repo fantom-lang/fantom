@@ -187,7 +187,7 @@ fan.sys.Int.div = function(a, b)
   if (r < 0) return Math.ceil(r);
   return Math.floor(r);
 }
-fan.sys.Int.divFloat   = function(a, b) { return fan.sys.Float.make(fan.sys.Int.div(a, b)); }
+fan.sys.Int.divFloat   = function(a, b) { return fan.sys.Float.make(a / b); }
 fan.sys.Int.divDecimal = function(a, b) { return fan.sys.Decimal.make(fan.sys.Int.div(a, b)); }
 
 fan.sys.Int.mod        = function(a, b) { return a % b; }
