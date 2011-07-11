@@ -70,7 +70,6 @@ internal const class WebRepo : Repo
 
     // if not 200, then assume a JSON error message
     if (c.resCode != 200) parseRes(c)
-
     return c.resIn
   }
 
@@ -78,7 +77,15 @@ internal const class WebRepo : Repo
   {
     // post file
     c := prepare("POST", `publish`)
-    c.postFile(podFile)
+    c.reqHeaders["Content-Type"] = "application/zip"
+    c.reqHeaders["Content-Length"] = podFile.size.toStr
+    c.reqHeaders["Expect"] = "100-continue"
+    c.writeReq
+    c.readRes
+    if (c.resCode != 100) parseRes(c)  // assume JSON error
+    podFile.in.pipe(c.reqOut, podFile.size)
+    c.reqOut.close
+    c.readRes
 
     // parse json response
     jsonRes := parseRes(c)
