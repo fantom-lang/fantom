@@ -112,6 +112,16 @@ abstract class WebReq
   abstract Str:Str headers()
 
   **
+  ** Return if client specified ["Expect" header]`pod-doc#expectContinue`.
+  ** In this scenerio, the weblet must call `WebRes.sendContinue`
+  ** before attempting to read the response body.
+  **
+  virtual once Bool expectContinue()
+  {
+    headers["Expect"]?.lower == "100-continue"
+  }
+
+  **
   ** Map of cookie values keyed by cookie name.  The
   ** cookies map is readonly and case insensitive.
   **
