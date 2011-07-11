@@ -72,11 +72,17 @@ abstract class WebRes
   **
   ** Send an error response to client using the specified status and
   ** HTML formatted message.  If this response has already been committed
-  ** this method throws an Err.  If the server has a preconfigured page
-  ** for this error code, it will trump the message passed in.
-  ** This method implicitly calls `done`.
+  ** this method throws an Err.  This method implicitly calls `done`.
   **
   abstract Void sendErr(Int statusCode, Str? msg := null)
+
+  **
+  ** Send an 100 Continue message to client which is used when the
+  ** client specifies the ["Expect" header]`pod-doc#expectContinue`.
+  ** Weblets are responsible for handling continue themselves.  If
+  ** this response has already been committed this method throws an Err.
+  **
+  abstract Void sendContinue()
 
   **
   ** Return if this response is complete - see `done`.

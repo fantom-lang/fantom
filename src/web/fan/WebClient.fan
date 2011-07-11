@@ -247,10 +247,13 @@ class WebClient
   **
   ** Make a post request to the URI with the given form data.
   ** Set the Content-Type to application/x-www-form-urlencoded.
-  ** Upon completion the response is ready to be read.
+  ** Upon completion the response is ready to be read.  This method
+  ** does not support the ["Expect" header]`pod-doc#expectContinue` (it
+  ** posts all form data before reading response).
   **
   This postForm(Str:Str form)
   {
+    if (reqHeaders["Expect"] != null) throw UnsupportedErr("'Expect' header")
     body := Uri.encodeQuery(form)
     reqMethod = "POST"
     reqHeaders["Content-Type"] = "application/x-www-form-urlencoded"
@@ -265,10 +268,13 @@ class WebClient
   ** Make a post request to the URI using UTF-8 encoding of given
   ** string.  If Content-Type is not already set, then set it
   ** to "text/plain; charset=utf-8".  Upon completion the response
-  ** is ready to be read.
+  ** is ready to be read.  This method does not support the
+  ** ["Expect" header]`pod-doc#expectContinue` (it posts full string
+  ** before reading response).
   **
   This postStr(Str content)
   {
+    if (reqHeaders["Expect"] != null) throw UnsupportedErr("'Expect' header")
     body := Buf().print(content).flip
     reqMethod = "POST"
     ct := reqHeaders["Content-Type"]
@@ -284,10 +290,13 @@ class WebClient
   **
   ** Post a file to the URI.  If Content-Type header is not already
   ** set, then it is set from the file extension's MIME type.  Upon
-  ** completion the response is ready to be read.
+  ** completion the response is ready to be read.  This method does
+  ** not support the ["Expect" header]`pod-doc#expectContinue` (it
+  ** posts full file before reading response).
   **
   This postFile(File file)
   {
+    if (reqHeaders["Expect"] != null) throw UnsupportedErr("'Expect' header")
     reqMethod = "POST"
     ct := reqHeaders["Content-Type"]
     if (ct == null)

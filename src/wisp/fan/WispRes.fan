@@ -111,8 +111,7 @@ internal class WispRes : WebRes
   **
   ** Send an error response to client using the specified status and
   ** HTML formatted message.  If this response has already been committed
-  ** this method throws an Err.  If the server has a preconfigured page
-  ** for this error code, it will trump the message passed in.
+  ** this method throws an Err.
   **
   override Void sendErr(Int statusCode, Str? msg := null)
   {
@@ -135,6 +134,19 @@ internal class WispRes : WebRes
     headers["Content-Length"] = buf.size.toStr
     this.out.writeBuf(buf.flip)
     done
+  }
+
+  **
+  ** Send an 100 Continue message to client which is used when the
+  ** client specifies the "Expect: 100-continue" request header.
+  ** Weblets are responsible for handling continue themselves.
+  **
+  override Void sendContinue()
+  {
+    checkUncommitted
+    sout := socket.out
+    sout.print("HTTP/1.1 100 Continue\r\n")
+    sout.print("\r\n").flush
   }
 
   **
