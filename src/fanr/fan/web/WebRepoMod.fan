@@ -224,9 +224,6 @@ const class WebRepoMod : WebMod
     // if user can't publish any pods, immediately bail
     if (!auth.allowPublish(user, null)) { sendForbiddenErr(user); return }
 
-    // if expect continue, then send continue before reading response body
-    if (req.expectContinue) res.sendContinue
-
     // allocate temp file
     tempName := "fanr-" + DateTime.now.toLocale("YYMMDDhhmmss") + "-" + Buf.random(4).toHex + ".pod"
     tempFile := tempDir + tempName.toUri

@@ -112,16 +112,6 @@ abstract class WebReq
   abstract Str:Str headers()
 
   **
-  ** Return if client specified ["Expect" header]`pod-doc#expectContinue`.
-  ** In this scenerio, the weblet must call `WebRes.sendContinue`
-  ** before attempting to read the response body.
-  **
-  virtual once Bool expectContinue()
-  {
-    headers["Expect"]?.lower == "100-continue"
-  }
-
-  **
   ** Map of cookie values keyed by cookie name.  The
   ** cookies map is readonly and case insensitive.
   **
@@ -162,7 +152,13 @@ abstract class WebReq
   }
 
   **
-  ** The InStream for this request.
+  ** Get the stream to read request body.  See `WebUtil.makeContentInStream`
+  ** to check under which conditions request content is available.
+  ** If request content is not available, then throw an exception.
+  **
+  ** If the client specified the "Expect: 100-continue" header, then the first
+  ** access of the request input stream will automatically send the client
+  ** a [100 Continue]`pod-doc#expectContinue` response.
   **
   abstract InStream in()
 

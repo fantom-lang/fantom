@@ -139,9 +139,8 @@ internal class WispRes : WebRes
   **
   ** Send an 100 Continue message to client which is used when the
   ** client specifies the "Expect: 100-continue" request header.
-  ** Weblets are responsible for handling continue themselves.
   **
-  override Void sendContinue()
+  internal Void sendContinue()
   {
     checkUncommitted
     sout := socket.out

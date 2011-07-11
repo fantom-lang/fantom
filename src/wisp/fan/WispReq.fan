@@ -14,17 +14,11 @@ using web
 **
 internal class WispReq : WebReq
 {
-  new make(WispService service, TcpSocket socket)
+  new make(WispService service, TcpSocket socket, WispRes res)
   {
     this.service = service
     this.socket  = socket
-  }
-
-  new makeTest(InStream in)
-  {
-    this.service = WispService()
-    this.socket = TcpSocket()
-    this.webIn = in
+    this.res     = res
   }
 
   override WebMod mod := WispDefaultMod()
@@ -39,6 +33,12 @@ internal class WispReq : WebReq
   override InStream in()
   {
     if (webIn == null) throw Err("Attempt to access WebReq.in with no content")
+    if (checkContinue)
+    {
+      checkContinue = false
+      if (headers["Expect"]?.lower == "100-continue")
+        res.sendContinue
+    }
     return webIn
   }
 
@@ -50,4 +50,6 @@ internal class WispReq : WebReq
   internal WispService service
   internal TcpSocket socket
   internal InStream? webIn
+  private Bool checkContinue := true
+  private WispRes res
 }
