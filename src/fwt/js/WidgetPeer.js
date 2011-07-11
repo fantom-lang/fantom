@@ -421,7 +421,12 @@ fan.fwt.WidgetPeer.toKey = function(event)
   // find primary key
   var key = null;
   if (event.keyCode != null && event.keyCode > 0)
-    key = fan.fwt.WidgetPeer.keyCodeToKey(event.keyCode);
+  {
+    // force alpha keys to lowercase so we map correctly
+    var code = event.keyCode;
+    if (code >= 65 && code <= 90) code += 32;
+    key = fan.fwt.WidgetPeer.keyCodeToKey(code);
+  }
 
   if (event.shiftKey)   key = key==null ? fan.fwt.Key.m_shift : key.plus(fan.fwt.Key.m_shift);
   if (event.altKey)     key = key==null ? fan.fwt.Key.m_alt   : key.plus(fan.fwt.Key.m_alt);
