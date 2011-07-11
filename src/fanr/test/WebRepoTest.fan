@@ -22,6 +22,8 @@ class WebRepoTest : Test
   internal Repo? badPass  // client with bad password
   internal Repo? good     // client with proper authentication
 
+  PodSpec? webSpec   // set in doVerifyQuery
+
 //////////////////////////////////////////////////////////////////////////
 // Setup/Teardown
 //////////////////////////////////////////////////////////////////////////
@@ -69,6 +71,7 @@ class WebRepoTest : Test
   {
     verifyPing
     verifyQuery
+    verifyRead
     verifyPublish
   }
 
@@ -127,6 +130,47 @@ class WebRepoTest : Test
     verifyEq(pods.size, 2)
     verifyEq(pods[0].name, "web")
     verifyEq(pods[1].name, "wisp")
+
+    webSpec = pods[0]
+  }
+
+
+//////////////////////////////////////////////////////////////////////////
+// Read
+//////////////////////////////////////////////////////////////////////////
+
+  Void verifyRead()
+  {
+    // bad credentials
+    verifyBadCredentials |r| { r.read(webSpec) }
+
+    // public not allowed
+    auth.allowPublic.val = false
+    verifyAuthRequired |r| { r.read(webSpec) }
+
+    // public allowed
+    auth.allowPublic.val = true
+    doVerifyRead(pub)
+
+    // login not allowed
+    auth.allowUser.val = auth.allowPublic.val = false
+    verifyForbidden |r| { r.read(webSpec) }
+
+    // login allowed
+    auth.allowUser.val = true
+    doVerifyRead(good)
+  }
+
+  Void doVerifyRead(Repo r)
+  {
+    temp := tempDir + `web-download.pod`
+    out := temp.out
+    r.read(webSpec).pipe(out)
+    out.close
+
+    spec := PodSpec.load(temp)
+    verifyEq(spec.name, "web")
+    verifyEq(spec.meta["org.name"], "Fantom")
   }
 
 //////////////////////////////////////////////////////////////////////////
