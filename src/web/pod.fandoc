@@ -168,13 +168,14 @@ and pipelining.
 
 Expect Continue [#expectContinue]
 *********************************
-Neither the `WebClient` and `Weblet` APIs provide automatic support for the
-"Expect" header.  This header must be handled by you explicitly in your client
-and/or server side code.  Using "Expect: 100-continue" allows the server
-to fail-fast and report an error to the client before the client sends
-the request body (often when posting a large file).
+Using "Expect: 100-continue" allows the server to fail-fast and
+report an error to the client before the client sends the request
+body.  This technique is often used before posting large files
+to verify preconditions.
 
-Client side example for posting a file using Expect header:
+The `WebClient` API does not provide automatic support for using the
+Expect header.  You must manually handle flow control yourself.  Here
+is a simple example showing how to post a file using the Expect header:
 
   c := WebClient(`http://example.com/post-file`)
   c.reqMethod = "POST"
@@ -189,29 +190,8 @@ Client side example for posting a file using Expect header:
   c.readRes
   if (c.resCode != 200) throw IOErr("Expecting 200, not $c.resCode")
 
-Server side example for responding with a continue:
-
-  // precondition checking
-  if (reqIsInvalid) { res.sendErr(400, "Invalid request"); return }
-
-  // if Expect: 100-continue was specified, then send continue
-  if (req.expectedContinue) res.sendContinue
-
-  // read request body to temp file
-  tempOut := tempFile.out
-  len := req.headers["Content-Length"]?.toInt ?: null
-  try
-    req.in.pipe(tempOut, len)
-  finally
-    tempOut.close
-
-  // send response
-  res.statusCode = 200
-  res.headers["Content-Type"] = "text/plain"
-  res.out.printLine("All okay!").close
-
-
-
-
-
+Server side processing of the Expect header is automatic.
+When a Weblet acquires the `WebReq.in` stream for the first time, the
+request is checked for the "Expect: 100-continue" header and if
+specified, then a 100 Continue is automatically sent.
 

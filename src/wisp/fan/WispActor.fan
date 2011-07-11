@@ -60,8 +60,8 @@ internal const class WispActor : Actor
   Bool process(TcpSocket socket)
   {
     // allocate request, response
-    req := WispReq(service, socket)
     res := WispRes(service, socket)
+    req := WispReq(service, socket, res)
 
     // parse request line and headers, on error return false to
     // close socket and terminate processing on this thread and socket

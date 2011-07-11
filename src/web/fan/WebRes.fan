@@ -77,14 +77,6 @@ abstract class WebRes
   abstract Void sendErr(Int statusCode, Str? msg := null)
 
   **
-  ** Send an 100 Continue message to client which is used when the
-  ** client specifies the ["Expect" header]`pod-doc#expectContinue`.
-  ** Weblets are responsible for handling continue themselves.  If
-  ** this response has already been committed this method throws an Err.
-  **
-  abstract Void sendContinue()
-
-  **
   ** Return if this response is complete - see `done`.
   **
   abstract Bool isDone()
