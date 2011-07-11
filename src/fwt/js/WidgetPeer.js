@@ -63,8 +63,24 @@ fan.fwt.WidgetPeer.prototype.posOnWindow = function(self)
 
 fan.fwt.WidgetPeer.prototype.posOnDisplay = function(self)
 {
-  //equals to posOnWindow for now
-  return this.posOnWindow(self);
+  // find pos relative to window
+  var pos = this.posOnWindow(self);
+  var win = self.window();
+  if (win != null && win.peer.root != null)
+  {
+    // find position of window relative to display
+    var elem = win.peer.root;
+    var x = 0, y = 0;
+    do
+    {
+      x += elem.offsetLeft - elem.scrollLeft;
+      y += elem.offsetTop - elem.scrollTop;
+    }
+    while(elem = elem.offsetParent);
+    if (x != 0 || y != 0)
+      return fan.gfx.Point.make(pos.m_x + x, pos.m_y + y);
+  }
+  return pos;
 }
 
 fan.fwt.WidgetPeer.prototype.prefSize = function(self, hints)
@@ -278,18 +294,10 @@ fan.fwt.WidgetPeer.prototype.attachEventListener = function(self, type, evtId, l
   var peer = this;
   var func = function(e)
   {
-    // find pos relative to widget
-    var dis  = peer.posOnWindow(self);
+    // find pos relative to display
+    var dis  = peer.posOnDisplay(self);
     var mx   = e.clientX - dis.m_x;
     var my   = e.clientY - dis.m_y;
-
-    // make sure to rel against window root
-    var win = self.window();
-    if (win != null && win.peer.root != null)
-    {
-      mx -= win.peer.root.offsetLeft;
-      my -= win.peer.root.offsetTop;
-    }
 
     // cache event type
     var isClickEvent = evtId == fan.fwt.EventId.m_mouseDown ||
