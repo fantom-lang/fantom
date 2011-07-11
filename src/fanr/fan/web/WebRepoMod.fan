@@ -200,6 +200,8 @@ const class WebRepoMod : WebMod
 
   private Void onPod(Str podName, Str podVer, Obj? user)
   {
+// TODO
+
     // lookup pod that matches name/version
     query := "$podName $podVer"
     spec := repo.query(query, 100).find |p| { p.version.toStr == podVer }
@@ -219,6 +221,12 @@ const class WebRepoMod : WebMod
   {
     if (req.method != "POST") { sendBadMethodErr; return }
 
+    // if user can't publish any pods, immediately bail
+    if (!auth.allowPublish(user, null)) { sendForbiddenErr(user); return }
+
+    // if expect continue, then send continue before reading response body
+    if (req.expectContinue) res.sendContinue
+
     // allocate temp file
     tempName := "fanr-" + DateTime.now.toLocale("YYMMDDhhmmss") + "-" + Buf.random(4).toHex + ".pod"
     tempFile := tempDir + tempName.toUri
@@ -233,8 +241,12 @@ const class WebRepoMod : WebMod
       finally
         tempOut.close
 
+      // check if user can publish this specific pod
+      spec := PodSpec.load(tempFile)
+      if (!auth.allowPublish(user, spec)) { sendForbiddenErr(user); return }
+
       // publish to local repo
-      spec := repo.publish(tempFile)
+      spec = repo.publish(tempFile)
 
       // return JSON response
       res.headers["Content-Type"] = "text/plain"
@@ -325,7 +337,7 @@ const class WebRepoMod : WebMod
   {
     res.statusCode = code
     res.headers["Content-Type"] = "text/plain"
-    res.out.printLine("""{"err":$msg.toCode}""")
+    res.out.printLine("""{"err":$msg.toCode}""").close
     res.done
   }
 

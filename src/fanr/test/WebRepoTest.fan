@@ -30,9 +30,9 @@ class WebRepoTest : Test
   {
     // create pod file repo
     fr := FileRepo(tempDir.uri)
-    fr.publish(Env.cur.homeDir + `lib/fan/web.pod`)
-    fr.publish(Env.cur.homeDir + `lib/fan/wisp.pod`)
-    fr.publish(Env.cur.homeDir + `lib/fan/util.pod`) // no one allowed to query
+    fr.publish(podFile("web"))
+    fr.publish(podFile("wisp"))
+    fr.publish(podFile("util")) // no one allowed to query
 
     // wrap with WebRepoMod
     mod := WebRepoMod
@@ -59,6 +59,8 @@ class WebRepoTest : Test
     wispService?.uninstall
   }
 
+  File podFile(Str podName) { Env.cur.homeDir + `lib/fan/${podName}.pod` }
+
 //////////////////////////////////////////////////////////////////////////
 // Main
 //////////////////////////////////////////////////////////////////////////
@@ -67,6 +69,7 @@ class WebRepoTest : Test
   {
     verifyPing
     verifyQuery
+    verifyPublish
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -127,6 +130,52 @@ class WebRepoTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Publish
+//////////////////////////////////////////////////////////////////////////
+
+  Void verifyPublish()
+  {
+    f := podFile("inet")
+    // bad credentials
+    verifyBadCredentials |r| { r.publish(f) }
+
+    // public not allowed
+    auth.allowPublic.val = false
+    verifyAuthRequired |r| { r.publish(f) }
+
+    // public allowed
+    auth.allowPublic.val = true
+    doVerifyPublish(pub, f)
+
+    // login not allowed
+    f = podFile("build")
+    auth.allowUser.val = auth.allowPublic.val = false
+    verifyForbidden |r| { r.publish(f) }
+
+    // login allowed
+    auth.allowUser.val = true
+    doVerifyPublish(good, f)
+
+    // no one allowed to publish util
+    f = podFile("util")
+    verifyForbidden |r| { r.publish(f) }
+
+    // verify query that we successfully published two new pods
+    pods := good.query("*").sort
+    verifyEq(pods.size, 4)
+    verifyEq(pods[0].name, "build")
+    verifyEq(pods[1].name, "inet")
+    verifyEq(pods[2].name, "web")
+    verifyEq(pods[3].name, "wisp")
+  }
+
+  Void doVerifyPublish(Repo r, File f)
+  {
+    spec := r.publish(f)
+    verifyEq(spec.name, f.basename)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Authentication
 //////////////////////////////////////////////////////////////////////////
 
@@ -158,6 +207,7 @@ class WebRepoTest : Test
       err = e
 
     if (err == null) fail("No err raised: $msg")
+    if (err isnot RemoteErr) err.trace
 
     verifyEq(err.typeof, RemoteErr#)
     // echo("     $err")
@@ -173,7 +223,12 @@ internal const class TestWebRepoAuth : SimpleWebRepoAuth
   const AtomicBool allowUser   := AtomicBool(false)
   override Bool allowQuery(Obj? u, PodSpec? p)
   {
-    if (p?.name == "util") return false
+    if (p?.name == "util") return false // util never allowed
+    return allowPublic.val  || (u != null && allowUser.val)
+  }
+  override Bool allowPublish(Obj? u, PodSpec? p)
+  {
+    if (p?.name == "util") return false // util never allowed
     return allowPublic.val  || (u != null && allowUser.val)
   }
 }
