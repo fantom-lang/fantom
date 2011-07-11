@@ -200,12 +200,16 @@ const class WebRepoMod : WebMod
 
   private Void onPod(Str podName, Str podVer, Obj? user)
   {
-// TODO
+    // if user can't query any pods, immediately bail
+    if (!auth.allowQuery(user, null)) { sendForbiddenErr(user); return }
 
     // lookup pod that matches name/version
     query := "$podName $podVer"
     spec := repo.query(query, 100).find |p| { p.version.toStr == podVer }
     if (spec == null)  { sendErr(404, "No pod match: $query"); return }
+
+    // check permissions
+    if (!auth.allowQuery(user, spec)) { sendForbiddenErr(user); return }
 
     // pipe repo stream to response stream
     res.headers["Content-Type"] = "application/zip"
