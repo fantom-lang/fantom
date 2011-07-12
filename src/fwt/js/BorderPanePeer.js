@@ -46,44 +46,8 @@ fan.fwt.BorderPanePeer.prototype.relayout = function(self)
 
 fan.fwt.BorderPanePeer.prototype.sync = function(self)
 {
-  var b = self.m_border;
   fan.fwt.WidgetPeer.setBg(this.elem, self.m_bg);
-  with (this.elem.style)
-  {
-    borderStyle = "solid";
-
-    borderTopWidth    = b.m_widthTop    + "px";
-    borderRightWidth  = b.m_widthRight  + "px";
-    borderBottomWidth = b.m_widthBottom + "px";
-    borderLeftWidth   = b.m_widthLeft   + "px";
-
-    borderTopColor    = b.m_colorTop.toCss();
-    borderRightColor  = b.m_colorRight.toCss();
-    borderBottomColor = b.m_colorBottom.toCss();
-    borderLeftColor   = b.m_colorLeft.toCss();
-
-    if (this.elem.style.borderRadius != undefined)
-    {
-      borderTopLeftRadius     = b.m_radiusTopLeft + "px";
-      borderTopRightRadius    = b.m_radiusTopRight + "px";
-      borderBottomRightRadius = b.m_radiusBottomRight + "px";
-      borderBottomLeftRadius  = b.m_radiusBottomLeft + "px";
-    }
-    else if (this.elem.style.MozBorderRadius != undefined)
-    {
-      MozBorderRadiusTopleft     = b.m_radiusTopLeft + "px";
-      MozBorderRadiusTopright    = b.m_radiusTopRight + "px";
-      MozBorderRadiusBottomright = b.m_radiusBottomRight + "px";
-      MozBorderRadiusBottomleft  = b.m_radiusBottomLeft + "px";
-    }
-    else if (this.elem.style.webkitBorderRadius != undefined)
-    {
-      webkitBorderTopLeftRadius     = b.m_radiusTopLeft + "px";
-      webkitBorderTopRightRadius    = b.m_radiusTopRight + "px";
-      webkitBorderBottomRightRadius = b.m_radiusBottomRight + "px";
-      webkitBorderBottomLeftRadius  = b.m_radiusBottomLeft + "px";
-    }
-  }
+  fan.fwt.WidgetPeer.setBorder(this.elem, self.m_border);
 
   // override style
   var override = this.$style(self);
@@ -118,6 +82,7 @@ fan.fwt.BorderPanePeer.prototype.sync = function(self)
   }
 
   // sync size
+  var b = self.m_border;
   var w = this.m_size.m_w - b.m_widthLeft - b.m_widthRight;
   var h = this.m_size.m_h - b.m_widthTop - b.m_widthBottom;
   fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
