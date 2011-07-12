@@ -42,8 +42,8 @@ current version.  The version syntax reuses the `sys::Depend` syntax:
   foo 1.2,1.4   // any version of 1.2 or 1.4
 
 So in simple cases the query language is a clean superset of the
-Depend syntax.  This means its easy to find a dependency.  If we assume
-that the '-n' option limits the number of matching results, we can query
+Depend syntax.  This means its easy to find a dependency.  Using the '-n' option
+to limit the number of matching results to one, we can query
 the best match for a dependency like this:
 
   fanr query -n 1 "foo 1.0"

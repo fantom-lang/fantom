@@ -8,6 +8,32 @@
 
 Overview [#overview]
 ********************
-TODO
+File repos are used to store a database of pods with a simple file
+directory structure.  File repos also provide a simple base repository
+which may be wrapped by more advanced repo implementations such as
+[web repos]`WebRepos`.
+
+Design [#design]
+****************
+A file repo is implemented using a simple design:
+  1. one directory for each pod
+  2. each pod version is named "{name}-{version}.pod"
+  3. meta-data is lazily loaded from pod zip file as needed
+
+So a simple file repo might look something like this:
+
+  fileRepo/
+    acmeAlpha/
+      acmeAlpha-1.0.24.pod
+      acmeAlpha-1.0.25.pod
+      acmeAlpha-1.0.26.pod
+    acmeBeta/
+      acmeBeta-1.0.25.pod
+      acmeBeta-1.0.26.pod
+
+This design allows you to easily manage your repository using
+standard file management tools.  It also provides an easy way
+to find the current/latest version of pod without actually having
+to open each pod file and inspect the metadata.
 
 
