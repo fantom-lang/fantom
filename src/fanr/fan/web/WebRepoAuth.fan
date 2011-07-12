@@ -42,8 +42,8 @@ const abstract class WebRepoAuth
 
   ** Get the salt used for the SALTED-HMAC-SHA1 secret algorithm for
   ** the given user.  If the user doesn't exist or salts aren't
-  ** supported, then generate a unique repeatable salt off the username.
-  abstract Str salt(Obj? user)
+  ** supported, then return null.
+  abstract Str? salt(Obj? user)
 
   ** Get the secret as a byte buffer for the given user and algorithm
   ** which can be used to verify the digital signature of a request.
@@ -75,7 +75,7 @@ const abstract class WebRepoAuth
 internal const class PublicWebRepoAuth : WebRepoAuth
 {
   override Obj? user(Str username) { null }
-  override Str salt(Obj? user) { publicSalt }
+  override Str? salt(Obj? user) { publicSalt }
   override Buf secret(Obj? user, Str algorithm) { Buf() }
   override Str[] secretAlgorithms() { ["PASSWORD", "SALTED-HMAC-SHA1"] }
   override Bool allowQuery(Obj? u, PodSpec? p) { true }
@@ -114,7 +114,7 @@ internal const class SimpleWebRepoAuth : WebRepoAuth
     }
   }
 
-  override Str salt(Obj? user) { userSalt }
+  override Str? salt(Obj? user) { user != null ? userSalt : null }
 
   override Str[] secretAlgorithms() { ["PASSWORD", "SALTED-HMAC-SHA1"] }
 
