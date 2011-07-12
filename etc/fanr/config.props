@@ -6,9 +6,18 @@
 //
 
 // Default repository URI to use for all commands.
-// Can be overriden with the -r option
+// Override on command line with the -r option
 repo=http://fantom.org/fanr/
 
 // Number of versions per pod limit for query command.
-// Can be overriden with the -n option
+// Override on command line with the -n option
 numVersions=5
+
+// Hard coded username for default repository
+// Override on command line with -u option
+// username=someone
+
+// Hard coded password for default repository
+// Override on command line with -p option
+// password=xyz123
+

@@ -147,6 +147,7 @@ abstract class Command
   {
     name   = "u"
     help   = "Username for authentication"
+    config = "username"
   }
   Str? username
 
@@ -155,6 +156,7 @@ abstract class Command
   {
     name   = "p"
     help   = "Password for authentication"
+    config = "password"
   }
   Str? password
 

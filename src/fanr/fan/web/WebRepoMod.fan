@@ -83,7 +83,8 @@ const class WebRepoMod : WebMod
     }
     catch (Err e)
     {
-      sendErr(500, e.toStr)
+      if (!res.isCommitted) sendErr(500, e.toStr)
+      else throw e
     }
   }
 
@@ -283,7 +284,7 @@ const class WebRepoMod : WebMod
     out := res.out
     out.printLine("""{""")
     out.printLine(""" "username":$username.toCode,""")
-    out.printLine(""" "salt":$salt.toCode,""")
+    if (salt != null) out.printLine(""" "salt":$salt.toCode,""")
     out.printLine(""" "secretAlgorithms":$secrets.toCode,""")
     out.printLine(""" "signatureAlgorithms":$signatures.toCode,""")
     out.printLine(""" "ts":$now.toStr.toCode""")
