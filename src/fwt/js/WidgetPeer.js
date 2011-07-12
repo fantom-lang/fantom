@@ -441,10 +441,12 @@ fan.fwt.WidgetPeer.keyCodeToKey = function(keyCode)
   // TODO FIXIT: map rest of non-alpha keys
   switch (keyCode)
   {
-    case 38: return fan.fwt.Key.m_up;
-    case 40: return fan.fwt.Key.m_down;
+    case 8:  return fan.fwt.Key.m_backspace;
     case 37: return fan.fwt.Key.m_left;
+    case 38: return fan.fwt.Key.m_up;
     case 39: return fan.fwt.Key.m_right;
+    case 40: return fan.fwt.Key.m_down;
+    case 46: return fan.fwt.Key.m_$delete;
     default: return fan.fwt.Key.fromMask(keyCode);
   }
 }
@@ -564,6 +566,47 @@ fan.fwt.WidgetPeer.setBg = function(elem, brush)
     // set style
     style.background = str;
     return;
+  }
+}
+
+fan.fwt.WidgetPeer.setBorder = function(elem, border)
+{
+  if (border == null) return;
+
+  var s = elem.style;
+  var b = border;
+  s.borderStyle = "solid";
+
+  s.borderTopWidth    = b.m_widthTop    + "px";
+  s.borderRightWidth  = b.m_widthRight  + "px";
+  s.borderBottomWidth = b.m_widthBottom + "px";
+  s.borderLeftWidth   = b.m_widthLeft   + "px";
+
+  s.borderTopColor    = b.m_colorTop.toCss();
+  s.borderRightColor  = b.m_colorRight.toCss();
+  s.borderBottomColor = b.m_colorBottom.toCss();
+  s.borderLeftColor   = b.m_colorLeft.toCss();
+
+  if (s.borderRadius != undefined)
+  {
+    s.borderTopLeftRadius     = b.m_radiusTopLeft + "px";
+    s.borderTopRightRadius    = b.m_radiusTopRight + "px";
+    s.borderBottomRightRadius = b.m_radiusBottomRight + "px";
+    s.borderBottomLeftRadius  = b.m_radiusBottomLeft + "px";
+  }
+  else if (s.style.MozBorderRadius != undefined)
+  {
+    s.MozBorderRadiusTopleft     = b.m_radiusTopLeft + "px";
+    s.MozBorderRadiusTopright    = b.m_radiusTopRight + "px";
+    s.MozBorderRadiusBottomright = b.m_radiusBottomRight + "px";
+    s.MozBorderRadiusBottomleft  = b.m_radiusBottomLeft + "px";
+  }
+  else if (s.webkitBorderRadius != undefined)
+  {
+    s.webkitBorderTopLeftRadius     = b.m_radiusTopLeft + "px";
+    s.webkitBorderTopRightRadius    = b.m_radiusTopRight + "px";
+    s.webkitBorderBottomRightRadius = b.m_radiusBottomRight + "px";
+    s.webkitBorderBottomLeftRadius  = b.m_radiusBottomLeft + "px";
   }
 }
 
