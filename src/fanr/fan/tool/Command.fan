@@ -167,7 +167,9 @@ abstract class Command
   internal Bool init(Str[] args)
   {
     initOptsFromConfig
-    return parseArgs(args)
+    if (!parseArgs(args)) return false
+    promptPassword
+    return true
   }
 
   private Void initOptsFromConfig()
@@ -314,6 +316,13 @@ abstract class Command
       return File.os(path).normalize
     else
       return File.make(path.toUri, false)
+  }
+
+  private Void promptPassword()
+  {
+    // if we have a username, but no password then prompt for it
+    if (username != null && password == null)
+      password = Env.cur.promptPassword("Password for '$username'>")
   }
 
 //////////////////////////////////////////////////////////////////////////
