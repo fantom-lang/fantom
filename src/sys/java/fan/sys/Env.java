@@ -77,6 +77,9 @@ public abstract class Env
 
   public OutStream err() { return parent.err(); }
 
+  public String promptPassword() { return this.promptPassword(""); }
+  public String promptPassword(String msg) { return parent.promptPassword(msg); }
+
   public File homeDir() { return parent.homeDir(); }
 
   public File workDir() { return parent.workDir(); }

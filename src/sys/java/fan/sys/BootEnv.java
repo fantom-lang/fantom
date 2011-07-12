@@ -129,6 +129,13 @@ public class BootEnv
 
   public OutStream err() { return err; }
 
+  public String promptPassword(String msg)
+  {
+    char[] pass = System.console().readPassword(msg);
+    if (pass == null) return null;
+    return new String(pass);
+  }
+
   public File homeDir() { return homeDir; }
 
   public File workDir() { return homeDir; }
