@@ -154,6 +154,13 @@ abstract const class Env
   virtual OutStream err()
 
   **
+  ** Prompt the user to enter a password from standard input with echo
+  ** disabled.  Return null if end of stream has been reached.
+  ** Default implementation delegates to `parent`.
+  **
+  virtual Str? promptPassword(Str msg := "")
+
+  **
   ** Get the home directory of Fantom installation.
   ** Default implementation delegates to `parent`.
   **

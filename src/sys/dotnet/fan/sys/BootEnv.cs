@@ -111,6 +111,12 @@ namespace Fan.Sys
 
     public override OutStream err() { return m_err; }
 
+    public override string promptPassword(string msg)
+    {
+      // TODO
+      throw UnsupportedErr.make().val;
+    }
+
     public override File homeDir() { return m_homeDir; }
 
     public override File workDir() { return m_homeDir; }

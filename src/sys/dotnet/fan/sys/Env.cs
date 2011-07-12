@@ -87,6 +87,9 @@ namespace Fan.Sys
 
     public virtual OutStream err() { return m_parent.err(); }
 
+    public virtual string promptPassword() { return this.promptPassword(""); }
+    public virtual string promptPassword(string msg) { return m_parent.promptPassword(); }
+
     public virtual File homeDir() { return m_parent.homeDir(); }
 
     public virtual File workDir() { return m_parent.workDir(); }
