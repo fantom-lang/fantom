@@ -12,6 +12,14 @@
 fan.fwt.ButtonPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
 fan.fwt.ButtonPeer.prototype.$ctor = function(self) {}
 
+// CSS
+fan.fwt.WidgetPeer.addCss(
+  "div._fwt_Button_:focus {" +
+  " -webkit-box-shadow:0 0 2px 2px #7baddc;" +
+  " -moz-box-shadow:   0 0 2px 2px #7baddc;" +
+  " box-shadow:        0 0 2px 2px #7baddc;" +
+  "}");
+
 fan.fwt.ButtonPeer.prototype.font = function(self) { return this.m_font; }
 fan.fwt.ButtonPeer.prototype.font$ = function(self, val) { this.m_font = val; }
 fan.fwt.ButtonPeer.prototype.m_font = null;
@@ -53,7 +61,9 @@ fan.fwt.ButtonPeer.prototype.m_$defCursor = "default";
 
 fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
 {
-  var div = this.emptyDiv();
+  var div = document.createElement("div");
+  div.tabIndex = 0;
+  div.className = "_fwt_Button_";
   var style = div.style;
   style.font = fan.fwt.WidgetPeer.fontToCss(this.m_font==null ? fan.fwt.DesktopPeer.$sysFont : this.m_font);
   style.border  = "1px solid #404040";
@@ -88,19 +98,38 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
     if (self.m_mode == fan.fwt.ButtonMode.m_toggle)
       $this.m_selected = !$this.m_selected;
 
-    var evt = fan.fwt.Event.make();
-    evt.m_id = fan.fwt.EventId.m_action;
-    evt.m_widget = self;
-
-    var list = self.onAction().list();
-    for (var i=0; i<list.size(); i++) list.get(i).call(evt);
-
+    $this.fireAction(self);
     $this.m_pressed = false;
     $this.repaint(self);
   }
 
-  parentElem.appendChild(div);
-  return div;
+  div.onkeydown = function(event)
+  {
+    if (!self.enabled()) return;
+    if (event.keyCode == 32)
+    {
+      // consume event
+      event.stopPropagation();
+
+      // indicate press
+      $this.m_pressed = true;
+      $this.repaint(self);
+
+      // allow time for state change to display, then fire
+      // event and restore button state
+      setTimeout(function() {
+        $this.fireAction(self);
+        $this.m_pressed = false;
+        $this.repaint(self);
+      }, 100);
+    }
+  }
+
+  var wrap = this.emptyDiv();
+  wrap.style.padding = "2px";
+  wrap.appendChild(div);
+  parentElem.appendChild(wrap);
+  return wrap;
 }
 
 fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
@@ -116,6 +145,7 @@ fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
     whiteSpace = "nowrap";
   }
   div.appendChild(check);
+  var $this = this;
   div.onclick = function(event)
   {
     if (!self.enabled()) return;
@@ -123,16 +153,22 @@ fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
     // bind selected to widget
     self.selected$(check.checked);
 
-    var evt = fan.fwt.Event.make();
-    evt.m_id = fan.fwt.EventId.m_action;
-    evt.m_widget = self;
-
-    var list = self.onAction().list();
-    for (var i=0; i<list.size(); i++) list.get(i).call(evt);
+    // fire event
+    $this.fireAction(self);
   }
 
   parentElem.appendChild(div);
   return div;
+}
+
+fan.fwt.ButtonPeer.prototype.fireAction = function(self)
+{
+  var evt = fan.fwt.Event.make();
+  evt.m_id = fan.fwt.EventId.m_action;
+  evt.m_widget = self;
+
+  var list = self.onAction().list();
+  for (var i=0; i<list.size(); i++) list.get(i).call(evt);
 }
 
 fan.fwt.ButtonPeer.prototype.repaint = function(self)
@@ -144,7 +180,7 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
   if (self.m_mode == fan.fwt.ButtonMode.m_push ||
       self.m_mode == fan.fwt.ButtonMode.m_toggle)
   {
-    var div = this.elem;
+    var div = this.elem.firstChild;
     var style = div.style;
     var pressed = this.m_pressed || this.m_selected;
 
@@ -180,7 +216,8 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
   if (self.m_mode == fan.fwt.ButtonMode.m_push ||
       self.m_mode == fan.fwt.ButtonMode.m_toggle)
   {
-    var div = this.elem;
+    var div = this.elem.firstChild;
+    div.tabIndex = this.m_enabled ? 0 : -1;
 
     // remove old text node
     while (div.firstChild != null)
@@ -232,8 +269,8 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
     }
 
     // account for padding/border
-    h -= 8;
-    w -= 14;
+    h -= 4;
+    w -= 4;
   }
   else if (self.m_mode == fan.fwt.ButtonMode.m_check ||
            self.m_mode == fan.fwt.ButtonMode.m_radio)
