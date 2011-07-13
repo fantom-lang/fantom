@@ -21,6 +21,17 @@ and implements the server side REST protocol.
 The `fanr::WebRepoAuth` class provides hooks for to integrate the repository
 into your web site's authentication and security model.
 
+WebRepoMain [#webRepoMain]
+**************************
+There is a super, simple implementation in the 'fanr' pod which allows
+you to publish a file repo to the web using the following command line:
+
+  fan fanr::WebRepoMain /path/to/fileRepo -port 80
+
+By default the server is public, or you can use the -username and
+-password options to protect it with a simple username/password
+combination.
+
 REST Protocol [#protocol]
 *************************
 The following table specifies the URI namespace of the fanr REST protocol:

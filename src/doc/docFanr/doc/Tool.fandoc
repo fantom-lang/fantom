@@ -8,6 +8,153 @@
 
 Overview [#overview]
 ********************
-TODO
+The 'fanr' command line tool provides a set of commands to manage
+a repository and install pods from a repo to your local environment.
+The basic fanr command are:
 
+  - [query]`#query`: query a repository to see what pods and versions
+    match a specific query filter
+  - [env]`#env`: find pods in the local environment which match a
+    specific query filter
+  - [install]`#install`: download and install one or more pods
+    from the repository to the local environment
+  - [uninstall]`#uninstall`: remove one more pods from the local
+    environment
+  - [publish]`#publish`: upload a pod to the repository
 
+In addition there are commands to print help, print configuration,
+and ping the server.  Run "fanr -?" for a full listing of commands.
+Run "fanr help <cmd>" to get full usage of a given command.
+
+Basics [#basics]
+****************
+The 'fanr' command line is invoked with a specific command.  A given
+command always operates in the context of the local [environment]`Concepts#env`
+and a given [repository]`Concepts#repos`.  Some commands may have
+an argument or options.
+
+You can use just the first few letters of the command as a shortcut
+if the prefix is unambiguous.  For instance you can use "q" as an alias for
+"query" (since it is the only command which begins with "q").  But you
+need to specify "pi" or "pu" to distinguish between "ping" and "publish".
+
+Options and Config [#config]
+****************************
+Many options can be specified on the command line or configured in the
+"etc/fanr/config.props" file.  The following are commonly used options
+used across commands:
+
+  Option      Config        Description
+  ------      ------        -----------
+  -r          repo          URI of repository to use for command
+  -u          username      Username to use for authentication
+  -p          password      Password to use for authentication
+  -n          numVersions   Number of pod versions to query
+  -y          n/a           Skip confirmation
+  -errTrace   n/a           Print full stack trace if command fails
+
+In the table above, the Option column indicates how the option is
+specified on the command line.  The Config column indicates how
+the default may be configured in "etc/fanr/config.props".  If the
+username is specified, but password is omitted, then the command line
+will prompt you enter it when the command is executed.
+
+Query Command [#query]
+**********************
+The 'query' command performs a query on the repository and lists
+all the pods which match a string [filter]`Queries`.  If your
+query filter has spaces, then you will need to quote it on the command
+line.
+
+Examples:
+
+  // query all pods available in default repo
+  fanr query *
+
+  // query all pods in an explicit repo
+  fanr query -r http://acme/fanr *
+
+  // query all pods in default repo, with username (prompt for password)
+  fanr query -u someone *
+
+  // query only latest version of all pods (numVersion is one)
+  fanr query -n 1 *
+
+  // query all pods with version of 1.0.58.*
+  fanr query "* 1.0.58"
+
+  // query all pods available for specific project name
+  fanr query "* proj.name~='sidewalk'"
+
+Env Command [#env]
+******************
+The 'env' command works just like the 'query' command, except it
+queries the local environment instead of the repository.  It can
+be a quick and easy way to see what pods you have installed or
+filter by metadata.
+
+Examples:
+
+   // query all pods installed
+   fanr env *
+
+   // query version of installed pod fooBar
+   fanr env fooBar
+
+   // query all pods installed at version 1.0.63
+   fanr env "* 1.0.63"
+
+   // query all pods installed for specific project name
+   fanr env "* proj.name~='sidewalk'"
+
+Install Command [#install]
+**************************
+The 'install' command takes a [query]`Queries` string to find all
+the matching pods in the repository and installs them to your local
+environment.  The following steps are performed for an install:
+  1. query the repo for latest version of pods which match your
+     query string
+  2. if any pods to install have dependencies not met by local
+     environment, then query the repo for the latest version of those
+     pods and add them to your install set
+  3. prompt you to show which pods will be installed and whether
+     it is a new install, upgrade, or downgrade; if installed pod
+     is at exact version as repo version then it is skipped
+  4. download the pods to a temporary directory
+  5. once all pods are downloaded, they are copied into your
+     working library directory
+
+Examples:
+
+  // install latest version acmeCoolPod
+  fanr install acmeCoolPod
+
+  // install specific versions of foo and bar
+  fanr install "foo 1.0.32, bar 1.0.33.1"
+
+  // install latest version of pods for specific project name
+  fanr install "* proj.name~='sidewalk'"
+
+Uninstall Command [#uninstall]
+******************************
+The 'uninstall' command takes a [query]`Queries` string to find all
+the matching pods in your local environment, checks dependencies, prompts
+you, then deletes them from your local library.
+
+If the uninstall command detects that deleting a pod would break
+dependencies, then it prints the dependency problems and exits.
+
+Publish Command [#publish]
+**************************
+The publish command is used to upload a pod file from your local system
+to the repository.  If you pass a simple pod name to the command then it
+finds that pod file in your local environment.  Otherwise you can pass
+a file path to the pod file you wish to publish.
+
+Examples:
+
+  // publish pod from local environment library
+  fanr publish acmeCoolLib
+
+  // publish pod with explicit file path (Windows path)
+  fanr publish \mypods\acmeCoolLib.pod
