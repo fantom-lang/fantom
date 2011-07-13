@@ -263,14 +263,15 @@ class WebRepoTest : Test
 internal const class TestWebRepoAuth : SimpleWebRepoAuth
 {
   new make(Str u, Str p) : super(u, p) {}
+
+  override Bool allowQuery(Obj? u, PodSpec? p) { allow(u, p) }
+  override Bool allowRead(Obj? u, PodSpec? p) { allow(u, p) }
+  override Bool allowPublish(Obj? u, PodSpec? p) { allow(u, p) }
+
   const AtomicBool allowPublic := AtomicBool(false)
   const AtomicBool allowUser   := AtomicBool(false)
-  override Bool allowQuery(Obj? u, PodSpec? p)
-  {
-    if (p?.name == "util") return false // util never allowed
-    return allowPublic.val  || (u != null && allowUser.val)
-  }
-  override Bool allowPublish(Obj? u, PodSpec? p)
+
+  Bool allow(Obj? u, PodSpec? p)
   {
     if (p?.name == "util") return false // util never allowed
     return allowPublic.val  || (u != null && allowUser.val)
