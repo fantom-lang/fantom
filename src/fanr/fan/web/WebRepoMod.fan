@@ -23,17 +23,8 @@ using util
 **    POST     {base}/publish           publish pod
 **    GET      {base}/auth?{username}   authentication info
 **
-** HTTP Headers
-**    "Fan-NumVersions"   query version limit
+** See [Web Repos]`docFanr::WebRepos`.
 **
-** Response codes:
-**   - 2xx:  okay
-**   - 4xx:  client side error (bad request)
-**   - 5xx:  server side error
-**
-** Responses are returned in JSON:
-**   - query: '{"pods":[{...},{...}]}'
-**   - error: '{"err":"something bad happened"}'
 **
 const class WebRepoMod : WebMod
 {
@@ -201,8 +192,8 @@ const class WebRepoMod : WebMod
 
   private Void onPod(Str podName, Str podVer, Obj? user)
   {
-    // if user can't query any pods, immediately bail
-    if (!auth.allowQuery(user, null)) { sendForbiddenErr(user); return }
+    // if user can't read any pods, immediately bail
+    if (!auth.allowRead(user, null)) { sendForbiddenErr(user); return }
 
     // lookup pod that matches name/version
     query := "$podName $podVer"
@@ -210,7 +201,7 @@ const class WebRepoMod : WebMod
     if (spec == null)  { sendErr(404, "No pod match: $query"); return }
 
     // check permissions
-    if (!auth.allowQuery(user, spec)) { sendForbiddenErr(user); return }
+    if (!auth.allowRead(user, spec)) { sendForbiddenErr(user); return }
 
     // pipe repo stream to response stream
     res.headers["Content-Type"] = "application/zip"
@@ -276,9 +267,6 @@ const class WebRepoMod : WebMod
     salt         := auth.salt(user)
     secrets      := auth.secretAlgorithms.join(",")
     signatures   := auth.signatureAlgorithms.join(",")
-    allowQuery   := auth.allowQuery(user, null)
-    allowInstall := auth.allowInstall(user, null)
-    allowPublish := auth.allowPublish(user, null)
 
     res.headers["Content-Type"] = "text/plain"
     out := res.out

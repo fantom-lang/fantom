@@ -59,9 +59,9 @@ const abstract class WebRepoAuth
   ** If pod is null, return if user is allowed to query anything.
   abstract Bool allowQuery(Obj? user, PodSpec? pod)
 
-  ** Is the given user allowed to install the given pod?
+  ** Is the given user allowed to read/download/install the given pod?
   ** If pod is null, return if user is allowed to install anything.
-  abstract Bool allowInstall(Obj? user, PodSpec? pod)
+  abstract Bool allowRead(Obj? user, PodSpec? pod)
 
   ** Is the given user allowed to publish the given pod?
   ** If pod is null, return if user is allowed to publish anything.
@@ -79,7 +79,7 @@ internal const class PublicWebRepoAuth : WebRepoAuth
   override Buf secret(Obj? user, Str algorithm) { Buf() }
   override Str[] secretAlgorithms() { ["PASSWORD", "SALTED-HMAC-SHA1"] }
   override Bool allowQuery(Obj? u, PodSpec? p) { true }
-  override Bool allowInstall(Obj? u, PodSpec? p) { true }
+  override Bool allowRead(Obj? u, PodSpec? p)   { true }
   override Bool allowPublish(Obj? u, PodSpec? p) { true }
 
   private const Str publicSalt := Buf.random(16).toHex
@@ -119,7 +119,7 @@ internal const class SimpleWebRepoAuth : WebRepoAuth
   override Str[] secretAlgorithms() { ["PASSWORD", "SALTED-HMAC-SHA1"] }
 
   override Bool allowQuery(Obj? u, PodSpec? p) { u != null }
-  override Bool allowInstall(Obj? u, PodSpec? p) { u != null }
+  override Bool allowRead(Obj? u, PodSpec? p) { u != null }
   override Bool allowPublish(Obj? u, PodSpec? p) { u != null }
 
   private const Str username
