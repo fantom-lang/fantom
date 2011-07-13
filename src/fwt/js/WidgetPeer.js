@@ -442,7 +442,7 @@ fan.fwt.WidgetPeer.keyCodeToKey = function(keyCode)
   switch (keyCode)
   {
     case 8:  return fan.fwt.Key.m_backspace;
-    case 13: return fan.fwt_Key.m_enter;
+    case 13: return fan.fwt.Key.m_enter;
     case 32: return fan.fwt.Key.m_space;
     case 37: return fan.fwt.Key.m_left;
     case 38: return fan.fwt.Key.m_up;
