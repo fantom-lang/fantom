@@ -253,6 +253,7 @@ class Dialog : Window
       halignPane = Halign.right
       uniformRows = true
       uniformCols = true
+      hgap = Env.cur.runtime == "js" ? 2 : 4
     }
     commands.each |Command c|
     {
@@ -279,7 +280,11 @@ class Dialog : Window
           bodyAndImage,
         },
       },
-      InsetPane { insets = Insets(0, 16, 16, 16); it.add(buttons) },
+      InsetPane
+      {
+        insets = Env.cur.runtime == "js" ? Insets(0,14,14,14) : Insets(0,16,16,16)
+        buttons,
+      },
     }
 
     return this
