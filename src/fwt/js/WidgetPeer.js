@@ -335,6 +335,7 @@ fan.fwt.WidgetPeer.prototype.attachEventListener = function(self, type, evtId, l
 
     // prevent bubbling
     if (evt.m_consumed || isMouseEvent) e.stopPropagation();
+    if (evt.m_consumed) e.preventDefault();
     return false;
   }
 
