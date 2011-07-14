@@ -200,6 +200,7 @@ fan.fwt.WidgetPeer.prototype.attachTo = function(self, elem)
 }
 
 fan.fwt.WidgetPeer.prototype.checkKeyListeners = function(self) {}
+fan.fwt.WidgetPeer.prototype.checkFocusListeners = function(self) {}
 
 fan.fwt.WidgetPeer.prototype.create = function(parentElem, self)
 {
@@ -255,6 +256,8 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
   this.checkEventListener(self, 0x040, "mousewheel", fan.fwt.EventId.m_mouseWheel, self.onMouseWheel());
   this.checkEventListener(self, 0x080, "keydown",    fan.fwt.EventId.m_keyDown,    self.onKeyDown());
   this.checkEventListener(self, 0x100, "keyup",      fan.fwt.EventId.m_keyUp,      self.onKeyUp());
+  this.checkEventListener(self, 0x200, "blur",       fan.fwt.EventId.m_blur,       self.onBlur());
+  this.checkEventListener(self, 0x400, "focus",      fan.fwt.EventId.m_focus,      self.onFocus());
 
   // sync bounds
   with (this.elem.style)
@@ -503,6 +506,8 @@ fan.fwt.WidgetPeer.addCss("div:focus { outline:0; }");
 
 fan.fwt.WidgetPeer.setBg = function(elem, brush)
 {
+  if (brush == null) return;
+
   var style = elem.style;
   if (brush == null) { style.background = "none"; return; }
   if (brush instanceof fan.gfx.Color) { style.background = brush.toCss(); return; }
