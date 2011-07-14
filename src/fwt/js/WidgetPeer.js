@@ -506,8 +506,6 @@ fan.fwt.WidgetPeer.addCss("div:focus { outline:0; }");
 
 fan.fwt.WidgetPeer.setBg = function(elem, brush)
 {
-  if (brush == null) return;
-
   var style = elem.style;
   if (brush == null) { style.background = "none"; return; }
   if (brush instanceof fan.gfx.Color) { style.background = brush.toCss(); return; }
@@ -578,10 +576,9 @@ fan.fwt.WidgetPeer.setBg = function(elem, brush)
 
 fan.fwt.WidgetPeer.setBorder = function(elem, border)
 {
-  if (border == null) return;
-
   var s = elem.style;
   var b = border;
+  if (b == null) { s.border = "none"; return; }
   s.borderStyle = "solid";
 
   s.borderTopWidth    = b.m_widthTop    + "px";
