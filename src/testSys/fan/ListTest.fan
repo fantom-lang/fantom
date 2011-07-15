@@ -623,7 +623,9 @@ class ListTest : Test
   {
     list := Int[,]
     verifyEq(list.fill(0, 3), [0, 0, 0])
+    verifyEq(list.size, 3)
     verifyEq(list.fill(0xff, 2), [0, 0, 0, 0xff, 0xff])
+    verifyEq(list.size, 5)
   }
 
 //////////////////////////////////////////////////////////////////////////
