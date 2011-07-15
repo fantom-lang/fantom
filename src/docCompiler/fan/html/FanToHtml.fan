@@ -374,21 +374,22 @@ class FanToHtml
   {
     list :=
     [
-      "abstract",  "finally",    "readonly",
-      "as",        "for",        "return",
-      "assert",    "foreach",    "static",
-      "break",     "goto",       "super",
-      "case",      "if",         "switch",
-      "catch",     "internal",   "this",
-      "class",     "is",         "throw",
-      "const",     "mixin",      "true",
-      "continue",  "native",     "try",
-      "default",   "new",        "using",
-      "do",        "null",       "virtual",
-      "else",      "override",   "volatile",
-      "enum",      "private",    "void",
-      "false",     "protected",  "while",
-      "final",     "public",     "once"
+      "abstract",       "foreach",        "return",
+      "as",             "if",             "static",
+      "assert",         "internal",       "super",
+      "break",          "is",             "switch",
+      "case",           "isnot",          "this",
+      "catch",          "it",             "throw",
+      "class",          "mixin",          "true",
+      "const",          "native",         "try",
+      "continue",       "new",            "using",
+      "default",        "null",           "virtual",
+      "do",             "once",           "volatile",
+      "else",           "override",       "void",
+      "false",          "private",        "while",
+      "final",          "protected",
+      "finally",        "public",
+      "for",            "readonly",
      ]
      map := Str:Bool[:]
      list.each |Str s| { map[s] = true }
