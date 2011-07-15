@@ -488,7 +488,8 @@ public final class List
     modify();
     int t = (int)times;
     if (values.length < size+t) grow(size+t);
-    for (int i=0; i<t; ++i) add(val);
+    for (int i=0; i<t; ++i) values[size+i] = val;
+    size += t;
     return this;
   }
 
