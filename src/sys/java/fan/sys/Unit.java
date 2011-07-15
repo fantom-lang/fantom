@@ -63,7 +63,7 @@ public final class Unit
       if (Sys.isJarDist)
         in = new SysInStream(Unit.class.getClassLoader().getResourceAsStream(path));
       else
-        in = Env.cur().findFile(path).in();
+        in = Env.cur().findFile(Uri.fromStr(path)).in();
 
       // parse each line
       String curQuantityName = null;

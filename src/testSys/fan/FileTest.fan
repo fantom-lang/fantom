@@ -22,8 +22,10 @@ class FileTest : Test
   {
     // verify clean empty directory
     verify(tempDir.exists)
+    verify(tempDir->exists)
     verify(tempDir.isDir)
     verify(tempDir.list.isEmpty)
+    verify(tempDir->list->isEmpty)
     verify(tempDir.list.size == 0)
     verify(tempDir.listDirs.size == 0)
     verify(tempDir.listFiles.size == 0)
@@ -67,6 +69,7 @@ class FileTest : Test
     verifyEq(f + `d`,   File.make(`a/b/c/d`))
     verifyEq(f + `d/e`,  File.make(`a/b/c/d/e`))
     verifyEq(f + `../d`, File.make(`a/b/d`))
+    verifyEq(f->plus(`../d`), File.make(`a/b/d`))
 
     f = File.make(`a/b/c`);
     verifyEq(f + `d`,   File.make(`a/b/d`))
@@ -90,7 +93,7 @@ class FileTest : Test
     verifyEq(x.uri, slash)
     verifyEq(x.exists, true)
 
-    x = tempDir.plus(`dir`, false)
+    x = tempDir->plus(`dir`, false)
     verifyEq(x.uri, slash)
     verifyEq(x.exists, true)
   }
@@ -302,7 +305,9 @@ class FileTest : Test
     a1 = a1.moveTo(dirA+`a1`)
     verifyEq(dirA.list.size, 1)
     verifyEq(a1.parent, dirA)
+    verifyEq(a1->parent, dirA)
     verifyEq(a1.readAllStr, "hi")
+    verifyEq(a1->readAllStr, "hi")
 
     // moveInto dir
     dirA = dirA.moveInto(dirB)
@@ -324,6 +329,7 @@ class FileTest : Test
 
     out := f.out.writeChars("alpha\nbeta\rgamma").close
     verifyEq(f.in.readAllStr, "alpha\nbeta\ngamma")
+    verifyEq(f->in->readAllStr, "alpha\nbeta\ngamma")
 
     out = f.out(false, 0).writeChars("alpha\nbeta\rgamma").close
     verifyEq(f.in(null).readAllStr, "alpha\nbeta\ngamma")
