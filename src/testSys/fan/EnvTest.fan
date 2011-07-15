@@ -35,6 +35,7 @@ class EnvTest : Test
     verifyEq(Env.cur.args.of, Str#)
     verifyEq(Env.cur.args.isRO, true)
     verifyEq(Env.cur.args.isImmutable, true)
+    verifyEq(Env.cur->args->of, Str#)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -64,6 +65,7 @@ class EnvTest : Test
     runtime := ["java", "dotnet", "js"]
 
     verify(os.contains(Env.cur.os))
+    verify(os.contains(Env.cur->os))
     verify(arch.contains(Env.cur.arch))
     verify(runtime.contains(Env.cur.runtime))
     verifyEq(Env.cur.platform, "${Env.cur.os}-${Env.cur.arch}");
@@ -79,6 +81,7 @@ class EnvTest : Test
     verifyEnvDir(Env.cur.homeDir)
     verifyEnvDir(Env.cur.workDir)
     verifyEnvDir(Env.cur.tempDir)
+    verifyEnvDir(Env.cur->homeDir)
   }
 
   Void verifyEnvDir(File f)
@@ -121,7 +124,7 @@ class EnvTest : Test
 
     // directories
     verifyEq(Env.cur.findFile(`etc/sys`).isDir, true)
-    verifyEq(Env.cur.findFile(`etc/sys/`).isDir, true)
+    verifyEq(Env.cur->findFile(`etc/sys/`)->isDir, true)
 
     // arg err
     verifyErr(ArgErr#) { Env.cur.findFile(`/etc/`) }
@@ -130,6 +133,7 @@ class EnvTest : Test
     verifyEq(Env.cur.findFile(`etc/foo bar/no exist`, false), null)
     verifyErr(UnresolvedErr#) { Env.cur.findFile(`etc/foo bar/no exist`) }
     verifyErr(UnresolvedErr#) { Env.cur.findFile(`etc/foo bar/no exist`, true) }
+    verifyErr(UnresolvedErr#) { Env.cur->findFile(`etc/foo bar/no exist`, true) }
 
     // findAllFiles
     verify(Env.cur.findAllFiles(`etc/sys/timezones.ftz`).size >= 1)
@@ -153,6 +157,7 @@ class EnvTest : Test
       // verify basics
       verifyEq(Env.cur.props(pod, `some-bad-file-foo-bar`, 1min), Str:Str[:])
       verifyEq(Env.cur.props(pod, uri, 1min), props)
+      verifyEq(Env.cur->props(pod, uri, 1min), props)
 
       // verify cached
       cached := Env.cur.props(pod, uri, 1min)
@@ -192,6 +197,7 @@ class EnvTest : Test
     verifyNotNull(pod.config("buildVersion"))
     verifySame(pod.config("buildVersion"), pod.config("buildVersion"))
     verifyEq(pod.config("buildVersion"), Env.cur.config(pod, "buildVersion"))
+    verifyEq(pod->config("buildVersion"), Env.cur->config(pod, "buildVersion"))
     verifyEq(pod.config("foo.not.found"), null)
     verifyEq(pod.config("foo.not.found", "?"), "?")
     verifyEq(Env.cur.config(pod, "foo.not.found"), null)

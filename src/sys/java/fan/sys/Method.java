@@ -549,7 +549,13 @@ public class Method
       if (index < 0) index = 0;
 
       // route to Java reflection
-      return reflect[index].invoke(instance, args);
+      java.lang.reflect.Method jm = reflect[index];
+      if (jm == null)
+      {
+        fixReflect();
+        jm = reflect[index];
+      }
+      return jm.invoke(instance, args);
     }
     catch (IllegalArgumentException e)
     {
@@ -580,6 +586,30 @@ public class Method
 
 
       throw Err.make("Cannot call '" + this + "': " + e);
+    }
+  }
+
+  private void fixReflect()
+  {
+    // this code is used to fix up our reflect table which maps
+    // parameter arity to java.lang.reflect.Methods; in sys code we
+    // don't necessarily override every version of a method with default
+    // parameters in subclasses; so if a reflection table is incomplete
+    // then we fill in missing entries from the base type's method
+    try
+    {
+      parent.base().finish();
+      Method inherit = parent.base().method(name);
+      for (int i=0; i<reflect.length; ++i)
+      {
+        if (reflect[i] == null)
+           reflect[i] = inherit.reflect[i];
+      }
+    }
+    catch (Exception e)
+    {
+      System.out.println("ERROR Method.fixReflect " + qname);
+      e.printStackTrace();
     }
   }
 
