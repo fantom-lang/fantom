@@ -37,6 +37,7 @@ class Build : BuildScript
       "scrollpane",  "Using ScrollPane",
       "gradient",    "Gradients (at least what SWT supports)",
       "timer",       "Timer using Desktop.callLater",
+      "table",       "Table model and visualization options",
     "email/",        "email",
       "sending",     "Sending email via SMTP",
     "js/",           "js",
