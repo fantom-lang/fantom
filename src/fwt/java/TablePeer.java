@@ -105,10 +105,14 @@ public class TablePeer
     Table c = (Table)this.control;
     if (c == null) return;
 
-    TableModel model = model();
+    // remove all all columns
+    while (c.getColumnCount() > 0) c.getColumns()[0].dispose();
 
+    // remove all rows
     c.removeAll();
-    c.setItemCount((int)model.numRows());
+
+    // rebuild table from model
+    rebuild();
     c.clearAll();
   }
 
