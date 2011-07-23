@@ -72,8 +72,8 @@ class JsonOutStream : OutStream
     writeChar(JsonToken.objectStart)
     type.fields.each |f, i|
     {
-      if (i != 0) writeChar(JsonToken.comma).writeChar('\n')
       if (f.isStatic || f.hasFacet(Transient#) == true) return
+      if (i != 0) writeChar(JsonToken.comma).writeChar('\n')
       writeJsonPair(f.name, f.get(obj))
     }
     writeChar(JsonToken.objectEnd)

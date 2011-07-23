@@ -118,8 +118,7 @@ class JsonTest : Test
            "i":7,
            "f":5.0,
            "s":"string\n",
-           "ints":[1,2,3],
-           }|>)
+           "ints":[1,2,3]}|>)
 
     // errors
     verifyErr(IOErr#) { verifyWrite(Buf(), "") }
@@ -193,6 +192,7 @@ class JsonTest : Test
     obj = JsonInStream(buf.flip.in).readJson
     f()
   }
+
 }
 
 **************************************************************************
@@ -206,6 +206,6 @@ internal class SerialA
   Int i := 7
   Float f := 5f
   Str s := "string\n"
-  Int[] ints  := [1, 2, 3]
   @Transient Int noGo := 99
+  Int[] ints  := [1, 2, 3]
 }
