@@ -187,13 +187,13 @@ fan.dom.ElemPeer.prototype.next = function(self)
 
 fan.dom.ElemPeer.prototype.add = function(self, child)
 {
-  this.elem.appendChild(child.elem);
+  this.elem.appendChild(child.peer.elem);
   return this;
 }
 
 fan.dom.ElemPeer.prototype.remove = function(self, child)
 {
-  this.elem.removeChild(child.elem);
+  this.elem.removeChild(child.peer.elem);
   return this;
 }
 
