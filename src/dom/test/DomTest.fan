@@ -21,6 +21,7 @@ class DomTest : Weblet
       .title.w("Dom Test").titleEnd
       .includeJs(`/pod/sys/sys.js`)
       .includeJs(`/pod/gfx/gfx.js`)
+      .includeJs(`/pod/web/web.js`)
       .includeJs(`/pod/dom/dom.js`)
       .style.w(
        ".hidden { display: none; }")
@@ -36,9 +37,10 @@ class DomTest : Weblet
           try
           {
             var test = fan.dom.DomTestClient.make();
-            print('testAttrs');  test.testAttrs();
-            print('testBasics'); test.testBasics();
-            print('testCreate'); test.testCreate();
+            print('testAttrs');     test.testAttrs();
+            print('testBasics');    test.testBasics();
+            print('testCreate');    test.testCreate();
+            print('testAddRemove'); test.testAddRemove();
             results.style.color = 'green';
             results.innerHTML = 'All tests passed! [' + test.m_verifies + ' verifies]';
           }
@@ -178,6 +180,33 @@ internal class DomTestClient
     verifyEq(elem["id"], "cool")
     verifyEq(elem["name"], "yay")
     verifyEq(elem["class"], "foo")
+  }
+
+  Void testAddRemove()
+  {
+    doc  := Win.cur.doc
+    elem := doc.createElem("div")
+    elem.add(doc.createElem("div", ["class":"a"]))
+    verifyEq(elem.children.size, 1)
+    verifyEq(elem.children.first.className, "a")
+
+    b := doc.createElem("div", ["class":"b"]); elem.add(b)
+    c := doc.createElem("div", ["class":"c"]); elem.add(c)
+    verifyEq(elem.children.size, 3)
+    verifyEq(elem.children[1].className, "b")
+    verifyEq(elem.children[2].className, "c")
+
+    elem.remove(b)
+    verifyEq(elem.children.size, 2)
+    verifyEq(elem.children[0].className, "a")
+    verifyEq(elem.children[1].className, "c")
+
+    elem.remove(c)
+    verifyEq(elem.children.size, 1)
+    verifyEq(elem.children[0].className, "a")
+
+    elem.remove(elem.children.first)
+    verifyEq(elem.children.size, 0)
   }
 
   Void verify(Bool v)
