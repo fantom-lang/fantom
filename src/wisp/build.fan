@@ -25,7 +25,7 @@ class Build : BuildPod
                "license.name": "Academic Free License 3.0",
                "vcs.name":     "Mercurial",
                "vcs.uri":      "http://hg.fantom.org/fan-1.0/"]
-    depends = ["sys 1.0", "concurrent 1.0", "inet 1.0", "web 1.0"]
+    depends = ["sys 1.0", "util 1.0", "concurrent 1.0", "inet 1.0", "web 1.0"]
     srcDirs = [`fan/`, `test/`]
     docSrc  = true
   }
