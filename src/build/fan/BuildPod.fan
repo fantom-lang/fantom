@@ -175,6 +175,18 @@ abstract class BuildPod : BuildScript
     meta["pod.native.dotnet"] = (dotnetDirs != null && !dotnetDirs.isEmpty).toStr
     meta["pod.native.js"]     = (jsDirs     != null && !jsDirs.isEmpty).toStr
 
+    // TODO: add additinal meta props defined by config file/env var
+    // this behavior is not guaranteed in future versions, rather we
+    // need to potentially overhaul how build data is defined
+    // See topic http://fantom.org/sidewalk/topic/1584
+    config("meta", "").split(',').each |pair|
+    {
+      if (pair.isEmpty) return
+      tuples := pair.split('=')
+      if (tuples.size != 2) throw Err("Invalid config meta: $pair")
+      meta[tuples[0]] = tuples[1]
+    }
+
     // map my config to CompilerInput structure
     ci := CompilerInput()
     ci.inputLoc    = Loc.makeFile(scriptFile)
