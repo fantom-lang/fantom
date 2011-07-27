@@ -33,6 +33,9 @@ fan.fwt.Graphics.prototype.paint = function(canvas, bounds, f)
   this.cx.textBaseline = "top";
   this.cx.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
   this.cx.clearRect(bounds.m_x, bounds.m_y, bounds.m_w, bounds.m_h);
+  this.brush$(fan.gfx.Color.m_black);
+  this.pen$(fan.gfx.Pen.m_defVal);
+  this.font$(fan.fwt.Desktop.sysFont());
   f(this);
   this.cx.restore();
 }
@@ -111,7 +114,7 @@ fan.fwt.Graphics.prototype.font$  = function(f)
 }
 
 // Bool antialias
-fan.fwt.Graphics.prototype.m_antialias = null
+fan.fwt.Graphics.prototype.m_antialias = true;
 fan.fwt.Graphics.prototype.antialias   = function() { return this.m_antialias }
 fan.fwt.Graphics.prototype.antialias$  = function(aa)
 {
@@ -120,7 +123,7 @@ fan.fwt.Graphics.prototype.antialias$  = function(aa)
 }
 
 // Int alpha
-fan.fwt.Graphics.prototype.m_alpha = null
+fan.fwt.Graphics.prototype.m_alpha = 255;
 fan.fwt.Graphics.prototype.alpha   = function() { return this.m_alpha}
 fan.fwt.Graphics.prototype.alpha$  = function(a)
 {
