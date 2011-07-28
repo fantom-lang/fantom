@@ -80,8 +80,8 @@ public class TablePeer
   };
 
   // Int[] selected
-  public List selected(fan.fwt.Table self) { return selected.get(); }
-  public void selected(fan.fwt.Table self, List v) { selected.set(v); }
+  public List selected(fan.fwt.Table self) { return view().rowsViewToModel(selected.get()); }
+  public void selected(fan.fwt.Table self, List v) { selected.set(view().rowsModelToView(v)); }
   public final Prop.IntsProp selected = new Prop.IntsProp(this)
   {
     public int[] get(Widget w) { return ((Table)w).getSelectionIndices(); }
@@ -97,6 +97,7 @@ public class TablePeer
     Table c = (Table)this.control;
     if (c == null) return;
 
+    indices = view().rowsModelToView(indices);
     c.clear(indices.toInts());
   }
 
@@ -127,7 +128,7 @@ public class TablePeer
     int index = c.indexOf(item);
     if (index < 0) return null;
 
-    return Long.valueOf(index);
+    return Long.valueOf(view().rowViewToModel(index));
   }
 
   public Long colAt(fan.fwt.Table self, fan.gfx.Point fanPos)
@@ -142,7 +143,7 @@ public class TablePeer
     for (int i=0; i<c.getColumnCount(); ++i)
     {
       if (item.getBounds(i).contains(swtPos))
-        return Long.valueOf(i);
+        return Long.valueOf(view().colViewToModel(i));
     }
 
     return null;
@@ -164,7 +165,7 @@ public class TablePeer
 
   private void handleSetData(Event event)
   {
-    TableModel model = model();
+    TableModel model = view();
 
     Fwt fwt = Fwt.get();
     TableItem item = (TableItem)event.item;
@@ -242,8 +243,8 @@ public class TablePeer
     // TODO: need to figure out how to sync
     Table table = (Table)this.control;
 
-    // get model
-    TableModel model = model();
+    // get view of model
+    TableView model = view();
 
     // build columns
     int numCols = (int)model.numCols();
@@ -274,7 +275,12 @@ public class TablePeer
     Table table = (Table)this.control;
     if (table != null)
     {
-      if (col != null) table.setSortColumn(table.getColumn(col.intValue()));
+      if (col != null)
+      {
+        long modelIndex = col.longValue();
+        long viewIndex = view().colModelToView(modelIndex);
+        table.setSortColumn(table.getColumn((int)viewIndex));
+      }
       table.setSortDirection(mode == SortMode.up ? SWT.UP : SWT.DOWN);
       refreshAll(self);
     }
@@ -290,7 +296,7 @@ public class TablePeer
     TableColumn col = (TableColumn)e.widget;
     Long sortCol = null;
     for (int i=0; i<table.getColumnCount(); ++i)
-      if (table.getColumn(i) == col) { sortCol = Long.valueOf(i); break; }
+      if (table.getColumn(i) == col) { sortCol = Long.valueOf(view().colViewToModel(i)); break; }
 
     // figure out sorting up or down
     SortMode sortMode = SortMode.up;
@@ -309,10 +315,10 @@ public class TablePeer
   {
     int i = ((Table)control).getSelectionIndex();
     if (i < 0) return null;
-    return Long.valueOf(i);
+    return Long.valueOf(view().rowViewToModel(i));
   }
 
-  public TableModel model()
+  public TableView view()
   {
     return ((fan.fwt.Table)this.self).view();
   }

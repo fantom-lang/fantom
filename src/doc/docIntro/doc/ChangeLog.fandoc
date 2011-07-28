@@ -20,6 +20,7 @@
 - fwt-js: keyboard support for Table, Dialog, Button
 - fwt-js: onBlur/onFocus support
 - Add fwt/table.fan example
+- Fix fwt::Table view/model bugs
 - wisp::Main to run simple WebMods under Wisp
 
 *Build 1.0.59 (2 Jun 2011)*
