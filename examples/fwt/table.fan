@@ -19,7 +19,34 @@ class TableDemo
   {
     // model and table
     model := Model()
-    table := Table { it.model = model }
+    table := Table { it.model = model; multi = true }
+
+    // event handlers
+    table.onAction.add |event|
+    {
+      echo("$event => " + model.text(0, event.index))
+    }
+    table.onSelect.add |event|
+    {
+      echo("$event => " + model.text(0, event.index))
+    }
+    table.onMouseDown.add |event|
+    {
+      row := table.rowAt(event.pos)
+      col := table.colAt(event.pos)
+      if (row != null && col != null)
+        echo("$event => " + model.text(col, row))
+      else
+        echo("$event => null")
+    }
+    table.onPopup.add |event|
+    {
+      echo("$event => " + model.text(0, event.index))
+      event.popup = Menu
+      {
+        MenuItem { text = model.text(0, event.index) },
+      }
+    }
 
     // fields to change model
     headerPrefix := Text { text = model.headerPrefix }
@@ -46,6 +73,18 @@ class TableDemo
       table.refreshAll
     }
 
+    dump := |->|
+    {
+      echo("".padr(20, '-'))
+      echo("sortCol:  $table.sortCol")
+      echo("sortMode: $table.sortMode")
+      echo("isColVisible:")
+      model.numCols.times |i| { echo("  " + model.header(i) + ": visible=" + table.isColVisible(i)) }
+      echo("selected:")
+      table.selected.each |sel| { echo("  selected: $sel => " + model.text(0, sel)) }
+      echo("".padr(20, '-'))
+    }
+
     // put together the whole screen and open
     Window
     {
@@ -67,6 +106,7 @@ class TableDemo
             show1, Label { text = "" },
             show2, Label { text = "" },
             Button { text = "refreshAll"; onAction.add(update) },
+            Button { text = "dump"; onAction.add(dump) },
           }
         }
       },;
@@ -77,10 +117,19 @@ class TableDemo
 
 class Model : TableModel
 {
+  Str[] vals := ["apple", "orange", "red", "pink", "fantom",
+    "java", "javascript", "python", "ruby", "purple",
+    "black", "star wars", "fight club", "casablanca", "inception",
+    "aug", "sep", "oct", "nov", "dec"]
   Str headerPrefix := "Col-"
   Halign halignVal := Halign.left
   Color fgVal := Color.black
   override Str header(Int col) { headerPrefix + col }
+  override Str text(Int col, Int row)
+  {
+    if (col == 0) return vals[row % vals.size]
+    return "$row : $col"
+  }
   override Int numRows := 20
   override Int numCols := 3
   override Halign halign(Int col) { halignVal }

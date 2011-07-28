@@ -105,6 +105,12 @@ class TableTest : Test
         verifyEq(t.view.text(c, r), cell)
       }
     }
+
+    // verify selection
+    t.selected = [0, 2]
+    verifyEq(t.selected.size, 2)
+    verifyEq(t.selected[0], 0)
+    verifyEq(t.selected[1], 2)
   }
 
 }

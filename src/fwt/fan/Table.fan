@@ -108,7 +108,10 @@ class Table : Widget
   native Void refreshAll()
 
   **
-  ** Get and set the selected row indices.
+  ** Get and set the selected row indices.  The indices match
+  ** the logical model row indices which may not be consistent
+  ** with the current view (if the user has resorted rows).  No
+  ** guarantee is made that indices are in sorted order.
   **
   native Int[] selected
 
@@ -349,11 +352,23 @@ internal class TableView : TableModel
     model.numCols.times |i| { cols.add(i); vis.add(true) }
   }
 
+  // View -> Model
+  internal Int rowViewToModel(Int i) { rows[i] }
+  internal Int colViewToModel(Int i) { cols[i] }
+  internal Int[] rowsViewToModel(Int[] i) { i.map |x->Int| { rows[x] } }
+  internal Int[] colsViewToModel(Int[] i) { i.map |x->Int| { rows[x] } }
+
+  // Model -> View (need to optimize linear scan)
+  internal Int rowModelToView(Int i) { rows.findIndex |x| { x == i } }
+  internal Int colModelToView(Int i) { cols.findIndex |x| { x == i } }
+  internal Int[] rowsModelToView(Int[] i)  { i.map |x->Int| { rowModelToView(x) } }
+  internal Int[] colsModelToView(Int[] i)  { i.map |x->Int| { colModelToView(x) } }
+
   private Table table
   private Int[] rows := [,]   // view to base row index mapping
   private Int[] cols := [,]   // view to base col index mapping
   private Bool[] vis := [,]   // visible
-  internal Int? sortCol { private set }
+  internal Int? sortCol { private set }  // model based index
   internal SortMode sortMode := SortMode.up { private set }
 }
 
