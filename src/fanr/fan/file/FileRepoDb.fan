@@ -36,6 +36,7 @@ internal class FileRepoDb
     switch (msg.id)
     {
       case FileRepoMsg.load:     return load
+      case FileRepoMsg.find:     return find(msg.a, msg.b)
       case FileRepoMsg.query:    return query(msg.a, msg.b)
       case FileRepoMsg.publish:  return publish(msg.a)
       default:                   throw Err("Unknown msg: $msg")
@@ -110,6 +111,23 @@ internal class FileRepoDb
 
     // sort by highest to lowest version
     podDir.all.sortr |a, b| { a.version <=> b.version }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Find
+//////////////////////////////////////////////////////////////////////////
+
+  private PodSpec? find(Str name, Version ver)
+  {
+    // lookup dir record for name
+    dir := podDirs[name]
+    if (dir == null) return null
+
+    // ensure all pod versions are fully loaded
+    loadAll(dir)
+
+    // find exact version match
+    return dir.all.find |pod| { pod.version == ver }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -221,9 +239,10 @@ internal class PodDir
 internal const class FileRepoMsg
 {
   const static Int load     := 0  //
-  const static Int query    := 1  // a=query, b=numVersions
-  const static Int versions := 2  // a=Str
-  const static Int publish  := 3  // a=File
+  const static Int find     := 1  // a=name, b=version
+  const static Int query    := 2  // a=query, b=numVersions
+  const static Int versions := 3  // a=Str
+  const static Int publish  := 4  // a=File
 
   new make(Int id, Obj? a := null, Obj? b := null) { this.id = id; this.a = a; this.b = b}
 
