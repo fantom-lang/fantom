@@ -145,6 +145,7 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     {
       text = document.createElement("a");
       text.href = uri.uri;
+      if (uri.target) text.target = uri.target;
       switch (uri.underline)
       {
         case "none": text.style.textDecoration = "none"; break;
