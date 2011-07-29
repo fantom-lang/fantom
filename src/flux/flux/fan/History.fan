@@ -183,7 +183,7 @@ internal class HistoryPickerModel : TableModel
     switch (col)
     {
       case 0: return fullPath ? 450 : 250
-      case 1: return 20
+      case 1: return 24
       default: return null
     }
   }
