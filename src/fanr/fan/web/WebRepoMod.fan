@@ -14,14 +14,15 @@ using util
 ** publishing a repo over HTTP to be used by 'WebRepo'. URI
 ** namespace:
 **
-**    Method   Uri                      Operation
-**    ------   --------------------     ---------
-**    GET      {base}/ping              ping meta-data
-**    GET      {base}/query?{query}     pod query
-**    POST     {base}/query             pod query
-**    GET      {base}/pod/{name}/{ver}  pod download
-**    POST     {base}/publish           publish pod
-**    GET      {base}/auth?{username}   authentication info
+**    Method   Uri                       Operation
+**    ------   --------------------      ---------
+**    GET      {base}/ping               ping meta-data
+**    GET      {base}/find/{name}/{ver}  pod find
+**    GET      {base}/query?{query}      pod query
+**    POST     {base}/query              pod query
+**    GET      {base}/pod/{name}/{ver}   pod download
+**    POST     {base}/publish            publish pod
+**    GET      {base}/auth?{username}    authentication info
 **
 ** See [Web Repos]`docFanr::WebRepos`.
 **
@@ -65,6 +66,7 @@ const class WebRepoMod : WebMod
       // route to correct command
       path := req.modRel.path
       cmd := path.getSafe(0) ?: "?"
+      if (cmd == "find"    && path.size == 3) { onFind(path[1], path[2], user); return }
       if (cmd == "query"   && path.size == 1) { onQuery(user); return }
       if (cmd == "pod"     && path.size == 3) { onPod(path[1], path[2], user); return }
       if (cmd == "publish" && path.size == 1) { onPublish(user); return }
@@ -140,6 +142,29 @@ const class WebRepoMod : WebMod
 
     res.headers["Content-Type"] = "text/plain"
     JsonOutStream(res.out).writeJson(props).flush
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Find
+//////////////////////////////////////////////////////////////////////////
+
+  private Void onFind(Str podName, Str verStr, Obj? user)
+  {
+    // if user can't read any pods, immediately bail
+    if (!auth.allowQuery(user, null)) { sendForbiddenErr(user); return }
+
+    // lookup pod that matches name/version
+    ver := Version.fromStr(verStr, false)
+    if (ver == null)  { sendErr(404, "Invalid version: $verStr"); return }
+    spec := repo.find(podName, ver, false)
+    if (spec == null)  { sendErr(404, "Pod not found: $podName-$ver"); return }
+
+    // verify permissions
+    if (!auth.allowQuery(user, spec)) { sendForbiddenErr(user); return }
+
+    // return result
+    res.headers["Content-Type"] = "text/plain"
+    printPodSpecJson(res.out, spec, false)
   }
 
 //////////////////////////////////////////////////////////////////////////

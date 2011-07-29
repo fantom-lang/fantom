@@ -30,6 +30,11 @@ abstract const class Repo
   **   - 'fanr.version': version string of 'fanr' pod being used
   abstract Str:Str ping()
 
+  ** Find an exact match for the given pod name and version.  If
+  ** not found then return null or throw UnknownPodErr based on
+  ** checked flag.
+  abstract PodSpec? find(Str podName, Version version, Bool checked := true)
+
   ** Find pod versions which match query.  The 'numVersions'
   ** specifies how many different versions will be matched for a
   ** single pod.  Multiple pod versions are matched from highest

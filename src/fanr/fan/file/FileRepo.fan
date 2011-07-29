@@ -59,6 +59,15 @@ internal const class FileRepo : Repo
      "fanr.version": FileRepo#.pod.version.toStr]
   }
 
+  override PodSpec? find(Str name, Version ver, Bool checked := true)
+  {
+    msg := FileRepoMsg(FileRepoMsg.find, name, ver)
+    spec := actor.send(msg).get(timeout) as PodSpec
+    if (spec != null) return spec
+    if (checked) throw UnknownPodErr("$name-$ver")
+    return null
+  }
+
   override PodSpec[] query(Str query, Int numVersions := 1)
   {
     msg := FileRepoMsg(FileRepoMsg.query, query, numVersions)

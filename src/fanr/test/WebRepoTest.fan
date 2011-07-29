@@ -70,6 +70,7 @@ class WebRepoTest : Test
   Void test()
   {
     verifyPing
+    verifyFind
     verifyQuery
     verifyRead
     verifyPublish
@@ -96,6 +97,50 @@ class WebRepoTest : Test
     verifyEq(p["fanr.type"], WebRepo#.qname)
     verifyEq(p["extra"], "foo")
     verifyEq(DateTime.fromStr(p["ts"]).date, Date.today)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Find
+//////////////////////////////////////////////////////////////////////////
+
+  Void verifyFind()
+  {
+    // bad credentials
+    verifyBadCredentials |r| { r.find("foo", Version("1.0")) }
+
+    // public not allowed
+    auth.allowPublic.val = false
+    verifyAuthRequired |r| { r.find("foo", Version("1.0")) }
+
+    // public allowed
+    auth.allowPublic.val = true
+    doVerifyFind(pub)
+
+    // login not allowed
+    auth.allowUser.val = auth.allowPublic.val = false
+    verifyForbidden |r| { r.find("foo", Version("1.0")) }
+
+    // login allowed
+    auth.allowUser.val = true
+    doVerifyFind(good)
+  }
+
+  Void doVerifyFind(Repo r)
+  {
+    wisp := Pod.find("wisp")  // allowed
+    util := Pod.find("util")  // never allowed
+
+    pod := r.find("wisp", wisp.version)
+    verifyEq(pod.name, "wisp")
+    verifyEq(pod.version, wisp.version)
+
+    badVer := Version("28.99.1234")
+    verifyEq(r.find("fooBarNotFound", Version("1.0.123"), false), null)
+    verifyEq(r.find("wisp", badVer, false), null)
+    verifyErr(UnknownPodErr#) { r.find("wisp", badVer) }
+    verifyErr(UnknownPodErr#) { r.find("wisp", badVer, true) }
+
+    verifyForbidden |x| { x.find("util", util.version) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -133,7 +178,6 @@ class WebRepoTest : Test
 
     webSpec = pods[0]
   }
-
 
 //////////////////////////////////////////////////////////////////////////
 // Read

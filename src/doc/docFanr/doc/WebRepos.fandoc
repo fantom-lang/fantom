@@ -36,14 +36,15 @@ REST Protocol [#protocol]
 *************************
 The following table specifies the URI namespace of the fanr REST protocol:
 
-  Method   Uri                      Operation
-  ------   --------------------     ---------
-  GET      {base}/ping              ping meta-data
-  GET      {base}/query?{query}     pod query
-  POST     {base}/query             pod query
-  GET      {base}/pod/{name}/{ver}  pod download
-  POST     {base}/publish           publish pod
-  GET      {base}/auth?{username}   authentication info
+  Method   Uri                       Operation
+  ------   --------------------      ---------
+  GET      {base}/ping               ping meta-data
+  GET      {base}/find/{name}/{ver}  find pod
+  GET      {base}/query?{query}      pod query
+  POST     {base}/query              pod query
+  GET      {base}/pod/{name}/{ver}   pod download
+  POST     {base}/publish            publish pod
+  GET      {base}/auth?{username}    authentication info
 
 The protocol defines a set of "Fanr-" headers for authentication
 and specifying options to operations.  The payload of all operations
@@ -54,6 +55,7 @@ The following sections details the various features of the protocol:
   - [Authentication]`#authentication`: authentication and digital
     signatures
   - [Ping]`#ping`: ping a server's meta-data
+  - [Find]`#find`: find exact match for pod name/version
   - [Query]`#query`: query the repository for set of pods
   - [Read]`#read`: download a pod for installation
   - [Publish]`#publish`: upload a pod to add to the repository
@@ -177,8 +179,30 @@ The ping response is a JSON map of string name/value pairs:
 
 Also see `fanr::Repo.ping` and `fanr::WebRepoMod.pingMeta`.
 
+REST Find [#find]
+===================
+The "find" URI is used to perform a an exact find.
+
+Server side permission for the "find" URI is controlled by
+the `fanr::WebRepoAuth.allowQuery` method.
+
+The find response is a JSON map containing the the pod
+metadata as string name/value pairs.  If the pod is not
+found, then 404 is returned.
+
+  // request
+  GET http://localhost/find/xml/1.0.59
+
+  // response
+  {
+    "pod.name":"xml",
+    "pod.version":"1.0.59",
+    "pod.depends":"sys 1.0",
+    "pod.summary":"XML Parser and Document Modeling",
+  }
+
 REST Query [#query]
-=================
+===================
 The "query" URI is used to perform a repo query.  The query string may
 be passed in the URI query parameter using a GET request or may be passed
 as the request body of a POST request.
