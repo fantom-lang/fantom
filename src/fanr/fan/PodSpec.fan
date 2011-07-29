@@ -19,13 +19,17 @@ const class PodSpec
 
   internal static PodSpec load(File file)
   {
-    // open as zip file
-    zip := Zip.open(file)
+    // open as zip file (use read so that we can use any
+    // file with input stream)
+    zip := Zip.read(file.in)
 
     try
     {
       // find meta.props
-      meta := zip.contents[`/meta.props`] ?: throw Err("Missing meta.props")
+      File? meta := null
+      for (File? f; (f = zip.readNext) != null; )
+        if (f.uri == `/meta.props`) { meta = f; break }
+      if (meta == null) throw Err("Missing meta.props")
 
       // parse meta into PodSpec
       return make(meta.readProps, file)
