@@ -210,7 +210,7 @@ abstract const class Env
   ** Resolve the pod file for the given pod name.  If the
   ** name cannot be resovled to a pod, return null.  The
   ** default implementation routes to `findFile` to look
-  ** in "lib/etc" directory.
+  ** in "lib/fan" directory.
   **
   virtual File? findPodFile(Str podName)
 
@@ -219,7 +219,7 @@ abstract const class Env
   ** in this environemnt.  This method is used by `Pod.list` and for
   ** constructing the type database.  Each of these names must be
   ** resolvable by `findPodFile`.  The default implementation routes
-  ** to `findFile` to look in the "lib/etc" directory and assumes a
+  ** to `findFile` to look in the "lib/fan" directory and assumes a
   ** naming convention of "{name}.pod".
   **
   virtual Str[] findAllPodNames()

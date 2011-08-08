@@ -17,7 +17,8 @@ const class PodSpec
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  internal static PodSpec load(File file)
+  ** Construct from a pod zip file
+  static PodSpec load(File file)
   {
     // open as zip file (use read so that we can use any
     // file with input stream)
