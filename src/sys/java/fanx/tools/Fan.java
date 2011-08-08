@@ -27,6 +27,9 @@ public class Fan
     // args
     Sys.bootEnv.setArgs(args);
 
+    // check for pods pending installation
+    checkInstall();
+
     // first try as file name
     File file = new File(target);
     if (file.exists() && target.toLowerCase().endsWith(".fan") && !file.isDirectory())
@@ -39,7 +42,38 @@ public class Fan
     }
   }
 
-  public int executeFile(File file, String[] args)
+  private void checkInstall()
+  {
+    // During bootstrap, check for pods located in "lib/install" and
+    // if found copy them to "lib/fan".  This gives us a simple way to
+    // stage installs which don't effect current program until the next
+    // reboot.  This is not really intended to be a long term solution
+    // because it suffers from limitations: assumes only one Fantom program
+    // being restarted at a time and doesn't work with Env very well
+    try
+    {
+      File installDir = new File(Sys.homeDir, "lib" + File.separator + "install");
+      if (!installDir.exists()) return;
+      File[] files = installDir.listFiles();
+      for (int i=0; files != null && i<files.length; ++i)
+      {
+        File file = files[i];
+        String name = file.getName();
+        if (!name.endsWith(".pod")) continue;
+        System.out.println("INSTALL POD: " + name);
+        FileUtil.copy(file, new File(Sys.podsDir, name));
+        file.delete();
+      }
+      FileUtil.delete(installDir);
+    }
+    catch (Throwable e)
+    {
+      System.out.println("ERROR: checkInstall");
+      e.printStackTrace();
+    }
+  }
+
+  private int executeFile(File file, String[] args)
     throws Exception
   {
     LocalFile f = (LocalFile)(new LocalFile(file).normalize());
@@ -88,7 +122,7 @@ public class Fan
     return callMain(type, main);
   }
 
-  public int executeType(String target, String[] args)
+  private int executeType(String target, String[] args)
     throws Exception
   {
     if (target.indexOf("::") < 0) target += "::Main.main";
