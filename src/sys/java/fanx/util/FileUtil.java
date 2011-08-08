@@ -126,6 +126,25 @@ public class FileUtil
 //////////////////////////////////////////////////////////////////////////
 
   /**
+   * Copy file with overwrite behavior.
+   */
+  public static void copy(File from, File to)
+    throws IOException
+  {
+    InputStream in = new BufferedInputStream(new FileInputStream(from));
+    try
+    {
+      OutputStream out = new BufferedOutputStream(new FileOutputStream(to));
+      try
+      {
+        pipe(in, out);
+      }
+      finally { try { out.close(); } catch (Exception e) {} }
+    }
+    finally { try { in.close(); } catch (Exception e) {} }
+  }
+
+  /**
    * Pipe all the bytes available from the input stream to
    * the output stream.
    */
