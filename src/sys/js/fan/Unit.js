@@ -113,7 +113,7 @@ fan.sys.Unit.define = function(str)
   {
     var msg = str;
     if (e instanceof fan.sys.ParseErr) msg += ": " + e.m_msg;
-    throw fan.sys.ParseErr.make("Unit", msg);
+    throw fan.sys.ParseErr.makeStr("Unit", msg);
   }
 
   // register

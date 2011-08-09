@@ -116,7 +116,7 @@ fan.sys.Err.make = function(err, cause)
     var m = err.message;
     if (m.indexOf(" from null") != -1) return fan.sys.NullErr.make(m, cause);
     if (m.indexOf(" of null")   != -1) return fan.sys.NullErr.make(m, cause);
-    
+
     // TODO
     //  EvalError
     //  RangeError
@@ -212,7 +212,8 @@ fan.sys.ParseErr.prototype.$ctor = function(type, val, more, cause)
   fan.sys.Err.prototype.$ctor.call(this, msg, cause)
 }
 fan.sys.ParseErr.prototype.$typeof = function() { return fan.sys.ParseErr.$type; }
-fan.sys.ParseErr.make = function(type, val, more, cause) { return new fan.sys.ParseErr(type,val,more,cause); }
+fan.sys.ParseErr.make = function(msg, cause) { return new fan.sys.ParseErr(msg, null, null, cause); }
+fan.sys.ParseErr.makeStr = function(type, val, more, cause) { return new fan.sys.ParseErr(type, val, more, cause); }
 
 // ReadonlyErr
 fan.sys.ReadonlyErr = fan.sys.Obj.$extend(fan.sys.Err);

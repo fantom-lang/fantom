@@ -36,7 +36,7 @@ fan.sys.Int.fromStr = function(s, radix, checked)
     throw new Error("Unsupported radix " + radix);
   }
   catch (err) {}
-  if (checked) throw fan.sys.ParseErr.make("Int", s);
+  if (checked) throw fan.sys.ParseErr.makeStr("Int", s);
   return null;
 }
 

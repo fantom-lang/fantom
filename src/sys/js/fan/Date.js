@@ -243,7 +243,7 @@ fan.sys.Date.fromStr = function(s, checked)
   catch (err)
   {
     if (checked != null && !checked) return null;
-    throw fan.sys.ParseErr.make("Date", s);
+    throw fan.sys.ParseErr.makeStr("Date", s);
   }
 }
 

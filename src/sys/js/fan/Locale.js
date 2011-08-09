@@ -38,7 +38,7 @@ fan.sys.Locale.fromStr = function(s, checked)
   }
   catch (err) {}
   if (!checked) return null;
-  throw fan.sys.ParseErr.make("Locale", s);
+  throw fan.sys.ParseErr.makeStr("Locale", s);
 }
 
 fan.sys.Locale.prototype.$ctor = function(str, lang, country)

@@ -33,7 +33,7 @@ fan.sys.Depend.fromStr = function(str, checked)
   catch (err)
   {
     if (!checked) return null;
-    throw fan.sys.ParseErr.make("Depend", str);
+    throw fan.sys.ParseErr.makeStr("Depend", str);
   }
 }
 

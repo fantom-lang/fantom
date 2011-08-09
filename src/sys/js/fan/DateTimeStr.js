@@ -382,7 +382,7 @@ fan.sys.DateTimeStr.prototype.parseDateTime = function(s, defTz, checked)
   }
   catch (err)
   {
-    if (checked) throw fan.sys.ParseErr.make("DateTime", s, fan.sys.Err.make(err));
+    if (checked) throw fan.sys.ParseErr.makeStr("DateTime", s, fan.sys.Err.make(err));
     return null;
   }
 }
@@ -396,7 +396,7 @@ fan.sys.DateTimeStr.prototype.parseDate = function(s, checked)
   }
   catch (err)
   {
-    if (checked) throw fan.sys.ParseErr.make("Date", s, fan.sys.Err.make(err));
+    if (checked) throw fan.sys.ParseErr.makeStr("Date", s, fan.sys.Err.make(err));
     return null;
   }
 }
@@ -410,7 +410,7 @@ fan.sys.DateTimeStr.prototype.parseTime = function(s, checked)
   }
   catch (err)
   {
-    if (checked) throw fan.sys.ParseErr.make("Time", s, fan.sys.Err.make(err));
+    if (checked) throw fan.sys.ParseErr.makeStr("Time", s, fan.sys.Err.make(err));
     return null;
   }
 }

@@ -52,7 +52,7 @@ fan.sys.Range.fromStr = function(s, checked)
   }
   catch (err) {}
   if (!checked) return null;
-  throw fan.sys.ParseErr.make("Range", s);
+  throw fan.sys.ParseErr.makeStr("Range", s);
 }
 
 //////////////////////////////////////////////////////////////////////////

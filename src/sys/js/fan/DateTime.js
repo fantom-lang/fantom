@@ -365,7 +365,7 @@ fan.sys.DateTime.fromStr = function(s, checked, iso)
   {
     if (!checked) return null;
     if (err instanceof fan.sys.ParseErr) throw err;
-    throw fan.sys.ParseErr.make("DateTime", s);
+    throw fan.sys.ParseErr.makeStr("DateTime", s);
   }
 }
 

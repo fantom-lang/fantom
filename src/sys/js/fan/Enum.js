@@ -44,7 +44,7 @@ fan.sys.Enum.doFromStr = function(t, name, checked)
     catch (err) {}
   }
   if (!checked) return null;
-  throw fan.sys.ParseErr.make(t.qname(), name);
+  throw fan.sys.ParseErr.makeStr(t.qname(), name);
 }
 
 //////////////////////////////////////////////////////////////////////////
