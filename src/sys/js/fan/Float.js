@@ -144,7 +144,7 @@ fan.sys.Float.fromStr = function(s, checked)
   if (isNaN(s))
   {
     if (checked != null && !checked) return null;
-    throw fan.sys.ParseErr.make("Float", s);
+    throw fan.sys.ParseErr.makeStr("Float", s);
   }
   return fan.sys.Float.make(parseFloat(s));
 }

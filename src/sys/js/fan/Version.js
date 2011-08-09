@@ -49,7 +49,7 @@ fan.sys.Version.fromStr = function(s, checked)
   if (!valid || segments.size() == 0)
   {
     if (checked)
-      throw fan.sys.ParseErr.make("Version", s);
+      throw fan.sys.ParseErr.makeStr("Version", s);
     else
       return null;
   }

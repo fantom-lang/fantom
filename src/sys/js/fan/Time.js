@@ -84,7 +84,7 @@ fan.sys.Time.fromStr = function(s, checked)
   catch (err)
   {
     if (!checked) return null;
-    throw fan.sys.ParseErr.make("Time", s);
+    throw fan.sys.ParseErr.makeStr("Time", s);
   }
 }
 

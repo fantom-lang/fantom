@@ -46,7 +46,7 @@ fan.sys.Bool.fromStr = function(s, checked)
   if (s == "true") return true;
   if (s == "false") return false;
   if (!checked) return null;
-  throw fan.sys.ParseErr.make("Bool", s);
+  throw fan.sys.ParseErr.makeStr("Bool", s);
 }
 
 fan.sys.Bool.toStr  = function(self) { return self ? "true" : "false"; }

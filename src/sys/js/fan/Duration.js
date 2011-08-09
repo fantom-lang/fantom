@@ -74,7 +74,7 @@ fan.sys.Duration.fromStr = function(s, checked)
   catch (err)
   {
     if (!checked) return null;
-    throw fan.sys.ParseErr.make("Duration", s);
+    throw fan.sys.ParseErr.makeStr("Duration", s);
   }
 }
 
@@ -372,7 +372,7 @@ fan.sys.Duration.fromIso = function(s, checked)
   catch (err)
   {
     if (!checked) return null;
-    throw fan.sys.ParseErr.make("ISO 8601 Duration",  s);
+    throw fan.sys.ParseErr.makeStr("ISO 8601 Duration",  s);
   }
 }
 

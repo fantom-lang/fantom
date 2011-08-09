@@ -27,7 +27,7 @@ fan.sys.Uri.fromStr = function(s, checked)
   catch (err)
   {
     if (!checked) return null;
-    throw fan.sys.ParseErr.make("Uri",  s);
+    throw fan.sys.ParseErr.makeStr("Uri",  s);
   }
 }
 
@@ -41,7 +41,7 @@ fan.sys.Uri.decode = function(s, checked)
   catch (err)
   {
     if (!checked) return null;
-    throw fan.sys.ParseErr.make("Uri", s);
+    throw fan.sys.ParseErr.makeStr("Uri", s);
   }
 }
 

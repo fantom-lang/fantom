@@ -62,7 +62,7 @@ fan.sys.MimeType.fromStr = function(s, checked)
   catch (err)
   {
     if (!checked) return null;
-    throw fan.sys.ParseErr.make("MimeType",  s);
+    throw fan.sys.ParseErr.makeStr("MimeType",  s);
   }
 }
 
@@ -77,7 +77,7 @@ fan.sys.MimeType.parseParams = function(s, checked)
   {
     if (!checked) return null;
     if (err instanceof fan.sys.ParseErr) throw err;
-    throw fan.sys.ParseErr.make("MimeType params",  s);
+    throw fan.sys.ParseErr.makeStr("MimeType params",  s);
   }
 }
 
@@ -96,7 +96,7 @@ fan.sys.MimeType.doParseParams = function(s, offset)
     var c = s.charAt(i);
 
     if (c == '(' && !inQuotes)
-      throw fan.sys.ParseErr.make("MimeType", s, "comments not supported");
+      throw fan.sys.ParseErr.makeStr("MimeType", s, "comments not supported");
 
     if (c == '=' && !inQuotes)
     {
