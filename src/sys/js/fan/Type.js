@@ -38,7 +38,7 @@ fan.sys.Type.prototype.$ctor = function(qname, base, mixins, facets, flags)
   this.m_pod      = fan.sys.Pod.find(s[0]);
   this.m_name     = s[1];
   this.m_base     = base == null ? null : fan.sys.Type.find(base);
-  this.m_slots    = [];
+  this.m_slots    = {};
   this.m_myFacets = new fan.sys.Facets(facets);
   this.m_flags    = flags;
   this.m_$qname   = 'fan.' + this.m_pod + '.' + this.m_name;
