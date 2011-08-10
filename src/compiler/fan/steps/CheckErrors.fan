@@ -588,6 +588,9 @@ class CheckErrors : CompilerStep
         return
       }
 
+      // check if facet field is deprecated
+      checkDeprecated(field, val.loc)
+
       // check field type
       if (!val.ctype.fits(field.fieldType.inferredAs))
         err("Invalid type for facet field '$name': expected '$field.fieldType' not '$val.ctype'", val.loc)
