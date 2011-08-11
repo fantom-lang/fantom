@@ -127,8 +127,10 @@ class Build : BuildGroup
   @Target { help = "Delete every intermediate we can think of" }
   Void superclean()
   {
-    // fanLib nuke it all
+    // lib dirs nuke it all
     Delete.make(this, devHomeDir + `lib/fan/`).run
+    Delete.make(this, devHomeDir + `lib/patches/`).run
+    Delete.make(this, devHomeDir + `lib/install/`).run
 
     // doc nuke it all
     Delete.make(this, devHomeDir + `doc/`).run
