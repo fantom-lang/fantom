@@ -201,6 +201,14 @@ abstract class Expr : Node
     // the buffer by the time the tokens are passed to the parser
     try
     {
+      // literals
+      if (this is LiteralExpr)
+      {
+        s := serialize
+        if (s.size > 40) s = "..."
+        return s
+      }
+
       // if we access an internal slot then don't expose in public docs
       CSlot? slot := null
       if (this is CallExpr) slot = ((CallExpr)this).method

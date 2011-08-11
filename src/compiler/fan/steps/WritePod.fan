@@ -136,7 +136,8 @@ class WritePod : CompilerStep
     writePodDoc(zip)
     compiler.types.each |TypeDef t|
     {
-      if (!t.isSynthetic) writeTypeDoc(zip, t)
+      if (!t.isSynthetic) writeTypeDoc(zip, t)  // old TODO
+//      if (!t.isSynthetic) writeApiDoc(zip, t) // new
     }
   }
 
@@ -152,11 +153,29 @@ class WritePod : CompilerStep
   }
 
   **
+  ** Write the API doc text file used by compilerDoc
+  **
+  // TODO
+  private Void writeApiDoc(Zip zip, TypeDef t)
+  {
+    try
+    {
+      out := zip.writeNext("doc2/${t.name}.apidoc".toUri)
+      ApiDocWriter(out).writeType(t).close
+    }
+    catch (Err e)
+    {
+      throw errReport(CompilerErr("Cannot write fandoc '$t.name'", t.loc, e))
+    }
+  }
+
+  **
   ** FDoc is used to read/write a fandoc text file.  The fandoc file
   ** format is an extremely simple plan text format with left justified
   ** type/slot qnames, followed by the fandoc content indented two spaces.
   ** Addiontal type/slot meta-data is prefixed as "@name=value" lines.
   **
+  // TODO (nuke docMeta when you get rid of this crap)
   private Void writeTypeDoc(Zip zip, TypeDef t)
   {
     try
