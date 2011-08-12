@@ -192,6 +192,8 @@ abstract class Expr : Node
 
   **
   ** Get this expression as a string suitable for documentation.
+  ** This string must not contain a newline or it will break the
+  ** DocApiParser.
   **
   Str? toDocStr()
   {
