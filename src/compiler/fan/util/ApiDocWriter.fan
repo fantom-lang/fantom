@@ -70,12 +70,12 @@ class ApiDocWriter
 
   private Void writeMethodSig(MethodDef m)
   {
-    writeTypeRef(m.returnType).w(" ").w(m.name).w("(")
+    writeTypeRef(m.returnType).w(" ").w(m.name).w("(\n")
     m.paramDefs.each |param, i|
     {
-      if (i > 0) w(",")
       writeTypeRef(param.paramType).w(" ").w(param.name)
       if (param.def != null) w(":=").writeExpr(param.def)
+      w("\n")
     }
     w(")")
   }
@@ -91,14 +91,14 @@ class ApiDocWriter
     w("@").writeTypeRef(facet.type)
     if (!facet.names.isEmpty)
     {
-      w(" { ")
+      w(" {\n")
       facet.names.each |name, i|
       {
-        if (i > 0) w("; ")
         w(name).w("=")
         writeExpr(facet.vals[i])
+        w("\n")
       }
-      w(" }")
+      w("}")
     }
     w("\n")
   }
@@ -110,6 +110,8 @@ class ApiDocWriter
 
   private This writeExpr(Expr expr)
   {
+    // this string must never have a newline since that
+    // is how we determine end of expressions in parser
     w(expr.toDocStr ?: "...")
   }
 
