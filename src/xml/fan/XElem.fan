@@ -290,6 +290,7 @@ class XElem : XNode
   This copy()
   {
     copy := XElem(name, ns)
+    copy.line = line
     if (!attrList.isEmpty) copy.attrList = attrList.dup
     if (!childList.isEmpty) copy.childList = childList.dup
     return copy
