@@ -262,7 +262,7 @@ internal class ApiDocParser
     if (docLine != null)
       this.lastDocLoc = DocLoc(this.loc.file, docLine)
     else
-      this.lastDocLoc = DocLoc(this.loc.file, null)
+      this.lastDocLoc = DocLoc(this.loc.file, 1)
 
     // if file was specified then new fresh location
     if (file != null) return DocLoc("${podName}::${file}", line)
@@ -295,9 +295,9 @@ internal class ApiDocParser
   private Str cur := ""
   private DocTypeRef? ref
   private Int flags
-  private DocLoc loc := DocLoc("Unknown")
+  private DocLoc loc := DocLoc("Unknown", 0)
   private DocFandoc? doc
-  private DocLoc lastDocLoc := DocLoc("Unknown")
+  private DocLoc lastDocLoc := DocLoc("Unknown", 1)
   private DocFacet[]? facets
   private DocTypeRef? base
   private DocTypeRef[] mixins := [,]

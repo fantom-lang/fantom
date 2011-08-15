@@ -12,7 +12,7 @@
 const class DocLoc
 {
   ** Construct with file and optional line number
-  new make(Str file, Int? line := null)
+  new make(Str file, Int line)
   {
     this.file = file
     this.line = line
@@ -21,13 +21,13 @@ const class DocLoc
   ** Filename location
   const Str file
 
-  ** Line number of null if unknown
-  const Int? line
+  ** Line number or zero if unknown
+  const Int line
 
   ** Return string representation
   override Str toStr()
   {
-    if (line == null) return file
+    if (line <= 0) return file
     return "$file [Line $line]"
   }
 }
@@ -38,7 +38,11 @@ const class DocLoc
 const class DocFandoc
 {
   ** Construct from `loc` and `text`
-  new make(DocLoc loc, Str text) { this.loc = loc; this.text = text }
+  new make(DocLoc loc, Str text)
+  {
+    this.loc = loc
+    this.text = text
+  }
 
   ** Location of fandoc in source file
   const DocLoc loc
