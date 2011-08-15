@@ -12,8 +12,9 @@
 abstract const class DocSlot
 {
   ** Constructor
-  internal new make(DocTypeRef parent, Str name, Int flags, Str doc, DocFacet[] facets)
+  internal new make(DocLoc loc, DocTypeRef parent, Str name, Int flags, Str doc, DocFacet[] facets)
   {
+    this.loc    = loc
     this.parent = parent
     this.name   = name
     this.qname  = parent.qname + "." + name
@@ -21,6 +22,9 @@ abstract const class DocSlot
     this.doc    = doc
     this.facets = facets
   }
+
+  ** Source code location of this slot
+  const DocLoc loc
 
   ** Type which defines the slot
   const DocTypeRef parent
@@ -61,9 +65,9 @@ abstract const class DocSlot
 const class DocField : DocSlot
 {
   ** Constructor
-  internal new make(DocTypeRef parent, Str name, Int flags, Str doc, DocFacet[] facets,
+  internal new make(DocLoc loc, DocTypeRef parent, Str name, Int flags, Str doc, DocFacet[] facets,
                     DocTypeRef type, Str? init)
-    : super(parent, name, flags, doc, facets)
+    : super(loc, parent, name, flags, doc, facets)
   {
     this.type = type
     this.init = init
@@ -93,9 +97,9 @@ const class DocField : DocSlot
 const class DocMethod : DocSlot
 {
   ** Constructor
-  internal new make(DocTypeRef parent, Str name, Int flags, Str doc, DocFacet[] facets,
+  internal new make(DocLoc loc, DocTypeRef parent, Str name, Int flags, Str doc, DocFacet[] facets,
                     DocTypeRef returns, DocParam[] params)
-    : super(parent, name, flags, doc, facets)
+    : super(loc, parent, name, flags, doc, facets)
   {
     this.returns = returns
     this.params  = params

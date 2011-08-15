@@ -27,6 +27,9 @@ const class DocType
   ** Qualified name formatted as "pod::name".
   Str qname() { ref.qname }
 
+  ** Source code location of this type definition
+  const DocLoc loc
+
   ** Flags mask - see `DocFlags`
   const Int flags
 
