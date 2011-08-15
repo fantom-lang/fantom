@@ -33,7 +33,7 @@ class DocEnv
   ** `IndexRenderer` to use for rendering type various index pages (top, pod, etc)
   Type indexRenderer := IndexRenderer#
 
-  ** `TypeRender` to use for rendering type API HTML pages
+  ** `TypeRenderer` to use for rendering type API HTML pages
   Type typeRenderer := TypeRenderer#
 
   ** `ChapterRenderer` to use for rendering type API HTML pages
@@ -109,7 +109,12 @@ class DocEnv
   once DocPod[] pods()
   {
     acc := DocPod[,]
-    loader.findAllPodNames.each |name| { acc.add(pod(name)) }
+    loader.findAllPodNames.each |name|
+    {
+      pod := pod(name)
+      if (pod.meta["pod.docApi"] != "false")
+        acc.add(pod)
+    }
     acc.sort |a, b| { a.name <=> b.name }
     return acc.ro
   }

@@ -260,7 +260,7 @@ internal class ApiDocParser
 
     // if docLine was specified, save it away for when we get to doc
     if (docLine != null)
-      this.lastDocLoc = DocLoc(this.loc.file, docLine)
+      this.lastDocLoc = DocLoc(file ?: this.loc.file, docLine)
     else
       this.lastDocLoc = DocLoc(this.loc.file, 1)
 

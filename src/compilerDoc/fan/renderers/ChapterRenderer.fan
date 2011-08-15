@@ -28,7 +28,7 @@ class ChapterRenderer : DocRenderer
   ** Chapter to renderer
   const DocChapter chapter
 
-  ** Render the HTML for the DocType referened by `type` field.
+  ** Render the HTML for the DocType referened by `chapter` field.
   virtual Void writeChapter()
   {
     out.p.a(`../index.html`).w("Home").aEnd
