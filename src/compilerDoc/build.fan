@@ -26,6 +26,7 @@ class Build : BuildPod
                   "vcs.name":     "Mercurial",
                   "vcs.uri":      "http://hg.fantom.org/fan-1.0/"]
     depends    = ["sys 1.0",
+                  "concurrent 1.0",
                   "fandoc 1.0",
                   "fanr 1.0",
                   "util 1.0",

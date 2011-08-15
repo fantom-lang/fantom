@@ -38,6 +38,9 @@ abstract const class DocSlot
   ** Flags mask - see `DocFlags`
   const Int flags
 
+  ** Display name is Type.name
+  Str dis() { parent.name + "." + name }
+
   ** Fandoc documentation string
   const DocFandoc doc
 
