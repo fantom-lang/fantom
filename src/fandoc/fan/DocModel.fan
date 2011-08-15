@@ -40,7 +40,6 @@ enum class DocNodeId
 **
 abstract class DocNode
 {
-
   **
   ** Get node id for node type.
   **
@@ -400,6 +399,7 @@ class Link : DocElem
   override Bool isInline() { return true }
   Bool isCode := false  // when uri resolves to a type or slot
   Str uri
+  Int line
 }
 
 **************************************************************************

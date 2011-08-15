@@ -162,6 +162,7 @@ internal class InlineParser
   private DocNode link()
   {
     link := Link(uri)
+    link.line = this.line
     link.children.add(DocText(link.uri))
     return link
   }
