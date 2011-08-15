@@ -41,6 +41,7 @@
 ** The following attributes are supported:
 **   file: type source file name (slots implied by type's file)
 **   line: integer line number of type/slot definition
+**   docLine: first non-empty starting line of fandoc in source file
 **
 internal class ApiDocParser
 {
@@ -243,17 +244,25 @@ internal class ApiDocParser
   private DocLoc parseAttrs()
   {
     // the only attributes we care about are location (file, line)
-    Str? file := null
-    Int? line := null
+    Str? file    := null
+    Int? line    := null
+    Int? docLine := null
     while (cur.startsWith("%"))
     {
       eq   := cur.index("=")
       name := cur[1..<eq]
       val  := cur[eq+1..-1]
       if (name == "line") line = val.toInt
+      else if (name == "docLine") docLine = val.toInt
       else if (name == "file") file = val
       consumeLine
     }
+
+    // if docLine was specified, save it away for when we get to doc
+    if (docLine != null)
+      this.lastDocLoc = DocLoc(this.loc.file, docLine)
+    else
+      this.lastDocLoc = DocLoc(this.loc.file, null)
 
     // if file was specified then new fresh location
     if (file != null) return DocLoc("${podName}::${file}", line)
@@ -262,9 +271,9 @@ internal class ApiDocParser
     return DocLoc(this.loc.file, line)
   }
 
-  private Str parseDoc()
+  private DocFandoc parseDoc()
   {
-    if (cur.isEmpty) { consumeLine; return "" }
+    if (cur.isEmpty) { consumeLine; return DocFandoc(lastDocLoc, "") }
     s := StrBuf(256)
     while (!cur.isEmpty)
     {
@@ -273,7 +282,7 @@ internal class ApiDocParser
       consumeLine
     }
     consumeLine
-    return s.toStr
+    return DocFandoc(lastDocLoc, s.toStr)
   }
 
   private Void consumeLine()
@@ -287,7 +296,8 @@ internal class ApiDocParser
   private DocTypeRef? ref
   private Int flags
   private DocLoc loc := DocLoc("Unknown")
-  private Str doc := ""
+  private DocFandoc? doc
+  private DocLoc lastDocLoc := DocLoc("Unknown")
   private DocFacet[]? facets
   private DocTypeRef? base
   private DocTypeRef[] mixins := [,]

@@ -194,6 +194,7 @@ class WritePod : CompilerStep
     }
   }
 
+  // TODO: nuke when ready
   private static Void writeDoc(OutStream out, Str key, DefNode node)
   {
     doc := node.doc
@@ -210,7 +211,7 @@ class WritePod : CompilerStep
     }
     if (doc != null)
     {
-      doc.each |Str line| { out.print("  ").printLine(line) }
+      doc.lines.each |Str line| { out.print("  ").printLine(line) }
     }
     out.printLine
   }

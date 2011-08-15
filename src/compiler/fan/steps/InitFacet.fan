@@ -78,7 +78,7 @@ class InitFacet : CompilerStep
 
     // const static CurType defVal := make()
     f := FieldDef(loc, curType)
-    f.doc       = ["Singleton for $curType.name facet."]
+    f.doc       = DocDef(loc, ["Singleton for $curType.name facet."])
     f.flags     = FConst.Public + FConst.Static + FConst.Const + FConst.Storage
     f.name      = "defVal"
     f.fieldType = curType

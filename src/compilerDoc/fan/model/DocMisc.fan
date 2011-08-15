@@ -31,3 +31,19 @@ const class DocLoc
     return "$file [Line $line]"
   }
 }
+
+**
+** Fandoc string for a type or slot
+**
+const class DocFandoc
+{
+  ** Construct from `loc` and `text`
+  new make(DocLoc loc, Str text) { this.loc = loc; this.text = text }
+
+  ** Location of fandoc in source file
+  const DocLoc loc
+
+  ** Plain text fandoc string
+  const Str text
+}
+

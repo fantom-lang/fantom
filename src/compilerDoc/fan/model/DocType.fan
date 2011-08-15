@@ -34,7 +34,7 @@ const class DocType
   const Int flags
 
   ** Fandoc documentation string
-  const Str doc
+  const DocFandoc doc
 
   ** Facets defined on this type
   const DocFacet[] facets
@@ -49,7 +49,7 @@ const class DocType
   const DocSlot[] slots
 
   ** Summary is the first sentence of `doc`
-  Str summary() { DocUtil.firstSentence(doc) }
+  Str summary() { DocUtil.firstSentence(doc.text) }
 
   internal Void dump(OutStream out)
   {
@@ -58,7 +58,7 @@ const class DocType
     out.printLine("pod    = $pod")
     out.printLine("name   = $name")
     out.printLine("flags  = " + DocFlags.toNames(flags))
-    out.printLine("doc    = $doc.toCode")
+    out.printLine("doc    = $doc.text.toCode")
     out.printLine("base   = $base")
     out.printLine("mixins = $mixins")
     facets.each |facet| { out.printLine(facet) }

@@ -19,7 +19,7 @@ class EnumDef : Node
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Loc loc, Str[]? doc, Str name, Int ordinal)
+  new make(Loc loc, DocDef? doc, Str name, Int ordinal)
     : super(loc)
   {
     this.doc      = doc
@@ -49,7 +49,7 @@ class EnumDef : Node
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Str[]? doc
+  DocDef? doc
   Int ordinal
   Str name
   Expr[] ctorArgs

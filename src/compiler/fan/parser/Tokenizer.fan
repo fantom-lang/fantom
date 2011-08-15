@@ -80,8 +80,8 @@ class Tokenizer : CompilerSupport
     while (true)
     {
       // save current line
-      line := this.line
-      col  := this.col
+      curLine = this.line
+      col := this.col
 
       // find next token
       TokenVal? tok := find
@@ -89,7 +89,7 @@ class Tokenizer : CompilerSupport
 
       // fill in token's location
       tok.file = filename
-      tok.line = line
+      tok.line = curLine
       tok.col  = col
       tok.newline = lastLine < line
       tok.whitespace = whitespace
@@ -741,9 +741,12 @@ class Tokenizer : CompilerSupport
         continue
       }
 
-      // add line and reset buffer (but don't add leading empty lines)
+      // add line and reset buffer
+      // if leading empty lines then skip them and update this.curLine to
+      // ensure location starts at first non-empty line
       line := s.toStr
       if (!lines.isEmpty || !line.trim.isEmpty) lines.add(line)
+      else this.curLine++
       s.clear
 
       // we at a newline, check for leading whitespace(0+)/star(2+)/whitespace(1)
@@ -972,6 +975,7 @@ class Tokenizer : CompilerSupport
   private Str filename      // source file name
   private Int line := 1     // pos line number
   private Int col := 1      // pos column number
+  private Int curLine       // line number of current token
   private Int cur           // current char
   private Int peek          // next char
   private Int lastLine      // line number of last token returned from next()
