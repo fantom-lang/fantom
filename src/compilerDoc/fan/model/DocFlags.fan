@@ -32,16 +32,77 @@ final const class DocFlags
   const static Int Synthetic  := 0x00020000
   const static Int Virtual    := 0x00040000
 
+  static Bool isAbstract (Int flags) { flags.and(DocFlags.Abstract)  != 0 }
+  static Bool isConst    (Int flags) { flags.and(DocFlags.Const)     != 0 }
+  static Bool isCtor     (Int flags) { flags.and(DocFlags.Ctor)      != 0 }
+  static Bool isEnum     (Int flags) { flags.and(DocFlags.Enum)      != 0 }
+  static Bool isFacet    (Int flags) { flags.and(DocFlags.Facet)     != 0 }
+  static Bool isFinal    (Int flags) { flags.and(DocFlags.Final)     != 0 }
+  static Bool isGetter   (Int flags) { flags.and(DocFlags.Getter)    != 0 }
+  static Bool isInternal (Int flags) { flags.and(DocFlags.Internal)  != 0 }
+  static Bool isMixin    (Int flags) { flags.and(DocFlags.Mixin)     != 0 }
+  static Bool isNative   (Int flags) { flags.and(DocFlags.Native)    != 0 }
+  static Bool isOverride (Int flags) { flags.and(DocFlags.Override)  != 0 }
+  static Bool isPrivate  (Int flags) { flags.and(DocFlags.Private)   != 0 }
+  static Bool isProtected(Int flags) { flags.and(DocFlags.Protected) != 0 }
+  static Bool isPublic   (Int flags) { flags.and(DocFlags.Public)    != 0 }
+  static Bool isSetter   (Int flags) { flags.and(DocFlags.Setter)    != 0 }
+  static Bool isStatic   (Int flags) { flags.and(DocFlags.Static)    != 0 }
+  static Bool isStorage  (Int flags) { flags.and(DocFlags.Storage)   != 0 }
+  static Bool isSynthetic(Int flags) { flags.and(DocFlags.Synthetic) != 0 }
+  static Bool isVirtual  (Int flags) { flags.and(DocFlags.Virtual)   != 0 }
+
   static Int fromName(Str name)
   {
     fromNameMap[name] ?: throw Err("Invalid flag '$name'")
+  }
+
+  ** Type flags to display including final 'class' or 'mixin'
+  static Str toTypeDis(Int f)
+  {
+    s := StrBuf()
+
+    if (isInternal(f)) s.join("internal")
+
+    if (isAbstract(f) && !isMixin(f)) s.join("abstract")
+
+    if (isEnum(f))       s.join("enum")
+    else if (isFacet(f)) s.join("facet")
+    else if (isConst(f)) s.join("const")
+
+    if (isMixin(f)) s.join("mixin")
+    else s.join("class")
+
+    return s.toStr()
+  }
+
+  static Str toSlotDis(Int f)
+  {
+    s := StrBuf()
+
+    if (isInternal(f)) s.join("internal")
+    else if (isProtected(f)) s.join("protected")
+    else if (isPrivate(f)) s.join("private")
+
+    if (isAbstract(f)) s.join("abstract")
+    else if (isVirtual(f)) s.join("virtual")
+
+    if (isCtor(f))     s.join("new")
+    if (isConst(f))    s.join("const")
+    if (isStatic(f))   s.join("static")
+    if (isOverride(f)) s.join("override")
+    if (isFinal(f))    s.join("final")
+
+    return s.toStr()
   }
 
   static Str toNames(Int flags)
   {
     s := StrBuf()
     for (b:=1; b<=Virtual; b=b.shiftl(1))
+    {
       if (flags.and(b) != 0) s.join(toNameMap[b])
+    }
     return s.toStr
   }
 

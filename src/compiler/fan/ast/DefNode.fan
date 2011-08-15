@@ -74,12 +74,18 @@ abstract class DefNode : Node
   **   - public or protected
   **   - not synthentic
   **   - not annotated with @NoDoc
+  **   - not a subclass of sys::Test
   **
   internal Bool isDocumented()
   {
     if (flags.and(FConst.Synthetic) != 0) return false
     if (flags.and(FConst.Public) == 0 && flags.and(FConst.Protected) == 0) return false
     if (facet("sys::NoDoc") != null) return false
+    if (this is TypeDef)
+    {
+      t := (TypeDef)this
+      if (t.base != null && t.base.fits(ns.testType)) return false
+    }
     return true
   }
 

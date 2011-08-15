@@ -62,6 +62,9 @@ internal class ApiDocParser
       // zero or more slots
       while (parseSlot) {}
 
+      // sort slots by name
+      slots.sort |a, b| { a.name <=> b.name }
+
       // construct DocType from my own fields
       return DocType
       {

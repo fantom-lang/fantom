@@ -73,6 +73,7 @@ abstract class CNamespace
     fieldType    = sysType("Field")
     methodType   = sysType("Method")
     rangeType    = sysType("Range")
+    testType     = sysType("Test")
     uriType      = sysType("Uri")
     voidType     = sysType("Void")
     fieldNotSetErrType = sysType("FieldNotSetErr")
@@ -319,6 +320,7 @@ abstract class CNamespace
   CType? fieldType            { private set }
   CType? methodType           { private set }
   CType? rangeType            { private set }
+  CType? testType             { private set }
   CType? uriType              { private set }
   CType? voidType             { private set }
   CType? fieldNotSetErrType   { private set }
