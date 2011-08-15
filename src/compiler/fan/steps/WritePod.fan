@@ -137,7 +137,10 @@ class WritePod : CompilerStep
     compiler.types.each |TypeDef t|
     {
       if (!t.isSynthetic) writeTypeDoc(zip, t)  // old TODO
-      if (!t.isSynthetic) writeApiDoc(zip, t)   // new
+    }
+    compiler.types.each |TypeDef t|
+    {
+      if (t.isDocumented) writeApiDoc(zip, t)
     }
   }
 

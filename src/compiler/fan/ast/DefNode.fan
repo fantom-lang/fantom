@@ -63,9 +63,24 @@ abstract class DefNode : Node
     facets.each |FacetDef f| { f.print(out) }
   }
 
+  // TODO
   virtual [Str:Str]? docMeta()
   {
     return null
+  }
+
+  **
+  ** Return if this type or slot should be documented:
+  **   - public or protected
+  **   - not synthentic
+  **   - not annotated with @NoDoc
+  **
+  internal Bool isDocumented()
+  {
+    if (flags.and(FConst.Synthetic) != 0) return false
+    if (flags.and(FConst.Public) == 0 && flags.and(FConst.Protected) == 0) return false
+    if (facet("sys::NoDoc") != null) return false
+    return true
   }
 
 //////////////////////////////////////////////////////////////////////////
