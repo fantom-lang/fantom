@@ -45,7 +45,7 @@ class ApiDocWriter
     // slots
     t.slotDefs.each |slot|
     {
-      if (!slot.isSynthetic) writeSlot(slot)
+      if (slot.isDocumented) writeSlot(slot)
     }
 
     return this
