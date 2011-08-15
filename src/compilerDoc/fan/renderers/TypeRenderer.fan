@@ -37,7 +37,7 @@ class TypeRenderer : DocRenderer
   virtual Void writeTypeOverview()
   {
     out.h1.w("type $type.qname").h1End
-    writeFandoc(type.doc)
+    writeFandoc(type, type.doc)
   }
 
   ** Render the HTML for all the slot definitions
@@ -51,7 +51,7 @@ class TypeRenderer : DocRenderer
   virtual Void writeSlot(DocSlot slot)
   {
     out.h3.w(slot.name).h3End
-    writeFandoc(slot.doc)
+    writeFandoc(type, slot.doc)
   }
 
 

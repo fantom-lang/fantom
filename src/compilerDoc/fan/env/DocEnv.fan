@@ -30,14 +30,33 @@ class DocEnv
   ** Theme instance to use for HTML chrome and navigation
   DocTheme theme := DocTheme()
 
-  ** Type to use for rendering type various index pages (top, pod, etc)
+  ** `IndexRenderer` to use for rendering type various index pages (top, pod, etc)
   Type indexRenderer := IndexRenderer#
 
-  ** Type to use for rendering type API HTML pages
+  ** `TypeRender` to use for rendering type API HTML pages
   Type typeRenderer := TypeRenderer#
+
+  ** `DocLinker` to use for resolving fandoc hyperlinks.  See `makeLinker`.
+  Type linker := DocLinker#
 
   ** Plug-in for error reporting
   DocErrHandler errHandler := DocErrHandler()
+
+//////////////////////////////////////////////////////////////////////////
+// Linking
+//////////////////////////////////////////////////////////////////////////
+
+  ** Constructor a linker to use for given base object,
+  ** link str and location.
+  DocLinker makeLinker(Obj base, Str link, DocLoc loc)
+  {
+    func := Field.makeSetFunc([
+      DocLinker#env:  this,
+      DocLinker#base: base,
+      DocLinker#link: link,
+      DocLinker#loc:  loc])
+    return linker.make([func])
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Error Handling
