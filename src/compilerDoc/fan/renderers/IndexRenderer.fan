@@ -39,9 +39,15 @@ class IndexRenderer : DocRenderer
     writeEnd
   }
 
-  ** Render the HTML for the type overview (base, mixins, type doc)
-  virtual Void writePodIndex(DocPod pod)
+  ** Render the HTML pod's index of types
+  virtual Void writeTypeIndex(DocPod pod)
   {
+    out.p.a(`../index.html`).w("Home").aEnd
+      .w(" > ").a(`index.html`).w(pod.name).aEnd
+    if (pod.podDoc != null)
+      out.w(" | ").a(`pod-doc.html`).w("PodDoc").aEnd
+    out.pEnd.hr
+
     writeStart(pod.name)
 
     out.h2.w("pod").h2End
@@ -54,6 +60,30 @@ class IndexRenderer : DocRenderer
       out.tr
         .td.a(`${type.name}.html`).w(type.name).aEnd.tdEnd
         .td.w(type.summary).tdEnd
+        .trEnd
+    }
+    out.tableEnd
+
+    writeEnd
+  }
+
+  ** Render the HTML pod's index of chapters
+  virtual Void writeChapterIndex(DocPod pod)
+  {
+    out.p.a(`../index.html`).w("Home").aEnd.pEnd.hr
+
+    writeStart(pod.name)
+
+    out.h2.w("pod").h2End
+    out.h1.w(pod.name).h1End
+    out.p.w(pod.summary).pEnd
+
+    out.table
+    pod.chapters.each |chapters|
+    {
+      out.tr
+        .td.a(`${chapters.name}.html`).w(chapters.name).aEnd.tdEnd
+        //.td.w(type.summary).tdEnd
         .trEnd
     }
     out.tableEnd

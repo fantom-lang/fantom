@@ -41,28 +41,32 @@ class Main : AbstractMain
     // render topindex if requested
     if (all || topindex)
     {
-      out := WebOutStream(outDir.plus(`index.html`).out)
-      IndexRenderer r := env.indexRenderer.make([env, out])
-      r.writeTopIndex(env.pods)
-      out.close
+      env.makeIndexRenderer(outDir.plus(`index.html`).out).writeTopIndex(env.pods)
     }
 
     // render each pod
     docPods.each |pod|
     {
       // pod index
-      out := WebOutStream(outDir.plus(`${pod.name}/index.html`).out)
-      IndexRenderer ir := env.indexRenderer.make([env, out])
-      ir.writePodIndex(pod)
-      out.close
+      if (pod.chapters.isEmpty)
+        env.makeIndexRenderer(outDir.plus(`${pod.name}/index.html`).out).writeTypeIndex(pod)
+      else
+        env.makeIndexRenderer(outDir.plus(`${pod.name}/index.html`).out).writeChapterIndex(pod)
+
+      // pod-doc
+      if (pod.podDoc != null)
+        env.makeChapterRenderer(outDir.plus(`${pod.name}/pod-doc.html`).out, pod.podDoc).writeChapter
 
       // each type
       pod.types.each |type|
       {
-        out = WebOutStream(outDir.plus(`${pod.name}/${type.name}.html`).out)
-        TypeRenderer tr := env.typeRenderer.make([env, out, type])
-        tr.writeType
-        out.close
+        env.makeTypeRenderer(outDir.plus(`${pod.name}/${type.name}.html`).out, type).writeType
+      }
+
+      // each chapter
+      pod.chapters.each |chapter|
+      {
+        env.makeChapterRenderer(outDir.plus(`${pod.name}/${chapter.name}.html`).out, chapter).writeChapter
       }
     }
 

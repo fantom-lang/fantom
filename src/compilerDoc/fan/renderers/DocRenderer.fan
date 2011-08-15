@@ -49,10 +49,11 @@ class DocRenderer
   }
 
   ** Write ending HTML for page. Default implemenation calls
-  ** `Theme.writeEnd` for installed theme.
+  ** `Theme.writeEnd` for installed theme and closes output stream.
   virtual Void writeEnd()
   {
     env.theme.writeEnd(this)
+    out.close
   }
 
   **

@@ -73,6 +73,11 @@ class DocLinker
       baseType = base
       basePod  = env.pod(baseType.pod)
     }
+    else if (base is DocChapter)
+    {
+      baseChapter = base
+      basePod = env.pod(baseChapter.pod)
+    }
     else throw Err("Invalid base type: $base.typeof")
 
     // check absolute
@@ -97,8 +102,8 @@ class DocLinker
     pound := namePart.indexr("#")
     if (pound != null)
     {
-      fragPart = namePart[0..<pound]
-      namePart = namePart[pound+1..-1]
+      fragPart = namePart[pound+1..-1]
+      namePart = namePart[0..<pound]
     }
 
     // split namePart.dotPart
@@ -132,7 +137,7 @@ echo("   pod     = $pod")
   ** Associated environment
   DocEnv env { internal set }
 
-  ** Base of current link: must be `DocPod` or `DocType`
+  ** Base of current link: must be `DocPod`, `DocType`, or `DocChapter`
   Obj base { internal set }
 
   ** Pod derived from `base`
@@ -140,6 +145,9 @@ echo("   pod     = $pod")
 
   ** Type derived from `base` or null if not inside a type definition
   const DocType? baseType
+
+  ** Chapter derived from `base` or null if not inside a chapter
+  const DocChapter? baseChapter
 
   ** Link string to parse
   const Str link
@@ -174,19 +182,48 @@ echo("   pod     = $pod")
   ** Resolve `link` and if not resolved throw DocErr
   virtual DocLink? resolve()
   {
+// TODO: avoid/ignore bootstrap and examples
+if (podPart == "sys" || podPart == "build" || podPart == "compiler" || podPart == "examples")
+  return DocLink(link.toUri, link, true)
+
     // if we weren't able to resolve our current pod, time to bail
     if (pod == null) throw err("unknown pod: $podPart")
 
     // check for absolute URIs
     if (isAbs) return resolveAbs
 
-    // check for special names
-    if (namePart == "index")   return resolvePodIndex
-    if (namePart == "pod-doc") return resolvePodDoc
+    // check for frag
+    if (namePart.isEmpty && fragPart != null)
+    {
+      if (baseChapter == null) throw err("invalid frag outside of chapter")
+      return resolveChapter(baseChapter)
+    }
+
+    // special: index
+    if (namePart == "index") return resolvePodIndex
+
+    // special: pod-doc
+    if (namePart == "pod-doc")
+    {
+      if (pod.podDoc == null) throw err("unknown pod-doc: $pod.name")
+      return resolveChapter(pod.podDoc)
+    }
 
     // check for slot in current type
     slot := baseType?.slot(namePart, false)
     if (slot != null) return resolveSlot(slot, true)
+
+    // if we we have chapters, this pod doesn't contain types
+    if (!pod.chapters.isEmpty)
+    {
+      // check ".slot" not defined
+      if (dotPart != null) throw err("Cannot have dotPart in chapters")
+
+      // resolve chapter
+      chapter := pod.chapter(namePart, false)
+      if (chapter == null) throw err("unknown chapter: ${pod}::${namePart}")
+      return resolveChapter(chapter)
+    }
 
     // at this point namePart must be type or chapter
     type := pod.type(namePart, false)
@@ -216,9 +253,11 @@ echo("   pod     = $pod")
   }
 
   ** Check and resolve `pod` to its pod-doc fandoc file
-  private DocLink resolvePodDoc()
+  private DocLink resolveChapter(DocChapter c)
   {
-    DocLink(toUri("pod-doc"), pod.name, true)
+// TODO
+//if (fragPart != null) echo("check frag: $c.qname # $fragPart")
+    return DocLink(toUri(c.name, fragPart), pod.name, true)
   }
 
   ** Resolve link to type

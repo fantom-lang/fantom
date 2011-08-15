@@ -36,6 +36,9 @@ class DocEnv
   ** `TypeRender` to use for rendering type API HTML pages
   Type typeRenderer := TypeRenderer#
 
+  ** `ChapterRenderer` to use for rendering type API HTML pages
+  Type chapterRenderer := ChapterRenderer#
+
   ** `DocLinker` to use for resolving fandoc hyperlinks.  See `makeLinker`.
   Type linker := DocLinker#
 
@@ -43,8 +46,31 @@ class DocEnv
   DocErrHandler errHandler := DocErrHandler()
 
 //////////////////////////////////////////////////////////////////////////
-// Linking
+// Factories
 //////////////////////////////////////////////////////////////////////////
+
+  ** Construct instance of `indexRenderer`
+  IndexRenderer makeIndexRenderer(OutStream out)
+  {
+    indexRenderer.make([this, toWebOut(out)])
+  }
+
+  ** Construct instance of `typeRenderer`
+  TypeRenderer makeTypeRenderer(OutStream out, DocType type)
+  {
+    typeRenderer.make([this, toWebOut(out), type])
+  }
+
+  ** Construct instance of `chapterRenderer`
+  ChapterRenderer makeChapterRenderer(OutStream out, DocChapter chapter)
+  {
+    chapterRenderer.make([this, toWebOut(out), chapter])
+  }
+
+  private WebOutStream toWebOut(OutStream out)
+  {
+    out as WebOutStream ?: WebOutStream(out)
+  }
 
   ** Constructor a linker to use for given base object,
   ** link str and location.
