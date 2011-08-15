@@ -87,7 +87,7 @@ tag.  Finally, to "mount" the JavaScript runtime, invoke
     WebUtil.jsMain(out, "myPod::Main")
     out.headEnd
 
-A complete example is available in [js-demo]`/doc/examples/js-demo.html`.
+A complete example is available in [js-demo]`examples::js-demo.html`.
 Note that this example illustrates dynamically compiling code into the page.
 This is not required (or normal).  The only requirement is to load your pods
 and invoke 'WebUtil.jsMain'.  There is also no requirement that

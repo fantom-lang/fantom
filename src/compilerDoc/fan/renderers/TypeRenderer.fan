@@ -28,6 +28,10 @@ class TypeRenderer : DocRenderer
   virtual Void writeType()
   {
     writeStart(type.qname)
+    out.p.a(`../index.html`).w("Home").aEnd
+      .w(" > ").a(`index.html`).w(type.pod).aEnd
+      .w(" > ").a(`${type.name}.html`).w(type.name).aEnd
+      .pEnd.hr
     writeTypeOverview
     writeSlots
     writeEnd

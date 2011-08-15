@@ -102,6 +102,8 @@ class DocPod
 
     // these are the data structures we'll be building up
     typeMap  := Str:DocType[:]
+    DocChapter? podDoc := null
+    chapterMap := Str:DocChapter[:]
 
     // get file to use from DocLoader
     file := env.loader.findPodFile(name) ?: throw Err("File not found: $name")
@@ -111,20 +113,68 @@ class DocPod
       // iterate thru the zip file looking for the files we need
       zip.contents.each |f|
       {
+        // if doc/{type}.apidoc
         if (f.path[0] == "doc2" && f.ext == "apidoc")
         {
           type := ApiDocParser(name, f.in).parseType
           typeMap[type.name] = type
+        }
+
+        // if doc/{type}.fandoc
+        if (f.path[0] == "doc" && f.ext == "fandoc")
+        {
+          isPodDoc := f.basename == "pod"
+          chapter := DocChapter
+          {
+            it.pod  = this.name
+            it.name = isPodDoc ? "pod-doc" : f.basename
+            it.loc  = DocLoc(f.name, 1)
+            it.doc  = DocFandoc(it.loc, f.in.readAllStr)
+          }
+          if (isPodDoc)
+            podDoc = chapter
+          else
+            chapterMap[chapter.name] = chapter
         }
       }
     }
     finally zip.close
 
     // save state
-    this.typeList = typeMap.vals.sort(|a, b| { a.name <=> b.name }).ro
-    this.typeMap  = typeMap
+    this.typeList    = typeMap.vals.sort(|a, b| { a.name <=> b.name }).ro
+    this.typeMap     = typeMap
+    this.podDocRef   = podDoc
+    this.chapterList = chapterMap.vals.ro
+    this.chapterMap  = chapterMap.ro
     return this
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Chapters
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return pod-doc file as a chapter instance or null
+  **
+  DocChapter? podDoc() { load.podDocRef }
+
+  **
+  ** Find a chapter by name.  If the chapter doesn't exist and checked
+  ** is false then return null, otherwise throw Err.
+  **
+  DocChapter? chapter(Str chapterName, Bool checked := true)
+  {
+    load
+    c := chapterMap[chapterName]
+    if (c != null) return c
+    if (checked) throw Err("Unknown chapter: ${this.name}::${chapterName}")
+    return null
+  }
+
+  **
+  ** If this is a manual like docLang, return list of chapters.
+  **
+  DocChapter[] chapters() { load.chapterList}
 
 //////////////////////////////////////////////////////////////////////////
 // State
@@ -132,4 +182,7 @@ class DocPod
 
   private DocType[]? typeList
   private [Str:DocType]? typeMap
+  private DocChapter? podDocRef
+  private DocChapter[]? chapterList
+  private [Str:DocChapter]? chapterMap
 }
