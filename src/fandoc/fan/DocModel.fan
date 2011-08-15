@@ -218,6 +218,7 @@ class Heading : DocElem
   override DocNodeId id() { return DocNodeId.heading }
   override Str htmlName() { return "h$level" }
   override Bool isInline() { return false }
+  Str title() { children.first.toStr }
   const Int level
 }
 

@@ -80,6 +80,14 @@ class DocRenderer
     parser.silent = true
     root := parser.parse(loc.file, doc.text.in)
 
+    // write it out or report errors
+    doWriteFandoc(base, doc, parser, root)
+  }
+
+// TODO - this is hacked to share with ChapterRender
+  internal Void doWriteFandoc(Obj base, DocFandoc doc, FandocParser parser, Doc root)
+  {
+    loc := doc.loc
     // if no errors, then write as HTML
     if (parser.errs.isEmpty)
     {

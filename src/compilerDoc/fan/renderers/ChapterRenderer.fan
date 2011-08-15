@@ -7,6 +7,8 @@
 //
 
 using web
+using fandoc
+
 
 **
 ** ChapterRenderer renders a manual chapter such
@@ -20,6 +22,7 @@ class ChapterRenderer : DocRenderer
     : super(env, out)
   {
     this.chapter = chapter
+
   }
 
   ** Chapter to renderer
@@ -32,9 +35,29 @@ class ChapterRenderer : DocRenderer
       .w(" > ").a(`index.html`).w(chapter.pod).aEnd
       .w(" > ").a(`${chapter.name}.html`).w(chapter.name).aEnd
       .pEnd.hr
+
+// TODO: don't love this design
+     parser := FandocParser()
+     parser.silent = true
+     root := parser.parse(chapter.doc.loc.file, chapter.doc.text.in)
+     headings := root.findHeadings
+
     writeStart(chapter.qname)
-    writeFandoc(chapter, chapter.doc)
+    writeHeadings(headings)
+    doWriteFandoc(chapter, chapter.doc, parser, root)
     writeEnd
+  }
+
+  virtual Void writeHeadings(Heading[] headings)
+  {
+    headings.each |h|
+    {
+      out.span
+      h.level.times |x| { out.w("&nbsp;&nbsp;&nbsp;&nbsp;") }
+      if (h.anchorId == null) out.w(h.title)
+      else out.a(`#${h.anchorId}`).w(h.title).aEnd
+      out.spanEnd.br
+    }
   }
 
 }
