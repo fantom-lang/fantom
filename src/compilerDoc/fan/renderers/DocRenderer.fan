@@ -66,29 +66,54 @@ class DocRenderer
 // Fanco
 //////////////////////////////////////////////////////////////////////////
 
-  ** Write the given fandoc string as HTML
-  virtual Void writeFandoc(DocFandoc doc)
+  **
+  ** Write the given fandoc string as HTML.  The base must
+  ** one of the types supported by `DocLinker.link` (such as
+  ** DocPod or DocType).
+  **
+  virtual Void writeFandoc(Obj base, DocFandoc doc)
   {
     // parse fandoc
+    loc := doc.loc
     parser := FandocParser()
     parser.silent = true
-    root := parser.parse(doc.loc.file, doc.text.in)
+    root := parser.parse(loc.file, doc.text.in)
 
     // if no errors, then write as HTML
     if (parser.errs.isEmpty)
     {
-      docOut := HtmlDocWriter(out)
-      root.children.each |child| { child.write(docOut) }
+      writer := HtmlDocWriter(out)
+      writer.onLink = |Link elem|
+      {
+        try
+        {
+          // route to DocLinker
+          orig := elem.uri
+          link := env.makeLinker(base, elem.uri, DocLoc(loc.file, loc.line+elem.line-1)).resolve
+
+          // update link element
+          elem.uri = link.uri.encode
+          elem.isCode = link.isCode
+
+          // if link text was original URI, then update with DocLin.dis
+          if (elem.children.first is DocText && elem.children.first.toStr == orig)
+          {
+            elem.children.clear
+            elem.addChild(DocText(link.dis))
+          }
+        }
+        catch (DocErr e) env.errReport(e)
+      }
+      root.children.each |child| { child.write(writer) }
     }
 
     // otherwise report errors and print as <pre>
     else
     {
       // report each error
-      baseLine := doc.loc.line ?: 1
       parser.errs.each |err|
       {
-        env.err(err.msg, DocLoc(doc.loc.file, baseLine + err.line - 1))
+        env.err(err.msg, DocLoc(loc.file, loc.line + err.line - 1))
       }
 
       // print as <pre>
@@ -97,3 +122,4 @@ class DocRenderer
   }
 
 }
+
