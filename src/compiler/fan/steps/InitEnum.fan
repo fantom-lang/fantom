@@ -133,8 +133,9 @@ class InitEnum : CompilerStep
     m.params.add(ParamDef(loc, ns.boolType, "checked", LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)))
     m.ret = TypeRef(loc, curType.toNullable)
     m.code = Block(loc)
-    m.doc  = ["Return the $curType.name instance for the specified name.  If not a",
-              "valid name and checked is false return null, otherwise throw ParseErr."]
+    m.doc  = DocDef(loc,
+              ["Return the $curType.name instance for the specified name.  If not a",
+               "valid name and checked is false return null, otherwise throw ParseErr."])
     curType.addSlot(m)
 
     // return (CurType)doParse(name, checked)
@@ -216,7 +217,7 @@ class InitEnum : CompilerStep
     f.name      = "vals"
     f.fieldType = listType
     f.init      = init
-    f.doc       = ["List of $curType.name values indexed by ordinal"]
+    f.doc       = DocDef(loc, ["List of $curType.name values indexed by ordinal"])
     return f
   }
 

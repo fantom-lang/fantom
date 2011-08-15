@@ -12,7 +12,7 @@
 abstract const class DocSlot
 {
   ** Constructor
-  internal new make(DocLoc loc, DocTypeRef parent, Str name, Int flags, Str doc, DocFacet[] facets)
+  internal new make(DocLoc loc, DocTypeRef parent, Str name, Int flags, DocFandoc doc, DocFacet[] facets)
   {
     this.loc    = loc
     this.parent = parent
@@ -39,7 +39,7 @@ abstract const class DocSlot
   const Int flags
 
   ** Fandoc documentation string
-  const Str doc
+  const DocFandoc doc
 
   ** Facets defined on this slot
   const DocFacet[] facets
@@ -50,7 +50,7 @@ abstract const class DocSlot
     out.printLine("    parent = $parent")
     out.printLine("    name   = $name")
     out.printLine("    flags  = " + DocFlags.toNames(flags))
-    out.printLine("    doc    = $doc.toCode")
+    out.printLine("    doc    = $doc.text.toCode")
     facets.each |facet| { out.printLine("    $facet") }
   }
 }
@@ -65,7 +65,7 @@ abstract const class DocSlot
 const class DocField : DocSlot
 {
   ** Constructor
-  internal new make(DocLoc loc, DocTypeRef parent, Str name, Int flags, Str doc, DocFacet[] facets,
+  internal new make(DocLoc loc, DocTypeRef parent, Str name, Int flags, DocFandoc doc, DocFacet[] facets,
                     DocTypeRef type, Str? init)
     : super(loc, parent, name, flags, doc, facets)
   {
@@ -97,7 +97,7 @@ const class DocField : DocSlot
 const class DocMethod : DocSlot
 {
   ** Constructor
-  internal new make(DocLoc loc, DocTypeRef parent, Str name, Int flags, Str doc, DocFacet[] facets,
+  internal new make(DocLoc loc, DocTypeRef parent, Str name, Int flags, DocFandoc doc, DocFacet[] facets,
                     DocTypeRef returns, DocParam[] params)
     : super(loc, parent, name, flags, doc, facets)
   {

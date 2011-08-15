@@ -72,8 +72,31 @@ abstract class DefNode : Node
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Str[]? doc          // lines of fandoc comment or null
+  DocDef? doc         // lines of fandoc comment or null
   Int flags := 0      // type/slot flags
   FacetDef[]? facets  // facet declarations or null
 
+}
+
+**************************************************************************
+** DocDef
+**************************************************************************
+
+**
+** Type or slot documentation in plain text fandoc format
+**
+class DocDef : Node
+{
+  new make(Loc loc, Str[] lines)
+    : super(loc)
+  {
+    this.lines = lines
+  }
+
+  override Void print(AstWriter out)
+  {
+    lines.each |line| { out.w("** ").w(line).nl }
+  }
+
+  Str[] lines
 }

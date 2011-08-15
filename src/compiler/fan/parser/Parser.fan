@@ -389,7 +389,7 @@ public class Parser : CompilerSupport
   ** Slot definition:
   **   <slotDef> :=  <fieldDef> | <methodDef> | <ctorDef>
   **
-  private SlotDef slotDef(TypeDef parent, Str[]? doc)
+  private SlotDef slotDef(TypeDef parent, DocDef? doc)
   {
     // check for static {} class initialization
     if (curt === Token.staticKeyword && peekt === Token.lbrace)
@@ -455,7 +455,7 @@ public class Parser : CompilerSupport
   **   <fieldGetter>  :=  "get" (<eos> | <block>)
   **   <fieldSetter>  :=  <protection> "set" (<eos> | <block>)
   **
-  private FieldDef fieldDef(Loc loc, TypeDef parent, Str[]? doc, FacetDef[]? facets, Int flags, TypeRef? type, Str name)
+  private FieldDef fieldDef(Loc loc, TypeDef parent, DocDef? doc, FacetDef[]? facets, Int flags, TypeRef? type, Str name)
   {
     // define field itself
     field := FieldDef(loc, parent)
@@ -641,7 +641,7 @@ public class Parser : CompilerSupport
   **   <param>          :=  <type> <id> [":=" <expr>]
   **   <methodBody>     :=  <eos> | ( "{" <stmts> "}" )
   **
-  private MethodDef methodDef(Loc loc, TypeDef parent, Str[]? doc, FacetDef[]? facets, Int flags, TypeRef ret, Str name)
+  private MethodDef methodDef(Loc loc, TypeDef parent, DocDef? doc, FacetDef[]? facets, Int flags, TypeRef ret, Str name)
   {
     method := MethodDef(loc, parent)
     method.doc    = doc
@@ -2288,13 +2288,17 @@ public class Parser : CompilerSupport
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Parse fandoc or retur null
+  ** Parse fandoc or return null
   **
-  private Str[]? doc()
+  private DocDef? doc()
   {
-    Str[]? doc := null
+    DocDef? doc := null
     while (curt === Token.docComment)
-      doc = (Str[])consume(Token.docComment).val
+    {
+      loc := cur
+      lines := (Str[])consume(Token.docComment).val
+      doc = DocDef(loc, lines)
+    }
     return doc
   }
 

@@ -21,7 +21,7 @@ class ApiDocWriter
   {
     // header
     writeFacets(t.facets)
-    writeAttrFile(t.loc)
+    writeTypeAttrs(t)
     if (t.isMixin)
       writeFlags(t.flags.and(FConst.Mixin.not)).w("mixin ").w(t.name)
     else
@@ -54,7 +54,7 @@ class ApiDocWriter
   private Void writeSlot(SlotDef s)
   {
     writeFacets(s.facets)
-    writeAttrLine(s.loc)
+    writeSlotAttrs(s)
     writeFlags(s.flags)
     if (s is FieldDef) writeFieldSig(s)
     else writeMethodSig(s)
@@ -105,17 +105,18 @@ class ApiDocWriter
     w("\n")
   }
 
-  private Void writeAttrFile(Loc loc)
+  private Void writeTypeAttrs(TypeDef t)
   {
-    filename := loc.filename
-    if (filename == null) return
-    w("%file=").w(filename).w("\n")
+    filename := t.loc.filename
+    if (filename != null)   w("%file=").w(filename).w("\n")
+    if (t.loc.line != null) w("%line=").w(t.loc.line.toStr).w("\n")
+    if (t.doc != null)      w("%docLine=").w(t.doc.loc.line.toStr).w("\n")
   }
 
-  private Void writeAttrLine(Loc loc)
+  private Void writeSlotAttrs(SlotDef s)
   {
-    if (loc.line == null) return
-    w("%line=").w(loc.line.toStr).w("\n")
+    if (s.loc.line != null) w("%line=").w(s.loc.line.toStr).w("\n")
+    if (s.doc != null)      w("%docLine=").w(s.doc.loc.line.toStr).w("\n")
   }
 
   private This writeTypeRef(CType t)
@@ -154,7 +155,7 @@ class ApiDocWriter
   private Void writeDoc(DefNode node)
   {
     if (node.doc == null) return
-    node.doc.each |line|
+    node.doc.lines.each |line|
     {
       if (line.isEmpty) w("\\\n")
       else w(line).w("\n")

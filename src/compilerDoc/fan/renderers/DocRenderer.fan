@@ -67,41 +67,33 @@ class DocRenderer
 //////////////////////////////////////////////////////////////////////////
 
   ** Write the given fandoc string as HTML
-  virtual Void writeFandoc(Str fandoc, DocLoc loc)
+  virtual Void writeFandoc(DocFandoc doc)
   {
     // parse fandoc
     parser := FandocParser()
     parser.silent = true
-    doc := parser.parse(loc.file, fandoc.in)
+    root := parser.parse(doc.loc.file, doc.text.in)
 
     // if no errors, then write as HTML
     if (parser.errs.isEmpty)
     {
       docOut := HtmlDocWriter(out)
-      doc.children.each |child| { child.write(docOut) }
+      root.children.each |child| { child.write(docOut) }
     }
 
     // otherwise report errors and print as <pre>
     else
     {
-      // figure out our actual base line, if the loc.line is
-      // in the middle of the file then assume this is a type
-      // or slot location in which case fandoc starts above;
-      // this isn't exact because it doesn't take into account
-      // trailing empty ** line, but close enough
-      baseLine := loc.line ?: 1
-      if (baseLine > 1) baseLine = (baseLine - fandoc.numNewlines).max(1)
-
       // report each error
+      baseLine := doc.loc.line ?: 1
       parser.errs.each |err|
       {
-        env.err(err.msg, DocLoc(loc.file, baseLine+err.line-1))
+        env.err(err.msg, DocLoc(doc.loc.file, baseLine + err.line - 1))
       }
 
       // print as <pre>
-      out.pre.w(fandoc).preEnd
+      out.pre.w(doc.text).preEnd
     }
   }
 
 }
-
