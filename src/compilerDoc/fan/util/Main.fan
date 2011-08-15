@@ -66,8 +66,9 @@ class Main : AbstractMain
       }
     }
 
-// TODO: display errors
-    return 0
+    // if we collected any errrors assume failure
+    ok := env.errHandler.errs.isEmpty
+    return ok ? 0 : 1
   }
 
 }

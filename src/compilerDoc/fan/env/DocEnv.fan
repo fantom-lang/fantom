@@ -36,6 +36,26 @@ class DocEnv
   ** Type to use for rendering type API HTML pages
   Type typeRenderer := TypeRenderer#
 
+  ** Plug-in for error reporting
+  DocErrHandler errHandler := DocErrHandler()
+
+//////////////////////////////////////////////////////////////////////////
+// Error Handling
+//////////////////////////////////////////////////////////////////////////
+
+  ** Route error to `errHandler` and return as DocErr.
+  DocErr err(Str msg, DocLoc loc, Err? cause := null)
+  {
+    errReport(DocErr(msg, loc, cause))
+  }
+
+  ** Route error to `errHandler` and return the specified DocErr.
+  DocErr errReport(DocErr err)
+  {
+    errHandler.onErr(err)
+    return err
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Reflection
 //////////////////////////////////////////////////////////////////////////

@@ -256,7 +256,7 @@ internal class ApiDocParser
     }
 
     // if file was specified then new fresh location
-    if (file != null) return DocLoc(file, line)
+    if (file != null) return DocLoc("${podName}::${file}", line)
 
     // otherwise we derive file location from type definition
     return DocLoc(this.loc.file, line)
