@@ -24,6 +24,14 @@ class HtmlDocWriter : DocWriter
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Config
+//////////////////////////////////////////////////////////////////////////
+
+  ** Callback to perform link resolution and checking for
+  ** every Link element
+  |Link link|? onLink := null
+
+//////////////////////////////////////////////////////////////////////////
 // DocWriter
 //////////////////////////////////////////////////////////////////////////
 
@@ -76,6 +84,7 @@ class HtmlDocWriter : DocWriter
     {
       case DocNodeId.link:
         link := elem as Link
+        if (onLink != null) onLink(link)
         out.print(" href='$link.uri.toXml'")
       case DocNodeId.image:
         img := elem as Image
