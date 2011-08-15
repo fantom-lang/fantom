@@ -42,14 +42,14 @@ class DocRenderer
 //////////////////////////////////////////////////////////////////////////
 
   ** Write starting HTML for page. Default implemenation calls
-  ** `Theme.writeStart` for installed theme.
+  ** `DocTheme.writeStart` for installed theme.
   virtual Void writeStart(Str titleStr)
   {
     env.theme.writeStart(this, titleStr)
   }
 
   ** Write ending HTML for page. Default implemenation calls
-  ** `Theme.writeEnd` for installed theme and closes output stream.
+  ** `DocTheme.writeEnd` for installed theme and closes output stream.
   virtual Void writeEnd()
   {
     env.theme.writeEnd(this)

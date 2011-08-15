@@ -30,7 +30,7 @@ class DocLoader
   ** Resolve a pod name to a DocPod or return null if not found.
   ** Default implementation routes to `findPodFile`.  The
   ** returned pod only needs to have its summary meta loaded,
-  ** the types will be lazily loaded by `loadPod`.
+  ** the types will be lazily loaded by `DocPod`.
   **
   virtual DocPod? findPod(DocEnv env, Str podName)
   {
@@ -47,8 +47,7 @@ class DocLoader
 
   **
   ** Resolve a pod name to a File on the local file system or if
-  ** not found return null.  This method is used by both `findPod`
-  ** and `loadPod` for file system loaders.
+  ** not found return null.
   **
   virtual File? findPodFile(Str podName)
   {

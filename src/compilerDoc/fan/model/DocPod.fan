@@ -104,6 +104,7 @@ class DocPod
     typeMap  := Str:DocType[:]
     DocChapter? podDoc := null
     chapterMap := Str:DocChapter[:]
+    Obj[]? chapterIndex := null
 
     // get file to use from DocLoader
     file := env.loader.findPodFile(name) ?: throw Err("File not found: $name")
@@ -136,9 +137,20 @@ class DocPod
           else
             chapterMap[chapter.name] = chapter
         }
+
+        // if doc/index.fog
+        if (f.path[0] == "doc" && f.name == "index.fog")
+          chapterIndex = f.readObj
       }
     }
     finally zip.close
+
+    // generate chapterIndex if not specified
+    if (chapterIndex == null)
+    {
+      chapterIndex = [,]
+      chapterMap.each |c| { chapterIndex.add([c.name, ""]) }
+    }
 
     // save state
     this.typeList    = typeMap.vals.sort(|a, b| { a.name <=> b.name }).ro
@@ -146,6 +158,7 @@ class DocPod
     this.podDocRef   = podDoc
     this.chapterList = chapterMap.vals.ro
     this.chapterMap  = chapterMap.ro
+    this.chapterIndexRef = chapterIndex
     return this
   }
 
@@ -157,6 +170,12 @@ class DocPod
   ** Return pod-doc file as a chapter instance or null
   **
   DocChapter? podDoc() { load.podDocRef }
+
+  **
+  ** Return parsed "index.fog" if specified which is a list
+  ** of sections as a 'Str' or chapter links as '[Uri, Str]'
+  **
+  Obj[] chapterIndex() { load.chapterIndexRef }
 
   **
   ** Find a chapter by name.  If the chapter doesn't exist and checked
@@ -185,4 +204,5 @@ class DocPod
   private DocChapter? podDocRef
   private DocChapter[]? chapterList
   private [Str:DocChapter]? chapterMap
+  private Obj[]? chapterIndexRef
 }

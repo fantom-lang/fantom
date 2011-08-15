@@ -11,7 +11,8 @@ using web
 **
 ** IndexRenderer renders the various indices:
 **   - `writeTopIndex`: top level index of all pods
-**   - `writePodIndex`: index of types in an API pod
+**   - `writeTypeIndex`: index of types in an API pod
+**   - `writeChapterIndex`: index of chapters in a manual pod
 **
 class IndexRenderer : DocRenderer
 {
@@ -79,12 +80,22 @@ class IndexRenderer : DocRenderer
     out.p.w(pod.summary).pEnd
 
     out.table
-    pod.chapters.each |chapters|
+    pod.chapterIndex.each |item|
     {
-      out.tr
-        .td.a(`${chapters.name}.html`).w(chapters.name).aEnd.tdEnd
-        //.td.w(type.summary).tdEnd
+      if (item is Str)
+      {
+        // section header
+        out.tr.td.b.w(item).bEnd.tdEnd.td.tdEnd.trEnd
+      }
+      else
+      {
+        name    := (Uri)item->get(0)
+        summary := (Str)item->get(1)
+        out.tr
+          .td.a(`${name}.html`).w(name).aEnd.tdEnd
+          .td.w(summary).tdEnd
         .trEnd
+      }
     }
     out.tableEnd
 
