@@ -15,9 +15,9 @@
 **
 ** The syntax is defined as:
 **   <file>      :=  <type> ["\n" <slot>]*
-**   <type>      :=  <facets> "\n" <flags> "class " <id> [<inherit>] "\n" <doc>
+**   <type>      :=  <facets> <attrs> <flags> "class " <id> [<inherit>] "\n" <doc>
 **   <inherit>   :=  ":" [<typeRef> ","]*
-**   <slot>      :=  <facets> "\n" <flags> <slotSig> "\n" <doc>
+**   <slot>      :=  <facets> <attrs> <flags> <slotSig> "\n" <doc>
 **   <slotSig>   :=  <fieldSig> | <methodSig>
 **   <fieldSig>  :=  <typeRef> " " <id> [":=" <expr>"]
 **   <methodSig> :=  <typeRef> " " <id> "(" "\n" [<param> "\n"]* ")"
@@ -27,6 +27,8 @@
 **   <flag>      :=  standard Fantom flag keywords (public, const, etc)
 **   <facets>    :=  [<facet> "\n"]*
 **   <facet>     :=  "@" <type> [" {\n" [<id> "=" <expr> "\n"]* "}"]
+**   <attrs>     :=  [<attr> "\n"]*
+**   <attr>      :=  "%" <id> "=" <expr> "\n"
 **   <expr>      :=  text until end of line
 **   <id>        :=  Fantom identifier
 **   <typeRef>   :=  Fantom type signature (no spaces allowed)
@@ -35,6 +37,10 @@
 ** Also note that the grammar is defined such that expr to display
 ** in docs for field and parameter defaults is always positioned at
 ** the end of the line (avoiding nasty escaping problems).
+**
+** The following attributes are supported:
+**   file: type source file name (slots implied by type's file)
+**   line: integer line number of type/slot definition
 **
 internal class ApiDocParser
 {
@@ -58,6 +64,7 @@ internal class ApiDocParser
       // construct DocType from my own fields
       return DocType
       {
+        it.loc    = this.loc
         it.ref    = this.ref
         it.flags  = this.flags
         it.doc    = this.doc
@@ -72,7 +79,9 @@ internal class ApiDocParser
 
   private Void parseTypeHeader()
   {
+    // facets, loc
     this.facets = parseFacets
+    this.loc    = parseAttrs
 
     // <flags> "class" <name> [":" extends]
     colon := cur.index(":")
@@ -118,17 +127,18 @@ internal class ApiDocParser
     // check if at end of file
     if (cur.isEmpty) return false
 
-    // facets
+    // facets, loc
     facets := parseFacets
+    loc := parseAttrs
 
     if (cur[-1] == '(')
-      slots.add(parseMethod(facets))
+      slots.add(parseMethod(loc, facets))
     else
-      slots.add(parseField(facets))
+      slots.add(parseField(loc, facets))
     return true
   }
 
-  private DocField parseField(DocFacet[] facets)
+  private DocField parseField(DocLoc loc, DocFacet[] facets)
   {
     // cur is: <flags> <type> <name> [":=" <expr>]
 
@@ -155,10 +165,10 @@ internal class ApiDocParser
     consumeLine
     doc := parseDoc
 
-    return DocField(ref, name, flags, doc, facets, type, init)
+    return DocField(loc, ref, name, flags, doc, facets, type, init)
   }
 
-  private DocMethod parseMethod(DocFacet[] facets)
+  private DocMethod parseMethod(DocLoc loc, DocFacet[] facets)
   {
     // cur is: <flags> <type> <name> "("
 
@@ -190,7 +200,7 @@ internal class ApiDocParser
     // consume current line and parse docs
     doc := parseDoc
 
-    return DocMethod(ref, name, flags, doc, facets, returns, params)
+    return DocMethod(loc, ref, name, flags, doc, facets, returns, params)
   }
 
   private DocFacet[] parseFacets()
@@ -230,6 +240,28 @@ internal class ApiDocParser
     return DocFacet(type, fields)
   }
 
+  private DocLoc parseAttrs()
+  {
+    // the only attributes we care about are location (file, line)
+    Str? file := null
+    Int? line := null
+    while (cur.startsWith("%"))
+    {
+      eq   := cur.index("=")
+      name := cur[1..<eq]
+      val  := cur[eq+1..-1]
+      if (name == "line") line = val.toInt
+      else if (name == "file") file = val
+      consumeLine
+    }
+
+    // if file was specified then new fresh location
+    if (file != null) return DocLoc(file, line)
+
+    // otherwise we derive file location from type definition
+    return DocLoc(this.loc.file, line)
+  }
+
   private Str parseDoc()
   {
     if (cur.isEmpty) { consumeLine; return "" }
@@ -253,7 +285,8 @@ internal class ApiDocParser
   private const Str podName
   private Str cur := ""
   private DocTypeRef? ref
-  private Int flags := DocFlags.Public
+  private Int flags
+  private DocLoc loc := DocLoc("Unknown")
   private Str doc := ""
   private DocFacet[]? facets
   private DocTypeRef? base

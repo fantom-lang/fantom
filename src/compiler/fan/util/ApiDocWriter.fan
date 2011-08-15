@@ -21,6 +21,7 @@ class ApiDocWriter
   {
     // header
     writeFacets(t.facets)
+    writeAttrFile(t.loc)
     if (t.isMixin)
       writeFlags(t.flags.and(FConst.Mixin.not)).w("mixin ").w(t.name)
     else
@@ -53,6 +54,7 @@ class ApiDocWriter
   private Void writeSlot(SlotDef s)
   {
     writeFacets(s.facets)
+    writeAttrLine(s.loc)
     writeFlags(s.flags)
     if (s is FieldDef) writeFieldSig(s)
     else writeMethodSig(s)
@@ -101,6 +103,19 @@ class ApiDocWriter
       w("}")
     }
     w("\n")
+  }
+
+  private Void writeAttrFile(Loc loc)
+  {
+    filename := loc.filename
+    if (filename == null) return
+    w("%file=").w(filename).w("\n")
+  }
+
+  private Void writeAttrLine(Loc loc)
+  {
+    if (loc.line == null) return
+    w("%line=").w(loc.line.toStr).w("\n")
   }
 
   private This writeTypeRef(CType t)
