@@ -6,6 +6,8 @@
 //   11 Aug 11  Brian Frank  Creation
 //
 
+using concurrent
+
 **
 ** DocType models the documentation of a `sys::Type`.
 **
@@ -48,8 +50,28 @@ const class DocType
   ** Slots defined by this type
   const DocSlot[] slots
 
+  ** Get slot by name.  If not found return null or raise UknownSlotErr
+  DocSlot? slot(Str name, Bool checked := true)
+  {
+    map := slotMapRef.val as Str:DocSlot
+    if (map == null)
+    {
+      map = Str:DocSlot[:]
+      slots.each |slot| { map[slot.name] = slot }
+      slotMapRef.val = map.toImmutable
+    }
+    slot := map[name]
+    if (slot != null) return slot
+    if (checked) throw UnknownSlotErr("${qname}::${name}")
+    return null
+  }
+  private const AtomicRef slotMapRef := AtomicRef(null)
+
   ** Summary is the first sentence of `doc`
   Str summary() { DocUtil.firstSentence(doc.text) }
+
+  ** return qname
+  override Str toStr() { qname }
 
   internal Void dump(OutStream out)
   {
@@ -64,20 +86,6 @@ const class DocType
     facets.each |facet| { out.printLine(facet) }
     slots.each |slot| { slot.dump(out) }
     out.printLine.flush
-  }
-
-  static Void main()
-  {
-    file := Env.cur.homeDir + `lib/fan/xfoo.pod`
-    zip  := Zip.open(file)
-    zip.contents.vals.sort.each |f|
-    {
-      if (f.path.first == "doc2" && f.ext == "apidoc")
-      {
-if (f.basename != "Bar") return
-         ApiDocParser("xfoo", f.in).parseType.dump(Env.cur.out)
-      }
-    }
   }
 
 }
