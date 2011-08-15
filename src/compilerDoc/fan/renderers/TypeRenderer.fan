@@ -40,7 +40,24 @@ class TypeRenderer : DocRenderer
   ** Render the HTML for the type overview (base, mixins, type doc)
   virtual Void writeTypeOverview()
   {
-    out.h1.w("type $type.qname").h1End
+    out.h1.w("$type.qname").h1End
+
+    // <flags> <name> <base/mixins>
+    out.div.code("style='color:green;'")
+    out.w(DocFlags.toTypeDis(type.flags)).w(" ").w(type.name)
+    if (type.base != null || !type.mixins.isEmpty)
+    {
+      comma := false
+      out.w(" : ")
+      if (type.base != null) { writeTypeRef(type.base); comma = true}
+      type.mixins.each |m|
+      {
+        if (comma) out.w(", "); else comma = true
+        writeTypeRef(m)
+      }
+    }
+    out.codeEnd.divEnd
+
     writeFandoc(type, type.doc)
   }
 
@@ -54,8 +71,51 @@ class TypeRenderer : DocRenderer
   ** Render the HTML for all the given slot
   virtual Void writeSlot(DocSlot slot)
   {
-    out.h3.w(slot.name).h3End
+    out.hr.h3.w(slot.name).h3End
+
+    // signature
+    out.div.code("style='color:green;'")
+    out.w(DocFlags.toSlotDis(slot.flags)).w(" ")
+    if (slot is DocField)
+    {
+      field := (DocField)slot
+      writeTypeRef(field.type)
+      out.w(" ").w(field.name)
+      if (field.init != null) out.w(" := ").w(field.init.toXml)
+    }
+    else
+    {
+      // method signature
+      method := (DocMethod)slot
+      writeTypeRef(method.returns)
+      out.w(" ").w(method.name).w("(")
+      method.params.each |param, i|
+      {
+        if (i > 0) out.w(", ")
+        writeTypeRef(param.type)
+        out.w(" ")
+        out.w(param.name)
+        if (param.def != null) out.w(" := ").w(param.def.toXml)
+      }
+      out.w(")")
+    }
+    out.codeEnd.divEnd
+
+    // documentation
     writeFandoc(type, slot.doc)
+  }
+
+  ** Write the given type ref as a hyperlink
+  virtual Void writeTypeRef(DocTypeRef ref)
+  {
+    // TODO
+    uri := StrBuf()
+    if (ref.pod != type.pod) uri.add("../").add(ref.pod).add("/")
+    uri.add(ref.name).add(".html")
+
+    dis := ref.isParameterized ? ref.signature : ref.name
+
+    out.a(uri.toStr.toUri).w(dis).aEnd
   }
 
 
