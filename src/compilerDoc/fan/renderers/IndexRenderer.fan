@@ -43,17 +43,19 @@ class IndexRenderer : DocRenderer
   ** Render the HTML pod's index of types
   virtual Void writeTypeIndex(DocPod pod)
   {
+    writeStart(pod.name)
+
     out.p.a(`../index.html`).w("Home").aEnd
       .w(" > ").a(`index.html`).w(pod.name).aEnd
     if (pod.podDoc != null)
       out.w(" | ").a(`pod-doc.html`).w("PodDoc").aEnd
     out.pEnd.hr
 
-    writeStart(pod.name)
-
     out.h2.w("pod").h2End
     out.h1.w(pod.name).h1End
-    out.p.w(pod.summary).pEnd
+    out.p.esc(pod.summary).pEnd
+    if (pod.podDoc != null)
+      out.p.w("See <a href='pod-doc.html'>PodDoc</a> for more information.").pEnd
 
     out.table
     pod.types.each |type|
