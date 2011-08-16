@@ -75,8 +75,11 @@ class HtmlDocWriter : DocWriter
     if (elem.isBlock) out.writeChar('\n')
 
     // if hyperlink to code, then wrap in code element
-    if (elem.id == DocNodeId.link && ((Link)elem).isCode)
-      out.print("<code>")
+    if (elem.id == DocNodeId.link)
+    {
+      if (onLink != null) onLink(elem)
+      if (elem->isCode) out.print("<code>")
+    }
 
     out.writeChar('<').print(elem.htmlName)
     if (elem.anchorId != null) out.print(" id='$elem.anchorId'")
@@ -84,7 +87,6 @@ class HtmlDocWriter : DocWriter
     {
       case DocNodeId.link:
         link := elem as Link
-        if (onLink != null) onLink(link)
         out.print(" href='$link.uri.toXml'")
       case DocNodeId.image:
         img := elem as Image
