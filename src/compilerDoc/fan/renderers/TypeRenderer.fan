@@ -118,14 +118,19 @@ class TypeRenderer : DocRenderer
 
     if (slot is DocField)
     {
+      // field sig
       field := (DocField)slot
       out.w(DocFlags.toSlotDis(field.flags)).w(" ")
       writeTypeRef(field.type)
       out.w(" ").w(field.name)
       if (field.init != null) out.w(" := ").w(field.init.toXml)
+
+      // field setting
+      out.w(" &mdash; TODO: set {}")
     }
     else
     {
+      //  method sig
       method := (DocMethod)slot
       if (DocFlags.isCtor(method.flags)) out.w("new")
       else
