@@ -52,7 +52,7 @@ class LocalDocWriter
     // pods
     pods.each |pod|
     {
-      if (pod.chapters.isEmpty)
+      if (!pod.isManual)
       {
         // pod index
         out = WebOutStream(outDir.plus(`${pod.name}/index.html`).out)
@@ -150,8 +150,10 @@ class LocalDocWriter
     apis    := DocPod[,]
     env.pods.each |p|
     {
-      if (p.chapters.isEmpty) apis.add(p)
-      else manuals.add(p)
+      if (p.isManual)
+        manuals.add(p)
+      else
+        apis.add(p)
     }
 
     // manuals

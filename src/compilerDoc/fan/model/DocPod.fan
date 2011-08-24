@@ -172,6 +172,11 @@ class DocPod
   DocChapter? podDoc() { load.podDocRef }
 
   **
+  ** A *manual* pod is a pod with only fandoc chapters and no types.
+  **
+  Bool isManual() { load; return typeList.isEmpty && !chapterList.isEmpty }
+
+  **
   ** Return parsed "index.fog" if specified which is a list
   ** of sections as a 'Str' or chapter links as '[Uri, Str]'
   **
@@ -193,7 +198,7 @@ class DocPod
   **
   ** If this is a manual like docLang, return list of chapters.
   **
-  DocChapter[] chapters() { load.chapterList}
+  DocChapter[] chapters() { load.chapterList }
 
 //////////////////////////////////////////////////////////////////////////
 // State
