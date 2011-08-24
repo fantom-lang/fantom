@@ -38,41 +38,14 @@ class Main : AbstractMain
     // figure out which pods to render
     DocPod[] docPods := all ? env.pods : pods.map |n->DocPod| { env.pod(n) }
 
-    // render topindex if requested
-    if (all || topindex)
+    // render pods
+    docWriter := LocalDocWriter
     {
-      env.makeIndexRenderer(outDir.plus(`index.html`).out).writeTopIndex(env.pods)
+      it.env    = env
+      it.pods   = docPods
+      it.index  = all || topindex
+      it.outDir = this.outDir
     }
-
-    // render each pod
-    docPods.each |pod|
-    {
-      // pod index
-      if (pod.chapters.isEmpty)
-        env.makeIndexRenderer(outDir.plus(`${pod.name}/index.html`).out).writeTypeIndex(pod)
-      else
-        env.makeIndexRenderer(outDir.plus(`${pod.name}/index.html`).out).writeChapterIndex(pod)
-
-      // pod-doc
-      if (pod.podDoc != null)
-        env.makeChapterRenderer(outDir.plus(`${pod.name}/pod-doc.html`).out, pod.podDoc).writeChapter
-
-      // each type
-      pod.types.each |type|
-      {
-        env.makeTypeRenderer(outDir.plus(`${pod.name}/${type.name}.html`).out, type).writeType
-      }
-
-      // each chapter
-      pod.chapters.each |chapter|
-      {
-        env.makeChapterRenderer(outDir.plus(`${pod.name}/${chapter.name}.html`).out, chapter).writeChapter
-      }
-    }
-
-    // if we collected any errrors assume failure
-    ok := env.errHandler.errs.isEmpty
-    return ok ? 0 : 1
+    return docWriter.write.isEmpty ? 0 : 1
   }
-
 }

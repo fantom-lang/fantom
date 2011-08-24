@@ -31,14 +31,8 @@ class TypeRenderer : DocRenderer
   ** Render the HTML for the DocType referened by `type` field.
   virtual Void writeType()
   {
-    writeStart(type.qname)
-    out.p.a(`../index.html`).w("Home").aEnd
-      .w(" > ").a(`index.html`).w(type.pod).aEnd
-      .w(" > ").a(`${type.name}.html`).w(type.name).aEnd
-      .pEnd.hr
     writeTypeOverview
     writeSlots
-    writeEnd
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,8 +43,7 @@ class TypeRenderer : DocRenderer
   virtual Void writeTypeOverview()
   {
     // type name
-    out.h2.w(DocFlags.toTypeDis(type.flags)).h2End
-    out.h1.w("$type.qname").h1End
+    out.h1.span.w(DocFlags.toTypeDis(type.flags)).spanEnd.w(" $type.qname").h1End
     writeTypeInheritance
 
     // facets
