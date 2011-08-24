@@ -335,6 +335,7 @@ class MapTest : Test
   Void testNullVals()
   {
     m := ["a": "A", "b": null]
+    m.def = "def field"
 
     verifyEq(m.size, 2)
 
@@ -343,6 +344,9 @@ class MapTest : Test
 
     verifyEq(m["a"], "A")
     verifyEq(m["b"], null)
+    verifyEq(m["c"], "def field")
+    verifyEq(m.get("b", "def param"), null)
+    verifyEq(m.get("x", "def param"), "def param")
 
     keys := Str[,]
     vals := Str?[,]

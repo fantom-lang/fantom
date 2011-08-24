@@ -79,14 +79,16 @@ public final class Map
   {
     Object val = map.get(key);
     if (val != null) return val;
-    return this.def;
+    if (this.def == null) return null;
+    return map.containsKey(key) ? null : this.def;
   }
 
   public final Object get(Object key, Object def)
   {
     Object val = map.get(key);
     if (val != null) return val;
-    return def;
+    if (def == null) return null;
+    return map.containsKey(key) ? null : def;
   }
 
   public final boolean containsKey(Object key)
