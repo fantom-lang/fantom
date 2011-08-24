@@ -7,7 +7,7 @@
 **************************************************************************
 
 Overview [#overview]
-********************
+====================
 Fantom Widget Toolkit or [FWT]`fwt::index` provides a toolkit for
 building both desktop and HTML5 browser based applications:
 
@@ -21,12 +21,12 @@ The fwt defines the basic low level infrastructure for applications.
 application framework for desktop apps.
 
 Widgets [#widgets]
-******************
+==================
 The `fwt::Widget` class is the root of the widget class hierarchy.
 Widgets represent UI components such as buttons or text fields.
 
 Widget Tree [#widgetTree]
-=========================
+-------------------------
 Widgets are structured as a tree.  Typically the root of a visible
 widget tree is a `fwt::Window` on the screen. Any widget is a potential
 container for other widgets - although typically only Panes contain children.
@@ -42,7 +42,7 @@ A widget may only be mounted under one parent.  If you attempt to
 add a widget to multiple parents an exception is thrown.
 
 Panes [#panes]
-==============
+--------------
 Widgets come in two flavors: panes and controls.  [Panes]`fwt::Pane` are
 widgets which are designed to be containers for other widgets.  Panes are
 responsible for laying out their children.  Widgets which don't subclass
@@ -50,7 +50,7 @@ from Pane are most often leaf widgets which provide some control such as a
 button or text field.
 
 Custom Widgets [#customWidgets]
-===============================
+-------------------------------
 Most often you will use the predefined widgets in the toolkit.  However
 you can create your own widgets too.  Typically you will subclass `fwt::Pane`
 to create a new container widget or `fwt::Canvas` for a new control.
@@ -58,7 +58,7 @@ Panes are responsible for deciding how to layout their children.  Controls
 will typically define custom painting and eventing.
 
 Painting [#painting]
-********************
+====================
 [Canvas]`fwt::Canvas` widgets may override the [onPaint]`fwt::Canvas.onPaint`
 method to provide custom painting.  Painting is done via the `gfx::Graphics`
 API:
@@ -116,7 +116,7 @@ outline:
   }
 
 Layout [#layout]
-****************
+================
 Every widget plays a role in how the UI is laid out.  Leaf widgets define
 a preferred size by overriding the [prefSize]`fwt::Widget.prefSize` method.
 The 'prefSize' method takes a `gfx::Hints` which contains an optional
@@ -129,7 +129,7 @@ override 'prefSize' to compute the containers preferred size from
 the children.
 
 Eventing [#eventing]
-********************
+====================
 All widgets support a set of eventing callbacks which by convention start
 with the "on" prefix.  Widget events are declared as fields of type
 `fwt::EventListeners` which maintain a list of callback functions.
@@ -158,7 +158,7 @@ you can use functions which take [fewer arguments]`docLang::Functions#arityCompa
 The 'onModify' event handler takes an event parameter.
 
 Commands [#commands]
-********************
+====================
 A common technique in user interfaces to separate the UI elements
 from the command logic.  For example you might have both a menu item
 and a toolbar button for a "Save" command.  The `fwt::Command` class
