@@ -38,32 +38,6 @@ class DocRenderer
   WebOutStream out { private set }
 
 //////////////////////////////////////////////////////////////////////////
-// Start/End
-//////////////////////////////////////////////////////////////////////////
-
-  ** Write starting HTML for page. Default implemenation calls
-  ** `DocTheme.writeStart` for installed theme.
-  virtual Void writeStart(Str titleStr)
-  {
-    env.theme.writeStart(this, titleStr)
-  }
-
-  ** Write ending HTML for page. Default implemenation calls
-  ** `DocTheme.writeEnd` for installed theme and closes output stream.
-  virtual Void writeEnd()
-  {
-    env.theme.writeEnd(this)
-    out.close
-  }
-
-  **
-  ** Callback from `writeStart` to write any head includes
-  **
-  virtual Void writeHeadIncludes()
-  {
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Fanco
 //////////////////////////////////////////////////////////////////////////
 

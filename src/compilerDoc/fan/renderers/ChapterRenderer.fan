@@ -23,42 +23,31 @@ class ChapterRenderer : DocRenderer
   {
     this.chapter = chapter
 
+// TODO: don't love this design
+    parser := FandocParser()
+    parser.silent = true
+    root := parser.parse(chapter.doc.loc.file, chapter.doc.text.in)
+    this.headings = root.findHeadings
+
+    // validate headings
+    h1 := headings.findAll |h| { h.level == 1 }
+    if (h1.size > 0) echo("ERR: H1 headings not allowed [$chapter]")
   }
 
   ** Chapter to renderer
   const DocChapter chapter
 
+  ** Headings for chapter.
+// TODO FIXIT: needs to move to DocChapter
+  Heading[] headings
+
   ** Render the HTML for the DocType referened by `chapter` field.
   virtual Void writeChapter()
   {
-    out.p.a(`../index.html`).w("Home").aEnd
-      .w(" > ").a(`index.html`).w(chapter.pod).aEnd
-      .w(" > ").a(`${chapter.name}.html`).w(chapter.name).aEnd
-      .pEnd.hr
-
-// TODO: don't love this design
-     parser := FandocParser()
-     parser.silent = true
-     root := parser.parse(chapter.doc.loc.file, chapter.doc.text.in)
-     headings := root.findHeadings
-
-    writeStart(chapter.qname)
-    writeHeadings(headings)
+    parser := FandocParser()
+    parser.silent = true
+    root := parser.parse(chapter.doc.loc.file, chapter.doc.text.in)
     doWriteFandoc(chapter, chapter.doc, parser, root)
-    writeEnd
   }
-
-  virtual Void writeHeadings(Heading[] headings)
-  {
-    headings.each |h|
-    {
-      out.span
-      h.level.times |x| { out.w("&nbsp;&nbsp;&nbsp;&nbsp;") }
-      if (h.anchorId == null) out.w(h.title)
-      else out.a(`#${h.anchorId}`).w(h.title).aEnd
-      out.spanEnd.br
-    }
-  }
-
 }
 
