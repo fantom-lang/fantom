@@ -57,6 +57,13 @@ final const class DocFlags
     fromNameMap[name] ?: throw Err("Invalid flag '$name'")
   }
 
+  static Int fromNames(Str names)
+  {
+    flags := 0
+    names.split.each |name| { flags = flags.or(fromName(name)) }
+    return flags
+  }
+
   ** Type flags to display including final 'class' or 'mixin'
   static Str toTypeDis(Int f)
   {

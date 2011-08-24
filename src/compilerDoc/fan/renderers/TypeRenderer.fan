@@ -123,8 +123,9 @@ class TypeRenderer : DocRenderer
       out.w(" ").w(field.name)
       if (field.init != null) out.w(" := ").w(field.init.toXml)
 
-      // field setting
-      out.w(" &mdash; TODO: set {}")
+      // field setter if different protection scope
+      if (field.setterFlags != null)
+        out.w(" { ").w(DocFlags.toSlotDis(field.setterFlags)).w(" set }")
     }
     else
     {

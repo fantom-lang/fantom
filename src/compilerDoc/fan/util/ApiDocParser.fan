@@ -83,9 +83,12 @@ internal class ApiDocParser
 
   private Void parseTypeHeader()
   {
-    // facets, loc
+    // facets
     this.facets = parseFacets
-    this.loc    = parseAttrs
+
+    // attrs
+    attrs := parseAttrs
+    this.loc = attrs.loc
 
     // <flags> "class" <name> [":" extends]
     colon := cur.index(":")
@@ -123,7 +126,7 @@ internal class ApiDocParser
 
     // ready to parse doc
     consumeLine
-    this.doc = parseDoc
+    this.doc = parseDoc(attrs)
   }
 
   private Bool parseSlot()
@@ -133,16 +136,16 @@ internal class ApiDocParser
 
     // facets, loc
     facets := parseFacets
-    loc := parseAttrs
+    attrs := parseAttrs
 
     if (cur[-1] == '(')
-      slots.add(parseMethod(loc, facets))
+      slots.add(parseMethod(attrs, facets))
     else
-      slots.add(parseField(loc, facets))
+      slots.add(parseField(attrs, facets))
     return true
   }
 
-  private DocField parseField(DocLoc loc, DocFacet[] facets)
+  private DocField parseField(DocAttrs attrs, DocFacet[] facets)
   {
     // cur is: <flags> <type> <name> [":=" <expr>]
 
@@ -167,12 +170,12 @@ internal class ApiDocParser
 
     // parse fandoc
     consumeLine
-    doc := parseDoc
+    doc := parseDoc(attrs)
 
-    return DocField(loc, ref, name, flags, doc, facets, type, init)
+    return DocField(attrs, ref, name, flags, doc, facets, type, init)
   }
 
-  private DocMethod parseMethod(DocLoc loc, DocFacet[] facets)
+  private DocMethod parseMethod(DocAttrs attrs, DocFacet[] facets)
   {
     // cur is: <flags> <type> <name> "("
 
@@ -202,9 +205,9 @@ internal class ApiDocParser
     consumeLine  // trailing ")"
 
     // consume current line and parse docs
-    doc := parseDoc
+    doc := parseDoc(attrs)
 
-    return DocMethod(loc, ref, name, flags, doc, facets, returns, params)
+    return DocMethod(attrs, ref, name, flags, doc, facets, returns, params)
   }
 
   private DocFacet[] parseFacets()
@@ -244,8 +247,10 @@ internal class ApiDocParser
     return DocFacet(type, fields)
   }
 
-  private DocLoc parseAttrs()
+  private DocAttrs parseAttrs()
   {
+    attrs := DocAttrs()
+
     // the only attributes we care about are location (file, line)
     Str? file    := null
     Int? line    := null
@@ -258,25 +263,29 @@ internal class ApiDocParser
       if (name == "line") line = val.toInt
       else if (name == "docLine") docLine = val.toInt
       else if (name == "file") file = val
+      else if (name == "setterFlags") attrs.setterFlags = DocFlags.fromNames(val)
       consumeLine
     }
 
-    // if docLine was specified, save it away for when we get to doc
+    // create or default docLoc
     if (docLine != null)
-      this.lastDocLoc = DocLoc(file ?: this.loc.file, docLine)
+      attrs.docLoc = DocLoc(file ?: this.loc.file, docLine)
     else
-      this.lastDocLoc = DocLoc(this.loc.file, 1)
+      attrs.docLoc = DocLoc(this.loc.file, 1)
 
     // if file was specified then new fresh location
-    if (file != null) return DocLoc("${podName}::${file}", line)
-
     // otherwise we derive file location from type definition
-    return DocLoc(this.loc.file, line)
+    if (file != null)
+      attrs.loc = DocLoc("${podName}::${file}", line)
+    else
+      attrs.loc = DocLoc(this.loc.file, line)
+
+    return attrs
   }
 
-  private DocFandoc parseDoc()
+  private DocFandoc parseDoc(DocAttrs attrs)
   {
-    if (cur.isEmpty) { consumeLine; return DocFandoc(lastDocLoc, "") }
+    if (cur.isEmpty) { consumeLine; return DocFandoc(attrs.docLoc, "") }
     s := StrBuf(256)
     while (!cur.isEmpty)
     {
@@ -285,7 +294,7 @@ internal class ApiDocParser
       consumeLine
     }
     consumeLine
-    return DocFandoc(lastDocLoc, s.toStr)
+    return DocFandoc(attrs.docLoc, s.toStr)
   }
 
   private Void consumeLine()
@@ -300,9 +309,15 @@ internal class ApiDocParser
   private Int flags
   private DocLoc loc := DocLoc("Unknown", 0)
   private DocFandoc? doc
-  private DocLoc lastDocLoc := DocLoc("Unknown", 1)
   private DocFacet[]? facets
   private DocTypeRef? base
   private DocTypeRef[] mixins := [,]
   private DocSlot[] slots := [,]
+}
+
+internal class DocAttrs
+{
+  DocLoc? loc
+  DocLoc? docLoc
+  Int? setterFlags
 }

@@ -12,9 +12,9 @@
 abstract const class DocSlot
 {
   ** Constructor
-  internal new make(DocLoc loc, DocTypeRef parent, Str name, Int flags, DocFandoc doc, DocFacet[] facets)
+  internal new make(DocAttrs attrs, DocTypeRef parent, Str name, Int flags, DocFandoc doc, DocFacet[] facets)
   {
-    this.loc    = loc
+    this.loc    = attrs.loc
     this.parent = parent
     this.name   = name
     this.qname  = parent.qname + "." + name
@@ -68,12 +68,13 @@ abstract const class DocSlot
 const class DocField : DocSlot
 {
   ** Constructor
-  internal new make(DocLoc loc, DocTypeRef parent, Str name, Int flags, DocFandoc doc, DocFacet[] facets,
+  internal new make(DocAttrs attrs, DocTypeRef parent, Str name, Int flags, DocFandoc doc, DocFacet[] facets,
                     DocTypeRef type, Str? init)
-    : super(loc, parent, name, flags, doc, facets)
+    : super(attrs, parent, name, flags, doc, facets)
   {
     this.type = type
     this.init = init
+    this.setterFlags = attrs.setterFlags
   }
 
   ** Type of the field
@@ -81,6 +82,10 @@ const class DocField : DocSlot
 
   ** Expression used to initialize the field
   const Str? init
+
+  ** Flags for setting method if different from overall field level
+  ** flags, otherwise null.
+  const Int? setterFlags
 
   internal override Void dump(OutStream out)
   {
@@ -100,9 +105,9 @@ const class DocField : DocSlot
 const class DocMethod : DocSlot
 {
   ** Constructor
-  internal new make(DocLoc loc, DocTypeRef parent, Str name, Int flags, DocFandoc doc, DocFacet[] facets,
+  internal new make(DocAttrs attrs, DocTypeRef parent, Str name, Int flags, DocFandoc doc, DocFacet[] facets,
                     DocTypeRef returns, DocParam[] params)
-    : super(loc, parent, name, flags, doc, facets)
+    : super(attrs, parent, name, flags, doc, facets)
   {
     this.returns = returns
     this.params  = params
