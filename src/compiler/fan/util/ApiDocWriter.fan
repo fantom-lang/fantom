@@ -117,6 +117,12 @@ class ApiDocWriter
   {
     if (s.loc.line != null) w("%line=").w(s.loc.line.toStr).w("\n")
     if (s.doc != null)      w("%docLine=").w(s.doc.loc.line.toStr).w("\n")
+    if (s is FieldDef)
+    {
+      f := ((FieldDef)s)
+      if (f.setter != null && f.flags.and(protectionMask) != f.setter.flags.and(protectionMask))
+        w("%setterFlags=").writeFlags(f.setter.flags.and(protectionMask)).w("\n")
+    }
   }
 
   private This writeTypeRef(CType t)
@@ -163,6 +169,8 @@ class ApiDocWriter
   }
 
   This w(Str x) { out.print(x); return this }
+
+  private const static Int protectionMask := (FConst.Public).or(FConst.Protected).or(FConst.Private).or(FConst.Internal)
 
   OutStream out
 }
