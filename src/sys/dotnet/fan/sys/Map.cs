@@ -78,7 +78,8 @@ namespace Fan.Sys
       if (key == null) return m_def;
       object val = m_map[key];
       if (val != null) return val;
-      return m_def;
+      if (m_def == null) return null;
+      return containsKey(key) ? null : m_def;
     }
 
     public object get(object key, object def)
@@ -86,7 +87,8 @@ namespace Fan.Sys
       if (key == null) return def;
       object val = m_map[key];
       if (val != null) return val;
-      return def;
+      if (def == null) return null;
+      return containsKey(key) ? null : def;
     }
 
     public bool containsKey(object key)
