@@ -7,13 +7,13 @@
 **************************************************************************
 
 Overview [#overview]
-********************
+====================
 Fantom comes bundled with the `wisp::WispService` which implements
 a web server purely in Fantom code - so you can use it without
 the fuss of setting up additional software.
 
 Test Setup [#setup]
-*******************
+===================
 You can run a test wisp server straight from fansh using
 a configurable port:
 
@@ -24,8 +24,8 @@ a configurable port:
 If it is running correctly you should be able to
 hit `http://localhost:8080/` and see the test page.
 
-Configuration
-*************
+Configuration [#config]
+=======================
 Wisp is easily configured by installing a root WebMod which is
 responsible for serving all requests to the server.  Typically
 you will install a composition [WebMod]`webmod::pod-doc` to setup your
@@ -37,4 +37,21 @@ with various WebMod configurations:
   - [web-demo]`examples::web-demo`: illustrates use of many different webmods
   - [js-demo]`examples::js-demo`: configuration used to serve up FWT in browser examples
 
+wisp::Main [#main]
+==================
+For the common case where a single WebMod is used, wisp can be run directly from
+the command line:
 
+  $ fan wisp
+  Usage:
+    wisp [options] <mod>
+  Arguments:
+    mod    qualified type name for WebMod to run
+  Options:
+    -help, -?      Print usage help
+    -port <Int>    http port (default 8080)
+
+For example:
+
+   $ fan wisp myPod::MyWebMod
+   [16:43:16 24-Aug-12] [info] [web] WispService started on port 8080
