@@ -213,8 +213,8 @@ if (podPart == "sys" || podPart == "build" || podPart == "compiler" || podPart =
     slot := baseType?.slot(namePart, false)
     if (slot != null) return resolveSlot(slot, true)
 
-    // if we we have chapters, this pod doesn't contain types
-    if (!pod.chapters.isEmpty)
+    // if this pod is a manual, then it doesn't contain types
+    if (pod.isManual)
     {
       // check ".slot" not defined
       if (dotPart != null) throw err("Cannot have dotPart in chapters")
