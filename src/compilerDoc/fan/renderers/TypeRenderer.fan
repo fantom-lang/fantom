@@ -47,7 +47,12 @@ class TypeRenderer : DocRenderer
     writeTypeInheritance
 
     // facets
-    out.p("class='todo'").w("TODO: facets").pEnd
+    if (type.facets.size > 0)
+    {
+      out.p
+      type.facets.each |f| { writeFacet(f); out.br }
+      out.pEnd
+    }
 
     // fandoc
     writeFandoc(type, type.doc)
@@ -107,7 +112,7 @@ class TypeRenderer : DocRenderer
   virtual Void writeSlotSig(DocSlot slot)
   {
     out.p.code("class='sig'")
-    out.printLine("TODO: facets").br
+    slot.facets.each |f| { writeFacet(f); out.br }
 
     if (slot is DocField)
     {
@@ -160,6 +165,20 @@ class TypeRenderer : DocRenderer
     dis := ref.isParameterized ? ref.signature : (full ? ref.qname : ref.name)
 
     out.a(uri.toStr.toUri).w(dis).aEnd
+  }
+
+  ** Write the given facet.
+  virtual Void writeFacet(DocFacet f)
+  {
+    out.code("class='sig'")
+    out.w("@")
+    writeTypeRef(f.type)
+    if (f.fields.size > 0)
+    {
+      s := f.fields.join("; ") |v,n| { "$n.toXml=$v.toXml" }
+      out.w(" { $s }")
+    }
+    out.codeEnd
   }
 }
 
