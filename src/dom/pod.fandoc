@@ -24,7 +24,7 @@ one-to-one:
   XmlHttpRequest    HttpReq/HttpRes
 
 Win [#win]
-==========
+**********
 
   // basics
   win := Win.cur       // get current Win instance
@@ -43,14 +43,14 @@ Win [#win]
   win.localStorage.clear          // clear all contents from local storage
 
 Doc [#doc]
-==========
+**********
 
   doc := Win.cur.doc      // get doc instance for this window
   doc.elem("someId")      // return the Elem with id='someId'
   doc.createElem("div")   // create a new <div> element
 
 Elem [#elem]
-============
+**********
 
   // attributes
   elem["alt"]               // get an attribute value
@@ -89,7 +89,7 @@ Elem [#elem]
   elem.findAll |e| { e.tagName == "img" }  // find all <img> descendants
 
 XmlHttpRequest [#xhr]
-=====================
+*********************
 
 The [HttpReq]`dom::HttpReq` object is used to make background HTTP
 requests from the browser.  For both sync and async requests, the response
