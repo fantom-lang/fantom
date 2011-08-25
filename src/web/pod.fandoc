@@ -7,7 +7,7 @@
 **************************************************************************
 
 Overview [#overview]
-====================
+********************
 The [web]`web::index` pod defines the standard APIs used to handle
 both client and server side HTTP requests.
 
@@ -27,7 +27,7 @@ Server side web APIs are organized into the primary classes:
     other modules to build up a web solution.
 
 WebClient [#webClient]
-======================
+**********************
 The 'WebClient' class is used to manage client side HTTP requests
 and responses.  The basic lifecycle of WebClient:
   1. configure request fields such as 'reqUri', 'reqMethod', and 'reqHeaders'
@@ -45,7 +45,7 @@ make common cases easier.
 See [examples]`examples::web-client` for sample code.
 
 Weblets [#weblet]
-=================
+*****************
 Pretty much anything that touches a HTTP request should be implement
 `web::Weblet`.  The lifecycle of a Weblet is quite simple:
   - all web requests are guaranteed to be called on their own
@@ -58,7 +58,7 @@ Pretty much anything that touches a HTTP request should be implement
     to the 'doGet', 'doPost', etc methods
 
 WebReq [#webReq]
-================
+****************
 The `web::WebReq` class models the request side of a HTTP request.
 Common methods you will use include:
   - [method]`web::WebReq.method`: HTTP method such as "GET" or "POST"
@@ -79,7 +79,7 @@ Common methods you will use include:
     only for the life of request
 
 WebRes [#webRes]
-================
+****************
 The `web::WebRes` class models the response side of a HTTP request.
 A 'WebRes' has the following lifecycle:
   - **Uncommitted**: at this point nothing has been written back on the
@@ -111,7 +111,7 @@ WebRes is a fairly low level API which requires the commit state
 model to avoid buffering the content.
 
 WebSessions [#sessions]
-=======================
+***********************
 The `web::WebSession` class models the client session which allows you to
 persist state between HTTP requests.  WebSessions in Fantom are cookie
 based using the cookie name "fanws".  The default session implementation
@@ -144,7 +144,7 @@ Example of storing a counter in a session:
   }
 
 WebMods [#webmod]
-=================
+******************
 The `web::WebMod` class is the base class for plugging in web server
 modules.  WebMods are immutable Weblets which may be composed together
 to build higher level modules or to configure the entire web server.
@@ -167,7 +167,7 @@ designed to handle common tasks such publishing static files, routing,
 and pipelining.
 
 Expect Continue [#expectContinue]
-=================================
+*********************************
 Using "Expect: 100-continue" allows the server to fail-fast and
 report an error to the client before the client sends the request
 body.  This technique is often used before posting large files

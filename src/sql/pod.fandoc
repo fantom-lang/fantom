@@ -7,7 +7,7 @@
 **************************************************************************
 
 Overview [#overview]
-====================
+********************
 
 The [sql]`sql::index` pod provides a standardized, low level API to work
 with relational databases.  Its basic goals in life:
@@ -17,7 +17,7 @@ with relational databases.  Its basic goals in life:
  - Model: model meta-data and relational tables
 
 Test Setup [#testSetup]
-=======================
+***********************
 The sql tests use the following config props to determine the
 database configuration:
   - 'test.uri': connection/jdbc url string, defaults
@@ -39,13 +39,13 @@ To setup the fantest database and user account via the mysql command line:
   mysql> grant all privileges on fantest.* to fantest identified by 'fantest';
 
 Connections [#connections]
-==========================
+**************************
 Connections are managed by the `sql::SqlConn` class.  To open and close connections
 to the database, simply call the [SqlConn.open]`sql::SqlConn.open` and
 [SqlConn.close]`sql::SqlConn.close` methods.
 
 Connections in Java [#java]
----------------------------
+===========================
 When running in a Java VM, Fantom uses JDBC under the covers.  Using
 MySQL as an example, follow these steps to open a connection in
 the JVM:
@@ -67,7 +67,7 @@ to preload the class is to ensure the classname is defined in
       db := SqlConn.open("jdbc:mysql://localhost:3306/fantest", "fantest", "fantest")
 
 Statements [#statements]
-========================
+************************
 SQL statements are created using the [SqlConn.sql]`sql::SqlConn.sql`
 method.  After a statement has been created, it can be executed immediately
 by calling [execute]`sql::Statement.execute` or it can be prepared for later
@@ -94,7 +94,7 @@ parameters.
       addBook.execute(["title":"Captains Courageous", "author":"Rudyard Kipling", "year":1897])
 
 Queries [#queries]
-==================
+******************
 The result of an SQL query is always a relational table described
 by fixed columns with zero or more rows.  Fantom supports two different
 mechanisms  for retrieving query results: as a list of [Rows]`sql::Row`
@@ -114,7 +114,7 @@ Or to iterate through the rows:
       }
 
 sql::Row [#row]
----------------
+===============
 The rows for a given query result all share a list of [sql::Cols]`sql::Col`
 which describes the meta-data.  You can use access the column of each
 row using the 'get(Col)' or with [dynamic invoke]`docLang::Methods#dynamicInvoke`:
@@ -131,7 +131,7 @@ If you have a large query result, using 'get(Col)' provides a little
 better performance.
 
 SQL/Fantom Type Mapping [#typeMapping]
-======================================
+**************************************
 The following type specifies the mapping of SQL types to Fantom types:
 
   SQL Type       Fantom Type
