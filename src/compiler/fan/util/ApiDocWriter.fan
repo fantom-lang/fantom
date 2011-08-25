@@ -121,7 +121,7 @@ class ApiDocWriter
     {
       f := ((FieldDef)s)
       if (f.setter != null && f.flags.and(protectionMask) != f.setter.flags.and(protectionMask))
-        w("%setterFlags=").writeFlags(f.setter.flags.and(protectionMask)).w("\n")
+        w("%set=").writeFlags(f.setter.flags.and(protectionMask)).w("\n")
     }
   }
 
