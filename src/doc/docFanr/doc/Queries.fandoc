@@ -21,8 +21,8 @@ The general format of a query string is:
 
 If you want to perform multiple queries at once you can separate them with a comma.
 
-Name Filters
-************
+Name Filters [#nameFilters]
+***************************
 Name filter is simple string with optional "*" wildcard:
 
   sidewalk     // match the pod name "sidewalk"
@@ -30,8 +30,8 @@ Name filter is simple string with optional "*" wildcard:
   a*           // match any pod starting with "a"
   *            // match any pod
 
-Version Filters
-***************
+Version Filters [#versionFilters]
+*********************************
 The version filter is optional.  If omitted, we assume we are matching
 current version.  The version syntax reuses the `sys::Depend` syntax:
 
@@ -56,8 +56,8 @@ available for my current local installation:
 This would return latest patch versions of my specific versions
 of 'a', 'b', 'c', and 'd'.
 
-Meta Filters
-************
+Meta Filters [#metaFilters]
+****************************
 You can perform queries on arbitrary [pod metadata]`docLang::Pods#meta` props:
 
   org.name == SkyFoundry   // any pod where org.ame == "SkyFoundry"

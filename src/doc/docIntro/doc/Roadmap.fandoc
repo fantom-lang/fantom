@@ -31,24 +31,19 @@ Future Work [#futureWork]
 Random list of ideas for future work we have on our radar, or that
 we would like to see receive community attention:
 
-IDE Support
-===========
+IDE Support [#ideSupport]
+=========================
 By far and awaw the biggest requirement for a successful ecosystem is
 awesome tooling.  The community is doing a great job addressing IDE
 tooling, and if you are interested please get involved!
 
-Web Repositories
+Crypto [#crypto]
 ================
-Fantom is growing and we are quickly reaching a point where a Fantom
-like "CPAN" would really help for managing and distributing pods.
-
-Crypto
-======
 We need standardized APIs for cryptographic operations and algorithms. This
 work will include support for the SSL protocol.
 
-.NET and Alternate Runtimes
-===========================
+.NET and Alternate Runtimes [#dotnet]
+=====================================
 The focus of the core Fantom team is Java and JavaScript support.  If you
 are interested in the .NET or other runtimes please get involved!
 
