@@ -192,6 +192,9 @@ internal class FileRepoDb
     // copy it
     inputFile.copyTo(dbFile)
 
+    // re-read spec using correct dbFile
+    spec = PodSpec.load(dbFile)
+
     // check if we need to update our data structures
     podDir := podDirs[spec.name]
     if (podDir == null)
