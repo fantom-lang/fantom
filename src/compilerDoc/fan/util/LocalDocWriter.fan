@@ -52,17 +52,18 @@ class LocalDocWriter
     // pods
     pods.each |pod|
     {
+      podDir := outDir + `${pod.name}/`
       if (!pod.isManual)
       {
         // pod index
-        out = WebOutStream(outDir.plus(`${pod.name}/index.html`).out)
+        out = WebOutStream(podDir.plus(`index.html`).out)
         writePodIndex(out, pod)
         out.close
 
         // types
         pod.types.each |type|
         {
-          out = WebOutStream(outDir.plus(`${pod.name}/${type.name}.html`).out)
+          out = WebOutStream(podDir.plus(`${type.name}.html`).out)
           writeType(out, type)
           out.close
         }
@@ -70,16 +71,30 @@ class LocalDocWriter
       else
       {
         // manual index
-        out = WebOutStream(outDir.plus(`${pod.name}/index.html`).out)
+        out = WebOutStream(podDir.plus(`index.html`).out)
         writeManualIndex(out, pod)
         out.close
 
         // chapters
         pod.chapters.each |chapter|
         {
-          out = WebOutStream(outDir.plus(`${pod.name}/${chapter.name}.html`).out)
+          out = WebOutStream(podDir.plus(`${chapter.name}.html`).out)
           writeChapter(out, chapter)
           out.close
+        }
+
+        // resources
+        if (!pod.resources.isEmpty)
+        {
+          zip := pod.open
+          try
+          {
+            pod.resources.each |res|
+            {
+              zip.contents[res].in.pipe(podDir.plus(res.name.toUri).out)
+            }
+          }
+          finally zip.close
         }
       }
     }

@@ -65,6 +65,14 @@ class DocPod
   ** See [docLang]`docLang::Pods#meta`.
   const Str:Str meta
 
+  ** Open this pod file as a zip file.
+  Zip open()
+  {
+    file := env.loader.envFindPodFile(name)
+    if (file == null) throw Err("Cannot map '$name' to pod file")
+    return Zip.open(file)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Types
 //////////////////////////////////////////////////////////////////////////
@@ -105,10 +113,10 @@ class DocPod
     DocChapter? podDoc := null
     chapterMap := Str:DocChapter[:]
     Obj[]? chapterIndex := null
+    resourceList := Uri[,]
 
-    // get file to use from DocLoader
-    file := env.loader.findPodFile(name) ?: throw Err("File not found: $name")
-    zip := Zip.open(file)
+    // process zip contents
+    zip := open
     try
     {
       // iterate thru the zip file looking for the files we need
@@ -121,8 +129,11 @@ class DocPod
           typeMap[type.name] = type
         }
 
+        // we only care about files in doc/*
+        if (f.path[0] != "doc") return
+
         // if doc/{type}.fandoc
-        if (f.path[0] == "doc" && f.ext == "fandoc")
+        if (f.ext == "fandoc")
         {
           isPodDoc := f.basename == "pod"
           chapter := DocChapter
@@ -139,8 +150,16 @@ class DocPod
         }
 
         // if doc/index.fog
-        if (f.path[0] == "doc" && f.name == "index.fog")
+        else if (f.name == "index.fog")
+        {
           chapterIndex = f.readObj
+        }
+
+        // otherwise assume its a resource
+        else
+        {
+          resourceList.add(f.uri)
+        }
       }
     }
     finally zip.close
@@ -158,6 +177,7 @@ class DocPod
     this.podDocRef   = podDoc
     this.chapterList = chapterMap.vals.ro
     this.chapterMap  = chapterMap.ro
+    this.resourceList = resourceList.ro
     this.chapterIndexRef = chapterIndex
     return this
   }
@@ -200,6 +220,13 @@ class DocPod
   **
   DocChapter[] chapters() { load.chapterList }
 
+  **
+  ** Resource files in pod which are used to support the
+  ** documentation such as images used by the fandoc chapters.
+  ** The Uris are internal the pod zip file.
+  **
+  Uri[] resources() { load.resourceList }
+
 //////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////
@@ -210,4 +237,5 @@ class DocPod
   private DocChapter[]? chapterList
   private [Str:DocChapter]? chapterMap
   private Obj[]? chapterIndexRef
+  private Uri[]? resourceList
 }
