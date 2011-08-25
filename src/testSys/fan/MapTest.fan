@@ -272,7 +272,7 @@ class MapTest : Test
     verifyEq(m[9], null)
     verifyEq(m.get(0, "?"), "?")
     verifyEq(m.get(2, "?"), "two")
-    verifyEq(m.get(9, "?"), "?") // mapped, but null returns def
+    verifyEq(m.get(9, "?"), null)
     verifyErr(ArgErr#) { m.add(5, "err") }
     verifyErr(ArgErr#) { m.add(9, "err") }
 
