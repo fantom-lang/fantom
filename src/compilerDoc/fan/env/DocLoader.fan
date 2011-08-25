@@ -16,23 +16,29 @@ using web
 class DocLoader
 {
 
+  // internal methods that route to protected plugin methods
+  // allow us to force clients to go thru DocEnv and its cache
+  internal Str[] envFindAllPodNames() { findAllPodNames }
+  internal DocPod? envFindPod(DocEnv env, Str podName) { findPod(env, podName) }
+  internal File? envFindPodFile(Str podName) { findPodFile(podName) }
+
   **
   ** Resolve the full listing of pod names to use for topindex
   ** and to populate `DocEnv.pods`.  Default implementation
   ** routes to `sys::Env.findAllPodNames`.
   **
-  virtual Str[] findAllPodNames()
+  protected virtual Str[] findAllPodNames()
   {
     Env.cur.findAllPodNames
   }
 
   **
-  ** Resolve a pod name to a DocPod or return null if not found.
-  ** Default implementation routes to `findPodFile`.  The
-  ** returned pod only needs to have its summary meta loaded,
-  ** the types will be lazily loaded by `DocPod`.
+  ** Resolve a pod name to a DocPod or return null.  Default
+  ** implementation routes to `findPodFile`.  The returned pod
+  ** only needs to have its summary meta loaded, the types will
+  ** be lazily loaded by `DocPod`.
   **
-  virtual DocPod? findPod(DocEnv env, Str podName)
+  protected virtual DocPod? findPod(DocEnv env, Str podName)
   {
     file := findPodFile(podName)
     if (file == null) return null
@@ -46,10 +52,10 @@ class DocLoader
   }
 
   **
-  ** Resolve a pod name to a File on the local file system or if
-  ** not found return null.
+  ** Resolve a pod name to a File on the local file system.
+  ** If not found return null.
   **
-  virtual File? findPodFile(Str podName)
+  protected virtual File? findPodFile(Str podName)
   {
     Env.cur.findPodFile(podName)
   }

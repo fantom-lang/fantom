@@ -74,7 +74,7 @@ class DocEnv
   once DocPod[] pods()
   {
     acc := DocPod[,]
-    loader.findAllPodNames.each |name|
+    loader.envFindAllPodNames.each |name|
     {
       pod := pod(name)
       if (pod.meta["pod.docApi"] != "false")
@@ -91,7 +91,7 @@ class DocEnv
     pod := podCache[podName]
     if (pod == null)
     {
-      pod = loader.findPod(this, podName)
+      pod = loader.envFindPod(this, podName)
       if (pod != null) podCache[podName] = pod
     }
     if (pod != null) return pod
