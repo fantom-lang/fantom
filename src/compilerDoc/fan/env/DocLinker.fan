@@ -183,7 +183,7 @@ echo("   pod     = $pod")
   virtual DocLink? resolve()
   {
 // TODO: avoid/ignore bootstrap and examples
-if (podPart == "sys" || podPart == "build" || podPart == "compiler" || podPart == "examples")
+if (podPart == "examples")
   return DocLink(link.toUri, link, true)
 
     // if we weren't able to resolve our current pod, time to bail

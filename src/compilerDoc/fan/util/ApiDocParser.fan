@@ -263,7 +263,7 @@ internal class ApiDocParser
       if (name == "line") line = val.toInt
       else if (name == "docLine") docLine = val.toInt
       else if (name == "file") file = val
-      else if (name == "setterFlags") attrs.setterFlags = DocFlags.fromNames(val)
+      else if (name == "set") attrs.setterFlags = DocFlags.fromNames(val)
       consumeLine
     }
 
