@@ -91,6 +91,7 @@ class FandocParser
       case LineType.h1:
       case LineType.h2:
       case LineType.h3:
+      case LineType.h4:
         return heading
     }
 
@@ -408,9 +409,10 @@ class FandocParser
     else if (peek.isSpace)             peekt = LineType.blank
     else if (peek.startsWith("pre>"))  peekt = LineType.preStart
     else if (peek.startsWith("<pre"))  peekt = LineType.preEnd
-    else if (peek.startsWith("***") && curNotBlank)  peekt = LineType.h1
-    else if (peek.startsWith("===") && curNotBlank)  peekt = LineType.h2
-    else if (peek.startsWith("---") && curNotBlank)  peekt = LineType.h3
+    else if (peek.startsWith("###") && curNotBlank)  peekt = LineType.h1
+    else if (peek.startsWith("***") && curNotBlank)  peekt = LineType.h2
+    else if (peek.startsWith("===") && curNotBlank)  peekt = LineType.h3
+    else if (peek.startsWith("---") && curNotBlank)  peekt = LineType.h4
     else
     {
       peekt = LineType.normal
@@ -491,9 +493,10 @@ internal enum class LineType
   blank,       // space*
   ul,          // space* "-" space*
   ol,          // space* (number|letter)* "." space*
-  h1,          // ***
-  h2,          // ===
-  h3,          // ---
+  h1,          // ###
+  h2,          // ***
+  h3,          // ===
+  h4,          // ---
   blockquote,  // >
   preStart,    // pre>
   preEnd,      // <pre
@@ -508,6 +511,7 @@ internal enum class LineType
       case h1: return 1
       case h2: return 2
       case h3: return 3
+      case h4: return 4
       default: throw Err(toStr)
     }
   }

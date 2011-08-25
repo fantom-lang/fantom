@@ -114,10 +114,10 @@ class FandocTest : Test
     doc := verifyDoc("[#xyz]some text\nthe end.", ["<body>", ["<p>", "some text the end."]])
     verifyEq(doc.children.first->anchorId, "xyz")
 
-    doc = verifyDoc("Chapter Two [#ch2]\n=======\nblah blah", ["<body>", ["<h2>", "Chapter Two "], ["<p>", "blah blah"]])
+    doc = verifyDoc("Chapter Two [#ch2]\n=======\nblah blah", ["<body>", ["<h3>", "Chapter Two "], ["<p>", "blah blah"]])
     verifyEq(doc.children.first->anchorId, "ch2")
 
-    doc = verifyDoc("[#ch2]Chapter Two\n=======\nblah blah", ["<body>", ["<h2>", "Chapter Two"], ["<p>", "blah blah"]])
+    doc = verifyDoc("[#ch2]Chapter Two\n=======\nblah blah", ["<body>", ["<h3>", "Chapter Two"], ["<p>", "blah blah"]])
     verifyEq(doc.children.first->anchorId, "ch2")
   }
 
@@ -199,17 +199,20 @@ class FandocTest : Test
       -----
         Foo
 
+      New Book
+      ########
       Chapter 2
       *********
 
       Roger - chapter two!
       ", ["<body>",
-            ["<h1>", "Chapter 1"],
-            ["<h2>", "1.1"],
+            ["<h2>", "Chapter 1"],
+            ["<h3>", "1.1"],
             ["<p>", "Alpha Beta"],
-            ["<h3>", "1. 1.1"],
+            ["<h4>", "1. 1.1"],
             ["<pre>", "Foo"],
-            ["<h1>", "Chapter 2"],
+            ["<h1>", "New Book"],
+            ["<h2>", "Chapter 2"],
             ["<p>", "Roger - chapter two!"],
           ])
 
@@ -408,10 +411,10 @@ class FandocTest : Test
       ** title: Rocking test here!
       **************************************
 
-      h1
+      head
       ***
 
-      para", ["<body>", ["<h1>", "h1"], ["<p>", "para"]])
+      para", ["<body>", ["<h2>", "head"], ["<p>", "para"]])
 
 
      verifyEq(doc.meta.size, 2)
@@ -481,7 +484,6 @@ class FandocTest : Test
   {
     parser := FandocParser { silent = true }
     doc := parser.parse("Test", str.in)
-    //doc.dump
     verifyDocNode(doc, expected)
     return doc
   }
