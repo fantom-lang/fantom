@@ -7,7 +7,7 @@
 **************************************************************************
 
 Overview [#overview]
-====================
+********************
 The [webmod]`webmod::index` pod defines a library for web modules
 which may be composed together:
   - [FileMod]`#file`: publish static files
@@ -16,7 +16,7 @@ which may be composed together:
   - [LogMod]`#log`: logs using W3C extended log format
 
 FileMod [#file]
-===============
+***************
 [FileMod]`webmod::FileMod` is a simple way to publish static files
 under a base URI.  FileMod may be used with a single file or with
 a directory.  If using FileMod with a directory, then any request
@@ -62,7 +62,7 @@ Directories map files based on [WebReq.modRel]`web::WebReq.modRel`:
   /stuff/foo/beta.html  =>  /stuff/foo/beta.html
 
 RouteMod [#route]
-=================
+*****************
 [RouteMod]`webmod::RouteMod` is a composition module used to route
 path names in a URI to sub-modules.  RouteMod maps the first path
 name in [WebReq.modRel]`web::WebReq.modRel` to a sub module via
@@ -102,7 +102,7 @@ Request uri to module mappings:
   /bar/alpha/x  =>  alpha
 
 PipelineMod [#pipeline]
-=======================
+***********************
 [PipelineMod]`webmod::PipelineMod` is a composition module used
 to run a request through a series of sub-modules.  The lifecycle of
 a PipelineMod request:
@@ -116,7 +116,7 @@ request regardless of the 'WebRes.isDone' state.  But the modules
 declared steps are only processed as long as 'WebRes.isDone' is false.
 
 LogMod [#log]
-=============
+************
 [LogMod]`webmod::LogMod` class is used to generate a server
 log file for all HTTP requests in the [W3C Extended Log File
 Format]`http://www.w3.org/TR/WD-logfile.html`.  Logging is

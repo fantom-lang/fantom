@@ -7,7 +7,7 @@
 **************************************************************************
 
 Overview [#overview]
-====================
+********************
 The [xml]`xml::index` API provides the core APIs for working with XML:
 
   1. [XElem]`xml::XElem`: Provides a standard representation of an XML element tree
@@ -27,7 +27,7 @@ The features supported by XParser:
   - Character data consisting only of whitespace is always ignored
 
 DOM [#dom]
-==========
+**********
 XML documents are modeled in memory using the following classes:
 
   - [XDoc]`xml::XDoc`: models the entire document providing access to
@@ -67,7 +67,7 @@ it-blocks:
   </root>
 
 Namespaces [#ns]
-================
+****************
 The [XNs]`xml::XNs` class is used model XML namespaces.  The default
 namespace is indicated with the prefix of "".  Both XElem and XAttr
 define a set of methods for working with qualified names:
@@ -103,7 +103,7 @@ attributes are declared:
   </b:root>
 
 Writing [#writing]
-==================
+******************
 All the XML node classes support a 'write' method which takes
 an 'OutStream'.  During debugging it is often convenient to
 write to standard out:
@@ -132,7 +132,7 @@ markup escaped.  However, you should prefer OutStream when streaming
 which is more efficient.
 
 Parsing [#parsing]
-==================
+******************
 The [XParser]`xml::XParser` class is used to parse XML input streams into XElems.
 The easiest way to do this is to parse the entire document into memory using
 the 'parseDoc' method:

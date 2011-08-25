@@ -7,7 +7,7 @@
 **************************************************************************
 
 Overview [#overview]
-====================
+********************
 Fandoc is documentation format written in plaintext similiar to
 [Markdown]`http://daringfireball.net/projects/markdown/`.  Fandoc
 is the format used for:
@@ -19,7 +19,7 @@ You can use the [fandoc APIs]`#api` to parse fandoc plaintext
 into a document object model and generate HTML.
 
 Header [#header]
-================
+****************
 The begining of a Fandoc document may be prefixed with a header block.  The
 header block includes a series of lines which begin with '**'.  If
 the line includes a colon, then it is added a key/value pair to
@@ -37,7 +37,7 @@ pre>
 <pre>
 
 Inline Formatting [#inline]
-===========================
+***************************
 pre>
   - Inline code: 'FandocParser'
   - Strong: **foo bar**
@@ -53,7 +53,7 @@ pre>
   - Hyperlink: [Fantom Home Page]`http://fantom.org/`
 
 Paragraphs [#p]
-===============
+***************
 Paragraphs are separated by a blank line:
 
 pre>
@@ -71,7 +71,7 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
 nisi ut aliquip ex ea commodo consequat.
 
 Preformatted [#pre]
-===================
+*******************
 When documenting a programming language, you tend to include
 lots of code snippets.  Anything indented two or more spaces is
 considered preformatted (like the pre tag in HTML).  Preformatted
@@ -106,7 +106,7 @@ pre>
 <pre
 
 Unordered List [#ul]
-====================
+********************
 Unordered lists use a dash followed by a space.  Use indentation
 to indicate list hierarchy (two or more spaces):
 
@@ -127,7 +127,7 @@ pre>
   - item 4
 
 Ordered List [#ol]
-==================
+******************
 Ordered lists use an identifier followed by a dot and space.  The identifier
 can be a number, letter, or roman numeral (lower or upper case).  Use
 indentation to indicate list hierarchy (two or more spaces):
@@ -157,7 +157,7 @@ pre>
      ii. Subsection ii
 
 Block Quotes [#blockQuotes]
-===========================
+***************************
 Block quotes start the first line (or every line) of the paragraph
 with the ">" character followed by a space:
 
@@ -176,7 +176,7 @@ pre>
 nisi ut aliquip ex ea commodo consequat.
 
 Images [#images]
-================
+****************
 Images use the same syntax as a hyperlink with anchor text, but
 are prefixed with a bang:
 
@@ -187,7 +187,7 @@ pre>
 ![fan logo]`http://fantom.org/doc/eximg.png`
 
 Headings [#headings]
-====================
+********************
 Headings are a title line followed by an "underline".  Documentation
 should define an anchor id for each heading:
 
@@ -212,7 +212,7 @@ Ex Heading 3 [#h3]
 ------------------
 
 Hyperlinks [#hyperlinks]
-========================
+************************
 The [docCompiler]`docCompiler::index` pod is used to compile API or stand-alone
 documentation.  It allows you to use abstract uris to create cross reference
 hyperlinks.  During the compilation these uris are translated into relative links
@@ -254,7 +254,7 @@ pre>
   - [Env#index]`docLang::Env#index`: anchor within chapter (internal to pod)
 
 Fandoc API [#api]
-=================
+*****************
 The [FandocParser]`fandoc::FandocParser` class is used to parse fandoc
 plaintext into a document object model.  The [DocNode]`fandoc::DocNode` is
 the base class of all nodes in the document tree.  The tree is organized

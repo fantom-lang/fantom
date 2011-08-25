@@ -7,7 +7,7 @@
 **************************************************************************
 
 Overview [#overview]
-====================
+********************
 The [email]`email::index` pod provides APIs for working with electronic
 mail.  The following features are supported:
 
@@ -21,7 +21,7 @@ as POP3 or IMAP.  If you need this functionality, please let us know.
 See [examples]`examples::email-sending` for sample code.
 
 SMTP [#smtp]
-============
+************
 The [SmtpClient]`email::SmtpClient` class lets you relay mail to a SMTP
 server.  An instance of SmtpClient is configured with a host (and port if
 not using 25).  If you wish to use SMTP authentication you will also need
@@ -56,7 +56,7 @@ If you run into trouble, you can turn on tracing:
   mailer.log.level = LogLevel.trace
 
 Email [#email]
-==============
+**************
 The [Email]`email::Email` class is used to model a MIME message.  Typical
 use is to construct a Email instance using [it-blocks]`docLang::Closures#itBlocks`:
 
@@ -81,7 +81,7 @@ sending an email which checks that headers are correctly configured
 and performs header normalization.
 
 TextPart [#textPart]
-====================
+********************
 The [TextPart]`email::TextPart` is used to represent text via a Str.
 By default a TextPart defaults to "text/plain":
 
@@ -107,7 +107,7 @@ can define an explicit charset yourself in the "Content-Type" header:
   }
 
 MultiPart [#multiPart]
-======================
+**********************
 The [MultiPart]`email::MultiPart` class is used to encode MIME multiparts.
 By default the "Content-Type" defaults "multipart/mixed".  Mixed is typically
 used with file attachments.  The "multipart/alternative" is used when
@@ -116,7 +116,7 @@ The multipart boundary is automatically generated in the
 [validate]`email::MultiPart.validate` method.
 
 FilePart [#filePart]
-====================
+********************
 The [FilePart]`email::FilePart` class is used to encode a binary attachment from
 a File instance.  If you don't provide a "Content-Type", it will automatically
 default to [File.mimeType]`sys::File.mimeType`.  If you don't specify a name
