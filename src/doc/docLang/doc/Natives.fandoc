@@ -6,8 +6,8 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-Overview
-********
+Overview [#overview]
+********************
 Native classes, methods, and fields are used to implement Fantom in the
 native language of the runtime platform.  For example a native method
 would be implemented in Java for the JVM, in C# for the CLR, and JavaScript
@@ -26,8 +26,8 @@ When writing native code, refer to the FFI documentation for how to
 map Fantom types to their native platform types.  For example see
 [Java FFI]`JavaFFI#summary` to map between Fantom and Java types.
 
-Native Classes
-**************
+Native Classes [#classes]
+*************************
 A native class is one where the entire implementation is coded up
 in the native language.  In general the native code must look exactly
 like what the compiler/runtime would emit.  The 'sys' pod is implemented
@@ -82,8 +82,8 @@ Java implementation would look like:
     public String b = "const";
   }
 
-Native Peers
-************
+Native Peers [#peers]
+*********************
 The general design for classes with native methods and fields is to
 create a peer class for each Fantom type.  These peers may be a singleton
 shared by all Fantom instances or you may use a peer instance per

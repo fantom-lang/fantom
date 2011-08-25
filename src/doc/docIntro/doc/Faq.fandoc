@@ -7,7 +7,7 @@
 **************************************************************************
 
 Contact Us? [#contact]
-======================
+**********************
 Please direct questions or feedback to the
 [discussion group]`http://fantom.org/sidewalk/topic/`.  Or feel free
 to use email or Twitter:
@@ -15,7 +15,7 @@ to use email or Twitter:
   - Andy: afrankvt at gmail dot com | [twitter/afrankvt]`http://twitter.com/afrankvt`
 
 Didn't this language used to be called Fan? [#fan]
-==================================================
+**************************************************
 Yeap!  Originally the language was called Fan; named after "The Fan" which
 is the [neighborhood]`http://en.wikipedia.org/wiki/Fan_district`
 where we live in Richmond, VA.  It's a great turn of the 20th century
@@ -24,16 +24,19 @@ to automobile-centric.  But after a long debate about the searchability
 of Fan, we renamed the langauge to Fantom in November 2009.
 
 How is Fantom licensed? [#license]
-==================================
+**********************************
 Fantom is licensed under the [Academic Free License 3.0]`License` which
 is a BSD-styled license (it is very similiar to the Apache 2.0 license).
 
 What is the status of Fantom? [#status]
-=======================================
-Fantom is currently in [development]`Roadmap#status`.
+***************************************
+Fantom is currently in [development]`Roadmap#status`.  It is robust
+and stable and ready to use in production.  It has been used successfully
+in production for several years now.  However we may still make occassional
+breaking changes.
 
 How do Fantom version numbers work? [#versions]
-===============================================
+***********************************************
 Fantom version numbers are a three or four part series of decimal
 integers separated by dots: 'major.minor.build.patch'.  We are
 currently developing version 1.0 as a series of incrementing
