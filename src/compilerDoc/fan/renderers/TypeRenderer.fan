@@ -67,7 +67,11 @@ class TypeRenderer : DocRenderer
     {
       chain.insert(0, base)
       try { base = env.pod(base.pod).type(base.name).base }
-      catch { base = null }
+      catch (Err err)
+      {
+        env.err("Type inheritance failed; unknown type: $base", type.loc)
+        base = null
+      }
     }
     out.pre
     chain.each |ref,i|
