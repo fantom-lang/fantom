@@ -193,23 +193,32 @@ should define an anchor id for each heading:
 
 pre>
   Ex Heading 1 [#h1]
-  ******************
+  ##################
 
   Ex Heading 2 [#h2]
-  ==================
+  ******************
 
   Ex Heading 3 [#h3]
+  ==================
+
+  Ex Heading 4 [#h4]
   ------------------
 <pre
 
 Ex Heading 1 [#h1]
-******************
+##################
 
 Ex Heading 2 [#h2]
-==================
+******************
 
 Ex Heading 3 [#h3]
+==================
+
+Ex Heading 4 [#h4]
 ------------------
+
+Note: By convention top level sections of a chapter use heading level 2.
+Heading level 1 is reserved for the chapter title.
 
 Hyperlinks [#hyperlinks]
 ************************
