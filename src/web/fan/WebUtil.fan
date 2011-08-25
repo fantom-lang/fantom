@@ -402,8 +402,8 @@ internal class ChunkInStream : InStream
   new make(InStream in, Int? fixed := null) : super(null)
   {
     this.in = in
-    this.isFixed  = (fixed != null)
-    this.chunkRem = (fixed != null) ? fixed : -1
+    this.noMoreChunks = (fixed != null)
+    this.chunkRem     = (fixed != null) ? fixed : -1
   }
 
   override Int? read()
@@ -441,8 +441,9 @@ internal class ChunkInStream : InStream
       // if we have bytes remaining in this chunk return true
       if (chunkRem > 0) return true
 
-      // if this is a single fixed "chunk" we are at end of stream
-      if (isFixed) return false
+      // if we have set noMoreChunks this means we at end of the
+      // logical chunked stream
+      if (noMoreChunks) return false
 
       // we expect \r\n unless this is first chunk
       if (chunkRem != -1 && !in.readLine.isEmpty) throw Err()
@@ -453,19 +454,26 @@ internal class ChunkInStream : InStream
       if (semi != null) line = line[0..semi]
       chunkRem = line.toInt(16)
 
-      // if we have more chunks keep chugging,
-      // otherwise read any trailing headers
+      // if we have more chunks keep chugging
       if (chunkRem > 0) return true
+
+      // we are done so read trailing headers and set noMoreChunks
+      // flag so that additional reads to this input stream
+      // always are at end of stream
+      noMoreChunks = true
       WebUtil.parseHeaders(in)
       return false
     }
-    catch throw IOErr("Invalid format for HTTP chunked transfer encoding")
+    catch (Err e)
+    {
+      throw IOErr("Invalid format for HTTP chunked transfer encoding")
+    }
   }
 
-  override Str toStr() { "${Type.of(this).qname} { isFixed=$isFixed chunkRem=$chunkRem pushback=$pushback }" }
+  override Str toStr() { "$typeof { noMoreChunks=$noMoreChunks chunkRem=$chunkRem pushback=$pushback }" }
 
   InStream in         // underlying input stream
-  Bool isFixed        // if non-null, then we're using as one fixed chunk
+  Bool noMoreChunks   // don't attempt to read more chunks
   Int chunkRem        // remaining bytes in current chunk (-1 for first chunk)
   Int[]? pushback     // stack for unread
 }

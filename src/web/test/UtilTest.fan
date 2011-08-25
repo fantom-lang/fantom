@@ -93,11 +93,14 @@ class UtilTest : Test
     verifyEq(in.readBuf(buf.clear, 20), 11)
     verifyEq(buf.flip.readAllStr, "hello there")
     verifyEq(in.readBuf(buf.clear, 20), null)
+    verifyEq(in.readBuf(buf.clear, 20), null)
 
     // readBufFully
     in = WebUtil.makeChunkedInStream(str.toBuf.in)
     in.readBufFully(buf.clear, 14)
     verifyEq(buf.readAllStr, "xyzhello there")
+    verifyEq(in.read, null)
+    verifyEq(in.readChar, null)
     verifyEq(in.read, null)
 
     // unread
