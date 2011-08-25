@@ -66,9 +66,8 @@ class TypeRenderer : DocRenderer
     while (base != null)
     {
       chain.insert(0, base)
-      // TODO FIXIT: DocTypeRef.base field
-      //base = base.base
-      base = null
+      try { base = env.pod(base.pod).type(base.name).base }
+      catch { base = null }
     }
     out.pre
     chain.each |ref,i|
