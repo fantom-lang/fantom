@@ -107,7 +107,12 @@ internal class ApiDocParser
     isMixin := flags.and(DocFlags.Mixin) != 0
 
     // extends
-    if (colon != null)
+    if (colon == null)
+    {
+      if (!(podName == "sys" && name == "Obj") && !isMixin)
+        this.base = DocTypeRef("sys::Obj")
+    }
+    else
     {
       typesSigs := cur[colon+1..-1].split(',')
       types := typesSigs.map |sig->DocTypeRef| { DocTypeRef(sig) }
