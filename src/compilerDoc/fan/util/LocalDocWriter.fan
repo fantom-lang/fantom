@@ -302,22 +302,23 @@ class LocalDocWriter
 
     // headings
     out.ul("class='sidebar'")
-    writeChapterHeadings(r, chapter.headings)
+    writeChapterHeadings(out, chapter.headings)
     out.ulEnd
   }
 
-  private Void writeChapterHeadings(ChapterRenderer r, DocHeading[] headings)
+  private Void writeChapterHeadings(WebOutStream out, DocHeading[] headings)
   {
     headings.each |h|
     {
-      r.out.li
-      r.out.a(`#$h.anchorId`).esc(h.title).aEnd.liEnd
+      out.li
+      out.a(`#$h.anchorId`).esc(h.title).aEnd
       if (!h.children.isEmpty)
       {
-        r.out.ul
-        writeChapterHeadings(r, h.children)
-        r.out.ulEnd
+        out.ul
+        writeChapterHeadings(out, h.children)
+        out.ulEnd
       }
+      out.liEnd
     }
   }
 
