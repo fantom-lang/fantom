@@ -32,7 +32,8 @@ abstract class BuildPod : BuildScript
   Str? summary := null
 
   **
-  ** Version of the pod - default is set to `config` prop 'buildVersion'.
+  ** Version of the pod - default is set to `BuildScript.config`
+  ** prop 'buildVersion'.
   **
   Version version := Version(config("buildVersion", "0"))
 

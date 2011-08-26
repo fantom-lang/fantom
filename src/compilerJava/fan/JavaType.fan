@@ -211,7 +211,7 @@ class JavaType : CType
   ** The arrayOf field always stores a JavaType so that we
   ** can correctly resolve the FFI qname.  This means that
   ** that an array of java.lang.Object will have an arrayOf
-  ** value of [java]java.lang::Object.  This method correctly
+  ** value of '[java]java.lang::Object'.  This method correctly
   ** maps the arrayOf map to its canonical Fantom type.
   **
   CType? inferredArrayOf()
