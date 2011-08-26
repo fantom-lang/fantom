@@ -692,7 +692,8 @@ final class List
   ** List is already readonly, then return this.  Only methods
   ** documented as "readonly safe" may be used safely with a readonly
   ** List, all others will throw ReadonlyErr.  This method is readonly
-  ** safe.  See `isImmutable` and `toImmutable` for deep immutability.
+  ** safe.  See `Obj.isImmutable` and `Obj.toImmutable` for deep
+  ** immutability.
   **
   L ro()
 
