@@ -300,14 +300,25 @@ class LocalDocWriter
     r := ChapterRenderer(env, out, chapter)
     r.writeChapter
 
-    // TODO FIXIT: DocChapter.headings
     // headings
     out.ul("class='sidebar'")
-    r.headings.each |h|
-    {
-      out.li.a(`#$h.anchorId`).esc(h.title).aEnd.liEnd
-    }
+    writeChapterHeadings(r, chapter.headings)
     out.ulEnd
+  }
+
+  private Void writeChapterHeadings(ChapterRenderer r, DocHeading[] headings)
+  {
+    headings.each |h|
+    {
+      r.out.li
+      r.out.a(`#$h.anchorId`).esc(h.title).aEnd.liEnd
+      if (!h.children.isEmpty)
+      {
+        r.out.ul
+        writeChapterHeadings(r, h.children)
+        r.out.ulEnd
+      }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
