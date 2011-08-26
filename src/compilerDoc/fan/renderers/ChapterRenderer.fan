@@ -30,10 +30,7 @@ class ChapterRenderer : DocRenderer
   ** Render the HTML for the DocType referened by `chapter` field.
   virtual Void writeChapter()
   {
-    parser := FandocParser()
-    parser.silent = true
-    root := parser.parse(chapter.doc.loc.file, chapter.doc.text.in)
-    doWriteFandoc(chapter, chapter.doc, parser, root)
+    writeFandoc(chapter, chapter.doc)
   }
 }
 
