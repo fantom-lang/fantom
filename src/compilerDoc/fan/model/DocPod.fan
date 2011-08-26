@@ -135,15 +135,8 @@ class DocPod
         // if doc/{type}.fandoc
         if (f.ext == "fandoc")
         {
-          isPodDoc := f.basename == "pod"
-          chapter := DocChapter
-          {
-            it.pod  = this.name
-            it.name = isPodDoc ? "pod-doc" : f.basename
-            it.loc  = DocLoc(f.name, 1)
-            it.doc  = DocFandoc(it.loc, f.in.readAllStr)
-          }
-          if (isPodDoc)
+          chapter := DocChapter(this, f)
+          if (chapter.isPodDoc)
             podDoc = chapter
           else
             chapterMap[chapter.name] = chapter
