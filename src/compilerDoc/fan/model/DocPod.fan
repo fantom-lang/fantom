@@ -106,14 +106,13 @@ class DocPod
   private This load()
   {
     // short circuit if already loaded
-    if (typeList != null) return this
+    if (loaded) return this
 
     // these are the data structures we'll be building up
-    typeMap  := Str:DocType[:]
-    DocChapter? podDoc := null
-    chapterMap := Str:DocChapter[:]
-    Obj[]? chapterIndex := null
-    resourceList := Uri[,]
+    types     := Str:DocType[:]
+    chapters  := Str:DocChapter[:]
+    indexFog  := null
+    resources := Uri[,]
 
     // process zip contents
     zip := open
@@ -126,7 +125,7 @@ class DocPod
         if (f.path[0] == "doc2" && f.ext == "apidoc")
         {
           type := ApiDocParser(name, f.in).parseType
-          typeMap[type.name] = type
+          types[type.name] = type
         }
 
         // we only care about files in doc/*
@@ -136,43 +135,139 @@ class DocPod
         if (f.ext == "fandoc")
         {
           chapter := DocChapter(this, f)
-          if (chapter.isPodDoc)
-            podDoc = chapter
-          else
-            chapterMap[chapter.name] = chapter
+          chapters[chapter.name] = chapter
         }
 
         // if doc/index.fog
         else if (f.name == "index.fog")
         {
-          chapterIndex = f.readObj
+          indexFog = f.readObj
         }
 
         // otherwise assume its a resource
         else
         {
-          resourceList.add(f.uri)
+          resources.add(f.uri)
         }
       }
     }
     finally zip.close
 
-    // generate chapterIndex if not specified
-    if (chapterIndex == null)
+    // save state
+    saveTypes(types)
+    saveChapters(chapters, indexFog)
+    saveResources(resources)
+    loaded = true
+    return this
+  }
+
+  private Void saveTypes(Str:DocType map)
+  {
+    // create sorted list
+    list := map.vals.sort|a, b| { a.name <=> b.name }
+
+    // build toc
+    toc := Obj[,]
+    mixins  := DocType[,]
+    classes := DocType[,]
+    enums   := DocType[,]
+    facets  := DocType[,]
+    errs    := DocType[,]
+    list.each |t|
     {
-      chapterIndex = [,]
-      chapterMap.each |c| { chapterIndex.add([c.name, ""]) }
+      if (t.isEnum) enums.add(t)
+      else if (t.isFacet) facets.add(t)
+      else if (t.isMixin) mixins.add(t)
+      else if (t.isErr) errs.add(t)
+      else classes.add(t)
+    }
+    if (mixins.size  > 0) toc.add("Mixins").addAll(mixins)
+    if (classes.size > 0) toc.add("Classes").addAll(classes)
+    if (enums.size   > 0) toc.add("Enums").addAll(enums)
+    if (facets.size  > 0) toc.add("Facets").addAll(facets)
+    if (errs.size    > 0) toc.add("Errs").addAll(errs)
+
+    // save to fields
+    this.typeMap  = map
+    this.typeList = list.ro
+    this.tocRef = toc.ro
+  }
+
+  private Void saveChapters(Str:DocChapter map, Obj[]? indexFog)
+  {
+    // create sorted list of chapters
+    list := map.vals.sort |a, b| { a.name <=> b.name }
+
+    // if this pod has types, it can't be a manual
+    if (!typeList.isEmpty)
+    {
+      if (list.size == 1 && list.first.isPodDoc)
+        this.podDocRef = list.first
+      return
     }
 
-    // save state
-    this.typeList    = typeMap.vals.sort(|a, b| { a.name <=> b.name }).ro
-    this.typeMap     = typeMap
-    this.podDocRef   = podDoc
-    this.chapterList = chapterMap.vals.sort.ro
-    this.chapterMap  = chapterMap.ro
-    this.resourceList = resourceList.ro
-    this.chapterIndexRef = chapterIndex
-    return this
+    // generate indexFog if not specified
+    if (indexFog == null)
+    {
+      if (!map.isEmpty) env.err("Manual missing '${name}::index.fog'", DocLoc(name, 0))
+      indexFog = [,]
+      list.each |c| { indexFog.add([c.name.toUri, ""]) }
+    }
+
+    // order the chapters by indexFog:
+    //   - map DocChapter summary
+    //   - check that chapters/index.fog match
+    toc := Obj[,]
+    indexLoc := DocLoc("${name}::index.fog", 0)
+    indexMap := map.dup
+    indexFog.each |item|
+    {
+      // grouping header
+      if (item is Str) { toc.add(item); return }
+
+      // get item as Uri/Str pair
+      Uri? uri
+      Str? summary
+      try
+      {
+        uri = ((List)item).get(0)
+        summary = ((List)item).get(1)
+      }
+      catch { env.err("Invalid item: $item", indexLoc); return }
+
+      // lookup chapter and remove from map so we know it was indexed
+      c := indexMap.remove(uri.toStr)
+      if (c == null) { env.err("Unknown chapter: $uri", indexLoc); return }
+
+      // add it toc
+      toc.add(c)
+
+      // map summary
+      c.summaryRef.val = summary
+    }
+
+    // report errors for chapters not in index
+    indexMap.each |c| { env.err("Chapter not in index: $c.name", indexLoc) }
+
+    // redo list now that we have chapters ordered by index
+    list = toc.findType(DocChapter#)
+
+    // map DocChapter prev/next
+    list.each |c, i|
+    {
+      if (i > 0) c.prevRef.val = list[i-1]
+      c.nextRef.val = list.getSafe(i+1)
+    }
+
+    // save to fields
+    this.chapterMap  = map
+    this.chapterList = list.ro
+    this.tocRef = toc.ro
+  }
+
+  private Void saveResources(Uri[] list)
+  {
+    this.resourceList = list.sort.ro
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -190,10 +285,11 @@ class DocPod
   Bool isManual() { load; return typeList.isEmpty && !chapterList.isEmpty }
 
   **
-  ** Return parsed "index.fog" if specified which is a list
-  ** of sections as a 'Str' or chapter links as '[Uri, Str]'
+  ** If this a API pod, this is the Str/DocType where the string indicates
+  ** groupings such as "Classes", "Mixins", etc.  If this is a manual return
+  ** the list of Str/DocChapter where Str indicates index grouping headers.
   **
-  Obj[] chapterIndex() { load.chapterIndexRef }
+  Obj[] toc() { load.tocRef }
 
   **
   ** Find a chapter by name.  If the chapter doesn't exist and checked
@@ -224,11 +320,12 @@ class DocPod
 // State
 //////////////////////////////////////////////////////////////////////////
 
+  private Bool loaded
   private DocType[]? typeList
   private [Str:DocType]? typeMap
   private DocChapter? podDocRef
-  private DocChapter[]? chapterList
-  private [Str:DocChapter]? chapterMap
-  private Obj[]? chapterIndexRef
+  private DocChapter[]? chapterList := [,]
+  private [Str:DocChapter]? chapterMap := [:]
+  private Obj[]? tocRef
   private Uri[]? resourceList
 }

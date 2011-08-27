@@ -76,6 +76,8 @@ internal class ApiDocParser
         it.base   = this.base
         it.mixins = this.mixins
         it.slots  = this.slots
+// TODO
+it.isErr = this.ref.name.endsWith("Err")
       }
     }
     finally { if (close) in.close }
