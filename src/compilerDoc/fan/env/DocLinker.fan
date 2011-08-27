@@ -117,17 +117,6 @@ class DocLinker
     // figure out pod field which is pod to use for resolution;
     // either explicitly qualified by podPart or default to basePod
     pod = podPart == null ? basePod : env.pod(podPart, false)
-
-/*
-echo
-echo("====> link = $link")
-echo("   podPart = $podPart")
-echo("  namePart = $namePart")
-echo("   dotPart = $dotPart")
-echo("  fragPart = $fragPart")
-echo("   isAbs   = $isAbs")
-echo("   pod     = $pod")
-*/
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -249,15 +238,30 @@ if (podPart == "examples")
   ** Resolve `pod` to its index file
   private DocLink resolvePodIndex()
   {
-    DocLink(toUri("index"), pod.name, true)
+    DocLink(toUri("index"), pod.name, !pod.isManual)
   }
 
   ** Check and resolve `pod` to its pod-doc fandoc file
   private DocLink resolveChapter(DocChapter c)
   {
-// TODO
-//if (fragPart != null) echo("check frag: $c.qname # $fragPart")
-    return DocLink(toUri(c.name, fragPart), pod.name, true)
+    // check fragment maps to valid anchorId
+    DocHeading? h := null
+    if (fragPart != null)
+    {
+      h = c.heading(fragPart, false)
+      if (h == null) throw err("invalid frag id: ${c.qname}#${fragPart}")
+    }
+
+    if (c.isPodDoc)
+    {
+      // pod-doc is rolled into index
+      return DocLink(toUri("index", fragPart ?: "pod-doc"), pod.name, false)
+    }
+    else
+    {
+      // link to normal chapter
+      return DocLink(toUri(c.name, fragPart), c.name, false)
+    }
   }
 
   ** Resolve link to type

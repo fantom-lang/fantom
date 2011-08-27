@@ -239,7 +239,7 @@ class LocalDocWriter
     if (pod.podDoc != null)
     {
       // chapter content
-      out.div("class='pod-doc article'")
+      out.div("class='pod-doc article' id='pod-doc'")
       writeChapterContent(out, pod.podDoc)
       out.divEnd
     }

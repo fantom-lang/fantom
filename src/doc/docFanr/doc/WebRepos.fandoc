@@ -59,7 +59,7 @@ The following sections details the various features of the protocol:
   - [Query]`#query`: query the repository for set of pods
   - [Read]`#read`: download a pod for installation
   - [Publish]`#publish`: upload a pod to add to the repository
-  - [Errors]`#error`: error handling
+  - [Errors]`#errors`: error handling
 
 REST Authentication [#authentication]
 =====================================

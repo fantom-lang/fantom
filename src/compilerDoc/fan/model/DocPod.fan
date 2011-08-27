@@ -168,7 +168,7 @@ class DocPod
     this.typeList    = typeMap.vals.sort(|a, b| { a.name <=> b.name }).ro
     this.typeMap     = typeMap
     this.podDocRef   = podDoc
-    this.chapterList = chapterMap.vals.ro
+    this.chapterList = chapterMap.vals.sort.ro
     this.chapterMap  = chapterMap.ro
     this.resourceList = resourceList.ro
     this.chapterIndexRef = chapterIndex
