@@ -115,6 +115,18 @@ const class DocChapter
   ** Top-level chapter headings
   const DocHeading[] headings
 
+  ** Summary for TOC
+  Str summary() { summaryRef.val }
+  internal const AtomicRef summaryRef := AtomicRef("")
+
+  ** Previous chapter in TOC order or null if first
+  DocChapter? prev() { prevRef.val }
+  internal const AtomicRef prevRef := AtomicRef(null)
+
+  ** Next chapter in TOC order or null if last
+  DocChapter? next() { nextRef.val }
+  internal const AtomicRef nextRef := AtomicRef(null)
+
   ** Get a chapter heading by its anchor id or raise NameErr/return null.
   DocHeading? heading(Str id, Bool checked := true)
   {

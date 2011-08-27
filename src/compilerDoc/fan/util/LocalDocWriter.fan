@@ -285,6 +285,13 @@ class LocalDocWriter
   virtual Void writeChapter(WebOutStream out, DocChapter chapter)
   {
     writeStart(out, chapter.qname, chapter)
+
+    out.div("class='nav'")
+    if (chapter.prev != null) out.w("&lt;&lt; ").a(`${chapter.prev.name}.html`).w(chapter.prev.name).aEnd
+    out.w(" | ")
+    if (chapter.next != null) out.a(`${chapter.next.name}.html`).w(chapter.next.name).aEnd.w(" &gt;&gt;")
+    out.divEnd
+
     out.div("class='article'")
     out.h1.esc(chapter.name).h1End
     writeChapterContent(out, chapter)

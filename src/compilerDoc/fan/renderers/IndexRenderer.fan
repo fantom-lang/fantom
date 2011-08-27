@@ -28,14 +28,23 @@ class IndexRenderer : DocRenderer
     out.h1.span.w("pod").spanEnd.w(" $pod.name").h1End
     out.p.esc(pod.summary).pEnd
 
-    // type list
     out.table
-    pod.types.each |type|
+    pod.toc.each |item|
     {
-      out.tr
-        .td.a(`${type.name}.html`).w(type.name).aEnd.tdEnd
-        .td.w(type.summary).tdEnd
-        .trEnd
+      if (item is Str)
+      {
+        out.tr
+          .td("colspan='2'").w("<b>$item</b>").tdEnd
+          .trEnd
+      }
+      else
+      {
+        type := item as DocType
+        out.tr
+          .td.a(`${type.name}.html`).w(type.name).aEnd.tdEnd
+          .td.w(type.summary).tdEnd
+          .trEnd
+      }
     }
     out.tableEnd
   }
@@ -50,7 +59,7 @@ class IndexRenderer : DocRenderer
     // contents
     out.ul("class='toc'")
     open := false
-    pod.chapterIndex.each |item|
+    pod.toc.each |item|
     {
       if (item is Str)
       {
@@ -65,11 +74,10 @@ class IndexRenderer : DocRenderer
       else
       {
         // chapter
-        name    := (Uri)item->get(0)
-        summary := (Str)item->get(1)
+        c := item as DocChapter
         out.li
-          .a(`${name}.html`).esc(name).aEnd
-          .w(" &ndash; ").esc(summary)
+          .a(`${c.name}.html`).esc(c.name).aEnd
+          .w(" &ndash; ").esc(c.summary)
           .liEnd
       }
     }

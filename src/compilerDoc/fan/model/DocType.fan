@@ -50,6 +50,9 @@ const class DocType
   ** Slots defined by this type
   const DocSlot[] slots
 
+  ** Is this a subclass of 'sys::Err'
+  const Bool isErr
+
   ** Get slot by name.  If not found return null or raise UknownSlotErr
   DocSlot? slot(Str name, Bool checked := true)
   {
@@ -72,6 +75,15 @@ const class DocType
 
   ** return qname
   override Str toStr() { qname }
+
+  ** Is an enum type
+  Bool isEnum() { DocFlags.isEnum(flags) }
+
+  ** Is an mixin type
+  Bool isMixin() { DocFlags.isMixin(flags) }
+
+  ** Is an facet type
+  Bool isFacet() { DocFlags.isFacet(flags) }
 
   internal Void dump(OutStream out)
   {
