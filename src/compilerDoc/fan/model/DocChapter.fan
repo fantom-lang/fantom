@@ -115,6 +115,10 @@ const class DocChapter
   ** Top-level chapter headings
   const DocHeading[] headings
 
+  ** Chapter number (one-based)
+  Int num() { numRef.val }
+  internal const AtomicInt numRef := AtomicInt()
+
   ** Summary for TOC
   Str summary() { summaryRef.val }
   internal const AtomicRef summaryRef := AtomicRef("")
