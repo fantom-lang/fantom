@@ -12,7 +12,7 @@
 class Loc
 {
 
-  new make(Str? file, Int? line := null, Int? col := null)
+  new make(Str file, Int? line := null, Int? col := null)
   {
     this.file = file
     this.line = line
@@ -39,7 +39,6 @@ class Loc
 
   Str? filename()
   {
-    if (file == null) return null
     f := file
     slash := f.indexr("/")
     if (slash == null) slash = f.indexr("\\")
@@ -61,8 +60,7 @@ class Loc
 
   override Int hash()
   {
-    hash := 33
-    if (file != null) hash = hash.xor(file.hash)
+    hash := file.hash
     if (line != null) hash = hash.xor(line.hash)
     if (col  != null) hash = hash.xor(col.hash)
     return hash
@@ -101,7 +99,7 @@ class Loc
     return s.toStr
   }
 
-  Str? file
+  Str file := "Unknown"
   Int? line
   Int? col
 
