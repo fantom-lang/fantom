@@ -31,7 +31,7 @@ class Build : BuildPod
                   "fanr 1.0",
                   "util 1.0",
                   "web 1.0"]
-    srcDirs    = [`fan/env/`, `fan/model/`, `fan/renderers/`, `fan/util/`]
+    srcDirs    = [`fan/env/`, `fan/model/`, `fan/renderers/`, `fan/util/`, `test/`]
     docSrc     = true
   }
 }
