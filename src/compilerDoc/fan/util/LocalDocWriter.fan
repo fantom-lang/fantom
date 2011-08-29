@@ -442,6 +442,10 @@ class LocalDocWriter
     div.type table { width:100%; }
     div.type table td:last-child { width:100%; }
 
+    div.toc ol li { margin-bottom:1em; }
+    div.toc ol li p { margin:1px 0 1px 1em; }
+    div.toc ol li p:last-child { font-size:12px; }
+
     div.index > div.manuals { float:left; width:50%; }
     div.index > div.manuals > h2 { margin-top:0; }
     div.index > div.manuals table { border:none; }
