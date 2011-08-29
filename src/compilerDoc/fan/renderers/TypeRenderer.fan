@@ -61,26 +61,15 @@ class TypeRenderer : DocRenderer
   ** Render type inheritance.
   virtual Void writeTypeInheritance()
   {
-    chain := DocTypeRef[,]
-    base  := type.base
-    while (base != null)
-    {
-      chain.insert(0, base)
-      try { base = env.pod(base.pod).type(base.name).base }
-      catch (Err err)
-      {
-        env.err("Type inheritance failed; unknown type: $base", type.loc)
-        base = null
-      }
-    }
     out.pre
-    //chain.insert(0, DocTypeRef("sys::Obj"))
-    chain.each |ref,i|
+    indent := 0
+    type.base.eachr |ref|
     {
-      if (i > 0) out.w("\n${Str.spaces(i*2)}")
+      if (indent > 0) out.w("\n${Str.spaces(indent*2)}")
       writeTypeRef(ref, true)
+      indent++
     }
-    if (chain.size > 0) out.w("\n${Str.spaces(chain.size*2)}")
+    if (type.base.size > 0) out.w("\n${Str.spaces(indent*2)}")
     out.w("$type.qname")
     type.mixins.each |ref,i|
     {
