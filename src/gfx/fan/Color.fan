@@ -254,10 +254,10 @@ const class Color : Brush
   **
   ** Return `argb` as the hash code.
   **
-  override Int hash() { return rgb }
+  override Int hash() { return argb }
 
   **
-  ** Return `argb` as the hash code.
+  ** Equality is based on `argb`.
   **
   override Bool equals(Obj? that)
   {
