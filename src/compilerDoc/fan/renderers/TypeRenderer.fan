@@ -151,14 +151,51 @@ class TypeRenderer : DocRenderer
   ** Write the given type ref as a hyperlink
   virtual Void writeTypeRef(DocTypeRef ref, Bool full := false)
   {
-    // TODO
-    uri := StrBuf()
-    if (ref.pod != type.pod) uri.add("../").add(ref.pod).add("/")
-    uri.add(ref.name).add(".html")
+    if (ref.isParameterized)
+    {
+      if (ref.qname == "sys::List")
+      {
+        writeTypeRef(ref.v)
+        out.w("[]")
+      }
+      else if (ref.qname == "sys::Map")
+      {
+        if (ref.isNullable) out.w("[")
+        writeTypeRef(ref.k)
+        out.w(":")
+        writeTypeRef(ref.v)
+        if (ref.isNullable) out.w("]")
+      }
+      else if (ref.qname == "sys::Func")
+      {
+        isVoid := ref.funcReturn.qname == "sys::Void"
+        out.w("|")
+        ref.funcParams.each |p, i|
+        {
+          if (i > 0) out.w(",")
+          writeTypeRef(p)
+        }
+        if (!isVoid || ref.funcParams.isEmpty)
+        {
+          out.w("->")
+          writeTypeRef(ref.funcReturn)
+        }
+        out.w("|")
+      }
+      else throw Err("Unsupported parameterized type: $ref")
+      if (ref.isNullable) out.w("?")
+    }
+    else
+    {
+      uri := StrBuf()
+      if (ref.pod != type.pod) uri.add("../").add(ref.pod).add("/")
+      uri.add(ref.name).add(".html")
 
-    dis := ref.isParameterized ? ref.signature : (full ? ref.qname : ref.name)
-
-    out.a(uri.toStr.toUri).w(dis).aEnd
+      out.a(uri.toStr.toUri)
+         .w(full ? ref.qname : ref.name)
+         .w(ref.isNullable ? "?" : "")
+         .aEnd
+    }
   }
 
   ** Write the given facet.
