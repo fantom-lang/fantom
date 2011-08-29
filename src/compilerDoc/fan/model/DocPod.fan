@@ -256,9 +256,10 @@ class DocPod
     // redo list now that we have chapters ordered by index
     list = toc.findType(DocChapter#)
 
-    // map DocChapter prev/next
+    // map DocChapter num/prev/next
     list.each |c, i|
     {
+      c.numRef.val = i+1
       if (i > 0) c.prevRef.val = list[i-1]
       c.nextRef.val = list.getSafe(i+1)
     }

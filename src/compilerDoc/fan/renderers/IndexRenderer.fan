@@ -59,7 +59,6 @@ class IndexRenderer : DocRenderer
     // contents
     out.div("class='toc'")
     open  := false
-    index := 0
     pod.toc.each |item|
     {
       if (item is Str)
@@ -75,14 +74,13 @@ class IndexRenderer : DocRenderer
       {
         if (!open) out.ol
         open = true
-        index++
 
         // chapter
         c := item as DocChapter
         list := c.headings.join(", ") |h| {
           "<a href='${c.name}.html#$h.anchorId'>$h.title.toXml</a>"
         }
-        out.li("value='$index'")
+        out.li("value='$c.num'")
           .a(`${c.name}.html`).esc(c.name).aEnd
           .p.esc(c.summary).pEnd
           .p.w(list).pEnd
