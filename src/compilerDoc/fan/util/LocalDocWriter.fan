@@ -254,7 +254,7 @@ class LocalDocWriter
     writeStart(out, type.qname, type)
 
     // type docs
-    out.div("class='article'")
+    out.div("class='article type'")
     TypeRenderer(env, out, type).writeType
 
     // slot list
@@ -287,7 +287,7 @@ class LocalDocWriter
     writeStart(out, chapter.qname, chapter)
     out.div("class='article'")
     writeChapterNav(out, chapter)
-    out.h1.esc(chapter.name).h1End
+    out.h1.span.w("${chapter.num}.").spanEnd.w(" ").esc(chapter.name).h1End
     writeChapterContent(out, chapter)
     writeChapterNav(out, chapter)
     out.divEnd
@@ -301,11 +301,15 @@ class LocalDocWriter
     out.ul("class='chapter-nav'")
     if (chapter.prev != null)
       out.li("class='prev'")
-        .a(`${chapter.prev.name}.html`).esc(chapter.prev.name).aEnd
+        .a(`${chapter.prev.name}.html`)
+        .w("${chapter.prev.num}. ").esc(chapter.prev.name)
+        .aEnd
         .liEnd
     if (chapter.next != null)
       out.li("class='next'")
-        .a(`${chapter.next.name}.html`).esc(chapter.next.name).aEnd
+        .a(`${chapter.next.name}.html`)
+        .w("${chapter.next.num}. ")
+        .esc(chapter.next.name).aEnd
         .liEnd
     out.ulEnd
   }
@@ -391,11 +395,6 @@ class LocalDocWriter
       font-size:12px;
     }
 
-    h1 > span:first-child {
-      display:block;
-      font-size:60%;
-    }
-
     dl {
       margin:2em 0 1em 0;
     }
@@ -451,6 +450,7 @@ class LocalDocWriter
 
     div.type table { width:100%; }
     div.type table td:last-child { width:100%; }
+    div.type h1 > span:first-child { display:block; font-size:60%; }
 
     div.toc ol li { margin-bottom:1em; }
     div.toc ol li p { margin:1px 0 1px 1em; }
