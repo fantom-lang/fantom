@@ -43,7 +43,14 @@ public class CanvasPeer
   public void paintControl(PaintEvent e)
   {
     FwtGraphics g = new FwtGraphics(e);
-    ((fan.fwt.Canvas)self).onPaint(g);
+    try
+    {
+      ((fan.fwt.Canvas)self).onPaint(g);
+    }
+    finally
+    {
+      g.dispose();
+    }
   }
 
 }
