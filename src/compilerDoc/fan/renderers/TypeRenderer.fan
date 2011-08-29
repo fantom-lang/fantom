@@ -74,6 +74,7 @@ class TypeRenderer : DocRenderer
       }
     }
     out.pre
+    //chain.insert(0, DocTypeRef("sys::Obj"))
     chain.each |ref,i|
     {
       if (i > 0) out.w("\n${Str.spaces(i*2)}")

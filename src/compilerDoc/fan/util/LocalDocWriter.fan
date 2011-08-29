@@ -223,7 +223,7 @@ class LocalDocWriter
 
     // TODO FIXT: should this just be all done here?
     // type table
-    out.div("class='article'")
+    out.div("class='article type'")
     IndexRenderer(env, out).writeTypeIndex(pod)
 
     // type list
@@ -381,15 +381,6 @@ class LocalDocWriter
       font-size:12px;
     }
 
-    table tr.section {
-      background:none;
-    }
-
-    table tr.section td {
-      font-weight:bold;
-      padding:1em 0em;
-    }
-
     h1 > span:first-child {
       display:block;
       font-size:60%;
@@ -448,37 +439,16 @@ class LocalDocWriter
       margin-top:2em;
     }
 
-    div.index > div.manuals {
-      float:left;
-      width:50%;
-    }
+    div.type table { width:100%; }
+    div.type table td:last-child { width:100%; }
 
-    div.index > div.manuals > h2 {
-      margin-top:0;
-    }
-
-    div.index > div.manuals table {
-      border:none;
-    }
-
-    div.index > div.manuals table tr {
-      background:none;
-      border:none;
-    }
-
-    div.index > div.manuals table td {
-     padding:0.5em 1em;
-    }
-
-    div.index > div.manuals table td:last-child {
-      padding-right:2em;
-    }
-
-    div.index > div.manuals table td:first-child {
-      vertical-align:top;
-    }
-
-    div.index div.apis {
-      padding-left:1em;
-    }"
+    div.index > div.manuals { float:left; width:50%; }
+    div.index > div.manuals > h2 { margin-top:0; }
+    div.index > div.manuals table { border:none; }
+    div.index > div.manuals table tr { background:none; border:none; }
+    div.index > div.manuals table td { padding:0.5em 1em; }
+    div.index > div.manuals table td:last-child { padding-right:2em; }
+    div.index > div.manuals table td:first-child { vertical-align:top; }
+    div.index div.apis { padding-left:1em; }
+    "
 }

@@ -28,14 +28,14 @@ class IndexRenderer : DocRenderer
     out.h1.span.w("pod").spanEnd.w(" $pod.name").h1End
     out.p.esc(pod.summary).pEnd
 
-    out.table
-    pod.toc.each |item|
+    // list type
+    pod.toc.each |item,i|
     {
       if (item is Str)
       {
-        out.tr
-          .td("colspan='2'").w("<b>$item</b>").tdEnd
-          .trEnd
+        if (i > 0) out.tableEnd
+        out.h2.w(item).h2End
+        out.table
       }
       else
       {
