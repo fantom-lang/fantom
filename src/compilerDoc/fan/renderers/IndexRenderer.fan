@@ -57,32 +57,40 @@ class IndexRenderer : DocRenderer
     out.p.esc(pod.summary).pEnd
 
     // contents
-    out.ul("class='toc'")
-    open := false
+    out.div("class='toc'")
+    open  := false
+    index := 0
     pod.toc.each |item|
     {
       if (item is Str)
       {
         // close open list
-        if (open) out.olEnd.liEnd
-        open = true
+        if (open) out.olEnd
+        open = false
 
         // section header
-        out.li.esc(item)
-        out.ol
+        out.h2.esc(item).h2End
       }
       else
       {
+        if (!open) out.ol
+        open = true
+        index++
+
         // chapter
         c := item as DocChapter
-        out.li
+        list := c.headings.join(", ") |h| {
+          "<a href='${c.name}.html#$h.anchorId'>$h.title.toXml</a>"
+        }
+        out.li("value='$index'")
           .a(`${c.name}.html`).esc(c.name).aEnd
-          .w(" &ndash; ").esc(c.summary)
+          .p.esc(c.summary).pEnd
+          .p.w(list).pEnd
           .liEnd
       }
     }
-    out.olEnd.liEnd
-    out.ulEnd
+    if (open) out.olEnd
+    out.divEnd
   }
 }
 
