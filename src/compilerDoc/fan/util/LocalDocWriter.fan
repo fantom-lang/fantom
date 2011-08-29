@@ -285,19 +285,29 @@ class LocalDocWriter
   virtual Void writeChapter(WebOutStream out, DocChapter chapter)
   {
     writeStart(out, chapter.qname, chapter)
-
-    out.div("class='nav'")
-    if (chapter.prev != null) out.w("&lt;&lt; ").a(`${chapter.prev.name}.html`).w(chapter.prev.name).aEnd
-    out.w(" | ")
-    if (chapter.next != null) out.a(`${chapter.next.name}.html`).w(chapter.next.name).aEnd.w(" &gt;&gt;")
-    out.divEnd
-
     out.div("class='article'")
+    writeChapterNav(out, chapter)
     out.h1.esc(chapter.name).h1End
     writeChapterContent(out, chapter)
+    writeChapterNav(out, chapter)
     out.divEnd
     writeEnd(out)
     out.close
+  }
+
+  ** Write chapter prev/next navigation.
+  virtual Void writeChapterNav(WebOutStream out, DocChapter chapter)
+  {
+    out.ul("class='chapter-nav'")
+    if (chapter.prev != null)
+      out.li("class='prev'")
+        .a(`${chapter.prev.name}.html`).esc(chapter.prev.name).aEnd
+        .liEnd
+    if (chapter.next != null)
+      out.li("class='next'")
+        .a(`${chapter.next.name}.html`).esc(chapter.next.name).aEnd
+        .liEnd
+    out.ulEnd
   }
 
   ** Write chapter content.
@@ -445,6 +455,13 @@ class LocalDocWriter
     div.toc ol li { margin-bottom:1em; }
     div.toc ol li p { margin:1px 0 1px 1em; }
     div.toc ol li p:last-child { font-size:12px; }
+
+    ul.chapter-nav { list-style:none; margin:1em 0; padding:0; position:relative; }
+    ul.chapter-nav li { display:block; color:#999; }
+    ul.chapter-nav li.next { text-align:right; }
+    ul.chapter-nav li + li.next { position:absolute; top:0; right:0; }
+    ul.chapter-nav li.prev:before { content:'\\00ab '; }
+    ul.chapter-nav li.next:after { content:' \\00bb'; margin:0 }
 
     div.index > div.manuals { float:left; width:50%; }
     div.index > div.manuals > h2 { margin-top:0; }
