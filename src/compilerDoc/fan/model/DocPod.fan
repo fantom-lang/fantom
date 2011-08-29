@@ -121,34 +121,38 @@ class DocPod
       // iterate thru the zip file looking for the files we need
       zip.contents.each |f|
       {
-        // if doc/{type}.apidoc
-        if (f.path[0] == "doc2" && f.ext == "apidoc")
+        try
         {
-          type := ApiDocParser(name, f.in).parseType
-          types[type.name] = type
-        }
+          // if doc/{type}.apidoc
+          if (f.path[0] == "doc2" && f.ext == "apidoc")
+          {
+            type := ApiDocParser(name, f.in).parseType
+            types[type.name] = type
+          }
 
-        // we only care about files in doc/*
-        if (f.path[0] != "doc") return
+          // we only care about files in doc/*
+          if (f.path[0] != "doc") return
 
-        // if doc/{type}.fandoc
-        if (f.ext == "fandoc")
-        {
-          chapter := DocChapter(this, f)
-          chapters[chapter.name] = chapter
-        }
+          // if doc/{type}.fandoc
+          if (f.ext == "fandoc")
+          {
+            chapter := DocChapter(this, f)
+            chapters[chapter.name] = chapter
+          }
 
-        // if doc/index.fog
-        else if (f.name == "index.fog")
-        {
-          indexFog = f.readObj
-        }
+          // if doc/index.fog
+          else if (f.name == "index.fog")
+          {
+            indexFog = f.readObj
+          }
 
-        // otherwise assume its a resource
-        else
-        {
-          resources.add(f.uri)
+          // otherwise assume its a resource
+          else
+          {
+            resources.add(f.uri)
+          }
         }
+        catch (Err e) env.err("Cannot parse", DocLoc("${name}::${f}", 0), e)
       }
     }
     finally zip.close

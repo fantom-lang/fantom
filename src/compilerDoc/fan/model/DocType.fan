@@ -15,7 +15,18 @@ const class DocType
 {
 
   ** Constructor
-  internal new make(|This| f) { f(this) }
+  internal new make(DocAttrs attrs, DocTypeRef ref, DocSlot[] slots)
+  {
+    this.ref    = ref
+    this.loc    = attrs.loc
+    this.flags  = attrs.flags
+    this.facets = attrs.facets
+    this.doc    = attrs.doc
+    this.base   = attrs.base
+    this.mixins = attrs.mixins
+    this.slots  = slots
+    this.isErr  = base.find {it.qname=="sys::Err"} != null
+  }
 
   ** Representation of this type definition as a reference
   const DocTypeRef ref
@@ -35,14 +46,16 @@ const class DocType
   ** Flags mask - see `DocFlags`
   const Int flags
 
-  ** Fandoc documentation string
-  const DocFandoc doc
-
   ** Facets defined on this type
   const DocFacet[] facets
 
-  ** The direct super class of this type (null for Obj)
-  const DocTypeRef? base
+  ** Fandoc documentation string
+  const DocFandoc doc
+
+  ** Base class inheritance chain where direct subclass is first
+  ** and 'sys::Obj' is last.  If this type is a mixin or this is
+  ** 'sys::Obj' itself then this is an empty list.
+  const DocTypeRef[] base
 
   ** Mixins directly implemented by this type
   const DocTypeRef[] mixins
@@ -84,20 +97,5 @@ const class DocType
 
   ** Is an facet type
   Bool isFacet() { DocFlags.isFacet(flags) }
-
-  internal Void dump(OutStream out)
-  {
-    out.printLine("#### $qname #####")
-    out.printLine("ref    = $ref")
-    out.printLine("pod    = $pod")
-    out.printLine("name   = $name")
-    out.printLine("flags  = " + DocFlags.toNames(flags))
-    out.printLine("doc    = $doc.text.toCode")
-    out.printLine("base   = $base")
-    out.printLine("mixins = $mixins")
-    facets.each |facet| { out.printLine(facet) }
-    slots.each |slot| { slot.dump(out) }
-    out.printLine.flush
-  }
 
 }

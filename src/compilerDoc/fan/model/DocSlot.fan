@@ -12,15 +12,15 @@
 abstract const class DocSlot
 {
   ** Constructor
-  internal new make(DocAttrs attrs, DocTypeRef parent, Str name, Int flags, DocFandoc doc, DocFacet[] facets)
+  internal new make(DocAttrs attrs, DocTypeRef parent, Str name)
   {
     this.loc    = attrs.loc
     this.parent = parent
     this.name   = name
     this.qname  = parent.qname + "." + name
-    this.flags  = flags
-    this.doc    = doc
-    this.facets = facets
+    this.flags  = attrs.flags
+    this.doc    = attrs.doc
+    this.facets = attrs.facets
   }
 
   ** Source code location of this slot
@@ -46,16 +46,6 @@ abstract const class DocSlot
 
   ** Facets defined on this slot
   const DocFacet[] facets
-
-  internal virtual Void dump(OutStream out)
-  {
-    out.printLine("$name")
-    out.printLine("    parent = $parent")
-    out.printLine("    name   = $name")
-    out.printLine("    flags  = " + DocFlags.toNames(flags))
-    out.printLine("    doc    = $doc.text.toCode")
-    facets.each |facet| { out.printLine("    $facet") }
-  }
 }
 
 **************************************************************************
@@ -68,9 +58,9 @@ abstract const class DocSlot
 const class DocField : DocSlot
 {
   ** Constructor
-  internal new make(DocAttrs attrs, DocTypeRef parent, Str name, Int flags, DocFandoc doc, DocFacet[] facets,
+  internal new make(DocAttrs attrs, DocTypeRef parent, Str name,
                     DocTypeRef type, Str? init)
-    : super(attrs, parent, name, flags, doc, facets)
+    : super(attrs, parent, name)
   {
     this.type = type
     this.init = init
@@ -86,13 +76,6 @@ const class DocField : DocSlot
   ** Flags for setting method if different from overall field level
   ** flags, otherwise null.
   const Int? setterFlags
-
-  internal override Void dump(OutStream out)
-  {
-    super.dump(out)
-    out.printLine("    type   = $type")
-    out.printLine("    init   = $init")
-  }
 }
 
 **************************************************************************
@@ -105,9 +88,9 @@ const class DocField : DocSlot
 const class DocMethod : DocSlot
 {
   ** Constructor
-  internal new make(DocAttrs attrs, DocTypeRef parent, Str name, Int flags, DocFandoc doc, DocFacet[] facets,
+  internal new make(DocAttrs attrs, DocTypeRef parent, Str name,
                     DocTypeRef returns, DocParam[] params)
-    : super(attrs, parent, name, flags, doc, facets)
+    : super(attrs, parent, name)
   {
     this.returns = returns
     this.params  = params
@@ -118,13 +101,6 @@ const class DocMethod : DocSlot
 
   ** Parameters of the method
   const DocParam[] params
-
-  internal override  Void dump(OutStream out)
-  {
-    super.dump(out)
-    out.printLine("    return = $returns")
-    params.each |p, i| { out.printLine("    p[$i]  = $p") }
-  }
 }
 
 **************************************************************************

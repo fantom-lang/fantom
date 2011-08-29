@@ -11,6 +11,8 @@
 **
 const class DocLoc
 {
+  const static DocLoc unknown := DocLoc("Unknown", 0)
+
   ** Construct with file and optional line number
   new make(Str file, Int line)
   {

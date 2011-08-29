@@ -14,34 +14,35 @@
 ** simple human readable format.
 **
 ** The syntax is defined as:
-**   <file>      :=  <type> ["\n" <slot>]*
-**   <type>      :=  <facets> <attrs> <flags> "class " <id> [<inherit>] "\n" <doc>
-**   <inherit>   :=  ":" [<typeRef> ","]*
-**   <slot>      :=  <facets> <attrs> <flags> <slotSig> "\n" <doc>
-**   <slotSig>   :=  <fieldSig> | <methodSig>
-**   <fieldSig>  :=  <typeRef> " " <id> [":=" <expr>"]
-**   <methodSig> :=  <typeRef> " " <id> "(" "\n" [<param> "\n"]* ")"
-**   <param>     :=  <typeRef> <id> [":=" <expr>]
-**   <doc>       :=  lines of text, empty lines indicated with "\"
-**   <flags>     :=  [<flag> " "]*
-**   <flag>      :=  standard Fantom flag keywords (public, const, etc)
-**   <facets>    :=  [<facet> "\n"]*
-**   <facet>     :=  "@" <type> [" {\n" [<id> "=" <expr> "\n"]* "}"]
-**   <attrs>     :=  [<attr> "\n"]*
-**   <attr>      :=  "%" <id> "=" <expr> "\n"
-**   <expr>      :=  text until end of line
-**   <id>        :=  Fantom identifier
-**   <typeRef>   :=  Fantom type signature (no spaces allowed)
+**   <file>      :=  <class> <slot>*
+**   <class>     :=  "== " <name> <nl> <attrs>
+**   <slot>      :=  (<fieldSig> | <methodSig>) <attrs>
+**   <fieldSig>  :=  "-- " <name> <sp> <type> [":=" <expr>] <nl>
+**   <methodSig> :=  "-- " <name> "(" <nl> [<param> <nl>]* ")" <sp> <return> <nl>
+**   <param>     :=  <name> <type> [":=" <expr>]
+**   <return>    :=  <type>
 **
-** Note spaces are significant.  Extra whitespace is not allowed.
-** Also note that the grammar is defined such that expr to display
+**   <attrs>     :=  <meta>* <facet>* <nl> <doc>.
+**   <meta>      :=  <name> "=" <expr> <nl>
+**   <facet>     :=  "@" <type> ["{" <nl> [<name> "=" <expr> <nl>]* "}"] <nl>
+**   <doc>       :=  lines of text until "-- "
+**
+**   <name>      :=  Fantom identifier
+**   <type>      :=  Fantom type signature (no spaces allowed)
+**   <expr>      :=  text until end of line
+**   <nl>        :=  "\n"
+**   <sp>        :=  " "
+**
+** Standard attributes:
+**   - base: list of space separated base class type signatures
+**   - mixins: list of space separated mixin type signatures
+**   - loc: <file> ":" <line> "/" <docLine>
+**   - flags: type or slot space separated flag keywords
+**   - set: field setter flags
+**
+** Note that the grammar is defined such that expr to display
 ** in docs for field and parameter defaults is always positioned at
 ** the end of the line (avoiding nasty escaping problems).
-**
-** The following attributes are supported:
-**   file: type source file name (slots implied by type's file)
-**   line: integer line number of type/slot definition
-**   docLine: first non-empty starting line of fandoc in source file
 **
 internal class ApiDocParser
 {
@@ -56,174 +57,141 @@ internal class ApiDocParser
   {
     try
     {
-      // header
-      parseTypeHeader
+      // == <name>
+      if (!cur.startsWith("== ")) throw Err("Expected == <name>")
+      name := cur[3..-1]
+      consumeLine
+
+      // parse attrs
+      attrs  := parseAttrs
+      this.typeRef = DocTypeRef("${podName}::${name}")
+      this.typeLoc = attrs.loc
 
       // zero or more slots
-      while (parseSlot) {}
+      slots := DocSlot[,]
+      while (true)
+      {
+        slot := parseSlot
+        if (slot == null) break
+        slots.add(slot)
+      }
 
       // sort slots by name
       slots.sort |a, b| { a.name <=> b.name }
 
       // construct DocType from my own fields
-      return DocType
-      {
-        it.loc    = this.loc
-        it.ref    = this.ref
-        it.flags  = this.flags
-        it.doc    = this.doc
-        it.facets = this.facets
-        it.base   = this.base
-        it.mixins = this.mixins
-        it.slots  = this.slots
-// TODO
-it.isErr = this.ref.name.endsWith("Err")
-      }
+      return DocType(attrs, typeRef, slots)
     }
     finally { if (close) in.close }
   }
 
-  private Void parseTypeHeader()
-  {
-    // facets
-    this.facets = parseFacets
-
-    // attrs
-    attrs := parseAttrs
-    this.loc = attrs.loc
-
-    // <flags> "class" <name> [":" extends]
-    colon := cur.index(":")
-    toks := (colon == null ? cur : cur[0..<colon]).split
-    name := toks[-1]
-    this.ref = DocTypeRef.makeSimple(podName, name)
-
-    // parse flags
-    flags := 0
-    if (toks[-2] == "mixin") flags = DocFlags.Mixin
-    toks.eachRange(0..-3) |flagName|
-    {
-      flags = flags.or(DocFlags.fromName(flagName))
-    }
-    this.flags = flags
-    isMixin := flags.and(DocFlags.Mixin) != 0
-
-    // extends
-    if (colon == null)
-    {
-      if (!(podName == "sys" && name == "Obj") && !isMixin)
-        this.base = DocTypeRef("sys::Obj")
-    }
-    else
-    {
-      typesSigs := cur[colon+1..-1].split(',')
-      types := typesSigs.map |sig->DocTypeRef| { DocTypeRef(sig) }
-      if (isMixin)
-      {
-        // mixins don't include base type
-        this.mixins = types
-      }
-      else
-      {
-        // base class always first
-        this.base   = types.first
-        this.mixins = types[1..-1]
-      }
-    }
-
-    // ready to parse doc
-    consumeLine
-    this.doc = parseDoc(attrs)
-  }
-
-  private Bool parseSlot()
+  private DocSlot? parseSlot()
   {
     // check if at end of file
-    if (cur.isEmpty) return false
+    if (cur.isEmpty) return null
 
-    // facets, loc
-    facets := parseFacets
-    attrs := parseAttrs
-
+    // "-- " <name> <sp> <type> [":=" <expr>]
+    // "-- " <name> "(" <nl> [<param> <nl>]* ")" <return>
+    if (!cur.startsWith("-- ")) throw Err("Expected -- <name>")
     if (cur[-1] == '(')
-      slots.add(parseMethod(attrs, facets))
+      return parseMethod
     else
-      slots.add(parseField(attrs, facets))
-    return true
+      return parseField
   }
 
-  private DocField parseField(DocAttrs attrs, DocFacet[] facets)
+  private DocField parseField()
   {
-    // cur is: <flags> <type> <name> [":=" <expr>]
-
-    // first parse out init expression
-    working   := this.cur
-    Str? init := null
-    initi := working.index(":=")
-    if (initi != null)
-    {
-      init    = working[initi+2..-1]
-      working = working[0..<initi]
-    }
-
-    // tokenize by space
-    toks := working.split
-    name := toks[-1]
-    type := DocTypeRef(toks[-2])
-
-    // tokens 0 to -3 are flags
-    flags := 0
-    toks.eachRange(0..-3) |tok| { flags = flags.or(DocFlags.fromName(tok)) }
-
-    // parse fandoc
+    //  "-- " <name> <sp> <type> [":=" <expr>]
+    sp    := cur.index(" ", 4)
+    initi := cur.index(":=", sp+1)
+    name  := cur[3..<sp]
+    type  := cur[sp+1 ..< (initi ?: cur.size)]
+    init  := initi == null ? null : cur[initi+2..-1]
     consumeLine
-    doc := parseDoc(attrs)
-
-    return DocField(attrs, ref, name, flags, doc, facets, type, init)
+    attrs  := parseAttrs
+    return DocField(attrs, typeRef, name, DocTypeRef(type), init)
   }
 
-  private DocMethod parseMethod(DocAttrs attrs, DocFacet[] facets)
+  private DocMethod parseMethod()
   {
-    // cur is: <flags> <type> <name> "("
+    // "-- " <name> "(" <nl> [<param> <nl>]* ")" <return>
 
     // tokenize by space
-    toks := cur.split
-    name := toks[-1][0..-2]
-    returns := DocTypeRef(toks[-2])
-
-    // tokens 0 to -3 are flags
-    flags := 0
-    toks.eachRange(0..-3) |tok| { flags = flags.or(DocFlags.fromName(tok)) }
+    name := cur[3..-2]
+    consumeLine
 
     // parse params
     params := DocParam[,]
-    consumeLine
-    while (cur != ")")
+    while (cur[0] != ')')
     {
-      space := cur.index(" ")
-      defi  := cur.index(":=", space+2)
-      type  := DocTypeRef(cur[0..<space])
-      pname := cur[space+1 ..< (defi ?: cur.size)]
+      sp    := cur.index(" ")
+      defi  := cur.index(":=", sp+1)
+      pname := cur[0..<sp]
+      type  := cur[sp+1 ..< (defi ?: cur.size)]
       def   := defi == null ? null : cur[defi+2..-1]
-
-      params.add(DocParam(type, pname, def))
+      params.add(DocParam(DocTypeRef(type), pname, def))
       consumeLine
     }
-    consumeLine  // trailing ")"
+    returns := DocTypeRef(cur[2..-1])
+    consumeLine
 
-    // consume current line and parse docs
-    doc := parseDoc(attrs)
-
-    return DocMethod(attrs, ref, name, flags, doc, facets, returns, params)
+    // attrs, facets, and doc
+    attrs  := parseAttrs
+    return DocMethod(attrs, typeRef, name, returns, params)
   }
 
-  private DocFacet[] parseFacets()
+  ** Parse meta name/val pairs, facets, and fandoc section
+  private DocAttrs parseAttrs()
+  {
+    attrs := DocAttrs()
+    parseMeta(attrs)
+    parseFacets(attrs)
+    parseDoc(attrs)
+    return attrs
+  }
+
+  private Void parseMeta(DocAttrs attrs)
+  {
+    while (!cur.isEmpty && cur[0].isAlpha)
+    {
+      eq   := cur.index("=")
+      name := cur[0..<eq]
+      val  := cur[eq+1..-1]
+      switch (name)
+      {
+        case "loc":    parseLoc(attrs, val)
+        case "flags":  attrs.flags = DocFlags.fromNames(val)
+        case "base":   attrs.base   = parseTypeList(val)
+        case "mixins": attrs.mixins = parseTypeList(val)
+        case "set":    attrs.setterFlags = DocFlags.fromNames(val)
+      }
+      consumeLine
+    }
+  }
+
+  private Void parseLoc(DocAttrs attrs, Str val)
+  {
+    colon   := val.index(":")
+    slash   := val.indexr("/")
+    file    := colon == 0 ? this.typeLoc.file : val[0..<colon]
+    line    := val[colon+1 ..< (slash ?: val.size)].toInt
+    docLine := slash != null ? val[slash+1..-1].toInt : line
+    attrs.loc    = DocLoc(file, line)
+    attrs.docLoc = DocLoc(file, docLine)
+  }
+
+  private DocTypeRef[] parseTypeList(Str val)
+  {
+    val.split.map |tok->DocTypeRef| { DocTypeRef(tok) }
+  }
+
+  private Void parseFacets(DocAttrs attrs)
   {
     facet := parseFacet
-    if (facet == null) return DocFacet#.emptyList
+    if (facet == null) return
     acc := [facet]
     while ((facet = parseFacet) != null) acc.add(facet)
-    return acc
+    attrs.facets = acc
   }
 
   private DocFacet? parseFacet()
@@ -231,8 +199,7 @@ it.isErr = this.ref.name.endsWith("Err")
     if (!cur.startsWith("@")) return null
 
     complex := cur[-1] == '{'
-    typeEnd := complex ? -3 : -1
-    type := DocTypeRef(cur[1..typeEnd])
+    type := DocTypeRef(cur[1..(complex ? -2 : -1)])
     fields := DocFacet.noFields
 
     consumeLine
@@ -254,77 +221,43 @@ it.isErr = this.ref.name.endsWith("Err")
     return DocFacet(type, fields)
   }
 
-  private DocAttrs parseAttrs()
+  private Void parseDoc(DocAttrs attrs)
   {
-    attrs := DocAttrs()
-
-    // the only attributes we care about are location (file, line)
-    Str? file    := null
-    Int? line    := null
-    Int? docLine := null
-    while (cur.startsWith("%"))
-    {
-      eq   := cur.index("=")
-      name := cur[1..<eq]
-      val  := cur[eq+1..-1]
-      if (name == "line") line = val.toInt
-      else if (name == "docLine") docLine = val.toInt
-      else if (name == "file") file = val
-      else if (name == "set") attrs.setterFlags = DocFlags.fromNames(val)
-      consumeLine
-    }
-
-    // create or default docLoc
-    if (docLine != null)
-      attrs.docLoc = DocLoc(file ?: this.loc.file, docLine)
-    else
-      attrs.docLoc = DocLoc(this.loc.file, 1)
-
-    // if file was specified then new fresh location
-    // otherwise we derive file location from type definition
-    if (file != null)
-      attrs.loc = DocLoc("${podName}::${file}", line)
-    else
-      attrs.loc = DocLoc(this.loc.file, line)
-
-    return attrs
-  }
-
-  private DocFandoc parseDoc(DocAttrs attrs)
-  {
-    if (cur.isEmpty) { consumeLine; return DocFandoc(attrs.docLoc, "") }
-    s := StrBuf(256)
-    while (!cur.isEmpty)
-    {
-      if (cur != "\\") s.add(cur)
-      s.addChar('\n')
-      consumeLine
-    }
+    if (!cur.isEmpty) throw Err("expecting empty line")
     consumeLine
-    return DocFandoc(attrs.docLoc, s.toStr)
+
+    s := StrBuf(256)
+    while (!eof && !cur.startsWith("-- "))
+    {
+      s.add(cur).addChar('\n')
+      consumeLine
+    }
+    attrs.doc = DocFandoc(attrs.docLoc, s.toStr)
   }
 
   private Void consumeLine()
   {
-    cur = in.readLine ?: ""
+    next := in.readLine
+    if (next != null) cur = next
+    else { cur = ""; eof = true }
   }
 
   private InStream in
   private const Str podName
   private Str cur := ""
-  private DocTypeRef? ref
-  private Int flags
-  private DocLoc loc := DocLoc("Unknown", 0)
-  private DocFandoc? doc
-  private DocFacet[]? facets
-  private DocTypeRef? base
-  private DocTypeRef[] mixins := [,]
-  private DocSlot[] slots := [,]
+  private DocLoc typeLoc := DocLoc.unknown
+  private DocTypeRef? typeRef
+  private Bool eof
 }
 
 internal class DocAttrs
 {
-  DocLoc? loc
-  DocLoc? docLoc
+  Int flags
+  DocLoc loc := DocLoc.unknown
+  DocLoc docLoc := DocLoc.unknown
   Int? setterFlags
+  DocTypeRef[] base   := DocTypeRef#.emptyList
+  DocTypeRef[] mixins := DocTypeRef#.emptyList
+  DocFacet[] facets   := DocFacet#.emptyList
+  DocFandoc? doc
 }

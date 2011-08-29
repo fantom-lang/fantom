@@ -17,69 +17,88 @@ class ApiDocWriter
 
   Bool close() { out.close }
 
+//////////////////////////////////////////////////////////////////////////
+// Type
+//////////////////////////////////////////////////////////////////////////
+
   This writeType(TypeDef t)
   {
-    // header
+    // name
+    w(typePrefix).w(t.name).w("\n")
+
+    // attributes
+    writeAttr("base",   encodeBase(t))
+    writeAttr("mixins", encodeMixins(t))
+    writeAttr("flags",  encodeFlags(t.flags))
+    writeAttr("loc",    encodeLoc(t, true))
+
+    // facets
     writeFacets(t.facets)
-    writeTypeAttrs(t)
-    if (t.isMixin)
-      writeFlags(t.flags.and(FConst.Mixin.not)).w("mixin ").w(t.name)
-    else
-      writeFlags(t.flags).w("class ").w(t.name)
-    if ((t.base != null && !t.base.isObj) || !t.mixins.isEmpty)
-    {
-      w(":")
-      comma := false
-      if (!t.isMixin && t.base != null) { writeTypeRef(t.base); comma = true }
-      t.mixins.each |m|
-      {
-        if (comma) w(",")
-        writeTypeRef(m)
-        comma = true
-      }
-    }
-    w("\n")
+
+    // doc
     writeDoc(t)
-    w("\n")
 
     // slots
     t.slotDefs.each |slot|
     {
       if (slot.isDocumented) writeSlot(slot)
     }
-
     return this
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Slots
+//////////////////////////////////////////////////////////////////////////
+
   private Void writeSlot(SlotDef s)
   {
+    // slot or method specific
+    if (s is FieldDef)
+      writeFieldStart(s)
+    else
+      writeMethodStart(s)
+
+    // common attributes
+    writeAttr("flags", encodeFlags(s.flags))
+    writeAttr("loc",   encodeLoc(s, false))
+
+    // facets
     writeFacets(s.facets)
-    writeSlotAttrs(s)
-    writeFlags(s.flags)
-    if (s is FieldDef) writeFieldSig(s)
-    else writeMethodSig(s)
-    w("\n")
+
+    // doc
     writeDoc(s)
+  }
+
+  private Void writeFieldStart(FieldDef f)
+  {
+    w(slotPrefix).w(f.name).w(" ").w(f.fieldType.signature)
+    if (f.init != null) w(":=").w(encodeExpr(f.init))
     w("\n")
+
+    if (f.setter != null && f.flags.and(protectionMask) != f.setter.flags.and(protectionMask))
+      writeAttr("set", encodeFlags(f.setter.flags.and(protectionMask)))
   }
 
-  private Void writeFieldSig(FieldDef f)
+  private Void writeMethodStart(MethodDef m)
   {
-    writeTypeRef(f.fieldType).w(" ").w(f.name)
-    if (f.init != null)
-      w(":=").writeExpr(f.init)
-  }
-
-  private Void writeMethodSig(MethodDef m)
-  {
-    writeTypeRef(m.returnType).w(" ").w(m.name).w("(\n")
-    m.paramDefs.each |param, i|
+    w(slotPrefix).w(m.name).w("(\n")
+    m.paramDefs.each |p, i|
     {
-      writeTypeRef(param.paramType).w(" ").w(param.name)
-      if (param.def != null) w(":=").writeExpr(param.def)
+      w(p.name).w(" ").w(p.paramType.signature)
+      if (p.def != null) w(":=").w(encodeExpr(p.def))
       w("\n")
     }
-    w(")")
+    w(") ").w(m.returnType.signature).w("\n")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Write Utils
+//////////////////////////////////////////////////////////////////////////
+
+  private Void writeAttr(Str name, Obj? val)
+  {
+    if (val == null) return
+    w(name).w("=").w(val.toStr).w("\n")
   }
 
   private Void writeFacets(FacetDef[]? facets)
@@ -90,14 +109,13 @@ class ApiDocWriter
 
   private Void writeFacet(FacetDef facet)
   {
-    w("@").writeTypeRef(facet.type)
+    w("@").w(facet.type.signature)
     if (!facet.names.isEmpty)
     {
-      w(" {\n")
+      w("{\n")
       facet.names.each |name, i|
       {
-        w(name).w("=")
-        writeExpr(facet.vals[i])
+        w(name).w("=").w(encodeExpr(facet.vals[i]))
         w("\n")
       }
       w("}")
@@ -105,71 +123,93 @@ class ApiDocWriter
     w("\n")
   }
 
-  private Void writeTypeAttrs(TypeDef t)
-  {
-    filename := t.loc.filename
-    if (filename != null)   w("%file=").w(filename).w("\n")
-    if (t.loc.line != null) w("%line=").w(t.loc.line.toStr).w("\n")
-    if (t.doc != null)      w("%docLine=").w(t.doc.loc.line.toStr).w("\n")
-  }
-
-  private Void writeSlotAttrs(SlotDef s)
-  {
-    if (s.loc.line != null) w("%line=").w(s.loc.line.toStr).w("\n")
-    if (s.doc != null)      w("%docLine=").w(s.doc.loc.line.toStr).w("\n")
-    if (s is FieldDef)
-    {
-      f := ((FieldDef)s)
-      if (f.setter != null && f.flags.and(protectionMask) != f.setter.flags.and(protectionMask))
-        w("%set=").writeFlags(f.setter.flags.and(protectionMask)).w("\n")
-    }
-  }
-
-  private This writeTypeRef(CType t)
-  {
-    w(t.signature)
-  }
-
-  private This writeExpr(Expr expr)
-  {
-    // this string must never have a newline since that
-    // is how we determine end of expressions in parser
-    w(expr.toDocStr ?: "...")
-  }
-
-  private This writeFlags(Int flags)
-  {
-    if (flags.and(FConst.Abstract)  != 0) w("abstract ")
-    if (flags.and(FConst.Const)     != 0) w("const ")
-    if (flags.and(FConst.Enum)      != 0) w("enum ")
-    if (flags.and(FConst.Facet)     != 0) w("facet ")
-    if (flags.and(FConst.Final)     != 0) w("final ")
-    if (flags.and(FConst.Internal)  != 0) w("internal ")
-    if (flags.and(FConst.Mixin)     != 0) w("mixin ")
-    if (flags.and(FConst.Native)    != 0) w("native ")
-    if (flags.and(FConst.Override)  != 0) w("override ")
-    if (flags.and(FConst.Private)   != 0) w("private ")
-    if (flags.and(FConst.Protected) != 0) w("protected ")
-    if (flags.and(FConst.Public)    != 0) w("public ")
-    if (flags.and(FConst.Static)    != 0) w("static ")
-    if (flags.and(FConst.Synthetic) != 0) w("synthetic ")
-    if (flags.and(FConst.Virtual)   != 0) w("virtual ")
-    if (flags.and(FConst.Ctor)      != 0) w("new ")
-    return this
-  }
-
   private Void writeDoc(DefNode node)
   {
+    w("\n")
     if (node.doc == null) return
     node.doc.lines.each |line|
     {
-      if (line.isEmpty) w("\\\n")
-      else w(line).w("\n")
+      if (line.startsWith(slotPrefix)) w(slotPrefix[0..0])
+      w(line).w("\n")
     }
+    w("\n")
   }
 
   This w(Str x) { out.print(x); return this }
 
+//////////////////////////////////////////////////////////////////////////
+// Str Encodings
+//////////////////////////////////////////////////////////////////////////
+
+  private Str? encodeBase(TypeDef t)
+  {
+    if (t.isMixin) return null
+    s := StrBuf()
+    b := t.base
+    while (b != null)
+    {
+      s.join(b.signature)
+      b = b.base
+    }
+    return s.isEmpty ? null : s.toStr
+  }
+
+  private Str? encodeMixins(TypeDef t)
+  {
+    if (t.mixins.isEmpty) return null
+    s := StrBuf()
+    t.mixins.each |m| { s.join(m.signature) }
+    return s.toStr
+  }
+
+  private Str? encodeLoc(DefNode n, Bool includeFile)
+  {
+    s := StrBuf()
+    if (includeFile) s.add(n.loc.filename)
+    if (n.loc.line != null)
+    {
+      s.add(":").add(n.loc.line)
+      if (n.doc != null && n.doc.loc.line != null)
+        s.add("/").add(n.doc.loc.line)
+    }
+    return s.isEmpty ? null : s.toStr
+  }
+
+  private static Str encodeExpr(Expr expr)
+  {
+    // this string must never have a newline since that
+    // is how we determine end of expressions in parser
+    expr.toDocStr ?: "..."
+  }
+
+  private static Str encodeFlags(Int flags)
+  {
+    s := StrBuf()
+    if (flags.and(FConst.Abstract)  != 0) s.join("abstract")
+    if (flags.and(FConst.Const)     != 0) s.join("const")
+    if (flags.and(FConst.Enum)      != 0) s.join("enum")
+    if (flags.and(FConst.Facet)     != 0) s.join("facet")
+    if (flags.and(FConst.Final)     != 0) s.join("final")
+    if (flags.and(FConst.Internal)  != 0) s.join("internal")
+    if (flags.and(FConst.Mixin)     != 0) s.join("mixin")
+    if (flags.and(FConst.Native)    != 0) s.join("native")
+    if (flags.and(FConst.Override)  != 0) s.join("override")
+    if (flags.and(FConst.Private)   != 0) s.join("private")
+    if (flags.and(FConst.Protected) != 0) s.join("protected")
+    if (flags.and(FConst.Public)    != 0) s.join("public")
+    if (flags.and(FConst.Static)    != 0) s.join("static")
+    if (flags.and(FConst.Synthetic) != 0) s.join("synthetic")
+    if (flags.and(FConst.Virtual)   != 0) s.join("virtual")
+    if (flags.and(FConst.Ctor)      != 0) s.join("new")
+    return s.toStr
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  private const static Str typePrefix := "== "
+  private const static Str slotPrefix := "-- "
   private const static Int protectionMask := (FConst.Public).or(FConst.Protected).or(FConst.Private).or(FConst.Internal)
 
   OutStream out
