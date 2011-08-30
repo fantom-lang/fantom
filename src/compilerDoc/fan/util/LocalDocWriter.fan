@@ -79,7 +79,7 @@ class LocalDocWriter
         pod.chapters.each |chapter|
         {
           out = WebOutStream(podDir.plus(`${chapter.name}.html`).out)
-          writeChapter(out, chapter)
+          writeChapter(out, pod, chapter)
           out.close
         }
 
@@ -221,18 +221,19 @@ class LocalDocWriter
     // header
     writeStart(out, pod.name, pod)
 
-    // TODO FIXT: should this just be all done here?
     // type table
     out.div("class='article type'")
-    IndexRenderer(env, out).writeTypeIndex(pod)
+    IndexRenderer(env, out, pod).writeTypeIndex
 
     // type list
-    out.ul("class='sidebar'")
+    out.div("class='sidebar'")
+    out.ul
     pod.types.each |t|
     {
       out.li.a(`${t.name}.html`).w(t.name).aEnd.liEnd
     }
     out.ulEnd
+    out.divEnd
     out.divEnd
 
     // pod doc
@@ -240,7 +241,10 @@ class LocalDocWriter
     {
       // chapter content
       out.div("class='pod-doc article' id='pod-doc'")
-      writeChapterContent(out, pod.podDoc)
+      ChapterRenderer(env, out, pod.podDoc).writeChapter
+      out.div("class='sidebar'")
+      IndexRenderer(env, out, pod).writePodDocToc
+      out.divEnd
       out.divEnd
     }
 
@@ -276,20 +280,29 @@ class LocalDocWriter
   virtual Void writeManualIndex(WebOutStream out, DocPod pod)
   {
     writeStart(out, pod.name, pod)
-    IndexRenderer(env, out).writeChapterIndex(pod)
+    IndexRenderer(env, out, pod).writeChapterIndex
     writeEnd(out)
     out.close
   }
 
   ** Write chapter.
-  virtual Void writeChapter(WebOutStream out, DocChapter chapter)
+  virtual Void writeChapter(WebOutStream out, DocPod pod, DocChapter chapter)
   {
     writeStart(out, chapter.qname, chapter)
     out.div("class='article'")
+
+    // chapter
     writeChapterNav(out, chapter)
     out.h1.span.w("${chapter.num}.").spanEnd.w(" ").esc(chapter.name).h1End
-    writeChapterContent(out, chapter)
+    ChapterRenderer(env, out, chapter).writeChapter
     writeChapterNav(out, chapter)
+
+    // toc
+    out.div("class='sidebar'")
+    out.p.a(`index.html`).esc(pod.name).aEnd.pEnd
+    IndexRenderer(env, out, pod).writeChapterToc(chapter)
+    out.divEnd
+
     out.divEnd
     writeEnd(out)
     out.close
@@ -314,35 +327,6 @@ class LocalDocWriter
     out.ulEnd
   }
 
-  ** Write chapter content.
-  virtual Void writeChapterContent(WebOutStream out, DocChapter chapter)
-  {
-    // content
-    r := ChapterRenderer(env, out, chapter)
-    r.writeChapter
-
-    // headings
-    out.ul("class='sidebar'")
-    writeChapterHeadings(out, chapter.headings)
-    out.ulEnd
-  }
-
-  private Void writeChapterHeadings(WebOutStream out, DocHeading[] headings)
-  {
-    headings.each |h|
-    {
-      out.li
-      out.a(`#$h.anchorId`).esc(h.title).aEnd
-      if (!h.children.isEmpty)
-      {
-        out.ul
-        writeChapterHeadings(out, h.children)
-        out.ulEnd
-      }
-      out.liEnd
-    }
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // CSS
 //////////////////////////////////////////////////////////////////////////
@@ -354,93 +338,44 @@ class LocalDocWriter
       width:900px;
     }
 
-    a {
-      color:#00c;
-    }
+    a { color:#00c; }
+    pre, code { font-size:13px; color:#666; }
+    pre { margin:1em 2em; overflow-y:hidden; overflow-x:auto; }
+    code.sig, code.sig a { color:#070; }
 
-    pre, code {
-      font-size:13px;
-      color:#666;
-    }
+    table { border-collapse:collapse; border-top:1px solid #d9d9d9; }
+    table tr { border-bottom:1px solid #d9d9d9; }
+    table tr:nth-child(odd) { background:#f5f5f5; }
+    table td { padding:0.25em 0.5em; }
+    table td div { font-size:12px; }
 
-    pre {
-      margin:1em 2em;
-      overflow-y:hidden;
-      overflow-x:auto;
-    }
-
-    code.sig,
-    code.sig a {
-      color:#070;
-    }
-
-    table {
-      border-collapse:collapse;
-      border-top:1px solid #d9d9d9;
-    }
-
-    table tr {
-      border-bottom:1px solid #d9d9d9;
-    }
-
-    table tr:nth-child(odd) {
-      background:#f5f5f5;
-    }
-
-    table td {
-      padding:0.25em 0.5em;
-    }
-
-    table td div {
-      font-size:12px;
-    }
-
-    dl {
-      margin:2em 0 1em 0;
-    }
-
+    dl { margin:2em 0 1em 0; }
     dl dt {
       border-top:1px solid #ccc;
       font-weight:bold;
       padding:0.5em 0 0 0;
     }
 
-    ul.nav {
-      margin:0;
-      padding:0 0 1em 0;
-      border-bottom:1px solid #ccc;
-    }
+    ul.nav { margin:0; padding:0 0 1em 0; border-bottom:1px solid #ccc; }
+    ul.nav li { display:inline-block; margin:0; padding:0; }
+    ul.nav li:after { margin:0 0.5em; content:'\\00bb'; color:#999; }
+    ul.nav li:last-child:after { content:''; }
 
-    ul.nav li {
-      display:inline-block;
-      margin:0;
-      padding:0;
-    }
+    div.article { padding-right:14em; position:relative; }
 
-    ul.nav li:after {
-      margin:0 0.5em;
-      content:'\\00bb';
-      color:#999;
-    }
-
-    ul.nav li:last-child:after {
-      content:'';
-    }
-
-    div.article {
-      padding-right:12em;
-      position:relative;
-    }
-
-    ul.sidebar {
-      position:absolute;
-      top:3em;
-      right:0;
-      width:10em;
-      list-style:none;
-      padding:0;
-      margin:0;
-      line-height:1.5em;
+    div.sidebar { position:absolute; top:3em; right:0; width:12em; }
+    div.sidebar > p { font-weight:bold; }
+    div.sidebar > p:first-child { margin-top:0; }
+    div.sidebar > ul { padding:0; margin:0; line-height:1.5em; }
+    div.sidebar > ul ul { padding-left:1.2em; line-height:1.3em; }
+    div.sidebar > ol { padding:0 0 0 2em; margin:0; line-height:1.5em; }
+    div.sidebar > ol { counter-reset:chapter; }
+    div.sidebar > ol > li { counter-increment:chapter; }
+    div.sidebar ol ol { list-style:none; padding-left:0; }
+    div.sidebar ol ol li:first-child { counter-reset:section; }
+    div.sidebar ol ol li:before {
+      content:counter(chapter) '.' counter(section) '. ';
+      counter-increment:section;
     }
 
     div.pod-doc {
@@ -451,6 +386,7 @@ class LocalDocWriter
     div.type table { width:100%; }
     div.type table td:last-child { width:100%; }
     div.type h1 > span:first-child { display:block; font-size:60%; }
+    div.type div.sidebar > ul { list-style:none; }
 
     div.toc ol li { margin-bottom:1em; }
     div.toc ol li p { margin:1px 0 1px 1em; }
