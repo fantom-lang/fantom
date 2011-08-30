@@ -369,8 +369,6 @@ class LocalDocWriter
     div.sidebar > ul { padding:0; margin:0; line-height:1.5em; }
     div.sidebar > ul ul { padding-left:1.2em; line-height:1.3em; }
     div.sidebar > ol { padding:0 0 0 2em; margin:0; line-height:1.5em; }
-    div.sidebar > ol { counter-reset:chapter; }
-    div.sidebar > ol > li { counter-increment:chapter; }
     div.sidebar ol ol { list-style:none; padding-left:0; }
     div.sidebar ol ol li:first-child { counter-reset:section; }
     div.sidebar ol ol li:before {
