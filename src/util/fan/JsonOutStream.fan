@@ -20,9 +20,9 @@ class JsonOutStream : OutStream
   **
   public static Str writeJsonToStr(Obj? obj)
   {
-    buf := Buf()  // TODO: switch to StrBuf once #1031 is fixed
+    buf := StrBuf()
     JsonOutStream(buf.out).writeJson(obj)
-    return buf.flip.readAllStr
+    return buf.toStr
   }
 
   **
