@@ -148,15 +148,16 @@ class IndexRenderer : DocRenderer
       out.ol
       chapters.each |c|
       {
-        out.li("value='$c.num'").a(`${c.name}.html`).esc(c.name).aEnd
+        out.li("value='$c.num' style='counter-reset:chapter $c.num;'")
+          .a(`${c.name}.html`).esc(c.name).aEnd
+
+        // chapter sections
         if (c == cur)
         {
           out.ol
-          c.headings.each |h,i|
+          c.headings.each |h|
           {
-            out.li //("value='${c.num}.$i'")
-              .a(`${c.name}.html#$h.anchorId`).esc(h.title).aEnd
-              .liEnd
+            out.li.a(`${c.name}.html#$h.anchorId`).esc(h.title).aEnd.liEnd
           }
           out.olEnd
         }
