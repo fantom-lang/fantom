@@ -258,6 +258,7 @@ class FileDocWriter
 
     // type list
     out.div("class='sidebar'")
+    out.h3.w("All Types").h3End
     out.ul
     pod.types.each |t|
     {
@@ -274,6 +275,7 @@ class FileDocWriter
       out.div("class='pod-doc article' id='pod-doc'")
       ChapterRenderer(env, out, pod.podDoc).writeChapter
       out.div("class='sidebar'")
+      out.h3.w("Contents").h3End
       IndexRenderer(env, out, pod).writePodDocToc
       out.divEnd
       out.divEnd
@@ -430,7 +432,7 @@ class FileDocWriter
     div.sidebar > h3:first-child { margin-top:0; }
     div.sidebar > p { font-weight:bold; }
     div.sidebar > p:first-child { margin-top:0; }
-    div.sidebar > ul { padding:0; margin:0; line-height:1.5em; }
+    div.sidebar > ul { padding:0; margin:0 0 0 1.5em; line-height:1.5em; }
     div.sidebar > ul ul { padding-left:1.2em; line-height:1.3em; }
     div.sidebar > ol { padding:0 0 0 2em; margin:0; line-height:1.5em; }
     div.sidebar ol ol { list-style:none; padding-left:0; }
@@ -439,6 +441,15 @@ class FileDocWriter
       content:counter(chapter) '.' counter(section) '. ';
       counter-increment:section;
     }
+
+    div.index > div.manuals { float:left; width:50%; }
+    div.index > div.manuals > h2 { margin-top:0; }
+    div.index > div.manuals table { border:none; }
+    div.index > div.manuals table tr { background:none; border:none; }
+    div.index > div.manuals table td { padding:0.5em 1em; }
+    div.index > div.manuals table td:last-child { padding-right:2em; }
+    div.index > div.manuals table td:first-child { vertical-align:top; }
+    div.index div.apis { padding-left:1em; }
 
     div.pod-doc {
       border-top:1px solid #ccc;
@@ -449,7 +460,7 @@ class FileDocWriter
     div.type table td:last-child { width:100%; }
     div.type h1 > span:first-child { display:block; font-size:60%; }
     div.type + div.sidebar > ul { list-style:none; }
-    div.type > p > a.src { display:none; }
+    div.type > p > a.src { display:none; margin-left:0; }
 
     div.toc ol li { margin-bottom:1em; }
     div.toc ol li p { margin:1px 0 1px 1em; }
@@ -461,15 +472,6 @@ class FileDocWriter
     ul.chapter-nav li + li.next { position:absolute; top:0; right:0; }
     ul.chapter-nav li.prev:before { content:'\\00ab '; }
     ul.chapter-nav li.next:after { content:' \\00bb'; margin:0 }
-
-    div.index > div.manuals { float:left; width:50%; }
-    div.index > div.manuals > h2 { margin-top:0; }
-    div.index > div.manuals table { border:none; }
-    div.index > div.manuals table tr { background:none; border:none; }
-    div.index > div.manuals table td { padding:0.5em 1em; }
-    div.index > div.manuals table td:last-child { padding-right:2em; }
-    div.index > div.manuals table td:first-child { vertical-align:top; }
-    div.index div.apis { padding-left:1em; }
 
     div.src pre { margin:1em 0; padding:0; color:#000; }
     div.src pre b { color:#f00; font-weight:normal; }
