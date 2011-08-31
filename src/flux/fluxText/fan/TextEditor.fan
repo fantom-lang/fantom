@@ -7,6 +7,7 @@
 //
 
 using concurrent
+using syntax
 using gfx
 using fwt
 using flux
@@ -115,7 +116,7 @@ class TextEditor : View
     // create rich text widget
     richText = RichText { model = doc; border = false }
 
-    richText.font = syntax.font
+    richText.font = options.font
     richText.tabSpacing = options.tabSpacing
 
     // initialize controller
@@ -148,10 +149,10 @@ class TextEditor : View
 
     // figure out what syntax file to use
     // based on file extension and shebang
-    rules = SyntaxRules.load(syntax, file, lines.first)
+    rules = SyntaxRules.loadForFile(file, lines.first)
 
     // load document
-    doc = Doc(options, syntax, rules)
+    doc = Doc(options, rules)
     doc.load(lines)
   }
 
@@ -186,7 +187,6 @@ class TextEditor : View
 
   File? file
   TextEditorOptions options := TextEditorOptions.load
-  SyntaxOptions syntax := SyntaxOptions.load
   Charset charset := options.charset
   SyntaxRules? rules
   RichText? richText

@@ -27,6 +27,7 @@
 - New syntax pod
 - New compilerDoc pod
 - Fandoc: shift heading levels-
+- Rework fluxText to depend on new syntax pod
 
 *Build 1.0.59 (2 Jun 2011)*
 - Remove support for deprecated 'readonly' keyword

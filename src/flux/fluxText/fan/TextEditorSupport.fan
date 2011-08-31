@@ -8,6 +8,7 @@
 
 using fwt
 using flux
+using syntax
 
 **
 ** TextEditorSupport provides a bunch of convience methods
@@ -20,8 +21,6 @@ internal mixin TextEditorSupport
   Frame frame() { return editor.frame }
 
   TextEditorOptions options() { return editor.options }
-
-  SyntaxOptions syntax() { return editor.syntax }
 
   SyntaxRules rules() { return editor.rules }
 

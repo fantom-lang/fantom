@@ -6,6 +6,8 @@
 //
 
 using sys
+using gfx
+using fwt
 using fluxText
 
 TextEditorOptions
@@ -31,5 +33,23 @@ TextEditorOptions
   ** Default char encoding to use when load/saving
   ** text files.  Defaults to utf8.
   charset = Charset("utf8")
+
+//////////////////////////////////////////////////////////////////////////
+// Styling
+//////////////////////////////////////////////////////////////////////////
+
+  ** default font to use absense font in specific syntax styling;
+  ** if not configured then we use Font.sysMonospace which defaults
+  ** to Monaco on OS X and Courier New on other platforms
+  //font = Font("10pt Courier New")
+
+  ** color coding
+  highlightCurLine = Color("#f0f0f0")
+  text          = RichTextStyle { fg = Color("#000") }
+  bracket       = RichTextStyle { fg = Color("#f00") }
+  bracketMatch  = RichTextStyle { fg = Color("#f00"); bg=Color("#ff0") }
+  keyword       = RichTextStyle { fg = Color("#00f") }
+  literal       = RichTextStyle { fg = Color("#077") }
+  comment       = RichTextStyle { fg = Color("#070") }
 
 }

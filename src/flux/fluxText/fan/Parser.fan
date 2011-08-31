@@ -7,6 +7,7 @@
 //
 
 using fwt
+using syntax
 
 **
 ** Parser is responsible for tokenizing a document line
@@ -24,7 +25,6 @@ internal class Parser
   new make(Doc doc)
   {
     options  = doc.options
-    syntax   = doc.syntax
     rules    = doc.rules
     brackets = rules.brackets
 
@@ -48,7 +48,7 @@ internal class Parser
     // block comments
     commentStart = toMatcher(rules.blockCommentStart)
     commentEnd   = toMatcher(rules.blockCommentEnd)
-    commentOpen  = BlockOpen(this, rules.blockCommentStart, [0, syntax.comment].ro)
+    commentOpen  = BlockOpen(this, rules.blockCommentStart, [0, options.comment].ro)
 
     // str literals
     strs = StrMatch[,]
@@ -97,7 +97,7 @@ internal class Parser
     catch (Err e)
     {
       e.trace
-      return Line { it.text = text; it.styling = [0, syntax.text] }
+      return Line { it.text = text; it.styling = [0, options.text] }
     }
   }
 
@@ -123,11 +123,11 @@ internal class Parser
       tok := next
       switch (tok)
       {
-        case Token.bracket: addStyle(styling, p, syntax.bracket)
-        case Token.keyword: addStyle(styling, p, syntax.keyword)
-        case Token.literal: addStyle(styling, p, syntax.literal)
-        case Token.comment: addStyle(styling, p, syntax.comment)
-        default:            addStyle(styling, p, syntax.text)
+        case Token.bracket: addStyle(styling, p, options.bracket)
+        case Token.keyword: addStyle(styling, p, options.keyword)
+        case Token.literal: addStyle(styling, p, options.literal)
+        case Token.comment: addStyle(styling, p, options.comment)
+        default:            addStyle(styling, p, options.text)
       }
     }
   }
@@ -298,7 +298,7 @@ internal class Parser
       end       = toMatcher(s.delimiterEnd ?: s.delimiter, s.escape)
       escape    = s.escape
       multiLine = s.multiLine
-      blockOpen = BlockOpen(this, s.delimiter, [0, syntax.literal].ro)
+      blockOpen = BlockOpen(this, s.delimiter, [0, options.literal].ro)
     }
   }
 
@@ -424,7 +424,6 @@ internal class Parser
 //////////////////////////////////////////////////////////////////////////
 
   internal TextEditorOptions options // configured options
-  internal SyntaxOptions syntax    // configured options
   internal SyntaxRules rules       // syntax rules for current document
 
   private Str brackets             // str of bracket symbols

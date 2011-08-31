@@ -6,6 +6,7 @@
 //   30 Jul 08  Brian Frank  Creation
 //
 
+using syntax
 using fwt
 
 class SyntaxTest : Test
@@ -15,7 +16,7 @@ class SyntaxTest : Test
 // Setup
 //////////////////////////////////////////////////////////////////////////
 
-  const SyntaxOptions opt := SyntaxOptions.load
+  const TextEditorOptions opt := TextEditorOptions.load
   const RichTextStyle t := opt.text
   const RichTextStyle s := opt.literal
   const RichTextStyle c := opt.comment
@@ -230,8 +231,7 @@ class SyntaxTest : Test
   Void verifyBrackets(Str ext, Str src, Int line, Int col, Obj[][] styling, Bool testReverse := true)
   {
     doc := Doc(TextEditorOptions.load,
-               SyntaxOptions.load,
-               SyntaxRules.load(SyntaxOptions.load, "foo.$ext".toUri.toFile, null))
+               SyntaxRules.loadForExt(ext))
     doc.text = src
 
     a := doc.offsetAtLine(line) + col
@@ -255,8 +255,7 @@ class SyntaxTest : Test
   Void verifySyntax(Str ext, Str src, Obj[][] styling)
   {
     doc := Doc(TextEditorOptions.load,
-               SyntaxOptions.load,
-               SyntaxRules.load(SyntaxOptions.load, "foo.$ext".toUri.toFile, null))
+               SyntaxRules.loadForExt(ext))
     doc.text = src
     verifySyntaxDoc(doc, styling)
   }

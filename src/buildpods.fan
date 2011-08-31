@@ -38,6 +38,7 @@ class Build : BuildGroup
       `webmod/build.fan`,
       `wisp/build.fan`,
       `fandoc/build.fan`,
+      `syntax/build.fan`,
       `docCompiler/build.fan`,
       `sql/build.fan`,
       `email/build.fan`,
