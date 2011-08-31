@@ -65,7 +65,7 @@ class LocalDocWriter
         pod.types.each |type|
         {
           out = WebOutStream(podDir.plus(`${type.name}.html`).out)
-          writeType(out, type)
+          writeType(out, pod, type)
           out.close
         }
 
@@ -274,7 +274,7 @@ class LocalDocWriter
   }
 
   ** Write Type.
-  private Void writeType(WebOutStream out, DocType type)
+  private Void writeType(WebOutStream out, DocPod pod, DocType type)
   {
     // header
     writeStart(out, type.qname, type)
@@ -285,8 +285,17 @@ class LocalDocWriter
     TypeRenderer(env, out, type).writeType
     out.divEnd
 
-    // slot list
+    // src
     out.div("class='sidebar'")
+    out.h3.w("Source").h3End
+    out.ul
+    src := pod.source(type.loc.file, false)
+    if (src == null) out.li.w("Not available").liEnd
+    else out.li.a(`src-${src.name}.html`).w("View Source").aEnd.liEnd
+    out.ulEnd
+
+    // src/slot list
+    out.h3.w("Slots").h3End
     out.ul
     type.slots.each |slot|
     {
@@ -376,7 +385,7 @@ class LocalDocWriter
     }
 
     a { color:#00c; }
-    pre, code { font-size:13px; color:#666; }
+    pre, code { font-size:13px; color:#555; }
     pre { margin:1em 2em; overflow-y:hidden; overflow-x:auto; }
     code.sig, code.sig a { color:#070; }
 
@@ -392,6 +401,8 @@ class LocalDocWriter
       font-weight:bold;
       padding:0.5em 0 0 0;
     }
+    dl dd { position:relative; }
+    dl dd a.src { position:absolute; top:-2.5em; right:0; font-size:12px; color:#999; }
 
     ul.nav { margin:0; padding:0 0 1em 0; border-bottom:1px solid #ccc; }
     ul.nav li { display:inline-block; margin:0; padding:0; }
@@ -401,6 +412,7 @@ class LocalDocWriter
     div.article { padding-right:14em; position:relative; }
 
     div.sidebar { position:absolute; top:3em; right:0; width:12em; }
+    div.sidebar > h3:first-child { margin-top:0; }
     div.sidebar > p { font-weight:bold; }
     div.sidebar > p:first-child { margin-top:0; }
     div.sidebar > ul { padding:0; margin:0; line-height:1.5em; }
@@ -422,6 +434,7 @@ class LocalDocWriter
     div.type table td:last-child { width:100%; }
     div.type h1 > span:first-child { display:block; font-size:60%; }
     div.type + div.sidebar > ul { list-style:none; }
+    div.type > p > a.src { display:none; }
 
     div.toc ol li { margin-bottom:1em; }
     div.toc ol li p { margin:1px 0 1px 1em; }

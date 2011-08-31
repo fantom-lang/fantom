@@ -59,7 +59,9 @@ class TypeRenderer : DocRenderer
     }
 
     // if source if available
+    out.p
     writeSourceLink(type.doc.loc)
+    out.pEnd
 
     // fandoc
     writeFandoc(type, type.doc)
@@ -240,8 +242,8 @@ class TypeRenderer : DocRenderer
     if (src == null) return
 
     // link to HTML file for source
-    uri := `src-${src.name}.html#${loc.line}`
-    out.a(uri).w("Source").aEnd
+    uri := `src-${src.name}.html#l${loc.line}`
+    out.a(uri, "class='src'").w("Source").aEnd
   }
 
 }
