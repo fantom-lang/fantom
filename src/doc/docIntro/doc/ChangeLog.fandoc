@@ -24,7 +24,9 @@
 - wisp::Main to run simple WebMods under Wisp
 - Add deprecation warnings for facet fields
 - New compiler apidoc format
-- Fandoc: shift heading levels
+- New syntax pod
+- New compilerDoc pod
+- Fandoc: shift heading levels-
 
 *Build 1.0.59 (2 Jun 2011)*
 - Remove support for deprecated 'readonly' keyword
