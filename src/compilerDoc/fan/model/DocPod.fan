@@ -113,6 +113,7 @@ class DocPod
     chapters  := Str:DocChapter[:]
     indexFog  := null
     resources := Uri[,]
+    sources   := Uri[,]
 
     // process zip contents
     zip := open
@@ -123,6 +124,13 @@ class DocPod
       {
         try
         {
+          // if this is src/{file}, save to source list
+          if (f.path[0] == "src")
+          {
+            if (f.path.size == 2) sources.add(f.uri)
+            return
+          }
+
           // we only care about files in doc/*
           if (f.path[0] != "doc") return
 
@@ -161,6 +169,7 @@ class DocPod
     saveTypes(types)
     saveChapters(chapters, indexFog)
     saveResources(resources)
+    saveSources(sources)
     loaded = true
     return this
   }
@@ -275,6 +284,12 @@ class DocPod
     this.resourceList = list.sort.ro
   }
 
+  private Void saveSources(Uri[] list)
+  {
+    this.sourceList = list.sort.ro
+    this.sourceMap  = Str:Uri[:].addList(list) |uri| { uri.name }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Chapters
 //////////////////////////////////////////////////////////////////////////
@@ -317,9 +332,28 @@ class DocPod
   **
   ** Resource files in pod which are used to support the
   ** documentation such as images used by the fandoc chapters.
-  ** The Uris are internal the pod zip file.
+  ** The Uris are internal to the pod zip file.
   **
   Uri[] resources() { load.resourceList }
+
+  **
+  ** Source files in pod which should be included in documentation.
+  ** The Uris are internal to the pod zip file.
+  **
+  Uri[] sources() { load.sourceList }
+
+  **
+  ** Return pod internal URI to source code for filename, or
+  ** if not available return null/raise exception.
+  **
+  Uri? source(Str filename, Bool checked := true)
+  {
+    load
+    uri := sourceMap[filename]
+    if (uri != null) return uri
+    if (checked) throw UnresolvedErr("source file: $filename")
+    return null
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // State
@@ -333,4 +367,6 @@ class DocPod
   private [Str:DocChapter]? chapterMap := [:]
   private Obj[]? tocRef
   private Uri[]? resourceList
+  private Uri[]? sourceList
+  private [Str:Uri]? sourceMap
 }
