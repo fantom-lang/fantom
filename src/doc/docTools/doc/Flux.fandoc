@@ -82,27 +82,22 @@ general options when working with text files:
   - convert tabs to spaces
   - tab spacing
   - strip trailing whitespace on save
+  - configure styling for syntax color coding
 
 Syntax Color Coding [#syntaxOptions]
 ====================================
 You can add syntax color coding for new languages easily through
 the options.  First step is to map file extensions to a syntax
-definition via [SyntaxOptions]`fluxText::SyntaxOptions`.  You also
-use SytnaxOptions to configure your font and color preferences.
+definition in "etc/syntax/ext.props".
 
 For example let's say we want to add support for "foolang".  First
-we edit "etc/fluxText/syntax.fog" to map the file extensions "foo" and
-"foolang" to the definition stored in "etc/fluxText/syntax/foolang.fog":
+we edit "etc/syntax/ext.props" to map the file extension "foo" to
+the definition named "foolang":
 
-  extToRules =
-  [
-    ...
-    "foolang": "foolang",
-    "foo": "foolang",
-    ...
+  foo=foolang
 
-Next we create the syntax rules in "etc/fluxText/syntax/foolang.fog"
-using [SyntaxRules]`fluxText::SyntaxRules`.  This is where we
+Next we create the syntax rules in "etc/syntax/syntax-foolang.fog"
+using [SyntaxRules]`syntax::SyntaxRules`.  This is where we
 define our keywords and syntax for comments and string literals.
 It is easiest to start off with a definition for a language
 you are already familiar with.  For example Java's syntax rules
