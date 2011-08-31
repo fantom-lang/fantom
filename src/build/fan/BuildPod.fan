@@ -61,7 +61,7 @@ abstract class BuildPod : BuildScript
   Bool docApi := true
 
   **
-  ** Indicates if if source code should be included in the documentation.
+  ** Indicates if if source code should be included in the pod/documentation.
   ** By default source code it *not* included.
   **
   Bool docSrc := false
@@ -203,6 +203,7 @@ abstract class BuildPod : BuildScript
     ci.jsFiles     = jsDirs
     ci.log         = log
     ci.includeDoc  = docApi
+    ci.includeSrc  = docSrc
     ci.mode        = CompilerInputMode.file
     ci.outDir      = outPodDir.toFile
     ci.output      = CompilerOutputMode.podFile

@@ -63,12 +63,6 @@ abstract class DefNode : Node
     facets.each |FacetDef f| { f.print(out) }
   }
 
-  // TODO
-  virtual [Str:Str]? docMeta()
-  {
-    return null
-  }
-
   **
   ** Return if this type or slot should be documented:
   **   - public or protected
