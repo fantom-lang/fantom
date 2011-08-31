@@ -63,6 +63,18 @@ class TypeRenderer : DocRenderer
 
     // fandoc
     writeFandoc(type, type.doc)
+
+    // enum vals
+    if (DocFlags.isEnum(type.flags))
+    {
+      out.ul
+      type.slots.each |s|
+      {
+        if (DocFlags.isEnum(s.flags))
+          out.li.a(`#$s.name`).esc(s.name).aEnd.liEnd
+      }
+      out.ulEnd
+    }
   }
 
   ** Render type inheritance.
