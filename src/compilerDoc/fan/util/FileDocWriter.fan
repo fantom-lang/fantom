@@ -171,7 +171,7 @@ class FileDocWriter
     }
   }
 
-  ** Start a HTML page.
+  ** End HTML page.
   virtual Void writeEnd(WebOutStream out)
   {
     out.bodyEnd
@@ -245,7 +245,7 @@ class FileDocWriter
 //////////////////////////////////////////////////////////////////////////
 
   ** Write pod index.
-  private Void writePodIndex(WebOutStream out, DocPod pod)
+  virtual Void writePodIndex(WebOutStream out, DocPod pod)
   {
     // header
     writeStart(out, pod.name, pod)
@@ -283,7 +283,7 @@ class FileDocWriter
   }
 
   ** Write Type.
-  private Void writeType(WebOutStream out, DocPod pod, DocType type)
+  virtual Void writeType(WebOutStream out, DocPod pod, DocType type)
   {
     // header
     writeStart(out, type.qname, type)
@@ -390,7 +390,9 @@ class FileDocWriter
 // CSS
 //////////////////////////////////////////////////////////////////////////
 
-  private static const Str css :=
+  ** Return css to use for HTML files.
+  virtual Str css()
+  {
    "body {
       font:14px Helvetica Neue, Arial, sans-serif;
       padding:0; margin:1em auto 4em auto;
@@ -476,4 +478,5 @@ class FileDocWriter
     div.src pre q   { color:#070; font-style:normal; }
     div.src pre q:before, div.src pre q:after { content: ''; }
     "
+  }
 }
