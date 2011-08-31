@@ -414,7 +414,7 @@ class FileDocWriter
       font-weight:bold;
       padding:0.5em 0 0 0;
     }
-    dl dd { position:relative; }
+    dl dd { position:relative; margin-bottom:1em; }
     dl dd a.src { position:absolute; top:-2.5em; right:0; font-size:12px; color:#999; }
 
     ul.nav { margin:0; padding:0 0 1em 0; border-bottom:1px solid #ccc; }
