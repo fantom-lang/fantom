@@ -222,8 +222,10 @@ class LocalDocWriter
     writeStart(out, pod.name, pod)
 
     // type table
-    out.div("class='article type'")
+    out.div("class='article'")
+    out.div("class='type'")
     IndexRenderer(env, out, pod).writeTypeIndex
+    out.divEnd
 
     // type list
     out.div("class='sidebar'")
@@ -258,16 +260,20 @@ class LocalDocWriter
     writeStart(out, type.qname, type)
 
     // type docs
-    out.div("class='article type'")
+    out.div("class='article'")
+    out.div("class='type'")
     TypeRenderer(env, out, type).writeType
+    out.divEnd
 
     // slot list
-    out.ul("class='sidebar'")
+    out.div("class='sidebar'")
+    out.ul
     type.slots.each |slot|
     {
       out.li.a(`#$slot.name`).w(slot.name).aEnd.liEnd
     }
     out.ulEnd
+    out.divEnd
     out.divEnd
     writeEnd(out)
   }
@@ -384,7 +390,7 @@ class LocalDocWriter
     div.type table { width:100%; }
     div.type table td:last-child { width:100%; }
     div.type h1 > span:first-child { display:block; font-size:60%; }
-    div.type div.sidebar > ul { list-style:none; }
+    div.type + div.sidebar > ul { list-style:none; }
 
     div.toc ol li { margin-bottom:1em; }
     div.toc ol li p { margin:1px 0 1px 1em; }
