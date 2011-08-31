@@ -150,6 +150,7 @@ class TextEditor : View
     // figure out what syntax file to use
     // based on file extension and shebang
     rules = SyntaxRules.loadForFile(file, lines.first)
+    if (rules == null) rules = SyntaxRules {}
 
     // load document
     doc = Doc(options, rules)
