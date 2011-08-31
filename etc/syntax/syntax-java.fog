@@ -1,11 +1,11 @@
 //
-// Syntax rules for C#
+// Syntax rules for Java
 //
 // History:
-//   14 Aug 08  Brian Frank  Creation
+//   10 Aug 08  Brian Frank  Creation
 //
 
-using fluxText
+using syntax
 
 SyntaxRules
 {
@@ -20,93 +20,65 @@ SyntaxRules
   // string and character literals
   strs =
   [
-    SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false },  // char
     SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = false }, // String
-    SyntaxStr { delimiter = "@\""; delimiterEnd="\""; multiLine = true }, // verbatim String
+    SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false }   // char
   ]
 
   // keyword list
   keywords =
   [
     "abstract",
-    "as",
-    "base",
-    "bool",
+    "assert",
+    "boolean",
     "break",
     "byte",
     "case",
     "catch",
     "char",
-    "checked",
     "class",
     "const",
     "continue",
-    "decimal",
     "default",
-    "delegate",
     "do",
     "double",
     "else",
-    "enum",
-    "event",
-    "explicit",
-    "extern",
+    "extends",
     "false",
+    "final",
     "finally",
-    "fixed",
     "float",
     "for",
-    "foreach",
     "goto",
     "if",
-    "implicit",
-    "in",
+    "implements",
+    "import",
+    "instanceof",
     "int",
     "interface",
-    "internal",
-    "is",
-    "lock",
     "long",
-    "namespace",
+    "native",
     "new",
     "null",
-    "object",
-    "operator",
-    "out",
-    "override",
-    "params",
+    "package",
     "private",
     "protected",
     "public",
-    "readonly",
-    "ref",
     "return",
-    "sbyte",
-    "sealed",
     "short",
-    "sizeof",
-    "stackalloc",
     "static",
-    "string",
-    "struct",
+    "strictfp",
+    "super",
     "switch",
+    "synchronized",
     "this",
     "throw",
+    "throws",
+    "transient",
     "true",
     "try",
-    "typeof",
-    "uint",
-    "ulong",
-    "unchecked",
-    "unsafe",
-    "ushort",
-    "using",
-    "virtual",
-    "volatile",
     "void",
+    "volatile",
     "while",
   ]
 }
-
-
 

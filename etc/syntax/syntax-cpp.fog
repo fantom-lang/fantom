@@ -1,11 +1,11 @@
 //
-// Syntax rules for JavaScript
+// Syntax rules for C++
 //
 // History:
 //   14 Aug 08  Brian Frank  Creation
 //
 
-using fluxText
+using syntax
 
 SyntaxRules
 {
@@ -20,74 +20,89 @@ SyntaxRules
   // string and character literals
   strs =
   [
-    SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = false },
-    SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false }
+    SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = false }, // String
+    SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false }   // char
   ]
 
   // keyword list
   keywords =
   [
-    "abstract",
-    "boolean",
+    "#define",
+    "#elif",
+    "#endif",
+    "#error",
+    "#if",
+    "#ifdef",
+    "#ifndef",
+    "#include",
+    "#line",
+    "#warning",
+    "#undef",
+    "asm",
+    "auto",
+    "bool",
     "break",
-    "byte",
     "case",
     "catch",
     "char",
     "class",
     "const",
+    "const_cast",
     "continue",
-    "debugger",
     "default",
     "delete",
     "do",
     "double",
+    "dynamic_cast",
     "else",
     "enum",
+    "explicit",
     "export",
-    "extends",
+    "extern",
     "false",
-    "final",
-    "finally",
     "float",
     "for",
-    "function",
+    "friend",
     "goto",
     "if",
-    "implements",
-    "import",
-    "in",
-    "instanceof",
+    "inline",
     "int",
-    "interface",
     "long",
-    "native",
+    "mutable",
+    "namespace",
     "new",
-    "null",
-    "package",
+    "operator",
     "private",
     "protected",
     "public",
+    "register",
+    "reinterpret_cast",
     "return",
     "short",
+    "signed",
+    "sizeof",
     "static",
-    "super",
+    "static_cast",
+    "struct",
     "switch",
-    "synchronized",
+    "template",
     "this",
     "throw",
-    "throws",
-    "transient",
     "true",
     "try",
-    "typeof",
-    "undefined",
-    "var",
+    "typedef",
+    "typeid",
+    "typename",
+    "union",
+    "unsigned",
+    "using",
+    "virtual",
     "void",
     "volatile",
+    "wchar_t",
     "while",
-    "with",
   ]
 }
+
 
 

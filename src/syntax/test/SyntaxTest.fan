@@ -213,6 +213,7 @@ class SyntaxTest : Test
   Void verifySyntax(Str ext, Str src, Obj[][] expected)
   {
     rules := SyntaxRules.loadForExt(ext)
+    if (rules == null) throw Err("no rules for $ext")
     doc := SyntaxDoc.parse(rules, src.in)
 
     // dump
