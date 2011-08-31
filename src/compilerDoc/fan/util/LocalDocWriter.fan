@@ -8,6 +8,7 @@
 
 using util
 using web
+using syntax
 
 **
 ** LocalDocWriter
@@ -66,6 +67,25 @@ class LocalDocWriter
           out = WebOutStream(podDir.plus(`${type.name}.html`).out)
           writeType(out, type)
           out.close
+        }
+
+        // source files
+        if (!pod.sources.isEmpty)
+        {
+          zip := pod.open
+          try
+          {
+            pod.sources.each |src|
+            {
+              rules := SyntaxRules.loadForExt(src.ext ?: "?") ?:SyntaxRules()
+              syntaxDoc := SyntaxDoc.parse(rules, zip.contents[src].in)
+              out = WebOutStream(podDir.plus(`src-${src.name}.html`).out)
+              writeSource(out, src.name, syntaxDoc)
+              out.close
+
+            }
+          }
+          finally zip.close
         }
       }
       else
@@ -331,6 +351,17 @@ class LocalDocWriter
         .esc(chapter.next.name).aEnd
         .liEnd
     out.ulEnd
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Source
+//////////////////////////////////////////////////////////////////////////
+
+  ** Write source code file
+  virtual Void writeSource(WebOutStream out, Str name, SyntaxDoc doc)
+  {
+    w := HtmlSyntaxWriter(out)
+    w.writeDoc(doc)
   }
 
 //////////////////////////////////////////////////////////////////////////

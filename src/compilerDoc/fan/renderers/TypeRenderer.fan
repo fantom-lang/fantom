@@ -23,10 +23,14 @@ class TypeRenderer : DocRenderer
     : super(env, out)
   {
     this.type = type
+    this.pod  = env.pod(type.pod)
   }
 
   ** Type to renderer
   const DocType type
+
+  ** Pod for type
+  DocPod pod { private set }
 
   ** Render the HTML for the DocType referened by `type` field.
   virtual Void writeType()
@@ -53,6 +57,9 @@ class TypeRenderer : DocRenderer
       type.facets.each |f| { writeFacet(f); out.br }
       out.pEnd
     }
+
+    // if source if available
+    writeSourceLink(type.doc.loc)
 
     // fandoc
     writeFandoc(type, type.doc)
@@ -97,6 +104,7 @@ class TypeRenderer : DocRenderer
     out.dt("id='$slot.name'").w("$slot.name").dtEnd
     out.dd
     writeSlotSig(slot)
+    writeSourceLink(slot.doc.loc)
     writeFandoc(type, slot.doc)
     out.ddEnd
   }
@@ -211,5 +219,18 @@ class TypeRenderer : DocRenderer
     }
     out.codeEnd
   }
+
+  ** Write source code link if source is available
+  virtual Void writeSourceLink(DocLoc loc)
+  {
+    // check if source is available
+    src := pod.source(loc.file, false)
+    if (src == null) return
+
+    // link to HTML file for source
+    uri := `src-${src.name}.html#${loc.line}`
+    out.a(uri).w("Source").aEnd
+  }
+
 }
 
