@@ -11,9 +11,9 @@ using web
 using syntax
 
 **
-** LocalDocWriter
+** FileDocWriter
 **
-class LocalDocWriter
+class FileDocWriter
 {
   ** Constructor.
   new make(|This| f)

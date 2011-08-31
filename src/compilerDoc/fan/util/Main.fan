@@ -39,7 +39,7 @@ class Main : AbstractMain
     DocPod[] docPods := all ? env.pods : pods.map |n->DocPod| { env.pod(n) }
 
     // render pods
-    docWriter := LocalDocWriter
+    docWriter := FileDocWriter
     {
       it.env    = env
       it.pods   = docPods
