@@ -123,15 +123,15 @@ class DocPod
       {
         try
         {
+          // we only care about files in doc/*
+          if (f.path[0] != "doc") return
+
           // if doc/{type}.apidoc
-          if (f.path[0] == "doc2" && f.ext == "apidoc")
+          if (f.ext == "apidoc")
           {
             type := ApiDocParser(name, f.in).parseType
             types[type.name] = type
           }
-
-          // we only care about files in doc/*
-          if (f.path[0] != "doc") return
 
           // if doc/{type}.fandoc
           if (f.ext == "fandoc")
