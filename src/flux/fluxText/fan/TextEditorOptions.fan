@@ -6,6 +6,8 @@
 //   15 Aug 08  Brian Frank  Creation
 //
 
+using gfx
+using fwt
 using flux
 
 **
@@ -37,6 +39,19 @@ const class TextEditorOptions
   ** Default char encoding to use when load/saving
   ** text files.  Defaults to utf8.
   const Charset charset := Charset.utf8
+
+//////////////////////////////////////////////////////////////////////////
+// Styling
+//////////////////////////////////////////////////////////////////////////
+
+  const Font font                   := Desktop.sysFontMonospace
+  const Color highlightCurLine      := Color(0xf0_f0_f0)
+  const RichTextStyle text          := RichTextStyle { fg = Color(0x00_00_00) }
+  const RichTextStyle bracket       := RichTextStyle { fg = Color(0xff_00_00) }
+  const RichTextStyle bracketMatch  := RichTextStyle { fg = Color(0xff_00_00); bg=Color(0xff_ff_00); }
+  const RichTextStyle keyword       := RichTextStyle { fg = Color(0x00_00_ff) }
+  const RichTextStyle literal       := RichTextStyle { fg = Color(0x00_77_77) }
+  const RichTextStyle comment       := RichTextStyle { fg = Color(0x00_77_00) }
 
 //////////////////////////////////////////////////////////////////////////
 // Utils

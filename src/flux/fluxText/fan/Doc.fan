@@ -9,6 +9,7 @@
 using gfx
 using fwt
 using flux
+using syntax
 
 **
 ** Doc is the model for text edited in a `TextEditor`
@@ -20,11 +21,10 @@ class Doc : RichTextModel
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(TextEditorOptions options, SyntaxOptions syntax, SyntaxRules rules)
+  new make(TextEditorOptions options, SyntaxRules rules)
   {
     lines.add(Line { it.offset=0; it.text="" })
     this.options   = options
-    this.syntax    = syntax
     this.rules     = rules
     this.parser    = Parser(this)
     this.delimiter = options.lineDelimiter
@@ -194,7 +194,7 @@ class Doc : RichTextModel
   override Color? lineBackground(Int lineIndex)
   {
     if (lineIndex == caretLine)
-      return syntax.highlightCurLine
+      return options.highlightCurLine
     else
       return null
   }
@@ -229,14 +229,14 @@ class Doc : RichTextModel
     // a) if we are replacing a single char run
     if (offset == iOffset && left == 0)
     {
-      styling[i+1] = syntax.bracketMatch
+      styling[i+1] = options.bracketMatch
       return
     }
 
     // b) if end of run, insert only
     if (left == 0)
     {
-      styling.insert(i, syntax.bracketMatch)
+      styling.insert(i, options.bracketMatch)
       styling.insert(i, offset)
       return
     }
@@ -245,7 +245,7 @@ class Doc : RichTextModel
     if (offset == iOffset)
     {
       styling[i] = offset+1  // move to left one char
-      styling.insert(i, syntax.bracketMatch)
+      styling.insert(i, options.bracketMatch)
       styling.insert(i, offset)
       return
     }
@@ -253,7 +253,7 @@ class Doc : RichTextModel
     // d) we are breaking the middle of run
     styling.insert(i, iStyle)
     styling.insert(i, offset+1)
-    styling.insert(i, syntax.bracketMatch)
+    styling.insert(i, options.bracketMatch)
     styling.insert(i, offset)
   }
 
@@ -466,9 +466,6 @@ class Doc : RichTextModel
 
   ** Text options for current document
   TextEditorOptions options { private set }
-
-  ** Syntax options for current document
-  SyntaxOptions syntax { private set }
 
   ** Syntax rules for current document
   SyntaxRules rules { private set }

@@ -6,6 +6,7 @@
 //   30 Jul 08  Brian Frank  Creation
 //
 
+using syntax
 using fwt
 
 class DocTest : Test
@@ -294,8 +295,7 @@ class DocTest : Test
   Doc makeDoc(Str text, TextEditorOptions options := TextEditorOptions.load)
   {
     doc := Doc(options,
-               SyntaxOptions.load,
-               SyntaxRules.load(SyntaxOptions.load, null, null))
+               SyntaxRules {})
     doc.text = text
     return doc
   }
