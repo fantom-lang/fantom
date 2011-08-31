@@ -80,6 +80,11 @@ abstract class DefNode : Node
       t := (TypeDef)this
       if (t.base != null && t.base.fits(ns.testType)) return false
     }
+    else if (this is MethodDef)
+    {
+      m := (MethodDef)this
+      if (m.isFieldAccessor) return false
+    }
     return true
   }
 
