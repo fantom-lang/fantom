@@ -1,80 +1,85 @@
 //
-// Syntax rules for ActionScript
+// Syntax rules for Sedona
 //
 // History:
-//   13 Feb 09  Andy Frank  Creation
+//   14 Aug 08  Brian Frank  Creation
 //
 
-using fluxText
+using syntax
 
 SyntaxRules
 {
   // list of end of line comment tokens
-  comments = ["//"]
+  comments = ["//", "**"]
 
   // block comments
   blockCommentStart = "/*"
   blockCommentEnd   = "*/"
-  blockCommentsNest = false
+  blockCommentsNest = true
 
   // string and character literals
   strs =
   [
-    SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = false }, // String
+    SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = false }, // Str
     SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false }   // char
   ]
 
   // keyword list
   keywords =
   [
-    "as",
+    "abstract",
+    "action",
+    "assert",
+    "bool",
     "break",
+    "byte",
     "case",
     "catch",
     "class",
     "const",
     "continue",
     "default",
+    "define",
     "do",
-    "dynamic",
-    "each",
     "else",
+    "enum",
     "extends",
     "false",
     "final",
     "finally",
+    "float",
     "for",
-    "function",
-    "get",
+    "foreach",
     "if",
-    "in",
-    "is",
-    "implements",
-    "import",
-    "include",
-    "interface",
+    "inline",
+    "int",
     "internal",
-    "label",
-    "namespace",
+    "is",
     "native",
     "new",
     "null",
     "override",
-    "package",
     "private",
+    "property",
     "protected",
     "public",
+    "readonly",
     "return",
-    "set",
+    "short",
     "static",
     "super",
     "switch",
+    "synchronized",
     "this",
     "throw",
     "true",
     "try",
-    "var",
-    "with",
+    "using",
+    "virtual",
+    "void",
     "while",
   ]
 }
+
+
+

@@ -1,11 +1,11 @@
 //
-// Syntax rules for C++
+// Syntax rules for C#
 //
 // History:
 //   14 Aug 08  Brian Frank  Creation
 //
 
-using fluxText
+using syntax
 
 SyntaxRules
 {
@@ -20,86 +20,90 @@ SyntaxRules
   // string and character literals
   strs =
   [
+    SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false },  // char
     SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = false }, // String
-    SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false }   // char
+    SyntaxStr { delimiter = "@\""; delimiterEnd="\""; multiLine = true }, // verbatim String
   ]
 
   // keyword list
   keywords =
   [
-    "#define",
-    "#elif",
-    "#endif",
-    "#error",
-    "#if",
-    "#ifdef",
-    "#ifndef",
-    "#include",
-    "#line",
-    "#warning",
-    "#undef",
-    "asm",
-    "auto",
+    "abstract",
+    "as",
+    "base",
     "bool",
     "break",
+    "byte",
     "case",
     "catch",
     "char",
+    "checked",
     "class",
     "const",
-    "const_cast",
     "continue",
+    "decimal",
     "default",
-    "delete",
+    "delegate",
     "do",
     "double",
-    "dynamic_cast",
     "else",
     "enum",
+    "event",
     "explicit",
-    "export",
     "extern",
     "false",
+    "finally",
+    "fixed",
     "float",
     "for",
-    "friend",
+    "foreach",
     "goto",
     "if",
-    "inline",
+    "implicit",
+    "in",
     "int",
+    "interface",
+    "internal",
+    "is",
+    "lock",
     "long",
-    "mutable",
     "namespace",
     "new",
+    "null",
+    "object",
     "operator",
+    "out",
+    "override",
+    "params",
     "private",
     "protected",
     "public",
-    "register",
-    "reinterpret_cast",
+    "readonly",
+    "ref",
     "return",
+    "sbyte",
+    "sealed",
     "short",
-    "signed",
     "sizeof",
+    "stackalloc",
     "static",
-    "static_cast",
+    "string",
     "struct",
     "switch",
-    "template",
     "this",
     "throw",
     "true",
     "try",
-    "typedef",
-    "typeid",
-    "typename",
-    "union",
-    "unsigned",
+    "typeof",
+    "uint",
+    "ulong",
+    "unchecked",
+    "unsafe",
+    "ushort",
     "using",
     "virtual",
-    "void",
     "volatile",
-    "wchar_t",
+    "void",
     "while",
   ]
 }

@@ -1,11 +1,11 @@
 //
-// Syntax rules for Java
+// Syntax rules for JavaScript
 //
 // History:
-//   10 Aug 08  Brian Frank  Creation
+//   14 Aug 08  Brian Frank  Creation
 //
 
-using fluxText
+using syntax
 
 SyntaxRules
 {
@@ -20,15 +20,14 @@ SyntaxRules
   // string and character literals
   strs =
   [
-    SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = false }, // String
-    SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false }   // char
+    SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = false },
+    SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false }
   ]
 
   // keyword list
   keywords =
   [
     "abstract",
-    "assert",
     "boolean",
     "break",
     "byte",
@@ -38,20 +37,26 @@ SyntaxRules
     "class",
     "const",
     "continue",
+    "debugger",
     "default",
+    "delete",
     "do",
     "double",
     "else",
+    "enum",
+    "export",
     "extends",
     "false",
     "final",
     "finally",
     "float",
     "for",
+    "function",
     "goto",
     "if",
     "implements",
     "import",
+    "in",
     "instanceof",
     "int",
     "interface",
@@ -66,7 +71,6 @@ SyntaxRules
     "return",
     "short",
     "static",
-    "strictfp",
     "super",
     "switch",
     "synchronized",
@@ -76,9 +80,14 @@ SyntaxRules
     "transient",
     "true",
     "try",
+    "typeof",
+    "undefined",
+    "var",
     "void",
     "volatile",
     "while",
+    "with",
   ]
 }
+
 
