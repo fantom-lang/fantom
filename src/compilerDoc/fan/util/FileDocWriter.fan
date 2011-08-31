@@ -80,7 +80,7 @@ class FileDocWriter
               rules := SyntaxRules.loadForExt(src.ext ?: "?") ?:SyntaxRules()
               syntaxDoc := SyntaxDoc.parse(rules, zip.contents[src].in)
               out = WebOutStream(podDir.plus(`src-${src.name}.html`).out)
-              writeSource(out, src.name, syntaxDoc)
+              writeSource(out, pod, src.name, syntaxDoc)
               out.close
 
             }
@@ -158,6 +158,15 @@ class FileDocWriter
             .li.a(`../index.html`).w("Home").aEnd.liEnd
             .li.a(`index.html`).w(obj->pod).aEnd.liEnd
             .li.a(`${obj->name}.html`).w(obj->name).aEnd.liEnd
+            .ulEnd
+
+      case Str[]#:
+          list := (Str[])obj
+          out.ul("class='nav'")
+            .li.a(`../index.html`).w("Home").aEnd.liEnd
+            .li.a(`index.html`).w(list[0]).aEnd.liEnd
+            .li.a(`${list[1]}.html`).w(list[1]).aEnd.liEnd
+            .li.a(`${list[2]}.html`).w("Source").aEnd.liEnd
             .ulEnd
     }
   }
@@ -367,10 +376,14 @@ class FileDocWriter
 //////////////////////////////////////////////////////////////////////////
 
   ** Write source code file
-  virtual Void writeSource(WebOutStream out, Str name, SyntaxDoc doc)
+  virtual Void writeSource(WebOutStream out, DocPod pod, Str name, SyntaxDoc doc)
   {
-    w := HtmlSyntaxWriter(out)
-    w.writeDoc(doc)
+    type := name[0..<name.index(".")]
+    writeStart(out, name, [pod.name, type, name])
+    out.div("class='src'")
+    HtmlSyntaxWriter(out).writeLines(doc)
+    out.divEnd
+    writeEnd(out)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -455,5 +468,12 @@ class FileDocWriter
     div.index > div.manuals table td:last-child { padding-right:2em; }
     div.index > div.manuals table td:first-child { vertical-align:top; }
     div.index div.apis { padding-left:1em; }
+
+    div.src pre { margin:1em 0; padding:0; color:#000; }
+    div.src pre b { color:#f00; font-weight:normal; }
+    div.src pre i   { color:#00f; font-style:normal; }
+    div.src pre em  { color:#077; font-style:normal; }
+    div.src pre q   { color:#070; font-style:normal; }
+    div.src pre q:before, div.src pre q:after { content: ''; }
     "
 }
