@@ -82,6 +82,7 @@ class Build : BuildGroup
 // Doc
 //////////////////////////////////////////////////////////////////////////
 
+  /*
   @Target { help = "Build fandoc HTML docs" }
   Void doc()
   {
@@ -96,6 +97,7 @@ class Build : BuildGroup
 
     Exec.make(this, [fanExe, "docCompiler", "-topindex"]).run
   }
+  */
 
 //////////////////////////////////////////////////////////////////////////
 // Full
@@ -180,7 +182,6 @@ class Build : BuildGroup
   {
     superclean
     compile
-    doc
     test
     examples
     deleteNonDist

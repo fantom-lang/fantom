@@ -222,7 +222,7 @@ Heading level 1 is reserved for the chapter title.
 
 Hyperlinks [#hyperlinks]
 ************************
-The [docCompiler]`docCompiler::index` pod is used to compile API or stand-alone
+The [compilerDoc]`compilerDoc::index` pod is used to compile API or stand-alone
 documentation.  It allows you to use abstract uris to create cross reference
 hyperlinks.  During the compilation these uris are translated into relative links
 to the appropiate HTML files.  Hyperlinks to types and slots are automatically

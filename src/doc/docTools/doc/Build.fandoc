@@ -137,7 +137,6 @@ targets ready to use:
     a pod file along with all associated natives (JavaScript, Java, .NET)
   - [clean]`build::BuildPod.clean`: deletes all the intermediate
     and derived target files
-  - [doc]`build::BuildPod.doc`: compile fandoc to HTML
   - [test]`build::BuildPod.test`: runs all tests declared by the pod
   - [full]`build::BuildPod.full`: clean, compile, test
 

@@ -29,8 +29,7 @@ F4 is an Eclipse-based IDE for Fantom which is written mostly in Fantom
 itself. It can be installed as a set of plugins via Eclipse update site
 or as a standalone application:
 
-  - [Home Page]`http://xored.com/fantom`
-  - [Download]`http://xored.com/fantom/download`
+  - [Home Page]`http://xored.com/f4`
 
 TextMate Bundle (msl) [#textmate]
 *********************************

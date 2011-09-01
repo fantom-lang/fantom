@@ -28,6 +28,8 @@
 - New compilerDoc pod
 - Fandoc: shift heading levels-
 - Rework fluxText to depend on new syntax pod
+- Nuke old docCompiler
+- Remove 'doc' target from build scripts
 
 *Build 1.0.59 (2 Jun 2011)*
 - Remove support for deprecated 'readonly' keyword
