@@ -531,7 +531,7 @@ class FantomDocWriter : FileDocWriter
     div.index div.manuals table tr { background:none; border:none; }
     div.index div.manuals table td { padding:0.5em 1em; }
     div.index div.manuals table td:last-child { padding-right:2em; }
-    div.index div.manuals table td:first-child { vertical-align:top; }
+    div.index div.manuals table td:first-child { vertical-align:top; padding-left:5px; }
     div.index div.examples table { margin-right:2em; }
     div.index div.apis { padding-left:1em; }
 
@@ -555,7 +555,7 @@ class FantomDocWriter : FileDocWriter
       width: 850px;
       margin: 3em auto 1em auto;
       font-size: 8pt;
-      color: #3a415a;
+      color: #999;
     }
     "
   }
