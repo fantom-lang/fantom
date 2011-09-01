@@ -59,7 +59,31 @@ class Main : AbstractMain
 class FantomDocWriter : FileDocWriter
 {
   ** Constructor.
-  new make(|This| f) : super(f) {}
+  new make(|This| f) : super(f)
+  {
+    this.exampleSrcDir = Env.cur.homeDir + `examples/`
+
+    map   := Str:Obj[][:] { ordered=true }
+    last  := ""
+    index := (Obj[])(exampleSrcDir + `index.fog`).readObj
+    index.each |item|
+    {
+      if (item is Str) last = item
+      else
+      {
+        list := map[last] ?: Obj[,]
+        list.add(item)
+        map[last] = list
+      }
+    }
+    this.exampleIndex = map.ro
+  }
+
+  ** Example source dir.
+  File exampleSrcDir
+
+  ** Example index.fog
+  Str:Obj[] exampleIndex
 
   ** Include example if index flag is specified
   override DocErr[] write()
@@ -128,6 +152,14 @@ class FantomDocWriter : FileDocWriter
             .li.a(`index.html`).w(obj->pod).aEnd.w("</li>")
             .li.a(`${obj->name}.html`).w(obj->name).aEnd.w("</li>")
             .ulEnd
+
+      case Str[]#:
+          out.ul
+            .li.a(`../index.html`).w("Doc Home").aEnd.w("</li>")
+            .li.a(`index.html`).w("Examples").aEnd.w("</li>")
+            if (obj->size > 0)
+              out.li.a(`${obj->first}`).w(obj->last).aEnd.w("</li>")
+            out.ulEnd
 
       case Obj[]#:
           list  := (Obj[])obj
@@ -212,8 +244,21 @@ class FantomDocWriter : FileDocWriter
     // examples
     out.div("class='examples'")
     out.h2.w("Examples").h2End
-    //out.table
-    //out.tableEnd
+    out.table
+    exampleIndex.each |list,name|
+    {
+      names := list.join(", ") |v|
+      {
+        uri  := (Uri)v->first
+        file := exampleUriToFilename(uri)
+        return "<a href='examples/$file'>$uri.name</a>"
+      }
+      out.tr
+        .td.a(`examples/index.html#$name`).esc(name).aEnd.tdEnd
+        .td.div.w(names).divEnd.tdEnd
+        .trEnd
+    }
+    out.tableEnd
     out.divEnd
     out.divEnd
 
@@ -241,55 +286,61 @@ class FantomDocWriter : FileDocWriter
 
   private Void writeExamples()
   {
-    // load toc
-    srcDir := Env.cur.homeDir + `examples/`
-    index := (srcDir + `index.fog`).readObj as Obj[]
-
     // write example index
     dir := outDir + `examples/`
     out := WebOutStream(dir.plus(`index.html`).out)
-    writeExampleIndex(out, index)
+    writeExampleIndex(out)
     out.close
 
     // write example source code
-    index.each |item|
+    exampleIndex.each |list|
     {
-      // only iterating [Uri,Str] pairs
-      if (item isnot List) return
-      uri := item->get(0) as Uri
-
-      // parse source file as SyntaxDoc
-      srcFile := srcDir.plus(uri)
-      if (!srcFile.exists) throw IOErr("example file not found: $srcFile")
-      rules := SyntaxRules.loadForExt(srcFile.ext ?: "?") ?:SyntaxRules()
-      syntaxDoc := SyntaxDoc.parse(rules, srcFile.in)
-
-      // write HTML file
-      filename := exampleUriToFilename(uri)
-      out = WebOutStream(dir.plus(filename.toUri).out)
-      writeExampleFile(out, uri.name, syntaxDoc)
-      out.close
-    }
-  }
-
-  private Void writeExampleIndex(WebOutStream out, Obj[] items)
-  {
-    items.each |item|
-    {
-      if (item is Str) out.h2.w(item).h2End
-      else
+      list.each |item|
       {
         uri := item->get(0) as Uri
-        summary := item->get(1) as Str
-        link := uri.path[0] + "-" + uri.basename + ".html"
-        out.p.a(exampleUriToFilename(uri).toUri).w(uri.basename).aEnd.w(" - ").w(summary).pEnd
+
+        // parse source file as SyntaxDoc
+        srcFile := exampleSrcDir.plus(uri)
+        if (!srcFile.exists) throw IOErr("example file not found: $srcFile")
+        rules := SyntaxRules.loadForExt(srcFile.ext ?: "?") ?:SyntaxRules()
+        syntaxDoc := SyntaxDoc.parse(rules, srcFile.in)
+
+        // write HTML file
+        filename := exampleUriToFilename(uri)
+        out = WebOutStream(dir.plus(filename.toUri).out)
+        writeExampleFile(out, uri, syntaxDoc)
+        out.close
       }
     }
   }
 
-  private Void writeExampleFile(WebOutStream out, Str name, SyntaxDoc doc)
+  private Void writeExampleIndex(WebOutStream out)
   {
-    writeStart(out, name, ["examples", "TODO", "TODO"])
+    writeStart(out, "Examples", Str[,])
+    out.div("class='ex-index'")
+    exampleIndex.each |list, name|
+    {
+      out.h2("id='$name'").esc(name).h2End
+      out.table
+      list.each |item|
+      {
+        uri := item->get(0) as Uri
+        summary := item->get(1) as Str
+        link := uri.path[0] + "-" + uri.basename + ".html"
+        out.tr
+          .td.a(exampleUriToFilename(uri).toUri).esc(uri.basename).aEnd.tdEnd
+          .td.esc(summary).tdEnd
+          .trEnd
+      }
+      out.tableEnd
+    }
+    out.divEnd
+    writeEnd(out)
+  }
+
+  private Void writeExampleFile(WebOutStream out, Uri uri, SyntaxDoc doc)
+  {
+    writeStart(out, uri.name, [exampleUriToFilename(uri), uri.name])
     out.div("class='src'")
     HtmlSyntaxWriter(out).writeLines(doc)
     out.divEnd
@@ -472,7 +523,12 @@ class FantomDocWriter : FileDocWriter
     div.index div.manuals table td { padding:0.5em 1em; }
     div.index div.manuals table td:last-child { padding-right:2em; }
     div.index div.manuals table td:first-child { vertical-align:top; }
+    div.index div.examples table { margin-right:2em; }
     div.index div.apis { padding-left:1em; }
+
+    div.ex-index table { width:630px; }
+    div.ex-index table td:first-child { padding-right:2em; }
+    div.ex-index table td:last-child { width:100%; }
 
     div.src pre { margin:1em 0; padding:0; color:#000; border:none; background:none; }
     div.src pre b { color:#f00; font-weight:normal; }
