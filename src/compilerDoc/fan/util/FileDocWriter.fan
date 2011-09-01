@@ -304,9 +304,10 @@ class FileDocWriter
     out.div("class='sidebar'")
     out.h3.w("Source").h3End
     out.ul
-    src := pod.source(type.doc.loc.file, false)
+    loc := type.doc.loc
+    src := pod.source(loc.file, false)
     if (src == null) out.li.w("Not available").liEnd
-    else out.li.a(`src-${src.name}.html#line${type.doc.loc.line}`).w("View Source").aEnd.liEnd
+    else out.li.a(`src-${src.name}.html#line$loc.line`).w("View Source").aEnd.liEnd
     out.ulEnd
 
     // src/slot list
