@@ -79,27 +79,6 @@ class Build : BuildGroup
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Doc
-//////////////////////////////////////////////////////////////////////////
-
-  /*
-  @Target { help = "Build fandoc HTML docs" }
-  Void doc()
-  {
-    fanExe := Exec.exePath(devHomeDir + `bin/fan`)
-    allBuildPodScripts.each |BuildPod script|
-    {
-      name := script.podName
-      if (name.startsWith("test")) return
-      src := script.scriptDir
-      Exec.make(this, [fanExe, "docCompiler", "-src", src.osPath, name]).run
-    }
-
-    Exec.make(this, [fanExe, "docCompiler", "-topindex"]).run
-  }
-  */
-
-//////////////////////////////////////////////////////////////////////////
 // Full
 //////////////////////////////////////////////////////////////////////////
 
@@ -196,9 +175,9 @@ class Build : BuildGroup
     Delete(this, devHomeDir+`lib/tmp/`).run
     Delete(this, devHomeDir+`lib/temp/`).run
     Delete(this, devHomeDir+`src/sys/java/temp/`).run
-    Delete(this, devHomeDir+`etc/sys/types.db`).run
     Delete(this, devHomeDir+`etc/flux/session/`).run
     Delete(this, devHomeDir+`examples/web/demo/logs/`).run
+    Delete(this, devHomeDir+`lib/dotnet/sys.pdb`).run
 
     (devHomeDir + `lib/java/`).list.each |File f|
     {
