@@ -127,7 +127,7 @@ class FantomDocWriter : FileDocWriter
             .li.a(`../index.html`).w("Home").aEnd.liEnd
             .li.a(`index.html`).w(list[0]).aEnd.liEnd
             .li.a(`${list[1]}.html`).w(list[1]).aEnd.liEnd
-            .li.a(`${list[2]}.html`).w("Source").aEnd.liEnd
+            .li.a(`src-${list[2]}.html`).w("Source").aEnd.liEnd
             .ulEnd
 
        default:

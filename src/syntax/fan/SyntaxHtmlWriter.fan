@@ -60,7 +60,7 @@ class HtmlSyntaxWriter
   ** Write a single syntax line as styled HTML
   This writeLine(SyntaxLine line)
   {
-    out.print("<span id='l").print(line.num).print("'>")
+    out.print("<span id='line").print(line.num).print("'>")
     line.eachSegment |type, text|
     {
       if (type.html != null) out.print("<").print(type.html).print(">")
