@@ -242,7 +242,7 @@ class TypeRenderer : DocRenderer
     if (src == null) return
 
     // link to HTML file for source
-    uri := `src-${src.name}.html#l${loc.line}`
+    uri := `src-${src.name}.html#line${loc.line}`
     out.a(uri, "class='src'").w("Source").aEnd
   }
 

@@ -166,7 +166,7 @@ class FileDocWriter
             .li.a(`../index.html`).w("Home").aEnd.liEnd
             .li.a(`index.html`).w(list[0]).aEnd.liEnd
             .li.a(`${list[1]}.html`).w(list[1]).aEnd.liEnd
-            .li.a(`${list[2]}.html`).w("Source").aEnd.liEnd
+            .li.a(`src-${list[2]}.html`).w("Source").aEnd.liEnd
             .ulEnd
     }
   }
@@ -300,7 +300,7 @@ class FileDocWriter
     out.div("class='sidebar'")
     out.h3.w("Source").h3End
     out.ul
-    src := pod.source(type.loc.file, false)
+    src := pod.source(type.doc.loc.file, false)
     if (src == null) out.li.w("Not available").liEnd
     else out.li.a(`src-${src.name}.html`).w("View Source").aEnd.liEnd
     out.ulEnd
