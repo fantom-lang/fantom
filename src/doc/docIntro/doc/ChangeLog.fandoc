@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.60 (working)*
+*Build 1.0.60 (1 Sept 2011)*
 - WebClient.proxy support
 - JsProps.writeProps: include etc/xxx files
 - WebOutStream: thead, tbody, tfoot
@@ -30,6 +30,10 @@
 - Rework fluxText to depend on new syntax pod
 - Nuke old docCompiler
 - Remove 'doc' target from build scripts
+- #1091: KeyDown not working in FWT/JS
+- #1558: js: DateTime.toHttpStr lacks JS implementation
+- #1576: Fix Java sys method reflection
+- #1617: Map.get returns default value for existing key if value is null
 
 *Build 1.0.59 (2 Jun 2011)*
 - Remove support for deprecated 'readonly' keyword
