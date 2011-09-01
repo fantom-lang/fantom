@@ -19,54 +19,63 @@ import fan.sys.*;
 public class FDoc
 {
 
-  /**
-   * Read a fandoc file and store the doc strings.
-   * Top is ClassType or Pod.
-   */
-  public static void read(InputStream in, Object top)
+  public FDoc(InputStream in, ClassType type)
     throws IOException
   {
-    BufferedReader r = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-    String line;
-    String key = null;
-    StringBuilder s = new StringBuilder();
-    while ((line = r.readLine()) != null)
-    {
-      if (line.startsWith("  ")) { s.append(line.substring(2)).append('\n'); continue; }
-      if (line.length() == 0 && key != null)
-      {
-        setDoc(top, key, s.toString());
-        s = new StringBuilder();
-        key = null;
-      }
-      else
-      {
-        key = line;
-      }
-    }
+    this.in   = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+    this.type = type;
   }
 
-  private static void setDoc(Object top, String key, String doc)
+  public void read()
+    throws IOException
   {
-    if (top instanceof Pod)
+    consume();
+    // == <type>
+    if (!cur.startsWith("== ")) throw new IOException("Unexpected type line: " + cur);
+    type.doc = readAttrsToDoc();
+
+    // -- <slot> sections
+    while (cur != null)
     {
-      int colon = key.lastIndexOf(':');
-      String name = colon < 0 ? null : key.substring(colon+1);
-      if (name == null)
-        ((Pod)top).doc = doc;
-      else
-        throw new RuntimeException(key);
-    }
-    else
-    {
-      int dot = key.lastIndexOf('.');
-      String name = dot < 0 ? null : key.substring(dot+1);
-      if (name == null)
-        ((ClassType)top).doc = doc;
-      else
-        ((Type)top).slot(name, true).doc = doc;
+      // <slot>      :=  (<fieldSig> | <methodSig>) <attrs>
+      // <fieldSig>  :=  "-- " <name> <sp> <type> [":=" <expr>] <nl>
+      // <methodSig> :=  "-- " <name> "(" <nl> [<param> <nl>]* ")" <sp> <return> <nl>
+      if (!cur.startsWith("-- ")) throw new IOException("Unexpected slot line: " + cur);
+      String slotName = cur.endsWith("(") ?
+         cur.substring(3, cur.length()-1) :
+         cur.substring(3, cur.indexOf(' ', 4));
+      String slotDoc = readAttrsToDoc();
+      Slot slot = type.slot(slotName, false);
+      if (slot != null) slot.doc = slotDoc;
     }
   }
 
+  private String readAttrsToDoc()
+    throws IOException
+  {
+    // skip meta/facets, params, etc; fandoc starts after blank line
+    while (cur != null && cur.length() > 0) consume();
+    consume();
 
+    // read the fandoc
+    StringBuilder s = new StringBuilder();
+    while (cur != null && !cur.startsWith("-- "))
+    {
+      s.append(cur).append('\n');
+      consume();
+    }
+    if (s.length() == 0) return "";
+    if (s.charAt(s.length()-1) == '\n') s.setLength(s.length()-1);
+    return s.toString();
+  }
+
+  private void consume()
+    throws IOException
+  {
+    cur = in.readLine();
+  }
+
+  private BufferedReader in;  // stream of lines to read
+  private ClassType type;     // type we are storing result to
+  private String cur;         // current line
 }
