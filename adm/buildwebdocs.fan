@@ -251,7 +251,7 @@ class FantomDocWriter : FileDocWriter
       {
         uri  := (Uri)v->first
         file := exampleUriToFilename(uri)
-        return "<a href='examples/$file'>$uri.name</a>"
+        return "<a href='examples/$file'>$uri.basename</a>"
       }
       out.tr
         .td.a(`examples/index.html#$name`).esc(name).aEnd.tdEnd

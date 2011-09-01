@@ -306,7 +306,7 @@ class FileDocWriter
     out.ul
     src := pod.source(type.doc.loc.file, false)
     if (src == null) out.li.w("Not available").liEnd
-    else out.li.a(`src-${src.name}.html`).w("View Source").aEnd.liEnd
+    else out.li.a(`src-${src.name}.html#line${type.doc.loc.line}`).w("View Source").aEnd.liEnd
     out.ulEnd
 
     // src/slot list
