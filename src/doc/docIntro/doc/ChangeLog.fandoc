@@ -6,6 +6,8 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.61 (working)*
+
 *Build 1.0.60 (1 Sept 2011)*
 - WebClient.proxy support
 - JsProps.writeProps: include etc/xxx files
@@ -26,7 +28,7 @@
 - New compiler apidoc format
 - New syntax pod
 - New compilerDoc pod
-- Fandoc: shift heading levels-
+- Fandoc: shift heading levels
 - Rework fluxText to depend on new syntax pod
 - Nuke old docCompiler
 - Remove 'doc' target from build scripts
