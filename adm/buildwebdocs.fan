@@ -388,7 +388,7 @@ class FantomDocWriter : FileDocWriter
     table tr { border-bottom:1px solid #d0dae5; }
     table tr:nth-child(odd) { background:#f2f6f8; }
     table td { padding:5px; }
-    table td div { font-size:8pt; }
+    table td div { font-size:9pt; }
 
     /*************************************************************************
      * Header
@@ -507,7 +507,7 @@ class FantomDocWriter : FileDocWriter
 
     div.toc ol li { margin-bottom:1em; }
     div.toc ol li p { margin:1px 0 1px 1em; }
-    div.toc ol li p:last-child { font-size:12px; }
+    div.toc ol li p:last-child { font-size:9pt; }
 
     ul.chapter-nav { list-style:none; margin:1em 0; padding:0; position:relative; font-size:10pt; }
     ul.chapter-nav li { display:block; color:#999; }
