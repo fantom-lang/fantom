@@ -48,6 +48,7 @@ class Main : AbstractMain
       it.pods   = docPods
       it.index  = all || topindex
       it.outDir = this.outDir
+      it.version = env.pod("sys").version
     }
     return docWriter.write.isEmpty ? 0 : 1
   }
@@ -78,6 +79,11 @@ class FantomDocWriter : FileDocWriter
     }
     this.exampleIndex = map.ro
   }
+
+  ** Build version
+  Version version
+
+  Str timestamp := DateTime.now.toLocale
 
   ** Example source dir.
   File exampleSrcDir
@@ -191,6 +197,9 @@ class FantomDocWriter : FileDocWriter
   override Void writeEnd(WebOutStream out)
   {
     out.divEnd.divEnd // content
+    out.div("class='footer'")
+     .w(this.version).w(" ").w(timestamp)
+     .divEnd
     out.bodyEnd
     out.htmlEnd
   }
@@ -536,6 +545,18 @@ class FantomDocWriter : FileDocWriter
     div.src pre em  { color:#077; font-style:normal; }
     div.src pre q   { color:#070; font-style:normal; }
     div.src pre q:before, div.src pre q:after { content: ''; }
+
+    /*************************************************************************
+     * Footer
+     ************************************************************************/
+
+    div.footer
+    {
+      width: 850px;
+      margin: 3em auto 1em auto;
+      font-size: 8pt;
+      color: #3a415a;
+    }
     "
   }
 }
