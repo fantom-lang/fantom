@@ -81,9 +81,8 @@ class FileDocWriter
               rules := SyntaxRules.loadForExt(src.ext ?: "?") ?:SyntaxRules()
               syntaxDoc := SyntaxDoc.parse(rules, zip.contents[src].in)
               out = WebOutStream(podDir.plus(`src-${src.name}.html`).out)
-              writeSource(out, pod, src.name, syntaxDoc)
+              writeSource(out, pod, src, syntaxDoc)
               out.close
-
             }
           }
           finally zip.close
@@ -161,12 +160,16 @@ class FileDocWriter
             .li.a(`${obj->name}.html`).w(obj->name).aEnd.liEnd
             .ulEnd
 
-      case Str[]#:
-          list := (Str[])obj
+      case Obj[]#:
+          list  := (Obj[])obj
+          pod   := (Str)list[0]
+          multi := (Bool)list[1]
+          src   := (Str)list[2]
+          type  := src[0..<src.index(".")]
           out.ul("class='nav'")
             .li.a(`../index.html`).w("Home").aEnd.liEnd
-            .li.a(`index.html`).w(list[0]).aEnd.liEnd
-            .li.a(`${list[1]}.html`).w(list[1]).aEnd.liEnd
+            .li.a(`index.html`).w(pod).aEnd.liEnd
+            .li.w(multi ? "Multiple" : "<a href='${type}.html'>$type</a>").liEnd
             .li.a(`src-${list[2]}.html`).w("Source").aEnd.liEnd
             .ulEnd
     }
@@ -379,10 +382,11 @@ class FileDocWriter
 //////////////////////////////////////////////////////////////////////////
 
   ** Write source code file
-  virtual Void writeSource(WebOutStream out, DocPod pod, Str name, SyntaxDoc doc)
+  virtual Void writeSource(WebOutStream out, DocPod pod, Uri src, SyntaxDoc doc)
   {
-    type := name[0..<name.index(".")]
-    writeStart(out, name, [pod.name, type, name])
+    types := pod.types.findAll { it.loc.file == src.name }
+    multi := types.size > 1
+    writeStart(out, src.name, [pod.name, multi, src.name])
     out.div("class='src'")
     HtmlSyntaxWriter(out).writeLines(doc)
     out.divEnd
