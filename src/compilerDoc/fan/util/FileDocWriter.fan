@@ -35,7 +35,7 @@ class FileDocWriter
   Bool index := true
 
   ** Write pods and return any errors.
-  DocErr[] write()
+  virtual DocErr[] write()
   {
     WebOutStream? out
 
@@ -53,6 +53,7 @@ class FileDocWriter
     // pods
     pods.each |pod|
     {
+      echo("Writing pod '$pod.name' ...")
       podDir := outDir + `${pod.name}/`
       if (!pod.isManual)
       {
