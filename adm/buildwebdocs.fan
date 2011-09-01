@@ -61,6 +61,14 @@ class FantomDocWriter : FileDocWriter
   ** Constructor.
   new make(|This| f) : super(f) {}
 
+  ** Include example if index flag is specified
+  override DocErr[] write()
+  {
+    super.write
+    if (index) writeExamples
+    return env.errHandler.errs
+  }
+
   ** Start a HTML page.
   override Void writeStart(WebOutStream out, Str title, Obj? obj)
   {
@@ -221,6 +229,72 @@ class FantomDocWriter : FileDocWriter
 
     out.divEnd
     writeEnd(out)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Examples
+//////////////////////////////////////////////////////////////////////////
+
+  private Void writeExamples()
+  {
+    // load toc
+    srcDir := Env.cur.homeDir + `examples/`
+    index := (srcDir + `index.fog`).readObj as Obj[]
+
+    // write example index
+    dir := outDir + `examples/`
+    out := WebOutStream(dir.plus(`index.html`).out)
+    writeExampleIndex(out, index)
+    out.close
+
+    // write example source code
+    index.each |item|
+    {
+      // only iterating [Uri,Str] pairs
+      if (item isnot List) return
+      uri := item->get(0) as Uri
+
+      // parse source file as SyntaxDoc
+      srcFile := srcDir.plus(uri)
+      if (!srcFile.exists) throw IOErr("example file not found: $srcFile")
+      rules := SyntaxRules.loadForExt(srcFile.ext ?: "?") ?:SyntaxRules()
+      syntaxDoc := SyntaxDoc.parse(rules, srcFile.in)
+
+      // write HTML file
+      filename := exampleUriToFilename(uri)
+      out = WebOutStream(dir.plus(filename.toUri).out)
+      writeExampleFile(out, uri.name, syntaxDoc)
+      out.close
+    }
+  }
+
+  private Void writeExampleIndex(WebOutStream out, Obj[] items)
+  {
+    items.each |item|
+    {
+      if (item is Str) out.h2.w(item).h2End
+      else
+      {
+        uri := item->get(0) as Uri
+        summary := item->get(1) as Str
+        link := uri.path[0] + "-" + uri.basename + ".html"
+        out.p.a(exampleUriToFilename(uri).toUri).w(uri.basename).aEnd.w(" - ").w(summary).pEnd
+      }
+    }
+  }
+
+  private Void writeExampleFile(WebOutStream out, Str name, SyntaxDoc doc)
+  {
+    writeStart(out, name, ["examples", "TODO", "TODO"])
+    out.div("class='src'")
+    HtmlSyntaxWriter(out).writeLines(doc)
+    out.divEnd
+    writeEnd(out)
+  }
+
+  private static Str exampleUriToFilename(Uri uri)
+  {
+    uri.path[0] + "-" + uri.basename + ".html"
   }
 
 //////////////////////////////////////////////////////////////////////////
