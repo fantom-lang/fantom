@@ -129,13 +129,17 @@ class FantomDocWriter : FileDocWriter
             .li.a(`${obj->name}.html`).w(obj->name).aEnd.w("</li>")
             .ulEnd
 
-      case Str[]#:
-          list := (Str[])obj
+      case Obj[]#:
+          list  := (Obj[])obj
+          pod   := (Str)list[0]
+          multi := (Bool)list[1]
+          src   := (Str)list[2]
+          type  := src[0..<src.index(".")]
           out.ul("class='nav'")
-            .li.a(`../index.html`).w("Home").aEnd.liEnd
-            .li.a(`index.html`).w(list[0]).aEnd.liEnd
-            .li.a(`${list[1]}.html`).w(list[1]).aEnd.liEnd
-            .li.a(`src-${list[2]}.html`).w("Source").aEnd.liEnd
+            .li.a(`../index.html`).w("Doc Home").aEnd.w("</li>")
+            .li.a(`index.html`).w(pod).aEnd.w("</li>")
+            .li.w(multi ? "Multiple" : "<a href='${type}.html'>$type</a>").w("</li>")
+            .li.a(`src-${list[2]}.html`).w("Source").aEnd.w("</li>")
             .ulEnd
 
        default:
