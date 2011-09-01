@@ -378,25 +378,6 @@ abstract class BuildPod : BuildScript
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Doc
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Build the HTML documentation
-  **
-  @Target { help = "Build the HTML documentation" }
-  virtual Void doc()
-  {
-    // use docCompiler reflectively
-    docCompiler := Type.find("docCompiler::Main").make
-    docCompiler->d    = outDocDir.toFile
-    docCompiler->src  = scriptDir
-    docCompiler->pods = [podName]
-    Int r := docCompiler->run
-    if (r != 0) fatal("Cannot doc compiler '$podName'")
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Test
 //////////////////////////////////////////////////////////////////////////
 
