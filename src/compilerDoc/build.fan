@@ -33,6 +33,7 @@ class Build : BuildPod
                   "util 1.0",
                   "web 1.0"]
     srcDirs    = [`fan/env/`, `fan/model/`, `fan/renderers/`, `fan/util/`, `test/`]
+    resDirs    = [`res/`]
     docSrc     = true
   }
 }

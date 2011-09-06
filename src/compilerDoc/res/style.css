@@ -1,0 +1,305 @@
+body {
+  font: 14px Helvetica Neue, Arial, sans-serif;
+  padding: 0;
+  margin: 1em auto 4em auto;
+  width: 900px;
+}
+
+a {
+  color: #00c;
+}
+
+pre, code {
+  font-size: 13px; color:#555;
+}
+
+pre {
+  margin: 1em 2em;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+table {
+  border-collapse: collapse;
+  border-top: 1px solid #d9d9d9;
+}
+
+table tr {
+  border-bottom: 1px solid #d9d9d9;
+}
+
+table tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+
+table td {
+  padding: 0.25em 0.5em;
+}
+
+table td div {
+  font-size:12px;
+}
+
+/***************************************************************
+ * Breadcrumb
+ **************************************************************/
+
+div.breadcrumb ul {
+  margin: 0;
+  padding: 0 0 1em 0;
+  border-bottom:1px solid #ccc;
+}
+
+div.breadcrumb ul li {
+  display: inline-block;
+  margin: 0;
+  padding:0;
+}
+
+div.breadcrumb ul li:after {
+  margin: 0 0.5em;
+  content: '\00bb';
+  color: #999;
+}
+
+div.breadcrumb ul li:last-child:after {
+  content: '';
+}
+
+/***************************************************************
+ * Index
+ **************************************************************/
+
+div.index > div.manuals {
+  float: left;
+  width: 48%;
+  padding-right: 2em;
+}
+
+div.index > div.manuals h2 {
+  margin-top: 0;
+}
+
+div.index > div.manuals table td {
+  padding: 0.5em 1em;
+}
+
+div.index > div.manuals table td:last-child {
+  padding-right: 2em;
+}
+
+div.index > div.manuals table td:first-child {
+  vertical-align: top;
+}
+
+/***************************************************************
+ * Main : Sidebar
+ **************************************************************/
+
+div.mainSidebar {
+  padding-right: 14em;
+  position: relative;
+}
+
+div.mainSidebar + div.mainSidebar {
+  border-top: 1px solid #ccc;
+  margin-top: 2em;
+}
+
+div.sidebar {
+  position: absolute;
+  top: 1em;
+  right: 0;
+  width: 12em;
+}
+
+div.sidebar > ul {
+  padding: 0;
+  margin:0 0 0 1.5em;
+  line-height: 1.5em;
+}
+
+div.sidebar > ul ul {
+  padding-left: 1.2em;
+  line-height: 1.3em;
+}
+
+div.sidebar > ol {
+  margin: 0;
+  padding: 0 0 0 2em;
+  line-height: 1.5em;
+}
+
+div.sidebar ol ol {
+  list-style: none;
+  padding-left: 0;
+}
+
+div.sidebar ol ol li:first-child {
+  counter-reset: section;
+}
+
+div.sidebar ol ol li:before {
+  content: counter(chapter) '.' counter(section) '. ';
+  counter-increment: section;
+}
+
+div.sidebar h3 {
+  counter-reset: part;
+}
+
+div.sidebar h4:before {
+  content: counter(part, upper-roman) '. ';
+  counter-increment: part;
+}
+
+/***************************************************************
+ * Type
+ **************************************************************/
+
+div.type table {
+  width: 100%;
+}
+
+div.type table td:last-child {
+  width: 100%;
+}
+
+div.type h1 > span:first-child {
+  display: block;
+  font-size: 60%;
+}
+div.type > p.src {
+  display:none;
+}
+
+div.type p.facets code,
+div.type p.facets a,
+div.type p.sig code,
+div.type p.sig a {
+  color:#070;
+}
+
+div.type + div.sidebar > ul {
+  list-style:none;
+}
+
+/***************************************************************
+ * Type : Slots
+ **************************************************************/
+
+div.type dl {
+  margin: 2em 0 1em 0;
+}
+
+div.type dl dt {
+  border-top: 1px solid #ccc;
+  font-weight: bold;
+  padding: 0.5em 0 0 0;
+}
+
+div.type dl dd {
+  position: relative;
+  margin-bottom: 1em;
+}
+
+div.type dl dd p.src a {
+  position: absolute;
+  top: -2.5em;
+  right: 0;
+  font-size: 12px;
+  color: #999;
+}
+
+/***************************************************************
+ * Manual Index
+ **************************************************************/
+
+div.toc ol li {
+  margin-bottom: 1em;
+}
+
+div.toc ol li p {
+  margin: 1px 0 1px 1em;
+}
+
+div.toc ol li p:last-child {
+  font-size: 12px;
+}
+
+div.toc {
+  counter-reset: part;
+}
+
+div.toc h2:before {
+  content: counter(part, upper-roman) '. ';
+  counter-increment: part;
+}
+
+/***************************************************************
+ * Manual : Chapter
+ **************************************************************/
+
+ul.chapter-nav {
+  position: relative;
+  list-style: none;
+  margin: 1em 0; padding:0;
+}
+
+ul.chapter-nav li {
+  display: block;
+  color:#999;
+}
+
+ul.chapter-nav li.next {
+  text-align: right;
+}
+
+ul.chapter-nav li + li.next {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+ul.chapter-nav li.prev:before {
+  content: '\00ab ';
+}
+
+ul.chapter-nav li.next:after {
+  content:' \00bb'; margin:0
+}
+
+/***************************************************************
+ * Source Code
+ **************************************************************/
+
+div.src pre {
+  margin: 1em 0;
+  padding: 0;
+  color: #000;
+}
+
+div.src pre b {
+  color: #f00;
+  font-weight: normal;
+}
+
+div.src pre i {
+  color: #00f;
+  font-style: normal;
+}
+
+div.src pre em {
+  color: #077;
+  font-style:normal;
+}
+
+div.src pre q {
+  color: #070;
+  font-style: normal;
+}
+
+div.src pre q:before,
+div.src pre q:after {
+  content: '';
+}
