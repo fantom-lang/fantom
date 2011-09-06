@@ -38,7 +38,7 @@ class DocRenderer
   WebOutStream out { private set }
 
 //////////////////////////////////////////////////////////////////////////
-// Fanco
+// Fancoc
 //////////////////////////////////////////////////////////////////////////
 
   **
@@ -96,5 +96,12 @@ class DocRenderer
     }
   }
 
+  ** Return URI for source, or null if not available.
+  virtual Uri? sourceLink(DocPod pod, DocLoc loc)
+  {
+    src := pod.source(loc.file, false)
+    if (src == null) return null
+    return `src-${src.name}.html#line${loc.line}`
+  }
 }
 

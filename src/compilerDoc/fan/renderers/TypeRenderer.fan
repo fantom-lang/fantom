@@ -11,6 +11,42 @@ using web
 **
 ** TypeRenderer renders the API of a Fantom type modeled via `DocType`.
 **
+** Overview
+** ========
+**
+**   <h1>
+**    <span>{type.flags}</span> {type.qname}
+**   </h1>
+**   <pre>...</pre>                 // inhertiance
+**   <p class='facets'>...</p>      // facet list (if available)
+**   <p class='src'><a>...</a></p>  // source link (if available)
+**   ...                            // type fandoc
+**   <ul>...</ul>                   // emum list (if available)
+**
+** Slots
+** =====
+**
+**   <dl>
+**    <dt id='{slot.name}'>{slot.name}</dt>
+**    <dd>
+**     <p class='sig'><code>...</code></p>  // slot signature
+**     <p class='src'><a>...</a></p>        // source link (if available)
+**     ...                                  // slot fandoc
+**    </dd>
+**   </dl>
+**
+** Table of Contents
+** ==================
+**
+**   <h3>Source</h3>
+**   <ul><li><a>...</a></li></ul>     // if source link
+**   <ul><li>Not available</li></ul>  // if no source link
+**
+**   <h3>Slots</h3>
+**   <ul>
+**    <li><a href='#{slot.name}'>{slot.name}</a></li>
+**   </ul>
+**
 class TypeRenderer : DocRenderer
 {
 
@@ -43,25 +79,30 @@ class TypeRenderer : DocRenderer
 // Overview
 //////////////////////////////////////////////////////////////////////////
 
+  **
   ** Render the HTML for the type overview (base, mixins, type doc)
+  **
   virtual Void writeTypeOverview()
   {
     // type name
-    out.h1.span.w(DocFlags.toTypeDis(type.flags)).spanEnd.w(" $type.qname").h1End
+    out.h1
+      .span.w(DocFlags.toTypeDis(type.flags)).spanEnd
+      .w(" $type.qname")
+      .h1End
+
+    // inheritance
     writeTypeInheritance
 
     // facets
     if (type.facets.size > 0)
     {
-      out.p
+      out.p("class='facets'")
       type.facets.each |f| { writeFacet(f); out.br }
       out.pEnd
     }
 
     // if source if available
-    out.p
     writeSourceLink(type.doc.loc)
-    out.pEnd
 
     // fandoc
     writeFandoc(type, type.doc)
@@ -126,7 +167,7 @@ class TypeRenderer : DocRenderer
   ** Render HTML for slot signature.
   virtual Void writeSlotSig(DocSlot slot)
   {
-    out.p.code("class='sig'")
+    out.p("class='sig'").code
     slot.facets.each |f| { writeFacet(f); out.br }
 
     if (slot is DocField)
@@ -164,6 +205,34 @@ class TypeRenderer : DocRenderer
     }
 
     out.codeEnd.pEnd
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Toc
+//////////////////////////////////////////////////////////////////////////
+
+  ** Render the table of contents for this type.
+  virtual Void writeToc()
+  {
+    // source link
+    out.h3.w("Source").h3End
+    out.ul
+    loc := type.doc.loc
+    src := pod.source(loc.file, false)
+    if (src == null)
+      out.li.w("Not available").liEnd
+    else
+      out.li.a(`src-${src.name}.html#line$loc.line`).w("View Source").aEnd.liEnd
+    out.ulEnd
+
+    // slot list
+    out.h3.w("Slots").h3End
+    out.ul
+    type.slots.each |slot|
+    {
+      out.li.a(`#$slot.name`).w(slot.name).aEnd.liEnd
+    }
+    out.ulEnd
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -234,17 +303,13 @@ class TypeRenderer : DocRenderer
     out.codeEnd
   }
 
-  ** Write source code link if source is available
+  ** Write source code link if source is available. Return
+  ** true if source is available.
   virtual Void writeSourceLink(DocLoc loc)
   {
-    // check if source is available
-    src := pod.source(loc.file, false)
-    if (src == null) return
-
-    // link to HTML file for source
-    uri := `src-${src.name}.html#line${loc.line}`
-    out.a(uri, "class='src'").w("Source").aEnd
+    uri := sourceLink(pod, loc)
+    if (uri == null) return
+    out.p("class='src'").a(uri).w("Source").aEnd.pEnd
   }
-
 }
 
