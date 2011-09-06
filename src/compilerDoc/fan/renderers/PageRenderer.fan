@@ -121,16 +121,6 @@ class PageRenderer : DocRenderer
   ** Begin the page.
   virtual Void writeStart()
   {
-    // find title and resource path
-    title   := ""
-    resPath := "../"
-    if (chapter != null) title = chapter.name
-    else if (type != null) title = type.qname
-    else if (sourceUri != null) title = sourceUri.name
-    else if (pod != null) title = pod.name
-    else { title="Doc Index"; resPath="" }
-
-    // start document
     out.docType
     out.html
     out.head
@@ -140,6 +130,26 @@ class PageRenderer : DocRenderer
       .headEnd
     out.body
     writeBreadcrumb
+  }
+
+  ** Get best title based on current configuration.
+  virtual Str title()
+  {
+    if (chapter   != null) return chapter.name
+    if (type      != null) return type.qname
+    if (sourceUri != null) return sourceUri.name
+    if (pod       != null) return pod.name
+    return "Doc Index"
+  }
+
+  ** Get path to resource directory based on current configuraiton.
+  virtual Str resPath()
+  {
+    if (chapter   != null) return "../"
+    if (type      != null) return "../"
+    if (sourceUri != null) return "../"
+    if (pod       != null) return "../"
+    return ""
   }
 
   ** Write breadcrumb for currrent configuration.

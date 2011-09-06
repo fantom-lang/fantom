@@ -54,9 +54,10 @@ class Main : AbstractMain
   }
 }
 
-**
+**************************************************************************
 ** FantomDocWriter
-**
+**************************************************************************
+
 class FantomDocWriter : FileDocWriter
 {
   ** Constructor.
@@ -99,20 +100,136 @@ class FantomDocWriter : FileDocWriter
     return env.errHandler.errs
   }
 
-  ** Start a HTML page.
-  override Void writeStart(WebOutStream out, Str title, Obj? obj)
+  ** Return customized PageRenderer
+  override PageRenderer makePageRenderer(WebOutStream out)
   {
-    // path to resource files
-    path := obj == null ? "" : "../"
+    FantomPageRenderer(this, env, out)
+  }
 
+  ** Customize CSS
+  override Void writeCss(File file)
+  {
+    file.out.printLine(FantomCss.css).close
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Examples
+//////////////////////////////////////////////////////////////////////////
+
+  private Void writeExamples()
+  {
+    // write example index
+    dir := outDir + `examples/`
+    writeExampleIndex(dir + `index.html`)
+
+    // write example source code
+    exampleIndex.each |list|
+    {
+      list.each |item|
+      {
+        uri := item->get(0) as Uri
+
+        // parse source file as SyntaxDoc
+        srcFile := exampleSrcDir.plus(uri)
+        if (!srcFile.exists) throw IOErr("example file not found: $srcFile")
+        rules := SyntaxRules.loadForExt(srcFile.ext ?: "?") ?:SyntaxRules()
+        doc   := SyntaxDoc.parse(rules, srcFile.in)
+
+        // write HTML file
+        file := dir + exampleUriToFilename(uri).toUri
+        writeExampleFile(file, uri, doc)
+      }
+    }
+  }
+
+  ** Write example index.
+  Void writeExampleIndex(File file)
+  {
+    out := WebOutStream(file.out)
+    r := FantomPageRenderer(this, env, out) { exampleUri=`index.html` }
+
+    r.writeStart
+    out.div("class='ex-index'")
+    exampleIndex.each |list, name|
+    {
+      out.h2("id='$name'").esc(name).h2End
+      out.table
+      list.each |item|
+      {
+        uri := item->get(0) as Uri
+        summary := item->get(1) as Str
+        link := uri.path[0] + "-" + uri.basename + ".html"
+        out.tr
+          .td.a(exampleUriToFilename(uri).toUri).esc(uri.basename).aEnd.tdEnd
+          .td.esc(summary).tdEnd
+          .trEnd
+      }
+      out.tableEnd
+    }
+    out.divEnd
+    r.writeEnd
+    out.close
+  }
+
+  ** Write example source file.
+  Void writeExampleFile(File file, Uri uri, SyntaxDoc doc)
+  {
+    out := WebOutStream(file.out)
+    FantomPageRenderer(this, env, out)
+    {
+      exampleUri = uri
+      exampleDoc = doc
+    }.writeExample
+    out.close
+  }
+
+  ** Return URI for example.
+  Str exampleUriToFilename(Uri uri)
+  {
+    uri.path[0] + "-" + uri.basename + ".html"
+  }
+}
+
+**************************************************************************
+** FantomPageRenderer
+**************************************************************************
+
+class FantomPageRenderer : PageRenderer
+{
+  new make(FantomDocWriter parent, DocEnv env, WebOutStream out) : super(env, out)
+  {
+    this.parent = parent
+  }
+
+  ** Example URI.
+  Uri? exampleUri
+
+  ** Example source file
+  SyntaxDoc? exampleDoc
+
+  override Str title()
+  {
+    if (exampleDoc != null) return exampleUri.name
+    if (exampleUri != null) return "Examples"
+    return super.title
+  }
+
+  override Str resPath()
+  {
+    if (exampleUri != null) return "../"
+    return super.resPath
+  }
+
+  override Void writeStart()
+  {
     // start HTML doc
     out.docType
     out.html
     out.head
       .title.esc(title).titleEnd
       .printLine("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>")
-      .includeJs(`${path}../docres/doc.js`)
-      .includeCss(`${path}style.css`)
+      .includeJs(`${resPath}../docres/doc.js`)
+      .includeCss(`${resPath}style.css`)
       .w("<!--[if lte IE 7]>
           <style type='text/css'>
             div.header li { display:inline; }
@@ -143,47 +260,17 @@ class FantomDocWriter : FileDocWriter
     // subheader
     out.div("class='subHeader'")
     out.div
-    switch (obj?.typeof)
+    if (exampleUri == null) writeBreadcrumb
+    else
     {
-      case DocPod#:
-          out.ul
-            .li.a(`../index.html`).w("Doc Home").aEnd.w("</li>")
-            .li.a(`index.html`).w(obj->name).aEnd.w("</li>")
-            .ulEnd
-
-      case DocType#:
-      case DocChapter#:
-          out.ul
-            .li.a(`../index.html`).w("Doc Home").aEnd.w("</li>")
-            .li.a(`index.html`).w(obj->pod).aEnd.w("</li>")
-            .li.a(`${obj->name}.html`).w(obj->name).aEnd.w("</li>")
-            .ulEnd
-
-      case Str[]#:
-          out.ul
-            .li.a(`../index.html`).w("Doc Home").aEnd.w("</li>")
-            .li.a(`index.html`).w("Examples").aEnd.w("</li>")
-            if (obj->size > 0)
-              out.li.a(`${obj->first}`).w(obj->last).aEnd.w("</li>")
-            out.ulEnd
-
-      case Obj[]#:
-          list  := (Obj[])obj
-          pod   := (Str)list[0]
-          multi := (Bool)list[1]
-          src   := (Str)list[2]
-          type  := src[0..<src.index(".")]
-          out.ul("class='nav'")
-            .li.a(`../index.html`).w("Doc Home").aEnd.w("</li>")
-            .li.a(`index.html`).w(pod).aEnd.w("</li>")
-            .li.w(multi ? "Multiple" : "<a href='${type}.html'>$type</a>").w("</li>")
-            .li.a(`src-${list[2]}.html`).w("Source").aEnd.w("</li>")
-            .ulEnd
-
-       default:
-          out.ul
-            .li.a(`../index.html`).w("Doc Home").aEnd.w("</li>")
-            .ulEnd
+      out.div("class='breadcrumb'")
+        .ul
+          .li.a(`../index.html`).w("Doc Index").aEnd.w("</li>")
+          .li.a(`index.html`).w("Examples").aEnd.w("</li>")
+          if (exampleDoc != null)
+            out.li.a(exampleUri.name.toUri).w(exampleUri.name).aEnd.w("</li>")
+          out.ulEnd
+        .divEnd
     }
     out.divEnd
     out.divEnd
@@ -193,73 +280,38 @@ class FantomDocWriter : FileDocWriter
     out.div
   }
 
-  ** End a HTML page.
-  override Void writeEnd(WebOutStream out)
+  override Void writeEnd()
   {
     out.divEnd.divEnd // content
     out.div("class='footer'")
-     .w(this.version).w(" ").w(timestamp)
+     .w("$parent.version $parent.timestamp")
      .divEnd
     out.bodyEnd
     out.htmlEnd
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Index
-//////////////////////////////////////////////////////////////////////////
-
-  ** Write top index.
-  override Void writeIndex(WebOutStream out)
+  override Void writeIndex()
   {
-    // header
-    writeStart(out, "Home", null)
+    // start
+    writeStart
     out.div("class='index'")
-
-    // sort pods by manual/api
-    manuals := DocPod[,]
-    apis    := DocPod[,]
-    env.pods.each |p|
-    {
-      if (p.isManual)
-        manuals.add(p)
-      else
-        apis.add(p)
-    }
 
     // manuals
     out.div("class='float'")
     out.div("class='manuals'")
-    out.h2.w("Manuals").h2End
-    out.table
-    ["docIntro", "docLang", "docTools", "docFanr"].each |name|
-    {
-      pod := manuals.find |m| { m.name == name }
-      out.tr
-        .td.a(`${pod.name}/index.html`).w(pod.name).aEnd.tdEnd
-        .td.w(pod.summary)
-        .div
-        pod.chapters.each |ch,i|
-        {
-          if (i > 0) out.w(", ")
-          out.a(`${pod.name}/${ch.name}.html`).w("$ch.name").aEnd
-        }
-        out.divEnd
-        out.tdEnd
-     out.trEnd
-    }
-    out.tableEnd
+    IndexRenderer(env, out).writeManuals
     out.divEnd
 
     // examples
     out.div("class='examples'")
     out.h2.w("Examples").h2End
     out.table
-    exampleIndex.each |list,name|
+    parent.exampleIndex.each |list,name|
     {
       names := list.join(", ") |v|
       {
         uri  := (Uri)v->first
-        file := exampleUriToFilename(uri)
+        file := parent.exampleUriToFilename(uri)
         return "<a href='examples/$file'>$uri.basename</a>"
       }
       out.tr
@@ -273,100 +325,34 @@ class FantomDocWriter : FileDocWriter
 
     // apis
     out.div("class='apis'")
-    out.h2.w("APIs").h2End
-    out.table
-    apis.each |pod|
-    {
-      out.tr
-        .td.a(`${pod.name}/index.html`).w(pod.name).aEnd.tdEnd
-        .td.w(pod.summary).tdEnd
-        .trEnd
-    }
-    out.tableEnd
+    IndexRenderer(env, out).writeApis
     out.divEnd
 
+    // end
     out.divEnd
-    writeEnd(out)
+    writeEnd
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Examples
-//////////////////////////////////////////////////////////////////////////
 
-  private Void writeExamples()
+  Void writeExample()
   {
-    // write example index
-    dir := outDir + `examples/`
-    out := WebOutStream(dir.plus(`index.html`).out)
-    writeExampleIndex(out)
-    out.close
-
-    // write example source code
-    exampleIndex.each |list|
-    {
-      list.each |item|
-      {
-        uri := item->get(0) as Uri
-
-        // parse source file as SyntaxDoc
-        srcFile := exampleSrcDir.plus(uri)
-        if (!srcFile.exists) throw IOErr("example file not found: $srcFile")
-        rules := SyntaxRules.loadForExt(srcFile.ext ?: "?") ?:SyntaxRules()
-        syntaxDoc := SyntaxDoc.parse(rules, srcFile.in)
-
-        // write HTML file
-        filename := exampleUriToFilename(uri)
-        out = WebOutStream(dir.plus(filename.toUri).out)
-        writeExampleFile(out, uri, syntaxDoc)
-        out.close
-      }
-    }
-  }
-
-  private Void writeExampleIndex(WebOutStream out)
-  {
-    writeStart(out, "Examples", Str[,])
-    out.div("class='ex-index'")
-    exampleIndex.each |list, name|
-    {
-      out.h2("id='$name'").esc(name).h2End
-      out.table
-      list.each |item|
-      {
-        uri := item->get(0) as Uri
-        summary := item->get(1) as Str
-        link := uri.path[0] + "-" + uri.basename + ".html"
-        out.tr
-          .td.a(exampleUriToFilename(uri).toUri).esc(uri.basename).aEnd.tdEnd
-          .td.esc(summary).tdEnd
-          .trEnd
-      }
-      out.tableEnd
-    }
-    out.divEnd
-    writeEnd(out)
-  }
-
-  private Void writeExampleFile(WebOutStream out, Uri uri, SyntaxDoc doc)
-  {
-    writeStart(out, uri.name, [exampleUriToFilename(uri), uri.name])
+    writeStart
     out.div("class='src'")
-    HtmlSyntaxWriter(out).writeLines(doc)
+    HtmlSyntaxWriter(out).writeLines(exampleDoc)
     out.divEnd
-    writeEnd(out)
+    writeEnd
   }
 
-  private static Str exampleUriToFilename(Uri uri)
-  {
-    uri.path[0] + "-" + uri.basename + ".html"
-  }
+  private FantomDocWriter parent
+}
 
-//////////////////////////////////////////////////////////////////////////
-// CSS
-//////////////////////////////////////////////////////////////////////////
+**************************************************************************
+** CSS
+**************************************************************************
 
-  override Str css()
-  {
+class FantomCss
+{
+  static const Str css :=
    "body {
       font:10pt Arial, sans-serif;
       margin:0 0 3em 0; padding: 0;
@@ -383,7 +369,7 @@ class FantomDocWriter : FileDocWriter
     }
 
     code { color:#080; }
-    code.sig a { color:#080; }
+    p.sig code a { color:#080; }
     pre {
       color:#333; background:#f7f7ed; border:1px solid #dfe0cd; padding:10px;
       -webkit-border-radius:5px; -moz-border-radius:5px; border-radius:5px;
@@ -472,12 +458,14 @@ class FantomDocWriter : FileDocWriter
 
     div.content > div { width:850px; margin:0 auto; position:relative; }
 
-    div.article { padding-right:220px; font-size:11pt; position:relative; }
-    div.article table,
-    div.article div.sidebar { font-size:10pt; }
-
-    div.pod-doc { border-top:1px solid #ccc; margin-top:2em; }
-    div.pod-doc div.sidebar { margin-top:1em; }
+    div.mainSidebar { padding-right:220px; font-size:11pt; position:relative; }
+    div.mainSidebar table,
+    div.mainSidebar div.sidebar { font-size:10pt; }
+    div.mainSidebar + div.mainSidebar {
+      border-top: 1px solid #ccc;
+      margin-top: 2em;
+    }
+    div.chapter + div.sidebar { margin-top:2em; }
 
     div.sidebar { position:absolute; right:0; top:0; width:200px; }
     div.sidebar > p { font-weight:bold; }
@@ -492,6 +480,23 @@ class FantomDocWriter : FileDocWriter
       content:counter(chapter) '.' counter(section) '. ';
       counter-increment:section;
     }
+    div.pod-doc + div.sidebar { margin-top:1em; }
+    div.chapter + div.sidebar h3 { counter-reset: part; margin-bottom:1.75em; }
+    div.chapter + div.sidebar h4:before {
+      color:#777;
+      content: counter(part, upper-roman) '. ';
+      counter-increment: part;
+    }
+    div.chapter + div.sidebar h3 a {
+      color:#4e4d3a;
+      background:#f7f7ed;
+      padding:10px 12px;
+      border:1px solid #dfe0cd;
+      -webket-border-radius:5px;
+      -moz-border-radius:5px;
+      border-radius:5px;
+      font-size:10pt;
+    }
 
     dl { margin:2em 0 1em 0; }
     dl dt {
@@ -501,7 +506,7 @@ class FantomDocWriter : FileDocWriter
       padding:5px;
     }
     dl dd { position:relative; margin:1em 0 2em 2em; }
-    dl dd a.src {
+    dl dd p.src a {
       position:absolute;
       top:-36px; right:5px;
       font-size:8pt; color:#7aa3c0;
@@ -511,9 +516,14 @@ class FantomDocWriter : FileDocWriter
     div.type table { width:100%; }
     div.type table td:last-child { width:100%; }
     div.type h1 > span:first-child { display:block; font-size:60%; }
-    div.type > p > a.src { display:none; }
+    div.type > p.src { display:none; }
     div.type + div.sidebar > ul { list-style:none; }
 
+    div.toc { counter-reset: part; }
+    div.toc h2:before {
+      content: counter(part, upper-roman) '. ';
+      counter-increment: part;
+    }
     div.toc ol li { margin-bottom:1em; }
     div.toc ol li p { margin:1px 0 1px 1em; }
     div.toc ol li p:last-child { font-size:9pt; }
@@ -525,10 +535,8 @@ class FantomDocWriter : FileDocWriter
     ul.chapter-nav li.prev:before { content:'\\00ab '; }
     ul.chapter-nav li.next:after { content:' \\00bb'; margin:0 }
 
-    div.index > div.float { float:left; width:50%; }
+    div.index > div.float { float:left; width:48%; padding-right:2em; }
     div.index div.manuals > h2 { margin-top:0; }
-    div.index div.manuals table { border:none; }
-    div.index div.manuals table tr { background:none; border:none; }
     div.index div.manuals table td { padding:0.5em 1em; }
     div.index div.manuals table td:last-child { padding-right:2em; }
     div.index div.manuals table td:first-child { vertical-align:top; padding-left:5px; }
@@ -558,5 +566,4 @@ class FantomDocWriter : FileDocWriter
       color: #999;
     }
     "
-  }
 }

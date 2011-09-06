@@ -34,6 +34,12 @@ class FileDocWriter
   ** Write top index and resource files.
   Bool index := true
 
+  ** Return a new PageRenderer.
+  virtual PageRenderer makePageRenderer(WebOutStream out)
+  {
+    PageRenderer(env, out)
+  }
+
   ** Write pods and return any errors.
   virtual DocErr[] write()
   {
@@ -118,7 +124,7 @@ class FileDocWriter
   virtual Void writeIndex(File file)
   {
     out := WebOutStream(file.out)
-    PageRenderer(env, out).writeIndex
+    makePageRenderer(out).writeIndex
     out.close
   }
 
@@ -126,7 +132,7 @@ class FileDocWriter
   virtual Void writePodIndex(File file, DocPod pod)
   {
     out := WebOutStream(file.out)
-    PageRenderer(env, out) { it.pod = pod }.writePodIndex
+    makePageRenderer(out) { it.pod = pod }.writePodIndex
     out.close
   }
 
@@ -134,7 +140,7 @@ class FileDocWriter
   virtual Void writeType(File file, DocType type)
   {
     out := WebOutStream(file.out)
-    PageRenderer(env, out) { it.type = type }.writeType
+    makePageRenderer(out) { it.type = type }.writeType
     out.close
   }
 
@@ -142,7 +148,7 @@ class FileDocWriter
   virtual Void writeManualIndex(File file, DocPod pod)
   {
     out := WebOutStream(file.out)
-    PageRenderer(env, out) { it.pod = pod }.writeManualIndex
+    makePageRenderer(out) { it.pod = pod }.writeManualIndex
     out.close
   }
 
@@ -150,7 +156,7 @@ class FileDocWriter
   virtual Void writeChapter(File file, DocChapter chapter)
   {
     out := WebOutStream(file.out)
-    PageRenderer(env, out) { it.chapter = chapter }.writeChapter
+    makePageRenderer(out) { it.chapter = chapter }.writeChapter
     out.close
   }
 
@@ -158,7 +164,7 @@ class FileDocWriter
   virtual Void writeSource(File file, DocPod pod, Uri uri, SyntaxDoc doc)
   {
     out := WebOutStream(file.out)
-    PageRenderer(env, out)
+    makePageRenderer(out)
     {
       it.pod = pod
       it.sourceUri = uri
