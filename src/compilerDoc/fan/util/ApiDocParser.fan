@@ -68,16 +68,13 @@ internal class ApiDocParser
       this.typeLoc = attrs.loc
 
       // zero or more slots
-      slots := DocSlot[,]
+      slots := Str:DocSlot[:]
       while (true)
       {
         slot := parseSlot
         if (slot == null) break
-        slots.add(slot)
+        slots[slot.name] = slot
       }
-
-      // sort slots by name
-      slots.sort |a, b| { a.name <=> b.name }
 
       // construct DocType from my own fields
       return DocType(attrs, typeRef, slots)

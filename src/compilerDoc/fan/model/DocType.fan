@@ -15,17 +15,31 @@ const class DocType
 {
 
   ** Constructor
-  internal new make(DocAttrs attrs, DocTypeRef ref, DocSlot[] slots)
+  internal new make(DocAttrs attrs, DocTypeRef ref, Str:DocSlot slotMap)
   {
-    this.ref    = ref
-    this.loc    = attrs.loc
-    this.flags  = attrs.flags
-    this.facets = attrs.facets
-    this.doc    = attrs.doc
-    this.base   = attrs.base
-    this.mixins = attrs.mixins
-    this.slots  = slots
-    this.isErr  = base.find {it.qname=="sys::Err"} != null
+    this.ref     = ref
+    this.loc     = attrs.loc
+    this.flags   = attrs.flags
+    this.facets  = attrs.facets
+    this.doc     = attrs.doc
+    this.base    = attrs.base
+    this.mixins  = attrs.mixins
+    this.slotMap = slotMap
+    this.isErr   = base.find {it.qname=="sys::Err"} != null
+
+    // create sorted list
+    list := slotMap.vals.sort|a, b| { a.name <=> b.name }
+
+    // filter out slots which shouldn't be documented,
+    // but leave them in the map for lookup
+    list = list.exclude |s|
+    {
+      s.hasFacet("sys::NoDoc")     ||
+      DocFlags.isInternal(s.flags) ||
+      DocFlags.isPrivate(s.flags)  ||
+      DocFlags.isSynthetic(s.flags)
+    }
+    this.slots = list
   }
 
   ** Representation of this type definition as a reference
@@ -49,6 +63,9 @@ const class DocType
   ** Facets defined on this type
   const DocFacet[] facets
 
+  ** Return if given facet is defined on type
+  Bool hasFacet(Str qname) { facets.any |f| { f.type.qname == qname } }
+
   ** Fandoc documentation string
   const DocFandoc doc
 
@@ -60,28 +77,21 @@ const class DocType
   ** Mixins directly implemented by this type
   const DocTypeRef[] mixins
 
-  ** Slots defined by this type
-  const DocSlot[] slots
-
   ** Is this a subclass of 'sys::Err'
   const Bool isErr
+
+  ** List of the public, documented slots in this type.
+  const DocSlot[] slots
 
   ** Get slot by name.  If not found return null or raise UknownSlotErr
   DocSlot? slot(Str name, Bool checked := true)
   {
-    map := slotMapRef.val as Str:DocSlot
-    if (map == null)
-    {
-      map = Str:DocSlot[:]
-      slots.each |slot| { map[slot.name] = slot }
-      slotMapRef.val = map.toImmutable
-    }
-    slot := map[name]
+    slot := slotMap[name]
     if (slot != null) return slot
     if (checked) throw UnknownSlotErr("${qname}::${name}")
     return null
   }
-  private const AtomicRef slotMapRef := AtomicRef(null)
+  private const Str:DocSlot slotMap
 
   ** Summary is the first sentence of `doc`
   Str summary() { DocUtil.firstSentence(doc.text) }

@@ -78,7 +78,7 @@ class DocPod
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** List of the all defined types.
+  ** List of the public, documented types in this pod.
   **
   DocType[] types() { load.typeList }
 
@@ -178,6 +178,15 @@ class DocPod
   {
     // create sorted list
     list := map.vals.sort|a, b| { a.name <=> b.name }
+
+    // filter out types which shouldn't be documented,
+    // but leave them in the map for lookup
+    list = list.exclude |t|
+    {
+      t.hasFacet("sys::NoDoc")     ||
+      DocFlags.isInternal(t.flags) ||
+      DocFlags.isSynthetic(t.flags)
+    }
 
     // build toc
     toc := Obj[,]
