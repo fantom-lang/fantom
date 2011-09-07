@@ -67,14 +67,16 @@ abstract class DefNode : Node
   ** Return if this type or slot should be documented:
   **   - public or protected
   **   - not synthentic
-  **   - not annotated with @NoDoc
   **   - not a subclass of sys::Test
+  **
+  ** If a public type/slot is annotated with @NoDoc we
+  ** we still generate the docs to make it available for
+  ** reflection
   **
   internal Bool isDocumented()
   {
     if (flags.and(FConst.Synthetic) != 0) return false
     if (flags.and(FConst.Public) == 0 && flags.and(FConst.Protected) == 0) return false
-    if (facet("sys::NoDoc") != null) return false
     if (this is TypeDef)
     {
       t := (TypeDef)this

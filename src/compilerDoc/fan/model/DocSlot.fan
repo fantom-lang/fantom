@@ -46,6 +46,9 @@ abstract const class DocSlot
 
   ** Facets defined on this slot
   const DocFacet[] facets
+
+  ** Return if given facet is defined on slot
+  Bool hasFacet(Str qname) { facets.any |f| { f.type.qname == qname } }
 }
 
 **************************************************************************
