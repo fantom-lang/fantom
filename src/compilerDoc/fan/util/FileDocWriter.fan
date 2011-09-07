@@ -101,7 +101,8 @@ class FileDocWriter
           {
             pod.resources.each |res|
             {
-              zip.contents[res].in.pipe(podDir.plus(res.name.toUri).out)
+              buf := zip.contents[res].in.readAllBuf
+              podDir.plus(res.name.toUri).out.writeBuf(buf).flush
             }
           }
           finally zip.close
