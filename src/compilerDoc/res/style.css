@@ -97,7 +97,7 @@ div.index > div.manuals table td:first-child {
  **************************************************************/
 
 div.mainSidebar {
-  padding-right: 14em;
+  padding-right: 16em;
   position: relative;
 }
 
@@ -110,7 +110,7 @@ div.sidebar {
   position: absolute;
   top: 1em;
   right: 0;
-  width: 12em;
+  width: 14em;
 }
 
 div.sidebar > ul {
@@ -130,18 +130,29 @@ div.sidebar > ol {
   line-height: 1.5em;
 }
 
-div.sidebar ol ol {
+div.sidebar > ol > li > ol {
   list-style: none;
   padding-left: 0;
-}
-
-div.sidebar ol ol li:first-child {
   counter-reset: section;
 }
 
-div.sidebar ol ol li:before {
+div.sidebar > ol > li > ol > li:before {
   content: counter(chapter) '.' counter(section) '. ';
   counter-increment: section;
+}
+
+div.sidebar ol ol ol {
+  list-style: none;
+  padding-left: 1em;
+}
+
+div.sidebar ol ol ol li:first-child {
+  counter-increment: heading;
+}
+
+div.sidebar ol ol ol li:before {
+  content: counter(chapter) '.' counter(section) '.' counter(heading) '. ';
+  counter-increment: heading;
 }
 
 div.sidebar h3 {

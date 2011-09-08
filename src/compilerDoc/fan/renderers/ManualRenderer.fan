@@ -198,6 +198,15 @@ class ManualRenderer : DocRenderer
           c.headings.each |h|
           {
             out.li.a(`${c.name}.html#$h.anchorId`).esc(h.title).aEnd.liEnd
+            if (h.children.size > 0)
+            {
+              out.ol
+              h.children.each |sh|
+              {
+                out.li.a(`${c.name}.html#$sh.anchorId`).esc(sh.title).aEnd.liEnd
+              }
+              out.olEnd
+            }
           }
           out.olEnd
         }
