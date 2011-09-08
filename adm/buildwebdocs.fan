@@ -474,11 +474,16 @@ class FantomCss
     div.sidebar ul ul { padding-left:1.2em; }
     div.sidebar li { margin: 3px 3px 3px 0; }
     div.sidebar > ol { padding:0 0 0 2em; margin:0; line-height:1.5em; color:#777; }
-    div.sidebar ol ol { list-style:none; padding-left:0; }
-    div.sidebar ol ol li:first-child { counter-reset:section; }
-    div.sidebar ol ol li:before {
+    div.sidebar > ol > li > ol { list-style:none; padding-left:0;counter-reset:section; }
+    div.sidebar > ol > li > ol li:before {
       content:counter(chapter) '.' counter(section) '. ';
       counter-increment:section;
+    }
+    div.sidebar ol ol ol { list-style:none; padding-left:1em; }
+    div.sidebar ol ol ol li:first-child { counter-increment: heading; }
+    div.sidebar ol ol ol li:before {
+      content: counter(chapter) '.' counter(section) '.' counter(heading) '. ';
+      counter-increment: heading;
     }
     div.pod-doc + div.sidebar { margin-top:1em; }
     div.chapter + div.sidebar h3 { counter-reset: part; margin-bottom:1.75em; }
