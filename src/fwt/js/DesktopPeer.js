@@ -20,6 +20,9 @@ fan.fwt.DesktopPeer.$isMac     = navigator.userAgent.indexOf("Mac OS X") != -1;
 fan.fwt.DesktopPeer.$isFirefox = navigator.userAgent.indexOf("Firefox/") != -1;
 fan.fwt.DesktopPeer.$isIE      = navigator.userAgent.indexOf("MSIE") != -1;
 
+fan.fwt.DesktopPeer.clipboard  = function() { return fan.fwt.DesktopPeer.$clipboard; }
+fan.fwt.DesktopPeer.$clipboard = new fan.fwt.Clipboard();
+
 // TODO
 //fan.fwt.DesktopPeer.bounds()
 //fan.fwt.DesktopPeer.focus()
