@@ -7,6 +7,7 @@
 **************************************************************************
 
 [
+  [`Readme`,     "readme for distribution"],
   [`StartHere`,  "learn how to get started and use the documentation"],
   [`Tour`,       "whirlwind tour of Fantom's features"],
   [`WhyFantom`,  "why we built Fantom and what problems we desire to solve"],
