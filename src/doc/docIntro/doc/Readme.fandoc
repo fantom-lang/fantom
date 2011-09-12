@@ -1,0 +1,53 @@
+**************************************************************************
+** title:      Fantom Readme
+** author:     Brian Frank
+** created:    12 Sep 11
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Fantom Quick Links [#quickLinks]
+********************************
+- [Setup]`http://fantom.org/doc/docTools/Setup`
+- [Getting Started]`http://fantom.org/doc/docIntro/StartHere`
+- [Hello World]`http://fantom.org/doc/docIntro/HelloWorld`
+- [Examples]`http://fantom.org/doc/examples/index.html`
+
+Setup [#Setup]
+**************
+1. Ensure "{home}/bin" is in your path
+2. Fantom launcher:
+   - Unix: "bin/fan" bash script
+   - Windows: "bin/fan.exe" executable
+3. Verify setup "fan -version"
+
+For further information see [docTools::Setup]`http://fantom.org/doc/docTools/Setup`
+
+Tools [#tools]
+**************
+Common tools you will use:
+  - [fan]`http://fantom.org/doc/docTools/Fan`: Fantom launcher for scripts and pods
+  - [fansh]`http://fantom.org/doc/docTools/Fansh`: Fantom interactive shell
+  - [fant]`http://fantom.org/doc/docTools/Fant`: Fantom test runner
+  - [IDEs]`http://fantom.org/doc/docTools/IDEs`: different IDE and editor options
+
+For further information see [docTools]`http://fantom.org/doc/docTools/index`
+
+Docs [#docs]
+************
+The documentation maybe found online at `http://fantom.org/doc/`.
+
+You may also build the HTML docs in your local environment using the command:
+
+   fan compilerDoc -all
+
+This will generate the HTML docs for all the pods found in your local
+working environment.
+
+Community [#community]
+**********************
+- Forum: `http://fantom.org/sidewalk/topic/`
+- Latest Download: `http://fantom.org/`
+- Mecurial Repo: `http://hg.fantom.org/fan-1.0/`
+- IRC: `http://webchat.freenode.net/?channels=#fantom`
+

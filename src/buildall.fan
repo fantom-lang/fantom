@@ -153,6 +153,21 @@ class Build : BuildGroup
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Readme
+//////////////////////////////////////////////////////////////////////////
+
+  @Target { help = "Generate readme.html file" }
+  Void readme()
+  {
+    src := scriptDir + `doc/docIntro/doc/Readme.fandoc`
+    doc := Type.find("fandoc::FandocParser").make->parse(src.name, src.in)
+    out := (scriptDir + `../readme.html`).out
+    writer := Type.find("fandoc::HtmlDocWriter").make([out])
+    doc->write(writer)
+    out.close
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Dist
 //////////////////////////////////////////////////////////////////////////
 
@@ -164,12 +179,14 @@ class Build : BuildGroup
     test
     examples
     deleteNonDist
+    readme
     zip
   }
 
   @Target { help = "Delete non-distribution files" }
   Void deleteNonDist()
   {
+    Delete(this, devHomeDir+`readme.html`).run
     Delete(this, devHomeDir+`tmp/`).run
     Delete(this, devHomeDir+`temp/`).run
     Delete(this, devHomeDir+`lib/tmp/`).run
