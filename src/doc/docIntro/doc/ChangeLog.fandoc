@@ -7,6 +7,7 @@
 **************************************************************************
 
 *Build 1.0.61 (working)*
+- Upgrade timezone database with zone info version 2011j
 - Generate apidocs for @NoDoc type/slots, but hide in compilerDoc
 
 *Build 1.0.60 (1 Sept 2011)*

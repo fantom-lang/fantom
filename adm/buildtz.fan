@@ -32,6 +32,13 @@ using build
 **   - Asia/Gaza was out of order and all weird, got rid of 2010 only
 **   - America/Resolute - got rid of 2006 since DST without offset
 **
+** Conversion Notes Sep-2011
+** -------------------------
+**   - 2011j version
+**   - southamerica was non-ASCII, nuked comment lines in error
+**   - Africa/Cairo has too many rules for 2010, just picked last one
+**   - Asia/Gaza was weird, commented out 2010
+**
 class Build : BuildScript
 {
 
@@ -40,7 +47,7 @@ class Build : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   // directory of input files
-  Uri srcDir := `/stuff/tzinfo/`
+  Uri srcDir := `/stuff/tzinfo/2011j/`
 
   // input files from Olsen database
   Uri[] srcUris :=
@@ -144,41 +151,50 @@ class Build : BuildScript
     rules := Rule[,]
 
     f := srcDir.toFile + uri
-    f.eachLine |Str line|
+    try
     {
-      lineNum++
-      try
+      f.eachLine |Str line|
       {
-        // strip and skip comments
-        if (line.size == 0) return
-        leadingWs := line[0].isSpace
-        line = line.trim
-        if (line.size == 0 || line[0] == '#') return
-        pound := line.indexr("#")
-        if (pound != null) line = line[0..<pound]
-
-        toks := line.split
-        switch (toks.first)
+        lineNum++
+        try
         {
-          case "Rule":
-            parseRule(toks)
-          case "Zone":
-            parseZone(null, toks)
-          case "Link":
-            echo("IGNORE: $line")
-          default:
-            if (leadingWs)
-              parseZone(zones.last, toks)
-            else
-              throw Err(line)
+          // strip and skip comments
+          if (line.size == 0) return
+          leadingWs := line[0].isSpace
+          line = line.trim
+          if (line.size == 0 || line[0] == '#') return
+          pound := line.indexr("#")
+          if (pound != null) line = line[0..<pound]
+
+          toks := line.split
+          switch (toks.first)
+          {
+            case "Rule":
+              parseRule(toks)
+            case "Zone":
+              parseZone(null, toks)
+            case "Link":
+              echo("IGNORE: $line")
+            default:
+              if (leadingWs)
+                parseZone(zones.last, toks)
+              else
+                throw Err(line)
+          }
+        }
+        catch (Err e)
+        {
+          echo("ERROR: parsing $f [Line $lineNum]")
+          e.trace
+          throw FatalBuildErr()
         }
       }
-      catch (Err e)
-      {
-        echo("ERROR: parsing $f [Line $lineNum]")
-        e.trace
-        throw FatalBuildErr()
-      }
+    }
+    catch (Err e)
+    {
+      echo("ERROR: parsing $f [Line $lineNum]")
+      e.trace
+      throw FatalBuildErr()
     }
   }
 
@@ -361,7 +377,11 @@ class Build : BuildScript
 
       // we should have one or two rules for this year
       if (yrRules.size != 2)
+      {
+        echo("ERROR: too many rules $z.name in year $yr")
+        yrRules.each |y| { echo(y) }
         throw Err("Problem for year $yr $z.name: $yrRules")
+      }
 
       // figure out which is start and which is end, note
       // in the southern hemisphere typically fall is start
