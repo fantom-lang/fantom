@@ -108,17 +108,17 @@ class WebClientTest : Test
     map :=
     [
       `/doc/docIntro/WhyFan.html`: `/doc/docIntro/WhyFantom.html`,
-      `/doc/docLib/Dom.html`:      `/doc/dom/pod-doc.html`,
-      `/doc/docLib/Email.html`:    `/doc/email/pod-doc.html`,
-      `/doc/docLib/Fandoc.html`:   `/doc/fandoc/pod-doc.html`,
-      `/doc/docLib/Flux.html`:     `/doc/flux/pod-doc.html`,
-      `/doc/docLib/Fwt.html`:      `/doc/fwt/pod-doc.html`,
-      `/doc/docLib/Json.html`:     `/doc/util/pod-doc.html#json`,
-      `/doc/docLib/Sql.html` :     `/doc/sql/pod-doc.html`,
-      `/doc/docLib/Web.html`:      `/doc/web/pod-doc.html`,
-      `/doc/docLib/WebMod.html`:   `/doc/webmod/pod-doc.html`,
-      `/doc/docLib/Wisp.html`:     `/doc/wisp/pod-doc.html`,
-      `/doc/docLib/Xml.html`:      `/doc/xml/pod-doc.html`,
+      `/doc/docLib/Dom.html`:      `/doc/dom/index.html`,
+      `/doc/docLib/Email.html`:    `/doc/email/index.html`,
+      `/doc/docLib/Fandoc.html`:   `/doc/fandoc/index.html`,
+      `/doc/docLib/Flux.html`:     `/doc/flux/index.html`,
+      `/doc/docLib/Fwt.html`:      `/doc/fwt/index.html`,
+      `/doc/docLib/Json.html`:     `/doc/util/index.html#json`,
+      `/doc/docLib/Sql.html` :     `/doc/sql/index.html`,
+      `/doc/docLib/Web.html`:      `/doc/web/index.html`,
+      `/doc/docLib/WebMod.html`:   `/doc/webmod/index.html`,
+      `/doc/docLib/Wisp.html`:     `/doc/wisp/index.html`,
+      `/doc/docLib/Xml.html`:      `/doc/xml/index.html`,
       `/doc/docLang/TypeDatabase.html`: `/doc/docLang/Env.html#index`,
     ]
     uri := map.keys.random
