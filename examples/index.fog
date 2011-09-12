@@ -13,6 +13,7 @@
   [`fwt/hello.fan`,         "Hello world with FWT"],
   [`fwt/demo.fan`,          "Shows off just about everything at once"],
   [`fwt/desktop.fan`,       "Paints desktop monitor configuration"],
+  [`fwt/clipboard.fan`,     "Use of Desktop.clipboard"],
   [`fwt/clock.fan`,         "FWT combined with Actors"],
   [`fwt/richtext.fan`,      "Basic RichText document model"],
   [`fwt/scrollpane.fan`,    "Using ScrollPane"],

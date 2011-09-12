@@ -61,6 +61,13 @@ public class DesktopPeer
     return WidgetPeer.rect(Fwt.get().display.getBounds());
   }
 
+  public static Clipboard clipboard()
+  {
+    if (clipboard == null) clipboard = new Clipboard();
+    return clipboard;
+  }
+  private static Clipboard clipboard;
+
   public static fan.fwt.Widget focus()
   {
     return WidgetPeer.toFanWidget(Fwt.get().display.getFocusControl());

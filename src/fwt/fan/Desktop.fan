@@ -26,6 +26,11 @@ class Desktop
   @NoDoc static native Void appName(Str name)
 
   **
+  ** Reference to the system clipboard for data transfer.
+  **
+  static native Clipboard clipboard()
+
+  **
   ** Get the platform name: "windows", "mac"
   **
   static native Str platform()
