@@ -62,6 +62,11 @@ fan.sys.Date.prototype.toIso = function()
   return this.toStr();
 }
 
+fan.sys.Date.prototype.hash = function()
+{
+  return (this.m_year << 16) ^ (this.m_month << 8) ^ this.m_day;
+}
+
 fan.sys.Date.prototype.toStr = function()
 {
   if (this.m_str == null) this.m_str = this.toLocale("YYYY-MM-DD");
