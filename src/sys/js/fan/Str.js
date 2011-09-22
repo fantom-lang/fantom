@@ -36,10 +36,22 @@ fan.sys.Str.compareIgnoreCase = function(self, that)
   return 1;
 }
 
-fan.sys.Str.hash = function(self) { return self; }
 fan.sys.Str.toStr = function(self) { return self; }
 fan.sys.Str.toLocale = function(self) { return self; }
 fan.sys.Str.$typeof = function(self) { return fan.sys.Str.$type; }
+
+fan.sys.Str.hash = function(self)
+{
+  var hash = 0;
+  if (self.length == 0) return hash;
+  for (var i=0; i<self.length; i++)
+  {
+    var ch = self.charCodeAt(i);
+    hash = ((hash << 5) - hash) + ch;
+    hash = hash & hash;
+  }
+  return hash;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Operators
