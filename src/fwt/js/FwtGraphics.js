@@ -219,6 +219,8 @@ fan.fwt.Graphics.prototype.fillRoundRect = function(x, y, w, h, wArc, hArc)
 // generate path for a rounded rectangle
 fan.fwt.Graphics.prototype.pathRoundRect = function(x, y, w, h, wArc, hArc)
 {
+  x += 0.5;
+  y += 0.5;
   this.cx.beginPath();
   this.cx.moveTo(x + wArc, y);
   this.cx.lineTo(x + w - wArc, y);
