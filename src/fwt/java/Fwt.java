@@ -56,7 +56,7 @@ public class Fwt
     protected Object initialValue()
     {
       Fwt fwt = new Fwt();
-      Actor.locals().add("gfx.env", FwtEnv.make());
+      Actor.locals().set("gfx.env", FwtEnv.make());
       if (mainFwt == null) mainFwt = fwt;
       return fwt;
     }
