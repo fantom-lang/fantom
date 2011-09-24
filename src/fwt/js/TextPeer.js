@@ -131,8 +131,8 @@ fan.fwt.TextPeer.prototype.sync = function(self)
   fan.fwt.WidgetPeer.applyStyle(text,
     fade ? this.$disabledStyle(self) : this.$style(self));
 
-  if (self.m_multiLine)
-  {
+  //if (self.m_multiLine)
+  //{
     // cache size
     var oldw = this.elem.style.width;
     var oldh = this.elem.style.height;
@@ -158,7 +158,7 @@ fan.fwt.TextPeer.prototype.sync = function(self)
       text.style.width  = "100%";
       text.style.height = "100%";
     }
-  }
+  //}
 
   // sync widget size
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
