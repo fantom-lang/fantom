@@ -615,3 +615,14 @@ fan.fwt.WidgetPeer.setBorder = function(elem, border)
   }
 }
 
+fan.fwt.WidgetPeer.applyStyle = function(elem, map)
+{
+  if (map == null) return;
+  for (var k in map.keyMap)
+  {
+    var key = map.keyMap[k];
+    var val = map.valMap[k];
+    elem.style.setProperty(key, val, "");
+  }
+}
+

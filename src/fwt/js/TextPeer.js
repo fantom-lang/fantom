@@ -30,13 +30,9 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
   if (self.m_multiLine)
   {
     var text = document.createElement("textarea");
-    text.style.position = "absolute";
-    text.style.left     = "0px";
-    text.style.top      = "1px";
-    text.style.outline  = "none";
-    text.style.padding  = "2px";
-    text.style.resize   = "none";
-    text.style.font     = fan.fwt.WidgetPeer.fontToCss(this.m_font);
+    text.cols = self.m_prefCols;
+    text.rows = self.m_prefRows;
+    text.style.resize = "none";
     this.control = text;
   }
   else
@@ -44,16 +40,16 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
     var text = document.createElement("input");
     text.type = self.m_password ? "password" : "text";
     text.size = self.m_prefCols;
-    text.style.outline = "none";
-    text.style.padding = "1px 2px 2px 2px";
-    text.style.margin  = "0px";
-    text.style.font    = fan.fwt.WidgetPeer.fontToCss(this.m_font);
     this.control = text;
   }
 
+  // placeholder
+  var ph = this.$placeHolder(self);
+  if (ph != null) this.control.placeholder = ph;
+
   // wire up event handlers to keep text prop synchronized
   var $this = this;
-  text.onkeyup = function(e)
+  this.control.onkeyup = function(e)
   {
     // fire onModify
     $this.fireModify(self);
@@ -73,18 +69,20 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
   text.onpaste = function(event) { setTimeout(function() { $this.fireModify(self); }, 10); }
   text.oncut   = function(event) { setTimeout(function() { $this.fireModify(self); }, 10); }
 
-  // inner div
-  var inner = document.createElement("div");
-  inner.style.borderTop = "1px solid #ccc";
-  inner.appendChild(this.control);
+  // style
+  var s = this.control.style;
+  s.padding = "3px 2px 2px 2px"
+  s.margin  = "0";
+  s.outline = "none";
+  s.borderBottom = "1px solid #d0d0d0";
+  s.borderLeft   = "1px solid #9d9d9d";
+  s.borderRight  = "1px solid #afafaf";
+  s.borderTop    = "1px solid #707070";
+  s.font = fan.fwt.WidgetPeer.fontToCss(this.m_font);
 
-  // container element
+  // assemble
   var div = this.emptyDiv();
-  div.style.borderBottom = "1px solid #d0d0d0";
-  div.style.borderLeft   = "1px solid #9d9d9d";
-  div.style.borderRight  = "1px solid #afafaf";
-  div.style.borderTop    = "1px solid #707070";
-  div.appendChild(inner);
+  div.appendChild(this.control);
   parentElem.appendChild(div);
   return div;
 }
@@ -121,26 +119,54 @@ fan.fwt.TextPeer.prototype.sync = function(self)
   text.readOnly = !self.m_editable;
   text.disabled = !this.m_enabled;
 
+  // sync style
   var fade = !self.m_editable || !this.m_enabled;
   text.style.background = fade ? "#e4e4e4" : "#fff";
-  text.style.border     = fade ? "1px solid #d7d7d7" : "1px solid #f5f5f5";
-  text.style.borderBottom = "none";
+  var shadow = "inset 0px 1px 2px" + (fade ? "#a2a2a2" : "#b7b7b7");
+  text.style.webkitBoxShadow = shadow;
+  text.style.mozBoxShadow = shadow;
+  text.style.boxShadow = shadow;
 
-  // sync input control size
+  // hook for override
+  fan.fwt.WidgetPeer.applyStyle(text,
+    fade ? this.$disabledStyle(self) : this.$style(self));
+
   if (self.m_multiLine)
   {
-    text.style.width  = (this.m_size.m_w - 8) + "px";
-    text.style.height = (this.m_size.m_h - 8) + "px";
-  }
-  else
-  {
-    text.style.width  = (this.m_size.m_w - 8) + "px";
-    text.style.height = (this.m_size.m_h - 7) + "px";
+    // cache size
+    var oldw = this.elem.style.width;
+    var oldh = this.elem.style.height;
+
+    // sync and measure pref
+    this.elem.style.width  = "auto";
+    this.elem.style.height = "auto";
+    var pw = this.elem.offsetWidth;
+    var ph = this.elem.offsetHeight;
+
+    // restore old size
+    this.elem.style.width  = oldw;
+    this.elem.style.height = oldh;
+
+    // check if explicit size
+    var w = this.m_size.m_w;
+    var h = this.m_size.m_h;
+    if ((w > 0 && w != pw) || (h > 0 && h != ph))
+    {
+      text.style = "absolute";
+      text.style.MozBoxSizing = "border-box";
+      text.style.boxSizing = "border-box";
+      text.style.width  = "100%";
+      text.style.height = "100%";
+    }
   }
 
   // sync widget size
-  var w = this.m_size.m_w - 2;
-  var h = this.m_size.m_h - 2;
-  fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
 
+// Backdoor hook to override style [returns [Str:Str]?]
+fan.fwt.TextPeer.prototype.$style = function(self) { return null; }
+fan.fwt.TextPeer.prototype.$disabledStyle = function(self) { return null; }
+
+// Backdoor hook to set placeholder text [returns Str?]
+fan.fwt.TextPeer.prototype.$placeHolder = function(self) { return null; }
