@@ -47,9 +47,9 @@ fan.fwt.TabPeer.prototype.sync = function(self)
   css.border  = "1px solid #404040";
   css.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
   if (selected) css.borderBottom = "1px solid #eee";
+  css.webkitBorderRadius = "5px 5px 0 0";
   css.MozBorderRadius = "5px 5px 0 0";
-  css.webkitBorderTopLeftRadius  = "5px";
-  css.webkitBorderTopRightRadius = "5px";
+  css.borderRadius = "5px 5px 0 0";
 
   if (selected)
   {
