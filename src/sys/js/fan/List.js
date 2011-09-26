@@ -20,7 +20,7 @@ fan.sys.List = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.sys.List.make = function(of, values)
 {
   if (of == null) throw fan.sys.NullErr();
-  if (values === undefined) values = [];
+  if (values === undefined || typeof(values) == "number") values = [];
 
   var self = new fan.sys.List();
   self.m_of = of;
@@ -29,6 +29,11 @@ fan.sys.List.make = function(of, values)
   self.m_readonly = false;
   self.m_immutable = false;
   return self;
+}
+
+fan.sys.List.makeObj = function(capacity)
+{
+  return fan.sys.List.make(fan.sys.Obj.$type);
 }
 
 fan.sys.List.prototype.$ctor = function()
