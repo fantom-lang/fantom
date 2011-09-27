@@ -203,7 +203,7 @@ fan.fwt.Graphics.prototype.fillRect = function(x, y, w, h)
 // This drawRoundRect(Int x, Int y, Int w, Int h, Int wArc, Int hArc)
 fan.fwt.Graphics.prototype.drawRoundRect = function(x, y, w, h, wArc, hArc)
 {
-  this.pathRoundRect(x, y, w, h, wArc, hArc)
+  this.pathRoundRect(x+0.5, y+0.5, w, h, wArc, hArc)
   this.cx.stroke();
   return this;
 }
@@ -219,8 +219,6 @@ fan.fwt.Graphics.prototype.fillRoundRect = function(x, y, w, h, wArc, hArc)
 // generate path for a rounded rectangle
 fan.fwt.Graphics.prototype.pathRoundRect = function(x, y, w, h, wArc, hArc)
 {
-  x += 0.5;
-  y += 0.5;
   this.cx.beginPath();
   this.cx.moveTo(x + wArc, y);
   this.cx.lineTo(x + w - wArc, y);
