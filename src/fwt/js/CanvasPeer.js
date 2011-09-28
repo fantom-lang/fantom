@@ -25,6 +25,8 @@ fan.fwt.CanvasPeer.prototype.toPng = function(self)
   return this.elem.firstChild.toDataURL("image/png");
 }
 
+fan.fwt.CanvasPeer.prototype.clearOnRepaint = function() { return true; }
+
 fan.fwt.CanvasPeer.prototype.sync = function(self)
 {
   // short-circuit if not properly layed out
