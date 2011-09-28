@@ -32,7 +32,8 @@ fan.fwt.Graphics.prototype.paint = function(canvas, bounds, f)
   this.cx.lineCap = "square";
   this.cx.textBaseline = "top";
   this.cx.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
-  this.cx.clearRect(bounds.m_x, bounds.m_y, bounds.m_w, bounds.m_h);
+  if (this.widget.peer.clearOnRepaint())
+    this.cx.clearRect(bounds.m_x, bounds.m_y, bounds.m_w, bounds.m_h);
   this.brush$(fan.gfx.Color.m_black);
   this.pen$(fan.gfx.Pen.m_defVal);
   this.font$(fan.fwt.Desktop.sysFont());
