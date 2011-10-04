@@ -71,7 +71,9 @@ fan.sys.MimeType.parseParams = function(s, checked)
   if (checked === undefined) checked = true;
   try
   {
-    return fan.sys.MimeType.doParseParams(s, 0);
+    // use local var to trap exception
+    var v = fan.sys.MimeType.doParseParams(s, 0);
+    return v;
   }
   catch (err)
   {
@@ -101,8 +103,8 @@ fan.sys.MimeType.doParseParams = function(s, offset)
     if (c == '=' && !inQuotes)
     {
       eq = i++;
-      while (fan.sys.Int.isSpace(s.charAt(i))) ++i;
-      if (s.charAt(i) == '"') { inQuotes = true; ++i; }
+      while (fan.sys.MimeType.isSpace(s, i)) ++i;
+      if (s.charAt(i) == '"') { inQuotes = true; ++i; c = s.charAt(i); }
       else inQuotes = false;
       valStart = i;
     }
@@ -137,6 +139,7 @@ fan.sys.MimeType.doParseParams = function(s, offset)
 
   if (keyStart < s.length)
   {
+    if (eq < 0) throw fan.sys.IndexErr.make(eq);
     if (valEnd < 0) valEnd = s.length-1;
     var key = fan.sys.Str.trim(s.substring(keyStart, eq));
     var val = fan.sys.Str.trim(s.substring(valStart, valEnd+1));
@@ -145,6 +148,12 @@ fan.sys.MimeType.doParseParams = function(s, offset)
   }
 
   return params;
+}
+
+fan.sys.MimeType.isSpace = function(s, i)
+{
+  if (i >= s.length) throw fan.sys.IndexErr.make(i);
+  return fan.sys.Int.isSpace(s.charCodeAt(i));
 }
 
 fan.sys.MimeType.unescape = function(s)
