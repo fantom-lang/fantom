@@ -11,6 +11,7 @@
 - Generate apidocs for @NoDoc type/slots, but hide in compilerDoc
 - Add fwt::Clipboard
 - Add readme.html to distribution
+- WispService.addr to bind to specific IP interface
 
 *Build 1.0.60 (1 Sept 2011)*
 - WebClient.proxy support
