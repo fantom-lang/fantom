@@ -127,7 +127,7 @@ public final class MimeType
       {
         eq = i++;
         while (FanInt.isSpace(s.charAt(i))) ++i;
-        if (s.charAt(i) == '"') { inQuotes = true; ++i; }
+        if (s.charAt(i) == '"') { inQuotes = true; ++i; c=s.charAt(i); }
         else inQuotes = false;
         valStart = i;
       }
