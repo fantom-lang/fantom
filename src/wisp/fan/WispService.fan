@@ -27,6 +27,11 @@ const class WispService : Service
   internal static const Log log := Log.get("web")
 
   **
+  ** Which IpAddr to bind to or null for the default.
+  **
+  const IpAddr? addr := null
+
+  **
   ** Well known TCP port for HTTP traffic.
   **
   const Int port := 80
@@ -77,7 +82,7 @@ const class WispService : Service
     {
       try
       {
-        listener.bind(null, port)
+        listener.bind(addr, port)
         break
       }
       catch (Err e)

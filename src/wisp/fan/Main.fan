@@ -7,11 +7,15 @@
 //
 
 using util
+using inet
 
 internal class Main : AbstractMain
 {
   @Arg { help = "qualified type name for WebMod to run" }
   Str? mod
+
+  @Opt { help = "IP address to bind to" }
+  Str? addr
 
   @Opt { help = "http port" }
   Int port := 8080
@@ -20,6 +24,7 @@ internal class Main : AbstractMain
   {
     runServices([WispService
     {
+      it.addr = this.addr == null ? null : IpAddr(this.addr)
       it.port = this.port
       it.root = Type.find(this.mod).make
     }])
