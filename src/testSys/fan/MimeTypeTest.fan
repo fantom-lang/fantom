@@ -128,6 +128,8 @@ class MimeTypeTest : Test
     verifyParseParams("name=\"a=b;c=d\"", ["name":"a=b;c=d"])
     verifyParseParams("name=\"_\\\"quoted\\\"_\"", ["name":"_\"quoted\"_"])
     verifyParseParams("a=\"quot=\\\"\"; b=c; d=\"bs=\\\\\"; e=\"_\\\\\\\"_\"", ["a":"quot=\"", "b":"c", "d":"bs=\\", "e":"_\\\"_"])
+    verifyParseParams("a=\"\"; b=\"\"; c=\"foo\"", ["a":"", "b":"", "c":"foo"])
+    verifyParseParams("a=\"\"; b=\"foo\"; c=\"\"", ["a":"", "b":"foo", "c":""])
 
     verifyEq(MimeType.parseParams("n=", false), null)
     verifyErr(ParseErr#) { MimeType.parseParams("x", true) }
