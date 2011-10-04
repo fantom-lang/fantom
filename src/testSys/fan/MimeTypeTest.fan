@@ -9,6 +9,7 @@
 **
 ** MimeTypeTest
 **
+@Js
 class MimeTypeTest : Test
 {
 
