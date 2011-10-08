@@ -230,7 +230,7 @@ public final class Range
 // Slice Utils
 //////////////////////////////////////////////////////////////////////////
 
-  final int start(int size)
+  public final int start(int size)
   {
     int x = (int)start;
     if (x < 0) x = size + x;
@@ -238,7 +238,7 @@ public final class Range
     return x;
   }
 
-  final long start(long size)
+  public final long start(long size)
   {
     long x = start;
     if (x < 0) x = size + x;
@@ -246,7 +246,7 @@ public final class Range
     return x;
   }
 
-  final int end(int size)
+  public final int end(int size)
   {
     int x = (int)end;
     if (x < 0) x = size + x;
@@ -255,7 +255,7 @@ public final class Range
     return x;
   }
 
-  final long end(long size)
+  public final long end(long size)
   {
     long x = end;
     if (x < 0) x = size + x;

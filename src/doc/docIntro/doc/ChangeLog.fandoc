@@ -12,6 +12,7 @@
 - Add fwt::Clipboard
 - Add readme.html to distribution
 - WispService.addr to bind to specific IP interface
+- Add util::IntArray
 
 *Build 1.0.60 (1 Sept 2011)*
 - WebClient.proxy support
