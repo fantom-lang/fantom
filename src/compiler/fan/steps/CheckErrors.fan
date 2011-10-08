@@ -1612,7 +1612,7 @@ class CheckErrors : CompilerStep
     if (slot.isPrivate && myType != slot.parent)
       return "Private $msg '$slot.qname' not accessible"
 
-    else if (slot.isProtected && !myType.fits(slot.parent))
+    else if (slot.isProtected && !myType.fits(slot.parent) && myType.pod != slot.parent.pod)
       return "Protected $msg '$slot.qname' not accessible"
 
     else if (isInternal && myType.pod != slot.parent.pod)

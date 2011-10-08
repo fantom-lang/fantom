@@ -167,6 +167,7 @@ class CheckErrorsTest : CompilerTest
 
       internal mixin InternalMixin
       {
+        static Void x() { Public.msPublic; Public.msProtected; Public.msInternal }
       }
       ")
 

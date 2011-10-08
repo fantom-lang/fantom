@@ -35,7 +35,7 @@ A slot can be annotated with one of the following modifiers
 to define its visibility:
 
   - 'public': everyone can access the slot
-  - 'protected': only subclasses can access the slot
+  - 'protected': only subclasses and types within declaring pod can access the slot
   - 'internal': only types within the declaring pod can access the slot
   - 'private': only declaring type can access the slot
 
