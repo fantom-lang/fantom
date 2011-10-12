@@ -535,6 +535,7 @@ class FwtDemo
     {
       numCols = 2
       hgap = 36
+      it.onKeyDown.add |e| { echo("onKeyDown: $e.key") }
       GridPane
       {
         EventDemo { name = "A"; demo = this },

@@ -63,6 +63,15 @@ const class Key
   static const Key esc             := predefine(0x1B, "Esc")
   static const Key tab             := predefine('\t', "Tab")
 
+  static const Key comma           := predefine(',',  "Comma")
+  static const Key period          := predefine('.',  "Period")
+  static const Key slash           := predefine('/',  "Slash")
+  static const Key semicolon       := predefine(';',  "Semicolon")
+  static const Key quote           := predefine('\'', "Quote")
+  static const Key openBracket     := predefine('[',  "OpenBracket")
+  static const Key closeBracket    := predefine(']',  "CloseBracket")
+  static const Key backSlash       := predefine('\\', "BackSlash")
+
   static const Key up              := predefine(0x0100_0000 + 1,  "Up")
   static const Key down            := predefine(0x0100_0000 + 2,  "Down")
   static const Key left            := predefine(0x0100_0000 + 3,  "Left")

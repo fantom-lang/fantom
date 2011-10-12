@@ -445,14 +445,22 @@ fan.fwt.WidgetPeer.keyCodeToKey = function(keyCode)
   // TODO FIXIT: map rest of non-alpha keys
   switch (keyCode)
   {
-    case 8:  return fan.fwt.Key.m_backspace;
-    case 13: return fan.fwt.Key.m_enter;
-    case 32: return fan.fwt.Key.m_space;
-    case 37: return fan.fwt.Key.m_left;
-    case 38: return fan.fwt.Key.m_up;
-    case 39: return fan.fwt.Key.m_right;
-    case 40: return fan.fwt.Key.m_down;
-    case 46: return fan.fwt.Key.m_$delete;
+    case 8:   return fan.fwt.Key.m_backspace;
+    case 13:  return fan.fwt.Key.m_enter;
+    case 32:  return fan.fwt.Key.m_space;
+    case 37:  return fan.fwt.Key.m_left;
+    case 38:  return fan.fwt.Key.m_up;
+    case 39:  return fan.fwt.Key.m_right;
+    case 40:  return fan.fwt.Key.m_down;
+    case 46:  return fan.fwt.Key.m_$delete;
+    case 186: return fan.fwt.Key.m_semicolon;
+    case 188: return fan.fwt.Key.m_comma;
+    case 190: return fan.fwt.Key.m_period;
+    case 191: return fan.fwt.Key.m_slash;
+    case 219: return fan.fwt.Key.m_openBracket;
+    case 220: return fan.fwt.Key.m_backSlash;
+    case 221: return fan.fwt.Key.m_closeBracket;
+    case 222: return fan.fwt.Key.m_quote;
     default: return fan.fwt.Key.fromMask(keyCode);
   }
 }
