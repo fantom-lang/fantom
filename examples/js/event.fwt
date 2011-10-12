@@ -27,6 +27,7 @@ class Demo
           },
         },
       }
+      it.onKeyDown.add |e| { echo("# onKeyDown: $e.key") }
       size = Size(400, 400)
     }.open
   }
