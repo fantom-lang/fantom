@@ -458,6 +458,7 @@ fan.fwt.WidgetPeer.keyCodeToKey = function(keyCode)
     case 188: return fan.fwt.Key.m_comma;
     case 190: return fan.fwt.Key.m_period;
     case 191: return fan.fwt.Key.m_slash;
+    case 192: return fan.fwt.Key.m_backtick;
     case 219: return fan.fwt.Key.m_openBracket;
     case 220: return fan.fwt.Key.m_backSlash;
     case 221: return fan.fwt.Key.m_closeBracket;

@@ -71,6 +71,7 @@ const class Key
   static const Key openBracket     := predefine('[',  "OpenBracket")
   static const Key closeBracket    := predefine(']',  "CloseBracket")
   static const Key backSlash       := predefine('\\', "BackSlash")
+  static const Key backtick        := predefine('`',  "Backtick")
 
   static const Key up              := predefine(0x0100_0000 + 1,  "Up")
   static const Key down            := predefine(0x0100_0000 + 2,  "Down")
