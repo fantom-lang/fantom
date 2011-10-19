@@ -1632,7 +1632,7 @@ class CheckErrors : CompilerStep
   private Void checkDeprecated(Obj target, Loc loc)
   {
     // don't check inside of synthetic getter/setter
-    if (curMethod != null && curMethod.isSynthetic) return
+    if (curMethod != null && curMethod.isSynthetic && curMethod.isFieldAccessor) return
 
     // check both slot and its parent type
     slot := target as CSlot
