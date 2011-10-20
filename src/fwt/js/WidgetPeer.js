@@ -453,7 +453,8 @@ fan.fwt.WidgetPeer.keyCodeToKey = function(keyCode)
     case 39:  return fan.fwt.Key.m_right;
     case 40:  return fan.fwt.Key.m_down;
     case 46:  return fan.fwt.Key.m_$delete;
-    case 91:  return fan.fwt.Key.m_command;
+    case 91:  return fan.fwt.Key.m_command;  // left cmd
+    case 93:  return fan.fwt.Key.m_command;  // right cmd
     case 186: return fan.fwt.Key.m_semicolon;
     case 188: return fan.fwt.Key.m_comma;
     case 190: return fan.fwt.Key.m_period;
