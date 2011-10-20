@@ -266,18 +266,21 @@ public class ClassType
 // Reflection
 //////////////////////////////////////////////////////////////////////////
 
-  protected final synchronized ClassType reflect()
+  protected final ClassType reflect()
   {
-    // short circuit if already reflected
-    if (slotsByName != null) return this;
+    synchronized(lock())
+    {
+      // short circuit if already reflected
+      if (slotsByName != null) return this;
 
-    if (Debug) System.out.println("-- reflect: " + qname + " " + slotsByName);
+      if (Debug) System.out.println("-- reflect: " + qname + " " + slotsByName);
 
-    // do it
-    doReflect();
+      // do it
+      doReflect();
 
-    // return this
-    return this;
+      // return this
+      return this;
+    }
   }
 
   protected void doReflect()
@@ -452,52 +455,55 @@ public class ClassType
   /**
    * Emit to a Java class.
    */
-  public synchronized Class emit()
+  public Class emit()
   {
-    if (cls == null)
+    synchronized (lock())
     {
-      if (Debug) System.out.println("-- emit:   " + qname);
-
-      // make sure we have reflected to setup slots
-      reflect();
-
-      // if sys class, just load it by name
-      String podName = pod.name;
-      if (podName.equals("sys"))
+      if (cls == null)
       {
-        try
-        {
-          this.javaRepr = FanUtil.isJavaRepresentation(this);
-          this.cls = Class.forName(FanUtil.toJavaImplClassName(podName, name));
-        }
-        catch (Exception e)
-        {
-          e.printStackTrace();
-          throw Err.make("Cannot load precompiled class: " + qname, e);
-        }
-      }
+        if (Debug) System.out.println("-- emit:   " + qname);
 
-      // otherwise we need to emit it
-      else
-      {
-        try
-        {
-          Class[] classes = Env.cur().loadTypeClasses(this);
-          this.cls = classes[0];
-          if (classes.length > 1)
-            this.auxCls = classes[1];
-        }
-        catch (Exception e)
-        {
-          e.printStackTrace();
-          throw Err.make("Cannot emit: " + qname, e);
-        }
-      }
+        // make sure we have reflected to setup slots
+        reflect();
 
-      // we are done with our ftype now, gc it
-      this.ftype = null;
+        // if sys class, just load it by name
+        String podName = pod.name;
+        if (podName.equals("sys"))
+        {
+          try
+          {
+            this.javaRepr = FanUtil.isJavaRepresentation(this);
+            this.cls = Class.forName(FanUtil.toJavaImplClassName(podName, name));
+          }
+          catch (Exception e)
+          {
+            e.printStackTrace();
+            throw Err.make("Cannot load precompiled class: " + qname, e);
+          }
+        }
+
+        // otherwise we need to emit it
+        else
+        {
+          try
+          {
+            Class[] classes = Env.cur().loadTypeClasses(this);
+            this.cls = classes[0];
+            if (classes.length > 1)
+              this.auxCls = classes[1];
+          }
+          catch (Exception e)
+          {
+            e.printStackTrace();
+            throw Err.make("Cannot emit: " + qname, e);
+          }
+        }
+
+        // we are done with our ftype now, gc it
+        this.ftype = null;
+      }
+      return cls;
     }
-    return cls;
   }
 
   /**
@@ -526,21 +532,23 @@ public class ClassType
    * Finish ensures we have reflected and emitted, then does
    * the final binding between slots and Java members
    */
-  public synchronized void finish()
+  public void finish()
   {
-    if (finished) return;
-    try
+    synchronized (lock())
     {
-      // ensure reflected and emitted
-      reflect();
-      emit();
-      finished = true;
+      if (finished) return;
+      try
+      {
+        // ensure reflected and emitted
+        reflect();
+        emit();
+        finished = true;
 
-      // map Java members to my slots for reflection; if
-      // mixin then we do this for both the interface and
-      // the static methods only of the implementation class
-      finishSlots(cls, false);
-      if (isMixin()) finishSlots(auxCls, true);
+        // map Java members to my slots for reflection; if
+        // mixin then we do this for both the interface and
+        // the static methods only of the implementation class
+        finishSlots(cls, false);
+        if (isMixin()) finishSlots(auxCls, true);
 
 /*
 System.out.println("---- Finish " + qname() + " cls=" + cls);
@@ -557,15 +565,16 @@ for (int i=0; i<methods().sz(); ++i)
 catch (Exception e) { e.printStackTrace(); }
 */
 
-    }
-    catch (Throwable e)
-    {
-      e.printStackTrace();
-      throw Err.make("Cannot emitFinish: " + qname + "." + finishing, e);
-    }
-    finally
-    {
-      finishing = null;
+      }
+      catch (Throwable e)
+      {
+        e.printStackTrace();
+        throw Err.make("Cannot emitFinish: " + qname + "." + finishing, e);
+      }
+      finally
+      {
+        finishing = null;
+      }
     }
   }
 
@@ -680,6 +689,9 @@ catch (Exception e) { e.printStackTrace(); }
 
   public boolean javaRepr() { return javaRepr; }
 
+  // Use pod.classLoader as our single lock
+  private Object lock() { return pod.classLoader; }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
@@ -712,7 +724,7 @@ catch (Exception e) { e.printStackTrace(); }
 
   // available when emitted
   Class cls;         // main Java class representation
-  Class auxCls;      // implementation Java class if mixin/Err
+  Class auxCls;      // implementation Java class if mixin
 
   // flags to ensure we finish only once
   boolean finished;
