@@ -115,23 +115,27 @@ class ObixClient
 
   **
   ** Read an obix document with the specified href.
+  ** If the result is an '<err>' object, then throw
+  ** an ObixErr with the object.
   **
   ObixObj read(Uri uri)
   {
     c := makeReq(uri, "GET")
     c.writeReq.readRes
-    if (c.resCode != 200) throw IOErr("Bad HTTP response: $c.resCode $c.reqUri")
-    return ObixObj.readXml(c.resIn)
+    return readResObj(c)
   }
 
   **
-  ** Write an obix document to the specified href and
-  ** return the server's result.
+  ** Write an obix document to the specified href and return
+  ** the server's result.  If the result is an '<err>' object,
+  ** then throw an ObixErr with the object.
   **
   ObixObj write(ObixObj obj) { post(obj.href, "PUT", obj) }
 
   **
   ** Invoke the operation identified by the specified href.
+  ** If the result is* an '<err>' object, then throw an ObixErr
+  ** with the object.
   **
   ObixObj invoke(Uri uri, ObixObj in) { post(uri, "POST", in) }
 
@@ -153,8 +157,15 @@ class ObixClient
     c.reqOut.close
     c.readRes
     if (c.resCode == 100) c.readRes
-    if (c.resCode != 200) throw IOErr("Bad HTTP response: $c.resCode")
-    return ObixObj.readXml(c.resIn)
+    return readResObj(c)
+  }
+
+  private static ObixObj readResObj(WebClient c)
+  {
+    if (c.resCode != 200) throw IOErr("Bad HTTP response: $c.resCode $c.reqUri")
+    obj := ObixObj.readXml(c.resIn)
+    if (obj.elemName == "err") throw ObixErr(obj)
+    return obj
   }
 
 //////////////////////////////////////////////////////////////////////////
