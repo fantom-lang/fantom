@@ -88,7 +88,7 @@ public abstract class Slot
 
   public final int flags() { return flags; }
   public final boolean isAbstract()  { return (flags & FConst.Abstract) != 0; }
-  public /* */ boolean isConst()     { return (flags & FConst.Const) != 0; } // we let synethic Methods override
+  public /* */ boolean isConst()     { return (flags & FConst.Const) != 0; } // we let synthetic Methods override
   public final boolean isCtor()      { return (flags & FConst.Ctor) != 0; }
   public final boolean isInternal()  { return (flags & FConst.Internal) != 0; }
   public final boolean isNative()    { return (flags & FConst.Native) != 0; }
