@@ -297,6 +297,7 @@ class Command
 **
 ** Manages a stack of commands for undo/redo.
 **
+@Js
 final class CommandStack
 {
   **
