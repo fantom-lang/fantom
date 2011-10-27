@@ -39,6 +39,7 @@ ppt=application/mspowerpoint
 props=text/plain; charset=utf-8
 properties=text/plain; charset=utf-8
 rss=application/rss+xml
+svg=image/svg+xml; charset=utf-8
 swf=application/x-shockwave-flash
 tar=application/x-tar
 txt=text/plain; charset=utf-8
