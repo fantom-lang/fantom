@@ -164,6 +164,16 @@ fan.sys.Duration.prototype.floor = function(accuracy)
   if (this.m_ticks % accuracy.m_ticks == 0) return this;
   return fan.sys.Duration.make(this.m_ticks - (this.m_ticks % accuracy.m_ticks));
 }
+fan.sys.Duration.prototype.min = function(that)
+{
+  if (this.m_ticks <= that.m_ticks) return this;
+  else return that;
+}
+fan.sys.Duration.prototype.max = function(that)
+{
+  if (this.m_ticks >= that.m_ticks) return this;
+  else return that;
+}
 fan.sys.Duration.prototype.abs = function()
 {
   if (this.m_ticks >= 0) return this;

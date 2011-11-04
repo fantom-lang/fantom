@@ -153,6 +153,16 @@ const final class Duration
   **
   Duration abs()
 
+  **
+  ** Return the minimum duration between this and that.
+  **
+  Duration min(Duration that)
+
+  **
+  ** Return the maximum duration between this and that.
+  **
+  Duration max(Duration that)
+
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////
