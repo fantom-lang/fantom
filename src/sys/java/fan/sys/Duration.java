@@ -194,6 +194,16 @@ public final class Duration
     return make(ticks - (ticks % accuracy.ticks));
   }
 
+  public final Duration min(Duration that)
+  {
+    return this.ticks <= that.ticks ? this : that;
+  }
+
+  public final Duration max(Duration that)
+  {
+    return this.ticks >= that.ticks ? this : that;
+  }
+
   public final Duration abs()
   {
     if (ticks >= 0) return this;

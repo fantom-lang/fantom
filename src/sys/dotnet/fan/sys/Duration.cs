@@ -200,6 +200,16 @@ namespace Fan.Sys
       return make(m_ticks - (m_ticks % accuracy.m_ticks));
     }
 
+    public Duration min(Duration that)
+    {
+      return this.m_ticks <= that.m_ticks ? this : that;
+    }
+
+    public Duration max(Duration that)
+    {
+      return this.m_ticks >= that.m_ticks ? this : that;
+    }
+
     public Duration abs()
     {
       if (m_ticks >= 0) return this;
