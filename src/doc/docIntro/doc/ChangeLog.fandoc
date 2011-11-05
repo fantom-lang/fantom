@@ -14,6 +14,8 @@
 - WispService.addr to bind to specific IP interface
 - Add util::IntArray, util::BoolArray
 - Fix Java runtime class loading deadlock
+- Duration.min, max
+- WispService.maxThreads
 
 *Build 1.0.60 (1 Sept 2011)*
 - WebClient.proxy support
