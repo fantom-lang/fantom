@@ -47,7 +47,22 @@ const class WispService : Service
   **
   const WispSessionStore sessionStore := MemWispSessionStore()
 
-  new make(|This|? f := null) { if (f != null) f(this) }
+  **
+  ** Max number of threads which are used for concurrent
+  ** web request processing.
+  **
+  const Int maxThreads := 500
+
+  **
+  ** Constructor with it-block
+  **
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+    listenerPool   = ActorPool()
+    tcpListenerRef = AtomicRef()
+    processorPool  = ActorPool { it.maxThreads = this.maxThreads }
+  }
 
   override Void onStart()
   {
@@ -113,9 +128,9 @@ const class WispService : Service
     log.info("WispService stopped on port ${port}")
   }
 
-  internal const ActorPool listenerPool    := ActorPool()
-  internal const AtomicRef tcpListenerRef  := AtomicRef()
-  internal const ActorPool processorPool   := ActorPool()
+  internal const ActorPool listenerPool
+  internal const AtomicRef tcpListenerRef
+  internal const ActorPool processorPool
 
   @NoDoc static Void main()
   {
