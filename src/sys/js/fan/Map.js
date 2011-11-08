@@ -31,7 +31,7 @@ fan.sys.Map.make = function(k, v)
   }
 
   var self = new fan.sys.Map();
-  self.keyMap = {};
+  self.keyMap = [];
   self.valMap = [];
   self.m_size = 0;
   self.m_readonly = false;
@@ -77,11 +77,8 @@ fan.sys.Map.prototype.get = function(key, defVal)
 
 fan.sys.Map.prototype.containsKey = function(key)
 {
-  var hash = this.hashKey(key);
-  for (var k in this.keyMap)
-    if (k == hash)
-      return true;
-  return false;
+  var k = this.hashKey(key);
+  return this.keyMap[k] !== undefined;
 }
 
 fan.sys.Map.prototype.keys = function()
@@ -243,8 +240,8 @@ fan.sys.Map.prototype.dup = function()
 fan.sys.Map.prototype.clear = function()
 {
   this.modify();
-  this.keyMap = {};
-  this.valMap = {};
+  this.keyMap = [];
+  this.valMap = [];
   this.m_size = 0;
   return this;
 }
