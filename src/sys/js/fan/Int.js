@@ -80,6 +80,8 @@ fan.sys.Int.equals = function(self, obj)
   return self === obj;
 }
 
+fan.sys.Int.hash = function(self) { return self; }
+
 fan.sys.Int.abs = function(self)      { return self < 0 ? -self : self; }
 fan.sys.Int.min = function(self, val) { return self < val ? self : val; }
 fan.sys.Int.max = function(self, val) { return self > val ? self : val; }
