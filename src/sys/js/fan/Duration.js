@@ -140,6 +140,11 @@ fan.sys.Duration.prototype.compare = function(that)
   return +1;
 }
 
+fan.sys.Duration.prototype.hash = function()
+{
+  return (this.m_ticks ^ (this.m_ticks >> 32));
+}
+
 fan.sys.Duration.prototype.$typeof = function()
 {
   return fan.sys.Duration.$type;
