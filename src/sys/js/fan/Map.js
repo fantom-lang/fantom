@@ -32,7 +32,7 @@ fan.sys.Map.make = function(k, v)
 
   var self = new fan.sys.Map();
   self.keyMap = {};
-  self.valMap = {};
+  self.valMap = [];
   self.m_size = 0;
   self.m_readonly = false;
   self.m_immutable = false;
@@ -220,7 +220,7 @@ fan.sys.Map.prototype.remove = function(key)
   this.modify();
   var k = this.hashKey(key);
   var v = this.valMap[k];
-  if (v === undefined) null;
+  if (v === undefined) return null;
 
   delete this.keyMap[k];
   delete this.valMap[k];
@@ -297,15 +297,10 @@ fan.sys.Map.prototype.equals = function(that)
   {
     if (!this.m_type.equals(that.m_type)) return false;
     if (this.m_size != that.m_size) return false;
-    var selfNum = 0;
     for (var k in this.valMap)
-    {
-      if (!fan.sys.ObjUtil.equals(this.valMap[k], that.valMap[k])) return false;
-      selfNum++;
-    }
-    var thatNum = 0;
-    for (var k in that.valMap) thatNum++;
-    return selfNum == thatNum;
+      if (!fan.sys.ObjUtil.equals(this.valMap[k], that.valMap[k]))
+        return false;
+    return true
   }
   return false;
 }
@@ -560,9 +555,9 @@ fan.sys.Map.prototype.modify = function()
 
 fan.sys.Map.prototype.hashKey = function(key)
 {
-  // TODO: uniquly encode key object to string key
+  // TODO: handle collisions
   if (this.m_caseInsensitive) key = fan.sys.Str.lower(key);
-  return '' + key;
+  return fan.sys.ObjUtil.hash(key);
 }
 
 fan.sys.Map.fromLiteral = function(keys, vals, k, v)

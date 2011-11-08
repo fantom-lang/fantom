@@ -15,7 +15,13 @@ fan.sys.ObjUtil = function() {};
 fan.sys.ObjUtil.hash = function(obj)
 {
   if (obj instanceof fan.sys.Obj) return obj.hash();
-  throw fan.sys.Err.make("ObjUtil.hash: unexpected code path");
+
+  var t = typeof obj;
+  if (t === "number") return fan.sys.Int.hash(obj);
+  if (t === "string") return fan.sys.Str.hash(obj);
+
+  // TODO FIXIT
+  return 0;
 }
 
 fan.sys.ObjUtil.equals = function(a, b, op)
