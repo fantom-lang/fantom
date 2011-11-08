@@ -33,6 +33,7 @@ fan.sys.Map.make = function(k, v)
   var self = new fan.sys.Map();
   self.keyMap = {};
   self.valMap = {};
+  self.m_size = 0;
   self.m_readonly = false;
   self.m_immutable = false;
   self.m_type = mt;
@@ -57,13 +58,11 @@ fan.sys.Map.prototype.$typeof = function()
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Map.prototype.isEmpty = function() { return this.size() == 0; }
+fan.sys.Map.prototype.isEmpty = function() { return this.m_size == 0; }
 
 fan.sys.Map.prototype.size = function()
 {
-  var sz = 0;
-  for (var k in this.valMap) sz++;
-  return sz;
+  return this.m_size;
 }
 
 fan.sys.Map.prototype.get = function(key, defVal)
@@ -108,7 +107,11 @@ fan.sys.Map.prototype.set = function(key, val)
     throw fan.sys.NotImmutableErr.make("key is not immutable: " + fan.sys.ObjUtil.$typeof(key));
 
   var k = this.hashKey(key);
-  if (this.keyMap[k] == null) this.keyMap[k] = key;
+  if (this.keyMap[k] === undefined)
+  {
+    this.keyMap[k] = key;
+    this.m_size++;
+  }
   this.valMap[k] = val;
   return this;
 }
@@ -128,6 +131,7 @@ fan.sys.Map.prototype.add = function(key, val)
 
   this.keyMap[k] = key;
   this.valMap[k] = val;
+  this.m_size++;
   return this;
 }
 
@@ -216,8 +220,11 @@ fan.sys.Map.prototype.remove = function(key)
   this.modify();
   var k = this.hashKey(key);
   var v = this.valMap[k];
+  if (v === undefined) null;
+
   delete this.keyMap[k];
   delete this.valMap[k];
+  this.m_size--;
   return v;
 }
 
@@ -226,6 +233,7 @@ fan.sys.Map.prototype.dup = function()
   var dup = fan.sys.Map.make(this.m_type.k, this.m_type.v);
   for (k in this.keyMap) dup.keyMap[k] = this.keyMap[k];
   for (k in this.valMap) dup.valMap[k] = this.valMap[k];
+  dup.m_size = this.m_size;
   dup.m_caseInsensitive = this.m_caseInsensitive;
   dup.m_ordered = this.m_ordered;
   dup.m_def = this.m_def;
@@ -237,6 +245,7 @@ fan.sys.Map.prototype.clear = function()
   this.modify();
   this.keyMap = {};
   this.valMap = {};
+  this.m_size = 0;
   return this;
 }
 
@@ -249,7 +258,7 @@ fan.sys.Map.prototype.caseInsensitive$ = function(val)
   if (this.m_type.k != fan.sys.Str.$type)
     throw fan.sys.UnsupportedErr.make("Map not keyed by Str: " + this.m_type);
 
-  if (this.size() != 0)
+  if (this.m_size != 0)
     throw fan.sys.UnsupportedErr.make("Map not empty");
 
   if (val && this.ordered())
@@ -264,7 +273,7 @@ fan.sys.Map.prototype.ordered$ = function(val)
 {
   this.modify();
 
-  if (this.size() != 0)
+  if (this.m_size != 0)
     throw fan.sys.UnsupportedErr.make("Map not empty");
 
   if (val && this.caseInsensitive())
@@ -287,6 +296,7 @@ fan.sys.Map.prototype.equals = function(that)
   if (that != null)
   {
     if (!this.m_type.equals(that.m_type)) return false;
+    if (this.m_size != that.m_size) return false;
     var selfNum = 0;
     for (var k in this.valMap)
     {
@@ -390,7 +400,7 @@ fan.sys.Map.prototype.exclude = function(f)
 
 fan.sys.Map.prototype.any = function(f)
 {
-  if (this.size() == 0) return false;
+  if (this.m_size == 0) return false;
   for (var k in this.keyMap)
   {
     var key = this.keyMap[k];
@@ -403,7 +413,7 @@ fan.sys.Map.prototype.any = function(f)
 
 fan.sys.Map.prototype.all = function(f)
 {
-  if (this.size() == 0) return true;
+  if (this.m_size == 0) return true;
   for (var k in this.keyMap)
   {
     var key = this.keyMap[k];
@@ -449,7 +459,7 @@ fan.sys.Map.prototype.join = function(sep, f)
 {
   if (f === undefined) f = null;
 
-  var size = this.size();
+  var size = this.m_size;
   if (size == 0) return '';
   var s = '';
   for (var k in this.keyMap)
@@ -467,7 +477,7 @@ fan.sys.Map.prototype.join = function(sep, f)
 
 fan.sys.Map.prototype.toCode = function()
 {
-  var size = this.size();
+  var size = this.m_size;
   var s = '';
   s += this.m_type.signature();
   s += '[';
@@ -528,6 +538,7 @@ fan.sys.Map.prototype.toImmutable = function()
   var ro = fan.sys.Map.make(this.m_type.k, this.m_type.v);
   for (k in this.keyMap) ro.keyMap[k] = this.keyMap[k];
   for (k in this.valMap) ro.valMap[k] = fan.sys.ObjUtil.toImmutable(this.valMap[k]);
+  ro.m_size = this.m_size;
   ro.m_caseInsensitive = this.m_caseInsensitive;
   ro.m_ordered = this.m_ordered;
   ro.m_readonly = true;
