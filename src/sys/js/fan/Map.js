@@ -70,7 +70,7 @@ fan.sys.Map.prototype.get = function(key, defVal)
   if (defVal === undefined) defVal = this.m_def;
   var k = this.hashKey(key);
   var val = this.valMap[k];
-  if (val == null && defVal != null)
+  if (val === undefined && defVal != null)
     return defVal;
   return val;
 }
@@ -126,7 +126,7 @@ fan.sys.Map.prototype.add = function(key, val)
 
   var k = this.hashKey(key);
   var old = this.valMap[k];
-  if (old != null)
+  if (old !== undefined)
     throw fan.sys.ArgErr.make("Key already mapped: " + key);
 
   this.keyMap[k] = key;
@@ -139,7 +139,7 @@ fan.sys.Map.prototype.getOrAdd = function(key, valFunc)
 {
   var k = this.hashKey(key);
   var val = this.valMap[k];
-  if (val != null) return val;
+  if (val !== undefined) return val;
   val = valFunc.call(key);
   this.add(key, val);
   return val;
