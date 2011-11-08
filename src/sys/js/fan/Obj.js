@@ -59,7 +59,7 @@ fan.sys.Obj.prototype.compare = function(that)
 fan.sys.Obj.$hashCounter = -9007199254740992;
 fan.sys.Obj.prototype.hash = function()
 {
-  if(this.$hash === undefined)
+  if (this.$hash === undefined)
     this.$hash = fan.sys.Obj.$hashCounter++;
   return this.$hash;
 }
