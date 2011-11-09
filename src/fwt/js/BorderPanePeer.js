@@ -54,10 +54,10 @@ fan.fwt.BorderPanePeer.prototype.sync = function(self)
   if (override != null)
   {
     s = this.elem.style;
-    for (var k in override.keyMap)
+    override.$each(function(b)
     {
-      var key = override.keyMap[k];
-      var val = override.valMap[k];
+      var key = b.key;
+      var val = b.val;
 
       // skip for Chrome until working properly
       if (fan.fwt.BorderPane.$isWinChrome)
@@ -72,13 +72,13 @@ fan.fwt.BorderPanePeer.prototype.sync = function(self)
             if (list[i].indexOf("inset") == -1)
               temp += list[i];
           }
-          if (temp.length == 0) continue;
+          if (temp.length == 0) return;
           val = temp;
         }
       }
 
       s.setProperty(key, val, "");
-    }
+    });
   }
 
   // sync size
