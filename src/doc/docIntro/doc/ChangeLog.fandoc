@@ -16,6 +16,9 @@
 - Fix Java runtime class loading deadlock
 - Duration.min, max
 - WispService.maxThreads
+- js: Obj.hash default implementation
+- js: rewrite Map implementation; use Obj.hash; support key collisions
+- js: Map.caseInsensitive support
 
 *Build 1.0.60 (1 Sept 2011)*
 - WebClient.proxy support
