@@ -200,26 +200,8 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
   var override = this.$style(self);
   if (override != null)
   {
-    if (img != null)
-    {
-      s = img.style;
-      for (var k in override.keyMap)
-      {
-        var key = override.keyMap[k];
-        var val = override.valMap[k];
-        s.setProperty(key, val, "");
-      }
-    }
-    if (text != null)
-    {
-      s = text.style;
-      for (var k in override.keyMap)
-      {
-        var key = override.keyMap[k];
-        var val = override.valMap[k];
-        s.setProperty(key, val, "");
-      }
-    }
+    if (img  != null) fan.fwt.WidgetPeer.applyStyle(img, override);
+    if (text != null) fan.fwt.WidgetPeer.applyStyle(text, override);
   }
 }
 
