@@ -1212,4 +1212,60 @@ class MapTest : Test
     verifyErr(NotImmutableErr#) { [4:[8ns:this]].toImmutable }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Collisions
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCollisions()
+  {
+    a := CollisionTest("a")
+    b := CollisionTest("b")
+    c := CollisionTest("c")
+    d := CollisionTest("d")
+    e := CollisionTest("e")
+
+    m := CollisionTest:Str[a:"a", b:"b", c:"c", d:"d", e:"e"]
+    verifyEq(m.size, 5)
+    verifyEq(m, [a:"a", b:"b", c:"c", d:"d", e:"e"])
+    verifyEq(m[a], "a")
+    verifyEq(m[b], "b")
+    verifyEq(m[c], "c")
+    verifyEq(m[d], "d")
+    verifyEq(m[e], "e")
+
+    m.remove(c)
+    verifyEq(m.size, 4)
+    verifyEq(m, [a:"a", b:"b", d:"d", e:"e"])
+    verifyEq(m[a], "a")
+    verifyEq(m[b], "b")
+    verifyEq(m[d], "d")
+    verifyEq(m[e], "e")
+
+    m.remove(a)
+    verifyEq(m.size, 3)
+    verifyEq(m, [b:"b", d:"d", e:"e"])
+    verifyEq(m[b], "b")
+    verifyEq(m[d], "d")
+    verifyEq(m[e], "e")
+
+    m.remove(e)
+    verifyEq(m.size, 2)
+    verifyEq(m, [b:"b", d:"d"])
+    verifyEq(m[b], "b")
+    verifyEq(m[d], "d")
+  }
 }
+
+@Js
+const class CollisionTest
+{
+  new make(Str val) { this.val = val }
+  override Int hash() { 12 }
+  override Bool equals(Obj? that)
+  {
+    (that is CollisionTest) ? that->val == val : false
+  }
+  override Str toStr() { val }
+  const Str val
+}
+
