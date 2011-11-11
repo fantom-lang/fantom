@@ -98,6 +98,7 @@ class TestRunner
       JsProps.writeProps(out, p, `locale/es-MX.props`, 1sec)
 
       // timezones
+      JsTimeZone(TimeZone("Phoenix")).write(out)
       JsTimeZone(TimeZone("London")).write(out)
       JsTimeZone(TimeZone("Amsterdam")).write(out)
       JsTimeZone(TimeZone("Kiev")).write(out)
@@ -108,6 +109,8 @@ class TestRunner
       JsTimeZone(TimeZone("St_Johns")).write(out)
       JsTimeZone(TimeZone("Godthab")).write(out)
       JsTimeZone(TimeZone("Taipei")).write(out)
+      JsTimeZone(TimeZone("Kolkata")).write(out)
+      JsTimeZone(TimeZone("Ho_Chi_Minh")).write(out)
 
       // unit db
       JsUnitDatabase().write(out)
