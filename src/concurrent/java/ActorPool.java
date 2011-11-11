@@ -138,5 +138,6 @@ public class ActorPool
   private Scheduler scheduler;
   volatile boolean killed;
   public long maxThreads = 100;
+  public long maxMsgsBeforeYield = 100;
 
 }

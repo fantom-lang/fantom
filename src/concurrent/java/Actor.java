@@ -185,7 +185,8 @@ public class Actor
     Locale.setCur(context.locale);
 
     // process up to 100 messages before yielding the thread
-    for (int count = 0; count < 100; count++)
+    int maxMessages = (int)pool.maxMsgsBeforeYield;
+    for (int count = 0; count < maxMessages; count++)
     {
       // get next message, or if none pending we are done
       Future future = null;
