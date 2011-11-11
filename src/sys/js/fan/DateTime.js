@@ -84,6 +84,8 @@ fan.sys.DateTime.nowTicks = function()
 
 fan.sys.DateTime.boot = function()
 {
+  if (fan.sys.DateTime.m_boot === undefined)
+    fan.sys.DateTime.m_boot = fan.sys.DateTime.now();
   return fan.sys.DateTime.m_boot;
 }
 
