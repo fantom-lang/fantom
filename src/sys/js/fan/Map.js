@@ -32,6 +32,7 @@ fan.sys.Map.make = function(k, v)
 
   var self = new fan.sys.Map();
   self.m_vals = [];
+  self.m_keys = null;  // only used for ordered
   self.m_size = 0;
   self.m_readonly = false;
   self.m_immutable = false;
@@ -196,8 +197,8 @@ fan.sys.Map.prototype.remove = function(key)
 fan.sys.Map.prototype.dup = function()
 {
   var dup = fan.sys.Map.make(this.m_type.k, this.m_type.v);
-  dup.m_caseInsensitive = this.m_caseInsensitive;
-  dup.m_ordered = this.m_ordered;
+  if (this.m_ordered) dup.ordered$(true);
+  if (this.m_caseInsensitive) dup.caseInsensitive$(true);
   dup.m_def = this.m_def;
   this.$each(function(b) { dup.set(b.key, b.val); });
   return dup;
@@ -206,6 +207,7 @@ fan.sys.Map.prototype.dup = function()
 fan.sys.Map.prototype.clear = function()
 {
   this.modify();
+  if (this.m_ordered) this.m_keys = [];
   this.m_vals = [];
   this.m_size = 0;
   return this;
@@ -241,10 +243,8 @@ fan.sys.Map.prototype.ordered$ = function(val)
   if (val && this.caseInsensitive())
     throw fan.sys.UnsupportedErr.make("Map cannot be caseInsensitive and ordered");
 
-  // TODO FIXIT: not implemented
-  fan.sys.ObjUtil.echo("Map.ordered not implemented");
-
   this.m_ordered = val;
+  this.m_keys = [];
 }
 
 fan.sys.Map.prototype.def = function() { return this.m_def; }
@@ -394,8 +394,8 @@ fan.sys.Map.prototype.map = function(f)
   var r = f.returns();
   if (r == fan.sys.Void.$type) r = fan.sys.Obj.$type.toNullable();
   var acc = fan.sys.Map.make(this.m_type.k, r);
-  acc.m_ordered = this.m_ordered;
-  acc.m_caseInsensitive = this.m_caseInsensitive;
+  if (this.m_ordered) acc.ordered$(true);
+  if (this.m_caseInsensitive) acc.caseInsensitive$(true);
   this.$each(function(b) { acc.add(b.key, f.call(b.val, b.key)); });
   return acc;
 }
@@ -470,8 +470,8 @@ fan.sys.Map.prototype.toImmutable = function()
 {
   if (this.m_immutable) return this;
   var ro = fan.sys.Map.make(this.m_type.k, this.m_type.v);
-  ro.m_caseInsensitive = this.m_caseInsensitive;
-  ro.m_ordered = this.m_ordered;
+  if (this.m_ordered) ro.ordered$(true);
+  if (this.m_caseInsensitive) ro.caseInsensitive$(true);
   this.$each(function(b)
   {
     ro.set(b.key, fan.sys.ObjUtil.toImmutable(b.val));
@@ -532,6 +532,11 @@ fan.sys.Map.prototype.$set = function(key, val, add)
   var b = this.m_vals[h];
   if (b === undefined)
   {
+    if (this.m_ordered)
+    {
+      n.ki = this.m_keys.length;
+      this.m_keys.push(key);
+    }
     this.m_vals[h] = n;
     this.m_size++;
     return
@@ -546,6 +551,11 @@ fan.sys.Map.prototype.$set = function(key, val, add)
     }
     if (b.next === undefined)
     {
+      if (this.m_ordered)
+      {
+        n.ki = this.m_keys.length;
+        this.m_keys.push(key);
+      }
       b.next = n;
       this.m_size++;
       return;
@@ -561,6 +571,7 @@ fan.sys.Map.prototype.$remove = function(key)
   if (b === undefined) return null;
   if (b.next === undefined)
   {
+    if (this.m_ordered) this.m_keys.splice(b.ki, 1);
     this.m_vals[h] = undefined;
     this.m_size--;
     var v = b.val;
@@ -575,6 +586,7 @@ fan.sys.Map.prototype.$remove = function(key)
       if (prev !== undefined && b.next !== undefined) prev.next = b.next;
       else if (prev === undefined) this.m_vals[h] = b.next;
       else if (b.next === undefined) prev.next = undefined;
+      if (this.m_ordered) this.m_keys.splice(b.ki, 1);
       this.m_size--;
       var v = b.val
       delete b;
@@ -588,13 +600,25 @@ fan.sys.Map.prototype.$remove = function(key)
 
 fan.sys.Map.prototype.$each = function(func)
 {
-  for (var h in this.m_vals)
+  if (this.m_ordered)
   {
-    var b = this.m_vals[h];
-    while (b !== undefined)
+    for (var i=0; i<this.m_keys.length; i++)
     {
-      if (func(b) === false) return;
-      b = b.next;
+      var k = this.m_keys[i];
+      var v = this.$get(k);
+      if (func({ key:k, ki:i, val:v }) === false) return;
+    }
+  }
+  else
+  {
+    for (var h in this.m_vals)
+    {
+      var b = this.m_vals[h];
+      while (b !== undefined)
+      {
+        if (func(b) === false) return;
+        b = b.next;
+      }
     }
   }
 }

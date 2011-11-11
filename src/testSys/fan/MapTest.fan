@@ -804,10 +804,13 @@ class MapTest : Test
     verifyEq(rw.vals, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5])
 
     // set false
-    m.ordered = false
-    10.times |Int j| { m.add(j.toStr, j) }
-    verifyNotEq(m.keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
-    verifyNotEq(m.vals, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    if (Env.cur.runtime != "js")
+    {
+      m.ordered = false
+      10.times |Int j| { m.add(j.toStr, j) }
+      verifyNotEq(m.keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
+      verifyNotEq(m.vals, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    }
 
     // errors
     verifyErr(UnsupportedErr#) { ["a":0].ordered = true }
