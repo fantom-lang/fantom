@@ -346,10 +346,7 @@ fan.sys.DateTime.fromStr = function(s, checked, iso)
     if (iso)
     {
       if (i < s.length) throw new Error();
-      if (offset == 0)
-        tz = fan.sys.TimeZone.utc();
-      else
-        tz = fan.sys.TimeZone.fromStr("GMT" + (offset < 0 ? "+" : "-") + Math.abs(offset)/3600);
+      tz = fan.sys.TimeZone.fromGmtOffset(offset);
     }
     else
     {
@@ -357,10 +354,8 @@ fan.sys.DateTime.fromStr = function(s, checked, iso)
       tz = fan.sys.TimeZone.fromStr(s.substring(i), true);
     }
 
-    //return fan.sys.DateTime.make(year, fan.sys.Month.m_vals.get(month), day, hour, min, sec, ns, offset, tz);
-
     // use local var to capture any exceptions
-    var instance = fan.sys.DateTime.make(year, fan.sys.Month.m_vals.get(month), day, hour, min, sec, ns, tz);
+    var instance = fan.sys.DateTime.doMake(year, fan.sys.Month.m_vals.get(month), day, hour, min, sec, ns, offset, tz);
     return instance;
   }
   catch (err)
