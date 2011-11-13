@@ -78,12 +78,12 @@ The main method either takes no arguments or 'Str[]'.  You can access
 any arguments passed on the command line via  the [Env.args]`sys::Env.args`
 method.  All of these are valid main methods:
 
-  Void make()
-  Void make(Str[] args)
-  Void make(Str[] args, Bool defaultsOk := true)
-  Int make()
-  Int make(Str[] args)
-  Int make(Str[] args, Bool defA := true, Int? defB := null)
+  Void main()
+  Void main(Str[] args)
+  Void main(Str[] args, Bool defaultsOk := true)
+  Int main()
+  Int main(Str[] args)
+  Int main(Str[] args, Bool defA := true, Int? defB := null)
 
 All of the main method signatures above can be static or instance based.
 If the main method is static then it is simply invoked using reflection.
