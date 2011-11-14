@@ -586,10 +586,19 @@ namespace Fan.Sys
 
       int hr = parseInt(1);
       int min = 0;
-      if (pos < str.Length && str[pos] == ':')
+
+      if (pos < str.Length)
       {
-        pos++;
-        min = parseInt(1);
+        ch = str[pos];
+        if (ch == ':')
+        {
+          pos++;
+          min = parseInt(1);
+        }
+        else if ('0' <= ch && ch <= '9')
+        {
+          min = parseInt(1);
+        }
       }
       tzOffset = hr*3600 + min*60;
       if (neg) tzOffset = -tzOffset;

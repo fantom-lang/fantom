@@ -609,10 +609,18 @@ fan.sys.DateTimeStr.prototype.parseTzOffset = function()
 
   var hr = this.parseInt(1);
   var min = 0;
-  if (this.pos < this.str.length && this.str.charAt(this.pos) == ':')
+  if (this.pos < this.str.length)
   {
-    this.pos++;
-    min = this.parseInt(1);
+    ch = this.str.charCodeAt(this.pos);
+    if (ch == 58)
+    {
+      this.pos++;
+      min = this.parseInt(1);
+    }
+    else if (48 <= ch && ch <= 57)
+    {
+      min = this.parseInt(1);
+    }
   }
   this.tzOffset = hr*3600 + min*60;
   if (neg) this.tzOffset = -this.tzOffset;
