@@ -70,7 +70,7 @@ public abstract class FTypeEmit
    */
   public Box emit()
   {
-    init(jname(type.self), base(), mixins(), jflags(type.flags));
+    init(jname(type.self), base(), mixins(), jflags(type.flags) | SUPER);
     this.selfName = className;
     preview();
     emitType();
