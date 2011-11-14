@@ -93,38 +93,48 @@ class ConstChecks : CompilerStep
 
   private Void processCtor(MethodDef ctor)
   {
-    // only process constructors with an it-block as last arg
-    if (!ctor.isItBlockCtor) return
-
     // set current state
     this.curCtor = ctor
 
     // add func?.enterCtor(this)
-    loc := ctor.loc
-    enter := CallExpr.makeWithMethod(loc, LocalVarExpr(loc, itBlockVar), ns.funcEnterCtor, [ThisExpr(loc)])
-    enter.isSafe = true
-    enter.noLeave
-    ctor.code.stmts.insert(0, enter.toStmt)
+    if (ctor.isItBlockCtor)
+    {
+      loc := ctor.loc
+      enter := CallExpr.makeWithMethod(loc, LocalVarExpr(loc, itBlockVar), ns.funcEnterCtor, [ThisExpr(loc)])
+      enter.isSafe = true
+      enter.noLeave
+      ctor.code.stmts.insert(0, enter.toStmt)
+    }
 
     // walk all the statements and insert exitCtor before each return
-    ctor.code.walk(this, VisitDepth.stmt)
+    if (ctor.isItBlockCtor || fieldCheck != null)
+      ctor.code.walk(this, VisitDepth.stmt)
   }
 
   override Stmt[]? visitStmt(Stmt stmt)
   {
     if (stmt.id !== StmtId.returnStmt) return null
     loc := stmt.loc
+    result := Stmt[,]
 
     // insert call to func?.exitCtor()
-    exit1 := CallExpr.makeWithMethod(loc, LocalVarExpr(loc, itBlockVar), ns.funcExitCtor)
-    exit1.isSafe = true
-    exit1.noLeave
-    if (fieldCheck == null) return [exit1.toStmt, stmt]
+    if (curCtor.isItBlockCtor)
+    {
+      exit1 := CallExpr.makeWithMethod(loc, LocalVarExpr(loc, itBlockVar), ns.funcExitCtor)
+      exit1.isSafe = true
+      exit1.noLeave
+      result.add(exit1.toStmt)
+    }
 
     // if needed insert call to this.fieldCheck()
-    exit2 := CallExpr.makeWithMethod(loc, ThisExpr(loc), fieldCheck)
-    exit2.noLeave
-    return [exit1.toStmt, exit2.toStmt, stmt]
+    if (fieldCheck != null)
+    {
+      exit2 := CallExpr.makeWithMethod(loc, ThisExpr(loc), fieldCheck)
+      exit2.noLeave
+      result.add(exit2.toStmt)
+    }
+
+    return result.add(stmt)
   }
 
   private MethodVar itBlockVar() { curCtor.vars[curCtor.params.size-1] }
