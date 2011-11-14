@@ -8,6 +8,7 @@
 package fan.sql;
 
 import java.util.HashMap;
+import fan.sys.FanStr;
 import fan.sys.List;
 
 public class Cols
@@ -26,10 +27,10 @@ public class Cols
       for (int i=0; i<list.sz(); ++i)
       {
         Col col = (Col)list.get(i);
-        map.put(col.name, col);
+        map.put(FanStr.lower(col.name), col);
       }
     }
-    return (Col)map.get(name);
+    return (Col)map.get(FanStr.lower(name));
   }
 
   public final List list;
