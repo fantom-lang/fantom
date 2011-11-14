@@ -61,6 +61,7 @@ fan.fwt.TablePeer.injectCss = function()
     " text-align: left;" +
     " white-space: nowrap;" +
     " border-right: 1px solid #d9d9d9;" +
+    " cursor: default;" +
     "}" +
     "table.__fwt_table td:last-child {" +
     " width: 100%;" +
@@ -139,6 +140,12 @@ fan.fwt.TablePeer.prototype.create = function(parentElem, self)
   style.background = "#fff";
 
   var $this = this;
+  div.addEventListener("mousedown", function(event) {
+    if (event.target !== div) return;
+    $this.m_selected = $this.selection.select([]);
+    $this.selection.notify(null);
+  });
+
   table.addEventListener("mousedown", function(event) {
     $this.$onMouseDown(self, event);
   }, false);
@@ -216,42 +223,31 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   if (this.m_headerVisible)
   {
     var tr = document.createElement("tr");
-    for (var c=-1; c<cols; c++)
+    for (var c=0; c<cols; c++)
     {
       // we have to embed a div inside our th to make
       // the borders overlap correctly
       var fix = document.createElement("div");
-      if (c < 0)
+      var s = view.header(c);
+      if (s.length == 0) fix.innerHTML = "&nbsp;"
+      else fix.appendChild(document.createTextNode(s));
+      var halign = view.halign(c);
+      switch (halign)
       {
-        fix.innerHTML = "&nbsp;";
-        var arrow  = this.makeArrowDown();
+        case fan.gfx.Halign.m_left:   fix.style.textAlign = "left"; break;
+        case fan.gfx.Halign.m_center: fix.style.textAlign = "center"; break;
+        case fan.gfx.Halign.m_right:  fix.style.textAlign = "right"; break;
+      }
+      if (c === sortCol)
+      {
+        var down = self.sortMode() == fan.fwt.SortMode.m_down;
+        var arrow  = this.makeArrowDown(down);
         arrow.style.top  = "9px";
-        arrow.style.left = "14px";
+        arrow.style.right = "9px";
+        fix.style.paddingRight = "12px";
         fix.appendChild(arrow);
-        fix.onmousedown = function() { $this.support.popup(); }
       }
-      else
-      {
-        var s = view.header(c);
-        if (s.length == 0) fix.innerHTML = "&nbsp;"
-        else fix.appendChild(document.createTextNode(s));
-        var halign = view.halign(c);
-        switch (halign)
-        {
-          case fan.gfx.Halign.m_left:   fix.style.textAlign = "left"; break;
-          case fan.gfx.Halign.m_center: fix.style.textAlign = "center"; break;
-          case fan.gfx.Halign.m_right:  fix.style.textAlign = "right"; break;
-        }
-        if (c === sortCol)
-        {
-          var down = self.sortMode() == fan.fwt.SortMode.m_down;
-          var arrow  = this.makeArrowDown(down);
-          arrow.style.top  = "9px";
-          arrow.style.right = "9px";
-          fix.style.paddingRight = "12px";
-          fix.appendChild(arrow);
-        }
-      }
+
       var th = document.createElement("th");
       th.appendChild(fix);
       tr.appendChild(th);
@@ -262,79 +258,67 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   for (var r=0; r<rows; r++)
   {
     var tr = document.createElement("tr");
-    for (var c=-1; c<cols; c++)
+    for (var c=0; c<cols; c++)
     {
       var td = document.createElement("td");
-      if (c < 0)
+      var node = td;
+
+      // cell hyperlink
+      var uri = null;
+      if (model.$uri) uri = model.$uri(view.m_cols.get(c), view.m_rows.get(r));
+      if (uri != null)
       {
-        // selection checkbox
-        var cb = document.createElement("input");
-        cb.tabIndex = -1;
-        cb.type = "checkbox";
-        var $this = this;
-        cb.onclick = function(event) { $this.selection.toggle(event ? event : window.event) };
-        td.appendChild(cb);
+        var a = document.createElement("a");
+        a.href = uri.encode();
+        node.appendChild(a);
+        node = a;
       }
+
+      // cell image
+      var imgElem = null;
+      var img = view.image(c,r);
+      if (img != null)
+      {
+        imgElem = document.createElement("img");
+        imgElem.src = fan.fwt.WidgetPeer.uriToImageSrc(img.m_uri);
+
+        // image align
+        var halignImg = fan.gfx.Halign.m_left;
+        if (model.$halignImage) halignImg = model.$halignImage(view.m_cols.get(c));
+        if (halignImg === fan.gfx.Halign.m_right) imgElem.className = "right";
+      }
+
+      // cell text
+      var text = view.text(c,r);
+      if (imgElem == null) node.appendChild(document.createTextNode(text));
       else
       {
-        var node = td;
-
-        // cell hyperlink
-        var uri = null;
-        if (model.$uri) uri = model.$uri(view.m_cols.get(c), view.m_rows.get(r));
-        if (uri != null)
+        node.appendChild(imgElem);
+        if (text.length > 0)
         {
-          var a = document.createElement("a");
-          a.href = uri.encode();
-          node.appendChild(a);
-          node = a;
-        }
+          var span = document.createElement("span");
 
-        // cell image
-        var imgElem = null;
-        var img = view.image(c,r);
-        if (img != null)
-        {
-          imgElem = document.createElement("img");
-          imgElem.src = fan.fwt.WidgetPeer.uriToImageSrc(img.m_uri);
+          // workaround for Firefox float "bug"
+          if (isFirefox && imgElem.className == "right")
+            span.style.marginRight = "22px";
 
-          // image align
-          var halignImg = fan.gfx.Halign.m_left;
-          if (model.$halignImage) halignImg = model.$halignImage(view.m_cols.get(c));
-          if (halignImg === fan.gfx.Halign.m_right) imgElem.className = "right";
-        }
-
-        // cell text
-        var text = view.text(c,r);
-        if (imgElem == null) node.appendChild(document.createTextNode(text));
-        else
-        {
-          node.appendChild(imgElem);
-          if (text.length > 0)
-          {
-            var span = document.createElement("span");
-
-            // workaround for Firefox float "bug"
-            if (isFirefox && imgElem.className == "right")
-              span.style.marginRight = "22px";
-
-            span.appendChild(document.createTextNode(text));
-            node.appendChild(span);
-          }
-        }
-
-        // style overrides
-        var fg = view.fg(c,r); if (fg != null) td.style.color = fg.toCss();
-        var bg = view.bg(c,r); if (bg != null) td.style.background = bg.toCss();
-        var font = view.font(c,r); if (font != null) td.style.font = fan.fwt.WidgetPeer.fontToCss(font);
-        var halign = view.halign(c);
-        switch (halign)
-        {
-          case fan.gfx.Halign.m_left:   td.style.textAlign = "left"; break;
-          case fan.gfx.Halign.m_center: td.style.textAlign = "center"; break;
-          case fan.gfx.Halign.m_right:  td.style.textAlign = "right"; break;
+          span.appendChild(document.createTextNode(text));
+          node.appendChild(span);
         }
       }
+
+      // style overrides
+      var fg = view.fg(c,r); if (fg != null) td.style.color = fg.toCss();
+      var bg = view.bg(c,r); if (bg != null) td.style.background = bg.toCss();
+      var font = view.font(c,r); if (font != null) td.style.font = fan.fwt.WidgetPeer.fontToCss(font);
+      var halign = view.halign(c);
+      switch (halign)
+      {
+        case fan.gfx.Halign.m_left:   td.style.textAlign = "left"; break;
+        case fan.gfx.Halign.m_center: td.style.textAlign = "center"; break;
+        case fan.gfx.Halign.m_right:  td.style.textAlign = "right"; break;
+      }
+
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
@@ -363,22 +347,25 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
   if (target.tagName == "DIV") target = target.parentNode;
   if (target.tagName == "TH")
   {
-    var col = target.cellIndex - 1;
-    if (col < 0) return;
-
+    var col = target.cellIndex
     var old = self.sortCol();
     var mode = old === col ? self.sortMode().toggle() : fan.fwt.SortMode.m_up;
     self.sort(col, mode);
+    return;
   }
 
   // cell events
-  if (target.tagName == "IMG") target = target.parentNode;
+  if (target.tagName == "IMG")  target = target.parentNode;
+  if (target.tagName == "SPAN") target = target.parentNode;
   if (target.tagName == "TD")
   {
     // find cell address
-    var col = target.cellIndex - 1;
+    var col = target.cellIndex;
     var row = target.parentNode.rowIndex - 1;
-    if (col < 0 || row < 0) return;
+    if (row < 0) return;
+
+    // select row
+    this.selection.addSelection(event, row);
 
     // check for valid callback
     var model = self.m_model;
@@ -393,7 +380,7 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
     var div   = this.elem;
     var table = div.firstChild;
     var tr  = table.rows[row+1];
-    var td  = tr.cells[col+1];
+    var td  = tr.cells[col];
     var rx  = posOnDis.m_x - td.offsetLeft + div.scrollLeft;
     var ry  = posOnDis.m_y - tr.offsetTop  + div.scrollTop;
     var rel = fan.gfx.Point.make(rx, ry);
@@ -513,15 +500,10 @@ fan.fwt.TableSelection.prototype.$ctor = function(table)
   this.last = null;
 }
 
-fan.fwt.TableSelection.prototype.toggle = function(event)
+fan.fwt.TableSelection.prototype.addSelection = function(event, row)
 {
-  var target = event.target ? event.target : event.srcElement;
-  var multi  = this.table.m_multi && (event.ctrlKey || event.metaKey || event.shiftKey);
-  var on  = target.checked;
-  var tr  = target.parentNode.parentNode;
-  var row = tr.rowIndex;
-  if (this.table.peer.m_headerVisible) row--; // account for th row
-  var list = null;
+  var multi = this.table.m_multi && (event.ctrlKey || event.metaKey || event.shiftKey);
+  var list = null
 
   if (multi)
   {
@@ -550,11 +532,14 @@ fan.fwt.TableSelection.prototype.toggle = function(event)
       if (!found) list.push(row);
       this.last = row;
     }
+
+    // clear selection
+    window.getSelection().removeAllRanges();
   }
   else
   {
-    var hadMulti = this.table.m_multi && this.table.peer.m_selected.size() > 1;
-    list = (on || hadMulti) ? [row] : [];
+    if (this.table.peer.m_selected.first == row) return;
+    list = [row];
     this.last = row;
   }
 
