@@ -200,6 +200,13 @@ class SqlServiceTest : Test
     verifyEq(f->d,        date)
     verifyEq(f->t,        time)
 
+    // mixed case
+    verifyEq(f.get(f.col("name")), "Alice")
+    verifyEq(f.get(f.col("Name")), "Alice")
+    verifyEq(f.get(f.col("NAME")), "Alice")
+    verifyEq(f->Name,  "Alice")
+    verifyEq(f->NAME,  "Alice")
+
     verifyEq(f[f.col("pet")], "Pooh")
   }
 
