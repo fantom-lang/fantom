@@ -854,6 +854,8 @@ class ResolveExpr : CompilerStep
       curType.closure.enclosingVars.dup :
       Str:MethodVar[:]
 
+    if (curMethod == null) return acc
+
     curMethod.vars.each |MethodVar var|
     {
       if (isBlockInScope(var.scope))
