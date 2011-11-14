@@ -112,7 +112,7 @@ class Tokenizer : CompilerSupport
     if (cur.isSpace) { consume; whitespace = true; return null }
 
     // alpha means keyword or identifier
-    if (cur.isAlpha || cur == '_') return word
+    if (isIdentifierStart(cur)) return word
 
     // number or .number (note that + and - are handled as unary operator)
     if (cur.isDigit) return number
@@ -163,6 +163,8 @@ class Tokenizer : CompilerSupport
     // otherwise this is a normal identifier
     return TokenVal(Token.identifier, word)
   }
+
+  private static Bool isIdentifierStart(Int c) { c.isAlpha || c == '_' }
 
 //////////////////////////////////////////////////////////////////////////
 // Number
@@ -518,9 +520,9 @@ class Tokenizer : CompilerSupport
       while (true)
       {
         if (cur != '.') break
+        if (!isIdentifierStart(peek)) throw err("Expected identifier after dot")
         tokens.add(next) // dot
         tok = next
-        if (tok.kind !== Token.identifier) throw err("Expected identifier")
         tokens.add(tok)
       }
     }

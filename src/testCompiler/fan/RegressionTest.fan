@@ -599,4 +599,35 @@ class RegressionTest : CompilerTest
     verifyEq(obj->testI, [22, 20, 141])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1639 Confusing error report when variable error in a string.
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1639()
+  {
+    verifyErrors(
+     Str<|class Foo { Str foo(Obj v) {
+          line := "foo $v."
+          return line } }|>,
+       [
+         2, 16, "Expected identifier after dot",
+       ])
+
+    verifyErrors(
+     Str<|class Foo { Str foo(Obj v) {
+          line := "foo $v. "
+          return line } }|>,
+       [
+         2, 16, "Expected identifier after dot",
+       ])
+
+    verifyErrors(
+     Str<|class Foo { Str foo(Obj v) {
+          line := "foo $v.123"
+          return line } }|>,
+       [
+         2, 16, "Expected identifier after dot",
+       ])
+  }
+
 }
