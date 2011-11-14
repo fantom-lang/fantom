@@ -24,7 +24,7 @@ class ContentPane : Pane
   **
   ** The content child widget.
   **
-  Widget? content { set { remove(&content); Widget.super.add(it); &content = it } }
+  Widget? content { set { remove(&content); doAdd(it); &content = it } }
 
   **
   ** If this the first widget added, then assume it the content.
@@ -35,6 +35,12 @@ class ContentPane : Pane
     super.add(child)
     return this
   }
+
+  **
+  ** Internal hook to call Widget.add version directly and skip
+  ** hook to implicitly mount any added child as content.
+  **
+  internal Void doAdd(Widget? child) { super.add(child) }
 
 //////////////////////////////////////////////////////////////////////////
 // Layout

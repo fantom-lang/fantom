@@ -1378,6 +1378,9 @@ class CheckErrors : CompilerStep
 
     if (expr.explicitType != null)
     {
+      if (expr.explicitType.isClass)
+        err("Cannot use named super on class type '$expr.explicitType'", expr.loc)
+
       if (!curType.fits(expr.explicitType))
         err("Named super '$expr.explicitType' not a super class of '$curType.name'", expr.loc)
     }

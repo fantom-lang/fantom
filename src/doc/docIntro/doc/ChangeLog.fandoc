@@ -20,6 +20,7 @@
 - js: rewrite Map implementation; use Obj.hash; support key collisions
 - js: Map.caseInsensitive support
 - ActorPool.maxMsgsBeforeYield NoDoc hook
+- Remove support for named supers on class types
 
 *Build 1.0.60 (1 Sept 2011)*
 - WebClient.proxy support
