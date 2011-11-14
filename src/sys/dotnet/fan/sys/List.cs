@@ -116,16 +116,22 @@ namespace Fan.Sys
       if (newSize > m_size)
       {
         if (!m_of.isNullable()) throw ArgErr.make("Cannot grow non-nullable list of " + m_of).val;
-        object[] temp = new object[newSize];
-        Array.Copy(m_values, 0, temp, 0, m_size);
-        m_values = temp;
+        if (newSize > m_values.Length)
+        {
+          object[] temp = new object[newSize];
+           Array.Copy(m_values, 0, temp, 0, m_size);
+          m_values = temp;
+        }
+        else
+        {
+          for (int i=m_size; i<newSize; ++i) m_values[i] = null;
+        }
         m_size = newSize;
       }
       else
       {
-        object[] temp = new object[newSize];
-        Array.Copy(m_values, 0, temp, 0, newSize);
-        m_values = temp;
+        // null out removed items for GC
+        for (int i=newSize; i<m_size; ++i) m_values[i] = null;
         m_size = newSize;
       }
     }

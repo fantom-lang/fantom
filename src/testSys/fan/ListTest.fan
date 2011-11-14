@@ -447,7 +447,7 @@ class ListTest : Test
 
     x.size = 2
     verifyEq(x.size, 2)
-    verifyEq(x.capacity, 2)
+    verifyEq(x.capacity, 4)
     verifyEq(x, Str?["a", "b"])
 
     x.size = 5
@@ -462,7 +462,7 @@ class ListTest : Test
 
     x.size = 0
     verifyEq(x.size, 0)
-    verifyEq(x.capacity, 0)
+    verifyEq(x.capacity, 10)
     verifyEq(x, Str?[,])
 
     x.add("x")
@@ -470,10 +470,17 @@ class ListTest : Test
     verifyEq(x.capacity, 10)
     verifyEq(x, Str?["x"])
 
-    x.size = 1
-    verifyEq(x.size, 1)
-    verifyEq(x.capacity, 1)
-    verifyEq(x, Str?["x"])
+    x.size = 2
+    verifyEq(x.size, 2)
+    verifyEq(x.capacity, 10)
+    verifyEq(x, Str?["x", null])
+
+    x[1] = "foo"
+    x.size = 0
+    x.size = 3
+    verifyEq(x.size, 3)
+    verifyEq(x.capacity, 10)
+    verifyEq(x, Str?[null, null, null])
 
     y := ["a", "b", "c"]
     y.size = 2

@@ -125,16 +125,22 @@ public final class List
     if (newSize > size)
     {
       if (!of.isNullable()) throw ArgErr.make("Cannot grow non-nullable list of " + of);
-      Object[] temp = newArray(newSize);
-      System.arraycopy(values, 0, temp, 0, size);
-      values = temp;
+      if (newSize > values.length)
+      {
+        Object[] temp = newArray(newSize);
+        System.arraycopy(values, 0, temp, 0, size);
+        values = temp;
+      }
+      else
+      {
+        for (int i=size; i<newSize; ++i) values[i] = null;
+      }
       size = newSize;
     }
     else
     {
-      Object[] temp = newArray(newSize);
-      System.arraycopy(values, 0, temp, 0, newSize);
-      values = temp;
+      // null out removed items for GC
+      for (int i=newSize; i<size; ++i) values[i] = null;
       size = newSize;
     }
   }
