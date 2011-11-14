@@ -1059,8 +1059,9 @@ class InheritTest : CompilerTest
           {
             case 'C': return \"C.f\"
             case 'S': return super.f(a)
-            case 'B': return B.super.f(a)
-            case 'A': return A.super.f(a)
+            // removed named super on classes #1670
+            // case 'B': return B.super.f(a)
+            // case 'A': return A.super.f(a)
             case 'X': return X.super.f(a)
             case 'Y': return Y.super.f(a)
           }
@@ -1073,8 +1074,9 @@ class InheritTest : CompilerTest
           {
             case 'C': return \"C.f\"
             case 'S': return super.f(a)
-            case 'B': return B.super.f(a)
-            case 'A': return A.super.f(a)
+            // removed named super on classes #1670
+            // case 'B': return B.super.f(a)
+            // case 'A': return A.super.f(a)
             case 'X': return X.super.f(a)
             case 'Y': return Y.super.f(a)
           }
@@ -1103,14 +1105,13 @@ class InheritTest : CompilerTest
      verifyEq(t.name, "C")
      obj := t.make;
 
-     ["f", "g", "h"].each |Str m|
+     ["f", "g", "h"].each |Str mn|
      {
-       verifyEq(t.method(m).callOn(obj, ['C']), "C.f")
-       verifyEq(t.method(m).callOn(obj, ['S']), "B.f")
-       verifyEq(t.method(m).callOn(obj, ['B']), "B.f")
-       verifyEq(t.method(m).callOn(obj, ['A']), "A.f")
-       verifyEq(t.method(m).callOn(obj, ['X']), "X.f")
-       verifyEq(t.method(m).callOn(obj, ['Y']), "Y.f")
+       m := t.method(mn)
+       verifyEq(m.callOn(obj, ['C']), "C.f")
+       verifyEq(m.callOn(obj, ['S']), "B.f")
+       verifyEq(m.callOn(obj, ['X']), "X.f")
+       verifyEq(m.callOn(obj, ['Y']), "Y.f")
      }
 
      verifyEq(t.method("s").callOn(obj, ['Z']), "Z.s")
@@ -1145,11 +1146,15 @@ class InheritTest : CompilerTest
       class B : A, Y
       {
         Str m00() { return Foo.super.f }
+        Str m03() { return A.super.a }
       }",
       [
         9, 22, "Must use named 'super' inside mixin",
        10, 22, "Cannot use 'Obj.super' inside mixin (yeah I know - take it up with Sun)",
+       10, 22, "Cannot use named super on class type 'sys::Obj'",
+       25, 22, "Cannot use named super on class type '$podName::Foo'",
        25, 22, "Named super '$podName::Foo' not a super class of 'B'",
+       26, 22, "Cannot use named super on class type '$podName::A'",
      ])
   }
 

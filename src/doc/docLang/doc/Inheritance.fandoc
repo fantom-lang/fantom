@@ -152,16 +152,17 @@ keyword.  There are two ways to use 'super':
   super.someMethod()
 
   // named super
-  BaseType.super.someMethod()
+  Base.super.someMethod()
 
 The following rules define the use of 'super':
 
-  1. An unnamed super is always on the super class, never a super mixin
+  1. An unnamed super always resolves to super class, never a super mixin
   2. Obviously you can't use a named super on something which isn't one
      of your super types
-  3. Named supers allow you to jump up multiple levels of inheritance
-  4. Mixins cannot use unnamed super because that would be a non-virtual
-     call on Obj (which is itself really just a problem with Java's lame
-     rules on 'invokespecial')
-  5. Mixins can use named supers on their super mixins
+  3. Named supers can only be used on a mixin type, you cannot use a named
+     super with a class type; this means in a subclass you only have access
+     to your direct subclass's implementation (this is a problem with
+     restrictions on Java's 'invokespecial' opcode)
+  4. Mixins can use named supers on their super mixins, but never use an
+     unnamed super
 
