@@ -1663,7 +1663,7 @@ class CheckErrorsTest : CompilerTest
   Void testDefiniteAssignStmts()
   {
     verifyErrors(
-      "abstract class Foo
+    """abstract class Foo
        {
          new m01() // ok
          {
@@ -1715,6 +1715,12 @@ class CheckErrorsTest : CompilerTest
            try { x = s } catch (IOErr e) { throw e }
          }
 
+         new m14(Int v) // ok
+         {
+           if (v == 0) x = ""
+           else throw Err()
+         }
+
          static Bool foo(Str y := s) { false }
          const static Str s := \"x\"
          Str x
@@ -1723,7 +1729,7 @@ class CheckErrorsTest : CompilerTest
        class Bar
        {
          virtual Str ok04 := \"ok\"
-       }",
+       }""",
        [
          8, 3, "Non-nullable field 'x' must be assigned in constructor 'm02'",
          13, 3, "Non-nullable field 'x' must be assigned in constructor 'm03'",
@@ -1733,6 +1739,20 @@ class CheckErrorsTest : CompilerTest
          38, 3, "Non-nullable field 'x' must be assigned in constructor 'm11'",
          43, 3, "Non-nullable field 'x' must be assigned in constructor 'm12'",
        ])
+  }
+
+  Void testDefiniteAssignInClosures()
+  {
+    compile(
+     """class Foo
+        {
+          new make(Bool c) { f := |->| { x = "ok" }; if (c) f(); echo("x=\$x") }
+          Str x
+        }""")
+
+     t := pod.types.first
+     verifyEq(t.make([true])->x, "ok")
+     verifyErr(FieldNotSetErr#) { t.make([false]) }
   }
 
 //////////////////////////////////////////////////////////////////////////

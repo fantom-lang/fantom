@@ -152,7 +152,11 @@ class LocalDefStmt : Stmt
 
   override Bool isExit() { return false }
 
-  override Bool isDefiniteAssign(|Expr lhs->Bool| f) { false }
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f)
+  {
+    if (init != null) return init.isDefiniteAssign(f)
+    return false
+  }
 
   override Void walkChildren(Visitor v, VisitDepth depth)
   {
@@ -305,7 +309,7 @@ class ThrowStmt : Stmt
 
   override Bool isExit() { true }
 
-  override Bool isDefiniteAssign(|Expr lhs->Bool| f) { false }
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f) { true }
 
   override Void walkChildren(Visitor v, VisitDepth depth)
   {

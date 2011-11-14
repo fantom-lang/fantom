@@ -1314,6 +1314,8 @@ class TypeCheckExpr : Expr
 
   override Bool isAlwaysNullable() { id === ExprId.asExpr }
 
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f) { target.isDefiniteAssign(f) }
+
   override Str serialize()
   {
     if (id == ExprId.coerce)
@@ -1484,6 +1486,13 @@ class ClosureExpr : Expr
       out.nl
       code.print(out)
     }
+  }
+
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f)
+  {
+    // at this point, we have moved code into doCall method
+    if (doCall == null) return false
+    return doCall.code.isDefiniteAssign(f)
   }
 
   Expr toWith(Expr target)

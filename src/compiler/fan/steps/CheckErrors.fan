@@ -514,10 +514,27 @@ class CheckErrors : CompilerStep
     {
       definite := m != null && m.code.isDefiniteAssign |Expr lhs->Bool|
       {
+        // can't be assignment if if lhs is not a field
         if (lhs.id !== ExprId.field) return false
+
+        // check that field assignment to the correct slot
         fe := (FieldExpr)lhs
-        if (!isStaticInit && fe.target?.id !== ExprId.thisExpr) return false
-        return fe.field.qname == f.qname
+        if (fe.field.qname != f.qname) return false
+
+        // if no target assume static init
+        ft := fe.target
+        if (isStaticInit || ft == null) return true
+
+        // check if we are assigning the field inside an
+        // closure, in which case move check to runtime
+        if (ft.id === ExprId.field && ((FieldExpr)ft).field.name == "\$this")
+        {
+          f.requiresNullCheck = true;
+          return true
+        }
+
+        // otherwise must be assignment to this instance
+        return ft.id === ExprId.thisExpr
       }
       if (definite) return
 
