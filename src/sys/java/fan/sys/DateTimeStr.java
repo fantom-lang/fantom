@@ -588,10 +588,18 @@ class DateTimeStr
 
     int hr = parseInt(1);
     int min = 0;
-    if (pos < str.length() && str.charAt(pos) == ':')
+    if (pos < str.length())
     {
-      pos++;
-      min = parseInt(1);
+      ch = str.charAt(pos);
+      if (ch == ':')
+      {
+        pos++;
+        min = parseInt(1);
+      }
+      else if ('0' <= ch && ch <= '9')
+      {
+        min = parseInt(1);
+      }
     }
     tzOffset = hr*3600 + min*60;
     if (neg) tzOffset = -tzOffset;

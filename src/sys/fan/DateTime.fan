@@ -288,9 +288,12 @@ const final class DateTime
   ** based on checked flag.  See `toLocale` for pattern syntax.
   **
   ** The timezone is inferred from the zone pattern, or else the
-  ** given 'tz' parameter is used for the timezone.  If only a zone
-  ** offset is available and it doesn't match the expected for the
-  ** 'tz' parameter, then use a "GMT+/-" timezone.
+  ** given 'tz' parameter is used for the timezone.  The 'z' pattern
+  ** will match "hh:mm", "hhmm", or "hh".  If only a zone offset is
+  ** available and it doesn't match the expected 'tz' parameter,
+  ** then use a "GMT+/-" timezone.  Note that if offset is a fractional
+  ** hour such as GMT-3:30, then result will have ticks, but its
+  ** tz will be floored hour based GMT timezone such as GMT-3.
   **
   static DateTime? fromLocale(Str str, Str pattern, TimeZone tz := TimeZone.cur, Bool checked := true)
 

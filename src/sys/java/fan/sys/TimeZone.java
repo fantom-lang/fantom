@@ -126,10 +126,18 @@ public final class TimeZone
   /** Get generic GMT offset where offset is in seconds */
   static TimeZone fromGmtOffset(int offset)
   {
-    if (offset == 0)
-      return TimeZone.utc();
-    else
-      return TimeZone.fromStr("GMT" + (offset < 0 ? "+" : "-") + Math.abs(offset)/3600);
+    if (offset == 0) return TimeZone.utc();
+    StringBuffer s = new StringBuffer();
+    if (offset < 0) { offset = -offset; s.append("GMT+"); } else { s.append("GMT-"); }
+    int hour = offset / 3600;
+    /* we don't have standard GMT timezones to support fractional
+       hours like nutjobs that use timezones such as 3:30, so just
+       round to nearest GMT hour
+    int min  = (offset % 3600)/60;
+    if (min != 0) throw new RuntimeException("Cannot convert fractional hour to GMT timezone: " + hour + ":" + min);
+    */
+    s.append(hour);
+    return TimeZone.fromStr(s.toString());
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -1106,6 +1106,12 @@ class DateTimeTest : Test
     verifyFromLocale("2010-03-04 13:00 -05:00", "YYYY-MM-DD kk:mm z", ny,
                      DateTime(2010, Month.mar, 4, 13, 0, 0, 0, ny))
 
+    verifyFromLocale("2010-03-04 13:00 -0500", "YYYY-MM-DD kk:mm z", ny,
+                     DateTime(2010, Month.mar, 4, 13, 0, 0, 0, ny))
+
+    verifyFromLocale("2010-03-04 13:00 -05", "YYYY-MM-DD kk:mm z", ny,
+                     DateTime(2010, Month.mar, 4, 13, 0, 0, 0, ny))
+
     // does not match passed tz
 
     verifyFromLocale("2010-03-04 13:00 Z", "YYYY-MM-DD kk:mm z", la,
@@ -1125,6 +1131,25 @@ class DateTimeTest : Test
 
     verifyFromLocale("2010-06-04 13:00 -08:00", "YYYY-MM-DD kk:mm z", la, // dst is -7
                      DateTime(2010, Month.jun, 4, 13, 0, 0, 0, TimeZone("GMT+8")))
+
+    // various ISO 8601 timezone offsets
+
+    verifyFromLocale("-03:00 10JUN201123:19", "z DMMMYYYYhh:mm", ny,
+                     DateTime(2011, Month.jun, 10, 23, 19, 0, 0, TimeZone("GMT+3")))
+
+    verifyFromLocale("-0300 10JUN201123:19", "z DMMMYYYYhh:mm", ny,
+                     DateTime(2011, Month.jun, 10, 23, 19, 0, 0, TimeZone("GMT+3")))
+
+    verifyFromLocale("-03 10JUN201123:19", "z DMMMYYYYhh:mm", ny,
+                     DateTime(2011, Month.jun, 10, 23, 19, 0, 0, TimeZone("GMT+3")))
+
+    // fractional offsets round to hour - not all that swell, but
+    // otherwise we'd need to create non-standard GMT timezones?
+    // so we are left with correct offset, but it doesn't match timezone
+
+    ts := DateTime.fromLocale("-0330 10JUN201123:19", "z DMMMYYYYhh:mm")
+    verifyEq(ts.tz, TimeZone("GMT+3"))
+    verifyEq(ts.ticks, DateTime(2011, Month.jun, 10, 23, 19, 0, 0, TimeZone("GMT+3")).plus(30min).ticks)
 
     // cur timezone
     verifyEq(DateTime.fromLocale("10-08-23 4:55", "YY-MM-DD k:mm"), DateTime(2010, Month.aug, 23, 4, 55, 0))
