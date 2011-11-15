@@ -184,12 +184,22 @@ namespace Fan.Sys
       return make(m_ticks - x.m_ticks);
     }
 
-    public Duration mult(double x)
+    public Duration mult(long x)
+    {
+      return make(m_ticks * x);
+    }
+
+    public Duration multFloat(double x)
     {
       return make((long)(m_ticks * x));
     }
 
-    public Duration div(double x)
+    public Duration div(long x)
+    {
+      return make(m_ticks / x);
+    }
+
+    public Duration divFloat(double x)
     {
       return make((long)(m_ticks / x));
     }

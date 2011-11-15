@@ -140,8 +140,10 @@ class DurationTest : Test
     verifyEq(-x, -2hr)
     verifyEq(x + 1min, 121min)
     verifyEq(x - 1day, -22hr)
+    verifyEq(x * 8, 16hr)
     verifyEq(x * 3f, 6hr)
     verifyEq(x * 0.25f, 30min)
+    verifyEq(x / 4, 30min)
     verifyEq(x / 12f, 10min)
     verifyEq(x / 0.5f, 4hr)
   }

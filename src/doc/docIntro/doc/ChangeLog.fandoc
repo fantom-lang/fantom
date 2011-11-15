@@ -24,6 +24,7 @@
 - Add ACC_SUPER to JVM emitted classes
 - js: convert fwt::Table to desktop style selection UX
 - Fix sql Col lookup to be case insensitive
+- Duration mult/multFloat, div/divFloat
 
 *Build 1.0.60 (1 Sept 2011)*
 - WebClient.proxy support

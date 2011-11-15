@@ -130,12 +130,22 @@ const final class Duration
   **
   ** Multiply this with b.  Shortcut is a*b.
   **
-  @Operator Duration mult(Float b)
+  @Operator Duration mult(Int b)
+
+  **
+  ** Multiply this with b.  Shortcut is a*b.
+  **
+  @Operator Duration multFloat(Float b)
 
   **
   ** Divide this by b.  Shortcut is a/b.
   **
-  @Operator Duration div(Float b)
+  @Operator Duration div(Int b)
+
+  **
+  ** Divide this by b.  Shortcut is a/b.
+  **
+  @Operator Duration divFloat(Float b)
 
   **
   ** Add this with b.  Shortcut is a+b.
