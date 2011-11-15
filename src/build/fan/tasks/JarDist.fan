@@ -58,7 +58,14 @@ class JarDist : JdkTask
     m := Slot.findMethod(mainMethod, false)
     if (m == null) throw fatal("mainMethod not found: $mainMethod")
     if (!m.isStatic) throw fatal("mainMethod not static: $mainMethod")
-    if (!m.params.isEmpty) throw fatal("mainMethod must have no params: $mainMethod")
+    if (!isMainParamsOk(m)) throw fatal("mainMethod params must be () or (Str[]): $mainMethod")
+  }
+
+  private static Bool isMainParamsOk(Method m)
+  {
+    if (m.params.isEmpty) return true
+    if (m.params.size == 1 && m.params[0].type == Str[]#) return true
+    return false
   }
 
   private Void initTempDir()
@@ -226,7 +233,7 @@ class JarDist : JdkTask
                Sys.bootEnv.setArgs(args);
          $podInits
                Method m = Slot.findMethod("$mainMethod");
-               m.call();
+               m.call(Env.cur().args());
              }
              catch (Err e) { e.trace(); }
              catch (Throwable e) { e.printStackTrace(); }
