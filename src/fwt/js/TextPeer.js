@@ -106,6 +106,16 @@ fan.fwt.TextPeer.prototype.fireModify = function(self)
   }
 }
 
+fan.fwt.TextPeer.prototype.focus = function(self)
+{
+  if (this.control != null) this.control.focus();
+}
+
+fan.fwt.TextPeer.prototype.hasFocus = function(self)
+{
+  return this.control != null && this.control === document.activeElement;
+}
+
 fan.fwt.TextPeer.prototype.sync = function(self)
 {
   var text = this.control;
