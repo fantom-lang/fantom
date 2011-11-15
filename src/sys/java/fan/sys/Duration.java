@@ -178,12 +178,22 @@ public final class Duration
     return make(ticks - x.ticks);
   }
 
-  public final Duration mult(double x)
+  public final Duration mult(long x)
+  {
+    return make(ticks * x);
+  }
+
+  public final Duration multFloat(double x)
   {
     return make((long)(ticks * x));
   }
 
-  public final Duration div(double x)
+  public final Duration div(long x)
+  {
+    return make(ticks / x);
+  }
+
+  public final Duration divFloat(double x)
   {
     return make((long)(ticks / x));
   }

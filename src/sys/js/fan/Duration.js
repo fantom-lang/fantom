@@ -163,7 +163,9 @@ fan.sys.Duration.prototype.negate = function() { return fan.sys.Duration.make(-t
 fan.sys.Duration.prototype.plus = function(x)  { return fan.sys.Duration.make(this.m_ticks + x.m_ticks); }
 fan.sys.Duration.prototype.minus = function(x) { return fan.sys.Duration.make(this.m_ticks - x.m_ticks); }
 fan.sys.Duration.prototype.mult = function(x)  { return fan.sys.Duration.make(this.m_ticks * x); }
+fan.sys.Duration.prototype.multFloat = function(x)  { return fan.sys.Duration.make(this.m_ticks * x); }
 fan.sys.Duration.prototype.div = function(x)   { return fan.sys.Duration.make(this.m_ticks / x); }
+fan.sys.Duration.prototype.divFloat = function(x)   { return fan.sys.Duration.make(this.m_ticks / x); }
 fan.sys.Duration.prototype.floor = function(accuracy)
 {
   if (this.m_ticks % accuracy.m_ticks == 0) return this;
