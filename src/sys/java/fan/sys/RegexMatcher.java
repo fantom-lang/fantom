@@ -45,6 +45,16 @@ public final class RegexMatcher
     return matcher.find();
   }
 
+  public final String replaceFirst(String replacement)
+  {
+    return matcher.replaceFirst(replacement);
+  }
+
+  public final String replaceAll(String replacement)
+  {
+    return matcher.replaceAll(replacement);
+  }
+
   public final long groupCount()
   {
     return matcher.groupCount();

@@ -23,7 +23,7 @@ final class RegexMatcher
   private new make()
 
 //////////////////////////////////////////////////////////////////////////
-// Matching Operations
+// Matching
 //////////////////////////////////////////////////////////////////////////
 
   **
@@ -41,6 +41,22 @@ final class RegexMatcher
   ** if a match cannot be made.
   **
   Bool find()
+
+//////////////////////////////////////////////////////////////////////////
+// Replace
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Replace the first sequence which matches the pattern with
+  ** the given replacment string.
+  **
+  Str replaceFirst(Str replacement)
+
+  **
+  ** Replace every sequence which matches the pattern with the
+  ** given replacment string.
+  **
+  Str replaceAll(Str replacement)
 
 //////////////////////////////////////////////////////////////////////////
 // Group
@@ -74,9 +90,5 @@ final class RegexMatcher
   ** index is invalid.
   **
   Int end(Int group := 0)
-
-
-  // TODO: lots more functionality needed
-  // TODO: examples in fandoc
 
 }
