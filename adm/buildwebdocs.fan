@@ -35,8 +35,13 @@ class Main : AbstractMain
     // must generate topindex or at least one pod
     if (!topindex && !all && pods.isEmpty) { usage; return 1 }
 
-    // create default DocEnv instance
-    env := DocEnv()
+    // load example index
+    exampleSrcDir := Env.cur.homeDir + `examples/`
+    exampleUris   := Str:Uri[:]
+    exampleIndex  := loadExampleIndex(exampleSrcDir, exampleUris)
+
+    // create customized env instance
+    env := FantomDocEnv(exampleUris)
 
     // figure out which pods to render
     DocPod[] docPods := all ? env.pods : pods.map |n->DocPod| { env.pod(n) }
@@ -44,13 +49,78 @@ class Main : AbstractMain
     // render pods
     docWriter := FantomDocWriter
     {
-      it.env    = env
-      it.pods   = docPods
-      it.index  = all || topindex
-      it.outDir = this.outDir
-      it.version = env.pod("sys").version
+      it.env           = env
+      it.pods          = docPods
+      it.index         = all || topindex
+      it.outDir        = this.outDir
+      it.version       = env.pod("sys").version
+      it.exampleSrcDir = exampleSrcDir
+      it.exampleIndex  = exampleIndex
     }
     return docWriter.write.isEmpty ? 0 : 1
+  }
+
+  static Str:Obj loadExampleIndex(File srcDir, Str:Uri uris)
+  {
+    uris["index"] = `../examples/index.html`
+    map   := Str:Obj[][:] { ordered=true }
+    last  := ""
+    index := (Obj[])(srcDir + `index.fog`).readObj
+    index.each |item|
+    {
+      if (item is Str) last = item
+      else
+      {
+        uri := ((List)item).first as Uri
+        key := uri.path[0] + "-" + uri.basename
+        uris[key] = `../examples/${key}.html`
+
+        list := map[last] ?: Obj[,]
+        list.add(item)
+        map[last] = list
+      }
+    }
+    return map.ro
+  }
+
+}
+
+**************************************************************************
+** FantomDocLinker
+**************************************************************************
+
+internal class FantomDocEnv : DocEnv
+{
+  new make(Str:Uri exampleUris)
+  {
+    this.exampleUris = exampleUris
+    this.linker = FantomDocLinker#
+  }
+
+  Str:Uri exampleUris
+}
+
+**************************************************************************
+** FantomDocLinker
+**************************************************************************
+
+** Add support for examples
+internal class FantomDocLinker : DocLinker
+{
+  new make(|This| f) : super(f) {}
+
+  override DocLink? resolve()
+  {
+    if (podPart == "examples") return resolveExamples
+    return super.resolve
+  }
+
+  private DocLink? resolveExamples()
+  {
+    exampleUris := ((FantomDocEnv)env).exampleUris
+    uri := exampleUris[namePart]
+    if (uri == null) throw err("Unknown example file: $namePart")
+    return DocLink(uri, namePart)
   }
 }
 
@@ -61,25 +131,7 @@ class Main : AbstractMain
 class FantomDocWriter : FileDocWriter
 {
   ** Constructor.
-  new make(|This| f) : super(f)
-  {
-    this.exampleSrcDir = Env.cur.homeDir + `examples/`
-
-    map   := Str:Obj[][:] { ordered=true }
-    last  := ""
-    index := (Obj[])(exampleSrcDir + `index.fog`).readObj
-    index.each |item|
-    {
-      if (item is Str) last = item
-      else
-      {
-        list := map[last] ?: Obj[,]
-        list.add(item)
-        map[last] = list
-      }
-    }
-    this.exampleIndex = map.ro
-  }
+  new make(|This| f) : super(f) {}
 
   ** Build version
   Version version
