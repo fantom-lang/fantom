@@ -1244,6 +1244,14 @@ class CheckErrors : CompilerStep
     if (call.isSafe && call.target != null && !call.target.ctype.isNullable)
       err("Cannot use null-safe call on non-nullable type '$call.target.ctype'", call.target.loc)
 
+    // if this call is not null safe, then verify that it's target isn't
+    // a null safe call such as foo?.bar.baz
+    if (!call.isSafe && call.target is CallExpr && ((CallExpr)call.target).isSafe)
+    {
+      err("Non-null safe call chained after null safe call", call.loc)
+      return
+    }
+
     // if calling a method on a value-type, ensure target is
     // coerced to non-null; we don't do this for comparisons
     // and safe calls since they are handled specially
