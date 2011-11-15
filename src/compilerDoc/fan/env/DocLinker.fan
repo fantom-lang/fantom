@@ -171,9 +171,9 @@ class DocLinker
   ** Resolve `link` and if not resolved throw DocErr
   virtual DocLink? resolve()
   {
-// TODO: avoid/ignore bootstrap and examples
-if (podPart == "examples")
-  return DocLink(link.toUri, link, true)
+    // unless explicitly handled, just map example URIs to fantom.org
+    if (podPart == "examples")
+     return DocLink(`http://fantom.org/doc/examples/${namePart}.html`, link)
 
     // if we weren't able to resolve our current pod, time to bail
     if (pod == null) throw err("unknown pod: $podPart")
