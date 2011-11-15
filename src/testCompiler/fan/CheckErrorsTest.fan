@@ -1282,7 +1282,6 @@ class CheckErrorsTest : CompilerTest
 
   Void testSafeNav()
   {
-    // CheckErrors level errors
     verifyErrors(
      "class Foo
       {
@@ -1322,6 +1321,33 @@ class CheckErrorsTest : CompilerTest
         11, 13, "Cannot use null-safe access on non-nullable type '$podName::Foo'",
         13, 13, "Cannot use '?:' operator on non-nullable type '$podName::Foo'",
         14, 24, "Cannot use '?:' operator on non-nullable type 'sys::Int'",
+       ])
+  }
+
+  Void testSafeNavChaining()
+  {
+    verifyErrors(
+     "class Foo
+      {
+        Void func(Str? x)
+        {
+          x?.size.toHex
+          x?.size->toHex
+          x?->size.toStr
+          x?->size->toStr
+          x?.size?.toHex   // ok
+          x?.size?.toHex.hash
+          x?.size?.toHex?.hash.toStr.size
+        }
+      }",
+
+       [
+          5, 13, "Non-null safe call chained after null safe call",
+          6, 14, "Non-null safe call chained after null safe call",
+          7, 14, "Non-null safe call chained after null safe call",
+          8, 15, "Non-null safe call chained after null safe call",
+         10, 20, "Non-null safe call chained after null safe call",
+         11, 26, "Non-null safe call chained after null safe call",
        ])
   }
 
