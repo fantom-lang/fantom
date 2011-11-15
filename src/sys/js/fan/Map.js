@@ -571,7 +571,7 @@ fan.sys.Map.prototype.$remove = function(key)
   if (b === undefined) return null;
   if (b.next === undefined)
   {
-    if (this.m_ordered) this.m_keys.splice(b.ki, 1);
+    if (this.m_ordered) this.m_keys[b.ki] = undefined;
     this.m_vals[h] = undefined;
     this.m_size--;
     var v = b.val;
@@ -586,7 +586,7 @@ fan.sys.Map.prototype.$remove = function(key)
       if (prev !== undefined && b.next !== undefined) prev.next = b.next;
       else if (prev === undefined) this.m_vals[h] = b.next;
       else if (b.next === undefined) prev.next = undefined;
-      if (this.m_ordered) this.m_keys.splice(b.ki, 1);
+      if (this.m_ordered) this.m_keys[b.ki] = undefined;
       this.m_size--;
       var v = b.val
       delete b;
@@ -605,6 +605,7 @@ fan.sys.Map.prototype.$each = function(func)
     for (var i=0; i<this.m_keys.length; i++)
     {
       var k = this.m_keys[i];
+      if (k === undefined) continue;
       var v = this.$get(k);
       if (func({ key:k, ki:i, val:v }) === false) return;
     }
