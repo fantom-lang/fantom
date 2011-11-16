@@ -88,6 +88,9 @@ fan.fwt.TablePeer.injectCss = function()
     fan.fwt.WidgetPeer.addCss("table.__fwt_table td img.right + span { margin-right:25px; }");
 }
 
+fan.fwt.TablePeer.$arrowUp   = fan.sys.Uri.fromStr("fan://fwt/res/img/arrowUp.png");
+fan.fwt.TablePeer.$arrowDown = fan.sys.Uri.fromStr("fan://fwt/res/img/arrowDown.png");
+
 // TODO
 //fan.fwt.TablePeer.prototype.colAt = function(self, pos) {}
 //fan.fwt.TablePeer.prototype.rowAt = function(self, pos) {}
@@ -223,6 +226,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   if (this.m_headerVisible)
   {
     var tr = document.createElement("tr");
+    tr.oncontextmenu = function(e) { $this.support.popup(e); return false; }
     for (var c=0; c<cols; c++)
     {
       // we have to embed a div inside our th to make
@@ -241,13 +245,12 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       if (c === sortCol)
       {
         var down = self.sortMode() == fan.fwt.SortMode.m_down;
-        var arrow  = this.makeArrowDown(down);
-        arrow.style.top  = "9px";
-        arrow.style.right = "9px";
-        fix.style.paddingRight = "12px";
+        var arrow  = this.makeArrow(down);
+        arrow.style.top  = "7px";
+        arrow.style.right = "4px";
+        fix.style.paddingRight = "16px";
         fix.appendChild(arrow);
       }
-
       var th = document.createElement("th");
       th.appendChild(fix);
       tr.appendChild(th);
@@ -347,6 +350,7 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
   if (target.tagName == "DIV") target = target.parentNode;
   if (target.tagName == "TH")
   {
+    if (event.button != 0 || event.ctrlKey) return;
     var col = target.cellIndex
     var old = self.sortCol();
     var mode = old === col ? self.sortMode().toggle() : fan.fwt.SortMode.m_up;
@@ -451,42 +455,17 @@ fan.fwt.TablePeer.prototype.$onKeyDown = function(self, event)
   this.selection.notify(this.m_selected.first());
 }
 
-fan.fwt.TablePeer.prototype.makeArrowDown = function(down)
+fan.fwt.TablePeer.prototype.makeArrow = function(down)
 {
   if (down === undefined) down = true;
-  var s = down ? 0 : 2;
-  var d = down ? 1 : -1;
 
-  var div = document.createElement("div");
-  div.style.position = "absolute";
-  div.width  = "5px";
-  div.height = "3px";
-
-  var dot = null;
-  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="0px"; div.appendChild(dot);
-  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="1px"; div.appendChild(dot);
-  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="2px"; div.appendChild(dot);
-  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="3px"; div.appendChild(dot);
-  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="4px"; div.appendChild(dot);
-  s += d;
-
-  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="1px"; div.appendChild(dot);
-  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="2px"; div.appendChild(dot);
-  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="3px"; div.appendChild(dot);
-  s += d;
-
-  dot = this.makeDot(); dot.style.top=""+s+"px"; dot.style.left="2px"; div.appendChild(dot);
-  return div;
-}
-
-fan.fwt.TablePeer.prototype.makeDot = function()
-{
-  var dot = document.createElement("div");
-  dot.style.position   = "absolute";
-  dot.style.width      = "1px";
-  dot.style.height     = "1px";
-  dot.style.background = "#404040";
-  return dot;
+  var uri = down ? fan.fwt.TablePeer.$arrowDown : fan.fwt.TablePeer.$arrowUp
+  var img = document.createElement("img");
+  img.src = fan.fwt.WidgetPeer.uriToImageSrc(uri);
+  img.style.position = "absolute";
+  img.style.width = "8px";
+  img.style.height = "7px";
+  return img;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -597,7 +576,7 @@ fan.fwt.TableSelection.prototype.notify = function(primaryIndex)
 fan.fwt.TableSupport = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.fwt.TableSupport.prototype.$ctor = function(table) { this.table = table; }
 
-fan.fwt.TableSupport.prototype.popup = function()
+fan.fwt.TableSupport.prototype.popup = function(e)
 {
   var $this = this;
   var table = this.table;
@@ -642,41 +621,45 @@ fan.fwt.TableSupport.prototype.popup = function()
 
   if (table.view().numRows() == 0) xport.enabled$(false);
 
+  // clear selection
+  window.getSelection().removeAllRanges();
+
+  var dis  = table.peer.posOnDisplay(table);
+  var mx   = e.clientX - dis.m_x;
+  var my   = e.clientY - dis.m_y;
+
+  // open menu
   var menu = fan.fwt.Menu.make();
   menu.add(selectAll);
   menu.add(selectNone);
   menu.add(xport);
-  menu.open(table, fan.gfx.Point.make(0, 23));
+  menu.open(table, fan.gfx.Point.make(mx, my));
 }
 
 fan.fwt.TableSupport.prototype.exportTable = function()
 {
-  // build csv str
-  var str = "";
-  var model = this.table.model();
+  var buf = fan.sys.StrBuf.make();
+  var csv = fan.util.CsvOutStream.make(buf.out());
+
   // headers
-  for (var c=0; c<model.numCols(); c++)
-  {
-    if (c>0) str += ",";
-    str += this.escape(model.header(c));
-  }
-  str += "\n";
+  var model = this.table.model();
+  var row   = fan.sys.List.make(fan.sys.Str.$type);
+  for (var c=0; c<model.numCols(); c++) row.add(model.header(c));
+  csv.writeRow(row);
+
   // rows
   for (var r=0; r<model.numRows(); r++)
   {
-    for (var c=0; c<model.numCols(); c++)
-    {
-      if (c>0) str += ",";
-      str += this.escape(model.text(c, r));
-    }
-    str += "\n";
+    row.clear();
+    for (var c=0; c<model.numCols(); c++) row.add(model.text(c, r));
+    csv.writeRow(row);
   }
 
   // show in widget
   var text = fan.fwt.Text.make();
   text.m_multiLine = true;
   text.m_prefRows = 20;
-  text.text$(str);
+  text.text$(buf.toStr());
 
   var cons = fan.fwt.ConstraintPane.make();
   cons.m_minw = 650;
@@ -689,17 +672,3 @@ fan.fwt.TableSupport.prototype.exportTable = function()
   dlg.commands$(fan.sys.List.make(fan.sys.Obj.$type, [fan.fwt.Dialog.ok()]));
   dlg.open();
 }
-
-fan.fwt.TableSupport.prototype.escape = function(str)
-{
-  // convert " to ""
-  str = str.replace(/\"/g, "\"\"");
-
-  // check if need to wrap in quotes
-  var wrap = str.search(/[,\n\" ]/) != -1;
-  if (wrap) str = "\"" + str + "\"";
-
-  return str;
-}
-
-
