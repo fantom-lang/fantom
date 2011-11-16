@@ -23,6 +23,7 @@
 - Fix sql Col lookup to be case insensitive
 - Compiler check for chaining non-null safe call after null safe call
 - Env.indexKeys
+- Remove UriScheme.scheme method
 - js: convert fwt::Table to desktop style selection UX
 - js: Obj.hash default implementation
 - js: rewrite Map implementation; use Obj.hash; support key collisions
