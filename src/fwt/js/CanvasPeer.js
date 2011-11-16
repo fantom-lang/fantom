@@ -33,6 +33,7 @@ fan.fwt.CanvasPeer.prototype.sync = function(self)
   var size = this.m_size
   if (size.m_w == 0 || size.m_h == 0) return;
 
+  // TODO FIXIT: just assume canvas support?
   if (this.hasCanvas)
   {
     var div = this.elem;
@@ -58,39 +59,6 @@ fan.fwt.CanvasPeer.prototype.sync = function(self)
     var g = new fan.fwt.Graphics();
     g.widget = self;
     g.paint(c, self.bounds(), function() { self.onPaint(g) })
-  }
-  else
-  {
-    if (this.fxLoaded == true)
-    {
-      // find applet tag
-      var app = document.getElementById("app");
-      if (app != null && size.m_w > 0 && size.m_h > 0)
-      {
-        app.width  = size.m_w;
-        app.height = size.m_h;
-
-        var g = new JfxGraphics(app.script);
-        app.script.init();
-        self.onPaint(g);
-        app.script.commit();
-      }
-    }
-    else
-    {
-      this.fxLoaded = true;
-      var s = javafxString({
-        codebase: fan.sys.UriPodBase + "fwt/res/javafx/",
-        archive: "Canvas.jar",
-        draggable: true,
-        width:  200,
-        height: 200,
-        code: "fan.fwt.Canvas",
-        name: "Canvas",
-        id: "app"
-      });
-      this.elem.innerHTML = s;
-    }
   }
 
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
