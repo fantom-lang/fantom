@@ -27,14 +27,7 @@ abstract const class UriScheme
   static UriScheme? find(Str scheme, Bool checked := true)
 
   **
-  ** Return the scheme name for this instance.  This method
-  ** is implicitly defined based on the scheme name used to
-  ** `find` the instance.
-  **
-  Str scheme()
-
-  **
-  ** Default implementation returns `scheme`.
+  ** Default implementation returns type qname.
   **
   override Str toStr()
 

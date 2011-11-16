@@ -18,21 +18,22 @@ class NamingTest : Test
 
   Void testSchemeFind()
   {
-    x := UriScheme.find("fan")
-    verifyEq(Type.of(x).qname, "sys::FanScheme")
-    verifyEq(x.scheme, "fan")
-    verifyEq(x.toStr, "fan")
-    verifySame(UriScheme.find("fan"), x)
-
-    x = UriScheme.find("file")
-    verifyEq(Type.of(x).qname, "sys::FileScheme")
-    verifyEq(x.scheme, "file")
-    verifyEq(x.toStr, "file")
-    verifySame(UriScheme.find("file"), x)
+    verifyScheme(UriScheme.find("fan"),  "sys::FanScheme", "fan")
+    verifyScheme(UriScheme.find("file"), "sys::FileScheme", "file")
 
     verifyEq(UriScheme.find("foobar", false), null)
     verifyErr(UnresolvedErr#) { UriScheme.find("foobar") }
     verifyErr(UnresolvedErr#) { UriScheme.find("foobar", true) }
+  }
+
+  Void verifyScheme(UriScheme x, Str qname, Str scheme)
+  {
+    verifyEq(x.typeof.qname, qname)
+    verifyEq(x.toStr, qname)
+    verifySame(UriScheme.find(scheme), x)
+
+    UriScheme y := x.typeof.make
+    verifySame(y.typeof, x.typeof)
   }
 
 //////////////////////////////////////////////////////////////////////////

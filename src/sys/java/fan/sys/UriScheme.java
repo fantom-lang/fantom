@@ -45,7 +45,6 @@ public abstract class UriScheme
 
       // allocate instance
       UriScheme s = (UriScheme)t.make();
-      s.scheme = scheme;
 
       // add to cache
       synchronized (cache)
@@ -78,9 +77,7 @@ public abstract class UriScheme
 
   public Type typeof() { return Sys.UriSchemeType; }
 
-  public String toStr() { return scheme; }
-
-  public String scheme() { return scheme; }
+  public String toStr() { return typeof().qname(); }
 
   public abstract Object get(Uri uri, Object base);
 
@@ -89,6 +86,4 @@ public abstract class UriScheme
 //////////////////////////////////////////////////////////////////////////
 
   static HashMap cache = new HashMap();
-
-  String scheme;
 }
