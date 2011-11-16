@@ -15,17 +15,18 @@
 - Add util::IntArray, util::BoolArray
 - Fix Java runtime class loading deadlock
 - Duration.min, max
+- Duration mult/multFloat, div/divFloat
 - WispService.maxThreads
-- js: Obj.hash default implementation
-- js: rewrite Map implementation; use Obj.hash; support key collisions
-- js: Map.caseInsensitive support
 - ActorPool.maxMsgsBeforeYield NoDoc hook
 - Remove support for named supers on class types
 - Add ACC_SUPER to JVM emitted classes
-- js: convert fwt::Table to desktop style selection UX
 - Fix sql Col lookup to be case insensitive
-- Duration mult/multFloat, div/divFloat
 - Compiler check for chaining non-null safe call after null safe call
+- Env.indexKeys
+- js: convert fwt::Table to desktop style selection UX
+- js: Obj.hash default implementation
+- js: rewrite Map implementation; use Obj.hash; support key collisions
+- js: Map.caseInsensitive support
 
 *Build 1.0.60 (1 Sept 2011)*
 - WebClient.proxy support

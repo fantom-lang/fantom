@@ -40,6 +40,12 @@ public class EnvIndex
     return Sys.StrType.emptyList();
   }
 
+  public synchronized List keys()
+  {
+    if (keys == null) load();
+    return keys;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Load
 //////////////////////////////////////////////////////////////////////////
@@ -68,16 +74,23 @@ public class EnvIndex
 
     // now make all the lists immutable
     HashMap immutable = new HashMap(mutable.size()*3);
+    List keys = new List(Sys.StrType);
     Iterator it = mutable.entrySet().iterator();
     while (it.hasNext())
     {
       Entry entry = (Entry)it.next();
-      immutable.put(entry.getKey(), ((List)entry.getValue()).toImmutable());
+      String key = (String)entry.getKey();
+      immutable.put(key, ((List)entry.getValue()).toImmutable());
+      keys.add(key);
     }
+
+    // sort and lock down list of keys
+    keys = (List)keys.sort().toImmutable();
 
     long t2 = System.currentTimeMillis();
     log.debug("Index load " + (t2-t1) + "ms");
     this.index = immutable;
+    this.keys  = keys;
   }
 
   private static void loadPod(HashMap index, String n, File f)
@@ -140,5 +153,6 @@ public class EnvIndex
 
   private final Env env;
   private HashMap index;
+  private List keys;
 
 }

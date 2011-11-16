@@ -338,6 +338,13 @@ class EnvTest : Test
 
   Void testIndex()
   {
+    keys := Env.cur.indexKeys
+    verifyEq(keys.isImmutable, true)
+    verifyEq(keys.typeof, Str[]#)
+    verifySame(Env.cur.indexKeys, keys)
+    verify(keys.contains("testSys.mult"))
+    verify(keys.contains("sys.uriScheme.fan"))
+
     verifyIndex("testSys.bad", Str[,])
     verifyIndex("testSys.single", ["works!"])
 
