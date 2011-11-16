@@ -73,6 +73,7 @@ fan.fwt.MenuPeer.prototype.close = function()
 {
   if (this.$shell) this.$shell.parentNode.removeChild(this.$shell);
   if (this.$mask) this.$mask.parentNode.removeChild(this.$mask);
+  this.$parent.focus();
 }
 
 fan.fwt.MenuPeer.prototype.relayout = function(self)
