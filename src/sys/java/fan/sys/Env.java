@@ -141,6 +141,11 @@ public abstract class Env
     return index.get(key);
   }
 
+  public List indexKeys()
+  {
+    return index.keys();
+  }
+
   public Map props(Pod pod, Uri uri, Duration maxAge)
   {
     return props.get(pod, uri, maxAge);

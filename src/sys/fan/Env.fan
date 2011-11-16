@@ -255,6 +255,13 @@ abstract const class Env
   virtual Str[] index(Str key)
 
   **
+  ** Get listing of all keys mapped by indexed props.  The
+  ** values of each key may be resolved by the `index` method.
+  ** See [docLang]`docLang::Env#index` for details.
+  **
+  virtual Str[] indexKeys()
+
+  **
   ** Return a merged key/value map of all the prop files found
   ** using the following resolution rules:
   **   1. `Env.findAllFiles`: "etc/{pod}/{uri}"

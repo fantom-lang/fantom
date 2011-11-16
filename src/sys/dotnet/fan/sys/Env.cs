@@ -147,6 +147,11 @@ namespace Fan.Sys
       return m_index.get(key);
     }
 
+    public virtual List indexKeys()
+    {
+      return m_index.keys();
+    }
+
     public virtual Map props(Pod pod, Uri uri, Duration maxAge)
     {
       return m_props.get(pod, uri, maxAge);

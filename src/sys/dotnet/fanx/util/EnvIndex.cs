@@ -41,6 +41,13 @@ namespace Fanx.Util
       return Sys.StrType.emptyList();
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public List keys()
+    {
+      if (m_keys == null) load();
+      return m_keys;
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Load
   //////////////////////////////////////////////////////////////////////////
@@ -67,14 +74,17 @@ namespace Fanx.Util
       }
 
       // now make all the lists immutable
+      List keys = new List(Sys.StrType);
       Hashtable immutable = new Hashtable(mutable.Count*3);
       IDictionaryEnumerator en = mutable.GetEnumerator();
       while (en.MoveNext())
       {
         immutable[en.Key] = ((List)en.Value).toImmutable();
+        keys.add(en.Key);
       }
 
       this.m_index = immutable;
+      this.m_keys = (List)keys.sort().toImmutable();
     }
 
     private static void loadPod(Hashtable index, string n, FileSystemInfo f)
@@ -117,5 +127,6 @@ namespace Fanx.Util
 
     private Env m_env;
     private Hashtable m_index;
+    private List m_keys;
   }
 }
