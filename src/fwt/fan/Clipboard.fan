@@ -10,6 +10,7 @@ using gfx
 
 **
 ** Clipboard provides access to the system clipboard for data transfer.
+** Access is via `Desktop.clipboard`.
 **
 @Js
 class Clipboard
