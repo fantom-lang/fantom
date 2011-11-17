@@ -53,8 +53,10 @@ fan.fwt.MenuPeer.prototype.open = function(self, parent, point)
     padding    = "5px 0";
     MozBoxShadow    = "0 5px 12px #555";
     webkitBoxShadow = "0 5px 12px #555";
+    boxShadow       = "0 5px 12px #555";
     MozBorderRadius     = "5px";
     webkitBorderRadius  = "5px";
+    borderRadius        = "5px";
   }
 
   // attach to DOM
