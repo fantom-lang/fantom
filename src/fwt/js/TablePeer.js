@@ -365,7 +365,8 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
   {
     // find cell address
     var col = target.cellIndex;
-    var row = target.parentNode.rowIndex - 1;
+    var row = target.parentNode.rowIndex;
+    if (this.m_headerVisible) row--;
     if (row < 0) return;
 
     // select row
