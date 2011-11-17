@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.61 (working)*
+*Build 1.0.61 (17 Nov 2011)*
 - Upgrade timezone database with zone info version 2011j
 - Generate apidocs for @NoDoc type/slots, but hide in compilerDoc
 - Add fwt::Clipboard
@@ -28,6 +28,17 @@
 - js: Obj.hash default implementation
 - js: rewrite Map implementation; use Obj.hash; support key collisions
 - js: Map.caseInsensitive support
+- #1464: js: Obj.hash always returns 0
+- #1485: js: Map doesn't handle equal hash codes
+- #1494: JarDist - support for main(Str[]) params
+- #1556: Timezone support (ISO 8601) - doesn't support all formats
+- #1564: Compiler error on abstract Func
+- #1607: Fix List.size to not automatically change capacity
+- #1608: extending sys::Str with replaceMatch/replaceMatches
+- #1639: Confusing error report when variable error in a string.
+- #1654: Fix example doc hyperlinks
+- #1667: protected modifier provides internal access
+- #1676: compiler: Non-nullable field 'mytext' must be assigned in ctor
 
 *Build 1.0.60 (1 Sept 2011)*
 - WebClient.proxy support
