@@ -62,9 +62,9 @@ The following are the standardized keys automatically defined by compiler:
   - 'pod.isScript': was the pod compiled in script mode
   - 'pod.docSrc': should documentation include source code, see [BuildPod]`build::BuildPod.docSrc`
   - 'pod.docApi': should pod be included in documentation, see [BuildPod]`build::BuildPod.docApi`
-  - 'pod.native.java': does pad use native Java code (true or false)
-  - 'pod.native.dotnet': does pad use native .NET code (true or false)
-  - 'pod.native.js': does pad use native JavaScript code (true or false)
+  - 'pod.native.java': does pod use native Java code (true or false)
+  - 'pod.native.dotnet': does pod use native .NET code (true or false)
+  - 'pod.native.js': does pod use native JavaScript code (true or false)
   - 'fcode.version': binary format version of the fcode
   - 'build.ts': compile time in local timezone formatted as [DateTime]`sys::DateTime.toStr`
   - 'build.platform':  compile env platform formatted as [Env.platform]`sys::Env.platform`
