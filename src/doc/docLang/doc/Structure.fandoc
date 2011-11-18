@@ -41,6 +41,7 @@ given Fantom installation.  Code examples for common pod operations:
   Pod.find("acmeFoo", false)     // find a pod (returns null if not found)
   myPod.file(`/img/icon.png`)    // lookup a resource file in myPod
   `fan://myPod/img/icon.png`.get // lookup a resource file in myPod
+  someObj.typeof.pod             // get the pod of an object/type
   Pod.of(someObj)                // get the pod of an object
 
 See `Pods` chapter for more details.
@@ -60,7 +61,7 @@ and [mixins]`TypeSystem#mixins`.
 The `sys::Type` type is the reflection API for working with types at runtime.
 Code snippets for common type operations:
 
-  Type.of(someObj)          // get the type of the an object
+  someObj.typeof            // get the type of the an object
   myPod.types               // list the types in myPod
   myPod.findType("Foo")     // find a type within myPod by its simple name
   Type.find("myPod::Foo")   // lookup a type by its qualified name
@@ -92,7 +93,7 @@ Code examples for commonly used slot operations:
 
 All slots are keyed by a unique name.  This means Fantom does not support
 methods overridden by parameter type like Java or C#.  Although you may
-find this to be a drag on occasion, there are a couple features in Fan
+find this to be a drag on occasion, there are a couple features in Fantom
 that make this restriction quite palatable.  First method parameters may
 have defaults - this eliminates the convenience methods commonly used in
 Java or C# APIs.  Second all types subclass from Obj - this eliminates
