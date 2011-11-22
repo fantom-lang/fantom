@@ -551,12 +551,12 @@ class WebOutStream : OutStream
   **
   ** Start a <li> tag.
   **
-  This li(Str? attrs := null) { return tag("li", attrs).nl }
+  This li(Str? attrs := null) { return tag("li", attrs) }
 
   **
   ** End a <li> tag.
   **
-  This liEnd() { return tagEnd("li").nl }
+  This liEnd() { return tagEnd("li") }
 
 //////////////////////////////////////////////////////////////////////////
 // dl/dd/dt
