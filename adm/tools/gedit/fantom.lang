@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language id="fantom" _name="Fantom" version="2.0" _section="Sources">
+  <metadata>
+    <property name="mimetypes">text/x-fansrc;text/x-fan</property>
+    <property name="globs">*.fan</property>
+    <property name="line-comment-start">//</property>
+    <property name="block-comment-start">/*</property>
+    <property name="block-comment-end">*/</property>
+  </metadata>
+
+  <styles>
+    <style id="comment" _name="Comment" map-to="def:comment"/>
+    <style id="error" _name="Error" map-to="def:error"/>
+    <style id="string" _name="String" map-to="def:string"/>
+    <style id="uri" _name="Character" map-to="def:string"/>
+    <style id="dsl" _name="DSL" map-to="def:string"/>
+    <style id="char" _name="Character" map-to="def:character"/>
+    <style id="escaped-character" _name="Escaped Character" map-to="def:special-char"/>
+    <style id="facet" _name="Facet" map-to="def:special-constant"/>
+    <style id="type" _name="Type" map-to="def:type"/>
+    <style id="keyword" _name="Keyword" map-to="def:keyword"/>
+    <style id="null-value" _name="Null Value" map-to="def:special-constant"/>
+    <style id="boolean" _name="Boolean value" map-to="def:boolean"/>
+  </styles>
+
+  <definitions>
+    <context id="fantom" class="no-spell-check">
+      <include>
+        <context ref="def:shebang"/>
+        <context ref="line-comment"/>
+        <context ref="doc-comment"/>
+        <context ref="multiline-comment"/>
+        <context ref="close-comment-outside-comment"/>
+        <context ref="triple-quote-string"/>
+        <context ref="string"/>
+        <context ref="uri"/>
+        <context ref="dsl"/>
+        <context ref="char"/>
+        <context ref="facet"/>
+        <context ref="keywords"/>
+        <context ref="basic-types"/>
+        <context ref="uppercase-types"/>
+        <context ref="null-value"/>
+        <context ref="boolean"/>
+        <context ref="def:decimal"/>
+        <context ref="def:hexadecimal"/>
+        <context ref="def:float"/>
+      </include>
+    </context>
+
+    <context id="line-comment" style-ref="comment" end-at-line-end="true" class-disabled="no-spell-check">
+      <start>//</start>
+    </context>
+
+    <context id="doc-comment" style-ref="comment" end-at-line-end="true" class-disabled="no-spell-check">
+      <start>\*\*</start>
+    </context>
+
+    <context id="multiline-comment" style-ref="comment" class-disabled="no-spell-check">
+      <start>/\*</start>
+      <end>\*/</end>
+      <include>
+        <context ref="multiline-comment"/>
+      </include>
+    </context>
+
+    <context id="close-comment-outside-comment" style-ref="error">
+      <match>\*/(?!\*)</match>
+    </context>
+
+    <context id="triple-quote-string" style-ref="string" class-disabled="no-spell-check">
+      <start>"""</start>
+      <end>"""</end>
+    </context>
+
+    <context id="string" style-ref="string" class-disabled="no-spell-check">
+      <start>"</start>
+      <end>"</end>
+      <include>
+        <context ref="escaped-character"/>
+      </include>
+    </context>
+
+    <context id="uri" style-ref="uri" end-at-line-end="true">
+      <start>`</start>
+      <end>`</end>
+      <include>
+        <context ref="escaped-character"/>
+      </include>
+    </context>
+
+    <context id="dsl" style-ref="dsl">
+      <start>&lt;\|</start>
+      <end>\|&gt;</end>
+      <include>
+        <context ref="escaped-character"/>
+      </include>
+    </context>
+
+    <context id="char" style-ref="char" end-at-line-end="true">
+      <start>'</start>
+      <end>'</end>
+      <include>
+        <context ref="escaped-character"/>
+      </include>
+    </context>
+    
+    <context id="escaped-character" style-ref="escaped-character">
+      <match>\\.</match>
+    </context>
+    
+    <context id="facet" style-ref="facet">
+      <match>@[a-zA-Z0-9_]+</match>
+    </context>
+
+    <context id="keywords" style-ref="keyword">
+      <keyword>abstract</keyword>
+      <keyword>as</keyword>
+      <keyword>assert</keyword>
+      <keyword>break</keyword>
+      <keyword>case</keyword>
+      <keyword>catch</keyword>
+      <keyword>class</keyword>
+      <keyword>const</keyword>
+      <keyword>continue</keyword>
+      <keyword>default</keyword>
+      <keyword>do</keyword>
+      <keyword>else</keyword>
+      <keyword>enum</keyword>
+      <keyword>facet</keyword>
+      <keyword>final</keyword>
+      <keyword>finally</keyword>
+      <keyword>for</keyword>
+      <keyword>foreach</keyword>
+      <keyword>if</keyword>
+      <keyword>internal</keyword>
+      <keyword>is</keyword>
+      <keyword>isnot</keyword>
+      <keyword>it</keyword>
+      <keyword>mixin</keyword>
+      <keyword>native</keyword>
+      <keyword>new</keyword>
+      <keyword>once</keyword>
+      <keyword>override</keyword>
+      <keyword>private</keyword>
+      <keyword>protected</keyword>
+      <keyword>public</keyword>
+      <keyword>readonly</keyword>
+      <keyword>return</keyword>
+      <keyword>static</keyword>
+      <keyword>super</keyword>
+      <keyword>switch</keyword>
+      <keyword>this</keyword>
+      <keyword>throw</keyword>
+      <keyword>try</keyword>
+      <keyword>using</keyword>
+      <keyword>virtual</keyword>
+      <keyword>volatile</keyword>
+      <keyword>void</keyword>
+      <keyword>while</keyword>
+      <!-- The following are not keywords but I want to have them highlighted -->
+      <keyword>echo</keyword>
+      <keyword>each</keyword>
+    </context>
+
+    <context id="basic-types" style-ref="type">
+      <keyword>Bool</keyword>
+      <keyword>Buf</keyword>
+      <keyword>Decimal</keyword>
+      <keyword>Duration</keyword>
+      <keyword>Err</keyword>
+      <keyword>Field</keyword>
+      <keyword>File</keyword>
+      <keyword>Float</keyword>
+      <keyword>Func</keyword>
+      <keyword>InStream</keyword>
+      <keyword>Int</keyword>
+      <keyword>Map</keyword>
+      <keyword>Method</keyword>
+      <keyword>Num</keyword>
+      <keyword>Obj</keyword>
+      <keyword>Operator</keyword>
+      <keyword>OutStream</keyword>
+      <keyword>Range</keyword>
+      <keyword>Slot</keyword>
+      <keyword>Str</keyword>
+      <keyword>Type</keyword>
+      <keyword>Uri</keyword>
+      <keyword>Void</keyword>
+    </context>
+
+    <context id="uppercase-types" style-ref="type">
+      <match>\b[A-Z][a-zA-Z0-9_]+\b</match>
+    </context>
+
+    <context id="null-value" style-ref="null-value">
+      <keyword>null</keyword>
+    </context>
+
+    <context id="boolean" style-ref="boolean">
+      <keyword>false</keyword>
+      <keyword>true</keyword>
+    </context>
+    
+  </definitions>
+</language>
