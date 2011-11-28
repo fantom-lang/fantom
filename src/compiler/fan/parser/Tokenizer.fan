@@ -855,13 +855,7 @@ class Tokenizer : CompilerSupport
       case '?':
         if (cur == ':') { consume; return TokenVal(Token.elvis) }
         if (cur == '.') { consume; return TokenVal(Token.safeDot) }
-        if (cur == '-')
-        {
-          consume
-          if (cur != '>') throw err("Expected '?->' symbol")
-          consume
-          return TokenVal(Token.safeArrow)
-        }
+        if (cur == '-' && peek == '>') { consume; consume; return TokenVal(Token.safeArrow) }
         return TokenVal(Token.question)
       case '@':
         return TokenVal(Token.at)
