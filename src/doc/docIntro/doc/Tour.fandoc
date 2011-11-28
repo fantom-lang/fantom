@@ -92,6 +92,15 @@ A simple variable or dotted expression can just be prefixed
 with "$", but more complicated expressions are wrapped in curly
 braces.
 
+Fantom also has built-in support for localized strings:
+
+  // lookup a locale props value
+  "$<fwt::err.name>"
+
+  // add locale lookup and automatically add default
+  // key/value to the pod's locale/en.props resource file
+  "$<fileNotFound=The file was not found>"
+
 Statements [#statements]
 **************************
 [Statements]`docLang::Statements` are mostly like
