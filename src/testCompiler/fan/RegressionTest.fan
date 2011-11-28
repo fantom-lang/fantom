@@ -630,4 +630,16 @@ class RegressionTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1705 small ternary operator issue
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1705()
+  {
+    compile("""class Foo { Obj x(Obj? a) { a==null?-7:a } }""")
+    obj := pod.types.first.make
+    verifyEq(obj->x(null), -7)
+    verifyEq(obj->x(8), 8)
+  }
+
 }
