@@ -275,6 +275,7 @@ kilobtus_per_hour, kBTU/h; kg1*m2*sec-3; 293.07107017222
 
 -- power by area (kg1*sec-3)
 watts_per_square_meter, W/m²; kg1*sec-3
+watts_per_square_foot, W/ft²; kg1*sec-3; 10.7639104
 kilowatts_per_square_meter, kW/m²; kg1*sec-3; 1000.0
 kilowatts_per_square_foot, kW/ft²; kg1*sec-3; 10763.9104
 
