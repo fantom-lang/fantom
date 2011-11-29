@@ -41,6 +41,7 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     height     = "100%";
     background = "#000";
     opacity    = "0.0";
+    zIndex     = "100";
     filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=25);"
     MozTransition    = "100ms";
     webkitTransition = "100ms";
@@ -55,6 +56,7 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     left       = "0";
     width      = "100%";
     height     = "100%";
+    zIndex     = "101";
   }
 
   // mount window
