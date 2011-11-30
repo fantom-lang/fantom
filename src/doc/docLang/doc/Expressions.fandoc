@@ -228,7 +228,7 @@ runtime:
   obj isnot Str  =>  evaluates to true
   obj isnot Num  =>  evaluates to false
   obj as Float   =>  evaluates to null
-  obj as Int     =>  evaluates to 6 (expr is typed as Int)
+  obj as Int     =>  evaluates to 123 (expr is typed as Int)
 
 Nullability of types is not considered when using the 'is', 'isnot',
 and 'as' operators.  For example these two expressions are considered
