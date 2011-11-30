@@ -112,7 +112,7 @@ class Reflection
     t   := Type.find("fwt::Label")
     obj := t.make
     f   := t.field("text")
-    show(t.field("onBlur"),            "lookup the field called xyz on someType")
+    show(t.field("fg"),                "lookup the field called xyz on someType")
     show(t.field("x", false),          "returns null if field not found")
     show(t.fields,                     "list all the fields on someType")
     show(Slot.findField("fwt::Label.text"),       "looukp a field by its qualified name")
