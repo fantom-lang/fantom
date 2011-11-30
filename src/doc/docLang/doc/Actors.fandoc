@@ -68,7 +68,7 @@ it receives a message:
   pool := ActorPool()
   a := Actor(pool) |msg|
   {
-    count := 1 + Actor.locals.get("count", 0)
+    count := 1 + (Int)Actor.locals.get("count", 0)
     Actor.locals["count"] = count
     return count
   }
