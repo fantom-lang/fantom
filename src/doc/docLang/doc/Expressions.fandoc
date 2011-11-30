@@ -386,16 +386,16 @@ Here is an FWT example:
   Menu
   {
     text = "File"
-    MenuItem { text = "Open"; onSelect=#open.func },
-    MenuItem { text = "Save"; onSelect=#save.func },
+    MenuItem { text = "Open"; onAction.add { echo("open") } },
+    MenuItem { text = "Save"; onAction.add { echo("save") } },
   }
 
   // is syntax sugar for (note: can't actually use it as param name)
   Menu.make.with |Menu it|
   {
     it.text = "File"
-    it.add(MenuItem { text = "Open"; onSelect=#open.func })
-     .add(MenuItem { text = "Save"; onSelect=#save.func })
+    it.add(MenuItem MenuItem { text = "Open"; onAction.add { echo("open") } })
+      .add(MenuItem { text = "Save"; onAction.add { echo("save") } })
   }
 
 Advanced Operators [#advances]
