@@ -69,7 +69,8 @@ fan.fwt.ComboPeer.prototype.rebuild = function(self)
   for (var i=0; i<this.m_items.size(); i++)
   {
     var option = document.createElement("option");
-    option.appendChild(document.createTextNode(this.m_items.get(i)));
+    var text   = this.$itemText(self, this.m_items.get(i));
+    option.appendChild(document.createTextNode(text));
     select.appendChild(option);
   }
 }
@@ -78,7 +79,7 @@ fan.fwt.ComboPeer.prototype.sync = function(self)
 {
   if (this.needsRebuild)
   {
-    this.rebuild();
+    this.rebuild(self);
     this.needsRebuild = false;
   }
 
@@ -106,4 +107,10 @@ fan.fwt.ComboPeer.prototype.sync = function(self)
   }
 
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
+}
+
+// Backdoor hook to override item text [returns Str]
+fan.fwt.ComboPeer.prototype.$itemText = function(self, item)
+{
+  return fan.sys.ObjUtil.toStr(item);
 }
