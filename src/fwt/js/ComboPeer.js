@@ -12,6 +12,8 @@
 fan.fwt.ComboPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
 fan.fwt.ComboPeer.prototype.$ctor = function(self) {}
 
+// see init.js for CSS
+
 fan.fwt.ComboPeer.prototype.font   = function(self) { return this.m_font; }
 fan.fwt.ComboPeer.prototype.font$  = function(self, val) { this.m_font = val; }
 fan.fwt.ComboPeer.prototype.m_font = null;
@@ -43,6 +45,9 @@ fan.fwt.ComboPeer.prototype.create = function(parentElem)
   this.needsRebuild = true;
 
   var select = document.createElement("select");
+  select.className = "_fwt_Combo_";
+  select.style.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
+
   var div = this.emptyDiv();
   div.appendChild(select);
   parentElem.appendChild(div);

@@ -17,6 +17,7 @@ fan.fwt.DesktopPeer.isWindows = function() { return !fan.fwt.DesktopPeer.$isMac;
 fan.fwt.DesktopPeer.isMac     = function() { return fan.fwt.DesktopPeer.$isMac; }
 
 fan.fwt.DesktopPeer.$isMac     = navigator.userAgent.indexOf("Mac OS X") != -1;
+fan.fwt.DesktopPeer.$isWebkit  = navigator.userAgent.indexOf("AppleWebKit/") != -1;
 fan.fwt.DesktopPeer.$isFirefox = navigator.userAgent.indexOf("Firefox/") != -1;
 fan.fwt.DesktopPeer.$isIE      = navigator.userAgent.indexOf("MSIE") != -1;
 
