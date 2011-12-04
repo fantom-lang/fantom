@@ -150,8 +150,12 @@ fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
   {
     if (!self.enabled()) return;
 
+    // find check value
+    var val = check.checked;
+    if (event.target.nodeName != "INPUT") val = !val;
+
     // bind selected to widget
-    self.selected$(check.checked);
+    self.selected$(val);
 
     // fire event
     $this.fireAction(self);
