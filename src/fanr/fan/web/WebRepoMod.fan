@@ -17,6 +17,7 @@ using util
 **    Method   Uri                       Operation
 **    ------   --------------------      ---------
 **    GET      {base}/ping               ping meta-data
+**    GET      {base}/find/{name}        pod find current
 **    GET      {base}/find/{name}/{ver}  pod find
 **    GET      {base}/query?{query}      pod query
 **    POST     {base}/query              pod query
@@ -66,6 +67,7 @@ const class WebRepoMod : WebMod
       // route to correct command
       path := req.modRel.path
       cmd := path.getSafe(0) ?: "?"
+      if (cmd == "find"    && path.size == 2) { onFind(path[1], null, user); return }
       if (cmd == "find"    && path.size == 3) { onFind(path[1], path[2], user); return }
       if (cmd == "query"   && path.size == 1) { onQuery(user); return }
       if (cmd == "pod"     && path.size == 3) { onPod(path[1], path[2], user); return }
@@ -148,14 +150,18 @@ const class WebRepoMod : WebMod
 // Find
 //////////////////////////////////////////////////////////////////////////
 
-  private Void onFind(Str podName, Str verStr, Obj? user)
+  private Void onFind(Str podName, Str? verStr, Obj? user)
   {
     // if user can't read any pods, immediately bail
     if (!auth.allowQuery(user, null)) { sendForbiddenErr(user); return }
 
     // lookup pod that matches name/version
-    ver := Version.fromStr(verStr, false)
-    if (ver == null)  { sendErr(404, "Invalid version: $verStr"); return }
+    Version? ver := null
+    if (verStr != null)
+    {
+      ver = Version.fromStr(verStr, false)
+      if (ver == null)  { sendErr(404, "Invalid version: $verStr"); return }
+    }
     spec := repo.find(podName, ver, false)
     if (spec == null)  { sendErr(404, "Pod not found: $podName-$ver"); return }
 

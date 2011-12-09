@@ -134,6 +134,10 @@ class WebRepoTest : Test
     verifyEq(pod.name, "wisp")
     verifyEq(pod.version, wisp.version)
 
+    pod = r.find("wisp", null)
+    verifyEq(pod.name, "wisp")
+    verifyEq(pod.version, wisp.version)
+
     badVer := Version("28.99.1234")
     verifyEq(r.find("fooBarNotFound", Version("1.0.123"), false), null)
     verifyEq(r.find("wisp", badVer, false), null)

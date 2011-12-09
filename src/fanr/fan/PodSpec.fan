@@ -38,7 +38,7 @@ const class PodSpec
     finally zip.close
   }
 
-  internal new make(Str:Str m, File? file)
+  @NoDoc new make(Str:Str m, File? file)
   {
     this.name    = getReq(m, "pod.name")
     this.version = Version.fromStr(getReq(m, "pod.version"))
@@ -86,7 +86,7 @@ const class PodSpec
   DateTime? ts() { DateTime.fromStr((meta["build.ts"] ?: meta["build.time"]) ?: "", false) }
 
   ** If loaded from a local file
-  internal const File? file
+  @NoDoc const File? file
 
   ** String format is "{name}-{version}"
   override const Str toStr
