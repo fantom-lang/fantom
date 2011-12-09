@@ -31,9 +31,9 @@ abstract const class Repo
   abstract Str:Str ping()
 
   ** Find an exact match for the given pod name and version.  If
-  ** not found then return null or throw UnknownPodErr based on
-  ** checked flag.
-  abstract PodSpec? find(Str podName, Version version, Bool checked := true)
+  ** version is null, then find latest version.  If not found then
+  ** return null or throw UnknownPodErr based on checked flag.
+  abstract PodSpec? find(Str podName, Version? version, Bool checked := true)
 
   ** Find pod versions which match query.  The 'numVersions'
   ** specifies how many different versions will be matched for a

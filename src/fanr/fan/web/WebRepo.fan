@@ -46,14 +46,14 @@ internal const class WebRepo : Repo
     return parseRes(c)
   }
 
-  override PodSpec? find(Str podName, Version version, Bool checked := true)
+  override PodSpec? find(Str podName, Version? ver, Bool checked := true)
   {
     // prepare query
-    c := prepare("GET", `find/${podName}/${version}`)
+    c := prepare("GET", ver == null ? `find/${podName}` : `find/${podName}/${ver}`)
     c.writeReq.readRes
     if (c.resCode == 404)
     {
-      if (checked) throw UnknownPodErr("$podName-$version")
+      if (checked) throw UnknownPodErr("$podName-$ver")
       return null
     }
 

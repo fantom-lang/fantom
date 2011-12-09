@@ -117,11 +117,14 @@ internal class FileRepoDb
 // Find
 //////////////////////////////////////////////////////////////////////////
 
-  private PodSpec? find(Str name, Version ver)
+  private PodSpec? find(Str name, Version? ver)
   {
     // lookup dir record for name
     dir := podDirs[name]
     if (dir == null) return null
+
+    // if version null, then find latest one
+    if (ver == null) return dir.cur
 
     // ensure all pod versions are fully loaded
     loadAll(dir)
