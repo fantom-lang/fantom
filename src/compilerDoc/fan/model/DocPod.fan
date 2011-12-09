@@ -68,7 +68,7 @@ class DocPod
   ** Open this pod file as a zip file.
   Zip open()
   {
-    file := env.loader.envFindPodFile(name)
+    file := env.loader.findPodFile(name)
     if (file == null) throw Err("Cannot map '$name' to pod file")
     return Zip.open(file)
   }
@@ -212,7 +212,7 @@ class DocPod
     // save to fields
     this.typeMap  = map
     this.typeList = list.ro
-    this.tocRef = toc.ro
+    this.tocRef = toc.toImmutable
   }
 
   private Void saveChapters(Str:DocChapter map, Obj[]? indexFog)
@@ -285,7 +285,7 @@ class DocPod
     // save to fields
     this.chapterMap  = map
     this.chapterList = list.ro
-    this.tocRef = toc.ro
+    this.tocRef = toc.toImmutable
   }
 
   private Void saveResources(Uri[] list)

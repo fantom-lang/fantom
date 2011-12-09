@@ -16,12 +16,6 @@ using web
 class DocLoader
 {
 
-  // internal methods that route to protected plugin methods
-  // allow us to force clients to go thru DocEnv and its cache
-  internal Str[] envFindAllPodNames() { findAllPodNames }
-  internal DocPod? envFindPod(DocEnv env, Str podName) { findPod(env, podName) }
-  internal File? envFindPodFile(Str podName) { findPodFile(podName) }
-
   **
   ** Resolve the full listing of pod names to use for topindex
   ** and to populate `DocEnv.pods`.  Default implementation
