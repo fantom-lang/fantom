@@ -2050,7 +2050,7 @@ public class Parser : CompilerSupport
   private TypeRef typeRef()
   {
     Loc loc := cur
-    return TypeRef(loc, ctype)
+    return TypeRef(loc, ctype(true))
   }
 
   **
@@ -2086,7 +2086,7 @@ public class Parser : CompilerSupport
   **   <listType>  :=  <type> "[]"
   **   <mapType>   :=  ["["] <type> ":" <type> ["]"]
   **
-  private CType ctype()
+  private CType ctype(Bool isTypeRef := false)
   {
     CType? t := null
 
@@ -2107,7 +2107,7 @@ public class Parser : CompilerSupport
     }
     else if (curt === Token.pipe)
     {
-      t = funcType
+      t = funcType(isTypeRef)
     }
     else
     {
@@ -2212,7 +2212,10 @@ public class Parser : CompilerSupport
   **   <formalInferred> :=  <id>
   **   <formalTypeOnly> :=  <type>
   **
-  private CType funcType()
+  ** If isTypeRef is true (slot signatures), then we requrie explicit
+  ** parameter types.
+  **
+  private CType funcType(Bool isTypeRef)
   {
     params := CType[,]
     names  := Str[,]
@@ -2224,11 +2227,11 @@ public class Parser : CompilerSupport
     // params, must be one if no ->
     inferred := false
     unnamed := [false]
-    if (curt !== Token.arrow) inferred = funcTypeFormal(params, names, unnamed)
+    if (curt !== Token.arrow) inferred = funcTypeFormal(isTypeRef, params, names, unnamed)
     while (curt === Token.comma)
     {
       consume
-      inferred = inferred.or(funcTypeFormal(params, names, unnamed))
+      inferred = inferred.or(funcTypeFormal(isTypeRef, params, names, unnamed))
     }
 
     // if we see ?-> in a function type, that means |X?->ret|
@@ -2258,9 +2261,9 @@ public class Parser : CompilerSupport
     return ft
   }
 
-  private Bool funcTypeFormal(CType[] params, Str[] names, Bool[] unnamed)
+  private Bool funcTypeFormal(Bool isTypeRef, CType[] params, Str[] names, Bool[] unnamed)
   {
-    t := tryType
+    t := isTypeRef ? ctype(true) : tryType
     if (t != null)
     {
       params.add(t)
