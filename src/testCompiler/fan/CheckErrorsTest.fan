@@ -1536,6 +1536,8 @@ class CheckErrorsTest : CompilerTest
          Obj m11(Int f) { Foo { it.f = it.f } }
          Obj m12(Int f) { Foo { this.f = this.f } }
 
+         const static Str bar := Foo.bar
+
          Void ok01(Foo foo) { this.foo = foo }
          Void ok03(Foo x) { f = x.f }
          Void ok04(Foo x) { foo.f = x.foo.f }
@@ -1546,6 +1548,7 @@ class CheckErrorsTest : CompilerTest
          Obj ok09(Int f) { Foo { this.f = f } }
          Obj ok10(Int f) { Foo { f = it.f } }
          Obj ok11(Int f) { Foo { f = this.f } }
+
 
          Int f
          Foo? foo
@@ -1558,6 +1561,7 @@ class CheckErrorsTest : CompilerTest
          7, 21, "Self assignment",
          8, 20, "Self assignment",
          9, 20, "Self assignment",
+        14, 3,  "Self assignment",
         10, 26, "Self assignment",
         11, 29, "Self assignment",
         12, 31, "Self assignment",
