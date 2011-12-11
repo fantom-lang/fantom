@@ -642,4 +642,25 @@ class RegressionTest : CompilerTest
     verifyEq(obj->x(8), 8)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1718 Require func param types in slot signatures
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1718()
+  {
+    verifyErrors(
+     """class Foo {
+          |x|? f
+          |y| m0(|z| a) { throw Err() }
+          Void m1(|Str, Bar, Bar[] x| a) { throw Err() }
+        }""",
+       [
+         2,  4, "Unknown type 'x'",
+         3,  4, "Unknown type 'y'",
+         3, 11, "Unknown type 'z'",
+         4, 17, "Unknown type 'Bar'",
+         4, 22, "Unknown type 'Bar'",
+       ])
+  }
+
 }

@@ -134,7 +134,7 @@ internal class LineTokenizer
 //////////////////////////////////////////////////////////////////////////
 
   ** Tokenize to given callback
-  Void tokenizeLine(Str line, |DocType, Str| f)
+  Void tokenizeLine(Str line, |SyntaxType, Str| f)
   {
     // reset line
     this.line = line

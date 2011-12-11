@@ -375,7 +375,7 @@ class FuncType : GenericType
   CType[] params { private set } // a, b, c ...
   Str[] names    { private set } // parameter names
   CType ret      { private set } // return type
-  Bool unnamed                   // where any names auto-generated
+  Bool unnamed                   // were any names auto-generated
   override const Str signature   // |a,b..n->r|
   override const Bool isGenericParameter
   Bool inferredSignature   // were one or more parameters inferred
