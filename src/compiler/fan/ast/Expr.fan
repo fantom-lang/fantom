@@ -1267,6 +1267,11 @@ class StaticTargetExpr : Expr
     this.ctype = ctype
   }
 
+  override Bool sameVarAs(Expr that)
+  {
+    that.id === ExprId.staticTarget && ctype == that.ctype
+  }
+
   override Str toStr()
   {
     return ctype.signature
