@@ -43,7 +43,7 @@ class Compiler
     this.log        = input.log
     this.errs       = CompilerErr[,]
     this.warns      =  CompilerErr[,]
-    this.depends    = Depend[,]
+    this.depends    = CDepend[,]
     this.wrappers   = Str:CField[:]
     this.localeDefs = LocaleLiteralExpr[,]
   }
@@ -114,7 +114,7 @@ class Compiler
   CompilerLog log           // ctor
   CompilerErr[] errs        // accumulated errors
   CompilerErr[] warns       // accumulated warnings
-  Depend[] depends          // InitInput
+  CDepend[] depends         // InitInput
   CNamespace? ns            // InitInput
   PodDef? pod               // InitInput
   Bool isSys := false       // InitInput; are we compiling sys itself

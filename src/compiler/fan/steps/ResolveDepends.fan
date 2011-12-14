@@ -44,17 +44,17 @@ class ResolveDepends : CompilerStep
     input := compiler.input
     isSys := input.podName == "sys"
     if (compiler.depends.isEmpty && !isSys)
-      compiler.depends.add(Depend.fromStr("sys 0+"))
+      compiler.depends.add(CDepend.fromStr("sys 0+"))
 
     // we initialize the CNamespace.depends map
     // as we process each dependency
-    ns.depends = Str:Depend[:]
+    ns.depends = Str:CDepend[:]
 
     // process each dependency
-    compiler.depends.each |Depend depend|
+    compiler.depends.each |cdepend|
     {
-      ns.depends[depend.name] = depend
-      resolveDepend(depend)
+      ns.depends[cdepend.name] = cdepend
+      cdepend.pod = resolveDepend(cdepend.depend)
     }
 
     // check that everything has a dependency on sys
@@ -68,9 +68,9 @@ class ResolveDepends : CompilerStep
   ** Resolve the dependency via reflection using
   ** the pods the compiler is running against.
   **
-  private Void resolveDepend(Depend depend)
+  private CPod? resolveDepend(Depend depend)
   {
-    CPod? pod := null
+    CPod? pod
     try
     {
       pod = ns.resolvePod(depend.name, loc)
@@ -78,14 +78,15 @@ class ResolveDepends : CompilerStep
     catch (CompilerErr e)
     {
       err("Cannot resolve depend: pod '$depend.name' not found", loc)
-      return
+      return null
     }
 
     if (!depend.match(pod.version))
     {
       err("Cannot resolve depend: '$pod.name $pod.version' != '$depend'", loc)
-      return
     }
+
+    return pod
   }
 
 //////////////////////////////////////////////////////////////////////////

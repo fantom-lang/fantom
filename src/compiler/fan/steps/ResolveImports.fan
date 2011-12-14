@@ -68,7 +68,7 @@ class ResolveImports : CompilerStep
       resolved.each |pod|
       {
         if (pod !== compiler.pod && pod.name != "sys")
-          compiler.depends.add(Depend("$pod.name $pod.version"))
+          compiler.depends.add(CDepend.fromStr("$pod.name $pod.version"))
       }
     }
   }
