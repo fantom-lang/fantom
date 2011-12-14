@@ -24,7 +24,7 @@ const class CompilerErr : Err
     }
   }
 
-  Loc loc() { Loc(file, line, col) }
+  Loc loc() { Loc(file ?: "Unknown", line, col) }
 
   Bool isErr() { level === LogLevel.err }
 

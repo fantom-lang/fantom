@@ -135,7 +135,7 @@ class InitInput : CompilerStep
     compiler.jsFiles  = findFiles(input.jsFiles,  "js")
 
     if (compiler.srcFiles.isEmpty && compiler.resFiles.isEmpty)
-      throw err("No fan source files found", null)
+      throw err("No fan source files found", input.inputLoc)
 
     // map sure no duplicate names in srcFiles
     map := Str:File[:]
