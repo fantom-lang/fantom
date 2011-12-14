@@ -9,7 +9,7 @@
 
 **
 ** Env defines a pluggable class used to boot and manage a Fantom
-** runtime environment.
+** runtime environment.  Use `cur` to access the current Env instance.
 **
 abstract const class Env
 {

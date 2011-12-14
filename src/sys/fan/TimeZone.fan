@@ -22,6 +22,8 @@
 ** "America/New_York".  The simple name is the city name only
 ** such as "New_York".
 **
+** Use `cur` to get current default timezone for VM.
+**
 ** Also see [docLang]`docLang::DateTime`.
 **
 @Serializable { simple = true }
