@@ -115,7 +115,7 @@ class InitInput : CompilerStep
   **
   private Void initDepends()
   {
-    compiler.depends = input.depends
+    compiler.depends = input.depends.map |d->CDepend| { CDepend(d, null) }
   }
 
 //////////////////////////////////////////////////////////////////////////

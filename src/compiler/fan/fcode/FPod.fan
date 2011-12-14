@@ -291,7 +291,7 @@ final class FPod : CPod, FConst
   override CNamespace ns    // compiler's namespace
   override Str name         // pod's unique name
   override Version version  // pod version
-  Depend[]? depends         // pod dependencies
+  CDepend[]? depends        // pod dependencies
   Str:Str meta              // pod meta
   Str:Obj index             // pod index
   Zip? zip                  // zipped storage

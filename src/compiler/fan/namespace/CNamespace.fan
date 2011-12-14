@@ -280,7 +280,7 @@ abstract class CNamespace
   **
   ** Map of dependencies keyed by pod name set in ResolveDepends.
   **
-  [Str:Depend]? depends
+  [Str:CDepend]? depends
 
 //////////////////////////////////////////////////////////////////////////
 // Predefined
