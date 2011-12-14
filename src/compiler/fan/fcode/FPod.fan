@@ -224,10 +224,13 @@ final class FPod : CPod, FConst
     if (!uris.isEmpty)       uris.write(out(`/fcode/uris.def`))
 
     // write type meta-data
-    out := this.out(`/fcode/types.def`)
-    out.writeI2(ftypes.size)
-    ftypes.each |FType t| { t.writeMeta(out) }
-    out.close
+    if (!ftypes.isEmpty)
+    {
+      out := this.out(`/fcode/types.def`)
+      out.writeI2(ftypes.size)
+      ftypes.each |FType t| { t.writeMeta(out) }
+      out.close
+    }
 
     // write type full fcode
     ftypes.each |FType t| { t.write }

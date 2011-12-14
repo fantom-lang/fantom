@@ -8,6 +8,7 @@
 
 *Build 1.0.62 (working)*
 - Add gedit config file
+- Tweak compiler to omit fcode/types.def if no types
 
 *Build 1.0.61 (17 Nov 2011)*
 - Upgrade timezone database with zone info version 2011j

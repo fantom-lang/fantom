@@ -77,7 +77,7 @@ public final class FPod
     methodRefs.read(store.read("fcode/methodRefs.def"));
 
     // type meta
-    readTypeMeta(store.read("fcode/types.def", true));
+    readTypeMeta(store.read("fcode/types.def"));
 
     // full fcode always lazy loaded in Type.reflect()
   }
@@ -186,6 +186,7 @@ public final class FPod
 
   private void readTypeMeta(FStore.Input in) throws IOException
   {
+    if (in == null) { types = new FType[0]; return; }
     types = new FType[in.u2()];
     for (int i=0; i<types.length; ++i)
     {
