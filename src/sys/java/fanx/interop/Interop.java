@@ -116,6 +116,14 @@ public class Interop
   }
 
   /**
+   * Convert from java.io.File to sys::File.
+   */
+  public static File toFan(java.io.File file)
+  {
+    return new LocalFile(file);
+  }
+
+  /**
    * Convert from sys::InStream to java.io.InputStream.
    */
   public static InputStream toJava(InStream in)
@@ -129,6 +137,15 @@ public class Interop
   public static OutputStream toJava(OutStream out)
   {
     return SysOutStream.java(out);
+  }
+
+  /**
+   * Convert from sys::File to java.io.File.  Raise
+   * cast exception if not a local file.
+   */
+  public static java.io.File toJava(File file)
+  {
+    return ((LocalFile)file).toJava();
   }
 
 //////////////////////////////////////////////////////////////////////////
