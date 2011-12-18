@@ -52,7 +52,7 @@ class FileDocWriter
     // pods
     pods.each |pod|
     {
-      echo("Writing pod '$pod.name' ...")
+      if (pods.size > 1) echo("Writing pod '$pod.name' ...")
       podDir := outDir + `${pod.name}/`
 
       if (!pod.isManual)
