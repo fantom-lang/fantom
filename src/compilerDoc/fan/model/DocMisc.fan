@@ -13,7 +13,7 @@ const class DocLoc
 {
   const static DocLoc unknown := DocLoc("Unknown", 0)
 
-  ** Construct with file and optional line number
+  ** Construct with file and line number (zero if unknown)
   new make(Str file, Int line)
   {
     this.file = file
