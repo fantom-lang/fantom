@@ -63,6 +63,15 @@ const class DocType
   ** Facets defined on this type
   const DocFacet[] facets
 
+  ** Return given facet
+  DocFacet? facet(Str qname, Bool checked := true)
+  {
+    f := facets.find |f| { f.type.qname == qname }
+    if (f != null) return f
+    if (checked) throw Err("Missing facet @$qname on $this.qname")
+    return null
+  }
+
   ** Return if given facet is defined on type
   Bool hasFacet(Str qname) { facets.any |f| { f.type.qname == qname } }
 
