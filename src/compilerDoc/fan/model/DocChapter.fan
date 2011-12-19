@@ -12,7 +12,7 @@ using fandoc
 **
 ** DocChapter models a fandoc "chapter" in a manual like docLang
 **
-const class DocChapter
+const class DocChapter : DocPage
 {
   ** Constructor
   internal new make(DocEnv env, Str pod, File f)
@@ -98,6 +98,9 @@ const class DocChapter
 
   ** Simple name of the chapter such as "Overview" or "pod-doc"
   const Str name
+
+  ** Title is the qualified name of the document
+  override Str title() { "$pod::$name" }
 
   ** Return if this chapter is the special "pod-doc" file
   Bool isPodDoc() { name == "pod-doc" }

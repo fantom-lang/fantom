@@ -7,6 +7,20 @@
 //
 
 **
+** DocPage is the base class for encapsulating documents
+** which are logically one "page".  All docs are organized
+** under a pod.  Subclasses include:
+**  - `DocPod`: pod index (manual or API)
+**  - `DocType`: type API
+**  - `DocChapter`: chapter in manual
+**
+const abstract class DocPage
+{
+  ** Default title for the document
+  abstract Str title()
+}
+
+**
 ** DocLoc models a filename / linenumber
 **
 const class DocLoc

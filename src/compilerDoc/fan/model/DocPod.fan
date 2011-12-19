@@ -10,7 +10,7 @@
 **
 ** DocPod models the documentation of a `sys::Pod`.
 **
-const class DocPod
+const class DocPod : DocPage
 {
 
   ** Load from a zip file.  The given env is ued for error reporting.
@@ -51,6 +51,9 @@ const class DocPod
 
   ** Summary string for the pod
   const Str summary
+
+  ** Always return `name`.
+  override Str title() { name }
 
   ** Always return `name`.
   override Str toStr() { name }
