@@ -212,6 +212,7 @@ class PageRenderer : DocRenderer
 //////////////////////////////////////////////////////////////////////////
 
   ** Write docs index.
+  /*
   virtual Void writeIndex()
   {
     // start
@@ -220,18 +221,19 @@ class PageRenderer : DocRenderer
 
     // manuals
     out.div("class='manuals'")
-    IndexRenderer(env, out).writeManuals
+    IndexRenderer(env, out, pods).writeManuals
     out.divEnd
 
     // apis
     out.div("class='apis'")
-    IndexRenderer(env, out).writeApis
+    IndexRenderer(env, out, pods).writeApis
     out.divEnd
 
     // end
     out.divEnd
     writeEnd
   }
+  */
 
   **
   ** Write pod index.

@@ -19,7 +19,6 @@ class FileDocWriter
   new make(|This| f)
   {
     f(this)
-    if (pods == null) pods = env.pods
   }
 
   ** Output dir to write files.
@@ -46,7 +45,7 @@ class FileDocWriter
     if (index)
     {
       writeCss(outDir + `style.css`)
-      writeIndex(outDir + `index.html`)
+      writeTopIndex(outDir + `index.html`)
     }
 
     // pods
@@ -121,12 +120,79 @@ class FileDocWriter
     file.out.printLine(css).close
   }
 
-  ** Write docs index.
-  virtual Void writeIndex(File file)
+  ** Write top level docs index.  Default organization is
+  ** to group everything into manuals or APIs
+  virtual Void writeTopIndex(File file)
   {
+    // organize pods into manuals and apis
+    manuals := DocPod[,]
+    apis    := DocPod[,]
+    pods.each |p|
+    {
+      if (p.isManual) manuals.add(p)
+      else apis.add(p)
+    }
+    manuals.moveTo(manuals.find |p| { p.name == "docIntro" }, 0)
+    manuals.moveTo(manuals.find |p| { p.name == "docLang" }, 1)
+
+    // doc start
     out := WebOutStream(file.out)
-    makePageRenderer(out).writeIndex
+    pr := makePageRenderer(out)
+    pr.writeStart
+    out.div("class='index'")
+
+    // manual table
+    out.div("class='manuals'")
+    out.h2.w("Manuals").h2End
+    writeTopIndexManuals(out, manuals)
+    out.divEnd
+
+    // api table
+    out.div("class='apis'")
+    out.h2.w("APIs").h2End
+    writeTopIndexApis(out, apis)
+    out.divEnd
+
+    // doc end
+    out.divEnd
+    pr.writeEnd
     out.close
+  }
+
+  ** Write API table for a top-level index.
+  Void writeTopIndexApis(WebOutStream out, DocPod[] pods)
+  {
+    out.table
+    pods.each |pod|
+    {
+      out.tr
+        .td.a(`${pod.name}/index.html`).w(pod.name).aEnd.tdEnd
+        .td.w(pod.summary).tdEnd
+        .trEnd
+    }
+    out.tableEnd
+  }
+
+  ** Write a table of manual pods for a top-level index
+  Void writeTopIndexManuals(WebOutStream out, DocPod[] manuals)
+  {
+    out.table
+    manuals.each |pod|
+    {
+      out.tr
+        .td.a(`${pod.name}/index.html`).w(pod.name).aEnd.tdEnd
+        .td.w(pod.summary)
+        .div
+        pod.chapters.each |ch,i|
+        {
+          if (i > 0) out.w(", ")
+          out.a(`${pod.name}/${ch.name}.html`).w("$ch.name").aEnd
+        }
+        out.divEnd
+        out.tdEnd
+     out.trEnd
+    }
+    out.tableEnd
   }
 
   ** Write pod index.

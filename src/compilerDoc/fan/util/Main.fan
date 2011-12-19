@@ -36,7 +36,8 @@ class Main : AbstractMain
     env := DocEnv()
 
     // figure out which pods to render
-    DocPod[] docPods := all ? env.pods : pods.map |n->DocPod| { env.pod(n) }
+    podNames := all ? Env.cur.findAllPodNames : this.pods
+    DocPod[] docPods := podNames.map |n->DocPod| { env.pod(n) }
 
     // render pods
     docWriter := FileDocWriter

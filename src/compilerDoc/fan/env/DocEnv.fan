@@ -70,20 +70,6 @@ class DocEnv
 // Reflection
 //////////////////////////////////////////////////////////////////////////
 
-  ** List all pods found in this environment.
-  once DocPod[] pods()
-  {
-    acc := DocPod[,]
-    loader.findAllPodNames.each |name|
-    {
-      pod := pod(name)
-      if (pod.meta["pod.docApi"] != "false")
-        acc.add(pod)
-    }
-    acc.sort |a, b| { a.name <=> b.name }
-    return acc.ro
-  }
-
   ** Get a pod by name.  If not found return null or
   ** throw UnknownPodErr based on checked flag.
   DocPod? pod(Str podName, Bool checked := true)
