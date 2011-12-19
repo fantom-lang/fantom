@@ -43,8 +43,21 @@ class Main : AbstractMain
     // create customized env instance
     env := FantomDocEnv(exampleUris)
 
-    // figure out which pods to render
-    DocPod[] docPods := all ? env.pods : pods.map |n->DocPod| { env.pod(n) }
+    // figure out which pods to render, use reflection
+    // get standard Fantom pods
+    docPods := DocPod[,]
+    Pod.list.each |pod|
+    {
+      // skip no doc pods
+      if (pod.meta["pod.docApi"] != "true") return
+
+      // skip anything not a fantom core
+      proj := pod.meta["proj.name"]
+      if (proj != "Fantom Core" && proj != "Fantom Docs") return
+
+      // keep this one
+      docPods.add(env.pod(pod.name))
+    }
 
     // render pods
     docWriter := FantomDocWriter
@@ -162,6 +175,69 @@ class FantomDocWriter : FileDocWriter
   override Void writeCss(File file)
   {
     file.out.printLine(FantomCss.css).close
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Top Index
+//////////////////////////////////////////////////////////////////////////
+
+  override Void writeTopIndex(File file)
+  {
+    // organize pods into manuals and apis
+    manuals := DocPod[,]
+    apis    := DocPod[,]
+    pods.each |p|
+    {
+      if (p.isManual) manuals.add(p)
+      else apis.add(p)
+    }
+    manuals.moveTo(manuals.find |p| { p.name == "docIntro" }, 0)
+    manuals.moveTo(manuals.find |p| { p.name == "docLang" }, 1)
+
+    // doc start
+    out := WebOutStream(file.out)
+    pr := makePageRenderer(out)
+    pr.writeStart
+    out.div("class='index'")
+
+    // manuals
+    out.div("class='float'")
+    out.div("class='manuals'")
+    out.h2.w("Manuals").h2End
+    writeTopIndexManuals(out, manuals)
+    out.divEnd
+
+    // examples
+    out.div("class='examples'")
+    out.h2.w("Examples").h2End
+    out.table
+    exampleIndex.each |list,name|
+    {
+      names := list.join(", ") |v|
+      {
+        uri  := (Uri)v->first
+        exFile := exampleUriToFilename(uri)
+        return "<a href='examples/$exFile'>$uri.basename</a>"
+      }
+      out.tr
+        .td.a(`examples/index.html#$name`).esc(name).aEnd.tdEnd
+        .td.div.w(names).divEnd.tdEnd
+        .trEnd
+    }
+    out.tableEnd
+    out.divEnd
+    out.divEnd
+
+    // apis
+    out.div("class='apis'")
+    out.h2.w("APIs").h2End
+    writeTopIndexApis(out, apis)
+    out.divEnd
+
+    // end
+    out.divEnd
+    pr.writeEnd
+    out.close
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -341,50 +417,6 @@ class FantomPageRenderer : PageRenderer
     out.bodyEnd
     out.htmlEnd
   }
-
-  override Void writeIndex()
-  {
-    // start
-    writeStart
-    out.div("class='index'")
-
-    // manuals
-    out.div("class='float'")
-    out.div("class='manuals'")
-    IndexRenderer(env, out).writeManuals
-    out.divEnd
-
-    // examples
-    out.div("class='examples'")
-    out.h2.w("Examples").h2End
-    out.table
-    parent.exampleIndex.each |list,name|
-    {
-      names := list.join(", ") |v|
-      {
-        uri  := (Uri)v->first
-        file := parent.exampleUriToFilename(uri)
-        return "<a href='examples/$file'>$uri.basename</a>"
-      }
-      out.tr
-        .td.a(`examples/index.html#$name`).esc(name).aEnd.tdEnd
-        .td.div.w(names).divEnd.tdEnd
-        .trEnd
-    }
-    out.tableEnd
-    out.divEnd
-    out.divEnd
-
-    // apis
-    out.div("class='apis'")
-    IndexRenderer(env, out).writeApis
-    out.divEnd
-
-    // end
-    out.divEnd
-    writeEnd
-  }
-
 
   Void writeExample()
   {

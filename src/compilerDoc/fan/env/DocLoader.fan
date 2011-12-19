@@ -17,16 +17,6 @@ class DocLoader
 {
 
   **
-  ** Resolve the full listing of pod names to use for topindex
-  ** and to populate `DocEnv.pods`.  Default implementation
-  ** routes to `sys::Env.findAllPodNames`.
-  **
-  protected virtual Str[] findAllPodNames()
-  {
-    Env.cur.findAllPodNames
-  }
-
-  **
   ** Resolve a pod name to a DocPod or return null.  Default
   ** implementation routes to `findPodFile` and then calls
   ** `DocPod.load`.
