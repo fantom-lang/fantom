@@ -15,11 +15,11 @@ using fandoc
 const class DocChapter
 {
   ** Constructor
-  internal new make(DocPod pod, File f)
+  internal new make(DocEnv env, Str pod, File f)
   {
-    this.pod  = pod.name
+    this.pod  = pod
     this.name = f.name == "pod.fandoc" ? "pod-doc" : f.basename
-    this.loc  = DocLoc("${pod.name}::${f.name}", 1)
+    this.loc  = DocLoc("${pod}::${f.name}", 1)
     this.doc  = DocFandoc(this.loc, f.in.readAllStr)
 
     // parse fandoc and build the headings tree
@@ -34,23 +34,22 @@ const class DocChapter
       fandocHeadings := parser.parse(f.name, doc.text.in).findHeadings
 
       // map headings into tree structure
-      buildHeadingsTree(pod, fandocHeadings, headingTop, headingMap)
+      buildHeadingsTree(env, fandocHeadings, headingTop, headingMap)
     }
     catch (Err e)
     {
-      pod.env.err("Cannot parse fandoc chapter", loc, e)
+      env.err("Cannot parse fandoc chapter", loc, e)
     }
     this.headings = headingTop
     this.headingMap = headingMap
   }
 
-  private Void buildHeadingsTree(DocPod pod, Heading[] fandoc, DocHeading[] top, Str:DocHeading map)
+  private Void buildHeadingsTree(DocEnv env, Heading[] fandoc, DocHeading[] top, Str:DocHeading map)
   {
     // if no headings just bail
     if (fandoc.isEmpty) return
 
     // first map Fandoc headings to DocHeadings and map by anchor id
-    env := pod.env
     headings := DocHeading[,]
     children := DocHeading:DocHeading[][:]
     fandoc.each |d|
@@ -74,7 +73,7 @@ const class DocChapter
       // top level heading
       if (stack.isEmpty)
       {
-        if (h.level != 2 && pod.name != "fandoc")
+        if (h.level != 2 && this.pod != "fandoc")
           env.err("Expected top-level heading to be level 2: $h.title", loc)
         top.add(h)
       }

@@ -69,7 +69,7 @@ class FileDocWriter
         // source files
         if (!pod.sources.isEmpty)
         {
-          zip := pod.open
+          zip := Zip.open(pod.file)
           try
           {
             pod.sources.each |src|
@@ -96,7 +96,7 @@ class FileDocWriter
         // resources
         if (!pod.resources.isEmpty)
         {
-          zip := pod.open
+          zip := Zip.open(pod.file)
           try
           {
             pod.resources.each |res|

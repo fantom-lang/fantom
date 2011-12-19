@@ -4,56 +4,50 @@
 //
 // History:
 //   11 Aug 11  Brian Frank  Creation
+//   19 Dec 11  Brian Frank  Redesign to make DocPod const
 //
 
 **
 ** DocPod models the documentation of a `sys::Pod`.
 **
-class DocPod
+const class DocPod
 {
 
-//////////////////////////////////////////////////////////////////////////
-// Construction
-//////////////////////////////////////////////////////////////////////////
-
-  ** Construct from meta.props
-  new make(DocEnv env, Str:Str meta)
+  ** Load from a zip file.  The given env is ued for error reporting.
+  static DocPod load(DocEnv env, File file)
   {
-    this.env     = env
-    this.name    = getReq(meta, "pod.name")
-    this.version = Version.fromStr(getReq(meta, "pod.version"))
-    this.depends = parseDepends(meta)
-    this.summary = getReq(meta, "pod.summary")
-    this.meta    = meta
+    loader := DocPodLoader(env, file).load
+    return DocPod(loader)
   }
 
-  private static Str getReq(Str:Str m, Str n)
+  ** Private constructor to copy loader fields
+  private new make(DocPodLoader loader)
   {
-    m[n] ?: throw Err("Missing '$n' in meta.props")
+    this.file        = loader.file
+    this.name        = loader.name
+    this.version     = loader.version
+    this.summary     = loader.summary
+    this.meta        = loader.meta
+    this.toc         = loader.toc
+    this.types       = loader.typeList
+    this.typeMap     = loader.typeMap
+    this.chapters    = loader.chapterList
+    this.chapterMap  = loader.chapterMap
+    this.podDoc      = loader.podDoc
+    this.resources   = loader.resourceList
+    this.resourceMap = loader.resourceMap
+    this.sources     = loader.sourceList
+    this.sourceMap   = loader.sourceMap
   }
 
-  private static Depend[] parseDepends(Str:Str m)
-  {
-    s := getReq(m, "pod.depends").trim
-    if (s.isEmpty) return Depend#.emptyList
-    return s.split(';').map |tok->Depend| { Depend(tok) }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Identity
-//////////////////////////////////////////////////////////////////////////
-
-  ** Environment used to load and manage this pod
-  DocEnv env { private set }
+  ** File the pod was loaded from
+  const File file
 
   ** Simple name of the pod such as "sys".
   const Str name
 
   ** Version number for this pod.
   const Version version
-
-  ** Get the declared list of dependencies for this pod.
-  const Depend[] depends
 
   ** Summary string for the pod
   const Str summary
@@ -65,49 +59,93 @@ class DocPod
   ** See [docLang]`docLang::Pods#meta`.
   const Str:Str meta
 
-  ** Open this pod file as a zip file.
-  Zip open()
-  {
-    file := env.loader.findPodFile(name)
-    if (file == null) throw Err("Cannot map '$name' to pod file")
-    return Zip.open(file)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Types
-//////////////////////////////////////////////////////////////////////////
-
-  **
   ** List of the public, documented types in this pod.
-  **
-  DocType[] types() { load.typeList }
+  const DocType[] types
 
-  **
   ** Find a type by name.  If the type doesn't exist and checked
   ** is false then return null, otherwise throw UnknownTypeErr.
-  **
   DocType? type(Str typeName, Bool checked := true)
   {
-    load
     t := typeMap[typeName]
     if (t != null) return t
     if (checked) throw UnknownTypeErr("${this.name}::${typeName}")
     return null
   }
+  private const Str:DocType typeMap
 
-  **
-  ** Lazily perform a deep load of a DocPod.  When the DocPod is
-  ** constructed it is "hollow" and we only know summary information
-  ** gleaned from meta.props - this is all we need for top-level
-  ** index.  But once we need to know types, etc it is time to perform
-  ** a deep load.  To avoid pinning open the pod zip file we just
-  ** load every type at once.
-  **
-  private This load()
+  ** Return pod-doc file as a chapter instance or null
+  const DocChapter? podDoc
+
+  ** A *manual* pod is a pod with only fandoc chapters and no types.
+  Bool isManual() { types.isEmpty && !chapters.isEmpty }
+
+  ** If this a API pod, this is the Str/DocType where the string indicates
+  ** groupings such as "Classes", "Mixins", etc.  If this is a manual return
+  ** the list of Str/DocChapter where Str indicates index grouping headers.
+  const Obj[] toc
+
+  ** If this is a manual like docLang, return list of chapters.
+  const DocChapter[] chapters
+
+  ** Find a chapter by name.  If the chapter doesn't exist and
+  ** checked is false then return null, otherwise throw Err.
+  DocChapter? chapter(Str chapterName, Bool checked := true)
   {
-    // short circuit if already loaded
-    if (loaded) return this
+    c := chapterMap[chapterName]
+    if (c != null) return c
+    if (checked) throw Err("Unknown chapter: ${this.name}::${chapterName}")
+    return null
+  }
+  private const Str:DocChapter chapterMap
 
+  ** Resource files in pod which are used to support the
+  ** documentation such as images used by the fandoc chapters.
+  ** Resources can only be located in doc/ sub-directory.
+  ** The Uris are internal to the pod zip file.
+  const Uri[] resources
+
+  ** Return pod internal URI to resource for filename, or
+  ** if not available return null/raise exception.
+  Uri? resource(Str filename, Bool checked := true)
+  {
+    uri := resourceMap[filename]
+    if (uri != null) return uri
+    if (checked) throw UnresolvedErr("resource file: $filename")
+    return null
+  }
+  private const Str:Uri resourceMap
+
+  ** Source files in pod which should be included in documentation.
+  ** The Uris are internal to the pod zip file.
+  const Uri[] sources
+
+  ** Return pod internal URI to source code for filename, or
+  ** if not available return null/raise exception.
+  Uri? source(Str filename, Bool checked := true)
+  {
+    uri := sourceMap[filename]
+    if (uri != null) return uri
+    if (checked) throw UnresolvedErr("source file: $filename")
+    return null
+  }
+  private const Str:Uri sourceMap
+
+}
+
+**************************************************************************
+** DocPodLoader
+**************************************************************************
+
+internal class DocPodLoader
+{
+  new make(DocEnv env, File file)
+  {
+    this.env  = env
+    this.file = file
+  }
+
+  This load()
+  {
     // these are the data structures we'll be building up
     types     := Str:DocType[:]
     chapters  := Str:DocChapter[:]
@@ -115,10 +153,15 @@ class DocPod
     resources := Uri[,]
     sources   := Uri[,]
 
-    // process zip contents
-    zip := open
+    // process zip file contents
+    zip := Zip.open(file)
     try
     {
+      // first read meta
+      metaFile := zip.contents[`/meta.props`] ?: throw Err("Pod missing meta.props: $file")
+      this.meta = metaFile.readProps
+      finishMeta
+
       // iterate thru the zip file looking for the files we need
       zip.contents.each |f|
       {
@@ -144,7 +187,7 @@ class DocPod
           // if doc/{type}.fandoc
           if (f.ext == "fandoc")
           {
-            chapter := DocChapter(this, f)
+            chapter := DocChapter(env, name, f)
             chapters[chapter.name] = chapter
           }
 
@@ -165,16 +208,27 @@ class DocPod
     }
     finally zip.close
 
-    // save state
-    saveTypes(types)
-    saveChapters(chapters, indexFog)
-    saveResources(resources)
-    saveSources(sources)
-    loaded = true
+    // finish
+    finishTypes(types)
+    finishChapters(env, chapters, indexFog)
+    finishResources(resources)
+    finishSources(sources)
     return this
   }
 
-  private Void saveTypes(Str:DocType map)
+  private Void finishMeta()
+  {
+    this.name    = getMeta("pod.name")
+    this.summary = getMeta("pod.summary")
+    this.version = Version.fromStr(getMeta("pod.version"))
+  }
+
+  private Str getMeta(Str n)
+  {
+    meta[n] ?: throw Err("Missing '$n' in meta.props")
+  }
+
+  private Void finishTypes(Str:DocType map)
   {
     // create sorted list
     list := map.vals.sort|a, b| { a.name <=> b.name }
@@ -210,12 +264,12 @@ class DocPod
     if (errs.size    > 0) toc.add("Errs").addAll(errs)
 
     // save to fields
-    this.typeMap  = map
-    this.typeList = list.ro
-    this.tocRef = toc.toImmutable
+    this.typeMap  = map.toImmutable
+    this.typeList = list.toImmutable
+    this.toc      = toc.toImmutable
   }
 
-  private Void saveChapters(Str:DocChapter map, Obj[]? indexFog)
+  private Void finishChapters(DocEnv env, Str:DocChapter map, Obj[]? indexFog)
   {
     // create sorted list of chapters
     list := map.vals.sort |a, b| { a.name <=> b.name }
@@ -224,7 +278,9 @@ class DocPod
     if (!typeList.isEmpty)
     {
       if (list.size == 1 && list.first.isPodDoc)
-        this.podDocRef = list.first
+        this.podDoc = list.first
+      this.chapterMap  = map.toImmutable
+      this.chapterList = list.toImmutable
       return
     }
 
@@ -283,99 +339,38 @@ class DocPod
     }
 
     // save to fields
-    this.chapterMap  = map
-    this.chapterList = list.ro
-    this.tocRef = toc.toImmutable
+    this.chapterMap  = map.toImmutable
+    this.chapterList = list.toImmutable
+    this.toc         = toc.toImmutable
   }
 
-  private Void saveResources(Uri[] list)
+  private Void finishResources(Uri[] list)
   {
-    this.resourceList = list.sort.ro
+    this.resourceList = list.sort.toImmutable
+    this.resourceMap  = Str:Uri[:].addList(list) |uri| { uri.name }.toImmutable
   }
 
-  private Void saveSources(Uri[] list)
+  private Void finishSources(Uri[] list)
   {
-    this.sourceList = list.sort.ro
-    this.sourceMap  = Str:Uri[:].addList(list) |uri| { uri.name }
+    this.sourceList = list.sort.toImmutable
+    this.sourceMap  = Str:Uri[:].addList(list) |uri| { uri.name }.toImmutable
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Chapters
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Return pod-doc file as a chapter instance or null
-  **
-  DocChapter? podDoc() { load.podDocRef }
-
-  **
-  ** A *manual* pod is a pod with only fandoc chapters and no types.
-  **
-  Bool isManual() { load; return typeList.isEmpty && !chapterList.isEmpty }
-
-  **
-  ** If this a API pod, this is the Str/DocType where the string indicates
-  ** groupings such as "Classes", "Mixins", etc.  If this is a manual return
-  ** the list of Str/DocChapter where Str indicates index grouping headers.
-  **
-  Obj[] toc() { load.tocRef }
-
-  **
-  ** Find a chapter by name.  If the chapter doesn't exist and checked
-  ** is false then return null, otherwise throw Err.
-  **
-  DocChapter? chapter(Str chapterName, Bool checked := true)
-  {
-    load
-    c := chapterMap[chapterName]
-    if (c != null) return c
-    if (checked) throw Err("Unknown chapter: ${this.name}::${chapterName}")
-    return null
-  }
-
-  **
-  ** If this is a manual like docLang, return list of chapters.
-  **
-  DocChapter[] chapters() { load.chapterList }
-
-  **
-  ** Resource files in pod which are used to support the
-  ** documentation such as images used by the fandoc chapters.
-  ** The Uris are internal to the pod zip file.
-  **
-  Uri[] resources() { load.resourceList }
-
-  **
-  ** Source files in pod which should be included in documentation.
-  ** The Uris are internal to the pod zip file.
-  **
-  Uri[] sources() { load.sourceList }
-
-  **
-  ** Return pod internal URI to source code for filename, or
-  ** if not available return null/raise exception.
-  **
-  Uri? source(Str filename, Bool checked := true)
-  {
-    load
-    uri := sourceMap[filename]
-    if (uri != null) return uri
-    if (checked) throw UnresolvedErr("source file: $filename")
-    return null
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// State
-//////////////////////////////////////////////////////////////////////////
-
-  private Bool loaded
-  private DocType[]? typeList
-  private [Str:DocType]? typeMap
-  private DocChapter? podDocRef
-  private DocChapter[]? chapterList := [,]
-  private [Str:DocChapter]? chapterMap := [:]
-  private Obj[]? tocRef
-  private Uri[]? resourceList
-  private Uri[]? sourceList
-  private [Str:Uri]? sourceMap
+  DocEnv env                    // ctor
+  File file                     // ctor
+  [Str:Str]? meta               // load
+  Str? name                     // finishMeta
+  Str? summary                  // finishMeta
+  Version? version              // finishMeta
+  DocType[]? typeList           // finishTypes
+  [Str:DocType]? typeMap        // finishTypes
+  DocChapter[]? chapterList     // finishChapters
+  [Str:DocChapter]? chapterMap  // finishChapters
+  DocChapter? podDoc            // finishChapters
+  Uri[]? resourceList           // finishResource
+  [Str:Uri]? resourceMap        // finishResource
+  Uri[]? sourceList             // finishSource
+  [Str:Uri]? sourceMap          // finishSource
+  Obj[]? toc                    // finishTypes/finishChapters
 }
+

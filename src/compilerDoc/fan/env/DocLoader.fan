@@ -28,21 +28,14 @@ class DocLoader
 
   **
   ** Resolve a pod name to a DocPod or return null.  Default
-  ** implementation routes to `findPodFile`.  The returned pod
-  ** only needs to have its summary meta loaded, the types will
-  ** be lazily loaded by `DocPod`.
+  ** implementation routes to `findPodFile` and then calls
+  ** `DocPod.load`.
   **
   protected virtual DocPod? findPod(DocEnv env, Str podName)
   {
     file := findPodFile(podName)
     if (file == null) return null
-    zip := Zip.open(file)
-    try
-    {
-      meta := zip.contents[`/meta.props`] ?: throw Err("Pod missing meta.props: $file")
-      return DocPod(env, meta.readProps)
-    }
-    finally zip.close
+    return DocPod.load(env, file)
   }
 
   **
