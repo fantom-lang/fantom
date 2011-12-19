@@ -10,6 +10,8 @@
 - Add gedit config file
 - Tweak compiler to omit fcode/types.def if no types
 - Refactor Compiler.depends
+- Refactor compilerDoc to make DocPod const
+- Refactor compilerDoc to use DocPage base class
 
 *Build 1.0.61 (17 Nov 2011)*
 - Upgrade timezone database with zone info version 2011j

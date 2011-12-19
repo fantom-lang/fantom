@@ -11,7 +11,7 @@ using concurrent
 **
 ** DocType models the documentation of a `sys::Type`.
 **
-const class DocType
+const class DocType : DocPage
 {
 
   ** Constructor
@@ -53,6 +53,9 @@ const class DocType
 
   ** Qualified name formatted as "pod::name".
   Str qname() { ref.qname }
+
+  ** Title of the document is the qualified name
+  override Str title() { qname }
 
   ** Source code location of this type definition
   const DocLoc loc
