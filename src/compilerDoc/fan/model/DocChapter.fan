@@ -15,7 +15,7 @@ using fandoc
 const class DocChapter : DocPage
 {
   ** Constructor
-  internal new make(DocEnv env, Str pod, File f)
+  internal new make(DocEnv env, DocPod pod, File f)
   {
     this.pod  = pod
     this.name = f.name == "pod.fandoc" ? "pod-doc" : f.basename
@@ -73,7 +73,7 @@ const class DocChapter : DocPage
       // top level heading
       if (stack.isEmpty)
       {
-        if (h.level != 2 && this.pod != "fandoc")
+        if (h.level != 2 && pod.name != "fandoc")
           env.err("Expected top-level heading to be level 2: $h.title", loc)
         top.add(h)
       }
@@ -93,8 +93,8 @@ const class DocChapter : DocPage
     children.each |kids, h| { h.childrenRef.val = kids.toImmutable }
   }
 
-  ** Pod name which defines this chapter such as "docLang"
-  const Str pod
+  ** Pod which defines this chapter such as "docLang"
+  const DocPod pod
 
   ** Simple name of the chapter such as "Overview" or "pod-doc"
   const Str name

@@ -293,7 +293,7 @@ class PageRenderer : DocRenderer
   virtual Void writeType()
   {
     if (type == null) throw ArgErr("type not configured")
-    this.pod = env.pod(type.pod)
+    this.pod = type.pod
     renderer := TypeRenderer(env, out, type)
 
     // start
@@ -355,7 +355,7 @@ class PageRenderer : DocRenderer
   virtual Void writeChapter()
   {
     if (chapter == null) throw ArgErr("chapter not configured")
-    this.pod = env.pod(chapter.pod)
+    this.pod = chapter.pod
     renderer := ManualRenderer(env, out, pod)
 
     // start

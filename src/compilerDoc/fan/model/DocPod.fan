@@ -16,28 +16,38 @@ const class DocPod : DocPage
   ** Load from a zip file.  The given env is ued for error reporting.
   static DocPod load(DocEnv env, File file)
   {
-    loader := DocPodLoader(env, file).load
-    return DocPod(loader)
+    return DocPod(env, file)
   }
 
   ** Private constructor to copy loader fields
-  private new make(DocPodLoader loader)
+  private new make(DocEnv env, File file)
   {
-    this.file        = loader.file
-    this.name        = loader.name
-    this.version     = loader.version
-    this.summary     = loader.summary
-    this.meta        = loader.meta
-    this.toc         = loader.toc
-    this.types       = loader.typeList
-    this.typeMap     = loader.typeMap
-    this.chapters    = loader.chapterList
-    this.chapterMap  = loader.chapterMap
-    this.podDoc      = loader.podDoc
-    this.resources   = loader.resourceList
-    this.resourceMap = loader.resourceMap
-    this.sources     = loader.sourceList
-    this.sourceMap   = loader.sourceMap
+    this.file = file
+    loader := DocPodLoader(env, file, this)
+    zip := Zip.open(file)
+    try
+    {
+      // first load meta data
+      loader.loadMeta(zip)
+      this.name    = loader.name
+      this.version = loader.version
+      this.summary = loader.summary
+      this.meta    = loader.meta
+
+      // next load meta
+      loader.loadContent(zip)
+      this.toc         = loader.toc
+      this.types       = loader.typeList
+      this.typeMap     = loader.typeMap
+      this.chapters    = loader.chapterList
+      this.chapterMap  = loader.chapterMap
+      this.podDoc      = loader.podDoc
+      this.resources   = loader.resourceList
+      this.resourceMap = loader.resourceMap
+      this.sources     = loader.sourceList
+      this.sourceMap   = loader.sourceMap
+    }
+    finally zip .close
   }
 
   ** File the pod was loaded from
@@ -141,86 +151,18 @@ const class DocPod : DocPage
 
 internal class DocPodLoader
 {
-  new make(DocEnv env, File file)
-  {
+  new make(DocEnv env, File file, DocPod pod)
+   {
     this.env  = env
     this.file = file
+    this.pod  = pod
   }
 
-  This load()
+  Void loadMeta(Zip zip)
   {
-    // these are the data structures we'll be building up
-    types     := Str:DocType[:]
-    chapters  := Str:DocChapter[:]
-    indexFog  := null
-    resources := Uri[,]
-    sources   := Uri[,]
-
-    // process zip file contents
-    zip := Zip.open(file)
-    try
-    {
-      // first read meta
-      metaFile := zip.contents[`/meta.props`] ?: throw Err("Pod missing meta.props: $file")
-      this.meta = metaFile.readProps
-      finishMeta
-
-      // iterate thru the zip file looking for the files we need
-      zip.contents.each |f|
-      {
-        try
-        {
-          // if this is src/{file}, save to source list
-          if (f.path[0] == "src")
-          {
-            if (f.path.size == 2) sources.add(f.uri)
-            return
-          }
-
-          // we only care about files in doc/*
-          if (f.path[0] != "doc") return
-
-          // if doc/{type}.apidoc
-          if (f.ext == "apidoc")
-          {
-            type := ApiDocParser(name, f.in).parseType
-            types[type.name] = type
-          }
-
-          // if doc/{type}.fandoc
-          if (f.ext == "fandoc")
-          {
-            chapter := DocChapter(env, name, f)
-            chapters[chapter.name] = chapter
-          }
-
-          // if doc/index.fog
-          else if (f.name == "index.fog")
-          {
-            indexFog = f.readObj
-          }
-
-          // otherwise assume its a resource
-          else
-          {
-            resources.add(f.uri)
-          }
-        }
-        catch (Err e) env.err("Cannot parse", DocLoc("${name}::${f}", 0), e)
-      }
-    }
-    finally zip.close
-
-    // finish
-    finishTypes(types)
-    finishChapters(env, chapters, indexFog)
-    finishResources(resources)
-    finishSources(sources)
-    return this
-  }
-
-  private Void finishMeta()
-  {
+    // first read meta
+    metaFile := zip.contents[`/meta.props`] ?: throw Err("Pod missing meta.props: $file")
+    this.meta    = metaFile.readProps
     this.name    = getMeta("pod.name")
     this.summary = getMeta("pod.summary")
     this.version = Version.fromStr(getMeta("pod.version"))
@@ -229,6 +171,66 @@ internal class DocPodLoader
   private Str getMeta(Str n)
   {
     meta[n] ?: throw Err("Missing '$n' in meta.props")
+  }
+
+  Void loadContent(Zip zip)
+  {
+    // these are the data structures we'll be building up
+    types     := Str:DocType[:]
+    chapters  := Str:DocChapter[:]
+    indexFog  := null
+    resources := Uri[,]
+    sources   := Uri[,]
+
+    // iterate thru the zip file looking for the files we need
+    zip.contents.each |f|
+    {
+      try
+      {
+        // if this is src/{file}, save to source list
+        if (f.path[0] == "src")
+        {
+          if (f.path.size == 2) sources.add(f.uri)
+          return
+        }
+
+        // we only care about files in doc/*
+        if (f.path[0] != "doc") return
+
+        // if doc/{type}.apidoc
+        if (f.ext == "apidoc")
+        {
+          type := ApiDocParser(pod, f.in).parseType
+          types[type.name] = type
+        }
+
+        // if doc/{type}.fandoc
+        if (f.ext == "fandoc")
+        {
+          chapter := DocChapter(env, pod, f)
+          chapters[chapter.name] = chapter
+        }
+
+        // if doc/index.fog
+        else if (f.name == "index.fog")
+        {
+          indexFog = f.readObj
+        }
+
+        // otherwise assume its a resource
+        else
+        {
+          resources.add(f.uri)
+        }
+      }
+      catch (Err e) env.err("Cannot parse", DocLoc("${name}::${f}", 0), e)
+    }
+
+    // finish
+    finishTypes(types)
+    finishChapters(env, chapters, indexFog)
+    finishResources(resources)
+    finishSources(sources)
   }
 
   private Void finishTypes(Str:DocType map)
@@ -361,10 +363,11 @@ internal class DocPodLoader
 
   DocEnv env                    // ctor
   File file                     // ctor
+  DocPod pod                    // ctor
   [Str:Str]? meta               // load
-  Str? name                     // finishMeta
-  Str? summary                  // finishMeta
-  Version? version              // finishMeta
+  Str? name                     // loadMeta
+  Str? summary                  // loadMeta
+  Version? version              // loadMeta
   DocType[]? typeList           // finishTypes
   [Str:DocType]? typeMap        // finishTypes
   DocChapter[]? chapterList     // finishChapters
@@ -376,4 +379,5 @@ internal class DocPodLoader
   [Str:Uri]? sourceMap          // finishSource
   Obj[]? toc                    // finishTypes/finishChapters
 }
+
 
