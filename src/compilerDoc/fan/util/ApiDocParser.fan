@@ -46,9 +46,9 @@
 **
 internal class ApiDocParser
 {
-  new make(Str podName, InStream in)
+  new make(DocPod pod, InStream in)
   {
-    this.podName = podName
+    this.pod = pod
     this.in = in
     consumeLine
   }
@@ -64,7 +64,7 @@ internal class ApiDocParser
 
       // parse attrs
       attrs  := parseAttrs
-      this.typeRef = DocTypeRef("${podName}::${name}")
+      this.typeRef = DocTypeRef("${pod.name}::${name}")
       this.typeLoc = attrs.loc
 
       // zero or more slots
@@ -77,7 +77,7 @@ internal class ApiDocParser
       }
 
       // construct DocType from my own fields
-      return DocType(attrs, typeRef, slots)
+      return DocType(pod, attrs, typeRef, slots)
     }
     finally { if (close) in.close }
   }
@@ -240,7 +240,7 @@ internal class ApiDocParser
   }
 
   private InStream in
-  private const Str podName
+  private const DocPod pod
   private Str cur := ""
   private DocLoc typeLoc := DocLoc.unknown
   private DocTypeRef? typeRef

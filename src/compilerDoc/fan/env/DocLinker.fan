@@ -71,12 +71,12 @@ class DocLinker
     else if (base is DocType)
     {
       baseType = base
-      basePod  = env.pod(baseType.pod)
+      basePod  = baseType.pod
     }
     else if (base is DocChapter)
     {
       baseChapter = base
-      basePod = env.pod(baseChapter.pod)
+      basePod = baseChapter.pod
     }
     else throw Err("Invalid base type: $base.typeof")
 

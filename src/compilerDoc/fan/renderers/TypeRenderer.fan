@@ -59,14 +59,10 @@ class TypeRenderer : DocRenderer
     : super(env, out)
   {
     this.type = type
-    this.pod  = env.pod(type.pod)
   }
 
   ** Type to renderer
   const DocType type
-
-  ** Pod for type
-  DocPod pod { private set }
 
   ** Render the HTML for the DocType referened by `type` field.
   virtual Void writeType()
@@ -218,7 +214,7 @@ class TypeRenderer : DocRenderer
     out.h3.w("Source").h3End
     out.ul
     loc := type.doc.loc
-    src := pod.source(loc.file, false)
+    src := type.pod.source(loc.file, false)
     if (src == null)
       out.li.w("Not available").liEnd
     else
@@ -279,7 +275,7 @@ class TypeRenderer : DocRenderer
     else
     {
       uri := StrBuf()
-      if (ref.pod != type.pod) uri.add("../").add(ref.pod).add("/")
+      if (ref.pod != type.pod.name) uri.add("../").add(ref.pod).add("/")
       uri.add(ref.name).add(".html")
 
       out.a(uri.toStr.toUri)
@@ -307,7 +303,7 @@ class TypeRenderer : DocRenderer
   ** true if source is available.
   virtual Void writeSourceLink(DocLoc loc)
   {
-    uri := sourceLink(pod, loc)
+    uri := sourceLink(type.pod, loc)
     if (uri == null) return
     out.p("class='src'").a(uri).w("Source").aEnd.pEnd
   }

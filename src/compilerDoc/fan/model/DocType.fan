@@ -15,8 +15,9 @@ const class DocType : DocPage
 {
 
   ** Constructor
-  internal new make(DocAttrs attrs, DocTypeRef ref, Str:DocSlot slotMap)
+  internal new make(DocPod pod, DocAttrs attrs, DocTypeRef ref, Str:DocSlot slotMap)
   {
+    this.pod     = pod
     this.ref     = ref
     this.loc     = attrs.loc
     this.flags   = attrs.flags
@@ -42,11 +43,11 @@ const class DocType : DocPage
     this.slots = list
   }
 
+  ** Pod which defines this type
+  const DocPod pod
+
   ** Representation of this type definition as a reference
   const DocTypeRef ref
-
-  ** Pod name which defines this type
-  Str pod() { ref.pod }
 
   ** Simple name of the type such as "Str".
   Str name() { ref.name }

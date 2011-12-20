@@ -68,7 +68,7 @@ class ManualRenderer : DocRenderer
   }
 
   ** Pod to renderer
-  DocPod pod { private set }
+  const DocPod pod
 
   ** Render the manual index of chapters.
   virtual Void writeIndex()
