@@ -20,7 +20,7 @@ const class DocPod : DocPage
   }
 
   ** Private constructor to copy loader fields
-  private new make(DocEnv env, File file)
+  @NoDoc new make(DocEnv env, File file)
   {
     this.file = file
     loader := DocPodLoader(env, file, this)

@@ -12,6 +12,7 @@ using web
 **
 ** Main
 **
+@NoDoc
 class Main : AbstractMain
 {
 

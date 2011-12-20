@@ -13,6 +13,7 @@ using syntax
 **
 ** FileDocWriter
 **
+@NoDoc
 class FileDocWriter
 {
   ** Constructor.
