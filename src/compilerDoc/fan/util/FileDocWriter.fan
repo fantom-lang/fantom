@@ -67,16 +67,16 @@ class FileDocWriter
         }
 
         // source files
-        if (!pod.sources.isEmpty)
+        if (!pod.srcList.isEmpty)
         {
           zip := Zip.open(pod.file)
           try
           {
-            pod.sources.each |src|
+            pod.srcList.each |src|
             {
-              rules := SyntaxRules.loadForExt(src.ext ?: "?") ?:SyntaxRules()
-              doc   := SyntaxDoc.parse(rules, zip.contents[src].in)
-              writeSource(podDir + `src-${src.name}.html`, pod, src, doc)
+              rules := SyntaxRules.loadForExt(src.uri.ext ?: "?") ?:SyntaxRules()
+              doc   := SyntaxDoc.parse(rules, zip.contents[src.uri].in)
+              writeSource(podDir + `src-${src.name}.html`, src, doc)
             }
           }
           finally zip.close
@@ -94,14 +94,14 @@ class FileDocWriter
         }
 
         // resources
-        if (!pod.resources.isEmpty)
+        if (!pod.resList.isEmpty)
         {
           zip := Zip.open(pod.file)
           try
           {
-            pod.resources.each |res|
+            pod.resList.each |res|
             {
-              buf := zip.contents[res].in.readAllBuf
+              buf := zip.contents[res.uri].in.readAllBuf
               podDir.plus(res.name.toUri).out.writeBuf(buf).flush
             }
           }
@@ -229,13 +229,13 @@ class FileDocWriter
   }
 
   ** Write source file.
-  virtual Void writeSource(File file, DocPod pod, Uri uri, SyntaxDoc doc)
+  virtual Void writeSource(File file, DocSrc src, SyntaxDoc doc)
   {
     out := WebOutStream(file.out)
     makePageRenderer(out)
     {
-      it.pod = pod
-      it.sourceUri = uri
+      it.pod = src.pod
+      it.sourceUri = src.uri
       it.sourceDoc = doc
     }.writeSource
     out.close

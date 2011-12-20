@@ -214,7 +214,7 @@ class TypeRenderer : DocRenderer
     out.h3.w("Source").h3End
     out.ul
     loc := type.doc.loc
-    src := type.pod.source(loc.file, false)
+    src := type.pod.src(loc.file, false)
     if (src == null)
       out.li.w("Not available").liEnd
     else

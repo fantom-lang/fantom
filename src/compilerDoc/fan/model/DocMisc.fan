@@ -6,6 +6,10 @@
 //   15 Aug 11  Brian Frank  Creation
 //
 
+**************************************************************************
+** DocPage
+**************************************************************************
+
 **
 ** DocPage is the base class for encapsulating documents
 ** which are logically one "page".  All docs are organized
@@ -19,6 +23,52 @@ const abstract class DocPage
   ** Default title for the document
   abstract Str title()
 }
+
+**************************************************************************
+** DocRes
+**************************************************************************
+
+**
+** DocRes models a resource file within a pod.
+**
+const class DocRes : DocPage
+{
+  ** Construct for pod and uri
+  new make(DocPod pod, Uri uri)
+  {
+    this.pod = pod
+    this.uri = uri
+  }
+
+  ** Pod which contains the resource
+  const DocPod pod
+
+  ** Uri of the resource file inside the pod
+  const Uri uri
+
+  ** Resource filename
+  Str name() { uri.name }
+
+  ** Title is the filename
+  override Str title() { uri.name }
+}
+
+**************************************************************************
+** DocSrc
+**************************************************************************
+
+**
+** DocSrc models a page of source code for display.
+**
+const class DocSrc : DocRes
+{
+  ** Construct for pod and uri
+  new make(DocPod pod, Uri uri) : super(pod, uri) {}
+}
+
+**************************************************************************
+** DocLoc
+**************************************************************************
 
 **
 ** DocLoc models a filename / linenumber
@@ -47,6 +97,10 @@ const class DocLoc
     return "$file [Line $line]"
   }
 }
+
+**************************************************************************
+** DocFandoc
+**************************************************************************
 
 **
 ** Fandoc string for a type or slot

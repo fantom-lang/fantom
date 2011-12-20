@@ -36,16 +36,16 @@ const class DocPod : DocPage
 
       // next load meta
       loader.loadContent(zip)
-      this.toc         = loader.toc
-      this.types       = loader.typeList
-      this.typeMap     = loader.typeMap
-      this.chapters    = loader.chapterList
-      this.chapterMap  = loader.chapterMap
-      this.podDoc      = loader.podDoc
-      this.resources   = loader.resourceList
-      this.resourceMap = loader.resourceMap
-      this.sources     = loader.sourceList
-      this.sourceMap   = loader.sourceMap
+      this.toc        = loader.toc
+      this.types      = loader.typeList
+      this.typeMap    = loader.typeMap
+      this.chapters   = loader.chapterList
+      this.chapterMap = loader.chapterMap
+      this.podDoc     = loader.podDoc
+      this.resList    = loader.resList
+      this.resMap     = loader.resMap
+      this.srcList    = loader.srcList
+      this.srcMap     = loader.srcMap
     }
     finally zip .close
   }
@@ -114,34 +114,33 @@ const class DocPod : DocPage
   ** Resource files in pod which are used to support the
   ** documentation such as images used by the fandoc chapters.
   ** Resources can only be located in doc/ sub-directory.
-  ** The Uris are internal to the pod zip file.
-  const Uri[] resources
+  const DocRes[] resList
 
-  ** Return pod internal URI to resource for filename, or
-  ** if not available return null/raise exception.
-  Uri? resource(Str filename, Bool checked := true)
+  ** Return resource for filename, or if not available
+  ** return null/raise exception.  This filenames is
+  ** always relative to doc/ sub-directory.
+  DocRes? res(Str filename, Bool checked := true)
   {
-    uri := resourceMap[filename]
+    uri := resMap[filename]
     if (uri != null) return uri
     if (checked) throw UnresolvedErr("resource file: $filename")
     return null
   }
-  private const Str:Uri resourceMap
+  private const Str:DocRes resMap
 
   ** Source files in pod which should be included in documentation.
-  ** The Uris are internal to the pod zip file.
-  const Uri[] sources
+  const DocSrc[] srcList
 
-  ** Return pod internal URI to source code for filename, or
-  ** if not available return null/raise exception.
-  Uri? source(Str filename, Bool checked := true)
+  ** Return source code for filename, or if not
+  ** available return null/raise exception.
+  DocSrc? src(Str filename, Bool checked := true)
   {
-    uri := sourceMap[filename]
+    uri := srcMap[filename]
     if (uri != null) return uri
     if (checked) throw UnresolvedErr("source file: $filename")
     return null
   }
-  private const Str:Uri sourceMap
+  private const Str:DocSrc srcMap
 
 }
 
@@ -349,16 +348,18 @@ internal class DocPodLoader
     this.toc         = toc.toImmutable
   }
 
-  private Void finishResources(Uri[] list)
+  private Void finishResources(Uri[] uris)
   {
-    this.resourceList = list.sort.toImmutable
-    this.resourceMap  = Str:Uri[:].addList(list) |uri| { uri.name }.toImmutable
+    DocRes[] list := uris.sort.map |uri->DocRes| { DocRes(pod, uri) }
+    this.resList = list.toImmutable
+    this.resMap  = Str:DocRes[:].addList(list) |res| { res.name }.toImmutable
   }
 
-  private Void finishSources(Uri[] list)
+  private Void finishSources(Uri[] uris)
   {
-    this.sourceList = list.sort.toImmutable
-    this.sourceMap  = Str:Uri[:].addList(list) |uri| { uri.name }.toImmutable
+    DocSrc[] list := uris.sort.map |uri->DocSrc| { DocSrc(pod, uri) }
+    this.srcList = list.toImmutable
+    this.srcMap  = Str:DocSrc[:].addList(list) |res| { res.name }.toImmutable
   }
 
   DocEnv env                    // ctor
@@ -373,10 +374,10 @@ internal class DocPodLoader
   DocChapter[]? chapterList     // finishChapters
   [Str:DocChapter]? chapterMap  // finishChapters
   DocChapter? podDoc            // finishChapters
-  Uri[]? resourceList           // finishResource
-  [Str:Uri]? resourceMap        // finishResource
-  Uri[]? sourceList             // finishSource
-  [Str:Uri]? sourceMap          // finishSource
+  DocRes[]? resList             // finishResource
+  [Str:DocRes]? resMap          // finishResource
+  DocSrc[]? srcList             // finishSource
+  [Str:DocSrc]? srcMap          // finishSource
   Obj[]? toc                    // finishTypes/finishChapters
 }
 

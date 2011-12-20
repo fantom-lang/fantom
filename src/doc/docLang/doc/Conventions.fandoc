@@ -55,9 +55,11 @@ Common Names [#commonNames]
   - Prefer rec to record
   - Prefer req to request
   - Prefer res to response
+  - Prefer res to resource
   - Prefer ro/RO to Ro
   - Prefer rw/RW to Rw
   - Prefer size to length or count
+  - Prefer src to source
   - Prefer username to userName
   - Prefer val to value
   - Prefer warn to warning
