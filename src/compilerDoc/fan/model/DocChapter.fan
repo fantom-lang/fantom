@@ -7,17 +7,18 @@
 //
 
 using concurrent
-using fandoc
+using fandoc::FandocParser
+using fandoc::Heading
 
 **
 ** DocChapter models a fandoc "chapter" in a manual like docLang
 **
-const class DocChapter : DocPage
+const class DocChapter : Doc
 {
   ** Constructor
-  internal new make(DocEnv env, DocPod pod, File f)
+  internal new make(DocPodLoader loader, File f)
   {
-    this.pod  = pod
+    this.pod  = loader.pod
     this.name = f.name == "pod.fandoc" ? "pod-doc" : f.basename
     this.loc  = DocLoc("${pod}::${f.name}", 1)
     this.doc  = DocFandoc(this.loc, f.in.readAllStr)
@@ -34,17 +35,17 @@ const class DocChapter : DocPage
       fandocHeadings := parser.parse(f.name, doc.text.in).findHeadings
 
       // map headings into tree structure
-      buildHeadingsTree(env, fandocHeadings, headingTop, headingMap)
+      buildHeadingsTree(loader, fandocHeadings, headingTop, headingMap)
     }
     catch (Err e)
     {
-      env.err("Cannot parse fandoc chapter", loc, e)
+      loader.err("Cannot parse fandoc chapter", loc, e)
     }
     this.headings = headingTop
     this.headingMap = headingMap
   }
 
-  private Void buildHeadingsTree(DocEnv env, Heading[] fandoc, DocHeading[] top, Str:DocHeading map)
+  private Void buildHeadingsTree(DocPodLoader loader, Heading[] fandoc, DocHeading[] top, Str:DocHeading map)
   {
     // if no headings just bail
     if (fandoc.isEmpty) return
@@ -56,8 +57,8 @@ const class DocChapter : DocPage
     {
       id := d.anchorId
       h := DocHeading { it.level = d.level; it.title = d.title; it.anchorId = id}
-      if (id == null) env.err("Heading missing anchor id: $h.title", loc)
-      else if (map[id] != null) env.err("Heading duplicate anchor id: $id", loc)
+      if (id == null) loader.err("Heading missing anchor id: $h.title", loc)
+      else if (map[id] != null) loader.err("Heading duplicate anchor id: $id", loc)
       else map[id] = h
       headings.add(h)
       children[h] = DocHeading[,]
@@ -74,7 +75,7 @@ const class DocChapter : DocPage
       if (stack.isEmpty)
       {
         if (h.level != 2 && pod.name != "fandoc")
-          env.err("Expected top-level heading to be level 2: $h.title", loc)
+          loader.err("Expected top-level heading to be level 2: $h.title", loc)
         top.add(h)
       }
 
@@ -82,7 +83,7 @@ const class DocChapter : DocPage
       else
       {
         if (stack.peek.level +1 != h.level)
-          env.err("Expected heading to be level ${stack.peek.level+1}: $h.title", loc)
+          loader.err("Expected heading to be level ${stack.peek.level+1}: $h.title", loc)
         children[stack.peek].add(h)
       }
 
@@ -99,8 +100,17 @@ const class DocChapter : DocPage
   ** Simple name of the chapter such as "Overview" or "pod-doc"
   const Str name
 
+  ** Document name under space is same as `name`
+  override Str docName() { name }
+
+  ** The space for this doc is `pod`
+  override DocSpace space() { pod }
+
   ** Title is the qualified name of the document
   override Str title() { "$pod::$name" }
+
+  ** Default renderer is `DocChapterRenderer`
+  override Type renderer() { DocChapterRenderer# }
 
   ** Return if this chapter is the special "pod-doc" file
   Bool isPodDoc() { name == "pod-doc" }

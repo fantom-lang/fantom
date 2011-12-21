@@ -7,24 +7,27 @@
 //
 
 using fandoc
+using fandoc::Doc as FandocDoc
 using web
 
 **
-** DocRenderer is base class for renders for various documentation
-** pages for indices, types, etc.
+** DocRenderer is base class for rendering a Doc.
+** See `writeDoc` for rendering pipeline.
 **
-class DocRenderer
+abstract class DocRenderer
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  ** All subclasses must implement ctor with env, out params.
-  new make(DocEnv env, WebOutStream out)
+  ** All subclasses must implement ctor with env, out, doc params.
+  new make(DocEnv env, WebOutStream out, Doc doc)
   {
     this.env = env
     this.out = out
+    this.doc = doc
+    this.theme = env.theme
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -37,8 +40,40 @@ class DocRenderer
   ** HTML output stream
   WebOutStream out { private set }
 
+  ** Document to be renderered
+  const Doc doc
+
+  ** Theme to use for rendering chrome and navigation.
+  ** This field is initialized from `DocEnv.theme`.
+  const DocTheme theme
+
 //////////////////////////////////////////////////////////////////////////
-// Fandoc
+// Hooks
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Render the `doc`.  This method delegates to:
+  **  1. `DocTheme.writeStart`
+  **  2. `DocTheme.writeBreadcrumb`
+  **  3. `writeContent`
+  **  3. `DocTheme.writeEnd`
+  **
+  virtual Void writeDoc()
+  {
+    theme.writeStart(this)
+    theme.writeBreadcrumb(this)
+    writeContent
+    theme.writeEnd(this)
+  }
+
+  **
+  ** Subclass hook to render document specific content.
+  ** See `writeDoc` for rendering pipeline.
+  **
+  abstract Void writeContent()
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
 //////////////////////////////////////////////////////////////////////////
 
   **
@@ -101,7 +136,7 @@ class DocRenderer
   {
     src := pod.src(loc.file, false)
     if (src == null) return null
-    return `src-${src.name}.html#line${loc.line}`
+    return `${src.docName}.html#line${loc.line}`
   }
 }
 

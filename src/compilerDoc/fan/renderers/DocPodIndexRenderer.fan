@@ -9,7 +9,7 @@
 using web
 
 **
-** PodRenderer renders the overview of pod contents.
+** Renders the index of a pod's documents.
 **
 ** Index
 ** =====
@@ -35,27 +35,77 @@ using web
 **    </li>
 **   </ul>
 **
-class PodRenderer : DocRenderer
+class DocPodIndexRenderer : DocRenderer
 {
-  ** Constructor with env, out params.
-  new make(DocEnv env, WebOutStream out, DocPod pod)
-    : super(env, out)
+  new make(DocEnv env, WebOutStream out, DocPodIndex doc)
+    : super(env, out, doc)
   {
-    this.pod = pod
+    this.index = doc
   }
 
-  ** Pod to renderer
-  DocPod pod { private set }
+  ** Pod index to render
+  const DocPodIndex index
+
+  ** Write the content for a pod index.  This delegates
+  ** to `writeContentApi` or `writeContentManual`
+  override Void writeContent()
+  {
+    if (index.pod.isManual)
+      writeContentManual
+    else
+      writeContentApi
+  }
+
+  ** Write the content for an API (non-manual) pod
+  virtual Void writeContentApi()
+  {
+    // type table
+    pod := index.pod
+    out.div("class='mainSidebar'")
+    out.div("class='main type'")
+    writeTypes
+    out.divEnd
+
+    // type list
+    out.div("class='sidebar'")
+    out.h3.w("All Types").h3End
+    out.ul
+    pod.types.each |t|
+    {
+      out.li.a(`${t.name}.html`).w(t.name).aEnd.liEnd
+    }
+    out.ulEnd
+    out.divEnd
+    out.divEnd
+
+    // pod doc
+    if (pod.podDoc != null)
+    {
+      // chapter
+      out.div("class='mainSidebar'")
+      out.div("class='main pod-doc' id='pod-doc'")
+      writeFandoc(pod.podDoc, pod.podDoc.doc)
+      out.divEnd
+
+      // toc
+      out.div("class='sidebar'")
+      out.h3.w("Contents").h3End
+      writePodDocToc(pod.podDoc.headings)
+      out.divEnd
+      out.divEnd
+    }
+  }
 
   ** Render the pod's index of types.
-  virtual Void writeIndex()
+  virtual Void writeTypes()
   {
     // name
+    pod := index.pod
     out.h1.span.w("pod").spanEnd.w(" $pod.name").h1End
     out.p.esc(pod.summary).pEnd
 
     // list type
-    pod.toc.each |item,i|
+    pod.index.toc.each |item,i|
     {
       if (item is Str)
       {
@@ -76,7 +126,7 @@ class PodRenderer : DocRenderer
   }
 
   ** Write out pod-doc table of contents.
-  virtual Void writePodDocToc(DocHeading[] headings := pod.podDoc.headings)
+  virtual Void writePodDocToc(DocHeading[] headings)
   {
     out.ul
     headings.each |h|
@@ -88,18 +138,18 @@ class PodRenderer : DocRenderer
     out.ulEnd
   }
 
-  /*
-  ** Render the HTML pod's index of chapters
-  virtual Void writeChapterIndex()
+  ** Write the content for a manual pod
+  virtual Void writeContentManual()
   {
     // name
+    pod := index.pod
     out.h1.w(pod.name).h1End
     out.p.esc(pod.summary).pEnd
 
     // contents
     out.div("class='toc'")
     open  := false
-    pod.toc.each |item|
+    pod.index.toc.each |item|
     {
       if (item is Str)
       {
@@ -107,7 +157,7 @@ class PodRenderer : DocRenderer
         if (open) out.olEnd
         open = false
 
-        // section header
+        // part header
         out.h2.esc(item).h2End
       }
       else
@@ -131,64 +181,5 @@ class PodRenderer : DocRenderer
     out.divEnd
   }
 
-  ** Write out chapter table of contents for pod.
-  virtual Void writeChapterToc(DocChapter? cur := null)
-  {
-    // map chapters into sections
-    map  := Str:DocChapter[][:] { ordered=true }
-    last := ""
-    pod.toc.each |item|
-    {
-      if (item is Str) last = item
-      else
-      {
-        list := map[last] ?: DocChapter[,]
-        list.add(item)
-        map[last] = list
-      }
-    }
-
-    // write list
-    map.each |chapters, section|
-    {
-      // section header if defined
-      if (!section.isEmpty)
-      {
-        if (cur != null && chapters.contains(cur))
-        {
-          // section header
-          out.p.esc(section).pEnd
-        }
-        else
-        {
-          // skip chapters if not in same section
-          out.p.a(`${chapters.first.name}.html`).esc(section).aEnd.pEnd
-          return
-        }
-      }
-
-      // chapter lists
-      out.ol
-      chapters.each |c|
-      {
-        out.li("value='$c.num' style='counter-reset:chapter $c.num;'")
-          .a(`${c.name}.html`).esc(c.name).aEnd
-
-        // chapter sections
-        if (c == cur)
-        {
-          out.ol
-          c.headings.each |h|
-          {
-            out.li.a(`${c.name}.html#$h.anchorId`).esc(h.title).aEnd.liEnd
-          }
-          out.olEnd
-        }
-        out.liEnd
-      }
-      out.olEnd
-    }
-  }
-  */
 }
 
