@@ -79,7 +79,7 @@ class DocChapterRenderer : DocRenderer
       .h1End
 
     // content
-    writeFandoc(chapter, chapter.doc)
+    writeFandoc(chapter.doc)
   }
 
   ** Write chapter prev/next navigation.

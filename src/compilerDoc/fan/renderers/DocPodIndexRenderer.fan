@@ -84,7 +84,7 @@ class DocPodIndexRenderer : DocRenderer
       // chapter
       out.div("class='mainSidebar'")
       out.div("class='main pod-doc' id='pod-doc'")
-      writeFandoc(pod.podDoc, pod.podDoc.doc)
+      DocChapterRenderer(env, out, pod.podDoc).writeBody
       out.divEnd
 
       // toc

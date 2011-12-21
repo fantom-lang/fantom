@@ -104,10 +104,10 @@ class DocTypeRenderer : DocRenderer
     }
 
     // if source if available
-    writeSourceLink(type.doc.loc)
+    writeSrcLink(type.doc.loc)
 
     // fandoc
-    writeFandoc(type, type.doc)
+    writeFandoc(type.doc)
 
     // enum vals
     if (DocFlags.isEnum(type.flags))
@@ -161,8 +161,8 @@ class DocTypeRenderer : DocRenderer
     out.dt("id='$slot.name'").w("$slot.name").dtEnd
     out.dd
     writeSlotSig(slot)
-    writeSourceLink(slot.doc.loc)
-    writeFandoc(type, slot.doc)
+    writeSrcLink(slot.doc.loc)
+    writeFandoc(slot.doc)
     out.ddEnd
   }
 
@@ -218,14 +218,13 @@ class DocTypeRenderer : DocRenderer
   {
     // source link
     out.h3.w("Source").h3End
-    out.ul
-    loc := type.doc.loc
-    src := type.pod.src(loc.file, false)
-    if (src == null)
-      out.li.w("Not available").liEnd
+    out.ul.li
+    srcLink := toSrcLink(type.doc.loc, "View Source")
+    if (srcLink == null)
+      out.w("Not available")
     else
-      out.li.a(`${src.docName}.html#line$loc.line`).w("View Source").aEnd.liEnd
-    out.ulEnd
+      writeLink(srcLink)
+    out.liEnd.ulEnd
 
     // slot list
     out.h3.w("Slots").h3End
@@ -305,13 +304,23 @@ class DocTypeRenderer : DocRenderer
     out.codeEnd
   }
 
-  ** Write source code link if source is available. Return
-  ** true if source is available.
-  virtual Void writeSourceLink(DocLoc loc)
+  ** Map filename/line number to a source file link
+  DocLink? toSrcLink(DocLoc loc, Str dis)
   {
-    uri := sourceLink(type.pod, loc)
-    if (uri == null) return
-    out.p("class='src'").a(uri).w("Source").aEnd.pEnd
+    src := type.pod.src(loc.file, false)
+    if (src == null) return null
+    frag := loc.line > 20 ? "line${loc.line}" : null
+    return DocLink(doc, src, dis, frag)
+  }
+
+  ** Write source code link as <p> if source is available.
+  virtual Void writeSrcLink(DocLoc loc, Str dis := "Source")
+  {
+    link := toSrcLink(loc, dis)
+    if (link == null) return
+    out.p
+    writeLink(link)
+    out.pEnd
   }
 }
 

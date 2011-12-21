@@ -67,6 +67,9 @@ const class DocType : Doc
   ** Default renderer is `DocTypeRenderer`
   override Type renderer() { DocTypeRenderer# }
 
+  ** Return true
+  override Bool isCode() { true}
+
   ** Source code location of this type definition
   const DocLoc loc
 

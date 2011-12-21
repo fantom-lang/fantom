@@ -48,22 +48,26 @@ class Main : AbstractMain
 
     // get space to doc based on arguments
     spaces := DocSpace[,]
-    podNames := all || allCore ? Env.cur.findAllPodNames : this.pods
+    isAll := all || allCore
+    podNames := isAll ? Env.cur.findAllPodNames : this.pods
     podNames.each |podName|
     {
       DocPod pod := env.space(podName)
-      if (all || allCore) if (pod.meta["pod.docApi"] == "false") return
+      if (isAll) if (pod.meta["pod.docApi"] == "false") return
       if (allCore) if (!(pod.meta["proj.name"] ?: "").startsWith("Fantom ")) return
       spaces.add(pod)
     }
 
     // sort spaces
-    spaces.sort
-    spaces.moveTo(spaces.find |p| { p.spaceName == "docIntro" }, 0)
-    spaces.moveTo(spaces.find |p| { p.spaceName == "docLang" }, 1)
+    if (isAll)
+    {
+      spaces.sort
+      spaces.moveTo(spaces.find |p| { p.spaceName == "docIntro" }, 0)
+      spaces.moveTo(spaces.find |p| { p.spaceName == "docLang" }, 1)
+    }
 
     // write the documents
-    if (all || allCore) writeTopIndex(env, DocTopIndex { it.spaces = spaces })
+    if (isAll) writeTopIndex(env, DocTopIndex { it.spaces = spaces })
     spaces.each |space| { writeSpace(env, space) }
     return 0
   }
