@@ -44,5 +44,10 @@ const abstract class Doc
   ** Get the default `DocRenderer` type to use for renderering this document.
   **
   abstract Type renderer()
+
+  **
+  ** Should links to this document be formatted as code identifier
+  **
+  virtual Bool isCode() { false }
 }
 

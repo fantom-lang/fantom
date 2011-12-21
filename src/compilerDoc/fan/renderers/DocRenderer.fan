@@ -77,11 +77,20 @@ abstract class DocRenderer
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Write the given fandoc string as HTML.  The base must
-  ** one of the types supported by `DocLinker.link` (such as
-  ** DocPod or DocType).
+  ** Write an '<a>' element for the given link from this renderer
+  ** document to another document.  See `DocEnv.linkUri`.
   **
-  virtual Void writeFandoc(Obj base, DocFandoc doc)
+  virtual Void writeLink(DocLink link)
+  {
+    out.a(env.linkUri(link)).w(link.dis).aEnd
+  }
+
+  **
+  ** Write the given fandoc string as HTML.  This method
+  ** delegates to `DocEnv.link` and `DocEnv.linkUri` to
+  ** resolve links from the current document.
+  **
+  virtual Void writeFandoc(DocFandoc doc)
   {
     // parse fandoc
     loc := doc.loc
@@ -95,24 +104,29 @@ abstract class DocRenderer
       writer := HtmlDocWriter(out)
       writer.onLink = |Link elem|
       {
+        // don't process absolute links
+        orig := elem.uri
+        if (orig.startsWith("http:/") ||
+            orig.startsWith("https:/") ||
+            orig.startsWith("ftp:/")) return
+
         try
         {
-          // route to DocLinker
-          orig := elem.uri
-          link := env.makeLinker(base, elem.uri, DocLoc(loc.file, loc.line+elem.line-1)).resolve
+          // route to DocEnv.link
+          link := env.link(this.doc, elem.uri, true)
 
-          // update link element
-          elem.uri = link.uri.encode
-          elem.isCode = link.isCode
+          // get environment URI for the DocLink
+          elem.uri = env.linkUri(link).encode
+          elem.isCode = link.target.isCode
 
-          // if link text was original URI, then update with DocLin.dis
+          // if link text was original URI, then update with DocLink.dis
           if (elem.children.first is DocText && elem.children.first.toStr == orig)
           {
             elem.children.clear
             elem.addChild(DocText(link.dis))
           }
         }
-        catch (DocErr e) env.errReport(e)
+        catch (Err e) env.err(e.toStr, DocLoc(loc.file, loc.line+elem.line-1))
       }
       root.children.each |child| { child.write(writer) }
     }
@@ -129,14 +143,6 @@ abstract class DocRenderer
       // print as <pre>
       out.pre.w(doc.text).preEnd
     }
-  }
-
-  ** Return URI for source, or null if not available.
-  virtual Uri? sourceLink(DocPod pod, DocLoc loc)
-  {
-    src := pod.src(loc.file, false)
-    if (src == null) return null
-    return `${src.docName}.html#line${loc.line}`
   }
 }
 

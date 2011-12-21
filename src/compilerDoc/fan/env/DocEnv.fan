@@ -59,6 +59,85 @@ abstract const class DocEnv
     r.writeDoc
   }
 
+  **
+  ** Return URI used to link the from doc to the target doc.
+  **
+  Uri linkUri(DocLink link)
+  {
+    s := StrBuf()
+    if (link.from.space !== link.target.space)
+      s.add("../").add(link.target.space.spaceName).add("/")
+    docName := link.target.docName
+    if (docName == "pod-doc") docName = "index"
+    s.add(docName)
+    s.add(".html")
+    if (link.frag != null) s.add("#").add(link.frag)
+    return s.toStr.toUri
+  }
+
+  **
+  ** Resolve the link relative to the given from document.
+  ** See `DocLink` for the built-in formats.
+  **
+  DocLink? link(Doc from, Str link, Bool checked := true)
+  {
+    // if absolute spaceName::docName
+    colons := link.index("::")
+    space := from.space as DocSpace
+    docName := link
+    if (colons != null)
+    {
+      spaceName := link[0..<colons]
+if (spaceName == "examples") return DocLink(from, from, link)
+      docName   = link[colons+2..-1]
+      space     = this.space(spaceName, checked)
+      if (space == null) return null
+    }
+
+    // check if we have a Type.slot
+    dot := docName.index(".")
+    if (dot != null)
+    {
+      typeName := docName[0..<dot]
+      slotName := docName[dot+1..-1]
+      type := space.doc(typeName, false) as DocType
+      if (type != null)
+      {
+        slot := type.slot(slotName)
+        if (slot != null) return DocLink(from, type, "${typeName}.${slotName}", slotName)
+      }
+    }
+
+    // check for slot in Type
+    if (from is DocType)
+    {
+      slot := ((DocType)from).slot(docName, false)
+      if (slot != null) return DocLink(from, from, docName, docName)
+    }
+
+    // check if we have Chatper#frag
+    pound := docName.index("#")
+    if (pound != null)
+    {
+      chapterName := docName[0..<pound]
+      headingName := docName[pound+1..-1]
+      chapter := (chapterName.isEmpty ? from : space.doc(chapterName, false)) as DocChapter
+      if (chapter != null)
+      {
+        heading := chapter.heading(headingName, false)
+        if (heading != null) return DocLink(from, chapter, chapterName, headingName)
+      }
+    }
+
+    // assume simple document name in space
+    doc := space.doc(docName, false)
+    if (doc != null) return DocLink(from, doc, doc.docName)
+
+    // no joy
+    if (checked) throw Err("Broken link: $link")
+    return null
+  }
+
 ** TODO
   DocErr err(Str msg, DocLoc loc, Err? cause := null)
   {
@@ -71,22 +150,5 @@ abstract const class DocEnv
     echo("$err.loc: $err.msg")
     if (err.cause != null) err.cause.trace
     return err
-  }
-
-** TODO
-  ** `DocLinker` to use for resolving fandoc hyperlinks.  See `makeLinker`.
-  virtual Type linker() { DocLinker# }
-
-** TODO
-  ** Constructor a linker to use for given base object,
-  ** link str and location.
-  DocLinker makeLinker(Obj base, Str link, DocLoc loc)
-  {
-    func := Field.makeSetFunc([
-      DocLinker#env:  this,
-      DocLinker#base: base,
-      DocLinker#link: link,
-      DocLinker#loc:  loc])
-    return linker.make([func])
   }
 }
