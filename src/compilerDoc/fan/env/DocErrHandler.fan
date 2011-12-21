@@ -25,6 +25,15 @@ const class DocErr : Err
 }
 
 **
+** UnknownDocErr is raised when resolving a non-existent document.
+**
+const class UnknownDocErr : Err
+{
+  ** Constructor
+  new make(Str msg, Err? cause := null) : super(msg, cause) {}
+}
+
+**
 ** DocErrHandler is responsible for handling errors encountered
 ** during doc compilation including broken links and fandoc format
 ** errors.

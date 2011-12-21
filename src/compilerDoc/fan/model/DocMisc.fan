@@ -7,21 +7,31 @@
 //
 
 **************************************************************************
-** DocPage
+** DocTopIndex
 **************************************************************************
 
 **
-** DocPage is the base class for encapsulating documents
-** which are logically one "page".  All docs are organized
-** under a pod.  Subclasses include:
-**  - `DocPod`: pod index (manual or API)
-**  - `DocType`: type API
-**  - `DocChapter`: chapter in manual
+** DocTopIndex models the top-level index
 **
-const abstract class DocPage
+const class DocTopIndex : Doc
 {
-  ** Default title for the document
-  abstract Str title()
+  ** Construct with list of spaces
+  new make(DocSpace[] spaces) { this.spaces = spaces }
+
+  ** Spaces to index
+  const DocSpace[] spaces
+
+  ** Throw UnsupportedErr
+  override DocSpace space() { throw UnsupportedErr() }
+
+  ** Throw UnsupportedErr
+  override Str docName() { throw UnsupportedErr() }
+
+  ** Return "Doc Index"
+  override Str title() { "Doc Index" }
+
+  ** Default renderer is `DocTopIndexRenderer`
+  override Type renderer() { DocTopIndexRenderer# }
 }
 
 **************************************************************************
@@ -31,10 +41,10 @@ const abstract class DocPage
 **
 ** DocRes models a resource file within a pod.
 **
-const class DocRes : DocPage
+const class DocRes : Doc
 {
   ** Construct for pod and uri
-  new make(DocPod pod, Uri uri)
+  internal new make(DocPod pod, Uri uri)
   {
     this.pod = pod
     this.uri = uri
@@ -46,11 +56,17 @@ const class DocRes : DocPage
   ** Uri of the resource file inside the pod
   const Uri uri
 
-  ** Resource filename
-  Str name() { uri.name }
+  ** The space for this doc is `pod`
+  override DocSpace space() { pod }
+
+  ** Document name under space is filename
+  override Str docName() { uri.name }
 
   ** Title is the filename
   override Str title() { uri.name }
+
+  ** Throw UnsupportedErr
+  override Type renderer() { throw UnsupportedErr() }
 }
 
 **************************************************************************
@@ -60,10 +76,32 @@ const class DocRes : DocPage
 **
 ** DocSrc models a page of source code for display.
 **
-const class DocSrc : DocRes
+const class DocSrc : Doc
 {
   ** Construct for pod and uri
-  new make(DocPod pod, Uri uri) : super(pod, uri) {}
+  internal new make(DocPod pod, Uri uri)
+  {
+    this.pod = pod
+    this.uri = uri
+  }
+
+  ** Pod which contains the source file
+  const DocPod pod
+
+  ** Uri of the source file inside the pod
+  const Uri uri
+
+  ** The space for this doc is `pod`
+  override DocSpace space() { pod }
+
+  ** Document name under space is "src-{filename}"
+  override Str docName() { "src-${uri.name}" }
+
+  ** Title is the filename
+  override Str title() { uri.name }
+
+  ** Default renderer is `DocSrcRenderer`
+  override Type renderer() { DocSrcRenderer# }
 }
 
 **************************************************************************
@@ -103,7 +141,7 @@ const class DocLoc
 **************************************************************************
 
 **
-** Fandoc string for a type or slot
+** Wrapper for Fandoc string for a chapter, type, or slot
 **
 const class DocFandoc
 {

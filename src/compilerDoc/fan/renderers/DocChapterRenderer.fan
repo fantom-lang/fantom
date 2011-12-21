@@ -9,24 +9,7 @@
 using web
 
 **
-** ManualRenderer renders DocPod chapter content.
-**
-** Index
-** =====
-**
-**   <h1>{pod.name}</h1>
-**   <p>{pod.summary}</p>
-**
-**   <div class='toc'>
-**    <h2>{part.name}</h2>   // if available
-**    <ol>
-**     <li>
-**      <a>{chapter.name}</a>
-**      <p>{chapter.summary}</p>
-**      <p><a>...</a>, <a>...</a></p>  // chapter headings
-**     </li>
-**    </ol>
-**   </div>
+** Renders DocChapter documents
 **
 ** Chapter
 ** =======
@@ -58,62 +41,36 @@ using web
 **    </li>
 **   </ol>
 **
-class ManualRenderer : DocRenderer
+class DocChapterRenderer : DocRenderer
 {
-  ** Constructor with env, out params.
-  new make(DocEnv env, WebOutStream out, DocPod pod)
-    : super(env, out)
+  new make(DocEnv env, WebOutStream out, DocChapter doc)
+    : super(env, out, doc)
   {
-    this.pod = pod
+    this.chapter = doc
   }
 
-  ** Pod to renderer
-  const DocPod pod
+  ** Chapter document to renderer
+  const DocChapter chapter
 
-  ** Render the manual index of chapters.
-  virtual Void writeIndex()
+  override Void writeContent()
   {
-    // name
-    out.h1.w(pod.name).h1End
-    out.p.esc(pod.summary).pEnd
+    // content
+    out.div("class='mainSidebar'")
+    out.div("class='main chapter'")
+    writeNav
+    writeBody
+    writeNav
+    out.divEnd
 
-    // contents
-    out.div("class='toc'")
-    open  := false
-    pod.toc.each |item|
-    {
-      if (item is Str)
-      {
-        // close open list
-        if (open) out.olEnd
-        open = false
-
-        // part header
-        out.h2.esc(item).h2End
-      }
-      else
-      {
-        if (!open) out.ol
-        open = true
-
-        // chapter
-        c := item as DocChapter
-        list := c.headings.join(", ") |h| {
-          "<a href='${c.name}.html#$h.anchorId'>$h.title.toXml</a>"
-        }
-        out.li("value='$c.num'")
-          .a(`${c.name}.html`).esc(c.name).aEnd
-          .p.esc(c.summary).pEnd
-          .p.w(list).pEnd
-          .liEnd
-      }
-    }
-    if (open) out.olEnd
+    // toc
+    out.div("class='sidebar'")
+    writeToc
+    out.divEnd
     out.divEnd
   }
 
-  ** Write chapter content.
-  virtual Void writeChapter(DocChapter chapter)
+  ** Write chapter body.
+  virtual Void writeBody()
   {
     // heading
     out.h1
@@ -126,8 +83,9 @@ class ManualRenderer : DocRenderer
   }
 
   ** Write chapter prev/next navigation.
-  virtual Void writeChapterNav(DocChapter cur)
+  virtual Void writeNav()
   {
+    cur := chapter
     out.ul("class='chapter-nav'")
     if (cur.prev != null)
       out.li("class='prev'")
@@ -145,15 +103,16 @@ class ManualRenderer : DocRenderer
   }
 
   ** Write out chapter table of contents for pod.
-  virtual Void writeChapterToc(DocChapter cur)
+  virtual Void writeToc()
   {
     // manual index
-    out.h3.a(`index.html`).esc(pod.name).aEnd.h3End
+    out.h3.a(`index.html`).esc(chapter.pod.name).aEnd.h3End
 
     // map chapters into parts
+    cur := this.chapter
     map  := Str:DocChapter[][:] { ordered=true }
     last := ""
-    pod.toc.each |item|
+    chapter.pod.index.toc.each |item|
     {
       if (item is Str) last = item
       else
@@ -216,4 +175,3 @@ class ManualRenderer : DocRenderer
     }
   }
 }
-

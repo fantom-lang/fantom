@@ -9,7 +9,7 @@
 using web
 
 **
-** TypeRenderer renders the API of a Fantom type modeled via `DocType`.
+** Renders DocType documents
 **
 ** Overview
 ** ========
@@ -47,7 +47,7 @@ using web
 **    <li><a href='#{slot.name}'>{slot.name}</a></li>
 **   </ul>
 **
-class TypeRenderer : DocRenderer
+class DocTypeRenderer : DocRenderer
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,20 +55,26 @@ class TypeRenderer : DocRenderer
 //////////////////////////////////////////////////////////////////////////
 
   ** Constructor with env, out params.
-  new make(DocEnv env, WebOutStream out, DocType type)
-    : super(env, out)
+  new make(DocEnv env, WebOutStream out, DocType doc)
+    : super(env, out, doc)
   {
-    this.type = type
+    this.type = doc
   }
 
   ** Type to renderer
   const DocType type
 
-  ** Render the HTML for the DocType referened by `type` field.
-  virtual Void writeType()
+  override Void writeContent()
   {
-    writeTypeOverview
-    writeSlots
+    out.div("class='mainSidebar'")
+      out.div("class='main type'")
+        writeTypeOverview
+        writeSlots
+      out.divEnd
+      out.div("class='sidebar'")
+        writeToc
+      out.divEnd
+    out.divEnd
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -218,7 +224,7 @@ class TypeRenderer : DocRenderer
     if (src == null)
       out.li.w("Not available").liEnd
     else
-      out.li.a(`src-${src.name}.html#line$loc.line`).w("View Source").aEnd.liEnd
+      out.li.a(`${src.docName}.html#line$loc.line`).w("View Source").aEnd.liEnd
     out.ulEnd
 
     // slot list

@@ -116,7 +116,7 @@ class DocLinker
 
     // figure out pod field which is pod to use for resolution;
     // either explicitly qualified by podPart or default to basePod
-    pod = podPart == null ? basePod : env.pod(podPart, false)
+    pod = podPart == null ? basePod : env.space(podPart, false) as DocPod
   }
 
 //////////////////////////////////////////////////////////////////////////

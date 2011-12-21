@@ -10,20 +10,20 @@
 **
 ** DocPod models the documentation of a `sys::Pod`.
 **
-const class DocPod : DocPage
+const class DocPod : DocSpace
 {
 
   ** Load from a zip file.  The given env is ued for error reporting.
-  static DocPod load(DocEnv env, File file)
+  static DocPod load(File file)
   {
-    return DocPod(env, file)
+    return DocPod(file)
   }
 
   ** Private constructor to copy loader fields
-  @NoDoc new make(DocEnv env, File file)
+  @NoDoc new make(File file)
   {
     this.file = file
-    loader := DocPodLoader(env, file, this)
+    loader := DocPodLoader(file, this)
     zip := Zip.open(file)
     try
     {
@@ -36,12 +36,12 @@ const class DocPod : DocPage
 
       // next load meta
       loader.loadContent(zip)
-      this.toc        = loader.toc
+      this.index      = loader.index
       this.types      = loader.typeList
       this.typeMap    = loader.typeMap
+      this.podDoc     = loader.podDoc
       this.chapters   = loader.chapterList
       this.chapterMap = loader.chapterMap
-      this.podDoc     = loader.podDoc
       this.resList    = loader.resList
       this.resMap     = loader.resMap
       this.srcList    = loader.srcList
@@ -63,14 +63,14 @@ const class DocPod : DocPage
   const Str summary
 
   ** Always return `name`.
-  override Str title() { name }
-
-  ** Always return `name`.
   override Str toStr() { name }
 
   ** Get the meta name/value pairs for this pod.
   ** See [docLang]`docLang::Pods#meta`.
   const Str:Str meta
+
+  ** Document which models the index page for this pod
+  const DocPodIndex index
 
   ** List of the public, documented types in this pod.
   const DocType[] types
@@ -86,16 +86,11 @@ const class DocPod : DocPage
   }
   private const Str:DocType typeMap
 
-  ** Return pod-doc file as a chapter instance or null
+  ** If this pod has an associated pod.fandoc chapter
   const DocChapter? podDoc
 
   ** A *manual* pod is a pod with only fandoc chapters and no types.
   Bool isManual() { types.isEmpty && !chapters.isEmpty }
-
-  ** If this a API pod, this is the Str/DocType where the string indicates
-  ** groupings such as "Classes", "Mixins", etc.  If this is a manual return
-  ** the list of Str/DocChapter where Str indicates index grouping headers.
-  const Obj[] toc
 
   ** If this is a manual like docLang, return list of chapters.
   const DocChapter[] chapters
@@ -123,7 +118,7 @@ const class DocPod : DocPage
   {
     uri := resMap[filename]
     if (uri != null) return uri
-    if (checked) throw UnresolvedErr("resource file: $filename")
+    if (checked) throw UnknownDocErr("resource file: $filename")
     return null
   }
   private const Str:DocRes resMap
@@ -137,11 +132,98 @@ const class DocPod : DocPage
   {
     uri := srcMap[filename]
     if (uri != null) return uri
-    if (checked) throw UnresolvedErr("source file: $filename")
+    if (checked) throw UnknownDocErr("source file: $filename")
     return null
   }
   private const Str:DocSrc srcMap
 
+  ** Space name is same as `name`
+  override Str spaceName() { name }
+
+  **
+  ** Find the document with the given name.  If not found raise
+  ** UnknownDocErr or return null based on checked flag.
+  ** The document namespace of a pod is:
+  **   - "index": the DocPodIndex
+  **   - "{type name}": DocType
+  **   - "{chapter name}": DocChapter
+  **   - "{filename}": DocRes
+  **   - "src-{filename}": DocSrc
+  **
+  override Doc? doc(Str name, Bool checked := true)
+  {
+    // index
+    if (name == "index") return index
+
+    // type
+    type := type(name, false)
+    if (type != null) return type
+
+    // chapter
+    chapter := chapter(name, false)
+    if (chapter != null) return chapter
+
+    // source
+    if (name.startsWith("src-"))
+    {
+      src := src(name[4..-1], false)
+      if (src != null) return src
+    }
+
+    // resource
+    res := res(name, false)
+    if (res != null) return res
+
+    // not found
+    if (checked) throw UnknownDocErr("${this.name}::${name}")
+    return null
+  }
+
+  override Void eachDoc(|Doc| f)
+  {
+    f(index)
+    types.each(f)
+    chapters.each(f)
+    srcList.each(f)
+    resList.each(f)
+  }
+}
+
+**************************************************************************
+** DocPodIndex
+**************************************************************************
+
+**
+** DocPodIndex represents the index document of a DocPod.
+**
+const class DocPodIndex : Doc
+{
+  ** Constructor
+  internal new make(DocPod pod, Obj[] toc)
+  {
+    this.pod = pod
+    this.toc = toc
+  }
+
+  ** Parent pod
+  const DocPod pod
+
+  ** If this a API pod, this is the Str/DocType where the string indicates
+  ** groupings such as "Classes", "Mixins", etc.  If this is a manual return
+  ** the list of Str/DocChapter where Str indicates index grouping headers.
+  const Obj[] toc
+
+  ** The space for this doc is `pod`
+  override DocSpace space() { pod }
+
+  ** The document name under space is "index"
+  override Str docName() { "index" }
+
+  ** Title is pod name
+  override Str title() { pod.name }
+
+  ** Default renderer is `DocPodIndexRenderer`
+  override Type renderer() { DocPodIndexRenderer# }
 }
 
 **************************************************************************
@@ -150,9 +232,8 @@ const class DocPod : DocPage
 
 internal class DocPodLoader
 {
-  new make(DocEnv env, File file, DocPod pod)
+  new make(File file, DocPod pod)
    {
-    this.env  = env
     this.file = file
     this.pod  = pod
   }
@@ -201,35 +282,36 @@ internal class DocPodLoader
         {
           type := ApiDocParser(pod, f.in).parseType
           types[type.name] = type
+          return
         }
 
         // if doc/{type}.fandoc
         if (f.ext == "fandoc")
         {
-          chapter := DocChapter(env, pod, f)
+          chapter := DocChapter(this, f)
           chapters[chapter.name] = chapter
+          return
         }
 
         // if doc/index.fog
-        else if (f.name == "index.fog")
+        if (f.name == "index.fog")
         {
           indexFog = f.readObj
+          return
         }
 
         // otherwise assume its a resource
-        else
-        {
-          resources.add(f.uri)
-        }
+        resources.add(f.uri)
       }
-      catch (Err e) env.err("Cannot parse", DocLoc("${name}::${f}", 0), e)
+      catch (Err e) err("Cannot parse", DocLoc("${name}::${f}", 0), e)
     }
 
     // finish
     finishTypes(types)
-    finishChapters(env, chapters, indexFog)
+    finishChapters(chapters, indexFog)
     finishResources(resources)
     finishSources(sources)
+    finishIndex
   }
 
   private Void finishTypes(Str:DocType map)
@@ -273,7 +355,7 @@ internal class DocPodLoader
     this.toc      = toc.toImmutable
   }
 
-  private Void finishChapters(DocEnv env, Str:DocChapter map, Obj[]? indexFog)
+  private Void finishChapters(Str:DocChapter map, Obj[]? indexFog)
   {
     // create sorted list of chapters
     list := map.vals.sort |a, b| { a.name <=> b.name }
@@ -291,7 +373,7 @@ internal class DocPodLoader
     // generate indexFog if not specified
     if (indexFog == null)
     {
-      if (!map.isEmpty) env.err("Manual missing '${name}::index.fog'", DocLoc(name, 0))
+      if (!map.isEmpty) err("Manual missing '${name}::index.fog'", DocLoc(name, 0))
       indexFog = [,]
       list.each |c| { indexFog.add([c.name.toUri, ""]) }
     }
@@ -315,11 +397,11 @@ internal class DocPodLoader
         uri = ((List)item).get(0)
         summary = ((List)item).get(1)
       }
-      catch { env.err("Invalid item: $item", indexLoc); return }
+      catch { err("Invalid item: $item", indexLoc); return }
 
       // lookup chapter and remove from map so we know it was indexed
       c := indexMap.remove(uri.toStr)
-      if (c == null) { env.err("Unknown chapter: $uri", indexLoc); return }
+      if (c == null) { err("Unknown chapter: $uri", indexLoc); return }
 
       // add it toc
       toc.add(c)
@@ -329,7 +411,7 @@ internal class DocPodLoader
     }
 
     // report errors for chapters not in index
-    indexMap.each |c| { env.err("Chapter not in index: $c.name", indexLoc) }
+    indexMap.each |c| { err("Chapter not in index: $c.name", indexLoc) }
 
     // redo list now that we have chapters ordered by index
     list = toc.findType(DocChapter#)
@@ -352,17 +434,28 @@ internal class DocPodLoader
   {
     DocRes[] list := uris.sort.map |uri->DocRes| { DocRes(pod, uri) }
     this.resList = list.toImmutable
-    this.resMap  = Str:DocRes[:].addList(list) |res| { res.name }.toImmutable
+    this.resMap  = Str:DocRes[:].addList(list) |res| { res.uri.name }.toImmutable
   }
 
   private Void finishSources(Uri[] uris)
   {
     DocSrc[] list := uris.sort.map |uri->DocSrc| { DocSrc(pod, uri) }
     this.srcList = list.toImmutable
-    this.srcMap  = Str:DocSrc[:].addList(list) |res| { res.name }.toImmutable
+    this.srcMap  = Str:DocSrc[:].addList(list) |src| { src.uri.name }.toImmutable
   }
 
-  DocEnv env                    // ctor
+  private Void finishIndex()
+  {
+    this.index = DocPodIndex(pod, toc)
+  }
+
+  Void err(Str msg, DocLoc loc, Err? cause := null)
+  {
+    // TODO
+    echo("$loc: $msg")
+    if (cause != null) cause.trace
+  }
+
   File file                     // ctor
   DocPod pod                    // ctor
   [Str:Str]? meta               // load
@@ -379,6 +472,7 @@ internal class DocPodLoader
   DocSrc[]? srcList             // finishSource
   [Str:DocSrc]? srcMap          // finishSource
   Obj[]? toc                    // finishTypes/finishChapters
+  DocPodIndex? index            // finishIndex
 }
 
 
