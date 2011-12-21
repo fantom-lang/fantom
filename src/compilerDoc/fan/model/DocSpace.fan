@@ -18,6 +18,12 @@ const abstract class DocSpace
   abstract Str spaceName()
 
   **
+  ** String to use for this space in the breadcrumb.
+  ** By default this is the `spaceName`.
+  **
+  virtual Str breadcrumb() { spaceName }
+
+  **
   ** Lookup the document in this space.  If not found
   ** raise `UnknownDocErr` or return null based on checked flag.
   **
