@@ -15,11 +15,14 @@
 **
 const class DocTopIndex : Doc
 {
-  ** Construct with list of spaces
-  new make(DocSpace[] spaces) { this.spaces = spaces }
+  ** It-block constructor
+  new make(|This|? f := null) { if (f != null) f(this) }
 
   ** Spaces to index
-  const DocSpace[] spaces
+  const DocSpace[] spaces := [,]
+
+  ** Get the spaces which as instances of DocPod
+  DocPod[] pods() { spaces.findType(DocPod#) }
 
   ** Throw UnsupportedErr
   override DocSpace space() { throw UnsupportedErr() }
@@ -27,11 +30,11 @@ const class DocTopIndex : Doc
   ** Throw UnsupportedErr
   override Str docName() { throw UnsupportedErr() }
 
-  ** Return "Doc Index"
-  override Str title() { "Doc Index" }
+  ** Default is "Doc Index"
+  override const Str title := "Doc Index"
 
-  ** Default renderer is `DocTopIndexRenderer`
-  override Type renderer() { DocTopIndexRenderer# }
+  ** Default renderer `DocTopIndexRenderer`
+  override const Type renderer := DocTopIndexRenderer#
 }
 
 **************************************************************************
@@ -99,6 +102,9 @@ const class DocSrc : Doc
 
   ** Title is the filename
   override Str title() { uri.name }
+
+  ** Breadcrumb name is the filename
+  override Str breadcrumb() { uri.name }
 
   ** Default renderer is `DocSrcRenderer`
   override Type renderer() { DocSrcRenderer# }

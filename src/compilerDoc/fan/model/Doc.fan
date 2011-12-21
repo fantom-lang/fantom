@@ -35,6 +35,12 @@ const abstract class Doc
   abstract Str title()
 
   **
+  ** String to use for this document in the breadcrumb.
+  ** By default this is the `docName`.
+  **
+  virtual Str breadcrumb() { docName }
+
+  **
   ** Get the default `DocRenderer` type to use for renderering this document.
   **
   abstract Type renderer()

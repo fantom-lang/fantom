@@ -31,30 +31,28 @@ class DocTopIndexRenderer : DocRenderer
 
     // manuals
     out.div("class='manuals'")
-    writeManuals
+    out.h2.w("Manuals").h2End
+    writeManuals(index.pods.findAll |p| { p.isManual })
     out.divEnd
 
     // apis
     out.div("class='apis'")
-    writeApis
+    out.h2.w("APIs").h2End
+    writeApis(index.pods.findAll |p| { !p.isManual })
     out.divEnd
 
     // end
     out.divEnd
   }
 
-  ** Write manuals index.
-  virtual Void writeManuals()
+  ** Write manuals table of pod name/links along with
+  ** shortcut chapter links.
+  virtual Void writeManuals(DocPod[] pods)
   {
-    out.div("class='manuals'")
-    out.h2.w("Manuals").h2End
     out.table
     index := (DocTopIndex)this.doc
-    index.spaces.each |space|
+    pods.each |pod|
     {
-      pod := space as DocPod
-      if (pod == null || !pod.isManual) return
-
       out.tr
         .td.a(`${pod.name}/index.html`).w(pod.name).aEnd.tdEnd
         .td.w(pod.summary)
@@ -69,27 +67,21 @@ class DocTopIndexRenderer : DocRenderer
      out.trEnd
     }
     out.tableEnd
-    out.divEnd
   }
 
-  ** Write API index.
-  virtual Void writeApis()
+  ** Write API table of pod name/link and summaries.
+  virtual Void writeApis(DocPod[] pods)
   {
-    out.div("class='apis'")
-    out.h2.w("APIs").h2End
     out.table
     index := (DocTopIndex)this.doc
-    index.spaces.each |space|
+    pods.each |pod|
     {
-      pod := space as DocPod
-      if (pod == null || pod.isManual) return
       out.tr
         .td.a(`${pod.name}/index.html`).w(pod.name).aEnd.tdEnd
         .td.w(pod.summary).tdEnd
         .trEnd
     }
     out.tableEnd
-    out.divEnd
   }
 }
 

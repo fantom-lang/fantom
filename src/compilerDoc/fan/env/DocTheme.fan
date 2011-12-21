@@ -49,15 +49,15 @@ const class DocTheme
     else
     {
       out.li.a(`../index.html`).w("Doc Index").aEnd.liEnd
-      out.li.a(`index.html`).w(r.doc.space.spaceName).aEnd.liEnd
-      if (doc isnot DocSrc) out.li.a(`${doc.docName}.html`).w(r.doc.docName).aEnd.liEnd
+      out.li.a(`index.html`).w(r.doc.space.breadcrumb).aEnd.liEnd
+      if (doc isnot DocSrc) out.li.a(`${doc.docName}.html`).w(r.doc.breadcrumb).aEnd.liEnd
       else
       {
         src := (DocSrc)doc
         type := src.pod.type(src.uri.basename, false)
         if (type != null)
-          out.li.a(`${type.docName}.html`).w(type.name).aEnd.liEnd
-        out.li.a(`${doc.docName}.html`).w(src.uri.name).aEnd.liEnd
+          out.li.a(`${type.docName}.html`).w(type.breadcrumb).aEnd.liEnd
+        out.li.a(`${doc.docName}.html`).w(src.breadcrumb).aEnd.liEnd
       }
     }
     out.ulEnd.divEnd

@@ -22,7 +22,12 @@ abstract const class DocEnv
   ** Theme is responsible for the common chrome, styling, and
   ** navigation during rendering
   **
-  const DocTheme theme := DocTheme()
+  virtual DocTheme theme() { DocTheme() }
+
+  **
+  ** Get the document which represents top level index.
+  **
+  virtual DocTopIndex topIndex() { DocTopIndex() }
 
   **
   ** Lookup a space by its space name.  If not found then return
@@ -70,7 +75,7 @@ abstract const class DocEnv
 
 ** TODO
   ** `DocLinker` to use for resolving fandoc hyperlinks.  See `makeLinker`.
-  const Type linker := DocLinker#
+  virtual Type linker() { DocLinker# }
 
 ** TODO
   ** Constructor a linker to use for given base object,
