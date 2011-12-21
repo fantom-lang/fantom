@@ -1274,6 +1274,7 @@ class ListTest : Test
   Void testMoveTo()
   {
     x := [0, 1, 2, 3, 4]
+    Int? nil := null
     verifyEq(x.moveTo(4, 0),  [4, 0, 1, 2, 3])
     verifyEq(x.moveTo(4, 1),  [0, 4, 1, 2, 3])
     verifyEq(x.moveTo(4, -1), [0, 1, 2, 3, 4])
@@ -1284,6 +1285,7 @@ class ListTest : Test
     verifyEq(x.moveTo(4, -3), [0, 1, 4, 2, 3])
     verifyEq(x.moveTo(4, 3),  [0, 1, 2, 4, 3])
     verifyEq(x.moveTo(4, 4),  [0, 1, 2, 3, 4])
+    verifyEq(x.moveTo(nil, 2), [0, 1, 2, 3, 4])
   }
 
 //////////////////////////////////////////////////////////////////////////

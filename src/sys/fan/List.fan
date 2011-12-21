@@ -604,14 +604,14 @@ final class List
   ** Find the given item, and move it to the given index.  All the
   ** other items are shifted accordingly.  Negative indexes may
   ** used to access an index from the end of the list.  If the item is
-  ** not found then this is a no op.  Return this.  Throw ReadonlyErr
-  ** if readonly.
+  ** null or not found then this is a no op.  Return this.  Throw
+  ** ReadonlyErr if readonly.
   **
   ** Examples:
   **   [10, 11, 12].moveTo(11, 0)  =>  [11, 10, 12]
   **   [10, 11, 12].moveTo(11, -1) =>  [10, 12, 11]
   **
-  L moveTo(V item, Int toIndex)
+  L moveTo(V? item, Int toIndex)
 
   **
   ** Return a new list which recursively flattens any list items into
