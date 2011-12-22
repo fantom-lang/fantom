@@ -142,7 +142,13 @@ abstract class DocRenderer
             elem.addChild(DocText(link.dis))
           }
         }
-        catch (Err e) env.err(e.toStr, DocLoc(loc.file, loc.line+elem.line-1))
+        catch (Err e)
+        {
+          if (elem.uri.startsWith("examples::"))
+            elem.uri = "http://fantom.org/doc/" + elem.uri.replace("::", "/")
+          else
+            env.err(e.toStr, DocLoc(loc.file, loc.line+elem.line-1))
+        }
       }
       root.children.each |child| { child.write(writer) }
     }

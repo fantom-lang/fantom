@@ -31,6 +31,10 @@ class Main : AbstractMain
   @Opt { help = "Output dir for doc files" }
   File outDir := Env.cur.workDir + `doc/`
 
+  DocEnv env := DefaultDocEnv()
+
+  DocSpace[] spaces := DocSpace[,]
+
   override Int run()
   {
     // ensure outDir is a directory
@@ -43,11 +47,8 @@ class Main : AbstractMain
       outDir.delete
     }
 
-    // create space
-    env := DefaultDocEnv()
-
     // get space to doc based on arguments
-    spaces := DocSpace[,]
+    spaces = DocSpace[,]
     isAll := all || allCore
     podNames := isAll ? Env.cur.findAllPodNames : this.pods
     podNames.each |podName|
@@ -67,7 +68,7 @@ class Main : AbstractMain
     }
 
     // write the documents
-    if (isAll) writeTopIndex(env, DocTopIndex { it.spaces = spaces })
+    if (isAll) writeTopIndex(env, DocTopIndex { it.spaces = this.spaces })
     spaces.each |space| { writeSpace(env, space) }
     return 0
   }
