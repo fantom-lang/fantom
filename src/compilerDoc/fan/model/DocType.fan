@@ -130,4 +130,15 @@ const class DocType : Doc
   ** Is an facet type
   Bool isFacet() { DocFlags.isFacet(flags) }
 
+  ** Index the type summary and all slot docs
+  override Void onIndex(DocIndexer indexer)
+  {
+    indexer.addStr(name)
+    indexer.addFandoc(doc)
+    slots.each |slot|
+    {
+      indexer.addStr(slot.name)
+      indexer.addFandoc(slot.doc)
+    }
+  }
 }

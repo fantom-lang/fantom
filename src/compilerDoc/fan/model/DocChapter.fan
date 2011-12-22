@@ -156,6 +156,13 @@ const class DocChapter : Doc
   override Str toStr() { qname }
 
   private const Str:DocHeading headingMap
+
+  ** Index the chapter name and body
+  override Void onIndex(DocIndexer indexer)
+  {
+    indexer.addStr(name)
+    indexer.addFandoc(doc)
+  }
 }
 
 **

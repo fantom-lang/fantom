@@ -56,5 +56,12 @@ const abstract class Doc
   ** it lives a level above the standard two level namespace.
   **
   virtual Bool isTopIndex() { false }
+
+  **
+  ** Callback to handle text search indexing for this document.
+  ** Call one of the 'addX' methods on the indexer for each
+  ** chunk of text in the document to be indexed.
+  **
+  virtual Void onIndex(DocIndexer indexer) {}
 }
 
