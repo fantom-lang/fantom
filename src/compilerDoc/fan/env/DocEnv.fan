@@ -61,25 +61,35 @@ abstract const class DocEnv
 
   **
   ** Return URI used to link the from doc to the target doc.
+  ** Also see `linkUriExt`.
   **
-  Uri linkUri(DocLink link)
+  virtual Uri linkUri(DocLink link)
   {
     s := StrBuf()
-    if (link.from.space !== link.target.space)
+    if (link.from.isTopIndex)
+      s.add(link.target.space.spaceName).add("/")
+    else if (link.from.space !== link.target.space)
       s.add("../").add(link.target.space.spaceName).add("/")
     docName := link.target.docName
     if (docName == "pod-doc") docName = "index"
     s.add(docName)
-    s.add(".html")
+    ext := linkUriExt
+    if (ext != null) s.add(ext)
     if (link.frag != null) s.add("#").add(link.frag)
     return s.toStr.toUri
   }
 
   **
+  ** Return the file extension (including the dot) to
+  ** suffix all link URIs.  Default returns ".html"
+  **
+  virtual Str? linkUriExt() { ".html"}
+
+  **
   ** Resolve the link relative to the given from document.
   ** See `DocLink` for the built-in formats.
   **
-  DocLink? link(Doc from, Str link, Bool checked := true)
+  virtual DocLink? link(Doc from, Str link, Bool checked := true)
   {
     // if absolute spaceName::docName
     colons := link.index("::")

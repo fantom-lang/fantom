@@ -49,5 +49,12 @@ const abstract class Doc
   ** Should links to this document be formatted as code identifier
   **
   virtual Bool isCode() { false }
+
+  **
+  ** Convenience to check if this is  top-level index document.
+  ** Top index often requires a bit of special handling since
+  ** it lives a level above the standard two level namespace.
+  **
+  virtual Bool isTopIndex() { false }
 }
 

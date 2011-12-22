@@ -58,6 +58,7 @@ class DocChapterRenderer : DocRenderer
     out.div("class='mainSidebar'")
     out.div("class='main chapter'")
     writeNav
+    out.h1.span.w("${chapter.num}.").spanEnd.w(" ").esc(chapter.name).h1End
     writeBody
     writeNav
     out.divEnd
@@ -72,13 +73,6 @@ class DocChapterRenderer : DocRenderer
   ** Write chapter body.
   virtual Void writeBody()
   {
-    // heading
-    out.h1
-      .span.w("${chapter.num}.").spanEnd
-      .w(" ").esc(chapter.name)
-      .h1End
-
-    // content
     writeFandoc(chapter.doc)
   }
 
@@ -88,17 +82,17 @@ class DocChapterRenderer : DocRenderer
     cur := chapter
     out.ul("class='chapter-nav'")
     if (cur.prev != null)
+    {
       out.li("class='prev'")
-        .a(`${cur.prev.name}.html`)
-        .w("${cur.prev.num}. ").esc(cur.prev.name)
-        .aEnd
-        .liEnd
+      writeLinkTo(cur.prev, "${cur.prev.num}. $cur.prev.name")
+      out.liEnd
+    }
     if (cur.next != null)
+    {
       out.li("class='next'")
-        .a(`${cur.next.name}.html`)
-        .w("${cur.next.num}. ")
-        .esc(cur.next.name).aEnd
-        .liEnd
+      writeLinkTo(cur.next, "${cur.next.num}. $cur.next.name")
+      out.liEnd
+    }
     out.ulEnd
   }
 
@@ -106,7 +100,9 @@ class DocChapterRenderer : DocRenderer
   virtual Void writeToc()
   {
     // manual index
-    out.h3.a(`index.html`).esc(chapter.pod.name).aEnd.h3End
+    out.h3
+    writeLinkTo(chapter.pod.index, chapter.pod.name)
+    out.h3End
 
     // map chapters into parts
     cur := this.chapter
@@ -137,7 +133,9 @@ class DocChapterRenderer : DocRenderer
         else
         {
           // skip chapter list if not in same part
-          out.h4.a(`${chapters.first.name}.html`).esc(part).aEnd.h4End
+          out.h4
+          writeLinkTo(chapters.first, part)
+          out.h4End
           return
         }
       }
@@ -148,7 +146,7 @@ class DocChapterRenderer : DocRenderer
       {
         // chapter name
         out.li("value='$c.num' style='counter-reset:chapter $c.num;'")
-          .a(`${c.name}.html`).esc(c.name).aEnd
+        writeLinkTo(c)
 
         // chapter headings
         if (c == cur)
@@ -156,13 +154,17 @@ class DocChapterRenderer : DocRenderer
           out.ol
           c.headings.each |h|
           {
-            out.li.a(`${c.name}.html#$h.anchorId`).esc(h.title).aEnd.liEnd
+            out.li
+            writeLinkTo(c, h.title, h.anchorId)
+            out.liEnd
             if (h.children.size > 0)
             {
               out.ol
               h.children.each |sh|
               {
-                out.li.a(`${c.name}.html#$sh.anchorId`).esc(sh.title).aEnd.liEnd
+                out.li
+                writeLinkTo(c, sh.title, sh.anchorId)
+                out.liEnd
               }
               out.olEnd
             }

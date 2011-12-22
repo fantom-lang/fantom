@@ -82,7 +82,23 @@ abstract class DocRenderer
   **
   virtual Void writeLink(DocLink link)
   {
-    out.a(env.linkUri(link)).w(link.dis).aEnd
+    out.a(env.linkUri(link)).esc(link.dis).aEnd
+  }
+
+  **
+  ** Convenience for 'writeLink(linkTo(target, dis, frag))'
+  **
+  virtual Void writeLinkTo(Doc target, Str dis := target.docName, Str? frag := null)
+  {
+    writeLink(linkTo(target, dis, frag))
+  }
+
+  **
+  ** Create a DocLink from this renderer doc to the target document.
+  **
+  DocLink linkTo(Doc target, Str dis := target.docName, Str? frag := null)
+  {
+    DocLink(this.doc, target, dis, frag)
   }
 
   **

@@ -54,13 +54,13 @@ class DocTopIndexRenderer : DocRenderer
     pods.each |pod|
     {
       out.tr
-        .td.a(`${pod.name}/index.html`).w(pod.name).aEnd.tdEnd
-        .td.w(pod.summary)
-        .div
+        out.td; writeLinkTo(pod.index, pod.name); out.tdEnd
+        out.td.w(pod.summary)
+        out.div
         pod.chapters.each |ch,i|
         {
           if (i > 0) out.w(", ")
-          out.a(`${pod.name}/${ch.name}.html`).w("$ch.name").aEnd
+          writeLinkTo(ch)
         }
         out.divEnd
         out.tdEnd
@@ -77,9 +77,9 @@ class DocTopIndexRenderer : DocRenderer
     pods.each |pod|
     {
       out.tr
-        .td.a(`${pod.name}/index.html`).w(pod.name).aEnd.tdEnd
-        .td.w(pod.summary).tdEnd
-        .trEnd
+      out.td; writeLinkTo(pod.index, pod.name); out.tdEnd
+      out.td.w(pod.summary).tdEnd
+      out.trEnd
     }
     out.tableEnd
   }
