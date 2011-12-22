@@ -4,10 +4,12 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   29 Aug 11  Andy Frank  Creation
+//   29 Aug 11  Andy Frank    Creation
+//   22 Dec 11  Brian Frank   Refactor for new compilerDoc design
 //
 
 using compilerDoc
+using compilerDoc::Main as DocMain
 using syntax
 using util
 using web
@@ -18,343 +20,194 @@ using web
 class Main : AbstractMain
 {
 
-  @Opt { help = "Generate top index" }
-  Bool topindex
-
-  @Opt { help = "Generate everything (topindex and all pods)" }
-  Bool all
-
-  @Arg { help = "Name of pods to compile" }
-  Str[] pods := [,]
-
   @Opt { help = "Output dir for doc files" }
   File outDir := Env.cur.workDir + `doc/`
 
   override Int run()
   {
-    // must generate topindex or at least one pod
-    if (!topindex && !all && pods.isEmpty) { usage; return 1 }
+    env := FantomDocEnv()
 
-    // load example index
-    exampleSrcDir := Env.cur.homeDir + `examples/`
-    exampleUris   := Str:Uri[:]
-    exampleIndex  := loadExampleIndex(exampleSrcDir, exampleUris)
+    // delegate to compilerDoc Main
+    main := DocMain()
+    main.env     = env
+    main.outDir  = this.outDir
+    main.clean   = true
+    main.allCore = true
+    main.run
 
-    // create customized env instance
-    env := FantomDocEnv(exampleUris)
+    // override top index and css
+    main.writeTopIndex(env, DocTopIndex { it.spaces = main.spaces; it.renderer = FantomTopIndexRenderer# })
+    outDir.plus(`style.css`).out.printLine(FantomCss.css).close
 
-    // figure out which pods to render, use reflection
-    // get standard Fantom pods
-    docPods := DocPod[,]
-    Pod.list.each |pod|
-    {
-      // skip no doc pods
-      if (pod.meta["pod.docApi"] != "true") return
-
-      // skip anything not a fantom core
-      proj := pod.meta["proj.name"]
-      if (proj != "Fantom Core" && proj != "Fantom Docs") return
-
-      // keep this one
-      docPods.add(env.pod(pod.name))
-    }
-
-    // render pods
-    docWriter := FantomDocWriter
-    {
-      it.env           = env
-      it.pods          = docPods
-      it.index         = all || topindex
-      it.outDir        = this.outDir
-      it.version       = env.pod("sys").version
-      it.exampleSrcDir = exampleSrcDir
-      it.exampleIndex  = exampleIndex
-    }
-    return docWriter.write.isEmpty ? 0 : 1
+    // generate examples
+    main.writeSpace(env, env.examples)
+    return 0
   }
+}
 
-  static Str:Obj loadExampleIndex(File srcDir, Str:Uri uris)
+**************************************************************************
+** FantomDocEnv
+**************************************************************************
+
+const class FantomDocEnv : DefaultDocEnv
+{
+  const DocExamples examples := DocExamples()
+  override DocTheme theme() { FantomDocTheme() }
+  override const DocTopIndex topIndex := DocTopIndex { renderer = FantomTopIndexRenderer# }
+  Version version() { ((DocPod)space("sys")).version }
+  const DateTime timestamp := DateTime.now.floor(1min)
+  override DocSpace? space(Str name, Bool checked := true)
   {
-    uris["index"] = `../examples/index.html`
-    map   := Str:Obj[][:] { ordered=true }
-    last  := ""
+    if (name == examples.spaceName) return examples
+    return super.space(name, checked)
+  }
+}
+
+**************************************************************************
+** DocExamples
+**************************************************************************
+
+const class DocExamples : DocSpace
+{
+  new make(File srcDir := Env.cur.homeDir + `examples/`)
+  {
+    docs := Str:Doc[:]
+    docs["index"] = index
+    sections := Str:DocExample[][:] { ordered = true }
+    curSection  := ""
     index := (Obj[])(srcDir + `index.fog`).readObj
     index.each |item|
     {
-      if (item is Str) last = item
+      if (item is Str) curSection = item
       else
       {
+        // create doc
         uri := ((List)item).first as Uri
-        key := uri.path[0] + "-" + uri.basename
-        uris[key] = `../examples/${key}.html`
+        summary := ((List)item)[1] as Str
+        docName := uri.path[0] + "-" + uri.basename
+        file := srcDir + uri
+        ex := DocExample(this, docName, summary, file)
 
-        list := map[last] ?: Obj[,]
-        list.add(item)
-        map[last] = list
+        // map by doc name
+        docs[docName] = ex
+
+        // keep track of sections
+        sectionList := sections[curSection] ?: DocExample[,]
+        sectionList.add(ex)
+        sections[curSection] = sectionList
       }
     }
-    return map.ro
+    this.docs = docs
+    this.sections = sections
   }
 
+  override Str spaceName() { "examples" }
+
+  override Doc? doc(Str docName, Bool checked := true)
+  {
+    doc := docs[docName]
+    if (doc != null) return doc
+    echo("ERROR: broken example link: $docName")
+    if (checked) throw UnknownDocErr("examples::$docName")
+    return null
+  }
+
+  override Void eachDoc(|Doc| f) { docs.each(f) }
+
+  const DocExampleIndex index := DocExampleIndex(this)
+  const Str:Doc docs
+  const Str:DocExample[] sections
 }
 
 **************************************************************************
-** FantomDocLinker
+** DocExampleIndex
 **************************************************************************
 
-internal class FantomDocEnv : DocEnv
+const class DocExampleIndex : Doc
 {
-  new make(Str:Uri exampleUris)
-  {
-    this.exampleUris = exampleUris
-    this.linker = FantomDocLinker#
-  }
-
-  Str:Uri exampleUris
+  new make(DocExamples space) { this.space = space }
+  override const DocExamples space
+  override Str docName() { "index" }
+  override Str title() { "Examples" }
+  override Type renderer() { DocExampleIndexRenderer# }
 }
 
-**************************************************************************
-** FantomDocLinker
-**************************************************************************
-
-** Add support for examples
-internal class FantomDocLinker : DocLinker
+class DocExampleIndexRenderer : DocRenderer
 {
-  new make(|This| f) : super(f) {}
-
-  override DocLink? resolve()
+  new make(DocEnv e, WebOutStream o, Doc d) : super(e, o, d) {}
+  override Void writeContent()
   {
-    if (podPart == "examples") return resolveExamples
-    return super.resolve
-  }
-
-  private DocLink? resolveExamples()
-  {
-    exampleUris := ((FantomDocEnv)env).exampleUris
-    uri := exampleUris[namePart]
-    if (uri == null) throw err("Unknown example file: $namePart")
-    return DocLink(uri, namePart)
-  }
-}
-
-**************************************************************************
-** FantomDocWriter
-**************************************************************************
-
-class FantomDocWriter : FileDocWriter
-{
-  ** Constructor.
-  new make(|This| f) : super(f) {}
-
-  ** Build version
-  Version version
-
-  Str timestamp := DateTime.now.toLocale
-
-  ** Example source dir.
-  File exampleSrcDir
-
-  ** Example index.fog
-  Str:Obj[] exampleIndex
-
-  ** Include example if index flag is specified
-  override DocErr[] write()
-  {
-    super.write
-    if (index) writeExamples
-    return env.errHandler.errs
-  }
-
-  ** Return customized PageRenderer
-  override PageRenderer makePageRenderer(WebOutStream out)
-  {
-    FantomPageRenderer(this, env, out)
-  }
-
-  ** Customize CSS
-  override Void writeCss(File file)
-  {
-    file.out.printLine(FantomCss.css).close
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Top Index
-//////////////////////////////////////////////////////////////////////////
-
-  override Void writeTopIndex(File file)
-  {
-    // organize pods into manuals and apis
-    manuals := DocPod[,]
-    apis    := DocPod[,]
-    pods.each |p|
-    {
-      if (p.isManual) manuals.add(p)
-      else apis.add(p)
-    }
-    manuals.moveTo(manuals.find |p| { p.name == "docIntro" }, 0)
-    manuals.moveTo(manuals.find |p| { p.name == "docLang" }, 1)
-
-    // doc start
-    out := WebOutStream(file.out)
-    pr := makePageRenderer(out)
-    pr.writeStart
-    out.div("class='index'")
-
-    // manuals
-    out.div("class='float'")
-    out.div("class='manuals'")
-    out.h2.w("Manuals").h2End
-    writeTopIndexManuals(out, manuals)
-    out.divEnd
-
-    // examples
-    out.div("class='examples'")
-    out.h2.w("Examples").h2End
-    out.table
-    exampleIndex.each |list,name|
-    {
-      names := list.join(", ") |v|
-      {
-        uri  := (Uri)v->first
-        exFile := exampleUriToFilename(uri)
-        return "<a href='examples/$exFile'>$uri.basename</a>"
-      }
-      out.tr
-        .td.a(`examples/index.html#$name`).esc(name).aEnd.tdEnd
-        .td.div.w(names).divEnd.tdEnd
-        .trEnd
-    }
-    out.tableEnd
-    out.divEnd
-    out.divEnd
-
-    // apis
-    out.div("class='apis'")
-    out.h2.w("APIs").h2End
-    writeTopIndexApis(out, apis)
-    out.divEnd
-
-    // end
-    out.divEnd
-    pr.writeEnd
-    out.close
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Examples
-//////////////////////////////////////////////////////////////////////////
-
-  private Void writeExamples()
-  {
-    // write example index
-    dir := outDir + `examples/`
-    writeExampleIndex(dir + `index.html`)
-
-    // write example source code
-    exampleIndex.each |list|
-    {
-      list.each |item|
-      {
-        uri := item->get(0) as Uri
-
-        // parse source file as SyntaxDoc
-        srcFile := exampleSrcDir.plus(uri)
-        if (!srcFile.exists) throw IOErr("example file not found: $srcFile")
-        rules := SyntaxRules.loadForExt(srcFile.ext ?: "?") ?:SyntaxRules()
-        doc   := SyntaxDoc.parse(rules, srcFile.in)
-
-        // write HTML file
-        file := dir + exampleUriToFilename(uri).toUri
-        writeExampleFile(file, uri, doc)
-      }
-    }
-  }
-
-  ** Write example index.
-  Void writeExampleIndex(File file)
-  {
-    out := WebOutStream(file.out)
-    r := FantomPageRenderer(this, env, out) { exampleUri=`index.html` }
-
-    r.writeStart
+    space := ((DocExampleIndex)this.doc).space
     out.div("class='ex-index'")
-    exampleIndex.each |list, name|
+    curSection := "???"
+    space.sections.each |list, name|
     {
       out.h2("id='$name'").esc(name).h2End
       out.table
-      list.each |item|
+      list.each |ex|
       {
-        uri := item->get(0) as Uri
-        summary := item->get(1) as Str
-        link := uri.path[0] + "-" + uri.basename + ".html"
         out.tr
-          .td.a(exampleUriToFilename(uri).toUri).esc(uri.basename).aEnd.tdEnd
-          .td.esc(summary).tdEnd
-          .trEnd
+        out.td; writeLinkTo(ex, ex.file.basename); out.tdEnd
+        out.td.esc(ex.summary).tdEnd
+        out.trEnd
       }
       out.tableEnd
     }
     out.divEnd
-    r.writeEnd
-    out.close
-  }
-
-  ** Write example source file.
-  Void writeExampleFile(File file, Uri uri, SyntaxDoc doc)
-  {
-    out := WebOutStream(file.out)
-    FantomPageRenderer(this, env, out)
-    {
-      exampleUri = uri
-      exampleDoc = doc
-    }.writeExample
-    out.close
-  }
-
-  ** Return URI for example.
-  Str exampleUriToFilename(Uri uri)
-  {
-    uri.path[0] + "-" + uri.basename + ".html"
   }
 }
 
 **************************************************************************
-** FantomPageRenderer
+** DocExample
 **************************************************************************
 
-class FantomPageRenderer : PageRenderer
+const class DocExample : Doc
 {
-  new make(FantomDocWriter parent, DocEnv env, WebOutStream out) : super(env, out)
+  new make(DocExamples space, Str docName, Str summary, File file)
   {
-    this.parent = parent
+    this.space   = space
+    this.docName = docName
+    this.summary = summary
+    this.file    = file
   }
+  override const DocExamples space
+  override const Str docName
+  override Str breadcrumb() { docName + "." + file.ext }
+  const Str summary
+  const File file
+  override Str title() { file.name }
+  override Type renderer() { DocExampleRenderer# }
+}
 
-  ** Example URI.
-  Uri? exampleUri
-
-  ** Example source file
-  SyntaxDoc? exampleDoc
-
-  override Str title()
+class DocExampleRenderer : DocRenderer
+{
+  new make(DocEnv e, WebOutStream o, Doc d) : super(e, o, d) {}
+  override Void writeContent()
   {
-    if (exampleDoc != null) return exampleUri.name
-    if (exampleUri != null) return "Examples"
-    return super.title
+    example := (DocExample)this.doc
+    rules := SyntaxRules.loadForExt(example.file.ext ?: "?") ?: SyntaxRules()
+    syntaxDoc := SyntaxDoc.parse(rules, example.file.in)
+    out.div("class='src'")
+    HtmlSyntaxWriter(out).writeLines(syntaxDoc)
+    out.divEnd
   }
+}
 
-  override Str resPath()
-  {
-    if (exampleUri != null) return "../"
-    return super.resPath
-  }
+**************************************************************************
+** FantomDocTheme
+**************************************************************************
 
-  override Void writeStart()
+const class FantomDocTheme : DocTheme
+{
+  override Void writeStart(DocRenderer r)
   {
+    out := r.out
+    resPath := r.doc.isTopIndex ? "" : "../"
     // start HTML doc
     out.docType
     out.html
     out.head
-      .title.esc(title).titleEnd
+      .title.esc(r.doc.title).titleEnd
       .printLine("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>")
       .includeJs(`${resPath}../docres/doc.js`)
       .includeCss(`${resPath}style.css`)
@@ -385,21 +238,16 @@ class FantomPageRenderer : PageRenderer
      .divEnd
      .divEnd
 
-    // subheader
+  }
+
+  override Void writeBreadcrumb(DocRenderer r)
+  {
+    out := r.out
+
+    // subheader breadcrumb
     out.div("class='subHeader'")
     out.div
-    if (exampleUri == null) writeBreadcrumb
-    else
-    {
-      out.div("class='breadcrumb'")
-        .ul
-          .li.a(`../index.html`).w("Doc Index").aEnd.w("</li>")
-          .li.a(`index.html`).w("Examples").aEnd.w("</li>")
-          if (exampleDoc != null)
-            out.li.a(exampleUri.name.toUri).w(exampleUri.name).aEnd.w("</li>")
-          out.ulEnd
-        .divEnd
-    }
+    super.writeBreadcrumb(r)
     out.divEnd
     out.divEnd
 
@@ -408,26 +256,68 @@ class FantomPageRenderer : PageRenderer
     out.div
   }
 
-  override Void writeEnd()
+  override Void writeEnd(DocRenderer r)
   {
+    env := (FantomDocEnv)r.env
+    out := r.out
     out.divEnd.divEnd // content
     out.div("class='footer'")
-     .w("$parent.version $parent.timestamp")
+     .w("$env.version").span.w(" &#x2219; ").spanEnd.w(env.timestamp.toLocale)
      .divEnd
     out.bodyEnd
     out.htmlEnd
   }
+}
 
-  Void writeExample()
+**************************************************************************
+** FantomTopIndexRenderer
+**************************************************************************
+
+class FantomTopIndexRenderer : DocTopIndexRenderer
+{
+  new make(DocEnv env, WebOutStream out, Doc doc) : super(env, out, doc) {}
+  override Void writeContent()
   {
-    writeStart
-    out.div("class='src'")
-    HtmlSyntaxWriter(out).writeLines(exampleDoc)
-    out.divEnd
-    writeEnd
-  }
+    out.div("class='index'")
 
-  private FantomDocWriter parent
+    // manuals
+    out.div("class='float'")
+    out.div("class='manuals'")
+    out.h2.w("Manuals").h2End
+    writeManuals(index.pods.findAll |p| { p.isManual })
+    out.divEnd
+
+    // examples
+    out.div("class='examples'")
+    out.h2.w("Examples").h2End
+    out.table
+    examples := ((FantomDocEnv)env).examples
+    examples.sections.each |list, name|
+    {
+      out.tr
+      out.td; writeLinkTo(examples.index, name, name); out.tdEnd
+      out.td.div
+      list.each |ex, i|
+      {
+        if (i > 0) out.w(", ")
+        writeLinkTo(ex, ex.file.basename)
+      }
+      out.divEnd.tdEnd
+      out.trEnd
+    }
+    out.tableEnd
+    out.divEnd
+    out.divEnd
+
+    // apis
+    out.div("class='apis'")
+    out.h2.w("APIs").h2End
+    writeApis(index.pods.findAll |p| { !p.isManual })
+    out.divEnd
+
+    // end
+    out.divEnd
+  }
 }
 
 **************************************************************************

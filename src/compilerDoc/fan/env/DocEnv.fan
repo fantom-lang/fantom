@@ -98,7 +98,6 @@ abstract const class DocEnv
     if (colons != null)
     {
       spaceName := link[0..<colons]
-if (spaceName == "examples") return DocLink(from, from, link)
       docName   = link[colons+2..-1]
       space     = this.space(spaceName, checked)
       if (space == null) return null
