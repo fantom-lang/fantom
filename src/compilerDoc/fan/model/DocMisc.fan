@@ -161,6 +161,29 @@ const class DocFandoc
     this.text = text
   }
 
+  ** Return the first sentence of fandoc
+  DocFandoc firstSentence()
+  {
+    buf := StrBuf()
+    for (i:=0; i<text.size; i++)
+    {
+      ch := text[i]
+      peek := i<text.size-1 ? text[i+1] : -1
+      if (ch == '.' && (peek == ' ' || peek == '\n'))
+      {
+        buf.addChar(ch)
+        break;
+      }
+      else if (ch == '\n')
+      {
+        if (peek == -1 || peek == ' ' || peek == '\n') break
+        else buf.addChar(' ')
+      }
+      else buf.addChar(ch)
+    }
+    return DocFandoc(loc, buf.toStr)
+  }
+
   ** Location of fandoc in source file
   const DocLoc loc
 

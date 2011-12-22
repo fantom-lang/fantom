@@ -118,9 +118,6 @@ const class DocType : Doc
   }
   private const Str:DocSlot slotMap
 
-  ** Summary is the first sentence of `doc`
-  Str summary() { DocUtil.firstSentence(doc.text) }
-
   ** return qname
   override Str toStr() { qname }
 
