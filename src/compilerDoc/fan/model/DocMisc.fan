@@ -181,6 +181,7 @@ const class DocFandoc
       }
       else buf.addChar(ch)
     }
+    if (buf.size > 1 && buf[-1] == ':') buf.remove(-1)
     return DocFandoc(loc, buf.toStr)
   }
 
