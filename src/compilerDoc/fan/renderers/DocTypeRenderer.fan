@@ -279,9 +279,13 @@ class DocTypeRenderer : DocRenderer
     }
     else
     {
+      // make link by hand to avoid having to resolve
+      // every type to a full fledged Doc instance
       uri := StrBuf()
       if (ref.pod != type.pod.name) uri.add("../").add(ref.pod).add("/")
-      uri.add(ref.name).add(".html")
+      uri.add(ref.name)
+      uriExt := env.linkUriExt
+      if (uriExt != null) uri.add(uriExt)
 
       out.a(uri.toStr.toUri)
          .w(full ? ref.qname : ref.name)

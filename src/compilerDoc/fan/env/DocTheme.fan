@@ -29,7 +29,7 @@ const class DocTheme
     out.head
       .title.esc(r.doc.title).titleEnd
       .printLine("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>")
-      .includeCss(r.doc is DocTopIndex ? `style.css` : `../style.css`)
+      .includeCss(r.doc.isTopIndex ? `style.css` : `../style.css`)
       .headEnd
     out.body
   }
@@ -41,23 +41,31 @@ const class DocTheme
   {
     out := r.out
     doc := r.doc
+    ext := r.env.linkUriExt ?: ""
     out.div("class='breadcrumb'").ul
-    if (doc is DocTopIndex)
+    if (doc.isTopIndex)
     {
-      out.li.a(`index.html`).w("Doc Index").aEnd.liEnd
+      out.li.a(`index$ext`).w("Doc Index").aEnd.liEnd
     }
     else
     {
-      out.li.a(`../index.html`).w("Doc Index").aEnd.liEnd
-      out.li.a(`index.html`).w(r.doc.space.breadcrumb).aEnd.liEnd
-      if (doc isnot DocSrc) out.li.a(`${doc.docName}.html`).w(r.doc.breadcrumb).aEnd.liEnd
-      else
+      out.li.a(`../index$ext`).w("Doc Index").aEnd.liEnd
+      out.li.a(`index$ext`).w(r.doc.space.breadcrumb).aEnd.liEnd
+      if (doc is DocPodIndex)
+      {
+        // skip
+      }
+      else if (doc is DocSrc)
       {
         src := (DocSrc)doc
         type := src.pod.type(src.uri.basename, false)
         if (type != null)
-          out.li.a(`${type.docName}.html`).w(type.breadcrumb).aEnd.liEnd
-        out.li.a(`${doc.docName}.html`).w(src.breadcrumb).aEnd.liEnd
+          out.li.a(`${type.docName}$ext`).w(type.breadcrumb).aEnd.liEnd
+        out.li.a(`${doc.docName}$ext`).w(src.breadcrumb).aEnd.liEnd
+      }
+      else
+      {
+        out.li.a(`${doc.docName}$ext`).w(r.doc.breadcrumb).aEnd.liEnd
       }
     }
     out.ulEnd.divEnd

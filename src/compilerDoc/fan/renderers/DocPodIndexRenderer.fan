@@ -72,7 +72,9 @@ class DocPodIndexRenderer : DocRenderer
     out.ul
     pod.types.each |t|
     {
-      out.li.a(`${t.name}.html`).w(t.name).aEnd.liEnd
+      out.li
+      writeLinkTo(t)
+      out.liEnd
     }
     out.ulEnd
     out.divEnd
@@ -117,9 +119,9 @@ class DocPodIndexRenderer : DocRenderer
       {
         type := item as DocType
         out.tr
-          .td.a(`${type.name}.html`).w(type.name).aEnd.tdEnd
-          .td.esc(type.summary).tdEnd
-          .trEnd
+        out.td; writeLinkTo(type); out.tdEnd
+        out.td.esc(type.summary).tdEnd
+        out.trEnd
       }
     }
     out.tableEnd
@@ -167,14 +169,16 @@ class DocPodIndexRenderer : DocRenderer
 
         // chapter
         c := item as DocChapter
-        list := c.headings.join(", ") |h| {
-          "<a href='${c.name}.html#$h.anchorId'>$h.title.toXml</a>"
-        }
         out.li("value='$c.num'")
-          .a(`${c.name}.html`).esc(c.name).aEnd
-          .p.esc(c.summary).pEnd
-          .p.w(list).pEnd
-          .liEnd
+        writeLinkTo(c)
+        out.p.esc(c.summary).pEnd
+        out.p
+        c.headings.each |h, i|
+        {
+          if (i > 0) out.w(", ")
+          writeLinkTo(c, h.title, h.anchorId)
+        }
+        out.pEnd.liEnd
       }
     }
     if (open) out.olEnd

@@ -35,6 +35,9 @@ const class DocTopIndex : Doc
 
   ** Default renderer `DocTopIndexRenderer`
   override const Type renderer := DocTopIndexRenderer#
+
+  ** Return true
+  override Bool isTopIndex() { true}
 }
 
 **************************************************************************
