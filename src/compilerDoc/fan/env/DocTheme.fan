@@ -51,7 +51,7 @@ const class DocTheme
     {
       out.li.a(`../index$ext`).w("Doc Index").aEnd.liEnd
       out.li.a(`index$ext`).w(r.doc.space.breadcrumb).aEnd.liEnd
-      if (doc is DocPodIndex)
+      if (doc.isSpaceIndex)
       {
         // skip
       }

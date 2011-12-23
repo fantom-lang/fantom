@@ -222,6 +222,9 @@ const class DocPodIndex : Doc
   ** Title is pod name
   override Str title() { pod.name }
 
+  ** Return true
+  override Bool isSpaceIndex() { true }
+
   ** Default renderer is `DocPodIndexRenderer`
   override Type renderer() { DocPodIndexRenderer# }
 }
