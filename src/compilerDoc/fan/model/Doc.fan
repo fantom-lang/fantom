@@ -58,6 +58,11 @@ const abstract class Doc
   virtual Bool isTopIndex() { false }
 
   **
+  ** Return if this is the index document of the space.
+  **
+  virtual Bool isSpaceIndex() { false }
+
+  **
   ** Callback to handle text search indexing for this document.
   ** Call one of the 'addX' methods on the indexer for each
   ** chunk of text in the document to be indexed.
