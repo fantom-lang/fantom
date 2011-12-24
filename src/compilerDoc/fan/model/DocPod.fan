@@ -75,6 +75,9 @@ const class DocPod : DocSpace
   ** List of the public, documented types in this pod.
   const DocType[] types
 
+  ** Get the build timestamp or null if not available
+  DateTime? ts() { DateTime.fromStr((meta["build.ts"] ?: meta["build.time"]) ?: "", false) }
+
   ** Find a type by name.  If the type doesn't exist and checked
   ** is false then return null, otherwise throw UnknownTypeErr.
   DocType? type(Str typeName, Bool checked := true)
