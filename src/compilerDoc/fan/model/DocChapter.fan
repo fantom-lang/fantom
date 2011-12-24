@@ -26,13 +26,16 @@ const class DocChapter : Doc
     // parse fandoc and build the headings tree
     headingTop := DocHeading[,]
     headingMap := Str:DocHeading[:]
+    meta := Str:Str[:]
     try
     {
       // parse fandoc silently - don't worry about errors,
       // we'll catch and report them at render time
       parser := FandocParser()
       parser.silent = true
-      fandocHeadings := parser.parse(f.name, doc.text.in).findHeadings
+      fandocDoc := parser.parse(f.name, doc.text.in)
+      meta = fandocDoc.meta
+      fandocHeadings := fandocDoc.findHeadings
 
       // map headings into tree structure
       buildHeadingsTree(loader, fandocHeadings, headingTop, headingMap)
@@ -43,6 +46,7 @@ const class DocChapter : Doc
     }
     this.headings = headingTop
     this.headingMap = headingMap
+    this.meta = meta
   }
 
   private Void buildHeadingsTree(DocPodLoader loader, Heading[] fandoc, DocHeading[] top, Str:DocHeading map)
@@ -120,6 +124,9 @@ const class DocChapter : Doc
 
   ** Location for chapter file
   const DocLoc loc
+
+  ** Fandoc heating metadata
+  const Str:Str meta
 
   ** Chapter contents as Fandoc string
   const DocFandoc doc
