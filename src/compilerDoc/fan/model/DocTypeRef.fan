@@ -43,6 +43,10 @@ abstract const class DocTypeRef
   ** non-parameterized types the signature is the same as qname.
   abstract Str signature()
 
+  ** Get nice display name for type which excludes pod name
+  ** even in parameterized types.
+  abstract Str dis()
+
   ** Is this a nullable type such as 'Str?'
   abstract Bool isNullable()
 
@@ -81,6 +85,7 @@ internal const class BasicTypeRef : DocTypeRef
   override const Str name
   override const Str qname
   override Str signature() { qname }
+  override Str dis() { name }
   override Bool isNullable() { false }
   override Bool isParameterized() { false }
   override DocTypeRef? v() { null }
@@ -101,6 +106,7 @@ internal const class NullableTypeRef : DocTypeRef
   override Str name() { base.name }
   override Str qname() { base.qname }
   override Str signature() { "${base}?" }
+  override Str dis() { "${base.dis}?" }
   override Bool isNullable() { true }
   override Bool isParameterized() { base.isParameterized }
   override DocTypeRef? v() { base.v }
@@ -120,6 +126,7 @@ internal const class ListTypeRef : DocTypeRef
   override Str name() { "List" }
   override Str qname() { "sys::List" }
   override Str signature() { "$v[]" }
+  override Str dis() { "${v.dis}[]" }
   override Bool isNullable() { false }
   override Bool isParameterized() { true }
   override const DocTypeRef? v
@@ -139,6 +146,7 @@ internal const class MapTypeRef : DocTypeRef
   override Str name() { "Map" }
   override Str qname() { "sys::Map" }
   override Str signature() { "[$k:$v]" }
+  override Str dis() { "[$k.dis:$v.dis]" }
   override Bool isNullable() { false }
   override Bool isParameterized() { true }
   override const DocTypeRef? k
@@ -164,6 +172,16 @@ internal const class FuncTypeRef : DocTypeRef
     funcParams.each |p, i| { if (i > 0) s.add(","); s.add(p.signature) }
     s.add("->")
     s.add(funcReturn)
+    s.add("|")
+    return s.toStr
+  }
+  override Str dis()
+  {
+    s := StrBuf()
+    s.add("|")
+    funcParams.each |p, i| { if (i > 0) s.add(","); s.add(p.dis) }
+    s.add("->")
+    s.add(funcReturn.dis)
     s.add("|")
     return s.toStr
   }

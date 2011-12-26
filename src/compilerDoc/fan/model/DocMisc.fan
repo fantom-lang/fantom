@@ -164,6 +164,12 @@ const class DocFandoc
   ** Return the first sentence of fandoc
   DocFandoc firstSentence()
   {
+    DocFandoc(loc, firstSentenceStrBuf.toStr)
+  }
+
+  ** Return the first sentence of fandoc as a StrBuf
+  @NoDoc StrBuf firstSentenceStrBuf()
+  {
     buf := StrBuf()
     for (i:=0; i<text.size; i++)
     {
@@ -182,7 +188,7 @@ const class DocFandoc
       else buf.addChar(ch)
     }
     if (buf.size > 1 && buf[-1] == ':') buf.remove(-1)
-    return DocFandoc(loc, buf.toStr)
+    return buf
   }
 
   ** Location of fandoc in source file

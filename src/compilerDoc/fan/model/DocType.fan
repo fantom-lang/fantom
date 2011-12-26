@@ -130,15 +130,62 @@ const class DocType : Doc
   ** Is an facet type
   Bool isFacet() { DocFlags.isFacet(flags) }
 
+//////////////////////////////////////////////////////////////////////////
+// onCrawl
+//////////////////////////////////////////////////////////////////////////
+
   ** Index the type summary and all slot docs
-  override Void onIndex(DocIndexer indexer)
+  override Void onCrawl(DocCrawler crawler)
   {
-    indexer.addStr(name)
-    indexer.addFandoc(doc)
+    typeSummary := crawlTypeSummary
+    crawler.addKeyword(name,  qname, typeSummary, null)
+    crawler.addKeyword(qname, qname, typeSummary, null)
+    crawler.addFandoc(doc)
+
     slots.each |slot|
     {
-      indexer.addStr(slot.name)
-      indexer.addFandoc(slot.doc)
+      slotSummary := crawlSlotSummary(slot)
+      scopedName := "${this.name}.${slot.name}"
+      crawler.addKeyword(slot.name,  slot.qname, slotSummary, slot.name)
+      crawler.addKeyword(slot.qname, slot.qname, slotSummary, slot.name)
+      crawler.addKeyword(scopedName, slot.qname, slotSummary, slot.name)
+      crawler.addFandoc(slot.doc)
     }
   }
+
+  private DocFandoc crawlTypeSummary()
+  {
+    s := doc.firstSentenceStrBuf
+    s.add("\n  ")
+    if (isMixin) s.add("mixin ")
+    else s.add(" class")
+    s.add(name)
+    return DocFandoc(loc, s.toStr)
+  }
+
+  private DocFandoc crawlSlotSummary(DocSlot slot)
+  {
+    s := slot.doc.firstSentenceStrBuf
+    s.add("\n  ")
+    if (slot is DocField)
+    {
+      f := (DocField)slot
+      s.add(f.type.dis).add(" ").add(slot.name)
+    }
+    else
+    {
+      m := (DocMethod)slot
+      s.add(m.returns.dis).add(" ").add(slot.name)
+      s.add("(")
+      m.params.each |p, i|
+      {
+        if (i > 0) s.add(", ")
+        s.add(p.type.dis).add(" ").add(p.name)
+      }
+      s.add(")")
+    }
+
+    return DocFandoc(loc, s.toStr)
+  }
+
 }
