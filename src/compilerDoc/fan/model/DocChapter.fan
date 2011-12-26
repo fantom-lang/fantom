@@ -18,10 +18,11 @@ const class DocChapter : Doc
   ** Constructor
   internal new make(DocPodLoader loader, File f)
   {
-    this.pod  = loader.pod
-    this.name = f.name == "pod.fandoc" ? "pod-doc" : f.basename
-    this.loc  = DocLoc("${pod}::${f.name}", 1)
-    this.doc  = DocFandoc(this.loc, f.in.readAllStr)
+    this.pod   = loader.pod
+    this.name  = f.name == "pod.fandoc" ? "pod-doc" : f.basename
+    this.loc   = DocLoc("${pod}::${f.name}", 1)
+    this.doc   = DocFandoc(this.loc, f.in.readAllStr)
+    this.qname = "$pod.name::$name"
 
     // parse fandoc and build the headings tree
     headingTop := DocHeading[,]
@@ -111,7 +112,7 @@ const class DocChapter : Doc
   override DocSpace space() { pod }
 
   ** Title is the qualified name of the document
-  override Str title() { "$pod::$name" }
+  override Str title() { qname }
 
   ** Default renderer is `DocChapterRenderer`
   override Type renderer() { DocChapterRenderer# }
@@ -120,7 +121,7 @@ const class DocChapter : Doc
   Bool isPodDoc() { name == "pod-doc" }
 
   ** Qualified name as "pod::name"
-  Str qname() { "$pod::$name" }
+  const Str qname
 
   ** Location for chapter file
   const DocLoc loc
@@ -165,10 +166,12 @@ const class DocChapter : Doc
   private const Str:DocHeading headingMap
 
   ** Index the chapter name and body
-  override Void onIndex(DocIndexer indexer)
+  override Void onCrawl(DocCrawler crawler)
   {
-    indexer.addStr(name)
-    indexer.addFandoc(doc)
+    summary := DocFandoc(this.loc, this.summary)
+    crawler.addKeyword(name, qname, summary, null)
+    crawler.addKeyword(qname, qname, summary, null)
+    crawler.addFandoc(doc)
   }
 }
 
