@@ -230,6 +230,12 @@ const class DocPodIndex : Doc
 
   ** Default renderer is `DocPodIndexRenderer`
   override Type renderer() { DocPodIndexRenderer# }
+
+  ** Index the type summary and all slot docs
+  override Void onCrawl(DocCrawler crawler)
+  {
+    crawler.addKeyword(pod.name, "Pod: $pod.name", DocFandoc(DocLoc(pod.name, 0), pod.summary), null)
+  }
 }
 
 **************************************************************************
