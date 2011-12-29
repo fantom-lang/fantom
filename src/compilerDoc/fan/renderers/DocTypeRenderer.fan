@@ -322,7 +322,7 @@ class DocTypeRenderer : DocRenderer
   {
     link := toSrcLink(loc, dis)
     if (link == null) return
-    out.p
+    out.p("class='src'")
     writeLink(link)
     out.pEnd
   }
