@@ -158,7 +158,7 @@ const class DocType : Doc
     s := doc.firstSentenceStrBuf
     s.add("\n  ")
     if (isMixin) s.add("mixin ")
-    else s.add(" class")
+    else s.add(" class ")
     s.add(name)
     return DocFandoc(loc, s.toStr)
   }

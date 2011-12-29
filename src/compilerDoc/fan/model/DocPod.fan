@@ -234,7 +234,7 @@ const class DocPodIndex : Doc
   ** Index the type summary and all slot docs
   override Void onCrawl(DocCrawler crawler)
   {
-    crawler.addKeyword(pod.name, "Pod: $pod.name", DocFandoc(DocLoc(pod.name, 0), pod.summary), null)
+    crawler.addKeyword(pod.name, pod.name, DocFandoc(DocLoc(pod.name, 0), pod.summary), null)
   }
 }
 
