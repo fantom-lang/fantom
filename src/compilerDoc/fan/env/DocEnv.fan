@@ -134,12 +134,15 @@ abstract const class DocEnv
       if (chapter != null)
       {
         heading := chapter.heading(headingName, false)
-        if (heading != null) return DocLink(from, chapter, chapterName, headingName)
+        if (heading != null) return DocLink(from, chapter, chapter.title, headingName)
       }
     }
 
-    // assume simple document name in space
+    // check for Chapter
     doc := space.doc(docName, false)
+    if (doc is DocChapter) return DocLink(from, doc, doc.title)
+
+    // assume simple document name in space
     if (doc != null) return DocLink(from, doc, doc.docName)
 
     // no joy

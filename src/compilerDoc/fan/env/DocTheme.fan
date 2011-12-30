@@ -55,6 +55,10 @@ const class DocTheme
       {
         // skip
       }
+      else if (doc is DocChapter)
+      {
+        out.li.a(`${doc.docName}$ext`).w(r.doc.title).aEnd.liEnd
+      }
       else if (doc is DocSrc)
       {
         src := (DocSrc)doc
