@@ -15,7 +15,7 @@ using web
 ** =======
 **
 **   <h1>
-**    <span>{chapter.num}<span> {chapter.name}
+**    <span>{chapter.num}<span> {chapter.title}
 **   </h1>
 **   ... // chapter fandoc
 **
@@ -23,8 +23,8 @@ using web
 ** ===========
 **
 **   <ul class='chapter-nav'>
-**    <li class='prev'><a>{prev.name}</a></li>  // if available
-**    <li class='next'><a>{next.name}</a></li>  // if available
+**    <li class='prev'><a>{prev.title}</a></li>  // if available
+**    <li class='next'><a>{next.title}</a></li>  // if available
 **   </ul>
 **
 ** Table of Contents
@@ -33,8 +33,8 @@ using web
 **   <h3><a>{pod.name}</a></h3>
 **   <h4><a>{part.name}</a></h4>  // if available
 **   <ol>
-**    <li><a>{chapter.name}</a></li>
-**    <li><a>{chapter.name}</a>
+**    <li><a>{chapter.title}</a></li>
+**    <li><a>{chapter.title}</a>
 **     <ol>
 **      <li><a>{heading.name}</a></li>
 **     </ol>
@@ -58,7 +58,7 @@ class DocChapterRenderer : DocRenderer
     out.div("class='mainSidebar'")
     out.div("class='main chapter'")
     writeNav
-    out.h1.span.w("${chapter.num}.").spanEnd.w(" ").esc(chapter.name).h1End
+    out.h1.span.w("${chapter.num}.").spanEnd.w(" ").esc(chapter.title).h1End
     writeBody
     writeNav
     out.divEnd
@@ -84,13 +84,13 @@ class DocChapterRenderer : DocRenderer
     if (cur.prev != null)
     {
       out.li("class='prev'")
-      writeLinkTo(cur.prev, "${cur.prev.num}. $cur.prev.name")
+      writeLinkTo(cur.prev, "${cur.prev.num}. $cur.prev.title")
       out.liEnd
     }
     if (cur.next != null)
     {
       out.li("class='next'")
-      writeLinkTo(cur.next, "${cur.next.num}. $cur.next.name")
+      writeLinkTo(cur.next, "${cur.next.num}. $cur.next.title")
       out.liEnd
     }
     out.ulEnd

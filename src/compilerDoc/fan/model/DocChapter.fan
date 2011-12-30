@@ -111,8 +111,8 @@ const class DocChapter : Doc
   ** The space for this doc is `pod`
   override DocSpace space() { pod }
 
-  ** Title is the qualified name of the document
-  override Str title() { qname }
+  ** Title is 'meta.title', or qualified name if not specified.
+  override Str title() { meta["title"] ?: qname }
 
   ** Default renderer is `DocChapterRenderer`
   override Type renderer() { DocChapterRenderer# }

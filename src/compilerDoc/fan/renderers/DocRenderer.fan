@@ -88,17 +88,19 @@ abstract class DocRenderer
   **
   ** Convenience for 'writeLink(linkTo(target, dis, frag))'
   **
-  virtual Void writeLinkTo(Doc target, Str dis := target.docName, Str? frag := null)
+  virtual Void writeLinkTo(Doc target, Str? dis := null, Str? frag := null)
   {
+    if (dis == null) dis = target is DocChapter ? target.title : target.docName
     writeLink(linkTo(target, dis, frag))
   }
 
   **
   ** Create a DocLink from this renderer doc to the target document.
   **
-  DocLink linkTo(Doc target, Str dis := target.docName, Str? frag := null)
+  DocLink linkTo(Doc target, Str? dis := null, Str? frag := null)
   {
-    DocLink(this.doc, target, dis, frag)
+    if (dis == null) dis = target is DocChapter ? target.title : target.docName
+    return DocLink(this.doc, target, dis, frag)
   }
 
   **
