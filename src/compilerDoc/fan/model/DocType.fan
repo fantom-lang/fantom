@@ -155,13 +155,12 @@ const class DocType : Doc
 
   private DocFandoc crawlTypeSummary()
   {
-    // s := doc.firstSentenceStrBuf
+    s := doc.firstSentenceStrBuf
     // s.add("\n  ")
     // if (isMixin) s.add("mixin ")
     // else s.add(" class ")
     // s.add(name)
-    // return DocFandoc(loc, s.toStr)
-    return doc
+    return DocFandoc(loc, s.toStr)
   }
 
   private DocFandoc crawlSlotSummary(DocSlot slot)
