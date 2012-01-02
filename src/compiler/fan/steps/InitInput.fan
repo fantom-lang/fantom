@@ -41,6 +41,7 @@ class InitInput : CompilerStep
   override Void run()
   {
     validateInput
+    validatePodName
     initNamespace
     initPod
     initDepends
@@ -60,6 +61,25 @@ class InitInput : CompilerStep
       input.validate
     catch (CompilerErr err)
       throw errReport(err)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Validate pod name
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Verify that pod name is valid
+  **
+  private Void validatePodName()
+  {
+    n := input.podName
+    loc := input.inputLoc
+    if (n.isEmpty) throw err("Pod name is empty", loc)
+    if (!n[0].isAlpha) throw err("Pod name must begin with alpha char", loc)
+    n.each |ch|
+    {
+      if (!ch.isAlphaNum && ch != '_') throw err("Pod name contains invalid char '$ch.toChar'", loc)
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
