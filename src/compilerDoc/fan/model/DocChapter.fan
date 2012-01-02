@@ -169,8 +169,8 @@ const class DocChapter : Doc
   override Void onCrawl(DocCrawler crawler)
   {
     summary := DocFandoc(this.loc, this.summary)
-    crawler.addKeyword(name, qname, summary, null)
-    crawler.addKeyword(qname, qname, summary, null)
+    crawler.addKeyword(name, title, summary, null)
+    crawler.addKeyword(qname, title, summary, null)
     crawler.addFandoc(doc)
   }
 }
