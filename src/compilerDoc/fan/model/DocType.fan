@@ -155,18 +155,18 @@ const class DocType : Doc
 
   private DocFandoc crawlTypeSummary()
   {
-    s := doc.firstSentenceStrBuf
-    s.add("\n  ")
-    if (isMixin) s.add("mixin ")
-    else s.add(" class ")
-    s.add(name)
-    return DocFandoc(loc, s.toStr)
+    // s := doc.firstSentenceStrBuf
+    // s.add("\n  ")
+    // if (isMixin) s.add("mixin ")
+    // else s.add(" class ")
+    // s.add(name)
+    // return DocFandoc(loc, s.toStr)
+    return doc
   }
 
   private DocFandoc crawlSlotSummary(DocSlot slot)
   {
-    s := slot.doc.firstSentenceStrBuf
-    s.add("\n  ")
+    s := StrBuf().add("> '")
     if (slot is DocField)
     {
       f := (DocField)slot
@@ -184,7 +184,7 @@ const class DocType : Doc
       }
       s.add(")")
     }
-
+    s.add("'\n\n").add(doc.firstSentenceStrBuf)
     return DocFandoc(loc, s.toStr)
   }
 
