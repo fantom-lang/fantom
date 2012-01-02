@@ -68,12 +68,12 @@ serialize.
 Reflection [#reflection]
 ************************
 Facets are available at runtime via the following methods:
-  - [Type.facet]`sys::Type.facet`
-  - [Type.facets]`sys::Type.facets`
-  - [Type.hasFacets]`sys::Type.hasFacet`
-  - [Slot.facet]`sys::Slot.facet`
-  - [Slot.facets]`sys::Slot.facets`
-  - [Slot.hasFacets]`sys::Slot.hasFacet`
+  - `sys::Type.facet`
+  - `sys::Type.facets`
+  - `sys::Type.hasFacet`
+  - `sys::Slot.facet`
+  - `sys::Slot.facets`
+  - `sys::Slot.hasFacet`
 
 Always prefer the 'facet' and 'hasFacet' methods over 'facets' since it is
 much more efficient.  Some examples:
