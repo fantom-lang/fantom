@@ -168,9 +168,9 @@ const class DocChapter : Doc
   ** Index the chapter name and body
   override Void onCrawl(DocCrawler crawler)
   {
-    //summary := DocFandoc(this.loc, this.summary)
-    //crawler.addKeyword(name, title, summary, null)
-    //crawler.addKeyword(qname, title, summary, null)
+    summary := DocFandoc(this.loc, this.summary)
+    crawler.addKeyword(name, title, summary, null)
+    crawler.addKeyword(qname, title, summary, null)
     crawler.addFandoc(doc)
   }
 }
