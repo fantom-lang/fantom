@@ -74,7 +74,8 @@ class DocTopIndexRenderer : DocRenderer
   {
     out.table
     index := (DocTopIndex)this.doc
-    pods.each |pod|
+    sorted := pods.dup.sort |a,b| { a.name <=> b.name }
+    sorted.each |pod|
     {
       out.tr
       out.td; writeLinkTo(pod.index, pod.name); out.tdEnd
