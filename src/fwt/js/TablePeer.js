@@ -145,6 +145,10 @@ fan.fwt.TablePeer.prototype.create = function(parentElem, self)
   var $this = this;
   div.addEventListener("mousedown", function(event) {
     if (event.target !== div) return;
+// TODO FIXIT: ignore scrollbar presses
+if (div.offsetWidth  - event.clientX < 20) return;
+if (div.offsetHeight - event.clientY < 20) return;
+
     $this.m_selected = $this.selection.select([]);
     $this.selection.notify(null);
   });
