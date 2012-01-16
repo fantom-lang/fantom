@@ -36,7 +36,7 @@ final const class AtomicRef
   ** Atomically set the value to 'update' if current value is
   ** equivalent to the 'expect' value compared using '===' operator.
   ** Return true if updated, or false if current value was not equal
-  ** to the expected value. Throw NotImmutableErr if 'val' is mutable.
+  ** to the expected value. Throw NotImmutableErr if 'update' is mutable.
   **
   native Bool compareAndSet(Obj? expect, Obj? update)
 

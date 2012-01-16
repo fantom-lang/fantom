@@ -92,7 +92,7 @@ Code examples for commonly used slot operations:
   #xyx                         // slot literal current type
 
 All slots are keyed by a unique name.  This means Fantom does not support
-methods overridden by parameter type like Java or C#.  Although you may
+methods overloaded by parameter type like Java or C#.  Although you may
 find this to be a drag on occasion, there are a couple features in Fantom
 that make this restriction quite palatable.  First method parameters may
 have defaults - this eliminates the convenience methods commonly used in
