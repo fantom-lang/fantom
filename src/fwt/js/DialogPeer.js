@@ -189,7 +189,8 @@ fan.fwt.DialogPeer.prototype.close = function(self, result)
     if ($this.$shell) $this.$shell.parentNode.removeChild($this.$shell);
     if ($this.$mask) $this.$mask.parentNode.removeChild($this.$mask);
     fan.fwt.WindowPeer.prototype.close.call($this, self, result);
-    if ($this.$focus != null) $this.$focus.focus();
+    // try to refocus last widget; don't make a fuss if we can't
+    try { $this.$focus.focus(); } catch (err) {}
   }, 100);
 }
 
