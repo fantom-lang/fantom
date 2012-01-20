@@ -43,7 +43,7 @@ abstract const class DocEnv
   **
   virtual Doc? doc(Str spaceName, Str docName, Bool checked := true)
   {
-    doc := space(spaceName, false)?.doc(docName)
+    doc := space(spaceName, false)?.doc(docName, false)
     if (doc != null) return doc
     if (checked) throw UnknownDocErr("$spaceName::$docName")
     return null
