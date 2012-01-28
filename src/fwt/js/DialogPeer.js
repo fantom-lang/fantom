@@ -133,6 +133,11 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     var func = function() { elem.focus(); }
     setTimeout(func, 50);
   }
+
+  // 26 Jan 2012: Chrome contains a bug where scrolling is broken
+  // for elements that have webkit-transform applied - so allow
+  // animation to comlete, then remove:
+  setTimeout(function() { dlg.style.webkitTransform = "none"; }, 300);
 }
 
 fan.fwt.DialogPeer.findFormControl = function(node)
