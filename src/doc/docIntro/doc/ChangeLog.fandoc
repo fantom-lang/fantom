@@ -11,6 +11,7 @@
 - Tweak compiler to omit fcode/types.def if no types
 - Refactor Compiler.depends
 - Redesign compilerDoc
+- Add localeTestMode for JS environment
 
 *Build 1.0.61 (17 Nov 2011)*
 - Upgrade timezone database with zone info version 2011j

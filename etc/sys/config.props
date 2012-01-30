@@ -23,6 +23,11 @@ runtime=java
 // This property can only be configured by bootstrap homeDir.
 // debug=true
 
+// If set to true, this displays all Env.locale strings as
+// pod::key to allow debugging during the localization process.
+// Currently only supported in JavaScript environment.
+// localeTestMode=true
+
 //////////////////////////////////////////////////////////////////////////
 // Java Runtime
 //////////////////////////////////////////////////////////////////////////
