@@ -61,6 +61,16 @@ if [ -z "$FAN_JAVA" ] ; then
     exit 1
   fi
 fi
+
+FAN_CLASSPATH="$FAN_CP":"$CLASSPATH"
+
+# On Cygwin, convert paths to Windows-style (as expected by a JVM running on Windows)
+if $cygwin; then
+  FAN_HOME=`cygpath --windows $FAN_HOME`
+  FAN_CLASSPATH=`cygpath --windows --path $FAN_CLASSPATH`
+  JAVA_HOME=`cygpath --windows $JAVA_HOME`
+fi
+
 # read a single line property from $FAN_HOME/etc/sys/config.props
 read_prop()
 {
@@ -73,5 +83,5 @@ fanlaunch()
   FAN_MAIN="fanx.tools.$1"
   shift
   read_prop JAVA_OPTIONS java.options
-  "$FAN_JAVA" $osFlags $JAVA_OPTIONS $libPath -cp "$FAN_CP":"$CLASSPATH" -Dfan.home="$FAN_HOME" "$FAN_MAIN" "$@"
+  "$FAN_JAVA" $osFlags $JAVA_OPTIONS $libPath -cp "$FAN_CLASSPATH" -Dfan.home="$FAN_HOME" "$FAN_MAIN" "$@"
 }
