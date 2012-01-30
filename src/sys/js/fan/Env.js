@@ -54,6 +54,9 @@ fan.sys.Env.prototype.$setVars = function(vars)
 
 fan.sys.Env.noDef = "_Env_nodef_";
 
+// used to display locale keys
+fan.sys.Env.localeTestMode = false;
+
 // check if running under Rhino (Java VM)
 fan.sys.Env.$rhino = false;
 
@@ -116,6 +119,13 @@ fan.sys.Env.prototype.config = function(pod, key, def)
 
 fan.sys.Env.prototype.locale = function(pod, key, def, locale)
 {
+  // if in test mode return pod::key
+  if (fan.sys.Env.localeTestMode &&
+      key.indexOf(".icon") == -1 &&
+      key.indexOf(".accelerator") == -1 &&
+      pod.$name() != "sys")
+    return pod + "::" + key;
+
   if (def === undefined) def = fan.sys.Env.noDef;
   if (locale === undefined) locale = fan.sys.Locale.cur();
 
