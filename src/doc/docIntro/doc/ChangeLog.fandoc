@@ -12,6 +12,8 @@
 - Refactor Compiler.depends
 - Redesign compilerDoc
 - Add localeTestMode for JS environment
+- Fix fanlauncher to work in Cygwin
+- Fix Decimal to handle non-terminating divide
 
 *Build 1.0.61 (17 Nov 2011)*
 - Upgrade timezone database with zone info version 2011j
