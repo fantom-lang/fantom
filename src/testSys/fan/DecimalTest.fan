@@ -114,6 +114,9 @@ class DecimalTest : Test
     verifyEq(16d / 5d, 3.2d)
     verifyEq(15d / 5,  3d)
     verifyEq(15d / 5f, 3d)
+    verifyEq(1d / 3d, 0.3333333333d)
+    verifyEq(1d / 3,  0.3333333333d)
+    verifyEq(1d / 3f, 0.3333333333d)
     x = 20d / 2d; x /= -5d; verifyEq(x, -2d)
 
     verifyEq(21d%-6d, 3d)

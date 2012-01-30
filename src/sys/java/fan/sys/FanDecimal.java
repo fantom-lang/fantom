@@ -78,9 +78,26 @@ public final class FanDecimal
   public static BigDecimal multInt(BigDecimal self, long x) { return self.multiply(BigDecimal.valueOf(x)); }
   public static BigDecimal multFloat(BigDecimal self, double x) { return self.multiply(BigDecimal.valueOf(x)); }
 
-  public static BigDecimal div(BigDecimal self, BigDecimal x) { return self.divide(x); }
-  public static BigDecimal divInt(BigDecimal self, long x) { return self.divide(BigDecimal.valueOf(x)); }
-  public static BigDecimal divFloat(BigDecimal self, double x) { return self.divide(BigDecimal.valueOf(x)); }
+  public static BigDecimal div(BigDecimal self, BigDecimal x)
+  {
+    // From https://github.com/groovy/groovy-core/blob/master/src/main/org/codehaus/groovy/runtime/typehandling/BigDecimalMath.java
+    // as suggested by 'saltnlight5' in "Decimal operation failure?" discussion http://fantom.org/sidewalk/topic/1743
+    try
+    {
+      return self.divide(x);
+    }
+    catch (ArithmeticException e)
+    {
+      // set a DEFAULT precision if otherwise non-terminating
+      int precision = Math.max(self.precision(), x.precision()) + DIVISION_EXTRA_PRECISION;
+      BigDecimal result = self.divide(x, new MathContext(precision));
+      int scale = Math.max(Math.max(self.scale(), x.scale()), DIVISION_MIN_SCALE);
+      if (result.scale() > scale) result = result.setScale(scale, BigDecimal.ROUND_HALF_UP);
+      return result;
+    }
+  }
+  public static BigDecimal divInt(BigDecimal self, long x) { return div(self, BigDecimal.valueOf(x)); }
+  public static BigDecimal divFloat(BigDecimal self, double x) { return div(self, BigDecimal.valueOf(x)); }
 
   public static BigDecimal mod(BigDecimal self, BigDecimal x) { return self.remainder(x); }
   public static BigDecimal modInt(BigDecimal self, long x) { return self.remainder(BigDecimal.valueOf(x)); }
@@ -158,5 +175,13 @@ public final class FanDecimal
 //////////////////////////////////////////////////////////////////////////
 
   public static BigDecimal defVal = BigDecimal.ZERO;
+
+  // This is an arbitrary value, picked as a reasonable choice for a precision
+  // for typical user math when a non-terminating result would otherwise occur.
+  private static final int DIVISION_EXTRA_PRECISION = 10;
+
+  // This is an arbitrary value, picked as a reasonable choice for a rounding point
+  // for typical user math.
+  private static final int DIVISION_MIN_SCALE = 10;
 
 }
