@@ -121,6 +121,7 @@ fan.sys.Env.prototype.locale = function(pod, key, def, locale)
 {
   // if in test mode return pod::key
   if (fan.sys.Env.localeTestMode &&
+      key.indexOf(".browser") == -1 &&
       key.indexOf(".icon") == -1 &&
       key.indexOf(".accelerator") == -1 &&
       pod.$name() != "sys")
