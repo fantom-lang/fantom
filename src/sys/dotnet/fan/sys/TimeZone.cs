@@ -64,6 +64,23 @@ namespace Fan.Sys
         throw IOErr.make("Cannot load from timezone database: " + name).val;
       }
 
+      // if not found, check aliases
+      if (tz == null)
+      {        
+        if (aliases == null) loadAliases();
+        string alias = (string)aliases[name];
+        if (alias != null)
+        {
+          tz = fromStr(alias);  // better be found
+          lock (cache)
+          {
+            cache[tz.m_name] = tz;
+            cache[tz.m_fullName] = tz;
+            return tz;
+          }
+        }
+      }
+
       // if found, then cache and return
       if (tz != null)
       {
@@ -177,6 +194,50 @@ namespace Fan.Sys
 //    {
 //      return java.util.TimeZone.getTimeZone(name.val);
 //    }
+
+//////////////////////////////////////////////////////////////////////////
+// Aliases
+//////////////////////////////////////////////////////////////////////////
+
+  private static void loadAliases()
+  {
+    Hashtable map = new Hashtable();
+    try
+    {
+      // read as props file
+      //String sep = java.io.File.separator;
+      //Map props = Env.cur().props(Sys.sysPod, Uri.fromStr("timezone-aliases.props"), Duration.Zero);
+      Map props = Sys.m_sysPod.props(Uri.fromStr("timezone-aliases.props"), Duration.Zero);
+      
+      System.Diagnostics.Debug.WriteLine(props.size());
+      System.Console.WriteLine(props.size());
+
+      // map both simple name and full names to aliases map
+      IDictionaryEnumerator it = props.pairsIterator();
+      while (it.MoveNext())
+      {
+        string key = (string)it.Key;
+        string val = (string)it.Value;
+
+        // map by fullName
+        map[key] = val;
+
+        // map by simple name
+        int slash = key.LastIndexOf('/');
+        if (slash > 0) map[key.Substring(slash+1)] = val;
+      }
+    }
+    catch (Exception e)
+    {
+      Err.dumpStack(e);
+      Console.WriteLine("ERROR: Cannot read timezone-aliases.props");
+    }
+
+    // save to field and force memory barrier sync
+    TimeZone.aliases = map;
+    lock(TimeZone.aliases) {}
+    //synchronized(TimeZone.aliases) {}
+  }
 
   //////////////////////////////////////////////////////////////////////////
   // Database
@@ -585,6 +646,7 @@ namespace Fan.Sys
     static int[] indexOffsets  = new int[0];
 
     static Hashtable cache = new Hashtable(); // string -> TimeZone
+    static Hashtable aliases = null;          // will be loaded by loadAliases
     internal static TimeZone m_utc;
     internal static TimeZone m_rel;
     internal static TimeZone m_cur = null;
