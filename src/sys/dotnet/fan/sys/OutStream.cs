@@ -233,16 +233,14 @@ namespace Fan.Sys
       m_charsetEncoder = charset.newEncoder();
       m_charset = charset;
     }
-
-    public virtual OutStream writeChar(long c)
-    {
-      m_charsetEncoder.encode((char)c, this);
-      return this;
-    }
-
+    
+    public virtual OutStream writeChar(long c) { return writeChar((char)c); }
     public virtual OutStream writeChar(char c)
     {
-      m_charsetEncoder.encode(c, this);
+      if (m_out != null)
+        m_out.writeChar(c);
+      else
+        m_charsetEncoder.encode(c, this);
       return this;
     }
 
@@ -252,8 +250,12 @@ namespace Fan.Sys
     public virtual OutStream writeChars(string s, int off, int len)
     {
       int end = off+len;
-      for (int i=off; i<end; ++i)
-        m_charsetEncoder.encode(s[i], this);
+      if (m_out != null)
+          for (int i = off; i < end; ++i)
+            m_out.writeChar(s[i]);
+      else
+          for (int i = off; i < end; ++i)
+            m_charsetEncoder.encode(s[i], this);
       return this;
     }
 
@@ -347,7 +349,6 @@ namespace Fan.Sys
       bool escNewlines  = (mask & m_xmlEscNewlines) != 0;
       bool escQuotes    = (mask & m_xmlEscQuotes) != 0;
       bool escUnicode   = (mask & m_xmlEscUnicode) != 0;
-      Charset.Encoder enc  = m_charsetEncoder;
       int len = s.Length;
 
       for (int i=0; i<len; ++i)
@@ -367,14 +368,14 @@ namespace Fan.Sys
           // newlines
           case '\n': case '\r':
             if (!escNewlines)
-              enc.encode((char)ch, this);
+              writeChar((char)ch);
             else
               writeXmlEsc(ch);
             break;
 
           // space
           case ' ':
-            enc.encode(' ', this);
+            writeChar(' ');
             break;
 
           // table switch on common ASCII chars
@@ -391,61 +392,33 @@ namespace Fan.Sys
           case 'l': case 'm': case 'n': case 'o': case 'p': case 'q': case 'r':
           case 's': case 't': case 'u': case 'v': case 'w': case 'x': case 'y':
           case 'z': case '{': case '|': case '}': case '~':
-            enc.encode((char)ch, this);
+            writeChar((char)ch);
             break;
 
           // XML control characters
           case '<':
-            enc.encode('&', this);
-            enc.encode('l', this);
-            enc.encode('t', this);
-            enc.encode(';', this);
+            writeChars("&lt;");
             break;
           case '>':
-            if (i > 0 && s[i-1] != ']') enc.encode('>', this);
-            else
-            {
-              enc.encode('&', this);
-              enc.encode('g', this);
-              enc.encode('t', this);
-              enc.encode(';', this);
-            }
+            if (i > 0 && s[i-1] != ']') writeChar('>');
+            else writeChars("&gt;");
             break;
           case '&':
-            enc.encode('&', this);
-            enc.encode('a', this);
-            enc.encode('m', this);
-            enc.encode('p', this);
-            enc.encode(';', this);
+            writeChars("&amp;");
             break;
           case '"':
-            if (!escQuotes) enc.encode((char)ch, this);
-            else
-            {
-              enc.encode('&', this);
-              enc.encode('q', this);
-              enc.encode('u', this);
-              enc.encode('o', this);
-              enc.encode('t', this);
-              enc.encode(';', this);
-            }
+            if (!escQuotes) writeChar((char)ch);
+            else writeChars("&quot;");
             break;
           case '\'':
-            if (!escQuotes) enc.encode((char)ch, this);
-            else
-            {
-              enc.encode('&', this);
-              enc.encode('#', this);
-              enc.encode('3', this);
-              enc.encode('9', this);
-              enc.encode(';', this);
-            }
+            if (!escQuotes) writeChar((char)ch);
+            else writeChars("&#39;");
             break;
 
           // default
           default:
             if (ch <= 0xf7 || !escUnicode)
-              enc.encode((char)ch, this);
+              writeChar((char)ch);
             else
               writeXmlEsc(ch);
             break;
