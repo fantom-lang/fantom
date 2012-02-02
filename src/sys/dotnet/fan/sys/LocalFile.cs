@@ -87,7 +87,7 @@ namespace Fan.Sys
       for (int i=0; i<len; ++i)
       {
         int c = path[i];
-        if (i == 0 && c == '/') continue;  // skip abs
+        if (i == 0 && c == '/' && path.Contains(":")) continue;  // skip abs
         if (i == len-1 && c == '/' && dir) continue;  // skip trailing slash
         switch (c)
         {
