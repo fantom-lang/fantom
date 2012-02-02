@@ -125,7 +125,7 @@ namespace Fan.Sys
         throw NullErr.make("key is null").val;
       if (!isImmutable(key))
         throw NotImmutableErr.make("key is not immutable: " + @typeof(key)).val;
-      if (m_map[key] != null)
+      if (containsKey(key))
         throw ArgErr.make("Key already mapped: " + key).val;
       m_map[key] = val;
       return this;
@@ -133,9 +133,8 @@ namespace Fan.Sys
 
     public object getOrAdd(object key, Func valFunc)
     {
-      object val = m_map[key];
-      if (val != null) return val;
-      val = valFunc.call(key);
+      if (containsKey(key)) return get(key);
+      object val = valFunc.call(key);
       add(key, val);
       return val;
     }

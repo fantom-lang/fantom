@@ -816,16 +816,16 @@ namespace Fan.Sys
       return -(low + 1);
     }
 
-    public  long binaryFind(Func f)
+    public long binaryFind(Func f)
     {
-      Object[] values = this.m_values;
+      object[] values = this.m_values;
       int low = 0, high = m_size-1;
       bool oneArg = f.arity() == 1;
       while (low <= high)
       {
         int probe = (low + high) >> 1;
-        Object val = values[probe];
-        Object res = oneArg ? f.call(val) : f.call(val, Long.valueOf(probe));
+        object val = values[probe];
+        object res = oneArg ? f.call(val) : f.call(val, Long.valueOf(probe));
         long cmp = ((Long)res).longValue();
         if (cmp > 0)
           low = probe + 1;
