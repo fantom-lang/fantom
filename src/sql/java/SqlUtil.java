@@ -40,6 +40,7 @@ public class SqlUtil
   /**
    * Get a JDBC Java object for the specified Fan object.
    */
+  @SuppressWarnings({"deprecation"})
   public static Object fanToSqlObj(Object value)
   {
     Object jobj = value;
@@ -295,6 +296,7 @@ public class SqlUtil
 
   public static class ToFanDate extends SqlToFan
   {
+    @SuppressWarnings({"deprecation"})
     public Object toObj(ResultSet rs, int col)
       throws SQLException
     {
@@ -306,6 +308,7 @@ public class SqlUtil
 
   public static class ToFanTime extends SqlToFan
   {
+    @SuppressWarnings({"deprecation"})
     public Object toObj(ResultSet rs, int col)
       throws SQLException
     {

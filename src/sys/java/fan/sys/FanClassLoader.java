@@ -248,7 +248,7 @@ public class FanClassLoader
       for (int i=0; list != null && i<list.length; ++i)
       {
         if (list[i].getName().endsWith(".jar"))
-          addURL(list[i].toURL());
+          addURL(list[i].toURI().toURL());
       }
     }
   }
