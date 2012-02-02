@@ -124,7 +124,7 @@ namespace Fan.Sys
         {
           eq = i++;
           while (FanInt.isSpace(s[i])) ++i;
-          if (s[i] == '"') { inQuotes = true; ++i; }
+          if (s[i] == '"') { inQuotes = true; ++i; c=s[i]; }
           else inQuotes = false;
           valStart = i;
         }
