@@ -296,7 +296,7 @@ namespace Fan.Sys
       for (int i=0; i<m_size; i++)
       {
         object obj = m_values[i];
-        if (obj != null) hash ^= FanObj.hash(obj);
+        hash = (31 * hash) + (obj == null ? 0 : FanObj.hash(obj));
       }
       return hash;
     }
@@ -816,6 +816,27 @@ namespace Fan.Sys
       return -(low + 1);
     }
 
+    public  long binaryFind(Func f)
+    {
+      Object[] values = this.m_values;
+      int low = 0, high = m_size-1;
+      bool oneArg = f.arity() == 1;
+      while (low <= high)
+      {
+        int probe = (low + high) >> 1;
+        Object val = values[probe];
+        Object res = oneArg ? f.call(val) : f.call(val, Long.valueOf(probe));
+        long cmp = ((Long)res).longValue();
+        if (cmp > 0)
+          low = probe + 1;
+        else if (cmp < 0)
+          high = probe - 1;
+        else
+          return probe;
+      }
+      return -(low + 1);
+    }
+    
     public List reverse()
     {
       modify();
