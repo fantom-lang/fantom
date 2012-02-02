@@ -78,7 +78,7 @@ namespace Fan.Sys
 
     public override Type @typeof() { return Sys.UriSchemeType; }
 
-    public override string toStr() { return m_scheme; }
+    public override string toStr() { return @typeof().qname(); }
 
     public string scheme() { return m_scheme; }
 
