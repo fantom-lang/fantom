@@ -76,11 +76,8 @@ namespace Fan.Sys
     public static bool approx(double self, double that) { return approx(self, that, null); }
     public static bool approx(double self, double that, Double tolerance)
     {
-      // special check for nan
-      if (System.Double.IsNaN(self) && System.Double.IsNaN(that)) return true;      
-
-      // need this to check +inf, -inf
-      if (equals(self, that)) return true;
+      // need this to check +inf, -inf, and nan
+      if (compare(self, new Double(that)) == 0) return true;
 
       double t;
       if (tolerance == null)
