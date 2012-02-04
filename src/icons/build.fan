@@ -26,7 +26,7 @@ class Build : BuildPod
                "vcs.name":     "Mercurial",
                "vcs.uri":      "http://hg.fantom.org/fan-1.0/"]
     depends = ["sys 1.0"]
-    resDirs = [`x16/`, `x32/`, `x48/`, `x256/`]
+    resDirs = [`x16/`, `x32/`, `x48/`, `x64/`, `x256/`]
     docApi  = false
   }
 }
