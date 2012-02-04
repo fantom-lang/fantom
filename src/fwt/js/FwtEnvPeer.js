@@ -51,7 +51,7 @@ fan.fwt.FwtEnvPeer.loadImage = function(fanImg, widget)
             if (p.peer.notifyImgLoad) break;
             p = p.parent();
           }
-          if (p.peer.notifyImgLoad)
+          if (p != null && p.peer.notifyImgLoad)
           {
             fan.fwt.FwtEnvPeer.$win = p;
             fan.fwt.FwtEnvPeer.$needRelayout = true;
