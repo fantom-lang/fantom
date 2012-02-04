@@ -43,16 +43,15 @@ fan.fwt.FwtEnvPeer.loadImage = function(fanImg, widget)
           fan.fwt.FwtEnvPeer.$win = win;
           fan.fwt.FwtEnvPeer.$needRelayout = true;
         }
-        else if (fan.frescoKit)
+        else
         {
-          // TODO FIXIT: some base class for Window/Dialog/Popup???
           var p = widget;
           while (p != null)
           {
-            if (p instanceof fan.frescoKit.Popup) break;
+            if (p.peer.notifyImgLoad) break;
             p = p.parent();
           }
-          if (p instanceof fan.frescoKit.Popup)
+          if (p.peer.notifyImgLoad)
           {
             fan.fwt.FwtEnvPeer.$win = p;
             fan.fwt.FwtEnvPeer.$needRelayout = true;
