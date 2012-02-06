@@ -24,6 +24,18 @@ fan.fwt.TextPeer.prototype.text$ = function(self, val, sync)
 }
 fan.fwt.TextPeer.prototype.m_text = "";
 
+fan.fwt.TextPeer.prototype.prefSize = function(self, hints)
+{
+  var pref = fan.fwt.WidgetPeer.prototype.prefSize.call(this, self, hints);
+  if (fan.fwt.DesktopPeer.isMac && fan.fwt.DesktopPeer.$isWebkit)
+  {
+    // Webkit on OS X 10.7 has some bug reporting proper pref
+    // size when size=X is specified on field
+    pref = fan.gfx.Size.make(Math.floor(pref.m_w * 1.25), pref.m_h);
+  }
+  return pref
+}
+
 fan.fwt.TextPeer.prototype.create = function(parentElem, self)
 {
   // create actual input element
