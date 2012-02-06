@@ -105,6 +105,14 @@ native const class Actor
   **
   protected virtual Obj? receive(Obj? msg)
 
+  **
+  ** Get the current number of messages pending on the message queue.
+  **
+  ** NOTE: this method is marked as NoDoc, it is provided for low level
+  ** access to monitor the actor, but it is subject to change.
+  **
+  @NoDoc Int queueSize()
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
