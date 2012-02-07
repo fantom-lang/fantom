@@ -43,6 +43,11 @@ class SmtpClient
   **
   Str? password
 
+  **
+  ** Use SSL for connection (ensure port is configured properly)
+  **
+  Bool ssl
+
 //////////////////////////////////////////////////////////////////////////
 // Send
 //////////////////////////////////////////////////////////////////////////
@@ -67,7 +72,8 @@ class SmtpClient
     if (host == null) throw NullErr("host is null")
 
     // open the socket connection
-    sock = TcpSocket().connect(IpAddr(host), port)
+    sock = ssl ? TcpSocket.makeSsl : TcpSocket.make
+    sock.connect(IpAddr(host), port)
     try
     {
       // read server hello
