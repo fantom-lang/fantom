@@ -94,7 +94,7 @@ public class TcpListenerPeer
     try
     {
       TcpSocket s = TcpSocket.make();
-      implAccept(s.peer);
+      implAccept(s.peer.socket);
       s.peer.connected(s);
       return s;
     }
