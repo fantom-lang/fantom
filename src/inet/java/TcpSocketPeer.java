@@ -10,9 +10,9 @@ package fan.inet;
 import java.io.*;
 import java.net.*;
 import fan.sys.*;
+import javax.net.ssl.*;
 
 public class TcpSocketPeer
-  extends Socket
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -21,14 +21,33 @@ public class TcpSocketPeer
 
   public static TcpSocketPeer make(TcpSocket fan)
   {
-    return new TcpSocketPeer();
+    return new TcpSocketPeer(false);
   }
 
-  public TcpSocketPeer()
+  public static TcpSocket makeSsl()
   {
+    TcpSocket self = new TcpSocket();
+    self.peer = new TcpSocketPeer(true);
+    return self;
+  }
+
+  public TcpSocketPeer(boolean ssl)
+  {
+    try
+    {
+      if (ssl)
+        this.socket = SSLSocketFactory.getDefault().createSocket();
+      else
+        this.socket = new Socket();
+    }
+    catch (IOException e)
+    {
+      throw IOErr.make(e);
+    }
+
     // turn off Nagle's algorithm since we should
     // always be doing buffering in the virtual machine
-    try { setTcpNoDelay(true); } catch (Exception e) {}
+    try { socket.setTcpNoDelay(true); } catch (Exception e) {}
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -37,17 +56,17 @@ public class TcpSocketPeer
 
   public boolean isBound(TcpSocket fan)
   {
-    return isBound();
+    return socket.isBound();
   }
 
   public boolean isConnected(TcpSocket fan)
   {
-    return isConnected();
+    return socket.isConnected();
   }
 
   public boolean isClosed(TcpSocket fan)
   {
-    return isClosed();
+    return socket.isClosed();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,29 +75,29 @@ public class TcpSocketPeer
 
   public IpAddr localAddr(TcpSocket fan)
   {
-    if (!isBound()) return null;
-    InetAddress addr = getLocalAddress();
+    if (!socket.isBound()) return null;
+    InetAddress addr = socket.getLocalAddress();
     if (addr == null) return null;
     return IpAddrPeer.make(addr);
   }
 
   public Long localPort(TcpSocket fan)
   {
-    if (!isBound()) return null;
-    int port = getLocalPort();
+    if (!socket.isBound()) return null;
+    int port = socket.getLocalPort();
     if (port <= 0) return null;
     return Long.valueOf(port);
   }
 
   public IpAddr remoteAddr(TcpSocket fan)
   {
-    if (!isConnected()) return null;
+    if (!socket.isConnected()) return null;
     return remoteAddr;
   }
 
   public Long remotePort(TcpSocket fan)
   {
-    if (!isConnected()) return null;
+    if (!socket.isConnected()) return null;
     return Long.valueOf(remotePort);
   }
 
@@ -92,7 +111,7 @@ public class TcpSocketPeer
     {
       InetAddress javaAddr = (addr == null) ? null : addr.peer.java;
       int javaPort = (port == null) ? 0 : port.intValue();
-      bind(new InetSocketAddress(javaAddr, javaPort));
+      socket.bind(new InetSocketAddress(javaAddr, javaPort));
       return fan;
     }
     catch (IOException e)
@@ -107,7 +126,7 @@ public class TcpSocketPeer
     {
       // connect
       int javaTimeout = (timeout == null) ? 0 : (int)timeout.millis();
-      connect(new InetSocketAddress(addr.peer.java, (int)port), javaTimeout);
+      socket.connect(new InetSocketAddress(addr.peer.java, (int)port), javaTimeout);
       connected(fan);
       return fan;
     }
@@ -120,11 +139,11 @@ public class TcpSocketPeer
   void connected(TcpSocket fan)
     throws IOException
   {
-    InetSocketAddress sockAddr = (InetSocketAddress)getRemoteSocketAddress();
+    InetSocketAddress sockAddr = (InetSocketAddress)socket.getRemoteSocketAddress();
     this.remoteAddr = IpAddrPeer.make(sockAddr.getAddress());
     this.remotePort = sockAddr.getPort();
-    this.in  = SysInStream.make(getInputStream(), getInBufferSize(fan));
-    this.out = SysOutStream.make(getOutputStream(), getOutBufferSize(fan));
+    this.in  = SysInStream.make(socket.getInputStream(), getInBufferSize(fan));
+    this.out = SysOutStream.make(socket.getOutputStream(), getOutBufferSize(fan));
   }
 
   public InStream in(TcpSocket fan)
@@ -155,7 +174,7 @@ public class TcpSocketPeer
   public void close()
     throws IOException
   {
-    super.close();
+    socket.close();
     this.in  = null;
     this.out = null;
   }
@@ -200,7 +219,7 @@ public class TcpSocketPeer
   {
     try
     {
-      return getKeepAlive();
+      return socket.getKeepAlive();
     }
     catch (IOException e)
     {
@@ -212,7 +231,7 @@ public class TcpSocketPeer
   {
     try
     {
-      setKeepAlive(v);
+      socket.setKeepAlive(v);
     }
     catch (IOException e)
     {
@@ -224,7 +243,7 @@ public class TcpSocketPeer
   {
     try
     {
-      return getReceiveBufferSize();
+      return socket.getReceiveBufferSize();
     }
     catch (IOException e)
     {
@@ -236,7 +255,7 @@ public class TcpSocketPeer
   {
     try
     {
-      setReceiveBufferSize((int)v);
+      socket.setReceiveBufferSize((int)v);
     }
     catch (IOException e)
     {
@@ -248,7 +267,7 @@ public class TcpSocketPeer
   {
     try
     {
-      return getSendBufferSize();
+      return socket.getSendBufferSize();
     }
     catch (IOException e)
     {
@@ -260,7 +279,7 @@ public class TcpSocketPeer
   {
     try
     {
-      setSendBufferSize((int)v);
+      socket.setSendBufferSize((int)v);
     }
     catch (IOException e)
     {
@@ -272,7 +291,7 @@ public class TcpSocketPeer
   {
     try
     {
-      return getReuseAddress();
+      return socket.getReuseAddress();
     }
     catch (IOException e)
     {
@@ -284,7 +303,7 @@ public class TcpSocketPeer
   {
     try
     {
-      setReuseAddress(v);
+      socket.setReuseAddress(v);
     }
     catch (IOException e)
     {
@@ -296,7 +315,7 @@ public class TcpSocketPeer
   {
     try
     {
-      int linger = getSoLinger();
+      int linger = socket.getSoLinger();
       if (linger < 0) return null;
       return Duration.makeSec(linger);
     }
@@ -311,9 +330,9 @@ public class TcpSocketPeer
     try
     {
       if (v == null)
-        setSoLinger(false, 0);
+        socket.setSoLinger(false, 0);
       else
-        setSoLinger(true, (int)(v.sec()));
+        socket.setSoLinger(true, (int)(v.sec()));
     }
     catch (IOException e)
     {
@@ -325,7 +344,7 @@ public class TcpSocketPeer
   {
     try
     {
-      int timeout = getSoTimeout();
+      int timeout = socket.getSoTimeout();
       if (timeout <= 0) return null;
       return Duration.makeMillis(timeout);
     }
@@ -340,9 +359,9 @@ public class TcpSocketPeer
     try
     {
       if (v == null)
-        setSoTimeout(0);
+        socket.setSoTimeout(0);
       else
-        setSoTimeout((int)(v.millis()));
+        socket.setSoTimeout((int)(v.millis()));
     }
     catch (IOException e)
     {
@@ -354,7 +373,7 @@ public class TcpSocketPeer
   {
     try
     {
-      return getTcpNoDelay();
+      return socket.getTcpNoDelay();
     }
     catch (IOException e)
     {
@@ -366,7 +385,7 @@ public class TcpSocketPeer
   {
     try
     {
-      setTcpNoDelay(v);
+      socket.setTcpNoDelay(v);
     }
     catch (IOException e)
     {
@@ -378,7 +397,7 @@ public class TcpSocketPeer
   {
     try
     {
-      return getTrafficClass();
+      return socket.getTrafficClass();
     }
     catch (IOException e)
     {
@@ -390,7 +409,7 @@ public class TcpSocketPeer
   {
     try
     {
-      setTrafficClass((int)v);
+      socket.setTrafficClass((int)v);
     }
     catch (IOException e)
     {
@@ -402,6 +421,7 @@ public class TcpSocketPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  final Socket socket;
   private int inBufSize = 4096;
   private int outBufSize = 4096;
   private IpAddr remoteAddr;
@@ -409,5 +429,4 @@ public class TcpSocketPeer
   private SysInStream in;
   private SysOutStream out;
   private SocketOptions options;
-
 }
