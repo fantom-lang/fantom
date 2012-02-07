@@ -388,7 +388,7 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
     // find pos relative to cell
     var div   = this.elem;
     var table = div.firstChild;
-    var tr  = table.rows[row+1];
+    var tr  = table.rows[row + (this.m_headerVisible ? 1 : 0)];
     var td  = tr.cells[col];
     var rx  = posOnDis.m_x - td.offsetLeft + div.scrollLeft;
     var ry  = posOnDis.m_y - tr.offsetTop  + div.scrollTop;
