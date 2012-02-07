@@ -419,6 +419,7 @@ class WebClient
     close
     newUri := Uri.decode(loc)
     if (!newUri.isAbs) newUri = reqUri + newUri
+    if (reqUri == newUri) throw Err("Cyclical redirect: $newUri")
     reqUri = newUri
     writeReq
     readRes

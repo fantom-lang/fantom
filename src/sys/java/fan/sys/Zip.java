@@ -141,6 +141,7 @@ public final class Zip
           }
           catch (java.io.IOException e)
           {
+            e.printStackTrace();
             return false;
           }
         }
@@ -162,6 +163,7 @@ public final class Zip
     }
     catch (java.io.IOException e)
     {
+      e.printStackTrace();
       return false;
     }
   }
@@ -177,6 +179,7 @@ public final class Zip
     }
     catch (java.io.IOException e)
     {
+      e.printStackTrace();
       return false;
     }
   }
