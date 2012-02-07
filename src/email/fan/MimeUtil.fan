@@ -27,17 +27,20 @@ class MimeUtil
 
   **
   ** Return the addr-spec or "local@domain" part of an email
-  ** address string.  Email addresses may be formatted with or
-  ** without a display name:
-  **   bob@acme.com
-  **   Bob Smith <bob@acme.com>
-  **   "Bob Smith" <bob@acme.com>
+  ** address string.  The result is always returned as "<addr>".
+  ** The addresses may be formatted with or without a display name:
+  **
+  **   bob@acme.com                =>  <bob@acme.com>
+  **   Bob Smith <bob@acme.com>    =>  <bob@acme.com>
+  **   "Bob Smith" <bob@acme.com>  =>  <bob@acme.com>
   **
   static Str toAddrSpec(Str addr)
   {
-    lt := addr.index("<"); if (lt == null) return addr
-    gt := addr.index(">"); if (gt == null) return addr
-    return addr[lt+1..<gt].trim
+    addr = addr.trim
+    lt := addr.index("<")
+    gt := addr.index(">")
+    if (lt != null && gt != null) return addr[lt..gt]
+    return "<$addr>"
   }
 
 }

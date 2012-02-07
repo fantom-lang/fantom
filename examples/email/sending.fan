@@ -17,6 +17,7 @@ class Sending
 {
   // configure with your real SMTP host and account info
   Str testHost   := "smtp.acme.com"
+  Int testPort   := 25
   Str testUser   := "user"
   Str testPass   := "pass"
   Str testTo     := "to@acme.com"
@@ -28,6 +29,7 @@ class Sending
     c := SmtpClient
     {
       host     = testHost
+      port     = testPort
       username = testUser
       password = testPass
     }

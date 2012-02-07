@@ -14,10 +14,12 @@ class MimeUtilTest : Test
 
   Void testToAddrSpec()
   {
-    verifyEq(MimeUtil.toAddrSpec("bob@acme.com"), "bob@acme.com")
-    verifyEq(MimeUtil.toAddrSpec("<bob@acme.com>"), "bob@acme.com")
-    verifyEq(MimeUtil.toAddrSpec("Bob Smith <bob@acme.com>"), "bob@acme.com")
-    verifyEq(MimeUtil.toAddrSpec("\"Bob Smith\" <bob@acme.com>"), "bob@acme.com")
+    verifyEq(MimeUtil.toAddrSpec("bob@acme.com"), "<bob@acme.com>")
+    verifyEq(MimeUtil.toAddrSpec("bob@acme.com "), "<bob@acme.com>")
+    verifyEq(MimeUtil.toAddrSpec("<bob@acme.com>"), "<bob@acme.com>")
+    verifyEq(MimeUtil.toAddrSpec("<bob@acme.com> "), "<bob@acme.com>")
+    verifyEq(MimeUtil.toAddrSpec("Bob Smith <bob@acme.com>"), "<bob@acme.com>")
+    verifyEq(MimeUtil.toAddrSpec("\"Bob Smith\" <bob@acme.com>"), "<bob@acme.com>")
   }
 
   Void testEncodedWord()
