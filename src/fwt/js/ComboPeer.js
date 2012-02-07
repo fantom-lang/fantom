@@ -10,7 +10,10 @@
  * ComboPeer.
  */
 fan.fwt.ComboPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
-fan.fwt.ComboPeer.prototype.$ctor = function(self) {}
+fan.fwt.ComboPeer.prototype.$ctor = function(self)
+{
+  this.m_items = fan.sys.List.make(fan.sys.Obj.$type);
+}
 
 // see init.js for CSS
 
