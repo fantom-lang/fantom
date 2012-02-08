@@ -32,12 +32,13 @@ runtime=java
 // Java Runtime
 //////////////////////////////////////////////////////////////////////////
 
-// Set this property to specify a jvm.dll path to explicitly
-// select the jvm runtime to use; if not set then we lookup
-// the Java VM to use in the registry under:
+// Windows jvm.dll path to explicitly select the jvm runtime to use; if
+// not set then we lookup the Java VM to use in the registry under:
 //   \HKEY_LOCAL_MACHINE\Software\JavaSoft\JavaRuntimeEnvironment.CurrentVersion
-// java.jvm=C:\\Program Files\\Java\\jre1.5.0_06\\bin\\client\\jvm.dll
-// java.jvm=E:\\tools\\jdk16\\jre\\bin\\server\\jvm.dll
+// Typical install defaults:
+//   java.jvm=C:\\Program Files\\Java\\jre1.5.0_06\\bin\\client\\jvm.dll
+//   java.jvm=C:\\Program Files (x86)\\Java\\jre6\\bin\\client\\jvm.dll
+//   java.jvm=C:\\Program Files (x86)\\Java\\jre7\\bin\\client\\jvm.dll
 
 // Set this property to pass additional command line options to the Java VM.
 // The options should be listed together separated with a space.
