@@ -227,9 +227,12 @@ fan.sys.Duration.prototype.toDay    = function() { return Math.floor(this.m_tick
 fan.sys.Duration.prototype.toLocale = function()
 {
   var ticks = this.m_ticks;
+  var pod = fan.sys.Duration.$type.m_pod;
+  var env = fan.sys.Env.cur();
+  var locale = fan.sys.Locale.cur();
 
   // less than 1000ns Xns
-  if (ticks < 1000) return ticks + "ns";
+  if (ticks < 1000) return ticks + env.locale(pod, "nsAbbr", "ns",  locale);
 
   // less than 2ms X.XXXms
   if (ticks < 2*fan.sys.Duration.nsPerMilli)
@@ -244,17 +247,17 @@ fan.sys.Duration.prototype.toLocale = function()
     s += us;
     if (s.charAt(s.length-1) == '0') s = s.substr(0, s.length-1);
     if (s.charAt(s.length-1) == '0') s = s.substr(0, s.length-1);
-    s += "ms";
+    s += env.locale(pod, "msAbbr", "ms",  locale);;
     return s;
   }
 
   // less than 2sec Xms
   if (ticks < 2*fan.sys.Duration.nsPerSec)
-    return Math.floor(ticks/fan.sys.Duration.nsPerMilli) + "ms";
+    return Math.floor(ticks/fan.sys.Duration.nsPerMilli) + env.locale(pod, "msAbbr", "ms",  locale);
 
   // less than 2min Xsec
   if (ticks < 1*fan.sys.Duration.nsPerMin)
-    return Math.floor(ticks/fan.sys.Duration.nsPerSec) + "sec";
+    return Math.floor(ticks/fan.sys.Duration.nsPerSec) + env.locale(pod, "secAbbr", "sec",  locale);
 
   // [Xdays] [Xhr] Xmin Xsec
   var days = Math.floor(ticks/fan.sys.Duration.nsPerDay); ticks -= days*fan.sys.Duration.nsPerDay;
@@ -263,10 +266,10 @@ fan.sys.Duration.prototype.toLocale = function()
   var sec  = Math.floor(ticks/fan.sys.Duration.nsPerSec);
 
   var s = '';
-  if (days > 0) s += days + (days == 1 ? "day " : "days ");
-  if (hr  > 0) s += hr + "hr ";
-  if (min > 0) s += min + "min ";
-  if (sec > 0) s += sec + "sec ";
+  if (days > 0) s += days + (days == 1 ? env.locale(pod, "dayAbbr", "day", locale) : env.locale(pod, "daysAbbr", "days", locale)) + " ";
+  if (hr  > 0) s += hr  + env.locale(pod, "hourAbbr", "hr",  locale) + " ";
+  if (min > 0) s += min + env.locale(pod, "minAbbr",  "min", locale) + " ";
+  if (sec > 0) s += sec + env.locale(pod, "secAbbr",  "sec", locale) + " ";
   return s.substring(0, s.length-1);
 }
 

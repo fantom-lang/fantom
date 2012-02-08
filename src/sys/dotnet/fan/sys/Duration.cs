@@ -291,10 +291,13 @@ namespace Fan.Sys
     public string toLocale()
     {
       long ticks = this.m_ticks;
+      Pod pod = Sys.m_sysPod;
+      Env env = Env.cur();
+      Locale locale = Locale.cur();
       StringBuilder s;
 
       // less than 1000ns Xns
-      if (ticks < 1000L) return ticks + "ns";
+      if (ticks < 1000L) return ticks + env.locale(pod, "nsAbbr", "ns", locale);
 
       // less than 2ms X.XXXms
       if (ticks < 2*nsPerMilli)
@@ -309,15 +312,15 @@ namespace Fan.Sys
         s.Append(us);
         if (s[s.Length-1] == '0') s.Length = s.Length-1;
         if (s[s.Length-1] == '0') s.Length = s.Length-1;
-        s.Append("ms");
+        s.Append(env.locale(pod, "msAbbr", "ms", locale));
         return s.ToString();
       }
 
       // less than 2sec Xms
-      if (ticks < 2L*nsPerSec) return (ticks/nsPerMilli) + "ms";
+      if (ticks < 2L*nsPerSec) return (ticks/nsPerMilli) + env.locale(pod, "msAbbr", "ms", locale);
 
       // less than 2min Xsec
-      if (ticks < 1L*nsPerMin) return (ticks/nsPerSec) + "sec";
+      if (ticks < 1L*nsPerMin) return (ticks/nsPerSec) + env.locale(pod, "secAbbr", "sec", locale);
 
       // [Xdays] [Xhr] Xmin Xsec
       long days  = ticks/nsPerDay; ticks -= days*nsPerDay;
@@ -326,10 +329,10 @@ namespace Fan.Sys
       long sec = ticks/nsPerSec;
 
       s = new StringBuilder();
-      if (days > 0) s.Append(days).Append(days == 1 ? "day " : "days ");
-      if (hr > 0)   s.Append(hr).Append("hr ");
-      if (min > 0)  s.Append(min).Append("min ");
-      if (sec > 0)  s.Append(sec).Append("sec ");
+      if (days > 0) s.Append(days).Append(days == 1 ? env.locale(pod, "dayAbbr", "day", locale) : env.locale(pod, "daysAbbr", "days", locale)).Append(" ");
+      if (hr > 0)   s.Append(hr).Append(env.locale(pod, "hourAbbr", "hr", locale)).Append(" ");
+      if (min > 0)  s.Append(min).Append(env.locale(pod, "minAbbr", "min", locale)).Append(" ");
+      if (sec > 0)  s.Append(sec).Append(env.locale(pod, "secAbbr", "sec", locale)).Append(" ");
       s.Length = s.Length - 1;
       return s.ToString();
     }

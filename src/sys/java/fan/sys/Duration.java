@@ -285,9 +285,12 @@ public final class Duration
   public String toLocale()
   {
     long ticks = this.ticks;
+    Pod pod = Sys.sysPod;
+    Env env = Env.cur();
+    Locale locale = Locale.cur();
 
     // less than 1000ns Xns
-    if (ticks < 1000L) return ticks + "ns";
+    if (ticks < 1000L) return ticks + env.locale(pod, "nsAbbr", "ns", locale);
 
     // less than 2ms X.XXXms
     if (ticks < 2*nsPerMilli)
@@ -302,15 +305,15 @@ public final class Duration
       s.append(us);
       if (s.charAt(s.length()-1) == '0') s.setLength(s.length()-1);
       if (s.charAt(s.length()-1) == '0') s.setLength(s.length()-1);
-      s.append("ms");
+      s.append(env.locale(pod, "msAbbr", "ms", locale));
       return s.toString();
     }
 
     // less than 2sec Xms
-    if (ticks < 2L*nsPerSec)   return (ticks/nsPerMilli) + "ms";
+    if (ticks < 2L*nsPerSec)   return (ticks/nsPerMilli) + env.locale(pod, "msAbbr", "ms", locale);
 
     // less than 2min Xsec
-    if (ticks < 1L*nsPerMin)   return (ticks/nsPerSec) + "sec";
+    if (ticks < 1L*nsPerMin)   return (ticks/nsPerSec) + env.locale(pod, "secAbbr", "sec", locale);
 
     // [Xdays] [Xhr] Xmin Xsec
     long days  = ticks/nsPerDay; ticks -= days*nsPerDay;
@@ -319,10 +322,10 @@ public final class Duration
     long sec = ticks/nsPerSec;
 
     StringBuilder s = new StringBuilder();
-    if (days > 0) s.append(days).append(days == 1 ? "day " : "days ");
-    if (hr > 0)   s.append(hr).append("hr ");
-    if (min > 0)  s.append(min).append("min ");
-    if (sec > 0)  s.append(sec).append("sec ");
+    if (days > 0) s.append(days).append(days == 1 ? env.locale(pod, "dayAbbr", "day", locale) : env.locale(pod, "daysAbbr", "days", locale)).append(' ');
+    if (hr > 0)   s.append(hr).append(env.locale(pod, "hourAbbr", "hr", locale)).append(' ');
+    if (min > 0)  s.append(min).append(env.locale(pod, "minAbbr", "min", locale)).append(' ');
+    if (sec > 0)  s.append(sec).append(env.locale(pod, "secAbbr", "sec", locale)).append(' ');
     s.setLength(s.length()-1);
     return s.toString();
   }
