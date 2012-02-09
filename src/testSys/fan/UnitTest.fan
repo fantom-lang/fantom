@@ -250,4 +250,20 @@ class UnitTest : Test
   {
     verifySame(Unit(a) / Unit(b), Unit(quotient))
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Unicode
+//////////////////////////////////////////////////////////////////////////
+
+  Void testUnicode()
+  {
+    // test ohm \u2126 which can normalized into \u03A9
+    verifySame(Unit.fromStr("\u2126"), Unit.fromStr("\u03A9"))
+    Unit.list.each |unit|
+    {
+      if (unit.symbol.contains("\u2126"))
+        verifySame(unit, Unit.fromStr(unit.symbol.replace("\u2126", "\u03A9")))
+    }
+  }
+
 }
