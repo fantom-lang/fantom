@@ -112,16 +112,16 @@ kiloVolt, kV; kg1*m2*sec-3*A-1; 1000.0
 megaVolt, MV; kg1*m2*sec-3*A-1; 1000000.0
 
 -- electric resistance (kg1*m2*sec-3*A-2)
-ohm, Ω; kg1*m2*sec-3*A-2
-kilohm, kΩ; kg1*m2*sec-3*A-2; 1000.0
-megohm, MΩ; kg1*m2*sec-3*A-2; 1000000.0
-milliohm, mΩ; kg1*m2*sec-3*A-2; 0.0010
+ohm, Ω, Ω; kg1*m2*sec-3*A-2
+kilohm, kΩ, kΩ; kg1*m2*sec-3*A-2; 1000.0
+megohm, MΩ, MΩ; kg1*m2*sec-3*A-2; 1000000.0
+milliohm, mΩ, mΩ; kg1*m2*sec-3*A-2; 0.0010
 
 -- electrical conductivity (kg-1*m-3*sec3*A2)
 siemens_per_meter, S/m; kg-1*m-3*sec3*A2
 
 -- electrical resistivity (kg1*m3*sec-3*A-2)
-ohm_meter, Ωm; kg1*m3*sec-3*A-2
+ohm_meter, Ωm, Ωm; kg1*m3*sec-3*A-2
 
 -- energy (kg1*m2*sec-2)
 joule, J; kg1*m2*sec-2
