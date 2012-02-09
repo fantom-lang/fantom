@@ -1,6 +1,6 @@
-dateTime=WWW DD MMM YYYY hh:mm:ss zzz
-date=DD-MM-YY
-time=hh:mm:ss
+dateTime=WWW DD MMM YYYY HH:mm:ss zzz
+date=DD-MM-YYYY
+time=HH:mm:ss
 float=#.0##
 decimal=#.0##
 int=#
@@ -43,3 +43,11 @@ wedAbbr=wo
 thuAbbr=do
 friAbbr=vr
 satAbbr=za
+dayAbbr=dag
+daysAbbr=dagen
+hourAbbr=uur
+minAbbr=min
+secAbbr=sec
+msAbbr=ms
+nsAbbr=ns
+
