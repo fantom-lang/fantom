@@ -66,7 +66,7 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
   div.className = "_fwt_Button_";
   var style = div.style;
   style.font = fan.fwt.WidgetPeer.fontToCss(this.m_font==null ? fan.fwt.DesktopPeer.$sysFont : this.m_font);
-  style.border  = "1px solid #404040";
+  style.border  = "1px solid #555";
   style.MozBorderRadius    = "4px";
   style.webkitBorderRadius = "4px";
   style.borderRadius       = "4px";
@@ -199,7 +199,7 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
       if (this.m_enabled)
       {
         style.color = "#000";
-        style.border = "1px solid #404040";
+        style.border = "1px solid #555";
         fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #fefefe, #d8d8d8 0.90, #d1d1d1 0.90, #b9b9b9"));
       }
       else
