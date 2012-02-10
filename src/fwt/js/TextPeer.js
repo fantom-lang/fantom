@@ -15,6 +15,28 @@ fan.fwt.TextPeer.prototype.$ctor = function(self)
   this.control = null;
 }
 
+fan.fwt.WidgetPeer.addCss(
+  "._fwt_Text_ {" +
+  " background: #fff;" +
+  " color: black;" +
+  " padding: 3px 2px 2px 2px;" +
+  " margin: 0;" +
+  " outline: none;" +
+  " border-bottom: 1px solid #d0d0d0;" +
+  " border-left:   1px solid #9d9d9d;" +
+  " border-right:  1px solid #afafaf;" +
+  " border-top:    1px solid #707070;" +
+  " -webkit-box-shadow: inset 0px 1px 2px #b7b7b7;" +
+  " -moz-box-shadow:    inset 0px 1px 2px #b7b7b7;" +
+  " box-shadow:         inset 0px 1px 2px #b7b7b7;" +
+  "}" +
+  "._fwt_Text_readonly_ {" +
+  " background: #e4e4e4;" +
+  " -webkit-box-shadow: inset 0px 1px 2px #a2a2a2;" +
+  " -moz-box-shadow:    inset 0px 1px 2px #a2a2a2;" +
+  " box-shadow:         inset 0px 1px 2px #a2a2a2;" +
+  "}");
+
 fan.fwt.TextPeer.prototype.text = function(self) { return this.m_text; }
 fan.fwt.TextPeer.prototype.text$ = function(self, val, sync)
 {
@@ -81,16 +103,9 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
   text.onpaste = function(event) { setTimeout(function() { $this.fireModify(self); }, 10); }
   text.oncut   = function(event) { setTimeout(function() { $this.fireModify(self); }, 10); }
 
-  // style
-  var s = this.control.style;
-  s.padding = "3px 2px 2px 2px"
-  s.margin  = "0";
-  s.outline = "none";
-  s.borderBottom = "1px solid #d0d0d0";
-  s.borderLeft   = "1px solid #9d9d9d";
-  s.borderRight  = "1px solid #afafaf";
-  s.borderTop    = "1px solid #707070";
-  s.font = fan.fwt.WidgetPeer.fontToCss(this.m_font);
+  // font
+  this.control.style.font = fan.fwt.WidgetPeer.fontToCss(
+    this.m_font != null ? this.m_font : fan.fwt.Desktop.sysFont());
 
   // assemble
   var div = this.emptyDiv();
@@ -142,16 +157,10 @@ fan.fwt.TextPeer.prototype.sync = function(self)
   text.disabled = !this.m_enabled;
 
   // sync style
-  var fade = !self.m_editable || !this.m_enabled;
-  text.style.background = fade ? "#e4e4e4" : "#fff";
-  var shadow = "inset 0px 1px 2px" + (fade ? "#a2a2a2" : "#b7b7b7");
-  text.style.webkitBoxShadow = shadow;
-  text.style.mozBoxShadow = shadow;
-  text.style.boxShadow = shadow;
-
-  // hook for override
+  var readonly = !self.m_editable || !this.m_enabled;
+  text.className = this.$cssClass(readonly);
   fan.fwt.WidgetPeer.applyStyle(text,
-    fade ? this.$disabledStyle(self) : this.$style(self));
+    readonly ? this.$disabledStyle(self) : this.$style(self));
 
   //if (self.m_multiLine)
   //{
@@ -189,6 +198,10 @@ fan.fwt.TextPeer.prototype.sync = function(self)
 // Backdoor hook to override style [returns [Str:Str]?]
 fan.fwt.TextPeer.prototype.$style = function(self) { return null; }
 fan.fwt.TextPeer.prototype.$disabledStyle = function(self) { return null; }
+fan.fwt.TextPeer.prototype.$cssClass = function(readonly)
+{
+  return readonly ? "_fwt_Text_ _fwt_Text_readonly_" : "_fwt_Text_";
+}
 
 // Backdoor hook to set placeholder text [returns Str?]
 fan.fwt.TextPeer.prototype.$placeHolder = function(self) { return null; }

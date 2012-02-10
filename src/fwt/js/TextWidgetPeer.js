@@ -18,5 +18,5 @@ fan.fwt.TextWidgetPeer.prototype.m_caretOffset = 0;
 
 fan.fwt.TextWidgetPeer.prototype.font = function(self) { return this.m_font; }
 fan.fwt.TextWidgetPeer.prototype.font$ = function(self, val) { this.m_font = val; }
-fan.fwt.TextWidgetPeer.prototype.m_font = fan.fwt.Desktop.sysFont();
+fan.fwt.TextWidgetPeer.prototype.m_font = null;
 
