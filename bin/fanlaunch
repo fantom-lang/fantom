@@ -69,7 +69,9 @@ FAN_CLASSPATH="$FAN_CP":"$CLASSPATH"
 if $cygwin; then
   FAN_HOME=`cygpath --windows $FAN_HOME`
   FAN_CLASSPATH=`cygpath --windows --path $FAN_CLASSPATH`
-  JAVA_HOME=`cygpath --windows $JAVA_HOME`
+  if [ ! -z "$JAVA_HOME" ] ; then
+    JAVA_HOME=`cygpath --windows $JAVA_HOME`
+  fi
 fi
 
 # read a single line property from props file
@@ -82,6 +84,6 @@ fanlaunch()
 {
   FAN_MAIN="fanx.tools.$1"
   shift
-  read_prop JAVA_OPTIONS $FAN_CONFIG_PROPS java.options
+  read_prop JAVA_OPTIONS "$FAN_CONFIG_PROPS" java.options
   "$FAN_JAVA" $osFlags $JAVA_OPTIONS $libPath -cp "$FAN_CLASSPATH" -Dfan.home="$FAN_HOME" "$FAN_MAIN" "$@"
 }
