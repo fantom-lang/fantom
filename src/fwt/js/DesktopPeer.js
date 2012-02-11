@@ -94,7 +94,7 @@ fan.fwt.DesktopPeer.$sysBorder       = fan.gfx.Color.fromStr("#333333");
 fan.fwt.DesktopPeer.$sysListFg       = fan.gfx.Color.fromStr("#000000");
 fan.fwt.DesktopPeer.$sysListBg       = fan.gfx.Color.fromStr("#ffffff");
 fan.fwt.DesktopPeer.$sysListSelFg    = fan.gfx.Color.fromStr("#ffffff");
-fan.fwt.DesktopPeer.$sysListSelBg    = fan.gfx.Color.fromStr("#316ac5");
+fan.fwt.DesktopPeer.$sysListSelBg    = fan.gfx.Color.fromStr("#3d80df");
 
 fan.fwt.DesktopPeer.sysDarkShadow  = function() { return fan.fwt.DesktopPeer.$sysDarkShadow; }
 fan.fwt.DesktopPeer.sysNormShadow  = function() { return fan.fwt.DesktopPeer.$sysNormShadow; }
