@@ -45,14 +45,24 @@ fanx_TypeParser.prototype.load = function()
   if (this.cur == '|')
     type = this.loadFunc();
 
-  // [java] is java FFI
-  else if (this.cur == '[' && this.sig.indexOf("[java]") != -1) //sig.regionMatches(pos, "[java]", 0, 6))
-    //type = loadFFI();
-    throw fan.sys.ArgErr.make("Java types not allowed '" + this.sig + "'");
-
-  // [...] is map
+  // [ is either [ffi]xxx or [K:V] map
   else if (this.cur == '[')
-    type = this.loadMap();
+  {
+    var ffi = true;
+    for (var i=this.pos+1; i<this.len; i++)
+    {
+      var ch = this.sig.charAt(i);
+      if (this.isIdChar(ch)) continue;
+      ffi = (ch == ']');
+      break;
+    }
+
+    if (ffi)
+      //type = loadFFI();
+      throw fan.sys.ArgErr.make("Java types not allowed '" + this.sig + "'");
+    else
+      type = this.loadMap();
+  }
 
   // otherwise must be basic[]
   else
@@ -71,6 +81,11 @@ fanx_TypeParser.prototype.load = function()
     this.consume('[');
     this.consume(']');
     type = type.toListOf();
+    if (this.cur == '?')
+    {
+      consume('?');
+      type = type.toNullable();
+    }
   }
 
   // nullable
@@ -198,8 +213,7 @@ fanx_TypeParser.load = function(sig, checked)
     var typeName;
     try
     {
-      var colon = sig.indexOf(":");
-      if (sig.charAt(colon+1) != ':') throw new Exception();
+      var colon = sig.indexOf("::");
       podName  = sig.substring(0, colon);
       typeName = sig.substring(colon+2);
       if (podName.length == 0 || typeName.length == 0) throw fan.sys.Err.make("");

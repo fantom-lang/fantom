@@ -16,8 +16,10 @@ fan.sys.Method = fan.sys.Obj.$extend(fan.sys.Slot);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Method.prototype.$ctor = function(parent, name, flags, returns, params, facets)
+fan.sys.Method.prototype.$ctor = function(parent, name, flags, returns, params, facets, generic)
 {
+  if (generic === undefined) generic = null;
+
   this.m_parent  = parent;
   this.m_name    = name;
   this.m_qname   = parent.qname() + "." + name;
@@ -28,6 +30,23 @@ fan.sys.Method.prototype.$ctor = function(parent, name, flags, returns, params, 
   this.m_$name   = this.$$name(name);
   this.m_$qname  = this.m_parent.m_$qname + '.' + this.m_$name;
   this.m_facets  = new fan.sys.Facets(facets);
+  this.m_mask    = (generic != null) ? 0 : fan.sys.Method.toMask(parent, returns, params);
+  this.m_generic = generic;
+}
+
+fan.sys.Method.GENERIC = 0x01;
+fan.sys.Method.toMask = function(parent, returns, params)
+{
+  // we only use generics in Sys
+  if (parent.pod().$name() != "sys") return 0;
+
+  var p = returns.isGenericParameter() ? 1 : 0;
+  for (var i=0; i<params.size(); ++i)
+    p |= params.get(i).m_type.isGenericParameter() ? 1 : 0;
+
+  var mask = 0;
+  if (p != 0) mask |= fan.sys.Method.GENERIC;
+  return mask;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,6 +78,14 @@ fan.sys.Method.prototype.$typeof = function() { return fan.sys.Method.$type; }
 fan.sys.Method.prototype.returns = function() { return this.m_returns; }
 fan.sys.Method.prototype.params  = function() { return this.m_params.ro(); }
 fan.sys.Method.prototype.func = function() { return this.m_func; }
+
+//////////////////////////////////////////////////////////////////////////
+// Generics
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Method.prototype.isGenericMethod = function() { return (this.m_mask & fan.sys.Method.GENERIC) != 0; }
+fan.sys.Method.prototype.isGenericInstance = function() { return this.m_generic != null; }
+fan.sys.Method.prototype.getGenericMethod = function() { return this.m_generic; }
 
 //////////////////////////////////////////////////////////////////////////
 // Call Conveniences
