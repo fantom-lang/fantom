@@ -569,15 +569,16 @@ class ListTest : Test
 
   Void testRemove()
   {
+    js  := Env.cur.runtime == "js"
     foo := "foobar"[0..2]
     list := Str?["a", "b", foo, null, "a"]
-    verifyEq(list.indexSame("foo"), null)
+    if (!js) verifyEq(list.indexSame("foo"), null)
     verifyEq(list.remove("b"), "b");     verifyEq(list, Str?["a", "foo", null, "a"])
     verifyEq(list.remove("a"), "a");     verifyEq(list, Str?["foo", null, "a"])
     verifyEq(list.remove("x"), null);    verifyEq(list, Str?["foo", null, "a"])
     verifyEq(list.remove("a"), "a");     verifyEq(list, Str?["foo", null])
     verifyEq(list.remove(null), null);   verifyEq(list, Str?["foo"])
-    verifyEq(list.removeSame("foo"), null);  verifyEq(list, Str?["foo"])
+    if (!js) verifyEq(list.removeSame("foo"), null);  verifyEq(list, Str?["foo"])
     verifyEq(list.remove("foo"), "foo"); verifyEq(list, Str?[,])
     verifyEq(list.remove("a"), null);    verifyEq(list, Str?[,])
   }
@@ -641,8 +642,10 @@ class ListTest : Test
 
   Void testContainsIndex()
   {
+    js  := Env.cur.runtime == "js"
     foo := "foobar"[0..2]
-    verify(foo !== "foo")
+    // TODO: this is not true under js:
+    if (!js) verify(foo !== "foo")
     list := Str?["a", "b", null, "c", null, "b", foo]
 
     //verifyEq([,].contains(null), false)
@@ -655,8 +658,8 @@ class ListTest : Test
     verifyEq(list.index("foo"), 6)
 
     verifyEq(list.indexSame("a"), 0)
-    verifyEq(list.indexSame("abc"[0..0]), null)
-    verifyEq(list.indexSame("foo"), null)
+    if (!js) verifyEq(list.indexSame("abc"[0..0]), null)
+    if (!js) verifyEq(list.indexSame("foo"), null)
 
     verify(list.contains("b"))
     verifyEq(list.index("b"), 1)
@@ -694,7 +697,7 @@ class ListTest : Test
     verifyEq(list.index("b", -2), 5)
     verifyEq(list.index("b", -6), 1)
     verifyEq(list.index("foo", -1), 6)
-    verifyEq(list.indexSame("foo", -1), null)
+    if (!js) verifyEq(list.indexSame("foo", -1), null)
 
     verifyEq(list.index(null, 0), 2)
     verifyEq(list.index(null, 2), 2)

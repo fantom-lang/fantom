@@ -69,8 +69,10 @@ fan.sys.Method.prototype.invoke = function(instance, args)
     instance = null;
   }
 
-  // TODO FIXIT: if func is null - most likley native
-  // method hasn't been implemented
+// TODO FIXIT: if func is null - most likley native
+// method hasn't been implemented
+if (func == null) fan.sys.ObjUtil.echo("### Method.invoke missing: " + this.m_$qname);
+
   return func.apply(instance, vals);
 }
 
