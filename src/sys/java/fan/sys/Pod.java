@@ -56,8 +56,10 @@ public class Pod
           // if resolving is non-null, check that our pod name it
           // isn't in the resolving map, because then we have a cyclic
           // dependency which is bad, bad, bad
+          if (resolving == null) resolving = new HashMap();
           if (resolving != null && resolving.containsKey(name))
             throw new Exception("Cyclic dependency on '" + name + "'");
+          resolving.put(name, name);
 
           // if fpod is non-null, then we are "creating" this pod in
           // memory direct from the compiler, otherwise we need to
@@ -71,12 +73,10 @@ public class Pod
           // dependency check, keep track of what we are loading
           // via depends checking to prevent a cyclic dependency
           // from putting us into an infinite loop
-          HashMap thisResolving = new HashMap();
-          thisResolving.put(name, name);
           for (int i=0; i<fpod.depends.length; ++i)
           {
             Depend d = fpod.depends[i];
-            Pod dpod = doFind(d.name(), false, null, thisResolving);
+            Pod dpod = doFind(d.name(), false, null, resolving);
             if (dpod == null)
               throw new Exception("Missing dependency for '" + name + "': " + d);
             if (!d.match(dpod.version()))
