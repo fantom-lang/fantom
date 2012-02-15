@@ -45,3 +45,7 @@ fan.sys.Decimal.equals = function(self, that)
   return false;
 }
 
+fan.sys.Decimal.toCode = function(self)
+{
+  return "" + self + "d";
+}

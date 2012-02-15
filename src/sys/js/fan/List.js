@@ -63,6 +63,7 @@ fan.sys.List.prototype.size$ = function(val)
 fan.sys.List.prototype.capacity = function() { return this.m_values.length; }
 fan.sys.List.prototype.capacity$ = function(val)
 {
+  this.modify();
   if (val < this.m_size) throw fan.sys.ArgErr.make("capacity < size");
   // noop
 }
@@ -182,7 +183,7 @@ fan.sys.List.prototype.hash = function()
   for (var i=0; i<size; ++i)
   {
     var obj = vals[i];
-    if (obj != null) hash ^= fan.sys.ObjUtil.hash(obj);
+    hash = (31*hash) + (obj == null ? 0 : fan.sys.ObjUtil.hash(obj));
   }
   return hash;
 }
