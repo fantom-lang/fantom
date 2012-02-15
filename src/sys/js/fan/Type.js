@@ -142,13 +142,12 @@ fan.sys.Type.prototype.isGenericParameter = function()
 
 fan.sys.Type.prototype.isGeneric = function() { return this.isGenericType(); }
 
-/*
-public Map params()
+fan.sys.Type.prototype.params = function()
 {
-  if (noParams == null) noParams = Sys.emptyStrTypeMap;
-  return (Map)noParams;
+  if (fan.sys.Type.$noParams == null)
+    fan.sys.Type.$noParams = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Type.$type).ro();
+  return fan.sys.Type.$noParams;
 }
-*/
 
 fan.sys.Type.prototype.parameterize = function(params)
 {
@@ -590,6 +589,12 @@ fan.sys.NullableType.prototype.doc = function() { return this.m_root.doc(); }
 fan.sys.GenericType = fan.sys.Obj.$extend(fan.sys.Type)
 fan.sys.GenericType.prototype.$ctor = function(v) {}
 
+fan.sys.GenericType.prototype.params = function()
+{
+  if (this.m_params == null) this.m_params = this.makeParams();
+  return this.m_params;
+}
+
 fan.sys.GenericType.prototype.doReflect = function()
 {
   if (this.m_slotList != null) return;
@@ -787,6 +792,13 @@ fan.sys.ListType.prototype.toNullable = function()
 fan.sys.ListType.prototype.facets = function() { return fan.sys.List.$type.facets(); }
 fan.sys.ListType.prototype.facet = function(type, checked) { return fan.sys.List.$type.facet(type, checked); }
 
+fan.sys.ListType.prototype.makeParams = function()
+{
+  return fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Type.$type)
+    .set("V", this.v)
+    .set("L", this).ro();
+}
+
 fan.sys.ListType.prototype.isGenericParameter = function()
 {
   return this.v.isGenericParameter();
@@ -870,6 +882,14 @@ fan.sys.MapType.prototype.toNullable = function()
 
 fan.sys.MapType.prototype.facets = function() { return fan.sys.Map.$type.facets(); }
 fan.sys.MapType.prototype.facet = function(type, checked) { return fan.sys.Map.$type.facet(type, checked); }
+
+fan.sys.MapType.prototype.makeParams = function()
+{
+  return fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Type.$type)
+    .set("K", this.k)
+    .set("V", this.v)
+    .set("M", this).ro();
+}
 
 fan.sys.MapType.prototype.isGenericParameter = function()
 {
