@@ -64,7 +64,12 @@ fan.sys.Method.prototype.invoke = function(instance, args)
   // to map into a static call
   if (func == null && instance != null)
   {
-    func = eval(this.m_$qname);
+    // Obj maps to ObjUtil
+    qname = this.m_$qname;
+    if (this.m_parent.m_qname === "sys::Obj")
+      qname = "fan.sys.ObjUtil." + this.m_$name;
+
+    func = eval(qname);
     vals.splice(0, 0, instance);
     instance = null;
   }
@@ -111,10 +116,10 @@ fan.sys.Method.prototype.call = function()
 fan.sys.Method.prototype.callList = function(args)
 {
   var instance = null;
-  if (!this.isStatic() && (this.m_flags & fan.sys.FConst.Static == 0))
+  if (!this.isStatic() && ((this.m_flags & fan.sys.FConst.Static) == 0))
   {
     instance = args.get(0);
-    args = args.getSlice(1, -1);
+    args = args.getRange(new fan.sys.Range(1, -1));
   }
   return this.invoke(instance, args);
 }
