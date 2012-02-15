@@ -30,7 +30,9 @@ class JavaPod : CPod
 
   const Str packageName
 
-  override Version version() { return Version("0") }
+  override const Version version := Version.defVal
+
+  override const CDepend[] depends := [,]
 
   override JavaBridge? bridge
 

@@ -42,7 +42,8 @@ class ResolveDepends : CompilerStep
     // if the input has no dependencies, then
     // assume a dependency on sys
     input := compiler.input
-    isSys := input.podName == "sys"
+    myName := input.podName
+    isSys := myName == "sys"
     if (compiler.depends.isEmpty && !isSys)
       compiler.depends.add(CDepend.fromStr("sys 0+"))
 
@@ -60,6 +61,21 @@ class ResolveDepends : CompilerStep
     // check that everything has a dependency on sys
     if (!ns.depends.containsKey("sys") && !isSys)
       err("All pods must have a dependency on 'sys'", loc)
+
+    bombIfErr
+
+    // now that we've resolved all depends, ensure there are no
+    // cyclic dependencies; this means that none of my dependent
+    // pods should have a cyclic dependency back on me
+    ns.depends.each |myDepend|
+    {
+      if (myDepend.name == myName) err("Cyclic dependency on self '$myName'", loc)
+      myDepend.pod.depends.each |podDepend|
+      {
+        if (podDepend.name == myName)
+          err("Cyclic dependency on '$myDepend.name'", loc)
+      }
+    }
 
     bombIfErr
   }

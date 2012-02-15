@@ -15,6 +15,8 @@ class CDepend
 
   new make(Depend d, CPod? p) { this.depend = d; this.pod = p }
 
+  static CDepend[] makeList(Depend[] d) { d.map |x->CDepend| { make(x, null) } }
+
   ** Depend specification
   const Depend depend
 
