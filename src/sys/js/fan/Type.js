@@ -690,8 +690,8 @@ fan.sys.GenericType.prototype.parameterizeType = function(t)
   var nn = t.toNonNullable();
   if (nn instanceof fan.sys.ListType)
     t = this.parameterizeListType(nn);
-  //else if (nn instanceof fan.sys.FuncType)
-  //  t = parameterizeFuncType((FuncType)nn);
+  else if (nn instanceof fan.sys.FuncType)
+    t = this.parameterizeFuncType(nn);
   else
     t = this.doParameterize(nn);
   return nullable ? t.toNullable() : t;
@@ -702,24 +702,21 @@ fan.sys.GenericType.prototype.parameterizeListType = function(t)
   return this.doParameterize(t.v).toListOf();
 }
 
-// /**
-//  * Recursively parameterize the params of a method type.
-//  */
-// final FuncType parameterizeFuncType(FuncType t)
-// {
-//   Type[] params = new Type[t.params.length];
-//   for (int i=0; i<params.length; ++i)
-//   {
-//     Type param = t.params[i];
-//     if (param.isGenericParameter()) param = doParameterize(param);
-//     params[i] = param;
-//   }
-//
-//   Type ret = t.ret;
-//   if (ret.isGenericParameter()) ret = doParameterize(ret);
-//
-//   return new FuncType(params, ret);
-// }
+fan.sys.GenericType.prototype.parameterizeFuncType = function(t)
+{
+  var params = [];
+  for (var i=0; i<t.params.length; i++)
+  {
+    var param = t.params[i];
+    if (param.isGenericParameter()) param = this.doParameterize(param);
+    params[i] = param;
+  }
+
+  var ret = t.ret;
+  if (ret.isGenericParameter()) ret = this.doParameterize(ret);
+
+  return new fan.sys.FuncType(params, ret);
+}
 
 fan.sys.GenericType.prototype.doParameterize = function(t) {}
 
@@ -908,8 +905,7 @@ fan.sys.MapType.prototype.doParameterize = function(t)
  * FuncType
  ************************************************************************/
 
-fan.sys.FuncType = fan.sys.Obj.$extend(fan.sys.Type);
-
+fan.sys.FuncType = fan.sys.Obj.$extend(fan.sys.GenericType);
 fan.sys.FuncType.prototype.$ctor = function(params, ret)
 {
   this.m_pod    = fan.sys.Pod.find("sys");
@@ -919,6 +915,12 @@ fan.sys.FuncType.prototype.$ctor = function(params, ret)
   this.params   = params;
   this.ret      = ret;
   this.m_mixins = fan.sys.Type.$type.emptyList();
+
+  // I am a generic parameter type if any my args or
+  // return type are generic parameter types.
+  this.genericParameterType |= ret.isGenericParameter();
+  for (var i=0; i<params.length; ++i)
+    this.genericParameterType |= params[i].isGenericParameter();
 }
 
 fan.sys.FuncType.prototype.signature = function()
@@ -985,3 +987,26 @@ fan.sys.FuncType.prototype.toNullable = function()
 
 fan.sys.FuncType.prototype.facets = function() { return fan.sys.Func.$type.facets(); }
 fan.sys.FuncType.prototype.facet = function(type, checked) { return fan.sys.Func.$type.facet(type, checked); }
+
+
+// fan.sys.FuncType.prototype.makeParams = function()
+// {
+//   var map = fan.sys.Map.make(fan.sys.Sys.$type, fan.sys.Type.$type);
+//   for (var i=0; i<this.params.length; ++i)
+//     map.set(fan.sys.Str.m_ascii['A'+i], params[i]);
+//   return map.set("R", ret).ro();
+// }
+
+fan.sys.FuncType.prototype.isGenericParameter = function() { return this.genericParameterType; }
+fan.sys.FuncType.prototype.doParameterize = function(t)
+{
+  // return
+  if (t == fan.sys.Sys.RType) return ret;
+
+  // if A-H maps to avail params
+  var name = t.$name().charCodeAt(0) - 65;
+  if (name < this.params.length) return this.params[name];
+
+  // otherwise let anything be used
+  return fan.sys.Obj.$type;
+}
