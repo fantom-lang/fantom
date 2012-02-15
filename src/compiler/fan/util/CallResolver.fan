@@ -169,7 +169,14 @@ class CallResolver : CompilerSupport
 
       // if we found a match on both base and it, that is an error
       if (isAmbiguous(found, foundIt))
-        throw err("Ambiguous slot '$name' on both 'this' ($base) and 'it' ($baseIt)", loc)
+      {
+        // if we detected ambiguity, but the current type doesn't have
+        // visibility to access the baseIt slot, then ignore it
+        if (!CheckErrors.isSlotVisible(curType, foundIt))
+          { foundIt = null }
+        else
+          throw err("Ambiguous slot '$name' on both 'this' ($base) and 'it' ($baseIt)", loc)
+      }
 
       // resolved against implicit it
       if (foundIt != null)

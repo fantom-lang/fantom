@@ -1069,7 +1069,7 @@ class CheckErrors : CompilerStep
 
     // check protection scope (which might be more narrow than the scope
     // of the entire field as checked in checkProtection by checkField)
-    if (field.setter != null && slotProtectionErr(field) == null)
+    if (field.setter != null && slotProtectionErr(curType, field) == null)
       checkSlotProtection(field.setter, lhs.loc, true)
 
     // if not-const we are done
@@ -1613,13 +1613,15 @@ class CheckErrors : CompilerStep
 
   private Void checkSlotProtection(CSlot slot, Loc loc, Bool setter := false)
   {
-    errMsg := slotProtectionErr(slot, setter)
+    errMsg := slotProtectionErr(curType, slot, setter)
     if (errMsg != null) err(errMsg, loc)
 
     checkDeprecated(slot, loc)
   }
 
-  private Str? slotProtectionErr(CSlot slot, Bool setter := false)
+  static Bool isSlotVisible(TypeDef curType, CSlot slot) { slotProtectionErr(curType, slot) == null }
+
+  private static Str? slotProtectionErr(TypeDef curType, CSlot slot, Bool setter := false)
   {
     msg := setter ? "setter of field" : (slot is CMethod ? "method" : "field")
 
@@ -1628,22 +1630,18 @@ class CheckErrors : CompilerStep
       return null
 
     // allow closures same scope priviledges as enclosing class
-    myType := curType
-    if (myType != null)
-    {
-      if (myType.isClosure) myType = curType.closure.enclosingType
-    }
+    if (curType.isClosure) curType = curType.closure.enclosingType
 
     // consider the slot internal if its parent is internal
     isInternal := slot.isInternal || (slot.parent.isInternal && !slot.parent.isParameterized)
 
-    if (slot.isPrivate && myType != slot.parent)
+    if (slot.isPrivate && curType != slot.parent)
       return "Private $msg '$slot.qname' not accessible"
 
-    else if (slot.isProtected && !myType.fits(slot.parent) && myType.pod != slot.parent.pod)
+    else if (slot.isProtected && !curType.fits(slot.parent) && curType.pod != slot.parent.pod)
       return "Protected $msg '$slot.qname' not accessible"
 
-    else if (isInternal && myType.pod != slot.parent.pod)
+    else if (isInternal && curType.pod != slot.parent.pod)
       return "Internal $msg '$slot.qname' not accessible"
 
     else
