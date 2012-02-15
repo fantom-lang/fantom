@@ -28,6 +28,11 @@ mixin CPod
   abstract Version version()
 
   **
+  ** Get the pod dependencies
+  **
+  abstract CDepend[] depends()
+
+  **
   ** List of the all defined types.
   **
   abstract CType[] types()

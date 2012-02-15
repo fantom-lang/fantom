@@ -23,6 +23,7 @@ final class FPod : CPod, FConst
   {
     this.ns         = ns
     this.version    = Version.defVal
+    this.depends    = CDepend[,]
     this.name       = podName
     this.zip        = zip
     this.names      = FTable.makeStrs(this)
@@ -291,7 +292,7 @@ final class FPod : CPod, FConst
   override CNamespace ns    // compiler's namespace
   override Str name         // pod's unique name
   override Version version  // pod version
-  CDepend[]? depends        // pod dependencies
+  override CDepend[] depends // pod dependencies
   Str:Str meta              // pod meta
   Str:Obj index             // pod index
   Zip? zip                  // zipped storage
