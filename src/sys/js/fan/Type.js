@@ -129,18 +129,16 @@ fan.sys.Type.prototype.isGenericParameter = function()
   return this.m_pod.m_name === "sys" && this.m_name.length === 1;
 }
 
-/*
-fan.sys.Type.prototype.getRawType = function()
-{
-  if (!isGenericParameter()) return this;
-  if (this == Sys.LType) return Sys.ListType;
-  if (this == Sys.MType) return Sys.MapType;
-  if (this instanceof ListType) return Sys.ListType;
-  if (this instanceof MapType)  return Sys.MapType;
-  if (this instanceof FuncType) return Sys.FuncType;
-  return Sys.ObjType;
-}
-*/
+// fan.sys.Type.prototype.getRawType = function()
+// {
+//   if (!isGenericParameter()) return this;
+//   if (this == Sys.LType) return Sys.ListType;
+//   if (this == Sys.MType) return Sys.MapType;
+//   if (this instanceof ListType) return Sys.ListType;
+//   if (this instanceof MapType)  return Sys.MapType;
+//   if (this instanceof FuncType) return Sys.FuncType;
+//   return Sys.ObjType;
+// }
 
 fan.sys.Type.prototype.isGeneric = function() { return this.isGenericType(); }
 
@@ -290,9 +288,6 @@ fan.sys.Type.prototype.$am = function(name, flags, returns, params, facets)
 // addField
 fan.sys.Type.prototype.$af = function(name, flags, of, facets)
 {
-  // TODO: Map.def - not sure how to handle this yet
-  if (of == 'sys::V?') return this;
-
   var t = fanx_TypeParser.load(of);
   var f = new fan.sys.Field(this, name, flags, t, facets);
   this.m_slots[name] = f;
@@ -552,16 +547,21 @@ fan.sys.NullableType.prototype.$ctor = function(root)
 {
   this.m_root = root;
   this.m_signature = root.signature() + "?";
+  this.m_qname  = root.m_qname;
+  this.m_pod    = root.m_pod;
+  this.m_name   = root.m_name;
+  this.m_base   = root.m_base;
+  this.m_mixins = root.m_mixins;
+
+  this.m_slots  = root.m_slots;
+  this.m_slotList = root.m_slotList;
+  this.m_fieldList = root.m_fieldList;
+  this.m_methodList = root.m_methodList;
 }
 
-fan.sys.NullableType.prototype.pod = function() { return this.m_root.pod(); }
-fan.sys.NullableType.prototype.$name = function() { return this.m_root.$name(); }
-fan.sys.NullableType.prototype.qname = function() { return this.m_root.qname(); }
 fan.sys.NullableType.prototype.signature = function() { return this.m_signature; }
 fan.sys.NullableType.prototype.flags = function() { return this.m_root.flags(); }
 
-fan.sys.NullableType.prototype.base = function() { return this.m_root.base(); }
-fan.sys.NullableType.prototype.mixins = function() { return this.m_root.mixins(); }
 fan.sys.NullableType.prototype.inheritance = function() { return this.m_root.inheritance(); }
 fan.sys.NullableType.prototype.is = function(type) { return this.m_root.is(type); }
 
@@ -578,11 +578,6 @@ fan.sys.NullableType.prototype.getRawType = function() { return this.m_root.getR
 fan.sys.NullableType.prototype.params = function() { return this.m_root.params(); }
 fan.sys.NullableType.prototype.parameterize = function(params) { return this.m_root.parameterize(params).toNullable(); }
 
-fan.sys.NullableType.prototype.fields = function() { return this.m_root.fields(); }
-fan.sys.NullableType.prototype.methods = function() { return this.m_root.methods(); }
-fan.sys.NullableType.prototype.slots = function() { return this.m_root.slots(); }
-fan.sys.NullableType.prototype.slot = function(name, checked) { return this.m_root.slot(name, checked); }
-
 fan.sys.NullableType.prototype.facets = function() { return this.m_root.facets(); }
 fan.sys.NullableType.prototype.facet = function(type, checked) { return this.m_root.facet(type, checked); }
 
@@ -597,9 +592,6 @@ fan.sys.GenericType.prototype.$ctor = function(v) {}
 
 fan.sys.GenericType.prototype.doReflect = function()
 {
-  try
-  {
-
   if (this.m_slotList != null) return;
 
    // ensure master type is reflected
@@ -633,15 +625,6 @@ fan.sys.GenericType.prototype.doReflect = function()
   this.m_slotList = fan.sys.List.make(fan.sys.Slot.$type, slots);
   this.m_fieldList = fan.sys.List.make(fan.sys.Field.$type, fields);
   this.m_methodList = fan.sys.List.make(fan.sys.Method.$type, methods);
-
-  }
-  catch (err)
-  {
-    println(err);
-    println(err.stack);
-    println(err.stackTrace);
-    println(err.javaException);
-  }
 }
 
 fan.sys.GenericType.prototype.parameterizeField = function(f)
@@ -653,7 +636,7 @@ fan.sys.GenericType.prototype.parameterizeField = function(f)
   // create new parameterized version
   t = this.parameterizeType(t);
   //var pf = new Field(this, f.name, f.flags, f.facets, f.lineNum, t);
-  var pf = new fan.sys.File(this, f.m_name, f.m_flags, f.m_type, f.m_facets);
+  var pf = new fan.sys.Field(this, f.m_name, f.m_flags, t, f.m_facets);
   //pf.reflect = f.reflect;
   return pf;
 }
@@ -804,6 +787,11 @@ fan.sys.ListType.prototype.toNullable = function()
 fan.sys.ListType.prototype.facets = function() { return fan.sys.List.$type.facets(); }
 fan.sys.ListType.prototype.facet = function(type, checked) { return fan.sys.List.$type.facet(type, checked); }
 
+fan.sys.ListType.prototype.isGenericParameter = function()
+{
+  return this.v.isGenericParameter();
+}
+
 fan.sys.ListType.prototype.doParameterize = function(t)
 {
   if (t == fan.sys.Sys.VType) return this.v;
@@ -815,8 +803,7 @@ fan.sys.ListType.prototype.doParameterize = function(t)
  * MapType
  ************************************************************************/
 
-fan.sys.MapType = fan.sys.Obj.$extend(fan.sys.Type);
-
+fan.sys.MapType = fan.sys.Obj.$extend(fan.sys.GenericType);
 fan.sys.MapType.prototype.$ctor = function(k, v)
 {
   this.k = k;
@@ -824,7 +811,9 @@ fan.sys.MapType.prototype.$ctor = function(k, v)
   this.m_qname  = "sys::Map";
   this.m_pod    = fan.sys.Pod.find("sys");
   this.m_name   = "Map";
+  this.m_base   = fan.sys.Map.$type;
   this.m_mixins = fan.sys.Type.$type.emptyList();
+  this.m_slots  = {};
 }
 
 fan.sys.MapType.prototype.signature = function()
@@ -881,6 +870,19 @@ fan.sys.MapType.prototype.toNullable = function()
 
 fan.sys.MapType.prototype.facets = function() { return fan.sys.Map.$type.facets(); }
 fan.sys.MapType.prototype.facet = function(type, checked) { return fan.sys.Map.$type.facet(type, checked); }
+
+fan.sys.MapType.prototype.isGenericParameter = function()
+{
+  return this.v.isGenericParameter() && this.k.isGenericParameter();
+}
+
+fan.sys.MapType.prototype.doParameterize = function(t)
+{
+  if (t == fan.sys.Sys.KType) return this.k;
+  if (t == fan.sys.Sys.VType) return this.v;
+  if (t == fan.sys.Sys.MType) return this;
+  throw new Error(t.toString());
+}
 
 /*************************************************************************
  * FuncType
