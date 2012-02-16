@@ -246,9 +246,14 @@ class Tokenizer : CompilerSupport
       {
         num := Decimal.fromStr(str)
         if (dur != null)
+        {
           return TokenVal(Token.durationLiteral, Duration((num*dur.toDecimal).toInt))
+        }
         else
+        {
+          if (!decimalSuffix) err("Float/Decimal literal must have f/d suffix")
           return TokenVal(Token.decimalLiteral, num)
+        }
       }
 
       // int literal

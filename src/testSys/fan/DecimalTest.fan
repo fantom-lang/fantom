@@ -192,8 +192,8 @@ class DecimalTest : Test
 
   Void testToStr()
   {
-    verifyEq(2.00.toStr, "2.00")
-    verifyEq(0.040.toStr, "0.040")
+    verifyEq(2.00D.toStr, "2.00")
+    verifyEq(0.040d.toStr, "0.040")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -229,7 +229,7 @@ class DecimalTest : Test
     // NOTE: most testing is done in FloatTest.testLocale, we just
     //  test decimals which exceed 64-bit int/float range
 
-    verifyToLocale(123_456_789.123_456_789, "#,####.###", "1,2345,6789.123")
+    verifyToLocale(123_456_789.123_456_789d, "#,####.###", "1,2345,6789.123")
     verifyToLocale(123_456_789_123_456_789_123_456_789d, "#,###.0#",  "123,456,789,123,456,789,123,456,789.0")
     verifyToLocale(-123_456_789_123_456_789_123_456_789.55d, "#,###.0",  "-123,456,789,123,456,789,123,456,789.6")
 

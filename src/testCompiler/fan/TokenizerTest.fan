@@ -216,44 +216,44 @@ class TokenizerTest : Test
   {
     verifyDecimal("3d",           3d)
     verifyDecimal("3D",           3d)
-    verifyDecimal("3.0",          3.0d)
     verifyDecimal("3.0d",         3.0d)
     verifyDecimal("73d",          73d)
     verifyDecimal("73D",          73D)
-    verifyDecimal("73.0",         73.0d)
     verifyDecimal("73.0d",        73.0d)
     verifyDecimal("123456d",      123456d)
     verifyDecimal("123456D",      123456D)
-    verifyDecimal("123456.0",     123456.0d)
+    verifyDecimal("123456.0d",    123456.0d)
     verifyDecimal("7d",           7D)
     verifyDecimal("07.0d",        07.0D)
     verifyDecimal(".2d",          .2D)
     verifyDecimal("0.2d",         0.2D)
     verifyDecimal("0.007d",       0.007d)
-    verifyDecimal(".12345",      .12345d)
-    verifyDecimal("0.12345",     .12345d)
-    verifyDecimal("12345.6789",  12345.6789d)
-    verifyDecimal("3e6",         3e6d)
-    verifyDecimal("3E6",         3E6d)
-    verifyDecimal("3.0e6",       3.0e6d)
+    verifyDecimal(".12345d",      .12345d)
+    verifyDecimal("0.12345d",     .12345d)
+    verifyDecimal("12345.6789d",  12345.6789d)
+    verifyDecimal("3e6d",         3e6d)
+    verifyDecimal("3E6D",         3E6d)
     verifyDecimal("3.0E6d",       3.0E6d)
-    verifyDecimal("3e-6",        3e-6d)
     verifyDecimal("3E-6D",        3E-6d)
-    verifyDecimal(".2e+6",       .2e+6d)
     verifyDecimal(".2E+6d",       .2E+6d)
-    verifyDecimal(".2e-03",      .2e-03d)
     verifyDecimal(".2E-03d",      .2E-03d)
     verifyDecimal("1.234_567D",   1.234567d)
-    verifyDecimal("1.2e2_5",     1.2e25d)
-    verifyDecimal("1_2.3_7e1_1",  12.37e11d)
-    verifyDecimal("1.5E-4",      1.5E-4d)
-    verifyDecimal("3.402E15",     3.402E15d)
+    verifyDecimal("1.2e2_5d",     1.2e25d)
+    verifyDecimal("1_2.3_7e1_1d",  12.37e11d)
+    verifyDecimal("1.5E-4d",      1.5E-4d)
+    verifyDecimal("3.402E15d",     3.402E15d)
     verifyDecimal("1.4E-12D",    1.4E-12d)
-    verifyDecimal("1.7976931348623157E26", 1.7976931348623157E26d)
+    verifyDecimal("1.7976931348623157E26d", 1.7976931348623157E26d)
+    verifyInvalid("3.0")
+    verifyInvalid("3e2")
     verifyInvalid("3e")
+    verifyInvalid("3ed")
     verifyInvalid("-3e")
+    verifyInvalid("-3ed")
     verifyInvalid("-.3e")
+    verifyInvalid("-.3ed")
     verifyInvalid("+0.3e")
+    verifyInvalid("+0.3ed")
   }
 
   Void verifyDecimal(Str src, Decimal val)
@@ -319,8 +319,8 @@ class TokenizerTest : Test
     verifyStr("\"\\uFFFF\"", "\uFFFF")
     verifyStr("\"\\uabcd\"", "\uabcd")
     verifyStr("\"\\uABCD\"", "\uABCD")
-    verifyStr("\"a\nb\"",     "a\nb")      // with newline
-    verifyStr("\"a\nb\n c\"", "a\nb\n c")  // with newline
+    verifyStr("\"a\n b\"",     "a\nb")      // with newline
+    verifyStr("\"a\n b\n  c\"", "a\nb\n c")  // with newline
     verifyInvalid("\"")
     verifyInvalid("\"a")
     verifyInvalid("\"a\n")
@@ -522,7 +522,7 @@ class TokenizerTest : Test
     /*         123456789_123456789_1234 */
     /*  1 */  "foo bar\n" +
     /*  2 */  "here*\"there\"//junk\n" +
-    /*  3 */  " 308 1.0 55 8f\n" +
+    /*  3 */  " 308 10d 55 8f\n" +
     /*  4 */  "/* a b /*c*/ d \n" +
     /*  5 */  "*/ +=;\n" +
     /*  6 */  "  a\n" +
@@ -692,7 +692,9 @@ class TokenizerTest : Test
     // strip trailing eof
     c := Compiler(CompilerInput())
     c.log.level = LogLevel.silent
-    return Tokenizer.make(c, Loc("test"), src, true).tokenize[0..-2]
+    r := Tokenizer.make(c, Loc("test"), src, true).tokenize[0..-2]
+    if (c.errs.size > 0) throw c.errs.first
+    return r
   }
 
   Void verifyToken(Str src, TokenVal want)
