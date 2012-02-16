@@ -222,6 +222,7 @@ public class Process
         catch (Throwable e)
         {
           if (proc.isAlive()) e.printStackTrace();
+          else return;
         }
       }
     }
@@ -260,6 +261,7 @@ public class Process
         catch (Throwable e)
         {
           if (proc.isAlive()) e.printStackTrace();
+          else return;
         }
       }
     }
