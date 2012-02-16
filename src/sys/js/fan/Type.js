@@ -63,6 +63,7 @@ fan.sys.Type.prototype.isAbstract  = function() { return (this.flags() & fan.sys
 fan.sys.Type.prototype.isClass     = function() { return (this.flags() & (fan.sys.FConst.Enum|fan.sys.FConst.Mixin)) == 0; }
 fan.sys.Type.prototype.isConst     = function() { return (this.flags() & fan.sys.FConst.Const) != 0; }
 fan.sys.Type.prototype.isEnum      = function() { return (this.flags() & fan.sys.FConst.Enum) != 0; }
+fan.sys.Type.prototype.isFacet     = function() { return (this.flags() & fan.sys.FConst.Facet) != 0; }
 fan.sys.Type.prototype.isFinal     = function() { return (this.flags() & fan.sys.FConst.Final) != 0; }
 fan.sys.Type.prototype.isInternal  = function() { return (this.flags() & fan.sys.FConst.Internal) != 0; }
 fan.sys.Type.prototype.isMixin     = function() { return (this.flags() & fan.sys.FConst.Mixin) != 0; }
@@ -159,14 +160,14 @@ fan.sys.Type.prototype.params = function()
 
 fan.sys.Type.prototype.parameterize = function(params)
 {
-  if (this instanceof fan.sys.ListType)
+  if (this === fan.sys.List.$type)
   {
     var v = params.get("V");
     if (v == null) throw fan.sys.ArgErr.make("List.parameterize - V undefined");
     return v.toListOf();
   }
 
-  if (this instanceof fan.sys.MapType)
+  if (this === fan.sys.Map.$type)
   {
     var v = params.get("V");
     var k = params.get("K");
@@ -175,20 +176,19 @@ fan.sys.Type.prototype.parameterize = function(params)
     return new fan.sys.MapType(k, v);
   }
 
-  // TODO FIXIT
-  // if (this == Sys.FuncType)
-  // {
-  //   Type r = (Type)params.get("R");
-  //   if (r == null) throw ArgErr.make("Map.parameterize - R undefined");
-  //   ArrayList p = new ArrayList();
-  //   for (int i='A'; i<='H'; ++i)
-  //   {
-  //     Type x = (Type)params.get(FanStr.ascii[i]);
-  //     if (x == null) break;
-  //     p.add(x);
-  //   }
-  //   return new FuncType((Type[])p.toArray(new Type[p.size()]), r);
-  // }
+  if (this === fan.sys.Func.$type)
+  {
+    var r = params.get("R");
+    if (r == null) throw fan.sys.ArgErr.make("Func.parameterize - R undefined");
+    var p = [];
+    for (var i=65; i<=72; ++i)
+    {
+      var x = params.get(String.fromCharCode(i));
+      if (x == null) break;
+      p.push(x);
+    }
+    return new fan.sys.FuncType(p, r);
+  }
 
   throw fan.sys.UnsupportedErr.make("not generic: " + this);
 }
@@ -713,9 +713,9 @@ fan.sys.GenericType.prototype.parameterizeListType = function(t)
 fan.sys.GenericType.prototype.parameterizeFuncType = function(t)
 {
   var params = [];
-  for (var i=0; i<t.params.length; i++)
+  for (var i=0; i<t.pars.length; i++)
   {
-    var param = t.params[i];
+    var param = t.pars[i];
     if (param.isGenericParameter()) param = this.doParameterize(param);
     params[i] = param;
   }
@@ -920,7 +920,7 @@ fan.sys.FuncType.prototype.$ctor = function(params, ret)
   this.m_name   = "Func";
   this.m_qname  = "sys::Func";
   this.m_base   = fan.sys.Obj.$type;
-  this.params   = params;
+  this.pars     = params;
   this.ret      = ret;
   this.m_mixins = fan.sys.Type.$type.emptyList();
 
@@ -934,10 +934,10 @@ fan.sys.FuncType.prototype.$ctor = function(params, ret)
 fan.sys.FuncType.prototype.signature = function()
 {
   var s = '|'
-  for (var i=0; i<this.params.length; i++)
+  for (var i=0; i<this.pars.length; i++)
   {
     if (i > 0) s += ',';
-    s += this.params[i].signature();
+    s += this.pars[i].signature();
   }
   s += '->';
   s += this.ret.signature();
@@ -949,9 +949,9 @@ fan.sys.FuncType.prototype.equals = function(that)
 {
   if (that instanceof fan.sys.FuncType)
   {
-    if (this.params.length != that.params.length) return false;
-    for (var i=0; i<this.params.length; i++)
-      if (!this.params[i].equals(that.params[i])) return false;
+    if (this.pars.length != that.pars.length) return false;
+    for (var i=0; i<this.pars.length; i++)
+      if (!this.pars[i].equals(that.pars[i])) return false;
     return this.ret.equals(that.ret);
   }
   return false;
@@ -968,9 +968,9 @@ fan.sys.FuncType.prototype.is = function(that)
     // match params - it is ok for me to have less than
     // the type params (if I want to ignore them), but I
     // must have no more
-    if (this.params.length > that.params.length) return false;
-    for (var i=0; i<this.params.length; ++i)
-      if (!that.params[i].is(this.params[i])) return false;
+    if (this.pars.length > that.params.length) return false;
+    for (var i=0; i<this.pars.length; ++i)
+      if (!that.params[i].is(this.pars[i])) return false;
 
     // this method works for the specified method type
     return true;
@@ -996,14 +996,13 @@ fan.sys.FuncType.prototype.toNullable = function()
 fan.sys.FuncType.prototype.facets = function() { return fan.sys.Func.$type.facets(); }
 fan.sys.FuncType.prototype.facet = function(type, checked) { return fan.sys.Func.$type.facet(type, checked); }
 
-
-// fan.sys.FuncType.prototype.makeParams = function()
-// {
-//   var map = fan.sys.Map.make(fan.sys.Sys.$type, fan.sys.Type.$type);
-//   for (var i=0; i<this.params.length; ++i)
-//     map.set(fan.sys.Str.m_ascii['A'+i], params[i]);
-//   return map.set("R", ret).ro();
-// }
+fan.sys.FuncType.prototype.makeParams = function()
+{
+  var map = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Type.$type);
+  for (var i=0; i<this.pars.length; ++i)
+    map.set(String.fromCharCode(i+65), this.pars[i]);
+  return map.set("R", this.ret).ro();
+}
 
 fan.sys.FuncType.prototype.isGenericParameter = function() { return this.genericParameterType; }
 fan.sys.FuncType.prototype.doParameterize = function(t)
@@ -1013,7 +1012,7 @@ fan.sys.FuncType.prototype.doParameterize = function(t)
 
   // if A-H maps to avail params
   var name = t.$name().charCodeAt(0) - 65;
-  if (name < this.params.length) return this.params[name];
+  if (name < this.pars.length) return this.pars[name];
 
   // otherwise let anything be used
   return fan.sys.Obj.$type;

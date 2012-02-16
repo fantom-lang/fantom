@@ -51,3 +51,4 @@ fan.sys.File.os = function(osPath)
 
 fan.sys.File.prototype.exists = function() { return true; }
 
+fan.sys.File.prototype.uri = function() { return this.m_uri; }
