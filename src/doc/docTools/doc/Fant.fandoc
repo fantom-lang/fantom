@@ -67,6 +67,13 @@ pod.  You can also pass "-all" to run all tests in all pods:
   fant testSys::StrTest
   fant testSys::StrTest.testEach
 
+You can also pass a script filename to 'fant':
+
+  fant /tests/foo.fan
+
+The script will be compiled into a pod and then all subclasses
+of Test will be run.
+
 The test results will be printed to standard out.  Any test
 failures will be raised as exceptions.
 

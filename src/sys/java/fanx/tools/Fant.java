@@ -7,6 +7,7 @@
 //
 package fanx.tools;
 
+import java.io.File;
 import java.util.*;
 import fan.sys.*;
 import fan.sys.List;
@@ -27,7 +28,10 @@ public class Fant
 
     long t1 = System.currentTimeMillis();
     for (int i=0; i<patterns.length; ++i)
-      test(patterns[i], verbose);
+    {
+      int r = test(patterns[i], verbose);
+      if (r != 0) return r;
+    }
     long t2 = System.currentTimeMillis();
 
     System.out.println();
@@ -48,8 +52,20 @@ public class Fant
     return failures;
   }
 
-  public void test(String pattern, boolean verbose)
+  public int test(String pattern, boolean verbose)
   {
+    // first try as file name
+    File file = new File(pattern);
+    if (file.exists() && pattern.toLowerCase().endsWith(".fan") && !file.isDirectory())
+    {
+      Pod pod = Fan.compileScript(file, null);
+      if (pod == null) return 1;
+      test(pod.name(), verbose);
+      return 0;
+    }
+    if (pattern.contains("/") || pattern.contains("\\"))
+      throw Err.make("Unknown file: " + pattern);
+
     if (pattern.equals("*"))
     {
       List pods = Pod.list();
@@ -58,7 +74,7 @@ public class Fant
         Pod pod = (Pod)pods.get(i);
         test(pod.name(), verbose);
       }
-      return;
+      return 0;
     }
 
     if (pattern.equals("sys") || pattern.startsWith("sys::"))
@@ -70,7 +86,7 @@ public class Fant
         pattern = pattern.substring(5);
       if (!fanx.test.Test.test(pattern)) failures++;
       totalVerifyCount += fanx.test.Test.totalVerified;
-      return;
+      return 0;
     }
 
     StringTokenizer st = new StringTokenizer(pattern, ":.");
@@ -106,6 +122,7 @@ public class Fant
       }
       testCount++;
     }
+    return 0;
   }
 
   private Type[] tests(Pod pod, String testName)
@@ -276,8 +293,7 @@ public class Fant
     System.out.println("  fant [options] <pod> [pod]*");
     System.out.println("  fant [options] <pod>::<test>");
     System.out.println("  fant [options] <pod>::<test>.<method>");
-    System.out.println("Note:");
-    System.out.println("  You can use * to indicate wildcard for all pods");
+    System.out.println("  fant [options] filename");
     System.out.println("Options:");
     System.out.println("  -help, -h, -?  print usage help");
     System.out.println("  -version       print version");
