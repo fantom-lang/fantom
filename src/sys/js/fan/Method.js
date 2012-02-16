@@ -116,7 +116,7 @@ fan.sys.Method.prototype.call = function()
 fan.sys.Method.prototype.callList = function(args)
 {
   var instance = null;
-  if (!this.isStatic() && ((this.m_flags & fan.sys.FConst.Static) == 0))
+  if (!this.isCtor() && !this.isStatic())
   {
     instance = args.get(0);
     args = args.getRange(new fan.sys.Range(1, -1));

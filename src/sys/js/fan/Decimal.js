@@ -45,6 +45,11 @@ fan.sys.Decimal.equals = function(self, that)
   return false;
 }
 
+fan.sys.Decimal.encode = function(self, out)
+{
+  out.w(""+self).w("d");
+}
+
 fan.sys.Decimal.toCode = function(self)
 {
   return "" + self + "d";
