@@ -51,7 +51,7 @@ fanx_ObjEncoder.prototype.writeObj = function(obj)
 
   var f = obj.$fanType;
   if (f === fan.sys.Float.$type)   { fan.sys.Float.encode(obj, this); return; }
-//  if (f === fan.sys.Decimal.$type) { FanDecimal.encode((BigDecimal)obj, this); return; }
+  if (f === fan.sys.Decimal.$type) { fan.sys.Decimal.encode(obj, this); return; }
 
   if (obj.$literalEncode)
   {

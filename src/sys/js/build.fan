@@ -97,6 +97,8 @@ class Build : BuildScript
     // write all types first
     reflect.each |t|
     {
+      t.slots  // make sure type is loadd
+
       adder  := t.isMixin ? "\$am" : "\$at"
       base   := t.base == null ? "null" : "'$t.base.qname'"
       mixins := t.mixins.join(",") |m| { "'$m.pod::$m.name'" }

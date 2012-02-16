@@ -77,6 +77,14 @@ fan.sys.Type.prototype.trap = function(name, args)
   return fan.sys.Obj.prototype.trap.call(this, name, args);
 }
 
+fan.sys.Type.prototype.equals = function(that)
+{
+  if (that instanceof fan.sys.Type)
+    return this.signature() === that.signature();
+  else
+    return false;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Value Types
 //////////////////////////////////////////////////////////////////////////
