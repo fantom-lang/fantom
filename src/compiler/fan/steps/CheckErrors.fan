@@ -688,6 +688,14 @@ class CheckErrors : CompilerStep
     }
   }
 
+  private Void checkThrowExpr(ThrowExpr expr)
+  {
+    expr.exception = coerce(expr.exception, ns.errType) |->|
+    {
+      err("Must throw Err, not '$expr.exception.ctype'", expr.exception.loc)
+    }
+  }
+
   private Void checkFor(ForStmt stmt)
   {
     if (stmt.condition != null)
@@ -847,6 +855,7 @@ class CheckErrors : CompilerStep
       case ExprId.asExpr:
       case ExprId.coerce:         checkTypeCheck(expr)
       case ExprId.ternary:        checkTernary(expr)
+      case ExprId.throwExpr:      checkThrowExpr(expr)
     }
     return expr
   }

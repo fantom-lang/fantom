@@ -934,6 +934,8 @@ class CheckErrorsTest : CompilerTest
         Void m30() { return 6 }
         Obj m31() { return }
         Obj m32(Bool b) { if (b) return; else return }
+
+        Obj m34(Obj? x) { x ?: throw \"x\" }
       }",
        [3, 26, "If condition must be Bool, not 'sys::Int'",
         4, 28, "Must throw Err, not 'sys::Int'",
@@ -969,6 +971,8 @@ class CheckErrorsTest : CompilerTest
         31, 15, "Must return a value from non-Void method",
         32, 28, "Must return a value from non-Void method",
         32, 41, "Must return a value from non-Void method",
+
+        34, 32, "Must throw Err, not 'sys::Str'",
        ])
   }
 
