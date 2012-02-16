@@ -201,7 +201,7 @@ class StreamTest : Test
       out.writeF8(Float.posInf)
       out.writeF8(Float.negInf)
       out.writeDecimal(-123.456d)
-      out.writeDecimal(61e-20)
+      out.writeDecimal(61e-20d)
     }
     out.writeBool(false)
     out.writeBool(true)
@@ -300,7 +300,7 @@ class StreamTest : Test
       test.verifyEq(in.readF8, Float.posInf)
       test.verifyEq(in.readF8, Float.negInf)
       test.verifyEq(in.readDecimal, -123.456d)
-      test.verifyEq(in.readDecimal, 61e-20)
+      test.verifyEq(in.readDecimal, 61e-20d)
     }
     test.verifyEq(in.readBool, false)
     test.verifyEq(in.readBool, true)

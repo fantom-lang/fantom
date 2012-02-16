@@ -104,17 +104,14 @@ Decimals are backed by 'BigDecimal' in Java and 'System.Decimal'
 in .NET.
 
 Decimal literals are expressed just like Float literals except
-they use the "d" or "D" suffix.  If a float literal with a fraction
-or exponent is expressed with no suffix, then it is assumed to be
-a decimal.  Examples of 'Decimal' literals:
+they use the "d" or "D" suffix.  Examples of 'Decimal' literals:
 
   4d
-  4.0
-  4.00
+  4.0D
   123_456d
-  3e6
+  3e6d
   0.2e+6D
-  1_2.3_7e-5_6
+  1_2.3_7e-5_6d
 
 NOTE: decimals don't operate exactly the same between the Java
 and .NET platform.  Java uses BigDecimal which has an infinite
@@ -122,9 +119,9 @@ range, while .NET uses System.Decimal with a range of of 28 significant
 digits and a range of 1E-28 to 7.9E+28.  There is also a difference
 in equality between the two platforms:
 
-   3.00 == 3.0   =>  false on Java
-   3.00 == 3.0   =>  true on .NET
-   3.00 <=> 3.0  =>  zero on both platforms
+   3.00d == 3.0d   =>  false on Java
+   3.00d == 3.0d   =>  true on .NET
+   3.00d <=> 3.0d  =>  zero on both platforms
 
 Java treats trailing zeros as significant for equality, but they are
 insignificant on .NET.  However both platforms produce consistent

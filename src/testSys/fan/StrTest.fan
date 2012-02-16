@@ -1127,7 +1127,7 @@ class StrTest : Test
     verifyEq("xxx".toFloat(false), null)
     verifyErr(ParseErr#) { "blah".toFloat }
 
-    verifyEq("8.00".toDecimal, 8.00)
+    verifyEq("8.00".toDecimal, 8.00d)
     verifyEq("5.x".toDecimal(false), null)
     verifyErr(ParseErr#) { "5.x".toDecimal }
 
