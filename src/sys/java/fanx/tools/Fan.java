@@ -76,32 +76,8 @@ public class Fan
   private int executeFile(File file, String[] args)
     throws Exception
   {
-    LocalFile f = (LocalFile)(new LocalFile(file).normalize());
-
-    // options
-    Map options = new Map(Sys.StrType, Sys.ObjType);
-    for (int i=0; i<args.length; ++i)
-      if (args[i].equals("-fcodeDump")) options.add("fcodeDump", Boolean.TRUE);
-
-    // use Fantom reflection to run compiler::Main.compileScript(File)
-    Pod pod = null;
-    try
-    {
-      pod = Env.cur().compileScript(f, options).pod();
-    }
-    catch (Err e)
-    {
-      System.out.println("ERROR: cannot compile script");
-      if (!e.getClass().getName().startsWith("fan.compiler"))
-        e.trace();
-      return -1;
-    }
-    catch (Exception e)
-    {
-      System.out.println("ERROR: cannot compile script");
-      e.printStackTrace();
-      return -1;
-    }
+    Pod pod = compileScript(file, args);
+    if (pod == null) return -1;
 
     List types = pod.types();
     Type type = null;
@@ -120,6 +96,34 @@ public class Fan
     }
 
     return callMain(type, main);
+  }
+
+  static Pod compileScript(File file, String[] args)
+  {
+    LocalFile f = (LocalFile)(new LocalFile(file).normalize());
+
+    Map options = new Map(Sys.StrType, Sys.ObjType);
+    for (int i=0; args != null && i<args.length; ++i)
+      if (args[i].equals("-fcodeDump")) options.add("fcodeDump", Boolean.TRUE);
+
+    try
+    {
+      // use Fantom reflection to run compiler::Main.compileScript(File)
+      return Env.cur().compileScript(f, options).pod();
+    }
+    catch (Err e)
+    {
+      System.out.println("ERROR: cannot compile script");
+      if (!e.getClass().getName().startsWith("fan.compiler"))
+        e.trace();
+      return null;
+    }
+    catch (Exception e)
+    {
+      System.out.println("ERROR: cannot compile script");
+      e.printStackTrace();
+      return null;
+    }
   }
 
   private int executeType(String target, String[] args)
