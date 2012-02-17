@@ -355,4 +355,8 @@ fan.sys.Int.m_KB = 1024;
 fan.sys.Int.m_MB = 1024*1024;
 fan.sys.Int.m_GB = 1024*1024*1024;
 
-
+// TODO FIXIT
+fan.sys.Int.localeIsUpper = function(self) { return fan.sys.Int.isUpper(self); }
+fan.sys.Int.localeIsLower = function(self) { return fan.sys.Int.isLower(self); }
+fan.sys.Int.localeUpper   = function(self) { return fan.sys.Int.upper(self); }
+fan.sys.Int.localeLower   = function(self) { return fan.sys.Int.lower(self); }
