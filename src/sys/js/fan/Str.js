@@ -566,6 +566,7 @@ fan.sys.Str.localeCompare = function(self, that)
 fan.sys.Str.toBool = function(self, checked) { return fan.sys.Bool.fromStr(self, checked); }
 fan.sys.Str.toFloat = function(self, checked) { return fan.sys.Float.fromStr(self, checked); }
 fan.sys.Str.toInt = function(self, radix, checked) { return fan.sys.Int.fromStr(self, radix, checked); }
+fan.sys.Str.toDecimal = function(self, checked) { return fan.sys.Decimal.fromStr(self, checked); }
 
 fan.sys.Str.$in = function(self) { return fan.sys.InStream.makeForStr(self); }
 fan.sys.Str.toUri = function(self) { return fan.sys.Uri.fromStr(self); }

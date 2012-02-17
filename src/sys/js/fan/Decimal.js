@@ -25,6 +25,24 @@ fan.sys.Decimal.make = function(val)
   return x;
 }
 
+fan.sys.Decimal.fromStr = function(s, checked)
+{
+  if (checked === undefined) checked = true;
+  try
+  {
+    // TODO FIXIT
+    for (var i=0; i<s.length; i++)
+      if (!fan.sys.Int.isDigit(s.charCodeAt(i)) && s[i] !== '.')
+        throw new Error();
+    return fan.sys.Decimal.make(parseFloat(s));
+  }
+  catch (e)
+  {
+    if (!checked) return null;
+    throw fan.sys.ParseErr.make("Decimal",  s);
+  }
+}
+
 fan.sys.Decimal.toFloat = function(self)
 {
   return fan.sys.Float.make(self.valueOf());
