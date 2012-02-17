@@ -61,8 +61,12 @@ class Compiler
     log.info("Compile [${input.podName}]")
     log.indent
 
-    frontend
-    backend
+    try
+    {
+      frontend
+      backend
+    }
+    finally cleanup
 
     log.unindent
     return output
@@ -104,6 +108,18 @@ class Compiler
   {
     Assemble(this).run
     GenerateOutput(this).run
+  }
+
+  **
+  ** Guaranteed cleanup of resources
+  **
+  private Void cleanup()
+  {
+    try
+    {
+      ns.cleanup
+    }
+    catch (Err e) e.trace
   }
 
 //////////////////////////////////////////////////////////////////////////
