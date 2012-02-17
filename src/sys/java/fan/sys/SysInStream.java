@@ -92,8 +92,13 @@ public class SysInStream
   {
     try
     {
-      long skipped = in.skip(n);
-      if (skipped < 0) return 0;
+      long skipped = 0;
+      while (skipped < n)
+      {
+        long x = in.skip(n-skipped);
+        if (x < 0) break;
+        skipped += x;
+      }
       return skipped;
     }
     catch (IOException e)
