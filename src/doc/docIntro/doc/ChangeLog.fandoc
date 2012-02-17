@@ -19,6 +19,7 @@
 - Add locale keys for Duration.toLocale
 - Require "d" suffix for Decimal literals
 - Fant can now run script files
+- Add classfile diassembler to compilerJava
 
 *Build 1.0.61 (17 Nov 2011)*
 - Upgrade timezone database with zone info version 2011j
