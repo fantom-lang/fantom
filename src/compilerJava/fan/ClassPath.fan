@@ -32,11 +32,9 @@ class ClassPath
     Env.cur.vars.get("sun.boot.class.path", "").split(File.pathSep[0]).each |Str path|
     {
       f := File.os(path)
-      // skip big jar files we can probably safely ignore
+      if (!f.exists) return
       if (!f.isDir && f.ext != "jar") return
-      if (f.name == "deploy.jar") return
-      if (f.name == "charsets.jar") return
-      if (f.name == "javaws.jar") return
+      if (javaIgnore[f.name] != null) return
       entries.add(f)
     }
 
@@ -49,9 +47,15 @@ class ClassPath
     }
 
     // {java}lib/ext
+    lib.plus(`ext/`).list.each |f|
+    {
+      if (f.ext != "jar") return
+      if (javaIgnore[f.name] != null) return
+      entries.add(f)
+    }
+
     // {fan}lib/java/ext
     // {fan}lib/java/ext/{plat}
-    addJars(entries, lib + `ext/`)
     addJars(entries, Env.cur.homeDir + `lib/java/ext/`)
     addJars(entries, Env.cur.homeDir + `lib/java/ext/${Env.cur.platform}/`)
 
@@ -69,6 +73,25 @@ class ClassPath
   {
     dir.list.each |f| { if (f.ext == "jar") entries.add(f) }
   }
+
+  // ignore the common big jars that ship with
+  // HotSpot which don't contain public java packages
+  private static const Str:Str javaIgnore := [:].addList(
+  [
+    "deploy.jar",
+    "charsets.jar",
+    "javaws.jar",
+    "jsse.jar",
+    "resources.jar",
+    "dnsns.jar",
+    "localedata.jar",
+    "sunec.jar",
+    "sunec_provider.jar",
+    "sunjce_provider.jar",
+    "sunmscapi.jar",
+    "sunpkcs11.jar",
+    "zipfs.jar",
+  ])
 
   **
   ** Make for current set of jars.
@@ -120,7 +143,7 @@ class ClassPath
   **
   private Void loadEntry(Str:Str[] acc, File f)
   {
-    if(f.isDir)
+    if (f.isDir)
     {
       f.walk |File x| { accept(acc, x.uri.relTo(f.uri)) }
     }
@@ -154,13 +177,22 @@ class ClassPath
     t1 := Duration.now
     cp := makeForCurrent
     t2:= Duration.now
-    echo("ClassPath.makeForCurrent: ${(t2-t1).toMillis}ms")
+    echo("ClassPath.makeForCurrent")
+    echo
 
     echo("Entries Found:")
     cp.entries.each |File f| { echo("  $f") }
 
     echo("Packages Found:")
-    cp.classes.keys.sort.each |Str p| { echo("  $p [" + cp.classes[p].size + "]") }
+    classes := 0
+    cp.classes.keys.sort.each |Str p|
+    {
+      classes += cp.classes[p].size
+      echo("  $p [" + cp.classes[p].size + "]")
+    }
+
+    echo
+    echo("${(t2-t1).toLocale}, $cp.classes.size packages, $classes classes")
   }
 
 }
