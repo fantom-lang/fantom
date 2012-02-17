@@ -54,3 +54,25 @@ fan.sys.Decimal.toCode = function(self)
 {
   return "" + self + "d";
 }
+
+fan.sys.Decimal.toLocale = function(self, pattern)
+{
+  if (pattern === undefined) pattern = null;
+
+  // get current locale
+  // var locale = fans.sys.Locale.cur();
+  // java.text.DecimalFormatSymbols df = locale.decimal();
+  //
+  // // get default pattern if necessary
+  // if (pattern == null)
+  //   pattern = Env.cur().locale(Sys.sysPod, "decimal", "#,###.0##");
+  //
+  // // parse pattern and get digits
+  // NumPattern p = NumPattern.parse(pattern);
+  // NumDigits d = new NumDigits(self);
+  //
+  // // route to common FanNum method
+  // return FanNum.toLocale(p, d, df);
+
+  return "" + self;
+}

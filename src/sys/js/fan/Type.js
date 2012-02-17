@@ -968,9 +968,9 @@ fan.sys.FuncType.prototype.is = function(that)
     // match params - it is ok for me to have less than
     // the type params (if I want to ignore them), but I
     // must have no more
-    if (this.pars.length > that.params.length) return false;
+    if (this.pars.length > that.pars.length) return false;
     for (var i=0; i<this.pars.length; ++i)
-      if (!that.params[i].is(this.pars[i])) return false;
+      if (!that.pars[i].is(this.pars[i])) return false;
 
     // this method works for the specified method type
     return true;
