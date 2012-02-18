@@ -20,14 +20,14 @@ class DasmClass
   ** Class access flags
   const DasmFlags flags
 
-  ** This class name in "/" format
-  const Str thisClass
+  ** This class name signature
+  const DasmType thisClass
 
-  ** Super class name in "/" format (or null if object)
-  const Str? superClass
+  ** Super class name signature (or null if object)
+  const DasmType? superClass
 
-  ** Interfaces in "/" format
-  const Str[] interfaces
+  ** Interface signatures
+  const DasmType[] interfaces
 
   ** Member fields
   const DasmField[] fields
@@ -35,8 +35,8 @@ class DasmClass
   ** Member methods
   const DasmMethod[] methods
 
-  ** Return `thisClass`
-  override Str toStr() { thisClass }
+  ** Return 'thisClass.toStr'
+  override Str toStr() { thisClass.toStr }
 
   ** Dump debug to output stream
   Void dump(OutStream out := Env.cur.out)
@@ -63,7 +63,7 @@ class DasmClass
 **
 const class DasmFlags
 {
-  new make(Int flags) { this.flags = flags }
+  new make(Int mask) { this.mask = mask }
 
   static const Int PUBLIC     := 0x0001
   static const Int PRIVATE    := 0x0002
@@ -79,14 +79,14 @@ const class DasmFlags
   static const Int ANNOTATION := 0x2000
   static const Int ENUM       := 0x4000
 
-  Bool isPublic()    {  flags.and(PUBLIC) != 0   }
-  Bool isPrivate()   { flags.and(PRIVATE) != 0   }
-  Bool isProtected() { flags.and(PROTECTED) != 0 }
-  Bool isStatic()    { flags.and(STATIC) != 0    }
-  Bool isFinal()     { flags.and(FINAL) != 0     }
-  Bool isSuper()     { flags.and(SUPER) != 0     }
-  Bool isInterface() { flags.and(INTERFACE) != 0 }
-  Bool isAbstract()  { flags.and(ABSTRACT) != 0  }
+  Bool isPublic()    { mask.and(PUBLIC) != 0   }
+  Bool isPrivate()   { mask.and(PRIVATE) != 0   }
+  Bool isProtected() { mask.and(PROTECTED) != 0 }
+  Bool isStatic()    { mask.and(STATIC) != 0    }
+  Bool isFinal()     { mask.and(FINAL) != 0     }
+  Bool isSuper()     { mask.and(SUPER) != 0     }
+  Bool isInterface() { mask.and(INTERFACE) != 0 }
+  Bool isAbstract()  { mask.and(ABSTRACT) != 0  }
 
   override Str toStr()
   {
@@ -100,7 +100,7 @@ const class DasmFlags
     return s.toStr
   }
 
-  const Int flags
+  const Int mask
 }
 
 
@@ -161,6 +161,19 @@ const class DasmType
 
   ** If array, what is its rank (or zero if not an array)
   const Int rank
+
+  ** Is this an array type
+  Bool isArray() { rank > 0 }
+
+  ** Is this a primitive type
+  Bool isPrimitive() { sig.size == 1 }
+
+  ** Get array's component type
+  DasmType toComponentType()
+  {
+    if (rank == 0) throw ArgErr("Not an array: $sig")
+    return make(sig[1..-1])
+  }
 
   override Str toStr()
   {

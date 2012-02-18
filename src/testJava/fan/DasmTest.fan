@@ -27,9 +27,9 @@ class DasmTest : Test
     // c.dump
 
     verifyEq(c.flags.isPublic, true)
-    verifyEq(c.thisClass, "fanx/test/InteropTest")
-    verifyEq(c.superClass, "java/lang/Object")
-    verifyEq(c.interfaces, Str[,])
+    verifyEq(c.thisClass.toStr, "fanx.test.InteropTest")
+    verifyEq(c.superClass.toStr, "java.lang.Object")
+    verifyEq(c.interfaces, DasmType[,])
     verifyField(c, "num", "J")
     verifyField(c, "ints", "[I")
     verifyField(c, "formats", "[Ljava/text/SimpleDateFormat;")

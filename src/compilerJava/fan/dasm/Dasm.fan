@@ -96,21 +96,27 @@ class Dasm
 
   private Void readThisClass()
   {
-    thisClass = readClass
+    clsName := readClass
+    thisClass = DasmType("L${clsName};")
   }
 
   private Void readSuperClass()
   {
-    superClass = readClass
+    clsName := readClass
+    if (clsName != null)
+      superClass = DasmType("L${clsName};")
   }
 
   private Void readInterfaces()
   {
     num := in.readU2
-    interfaces = Str[,]
+    interfaces = DasmType[,]
     interfaces.capacity = num
     for (i:=0; i<num; ++i)
-      interfaces.add(readClass)
+    {
+      clsName := readClass
+      interfaces.add(DasmType("L${clsName};"))
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -265,9 +271,9 @@ class Dasm
   private Str?[] cpUtf8 := [,]   // readConstantPool
   private Int?[] cpClass := [,]  // readConstantPool
   private DasmFlags? flags       // readAccessFlags
-  private Str? thisClass         // readThisClass
-  private Str? superClass        // readSuperClass
-  private Str[]? interfaces      // readInterfaces
+  private DasmType? thisClass    // readThisClass
+  private DasmType? superClass   // readSuperClass
+  private DasmType[]? interfaces // readInterfaces
   private DasmField[]? fields    // readFields
   private DasmMethod[]? methods  // readMethods
 }
