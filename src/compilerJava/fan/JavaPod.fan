@@ -19,8 +19,13 @@ class JavaPod : CPod
     this.bridge      = bridge
     this.name        = "[java]" + package
     this.packageName = package.name
-    this.types       = package.classes.keys.map |name->JavaType| { JavaType(this, name) }
     this.isInterop   = (package.name == "fanx.interop")
+
+    this.types = [,]
+    package.classes.each |file, name|
+    {
+      this.types.add(JavaType.makeDasm(this, name, file))
+    }
   }
 
   new makePrimitives(JavaBridge bridge)

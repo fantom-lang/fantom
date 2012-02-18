@@ -23,16 +23,21 @@ class JavaPrimitives : JavaPod
     : super.makePrimitives(bridge)
   {
     ns := bridge.ns
+    this.booleanType = makeType("boolean", ns.boolType)
+    this.byteType    = makeType("byte" ,   ns.intType)
+    this.shortType   = makeType("short",   ns.intType)
+    this.charType    = makeType("char",    ns.intType)
+    this.intType     = makeType("int",     ns.intType)
+    this.longType    = makeType("long",    ns.intType)
+    this.floatType   = makeType("float",   ns.floatType)
+    this.doubleType  = makeType("double",  ns.floatType)
+  }
 
-    this.booleanType = JavaType(this, "boolean", ns.boolType.toNullable)
-    this.byteType    = JavaType(this, "byte" ,   ns.intType.toNullable)
-    this.shortType   = JavaType(this, "short",   ns.intType.toNullable)
-    this.charType    = JavaType(this, "char",    ns.intType.toNullable)
-    this.intType     = JavaType(this, "int",     ns.intType.toNullable)
-    this.longType    = JavaType(this, "long",    ns.intType.toNullable)
-    this.floatType   = JavaType(this, "float",   ns.floatType.toNullable)
-    this.doubleType  = JavaType(this, "double",  ns.floatType.toNullable)
-    this.types = [intType, charType, byteType, shortType, floatType, longType, doubleType, booleanType]
+  private JavaType makeType(Str name, CType fanType)
+  {
+    t := JavaType.makePrimitive(this, name, fanType.toNullable)
+    types.add(t)
+    return t
   }
 
   JavaType byteType

@@ -262,7 +262,7 @@ internal class JavaReflect
   **
   static Class toJavaClass(JavaType t)
   {
-    return Class.forName(t.toJavaClassName)
+    Class.forName(t.toJavaClassName)
   }
 
   **
@@ -270,7 +270,7 @@ internal class JavaReflect
   **
   static CType[] toFanTypes(JavaBridge bridge, Class[] cls)
   {
-    return cls.map |Class c->CType| { toFanType(bridge, c) }
+    cls.map |Class c->CType| { toFanType(bridge, c) }
   }
 
   **
@@ -366,7 +366,7 @@ internal class JavaReflect
   **
   static Int toClassFlags(Int modifiers)
   {
-    return FanUtil.classModifiersToFanFlags(modifiers)
+    FanUtil.classModifiersToFanFlags(modifiers)
   }
 
   **
@@ -374,7 +374,7 @@ internal class JavaReflect
   **
   static Int toMemberFlags(Int modifiers)
   {
-    return FanUtil.memberModifiersToFanFlags(modifiers)
+    FanUtil.memberModifiersToFanFlags(modifiers)
   }
 
   **

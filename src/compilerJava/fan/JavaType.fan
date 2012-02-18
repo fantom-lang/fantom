@@ -18,17 +18,32 @@ class JavaType : CType
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  **
-  ** Construct with loaded Type.
-  **
-  new make(JavaPod pod, Str name, CType? primitiveNullable := null)
+  new makeDasm(JavaPod pod, Str name, File classfile)
+    : this.init(pod, name)
+  {
+    this.classfile = classfile
+  }
+
+  new makePrimitive(JavaPod pod, Str name, CType primitiveNullable)
+    : this.init(pod, name)
+  {
+    this.primitiveNullable = primitiveNullable
+  }
+
+  new makeArray(JavaType of)
+    : this.init(of.pod, "[" + of.name)
+  {
+    this.arrayRank = of.arrayRank + 1
+    this.arrayOf   = of
+  }
+
+  private new init(JavaPod pod, Str name)
   {
     this.pod    = pod
     this.name   = name
     this.qname  = pod.name + "::" + name
     this.base   = ns.objType
     this.mixins = CType[,]
-    this.primitiveNullable = primitiveNullable
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -40,7 +55,6 @@ class JavaType : CType
   override const Str name
   override const Str qname
   override Str signature() { qname }
-
   override CFacet? facet(Str qname) { null }
 
   override CType? base { get { load; return &base } }
@@ -130,6 +144,9 @@ class JavaType : CType
 // Load
 //////////////////////////////////////////////////////////////////////////
 
+  ** Classfile to use for loading
+  const File? classfile
+
   private Void load()
   {
     if (loaded) return
@@ -188,24 +205,24 @@ class JavaType : CType
   **
   Bool isInteropArray()
   {
-    return pod.isInterop && name.endsWith("Array")
+    pod.isInterop && name.endsWith("Array")
   }
 
   **
   ** Is this a array type such as '[java]foo.bar::[Baz'
   **
-  Bool isArray() { return arrayRank > 0 }
+  Bool isArray() {  arrayRank > 0 }
 
   **
   ** The rank of the array where 0 is not an array,
   ** 1 is one dimension, 2 is two dimensional, etc.
   **
-  Int arrayRank := 0
+  const Int arrayRank := 0
 
   **
   ** If this an array, this is the component type.
   **
-  JavaType? arrayOf
+  JavaType? arrayOf { private set }
 
   **
   ** The arrayOf field always stores a JavaType so that we
@@ -224,14 +241,7 @@ class JavaType : CType
   **
   ** Get the type which is an array of this type.
   **
-  once JavaType toArrayOf()
-  {
-    return JavaType(pod, "[" + name)
-    {
-      it.arrayRank = this.arrayRank + 1
-      it.arrayOf = this
-    }
-  }
+  once JavaType toArrayOf() { makeArray(this) }
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
