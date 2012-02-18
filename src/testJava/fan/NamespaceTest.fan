@@ -85,6 +85,17 @@ class NamespaceTest : JavaTest
     verifyEq(obs.method("clearChanged").isProtected, true)
     props := util.resolveType("Properties", true)
     verifyEq(props.method("rehash").isProtected, true)  // inherited thru HashMap
+
+    // AtomicLong, interfaces, superclass, etc
+    atomic := ns.resolvePod("[java]java.util.concurrent.atomic", null)
+    ai := atomic.resolveType("AtomicInteger", true)
+    verifyEq(ai.qname, "[java]java.util.concurrent.atomic::AtomicInteger")
+    verifyEq(ai.base.qname, "[java]java.lang::Number")
+    verifyEq(ai.base.base.qname, "sys::Obj")
+    verifyEq(ai.mixins.size, 1)
+    verifyEq(ai.mixins.first.qname, "[java]java.io::Serializable")
+    verifyEq(ai.slots["addAndGet"].parent, ai)
+    verifyEq(ai.slots["wait"].parent, ai) // has it, but parent wrong
   }
 
 //////////////////////////////////////////////////////////////////////////
