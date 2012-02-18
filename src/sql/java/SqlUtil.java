@@ -80,6 +80,7 @@ public class SqlUtil
       case Types.VARCHAR:
       case Types.NVARCHAR:
       case Types.LONGVARCHAR:
+      case Types.SQLXML:
         return Sys.StrType;
 
       case Types.BIT:
