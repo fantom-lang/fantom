@@ -20,7 +20,7 @@ class JavaPrimitives : JavaPod
 {
 
   new make(JavaBridge bridge)
-    : super(bridge, "", null)
+    : super.makePrimitives(bridge)
   {
     ns := bridge.ns
 

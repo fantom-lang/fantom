@@ -110,7 +110,7 @@ class Dasm
     interfaces = Str[,]
     interfaces.capacity = num
     for (i:=0; i<num; ++i)
-      interfaces[i] = readClass
+      interfaces.add(readClass)
   }
 
 //////////////////////////////////////////////////////////////////////////

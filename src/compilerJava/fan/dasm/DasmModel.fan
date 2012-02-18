@@ -35,6 +35,9 @@ class DasmClass
   ** Member methods
   const DasmMethod[] methods
 
+  ** Return `thisClass`
+  override Str toStr() { thisClass }
+
   ** Dump debug to output stream
   Void dump(OutStream out := Env.cur.out)
   {
