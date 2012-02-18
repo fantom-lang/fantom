@@ -94,58 +94,52 @@ class ClassPath
   ])
 
   **
-  ** Make for current set of jars.
+  ** Construct for given list of jar files or directoris.
   **
-  new make(File[] entries)
+  new make(File[] files)
   {
-    this.entries = entries
-    this.classes = loadClasses
+    this.files    = files
+    this.packages = loadPackages
   }
 
 //////////////////////////////////////////////////////////////////////////
-// State
+// Access
 //////////////////////////////////////////////////////////////////////////
 
-  **
-  ** Class path entries to search
-  **
-  const File[] entries
+  ** Class path files (jar or dirs) to search
+  const File[] files
 
-  **
-  ** List of classes keyed by package name in class path
-  **
-  const Str:Str[] classes
+  ** Open zip files
+  private Zip[] zips := [,]
 
-  **
-  ** Return list of jar files.
-  **
-  override Str toStr()
+  ** Packages keyed by package name in "." format
+  Str:ClassPathPackage packages { private set }
+
+  ** Return list of files.
+  override Str toStr() { files.toStr }
+
+  ** Close all open zip files
+  Void close()
   {
-    return entries.toStr
+    zips.each |zip| { zip.close }
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Loading
 //////////////////////////////////////////////////////////////////////////
 
-  **
-  ** Load the map of package:class[] by walking every entry
-  **
-  protected virtual Str:Str[] loadClasses()
+  private Str:ClassPathPackage loadPackages()
   {
-    acc := Str:Str[][:]
-    entries.each |File f|  { loadEntry(acc, f) }
+    acc := Str:ClassPathPackage[:]
+    files.each |File f|  { loadFile(acc, f) }
     return acc
   }
 
-  **
-  ** Load the map of package:class[] by walking class path entry
-  **
-  private Void loadEntry(Str:Str[] acc, File f)
+  private Void loadFile(Str:ClassPathPackage acc, File f)
   {
     if (f.isDir)
     {
-      f.walk |File x| { accept(acc, x.uri.relTo(f.uri)) }
+      f.walk |File x| { accept(acc, x.uri.relTo(f.uri), f) }
     }
     else
     {
@@ -153,46 +147,82 @@ class ClassPath
       try
       {
         zip = Zip.open(f)
-        zip.contents.each |File x, Uri uri| { accept(acc, uri) }
+        zips.add(zip)
+        zip.contents.each |File x, Uri uri| { accept(acc, uri, x) }
       }
-      catch {}
-      finally { if (zip != null) zip.close }
+      catch (Err e)
+      {
+        echo("ERROR: $typeof: $f")
+        e.trace
+      }
     }
   }
 
-  private Void accept(Str:Str[] acc, Uri uri)
+  private Void accept(Str:ClassPathPackage acc, Uri uri, File file)
   {
+    // don't care about anything but .class files
     if (uri.ext != "class") return
-    package := uri.path[0..-2].join(".")
-    if (package.startsWith("com.sun") || package.startsWith("sun")) return
+
+    // convert URI to package name, skip non-public 'com.sun'
+    packageName := uri.path[0..-2].join(".")
+    if (packageName.startsWith("com.sun") || packageName.startsWith("sun")) return
+
+    // get simple name of class
     name := uri.basename
     if (name == "Void") return
-    classes := acc[package]
-    if (classes == null) acc[package] = classes = Str[,]
-    if (!classes.contains(name)) classes.add(name)
+
+    // get or add package
+    package := acc[packageName]
+    if (package == null) acc[packageName] = package = ClassPathPackage(packageName)
+
+    // add class to package if not already defined
+    if (package.classes[name] == null) package.classes[name] = file
   }
 
   static Void main()
   {
     t1 := Duration.now
     cp := makeForCurrent
+    cp.close
     t2:= Duration.now
     echo("ClassPath.makeForCurrent")
     echo
 
-    echo("Entries Found:")
-    cp.entries.each |File f| { echo("  $f") }
+    echo("Files Found:")
+    cp.files.each |File f| { echo("  $f") }
 
     echo("Packages Found:")
     classes := 0
-    cp.classes.keys.sort.each |Str p|
+    cp.packages.vals.sort.each |p|
     {
-      classes += cp.classes[p].size
-      echo("  $p [" + cp.classes[p].size + "]")
+      classes += p.classes.size
+      echo("  $p [" + p.classes.size + "]")
     }
 
     echo
-    echo("${(t2-t1).toLocale}, $cp.classes.size packages, $classes classes")
+    echo("${(t2-t1).toLocale}, $cp.packages.size packages, $classes classes")
   }
-
 }
+
+**************************************************************************
+** ClassPathPackage
+**************************************************************************
+
+**
+** ClassPathPackage models a single package found in the class
+** path with a map of classnames to classfiles.
+**
+class ClassPathPackage
+{
+  new make(Str name) { this.name = name }
+
+  ** Package name in "." format
+  const Str name
+
+  ** Classfiles keyed by simple name (not qualified name)
+  Str:File classes := [:] { private set }
+
+  ** Return name
+  override Str toStr() { name }
+}
+

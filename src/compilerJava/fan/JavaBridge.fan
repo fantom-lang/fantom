@@ -29,6 +29,12 @@ class JavaBridge : CBridge
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Cleanup
+//////////////////////////////////////////////////////////////////////////
+
+  override Void cleanup() { cp.close }
+
+//////////////////////////////////////////////////////////////////////////
 // Namespace
 //////////////////////////////////////////////////////////////////////////
 
@@ -41,12 +47,12 @@ class JavaBridge : CBridge
     if (name == "") return primitives
 
     // look for package name in classpatch
-    classes := cp.classes[name]
-    if (classes == null)
+    package := cp.packages[name]
+    if (package == null)
       throw CompilerErr("Java package '$name' not found", loc)
 
     // map package to JavaPod
-    return JavaPod(this, name, classes)
+    return JavaPod(this, package)
   }
 
   **
@@ -795,14 +801,6 @@ class JavaBridge : CBridge
 
   private Str:CMethod funcWrappers := Str:CMethod[:]  // funcType+method:ctor
 
-//////////////////////////////////////////////////////////////////////////
-// Lifecycle
-//////////////////////////////////////////////////////////////////////////
-
-  override Void cleanup()
-  {
-
-  }
 
 }
 

@@ -14,14 +14,21 @@ using compiler
 class JavaPod : CPod
 {
 
-  new make(JavaBridge bridge, Str package, Str[]? classes)
+  new make(JavaBridge bridge, ClassPathPackage package)
   {
-    this.bridge = bridge
-    this.name = "[java]" + package
-    this.packageName = package
-    if (classes != null)
-      this.types = classes.map |Str n->JavaType| { JavaType(this, n) }
-    isInterop = (package == "fanx.interop")
+    this.bridge      = bridge
+    this.name        = "[java]" + package
+    this.packageName = package.name
+    this.types       = package.classes.keys.map |name->JavaType| { JavaType(this, name) }
+    this.isInterop   = (package.name == "fanx.interop")
+  }
+
+  new makePrimitives(JavaBridge bridge)
+  {
+    this.bridge      = bridge
+    this.name        = "[java]"
+    this.packageName = ""
+    this.types       = CType[,]
   }
 
   override CNamespace ns() { return bridge.ns }
@@ -38,7 +45,7 @@ class JavaPod : CPod
 
   override Bool isForeign() { return true }
 
-  override CType[] types := [,]
+  override CType[] types
 
   override JavaType? resolveType(Str typeName, Bool checked)
   {
