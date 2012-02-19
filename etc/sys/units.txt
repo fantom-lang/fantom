@@ -155,6 +155,8 @@ kilowatt_hours_per_square_meter, kWh/m²; kg1*sec-2; 3600000.0
 kilowatt_hours_per_square_foot, kWh/ft²; kg1*sec-2; 3.8750077500155E7
 megajoules_per_square_meter, MJ/m²; kg1*sec-2; 1000000.0
 megajoules_per_square_foot, MJ/ft²; kg1*sec-2; 1.076391041671E7
+kilobtu_per_square_foot, kBTU/ft²; kg1*sec-2; 1.135433731957E7
+megabtu_per_square_foot, MBTU/ft²; kg1*sec-2; 1.135433731957E10
 
 -- enthalpy (m2*sec-2)
 joules_per_gram, J/g; m2*sec-2; 0.0010
@@ -278,6 +280,7 @@ watts_per_square_meter, W/m²; kg1*sec-3
 watts_per_square_foot, W/ft²; kg1*sec-3; 10.7639104
 kilowatts_per_square_meter, kW/m²; kg1*sec-3; 1000.0
 kilowatts_per_square_foot, kW/ft²; kg1*sec-3; 10763.9104
+kilobtus_per_hour_per_square_foot, kBTU/h/ft²; kg1*sec-3; 3153.8257472
 
 -- apparent power (kg1*m2*sec-3)
 volt_ampere, VA; kg1*m2*sec-3
