@@ -972,6 +972,34 @@ class MapTest : Test
     // typed assign
     Int:Str a := map.findAll |Str v->Bool| { return v.size == 4 }
     verifyEq(a, [0:"zero", 4:"four"])
+
+    // ordered
+    mo := Str:Int[:]
+    mo.ordered = true
+    mo.add("one",   1)
+    mo.add("two",   2)
+    mo.add("three", 3)
+    mo.add("four",  4)
+    mx1 := mo.findAll { true }
+    mx2 := mo.exclude { false }
+    verifyEq(mx1.ordered, true)
+    verifyEq(mx2.ordered, true)
+    verifyEq(mx1.keys, ["one", "two", "three", "four"])
+    verifyEq(mx2.keys, ["one", "two", "three", "four"])
+
+    // case insensitive
+    mc := Str:Int[:]
+    mc.caseInsensitive = true
+    mc.add("One",   1)
+    mc.add("TWO",   2)
+    mc.add("three", 3)
+    mc.add("Four",  4)
+    mx1 = mc.findAll { it.isEven }
+    mx2 = mc.exclude { it.isOdd }
+    verifyEq(mx1.caseInsensitive, true)
+    verifyEq(mx2.caseInsensitive, true)
+    verifyEq(mx1["two"], 2)
+    verifyEq(mx2["two"], 2)
   }
 
 //////////////////////////////////////////////////////////////////////////
