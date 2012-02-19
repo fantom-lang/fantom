@@ -11,7 +11,7 @@ using fwt
 **
 ** Main launcher for flux.
 **
-internal class Main
+@NoDoc class Main
 {
   static Void main(Str[] args)
   {
