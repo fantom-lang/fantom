@@ -403,6 +403,8 @@ namespace Fan.Sys
     public Map findAll(Func f)
     {
       Map acc = new Map(m_type);
+      if (this.ordered()) acc.ordered(true);
+      if (this.caseInsensitive()) acc.caseInsensitive(true);
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
@@ -417,6 +419,8 @@ namespace Fan.Sys
     public Map exclude(Func f)
     {
       Map acc = new Map(m_type);
+      if (this.ordered()) acc.ordered(true);
+      if (this.caseInsensitive()) acc.caseInsensitive(true);
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
