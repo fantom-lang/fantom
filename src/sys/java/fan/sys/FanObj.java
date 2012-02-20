@@ -217,6 +217,16 @@ public class FanObj
     }
   }
 
+  // Remap all java.lang.Objects as statics since we emit to FanObj
+  public static String toString(Object o) { return o.toString(); }
+  public static Class getClass(Object o) { return o.getClass(); }
+  public static int hashCode(Object o) { return o.hashCode(); }
+  public static void notify(Object o) { o.notify(); }
+  public static void notifyAll(Object o) { o.notifyAll(); }
+  public static void wait(Object o) throws InterruptedException { o.wait(); }
+  public static void wait(Object o, long t) throws InterruptedException { o.wait(t); }
+  public static void wait(Object o, long t, int n) throws InterruptedException { o.wait(t, n); }
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////

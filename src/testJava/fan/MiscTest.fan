@@ -259,4 +259,35 @@ class MiscTest : JavaTest
          5, 3, "Once method cannot be used with FFI type '[java]java.lang::[String?'"])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Object
+//////////////////////////////////////////////////////////////////////////
+
+  Void testObjectMethods()
+  {
+    compile(
+     """using [java] java.lang
+        class Foo
+        {
+          Str a(Object x) { x.toString }
+          Str b(Object x) { x.getClass.getName }
+          Int c(Object x) { x.hashCode }
+          Str d(Object x) { r := ""; try x.notify; catch(Err e) r = e.msg; return r }
+          Str e(Object x) { r := ""; try x.notifyAll; catch(Err e) r = e.msg; return r }
+          Str f(Object x) { r := ""; try x.wait; catch(Err e) r = e.msg; return r }
+          Str g(Object x) { r := ""; try x.wait(10); catch(Err e) r = e.msg; return r }
+          Str h(Object x) { r := ""; try x.wait(0, 10); catch(Err e) r = e.msg; return r }
+        }""")
+
+    obj := pod.types.first.make
+    verifySame(obj->a("foo"), "foo")
+    verifySame(obj->b("foo"), "java.lang.String")
+    verifyEq(obj->c(obj), obj.hash)
+    verifySame(obj->d(obj).toStr, "java.lang.IllegalMonitorStateException")
+    verifySame(obj->e(obj).toStr, "java.lang.IllegalMonitorStateException")
+    verifySame(obj->f(obj).toStr, "java.lang.IllegalMonitorStateException")
+    verifySame(obj->g(obj).toStr, "java.lang.IllegalMonitorStateException")
+    verifySame(obj->h(obj).toStr, "java.lang.IllegalMonitorStateException")
+  }
+
 }
