@@ -334,6 +334,8 @@ fan.sys.Map.prototype.find = function(f)
 fan.sys.Map.prototype.findAll = function(f)
 {
   var acc = fan.sys.Map.make(this.m_type.k, this.m_type.v);
+  if (this.m_ordered) acc.ordered$(true);
+  if (this.m_caseInsensitive) acc.caseInsensitive$(true);
   this.$each(function(b)
   {
     if (f.call(b.val, b.key))
@@ -345,6 +347,8 @@ fan.sys.Map.prototype.findAll = function(f)
 fan.sys.Map.prototype.exclude = function(f)
 {
   var acc = fan.sys.Map.make(this.m_type.k, this.m_type.v);
+  if (this.m_ordered) acc.ordered$(true);
+  if (this.m_caseInsensitive) acc.caseInsensitive$(true);
   this.$each(function(b)
   {
     if (!f.call(b.val, b.key))
