@@ -9,6 +9,7 @@ package fanx.util;
 
 import java.util.*;
 import fan.sys.*;
+import fanx.emit.*;
 import fanx.fcode.*;
 import java.lang.reflect.Modifier;
 
@@ -438,6 +439,9 @@ public class FanUtil
     else if (Modifier.isPrivate(m))  flags |= FConst.Private;
     else if (Modifier.isProtected(m))  flags |= FConst.Protected;
     else flags |= FConst.Internal;
+
+    // reflection API doesn't have method for ACC_ENUM
+    if ((m & EmitConst.ENUM) != 0) flags |= FConst.Enum;
 
     return flags;
   }
