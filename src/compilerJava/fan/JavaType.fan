@@ -161,8 +161,14 @@ class JavaType : CType
     }
     else
     {
-      // map Java members to slots using Java reflection
-      JavaReflect.loadType(this, slots)
+      useReflection := true
+
+      // map Java members to slots using either Java reflection
+      // or the new disassembler
+      if (useReflection)
+        JavaReflect.loadType(this, slots)
+      else
+        JavaDasmLoader(this, slots).load
     }
     this.slots = slots
     loaded = true

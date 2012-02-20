@@ -95,7 +95,7 @@ class NamespaceTest : JavaTest
     verifyEq(ai.mixins.size, 1)
     verifyEq(ai.mixins.first.qname, "[java]java.io::Serializable")
     verifyEq(ai.slots["addAndGet"].parent, ai)
-    verifyEq(ai.slots["wait"].parent, ai) // has it, but parent wrong
+    verifyEq(ai.slots["wait"].parent.qname, "[java]java.lang::Object")
     verifyEq(ai.slots["<init>"].isCtor, true)
   }
 
