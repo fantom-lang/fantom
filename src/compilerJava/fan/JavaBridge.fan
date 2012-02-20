@@ -55,15 +55,6 @@ class JavaBridge : CBridge
     return JavaPod(this, package)
   }
 
-  **
-  ** Map class meta-data and Java members to Fantom slots
-  ** for the specified JavaType.
-  **
-  virtual Void loadType(JavaType type, Str:CSlot slots)
-  {
-    JavaReflect.loadType(type, slots)
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Call Resolution
 //////////////////////////////////////////////////////////////////////////

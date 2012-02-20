@@ -61,6 +61,13 @@ internal class JavaReflect
 
     // map Java constructors to CSlots
     cls.getDeclaredConstructors.each |JCtor j| { mapCtor(self, slots, j) }
+
+    // merge in sys::Obj slots
+    self.ns.objType.slots.each |CSlot s|
+    {
+      if (s.isCtor) return
+      if (slots[s.name] == null) slots[s.name] = s
+    }
   }
 
   **

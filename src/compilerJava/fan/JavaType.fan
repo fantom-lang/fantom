@@ -155,17 +155,14 @@ class JavaType : CType
     {
       flags = FConst.Public
     }
+    else if (isArray)
+    {
+      flags = arrayOf.isPublic ? FConst.Public : FConst.Internal
+    }
     else
     {
       // map Java members to slots using Java reflection
-      pod.bridge.loadType(this, slots)
-
-      // merge in sys::Obj slots
-      ns.objType.slots.each |CSlot s|
-      {
-        if (s.isCtor) return
-        if (slots[name] == null) slots[s.name] = s
-      }
+      JavaReflect.loadType(this, slots)
     }
     this.slots = slots
     loaded = true
