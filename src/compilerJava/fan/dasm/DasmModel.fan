@@ -79,14 +79,15 @@ const class DasmFlags
   static const Int ANNOTATION := 0x2000
   static const Int ENUM       := 0x4000
 
-  Bool isPublic()    { mask.and(PUBLIC) != 0   }
-  Bool isPrivate()   { mask.and(PRIVATE) != 0   }
-  Bool isProtected() { mask.and(PROTECTED) != 0 }
-  Bool isStatic()    { mask.and(STATIC) != 0    }
-  Bool isFinal()     { mask.and(FINAL) != 0     }
-  Bool isSuper()     { mask.and(SUPER) != 0     }
-  Bool isInterface() { mask.and(INTERFACE) != 0 }
-  Bool isAbstract()  { mask.and(ABSTRACT) != 0  }
+  Bool isPublic()     { mask.and(PUBLIC) != 0   }
+  Bool isPrivate()    { mask.and(PRIVATE) != 0   }
+  Bool isProtected()  { mask.and(PROTECTED) != 0 }
+  Bool isStatic()     { mask.and(STATIC) != 0    }
+  Bool isFinal()      { mask.and(FINAL) != 0     }
+  Bool isSuper()      { mask.and(SUPER) != 0     }
+  Bool isInterface()  { mask.and(INTERFACE) != 0 }
+  Bool isAbstract()   { mask.and(ABSTRACT) != 0  }
+  Bool isAnnotation() { mask.and(ANNOTATION) != 0  }
 
   override Str toStr()
   {

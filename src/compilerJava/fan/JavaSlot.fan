@@ -104,8 +104,6 @@ class JavaMethod : JavaSlot, CMethod
   {
     this.name == m.name &&
     this.params.size == m.params.size &&
-    this.returnType == m.returnType &&
-    this.flags == m.flags &&
     this.params.all |p, i| { p.paramType == m.params[i].paramType }
   }
 }
