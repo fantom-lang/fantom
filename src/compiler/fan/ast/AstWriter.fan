@@ -100,7 +100,7 @@ class AstWriter
     return this
   }
 
-  internal static Str flagsToStr(Int flags)
+  static Str flagsToStr(Int flags)
   {
     s := StrBuf()
     w := AstWriter(s.out).flags(flags)
