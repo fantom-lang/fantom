@@ -155,7 +155,6 @@ internal class JavaReflect
         java.getName,
         toMemberFlags(mods),
         toFanType(self.bridge, java.getType))
-      if (java.isEnumConstant()) fan.flags = fan.flags.or(FConst.Enum)
       slots.set(fan.name, fan)
     }
     catch (UnknownTypeErr e) errUnknownType(e)
