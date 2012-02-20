@@ -19,6 +19,11 @@ using [java] fanx.util
 ** JavaReflect provides Java reflection utilities.
 ** It encapsulates the FFI calls out to Java.
 **
+** TODO: this code is obsolete, it has been replaced by JavaDasmLoader
+** as of Feb 2012; keep around until we are sure new stuff is correct
+** in case we need to compare reflection and disassembler results
+** side-by-side
+**
 internal class JavaReflect
 {
   **

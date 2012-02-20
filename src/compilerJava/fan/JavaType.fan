@@ -161,8 +161,6 @@ class JavaType : CType
     }
     else
     {
-      useReflection := true
-
       // map Java members to slots using either Java reflection
       // or the new disassembler
       if (useReflection)
@@ -172,6 +170,19 @@ class JavaType : CType
     }
     this.slots = slots
     loaded = true
+  }
+
+  ** TODO: hook to fallback to old reflection loader in case
+  ** we run into trouble with disassembler loader
+  static const Bool useReflection := false
+  static
+  {
+    try
+    {
+      useReflection = Env.cur.config(JavaType#.pod, "useReflection") == "true"
+      if (useReflection) echo("<<< JavaType using reflection >>>")
+    }
+    catch (Err e) e.trace
   }
 
 //////////////////////////////////////////////////////////////////////////
