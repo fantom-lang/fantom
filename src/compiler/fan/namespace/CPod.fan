@@ -38,6 +38,12 @@ mixin CPod
   abstract CType[] types()
 
   **
+  ** Pod zip file.  Not all implementations have a backing
+  ** file in which case they will throw UnsupportedErr
+  **
+  abstract File file()
+
+  **
   ** Lookup a type by its simple name.  If the type doesn't
   ** exist and checked is true then throw UnknownTypeErr
   ** otherwise return null.
