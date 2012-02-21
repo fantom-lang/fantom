@@ -22,10 +22,35 @@ class JavaBridge : CBridge
   **
   ** Construct a JavaBridge for current environment
   **
-  new make(Compiler c, ClassPath cp := ClassPath.makeForCurrent)
+  new make(Compiler c)
     : super(c)
   {
-    this.cp = cp
+    this.cp = initClassPath
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// ClassPath
+//////////////////////////////////////////////////////////////////////////
+
+  private ClassPath initClassPath()
+  {
+    // always include system classpath
+    cpFiles := ClassPath.findSysClassPathFiles
+
+    // add all pods in flattened dependency chain to classpath
+    acc := Str:File[:] { ordered = true }
+    ns.depends?.each |d| { flattenDepends(acc, d) }
+    cpFiles.addAll(acc.vals)
+
+    return ClassPath(cpFiles)
+  }
+
+  private Void flattenDepends(Str:File acc, CDepend d)
+  {
+    if (acc.containsKey(d.name)) return
+    pod  := ns.resolvePod(d.name, compiler.input.inputLoc)
+    acc[d.name] = pod.file
+    pod.depends.each |x| { flattenDepends(acc, x) }
   }
 
 //////////////////////////////////////////////////////////////////////////
