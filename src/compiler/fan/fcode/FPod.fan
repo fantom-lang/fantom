@@ -44,6 +44,8 @@ final class FPod : CPod, FConst
 // CPod
 //////////////////////////////////////////////////////////////////////////
 
+  override File file() { zip.file }
+
   override CType? resolveType(Str name, Bool checked)
   {
     t := ftypesByName[name]

@@ -40,6 +40,8 @@ class JavaPod : CPod
 
   override const Str name
 
+  override File file() { throw UnsupportedErr() }
+
   const Str packageName
 
   override const Version version := Version.defVal

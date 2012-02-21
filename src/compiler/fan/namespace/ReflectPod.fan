@@ -26,6 +26,8 @@ class ReflectPod : CPod
 
   override once CDepend[] depends() { CDepend.makeList(pod.depends) }
 
+  override once File file() { Env.cur.findPodFile(name) }
+
   override CType[] types()
   {
     if (!loadedAllTypes)

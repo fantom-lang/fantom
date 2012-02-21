@@ -32,6 +32,8 @@ class PodDef : Node, CPod
 
   override CDepend[] depends() { ns.compiler.depends }
 
+  override File file() { throw UnsupportedErr() }
+
   override CType? resolveType(Str name, Bool checked)
   {
     t := typeDefs[name]
