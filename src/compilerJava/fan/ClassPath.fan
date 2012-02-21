@@ -19,10 +19,9 @@ class ClassPath
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Attempt to derive the current classpath by looking at
-  ** system properties.
+  ** Find all jars in system classpath
   **
-  static ClassPath makeForCurrent()
+  static File[] findSysClassPathFiles()
   {
     entries := File[,]
 
@@ -66,7 +65,7 @@ class ClassPath
       if (f.exists) entries.add(f)
     }
 
-    return make(entries)
+    return entries
   }
 
   private static Void addJars(File[] entries, File dir)
@@ -93,13 +92,19 @@ class ClassPath
     "zipfs.jar",
   ])
 
+//////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
   **
   ** Construct for given list of jar files or directoris.
   **
   new make(File[] files)
   {
-    this.files    = files
+    start := Duration.now
+    this.files = files
     this.packages = loadPackages
+    this.dur = Duration.now - start
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -123,6 +128,9 @@ class ClassPath
   {
     zips.each |zip| { zip.close }
   }
+
+  ** Load time duration
+  private Duration dur
 
 //////////////////////////////////////////////////////////////////////////
 // Loading
@@ -179,28 +187,27 @@ class ClassPath
     if (package.classes[name] == null) package.classes[name] = file
   }
 
-  static Void main()
+  Void dump(OutStream out := Env.cur.out)
   {
-    t1 := Duration.now
-    cp := makeForCurrent
-    cp.close
-    t2:= Duration.now
-    echo("ClassPath.makeForCurrent")
-    echo
-
-    echo("Files Found:")
-    cp.files.each |File f| { echo("  $f") }
-
-    echo("Packages Found:")
+    out.printLine("--- ClassPath ---")
+    out.printLine("Packages Found:")
     classes := 0
-    cp.packages.vals.sort.each |p|
+    packages.vals.sort.each |p|
     {
       classes += p.classes.size
-      echo("  $p [" + p.classes.size + "]")
+      out.printLine("  $p [" + p.classes.size + "]")
     }
+    out.printLine("ClassPath Files:")
+    files.each |File f| { echo("  $f") }
+    out.printLine("${dur.toLocale}, $files.size files, $packages.size packages, $classes classes")
+    out.printLine("-----------------")
+  }
 
-    echo
-    echo("${(t2-t1).toLocale}, $cp.packages.size packages, $classes classes")
+  static Void main()
+  {
+    cp := ClassPath(findSysClassPathFiles)
+    cp.close
+    cp.dump
   }
 }
 
