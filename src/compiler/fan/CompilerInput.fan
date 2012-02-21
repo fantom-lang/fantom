@@ -136,7 +136,8 @@ class CompilerInput
   **
   ** List of resource files or directories containing resource files
   ** to include in the pod zip.  Uris are relative to `baseDir`.
-  ** This field is used only in file mode.
+  ** This field is used only in file mode.  If a file has a "jar"
+  ** extension then its contents are unzipped into the target pod.
   **
   Uri[]? resFiles
 

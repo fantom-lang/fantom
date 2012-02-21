@@ -119,6 +119,9 @@ class WritePod : CompilerStep
     if (path == `locale/en.props` && compiler.localeProps != null)
       return
 
+    // if resource is jar file, then unzip it
+    if (file.ext == "jar") { writeResZip(zip, file); return }
+
     try
     {
       out := zip.writeNext(path, file.modified)
@@ -129,6 +132,23 @@ class WritePod : CompilerStep
     {
       throw errReport(CompilerErr("Cannot write resource file '$path'", loc, e))
     }
+  }
+
+  private Void writeResZip(Zip zip, File resFile)
+  {
+    // open resource file as a zip file
+    Zip? resZip := null
+    try
+      resZip = Zip.open(resFile)
+    catch (Err e)
+      errReport(CompilerErr("Cannot open resource file as zip: 'f'", loc, e))
+
+    // process each entry in zip as resource
+    try
+    {
+      resZip.contents.each |c| { writeRes(zip, c, c.uri) }
+    }
+    finally resZip.close
   }
 
 //////////////////////////////////////////////////////////////////////////
