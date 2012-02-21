@@ -96,6 +96,14 @@ public class FanClassLoader
       cls = findPrecompiledClass(name, null);
       if (cls != null) return cls;
 
+      // look in my dependencies for pre-compiled class
+      for (int i=0; i<pod.dependPods.length; ++i)
+      {
+        FanClassLoader d = pod.dependPods[i].classLoader;
+        if (d.findPrecompiledClassFile(name) != null)
+          return d.loadClass(name);
+      }
+
       // fallback to default URLClassLoader loader
       // implementation which searches my ext jars
       return super.findClass(name);
@@ -167,13 +175,26 @@ public class FanClassLoader
     return t.emit();
   }
 
-  private Class findPrecompiledClass(String name, String fanTypeName)
+  private Box findPrecompiledClassFile(String name)
   {
-    if (pod.fpod.store == null) return null;
     try
     {
+      if (pod.fpod.store == null) return null;
       String path = name.replace('.', '/') + ".class";
-      Box precompiled = pod.fpod.store.readToBox(path);
+      return pod.fpod.store.readToBox(path);
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  private Class findPrecompiledClass(String name, String fanTypeName)
+  {
+    try
+    {
+      Box precompiled = findPrecompiledClassFile(name);
       if (precompiled == null) return null;
 
       Class cls = defineClass(name, precompiled.buf, 0, precompiled.len, codeSource);
