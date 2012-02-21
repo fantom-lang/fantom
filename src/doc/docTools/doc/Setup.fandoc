@@ -169,7 +169,10 @@ The platform directory is used for JARs which vary by platform.  For
 example the SWT JARs are distributed in platform specific directories.
 You can verify your platform running "fan -version".
 
-Also see [JavaFFI]`docLang::JavaFFI#deployment`.
+The preferred mechanism to add Java JARs into your Fantom environment
+is to convert them into a pod.
+
+Also see [JavaFFI]`docLang::JavaFFI#classpathRuntime`.
 
 SWT Support [#swt]
 ******************

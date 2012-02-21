@@ -18,7 +18,7 @@ is basically a mapping of the Java type system into the Fantom type system:
   - Java methods => Fantom methods
 
 Fantom was designed to run on the JVM, so mapping between the two worlds is
-fairly straight foward with a high level of interoperability.  However,
+fairly straightfoward with a high level of interoperability.  However,
 there is a level of impedance mismatch between the two type systems.
 Features supported by the Java FFI:
   - Interop with any Java API except those which use multi-dimensional arrays
@@ -71,7 +71,7 @@ The following table summarizes the mapping of Java types to Fantom types:
   long[]               [java]fanx.interop::LongArray
   float[]              [java]fanx.interop::FloatArray
   double[]             [java]fanx.interop::DoubleArray
-  Foo[][]             // unsupported for both primitivies and Objects
+  Foo[][]              // unsupported for both primitivies and Objects
 
 Quick reference for mapping Java code to Fantom code:
   Java                         Fantom
@@ -89,54 +89,62 @@ How it Works [#howItWorks]
 The Java FFI does not use any special Fantom syntax.  Java APIs are
 imported into the Fantom type system via the normal 'using' statement
 with a special syntax for pod names.  Java packages are mapped to Fantom
-pods by prefixing the string "[java]".  For example the Java package
+pods by prefixing the string '"[java]"'.  For example the Java package
 'javax.swing' has the Fantom pod name of '[java]javax.swing'.
 
 The Fantom compiler itself has no knowledge of Java libraries, rather it supports
-FFI plugins based on pods being prefixed with "[ffi]".  In the case of the Java
+FFI plugins based on pods being prefixed with '"[ffi]"'.  In the case of the Java
 FFI, the [compilerJava]`compilerJava::index` pod is the compiler plugin for
 importing the Java type system into Fantom.
 
 Fantom code using the Java FFI results in a normal pod file compiled down into
 fcode.  The only difference is that the fcode contains type and member references
 which are Java specific.  This means that Fantom pods with Java FFI calls are not
-necessarily portable; attempting to use a Java FFI call on .NET will fail.
+necessarily portable; attempting to use a Java FFI call in a JavaScript or .NET
+environment will fail.
 
-Class Path [#classpath]
-***********************
-The current implementation of the 'compilerJava' plugin is pretty simple.  It
-looks for packages and classes using the Fantom runtime classpath.  This includes:
+Class Path - Compiler [#classpathCompiler]
+******************************************
+At compile time, the Java FFI compiler attempts to resolve
+Java packages and classes using the following classpath:
+
   1. jars found in "sun.boot.class.path"
   2. {java}lib/rt.jar (only if step above fails to find anything)
   3. {java}lib/ext/*.jar
   4. {fan}lib/java/ext/*.jar
   5. {fan}lib/java/ext/{Env.platform}/*.jar
   6. jars found in "java.class.path" system property
+  7. any pod in your dependency chain
 
-In order to use a class found in the classpath, 'compilerJava' uses Java
-reflection and resolves the class via 'Class.forName' with the current classloader.
-If you have problems importing classes you can dump the jars and packages
-found using:
+You can test your system classpath to see what files and packages
+are discovered using this command:
 
   fan compilerJava::ClassPath
 
-Deployment [#deployment]
-************************
-During runtime on the JVM, the Fantom uses a classloader per pod.
-Classes are resolved as follows:
+Class Path - Runtime [#classpathRuntime]
+****************************************
+The Fantom JVM runtime uses a classloader per pod.  The same classpath
+used during compile time as described above is applied during runtime.
+The only difference is that the Fantom runtime delegates to the standard
+system classloader to resolve the classes from steps 1-3.  Steps 4-7 are
+explicitly handled by 'FanClassLoader'.
+
+Detailed steps for Fantom classloading on JVM:
   1. Classfile is contained in the pod zip:
      a. Fantom type 'foo::Bar' maps to precompiled classfile fan/foo/Bar.class"
      b. Java type 'acme.foo.Bar' maps to "acme/foo/Bar.class"
   2. Fantom type 'foo::Bar' is loaded as follows:
      a. first resolve pod file "foo.pod" via `Env`
      b. emit classfile from "fcode/Bar.fcode"
-  3. Search extension jars in "{fan.home}/lib/java/ext"
-  4. Search extension jars in "{fan.home}/lib/java/ext/{platform}" (see [Env]`sys::Env.platform`)
-  5. System classloader which typically includes "{java.home}/lib/ext"
+  4. Search for pre-compiled classfile in dependent pods
+  5. Search extension jars in "{fan.home}/lib/java/ext"
+  6. Search extension jars in "{fan.home}/lib/java/ext/{platform}" (see [Env]`sys::Env.platform`)
+  7. System classloader which typically includes "{java.home}/lib/ext"
 
 You can bundle Java code in a pod zip file and it will be visible to classes
-within your pod.  However other pods will only have visibility to your Fantom
-classes in that pod (not other Java classes).
+within your pod as well as to any pod that has a dependency on your pod.
+You can easily convert to a JAR file into a Fantom pod using a build
+script that includes the JAR as a [resource file]`build::BuildPod.resDirs`.
 
 Primitives [#primitives]
 ************************
