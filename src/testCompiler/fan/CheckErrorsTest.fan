@@ -244,6 +244,10 @@ class CheckErrorsTest : CompilerTest
       class C30 { Void f(Public p) { p.fPublicProtected = 7; p.fPublicProtected++ } }
       class C31 { Void f(Public p) { p.fPublicReadonly = 7; p.fPublicReadonly++ } }
       class C32 : Public { Void f(Public p) { p.fProtectedInternal = 7; p.fProtectedInternal++ } }
+      class C33 { Bool f(Obj o) { o is MemBuf } }
+      class C34 { Bool f(Obj o) { o isnot MemBuf } }
+      class C35 { Obj? f(Obj o) { o as MemBuf } }
+      class C36 { Obj? f(Obj o) { return (MemBuf)o } }
       ",
     [
       5, 34, "Protected method '${p}.mProtected' not accessible",
@@ -267,6 +271,10 @@ class CheckErrorsTest : CompilerTest
      30, 57, "Private setter of field '${p}.fPublicReadonly' not accessible",
      31, 43, "Internal setter of field '${p}.fProtectedInternal' not accessible",
      31, 69, "Internal setter of field '${p}.fProtectedInternal' not accessible",
+     32, 29, "Internal type 'sys::MemBuf' not accessible",
+     33, 29, "Internal type 'sys::MemBuf' not accessible",
+     34, 29, "Internal type 'sys::MemBuf' not accessible",
+     35, 36, "Internal type 'sys::MemBuf' not accessible",
     ])
   }
 

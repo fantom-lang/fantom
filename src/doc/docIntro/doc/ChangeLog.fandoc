@@ -23,6 +23,7 @@
 - Switch Java FFI to use disassembler instead of reflection
 - Fix resource handle to allow jars to be bundled with pods
 - Fix compiler/runtime to search dependencies for Java classfiles
+- Compiler check for type visibility for is, isnot, as, casting
 
 *Build 1.0.61 (17 Nov 2011)*
 - Upgrade timezone database with zone info version 2011j

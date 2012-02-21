@@ -1426,6 +1426,9 @@ class CheckErrors : CompilerStep
     // compiler generated itself (which is most coercions)
     if (expr.synthetic) return
 
+    // check type is visible
+    checkTypeProtection(expr.check, expr.loc)
+
     // verify types are convertible
     check := expr.check
     target := expr.target.ctype
