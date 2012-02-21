@@ -73,8 +73,9 @@ abstract class BuildPod : BuildScript
   Uri[]? srcDirs
 
   **
-  ** List of Uris relative to build script of directories of resources
-  ** files to package into pod zip file.  Optional.
+  ** List of optional Uris relative to build script of directories of
+  ** resources files to package into pod zip file.  If a file has a "jar"
+  ** extension then its contents are unzipped into the target pod.
   **
   Uri[]? resDirs
 
