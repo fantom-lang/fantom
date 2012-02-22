@@ -9,6 +9,7 @@
 **
 ** SlotTest
 **
+@Js
 class SlotTest : Test
 {
 
@@ -94,14 +95,14 @@ class SlotTest : Test
 ** SlotsA
 **************************************************************************
 
-class SlotsA
+@Js class SlotsA
 {
   virtual Str a := "SlotsA"
   protected virtual Str b() { return "SlotsA" }
   internal static const Int c := 77
 }
 
-class SlotsB : SlotsA
+@Js class SlotsB : SlotsA
 {
   override final Str a := "SlotsB"
   protected override final Str b() { return "SlotsB" }
