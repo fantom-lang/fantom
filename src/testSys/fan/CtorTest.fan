@@ -11,6 +11,7 @@ using concurrent
 **
 ** CtorTest
 **
+@Js
 class CtorTest : Test
 {
 
@@ -171,12 +172,12 @@ class CtorTest : Test
 // CtorNone
 //////////////////////////////////////////////////////////////////////////
 
-class CtorNone
+@Js class CtorNone
 {
   Str x := "none"
 }
 
-class CtorSubNone : CtorNone
+@Js class CtorSubNone : CtorNone
 {
 }
 
@@ -184,17 +185,17 @@ class CtorSubNone : CtorNone
 // CtorAutoGen
 //////////////////////////////////////////////////////////////////////////
 
-class CtorAutoGen
+@Js class CtorAutoGen
 {
   new foobar() { x = "bsf" }
   Str x
 }
 
-class CtorSubAutoGen1 : CtorAutoGen
+@Js class CtorSubAutoGen1 : CtorAutoGen
 {
 }
 
-class CtorSubAutoGen2 : CtorAutoGen
+@Js class CtorSubAutoGen2 : CtorAutoGen
 {
   new make() {}
 }
@@ -203,7 +204,7 @@ class CtorSubAutoGen2 : CtorAutoGen
 // CtorBase
 //////////////////////////////////////////////////////////////////////////
 
-class CtorBase
+@Js class CtorBase
 {
   new make(Str x) { this.x = x; this.y = "y"; }
   new makeDef()   { this.x = "defx"; this.y = "defy"; }
@@ -213,7 +214,7 @@ class CtorBase
   Str y
 }
 
-class CtorSubBase : CtorBase
+@Js class CtorSubBase : CtorBase
 {
   new make() : super("foo") {}
 }
@@ -222,7 +223,7 @@ class CtorSubBase : CtorBase
 // CtorDefs
 //////////////////////////////////////////////////////////////////////////
 
-class CtorDefs
+@Js class CtorDefs
 {
   new make(Int a, Int b := 2, Int c := 3)
   {
@@ -240,7 +241,7 @@ class CtorDefs
   Int c;
 }
 
-class CtorSubDefs : CtorDefs
+@Js class CtorSubDefs : CtorDefs
 {
   new make(Int a, Int b := 12, Int c := 13) : super(a, b, c) {}
   new makeThis1()  : this.make(71) {}
@@ -251,13 +252,13 @@ class CtorSubDefs : CtorDefs
 // CtorOrdering
 //////////////////////////////////////////////////////////////////////////
 
-class CtorOrderA
+@Js class CtorOrderA
 {
   new make(Str? a := null) { q += ",1" }
   Str q := "0"
 }
 
-class CtorOrderB : CtorOrderA
+@Js class CtorOrderB : CtorOrderA
 {
   new make() : super.make("foo") { r += ",3" }
   new makeThis() : this.make() {}
@@ -269,7 +270,7 @@ class CtorOrderB : CtorOrderA
 // ConstFieldCtor
 //////////////////////////////////////////////////////////////////////////
 
-class ConstFieldCtor
+@Js class ConstFieldCtor
 {
   new make()
   {
