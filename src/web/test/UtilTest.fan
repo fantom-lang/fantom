@@ -9,6 +9,7 @@
 **
 ** UtilTest
 **
+@Js
 class UtilTest : Test
 {
 

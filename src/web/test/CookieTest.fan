@@ -9,6 +9,7 @@
 **
 ** CookieTest
 **
+@Js
 class CookieTest : Test
 {
 

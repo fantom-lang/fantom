@@ -396,7 +396,7 @@ class WebUtil
 **************************************************************************
 ** ChunkInStream
 **************************************************************************
-
+@Js
 internal class ChunkInStream : InStream
 {
   new make(InStream in, Int? fixed := null) : super(null)
@@ -481,7 +481,7 @@ internal class ChunkInStream : InStream
 **************************************************************************
 ** FixedOutStream
 **************************************************************************
-
+@Js
 internal class FixedOutStream : OutStream
 {
   new make(OutStream out, Int fixed) : super(null)
@@ -534,7 +534,7 @@ internal class FixedOutStream : OutStream
 **************************************************************************
 ** ChunkOutStream
 **************************************************************************
-
+@Js
 internal class ChunkOutStream : OutStream
 {
   new make(OutStream out) : super(null)
@@ -600,7 +600,7 @@ internal class ChunkOutStream : OutStream
 **************************************************************************
 ** MultiPartInStream
 **************************************************************************
-
+@Js
 internal class MultiPartInStream : InStream
 {
   new make(InStream in, Str boundary) : super(null)
