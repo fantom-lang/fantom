@@ -94,10 +94,16 @@ class JsSuperExpr : JsExpr
 {
   new make(JsCompilerSupport s, SuperExpr se) : super(s)
   {
+    type = JsTypeRef(s, se.ctype, se.loc)
     if (se.explicitType != null)
       explicitType = JsTypeRef(s, se.explicitType, se.loc)
   }
-  override Void write(JsWriter out) {} // handled in JsCallExpr
+  override Void write(JsWriter out)
+  {
+    t := explicitType ?: type
+    out.w("${t.qname}.prototype")
+  }
+  JsTypeRef type
   JsTypeRef? explicitType
 }
 
@@ -466,11 +472,7 @@ class JsBinaryExpr : JsExpr
   {
     if (lhs is JsFieldExpr && lhs->useAccessor == true)
     {
-      lhs->isSet = true
-      lhs.write(out)
-      out.w("\$(")
-      rhs.write(out)
-      out.w(")")
+      ((JsFieldExpr)lhs).writeAccessorSet(out, rhs)
     }
     else
     {
@@ -712,8 +714,8 @@ class JsCallExpr : JsExpr
 
   Void writeSuper(JsWriter out)
   {
-    JsTypeRef t := target->explicitType ?: targetType
-    out.w("${t.qname}.prototype.${name}.call($support.thisName")
+    target.write(out)
+    out.w(".${name}.call($support.thisName")
     writeArgs(out, true)
     out.w(")")
   }
@@ -879,7 +881,35 @@ class JsFieldExpr : JsExpr
     this.isSafe = fe.isSafe
     this.useAccessor = fe.useAccessor
   }
+
+  Void writeAccessorSet(JsWriter out, JsExpr arg)
+  {
+    this.setArg = arg
+    this.write(out)
+    this.setArg = null
+  }
+
   override Void write(JsWriter out)
+  {
+    if (target is JsSuperExpr) writeSuper(out)
+    else writeNorm(out)
+  }
+
+  private Void writeSuper(JsWriter out)
+  {
+    name := field.name
+    if (setArg != null) name += "\$"
+    target.write(out)
+    out.w(".${name}.call($support.thisName")
+    if (setArg != null)
+    {
+      out.w(",")
+      setArg.write(out)
+    }
+    out.w(")")
+  }
+
+  private Void writeNorm(JsWriter out)
   {
     old := support.thisName
     if (isSafe)
@@ -900,22 +930,30 @@ class JsFieldExpr : JsExpr
     if (useAccessor)
     {
       out.w("$field.name")
-      if (!isSet) out.w("()")
+      if (setArg == null) out.w("()")
+      else
+      {
+        out.w("\$(")
+        setArg.write(out)
+        out.w(")")
+      }
     }
     else out.w("m_$field.name")
     if (isSafe) out.w("}($old))")
   }
+
   private Void writeTarget(JsWriter out)
   {
     if (target == null) parent.write(out)
     else target.write(out)
   }
+
   JsExpr? target       // field target
   JsTypeRef parent     // field parent type
   JsFieldRef field     // field
   Bool useAccessor     // false if access using '*' storage operator
   Bool isSafe          // is safe nav
-  Bool isSet := false  // transiently use for setters
+  JsExpr? setArg       // transiently use for setters
 }
 
 **************************************************************************
