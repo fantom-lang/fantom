@@ -42,9 +42,9 @@ class FacetsTest : Test
   {
     if (!js)
     {
-      verifyEq(ZipTest#.facets, Facet[,])
-      verifyEq(ZipTest#.facets.isImmutable, true)
-      verifyEq(ZipTest#.facet(NoDoc#, false), null)
+      verifyEq(Type.find("testSys::ZipTest").facets, Facet[,])
+      verifyEq(Type.find("testSys::ZipTest").facets.isImmutable, true)
+      verifyEq(Type.find("testSys::ZipTest").facet(NoDoc#, false), null)
     }
 
     verifyEq(FacetsTest#testEmpty.facets, Facet[,])
