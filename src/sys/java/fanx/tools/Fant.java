@@ -231,6 +231,7 @@ public class Fant
     {
       boolean self = false;
       boolean verbose = false;
+      boolean js = false;
       ArrayList targets = new ArrayList();
 
       if (args.length == 0) { help(); return -1; }
@@ -256,6 +257,10 @@ public class Fant
           fan.sys.Test.verbose =  true;
           fanx.test.Test.verbose = true;
         }
+        else if (a == "-js")
+        {
+          js = true;
+        }
         else if (a == "-all")
         {
           targets.add("*");
@@ -273,7 +278,10 @@ public class Fant
       if (targets.size() == 0) { help(); return -1; }
 
       String[] t = (String[])targets.toArray(new String[targets.size()]);
-      return test(t, verbose);
+      if (js)
+        return new Fan().execute("compilerJs::TestRunner", t);
+      else
+        return test(t, verbose);
     }
     catch (Throwable e)
     {
@@ -299,6 +307,7 @@ public class Fant
     System.out.println("  -version       print version");
     System.out.println("  -v             verbose mode");
     System.out.println("  -all           test all pods");
+    System.out.println("  -js            test JavaScript environment");
   }
 
 //////////////////////////////////////////////////////////////////////////
