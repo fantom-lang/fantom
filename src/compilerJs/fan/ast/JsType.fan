@@ -15,7 +15,7 @@ class JsType : JsNode
 {
   new make(JsCompilerSupport s, TypeDef def) : super(s)
   {
-    this.base        = JsTypeRef(s, def.base)
+    this.base        = JsTypeRef(s, def.base, def.loc)
     this.qname       = qnameToJs(def)
     this.pod         = def.pod.name
     this.name        = def.name
@@ -27,7 +27,7 @@ class JsType : JsNode
     this.isMixin     = def.isMixin
     this.isSynthetic = def.isSynthetic
     this.facets      = def.facets?.map |f| { JsFacet(s, f) } ?: [,]
-    this.mixins      = def.mixins.map |r| { JsTypeRef(s, r) }
+    this.mixins      = def.mixins.map |r| { JsTypeRef(s, r, def.loc) }
     this.fields      = def.fieldDefs.map |f| { JsField(s, f) }
     if (def.staticInit != null) this.staticInit = def.staticInit.name
 
@@ -45,7 +45,8 @@ class JsType : JsNode
     while (t != null)
     {
       slot := t.slots.find |s| { s.isNative && s.parent.qname == t.qname }
-      if (slot != null) return JsTypeRef(cs, slot.parent)
+      if (slot != null)
+        return JsTypeRef(cs, slot.parent, def is Node ? ((Node)def).loc : null)
       t = t.base
     }
     return null
@@ -134,15 +135,15 @@ class JsType : JsNode
 **
 class JsTypeRef : JsNode
 {
-  static JsTypeRef make(JsCompilerSupport cs, CType ref)
+  static JsTypeRef make(JsCompilerSupport cs, CType ref, Loc loc)
   {
     key := ref.signature
     js  := cs.typeRef[key]
-    if (js == null) cs.typeRef[key] = js = JsTypeRef.makePriv(cs, ref)
+    if (js == null) cs.typeRef[key] = js = JsTypeRef.makePriv(cs, ref, loc)
     return js
   }
 
-  private new makePriv(JsCompilerSupport cs, CType ref) : super.make(cs)
+  private new makePriv(JsCompilerSupport cs, CType ref, Loc? loc) : super.make(cs)
   {
     this.qname = qnameToJs(ref)
     this.pod   = ref.pod.name
@@ -156,12 +157,19 @@ class JsTypeRef : JsNode
     this.isFunc = ref.isFunc
 
     deref := ref.deref
-    if (deref is ListType) v = JsTypeRef(cs, deref->v)
+    if (deref is ListType) v = JsTypeRef(cs, deref->v, loc)
     if (deref is MapType)
     {
-      k = JsTypeRef(cs, deref->k)
-      v = JsTypeRef(cs, deref->v)
+      k = JsTypeRef(cs, deref->k, loc)
+      v = JsTypeRef(cs, deref->v, loc)
     }
+
+    // TODO FIXIT: don't check sys yet
+    // verify type is marked with @Js
+    if (this.pod != "sys" && !ref.isSynthetic && ref.facet("sys::Js") == null)
+      // TODO FIXIT: warn for now
+      //cs.err("Type '$ref.qname' not available in Js", loc)
+      cs.warn("Type '$ref.qname' not available in Js", loc)
   }
 
   override Void write(JsWriter out)

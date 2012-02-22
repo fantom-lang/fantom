@@ -15,7 +15,7 @@ class JsField : JsSlot
 {
   new make(JsCompilerSupport s, FieldDef f) : super(s, f)
   {
-    this.ftype = JsTypeRef(s, f.fieldType)
+    this.ftype = JsTypeRef(s, f.fieldType, f.loc)
   }
 
   override Void write(JsWriter out)

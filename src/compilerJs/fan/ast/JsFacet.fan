@@ -15,7 +15,7 @@ class JsFacet : JsNode
 {
   new make(JsCompilerSupport s, FacetDef f) : super(s)
   {
-    this.type = JsTypeRef(s, f.type)
+    this.type = JsTypeRef(s, f.type, f.loc)
     this.val  = f.serialize
   }
 

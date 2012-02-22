@@ -20,7 +20,7 @@ class JsMethod : JsSlot
     this.isGetter   = m.isGetter
     this.isSetter   = m.isSetter
     this.params     = m.params.map |CParam p->JsMethodParam| { JsMethodParam(s, p) }
-    this.ret        = JsTypeRef(s, m.ret)
+    this.ret        = JsTypeRef(s, m.ret, m.loc)
     this.hasClosure = ClosureFinder(m).exists
     if (m.ctorChain != null) this.ctorChain = JsExpr.makeFor(s, m.ctorChain)
     if (m.code != null) this.code = JsBlock(s, m.code)
@@ -149,7 +149,7 @@ class JsMethodParam : JsNode
   new make(JsCompilerSupport s, CParam p) : super(s)
   {
     this.name = vnameToJs(p.name)
-    this.paramType = JsTypeRef(s, p.paramType)
+    this.paramType = JsTypeRef(s, p.paramType, p is Node ? ((Node)p).loc : null)
     this.hasDef = p.hasDefault
     if (hasDef) this.defVal = JsExpr.makeFor(s, p->def)
   }
