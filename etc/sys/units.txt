@@ -282,6 +282,12 @@ kilowatts_per_square_meter, kW/m²; kg1*sec-3; 1000.0
 kilowatts_per_square_foot, kW/ft²; kg1*sec-3; 10763.9104
 kilobtus_per_hour_per_square_foot, kBTU/h/ft²; kg1*sec-3; 3153.8257472
 
+-- power by volumetric flow (kg*m-1*sec-2)
+watts_per_cubic_meters_per_second, W/m³/s; kg1*m-1*sec-2
+watts_per_cubic_feet_per_minute, W/cfm; kg1*m-1*sec-2; 2118.8800032893155
+kilowatts_per_kilocubic_feet_per_minute, kW/kcfm; kg1*m-1*sec-2; 2118.8800032893155
+kilowatts_per_gallons_per_minute, kW/gal/min; kg1*m-1*sec-2; 15850323
+
 -- apparent power (kg1*m2*sec-3)
 volt_ampere, VA; kg1*m2*sec-3
 kilovolt_ampere, kVA; kg1*m2*sec-3; 1000.0
@@ -350,6 +356,7 @@ millimeters_per_second, mm/s; m1*sec-1; 0.0010
 millimeters_per_minute, mm/min; m1*sec-1; 1.6666666666666667E-5
 meters_per_minute, m/min; m1*sec-1; 0.016666666666666666
 meters_per_hour, m/h; m1*sec-1; 2.777777777777778E-4
+knot; m1*sec-1; 0.5144
 
 -- volume (m3)
 cubic_meter, m³; m3
