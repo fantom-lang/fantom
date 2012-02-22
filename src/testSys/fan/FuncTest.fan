@@ -322,7 +322,7 @@ class FuncTest : Test
 
 }
 
-internal class BindDef
+@Js internal class BindDef
 {
   Int[] list := Int[,]
   new make(Int a := 1, Int b := 2, Int c := 3) { list = [a, b, c] }
