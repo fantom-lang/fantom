@@ -95,7 +95,7 @@ class JsSuperExpr : JsExpr
   new make(JsCompilerSupport s, SuperExpr se) : super(s)
   {
     if (se.explicitType != null)
-      explicitType = JsTypeRef(s, se.explicitType)
+      explicitType = JsTypeRef(s, se.explicitType, se.loc)
   }
   override Void write(JsWriter out) {} // handled in JsCallExpr
   JsTypeRef? explicitType
@@ -136,7 +136,7 @@ class JsStaticTargetExpr : JsExpr
 {
   new make(JsCompilerSupport s, StaticTargetExpr le) : super(s)
   {
-    target = JsTypeRef(s, le.ctype)
+    target = JsTypeRef(s, le.ctype, le.loc)
   }
   override Void write(JsWriter out)
   {
@@ -288,7 +288,7 @@ class JsTypeLiteralExpr : JsExpr
 {
   new make(JsCompilerSupport s, LiteralExpr x) : super(s)
   {
-    this.val = JsTypeRef(s, x.val)
+    this.val = JsTypeRef(s, x.val, x.loc)
   }
   override Void write(JsWriter out)
   {
@@ -317,7 +317,7 @@ class JsSlotLiteralExpr : JsExpr
 {
   new make(JsCompilerSupport s, SlotLiteralExpr x) : super(s)
   {
-    this.parent = JsTypeRef(s, x.parent)
+    this.parent = JsTypeRef(s, x.parent, x.loc)
     this.name   = x.name
   }
   override Void write(JsWriter out)
@@ -363,9 +363,9 @@ class JsListLiteralExpr : JsExpr
 {
   new make(JsCompilerSupport s, ListLiteralExpr x) : super(s)
   {
-    this.inferredType = JsTypeRef(s, x.ctype)
+    this.inferredType = JsTypeRef(s, x.ctype, x.loc)
     if (x.explicitType != null)
-      this.explicitType = JsTypeRef(s, x.explicitType)
+      this.explicitType = JsTypeRef(s, x.explicitType, x.loc)
 
     this.vals = x.vals.map |v->JsExpr| { JsExpr.makeFor(s, v) }
   }
@@ -399,9 +399,9 @@ class JsMapLiteralExpr : JsExpr
 {
   new make(JsCompilerSupport s, MapLiteralExpr me) : super(s)
   {
-    this.inferredType = JsTypeRef(s, me.ctype)
+    this.inferredType = JsTypeRef(s, me.ctype, me.loc)
     if (me.explicitType != null)
-      this.explicitType = JsTypeRef(s, me.explicitType)
+      this.explicitType = JsTypeRef(s, me.explicitType, me.loc)
 
     this.keys = me.keys.map |k->JsExpr| { JsExpr.makeFor(s, k) }
     this.vals = me.vals.map |v->JsExpr| { JsExpr.makeFor(s, v) }
@@ -578,7 +578,7 @@ class JsTypeCheckExpr : JsExpr
   {
     this.op     = te.id == ExprId.coerce ? "coerce" : te.opStr
     this.target = JsExpr.makeFor(s, te.target)
-    this.check  = JsTypeRef(s, te.check)
+    this.check  = JsTypeRef(s, te.check, te.loc)
   }
   override Void write(JsWriter out)
   {
@@ -618,7 +618,7 @@ class JsCallExpr : JsExpr
 
     if (ce.method != null)
     {
-      this.parent = JsTypeRef(s, ce.method.parent)
+      this.parent = JsTypeRef(s, ce.method.parent, ce.loc)
       this.isCtor = ce.method.isCtor
       this.isObj  = ce.method.parent.qname == "sys::Obj"
       this.isPrim = isPrimitive(ce.method.parent)
@@ -628,7 +628,7 @@ class JsCallExpr : JsExpr
     if (ce.target != null)
     {
       this.target = JsExpr.makeFor(s, ce.target)
-      this.targetType = ce.target.ctype == null ? parent : JsTypeRef(s, ce.target.ctype)
+      this.targetType = ce.target.ctype == null ? parent : JsTypeRef(s, ce.target.ctype, ce.loc)
     }
 
     // force these methods to route thru ObjUtil if not a super.xxx expr
@@ -874,7 +874,7 @@ class JsFieldExpr : JsExpr
   new make(JsCompilerSupport s, FieldExpr fe) : super(s)
   {
     if (fe.target != null) this.target = JsExpr.makeFor(s, fe.target)
-    this.parent = JsTypeRef(s, fe.field.parent)
+    this.parent = JsTypeRef(s, fe.field.parent, fe.loc)
     this.field  = JsFieldRef(s, fe.field)
     this.isSafe = fe.isSafe
     this.useAccessor = fe.useAccessor
