@@ -62,9 +62,9 @@ class BorderTest : Test
     verifyEq(Border.fromStr("1,2,3,", false), null)
     verifyEq(Border.fromStr("2 bad", false), null)
     verifyEq(Border.fromStr("2 solid bad", false), null)
-    verifyErr(ParseErr#) { Border.fromStr("x", true) }
-    verifyErr(ParseErr#) { Border.fromStr("2x") }
-    verifyErr(ParseErr#) { Border.fromStr("2 x") }
+    verifyErr(ParseErr#) { x := Border.fromStr("x", true) }
+    verifyErr(ParseErr#) { x := Border.fromStr("2x") }
+    verifyErr(ParseErr#) { x := Border.fromStr("2 x") }
   }
 
   Void verifyBorder(Str str, Int[] w, Int[] s, Color[] c, Int[] r, Str normStr)

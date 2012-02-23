@@ -56,8 +56,8 @@ class ColorTest : Test
     verifyEq(Color.fromStr("#dea4b5c6"), Color(0xdea4b5c6, true))
 
     verifyEq(Color.fromStr("#abdc", false), null)
-    verifyErr(ParseErr#) { Color.fromStr("abc") }
-    verifyErr(ParseErr#) { Color.fromStr("#xyz", true) }
+    verifyErr(ParseErr#) { x := Color.fromStr("abc") }
+    verifyErr(ParseErr#) { x := Color.fromStr("#xyz", true) }
   }
 
   Void testEquals()
