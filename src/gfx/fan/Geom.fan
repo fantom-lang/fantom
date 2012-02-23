@@ -25,7 +25,7 @@ const class Point
 
   ** Parse from string.  If invalid and checked is
   ** true then throw ParseErr otherwise return null.
-  static Point? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
   {
     try
     {
@@ -80,7 +80,7 @@ const class Size
 
   ** Parse from string.  If invalid and checked is
   ** true then throw ParseErr otherwise return null.
-  static Size? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
   {
     try
     {
@@ -137,7 +137,7 @@ const class Rect
 
   ** Parse from string.  If invalid and checked is
   ** true then throw ParseErr otherwise return null.
-  static Rect? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
   {
     try
     {
@@ -270,7 +270,7 @@ const class Insets
   ** formats are:
   **   - "len"
   **   - "top,right,bottom,left"
-  static Insets? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
   {
     try
     {

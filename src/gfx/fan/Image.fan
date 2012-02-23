@@ -77,7 +77,7 @@ const class Image
   **
   ** Convenience for 'make(uri.toUri, checked)'.
   **
-  static Image? fromStr(Str uri, Bool checked := true)
+  static new fromStr(Str uri, Bool checked := true)
   {
     make(uri.toUri, checked)
   }

@@ -70,7 +70,7 @@ const class Pen
   ** and checked is true then throw ParseErr otherwise
   ** return null.
   **
-  static Pen? fromStr(Str str, Bool checked := true)
+  static new fromStr(Str str, Bool checked := true)
   {
     try
     {

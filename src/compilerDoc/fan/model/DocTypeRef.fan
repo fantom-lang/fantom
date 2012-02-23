@@ -13,7 +13,7 @@ abstract const class DocTypeRef
 {
 
   ** Constructor from signature string
-  static DocTypeRef? fromStr(Str sig, Bool checked := true)
+  static new fromStr(Str sig, Bool checked := true)
   {
     try
     {

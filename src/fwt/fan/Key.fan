@@ -162,7 +162,7 @@ const class Key
   ** and checked is true then throw ParseErr otherwise
   ** return null.
   **
-  static Key? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
   {
     try
     {

@@ -49,7 +49,7 @@ const class Font
   **   Font.fromStr("bold 10pt Courier")
   **   Font.fromStr("bold italic 8pt Times Roman")
   **
-  static Font? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
   {
     try
     {

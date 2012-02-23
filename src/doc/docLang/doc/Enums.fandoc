@@ -56,7 +56,7 @@ the covers:
 
     static const Color[] vals = [red, blue, green].toImmutable
 
-    static Color? fromStr(Str s) { ... }
+    static new fromStr(Str s) { ... }
 
     private new make(Int ord, Str name) : super(ord, name) {}
   }

@@ -43,8 +43,8 @@ class KeyTest : Test
   Void testParse()
   {
     eq := Key("=")
-    verifyKey(eq, "=", [eq])
-    verifyKey(Key("Command+="), "Command+=", [Key.command, eq])
+    verifyKey(eq, "=", Key[eq])
+    verifyKey(Key("Command+="), "Command+=", Key[Key.command, eq])
 
     verifyEq(Key.fromStr("", false), null)
     verifyEq(Key.fromStr("==", false), null)
@@ -52,8 +52,8 @@ class KeyTest : Test
     verifyEq(Key.fromStr("Foo", false), null)
     verifyEq(Key.fromStr("R+W", false), null)
 
-    verifyErr(ParseErr#) { Key("R+W") }
-    verifyErr(ParseErr#) { Key.fromStr("2+3+4", true) }
+    verifyErr(ParseErr#) { x := Key("R+W") }
+    verifyErr(ParseErr#) { x := Key.fromStr("2+3+4", true) }
   }
 
   Void verifyKey(Key k, Str s, Key[] ks)
