@@ -14,7 +14,7 @@ class CompilerJsTest : Test
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Test
+// testMethodHiding
 //////////////////////////////////////////////////////////////////////////
 
   Void testMethodHiding()
@@ -29,6 +29,18 @@ class CompilerJsTest : Test
     verifyEq(a.f1, "fa")
     verifyEq(b.f1, "fa")
     verifyEq(b.f2, "fb")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// testShortcutFieldSet
+//////////////////////////////////////////////////////////////////////////
+
+  Void testShortcutFieldSet()
+  {
+    c := CompilerJsC()
+    verifyEq(c.x, 0)
+    c.foo; verifyEq(c.x, 4)
+    c.foo; verifyEq(c.x, 8)
   }
 }
 
@@ -48,5 +60,10 @@ class CompilerJsTest : Test
 
   Str f2() { _f1 }
   private Str _f1 := "fb"
+}
 
+@Js class CompilerJsC
+{
+  virtual Int x := 0
+  Void foo() { x += 4 }
 }

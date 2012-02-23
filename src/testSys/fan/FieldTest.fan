@@ -9,6 +9,7 @@
 **
 ** FieldTest
 **
+@Js
 class FieldTest : Test
 {
 
@@ -345,7 +346,7 @@ class FieldTest : Test
 // OutsideAccessor
 //////////////////////////////////////////////////////////////////////////
 
-class OutsideAccessor
+@Js class OutsideAccessor
 {
   static Int getCount(FieldTest test) { return test.count }
   static Void setCount(FieldTest test, Int c) { test.count = c }
@@ -356,7 +357,7 @@ class OutsideAccessor
 // OutsideAccessor
 //////////////////////////////////////////////////////////////////////////
 
-const class ConstMakeSetTest
+@Js const class ConstMakeSetTest
 {
   new make(|This|? f) { f?.call(this) }
   const Int x
@@ -368,7 +369,7 @@ const class ConstMakeSetTest
 // FieldInferTest
 //////////////////////////////////////////////////////////////////////////
 
-class FieldInferTest
+@Js class FieldInferTest
 {
   Str[]  a  := [,]
   Str?[]? b := [null, "x"]
@@ -384,7 +385,7 @@ class FieldInferTest
 // FieldNotSetTest
 //////////////////////////////////////////////////////////////////////////
 
-class FieldNotSetTest
+@Js class FieldNotSetTest
 {
   new make1(|This|? f := null) { f?.call(this) }
 
