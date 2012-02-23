@@ -156,7 +156,7 @@ class Normalize : CompilerStep
 
     // check if the base class has exactly one available
     // constructor with no parameters
-    superCtors := base.ctors
+    superCtors := base.instanceCtors
     if (superCtors.size != 1) return
     superCtor := superCtors.first
     if (superCtor.isPrivate) return
