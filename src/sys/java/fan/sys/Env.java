@@ -275,6 +275,24 @@ public abstract class Env
     }
   }
 
+  // TODO: temp hack to get PathEnv.path
+  public String[] toDebugPath()
+  {
+    Field f = typeof().field("path", false);
+    if (f == null) return null;
+
+    List list = (List)f.get(this);
+    String[] result = new String[list.sz()];
+    for (int i=0; i<list.sz(); ++i)
+    {
+      String s = ((File)list.get(i)).osPath();
+      if (i == 0) s += " (work)";
+      if (i == list.sz()-1) s += " (home)";
+      result[i] = s;
+    }
+    return result;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////

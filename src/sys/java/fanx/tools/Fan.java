@@ -221,8 +221,18 @@ public class Fan
     println("  fan.version:     " + Sys.sysPod.version());
     println("  fan.env:         " + Env.cur());
     println("  fan.home:        " + Env.cur().homeDir().osPath());
-    println("");
+
+    String[] path = Env.cur().toDebugPath();
+    if (path != null)
+    {
+      println("");
+      println("Env Path:");
+      for (int i=0; i<path.length; ++i)
+      println("  " + path[i]);
+      println("");
+    }
   }
+
 
   static void pods(String progName)
   {
