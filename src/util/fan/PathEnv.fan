@@ -19,11 +19,28 @@ const class PathEnv : Env
   **
   new make() : super(Env.cur)
   {
+    this.path = parsePath(vars["FAN_ENV_PATH"] ?: "")
+    this.workDir = path.first
+    this.tempDir = workDir + `temp/`
+  }
+
+  **
+  ** Prototype to explore using directory structure to setup
+  ** path by placing a "fan.props" in working directory.
+  **
+  @NoDoc new makeProps(File file) : super.make(Env.cur)
+  {
+    this.path = parsePath(file.readProps["path"] ?: "").insert(0, file.parent.normalize)
+    this.workDir = path.first
+    this.tempDir = workDir + `temp/`
+  }
+
+  private File[] parsePath(Str path)
+  {
+    acc := File[,]
     try
     {
-      var := vars["FAN_ENV_PATH"] ?: ""
-      acc := File[,]
-      var.split(File.pathSep[0]).each |item|
+      path.split(File.pathSep[0]).each |item|
       {
         if (item.isEmpty) return
         dir := File.os(item).normalize
@@ -32,16 +49,10 @@ const class PathEnv : Env
         if (!dir.isDir) { log.warn("Not a dir: $dir"); return }
         acc.add(dir)
       }
-      acc.add(Env.cur.homeDir)
-      this.path = acc
     }
-    catch (Err e)
-    {
-      log.err("Initialization error", e)
-      this.path = [Env.cur.homeDir]
-    }
-    this.workDir = path.first
-    this.tempDir = workDir + `temp/`
+    catch (Err e) log.err("Cannot parse path: $path", e)
+    acc.add(Env.cur.homeDir)
+    return acc
   }
 
   **

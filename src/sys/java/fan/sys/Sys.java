@@ -432,15 +432,33 @@ public final class Sys
   {
     try
     {
+      // if running from JAR, we have to use special JarDistEnv
       if (isJarDist)
       {
         curEnv = JarDistEnv.make();
         return;
       }
 
+      // check FAN_ENV environment variable
       String var = (String)Env.cur().vars().get("FAN_ENV");
-      if (var == null) return;
-      curEnv = (Env)Type.find(var).make();
+      if (var != null)
+      {
+        curEnv = (Env)Type.find(var).make();
+        return;
+      }
+
+      // lookup up from current directory to find "fan.props" file
+      File dir = new File(".").getCanonicalFile();
+      while (dir != null)
+      {
+        File fanFile = new File(dir, "fan.props");
+        if (fanFile.exists())
+        {
+          curEnv = (Env)Type.find("util::PathEnv").method("makeProps").call(new LocalFile(fanFile));
+          return;
+        }
+        dir = dir.getParentFile();
+      }
     }
     catch (Exception e)
     {
