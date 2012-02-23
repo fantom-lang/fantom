@@ -543,25 +543,77 @@ class ResolveExpr : CompilerStep
     // double check this in CheckErrors)
     call.ctype = base
 
-    // check for fromStr
-    if (call.args.size == 1 && call.args.first.ctype.isStr)
+    // get all constructors that might match this call
+    matches := Str:CMethod[:]
+    findCtorMatches(matches, base, call.args)
+
+    // check if our last argument is an it-block, then check
+    // for constructors without that arg:
+    //    make(...).with(lastArg)
+    itBlock := (call.args.last as ClosureExpr)?.isItBlock ?: false
+    if (itBlock) findCtorMatches(matches, base, call.args[0..-2])
+
+    // if no matches bail
+    if (matches.isEmpty)
     {
-      fromStr := base.method("fromStr")
-      if (fromStr != null && fromStr.parent == base)
-      {
-        call.method = fromStr
-        return call
-      }
+      args := call.args.join(", ") |arg| { arg.ctype.toStr }
+      err("No constructor found: ${base.name}($args)", call.loc)
+      return call
     }
 
-    // resolve make
-    call.method = base.method("make")
-    if (call.method == null)
-      err("Unknown construction method '${base.qname}.make'", call.loc)
+    // if we have multiple matches, we have ambiguous constructor
+    if (matches.size > 1)
+    {
+      args := call.args.join(", ") |arg| { arg.ctype.toStr }
+      names := matches.join(", ") |m| { m.name }
+      err("Ambiguous operator method: ${base.name}($args) [$names]", call.loc)
+      return call
+    }
 
     // hook to infer closure type from call or to
     // translateinto an implicit call to Obj.with
+    call.method = matches.vals.first
     return CallResolver.inferClosureTypeFromCall(this, call, base)
+  }
+
+  **
+  ** Walk all the slots in 'base' and match any constructor
+  ** that could be called using the given arguments.
+  **
+  private Void findCtorMatches(Str:CMethod matches, CType base, Expr[] args)
+  {
+    base.slots.each |slot|
+    {
+      // if not a visibile constructor, then not a match
+      if (!isCtorMethod(slot)) return
+      if (!CheckErrors.isSlotVisible(curType, slot)) return
+
+      // don't match any inherited methods
+      if (slot.parent != base) return
+
+      // check argument/parameter counts to see if we can disqualify it
+      ctor := (CMethod)slot
+      params := ctor.params
+      if (params.size < args.size) return
+      if (params.size > args.size && !params[args.size].hasDefault) return
+
+      // check that each parameter fits
+      for (i:=0; i<args.size; ++i)
+        if (!CheckErrors.canCoerce(args[i], params[i].paramType))
+          return
+
+      // its a match!
+      matches[ctor.name] = ctor
+    }
+  }
+
+  private Bool isCtorMethod(CSlot slot)
+  {
+    if (slot.isCtor) return true
+    if (slot isnot CMethod) return false
+    // TODO let static "make" or "fromStr" pass
+    if (slot.isStatic && (slot.name == "make" || slot.name == "fromStr")) return true
+    return false
   }
 
   **
@@ -636,9 +688,7 @@ class ResolveExpr : CompilerStep
       {
         if (m.params.size != 1) return false
         paramType := m.params.first.paramType
-        match := true
-        CheckErrors.coerce(rhs, paramType, |->| { match = false })
-        return match
+        return CheckErrors.canCoerce(rhs, paramType)
       }
     }
 
@@ -654,7 +704,7 @@ class ResolveExpr : CompilerStep
 
     // still have an ambiguous operator method call
     names := (matches.map |CMethod m->Str| { m.name }).join(", ")
-    err("Ambiguous operator method: ${op.formatErr(lhs, rhs.ctype)} ($names)", expr.loc)
+    err("Ambiguous operator method: ${op.formatErr(lhs, rhs.ctype)} [$names]", expr.loc)
     return null
   }
 
