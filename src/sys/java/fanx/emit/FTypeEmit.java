@@ -158,6 +158,7 @@ public abstract class FTypeEmit
   {
     String name = m.name;
     boolean isNative = (m.flags & FConst.Native) != 0;
+    boolean isStatic = (m.flags & FConst.Static) != 0;
     boolean isCtor   = (m.flags & FConst.Ctor) != 0;
 
     // static$init -> <clinit>
@@ -171,7 +172,7 @@ public abstract class FTypeEmit
     {
       me = new FMethodEmit(this, m).emitNative();
     }
-    else if (isCtor)
+    else if (isCtor && !isStatic)
     {
       if (parent.base().isJava())
         me = new FMethodEmit(this, m).emitCtorWithJavaSuper();

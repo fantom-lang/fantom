@@ -382,7 +382,6 @@ class CheckErrors : CompilerStep
       else if (flags.and(FConst.Virtual) != 0) err("Invalid combination of 'new' and 'virtual' modifiers", loc)
       if (flags.and(Parser.Once) != 0)     err("Invalid combination of 'new' and 'once' modifiers", loc)
       if (flags.and(FConst.Native) != 0)   err("Invalid combination of 'new' and 'native' modifiers", loc)
-      if (flags.and(FConst.Static) != 0)   err("Invalid combination of 'new' and 'static' modifiers", loc)
     }
 
     // check invalid static flags
@@ -1109,7 +1108,7 @@ class CheckErrors : CompilerStep
       // check attempt to set field outside of owning class or subclass
       if (inType != field.parent)
       {
-        if (!inType.fits(field.parent) || !inMethod.isCtor)
+        if (!inType.fits(field.parent) || !inMethod.isInstanceCtor)
         {
           err("Cannot set const field '$field.qname'", lhs.loc)
           return rhs
@@ -1117,7 +1116,7 @@ class CheckErrors : CompilerStep
       }
 
       // check attempt to set instance field outside of ctor
-      if (!field.isStatic && !(inMethod.isInstanceInit || inMethod.isCtor))
+      if (!field.isStatic && !(inMethod.isInstanceInit || inMethod.isInstanceCtor))
       {
         err("Cannot set const field '$field.name' outside of constructor", lhs.loc)
         return rhs
@@ -1245,7 +1244,7 @@ class CheckErrors : CompilerStep
         err("Cannot use super to call abstract method '$m.qname'", call.target.loc)
 
       // check that calling super with exact param match otherwise stack overflow
-      if (call.args.size != m.params.size && m.name == curMethod.name && !m.isCtor)
+      if (call.args.size != m.params.size && m.name == curMethod.name && !m.isInstanceCtor)
         err("Must call super method '$m.qname' with exactly $m.params.size arguments", call.target.loc)
     }
 

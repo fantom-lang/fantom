@@ -1318,7 +1318,7 @@ class CodeAsm : CompilerSupport
     {
       // note we need to use the actual method signature (not parameterized)
       x := m.isParameterized ? m.generic : m
-      if (!x.returnType.isVoid || x.isCtor)
+      if (!x.returnType.isVoid || x.isInstanceCtor)
         opType(FOp.Pop, x.returnType)
     }
   }
