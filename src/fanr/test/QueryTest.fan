@@ -112,8 +112,8 @@ class QueryTest : Test
     verifyParser("foo 1.2,1.4 a.ver ~= 20.3, bar",  [["foo", Depend("v 1.2,1.4"), [QueryMeta("a.ver", QueryOp.like, Version("20.3"))]], ["bar"]])
 
     verifyEq(Query.fromStr("2", false), null)
-    verifyErr(ParseErr#) { Query.fromStr("2", true) }
-    verifyErr(ParseErr#) { Query("2") }
+    verifyErr(ParseErr#) { x := Query.fromStr("2", true) }
+    verifyErr(ParseErr#) { x := Query("2") }
   }
 
   Void verifyParser(Str input, Obj?[][] parts)

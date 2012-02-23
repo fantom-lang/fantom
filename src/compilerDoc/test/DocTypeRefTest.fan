@@ -113,8 +113,8 @@ class DocTypeRefTest : Test
 
     // errors
     verifyEq(DocTypeRef.fromStr("foo", false), null)
-    verifyErr(ParseErr#) { DocTypeRef.fromStr("foo") }
-    verifyErr(ParseErr#) { DocTypeRef.fromStr("foo", true) }
+    verifyErr(ParseErr#) { x := DocTypeRef.fromStr("foo") }
+    verifyErr(ParseErr#) { x := DocTypeRef.fromStr("foo", true) }
   }
 
   Void verifyBasic(DocTypeRef t, Str pod, Str name, Bool nullable)
