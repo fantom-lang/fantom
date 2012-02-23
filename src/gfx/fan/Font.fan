@@ -31,7 +31,7 @@ const class Font
   ** bold/italic style.  This is internal for now, because eventually
   ** we should be able to collapse this and it-block into single ctor.
   **
-  @NoDoc new makeFields(Str name, Int size := 12, Bool bold := false, Bool italic := false)
+  @NoDoc new makeFields(Str name, Int size, Bool bold := false, Bool italic := false)
   {
     this.name = name
     this.size   = size

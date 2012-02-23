@@ -63,7 +63,7 @@ const class Border
   **
   ** Default is zero pixel border.
   **
-  static const Border defVal := Border("0")
+  static const Border defVal := Border.fromStr("0")
 
   **
   ** Construct with it-block
