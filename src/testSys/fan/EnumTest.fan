@@ -129,11 +129,11 @@ class EnumTest : Test
   {
     verifySame(Weekday.fromStr("mon"), Weekday.mon)
     verifySame(Weekday.fromStr("xxx", false), null)
-    verifyErr(ParseErr#) { Weekday.fromStr("xxx") }
+    verifyErr(ParseErr#) { x := Weekday.fromStr("xxx") }
 
     verifySame(Month.fromStr("apr"), Month.apr)
     verifySame(Month.fromStr("xxx", false), null)
-    verifyErr(ParseErr#) { Month.fromStr("xxx") }
+    verifyErr(ParseErr#) { x := Month.fromStr("xxx") }
 
     verifySame(EnumAbc.fromStr("A"), EnumAbc.A)
     verifySame(EnumAbc.fromStr("B"), EnumAbc.B)

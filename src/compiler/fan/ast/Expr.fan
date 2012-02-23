@@ -782,16 +782,10 @@ abstract class NameExpr : Expr
 **
 class UnknownVarExpr : NameExpr
 {
-  new make(Loc loc, Expr? target, Str name)
-    : super(loc, ExprId.unknownVar, target, name)
+  new make(Loc loc, Expr? target, Str name, ExprId id := ExprId.unknownVar)
+    : super(loc, id, target, name)
   {
   }
-
-  new makeStorage(Loc loc, Expr? target, Str name)
-    : super.make(loc, ExprId.storage, target, name)
-  {
-  }
-
 }
 
 **************************************************************************
@@ -1141,12 +1135,11 @@ class LocalVarExpr : Expr
     }
   }
 
-  new makeNoUnwrap(Loc loc, MethodVar var)
-    : super.make(loc, ExprId.localVar)
+  static LocalVarExpr makeNoUnwrap(Loc loc, MethodVar var)
   {
-    this.var    = var
-    this.ctype  = var.ctype
-    this.unwrap = false
+    self := make(loc, var, ExprId.localVar)
+    self.unwrap = false
+    return self
   }
 
   override Bool isAssignable() { true }

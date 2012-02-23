@@ -258,10 +258,11 @@ class ReturnStmt : Stmt
     this.expr = expr
   }
 
-  new makeSynthetic(Loc loc, Expr? expr := null)
-    : this.make(loc, expr)
+  static ReturnStmt makeSynthetic(Loc loc, Expr? expr := null)
   {
-    this.isSynthetic = true
+    stmt := make(loc, expr)
+    stmt.isSynthetic = true
+    return stmt
   }
 
   override Bool isExit() { true }
