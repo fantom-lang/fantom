@@ -30,10 +30,7 @@ const class Mark
   ** various compilers including Fantom compilers, javac, and the
   ** C# compiler.  Return null if file path found.
   **
-  static Mark? fromStr(Str text)
-  {
-    return MarkParser(text).parse
-  }
+  static new fromStr(Str text) { MarkParser(text).parse }
 
   **
   ** Uri of the resource

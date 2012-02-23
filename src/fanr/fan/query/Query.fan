@@ -12,7 +12,7 @@
 **
 internal const class Query
 {
-  static Query? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
   {
     try
     {

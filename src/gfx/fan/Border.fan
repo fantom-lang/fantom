@@ -99,7 +99,7 @@ const class Border
   **   Border("0,1,2,3")    =>  0,1,2,3 solid #000000 0
   **   Border("0,1,2 #00f") =>  0,1,2 solid #0000ff 0
   **
-  static Border? fromStr(Str str, Bool checked := true)
+  static new fromStr(Str str, Bool checked := true)
   {
     try
     {

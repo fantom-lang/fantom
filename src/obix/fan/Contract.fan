@@ -22,7 +22,7 @@ const class Contract
   ** format error then throw ParseErr or return null based
   ** on checked flag.
   **
-  static Contract? fromStr(Str s, Bool checked := false)
+  static new fromStr(Str s, Bool checked := false)
   {
     try
     {

@@ -82,7 +82,7 @@ const class Gradient : Brush
   **   Gradient("5px 3px, 25px 30px, #f00, #00f")       =>  linear(5px 3px, 25px 30px, #ff0000 0.0, #0000ff 1.0)
   **   Gradient("0% 50%, 100% 50%, #f00 0.1, #00f 0.9") =>  linear(0% 50%, 100% 50%, #ff0000 0.1, #0000ff 0.9)
   **
-  static Gradient? fromStr(Str str, Bool checked := true)
+  static new fromStr(Str str, Bool checked := true)
   {
     try
     {
