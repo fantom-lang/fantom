@@ -16,7 +16,7 @@ class JsMethod : JsSlot
   new make(JsCompilerSupport s, MethodDef m) : super(s, m)
   {
     this.parentPeer = JsType.findPeer(s, m.parent)
-    this.isCtor     = m.isCtor
+    this.isInstanceCtor = m.isInstanceCtor
     this.isGetter   = m.isGetter
     this.isSetter   = m.isSetter
     this.params     = m.params.map |CParam p->JsMethodParam| { JsMethodParam(s, p) }
@@ -30,7 +30,7 @@ class JsMethod : JsSlot
 
   override Void write(JsWriter out)
   {
-    if (isCtor)
+    if (isInstanceCtor)
     {
       // write static factory make method
       ctorParams := [JsMethodParam.makeSelf(support)].addAll(params)
@@ -56,7 +56,7 @@ class JsMethod : JsSlot
     if (isAbstract) return
 
     out.w(parent)
-    if (!isStatic && !isCtor) out.w(".prototype")
+    if (!isStatic && !isInstanceCtor) out.w(".prototype")
     out.w(".$methName = function${sig(methParams)}").nl
     out.w("{").nl
     out.indent
@@ -115,7 +115,7 @@ class JsMethod : JsSlot
   }
 
   JsTypeRef? parentPeer   // parent peer if has one
-  Bool isCtor             // is this method a constructor
+  Bool isInstanceCtor     // is this method an instance constructor
   Bool isGetter           // is this method a field getter
   Bool isSetter           // is this method a field setter
   JsMethodParam[] params  // method params
