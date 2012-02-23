@@ -145,9 +145,9 @@ class EnumTest : Test
     verifySame(Suits.fromStr("clubs"), Suits.clubs)
     verifySame(Suits.fromStr("colors", false), null)
 
-    verifyErr(ParseErr#) { EnumAbc.fromStr("values") }
-    verifyErr(ParseErr#) { EnumAbc.fromStr("first", true) }
-    verifyErr(ParseErr#) { EnumAbc.fromStr("foo") }
+    verifyErr(ParseErr#) { x := EnumAbc.fromStr("values") }
+    verifyErr(ParseErr#) { x := EnumAbc.fromStr("first", true) }
+    verifyErr(ParseErr#) { x := EnumAbc.fromStr("foo") }
   }
 
 //////////////////////////////////////////////////////////////////////////
