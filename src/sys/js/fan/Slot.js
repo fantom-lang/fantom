@@ -72,6 +72,15 @@ fan.sys.Slot.find = function(qname, checked)
   return type.slot(slotName, checked);
 }
 
+fan.sys.Slot.findFunc = function(qname, checked)
+{
+  if (checked === undefined) checked = true;
+
+  var m = fan.sys.Slot.find(qname, checked);
+  if (m == null) return null;
+  return m.m_func;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
