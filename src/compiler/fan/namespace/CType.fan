@@ -538,6 +538,10 @@ mixin CType
   **
   CMethod[] ctors() { slots.vals.findAll |s| { s.isCtor } }
 
+  ** List of the all instance constructors.
+  **
+  CMethod[] instanceCtors() { slots.vals.findAll |s| { s.isInstanceCtor } }
+
   **
   ** Get operators lookup structure
   **
