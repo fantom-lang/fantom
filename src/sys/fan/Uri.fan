@@ -79,7 +79,7 @@ const final class Uri
   **   - If http then port 80 normalizes to null
   **   - If http then a null path normalizes to /
   **
-  static Uri? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
 
   **
   ** Parse an ASCII percent encoded string into a Uri according to

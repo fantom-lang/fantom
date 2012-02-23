@@ -23,7 +23,7 @@ const final class Int : Num
   ** If invalid format and checked is false return null,
   ** otherwise throw ParseErr.
   **
-  static Int? fromStr(Str s, Int radix := 10, Bool checked := true)
+  static new fromStr(Str s, Int radix := 10, Bool checked := true)
 
   **
   ** Generate a random number.  If range is null then all 2^64

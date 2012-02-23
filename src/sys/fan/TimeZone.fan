@@ -60,7 +60,7 @@ const class TimeZone
   **   - [TimeZone database]`docLang::DateTime#timeZone`
   **   - [TimeZone aliases]`docLang::DateTime#timeZoneAliases`
   **
-  static TimeZone? fromStr(Str name, Bool checked := true)
+  static new fromStr(Str name, Bool checked := true)
 
   **
   ** UTC time zone instance is "Etc/Utc".

@@ -35,7 +35,7 @@ const final class Duration
   **
   ** Create a Duration which represents the specified number of nanosecond ticks.
   **
-  static Duration make(Int ticks)
+  static new make(Int ticks)
 
   **
   ** Parse a Str into a Duration according to the Fantom
@@ -55,7 +55,7 @@ const final class Duration
   **   Duration.fromStr("100ms")
   **   Duration.fromStr("-0.5hr")
   **
-  static Duration? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
 
   **
   ** Get the system timer at boot time of the Fantom VM.

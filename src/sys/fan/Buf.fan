@@ -37,7 +37,7 @@ class Buf
   **
   ** Allocate a byte buffer in RAM with the initial given capacity.
   **
-  static Buf make(Int capacity := 1024)
+  static new make(Int capacity := 1024)
 
   **
   ** Generate a random series of bytes.
