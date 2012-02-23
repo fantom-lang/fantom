@@ -18,7 +18,7 @@ const class Image
   ** Convenience for `makeFile` to create an image which
   ** is loaded from the file referenced by `sys::Uri.get`.
   **
-  static Image? make(Uri uri, Bool checked := true)
+  static new make(Uri uri, Bool checked := true)
   {
     try
     {
@@ -43,7 +43,7 @@ const class Image
   **     g.fillRect(0, 0, 100, 100)
   **   }
   **
-  static Image makePainted(Size size, |Graphics| f)
+  static new makePainted(Size size, |Graphics| f)
   {
     GfxEnv.cur.imagePaint(size, f)
   }
@@ -60,7 +60,7 @@ const class Image
   ** image once this method completes successfully.  Completion of
   ** this method is based only on file existence.
   **
-  static Image? makeFile(File f, Bool checked := true)
+  static new makeFile(File f, Bool checked := true)
   {
     try
     {

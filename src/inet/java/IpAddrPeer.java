@@ -27,7 +27,7 @@ public class IpAddrPeer
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static IpAddr make(String str)
+  public static IpAddr makeNative(String str)
   {
     try
     {
