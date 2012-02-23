@@ -464,15 +464,30 @@ class JsBinaryExpr : JsExpr
 {
   new make(JsCompilerSupport s, BinaryExpr x) : super(s)
   {
-    this.symbol = x.opToken.symbol
-    this.lhs    = JsExpr.makeFor(s, x.lhs)
-    this.rhs    = JsExpr.makeFor(s, x.rhs)
+    this.symbol   = x.opToken.symbol
+    this.lhs      = JsExpr.makeFor(s, x.lhs)
+    this.rhs      = JsExpr.makeFor(s, x.rhs)
+    this.leave    = x.leave
+    this.isAssign = x.assignTarget != null
   }
   override Void write(JsWriter out)
   {
-    if (lhs is JsFieldExpr && lhs->useAccessor == true)
+    if (isAssign && lhs is JsFieldExpr)
     {
-      ((JsFieldExpr)lhs).writeAccessorSet(out, rhs)
+      fe := (JsFieldExpr)lhs
+      if (leave)
+      {
+        var := support.unique
+        old := support.thisName
+        support.thisName = "\$this"
+        out.w("(function(\$this) {")
+        out.w(" var $var = "); rhs.write(out); out.w("; ")
+        fe.writeSetter(out, JsVarExpr(support, var)); out.w(";")
+        out.w(" return $var;")
+        out.w(" })($old)")
+        support.thisName = old
+      }
+      else { fe.writeSetter(out, rhs) }
     }
     else
     {
@@ -484,6 +499,16 @@ class JsBinaryExpr : JsExpr
   Str symbol
   JsExpr lhs
   JsExpr rhs
+  Bool leave
+  Bool isAssign
+}
+
+// for JsBinaryExpr support
+internal class JsVarExpr : JsExpr
+{
+  new make(JsCompilerSupport s, Str name) : super(s) { this.name = name }
+  override Void write(JsWriter out) { out.w(name) }
+  Str name
 }
 
 **************************************************************************
@@ -763,7 +788,6 @@ class JsCallExpr : JsExpr
   Bool isStatic          // is this a static method
   Bool isDynamic         // is this a -> call
   Str? dynamicName       // name of -> call
-
 }
 
 **************************************************************************
@@ -778,6 +802,7 @@ class JsShortcutExpr : JsCallExpr
     this.isAssign  = se.isAssign
     this.isIndexedAssign = se is IndexedAssignExpr
     this.isPostfixLeave  = se.isPostfixLeave
+    this.leave     = se.leave
 
     switch (symbol)
     {
@@ -810,6 +835,11 @@ class JsShortcutExpr : JsCallExpr
 
   override Void write(JsWriter out)
   {
+    if (fieldSet)
+    {
+      super.write(out)
+      return
+    }
     if (isIndexedAssign)
     {
       doWriteIndexedAssign(out)
@@ -834,8 +864,19 @@ class JsShortcutExpr : JsCallExpr
   {
     if (isAssign)
     {
-      assignTarget.write(out)
-      out.w(" = ")
+      if (assignTarget is JsFieldExpr)
+      {
+        fieldSet = true
+        fe := (JsFieldExpr)assignTarget
+        fe.writeSetter(out, this)
+        fieldSet = false
+        return
+      }
+      else
+      {
+        assignTarget.write(out)
+        out.w(" = ")
+      }
     }
     super.write(out)
   }
@@ -865,6 +906,8 @@ class JsShortcutExpr : JsCallExpr
   Bool isPostfixLeave   // is postfix expr
   JsExpr? assignTarget  // target of assignment
   JsExpr? assignIndex   // indexed assign: index
+  Bool leave            // leave result of expr on "stack"
+  Bool fieldSet := false  // transietly used for field sets
 }
 
 **************************************************************************
@@ -882,7 +925,7 @@ class JsFieldExpr : JsExpr
     this.useAccessor = fe.useAccessor
   }
 
-  Void writeAccessorSet(JsWriter out, JsExpr arg)
+  Void writeSetter(JsWriter out, JsExpr arg)
   {
     this.setArg = arg
     this.write(out)
@@ -904,7 +947,7 @@ class JsFieldExpr : JsExpr
     if (setArg != null)
     {
       out.w(",")
-      setArg.write(out)
+      writeSetArg(out)
     }
     out.w(")")
   }
@@ -934,12 +977,20 @@ class JsFieldExpr : JsExpr
       else
       {
         out.w("\$(")
-        setArg.write(out)
+        writeSetArg(out)
         out.w(")")
       }
     }
-    else out.w("m_$field.name")
-    if (isSafe) out.w("}($old))")
+    else
+    {
+      out.w("m_$field.name")
+      if (setArg != null)
+      {
+        out.w(" = ")
+        writeSetArg(out)
+      }
+    }
+    if (isSafe) out.w(" }($old))")
   }
 
   private Void writeTarget(JsWriter out)
@@ -948,10 +999,18 @@ class JsFieldExpr : JsExpr
     else target.write(out)
   }
 
+  private Void writeSetArg(JsWriter out)
+  {
+    arg := setArg
+    this.setArg = null
+    arg.write(out)
+    this.setArg = arg
+  }
+
   JsExpr? target       // field target
   JsTypeRef parent     // field parent type
   JsFieldRef field     // field
-  Bool useAccessor     // false if access using '*' storage operator
+  Bool useAccessor     // false if access using '&' storage operator
   Bool isSafe          // is safe nav
   JsExpr? setArg       // transiently use for setters
 }
