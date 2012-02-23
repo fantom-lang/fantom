@@ -1688,7 +1688,7 @@ public class Parser : CompilerSupport
     if (curt == Token.amp)
     {
       consume
-      return UnknownVarExpr.makeStorage(loc, target, consumeId)
+      return UnknownVarExpr(loc, target, consumeId, ExprId.storage)
     }
 
     if (peek.isCallOpenParen)

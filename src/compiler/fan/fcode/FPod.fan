@@ -162,7 +162,7 @@ final class FPod : CPod, FConst
     name = meta.get("pod.name") ?: throw IOErr("Missing meta pod.name")
     version = Version(meta.get("pod.version"))
     d := meta.get("pod.depends")
-    depends = d.isEmpty ? Depend[,] : d.split(';').map |s->Depend| { Depend(s) }
+    depends = d.isEmpty ? CDepend[,] : d.split(';').map |s->CDepend| { CDepend(s) }
 
     // read tables
     names.read(in(`/fcode/names.def`))
