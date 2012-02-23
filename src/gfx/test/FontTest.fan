@@ -32,8 +32,8 @@ class FontTest : Test
     verifyEq(Font.fromStr("italic 5pt Arial"), Font.makeFields("Arial", 5, false, true))
     verifyEq(Font.fromStr("bold italic 10pt Aa Bb"), Font.makeFields("Aa Bb", 10, true, true))
     verifyEq(Font.fromStr("Arial", false), null)
-    verifyErr(ParseErr#) { Font.fromStr("10 Arial") }
-    verifyErr(ParseErr#) { Font.fromStr("", true) }
+    verifyErr(ParseErr#) { x := Font.fromStr("10 Arial") }
+    verifyErr(ParseErr#) { x := Font.fromStr("", true) }
   }
 
   Void verifyFont(Font f, Str name, Int size, Bool bold, Bool italic, Str str)

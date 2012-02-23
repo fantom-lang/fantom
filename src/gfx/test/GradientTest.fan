@@ -58,8 +58,8 @@ class GradientTest : Test
     // errors
     verifyEq(Gradient.fromStr("", false), null)
     verifyEq(Gradient.fromStr("linear(3p 4px, 6px 8px, f00, #00f)", false), null)
-    verifyErr(ParseErr#) { Gradient.fromStr("line(2)", true) }
-    verifyErr(ParseErr#) { Gradient.fromStr("linear(-3px -2px 100 100, #f00, #00f)") }
+    verifyErr(ParseErr#) { x := Gradient.fromStr("line(2)", true) }
+    verifyErr(ParseErr#) { x := Gradient.fromStr("linear(-3px -2px 100 100, #f00, #00f)") }
   }
 
   Void verifyGradient(Str str, Str x1, Str y1, Str x2, Str y2, Obj[][] stops)

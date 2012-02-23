@@ -25,8 +25,8 @@ class GeomTest : Test
     verifyEq(Point.fromStr("4,-2"), Point(4, -2))
     verifyEq(Point.fromStr("33 , 44"), Point(33, 44))
     verifyEq(Point.fromStr("x,-2", false), null)
-    verifyErr(ParseErr#) { Point.fromStr("x,-2") }
-    verifyErr(ParseErr#) { Point.fromStr("x,-2", true) }
+    verifyErr(ParseErr#) { x := Point.fromStr("x,-2") }
+    verifyErr(ParseErr#) { x := Point.fromStr("x,-2", true) }
 
     verifySer(Point(0, 1))
     verifySer(Point(-99, -505))
@@ -44,8 +44,8 @@ class GeomTest : Test
     verifyEq(Size.fromStr("4,-2"), Size(4, -2))
     verifyEq(Size.fromStr("-33 , 60"), Size(-33, 60))
     verifyEq(Size.fromStr("x,-2", false), null)
-    verifyErr(ParseErr#) { Size.fromStr("x,-2") }
-    verifyErr(ParseErr#) { Size.fromStr("x,-2", true) }
+    verifyErr(ParseErr#) { x := Size.fromStr("x,-2") }
+    verifyErr(ParseErr#) { x := Size.fromStr("x,-2", true) }
 
     verifySer(Size(0, 1))
     verifySer(Size(-99, -505))
@@ -92,8 +92,8 @@ class GeomTest : Test
     verifyEq(Rect.fromStr("3,4,5,6"), Rect(3,4,5,6))
     verifyEq(Rect.fromStr("-1 , -2, -3  , -4"), Rect(-1,-2,-3,-4))
     verifyEq(Rect.fromStr("3,4,5", false), null)
-    verifyErr(ParseErr#) { Rect.fromStr("3,4,x,6") }
-    verifyErr(ParseErr#) { Rect.fromStr("", true) }
+    verifyErr(ParseErr#) { x := Rect.fromStr("3,4,x,6") }
+    verifyErr(ParseErr#) { x := Rect.fromStr("", true) }
 
     verifySer(Rect(1, 2, 3, 4))
     verifySer(Rect(-1, 2, -3, 4))
@@ -138,8 +138,8 @@ class GeomTest : Test
     verifyEq(Insets.fromStr("10"), Insets(10,10,10,10))
     verifyEq(Insets.fromStr("-1 , -2, -3  , -4"), Insets(-1,-2,-3,-4))
     verifyEq(Insets.fromStr("3,4,5", false), null)
-    verifyErr(ParseErr#) { Insets.fromStr("3,4,x,6") }
-    verifyErr(ParseErr#) { Insets.fromStr("", true) }
+    verifyErr(ParseErr#) { x := Insets.fromStr("3,4,x,6") }
+    verifyErr(ParseErr#) { x := Insets.fromStr("", true) }
 
     verifySer(Insets(1, 2, 3, 4))
     verifySer(Insets(-1, 2, -3, 4))
