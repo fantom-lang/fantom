@@ -486,7 +486,7 @@ class DateTimeTest : Test
     verify(!names.contains("New_York"))
 
     verify(TimeZone.fromStr("foo bar", false) == null)
-    verifyErr(ParseErr#) { TimeZone.fromStr("foo bar") }
+    verifyErr(ParseErr#) { x := TimeZone.fromStr("foo bar") }
 
     verifySame(TimeZone.utc, TimeZone.fromStr("UTC"))
     verifySame(TimeZone.rel, TimeZone.fromStr("Rel"))
@@ -770,20 +770,20 @@ class DateTimeTest : Test
    //  - Future rules for Asia/Jerusalem
 
     // out of bounds
-    verifyErr(ArgErr#) { DateTime.make(1899, Month.jun, 1, 0, 0) }
-    verifyErr(ArgErr#) { DateTime.make(2100, Month.jun, 1, 0, 0) }
-    verifyErr(ArgErr#) { DateTime.make(2007, Month.feb, 0, 0, 0) }
-    verifyErr(ArgErr#) { DateTime.make(2007, Month.feb, 29, 0, 0) }
-    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, -1, 0) }
-    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 60, 00) }
-    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 0, -1) }
-    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 0, 60) }
-    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 0, 0, -1) }
-    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 0, 0, 60) }
-    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 0, 0, 0, -1) }
-    verifyErr(ArgErr#) { DateTime.make(2007, Month.jun, 6, 0, 0, 0, 1_000_000_000) }
-    verifyErr(ArgErr#) { DateTime.makeTicks(-3124137600000_000001, utc) }
-    verifyErr(ArgErr#) { DateTime.makeTicks(3155760000000_000000, utc) }
+    verifyErr(ArgErr#) { x := DateTime.make(1899, Month.jun, 1, 0, 0) }
+    verifyErr(ArgErr#) { x := DateTime.make(2100, Month.jun, 1, 0, 0) }
+    verifyErr(ArgErr#) { x := DateTime.make(2007, Month.feb, 0, 0, 0) }
+    verifyErr(ArgErr#) { x := DateTime.make(2007, Month.feb, 29, 0, 0) }
+    verifyErr(ArgErr#) { x := DateTime.make(2007, Month.jun, 6, -1, 0) }
+    verifyErr(ArgErr#) { x := DateTime.make(2007, Month.jun, 6, 60, 00) }
+    verifyErr(ArgErr#) { x := DateTime.make(2007, Month.jun, 6, 0, -1) }
+    verifyErr(ArgErr#) { x := DateTime.make(2007, Month.jun, 6, 0, 60) }
+    verifyErr(ArgErr#) { x := DateTime.make(2007, Month.jun, 6, 0, 0, -1) }
+    verifyErr(ArgErr#) { x := DateTime.make(2007, Month.jun, 6, 0, 0, 60) }
+    verifyErr(ArgErr#) { x := DateTime.make(2007, Month.jun, 6, 0, 0, 0, -1) }
+    verifyErr(ArgErr#) { x := DateTime.make(2007, Month.jun, 6, 0, 0, 0, 1_000_000_000) }
+    verifyErr(ArgErr#) { x := DateTime.makeTicks(-3124137600000_000001, utc) }
+    verifyErr(ArgErr#) { x := DateTime.makeTicks(3155760000000_000000, utc) }
   }
 
   Void verifyDateTime(Int ticks, TimeZone tz, Int year, Month month, Int day,
@@ -891,9 +891,9 @@ class DateTimeTest : Test
 
     verifyEq(Date.fromStr("1972-06-03"), Date(1972, Month.jun, 3))
     verifyEq(Date.fromIso("2009/05/03", false), null)
-    verifyErr(ParseErr#) { Date.fromStr("1990") }
-    verifyErr(ParseErr#) { Date.fromIso("2009-12-30Z") }
-    verifyErr(ParseErr#) { Date.fromIso("2009-12-30-04:30") }
+    verifyErr(ParseErr#) { x := Date.fromStr("1990") }
+    verifyErr(ParseErr#) { x := Date.fromIso("2009-12-30Z") }
+    verifyErr(ParseErr#) { x := Date.fromIso("2009-12-30-04:30") }
   }
 
   Void verifyDateToStr(Date d, Str s)
@@ -918,8 +918,8 @@ class DateTimeTest : Test
 
     verifyEq(Time.fromStr("30:99", false), null)
     verifyEq(Time.fromIso("12:30:00Z", false), null)
-    verifyErr(ParseErr#) { Time.fromStr("") }
-    verifyErr(ParseErr#) { Time.fromIso("12:30:00+05:00") }
+    verifyErr(ParseErr#) { x := Time.fromStr("") }
+    verifyErr(ParseErr#) { x := Time.fromIso("12:30:00+05:00") }
   }
 
   Void verifyTimeToStr(Time t, Str s)
@@ -933,8 +933,8 @@ class DateTimeTest : Test
   Void verifyFromStrErr(Str s)
   {
     verifyEq(DateTime.fromStr(s, false), null)
-    verifyErr(ParseErr#) { DateTime.fromStr(s) }
-    verifyErr(ParseErr#) { DateTime.fromStr(s, true) }
+    verifyErr(ParseErr#) { x := DateTime.fromStr(s) }
+    verifyErr(ParseErr#) { x := DateTime.fromStr(s, true) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1283,7 +1283,7 @@ class DateTimeTest : Test
 
   Void verifyIso(Str s, Int y, Month mon, Int day, Int h, Int min, Int sec, Int ns, TimeZone tz, Duration offset)
   {
-    verifyErr(ParseErr#) { DateTime.fromStr(s); }
+    verifyErr(ParseErr#) { x := DateTime.fromStr(s); }
     d := DateTime.fromIso(s)
     verifyEq(d.year, y)
     verifyEq(d.month, mon)

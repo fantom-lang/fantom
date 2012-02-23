@@ -51,8 +51,8 @@ class UuidTest : Test
     verifyEq(buf.flip.readObj, x)
 
     verifyEq(Uuid.fromStr("xxxx", false), null)
-    verifyErr(ParseErr#) { Uuid.fromStr("aabbccdd-0022-0345-0123-ff00eecc557x") }
-    verifyErr(ParseErr#) { Uuid.fromStr("aabbccdd-0022-0345-0123-ff00eecc5577a", true) }
+    verifyErr(ParseErr#) { z := Uuid.fromStr("aabbccdd-0022-0345-0123-ff00eecc557x") }
+    verifyErr(ParseErr#) { z := Uuid.fromStr("aabbccdd-0022-0345-0123-ff00eecc5577a", true) }
   }
 
   Void verifyParse(Uuid x)

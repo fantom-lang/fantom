@@ -59,8 +59,8 @@ class UnitTest : Test
     verifyErr(ParseErr#) { Unit.define("test_bad,t8;m2;5;#") }
 
     verifyEq(Unit.fromStr("test_bad", false), null)
-    verifyErr(Err#) { Unit("test_bad") }
-    verifyErr(Err#) { Unit.fromStr("test_bad", true) }
+    verifyErr(Err#) { x := Unit("test_bad") }
+    verifyErr(Err#) { x := Unit.fromStr("test_bad", true) }
   }
 
   Void verifyDefine(Str s, Str[] ids, Str:Int dim, Float scale, Float offset := 0f)

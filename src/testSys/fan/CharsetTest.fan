@@ -39,8 +39,8 @@ class CharsetTest : Test
 
     // verify invalid name
     verifyEq(Charset.fromStr("bogus", false), null)
-    verifyErr(ParseErr#) { Charset.fromStr("bogus") }
-    verifyErr(ParseErr#) { Charset.fromStr("*^%#!%", true) }
+    verifyErr(ParseErr#) { x := Charset.fromStr("bogus") }
+    verifyErr(ParseErr#) { x := Charset.fromStr("*^%#!%", true) }
   }
 
   Void testStandard()

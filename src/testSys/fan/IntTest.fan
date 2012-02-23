@@ -579,11 +579,11 @@ class IntTest : Test
       verifyEq(Int.fromStr("10111", 2), 0x17)
     }
     verifyEq(Int.fromStr("badz", 16, false), null)
-    verifyErr(ParseErr#) { Int.fromStr("") }
-    verifyErr(ParseErr#) { Int.fromStr("x") }
-    verifyErr(ParseErr#) { Int.fromStr("3", 2, true) }
-    verifyErr(ParseErr#) { Int.fromStr("3g", 16, true) }
-    verifyErr(ParseErr#) { Int.fromStr("-10111", 2) }
+    verifyErr(ParseErr#) { x := Int.fromStr("") }
+    verifyErr(ParseErr#) { x := Int.fromStr("x") }
+    verifyErr(ParseErr#) { x := Int.fromStr("3", 2, true) }
+    verifyErr(ParseErr#) { x := Int.fromStr("3g", 16, true) }
+    verifyErr(ParseErr#) { x := Int.fromStr("-10111", 2) }
   }
 
 //////////////////////////////////////////////////////////////////////////

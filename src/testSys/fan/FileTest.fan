@@ -60,7 +60,7 @@ class FileTest : Test
     verifyEq(f.uri.scheme, "file")
     verifyEq(f.uri.pathStr, "/ok/path")
 
-    verifyErr(ArgErr#) { File(`c:/bad/windows/path`) }
+    verifyErr(ArgErr#) { x := File(`c:/bad/windows/path`) }
   }
 
   Void testPlus()
@@ -86,7 +86,7 @@ class FileTest : Test
     slash := dir.uri
     noSlash := slash.toStr[0..-2].toUri
 
-    verifyErr(IOErr#) { File.make(noSlash) }
+    verifyErr(IOErr#) { x := File.make(noSlash) }
     verifyErr(IOErr#) { x := this.tempDir + `dir`; echo("$x $x.exists") }
 
     x := File.make(noSlash, false)
@@ -193,8 +193,8 @@ class FileTest : Test
     verify(f.exists); f.create
 
     // check errors
-    verifyErr(IOErr#) { File.make((f.pathStr+"/").toUri) }
-    verifyErr(IOErr#) { File.make(d.toStr[0..-2].toUri) }
+    verifyErr(IOErr#) { x := File.make((f.pathStr+"/").toUri) }
+    verifyErr(IOErr#) { x := File.make(d.toStr[0..-2].toUri) }
 
     // delete
     d.delete; verifyFalse(d.exists)
