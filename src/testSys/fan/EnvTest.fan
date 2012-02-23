@@ -374,7 +374,12 @@ class EnvTest : Test
 
     // launch external proc: "fan testSys::EnvShutdownHookTest"
     buf := Buf()
-    process := Process([ProcessTest.fanCmd, EnvShutdownHookTest#.qname])
+    // use reflection to make compilerJs happy
+    //process := Process([ProcessTest.fanCmd, EnvShutdownHookTest#.qname])
+    process := Process([
+      Slot.find("testSys::ProcessTest.fanCmd")->call,
+      Type.find("testSys::EnvShutdownHookTest").qname
+    ])
     process.out = buf.out
     process.run.join
 
