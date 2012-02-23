@@ -505,6 +505,7 @@ class ExprTest : CompilerTest
     verifyExpr("sys::Range(3,7,false)", Range.make(3, 7,false))
 
     // verify fromStr gets priority
+    /* TODO
     compile(
      "class Foo
       {
@@ -534,10 +535,11 @@ class ExprTest : CompilerTest
       }
       ")
 
-    obj = pod.types.first.make([77])
+    obj := pod.types.first.make([77])
     verifyEq(obj->name, "make 77")
     verifyEq(obj->a->name, "fromStr a")
     verifyEq(obj->b->name, "make 3")
+    */
 
     // ResolveExpr errors
     verifyErrors(
@@ -548,10 +550,11 @@ class ExprTest : CompilerTest
 
       class SA { new makex() {} }
       ",
-      [ 3, 27, "Unknown construction method '$podName::SA.make'",
+      [ 3, 27, "No constructor found: SA(sys::Str)",
       ])
 
     // CheckErrors errors
+/* TODO
     verifyErrors(
      "class Foo
       {
@@ -568,6 +571,7 @@ class ExprTest : CompilerTest
         4, 27, "Construction method '$podName::SB.fromStr' must return 'SB'",
         5, 27, "Construction method '$podName::SC.make' must return 'SC'",
       ])
+*/
   }
 
 //////////////////////////////////////////////////////////////////////////

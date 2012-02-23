@@ -1713,6 +1713,16 @@ class CheckErrors : CompilerStep
   }
 
   **
+  ** Return if `coerce` would not report a compiler error.
+  **
+  static Bool canCoerce(Expr expr, CType expected)
+  {
+    ok := true
+    coerce(expr, expected) |->| { ok = false }
+    return ok
+  }
+
+  **
   ** Coerce the target expression to the specified type.  If
   ** the expression is not type compatible run the onErr function.
   **
