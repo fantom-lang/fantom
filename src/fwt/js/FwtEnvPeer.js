@@ -115,7 +115,7 @@ fan.fwt.FwtEnvPeer.prototype.imageResize = function(self, fanImg, size)
   fan.fwt.FwtEnvPeer.imgCache[uri] = jsNew;
 
   // create new Fan wrapper which references jsNew via uri
-  return fan.gfx.Image.makeUri(uri);
+  return fan.gfx.Image.makeFields(uri, null);
 }
 
 // Image imagePaint(Size size, |Graphics| f)
@@ -142,7 +142,7 @@ fan.fwt.FwtEnvPeer.prototype.imagePaint = function(self, size, f)
   fan.fwt.FwtEnvPeer.imgCache[uri] = jsNew;
 
   // create new Fan wrapper which references jsNew via uri
-  return fan.gfx.Image.makeUri(uri);
+  return fan.gfx.Image.makeFields(uri, null);
 }
 
 //////////////////////////////////////////////////////////////////////////

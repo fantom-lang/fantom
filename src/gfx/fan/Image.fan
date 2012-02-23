@@ -24,7 +24,7 @@ const class Image
     {
       f := (File)uri.get
       if (!f.exists) throw UnresolvedErr("file does not exist: $f")
-      return makeUri(uri) { it.file = f }
+      return makeFields(uri, f)
     }
     catch (Err e)
     {
@@ -65,7 +65,7 @@ const class Image
     try
     {
       if (!f.exists) throw UnresolvedErr("file does not exist: $f")
-      return makeUri(f.uri) { it.file = f }
+      return makeFields(f.uri, f)
     }
     catch (Err e)
     {
@@ -83,14 +83,14 @@ const class Image
   }
 
   **
-  ** Construct an image identified by the given URI.  This
-  ** constructor is used for subclasses and graphics toolkits.
-  ** Developers should use `make` or `makeFile`.
+  ** Construct with field values.  This constructor is used
+  ** for subclasses and graphics toolkits.  Developers
+  ** should use `make` or `makeFile`.
   **
-  @NoDoc new makeUri(Uri uri, |This|? f := null)
+  @NoDoc new makeFields(Uri uri, File file)
   {
     this.uri = uri
-    if (f != null) f(this)
+    this.file = file
   }
 
   **
