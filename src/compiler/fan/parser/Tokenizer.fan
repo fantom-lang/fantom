@@ -996,8 +996,8 @@ internal enum class Quoted
   triple("Str literal", true),
   uri("Uri literal", false)
 
-  Bool isUri() { return this === uri }
-  Bool isTriple() { return this === triple }
+  Bool isUri() { this === uri }
+  Bool isTriple() { this === triple }
 
   private new make(Str s, Bool ml) { toStr = s; multiLine = ml }
 

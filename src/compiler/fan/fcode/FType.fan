@@ -27,11 +27,11 @@ class FType : CType
 // CType
 //////////////////////////////////////////////////////////////////////////
 
-  override CNamespace ns() { return fpod.ns }
-  override FPod pod() { return fpod }
-  override once Str name() { return fpod.n(fpod.typeRef(self).typeName) }
-  override once Str qname() { return "${fpod.name}::${name}" }
-  override Str signature() { return qname }
+  override CNamespace ns() { fpod.ns }
+  override FPod pod() { fpod }
+  override once Str name() { fpod.n(fpod.typeRef(self).typeName) }
+  override once Str qname() { "${fpod.name}::${name}" }
+  override Str signature() { qname }
 
   FAttr? attr(Str name)
   {
@@ -72,23 +72,23 @@ class FType : CType
 
   override once COperators operators() { COperators(this) }
 
-  override Bool isNullable() { return false }
+  override Bool isNullable() { false }
 
-  override once CType toNullable() { return NullableType(this) }
+  override once CType toNullable() { NullableType(this) }
 
   override Bool isGeneric()
   {
     return fpod.name == "sys" && (name == "List" || name == "Map" || name == "Func")
   }
 
-  override Bool isParameterized() { return false }
+  override Bool isParameterized() { false }
 
   override Bool isGenericParameter()
   {
     return fpod.name == "sys" && name.size == 1
   }
 
-  override once CType toListOf() { return ListType(this) }
+  override once CType toListOf() { ListType(this) }
 
 //////////////////////////////////////////////////////////////////////////
 // Reflection

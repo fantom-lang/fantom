@@ -80,7 +80,7 @@ class FPrinter : FConst
     printLine("--" + typeRef(t.self) + " : " + typeRef(t.fbase) + "--")
     if (!t.fmixins.isEmpty)
     {
-      printLine("  mixin " + t.fmixins.join(", ") |Int m->Str| { return typeRef(m) });
+      printLine("  mixin " + t.fmixins.join(", ") |Int m->Str| { typeRef(m) });
     }
     attrs(t.fattrs)
     printLine
@@ -108,7 +108,7 @@ class FPrinter : FConst
   Void method(FMethod m)
   {
     print("  " + name(m.nameIndex) + " (")
-    print(m.fparams.join(", ") |FMethodVar p->Str| { return typeRef(p.typeRef) + " " + name(p.nameIndex) })
+    print(m.fparams.join(", ") |FMethodVar p->Str| { typeRef(p.typeRef) + " " + name(p.nameIndex) })
     print(") -> " + typeRef(m.ret))
     if (m.ret != m.inheritedRet) print(" {" + typeRef(m.inheritedRet) + "}")
     printLine(" [" + flags(m.flags) + "]")

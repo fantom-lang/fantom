@@ -53,12 +53,12 @@ mixin CPod
   **
   ** If this a foreign function interface pod.
   **
-  virtual Bool isForeign() { return false }
+  virtual Bool isForeign() { false }
 
   **
   ** If this a foreign function interface return the bridge.
   **
-  virtual CBridge? bridge() { return null }
+  virtual CBridge? bridge() { null }
 
   **
   ** Hash on name.
