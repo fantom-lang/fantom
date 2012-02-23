@@ -509,8 +509,8 @@ class FloatTest : Test
     verifyEq(Float.fromStr("-INF"), Float.negInf)
     verifyEq(Float.fromStr("NaN"),  Float.nan)
     verifyEq(Float.fromStr("foo", false),  null)
-    verifyErr(ParseErr#) { Float.fromStr("no way!") }
-    verifyErr(ParseErr#) { Float.fromStr("%\$##", true) }
+    verifyErr(ParseErr#) { x := Float.fromStr("no way!") }
+    verifyErr(ParseErr#) { x := Float.fromStr("%\$##", true) }
   }
 
 //////////////////////////////////////////////////////////////////////////

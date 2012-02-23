@@ -111,8 +111,8 @@ class MimeTypeTest : Test
   Void verifyFromStrBad(Str s)
   {
     verifyEq(MimeType.fromStr(s, false), null)
-    verifyErr(ParseErr#) { MimeType.fromStr(s) }
-    verifyErr(ParseErr#) { MimeType.fromStr(s, true) }
+    verifyErr(ParseErr#) { x := MimeType.fromStr(s) }
+    verifyErr(ParseErr#) { x := MimeType.fromStr(s, true) }
   }
 
 //////////////////////////////////////////////////////////////////////////

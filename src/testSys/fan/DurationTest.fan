@@ -229,12 +229,12 @@ class DurationTest : Test
     verifyEq(Duration.fromStr("-1.5day"), -36hr)
 
     // invalid
-    verifyErr(ParseErr#) { Duration.fromStr("4") }
-    verifyErr(ParseErr#) { Duration.fromStr("4x") }
-    verifyErr(ParseErr#) { Duration.fromStr("4seconds") }
-    verifyErr(ParseErr#) { Duration.fromStr("xms") }
-    verifyErr(ParseErr#) { Duration.fromStr("x4ms") }
-    verifyErr(ParseErr#) { Duration.fromStr("4days") }
+    verifyErr(ParseErr#) { x := Duration.fromStr("4") }
+    verifyErr(ParseErr#) { x := Duration.fromStr("4x") }
+    verifyErr(ParseErr#) { x := Duration.fromStr("4seconds") }
+    verifyErr(ParseErr#) { x := Duration.fromStr("xms") }
+    verifyErr(ParseErr#) { x := Duration.fromStr("x4ms") }
+    verifyErr(ParseErr#) { x := Duration.fromStr("4days") }
   }
 
   Void verifyStr(Duration dur, Str format)

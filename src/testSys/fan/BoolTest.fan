@@ -255,8 +255,8 @@ class BoolTest : Test
     verifyEq(Bool.fromStr("true"), true)
     verifyEq(Bool.fromStr("false"), false)
     verifyEq(Bool.fromStr("F", false), null)
-    verifyErr(ParseErr#) { Bool.fromStr("True") }
-    verifyErr(ParseErr#) { Bool.fromStr("") }
+    verifyErr(ParseErr#) { x := Bool.fromStr("True") }
+    verifyErr(ParseErr#) { x := Bool.fromStr("") }
   }
 
 //////////////////////////////////////////////////////////////////////////
