@@ -71,7 +71,7 @@ class InitEnum : CompilerStep
 
     // check if there are any existing constructors - there
     // can only be zero or one called make
-    ctors := curType.methodDefs.findAll |MethodDef x->Bool| { x.isCtor }
+    ctors := curType.methodDefs.findAll |MethodDef x->Bool| { x.isInstanceCtor }
     ctors.each |MethodDef ctor|
     {
       if (ctor.name == "make")

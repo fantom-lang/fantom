@@ -40,6 +40,9 @@ mixin CSlot
   Bool isSynthetic() { flags.and(FConst.Synthetic) != 0 }
   Bool isVirtual()   { flags.and(FConst.Virtual)   != 0 }
 
+  Bool isInstanceCtor() { isCtor && !isStatic }
+  Bool isStaticCtor() { isCtor && isStatic }
+
   **
   ** Get the facet keyed by given type, or null if not defined.
   **

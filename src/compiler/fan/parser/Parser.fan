@@ -427,7 +427,10 @@ public class Parser : CompilerSupport
     if (flags.and(FConst.Ctor) != 0)
     {
       name := consumeId
-      return methodDef(loc, parent, doc, facets, flags, TypeRef(loc, ns.voidType), name)
+      returns := flags.and(FConst.Static) == 0 ?
+                 TypeRef(loc, ns.voidType) :
+                 TypeRef(loc, parent.toNullable)
+      return methodDef(loc, parent, doc, facets, flags, returns, name)
     }
 
     // otherwise must be field or method

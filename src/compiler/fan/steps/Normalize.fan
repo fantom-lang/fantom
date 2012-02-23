@@ -120,7 +120,7 @@ class Normalize : CompilerStep
     if (!code.isExit) addImplicitReturn(m)
 
     // insert super constructor call
-    if (m.isCtor) insertSuperCtor(m)
+    if (m.isInstanceCtor) insertSuperCtor(m)
 
     // once
     if (m.isOnce) normalizeOnce(m, iInit)
@@ -244,7 +244,7 @@ class Normalize : CompilerStep
     // unless the constructor chains to "this"
     t.methodDefs.each |MethodDef m|
     {
-      if (!m.isCtor) return
+      if (!m.isInstanceCtor) return
       if (t.isNative) return
       if (m.ctorChain != null && m.ctorChain.target.id === ExprId.thisExpr) return
       call := CallExpr.makeWithMethod(m.loc, ThisExpr(m.loc), ii)
