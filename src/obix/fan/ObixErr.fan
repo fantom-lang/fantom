@@ -13,7 +13,7 @@
 const class ObixErr : Err
 {
   ** Construct error ObixObj
-  static ObixErr make(ObixObj obj)
+  static new make(ObixObj obj)
   {
     doMake(obj.contract, obj.display ?: "")
   }

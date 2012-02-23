@@ -37,9 +37,9 @@ class IpAddrTest : Test
                "::169.2.30.200")
 
     // invalid
-    verifyErr(UnknownHostErr#) { IpAddr("0123:4567:89ab:cdef:fedc:ba98:7654:3210:ffff") }
-    verifyErr(UnknownHostErr#) { IpAddr("::fx54:3210:ffff") }
-    verifyErr(UnknownHostErr#) { IpAddr("not.going.to.happen.") }
+    verifyErr(UnknownHostErr#) { x := IpAddr("0123:4567:89ab:cdef:fedc:ba98:7654:3210:ffff") }
+    verifyErr(UnknownHostErr#) { x := IpAddr("::fx54:3210:ffff") }
+    verifyErr(UnknownHostErr#) { x := IpAddr("not.going.to.happen.") }
 
     // local
     verifySame(IpAddr.local, IpAddr.local)

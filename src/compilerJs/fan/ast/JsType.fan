@@ -135,7 +135,7 @@ class JsType : JsNode
 **
 class JsTypeRef : JsNode
 {
-  static JsTypeRef make(JsCompilerSupport cs, CType ref, Loc loc)
+  static new make(JsCompilerSupport cs, CType ref, Loc loc)
   {
     key := ref.signature
     js  := cs.typeRef[key]

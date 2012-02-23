@@ -33,10 +33,10 @@ class ImageTest : Test
     bad := `/some/really/bad/uri/for/a/image.xyz`
     verifyNull(Image(bad, false))
     verifyNull(Image.makeFile(bad.toFile, false))
-    verifyErr(UnresolvedErr#) { Image(bad) }
-    verifyErr(UnresolvedErr#) { Image(bad, true) }
-    verifyErr(UnresolvedErr#) { Image.makeFile(bad.toFile) }
-    verifyErr(UnresolvedErr#) { Image.makeFile(bad.toFile, true) }
+    verifyErr(UnresolvedErr#) { x := Image(bad) }
+    verifyErr(UnresolvedErr#) { x := Image(bad, true) }
+    verifyErr(UnresolvedErr#) { x := Image.makeFile(bad.toFile) }
+    verifyErr(UnresolvedErr#) { x := Image.makeFile(bad.toFile, true) }
 
     buf := Buf().writeObj(Image(file.uri))
     Image x := buf.flip.readObj

@@ -18,7 +18,7 @@ native final class BoolArray
 //////////////////////////////////////////////////////////////////////////
 
   ** Create a array of given size
-  static BoolArray make(Int size)
+  static new make(Int size)
 
   ** Private constructor
   private new privateMake()
