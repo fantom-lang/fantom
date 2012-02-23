@@ -189,7 +189,11 @@ class DocTypeRenderer : DocRenderer
     {
       //  method sig
       method := (DocMethod)slot
-      if (DocFlags.isCtor(method.flags)) out.w("new")
+      if (DocFlags.isCtor(method.flags))
+      {
+        if (DocFlags.isStatic(method.flags)) out.w("static ")
+        out.w("new")
+      }
       else
       {
         out.w(DocFlags.toSlotDis(method.flags)).w(" ")
