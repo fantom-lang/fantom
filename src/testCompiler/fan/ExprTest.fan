@@ -504,74 +504,62 @@ class ExprTest : CompilerTest
     verifyExpr("Range(3,7,true)", Range.make(3, 7,true))
     verifyExpr("sys::Range(3,7,false)", Range.make(3, 7,false))
 
-    // verify fromStr gets priority
-    /* TODO
     compile(
-     "class Foo
-      {
-        Obj a() { return Foo(\"a\") }
+     """class Tester
+        {
+          Str t00() { Foo("a").toStr }
+          Str t01() { Foo("a", "b").toStr }
+          Str t02() { Foo(9).toStr }
+          Str t03() { M("x").toStr }
+          Str t04() { M("x", "y").toStr }
+        }
+        class Foo : M
+        {
+          new make1(Str x) { toStr = x }
+          new make2(Str x, Str y) { toStr = x + "," + y }
+          static new make3(Int x)  { make1("Int " + x) }
+          const override Str toStr
+        }
+        mixin M
+        {
+          static new make1(Str x) { Foo(x) }
+          static new make2(Str x, Str y) { Foo(x, y) }
+        }
+        """)
 
-        new make(Str n) { name = \"make \$n\" }
-        static Foo fromStr(Str n) { return make(n) {it.name = \"fromStr \$n\"} }
-        Str name
-      }
-      ")
+    obj := pod.types.first.make
+    verifyEq(obj->t00, "a")
+    verifyEq(obj->t01, "a,b")
+    verifyEq(obj->t02, "Int 9")
+    verifyEq(obj->t03, "x")
+    verifyEq(obj->t04, "x,y")
 
-    obj := pod.types.first.make(["z"])
-    verifyEq(obj->name, "make z")
-    verifyEq(obj->a->name, "fromStr a")
-
-    // but fromStr only gets priority if both have Str args
-    compile(
-     "class Foo
-      {
-        Obj a() { return Foo(\"a\") }
-        Obj b() { return Foo(3) }
-
-        static Foo make(Int n) { return m {it.name = \"make \$n\"} }
-        static Foo fromStr(Str n) { return m {it.name = \"fromStr \$n\"} }
-        new m() {}
-        Str? name
-      }
-      ")
-
-    obj := pod.types.first.make([77])
-    verifyEq(obj->name, "make 77")
-    verifyEq(obj->a->name, "fromStr a")
-    verifyEq(obj->b->name, "make 3")
-    */
 
     // ResolveExpr errors
     verifyErrors(
-     "class Foo
-      {
-        static Obj a() { return SA(\"x\") }
-      }
-
-      class SA { new makex() {} }
-      ",
-      [ 3, 27, "No constructor found: SA(sys::Str)",
+     """class Tester
+        {
+          Obj t00() { Foo("a") }
+          Obj t01() { Foo("a", true) }
+          Obj t02() { Foo("a", 3) }
+          Obj t03() { Foo("a", true, 3) } // ok
+          Obj t04() { Foo() }
+          Obj t05() { Foo(4f) }
+        }
+        class Foo
+        {
+          new make1(Str x) {}
+          new make2(Str x, Bool y := true) {}
+          static new make3(Str x, Bool y, Int z := 3) {}
+          private new make4(Str x) {}
+        }
+        """,
+      [ 3, 15, "Ambiguous constructor: Foo(sys::Str) [make1, make2]",
+        4, 15, "Ambiguous constructor: Foo(sys::Str, sys::Bool) [make2, make3]",
+        5, 15, "No constructor found: Foo(sys::Str, sys::Int)",
+        7, 15, "No constructor found: Foo()",
+        8, 15, "No constructor found: Foo(sys::Float)",
       ])
-
-    // CheckErrors errors
-/* TODO
-    verifyErrors(
-     "class Foo
-      {
-        static Obj a() { return SA(\"x\") }
-        static Obj b() { return SB(\"x\") }
-        static Obj c() { return SC() }
-      }
-
-      class SA { SA? fromStr(Str a) {return null} }
-      class SB { static SA? fromStr(Str a) {return null} }
-      class SC { static SA? make() {return null} new m() {} }
-      ",
-      [ 3, 27, "Cannot call instance method 'fromStr' in static context",
-        4, 27, "Construction method '$podName::SB.fromStr' must return 'SB'",
-        5, 27, "Construction method '$podName::SC.make' must return 'SC'",
-      ])
-*/
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -880,7 +880,7 @@ class CheckErrorsTest : CompilerTest
          4,  1, "Must call super class constructor in 'make'",
          5, 15, "Must call super class constructor in 'makeIt'",
          6, 15, "Must call super class constructor in 'makeIt'",
-         7, 11, "Mixins cannot have constructors",
+         7, 11, "Mixins cannot have instance constructors",
          8, 30, "Parameter 'b' must have default",
        ])
   }

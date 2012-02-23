@@ -336,7 +336,7 @@ class CheckErrors : CompilerStep
     checkMethodReturn(m)
 
     // check ctors call super (or another this) ctor
-    if (m.isCtor) checkCtor(m)
+    if (m.isInstanceCtor) checkInstanceCtor(m)
 
     // if method has operator facet, check it
     if (m.hasFacet("sys::Operator")) checkOperatorMethod(m)
@@ -471,11 +471,11 @@ class CheckErrors : CompilerStep
       checkValidType(m.loc, m.ret)
   }
 
-  private Void checkCtor(MethodDef m)
+  private Void checkInstanceCtor(MethodDef m)
   {
     // mixins cannot have constructors
     if (curType.isMixin)
-      err("Mixins cannot have constructors", m.loc)
+      err("Mixins cannot have instance constructors", m.loc)
 
     // ensure super/this constructor is called
     if (m.ctorChain == null && !compiler.isSys && !curType.base.isObj && !curType.isSynthetic)
@@ -1218,7 +1218,7 @@ class CheckErrors : CompilerStep
         err("Cannot call constructor '$name' on instance", call.loc)
 
       // ensure we aren't calling a constructor on an abstract class
-      if (m.parent.isAbstract)
+      if (m.parent.isAbstract && !m.isStatic)
         err("Calling constructor on abstract class", call.loc)
     }
 

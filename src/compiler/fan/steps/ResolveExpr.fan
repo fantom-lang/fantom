@@ -565,8 +565,8 @@ class ResolveExpr : CompilerStep
     if (matches.size > 1)
     {
       args := call.args.join(", ") |arg| { arg.ctype.toStr }
-      names := matches.join(", ") |m| { m.name }
-      err("Ambiguous operator method: ${base.name}($args) [$names]", call.loc)
+      names := matches.map |m| { m.name }.vals.sort.join(", ")
+      err("Ambiguous constructor: ${base.name}($args) [$names]", call.loc)
       return call
     }
 
