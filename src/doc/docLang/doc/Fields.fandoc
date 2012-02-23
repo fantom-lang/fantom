@@ -185,7 +185,7 @@ The keyword 'static' is used to create a static class level field:
 
 The field 'nullId' is a const static field - there is only one global
 instance on the class itself.  Const static fields can only be set in
-[static constructors]`Methods#staticCtor`.  Static fields must be
+[static initializers]`Methods#staticInit`.  Static fields must be
 const - this ensures [thread safety]`Concurrency`.  Static fields
 are accessed using the '.' operator on the class itself:
 

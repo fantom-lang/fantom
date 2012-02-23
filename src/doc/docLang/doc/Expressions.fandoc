@@ -338,7 +338,7 @@ expression:
    // is syntax sugar for
    Version.fromStr("3.2")
 
-To use this expression, the type must have a static method called 'fromStr' which
+To use this expression, the type must have a constructor called 'fromStr' which
 takes a 'Str' parameter and returns an instance of itself.  The method may contain
 additional parameters if they have default values.  The type does not have to
 implement the `sys::Serializable` facet to use this expression (although it does

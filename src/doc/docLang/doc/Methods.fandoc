@@ -22,7 +22,7 @@ The 'incr' method is an instance method which means it is always invoked
 on an instance of 'Boo'.  The 'add' method is static and is not invoked
 on an instance:
 
-  b := Boo.make
+  b := Boo()
   x := b.incr()
   y := Boo.add(3, 4)
 
@@ -39,7 +39,7 @@ such that the target type or instance is implied.  For example:
   }
 
 If the method does not take any parameters, then we can leave off the '()' empty
-parenthesis.  By convention the empty parenthesis are *always* omitted:
+parentheses.  By convention the empty parentheses are *always* omitted:
 
   b.incr  // same as b.incr()
 
@@ -63,7 +63,7 @@ Constructors [#ctor]
 Constructors are special methods used to create new instances of a class.  In
 Fantom, constructors are named methods.  The difference is that they use the 'new'
 keyword in their definition instead of a return type (the return type is implied
-to be an instance of the type):
+to be an instance of the type).
 
   class MissingPerson
   {
@@ -78,37 +78,58 @@ the constructor like a static method:
 
   jack := MissingPerson.make("Jack Shephard")
 
-You can also use the [shorthand syntax]`#constructionCalls` for calling
-a constructor called "make":
+You can also use the [shorthand syntax]`#constructionCalls`:
 
   sayid := MissingPerson("Sayid Jarrah")
 
-From a client perspective, constructors look just like named factory methods (in
-fact switching between a static method and constructor maintains source level
-compatibility, but not binary compatibility).  Constructors have the unusual
-property of acting like a static method on the outside and an instance
-method on the inside.  On the outside you call a constructor like a static method
-and get back an instance of the type.  On the inside of a constructor, the
-instance has already been allocated and is available using the 'this' keyword.
+Fantom supports both *instance constructors* and *static constructors*.
+From a client perspective, both instance and static constructors look just
+like named factory methods.  Instance constructors have an implicit object
+allocation, so the body of the method works just like any other instance
+method with an implied 'this' instance.  Static constructors on the other
+hand are normal static methods and it is your responsiblity to perform
+an object allocation (using an instance constructor).
 
-If you do not declare a constructor on your class, then the compiler will
-automatically generate a public no arg constructor called 'make'.
+  class Number
+  {
+    new make(Int val) { this.val = val }
+    static new fromStr(Str s) { make(s.toInt) }
+  }
 
-Only classes can have constructors.  It is a compile time error to declare
-a constructor on a mixin.
+In the example above we have an instance constructor named 'make' and
+a static constructor named 'fromStr'.  Notice that the instance constructor
+has an implicit 'this' parameter - the allocation is performed automatically
+when called.  However since 'fromStr' is a static constructor, it is
+responsible for performing the allocation (in this case delegating to
+'make').  When it comes calling constructors they both work the same way:
+
+  x1 := Number.make(1)
+  x2 := Number(2)
+  x3 := Number.fromStr("3")
+  x4 := Number("4")
+
+The return type of a static constructor is always a nullable version
+of the defining class.  So in the example above 'Number.fromStr' has
+an implied return type of 'Number?'.  The return type of an instance
+constructor is 'Void', but when called by a client will evaluate to
+the defining type.
+
+Only classes can have instance constructors.  It is a compile time error
+to declare an instance constructor on a mixin.  However, mixins are
+allowed to declare static constructors.
+
+Auto Generated Constructor [#autoGenCtor]
+=========================================
+If you do not declare any instance constructors on your class, then the
+compiler will automatically generate a public no arg constructor
+called 'make'.
 
 Construction Calls [#constructionCalls]
 =======================================
 Fantom supports a special syntax called *construction calls* with
-the syntax 'Type(args)'.  These calls are resolved as follows:
-
-  1. bind to 'Type.fromStr' *if* there is exactly one Str argument *and*
-     'Type.fromStr' exists (see [simple literals]`Expressions#simples`)
-  2. otherwise bind to 'Type.make'
-
-The construction operator works on static methods or constructors.
-So you can use it when 'make' is a constructor or when 'make' is a factory
-method.  The method of construction call 'Foo(...)' must return 'Foo'.
+the syntax 'Type(args)'.  Like operators, these calls support overloading
+by parameter type.  Any constructor method marked with the 'new'
+keyword may be used with a constructor call.
 
 Convention is to always prefer a construction call to using 'make'
 explicitly:
@@ -119,12 +140,17 @@ explicitly:
   ArgErr.make("bad arg")   // non-preferred
   ArgErr("bad arg")        // preferred
 
+If the compiler cannot determine which constructor is being called
+from the arguments it will report a "Ambiguous constructor" error.
+In this case you will need to explictly use your constructor name.
+
 Constructor Chaining [#ctorChaining]
 ====================================
-When creating subclasses, you must call one of your parent class constructors
-or another of your own constructors using a syntax called *constructor
-chaining*.  The syntax to call a parent constructor is based on C++ and C#
-using the ':' after the formal parameters, but before the method body:
+When creating subclasses, you must call one of your parent class instance
+constructors or another of your own constructors using a syntax
+called *constructor chaining*.  The syntax to call a parent constructor
+is based on C++ and C# using the ':' after the formal parameters, but
+before the method body:
 
   class Foo
   {
@@ -152,11 +178,11 @@ the name implies calling a parent of the same name - 'make' in this case.
 is useful for ensuring all your initialization code is centralized in one
 constructor.
 
-Static Constructors [#staticCtor]
+Static Initializers [#staticInit]
 *********************************
-Static constructors are methods executed to initialize the class
-itself.  They are typically used to initialize [static fields]`Fields#static`.
-Static constructors use a Java like syntax:
+Static initializers are specially methods executed during class initialization.
+They are typically used to initialize [static fields]`Fields#static`.
+They use a Java like syntax:
 
   class Foo
   {
