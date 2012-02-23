@@ -128,7 +128,7 @@ class InitEnum : CompilerStep
     loc := curType.loc
     m := MethodDef(loc, curType)
     m.name = "fromStr"
-    m.flags = FConst.Public + FConst.Static
+    m.flags = FConst.Public + FConst.Static + FConst.Ctor
     m.params.add(ParamDef(loc, ns.strType, "name"))
     m.params.add(ParamDef(loc, ns.boolType, "checked", LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)))
     m.ret = TypeRef(loc, curType.toNullable)
