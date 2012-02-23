@@ -535,13 +535,10 @@ class ResolveExpr : CompilerStep
   private Expr resolveConstruction(CallExpr call)
   {
     base := call.target.ctype
+    call.ctype = base  // fallback in case of errors
 
     // route FFI constructors to bridge
     if (base.isForeign) return base.bridge.resolveConstruction(call)
-
-    // construction always resolves to base type (we
-    // double check this in CheckErrors)
-    call.ctype = base
 
     // get all constructors that might match this call
     matches := Str:CMethod[:]
@@ -570,9 +567,13 @@ class ResolveExpr : CompilerStep
       return call
     }
 
+    // we have our resolved match
+    match := matches.vals.first
+    call.method = match
+    call.ctype = match.isStatic ? match.returnType : base
+
     // hook to infer closure type from call or to
     // translateinto an implicit call to Obj.with
-    call.method = matches.vals.first
     return CallResolver.inferClosureTypeFromCall(this, call, base)
   }
 

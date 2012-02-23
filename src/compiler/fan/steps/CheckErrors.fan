@@ -1149,6 +1149,9 @@ class CheckErrors : CompilerStep
   {
     if (!call.method.isCtor)
     {
+      // TODO
+      //warn("Using static method '$call.method.qname' as constructor", call.loc)
+
       // check that ctor method is the expected type
       if (call.ctype.toNonNullable != call.method.returnType.toNonNullable)
         err("Construction method '$call.method.qname' must return '$call.ctype.name'", call.loc)

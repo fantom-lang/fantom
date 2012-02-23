@@ -327,7 +327,7 @@ class CallResolver : CompilerSupport
     call.noParens = isVar
 
     call.method = method
-    if (method.isCtor)
+    if (method.isInstanceCtor)
       call.ctype = method.parent
     else
       call.ctype = method.returnType
