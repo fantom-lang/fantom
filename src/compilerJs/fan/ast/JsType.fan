@@ -157,11 +157,11 @@ class JsTypeRef : JsNode
     this.isFunc = ref.isFunc
 
     deref := ref.deref
-    if (deref is ListType) v = JsTypeRef(cs, deref->v, loc)
+    if (deref is ListType) v = JsTypeRef.make(cs, deref->v, loc)
     if (deref is MapType)
     {
-      k = JsTypeRef(cs, deref->k, loc)
-      v = JsTypeRef(cs, deref->v, loc)
+      k = JsTypeRef.make(cs, deref->k, loc)
+      v = JsTypeRef.make(cs, deref->v, loc)
     }
 
     // TODO FIXIT: don't check sys yet
