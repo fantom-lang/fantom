@@ -30,7 +30,7 @@ const final class Date
   **
   ** Throw ArgErr is any of the parameters are out of range.
   **
-  static Date make(Int year, Month month, Int day)
+  static new make(Int year, Month month, Int day)
 
   **
   ** Parse the string into a Date from the programmatic encoding
@@ -38,7 +38,7 @@ const final class Date
   ** Date and checked is false then return null, otherwise throw
   ** ParseErr.
   **
-  static Date? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
 
   **
   ** Default value is "2000-01-01".

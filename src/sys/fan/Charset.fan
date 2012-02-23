@@ -23,7 +23,7 @@ const final class Charset
   ** methods such as `utf8` to get a standard encoding.  If charset not
   ** found and checked is false return null, otherwise throw ParseErr.
   **
-  static Charset? fromStr(Str name, Bool checked := true)
+  static new fromStr(Str name, Bool checked := true)
 
   **
   ** Private constructor

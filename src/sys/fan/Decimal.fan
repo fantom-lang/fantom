@@ -23,7 +23,7 @@ const final class Decimal : Num
   ** Parse a Str into a Decimal.  If invalid format and
   ** checked is false return null, otherwise throw ParseErr.
   **
-  static Decimal? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
 
   **
   ** Default value is 0.

@@ -23,7 +23,7 @@ const final class MimeType
   ** checked is false return null, otherwise throw ParseErr.
   ** Parenthesis comments are not supported.
   **
-  static MimeType? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
 
   **
   ** Parse a set of attribute-value parameters where the

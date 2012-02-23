@@ -34,7 +34,7 @@ const final class Time
   **
   ** Throw ArgErr is any of the parameters are out of range.
   **
-  static Time make(Int hour, Int min, Int sec := 0, Int ns := 0)
+  static new make(Int hour, Int min, Int sec := 0, Int ns := 0)
 
   **
   ** Parse the string into a Time from the programmatic encoding
@@ -42,7 +42,7 @@ const final class Time
   ** Time and checked is false then return null, otherwise throw
   ** ParseErr.
   **
-  static Time? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
 
   **
   ** Default value is "00:00:00".

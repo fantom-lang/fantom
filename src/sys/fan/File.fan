@@ -30,7 +30,7 @@ abstract const class File
   ** directory.  Throw ArgErr if the Uri has a scheme other than null
   ** or "file:".
   **
-  static File make(Uri uri, Bool checkSlash := true)
+  static new make(Uri uri, Bool checkSlash := true)
 
   **
   ** Make a File for the specified operating system specific path

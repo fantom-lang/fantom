@@ -40,7 +40,7 @@ const final class Range
   ** exclusive is "start..<end".  If invalid format then
   ** throw ParseErr or return null based on checked flag.
   **
-  static Range? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
 
 //////////////////////////////////////////////////////////////////////////
 // Obj Overrides

@@ -55,7 +55,7 @@ final const class Depend
   ** header for specification of the format.  If invalid format
   ** and checked is false return null, otherwise throw ParseErr.
   **
-  static Depend? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
 
   **
   ** Private constructor

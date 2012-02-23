@@ -39,9 +39,7 @@ const final class Float : Num
   ** If invalid format and checked is false return null, otherwise throw
   ** ParseErr.
   **
-  ** TODO: need spec - follow XML Schema literal definition
-  **
-  static Float? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
 
   **
   ** Generate a random float between 0.0 inclusive and 1.0 exclusive.

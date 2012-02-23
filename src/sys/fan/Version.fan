@@ -24,13 +24,13 @@ const final class Version
   ** If invalid format and checked is false return null,
   ** otherwise throw ParseErr.
   **
-  static Version? fromStr(Str version, Bool checked := true)
+  static new fromStr(Str version, Bool checked := true)
 
   **
   ** Construct with list of integer segments.
   ** Throw ArgErr if segments is empty or contains negative numbers.
   **
-  static Version make(Int[] segments)
+  static new make(Int[] segments)
 
   **
   ** Default value is "0".

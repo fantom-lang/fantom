@@ -25,7 +25,7 @@ const class Locale
   ** If invalid format and checked is false return null,
   ** otherwise throw ParseErr.
   **
-  static Locale? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
 
   **
   ** Private constructor

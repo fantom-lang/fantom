@@ -40,7 +40,7 @@ const final class Uuid
   **
   ** Generate a new UUID globally unique in space and time.
   **
-  static Uuid make()
+  static new make()
 
   **
   ** Create a 128-bit UUID from two 64-bit integers.
@@ -52,7 +52,7 @@ const final class Uuid
   ** class header documentation.  If invalid format and checked is false
   ** return null, otherwise throw ParseErr.
   **
-  static Uuid? fromStr(Str s, Bool checked := true)
+  static new fromStr(Str s, Bool checked := true)
 
   **
   ** Private constructor
