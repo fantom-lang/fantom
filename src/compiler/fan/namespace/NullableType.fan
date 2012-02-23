@@ -36,7 +36,7 @@ class NullableType : CType
 
   override Bool isVal() { root.isVal }
 
-  override CFacet? facet(Str qname) { return root.facet(qname) }
+  override CFacet? facet(Str qname) { root.facet(qname) }
 
   override Bool isNullable() { true }
   override CType toNullable() { this }
@@ -62,8 +62,8 @@ class NullableType : CType
   override CType[] mixins() { root.mixins }
   override Bool fits(CType t) { root.fits(t) }
 
-  override Str:CSlot slots() { return root.slots }
-  override COperators operators() { return root.operators }
+  override Str:CSlot slots() { root.slots }
+  override COperators operators() { root.operators }
 
   override Bool isValid() { root.isValid }
 

@@ -29,12 +29,12 @@ class Block : Node
   **
   ** Return is there are no statements
   **
-  Bool isEmpty() { return stmts.isEmpty }
+  Bool isEmpty() { stmts.isEmpty }
 
   **
   ** Return number of statements
   **
-  Int size() { return stmts.size }
+  Int size() { stmts.size }
 
   **
   ** Does this block always cause us to exit the method (does the

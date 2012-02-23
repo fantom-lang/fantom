@@ -176,7 +176,7 @@ public class Parser : CompilerSupport
     // name
     name := consumeId
     // lookup TypeDef
-    def := unit.types.find |TypeDef def->Bool| { return def.name == name }
+    def := unit.types.find |TypeDef def->Bool| { def.name == name }
     if (def == null) throw err("Invalid class definition", cur)
 
     // populate it's doc, facets, and flags
@@ -342,7 +342,7 @@ public class Parser : CompilerSupport
     {
       consume
       enumDef := enumDef(ordinal++)
-      if (def.enumDefs.any |EnumDef e->Bool| { return e.name == enumDef.name })
+      if (def.enumDefs.any |EnumDef e->Bool| { e.name == enumDef.name })
         err("Duplicate enum name '$enumDef.name'", enumDef.loc)
       def.enumDefs.add(enumDef)
     }
@@ -664,7 +664,7 @@ public class Parser : CompilerSupport
       while (true)
       {
         newParam := paramDef
-        if (method.params.any |ParamDef p->Bool| { return p.name == newParam.name })
+        if (method.params.any |ParamDef p->Bool| { p.name == newParam.name })
           err("Duplicate parameter name '$newParam.name'", newParam.loc)
         method.params.add(newParam)
         if (curt === Token.rparen) break

@@ -894,7 +894,7 @@ class ResolveExpr : CompilerStep
     }
 
     // look in block stack which models scope chain
-    return blockStack.any |Block b->Bool| { return b === block }
+    return blockStack.any |Block b->Bool| { b === block }
   }
 
 //////////////////////////////////////////////////////////////////////////

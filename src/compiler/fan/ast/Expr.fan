@@ -518,12 +518,12 @@ class ListLiteralExpr : Expr
 
   override Str serialize()
   {
-    return format |Expr e->Str| { return e.serialize }
+    return format |Expr e->Str| { e.serialize }
   }
 
   override Str toStr()
   {
-    return format |Expr e->Str| { return e.toStr }
+    return format |Expr e->Str| { e.toStr }
   }
 
   Str format(|Expr e->Str| f)
@@ -568,12 +568,12 @@ class MapLiteralExpr : Expr
 
   override Str serialize()
   {
-    return format |Expr e->Str| { return e.serialize }
+    return format |Expr e->Str| { e.serialize }
   }
 
   override Str toStr()
   {
-    return format |Expr e->Str| { return e.toStr }
+    return format |Expr e->Str| { e.toStr }
   }
 
   Str format(|Expr e->Str| f)
@@ -665,7 +665,7 @@ class BinaryExpr : Expr
 
   override Obj? assignTarget() { id === ExprId.assign ? lhs : null }
 
-  override Bool isStmt() { return id === ExprId.assign }
+  override Bool isStmt() { id === ExprId.assign }
 
   override Bool isDefiniteAssign(|Expr lhs->Bool| f)
   {
@@ -715,7 +715,7 @@ class CondExpr : Expr
     this.operands = [first]
   }
 
-  override Bool isCond() { return true }
+  override Bool isCond() { true }
 
   override Void walkChildren(Visitor v)
   {
@@ -844,7 +844,7 @@ class CallExpr : NameExpr
     return true
   }
 
-  virtual Bool isCompare() { return false }
+  virtual Bool isCompare() { false }
 
   override Void walkChildren(Visitor v)
   {
@@ -858,7 +858,7 @@ class CallExpr : NameExpr
     if (id != ExprId.construction || method.name != "fromStr")
       return super.serialize
 
-    argSer := args.join(",") |Expr e->Str| { return e.serialize }
+    argSer := args.join(",") |Expr e->Str| { e.serialize }
     return "$method.parent($argSer)"
   }
 
@@ -1052,9 +1052,9 @@ class FieldExpr : NameExpr
     }
   }
 
-  override Bool isAssignable() { return true }
+  override Bool isAssignable() { true }
 
-  override Bool assignRequiresTempVar() { return !field.isStatic }
+  override Bool assignRequiresTempVar() { !field.isStatic }
 
   override Bool sameVarAs(Expr that)
   {
@@ -1161,7 +1161,7 @@ class LocalVarExpr : Expr
     return register == x.register
   }
 
-  virtual Int register() { return var.register }
+  virtual Int register() { var.register }
 
   override Str toStr()
   {
@@ -1353,7 +1353,7 @@ class TypeCheckExpr : Expr
   }
 
   ** From type if coerce
-  CType? from { get { return &from ?: target.ctype } }
+  CType? from { get { &from ?: target.ctype } }
 
   Expr target
   CType check    // to type if coerce

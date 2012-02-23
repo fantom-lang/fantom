@@ -21,56 +21,56 @@ class FTable
   {
     return make(pod,
       |OutStream out, Obj obj| { out.writeUtf((Str)obj) },
-      |InStream in->Obj| { return in.readUtf.intern })
+      |InStream in->Obj| { in.readUtf.intern })
   }
 
   static FTable makeTypeRefs(FPod pod)
   {
     return make(pod,
       |OutStream out, Obj obj| { ((FTypeRef)obj).write(out) },
-      |InStream in->Obj| { return FTypeRef.read(in) })
+      |InStream in->Obj| { FTypeRef.read(in) })
   }
 
   static FTable makeFieldRefs(FPod pod)
   {
     return make(pod,
       |OutStream out, Obj obj| { ((FFieldRef)obj).write(out) },
-      |InStream in->Obj| { return FFieldRef.read(in) })
+      |InStream in->Obj| { FFieldRef.read(in) })
   }
 
   static FTable makeMethodRefs(FPod pod)
   {
     return make(pod,
       |OutStream out, Obj obj| { ((FMethodRef)obj).write(out) },
-      |InStream in->Obj| { return FMethodRef.read(in) })
+      |InStream in->Obj| { FMethodRef.read(in) })
   }
 
   static FTable makeInts(FPod pod)
   {
     return make(pod,
       |OutStream out, Obj obj| { out.writeI8((Int)obj) },
-      |InStream in->Obj| { return in.readS8 })
+      |InStream in->Obj| { in.readS8 })
   }
 
   static FTable makeFloats(FPod pod)
   {
     return make(pod,
       |OutStream out, Obj obj| { out.writeF8((Float)obj) },
-      |InStream in->Obj| { return in.readF8 })
+      |InStream in->Obj| { in.readF8 })
   }
 
   static FTable makeDecimals(FPod pod)
   {
     return make(pod,
       |OutStream out, Obj obj| { out.writeDecimal((Decimal)obj) },
-      |InStream in->Obj| { return in.readDecimal })
+      |InStream in->Obj| { in.readDecimal })
   }
 
   static FTable makeDurations(FPod pod)
   {
     return make(pod,
       |OutStream out, Obj obj| { out.writeI8(((Duration)obj).ticks) },
-      |InStream in->Obj| { return Duration(in.readS8) })
+      |InStream in->Obj| { Duration(in.readS8) })
   }
 
 //////////////////////////////////////////////////////////////////////////

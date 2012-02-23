@@ -26,10 +26,10 @@ abstract class FSlot : CSlot, FConst
 // CSlot
 //////////////////////////////////////////////////////////////////////////
 
-  FPod pod() { return fparent.pod }
-  override CType parent() { return fparent }
-  override Str name() { return fparent.fpod.n(nameIndex) }
-  override Str qname() { return fparent.qname + "." + name }
+  FPod pod() { fparent.pod }
+  override CType parent() { fparent }
+  override Str name() { fparent.fpod.n(nameIndex) }
+  override Str qname() { fparent.qname + "." + name }
 
   FAttr? attr(Str name)
   {

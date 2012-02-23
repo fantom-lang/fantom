@@ -28,15 +28,15 @@ class FMethod : FSlot, CMethod
 
   FMethodVar[] fparams()
   {
-    return vars.findAll |FMethodVar v->Bool| { return v.isParam }
+    return vars.findAll |FMethodVar v->Bool| { v.isParam }
   }
 
 //////////////////////////////////////////////////////////////////////////
 // CMethod
 //////////////////////////////////////////////////////////////////////////
 
-  override CType returnType() { return fparent.fpod.toType(ret) }
-  override CParam[] params() { return fparams }
+  override CType returnType() { fparent.fpod.toType(ret) }
+  override CParam[] params() { fparams }
 
   override Str signature()
   {
@@ -160,7 +160,7 @@ class FMethodVar : FConst, CParam
     return this
   }
 
-  FPod fpod() { return fmethod.fparent.fpod }
+  FPod fpod() { fmethod.fparent.fpod }
 
   FMethod fmethod
   Int nameIndex    // name index

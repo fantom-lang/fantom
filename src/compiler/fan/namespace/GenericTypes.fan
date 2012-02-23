@@ -25,26 +25,26 @@ abstract class GenericType : CType
 // CType
 //////////////////////////////////////////////////////////////////////////
 
-  override CNamespace ns() { return base.ns }
-  override CPod pod()      { return ns.sysPod }
-  override Str name()      { return base.name }
-  override Str qname()     { return base.qname }
+  override CNamespace ns() { base.ns }
+  override CPod pod()      { ns.sysPod }
+  override Str name()      { base.name }
+  override Str qname()     { base.qname }
 
-  override Bool isVal() { return false }
+  override Bool isVal() { false }
 
-  override Bool isNullable() { return false }
-  override once CType toNullable() { return NullableType(this) }
+  override Bool isNullable() { false }
+  override once CType toNullable() { NullableType(this) }
 
-  override Bool isGeneric() { return false }
-  override Bool isParameterized() { return true }
+  override Bool isGeneric() { false }
+  override Bool isParameterized() { true }
 
-  override once CType toListOf() { return ListType(this) }
+  override once CType toListOf() { ListType(this) }
 
-  override CType[] mixins() { return CType[,] }
+  override CType[] mixins() { CType[,] }
 
-  override CFacet? facet(Str qname) { return base.facet(qname) }
+  override CFacet? facet(Str qname) { base.facet(qname) }
 
-  override once Str:CSlot slots() { return parameterizeSlots }
+  override once Str:CSlot slots() { parameterizeSlots }
 
   override once COperators operators() { COperators(this) }
 
@@ -268,7 +268,7 @@ class FuncType : GenericType
 
   override Int flags()
   {
-    allPublic := ret.isPublic && params.all |CType p->Bool| { return p.isPublic }
+    allPublic := ret.isPublic && params.all |CType p->Bool| { p.isPublic }
     return allPublic ? FConst.Public : FConst.Internal
   }
 
@@ -399,20 +399,20 @@ class GenericParameterType : CType
   }
 
   override CNamespace ns
-  override CPod pod() { return ns.sysPod }
+  override CPod pod() { ns.sysPod }
   override Str name
   override Str qname
-  override Str signature() { return qname }
-  override Int flags() { return FConst.Public }
-  override Bool isVal() { return false }
-  override Bool isNullable() { return false }
-  override once CType toNullable() { return NullableType(this) }
-  override Bool isGeneric() { return false }
-  override Bool isParameterized() { return false }
-  override Bool isGenericParameter() { return true }
-  override once CType toListOf() { return ListType(this) }
-  override CType? base() { return ns.objType }
-  override CType[] mixins() { return CType[,] }
+  override Str signature() { qname }
+  override Int flags() { FConst.Public }
+  override Bool isVal() { false }
+  override Bool isNullable() { false }
+  override once CType toNullable() { NullableType(this) }
+  override Bool isGeneric() { false }
+  override Bool isParameterized() { false }
+  override Bool isGenericParameter() { true }
+  override once CType toListOf() { ListType(this) }
+  override CType? base() { ns.objType }
+  override CType[] mixins() { CType[,] }
   override CFacet? facet(Str qname) { null }
   override Str:CSlot slots() { throw UnsupportedErr() }
   override COperators operators() { ns.objType.operators }
@@ -433,18 +433,18 @@ class ParameterizedField : CField
     this.setter = ParameterizedMethod(parent, generic.setter)
   }
 
-  override Str name()  { return generic.name }
-  override Str qname() { return generic.qname }
-  override Str signature() { return generic.signature }
-  override Int flags() { return generic.flags }
+  override Str name()  { generic.name }
+  override Str qname() { generic.qname }
+  override Str signature() { generic.signature }
+  override Int flags() { generic.flags }
   override CFacet? facet(Str qname) { generic.facet(qname) }
 
   override CType fieldType
   override CMethod? getter
   override CMethod? setter
-  override CType inheritedReturnType() { return fieldType }
+  override CType inheritedReturnType() { fieldType }
 
-  override Bool isParameterized() { return true }
+  override Bool isParameterized() { true }
 
   override CType parent { private set }
   CField generic { private set }
@@ -476,14 +476,14 @@ class ParameterizedMethod : CMethod
     signature = "$returnType $name(" + params.join(", ") + ")"
   }
 
-  override Str name()  { return generic.name }
-  override Str qname() { return generic.qname }
-  override Int flags() { return generic.flags }
+  override Str name()  { generic.name }
+  override Str qname() { generic.qname }
+  override Int flags() { generic.flags }
   override CFacet? facet(Str qname) { generic.facet(qname) }
 
-  override Bool isParameterized()  { return true }
+  override Bool isParameterized()  { true }
 
-  override CType inheritedReturnType()  { return generic.inheritedReturnType }
+  override CType inheritedReturnType()  { generic.inheritedReturnType }
 
   override CType parent     { private set }
   override Str signature    { private set }
@@ -504,9 +504,9 @@ class ParameterizedMethodParam : CParam
     this.paramType = parent.parameterize(generic.paramType)
   }
 
-  override Str name() { return generic.name }
-  override Bool hasDefault() { return generic.hasDefault }
-  override Str toStr() { return "$paramType $name" }
+  override Str name() { generic.name }
+  override Bool hasDefault() { generic.hasDefault }
+  override Str toStr() { "$paramType $name" }
 
   override CType paramType { private set }
   CParam generic { private set }

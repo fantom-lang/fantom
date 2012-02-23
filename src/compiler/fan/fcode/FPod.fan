@@ -90,9 +90,9 @@ final class FPod : CPod, FConst
   Duration duration(Int index)    { durations[index] }
   Str uri(Int index)              { uris[index] }
 
-  Str typeRefStr(Int index) { return typeRef(index).format(this) }
-  Str fieldRefStr(Int index) { return fieldRef(index).format(this) }
-  Str methodRefStr(Int index) { return methodRef(index).format(this) }
+  Str typeRefStr(Int index) { typeRef(index).format(this) }
+  Str fieldRefStr(Int index) { fieldRef(index).format(this) }
+  Str methodRefStr(Int index) { methodRef(index).format(this) }
 
 //////////////////////////////////////////////////////////////////////////
 // Compile Utils
@@ -285,7 +285,7 @@ final class FPod : CPod, FConst
   **
   ** Get output stream to write the specified file to zip storage.
   **
-  OutStream out(Uri uri) { return zip.writeNext(uri) }
+  OutStream out(Uri uri) { zip.writeNext(uri) }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

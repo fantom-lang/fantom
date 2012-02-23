@@ -34,22 +34,22 @@ class ReflectType : CType
 // CType
 //////////////////////////////////////////////////////////////////////////
 
-  override ReflectNamespace ns() { return pod.ns }
-  override Str name()      { return t.name }
-  override Str qname()     { return t.qname }
-  override Str signature() { return t.signature }
-  override Int flags()     { return (Int)t->flags }
+  override ReflectNamespace ns() { pod.ns }
+  override Str name()      { t.name }
+  override Str qname()     { t.qname }
+  override Str signature() { t.signature }
+  override Int flags()     { (Int)t->flags }
 
   override const Bool isVal
 
-  override Bool isNullable() { return false }
-  override once CType toNullable() { return NullableType(this) }
+  override Bool isNullable() { false }
+  override once CType toNullable() { NullableType(this) }
 
-  override Bool isGeneric() { return t.isGeneric }
-  override Bool isParameterized() { return !t.params.isEmpty }
-  override Bool isGenericParameter() { return pod === ns.sysPod && name.size == 1 }
+  override Bool isGeneric() { t.isGeneric }
+  override Bool isParameterized() { !t.params.isEmpty }
+  override Bool isGenericParameter() { pod === ns.sysPod && name.size == 1 }
 
-  override once CType toListOf() { return ListType(this) }
+  override once CType toListOf() { ListType(this) }
 
   override CFacet? facet(Str qname)
   {

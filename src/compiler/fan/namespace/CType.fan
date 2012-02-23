@@ -47,12 +47,12 @@ mixin CType
   **
   ** Return signature
   **
-  override final Str toStr() { return signature }
+  override final Str toStr() { signature }
 
   **
   ** If this is a TypeRef, return what it references
   **
-  virtual CType deref() { return this }
+  virtual CType deref() { this }
 
 //////////////////////////////////////////////////////////////////////////
 // Nullable
@@ -96,7 +96,7 @@ mixin CType
   **
   ** Get this type as a non-nullable (if nullable)
   **
-  virtual CType toNonNullable() { return this }
+  virtual CType toNonNullable() { this }
 
 //////////////////////////////////////////////////////////////////////////
 // FFI
@@ -105,7 +105,7 @@ mixin CType
   **
   ** If this a foreign function interface type.
   **
-  virtual Bool isForeign() { return false }
+  virtual Bool isForeign() { false }
 
   **
   ** If this TypeDef extends from a FFI class or implements any
@@ -115,7 +115,7 @@ mixin CType
   {
     if (base == null) return null
     if (base.isForeign) return base
-    m := mixins.find |CType t->Bool| { return t.isForeign }
+    m := mixins.find |CType t->Bool| { t.isForeign }
     if (m != null) return m
     return base.foreignInheritance
   }
@@ -123,7 +123,7 @@ mixin CType
   **
   ** If this is a foreign function return the bridge.
   **
-  CBridge? bridge() { return pod.bridge }
+  CBridge? bridge() { pod.bridge }
 
   **
   ** If this type is being used for type inference then get the
@@ -131,7 +131,7 @@ mixin CType
   ** However some FFI types such as '[java]::int' are never used
   ** on the stack directly and are inferred to be 'sys::Int'.
   **
-  virtual CType inferredAs() { return this }
+  virtual CType inferredAs() { this }
 
   **
   ** Return if type is supported by the Fantom type system.  For example
@@ -140,7 +140,7 @@ mixin CType
   ** check for supported types during CheckErrors when accessing
   ** fields and methods.
   **
-  virtual Bool isSupported() { return true }
+  virtual Bool isSupported() { true }
 
 //////////////////////////////////////////////////////////////////////////
 // Generics
@@ -279,7 +279,7 @@ mixin CType
   **
   Bool fitsAny(CType[] types)
   {
-    return types.any |CType t->Bool| { return this.fits(t) }
+    return types.any |CType t->Bool| { this.fits(t) }
   }
 
   **
@@ -506,37 +506,37 @@ mixin CType
   **
   ** Return if this type contains a slot by the specified name.
   **
-  Bool hasSlot(Str name) { return slots.containsKey(name) }
+  Bool hasSlot(Str name) { slots.containsKey(name) }
 
   **
   ** Lookup a slot by name.  If the slot doesn't exist then return null.
   **
-  virtual CSlot? slot(Str name) { return slots[name] }
+  virtual CSlot? slot(Str name) { slots[name] }
 
   **
   ** Lookup a field by name (null if method).
   **
-  virtual CField? field(Str name) { return slot(name) as CField }
+  virtual CField? field(Str name) { slot(name) as CField }
 
   **
   ** Lookup a method by name (null if field).
   **
-  virtual CMethod? method(Str name) { return slot(name) as CMethod }
+  virtual CMethod? method(Str name) { slot(name) as CMethod }
 
   **
   ** List of the all defined fields (including inherited fields).
   **
-  CField[] fields() { return (CField[])slots.vals.findType(CField#) }
+  CField[] fields() { slots.vals.findType(CField#) }
 
   **
   ** List of the all defined methods (including inherited methods).
   **
-  CMethod[] methods() { return (CMethod[])slots.vals.findType(CMethod#) }
+  CMethod[] methods() { slots.vals.findType(CMethod#) }
 
   **
   ** List of the all constructors.
   **
-  CMethod[] ctors() { return methods.findAll |CMethod m->Bool| { return m.isCtor } }
+  CMethod[] ctors() { slots.vals.findAll |s| { s.isCtor } }
 
   **
   ** Get operators lookup structure

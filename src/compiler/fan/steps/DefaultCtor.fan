@@ -29,7 +29,7 @@ class DefaultCtor : CompilerStep
   {
     if (t.isMixin || t.isEnum || t.isFacet) return
 
-    hasCtor := t.methodDefs.any |MethodDef m->Bool| { return m.isCtor }
+    hasCtor := t.methodDefs.any |MethodDef m->Bool| { m.isCtor }
     if (hasCtor) return
 
     // ensure there isn't already a slot called make

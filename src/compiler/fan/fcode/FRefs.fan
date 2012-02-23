@@ -21,7 +21,7 @@ const class FTypeRef
     this.hashcode = podName.shiftl(17).xor(typeName).xor(sig.hash)
   }
 
-  override Int hash() { return hashcode }
+  override Int hash() { hashcode }
 
   override Bool equals(Obj? obj)
   {
@@ -29,7 +29,7 @@ const class FTypeRef
     return podName == x.podName && typeName == x.typeName && sig == x.sig
   }
 
-  Bool isGenericInstance() { return sig.size > 1 }
+  Bool isGenericInstance() { sig.size > 1 }
 
   Str signature(FPod pod)
   {
@@ -37,7 +37,7 @@ const class FTypeRef
     return pod.n(podName) + "::" + pod.n(typeName) + sig
   }
 
-  Str format(FPod pod) { return signature(pod) }
+  Str format(FPod pod) { signature(pod) }
 
   Void write(OutStream out)
   {

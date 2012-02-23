@@ -53,7 +53,7 @@ class CheckInheritance : CompilerStep
   {
     if (!t.baseSpecified)
     {
-      cls := t.mixins.find |CType x->Bool| { return !x.isMixin }
+      cls := t.mixins.find |CType x->Bool| { !x.isMixin }
       if (cls != null)
       {
         err("Invalid inheritance order, ensure class '$cls' comes first before mixins", t.loc)

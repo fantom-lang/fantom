@@ -770,7 +770,7 @@ class CheckErrors : CompilerStep
     // already declared by a previous return
     if (stmt.expr != null && protectedRegionDepth > 0)
     {
-      v := curMethod.vars.find |MethodVar v->Bool| { return v.name == "\$return" }
+      v := curMethod.vars.find |MethodVar v->Bool| { v.name == "\$return" }
       if (v == null) v = curMethod.addLocalVar(stmt.expr.ctype, "\$return", null)
       stmt.leaveVar = v
     }
@@ -1191,7 +1191,7 @@ class CheckErrors : CompilerStep
         err("Method '$name' uses unsupported type '$m.returnType'", call.loc)
         return
       }
-      unsupported := m.params.find |CParam p->Bool| { return !p.paramType.isSupported }
+      unsupported := m.params.find |CParam p->Bool| { !p.paramType.isSupported }
       if (unsupported != null)
       {
         err("Method '$name' uses unsupported type '$unsupported.paramType'", call.loc)
@@ -1541,7 +1541,7 @@ class CheckErrors : CompilerStep
       msg += "|" + sig.params.join(", ") + "|"
     else
       msg += "$name(" + params.join(", ", |p| { paramTypeStr(base, p) }) + ")"
-    msg += ", not (" + args.join(", ", |Expr e->Str| { return "$e.toTypeStr" }) + ")"
+    msg += ", not (" + args.join(", ", |Expr e->Str| { "$e.toTypeStr" }) + ")"
     err(msg, call.loc)
   }
 

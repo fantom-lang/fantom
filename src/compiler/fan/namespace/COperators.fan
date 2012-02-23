@@ -12,6 +12,7 @@
 **
 class COperators
 {
+  ** Construct for given parent type
   new make(CType parent)
   {
     this.parent = parent
@@ -42,6 +43,10 @@ class COperators
     exacts[methodName] ?: prefixes.find |p| { methodName.startsWith(p) }
   }
 
+  **
+  ** Get operators defined for prefix.  For example:
+  **   find("plus") => [plus, plusFloat, plusDecimal]
+  **
   CMethod[] find(Str prefix)
   {
     byPrefix[prefix] ?: CMethod#.emptyList

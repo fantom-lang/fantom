@@ -255,7 +255,7 @@ class CallResolver : CompilerSupport
     return true
   }
 
-  private Str errSig() { return "${base.qname}.${name}" }
+  private Str errSig() { "${base.qname}.${name}" }
 
 //////////////////////////////////////////////////////////////////////////
 // Implicit This

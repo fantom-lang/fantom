@@ -39,16 +39,16 @@ class TypeDef : DefNode, CType
 // CType
 //////////////////////////////////////////////////////////////////////////
 
-  override Str signature() { return qname }
+  override Str signature() { qname }
 
-  override Bool isNullable() { return false }
-  override once CType toNullable() { return NullableType(this) }
+  override Bool isNullable() { false }
+  override once CType toNullable() { NullableType(this) }
 
-  override Bool isGeneric() { return false }
-  override Bool isParameterized() { return false }
-  override Bool isGenericParameter() { return false }
+  override Bool isGeneric() { false }
+  override Bool isParameterized() { false }
+  override Bool isGenericParameter() { false }
 
-  override once CType toListOf() { return ListType(this) }
+  override once CType toListOf() { ListType(this) }
 
 //////////////////////////////////////////////////////////////////////////
 // Access
@@ -69,7 +69,7 @@ class TypeDef : DefNode, CType
   **
   ** Return all the all slots (inherited and defined)
   **
-  override Str:CSlot slots() { return slotMap }
+  override Str:CSlot slots() { slotMap }
 
   **
   ** Cached COperators map
@@ -258,7 +258,7 @@ class TypeDef : DefNode, CType
   **
   FieldDef[] staticFieldDefs()
   {
-    return fieldDefs.findAll |FieldDef f->Bool| { return f.isStatic }
+    return fieldDefs.findAll |FieldDef f->Bool| { f.isStatic }
   }
 
   **
@@ -266,7 +266,7 @@ class TypeDef : DefNode, CType
   **
   FieldDef[] instanceFieldDefs()
   {
-    return fieldDefs.findAll |FieldDef f->Bool| { return !f.isStatic }
+    return fieldDefs.findAll |FieldDef f->Bool| { !f.isStatic }
   }
 
   **
@@ -282,7 +282,7 @@ class TypeDef : DefNode, CType
   **
   MethodDef[] ctorDefs()
   {
-    return methodDefs.findAll |MethodDef m->Bool| { return m.isCtor }
+    return methodDefs.findAll |MethodDef m->Bool| { m.isCtor }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -294,7 +294,7 @@ class TypeDef : DefNode, CType
   **
   public EnumDef? enumDef(Str name)
   {
-    return enumDefs.find |EnumDef def->Bool| { return def.name == name }
+    return enumDefs.find |EnumDef def->Bool| { def.name == name }
   }
 
 //////////////////////////////////////////////////////////////////////////

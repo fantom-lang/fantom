@@ -161,7 +161,7 @@ mixin Visitor
   ** expression if doing a replacement for the expression in
   ** the abstract syntax tree.
   **
-  virtual Expr visitExpr(Expr expr) { return expr }
+  virtual Expr visitExpr(Expr expr) { expr }
 }
 
 **************************************************************************
