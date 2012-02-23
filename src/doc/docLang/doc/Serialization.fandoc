@@ -71,14 +71,14 @@ Simple [#simple]
 Set the [Serializable.simple]`sys::Serializable.simple` field to mark a
 type which is serialized atomically to and from a string representation.
 The `sys::Obj.toStr` method must return a suitable string representation of
-the object.  Each simple type must also declare a static method called 'fromStr'
+the object.  Each simple type must also declare a constructor called 'fromStr'
 which takes one or more parameters where the first parameter is a 'Str'
 and returns an instance of the object.  An example:
 
   @Serializable { simple = true }
   class Point
   {
-    static Point fromStr(Str s) { t := s.split(','); return make(t[0].toInt, t[1].toInt) }
+    static new fromStr(Str s) { t := s.split(','); return make(t[0].toInt, t[1].toInt) }
     new make(Int x, Int y) { this.x = x; this.y = y }
     override Str toStr() { return "$x,$y" }
     Int x := 0
@@ -189,8 +189,8 @@ Simples [#syntaxSimples]
 ========================
 A simple is serialized as: '<type>("<toStr>")'.  When writing the object, the
 'Obj.toStr' method is called to obtain the string representation.  When reading
-the object the static 'fromStr' method is used to decode the string back into
-an object.  Examples:
+the object the 'fromStr' method is used to decode the string back into an
+object.  Examples:
 
   sys::Version("1.2")
   sys::Depend("foo 1.2-3.4")
