@@ -96,7 +96,7 @@ public class FwtEnvPeer
   private fan.gfx.Image toFanImage(Image swtImage)
   {
     Uri uri = Uri.fromStr("mem-" + Uuid.make());
-    fan.gfx.Image fanImage = fan.gfx.Image.makeUri(uri);
+    fan.gfx.Image fanImage = fan.gfx.Image.makeFields(uri, null);
     Fwt.get().images.put(uri, swtImage);
     return fanImage;
   }
