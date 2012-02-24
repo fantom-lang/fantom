@@ -59,6 +59,7 @@ class JarDist : JdkTask
     if (m == null) throw fatal("mainMethod not found: $mainMethod")
     if (!m.isStatic) throw fatal("mainMethod not static: $mainMethod")
     if (!isMainParamsOk(m)) throw fatal("mainMethod params must be () or (Str[]): $mainMethod")
+    mainMethodArg = !m.params.isEmpty
   }
 
   private static Bool isMainParamsOk(Method m)
@@ -216,6 +217,8 @@ class JarDist : JdkTask
       podInits.add("""      Env.cur().loadPodClass(Pod.find("$podName"));\n""")
     }
 
+    mainArgs := mainMethodArg ? "Env.cur().args()" : ""
+
     // write out Main Java class
     file := tempDir + `fanjardist/Main.java`
     file.out.print(
@@ -233,7 +236,7 @@ class JarDist : JdkTask
                Sys.bootEnv.setArgs(args);
          $podInits
                Method m = Slot.findMethod("$mainMethod");
-               m.call(Env.cur().args());
+               m.call($mainArgs);
              }
              catch (Err e) { e.trace(); }
              catch (Throwable e) { e.printStackTrace(); }
@@ -273,6 +276,9 @@ class JarDist : JdkTask
   ** Qualified name of main method to run for JAR.
   ** This must be a static void method with no arguments.
   Str? mainMethod
+
+  ** Does the main method accept a Str[] arg
+  Bool mainMethodArg
 
   ** List of pods to compile into JAR; sys is always implied
   Str[] podNames := Str[,]
