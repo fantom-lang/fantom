@@ -66,16 +66,19 @@ can test which runtime is being used via "fan -version":
 
   C:\dev\fan>fan -version
   Fantom Launcher
-  Copyright (c) 2006-2011, Brian Frank and Andy Frank
+  Copyright (c) 2006-2012, Brian Frank and Andy Frank
   Licensed under the Academic Free License version 3.0
 
   Java Runtime:
-    java.version:    1.6.0_13
+    java.version:    1.7.0_02
     java.vm.name:    Java HotSpot(TM) Client VM
-    java.vm.vendor:  Sun Microsystems Inc.
-    java.vm.version: 11.3-b02
-    java.home:       C:\Program Files\Java\jre6
-    fan.version:     1.0.45
+    java.vm.vendor:  Oracle Corporation
+    java.vm.version: 22.0-b10
+    java.home:       C:\Program Files (x86)\Java\jre7
+    fan.platform:    win32-x86
+    fan.version:     1.0.62
+    fan.env:         sys::BootEnv
+    fan.home:        E:\fan
 
 Use "etc/sys/config.props" to configure which runtime is used by default.
 The value must be "java" or "dotnet":
