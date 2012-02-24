@@ -25,7 +25,7 @@ class Demo
             content = Label { text = "Text"; bg = Color.white }
             ConsumeEventDemo.listen(content, "label")
           },
-        },
+        }
       }
       it.onKeyDown.add |e| { echo("# onKeyDown: $e.key") }
       size = Size(400, 400)
