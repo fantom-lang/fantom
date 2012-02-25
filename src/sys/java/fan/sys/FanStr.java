@@ -165,8 +165,8 @@ public class FanStr
   {
     int size = self.length();
 
-    int s = r.start(size);
-    int e = r.end(size);
+    int s = r.startIndex(size);
+    int e = r.endIndex(size);
     if (e+1 < s) throw IndexErr.make(r);
 
     return self.substring(s, e+1);

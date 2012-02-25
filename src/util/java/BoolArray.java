@@ -47,7 +47,7 @@ public final class BoolArray extends FanObj
     int start, end;
     int size = (int)size();
     if (range == null) { start = 0; end = size-1; }
-    else  { start = range.start(size); end = range.end(size); }
+    else  { start = range.startIndex(size); end = range.endIndex(size); }
     for (int i=start; i<=end; ++i) set(i, val);
     return this;
   }

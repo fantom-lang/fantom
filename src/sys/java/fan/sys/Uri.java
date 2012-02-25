@@ -924,8 +924,8 @@ public final class Uri
       throw Err.make("Uri has no path: " + this);
 
     int size = path.sz();
-    int s = range.start(size);
-    int e = range.end(size);
+    int s = range.startIndex(size);
+    int e = range.endIndex(size);
     int n = e - s + 1;
     if (n < 0) throw IndexErr.make(range);
 

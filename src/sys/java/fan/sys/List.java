@@ -187,8 +187,8 @@ public final class List
   {
     try
     {
-      int s = r.start(size);
-      int e = r.end(size);
+      int s = r.startIndex(size);
+      int e = r.endIndex(size);
       int n = e - s + 1;
       if (n < 0) throw IndexErr.make(r);
 
@@ -441,8 +441,8 @@ public final class List
   public final List removeRange(Range r)
   {
     modify();
-    int s = r.start(size);
-    int e = r.end(size);
+    int s = r.startIndex(size);
+    int e = r.endIndex(size);
     int n = e - s + 1;
     if (n < 0) throw IndexErr.make(r);
 
@@ -556,8 +556,8 @@ public final class List
 
   public final void eachRange(Range r, Func f)
   {
-    int s = r.start(size);
-    int e = r.end(size);
+    int s = r.startIndex(size);
+    int e = r.endIndex(size);
     int n = e - s + 1;
     if (n < 0) throw IndexErr.make(r);
 

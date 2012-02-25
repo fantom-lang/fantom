@@ -165,6 +165,8 @@ class RangeTest : Test
     verifyErr(ParseErr#) { r := Range.fromStr("x..4", true) }
     verifyErr(ParseErr#) { r := Range.fromStr("3..x") }
     verifyEq(0..<7.toStr.in.readObj, 0..<7)
+    verifyEq(Range#.method("fromStr").call("0..10"), 0..10)
   }
+
 
 }

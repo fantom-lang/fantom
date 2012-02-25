@@ -6,6 +6,8 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.63 (working)*
+
 *Build 1.0.62 (24 Feb 2012)*
 - Add gedit config file
 - Tweak compiler to omit fcode/types.def if no types

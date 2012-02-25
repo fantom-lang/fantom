@@ -38,7 +38,7 @@ public abstract class IntArray extends FanObj
     int start, end;
     int thatSize = (int)that.size();
     if (thatRange == null) { start = 0; end = thatSize-1; }
-    else  { start = thatRange.start(thatSize); end  = thatRange.end(thatSize); }
+    else  { start = thatRange.startIndex(thatSize); end  = thatRange.endIndex(thatSize); }
     System.arraycopy(that.array(), start, this.array(), (int)thisOffset, end-start+1);
     return this;
   }
@@ -49,7 +49,7 @@ public abstract class IntArray extends FanObj
     int start, end;
     int size = (int)size();
     if (range == null) { start = 0; end = size-1; }
-    else  { start = range.start(size); end = range.end(size); }
+    else  { start = range.startIndex(size); end = range.endIndex(size); }
     for (int i=start; i<=end; ++i) set(i, val);
     return this;
   }
