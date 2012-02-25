@@ -254,26 +254,21 @@ internal class DocTypeRefParser
     else
       t = parseBasic
 
-    // nullable
-    if (cur == '?')
+    // nullable and []
+    while (cur == '?' || cur == '[')
     {
-      consume('?')
-      t = NullableTypeRef(t)
-    }
+      if (cur == '?')
+      {
+        consume('?')
+        t = NullableTypeRef(t)
+      }
 
-    // anything left must be []
-    while (cur == '[')
-    {
-      consume('[')
-      consume(']')
-      t = ListTypeRef(t)
-    }
-
-    // nullable
-    if (cur == '?')
-    {
-      consume('?')
-      t = NullableTypeRef(t)
+      if (cur == '[')
+      {
+        consume('[')
+        consume(']')
+        t = ListTypeRef(t)
+      }
     }
 
     return t
