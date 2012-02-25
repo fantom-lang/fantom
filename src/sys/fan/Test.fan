@@ -113,7 +113,7 @@ abstract class Test
   ** exact same type as err (compare using === operator).
   **
   ** Examples:
-  **   verifyErr(ParseErr#) { Int.fromStr("@#!") }
+  **   verifyErr(ParseErr#) { x := Int.fromStr("@#!") }
   **
   Void verifyErr(Type errType, |Test| c)
 
