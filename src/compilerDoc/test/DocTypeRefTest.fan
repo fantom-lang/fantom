@@ -111,6 +111,18 @@ class DocTypeRefTest : Test
     verifyEq(t.qname, "sys::List")
     verifyBasic(t.v, "foo", "Bar", true)
 
+    // bug report Feb-2012
+    t = DocTypeRef("sys::Str[][]?[]")
+    verifyEq(t.qname, "sys::List")
+    t = t.v
+    verifyEq(t.signature, "sys::Str[][]?")
+    verifyEq(t.isNullable, true)
+    t = t.v
+    verifyEq(t.signature, "sys::Str[]")
+    verifyEq(t.isNullable, false)
+    t = t.v
+    verifyEq(t.signature, "sys::Str")
+
     // errors
     verifyEq(DocTypeRef.fromStr("foo", false), null)
     verifyErr(ParseErr#) { x := DocTypeRef.fromStr("foo") }
