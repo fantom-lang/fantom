@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.62 (working)*
+*Build 1.0.62 (24 Feb 2012)*
 - Add gedit config file
 - Tweak compiler to omit fcode/types.def if no types
 - Refactor Compiler.depends
@@ -25,6 +25,20 @@
 - Fix compiler/runtime to search dependencies for Java classfiles
 - Compiler check for type visibility for is, isnot, as, casting
 - Prototype for "fan.props" PathEnv
+- #1143: js: Method.call fails for some core types
+- #1385: js: sys::List API problems
+- #1577: js: exception when Map->size
+- #1652: js: Type.params not implemented
+- #1683: JS: Assignment operator complie error
+- #1684: JS: Call super field
+- #1718: Require func param types when used in slot signatures
+- #1722: Cycle-dependent pod
+- #1738: Ambiguous slot issue
+- #1776: Proposal: Enhanced Constructors
+- #1778: Map#findAll() and Map#exclude()
+- #1780: Enhanced Java Support
+- #1782: js: Support for overriding virtual fields
+- #1783: js: checks for type dependencies
 
 *Build 1.0.61 (17 Nov 2011)*
 - Upgrade timezone database with zone info version 2011j
