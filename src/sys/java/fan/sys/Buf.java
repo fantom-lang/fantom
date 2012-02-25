@@ -145,8 +145,8 @@ public abstract class Buf
   public final Buf getRange(Range range)
   {
     long size = size();
-    long s = range.start(size);
-    long e = range.end(size);
+    long s = range.startIndex(size);
+    long e = range.endIndex(size);
     int n = (int)(e - s + 1);
     if (n < 0) throw IndexErr.make(range);
 

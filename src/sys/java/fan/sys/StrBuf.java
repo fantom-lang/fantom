@@ -121,8 +121,8 @@ public class StrBuf
 
   public StrBuf removeRange(Range r)
   {
-    int s = r.start(sb.length());
-    int e = r.end(sb.length());
+    int s = r.startIndex(sb.length());
+    int e = r.endIndex(sb.length());
     int n = e - s + 1;
     if (n < 0) throw IndexErr.make(r);
     sb.delete(s, e+1);
