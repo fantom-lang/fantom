@@ -195,7 +195,7 @@ class Normalize : CompilerStep
     x := MethodDef(loc, curType)
     x.flags        = FConst.Private + FConst.Synthetic
     x.name         = m.name + "\$Once"
-    x.ret          = ns.objType.toNullable
+    x.ret          = m.returnType
     x.inheritedRet = null
     x.paramDefs    = m.paramDefs
     x.vars         = m.vars
