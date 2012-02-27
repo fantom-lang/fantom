@@ -145,6 +145,13 @@ fan.fwt.FwtEnvPeer.prototype.imagePaint = function(self, size, f)
   return fan.gfx.Image.makeFields(uri, null);
 }
 
+// Void imageDispose(Image i)
+fan.fwt.FwtEnvPeer.prototype.imageDispose = function(self, img)
+{
+  // remove image from cache to allow GC free it
+  fan.fwt.FwtEnvPeer.imgCache[img.m_uri.toStr()] = null
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Font
 //////////////////////////////////////////////////////////////////////////
@@ -194,4 +201,12 @@ fan.fwt.FwtEnvPeer.prototype.fontWidth = function(self, font, str)
     return str.length * 7;
   }
 }
+
+fan.fwt.FwtEnvPeer.prototype.fontDispose = function(self, font) {}
+
+//////////////////////////////////////////////////////////////////////////
+// Color
+//////////////////////////////////////////////////////////////////////////
+
+fan.fwt.FwtEnvPeer.prototype.colorDispose = function(self, font) {}
 

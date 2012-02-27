@@ -106,6 +106,14 @@ const class Image
   const File? file
 
   **
+  ** Free any operating system resources used by this image.
+  ** Dispose is required if this image has been used in an operation
+  ** such as FWT onPaint which allocated a system resource to
+  ** represent this instance.
+  **
+  Void dispose() { GfxEnv.cur(false)?.imageDispose(this) }
+
+  **
   ** Return 'uri.hash'.
   **
   override Int hash() { uri.hash }
