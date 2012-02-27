@@ -82,17 +82,20 @@ class Desktop
   **
   ** Free any operating system resources used by the color.
   **
-  static native Void disposeColor(Color c)
+  @Deprecated { msg = "Use Color.dispose" }
+  static Void disposeColor(Color c) { c.dispose }
 
   **
   ** Free any operating system resources used by the font.
   **
-  static native Void disposeFont(Font f)
+  @Deprecated { msg = "Use Font.dispose" }
+  static Void disposeFont(Font f) { f.dispose }
 
   **
   ** Free any operating system resources used by the image.
   **
-  static native Void disposeImage(Image i)
+  @Deprecated { msg = "Use Image.dispose" }
+  static Void disposeImage(Image i) { i.dispose }
 
 //////////////////////////////////////////////////////////////////////////
 // System Fonts

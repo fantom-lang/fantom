@@ -252,6 +252,14 @@ const class Color : Brush
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Free any operating system resources used by this color.
+  ** Dispose is required if this color has been used in an operation
+  ** such as FWT onPaint which allocated a system resource to
+  ** represent this instance.
+  **
+  Void dispose() { GfxEnv.cur(false)?.colorDispose(this) }
+
+  **
   ** Return `argb` as the hash code.
   **
   override Int hash() { return argb }

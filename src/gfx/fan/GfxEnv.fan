@@ -54,6 +54,11 @@ abstract const class GfxEnv
   **
   abstract Image imagePaint(Size size, |Graphics| f)
 
+  **
+  ** Free any operating system resources used by the image.
+  **
+  abstract Void imageDispose(Image i)
+
 //////////////////////////////////////////////////////////////////////////
 // Font Support
 //////////////////////////////////////////////////////////////////////////
@@ -90,5 +95,20 @@ abstract const class GfxEnv
   ** with this font for this environment.
   **
   abstract Int fontWidth(Font f, Str s)
+
+  **
+  ** Free any operating system resources used by the font.
+  **
+  abstract Void fontDispose(Font f)
+
+//////////////////////////////////////////////////////////////////////////
+// Color Support
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Free any operating system resources used by the color.
+  **
+  abstract Void colorDispose(Color c)
+
 
 }

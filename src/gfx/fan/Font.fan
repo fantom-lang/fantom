@@ -105,6 +105,14 @@ const class Font
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Free any operating system resources used by this font.
+  ** Dispose is required if this color has been used in an operation
+  ** such as FWT onPaint which allocated a system resource to
+  ** represent this instance.
+  **
+  Void dispose() { GfxEnv.cur(false)?.fontDispose(this) }
+
+  **
   ** Return hash of name, size, and style.
   **
   override Int hash()

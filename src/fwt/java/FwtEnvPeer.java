@@ -101,6 +101,11 @@ public class FwtEnvPeer
     return fanImage;
   }
 
+  public void imageDispose(FwtEnv self, fan.gfx.Image x)
+  {
+    Fwt.get().dispose(x);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Font Support
 //////////////////////////////////////////////////////////////////////////
@@ -130,12 +135,26 @@ public class FwtEnvPeer
     return scratchGC(f).textExtent(s).x;
   }
 
+  public void fontDispose(FwtEnv self, fan.gfx.Font x)
+  {
+    Fwt.get().dispose(x);
+  }
+
   private GC scratchGC(fan.gfx.Font f)
   {
     Fwt fwt = Fwt.get();
     GC gc = fwt.scratchGC();
     gc.setFont(fwt.font(f));
     return gc;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Color Support
+//////////////////////////////////////////////////////////////////////////
+
+  public void colorDispose(FwtEnv self, fan.gfx.Color x)
+  {
+    Fwt.get().dispose(x);
   }
 
 }
