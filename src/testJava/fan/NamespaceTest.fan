@@ -7,6 +7,7 @@
 //
 
 using compiler
+using compilerJava
 
 **
 ** NamespaceTest
@@ -97,6 +98,26 @@ class NamespaceTest : JavaTest
     verifyEq(ai.slots["addAndGet"].parent, ai)
     verifyEq(ai.slots["wait"].parent.qname, "[java]java.lang::Object")
     verifyEq(ai.slots["<init>"].isCtor, true)
+
+    // SimpleDateFormat (#1790)
+    text := ns.resolvePod("[java]java.text", null)
+    sdf := text.resolveType("SimpleDateFormat", true)
+    JavaMethod? fm := sdf.method("format")
+    formats := JavaMethod[,]
+    while (fm != null) { formats.add(fm); fm = fm.next }
+    verifyEq(formats.size, 4)
+    format1 := formats.find |m| { m.params.size == 1 && m.params[0].paramType.name == "Obj" }
+    format2 := formats.find |m| { m.params.size == 1 && m.params[0].paramType.name == "Date" }
+    format3 := formats.find |m| { m.params.size == 3 && m.params[0].paramType.name == "Obj" }
+    format4 := formats.find |m| { m.params.size == 3 && m.params[0].paramType.name == "Date" }
+    verifyEq(format1.parent.qname,     "[java]java.text::Format")
+    verifyEq(format1.returnType.qname, "sys::Str")
+    verifyEq(format2.parent.qname,     "[java]java.text::DateFormat")
+    verifyEq(format2.returnType.qname, "sys::Str")
+    verifyEq(format3.parent.qname,     "[java]java.text::DateFormat")
+    verifyEq(format3.returnType.qname, "[java]java.lang::StringBuffer")
+    verifyEq(format4.parent.qname,     "[java]java.text::SimpleDateFormat")
+    verifyEq(format4.returnType.qname, "[java]java.lang::StringBuffer")
   }
 
 //////////////////////////////////////////////////////////////////////////

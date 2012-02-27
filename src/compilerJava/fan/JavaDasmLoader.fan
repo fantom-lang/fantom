@@ -118,9 +118,17 @@ internal class JavaDasmLoader
   {
     t.slots.each |slot|
     {
+      // don't inherit constructors or non-public/non-protected slots
       if (slot.isCtor) return
       if (!slot.isPublic && !slot.isProtected) return
-      addSlot(slot)
+
+      // if not JavaSlot then its straight add
+      java := slot as JavaSlot
+      if (java == null) { addSlot(slot); return }
+
+      // if JavaSlot when we need to ensure we add
+      // whole copy of linked list
+      while (java != null) { addSlot(java.dup); java = java.next }
     }
   }
 

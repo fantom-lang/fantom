@@ -29,6 +29,9 @@ abstract class JavaSlot : CSlot
 
   override Bool isForeign() { return true }
 
+  ** Clone without next linked list
+  abstract This dup()
+
   ** linked list of overloaded methods (first one
   ** may be field or method)
   JavaMethod? next
@@ -48,6 +51,8 @@ class JavaField : JavaSlot, CField
   {
     this.fieldType = type
   }
+
+  override This dup() { make(parent, name, flags, fieldType) }
 
   override CType fieldType
   override CMethod? getter
@@ -78,6 +83,8 @@ class JavaMethod : JavaSlot, CMethod
   override CType returnType
   override CParam[] params
   override Bool isGeneric
+
+  override This dup() { make(parent, name, flags, returnType, params) }
 
   override Str signature() { return "$returnType $name(" + params.join(",") + ")" }
   override CType inheritedReturnType() { return returnType }
