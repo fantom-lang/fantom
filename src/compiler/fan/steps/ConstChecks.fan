@@ -93,6 +93,9 @@ class ConstChecks : CompilerStep
 
   private Void processCtor(MethodDef ctor)
   {
+    // don't process static constructors
+    if (ctor.isStatic) return
+
     // set current state
     this.curCtor = ctor
 

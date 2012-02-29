@@ -663,4 +663,20 @@ class RegressionTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Don't insert checkFields in static ctor
+//////////////////////////////////////////////////////////////////////////
+
+  Void testStaticCheckFields()
+  {
+    compile(
+      """class Foo {
+           new make(|This| f) { f(this) }
+           const Date date
+           static new fromStr(Str s) { Foo { date = Date(s) } }}""")
+
+    t := pod.types.first
+    verifyEq(t.method("fromStr").call("2012-02-29")->date, Date("2012-02-29"))
+  }
+
 }
