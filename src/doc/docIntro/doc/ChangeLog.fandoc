@@ -8,6 +8,7 @@
 
 *Build 1.0.63 (working)*
 - Move dispose from Desktop to Color, Font, Image
+- Add util::FloatArray
 
 *Build 1.0.62 (24 Feb 2012)*
 - Add gedit config file
