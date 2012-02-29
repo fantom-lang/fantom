@@ -55,4 +55,9 @@ native class FloatArray
   ** then the entire array is filled, otherwise just the specified range.
   ** Return this.
   This fill(Float val, Range? range := null)
+
+  ** Sort the floats in this array.  If range is null then the
+  ** entire array is sorted, otherwise just the specified range.
+  ** Return this.
+  This sort(Range? range := null)
 }

@@ -8,6 +8,7 @@
 package fan.util;
 
 import fan.sys.*;
+import java.util.Arrays;
 
 public abstract class IntArray extends FanObj
 {
@@ -54,6 +55,18 @@ public abstract class IntArray extends FanObj
     return this;
   }
 
+  public IntArray sort() { return sort(null); }
+  public IntArray sort(Range range)
+  {
+    int start, end;
+    int size = (int)size();
+    if (range == null) { start = 0; end = size-1; }
+    else { start = range.startIndex(size); end = range.endIndex(size); }
+    doSort(start, end+1);
+    return this;
+  }
+  abstract void doSort(int from, int to);
+
   static class S1 extends IntArray
   {
     S1(int size) { array = new byte[size]; }
@@ -62,6 +75,7 @@ public abstract class IntArray extends FanObj
     public long get(long i) { return array[(int)i]; }
     public final void set(long i, long v) { array[(int)i] = (byte)v; }
     public final Object array() { return array; }
+    final void doSort(int from, int to) { Arrays.sort(array, from, to); }
     final byte[] array;
   }
 
@@ -80,6 +94,7 @@ public abstract class IntArray extends FanObj
     public long get(long i) { return array[(int)i]; }
     public final void set(long i, long v) { array[(int)i] = (short)v; }
     public final Object array() { return array; }
+    final void doSort(int from, int to) { Arrays.sort(array, from, to); }
     final short[] array;
   }
 
@@ -98,6 +113,7 @@ public abstract class IntArray extends FanObj
     public long get(long i) { return array[(int)i]; }
     public final void set(long i, long v) { array[(int)i] = (int)v; }
     public final Object array() { return array; }
+    final void doSort(int from, int to) { Arrays.sort(array, from, to); }
     final int[] array;
   }
 
@@ -116,6 +132,7 @@ public abstract class IntArray extends FanObj
     public final long get(long i) { return array[(int)i]; }
     public final void set(long i, long v) { array[(int)i] = v; }
     public final Object array() { return array; }
+    final void doSort(int from, int to) { Arrays.sort(array, from, to); }
     private final long[] array;
   }
 

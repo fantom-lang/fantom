@@ -70,4 +70,9 @@ native class IntArray
   ** then the entire array is filled, otherwise just the specified range.
   ** Return this.
   This fill(Int val, Range? range := null)
+
+  ** Sort the integers in this array.  If range is null then the
+  ** entire array is sorted, otherwise just the specified range.
+  ** Return this.
+  This sort(Range? range := null)
 }
