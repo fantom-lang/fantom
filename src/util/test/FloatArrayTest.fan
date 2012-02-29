@@ -96,6 +96,37 @@ class FloatArrayTest : Test
     verifyFloats(a, "4,4,4,9,9,9,3,3,3,9")
   }
 
+  Void testSort()
+  {
+    verifySort(FloatArray.makeF4(10))
+    verifySort(FloatArray.makeF8(10))
+  }
+
+  Void verifySort(FloatArray a)
+  {
+    expected     := Float[,]
+    expected2to5 := Float[,]
+    a.size.times |i|
+    {
+      val := Int.random(0..100).toFloat
+      a[i] = val
+      expected.add(val)
+      if (2 <= i && i <= 5) expected2to5.add(val)
+    }
+
+    expected2to5.sort
+    a.sort(2..5)
+    actual2to5 := Float[,]
+    (2..5).each |i| { actual2to5.add(a[i]) }
+    verifyEq(expected2to5, actual2to5)
+
+    expected.sort
+    a.sort
+    actual := Float[,]
+    a.size.times |i| { actual.add(a[i]) }
+    verifyEq(expected, actual)
+  }
+
   Void verifyMake(FloatArray a, Int size)
   {
     verifySame(a.typeof, FloatArray#)

@@ -8,6 +8,7 @@
 package fan.util;
 
 import fan.sys.*;
+import java.util.Arrays;
 
 public abstract class FloatArray extends FanObj
 {
@@ -49,6 +50,18 @@ public abstract class FloatArray extends FanObj
     return this;
   }
 
+  public FloatArray sort() { return sort(null); }
+  public FloatArray sort(Range range)
+  {
+    int start, end;
+    int size = (int)size();
+    if (range == null) { start = 0; end = size-1; }
+    else { start = range.startIndex(size); end = range.endIndex(size); }
+    doSort(start, end+1);
+    return this;
+  }
+  abstract void doSort(int from, int to);
+
   static class F4 extends FloatArray
   {
     F4(int size) { array = new float[size]; }
@@ -57,6 +70,7 @@ public abstract class FloatArray extends FanObj
     public double get(long i) { return array[(int)i]; }
     public final void set(long i, double v) { array[(int)i] = (float)v; }
     public final Object array() { return array; }
+    final void doSort(int from, int to) { Arrays.sort(array, from, to); }
     final float[] array;
   }
 
@@ -68,6 +82,7 @@ public abstract class FloatArray extends FanObj
     public final double get(long i) { return array[(int)i]; }
     public final void set(long i, double v) { array[(int)i] = v; }
     public final Object array() { return array; }
+    final void doSort(int from, int to) { Arrays.sort(array, from, to); }
     private final double[] array;
   }
 

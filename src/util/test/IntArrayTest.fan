@@ -148,6 +148,42 @@ class IntArrayTest : Test
     verifyInts(a, "255,255,255,255,255,255,255,255,255,255")
   }
 
+  Void testSort()
+  {
+    verifySort(IntArray.makeS1(10))
+    verifySort(IntArray.makeU1(10))
+    verifySort(IntArray.makeS2(10))
+    verifySort(IntArray.makeU2(10))
+    verifySort(IntArray.makeS4(10))
+    verifySort(IntArray.makeU4(10))
+    verifySort(IntArray.makeS8(10))
+  }
+
+  Void verifySort(IntArray a)
+  {
+    expected     := Int[,]
+    expected2to5 := Int[,]
+    a.size.times |i|
+    {
+      val := Int.random(0..100)
+      a[i] = val
+      expected.add(val)
+      if (2 <= i && i <= 5) expected2to5.add(val)
+    }
+
+    expected2to5.sort
+    a.sort(2..5)
+    actual2to5 := Int[,]
+    (2..5).each |i| { actual2to5.add(a[i]) }
+    verifyEq(expected2to5, actual2to5)
+
+    expected.sort
+    a.sort
+    actual := Int[,]
+    a.size.times |i| { actual.add(a[i]) }
+    verifyEq(expected, actual)
+  }
+
   Void verifyMake(IntArray a, Int size)
   {
     verifySame(a.typeof, IntArray#)
