@@ -12,6 +12,7 @@ class IntArrayTest : Test
   Void testS1()
   {
     a := IntArray.makeS1(5)
+    verifyMake(a, 5)
     verifyStore(a, -128)
     verifyStore(a, 127)
     verifyStore(a, 0x7f)
