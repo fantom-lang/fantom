@@ -11,6 +11,7 @@
 - Add util::FloatArray
 - Add IntArray, FloatArray sort
 - Add gzip factories to sys::Zip
+- FileWeblet gzip compression for text files
 
 *Build 1.0.62 (24 Feb 2012)*
 - Add gedit config file
