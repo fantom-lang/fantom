@@ -8,8 +8,11 @@
 
 **
 ** FileWeblet is used to service an HTTP request on a `sys::File`.
-** It handles all the dirty details for cache control, modification
-** time, ETags, etc.
+** It handles all the dirty details for cache control, compression,
+** modification time, ETags, etc.
+**
+** Default implementation uses gzip encoding if gzip is supported
+** by the client and the file's MIME type has a "text" media type.
 **
 ** Current implementation supports ETags and Modification time
 ** for cache validation.  It does not specify any cache control
@@ -81,10 +84,26 @@ class FileWeblet : Weblet
     // check if we can return a 304 not modified
     if (checkNotModified) return
 
-    // service a normal 200
-    res.statusCode = 200
+    // MIME type
     mime := file.mimeType
     if (mime != null) res.headers["Content-Type"] = mime.toStr
+
+    // check if client supports gzip and file has text/* MIME type
+    // and if so send the file using gzip compression (we don't
+    // know content length in this case)
+    ae := req.headers["Accept-Encoding"] ?: ""
+    if (mime?.mediaType == "text" && ae.contains("gzip"))
+    {
+      res.statusCode = 200
+      res.headers["Content-Encoding"] = "gzip"
+      out := Zip.gzipOutStream(res.out)
+      file.in.pipe(out, file.size)
+      out.close
+      return
+    }
+
+    // service a normal 200 with no compression
+    res.statusCode = 200
     res.headers["Content-Length"] = file.size.toStr
     file.in.pipe(res.out, file.size)
   }
