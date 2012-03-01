@@ -10,6 +10,7 @@
 - Move dispose from Desktop to Color, Font, Image
 - Add util::FloatArray
 - Add IntArray, FloatArray sort
+- Add gzip factories to sys::Zip
 
 *Build 1.0.62 (24 Feb 2012)*
 - Add gedit config file
