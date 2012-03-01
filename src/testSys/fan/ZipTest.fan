@@ -163,4 +163,33 @@ class ZipTest : Test
 
   DateTime start := DateTime.now
   DateTime yesterday := DateTime.now + (-1day)
+
+//////////////////////////////////////////////////////////////////////////
+// GZIP
+//////////////////////////////////////////////////////////////////////////
+
+  Void testGzip()
+  {
+    // generate string with lots of duplicate text
+    s := StrBuf()
+    100.times { s.add("hello world!\n") }
+    text := s.toStr
+
+    // check size if we write raw
+    buf := Buf()
+    buf.out.print(text)
+    rawSize := buf.size
+
+    // write to buffer with gzip
+    buf = Buf()
+    Zip.gzipOutStream(buf.out).print(text).close
+    gzipSize := buf.size
+
+    // verify gzip is smaller than raw size
+    verify(gzipSize < rawSize)
+
+    // verify we can read it back out
+    x := Zip.gzipInStream(buf.flip.in).readAllStr
+    verifyEq(text, x)
+  }
 }

@@ -131,4 +131,18 @@ final class Zip
   **
   override Str toStr()
 
+//////////////////////////////////////////////////////////////////////////
+// GZIP
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Construct a new GZIP output stream which wraps the given output stream.
+  **
+  static OutStream gzipOutStream(OutStream out)
+
+  **
+  ** Construct a new GZIP input stream which wraps the given output stream.
+  **
+  static InStream gzipInStream(InStream out)
+
 }

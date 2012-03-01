@@ -12,6 +12,8 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Zip
@@ -191,6 +193,34 @@ public final class Zip
     {
       e.printStackTrace();
       return false;
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// GZIP
+//////////////////////////////////////////////////////////////////////////
+
+  public static OutStream gzipOutStream(OutStream out)
+  {
+    try
+    {
+      return new SysOutStream(new GZIPOutputStream(SysOutStream.java(out)));
+    }
+    catch (java.io.IOException e)
+    {
+      throw IOErr.make(e);
+    }
+  }
+
+  public static InStream gzipInStream(InStream in)
+  {
+    try
+    {
+      return new SysInStream(new GZIPInputStream(SysInStream.java(in)));
+    }
+    catch (java.io.IOException e)
+    {
+      throw IOErr.make(e);
     }
   }
 
