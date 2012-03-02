@@ -65,6 +65,7 @@ public class Parser : CompilerSupport
   **
   private Void usings()
   {
+    doc
     while (curt == Token.usingKeyword)
       skipUsing
   }
@@ -89,6 +90,7 @@ public class Parser : CompilerSupport
       if (curt === Token.asKeyword) { consume; consumeId }
     }
     endOfStmt
+    doc
   }
 
 //////////////////////////////////////////////////////////////////////////
