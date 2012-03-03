@@ -158,4 +158,13 @@ class Window : ContentPane
   ** See WindowPeer.java for details
   internal |Obj data|? onDrop
 
+  ** Sets overlay text on dock icon for OSX.  Use empty string to
+  ** clear text.
+  **
+  ** TODO FIXIT:
+  **  - Should get moved to "FwtApp" when ready
+  **  - Any better names?
+  **  - Add a clearOverlayText method?
+  @NoDoc native Void setOverlayText(Str text)
+
 }
