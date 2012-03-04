@@ -16,6 +16,16 @@ using gfx
 @Serializable
 class Window : ContentPane
 {
+  **
+  ** Callback function when window is opended.
+  **
+  ** Event id fired:
+  **  - `EventId.open`
+  **
+  ** Event fields:
+  **   - none
+  **
+  once EventListeners onOpen() { EventListeners() }
 
   **
   ** Callback function when window is closed.  Consume
