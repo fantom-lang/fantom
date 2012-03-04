@@ -207,6 +207,11 @@ public class WindowPeer
     // open
     shell.open();
 
+    // TODO FIXIT: we actually want to fire this after the event
+    // loop is entered, so SWT is "active" - for now we can use
+    // Desktop.callLater(~10ms) as a workaround
+    self.onOpen().fire(event(EventId.open));
+
     // block until dialog is closed
     fwt.eventLoop(shell);
 
