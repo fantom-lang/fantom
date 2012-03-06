@@ -69,7 +69,19 @@ public class WidgetPeer
 
   // Bool enabled := true
   public boolean enabled(fan.fwt.Widget self) { return enabled.get(); }
-  public void enabled(fan.fwt.Widget self, boolean v) { enabled.set(v); }
+  public void enabled(fan.fwt.Widget self, boolean v)
+  {
+    if (enabled.get() == v) return;
+    enabled.set(v);
+
+    // propagate enabled down tree
+    List kids = self.kids;
+    for (int i=0; i<kids.sz(); ++i)
+    {
+      fan.fwt.Widget kid = (fan.fwt.Widget)kids.get(i);
+      kid.enabled(v);
+    }
+  }
   public final Prop.BoolProp enabled = new Prop.BoolProp(this, true)
   {
     public boolean get(Widget w)

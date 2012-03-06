@@ -114,7 +114,15 @@ fan.fwt.WidgetPeer.prototype.m_enabled = true;
 fan.fwt.WidgetPeer.prototype.enabled = function(self) { return this.m_enabled; }
 fan.fwt.WidgetPeer.prototype.enabled$ = function(self, val)
 {
+  if (this.m_enabled == val) return;
+
   this.m_enabled = val;
+
+  // propagate down widget tree
+  var kids = self.m_kids;
+  for (var i=0; i<kids.size(); i++)
+    kids.get(i).enabled$(val);
+
   if (this.elem != null) this.sync(self);
 }
 
