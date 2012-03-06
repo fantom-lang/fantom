@@ -81,13 +81,18 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
     this.rebuild(self);
     this.needRebuild = false;
   }
+
+  var i = this.m_image==null ? 0 : 1;
+  var text = this.elem.childNodes[i];
+  if (text != null && this.m_fg == null)
+    text.style.color = this.m_enabled ? "#000" : "#999";
+
   if (this.$softClip(self))
   {
-    var i = this.m_image==null ? 0 : 1;
-    var text = this.elem.childNodes[i];
     if (this.m_size.m_w > 0) // skip if prefSize not calc yet
       text.style.width = this.m_size.m_w + "px";
   }
+
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
 
