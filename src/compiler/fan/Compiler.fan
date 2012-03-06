@@ -42,7 +42,7 @@ class Compiler
     this.input      = input
     this.log        = input.log
     this.errs       = CompilerErr[,]
-    this.warns      =  CompilerErr[,]
+    this.warns      = CompilerErr[,]
     this.depends    = CDepend[,]
     this.wrappers   = Str:CField[:]
     this.localeDefs = LocaleLiteralExpr[,]

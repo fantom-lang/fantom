@@ -9,10 +9,12 @@
 package fan.sys;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
@@ -251,19 +253,30 @@ public final class TimeZone
   private static void loadAliases()
   {
     HashMap map = new HashMap();
+    BufferedReader in = null;
     try
     {
-      // read as props file
+      // read as props file without dependency on pulling in
+      // lot of sys types that might use DateTime
       String sep = java.io.File.separator;
-      Map props = Env.cur().props(Sys.sysPod, Uri.fromStr("timezone-aliases.props"), Duration.Zero);
+      InputStream fin = Sys.isJarDist ?
+        TimeZone.class.getClassLoader().getResourceAsStream("res/sys/timezone-aliases.props") :
+        new FileInputStream(Sys.homeDir + sep + "etc" + sep + "sys" + sep + "timezone-aliases.props");
+      in = new BufferedReader(new InputStreamReader(fin, "UTF-8"));
 
-      // map both simple name and full names to aliases map
-      Iterator it = props.pairsIterator();
-      while (it.hasNext())
+      // parse props file line by line
+      String line;
+      while ((line = in.readLine()) != null)
       {
-        Entry e = (Entry)it.next();
-        String key = (String)e.getKey();
-        String val = (String)e.getValue();
+        // skip empty lines and // comment lines
+        line = line.trim();
+        if (line.length() == 0 || line.startsWith("//")) continue;
+
+        // split key=val
+        int eq = line.indexOf('=');
+        if (eq < 0) { System.out.println("ERROR: timezone-aliases.props line: " + line); continue; }
+        String key = line.substring(0, eq).trim();
+        String val = line.substring(eq+1).trim();
 
         // map by fullName
         map.put(key, val);
@@ -277,6 +290,10 @@ public final class TimeZone
     {
       System.out.println("ERROR: Cannot read timezone-aliases.props");
       e.printStackTrace();
+    }
+    finally
+    {
+      try { if (in != null) in.close(); } catch (Exception e) {}
     }
 
     // save to field and force memory barrier sync
