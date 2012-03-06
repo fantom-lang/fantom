@@ -90,7 +90,6 @@ public class Parser : CompilerSupport
       if (curt === Token.asKeyword) { consume; consumeId }
     }
     endOfStmt
-    doc
   }
 
 //////////////////////////////////////////////////////////////////////////
