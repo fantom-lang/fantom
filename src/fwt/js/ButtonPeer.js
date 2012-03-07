@@ -280,6 +280,7 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
            self.m_mode == fan.fwt.ButtonMode.m_radio)
   {
     var div = this.elem;
+    div.style.color = this.m_enabled ? "#000" : "#999";
 
     // set state
     var check = this.elem.firstChild;
