@@ -66,6 +66,11 @@ class Compiler
       frontend
       backend
     }
+    catch (CompilerErr e)
+    {
+      if (errs.isEmpty) CompilerSupport(this).errReport(e)
+      throw e
+    }
     finally cleanup
 
     log.unindent
