@@ -147,7 +147,7 @@ class ClassPath
   {
     if (f.isDir)
     {
-      f.walk |File x| { accept(acc, x.uri.relTo(f.uri), f) }
+      f.walk |File x| { accept(acc, x.uri.relTo(f.uri), f, false) }
     }
     else
     {
@@ -155,8 +155,9 @@ class ClassPath
       try
       {
         zip = Zip.open(f)
+        isBoot := f.name == "rt.jar"
         zips.add(zip)
-        zip.contents.each |File x, Uri uri| { accept(acc, uri, x) }
+        zip.contents.each |File x, Uri uri| { accept(acc, uri, x, isBoot) }
       }
       catch (Err e)
       {
@@ -166,14 +167,18 @@ class ClassPath
     }
   }
 
-  private Void accept(Str:ClassPathPackage acc, Uri uri, File file)
+  private Void accept(Str:ClassPathPackage acc, Uri uri, File file, Bool isBoot)
   {
     // don't care about anything but .class files
     if (uri.ext != "class") return
 
-    // convert URI to package name, skip non-public 'com.sun'
+    // convert URI to package name, skip non-public 'com.sun' if rt.jar
     packageName := uri.path[0..-2].join(".")
-    if (packageName.startsWith("com.sun") || packageName.startsWith("sun")) return
+    if (isBoot)
+    {
+      if (packageName.startsWith("com.sun") || packageName.startsWith("sun"))
+        return
+    }
 
     // get simple name of class
     name := uri.basename
