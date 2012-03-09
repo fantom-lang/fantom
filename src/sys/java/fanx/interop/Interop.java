@@ -124,6 +124,14 @@ public class Interop
   }
 
   /**
+   * Convert from java.nio.ByteBuffer to sys::Buf.
+   */
+  public static Buf toFan(java.nio.ByteBuffer buf)
+  {
+    return new NioBuf(buf);
+  }
+
+  /**
    * Convert from sys::InStream to java.io.InputStream.
    */
   public static InputStream toJava(InStream in)
