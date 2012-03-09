@@ -75,7 +75,6 @@ namespace Fan.Sys
 
     public object get(object key)
     {
-      if (key == null) return m_def;
       object val = m_map[key];
       if (val != null) return val;
       if (m_def == null) return null;
@@ -84,16 +83,22 @@ namespace Fan.Sys
 
     public object get(object key, object def)
     {
-      if (key == null) return def;
       object val = m_map[key];
       if (val != null) return val;
       if (def == null) return null;
       return containsKey(key) ? null : def;
     }
 
+    public object getOrThrow(object key)
+    {
+      object val = m_map[key];
+      if (val != null) return val;
+      if (containsKey(key)) return null;
+      throw UnknownKeyErr.make(key.ToString()).val;
+    }
+
     public bool containsKey(object key)
     {
-      if (key == null) return false;
       return m_map.Contains(key);
     }
 

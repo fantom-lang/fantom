@@ -91,6 +91,14 @@ public final class Map
     return map.containsKey(key) ? null : def;
   }
 
+  public final Object getOrThrow(Object key)
+  {
+    Object val = map.get(key);
+    if (val != null) return val;
+    if (map.containsKey(key)) return null;
+    throw UnknownKeyErr.make(String.valueOf(key));
+  }
+
   public final boolean containsKey(Object key)
   {
     return map.containsKey(key);

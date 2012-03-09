@@ -68,6 +68,14 @@ fan.sys.Map.prototype.get = function(key, defVal)
   return val;
 }
 
+fan.sys.Map.prototype.getOrThrow = function(key)
+{
+  var val = this.$get(key);
+  if (val === undefined)
+    throw fan.sys.UnknownKeyErr.make("" + key);
+  return val;
+}
+
 fan.sys.Map.prototype.containsKey = function(key)
 {
   return this.$get(key) !== undefined;

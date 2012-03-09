@@ -233,6 +233,12 @@ fan.sys.TimeoutErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prototyp
 fan.sys.TimeoutErr.prototype.$typeof = function() { return fan.sys.TimeoutErr.$type; }
 fan.sys.TimeoutErr.make = function(msg, cause) { return new fan.sys.TimeoutErr(msg, cause); }
 
+// UnknownKeyErr
+fan.sys.UnknownKeyErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.UnknownKeyErr .prototype.$ctor = function(msg, cause) { fan.sys.Err.prototype.$ctor.call(this, msg, cause); }
+fan.sys.UnknownKeyErr.prototype.$typeof = function() { return fan.sys.UnknownKeyErr.$type; }
+fan.sys.UnknownKeyErr.make = function(msg, cause) { return new fan.sys.UnknownKeyErr(msg, cause); }
+
 // UnknownPodErr
 fan.sys.UnknownPodErr = fan.sys.Obj.$extend(fan.sys.Err);
 fan.sys.UnknownPodErr.prototype.$ctor = function(msg, cause) { fan.sys.Err.prototype.$ctor.call(this, msg, cause); }
