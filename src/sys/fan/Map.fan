@@ -70,6 +70,12 @@ final class Map
   @Operator V? get(K key, V? def := this.def)
 
   **
+  ** Get the value for the specified key or if key is not mapped
+  ** then raise UnknownKeyErr.  This method is readonly safe.
+  **
+  V getOrThrow(K key)
+
+  **
   ** Return if the specified key is mapped.
   ** This method is readonly safe.
   **

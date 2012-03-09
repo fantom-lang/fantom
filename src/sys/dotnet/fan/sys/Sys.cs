@@ -150,6 +150,7 @@ namespace Fan.Sys
     public static readonly Type ReadonlyErrType       = initType("ReadonlyErr");
     public static readonly Type TestErrType           = initType("TestErr");
     public static readonly Type TimeoutErrType        = initType("TimeoutErr");
+    public static readonly Type UnknownKeyErrType     = initType("UnknownKeyErr");
     public static readonly Type UnknownPodErrType     = initType("UnknownPodErr");
     public static readonly Type UnknownServiceErrType = initType("UnknownServiceErr");
     public static readonly Type UnknownSlotErrType    = initType("UnknownSlotErr");

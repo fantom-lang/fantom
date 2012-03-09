@@ -165,6 +165,7 @@ public final class Sys
   public static final Type ReadonlyErrType       = initType("ReadonlyErr");
   public static final Type TestErrType           = initType("TestErr");
   public static final Type TimeoutErrType        = initType("TimeoutErr");
+  public static final Type UnknownKeyErrType     = initType("UnknownKeyErr");
   public static final Type UnknownPodErrType     = initType("UnknownPodErr");
   public static final Type UnknownServiceErrType = initType("UnknownServiceErr");
   public static final Type UnknownSlotErrType    = initType("UnknownSlotErr");
