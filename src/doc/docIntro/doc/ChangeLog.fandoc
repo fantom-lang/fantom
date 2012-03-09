@@ -13,6 +13,7 @@
 - Add gzip factories to sys::Zip
 - FileWeblet gzip compression for text files
 - Propagate Widget.enabled down widget tree
+- Rename JVM MmapBuf to NioBuf
 
 *Build 1.0.62 (24 Feb 2012)*
 - Add gedit config file

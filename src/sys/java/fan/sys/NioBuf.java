@@ -4,6 +4,7 @@
 //
 // History:
 //   22 Feb 08  Brian Frank  Creation
+//   09 Mar 12  Brian Frank  MmapBuf => NioBuf
 //
 package fan.sys;
 
@@ -12,9 +13,9 @@ import java.security.*;
 import java.nio.*;
 
 /**
- * MmapBuf returned from File.mmap
+ * NioBuf used for File.mmap
  */
-public class MmapBuf
+public class NioBuf
   extends Buf
 {
 
@@ -22,9 +23,8 @@ public class MmapBuf
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  MmapBuf(File file, ByteBuffer buf)
+  public NioBuf(ByteBuffer buf)
   {
-    this.file = file;
     this.buf  = buf;
     this.out  = new NioBufOutStream();
     this.in   = new NioBufInStream();
@@ -34,7 +34,7 @@ public class MmapBuf
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type typeof() { return Sys.MmapBufType; }
+  public Type typeof() { return Sys.NioBufType; }
 
 //////////////////////////////////////////////////////////////////////////
 // Buf Support
@@ -224,7 +224,7 @@ public class MmapBuf
   }
 
 //////////////////////////////////////////////////////////////////////////
-// MmapBufOutStream
+// NioBufOutStream
 //////////////////////////////////////////////////////////////////////////
 
   class NioBufOutStream extends OutStream
@@ -256,7 +256,7 @@ public class MmapBuf
 
     public OutStream flush()
     {
-      MmapBuf.this.flush();
+      NioBuf.this.flush();
       return this;
     }
   }
@@ -301,7 +301,6 @@ public class MmapBuf
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private File file;
   private ByteBuffer buf;
   private byte[] temp;
 

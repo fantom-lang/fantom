@@ -353,7 +353,7 @@ public class LocalFile
       {
         fp = new RandomAccessFile(file, rw);
         chan = fp.getChannel();
-        return new MmapBuf(this, chan.map(mm, pos, size.longValue()));
+        return new NioBuf(chan.map(mm, pos, size.longValue()));
       }
       finally
       {

@@ -113,7 +113,7 @@ public final class Sys
   public static final Type BufType          = initType("Buf");
   public static final Type MemBufType       = initType("MemBuf");
   public static final Type FileBufType      = initType("FileBuf");
-  public static final Type MmapBufType      = initType("MmapBuf");
+  public static final Type NioBufType       = initType("NioBuf");
   public static final Type UriType          = initType("Uri");
   public static final Type ZipType          = initType("Zip");
   public static final Type ClassLoaderFileType = initType("ClassLoaderFile");
