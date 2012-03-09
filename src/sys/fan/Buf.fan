@@ -608,7 +608,18 @@ internal class FileBuf : Buf
 ** MmapBuf
 **************************************************************************
 
+// C# only right now (and not even implemented)
 internal class MmapBuf : Buf
+{
+  private new init()
+}
+
+**************************************************************************
+** NioBuf
+**************************************************************************
+
+// Java only
+internal class NioBuf : Buf
 {
   private new init()
 }
