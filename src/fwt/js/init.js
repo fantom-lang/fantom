@@ -30,5 +30,8 @@ if (fan.fwt.DesktopPeer.$isWebkit)
     " background:" + fan.fwt.ComboPeer.$bg + ",linear-gradient(top, #fefefe #cfcfcf);" +
     " -webkit-box-shadow:0 1px 1px #ddd;" +
     " box-shadow:        0 1px 1px #ddd;" +
+    "}" +
+    "select._fwt_Combo_[disabled] {" +
+    " opacity: 0.6;" +
     "}");
 }
