@@ -35,6 +35,9 @@ fan.fwt.WidgetPeer.addCss(
   " -webkit-box-shadow: inset 0px 1px 2px #a2a2a2;" +
   " -moz-box-shadow:    inset 0px 1px 2px #a2a2a2;" +
   " box-shadow:         inset 0px 1px 2px #a2a2a2;" +
+  "}" +
+  "._fwt_Text_[disabled] {" +
+  " opacity: 0.5;" +
   "}");
 
 fan.fwt.TextPeer.prototype.text = function(self) { return this.m_text; }
