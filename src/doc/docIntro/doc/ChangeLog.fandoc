@@ -15,6 +15,7 @@
 - Propagate Widget.enabled down widget tree
 - Rename JVM MmapBuf to NioBuf
 - Map.getOrThrow, add UnknownKeyErr
+- flux: autoSaveTabOnClose option
 
 *Build 1.0.62 (24 Feb 2012)*
 - Add gedit config file

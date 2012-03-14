@@ -269,6 +269,7 @@ internal class ViewTab : EdgePane
   Bool confirmClose()
   {
     if (!dirty) return true
+    if (GeneralOptions.load.autoSaveTabOnClose) { save; return true }
     r := Dialog.openQuestion(frame, "Save changes to $resource.name?",
       [Dialog.yes, Dialog.no, Dialog.cancel])
     if (r == Dialog.cancel) return false
