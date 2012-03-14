@@ -32,6 +32,12 @@ const class GeneralOptions
   const Uri homePage := `flux:start`
 
   **
+  ** Should we auto-save a tab when it is closed or
+  ** prompt user before save.
+  **
+  const Bool autoSaveTabOnClose := false
+
+  **
   ** Directories to index for Goto-File command.
   **
   const Uri[] indexDirs := Uri[,]

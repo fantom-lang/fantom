@@ -13,7 +13,9 @@ GeneralOptions
   ** then we use fan home directory as home.
   // homePage = `/foo`
 
-
   ** Absolute paths for directories to index for Goto-File command.
   // indexDirs = [`/dev/fan/src`]
+
+  ** Should we auto-save a tab when it is closed or prompt user to save
+  // autoSaveTabOnClose = true
 }
