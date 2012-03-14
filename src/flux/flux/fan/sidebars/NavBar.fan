@@ -43,7 +43,7 @@ internal class NavBar : SideBar
   override Void onLoad()
   {
     state := NavBarState.load
-    state.roots.each |uri| { addTree(FileResource.makeFile(uri.toFile)) }
+    state.roots.each |uri| { addTree(Resource.resolve(uri)) }
     if (state.selected != null) select(state.selected)
   }
 

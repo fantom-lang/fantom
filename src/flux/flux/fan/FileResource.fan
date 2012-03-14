@@ -71,7 +71,7 @@ class FileResource : Resource
     if (kids != null) return kids
 
     files := sortFiles(file.list)
-    kids = files.map |File f->FileResource| { makeFile(f.normalize) }
+    kids = files.map |File f->FileResource| { Resource.resolve(f.normalize.uri) }
     return kids
   }
   private FileResource[]? kids
@@ -105,17 +105,18 @@ class FileResource : Resource
   **
   override Menu? popup(Frame? frame, Event? event)
   {
+    pod := FileResource#.pod
     menu := super.popup(frame, event)
     if (file.isDir)
     {
-      menu.addCommand(Command.makeLocale(Pod.of(this), "openIn") { openIn(file) })
-      menu.addCommand(Command.makeLocale(Pod.of(this), CommandId.findInFiles, |->| { findInFiles(frame, file) }) { accelerator = null })
+      menu.addCommand(Command.makeLocale(pod, "openIn") { openIn(file) })
+      menu.addCommand(Command.makeLocale(pod, CommandId.findInFiles, |->| { findInFiles(frame, file) }) { accelerator = null })
       menu.addSep
-      menu.addCommand(Command.makeLocale(Pod.of(this), "newDir") { newDir(frame,file) })
+      menu.addCommand(Command.makeLocale(pod, "newDir") { newDir(frame,file) })
     }
     else menu.addSep
-    menu.addCommand(Command.makeLocale(Pod.of(this), "duplicate") { duplicate(frame,file) })
-    menu.addCommand(Command.makeLocale(Pod.of(this), "rename") { rename(frame,file) })
+    menu.addCommand(Command.makeLocale(pod, "duplicate") { duplicate(frame,file) })
+    menu.addCommand(Command.makeLocale(pod, "rename") { rename(frame,file) })
     return menu
   }
 

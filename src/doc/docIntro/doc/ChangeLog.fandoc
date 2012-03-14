@@ -16,6 +16,7 @@
 - Rename JVM MmapBuf to NioBuf
 - Map.getOrThrow, add UnknownKeyErr
 - flux: autoSaveTabOnClose option
+- flux: ensure FileResource can be overridden
 
 *Build 1.0.62 (24 Feb 2012)*
 - Add gedit config file

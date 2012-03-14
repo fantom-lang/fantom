@@ -26,7 +26,9 @@ abstract class Resource
   **
   static Resource[] roots()
   {
-    File.osRoots.map |File f->Resource| { FileResource.makeFile(f) }
+    acc := Resource[,]
+    File.osRoots.each |f| { if (f.exists) acc.add(resolve(f.uri)) }
+    return acc
   }
 
   **
@@ -42,15 +44,22 @@ abstract class Resource
   static Resource resolve(Uri uri)
   {
     // 1. resolve uri
+    if (uri.toStr.startsWith("/")) uri = "file:$uri".toUri
     obj := uri.get
 
     // 2. if already resource return it
     if (obj is Resource) return obj
 
-    // 3. map via fluxResource facet
-    rtype := Flux.indexForInheritance("flux.resource.", obj.typeof).first
-    if (rtype == null) throw UnsupportedErr("No resource mapping for $obj.typeof")
-    return rtype.make([uri, obj])
+    // 3. map via fluxResource indexed props
+    rtypes := Flux.indexForInheritance("flux.resource.", obj.typeof)
+    if (rtypes.isEmpty) throw UnsupportedErr("No resource mapping for $obj.typeof")
+    if (rtypes.size > 1)
+    {
+      // if we have multiple matches, take the non-flux version
+      nonFlux := rtypes.exclude |t| { t.pod === Resource#.pod }
+      if (!nonFlux.isEmpty) rtypes = nonFlux
+    }
+    return rtypes.first.make([uri, obj])
   }
 
   **
