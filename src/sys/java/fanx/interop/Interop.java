@@ -132,6 +132,30 @@ public class Interop
   }
 
   /**
+   * Convert from sys::Buf to to java.nio.ByteBuffer
+   *
+   * Return a bytebuffer that shares the same storage
+   * as this byte buffer, but independent pos and size.
+   *
+   * Changes made to the resulting ByteBuffer will affect
+   * this ByteBuffer's content but not its pos or size.
+   *
+   * The ByteBuffer will be created with position equal
+   * to this buf's pos and limit equal to this buf's limit,
+   * and no mark set.
+   *
+   * Throws UnsupportedErr if this Buf doesn't use an
+   ** underlying storage system supported by ByteBuffer.
+   *
+   * @see java.nio.ByteBuffer#duplicate
+   * @see java.nio.ByteBuffer#wrap(byte[], int, int)
+   */
+  public static java.nio.ByteBuffer toJava(Buf buf)
+  {
+    return buf.toByteBuffer();
+  }
+
+  /**
    * Convert from sys::InStream to java.io.InputStream.
    */
   public static InputStream toJava(InStream in)
