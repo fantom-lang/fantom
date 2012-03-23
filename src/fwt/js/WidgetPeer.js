@@ -524,6 +524,35 @@ fan.fwt.WidgetPeer.addCss = function(css)
 // disable focus outlines on div.tabIndex elements
 fan.fwt.WidgetPeer.addCss("div:focus { outline:0; }");
 
+fan.fwt.WidgetPeer.hasClassName = function(elem, className)
+{
+  var arr = elem.className.split(" ");
+  for (var i=0; i<arr.length; i++)
+    if (arr[i] == className)
+      return true;
+  return false;
+}
+
+fan.fwt.WidgetPeer.addClassName = function(elem, className)
+{
+  if (!fan.fwt.WidgetPeer.hasClassName(elem, className))
+    elem.className += " " + className;
+  return elem;
+}
+
+fan.fwt.WidgetPeer.removeClassName = function(elem, className)
+{
+  var arr = elem.className.split(" ");
+  for (var i=0; i<arr.length; i++)
+    if (arr[i] == className)
+    {
+      arr.splice(i, 1);
+      break;
+    }
+  elem.className = arr.join(" ");
+  return elem;
+}
+
 fan.fwt.WidgetPeer.setBg = function(elem, brush)
 {
   var style = elem.style;
@@ -638,5 +667,23 @@ fan.fwt.WidgetPeer.applyStyle = function(elem, map)
 {
   if (map == null) return;
   map.$each(function(b) { elem.style.setProperty(b.key, b.val, ""); });
+}
+
+// set the transition CSS for elem
+fan.fwt.WidgetPeer.setTransition = function(elem, css)
+{
+  elem.style.webkitTransition = css;
+  elem.style.MozTransition    = css;
+  elem.style.msTransition     = css;
+  elem.style.transition       = css;
+}
+
+// set the transform CSS for elem
+fan.fwt.WidgetPeer.setTransform = function(elem, css)
+{
+  elem.style.webkitTransform = css;
+  elem.style.MozTransform    = css;
+  elem.style.msTransform     = css;
+  elem.style.transform       = css;
 }
 
