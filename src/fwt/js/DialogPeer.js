@@ -115,11 +115,12 @@ fan.fwt.DialogPeer.prototype.open = function(self)
 
   // animate open and dialog resizes
   mask.style.opacity = "0.25";
-  var tx = "-transform 100ms, opacity 100ms, top 250ms, left 250ms, width 250ms, height 250ms";
-  dlg.style.MozTransition    = "-moz" + tx;
-  dlg.style.MozTransform     = "scale(1.0)";
-  dlg.style.webkitTransition = "-webkit" + tx;
+  var anim = "opacity 100ms, top 250ms, left 250ms, width 250ms, height 250ms";
+  var tx   = "-transform 100ms, ";
+  dlg.style.webkitTransition = "-webkit" + tx + anim;
+  dlg.style.MozTransition    = "-moz" + tx + anim;
   dlg.style.webkitTransform  = "scale(1.0)";
+  dlg.style.MozTransform     = "scale(1.0)";
   dlg.style.opacity = "1.0";
 
   // try to focus first form element
@@ -137,7 +138,13 @@ fan.fwt.DialogPeer.prototype.open = function(self)
   // 26 Jan 2012: Chrome contains a bug where scrolling is broken
   // for elements that have webkit-transform applied - so allow
   // animation to comlete, then remove:
-  setTimeout(function() { dlg.style.webkitTransform = "none"; }, 300);
+  if (fan.fwt.DesktopPeer.$isChrome)
+  {
+    setTimeout(function() {
+      dlg.style.webkitTransform = "none";
+      dlg.style.webkitTransition = anim;
+    }, 300);
+  }
 }
 
 fan.fwt.DialogPeer.findFormControl = function(node)
