@@ -83,6 +83,8 @@ public final class TimeZone
         tz = fromStr(alias);  // better be found
         synchronized (cache)
         {
+          TimeZone dup = (TimeZone)cache.get(name);
+          if (dup != null) return dup;
           cache.put(name, tz);
           return tz;
         }
@@ -94,6 +96,8 @@ public final class TimeZone
     {
       synchronized (cache)
       {
+        TimeZone dup = (TimeZone)cache.get(name);
+        if (dup != null) return dup;
         cache.put(tz.name, tz);
         cache.put(tz.fullName, tz);
         return tz;
