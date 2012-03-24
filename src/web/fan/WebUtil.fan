@@ -452,7 +452,7 @@ internal class ChunkInStream : InStream
       line := in.readLine
       semi := line.index(";")
       if (semi != null) line = line[0..semi]
-      chunkRem = line.toInt(16)
+      chunkRem = line.trim.toInt(16)
 
       // if we have more chunks keep chugging
       if (chunkRem > 0) return true
