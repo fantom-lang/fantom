@@ -104,7 +104,7 @@ abstract class WebReq
 
   **
   ** Map of HTTP request headers.  The headers map is readonly
-  ** and case sensitive (see `sys::Map.caseInsensitive`).
+  ** and case insensitive (see `sys::Map.caseInsensitive`).
   **
   ** Examples:
   **   req.headers["Accept-Language"]
