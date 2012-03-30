@@ -13,6 +13,9 @@ bat=batch
 // action script rules
 as=as
 
+// axon
+axon=axon
+
 // C++ rules
 h=cpp
 c=cpp
