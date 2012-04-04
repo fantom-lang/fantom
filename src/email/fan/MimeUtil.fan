@@ -43,4 +43,13 @@ class MimeUtil
     return "<$addr>"
   }
 
+  **
+  ** Write a MIME header formatted as "name: body\r\n".
+  ** NOTE: hook to potentially fold header lines over 1000 here
+  **
+  internal static Void encodeHeader(OutStream out, Str name, Str val)
+  {
+    out.print(name).print(": ").print(val).print("\r\n")
+  }
+
 }

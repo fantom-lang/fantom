@@ -90,14 +90,31 @@ class Email
   {
     out.print("Message-ID: $msgId\r\n")
     out.print("From: $from\r\n")
-    if (to != null && !to.isEmpty) out.print("To: " + to.join(",") + "\r\n")
-    if (cc != null && !cc.isEmpty) out.print("Cc: " + cc.join(",") + "\r\n")
+    encodeAddrSpecsField(out, "To", to)
+    encodeAddrSpecsField(out, "Cc", cc)
     out.print("Subject: " + MimeUtil.toEncodedWord(subject) + "\r\n")
     out.print("Date: ${DateTime.now.toHttpStr}\r\n")
     out.print("MIME-Version: 1.0\r\n")
     body.encode(out)
     out.print("\r\n.\r\n")
     out.flush
+  }
+
+  **
+  ** Encode a list of to/cc email addresses as a MIME header field.
+  ** We fold the header so each email address is on its own line
+  ** to avoid 1000 char line limit.  We also run each address thru
+  ** `MimeUtil.toAddrSpec` for normalization.
+  **
+  private Void encodeAddrSpecsField(OutStream out, Str name, Str[]? vals)
+  {
+    if (vals == null || vals.isEmpty) return
+    out.print(name).print(":")
+    vals.each |val, i|
+    {
+      comma := i + 1 < vals.size ? "," : ""
+      out.print(" ").print(MimeUtil.toAddrSpec(val)).print(comma).print("\r\n")
+    }
   }
 
 }
