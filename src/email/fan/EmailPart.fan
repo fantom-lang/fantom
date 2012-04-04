@@ -34,10 +34,7 @@ abstract class EmailPart
   **
   virtual Void encode(OutStream out)
   {
-    headers.each |Str val, Str key|
-    {
-      out.print(key).print(": ").print(val).print("\r\n")
-    }
+    headers.each |val, name| { MimeUtil.encodeHeader(out, name, val) }
     out.print("\r\n")
   }
 
