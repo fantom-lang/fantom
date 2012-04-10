@@ -236,6 +236,8 @@ class WebOutStreamTest : Test
 
     out.hr
     verifyOut(buf, "<hr />")
+    out.hr("class='foo'")
+    verifyOut(buf, "<hr class='foo' />")
 
     out.br
     verifyOut(buf, "<br />")

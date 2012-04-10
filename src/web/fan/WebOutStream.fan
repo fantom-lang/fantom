@@ -438,7 +438,7 @@ class WebOutStream : OutStream
   **
   ** Write out a complete <hr/> tag.
   **
-  This hr() { return tag("hr", null, true).nl }
+  This hr(Str? attrs := null) { return tag("hr", attrs, true).nl }
 
 //////////////////////////////////////////////////////////////////////////
 // br
