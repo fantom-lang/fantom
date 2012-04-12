@@ -1,6 +1,6 @@
 dateTime=YYYY年MM月DD日 WWWW hh:mm:ss
 date=YYYY年MM月DD日 WWWW
-time=kk時mm分ss秒 zzz
+time=kk時mm分ss秒
 float=#,###.0##
 decimal=#,###.0##
 int=#,###
