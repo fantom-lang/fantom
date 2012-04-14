@@ -173,7 +173,7 @@ internal const class WispActor : Actor
     // if using HTTP 1.1 and client specified using keep-alives,
     // then setup response to be persistent for pipelining
     if (req.version === ver11 &&
-        req.headers.get("Connection", "").equalsIgnoreCase("keep-alive"))
+        req.headers.get("Connection", "").split(',').any |tok| { tok.equalsIgnoreCase("keep-alive")})
     {
       res.isPersistent = true
       res.headers["Connection"] = "keep-alive"
