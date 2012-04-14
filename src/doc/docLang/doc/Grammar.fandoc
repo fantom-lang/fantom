@@ -173,8 +173,8 @@ Expr [#expr]
   <literal>        :=  "null" | "this" | "super" | "it" |
                        <bool> | <int> | <float> | <decimal> | <str> |
                        <duration> | <uri> | <list> | <map> | <uri>
-  <list>           :=  [<type>] "[" <listItems> [","] "]"
-  <listItems>      :=  "," | (<expr> ("," <expr>)*)
+  <list>           :=  [<type>] "[" <listItems> "]"
+  <listItems>      :=  "," | (<expr> ("," <expr>)*) [","]
   <map>            :=  [<mapType>] "[" <mapItems> [","] "]"
   <mapItems>       :=  ":" | (<mapPair> ("," <mapPair>)*)
   <mapPair>        :=  <expr> ":" <expr>
