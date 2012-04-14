@@ -65,7 +65,6 @@ public class Parser : CompilerSupport
   **
   private Void usings()
   {
-    doc
     while (curt == Token.usingKeyword)
       skipUsing
   }
@@ -124,6 +123,7 @@ public class Parser : CompilerSupport
   {
     // [<doc>]
     doc := doc()
+    if (curt === Token.usingKeyword) throw err("Cannot use ** doc comments before using statement")
     if (curt === Token.eof) return
 
     // <facets>
