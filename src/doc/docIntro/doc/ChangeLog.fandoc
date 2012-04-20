@@ -17,6 +17,7 @@
 - Map.getOrThrow, add UnknownKeyErr
 - flux: autoSaveTabOnClose option
 - flux: ensure FileResource can be overridden
+- Canvas.doubleBuffered
 
 *Build 1.0.62 (24 Feb 2012)*
 - Add gedit config file

@@ -15,12 +15,14 @@ using gfx
 @Serializable
 class Canvas : Widget
 {
+  ** Enables double buffering support which can reduce
+  ** flickering at the expose of a larger RAM footprint
+  const Bool doubleBuffered := false
 
   **
   ** This callback is invoked when the widget should be repainted.
   ** The graphics context is initialized at the widget's origin
   ** with the clip bounds set to the widget's size.
-  **
   **
   virtual Void onPaint(Graphics g) {}
 
