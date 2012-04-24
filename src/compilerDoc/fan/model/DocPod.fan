@@ -13,7 +13,7 @@
 const class DocPod : DocSpace
 {
 
-  ** Load from a zip file.  The given env is ued for error reporting.
+  ** Load from a zip file.
   static DocPod load(File file)
   {
     return DocPod(file)
