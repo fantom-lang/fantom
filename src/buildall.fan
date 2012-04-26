@@ -116,6 +116,9 @@ class Build : BuildGroup
     // doc nuke it all
     Delete.make(this, devHomeDir + `doc/`).run
 
+    // nuke flux session data
+    Delete.make(this, devHomeDir + `etc/flux/session/`).run
+
     // javaLib (keep ext/)
     (devHomeDir + `lib/java/`).list.each |File f|
     {
