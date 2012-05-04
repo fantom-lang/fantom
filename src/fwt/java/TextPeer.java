@@ -10,6 +10,7 @@ package fan.fwt;
 import fan.sys.*;
 import fan.sys.List;
 import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
@@ -93,6 +94,20 @@ public class TextPeer
   {
     public String get(Widget w) { return ((Text)w).getText(); }
     public void set(Widget w, String v) { ((Text)w).setText(v);  }
+  };
+
+  public fan.gfx.Color fg(fan.fwt.Text self) { return fg.get(); }
+  public void fg(fan.fwt.Text self, fan.gfx.Color v) { fg.set(v); }
+  public final Prop.ColorProp fg = new Prop.ColorProp(this)
+  {
+    public void set(Widget w, Color v) { ((Text)w).setForeground(v); }
+  };
+
+  public fan.gfx.Color bg(fan.fwt.Text self) { return bg.get(); }
+  public void bg(fan.fwt.Text self, fan.gfx.Color v) { bg.set(v); }
+  public final Prop.ColorProp bg = new Prop.ColorProp(this)
+  {
+    public void set(Widget w, Color v) { ((Text)w).setBackground(v); }
   };
 
 //////////////////////////////////////////////////////////////////////////
