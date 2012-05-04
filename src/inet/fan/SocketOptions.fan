@@ -133,6 +133,12 @@ final class SocketOptions
   }
 
   **
+  ** Controls default timeout used by `TcpSocket.connect`.
+  ** A null value indicates a system default timeout.
+  **
+  Duration? connectTimeout
+
+  **
   ** SO_TIMEOUT socket option controls the amount of time this socket
   ** will block on a read call before throwing an IOErr timeout exception.
   ** Null is used to indicate an infinite timeout.
