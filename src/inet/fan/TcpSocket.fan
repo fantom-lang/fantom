@@ -85,9 +85,11 @@ class TcpSocket
   ** Connect this socket to the specified address and port.  This method
   ** will block until the connection is made.  Throw IOErr if there is a
   ** connection error.  If a non-null timeout is specified, then block no
-  ** longer then the specified timeout before raising an IOErr.
+  ** longer then the specified timeout before raising an IOErr.  If
+  ** timeout is null, then a system default is used.  The default timeout
+  ** can also be set via `SocketOptions.connectTimeout`.
   **
-  native This connect(IpAddr addr, Int port, Duration? timeout := null)
+  native This connect(IpAddr addr, Int port, Duration? timeout := options.connectTimeout)
 
   **
   ** Get the input stream used to read data from the socket.  The input
