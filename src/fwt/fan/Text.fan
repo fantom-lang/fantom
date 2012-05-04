@@ -6,6 +6,8 @@
 //   27 Jul 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Text is used to enter and modify text.
 **
@@ -56,6 +58,18 @@ class Text : TextWidget
   ** The current text. Defaults to "".
   **
   override native Str text
+
+  **
+  ** The current foreground color for text.
+  ** Defaults to null (system default)
+  **
+  native Color? fg
+
+  **
+  ** The current background color of text field
+  ** Defaults to null (system default)
+  **
+  native Color? bg
 
   **
   ** Replace the text with 'newText' starting at position 'start'
