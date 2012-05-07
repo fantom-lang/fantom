@@ -340,6 +340,18 @@ const class Key
   }
 
   **
+  ** Remove the key from this combination.
+  ** Throws ArgErr if x is not defined in this combination
+  ** or x is not a modifier.
+  **
+  @Operator Key minus(Key x)
+  {
+    if (mask.and(x.mask) == 0 || !x.isModifier)
+      throw ArgErr("Not modifier: $this - $x")
+    return makeNew(mask.and(x.mask.not), null)
+  }
+
+  **
   ** Replace one modifier with another modifer.  If
   ** modFrom is not defined in this key, then return this.
   **

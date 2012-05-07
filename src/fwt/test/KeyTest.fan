@@ -40,6 +40,14 @@ class KeyTest : Test
     verifyErr(ArgErr#) { k := Key.x + Key.y }
   }
 
+  Void testMinus()
+  {
+    verifyKey((Key.shift+Key.x)-Key.shift, "X", [Key.x])
+    verifyKey((Key.shift+Key.ctrl+Key.up)-Key.shift, "Ctrl+Up", [Key.ctrl, Key.up])
+    verifyErr(ArgErr#) { k := Key.x - Key.y }
+    verifyErr(ArgErr#) { k := (Key.x+Key.shift) - Key.alt }
+  }
+
   Void testParse()
   {
     eq := Key("=")
