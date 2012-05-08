@@ -9,6 +9,7 @@
 **
 ** FandocErr
 **
+@Js
 const class FandocErr : Err
 {
 

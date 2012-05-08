@@ -10,6 +10,7 @@
 ** InlineParser parses a block of formatted text into
 ** a series of inline elements.
 **
+@Js
 internal class InlineParser
 {
 

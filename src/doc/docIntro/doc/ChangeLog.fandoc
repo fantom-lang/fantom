@@ -21,6 +21,7 @@
 - Add SocketOptions.connectTimeout
 - Add Text fg, bg colors
 - Add Key.minus method
+- @Js for Fandoc API
 
 *Build 1.0.62 (24 Feb 2012)*
 - Add gedit config file
