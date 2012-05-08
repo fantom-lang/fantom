@@ -12,6 +12,7 @@
 **
 ** See [pod doc]`pod-doc#api` for usage.
 **
+@Js
 class FandocParser
 {
 
@@ -487,6 +488,7 @@ class FandocParser
 ** LineType
 **************************************************************************
 
+@Js
 internal enum class LineType
 {
   eof,         // end of file

@@ -9,6 +9,7 @@
 **
 ** FandocTest
 **
+@Js
 class FandocTest : Test
 {
 

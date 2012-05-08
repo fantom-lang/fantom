@@ -11,6 +11,7 @@
 **
 ** See [pod doc]`pod-doc#api` for usage.
 **
+@Js
 mixin DocWriter
 {
 
