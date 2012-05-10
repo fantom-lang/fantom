@@ -390,8 +390,13 @@ public class WidgetPeer
   {
     // sync with native control
     this.control = control;
+
+    // reset focus/key eventing
+    this.activeKeyListener = false;
+    this.activeFocusListener = false;
     checkFocusListeners(self);
     checkKeyListeners(self);
+
     if (control instanceof Control)
     {
       Control c = (Control)control;
