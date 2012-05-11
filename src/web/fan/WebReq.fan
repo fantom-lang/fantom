@@ -112,6 +112,38 @@ abstract class WebReq
   abstract Str:Str headers()
 
   **
+  ** Get the accepted locales for this request based on the
+  ** "Accept-Language" HTTP header.  List is sorted by preference, where
+  ** 'locales.first' is best, and 'locales.last' is worst.  This list is
+  ** guarenteed to contain Locale("en").
+  **
+  virtual once Locale[] locales()
+  {
+    list := Locale[,]
+    hval := headers["Accept-Language"]
+    if (hval != null)
+    {
+      WebUtil.parseList(hval).each |val|
+      {
+        try
+        {
+          colon := val.index(";q=")
+          qual  := colon==null ? 1f : val[colon+3..-1].toFloat
+          lang  := colon==null ? val : val[0..<colon]
+          loc   := Locale.fromStr(lang, false)
+          if (qual > 0f && loc != null && !list.contains(loc)) list.add(loc)
+        }
+        catch (Err err) { err.trace }
+      }
+    }
+
+    // make sure we always have 'en'
+    en := Locale("en")
+    if (!list.contains(en)) list.add(en)
+    return list
+  }
+
+  **
   ** Map of cookie values keyed by cookie name.  The
   ** cookies map is readonly and case insensitive.
   **
