@@ -22,6 +22,8 @@
 - Add Text fg, bg colors
 - Add Key.minus method
 - @Js for Fandoc API
+- #1862: WebReq.locales
+- #1862: Wisp set Locale.cur via WebReq.locales for request
 
 *Build 1.0.62 (24 Feb 2012)*
 - Add gedit config file
