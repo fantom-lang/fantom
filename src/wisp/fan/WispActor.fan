@@ -178,6 +178,9 @@ internal const class WispActor : Actor
       res.isPersistent = true
       res.headers["Connection"] = "keep-alive"
     }
+
+    // configure Locale.cur for best match based on request
+    Locale.setCur(req.locales.first)
   }
 
 //////////////////////////////////////////////////////////////////////////
