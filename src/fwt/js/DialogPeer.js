@@ -135,16 +135,18 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     setTimeout(func, 50);
   }
 
-  // 26 Jan 2012: Chrome contains a bug where scrolling is broken
-  // for elements that have webkit-transform applied - so allow
-  // animation to comlete, then remove:
-  if (fan.fwt.DesktopPeer.$isChrome)
-  {
-    setTimeout(function() {
-      dlg.style.webkitTransform = "none";
-      dlg.style.webkitTransition = anim;
-    }, 300);
-  }
+  // 16 May 2012: Chrome 19 appears to have resolved this issue
+  //
+  // // 26 Jan 2012: Chrome contains a bug where scrolling is broken
+  // // for elements that have webkit-transform applied - so allow
+  // // animation to comlete, then remove:
+  // if (fan.fwt.DesktopPeer.$isChrome)
+  // {
+  //   setTimeout(function() {
+  //     dlg.style.webkitTransform = "none";
+  //     dlg.style.webkitTransition = anim;
+  //   }, 300);
+  // }
 }
 
 fan.fwt.DialogPeer.findFormControl = function(node)
