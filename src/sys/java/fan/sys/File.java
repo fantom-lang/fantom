@@ -126,6 +126,13 @@ public abstract class File
 
   public abstract Long size();
 
+  public boolean isEmpty()
+  {
+    if (isDir()) return list().isEmpty();
+    Long size = this.size();
+    return size == null || size.longValue() <= 0;
+  }
+
   public abstract DateTime modified();
   public abstract void modified(DateTime time);
 

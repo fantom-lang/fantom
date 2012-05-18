@@ -22,6 +22,7 @@
 - Add Text fg, bg colors
 - Add Key.minus method
 - @Js for Fandoc API
+- File.isEmpty to efficiently check for empty directory
 - #1862: WebReq.locales
 - #1862: Wisp set Locale.cur via WebReq.locales for request
 
