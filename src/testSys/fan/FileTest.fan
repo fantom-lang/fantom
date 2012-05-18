@@ -24,6 +24,7 @@ class FileTest : Test
     verify(tempDir.exists)
     verify(tempDir->exists)
     verify(tempDir.isDir)
+    verify(tempDir.isEmpty)
     verify(tempDir.list.isEmpty)
     verify(tempDir->list->isEmpty)
     verify(tempDir.list.size == 0)
@@ -134,6 +135,7 @@ class FileTest : Test
     // create file - no extension
     f := tempDir.createFile("file")
     verify(!f.isDir)
+    verify(f.isEmpty)
     verify(f.list.isEmpty)
     verify(f.listFiles.isEmpty)
     verify(f.listDirs.isEmpty)
@@ -152,6 +154,7 @@ class FileTest : Test
     e := (tempDir + `file.txt`).create
     verify(!e.isDir)
     verify(e.list.isEmpty)
+    verify(e.isEmpty)
     verifyEq(e.size, 0)
     verifyEq(e.name, "file.txt")
     verifyEq(e.basename, "file")
@@ -160,6 +163,7 @@ class FileTest : Test
     verifyEq(e.uri.path.last, "file.txt")
     verifyEq(e.path.last, "file.txt")
     verifyEq(e.uri.relToAuth.toStr, e.pathStr)
+    verifyEq(tempDir.isEmpty, false)
     verifyEq(tempDir.list.sort, [f, e])
     verifyEq(tempDir.listDirs, File[,])
     verifyEq(tempDir.listFiles.sort, [f, e])
@@ -167,6 +171,7 @@ class FileTest : Test
     // create dir
     d := tempDir.createDir("dir")
     verify(d.isDir)
+    verify(d.isEmpty)
     verify(d.list.isEmpty)
     verifyEq(d.name, "dir")
     verifyEq(d.basename, "dir")
@@ -303,6 +308,7 @@ class FileTest : Test
 
     // moveTo file
     a1 = a1.moveTo(dirA+`a1`)
+    verifyEq(dirA.isEmpty, false)
     verifyEq(dirA.list.size, 1)
     verifyEq(a1.parent, dirA)
     verifyEq(a1->parent, dirA)

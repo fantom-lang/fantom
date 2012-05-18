@@ -7,6 +7,7 @@
 //
 package fan.sys;
 
+import java.io.Closeable;
 import java.io.FileDescriptor;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
@@ -155,6 +156,50 @@ public class LocalFile
     if (file.isDirectory()) return null;
     return Long.valueOf(file.length());
   }
+
+  public boolean isEmpty()
+  {
+    // if file, then route to default implementation
+    if (!isDir()) return super.isEmpty();
+
+    // if running 1.6 or older then use raw java.ioFile.list
+    // to avoid excessive URI mapping overhead
+    if (Sys.javaVersion < Sys.JAVA_1_7) return file.list().length == 0;
+
+    // TODO: if running 1.7 then use new nio.files API to open a
+    // directory stream iterator; since we still require compiling
+    // with 1.6 we have to do this with reflection
+    try
+    {
+      // first time thru lookup reflection methods
+      if (toPathMethod == null)
+      {
+        toPathMethod = file.getClass().getMethod("toPath", new Class[0]);
+        newDirStreamMethod = Class.forName("java.nio.file.Files").getMethod("newDirectoryStream", new Class[] { toPathMethod.getReturnType() } );
+      }
+
+      // Path path = file.toPath()
+      // Iterable dirStream = Files.newDirStream(path)
+      Object path = toPathMethod.invoke(file, (Object[])null);
+      Iterable dirStream = (Iterable)newDirStreamMethod.invoke(null, new Object[] { path });
+      try
+      {
+        return !dirStream.iterator().hasNext();
+      }
+      finally
+      {
+        ((Closeable)dirStream).close();
+      }
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      return super.isEmpty();
+    }
+  }
+
+  private static java.lang.reflect.Method toPathMethod;
+  private static java.lang.reflect.Method newDirStreamMethod;
 
   public DateTime modified()
   {
