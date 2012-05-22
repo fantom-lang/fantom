@@ -235,7 +235,7 @@ public abstract class Env
       if (t != null) return t;
 
       // create a new one
-      t = new JavaType(this, cls);
+      t = new JavaType(cls);
       javaTypeCache.put(clsName, t);
       return t;
     }
@@ -249,7 +249,7 @@ public abstract class Env
    * The JavaType will delegate to `loadJavaClass` when it is time
    * to load the Java class mapped by the FFI type.
    */
-  public final JavaType loadJavaType(String podName, String typeName)
+  public final JavaType loadJavaType(Pod loadingPod, String podName, String typeName)
   {
     // we shouldn't be using this method for pure Fantom types
     if (!podName.startsWith("[java]"))
@@ -268,10 +268,65 @@ public abstract class Env
       JavaType t = (JavaType)javaTypeCache.get(clsName);
       if (t != null) return t;
 
-      // create a new one
-      t = new JavaType(this, podName, typeName);
-      javaTypeCache.put(clsName, t);
-      return t;
+      // resolve class to create new JavaType for this class name
+      try
+      {
+        Class cls = nameToClass(loadingPod, clsName);
+        t = new JavaType(cls);
+        javaTypeCache.put(clsName, t);
+        return t;
+      }
+      catch (ClassNotFoundException e)
+      {
+        throw UnknownTypeErr.make("Load from [" + loadingPod + "] " + clsName, e);
+      }
+    }
+  }
+
+  private Class nameToClass(Pod loadingPod, String name)
+    throws ClassNotFoundException
+  {
+    // first try primitives because Class.forName doesn't work for them
+    Class cls = (Class)primitiveClasses.get(name);
+    if (cls != null) return cls;
+
+    // array class like "[I" or "[Lfoo.Bar;"
+    if (name.charAt(0) == '[')
+    {
+      // if not a array of class, then use Class.forName
+      if (!name.endsWith(";")) return Class.forName(name);
+
+      // resolve component class "[Lfoo.Bar;"
+      String compName = name.substring(2, name.length()-1);
+      Class comp = nameToClass(loadingPod, compName);
+      return java.lang.reflect.Array.newInstance(comp, 0).getClass();
+    }
+
+    // if we have a pod class loader use it
+    if (loadingPod != null) return loadingPod.classLoader.loadClass(name);
+
+    // fallback to Class.forName
+    return Class.forName(name);
+  }
+
+  // String -> Class
+  private static final HashMap primitiveClasses = new HashMap();
+  static
+  {
+    try
+    {
+      primitiveClasses.put("boolean", boolean.class);
+      primitiveClasses.put("char",    char.class);
+      primitiveClasses.put("byte",    byte.class);
+      primitiveClasses.put("short",   short.class);
+      primitiveClasses.put("int",     int.class);
+      primitiveClasses.put("long",    long.class);
+      primitiveClasses.put("float",   float.class);
+      primitiveClasses.put("double",  double.class);
+    }
+    catch (Throwable e)
+    {
+      e.printStackTrace();
     }
   }
 

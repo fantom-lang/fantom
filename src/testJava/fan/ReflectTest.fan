@@ -29,7 +29,7 @@ class ReflectTest : JavaTest
         Type jint()  { return Type.find(\"[java]::int\") }
         Type array() { return Type.find(\"[java]java.util::[Date\") }
         Type list()  { return Type.find(\"[java]java.util::Date[]\") }
-        Type map()   { return Type.find(\"[[java]java.util::Date:[java]java.util::ArrayLsit]\") }
+        Type map()   { return Type.find(\"[[java]java.util::Date:[java]java.util::ArrayList]\") }
       }")
 
     obj := pod.types.first.make
@@ -63,9 +63,9 @@ class ReflectTest : JavaTest
     verifyEq(map.pod,   Pod.find("sys"))
     verifyEq(map.name,  "Map")
     verifyEq(map.qname, "sys::Map")
-    verifyEq(map.signature, "[[java]java.util::Date:[java]java.util::ArrayLsit]")
+    verifyEq(map.signature, "[[java]java.util::Date:[java]java.util::ArrayList]")
     verifyEq(map.params["K"].qname, "[java]java.util::Date")
-    verifyEq(map.params["V"].qname, "[java]java.util::ArrayLsit")
+    verifyEq(map.params["V"].qname, "[java]java.util::ArrayList")
   }
 
 //////////////////////////////////////////////////////////////////////////

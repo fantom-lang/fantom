@@ -32,7 +32,7 @@ public class FPodEmit
     return emit;
   }
 
-  public static void initFields(FPod fpod, Class cls)
+  public static void initFields(Pod pod, FPod fpod, Class cls)
     throws Exception
   {
     FLiterals literals = fpod.readLiterals();
@@ -58,7 +58,7 @@ public class FPodEmit
     for (int i=0; i<fpod.typeRefs.size(); ++i)
     {
       FTypeRef t = fpod.typeRef(i);
-      if (t.isFFI()) cls.getField("Type" + i).set(null, Env.cur().loadJavaType(t.podName, t.typeName));
+      if (t.isFFI()) cls.getField("Type" + i).set(null, Env.cur().loadJavaType(pod, t.podName, t.typeName));
     }
   }
 
