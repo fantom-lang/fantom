@@ -23,6 +23,7 @@
 - Add Key.minus method
 - @Js for Fandoc API
 - File.isEmpty to efficiently check for empty directory
+- Refactor JavaType to always preload the class
 - #1862: WebReq.locales
 - #1862: Wisp set Locale.cur via WebReq.locales for request
 

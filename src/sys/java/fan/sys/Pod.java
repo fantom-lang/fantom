@@ -441,7 +441,7 @@ public class Pod
       try
       {
         cls = Env.cur().loadPodClass(this);
-        FPodEmit.initFields(fpod, cls);
+        FPodEmit.initFields(this, fpod, cls);
       }
       catch (Exception e)
       {
@@ -456,7 +456,7 @@ public class Pod
     throws Exception
   {
     this.cls = cls;
-    FPodEmit.initFields(fpod, cls);
+    FPodEmit.initFields(this, fpod, cls);
   }
 
   Type type(int qname)
@@ -478,7 +478,7 @@ public class Pod
     String typeName = ref.typeName;
     if (podName.startsWith("[java]"))
     {
-      Type t = Env.cur().loadJavaType(podName, typeName);
+      Type t = Env.cur().loadJavaType(this, podName, typeName);
       if (ref.isNullable()) t = t.toNullable();
       return t;
     }

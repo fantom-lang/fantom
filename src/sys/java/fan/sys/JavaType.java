@@ -24,17 +24,9 @@ public class JavaType
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  JavaType(Env env, String podName, String typeName)
+  /** Must only be called by Env.loadJavaType */
+  JavaType(Class cls)
   {
-    this.env = env;
-    this.podName = podName;
-    this.typeName = typeName;
-    this.cls = null;
-  }
-
-  JavaType(Env env, Class cls)
-  {
-    this.env = env;
     if (cls.isArray() && cls.getComponentType().isPrimitive())
     {
       this.podName = "[java]fanx.interop";
@@ -42,11 +34,17 @@ public class JavaType
     }
     else
     {
-      if (cls.getPackage() == null)
+      Class x = cls;
+      int rank = 0;
+      while (x.isArray()) { rank++; x = x.getComponentType(); }
+      if (x.getPackage() == null)
         this.podName = "[java]";
       else
-        this.podName = "[java]" + cls.getPackage().getName();
-      this.typeName = cls.getSimpleName();
+        this.podName = "[java]" + x.getPackage().getName();
+
+      String typeName = x.getSimpleName();
+      for (int i=0; i<rank; ++i) typeName = "[" + typeName;
+      this.typeName = typeName;
     }
     this.cls = cls;
   }
@@ -119,22 +117,9 @@ public class JavaType
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * Get the Java class which represents this type.  This is
-   * either set in constructor by factor or lazily mapped.
+   * Get the Java class which represents this type.
    */
-  public Class toClass()
-  {
-    try
-    {
-      if (cls == null)
-        cls = env.loadJavaClass(toClassName(podName, typeName));
-      return cls;
-    }
-    catch (Exception e)
-    {
-      throw UnknownTypeErr.make("Cannot map Fantom type to Java class: " + qname(), e);
-    }
-  }
+  public Class toClass() { return cls; }
 
   /**
    * Init is responsible for lazily initialization of type
@@ -528,19 +513,10 @@ public class JavaType
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-/*
-  public static final JavaType ByteType  = make(byte.class);
-  public static final JavaType ShortType = make(short.class);
-  public static final JavaType CharType  = make(char.class);
-  public static final JavaType IntType   = make(int.class);
-  public static final JavaType FloatType = make(float.class);
-*/
-
-  private Env env;             // ctor
+  private final Class cls;     // ctor
   private String podName;      // ctor
   private String typeName;     // ctor
   private Type nullable;       // toNullable()
-  private Class cls;           // init()
   private int flags = -1;      // init()
   private Type base;           // init()
   private List mixins;         // init()
