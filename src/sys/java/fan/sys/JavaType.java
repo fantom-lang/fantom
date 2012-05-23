@@ -34,16 +34,27 @@ public class JavaType
     }
     else
     {
+      // if array, get component type x
       Class x = cls;
       int rank = 0;
       while (x.isArray()) { rank++; x = x.getComponentType(); }
-      if (x.getPackage() == null)
-        this.podName = "[java]";
-      else
-        this.podName = "[java]" + x.getPackage().getName();
 
-      String typeName = x.getSimpleName();
+      // parse packageName and className
+      String fullName = x.getName();
+      String packName = "";
+      String typeName = fullName;
+      int dot = fullName.lastIndexOf('.');
+      if (dot > 0)
+      {
+        packName = fullName.substring(0, dot);
+        typeName = fullName.substring(dot+1);
+      }
+
+      // if we have an array rank, prefix "["
       for (int i=0; i<rank; ++i) typeName = "[" + typeName;
+
+      // now we have our Fantom pod/type names
+      this.podName = "[java]" + packName;
       this.typeName = typeName;
     }
     this.cls = cls;
