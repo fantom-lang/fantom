@@ -417,7 +417,7 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event, count)
       ae.m_id = fan.fwt.EventId.m_action;
       ae.m_widget = self;
       ae.m_index = row;
-      this.support.table.onAction().fire(ae);
+      self.onAction().fire(ae);
       return;
     }
 
@@ -456,9 +456,9 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event, count)
 
 fan.fwt.TablePeer.prototype.$onKeyDown = function(self, event)
 {
-  // only handle up/down
+  // only handle up/down/space
   var key = event.keyCode;
-  if (key != 38 && key != 40) return;
+  if (key != 38 && key != 40 && key != 32) return;
 
   // consume event
   event.stopPropagation();
@@ -483,6 +483,14 @@ fan.fwt.TablePeer.prototype.$onKeyDown = function(self, event)
   {
          if (key == 38) list = [Math.max(0, first-1)];
     else if (key == 40) list = [Math.min(first+1, rows-1)];
+    else if (key == 32)
+    {
+      var ae = fan.fwt.Event.make();
+      ae.m_id = fan.fwt.EventId.m_action;
+      ae.m_widget = self;
+      ae.m_index = first;
+      self.onAction().fire(ae);
+    }
     this.keySelPivot = list[0];
   }
   else
@@ -498,6 +506,7 @@ fan.fwt.TablePeer.prototype.$onKeyDown = function(self, event)
       if (first < this.keySelPivot) list = list.slice(1, list.length);
       else  { if (last+1 < rows) list.push(last+1); }
     }
+
   }
 
   this.m_selected = fan.sys.List.make(fan.sys.Int.$type, list).sort();
