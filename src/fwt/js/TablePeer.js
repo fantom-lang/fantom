@@ -153,8 +153,42 @@ if (div.offsetHeight - event.clientY < 20) return;
     $this.selection.notify(null);
   });
 
-  table.addEventListener("mousedown", function(event) {
-    $this.$onMouseDown(self, event);
+  table.addEventListener("mousedown", function(event)
+  {
+    var clicks = $this.m_mouseClicks;
+    var xcur = event.clientX;
+    var ycur = event.clientY;
+
+    // init mouse clicks if not defined
+    if (clicks == null)
+    {
+      clicks = {
+        last: new Date().getTime(),
+        x: xcur,
+        y: ycur,
+        cur:  0
+      };
+    }
+
+    // verify pos and frequency
+    var now  = new Date().getTime();
+    var diff = now - clicks.last;
+    if (diff < 600 && clicks.x == xcur && clicks.y == ycur)
+    {
+      // increment click count
+      clicks.cur++;
+    }
+    else
+    {
+      // reset handler
+      clicks.x = xcur;
+      clicks.y = ycur;
+      clicks.cur = 1;
+    }
+
+    clicks.last = now;
+    $this.m_mouseClicks = clicks;
+    $this.$onMouseDown(self, event, clicks.cur);
   }, false);
 
   div.addEventListener("keydown", function(event) {
@@ -346,7 +380,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   this.selection.select(this.m_selected);
 }
 
-fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
+fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event, count)
 {
   var target = event.target;
 
@@ -375,6 +409,17 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event)
 
     // select row
     this.selection.addSelection(event, row);
+
+    // handle onAction event
+    if (count == 2)
+    {
+      var ae = fan.fwt.Event.make();
+      ae.m_id = fan.fwt.EventId.m_action;
+      ae.m_widget = self;
+      ae.m_index = row;
+      this.support.table.onAction().fire(ae);
+      return;
+    }
 
     // check for valid callback
     var model = self.m_model;
