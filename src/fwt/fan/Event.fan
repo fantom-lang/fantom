@@ -85,6 +85,14 @@ class Event
   Obj? data
 
   **
+  ** Return if this a single click, mouse up on button 3
+  **
+  Bool isPopupTrigger()
+  {
+    id === EventId.mouseUp && button == 3 && count == 1
+  }
+
+  **
   ** If this a popup event, then this field should be set
   ** to the menu item to open.  Setting this field to a nonnull
   ** value implicitly consumes the event.
