@@ -16,11 +16,15 @@ fan.fwt.DesktopPeer.platform  = function() { return "browser"; }
 fan.fwt.DesktopPeer.isWindows = function() { return !fan.fwt.DesktopPeer.$isMac; }
 fan.fwt.DesktopPeer.isMac     = function() { return fan.fwt.DesktopPeer.$isMac; }
 
-fan.fwt.DesktopPeer.$isMac     = navigator.userAgent.indexOf("Mac OS X") != -1;
-fan.fwt.DesktopPeer.$isWebkit  = navigator.userAgent.indexOf("AppleWebKit/") != -1;
-fan.fwt.DesktopPeer.$isChrome  = navigator.userAgent.indexOf("Chrome/") != -1;
-fan.fwt.DesktopPeer.$isFirefox = navigator.userAgent.indexOf("Firefox/") != -1;
-fan.fwt.DesktopPeer.$isIE      = navigator.userAgent.indexOf("MSIE") != -1;
+(function() {
+  var ua = navigator.userAgent;
+  fan.fwt.DesktopPeer.$isMac     = ua.indexOf("Mac OS X") != -1;
+  fan.fwt.DesktopPeer.$isWebkit  = ua.indexOf("AppleWebKit/") != -1;
+  fan.fwt.DesktopPeer.$isChrome  = ua.indexOf("Chrome/") != -1;
+  fan.fwt.DesktopPeer.$isSafari  = ua.indexOf("Safari/") != -1 && ua.indexOf("Version/") != -1;
+  fan.fwt.DesktopPeer.$isFirefox = ua.indexOf("Firefox/") != -1;
+  fan.fwt.DesktopPeer.$isIE      = ua.indexOf("MSIE") != -1;
+}());
 
 fan.fwt.DesktopPeer.clipboard  = function() { return fan.fwt.DesktopPeer.$clipboard; }
 fan.fwt.DesktopPeer.$clipboard = new fan.fwt.Clipboard();
