@@ -115,8 +115,12 @@ fan.fwt.DialogPeer.prototype.open = function(self)
 
   // animate open and dialog resizes
   mask.style.opacity = "0.25";
-  var anim = "opacity 100ms, top 250ms, left 250ms, width 250ms, height 250ms";
   var tx   = "-transform 100ms, ";
+//  var anim = "opacity 100ms, top 250ms, left 250ms, width 250ms, height 250ms";
+// 27 May 2012: Safari 5.1.7 is showing layout problems
+// with height transitons during relayout
+var anim = "opacity 100ms, left 250ms, width 250ms";
+if (!fan.fwt.DesktopPeer.$isSafari) anim += ", top 250ms, height 250ms";
   dlg.style.webkitTransition = "-webkit" + tx + anim;
   dlg.style.MozTransition    = "-moz" + tx + anim;
   dlg.style.webkitTransform  = "scale(1.0)";
