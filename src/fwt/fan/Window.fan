@@ -166,7 +166,7 @@ class Window : ContentPane
 
   ** Back-door hook until we officially support drag and drop.
   ** See WindowPeer.java for details
-  internal |Obj data|? onDrop
+  @NoDoc |Obj data|? onDrop
 
   ** Sets overlay text on dock icon for OSX.  Use empty string to
   ** clear text.
