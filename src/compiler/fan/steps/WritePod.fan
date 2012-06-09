@@ -130,7 +130,7 @@ class WritePod : CompilerStep
     }
     catch (Err e)
     {
-      throw errReport(CompilerErr("Cannot write resource file '$path'", loc, e))
+      throw errReport(CompilerErr("Cannot write resource file '$path': $e", loc, e))
     }
   }
 
