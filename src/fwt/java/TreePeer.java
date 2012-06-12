@@ -358,6 +358,18 @@ public class TreePeer
 
     // define roots
     tree.setItemCount(model.roots().sz());
+
+    // 12 Jun 2012 (Andy): OSX will not display tree when Window is first
+    // openend - this is is a huge hack - but so far its the only thing to
+    // workaround that (patch via Yi Lui).
+    if (Fwt.isMac() == true && model.roots().sz() > 0)
+    {
+      Event event = new Event();
+      event.type = SWT.SetData;
+      event.item = new TreeItem(tree, SWT.NONE);
+      handleEvent(event);
+      event.item.dispose();
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
