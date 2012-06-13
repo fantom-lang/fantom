@@ -34,7 +34,10 @@ fan.fwt.MenuItemPeer.prototype.create = function(parentElem, self)
 {
   var div = this.emptyDiv();
   div.style.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
-  div.style.padding = "1px 4px";
+  div.style.padding = "2px 12px 0px 12px";
+  div.style.webkitBorderBox = "border-box";
+     div.style.mozBorderBox = "border-box";
+        div.style.borderBox = "border-box";
   div.style.whiteSpace = "nowrap";
 
   div.onmouseover = function()
@@ -86,9 +89,7 @@ fan.fwt.MenuItemPeer.prototype.sync = function(self)
   // sync state
   div.style.color = self.peer.m_enabled ? "#000" : "#999";
 
-  // account for padding/border
-  var w = this.m_size.m_w - 8;
-  var h = this.m_size.m_h - 4;
-  fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
+  // sync
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
 
