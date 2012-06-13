@@ -22,9 +22,9 @@ class TcpSocket
   new make() {}
 
   **
-  ** Make a new unbound, unconnected SSL/TLC TCP socket.
+  ** Make a new unconnected SSL/TLS TCP socket or upgrade an existing socket.
   **
-  @NoDoc static native TcpSocket makeSsl()
+  @NoDoc static native TcpSocket makeSsl(TcpSocket? upgrade := null)
 
 //////////////////////////////////////////////////////////////////////////
 // State

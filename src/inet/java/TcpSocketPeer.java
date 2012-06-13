@@ -21,29 +21,53 @@ public class TcpSocketPeer
 
   public static TcpSocketPeer make(TcpSocket fan)
   {
-    return new TcpSocketPeer(false);
+    return new TcpSocketPeer(new Socket());
   }
 
-  public static TcpSocket makeSsl()
-  {
-    TcpSocket self = new TcpSocket();
-    self.peer = new TcpSocketPeer(true);
-    return self;
-  }
-
-  public TcpSocketPeer(boolean ssl)
+  public static TcpSocket makeSsl(TcpSocket upgrade)
   {
     try
     {
-      if (ssl)
-        this.socket = SSLSocketFactory.getDefault().createSocket();
+      // get SSL factory because Java loves factories!
+      SSLSocketFactory factory = (SSLSocketFactory)SSLSocketFactory.getDefault();
+
+      // create new SSL socket
+      SSLSocket socket;
+      if (upgrade == null)
+      {
+        socket = (SSLSocket)factory.createSocket();
+      }
+
+      // upgrade an existing socket
       else
-        this.socket = new Socket();
+      {
+        socket = (SSLSocket)factory.createSocket(
+                   upgrade.peer.socket,
+                   upgrade.peer.socket.getInetAddress().getHostAddress(),
+                   upgrade.peer.socket.getPort(),
+                   false);
+        socket.setUseClientMode(true);
+        socket.startHandshake();
+      }
+
+      // create the new TcpSocket instance
+      TcpSocket self = new TcpSocket();
+      self.peer = new TcpSocketPeer(socket);
+
+      // if upgrade, then initialize socket as already connected
+      if (upgrade != null) self.peer.connected(self);
+
+      return self;
     }
     catch (IOException e)
     {
       throw IOErr.make(e);
     }
+  }
+
+  public TcpSocketPeer(Socket socket)
+  {
+    this.socket = socket;
 
     // turn off Nagle's algorithm since we should
     // always be doing buffering in the virtual machine
@@ -421,7 +445,7 @@ public class TcpSocketPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  final Socket socket;
+  Socket socket;
   private int inBufSize = 4096;
   private int outBufSize = 4096;
   private IpAddr remoteAddr;
