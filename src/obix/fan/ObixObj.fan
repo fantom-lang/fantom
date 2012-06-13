@@ -153,6 +153,12 @@ class ObixObj
   }
 
   **
+  ** Return this element type's Fantom value type or null if this
+  ** is a non-value type such as 'obj'.
+  **
+  Type? valType() {  ObixUtil.elemNameToValType[elemName] }
+
+  **
   ** Get the value encoded as a string.  The string is *not*
   ** XML escaped.  If value is null return "null".
   **
