@@ -25,6 +25,7 @@
 - File.isEmpty to efficiently check for empty directory
 - Refactor JavaType to always preload the class
 - fwt-js: Table.onAction support
+- SmtpClient STARTTLS support
 - #1862: WebReq.locales
 - #1862: Wisp set Locale.cur via WebReq.locales for request
 

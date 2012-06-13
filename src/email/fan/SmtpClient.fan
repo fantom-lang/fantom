@@ -86,6 +86,25 @@ class SmtpClient
       if (res.code != 250) throw SmtpErr.makeRes(res)
       readExts(res)
 
+      // if we have starttls and no plaintext auth
+      // options then upgrade the socket
+      if (starttls && (auths == null || auths.isEmpty))
+      {
+        // tell server we're starting TLS
+        writeReq("STARTTLS")
+        res = readRes
+        if (res.code != 220) throw SmtpErr.makeRes(res)
+
+        // upgrade the socket to SSL/TLS
+        sock = TcpSocket.makeSsl(sock)
+
+        // redo EHLO and SMTP handshake
+        writeReq("EHLO [$IpAddr.local.numeric]")
+        res = readRes
+        if (res.code != 250) throw SmtpErr.makeRes(res)
+        readExts(res)
+      }
+
       // authenticate if configured
       if (username != null && password != null && auths != null && !auths.isEmpty)
         authenticate
@@ -212,6 +231,8 @@ class SmtpClient
       {
         case "AUTH":
           auths = toks[1..-1]
+        case "STARTTLS":
+          starttls = true
       }
     }
   }
@@ -295,6 +316,7 @@ class SmtpClient
 
   private TcpSocket? sock  // Socket if open or null if closed
   private Str[]? auths     // SASL auth mechanisms supported by server
+  private Bool starttls    // was STARTTLS specified
 }
 
 **************************************************************************
