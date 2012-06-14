@@ -13,9 +13,10 @@ using web
 ** standard plumbing for adding oBIX server side support.
 ** Standardized URIs handled by the base class:
 **
-**   {modBase}/xsl     debug style sheet
-**   {modBase}/about   about object
-**   {modBase}/batch   batch operation
+**   {modBase}/xsl           debug style sheet
+**   {modBase}/about         about object
+**   {modBase}/batch         batch operation
+**   {modBase}/watchService  watch service
 **
 ** All other URIs to the mod are automatically handled
 ** by the following callbacks:
@@ -60,9 +61,11 @@ const abstract class ObixMod : WebMod
     cmd := uri.path.getSafe(0)
     switch (cmd)
     {
-      case null:    onLobby; return
-      case "about": onAbout; return
-      case "xsl":   onXsl;   return
+      case null:           onLobby; return
+      case "about":        onAbout; return
+      case "batch":        onBatch; return
+      case "watchService": onWatchService; return
+      case "xsl":          onXsl; return
     }
 
     ObixObj? result
@@ -79,14 +82,11 @@ const abstract class ObixMod : WebMod
     }
     catch (UnresolvedErr e)
     {
-      res.sendErr(404)
-      return
+      result = ObixErr.toUnresolvedObj(uri)
     }
     catch (Err e)
     {
-      e.trace
-      res.sendErr(500, e.traceToStr)
-      return
+      result = ObixErr.toObj("Internal error: $e.toStr", e)
     }
 
     // return response
@@ -103,6 +103,61 @@ const abstract class ObixMod : WebMod
   {
     if (req.method != "GET") { res.sendErr(501); return }
     writeResObj(about)
+  }
+
+  private Void onBatch()
+  {
+    // must be invoke POST
+    if (req.method != "POST") { res.sendErr(501); return }
+
+    // read input which must be <list>
+    in := readReqObj
+    if (in.elemName != "list") { writeResErr("Expecting BatchIn to be <list>"); return }
+
+    // process each list input operation and add item to output list
+    out := ObixObj { elemName="list"; contract=Contract.batchOut }
+    in.each |opIn|
+    {
+      // process a single input operation
+      Uri? opUri := ``
+      ObixObj? opOut
+      try
+      {
+        // ensure we have a uri value
+        if (opIn.elemName != "uri") throw Err("Batch op must be <uri>")
+        opUri = opIn.val as Uri
+        if (opUri == null) throw Err("Batch op missing <uri> val")
+
+        // relative to mod
+        normUri := opUri
+        uriStr := normUri.toStr
+        baseStr := req.modBase.toStr
+        if (uriStr.startsWith(baseStr))
+          normUri = uriStr[baseStr.size..-1].toUri
+
+        switch (opIn.contract.toStr)
+        {
+          case "obix:Read":    opOut = onRead(normUri)
+          case "obix:Write":   opOut = onWrite(normUri, opIn.get("in"))
+          case "obix:Invoke":  opOut = onInvoke(normUri, opIn.get("in"))
+          default:             opOut = ObixErr.toObj("Unknown batch op type: $opIn.contract")
+        }
+      }
+      catch (UnresolvedErr e)  opOut = ObixErr.toUnresolvedObj(opUri)
+      catch (Err e)            opOut = ObixErr.toObj("Failed: $opIn", e)
+
+      // add this op output to the overall output list
+      opOut.href = opUri
+      out.add(opOut)
+    }
+
+    return writeResObj(out)
+  }
+
+  private Void onWatchService()
+  {
+    if (req.method != "GET") { res.sendErr(501); return }
+    writeResErr("TODO")
   }
 
   private Void onXsl()
@@ -130,6 +185,11 @@ const abstract class ObixMod : WebMod
     res.headers["Content-Length"] = buf.size.toStr
     res.out.writeBuf(buf)
     res.out.close
+  }
+
+  private Void writeResErr(Str msg, Err? cause := null)
+  {
+    writeResObj(ObixErr.toObj(msg, cause))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -175,8 +235,10 @@ const abstract class ObixMod : WebMod
     ObixObj
     {
       href = req.absUri.plusSlash
-      contract = Contract("obix:Lobby")
-      ObixObj { elemName = "ref"; name = "about"; href=`about/` },
+      contract = Contract.lobby
+      ObixObj { elemName = "ref"; name = "about"; href=`about/`; contract=Contract.about },
+      ObixObj { elemName = "op";  name = "batch"; href=`batch/`; in=Contract.batchIn; out=Contract.batchOut},
+      ObixObj { elemName = "ref"; name = "watchService"; href=`watchService/`; contract=Contract.watchService },
     }
   }
 
@@ -190,7 +252,7 @@ const abstract class ObixMod : WebMod
     ObixObj
     {
       href = req.absUri.plusSlash
-      contract = Contract("obix:About")
+      contract = Contract.about
       ObixObj { name = "obixVersion";    val = "1.1" },
       ObixObj { name = "serverName";     val = aboutServerName },
       ObixObj { name = "serverTime";     val = DateTime.now },
@@ -201,6 +263,20 @@ const abstract class ObixMod : WebMod
       ObixObj { name = "productVersion"; val = aboutProductVer},
       ObixObj { name = "productUrl";     val = aboutProductUrl },
       ObixObj { name = "tz";             val = TimeZone.cur.fullName },
+    }
+  }
+
+  **
+  ** Get represenation of the WatchService object.  Subclasses
+  ** can override this to customize their watch service.
+  **
+  virtual ObixObj watchService()
+  {
+    ObixObj
+    {
+      href = req.absUri.plusSlash
+      contract = Contract.watchService
+      ObixObj { elemName = "op"; name = "make"; href=`make/`; out=Contract.watch },
     }
   }
 
