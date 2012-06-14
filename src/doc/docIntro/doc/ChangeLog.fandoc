@@ -26,6 +26,7 @@
 - Refactor JavaType to always preload the class
 - fwt-js: Table.onAction support
 - SmtpClient STARTTLS support
+- ObixMod batch op support
 - #1862: WebReq.locales
 - #1862: Wisp set Locale.cur via WebReq.locales for request
 

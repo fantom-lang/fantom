@@ -12,6 +12,21 @@
 **
 const class ObixErr : Err
 {
+  ** Convert error message and cause back to an '<err>' object
+  static ObixObj toObj(Str msg, Err? cause := null)
+  {
+    obj :=  ObixObj { elemName = "err"; display = msg }
+    if (cause != null)
+      obj.add(ObixObj { elemName="str"; name="trace"; val = cause.traceToStr })
+    return obj
+  }
+
+  ** Convert to '<err>' with BadUriErr contract
+  static ObixObj toUnresolvedObj(Uri uri)
+  {
+    ObixObj { elemName = "err"; display = "Unresolved uri: $uri"; contract = Contract.badUriErr }
+  }
+
   ** Construct error ObixObj
   static new make(ObixObj obj)
   {
