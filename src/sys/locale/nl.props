@@ -1,6 +1,6 @@
-dateTime=WWW DD MMM YYYY HH:mm:ss zzz
+dateTime=WWW DD MMM YYYY hh:mm:ss zzz
 date=DD-MM-YYYY
-time=HH:mm:ss
+time=hh:mm:ss
 float=#.0##
 decimal=#.0##
 int=#
