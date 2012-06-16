@@ -1415,6 +1415,7 @@ public class Parser : CompilerSupport
     if (curt === Token.rparen)
     {
       consume
+      if (castType == null) throw err("Expecting cast '(type)'")
       return TypeCheckExpr(loc, ExprId.coerce, parenExpr, castType)
     }
     reset(mark)
