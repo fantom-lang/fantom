@@ -688,7 +688,12 @@ class RegressionTest : CompilerTest
     verifyErrors(
      Str<|class Foo { Str x(Str v) { "${v + "!"}" } }|>,
        [
-         1,  35, "Cannot nest string literals in interpolated string",
+         1,  35, "Cannot nest Str literal within interpolation",
+       ])
+    verifyErrors(
+     Str<|class Foo { Str x(Str v) { "${v + `f`}" } }|>,
+       [
+         1,  35, "Cannot nest Uri literal within interpolation",
        ])
   }
 
