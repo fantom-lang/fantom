@@ -316,7 +316,10 @@ const abstract class ObixMod : WebMod
       if (obj.href == null) throw Err("Watched obj missing href: $obj")
       list.add(obj)
     }
-    writeResObj(ObixObj { contract = Contract.watchOut; add(list) })
+    writeResObj(ObixObj {
+        contract = Contract.watchOut
+        href = req.absUri + req.modBase
+        add(list) })
   }
 
   private Void writeResWatch(ObixModWatch watch)
