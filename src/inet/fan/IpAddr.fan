@@ -117,4 +117,11 @@ final const class IpAddr
   **
   native Str hostname()
 
+  **
+  ** To the native platform representation:
+  **   - Java: returns 'java.net.InetAddress'
+  **   - .NET: returns 'System.Net.IPAddress'
+  **
+  native Obj toNative()
+
 }
