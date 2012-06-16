@@ -27,6 +27,7 @@
 - fwt-js: Table.onAction support
 - SmtpClient STARTTLS support
 - ObixMod batch op support
+- Add IpAddr.toNative
 - #1862: WebReq.locales
 - #1862: Wisp set Locale.cur via WebReq.locales for request
 
