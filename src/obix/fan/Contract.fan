@@ -82,6 +82,8 @@ const class Contract
   internal static const Contract batchOut     := Contract([`obix:BatchOut`])
   internal static const Contract watchService := Contract([`obix:WatchService`])
   internal static const Contract watch        := Contract([`obix:Watch`])
+  internal static const Contract watchIn      := Contract([`obix:WatchIn`])
+  internal static const Contract watchOut     := Contract([`obix:WatchOut`])
   internal static const Contract read         := Contract([`obix:Read`])
   internal static const Contract write        := Contract([`obix:Write`])
   internal static const Contract invoke       := Contract([`obix:Invoke`])

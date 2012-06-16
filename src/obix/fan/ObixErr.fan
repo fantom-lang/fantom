@@ -24,7 +24,13 @@ const class ObixErr : Err
   ** Convert to '<err>' with BadUriErr contract
   static ObixObj toUnresolvedObj(Uri uri)
   {
-    ObixObj { elemName = "err"; display = "Unresolved uri: $uri"; contract = Contract.badUriErr }
+    ObixObj
+    {
+      elemName = "err"
+      display = "Unresolved uri: $uri"
+      href = uri
+      contract = Contract.badUriErr
+    }
   }
 
   ** Construct error ObixObj
