@@ -477,6 +477,7 @@ class Tokenizer : CompilerSupport
       {
         if (endOfQuoted(q) || cur == 0) throw err("Unexpected end of $q, missing }")
         tok := next
+        if (tok.kind == Token.strLiteral) throw err("Cannot nest string literals in interpolated string", tok)
         if (tok.kind == Token.rbrace) break
         tokens.add(tok)
       }
