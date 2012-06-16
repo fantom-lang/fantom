@@ -17,6 +17,7 @@ using web
 **   {modBase}/about         about object
 **   {modBase}/batch         batch operation
 **   {modBase}/watchService  watch service
+**   {modBase}/watch/{id}    watch
 **
 ** All other URIs to the mod are automatically handled
 ** by the following callbacks:
@@ -58,19 +59,30 @@ const abstract class ObixMod : WebMod
   {
     // handle special built-in URIs
     uri := req.modRel
-    cmd := uri.path.getSafe(0)
-    switch (cmd)
+    try
     {
-      case null:           onLobby; return
-      case "about":        onAbout; return
-      case "batch":        onBatch; return
-      case "watchService": onWatchService; return
-      case "xsl":          onXsl; return
+      cmd := uri.path.getSafe(0)
+      switch (cmd)
+      {
+        case null:           onLobby; return
+        case "about":        onAbout; return
+        case "batch":        onBatch; return
+        case "watchService": onWatchService; return
+        case "watch":        onWatch; return
+        case "xsl":          onXsl; return
+      }
+    }
+    catch (Err e)
+    {
+      result := ObixErr.toObj("Internal error: $e.toStr", e)
+      writeResObj(result)
+      return
     }
 
     ObixObj? result
     try
     {
+
       // route to callback
       switch (req.method)
       {
@@ -93,6 +105,10 @@ const abstract class ObixMod : WebMod
     writeResObj(result)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Predefined Objects/URIs
+//////////////////////////////////////////////////////////////////////////
+
   private Void onLobby()
   {
     if (req.method != "GET") { res.sendErr(501); return }
@@ -104,6 +120,16 @@ const abstract class ObixMod : WebMod
     if (req.method != "GET") { res.sendErr(501); return }
     writeResObj(about)
   }
+
+  private Void onXsl()
+  {
+    file := ObixMod#.pod.file(`/res/xsl.xml`)
+    FileWeblet(file).onService
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Batch
+//////////////////////////////////////////////////////////////////////////
 
   private Void onBatch()
   {
@@ -154,17 +180,160 @@ const abstract class ObixMod : WebMod
     return writeResObj(out)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Watches
+//////////////////////////////////////////////////////////////////////////
+
   private Void onWatchService()
   {
-    if (req.method != "GET") { res.sendErr(501); return }
-    writeResErr("TODO")
+    // watchService/
+    uri := req.modRel
+    if (uri.path.size == 1)
+    {
+      if (req.method != "GET") { res.sendErr(501); return }
+      writeResObj(watchService)
+      return
+    }
+
+    // watchService/make
+    if (uri.path.size == 2 && uri.path[1] == "make")
+    {
+      if (req.method != "POST") { res.sendErr(501); return }
+      watch := watchOpen
+      writeResWatch(watch)
+      return
+    }
+
+    // anything else is unresolved error
+    writeResUnresolvedErr
   }
 
-  private Void onXsl()
+  private Void onWatch()
   {
-    file := ObixMod#.pod.file(`/res/xsl.xml`)
-    FileWeblet(file).onService
+    // all URIs must resolve to active watch
+    uri := req.modRel
+    watch := watch(uri.path.getSafe(1) ?: "?")
+    if (watch == null) { writeResUnresolvedErr; return }
+
+    // /watch/{id} returns watch itself
+    if (uri.path.size == 2) { writeResWatch(watch); return }
+
+    // handle /watch/{id}/{cmd}
+    cmd := uri.path.getSafe(2) ?: ""
+    if (cmd == "pollChanges") { onWatchPollChanges(watch); return }
+    if (cmd == "pollRefresh") { onWatchPollRefresh(watch); return }
+    if (cmd == "lease")       { onWatchLease(watch); return }
+    if (cmd == "add")         { onWatchAdd(watch); return }
+    if (cmd == "remove")      { onWatchRemove(watch); return }
+    if (cmd == "delete")      { onWatchDelete(watch); return }
+
+    // anything else is unresolved error
+    writeResUnresolvedErr
   }
+
+  private Void onWatchLease(ObixModWatch watch)
+  {
+    // if write
+    if (req.method == "PUT")
+    {
+      val := readReqObj.val
+      if (val isnot Duration) throw Err("Expected lease val to be reltime, not $val")
+      watch.lease = val
+    }
+
+    // if read/write
+    if (req.method == "GET" || req.method == "PUT")
+    {
+      writeResObj(ObixObj { name="lease"; href=watchUri(watch)+`lease`; val = watch.lease })
+      return
+    }
+
+    res.sendErr(501)
+  }
+
+  private Void onWatchAdd(ObixModWatch watch)
+  {
+    if (req.method != "POST") { res.sendErr(501); return }
+    uris := readWatchIn
+    objs := watch.add(uris)
+    writeWatchOut(objs)
+  }
+
+  private Void onWatchRemove(ObixModWatch watch)
+  {
+    if (req.method != "POST") { res.sendErr(501); return }
+    uris := readWatchIn
+    watch.remove(uris)
+    writeResObj(ObixObj { val="Watch removed: $uris.size" })
+  }
+
+  private Void onWatchPollChanges(ObixModWatch watch)
+  {
+    if (req.method != "POST") { res.sendErr(501); return }
+    readReqObj // ignored
+    objs := watch.pollChanges
+    writeWatchOut(objs)
+  }
+
+  private Void onWatchPollRefresh(ObixModWatch watch)
+  {
+    if (req.method != "POST") { res.sendErr(501); return }
+    readReqObj // ignored
+    objs := watch.pollRefresh
+    writeWatchOut(objs)
+  }
+
+  private Void onWatchDelete(ObixModWatch watch)
+  {
+    if (req.method != "POST") { res.sendErr(501); return }
+    watch.delete
+    writeResObj(ObixObj { val="Watch deleted: $watch.id" })
+  }
+
+  private Uri[] readWatchIn()
+  {
+    // read input which must be <list>
+    obj := readReqObj
+    list := obj.get("hrefs")
+    if (list.elemName != "list") throw Err("Expecting WatchIn.hrefs to be <list>")
+
+    // process each list input operation and add item to output list
+    acc := Uri[,]
+    list.each |kid|
+    {
+      uri := kid.val as Uri
+      if (uri == null) throw Err("Expecting WatchIn child to be <uri>")
+      acc.add(uri)
+    }
+    return acc
+  }
+
+  private Void writeWatchOut(ObixObj[] objs)
+  {
+    list := ObixObj { elemName="list"; name="values" }
+    objs.each |obj|
+    {
+      if (obj.href == null) throw Err("Watched obj missing href: $obj")
+      list.add(obj)
+    }
+    writeResObj(ObixObj { contract = Contract.watchOut; add(list) })
+  }
+
+  private Void writeResWatch(ObixModWatch watch)
+  {
+    obj := watch.toObixObj()
+    obj.href = watchUri(watch)
+    writeResObj(obj)
+  }
+
+  private Uri watchUri(ObixModWatch watch)
+  {
+    req.modBase + `watch/$watch.id/`
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Read/Write ObixObj
+//////////////////////////////////////////////////////////////////////////
 
   private ObixObj readReqObj()
   {
@@ -190,6 +359,11 @@ const abstract class ObixMod : WebMod
   private Void writeResErr(Str msg, Err? cause := null)
   {
     writeResObj(ObixErr.toObj(msg, cause))
+  }
+
+  private Void writeResUnresolvedErr()
+  {
+    writeResObj(ObixErr.toUnresolvedObj(req.modRel))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -280,6 +454,16 @@ const abstract class ObixMod : WebMod
     }
   }
 
+  **
+  ** Construct a new watch.
+  **
+  abstract ObixModWatch watchOpen()
+
+  **
+  ** Find an existing watch by its identifier or return null.
+  **
+  abstract ObixModWatch? watch(Str id)
+
   private const Str aboutServerName
   private const Str aboutVendorName
   private const Uri aboutVendorUrl
@@ -289,3 +473,60 @@ const abstract class ObixMod : WebMod
 
 }
 
+**************************************************************************
+** ObixModWatch
+**************************************************************************
+
+**
+** ObixMod hooks for implementing server side watches.  ObixMod manages
+** the networking/protocol side of things, but subclasses are responsible
+** for managing the actual URI subscription list and polling.
+**
+abstract class ObixModWatch
+{
+  ** Get unique idenifier for the watch. This string must be safe to
+  ** use within a URI path (should not contain special chars or slashes)
+  abstract Str id()
+
+  ** Get/set lease time
+  abstract Duration lease
+
+  ** Add the given uris to watch and return current state.  If
+  ** there is an error for an individual uri, return an error object.
+  ** Resulting objects must have hrefs which exactly match input uri.
+  abstract ObixObj[] add(Uri[] uris)
+
+  ** Remove the given uris from the watch.  Silently ignore bad uris.
+  abstract Void remove(Uri[] uris)
+
+  ** Poll URIs which have changed since last poll.
+  ** Resulting objects must have hrefs which exactly match input uri.
+  abstract ObixObj[] pollChanges()
+
+  ** Poll all URIs in this watch.
+  ** Resulting objects must have hrefs which exactly match input uri.
+  abstract ObixObj[] pollRefresh()
+
+  ** Handle delete/cleanup of watch.
+  abstract Void delete()
+
+  ** Map  server side representation to its on-the-wire Obix representation.
+  virtual ObixObj toObixObj()
+  {
+    ObixObj {
+      it.elemName = "obj"
+      it.contract = Contract.watch
+
+      ObixObj { elemName="reltime"; name="lease";  href=`lease`; val = lease; writable=false },
+
+      ObixObj { elemName="op"; name="add";         href=`add`;         in=Contract.watchIn; out=Contract.watchOut },
+      ObixObj { elemName="op"; name="remove";      href=`remove`;      in=Contract.watchIn},
+      ObixObj { elemName="op"; name="pollChanges"; href=`pollChanges`; out=Contract.watchOut},
+      ObixObj { elemName="op"; name="pollRefresh"; href=`pollRefresh`; out=Contract.watchOut},
+      ObixObj { elemName="op"; name="delete";      href=`delete` },
+    }
+  }
+
+  ** Debug string
+  override Str toStr() { "ObixModWatch $id" }
+}
