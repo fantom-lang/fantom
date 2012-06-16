@@ -446,7 +446,6 @@ class ObixObj
     if (precision != null) out.print(" precision='").print(precision).print("'")
     if (range != null) out.print(" range='").print(range.encode).print("'")
     if (status !== Status.ok) out.print(" status='").print(status).print("'")
-    if (status !== Status.ok) out.print(" status='").print(status).print("'")
     if (tz != null) out.print(" tz='").print(tz.fullName).print("'")
     if (unit != null) out.print(" unit='obix:units/").print(unit.name).print("'")
     if (writable) out.print(" writable='true'")
