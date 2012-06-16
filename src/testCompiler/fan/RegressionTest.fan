@@ -679,4 +679,18 @@ class RegressionTest : CompilerTest
     verifyEq(t.method("fromStr").call("2012-02-29")->date, Date("2012-02-29"))
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #1479 Disallow string literals inside interpolation
+//////////////////////////////////////////////////////////////////////////
+
+  Void test1479()
+  {
+    verifyErrors(
+     Str<|class Foo { Str x(Str v) { "${v + "!"}" } }|>,
+       [
+         1,  35, "Cannot nest string literals in interpolated string",
+       ])
+  }
+
+
 }
