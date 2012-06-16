@@ -538,6 +538,7 @@ public class Method
   {
     if (reflect == null) parent.finish();
 
+    java.lang.reflect.Method jm = null;
     try
     {
       // if parent is FFI Java class, then route to JavaType for handling
@@ -549,7 +550,7 @@ public class Method
       if (index < 0) index = 0;
 
       // route to Java reflection
-      java.lang.reflect.Method jm = reflect[index];
+      jm = reflect[index];
       if (jm == null)
       {
         fixReflect();
@@ -570,6 +571,10 @@ public class Method
     }
     catch (Exception e)
     {
+
+      if (instance == null && jm != null && !java.lang.reflect.Modifier.isStatic(jm.getModifiers()))
+        throw Err.make("Cannot call method '" + this + "' with null instance");
+
       if (reflect == null)
         throw Err.make("Method not mapped to java.lang.reflect correctly " + qname());
 
@@ -583,7 +588,6 @@ public class Method
         System.out.println("    reflect[" + i + "] = " + reflect[i]);
       e.printStackTrace();
       */
-
 
       throw Err.make("Cannot call '" + this + "': " + e);
     }
