@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.63 (working)*
+*Build 1.0.63 (16 Jun 2012)*
 - Move dispose from Desktop to Color, Font, Image
 - Add util::FloatArray
 - Add IntArray, FloatArray sort
@@ -28,8 +28,15 @@
 - SmtpClient STARTTLS support
 - ObixMod batch op support
 - Add IpAddr.toNative
+- #1479: Cannot use strings inside string interpolation
+- #1788: Range Serialization from Fantom1.0.60 -> Fantom1.0.61
+- #1790: Fix Java dasm overloaded inheritance
+- #1792: Lenient compilation for 'once' methods
+- #1844: sys::Field.get
 - #1862: WebReq.locales
 - #1862: Wisp set Locale.cur via WebReq.locales for request
+- #1885: the too-clever-editor bug
+- #1901: fwt::Tree does not repaint on refreshAll on OS X
 
 *Build 1.0.62 (24 Feb 2012)*
 - Add gedit config file
