@@ -498,6 +498,9 @@ class FantomCss
     div.type > p.src { display:none; }
     div.type + div.sidebar > ul { list-style:none; }
 
+    div.type table td { padding:0.4em 0.5em; }
+    div.type table td:last-child p { margin:0; }
+
     div.toc { counter-reset: part; }
     div.toc h2:before {
       content: counter(part, upper-roman) '. ';
