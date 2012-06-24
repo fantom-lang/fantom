@@ -31,6 +31,7 @@ class FileTest : Test
     verify(tempDir.listDirs.size == 0)
     verify(tempDir.listFiles.size == 0)
     verifyEq(tempDir.parent.uri, tempDir.uri.parent)
+    verifyEq((tempDir+`notfoundfoobar/`).isEmpty, true)
   }
 
   Void testWalk()
