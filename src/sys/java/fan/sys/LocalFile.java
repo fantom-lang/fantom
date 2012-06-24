@@ -160,7 +160,7 @@ public class LocalFile
   public boolean isEmpty()
   {
     // if file, then route to default implementation
-    if (!isDir()) return super.isEmpty();
+    if (!isDir() || !exists()) return super.isEmpty();
 
     // if running 1.6 or older then use raw java.ioFile.list
     // to avoid excessive URI mapping overhead
