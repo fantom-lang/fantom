@@ -54,6 +54,11 @@ class ObixClient
   **
   Uri? batchUri
 
+  **
+  ** Watch service relative URI - either set manually or via `readLobby`
+  **
+  Uri? watchServiceUri
+
 //////////////////////////////////////////////////////////////////////////
 // Conveniences
 //////////////////////////////////////////////////////////////////////////
@@ -67,6 +72,7 @@ class ObixClient
     lobby := read(lobbyUri)
     aboutUri = lobby.get("about", false)?.href
     batchUri = lobby.get("batch", false)?.href
+    watchServiceUri = lobby.get("watchService", false)?.href
     return lobby
   }
 
@@ -107,6 +113,30 @@ class ObixClient
 
     // return the list of children
     return out.list
+  }
+
+  **
+  ** Create a new watch from via `watchServiceUri` and return the
+  ** object which represents the watch.  Raise err if watch service
+  ** isn't available.
+  **
+  ObixClientWatch watchOpen()
+  {
+    // must have watchServiceUri configured
+    if (watchServiceUri == null) throw Err("watchService is not avaialble")
+
+    // lazily populate WatchService.make URI
+    if (watchServiceMakeUri == null)
+    {
+      service := read(watchServiceUri)
+      makeOp := service.get("make")
+      if (makeOp.href == null) throw Err("WatchService.make missing href")
+      watchServiceMakeUri = watchServiceUri + makeOp.href
+    }
+
+    // invoke the make op
+    watch := invoke(watchServiceMakeUri, ObixObj())
+    return ObixClientWatch(this, watch)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -192,4 +222,106 @@ class ObixClient
   //Log log := Log.get("obix")
 
   private Str authHeader
+  private Uri? watchServiceMakeUri
 }
+
+**************************************************************************
+** ObixClientWatch
+**************************************************************************
+
+**
+** Represents a clients side watch for an `ObixClient`
+**
+class ObixClientWatch
+{
+  ** Constructor used by ObixClient.watchOpen
+  internal new make(ObixClient client, ObixObj obj)
+  {
+    if (obj.href == null)
+      throw Err("Server returned Watch without href: $obj")
+
+    this.client = client
+    this.uri = obj.href
+    this.leaseUri       = childUri(obj, "lease",       "reltime")
+    this.addUri         = childUri(obj, "add",         "op")
+    this.removeUri      = childUri(obj, "remove",      "op")
+    this.pollChangesUri = childUri(obj, "pollChanges", "op")
+    this.pollRefreshUri = childUri(obj, "pollRefresh", "op")
+    this.deleteUri      = childUri(obj, "delete",      "op")
+  }
+
+  private Uri childUri(ObixObj obj, Str name, Str elem)
+  {
+    child := obj.get(name)
+    if (child.elemName != elem) throw Err("Expecting Watch.$name to be $elem, not $child.elemName")
+    if (child.href == null) throw Err("Missing href for Watch.$name")
+    return this.uri + child.href
+  }
+
+  ** Associated client
+  ObixClient client { private set }
+
+  ** Get or set the watch lease time on the server
+  Duration lease
+  {
+    get { client.read(leaseUri).val as Duration ?: throw Err("Invalid lease val") }
+    set { newVal := it; client.write(ObixObj { href = leaseUri; val = newVal }) }
+  }
+
+  ** Add URIs to the watch.
+  ObixObj[] add(Uri[] uris)
+  {
+    if (uris.isEmpty) return ObixObj[,]
+    return fromWatchOut(client.invoke(addUri, toWatchIn(uris)))
+  }
+
+  ** Remove URIs from the watch.
+  Void remove(Uri[] uris)
+  {
+    if (uris.isEmpty) return
+    client.invoke(removeUri, toWatchIn(uris))
+  }
+
+  ** Poll for changes to get state of only objects which have changed.
+  ObixObj[] pollChanges()
+  {
+    fromWatchOut(client.invoke(pollChangesUri, nullArg))
+  }
+
+  ** Poll refresh to get current state of every URI in watch
+  ObixObj[] pollRefresh()
+  {
+    fromWatchOut(client.invoke(pollRefreshUri, nullArg))
+  }
+
+  ** Close the watch down on the server side.
+  Void close()
+  {
+    client.invoke(deleteUri, nullArg)
+  }
+
+  private ObixObj nullArg() { ObixObj() }
+
+  private ObixObj toWatchIn(Uri[] uris)
+  {
+    list := ObixObj { elemName = "list"; name = "hrefs";  }
+    uris.each |uri| { list.add(ObixObj { val = uri }) }
+    return ObixObj { contract=Contract.watchIn; it.add(list) }
+  }
+
+  private ObixObj[] fromWatchOut(ObixObj res)
+  {
+    list := res.get("values")
+    if (list.elemName != "list") throw Err("Expecting WatchOut.list to be <list>: $list")
+    return list.list
+  }
+
+  private const Uri uri
+  private const Uri leaseUri
+  private const Uri addUri
+  private const Uri removeUri
+  private const Uri pollChangesUri
+  private const Uri pollRefreshUri
+  private const Uri deleteUri
+}
+
