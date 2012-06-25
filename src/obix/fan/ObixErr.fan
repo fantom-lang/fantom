@@ -50,4 +50,7 @@ const class ObixErr : Err
 
   ** The 'display' attribute of the '<err>' object
   const Str display
+
+  ** Return if the oBIX error defines the 'obix:BadUriErr' contract
+  Bool isBadUri() { contract.uris.contains(`obix:BadUriErr`) }
 }
