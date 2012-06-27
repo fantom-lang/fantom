@@ -12,6 +12,29 @@
 fan.fwt.MenuItemPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
 fan.fwt.MenuItemPeer.prototype.$ctor = function(self) {}
 
+// CSS
+fan.fwt.WidgetPeer.addCss(
+  "div._fwt_MenuItem_ {" +
+  "  font:" + fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont) + ";" +
+  " padding: 2px 12px 0px 12px;" +
+  " white-space: nowrap;" +
+  " -webkit-box-sizing: border-box;" +
+  "    -moz-box-sizing: border-box;" +
+  "         box-sizing: border-box;" +
+  "}" +
+  "div._fwt_MenuItem_.disabled {" +
+  " color: #999;" +
+  "}" +
+  "div._fwt_MenuItem_:hover," +
+  "div._fwt_MenuItem_:focus {" +
+  " background: #3d80df;" +
+  " color: #fff;" +
+  "}" +
+  "div._fwt_MenuItem_.disabled:hover {" +
+  " background: none;" +
+  " color: #999;" +
+  "}");
+
 fan.fwt.MenuItemPeer.prototype.selected   = function(self) { return this.m_selected; }
 fan.fwt.MenuItemPeer.prototype.selected$  = function(self, val) { this.m_selected = val; }
 fan.fwt.MenuItemPeer.prototype.m_selected = false;
@@ -33,41 +56,25 @@ fan.fwt.MenuItemPeer.prototype.m_$defCursor = "default";
 fan.fwt.MenuItemPeer.prototype.create = function(parentElem, self)
 {
   var div = this.emptyDiv();
-  div.style.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
-  div.style.padding = "2px 12px 0px 12px";
-  div.style.webkitBorderBox = "border-box";
-     div.style.mozBorderBox = "border-box";
-        div.style.borderBox = "border-box";
-  div.style.whiteSpace = "nowrap";
+  div.className = "_fwt_MenuItem_";
 
-  div.onmouseover = function()
-  {
-    if (!self.peer.m_enabled) return;
-    div.style.background = "#3d80df";
-    div.style.color = "#fff";
-  }
-
-  div.onmouseout = function()
-  {
-    if (!self.peer.m_enabled) return;
-    div.style.background = "";
-    div.style.color = "";
-  }
-
-  div.onclick = function()
-  {
-    if (!self.peer.m_enabled) return;
-
-    var evt = fan.fwt.Event.make();
-    evt.id = fan.fwt.EventId.m_action;
-    evt.widget = self;
-
-    var list = self.onAction().list();
-    for (var i=0; i<list.size(); i++) list.get(i).call(evt);
-  }
+  var $this = this;
+  div.onclick = function() { $this.invoke(self); }
 
   parentElem.appendChild(div);
   return div;
+}
+
+fan.fwt.MenuItemPeer.prototype.invoke = function(self)
+{
+  if (!self.peer.m_enabled) return;
+
+  var evt = fan.fwt.Event.make();
+  evt.id = fan.fwt.EventId.m_action;
+  evt.widget = self;
+
+  var list = self.onAction().list();
+  for (var i=0; i<list.size(); i++) list.get(i).call(evt);
 }
 
 fan.fwt.MenuItemPeer.prototype.sync = function(self)
@@ -87,7 +94,16 @@ fan.fwt.MenuItemPeer.prototype.sync = function(self)
   div.appendChild(document.createTextNode(this.m_text));
 
   // sync state
-  div.style.color = self.peer.m_enabled ? "#000" : "#999";
+  if (self.peer.m_enabled)
+  {
+    fan.fwt.WidgetPeer.removeClassName(div, "disabled")
+    div.tabIndex = 0;
+  }
+  else
+  {
+    fan.fwt.WidgetPeer.addClassName(div, "disabled")
+    div.tabIndex = -1;
+  }
 
   // sync
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
