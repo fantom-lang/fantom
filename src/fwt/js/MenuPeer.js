@@ -10,7 +10,11 @@
  * MenuPeer.
  */
 fan.fwt.MenuPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
-fan.fwt.MenuPeer.prototype.$ctor = function(self) {}
+fan.fwt.MenuPeer.prototype.$ctor = function(self)
+{
+  this.hasKeyBinding = false;
+  this.selIndex = null;
+}
 
 fan.fwt.MenuPeer.prototype.open = function(self, parent, point)
 {
@@ -46,6 +50,7 @@ fan.fwt.MenuPeer.prototype.open = function(self, parent, point)
 
   // mount menu content
   var content = this.emptyDiv();
+  content.tabIndex = 0;
   with (content.style)
   {
     background = "#fff";
@@ -59,6 +64,22 @@ fan.fwt.MenuPeer.prototype.open = function(self, parent, point)
     borderRadius        = "5px";
   }
 
+  // attach event handlers
+  if (!this.hasKeyBinding)
+  {
+    this.hasKeyBinding = true;
+    self.onKeyDown().add(fan.sys.Func.make(
+      fan.sys.List.make(fan.sys.Param.$type, [new fan.sys.Param("it","fwt::Event",false)]),
+      fan.sys.Void.$type,
+      function(it)
+      {
+        if (it.m_key == fan.fwt.Key.m_esc)   { $this.close(); it.consume(); }
+        if (it.m_key == fan.fwt.Key.m_up)    { $this.selPrev(self); it.consume(); }
+        if (it.m_key == fan.fwt.Key.m_down)  { $this.selNext(self); it.consume(); }
+        if (it.m_key == fan.fwt.Key.m_space) { $this.invoke(self);  it.consume(); }
+      }));
+  }
+
   // attach to DOM
   shell.appendChild(content);
   this.attachTo(self, content);
@@ -69,6 +90,48 @@ fan.fwt.MenuPeer.prototype.open = function(self, parent, point)
   // cache elements so we can remove when we close
   this.$mask = mask;
   this.$shell = shell;
+
+  // focus menu widget
+  setTimeout(function() { content.focus(); }, 50);
+}
+
+fan.fwt.MenuPeer.prototype.selPrev = function(self)
+{
+  var kids  = self.children();
+  var size  = kids.size();
+  var index = this.selIndex;
+  if (index == null) index = size;
+  index--;
+  if (index < 0) return;
+  while (index > 0 && !kids.get(index).enabled()) index--;
+  if (!kids.get(index).enabled()) return;
+  kids.get(index).focus();
+  this.selIndex = index;
+}
+
+fan.fwt.MenuPeer.prototype.selNext = function(self)
+{
+  var kids  = self.children();
+  var size  = kids.size();
+  var index = this.selIndex;
+  if (index == null) index = -1;
+  index++;
+  if (index > size-1) return;
+  while (index < size-1 && !kids.get(index).enabled()) index++;
+  if (!kids.get(index).enabled()) return;
+  kids.get(index).focus();
+  this.selIndex = index;
+}
+
+fan.fwt.MenuPeer.prototype.invoke = function(self)
+{
+  var kids = self.children();
+  var index = this.selIndex;
+  if (index == null || index < 0 || index > kids.size()-1) return;
+
+  this.close();
+  var item = kids.get(index);
+  item.peer.invoke(item);
 }
 
 fan.fwt.MenuPeer.prototype.close = function()
