@@ -71,21 +71,24 @@ const class Contract
     return uris.join(" ") {it.encode}
   }
 
+  ** Return if the contract list contains the given URI
+  Bool has(Uri contract) { uris.contains(contract) }
+
   **
   ** The empty contract with no URIs.
   **
   static const Contract empty := Contract(Uri[,])
 
-  internal static const Contract lobby        := Contract([`obix:Lobby`])
-  internal static const Contract about        := Contract([`obix:About`])
-  internal static const Contract batchIn      := Contract([`obix:BatchIn`])
-  internal static const Contract batchOut     := Contract([`obix:BatchOut`])
-  internal static const Contract watchService := Contract([`obix:WatchService`])
-  internal static const Contract watch        := Contract([`obix:Watch`])
-  internal static const Contract watchIn      := Contract([`obix:WatchIn`])
-  internal static const Contract watchOut     := Contract([`obix:WatchOut`])
-  internal static const Contract read         := Contract([`obix:Read`])
-  internal static const Contract write        := Contract([`obix:Write`])
-  internal static const Contract invoke       := Contract([`obix:Invoke`])
-  internal static const Contract badUriErr    := Contract([`obix:BadUriErr`])
+  @NoDoc static const Contract lobby        := Contract([`obix:Lobby`])
+  @NoDoc static const Contract about        := Contract([`obix:About`])
+  @NoDoc static const Contract batchIn      := Contract([`obix:BatchIn`])
+  @NoDoc static const Contract batchOut     := Contract([`obix:BatchOut`])
+  @NoDoc static const Contract watchService := Contract([`obix:WatchService`])
+  @NoDoc static const Contract watch        := Contract([`obix:Watch`])
+  @NoDoc static const Contract watchIn      := Contract([`obix:WatchIn`])
+  @NoDoc static const Contract watchOut     := Contract([`obix:WatchOut`])
+  @NoDoc static const Contract read         := Contract([`obix:Read`])
+  @NoDoc static const Contract write        := Contract([`obix:Write`])
+  @NoDoc static const Contract invoke       := Contract([`obix:Invoke`])
+  @NoDoc static const Contract badUriErr    := Contract([`obix:BadUriErr`])
 }
