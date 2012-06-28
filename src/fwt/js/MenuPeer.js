@@ -33,6 +33,7 @@ fan.fwt.MenuPeer.prototype.open = function(self, parent, point)
     background = "#fff";
     opacity    = "0.01";
     filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=1);"
+    zIndex     = 200;
   }
 
   // mount shell we use to attach widgets to
@@ -44,6 +45,7 @@ fan.fwt.MenuPeer.prototype.open = function(self, parent, point)
     left       = "0";
     width      = "100%";
     height     = "100%";
+    zIndex     = 201;
   }
   var $this = this;
   shell.onclick = function() { $this.close(); }
