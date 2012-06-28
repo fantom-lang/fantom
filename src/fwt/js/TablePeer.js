@@ -95,6 +95,26 @@ fan.fwt.TablePeer.$arrowDown = fan.sys.Uri.fromStr("fan://fwt/res/img/arrowDown.
 //fan.fwt.TablePeer.prototype.colAt = function(self, pos) {}
 //fan.fwt.TablePeer.prototype.rowAt = function(self, pos) {}
 
+fan.fwt.TablePeer.prototype.$cellPos = function(self, col, row)
+{
+  // check args
+  var model = self.m_model;
+  if (col >= model.numCols()) throw fan.sys.ArgErr.make("col out of bounds");
+  if (row >= model.numRows()) throw fan.sys.ArgErr.make("row out of bounds");
+
+  // find cell
+  if (this.m_headerVisible) row++;
+  var div   = this.elem;
+  var table = this.elem.firstChild;
+  var tr    = table.rows[row]
+  var td    = tr.cells[col]
+
+  // find pos
+  var x = td.offsetLeft - div.scrollLeft;
+  var y = tr.offsetTop  - div.scrollTop;
+  return fan.gfx.Point.make(x,y);
+}
+
 fan.fwt.TablePeer.prototype.m_headerVisible = true;
 fan.fwt.TablePeer.prototype.headerVisible   = function(self) { return this.m_headerVisible; }
 fan.fwt.TablePeer.prototype.headerVisible$  = function(self, val) { this.m_headerVisible = val; }
