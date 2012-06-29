@@ -55,10 +55,10 @@ taiwan_dollar, TWD
 us_dollar, USD, $
 
 -- acceleration (m1*sec-2)
-meters_per_second_sqared, m/s²; m1*sec-2
+meters_per_second_squared, m/s²; m1*sec-2
 
 -- angular acceleration (sec-2)
-radians_per_second_sqared, rad/s²; sec-2
+radians_per_second_squared, rad/s²; sec-2
 
 -- angular momentum (kg1*m2*sec-1)
 joule_second, Js; kg1*m2*sec-1
