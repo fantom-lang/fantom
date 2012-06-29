@@ -79,12 +79,13 @@ class JsonOutStream : OutStream
     writeChar(JsonToken.objectEnd)
   }
 
-  private Void writeJsonMap(Str:Obj? map)
+  private Void writeJsonMap(Map map)
   {
     writeChar(JsonToken.objectStart)
     notFirst := false
     map.each |val, key|
     {
+      if (key isnot Str) throw Err("JSON map key is not Str type: $key [$key.typeof]")
       if (notFirst) writeChar(JsonToken.comma).writeChar('\n')
       writeJsonPair(key, val)
       notFirst = true
