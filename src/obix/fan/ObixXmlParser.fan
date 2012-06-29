@@ -145,7 +145,7 @@ internal class ObixXmlParser
         case "precision":   obj.precision = attr.val.toInt
         case "status":      obj.status = Status(attr.val)
         case "tz":          if (obj.tz == null) obj.tz = parseTimeZone(attr.val)
-        case "unit":        if (attr.val.startsWith("obix:units/")) obj.unit = Unit.fromStr(attr.val[11..-1], false)
+        case "unit":        if (attr.val.startsWith("obix:units/")) obj.unit = Unit.fromStr(attr.val[11..-1].replace(" ", "_"), false)
         case "writable":    obj.writable = attr.val.toBool
       }
     }
