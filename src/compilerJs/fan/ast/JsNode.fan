@@ -82,6 +82,7 @@ abstract class JsNode
   [
     "char":   true,
     "delete": true,
+    "enum":   true,
     "fan":    true,
     "float":  true,
     "import": true,
