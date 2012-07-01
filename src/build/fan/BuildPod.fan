@@ -367,12 +367,13 @@ abstract class BuildPod : BuildScript
   {
     log.info("clean [$podName]")
     log.indent
-    Delete(this, devHomeDir+`lib/fan/${podName}.pod`).run
-    Delete(this, devHomeDir+`lib/java/${podName}.jar`).run
-    Delete(this, devHomeDir+`lib/dotnet/${podName}.dll`).run
-    Delete(this, devHomeDir+`lib/dotnet/${podName}.pdb`).run
-    Delete(this, devHomeDir+`lib/tmp/${podName}.dll`).run
-    Delete(this, devHomeDir+`lib/tmp/${podName}.pdb`).run
+    dir := Env.cur.workDir
+    Delete(this, dir+`lib/fan/${podName}.pod`).run
+    Delete(this, dir+`lib/java/${podName}.jar`).run
+    Delete(this, dir+`lib/dotnet/${podName}.dll`).run
+    Delete(this, dir+`lib/dotnet/${podName}.pdb`).run
+    Delete(this, dir+`lib/tmp/${podName}.dll`).run
+    Delete(this, dir+`lib/tmp/${podName}.pdb`).run
     Delete(this, scriptDir+`temp-java/`).run
     Delete(this, scriptDir+`temp-dotnet/`).run
     log.unindent
