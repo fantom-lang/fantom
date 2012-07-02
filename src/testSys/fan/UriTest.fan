@@ -780,6 +780,10 @@ class UriTest : Test
 
   Void testPlusName()
   {
+    verifyPlusName(`http://u/`,          "foo",  `http://u/foo`)
+    verifyPlusName(`http://u`,           "foo",  `http://u/foo`)
+    verifyPlusName(`fan://icons/`,       "foo",  `fan://icons/foo`)
+    verifyPlusName(`fan://icons`,        "foo",  `fan://icons/foo`)
     verifyPlusName(`http://u@h:9/x`,     "foo",  `http://u@h:9/foo`)
     verifyPlusName(`http://u@h:9/x/`,    "foo",  `http://u@h:9/x/foo`)
     verifyPlusName(`http://u@h:9/x?y=z`, "foo",  `http://u@h:9/foo`)

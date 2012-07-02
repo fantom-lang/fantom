@@ -1161,7 +1161,7 @@ fan.sys.Uri.toPathStr = function(isAbs, path, isDir)
 fan.sys.Uri.prototype.plusName = function(name, asDir)
 {
   var size        = this.m_path.size();
-  var isDir       = this.isDir();
+  var isDir       = this.isDir() || this.m_path.isEmpty();
   var newSize     = isDir ? size + 1 : size;
   var temp        = this.m_path.dup().m_values;
   temp[newSize-1] = name;
@@ -1175,7 +1175,7 @@ fan.sys.Uri.prototype.plusName = function(name, asDir)
   t.queryStr = null;
   t.frag     = null;
   t.path     = fan.sys.List.make(fan.sys.Str.$type, temp);
-  t.pathStr  = fan.sys.Uri.toPathStr(this.isPathAbs(), t.path, asDir);
+  t.pathStr  = fan.sys.Uri.toPathStr(this.isAbs() || this.isPathAbs(), t.path, asDir);
   return fan.sys.Uri.makeSections(t);
 }
 

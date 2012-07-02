@@ -1159,7 +1159,7 @@ namespace Fan.Sys
     public Uri plusName(string name, bool asDir)
     {
       int size        = m_path.sz();
-      bool isDir      = this.isDir();
+      bool isDir      = this.isDir() || m_path.isEmpty();
       int newSize     = isDir ? size + 1 : size;
       string[] temp   = (string[])m_path.toArray(new string[newSize]);
       temp[newSize-1] = name;
@@ -1173,7 +1173,7 @@ namespace Fan.Sys
       t.queryStr = null;
       t.frag     = null;
       t.path     = new List(Sys.StrType, temp);
-      t.pathStr  = toPathStr(isPathAbs(), t.path, asDir);
+      t.pathStr  = toPathStr(isAbs() || isPathAbs(), t.path, asDir);
       return new Uri(t);
     }
 

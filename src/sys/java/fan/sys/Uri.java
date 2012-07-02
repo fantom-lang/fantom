@@ -1156,7 +1156,7 @@ public final class Uri
   public Uri plusName(String name, boolean asDir)
   {
     int size         = path.sz();
-    boolean isDir    = isDir();
+    boolean isDir    = isDir() || path.isEmpty();
     int newSize      = isDir ? size + 1 : size;
     String[] temp    = (String[])path.toArray(new String[newSize]);
     temp[newSize-1]  = name;
@@ -1170,7 +1170,7 @@ public final class Uri
     t.queryStr = null;
     t.frag     = null;
     t.path     = new List(Sys.StrType, temp);
-    t.pathStr  = toPathStr(isPathAbs(), t.path, asDir);
+    t.pathStr  = toPathStr(isAbs() || isPathAbs(), t.path, asDir);
     return new Uri(t);
   }
 
