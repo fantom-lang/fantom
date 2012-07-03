@@ -131,7 +131,7 @@ abstract class DocRenderer
         try
         {
           // route to DocEnv.link
-          link := env.link(this.doc, elem.uri, true)
+          link := resolveFandocLink(elem, true)
 
           // get environment URI for the DocLink
           elem.uri = env.linkUri(link).encode
@@ -167,6 +167,14 @@ abstract class DocRenderer
       // print as <pre>
       out.pre.w(doc.text).preEnd
     }
+  }
+
+  **
+  ** Hook used to map a fandoc link to a doc link
+  **
+  virtual DocLink? resolveFandocLink(Link elem, Bool checked := true)
+  {
+    env.link(this.doc, elem.uri, true)
   }
 }
 
