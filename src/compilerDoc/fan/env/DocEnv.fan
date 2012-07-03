@@ -138,12 +138,13 @@ abstract const class DocEnv
       }
     }
 
-    // check for Chapter
+    // check for document
     doc := space.doc(docName, false)
-    if (doc is DocChapter) return DocLink(from, doc, doc.title)
-
-    // assume simple document name in space
-    if (doc != null) return DocLink(from, doc, doc.docName)
+    if (doc != null)
+    {
+      if (doc is DocType) return DocLink(from, doc, doc.docName)
+      return DocLink(from, doc, doc.title)
+    }
 
     // no joy
     if (checked) throw Err("Broken link: $link")
