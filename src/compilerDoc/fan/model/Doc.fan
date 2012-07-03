@@ -68,5 +68,12 @@ const abstract class Doc
   ** of text in the document to be indexed.
   **
   virtual Void onCrawl(DocCrawler crawler) {}
+
+  ** Get a chapter heading for this document by its anchor id
+  virtual DocHeading? heading(Str id, Bool checked := true)
+  {
+    if (checked) throw NameErr("Unknown header anchor id $space.spaceName::$docName#${id}")
+    return null
+  }
 }
 
