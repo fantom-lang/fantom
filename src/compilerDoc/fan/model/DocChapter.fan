@@ -152,12 +152,11 @@ const class DocChapter : Doc
   internal const AtomicRef nextRef := AtomicRef(null)
 
   ** Get a chapter heading by its anchor id or raise NameErr/return null.
-  DocHeading? heading(Str id, Bool checked := true)
+  override DocHeading? heading(Str id, Bool checked := true)
   {
     h := headingMap[id]
     if (h != null) return h
-    if (checked) throw NameErr("Unknown header anchor id ${qname}#${id}")
-    return null
+    return super.heading(id, checked)
   }
 
   ** Return qname
