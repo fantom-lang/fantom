@@ -73,6 +73,7 @@ internal class ObixUtil
   {
     map := Str:Type[:]
     valTypeToElemName.each |v, k| { map[v] = k }
+    map["enum"] = Str#
     elemNameToValType = map
   }
 
