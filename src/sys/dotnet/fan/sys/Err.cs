@@ -87,7 +87,7 @@ namespace Fan.Sys
       return err;
     }
 
-    public static void make_(Err self) { make_(self, null);  }
+    public static void make_(Err self) { make_(self, "");  }
     public static void make_(Err self, string msg) { make_(self, msg, null); }
     public static void make_(Err self, string msg, Err cause)
     {

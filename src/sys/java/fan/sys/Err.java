@@ -80,7 +80,7 @@ public class Err
     return err;
   }
 
-  public static void make$(Err self) { make$(self, null);  }
+  public static void make$(Err self) { make$(self, "");  }
   public static void make$(Err self, String msg) { make$(self, msg, null); }
   public static void make$(Err self, String msg, Err cause)
   {
