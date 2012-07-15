@@ -172,6 +172,10 @@ class ErrTest : Test
     verifyEq(err.msg, "foo")
     verifySame(err.cause, cause)
     verifyEq(err.toStr, "sys::IOErr: foo")
+
+    err = TestCtorErr()
+    verifyEq(err.msg, "")
+    verifyEq(err.cause, null)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -367,3 +371,5 @@ const class TestIOErr : IOErr
 
   const Str s := "memorial day"
 }
+
+const class TestCtorErr : Err { new make() : super.make() {} }
