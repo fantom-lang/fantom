@@ -57,6 +57,20 @@ fan.fwt.ComboPeer.prototype.create = function(parentElem)
   return div;
 }
 
+fan.fwt.ComboPeer.prototype.focus = function(self)
+{
+  if (this.elem == null) return
+  var select = this.elem.firstChild;
+  select.focus();
+}
+
+fan.fwt.ComboPeer.prototype.hasFocus = function(self)
+{
+  if (this.elem == null) return false;
+  var select = this.elem.firstChild;
+  return select === document.activeElement;
+}
+
 fan.fwt.ComboPeer.prototype.needsRebuild = true;
 fan.fwt.ComboPeer.prototype.rebuild = function(self)
 {
