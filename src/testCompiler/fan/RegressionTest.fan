@@ -275,7 +275,7 @@ class RegressionTest : CompilerTest
     verifyErrors(
      "class Foo { Void foo() { return (Obj)4 } }",
        [
-         1, 33, "Cannot return 'sys::Obj' as 'sys::Void'",
+         1, 26, "Cannot return a value from Void method",
        ])
   }
 
