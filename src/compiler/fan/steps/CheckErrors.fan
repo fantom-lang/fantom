@@ -743,6 +743,11 @@ class CheckErrors : CompilerStep
       if (!ret.isVoid)
         err("Must return a value from non-Void method", stmt.loc)
     }
+    else if (ret.isVoid)
+    {
+      if (stmt.expr != null)
+        err("Cannot return a value from Void method", stmt.loc)
+    }
     else if (ret.isThis)
     {
       if (!stmt.expr.ctype.fits(curType))

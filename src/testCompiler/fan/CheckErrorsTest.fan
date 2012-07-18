@@ -975,7 +975,7 @@ class CheckErrorsTest : CompilerTest
 
         28, 23, "Try block cannot be empty",
 
-        30, 23, "Cannot return 'sys::Int' as 'sys::Void'",
+        30, 16, "Cannot return a value from Void method",
         31, 15, "Must return a value from non-Void method",
         32, 28, "Must return a value from non-Void method",
         32, 41, "Must return a value from non-Void method",

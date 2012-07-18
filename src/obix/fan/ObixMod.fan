@@ -177,7 +177,7 @@ const abstract class ObixMod : WebMod
       out.add(opOut)
     }
 
-    return writeResObj(out)
+    writeResObj(out)
   }
 
 //////////////////////////////////////////////////////////////////////////
