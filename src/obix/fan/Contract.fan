@@ -91,4 +91,5 @@ const class Contract
   @NoDoc static const Contract write        := Contract([`obix:Write`])
   @NoDoc static const Contract invoke       := Contract([`obix:Invoke`])
   @NoDoc static const Contract badUriErr    := Contract([`obix:BadUriErr`])
+  @NoDoc static const Contract writePointIn := Contract([`obix:WritePointIn`])
 }
