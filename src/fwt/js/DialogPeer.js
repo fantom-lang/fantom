@@ -130,14 +130,14 @@ if (!fan.fwt.DesktopPeer.$isSafari) anim += ", top 250ms, height 250ms";
   // try to focus first form element
   self.focus();
   var elem = fan.fwt.DialogPeer.findFormControl(content);
-  if (elem != null)
-  {
-    // NOTE: needed to use a delay here for this to
-    // work reliably, assumingly to give the renderer
-    // time to layout DOM changes.
-    var func = function() { elem.focus(); }
-    setTimeout(func, 50);
-  }
+  // NOTE: needed to use a delay here for this to
+  // work reliably, assumingly to give the renderer
+  // time to layout DOM changes.
+  setTimeout(function() {
+    if (elem != null) elem.focus();
+    var list = self.onOpen().list();
+    for (var i=0; i<list.size(); i++) list.get(i).call(event);
+  }, 50);
 
   // 16 May 2012: Chrome 19 appears to have resolved this issue
   //
