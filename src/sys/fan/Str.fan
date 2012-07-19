@@ -621,6 +621,11 @@ const final class Str
   Uri toUri()
 
   **
+  ** Convenience for `Regex.fromStr` using this string.
+  **
+  Regex toRegex()
+
+  **
   ** Create an input stream to read characters from the this string.
   ** The input stream is designed only to read character data.  Attempts
   ** to perform binary reads will throw UnsupportedErr.

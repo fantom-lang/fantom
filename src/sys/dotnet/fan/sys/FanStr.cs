@@ -855,6 +855,8 @@ namespace Fan.Sys
 
     public static Uri toUri(string self) { return Uri.fromStr(self); }
 
+    public static Regex toRegex(string self) { return Regex.fromStr(self); }
+
     public static string toCode(string self) { return toCode(self, Long.valueOf('"'), false); }
     public static string toCode(string self, Long quote) { return toCode(self, quote, false); }
     public static string toCode(string self, Long quote, bool escapeUnicode)

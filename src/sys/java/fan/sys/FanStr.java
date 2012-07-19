@@ -850,6 +850,8 @@ public class FanStr
 
   public static Uri toUri(String self) { return Uri.fromStr(self); }
 
+  public static Regex toRegex(String self) { return Regex.fromStr(self); }
+
   public static String toCode(String self) { return toCode(self, FanInt.pos['"'], false); }
   public static String toCode(String self, Long quote) { return toCode(self, quote, false); }
   public static String toCode(String self, Long quote, boolean escapeUnicode)
