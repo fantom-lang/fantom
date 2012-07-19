@@ -1134,6 +1134,8 @@ class StrTest : Test
     verifyErr(ParseErr#) { "5.x".toDecimal }
 
     verifyEq("http://foo/".toUri, `http://foo/`)
+
+    verifyEq("foo".toRegex, Regex.fromStr("foo"))
   }
 
 //////////////////////////////////////////////////////////////////////////

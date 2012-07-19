@@ -570,6 +570,7 @@ fan.sys.Str.toDecimal = function(self, checked) { return fan.sys.Decimal.fromStr
 
 fan.sys.Str.$in = function(self) { return fan.sys.InStream.makeForStr(self); }
 fan.sys.Str.toUri = function(self) { return fan.sys.Uri.fromStr(self); }
+fan.sys.Str.toRegex = function(self) { return fan.sys.Regex.fromStr(self); }
 
 fan.sys.Str.chars = function(self)
 {
