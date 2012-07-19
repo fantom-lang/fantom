@@ -165,6 +165,25 @@ fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
   return div;
 }
 
+fan.fwt.ButtonPeer.prototype.$focusElem = function()
+{
+  if (this.elem == null) return null;
+  return this.elem.firstChild;
+}
+
+fan.fwt.ButtonPeer.prototype.focus = function(self)
+{
+  var elem = this.$focusElem();
+  if (elem != null) elem.focus();
+}
+
+fan.fwt.ButtonPeer.prototype.hasFocus = function(self)
+{
+  var elem = this.$focusElem();
+  if (elem == null) return false;
+  return elem === document.activeElement;
+}
+
 fan.fwt.ButtonPeer.prototype.fireAction = function(self)
 {
   var evt = fan.fwt.Event.make();
