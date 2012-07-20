@@ -16,30 +16,20 @@ using gfx
 @Js
 class WebLabel : Label
 {
-
-  **
   ** Override horizontal gap between image and text.
   ** Defaults to null.
-  **
   native Int? hgap
 
-  **
   ** If enabled, text that is clipped by bounds is indicated
   ** with ellipsis (...).  Defaults to 'false'.
-  **
   native Bool softClip
 
-  **
   ** Override image size.  Original image will be scaled up or
   ** down to match specified size.
-  **
   native Size? imageSize
 
-  **
   ** Override text CSS style. Defaults to null.
-  **
   native [Str:Str]? style
-
 }
 
 

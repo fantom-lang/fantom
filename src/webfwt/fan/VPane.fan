@@ -13,6 +13,7 @@ using gfx
 ** VPane lays out widgets vertically using the same width
 ** and the preferred height.
 **
+@NoDoc
 @Js
 class VPane : Pane
 {

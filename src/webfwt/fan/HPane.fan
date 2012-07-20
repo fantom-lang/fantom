@@ -13,6 +13,7 @@ using gfx
 ** HPane lays out widgets horizontally using the same height
 ** and the preferred width.
 **
+@NoDoc
 @Js
 class HPane : Pane
 {
