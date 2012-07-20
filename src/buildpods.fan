@@ -45,6 +45,7 @@ class Build : BuildGroup
       `compilerDoc/build.fan`,
       `dom/build.fan`,
       `fwt/build.fan`,
+      `webfwt/build.fan`,
       `icons/build.fan`,
       `flux/build.fan`,
       `xml/build.fan`,

@@ -1,0 +1,53 @@
+//
+// Copyright (c) 2011, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   14 Jul 09  Andy Frank  Creation
+//
+
+using gfx
+using fwt
+
+**
+** Popup displays a content widget in a popup window.
+**
+@Js
+class Popup : ContentPane
+{
+  ** Open this popup at the coordinates relative to the parent widget.
+  native This open(Widget parent, Point pos)
+
+  ** Close this popup.
+  native Void close()
+
+  ** Find and return the first parent Popup for the given widget, or
+  ** null if no parent Popup can be found.
+  static Popup? find(Widget w)
+  {
+    p := w.parent
+    while (p != null && p isnot Popup) p = p.parent
+    return p
+  }
+
+  ** Callback function when popup is closed.
+  **  - id: `fwt::EventId.close`
+  @Transient EventListeners onClose := EventListeners() { private set }
+
+  ** Move popup to new point, where point is relative to parent
+  ** widget passed to 'open'.
+  native Void move(Point pos)
+
+  ** Attach an "onPopup" event handler to the given widget.
+  static Void attach(Widget w, |Event e| f)
+  {
+    active := false
+    w.onMouseDown.add { active=true }
+    w.onMouseUp.add |e|
+    {
+      if (!active) return
+      f(e)
+      active = false
+    }
+  }
+}
