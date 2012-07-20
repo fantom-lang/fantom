@@ -86,6 +86,7 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
 
   // wire up event handlers to keep text prop synchronized
   var $this = this;
+  this.control.onfocus = function(e) { $this.$fireFocus(self); }
   this.control.onkeyup = function(e)
   {
     // fire onModify
