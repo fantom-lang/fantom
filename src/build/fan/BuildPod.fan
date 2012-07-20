@@ -39,6 +39,7 @@ abstract class BuildPod : BuildScript
 
   **
   ** List of dependencies for pod formatted as `sys::Depend`.
+  ** Strings are automatically run through `BuildScript.applyMacros`.
   **
   Str[] depends := Str[,]
 
@@ -195,7 +196,7 @@ abstract class BuildPod : BuildScript
     ci.podName     = podName
     ci.summary     = summary
     ci.version     = version
-    ci.depends     = depends.map |s->Depend| { Depend(s) }
+    ci.depends     = depends.map |s->Depend| { Depend(applyMacros(s)) }
     ci.meta        = meta
     ci.index       = index
     ci.baseDir     = scriptDir
