@@ -166,6 +166,20 @@ fan.fwt.WidgetPeer.prototype.hasFocus = function(self)
   return this.elem != null && this.elem === document.activeElement;
 }
 
+fan.fwt.WidgetPeer.prototype.$fireFocus = function(self)
+{
+  var evt = fan.fwt.Event.make();
+  evt.m_id = fan.fwt.EventId.m_focus;
+  evt.m_widget = self;
+
+  var list = self.onFocus().list();
+  for (var i=0; i<list.m_size; i++)
+  {
+    list.get(i).call(evt);
+    if (evt.m_consumed) break;
+  }
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Attach
 //////////////////////////////////////////////////////////////////////////
