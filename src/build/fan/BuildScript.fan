@@ -112,6 +112,45 @@ abstract class BuildScript
   }
 
   **
+  ** Get the key/value map of config props which are loaded
+  ** from "etc/build/config.props".
+  **
+  once Str:Str configs()
+  {
+    Env.cur.props(BuildScript#.pod, `config.props`, 10sec).ro
+  }
+
+  **
+  ** Apply a set of macro substitutions to the given pattern.
+  ** Substitution keys are indicated in the pattern using "@{key}"
+  ** and replaced by definition in macros map.  If a substitution
+  ** key is undefined then raise an exception.  The `configs`
+  ** method is used for default macro key/value map.
+  **
+  Str applyMacros(Str pattern, Str:Str macros := this.configs)
+  {
+    // short circuit if we don't have @
+    at := pattern.index("@")
+    if (at == null) return pattern
+
+    // rebuild string
+    s := pattern
+    for (i:=0; i<s.size-3; ++i)
+    {
+      if (s[i] == '@' && s[i+1] == '{')
+      {
+        c := s.index("}", i+2)
+        if (c == null) throw Err("Unclosed macro: $pattern")
+        key := s[i+2..<c]
+        val := macros[key]
+        if (val == null) throw Err("Undefined macro key: $key")
+        s = s[0..<i] + val + s[c+1..-1]
+      }
+    }
+    return s
+  }
+
+  **
   ** Resolve a set of URIs to files relative to scriptDir.
   **
   internal File[] resolveFiles(Uri[] uris)
