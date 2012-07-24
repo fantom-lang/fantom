@@ -28,6 +28,7 @@ fan.webfwt.PopupPeer.prototype.open = function(self, parent, point)
 {
   this.$parent = parent;
   this.$point = point;
+  this.$animate = self.m_animate;
 
   // mount mask that functions as input blocker for modality
   var mask = document.createElement("div")
@@ -69,9 +70,12 @@ fan.webfwt.PopupPeer.prototype.open = function(self, parent, point)
     MozBoxShadow    = "0 5px 12px #555";
     webkitBoxShadow = "0 5px 12px #555";
     boxShadow       = "0 5px 12px #555";
-    MozTransform    = "scale(0.75)";
-    webkitTransform = "scale(0.75)";
-    opacity = "0.0";
+    if (this.$animate)
+    {
+      MozTransform    = "scale(0.75)";
+      webkitTransform = "scale(0.75)";
+      opacity = "0.0";
+    }
   }
   popup.onclick = function(e)
   {
@@ -105,13 +109,16 @@ fan.webfwt.PopupPeer.prototype.open = function(self, parent, point)
   this.$shell = shell;
 
   // animate open and resizes
-  var tx = "-transform 100ms, ";
-  var anim = "opacity 100ms";
-  popup.style.MozTransition = "-moz" + tx + anim;
-  popup.style.MozTransform  = "scale(1.0)";
-  popup.style.webkitTransition = "-webkit" + tx + anim;
-  popup.style.webkitTransform = "scale(1.0)";
-  popup.style.opacity = "1.0";
+  if (this.$animate)
+  {
+    var tx = "-transform 100ms, ";
+    var anim = "opacity 100ms";
+    popup.style.MozTransition = "-moz" + tx + anim;
+    popup.style.MozTransform  = "scale(1.0)";
+    popup.style.webkitTransition = "-webkit" + tx + anim;
+    popup.style.webkitTransform = "scale(1.0)";
+    popup.style.opacity = "1.0";
+  }
 
   setTimeout(function() {
     // try to focus first form element - give DOM a few ms
@@ -129,11 +136,14 @@ fan.webfwt.PopupPeer.prototype.open = function(self, parent, point)
   }, 50);
 
   // attach resize animations
-  setTimeout(function() {
-    tx += "top 250ms, left 250ms, width 250ms, height 250ms";
-    popup.style.MozTransition    = "-moz" + tx;
-    popup.style.webkitTransition = "-webkit" + tx;
-  }, 100);
+  if (this.$animate)
+  {
+    setTimeout(function() {
+      tx += "top 250ms, left 250ms, width 250ms, height 250ms";
+      popup.style.MozTransition    = "-moz" + tx;
+      popup.style.webkitTransition = "-webkit" + tx;
+    }, 100);
+  }
 
   // 16 May 2012: Chrome 19 appears to have resolved this issue
   // // 26 Jan 2012: Chrome contains a bug where scrolling is broken
@@ -162,7 +172,7 @@ fan.webfwt.PopupPeer.prototype.close = function(self)
   for (var i=0; i<list.size(); i++) list.get(i).call(evt);
 
   // animate close
-  if (this.$shell)
+  if (this.$shell && this.$animate)
   {
     var popup = this.$shell.firstChild;
     popup.style.opacity = "0.0";

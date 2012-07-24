@@ -38,6 +38,9 @@ class Popup : ContentPane
   **  - id: `fwt::EventId.close`
   @Transient EventListeners onClose := EventListeners() { private set }
 
+  ** Animate popup open/close/resize.  Must be configured before 'open'.
+  Bool animate := true
+
   ** Move popup to new point, where point is relative to parent
   ** widget passed to 'open'.
   native Void move(Point pos)
