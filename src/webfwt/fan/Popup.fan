@@ -30,6 +30,10 @@ class Popup : ContentPane
     return p
   }
 
+  ** Callback function when popup is open.
+  **  - id: `fwt::EventId.open`
+  @Transient EventListeners onOpen := EventListeners() { private set }
+
   ** Callback function when popup is closed.
   **  - id: `fwt::EventId.close`
   @Transient EventListeners onClose := EventListeners() { private set }
