@@ -111,6 +111,10 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
       // consume event
       event.stopPropagation();
 
+      // toggle selected if toggle mode
+      if (self.m_mode == fan.fwt.ButtonMode.m_toggle)
+        $this.m_selected = !$this.m_selected;
+
       // indicate press
       $this.m_pressed = true;
       $this.repaint(self);
