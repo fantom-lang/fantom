@@ -113,12 +113,19 @@ fan.webfwt.PopupPeer.prototype.open = function(self, parent, point)
   popup.style.webkitTransform = "scale(1.0)";
   popup.style.opacity = "1.0";
 
-  // try to focus first form element - give DOM a few ms
-  // to layout content before we attempt to focus
   setTimeout(function() {
+    // try to focus first form element - give DOM a few ms
+    // to layout content before we attempt to focus
     var elem = fan.fwt.DialogPeer.findFormControl(popup);
-    if (elem != null) elem.focus()
-    else self.focus()
+    if (elem != null) elem.focus();
+    else self.focus();
+
+    // fire onOpen event listener
+    var evt = fan.fwt.Event.make();
+    evt.m_widget = self;
+    evt.m_id     = fan.fwt.EventId.m_open;
+    var list = self.onOpen().list();
+    for (var i=0; i<list.size(); i++) list.get(i).call(evt);
   }, 50);
 
   // attach resize animations
