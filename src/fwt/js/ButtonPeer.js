@@ -215,18 +215,9 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
     else
     {
       style.padding = "3px 6px";
-      if (this.m_enabled)
-      {
-        style.color = "#000";
-        style.border = "1px solid #555";
-        fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #fefefe, #d8d8d8 0.90, #d1d1d1 0.90, #b9b9b9"));
-      }
-      else
-      {
-        style.color = "#999";
-        style.border = "1px solid #999";
-        style.background = "#e0e0e0";
-      }
+      style.color = "#000";
+      style.border = "1px solid #555";
+      fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #fefefe, #d8d8d8 0.90, #d1d1d1 0.90, #b9b9b9"));
     }
   }
 }
@@ -312,5 +303,6 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
   }
 
   this.repaint(self);
+  this.elem.style.opacity = this.m_enabled ? "1.0" : "0.35";
   fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
 }
