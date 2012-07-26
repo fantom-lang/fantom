@@ -48,7 +48,7 @@ fan.fwt.MenuPeer.prototype.open = function(self, parent, point)
     zIndex     = 201;
   }
   var $this = this;
-  shell.onclick = function() { $this.close(); }
+  shell.onclick = function() { $this.close(self); }
 
   // mount menu content
   var content = this.emptyDiv();
@@ -75,7 +75,7 @@ fan.fwt.MenuPeer.prototype.open = function(self, parent, point)
       fan.sys.Void.$type,
       function(it)
       {
-        if (it.m_key == fan.fwt.Key.m_esc)   { $this.close(); it.consume(); }
+        if (it.m_key == fan.fwt.Key.m_esc)   { $this.close(self);   it.consume(); }
         if (it.m_key == fan.fwt.Key.m_up)    { $this.selPrev(self); it.consume(); }
         if (it.m_key == fan.fwt.Key.m_down)  { $this.selNext(self); it.consume(); }
         if (it.m_key == fan.fwt.Key.m_space) { $this.invoke(self);  it.consume(); }
@@ -131,16 +131,26 @@ fan.fwt.MenuPeer.prototype.invoke = function(self)
   var index = this.selIndex;
   if (index == null || index < 0 || index > kids.size()-1) return;
 
-  this.close();
+  this.close(self);
   var item = kids.get(index);
   item.peer.invoke(item);
 }
 
-fan.fwt.MenuPeer.prototype.close = function()
+fan.fwt.MenuPeer.prototype.close = function(self)
 {
+  // remove DOM node
   if (this.$shell) this.$shell.parentNode.removeChild(this.$shell);
   if (this.$mask) this.$mask.parentNode.removeChild(this.$mask);
+
+  // refocus the parent widget
   this.$parent.focus();
+
+  // fire onClose event
+  var evt = fan.fwt.Event.make();
+  evt.m_id = fan.fwt.EventId.m_close;
+  evt.m_widget = self;
+  var list = self.onClose().list();
+  for (var i=0; i<list.size(); i++) list.get(i).call(evt);
 }
 
 fan.fwt.MenuPeer.prototype.relayout = function(self)

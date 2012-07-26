@@ -35,6 +35,17 @@ class Menu : MenuItem
   once EventListeners onOpen() { EventListeners() }
 
   **
+  ** Callback function when menu is closed.
+  **
+  ** Event id fired:
+  **  - `EventId.closed`
+  **
+  ** Event fields:
+  **   - none
+  **
+  once EventListeners onClose() { EventListeners() }
+
+  **
   ** Open this menu as a popup at the coordinates relative to
   ** the parent widget.  This method blocks until the menu is
   ** closed.
