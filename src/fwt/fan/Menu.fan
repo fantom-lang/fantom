@@ -38,7 +38,7 @@ class Menu : MenuItem
   ** Callback function when menu is closed.
   **
   ** Event id fired:
-  **  - `EventId.closed`
+  **  - `EventId.close`
   **
   ** Event fields:
   **   - none
