@@ -157,6 +157,13 @@ fan.sys.Buf.prototype.close = function()
   return true;
 }
 
+fan.sys.Buf.prototype.endian = function() { this.m_out.endian(); }
+fan.sys.Buf.prototype.endian$ = function(endian)
+{
+  this.m_out.endian$(endian);
+  this.m_in.endian$(endian);
+}
+
 fan.sys.Buf.prototype.charset = function()
 {
   return this.m_out.charset();
