@@ -13,6 +13,11 @@ fan.webfwt.WebTableModel.prototype.$halignImage = function(col)
   return this.halignImage(col);
 }
 
+fan.webfwt.WebTableModel.prototype.$imageSel = function(col,row)
+{
+  return this.imageSel(col, row);
+}
+
 fan.webfwt.WebTableModel.prototype.$uri = function(col,row)
 {
   return this.uri(col, row);

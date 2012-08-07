@@ -88,8 +88,10 @@ fan.fwt.TablePeer.injectCss = function()
     fan.fwt.WidgetPeer.addCss("table.__fwt_table td img.right + span { margin-right:25px; }");
 }
 
+fan.fwt.TablePeer.$blank     = fan.sys.Uri.fromStr("fan://fwt/res/img/blank16.png");
 fan.fwt.TablePeer.$arrowUp   = fan.sys.Uri.fromStr("fan://fwt/res/img/arrowUp.png");
 fan.fwt.TablePeer.$arrowDown = fan.sys.Uri.fromStr("fan://fwt/res/img/arrowDown.png");
+fan.fwt.TablePeer.$imgClass  = [];
 
 // TODO
 //fan.fwt.TablePeer.prototype.colAt = function(self, pos) {}
@@ -280,6 +282,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   var rows  = view.numRows();
   var cols  = view.numCols();
   var sortCol = self.sortCol();
+  var blank = fan.fwt.WidgetPeer.uriToImageSrc(fan.fwt.TablePeer.$blank);
 
   if (this.m_headerVisible)
   {
@@ -341,12 +344,34 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       if (img != null)
       {
         imgElem = document.createElement("img");
-        imgElem.src = fan.fwt.WidgetPeer.uriToImageSrc(img.m_uri);
+        imgElem.src = blank;
+        imgElem.style.backgroundImage = "url(" + fan.fwt.WidgetPeer.uriToImageSrc(img.m_uri) + ")";
+        imgElem.width  = 16;
+        imgElem.height = 16;
+
+        // check for imageSel
+        if (model.$imageSel)
+        {
+          var sel = model.$imageSel(view.m_cols.get(c), view.m_rows.get(r));
+          if (sel != null)
+          {
+            var name = "sel_" + sel.m_uri.basename();
+            if (fan.fwt.TablePeer.$imgClass[name] == null)
+            {
+              var cls = "div.__fwt_table:focus tr.selected td img." + name + " {" +
+               " background-image: url(" + fan.fwt.WidgetPeer.uriToImageSrc(sel.m_uri) + ")" +
+               " !important; }";
+              fan.fwt.WidgetPeer.addCss(cls);
+              fan.fwt.TablePeer.$imgClass[name] = true;
+            }
+            fan.fwt.WidgetPeer.addClassName(imgElem, name);
+          }
+        }
 
         // image align
         var halignImg = fan.gfx.Halign.m_left;
         if (model.$halignImage) halignImg = model.$halignImage(view.m_cols.get(c));
-        if (halignImg === fan.gfx.Halign.m_right) imgElem.className = "right";
+        if (halignImg === fan.gfx.Halign.m_right) fan.fwt.WidgetPeer.addClassName(imgElem, "right");
       }
 
       // cell text
