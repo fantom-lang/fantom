@@ -19,6 +19,9 @@ abstract class WebTableModel : TableModel
   ** Image alignment relative to text.
   virtual Halign halignImage(Int c) { Halign.left }
 
+  ** Optional image to display when row is selected.
+  virtual Image? imageSel(Int col, Int row) { null }
+
   **
   ** Get the Uri used for this cell. Returning a Uri converts
   ** cell content to a hyperlink.
@@ -27,7 +30,6 @@ abstract class WebTableModel : TableModel
 
   ** Callback when mouse is pressed down on a cell.
   virtual Void onMouseDown(Event event, Int col, Int row) {}
-
 }
 
 
