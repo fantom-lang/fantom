@@ -661,7 +661,7 @@ fan.fwt.WidgetPeer.setBorder = function(elem, border)
     s.borderBottomRightRadius = b.m_radiusBottomRight + "px";
     s.borderBottomLeftRadius  = b.m_radiusBottomLeft + "px";
   }
-  else if (s.style.MozBorderRadius != undefined)
+  else if (s.MozBorderRadius != undefined)
   {
     s.MozBorderRadiusTopleft     = b.m_radiusTopLeft + "px";
     s.MozBorderRadiusTopright    = b.m_radiusTopRight + "px";
