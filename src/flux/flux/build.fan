@@ -44,8 +44,9 @@ class Build : BuildPod
       // views
       "flux.view.flux::StartResource": "flux::StartView",
       "flux.view.mime.x-directory": "flux::DirView",
-      "flux.view.mime.text/html": "flux::HtmlView",
       "flux.view.mime.image": "flux::ImageView",
+      // crashes 2012-08-12
+      //"flux.view.mime.text/html": "flux::HtmlView",
     ]
   }
 }

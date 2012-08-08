@@ -89,7 +89,7 @@ class FileResource : Resource
 
     // first try exact mime type matching
     acc := Type[,]
-    acc.addAll(Flux.qnamesToTypes(Env.cur.index("flux.view.mime.${mime.toStr}")))
+    acc.addAll(Flux.qnamesToTypes(Env.cur.index("flux.view.mime.${mime.mediaType}/${mime.subType}")))
 
     // then match by just media type
     acc.addAll(Flux.qnamesToTypes(Env.cur.index("flux.view.mime.${mime.mediaType}")))
