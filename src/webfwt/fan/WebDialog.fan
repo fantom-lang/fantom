@@ -124,6 +124,7 @@ class WebDialog : Dialog
     cmds.each |c|
     {
       b := Button.makeCommand(c) { insets=Insets(0,10,0,10) }
+      if (c == defCommand) setDefButton(b)
       buttons.add(ConstraintPane { minw=70; b, })
     }
     return buttons

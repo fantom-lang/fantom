@@ -204,6 +204,10 @@ public class WindowPeer
     if (mb.y < db.y) mb.y = db.y;
     self.bounds(rect(mb));
 
+    // set default button
+    if (defButton != null)
+      shell.setDefaultButton((org.eclipse.swt.widgets.Button)defButton.peer.control);
+
     // open
     shell.open();
 
@@ -294,5 +298,6 @@ public class WindowPeer
 
   boolean explicitPos;    // has pos been explicitly configured?
   boolean explicitSize;   // has size been explicitly configured?
+  Button defButton;
   Object result;
 }

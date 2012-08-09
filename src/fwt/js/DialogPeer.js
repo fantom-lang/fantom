@@ -15,6 +15,12 @@ fan.fwt.DialogPeer.prototype.$ctor = function(self)
   this.hasKeyBinding = false;
 }
 
+fan.fwt.DialogPeer.prototype.setDefButton = function(self, button)
+{
+  button.peer.m_def = true;
+  this.m_defButton = button;
+}
+
 fan.fwt.DialogPeer.prototype.open = function(self)
 {
   // attach event handlers
@@ -27,6 +33,11 @@ fan.fwt.DialogPeer.prototype.open = function(self)
       function(it)
       {
         if (it.m_key == fan.fwt.Key.m_esc) { self.close(null); it.consume(); }
+        if (it.m_key == fan.fwt.Key.m_enter)
+        {
+          var def = self.peer.m_defButton;
+          if (def != null) { def.peer.fireAction(def); it.consume(); }
+        }
       }));
   }
 

@@ -37,4 +37,12 @@ public class DialogPeer extends WindowPeer
 
   int defaultStyle() { return SWT.CLOSE | SWT.TITLE; }
 
+//////////////////////////////////////////////////////////////////////////
+// Methods
+//////////////////////////////////////////////////////////////////////////
+
+  public void setDefButton(Dialog self, Button button)
+  {
+    defButton = button;
+  }
 }
