@@ -57,6 +57,11 @@ class Dialog : Window
   **
   Command[]? commands
 
+  **
+  ** Optional command to specify as default action.
+  **
+  Command? defCommand := null
+
 //////////////////////////////////////////////////////////////////////////
 // Predefined Commands
 //////////////////////////////////////////////////////////////////////////
@@ -261,7 +266,9 @@ class Dialog : Window
       buttons.add(ConstraintPane
       {
         minw = 70
-        Button.makeCommand(c) { insets=Insets(0, 10, 0, 10) },
+        b := Button.makeCommand(c) { insets=Insets(0, 10, 0, 10) }
+        if (c == defCommand) setDefButton(b)
+        it.add(b)
       })
     }
 
@@ -290,9 +297,7 @@ class Dialog : Window
     return this
   }
 
-
-  // to force native peer
-  private native Void dummyDialog()
+  protected native Void setDefButton(Button b)
 }
 
 **************************************************************************

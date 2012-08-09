@@ -18,6 +18,33 @@ fan.fwt.WidgetPeer.addCss(
   " -webkit-box-shadow:0 0 2px 2px #7baddc;" +
   " -moz-box-shadow:   0 0 2px 2px #7baddc;" +
   " box-shadow:        0 0 2px 2px #7baddc;" +
+  "}" +
+  "div._fwt_Button_.push {" +
+  " color: black;" +
+  " border: 1px solid #555;" +
+  " border-radius: 4px;" +
+  " text-align: center;" +
+  " white-space: nowrap;" +
+  " padding: 3px 6px;" +
+  " background: -webkit-linear-gradient(top, #fefefe, #d8d8d8 90%, #d1d1d1 90%, #b9b9b9);" +
+  " background:    -moz-linear-gradient(top, #fefefe, #d8d8d8 90%, #d1d1d1 90%, #b9b9b9);" +
+  " background:         linear-gradient(top, #fefefe, #d8d8d8 90%, #d1d1d1 90%, #b9b9b9);" +
+  "}" +
+  "div._fwt_Button_.push.pressed {" +
+  " padding: 4px 6px 2px 6px;" +
+  " background: -webkit-linear-gradient(top, #b7b7b7, #c8c8c8 10%, #cecece 10%, #d9d9d9);" +
+  " background:    -moz-linear-gradient(top, #b7b7b7, #c8c8c8 10%, #cecece 10%, #d9d9d9);" +
+  " background:         linear-gradient(top, #b7b7b7, #c8c8c8 10%, #cecece 10%, #d9d9d9);" +
+  "}" +
+  "div._fwt_Button_.push.def {" +
+  " background: -webkit-linear-gradient(top, #c2d7f3, #a6b8d0 90%, #9aaac0 90%, #91a1b6);" +
+  " background:    -moz-linear-gradient(top, #c2d7f3, #a6b8d0 90%, #9aaac0 90%, #91a1b6);" +
+  " background:         linear-gradient(top, #c2d7f3, #a6b8d0 90%, #9aaac0 90%, #91a1b6);" +
+  "}" +
+  "div._fwt_Button_.push.def.pressed {" +
+  " background: -webkit-linear-gradient(top, #8f9eb3, #96a6bb 10%, #9eafc6 10%, #a7b9d0);" +
+  " background:    -moz-linear-gradient(top, #8f9eb3, #96a6bb 10%, #9eafc6 10%, #a7b9d0);" +
+  " background:         linear-gradient(top, #8f9eb3, #96a6bb 10%, #9eafc6 10%, #a7b9d0);" +
   "}");
 
 fan.fwt.ButtonPeer.prototype.font = function(self) { return this.m_font; }
@@ -63,15 +90,9 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
 {
   var div = document.createElement("div");
   div.tabIndex = 0;
-  div.className = "_fwt_Button_";
-  var style = div.style;
-  style.font = fan.fwt.WidgetPeer.fontToCss(this.m_font==null ? fan.fwt.DesktopPeer.$sysFont : this.m_font);
-  style.border  = "1px solid #555";
-  style.MozBorderRadius    = "4px";
-  style.webkitBorderRadius = "4px";
-  style.borderRadius       = "4px";
-  style.textAlign  = "center";
-  style.whiteSpace = "nowrap";
+  div.className = "_fwt_Button_ push";
+  div.style.font = fan.fwt.WidgetPeer.fontToCss(
+    this.m_font==null ? fan.fwt.DesktopPeer.$sysFont : this.m_font);
 
   var $this = this;
   div.onmousedown = function(event)
@@ -211,18 +232,8 @@ fan.fwt.ButtonPeer.prototype.repaint = function(self)
     var style = div.style;
     var pressed = this.m_pressed || this.m_selected;
 
-    if (pressed)
-    {
-      style.padding = "4px 6px 2px 6px";
-      fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #b7b7b7, #c8c8c8 0.10, #cecece 0.10, #d9d9d9"));
-    }
-    else
-    {
-      style.padding = "3px 6px";
-      style.color = "#000";
-      style.border = "1px solid #555";
-      fan.fwt.WidgetPeer.setBg(div, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #fefefe, #d8d8d8 0.90, #d1d1d1 0.90, #b9b9b9"));
-    }
+    if (pressed) fan.fwt.WidgetPeer.addClassName(div, "pressed");
+    else fan.fwt.WidgetPeer.removeClassName(div, "pressed");
   }
 }
 
@@ -236,6 +247,9 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
   {
     var div = this.elem.firstChild;
     div.tabIndex = this.m_enabled ? 0 : -1;
+
+    // set def
+    if (this.m_def == true) fan.fwt.WidgetPeer.addClassName(div, "def");
 
     // remove old text node
     while (div.firstChild != null)
@@ -294,7 +308,7 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
            self.m_mode == fan.fwt.ButtonMode.m_radio)
   {
     var div = this.elem;
-    div.style.color = this.m_enabled ? "#000" : "#999";
+    div.style.color = this.m_enabled ? "#000" : "#444";
 
     // set state
     var check = this.elem.firstChild;
