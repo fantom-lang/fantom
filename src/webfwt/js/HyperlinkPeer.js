@@ -33,3 +33,14 @@ fan.webfwt.HyperlinkPeer.prototype.$uri = function(self)
   };
 }
 
+// backdoor hook to reuse Label for hyperlinks
+fan.webfwt.HyperlinkPeer.prototype.$onBeforeUri = function(self)
+{
+  var list = self.onBefore().list();
+  if (list.size() == 0) return;
+
+  var evt = fan.fwt.Event.make();
+  evt.m_id = fan.fwt.EventId.m_action;
+  evt.m_widget = self;
+  for (var i=0; i<list.size(); i++) list.get(i).call(evt);
+}
