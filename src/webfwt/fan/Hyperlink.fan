@@ -23,6 +23,9 @@ class Hyperlink : WebLabel
 
   ** Underline mode for hyperlink.
   UnderlineMode underline := UnderlineMode.underline
+
+  ** Callback to invoke before link is followed.
+  once EventListeners onBefore() { EventListeners() }
 }
 
 **************************************************************************
