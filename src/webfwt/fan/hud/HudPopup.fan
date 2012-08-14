@@ -21,7 +21,7 @@ class HudPopup : Popup
     content = BorderPane
     {
       it.bg = Color("#f53b3b3b")
-      it.border = Border("#f53b3b3b $radius")
+      it.border = Border("#f5242424 $radius")
       it.insets = this.insets
     }
     if (f != null) f(this)
@@ -36,7 +36,7 @@ class HudPopup : Popup
   ** Border radius for popup.
   Insets radius := Insets(5)
   {
-    set { &radius=it; content->border=Border("#f53b3b3b $it") }
+    set { &radius=it; content->border=Border("#f5242424 $it") }
   }
 
   ** Content of popup.

@@ -67,9 +67,9 @@ fan.webfwt.PopupPeer.prototype.open = function(self, parent, point)
     MozBorderRadius    = "5px";
     webkitBorderRadius = "5px";
     borderRadius    = "5px";
-    MozBoxShadow    = "0 5px 12px #555";
-    webkitBoxShadow = "0 5px 12px #555";
-    boxShadow       = "0 5px 12px #555";
+    MozBoxShadow    = "0 6px 12px rgba(0, 0, 0, 0.5)";
+    webkitBoxShadow = "0 6px 12px rgba(0, 0, 0, 0.5)";
+    boxShadow       = "0 6px 12px rgba(0, 0, 0, 0.5)";
     if (this.$animate)
     {
       MozTransform    = "scale(0.75)";
