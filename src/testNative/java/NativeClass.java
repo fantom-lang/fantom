@@ -29,5 +29,11 @@ public class NativeClass
 
   public Type typeof() { return Type.find("testNative::NativeClass"); }
 
+  public String readResource(String name) throws java.io.IOException
+  {
+    java.io.InputStream in = getClass().getResourceAsStream(name);
+    return new java.io.BufferedReader(new java.io.InputStreamReader(in)).readLine();
+  }
+
   public long add(long a, long b) { return a + b; }
 }

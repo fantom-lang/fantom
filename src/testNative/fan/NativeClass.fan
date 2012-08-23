@@ -15,4 +15,6 @@ native class NativeClass
   new make()
 
   Int add(Int a, Int b)
+
+  Str readResource(Str name)
 }
