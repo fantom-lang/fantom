@@ -10,6 +10,7 @@
 - Move webfwt into Fantom core
 - BuildScript.applyMacros
 - fwt: Dialog.defCommand
+- FanClassLoader support for resource URLs
 
 *Build 1.0.63 (16 Jun 2012)*
 - Move dispose from Desktop to Color, Font, Image
