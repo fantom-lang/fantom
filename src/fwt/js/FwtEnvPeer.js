@@ -130,7 +130,7 @@ fan.fwt.FwtEnvPeer.prototype.imagePaint = function(self, size, f)
   canvas.height = size.m_h;
 
   // paint image content on the canvas
-  var g = new fan.fwt.Graphics();
+  var g = new fan.fwt.FwtGraphics();
   g.paint(canvas, fan.gfx.Rect.make(0, 0, size.m_w, size.m_h), function() { f.call(g) })
 
   // create new image based on canvas content
