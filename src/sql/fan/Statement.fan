@@ -21,7 +21,10 @@ class Statement
   {
     this.conn = conn
     this.sql = sql
+    init
   }
+
+  private native Void init()
 
   **
   ** Prepare this statement by compiling for efficient
@@ -44,10 +47,13 @@ class Statement
   native Void queryEach([Str:Obj]? params, |Row row| eachFunc)
 
   **
-  ** Execute a SQL statement and if applicable return a result.
-  ** If the statement produced auto-generated keys, then return
-  ** an Int[] list of the keys generated, otherwise return number
-  ** of rows modified.
+  ** Execute a SQL statement and if applicable return a result:
+  **   - If the statement is a query or procedure which produces
+  **     a result set, then return 'Row[]'
+  **   - If the statement is an insert and auto-generated keys
+  **     are supported by the connector then return 'Int[]' of
+  **     keys generated
+  **   - Return an 'Int' with the update count
   **
   native Obj execute([Str:Obj]? params := null)
 

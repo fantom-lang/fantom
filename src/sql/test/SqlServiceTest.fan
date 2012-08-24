@@ -29,7 +29,8 @@ class SqlServiceTest : Test
       insertTable
       closures
       transactions
-      statements
+      preparedStmts
+      executeStmts
     }
     catch (Err e)
     {
@@ -344,10 +345,10 @@ class SqlServiceTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Statements
+// Prepared Statements
 //////////////////////////////////////////////////////////////////////////
 
-  Void statements()
+  Void preparedStmts()
   {
     stmt := db.sql("select name, age from farmers where name = @name").prepare
     result := stmt.query(["name":"Alice"])
@@ -390,6 +391,23 @@ class SqlServiceTest : Test
     stmt.limit = null
     verifyEq(stmt.limit, null)
     verifyEq(stmt.query.size, 5)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Execute statements
+//////////////////////////////////////////////////////////////////////////
+
+  Void executeStmts()
+  {
+    r := db.sql(Str<|update farmers set pet="Pepper" where ducks=8|>).execute
+    verifyEq(r, 2)
+
+    r = db.sql("select name, pet from farmers").execute
+    verifyEq(r.typeof, Row[]#)
+    rows := r as Row[]
+    rows.sort |a, b| { a->name <=> b->name }
+    verifyEq(rows[3]->name, "Donny"); verifyEq(rows[3]->pet, "Pepper")
+    verifyEq(rows[4]->name, "John");  verifyEq(rows[4]->pet, "Pepper")
   }
 
 //////////////////////////////////////////////////////////////////////////
