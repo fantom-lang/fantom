@@ -268,6 +268,20 @@ public class StatementPeer
     return Long.valueOf(-1);
   }
 
+  public List more(Statement self)
+  {
+    try
+    {
+      if (stmt.getMoreResults())
+        return toRows(stmt.getResultSet());
+      else
+        return null;
+    }
+    catch (SQLException ex)
+    {
+      throw SqlConnPeer.err(ex);
+    }
+  }
 
   /**
    * Set the parameters for the underlying prepared statement
