@@ -58,6 +58,13 @@ class Statement
   native Obj execute([Str:Obj]? params := null)
 
   **
+  ** If the last execute has more results from a multi-result stored
+  ** procedure, then return the next batch of results as Row[].  Otherwise
+  ** if there are no more results then return null.
+  **
+  @NoDoc native Row[]? more()
+
+  **
   ** Close the statement.
   **
   native Void close()
