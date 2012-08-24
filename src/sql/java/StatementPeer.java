@@ -20,6 +20,18 @@ public class StatementPeer
     return new StatementPeer();
   }
 
+  public void init(Statement self)
+  {
+    // at this point the conn and sql fields are configured,
+    // figure out our auto-generated key mode
+    this.isInsert = FanStr.indexIgnoreCase(self.sql, "insert ") != null;
+    this.isAutoKeys = this.isInsert && self.conn.peer.supportsGetGenKeys;
+    this.autoKeyMode = this.isAutoKeys ?
+                       java.sql.Statement.RETURN_GENERATED_KEYS :
+                       java.sql.Statement.NO_GENERATED_KEYS;
+
+  }
+
   public Statement prepare(Statement self)
   {
     // Fan uses the ADO .NET prepared statement syntax, so
@@ -204,16 +216,16 @@ public class StatementPeer
       if (prepared)
       {
         setParameters(params);
-        int rows = ((PreparedStatement)stmt).executeUpdate();
-        return executeResult(self, rows);
+        boolean isResultSet = ((PreparedStatement)stmt).execute();
+        return executeResult(self, isResultSet);
       }
       else
       {
         createStatement(self);
         try
         {
-          int rows = stmt.executeUpdate(self.sql, autoGenKeyMode(self));
-          return executeResult(self, rows);
+          boolean isResultSet = stmt.execute(self.sql, autoKeyMode);
+          return executeResult(self, isResultSet);
         }
         finally
         {
@@ -227,30 +239,33 @@ public class StatementPeer
     }
   }
 
-  static int autoGenKeyMode(Statement self)
-  {
-    return self.conn.peer.supportsGetGenKeys && FanStr.indexIgnoreCase(self.sql, "insert") != null ?
-           java.sql.Statement.RETURN_GENERATED_KEYS :
-           java.sql.Statement.NO_GENERATED_KEYS;
-  }
-
-  private Object executeResult(Statement self, int rows)
+  private Object executeResult(Statement self, boolean isResultSet)
   {
     try
     {
-      if (autoGenKeyMode(self) == java.sql.Statement.RETURN_GENERATED_KEYS)
+      // if result is ResultSet, then return Row[]
+      if (isResultSet)
+      {
+        return toRows(stmt.getResultSet());
+      }
+
+      // if auto-generated keys, then return Int[]
+      if (isAutoKeys)
       {
         ResultSet rs = stmt.getGeneratedKeys();
         List keys = new List(Sys.IntType);
         while (rs.next()) keys.add(rs.getLong(1));
         if (!keys.isEmpty()) return keys;
       }
+
+      // othertise return the update count
+      return Long.valueOf(stmt.getUpdateCount());
     }
     catch (Exception e)
     {
       e.printStackTrace();
     }
-    return Long.valueOf(rows);
+    return Long.valueOf(-1);
   }
 
 
@@ -274,7 +289,6 @@ public class StatementPeer
       int[] locs = (int[])entry.getValue();
       for (int j = 0; j < locs.length; j++)
       {
-        // System.out.println("pstmt.setObject: " + locs[j] + " -> " + jobj.getClass().getName());
         try
         {
           pstmt.setObject(locs[j], jobj);
@@ -317,7 +331,7 @@ public class StatementPeer
     throws SQLException
   {
     if (prepared)
-      stmt = self.conn.peer.jconn.prepareStatement(translated, autoGenKeyMode(self));
+      stmt = self.conn.peer.jconn.prepareStatement(translated, autoKeyMode);
     else
       stmt = self.conn.peer.jconn.createStatement();
     if (limit > 0) stmt.setMaxRows(limit);
@@ -523,9 +537,12 @@ public class StatementPeer
   private static final int MODE_PARAM = 2;
   private static final int MODE_END   = 3;
 
-  private boolean            prepared = false;
-  private String             translated;
+  private boolean prepared = false;
+  private String translated;
   private java.sql.Statement stmt;
-  private HashMap            paramMap;
-  private int                limit = 0;
+  private HashMap paramMap;
+  private int limit = 0;              // limit field value
+  private boolean isInsert;           // does sql contain insert keyword
+  private boolean isAutoKeys;         // isInsert and connector supports auto-gen keys
+  private int autoKeyMode;            // JDBC constant for auto-gen keys
 }
