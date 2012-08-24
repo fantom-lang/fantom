@@ -11,6 +11,7 @@ using gfx
 **
 ** Stub for native implementation of gfx::Graphics
 **
+@Js
 internal native class FwtGraphics : Graphics
 {
   override native Brush brush

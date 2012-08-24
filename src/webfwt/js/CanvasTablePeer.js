@@ -25,7 +25,7 @@ fan.webfwt.CanvasTablePeer.prototype.writePng = function(self, out, col, row)
   document.body.appendChild(canvas);
 
   // render cell
-  var g = new fan.fwt.Graphics();
+  var g = new fan.fwt.FwtGraphics();
   var s = fan.gfx.Size.make(w, h);
   var b = fan.gfx.Rect.make(0, 0, w, h);
   g.widget = self;
