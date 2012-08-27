@@ -374,7 +374,7 @@ abstract const class File
   ** Open a new buffered OutStream used to write to this file.  If append is
   ** true, then we open the file to append to the end, otherwise it is
   ** opened as an empty file.  A bufferSize of null or zero will return an
-  ** unbuffered input stream.  Throw IOErr on error.
+  ** unbuffered output stream.  Throw IOErr on error.
   **
   abstract OutStream out(Bool append := false, Int? bufferSize := 4096)
 
