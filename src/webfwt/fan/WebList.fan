@@ -68,6 +68,7 @@ abstract class WebList : Pane
       it.id = EventId.select
       it.data = items[index]
       it.index = index
+      it.widget = this
     }
     onBeforeSelect.fire(event)
     return event.data != "cancel"
@@ -82,6 +83,7 @@ abstract class WebList : Pane
       it.id = EventId.select
       it.data = selected
       it.index = selectedIndex
+      it.widget = this
     })
   }
 
