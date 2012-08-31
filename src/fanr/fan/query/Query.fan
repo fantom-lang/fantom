@@ -10,8 +10,9 @@
 ** Query models a parsed query against the pod database.
 ** See `docFanr::Queries` for details and formal grammer.
 **
-internal const class Query
+const class Query
 {
+  ** Parse query string - see `docFanr::Queries` for format.
   static new fromStr(Str s, Bool checked := true)
   {
     try
@@ -26,14 +27,17 @@ internal const class Query
     }
   }
 
-  new make(QueryPart[] parts) { this.parts = parts }
+  internal new make(QueryPart[] parts) { this.parts = parts }
 
-  const QueryPart[] parts
+  internal const QueryPart[] parts
 
+  ** Return query string - see `docFanr::Queries` for format.
   override Str toStr() { parts.join(",") }
 
+  ** Hash is based on query parts
   override Int hash() { parts.hash }
 
+  ** Equality is based on query parts
   override Bool equals(Obj? that) { that is Query && parts == ((Query)that).parts }
 
   ** Match against full query (name, version, and meta)
