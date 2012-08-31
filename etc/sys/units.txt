@@ -388,3 +388,11 @@ cubic_meters_per_hour, m³/h; m3*sec-1; 2.777777777777778E-4
 liters_per_hour, L/h; m3*sec-1; 2.7777777777777776E-7
 cubic_meters_per_minute, m³/min; m3*sec-1; 0.016666666666666666
 
+-- bytes (null)
+byte
+kilobyte,kB
+megabyte,MB
+gigabyte,GB
+terabyte,TB
+petabyte,PB
+
