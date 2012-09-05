@@ -390,9 +390,9 @@ cubic_meters_per_minute, m³/min; m3*sec-1; 0.016666666666666666
 
 -- bytes (null)
 byte
-kilobyte,kB
-megabyte,MB
-gigabyte,GB
-terabyte,TB
-petabyte,PB
+kilobyte, kB; ; 1024
+megabyte, MB; ; 1048576
+gigabyte, GB; ; 1073741824
+terabyte, TB; ; 1099511627776
+petabyte, PB; ; 1125899906842624
 
