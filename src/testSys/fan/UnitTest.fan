@@ -197,6 +197,22 @@ class UnitTest : Test
     verifyConv(37f, c, 98.6f, f)
   }
 
+  Void testConversionBytes()
+  {
+    b  := Unit("byte")
+    kb := Unit("kB")
+    mb := Unit("MB")
+    gb := Unit("GB")
+    tb := Unit("TB")
+
+    verifyConv(1f, kb, 1024f, b)
+    verifyConv(1f, mb, 1048576f, b)
+    verifyConv(2f, mb, 2048f, kb)
+    verifyConv(0.5f, gb, 524288f, kb)
+    verifyConv(1024f, kb, 1f, mb)
+    verifyConv(1f, tb, 1024f, gb)
+  }
+
   Void verifyConv(Float from, Unit fromUnit, Float to, Unit toUnit)
   {
     actual := fromUnit.convertTo(from, toUnit)
