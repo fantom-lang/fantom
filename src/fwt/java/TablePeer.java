@@ -107,7 +107,11 @@ public class TablePeer
     if (c == null) return;
 
     // remove all all columns
-    while (c.getColumnCount() > 0) c.getColumns()[0].dispose();
+    while (c.getColumnCount() > 0)
+    {
+      try { c.getColumns()[0].dispose(); }
+      catch (Exception e) { e.printStackTrace(); }
+    }
 
     // remove all rows
     c.removeAll();
@@ -170,8 +174,10 @@ public class TablePeer
     Fwt fwt = Fwt.get();
     TableItem item = (TableItem)event.item;
 
-    int numCols = (int)model.numCols();
     long row = event.index;
+    if (row >= model.numRows()) return;
+
+    int numCols = (int)model.numCols();
     for (int i=0; i<numCols; ++i)
     {
       // Should we decide to allow embedding controls
