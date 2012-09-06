@@ -12,6 +12,7 @@
 - fwt: Dialog.defCommand
 - FanClassLoader support for resource URLs
 - Fix sql::Statement.execute to return Row[] on result sets
+- Add StrBuf getRange, replaceRange
 
 *Build 1.0.63 (16 Jun 2012)*
 - Move dispose from Desktop to Color, Font, Image

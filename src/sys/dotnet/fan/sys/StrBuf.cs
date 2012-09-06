@@ -80,6 +80,17 @@ namespace Fan.Sys
       }
     }
 
+    public string getRange(Range r)
+    {
+      int size = sb.Length;
+
+      int s = r.start(size);
+      int e = r.end(size);
+      if (e+1 < s) throw IndexErr.make(r).val;
+
+      return sb.ToString().Substring(s, (e-s)+1);
+    }
+
     public StrBuf set(long index, long ch)
     {
       try
@@ -143,6 +154,17 @@ namespace Fan.Sys
       int n = e - s + 1;
       if (n < 0) throw IndexErr.make(r).val;
       sb.Remove(s, n);
+      return this;
+    }
+
+    public StrBuf replaceRange(Range r, string str)
+    {
+      int s = r.start(sb.Length);
+      int e = r.end(sb.Length);
+      int n = e - s + 1;
+      if (n < 0) throw IndexErr.make(r).val;
+      sb.Remove(s, n);
+      sb.Insert(s, str);
       return this;
     }
 
