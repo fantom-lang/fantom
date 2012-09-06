@@ -120,7 +120,7 @@ LogMod [#log]
 [LogMod]`webmod::LogMod` class is used to generate a server
 log file for all HTTP requests in the [W3C Extended Log File
 Format]`http://www.w3.org/TR/WD-logfile.html`.  Logging is
-best done a step in the 'WebPipleine.after'.  See `util::FileLogger`
+best done a step in the `PipelineMod.after`.  See `util::FileLogger`
 to configure datetime patterns for your log files.
 
 The 'fields' property configures the format of the log records.
