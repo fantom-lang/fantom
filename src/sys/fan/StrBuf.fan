@@ -49,6 +49,21 @@ final class StrBuf
   @Operator Int get(Int index)
 
   **
+  ** Return a substring based on the specified range.  Negative indexes
+  ** may be used to access from the end of the string buffer.  This method
+  ** is accessed via the [] operator.  Throw IndexErr if range illegal.
+  **
+  ** Examples:
+  **   "abcd"[0..2]   => "abc"
+  **   "abcd"[3..3]   => "d"
+  **   "abcd"[-2..-1] => "cd"
+  **   "abcd"[0..<2]  => "ab"
+  **   "abcd"[1..-2]  => "bc"
+  **   "abcd"[4..-1]  => ""
+  **
+  @Operator Str getRange(Range range)
+
+  **
   ** Replace the existing character at index in this buffer.
   ** Negative indexes may be used to access from the end of
   ** the string buffer.  This method is accessed via the []
@@ -96,6 +111,13 @@ final class StrBuf
   ** if range illegal.  Return this.
   **
   This removeRange(Range r)
+
+  **
+  ** Replaces a range of indices from this buffer with the specified string.
+  ** Negative indexes may be used to access from the end of the buffer.
+  ** Throw IndexErr if range illegal.  Return this.
+  **
+  This replaceRange(Range r, Str str)
 
   **
   ** Clear the contents of the string buffer so that is

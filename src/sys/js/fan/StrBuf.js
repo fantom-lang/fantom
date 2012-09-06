@@ -63,6 +63,15 @@ fan.sys.StrBuf.prototype.get = function(i)
   return this.m_str.charCodeAt(i);
 }
 
+fan.sys.StrBuf.prototype.getRange = function(range)
+{
+  var size = this.m_str.length;
+  var s = range.$start(size);
+  var e = range.$end(size);
+  if (e+1 < s) throw fan.sys.IndexErr.make(range);
+  return this.m_str.substr(s, (e-s)+1);
+}
+
 fan.sys.StrBuf.prototype.set = function(i, ch)
 {
   if (i < 0) i = this.m_str.length+i;
@@ -104,6 +113,16 @@ fan.sys.StrBuf.prototype.removeRange = function(r)
   var n = e - s + 1;
   if (s < 0 || n < 0) throw fan.sys.IndexErr.make(r);
   this.m_str = this.m_str.substr(0,s) + this.m_str.substr(e+1);
+  return this;
+}
+
+fan.sys.StrBuf.prototype.replaceRange = function(r, str)
+{
+  var s = r.$start(this.m_str.length);
+  var e = r.$end(this.m_str.length);
+  var n = e - s + 1;
+  if (s < 0 || n < 0) throw fan.sys.IndexErr.make(r);
+  this.m_str = this.m_str.substr(0,s) + str + this.m_str.substr(e+1);
   return this;
 }
 

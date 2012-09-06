@@ -70,6 +70,17 @@ public class StrBuf
     return sb.charAt(i);
   }
 
+  public String getRange(Range r)
+  {
+    int size = sb.length();
+
+    int s = r.startIndex(size);
+    int e = r.endIndex(size);
+    if (e+1 < s) throw IndexErr.make(r);
+
+    return sb.substring(s, e+1);
+  }
+
   public StrBuf set(long index, long ch)
   {
     int i = (int)index;
@@ -126,6 +137,15 @@ public class StrBuf
     int n = e - s + 1;
     if (n < 0) throw IndexErr.make(r);
     sb.delete(s, e+1);
+    return this;
+  }
+
+  public StrBuf replaceRange(Range r, String str)
+  {
+    int s = r.startIndex(sb.length());
+    int e = r.endIndex(sb.length());
+    if (e+1 < s) throw IndexErr.make(r);
+    sb.replace(s, e+1, str);
     return this;
   }
 
