@@ -346,6 +346,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         imgElem = document.createElement("img");
         imgElem.src = blank;
         imgElem.style.backgroundImage = "url(" + fan.fwt.WidgetPeer.uriToImageSrc(img.m_uri) + ")";
+        imgElem.style.backgroundSize = "16px 16px";
         imgElem.width  = 16;
         imgElem.height = 16;
 
