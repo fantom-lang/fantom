@@ -52,7 +52,7 @@ Here is an example of a test class:
     {
       verify('A'.isUpper)
       verifyEq('A'.lower, 'a')
-      verifyErr(ParseErr#) { Int.fromStr("@#!") }
+      verifyErr(ParseErr#) { x := Int.fromStr("@#!") }
     }
   }
 
