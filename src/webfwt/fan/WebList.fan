@@ -23,25 +23,38 @@ abstract class WebList : Pane
   virtual Int? index(Obj item) { items.index(item) }
 
   ** Return 'false' to disable selection. Defaults to 'true'.
+  @NoDoc
   virtual Bool selectionEnabled() { true }
 
+  ** Enable multiple selection.  Defaults to 'false' for single selection.
+  Bool multi := false
+
   ** Selected item, or null if no selection.
-  Obj? selected := null
+  Obj[] selected := [,]
   {
     set
     {
-      index := index(it)
-      if (index != null) { &selected=it; selectedIndex=index }
+      list := Int[,]
+      it.each |item|
+      {
+        index := index(item)
+        if (index != null) list.add(index)
+      }
+      &selected = it
+      &selectedIndex = list
     }
   }
 
-  ** Index of selected item, or null if no selection.
-  Int? selectedIndex := null
+  ** Index of selected items, or empty list if no selection.
+  Int[] selectedIndex := [,]
   {
     set
     {
-      if (it != null && (it < 0 || it >= items.size)) throw IndexErr("$it")
-      &selected = it==null ? null : items[it]
+      &selected = it.map |i|
+      {
+        if (i < 0 || i >= items.size) throw IndexErr("$i")
+        return items[i]
+      }
       &selectedIndex = it
       updateSelection
     }
@@ -62,12 +75,12 @@ abstract class WebList : Pane
   once EventListeners onSelect() { EventListeners() }
 
   ** Fire onBeforeSelect with given index - return false to cancel.
-  private Bool fireBeforeSelect(Int index)
+  private Bool fireBeforeSelect(Int[] index)
   {
     event := Event {
       it.id = EventId.select
-      it.data = items[index]
-      it.index = index
+      it.data = items[index.first]
+      it.index = index.first
       it.widget = this
     }
     onBeforeSelect.fire(event)
@@ -75,14 +88,13 @@ abstract class WebList : Pane
   }
 
   ** Fire onSelect with given index.
-  private Void fireSelect(Int index)
+  private Void fireSelect(Int[] index)
   {
-    selected = items[index]
     selectedIndex = index
     onSelect.fire(Event {
       it.id = EventId.select
-      it.data = selected
-      it.index = selectedIndex
+      it.data = selected.first
+      it.index = selectedIndex.first
       it.widget = this
     })
   }

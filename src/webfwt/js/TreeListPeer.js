@@ -105,22 +105,29 @@ fan.webfwt.TreeListPeer.prototype.setupContainer = function(self, container)
   this.iconOffset = size.m_h > 16 ? Math.floor((size.m_h - 16) / 2) : 0;
 }
 
-fan.webfwt.WebListPeer.prototype.repaintSelection = function(self, info, selected)
+fan.webfwt.WebListPeer.prototype.repaintSelection = function(self, indices, selected)
 {
-  var img  = null;
-  for (var i=0; i<info.elem.childNodes.length; i++)
+  for (var i=0; i<indices.length; i++)
   {
-    var kid = info.elem.childNodes[i];
-    if (kid.tagName == "IMG") img = kid;
-  }
+    var ix   = indices[i];
+    var elem = this.indexToElem(ix);
+    var img  = null;
 
-  var elemClass = info.elem.className.indexOf("group") == -1 ? "" : "group"
-  info.elem.className = elemClass + (selected ? " selected" : "");
+    for (var j=0; j<elem.childNodes.length; j++)
+    {
+      var kid = elem.childNodes[j];
+      if (kid.tagName == "IMG") img = kid;
+    }
 
-  if (img != null)
-  {
-    var icon = self.icon(info.item, selected);
-    img.src  = fan.fwt.WidgetPeer.uriToImageSrc(icon.m_uri);
+    var elemClass = elem.className.indexOf("group") == -1 ? "" : "group"
+    elem.className = elemClass + (selected ? " selected" : "");
+
+    if (img != null)
+    {
+      var item = self.items.get(ix);
+      var icon = self.icon(item, selected);
+      img.src  = fan.fwt.WidgetPeer.uriToImageSrc(icon.m_uri);
+    }
   }
 }
 

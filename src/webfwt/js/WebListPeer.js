@@ -10,7 +10,9 @@
  * WebListPeer.
  */
 fan.webfwt.WebListPeer = fan.sys.Obj.$extend(fan.fwt.PanePeer);
-fan.webfwt.WebListPeer.prototype.$ctor = function(self) {}
+fan.webfwt.WebListPeer.prototype.$ctor = function(self)
+{
+}
 
 fan.webfwt.WebListPeer.prototype.m_items = fan.sys.Obj.$type.emptyList();
 fan.webfwt.WebListPeer.prototype.items = function(self) { return this.m_items; }
@@ -18,11 +20,13 @@ fan.webfwt.WebListPeer.prototype.items$ = function(self, val)
 {
   this.needsLayout = true;
   this.m_items = val;
-  self.selectedIndex$(null);
+  self.selectedIndex$(fan.sys.List.make(fan.sys.Int.$type));
 }
 
 fan.webfwt.WebListPeer.prototype.create = function(parentElem, self)
 {
+  this.sel = [];
+  this.pivot = null;
   this.needsLayout = true;
   var div = this.emptyDiv();
   div.tabIndex = 0;
@@ -42,72 +46,10 @@ fan.webfwt.WebListPeer.prototype.rebuild = function(self)
 
   if (self.selectionEnabled())
   {
-    // mousedown selectes items
     var $this = this;
-    container.onmousedown = function(event)
-    {
-      self.focus();
-
-      var info = $this.toSelInfo(event.target, container);
-      if (info == null) return;
-
-      if (!self.fireBeforeSelect(info.index)) return;
-
-      if ($this.sel) $this.repaintSelection(self, $this.sel, false);
-      $this.repaintSelection(self, info, true);
-      $this.sel = info;
-    }
-
-    // mouse up fires event
-    container.onmouseup = function(event)
-    {
-      if ($this.sel == null) return;
-      if ($this.sel.index == self.m_selectedIndex) return;
-      self.fireSelect($this.sel.index);
-    }
-
-    // key events move selection
-    this.elem.onkeydown = function(event)
-    {
-      // only handle up/down
-      var key = event.keyCode;
-     if (key != 38 && key != 40) return;
-
-      // consume event
-      event.stopPropagation();
-
-      // find direction
-      var diff = 0
-      if (event.keyCode == 38) diff = -1
-      if (event.keyCode == 40) diff = 1
-      if (diff == 0) return;
-
-      // find selection and notify
-      var index = self.m_selectedIndex;
-      var items = $this.m_items;
-      var check = function(i) {
-        return i>=0 && i<items.size() && (self.isHeading && self.isHeading(items.get(i)));
-      }
-
-      if (index == null)
-      {
-        index = 0;
-        while (check(index)) index++
-        if (index < items.size()) self.fireSelect(index);
-      }
-      else if (diff < 0 && index > 0)
-      {
-        index = index-1;
-        while (check(index)) index--;
-        if (index >= 0) self.fireSelect(index);
-      }
-      else if (diff > 0 && index < $this.m_items.size()-1)
-      {
-        index = index+1;
-        while (check(index)) index++;
-        if (index < items.size()) self.fireSelect(index);
-      }
-    }
+    container.onmousedown = function(event) { return $this.handleMouseDown(self, event) }
+    container.onmouseup   = function(event) { $this.handleMouseUp(self, event); }
+    this.elem.onkeydown   = function(event) { $this.handleKeyEvent(self, event); }
   }
 
   // add items to container
@@ -144,47 +86,29 @@ fan.webfwt.WebListPeer.prototype.updateSelection = function(self)
   if (!self.selectionEnabled()) return;
 
   // remove current selections
-  if (this.sel)
+  if (this.sel.length > 0)
   {
     this.repaintSelection(self, this.sel, false);
-    this.sel = null;
+    this.sel = [];
   }
 
   // if no new selection, bail here
   var index = self.m_selectedIndex;
-  if (index == null) return;
+  if (index.isEmpty()) return;
 
   // make sure index is in bounds
   var container = this.elem.firstChild;
   if (container == null) return;
-  if (index >= container.childNodes.length) return;
 
   // update new selection
-  var elem = container.childNodes[index];
-  var info  = { elem:elem, index:index, item:this.m_items.get(index) }
-  this.repaintSelection(self, info, true);
-  this.sel = info;
+  this.sel = [];
+  for (var i=0; i<index.size(); i++) this.sel.push(index.get(i));
+  this.repaintSelection(self, this.sel, true);
 }
 
-fan.webfwt.WebListPeer.prototype.toSelInfo = function(target, container)
-{
-  // short-circuit if background pressed
-  if (target.className.indexOf("_webfwt_WebList_") != -1) return null;
-
-  // walk up to actual row element
-  while (target.parentNode.className.indexOf("_webfwt_WebList_") == -1)
-    target = target.parentNode;
-
-  // match up row to item
-  for (var i=0; i<container.childNodes.length; i++)
-  {
-    var node = container.childNodes[i]
-    if (target == node && node.className.indexOf("group") == -1)
-      return { elem:target, index:i, item:this.m_items.get(i) };
-  }
-
-  return null;
-}
+/////////////////////////////////////////////////////////////////////////
+// Widget
+/////////////////////////////////////////////////////////////////////////
 
 fan.webfwt.WebListPeer.prototype.prefSize = function(self, hints)
 {
@@ -201,7 +125,7 @@ fan.webfwt.WebListPeer.prototype.sync = function(self)
     this.rebuild(self);
   }
 
-  var container = this.elem.firstChild;
+  var container = this.container();
   if (container != null)
   {
     container.style.width  = (this.m_size.m_w-2) + "px";
@@ -211,9 +135,9 @@ fan.webfwt.WebListPeer.prototype.sync = function(self)
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 
   // scroll selection into view if necessary
-  if (this.sel != null && container != null)
+  if (this.sel.length > 0 && container != null)
   {
-    var elem = this.sel.elem;
+    var elem = this.indexToElem(this.sel[0]);
     var et = elem.offsetTop;
     var eh = elem.offsetHeight;
     var cs = container.scrollTop;
@@ -223,4 +147,227 @@ fan.webfwt.WebListPeer.prototype.sync = function(self)
   }
 }
 
+/////////////////////////////////////////////////////////////////////////
+// Mouse Events
+/////////////////////////////////////////////////////////////////////////
 
+fan.webfwt.WebListPeer.prototype.handleMouseDown = function(self, event)
+{
+  self.focus();
+
+  var container = this.elem.firstChild;
+  var ix = this.elemToIndex(event.target);
+  if (ix == null) return;
+
+  // bail if onBefore cancels
+  var beforeList = this.toIntList([ix]);
+  if (!self.fireBeforeSelect(beforeList)) return;
+
+  // deselect current selection
+  this.repaintSelection(self, this.sel, false);
+
+  // update selection
+  if (!self.m_multi) this.sel = [ix];
+  else
+  {
+    if (event.ctrlKey || event.metaKey)
+    {
+      this.pivot = ix;
+      this.sel = this.cmdSel(this.sel, ix);
+    }
+    else if (event.shiftKey)
+    {
+      this.sel = this.shiftSel(this.sel, ix);
+    }
+    else
+    {
+      this.pivot = ix;
+      this.sel = [ix];
+    }
+  }
+
+  // repaint new selection
+  this.repaintSelection(self, this.sel, true);
+
+  // disable selection
+  event.stopPropagation();
+  return false;
+}
+
+fan.webfwt.WebListPeer.prototype.handleMouseUp = function(self, event)
+{
+  // check if selection has changed
+  var index = self.m_selectedIndex;
+  var same  = this.sel.length == index.size();
+  for (var i=0; i<this.sel.length; i++)
+    if (this.sel[i].index != index.getSafe(i))
+      same = false;
+
+  // only fire onSelect selection modified
+  if (same) return;
+  self.fireSelect(this.toIntList(this.sel));
+}
+
+/////////////////////////////////////////////////////////////////////////
+// Keyboard Events
+/////////////////////////////////////////////////////////////////////////
+
+fan.webfwt.WebListPeer.prototype.handleKeyEvent = function(self, event)
+{
+  // only handle up/down
+  var key = event.keyCode;
+  if (key != 38 && key != 40) return;
+
+  // consume event
+  event.stopPropagation();
+
+  // find direction
+  var diff = 0
+  if (event.keyCode == 38) diff = -1
+  if (event.keyCode == 40) diff = 1
+  if (diff == 0) return;
+
+  // find selection and notify
+  var cur = self.m_selectedIndex.first();
+  var items = this.m_items;
+  var check = function(i) {
+    return i>=0 && i<items.size() && (self.isHeading && self.isHeading(items.get(i)));
+  }
+
+  var ix = [];
+  if (cur == null)
+  {
+    // if no selection - select first item
+    var i = 0;
+    while (check(i)) i++
+    if (i < items.size())
+    {
+      this.pivot = i;
+      ix.push(i);
+    }
+  }
+  else if (diff < 0 && cur > 0)
+  {
+    // select previous item
+    var i = cur-1;
+    while (check(i)) i--;
+    if (i >= 0) { this.pivot=i; ix.push(i); }
+    // TODO: rubber-band keyboard support
+    // {
+    //   if (!event.shiftKey) { this.pivot=i; ix.push(i); }
+    //   else if (this.pivot == null) { this.pivot=i; ix.push(i); }
+    //   else
+    //   {
+    //     var i = this.pivot;
+    //     var di = cur < this.pivot ? -1 : 1;
+    //     while (i != cur) { info.push(toInfo(index)); ix += di }
+    //   }
+    // }
+  }
+  else if (diff > 0 && cur < this.m_items.size()-1)
+  {
+    // select next item
+    var i = cur+1;
+    while (check(i)) i++;
+    if (i < items.size()) { this.pivot=i; ix.push(i); }
+  }
+
+  // bail if no selection
+  if (ix.length == 0) return;
+
+  // updates selection
+  this.repaintSelection(self, this.sel, false);
+  this.sel = ix;
+  self.fireSelect(this.toIntList(this.sel));
+}
+
+/////////////////////////////////////////////////////////////////////////
+// Support
+/////////////////////////////////////////////////////////////////////////
+
+fan.webfwt.WebListPeer.prototype.container = function()
+{
+  if (this.elem == null) return null;
+  return this.elem.firstChild;
+}
+
+fan.webfwt.WebListPeer.prototype.indexToElem = function(index)
+{
+  var container = this.container();
+  return container.childNodes[index];
+}
+
+fan.webfwt.WebListPeer.prototype.elemToIndex = function(target)
+{
+  // short-circuit if background pressed
+  var container = this.container();
+  if (target.className.indexOf("_webfwt_WebList_") != -1) return null;
+
+  // walk up to actual row element
+  while (target.parentNode.className.indexOf("_webfwt_WebList_") == -1)
+    target = target.parentNode;
+
+  // match up row to item
+  for (var i=0; i<container.childNodes.length; i++)
+  {
+    var node = container.childNodes[i]
+    if (target == node && node.className.indexOf("group") == -1)
+      return i;
+  }
+
+  // no match found
+  return null;
+}
+
+fan.webfwt.WebListPeer.prototype.toIntList = function(array)
+{
+  var list = fan.sys.List.make(fan.sys.Int.$type);
+  for (var i=0; i<array.length; i++) list.add(array[i]);
+  return list;
+}
+
+fan.webfwt.WebListPeer.prototype.cmdSel = function(cur, ix)
+{
+  // remove if exists
+  var merge = cur.slice(0);
+  for (var i=0; i<merge.length; i++)
+    if (merge[i] == ix)
+    {
+      if (merge == 1) return merge; // never allow no selection
+      merge.splice(i, 1);
+      return merge;
+    }
+
+  // keep sorted by index
+  merge.push(ix);
+  merge.sort(function(a,b) {
+    if (a < b) return -1;
+    if (a > b) return 1;
+    return 0;
+  });
+
+  return merge;
+}
+
+fan.webfwt.WebListPeer.prototype.shiftSel = function(cur, index)
+{
+  if (this.pivot == null)
+  {
+    this.pivot = index;
+    return [index];
+  }
+
+  var container = this.container();
+  var list = [];
+  var ix = this.pivot;
+  var di = index < this.pivot ? -1 : 1;
+
+  while (ix != (index+di))
+  {
+    var node = container.childNodes[ix];
+    if (node.className.indexOf("group") == -1) list.push(ix);
+    ix += di;
+  }
+
+  return list;
+}
