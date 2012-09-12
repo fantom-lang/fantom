@@ -96,6 +96,10 @@ fan.webfwt.WebListPeer.prototype.updateSelection = function(self)
   var index = self.m_selectedIndex;
   if (index.isEmpty()) return;
 
+  // set pivot if preselecting
+  if (this.pivot == null && index.size() == 1)
+    this.pivot = index.first();
+
   // make sure index is in bounds
   var container = this.elem.firstChild;
   if (container == null) return;
