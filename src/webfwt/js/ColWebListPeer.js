@@ -60,9 +60,10 @@ fan.webfwt.ColWebListPeer.prototype.setupContainer = function(self, elem)
   elem.className = "_webfwt_WebScrollPane_ _webfwt_WebList_ _webfwt_ColWebList_";
 }
 
-fan.webfwt.ColWebListPeer.prototype.repaintSelection = function(self, info, selected)
+fan.webfwt.ColWebListPeer.prototype.repaintSelection = function(self, ix, selected)
 {
-  info.elem.className = selected ? "selected" : "";
+  for (var i=0; i<ix.length; i++)
+    this.indexToElem(ix[i]).className = selected ? "selected" : "";
 }
 
 fan.webfwt.ColWebListPeer.prototype.makeRow = function(self, item)

@@ -174,9 +174,9 @@ internal class ColList : EdgePane
   }
 
   Obj[] items
-  Obj? selected() { webList.selected }
+  Obj? selected() { webList.selected.first }
 
-  Void select(Obj node) { webList.selected = node }
+  Void select(Obj node) { webList.selected = [node] }
 
   private Widget makeHeader()
   {
