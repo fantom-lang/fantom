@@ -99,6 +99,7 @@ fan.webfwt.WebListPeer.prototype.updateSelection = function(self)
   // make sure index is in bounds
   var container = this.elem.firstChild;
   if (container == null) return;
+  if (container.childNodes.length == 0) return;
 
   // update new selection
   this.sel = [];
