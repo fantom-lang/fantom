@@ -16,7 +16,6 @@ fan.fwt.WidgetPeer.addCss(
   "._webfwt_HudText_ {" +
   " color:#fff;" +
   " border:1px solid #181818;" +
-  " padding:4px 18px 4px 6px;"+
   " background:#2c2c2c;" +
   " -webkit-box-shadow: inset 0px 1px 2px #1c1c1c;" +
   " -moz-box-shadow:    inset 0px 1px 2px #1c1c1c;" +
