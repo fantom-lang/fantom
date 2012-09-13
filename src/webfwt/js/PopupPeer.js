@@ -200,14 +200,18 @@ fan.webfwt.PopupPeer.prototype.sync = function(self)
   var w = pref.m_w;
   var h = pref.m_h;
 
-  // check if we need to swap dir
-  var vp = fan.dom.Win.cur().viewport();
-  if (x+w >= vp.m_w-6) x = vp.m_w - w - 6;
-  if (y+h >= vp.m_h-6) y = vp.m_h - h - 6;
+       if (self.m_halign == fan.gfx.Halign.m_center) { x -= Math.floor(w/2) }
+  else if (self.m_halign == fan.gfx.Halign.m_right)  { x -= w }
+
+       if (self.m_valign == fan.gfx.Valign.m_center) { y -= Math.floor(h/2) }
+  else if (self.m_valign == fan.gfx.Valign.m_bottom) { y -= h }
 
   // restrict size to viewport
+  var vp = fan.dom.Win.cur().viewport();
   if (w > vp.m_w-12) { x=6; w=vp.m_w-12; }
   if (h > vp.m_h-12) { y=6; h=vp.m_h-12; }
+  if (x+w >= vp.m_w-6) x = vp.m_w-w-6;
+  if (y+h >= vp.m_h-6) y = vp.m_h-h-6;
 
   this.pos$(self, fan.gfx.Point.make(x, y));
   this.size$(self, fan.gfx.Size.make(w, h));
