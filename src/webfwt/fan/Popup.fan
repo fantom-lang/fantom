@@ -38,6 +38,12 @@ class Popup : ContentPane
   **  - id: `fwt::EventId.close`
   @Transient EventListeners onClose := EventListeners() { private set }
 
+  ** Horizontal alignment of popup, using 'open(pos)' as origin.
+  Halign halign := Halign.left
+
+  ** Vertial alignment of popup, using 'open(pos)' as origin.
+  Valign valign := Valign.top
+
   ** Animate popup open/close/resize.  Must be configured before 'open'.
   Bool animate := true
 
