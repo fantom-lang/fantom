@@ -74,9 +74,9 @@ The following set of HTTP headers are defined to support authentication:
   - 'Fanr-Ts': timestamp formatted as `sys::DateTime` string which
     is used a time based nonce for signatures
 
-A digital signature of the request method, request URI, and "Fanr-" headers
-is used to verify the credentials of the user account.  The process for
-signing a request is as follows:
+A digital signature of the request method, request URI (relative to
+authority), and "Fanr-" headers is used to verify the credentials of the
+user account.  The process for signing a request is as follows:
   1. Query "{base}/auth?{username}" to discover which algorithms
      are supported and acquire public salt for user (if needed)
   2. Determine how to compute the secret key for the signing process
