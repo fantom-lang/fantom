@@ -143,7 +143,7 @@ internal const class WebRepo : Repo
   {
     s := Buf()
     s.printLine(method.upper)
-    s.printLine(uri.encode.lower)
+    s.printLine(uri.relToAuth.encode.lower)
     keys := headers.keys.findAll |key|
     {
       key = key.lower
