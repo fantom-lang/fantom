@@ -371,20 +371,21 @@ class WebClient
     // read response
     if (!isConnected) throw IOErr("Not connected")
     in := socket.in
+    res := ""
     try
     {
       // parse status-line
-      res := in.readLine
+      res = in.readLine
       if (res.startsWith("HTTP/1.1")) resVersion = ver11
       else if (res.startsWith("HTTP/1.0")) resVersion = ver10
-      else throw Err()
+      else throw Err("Not HTTP")
       resCode = res[9..11].toInt
       resPhrase = res[13..-1]
 
       // parse response headers
       resHeaders = WebUtil.parseHeaders(in)
     }
-    catch throw IOErr("Invalid HTTP response")
+    catch (Err e) throw IOErr("Invalid HTTP response: $res", e)
 
     // check for redirect
     checkFollowRedirect
