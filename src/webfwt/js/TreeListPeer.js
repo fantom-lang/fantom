@@ -124,7 +124,7 @@ fan.webfwt.WebListPeer.prototype.repaintSelection = function(self, indices, sele
 
     if (img != null)
     {
-      var item = self.items.get(ix);
+      var item = this.m_items.get(ix);
       var icon = self.icon(item, selected);
       img.src  = fan.fwt.WidgetPeer.uriToImageSrc(icon.m_uri);
     }
