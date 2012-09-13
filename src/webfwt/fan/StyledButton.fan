@@ -24,7 +24,7 @@ class StyledButton : ContentPane
   ** Construct HUD style button.
   new makeHud(|This|? f := null)
   {
-    border      = Border("#131313 5")
+    border      = Border("#131313 4")
     bg          = Gradient("0% 0%, 0% 100%, #5b5b5b, #393939")
     bgPressed   = Gradient("0% 0%, 0% 100%, #333, #484848")
     dropShadow  = Shadow("#555 0 1")
@@ -34,25 +34,25 @@ class StyledButton : ContentPane
   }
 
   ** Border of button, or null for none.
-  const Border? border := Border("#555 5")
+  const Border? border := Border("#9a9a9a 4")
 
   ** Insets betwee content and button border.
-  const Insets insets := Insets(3,12)
+  const Insets insets := Insets(1,10)
 
   ** Inner shadow color, of null for none.
   const Shadow? innerShadow := Shadow("#fff 0 1")
 
   ** Inner shadow color when button is pressed, of null for none.
-  const Shadow? innerShadowPressed := Shadow("#888 0 1")
+  const Shadow? innerShadowPressed := Shadow("#ccc 0 1")
 
   ** Drop shadow color, or null for none.
-  const Shadow? dropShadow := Shadow("#fff 0 1")
+  const Shadow? dropShadow := Shadow("#dfdfdf 0 1")
 
   ** Background brush for button, or null for none.
-  const Brush? bg := Gradient("0% 0%, 0% 100%, #fefefe, #bbb")
+  const Brush? bg := Gradient("0% 0%, 0% 100%, #fefefe, #cfcfcf")
 
   ** Background brush when button is pressed, or null for none.
-  const Brush? bgPressed := Gradient("0% 0%, 0% 100%, #a9a9a9, #bbb")
+  const Brush? bgPressed := Gradient("0% 0%, 0% 100%, #cecece, #d9d9d9")
 
   ** Tooltip to display on mouse hover, or null for none.
   const Str? toolTip := null
