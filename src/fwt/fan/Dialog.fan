@@ -55,12 +55,21 @@ class Dialog : Window
   ** is passed, then it should close the dialog as appropiate with
   ** the result object.
   **
-  Command[]? commands
+  Command[]? commands := null
+  {
+    set
+    {
+      &commands = it
+      defCommand = it.first
+    }
+  }
 
   **
-  ** Optional command to specify as default action.
+  ** Optional command to specify as default action. This field must
+  ** be configured *after* `commands` is set.  Use 'null' for no default
+  ** command.
   **
-  Command? defCommand := null
+  Command? defCommand
 
 //////////////////////////////////////////////////////////////////////////
 // Predefined Commands
