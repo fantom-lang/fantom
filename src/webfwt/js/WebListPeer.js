@@ -20,7 +20,7 @@ fan.webfwt.WebListPeer.prototype.items$ = function(self, val)
 {
   this.needsLayout = true;
   this.m_items = val;
-  self.selectedIndex$(fan.sys.List.make(fan.sys.Int.$type));
+  self.selectedIndexes$(fan.sys.List.make(fan.sys.Int.$type));
 }
 
 fan.webfwt.WebListPeer.prototype.create = function(parentElem, self)
@@ -93,7 +93,7 @@ fan.webfwt.WebListPeer.prototype.updateSelection = function(self)
   }
 
   // if no new selection, bail here
-  var index = self.m_selectedIndex;
+  var index = self.m_selectedIndexes;
   if (index.isEmpty()) return;
 
   // set pivot if preselecting
@@ -202,7 +202,7 @@ fan.webfwt.WebListPeer.prototype.handleMouseDown = function(self, event)
 fan.webfwt.WebListPeer.prototype.handleMouseUp = function(self, event)
 {
   // check if selection has changed
-  var index = self.m_selectedIndex;
+  var index = self.m_selectedIndexes;
   var same  = this.sel.length == index.size();
   for (var i=0; i<this.sel.length; i++)
     if (this.sel[i].index != index.getSafe(i))
@@ -233,7 +233,7 @@ fan.webfwt.WebListPeer.prototype.handleKeyEvent = function(self, event)
   if (diff == 0) return;
 
   // find selection and notify
-  var cur = self.m_selectedIndex.first();
+  var cur = self.m_selectedIndexes.first();
   var items = this.m_items;
   var check = function(i) {
     return i>=0 && i<items.size() && (self.isHeading && self.isHeading(items.get(i)));

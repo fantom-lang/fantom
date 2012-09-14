@@ -41,12 +41,12 @@ abstract class WebList : Pane
         if (index != null) list.add(index)
       }
       &selected = it
-      &selectedIndex = list
+      &selectedIndexes = list
     }
   }
 
   ** Index of selected items, or empty list if no selection.
-  Int[] selectedIndex := [,]
+  Int[] selectedIndexes := [,]
   {
     set
     {
@@ -55,7 +55,7 @@ abstract class WebList : Pane
         if (i < 0 || i >= items.size) throw IndexErr("$i")
         return items[i]
       }
-      &selectedIndex = it
+      &selectedIndexes = it
       updateSelection
     }
   }
@@ -90,11 +90,11 @@ abstract class WebList : Pane
   ** Fire onSelect with given index.
   private Void fireSelect(Int[] index)
   {
-    selectedIndex = index
+    selectedIndexes = index
     onSelect.fire(Event {
       it.id = EventId.select
       it.data = selected.first
-      it.index = selectedIndex.first
+      it.index = selectedIndexes.first
       it.widget = this
     })
   }
