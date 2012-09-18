@@ -36,7 +36,7 @@ fan.fwt.DialogPeer.prototype.open = function(self)
         if (it.m_key == fan.fwt.Key.m_enter)
         {
           var def = self.peer.m_defButton;
-          if (def != null) { def.peer.fireAction(def); it.consume(); }
+          if (def != null && def.enabled()) { def.peer.fireAction(def); it.consume(); }
         }
       }));
   }
