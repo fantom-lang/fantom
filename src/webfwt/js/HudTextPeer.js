@@ -20,7 +20,11 @@ fan.fwt.WidgetPeer.addCss(
   " -webkit-box-shadow: inset 0px 1px 2px #1c1c1c;" +
   " -moz-box-shadow:    inset 0px 1px 2px #1c1c1c;" +
   " box-shadow:         inset 0px 1px 2px #1c1c1c;" +
-  "}");
+  "}" +
+  "input._webfwt_HudText_::-webkit-input-placeholder { color: #777 }" +
+  "input._webfwt_HudText_:-moz-placeholder { color: #777 }" +
+  "input._webfwt_HudText_:-ms-input-placeholder { color: #777 }"
+  );
 
 fan.webfwt.HudTextPeer.prototype.$cssClass = function(readonly)
 {
