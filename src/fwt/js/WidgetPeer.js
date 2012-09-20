@@ -518,6 +518,16 @@ fan.fwt.WidgetPeer.cursorToCss = function(cursor)
   return s
 }
 
+fan.fwt.WidgetPeer.insetsToCss = function(insets)
+{
+  var s = "";
+  s += insets.m_top + "px ";
+  s += insets.m_right + "px ";
+  s += insets.m_bottom + "px ";
+  s += insets.m_left + "px";
+  return s;
+}
+
 fan.fwt.WidgetPeer.uriToImageSrc = function(uri)
 {
   if (uri.scheme() == "fan")

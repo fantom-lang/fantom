@@ -49,6 +49,14 @@ fan.fwt.TextPeer.prototype.text$ = function(self, val, sync)
 }
 fan.fwt.TextPeer.prototype.m_text = "";
 
+fan.fwt.TextPeer.prototype.m_bg = null;
+fan.fwt.TextPeer.prototype.bg = function(self) { return this.m_bg; }
+fan.fwt.TextPeer.prototype.bg$ = function(self, val) { this.m_bg = val; }
+
+fan.fwt.TextPeer.prototype.m_fg = null;
+fan.fwt.TextPeer.prototype.fg = function(self) { return this.m_fg; }
+fan.fwt.TextPeer.prototype.fg$ = function(self, val) { this.m_fg = val; }
+
 fan.fwt.TextPeer.prototype.prefSize = function(self, hints)
 {
   var pref = fan.fwt.WidgetPeer.prototype.prefSize.call(this, self, hints);
@@ -58,7 +66,7 @@ fan.fwt.TextPeer.prototype.prefSize = function(self, hints)
     // size when size=X is specified on field
     pref = fan.gfx.Size.make(Math.floor(pref.m_w * 1.25), pref.m_h);
   }
-  return pref
+  return pref;
 }
 
 fan.fwt.TextPeer.prototype.create = function(parentElem, self)
@@ -80,9 +88,8 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
     this.control = text;
   }
 
-  // placeholder
-  var ph = this.$placeHolder(self);
-  if (ph != null) this.control.placeholder = ph;
+  // sub-class create hook
+  if (this.subCreate) this.subCreate(self, this.control);
 
   // wire up event handlers to keep text prop synchronized
   var $this = this;
@@ -106,6 +113,10 @@ fan.fwt.TextPeer.prototype.create = function(parentElem, self)
   // to allow value to be set so it can be synced to m_text
   text.onpaste = function(event) { setTimeout(function() { $this.fireModify(self); }, 10); }
   text.oncut   = function(event) { setTimeout(function() { $this.fireModify(self); }, 10); }
+
+  // fg/bg
+  if (this.m_bg) this.control.style.background = this.m_bg.toCss();
+  if (this.m_fg) this.control.style.color = this.m_fg.toCss();
 
   // font
   this.control.style.font = fan.fwt.WidgetPeer.fontToCss(
@@ -195,6 +206,8 @@ fan.fwt.TextPeer.prototype.sync = function(self)
     }
   //}
 
+  if (this.subSync) this.subSync(self, text);
+
   // sync widget size
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
@@ -206,6 +219,3 @@ fan.fwt.TextPeer.prototype.$cssClass = function(readonly)
 {
   return readonly ? "_fwt_Text_ _fwt_Text_readonly_" : "_fwt_Text_";
 }
-
-// Backdoor hook to set placeholder text [returns Str?]
-fan.fwt.TextPeer.prototype.$placeHolder = function(self) { return null; }
