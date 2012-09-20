@@ -190,8 +190,8 @@ fan.fwt.MenuPeer.prototype.relayout = function(self)
 
   // check if we need to swap dir
   var shell = this.elem.parentNode;
-  if (x+w >= shell.offsetWidth-4)  x = pp.m_x + ps.m_w - w -1;
-  if (y+h >= shell.offsetHeight-4) y = pp.y - h;
+  if (x+w >= shell.offsetWidth-4)  x = pp.m_x + ps.m_w - w - 1;
+  if (y+h >= shell.offsetHeight-4) y = pp.m_y - h;
 
   this.pos$(self, fan.gfx.Point.make(x, y));
   this.size$(self, fan.gfx.Size.make(w, h));
