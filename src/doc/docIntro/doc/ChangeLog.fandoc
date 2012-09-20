@@ -14,6 +14,7 @@
 - Fix sql::Statement.execute to return Row[] on result sets
 - Add StrBuf getRange, replaceRange
 - Fix fanr signature encoding from abs to rel URI
+- Suppress deprecated warnings from within deprecated type
 
 *Build 1.0.63 (16 Jun 2012)*
 - Move dispose from Desktop to Color, Font, Image
