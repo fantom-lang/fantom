@@ -60,9 +60,11 @@ fan.webfwt.WebTextPeer.prototype.subSync = function(self, control)
   var w = this.m_size.m_w;
   var h = this.m_size.m_h;
   var d = self.m_dropShadow;
-  if (d != null) h -= d.m_offset.m_y + d.m_blur + d.m_spread;
-
-  control.style.height = h + "px";
+  if (d != null)
+  {
+    h -= d.m_offset.m_y + d.m_blur + d.m_spread;
+    control.style.height = h + "px";
+  }
 }
 
 // backdoor hook to override style
