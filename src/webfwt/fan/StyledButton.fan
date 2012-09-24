@@ -33,8 +33,9 @@ class StyledButton : ContentPane
     if (f != null) f(this)
   }
 
-  ** Border of button, or null for none.
-  const Border? border := Border("#9a9a9a 4")
+  ** Border of button, or null for none. This field cannot be
+  ** changed after widget peer has been created.
+  Border? border := Border("#9a9a9a 4")
 
   ** Insets betwee content and button border.
   const Insets insets := Insets(1,10)
@@ -95,6 +96,28 @@ class StyledButton : ContentPane
   ** EventListener invoked when button is moved to released state.
   ** Use `onAction` to properly register button action events.
   once EventListeners onReleased() { EventListeners() }
+
+  ** Group a list of StyledButtons into a single widget.
+  static Widget group(StyledButton[] buttons)
+  {
+    if (buttons.size == 1) return buttons.first
+
+    flow   := FlowPane { hgap = -1 }
+    color  := buttons.first.border.colorTop
+    radius := buttons.first.border.radiusTopLeft
+
+    buttons.each |b,i|
+    {
+      first := i == 0
+      last  := i == buttons.size-1
+      left  := first ? radius : 0
+      right := last  ? radius : 0
+      b.border = Border("$color $left,$right,$right,$left")
+      flow.add(b)
+    }
+
+    return flow
+  }
 
   ** Fire 'onAction' event.
   private Void fireAction()
