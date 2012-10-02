@@ -126,6 +126,7 @@ fan.fwt.LabelPeer.prototype.rebuild = function(self)
     {
       img = document.createElement("a");
       img.href = uri.uri;
+      if (uri.target) img.target = uri.target;
       img.onclick = function() { $this.$onBeforeUri(self) };
     }
     img.style.display = "inline-block";
