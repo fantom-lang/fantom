@@ -89,23 +89,27 @@ class CompileJava : JdkTask
       cmd.add(cp.join(File.pathSep) |File f->Str| { return f.osPath })
 
       // src files/dirs
-      listFiles(cmd, src)
+      cwd := script.scriptDir
+      listFiles(cmd, cwd, src)
       log.debug(cmd.join(" "))
-      r := Process(cmd).run.join
+      r := Process(cmd, cwd).run.join
       if (r != 0) throw Err.make
     }
-    catch (Err err)
+    catch (Err e)
     {
-      throw fatal("CompileJava failed")
+      throw fatal("CompileJava failed", e)
     }
   }
 
-  internal Void listFiles(Str[] list, File[] files)
+  internal Void listFiles(Str[] list, File cwd, File[] files)
   {
     files.each |File f|
     {
-      if (f.isDir) listFiles(list, f.list)
-      else if (f.ext == "java") list.add(f.osPath)
+      if (f.isDir) listFiles(list, cwd, f.list)
+      else if (f.ext == "java")
+      {
+        list.add(f.path[cwd.path.size..-1].join("/").toUri.toFile.osPath)
+      }
     }
   }
 
