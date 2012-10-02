@@ -199,8 +199,13 @@ class EventListeners
   {
     listeners.each |cb|
     {
-      if (event == null || !event.consumed)
-        cb(event)
+      if (event?.consumed == true) return
+      if (Env.cur.runtime == "js") cb(event)
+      else
+      {
+        try { cb(event) }
+        catch (Err e) { echo("event: $event"); e.trace }
+      }
     }
   }
 
