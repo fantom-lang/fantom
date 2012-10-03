@@ -14,6 +14,47 @@ fan.webfwt.ActivityPanePeer.prototype.$ctor = function(self)
 {
   this.$working = false;
 }
+// disable open/close animation
+fan.webfwt.ActivityPanePeer.m_useAnim = true;
+
+// dislabe for Chrome/Win
+if (fan.fwt.DesktopPeer.$isChrome && fan.fwt.DesktopPeer.isWindows())
+  fan.webfwt.ActivityPanePeer.m_useAnim = false;
+
+// CSS
+fan.fwt.WidgetPeer.addCss(
+  "div._webfwt_ActivityPane_mask_ {" +
+  " position: absolute;" +
+  " top:0; left:0; width:100%; height:100%;" +
+  " background: #000;" +
+  " opacity: 0.25;" +
+  " zIndex: 1000;" +
+  "}" +
+  "div._webfwt_ActivityPane_shell_ {" +
+  " position: absolute;" +
+  " top:0; left:0; width:100%; height:100%;" +
+  " zIndex: 1001;" +
+  "}" +
+  "div._webfwt_ActivityPane_content_ {" +
+  " position: absolute;" +
+  " background: #3b3b3b;" +
+  " color: #fff;" +
+  " font: bold " + fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont) + ";" +
+  " padding: 12px;" +
+  " border-radius: 5px;" +
+  "}" +
+  "div._webfwt_ActivityPane_content_.opening {" +
+  " opacity: 0.0;" +
+  " -webkit-transform: scale(0.75);" +
+  "    -moz-transform: scale(0.75);" +
+  "}" +
+  "div._webfwt_ActivityPane_content_.open {" +
+  " opacity: 1.0;" +
+  " -webkit-transition: -webkit-transform 100ms, opacity 100ms;" +
+  "    -moz-transition:    -moz-transform 100ms, opacity 100ms;" +
+  " -webkit-transform: scale(1.0);" +
+  "    -moz-transform: scale(1.0);" +
+  "}");
 
 fan.webfwt.ActivityPanePeer.$find = null;
 fan.webfwt.ActivityPanePeer.find = function()
@@ -33,47 +74,17 @@ fan.webfwt.ActivityPanePeer.prototype.open = function(self, parent)
 
   // mount mask that functions as input blocker for modality
   var mask = document.createElement("div");
-  with (mask.style)
-  {
-    position   = "absolute";
-    left       = "0";
-    top        = "0";
-    width      = "100%";
-    height     = "100%";
-    background = "#000";
-    opacity    = "0.25";
-    filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=25);"
-    zIndex     = 1000;
-  }
+  mask.className = "_webfwt_ActivityPane_mask_";
 
   // shell we use to attach widgets to
   var shell = document.createElement("div");
-  with (shell.style)
-  {
-    position = "absolute";
-    left     = "0";
-    top      = "0";
-    width    = "100%";
-    height   = "100%";
-    zIndex   = 1001;
-  }
+  shell.className = "_webfwt_ActivityPane_shell_";
 
   // mount content
   var content = document.createElement("div");
-  with (content.style)
-  {
-    position = "absolute";
-    background = "#3b3b3b";
-    color   = "#fff";
-    font    = "bold " + fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
-    padding = "12px";
-    MozBorderRadius    = "5px";
-    webkitBorderRadius = "5px";
-    borderRadius       = "5px";
-    MozTransform    = "scale(0.75)";
-    webkitTransform = "scale(0.75)";
-    opacity = "0.0";
-  }
+  content.className = fan.webfwt.ActivityPanePeer.m_useAnim
+    ? "_webfwt_ActivityPane_content_ opening"
+    : "_webfwt_ActivityPane_content_";
   if (self.m_image != null)
   {
     var img = document.createElement("img");
@@ -103,11 +114,8 @@ fan.webfwt.ActivityPanePeer.prototype.open = function(self, parent)
   content.style.top  = ((sh-ch)/2) + "px";
 
   // animate open
-  content.style.MozTransition = "-moz-transform 100ms, opacity 100ms";
-  content.style.MozTransform  = "scale(1.0)";
-  content.style.webkitTransition = "-webkit-transform 100ms, opacity 100ms";
-  content.style.webkitTransform  = "scale(1.0)";
-  content.style.opacity = "1.0";
+  if (fan.webfwt.ActivityPanePeer.m_useAnim)
+    content.className = "_webfwt_ActivityPane_content_ open";
 
   // set find instance
   fan.webfwt.ActivityPanePeer.$find = self;
@@ -122,18 +130,16 @@ fan.webfwt.ActivityPanePeer.prototype.close = function(self)
   fan.webfwt.ActivityPanePeer.$find = null;
 
   // animate close
-  if (this.$shell)
+  if (this.$shell && fan.webfwt.ActivityPanePeer.m_useAnim)
   {
     var content = this.$shell.firstChild;
-    content.style.opacity = "0.0";
-    content.style.MozTransform    = "scale(0.75)";
-    content.style.webkitTransform = "scale(0.75)";
+    content.className = "_webfwt_ActivityPane_content_ opening";
   }
 
   // allow animation to complete
   var $this = this;
   setTimeout(function() {
-    this.$working = false;
+    $this.$working = false;
     if ($this.$shell && $this.$shell.parentNode) $this.$shell.parentNode.removeChild($this.$shell);
     if ($this.$mask  && $this.$mask.parentNode)  $this.$mask.parentNode.removeChild($this.$mask);
     $this.$open = false;
