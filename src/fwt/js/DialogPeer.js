@@ -15,6 +15,52 @@ fan.fwt.DialogPeer.prototype.$ctor = function(self)
   this.hasKeyBinding = false;
 }
 
+// CSS
+fan.fwt.WidgetPeer.addCss(
+  "div._fwt_Dialog_mask_ {" +
+  " position: fixed;" +
+  " zIndex: 100;" +
+  " top:0; left:0; width:100%; height:100%;" +
+  " background: #000;" +
+  " opacity: 0.0;" +
+  " -webkit-transition: 100ms;" +
+  "    -moz-transition: 100ms;" +
+  "}" +
+  "div._fwt_Dialog_shell_ {" +
+  " position: fixed;" +
+  " zIndex: 101;" +
+  " top:0; left:0; width:100%; height:100%;" +
+  "}" +
+  "div._fwt_Dialog_tbar_ {" +
+  " height: 19px;" +
+  " padding: 5px 6px 4px 6px;" +
+  " color: #fff;" +
+  " font: " + fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont) + ";" +
+  // " textShadow: 0 -1px 1px #1c1c1c;" +
+  " text-align: center;" +
+  " border-bottom: 1px solid #282828;" +
+  " border-radius: 4px 4px 0 0;" +
+  " background: #5a5a5a;" +
+  " background-image: -webkit-linear-gradient(top, #707070, #5a5a5a 50%, #525252 50%, #484848); " +
+  " background-image:    -moz-linear-gradient(top, #707070, #5a5a5a 50%, #525252 50%, #484848); " +
+  " background-image:         linear-gradient(top, #707070, #5a5a5a 50%, #525252 50%, #484848); " +
+  " box-shadow: inset 0px 1px #7c7c7c;" +
+  "}" +
+  "div._fwt_Dialog_ {" +
+  " border: 1px solid #404040;" +
+  " border-radius: 5px 5px 0 0;" +
+  " box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);" +
+  "}" +
+  "div._fwt_Dialog_.opening {" +
+  " opacity: 0;" +
+  " -webkit-transform: scale(0.75);" +
+  "    -moz-transform: scale(0.75);" +
+  "}" +
+  "div._fwt_Dialog_.open {" +
+  " -webkit-transition: -webkit-transform 100ms, opacity 100ms;" + //, top 250ms, left 250ms, width 250ms, height 250ms;" +
+  "    -moz-transition:    -moz-transform 100ms, opacity 100ms;" + //, top 250ms, left 250ms, width 250ms, height 250ms;" +
+  "}");
+
 fan.fwt.DialogPeer.prototype.setDefButton = function(self, button)
 {
   button.peer.m_def = true;
@@ -43,73 +89,21 @@ fan.fwt.DialogPeer.prototype.open = function(self)
 
   // mount mask that functions as input blocker for modality
   var mask = document.createElement("div")
-  with (mask.style)
-  {
-    position   = "fixed";
-    top        = "0";
-    left       = "0";
-    width      = "100%";
-    height     = "100%";
-    background = "#000";
-    opacity    = "0.0";
-    zIndex     = "100";
-    filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=25);"
-    MozTransition    = "100ms";
-    webkitTransition = "100ms";
-  }
+  mask.className = "_fwt_Dialog_mask_";
 
   // mount shell we use to attach widgets to
   var shell = document.createElement("div")
-  with (shell.style)
-  {
-    position   = "fixed";
-    top        = "0";
-    left       = "0";
-    width      = "100%";
-    height     = "100%";
-    zIndex     = "101";
-  }
+  shell.className = "_fwt_Dialog_shell_";
 
   // mount window
   var tbar = this.emptyDiv();
-  with (tbar.style)
-  {
-    height     = "18px";
-    padding    = "4px 6px";
-    color      = "#fff";
-    font       = "bold " + fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
-    //textShadow = "0 -1px 1px #1c1c1c";
-    textAlign  = "center";
-    borderTop    = "1px solid #7c7c7c";
-    borderBottom = "1px solid #282828";
-    MozBorderRadiusTopleft     = "4px";
-    MozBorderRadiusTopright    = "4px";
-    webkitBorderTopLeftRadius  = "4px";
-    webkitBorderTopRightRadius = "4px";
-    borderRadius = "4px 4px 0 0";
-  }
-  fan.fwt.WidgetPeer.setBg(tbar, fan.gfx.Gradient.fromStr("0% 0%, 0% 100%, #707070, #5a5a5a 0.5, #525252 0.5, #484848"));
+  tbar.className = "_fwt_Dialog_tbar_";
+
   var content = this.emptyDiv();
-  with (content.style)
-  {
-    background = "#eee";
-  }
+  content.style.background = "#eee";
+
   var dlg = this.emptyDiv();
-  with (dlg.style)
-  {
-    border     = "1px solid #404040";
-    MozBorderRadiusTopleft     = "5px";
-    MozBorderRadiusTopright    = "5px";
-    webkitBorderTopLeftRadius  = "5px";
-    webkitBorderTopRightRadius = "5px";
-    borderRadius    = "5px 5px 0 0";
-    MozBoxShadow    = "0 5px 12px #404040";
-    webkitBoxShadow = "0 5px 12px #404040";
-    boxShadow       = "0 5px 12px #404040";
-    MozTransform    = "scale(0.75)";
-    webkitTransform = "scale(0.75)";
-    opacity = "0.0";
-  }
+  dlg.className = "_fwt_Dialog_ opening";
   tbar.appendChild(document.createTextNode(this.m_title));
   dlg.appendChild(tbar);
   dlg.appendChild(content);
@@ -126,17 +120,7 @@ fan.fwt.DialogPeer.prototype.open = function(self)
 
   // animate open and dialog resizes
   mask.style.opacity = "0.25";
-  var tx   = "-transform 100ms, ";
-//  var anim = "opacity 100ms, top 250ms, left 250ms, width 250ms, height 250ms";
-// 27 May 2012: Safari 5.1.7 is showing layout problems
-// with height transitons during relayout
-var anim = "opacity 100ms, left 250ms, width 250ms";
-if (!fan.fwt.DesktopPeer.$isSafari) anim += ", top 250ms, height 250ms";
-  dlg.style.webkitTransition = "-webkit" + tx + anim;
-  dlg.style.MozTransition    = "-moz" + tx + anim;
-  dlg.style.webkitTransform  = "scale(1.0)";
-  dlg.style.MozTransform     = "scale(1.0)";
-  dlg.style.opacity = "1.0";
+  dlg.className = "_fwt_Dialog_ open";
 
   setTimeout(function() {
     // try to focus first form element - give DOM a few ms
@@ -207,11 +191,7 @@ fan.fwt.DialogPeer.prototype.close = function(self, result)
   if (this.$shell)
   {
     var dlg = this.$shell.firstChild;
-    dlg.style.MozTransition = "-moz-transform 100ms, opacity 100ms";
-    dlg.style.webkitTransition = "-webkit-transform 100ms, opacity 100ms";
-    dlg.style.opacity = "0.0";
-    dlg.style.MozTransform = "scale(0.75)";
-    dlg.style.webkitTransform = "scale(0.75)";
+    dlg.className = "_fwt_Dialog_ opening";
     this.$mask.style.opacity = "0.0";
   }
 
