@@ -105,8 +105,20 @@ class CompileJava : JdkTask
   {
     files.each |File f|
     {
-      if (f.isDir && f.list.any |x| { x.ext == "java" })
-        list.add(f.plus(`*.java`).osPath)
+      // if directory, then recurse
+      if (f.isDir) listFiles(list, cwd, f.list)
+
+      // use dir/*.java on Windows so that command line doesn't
+      // get too long but list every file on other operating systems
+      if (Env.cur.os == "win32")
+      {
+        if (f.isDir && f.list.any |x| { x.ext == "java" })
+          list.add(f.plus(`*.java`).osPath)
+      }
+      else if (f.ext == "java")
+      {
+        list.add(f.osPath)
+      }
     }
   }
 
