@@ -105,11 +105,8 @@ class CompileJava : JdkTask
   {
     files.each |File f|
     {
-      if (f.isDir) listFiles(list, cwd, f.list)
-      else if (f.ext == "java")
-      {
-        list.add(f.path[cwd.path.size..-1].join("/").toUri.toFile.osPath)
-      }
+      if (f.isDir && f.list.any |x| { x.ext == "java" })
+        list.add(f.plus(`*.java`).osPath)
     }
   }
 
