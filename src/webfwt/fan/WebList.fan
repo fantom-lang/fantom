@@ -29,6 +29,12 @@ abstract class WebList : Pane
   ** Enable multiple selection.  Defaults to 'false' for single selection.
   Bool multi := false
 
+  ** If non-null, reported for preferred width.
+  Int? prefw := null
+
+  ** If non-null, reported for preferred width.
+  Int? prefh := null
+
   ** Selected item, or null if no selection.
   Obj[] selected := [,]
   {

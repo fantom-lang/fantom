@@ -117,7 +117,11 @@ fan.webfwt.WebListPeer.prototype.updateSelection = function(self)
 
 fan.webfwt.WebListPeer.prototype.prefSize = function(self, hints)
 {
-  return fan.fwt.WidgetPeer.prototype.prefSize.call(this, self, hints);
+  var pref = fan.fwt.WidgetPeer.prototype.prefSize.call(this, self, hints);
+
+  var pw = self.m_prefw; if (pw == null) pw = pref.m_w;
+  var ph = self.m_prefh; if (ph == null) ph = pref.m_h;
+  return fan.gfx.Size.make(pw, ph)
 }
 
 fan.webfwt.WebListPeer.prototype.onLayout = function(self) {}
