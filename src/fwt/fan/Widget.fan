@@ -330,6 +330,30 @@ abstract class Widget
   }
 
   **
+  ** Insert child index at given index.  If child is already
+  ** parented throw ArgErr.  Returns this.
+  **
+  @NoDoc virtual This insert(Int index, Widget child)
+  {
+    if (child.parent != null)
+      throw ArgErr("Child already parented: $child")
+    child.parent = this
+    kids.insert(index, child)
+    try { child.attach } catch (Err e) { e.trace }
+    return this
+  }
+
+  **
+  ** Insert all widgets in list by calling `index` on each
+  ** widget.  Returns this.
+  **
+  @NoDoc virtual This insertAll(Int index, Widget[] children)
+  {
+    children.each |kid,i| { insert(index+i, kid) }
+    return this
+  }
+
+  **
   ** Remove a child widget.  If child is null, then do
   ** nothing.  If this widget is not the child's current
   ** parent throw ArgErr.  Return this.
