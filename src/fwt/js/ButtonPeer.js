@@ -286,6 +286,7 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
         text.style.position = "relative";
         text.style.top = "-1px";
         text.style.verticalAlign = "middle";
+        if (self.m_fg) text.style.color = self.m_fg.toCss();
 
         text.appendChild(textNode);
         wrap.appendChild(text);
@@ -308,7 +309,7 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
            self.m_mode == fan.fwt.ButtonMode.m_radio)
   {
     var div = this.elem;
-    div.style.color = this.m_enabled ? "#000" : "#444";
+    div.style.color = self.m_fg ? self.m_fg.toCss() : (this.m_enabled ? "#000" : "#444");
 
     // set state
     var check = this.elem.firstChild;

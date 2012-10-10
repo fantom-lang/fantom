@@ -78,6 +78,11 @@ class Button : Widget
   native Font? font
 
   **
+  ** Color used for text. Defaults to null( system default).
+  **
+  @NoDoc Color? fg := null
+
+  **
   ** Insets to apply for padding between the button's border
   ** and its image and text.  Insets are only applied to push and
   ** toggle butttons; they are not applied to checks, radio, sep, or
