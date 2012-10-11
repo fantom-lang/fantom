@@ -23,7 +23,6 @@ if (!fan.fwt.DesktopPeer.$isFirefox)
     " color:#fff;" +
     " -webkit-appearance:none;" +
     " border:1px solid #131313;" +
-    " padding:4px 18px 4px 6px;"+
     " background:" + fan.webfwt.HudComboPeer.$bg + ",-webkit-linear-gradient(top, #5b5b5b, #393939);" +
     " background:" + fan.webfwt.HudComboPeer.$bg + ",linear-gradient(top, #5b5b5b #393939);" +
     " -webkit-box-shadow:0 1px 1px #555;" +
@@ -39,7 +38,6 @@ fan.webfwt.HudComboPeer.prototype.create = function(parentElem, self)
   var elem = fan.fwt.ComboPeer.prototype.create.call(this, parentElem, self);
   var select = elem.firstChild;
   select.className = "_fwt_Combo_ _webfwt_HudCombo_";
-  select.style.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFontSmall);
   return elem;
 }
 
