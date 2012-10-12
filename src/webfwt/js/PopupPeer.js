@@ -212,6 +212,8 @@ fan.webfwt.PopupPeer.prototype.sync = function(self)
   if (h > vp.m_h-12) { y=6; h=vp.m_h-12; }
   if (x+w >= vp.m_w-6) x = vp.m_w-w-6;
   if (y+h >= vp.m_h-6) y = vp.m_h-h-6;
+  if (x < 6) x = 6;
+  if (y < 6) y = 6;
 
   this.pos$(self, fan.gfx.Point.make(x, y));
   this.size$(self, fan.gfx.Size.make(w, h));
