@@ -70,10 +70,12 @@ class JsonOutStream : OutStream
 
     // serialize as JSON object
     writeChar(JsonToken.objectStart)
+    first := true
     type.fields.each |f, i|
     {
       if (f.isStatic || f.hasFacet(Transient#) == true) return
-      if (i != 0) writeChar(JsonToken.comma).writeChar('\n')
+      if (first) first = false
+      else writeChar(JsonToken.comma).writeChar('\n')
       writeJsonPair(f.name, f.get(obj))
     }
     writeChar(JsonToken.objectEnd)
