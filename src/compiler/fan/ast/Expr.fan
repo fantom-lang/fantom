@@ -1054,7 +1054,10 @@ class FieldExpr : NameExpr
   {
     x := that as FieldExpr
     if (x == null) return false
-    return field == x.field && target.sameVarAs(x.target)
+    return field == x.field &&
+           target != null &&
+           x.target != null &&
+           target.sameVarAs(x.target)
   }
 
   override Int? asTableSwitchCase()
