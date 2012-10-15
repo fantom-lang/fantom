@@ -34,6 +34,9 @@ js=text/javascript; charset=utf-8
 mp3=audio/mpeg3
 mpeg=video/mpeg
 obix=text/xml; charset=utf-8
+oga=audio/ogg
+ogg=audio/ogg
+ogv=video/ogg
 pdf=application/pdf
 png=image/png
 ppt=application/mspowerpoint
