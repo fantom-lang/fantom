@@ -104,6 +104,7 @@ class JsonInStream : InStream
       return null
     }
 
+    if (cur < 0) throw err("Unexpected end of stream")
     throw err("Unexpected token " + this.cur)
   }
 
@@ -165,6 +166,7 @@ class JsonInStream : InStream
     expect(JsonToken.quote)
     while( cur != JsonToken.quote )
     {
+      if (cur < 0) throw err("Unexpected end of str literal")
       if (cur == '\\')
       {
         s.addChar(escape)
@@ -224,6 +226,7 @@ class JsonInStream : InStream
       skipWhitespace
       val := parseVal
       array.add(val)
+      skipWhitespace
       if (!maybe(JsonToken.comma)) break
     }
     skipWhitespace
@@ -239,6 +242,7 @@ class JsonInStream : InStream
 
   private Void expect(Int tt)
   {
+    if (this.cur < 0) throw err("Unexpected end of stream, expected ${tt.toChar}")
     if (this.cur != tt) throw err("Expected ${tt.toChar}, got ${cur.toChar} at ${pos}")
     consume
   }
