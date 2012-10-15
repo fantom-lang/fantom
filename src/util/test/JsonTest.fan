@@ -41,12 +41,24 @@ class JsonTest : Test
     verifyBasics("[1,2.0]", Obj?[1,2f])
     verifyBasics("[1,2,3]", Obj?[1,2,3])
     verifyBasics("[3, 4.0, null, \"hi\"]", [3, 4.0f, null, "hi"])
+    verifyBasics("[2,\n3]", Obj?[2, 3])
+    verifyBasics("[2\n,3]", Obj?[2, 3])
+    verifyBasics("[  2 \n , \n 3 ]", Obj?[2, 3])
 
     // objects
     verifyBasics(Str<|{}|>, Str:Obj?[:])
     verifyBasics(Str<|{"k":null}|>, Str:Obj?["k":null])
     verifyBasics(Str<|{"a":1, "b":2}|>, Str:Obj?["a":1, "b":2])
     verifyBasics(Str<|{"a":1, "b":2,}|>, Str:Obj?["a":1, "b":2])
+
+    // errors
+    verifyErr(ParseErr#) { JsonInStream("\"".in).readJson }
+    verifyErr(ParseErr#) { JsonInStream("[".in).readJson }
+    verifyErr(ParseErr#) { JsonInStream("[1".in).readJson }
+    verifyErr(ParseErr#) { JsonInStream("[1,2".in).readJson }
+    verifyErr(ParseErr#) { JsonInStream("{".in).readJson }
+    verifyErr(ParseErr#) { JsonInStream("""{"x":""".in).readJson }
+    verifyErr(ParseErr#) { JsonInStream("""{"x":4,""".in).readJson }
   }
 
   Void verifyBasics(Str s, Obj? expected)
