@@ -453,6 +453,27 @@ public final class List
     return this;
   }
 
+  public final List removeAll(List toRemove)
+  {
+    // optimize special cases
+    modify();
+    if (toRemove.sz() == 0) { return this; }
+    if (toRemove.sz() == 1) { remove(toRemove.get(0)); return this; }
+
+    // rebuild the backing store array, implementation
+    // assumes that this list is bigger than toRemove list
+    Object[] newValues = newArray(values.length);
+    int newSize = 0;
+    for (int i=0; i<size; ++i)
+    {
+      Object val = values[i];
+      if (!toRemove.contains(val)) newValues[newSize++] = val;
+    }
+    this.values = newValues;
+    this.size = newSize;
+    return this;
+  }
+
   private void grow(int desiredSize)
   {
     int desired = (int)desiredSize;

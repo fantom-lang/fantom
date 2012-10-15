@@ -321,6 +321,14 @@ fan.sys.List.prototype.removeRange = function(r)
   return this;
 }
 
+fan.sys.List.prototype.removeAll = function(toRemove)
+{
+  this.modify();
+  for (var i=0; i<toRemove.m_size; i++)
+    this.remove(toRemove.get(i));
+  return this;
+}
+
 fan.sys.List.prototype.trim = function()
 {
   this.modify();
