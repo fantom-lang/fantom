@@ -226,15 +226,25 @@ class JarDist : JdkTask
          import fan.sys.*;
          public class Main
          {
-           public static void main(String[] args)
+           public static void boot()
            {
-             try
-             {
+             boot(new String[0]);
+           }
+
+           public static void boot(String[] args)
+           {
                System.getProperties().put("fan.jardist", "true");
                System.getProperties().put("fan.home",    ".");
                Sys.boot();
                Sys.bootEnv.setArgs(args);
          $podInits
+           }
+
+           public static void main(String[] args)
+           {
+             try
+             {
+               boot(args);
                Method m = Slot.findMethod("$mainMethod");
                m.call($mainArgs);
              }
