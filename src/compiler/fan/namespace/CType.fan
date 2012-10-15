@@ -194,12 +194,14 @@ mixin CType
     // we should use this type itself
     if (name.size != 1) return this
 
+    raw := ns.objType
     switch (name[0])
     {
-      case 'L': return ns.listType
-      case 'M': return ns.mapType
-      default:  return ns.objType
+      case 'L': raw = ns.listType
+      case 'M': raw = ns.mapType
     }
+    if (isNullable) raw = raw.toNullable
+    return raw
   }
 
   **
