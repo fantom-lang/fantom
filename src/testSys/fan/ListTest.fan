@@ -584,6 +584,30 @@ class ListTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// RemoveAll
+//////////////////////////////////////////////////////////////////////////
+
+  Void testRemoveAll()
+  {
+    list := [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    verifyRemoveAll(list, [0, 6, 7, 8], [1, 2, 3, 4, 5])
+    verifyRemoveAll(list, Int[,], [1, 2, 3, 4, 5])
+    verifyRemoveAll(list, [2, 4], [1, 3, 5])
+    verifyRemoveAll(list, [5], [1, 3])
+    verifyRemoveAll(list, [1, 9], [3])
+    verifyRemoveAll(list, [3, 4], Int[,])
+    list.addAll([10, 20, 30, 40])
+    verifyRemoveAll(list, [20, 30], [10, 40])
+  }
+
+  Void verifyRemoveAll(Int[] list, Int[] toRemove, Int[] expected)
+  {
+    verifySame(list.removeAll(toRemove), list)
+    verifyEq(list.size, expected.size)
+    verifyEq(list, expected)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // RemoveRange
 //////////////////////////////////////////////////////////////////////////
 
@@ -1505,6 +1529,7 @@ class ListTest : Test
     verifyErr(ReadonlyErr#) { r.remove("a") }
     verifyErr(ReadonlyErr#) { r.removeAt(5) }
     verifyErr(ReadonlyErr#) { r.removeSame("a") }
+    verifyErr(ReadonlyErr#) { r.removeAll(["a", "b"]) }
     verifyErr(ReadonlyErr#) { r.clear }
     verifyErr(ReadonlyErr#) { r.trim }
     verifyErr(ReadonlyErr#) { r.fill("", 3) }

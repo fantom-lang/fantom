@@ -261,6 +261,14 @@ final class List
   L removeRange(Range r)
 
   **
+  ** Remove every item in this list which is found in the 'toRemove' list using
+  ** same semantics as `remove` (compare for equality via the == operator).
+  ** If any value is not found, it is ignored.  Return this.
+  ** Throw ReadonlyErr if readonly.
+  **
+  L removeAll(L list)
+
+  **
   ** Remove all items from the list and set size to 0.  Return this.
   ** Throw ReadonlyErr if readonly.
   **

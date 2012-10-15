@@ -435,6 +435,27 @@ namespace Fan.Sys
       return this;
     }
 
+    public List removeAll(List toRemove)
+    {
+      // optimize special cases
+      modify();
+      if (toRemove.sz() == 0) { return this; }
+      if (toRemove.sz() == 1) { remove(toRemove.get(0)); return this; }
+
+      // rebuild the backing store array, implementation
+      // assumes that this list is bigger than toRemove list
+      object[] newValues = new object[m_values.Length];
+      int newSize = 0;
+      for (int i=0; i<m_size; ++i)
+      {
+        object val = m_values[i];
+        if (!toRemove.contains(val)) newValues[newSize++] = val;
+      }
+      this.m_values = newValues;
+      this.m_size = newSize;
+      return this;
+    }
+
     private void grow(int desiredSize)
     {
       int desired = (int)desiredSize;
@@ -836,7 +857,7 @@ namespace Fan.Sys
       }
       return -(low + 1);
     }
-    
+
     public List reverse()
     {
       modify();
