@@ -563,6 +563,19 @@ class Buf
   Buf toDigest(Str algorithm)
 
   **
+  ** Compute a cycle reduancy check code using this buffer's contents
+  ** from 0 to size.  The supported algorithm names:
+  **    - "CRC-16": also known as CRC-16-ANSI, CRC-16-IBM; used by
+  **      USB, ANSI X3.28, and Modbus
+  **    - "CRC-32": used by Ethernet, MPEG-2, PKZIP, Gzip, PNG
+  **    - "CRC-32-Adler": used by Zlib
+  **
+  ** Raise ArgErr is algorithm is not available.  This method is
+  ** only supported for memory based buffers.
+  **
+  Int crc(Str algorithm)
+
+  **
   ** Generate an HMAC message authentication as specified by RFC 2104.
   ** This buffer is the data input, 'algorithm' specifies the hash digest,
   ** and 'key' represents the secret key:
