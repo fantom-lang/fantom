@@ -10,6 +10,7 @@ package fan.sys;
 import java.io.*;
 import java.nio.*;
 import java.security.*;
+import java.util.zip.*;
 
 /**
  * MemBuf
@@ -253,6 +254,52 @@ public final class MemBuf
       throw ArgErr.make("Unknown digest algorthm: " + algorithm);
     }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// CRC
+//////////////////////////////////////////////////////////////////////////
+
+  public long crc(String algorithm)
+  {
+    if (algorithm.equals("CRC-16")) return crc16();
+    if (algorithm.equals("CRC-32")) return crc(new CRC32());
+    if (algorithm.equals("CRC-32-Adler")) return crc(new Adler32());
+    throw ArgErr.make("Unknown CRC algorthm: " + algorithm);
+  }
+
+  private long crc(Checksum checksum)
+  {
+    checksum.update(buf, 0, size);
+    return checksum.getValue() & 0xffffffff;
+  }
+
+  private long crc16()
+  {
+    int seed = 0xffff;
+    for (int i=0; i<size; ++i) seed = crc16(buf[i], seed);
+    return seed;
+  }
+
+  private int crc16(int dataToCrc, int seed)
+  {
+    int dat = ((dataToCrc ^ (seed & 0xFF)) & 0xFF);
+    seed = (seed & 0xFFFF) >>> 8;
+    int index1 = (dat & 0x0F);
+    int index2 = (dat >>> 4);
+    if ((CRC16_ODD_PARITY[index1] ^ CRC16_ODD_PARITY[index2]) == 1)
+      seed ^= 0xC001;
+    dat  <<= 6;
+    seed ^= dat;
+    dat  <<= 1;
+    seed ^= dat;
+    return seed;
+  }
+
+  static private final int[] CRC16_ODD_PARITY = { 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0 };
+
+//////////////////////////////////////////////////////////////////////////
+// HMAC
+//////////////////////////////////////////////////////////////////////////
 
   public Buf hmac(String algorithm, Buf keyBuf)
   {

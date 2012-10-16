@@ -1012,4 +1012,16 @@ class BufTest : Test
     24.times |Int i| { verifyEq(Buf.random(i).size, i) }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// CRC
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCRC()
+  {
+    buf := Buf.fromHex("F70302640008")
+    verifyEq(buf.crc("CRC-16"), 0xFD10)
+    verifyEq(buf.crc("CRC-32"), 0x15f9_d197)
+    verifyEq(buf.crc("CRC-32-Adler"), 0x071b_0169)
+  }
+
 }

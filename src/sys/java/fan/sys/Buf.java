@@ -453,6 +453,11 @@ public abstract class Buf
     throw UnsupportedErr.make(typeof()+".toDigest");
   }
 
+  public long crc(String algorithm)
+  {
+    throw UnsupportedErr.make(typeof()+".toDigest");
+  }
+
   public Buf hmac(String algorithm, Buf key)
   {
     throw UnsupportedErr.make(typeof()+".hmac");
