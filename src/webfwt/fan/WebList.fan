@@ -66,6 +66,13 @@ abstract class WebList : Pane
     }
   }
 
+  ** Fix for old code
+  @NoDoc Int? selectedIndex
+  {
+    get { selectedIndexes.first }
+    set { selectedIndexes = it == null ? Int#.emptyList : [it] }
+  }
+
   ** Update selection due to programtic changes.
   private native Void updateSelection()
 
