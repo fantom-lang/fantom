@@ -16,7 +16,7 @@
 **   - quoted cells may contain newlines (always normalized to "\n")
 **   - quoted cells must escape '"' with '""'
 **   - the `trim` flag trims leading/trailing whitespace from non-quoted
-**     cells (note that RFC 4180 specifies that whitespace is signficant)
+**     cells (note that RFC 4180 specifies that whitespace is significant)
 **
 ** Also see `CsvOutStream`.
 **
