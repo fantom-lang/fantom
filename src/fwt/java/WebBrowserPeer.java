@@ -119,7 +119,8 @@ public class WebBrowserPeer
     // we need to handle the Windows case of "c:\..." since the drive
     // will be interpretted as a scheme
     String loc = event.location;
-    if (loc.startsWith("file://")) loc = "file:/" + loc.substring(7);
+    if (loc.startsWith("file:///")) loc = "file:/" + loc.substring(8);
+    if (loc.startsWith("file://"))  loc = "file:/" + loc.substring(7);
     Uri uri = Uri.fromStr(loc);
     if (uri.scheme() == null || uri.scheme().length() == 1)
       uri = File.os(loc).normalize().uri();
