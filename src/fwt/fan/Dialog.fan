@@ -243,6 +243,7 @@ class Dialog : Window
     }
 
     // details
+    if (commands == null) commands = Command[,]
     if (details != null)
     {
       if (details is Err) details = ((Err)details).traceToStr
@@ -259,7 +260,6 @@ class Dialog : Window
     }
 
     // build buttons from commands
-    if (commands == null) commands := Command[,]
     buttons := GridPane
     {
       numCols = commands.size
