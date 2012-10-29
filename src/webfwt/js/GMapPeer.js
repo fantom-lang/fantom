@@ -117,6 +117,15 @@ fan.webfwt.GMapPeer.prototype.sync = function(self)
           google.maps.event.addListener(g, 'click', this.onMarkerClick(g, m.info));
       }
 
+      /*
+      google.maps.event.addListener(this.map, 'click', function(event) {
+        var lat = event.latLng.lat();
+        var lng = event.latLng.lng();
+        fan.sys.ObjUtil.echo(fan.sys.Float.toLocale(lat, "#.000000") + "," +
+                             fan.sys.Float.toLocale(lng, "#.000000"));
+      });
+      */
+
       // add routes
       for (var i=0; i<this.routes.length; i++)
       {
