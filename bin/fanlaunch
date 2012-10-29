@@ -85,5 +85,5 @@ fanlaunch()
   FAN_MAIN="fanx.tools.$1"
   shift
   read_prop JAVA_OPTIONS "$FAN_CONFIG_PROPS" java.options
-  "$FAN_JAVA" $osFlags $JAVA_OPTIONS $libPath -cp "$FAN_CLASSPATH" -Dfan.home="$FAN_HOME" "$FAN_MAIN" "$@"
+  exec "$FAN_JAVA" $osFlags $JAVA_OPTIONS $libPath -cp "$FAN_CLASSPATH" -Dfan.home="$FAN_HOME" "$FAN_MAIN" "$@"
 }
