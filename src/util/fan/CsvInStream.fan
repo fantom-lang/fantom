@@ -79,7 +79,7 @@ class CsvInStream : InStream
   virtual Str[]? readRow()
   {
     // read in next line
-    this.line = readLine
+    this.line = readLine(null)
     if (line == null) return null
 
     // allocate cells based on last width
