@@ -21,13 +21,10 @@ fan.webfwt.GMapPeer.prototype.create = function(parentElem, self)
   return fan.fwt.WidgetPeer.prototype.create.call(this, parentElem, self);
 }
 
-fan.webfwt.GMapPeer.prototype.addMarker = function(self, lat, lng, info)
+fan.webfwt.GMapPeer.prototype.addMarker = function(self, marker)
 {
-  if (info === undefined) info = null;
-  lat = lat.valueOf();
-  lng = lng.valueOf();
-  this.updateBounds(lat, lng);
-  this.markers.push({lat:lat, lng:lng, info:info});
+  this.updateBounds(marker.m_lat.valueOf(), marker.m_lng.valueOf());
+  this.markers.push(marker);
 }
 
 fan.webfwt.GMapPeer.prototype.addRoute = function(self, route, col)
@@ -109,12 +106,28 @@ fan.webfwt.GMapPeer.prototype.sync = function(self)
       for (var i=0; i<this.markers.length; i++)
       {
         var m = this.markers[i];
-        var g = new google.maps.Marker({
-          position: new google.maps.LatLng(m.lat, m.lng),
+        var x =
+        {
+          position: new google.maps.LatLng(m.m_lat.valueOf(), m.m_lng.valueOf()),
           map: this.map
-        });
-        if (m.info != null)
-          google.maps.event.addListener(g, 'click', this.onMarkerClick(g, m.info));
+        }
+        if (m.m_color)
+        {
+          x.icon = new google.maps.MarkerImage(
+            "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" +
+              m.m_color.toCss().substr(1),
+            new google.maps.Size(21, 34),
+            new google.maps.Point(0,0),
+            new google.maps.Point(10, 34));
+          x.shadow = new google.maps.MarkerImage(
+            "http://chart.apis.google.com/chart?chst=d_map_pin_shadow",
+            new google.maps.Size(40, 37),
+            new google.maps.Point(0, 0),
+            new google.maps.Point(12, 35));
+        }
+        var g = new google.maps.Marker(x);
+        if (m.m_infoHtml != null)
+          google.maps.event.addListener(g, 'click', this.onMarkerClick(g, m.m_infoHtml));
       }
 
       /*
@@ -175,11 +188,11 @@ fan.webfwt.GMapPeer.prototype.sync = function(self)
   }
 }
 
-fan.webfwt.GMapPeer.prototype.onMarkerClick = function(marker, info)
+fan.webfwt.GMapPeer.prototype.onMarkerClick = function(marker, infoHtml)
 {
   var t = this;
   return function() {
-    t.infoWindow.content = info;
+    t.infoWindow.content = infoHtml;
     t.infoWindow.open(t.map, marker);
   }
 }
