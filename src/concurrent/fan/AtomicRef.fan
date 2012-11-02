@@ -11,6 +11,7 @@
 ** between actor/threads with atomic updates.  Only immutable
 ** objects may be shared.
 **
+@Js
 final const class AtomicRef
 {
 
