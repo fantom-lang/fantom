@@ -29,6 +29,7 @@ abstract class WebTableModel : TableModel
   virtual Uri? uri(Int col, Int row) { null }
 
   ** Callback when mouse is pressed down on a cell.
+  @Deprecated { msg="Use WebTableModel.onCellMouseDown" }
   virtual Void onMouseDown(Event event, Int col, Int row) {}
 }
 

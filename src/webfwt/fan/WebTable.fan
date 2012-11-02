@@ -21,6 +21,16 @@ class WebTable : Table
 
   ** Pos relative to table for given cell.
   native Point cellPos(Int col, Int row)
+
+  **
+  ** Callback when mouse pressed inside a table cell.
+  ** Event.data is Str:Str map:
+  **  - posOnDisplay: mouse pos relative to display
+  **  - cellSize: cell size in pixels
+  **  - col: table column of cell
+  **  - row: table row of cell
+  **
+  once EventListeners onCellMouseDown() { EventListeners() }
 }
 
 

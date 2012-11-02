@@ -10,7 +10,10 @@
  * WebTablePeer.
  */
 fan.webfwt.WebTablePeer = fan.sys.Obj.$extend(fan.fwt.TablePeer);
-fan.webfwt.WebTablePeer.prototype.$ctor = function(self) {}
+fan.webfwt.WebTablePeer.prototype.$ctor = function(self)
+{
+  fan.fwt.TablePeer.prototype.$ctor.call(this, self);
+}
 
 fan.webfwt.WebTablePeer.prototype.cellPos = function(self,col,row)
 {
