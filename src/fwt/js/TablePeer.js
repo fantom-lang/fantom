@@ -470,7 +470,7 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event, count)
     // check for valid callback
     var model = self.m_model;
     var view  = self.view();
-    if (!model.$onMouseDown) return;
+    if (!model.$onMouseDown && !self.onCellMouseDown) return;
 
     // find pos on display
     var dis = this.posOnDisplay(self);
@@ -489,14 +489,18 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event, count)
     var data = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Obj.$type);
     data.set("posOnDisplay", posOnDis);
     data.set("cellSize",     fan.gfx.Size.make(td.offsetWidth, td.offsetHeight));
+    data.set("col", view.m_cols.get(col));
+    data.set("row", view.m_rows.get(row));
 
     // fire event
     var evt = fan.fwt.Event.make();
     evt.m_id = fan.fwt.EventId.m_mouseDown;
     evt.m_pos = rel;
     evt.m_widget = self;
+    evt.m_index = row;
     evt.m_data = data;
-    model.$onMouseDown(evt, view.m_cols.get(col), view.m_rows.get(row));
+    if (model.$onMouseDown) model.$onMouseDown(evt, view.m_cols.get(col), view.m_rows.get(row));
+    if (self.onCellMouseDown) self.onCellMouseDown().fire(evt);
   }
 }
 
