@@ -180,6 +180,24 @@ fan.sys.Time.fromIso = function(s, checked)
 }
 
 //////////////////////////////////////////////////////////////////////////
+// Past/Future
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Time.prototype.plus = function(d)  { return this.$plus(d.ticks()); }
+fan.sys.Time.prototype.minus = function(d) { return this.$plus(-d.ticks()); }
+fan.sys.Time.prototype.$plus = function(ticks)
+{
+  if (ticks == 0) return this;
+  if (ticks > fan.sys.Duration.nsPerDay)
+      throw fan.sys.ArgErr.make("Duration out of range: " + fan.sys.Duration.make(ticks));
+
+  var newTicks = this.toDuration().m_ticks + ticks;
+  if (newTicks < 0) newTicks = fan.sys.Duration.nsPerDay + newTicks;
+  if (newTicks >= fan.sys.Duration.nsPerDay) newTicks %= fan.sys.Duration.nsPerDay;
+  return fan.sys.Time.fromDuration(fan.sys.Duration.make(newTicks));
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Misc
 //////////////////////////////////////////////////////////////////////////
 

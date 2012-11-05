@@ -168,6 +168,27 @@ const final class Time
   Str toIso()
 
 //////////////////////////////////////////////////////////////////////////
+// Past/Future
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Add the specified duration to this time. Throw ArgErr if 'dur' is
+  ** not between 0 and 24hr.
+  **
+  ** Example:
+  **   Time(5,0,0) + 30min  =>  05:30:00
+  **
+  @Operator Time plus(Duration dur)
+
+  ** Subtract the specified duration to this time. Throw ArgErr if 'dur' is
+  ** not between 0 and 24hr.
+  **
+  ** Example:
+  **   Time(5,0,0) - 30min  =>  04:30:00
+  **
+  @Operator Time minus(Duration dur)
+
+//////////////////////////////////////////////////////////////////////////
 // Misc
 //////////////////////////////////////////////////////////////////////////
 

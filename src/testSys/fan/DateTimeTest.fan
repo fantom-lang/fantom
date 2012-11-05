@@ -1445,6 +1445,35 @@ class DateTimeTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Time plus/minus
+//////////////////////////////////////////////////////////////////////////
+
+  Void testTimeMath()
+  {
+    verifyTimeMath(Time(5,0,0),    Time(5,0,0),     0min)
+    verifyTimeMath(Time(5,0,0),    Time(5,30,0),    30min)
+    verifyTimeMath(Time(5,0,0),    Time(4,30,0),    -30min)
+    verifyTimeMath(Time(2,30,0),   Time(3,30,0),    1hr)
+    verifyTimeMath(Time(2,30,0),   Time(1,30,0),    -1hr)
+    verifyTimeMath(Time(20,12,25), Time(20,13, 3),  38sec)
+    verifyTimeMath(Time(20,12,25), Time(20,11,47),  -38sec)
+    verifyTimeMath(Time(23,59,59), Time(0,0,0),     1sec)
+    verifyTimeMath(Time(0,0,0),    Time(0,0,0),     24hr)
+    verifyTimeMath(Time(22,30,00), Time(3,30,0),    5hr)
+    verifyTimeMath(Time(1,15,00),  Time(23,15,0),   -2hr)
+
+    verifyErr(ArgErr#) { x := Time(3,30,0) + 25hr }
+    verifyErr(ArgErr#) { x := Time(3,30,0) + 2day }
+  }
+
+  Void verifyTimeMath(Time a, Time b, Duration diff)
+  {
+    verifyEq(a + diff, b)
+    verifyEq(b + -diff, a)
+    verifyEq(b - diff, a)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Date plus/minus
 //////////////////////////////////////////////////////////////////////////
 
