@@ -19,6 +19,7 @@
 - Buf.crc
 - Add bin/msvcr100.dll
 - Upgrade SWT to 4.2
+- Add Time.plus/minus(Duration)
 
 *Build 1.0.63 (16 Jun 2012)*
 - Move dispose from Desktop to Color, Font, Image

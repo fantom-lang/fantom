@@ -200,6 +200,25 @@ public final class Time
   public static Time fromIso(String s, boolean checked) { return fromStr(s, checked); }
 
 //////////////////////////////////////////////////////////////////////////
+// Past/Future
+//////////////////////////////////////////////////////////////////////////
+
+  public final Time plus(Duration d)  { return plus(d.ticks()); }
+  public final Time minus(Duration d) { return plus(-d.ticks()); }
+
+  private Time plus(long ticks)
+  {
+    if (ticks == 0) return this;
+    if (ticks > Duration.nsPerDay)
+      throw ArgErr.make("Duration out of range: " + Duration.make(ticks));
+
+    long newTicks = toDuration().ticks + ticks;
+    if (newTicks < 0) newTicks = Duration.nsPerDay + newTicks;
+    if (newTicks >= Duration.nsPerDay) newTicks %= Duration.nsPerDay;
+    return Time.fromDuration(Duration.make(newTicks));
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Misc
 //////////////////////////////////////////////////////////////////////////
 
