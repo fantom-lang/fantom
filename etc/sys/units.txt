@@ -137,6 +137,7 @@ calorie, cal; kg1*m2*sec-2; 4.184
 therm; kg1*m2*sec-2; 1.05506E8
 tons_refrigeration_hour, tonrefh; kg1*m2*sec-2; 1.26606708E7
 megajoule, MJ; kg1*m2*sec-2; 1000000.0
+gigajoule, GJ; kg1*m2*sec-2; 1000000000.0
 newton_meter, Nm; kg1*m2*sec-2
 
 -- apparent energy (kg1*m2*sec-2)
