@@ -25,8 +25,16 @@ class GMap : ContentPane
   **
   native Void addRoute(Float[] route, Color? color := null)
 
-  ** The zoom level for this map.
-  Int zoom := 4
+  ** The zoom level for this map. Defaults to 4.
+  native Int zoom
+
+  ** Center point for this map. Value should be a single lat,lng
+  ** pair.  Defaults to center of US.
+  native Float[] center
+
+  ** Configure map to automatically fit all markers/routes into
+  ** view.  This may override `zoom` and `center` fields.
+  Bool fitBounds := true
 
   ** Type of map to display.
   MapType mapType := MapType.roadMap

@@ -11,8 +11,47 @@ fan.webfwt.GMapPeer = fan.sys.Obj.$extend(fan.fwt.PanePeer);
 fan.webfwt.GMapPeer.prototype.$ctor = function(self)
 {
   fan.fwt.PanePeer.prototype.$ctor.call(this, self);
+  this.m_zoom = fan.sys.Int.make(4);
+  this.m_center = fan.sys.List.make(fan.sys.Float.$type,
+  [
+    fan.sys.Float.make(39.978030),
+    fan.sys.Float.make(-95.295274)
+  ]);
   this.markers = [];
   this.routes  = [];
+}
+
+fan.webfwt.GMapPeer.prototype.m_zoom = null;
+fan.webfwt.GMapPeer.prototype.zoom = function(self)
+{
+  return this.map
+    ? fan.sys.Int.make(this.map.getZoom())
+    : this.m_zoom;
+}
+fan.webfwt.GMapPeer.prototype.zoom$ = function(self, val)
+{
+  this.m_zoom = val;
+  if (this.map) this.map.setZoom(val.valueOf());
+}
+
+fan.webfwt.GMapPeer.prototype.m_center = null;
+fan.webfwt.GMapPeer.prototype.center = function(self)
+{
+  if (!this.map) return this.m_center;
+  var center = this.map.getCenter();
+  var lat = fan.sys.Float.make(center.lat());
+  var lng = fan.sys.Float.make(center.lng());
+  return fan.sys.List.make(fan.sys.Float.$type, [lat,lng]);
+}
+fan.webfwt.GMapPeer.prototype.center$ = function(self, val)
+{
+  this.m_center = val;
+  if (this.map)
+  {
+    var lat = val.get(0).valueOf();
+    var lng = val.get(1).valueOf();
+    this.map.setCenter(new google.maps.LatLng(lat, lng));
+  }
 }
 
 fan.webfwt.GMapPeer.prototype.create = function(parentElem, self)
@@ -70,24 +109,25 @@ fan.webfwt.GMapPeer.prototype.sync = function(self)
     return;
   }
 
-  try
-  {
+  // try
+  // {
     if (this.map == null && this.m_size.m_w > 0)
     {
       // TODO FIXIT - this code works with the V3 API
       //  - Would be nice to fitBounds *before* creating map
 
-      // defaults to centered on US
       var bounds = null;
+      var clat = this.m_center.get(0).valueOf();
+      var clng = this.m_center.get(1).valueOf();
       var options =
       {
-        center: new google.maps.LatLng(39.978030, -95.295274),
-        zoom: self.m_zoom,
+        center: new google.maps.LatLng(clat, clng),
+        zoom: this.m_zoom,
         mapTypeId: this.getMapType(self)
       };
 
       // center on bounding box of all markers
-      if (this.markers.length > 0 || this.routes.length > 0)
+      if (self.m_fitBounds && (this.markers.length > 0 || this.routes.length > 0))
       {
         // center on bounding box of all markers
         bounds = new google.maps.LatLngBounds(
@@ -161,7 +201,7 @@ fan.webfwt.GMapPeer.prototype.sync = function(self)
       }
 
       // fit bounds
-      if (bounds != null)
+      if (bounds != null && self.m_fitBounds)
       {
         // we must trap the zoom after our fitBounds call
         // async to accurately limit our zoom level
@@ -177,15 +217,15 @@ fan.webfwt.GMapPeer.prototype.sync = function(self)
         this.map.fitBounds(bounds);
       }
     }
-  }
-  catch (err)
-  {
-    fan.sys.ObjUtil.echo(err);
-    this.elem.innerHTML = "Could not load map";
-    this.elem.style.padding = "12px";
-    fan.fwt.WidgetPeer.prototype.sync.call(this, self);
-    return;
-  }
+  // }
+  // catch (err)
+  // {
+  //   console.trace(err);
+  //   this.elem.innerHTML = "Could not load map";
+  //   this.elem.style.padding = "12px";
+  //   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
+  //   return;
+  // }
 }
 
 fan.webfwt.GMapPeer.prototype.onMarkerClick = function(marker, infoHtml)
