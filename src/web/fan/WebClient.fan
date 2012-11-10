@@ -49,7 +49,12 @@ class WebClient
   **
   Uri reqUri := ``
   {
-    set { if (!it.isAbs) throw ArgErr("Request URI not absolute: `$it`"); &reqUri = it }
+    set
+    {
+      if (!it.isAbs) throw ArgErr("Request URI not absolute: `$it`")
+      if (it.scheme != "http") throw ArgErr("Request URI is not http: `$it`")
+      &reqUri = it
+    }
   }
 
   **
