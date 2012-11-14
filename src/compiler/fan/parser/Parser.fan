@@ -2001,7 +2001,7 @@ public class Parser : CompilerSupport
   **
   private ClosureExpr closure(Loc loc, FuncType funcType)
   {
-    if (curSlot == null) throw err("Unexpected closure")
+    if (curType == null || curSlot == null) throw err("Unexpected closure")
 
     // closure anonymous class name: class$slot$count
     name := "${curType.name}\$${curSlot.name}\$${closureCount++}"
