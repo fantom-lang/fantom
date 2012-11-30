@@ -144,7 +144,7 @@ the 'parseDoc' method:
   doc := XParser(`test.xml`.toFile.in).parseDoc
 
   // parse a string
-  doc := XParser(InStream.makeForStr("<foo/>")).parseDoc
+  doc := XParser("<foo/>".in).parseDoc
 
 The code above parses the document entirely into memory. This tends to be
 easiest way to work with XML documents.  However it can create efficiency problems
@@ -171,10 +171,10 @@ current element and its is descendants into memory during pull-parsing.
 
 Example of pull parsing:
 
-  parser := XParser(InStream.makeForStr(
+  parser := XParser(
     "<root>
        <a>text</a>
-     </root>"))
+     </root>".in)
 
   while (parser.next != null)
     echo("$parser.nodeType $parser.depth $parser.elem")
