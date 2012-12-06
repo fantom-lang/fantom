@@ -59,7 +59,7 @@ class DocTopIndexRenderer : DocRenderer
         out.div
         pod.chapters.each |ch,i|
         {
-          if (i > 0) out.w(" ")
+          if (i > 0) out.w(" &ndash; ")
           writeLinkTo(ch)
         }
         out.divEnd
