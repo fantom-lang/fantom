@@ -49,6 +49,10 @@ fan.fwt.WidgetPeer.addCss(
   " float:right;" +
   " font:" + fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.sysFontSmall()) + ";" +
   "}" +
+  "div._webfwt_TreeList_ > div > span.imgOnly { "+
+  " float:right;" +
+  " font-size:2px;" +
+  "}" +
   "div._webfwt_TreeList_ > div > span.def { "+
   " color:#325373;" +
   " margin-top:1px;" +
@@ -171,6 +175,7 @@ fan.webfwt.TreeListPeer.prototype.makeRow = function(self, item)
     }
     else if (aux == null && auxIcon != null)
     {
+      span.className = "imgOnly";
       span.appendChild(imgAux);
     }
     else
