@@ -133,11 +133,12 @@ fan.webfwt.WebListPeer.prototype.repaintSelection = function(self, indices, sele
 
 fan.webfwt.TreeListPeer.prototype.makeRow = function(self, item)
 {
-  var text  = self.text(item);
-  var font  = self.font(item);
-  var icon  = self.icon(item, false);
-  var depth = self.depth(item);
-  var aux   = self.aux(item);
+  var text    = self.text(item);
+  var font    = self.font(item);
+  var icon    = self.icon(item, false);
+  var depth   = self.depth(item);
+  var aux     = self.aux(item);
+  var auxIcon = self.auxIcon(item, false);
 
   var img  = null;
   var div  = null;
@@ -152,11 +153,34 @@ fan.webfwt.TreeListPeer.prototype.makeRow = function(self, item)
   div.appendChild(document.createTextNode(text));
   if (font != null) div.style.font = fan.fwt.WidgetPeer.fontToCss(font);
 
-  if (aux != null)
+  if (aux != null || auxIcon != null)
   {
     span = document.createElement("span");
-    span.className = self.auxStyle();
-    span.appendChild(document.createTextNode(aux));
+
+    var imgAux = null;
+    if (auxIcon != null)
+    {
+      imgAux = document.createElement("img");
+      imgAux.src = fan.fwt.WidgetPeer.uriToImageSrc(auxIcon.m_uri);
+    }
+
+    if (aux != null && auxIcon == null)
+    {
+      span.className = self.auxStyle();
+      span.appendChild(document.createTextNode(aux));
+    }
+    else if (aux == null && auxIcon != null)
+    {
+      span.appendChild(imgAux);
+    }
+    else
+    {
+      var spanAux = document.createElement("span");
+      spanAux.className = self.auxStyle();
+      spanAux.appendChild(document.createTextNode(aux));
+      span.appendChild(spanAux);
+      span.appendChild(imgAux);
+    }
   }
 
   if (icon != null)

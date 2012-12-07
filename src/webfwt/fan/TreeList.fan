@@ -46,6 +46,9 @@ class TreeList : WebList
   **  - "pill": pill capsule style
   virtual Str auxStyle() { "def" }
 
+  ** Get aux icon.  The aux icon size may not exceed `iconSize`.
+  virtual Image? auxIcon(Obj item, Bool selected) { null }
+
   // force native peer
   private native Void dummy()
 }

@@ -49,6 +49,7 @@ fan.webfwt.WebListPeer.prototype.rebuild = function(self)
     var $this = this;
     container.onmousedown = function(event) { return $this.handleMouseDown(self, event) }
     container.onmouseup   = function(event) { $this.handleMouseUp(self, event); }
+    container.ondblclick  = function(event) { self.fireAction(); }
     this.elem.onkeydown   = function(event) { $this.handleKeyEvent(self, event); }
   }
 
@@ -70,7 +71,7 @@ fan.webfwt.WebListPeer.prototype.rebuild = function(self)
 
 fan.webfwt.WebListPeer.prototype.setupContainer = function(self, elem) {}
 fan.webfwt.WebListPeer.prototype.finishContainer = function(self, elem) {}
-fan.webfwt.WebListPeer.prototype.repaintSelection = function(self, info, selected) {}
+fan.webfwt.WebListPeer.prototype.repaintSelection = function(self, ix, selected) {}
 
 fan.webfwt.WebListPeer.prototype.makeRow = function(self, item)
 {
