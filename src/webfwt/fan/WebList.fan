@@ -87,6 +87,11 @@ abstract class WebList : Pane
   **   - `fwt::Event.data`: the selected item
   once EventListeners onSelect() { EventListeners() }
 
+  ** Callback when an item is double-clicked.
+  **   - `fwt::Event.index`: index of selected item
+  **   - `fwt::Event.data`: the selected item
+  once EventListeners onAction() { EventListeners() }
+
   ** Fire onBeforeSelect with given index - return false to cancel.
   private Bool fireBeforeSelect(Int[] index)
   {
@@ -105,6 +110,17 @@ abstract class WebList : Pane
   {
     selectedIndexes = index
     onSelect.fire(Event {
+      it.id = EventId.select
+      it.data = selected.first
+      it.index = selectedIndexes.first
+      it.widget = this
+    })
+  }
+
+  ** Fire onAction with current selection.
+  private Void fireAction()
+  {
+    onAction.fire(Event {
       it.id = EventId.select
       it.data = selected.first
       it.index = selectedIndexes.first
