@@ -210,7 +210,7 @@ fan.webfwt.WebListPeer.prototype.handleMouseUp = function(self, event)
   var index = self.m_selectedIndexes;
   var same  = this.sel.length == index.size();
   for (var i=0; i<this.sel.length; i++)
-    if (this.sel[i].index != index.getSafe(i))
+    if (this.sel[i] != index.getSafe(i))
       same = false;
 
   // only fire onSelect selection modified
