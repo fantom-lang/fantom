@@ -38,7 +38,7 @@ fan.fwt.WidgetPeer.addCss(
   "div._webfwt_HudList_ > div > span.def { color:#666; }" +
   "div._webfwt_HudList_ > div > span.pill { background:#666; }" +
   "div._webfwt_HudList_ > div.selected > span.def { color:#fff; }" +
-  "div._webfwt_HudList_ > div.selected > span.pill { background:#444; }" +
+  "div._webfwt_HudList_ > div.selected > span.pill { background:#154f92; }" +
   "div._webfwt_HudList_:focus > div.selected > span.pill { background:#154f92; }" +
   "");
 
