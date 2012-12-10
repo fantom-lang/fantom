@@ -30,13 +30,17 @@ class Popup : ContentPane
     return p
   }
 
+  ** Callback function directly before popup is opened.
+  **  - id: `fwt::EventId.open`
+  once EventListeners onBeforeOpen() { EventListeners() }
+
   ** Callback function when popup is open.
   **  - id: `fwt::EventId.open`
-  @Transient EventListeners onOpen := EventListeners() { private set }
+  once EventListeners onOpen() { EventListeners() }
 
   ** Callback function when popup is closed.
   **  - id: `fwt::EventId.close`
-  @Transient EventListeners onClose := EventListeners() { private set }
+  once EventListeners onClose() { EventListeners() }
 
   ** Horizontal alignment of popup, using 'open(pos)' as origin.
   Halign halign := Halign.left

@@ -26,6 +26,13 @@ fan.webfwt.PopupPeer.prototype.move = function(self, point)
 
 fan.webfwt.PopupPeer.prototype.open = function(self, parent, point)
 {
+  // fire onBeforeOpen event listener
+  var be = fan.fwt.Event.make();
+  be.m_widget = self;
+  be.m_id  = fan.fwt.EventId.m_open;
+  var list = self.onBeforeOpen().list();
+  for (var i=0; i<list.size(); i++) list.get(i).call(be);
+
   this.$parent = parent;
   this.$point = point;
   this.$animate = self.m_animate;
