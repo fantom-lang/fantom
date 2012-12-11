@@ -377,7 +377,12 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
 
       // cell text
       var text = view.text(c,r);
-      if (imgElem == null) node.appendChild(document.createTextNode(text));
+      var addTextNode = function(n,t)
+      {
+        if (t == "") n.innerHTML = "&nbsp;"
+        else n.appendChild(document.createTextNode(t));
+      }
+      if (imgElem == null) addTextNode(node, text);
       else
       {
         node.appendChild(imgElem);
@@ -389,7 +394,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
           if (isFirefox && imgElem.className == "right")
             span.style.marginRight = "22px";
 
-          span.appendChild(document.createTextNode(text));
+          addTextNode(span, text);
           node.appendChild(span);
         }
       }
