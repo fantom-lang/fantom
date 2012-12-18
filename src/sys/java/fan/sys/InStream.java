@@ -570,6 +570,7 @@ public class InStream
     try
     {
       Map props = new Map(Sys.StrType, listVals ? Sys.StrType.toListOf() : Sys.StrType);
+      props.ordered(true);
 
       StringBuilder name = new StringBuilder();
       StringBuilder val = null;
