@@ -250,12 +250,26 @@ public class StatementPeer
       }
 
       // if auto-generated keys, then return Int[]
+      // Some databases like Oracle do not allow access to
+      // keys as Int, so return keys as Str[]
       if (isAutoKeys)
       {
         ResultSet rs = stmt.getGeneratedKeys();
-        List keys = new List(Sys.IntType);
-        while (rs.next()) keys.add(rs.getLong(1));
-        if (!keys.isEmpty()) return keys;
+        List keys = null;
+        while (rs.next())
+        {
+          // get key as Long or String
+          Object key;
+          try { key = rs.getLong(1); }
+          catch (Exception e) { key = rs.getString(1); }
+
+          // lazily create keys list with proper type
+          if (keys == null)
+            keys = new List(key instanceof Long ? Sys.IntType : Sys.StrType);
+
+          keys.add(key);
+        }
+        if (keys != null) return keys;
       }
 
       // othertise return the update count
