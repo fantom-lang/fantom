@@ -51,8 +51,8 @@ class Statement
   **   - If the statement is a query or procedure which produces
   **     a result set, then return 'Row[]'
   **   - If the statement is an insert and auto-generated keys
-  **     are supported by the connector then return 'Int[]' of
-  **     keys generated
+  **     are supported by the connector then return 'Int[]' or 'Str[]'
+  **     of keys generated
   **   - Return an 'Int' with the update count
   **
   native Obj execute([Str:Obj]? params := null)
