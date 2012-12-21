@@ -232,6 +232,7 @@ class DateTimeStr
           break;
 
         case 'z':
+          if (tz == null) throw new IllegalStateException("Format cannot contain timezone: " + pattern + " [locale: " + locale + "]");
           TimeZone.Rule rule = tz.rule(year);
           switch (n)
           {

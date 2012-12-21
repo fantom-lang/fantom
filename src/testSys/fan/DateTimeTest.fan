@@ -1623,4 +1623,32 @@ class DateTimeTest : Test
     if (cmp > 0) verify(a > b)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// All Locales
+//////////////////////////////////////////////////////////////////////////
+
+  Void testAllLocales()
+  {
+    locales := Pod.find("sys").files.findAll |f| { f.pathStr.startsWith("/locale/") }.map |f| { f.basename }
+    locales.each |locale|
+    {
+      Locale.setCur(Locale(locale))
+      try
+      {
+        ts := DateTime.now
+        verifyNotNull(ts.toLocale)
+        verifyNotNull(ts.time.toLocale)
+        verifyNotNull(ts.date.toLocale)
+        verifyNotNull(ts.month.toLocale)
+        verifyNotNull(ts.weekday.toLocale)
+      }
+      catch (Err e)
+      {
+        echo("Locale has invalid date time defaults: $locale")
+        e.trace
+        fail
+      }
+    }
+  }
+
 }

@@ -1,6 +1,6 @@
 dateTime=WWWW DD MMMM YYYY kk:mm:ss aa zzz
 date=WWWW DD MMMM YYYY
-time=kk:mm:ss  zzz
+time=kk:mm:ss
 float=##,##,###.0##
 decimal=##,##,###.0##
 int=##,##,###
