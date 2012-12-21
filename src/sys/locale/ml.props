@@ -1,6 +1,6 @@
 dateTime=WWWW DD MMMM YYYY kk:mm:ss aa zzz
 date=WWWW DD MMMM YYYY
-time=kk:mm:ss  zzz
+time=kk:mm:ss
 float=##,##,###.0##
 decimal=##,##,###.0##
 int=##,##,###
@@ -8,7 +8,7 @@ weekdayStart=sun
 janFull=ജനുവരി
 febFull=ഫെബ്രുവരി
 marFull=മാര്‍ച്ച്
-aprFull=ഏപ്രില്‍ 
+aprFull=ഏപ്രില്‍
 mayFull=മെയ്
 junFull=ജൂണ്‍
 julFull=ജൂലൈ
