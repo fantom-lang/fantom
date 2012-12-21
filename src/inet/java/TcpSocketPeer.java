@@ -203,6 +203,30 @@ public class TcpSocketPeer
     this.out = null;
   }
 
+  public void shutdownIn(TcpSocket fan)
+  {
+    try
+    {
+      socket.shutdownInput();
+    }
+    catch (IOException e)
+    {
+      throw IOErr.make(e);
+    }
+  }
+
+  public void shutdownOut(TcpSocket fan)
+  {
+    try
+    {
+      socket.shutdownOutput();
+    }
+    catch (IOException e)
+    {
+      throw IOErr.make(e);
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Streaming Options
 //////////////////////////////////////////////////////////////////////////
