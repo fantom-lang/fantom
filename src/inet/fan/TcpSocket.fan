@@ -112,6 +112,20 @@ class TcpSocket
   **
   native Bool close()
 
+  **
+  ** Place input stream for socket at "end of stream".  Any data sent
+  ** to input side of socket is acknowledged and then silently discarded.
+  ** Raise IOErr if error occurs.
+  **
+  native Void shutdownIn()
+
+  **
+  ** Disables the output stream for this socket. Any previously written
+  ** data will be sent followed by TCP's normal connection termination
+  ** sequence.  Raise IOErr if error occurs.
+  **
+  native Void shutdownOut()
+
 //////////////////////////////////////////////////////////////////////////
 // Socket Options
 //////////////////////////////////////////////////////////////////////////

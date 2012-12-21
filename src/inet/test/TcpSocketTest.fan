@@ -25,6 +25,8 @@ class TcpSocketTest : Test
     verifyEq(s.remotePort, null)
     verifyErr(IOErr#) { s.in }
     verifyErr(IOErr#) { s.out }
+    verifyErr(IOErr#) { s.shutdownIn }
+    verifyErr(IOErr#) { s.shutdownOut }
     s.close
   }
 
