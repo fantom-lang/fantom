@@ -12,17 +12,6 @@ Despite Fantom being such a young language, there are many projects
 for bringing Fantom support to your favorite IDE.  Note many of these
 projects are still in early development.
 
-Netbeans FantomIDE (tcolar) [#netbeans]
-***************************************
-FantomIDE is an IDE for the Fantom language based on Netbeans
-It can be installed *as a plugin* to an existing Netbeans installation
-or as a *standalone IDE*.  It contains out of the box support for
-Fantom as well as Java, Javascript, CSS, HTML, XML, Subversion, Mercurial.
-
-  - [Home Page]`http://fanide.colar.net/home`
-  - [Screencast]`http://www.colar.net/fanide/fansuite2.htm`
-  - [Download]`http://fanide.colar.net/install`
-
 Eclipse F4 (xored software) [#eclipse]
 ********************************************
 F4 is an Eclipse-based IDE for Fantom which is written mostly in Fantom
@@ -30,6 +19,16 @@ itself. It can be installed as a set of plugins via Eclipse update site
 or as a standalone application:
 
   - [Home Page]`http://xored.com/f4`
+
+Netbeans FantomIDE (tcolar) [#netbeans]
+***************************************
+FantomIDE is an IDE for the Fantom language based on Netbeans
+It can be installed *as a plugin* to an existing Netbeans installation
+or as a *standalone IDE*.  It contains out of the box support for
+Fantom as well as Java, Javascript, CSS, HTML, XML, Subversion, Mercurial.
+
+  - [Home Page]`http://fantomide.colar.net/home`
+  - [Download]`http://fantomide.colar.net/install`
 
 TextMate Bundle (msl) [#textmate]
 *********************************
@@ -51,3 +50,9 @@ Flux [#flux]
 The Fantom distro includes a very basic editor called `Flux` which
 provides syntax color coding for Fantom, Java, C#, etc.
 
+Camembert (tcolar) [#camembert]
+*******************************
+Camembert is a Free, Open source, lightweight IDE, purely written
+in Fantom.
+
+  - [Home Page]`http://www.status302.com/camembert`
