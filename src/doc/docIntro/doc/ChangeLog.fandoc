@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.64 (working)*
+*Build 1.0.64 (21 Dec 2012)*
 - Move webfwt into Fantom core
 - BuildScript.applyMacros
 - fwt: Dialog.defCommand
@@ -21,6 +21,12 @@
 - Upgrade SWT to 4.2
 - Add Time.plus/minus(Duration)
 - Keep InStream.readProps ordered
+- #1942: Err when making of err
+- #1960: Add List.removeAll
+- #2029: compiler bug - wrong non-nullabillity inference
+- #2031: json bug linebreak before comma crushed parser
+- #2043: Compiler NPE in static field assignment
+- #2058: No shutdownInput and shutdownOutput for inet::TcpSocket
 
 *Build 1.0.63 (16 Jun 2012)*
 - Move dispose from Desktop to Color, Font, Image
