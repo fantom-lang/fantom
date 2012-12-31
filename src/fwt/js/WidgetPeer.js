@@ -201,6 +201,7 @@ fan.fwt.WidgetPeer.prototype.attach = function(self)
   var elem = this.create(parent.peer.elem, self);
   this.attachTo(self, elem);
   self.cursor$(this.m_cursor);
+  elem.addEventListener("focus", function() { fan.fwt.Desktop.m_focus=self; }, false);
 
   // callback on parent
   //parent.peer.childAdded(self);

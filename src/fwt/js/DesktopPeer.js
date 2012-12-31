@@ -31,7 +31,9 @@ fan.fwt.DesktopPeer.$clipboard = new fan.fwt.Clipboard();
 
 // TODO
 //fan.fwt.DesktopPeer.bounds()
-//fan.fwt.DesktopPeer.focus()
+
+fan.fwt.Desktop.m_focus = null;
+fan.fwt.DesktopPeer.focus = function() { return fan.fwt.Desktop.m_focus; }
 
 fan.fwt.DesktopPeer.callAsync = function(f)
 {
