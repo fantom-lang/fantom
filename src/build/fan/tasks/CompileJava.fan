@@ -25,6 +25,7 @@ class CompileJava : JdkTask
     : super(script)
   {
     cp.add(rtJar)
+    this.params = (script.config("javacParams") ?: "").split.findAll |s| { !s.isEmpty }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,7 +36,7 @@ class CompileJava : JdkTask
   ** Extra parameters to pass to javac.  Default is
   ** to target 1.5 classfiles.
   **
-  Str[] params := ["-target", "1.5"]
+  Str[] params
 
 //////////////////////////////////////////////////////////////////////////
 // Add
