@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.65 (working)*
+- Add build javacParams config option (#1765)
+
 *Build 1.0.64 (21 Dec 2012)*
 - Move webfwt into Fantom core
 - BuildScript.applyMacros
