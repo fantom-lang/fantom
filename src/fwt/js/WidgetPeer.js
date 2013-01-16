@@ -455,11 +455,10 @@ fan.fwt.WidgetPeer.toKey = function(event)
     key = fan.fwt.WidgetPeer.keyCodeToKey(code);
   }
 
-  if (event.shiftKey)   key = key==null ? fan.fwt.Key.m_shift : key.plus(fan.fwt.Key.m_shift);
-  if (event.altKey)     key = key==null ? fan.fwt.Key.m_alt   : key.plus(fan.fwt.Key.m_alt);
-  if (event.ctrlKey)    key = key==null ? fan.fwt.Key.m_ctrl  : key.plus(fan.fwt.Key.m_ctrl);
-  // TODO FIXIT
-  //if (event.commandKey) key = key.plus(Key.command);
+  if (event.shiftKey) key = key==null ? fan.fwt.Key.m_shift : key.plus(fan.fwt.Key.m_shift);
+  if (event.altKey)   key = key==null ? fan.fwt.Key.m_alt   : key.plus(fan.fwt.Key.m_alt);
+  if (event.ctrlKey)  key = key==null ? fan.fwt.Key.m_ctrl  : key.plus(fan.fwt.Key.m_ctrl);
+  if (event.metaKey)  key = key==null ? fan.fwt.Key.m_command : key.plus(fan.fwt.Key.m_command);
   return key;
 }
 
