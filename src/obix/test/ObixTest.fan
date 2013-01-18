@@ -9,6 +9,7 @@
 **
 ** Abstract base class for tests.
 **
+@NoDoc
 abstract class ObixTest : Test
 {
 
