@@ -459,6 +459,11 @@ fan.fwt.WidgetPeer.toKey = function(event)
   if (event.altKey)   key = key==null ? fan.fwt.Key.m_alt   : key.plus(fan.fwt.Key.m_alt);
   if (event.ctrlKey)  key = key==null ? fan.fwt.Key.m_ctrl  : key.plus(fan.fwt.Key.m_ctrl);
   if (event.metaKey)  key = key==null ? fan.fwt.Key.m_command : key.plus(fan.fwt.Key.m_command);
+
+  // TODO FIXIT: never let key be null - so if key not
+  // mapped use dummy fallback (that hopefully no one uses...)
+  if (key == null) key = fan.fwt.Key.m_numLock;
+
   return key;
 }
 
