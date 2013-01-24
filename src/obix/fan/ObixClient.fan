@@ -7,6 +7,7 @@
 //
 
 using web
+using concurrent
 
 **
 ** ObixClient implements the client side of the oBIX
@@ -150,8 +151,11 @@ class ObixClient
   **
   ObixObj read(Uri uri)
   {
+    debugId := debugCounter.getAndIncrement
     c := makeReq(uri, "GET")
+    if (log.isDebug) log.debug("> [$debugId] GET $c.reqUri")
     c.writeReq.readRes
+    if (log.isDebug) log.debug("< [$debugId] $c.resCode")
     return readResObj(c)
   }
 
@@ -181,11 +185,14 @@ class ObixClient
 
   private ObixObj post(Uri uri, Str method, ObixObj in)
   {
+    debugId := debugCounter.getAndIncrement
     c := makeReq(uri, method)
+    if (log.isDebug) log.debug("> [$debugId] $method $c.reqUri")
     c.writeReq
     in.writeXml(c.reqOut)
     c.reqOut.close
     c.readRes
+    if (log.isDebug) log.debug("< [$debugId] $c.resCode")
     if (c.resCode == 100) c.readRes
     return readResObj(c)
   }
@@ -218,8 +225,9 @@ class ObixClient
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  ** Log for tracing
-  //Log log := Log.get("obix")
+  private static const AtomicInt debugCounter := AtomicInt()
+
+  @NoDoc Log log := Log.get("obix")
 
   private Str authHeader
   private Uri? watchServiceMakeUri
