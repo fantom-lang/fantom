@@ -26,6 +26,14 @@ fan.webfwt.WebTextPeer.prototype.subCreate = function(self, control)
   if (self.m_insets) control.style.padding = fan.fwt.WidgetPeer.insetsToCss(self.m_insets);
   if (self.m_textBorder) fan.fwt.WidgetPeer.setBorder(control, self.m_textBorder);
 
+  // image
+  if (self.m_image != null)
+  {
+    var src = fan.fwt.WidgetPeer.uriToImageSrc(self.m_image.m_uri);
+    control.style.backgroundImage = "url(" + src + ")";
+    control.style.backgroundRepeat = "no-repeat";
+  }
+
   var phColor = self.placeHolderColor();
   if (phColor)
   {
@@ -64,6 +72,17 @@ fan.webfwt.WebTextPeer.prototype.subSync = function(self, control)
   {
     h -= d.m_offset.m_y + d.m_blur + d.m_spread;
     control.style.height = h + "px";
+  }
+  if (self.m_image != null)
+  {
+    var left = self.m_halignImage == fan.gfx.Halign.m_left;
+    var pad = left ? control.style.paddingLeft : control.style.paddingRight;
+
+    if (pad == "") pad = "2px";  // see TextPeer.css for default
+    pad = parseInt(pad);
+
+    var bx = w - pad - 16;
+    control.style.backgroundPosition = bx + "px center";
   }
 }
 

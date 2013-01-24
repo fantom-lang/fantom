@@ -36,6 +36,12 @@ class WebText : Text
   ** Drop shadow, or null for none.
   Shadow? dropShadow := null
 
+  ** Image to display inside widget, or null for none.
+  Image? image := null
+
+  ** Halign of image.  Supoported values: 'left' and 'right'.
+  Halign halignImage := Halign.right
+
   ** Override style. Defaults to null.
   [Str:Str]? style := null
 
