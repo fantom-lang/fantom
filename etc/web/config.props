@@ -3,8 +3,11 @@
 //
 // History:
 //   10 Jun 11  Brian Frank  Creation
+//   21 Jan 13  Nicholas Harker - Added Proxy Exclusion Support
 //
 
-// default WebClient proxy URI formatted as "http://{host}[:port]"
-// proxy=http://hostname:8080/
+// Default WebClient.proxy URI formatted as "http://{host}[:port]/"
+// proxy=http://foo:8080/
 
+// WebClient.proxy exceptions as comma separated list of Regex globs
+// proxy.exceptions=192.168.*.*,*.google.com
