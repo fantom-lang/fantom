@@ -3,7 +3,9 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   24 Dec 08  Brian Frank  Almost Christmas!
+//   24 Dec 08  Brian Frank       Almost Christmas!
+//   15 Jan 13  Nicholas Harker   Added SSL Support
+//   21 Jan 13  Nicholas Harker   Added Proxy Exclusion Support
 //
 
 using inet
@@ -40,6 +42,7 @@ class WebClient
     if (reqUri != null) this.reqUri = reqUri
   }
 
+
 //////////////////////////////////////////////////////////////////////////
 // Request
 //////////////////////////////////////////////////////////////////////////
@@ -52,7 +55,7 @@ class WebClient
     set
     {
       if (!it.isAbs) throw ArgErr("Request URI not absolute: `$it`")
-      if (it.scheme != "http") throw ArgErr("Request URI is not http: `$it`")
+      if (it.scheme != "http" && it.scheme != "https") throw ArgErr("Request URI is not http or https: `$it`")
       &reqUri = it
     }
   }
@@ -185,10 +188,16 @@ class WebClient
   **
   Bool followRedirects := true
 
+//////////////////////////////////////////////////////////////////////////
+// Proxy Support
+//////////////////////////////////////////////////////////////////////////
+
   **
   ** If non-null, then all requests are routed through this
   ** proxy address (host and port).  Default is configured
-  ** in "etc/web/config.props" with the key "proxy".
+  ** in "etc/web/config.props" with the key "proxy".  Proxy
+  ** exceptions can be configured with the "proxy.exceptions"
+  ** config key as comma separated list of Regex globs.
   **
   Uri? proxy := proxyDef
 
@@ -199,6 +208,20 @@ class WebClient
     catch (Err e)
       e.trace
     return null
+  }
+
+  private Bool isProxy(Uri uri)
+  {
+    proxy != null && proxyExceptions.any |re| { re.matches(reqUri.host.toStr) }
+  }
+
+  private once Regex[] proxyExceptions()
+  {
+    try
+      return WebClient#.pod.config("proxy.exceptions")?.split(',')?.map |tok->Regex| { Regex.glob(tok) } ?: Regex[,]
+    catch (Err e)
+      e.trace
+    return Regex[,]
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -333,16 +356,20 @@ class WebClient
     if (reqHeaders.containsKey("Host")) throw Err("reqHeaders must not define 'Host'")
 
     // connect to the host:port if we aren't already connected
+    usingProxy := isProxy(reqUri)
     if (!isConnected)
     {
-      socket = TcpSocket()
-      connUri := proxy ?: reqUri
+      // make https or http socket
+      socket = reqUri.scheme == "https" ? TcpSocket.makeSsl: TcpSocket.make
       if (options != null) socket.options.copyFrom(this.options)
+
+      // connect to proxy or directly to request host
+      connUri := usingProxy ? proxy : reqUri
       socket.connect(IpAddr(connUri.host), connUri.port ?: 80)
     }
 
     // request uri is absolute if proxy, relative otherwise
-    reqPath := (proxy != null ? reqUri : reqUri.relToAuth).encode
+    reqPath := (usingProxy ? reqUri : reqUri.relToAuth).encode
 
     // host authority header
     host := reqUri.host
