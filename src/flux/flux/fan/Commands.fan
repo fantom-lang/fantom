@@ -760,7 +760,7 @@ internal class RecentCommand : FluxCommand
       dlg.close
     }
     pane := ConstraintPane { minw = 300; maxh = 300; add(picker) }
-    dlg = Dialog(frame) { title="Recent"; body=pane; commands=[Dialog.ok, Dialog.cancel] }
+    dlg = Dialog(frame) { title="Recent"; body=pane; commands=[Dialog.ok, Dialog.cancel]; defCommand = null }
     dlg.open
   }
 }
