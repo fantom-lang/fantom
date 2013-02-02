@@ -9,6 +9,7 @@
 *Build 1.0.65 (working)*
 - Add build javacParams config option (#1765)
 - Fandoc abstract Test classes
+- WebOutStream: add header, footer, nav, section, article, aside
 
 *Build 1.0.64 (21 Dec 2012)*
 - Move webfwt into Fantom core

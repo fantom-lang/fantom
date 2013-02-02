@@ -441,6 +441,52 @@ class WebOutStreamTest : Test
     verifyOut(buf, "<textarea rows='20' cols='50'>")
     out.textAreaEnd
     verifyOut(buf, "</textarea>")
+
+    //////////////////////////////////////////////////////////////////////////
+    // HTML5
+    //////////////////////////////////////////////////////////////////////////
+
+    out.header
+    verifyOut(buf, "<header>")
+    out.header("class='foo'")
+    verifyOut(buf, "<header class='foo'>")
+    out.headerEnd
+    verifyOut(buf, "</header>")
+
+    out.footer
+    verifyOut(buf, "<footer>")
+    out.footer("class='foo'")
+    verifyOut(buf, "<footer class='foo'>")
+    out.footerEnd
+    verifyOut(buf, "</footer>")
+
+    out.nav
+    verifyOut(buf, "<nav>")
+    out.nav("class='foo'")
+    verifyOut(buf, "<nav class='foo'>")
+    out.navEnd
+    verifyOut(buf, "</nav>")
+
+    out.section
+    verifyOut(buf, "<section>")
+    out.section("class='foo'")
+    verifyOut(buf, "<section class='foo'>")
+    out.sectionEnd
+    verifyOut(buf, "</section>")
+
+    out.article
+    verifyOut(buf, "<article>")
+    out.article("class='foo'")
+    verifyOut(buf, "<article class='foo'>")
+    out.articleEnd
+    verifyOut(buf, "</article>")
+
+    out.aside
+    verifyOut(buf, "<aside>")
+    out.aside("class='foo'")
+    verifyOut(buf, "<aside class='foo'>")
+    out.asideEnd
+    verifyOut(buf, "</aside>")
   }
 
 //////////////////////////////////////////////////////////////////////////
