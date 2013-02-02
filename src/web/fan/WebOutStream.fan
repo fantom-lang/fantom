@@ -727,6 +727,46 @@ class WebOutStream : OutStream
   This textAreaEnd() { return tagEnd("textarea").nl }
 
 //////////////////////////////////////////////////////////////////////////
+// HTML5
+//////////////////////////////////////////////////////////////////////////
+
+  ** Start a <header> tag.
+  This header(Str? attrs := null) { return tag("header", attrs).nl }
+
+  ** End a <header> tag.
+  This headerEnd() { return tagEnd("header").nl }
+
+  ** Start a <footer> tag.
+  This footer(Str? attrs := null) { return tag("footer", attrs).nl }
+
+  ** End a <footer> tag.
+  This footerEnd() { return tagEnd("footer").nl }
+
+  ** Start a <nav> tag.
+  This nav(Str? attrs := null) { return tag("nav", attrs).nl }
+
+  ** End a <nav> tag.
+  This navEnd() { return tagEnd("nav").nl }
+
+  ** Start a <section> tag.
+  This section(Str? attrs := null) { return tag("section", attrs).nl }
+
+  ** End a <section> tag.
+  This sectionEnd() { return tagEnd("section").nl }
+
+  ** Start a <article> tag.
+  This article(Str? attrs := null) { return tag("article", attrs).nl }
+
+  ** End a <article> tag.
+  This articleEnd() { return tagEnd("article").nl }
+
+  ** Start a <aside> tag.
+  This aside(Str? attrs := null) { return tag("aside", attrs).nl }
+
+  ** End a <aside> tag.
+  This asideEnd() { return tagEnd("aside").nl }
+
+//////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
