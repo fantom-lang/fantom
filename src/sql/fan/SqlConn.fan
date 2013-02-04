@@ -23,7 +23,10 @@ mixin SqlConn
   ** if connection cannot be established.
   ** See [pod-doc]`pod-doc#connections`.
   **
-  static SqlConn open(Str uri, Str? username, Str? password) { SqlConnImpl.openDefault(uri,username,password) }
+  static SqlConn open(Str uri, Str? username, Str? password)
+  {
+    SqlConnImpl.openDefault(uri,username,password)
+  }
 
   **
   ** Close the database connection.  Closing a connection already
