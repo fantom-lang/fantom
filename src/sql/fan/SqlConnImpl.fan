@@ -10,6 +10,7 @@
 ** SqlConn manages a connection to a relational database.
 ** See [pod-doc]`pod-doc#connections`.
 **
+@NoDoc
 class SqlConnImpl : SqlConn
 {
 
