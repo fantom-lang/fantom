@@ -11,27 +11,27 @@ import java.sql.*;
 import java.util.StringTokenizer;
 import fan.sys.*;
 
-public class SqlConnPeer
+public class SqlConnImplPeer
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Peer Factory
 //////////////////////////////////////////////////////////////////////////
 
-  public static SqlConnPeer make(SqlConn fan)
+  public static SqlConnImplPeer make(SqlConnImpl fan)
   {
-    return new SqlConnPeer();
+    return new SqlConnImplPeer();
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
-  public static SqlConn open(String uri, String user, String pass)
+  public static SqlConn openDefault(String uri, String user, String pass)
   {
     try
     {
-      SqlConn self = SqlConn.make();
+      SqlConnImpl self = SqlConnImpl.make();
       self.peer.jconn = DriverManager.getConnection(uri, user, pass);
       self.peer.supportsGetGenKeys = self.peer.jconn.getMetaData().supportsGetGeneratedKeys();
       return self;
@@ -42,7 +42,22 @@ public class SqlConnPeer
     }
   }
 
-  public boolean isClosed(SqlConn self)
+  public static SqlConn wrapConnection(java.sql.Connection jconn)
+  {
+    try
+    {
+        SqlConnImpl self = SqlConnImpl.make();
+        self.peer.jconn = jconn;
+        self.peer.supportsGetGenKeys = self.peer.jconn.getMetaData().supportsGetGeneratedKeys();
+        return self;
+    }
+    catch (SQLException e)
+    {
+        throw err(e);
+    }
+  }
+
+  public boolean isClosed(SqlConnImpl self)
   {
     try
     {
@@ -54,7 +69,7 @@ public class SqlConnPeer
     }
   }
 
-  public boolean close(SqlConn self)
+  public boolean close(SqlConnImpl self)
   {
     try
     {
@@ -72,7 +87,7 @@ public class SqlConnPeer
 // Data
 //////////////////////////////////////////////////////////////////////////
 
-  public SqlMeta meta(SqlConn self)
+  public SqlMeta meta(SqlConnImpl self)
   {
     try
     {
@@ -90,7 +105,7 @@ public class SqlConnPeer
 // Transactions
 //////////////////////////////////////////////////////////////////////////
 
-  public boolean autoCommit(SqlConn self)
+  public boolean autoCommit(SqlConnImpl self)
   {
     try
     {
@@ -102,7 +117,7 @@ public class SqlConnPeer
     }
   }
 
-  public void autoCommit(SqlConn self, boolean b)
+  public void autoCommit(SqlConnImpl self, boolean b)
   {
     try
     {
@@ -114,7 +129,7 @@ public class SqlConnPeer
     }
   }
 
-  public void commit(SqlConn self)
+  public void commit(SqlConnImpl self)
   {
     try
     {
@@ -126,7 +141,7 @@ public class SqlConnPeer
     }
   }
 
-  public void rollback(SqlConn self)
+  public void rollback(SqlConnImpl self)
   {
     try
     {

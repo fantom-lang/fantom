@@ -47,7 +47,7 @@ public class StatementPeer
     }
     catch (SQLException ex)
     {
-      throw SqlConnPeer.err(ex);
+      throw SqlConnImplPeer.err(ex);
     }
     return self;
   }
@@ -72,7 +72,7 @@ public class StatementPeer
     }
     catch (SQLException ex)
     {
-      throw SqlConnPeer.err(ex);
+      throw SqlConnImplPeer.err(ex);
     }
     finally
     {
@@ -201,7 +201,7 @@ public class StatementPeer
     }
     catch (SQLException ex)
     {
-      throw SqlConnPeer.err(ex);
+      throw SqlConnImplPeer.err(ex);
     }
     finally
     {
@@ -235,7 +235,7 @@ public class StatementPeer
     }
     catch (SQLException ex)
     {
-      throw SqlConnPeer.err(ex);
+      throw SqlConnImplPeer.err(ex);
     }
   }
 
@@ -293,7 +293,7 @@ public class StatementPeer
     }
     catch (SQLException ex)
     {
-      throw SqlConnPeer.err(ex);
+      throw SqlConnImplPeer.err(ex);
     }
   }
 
@@ -339,7 +339,7 @@ public class StatementPeer
     }
     catch (SQLException ex)
     {
-      throw SqlConnPeer.err(ex);
+      throw SqlConnImplPeer.err(ex);
     }
   }
 
