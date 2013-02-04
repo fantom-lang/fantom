@@ -10,20 +10,18 @@
 ** SqlConn manages a connection to a relational database.
 ** See [pod-doc]`pod-doc#connections`.
 **
-mixin SqlConn
+class SqlConnImpl : SqlConn
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Connection
 //////////////////////////////////////////////////////////////////////////
 
-  **
-  ** Open a connection to the database specified by the given
-  ** JDBC uri and username/password credentials.  Raise exception
-  ** if connection cannot be established.
-  ** See [pod-doc]`pod-doc#connections`.
-  **
-  static SqlConn open(Str uri, Str? username, Str? password) { SqlConnImpl.openDefault(uri,username,password) }
+  ** Internal constructor
+  internal new make() {}
+
+  ** Backward compatiblity method
+  static native SqlConn openDefault(Str uri, Str? username, Str? password)
 
   **
   ** Close the database connection.  Closing a connection already
@@ -31,12 +29,12 @@ mixin SqlConn
   ** an exception.  Return true if the connection was closed
   ** successfully or 'false' if closed abnormally.
   **
-  abstract Bool close()
+  override native Bool close()
 
   **
   ** Return if `close` has been called.
   **
-  abstract Bool isClosed()
+  override native Bool isClosed()
 
 //////////////////////////////////////////////////////////////////////////
 // Data
@@ -45,12 +43,12 @@ mixin SqlConn
   **
   ** Get the database meta-data
   **
-  abstract SqlMeta meta()
+  override native SqlMeta meta()
 
   **
   ** Create a statement for this database.
   **
-  abstract Statement sql(Str sql)
+  override Statement sql(Str sql) { Statement(this, sql) }
 
 //////////////////////////////////////////////////////////////////////////
 // Transactions
@@ -61,16 +59,16 @@ mixin SqlConn
   ** as an individual transaction.  Otherwise statements are grouped into
   ** transaction which must be closed via `commit` or `rollback`.
   **
-  abstract Bool autoCommit
+  override native Bool autoCommit
 
   **
   ** Commit all the changes made inside the current transaction.
   **
-  abstract Void commit()
+  override native Void commit()
 
   **
   ** Undo any changes made inside the current transaction.
   **
-  abstract Void rollback()
+  override native Void rollback()
 
 }

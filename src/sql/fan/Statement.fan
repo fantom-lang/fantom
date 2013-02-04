@@ -17,7 +17,7 @@ class Statement
   **
   ** Make a new statement with the specified SQL text.
   **
-  internal new make(SqlConn conn, Str sql)
+  internal new make(SqlConnImpl conn, Str sql)
   {
     this.conn = conn
     this.sql = sql
@@ -76,7 +76,7 @@ class Statement
   **
   ** The connection that this statement uses.
   **
-  internal SqlConn conn { private set }
+  internal SqlConnImpl conn { private set }
 
   **
   ** The SQL text used to create this statement.
