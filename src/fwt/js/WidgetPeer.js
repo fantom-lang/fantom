@@ -333,10 +333,11 @@ fan.fwt.WidgetPeer.prototype.attachEventListener = function(self, type, evtId, l
 
     // create fwt::Event and invoke handler
     var evt = fan.fwt.Event.make();
-    evt.m_id     = evtId;
-    evt.m_pos    = fan.gfx.Point.make(mx, my);
-    evt.m_widget = self;
-    evt.m_key    = fan.fwt.WidgetPeer.toKey(e);
+    evt.m_$target = e.target;
+    evt.m_id      = evtId;
+    evt.m_pos     = fan.gfx.Point.make(mx, my);
+    evt.m_widget  = self;
+    evt.m_key     = fan.fwt.WidgetPeer.toKey(e);
     if (isClickEvent)
     {
       evt.m_button = e.button + 1;

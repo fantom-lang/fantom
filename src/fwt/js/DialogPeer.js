@@ -81,6 +81,9 @@ fan.fwt.DialogPeer.prototype.open = function(self)
         if (it.m_key == fan.fwt.Key.m_esc) { self.close(null); it.consume(); }
         if (it.m_key == fan.fwt.Key.m_enter)
         {
+          // workaround to not fire defCmd for Text { multiLine=true }
+          if (it.m_$target != null && it.m_$target.tagName == "TEXTAREA") return;
+
           var def = self.peer.m_defButton;
           if (def != null && def.enabled()) { def.peer.fireAction(def); it.consume(); }
         }
