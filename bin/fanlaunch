@@ -53,8 +53,12 @@ fi
 
 # Set FAN_JAVA if not already set
 if [ -z "$FAN_JAVA" ] ; then
-  FAN_JAVA=`which java`
-  if [ -z "$FAN_JAVA" ] ; then
+  if [ ! -z "$JAVA_HOME" ]; then
+    FAN_JAVA="$JAVA_HOME/bin/java"
+  else
+    FAN_JAVA=`which java`
+  fi
+  if [ ! -x "$FAN_JAVA" ] ; then
     echo "Cannot find java, please either add the java bin directory to"
     echo "the PATH environment variable or set the FAN_JAVA variable to"
     echo "the path of the java binary file"
