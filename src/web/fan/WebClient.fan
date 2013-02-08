@@ -212,7 +212,7 @@ class WebClient
 
   private Bool isProxy(Uri uri)
   {
-    proxy != null && proxyExceptions.any |re| { re.matches(reqUri.host.toStr) }
+    proxy != null && !proxyExceptions.any |re| { re.matches(reqUri.host.toStr) }
   }
 
   private once Regex[] proxyExceptions()
