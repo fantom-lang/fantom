@@ -153,9 +153,17 @@ class ObixClient
   {
     debugId := debugCounter.getAndIncrement
     c := makeReq(uri, "GET")
-    if (log.isDebug) log.debug("> [$debugId] GET $c.reqUri")
+    if (log.isDebug)
+    {
+      log.debug("> [$debugId] GET $c.reqUri")
+      //c.reqHeaders.each |v, n| { log.debug("> [$debugId]   $n: $v") }
+    }
     c.writeReq.readRes
-    if (log.isDebug) log.debug("< [$debugId] $c.resCode")
+    if (log.isDebug)
+    {
+      log.debug("< [$debugId] $c.resCode")
+      //c.resHeaders.each |v, n| { log.debug("< [$debugId]   $n: $v") }
+    }
     return readResObj(c)
   }
 
@@ -178,7 +186,6 @@ class ObixClient
     uri = lobbyUri + uri
     c := WebClient(uri)
     c.reqMethod = method
-    c.reqHeaders["Content-Type"]  = "text/xml; charset=utf-8"
     c.reqHeaders["Authorization"] = authHeader
     return c
   }
@@ -187,12 +194,21 @@ class ObixClient
   {
     debugId := debugCounter.getAndIncrement
     c := makeReq(uri, method)
-    if (log.isDebug) log.debug("> [$debugId] $method $c.reqUri")
+    c.reqHeaders["Content-Type"]  = "text/xml; charset=utf-8"
+    if (log.isDebug)
+    {
+      log.debug("> [$debugId] $method $c.reqUri")
+      //c.reqHeaders.each |v, n| { log.debug("> [$debugId]   $n: $v") }
+    }
     c.writeReq
     in.writeXml(c.reqOut)
     c.reqOut.close
     c.readRes
-    if (log.isDebug) log.debug("< [$debugId] $c.resCode")
+    if (log.isDebug)
+    {
+      log.debug("< [$debugId] $c.resCode")
+      //c.resHeaders.each |v, n| { log.debug("< [$debugId]   $n: $v") }
+    }
     if (c.resCode == 100) c.readRes
     return readResObj(c)
   }
