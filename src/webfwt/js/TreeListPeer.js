@@ -199,6 +199,10 @@ fan.webfwt.TreeListPeer.prototype.makeRow = function(self, item)
 
     img = document.createElement("img");
     img.src = fan.fwt.WidgetPeer.uriToImageSrc(icon.m_uri);
+
+    var size = self.iconSize();
+    img.width = size.m_w;
+    img.height = size.m_h;
   }
 
   if (self.isHeading(item)) row.className = "group";
