@@ -61,14 +61,19 @@ const class Color : Brush
   **
   new make(Int argb := 0, Bool hasAlpha := false)
   {
-// 25 Feb 2013 - Chrome 25 appears to sometimes optimize
-// out our Int.shiftx methods - which can cause our sign
-// bit to be set - which we need to fix before argb value
-// is configured
-if (argb < 0) { argb += 0xffffffff+1; echo("# fixed") }
-
     if (!hasAlpha) argb = argb.or(0xff00_0000)
     this.argb = argb
+
+// 26 Feb 2013 - Chrome 25 appears to sometimes optimize
+// out our Int.shiftx methods - which can cause our sign
+// bit to be set - which we need to fix before argb value
+// is configured - and for some reason - doesn't always
+// take the firt time...
+while (this.argb < 0)
+{
+  this.argb += 0xffff_ffff+1
+  echo("# fixing: $argb -> $this.argb")
+}
   }
 
   **
