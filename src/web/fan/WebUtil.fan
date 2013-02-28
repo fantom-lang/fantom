@@ -196,11 +196,8 @@ class WebUtil
     if (headers.get("Transfer-Encoding", "").lower.contains("chunked"))
       return makeChunkedInStream(in) { charset = cs }
 
-    // if content-type is specified assume open ended content until close
-    if (ct != null) return in
-
-    // no content in response
-    return null
+    // assume open ended content until close
+    return in
   }
 
   **
