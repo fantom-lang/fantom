@@ -24,7 +24,7 @@ fan.sys.Bool.prototype.$ctor = function() {}
 
 fan.sys.Bool.prototype.$typeof = function()
 {
-  return fan.sys.Boo.$type;
+  return fan.sys.Bool.$type;
 }
 
 //////////////////////////////////////////////////////////////////////////
