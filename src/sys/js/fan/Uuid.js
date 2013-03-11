@@ -18,7 +18,7 @@ fan.sys.Uuid = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.sys.Uuid.prototype.$ctor = function ()
 {
-    this.m_value = "";
+  this.m_value = "";
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -27,54 +27,54 @@ fan.sys.Uuid.prototype.$ctor = function ()
 
 fan.sys.Uuid.make = function()
 {
-    throw fan.sys.UnsupportedErr.make("Uuid.make not implemented in Js env");
+  throw fan.sys.UnsupportedErr.make("Uuid.make not implemented in Js env");
 }
 
 fan.sys.Uuid.makeStr = function(a, b, c, d, e)
 {
-    var self = new fan.sys.Uuid();
-    self.m_value = fan.sys.Int.toHex(a, 8) + "-" +
-        fan.sys.Int.toHex(b, 4) + "-" +
-        fan.sys.Int.toHex(c, 4) + "-" +
-        fan.sys.Int.toHex(d, 4) + "-" +
-        fan.sys.Int.toHex(e, 12);
-    return self;
+  var self = new fan.sys.Uuid();
+  self.m_value = fan.sys.Int.toHex(a, 8) + "-" +
+    fan.sys.Int.toHex(b, 4) + "-" +
+    fan.sys.Int.toHex(c, 4) + "-" +
+    fan.sys.Int.toHex(d, 4) + "-" +
+    fan.sys.Int.toHex(e, 12);
+  return self;
 }
 
 fan.sys.Uuid.makeBits = function(hi, lo)
 {
-    throw fan.sys.UnsupportedErr.make("Uuid.makeBits not implemented in Js env");
+  throw fan.sys.UnsupportedErr.make("Uuid.makeBits not implemented in Js env");
 }
 
 fan.sys.Uuid.fromStr = function (s, checked)
 {
-    if (checked === undefined) checked = true;
+  if (checked === undefined) checked = true;
 
-    try
+  try
+  {
+    var len = s.length;
+
+    // sanity check
+    if (len != 36 ||
+      s.charAt(8) != '-' || s.charAt(13) != '-' || s.charAt(18) != '-' || s.charAt(23) != '-')
     {
-        var len = s.length;
-
-        // sanity check
-        if (len != 36 ||
-            s.charAt(8) != '-' || s.charAt(13) != '-' || s.charAt(18) != '-' || s.charAt(23) != '-')
-        {
-            throw new Error();
-        }
-
-        // parse hex components
-        var a = fan.sys.Int.fromStr(s.substring(0, 8), 16);
-        var b = fan.sys.Int.fromStr(s.substring(9, 13), 16);
-        var c = fan.sys.Int.fromStr(s.substring(14, 18), 16);
-        var d = fan.sys.Int.fromStr(s.substring(19, 23), 16);
-        var e = fan.sys.Int.fromStr(s.substring(24), 16);
-
-        return fan.sys.Uuid.makeStr(a, b, c, d, e);
+      throw new Error();
     }
-    catch (err)
-    {
-        if (!checked) return null;
-        throw fan.sys.ParseErr.make("Uuid", s);
-    }
+
+    // parse hex components
+    var a = fan.sys.Int.fromStr(s.substring(0, 8), 16);
+    var b = fan.sys.Int.fromStr(s.substring(9, 13), 16);
+    var c = fan.sys.Int.fromStr(s.substring(14, 18), 16);
+    var d = fan.sys.Int.fromStr(s.substring(19, 23), 16);
+    var e = fan.sys.Int.fromStr(s.substring(24), 16);
+
+    return fan.sys.Uuid.makeStr(a, b, c, d, e);
+  }
+  catch (err)
+  {
+    if (!checked) return null;
+    throw fan.sys.ParseErr.make("Uuid", s);
+  }
 
 }
 
@@ -83,37 +83,37 @@ fan.sys.Uuid.fromStr = function (s, checked)
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.Uuid.prototype.$typeof = function () {
-    return fan.sys.Uuid.$type;
+  return fan.sys.Uuid.$type;
 }
 
 fan.sys.Uuid.prototype.bitsHi = function()
 {
-    throw fan.sys.UnsupportedErr.make("Uuid.bitsHi not implemented in Js env");
+  throw fan.sys.UnsupportedErr.make("Uuid.bitsHi not implemented in Js env");
 }
 
 fan.sys.Uuid.prototype.bitsLo = function()
 {
-    throw fan.sys.UnsupportedErr.make("Uuid.bitsLo not implemented in Js env");
+  throw fan.sys.UnsupportedErr.make("Uuid.bitsLo not implemented in Js env");
 }
 
 fan.sys.Uuid.prototype.equals = function(that)
 {
-    if (that instanceof fan.sys.Uuid)
-        return this.m_value == that.m_value;
-    else
-        return false;
+  if (that instanceof fan.sys.Uuid)
+    return this.m_value == that.m_value;
+  else
+    return false;
 }
 
 fan.sys.Uuid.prototype.hash = function()
 {
-    return fan.sys.Str.hash(this.m_value);
+  return fan.sys.Str.hash(this.m_value);
 }
 fan.sys.Uuid.prototype.compare = function(that)
 {
-    return fan.sys.ObjUtil.compare(this.m_value, that.m_value)
+  return fan.sys.ObjUtil.compare(this.m_value, that.m_value)
 }
 
 fan.sys.Uuid.prototype.toStr = function()
 {
-    return this.m_value;
+  return this.m_value;
 }
