@@ -34,7 +34,7 @@ fan.fwt.ComboPeer.prototype.selectedIndex$  = function(self, val)
 {
   this.m_selectedIndex = val;
   if (this.elem != null && this.elem.firstChild != null)
-    this.elem.firstChild.selectedIndex = val;
+    this.elem.firstChild.selectedIndex = val == null ? -1 : val;
 }
 fan.fwt.ComboPeer.prototype.m_selectedIndex = null;
 
