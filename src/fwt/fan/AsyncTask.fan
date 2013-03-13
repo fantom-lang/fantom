@@ -68,7 +68,7 @@ class AsyncTask
     return this
   }
 
-  ** Convenience for `#onDone` and `#onErr` together.
+  ** Convenience for `onDone` and `onErr` together.
   This then(|Obj?| doneCallback, |Obj?|? errCallback := null)
   {
     onDone(doneCallback)
@@ -86,14 +86,14 @@ class AsyncTask
   ** True if `markDone` has been invoked.
   Bool isDone() { parent==null ? state === "done" : parent.isDone }
 
-  ** True if `#markErr` has been invoked.
+  ** True if `markErr` has been invoked.
   Bool isErr() { parent==null ? state === "err" : parent.isErr }
 
 //////////////////////////////////////////////////////////////////////////
 // Actions
 //////////////////////////////////////////////////////////////////////////
 
-  ** Mark this Task as 'done' and invoke all its `#onDone`
+  ** Mark this Task as 'done' and invoke all its `onDone`
   ** callbacks with given argment.
   Void markDone(Obj? obj := null)
   {
@@ -105,7 +105,7 @@ class AsyncTask
     _onDoneOrErr.each |f| { f(obj) }
   }
 
-  ** Mark this Task as 'erred' and invoke all its `#onErr`
+  ** Mark this Task as 'erred' and invoke all its `onErr`
   ** callbacks with given argment.
   Void markErr(Obj? obj := null)
   {
