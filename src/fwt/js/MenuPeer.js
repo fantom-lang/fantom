@@ -64,6 +64,7 @@ fan.fwt.MenuPeer.prototype.open = function(self, parent, point)
     MozBorderRadius     = "5px";
     webkitBorderRadius  = "5px";
     borderRadius        = "5px";
+    overflowY = "auto";
   }
 
   // attach event handlers
@@ -188,8 +189,15 @@ fan.fwt.MenuPeer.prototype.relayout = function(self)
   var w = pw;
   var h = ph;
 
-  // check if we need to swap dir
+  // clip if too big
   var shell = this.elem.parentNode;
+  if (h > shell.offsetHeight-24)
+  {
+    y = 12;
+    h = shell.offsetHeight-36;
+  }
+
+  // check if we need to swap dir
   if (x+w >= shell.offsetWidth-4)  x = pp.m_x + ps.m_w - w - 1;
   if (y+h >= shell.offsetHeight-4) y = pp.m_y - h;
 
