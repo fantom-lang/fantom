@@ -182,9 +182,6 @@ abstract const class Slot
 
   **
   ** Return the raw fandoc for this slot or null if not available.
-  ** If there is additional documentation meta-data available it is
-  ** included an the start of the string as a series of "@name=value"
-  ** lines.
   **
   Str? doc()
 
