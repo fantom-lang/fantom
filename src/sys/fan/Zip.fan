@@ -141,8 +141,8 @@ final class Zip
   static OutStream gzipOutStream(OutStream out)
 
   **
-  ** Construct a new GZIP input stream which wraps the given output stream.
+  ** Construct a new GZIP input stream which wraps the given input stream.
   **
-  static InStream gzipInStream(InStream out)
+  static InStream gzipInStream(InStream in)
 
 }
