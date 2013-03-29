@@ -186,7 +186,7 @@ abstract class CanvasTable : ContentPane
   internal Int? toColIndex(Int x)
   {
     dx := 0
-    x += headerCanvas.scrollX
+    //x += headerCanvas.scrollX
     c := colw.findIndex |w|
     {
       dx += w
