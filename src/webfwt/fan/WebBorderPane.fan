@@ -10,17 +10,13 @@ using fwt
 using gfx
 
 **
-** WebBorderPane extends Label with additional functionality.
+** WebBorderPane extends BorderPane with additional functionality.
 **
 @NoDoc
 @Js
 class WebBorderPane : BorderPane
 {
-
-  **
   ** Override style. Defaults to null.
-  **
   native [Str:Str]? style
-
 }
 
