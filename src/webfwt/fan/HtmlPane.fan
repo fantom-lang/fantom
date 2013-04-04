@@ -15,15 +15,16 @@ using fwt
 @Js
 class HtmlPane : Pane
 {
-
-  **
   ** The width in pixels of the HTML content.
-  **
   Int width := 100
 
-  **
+  ** Set font used for markup.
+  Font? font := null
+
+  ** Foreground color used for markup.
+  Color? fg := null
+
   ** The HTML fragment to display.
-  **
   native Str html
 
   override native Size prefSize(Hints hints := Hints.defVal)
