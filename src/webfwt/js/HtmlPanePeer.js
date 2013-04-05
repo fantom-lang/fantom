@@ -22,14 +22,16 @@ fan.webfwt.HtmlPanePeer.prototype.html$ = function(self, val)
 
 fan.webfwt.HtmlPanePeer.prototype.create = function(parentElem, self)
 {
+  var fixw = self.m_width > 0;
   var html = document.createElement("div");
-  html.style.width = self.m_width + "px";
+  if (fixw) html.style.width = self.m_width + "px";
 
   if (self.m_font != null) html.style.font = fan.fwt.WidgetPeer.fontToCss(self.m_font);
   if (self.m_fg   != null) html.style.color = self.m_fg.toCss();
 
   var div = this.emptyDiv();
   div.style.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
+  if (!fixw) div.style.overflow = "auto";
   div.appendChild(html);
   parentElem.appendChild(div);
   return div;
