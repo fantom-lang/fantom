@@ -208,10 +208,10 @@ fan.webfwt.PopupPeer.prototype.sync = function(self)
   var h = pref.m_h;
 
        if (self.m_halign == fan.gfx.Halign.m_center) { x -= Math.floor(w/2) }
-  else if (self.m_halign == fan.gfx.Halign.m_right)  { x -= w }
+  else if (self.m_halign == fan.gfx.Halign.m_left)   { x -= w }
 
        if (self.m_valign == fan.gfx.Valign.m_center) { y -= Math.floor(h/2) }
-  else if (self.m_valign == fan.gfx.Valign.m_bottom) { y -= h }
+  else if (self.m_valign == fan.gfx.Valign.m_top)    { y -= h }
 
   // restrict size to viewport
   var vp = fan.dom.Win.cur().viewport();
