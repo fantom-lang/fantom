@@ -43,10 +43,10 @@ class Popup : ContentPane
   once EventListeners onClose() { EventListeners() }
 
   ** Horizontal alignment of popup, using 'open(pos)' as origin.
-  Halign halign := Halign.left
+  Halign halign := Halign.right
 
   ** Vertial alignment of popup, using 'open(pos)' as origin.
-  Valign valign := Valign.top
+  Valign valign := Valign.bottom
 
   ** Animate popup open/close/resize.  Must be configured before 'open'.
   Bool animate := true
