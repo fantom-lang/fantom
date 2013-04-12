@@ -356,16 +356,18 @@ class WebClient
     if (reqHeaders.containsKey("Host")) throw Err("reqHeaders must not define 'Host'")
 
     // connect to the host:port if we aren't already connected
+    isHttps := reqUri.scheme == "https"
+    defPort := isHttps ? 443 : 80
     usingProxy := isProxy(reqUri)
     if (!isConnected)
     {
       // make https or http socket
-      socket = reqUri.scheme == "https" ? TcpSocket.makeSsl: TcpSocket.make
+      socket = isHttps ? TcpSocket.makeSsl: TcpSocket.make
       if (options != null) socket.options.copyFrom(this.options)
 
       // connect to proxy or directly to request host
       connUri := usingProxy ? proxy : reqUri
-      socket.connect(IpAddr(connUri.host), connUri.port ?: 80)
+      socket.connect(IpAddr(connUri.host), connUri.port ?: defPort)
     }
 
     // request uri is absolute if proxy, relative otherwise
@@ -373,7 +375,7 @@ class WebClient
 
     // host authority header
     host := reqUri.host
-    if (reqUri.port != null && reqUri.port != 80) host += ":$reqUri.port"
+    if (reqUri.port != null && reqUri.port != defPort) host += ":$reqUri.port"
 
     // figure out if/how we are streaming out content body
     out := socket.out
