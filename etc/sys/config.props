@@ -23,6 +23,10 @@ runtime=java
 // This property can only be configured by bootstrap homeDir.
 // debug=true
 
+// Default locale for the VM as "lang" or "lang-country". If
+// not specified the default is queried from the Java runtime
+// locale=fr-FR
+
 // If set to true, this displays all Env.locale strings as
 // pod::key to allow debugging during the localization process.
 // Currently only supported in JavaScript environment.

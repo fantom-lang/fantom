@@ -162,21 +162,38 @@ public class Locale
   static final Locale defaultLocale;
   static
   {
-    Locale x;
+    Locale x = null;
+
+    // first check system property, otherwise try to use Java timezone
     try
     {
-      String lang = java.util.Locale.getDefault().getLanguage();
-      String country = java.util.Locale.getDefault().getCountry();
-      if (country == null && country.length() == 0)
-        x = fromStr(lang);
-      else
-        x = fromStr(lang + "-" + country);
+      String sysProp = Sys.sysConfig("locale");
+      if (sysProp != null) x = fromStr(sysProp);
+    }
+    catch (Throwable e)
+    {
+      e.printStackTrace();
+    }
+
+    // fallback to Java's default Locale
+    try
+    {
+      if (x == null)
+      {
+        String lang = java.util.Locale.getDefault().getLanguage();
+        String country = java.util.Locale.getDefault().getCountry();
+        if (country == null && country.length() == 0)
+          x = fromStr(lang);
+        else
+          x = fromStr(lang + "-" + country);
+      }
     }
     catch (Exception e)
     {
       e.printStackTrace();
       x = fromStr("en");
     }
+
     defaultLocale = x;
   }
 
