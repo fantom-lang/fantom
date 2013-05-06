@@ -256,7 +256,8 @@ We can rewrite the 'Person' example above as a collection:
     acme::Person { name = "Maggie" },
   }
 
-This syntax is also supported directly in source code via [it-blocks]`Expressions#itBlocks`.
+This syntax is also supported directly in source code via
+[with-blocks]`Closures#withBlocks`.
 
 Grammar [#syntaxGrammar]
 ========================

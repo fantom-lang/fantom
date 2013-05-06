@@ -298,3 +298,22 @@ The default implementation of 'Obj.with' just applies the function:
 
 Using it-blocks and 'Obj.with' allows you open a new lexical scope
 with any expression.  It is quite useful for declarative programming.
+
+With blocks are commonly used with the [comma add operator]`Serialization#syntaxCollection`
+to implicitly add items to a collection.
+
+  // this long-hand syntax
+  pane.with
+  {
+    add(child1)
+    add(child2)
+    add(child3)
+  }
+
+  // can be collapsed to this with-block and comma operator
+  pane
+  {
+    child1,
+    child2,
+    child3
+  }
