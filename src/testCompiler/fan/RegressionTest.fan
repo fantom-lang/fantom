@@ -697,5 +697,18 @@ class RegressionTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #2139 Can not override method that returns 'This'
+//////////////////////////////////////////////////////////////////////////
 
+  Void test2139()
+  {
+    compile(
+      """class Dog { virtual This poo() { return this } }
+         class Cat : Dog { override This poo() { return super.poo } }""")
+
+    o := pod.types[1].make
+    verifyEq(o.typeof.name, "Cat")
+    verifySame(o->poo, o)
+  }
 }

@@ -750,8 +750,10 @@ class CheckErrors : CompilerStep
     }
     else if (ret.isThis)
     {
-      if (!stmt.expr.ctype.fits(curType))
+      stmt.expr = coerce(stmt.expr, curType) |->|
+      {
         err("Cannot return '$stmt.expr.toTypeStr' as $curType This", stmt.expr.loc)
+      }
     }
     else
     {
