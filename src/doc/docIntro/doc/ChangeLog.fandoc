@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.65 (working)*
+*Build 1.0.65 (20 May 2013)*
 - Add build javacParams config option (#1765)
 - Fandoc abstract Test classes
 - WebOutStream: add header, footer, nav, section, article, aside
@@ -14,7 +14,14 @@
 - fwt: AsyncTask
 - Locale default support for /etc/sys/config.props
 - Normalize Uri https, ftp ports
-- #1891 fix fandoc images embedded in paragraph text
+- #1891: Fix fandoc images embedded in paragraph text
+- #2051: Opening Uri by its scheme handler
+- #2052: sys::Uri.encodeQuery does not conform standard
+- #2054: Problem of Reduced Stack Trace
+- #2121: Runtime error when using Map as a type
+- #2133: Errs on Service.start()
+- #2134: NullErr with Safe Invoke
+- #2139: Can not override method that returns 'This'
 
 *Build 1.0.64 (21 Dec 2012)*
 - Move webfwt into Fantom core
