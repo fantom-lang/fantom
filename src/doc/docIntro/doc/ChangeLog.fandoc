@@ -13,6 +13,7 @@
 - Convert SqlConn from class to mixin
 - fwt: AsyncTask
 - Locale default support for /etc/sys/config.props
+- Normalize Uri https, ftp ports
 
 *Build 1.0.64 (21 Dec 2012)*
 - Move webfwt into Fantom core

@@ -633,6 +633,10 @@ class UriTest : Test
     verifyNorm("http://foo/a/..", `http://foo/`)
     verifyNorm("Http://foo:80/a/../..", `http://foo/..`)
     verifyNorm("HTTP://foo/a/b/c/../..", `http://foo/a/`)
+    verifyNorm("https://foo:443", `https://foo/`)
+    verifyNorm("HTTPS://foo:443/x", `https://foo/x`)
+    verifyNorm("FTP://foo:21", `ftp://foo/`)
+    verifyNorm("ftp://foo:21/x", `ftp://foo/x`)
 
     // relative
     verifyNorm("", ``)
