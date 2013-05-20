@@ -1323,6 +1323,7 @@ class CheckErrorsTest : CompilerTest
 
        [
          5,  8, "Null-safe operator on left hand side of assignment",
+         6, 10, "Non-null safe field access chained after null safe call",
          6,  8, "Null-safe operator on left hand side of assignment",
          7, 11, "Null-safe operator on left hand side of assignment",
          7,  8, "Null-safe operator on left hand side of assignment",
@@ -1350,7 +1351,10 @@ class CheckErrorsTest : CompilerTest
           x?.size?.toHex   // ok
           x?.size?.toHex.hash
           x?.size?.toHex?.hash.toStr.size
+          y := foo?.foo.foo
+          foo?.foo.toStr
         }
+        Foo? foo
       }",
 
        [
@@ -1360,6 +1364,8 @@ class CheckErrorsTest : CompilerTest
           8, 15, "Non-null safe call chained after null safe call",
          10, 20, "Non-null safe call chained after null safe call",
          11, 26, "Non-null safe call chained after null safe call",
+         12, 19, "Non-null safe field access chained after null safe call",
+         13, 14, "Non-null safe call chained after null safe call",
        ])
   }
 
@@ -1788,7 +1794,7 @@ class CheckErrorsTest : CompilerTest
     compile(
      """class Foo
         {
-          new make(Bool c) { f := |->| { x = "ok" }; if (c) f(); echo("x=\$x") }
+          new make(Bool c) { f := |->| { x = "ok" }; if (c) f(); }
           Str x
         }""")
 
