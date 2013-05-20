@@ -139,14 +139,13 @@ public class Err
 // Trace
 //////////////////////////////////////////////////////////////////////////
 
-  public Err trace() { return trace(Env.cur().out(), null, 0, true); }
-  public Err trace(OutStream out) { return trace(out, null, 0, true); }
-  public Err trace(OutStream out, Map opt) { return trace(out, opt, 0, true); }
-  public Err trace(OutStream out, Map opt, int indent, boolean useActual)
+  public Err trace() { return trace(Env.cur().out(), null, 0, toJava()); }
+  public Err trace(OutStream out) { return trace(out, null, 0, toJava()); }
+  public Err trace(OutStream out, Map opt) { return trace(out, opt, 0, toJava()); }
+  public Err trace(OutStream out, Map opt, int indent, Throwable java)
   {
     // map exception to stack trace
-    Throwable ex = actual != null && useActual ? actual : this;
-    StackTraceElement[] elems = ex.getStackTrace();
+    StackTraceElement[] elems = java.getStackTrace();
 
     // extract options
     int maxDepth = 20;
@@ -186,14 +185,16 @@ public class Err
     out.flush();
 
     // if this was a rebase, then dump original stack trace
-    if (useActual && actual instanceof RebaseException)
-      trace(out, opt, indent+2, false);
+    if (java instanceof RebaseException)
+    {
+      trace(out, opt, indent+2, ((RebaseException)java).actual);
+    }
 
-    // if there is a cause, then recurse
-    if (cause != null)
+    // if there is a cause, then recurse (but not if rebase)
+    else if (cause != null)
     {
       out.indent(indent).writeChars("Cause:\n");
-      cause.trace(out, opt, indent+2, true);
+      cause.trace(out, opt, indent+2, cause.toJava());
     }
 
     return this;
@@ -282,12 +283,14 @@ public class Err
 
   public Err rebase()
   {
-    actual = new RebaseException();
+    this.actual = new RebaseException(actual != null ? actual : this);
     return this;
   }
 
   public static class RebaseException extends RuntimeException
   {
+    RebaseException(Throwable actual) { this.actual = actual; }
+    final Throwable actual;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -297,5 +300,4 @@ public class Err
   String msg = "";
   Err cause;
   Throwable actual;
-
 }
