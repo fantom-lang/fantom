@@ -242,6 +242,9 @@ public class FanUtil
           if (typeName.equals("Void")) return "V";
           break;
       }
+
+      // generic parameters V, etc
+      if (typeName.length() == 1) return "java/lang/Object";
     }
 
     // if pod starts with [java] parse as FFI name
