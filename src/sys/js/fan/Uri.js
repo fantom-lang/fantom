@@ -148,18 +148,23 @@ fan.sys.UriSections.prototype.setFrag = function(x)  { this.frag = x.m_frag; }
 
 fan.sys.UriSections.prototype.normalize = function()
 {
-  this.normalizeHttp();
+  this.normalizeSchemes();
   this.normalizePath();
   this.normalizeQuery();
 }
 
-fan.sys.UriSections.prototype.normalizeHttp = function()
+fan.sys.UriSections.prototype.normalizeSchemes = function()
 {
-  if (this.scheme == null || this.scheme != "http")
-    return;
+  if (this.scheme == null) return;
+  if (this.scheme == "http")  { this.normalizeScheme(80);  return; }
+  if (this.scheme == "https") { this.normalizeScheme(443); return; }
+  if (this.scheme == "ftp")   { this.normalizeScheme(21);  return; }
+}
 
+fan.sys.UriSections.prototype.normalizeScheme = function(p)
+{
   // port 80 -> null
-  if (this.port != null && this.port == 80) this.port = null;
+  if (this.port != null && this.port == p) this.port = null;
 
   // if path is "" -> "/"
   if (this.pathStr == null || this.pathStr.length == 0)

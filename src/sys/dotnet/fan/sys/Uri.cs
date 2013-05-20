@@ -146,16 +146,21 @@ namespace Fan.Sys
 
       internal void normalize()
       {
-        normalizeHttp();
+        normalizeSchemes();
         normalizePath();
         normalizeQuery();
       }
 
-      private void normalizeHttp()
+      private void normalizeSchemes()
       {
-        if (scheme == null || scheme != "http")
-          return;
+        if (scheme == null) return;
+        if (scheme == "http")  { normalizeScheme(80);  return; }
+        if (scheme == "https") { normalizeScheme(443); return; }
+        if (scheme == "ftp")   { normalizeScheme(21);  return; }
+      }
 
+      private void normalizeScheme(int p)
+      {
         // port 80 -> null
         if (port != null && port.longValue() == 80) port = null;
 

@@ -143,18 +143,23 @@ public final class Uri
 
     void normalize()
     {
-      normalizeHttp();
+      normalizeSchemes();
       normalizePath();
       normalizeQuery();
     }
 
-    private void normalizeHttp()
+    private void normalizeSchemes()
     {
-      if (scheme == null || !scheme.equals("http"))
-        return;
+      if (scheme == null) return;
+      if (scheme.equals("http"))  { normalizeScheme(80);  return; }
+      if (scheme.equals("https")) { normalizeScheme(443); return; }
+      if (scheme.equals("ftp"))   { normalizeScheme(21);  return; }
+    }
 
-      // port 80 -> null
-      if (port != null && port.longValue() == 80) port = null;
+    private void normalizeScheme(int p)
+    {
+      // port  -> null
+      if (port != null && port.longValue() == p) port = null;
 
       // if path is "" -> "/"
       if (pathStr == null || pathStr.length() == 0)
