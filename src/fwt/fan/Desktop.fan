@@ -75,6 +75,12 @@ class Desktop
   **
   static native Void callLater(Duration delay, |->| f)
 
+  **
+  ** Launch the native program registered to open the the given URI.
+  ** Return true if launch was successful, false on failure.
+  **
+  static native Bool launchProgram(Uri uri)
+
 //////////////////////////////////////////////////////////////////////////
 // Dispose
 //////////////////////////////////////////////////////////////////////////
