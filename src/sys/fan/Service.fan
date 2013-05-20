@@ -113,11 +113,15 @@ const mixin Service
 
   **
   ** Callback when service transitions into running state.
+  ** If this callback raises an exception, then the service fails
+  ** to transition to the running state.
   **
   protected virtual Void onStart()
 
   **
   ** Callback when service transitions out of the running state.
+  ** If this callback raises an exception, then the service is still
+  ** transitioned to the non-running state.
   **
   protected virtual Void onStop()
 
