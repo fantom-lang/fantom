@@ -86,6 +86,10 @@ internal class InlineParser
       case '[':
         return last.isSpace
 
+      // ![
+      case '!':
+        return peek == '[' && last.isSpace
+
       // check for end of emphasis/strong or start of new one
       case '*':
         if (stack.peek.id == DocNodeId.strong)
