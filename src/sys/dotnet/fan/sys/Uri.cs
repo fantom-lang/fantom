@@ -110,6 +110,8 @@ namespace Fan.Sys
         int c = str[i];
         if (c < 128 && (charMap[c] & QUERY) != 0 && (delimEscMap[c] & QUERY) == 0)
           buf.Append((char)c);
+        else if (c == ' ')
+          buf.Append('+');
         else
           percentEncodeChar(buf, c);
       }
@@ -162,7 +164,7 @@ namespace Fan.Sys
       private void normalizeScheme(int p)
       {
         // port 80 -> null
-        if (port != null && port.longValue() == 80) port = null;
+        if (port != null && port.longValue() == p) port = null;
 
         // if path is "" -> "/"
         if (pathStr == null || pathStr.Length == 0)

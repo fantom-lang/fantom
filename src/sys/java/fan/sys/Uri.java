@@ -107,6 +107,8 @@ public final class Uri
       int c = str.charAt(i);
       if (c < 128 && (charMap[c] & QUERY) != 0 && (delimEscMap[c] & QUERY) == 0)
         buf.append((char)c);
+      else if (c == ' ')
+        buf.append('+');
       else
         percentEncodeChar(buf, c);
     }
