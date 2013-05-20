@@ -14,6 +14,7 @@
 - fwt: AsyncTask
 - Locale default support for /etc/sys/config.props
 - Normalize Uri https, ftp ports
+- #1891 fix fandoc images embedded in paragraph text
 
 *Build 1.0.64 (21 Dec 2012)*
 - Move webfwt into Fantom core
