@@ -174,6 +174,11 @@ class UriTest : Test
     verifyQueryEncoding(
       "=x;alpha=beta;q=z;foo=bar",
       ["alpha":"beta", "":"x", "q":"z", "foo":"bar"])
+
+    verifyEq(Uri.encodeQuery(["key":"a b c"]), "key=a+b+c")
+    verifyEq(Uri.decodeQuery("key=a+b+c"), ["key":"a b c"])
+    verifyEq(`foo?key=a b c`.encode, "foo?key=a+b+c")
+    verifyEq(Uri.decode("foo?key=a+b+c"), `foo?key=a b c`)
   }
 
   Void verifyQueryEncoding(Str encoded, Str:Str q, Bool exact := true)

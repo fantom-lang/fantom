@@ -92,6 +92,8 @@ fan.sys.Uri.encodeQueryStr = function(buf, str)
     var c = str.charCodeAt(i);
     if (c < 128 && (fan.sys.Uri.charMap[c] & fan.sys.Uri.QUERY) != 0 && (fan.sys.Uri.delimEscMap[c] & fan.sys.Uri.QUERY) == 0)
       buf += str.charAt(i);
+    else if (c == 32)
+      buf += "+"
     else
       buf = fan.sys.UriEncoder.percentEncodeChar(buf, c);
   }
