@@ -186,6 +186,7 @@ public class Service$
 
   public static Service start(Service self)
   {
+    State state = null;
     try
     {
       synchronized (lock)
@@ -194,7 +195,7 @@ public class Service$
         install(self);
 
         // if already running, short circuit
-        State state = (State)byService.get(self);
+        state = (State)byService.get(self);
         if (state.running) return self;
 
         // put into the running state
@@ -206,7 +207,9 @@ public class Service$
     }
     catch (Throwable e)
     {
-      e.printStackTrace();
+      if (state != null) state.running = false;
+      if (!e.toString().equals("sys::Err: test-nodump"))
+        e.printStackTrace();
     }
     return self;
   }
@@ -230,7 +233,8 @@ public class Service$
     }
     catch (Throwable e)
     {
-      e.printStackTrace();
+      if (!e.toString().equals("sys::Err: test-nodump"))
+        e.printStackTrace();
     }
     return self;
   }
@@ -248,7 +252,7 @@ public class Service$
   {
     State(Service s) { service = s; }
     Service service;
-    boolean running;
+    volatile boolean running;
   }
 
   /** Value for byType map */

@@ -200,6 +200,7 @@ namespace Fan.Sys
 
     public static Service start(Service self)
     {
+      State state = null;
       try
       {
         lock (m_lock)
@@ -208,7 +209,7 @@ namespace Fan.Sys
           install(self);
 
           // if already running, short circuit
-          State state = (State)byService[self];
+          state = (State)byService[self];
           if (state.running) return self;
 
           // put into the running state
@@ -220,6 +221,7 @@ namespace Fan.Sys
       }
       catch (System.Exception e)
       {
+        if (state != null) state.running = false;
         Err.dumpStack(e);
       }
       return self;

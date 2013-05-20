@@ -81,6 +81,21 @@ class ServiceTest : Test
     verifyEq(s.isRunning, false)
     verifyEq(Actor.locals["TestServiceB"], "onStop")
     verifyService(TestServiceB#, null)
+
+    // verify errors raised during callbacks
+    c := TestServiceC()
+    c.raise.val = true
+    c.start
+    verifyEq(c.isInstalled, true)
+    verifyEq(c.isRunning, false)
+    c.raise.val = false
+    c.start
+    verifyEq(c.isInstalled, true)
+    verifyEq(c.isRunning, true)
+    c.raise.val = true
+    c.stop
+    verifyEq(c.isInstalled, true)
+    verifyEq(c.isRunning, false)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -216,3 +231,10 @@ const class TestServiceB : TestServiceA
   protected override Void onStart() { Actor.locals["TestServiceB"] = "onStart" }
   protected override Void onStop()  { Actor.locals["TestServiceB"] = "onStop" }
 }
+const class TestServiceC : Service
+{
+  const AtomicBool raise := AtomicBool()
+  protected override Void onStart() { if (raise.val) throw Err("test-nodump") }
+  protected override Void onStop() { if (raise.val) throw Err("test-nodump") }
+}
+
