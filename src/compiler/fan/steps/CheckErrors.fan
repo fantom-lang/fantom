@@ -1264,7 +1264,7 @@ class CheckErrors : CompilerStep
 
     // if this call is not null safe, then verify that it's target isn't
     // a null safe call such as foo?.bar.baz
-    if (!call.isSafe && call.target is CallExpr && ((CallExpr)call.target).isSafe)
+    if (!call.isSafe && call.target is NameExpr && ((NameExpr)call.target).isSafe && call isnot ShortcutExpr)
     {
       err("Non-null safe call chained after null safe call", call.loc)
       return
@@ -1331,6 +1331,14 @@ class CheckErrors : CompilerStep
     // don't allow safe access on non-nullable type
     if (f.isSafe && f.target != null && !f.target.ctype.isNullable)
       err("Cannot use null-safe access on non-nullable type '$f.target.ctype'", f.target.loc)
+
+    // if this call is not null safe, then verify that it's target isn't
+    // a null safe call such as foo?.bar.baz
+    if (!f.isSafe && f.target is NameExpr && ((NameExpr)f.target).isSafe)
+    {
+      err("Non-null safe field access chained after null safe call", f.loc)
+      return
+    }
 
     // if using the field's accessor method
     if (f.useAccessor)
