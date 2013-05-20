@@ -17,6 +17,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.program.Program;
 
 public class DesktopPeer
 {
@@ -106,6 +107,11 @@ public class DesktopPeer
       fwt.display.timerExec((int)delay.millis(), runnable);
     else
       fwt.display.asyncExec(runnable);
+  }
+
+  public static boolean launchProgram(Uri uri)
+  {
+    return Program.launch(uri.toString());
   }
 
 //////////////////////////////////////////////////////////////////////////
