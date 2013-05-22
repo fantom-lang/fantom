@@ -208,7 +208,7 @@ public class Fan
   static void version(String progName)
   {
     println(progName);
-    println("Copyright (c) 2006-2012, Brian Frank and Andy Frank");
+    println("Copyright (c) 2006-2013, Brian Frank and Andy Frank");
     println("Licensed under the Academic Free License version 3.0");
     println("");
     println("Java Runtime:");

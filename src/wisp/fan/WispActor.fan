@@ -238,8 +238,8 @@ internal const class WispActor : Actor
         res.statusCode = 500
         res.headers.clear
         res.headers["Content-Type"] = "text/plain"
-        res.out.print("ERROR: $req.uri\n")
-        err.trace(res.out)
+        str := "ERROR: $req.uri\n$err.traceToStr".replace("<", "&gt;")
+        res.out.print(str)
       }
     }
     catch (Err e) { e.trace }

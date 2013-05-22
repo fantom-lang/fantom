@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.66 (working)*
+- Wisp support for secureSessionCookie config prop
+
 *Build 1.0.65 (20 May 2013)*
 - Add build javacParams config option (#1765)
 - Fandoc abstract Test classes
