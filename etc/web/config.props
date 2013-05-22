@@ -11,3 +11,7 @@
 
 // WebClient.proxy exceptions as comma separated list of Regex globs
 // proxy.exceptions=192.168.*.*,*.google.com
+
+// When true, then session cookies use the Secure parameter
+// to force https cookie usage
+// secureSessionCookie=true

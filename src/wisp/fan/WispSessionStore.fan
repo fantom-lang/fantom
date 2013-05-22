@@ -48,12 +48,18 @@ const mixin WispSessionStore
     {
       ws = WispSession(Uuid.make.toStr, Str:Obj?[:])
       WebRes res := Actor.locals["web.res"]
-      res.cookies.add(Cookie("fanws", ws.id))
+      res.cookies.add(makeCookie(ws))
     }
 
     // store in actor loical
     Actor.locals["web.session"] = ws
     return ws
+  }
+
+  private Cookie makeCookie(WispSession ws)
+  {
+    secure := WebReq#.pod.config("secureSessionCookie", null) == "true"
+    return Cookie("fanws", ws.id) { it.secure = secure }
   }
 
   internal Void doSave()
