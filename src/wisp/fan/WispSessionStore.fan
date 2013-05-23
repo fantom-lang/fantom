@@ -46,7 +46,7 @@ const mixin WispSessionStore
     // create new session, and add cookie to response
     else
     {
-      ws = WispSession(Uuid.make.toStr, Str:Obj?[:])
+      ws = WispSession(Uuid.make.toStr + "-" + Buf.random(8).toHex, Str:Obj?[:])
       WebRes res := Actor.locals["web.res"]
       res.cookies.add(makeCookie(ws))
     }
