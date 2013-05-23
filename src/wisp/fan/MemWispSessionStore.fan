@@ -77,7 +77,7 @@ internal const class MemWispSessionStore : WispSessionStore
     return null
   }
 
-  const ActorPool actorPool := ActorPool()
+  const ActorPool actorPool := ActorPool { it.name = "WispServiceSessions" }
   const Actor actor := Actor(actorPool) |msg| { receive(msg) }
   const Duration houseKeepingPeriod := 1min
   const Duration timeout := 15sec

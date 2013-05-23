@@ -24,8 +24,9 @@ public class ThreadPool
   /**
    * Construct with max number of threads.
    */
-  public ThreadPool(int max)
+  public ThreadPool(String name, int max)
   {
+    this.name     = name;
     this.max      = max;
     this.idleTime = 5000; // 5sec
     this.idle     = new LinkedList();
@@ -145,7 +146,7 @@ public class ThreadPool
     // if we are below max, then spawn a new thread
     if (workers.size() < max)
     {
-      worker = new Worker("ThreadPool-Worker-" + (counter++), work);
+      worker = new Worker(name + "-Worker-" + (counter++), work);
       worker.start();
       workers.put(worker, worker);
       return;
@@ -336,6 +337,7 @@ public class ThreadPool
   static final int STOPPING = 1;
   static final int DONE     = 2;
 
+  final String name;           // actor pool name
   final int max;               // maximum number of threads to use
   final int idleTime;          // time in ms to let threads idle (5sec)
   private volatile int state;  // life cycle state

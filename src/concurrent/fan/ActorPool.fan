@@ -68,6 +68,11 @@ native const class ActorPool
   This join(Duration? timeout := null)
 
   **
+  ** Name to use for the pool and associated threads.
+  **
+  const Str name := "ActorPool"
+
+  **
   ** Max number of threads which are used by this pool
   ** for concurrent actor execution.  This value must be
   ** at least one or greater.

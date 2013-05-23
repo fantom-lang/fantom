@@ -59,9 +59,9 @@ const class WispService : Service
   new make(|This|? f := null)
   {
     if (f != null) f(this)
-    listenerPool   = ActorPool()
+    listenerPool   = ActorPool { it.name = "WispServiceListener" }
     tcpListenerRef = AtomicRef()
-    processorPool  = ActorPool { it.maxThreads = this.maxThreads }
+    processorPool  = ActorPool { it.name = "WispService"; it.maxThreads = this.maxThreads }
   }
 
   override Void onStart()
