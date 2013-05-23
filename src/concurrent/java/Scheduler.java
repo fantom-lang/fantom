@@ -23,8 +23,9 @@ public class Scheduler implements Runnable
   /**
    * Constructor.
    */
-  public Scheduler()
+  public Scheduler(String name)
   {
+    this.name = name;
     this.alive = true;
   }
 
@@ -44,7 +45,7 @@ public class Scheduler implements Runnable
     // if we haven't launched our thread yet, then launch it
     if (thread == null)
     {
-      thread = new Thread(this, "Scheduler");
+      thread = new Thread(this, name + "-Scheduler");
       thread.start();
     }
 
@@ -203,6 +204,7 @@ public class Scheduler implements Runnable
 //////////////////////////////////////////////////////////////////////////
 
   volatile boolean alive;  // is this scheduler alive
+  final String name;       // actor pool name
   Thread thread;           // thread currently being used
   Node head;               // linked list sorted by deadline
 }
