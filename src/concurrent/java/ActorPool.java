@@ -40,7 +40,7 @@ public class ActorPool
     }
     if (self.maxThreads < 1) throw ArgErr.make("ActorPool.maxThreads must be >= 1, not " + self.maxThreads);
 
-    self.threadPool = new ThreadPool((int)self.maxThreads);
+    self.threadPool = new ThreadPool(self.name, (int)self.maxThreads);
     self.scheduler = new Scheduler();
   }
 
@@ -137,7 +137,7 @@ public class ActorPool
   private ThreadPool threadPool;
   private Scheduler scheduler;
   volatile boolean killed;
+  public String name = "ActorPool";
   public long maxThreads = 100;
   public long maxMsgsBeforeYield = 100;
-
 }
