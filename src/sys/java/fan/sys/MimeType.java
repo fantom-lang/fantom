@@ -123,7 +123,7 @@ public final class MimeType
       if (c == '(' && !inQuotes)
         throw ParseErr.make("MimeType", s, "comments not supported");
 
-      if (c == '=' && !inQuotes)
+      if (c == '=' && !inQuotes && valStart < 0)
       {
         eq = i++;
         while (FanInt.isSpace(s.charAt(i))) ++i;

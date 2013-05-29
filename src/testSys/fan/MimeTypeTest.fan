@@ -132,6 +132,15 @@ class MimeTypeTest : Test
     verifyParseParams("a=\"\"; b=\"\"; c=\"foo\"", ["a":"", "b":"", "c":"foo"])
     verifyParseParams("a=\"\"; b=\"foo\"; c=\"\"", ["a":"", "b":"foo", "c":""])
 
+    // not sure this is actually correctly formatted to have equals
+    // in unquoted values, but have seen Chrome send cookies like this
+    verifyParseParams("""a=sdecbc682; tz=America/New_York; b="05df13cc-9ef1"; c=MDI1MzE=; d=ABC=""",
+      ["a": "sdecbc682",
+       "tz": "America/New_York",
+       "b":  "05df13cc-9ef1",
+       "c":  "MDI1MzE=",
+       "d":  "ABC="])
+
     verifyEq(MimeType.parseParams("n=", false), null)
     verifyErr(ParseErr#) { MimeType.parseParams("x", true) }
     verifyErr(ParseErr#) { MimeType.parseParams("x=f;y=") }
