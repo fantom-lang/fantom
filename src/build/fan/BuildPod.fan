@@ -258,7 +258,7 @@ abstract class BuildPod : BuildScript
     sysJar   := devHomeDir + `lib/java/sys.jar`
     libFan   := devHomeDir + `lib/fan/`
     curPod   := outPodDir.toFile + `${podName}.pod`
-    depends  := (Depend[])this.depends.map |s->Depend| { Depend(s) }
+    depends  := depends.map |s->Depend| { Depend(applyMacros(s)) }
 
     // stub the pods fan classes into Java classfiles
     // by calling the JStub tool in the jsys runtime
