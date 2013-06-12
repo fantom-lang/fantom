@@ -283,6 +283,28 @@ public abstract class Env
     }
   }
 
+  /**
+   * Return the absolute path to the JNI library for given pod.
+   */
+  public String jniLibPath(String podName)
+  {
+    String lib = workDir().osPath() + "/lib/java/ext/" + platform() + "/";
+    String os  = os();
+
+    if (os == "win32") lib += podName + ".dll";
+    else if (os == "macosx") lib += "lib" + podName + ".jnilib";
+    else lib += "lib" + podName + ".so";
+
+    // TODO FIXIT: continue to load if library not found?
+    if (!new java.io.File(lib).exists())
+    {
+      System.out.println("ERR: jni library not found: " + lib);
+      return null;
+    }
+
+    return lib;
+  }
+
   private Class nameToClass(Pod loadingPod, String name)
     throws ClassNotFoundException
   {

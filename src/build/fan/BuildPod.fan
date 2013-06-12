@@ -86,6 +86,10 @@ abstract class BuildPod : BuildScript
   **
   Uri[]? javaDirs
 
+  ** List of Uris relative to build script of directories containing
+  ** the JNI C source files to compile.
+  Uri[]? jniDirs
+
   **
   ** List of Uris relative to build script of directories containing
   ** the C# source files to compile for .NET native methods.
@@ -156,6 +160,7 @@ abstract class BuildPod : BuildScript
 
     compileFan
     compileJava
+    compileJni
 // TODO-FACET
 //    compileDotnet
     log.unindent
@@ -175,6 +180,7 @@ abstract class BuildPod : BuildScript
     meta["pod.docApi"] = docApi.toStr
     meta["pod.docSrc"] = docSrc.toStr
     meta["pod.native.java"]   = (javaDirs   != null && !javaDirs.isEmpty).toStr
+    meta["pod.native.jni"]    = (jniDirs    != null && !jniDirs.isEmpty).toStr
     meta["pod.native.dotnet"] = (dotnetDirs != null && !dotnetDirs.isEmpty).toStr
     meta["pod.native.js"]     = (jsDirs     != null && !jsDirs.isEmpty).toStr
 
@@ -292,6 +298,47 @@ abstract class BuildPod : BuildScript
 
     // append files to the pod zip (we use java's jar tool)
     Exec(this, [jarExe, "-fu", curPod.osPath, "-C", jtemp.osPath, "."], jtemp).run
+
+    // cleanup temp
+    Delete(this, jtemp).run
+
+    log.unindent
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// JNI
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Compile JNI bindings if jniDirs configured.
+  **
+  virtual Void compileJni()
+  {
+    if (jniDirs == null) return
+
+    log.info("JNI [$podName]")
+    log.indent
+
+    // env
+    jtemp := scriptDir + `temp-jni/`
+    jdirs := this->resolveDirs(jniDirs)
+
+    // start with a clean directory
+    Delete(this, jtemp).run
+    CreateDir(this, jtemp).run
+
+    // compile
+    cc := CompileJni(this)
+    cc.src = jdirs
+    cc.out = jtemp
+    cc.lib = podName
+    cc.run
+
+    // move files to /lib/java/ext/<plat>/
+    libSrc := jtemp + cc.platLib
+    libDst := (outPodDir.parent + `java/ext/${Env.cur.platform}/${cc.platLib}`).toFile
+    log.info("Move [$libDst.osPath]")
+    libSrc.copyTo(libDst, ["overwrite":true])
 
     // cleanup temp
     Delete(this, jtemp).run

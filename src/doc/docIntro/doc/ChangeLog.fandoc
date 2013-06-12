@@ -10,6 +10,7 @@
 - Wisp support for secureSessionCookie config prop
 - ActorPool name
 - MimeType.parseParams fix for equals in value
+- BuildPod.compileJni added
 
 *Build 1.0.65 (20 May 2013)*
 - Add build javacParams config option (#1765)
