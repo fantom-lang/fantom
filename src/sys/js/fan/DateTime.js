@@ -423,6 +423,26 @@ fan.sys.DateTime.prototype.dst = function() { return ((this.m_fields >> 31) & 0x
 fan.sys.DateTime.prototype.tzAbbr = function() { return this.dst() ? this.m_tz.dstAbbr(this.year()) : this.m_tz.stdAbbr(this.year()); }
 fan.sys.DateTime.prototype.dayOfYear = function() { return fan.sys.DateTime.dayOfYear(this.year(), this.month().m_ordinal, this.day())+1; }
 
+fan.sys.DateTime.prototype.weekOfYear = function(startOfWeek)
+{
+  if (startOfWeek === undefined) startOfWeek = fan.sys.Weekday.localeStartOfWeek();
+  return fan.sys.DateTime.weekOfYear(this.year(), this.month().m_ordinal, this.day(), startOfWeek);
+}
+
+fan.sys.DateTime.weekOfYear = function(year, month, day, startOfWeek)
+{
+  var firstWeekday = fan.sys.DateTime.firstWeekday(year, 0); // zero based
+  var lastDayInFirstWeek = 7 - (firstWeekday - startOfWeek.m_ordinal);
+
+  // special case for first week
+  if (month == 0 && day <= lastDayInFirstWeek) return 1;
+
+  // compute from dayOfYear - lastDayInFirstWeek
+  var doy = fan.sys.DateTime.dayOfYear(year, month, day) + 1;
+  var woy = Math.floor((doy - lastDayInFirstWeek - 1) / 7);
+  return woy + 2; // add first week and make one based
+}
+
 /////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////

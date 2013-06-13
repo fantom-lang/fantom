@@ -85,7 +85,13 @@ fan.sys.Date.prototype.weekday = function()
 
 fan.sys.Date.prototype.dayOfYear = function()
 {
-  return fan.sys.DateTime.dayOfYear(this.year(), this.m_month, this.day()+1);
+  return fan.sys.DateTime.dayOfYear(this.year(), this.month().m_ordinal, this.day())+1;
+}
+
+fan.sys.Date.prototype.weekOfYear = function(startOfWeek)
+{
+  if (startOfWeek === undefined) startOfWeek = fan.sys.Weekday.localeStartOfWeek();
+  return fan.sys.DateTime.weekOfYear(this.year(), this.month().m_ordinal, this.day(), startOfWeek);
 }
 
 fan.sys.Date.prototype.plus = function(d)

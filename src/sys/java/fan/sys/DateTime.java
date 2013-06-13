@@ -432,6 +432,22 @@ public final class DateTime
 
   public final long dayOfYear() { return dayOfYear(getYear(), month().ord, getDay())+1; }
 
+  public final long weekOfYear() { return weekOfYear(Weekday.localeStartOfWeek()); }
+  public final long weekOfYear(Weekday startOfWeek) { return weekOfYear(getYear(), month().ord, getDay(), startOfWeek); }
+  static int weekOfYear(int year, int month, int day, Weekday startOfWeek)
+  {
+    int firstWeekday = firstWeekday(year, 0); // zero based
+    int lastDayInFirstWeek = 7 - (firstWeekday - startOfWeek.ord);
+
+    // special case for first week
+    if (month == 0 && day <= lastDayInFirstWeek) return 1;
+
+    // compute from dayOfYear - lastDayInFirstWeek
+    int doy = dayOfYear(year, month, day) + 1;
+    int woy = (doy - lastDayInFirstWeek - 1) / 7;
+    return woy + 2; // add first week and make one based
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////
