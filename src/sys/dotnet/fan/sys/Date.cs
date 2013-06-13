@@ -141,6 +141,12 @@ namespace Fan.Sys
       return DateTime.dayOfYear(getYear(), month().ord, getDay())+1;
     }
 
+    public long weekOfYear() { return weekOfYear(Weekday.localeStartOfWeek()); }
+    public long weekOfYear(Weekday startOfWeek)
+    {
+      return DateTime.weekOfYear(getYear(), month().ord, getDay(), startOfWeek);
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Locale
   //////////////////////////////////////////////////////////////////////////

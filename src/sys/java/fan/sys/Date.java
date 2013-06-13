@@ -143,6 +143,12 @@ public final class Date
     return DateTime.dayOfYear(getYear(), month().ord, getDay())+1;
   }
 
+  public final long weekOfYear() { return weekOfYear(Weekday.localeStartOfWeek()); }
+  public final long weekOfYear(Weekday startOfWeek)
+  {
+    return DateTime.weekOfYear(getYear(), month().ord, getDay(), startOfWeek);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////

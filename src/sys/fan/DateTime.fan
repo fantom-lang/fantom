@@ -228,6 +228,13 @@ const final class DateTime
   **
   Int dayOfYear()
 
+  **
+  ** Return the week number of the year as a number
+  ** between 1 and 53 using the given weekday as the
+  ** start of the week (defaults to current locale).
+  **
+  Int weekOfYear(Weekday startOfWeek := Weekday.localeStartOfWeek)
+
 //////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////

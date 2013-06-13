@@ -1564,6 +1564,45 @@ class DateTimeTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// WeekOfYear
+//////////////////////////////////////////////////////////////////////////
+
+  Void testWeekOfYear()
+  {
+    verifyWeekOfYear("2013-01-01", 1, 1, 1)
+    verifyWeekOfYear("2013-01-05", 1, 1, 1)
+    verifyWeekOfYear("2013-01-06", 2, 1, 1)
+    verifyWeekOfYear("2013-01-07", 2, 2, 1)
+    verifyWeekOfYear("2013-01-08", 2, 2, 2)
+    verifyWeekOfYear("2013-01-12", 2, 2, 2)
+    verifyWeekOfYear("2013-01-14", 3, 3, 2)
+    verifyWeekOfYear("2013-02-18", 8, 8, 7)
+    verifyWeekOfYear("2013-04-15", 16, 16, 15)
+    verifyWeekOfYear("2013-12-23", 52, 52, 51)
+    verifyWeekOfYear("2013-12-29", 53, 52, 52)
+    verifyWeekOfYear("2013-12-30", 53, 53, 52)
+    verifyWeekOfYear("2013-12-31", 53, 53, 53)
+
+    verifyEq(Date("2013-01-01").dayOfYear, 1)
+    verifyEq(Date("2013-02-01").dayOfYear, 32)
+    verifyEq(Date("2013-12-31").dayOfYear, 365)
+  }
+
+  Void verifyWeekOfYear(Str date, Int us, Int fi, Int tue)
+  {
+    d := Date(date)
+
+    Locale("en-US").use { verifyEq(d.weekOfYear, us) }
+    Locale("en-US").use { verifyEq(d.toDateTime(Time(12,0)).weekOfYear, us) }
+
+    Locale("fi").use    { verifyEq(d.weekOfYear, fi) }
+    Locale("fi").use    { verifyEq(d.toDateTime(Time(12,0)).weekOfYear, fi) }
+
+    verifyEq(d.weekOfYear(Weekday.tue), tue)
+    verifyEq(d.toDateTime(Time(12,0)).weekOfYear(Weekday.tue), tue)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Rel Normalization
 //////////////////////////////////////////////////////////////////////////
 
