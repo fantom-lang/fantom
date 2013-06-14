@@ -22,6 +22,7 @@ class DateTimeStr
   {
     this.pattern = pattern;
     this.locale  = locale;
+    this.val     = dt;
     this.year    = dt.getYear();
     this.mon     = dt.month();
     this.day     = dt.getDay();
@@ -38,6 +39,7 @@ class DateTimeStr
   {
     this.pattern = pattern;
     this.locale  = locale;
+    this.val     = d;
     this.year    = d.getYear();
     this.mon     = d.month();
     this.day     = d.getDay();
@@ -48,6 +50,7 @@ class DateTimeStr
   {
     this.pattern = pattern;
     this.locale  = locale;
+    this.val     = t;
     this.hour    = t.getHour();
     this.min     = t.getMin();
     this.sec     = t.getSec();
@@ -106,6 +109,7 @@ class DateTimeStr
           break;
 
         case 'M':
+          if (mon == null) throw ArgErr.make("Month not available");
           switch (n)
           {
             case 4:
@@ -131,6 +135,7 @@ class DateTimeStr
           break;
 
         case 'W':
+          if (weekday == null) throw ArgErr.make("Weekday not available");
           switch (n)
           {
             case 4:
@@ -139,6 +144,18 @@ class DateTimeStr
             case 3:
               s.append(weekday.abbr(locale()));
               break;
+            default: invalidNum = true;
+          }
+          break;
+
+        case 'V':
+          int woy = weekOfYear();
+          if (woy < 1) throw ArgErr.make("Week of year not available");
+          switch (n)
+          {
+            case 3:  s.append(woy).append(daySuffix(woy)); break;
+            case 2:  if (woy < 10) s.append('0');
+            case 1:  s.append(woy); break;
             default: invalidNum = true;
           }
           break;
@@ -288,21 +305,13 @@ class DateTimeStr
 
   private static String daySuffix(int day)
   {
-    // eventually need localization (or just skip if not english)
-    switch (day)
+    if (day == 11 || day == 12 || day == 13) return "th";
+    switch (day % 10)
     {
-      case 1:
-      case 21:
-      case 31:
-        return "st";
-      case 2:
-      case 22:
-        return "nd";
-      case 3:
-      case 23:
-        return "rd";
-      default:
-        return "th";
+      case 1:  return "st";
+      case 2:  return "nd";
+      case 3:  return "rd";
+      default: return "th";
     }
   }
 
@@ -523,7 +532,6 @@ class DateTimeStr
           if (match != c)
             throw new RuntimeException("Expected '" + (char)c + "' literal char, not '" + (char)match + "' [pos " + pos +"]");
       }
-
     }
   }
 
@@ -647,11 +655,20 @@ class DateTimeStr
     return locale;
   }
 
+  private int weekOfYear()
+  {
+    Weekday sow = Weekday.localeStartOfWeek(locale());
+    if (val instanceof DateTime) return (int)((DateTime)val).weekOfYear(sow);
+    if (val instanceof Date) return (int)((Date)val).weekOfYear(sow);
+    return 0;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   final String pattern;
+  Object val;
   int year;
   Month mon;
   int day;

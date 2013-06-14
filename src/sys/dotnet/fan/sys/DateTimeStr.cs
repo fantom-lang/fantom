@@ -27,6 +27,7 @@ namespace Fan.Sys
     {
       this.pattern  = pattern;
       this.m_locale = locale;
+      this.val      = dt;
       this.year     = dt.getYear();
       this.mon      = dt.month();
       this.day      = dt.getDay();
@@ -43,6 +44,7 @@ namespace Fan.Sys
     {
       this.pattern  = pattern;
       this.m_locale = locale;
+      this.val      = d;
       this.year     = d.getYear();
       this.mon      = d.month();
       this.day      = d.getDay();
@@ -53,6 +55,7 @@ namespace Fan.Sys
     {
       this.pattern  = pattern;
       this.m_locale = locale;
+      this.val      = t;
       this.hour     = t.getHour();
       this.min      = t.getMin();
       this.sec      = t.getSec();
@@ -111,6 +114,7 @@ namespace Fan.Sys
             break;
 
           case 'M':
+            if (mon == null) throw ArgErr.make("Month not available").val;
             switch (n)
             {
               case 4:
@@ -136,6 +140,7 @@ namespace Fan.Sys
             break;
 
           case 'W':
+            if (weekday == null) throw ArgErr.make("Weekday not available").val;
             switch (n)
             {
               case 4:
@@ -144,6 +149,18 @@ namespace Fan.Sys
               case 3:
                 s.Append(weekday.abbr(locale()));
                 break;
+              default: invalidNum = true; break;
+            }
+            break;
+
+          case 'V':
+            int woy = weekOfYear();
+            if (woy < 1) throw ArgErr.make("Week of year not available").val;
+            switch (n)
+            {
+              case 3:  s.Append(woy).Append(daySuffix(woy)); break;
+              case 2:  if (woy < 10) s.Append('0'); s.Append(woy); break;
+              case 1:  s.Append(woy); break;
               default: invalidNum = true; break;
             }
             break;
@@ -294,20 +311,13 @@ namespace Fan.Sys
     private static string daySuffix(int day)
     {
       // eventually need localization
-      switch (day)
+      if (day == 11 || day == 12 || day == 13) return "th";
+      switch (day % 10)
       {
-        case 1:
-        case 21:
-        case 31:
-          return "st";
-        case 2:
-        case 22:
-          return "nd";
-        case 3:
-        case 23:
-          return "rd";
-        default:
-          return "th";
+        case 1:  return "st";
+        case 2:  return "nd";
+        case 3:  return "rd";
+        default: return "th";
       }
     }
 
@@ -645,11 +655,20 @@ namespace Fan.Sys
       return m_locale;
     }
 
+    private int weekOfYear()
+    {
+      Weekday sow = Weekday.localeStartOfWeek(locale());
+      if (val is DateTime) return (int)((DateTime)val).weekOfYear(sow);
+      if (val is Date) return (int)((Date)val).weekOfYear(sow);
+      return 0;
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
     string pattern;
+    object val;
     int year;
     Month mon;
     int day;
