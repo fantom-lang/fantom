@@ -334,9 +334,12 @@ abstract class BuildPod : BuildScript
     cc.lib = podName
     cc.run
 
+    // override target platform
+    plat := config("jniPlatform") ?: Env.cur.platform
+
     // move files to /lib/java/ext/<plat>/
     libSrc := jtemp + cc.platLib
-    libDst := (outPodDir.parent + `java/ext/${Env.cur.platform}/${cc.platLib}`).toFile
+    libDst := (outPodDir.parent + `java/ext/${plat}/${cc.platLib}`).toFile
     log.info("Move [$libDst.osPath]")
     libSrc.copyTo(libDst, ["overwrite":true])
 
