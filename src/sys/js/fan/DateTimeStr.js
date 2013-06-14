@@ -35,6 +35,7 @@ fan.sys.DateTime.$ctor = function()
 fan.sys.DateTimeStr.makeDateTime = function(pattern, locale, dt)
 {
   var x = new fan.sys.DateTimeStr();
+  x.valDateTime = dt;
   x.pattern = pattern;
   x.loc     = locale;
   x.year    = dt.year();
@@ -53,6 +54,7 @@ fan.sys.DateTimeStr.makeDateTime = function(pattern, locale, dt)
 fan.sys.DateTimeStr.makeDate = function(pattern, locale, d)
 {
   var x = new fan.sys.DateTimeStr();
+  x.valDate = d;
   x.pattern = pattern;
   x.loc     = locale;
   x.year    = d.year();
@@ -161,6 +163,18 @@ fan.sys.DateTimeStr.prototype.format = function()
           case 3:
             s += this.weekday.abbr(this.locale());
             break;
+          default: invalidNum = true;
+        }
+        break;
+
+      case 'V':
+        var woy = this.weekOfYear();
+        if (woy < 1) throw fan.sys.ArgErr.make("Week of year not available");
+        switch (n)
+        {
+          case 3:  s += woy + fan.sys.DateTimeStr.daySuffix(woy); break;
+          case 2:  if (woy < 10) s += '0';
+          case 1:  s += woy; break;
           default: invalidNum = true;
         }
         break;
@@ -310,20 +324,13 @@ fan.sys.DateTimeStr.prototype.format = function()
 fan.sys.DateTimeStr.daySuffix = function(day)
 {
   // eventually need localization
-  switch (day)
+  if (day == 11 || day == 12 || day == 13) return "th";
+  switch (day % 10)
   {
-    case 1:
-    case 21:
-    case 31:
-      return "st";
-    case 2:
-    case 22:
-      return "nd";
-    case 3:
-    case 23:
-      return "rd";
-    default:
-      return "th";
+    case 1:  return "st";
+    case 2:  return "nd";
+    case 3:  return "rd";
+    default: return "th";
   }
 }
 
@@ -666,3 +673,12 @@ fan.sys.DateTimeStr.prototype.locale = function()
   if (this.loc == null) this.loc = fan.sys.Locale.cur();
   return this.loc;
 }
+
+fan.sys.DateTimeStr.prototype.weekOfYear = function()
+{
+  var sow = fan.sys.Weekday.localeStartOfWeek(this.locale());
+  if (this.valDateTime !== undefined) return this.valDateTime.weekOfYear(sow);
+  if (this.valDate !== undefined)     return this.valDate.weekOfYear(sow);
+  return 0;
+}
+

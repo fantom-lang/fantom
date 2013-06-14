@@ -79,10 +79,11 @@ fan.sys.Weekday.prototype.full = function(locale)
   return fan.sys.Env.cur().locale(pod, this.m_localeFullKey, this.$name(), locale);
 }
 
-fan.sys.Weekday.localeStartOfWeek = function()
+fan.sys.Weekday.localeStartOfWeek = function(locale)
 {
+  if (locale === undefined) locale = fan.sys.Locale.cur();
   var pod = fan.sys.Pod.find("sys");
-  return fan.sys.Weekday.fromStr(fan.sys.Env.cur().locale(pod, "weekdayStart", "sun"));
+  return fan.sys.Weekday.fromStr(fan.sys.Env.cur().locale(pod, "weekdayStart", "sun", locale));
 }
 
 fan.sys.Weekday.localeVals = function()

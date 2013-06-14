@@ -255,6 +255,9 @@ const final class DateTime
   **   DDD    Day with suffix            1st, 2nd, 3rd, 24th
   **   WWW    Three letter abbr weekday  Tue
   **   WWWW   Full weekday               Tuesday
+  **   V      One/two digit week of year 1,52
+  **   VV     Two digit week of year     01,52
+  **   VVV    Week of year with suffix   1st,52nd
   **   h      One digit 24 hour (0-23)   3, 22
   **   hh     Two digit 24 hour (0-23)   03, 22
   **   k      One digit 12 hour (1-12)   3, 11

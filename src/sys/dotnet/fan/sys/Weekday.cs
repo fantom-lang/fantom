@@ -76,9 +76,10 @@ namespace Fan.Sys
       return Env.cur().locale(Sys.m_sysPod, localeFullKey, name(), locale);
     }
 
-    public static Weekday localeStartOfWeek()
+    public static Weekday localeStartOfWeek() { return localeStartOfWeek(Locale.cur()); }
+    internal static Weekday localeStartOfWeek(Locale locale)
     {
-      return fromStr(Env.cur().locale(Sys.m_sysPod, "weekdayStart", "sun"));
+      return fromStr(Env.cur().locale(Sys.m_sysPod, "weekdayStart", "sun", locale));
     }
 
     public static List localeVals()

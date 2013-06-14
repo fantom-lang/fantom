@@ -1591,15 +1591,33 @@ class DateTimeTest : Test
   Void verifyWeekOfYear(Str date, Int us, Int fi, Int tue)
   {
     d := Date(date)
-
-    Locale("en-US").use { verifyEq(d.weekOfYear, us) }
-    Locale("en-US").use { verifyEq(d.toDateTime(Time(12,0)).weekOfYear, us) }
-
-    Locale("fi").use    { verifyEq(d.weekOfYear, fi) }
-    Locale("fi").use    { verifyEq(d.toDateTime(Time(12,0)).weekOfYear, fi) }
-
+    Locale("en-US").use { doVerifyWeekOfYear(d, us) }
+    Locale("fi").use    { doVerifyWeekOfYear(d, fi) }
     verifyEq(d.weekOfYear(Weekday.tue), tue)
-    verifyEq(d.toDateTime(Time(12,0)).weekOfYear(Weekday.tue), tue)
+    verifyEq(d.toDateTime(Time(23,59)).weekOfYear(Weekday.tue), tue)
+  }
+
+  private Void doVerifyWeekOfYear(Date d, Int woy)
+  {
+    verifyEq(d.weekOfYear, woy)
+    verifyEq(d.toDateTime(Time(12,0)).weekOfYear, woy)
+    verifyEq(d.toLocale("V VV VVV"), weekOfYearPattern(woy))
+    verifyEq(d.toDateTime(Time(0,0)).toLocale("V VV VVV" ), weekOfYearPattern(woy))
+  }
+
+  private Str weekOfYearPattern(Int woy)
+  {
+    switch (woy)
+    {
+      case 1: return "1 01 1st"
+      case 2: return "2 02 2nd"
+      case 3: return "3 03 3rd"
+      case 7: return "7 07 7th"
+      case 8: return "8 08 8th"
+      case 52: return "52 52 52nd"
+      case 53: return "53 53 53rd"
+      default: return "$woy $woy ${woy}th"
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

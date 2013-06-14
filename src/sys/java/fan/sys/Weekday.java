@@ -73,9 +73,10 @@ public final class Weekday
     return Env.cur().locale(Sys.sysPod, localeFullKey, name(), locale);
   }
 
-  public static Weekday localeStartOfWeek()
+  public static Weekday localeStartOfWeek() { return localeStartOfWeek(Locale.cur()); }
+  static Weekday localeStartOfWeek(Locale locale)
   {
-    return fromStr(Env.cur().locale(Sys.sysPod, "weekdayStart", "sun"));
+    return fromStr(Env.cur().locale(Sys.sysPod, "weekdayStart", "sun", locale));
   }
 
   public static List localeVals()
