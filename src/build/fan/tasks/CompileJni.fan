@@ -46,9 +46,14 @@ class CompileJni : Task
           cmd.add("-I/System/Library/Frameworks/JavaVM.framework/Headers")
 
         default:
-          // assume gcc for all other platforms
-          // gcc -shared -fpic -o libfoo.so -I/usr/java/include -I/usr/java/include/linux foo.c
-          throw Err("$Env.cur.os not yet supported")
+          // assume gcc/linux for all other platforms
+          jdkHome := Env.cur.config(Pod.find("build"), "jdkHome")
+          cmd.add("gcc")
+          cmd.add("-shared")
+          cmd.add("-fpic")
+          cmd.add("-o"); cmd.add((out + platLib).osPath)
+          cmd.add("-I${jdkHome}include")
+          cmd.add("-I${jdkHome}include.linux")
       }
 
       // src files
