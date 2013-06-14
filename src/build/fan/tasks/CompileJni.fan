@@ -47,8 +47,9 @@ class CompileJni : Task
 
         default:
           // assume gcc/linux for all other platforms
+          cc := script.config("cc") ?: "gcc"
           jdkHome := script.configDir("jdkHome")
-          cmd.add("gcc")
+          cmd.add(cc)
           cmd.add("-shared")
           cmd.add("-fpic")
           cmd.add("-o"); cmd.add((out + platLib).osPath)
