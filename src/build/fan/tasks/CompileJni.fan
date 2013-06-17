@@ -47,7 +47,7 @@ class CompileJni : Task
 
         default:
           // assume gcc/linux for all other platforms
-          jdkHome := Env.cur.config(Pod.find("build"), "jdkHome")
+          jdkHome := script.configDir("jdkHome")
           cmd.add("gcc")
           cmd.add("-shared")
           cmd.add("-fpic")
