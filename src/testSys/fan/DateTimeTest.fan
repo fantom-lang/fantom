@@ -1621,6 +1621,32 @@ class DateTimeTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// HoursInDay
+//////////////////////////////////////////////////////////////////////////
+
+  Void testHoursInDay()
+  {
+    verifyHoursInDay("2013-03-09",  "New_York", 24)
+    verifyHoursInDay("2013-03-10", "New_York", 23)
+    verifyHoursInDay("2013-03-11", "New_York", 24)
+    verifyHoursInDay("2013-06-19", "New_York", 24)
+    verifyHoursInDay("2013-11-02", "New_York", 24)
+    verifyHoursInDay("2013-11-03", "New_York", 25)
+    verifyHoursInDay("2013-12-31", "New_York", 24)
+
+    verifyHoursInDay("2015-03-29", "Madrid", 23)
+    verifyHoursInDay("2015-03-30", "Madrid", 24)
+    verifyHoursInDay("2015-10-25", "Madrid", 25)
+    verifyHoursInDay("2015-10-26", "Madrid", 24)
+  }
+
+  private Void verifyHoursInDay(Str d, Str tz, Int expected)
+  {
+    dt := Date(d).toDateTime(Time((0..23).random, 30), TimeZone(tz))
+    verifyEq(dt.hoursInDay, expected)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Rel Normalization
 //////////////////////////////////////////////////////////////////////////
 

@@ -188,6 +188,15 @@ fan.sys.TimeZone.compare = function(rule, x, year, mon, day, time)
 }
 
 /**
+ * Return if given date is the DstTime transition date
+ */
+fan.sys.TimeZone.isDstDate = function(rule, x, year, mon, day)
+{
+  return fan.sys.TimeZone.compareMonth(x, mon) == 0 &&
+         fan.sys.TimeZone.compareOnDay(rule, x, year, mon, day) == 0;
+}
+
+/**
  * Compare month
  */
 fan.sys.TimeZone.compareMonth = function(x, mon)

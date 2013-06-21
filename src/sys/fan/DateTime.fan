@@ -235,6 +235,15 @@ const final class DateTime
   **
   Int weekOfYear(Weekday startOfWeek := Weekday.localeStartOfWeek)
 
+  **
+  ** Return the number of hours for this date and this timezone.
+  ** Days which transition to DST will be 23 hours and days which
+  ** transition back to standard time will be 25 hours.  Note there
+  ** one timezone "Lord_Howe" which has a 30min offset which is
+  ** not handled by this method (WTF).
+  **
+  Int hoursInDay()
+
 //////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////

@@ -541,6 +541,15 @@ public final class TimeZone
   }
 
   /**
+   * Return if given date is the DstTime transition date
+   */
+  static boolean isDstDate(Rule rule, DstTime x, int year, int mon, int day)
+  {
+    return compareMonth(x, mon) == 0 &&
+           compareOnDay(rule, x, year, mon, day) == 0;
+  }
+
+  /**
    * Compare month
    */
   static int compareMonth(DstTime x, int mon)
@@ -642,6 +651,13 @@ public final class TimeZone
     byte  onDay;        // weekday (0-6)
     int   atTime;       // seconds
     byte  atMode;       // 'w' , 's', 'u' (wall, standard, universal)
+
+    public String toString()
+    {
+      return "DstTime mon=" + mon + " onMode=" + (char)onMode +
+             " onWeekday=" + onWeekday + " onDay=" + onDay +
+             " atTime=" + atTime + " " + (char)atMode;
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

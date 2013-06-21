@@ -443,6 +443,17 @@ fan.sys.DateTime.weekOfYear = function(year, month, day, startOfWeek)
   return woy + 2; // add first week and make one based
 }
 
+fan.sys.DateTime.prototype.hoursInDay = function()
+{
+  var year  = this.year();
+  var month = this.month().m_ordinal;
+  var day   = this.day();
+  var rule  = this.tz().rule(year);
+  if (fan.sys.TimeZone.isDstDate(rule, rule.dstStart, year, month, day)) return 23;
+  if (fan.sys.TimeZone.isDstDate(rule, rule.dstEnd, year, month, day))   return 25;
+  return 24;
+}
+
 /////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////
