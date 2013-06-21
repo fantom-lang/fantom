@@ -66,7 +66,7 @@ namespace Fan.Sys
 
       // if not found, check aliases
       if (tz == null)
-      {        
+      {
         if (aliases == null) loadAliases();
         string alias = (string)aliases[name];
         if (alias != null)
@@ -208,7 +208,7 @@ namespace Fan.Sys
       //String sep = java.io.File.separator;
       //Map props = Env.cur().props(Sys.sysPod, Uri.fromStr("timezone-aliases.props"), Duration.Zero);
       Map props = Sys.m_sysPod.props(Uri.fromStr("timezone-aliases.props"), Duration.Zero);
-      
+
       System.Diagnostics.Debug.WriteLine(props.size());
       System.Console.WriteLine(props.size());
 
@@ -529,6 +529,15 @@ namespace Fan.Sys
       if (c != 0) return c;
 
       return compareAtTime(rule, x, time);
+    }
+
+    /// <summary>
+    /// Return if given date is the DstTime transition date
+    /// </summary>
+    internal static bool isDstDate(Rule rule, DstTime x, int year, int mon, int day)
+    {
+      return compareMonth(x, mon) == 0 &&
+             compareOnDay(rule, x, year, mon, day) == 0;
     }
 
     /// <summary>
