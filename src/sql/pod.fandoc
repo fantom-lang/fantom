@@ -66,6 +66,13 @@ to preload the class is to ensure the classname is defined in
 
       db := SqlConn.open("jdbc:mysql://localhost:3306/fantest", "fantest", "fantest")
 
+If using Microsoft SQL Server:
+  a. Assuming you are running Java 1.6 or higher, then make sure you put only
+     "sqljdbc4.jar" into your classpath (do **not** put "sqljdbc.jar" in the path)
+  b. Classname is "com.microsoft.sqlserver.jdbc.SQLServerDriver" (for java.drivers
+     in etc/sql/config.props)
+  c. JDBC URL format is "jdbc:sqlserver://{host};database={name}"
+
 Statements [#statements]
 ************************
 SQL statements are created using the [SqlConn.sql]`sql::SqlConn.sql`
