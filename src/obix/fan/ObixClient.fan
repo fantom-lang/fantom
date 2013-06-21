@@ -187,6 +187,7 @@ class ObixClient
     c := WebClient(uri)
     c.reqMethod = method
     c.reqHeaders["Authorization"] = authHeader
+    c.followRedirects = false
     return c
   }
 
