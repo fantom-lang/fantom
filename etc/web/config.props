@@ -15,3 +15,7 @@
 // When true, then session cookies use the Secure parameter
 // to force https cookie usage
 // secureSessionCookie=true
+
+// Qualified type name of WebMod used to handle internal 500 errors
+// See WispService.errMod
+// errMod=wisp::WispDefaultErrMod

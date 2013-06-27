@@ -21,7 +21,7 @@ internal class WispReq : WebReq
     this.res     = res
   }
 
-  override WebMod mod := WispDefaultMod()
+  override WebMod mod := WispDefaultRootMod()
   override Str method := ""
   override Version version := nullVersion
   override IpAddr remoteAddr() { return socket.remoteAddr }

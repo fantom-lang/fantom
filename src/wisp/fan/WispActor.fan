@@ -71,11 +71,18 @@ internal const class WispActor : Actor
     success := false
     try
     {
+      // init thread locals
+      Actor.locals["web.req"] = req
+      Actor.locals["web.res"] = res
+
       // initialize the req and res
       initReqRes(req, res)
 
       // service which runs thru the installed web steps
-      doService(req, res)
+      service.root.onService
+
+      // save session if accessed
+      service.sessionStore.doSave
 
       // assume success which allows us to re-use this connection
       success = true
@@ -90,6 +97,10 @@ internal const class WispActor : Actor
     {
       internalServerErr(req, res, e)
     }
+
+    // cleanup thread locals
+    Actor.locals.remove("web.req")
+    Actor.locals.remove("web.res")
 
     // ensure response is committed and close the response
     // output stream, but don't close the underlying socket
@@ -184,30 +195,6 @@ internal const class WispActor : Actor
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Service
-//////////////////////////////////////////////////////////////////////////
-
-  private Void doService(WebReq req, WebRes res)
-  {
-    // init thread locals
-    Actor.locals["web.req"] = req
-    Actor.locals["web.res"] = res
-    try
-    {
-      service.root.onService
-    }
-    finally
-    {
-      // save session if accessed
-      service.sessionStore.doSave
-
-      // cleanup thread locals
-      Actor.locals.remove("web.req")
-      Actor.locals.remove("web.res")
-    }
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Error Handling
 //////////////////////////////////////////////////////////////////////////
 
@@ -237,12 +224,11 @@ internal const class WispActor : Actor
       {
         res.statusCode = 500
         res.headers.clear
-        res.headers["Content-Type"] = "text/plain"
-        str := "ERROR: $req.uri\n$err.traceToStr".replace("<", "&gt;")
-        res.out.print(str)
+        req.stash["err"] = err
+        service.errMod.onService
       }
     }
-    catch (Err e) { e.trace }
+    catch (Err e) WispService.log.err("internalServiceError res failed", e)
   }
 
 //////////////////////////////////////////////////////////////////////////

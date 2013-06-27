@@ -39,7 +39,7 @@ const class WispService : Service
   **
   ** Root WebMod used to service requests.
   **
-  const WebMod root := WispDefaultMod()
+  const WebMod root := WispDefaultRootMod()
 
   **
   ** Pluggable interface for managing web session state.
@@ -52,6 +52,24 @@ const class WispService : Service
   ** web request processing.
   **
   const Int maxThreads := 500
+
+  **
+  ** WebMod which is called on internal server error to return an 500
+  ** error response.  The exception raised is available in 'req.stash["err"]'.
+  ** The 'onService' method is called after clearing all headers and setting
+  ** the response code to 500.  The default error mod may be configured
+  ** via 'errMod' property in etc/web/config.props.
+  **
+  const WebMod errMod := initErrMod
+
+  private WebMod initErrMod()
+  {
+    try
+      return (WebMod)Type.find(Pod.find("web").config("errMod", "wisp::WispDefaultErrMod")).make
+    catch (Err e)
+      log.err("Cannot init errMod", e)
+    return WispDefaultErrMod()
+  }
 
   **
   ** Constructor with it-block
@@ -139,8 +157,11 @@ const class WispService : Service
   }
 }
 
+**************************************************************************
+** WispDefaultRootMod
+**************************************************************************
 
-internal const class WispDefaultMod : WebMod
+internal const class WispDefaultRootMod : WebMod
 {
   override Void onGet()
   {
@@ -160,3 +181,20 @@ internal const class WispDefaultMod : WebMod
     .htmlEnd
   }
 }
+
+**************************************************************************
+** WispDefaultErrMod
+**************************************************************************
+
+const class WispDefaultErrMod : WebMod
+{
+  override Void onService()
+  {
+    err := (Err)req.stash["err"]
+    res.headers["Content-Type"] = "text/plain"
+    str := "ERROR: $req.uri\n$err.traceToStr".replace("<", "&gt;")
+    res.out.print(str)
+  }
+}
+
+
