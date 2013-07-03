@@ -110,6 +110,7 @@ facet class Deprecated
 **   mod        a % b     binary
 **   get        a[b]      binary
 **   set        a[b] = c  ternary
+**   add        a { b, }
 **
 ** In the case of binary operators multiple methods may
 ** be declared for a given symbol as long as every method starts

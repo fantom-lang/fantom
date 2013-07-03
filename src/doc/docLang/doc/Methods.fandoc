@@ -246,6 +246,7 @@ by the method:
    mod        a % b     binary
    get        a[b]      binary
    set        a[b] = c  ternary
+   add        a { b, }
 
 In the case of the unary and ternary operators the method name must
 match exactly.  For the binary operators, the method must only start
