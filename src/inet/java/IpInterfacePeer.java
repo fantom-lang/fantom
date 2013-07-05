@@ -44,8 +44,8 @@ public class IpInterfacePeer
     }
   }
 
-  public static IpInterface find(IpAddr addr) { return find(addr, true); }
-  public static IpInterface find(IpAddr addr, boolean checked)
+  public static IpInterface findByAddr(IpAddr addr) { return findByAddr(addr, true); }
+  public static IpInterface findByAddr(IpAddr addr, boolean checked)
   {
     try
     {
@@ -60,8 +60,25 @@ public class IpInterfacePeer
     }
   }
 
+  public static IpInterface findByName(String name) { return findByName(name, true); }
+  public static IpInterface findByName(String name, boolean checked)
+  {
+    try
+    {
+      NetworkInterface java = NetworkInterface.getByName(name);
+      if (java != null) return make(java);
+      if (checked) throw UnresolvedErr.make("No interface for name: " + name);
+      return null;
+    }
+    catch (IOException e)
+    {
+      throw IOErr.make(e);
+    }
+  }
+
   static IpInterface make(NetworkInterface java)
   {
+    if (java == null) throw new IllegalArgumentException();
     IpInterface fan = IpInterface.make();
     fan.peer.java = java;
     return fan;
@@ -95,7 +112,9 @@ public class IpInterfacePeer
 
   public String name(IpInterface fan)
   {
-    return java.getName();
+    String name = java.getName();
+    if (name == null) return "?";
+    return name;
   }
 
   public String dis(IpInterface fan)

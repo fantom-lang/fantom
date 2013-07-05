@@ -19,6 +19,17 @@ class MulticastSocket : UdpSocket
   new make() {}
 
   **
+  ** Default network interface for outgoing datagrams on this socket
+  **
+  IpInterface interface
+  {
+    get { getInterface }
+    set { setInterface(it) }
+  }
+  private native IpInterface getInterface()
+  private native Void setInterface(IpInterface val)
+
+  **
   ** Default time to live for packets send on this socket.  Value must
   ** be between 0 and 255.  TTL of zero is only delivered locally.
   **
@@ -30,13 +41,15 @@ class MulticastSocket : UdpSocket
   native Bool loopbackMode
 
   **
-  ** Join a multicast group.  Return this.
+  ** Join a multicast group.  If interface parameter is null,
+  ** then `interface` field is used.  Return this.
   **
-  native This joinGroup(IpAddr addr)
+  native This joinGroup(IpAddr addr, Int? port := null, IpInterface? interface := null)
 
   **
-  ** Leave a multicast group.  Return this.
+  ** Leave a multicast group.  If interface parameter is null,
+  ** then `interface` field is used.  Return this.
   **
-  native This leaveGroup(IpAddr addr)
+  native This leaveGroup(IpAddr addr, Int? port := null, IpInterface? interface := null)
 
 }

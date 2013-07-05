@@ -24,20 +24,37 @@ class IpInterfaceTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Find
+// FindByAddr
 //////////////////////////////////////////////////////////////////////////
 
-  Void testFind()
+  Void testFindByAddr()
   {
     good := IpAddr.local
-    i := IpInterface.find(good)
+    i := IpInterface.findByAddr(good)
     verifyEq(i.addrs.contains(good), true)
     verifyEq(i, i)
 
     bad := IpAddr("0.1.2.3")
-    verifyErr(Err#) { IpInterface.find(bad) }
-    verifyErr(Err#) { IpInterface.find(bad, true) }
-    verifyEq(IpInterface.find(bad, false), null)
+    verifyErr(UnresolvedErr#) { IpInterface.findByAddr(bad) }
+    verifyErr(UnresolvedErr#) { IpInterface.findByAddr(bad, true) }
+    verifyEq(IpInterface.findByAddr(bad, false), null)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// FindByName
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFindByName()
+  {
+    good := IpInterface.list.first.name
+    i := IpInterface.findByName(good)
+    verifyEq(i.name, good)
+    verifyEq(i, i)
+
+    bad := "badname"
+    verifyErr(UnresolvedErr#) { IpInterface.findByName(bad) }
+    verifyErr(UnresolvedErr#) { IpInterface.findByName(bad, true) }
+    verifyEq(IpInterface.findByName(bad, false), null)
   }
 
 //////////////////////////////////////////////////////////////////////////

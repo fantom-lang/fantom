@@ -41,6 +41,33 @@ public class MulticastSocketPeer extends UdpSocketPeer
 // Implementation
 //////////////////////////////////////////////////////////////////////////
 
+  public IpInterface getInterface(MulticastSocket fan)
+    throws IOException
+  {
+    try
+    {
+      return IpInterfacePeer.make(socket.getNetworkInterface());
+    }
+    catch (IOException e)
+    {
+      throw IOErr.make(e);
+    }
+  }
+
+
+  public void  setInterface(MulticastSocket fan, IpInterface iface)
+    throws IOException
+  {
+    try
+    {
+      socket.setNetworkInterface(iface.peer.java);
+    }
+    catch (IOException e)
+    {
+      throw IOErr.make(e);
+    }
+  }
+
   public long timeToLive(MulticastSocket fan)
     throws IOException
   {
@@ -93,12 +120,15 @@ public class MulticastSocketPeer extends UdpSocketPeer
     }
   }
 
-  public UdpSocket joinGroup(UdpSocket fan, IpAddr addr)
+  public UdpSocket joinGroup(UdpSocket fan, IpAddr addr, Long port) { return joinGroup(fan, addr, port, null); }
+  public UdpSocket joinGroup(UdpSocket fan, IpAddr addr, Long port, IpInterface iface)
   {
     try
     {
       InetAddress javaAddr = (addr == null) ? null : addr.peer.java;
-      socket.joinGroup(javaAddr);
+      int javaPort = port == null ? 0 : port.intValue();
+      NetworkInterface javaIface = (iface == null) ? null : iface.peer.java;
+      socket.joinGroup(new InetSocketAddress(javaAddr, javaPort), javaIface);
       return fan;
     }
     catch (IOException e)
@@ -107,12 +137,15 @@ public class MulticastSocketPeer extends UdpSocketPeer
     }
   }
 
-  public UdpSocket leaveGroup(UdpSocket fan, IpAddr addr)
+  public UdpSocket leaveGroup(UdpSocket fan, IpAddr addr, Long port) { return leaveGroup(fan, addr, port, null); }
+  public UdpSocket leaveGroup(UdpSocket fan, IpAddr addr, Long port, IpInterface iface)
   {
     try
     {
       InetAddress javaAddr = (addr == null) ? null : addr.peer.java;
-      socket.leaveGroup(javaAddr);
+      int javaPort = port == null ? 0 : port.intValue();
+      NetworkInterface javaIface = (iface == null) ? null : iface.peer.java;
+      socket.leaveGroup(new InetSocketAddress(javaAddr, javaPort), javaIface);
       return fan;
     }
     catch (IOException e)

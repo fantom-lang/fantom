@@ -26,6 +26,7 @@ class MulticastSocketTest : Test
     verifyEq(s.remoteAddr, null)
     verifyEq(s.remotePort, null)
     verifyEq(s.timeToLive, 1)
+    verifyEq(s.interface.name.isEmpty, false)
     s.close
   }
 
@@ -33,6 +34,7 @@ class MulticastSocketTest : Test
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+  /*
   Void dump(MulticastSocket s)
   {
     echo("---------")
@@ -50,6 +52,8 @@ class MulticastSocketTest : Test
     echo("trafficCls   = 0x$s.options.trafficClass.toHex")
     echo("loopbackMode = $s.loopbackMode")
     echo("ttl          = $s.timeToLive")
+    echo("interface    = $s.interface")
   }
+  */
 
 }
