@@ -14,6 +14,7 @@
 - Date, DateTime weekInYear and VVV formatting pattern
 - DateTime.hoursInDay
 - WispService.errMod
+- MulticastSocket
 
 *Build 1.0.65 (20 May 2013)*
 - Add build javacParams config option (#1765)
