@@ -169,6 +169,8 @@ public class IpAddrPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  static final Type type = Type.find("inet::IpAddr");
+
   private static IpAddr local;
 
   public String str;
