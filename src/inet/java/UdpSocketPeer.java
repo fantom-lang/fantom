@@ -12,7 +12,6 @@ import java.net.*;
 import fan.sys.*;
 
 public class UdpSocketPeer
-  extends DatagramSocket
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -23,7 +22,7 @@ public class UdpSocketPeer
   {
     try
     {
-      return new UdpSocketPeer();
+      return new UdpSocketPeer(new DatagramSocket((SocketAddress)null));
     }
     catch (IOException e)
     {
@@ -31,10 +30,10 @@ public class UdpSocketPeer
     }
   }
 
-  public UdpSocketPeer()
+  public UdpSocketPeer(DatagramSocket socket)
     throws IOException
   {
-    super((SocketAddress)null);
+    this.socket = socket;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -43,17 +42,17 @@ public class UdpSocketPeer
 
   public boolean isBound(UdpSocket fan)
   {
-    return isBound();
+    return socket.isBound();
   }
 
   public boolean isConnected(UdpSocket fan)
   {
-    return isConnected();
+    return socket.isConnected();
   }
 
   public boolean isClosed(UdpSocket fan)
   {
-    return isClosed();
+    return socket.isClosed();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -62,29 +61,29 @@ public class UdpSocketPeer
 
   public IpAddr localAddr(UdpSocket fan)
   {
-    if (!isBound()) return null;
-    InetAddress addr = getLocalAddress();
+    if (!socket.isBound()) return null;
+    InetAddress addr = socket.getLocalAddress();
     if (addr == null) return null;
     return IpAddrPeer.make(addr);
   }
 
   public Long localPort(UdpSocket fan)
   {
-    if (!isBound()) return null;
-    int port = getLocalPort();
+    if (!socket.isBound()) return null;
+    int port = socket.getLocalPort();
     if (port <= 0) return null;
     return Long.valueOf(port);
   }
 
   public IpAddr remoteAddr(UdpSocket fan)
   {
-    if (!isConnected()) return null;
+    if (!socket.isConnected()) return null;
     return remoteAddr;
   }
 
   public Long remotePort(UdpSocket fan)
   {
-    if (!isConnected()) return null;
+    if (!socket.isConnected()) return null;
     return Long.valueOf(remotePort);
   }
 
@@ -98,7 +97,7 @@ public class UdpSocketPeer
     {
       InetAddress javaAddr = (addr == null) ? null : addr.peer.java;
       int javaPort = (port == null) ? 0 : port.intValue();
-      bind(new InetSocketAddress(javaAddr, javaPort));
+      socket.bind(new InetSocketAddress(javaAddr, javaPort));
       return fan;
     }
     catch (IOException e)
@@ -111,7 +110,7 @@ public class UdpSocketPeer
   {
     try
     {
-      connect(new InetSocketAddress(addr.peer.java, (int)port));
+      socket.connect(new InetSocketAddress(addr.peer.java, (int)port));
       this.remoteAddr = addr;
       this.remotePort = (int)port;
       return fan;
@@ -134,7 +133,7 @@ public class UdpSocketPeer
     // map address, port
     IpAddr addr = packet.addr();
     Long port = packet.port();
-    if (isConnected())
+    if (socket.isConnected())
     {
       if (addr != null || port != null)
         throw ArgErr.make("Address and port must be null to send while connected");
@@ -150,7 +149,7 @@ public class UdpSocketPeer
     // send
     try
     {
-      send(datagram);
+      socket.send(datagram);
     }
     catch (IOException e)
     {
@@ -177,7 +176,7 @@ public class UdpSocketPeer
     // receive
     try
     {
-      receive(datagram);
+      socket.receive(datagram);
     }
     catch (IOException e)
     {
@@ -195,7 +194,7 @@ public class UdpSocketPeer
 
   public UdpSocket disconnect(UdpSocket fan)
   {
-    disconnect();
+    socket.disconnect();
     this.remoteAddr = null;
     this.remotePort = -1;
     return fan;
@@ -205,7 +204,7 @@ public class UdpSocketPeer
   {
     try
     {
-      close();
+      socket.close();
       return true;
     }
     catch (Exception e)
@@ -228,7 +227,7 @@ public class UdpSocketPeer
   {
     try
     {
-      return getBroadcast();
+      return socket.getBroadcast();
     }
     catch (IOException e)
     {
@@ -240,7 +239,7 @@ public class UdpSocketPeer
   {
     try
     {
-      setBroadcast(v);
+      socket.setBroadcast(v);
     }
     catch (IOException e)
     {
@@ -252,7 +251,7 @@ public class UdpSocketPeer
   {
     try
     {
-      return getReceiveBufferSize();
+      return socket.getReceiveBufferSize();
     }
     catch (IOException e)
     {
@@ -264,7 +263,7 @@ public class UdpSocketPeer
   {
     try
     {
-      setReceiveBufferSize((int)v);
+      socket.setReceiveBufferSize((int)v);
     }
     catch (IOException e)
     {
@@ -276,7 +275,7 @@ public class UdpSocketPeer
   {
     try
     {
-      return getSendBufferSize();
+      return socket.getSendBufferSize();
     }
     catch (IOException e)
     {
@@ -288,7 +287,7 @@ public class UdpSocketPeer
   {
     try
     {
-      setSendBufferSize((int)v);
+      socket.setSendBufferSize((int)v);
     }
     catch (IOException e)
     {
@@ -300,7 +299,7 @@ public class UdpSocketPeer
   {
     try
     {
-      return getReuseAddress();
+      return socket.getReuseAddress();
     }
     catch (IOException e)
     {
@@ -312,7 +311,7 @@ public class UdpSocketPeer
   {
     try
     {
-      setReuseAddress(v);
+      socket.setReuseAddress(v);
     }
     catch (IOException e)
     {
@@ -324,7 +323,7 @@ public class UdpSocketPeer
   {
     try
     {
-      int timeout = getSoTimeout();
+      int timeout = socket.getSoTimeout();
       if (timeout <= 0) return null;
       return Duration.makeMillis(timeout);
     }
@@ -339,9 +338,9 @@ public class UdpSocketPeer
     try
     {
       if (v == null)
-        setSoTimeout(0);
+        socket.setSoTimeout(0);
       else
-        setSoTimeout((int)(v.millis()));
+        socket.setSoTimeout((int)(v.millis()));
     }
     catch (IOException e)
     {
@@ -353,7 +352,7 @@ public class UdpSocketPeer
   {
     try
     {
-      return getTrafficClass();
+      return socket.getTrafficClass();
     }
     catch (IOException e)
     {
@@ -365,7 +364,7 @@ public class UdpSocketPeer
   {
     try
     {
-      setTrafficClass((int)v);
+      socket.setTrafficClass((int)v);
     }
     catch (IOException e)
     {
@@ -377,6 +376,7 @@ public class UdpSocketPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  private final DatagramSocket socket;
   private IpAddr remoteAddr;
   private int remotePort = -1;
   private SocketOptions options;
