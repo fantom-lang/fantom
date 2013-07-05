@@ -27,7 +27,13 @@ final const class IpInterface
   ** returned.  If no interfaces are bound then return null or raise
   ** UnresolvedErr based on checked flag.
   **
-  native static IpInterface? find(IpAddr addr, Bool checked := true)
+  native static IpInterface? findByAddr(IpAddr addr, Bool checked := true)
+
+  **
+  ** Find the interface by its name.  If the interface is not found
+  ** then return null or raise UnresolvedErr based on checked flag.
+  **
+  native static IpInterface? findByName(Str name, Bool checked := true)
 
   **
   ** Private constructor.
