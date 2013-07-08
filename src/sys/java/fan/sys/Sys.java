@@ -221,7 +221,11 @@ public final class Sys
   public static final Duration bootDuration = initBootDuration();
 
   /** Current environment - do this after sys fully booted */
-  static { initEnv(); }
+  static
+  {
+    initEnv();
+    initEnvClassPath();
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Platform Init
@@ -464,6 +468,22 @@ public final class Sys
     catch (Exception e)
     {
       initWarn("curEnv", e);
+    }
+  }
+
+  private static void initEnvClassPath()
+  {
+    try
+    {
+      // add environment's work dir to classpath
+      LocalFile homeDir = (LocalFile)curEnv.homeDir();
+      LocalFile workDir = (LocalFile)curEnv.workDir();
+      if (!homeDir.equals(workDir))
+        FanClassLoader.extClassLoader.addFanDir(workDir.file);
+    }
+    catch (Exception e)
+    {
+      initWarn("envClassPath", e);
     }
   }
 
