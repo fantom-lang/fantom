@@ -261,10 +261,20 @@ public class FanClassLoader
     public ExtClassLoader()
     {
       super(new URL[0], FanClassLoader.class.getClassLoader());
+      addFanDir(Sys.homeDir);
+    }
+
+    /**
+     * Given a home or working directory, add the following directories  to the path:
+     *    {fanDir}/lib/java/ext/
+     *    {fanDir}/lib/java/ext/{platform}/
+     */
+    void addFanDir(java.io.File fanDir)
+    {
       try
       {
         String sep = java.io.File.separator;
-        java.io.File extDir = new java.io.File(Sys.homeDir, "lib" + sep + "java" + sep + "ext");
+        java.io.File extDir = new java.io.File(fanDir, "lib" + sep + "java" + sep + "ext");
         java.io.File platDir = new java.io.File(extDir, Sys.platform);
         addExtJars(extDir);
         addExtJars(platDir);
