@@ -168,6 +168,17 @@ class WebUtil
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Given a set of HTTP headers map Content-Type to its charset
+  ** or default to UTF-8.
+  **
+  static Charset headersToCharset(Str:Str headers)
+  {
+    ct := headers["Content-Type"]
+    if (ct != null) return MimeType(ct).charset
+    return Charset.utf8
+  }
+
+  **
   ** Given a set of headers, wrap the specified input stream
   ** to read the content body:
   **   1. If Content-Length then `makeFixedInStream`
@@ -183,9 +194,7 @@ class WebUtil
   {
     // map the "Content-Type" response header to the
     // appropiate charset or default to UTF-8.
-    Charset cs := Charset.utf8
-    ct := headers["Content-Type"]
-    if (ct != null) cs = MimeType(ct).charset
+    cs := headersToCharset(headers)
 
     // check for fixed content length
     len := headers["Content-Length"]
@@ -215,9 +224,7 @@ class WebUtil
   {
     // map the "Content-Type" response header to the
     // appropiate charset or default to UTF-8.
-    Charset cs := Charset.utf8
-    ct := headers["Content-Type"]
-    if (ct != null) cs = MimeType(ct).charset
+    cs := headersToCharset(headers)
 
     // check for fixed content length
     len := headers["Content-Length"]
@@ -225,6 +232,7 @@ class WebUtil
       return makeFixedOutStream(out, len.toInt) { charset = cs }
 
     // if content-type then assumed chunked output
+    ct := headers["Content-Type"]
     if (ct != null)
     {
       headers["Transfer-Encoding"] = "chunked"
