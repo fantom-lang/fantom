@@ -30,6 +30,7 @@ namespace Fan.Sys
     public static void make_(OutStream self, OutStream output)
     {
       self.m_out = output;
+      if (output != null) self.charset(output.charset());
     }
 
     protected OutStream()
@@ -233,7 +234,7 @@ namespace Fan.Sys
       m_charsetEncoder = charset.newEncoder();
       m_charset = charset;
     }
-    
+
     public virtual OutStream writeChar(long c) { return writeChar((char)c); }
     public virtual OutStream writeChar(char c)
     {

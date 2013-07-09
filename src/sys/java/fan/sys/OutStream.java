@@ -31,6 +31,7 @@ public class OutStream
   public static void make$(OutStream self, OutStream out)
   {
     self.out = out;
+    if (out != null) self.charset(out.charset());
   }
 
 //////////////////////////////////////////////////////////////////////////

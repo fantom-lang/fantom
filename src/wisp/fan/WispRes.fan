@@ -202,6 +202,7 @@ internal class WispRes : WebRes
       else
       {
         webOut = WebOutStream(sout)
+        webOut.charset = WebUtil.headersToCharset(&headers)
       }
     }
 
