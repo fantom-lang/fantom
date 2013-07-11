@@ -49,7 +49,7 @@ internal class WispRes : WebRes
   **
   ** Map of HTTP response headers.  You must set all headers before
   ** you access out() for the first time, which commits the response.
-  ** After the response is commited this map becomes read only.
+  ** Throw an err if response is already committed.
   **
   override Str:Str headers := Str:Str[:]
   {
@@ -58,8 +58,8 @@ internal class WispRes : WebRes
 
   **
   ** Get the list of cookies to set via a header fields.  Add a
-  ** a Cookie to this list to set a cookie.  Once the response
-  ** is commited, this list becomes readonly.
+  ** a Cookie to this list to set a cookie.  Throw an err if
+  ** response is already committed.
   **
   override Cookie[] cookies := Cookie[,]
   {
