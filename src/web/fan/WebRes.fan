@@ -20,8 +20,8 @@ abstract class WebRes
 
   **
   ** Get or set the HTTP status code for this response. Status code
-  ** defaults to 200.  Throw an err if status code passed in is not
-  ** recognized, or if the response has already been committed.
+  ** defaults to 200.  Throw an err if the response has already been
+  ** committed.
   **
   abstract Int statusCode
 
