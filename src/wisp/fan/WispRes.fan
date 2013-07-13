@@ -41,7 +41,6 @@ internal class WispRes : WebRes
     set
     {
       checkUncommitted
-      if (statusMsg[it] == null) throw Err("Unknown status code: $it");
       &statusCode = it
     }
   }
@@ -219,7 +218,7 @@ internal class WispRes : WebRes
     if (statusCode == 101 && &headers["Upgrade"] == "WebSocket")
       return "Web Socket Protocol Handshake"
     else
-      return statusMsg[statusCode]
+      return statusMsg[statusCode] ?: statusCode.toStr
   }
 
   **
