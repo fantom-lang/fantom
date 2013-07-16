@@ -231,6 +231,43 @@ class UtilTest : Test
     }
     verifyEq(buf.flip.readAllStr, "hello world")
     verifyEq(numRead, 11)
+
+    // mixed
+    s =
+     """------WebKitFormBoundaryZ7PdCaCUA42JfPxv
+        Content-Disposition: form-data; name="name"
+
+        FooBar
+        ------WebKitFormBoundaryZ7PdCaCUA42JfPxv
+        Content-Disposition: form-data; name="ver"
+
+        1.0.5
+        ------WebKitFormBoundaryZ7PdCaCUA42JfPxv
+        Content-Disposition: form-data; name="file"; filename="temp.txt"
+        Content-Type: application/octet-stream
+
+        Hello,
+        World
+        :)
+        ------WebKitFormBoundaryZ7PdCaCUA42JfPxv--
+        """
+    boundary = "----WebKitFormBoundaryZ7PdCaCUA42JfPxv"
+    numRead = 0
+    WebUtil.parseMultiPart(s.replace("\n", "\r\n").toBuf.in, boundary) |h, in|
+    {
+      numRead++
+      disp := h["Content-Disposition"]
+      verify(disp.startsWith("form-data;"))
+
+      map := MimeType.parseParams(disp["form-data;".size..-1].trim)
+      switch (map["name"])
+      {
+        case "name": verifyEq(in.readAllStr, "FooBar")
+        case "ver":  verifyEq(in.readAllStr, "1.0.5")
+        case "file": verifyEq(in.readAllStr, "Hello,\nWorld\n:)")
+      }
+    }
+    verifyEq(numRead, 3)
   }
 
   // generate test files for testParseMultiPart
