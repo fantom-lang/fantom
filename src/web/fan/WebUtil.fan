@@ -174,7 +174,11 @@ class WebUtil
   static Charset headersToCharset(Str:Str headers)
   {
     ct := headers["Content-Type"]
-    if (ct != null) return MimeType(ct).charset
+    if (ct != null)
+    {
+      mime := MimeType(ct, false)
+      if (mime != null) return mime.charset
+    }
     return Charset.utf8
   }
 
