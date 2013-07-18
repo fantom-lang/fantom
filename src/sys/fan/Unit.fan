@@ -237,8 +237,8 @@ const class Unit
   ** Convert a scalar value from this unit to the given unit.  If
   ** the units do not have the same dimension then throw Err.
   ** For example, to convert 3km to meters:
-  **   m  := Unit.find("meter")
-  **   km := Unit.find("kilometer")
+  **   m  := Unit("meter")
+  **   km := Unit("kilometer")
   **   km.convertTo(3f, m)  =>  3000f
   **
   Float convertTo(Float scalar, Unit unit)
