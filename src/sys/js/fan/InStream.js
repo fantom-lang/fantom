@@ -36,6 +36,11 @@ fan.sys.InStream.prototype.rChar = function()
     return this.m_charset.m_encoder.decode(this);
 }
 
+fan.sys.InStream.prototype.avail = function()
+{
+  return 0;
+}
+
 fan.sys.InStream.prototype.read = function()
 {
   try

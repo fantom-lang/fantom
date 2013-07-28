@@ -43,6 +43,18 @@ public class SysInStream
 // InStream
 //////////////////////////////////////////////////////////////////////////
 
+  public long avail()
+  {
+    try
+    {
+      return in.available();
+    }
+    catch (IOException e)
+    {
+      throw IOErr.make(e);
+    }
+  }
+
   public Long read() { int n = r(); return n < 0 ? null : FanInt.pos[n]; }
   public int r()
   {

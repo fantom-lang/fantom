@@ -32,6 +32,13 @@ class InStream
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Return the number of bytes available on input stream without
+  ** blocking.  Return zero if no bytes available or it is unknown.
+  ** Throw IOErr on error.
+  **
+  virtual Int avail()
+
+  **
   ** Read the next unsigned byte from the input stream.
   ** Return null if at end of stream.  Throw IOErr on error.
   **
