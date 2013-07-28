@@ -90,6 +90,21 @@ public class InStream
 // InStream
 //////////////////////////////////////////////////////////////////////////
 
+  public long avail()
+  {
+    try
+    {
+      return in.avail();
+    }
+    catch (NullPointerException e)
+    {
+      if (in == null)
+        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream");
+      else
+        throw e;
+    }
+  }
+
   public Long read()
   {
     try

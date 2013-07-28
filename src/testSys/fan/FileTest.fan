@@ -373,6 +373,21 @@ class FileTest : Test
     verifyEq(f.readProps, props)
   }
 
+  Void testAvail()
+  {
+    f := tempDir + `testfile.txt`
+    f.out.print("1234567890").close
+    in := f.in
+    verifyEq(in.avail, 10)
+    in.read
+    verifyEq(in.avail, 9)
+    in.readChar
+    verifyEq(in.avail, 8)
+    in.readLine
+    verifyEq(in.avail, 0)
+    in.close
+  }
+
   Void testReadAllLinesNL()
   {
     f := tempDir + `testfile.txt`
