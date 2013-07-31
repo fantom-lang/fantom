@@ -210,19 +210,26 @@ abstract class WebReq
   ** Given a web request:
   **   1. check that the content-type is form-data
   **   2. get the boundary string
-  **   3. route to `WebUtil.parseMultiPart`
+  **   3. invoke callback for each part (see `WebUtil.parseMultiPart`)
   **
-  ** For each part in the stream call the given callback function
-  ** with the part's headers and an input stream used to read the
-  ** part's body.  Each callback must completely drain the input
-  ** stream to prepare for the next part.
+  ** For each part in the stream call the given callback function with
+  ** the part's form name, headers, and an input stream used to read the
+  ** part's body.
   **
-  Void parseMultiPartForm(|Str:Str headers, InStream in| cb)
+  Void parseMultiPartForm(|Str formName, InStream in, Str:Str headers| cb)
   {
-    mime := MimeType(headers["Content-Type"])
+    mime := MimeType(this.headers["Content-Type"])
     if (mime.subType != "form-data") throw Err("Invalid content-type: $mime")
     boundary := mime.params["boundary"] ?: throw Err("Missing boundary param: $mime")
-    WebUtil.parseMultiPart(in, boundary, cb)
+    WebUtil.parseMultiPart(this.in, boundary) |partHeaders, partIn|
+    {
+      cd := partHeaders["Content-Disposition"] ?: throw Err("Multi-part missing Content-Disposition")
+      semi := cd.index(";") ?: throw Err("Expected semicolon; Content-Disposition: $cd")
+      params := MimeType.parseParams(cd[cd.index(";")+1..-1])
+      formName := params["name"] ?: throw Err("Expected name param; Content-Disposition: $cd")
+      cb(formName, partIn, partHeaders)
+      try { partIn.skip(Int.maxVal) } catch {} // drain stream
+    }
   }
 
 }
