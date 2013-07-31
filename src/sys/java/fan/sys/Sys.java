@@ -211,8 +211,11 @@ public final class Sys
   /** {BootEnv.homeDir}/etc/sys/config.props */
   public static final Map sysConfig = initSysConfig();
 
-  /** "fan.debug" env var used to generating debug attributes in bytecode */
+  /** Config prop used to generating debug attributes in bytecode */
   public static final boolean debug = sysConfigBool("debug", false);
+
+  /** Config prop used to determine max stack trace  */
+  public static final int errTraceMaxDepth = sysConfigInt("errTraceMaxDepth", 25);
 
   /** Absolute boot time */
   public static final DateTime bootDateTime = initBootDateTime();
@@ -542,6 +545,17 @@ public final class Sys
   {
     String val = sysConfig(name);
     if (val != null) return val.equals("true");
+    return def;
+  }
+
+  static int sysConfigInt(String name, int def)
+  {
+    try
+    {
+      String val = sysConfig(name);
+      if (val != null) return Integer.parseInt(val);
+    }
+    catch (Exception e) {}
     return def;
   }
 

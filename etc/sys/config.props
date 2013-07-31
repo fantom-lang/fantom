@@ -12,6 +12,9 @@
 // Runtime - either "java" or "dotnet"
 runtime=java
 
+// Default depth of Err.trace used for stack tracing
+errTraceMaxDepth=25
+
 // Default timezone to use for VM - can be either the simple name
 // or the full name.  If not set explicitly, then the we will
 // attempt to query the timezone from the Java or .NET runtime

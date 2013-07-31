@@ -43,7 +43,8 @@ const class Err
   ** The options may be used to specify the format of the output:
   **   - "maxDepth": Int specifies how many methods in each
   **        exception of chain to include.  If unspecified the
-  **        default is 20.
+  **        default is configured from the "errTraceMaxDepth" prop
+  **        in etc/sys/config.props.
   **
   This trace(OutStream out := Env.cur.out, [Str:Obj]? options := null)
 

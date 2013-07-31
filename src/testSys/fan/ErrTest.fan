@@ -59,11 +59,11 @@ class ErrTest : Test
     Err? err
     try { doThrow(30) } catch (Err e) { err = e }
 
-    // default is 20
+    // default is 25
     buf := Buf()
     err.trace(buf.out)
     lines := buf.flip.readAllLines
-    verifyEq(lines.size, 20+2) // toStr + More...
+    verifyEq(lines.size, 25+2) // toStr + More...
     verify(lines.last.contains("More"))
 
     // with maxDepth
