@@ -206,4 +206,23 @@ abstract class WebReq
   **
   Str:Obj? stash := Str:Obj?["web.startTime":Duration.now]
 
+  **
+  ** Given a web request:
+  **   1. check that the content-type is form-data
+  **   2. get the boundary string
+  **   3. route to `WebUtil.parseMultiPart`
+  **
+  ** For each part in the stream call the given callback function
+  ** with the part's headers and an input stream used to read the
+  ** part's body.  Each callback must completely drain the input
+  ** stream to prepare for the next part.
+  **
+  Void parseMultiPartForm(|Str:Str headers, InStream in| cb)
+  {
+    mime := MimeType(headers["Content-Type"])
+    if (mime.subType != "form-data") throw Err("Invalid content-type: $mime")
+    boundary := mime.params["boundary"] ?: throw Err("Missing boundary param: $mime")
+    WebUtil.parseMultiPart(in, boundary, cb)
+  }
+
 }
