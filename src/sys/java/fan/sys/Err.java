@@ -148,7 +148,7 @@ public class Err
     StackTraceElement[] elems = java.getStackTrace();
 
     // extract options
-    int maxDepth = 20;
+    int maxDepth = Sys.errTraceMaxDepth;
     if (opt != null)
     {
       Long m = (Long)opt.get("maxDepth");
