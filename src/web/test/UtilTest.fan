@@ -147,6 +147,19 @@ class UtilTest : Test
     verifyEq(in.read, null)
   }
 
+  Void testParseQVals()
+  {
+    verifyEq(WebUtil.parseQVals(""), Str:Float[:])
+    verifyEq(WebUtil.parseQVals("compress"), Str:Float["compress":1.0f])
+    verifyEq(WebUtil.parseQVals("compress,gzip"), Str:Float["compress":1.0f, "gzip": 1.0f])
+    verifyEq(WebUtil.parseQVals("compress;q=0.7,gzip;q=0.0"), Str:Float["compress":0.7f, "gzip": 0f])
+
+    q := WebUtil.parseQVals("foo , compress ; q=0.8 , gzip ; q=0.5 , bar; q=x")
+    verifyEq(q, Str:Float["foo":1.0f, "compress": 0.8f, "gzip": 0.5f, "bar":1.0f])
+    verifyEq(q["compress"], 0.8f)
+    verifyEq(q["def"], 0.0f)
+  }
+
   Void testParseMultiPart()
   {
     // couple empty posts

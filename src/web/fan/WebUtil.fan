@@ -163,6 +163,37 @@ class WebUtil
     return tok
   }
 
+  **
+  ** Given an HTTP header that uses q values, return a map of
+  ** name/q-value pairs.  This map has a def value of 0.
+  **
+  ** Example:
+  **   compress,gzip              =>  ["compress":1f, "gzip":1f]
+  **   compress;q=0.5,gzip;q=0.0  =>  ["compress":0.5f, "gzip":0.0f]
+  **
+  static Str:Float parseQVals(Str s)
+  {
+    map := Str:Float[:]
+    map.def = 0.0f
+    s.split(',').each |tok|
+    {
+      if (tok.isEmpty) return
+      name := tok
+      q    := 1.0f
+      x := tok.index(";")
+      if (x != null)
+      {
+        name = tok[0..<x].trim
+        attrs := tok[x+1..-1].trim
+        qattr := attrs.index("q=")
+        if (qattr != null)
+          q  = Float.fromStr(attrs[qattr+2..-1], false) ?: 1.0f
+      }
+      map[name] = q
+    }
+    return map
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // IO
 //////////////////////////////////////////////////////////////////////////
