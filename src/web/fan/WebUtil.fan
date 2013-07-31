@@ -300,7 +300,7 @@ class WebUtil
   ** stream call the given callback function with the part's headers
   ** and an input stream used to read the part's body.  Each callback
   ** must completely drain the input stream to prepare for the next
-  ** part.
+  ** part.  Also see `WebReq.parseMultiPartForm`.
   **
   static Void parseMultiPart(InStream in, Str boundary, |Str:Str headers, InStream in| cb)
   {
