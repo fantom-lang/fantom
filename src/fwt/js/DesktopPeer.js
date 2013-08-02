@@ -26,8 +26,7 @@ fan.fwt.DesktopPeer.isMac     = function() { return fan.fwt.DesktopPeer.$isMac; 
   fan.fwt.DesktopPeer.$isIE      = ua.indexOf("MSIE") != -1;
 }());
 
-fan.fwt.DesktopPeer.clipboard  = function() { return fan.fwt.DesktopPeer.$clipboard; }
-fan.fwt.DesktopPeer.$clipboard = new fan.fwt.Clipboard();
+// see init.js for Desktop.clipboard
 
 // TODO
 //fan.fwt.DesktopPeer.bounds()

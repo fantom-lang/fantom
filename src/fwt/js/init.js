@@ -13,6 +13,12 @@
 fan.concurrent.Actor.locals().set("gfx.env", fan.fwt.FwtEnv.make());
 
 //
+// Desktop
+//
+fan.fwt.DesktopPeer.clipboard  = function() { return fan.fwt.DesktopPeer.$clipboard; }
+fan.fwt.DesktopPeer.$clipboard = new fan.fwt.Clipboard();
+
+//
 // fwt::Combo CSS
 //
 if (fan.fwt.DesktopPeer.$isWebkit)
