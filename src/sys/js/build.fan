@@ -70,6 +70,7 @@ class Build : BuildScript
     }
     append(sys + `Sys.js`, out)
     append(sys + `Facets.js`, out)
+    append(sys + `MethodFunc.js`, out)
   }
 
   private Void writeTypeInfo(OutStream out)
@@ -142,7 +143,6 @@ class Build : BuildScript
   {
     log.debug("  fan/ [support]")
     append(sys + `FConst.js`, out)
-    append(sys + `Facets.js`, out)
     append(sys + `MemBufStream.js`, out)
     append(sys + `Md5.js`, out)
     append(sys + `ObjUtil.js`, out)
