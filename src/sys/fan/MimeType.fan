@@ -21,7 +21,7 @@ const final class MimeType
   **
   ** Parse from string format.  If invalid format and
   ** checked is false return null, otherwise throw ParseErr.
-  ** Parenthesis comments are not supported.
+  ** Parenthesis comments are treated as part of the value.
   **
   static new fromStr(Str s, Bool checked := true)
 

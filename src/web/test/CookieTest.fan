@@ -15,6 +15,13 @@ class CookieTest : Test
 
   Void test()
   {
+    // used by WebReq.cookies
+    s := "Bugzilla_login=28; VERSION-foo%2Fbar=unspecified; __u=1303429918|un=(referral)|ud=referral"
+    verifyEq(MimeType.parseParams(s),
+      ["Bugzilla_login": "28",
+       "VERSION-foo%2Fbar": "unspecified",
+       "__u": "1303429918|un=(referral)|ud=referral"])
+
     verifyCookie("foo=bar", Cookie("foo", "bar"))
     verifyCookie("foo=\"bar baz\"", Cookie("foo", "bar baz"))
     verifyCookie("foo=\"_\\\"quot\\\"_\"", Cookie("foo", "_\"quot\"_"))
