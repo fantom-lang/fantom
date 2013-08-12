@@ -120,8 +120,9 @@ public final class MimeType
     {
       int c = s.charAt(i);
 
-      if (c == '(' && !inQuotes)
-        throw ParseErr.make("MimeType", s, "comments not supported");
+      // let parens slide since sometimes they occur in cookies
+      // if (c == '(' && !inQuotes)
+      //   throw ParseErr.make("MimeType", s, "comments not supported");
 
       if (c == '=' && !inQuotes && valStart < 0)
       {
