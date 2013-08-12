@@ -415,6 +415,10 @@ const final class Int : Num
 
   **
   ** Call the specified function to this times passing the current counter.
+  ** The counter begins at zero.  Also see `Range.each`.
+  **
+  ** Example:
+  **   3.times |i| { echo(i) }  =>  0, 1, 2
   **
   Void times(|Int i| c)
 

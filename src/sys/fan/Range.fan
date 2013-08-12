@@ -150,9 +150,12 @@ const final class Range
 
   **
   ** Call the specified function for each integer in the range.
+  ** Also see `Int.times`.
   **
   ** Example:
-  **   ('a'..'z').each |Int i| { echo(i) }
+  **   (1..3).each |i| { echo(i) }          =>  1, 2, 3
+  **   (1..<3).each |i| { echo(i) }         => 1, 2
+  **   ('a'..'z').each |Int i| { echo(i) }  => 'a', 'b', ... 'z'
   **
   Void each(|Int i| c)
 
