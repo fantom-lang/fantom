@@ -248,6 +248,39 @@ namespace Fan.Sys
       }
     }
 
+    public Long indexr(object val) { return indexr(val, -1); }
+    public Long indexr(object val, long off)
+    {
+      if (m_size == 0) return null;
+      int start = (int)off;
+      if (start < 0) start = m_size + start;
+      if (start >= m_size) throw IndexErr.make(off).val;
+
+      try
+      {
+        if (val == null)
+        {
+          for (int i=start; i>=0; --i)
+            if (m_values[i] == null)
+              return Long.valueOf(i);
+        }
+        else
+        {
+          for (int i=start; i>=0; --i)
+          {
+            object obj = m_values[i];
+            if (obj != null && obj.Equals(val))
+              return Long.valueOf(i);
+          }
+        }
+        return null;
+      }
+      catch (IndexOutOfRangeException)
+      {
+        throw IndexErr.make(off).val;
+      }
+    }
+
     public Long indexSame(object val) { return indexSame(val, 0); }
     public Long indexSame(object val, long off)
     {

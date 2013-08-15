@@ -141,6 +141,35 @@ fan.sys.List.prototype.index = function(value, off)
   return null;
 }
 
+fan.sys.List.prototype.indexr = function(value, off)
+{
+  if (off === undefined) off = -1;
+
+  var size = this.m_size;
+  var values = this.m_values;
+  if (size == 0) return null;
+  var start = off;
+  if (start < 0) start = size + start;
+  if (start >= size || start < 0) throw fan.sys.IndexErr.make(off);
+
+  if (value == null)
+  {
+    for (var i=start; i>=0; --i)
+      if (values[i] == null)
+        return i;
+  }
+  else
+  {
+    for (var i=start; i>=0; --i)
+    {
+      var obj = values[i];
+      if (obj != null && fan.sys.ObjUtil.equals(obj, value))
+        return i;
+    }
+  }
+  return null;
+}
+
 fan.sys.List.prototype.indexSame = function(value, off)
 {
   if (off === undefined) off = 0;

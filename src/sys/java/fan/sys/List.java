@@ -257,6 +257,39 @@ public final class List
     }
   }
 
+  public final Long indexr(Object value) { return indexr(value, -1L); }
+  public final Long indexr(Object value, long off)
+  {
+    if (size == 0) return null;
+    int start = (int)off;
+    if (start < 0) start = size + start;
+    if (start >= size) throw IndexErr.make(off);
+
+    try
+    {
+      if (value == null)
+      {
+        for (int i=start; i>=0; --i)
+          if (values[i] == null)
+            return Long.valueOf(i);
+      }
+      else
+      {
+        for (int i=start; i>=0; --i)
+        {
+          Object obj = values[i];
+          if (obj != null && obj.equals(value))
+            return Long.valueOf(i);
+        }
+      }
+      return null;
+    }
+    catch (ArrayIndexOutOfBoundsException e)
+    {
+      throw IndexErr.make(off);
+    }
+  }
+
   public final Long indexSame(Object value) { return indexSame(value, 0L); }
   public final Long indexSame(Object value, long off)
   {
