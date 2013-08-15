@@ -680,6 +680,12 @@ class ListTest : Test
 
     verifyEq(list.index("a"), 0)
     verifyEq(list.index("foo"), 6)
+    verifyEq(list.index("b"), 1)
+
+    verifyEq(list.indexr("b"), 5)
+    verifyEq(list.indexr("b", -3), 1)
+    verifyEq(list.indexr(null), 4)
+    verifyEq(list.indexr("xx"), null)
 
     verifyEq(list.indexSame("a"), 0)
     if (!js) verifyEq(list.indexSame("abc"[0..0]), null)

@@ -18,6 +18,7 @@
 - OutStream wrappers default to charset of inner stream
 - Fix WispRes charset for non-persistent connections
 - InStream.avail
+- List.indexr
 
 *Build 1.0.65 (20 May 2013)*
 - Add build javacParams config option (#1765)

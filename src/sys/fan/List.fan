@@ -161,6 +161,12 @@ final class List
   Int? index(V item, Int offset := 0)
 
   **
+  ** Reverse index lookup.  This method works just like `index`
+  ** except that it searches backward from the starting offset.
+  **
+  Int? indexr(V item, Int offset := -1)
+
+  **
   ** Return integer index just like `List.index` except
   ** use '===' same operator instead of the '==' equals operator.
   **
