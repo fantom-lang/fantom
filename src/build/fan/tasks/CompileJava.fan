@@ -77,6 +77,9 @@ class CompileJava : JdkTask
       // build command
       cmd := [javacExe]
 
+      // always assume UTF-8
+      cmd.add("-encoding").add("utf-8")
+
       cmd.addAll(params)
 
       // -d outDir
