@@ -434,8 +434,8 @@ fan.fwt.WidgetPeer.toWheelDelta = function(e)
   else if (e.detail != null)
   {
     // Firefox
-    wx = e.axis == 1 ? e.detail : 0;
-    wy = e.axis == 2 ? e.detail : 0;
+    wx = e.axis == 1 ? (e.detail * 3) : 0;
+    wy = e.axis == 2 ? (e.detail * 3) : 0;
   }
 
   // make sure we have ints and return
