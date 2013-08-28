@@ -9,7 +9,7 @@
 /**
  * CanvasTablePeer.
  */
-fan.webfwt.CanvasTablePeer = fan.sys.Obj.$extend(fan.fwt.PanePeer);
+fan.webfwt.CanvasTablePeer = fan.sys.Obj.$extend(fan.fwt.CanvasPeer);
 fan.webfwt.CanvasTablePeer.prototype.$ctor = function(self) {}
 
 fan.webfwt.CanvasTablePeer.prototype.writePng = function(self, out, col, row)
@@ -37,4 +37,3 @@ fan.webfwt.CanvasTablePeer.prototype.writePng = function(self, out, col, row)
   // remove canvas
   document.body.removeChild(canvas);
 }
-
