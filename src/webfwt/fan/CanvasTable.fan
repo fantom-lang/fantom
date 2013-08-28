@@ -48,7 +48,7 @@ abstract class CanvasTable : Canvas
   Int[] selected := [,]
 
   ** Number of pixels to scroll when scrollbar track is paged.
-  Int scrollPage := 100
+  Int scrollPage := 120
 
   ** Callback when a row is double clicked or Space is pressed.
   **  - id: EventId.action
