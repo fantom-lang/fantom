@@ -272,7 +272,8 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   }
 
   // used for firefox workaround
-  var isFirefox = navigator.userAgent.indexOf("Firefox/") != -1;
+  var isChrome  = fan.fwt.DesktopPeer.$isChrome;
+  var isFirefox = fan.fwt.DesktopPeer.$isFirefox;
 
   // build new content
   var $this = this;
@@ -390,8 +391,12 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         {
           var span = document.createElement("span");
 
+          // workaround for Chrome/Firefox float "bug"
+          if (isChrome)
+            span.style.paddingRight = "16px";
+
           // workaround for Firefox float "bug"
-          if (isFirefox && imgElem.className == "right")
+          else if (isFirefox && imgElem.className == "right")
             span.style.marginRight = "22px";
 
           addTextNode(span, text);

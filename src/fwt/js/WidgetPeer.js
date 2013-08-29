@@ -624,7 +624,7 @@ fan.fwt.WidgetPeer.hasClassName = function(elem, className)
 fan.fwt.WidgetPeer.addClassName = function(elem, className)
 {
   if (!fan.fwt.WidgetPeer.hasClassName(elem, className))
-    elem.className += " " + className;
+    elem.className += elem.className == "" ? className : " " + className;
   return elem;
 }
 
