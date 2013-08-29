@@ -343,6 +343,7 @@ fan.fwt.WidgetPeer.prototype.attachEventListener = function(self, type, evtId, l
     evt.m_id      = evtId;
     evt.m_pos     = fan.gfx.Point.make(mx, my);
     evt.m_widget  = self;
+    evt.m_$peer   = peer;
     evt.m_key     = fan.fwt.WidgetPeer.toKey(e);
     if (isClickEvent)
     {
@@ -385,6 +386,30 @@ fan.fwt.WidgetPeer.prototype.attachEventListener = function(self, type, evtId, l
 
 fan.fwt.WidgetPeer.onWinMouseMove = function(e)
 {
+  var evt = fan.fwt.WidgetPeer.$curMouseDown
+  if (evt)
+  {
+    try
+    {
+      // update pos relative to display
+      var dis   = evt.m_$peer.posOnDisplay(evt.m_widget);
+      var mx    = e.clientX - dis.m_x;
+      var my    = e.clientY - dis.m_y;
+      evt.m_id  = fan.fwt.EventId.m_mouseMove;
+      evt.m_pos = fan.gfx.Point.make(mx, my);
+      var list = evt.m_widget.onMouseMove().list();
+      for (var i=0; i<list.m_size; i++)
+      {
+        list.get(i).call(evt);
+        if (evt.m_consumed) break;
+      }
+    }
+    catch (err)
+    {
+      // assume didn't get cleaned up
+      fan.fwt.WidgetPeer.$curMouseDown = null;
+    }
+  }
 }
 
 fan.fwt.WidgetPeer.onWinMouseUp = function(e)
