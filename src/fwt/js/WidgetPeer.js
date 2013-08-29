@@ -12,6 +12,12 @@
 fan.fwt.WidgetPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.fwt.WidgetPeer.prototype.$ctor = function(self) {}
 
+// attach global event handlers
+window.addEventListener("load", function() {
+  window.addEventListener("mousemove", fan.fwt.WidgetPeer.onWinMouseMove, false);
+  window.addEventListener("mouseup",   fan.fwt.WidgetPeer.onWinMouseUp,   false);
+}, false);
+
 //////////////////////////////////////////////////////////////////////////
 // Layout
 //////////////////////////////////////////////////////////////////////////
@@ -349,6 +355,10 @@ fan.fwt.WidgetPeer.prototype.attachEventListener = function(self, type, evtId, l
       evt.m_delta = fan.fwt.WidgetPeer.toWheelDelta(e);
     }
 
+    // special handling for mouseup events outside of element
+    if (type == "mousedown")    fan.fwt.WidgetPeer.$curMouseDown = evt;
+    else if (type == "mouseup") fan.fwt.WidgetPeer.$curMouseDown = null;
+
     // invoke handlers
     var list = listeners.list();
     for (var i=0; i<list.m_size; i++)
@@ -371,6 +381,27 @@ fan.fwt.WidgetPeer.prototype.attachEventListener = function(self, type, evtId, l
 
   // attach event handler
   this.elem.addEventListener(type, func, false);
+}
+
+fan.fwt.WidgetPeer.onWinMouseMove = function(e)
+{
+}
+
+fan.fwt.WidgetPeer.onWinMouseUp = function(e)
+{
+  var evt = fan.fwt.WidgetPeer.$curMouseDown
+  if (evt)
+  {
+    evt.m_id = fan.fwt.EventId.m_mouseUp;
+    //evt.m_pos = fan.gfx.Point.make(mx, my);   // what do we send here?
+    //evt.m_key = fan.fwt.WidgetPeer.toKey(e);
+    var list = evt.m_widget.onMouseUp().list();
+    for (var i=0; i<list.m_size; i++)
+    {
+      list.get(i).call(evt);
+      if (evt.m_consumed) break;
+    }
+  }
 }
 
 fan.fwt.WidgetPeer.processMouseClicks = function(peer, e)
