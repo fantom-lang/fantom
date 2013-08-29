@@ -19,6 +19,7 @@
 - Fix WispRes charset for non-persistent connections
 - InStream.avail
 - List.indexr
+- fwt-js: Improve mouseMove/mouseExit when exiting widget/browser bounds
 - webfwt::CanvasTable: rewrite for large table performance
 
 *Build 1.0.65 (20 May 2013)*
