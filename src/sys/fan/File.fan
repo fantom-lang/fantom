@@ -219,6 +219,13 @@ abstract const class File
   **
   @Operator abstract File plus(Uri path, Bool checkSlash := true)
 
+  **
+  ** Get the store instance which models the storage pool, device,
+  ** partition, or volume used to store this file.  Raise UnsupportedErr
+  ** if this file is not associated with a store.
+  **
+  virtual FileStore store()
+
 //////////////////////////////////////////////////////////////////////////
 // Management
 //////////////////////////////////////////////////////////////////////////

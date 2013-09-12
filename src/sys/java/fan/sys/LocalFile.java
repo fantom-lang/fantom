@@ -257,6 +257,18 @@ public class LocalFile
     return make(this.uri.plus(uri), checkSlash);
   }
 
+  public FileStore store()
+  {
+    try
+    {
+      return new LocalFileStore(this.file);
+    }
+    catch (java.io.IOException e)
+    {
+      throw IOErr.make(e);
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // File Management
 //////////////////////////////////////////////////////////////////////////
