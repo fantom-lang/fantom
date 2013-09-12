@@ -649,4 +649,14 @@ class FileTest : Test
     out.close
   }
 
+  Void testStore()
+  {
+    f := tempDir
+    s := f.store
+    verify(s.totalSpace > 0)
+    verify(s.totalSpace > s.availSpace)
+    verify(s.totalSpace > s.freeSpace)
+    verifyEq(s.typeof.qname, "sys::LocalFileStore")
+  }
+
 }
