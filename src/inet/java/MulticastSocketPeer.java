@@ -120,8 +120,8 @@ public class MulticastSocketPeer extends UdpSocketPeer
     }
   }
 
-  public UdpSocket joinGroup(MulticastSocket fan, IpAddr addr, Long port) { return joinGroup(fan, addr, port, null); }
-  public UdpSocket joinGroup(MulticastSocket fan, IpAddr addr, Long port, IpInterface iface)
+  public MulticastSocket joinGroup(MulticastSocket fan, IpAddr addr, Long port) { return joinGroup(fan, addr, port, null); }
+  public MulticastSocket joinGroup(MulticastSocket fan, IpAddr addr, Long port, IpInterface iface)
   {
     try
     {
@@ -137,8 +137,8 @@ public class MulticastSocketPeer extends UdpSocketPeer
     }
   }
 
-  public UdpSocket leaveGroup(MulticastSocket fan, IpAddr addr, Long port) { return leaveGroup(fan, addr, port, null); }
-  public UdpSocket leaveGroup(MulticastSocket fan, IpAddr addr, Long port, IpInterface iface)
+  public MulticastSocket leaveGroup(MulticastSocket fan, IpAddr addr, Long port) { return leaveGroup(fan, addr, port, null); }
+  public MulticastSocket leaveGroup(MulticastSocket fan, IpAddr addr, Long port, IpInterface iface)
   {
     try
     {
