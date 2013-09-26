@@ -26,6 +26,7 @@ internal class FileUploadTest : ContentPane
         GridPane { numCols=2; hgap=24; makeDef, makeDlg },
         makeReset,
         makeMulti,
+        makeMultiPart,
       },
     }
   }
@@ -126,6 +127,25 @@ internal class FileUploadTest : ContentPane
           onComplete.add |e| { echo("# $e.data") }
         }
         Label { text="Multi" }, f, buttons(f),
+      },
+    }
+  }
+
+  private Widget makeMultiPart()
+  {
+    BorderPane
+    {
+      bg = Color("#eee")
+      insets = Insets(6)
+      GridPane
+      {
+        f := FileUploader
+        {
+          uri = `/upload`
+          useMultiPart = true
+          onComplete.add |e| { echo("# $e.data") }
+        };
+        Label { text="Form Multi-Part" }, f, buttons(f),
       },
     }
   }

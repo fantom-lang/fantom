@@ -22,6 +22,7 @@
 - fwt-js: Improve mouseMove/mouseExit when exiting widget/browser bounds
 - webfwt::CanvasTable: rewrite for large table performance
 - FileStore API to check file system capacity
+- FileUploader.useMultiPart
 
 *Build 1.0.65 (20 May 2013)*
 - Add build javacParams config option (#1765)
