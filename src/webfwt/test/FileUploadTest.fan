@@ -53,7 +53,7 @@ internal class FileUploadTest : ContentPane
   {
     GridPane
     {
-      numCols = 2
+      numCols = 3
       Button
       {
         text = "Dialog : Def"
@@ -75,6 +75,19 @@ internal class FileUploadTest : ContentPane
           {
             uri = `/upload`
             multi = true
+            onComplete.add |e| { echo("# $e.data") }
+          }).open
+        }
+      },
+      Button
+      {
+        text = "Dialog : Headers"
+        onAction.add
+        {
+          FileUploader.dialog(this.window, FileUploader
+          {
+            uri = `/upload`
+            headers = ["Test-Header-A": "foo", "Test-Header-B": "bar", "Content-Type": "foo/bar"]
             onComplete.add |e| { echo("# $e.data") }
           }).open
         }

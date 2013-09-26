@@ -84,9 +84,11 @@ internal const class UiTesterMod : WebMod
       name := req.headers["FileUpload-filename"]
       buf  := req.in.readAllBuf
       //buf  := Buf(); while (req.in.readBuf(buf, 512) != null) { Slot.find("concurrent::Actor.sleep")->call(50ms) }
-      echo("# uploaded $name $buf.size bytes")
+      echo("# headers:")
+      echo(req.headers.join("\n") |v,n| { "#   $n: $v" })
+      echo("# uploaded $buf.size bytes")
       // echo(buf.readAllStr)
-      // echo("########")
+      echo("#")
 
       res.statusCode = 200
       res.headers["Content-Type"] = "text/plain; charset=UTF-8"
