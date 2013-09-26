@@ -196,6 +196,12 @@ abstract class BuildPod : BuildScript
       meta[tuples[0]] = tuples[1]
     }
 
+    // if stripTest config property is set to true then
+    // don't compile any Fantom code under test/
+    srcDirs := this.srcDirs
+    if (srcDirs != null && config("stripTest", "false") == "true")
+      srcDirs = srcDirs.dup.findAll |uri| { uri.path.first != "test" }
+
     // map my config to CompilerInput structure
     ci := CompilerInput()
     ci.inputLoc    = Loc.makeFile(scriptFile)
