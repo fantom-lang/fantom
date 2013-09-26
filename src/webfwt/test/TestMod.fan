@@ -85,6 +85,8 @@ internal const class UiTesterMod : WebMod
       buf  := req.in.readAllBuf
       //buf  := Buf(); while (req.in.readBuf(buf, 512) != null) { Slot.find("concurrent::Actor.sleep")->call(50ms) }
       echo("# uploaded $name $buf.size bytes")
+      // echo(buf.readAllStr)
+      // echo("########")
 
       res.statusCode = 200
       res.headers["Content-Type"] = "text/plain; charset=UTF-8"

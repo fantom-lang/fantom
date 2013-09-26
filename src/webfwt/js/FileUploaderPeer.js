@@ -204,9 +204,20 @@ fan.webfwt.FileUploaderPeer.prototype.onSubmit = function(self)
       }
       req.upload.onerror = function(e) { console.log("# error: " + file.m_$name); }
       req.upload.onabort = function(e) { console.log("# abort: " + file.m_$name); }
+
       req.open("POST", uri, true);
-      req.setRequestHeader("FileUpload-filename", file.m_$name);
-      req.send(file.m_file);
+      if (self.m_useMultiPart)
+      {
+        // TODO FIXIT: use a single POST for all files
+        var data = new FormData();
+        data.append("file", file.m_file, file.m_$name);
+        req.send(data);
+      }
+      else
+      {
+        req.setRequestHeader("FileUpload-filename", file.m_$name);
+        req.send(file.m_file);
+      }
     })(this.files.get(i));
   }
 

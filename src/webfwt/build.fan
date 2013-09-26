@@ -33,6 +33,6 @@ class Build : BuildPod
                `test/`]
     jsDirs  = [`js/`]
     resDirs = [`locale/`, `res/img/`]
-    docApi  = true
+    docSrc  = true
   }
 }

@@ -75,6 +75,10 @@ class FileUploader : Pane
   ** contained in the 'FileUpload-filename' request header.
   const Uri uri
 
+  ** If 'true' the POST content is formatted as "multipart/form-data".
+  ** If 'false' the raw file content is posted.
+  const Bool useMultiPart := false
+
   ** EventListener invoked when all uploads have completed.
   once EventListeners onComplete() { EventListeners() }
 
