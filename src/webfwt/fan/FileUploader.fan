@@ -79,6 +79,9 @@ class FileUploader : Pane
   ** If 'false' the raw file content is posted.
   const Bool useMultiPart := false
 
+  ** Additional HTTP headers to POST along with file content.
+  const Str:Str headers := [:]
+
   ** EventListener invoked when all uploads have completed.
   once EventListeners onComplete() { EventListeners() }
 

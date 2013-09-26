@@ -206,6 +206,14 @@ fan.webfwt.FileUploaderPeer.prototype.onSubmit = function(self)
       req.upload.onabort = function(e) { console.log("# abort: " + file.m_$name); }
 
       req.open("POST", uri, true);
+      var keys = self.m_headers.keys();
+      for (var i=0; i<keys.size(); i++)
+      {
+        var key = keys.get(i);
+        var val = self.m_headers.get(key);
+        req.setRequestHeader(key, val);
+      }
+
       if (self.m_useMultiPart)
       {
         // TODO FIXIT: use a single POST for all files
