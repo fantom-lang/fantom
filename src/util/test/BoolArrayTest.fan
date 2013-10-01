@@ -40,6 +40,11 @@ class BoolArrayTest : Test
     indices.each |i| { a[i] = true }
     verifyEq(a.size, size)
     (0..<size).each |i| { verifyEq(a[i], indices.contains(i)) }
+
+    c := BoolArray(size * 2)
+    c.copyFrom(a)
+    (0..<size).each |i| { verifyEq(c[i], indices.contains(i)) }
+    (size..<c.size).each |i| { verifyEq(c[i], false) }
   }
 
 }
