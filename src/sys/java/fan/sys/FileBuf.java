@@ -40,6 +40,15 @@ public class FileBuf
 // Buf Support
 //////////////////////////////////////////////////////////////////////////
 
+  public final Buf seek(long pos)
+  {
+    long size = size();
+    if (pos < 0) pos = size + pos;
+    if (pos < 0) throw IndexErr.make(pos);
+    pos(pos);
+    return this;
+  }
+
   public final long size()
   {
     try

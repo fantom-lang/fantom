@@ -118,7 +118,7 @@ public abstract class Buf
     return size()-pos() > 0;
   }
 
-  public final Buf seek(long pos)
+  public Buf seek(long pos)
   {
     long size = size();
     if (pos < 0) pos = size + pos;
