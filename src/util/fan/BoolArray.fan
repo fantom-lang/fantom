@@ -42,4 +42,8 @@ native final class BoolArray
   ** then the entire array is filled, otherwise just the specified range.
   ** Return this.
   This fill(Bool val, Range? range := null)
+
+  ** Copy the booleans from 'that' array into this array and return this.
+  This copyFrom(BoolArray that)
+
 }

@@ -52,6 +52,12 @@ public final class BoolArray extends FanObj
     return this;
   }
 
+  public BoolArray copyFrom(BoolArray that)
+  {
+    System.arraycopy(that.words, 0, this.words, 0, that.words.length);
+    return this;
+  }
+
   private final long size;
   private final int[] words;
 }
