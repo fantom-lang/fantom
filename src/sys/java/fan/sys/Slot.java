@@ -23,10 +23,20 @@ public abstract class Slot
 //////////////////////////////////////////////////////////////////////////
 
   public static Method findMethod(String qname) { return (Method)find(qname, true); }
-  public static Method findMethod(String qname, boolean checked) { return (Method)find(qname, checked); }
+  public static Method findMethod(String qname, boolean checked)
+  {
+    Slot slot = find(qname, checked);
+    if (slot instanceof Method || checked) return (Method)slot;
+    return null;
+  }
 
   public static Field findField(String qname) { return (Field)find(qname, true); }
-  public static Field findField(String qname, boolean checked) { return (Field)find(qname, checked); }
+  public static Field findField(String qname, boolean checked)
+  {
+    Slot slot = find(qname, checked);
+    if (slot instanceof Field || checked) return (Field)slot;
+    return null;
+  }
 
   public static Slot find(String qname) { return find(qname, true); }
   public static Slot find(String qname, boolean checked)

@@ -23,10 +23,20 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static Method findMethod(string qname) { return (Method)find(qname, true); }
-    public static Method findMethod(string qname, bool check) { return (Method)find(qname, check); }
+    public static Method findMethod(string qname, bool check)
+    {
+      Slot slot = find(qname, check);
+      if (slot is Method || check) return (Method)slot;
+      return null;
+    }
 
     public static Field findField(string qname) { return (Field)find(qname, true); }
-    public static Field findField(string qname, bool check) { return (Field)find(qname, check); }
+    public static Field findField(string qname, bool check)
+    {
+      Slot slot = find(qname, check);
+      if (slot is Field || check) return (Field)slot;
+      return null;
+    }
 
     public static Slot find(string qname) { return find(qname, true); }
     public static Slot find(string qname, bool check)
