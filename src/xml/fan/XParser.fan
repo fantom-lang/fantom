@@ -41,6 +41,7 @@ class XParser
   {
     try
     {
+      sniffEncoding
       parseProlog
       doc.root = parseElem(close)
       return doc
@@ -300,6 +301,47 @@ class XParser
 //////////////////////////////////////////////////////////////////////////
 // Parse Utils
 //////////////////////////////////////////////////////////////////////////
+
+  ** Implement char encoding detection according to:
+  ** http://www.w3.org/TR/REC-xml/#sec-guessing
+  private Void sniffEncoding()
+  {
+    // read first 2 bytes (use byte oriented charset for this)
+    // this doesn't let us detect UTF-32 charsets, but keeps things
+    // simple so we only have to read/pushback two bytes
+    in.charset = Charset("ISO-8859-1")
+    b1 := in.readChar ?: -1
+    b2 := in.readChar ?: -1
+
+    // UTF-16 Big Endian: 0xFE_FF BOM or '<'
+    if ((b1 == 0xFE && b2 == 0xFF) || (b1 == 0x0 && b2 == 0x3C))
+    {
+      in.charset = Charset.utf16BE
+      return
+    }
+
+    // UTF-16 Little Endian: 0xFF_FE BOM or '<'
+    if ((b1 == 0xFF && b2 == 0xFE) || (b1 == 0x3C && b2 == 0x0))
+    {
+      in.charset = Charset.utf16LE
+      return
+    }
+
+    // 0xEF_BB_BF UTF-8 BOM
+    if (b1 == 0xEF && b2 == 0xBB)
+    {
+      if (in.readChar != 0xBF) throw IOErr("Invalid UTF-8 BOM")
+      in.charset = Charset.utf8
+      return
+    }
+
+    // push back those bytes and assume UTF-8
+    if (b1 == '\n') line++; else if (b1 > 0) col++
+    if (b2 == '\n') line++; else if (b2 > 0) col++
+    pushback2 = b1
+    pushback  = b2
+    in.charset = Charset.utf8
+  }
 
   **
   ** Parse the prolog up to the root element.
@@ -733,8 +775,12 @@ class XParser
   **
   private Int read()
   {
+    // check pushback2
+    c := pushback2
+    if (c != -1) { pushback2 = -1; return c }
+
     // check pushback
-    c := pushback
+    c = pushback
     if (c != -1) { pushback = -1; return c }
 
     // read the next character
@@ -1005,6 +1051,7 @@ class XParser
 
   private InStream in
   private Int pushback := -1
+  private Int pushback2 := -1
   private XElem[] stack := [XElem("")]
   private XNsDefs[] nsStack := [XNsDefs()]
   private XNs? defaultNs
