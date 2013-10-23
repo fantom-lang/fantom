@@ -149,77 +149,99 @@ class ObixClient
   ** If the result is an '<err>' object, then throw
   ** an ObixErr with the object.
   **
-  ObixObj read(Uri uri)
-  {
-    debugId := debugCounter.getAndIncrement
-    c := makeReq(uri, "GET")
-    if (log.isDebug)
-    {
-      log.debug("> [$debugId] GET $c.reqUri")
-      //c.reqHeaders.each |v, n| { log.debug("> [$debugId]   $n: $v") }
-    }
-    c.writeReq.readRes
-    if (log.isDebug)
-    {
-      log.debug("< [$debugId] $c.resCode")
-      //c.resHeaders.each |v, n| { log.debug("< [$debugId]   $n: $v") }
-    }
-    return readResObj(c)
-  }
+  ObixObj read(Uri uri) { send(uri, "GET", null) }
 
   **
   ** Write an obix document to the specified href and return
   ** the server's result.  If the result is an '<err>' object,
   ** then throw an ObixErr with the object.
   **
-  ObixObj write(ObixObj obj) { post(obj.href, "PUT", obj) }
+  ObixObj write(ObixObj obj) { send(obj.href, "PUT", obj) }
 
   **
   ** Invoke the operation identified by the specified href.
   ** If the result is* an '<err>' object, then throw an ObixErr
   ** with the object.
   **
-  ObixObj invoke(Uri uri, ObixObj in) { post(uri, "POST", in) }
+  ObixObj invoke(Uri uri, ObixObj in) { send(uri, "POST", in) }
 
-  private WebClient makeReq(Uri uri, Str method)
+  private ObixObj send(Uri uri, Str method, ObixObj? in)
   {
     uri = lobbyUri + uri
     c := WebClient(uri)
     c.reqMethod = method
-    c.reqHeaders["Authorization"] = authHeader
     c.followRedirects = false
-    return c
-  }
+    c.reqHeaders["Authorization"] = authHeader
+    if (in != null) c.reqHeaders["Content-Type"]  = "text/xml; charset=utf-8"
 
-  private ObixObj post(Uri uri, Str method, ObixObj in)
-  {
-    debugId := debugCounter.getAndIncrement
-    c := makeReq(uri, method)
-    c.reqHeaders["Content-Type"]  = "text/xml; charset=utf-8"
     if (log.isDebug)
     {
-      log.debug("> [$debugId] $method $c.reqUri")
-      //c.reqHeaders.each |v, n| { log.debug("> [$debugId]   $n: $v") }
+      Str? req := null
+      if (in != null)
+      {
+        reqBuf := StrBuf()
+        in.writeXml(reqBuf.out)
+        req = reqBuf.toStr
+      }
+      debugId := debugReq(c, req)
+
+      c.writeReq
+      if (req != null) c.reqOut.print(req).close
+      c.readRes
+      if (c.resCode == 100) c.readRes
+      res := c.resCode == 200 ? c.resIn.readAllStr : null
+      debugRes(debugId, c, res)
+
+      return readResObj(c, res.in)
     }
-    c.writeReq
-    in.writeXml(c.reqOut)
-    c.reqOut.close
-    c.readRes
-    if (log.isDebug)
+    else
     {
-      log.debug("< [$debugId] $c.resCode")
-      //c.resHeaders.each |v, n| { log.debug("< [$debugId]   $n: $v") }
+      c.writeReq
+      if (in != null)
+      {
+        in.writeXml(c.reqOut)
+        c.reqOut.close
+      }
+      c.readRes
+      if (c.resCode == 100) c.readRes
+      return readResObj(c, c.resIn)
     }
-    if (c.resCode == 100) c.readRes
-    return readResObj(c)
   }
 
-  private static ObixObj readResObj(WebClient c)
+  private static ObixObj readResObj(WebClient c, InStream in)
   {
     if (c.resCode != 200) throw IOErr("Bad HTTP response: $c.resCode $c.reqUri")
-    obj := ObixObj.readXml(c.resIn)
+    obj := ObixObj.readXml(in)
     if (obj.elemName == "err") throw ObixErr(obj)
     return obj
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Debug
+//////////////////////////////////////////////////////////////////////////
+
+  private Int debugReq(WebClient c, Str? req)
+  {
+    if (!log.isDebug) return 0
+    debugId := debugCounter.getAndIncrement
+    s := StrBuf()
+    s.add("> [$debugId]\n")
+    s.add("$c.reqMethod $c.reqUri\n")
+    c.reqHeaders.each |v, n| { s.add("$n: $v\n") }
+    if (req != null) s.add(req.trimEnd).add("\n")
+    log.debug(s.toStr)
+    return debugId
+  }
+
+  private Void debugRes(Int debugId, WebClient c, Str? res)
+  {
+    if (!log.isDebug) return
+    s := StrBuf()
+    s.add("< [$debugId]\n")
+    s.add("$c.resCode $c.resPhrase\n")
+    c.resHeaders.each |v, n| { s.add("$n: $v\n") }
+    if (res != null) s.add(res.trimEnd).add("\n")
+    log.debug(s.toStr)
   }
 
 //////////////////////////////////////////////////////////////////////////
