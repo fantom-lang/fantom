@@ -272,6 +272,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   }
 
   // used for firefox workaround
+  var isWebkit  = fan.fwt.DesktopPeer.$isWebkit;
   var isChrome  = fan.fwt.DesktopPeer.$isChrome;
   var isFirefox = fan.fwt.DesktopPeer.$isFirefox;
 
@@ -391,8 +392,8 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         {
           var span = document.createElement("span");
 
-          // workaround for Chrome/Firefox float "bug"
-          if (isChrome)
+          // workaround for Webkit float "bug"
+          if (isWebkit)
             span.style.paddingRight = "16px";
 
           // workaround for Firefox float "bug"
