@@ -362,11 +362,13 @@ abstract class CanvasTable : Canvas
       case EventId.mouseDown:
         if (contains(vscroll.bounds, e.pos)) mouseDownVScroll(e)
         else if (contains(hscroll.bounds, e.pos)) mouseDownHScroll(e)
+        else if (contains(headerBounds, e.pos)) mouseDownHeader(e)
         else if (contains(rowsetBounds, e.pos)) mouseDownRowset(e)
 
       case EventId.mouseUp:
         if (vscroll.dragDelta != null) vscroll.dragDelta = null
         else if (hscroll.dragDelta != null) hscroll.dragDelta = null
+        else if (contains(headerBounds, e.pos)) mouseUpHeader(e)
         else if (contains(rowsetBounds, e.pos)) mouseUpRowset(e)
     }
   }
@@ -423,6 +425,23 @@ abstract class CanvasTable : Canvas
     pos := hscroll.toPos(e.pos.x - hscroll.dragDelta)
     hscroll.pos(pos)
     e.consumed = true
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Header
+//////////////////////////////////////////////////////////////////////////
+
+  private Void mouseDownHeader(Event e)
+  {
+  }
+
+  private Void mouseUpHeader(Event e)
+  {
+    col := toColIndex(e.pos.x)
+    sortMode = sortCol==col ? sortMode.toggle : SortMode.up
+    sortCol = col
+    onSort(col, sortMode)
+    relayout
   }
 
 //////////////////////////////////////////////////////////////////////////
