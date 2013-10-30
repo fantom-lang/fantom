@@ -90,6 +90,11 @@ abstract class BuildPod : BuildScript
   ** the JNI C source files to compile.
   Uri[]? jniDirs
 
+  ** If non-null, whitelist of platforms JNI should be enabled for.
+  ** Platform string may be full platform name ("macosx-x86_64") or OS
+  ** only ("macosx").
+  Str[]? jniPlatforms
+
   **
   ** List of Uris relative to build script of directories containing
   ** the C# source files to compile for .NET native methods.
@@ -328,6 +333,17 @@ abstract class BuildPod : BuildScript
 
     log.info("JNI [$podName]")
     log.indent
+
+    // check whitelist
+    if (jniPlatforms != null)
+    {
+      if (!jniPlatforms.contains(Env.cur.os) &&
+          !jniPlatforms.contains(Env.cur.platform))
+      {
+        log.info("  Skipping platform $Env.cur.platform")
+        return
+      }
+    }
 
     // env
     jtemp := scriptDir + `temp-jni/`
