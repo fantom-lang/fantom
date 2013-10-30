@@ -383,9 +383,9 @@ final class List
   V? find(|V item, Int index->Bool| c)
 
   **
-  ** Return the first item in the list for which c returns true
-  ** and return the item's index.  If c returns false for every
-  ** item, then return null.  This method is readonly safe.
+  ** Return the index of the first item in the list for which c returns
+  ** true.  If c returns false for every item, then return null.  This
+  ** method is readonly safe.
   **
   ** Example:
   **   list := [5, 6, 7]
