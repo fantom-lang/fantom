@@ -204,7 +204,8 @@ abstract class WebReq
   ** in order to pass data b/w Weblets while processing
   ** this request.
   **
-  Str:Obj? stash := Str:Obj?["web.startTime":Duration.now]
+  virtual Str:Obj? stash() { stashRef }
+  private Str:Obj? stashRef := Str:Obj?["web.startTime":Duration.now]
 
   **
   ** Given a web request:
