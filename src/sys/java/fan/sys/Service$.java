@@ -208,8 +208,7 @@ public class Service$
     catch (Throwable e)
     {
       if (state != null) state.running = false;
-      if (!e.toString().equals("sys::Err: test-nodump"))
-        e.printStackTrace();
+      dumpErr(self, "onStart", e);
     }
     return self;
   }
@@ -233,8 +232,7 @@ public class Service$
     }
     catch (Throwable e)
     {
-      if (!e.toString().equals("sys::Err: test-nodump"))
-        e.printStackTrace();
+      dumpErr(self, "onStop", e);
     }
     return self;
   }
@@ -242,6 +240,16 @@ public class Service$
   public static void onStart(Service self) {}
 
   public static void onStop(Service self) {}
+
+  private static void dumpErr(Service self, String method, Throwable e)
+  {
+    if (e.toString().equals("sys::Err: test-nodump")) return;
+    System.out.println("ERROR: " + self.getClass().getName() + "." +  method);
+    if (e instanceof Err)
+      ((Err)e).trace();
+    else
+      e.printStackTrace();
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // State/Node
