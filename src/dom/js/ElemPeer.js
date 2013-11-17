@@ -85,7 +85,7 @@ fan.dom.ElemPeer.prototype.get = function(self, name, def)
   if (name == "value")   return this.val(self);
   if (name == "checked") return this.checked(self);
 
-  var val = this.elem[name];
+  var val = this.elem.getAttribute(name);
   if (val != null) return val;
   if (def != null) return def;
   return null;
@@ -212,7 +212,7 @@ fan.dom.ElemPeer.prototype.find = function(self, f)
   {
     var kid = kids[i];
     if (f.call(kid)) return kid;
-    kid = kid.find(func);
+    kid = kid.find(f);
     if (kid != null) return kid;
   }
   return null;
@@ -226,7 +226,7 @@ fan.dom.ElemPeer.prototype.findAll = function(self, f, acc)
   {
     var kid = kids[i];
     if (f.call(kid)) acc.push(kid);
-    kid.findAll(func, acc);
+    kid.findAll(f, acc);
   }
   return acc;
 }
