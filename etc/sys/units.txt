@@ -10,7 +10,7 @@
 //
 
 -- dimensionless (null)
-percent, %
+percent, %; ; 100
 pixel, px
 decibel, db
 power_factor, pf
@@ -38,6 +38,8 @@ degrees_phase, degPh; ; 0.017453292519943
 steradian, sr
 nephelometric_turbidity_units, ntu
 formazin_nephelometric_unit, fnu
+power_usage_effectiveness, PUE
+data_center_infrastructure_efficiency, DCIE
 
 -- currency (null)
 australian_dollar, AUD
