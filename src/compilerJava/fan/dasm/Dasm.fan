@@ -69,17 +69,20 @@ class Dasm
       tag := in.readU1
       switch (tag)
       {
-        case CP_CLASS:     cpClass[i] = in.readU2
-        case CP_FIELD:     skip(4)
-        case CP_METHOD:    skip(4)
-        case CP_INTERFACE: skip(4)
-        case CP_STRING:    skip(2)
-        case CP_INTEGER:   skip(4)
-        case CP_FLOAT:     skip(4)
-        case CP_LONG:      skip(8); ++i
-        case CP_DOUBLE:    skip(8); ++i
-        case CP_NAMETYPE:  skip(4)
-        case CP_UTF8:      cpUtf8[i] = in.readUtf
+        case CP_CLASS:          cpClass[i] = in.readU2
+        case CP_FIELD:          skip(4)
+        case CP_METHOD:         skip(4)
+        case CP_INTERFACE:      skip(4)
+        case CP_STRING:         skip(2)
+        case CP_INTEGER:        skip(4)
+        case CP_FLOAT:          skip(4)
+        case CP_LONG:           skip(8); ++i
+        case CP_DOUBLE:         skip(8); ++i
+        case CP_NAMETYPE:       skip(4)
+        case CP_UTF8:           cpUtf8[i] = in.readUtf
+        case CP_METHODHANDLE:   skip(3)
+        case CP_METHODTYPE:     skip(2)
+        case CP_INVOKEDYNAMIC:  skip(4)
         default: throw IOErr("unknown tag $tag")
       }
     }
@@ -250,17 +253,20 @@ class Dasm
 // Constants
 //////////////////////////////////////////////////////////////////////////
 
-  static const Int CP_CLASS     := 7
-  static const Int CP_FIELD     := 9
-  static const Int CP_METHOD    := 10
-  static const Int CP_INTERFACE := 11
-  static const Int CP_STRING    := 8
-  static const Int CP_INTEGER   := 3
-  static const Int CP_FLOAT     := 4
-  static const Int CP_LONG      := 5
-  static const Int CP_DOUBLE    := 6
-  static const Int CP_NAMETYPE  := 12
-  static const Int CP_UTF8      := 1
+  static const Int CP_CLASS         := 7
+  static const Int CP_FIELD         := 9
+  static const Int CP_METHOD        := 10
+  static const Int CP_INTERFACE     := 11
+  static const Int CP_STRING        := 8
+  static const Int CP_INTEGER       := 3
+  static const Int CP_FLOAT         := 4
+  static const Int CP_LONG          := 5
+  static const Int CP_DOUBLE        := 6
+  static const Int CP_NAMETYPE      := 12
+  static const Int CP_UTF8          := 1
+  static const Int CP_METHODHANDLE  := 15
+  static const Int CP_METHODTYPE    := 16
+  static const Int CP_INVOKEDYNAMIC := 18
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
