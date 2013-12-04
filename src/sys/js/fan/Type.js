@@ -455,7 +455,7 @@ fan.sys.Type.prototype.doReflect = function()
 
   for (var i in this.m_slots)
   {
-    slot = this.m_slots[i]
+    var slot = this.m_slots[i]
     slots.push(slot);
     if (slot instanceof fan.sys.Field) fields.push(slot);
     else if (slot instanceof fan.sys.Method) methods.push(slot);
