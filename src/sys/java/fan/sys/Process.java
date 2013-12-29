@@ -222,7 +222,7 @@ public class Process
         catch (Throwable e)
         {
           if (proc.isAlive()) e.printStackTrace();
-          else return;
+          else { if (out != null) out.flush(); return; }
         }
       }
     }
