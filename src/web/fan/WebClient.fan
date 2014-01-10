@@ -173,10 +173,12 @@ class WebClient
 
   **
   ** Socket options for the TCP socket used for requests.
+  ** Default is 1min receiveTimeout.
   **
-  SocketOptions socketOptions()
+  once SocketOptions socketOptions()
   {
-    if (options == null) options = TcpSocket().options
+    options := TcpSocket().options
+    options.receiveTimeout = 1min
     return options
   }
 
@@ -363,7 +365,7 @@ class WebClient
     {
       // make https or http socket
       socket = isHttps ? TcpSocket.makeSsl: TcpSocket.make
-      if (options != null) socket.options.copyFrom(this.options)
+      socket.options.copyFrom(socketOptions)
 
       // connect to proxy or directly to request host
       connUri := usingProxy ? proxy : reqUri
@@ -488,7 +490,6 @@ class WebClient
 
   private InStream? resInStream
   private OutStream? reqOutStream
-  private SocketOptions? options
   private TcpSocket? socket
 
 }
