@@ -171,6 +171,7 @@ class ObixClient
     c := WebClient(uri)
     c.reqMethod = method
     c.followRedirects = false
+    c.socketOptions.receiveTimeout = this.receiveTimeout
     c.reqHeaders["Authorization"] = authHeader
     if (in != null) c.reqHeaders["Content-Type"]  = "text/xml; charset=utf-8"
 
@@ -267,6 +268,7 @@ class ObixClient
   private static const AtomicInt debugCounter := AtomicInt()
 
   @NoDoc Log log := Log.get("obix")
+  @NoDoc Duration receiveTimeout := 1min
 
   private Str authHeader
   private Uri? watchServiceMakeUri

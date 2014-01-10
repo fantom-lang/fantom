@@ -24,6 +24,7 @@
 - FileStore API to check file system capacity
 - FileUploader.useMultiPart,headers
 - XParser charset sniffing
+- WebClient default receiveTimeout to 1min
 
 *Build 1.0.65 (20 May 2013)*
 - Add build javacParams config option (#1765)
