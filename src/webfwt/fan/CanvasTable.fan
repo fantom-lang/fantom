@@ -41,6 +41,9 @@ abstract class CanvasTable : Canvas
   ** values represent a percentage of remaining space (0..1).
   const Num[] colWidths
 
+  ** Wrap the column names
+  const Bool colNameWrap
+
   ** Is selection enabled for this table.
   Bool selectionEnabled := true
 
@@ -121,7 +124,51 @@ abstract class CanvasTable : Canvas
 
   private Void onLayout()
   {
-    // define component bounds
+    // layout header assuming no wrap
+    headerh = headerhDef
+    dw := layoutHeader
+
+    // if we have a wrap, then we need to compute how col names fit
+    colText = Str[][,]
+    if (colNameWrap)
+    {
+      // compute each column
+      maxLines := 1
+      colNames.each |colName, i|
+      {
+        lines := wrapCol(colName, colw[i])
+        maxLines = maxLines.max(lines.size)
+        colText.add(lines)
+      }
+
+      // update heaederh and relayout header
+      headerh = headerhDef + (maxLines-1) * headerFont.height
+      dw = layoutHeader
+    }
+
+    // if no wrap, then we have one line per column
+    else
+    {
+      colNames.each |n| { colText.add([n]) }
+    }
+
+    // layout rows
+    dy := 0
+    rowb.clear
+    numRows.times |r|
+    {
+      dh := rowHeight(r)
+      rowb.add(Rect(0, dy, size.w, dh))
+      dy += dh
+    }
+
+    // max scroll bounds
+    vscroll.max = dy - rowsetBounds.h - 1; vscroll.layout
+    hscroll.max = dw - rowsetBounds.w - 1; hscroll.layout
+  }
+
+  private Int layoutHeader()
+  {
     w := size.w-1
     h := size.h-1
     headerBounds   = Rect(0, 0, w, headerh)
@@ -145,19 +192,43 @@ abstract class CanvasTable : Canvas
       dw += cw
     }
 
-    // layout rows
-    dy := 0
-    rowb.clear
-    numRows.times |r|
-    {
-      dh := rowHeight(r)
-      rowb.add(Rect(0, dy, size.w, dh))
-      dy += dh
-    }
+    return dw
+  }
 
-    // max scroll bounds
-    vscroll.max = dy - rowsetBounds.h - 1; vscroll.layout
-    hscroll.max = dw - rowsetBounds.w - 1; hscroll.layout
+  private Str[] wrapCol(Str colName, Int colw)
+  {
+    colw = colw - 8 // margin is 4
+    words := colName.split(' ')
+    first := words.first
+
+    // first word goes on first line
+    cur := StrBuf().add(first)
+    curw := headerFont.width(first)
+    spacew := headerFont.width(" ")
+
+    // add rest of the words
+    lines := Str[,]
+    for (i:=1; i<words.size; ++i)
+    {
+      word := words[i]
+      wordw := headerFont.width(word)
+      neww := curw + spacew + wordw
+      if (neww <= colw)
+      {
+        // fits on current line
+        cur.add(" ").add(word)
+        curw = neww
+      }
+      else
+      {
+        // wrap to next line
+        lines.add(cur.toStr)
+        cur = StrBuf().add(word)
+        curw = wordw
+      }
+    }
+    lines.add(cur.toStr)
+    return lines
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -206,7 +277,6 @@ abstract class CanvasTable : Canvas
     w  := size.w
     h  := headerBounds.h
     dx := 0
-    ty := (h - headerFont.height) / 2
 
     // header background
     // TODO: cache brush based on size
@@ -218,12 +288,20 @@ abstract class CanvasTable : Canvas
     g.translate(-hscroll.cur, 0)
     colw.each |cw,i|
     {
+      tx := dx+4+(i==0?1:0)
+      ty := (headerhDef - headerFont.height) / 2
+
       sort := sortCol == i
 
       g.brush = Color.black
       g.push
       g.clip(Rect(dx, 0, sort ? cw-16 : cw, h))
-      g.drawText(colNames[i], dx+4+(i==0?1:0), ty)
+      colLines := colText[i]
+      colLines.each |line, j|
+      {
+        g.drawText(line, tx, ty)
+        ty += headerFont.height
+      }
       g.pop
 
       if (sort)
@@ -554,7 +632,7 @@ abstract class CanvasTable : Canvas
 
   private static const Color border := Color("#9f9f9f")
 
-  private static const Int headerh        := 22
+  private static const Int headerhDef     := 22
   private static const Font headerFont    := Desktop.sysFontSmall.toBold
   private static const Color headerBorder := Color("#bdbdbd")
   private static const Color headerArrow  := Color("#666")
@@ -565,7 +643,7 @@ abstract class CanvasTable : Canvas
     GradientStop(Color("#f5f5f5"), 1f),
   ]
 
-  private static const Int ay := (headerh - 7) / 2 + 1
+  private static const Int ay := (headerhDef - 7) / 2 + 1
   private static const Point[] upArrow := [
     Point(0, 7),
     Point(4, 0),
@@ -612,6 +690,8 @@ abstract class CanvasTable : Canvas
   internal Rect rowsetBounds  := Rect.defVal
   private CTScrollBar vscroll := CTScrollBar { table=this }
   private CTScrollBar hscroll := CTScrollBar { table=this; orient=Orientation.horizontal }
+  private Int headerh       // header height with wrap applied
+  private Str[][]? colText  // col name lines with wrap applied
 
   // repaint with no relayout
   internal Bool repaintNoLayout := false
