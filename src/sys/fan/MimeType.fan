@@ -102,4 +102,10 @@ const final class MimeType
   **
   Charset charset()
 
+  **
+  ** Return an instance with this mediaType and subType,
+  ** but strip any parameters.
+  **
+  MimeType noParams()
+
 }

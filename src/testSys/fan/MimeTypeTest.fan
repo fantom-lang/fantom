@@ -178,4 +178,18 @@ class MimeTypeTest : Test
     verifyEq(MimeType("text/html").charset, Charset.utf8)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// No Params
+//////////////////////////////////////////////////////////////////////////
+
+  Void testNoParams()
+  {
+    x := MimeType("text/plain")
+    verifySame(x.noParams, x)
+    x = MimeType("text/something")
+    verifySame(x.noParams, x)
+    verifyEq(MimeType("text/plain; charset=UTF-16BE").noParams, MimeType("text/plain"))
+    verifyEq(MimeType("image/gif; foo=bar; baz=roo").noParams, MimeType("image/gif"))
+  }
+
 }
