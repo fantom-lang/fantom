@@ -103,6 +103,6 @@ class ConstantFolder : CompilerSupport
     return orig
   }
 
-  private const static Str:Int never := ["compare":1, "equal":1, "hash":1, "intern":1]
+  private const static Str:Int never := ["compare":1, "equal":1, "hash":1, "intern":1, "toLocale":1, "fromLocale": 1]
 
 }
