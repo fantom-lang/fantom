@@ -269,6 +269,12 @@ public final class MimeType
     return Charset.fromStr(s);
   }
 
+  public MimeType noParams()
+  {
+    if (params.isEmpty()) return this;
+    return fromStr(mediaType + "/" + subType);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Lazy Load
 //////////////////////////////////////////////////////////////////////////

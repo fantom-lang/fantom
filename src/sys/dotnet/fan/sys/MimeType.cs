@@ -117,10 +117,11 @@ namespace Fan.Sys
       {
         int c = s[i];
 
-        if (c == '(' && !inQuotes)
-          throw ParseErr.make("MimeType", s, "comments not supported").val;
+        // let parens slide since sometimes they occur in cookies
+        // if (c == '(' && !inQuotes)
+        //   throw ParseErr.make("MimeType", s, "comments not supported");
 
-        if (c == '=' && !inQuotes)
+        if (c == '=' && !inQuotes && valStart < 0)
         {
           eq = i++;
           while (FanInt.isSpace(s[i])) ++i;
@@ -264,6 +265,12 @@ namespace Fan.Sys
       string s = (string)m_params.get("charset");
       if (s == null) return Charset.utf8();
       return Charset.fromStr(s);
+    }
+
+    public MimeType noParams()
+    {
+      if (m_params.isEmpty()) return this;
+      return fromStr(m_mediaType + "/" + m_subType);
     }
 
   //////////////////////////////////////////////////////////////////////////
