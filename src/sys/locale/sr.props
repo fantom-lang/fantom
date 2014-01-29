@@ -1,6 +1,8 @@
 dateTime=WWWW, DD. MMMM YYYY. hh:mm:ss zzz
 date=DD.MM.YYYY.
 time=hh:mm:ss
+numDecimal=,
+numGrouping=.
 weekdayStart=sun
 janFull=јануар
 febFull=фебруар
