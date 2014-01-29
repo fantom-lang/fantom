@@ -43,45 +43,45 @@ public class FanNum
 
   public static String localeDecimal()
   {
-    return FanInt.toChar(Locale.cur().decimal().getDecimalSeparator());
+    return Locale.cur().numSymbols().decimal;
   }
 
   public static String localeGrouping()
   {
-    return FanInt.toChar(Locale.cur().decimal().getGroupingSeparator());
+    return Locale.cur().numSymbols().grouping;
   }
 
   public static String localeMinus()
   {
-    return FanInt.toChar(Locale.cur().decimal().getMinusSign());
+    return Locale.cur().numSymbols().minus;
   }
 
   public static String localePercent()
   {
-    return FanInt.toChar(Locale.cur().decimal().getPercent());
+    return Locale.cur().numSymbols().percent;
   }
 
   public static String localePosInf()
   {
-    return Locale.cur().decimal().getInfinity();
+    return Locale.cur().numSymbols().posInf;
   }
 
   public static String localeNegInf()
   {
-    Locale locale = Locale.cur();
-    return locale.decimal().getMinusSign() + locale.decimal().getInfinity();
+    return Locale.cur().numSymbols().negInf;
   }
 
   public static String localeNaN()
   {
-    return Locale.cur().decimal().getNaN();
+    return Locale.cur().numSymbols().nan;
   }
 
-  static String toLocale(NumPattern p, NumDigits d, DecimalFormatSymbols df)
+  static String toLocale(NumPattern p, NumDigits d, Locale locale)
   {
     // string buffer
+    Locale.NumSymbols symbols = locale.numSymbols();
     StringBuilder s = new StringBuilder();
-    if (d.negative) s.append(df.getMinusSign());
+    if (d.negative) s.append(symbols.minus);
 
     // if we have more frac digits then maxFrac, then round off
     d.round(p.maxFrac);
@@ -105,13 +105,13 @@ public class FanNum
       if (i < d.decimal)
       {
         if ((d.decimal - i) % p.group == 0 && i > 0)
-          s.append(df.getGroupingSeparator());
+          s.append(symbols.grouping);
       }
       else
       {
         if (i == d.decimal && p.maxFrac > 0)
         {
-          s.append(df.getDecimalSeparator());
+          s.append(symbols.decimal);
           decimal = true;
         }
         if (i-d.decimal >= p.maxFrac) break;
@@ -122,7 +122,7 @@ public class FanNum
     // trailing zeros
     for (int i=0; i<p.minFrac-d.fracSize(); ++i)
     {
-      if (!decimal) { s.append(df.getDecimalSeparator()); decimal = true; }
+      if (!decimal) { s.append(symbols.decimal); decimal = true; }
       s.append('0');
     }
 

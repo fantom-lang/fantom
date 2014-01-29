@@ -383,18 +383,17 @@ public final class FanInt
 
     // get current locale
     Locale locale = Locale.cur();
-    java.text.DecimalFormatSymbols df = locale.decimal();
 
     // get default pattern if necessary
     if (pattern == null)
-      pattern = Env.cur().locale(Sys.sysPod, "int", "#,###");
+      pattern = Env.cur().locale(Sys.sysPod, "int", "#,###", locale);
 
     // parse pattern and get digits
     NumPattern p = NumPattern.parse(pattern);
     NumDigits d = new NumDigits(self);
 
     // route to common FanNum method
-    return FanNum.toLocale(p, d, df);
+    return FanNum.toLocale(p, d, locale);
   }
 
   static String toLocaleBytes(long b)

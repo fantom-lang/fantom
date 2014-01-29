@@ -1,6 +1,8 @@
 dateTime=WWW DD. MMM YYYY hh.mm z
 date=DD. MMM YYYY
 time=hh.mm
+numDecimal=,
+numGrouping=\u00a0
 weekdayStart=sun
 janFull=januar
 febFull=februar

@@ -26,6 +26,7 @@
 - XParser charset sniffing
 - WebClient default receiveTimeout to 1min
 - MimeType.noParams
+- Redesign Num/Int/Float/Decimal formatting to use locale props
 
 *Build 1.0.65 (20 May 2013)*
 - Add build javacParams config option (#1765)

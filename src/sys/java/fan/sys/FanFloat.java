@@ -320,29 +320,28 @@ public final class FanFloat
     {
       // get current locale
       Locale locale = Locale.cur();
-      java.text.DecimalFormatSymbols df = locale.decimal();
 
       // handle special values
-      if (Double.isNaN(self)) return df.getNaN();
-      if (self == Double.POSITIVE_INFINITY) return df.getInfinity();
-      if (self == Double.NEGATIVE_INFINITY) return df.getMinusSign() + df.getInfinity();
+      if (Double.isNaN(self)) return locale.numSymbols().nan;
+      if (self == Double.POSITIVE_INFINITY) return locale.numSymbols().posInf;
+      if (self == Double.NEGATIVE_INFINITY) return locale.numSymbols().negInf;
 
       // get default pattern if necessary
       if (pattern == null)
-        pattern = Env.cur().locale(Sys.sysPod, "float", "#,###.0##");
+        pattern = Env.cur().locale(Sys.sysPod, "float", "#,###.0##", locale);
 
       // TODO: if value is < 10^-3 or > 10^7 it will be
       // converted to exponent string, so just bail on that
       String string = Double.toString(self);
       if (string.indexOf('E') > 0)
-        string = new java.text.DecimalFormat("0.#########", df).format(self);
+        string = new java.text.DecimalFormat("0.#########").format(self);
 
       // parse pattern and get digits
       NumPattern p = NumPattern.parse(pattern);
       NumDigits d = new NumDigits(string);
 
       // route to common FanNum method
-      return FanNum.toLocale(p, d, df);
+      return FanNum.toLocale(p, d, locale);
     }
     catch (Exception e)
     {
