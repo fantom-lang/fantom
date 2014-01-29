@@ -319,10 +319,7 @@ fan.sys.Int.toLocale = function(self, pattern)
     return fan.sys.Int.toLocaleBytes(self);
 
   // get current locale
-// TODO FIXIT
-//  Locale locale = Locale.cur();
-//  java.text.DecimalFormatSymbols df = locale.decimal();
-   var df = null;
+  var locale = fan.sys.Locale.cur();
 
   // get default pattern if necessary
   if (pattern == null)
@@ -335,7 +332,7 @@ fan.sys.Int.toLocale = function(self, pattern)
   var d = fan.sys.NumDigits.makeLong(self);
 
   // route to common FanNum method
-  return fan.sys.Num.toLocale(p, d, df);
+  return fan.sys.Num.toLocale(p, d, locale);
 }
 
 fan.sys.Int.toLocaleBytes = function(b)

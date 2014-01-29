@@ -93,6 +93,7 @@ class TestRunner
 
       // locales
       JsProps.writeProps(out, Pod.find("sys"), `locale/fi.props`, 1sec)
+      JsProps.writeProps(out, Pod.find("sys"), `locale/fr.props`, 1sec)
       JsProps.writeProps(out, p, `locale/en-US.props`, 1sec)
       JsProps.writeProps(out, p, `locale/es.props`, 1sec)
       JsProps.writeProps(out, p, `locale/es-MX.props`, 1sec)
