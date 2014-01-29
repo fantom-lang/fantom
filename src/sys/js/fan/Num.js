@@ -38,49 +38,48 @@ fan.sys.Num.toInt = function(val)
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-/*
-fan.sys.Num.localeDecimal()
+fan.sys.Num.localeDecimal = function()
 {
-  return FanInt.toChar(Locale.cur().decimal().getDecimalSeparator());
+  return fan.sys.Locale.cur().numSymbols().decimal;
 }
 
-fan.sys.Num.localeGrouping()
+fan.sys.Num.localeGrouping = function()
 {
-  return FanInt.toChar(Locale.cur().decimal().getGroupingSeparator());
+  return fan.sys.Locale.cur().numSymbols().grouping;
 }
 
-fan.sys.Num.localeMinus()
+fan.sys.Num.localeMinus = function()
 {
-  return FanInt.toChar(Locale.cur().decimal().getMinusSign());
+  return fan.sys.Locale.cur().numSymbols().minus;
 }
 
-fan.sys.Num.localePercent()
+fan.sys.Num.localePercent = function()
 {
-  return FanInt.toChar(Locale.cur().decimal().getPercent());
+  return fan.sys.Locale.cur().numSymbols().percent;
 }
 
-fan.sys.Num.localePosInf()
+fan.sys.Num.localePosInf = function()
 {
-  return Locale.cur().decimal().getInfinity();
+  return fan.sys.Locale.cur().numSymbols().posInf;
 }
 
-fan.sys.Num.localeNegInf()
+fan.sys.Num.localeNegInf = function()
 {
-  Locale locale = Locale.cur();
-  return locale.decimal().getMinusSign() + locale.decimal().getInfinity();
+  return fan.sys.Locale.cur().numSymbols().negInf;
 }
 
-fan.sys.Num.localeNaN()
+fan.sys.Num.localeNaN = function()
 {
-  return Locale.cur().decimal().getNaN();
+  return fan.sys.Locale.cur().numSymbols().nan;
 }
-*/
 
-fan.sys.Num.toLocale = function(p, d, df)
+fan.sys.Num.toLocale = function(p, d, locale)
 {
+  var symbols = locale.numSymbols();
+
   // string buffer
   var s = "";
-  if (d.m_negative) s += '-'; /*df.getMinusSign()*/
+  if (d.m_negative) s += symbols.minus;
 
   // if we have more frac digits then maxFrac, then round off
   d.round(p.m_maxFrac);
@@ -104,13 +103,13 @@ fan.sys.Num.toLocale = function(p, d, df)
     if (i < d.m_decimal)
     {
       if ((d.m_decimal - i) % p.m_group == 0 && i > 0)
-        s += ',' /*df.getGroupingSeparator());*/
+        s += symbols.grouping;
     }
     else
     {
       if (i == d.m_decimal && p.m_maxFrac > 0)
       {
-        s += '.'; /*df.getDecimalSeparator());*/
+        s += symbols.decimal;
         decimal = true;
       }
       if (i-d.m_decimal >= p.m_maxFrac) break;
@@ -121,7 +120,7 @@ fan.sys.Num.toLocale = function(p, d, df)
   // trailing zeros
   for (var i=0; i<p.m_minFrac-d.fracSize(); ++i)
   {
-    if (!decimal) { s += '.';  /*df.getDecimalSeparator());*/ decimal = true; }
+    if (!decimal) { s += symbols.decimal; decimal = true; }
     s += '0';
   }
 

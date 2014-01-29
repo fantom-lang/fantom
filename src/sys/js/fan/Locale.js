@@ -117,3 +117,24 @@ fan.sys.Locale.prototype.monthByName = function(name)
   }
   return this.m_monthsByName[name];
 }
+
+fan.sys.Locale.prototype.numSymbols = function()
+{
+  if (this.m_numSymbols == null)
+  {
+    var pod = fan.sys.Pod.find("sys");
+    var env = fan.sys.Env.cur();
+
+    this.m_numSymbols =
+    {
+      decimal:  env.locale(pod, "numDecimal",  ".",    this),
+      grouping: env.locale(pod, "numGrouping", ",",    this),
+      minus:    env.locale(pod, "numMinus",    "-" ,   this),
+      percent:  env.locale(pod, "numPercent",  "%",    this),
+      posInf:   env.locale(pod, "numPosInf",   "+Inf", this),
+      negInf:   env.locale(pod, "numNegInf",   "-Inf", this),
+      nan:      env.locale(pod, "numNaN",      "NaN",  this)
+    };
+  }
+  return this.m_numSymbols;
+}
