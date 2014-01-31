@@ -647,8 +647,19 @@ public final class Map
     public boolean containsKey(Object key) { return super.containsKey(new CIKey((String)key)); }
     public Object put(Object key, Object val) { return super.put(new CIKey((String)key), val); }
     public Object remove(Object key) { return super.remove(new CIKey((String)key)); }
-    public Set keySet() { throw new UnsupportedOperationException(); }
     public Set pairs() { return new CIPairs(entrySet()); }
+
+    public Set keySet()
+    {
+      java.util.HashSet keys = new java.util.HashSet();
+      Iterator it = pairs().iterator();
+      while (it.hasNext())
+      {
+        CIEntry entry = (CIEntry)it.next();
+        keys.add(entry.key);
+      }
+      return keys;
+    }
 
     public int hashCode()
     {
