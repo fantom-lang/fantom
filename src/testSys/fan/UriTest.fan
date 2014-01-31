@@ -188,6 +188,10 @@ class UriTest : Test
     roundtrip := Uri.decodeQuery(Uri.encodeQuery(q))
     verifyEq(roundtrip, q)
 
+    qci := Str:Str[:] { caseInsensitive = true }
+    q.each |v, k| { qci[k] = v }
+    verifyEq(Uri.encodeQuery(qci), Uri.encodeQuery(q))
+
     uri := Uri.decode("?$encoded")
     if (exact) verify(uri.encode[1..-1].equalsIgnoreCase(encoded))
     verifyUriEq(uri, Uri.fromStr(uri.toStr))
