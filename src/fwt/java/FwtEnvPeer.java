@@ -15,6 +15,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Rectangle;
 
 public class FwtEnvPeer
@@ -104,6 +105,38 @@ public class FwtEnvPeer
   public void imageDispose(FwtEnv self, fan.gfx.Image x)
   {
     Fwt.get().dispose(x);
+  }
+
+  public void imageWrite(FwtEnv self, fan.gfx.Image img, MimeType type, OutStream out)
+  {
+    try
+    {
+      // map mime type to SWT constant
+      int format = -1;
+      String mime = type.noParams().toString();
+      if (mime.equals("image/png"))       format = SWT.IMAGE_PNG;
+      else if (mime.equals("image/jpeg")) format = SWT.IMAGE_JPEG;
+      else if (mime.equals("image/gif"))  format = SWT.IMAGE_GIF;
+      else throw ArgErr.make("Unsupported mime type: " + mime);
+
+      // map Fantom image to SWT image
+      Fwt fwt = Fwt.get();
+      Image swtImg = fwt.image(img);
+      if (swtImg == null) throw Err.make("Image not valid or not loaded yet");
+
+      // map Fantom output stream to Java output stream
+      java.io.OutputStream jout = SysOutStream.java(out);
+
+      // write the image
+      ImageLoader saver = new ImageLoader();
+      saver.data = new ImageData[] { swtImg.getImageData() };
+      saver.save(jout, format);
+      jout.flush();
+    }
+    catch (java.io.IOException e)
+    {
+      throw IOErr.make(e);
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
