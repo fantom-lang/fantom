@@ -59,6 +59,11 @@ abstract const class GfxEnv
   **
   abstract Void imageDispose(Image i)
 
+  **
+  ** Implementation of `Image.write`
+  **
+  abstract Void imageWrite(Image i, MimeType type, OutStream out)
+
 //////////////////////////////////////////////////////////////////////////
 // Font Support
 //////////////////////////////////////////////////////////////////////////

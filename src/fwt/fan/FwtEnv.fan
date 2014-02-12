@@ -15,11 +15,11 @@ using gfx
 @Js
 internal const class FwtEnv : GfxEnv
 {
-
   override native Size imageSize(Image i)
   override native Image imageResize(Image i, Size s)
   override native Image imagePaint(Size s, |Graphics| f)
   override native Void imageDispose(Image i)
+  override native Void imageWrite(Image i, MimeType t, OutStream o)
 
   override native Int fontHeight(Font f)
   override native Int fontAscent(Font f)
