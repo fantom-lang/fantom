@@ -172,6 +172,8 @@ fan.fwt.TextPeer.prototype.sync = function(self)
   text.disabled = !this.m_enabled;
 
   // sync style
+  if (this.m_bg) this.control.style.background = this.m_bg.toCss();
+  if (this.m_fg) this.control.style.color = this.m_fg.toCss();
   var readonly = !self.m_editable || !this.m_enabled;
   text.className = this.$cssClass(readonly);
   fan.fwt.WidgetPeer.applyStyle(text,

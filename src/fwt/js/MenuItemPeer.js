@@ -12,7 +12,37 @@
 fan.fwt.MenuItemPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
 fan.fwt.MenuItemPeer.prototype.$ctor = function(self) {}
 
-// see init.js for CSS
+// CSS
+fan.fwt.WidgetPeer.addCss(
+  "div._fwt_MenuItem_ {" +
+  " font:" + fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont) + ";" +
+  " padding: 2px 12px 0px 12px;" +
+  " white-space: nowrap;" +
+  " -webkit-box-sizing: border-box;" +
+  "    -moz-box-sizing: border-box;" +
+  "         box-sizing: border-box;" +
+  "}" +
+  "div._fwt_MenuItem_ img {" +
+  "  padding: 2px 4px 3px 0;" +
+  "  vertical-align: middle;" +
+  "}" +
+  "div._fwt_MenuItem_.sep {" +
+  " margin: 6px 0 0 0;" +
+  " padding: 0 0 6px 0;" +
+  " border-top: 1px solid #dadada;" +
+  "}" +
+  "div._fwt_MenuItem_.disabled {" +
+  " color: #999;" +
+  "}" +
+  "div._fwt_MenuItem_:hover," +
+  "div._fwt_MenuItem_:focus {" +
+  " background: #3d80df;" +
+  " color: #fff;" +
+  "}" +
+  "div._fwt_MenuItem_.disabled:hover {" +
+  " background: none;" +
+  " color: #999;" +
+  "}");
 
 fan.fwt.MenuItemPeer.prototype.selected   = function(self) { return this.m_selected; }
 fan.fwt.MenuItemPeer.prototype.selected$  = function(self, val) { this.m_selected = val; }
@@ -72,7 +102,16 @@ fan.fwt.MenuItemPeer.prototype.sync = function(self)
 
   // add new text node
   if (self.m_mode == fan.fwt.MenuItemMode.m_sep) self.peer.m_enabled = false;
-  else div.appendChild(document.createTextNode(this.m_text));
+  else
+  {
+    if (this.m_image != null)
+    {
+      var img = document.createElement("img");
+      img.src = fan.fwt.WidgetPeer.uriToImageSrc(this.m_image.m_uri);
+      div.appendChild(img);
+    }
+    div.appendChild(document.createTextNode(this.m_text));
+  }
 
   // sync state
   if (self.peer.m_enabled)
