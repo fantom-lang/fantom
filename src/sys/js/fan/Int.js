@@ -253,7 +253,23 @@ fan.sys.Int.toHex = function(self, width)
 
   return s;
 }
-fan.sys.Int.$zeros = null;
+
+fan.sys.Int.toRadix = function(self, radix, width)
+{
+  if (width === undefined) width = null;
+
+  // convert to hex string
+  var s = self.toString(radix);
+
+  // pad width
+  if (width != null && s.length < width)
+  {
+    var zeros = width - s.length;
+    for (var i=0; i<zeros; ++i) s = '0' + s;
+  }
+
+  return s;
+}
 
 fan.sys.Int.toCode = function(self, base)
 {

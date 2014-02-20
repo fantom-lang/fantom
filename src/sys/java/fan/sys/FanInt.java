@@ -446,16 +446,23 @@ public final class FanInt
   public static String toHex(long self) { return toHex(self, null); }
   public static String toHex(long self, Long width)
   {
-    String s = Long.toHexString(self);
-    if (width != null && s.length() < width.intValue())
-    {
-      StringBuilder sb = new StringBuilder(width.intValue());
-      int zeros = width.intValue() - s.length();
-      for (int i=0; i<zeros; ++i) sb.append('0');
-      sb.append(s);
-      s = sb.toString();
-    }
-    return s;
+    return pad(Long.toHexString(self), width);
+  }
+
+  public static String toRadix(long self, long radix) { return toRadix(self, radix, null); }
+  public static String toRadix(long self, long radix, Long width)
+  {
+    return pad(Long.toString(self, (int)radix), width);
+  }
+
+  private static String pad(String s, Long width)
+  {
+    if (width == null || s.length() >= width.intValue()) return s;
+    StringBuilder sb = new StringBuilder(width.intValue());
+    int zeros = width.intValue() - s.length();
+    for (int i=0; i<zeros; ++i) sb.append('0');
+    sb.append(s);
+    return sb.toString();
   }
 
   public static String toStr(long self)
