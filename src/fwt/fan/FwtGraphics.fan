@@ -19,6 +19,7 @@ internal native class FwtGraphics : Graphics
   override native Font font
   override native Bool antialias
   override native Int alpha
+  override native GraphicsPath path()
   override native This drawLine(Int x1, Int y1, Int x2, Int y2)
   override native This drawPolyline(Point[] p)
   override native This drawPolygon(Point[] p)

@@ -1039,6 +1039,27 @@ class GraphicsDemo : Canvas
       g.alpha = 128; /* set alpha after gradient */  g.fillRect(180, 0, 20, 120)
     g.brush = Gradient("0px 0px, 0px 120px, #f00, #80ffffff");      g.fillRect(200, 0, 20, 120)
     g.brush = Gradient("0px 0px, 0px 120px, #80ff0000, #80ffffff"); g.fillRect(220, 0, 20, 120)
+
+    g.translate(140, -350)
+    g.alpha = 255
+    pathTurtle := |->GraphicsPath|
+    {
+      g.path
+       .moveTo(40, 100)
+       .curveTo(50, 30, 110, 30, 120, 100)
+       .curveTo(170, 80, 170, 140, 120, 120)
+       .lineTo(110, 120)
+       .curveTo(115, 140, 95, 140, 100, 120)
+       .lineTo(60, 120)
+       .curveTo(65, 140, 45, 140, 50, 120)
+       .lineTo(40, 120)
+       .close
+    }
+    g.brush = Color("#0a0")
+    pathTurtle().fill
+    g.brush = Color("#7B3F00")
+    g.pen = Pen("4")
+    pathTurtle().draw
   }
 
   Int sysColor(Graphics g, Int y, Color c, Str name)

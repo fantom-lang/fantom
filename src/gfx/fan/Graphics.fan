@@ -43,6 +43,11 @@ mixin Graphics
   abstract Int alpha
 
   **
+  ** Begin a new pathing operation.
+  **
+  abstract GraphicsPath path()
+
+  **
   ** Draw a line with the current pen and brush.
   **
   abstract This drawLine(Int x1, Int y1, Int x2, Int y2)
