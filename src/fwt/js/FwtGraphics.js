@@ -140,6 +140,15 @@ fan.fwt.FwtGraphics.prototype.alpha$  = function(a)
   this.cx.globalAlpha = a / 255;
 }
 
+// GraphicsPath path()
+fan.fwt.FwtGraphics.prototype.path = function()
+{
+  this.cx.beginPath();
+  var path = new fan.fwt.FwtGraphicsPath();
+  path.cx = this.cx;
+  return path;
+}
+
 // This drawLine(Int x1, Int y1, Int x2, Int y2)
 fan.fwt.FwtGraphics.prototype.drawLine = function(x1, y1, x2, y2)
 {

@@ -189,6 +189,11 @@ public class FwtGraphics implements Graphics
     brush(this.brush);
   }
 
+  public GraphicsPath path()
+  {
+    return new FwtGraphicsPath(this);
+  }
+
   public Graphics drawLine(long x1, long y1, long x2, long y2)
   {
     gc.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
