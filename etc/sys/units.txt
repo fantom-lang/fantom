@@ -275,7 +275,7 @@ kilowatt, kW; kg1*m2*sec-3; 1000.0
 megawatt, MW; kg1*m2*sec-3; 1000000.0
 gigawatt, GW; kg1*m2*sec-3; 1.0E9
 btus_per_hour, BTU/h; kg1*m2*sec-3; 0.292875
-therms_per_hour, therm/h; kg1*m2*sec-3; 29280.50878
+therms_per_hour, therm/h; kg1*m2*sec-3; 29287.5
 horsepower, hp; kg1*m2*sec-3; 745.7
 foot_pounds_per_second, ftlbs/sec; kg1*m2*sec-3; 1.355818
 tons_refrigeration, tonref; kg1*m2*sec-3; 3516.853
