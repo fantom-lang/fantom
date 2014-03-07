@@ -30,5 +30,9 @@ fan.sys.Unsafe.prototype.$ctor = function()
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.Unsafe.prototype.$typeof = function () {
+  return fan.sys.Unsafe.$type;
+}
+
 fan.sys.Unsafe.prototype.val = function() { return this.m_val; }
 
