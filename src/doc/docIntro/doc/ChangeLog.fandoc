@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.66 (working)*
+*Build 1.0.66 (19 Mar 201)*
 - Wisp support for secureSessionCookie config prop
 - ActorPool name
 - MimeType.parseParams fix for equals in value
@@ -31,6 +31,10 @@
 - Image.write
 - Int.toRadix
 - GraphicsPath API
+- #1478: js: Invalid type order for sys pod
+- #1614: fwt-js: Parse order bugs for peer defs
+- #2147: Stack trace manipulation / filter
+- #2149: java.lang.ClassFormatError: Duplicate field name&signature
 
 *Build 1.0.65 (20 May 2013)*
 - Add build javacParams config option (#1765)
