@@ -173,11 +173,12 @@ class WebClient
 
   **
   ** Socket options for the TCP socket used for requests.
-  ** Default is 1min receiveTimeout.
+  ** Default is 1min for connectTimeout and receiveTimeout.
   **
   once SocketOptions socketOptions()
   {
     options := TcpSocket().options
+    options.connectTimeout = 1min
     options.receiveTimeout = 1min
     return options
   }
