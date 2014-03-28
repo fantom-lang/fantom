@@ -23,6 +23,26 @@ fan.webfwt.WebListPeer.prototype.items$ = function(self, val)
   self.selectedIndexes$(fan.sys.List.make(fan.sys.Int.$type));
 }
 
+fan.webfwt.WebListPeer.prototype.m_scrolly = null;
+fan.webfwt.WebListPeer.prototype.scrolly = function(self)
+{
+  var container = this.container();
+  return container ? container.scrollTop : 0;
+}
+fan.webfwt.WebListPeer.prototype.scrolly$ = function(self, val)
+{
+  // max value is auto-clipped to viewport
+  if (val < 0) val = 0;
+
+  var container = this.container()
+  if (container == null) this.m_scrolly = val; // handle in sync()
+  else
+  {
+    container.scrollTop = val;
+    this.m_scrolly = null;   // make sure we clear out sync hook
+  }
+}
+
 fan.webfwt.WebListPeer.prototype.create = function(parentElem, self)
 {
   this.sel = [];
@@ -143,6 +163,13 @@ fan.webfwt.WebListPeer.prototype.sync = function(self)
   }
 
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
+
+  // check if scrolly is armed
+  if (this.m_scrolly && container != null && this.m_size.m_h > 0)
+  {
+    container.scrollTop = this.m_scrolly;
+    this.m_scrolly = null;
+  }
 
   // scroll selection into view if necessary
   if (this.sel.length > 0 && container != null)
