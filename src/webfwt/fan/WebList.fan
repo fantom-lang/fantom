@@ -26,6 +26,10 @@ abstract class WebList : Pane
   @NoDoc
   virtual Bool selectionEnabled() { true }
 
+  ** Get or set vertical scroll position.
+  @NoDoc
+  native Int scrolly
+
   ** Enable multiple selection.  Defaults to 'false' for single selection.
   Bool multi := false
 
