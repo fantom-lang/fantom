@@ -132,8 +132,9 @@ abstract class Obj
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Write 'x.toStr' to standard output.  If 'x' is null then print
-  ** "null".  If no argument is provided then print an empty line.
+  ** Write 'x.toStr' to standard output followed by newline.  If 'x' is
+  ** null then print "null".  If no argument is provided then print
+  ** an empty line.
   **
   static Void echo(Obj? x := "")
 
