@@ -458,6 +458,9 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event, count)
   if (target.tagName == "SPAN") target = target.parentNode;
   if (target.tagName == "TD")
   {
+    var model = self.m_model;
+    var view  = self.view();
+
     // find cell address
     var col = target.cellIndex;
     var row = target.parentNode.rowIndex;
@@ -473,14 +476,12 @@ fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event, count)
       var ae = fan.fwt.Event.make();
       ae.m_id = fan.fwt.EventId.m_action;
       ae.m_widget = self;
-      ae.m_index = row;
+      ae.m_index = view.m_rows.get(row);
       self.onAction().fire(ae);
       return;
     }
 
     // check for valid callback
-    var model = self.m_model;
-    var view  = self.view();
     if (!model.$onMouseDown && !self.onCellMouseDown) return;
 
     // find pos on display
