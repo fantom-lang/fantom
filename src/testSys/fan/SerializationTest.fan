@@ -147,6 +147,7 @@ class SerializationTest : Test
     verifySer("sys::DateTime(\"$now\")", now)
     verifySer("sys::Charset(\"utf-8\")", Charset.utf8)
     verifySer("testSys::SerSimple(\"7,8\")", SerSimple.make(7,8))
+    verifySer("sys::Regex(\"foo\")", Regex<|foo|>)
 
     verifySer("testSys::EnumAbc(\"C\")", EnumAbc.C)
     verifySer("testSys::Suits(\"spades\")", Suits.spades)
