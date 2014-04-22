@@ -9,6 +9,7 @@
 **
 ** Regex represents a regular expression.
 **
+@Serializable { simple = true }
 const final class Regex
 {
 
