@@ -111,8 +111,12 @@ public class FanClassLoader
     catch (NoClassDefFoundError e)
     {
       String s = e.toString();
-      if (s.contains("eclipse") && s.contains("swt"))
-        System.out.println("ERROR: cannot load SWT library - see `http://fantom.org/doc/docTools/Setup.html#swt`");
+      if (s.contains("swt"))
+      {
+        String msg = "cannot load SWT library; see http://fantom.org/doc/docTools/Setup.html#swt";
+        System.out.println("\nERROR: " + msg + "\n");
+        e = new NoClassDefFoundError(e.getMessage() + ": " + msg);
+      }
       throw e;
     }
   }
