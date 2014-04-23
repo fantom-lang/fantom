@@ -265,7 +265,7 @@ public abstract class File
       }
       else if (overwrite instanceof Func)
       {
-        if (!((Func)overwrite).callBool(this)) return;
+        if (!((Func)overwrite).callBool(to)) return;
       }
       else
       {
