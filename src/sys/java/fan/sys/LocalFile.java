@@ -162,7 +162,7 @@ public class LocalFile
     // if file, then route to default implementation
     if (!isDir() || !exists()) return super.isEmpty();
 
-    // if running 1.6 or older then use raw java.ioFile.list
+    // if running 1.6 or older then use raw java.io.File.list
     // to avoid excessive URI mapping overhead
     if (Sys.javaVersion < Sys.JAVA_1_7) return file.list().length == 0;
 
