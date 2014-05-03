@@ -1254,8 +1254,6 @@ class DateTimeTest : Test
 
   Void testJava()
   {
-    if (Env.cur.runtime != "java") return
-
     x := DateTime.fromJava(1227185341155, ny)
     verifyEq(x.tz, ny)
     verifyEq(x.year, 2008)
@@ -1264,6 +1262,10 @@ class DateTimeTest : Test
     verifyEq(x.hour, 7)
     verifyEq(x.min, 49)
     verifyEq(x.toJava, 1227185341155)
+
+    verifyEq(DateTime.fromJava(0, utc), null)
+    verifyEq(DateTime.fromJava(-1, utc), null)
+    verifyEq(DateTime.fromJava(-86400000, utc, false).toStr, "1969-12-31T00:00:00Z UTC")
  }
 
 //////////////////////////////////////////////////////////////////////////

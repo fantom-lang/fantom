@@ -686,11 +686,12 @@ namespace Fan.Sys
   // Java
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime fromJava(long millis) { return fromJava(millis, TimeZone.m_cur); }
-    public static DateTime fromJava(long millis, TimeZone tz)
+    public static DateTime fromJava(long millis) { return fromJava(millis, TimeZone.m_cur, true); }
+    public static DateTime fromJava(long millis, TimeZone tz) { return fromJava(millis, tz, true); }
+    public static DateTime fromJava(long millis, TimeZone tz, bool negIsNull)
     {
-      if (millis <= 0) return null;
-      return new DateTime((millis-diffJava)*nsPerMilli, TimeZone.m_cur);
+      if (millis <= 0 && negIsNull) return null;
+      return new DateTime((millis-diffJava)*nsPerMilli, tz);
     }
 
     public long toJava() { return (m_ticks / nsPerMilli) + diffJava; }

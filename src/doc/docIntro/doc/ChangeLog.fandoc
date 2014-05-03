@@ -8,6 +8,7 @@
 
 *Build 1.0.67 (working)*
 - Mark sys::Regex as serializable
+- DateTime.fromJava add negIsNull flag
 
 *Build 1.0.66 (19 Mar 201)*
 - Wisp support for secureSessionCookie config prop
