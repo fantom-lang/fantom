@@ -637,6 +637,24 @@ fan.sys.DateTime.checkYear = function(year)
 }
 
 //////////////////////////////////////////////////////////////////////////
+// Java
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.DateTime.prototype.toJava = function()
+{
+  return (this.m_ticks / fan.sys.DateTime.nsPerMilli) + 946684800000;
+}
+
+fan.sys.DateTime.fromJava = function(millis, tz, negIsNull)
+{
+  if (tz === undefined) tz = fan.sys.TimeZone.cur();
+  if (negIsNull === undefined) negIsNull = true;
+  if (millis <= 0 && negIsNull) return null;
+  var ticks = (millis - 946684800000) * fan.sys.DateTime.nsPerMilli;
+  return fan.sys.DateTime.makeTicks(ticks, tz);
+}
+
+//////////////////////////////////////////////////////////////////////////
 // HTTP
 //////////////////////////////////////////////////////////////////////////
 

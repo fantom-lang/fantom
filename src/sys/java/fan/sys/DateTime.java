@@ -702,10 +702,11 @@ public final class DateTime
     return (millis - diffJava) * nsPerMilli;
   }
 
-  public static DateTime fromJava(long millis) { return fromJava(millis, TimeZone.cur); }
-  public static DateTime fromJava(long millis, TimeZone tz)
+  public static DateTime fromJava(long millis) { return fromJava(millis, TimeZone.cur, true); }
+  public static DateTime fromJava(long millis, TimeZone tz) { return fromJava(millis, tz, true); }
+  public static DateTime fromJava(long millis, TimeZone tz, boolean negIsNull)
   {
-    if (millis <= 0) return null;
+    if (millis <= 0 && negIsNull) return null;
     return new DateTime(fromJavaToTicks(millis), tz);
   }
 
