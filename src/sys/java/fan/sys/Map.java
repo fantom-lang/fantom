@@ -32,7 +32,9 @@ public final class Map
 
   public static Map make(Type type)
   {
-    return new Map((MapType)type, new HashMap());
+    MapType t = (MapType)type;
+    if (t.k.isNullable()) throw ArgErr.make("Map key type cannot be nullable: " + t.k);
+    return new Map(t, new HashMap());
   }
 
   public Map(Type k, Type v)
