@@ -119,7 +119,7 @@ class FandocTest : Test
     doc = verifyDoc("Chapter Two [#ch2]\n=======\nblah blah", ["<body>", ["<h3>", "Chapter Two "], ["<p>", "blah blah"]])
     verifyEq(doc.children.first->anchorId, "ch2")
 
-    doc = verifyDoc("[#ch2]Chapter Two\n=======\nblah blah", ["<body>", ["<h3>", "Chapter Two"], ["<p>", "blah blah"]])
+    doc = verifyDoc("[#ch2]Chapter Two\n=======\nblah blah", ["<body>", ["<h3>", "Chapter Two"], ["<p>", "blah blah"]], false)
     verifyEq(doc.children.first->anchorId, "ch2")
   }
 
@@ -147,8 +147,8 @@ class FandocTest : Test
 
   Void testPre()
   {
-    verifyDoc("  a+b", ["<body>", ["<pre>", "a+b"]])
-    verifyDoc("a\n\n  foo\n  bar\n\nb", ["<body>", ["<p>", "a"], ["<pre>", "foo\nbar"], ["<p>", "b"],])
+    verifyDoc("  a+b", ["<body>", ["<pre>", "a+b"]], false)
+    verifyDoc("a\n\n  foo\n  bar\n\nb", ["<body>", ["<p>", "a"], ["<pre>", "foo\nbar"], ["<p>", "b"],], false)
 
     verifyDoc(
      "  class A
@@ -162,9 +162,9 @@ class FandocTest : Test
 
         class B {}
       ",
-         ["<body>", ["<pre>", "class A\n{\n  Int x()\n  {\n    return 3\n  }\n}\n\n\nclass B {}"]])
+         ["<body>", ["<pre>", "class A\n{\n  Int x()\n  {\n    return 3\n  }\n}\n\n\nclass B {}"]], false)
 
-    verifyDoc("Code:\n  [,]", ["<body>", ["<p>", "Code:"], ["<pre>", "[,]"]])
+    verifyDoc("Code:\n  [,]", ["<body>", ["<p>", "Code:"], ["<pre>", "[,]"]], false)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -216,11 +216,12 @@ class FandocTest : Test
             ["<h1>", "New Book"],
             ["<h2>", "Chapter 2"],
             ["<p>", "Roger - chapter two!"],
-          ])
+          ],
+      false)
 
     verifyDoc("a\n\n####\nb", ["<body>", ["<p>", "a"], ["<p>", "#### b"]])
     verifyDoc("a\n\n===\n\nb", ["<body>", ["<p>", "a"], ["<p>", "==="], ["<p>", "b"]])
-    verifyDoc("\n\n------\n", ["<body>", ["<p>", "------"]])
+    verifyDoc("\n\n------\n", ["<body>", ["<p>", "------"]], false)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -482,12 +483,22 @@ class FandocTest : Test
 // VerifyDoc
 //////////////////////////////////////////////////////////////////////////
 
-  Doc verifyDoc(Str str, Obj[] expected)
+  Doc verifyDoc(Str str, Obj[] expected, Bool testRoundtrip := true)
   {
     parser := FandocParser { silent = true }
     doc := parser.parse("Test", str.in)
     // doc.write(HtmlDocWriter())
     verifyDocNode(doc, expected)
+
+    if (testRoundtrip)
+    {
+      roundtrip := StrBuf()
+      doc.write(FandocDocWriter(roundtrip.out))
+      // echo; echo(roundtrip.toStr)
+      doc2 := parser.parse("Test-2", roundtrip.toStr.in)
+      verifyDocNode(doc2, expected)
+    }
+
     return doc
   }
 
