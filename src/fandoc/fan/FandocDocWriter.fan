@@ -24,7 +24,11 @@ class FandocDocWriter : DocWriter
 
   override Void docStart(Doc doc)
   {
-    if (doc.meta.isEmpty) return
+    if (doc.meta.isEmpty)
+    {
+      out.printLine
+      return
+    }
 
     out.printLine(Str.defVal.padl(72, '*'))
     doc.meta.each |v, k|
@@ -76,25 +80,8 @@ class FandocDocWriter : DocWriter
         if (para.anchorId != null)
           out.print("[#${para.anchorId}]")
 
-      case DocNodeId.heading:
-        inHeading = true
-
       case DocNodeId.pre:
-        if (listIndexes.isEmpty)
-        {
-          out.printLine("pre>")
-          if (!elem.children.isEmpty && elem.children.first is DocText)
-          {
-            txt := (DocText)elem.children.first
-            txt.str = txt.str.trimEnd
-          }
-        }
-        else
-        {
-          // Note: fandoc can't parse explicit pre's in lists
-          out.printLine
           inPre = true
-        }
 
       case DocNodeId.blockQuote:
         inBlockquote = true
@@ -146,8 +133,7 @@ class FandocDocWriter : DocWriter
 
       case DocNodeId.heading:
         head := (Heading) elem
-        out.print(head.title.trim)
-        size := head.title.trim.size
+        size := head.title.size
         if (head.anchorId != null)
         {
           out.print(" [#${head.anchorId}]")
@@ -156,44 +142,51 @@ class FandocDocWriter : DocWriter
         char := "#*=-".chars[head.level-1]
         line := Str.defVal.padl(size.max(3), char)
         out.printLine.printLine(line)
-        inHeading = false
 
       case DocNodeId.pre:
-        if (listIndexes.isEmpty)
-        {
-          out.print("\n<pre")
-          out.printLine
-          out.printLine
-        }
-        else inPre = false
+        inPre = false
 
       case DocNodeId.blockQuote:
         inBlockquote = false
 
       case DocNodeId.unorderedList:
         listIndexes.pop
+        if (listIndexes.isEmpty)
+          out.printLine
 
       case DocNodeId.orderedList:
         listIndexes.pop
+        if (listIndexes.isEmpty)
+          out.printLine
 
       case DocNodeId.listItem:
         item := (ListItem) elem
-        if (item.children.size == 1)
-          out.printLine
+        out.printLine
         inListItem = false
     }
   }
 
   override Void text(DocText text)
   {
-    if (inHeading) return
     if (inPre)
     {
-      indent := (listIndexes.size + 1) * 2
-      text.str.trimEnd.splitLines.each
+      endsWithLineBreak := text.str.endsWith("\n")
+      if (!listIndexes.isEmpty || !endsWithLineBreak)
       {
-        out.printLine("${Str.defVal.padl(indent)}${it}".trimEnd)
+        if (!listIndexes.isEmpty)
+          out.printLine
+        indentNo := (listIndexes.size + 1) * 2
+        indent   := Str.defVal.padl(indentNo)
+        text.str.splitLines.each
+        {
+          out.print(indent).printLine(it)
+        }
+      } else {
+        out.printLine("pre>")
+        out.print(text.str)
+        out.printLine("<pre")
       }
+      out.printLine
     }
     else out.print(text.str)
   }
@@ -203,7 +196,6 @@ class FandocDocWriter : DocWriter
   private Bool inBlockquote
   private Bool inPre
   private Bool inListItem
-  private Bool inHeading
 }
 
 **************************************************************************
@@ -259,7 +251,7 @@ internal class ListIndex
   private static Str toRoman(Int int)
   {
     l := romans.keys.find { it <= int }
-        return (int > l) ? romans[l] + toRoman(int - l) : romans[l]
+    return (int > l) ? romans[l] + toRoman(int - l) : romans[l]
   }
 
   private static Int:Str sortr(Int:Str unordered)
