@@ -125,6 +125,27 @@ design service actors using strictly asynchronous messaging, and
 keep synchronous messaging on client actors which don't service
 requests themselves.
 
+Message Error Handling [#msgErrHandling]
+****************************************
+When an actor raises an exception processing a message in its receive
+callback, the error is made available in the Future.  However if the
+Future is never checked, then the error is silently ignored.  Unfortunately
+the system cannot know if the error is going to be handled by client
+code via the Future.
+
+To prevent errors from silently occurring, the following design patterns
+are recommended:
+  1. each message should clearly identify who is responsible for
+     processing the error
+  2. if the actor is responsible for errors, then it should log the
+     error
+  3. if the client is responsible for  errors, then it must check
+     the Future and handle errors
+
+As a general principle, messages processed synchronously get handled by
+the client.  But async messages should probably get logged by the actor
+since its unlikely the client is doing anything with the Future.
+
 Timers [#timers]
 ****************
 The [sendLater]`concurrent::Actor.sendLater` method can be used to setup
