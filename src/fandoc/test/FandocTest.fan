@@ -116,10 +116,10 @@ class FandocTest : Test
     doc := verifyDoc("[#xyz]some text\nthe end.", ["<body>", ["<p>", "some text the end."]])
     verifyEq(doc.children.first->anchorId, "xyz")
 
-    doc = verifyDoc("Chapter Two [#ch2]\n=======\nblah blah", ["<body>", ["<h3>", "Chapter Two "], ["<p>", "blah blah"]])
+    doc = verifyDoc("Chapter Two [#ch2]\n=======\nblah blah", ["<body>", ["<h3>", "Chapter Two"], ["<p>", "blah blah"]])
     verifyEq(doc.children.first->anchorId, "ch2")
 
-    doc = verifyDoc("[#ch2]Chapter Two\n=======\nblah blah", ["<body>", ["<h3>", "Chapter Two"], ["<p>", "blah blah"]], false)
+    doc = verifyDoc("[#ch2]Chapter Two\n=======\nblah blah", ["<body>", ["<h3>", "Chapter Two"], ["<p>", "blah blah"]])
     verifyEq(doc.children.first->anchorId, "ch2")
   }
 
@@ -147,8 +147,8 @@ class FandocTest : Test
 
   Void testPre()
   {
-    verifyDoc("  a+b", ["<body>", ["<pre>", "a+b"]], false)
-    verifyDoc("a\n\n  foo\n  bar\n\nb", ["<body>", ["<p>", "a"], ["<pre>", "foo\nbar"], ["<p>", "b"],], false)
+    verifyDoc("  a+b", ["<body>", ["<pre>", "a+b"]])
+    verifyDoc("a\n\n  foo\n  bar\n\nb", ["<body>", ["<p>", "a"], ["<pre>", "foo\nbar"], ["<p>", "b"],])
 
     verifyDoc(
      "  class A
@@ -162,9 +162,9 @@ class FandocTest : Test
 
         class B {}
       ",
-         ["<body>", ["<pre>", "class A\n{\n  Int x()\n  {\n    return 3\n  }\n}\n\n\nclass B {}"]], false)
+         ["<body>", ["<pre>", "class A\n{\n  Int x()\n  {\n    return 3\n  }\n}\n\n\nclass B {}"]])
 
-    verifyDoc("Code:\n  [,]", ["<body>", ["<p>", "Code:"], ["<pre>", "[,]"]], false)
+    verifyDoc("Code:\n  [,]", ["<body>", ["<p>", "Code:"], ["<pre>", "[,]"]])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -216,12 +216,11 @@ class FandocTest : Test
             ["<h1>", "New Book"],
             ["<h2>", "Chapter 2"],
             ["<p>", "Roger - chapter two!"],
-          ],
-      false)
+          ])
 
     verifyDoc("a\n\n####\nb", ["<body>", ["<p>", "a"], ["<p>", "#### b"]])
     verifyDoc("a\n\n===\n\nb", ["<body>", ["<p>", "a"], ["<p>", "==="], ["<p>", "b"]])
-    verifyDoc("\n\n------\n", ["<body>", ["<p>", "------"]], false)
+    verifyDoc("\n\n------\n", ["<body>", ["<p>", "------"]])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -243,6 +242,12 @@ class FandocTest : Test
 
   Void testUL()
   {
+    verifyDoc(
+     "- a
+      
+      heading
+      ----", ["<body>", ["<ul>", ["<li>", "a"]], ["<h4>", "heading"]])
+
     verifyDoc("- a", ["<body>", ["<ul>", ["<li>", "a"]]])
 
     verifyDoc(
@@ -251,6 +256,10 @@ class FandocTest : Test
       - c
       ",
     ["<body>", ["<ul>", ["<li>", "a"], ["<li>", "b"], ["<li>", "c"]]])
+
+    verifyDoc(
+     "- li [link]`uri` text
+      - li", ["<body>", ["<ul>", ["<li>", "li ", ["<a uri>", "link"], " text"], ["<li>", "li"]]])
 
     verifyDoc(
      "- one
@@ -480,24 +489,92 @@ class FandocTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// ListItem
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToB26() 
+  {
+    li := ListIndex(OrderedListStyle.lowerAlpha)
+    verifyEq(li.toStr, "a. ")
+    verifyEq(li.increment.toStr, "b. ")
+    verifyEq(li.increment.toStr, "c. ")
+    verifyEq(li.increment.toStr, "d. ")
+    verifyEq(li.increment.toStr, "e. ")
+    verifyEq(li.increment.toStr, "f. ")
+    verifyEq(li.increment.toStr, "g. ")
+
+    li.index = 25
+    verifyEq(li.toStr, "y. ")
+    verifyEq(li.increment.toStr, "z. ")
+    verifyEq(li.increment.toStr, "aa. ")
+    verifyEq(li.increment.toStr, "ab. ")
+    verifyEq(li.increment.toStr, "ac. ")
+
+    li = ListIndex(OrderedListStyle.upperAlpha)
+    verifyEq(li.toStr, "A. ")
+    verifyEq(li.increment.toStr, "B. ")
+    verifyEq(li.increment.toStr, "C. ")
+    verifyEq(li.increment.toStr, "D. ")
+    verifyEq(li.increment.toStr, "E. ")
+    verifyEq(li.increment.toStr, "F. ")
+    verifyEq(li.increment.toStr, "G. ")
+
+    li.index = 26
+    verifyEq(li.toStr, "Z. ")
+    verifyEq(li.increment.toStr, "AA. ")
+    verifyEq(li.increment.toStr, "AB. ")
+    verifyEq(li.increment.toStr, "AC. ")
+  }
+
+  Void testToRoman() 
+  {
+    li := ListIndex(OrderedListStyle.lowerRoman)
+    verifyEq(li.toStr, "i. ")
+    verifyEq(li.increment.toStr, "ii. ")
+    verifyEq(li.increment.toStr, "iii. ")
+    verifyEq(li.increment.toStr, "iv. ")
+    verifyEq(li.increment.toStr, "v. ")
+    verifyEq(li.increment.toStr, "vi. ")
+    verifyEq(li.increment.toStr, "vii. ")
+
+    li.index = 26
+    verifyEq(li.toStr, "xxvi. ")
+    verifyEq(li.increment.toStr, "xxvii. ")
+    verifyEq(li.increment.toStr, "xxviii. ")
+    verifyEq(li.increment.toStr, "xxix. ")
+
+    li = ListIndex(OrderedListStyle.upperRoman)
+    verifyEq(li.toStr, "I. ")
+    verifyEq(li.increment.toStr, "II. ")
+    verifyEq(li.increment.toStr, "III. ")
+    verifyEq(li.increment.toStr, "IV. ")
+    verifyEq(li.increment.toStr, "V. ")
+    verifyEq(li.increment.toStr, "VI. ")
+    verifyEq(li.increment.toStr, "VII. ")
+
+    li.index = 26
+    verifyEq(li.toStr, "XXVI. ")
+    verifyEq(li.increment.toStr, "XXVII. ")
+    verifyEq(li.increment.toStr, "XXVIII. ")
+    verifyEq(li.increment.toStr, "XXIX. ")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // VerifyDoc
 //////////////////////////////////////////////////////////////////////////
 
-  Doc verifyDoc(Str str, Obj[] expected, Bool testRoundtrip := true)
+  Doc verifyDoc(Str str, Obj[] expected)
   {
     parser := FandocParser { silent = true }
     doc := parser.parse("Test", str.in)
     // doc.write(HtmlDocWriter())
     verifyDocNode(doc, expected)
 
-    if (testRoundtrip)
-    {
-      roundtrip := StrBuf()
-      doc.write(FandocDocWriter(roundtrip.out))
-      // echo; echo(roundtrip.toStr)
-      doc2 := parser.parse("Test-2", roundtrip.toStr.in)
-      verifyDocNode(doc2, expected)
-    }
+    roundtrip := StrBuf()
+    doc.write(FandocDocWriter(roundtrip.out))
+    // echo; echo(roundtrip.toStr)
+    doc2 := parser.parse("Test-2", roundtrip.toStr.in)
+    verifyDocNode(doc2, expected)
 
     return doc
   }
@@ -555,6 +632,13 @@ class FandocTest : Test
       else
       {
         verifyType(a, DocText#)
+        if (a->str != e) {
+            Env.cur.err.printLine("-----")
+            Env.cur.err.printLine(a->str)
+            Env.cur.err.printLine(" != ")
+            Env.cur.err.printLine(e)
+            Env.cur.err.printLine("-----")
+        }
         verifyEq(a->str, e)
       }
     }

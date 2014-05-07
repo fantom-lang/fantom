@@ -107,6 +107,9 @@ class FandocParser
     formattedText(h)
     consume
     skipBlankLines
+    title := h.children.first as DocText
+    if (title != null)
+      title.str = title.str.trim
     return h
   }
 
