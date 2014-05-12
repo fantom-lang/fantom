@@ -10,6 +10,7 @@
 - Mark sys::Regex as serializable
 - DateTime.fromJava add negIsNull flag
 - Add fandoc::FandocDocWriter
+- Add locale parameter to sys toLocale methods
 
 *Build 1.0.66 (19 Mar 201)*
 - Wisp support for secureSessionCookie config prop

@@ -198,15 +198,14 @@ fan.sys.Date.prototype.lastOfMonth = function()
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Date.prototype.toLocale = function(pattern)
+fan.sys.Date.prototype.toLocale = function(pattern, locale)
 {
+  if (locale === undefined || locale == null) locale = fan.sys.Locale.cur();
   if (pattern === undefined) pattern = null;
 
   // locale specific default
-  var locale = null;
   if (pattern == null)
   {
-    if (locale == null) locale = fan.sys.Locale.cur();
     var pod = fan.sys.Pod.find("sys");
     pattern = fan.sys.Env.cur().locale(pod, "date", "D-MMM-YYYY", locale);
   }

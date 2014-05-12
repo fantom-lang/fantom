@@ -463,17 +463,12 @@ public final class DateTime
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public String toLocale() { return toLocale((String)null, null); }
+  public String toLocale() { return toLocale(null, null); }
   public String toLocale(String pattern) { return toLocale(pattern, null); }
-  private String toLocale(String pattern, Locale locale)
+  public String toLocale(String pattern, Locale locale)
   {
-    // locale specific default
-    if (pattern == null)
-    {
-      if (locale == null) locale = Locale.cur();
-      pattern = Env.cur().locale(Sys.sysPod, localeKey, "D-MMM-YYYY WWW hh:mm:ss zzz", locale);
-    }
-
+    if (locale == null) locale = Locale.cur();
+    if (pattern == null) pattern = Env.cur().locale(Sys.sysPod, localeKey, "D-MMM-YYYY WWW hh:mm:ss zzz", locale);
     return new DateTimeStr(pattern, locale, this).format();
   }
 

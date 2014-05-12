@@ -343,6 +343,7 @@ class DateTimeTest : Test
     verifyEq(mon.toLocale(null), mmm)
     verifyEq(mon.localeAbbr, mmm)
     verifyEq(mon.localeFull, mmmm)
+    Locale("de").use { verifyEq(mon.toLocale("MMM", Locale.en), mmm) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -423,6 +424,7 @@ class DateTimeTest : Test
     verifyEq(w.toLocale(null), www)
     verifyEq(w.localeAbbr, www)
     verifyEq(w.localeFull, wwww)
+    Locale("de").use { verifyEq(w.toLocale("WWW", Locale.en), www) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -956,6 +958,11 @@ class DateTimeTest : Test
     verifyEq(x.toLocale("F, FF, FFF, FFFF, FFFFF"), "1, 12, 123, 123, 123")
     verifyEq(x.toLocale("F, fF, ffF, ffFF, ffffF"), "1, 12, 123, 123, 1230")
     verifyEq(x.toLocale("z, zzz, zzzz"), "-05:00, EST, New_York")
+    Locale("fr").use
+    {
+      verifyEq(x.toLocale("DD-MMM", Locale.en), "05-Feb")
+      verifyEq(x.date.toLocale("DD-MMM", Locale.en), "05-Feb")
+    }
 
     // US locale default pattern (12 hour time)
     verifyEq(x.toLocale(),     "5-Feb-2008 Tue 3:07:20AM EST")

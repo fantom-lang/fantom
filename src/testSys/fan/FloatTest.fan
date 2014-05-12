@@ -728,7 +728,11 @@ class FloatTest : Test
 
     // default, alternate locale
     verifyLocale(12345.4f, null, "12,345.4")
-    Locale("fr-FR").use { verifyEq(12345.4f.toLocale("#,###.0"), "12\u00a0345,4") }
+    Locale("fr-FR").use
+    {
+      verifyEq(12345.4f.toLocale("#,###.0"), "12\u00a0345,4")
+      verifyEq(12345.4f.toLocale("#,###.0", Locale.en), "12,345.4")
+    }
   }
 
   Void verifyLocale(Float f, Str? pattern, Str expected, Bool javaWrong := false)

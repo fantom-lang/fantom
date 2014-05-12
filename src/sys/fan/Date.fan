@@ -137,7 +137,7 @@ const final class Date
   **   WWWW   Full weekday               Tuesday
   **   'xyz'  Literal characters
   **
-  Str toLocale(Str? pattern := null)
+  Str toLocale(Str? pattern := null, Locale locale := Locale.cur)
 
   **
   ** Parse a string into a Date using the given pattern.  If

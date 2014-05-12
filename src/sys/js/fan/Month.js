@@ -58,18 +58,19 @@ fan.sys.Month.prototype.$typeof = function()
   return fan.sys.Month.$type;
 }
 
-fan.sys.Month.prototype.toLocale = function(pattern)
+fan.sys.Month.prototype.toLocale = function(pattern, locale)
 {
+  if (locale === undefined || locale == null) locale = fan.sys.Locale.cur();
   if (pattern === undefined) pattern = null;
-  if (pattern == null) return this.localeAbbr();
+  if (pattern == null) return this.abbr(locale);
   if (fan.sys.Str.isEveryChar(pattern, 77)) // 'M'
   {
     switch (pattern.length)
     {
       case 1: return ""+(this.m_ordinal+1);
       case 2: return this.m_ordinal < 9 ? "0" + (this.m_ordinal+1) : ""+(this.m_ordinal+1);
-      case 3: return this.localeAbbr();
-      case 4: return this.localeFull();
+      case 3: return this.abbr(locale);
+      case 4: return this.full(locale);
     }
   }
   throw fan.sys.ArgErr.make("Invalid pattern: " + pattern);

@@ -718,7 +718,11 @@ class IntTest : Test
 
     // default, alternate locale
     verifyToLocale(12345, null, "12,345")
-    Locale("fr-FR").use { verifyEq(12345.toLocale("#,###"), "12\u00a0345") }
+    Locale("fr-FR").use
+    {
+      verifyEq(12345.toLocale("#,###"), "12\u00a0345")
+      verifyEq(12345.toLocale("#,###", Locale.en), "12,345")
+    }
 
     // bytes
     kb := 1024; mb := 1024*1024; gb := 1024*1024*1024;

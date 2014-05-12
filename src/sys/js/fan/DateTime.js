@@ -460,13 +460,12 @@ fan.sys.DateTime.prototype.hoursInDay = function()
 
 fan.sys.DateTime.prototype.toLocale = function(pattern, locale)
 {
+  if (locale === undefined || locale == null) locale = fan.sys.Locale.cur();
   if (pattern === undefined) pattern = null;
-  if (locale  === undefined) locale = null;
 
   // locale specific default
   if (pattern == null)
   {
-    if (locale == null) locale = fan.sys.Locale.cur();
     var pod = fan.sys.Pod.find("sys");
     pattern = fan.sys.Env.cur().locale(pod, "dateTime", "D-MMM-YYYY WWW hh:mm:ss zzz", locale);
   }

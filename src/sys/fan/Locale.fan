@@ -20,6 +20,9 @@ const class Locale
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
+  ** Constant for the English Locale "en"
+  static const Locale en := fromStr("en")
+
   **
   ** Parse a locale according to the `toStr` format.
   ** If invalid format and checked is false return null,

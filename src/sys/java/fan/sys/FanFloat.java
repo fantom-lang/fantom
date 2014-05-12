@@ -313,13 +313,14 @@ public final class FanFloat
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public static String toLocale(double self) { return toLocale(self, null); }
-  public static String toLocale(double self, String pattern)
+  public static String toLocale(double self) { return toLocale(self, null, null); }
+  public static String toLocale(double self, String pattern) { return toLocale(self, pattern, null); }
+  public static String toLocale(double self, String pattern, Locale locale)
   {
     try
     {
       // get current locale
-      Locale locale = Locale.cur();
+      if (locale == null) locale = Locale.cur();
 
       // handle special values
       if (Double.isNaN(self)) return locale.numSymbols().nan;

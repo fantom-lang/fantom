@@ -235,7 +235,11 @@ class DecimalTest : Test
 
     // default, alternate locale
     verifyToLocale(12345.68d, null, "12,345.68")
-    Locale("fr-FR").use { verifyEq(1345.6d.toLocale("#,###.00"), "1\u00a0345,60") }
+    Locale("fr-FR").use
+    {
+      verifyEq(1345.6d.toLocale("#,###.00"), "1\u00a0345,60")
+      verifyEq(1345.6d.toLocale("#,###.00", Locale.en), "1,345.60")
+    }
   }
 
   Void verifyToLocale(Decimal d, Str? pattern, Str expected)

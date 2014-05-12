@@ -182,14 +182,12 @@ fan.sys.Float.toCode = function(self)
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Float.toLocale = function(self, pattern)
+fan.sys.Float.toLocale = function(self, pattern, locale)
 {
+  if (locale === undefined || locale == null) locale = fan.sys.Locale.cur();
   if (pattern === undefined) pattern = null;
   try
   {
-    // get current locale
-    var locale = fan.sys.Locale.cur();
-
     // handle special values
     if (isNaN(self)) return locale.numSymbols().nan;
     if (self == fan.sys.Float.m_posInf) return locale.numSymbols().posInf;
