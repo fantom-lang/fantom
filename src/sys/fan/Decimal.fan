@@ -168,6 +168,6 @@ const final class Decimal : Num
   ** If pattern is null, then the locale's default pattern is used.
   ** See `Float.toLocale` for pattern language and examples.
   **
-  Str toLocale(Str? pattern := null)
+  Str toLocale(Str? pattern := null, Locale locale := Locale.cur)
 
 }

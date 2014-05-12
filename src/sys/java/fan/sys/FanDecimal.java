@@ -151,11 +151,12 @@ public final class FanDecimal
     return self.toString() + "d";
   }
 
-  public static String toLocale(BigDecimal self) { return toLocale(self, null); }
-  public static String toLocale(BigDecimal self, String pattern)
+  public static String toLocale(BigDecimal self) { return toLocale(self, null, null); }
+  public static String toLocale(BigDecimal self, String pattern) { return toLocale(self, pattern, null); }
+  public static String toLocale(BigDecimal self, String pattern, Locale locale)
   {
     // get current locale
-    Locale locale = Locale.cur();
+    if (locale == null) locale = Locale.cur();
 
     // get default pattern if necessary
     if (pattern == null)

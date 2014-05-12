@@ -47,7 +47,7 @@ enum class Weekday
   ** If pattern is null it defaults to "WWW".  Also see `localeAbbr`
   ** and `localeFull`.
   **
-  Str toLocale(Str? pattern := null)
+  Str toLocale(Str? pattern := null, Locale locale := Locale.cur)
 
   **
   ** Get the abbreviated name for the current locale.

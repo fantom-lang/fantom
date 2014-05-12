@@ -299,7 +299,7 @@ const final class DateTime
   **   k:mma                       =>  9:58a
   **   k:mmAA                      =>  9:58AM
   **
-  Str toLocale(Str? pattern := null)
+  Str toLocale(Str? pattern := null, Locale locale := Locale.cur)
 
   **
   ** Parse a string into a DateTime using the given pattern.  If

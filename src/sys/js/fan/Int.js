@@ -326,16 +326,14 @@ for (var i=65; i<=70;  ++i) fan.sys.Int.charMap[i] |= fan.sys.Int.HEX;
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Int.toLocale = function(self, pattern)
+fan.sys.Int.toLocale = function(self, pattern, locale)
 {
+  if (locale === undefined || locale == null) locale = fan.sys.Locale.cur();
   if (pattern === undefined) pattern = null;
 
   // if pattern is "B" format as bytes
   if (pattern != null && pattern.length == 1 && pattern.charAt(0) == 'B')
     return fan.sys.Int.toLocaleBytes(self);
-
-  // get current locale
-  var locale = fan.sys.Locale.cur();
 
   // get default pattern if necessary
   if (pattern == null)

@@ -335,7 +335,7 @@ const final class Int : Num
   **   100_000.toLocale("B")        =>  98KB
   **   (3*1024*1024).toLocale("B")  =>  3MB
   **
-  Str toLocale(Str? pattern := null)
+  Str toLocale(Str? pattern := null, Locale locale := Locale.cur)
 
   **
   ** Return if this Unicode char is an uppercase letter in

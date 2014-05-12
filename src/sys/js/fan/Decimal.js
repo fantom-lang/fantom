@@ -73,8 +73,9 @@ fan.sys.Decimal.toCode = function(self)
   return "" + self + "d";
 }
 
-fan.sys.Decimal.toLocale = function(self, pattern)
+fan.sys.Decimal.toLocale = function(self, pattern, locale)
 {
+  if (locale === undefined || locale == null) locale = fan.sys.Locale.cur();
   if (pattern === undefined) pattern = null;
 
   // get current locale

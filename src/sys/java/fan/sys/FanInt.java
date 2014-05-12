@@ -374,15 +374,16 @@ public final class FanInt
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public static String toLocale(long self) { return toLocale(self, null); }
-  public static String toLocale(long self, String pattern)
+  public static String toLocale(long self) { return toLocale(self, null, null); }
+  public static String toLocale(long self, String pattern) { return toLocale(self, pattern, null); }
+  public static String toLocale(long self, String pattern, Locale locale)
   {
+    // get current locale
+    if (locale == null) locale = Locale.cur();
+
     // if pattern is "B" format as bytes
     if (pattern != null && pattern.length() == 1 && pattern.charAt(0) == 'B')
       return toLocaleBytes(self);
-
-    // get current locale
-    Locale locale = Locale.cur();
 
     // get default pattern if necessary
     if (pattern == null)
