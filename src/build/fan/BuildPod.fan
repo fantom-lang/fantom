@@ -238,6 +238,9 @@ abstract class BuildPod : BuildScript
       ci.ns = FPodNamespace(f)
     }
 
+    // subclass hook
+    onCompileFan(ci)
+
     try
     {
       Compiler(ci).compile
@@ -254,6 +257,11 @@ abstract class BuildPod : BuildScript
       throw FatalBuildErr.make
     }
   }
+
+  **
+  ** Callback to tune the Fantom compiler input
+  **
+  virtual Void onCompileFan(CompilerInput ci) {}
 
 //////////////////////////////////////////////////////////////////////////
 // Compile Java
