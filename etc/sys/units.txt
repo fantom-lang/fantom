@@ -251,6 +251,7 @@ milligram, mg; kg1; 1.0E-6
 gram, g; kg1; 0.0010
 ounce, oz; kg1; 0.02835
 pound, lb; kg1; 0.453591
+kilopound, klb; kg1; 453.591
 metric_ton, ton; kg1; 1000.0
 short_ton, t; kg1; 907.18474
 
@@ -261,6 +262,7 @@ kilograms_per_hour, kg/h; kg1*sec-1; 2.777777777777778E-4
 pounds_per_minute, lb/min; kg1*sec-1; 0.007559872833333333
 pounds_per_hour, lb/h; kg1*sec-1; 1.2599788055555556E-4
 pounds_per_second, lb/s; kg1*sec-1; 0.45359237
+kilopounds_per_hour, klb/h; kg1*sec-1; 0.12599788055555556
 grams_per_second, g/s; kg1*sec-1; 0.0010
 grams_per_minute, g/min; kg1*sec-1; 1.6666666666666667E-5
 metric_tons_per_hour, ton/h; kg1*sec-1; 0.2777777777777778
@@ -378,6 +380,7 @@ cubic_inch, in³; m3; 1.6387064E-5
 cubic_foot, ft³; m3; 0.028317
 cubic_yard, yd³; m3; 0.764555
 gallon, gal; m3; 0.003785
+kilogallon, kgal; m3; 3.785
 quart, qt; m3; 9.46E-4
 pint, pt; m3; 4.73E-4
 fluid_ounce, fl_oz; m3; 2.95729E-5
