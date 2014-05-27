@@ -63,14 +63,28 @@ public final class DateTime
 
   public static long nowTicks()
   {
-    return fromJavaToTicks(System.currentTimeMillis());
+    long java = System.currentTimeMillis();
+    if (java < diffJava)
+    {
+      // sanity check if clock is set before 1-Jan-2000 UTC
+      if (!badClockErr)
+      {
+        badClockErr = true;
+        System.out.println("###");
+        System.out.println("### System clock is not set correctly!");
+        System.out.println("###");
+      }
+      java = diffJava + System.nanoTime()/1000000L;
+    }
+    return fromJavaToTicks(java);
   }
+  private static boolean badClockErr;
 
   public static long nowUnique()
   {
     synchronized (nowUniqueLock)
     {
-      long now = (System.currentTimeMillis() - diffJava) * nsPerMilli;
+      long now = nowTicks();
       if (now <= nowUniqueLast) now = nowUniqueLast+1;
       return nowUniqueLast = now;
     }
