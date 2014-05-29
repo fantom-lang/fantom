@@ -58,8 +58,7 @@ public class FwtEnvPeer
     // create new SWT image
     // TODO: this doesn't handle transparency
     ImageData sdata = s.getImageData();
-    ImageData rdata = new ImageData(rw, rh, sdata.depth, sdata.palette);
-    rdata.transparentPixel = sdata.transparentPixel; // this don't work
+    ImageData rdata = sdata.scaledTo(rw, rh);
     Image resultSwt = new Image(fwt.display, rdata);
 
     // paint new SWT image
