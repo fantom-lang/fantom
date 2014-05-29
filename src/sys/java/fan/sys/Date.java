@@ -128,6 +128,7 @@ public final class Date
   public final int getYear() { return year; }
 
   public final Month month() { return Month.array[month]; }
+  public final int getMonth() { return month; }
 
   public final long day() { return day; }
   public final int getDay() { return day; }
