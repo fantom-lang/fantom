@@ -140,7 +140,6 @@ const class Image
 
   **
   ** Resize this image into a new image.  Also see `Graphics.copyImage`.
-  ** Note: this method doesn't support transparency correctly yet.
   **
   Image resize(Size size) { GfxEnv.cur.imageResize(this, size) }
 
