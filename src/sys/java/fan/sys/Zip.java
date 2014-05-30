@@ -14,6 +14,8 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
 /**
  * Zip
@@ -222,6 +224,20 @@ public final class Zip
     {
       throw IOErr.make(e);
     }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Deflate/Inflate
+//////////////////////////////////////////////////////////////////////////
+
+  public static OutStream deflateOutStream(OutStream out)
+  {
+    return new SysOutStream(new DeflaterOutputStream(SysOutStream.java(out)));
+  }
+
+  public static InStream deflateInStream(InStream in)
+  {
+    return new SysInStream(new InflaterInputStream(SysInStream.java(in)));
   }
 
 //////////////////////////////////////////////////////////////////////////
