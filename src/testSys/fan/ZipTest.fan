@@ -192,4 +192,34 @@ class ZipTest : Test
     x := Zip.gzipInStream(buf.flip.in).readAllStr
     verifyEq(text, x)
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Deflate/Inflate
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDeflate()
+  {
+    // generate string with lots of duplicate text
+    s := StrBuf()
+    100.times { s.add("hello deflate!\n") }
+    text := s.toStr
+
+    // check size if we write raw
+    buf := Buf()
+    buf.out.print(text)
+    rawSize := buf.size
+
+    // write to buffer with deflate
+    buf = Buf()
+    Zip.deflateOutStream(buf.out).print(text).close
+    deflateSize := buf.size
+
+    // verify gzip is smaller than raw size
+    verify(deflateSize < rawSize)
+
+    // verify we can read it back out
+    x := Zip.deflateInStream(buf.flip.in).readAllStr
+    verifyEq(text, x)
+  }
+
 }

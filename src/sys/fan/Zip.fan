@@ -145,4 +145,20 @@ final class Zip
   **
   static InStream gzipInStream(InStream in)
 
+//////////////////////////////////////////////////////////////////////////
+// Deflate
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Construct a new deflate output stream which wraps the given output stream,
+  ** and compresses data using the "deflate" compression format.
+  **
+  static OutStream deflateOutStream(OutStream out)
+
+  **
+  ** Construct a new deflate input stream which wraps the given input stream and
+  ** inflates data written using the "deflate" compression format.
+  **
+  static InStream deflateInStream(InStream in)
+
 }
