@@ -186,7 +186,7 @@ abstract class BuildJava : BuildScript
   Void full()
   {
     clean
-    compile()
+    compile
   }
 
 }
