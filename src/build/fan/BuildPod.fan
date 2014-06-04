@@ -452,7 +452,7 @@ abstract class BuildPod : BuildScript
   {
     log.info("clean [$podName]")
     log.indent
-    dir := Env.cur.workDir
+    dir := isFantomCore ? devHomeDir : Env.cur.workDir
     Delete(this, dir+`lib/fan/${podName}.pod`).run
     Delete(this, dir+`lib/java/${podName}.jar`).run
     Delete(this, dir+`lib/dotnet/${podName}.dll`).run
@@ -463,6 +463,8 @@ abstract class BuildPod : BuildScript
     Delete(this, scriptDir+`temp-dotnet/`).run
     log.unindent
   }
+
+  private Bool isFantomCore() { meta["proj.name"] == "Fantom Core" }
 
 //////////////////////////////////////////////////////////////////////////
 // Test
@@ -497,4 +499,5 @@ abstract class BuildPod : BuildScript
     compile
     test
   }
+
 }
