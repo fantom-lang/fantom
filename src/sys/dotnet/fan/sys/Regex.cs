@@ -100,6 +100,8 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
+    public static readonly Regex m_defVal = new Regex("");
+
     private string m_source;
     private NRegex m_pattern;
 

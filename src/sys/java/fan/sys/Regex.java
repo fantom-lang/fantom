@@ -89,6 +89,8 @@ public final class Regex
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  public static final Regex defVal = new Regex("");
+
   private String source;
   private Pattern pattern;
 }

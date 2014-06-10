@@ -229,6 +229,11 @@ fan.sys.DateTime.m_defVal = fan.sys.DateTime.make(
   2000, fan.sys.Month.m_jan, 1, 0, 0, 0, 0, fan.sys.TimeZone.utc());
 
 //
+// Regex
+//
+fan.sys.Regex.m_defVal = fan.sys.Regex.fromStr("");
+
+//
 // Version
 //
 fan.sys.Version.m_defVal = fan.sys.Version.fromStr("0");
