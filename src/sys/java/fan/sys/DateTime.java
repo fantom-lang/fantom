@@ -617,7 +617,7 @@ public final class DateTime
   /**
    * Get the number days in the specified month (0-11).
    */
-  static int numDaysInMonth(int year, int month)
+  public static int numDaysInMonth(int year, int month)
   {
     if (month == 1 && isLeapYear(year))
       return 29;
