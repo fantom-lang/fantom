@@ -87,16 +87,21 @@ public final class Date
   public long compare(Object that)
   {
     Date x = (Date)that;
-    if (year == x.year)
+    return compare(x.year, x.month, x.day);
+  }
+
+  public int compare(int y, int m, int d)
+  {
+    if (year == y)
     {
-      if (month == x.month)
+      if (month == m)
       {
-        if (day == x.day) return 0;
-        return day < x.day ? -1 : +1;
+        if (day == d) return 0;
+        return day < d ? -1 : +1;
       }
-      return month < x.month ? -1 : +1;
+      return month < m ? -1 : +1;
     }
-    return year < x.year ? -1 : +1;
+    return year < y ? -1 : +1;
   }
 
   public int hashCode()
