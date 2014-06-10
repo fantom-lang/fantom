@@ -25,6 +25,7 @@ class RegexTest : Test
     verifyEq(re.toStr, ";")
     verifyEq(re.hash, ";".hash)
     verifyType(re, Regex#)
+    verifyEq(Regex.defVal.toStr, "")
   }
 
 //////////////////////////////////////////////////////////////////////////

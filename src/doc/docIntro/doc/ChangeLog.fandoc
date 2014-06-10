@@ -7,7 +7,7 @@
 **************************************************************************
 
 *Build 1.0.67 (working)*
-- Mark sys::Regex as serializable
+- Mark sys::Regex as serializable and add defVal
 - DateTime.fromJava add negIsNull flag
 - Add fandoc::FandocDocWriter
 - Add locale parameter to sys toLocale methods
