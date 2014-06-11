@@ -347,6 +347,9 @@ const class Type
   **
   ** Lookup a slot by name.  If the slot doesn't exist and checked
   ** is false then return null, otherwise throw UnknownSlotErr.
+  ** Slots are any field or method in this type's scope including
+  ** those defined directly by this type and those inherited from
+  ** super class or mixins.
   **
   Slot? slot(Str name, Bool checked := true)
 
