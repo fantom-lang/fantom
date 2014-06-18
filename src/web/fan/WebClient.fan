@@ -388,6 +388,7 @@ class WebClient
     out.print(reqMethod).print(" ").print(reqPath)
        .print(" HTTP/").print(reqVersion).print("\r\n")
     out.print("Host: ").print(host).print("\r\n")
+    if (!reqHeaders.containsKey("Accept-Encoding")) out.print("Accept-Encoding: gzip\r\n")
     reqHeaders.each |Str v, Str k| { out.print(k).print(": ").print(v).print("\r\n") }
     out.print("\r\n")
     out.flush
