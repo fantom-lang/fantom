@@ -216,11 +216,12 @@ class WebUtil
   **
   ** Given a set of headers, wrap the specified input stream
   ** to read the content body:
-  **   1. If Content-Length then `makeFixedInStream`
-  **   2. If Transfer-Encoding is chunked then `makeChunkedInStream`
-  **   3. If Content-Type assume non-pipelined connection and
+  **   1. If Content-Encoding is 'gzip' then wrap via `sys::Zip.gzipInStream`
+  **   2. If Content-Length then `makeFixedInStream`
+  **   3. If Transfer-Encoding is chunked then `makeChunkedInStream`
+  **   4. If Content-Type assume non-pipelined connection and
   **      return 'in' directly
-  **   4. Assume no content and return null
+  **   5. Assume no content and return null
   **
   ** If a stream is returned, then it is automatically configured
   ** with the correct content encoding based on the Content-Type.
@@ -230,6 +231,19 @@ class WebUtil
     // map the "Content-Type" response header to the
     // appropiate charset or default to UTF-8.
     cs := headersToCharset(headers)
+
+    // check for content-encoding
+    ce := headers["Content-Encoding"]
+    if (ce != null)
+    {
+      ce = ce.lower
+      switch (ce)
+      {
+        case "gzip":    in = Zip.gzipInStream(in)
+        case "deflate": in = Zip.deflateInStream(in)
+        default: throw IOErr("Unsupported Content-Encoding: $ce")
+      }
+    }
 
     // check for fixed content length
     len := headers["Content-Length"]
