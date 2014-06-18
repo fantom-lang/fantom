@@ -993,6 +993,16 @@ class StrTest : Test
     verifyEq("   ".trimEnd, "")
   }
 
+  Void testTrimToNull()
+  {
+    verifyNull("".trimToNull)
+    verifyNull(" ".trimToNull)
+    verifyNull("   ".trimToNull)
+    verifyNull("\u0019\u0000\n\r\t \u0005\n".trimToNull)
+    verifyEq(" x ".trimToNull, "x")
+    verifySame("foo".trimToNull, "foo")
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Split
 //////////////////////////////////////////////////////////////////////////

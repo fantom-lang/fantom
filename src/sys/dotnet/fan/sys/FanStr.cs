@@ -602,6 +602,12 @@ namespace Fan.Sys
       return self.Substring(0, pos+1);
     }
 
+    public static string trimToNull(string self)
+    {
+      String trimmed = self.trim();
+      return trimmed.Length() == 0 ? null : trimmed;
+    }
+
     public static List split(string self) { return split(self, null, true); }
     public static List split(string self, Long separator) { return split(self, separator, true); }
     public static List split(string self, Long separator, bool trim)

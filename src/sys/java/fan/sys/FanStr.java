@@ -610,6 +610,12 @@ public class FanStr
     return self.substring(0, pos+1);
   }
 
+  public static String trimToNull(String self)
+  {
+    String trimmed = self.trim();
+    return trimmed.length() == 0 ? null : trimmed;
+  }
+
   public static List split(String self) { return split(self, null, true); }
   public static List split(String self, Long separator) { return split(self, separator, true); }
   public static List split(String self, Long separator, boolean trimmed)
