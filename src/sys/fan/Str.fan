@@ -412,6 +412,22 @@ const final class Str
   Str trim()
 
   **
+  ** Trim whitespace from the beginning and end of the string.  
+  ** Should the resultant string be empty, 'null' is returned.
+  ** 
+  ** For the purposes of this method, whitespace is defined as any character 
+  ** equal to or less than the 0x20 space character (including ' ', '\r', '\n', 
+  ** and '\t').
+  **
+  ** Examples:
+  **    "foo".trimToNull      =>  "foo"
+  **    "  foo  ".trimToNull  =>  "foo"
+  **    "".trimToNull         =>  null
+  **    "   ".trimToNull      =>  null
+  **
+  Str? trimToNull()
+
+  **
   ** Trim whitespace only from the beginning of the string.
   ** See `trim` for definition of whitespace.
   **
