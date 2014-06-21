@@ -26,14 +26,15 @@ const final class MimeType
   static new fromStr(Str s, Bool checked := true)
 
   **
-  ** Parse a set of attribute-value parameters where the
-  ** values may be tokens or quoted-strings.  The resulting map
-  ** is case insensitive.  If invalid format and checked is
-  ** false return null, otherwise throw ParseErr.  Parenthesis
-  ** comments are not supported.
+  ** Parse a set of attribute-value parameters where the values may be
+  ** tokens or quoted-strings.  The resulting map is case insensitive.
+  ** If invalid format return null or raise ParseErr based on checked flag.
+  ** Parenthesis comments are not supported.  If a value pair is missing
+  ** "= value", then the value is defaulted to "".
   **
   ** Examples:
-  **   a=b; c="d"  =>  ["a":"b", "c"="d"]
+  **   a=b; c="d"       =>  ["a":"b", "c"="d"]
+  **   foo=bar; secure  =>  ["foo":"bar", "secure":""]
   **
   static [Str:Str]? parseParams(Str s, Bool checked := true)
 

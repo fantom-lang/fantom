@@ -133,6 +133,17 @@ public final class MimeType
         valStart = i;
       }
 
+      if (c == ';' && eq < 0 && !inQuotes)
+      {
+        // key with no =val
+        String key = s.substring(keyStart, i).trim();
+        params.set(key, "");
+        keyStart = i+1;
+        eq = valStart = valEnd = -1;
+        hasEsc = false;
+        continue;
+      }
+
       if (eq < 0) continue;
 
       if (c == '\\' && inQuotes)
@@ -164,10 +175,18 @@ public final class MimeType
     if (keyStart < s.length())
     {
       if (valEnd < 0) valEnd = s.length()-1;
-      String key = s.substring(keyStart, eq).trim();
-      String val = s.substring(valStart, valEnd+1).trim();
-      if (hasEsc) val = unescape(val);
-      params.set(key, val);
+      if (eq < 0)
+      {
+        String key = s.substring(keyStart, s.length()).trim();
+        params.set(key, "");
+      }
+      else
+      {
+        String key = s.substring(keyStart, eq).trim();
+        String val = s.substring(valStart, valEnd+1).trim();
+        if (hasEsc) val = unescape(val);
+        params.set(key, val);
+      }
     }
 
     return params;
