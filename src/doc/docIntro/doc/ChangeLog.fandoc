@@ -13,6 +13,8 @@
 - Add locale parameter to sys toLocale methods
 - CompilerInput.docTests
 - WebClient includes Accept-Encoding: gzip
+- Str.trimToNull
+- MimeType.parseParams accepts valueless attributes
 
 *Build 1.0.66 (19 Mar 201)*
 - Wisp support for secureSessionCookie config prop

@@ -93,7 +93,6 @@ class MimeTypeTest : Test
 
     verifyFromStrBad("foo")
     verifyFromStrBad("a/b; x=")
-    verifyFromStrBad("a/b; x=y; z")
   }
 
   Void verifyFromStr(Str s, Str media, Str sub, [Str:Str]? params)
@@ -133,6 +132,15 @@ class MimeTypeTest : Test
     verifyParseParams("a=\"\"; b=\"foo\"; c=\"\"", ["a":"", "b":"foo", "c":""])
     verifyParseParams("x=f (comment)", ["x":"f (comment)"])
 
+    verifyParseParams("a", ["a":""])
+    verifyParseParams("ax", ["ax":""])
+    verifyParseParams("axy", ["axy":""])
+    verifyParseParams("a; b", ["a":"", "b":""])
+    verifyParseParams("ax; by", ["ax":"", "by":""])
+    verifyParseParams("ax ;  by ", ["ax":"", "by":""])
+    verifyParseParams("a=b; c", ["a":"b", "c":""])
+    verifyParseParams("a=b; cx", ["a":"b", "cx":""])
+
     // not sure this is actually correctly formatted to have equals
     // in unquoted values, but have seen Chrome send cookies like this
     verifyParseParams("""a=sdecbc682; tz=America/New_York; b="05df13cc-9ef1"; c=MDI1MzE=; d=ABC=""",
@@ -143,7 +151,6 @@ class MimeTypeTest : Test
        "d":  "ABC="])
 
     verifyEq(MimeType.parseParams("n=", false), null)
-    verifyErr(ParseErr#) { MimeType.parseParams("x", true) }
     verifyErr(ParseErr#) { MimeType.parseParams("x=f;y=") }
   }
 
