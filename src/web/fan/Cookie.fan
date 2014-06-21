@@ -19,17 +19,41 @@ const class Cookie
 
   **
   ** Parse a HTTP cookie header name/value pair.
-  ** Throw ParseErr if not formatted correctly.
+  ** Throw ParseErr or return null if not formatted correctly.
   **
-  static Cookie fromStr(Str s)
+  static new fromStr(Str s, Bool checked := true)
   {
-    eq := s.index("=")
-    if (eq == null) throw ParseErr(s)
-    name := s[0..<eq].trim
-    val := s[eq+1..-1].trim
-    if (val.size >= 2 && val[0] == '"' && val[-1] == '"')
-      val = WebUtil.fromQuotedStr(val)
-    return make(name, val)
+    try
+    {
+      Str? params := null
+      semi := s.index(";")
+      if (semi != null)
+      {
+        params = s[semi+1..-1]
+        s = s[0..<semi]
+      }
+
+      eq := s.index("=")
+      if (eq == null) throw ParseErr(s)
+      name := s[0..<eq].trim
+      val := s[eq+1..-1].trim
+      if (val.size >= 2 && val[0] == '"' && val[-1] == '"')
+        val = WebUtil.fromQuotedStr(val)
+
+      if (params == null) return make(name, val)
+
+      return make(name, val)
+      {
+        p := MimeType.parseParams(params)
+        it.domain = p["Domain"]
+        it.path = p.get("Path", "/")
+      }
+    }
+    catch (Err e)
+    {
+      if (checked) throw ParseErr("Cookie: $s")
+      return null
+    }
   }
 
   **
@@ -114,7 +138,7 @@ const class Cookie
   const Bool secure := false
 
   **
-  ** Return the cookie formatted as an HTTP header.
+  ** Return the cookie formatted as an Set-Cookie HTTP header.
   **
   override Str toStr()
   {
@@ -135,5 +159,9 @@ const class Cookie
     if (secure) s.add(";Secure")
     return s.toStr
   }
+
+  ** Get format used for Cookie header without quoted value
+  ** which can cause problem
+  internal Str toNameValStr() { "$name=$val" }
 
 }

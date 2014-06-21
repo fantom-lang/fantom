@@ -98,7 +98,10 @@ class WebUtil
   ** returned as a [case insensitive]`sys::Map.caseInsensitive` map.
   ** Throw ParseErr if headers are malformed.
   **
-  static Str:Str parseHeaders(InStream in)
+  static Str:Str parseHeaders(InStream in) { doParseHeaders(in, null) }
+
+  // handle set-cookie headers individually
+  internal static Str:Str doParseHeaders(InStream in, Cookie[]? cookies)
   {
     headers := Str:Str[:]
     headers.caseInsensitive = true
@@ -125,6 +128,13 @@ class WebUtil
       val := token(in, CR).trim
       if (in.read != LF)
         throw ParseErr("Invalid CRLF line ending")
+
+      // set-cookie
+      if (key.equalsIgnoreCase("Set-Cookie") && cookies != null)
+      {
+        cookie := Cookie.fromStr(val, false)
+        if (cookie != null) cookies.add(cookie)
+      }
 
       // check if key already defined in which case
       // this is an append, otherwise its a new pair
@@ -221,16 +231,14 @@ class WebUtil
   **   3. If Transfer-Encoding is chunked then `makeChunkedInStream`
   **   4. If Content-Type assume non-pipelined connection and
   **      return 'in' directly
-  **   5. Assume no content and return null
   **
   ** If a stream is returned, then it is automatically configured
   ** with the correct content encoding based on the Content-Type.
   **
-  static InStream? makeContentInStream(Str:Str headers, InStream in)
+  static InStream makeContentInStream(Str:Str headers, InStream in)
   {
-    // map the "Content-Type" response header to the
-    // appropiate charset or default to UTF-8.
-    cs := headersToCharset(headers)
+    // handle Content-Length / Transfer-Encoding
+    in = doMakeContentInStream(headers, in)
 
     // check for content-encoding
     ce := headers["Content-Encoding"]
@@ -239,11 +247,19 @@ class WebUtil
       ce = ce.lower
       switch (ce)
       {
-        case "gzip":    in = Zip.gzipInStream(in)
-        case "deflate": in = Zip.deflateInStream(in)
+        case "gzip":    return Zip.gzipInStream(in)
+        case "deflate": return Zip.deflateInStream(in)
         default: throw IOErr("Unsupported Content-Encoding: $ce")
       }
     }
+    return in
+  }
+
+  private static InStream? doMakeContentInStream(Str:Str headers, InStream in)
+  {
+    // map the "Content-Type" response header to the
+    // appropiate charset or default to UTF-8.
+    cs := headersToCharset(headers)
 
     // check for fixed content length
     len := headers["Content-Length"]
