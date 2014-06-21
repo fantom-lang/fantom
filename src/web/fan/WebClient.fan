@@ -40,6 +40,9 @@ class WebClient
   new make(Uri? reqUri := null)
   {
     if (reqUri != null) this.reqUri = reqUri
+
+    // default headers
+    reqHeaders["Accept-Encoding"] = "gzip"
   }
 
 
@@ -165,6 +168,33 @@ class WebClient
   Buf resBuf()
   {
     return resIn.readAllBuf
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Cookies
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Cookies to pass for "Cookie" request header.  If set to an empty
+  ** list then the "Cookie" request header is removed.  After a request
+  ** has been completed if the "Set-Cookie" response header specified
+  ** one or more cookies then this field is automatically updated with
+  ** the server specified cookies.
+  **
+  Cookie[] cookies := Cookie#.emptyList
+  {
+    set
+    {
+      // save field
+      &cookies = it
+
+      // set reqHeaders
+      if (it.isEmpty) { reqHeaders.remove("Cookie"); return }
+      reqHeaders["Cookie"] =
+        it.size == 1 ?
+        it.first.toNameValStr :
+        it.join(",") |c| { c.toNameValStr }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -388,7 +418,6 @@ class WebClient
     out.print(reqMethod).print(" ").print(reqPath)
        .print(" HTTP/").print(reqVersion).print("\r\n")
     out.print("Host: ").print(host).print("\r\n")
-    if (!reqHeaders.containsKey("Accept-Encoding")) out.print("Accept-Encoding: gzip\r\n")
     reqHeaders.each |Str v, Str k| { out.print(k).print(": ").print(v).print("\r\n") }
     out.print("\r\n")
     out.flush
@@ -421,7 +450,9 @@ class WebClient
       resPhrase = res[13..-1]
 
       // parse response headers
-      resHeaders = WebUtil.parseHeaders(in)
+      setCookies := Cookie[,]
+      resHeaders = WebUtil.doParseHeaders(in, setCookies)
+      if (!setCookies.isEmpty) cookies = setCookies
     }
     catch (Err e) throw IOErr("Invalid HTTP response: $res", e)
 

@@ -25,6 +25,19 @@ class WebClientTest : Test
     verifyErr(Err#) { x := WebClient { reqUri = `http://foo/`; reqHeaders["host"] = "bad"; writeReq; readRes } }
   }
 
+  Void testCookies()
+  {
+    a := Cookie.fromStr("alpha=blah; Expires=Tue, 15-Jan-2013 21:47:38 GMT; Path=/; Domain=.example.com; HttpOnly")
+    b := Cookie.fromStr("beta=belch")
+    c := WebClient(`http://foo.com/`)
+    c.cookies = [a]
+    verifyEq(c.reqHeaders["Cookie"], "alpha=blah")
+    c.cookies = [a, b]
+    verifyEq(c.reqHeaders["Cookie"], "alpha=blah,beta=belch")
+    c.cookies = [,]
+    verifyEq(c.reqHeaders["Cookie"], null)
+  }
+
   Void testGetFixed()
   {
     // use skyfoundry.com assuming simple static image page
@@ -71,10 +84,16 @@ class WebClientTest : Test
       verifyEq(c.resCode, 200)
       verifyEq(c.resPhrase, "OK")
       verifyEq(c.resHeaders.caseInsensitive, true)
+      verify(c.cookies.size > 0)
+      verify(c.reqHeaders["Cookie"] != null)
 
       // chunked transfer
       verify(c.resHeader("Transfer-Encoding").lower.contains("chunked"))
       verify(c.resStr.contains("<html"))
+
+      // try again
+      again := c.getStr
+      verify(again.contains("<html"))
     }
     finally c.close
   }

@@ -173,6 +173,7 @@ class ObixClient
     c.followRedirects = false
     c.socketOptions.receiveTimeout = this.receiveTimeout
     c.reqHeaders["Authorization"] = authHeader
+    c.cookies = cookies
     if (in != null) c.reqHeaders["Content-Type"]  = "text/xml; charset=utf-8"
 
     if (log.isDebug)
@@ -209,9 +210,10 @@ class ObixClient
     }
   }
 
-  private static ObixObj readResObj(WebClient c, InStream in)
+  private ObixObj readResObj(WebClient c, InStream in)
   {
     if (c.resCode != 200) throw IOErr("Bad HTTP response: $c.resCode $c.reqUri")
+    cookies = c.cookies
     obj := ObixObj.readXml(in)
     if (obj.elemName == "err") throw ObixErr(obj)
     return obj
@@ -251,14 +253,20 @@ class ObixClient
 
   static Void main(Str[] args)
   {
-    c := ObixClient(args[0].toUri, "", "")
+    c := ObixClient(args[0].toUri, args[1], args[2])
+    c.log.level = LogLevel.debug
     c.readLobby
-    about := c.readAbout
-    about.writeXml(Env.cur.out)
-    echo(about->serverName)
-    echo(about->vendorName)
-    echo(about->productName)
-    echo(about->productVersion)
+    3.times |i|
+    {
+      echo("------ $i ------")
+      about := c.readAbout
+      echo
+      echo(about->serverName)
+      echo(about->vendorName)
+      echo(about->productName)
+      echo(about->productVersion)
+      echo
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -272,6 +280,7 @@ class ObixClient
 
   private Str authHeader
   private Uri? watchServiceMakeUri
+  private Cookie[] cookies := Cookie#.emptyList
 }
 
 **************************************************************************
