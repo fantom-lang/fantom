@@ -35,6 +35,8 @@ public final class Month
 
   public static final List vals = (List)new List(Sys.MonthType, array).toImmutable();
 
+  public static Month fromOrdinal(int ord) { return array[ord]; }
+
   private Month(int ordinal, String name)
   {
     Enum.make$(this, FanInt.pos[ordinal], name.intern());
