@@ -61,6 +61,56 @@ abstract class DocNode
     write(html)
     html.out.flush
   }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Path Utilities
+  //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get the `DocElem` that contains this node.
+  ** Return 'null' if not parented.
+  **
+  DocElem? parent { internal set }
+
+  **
+  ** Get the path from the root of the DOM to this node.
+  **
+  virtual DocNode[] path()
+  {
+    DocNode[] p := [this]
+    cur := parent
+    while (cur != null)
+    {
+      p.add(cur)
+      cur = cur.parent
+    }
+    return p.reverse
+  }
+
+  **
+  ** Get the index of this node in its parent's children.
+  ** Return 'null' if not parented.
+  **
+  Int? pos()
+  {
+    return parent?.children?.indexSame(this)
+  }
+
+  **
+  ** Return 'true' if this node is the first child in its parent.
+  **
+  Bool isFirst()
+  {
+    return pos == 0
+  }
+
+  **
+  ** Return 'true' if this node is the last child in its parent.
+  **
+  Bool isLast()
+  {
+    return parent?.children?.last === this
+  }
 }
 
 **************************************************************************
@@ -134,37 +184,86 @@ abstract class DocElem : DocNode
     children.each |DocNode child| { child.write(out) }
   }
 
+  //////////////////////////////////////////////////////////////////////////
+  // Children
+  //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get a readonly list of this elements's children.
+  **
+  DocNode[] children() { return kids.ro }
+
   **
   ** Add a child to this node.  If adding a text node
   ** it is automatically merged with the trailing text
-  ** node (if applicable).  Return this.
+  ** node (if applicable).  If the node is arlready parented
+  ** thorw ArgErr. Return this.
   **
   This addChild(DocNode node)
   {
-    if (!children.isEmpty)
+    if (node.parent != null) throw ArgErr("Node already parented: $node")
+    if (!kids.isEmpty)
     {
-      last := children.last
+      last := kids.last
 
       // if adding two text nodes, then merge them
       if (node.id === DocNodeId.text && last.id === DocNodeId.text)
       {
-        ((DocText)children.last).str += ((DocText)node).str
+        ((DocText)kids.last).str += ((DocText)node).str
         return this
       }
 
       // two consecutive blockquotes get merged
       if (node.id === DocNodeId.blockQuote && last.id == DocNodeId.blockQuote)
       {
-        ((DocElem)last).children.addAll(((DocElem)node).children)
+        DocElem elem := (DocElem)node
+        elem.kids.dup.each |child| { elem.remove(child); last->addChild(child) }
         return this
       }
     }
 
-    children.add(node)
+    node.parent = this
+    kids.add(node)
     return this
   }
 
-  DocNode[] children := DocNode[,]
+  **
+  ** Remove a child node. If this element is not the child's
+  ** current parent throw ArgErr. Return this.
+  **
+  This remove(DocNode node)
+  {
+    if (kids.removeSame(node) == null) throw ArgErr("not my child: $node")
+    node.parent = null
+    return this
+  }
+
+  **
+  ** Remove all child nodes. Return this.
+  **
+  This removeAll()
+  {
+    kids.dup.each |node| { remove(node) }
+    return this
+  }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Path
+  //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Covariant override to narrow path to list of `DocElem`.
+  **
+  final override DocElem[] path()
+  {
+    return super.path.map|n->DocElem| { (DocElem)n }
+  }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Fields
+  //////////////////////////////////////////////////////////////////////////
+
+  private DocNode[] kids := [,]
   Str? anchorId
 }
 

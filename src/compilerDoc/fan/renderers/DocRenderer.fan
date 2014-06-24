@@ -140,8 +140,7 @@ abstract class DocRenderer
           // if link text was original URI, then update with DocLink.dis
           if (elem.children.first is DocText && elem.children.first.toStr == orig)
           {
-            elem.children.clear
-            elem.addChild(DocText(link.dis))
+            elem.removeAll.addChild(DocText(link.dis))
           }
         }
         catch (Err e)
@@ -177,4 +176,3 @@ abstract class DocRenderer
     env.link(this.doc, elem.uri, true)
   }
 }
-
