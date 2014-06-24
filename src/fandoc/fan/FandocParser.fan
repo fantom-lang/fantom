@@ -40,7 +40,7 @@ class FandocParser
     catch (Err e)
     {
       err("Invalid line $curLine", curLine, e)
-      doc.children = [Pre.make.addChild(DocText(lines.join("\n")))]
+      doc.removeAll.addChild(Pre.make.addChild(DocText(lines.join("\n"))))
     }
 
     lines = null
@@ -292,7 +292,7 @@ class FandocParser
       else
         err("Internal error: $e", startLineNum, e)
 
-      elem.children = elem.children[0..<oldNumChildren]
+      elem.children[oldNumChildren..-1].dup.each |badChild| { elem.remove(badChild) }
       elem.addChild(DocText(buf.toStr.replace("\n", " ")))
     }
 
