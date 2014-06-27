@@ -93,7 +93,9 @@ internal class InlineParser
       // check for end of emphasis/strong or start of new one
       case '*':
         if (stack.peek.id == DocNodeId.strong)
-          return peek == '*'
+          // if inside a strong, then end of strong, or start of emphasis
+          // ends the current text.
+          return peek == '*' || last.isSpace
         else if (stack.peek.id == DocNodeId.emphasis)
           return true
         else
