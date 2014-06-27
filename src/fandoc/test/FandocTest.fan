@@ -26,8 +26,13 @@ class FandocTest : Test
     verifyDoc("**x**", ["<body>", ["<p>", ["<strong>", "x"]]])
     verifyDoc("alpha **foo** beta", ["<body>", ["<p>", "alpha ", ["<strong>", "foo"], " beta"]])
 
+    // strong nested in emphasis
     verifyDoc("You know, *winter\n**really, really**\nsucks*!", ["<body>", ["<p>", "You know, ",
       ["<em>", "winter ", ["<strong>", "really, really"], " sucks"], "!"]])
+
+    // emphasis nested in strong
+    verifyDoc("You know, **winter\n*really, really*\nsucks**!", ["<body>", ["<p>", "You know, ",
+      ["<strong>", "winter ", ["<em>", "really, really"], " sucks"], "!"]])
 
     verifyDoc("**`foo`**", ["<body>", ["<p>", ["<strong>", ["<a foo>", "foo"]]]])
     verifyDoc("**[some Foo]`foo`**", ["<body>", ["<p>", ["<strong>", ["<a foo>", "some Foo"]]]])
@@ -244,7 +249,7 @@ class FandocTest : Test
   {
     verifyDoc(
      "- a
-      
+
       heading
       ----", ["<body>", ["<ul>", ["<li>", "a"]], ["<h4>", "heading"]])
 
@@ -492,7 +497,7 @@ class FandocTest : Test
 // ListItem
 //////////////////////////////////////////////////////////////////////////
 
-  Void testToB26() 
+  Void testToB26()
   {
     li := ListIndex(OrderedListStyle.lowerAlpha)
     verifyEq(li.toStr, "a. ")
@@ -526,7 +531,7 @@ class FandocTest : Test
     verifyEq(li.increment.toStr, "AC. ")
   }
 
-  Void testToRoman() 
+  Void testToRoman()
   {
     li := ListIndex(OrderedListStyle.lowerRoman)
     verifyEq(li.toStr, "i. ")
