@@ -35,6 +35,11 @@ fan.sys.Test.prototype.verify = function(cond, msg)
   this.verifyCount++;
 }
 
+fan.sys.Test.prototype.verifyTrue = function(cond, msg)
+{
+  return this.verify(cond, msg);
+}
+
 fan.sys.Test.prototype.verifyFalse = function(cond, msg)
 {
   if (cond) this.fail(msg);
@@ -132,6 +137,26 @@ fan.sys.Test.prototype.verifyErr = function(errType, func)
     //if (verbose) System.out.println("  verifyErr: " + e);
     println("  verifyErr: " + e);
     this.fail(e.$typeof() + " thrown, expected " + errType);
+  }
+  this.fail("No err thrown, expected " + errType);
+}
+
+fan.sys.Test.prototype.verifyErrMsg = function(errType, errMsg, func)
+{
+  try
+  {
+    func.call();
+  }
+  catch (err)
+  {
+    var e = fan.sys.Err.make(err);
+    if (e.$typeof() != errType) {
+      println("  verifyErrMsg: " + e);
+      this.fail(e.$typeof() + " thrown, expected " + errType);
+    }
+    this.verifyCount++;
+    this.verifyEq(errMsg, e.msg());
+    return;
   }
   this.fail("No err thrown, expected " + errType);
 }

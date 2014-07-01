@@ -58,6 +58,28 @@ class RegexTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Quote
+//////////////////////////////////////////////////////////////////////////
+
+  Void testQuote()
+  {
+    re := Regex.quote("foobar")
+    verifyEq(re.toStr, "foobar")
+    verifyEq(re.matches("foobar"), true)
+    verifyEq(re.matches("barfoo"), false)
+    
+    re = Regex.quote("foo.*bar")
+    verifyEq(re.toStr, "foo\\.\\*bar")
+    verifyEq(re.matches("foobar"), false)
+    verifyEq(re.matches("fooxbar"), false)
+    verifyEq(re.matches("foo.*bar"), true)
+
+    re = Regex.quote("+(.*)")
+    verifyEq(re.toStr, Str<|\+\(\.\*\)|>)
+    verifyEq(re.matches("+(.*)"), true)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Split
 //////////////////////////////////////////////////////////////////////////
 

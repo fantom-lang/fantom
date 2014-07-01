@@ -391,6 +391,12 @@ fan.sys.Str.trim = function(self, trimStart, trimEnd)
 fan.sys.Str.trimStart = function(self) { return fan.sys.Str.trim(self, true, false); }
 fan.sys.Str.trimEnd   = function(self) { return fan.sys.Str.trim(self, false, true); }
 
+fan.sys.Str.trimToNull = function(self)
+{
+  var trimmed = fan.sys.Str.trim(self, true, true);
+  return trimmed.length == 0 ? null : trimmed;
+}
+
 fan.sys.Str.split = function(self, sep, trimmed)
 {
   if (sep == null) return fan.sys.Str.splitws(self);
