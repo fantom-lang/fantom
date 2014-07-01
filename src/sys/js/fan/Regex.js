@@ -34,6 +34,18 @@ fan.sys.Regex.glob = function(pattern)
   return new fan.sys.Regex(s);
 }
 
+fan.sys.Regex.quote = function(pattern)
+{
+  var s = "";
+  for (var i=0; i<pattern.length; ++i)
+  {
+    var c = pattern.charCodeAt(i);
+    if (fan.sys.Int.isAlphaNum(c)) s += String.fromCharCode(c);
+    else s += '\\' + String.fromCharCode(c);
+  }
+  return new fan.sys.Regex(s);
+}
+
 fan.sys.Regex.prototype.$ctor = function(source)
 {
   this.m_source = source;

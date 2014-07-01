@@ -20,7 +20,7 @@ const final class Regex
   **
   ** Compile a regular expression pattern string.
   **
-  static Regex fromStr(Str pattern)
+  static new fromStr(Str pattern)
 
   **
   ** Make a Regex which will match a glob pattern:
@@ -29,6 +29,12 @@ const final class Regex
   **   - any other character is matched exactly
   **
   static Regex glob(Str pattern)
+
+  **
+  ** Make a Regex that matches the given string exactly.
+  ** All non-alpha numeric characters are escaped.
+  **
+  static Regex quote(Str str)
 
   **
   ** Private constructor.

@@ -58,6 +58,9 @@ public class Test
     verifyCount++;
   }
 
+  public void verifyTrue(boolean cond) { verify(cond, null); }
+  public void verifyTrue(boolean cond, String msg) { verify(cond, msg); }
+
   public void verifyFalse(boolean cond) { verifyFalse(cond, null); }
   public void verifyFalse(boolean cond, String msg)
   {
@@ -188,6 +191,36 @@ public class Test
       Err err = Err.make(e);
       if (err.typeof() == errType) { verifyCount++; return; }
       fail(e.toString() + " thrown, expected " + errType);
+    }
+    fail("No err thrown, expected " + errType);
+  }
+
+  public void verifyErrMsg(Type errType, String errMsg, Func f)
+  {
+    try
+    {
+      f.call(this);
+    }
+    catch (Err e)
+    {
+      if (verbose) System.out.println("  verifyErrMsg: " + e);
+      if (e.typeof() != errType) {
+        fail(e.typeof() + " thrown, expected " + errType);
+      }
+      verifyCount++;
+      verifyEq(errMsg, e.msg());
+      return;
+    }
+    catch (Throwable e)
+    {
+      if (verbose) System.out.println("  verifyErrMsg: " + e);
+      Err err = Err.make(e);
+      if (err.typeof() != errType) {
+        fail(e.toString() + " thrown, expected " + errType);
+      }
+      verifyCount++;
+      verifyEq(errMsg, err.msg());
+      return;
     }
     fail("No err thrown, expected " + errType);
   }

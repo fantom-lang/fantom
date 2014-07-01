@@ -53,7 +53,16 @@ abstract class Test
   ** failure exception.  If msg is non-null, include it
   ** in a failure exception.
   **
+  ** Identical to `verifyTrue`.
   Void verify(Bool cond, Str? msg := null)
+
+  **
+  ** Verify that cond is true, otherwise throw a test
+  ** failure exception.  If msg is non-null, include it
+  ** in a failure exception.
+  ** 
+  ** Identical to `verify`, added to suppliment `verifyFalse`.
+  Void verifyTrue(Bool cond, Str? msg := null)
 
   **
   ** Verify that cond is false, otherwise throw a test
@@ -98,7 +107,7 @@ abstract class Test
   Void verifySame(Obj? a, Obj? b, Str? msg := null)
 
   **
-  ** Verify that a !== b, otherwise throw a test* failure exception.
+  ** Verify that a !== b, otherwise throw a test failure exception.
   ** If msg is non-null, include it in failure exception.
   **
   Void verifyNotSame(Obj? a, Obj? b, Str? msg := null)
@@ -110,12 +119,25 @@ abstract class Test
 
   **
   ** Verify that the function throws an Err of the
-  ** exact same type as err (compare using === operator).
+  ** exact same type as errType (compare using === operator).
   **
-  ** Examples:
+  ** Example:
   **   verifyErr(ParseErr#) { x := Int.fromStr("@#!") }
   **
   Void verifyErr(Type errType, |Test| c)
+
+  **
+  ** Verify that the function throws an Err.
+  ** The Err must be the exact same type as errType 
+  ** and the contained msg must be the same as errMsg.
+  **
+  ** Example:
+  **   verifyErrMsg(ParseErr#, "Invalid Int: 'ABC'")
+  **   {
+  **     x := Int.fromStr("ABC")
+  **   }
+  **
+  Void verifyErrMsg(Type errType, Str errMsg, |Test| c)
 
   **
   ** Throw a test failure exception.  If msg is non-null, include

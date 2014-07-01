@@ -49,14 +49,14 @@ class IntTest : Test
   {
     Obj x := 3
 
-    verify(Type.of(x) === Int#)
-    verify(Type.of(3) === Int#)
-    verify(x.isImmutable)
-    verify(8.isImmutable)
+    verifyTrue(Type.of(x) === Int#)
+    verifyTrue(Type.of(3) === Int#)
+    verifyTrue(x.isImmutable)
+    verifyTrue(8.isImmutable)
 
-    verify(x is Obj)
-    verify(x is Num)
-    verify(x is Int)
+    verifyTrue(x is Obj)
+    verifyTrue(x is Num)
+    verifyTrue(x is Int)
     verifyFalse(x is Float)
   }
 
@@ -599,6 +599,8 @@ class IntTest : Test
     verifyErr(ParseErr#) { x := Int.fromStr("3", 2, true) }
     verifyErr(ParseErr#) { x := Int.fromStr("3g", 16, true) }
     verifyErr(ParseErr#) { x := Int.fromStr("-10111", 2) }
+    
+    verifyErrMsg(ParseErr#, "Invalid Int: 'ABC'") { x := Int.fromStr("ABC") }
   }
 
 //////////////////////////////////////////////////////////////////////////

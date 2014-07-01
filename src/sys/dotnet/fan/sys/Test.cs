@@ -59,6 +59,9 @@ namespace Fan.Sys
       verifyCount++;
     }
 
+    public void verifyTrue(bool cond) { verify(cond, null); }
+    public void verifyTrue(bool cond, string msg) { verify(cond, msg); }
+
     public void verifyFalse(bool cond) { verifyFalse(cond, null); }
     public void verifyFalse(bool cond, string msg)
     {
@@ -167,6 +170,36 @@ namespace Fan.Sys
         Err err = Fan.Sys.Err.make(e);
         if (err.@typeof() == errType) { verifyCount++; return; }
         fail(e.GetType() + " thrown, expected " + errType);
+      }
+      fail("No err thrown, expected " + errType);
+    }
+
+    public void verifyErrMsg(Type errType, string errMsg, Func f)
+    {
+      try
+      {
+        f.call(this);
+      }
+      catch (Err.Val e)
+      {
+        if (verbose) System.Console.WriteLine("  verifyErrMsg: " + e);
+        if (e.err().@typeof() != errType) { 
+          fail(e.err().@typeof() + " thrown, expected " + errType);
+        }
+        verifyCount++; 
+        verifyEq(errMsg, e.m_err.msg());
+        return; 
+      }
+      catch (System.Exception e)
+      {
+        if (verbose) System.Console.WriteLine("  verifyErrMsg: " + e);
+        Err err = Fan.Sys.Err.make(e);
+        if (err.@typeof() != errType) { 
+          fail(e.GetType() + " thrown, expected " + errType);
+        }
+        verifyCount++; 
+        verifyEq(errMsg, err.msg());
+        return; 
       }
       fail("No err thrown, expected " + errType);
     }
