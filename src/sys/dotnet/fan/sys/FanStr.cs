@@ -604,8 +604,8 @@ namespace Fan.Sys
 
     public static string trimToNull(string self)
     {
-      String trimmed = self.trim();
-      return trimmed.Length() == 0 ? null : trimmed;
+      String trimmed = self.Trim(m_trimChars);
+      return trimmed.Length == 0 ? null : trimmed;
     }
 
     public static List split(string self) { return split(self, null, true); }
