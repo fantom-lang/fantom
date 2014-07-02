@@ -51,17 +51,15 @@ abstract class Test
   **
   ** Verify that cond is true, otherwise throw a test
   ** failure exception.  If msg is non-null, include it
-  ** in a failure exception.
+  ** in a failure exception. Identical to `verifyTrue`.
   **
-  ** Identical to `verifyTrue`.
   Void verify(Bool cond, Str? msg := null)
 
   **
   ** Verify that cond is true, otherwise throw a test
   ** failure exception.  If msg is non-null, include it
-  ** in a failure exception.
-  ** 
-  ** Identical to `verify`, added to suppliment `verifyFalse`.
+  ** in a failure exception.  Identical to `verify`.
+  **
   Void verifyTrue(Bool cond, Str? msg := null)
 
   **
@@ -128,7 +126,7 @@ abstract class Test
 
   **
   ** Verify that the function throws an Err.
-  ** The Err must be the exact same type as errType 
+  ** The Err must be the exact same type as errType
   ** and the contained msg must be the same as errMsg.
   **
   ** Example:
