@@ -7,7 +7,7 @@
 //
 
 **
-** List represents an liner sequence of Objects indexed by an Int.
+** List represents an linear sequence of Objects indexed by an Int.
 **
 ** See [examples]`examples::sys-lists`.
 **
