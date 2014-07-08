@@ -661,4 +661,47 @@ class FileTest : Test
     verifyEq(s.typeof.qname, "sys::LocalFileStore")
   }
 
+  Void testList()
+  {
+    f := tempDir
+    a := (f+`a.txt`).create
+    b := (f+`b.txt`).create
+    c := (f+`c.foo`).create
+    x := (f+`x-dir/`).create
+    y := (f+`y-dir/`).create
+    z := (f+`z/`).create
+
+    reAll := Regex.glob("*")
+
+    verifyList(f.list, [a, b, c, x, y, z])
+    verifyList(f.list(null), [a, b, c, x, y, z])
+    verifyList(f.list(reAll), [a, b, c, x, y, z])
+    verifyList(f.list(Regex.glob("*.txt")), [a, b])
+    verifyList(f.list(Regex.glob("c*")), [c])
+    verifyList(f.list(Regex.glob("?-dir")), [x, y])
+    verifyList(f.list(Regex.glob("none")), File[,])
+
+    verifyList(f.listFiles, [a, b, c])
+    verifyList(f.listFiles(null), [a, b, c])
+    verifyList(f.listFiles(reAll), [a, b, c])
+    verifyList(f.listFiles(Regex.glob("*.txt")), [a, b])
+    verifyList(f.listFiles(Regex.glob("c*")), [c])
+    verifyList(f.listFiles(Regex.glob("?-dir")), File[,])
+    verifyList(f.listFiles(Regex.glob("none")), File[,])
+
+    verifyList(f.listDirs, [x, y, z])
+    verifyList(f.listDirs(null), [x, y, z])
+    verifyList(f.listDirs(reAll), [x, y, z])
+    verifyList(f.listDirs(Regex.glob("*.txt")), File[,])
+    verifyList(f.listDirs(Regex.glob("c*")), File[,])
+    verifyList(f.listDirs(Regex.glob("?-dir")), [x, y])
+    verifyList(f.listDirs(Regex.glob("none")), File[,])
+  }
+
+  Void verifyList(File[] actual, File[] expected)
+  {
+    actual.sort |a, b| { a.name <=> b.name }
+    verifyEq(actual, expected)
+  }
+
 }

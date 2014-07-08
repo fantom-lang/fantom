@@ -199,7 +199,7 @@ namespace Fan.Sys
       return new LocalFile(parent, uriToFile(parent));
     }
 
-    public override List list()
+    public override List list(Regex pattern)
     {
       int len = 0;
       FileSystemInfo[] list = null;
@@ -212,6 +212,7 @@ namespace Fan.Sys
       for (int i=0; i<len; i++)
       {
         FileSystemInfo f = list[i];
+        if (pattern != null && !pattern.matches(f.Name)) continue;
         string name = fileNameToUriName(f.Name);
         acc.add(new LocalFile(m_uri.plusName(name, f is DirectoryInfo), f));
       }

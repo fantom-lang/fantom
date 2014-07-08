@@ -69,7 +69,7 @@ public class ClassLoaderFile
     return null;
   }
 
-  public List list()
+  public List list(Regex pattern)
   {
     return new List(Sys.FileType, 0);
   }

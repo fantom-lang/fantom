@@ -16,6 +16,7 @@
 - Str.trimToNull
 - MimeType.parseParams accepts valueless attributes
 - DocElem redesigned parent/child APIs
+- File.list optional Regex parameter
 
 *Build 1.0.66 (19 Mar 201)*
 - Wisp support for secureSessionCookie config prop
