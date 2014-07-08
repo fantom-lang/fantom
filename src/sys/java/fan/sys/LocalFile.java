@@ -223,14 +223,32 @@ public class LocalFile
     return new LocalFile(parent, uriToFile(parent));
   }
 
-  public List list()
+  public List list(Regex pattern)      { return doList(pattern, '*'); }
+  public List listFiles(Regex pattern) { return doList(pattern, 'f'); }
+  public List listDir(Regex pattern)   { return doList(pattern, 'd'); }
+
+  private List doList(final Regex pattern, int mode)
   {
-    java.io.File[] list = file.listFiles();
+    java.io.File[] list;
+    if (pattern == null)
+    {
+      list = file.listFiles();
+    }
+    else
+    {
+      list = file.listFiles(new java.io.FilenameFilter()
+      {
+        public boolean accept(java.io.File file, String name) { return pattern.matches(name); }
+      });
+    }
+
     int len = list == null ? 0 : list.length;
     List acc = new List(Sys.FileType, len);
     for (int i=0; i<len; ++i)
     {
       java.io.File f = list[i];
+      if (mode == 'f' && f.isDirectory()) continue;
+      if (mode == 'd'  && !f.isDirectory()) continue;
       String name = fileNameToUriName(f.getName());
       acc.add(new LocalFile(uri.plusName(name, f.isDirectory()), f));
     }

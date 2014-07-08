@@ -148,11 +148,13 @@ namespace Fan.Sys
 
     public abstract File parent();
 
-    public abstract List list();
+    public virtual List list() { return list(null); }
+    public abstract List list(Regex pattern);
 
-    public virtual List listDirs()
+    public virtual List listDirs() { return listDirs(null); }
+    public virtual List listDirs(Regex pattern)
     {
-      List x = list();
+      List x = list(pattern);
       for (int i=x.sz()-1; i>=0; --i)
         if (!((File)x.get(i)).isDir())
           x.removeAt(i);
@@ -170,9 +172,10 @@ namespace Fan.Sys
       }
     }
 
-    public virtual List listFiles()
+    public virtual List listFiles() { return listFiles(null); }
+    public virtual List listFiles(Regex pattern)
     {
-      List x = list();
+      List x = list(pattern);
       for (int i=x.sz()-1; i>=0; --i)
         if (((File)x.get(i)).isDir())
           x.removeAt(i);

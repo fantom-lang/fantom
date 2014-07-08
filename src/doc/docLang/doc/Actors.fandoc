@@ -56,10 +56,10 @@ map which works like a thread local - a unique map is used for every
 actor.  To prevent naming collisions, you should prefix your map
 keys with your pod name:
 
-    // store a actor local
+    // store an actor local
     Actor.locals["acme.global"] = "hum bug"
 
-    // get a thread local
+    // get an actor local
     Actor.locals["acme.global"]
 
 For example to build an actor which maintains a counter every time

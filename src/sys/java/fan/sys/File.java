@@ -142,24 +142,35 @@ public abstract class File
 
   public abstract File parent();
 
-  public abstract List list();
+  public List list() { return list(null); }
+  public abstract List list(Regex pattern);
 
-  public List listDirs()
+  public List listDirs() { return listDirs(null); }
+  public List listDirs(Regex pattern)
   {
-    List list = list();
-    for (int i=list.sz()-1; i>=0; --i)
-      if (!((File)list.get(i)).isDir())
-        list.removeAt(i);
-    return list;
+    List list = list(pattern);
+    if (list.isEmpty()) return list;
+    List acc = new List(Sys.FileType, list.sz());
+    for (int i=0; i<list.sz(); ++i)
+    {
+      File file = (File)list.get(i);
+      if (file.isDir()) acc.add(file);
+    }
+    return acc;
   }
 
-  public List listFiles()
+  public List listFiles() { return listFiles(null); }
+  public List listFiles(Regex pattern)
   {
-    List list = list();
-    for (int i=list.sz()-1; i>=0; --i)
-      if (((File)list.get(i)).isDir())
-        list.removeAt(i);
-    return list;
+    List list = list(pattern);
+    if (list.isEmpty()) return list;
+    List acc = new List(Sys.FileType, list.sz());
+    for (int i=0; i<list.sz(); ++i)
+    {
+      File file = (File)list.get(i);
+      if (!file.isDir()) acc.add(file);
+    }
+    return acc;
   }
 
   public void walk(Func c)

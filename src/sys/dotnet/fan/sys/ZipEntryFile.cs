@@ -85,7 +85,7 @@ namespace Fan.Sys
       return null;
     }
 
-    public override List list()
+    public override List list(Regex pattern)
     {
       return new List(Sys.FileType, 0);
     }
