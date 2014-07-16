@@ -102,6 +102,7 @@ class TestRunner
       JsTimeZone(TimeZone("Phoenix")).write(out)
       JsTimeZone(TimeZone("London")).write(out)
       JsTimeZone(TimeZone("Amsterdam")).write(out)
+      JsTimeZone(TimeZone("Madrid")).write(out)
       JsTimeZone(TimeZone("Kiev")).write(out)
       JsTimeZone(TimeZone("Sao_Paulo")).write(out)
       JsTimeZone(TimeZone("Sydney")).write(out)
@@ -112,6 +113,8 @@ class TestRunner
       JsTimeZone(TimeZone("Taipei")).write(out)
       JsTimeZone(TimeZone("Kolkata")).write(out)
       JsTimeZone(TimeZone("Ho_Chi_Minh")).write(out)
+      JsTimeZone(TimeZone("EST")).write(out)
+      JsTimeZone(TimeZone("Louisville")).write(out)
 
       // unit db
       JsUnitDatabase().write(out)
