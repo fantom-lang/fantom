@@ -69,7 +69,7 @@ internal class InlineParser
       child = text
     }
 
-    if (child != null) parent.addChild(child)
+    if (child != null) parent.add(child)
 
     stack.pop
   }
@@ -131,7 +131,7 @@ internal class InlineParser
     }
     consume
     code := Code.make
-    code.addChild(DocText(buf.toStr))
+    code.add(DocText(buf.toStr))
     return code
   }
 
@@ -170,7 +170,7 @@ internal class InlineParser
   {
     link := Link(uri)
     link.line = this.line
-    link.addChild(DocText(link.uri))
+    link.add(DocText(link.uri))
     return link
   }
 
@@ -183,7 +183,7 @@ internal class InlineParser
     if (cur == '`')
     {
       link := Link(uri)
-      link.addChild(DocText(s))
+      link.add(DocText(s))
       return link
     }
     else if (s.startsWith("#"))

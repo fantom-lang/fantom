@@ -184,14 +184,17 @@ abstract class DocElem : DocNode
     children.each |DocNode child| { child.write(out) }
   }
 
-  //////////////////////////////////////////////////////////////////////////
-  // Children
-  //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// Children
+//////////////////////////////////////////////////////////////////////////
 
   **
   ** Get a readonly list of this elements's children.
   **
   DocNode[] children() { return kids.ro }
+
+  @Deprecated { msg = "Use add()" }
+  This addChild(DocNode node) { add(node) }
 
   **
   ** Add a child to this node.  If adding a text node
@@ -199,7 +202,7 @@ abstract class DocElem : DocNode
   ** node (if applicable).  If the node is arlready parented
   ** thorw ArgErr. Return this.
   **
-  This addChild(DocNode node)
+  This add(DocNode node)
   {
     if (node.parent != null) throw ArgErr("Node already parented: $node")
     if (!kids.isEmpty)
@@ -228,6 +231,15 @@ abstract class DocElem : DocNode
   }
 
   **
+  ** Convenicence to call `add` for each node in the given list.
+  **
+  This addAll(DocNode[] nodes)
+  {
+    nodes.each |node| { add(node) }
+    return this
+  }
+
+  **
   ** Remove a child node. If this element is not the child's
   ** current parent throw ArgErr. Return this.
   **
@@ -247,9 +259,9 @@ abstract class DocElem : DocNode
     return this
   }
 
-  //////////////////////////////////////////////////////////////////////////
-  // Path
-  //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// Path
+//////////////////////////////////////////////////////////////////////////
 
   **
   ** Covariant override to narrow path to list of `DocElem`.
@@ -259,9 +271,9 @@ abstract class DocElem : DocNode
     return super.path.map|n->DocElem| { (DocElem)n }
   }
 
-  //////////////////////////////////////////////////////////////////////////
-  // Fields
-  //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
 
   private DocNode[] kids := [,]
   Str? anchorId
