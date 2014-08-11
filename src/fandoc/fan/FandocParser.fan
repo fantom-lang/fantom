@@ -35,12 +35,12 @@ class FandocParser
     {
       header(doc)
       while (curt !== LineType.eof)
-        doc.addChild(topBlock)
+        doc.add(topBlock)
     }
     catch (Err e)
     {
       err("Invalid line $curLine", curLine, e)
-      doc.removeAll.addChild(Pre.make.addChild(DocText(lines.join("\n"))))
+      doc.removeAll.add(Pre.make.add(DocText(lines.join("\n"))))
     }
 
     lines = null
@@ -158,7 +158,7 @@ class FandocParser
   private DocElem blockquote()
   {
     // block quote wraps paragraph
-    return BlockQuote.make.addChild(formattedText(Para.make))
+    return BlockQuote.make.add(formattedText(Para.make))
   }
 
   private DocElem preExplicit()
@@ -187,7 +187,7 @@ class FandocParser
     while (curt === LineType.blank) consume
 
     pre := Pre.make
-    pre.addChild(DocText(buf.toStr))
+    pre.add(DocText(buf.toStr))
     return pre
   }
 
@@ -220,7 +220,7 @@ class FandocParser
     }
 
     pre := Pre.make
-    pre.addChild(DocText(buf.toStr))
+    pre.add(DocText(buf.toStr))
     return pre
   }
 
@@ -242,14 +242,14 @@ class FandocParser
       // next item in my own list
       if (curt === listType && curIndent == listIndent)
       {
-        list.addChild(formattedText(ListItem.make))
+        list.add(formattedText(ListItem.make))
       }
 
       // otherwise if indent is same or greater, then
       // this is a continuation of the my last node
       else if (curIndent >= listIndent)
       {
-        ((DocElem)list.children.last).addChild(block(listIndent))
+        ((DocElem)list.children.last).add(block(listIndent))
       }
 
       // end of list
@@ -293,7 +293,7 @@ class FandocParser
         err("Internal error: $e", startLineNum, e)
 
       elem.children[oldNumChildren..-1].dup.each |badChild| { elem.remove(badChild) }
-      elem.addChild(DocText(buf.toStr.replace("\n", " ")))
+      elem.add(DocText(buf.toStr.replace("\n", " ")))
     }
 
     return elem
