@@ -366,11 +366,11 @@ fan.sys.OutStream.prototype.writeXml = function(s, mask)
           this.writeChar(39);
         else
         {
+          // &#39;
           this.writeChar(38);
-          this.writeChar(97);
-          this.writeChar(112);
-          this.writeChar(111);
-          this.writeChar(115);
+          this.writeChar(35);
+          this.writeChar(51);
+          this.writeChar(57);
           this.writeChar(59);
         }
         break;
@@ -443,4 +443,3 @@ OutStream out;
 Charset charset = Charset.utf8();
 Charset.Encoder charsetEncoder = charset.newEncoder();
 */
-
