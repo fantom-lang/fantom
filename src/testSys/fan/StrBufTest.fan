@@ -299,6 +299,15 @@ class StrBufTest : Test
     out.writeXml("<foo>");  verifyEq(buf.toStr, "&lt;foo>")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Charset
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDefaultCharset()
+  {
+    s := StrBuf.make
+    verify(s.out.charset.name == "UTF-8")
+  }
 }
 
 @Js

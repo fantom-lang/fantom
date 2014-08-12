@@ -12,6 +12,7 @@
 fan.sys.StrBufOutStream = fan.sys.Obj.$extend(fan.sys.OutStream);
 fan.sys.StrBufOutStream.prototype.$ctor = function(buf)
 {
+  fan.sys.OutStream.prototype.$ctor.call(this)
   this.m_buf = buf;
 }
 
@@ -76,4 +77,3 @@ fan.sys.StrBufOutStream.prototype.writeChars = function(s, off, len)
 
 fan.sys.StrBufOutStream.prototype.flush = function() { return this; }
 fan.sys.StrBufOutStream.prototype.close = function() { return true; }
-
