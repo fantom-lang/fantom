@@ -40,6 +40,7 @@ class Build : BuildScript
     writeSysSupport(out)
     writeTimezones(out)
     writeSysProps(out)
+    writePodMeta(out)
     out.close
 
     // close sys.pod FPod.zip to release lock so we can rejar that file
@@ -202,6 +203,21 @@ class Build : BuildScript
   private Str toFacets(FFacet[]? facets)
   {
     facets == null ? "" : facets.join(",") |f| { "'$f.qname':$f.val.toCode" }
+  }
+
+  private Void writePodMeta(OutStream out)
+  {
+    // write subset of pod metadata since sys is "special"
+    version := configs["buildVersion"]?:"0"
+
+    out.printLine("with (fan.sys.Pod.find('sys'))")
+    out.printLine("{")
+    out.printLine("  m_meta = fan.sys.Map.make(fan.sys.Str.\$type, fan.sys.Str.\$type);")
+    out.printLine("  m_meta.set(\"pod.version\", $version.toCode);")
+    out.printLine("  m_meta.set(\"pod.depends\", \"\");")
+    out.printLine("  m_meta = m_meta.toImmutable();")
+    out.printLine("  m_version = fan.sys.Version.fromStr($version.toCode);")
+    out.printLine("}")
   }
 
 //////////////////////////////////////////////////////////////////////////

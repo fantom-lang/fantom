@@ -16,6 +16,7 @@ class JsPod : JsNode
   new make(JsCompilerSupport s, PodDef pod, TypeDef[] defs) : super(s)
   {
     this.name  = pod.name
+    this.meta  = pod.meta
     this.types = JsType[,]
     this.props = JsProps[,]
 
@@ -147,13 +148,24 @@ class JsPod : JsNode
       out.w(";").nl
     }
 
+    // pod meta
+    out.indent
+    out.w("m_meta = fan.sys.Map.make(fan.sys.Str.\$type, fan.sys.Str.\$type);").nl
+    meta.each |v, k|
+    {
+      out.w("m_meta.set($k.toCode, $v.toCode);").nl
+      if (k == "pod.version") out.w("m_version = fan.sys.Version.fromStr($v.toCode);").nl
+    }
+    out.w("m_meta = m_meta.toImmutable();").nl
+    out.unindent
+
     // end with block
     out.w("}").nl
   }
 
   Str name           // pod name
+  Str:Str meta       // pod meta
   JsType[] types     // types in this pod
   Str:File natives   // natives
   JsProps[] props    // prop files in this pod
 }
-
