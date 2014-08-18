@@ -47,8 +47,8 @@ fi
 
 # Set FAN_CP classpath if not already set
 if [ -z "$FAN_CP" -o ! -d "$FAN_CP" ] ; then
-  # always put sys.jar in classpath
-  FAN_CP="$FAN_HOME/lib/java/sys.jar"
+  # always put sys.jar and jline.jar in classpath
+  FAN_CP="$FAN_HOME/lib/java/sys.jar:$FAN_HOME/lib/java/jline.jar"
 fi
 
 # Set FAN_JAVA if not already set
