@@ -165,7 +165,11 @@ class NumDigits
       if (c == 'e' || c == 'E') { expPos = i; break; }
       digits[size++] = (char)c;
     }
+
+    // add decimal to end if not in orig string,
+    // otherwise removing any trailing fractional zeros
     if (decimal < 0) decimal = size;
+    else if (size > decimal && digits[size-1] == '0') size--;
 
     // if we had an exponent, then we need to normalize it
     if (expPos >= 0)
