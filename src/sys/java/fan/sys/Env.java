@@ -77,6 +77,9 @@ public abstract class Env
 
   public OutStream err() { return parent.err(); }
 
+  public String prompt() { return this.prompt(""); }
+  public String prompt(String msg) { return parent.prompt(msg); }
+
   public String promptPassword() { return this.promptPassword(""); }
   public String promptPassword(String msg) { return parent.promptPassword(msg); }
 

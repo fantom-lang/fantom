@@ -17,8 +17,9 @@
 - MimeType.parseParams accepts valueless attributes
 - DocElem redesigned parent/child APIs
 - File.list optional Regex parameter
+- Env.prompt and integrated support for JLine
 
-*Build 1.0.66 (19 Mar 201)*
+*Build 1.0.66 (19 Mar 2014)*
 - Wisp support for secureSessionCookie config prop
 - ActorPool name
 - MimeType.parseParams fix for equals in value

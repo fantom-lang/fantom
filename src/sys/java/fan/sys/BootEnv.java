@@ -129,18 +129,79 @@ public class BootEnv
 
   public OutStream err() { return err; }
 
-  public String promptPassword(String msg)
-  {
-    char[] pass = System.console().readPassword(msg);
-    if (pass == null) return null;
-    return new String(pass);
-  }
-
   public File homeDir() { return homeDir; }
 
   public File workDir() { return homeDir; }
 
   public File tempDir() { return tempDir; }
+
+//////////////////////////////////////////////////////////////////////////
+// Prompt JLine
+//////////////////////////////////////////////////////////////////////////
+
+  public String prompt(String msg)
+  {
+    // attempt to initilize JLine and if we can't fallback to Java API
+    if (!jlineInit())
+    {
+      return System.console().readLine(msg);
+    }
+
+    // use reflection to call JLine ConsoleReader.readLine
+    try
+    {
+      return (String)jline.getClass()
+        .getMethod("readLine", new Class[] { String.class })
+        .invoke(jline, new Object[] { msg });
+    }
+    catch (Exception e)
+    {
+      throw Err.make(e);
+    }
+  }
+
+  public String promptPassword(String msg)
+  {
+    // attempt to initilize JLine and if we can't fallback to Java API
+    if (!jlineInit())
+    {
+      char[] pass = System.console().readPassword(msg);
+      if (pass == null) return null;
+      return new String(pass);
+    }
+
+    // use reflection to call JLine ConsoleReader.readLine
+    try
+    {
+      return (String)jline.getClass()
+        .getMethod("readLine", new Class[] { String.class, Character.class })
+        .invoke(jline, new Object[] { msg, Character.valueOf('#') });
+    }
+    catch (Exception e)
+    {
+      throw Err.make(e);
+    }
+  }
+
+  private boolean jlineInit()
+  {
+    if (jline == null)
+    {
+      // use reflection to see if jline.console.ConsoleReader
+      // is available in classpath
+      try
+      {
+        // jline = new ConsoleReader()
+        Class cls  = Class.forName("jline.console.ConsoleReader");
+        jline = cls.getConstructor(new Class[] {}).newInstance();
+      }
+      catch (Throwable e)
+      {
+        jline = e;
+      }
+    }
+    return !(jline instanceof Throwable);
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Exit and Shutdown Hooks
@@ -309,6 +370,7 @@ public class BootEnv
   private final File homeDir;
   private final File tempDir;
   private final HashMap shutdownHooks = new HashMap();  // Func => Thread
+  private Object jline;  // null, Throwable, ConsoleReader
 
 }
 

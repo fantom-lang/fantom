@@ -29,11 +29,7 @@ class Shell
     while (isAlive)
     {
       // input next line
-      out.print("fansh> ").flush
-      line := in.readLine
-
-      // quit on eof
-      if (line == null) break
+      line := Env.cur.prompt("fansh> ")
 
       // skip empty lines
       line = line.trim

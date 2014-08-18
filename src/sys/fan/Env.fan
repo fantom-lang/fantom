@@ -154,8 +154,16 @@ abstract const class Env
   virtual OutStream err()
 
   **
+  ** Prompt the user to enter a command line from standard input.
+  ** See [Setup]`docTools::Setup#jline` for JLine integration.
+  ** Default implementation delegates to `parent`.
+  **
+  virtual Str prompt(Str msg := "")
+
+  **
   ** Prompt the user to enter a password from standard input with echo
   ** disabled.  Return null if end of stream has been reached.
+  ** See [Setup]`docTools::Setup#jline` for JLine integration.
   ** Default implementation delegates to `parent`.
   **
   virtual Str? promptPassword(Str msg := "")

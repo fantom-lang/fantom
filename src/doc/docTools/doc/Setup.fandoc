@@ -177,6 +177,17 @@ is to convert them into a pod.
 
 Also see [JavaFFI]`docLang::JavaFFI#classpathRuntime`.
 
+JLine [#jline]
+**************
+Running command line applications such as [fansh]`Fansh` in the Java VM can
+be unpleasant in Unix and OS X environments because control keys such as the
+arrow keys are not handled.  You can add [JLine2]`https://github.com/jline/jline2`
+to your system classpath to fix this.  The built-in bash scripts will automatically
+put "lib/java/jline.jar" into the classpath.  You can download a pre-built
+"jline.jar" file from `http://repo1.maven.org/maven2/jline/jline/`.  If JLine
+is not installed, then 'java.lang.Console' is used as a fallback.  To integrate
+command line support into your application use `sys::Env.prompt`.
+
 SWT Support [#swt]
 ******************
 The Fantom distribution ships with SWT support for a a couple common
