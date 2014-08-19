@@ -29,4 +29,8 @@ class TransitionPane : ContentPane
 
   ** Transition to given widget using current style.
   native Void transitionTo(Widget w)
+
+  ** Meta data for transition animations.
+  @NoDoc
+  Str:Obj meta := [:]
 }

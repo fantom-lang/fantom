@@ -124,6 +124,10 @@ fan.webfwt.TransitionPanePeer.prototype.doSlideUp = function(self, to)
 
 fan.webfwt.TransitionPanePeer.prototype.doFlip = function(self, w)
 {
+  // check meta
+  var a = self.m_meta.get("flip.angle");
+  if (a != null) this.m_angle = a;
+
   var front = self.content().peer.elem;
   fan.fwt.WidgetPeer.addClassName(front, "_webfwt_TransitionPane_flipFront");
 
