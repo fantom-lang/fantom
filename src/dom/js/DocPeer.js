@@ -42,6 +42,22 @@ fan.dom.DocPeer.prototype.createElem = function(self, tagName, attribs)
   return wrap;
 }
 
+fan.dom.DocPeer.prototype.query = function(self, selectors)
+{
+  var elem = this.doc.querySelector(selectors);
+  if (elem == null) return null;
+  return fan.dom.ElemPeer.make(elem);
+}
+
+fan.dom.DocPeer.prototype.queryAll = function(self, selectors)
+{
+  var list  = fan.sys.List.make(fan.dom.Elem.$type);
+  var elems = this.doc.querySelectorAll(selectors);
+  for (var i=0; i<elems.length; i++)
+    list.add(fan.dom.ElemPeer.make(elems[i]));
+  return list;
+}
+
 fan.dom.DocPeer.prototype.out = function(self)
 {
   return fan.web.WebOutStream.make(new fan.dom.DocOutStream(this.doc));

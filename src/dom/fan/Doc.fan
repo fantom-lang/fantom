@@ -58,6 +58,20 @@ class Doc
   **
   native Elem createElem(Str tagName, [Str:Str]? attrib := null)
 
+  **
+  ** Returns the first element within the document (using depth-first
+  ** pre-order traversal of the document's nodes) that matches the
+  ** specified group of selectors, or null if none found.
+  **
+  native Elem? query(Str selectors)
+
+  **
+  ** Returns a list of the elements within the document (using
+  ** depth-first pre-order traversal of the document's nodes) that
+  ** match the specified group of selectors.
+  **
+  native Elem[] queryAll(Str selectors)
+
 //////////////////////////////////////////////////////////////////////////
 // Writing
 //////////////////////////////////////////////////////////////////////////
