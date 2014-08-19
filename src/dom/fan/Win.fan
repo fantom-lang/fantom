@@ -66,6 +66,19 @@ class Win
   **
   native Size viewport()
 
+  **
+  ** Returns a reference to the parent of the current window
+  ** or subframe, or null if this is the top-most window.
+  **
+  native Win? parent()
+
+  **
+  ** Returns a reference to the topmost window in the window
+  ** hierarchy.  If this window is the topmost window, returns
+  ** self.
+  **
+  native Win top()
+
 //////////////////////////////////////////////////////////////////////////
 // Uri
 //////////////////////////////////////////////////////////////////////////
