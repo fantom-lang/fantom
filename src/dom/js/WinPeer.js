@@ -16,7 +16,7 @@ fan.dom.WinPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.dom.WinPeer.prototype.$ctor = function(self)
 {
-  this.win = null;
+  this.win  = null;
 }
 
 fan.dom.WinPeer.cur = function()
@@ -89,6 +89,28 @@ fan.dom.WinPeer.prototype.viewport = function(self)
     : fan.gfx.Size.make(
         this.win.document.documentElement.clientWidth,
         this.win.document.documentElement.clientHeight);
+}
+
+fan.dom.WinPeer.prototype.parent = function(self)
+{
+  if (this.win == this.win.parent) return null;
+  if (this.$parent == null)
+  {
+    this.$parent = fan.dom.Win.make();
+    this.$parent.peer.win = this.win.parent;
+  }
+  return this.$parent;
+}
+
+fan.dom.WinPeer.prototype.top = function(self)
+{
+  if (this.win == this.win.top) return self;
+  if (this.$top == null)
+  {
+    this.$top = fan.dom.Win.make();
+    this.$top.peer.win = this.win.top;
+  }
+  return this.$top;
 }
 
 //////////////////////////////////////////////////////////////////////////
