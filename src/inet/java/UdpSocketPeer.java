@@ -22,7 +22,10 @@ public class UdpSocketPeer
   {
     try
     {
-      return new UdpSocketPeer(new DatagramSocket((SocketAddress)null));
+      if (fan instanceof MulticastSocket)
+        return new MulticastSocketPeer(new java.net.MulticastSocket((SocketAddress)null));
+      else
+        return new UdpSocketPeer(new DatagramSocket((SocketAddress)null));
     }
     catch (IOException e)
     {

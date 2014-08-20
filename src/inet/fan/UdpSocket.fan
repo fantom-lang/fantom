@@ -106,7 +106,8 @@ class UdpSocket
   ** The buffer is *not* grown - at most Buf.capacity bytes are received.
   ** If the received message is longer than the packet's capacity then the
   ** message is silently truncated (weird Java behavior).  Upon return the
-  ** Buf size and position are updated to reflect the bytes read.  If packet
+  ** Buf size and position are updated to reflect the bytes read. Use
+  ** `sys::Buf.flip` to ready the buffer to read from start. If packet
   ** is null, then a new packet is created with a capacity of 1kb.  The
   ** packet data must always be a memory backed buffer.
   **

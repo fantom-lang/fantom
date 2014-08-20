@@ -20,14 +20,8 @@ public class MulticastSocketPeer extends UdpSocketPeer
 
   public static MulticastSocketPeer make(MulticastSocket fan)
   {
-    try
-    {
-      return new MulticastSocketPeer(new java.net.MulticastSocket((SocketAddress)null));
-    }
-    catch (IOException e)
-    {
-      throw IOErr.make(e);
-    }
+    // use the same instance as the UdpSocket's base class peer
+    return (MulticastSocketPeer)((UdpSocket)fan).peer;
   }
 
   public MulticastSocketPeer(java.net.MulticastSocket socket)
