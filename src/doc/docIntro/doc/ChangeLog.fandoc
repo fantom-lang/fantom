@@ -19,6 +19,7 @@
 - File.list optional Regex parameter
 - Env.prompt and integrated support for JLine
 - Dom: Win.parent,top, Doc.query,queryAll
+- JavaScript compiler now includes all a pod's props files
 
 *Build 1.0.66 (19 Mar 2014)*
 - Wisp support for secureSessionCookie config prop
