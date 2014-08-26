@@ -39,7 +39,7 @@ ogg=audio/ogg
 ogv=video/ogg
 pdf=application/pdf
 png=image/png
-ppt=application/mspowerpoint
+ppt=application/vnd.ms-powerpoint
 pptx=application/vnd.openxmlformats-officedocument.presentationml.presentation
 props=text/plain; charset=utf-8
 properties=text/plain; charset=utf-8
