@@ -49,6 +49,7 @@ class JsPod : JsNode
     {
       s.compiler.resFiles.each |file|
       {
+        if (file.ext != "props") return
         uri := file.uri.relTo(baseDir.uri)
         props.add(JsProps(pod, file, uri, s))
       }
@@ -74,9 +75,8 @@ class JsPod : JsNode
     // write type info
     writeTypeInfo(out)
 
-    // write locale/en.props
-    p := props.find |p| { p.uri == `locale/en.props` }
-    p?.write(out)
+    // write props resource files
+    props.each |p| { p.write(out) }
 
     // write static init
     types.each |t| { t.writeStatic(out) }
