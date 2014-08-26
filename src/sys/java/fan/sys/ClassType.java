@@ -244,8 +244,11 @@ public class ClassType
     {
       try
       {
-        InputStream in = pod.fpod.store.read("doc/" + name + ".apidoc");
-        if (in != null) { try { new FDoc(in, this).read(); } finally { in.close(); } }
+        if (pod.fpod.store != null)
+        {
+          InputStream in = pod.fpod.store.read("doc/" + name + ".apidoc");
+          if (in != null) { try { new FDoc(in, this).read(); } finally { in.close(); } }
+        }
       }
       catch (Exception e) { e.printStackTrace(); }
       docLoaded = true;
