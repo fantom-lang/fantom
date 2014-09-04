@@ -27,6 +27,10 @@ abstract class CanvasTable : Canvas
   new make(|This|? f)
   {
     if (f != null) f(this)
+
+    this.headerhDef = 22.max(headerFont.height + headerFont.ascent + headerFont.descent)
+    this.ay = (headerhDef - 7) / 2 + 1
+
     this.onKeyDown.add |e| { handleKeyDown(e) }
     this.onMouseMove.add  |e| { handleMouse(e) }
     this.onMouseDown.add  |e| { handleMouse(e) }
@@ -118,11 +122,14 @@ abstract class CanvasTable : Canvas
   ** Color of border between cells when row is selected.
   const Color cellSelectedBorder := Color("#346dbe")
 
+  ** Font for header columns.
+  const Font headerFont := Desktop.sysFontSmall.toBold
+
 //////////////////////////////////////////////////////////////////////////
 // Layout
 //////////////////////////////////////////////////////////////////////////
 
-  private Void onLayout()
+  @NoDoc Void onLayout()
   {
     // layout header assuming no wrap
     headerh = headerhDef
@@ -632,8 +639,6 @@ abstract class CanvasTable : Canvas
 
   private static const Color border := Color("#9f9f9f")
 
-  private static const Int headerhDef     := 22
-  private static const Font headerFont    := Desktop.sysFontSmall.toBold
   private static const Color headerBorder := Color("#bdbdbd")
   private static const Color headerArrow  := Color("#666")
   private static const GradientStop[] headerStops := [
@@ -643,7 +648,6 @@ abstract class CanvasTable : Canvas
     GradientStop(Color("#f5f5f5"), 1f),
   ]
 
-  private static const Int ay := (headerhDef - 7) / 2 + 1
   private static const Point[] upArrow := [
     Point(0, 7),
     Point(4, 0),
@@ -680,6 +684,9 @@ abstract class CanvasTable : Canvas
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
+
+  const private Int headerhDef
+  const private Int ay
 
   private Int[] colw := [,]
   private Rect[] rowb := [,]
@@ -774,4 +781,3 @@ internal class CTScrollBar
   Int max := 0                // max scroll pos
   Int? dragDelta              // if dragging delta to apply
 }
-
