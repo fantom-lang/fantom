@@ -151,7 +151,7 @@ final class Map
   ** Examples:
   **   m := [0:"0", 2:"old"]
   **   m.setList(["1","2"]) |Str s->Int| { return s.toInt }
-  **   m  =>  [0:0, 1:1, 2:2]
+  **   m  =>  [0:"0", 1:"1", 2:"2"]
   **
   M setList(V[] list, |V item, Int index->K|? c := null)
 
@@ -166,7 +166,7 @@ final class Map
   ** Examples:
   **   m := [0:"0"]
   **   m.addList(["1","2"]) |Str s->Int| { return s.toInt }
-  **   m  =>  [0:0, 1:1, 2:2]
+  **   m  =>  [0:"0", 1:"1", 2:"2"]
   **
   M addList(V[] list, |V item, Int index->K|? c := null)
 
