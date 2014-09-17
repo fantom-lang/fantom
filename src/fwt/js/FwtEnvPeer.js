@@ -159,28 +159,84 @@ fan.fwt.FwtEnvPeer.prototype.imageDispose = function(self, img)
 // global variable to store a CanvasRenderingContext2D
 fan.fwt.FwtEnvPeer.fontCx = null;
 
+// adjust font size roughly from pt to px
+fan.fwt.FwtEnvPeer.$ptToPx = function(ptSize)
+{
+  switch (ptSize)
+  {
+    case 6: return 8;
+    case 7: return 9;
+    case 8: return 11;
+    case 9: return 12;
+    case 10: return 13;
+    case 11: return 15;
+    case 12: return 16;
+    case 13: return 17;
+    case 14: return 19;
+    case 15: return 21;
+    case 16: return 22;
+    case 17: return 23;
+    case 18:
+    case 19:
+      // fall-through
+      return 24;
+    case 20:
+    case 21:
+      // fall-through
+      return 26;
+    case 22:
+    case 23:
+      // fall-through
+      return 29;
+    case 24:
+    case 25:
+      // fall-through
+      return 32;
+    case 26: return 35;
+    case 27: return 36;
+    case 28: return 37;
+    case 29: return 38;
+    case 30:
+    case 31:
+      // fall-through
+      return 40;
+    case 32:
+    case 33:
+      // fall-through
+      return 42;
+    case 34:
+    case 35:
+      // fall-through
+      return 45;
+    case 36: return 48;
+    default: return ptSize + 8
+  }
+}
+
 fan.fwt.FwtEnvPeer.prototype.fontHeight = function(self, font)
 {
-  // fudge this as 150% of size
-  return Math.round((font.m_size-3) * 1.5);
+  return fan.fwt.FwtEnvPeer.$ptToPx(font.m_size);
 }
 
 fan.fwt.FwtEnvPeer.prototype.fontAscent = function(self, font)
 {
-  // fudge this as 100% of size
-  return font.m_size-3;
+  // fudge
+  var px = fan.fwt.FwtEnvPeer.$ptToPx(font.m_size);
+  return Math.ceil(px * 0.68);
 }
 
 fan.fwt.FwtEnvPeer.prototype.fontDescent = function(self, font)
 {
-  // fudge this as 30% of size
-  return Math.round((font.m_size-3) * 0.3);
+  // fudge
+  var px = fan.fwt.FwtEnvPeer.$ptToPx(font.m_size);
+  return Math.ceil(px * 0.08);
 }
 
 fan.fwt.FwtEnvPeer.prototype.fontLeading = function(self, font)
 {
-  // fudge this as 16% of size
-  return Math.round((font.m_size-3) * 0.16);
+  // fudge
+  var px = fan.fwt.FwtEnvPeer.$ptToPx(font.m_size);
+  return Math.ceil(px * 0.01);
 }
 
 fan.fwt.FwtEnvPeer.prototype.fontWidth = function(self, font, str)
@@ -193,7 +249,7 @@ fan.fwt.FwtEnvPeer.prototype.fontWidth = function(self, font, str)
       fan.fwt.FwtEnvPeer.fontCx = document.createElement("canvas").getContext("2d");
     }
     fan.fwt.FwtEnvPeer.fontCx.font = fan.fwt.WidgetPeer.fontToCss(font);
-    return Math.round(fan.fwt.FwtEnvPeer.fontCx.measureText(str).width);
+    return Math.ceil(fan.fwt.FwtEnvPeer.fontCx.measureText(str).width);
   }
   catch (err)
   {
@@ -209,4 +265,3 @@ fan.fwt.FwtEnvPeer.prototype.fontDispose = function(self, font) {}
 //////////////////////////////////////////////////////////////////////////
 
 fan.fwt.FwtEnvPeer.prototype.colorDispose = function(self, font) {}
-
