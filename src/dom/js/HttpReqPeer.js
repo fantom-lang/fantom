@@ -15,6 +15,8 @@ fan.dom.HttpReqPeer.prototype.$ctor = function(self) {}
 fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
 {
   var xhr = new XMLHttpRequest();
+  var buf;
+  var view;
   xhr.open(method.toUpperCase(), self.m_uri.m_str, self.m_async);
   if (self.m_async)
   {
@@ -32,8 +34,26 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
     if (fan.sys.Str.lower(key) == "content-type") ct = true;
     xhr.setRequestHeader(key, self.m_headers.get(key));
   }
-  if (!ct) xhr.setRequestHeader("Content-Type", "text/plain");
-  xhr.send(content);
+  if (fan.sys.ObjUtil.$typeof(content) === fan.sys.Str.$type)
+  {
+    // send text
+    if (!ct) xhr.setRequestHeader("Content-Type", "text/plain");
+    xhr.send(content);
+  }
+  else if (content instanceof fan.sys.Buf)
+  {
+    // send binary
+    if (!ct) xhr.setRequestHeader("Content-Type", "application/octet-stream");
+    buf = new ArrayBuffer(content.size());
+    view = new Uint8Array(buf);
+    view.set(content.m_buf.slice());
+    xhr.send(view);
+  }
+  else
+  {
+    throw fan.sys.Err.make("Can only send Str or Buf: " + content);
+  }
+
   if (!self.m_async) f.call(fan.dom.HttpReqPeer.makeRes(xhr));
 }
 
@@ -68,4 +88,3 @@ fan.dom.HttpReqPeer.prototype.encodeForm = function(self, form)
   }
   return content;
 }
-

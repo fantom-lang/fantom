@@ -46,7 +46,7 @@ class HttpReq
   ** the response, call the given closure with the resulting
   ** HttpRes object.
   **
-  native Void send(Str method, Str content, |HttpRes res| c)
+  native Void send(Str method, Obj content, |HttpRes res| c)
 
   **
   ** Convenience for 'send("GET", "", c)'.
@@ -59,7 +59,7 @@ class HttpReq
   **
   ** Convenience for 'send("POST", content, c)'.
   **
-  Void post(Str content, |HttpRes res| c)
+  Void post(Obj content, |HttpRes res| c)
   {
     send("POST", content, c)
   }
