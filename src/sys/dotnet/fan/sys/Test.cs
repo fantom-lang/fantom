@@ -161,14 +161,14 @@ namespace Fan.Sys
       catch (Err.Val e)
       {
         if (verbose) System.Console.WriteLine("  verifyErr: " + e);
-        if (e.err().@typeof() == errType) { verifyCount++; return; }
+        if (e.err().@typeof() == errType || errType == null) { verifyCount++; return; }
         fail(e.err().@typeof() + " thrown, expected " + errType);
       }
       catch (System.Exception e)
       {
         if (verbose) System.Console.WriteLine("  verifyErr: " + e);
         Err err = Fan.Sys.Err.make(e);
-        if (err.@typeof() == errType) { verifyCount++; return; }
+        if (err.@typeof() == errType || errType == null) { verifyCount++; return; }
         fail(e.GetType() + " thrown, expected " + errType);
       }
       fail("No err thrown, expected " + errType);
@@ -183,23 +183,23 @@ namespace Fan.Sys
       catch (Err.Val e)
       {
         if (verbose) System.Console.WriteLine("  verifyErrMsg: " + e);
-        if (e.err().@typeof() != errType) { 
+        if (e.err().@typeof() != errType) {
           fail(e.err().@typeof() + " thrown, expected " + errType);
         }
-        verifyCount++; 
+        verifyCount++;
         verifyEq(errMsg, e.m_err.msg());
-        return; 
+        return;
       }
       catch (System.Exception e)
       {
         if (verbose) System.Console.WriteLine("  verifyErrMsg: " + e);
         Err err = Fan.Sys.Err.make(e);
-        if (err.@typeof() != errType) { 
+        if (err.@typeof() != errType) {
           fail(e.GetType() + " thrown, expected " + errType);
         }
-        verifyCount++; 
+        verifyCount++;
         verifyEq(errMsg, err.msg());
-        return; 
+        return;
       }
       fail("No err thrown, expected " + errType);
     }

@@ -182,14 +182,14 @@ public class Test
     catch (Err e)
     {
       if (verbose) System.out.println("  verifyErr: " + e);
-      if (e.typeof() == errType) { verifyCount++; return; }
+      if (e.typeof() == errType || errType == null) { verifyCount++; return; }
       fail(e.typeof() + " thrown, expected " + errType);
     }
     catch (Throwable e)
     {
       if (verbose) System.out.println("  verifyErr: " + e);
       Err err = Err.make(e);
-      if (err.typeof() == errType) { verifyCount++; return; }
+      if (err.typeof() == errType || errType == null) { verifyCount++; return; }
       fail(e.toString() + " thrown, expected " + errType);
     }
     fail("No err thrown, expected " + errType);

@@ -118,11 +118,13 @@ abstract class Test
   **
   ** Verify that the function throws an Err of the
   ** exact same type as errType (compare using === operator).
+  ** If the errType parameter is null, then this method
+  ** tests only that an exception is thrown, not its type.
   **
   ** Example:
   **   verifyErr(ParseErr#) { x := Int.fromStr("@#!") }
   **
-  Void verifyErr(Type errType, |Test| c)
+  Void verifyErr(Type? errType, |Test| c)
 
   **
   ** Verify that the function throws an Err.
