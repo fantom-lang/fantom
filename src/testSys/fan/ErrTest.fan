@@ -102,6 +102,9 @@ class ErrTest : Test
     verifySame(err.typeof.base, Err#)
     verifySame(err.typeof.base.base, Obj#)
     verifyEq(err.typeof.qname, "sys::CastErr")
+
+    verifyErr(CastErr#) { throw CastErr() }
+    verifyErr(null) { throw CastErr() }
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -133,7 +133,7 @@ fan.sys.Test.prototype.verifyErr = function(errType, func)
   catch (err)
   {
     var e = fan.sys.Err.make(err);
-    if (e.$typeof() == errType) { this.verifyCount++; return; }
+    if (e.$typeof() == errType || errType == null) { this.verifyCount++; return; }
     //if (verbose) System.out.println("  verifyErr: " + e);
     println("  verifyErr: " + e);
     this.fail(e.$typeof() + " thrown, expected " + errType);
