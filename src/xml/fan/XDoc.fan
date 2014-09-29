@@ -9,7 +9,7 @@
 **
 ** XML document encapsulates the root element and document type.
 **
-class XDoc : XNode
+@Js class XDoc : XNode
 {
 
 //////////////////////////////////////////////////////////////////////////

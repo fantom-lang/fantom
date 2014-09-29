@@ -10,7 +10,7 @@
 ** XAttr models an XML attribute in an element.  Attributes
 ** are immutable and may be shared across multiple XElem parents.
 **
-const class XAttr
+@Js const class XAttr
 {
 
   **

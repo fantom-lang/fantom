@@ -9,7 +9,7 @@
 **
 ** DomTest tests the tree model data structures
 **
-class DomTest : Test
+@Js class DomTest : Test
 {
 
 //////////////////////////////////////////////////////////////////////////

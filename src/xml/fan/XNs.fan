@@ -12,7 +12,7 @@
 ** are passed to the constructor of `XElem` and `XAttr`.  You
 ** can define the namespace attribute via `XAttr.makeNs`.
 **
-const class XNs
+@Js const class XNs
 {
 
   **

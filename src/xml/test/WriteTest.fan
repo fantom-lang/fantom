@@ -9,7 +9,7 @@
 **
 ** WriteTest
 **
-class WriteTest : XmlTest
+@Js class WriteTest : XmlTest
 {
 
   Void testWrites()

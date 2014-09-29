@@ -9,7 +9,7 @@
 **
 ** XML processing instruction node.
 **
-class XPi : XNode
+@Js class XPi : XNode
 {
 
   **

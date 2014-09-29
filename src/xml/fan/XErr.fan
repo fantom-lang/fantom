@@ -9,7 +9,7 @@
 **
 ** XML exception.
 **
-const class XErr : Err
+@Js const class XErr : Err
 {
 
 // TODO: add starting line of error - see issue 945

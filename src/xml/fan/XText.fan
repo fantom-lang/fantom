@@ -9,7 +9,7 @@
 **
 ** XText represents the character data inside an element.
 **
-class XText : XNode
+@Js class XText : XNode
 {
 
   **

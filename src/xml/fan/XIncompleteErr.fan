@@ -10,7 +10,7 @@
 ** Incomplete document exception indicates that the end of stream
 ** was reached before the end of the document was parsed.
 **
-const class XIncompleteErr : XErr
+@Js const class XIncompleteErr : XErr
 {
 
   **

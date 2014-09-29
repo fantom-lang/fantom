@@ -9,7 +9,7 @@
 **
 ** XNode is the base class for `XElem` and `XText`.
 **
-abstract class XNode
+@Js abstract class XNode
 {
 
   **
@@ -59,7 +59,7 @@ abstract class XNode
 **
 ** Enumerates the type of `XNode` and current node of `XParser`.
 **
-enum class XNodeType
+@Js enum class XNodeType
 {
   ** Document node type by `XDoc.nodeType`
   doc,
