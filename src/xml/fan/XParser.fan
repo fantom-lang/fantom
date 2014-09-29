@@ -13,7 +13,7 @@
 ** and text sections of an XML stream or it may be used to
 ** read an entire XML tree into memory as XElems.
 **
-class XParser
+@Js class XParser
 {
 
 ////////////////////////////////////////////////////////////////
@@ -1070,7 +1070,7 @@ class XParser
 ** NsDefs
 **************************************************************************
 
-internal class XNsDefs
+@Js internal class XNsDefs
 {
   XNs? find(Str prefix)
   {

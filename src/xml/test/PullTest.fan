@@ -9,7 +9,7 @@
 **
 ** Pull parsing testing
 **
-class PullTest : XmlTest
+@Js class PullTest : XmlTest
 {
 
 //////////////////////////////////////////////////////////////////////////

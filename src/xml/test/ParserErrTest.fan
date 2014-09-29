@@ -9,7 +9,7 @@
 **
 ** ParserErrTest verifies docs not well formed
 **
-class ParserErrTest : XmlTest
+@Js class ParserErrTest : XmlTest
 {
 
 //////////////////////////////////////////////////////////////////////////

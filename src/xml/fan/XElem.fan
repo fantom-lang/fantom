@@ -9,7 +9,7 @@
 **
 ** Models an XML element: its name, attributes, and children nodes.
 **
-class XElem : XNode
+@Js class XElem : XNode
 {
 
 //////////////////////////////////////////////////////////////////////////

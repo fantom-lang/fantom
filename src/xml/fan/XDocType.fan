@@ -9,7 +9,7 @@
 **
 ** XML document type declaration (but not the whole DTD).
 **
-class XDocType
+@Js class XDocType
 {
 
   **
