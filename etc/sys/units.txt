@@ -55,6 +55,7 @@ swedish_krona, SEK, kr
 swiss_franc, CHF, Fr
 taiwan_dollar, TWD
 us_dollar, USD, $
+new_israeli_shekel, NIS
 
 -- acceleration (m1*sec-2)
 meters_per_second_squared, m/s²; m1*sec-2
