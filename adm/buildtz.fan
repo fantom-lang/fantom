@@ -39,6 +39,13 @@ using build
 **   - Africa/Cairo has too many rules for 2010, just picked last one
 **   - Asia/Gaza was weird, commented out 2010
 **
+** Conversion Notes Sep-2011
+** -------------------------
+**   - 2014h version
+**   - Africa/Cairo has many overlapping rules - nuked many of them
+**   - Africa/Casabalanca has overlapping rules - nuked many of them
+**   - Asia/Hebron - overlapping rules, nuked many of 2010
+**
 class Build : BuildScript
 {
 
@@ -47,7 +54,7 @@ class Build : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   // directory of input files
-  Uri srcDir := `/stuff/tzinfo/2011j/`
+  Uri srcDir := `/work/stuff/tzinfo/2014h/`
 
   // input files from Olsen database
   Uri[] srcUris :=
