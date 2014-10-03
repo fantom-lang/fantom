@@ -104,6 +104,11 @@ fan.sys.Time.prototype.equals = function(that)
   return false;
 }
 
+fan.sys.Time.prototype.hash = function()
+{
+  return (this.m_hour << 28) ^ (this.m_min << 21) ^ (this.m_sec << 14) ^ this.m_ns;
+}
+
 fan.sys.Time.prototype.compare = function(that)
 {
   if (this.m_hour.valueOf() == that.m_hour.valueOf())
@@ -239,4 +244,3 @@ fan.sys.Time.prototype.isMidnight = function()
 {
   return this.equals(fan.sys.Time.m_defVal);
 }
-
