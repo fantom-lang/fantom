@@ -96,6 +96,11 @@ fan.sys.Uri.m_defVal = fan.sys.Uri.fromStr("");
 fan.sys.UriPodBase = "/pod/"; // TODO
 
 //
+// Locale
+//
+fan.sys.Locale.m_en = fan.sys.Locale.fromStr("en")
+
+//
 // MimeType
 //
 fan.sys.MimeType.m_imagePng  = fan.sys.MimeType.predefined("image", "png");
@@ -254,6 +259,3 @@ fan.sys.Unit.m_quantityNames = fan.sys.List.make(fan.sys.Str.$type, []);
 //
 fan.sys.Env.m_configProps   = fan.sys.Uri.fromStr("config.props");
 fan.sys.Env.m_localeEnProps = fan.sys.Uri.fromStr("locale/en.props");
-
-
-

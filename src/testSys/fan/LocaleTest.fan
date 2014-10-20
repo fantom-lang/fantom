@@ -26,6 +26,11 @@ class LocaleTest : Test
     Locale.setCur(orig)
   }
 
+  Void testEnStaticField()
+  {
+    verifyEq(Locale.en, Locale.fromStr("en"))
+  }
+
   Void testIdentity()
   {
     verifyLocale("en",    "en", null)
