@@ -21,7 +21,7 @@ const class Locale
 //////////////////////////////////////////////////////////////////////////
 
   ** Constant for the English Locale "en"
-  static const Locale en := fromStr("en")
+  static const Locale en 
 
   **
   ** Parse a locale according to the `toStr` format.
