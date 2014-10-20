@@ -377,13 +377,13 @@ public final class Uri
 
     private List pathSegments(String pathStr, int numSegs)
     {
-      // if pathStr is "/" then path si the empty list
+      // if pathStr is "/" then path is the empty list
       int len = pathStr.length();
       if (len == 0 || (len == 1 && pathStr.charAt(0) == '/'))
         return emptyPath();
 
-      // check for trailing slash
-      if (len > 1 && pathStr.charAt(len-1) == '/')
+      // check for trailing slash (unless backslash escaped)
+      if (charAtSafe(pathStr, len-1) == '/'  && charAtSafe(pathStr, len-2) != '\\')
       {
         numSegs--;
         len--;
@@ -577,6 +577,12 @@ public final class Uri
 
       // return character as is
       return c;
+    }
+
+    static int charAtSafe(String s, int index)
+    {
+      if (index < s.length()) return s.charAt(index);
+      return 0;
     }
 
     boolean decoding;

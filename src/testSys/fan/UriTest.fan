@@ -1077,6 +1077,7 @@ class UriTest : Test
 
     verifyEsc(`&x y/z`, "&x%20y/z", "&x y/z", ["&x y", "z"], null, nq, null)
     verifyEsc(`&x y\/z`, "&x%20y%2Fz", "&x y\\/z", ["&x y\\/z"], null, nq, null)
+    verifyEsc(`x\/`, "x%2F", "x\\/", ["x\\/"], null, nq, null)
 
     verifyEsc(`?\\=4`, "?%5C=4", "", np, "\\\\=4", ["\\":"4"], null)
     verifyEsc(`?\\=\\`, "?%5C=%5C", "", np, "\\\\=\\\\", ["\\":"\\"], null)
