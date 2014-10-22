@@ -493,7 +493,7 @@ internal class ChunkInStream : InStream
     }
     if (!checkChunk) return null
     numRead := in.readBuf(buf, chunkRem.min(n))
-    chunkRem -= numRead
+    if (numRead != null) chunkRem -= numRead
     return numRead
   }
 
