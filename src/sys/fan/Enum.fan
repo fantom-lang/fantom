@@ -31,6 +31,7 @@ abstract const class Enum
   **
   ** Protected constructor - for compiler use only.
   **
+  @NoDoc
   protected new make(Int ordinal, Str name)
 
   **
@@ -38,6 +39,7 @@ abstract const class Enum
   ** A public static fromStr method is always auto-generated
   ** by the compiler for each enum.
   **
+  @NoDoc
   protected static Enum? doFromStr(Type t, Str name, Bool checked)
 
 //////////////////////////////////////////////////////////////////////////
