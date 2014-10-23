@@ -596,6 +596,8 @@ fan.fwt.WidgetPeer.uriToImageSrc = function(uri)
 {
   if (uri.scheme() == "fan")
     return fan.sys.UriPodBase + uri.host() + uri.pathStr()
+  else if (uri.pathStr().indexOf("mem-") == 0)
+    return fan.fwt.FwtEnvPeer.imgCache[uri.toStr()].src
   else
     return uri.toStr();
 }
@@ -774,4 +776,3 @@ fan.fwt.WidgetPeer.setTransform = function(elem, css)
   elem.style.msTransform     = css;
   elem.style.transform       = css;
 }
-
