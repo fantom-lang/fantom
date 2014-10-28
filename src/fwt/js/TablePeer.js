@@ -433,8 +433,13 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   }
   table.appendChild(tbody);
 
-  // sync selection
-  this.selection.select(this.m_selected);
+  // sync selection - must map row model back to view in case sorted
+  var sel = [];
+  var selLen=this.m_selected.size();
+  for (var i=0; i<selLen; i++) {
+    sel[i] = view.rowModelToView(this.m_selected.get(i));
+  }
+  this.selection.select(sel);
 }
 
 fan.fwt.TablePeer.prototype.$onMouseDown = function(self, event, count)
