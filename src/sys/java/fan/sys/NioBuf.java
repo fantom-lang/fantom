@@ -190,7 +190,7 @@ public class NioBuf
     throw UnsupportedErr.make("mmap capacity fixed");
   }
 
-  public Buf flush()
+  public Buf sync()
   {
     if (buf instanceof MappedByteBuffer)
       ((MappedByteBuffer)buf).force();

@@ -22,6 +22,10 @@
 - JavaScript compiler now includes all a pod's props files
 - Fwt: JavaScript impl for WebBrowser
 - Rebuild timezone database using tzinfo 2014h
+- Deprecate Buf.flush in favor of Buf.sync
+- #1948: js: Pod meta-data not available in js
+- #2260: File.copyTo() overwrite func is passed the wrong file
+- #2325: document.querySelectorAll() in dom::Doc
 
 *Build 1.0.66 (19 Mar 2014)*
 - Wisp support for secureSessionCookie config prop

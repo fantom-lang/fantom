@@ -265,7 +265,7 @@ public class FileBuf
 // Buf API
 //////////////////////////////////////////////////////////////////////////
 
-  public final Buf flush()
+  public final Buf sync()
   {
     try
     {

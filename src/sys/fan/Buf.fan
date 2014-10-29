@@ -194,10 +194,17 @@ class Buf
   Bool close()
 
   **
-  ** If this Buf is backed by a file, then force all changes
-  ** to the storage device.  Throw IOErr on error.  Return this.
+  ** Obsolete call to `sync`.  In the future this method may be
+  ** relaxed to flush only memory buffers, but not force an fsync.
   **
+  @Deprecated { msg = "Use sync" }
   This flush()
+
+  **
+  ** If this Buf is backed by a file, then fsync all changes to
+  ** the storage device.  Throw IOErr on error.  Return this.
+  **
+  This sync()
 
   **
   ** Byte order mode for both OutStream and InStream.
