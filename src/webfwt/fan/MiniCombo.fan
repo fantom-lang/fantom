@@ -75,7 +75,7 @@ class MiniCombo : Pane
     popup := HudPopup
     {
       insets = Insets(6)
-      body = vpane
+      body = ConstraintPane { minw=125; vpane, }
       onClose.add { dropDownClosed }
     }
 
