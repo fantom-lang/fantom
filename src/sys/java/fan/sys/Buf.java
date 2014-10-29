@@ -194,7 +194,12 @@ public abstract class Buf
     return this;
   }
 
-  public Buf flush()
+  public final Buf flush()
+  {
+    return sync();
+  }
+
+  public Buf sync()
   {
     return this;
   }
