@@ -658,6 +658,9 @@ fan.fwt.TableSelection.prototype.select = function(rows)
   var selected = [];
   var view  = this.table.view();
   var tbody = this.table.peer.elem.firstChild.firstChild;
+  if (tbody == null || tbody.childNodes == null) {
+    return fan.sys.List.make(fan.sys.Int.$type, selected);
+  }
   var start = this.table.peer.m_headerVisible ? 1 : 0; // skip th row
   for (var i=start; i<tbody.childNodes.length; i++)
   {

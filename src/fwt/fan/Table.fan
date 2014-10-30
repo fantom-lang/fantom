@@ -340,8 +340,11 @@ class TableView : TableModel
     rows.capacity = model.numRows
     model.numRows.times |i| { rows.add(i) }
 
+    // only keep selection of rows that still exist
+    table.selected = table.selected.findAll |Int selIdx->Bool| { selIdx < model.numRows }
+
     // if sort was in-place, then resort
-    if (sortCol != null) sort(sortCol, sortMode)
+    if (sortCol != null && sortCol < model.numCols) sort(sortCol, sortMode)
   }
 
   private Void syncCols()
@@ -372,4 +375,3 @@ class TableView : TableModel
   internal Int? sortCol { private set }  // model based index
   internal SortMode sortMode := SortMode.up { private set }
 }
-
