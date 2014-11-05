@@ -376,6 +376,7 @@ cubic_meter, m³; m3
 cubic_millimeter, mm³; m3; 1.0E-9
 cubic_centimeter, cm³; m3; 1.0E-6
 milliliter, mL; m3; 1.0E-6
+hectoliter, hL; m3; 0.10
 liter, L; m3; 0.0010
 kiloliter, kL; m3
 cubic_inch, in³; m3; 1.6387064E-5
@@ -391,6 +392,7 @@ imperial_gallon, galUK; m3; 0.004546092
 -- volumetric flow (m3*sec-1)
 cubic_meters_per_second, m³/s; m3*sec-1
 milliliters_per_second, mL/s; m3*sec-1; 1.0E-6
+hectoliters_per_second, hL/s; m3*sec-1; 0.10
 liters_per_second, L/s; m3*sec-1; 0.0010
 cubic_feet_per_second, cfs; m3*sec-1; 0.028317
 cubic_feet_per_minute, cfm; m3*sec-1; 4.719474432E-4
