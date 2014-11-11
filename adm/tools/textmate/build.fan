@@ -90,6 +90,7 @@ class Build
     fan  := fanHome + `bin/fan`
     cmd  := [fan.osPath, buildFile.osPath]
     proc := Process(cmd)
+    proc.dir = buildFile.parent
     proc.out = BuildOutStream()
     proc.run.join
   }
@@ -105,7 +106,10 @@ class Build
 
 internal class BuildOutStream : OutStream
 {
-  new make() : super(null) {}
+  new make() : super(null)
+  {
+    echo("<div style='font:9pt Monaco;'>")
+  }
 
   override This write(Int b)
   {
