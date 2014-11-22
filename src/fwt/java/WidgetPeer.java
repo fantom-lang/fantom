@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.*;
 
 /**
@@ -373,6 +374,12 @@ public class WidgetPeer
       attachTo(create(item.getParent()));
       item.setControl((Control)this.control);
     }
+    else if (parentControl instanceof CTabItem)
+    {
+      CTabItem item = (CTabItem)parentControl;
+      attachTo(create(item.getParent()));
+      item.setControl((Control)this.control);
+    }
     else
     {
       attachTo(create(parentControl));
@@ -574,8 +581,8 @@ public class WidgetPeer
 // Event Utils
 //////////////////////////////////////////////////////////////////////////
 
-  fan.fwt.Event event(EventId id) { return event(id, null); }
-  fan.fwt.Event event(EventId id, Object data)
+  protected fan.fwt.Event event(EventId id) { return event(id, null); }
+  protected fan.fwt.Event event(EventId id, Object data)
   {
     fan.fwt.Event f = fan.fwt.Event.make();
     f.id(id);
