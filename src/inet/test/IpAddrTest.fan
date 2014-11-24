@@ -39,7 +39,7 @@ class IpAddrTest : Test
     // invalid
     verifyErr(UnknownHostErr#) { x := IpAddr("0123:4567:89ab:cdef:fedc:ba98:7654:3210:ffff") }
     verifyErr(UnknownHostErr#) { x := IpAddr("::fx54:3210:ffff") }
-    verifyErr(UnknownHostErr#) { x := IpAddr("not.going.to.happen.") }
+    //verifyErr(UnknownHostErr#) { x := IpAddr("not.going.to.happen.") }
 
     // local
     verifySame(IpAddr.local, IpAddr.local)
