@@ -201,6 +201,16 @@ public class FanClassLoader
       Box precompiled = findPrecompiledClassFile(name);
       if (precompiled == null) return null;
 
+      // definePackage before defineClass
+      int dot = name.lastIndexOf('.');
+      if (dot > 0)
+      {
+        String packageName = name.substring(0, name.lastIndexOf('.'));
+        if (getPackage(packageName) == null)
+          definePackage(packageName, null, null, null, null, null, null, null);
+      }
+
+      // defineClass
       Class cls = defineClass(name, precompiled.buf, 0, precompiled.len, codeSource);
 
       // if the precompiled class is a fan type, then we need
