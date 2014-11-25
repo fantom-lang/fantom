@@ -175,6 +175,8 @@ internal class GridPaneSizes
 {
   new make(GridPane grid, Widget[] kids)
   {
+    colw.fill(0, grid.numCols)
+
     // short-circuit if no kids
     if (kids.isEmpty)
     {
@@ -189,8 +191,7 @@ internal class GridPaneSizes
       pref := kid.visible ? kid.prefSize : Size.defVal
       prefs.add(pref)
 
-      if (col >= colw.size) colw.add(pref.w)
-      else colw[col] = colw[col].max(pref.w)
+      colw[col] = colw[col].max(pref.w)
 
       if (row >= rowh.size) rowh.add(pref.h)
       else rowh[row] = rowh[row].max(pref.h)
