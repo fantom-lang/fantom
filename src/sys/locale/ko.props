@@ -1,4 +1,4 @@
-dateTime=YYYY년 MM월 DD일 (WWW) aa kk시 mm분 ss초
+dateTime=YYYY년 MM월 DD일 (WWW) aa kk시 mm분 ss초 zzz
 date=YYYY년 MM월 DD일
 time=hh시 mm분 ss초
 float=#,###,###.0##

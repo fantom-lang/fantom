@@ -1,4 +1,4 @@
-dateTime=YYYY年MM月DD日 WWWW hh:mm:ss
+dateTime=YYYY年MM月DD日 WWWW hh:mm:ss zzz
 date=YYYY年MM月DD日 WWWW
 time=kk時mm分ss秒
 float=#,###.0##
