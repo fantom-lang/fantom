@@ -49,7 +49,7 @@ fan.fwt.ComboPeer.prototype.create = function(parentElem)
 
   var select = document.createElement("select");
   select.className = "_fwt_Combo_";
-  select.style.font = fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont);
+  select.style.font = fan.fwt.WidgetPeer.fontToCss(this.m_font == null ? fan.fwt.DesktopPeer.$sysFont : this.m_font);
 
   var div = this.emptyDiv();
   div.appendChild(select);
