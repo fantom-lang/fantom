@@ -161,11 +161,23 @@ fan.fwt.TextPeer.prototype.hasFocus = function(self)
 fan.fwt.TextPeer.prototype.sync = function(self)
 {
   var text = this.control;
+  var oldText = text.value
 
   // setting value will force cursor to end of text, so only
   // set if different to avoid relayout "bugs" where cursor
   // jumps unexpectedly
-  if (text.value != this.m_text) text.value = this.m_text;
+  if (text.value != this.m_text)
+  {
+    text.value = this.m_text;
+
+    // Prevent Chrome scrolling to end of textarea on initial load.
+    if (fan.fwt.DesktopPeer.$isChrome && oldText == "" && self.m_multiLine)
+    {
+      text.focus();
+      text.selectionStart = 0;
+      text.selectionEnd = 0;
+    }
+  }
 
   // sync control
   text.readOnly = !self.m_editable;
