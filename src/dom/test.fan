@@ -36,7 +36,7 @@ const class DomTestMod : WebMod
     name := req.modRel.path.first
     if (name == null) onIndex
     else if (name == "pod") onPodFile
-    else if (name == "dom") DomTest().onService
+    else if (name == "dom") dom::DomTest().onService
     else res.sendErr(404)
   }
 
