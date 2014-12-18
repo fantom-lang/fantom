@@ -128,7 +128,10 @@ public class Field
         throw ArgErr.make("Wrong type for field " + qname() + ": " + type + " != " + typeof(value));
     }
 
-    if (setter != null)
+    // use the setter by default, however if we have a storage field and
+    // the setter was auto-generated then falldown to set the actual field
+    // to avoid private setter implicit overrides
+    if ((setter != null && !setter.isSynthetic()) || reflect == null)
     {
       setter.invoke(instance, new Object[] { value });
       return;
