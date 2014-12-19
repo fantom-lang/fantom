@@ -19,20 +19,20 @@ fan.dom.DocPeer.prototype.title$ = function(self, val) { this.doc.title = val; }
 
 fan.dom.DocPeer.prototype.body = function(self)
 {
-  return fan.dom.ElemPeer.make(this.doc.body);
+  return fan.dom.ElemPeer.wrap(this.doc.body);
 }
 
 fan.dom.DocPeer.prototype.elem = function(self, id)
 {
   var elem = this.doc.getElementById(id);
   if (elem == null) return null;
-  return fan.dom.ElemPeer.make(elem);
+  return fan.dom.ElemPeer.wrap(elem);
 }
 
 fan.dom.DocPeer.prototype.createElem = function(self, tagName, attribs)
 {
   var elem = this.doc.createElement(tagName);
-  var wrap = fan.dom.ElemPeer.make(elem);
+  var wrap = fan.dom.ElemPeer.wrap(elem);
   if (attribs != null)
   {
     var k = attribs.keys();
@@ -46,7 +46,7 @@ fan.dom.DocPeer.prototype.query = function(self, selectors)
 {
   var elem = this.doc.querySelector(selectors);
   if (elem == null) return null;
-  return fan.dom.ElemPeer.make(elem);
+  return fan.dom.ElemPeer.wrap(elem);
 }
 
 fan.dom.DocPeer.prototype.queryAll = function(self, selectors)
@@ -54,7 +54,7 @@ fan.dom.DocPeer.prototype.queryAll = function(self, selectors)
   var list  = fan.sys.List.make(fan.dom.Elem.$type);
   var elems = this.doc.querySelectorAll(selectors);
   for (var i=0; i<elems.length; i++)
-    list.add(fan.dom.ElemPeer.make(elems[i]));
+    list.add(fan.dom.ElemPeer.wrap(elems[i]));
   return list;
 }
 

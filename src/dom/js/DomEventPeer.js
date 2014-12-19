@@ -14,7 +14,7 @@ fan.dom.DomEventPeer.prototype.$ctor = function(self) {}
 
 fan.dom.DomEventPeer.prototype.target = function(self)
 {
-  return fan.dom.ElemPeer.make(this.event.target);
+  return fan.dom.ElemPeer.wrap(this.event.target);
 }
 
 fan.dom.DomEventPeer.prototype.x = function(self) { return this.event.pageX; }

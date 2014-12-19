@@ -20,6 +20,24 @@ fan.dom.ElemPeer.prototype.$ctor = function(self)
   this.m_size = fan.gfx.Size.m_defVal;
 }
 
+/*
+ * Native only method to wrap an existing DOM node.  If this node
+ * has already been wrapped by an Elem instance, return the
+ * existing instance.
+ */
+fan.dom.ElemPeer.wrap = function(elem)
+{
+  if (elem == null) throw fan.sys.ArgErr.make("elem is null")
+
+  if (elem._fanElem != undefined)
+    return elem._fanElem;
+
+  var x = fan.dom.Elem.make();
+  x.peer.elem = elem;
+  elem._fanElem = x;
+  return x;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Attributes
 //////////////////////////////////////////////////////////////////////////
@@ -148,7 +166,7 @@ fan.dom.ElemPeer.prototype.parent = function(self)
 {
   var parent = this.elem.parentNode;
   if (parent == null) return null;
-  return fan.dom.ElemPeer.make(parent);
+  return fan.dom.ElemPeer.wrap(parent);
 }
 
 fan.dom.ElemPeer.prototype.children = function(self)
@@ -157,7 +175,7 @@ fan.dom.ElemPeer.prototype.children = function(self)
   var kids = this.elem.childNodes;
   for (var i=0; i<kids.length; i++)
     if (kids[i].nodeType == 1)
-      list.push(fan.dom.ElemPeer.make(kids[i]));
+      list.push(fan.dom.ElemPeer.wrap(kids[i]));
   return fan.sys.List.make(fan.dom.Elem.$type, list);
 }
 
@@ -166,7 +184,7 @@ fan.dom.ElemPeer.prototype.first = function(self)
   var kids = this.elem.childNodes;
   for (var i=0; i<kids.length; i++)
     if (kids[i].nodeType == 1)
-      return fan.dom.ElemPeer.make(kids[i]);
+      return fan.dom.ElemPeer.wrap(kids[i]);
   return null;
 }
 
@@ -176,7 +194,7 @@ fan.dom.ElemPeer.prototype.prev = function(self)
   while (sib != null && sib.nodeType != 1)
     sib = sib.previousSibling;
   if (sib == null) return null;
-  return fan.dom.ElemPeer.make(sib);
+  return fan.dom.ElemPeer.wrap(sib);
 }
 
 fan.dom.ElemPeer.prototype.next = function(self)
@@ -185,7 +203,7 @@ fan.dom.ElemPeer.prototype.next = function(self)
   while (sib != null && sib.nodeType != 1)
     sib = sib.nextSibling;
   if (sib == null) return null;
-  return fan.dom.ElemPeer.make(sib);
+  return fan.dom.ElemPeer.wrap(sib);
 }
 
 fan.dom.ElemPeer.prototype.add = function(self, child)
@@ -260,17 +278,4 @@ fan.dom.ElemPeer.prototype.toStr = function(self)
   if (id != null && id.length > 0) str += " id='" + id + "'"
   str += ">";
   return str;
-}
-
-fan.dom.ElemPeer.make = function(elem)
-{
-  if (elem == null) throw fan.sys.ArgErr.make("elem is null")
-
-  if (elem._fanElem != undefined)
-    return elem._fanElem;
-
-  var x = fan.dom.Elem.make();
-  x.peer.elem = elem;
-  elem._fanElem = x;
-  return x;
 }
