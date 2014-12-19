@@ -71,6 +71,9 @@ class Elem
   **
   native This removeClassName(Str className)
 
+  ** Get the Style instance for this element.
+  @NoDoc native Style style()
+
   ** Text content contained in this element.
   native Str text
 

@@ -93,6 +93,16 @@ fan.dom.ElemPeer.prototype.removeClassName = function(self, className)
   return self;
 }
 
+fan.dom.ElemPeer.prototype.style = function(self)
+{
+  if (this.$style == null)
+  {
+    this.$style = fan.dom.Style.make();
+    this.$style.peer.style = this.elem.style;
+  }
+  return this.$style;
+}
+
 fan.dom.ElemPeer.prototype.text  = function(self) { return this.elem.textContent; }
 fan.dom.ElemPeer.prototype.text$ = function(self, val) { this.elem.textContent = val; }
 
