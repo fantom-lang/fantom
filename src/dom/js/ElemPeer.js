@@ -64,6 +64,9 @@ fan.dom.ElemPeer.prototype.removeClassName = function(self, className)
   return this;
 }
 
+fan.dom.ElemPeer.prototype.text  = function(self) { return this.elem.textContent; }
+fan.dom.ElemPeer.prototype.text$ = function(self, val) { this.elem.textContent = val; }
+
 fan.dom.ElemPeer.prototype.html  = function(self) { return this.elem.innerHTML; }
 fan.dom.ElemPeer.prototype.html$ = function(self, val) { this.elem.innerHTML = val; }
 

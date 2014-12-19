@@ -68,6 +68,9 @@ class Elem
   **
   native This removeClassName(Str className)
 
+  ** Text content contained in this element.
+  native Str text
+
   **
   ** The HTML markup contained in this element.
   **
