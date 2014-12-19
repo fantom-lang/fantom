@@ -18,7 +18,7 @@
 - DocElem redesigned parent/child APIs
 - File.list optional Regex parameter
 - Env.prompt and integrated support for JLine
-- Dom: Win.parent,top, Doc.query,queryAll
+- Dom: Win.parent,top, Doc.query,queryAll, Elem.text
 - JavaScript compiler now includes all a pod's props files
 - Fwt: JavaScript impl for WebBrowser
 - Rebuild timezone database using tzinfo 2014h
