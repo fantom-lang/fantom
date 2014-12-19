@@ -23,7 +23,7 @@ class Elem
 //////////////////////////////////////////////////////////////////////////
 
   ** Create a new Elem in the current Doc.
-  new make(Str tagName) { _make(tagName) }
+  new make(Str tagName := "div") { _make(tagName) }
 
   private native Void _make(Str tagName)
 
