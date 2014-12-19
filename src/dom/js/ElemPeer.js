@@ -20,6 +20,17 @@ fan.dom.ElemPeer.prototype.$ctor = function(self)
   this.m_size = fan.gfx.Size.m_defVal;
 }
 
+fan.dom.ElemPeer.prototype._make = function(self, tagName)
+{
+  // short-circut for wrap()
+  if (tagName === undefined) return;
+
+  var doc  = fan.dom.Win.cur().doc().peer.doc;
+  var elem = doc.createElement(tagName);
+  this.elem = elem;
+  this.elem._fanElem = this;
+}
+
 /*
  * Native only method to wrap an existing DOM node.  If this node
  * has already been wrapped by an Elem instance, return the
@@ -66,7 +77,7 @@ fan.dom.ElemPeer.prototype.addClassName = function(self, className)
 {
   if (!this.hasClassName(self, className))
     this.elem.className += " " + className;
-  return this;
+  return self;
 }
 
 fan.dom.ElemPeer.prototype.removeClassName = function(self, className)
@@ -79,7 +90,7 @@ fan.dom.ElemPeer.prototype.removeClassName = function(self, className)
       break;
     }
   this.elem.className = arr.join(" ");
-  return this;
+  return self;
 }
 
 fan.dom.ElemPeer.prototype.text  = function(self) { return this.elem.textContent; }
@@ -209,13 +220,13 @@ fan.dom.ElemPeer.prototype.next = function(self)
 fan.dom.ElemPeer.prototype.add = function(self, child)
 {
   this.elem.appendChild(child.peer.elem);
-  return this;
+  return self;
 }
 
 fan.dom.ElemPeer.prototype.remove = function(self, child)
 {
   this.elem.removeChild(child.peer.elem);
-  return this;
+  return self;
 }
 
 fan.dom.ElemPeer.prototype.focus = function(self)
