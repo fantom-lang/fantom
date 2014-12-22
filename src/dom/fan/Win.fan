@@ -130,6 +130,9 @@ class Win
   **
   native Void onEvent(Str type, Bool useCapture, |DomEvent e| handler)
 
+  ** Call the specified function after a specified delay.
+  native Void callLater(Duration delay, |->| f)
+
 //////////////////////////////////////////////////////////////////////////
 // Storage
 //////////////////////////////////////////////////////////////////////////
