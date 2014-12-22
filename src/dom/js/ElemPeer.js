@@ -28,7 +28,7 @@ fan.dom.ElemPeer.prototype._make = function(self, tagName)
   var doc  = fan.dom.Win.cur().doc().peer.doc;
   var elem = doc.createElement(tagName);
   this.elem = elem;
-  this.elem._fanElem = this;
+  this.elem._fanElem = self;
 }
 
 /*
