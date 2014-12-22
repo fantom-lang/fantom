@@ -220,6 +220,12 @@ fan.dom.WinPeer.prototype.fakeHashChange = function(self, handler)
   setInterval(checkHash, 100);
 }
 
+fan.dom.WinPeer.prototype.callLater = function(self, delay, f)
+{
+  var func = function() { f.call() }
+  this.win.setTimeout(func, delay.toMillis());
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Storage
 //////////////////////////////////////////////////////////////////////////
