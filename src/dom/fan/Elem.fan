@@ -181,6 +181,12 @@ class Elem
   **
   native This remove(Elem child)
 
+  ** Callback when a child element is added.
+  @NoDoc protected virtual Void onAdd(Elem child) {}
+
+  ** Callback when a child element is removed.
+  @NoDoc protected virtual Void onRemove(Elem child) {}
+
 //////////////////////////////////////////////////////////////////////////
 // Focus
 //////////////////////////////////////////////////////////////////////////
