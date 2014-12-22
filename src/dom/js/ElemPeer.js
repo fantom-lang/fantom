@@ -230,12 +230,14 @@ fan.dom.ElemPeer.prototype.next = function(self)
 fan.dom.ElemPeer.prototype.add = function(self, child)
 {
   this.elem.appendChild(child.peer.elem);
+  self.onAdd(child);
   return self;
 }
 
 fan.dom.ElemPeer.prototype.remove = function(self, child)
 {
   this.elem.removeChild(child.peer.elem);
+  self.onRemove(child);
   return self;
 }
 
