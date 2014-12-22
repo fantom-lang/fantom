@@ -388,6 +388,7 @@ quart, qt; m3; 9.46E-4
 pint, pt; m3; 4.73E-4
 fluid_ounce, fl_oz; m3; 2.95729E-5
 imperial_gallon, galUK; m3; 0.004546092
+hecto_cubic_foot, hft³; m3; 2.8317
 
 -- volumetric flow (m3*sec-1)
 cubic_meters_per_second, m³/s; m3*sec-1
