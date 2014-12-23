@@ -221,4 +221,30 @@ class Elem
   **
   native Void onEvent(Str type, Bool useCapture, |DomEvent e| handler)
 
+//////////////////////////////////////////////////////////////////////////
+// Animation
+//////////////////////////////////////////////////////////////////////////
+
+  ** Animate a set of CSS properties.
+  @NoDoc Void animate(Str:Obj props, Duration dur, |Elem|? onComplete := null)
+  {
+    // force layout
+    x := this.size
+
+    // set transition
+    style := this.style
+    trans := props.keys.join(", ") |p| { "$p ${dur.toMillis}ms" }
+    style.set("-webkit-transition", trans)
+    style.set("-moz-transition", trans)
+
+    // set props
+    props.each |val,prop|
+    {
+      style.set(prop, val)
+    }
+
+    // invoke complete callback func
+    if (onComplete != null)
+      Win.cur.callLater(dur) |->| { onComplete(this) }
+  }
 }
