@@ -39,11 +39,11 @@ abstract class CanvasTable : Canvas
   }
 
   ** Column names.
-  const Str[] colNames
+  const Str[] colNames := [,]
 
   ** Column widths. Integer values represent exact widths.  Float
   ** values represent a percentage of remaining space (0..1).
-  const Num[] colWidths
+  const Num[] colWidths := [,]
 
   ** Wrap the column names
   const Bool colNameWrap
@@ -123,8 +123,14 @@ abstract class CanvasTable : Canvas
   const Color cellSelectedBorder := Color("#346dbe")
 
   ** Font for header columns.
-  const Font headerFont := Desktop.sysFontSmall.toBold
-
+  private static const Font defHeaderFont
+  static
+  {
+    if ("js" === Env.cur.runtime) defHeaderFont = Desktop.sysFontSmall.toBold
+    else defHeaderFont = Font("bold 8pt Helvetica")
+  }
+  const Font headerFont := defHeaderFont
+  
 //////////////////////////////////////////////////////////////////////////
 // Layout
 //////////////////////////////////////////////////////////////////////////
@@ -679,7 +685,10 @@ abstract class CanvasTable : Canvas
   virtual Void writeHtml(WebOutStream out, Int col, Int row) {}
 
   ** Render cell as PNG image encoded as Base64 and write to HTML.
-  native Void writePng(WebOutStream out, Int col, Int row)
+  Void writePng(WebOutStream out, Int col, Int row)
+  {
+    if ("js" === Env.cur.runtime) ColUtil.writePng(this, out, col, row)
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
@@ -780,4 +789,13 @@ internal class CTScrollBar
   Int cur := 0                // cur scroll pos
   Int max := 0                // max scroll pos
   Int? dragDelta              // if dragging delta to apply
+}
+
+**************************************************************************
+** ColUtil
+**************************************************************************
+@Js
+internal final class ColUtil
+{
+  native static Void writePng(CanvasTable table, WebOutStream out, Int col, Int row)
 }
