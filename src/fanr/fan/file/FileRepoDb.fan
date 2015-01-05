@@ -110,7 +110,7 @@ internal class FileRepoDb
     }
 
     // sort by highest to lowest version
-    podDir.all.sortr |a, b| { a.version <=> b.version }
+    podDir.sortAll
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -209,7 +209,7 @@ internal class FileRepoDb
     {
       // update existing pod cur/all
       if (spec.version > podDir.cur.version) podDir.cur = spec
-      if (podDir.all != null) podDir.all.add(spec).sortr
+      if (podDir.all != null) { podDir.all.add(spec); podDir.sortAll }
     }
 
     // return spec
@@ -236,6 +236,9 @@ internal class PodDir
   const File dir   // directory used to store pod files
   PodSpec cur      // current version
   PodSpec[]? all   // lazily loaded all versions
+
+  // sort by highest to lowest version
+  Void sortAll() { all.sortr |a, b| { a.version <=> b.version } }
 }
 
 **************************************************************************
