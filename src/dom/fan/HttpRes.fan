@@ -15,25 +15,15 @@
 @Js
 class HttpRes
 {
-
-  **
   ** Private ctor.
-  **
   private new make() {}
 
-  **
   ** The HTTP status code of the response.
-  **
   Int status
 
-  **
   ** The response headers.
-  **
   Str:Str headers := Str:Str[:]
 
-  **
   ** The content of the response.
-  **
   Str content := ""
-
 }
