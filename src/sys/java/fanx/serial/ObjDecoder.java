@@ -9,7 +9,7 @@ package fanx.serial;
 
 import fan.sys.*;
 import fanx.util.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -473,7 +473,7 @@ public class ObjDecoder
   private Object readMap(MapType mapType, Object firstKey)
   {
     // setup accumulator
-    HashMap map = new HashMap();
+    LinkedHashMap map = new LinkedHashMap();
 
     // finish first pair
     consume(Token.COLON, "Expected ':'");
