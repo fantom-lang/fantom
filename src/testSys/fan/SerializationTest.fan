@@ -219,6 +219,10 @@ class SerializationTest : Test
     verifySer("[1:8ms, 2:null]", Int:Duration?[1:8ms, 2:null])
     verifySer("[1:null, 2:8ns, 3:3]", Int:Obj?[1:null, 2:8ns, 3:3])
 
+    // test ordering
+    Str:Int m := verifySer("""["b":1, "a":2, "c":5, "e":3, "f":3]""",  ["b":1, "a":2, "c":5, "e":3, "f":3])
+    verifyEq(m.keys, ["b", "a", "c", "e", "f"])
+
     // various nested type/list type signatures
     verifySer("sys::Int:sys::Uri[,]", Int:Uri[,])
     verifySer("[sys::Int:sys::Uri][,]", [Int:Uri][,])
