@@ -65,22 +65,26 @@ class FilePart : EmailPart
     super.encode(out)
 
     // write file contents in base64
-    buf := Buf() { capacity = 100 }
     in := file.in
     try
-    {
-      left := file.size
-      while (left > 0)
-      {
-        in.readBufFully(buf, left.min(48))
-        out.print(buf.toBase64).print("\r\n")
-        left -= buf.size
-        buf.clear
-      }
-    }
+      encodeBase64(in, file.size, out)
     finally
-    {
       in.close
+  }
+
+  ** Encode 'size' bytes from 'in' to 'out' as base64 with maximum line length of 50.
+  **
+  ** Neither stream is closed after calling this function.
+  @NoDoc static Void encodeBase64(InStream in, Int size, OutStream out)
+  {
+    buf := Buf() { capacity = 100 }
+    left := size
+    while (left > 0)
+    {
+      in.readBufFully(buf, left.min(48))
+      out.print(buf.toBase64).print("\r\n")
+      left -= buf.size
+      buf.clear
     }
   }
 
