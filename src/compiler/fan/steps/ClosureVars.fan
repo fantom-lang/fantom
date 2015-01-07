@@ -418,8 +418,8 @@ class ClosureVars : CompilerStep
   {
     // build class name key
     suffix := ctype.isNullable ? "\$n" : ""
-    podName := ctype.pod.name != "sys" ? "\$" + ctype.pod.name : ""
-    name := "Wrap" + podName + "\$" + ctype.name + suffix
+    podName := ctype.pod.name != "sys" ? "\$" + toSafe(ctype.pod.name) : ""
+    name := "Wrap" + podName + "\$" + toSafe(ctype.name) + suffix
 
     // reuse existing wrapper
     existing := cs.compiler.wrappers[name]
@@ -458,6 +458,18 @@ class ClosureVars : CompilerStep
     // cache for reuse
     cs.compiler.wrappers[name] = f
     return f
+  }
+
+  private static Str toSafe(Str n)
+  {
+    if (n.isAlphaNum) return n
+    s := StrBuf()
+    n.each |ch|
+    {
+      if (ch.isAlphaNum) s.addChar(ch)
+      else s.addChar('_')
+    }
+    return s.toStr
   }
 
 //////////////////////////////////////////////////////////////////////////
