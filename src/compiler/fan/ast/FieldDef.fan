@@ -101,5 +101,6 @@ public class FieldDef : SlotDef, CField
   CType? inheritedRet       // if covariant override of method
   Bool requiresNullCheck    // flags that ctor needs runtime check to ensure it-block set it
   EnumDef? enumDef          // if an enum name/ordinal pair
+  Str? closureInfo          // if this is a closure wrapper field
 
 }
