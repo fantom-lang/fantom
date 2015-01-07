@@ -1686,13 +1686,20 @@ class CheckErrors : CompilerStep
   **
   private Void checkDeprecated(Obj target, Loc loc)
   {
-    // don't check inside of synthetic getter/setter or
-    // inside of a deprecated type itself
-    if (curMethod != null && curMethod.isSynthetic && curMethod.isFieldAccessor) return
+    slot := target as CSlot
+
+    // don't check inside:
+    //   - synthetic getter/setter or
+    //   - synthetic method of type itself
+    //   - a deprecated type itself
+    if (curMethod != null && curMethod.isSynthetic)
+    {
+      if (curMethod.isFieldAccessor) return
+      if (slot != null && slot.parent == curType) return
+    }
     if (curType.facet("sys::Deprecated") != null) return
 
     // check both slot and its parent type
-    slot := target as CSlot
     CFacet? f := null
     if (slot != null)
     {

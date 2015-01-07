@@ -209,6 +209,12 @@ class EnumTest : Test
     verifyEq(Suits#.facet(FacetS1#)->val, "y")
     verify(Suits#.facets.contains(Suits#.facet(Serializable#)))
     verify(Suits#.facets.contains(Suits#.facet(FacetS1#)))
+
+    verifyEq(Suits#clubs.facets.size, 0)
+    verifyEq(Suits#hearts.facets.size, 1)
+    verifyEq(Suits#hearts.hasFacet(FacetM2#), true)
+    verifyEq(Suits#spades.hasFacet(FacetS1#), true)
+    verifyEq(Suits#spades.facet(FacetS1#)->val, "!")
   }
 
 }
@@ -228,8 +234,12 @@ internal enum class EnumAbc
 enum class Suits
 {
   clubs("black"),
+
   diamonds("red"),
-  hearts("red"),
+
+  @FacetM2 hearts("red"),
+
+  @FacetS1 { val = "!" }
   spades("black")
 
   private new make(Str color) { this.color = color; }

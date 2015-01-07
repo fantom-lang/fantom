@@ -355,13 +355,14 @@ public class Parser : CompilerSupport
 
   **
   ** Enum definition:
-  **   <enumDef>  :=  <id> ["(" <args> ")"]
+  **   <enumDef>  :=  <facets> <id> ["(" <args> ")"]
   **
   private EnumDef enumDef(Int ordinal)
   {
     doc := doc()
+    facets := facets()
 
-    def := EnumDef(cur, doc, consumeId, ordinal)
+    def := EnumDef(cur, doc, facets, consumeId, ordinal)
 
     // optional ctor args
     if (curt === Token.lparen)
