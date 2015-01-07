@@ -19,10 +19,11 @@ class EnumDef : Node
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Loc loc, DocDef? doc, Str name, Int ordinal)
+  new make(Loc loc, DocDef? doc, FacetDef[]? facets, Str name, Int ordinal)
     : super(loc)
   {
     this.doc      = doc
+    this.facets   = facets
     this.name     = name
     this.ordinal  = ordinal
     this.ctorArgs = Expr[,]
@@ -50,6 +51,7 @@ class EnumDef : Node
 //////////////////////////////////////////////////////////////////////////
 
   DocDef? doc
+  FacetDef[]? facets
   Int ordinal
   Str name
   Expr[] ctorArgs

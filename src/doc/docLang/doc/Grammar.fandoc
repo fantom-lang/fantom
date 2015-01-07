@@ -49,7 +49,7 @@ Slot Def [#slotDef]
 *******************
 
   <enumValDefs>    :=  <enumValDef> ("," <enumValDef>)* <eos>
-  <enumValDef>     :=  <id> ["(" <args> ")"]
+  <enumValDef>     :=  <facets> <id> ["(" <args> ")"]
 
   <slotDefs>       :=  <slotDef>*
   <slotDef>        :=  <fieldDef> | <methodDef> | <ctorDef> | <staticInit>

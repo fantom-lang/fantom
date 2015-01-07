@@ -24,6 +24,7 @@
 - Rebuild timezone database using tzinfo 2014h
 - Deprecate Buf.flush in favor of Buf.sync
 - Tweak locale dateTime formats to always include timezone
+- Enum support for facets on items
 - #1948: js: Pod meta-data not available in js
 - #2260: File.copyTo() overwrite func is passed the wrong file
 - #2325: document.querySelectorAll() in dom::Doc
