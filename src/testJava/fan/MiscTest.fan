@@ -290,4 +290,30 @@ class MiscTest : JavaTest
     verifySame(obj->h(obj).toStr, "java.lang.IllegalMonitorStateException")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #2246 Closure wrapper
+//////////////////////////////////////////////////////////////////////////
+
+  Void test2246()
+  {
+    compile(
+     """using [java] java.util
+        class Foo
+        {
+          Obj? foo()
+          {
+            list := ArrayList()
+            list = ArrayList()
+            3.times |x|
+            {
+              list.add(x.toStr)
+            }
+            return list.size
+          }
+        }""")
+
+    obj := pod.types.first.make
+    verifyEq(obj->foo, 3)
+  }
+
 }
