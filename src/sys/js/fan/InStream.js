@@ -521,7 +521,14 @@ fan.sys.InStream.prototype.readProps = function()
         continue;
       }
 
-      // comment
+      // line comment
+      if (c == 35 && (last == 10 || last == 13))
+      {
+        inEndOfLineComment = true;
+        continue;
+      }
+
+      // end of line comment
       if (c == 47 && fan.sys.Int.isSpace(last))
       {
         var peek = this.rChar();

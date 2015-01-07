@@ -636,7 +636,14 @@ public class InStream
           continue;
         }
 
-        // comment
+        // line comment
+        if (c == '#' && (last == '\n' || last == '\r'))
+        {
+          inEndOfLineComment = true;
+          continue;
+        }
+
+        // end of line comment
         if (c == '/' && FanInt.isSpace(last))
         {
           int peek = rChar();

@@ -843,6 +843,8 @@ class StreamTest : Test
   {
     str :=
       "// header\n" +
+      "# not in there\n" +
+      "# another comment\n" +
       "a=alpha\n"+
       " b = beta \r"+
       "c = charlie // who /* block ignored\r\n"+
@@ -857,6 +859,7 @@ class StreamTest : Test
       "g=\\\n"+
       " g\\u0001value\r\n"+
       "/*"+
+      "# line comment\n" +
       "no=nope/*"+
       "no=\\uJKEK"+
       "*/ */"+
@@ -865,6 +868,7 @@ class StreamTest : Test
       "eq1=a != b\n"+
       "eq2\\u003d=~!@#\$%^&*()_+\n"+
       "comment=\\u002f* \\u002f/!\n" +
+      "# line comment\n" +
       "// skip\n" +
       "foo=http://foo/"
 
