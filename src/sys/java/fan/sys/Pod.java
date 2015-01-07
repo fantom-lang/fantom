@@ -150,7 +150,7 @@ public class Pod
       store = FStore.makeZip(new File(Sys.podsDir, name + ".pod"));
     }
 
-    // otherwise delete to Env.cur to find the pod file
+    // otherwise delegate to Env.cur to find the pod file
     else
     {
       File file = null;
