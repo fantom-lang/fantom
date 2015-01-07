@@ -346,6 +346,7 @@ class InStream
   **   - Any Unicode character allowed in name or value
   **   - Leading and trailing whitespace trimmed from both name and value
   **   - Duplicate name keys within one file is an error condition
+  **   - Lines starting with '#' are comments
   **   - Comment to end of line is '//' if start of line or preceeded
   **     by whitespace
   **   - Block comment is '/* */' (may be nested)
