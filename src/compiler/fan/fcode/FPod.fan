@@ -180,15 +180,17 @@ final class FPod : CPod, FConst
     in := this.in(`/fcode/types.def`)
     ftypes = FType[,]
     ftypesByName = Str:FType[:]
-    in.readU2.times
+    if (in != null)
     {
-      ftype := FType(this).readMeta(in)
-      ftypes.add(ftype)
-      ftypesByName[ftype.name] = ftype
-      ns.typeCache[ftype.qname] = ftype
+      in.readU2.times
+      {
+        ftype := FType(this).readMeta(in)
+        ftypes.add(ftype)
+        ftypesByName[ftype.name] = ftype
+        ns.typeCache[ftype.qname] = ftype
+      }
+      in.close
     }
-    in.close
-
   }
 
   **
