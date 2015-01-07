@@ -126,19 +126,19 @@ class WebClientTest : Test
     // always maintained
     map :=
     [
-      `/doc/docIntro/WhyFan.html`: `/doc/docIntro/WhyFantom.html`,
-      `/doc/docLib/Dom.html`:      `/doc/dom/index.html`,
-      `/doc/docLib/Email.html`:    `/doc/email/index.html`,
-      `/doc/docLib/Fandoc.html`:   `/doc/fandoc/index.html`,
-      `/doc/docLib/Flux.html`:     `/doc/flux/index.html`,
-      `/doc/docLib/Fwt.html`:      `/doc/fwt/index.html`,
-      `/doc/docLib/Json.html`:     `/doc/util/index.html#json`,
-      `/doc/docLib/Sql.html` :     `/doc/sql/index.html`,
-      `/doc/docLib/Web.html`:      `/doc/web/index.html`,
-      `/doc/docLib/WebMod.html`:   `/doc/webmod/index.html`,
-      `/doc/docLib/Wisp.html`:     `/doc/wisp/index.html`,
-      `/doc/docLib/Xml.html`:      `/doc/xml/index.html`,
-      `/doc/docLang/TypeDatabase.html`: `/doc/docLang/Env.html#index`,
+      `/doc/docIntro/WhyFan.html`: `/doc/docIntro/WhyFantom`,
+      `/doc/docLib/Dom.html`:      `/doc/dom/index`,
+      `/doc/docLib/Email.html`:    `/doc/email/index`,
+      `/doc/docLib/Fandoc.html`:   `/doc/fandoc/index`,
+      `/doc/docLib/Flux.html`:     `/doc/flux/index`,
+      `/doc/docLib/Fwt.html`:      `/doc/fwt/index`,
+      `/doc/docLib/Json.html`:     `/doc/util/index#json`,
+      `/doc/docLib/Sql.html` :     `/doc/sql/index`,
+      `/doc/docLib/Web.html`:      `/doc/web/index`,
+      `/doc/docLib/WebMod.html`:   `/doc/webmod/index`,
+      `/doc/docLib/Wisp.html`:     `/doc/wisp/index`,
+      `/doc/docLib/Xml.html`:      `/doc/xml/index`,
+      `/doc/docLang/TypeDatabase.html`: `/doc/docLang/Env#index`,
     ]
     uri := map.keys.random
     base := `http://fantom.org/`
