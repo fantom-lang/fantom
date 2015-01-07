@@ -325,7 +325,7 @@ class ClosureVars : CompilerStep
     }
 
     loc := closure.loc
-    field := addToClosure(closure, name, LocalVarExpr.makeNoUnwrap(loc, var.shadows))
+    field := addToClosure(closure, name, LocalVarExpr.makeNoUnwrap(loc, var.shadows), "wrapper for $var.name.toCode")
 
     // load from field to local in beginning of doCall
     loadLocal := BinaryExpr.makeAssign(LocalVarExpr.makeNoUnwrap(loc, var), fieldExpr(loc, ThisExpr(loc), field))
@@ -359,14 +359,14 @@ class ClosureVars : CompilerStep
       subArg = ThisExpr(loc, closure.enclosingType)
     }
 
-    return addToClosure(closure, "\$this", subArg)
+    return addToClosure(closure, "\$this", subArg, "implicit this")
   }
 
   **
   ** Common code between addVarToClosure and makeOuterThisField.
   ** Return storage field for closure variable.
   **
-  private static FieldDef addToClosure(ClosureExpr closure, Str name, Expr subtituteArg)
+  private static FieldDef addToClosure(ClosureExpr closure, Str name, Expr subtituteArg, Str info)
   {
     loc      := closure.loc
     thisType := closure.enclosingType
@@ -378,6 +378,7 @@ class ClosureVars : CompilerStep
     field.name  = name
     field.flags = syntheticFieldFlags
     field.fieldType = ctype
+    field.closureInfo = info
     implType.addSlot(field)
 
     // pass variable to subtitute closure constructor in outer scope

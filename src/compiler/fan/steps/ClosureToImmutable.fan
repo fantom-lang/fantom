@@ -58,9 +58,15 @@ class ClosureToImmutable : CompilerStep
       return
     }
 
-    // if never immutable we don't need to do anything, Func
-    // isImmutable and toImmutable default to assume mutable
-    if (isNeverImmutable(cls)) return
+    // if never immutable then we inherit default toImmutable false
+    // and generate a toImmutable which raises NotImmutableErr with
+    // a meaningful error message
+    never := isNeverImmutable(cls)
+    if (never != null)
+    {
+      genToImmutableErr(cls, never)
+      return
+    }
 
     // if we have made it here we are neither always immutable
     // or never immutable - we could be immutable, but we have
@@ -78,10 +84,13 @@ class ClosureToImmutable : CompilerStep
 
   **
   ** Are any of the fields known to never be immutable?
+  ** If any field is not immutable, then return meaningful error message.
   **
-  Bool isNeverImmutable(TypeDef cls)
+  Str? isNeverImmutable(TypeDef cls)
   {
-    cls.fieldDefs.any |f| { !f.fieldType.isConstFieldType }
+    field := cls.fieldDefs.find |f| { !f.fieldType.isConstFieldType }
+    if (field == null) return null
+    return "Closure field not const: " + (field.closureInfo ?: field.name)
   }
 
   **
@@ -105,6 +114,23 @@ class ClosureToImmutable : CompilerStep
     m.code = Block(loc)
     m.code.stmts.add(ReturnStmt.makeSynthetic(loc, result))
     cls.addSlot(m)
+  }
+
+  **
+  ** Generate toImmutable which raises an error with a nice error
+  ** message as to why the function is not immutable.
+  **
+  **   Obj toImmutable()
+  **   {
+  **     throw NotImmutableErr.make(msg);
+  **   }
+  **
+  private Void genToImmutableErr(TypeDef cls, Str msg)
+  {
+    loc := cls.loc
+    m := stubToImmutable(cls)
+    ctor := CallExpr.makeWithMethod(loc, null, ns.notImmutableErrMake, [LiteralExpr.makeStr(loc, ns, msg)])
+    m.code.add(ThrowStmt(loc, ctor))
   }
 
   **
@@ -140,12 +166,7 @@ class ClosureToImmutable : CompilerStep
     genIsImmutable(cls, FieldExpr(loc, ThisExpr(loc, cls), immutableField, false))
 
     // Obj toImmutable()
-    m := MethodDef(loc, cls)
-    m.flags = FConst.Public + FConst.Synthetic + FConst.Override
-    m.name = "toImmutable"
-    m.ret  = ns.objType
-    m.code = Block(loc)
-    cls.addSlot(m)
+    m := stubToImmutable(cls)
 
     // make( (T1)f1.toImmutable, ... )
     ctor := cls.method("make")
@@ -181,5 +202,19 @@ class ClosureToImmutable : CompilerStep
     // return temp
     m.code.add(ReturnStmt.makeSynthetic(loc, LocalVarExpr(loc, temp)))
   }
+
+  ** Stub the 'Obj toImmutable()' method
+  private MethodDef stubToImmutable(TypeDef cls)
+  {
+    loc := cls.loc
+    m := MethodDef(loc, cls)
+    m.flags = FConst.Public + FConst.Synthetic + FConst.Override
+    m.name = "toImmutable"
+    m.ret  = ns.objType
+    m.code = Block(loc)
+    cls.addSlot(m)
+    return m
+  }
+
 }
 

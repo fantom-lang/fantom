@@ -76,7 +76,8 @@ abstract class CNamespace
     testType     = sysType("Test")
     uriType      = sysType("Uri")
     voidType     = sysType("Void")
-    fieldNotSetErrType = sysType("FieldNotSetErr")
+    fieldNotSetErrType  = sysType("FieldNotSetErr")
+    notImmutableErrType = sysType("NotImmutableErr")
 
     // methods
     objTrap            = sysMethod(objType,    "trap")
@@ -110,6 +111,7 @@ abstract class CNamespace
     typeMethod         = sysMethod(typeType,   "method")
     funcCall           = sysMethod(funcType,   "call")
     fieldNotSetErrMake = sysMethod(fieldNotSetErrType, "make")
+    notImmutableErrMake = sysMethod(notImmutableErrType, "make")
 
     // mock methods
     mockFlags := FConst.Public + FConst.Virtual
@@ -339,6 +341,7 @@ abstract class CNamespace
   CType? uriType              { private set }
   CType? voidType             { private set }
   CType? fieldNotSetErrType   { private set }
+  CType? notImmutableErrType  { private set }
 
   CMethod? objTrap            { private set }
   CMethod? objWith            { private set }
@@ -374,5 +377,6 @@ abstract class CNamespace
   CMethod? funcCheckInCtor    { private set }
   CMethod? funcCall           { private set }
   CMethod? fieldNotSetErrMake { private set }
+  CMethod? notImmutableErrMake { private set }
 
 }
