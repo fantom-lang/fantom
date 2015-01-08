@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.67 (working)*
+*Build 1.0.67 (8 Jan 2015)*
 - Mark sys::Regex as serializable and add defVal
 - DateTime.fromJava add negIsNull flag
 - Add fandoc::FandocDocWriter
@@ -26,7 +26,13 @@
 - Tweak locale dateTime formats to always include timezone
 - Enum support for facets on items
 - #1948: js: Pod meta-data not available in js
+- #2059: Ordered map is unordered after serialization
+- #2246: Java FFI: ClassFormatError: Illegal class name
+- #2256: Improve Map.make error message
+- #2257: # Comment in Fantom Property Files?
 - #2260: File.copyTo() overwrite func is passed the wrong file
+- #2265: Deprecated enum values
+- #2270: Wrapper object refs not immutable
 - #2325: document.querySelectorAll() in dom::Doc
 
 *Build 1.0.66 (19 Mar 2014)*
