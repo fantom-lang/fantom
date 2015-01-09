@@ -19,3 +19,9 @@ fan.webfwt.WebTablePeer.prototype.cellPos = function(self,col,row)
 {
   return this.$cellPos(self, col, row);
 }
+
+fan.webfwt.WebTablePeer.prototype.scrollToBottom = function(self)
+{
+  this.elem.scrollTop = this.elem.scrollHeight;
+  return self;
+}

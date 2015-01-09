@@ -31,6 +31,9 @@ class WebTable : Table
   **  - row: table row of cell
   **
   once EventListeners onCellMouseDown() { EventListeners() }
+
+  ** Scroll to bottom of table content.
+  native This scrollToBottom()
 }
 
 
