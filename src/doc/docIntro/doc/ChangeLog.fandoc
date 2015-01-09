@@ -6,6 +6,8 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.68 (working)*
+
 *Build 1.0.67 (8 Jan 2015)*
 - Mark sys::Regex as serializable and add defVal
 - DateTime.fromJava add negIsNull flag

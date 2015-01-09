@@ -468,8 +468,11 @@ public final class DateTime
     int month = getMonth();
     int day   = getDay();
     TimeZone.Rule rule = tz.rule(year);
-    if (TimeZone.isDstDate(rule, rule.dstStart, year, month, day)) return 23;
-    if (TimeZone.isDstDate(rule, rule.dstEnd, year, month, day))   return 25;
+    if (rule.dstStart != null)
+    {
+      if (TimeZone.isDstDate(rule, rule.dstStart, year, month, day)) return 23;
+      if (TimeZone.isDstDate(rule, rule.dstEnd, year, month, day))   return 25;
+    }
     return 24;
   }
 

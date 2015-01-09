@@ -1647,6 +1647,8 @@ class DateTimeTest : Test
     verifyHoursInDay("2015-03-30", "Madrid", 24)
     verifyHoursInDay("2015-10-25", "Madrid", 25)
     verifyHoursInDay("2015-10-26", "Madrid", 24)
+
+    verifyHoursInDay("2015-10-26", "UTC", 24)
   }
 
   private Void verifyHoursInDay(Str d, Str tz, Int expected)
