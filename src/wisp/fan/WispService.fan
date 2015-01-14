@@ -137,7 +137,10 @@ const class WispService : Service
       catch (Err e)
       {
         if (!listenerPool.isStopped && !listener.isClosed)
+        {
           log.err("WispService accept on ${port}", e)
+          Actor.sleep(5sec)
+        }
       }
     }
 
