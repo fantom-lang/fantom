@@ -52,6 +52,7 @@ abstract class WebList : Pane
       }
       &selected = it
       &selectedIndexes = list
+      updateSelection
     }
   }
 
