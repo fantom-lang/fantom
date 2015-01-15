@@ -360,7 +360,7 @@ class TableView : TableModel
   Int rowViewToModel(Int i) { rows[i] }
   Int colViewToModel(Int i) { cols[i] }
   Int[] rowsViewToModel(Int[] i) { i.map |x->Int| { rows[x] } }
-  Int[] colsViewToModel(Int[] i) { i.map |x->Int| { rows[x] } }
+  Int[] colsViewToModel(Int[] i) { i.map |x->Int| { cols[x] } }
 
   // Model -> View (need to optimize linear scan)
   Int rowModelToView(Int i) { rows.findIndex |x| { x == i } }
