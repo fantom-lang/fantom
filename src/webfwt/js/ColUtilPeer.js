@@ -9,7 +9,7 @@
 fan.webfwt.ColUtilPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.webfwt.ColUtilPeer.prototype.$ctor = function(self) {}
 
-fan.webfwt.ColUtilPeer.prototype.writePng = function(table, out, col, row)
+fan.webfwt.ColUtilPeer.writePng = function(table, out, col, row)
 {
   var w = table.m_colw.get(col);
   var h = table.m_rowb.get(row).m_h;
