@@ -16,7 +16,7 @@ fan.fwt.DesktopPeer.platform  = function() { return "browser"; }
 fan.fwt.DesktopPeer.isWindows = function() { return !fan.fwt.DesktopPeer.$isMac; }
 fan.fwt.DesktopPeer.isMac     = function() { return fan.fwt.DesktopPeer.$isMac; }
 
-(function() {
+fan.fwt.DesktopPeer.$initPlatformBools = function() {
   var ua = navigator.userAgent;
   fan.fwt.DesktopPeer.$isMac     = ua.indexOf("Mac OS X") != -1;
   fan.fwt.DesktopPeer.$isWebkit  = ua.indexOf("AppleWebKit/") != -1;
@@ -24,7 +24,8 @@ fan.fwt.DesktopPeer.isMac     = function() { return fan.fwt.DesktopPeer.$isMac; 
   fan.fwt.DesktopPeer.$isSafari  = ua.indexOf("Safari/") != -1 && ua.indexOf("Version/") != -1;
   fan.fwt.DesktopPeer.$isFirefox = ua.indexOf("Firefox/") != -1;
   fan.fwt.DesktopPeer.$isIE      = ua.indexOf("MSIE") != -1;
-}());
+ };
+fan.fwt.DesktopPeer.$initPlatformBools();
 
 // see init.js for Desktop.clipboard
 
