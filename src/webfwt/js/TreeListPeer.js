@@ -117,6 +117,8 @@ fan.webfwt.WebListPeer.prototype.repaintSelection = function(self, indices, sele
     var elem = this.indexToElem(ix);
     var img  = null;
 
+    if (elem == undefined) continue;
+
     for (var j=0; j<elem.childNodes.length; j++)
     {
       var kid = elem.childNodes[j];
