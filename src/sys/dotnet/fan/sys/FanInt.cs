@@ -136,6 +136,7 @@ namespace Fan.Sys
     public static long xor       (long self, long x) { return self ^ x; }
     public static long shiftl    (long self, long x) { return self << ((int)x); }
     public static long shiftr    (long self, long x) { return (long)((ulong)self >> (int)x); }
+    public static long shifta    (long self, long x) { return self >> ((int)x); }
 
   //////////////////////////////////////////////////////////////////////////
   // Math
