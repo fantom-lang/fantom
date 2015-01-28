@@ -362,6 +362,7 @@ public class FMethodRef
   static Special intNegate     = new SpecialOp(LNEG);
   static Special intShiftl     = new SpecialOp2(L2I, LSHL);
   static Special intShiftr     = new SpecialOp2(L2I, LUSHR);
+  static Special intShifta     = new SpecialOp2(L2I, LSHR);
 
   static HashMap intSpecials = new HashMap();
   static
@@ -379,6 +380,7 @@ public class FMethodRef
     intSpecials.put("xor",        intXor);
     intSpecials.put("shiftl",     intShiftl);
     intSpecials.put("shiftr",     intShiftr);
+    intSpecials.put("shifta",     intShifta);
   }
 
 //////////////////////////////////////////////////////////////////////////

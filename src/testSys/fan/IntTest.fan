@@ -272,10 +272,18 @@ class IntTest : Test
     verifyEq(0x80.shiftr(1), 0x40)
     verifyEq(0x80.shiftr(3), 0x10)
 
+    // shifta
+    verifyEq(0x80.shifta(1), 0x40)
+    verifyEq(0x80.shifta(3), 0x10)
+
     if (Env.cur.runtime != "js")
     {
       verifyEq(0xabcd_0000_1111_0000.shiftr(4), 0x0abc_d000_0111_1000)
       verifyEq(0xabcd_0000_1111_0000->shiftr(4), 0x0abc_d000_0111_1000)
+      verifyEq((-1).shiftr(1), 0x7fff_ffff_ffff_ffff)
+      verifyEq((-1).shiftr(3), 0x1fff_ffff_ffff_ffff)
+      verifyEq((-1).shifta(1), -1)
+      verifyEq((-1).shifta(3), -1)
     }
   }
 
@@ -599,7 +607,7 @@ class IntTest : Test
     verifyErr(ParseErr#) { x := Int.fromStr("3", 2, true) }
     verifyErr(ParseErr#) { x := Int.fromStr("3g", 16, true) }
     verifyErr(ParseErr#) { x := Int.fromStr("-10111", 2) }
-    
+
     verifyErrMsg(ParseErr#, "Invalid Int: 'ABC'") { x := Int.fromStr("ABC") }
   }
 
