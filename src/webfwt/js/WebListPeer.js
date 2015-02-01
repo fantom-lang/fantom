@@ -130,6 +130,22 @@ fan.webfwt.WebListPeer.prototype.updateSelection = function(self)
   this.sel = [];
   for (var i=0; i<index.size(); i++) this.sel.push(index.get(i));
   this.repaintSelection(self, this.sel, true);
+
+  // ensure first item in selection is visible
+  this.scrollSelectionInView();
+}
+
+fan.webfwt.WebListPeer.prototype.scrollSelectionInView = function(self)
+{
+  if (this.sel.length == 0 || this.container == null) return;
+  var container = this.elem.firstChild;
+  var elem = this.indexToElem(this.sel[0]);
+  var et = elem.offsetTop;
+  var eh = elem.offsetHeight;
+  var cs = container.scrollTop;
+  var ch = container.offsetHeight;
+  if (et < cs) elem.scrollIntoView(true);
+  else if ((et+eh) > (cs+ch)) elem.scrollIntoView(false);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -171,17 +187,8 @@ fan.webfwt.WebListPeer.prototype.sync = function(self)
     this.m_scrolly = null;
   }
 
-  // scroll selection into view if necessary
-  if (this.sel.length > 0 && container != null)
-  {
-    var elem = this.indexToElem(this.sel[0]);
-    var et = elem.offsetTop;
-    var eh = elem.offsetHeight;
-    var cs = container.scrollTop;
-    var ch = container.offsetHeight;
-    if (et < cs) elem.scrollIntoView(true);
-    else if ((et+eh) > (cs+ch)) elem.scrollIntoView(false);
-  }
+  // ensure first item in selection is visible
+  this.scrollSelectionInView();
 }
 
 /////////////////////////////////////////////////////////////////////////
