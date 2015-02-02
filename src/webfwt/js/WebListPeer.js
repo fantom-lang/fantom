@@ -140,6 +140,7 @@ fan.webfwt.WebListPeer.prototype.scrollSelectionInView = function(self)
   if (this.sel.length == 0 || this.container == null) return;
   var container = this.elem.firstChild;
   var elem = this.indexToElem(this.sel[0]);
+  if (!elem) return;
   var et = elem.offsetTop;
   var eh = elem.offsetHeight;
   var cs = container.scrollTop;
