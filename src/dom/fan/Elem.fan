@@ -135,6 +135,26 @@ class Elem
   ** Remove a child element from this element. Return this.
   native This remove(Elem child)
 
+  ** Add all elements to this element.  Returns this.
+  This addAll(Elem[] elems)
+  {
+    elems.each |e| { add(e) }
+    return this
+  }
+
+  ** Remove all children from this element. Returns this.
+  This removeAll()
+  {
+    children.each |kid| { remove(kid) }
+    return this
+  }
+
+  ** Callback when this element is added to a parent.
+  @NoDoc protected virtual Void onParent(Elem parent) {}
+
+  ** Callback when this element is removed from a parent.
+  @NoDoc protected virtual Void onUnparent(Elem parent) {}
+
   ** Callback when a child element is added.
   @NoDoc protected virtual Void onAdd(Elem child) {}
 
