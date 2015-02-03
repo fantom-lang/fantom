@@ -529,6 +529,7 @@ fan.fwt.TablePeer.prototype.$onKeyDown = function(self, event)
 
   // consume event
   event.stopPropagation();
+  event.preventDefault();
 
   // if table is empty, short-circuit here
   var rows = self.model().numRows();
@@ -663,6 +664,7 @@ fan.fwt.TableSelection.prototype.select = function(rows)
   }
   var start = this.table.peer.m_headerVisible ? 1 : 0; // skip th row
   var first = null;
+  var last  = null;
   for (var i=start; i<tbody.childNodes.length; i++)
   {
     var row = i-start;
@@ -675,6 +677,7 @@ fan.fwt.TableSelection.prototype.select = function(rows)
       if (row == rows[s])
       {
         if (first == null) first = tr;
+        last = tr;
         on = true;
         selected.push(view.m_rows.get(row));
         break;
@@ -684,7 +687,16 @@ fan.fwt.TableSelection.prototype.select = function(rows)
     tr.firstChild.firstChild.checked = on;
   }
 
-  if (first != null) first.scrollIntoView();
+  if (first != null && first == last)
+  {
+    var div = tbody.parentNode.parentNode;
+    var et = first.offsetTop;
+    var eh = first.offsetHeight;
+    var cs = div.scrollTop;
+    var ch = div.offsetHeight;
+    if (et < cs) first.scrollIntoView(true);
+    else if ((et+eh) > (cs+ch)) first.scrollIntoView(false);
+  }
 
   selected.sort();
   return fan.sys.List.make(fan.sys.Int.$type, selected);
