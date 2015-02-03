@@ -662,6 +662,7 @@ fan.fwt.TableSelection.prototype.select = function(rows)
     return fan.sys.List.make(fan.sys.Int.$type, selected);
   }
   var start = this.table.peer.m_headerVisible ? 1 : 0; // skip th row
+  var first = null;
   for (var i=start; i<tbody.childNodes.length; i++)
   {
     var row = i-start;
@@ -673,6 +674,7 @@ fan.fwt.TableSelection.prototype.select = function(rows)
     for (var s=0; s<len; s++)
       if (row == rows[s])
       {
+        if (first == null) first = tr;
         on = true;
         selected.push(view.m_rows.get(row));
         break;
@@ -681,6 +683,9 @@ fan.fwt.TableSelection.prototype.select = function(rows)
     tr.className = on ? "selected" : "";
     tr.firstChild.firstChild.checked = on;
   }
+
+  if (first != null) first.scrollIntoView();
+
   selected.sort();
   return fan.sys.List.make(fan.sys.Int.$type, selected);
 }
