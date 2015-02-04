@@ -28,12 +28,12 @@ fan.fwt.WidgetPeer.addCss(
   " top:0; left:0; width:100%; height:100%;" +
   " background: #000;" +
   " opacity: 0.25;" +
-  " zIndex: 1000;" +
+  " z-index: 1000;" +
   "}" +
   "div._webfwt_ActivityPane_shell_ {" +
   " position: absolute;" +
   " top:0; left:0; width:100%; height:100%;" +
-  " zIndex: 1001;" +
+  " z-index: 1001;" +
   "}" +
   "div._webfwt_ActivityPane_content_ {" +
   " position: absolute;" +
