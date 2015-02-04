@@ -48,7 +48,7 @@ if (fan.fwt.DesktopPeer.$isWebkit)
 fan.fwt.WidgetPeer.addCss(
   "div._fwt_Dialog_mask_ {" +
   " position: fixed;" +
-  " zIndex: 100;" +
+  " z-index: 100;" +
   " top:0; left:0; width:100%; height:100%;" +
   " background: #000;" +
   " opacity: 0.0;" +
@@ -57,7 +57,7 @@ fan.fwt.WidgetPeer.addCss(
   "}" +
   "div._fwt_Dialog_shell_ {" +
   " position: fixed;" +
-  " zIndex: 101;" +
+  " z-index: 101;" +
   " top:0; left:0; width:100%; height:100%;" +
   "}" +
   "div._fwt_Dialog_tbar_ {" +
