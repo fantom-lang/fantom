@@ -76,7 +76,7 @@ class JsonOutStream : OutStream
     {
       if (f.isStatic || f.hasFacet(Transient#) == true) return
       if (first) first = false
-      else writeChar(JsonToken.comma).writeChar('\n')
+      else writeChar(JsonToken.comma)
       writeJsonPair(f.name, f.get(obj))
     }
     writeChar(JsonToken.objectEnd)
@@ -89,7 +89,7 @@ class JsonOutStream : OutStream
     map.each |val, key|
     {
       if (key isnot Str) throw Err("JSON map key is not Str type: $key [$key.typeof]")
-      if (notFirst) writeChar(JsonToken.comma).writeChar('\n')
+      if (notFirst) writeChar(JsonToken.comma)
       writeJsonPair(key, val)
       notFirst = true
     }
