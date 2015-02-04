@@ -126,11 +126,7 @@ class JsonTest : Test
 
     // serializable
     verifyWrite(SerialA(),
-      Str<|{"b":true,
-           "i":7,
-           "f":5.0,
-           "s":"string\n",
-           "ints":[1,2,3]}|>)
+      Str<|{"b":true,"i":7,"f":5.0,"s":"string\n","ints":[1,2,3]}|>)
 
     // errors
     verifyErr(IOErr#) { verifyWrite(Buf(), "") }
