@@ -143,28 +143,28 @@ public class Log
   public final void err(String msg, Throwable e) { err(msg, Err.make(e)); }
   public final void err(String msg, Err err)
   {
-    log(LogRec.make(DateTime.now(), LogLevel.err, name, msg, err));
+    log(LogRec.make(DateTime.now(null), LogLevel.err, name, msg, err));
   }
 
   public final void warn(String msg) { warn(msg, (Err)null); }
   public final void warn(String msg, Throwable e) { warn(msg, Err.make(e)); }
   public final void warn(String msg, Err err)
   {
-    log(LogRec.make(DateTime.now(), LogLevel.warn, name, msg, err));
+    log(LogRec.make(DateTime.now(null), LogLevel.warn, name, msg, err));
   }
 
   public final void info(String msg) { info(msg, (Err)null); }
   public final void info(String msg, Throwable e) { info(msg, Err.make(e)); }
   public final void info(String msg, Err err)
   {
-    log(LogRec.make(DateTime.now(), LogLevel.info, name, msg, err));
+    log(LogRec.make(DateTime.now(null), LogLevel.info, name, msg, err));
   }
 
   public final void debug(String msg) { debug(msg, (Err)null); }
   public final void debug(String msg, Throwable e) { debug(msg, Err.make(e)); }
   public final void debug(String msg, Err err)
   {
-    log(LogRec.make(DateTime.now(), LogLevel.debug, name, msg, err));
+    log(LogRec.make(DateTime.now(null), LogLevel.debug, name, msg, err));
   }
 
   public void log(LogRec rec)
