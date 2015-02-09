@@ -2198,7 +2198,11 @@ public class Parser : CompilerSupport
     }
 
     // if more then one, first try to exclude those internal to other pods
-    if (types.size > 1) types = types.exclude |t| { t.isInternal && t.pod.name != compiler.pod.name }
+    if (types.size > 1)
+    {
+      publicTypes := types.exclude |t| { t.isInternal && t.pod.name != compiler.pod.name }
+      if (!publicTypes.isEmpty) types = publicTypes
+    }
 
     // if more then one its ambiguous (use errReport to avoid suppression)
     if (types.size > 1)
