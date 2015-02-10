@@ -127,7 +127,9 @@ fan.dom.ElemPeer.prototype.get = function(self, name, def)
   if (name == "value")   return this.val(self);
   if (name == "checked") return this.checked(self);
 
-  var val = this.elem.getAttribute(name);
+  var val = this.elem[name];
+  if (val == null) val = this.elem.getAttribute(name);
+
   if (val != null) return val;
   if (def != null) return def;
   return null;
@@ -140,6 +142,7 @@ fan.dom.ElemPeer.prototype.set = function(self, name, val)
   else if (name == "class")   this.className$(self, val);
   else if (name == "value")   this.val$(self, val);
   else if (name == "checked") this.checked$(self, val);
+  else if (this.elem[name])   this.elem[name] = val;
   else this.elem.setAttribute(name, val);
 }
 
