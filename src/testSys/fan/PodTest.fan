@@ -150,4 +150,87 @@ class PodTest : Test
     verifySame(pod.props(`not/found`, 1ms), pod.props(`not/found`, 1ms))
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Reload
+//////////////////////////////////////////////////////////////////////////
+
+  Void testReload()
+  {
+    podName := "testSysPodReload"
+    podFile := Env.cur.workDir + `lib/fan/${podName}.pod`
+    try
+    {
+      // verify pod is not installed yet
+      pods := Pod.list
+      verifyEq(pods.find |p| { p.name == podName }, null)
+      verifyEq(Pod.find(podName, false), null)
+      verifyErr(UnknownPodErr#) { Pod.find(podName) }
+      verifyEq(Env.cur.index("podReload"), Str[,])
+
+      // create new pod
+      writePod(podFile, podName, "1.0")
+
+      // verify pod is now installed
+      typeof.pod->reloadList
+      pod := Pod.find(podName)
+      verifyPod(pod, podName, "1.0")
+
+      // now rewrite the pod
+      writePod(podFile, podName, "1.1")
+
+      // verify pod changes
+      oldPod := pod
+      pod->reload
+      pod = Pod.find(podName)
+      verifyNotSame(oldPod, pod)
+      verifyPod(pod, podName, "1.1")
+
+      // verify can't use old pod
+      verifyErr(null) { oldPod.file(`/res/a.txt`).readAllStr }
+
+      // verify can't reload pods with code
+      verifyErr(Err#) { Pod.find("sys")->reload }
+      verifyErr(Err#) { Pod.find("compiler")->reload }
+      verifyErr(Err#) { Pod.find("testSys")->reload }
+
+      // rewrite pod one more time
+      writePod(podFile, podName, "1.2")
+      pod->reload
+      pod = Pod.find(podName)
+      verifyPod(pod, podName, "1.2")
+    }
+    finally podFile.delete
+  }
+
+  private Void verifyPod(Pod pod, Str podName, Str ver)
+  {
+    verifyEq(Pod.list.find |p| { p.name == podName }, pod)
+    verifyEq(Env.cur.index("podReload"), [ver])
+    verifyEq(pod.props(`foo.props`, 1min)["foo"], "foo $ver")
+    verifyEq(pod.name, podName)
+    verifyEq(pod.version, Version(ver))
+    verifyEq(pod.meta["pod.summary"], "$podName $ver")
+    verifyEq(pod.file(`/res/a.txt`).readAllStr, "a $ver\n")
+    verifyEq(pod.file(`/res/b.txt`).readAllStr, "b $ver\n")
+  }
+
+  private Void writePod(File podFile, Str podName, Str ver)
+  {
+    meta := [
+      "pod.name":podName,
+      "pod.version":ver,
+      "pod.depends":"",
+      "pod.summary":"$podName $ver",
+      "fcode.version":"1.0.51"]    // TODO
+    f := tempDir + `${podName}.pod`
+    zip := Zip.write(f.out)
+    zip.writeNext(`meta.props`).writeProps(meta).close
+    zip.writeNext(`index.props`).writeProps(["podReload":ver]).close
+    zip.writeNext(`foo.props`).writeProps(["foo":"foo $ver"]).close
+    zip.writeNext(`res/a.txt`).printLine("a $ver").close
+    zip.writeNext(`res/b.txt`).printLine("b $ver").close
+    zip.close
+    f.copyTo(podFile, ["overwrite":true])
+  }
+
 }

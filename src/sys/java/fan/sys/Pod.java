@@ -205,6 +205,59 @@ public class Pod
     }
   }
 
+  private static Object reloadList()
+  {
+    Log log = Log.get("sys");
+    log.info("Pod reload list");
+
+    // update global data structures
+    synchronized (podsByName)
+    {
+      allPodsList = null;
+    }
+
+    // reload Env data structures
+    Env.cur().onPodReload();
+    return "reloadList";
+  }
+
+  private Object reload()
+  {
+    if (types.length != 0)
+      throw Err.make("Cannot reload pod with types: " + name);
+
+    Log log = Log.get("sys");
+    log.info("Pod reload: " + name);
+
+    // close current zip file
+    try
+    {
+      if (fpod.store != null) fpod.store.close();
+    }
+    catch (Exception e)
+    {
+      log.err("Cannot close pod", Err.make(e));
+    }
+
+    // update global data structures
+    synchronized (podsByName)
+    {
+      podsByName.remove(name);
+      allPodsList = null;
+    }
+
+    // reload Env data structures
+    Env.cur().onPodReload();
+    return this;
+  }
+
+  public Object trap(String name, List args)
+  {
+    if (name.equals("reloadList")) return reloadList();
+    if (name.equals("reload")) return reload();
+    return super.trap(name, args);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
