@@ -130,7 +130,7 @@ class Elem
   native Elem? next()
 
   ** Add a new element as a child to this element. Return this.
-  native This add(Elem child)
+  @Operator native This add(Elem child)
 
   ** Remove a child element from this element. Return this.
   native This remove(Elem child)
