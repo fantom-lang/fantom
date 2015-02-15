@@ -44,7 +44,10 @@ class DomEvent
   native Bool shift()
 
   ** Mouse button number pressed.
-  native Int? button
+  native Int? button()
+
+  ** Key code for key pressed.
+  native Int? keyCode()
 
   ** Meta-data for this event instance.
   Str:Obj? meta := Str:Obj?[:]
