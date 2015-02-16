@@ -18,12 +18,18 @@ fan.dom.StylePeer.prototype.$ctor = function(self)
   this.style = null;
 }
 
+fan.dom.StylePeer.prototype.clear = function(self)
+{
+  this.style.cssText = "";
+  return self;
+}
+
 fan.dom.StylePeer.prototype.get = function(self, name)
 {
   return this.style.getPropertyValue(name);
 }
 
-fan.dom.StylePeer.prototype.set = function(self, name, val)
+fan.dom.StylePeer.prototype.setProp = function(self, name, val)
 {
   this.style.setProperty(name, val);
 }

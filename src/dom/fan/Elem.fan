@@ -200,13 +200,12 @@ class Elem
     // set transition
     style := this.style
     trans := props.keys.join(", ") |p| { "$p ${dur.toMillis}ms" }
-    style.set("-webkit-transition", trans)
-    style.set("-moz-transition", trans)
+    style["transition"] = trans
 
     // set props
     props.each |val,prop|
     {
-      style.set(prop, val)
+      style[prop] = val
     }
 
     // invoke complete callback func
