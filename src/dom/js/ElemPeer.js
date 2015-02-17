@@ -230,20 +230,14 @@ fan.dom.ElemPeer.prototype.next = function(self)
   return fan.dom.ElemPeer.wrap(sib);
 }
 
-fan.dom.ElemPeer.prototype.add = function(self, child)
+fan.dom.ElemPeer.prototype.addChild = function(self, child)
 {
   this.elem.appendChild(child.peer.elem);
-  self.onAdd(child);
-  child.onParent(self);
-  return self;
 }
 
-fan.dom.ElemPeer.prototype.remove = function(self, child)
+fan.dom.ElemPeer.prototype.removeChild = function(self, child)
 {
   this.elem.removeChild(child.peer.elem);
-  child.onUnparent(self);
-  self.onRemove(child);
-  return self;
 }
 
 fan.dom.ElemPeer.prototype.focus = function(self)
