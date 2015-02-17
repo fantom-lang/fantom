@@ -66,7 +66,11 @@ class Style
 
   ** Property names that require vendor prefixes.
   private const static Str:Str[] vendor := [:].setList([
+    "align-content",
+    "align-items",
     "flex",
     "flex-direction",
+    "flex-wrap",
+    "justify-content",
   ])
 }
