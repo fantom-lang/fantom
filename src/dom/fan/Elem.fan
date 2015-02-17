@@ -130,10 +130,22 @@ class Elem
   native Elem? next()
 
   ** Add a new element as a child to this element. Return this.
-  @Operator native This add(Elem child)
+  @Operator virtual This add(Elem child)
+  {
+    addChild(child)
+    onAdd(child)
+    child.onParent(this)
+    return this
+  }
 
   ** Remove a child element from this element. Return this.
-  native This remove(Elem child)
+  virtual This remove(Elem child)
+  {
+    removeChild(child)
+    child.onUnparent(this)
+    onRemove(child)
+    return this
+  }
 
   ** Add all elements to this element.  Returns this.
   This addAll(Elem[] elems)
@@ -148,6 +160,12 @@ class Elem
     children.each |kid| { remove(kid) }
     return this
   }
+
+  ** Add a new element as a child to this element.
+  @NoDoc protected native Void addChild(Elem child)
+
+  ** Remove a child element from this element.
+  @NoDoc protected native Void removeChild(Elem child)
 
   ** Callback when this element is added to a parent.
   @NoDoc protected virtual Void onParent(Elem parent) {}
