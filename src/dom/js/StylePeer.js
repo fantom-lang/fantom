@@ -31,5 +31,6 @@ fan.dom.StylePeer.prototype.get = function(self, name)
 
 fan.dom.StylePeer.prototype.setProp = function(self, name, val)
 {
-  this.style.setProperty(name, val);
+  if (val == null) this.style.removeProperty(name);
+  else this.style.setProperty(name, val);
 }
