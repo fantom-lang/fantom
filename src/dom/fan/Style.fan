@@ -24,9 +24,10 @@ class Style
   **   color := style["color"]
   @Operator native Obj? get(Str name)
 
-  ** Set the given propery value.
+  ** Set the given propery value.  If 'val' is null this
+  ** property is removed.
   **   style["color"] = "#f00"
-  @Operator This set(Str name, Str val)
+  @Operator This set(Str name, Str? val)
   {
     if (vendor.containsKey(name))
     {
@@ -40,7 +41,7 @@ class Style
 
   ** Set all the given property values.
   **   style.setAll(["color":"#f00", "font-weight":"bold"])
-  This setAll(Str:Obj map)
+  This setAll(Str:Str? map)
   {
     map.each |v,n| { set(n,v) }
     return this
@@ -62,7 +63,7 @@ class Style
   }
 
   ** Set CSS property.
-  private native Void setProp(Str name, Str val)
+  private native Void setProp(Str name, Str? val)
 
   ** Property names that require vendor prefixes.
   private const static Str:Str[] vendor := [:].setList([
