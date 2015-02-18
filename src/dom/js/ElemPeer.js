@@ -166,6 +166,14 @@ fan.dom.ElemPeer.prototype.pos$ = function(self, val)
   this.elem.style.top  = val.m_y + "px";
 }
 
+fan.dom.ElemPeer.prototype.posDoc = function(self)
+{
+  var r = this.elem.getBoundingClientRect();
+  var x = Math.round(r.left);
+  var y = Math.round(r.top);
+  return fan.gfx.Point.make(x, y);
+}
+
 fan.dom.ElemPeer.prototype.size = function(self)
 {
   var w = this.elem.offsetWidth;
@@ -188,6 +196,7 @@ fan.dom.ElemPeer.prototype.size$ = function(self, val)
 
 fan.dom.ElemPeer.prototype.parent = function(self)
 {
+  if (this.elem.nodeName == "BODY") return null;
   var parent = this.elem.parentNode;
   if (parent == null) return null;
   return fan.dom.ElemPeer.wrap(parent);
