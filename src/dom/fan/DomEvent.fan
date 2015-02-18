@@ -49,7 +49,9 @@ class DomEvent
   ** Key code for key pressed.
   native Int? keyCode()
 
+  ** Stop further propagation of this event.
+  native Void stop()
+
   ** Meta-data for this event instance.
   Str:Obj? meta := Str:Obj?[:]
-
 }

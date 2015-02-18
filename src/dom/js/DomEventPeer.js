@@ -27,6 +27,8 @@ fan.dom.DomEventPeer.prototype.shift = function(self) { return this.event.shiftK
 fan.dom.DomEventPeer.prototype.button = function(self) { return this.event.button; }
 fan.dom.DomEventPeer.prototype.keyCode = function(self) { return this.event.keyCode; }
 
+fan.dom.DomEventPeer.prototype.stop = function(self) { this.event.stopPropagation(); }
+
 fan.dom.DomEventPeer.prototype.toStr = function(self)
 {
   return "DomEvent[" +
