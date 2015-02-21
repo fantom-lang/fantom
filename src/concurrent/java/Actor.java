@@ -285,6 +285,12 @@ public class Actor
       return null;
     }
 
+    void dump(fan.sys.OutStream out)
+    {
+      for (Future x = head; x != null; x = x.next)
+        out.print("  ").printLine(x.msg);
+    }
+
     Future head, tail;
     int size;
   }
@@ -357,6 +363,34 @@ public class Actor
 
     Func toKeyFunc, coalesceFunc;
     HashMap pending = new HashMap();
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Debug
+//////////////////////////////////////////////////////////////////////////
+
+  public Object trap(String name, List args)
+  {
+    if (name.equals("dump")) return dump(args);
+    return super.trap(name, args);
+  }
+
+  public final Object dump(List args)
+  {
+    fan.sys.OutStream out = fan.sys.Env.cur().out();
+    if (args != null && args.size() > 0)
+      out = (fan.sys.OutStream)args.get(0);
+    try
+    {
+      out.printLine("Actor");
+      out.printLine("  pool:      " + pool.name);
+      out.printLine("  submitted: " + submitted);
+      out.printLine("  queue:     " + queueSize());
+      queue.dump(out);
+
+    }
+    catch (Exception e) { out.printLine("  " + e + "\n"); }
+    return out;
   }
 
 //////////////////////////////////////////////////////////////////////////

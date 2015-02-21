@@ -198,21 +198,27 @@ public class ThreadPool
 // Debug
 //////////////////////////////////////////////////////////////////////////
 
-  public void dump(fan.sys.List args)
+  public void dump(fan.sys.OutStream out)
   {
-    fan.sys.OutStream out = fan.sys.Env.cur().out();
-    if (args != null && args.size() > 0)
-      out = (fan.sys.OutStream)args.get(0);
-
-    out.printLine("ThreadPool");
-    out.printLine("  pending: " + pending.size());
-    out.printLine("  idle:    " + idle.size());
-    out.printLine("  workers: " + workers.size());
+    out.printLine("  pending:    " + pending.size());
+    out.printLine("  idle:       " + idle.size());
+    out.printLine("  workers:    " + workers.size());
     Iterator it = workers.values().iterator();
     while (it.hasNext())
     {
       Worker w = (Worker)it.next();
-      out.printLine("  " + w + "  " + w.work);
+      out.print("  ").print(w.getName()).print(": ");
+      Work work = w.work;
+      if (work == null)
+        out.print("idle");
+      else
+        out.print(work);
+      if (work instanceof Actor)
+      {
+        Actor actor = (Actor)work;
+        out.print(" [queue: ").print(actor.queueSize()).print("]");
+      }
+      out.printLine();
     }
   }
 
