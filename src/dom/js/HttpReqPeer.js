@@ -38,7 +38,7 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
   {
     xhr.send(null);
   }
-  if (fan.sys.ObjUtil.$typeof(content) === fan.sys.Str.$type)
+  else if (fan.sys.ObjUtil.$typeof(content) === fan.sys.Str.$type)
   {
     // send text
     if (!ct) xhr.setRequestHeader("Content-Type", "text/plain");
