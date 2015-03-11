@@ -24,7 +24,7 @@ internal class WispRes : WebRes
   {
     this.service = service
     this.socket  = socket
-    headers.caseInsensitive = true
+    this.headers = service.extraResHeaders.dup
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ internal class WispRes : WebRes
   ** you access out() for the first time, which commits the response.
   ** Throw an err if response is already committed.
   **
-  override Str:Str headers := Str:Str[:]
+  override Str:Str headers
   {
     get { checkUncommitted; return &headers }
   }

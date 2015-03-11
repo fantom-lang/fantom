@@ -62,13 +62,39 @@ const class WispService : Service
   **
   const WebMod errMod := initErrMod
 
-  private WebMod initErrMod()
+  private static WebMod initErrMod()
   {
     try
       return (WebMod)Type.find(Pod.find("web").config("errMod", "wisp::WispDefaultErrMod")).make
     catch (Err e)
       log.err("Cannot init errMod", e)
     return WispDefaultErrMod()
+  }
+
+  **
+  ** Map of HTTP headers to include in every response.  These are
+  ** initialized from etc/web/config.props with the key "extraResHeaders"
+  ** as a set of "key:value" pairs separated by semicolons.
+  **
+  const Str:Str extraResHeaders := initExtraResHeaders
+
+  private static Str:Str initExtraResHeaders()
+  {
+    acc := Str:Str[:] { caseInsensitive = true }
+    try
+    {
+      Pod.find("web").config("extraResHeaders", "").split(';').each |pair|
+      {
+        if (pair.isEmpty) return
+        colon := pair.index(":") ?: throw Err("Missing colon: $pair")
+        key := pair[0..<colon].trim
+        val := pair[colon+1..-1].trim
+        if (key.isEmpty || val.isEmpty) throw Err("Invalid header: $pair")
+        acc[key] = val
+      }
+    }
+    catch (Err e) log.err("Cannot init resHeaders", e)
+    return acc.toImmutable
   }
 
   **
