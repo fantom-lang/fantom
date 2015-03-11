@@ -19,3 +19,8 @@
 // Qualified type name of WebMod used to handle internal 500 errors
 // See WispService.errMod
 // errMod=wisp::WispDefaultErrMod
+
+// Extra HTTP headers to add to every response
+// See WispService.extraResHeaders
+// extraResHeaders=Foo:XYZ; Bar:123;
+
