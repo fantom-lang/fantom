@@ -64,7 +64,7 @@ fan.dom.ElemPeer.prototype.$name$ = function(self, val) { return this.elem.name 
 fan.dom.ElemPeer.prototype.className  = function(self) { return this.elem.className; }
 fan.dom.ElemPeer.prototype.className$ = function(self, val) { return this.elem.className = val; }
 
-fan.dom.ElemPeer.prototype.hasClassName = function(self, className)
+fan.dom.ElemPeer.prototype.hasClass = function(self, className)
 {
   var arr = this.elem.className.split(" ");
   for (var i=0; i<arr.length; i++)
@@ -73,14 +73,14 @@ fan.dom.ElemPeer.prototype.hasClassName = function(self, className)
   return false;
 }
 
-fan.dom.ElemPeer.prototype.addClassName = function(self, className)
+fan.dom.ElemPeer.prototype.addClass = function(self, className)
 {
-  if (!this.hasClassName(self, className))
+  if (!this.hasClass(self, className))
     this.elem.className += " " + className;
   return self;
 }
 
-fan.dom.ElemPeer.prototype.removeClassName = function(self, className)
+fan.dom.ElemPeer.prototype.removeClass = function(self, className)
 {
   var arr = this.elem.className.split(" ");
   for (var i=0; i<arr.length; i++)
