@@ -45,26 +45,31 @@ class Elem
 
   ** Return true if this element has the given CSS class name,
   ** or false if it does not.
-  native Bool hasClassName(Str className)
+  native Bool hasClass(Str name)
 
   ** Add the given CSS class name to this element.  If this
   ** element already contains the given class name, then this
   ** method does nothing. Returns this.
-  native This addClassName(Str className)
+  native This addClass(Str name)
 
   ** Remove the given CSS class name to this element. If this
   ** element does not have the given class name, this method
   ** does nothing. Returns this.
-  native This removeClassName(Str className)
+  native This removeClass(Str name)
 
   ** Toggle the presence of the given CSS class name by adding
   ** or removing from this element.  Returns this.
-  This toggleClassName(Str className)
+  This toggleClass(Str name)
   {
-    if (hasClassName(className)) removeClassName(className)
-    else addClassName(className)
+    if (hasClass(name)) removeClass(name)
+    else addClass(name)
     return this
   }
+
+  // TODO FIXIT: remove
+  @NoDoc @Deprecated { msg = "Use hasClass" } Bool hasClassName(Str n) { hasClass(n) }
+  @NoDoc @Deprecated { msg = "Use addClass" } This addClassName(Str n) { addClass(n) }
+  @NoDoc @Deprecated { msg = "Use removeClass" } This removeClassName(Str n) { removeClass(n) }
 
   ** Get the Style instance for this element.
   @NoDoc native Style style()
