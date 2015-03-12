@@ -57,6 +57,15 @@ class Elem
   ** does nothing. Returns this.
   native This removeClassName(Str className)
 
+  ** Toggle the presence of the given CSS class name by adding
+  ** or removing from this element.  Returns this.
+  This toggleClassName(Str className)
+  {
+    if (hasClassName(className)) removeClassName(className)
+    else addClassName(className)
+    return this
+  }
+
   ** Get the Style instance for this element.
   @NoDoc native Style style()
 
