@@ -156,7 +156,9 @@ public final class FPod
       metaName = meta("pod.name");
       podVersion = meta("pod.version");
 
-      fcodeVersion = meta("fcode.version");
+      fcodeVersion = (String)meta.get("fcode.version");
+      if (fcodeVersion == null) fcodeVersion = "unspecified";
+
       String dependsStr = meta("pod.depends").trim();
       if (dependsStr.length() == 0) depends = new Depend[0];
       else
@@ -171,10 +173,6 @@ public final class FPod
     if (podName == null) podName = metaName;
     if (!podName.equals(metaName))
       throw new IOException("Pod name mismatch " + podName + " != " + metaName);
-
-    // sanity checking
-    if (!FConst.FCodeVersion.equals(fcodeVersion))
-      throw new IOException("Invalid fcode version " + fcodeVersion);
   }
 
   private String meta(String key) throws IOException
@@ -187,6 +185,11 @@ public final class FPod
   private void readTypeMeta(FStore.Input in) throws IOException
   {
     if (in == null) { types = new FType[0]; return; }
+
+    // if we have types, then ensure we have correct fcode
+    if (!FConst.FCodeVersion.equals(fcodeVersion))
+      throw new IOException("Invalid fcode version: " + fcodeVersion + " != " + FConst.FCodeVersion);
+
     types = new FType[in.u2()];
     for (int i=0; i<types.length; ++i)
     {
