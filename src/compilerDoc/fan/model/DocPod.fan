@@ -92,8 +92,8 @@ const class DocPod : DocSpace
   ** If this pod has an associated pod.fandoc chapter
   const DocChapter? podDoc
 
-  ** A *manual* pod is a pod with only fandoc chapters and no types.
-  Bool isManual() { types.isEmpty && !chapters.isEmpty }
+  ** A *manual* pod is a pod with two or more fandoc chapters and no types.
+  Bool isManual() { types.isEmpty && chapters.size >= 2 }
 
   ** If this is a manual like docLang, return list of chapters.
   const DocChapter[] chapters
@@ -373,7 +373,7 @@ internal class DocPodLoader
     list := map.vals.sort |a, b| { a.name <=> b.name }
 
     // if this pod has types, it can't be a manual
-    if (!typeList.isEmpty)
+    if (!typeList.isEmpty || list.size <= 1)
     {
       if (list.size == 1 && list.first.isPodDoc)
         this.podDoc = list.first
