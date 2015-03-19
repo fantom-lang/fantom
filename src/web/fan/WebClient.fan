@@ -392,15 +392,20 @@ class WebClient
     isHttps := reqUri.scheme == "https"
     defPort := isHttps ? 443 : 80
     usingProxy := isProxy(reqUri)
+    isTunnel := usingProxy && isHttps
     if (!isConnected)
     {
-      // make https or http socket
-      socket = isHttps ? TcpSocket.makeSsl: TcpSocket.make
-      socket.options.copyFrom(socketOptions)
+      if (isTunnel) socket = openHttpsTunnel
+      else
+      {
+        // make https or http socket
+        socket = isHttps ? TcpSocket.makeSsl: TcpSocket.make
+        socket.options.copyFrom(socketOptions)
 
-      // connect to proxy or directly to request host
-      connUri := usingProxy ? proxy : reqUri
-      socket.connect(IpAddr(connUri.host), connUri.port ?: defPort)
+        // connect to proxy or directly to request host
+        connUri := usingProxy ? proxy : reqUri
+        socket.connect(IpAddr(connUri.host), connUri.port ?: defPort)
+      }
     }
 
     // request uri is absolute if proxy, relative otherwise
@@ -423,6 +428,27 @@ class WebClient
     out.flush
 
     return this
+  }
+
+  ** Open an https tunnel through our proxy server.
+  private TcpSocket openHttpsTunnel()
+  {
+    socket = TcpSocket.make
+    socket.options.copyFrom(socketOptions)
+
+    // make CONNECT request to proxy server on http port
+    socket.connect(IpAddr(proxy.host), proxy.port ?: 80)
+    out := socket.out
+    out.print("CONNECT ${reqUri.host}:${reqUri.port ?: 443} HTTP/${reqVersion}").print("\r\n")
+       .print("\r\n")
+    out.flush
+
+    // expect a 200 response code
+    readRes
+    if (resCode != 200) throw IOErr("Could not open tunnel: bad HTTP response $resCode $resPhrase")
+
+    // upgrade to SSL socket now
+    return TcpSocket.makeSsl(socket)
   }
 
   **
