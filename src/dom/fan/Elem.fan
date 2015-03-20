@@ -138,6 +138,10 @@ class Elem
   ** if this element has no children.
   native Elem? first()
 
+  ** Get the last child node of this element, or null
+  ** if this element has no children.
+  native Elem? last()
+
   ** Get the previous sibling to this element, or null
   ** if this is the first element under its parent.
   native Elem? prev()

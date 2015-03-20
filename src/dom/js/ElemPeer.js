@@ -221,6 +221,15 @@ fan.dom.ElemPeer.prototype.first = function(self)
   return null;
 }
 
+fan.dom.ElemPeer.prototype.last = function(self)
+{
+  var kids = this.elem.childNodes;
+  for (var i=kids.length-1; i>=0; i--)
+    if (kids[i].nodeType == 1)
+      return fan.dom.ElemPeer.wrap(kids[i]);
+  return null;
+}
+
 fan.dom.ElemPeer.prototype.prev = function(self)
 {
   var sib = this.elem.previousSibling;

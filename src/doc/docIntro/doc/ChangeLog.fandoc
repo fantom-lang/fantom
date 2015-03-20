@@ -10,7 +10,7 @@
 - JsonOutStream: remove newlines from output
 - WispService.extraResHeaders
 - Elem: deprecate hasClassName, addClassName, removeClassName
-- Elem: add hasClass, addClass, removeClass, toggleClass
+- Elem: add hasClass, addClass, removeClass, toggleClass, last
 
 *Build 1.0.67 (8 Jan 2015)*
 - Mark sys::Regex as serializable and add defVal
