@@ -49,11 +49,18 @@ public class Fan
     // stage installs which don't effect current program until the next
     // reboot.  This is not really intended to be a long term solution
     // because it suffers from limitations: assumes only one Fantom program
-    // being restarted at a time and doesn't work with Env very well
+    // being restarted at a time
     try
     {
+      // check for {home}/lib/install/
       File installDir = new File(Sys.homeDir, "lib" + File.separator + "install");
       if (!installDir.exists()) return;
+
+      // install to {work}/lib/fan/
+      File dir = ((LocalFile)Env.cur().workDir()).toJava();
+      dir = new File(dir, "lib" + File.separator + "fan");
+
+      // install each file
       File[] files = installDir.listFiles();
       for (int i=0; files != null && i<files.length; ++i)
       {
@@ -61,7 +68,7 @@ public class Fan
         String name = file.getName();
         if (!name.endsWith(".pod")) continue;
         System.out.println("INSTALL POD: " + name);
-        FileUtil.copy(file, new File(Sys.podsDir, name));
+        FileUtil.copy(file, new File(dir, name));
         file.delete();
       }
       FileUtil.delete(installDir);
