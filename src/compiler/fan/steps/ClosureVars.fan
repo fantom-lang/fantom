@@ -238,9 +238,6 @@ class ClosureVars : CompilerStep
     {
       // use param wrapper variable
       var = var.paramWrapper
-
-      // if not unwrapping, we still need to use different variable
-      if (!local.unwrap) return LocalVarExpr(local.loc, var)
     }
 
     // if not a wrapped variable or we have explictly marked
@@ -271,7 +268,7 @@ class ClosureVars : CompilerStep
     {
       if (var.paramWrapper == null) return
       loc := method.loc
-      initWrap := initWrapper(loc, var.paramWrapper, LocalVarExpr(loc, var))
+      initWrap := initWrapper(loc, var.paramWrapper, LocalVarExpr.makeNoUnwrap(loc, var))
       method.code.stmts.insert(0, initWrap.toStmt)
     }
   }
