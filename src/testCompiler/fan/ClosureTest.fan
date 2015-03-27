@@ -619,4 +619,40 @@ class ClosureTest : CompilerTest
         9, 16, "Invalid args f2(|sys::Str,sys::Str->sys::Void|), not (|sys::Obj?,sys::Obj?,sys::Obj?,sys::Obj?->sys::Void|)",
       ])
   }
+
+  Void testMutableClosure()
+  {
+    compile(
+     """class Foo {
+        static Str[] list() { ["a", "b"] }
+        static Obj test() {
+          acc := Str[,]
+          list.each |i|
+          {
+            list.each |j|
+            {
+              list.each |k|
+              {
+                i = "(\$i)"
+                acc.add("\$i \$j \$k")
+              }
+              j = "(\$j)"
+            }
+          }
+          return acc
+        } }""")
+
+    //compiler.fpod.dump
+    o := pod.types.first.make
+    r := o->test as List
+    verifyEq(r.join(",\n"),
+      "(a) a a,
+       ((a)) a b,
+       (((a))) b a,
+       ((((a)))) b b,
+       (b) a a,
+       ((b)) a b,
+       (((b))) b a,
+       ((((b)))) b b")
+  }
 }
