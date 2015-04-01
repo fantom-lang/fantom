@@ -285,6 +285,18 @@ class InStream
   Str? readStrToken(Int? max := 4096, |Int ch->Bool|? c := null)
 
   **
+  ** Read a string terminated by the "\0" character.  The "\0"
+  ** character is read from the stream, but not included in the
+  ** string result.
+  **
+  ** The max parameter specifies the maximum number of Unicode
+  ** chacters (not bytes) to read before truncating the string and
+  ** returning.  If max is null, then no boundary is enforced except
+  ** of course the end of the stream.  Max defaults to 4kb.
+  **
+  Str readNullTerminatedStr(Int? max := 4096)
+
+  **
   ** Read the entire stream into a list of Str lines based on the
   ** configured charset encoding.  Each Str in the list maps
   ** to a line terminated by \n, \r\n, \r, or EOF.  The Str lines
