@@ -735,6 +735,33 @@ class StreamTest : Test
     in.close
   }
 
+  Void testReadNullTerminatedStr()
+  {
+    f := tempDir + `readNullTerminatedStr.hex`
+    f.create
+
+    // verify empty file
+    in := f.in
+    verifyEq(in.readNullTerminatedStr, null)
+    in.close
+
+    OutStream out := f.out
+    out.print("foo\u0000|bar\u0000longer one\u0000")
+    out.close
+
+    in = f.in
+    verifyEq(in.readNullTerminatedStr, "foo")
+    verifyEq(in.readChar, '|')
+    verifyEq(in.readNullTerminatedStr, "bar")
+    verifyEq(in.readNullTerminatedStr(4), "long");
+    verifyEq(in.readNullTerminatedStr(0), "");
+    verifyEq(in.readNullTerminatedStr(1), "e");
+    verifyEq(in.readNullTerminatedStr(9), "r one");
+    verifyEq(in.readNullTerminatedStr(4), null);
+
+    in.close
+  }
+
   Void testReadAllLines()
   {
     f := tempDir + `readAllLines.hex`

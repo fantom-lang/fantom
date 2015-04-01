@@ -493,6 +493,34 @@ public class InStream
     return buf.toString();
   }
 
+  public String readNullTerminatedStr() { return readNullTerminatedStr(FanInt.Chunk); }
+  public String readNullTerminatedStr(Long max)
+  {
+    // max limit
+    int maxChars = (max != null) ? max.intValue() : Integer.MAX_VALUE;
+    if (maxChars <= 0) return "";
+
+    // read first char, if at end of file bail
+    int c = rChar();
+    if (c < 0) return null;
+
+    // loop reading chars until we hit '\0' or max chars
+    StringBuilder buf = new StringBuilder();
+    while (true)
+    {
+      if (c == '\0') break;
+
+      // append to working buffer
+      buf.append((char)c);
+      if (buf.length() >= maxChars) break;
+
+      // read next char
+      c = rChar();
+      if (c < 0) break;
+    }
+    return buf.toString();
+  }
+
   public List readAllLines()
   {
     try
