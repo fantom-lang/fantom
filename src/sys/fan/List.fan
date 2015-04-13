@@ -308,8 +308,8 @@ final class List
 
   **
   ** Remove the last item and return it, or return null if the list
-  ** is empty.  This method as the same semantics as remove(-1), with
-  ** the exception of has an empty list is handled.  Throw ReadonlyErr
+  ** is empty.  This method as the same semantics as 'removeAt(-1)', with
+  ** the exception that an empty list is handled.  Throw ReadonlyErr
   ** if readonly.
   **
   V? pop()
