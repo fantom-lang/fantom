@@ -230,7 +230,6 @@ abstract class BuildScript
 
   **
   ** Parse the arguments passed from the command line.
-  ** Return true for success or false to end the script.
   **
   private TargetMethod[]? parseArgs(Str[] args)
   {
