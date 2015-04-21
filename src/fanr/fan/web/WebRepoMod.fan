@@ -192,7 +192,7 @@ const class WebRepoMod : WebMod
     }
 
     // get options
-    numVersions := Int.fromStr(req.headers["Fan-NumVersions"] ?: "3", 10, false) ?: 3
+    numVersions := Int.fromStr(req.headers["Fanr-NumVersions"] ?: "3", 10, false) ?: 3
 
     // do the query
     PodSpec[]? pods := null

@@ -65,8 +65,7 @@ internal const class WebRepo : Repo
   override PodSpec[] query(Str query, Int numVersions := 1)
   {
     // prepare query
-    c := prepare("POST", `query`)
-    c.reqHeaders["Fan-NumVersions"] = numVersions.toStr
+    c := prepare("POST", `query`, ["Fanr-NumVersions": numVersions.toStr])
     c.postStr(query)
 
     // parse json response
@@ -113,10 +112,11 @@ internal const class WebRepo : Repo
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  private WebClient prepare(Str method, Uri path)
+  private WebClient prepare(Str method, Uri path, Str:Str headers := [:])
   {
     c := WebClient(uri+path)
     c.reqMethod = method
+    headers.each |v, k| { c.reqHeaders[k] = v }
     if (username != null) sign(c)
     return c
   }
