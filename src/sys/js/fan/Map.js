@@ -68,6 +68,18 @@ fan.sys.Map.prototype.get = function(key, defVal)
   return val;
 }
 
+fan.sys.Map.prototype.getChecked = function(key, checked)
+{
+  if (checked === undefined) checked = true;
+  var val = this.$get(key);
+  if (val === undefined)
+  {
+    if (checked) throw fan.sys.UnknownKeyErr.make("" + key);
+    return null;
+  }
+  return val;
+}
+
 fan.sys.Map.prototype.getOrThrow = function(key)
 {
   var val = this.$get(key);

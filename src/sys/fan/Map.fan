@@ -70,6 +70,13 @@ final class Map
   @Operator V? get(K key, V? def := this.def)
 
   **
+  ** Get the value for the specified key.  If the key is not
+  ** mapped then return null or raise UnknownKeyEr based on checked
+  ** flag.  This method is readonly safe.
+  **
+  V? getChecked(K key, Bool checked := true)
+
+  **
   ** Get the value for the specified key or if key is not mapped
   ** then raise UnknownKeyErr.  This method is readonly safe.
   **
