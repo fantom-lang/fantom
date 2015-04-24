@@ -101,6 +101,16 @@ public final class Map
     return map.containsKey(key) ? null : def;
   }
 
+  public final Object getChecked(Object key) { return getChecked(key, true); }
+  public final Object getChecked(Object key, boolean checked)
+  {
+    Object val = map.get(key);
+    if (val != null) return val;
+    if (map.containsKey(key)) return null;
+    if (checked) throw UnknownKeyErr.make(String.valueOf(key));
+    return null;
+  }
+
   public final Object getOrThrow(Object key)
   {
     Object val = map.get(key);

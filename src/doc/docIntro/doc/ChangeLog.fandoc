@@ -12,6 +12,7 @@
 - Elem: deprecate hasClassName, addClassName, removeClassName
 - Elem: add hasClass, addClass, removeClass, toggleClass, last
 - InStream.readNullTerminatedStr
+- Map.getChecked
 
 *Build 1.0.67 (8 Jan 2015)*
 - Mark sys::Regex as serializable and add defVal

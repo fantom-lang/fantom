@@ -349,6 +349,12 @@ class MapTest : Test
     verifyEq(m.getOrThrow("a"), "A")
     verifyEq(m.getOrThrow("b"), null)
     verifyErr(UnknownKeyErr#) { x := m.getOrThrow("c") }
+
+    verifyEq(m.getChecked("a"), "A")
+    verifyEq(m.getChecked("b"), null)
+    verifyEq(m.getChecked("c", false), null)
+    verifyErr(UnknownKeyErr#) { x := m.getChecked("c") }
+    verifyErr(UnknownKeyErr#) { x := m.getChecked("c", true) }
   }
 
 //////////////////////////////////////////////////////////////////////////
