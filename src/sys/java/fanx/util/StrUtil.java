@@ -25,6 +25,8 @@ public class StrUtil
    */
   public static String replace(String s, String match, String replace)
   {
+    if (match.length() == 0) return s;
+
     StringBuilder b = new StringBuilder();
 
     int mlen = match.length();

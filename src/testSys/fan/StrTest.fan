@@ -1082,6 +1082,7 @@ class StrTest : Test
     verifyEq("xx".replace("x", "-"), "--")
     verifyEq("xbx".replace("x", "-"), "-b-")
     verifyEq("axb".replace("x", "-"), "a-b")
+    verifyEq("axb".replace("", "-"), "axb")
 
     verifyEq("".replace("xy", "-"), "")
     verifyEq("x".replace("xy", "-"), "x")
