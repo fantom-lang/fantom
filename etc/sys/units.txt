@@ -158,8 +158,12 @@ megavolt_ampere_reactive_hour, MVARh; kg1*m2*sec-2; 3.6E9
 
 -- energy by area (kg1*sec-2)
 joules_per_square_meter, J/m²; kg1*sec-2
+watt_hours_per_square_meter, Wh/m²; kg1*sec-2; 3600.0
+watt_hours_per_square_foot, Wh/ft²; kg1*sec-2; 3.8750077500155E4
 kilowatt_hours_per_square_meter, kWh/m²; kg1*sec-2; 3600000.0
 kilowatt_hours_per_square_foot, kWh/ft²; kg1*sec-2; 3.8750077500155E7
+megawatt_hours_per_square_meter, MWh/m²; kg1*sec-2; 3.6E9
+megawatt_hours_per_square_foot, MWh/ft²; kg1*sec-2; 3.8750077500155E10
 megajoules_per_square_meter, MJ/m²; kg1*sec-2; 1000000.0
 megajoules_per_square_foot, MJ/ft²; kg1*sec-2; 1.076391041671E7
 kilobtu_per_square_foot, kBTU/ft²; kg1*sec-2; 1.135433731957E7
@@ -414,4 +418,3 @@ megabyte, MB; ; 1048576
 gigabyte, GB; ; 1073741824
 terabyte, TB; ; 1099511627776
 petabyte, PB; ; 1125899906842624
-
