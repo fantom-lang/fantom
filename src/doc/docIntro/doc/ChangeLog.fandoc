@@ -13,6 +13,7 @@
 - Elem: add hasClass, addClass, removeClass, toggleClass, last
 - InStream.readNullTerminatedStr
 - Map.getChecked
+- Win.hisReplaceState
 
 *Build 1.0.67 (8 Jan 2015)*
 - Mark sys::Regex as serializable and add defVal

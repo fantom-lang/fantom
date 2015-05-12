@@ -93,6 +93,11 @@ class Win
   **
   native Void hisPushState(Str title, Uri uri, Str:Obj map)
 
+  **
+  ** Modify the current history item.
+  **
+  native Void hisReplaceState(Str title, Uri uri, Str:Obj map)
+
 //////////////////////////////////////////////////////////////////////////
 // Events
 //////////////////////////////////////////////////////////////////////////
