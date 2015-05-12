@@ -194,13 +194,10 @@ fan.fwt.DialogPeer.prototype.sync = function(self)
   var y  = Math.floor((shell.offsetHeight - h) / 2);
 
   tbar.style.width = (w-12) + "px";  // -padding/border
-  with (dlg.style)
-  {
-    left   = x + "px";
-    top    = y + "px";
-    width  = w + "px";
-    height = h + "px";
-  }
+  dlg.style.left   = x + "px";
+  dlg.style.top    = y + "px";
+  dlg.style.width  = w + "px";
+  dlg.style.height = h + "px";
 
   this.pos$(this, fan.gfx.Point.make(0, th));
   this.size$(this, fan.gfx.Size.make(pw, ph));
