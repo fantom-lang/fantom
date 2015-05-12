@@ -49,7 +49,7 @@ class Style
 
   ** Set properties via CSS text.
   **   style.setText("color: #f00; font-weight: bold;")
-  This setText(Str css)
+  This setCss(Str css)
   {
     css.split(';').each |s|
     {
