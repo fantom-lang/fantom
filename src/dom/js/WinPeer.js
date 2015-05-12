@@ -138,7 +138,20 @@ fan.dom.WinPeer.prototype.reload  = function(self, force)
 
 fan.dom.WinPeer.prototype.hisBack      = function(self) { this.win.history.back(); }
 fan.dom.WinPeer.prototype.hisForward   = function(self) { this.win.history.forward(); }
+
 fan.dom.WinPeer.prototype.hisPushState = function(self, title, uri, map)
+{
+  var state = fan.dom.WinPeer.mapToState(map);
+  this.win.history.pushState(state, title, uri.encode());
+}
+
+fan.dom.WinPeer.prototype.hisReplaceState = function(self, title, uri, map)
+{
+  var state = fan.dom.WinPeer.mapToState(map);
+  this.win.history.replaceState(state, title, uri.encode());
+}
+
+fan.dom.WinPeer.mapToState = function(map)
 {
   // TODO FIXIT: serializtaion
   var array = [];
@@ -148,8 +161,9 @@ fan.dom.WinPeer.prototype.hisPushState = function(self, title, uri, map)
       new fan.sys.Param("key","sys::Str",false)
     ]),
     fan.sys.Void.$type,
-    function(val,key) { array[key] = val }));
-  this.win.history.pushState(array, title, uri.encode());
+    function(val,key) { array[key] = val })
+  );
+  return array;
 }
 
 //////////////////////////////////////////////////////////////////////////
