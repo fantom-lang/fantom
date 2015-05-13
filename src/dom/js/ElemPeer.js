@@ -188,7 +188,6 @@ fan.dom.ElemPeer.prototype.size$ = function(self, val)
   this.m_size = fan.gfx.Size.make(val.m_w, val.m_h);
   this.elem.style.width  = val.m_w + "px";
   this.elem.style.height = val.m_h + "px";
-  self.onResize();
 }
 
 //////////////////////////////////////////////////////////////////////////
