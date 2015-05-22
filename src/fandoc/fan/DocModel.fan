@@ -231,6 +231,20 @@ abstract class DocElem : DocNode
   }
 
   **
+  ** Insert a child node at the specified index. A negative index may be
+  ** used to access an index from the end of the list. If adding a text node
+  ** it is automatically merged with surrounding text nodes (if applicable).
+  ** If the node is already parented throws ArgErr.
+  **
+  This insert(Int index, DocNode node)
+  {
+    tail := DocNode[node]
+    kids.eachRange(index..-1) |child| { remove(child); tail.add(child) }
+    tail.each { add(it) }
+    return this
+  }
+
+  **
   ** Convenicence to call `add` for each node in the given list.
   **
   This addAll(DocNode[] nodes)
