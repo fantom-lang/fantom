@@ -130,6 +130,53 @@ class PathTest : Test
     verifyFalse(para.isLast)
   }
 
+  Void testInsert()
+  {
+    // insert with text merge
+    doc := parse("foo\n\nbar\n\nbaz")
+    DocElem para := doc.children[1]
+    verifyEq("bar", para.children.first->str)
+    para.insert(0, DocText("foo"))
+    verifyEq("foobar", para.children.first->str)
+    para.insert(para.children.size, DocText("baz"))
+    verifyEq("foobarbaz", para.children.first->str)
+
+    // insert with blockquote merge
+    doc = parse("> a")
+    verifyEq(1, doc.children.size)
+    bq := doc.children.first as BlockQuote
+    verifyEq(1, bq.children.size)
+    para = bq.children.first
+    verify(para is Para)
+
+    p1 := Para().add(DocText("foo"))
+    bq = BlockQuote().add(p1)
+    doc.insert(0, bq)
+    verifyEq(1, doc.children.size)
+    verifyEq(2, bq.children.size)
+    verifySame(p1, bq.children.first)
+    verifySame(para, bq.children.last)
+
+    p2 := Para().add(DocText("baz"))
+    bq2 := BlockQuote().add(p2)
+    doc.insert(doc.children.size, bq2)
+    verifyEq(1, doc.children.size)
+    verifyEq(3, bq.children.size)
+    verifySame(p1, bq.children.first)
+    verifySame(para, bq.children[1])
+    verifySame(p2, bq.children.last)
+
+    p3 := Para().add(DocText("INNER"))
+    bq.insert(1, p3)
+    verifyEq(4, bq.children.size)
+    verifySame(p1, bq.children.first)
+    verifySame(p3, bq.children[1])
+    verifySame(para, bq.children[2])
+    verifySame(p2, bq.children.last)
+
+
+  }
+
   Doc parse(Str str)
   {
     return FandocParser { silent = true }.parse("Test", str.in)
