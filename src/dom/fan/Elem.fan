@@ -159,6 +159,17 @@ class Elem
     return this
   }
 
+  ** Replace existing child node with a new child.  Returns this.
+  virtual This replace(Elem oldChild, Elem newChild)
+  {
+    replaceChild(oldChild, newChild)
+    oldChild.onUnparent(this)
+    onRemove(oldChild)
+    onAdd(newChild)
+    newChild.onParent(this)
+    return this
+  }
+
   ** Remove a child element from this element. Return this.
   virtual This remove(Elem child)
   {
@@ -184,6 +195,9 @@ class Elem
 
   ** Add a new element as a child to this element.
   @NoDoc protected native Void addChild(Elem child)
+
+  ** Replace an existing child element with new element.
+  @NoDoc protected native Void replaceChild(Elem oldChild, Elem newChild)
 
   ** Remove a child element from this element.
   @NoDoc protected native Void removeChild(Elem child)
