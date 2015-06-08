@@ -253,6 +253,11 @@ fan.dom.ElemPeer.prototype.addChild = function(self, child)
   this.elem.appendChild(child.peer.elem);
 }
 
+fan.dom.ElemPeer.prototype.replaceChild = function(self, oldChild, newChild)
+{
+  this.elem.replaceChild(newChild.peer.elem, oldChild.peer.elem);
+}
+
 fan.dom.ElemPeer.prototype.removeChild = function(self, child)
 {
   this.elem.removeChild(child.peer.elem);

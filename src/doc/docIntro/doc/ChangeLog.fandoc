@@ -11,6 +11,7 @@
 - WispService.extraResHeaders
 - Elem: deprecate hasClassName, addClassName, removeClassName
 - Elem: add hasClass, addClass, removeClass, toggleClass, last
+- Elem: replace()
 - InStream.readNullTerminatedStr
 - Map.getChecked
 - Win.hisReplaceState
