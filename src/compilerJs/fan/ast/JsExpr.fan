@@ -1023,40 +1023,14 @@ class JsClosureExpr : JsExpr
 {
   new make(JsCompilerSupport s, ClosureExpr ce) : super(s)
   {
-    this.func = JsMethod(s, ce.doCall)
+    this.ce = ce
   }
   override Void write(JsWriter out)
   {
-    sig := func.sig(func.params)
-    out.w("fan.sys.Func.make(").nl
-    out.indent
-
-    // params
-    out.w("fan.sys.List.make(fan.sys.Param.\$type, [")
-    func.params.each |p,i|
-    {
-      if(i > 0) out.w(",")
-      out.w("new fan.sys.Param(\"$p.name\",\"$p.paramType.sig\",$p.hasDef)")
-    }
-    out.w("]),").nl
-
-    // return
-    JsTypeLiteralExpr.writeType(func.ret, out)
-    out.w(",").nl
-
-    // func
-    out.w("function$sig").nl
-    out.w("{").nl
-    out.indent
-    old := support.thisName
-    support.thisName = "\$this"
-    func.code?.write(out)
-    support.thisName = old
-    out.unindent
-    out.w("})")
-    out.unindent
+    support.podClosures.writeClosure(ce, out)
   }
-  JsMethod? func  // the func for this closure
+
+  ClosureExpr ce
 }
 
 **************************************************************************
@@ -1076,4 +1050,3 @@ class JsThrowExpr : JsExpr
   }
   JsExpr exception  // the exception to throw
 }
-
