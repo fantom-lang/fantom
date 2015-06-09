@@ -78,6 +78,9 @@ class JsPod : JsNode
     // write props resource files
     props.each |p| { p.write(out) }
 
+    // write closure fields (must be after writeTypeInfo)
+    writeClosureFields(out)
+
     // write static init
     types.each |t| { t.writeStatic(out) }
 
@@ -161,6 +164,13 @@ class JsPod : JsNode
 
     // end with block
     out.w("}").nl
+  }
+
+  ** Write static fields for pod's closures.
+  Void writeClosureFields(JsWriter out)
+  {
+    support.podClosures.write(out)
+    out.nl
   }
 
   Str name           // pod name

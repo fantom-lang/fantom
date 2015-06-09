@@ -19,6 +19,7 @@ class JsCompilerSupport : CompilerSupport
   new make(CompilerSupport s) : super(s.compiler)
   {
     this.suppressErr = s.suppressErr
+    this.podClosures = JsPodClosures(this)
   }
 
   **
@@ -39,4 +40,6 @@ class JsCompilerSupport : CompilerSupport
 
 
   Str:JsTypeRef typeRef := Str:JsTypeRef[:]  // typeRef map
+
+  JsPodClosures podClosures
 }

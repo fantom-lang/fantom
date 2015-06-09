@@ -20,6 +20,16 @@ fan.sys.Func.prototype.$ctor = function()
 {
 }
 
+fan.sys.Func.make$explicit = function(params, funcType, func)
+{
+  var self = new fan.sys.Func();
+  self.m_params = params;
+  self.m_return = funcType.ret;
+  self.m_type   = funcType;
+  self.m_func   = func;
+  return self;
+}
+
 fan.sys.Func.make = function(params, ret, func)
 {
   var self = new fan.sys.Func();
