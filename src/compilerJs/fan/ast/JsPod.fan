@@ -166,11 +166,10 @@ class JsPod : JsNode
     out.w("}").nl
   }
 
-  ** Write static fields for pod's closures.
+  ** Write closure function spec fields
   Void writeClosureFields(JsWriter out)
   {
     support.podClosures.write(out)
-    out.nl
   }
 
   Str name           // pod name
