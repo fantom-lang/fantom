@@ -41,5 +41,5 @@ class JsCompilerSupport : CompilerSupport
 
   Str:JsTypeRef typeRef := Str:JsTypeRef[:]  // typeRef map
 
-  JsPodClosures podClosures
+  JsPodClosures podClosures // JsPod
 }

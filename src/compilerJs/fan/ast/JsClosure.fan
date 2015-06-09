@@ -12,13 +12,12 @@ using compiler
 ** Utility for working with JS closures. Shared by JsPod and JsClosureExpr
 ** for writing javascript related to closures.
 **
-** Every closure in JS requires that* we create a 'fan.sys.Func'. The Func
-** requires a parameter list specification, as well as a 'fan.sys.FuncType'
-** specification. This class analyzes all closures for the pod and creates
-** static variables for each unique parameter list and  each unique function
-** type specification. Then, when the actual closure Func is created and
-** called, it uses those static fields instead of creating new instance each
-**  time the closure is called.
+** Every closure in JS requires that we create a 'fan.sys.Func'. The Func
+** requires a 'ClosureFuncSpec$' object that represents the closure
+** specification for the Func.This class analyzes all closures for the pod and creates
+** a static field for each unique ClosureFuncSpec it identifies.Then, when the actual
+** closure Func is created and called, it uses that static field instead of creating
+** a new one every time the closure is called.
 **
 class JsPodClosures : JsNode
 {
@@ -29,20 +28,14 @@ class JsPodClosures : JsNode
   ** Write the actual closure Func (JsClosureExpr)
   Void writeClosure(ClosureExpr ce, JsWriter out)
   {
-    typeField   := mapFuncSpec(ce)
-    paramsField := mapParams(ce)
-
     func := JsMethod(support, ce.doCall)
     sig  := func.sig(func.params)
 
-    out.w("fan.sys.Func.make\$explicit(").nl
+    out.w("fan.sys.Func.make\$closure(").nl
     out.indent
 
-    // params
-    out.w("${paramsField},").nl
-
-    // func type
-    out.w("${typeField},").nl
+    // closure spec
+    out.w("${mapFuncSpec(ce)},").nl
 
     // func
     out.w("function$sig").nl
@@ -57,91 +50,61 @@ class JsPodClosures : JsNode
     out.unindent
   }
 
-  ** Write the unique fields referenced by closures in this pod. (JsPod)
+  ** Write the unique closure specification fields for this pod (JsPod)
   override Void write(JsWriter out)
   {
-    // write Func types
-    varToType.each |JsMethod func, Str var|
+    varToFunc.each |JsMethod func, Str var|
     {
-      out.w("${var} = new fan.sys.FuncType([")
-      func.params.each |p, i|
-      {
-        if (i > 0) out.w(",")
-        out.w("fan.sys.Type.find(\"${p.paramType.sig}\")")
-      }
-      out.w("], ")
-      JsTypeLiteralExpr.writeType(func.ret, out)
-      out.w(");").nl
-    }
+      out.w("${var} = new fan.sys.ClosureFuncSpec\$(")
 
-    // write params
-    varToParams.each |JsMethodParam[] params, Str var|
-    {
-      out.w("${var} = fan.sys.List.make(fan.sys.Param.\$type, [")
-      params.each |p,i|
+      // return type
+      JsTypeLiteralExpr.writeType(func.ret, out)
+      out.w(",")
+
+      // raw parameters
+      out.w("[")
+      func.params.each |p,i|
       {
         if (i > 0) out.w(",")
-        out.w("new fan.sys.Param(\"$p.name\",\"$p.paramType.sig\",$p.hasDef)")
+        out.w("\"${p.name}\",\"${p.paramType.sig}\",\"${p.hasDef}\"")
       }
       out.w("]);").nl
     }
   }
 
-  ** Creates a variable for the FuncType of this closure and returns
-  ** the variable name. If we have seen a closure with the same
-  ** FuncType already, then re-use that variable declaration and return
-  ** the existing variable name.
+  ** Creates a variable for the ClosureFuncSpec of this closure and
+  ** returns the variable name. If we have already seen a closure with
+  ** the EXACT same spec, then re-use that variable declaration and
+  ** return the existing variable name.
   private Str mapFuncSpec(ClosureExpr ce)
   {
-    funcType := ce.signature
-    var := sigToTypeVar.getOrAdd(funcType.signature) |->Str|
-    {
-      "${pod(ce)}\$closType${support.unique}"
-    }
     func := JsMethod(support, ce.doCall)
-    varToType.getOrAdd(var) |->JsMethod| { func }
+    var  := specKeyToVar.getOrAdd(specKey(func)) |->Str|
+    {
+      "${pod(ce)}.\$clos${support.unique}"
+    }
+    varToFunc[var] = func
     return var
   }
 
-  ** Creates a variable for the parameter list of this closure and
-  ** returns the variable name. If we have seen a closure wit the
-  ** exact same parameters (name, type, defVal), then re-use that variable
-  ** declaration and return the existing variable name.
-  private Str mapParams(ClosureExpr ce)
-  {
-    func := JsMethod(support, ce.doCall)
-    var  := paramsKeyToVar.getOrAdd(paramsKey(func.params)) |->Str|
-    {
-      "${pod(ce)}\$closParams${support.unique}"
-    }
-    varToParams[var] = func.params
-    return var
-  }
+  ** Get the pod variable prefix for all the closure func specs
+  static private Str pod(ClosureExpr ce) { "fan.${ce.enclosingType.pod}" }
 
-  ** Create a unique key for a parameter list.
-  private Str paramsKey(JsMethodParam[] params)
+  ** Return the unique key for this function specification
+  static private Str specKey(JsMethod func)
   {
     buf := StrBuf()
-    params.each |p|
+    func.params.each |p|
     {
       buf.add("${p.name}-${p.paramType.sig}-${p.hasDef},")
     }
+    buf.add("${func.ret.sig}")
     return buf.toStr
   }
 
-  ** Get the pod variable prefix for all static closure variables.
-  private Str pod(ClosureExpr ce) { "fan.${ce.enclosingType.pod}" }
+  ** Func spec key to field variable name
+  private Str:Str specKeyToVar := [:]
 
-  ** FuncType signature to variable name
-  private [Str:Str] sigToTypeVar := [:]
-
-  ** FuncType variable name to JsMethod for that closure
-  private [Str:JsMethod] varToType := [:] { ordered = true }
-
-  ** Parameter list key (`paramKey`) to variable name
-  private [Str:Str] paramsKeyToVar := [:] { ordered = true }
-
-  ** Paramater list variable name to JsMethodParam[]
-  private [Str:JsMethodParam[]] varToParams := [:] { ordered = true }
-
+  ** Func spec field variable name to prototype function (for params and return type)
+  private Str:JsMethod varToFunc := [:] { ordered = true }
 }
