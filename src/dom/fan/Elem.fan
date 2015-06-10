@@ -93,7 +93,7 @@ class Elem
   ** The enabled attribute for this element, or null if one
   ** not applicable.  This is typically only valid for form
   ** elements.
-  native Bool? enabled
+  virtual native Bool? enabled
 
   ** Get an attribute by name.  If not found return
   ** the specificed default value.
