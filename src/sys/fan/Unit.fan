@@ -179,6 +179,11 @@ const class Unit
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Return the string format of the dimension portion of `definition`
+  **
+  Str dim()
+
+  **
   ** Kilogram (mass) component of the unit dimension.
   **
   Int kg()

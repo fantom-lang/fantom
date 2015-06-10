@@ -111,12 +111,14 @@ class UnitTest : Test
     verifyEq(m.name, "meter")
     verifyEq(m.symbol, "m")
     verifyEq(m.m, 1)
+    verifyEq(m.dim, "m1")
 
     m3 := Unit("m${exp3}")
     verifyEq(m3.ids, ["cubic_meter", "m${exp3}"])
     verifyEq(m3.name, "cubic_meter")
     verifyEq(m3.symbol, "m${exp3}")
     verifyEq(m3.m, 3)
+    verifyEq(m3.dim, "m3")
 
     all := Unit.list
     verifyType(all, Unit[]#)

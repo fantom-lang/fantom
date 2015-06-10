@@ -297,6 +297,8 @@ public final class Unit
 
   public final long cd() { return dim.cd; }
 
+  public final String dim() { return dim.toString(); }
+
   static class Dimension
   {
     public int hashCode()
