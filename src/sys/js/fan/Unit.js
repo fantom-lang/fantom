@@ -278,6 +278,8 @@ fan.sys.Unit.prototype.definition = function()
 // Dimension
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.Unit.prototype.dim = function() { return this.m_dim.toString(); }
+
 fan.sys.Unit.prototype.kg = function() { return this.m_dim.kg; }
 
 fan.sys.Unit.prototype.m = function() { return this.m_dim.m; }
