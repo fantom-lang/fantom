@@ -115,8 +115,17 @@ fan.dom.ElemPeer.prototype.val$ = function(self, val) { this.elem.value = val; }
 fan.dom.ElemPeer.prototype.checked  = function(self) { return this.elem.checked; }
 fan.dom.ElemPeer.prototype.checked$ = function(self, val) { this.elem.checked = val; }
 
-fan.dom.ElemPeer.prototype.enabled  = function(self) { return !this.elem.disabled; }
-fan.dom.ElemPeer.prototype.enabled$ = function(self, val) { this.elem.disabled = !val; }
+fan.dom.ElemPeer.prototype.enabled  = function(self)
+{
+  if (this.elem.disabled === undefined) return null;
+  return !this.elem.disabled;
+}
+
+fan.dom.ElemPeer.prototype.enabled$ = function(self, val)
+{
+  if (this.elem.disabled === undefined) return;
+  this.elem.disabled = !val;
+}
 
 fan.dom.ElemPeer.prototype.get = function(self, name, def)
 {
