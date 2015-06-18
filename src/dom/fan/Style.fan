@@ -62,6 +62,28 @@ class Style
     return this
   }
 
+  ** Convenience for 'get("width")'.
+  Str? width
+  {
+    get { get("width") }
+    set { set("width", it) }
+  }
+
+  ** Convenience for 'get("height")'.
+  Str? height
+  {
+    get { get("height") }
+    set { set("height", it) }
+  }
+
+  ** Convenience to set CSS width and height.
+  This setSize(Str w, Str h)
+  {
+    set("width", w)
+    set("height", h)
+    return this
+  }
+
   ** Set CSS property.
   private native Void setProp(Str name, Str? val)
 
