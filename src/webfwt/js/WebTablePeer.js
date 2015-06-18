@@ -25,3 +25,6 @@ fan.webfwt.WebTablePeer.prototype.scrollToBottom = function(self)
   this.elem.scrollTop = this.elem.scrollHeight;
   return self;
 }
+
+fan.webfwt.WebTablePeer.prototype.scrollTop  = function(self) { return this.elem.scrollTop; }
+fan.webfwt.WebTablePeer.prototype.scrollTop$ = function(self, val) { this.elem.scrollTop = val; }

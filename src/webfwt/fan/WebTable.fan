@@ -34,6 +34,7 @@ class WebTable : Table
 
   ** Scroll to bottom of table content.
   native This scrollToBottom()
+
+  ** The number of pixels that the content of the table is scrolled upward.
+  @NoDoc native Int scrollTop
 }
-
-
