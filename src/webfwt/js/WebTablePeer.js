@@ -26,5 +26,11 @@ fan.webfwt.WebTablePeer.prototype.scrollToBottom = function(self)
   return self;
 }
 
-fan.webfwt.WebTablePeer.prototype.scrollTop  = function(self) { return this.elem.scrollTop; }
-fan.webfwt.WebTablePeer.prototype.scrollTop$ = function(self, val) { this.elem.scrollTop = val; }
+fan.webfwt.WebTablePeer.prototype.scrollTop  = function(self)
+{
+  return (this.elem === undefined) ? 0 : this.elem.scrollTop;
+}
+fan.webfwt.WebTablePeer.prototype.scrollTop$ = function(self, val)
+{
+  if (this.elem !== undefined) this.elem.scrollTop = val;
+}
