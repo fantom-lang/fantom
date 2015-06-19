@@ -52,6 +52,9 @@ class DomEvent
   ** Stop further propagation of this event.
   native Void stop()
 
+  ** The DataTransfer object for this event.
+  native DataTransfer dataTransfer()
+
   ** Meta-data for this event instance.
   Str:Obj? meta := Str:Obj?[:]
 }

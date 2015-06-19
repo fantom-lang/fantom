@@ -81,4 +81,61 @@
   ** Fired synchronously when the value of an '<input>' or
   ** '<textarea>' element is changed.
   static const Str input := "input"
+
+  **
+  ** Fired on an element when a drag is started. The user is requesting to
+  ** drag the element where the dragstart event is fired. During this event,
+  ** a listener would set information such as the drag data and image to be
+  ** associated with the drag. This event is not fired when dragging a file
+  ** into the browser from the OS.
+  **
+  static const Str dragStart := "dragstart"
+
+  **
+  ** Fired when the mouse enters an element while a drag is occurring. A
+  ** listener for this event should indicate whether a drop is allowed over
+  ** this location. If there are no listeners, or the listeners perform no
+  ** operations, then a drop is not allowed by default. This is also the event
+  ** to listen for in order to provide feedback that a drop is allowed, such
+  ** as displaying a highlight or insertion marker.
+  **
+  static const Str dragEnter := "dragenter"
+
+  **
+  ** This event is fired as the mouse is moving over an element when a drag
+  ** is occurring. Much of the time, the operation that occurs during a
+  ** listener will be the same as the `dragEnter` event.
+  **
+  static const Str dragOver := "dragover"
+
+  **
+  ** This event is fired when the mouse leaves an element while a drag is
+  ** occurring. Listeners should remove any highlighting or insertion markers
+  ** used for drop feedback.
+  **
+  static const Str dragLeave := "dragleave"
+
+  **
+  ** This event is fired at the source of the drag and is the element where
+  ** `dragStart` was fired during the drag operation.
+  **
+  static const Str drag := "drag"
+
+  **
+  ** The drop event is fired on the element where the drop occurred at
+  ** the end of the drag operation. A listener would be responsible for
+  ** retrieving the data being dragged and inserting it at the drop location.
+  ** This event will only fire if a drop is desired. It will not fire if the
+  ** user cancelled the drag operation, for example by pressing the Escape
+  ** key, or if the mouse button was released while the mouse was not over a
+  ** valid drop target.
+  **
+  static const Str drop := "drop"
+
+  **
+  ** The source of the drag will receive a 'dragEnd' event when the drag
+  ** operation is complete, whether it was successful or not. This event is
+  ** not fired when dragging a file into the browser from the OS.
+  **
+  static const Str dragEnd := "dragend"
 }

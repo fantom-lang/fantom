@@ -27,7 +27,28 @@ fan.dom.DomEventPeer.prototype.shift = function(self) { return this.event.shiftK
 fan.dom.DomEventPeer.prototype.button = function(self) { return this.event.button; }
 fan.dom.DomEventPeer.prototype.keyCode = function(self) { return this.event.keyCode; }
 
-fan.dom.DomEventPeer.prototype.stop = function(self) { this.event.stopPropagation(); }
+fan.dom.DomEventPeer.prototype.stop = function(self)
+{
+  this.event.preventDefault();
+  this.event.stopPropagation();
+}
+
+fan.dom.DomEventPeer.prototype.dataTransfer = function(self)
+{
+  // Andy Frank 19-Jun-2015 -- Chrome/WebKit do not allow reading getData during
+  // the dragover event - which makes it impossible to check drop targets during
+  // drag.  To workaround for now - we just cache in a static field
+
+  if (this.event.dataTransfer.types &&
+      this.event.dataTransfer.types.length > 0 &&
+      this.event.dataTransfer.getData(this.event.dataTransfer.types[0]) == "")
+    return fan.dom.DomEventPeer.lastDataTx;
+
+  if (!this.dataTx)
+    this.dataTx = fan.dom.DomEventPeer.lastDataTx = fan.dom.DataTransferPeer.make(this.event.dataTransfer);
+
+  return this.dataTx;
+}
 
 fan.dom.DomEventPeer.prototype.toStr = function(self)
 {

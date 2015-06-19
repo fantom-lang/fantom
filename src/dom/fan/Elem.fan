@@ -95,6 +95,9 @@ class Elem
   ** elements.
   virtual native Bool? enabled
 
+  ** The draggable attribute for this element.
+  native Bool draggable
+
   ** Get an attribute by name.  If not found return
   ** the specificed default value.
   @Operator native Obj? get(Str name, Obj? def := null)

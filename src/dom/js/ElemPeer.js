@@ -127,6 +127,9 @@ fan.dom.ElemPeer.prototype.enabled$ = function(self, val)
   this.elem.disabled = !val;
 }
 
+fan.dom.ElemPeer.prototype.draggable  = function(self) { return this.elem.draggable; }
+fan.dom.ElemPeer.prototype.draggable$ = function(self, val) { this.elem.draggable = val; }
+
 fan.dom.ElemPeer.prototype.get = function(self, name, def)
 {
   if (name == "id")      return this.id(self);

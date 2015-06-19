@@ -12,6 +12,7 @@
 - Elem: deprecate hasClassName, addClassName, removeClassName
 - Elem: add hasClass, addClass, removeClass, toggleClass, last
 - Elem: replace()
+- Elem: drag and drop API support
 - InStream.readNullTerminatedStr
 - Map.getChecked
 - Win.hisReplaceState
