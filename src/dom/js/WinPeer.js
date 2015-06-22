@@ -177,16 +177,16 @@ fan.dom.WinPeer.prototype.onEvent = function(self, type, useCapture, handler)
     var evt = fan.dom.DomEventPeer.make(e);
     if (type == "popstate")
     {
-      // copy state object into Event.meta
+      // copy state object into Event.stash
       // TODO FIXIT: deserializtaion
       var array = e.state;
-      for (var key in array) evt.m_meta.set(key, array[key]);
+      for (var key in array) evt.m_stash.set(key, array[key]);
     }
     handler.call(evt);
 
     if (type == "beforeunload")
     {
-      var msg = evt.m_meta.get("beforeunloadMsg");
+      var msg = evt.m_stash.get("beforeunloadMsg");
       if (msg != null)
       {
         e.returnValue = msg;
