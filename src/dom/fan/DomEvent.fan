@@ -43,6 +43,10 @@ class DomEvent
   ** Return true if the SHIFT key was pressed during the event.
   native Bool shift()
 
+  ** Return true if the Meta key was pressed during the event.  On Macs
+  ** this maps to "command" key.  On Windows this maps to "Windows" key.
+  native Bool meta()
+
   ** Mouse button number pressed.
   native Int? button()
 
@@ -56,5 +60,5 @@ class DomEvent
   native DataTransfer dataTransfer()
 
   ** Meta-data for this event instance.
-  Str:Obj? meta := Str:Obj?[:]
+  Str:Obj? stash := Str:Obj?[:]
 }

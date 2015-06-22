@@ -13,6 +13,7 @@
 - Elem: add hasClass, addClass, removeClass, toggleClass, last
 - Elem: replace()
 - Elem: drag and drop API support
+- DomEvent: meta -> stash; new 'meta' field maps to meta key modifier
 - InStream.readNullTerminatedStr
 - Map.getChecked
 - Win.hisReplaceState

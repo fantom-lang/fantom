@@ -88,8 +88,8 @@ class Win
   ** Push a new history item onto the history stack. Use 'onpopstate'
   ** to listen for changes:
   **
-  **   // Event.meta contains state map passed into pushState
-  **   Win.cur.onEvent("popstate", false) |e| { echo("# state: $e.meta") }
+  **   // Event.stash contains state map passed into pushState
+  **   Win.cur.onEvent("popstate", false) |e| { echo("# state: $e.stash") }
   **
   native Void hisPushState(Str title, Uri uri, Str:Obj map)
 

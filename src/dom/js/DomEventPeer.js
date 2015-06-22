@@ -23,6 +23,7 @@ fan.dom.DomEventPeer.prototype.y = function(self) { return this.event.pageY; }
 fan.dom.DomEventPeer.prototype.alt   = function(self) { return this.event.altKey; }
 fan.dom.DomEventPeer.prototype.ctrl  = function(self) { return this.event.ctrlKey; }
 fan.dom.DomEventPeer.prototype.shift = function(self) { return this.event.shiftKey; }
+fan.dom.DomEventPeer.prototype.meta  = function(self) { return this.event.metaKey; }
 
 fan.dom.DomEventPeer.prototype.button = function(self) { return this.event.button; }
 fan.dom.DomEventPeer.prototype.keyCode = function(self) { return this.event.keyCode; }
