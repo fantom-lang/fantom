@@ -75,14 +75,19 @@ The 'return' statement is used to exit a method:
 
   // if Void method:
   return
+  return <expr>
 
   // if non-Void method:
   return <expr>
 
 If the enclosing method is 'Void', then 'return' simply returns control
-back to the code which called the method.  If the enclosing method
-is non-void, then the 'return' statement includes the expression
-used to return a result object to the caller.
+back to the code which called the method.  A 'return' statement in a Void
+method may optionally include a expression which is run before return.
+The expression returned by a Void method may evaluate to any type including
+Void.
+
+If the enclosing method is non-void, then the 'return' statement includes
+the expression used to return a result object to the caller.
 
 If returning an expression, then the expression must start on the same
 line as the 'return' keyword:

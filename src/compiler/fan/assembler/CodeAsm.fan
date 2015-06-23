@@ -138,7 +138,15 @@ class CodeAsm : CompilerSupport
     }
 
     // process as normal return
-    if (stmt.expr != null) expr(stmt.expr)
+    if (stmt.expr != null)
+    {
+      // evaluate expr
+      expr(stmt.expr)
+
+      // if we have a non-void expr inside a void method, then pop it off stack
+      if (curMethod != null && curMethod.ret.isVoid && !stmt.expr.ctype.isVoid)
+        opType(FOp.Pop, stmt.expr.ctype)
+    }
     op(FOp.Return)
   }
 
