@@ -745,8 +745,7 @@ class CheckErrors : CompilerStep
     }
     else if (ret.isVoid)
     {
-      if (stmt.expr != null)
-        err("Cannot return a value from Void method", stmt.loc)
+      // Void allows returning of anything
     }
     else if (ret.isThis)
     {

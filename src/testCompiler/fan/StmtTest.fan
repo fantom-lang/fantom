@@ -24,6 +24,11 @@ class StmtTest : CompilerTest
         Int a() { 7 }
         Int b(Bool b) { b ? 2 : 3 }
         Str[] c(Str[] x) { x.sort |Str a,Str b->Int| { a.size <=> b.size } }
+        Void v0() { return vi0 }
+        Void v1() { return vi1 }
+        Void vi0() { n++ }
+        Int vi1() { n++; return n }
+        Int n := 0
       }")
 
      o := pod.types.first.make
@@ -31,6 +36,8 @@ class StmtTest : CompilerTest
      verifyEq(o->b(true), 2)
      verifyEq(o->b(false), 3)
      verifyEq(o->c(["c", "aaa", "bb"]), ["c", "bb", "aaa"])
+     o->v0; verifyEq(o->n, 1)
+     o->v1; verifyEq(o->n, 2)
 
     verifyErrors(
       "class Foo
