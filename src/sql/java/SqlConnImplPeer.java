@@ -8,6 +8,7 @@
 package fan.sql;
 
 import java.sql.*;
+import java.util.Enumeration;
 import java.util.StringTokenizer;
 import fan.sys.*;
 
@@ -158,31 +159,57 @@ public class SqlConnImplPeer
 //////////////////////////////////////////////////////////////////////////
 
   static { loadDrivers(); }
+  private static String loadDebug;
 
   static void loadDrivers()
   {
+    StringBuilder s = new StringBuilder();
+    s.append("SqlConn.init:\n");
     try
     {
       String val = Pod.find("sql").config("java.drivers");
-      if (val == null) return;
-      String[] classNames = val.split(",");
-      for (int i=0; i<classNames.length; ++i)
+      s.append("  java.drivers=").append(val).append("\n");
+
+      if (val != null)
       {
-        String className = classNames[i].trim();
-        try
+        s.append("\nSqlConn.preload:\n");
+        String[] classNames = val.split(",");
+        for (int i=0; i<classNames.length; ++i)
         {
-          Class.forName(className);
-        }
-        catch (Exception e)
-        {
-          System.out.println("WARNING: Cannot preload JDBC driver: " + className);
+          String className = classNames[i].trim();
+          try
+          {
+            Class.forName(className);
+            s.append("  " + className + " [ok]\n");
+          }
+          catch (Exception e)
+          {
+            System.out.println("WARNING: Cannot preload JDBC driver: " + className);
+            s.append("  " + className + " [" + e + "]\n");
+          }
         }
       }
     }
     catch (Throwable e)
     {
       System.out.println(e);
+      s.append("ERROR: " + e + "\n");
     }
+    loadDebug = s.toString();
+  }
+
+  public static String debugDrivers()
+  {
+    StringBuilder s = new StringBuilder();
+    s.append("DriverManager.getDrivers:\n");
+    Enumeration e = DriverManager.getDrivers();
+    while (e.hasMoreElements())
+    {
+      Driver d = (Driver)e.nextElement();
+      s.append("  " + d.getClass().getName() + " [v" + d.getMajorVersion() + "." + d.getMinorVersion() + "]\n");
+    }
+    s.append("\n").append(loadDebug);
+    return s.toString();
   }
 
 //////////////////////////////////////////////////////////////////////////

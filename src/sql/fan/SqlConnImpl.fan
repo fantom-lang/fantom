@@ -24,6 +24,12 @@ class SqlConnImpl : SqlConn
   ** Backward compatiblity method
   static native SqlConn openDefault(Str uri, Str? username, Str? password)
 
+  ** Return plain text information about JDBC drivers installed
+  @NoDoc static native Str debugDrivers()
+
+  ** Print debugDrivers report to stdout
+  @NoDoc static Void printDebugDrivers() { echo; echo(debugDrivers) }
+
   **
   ** Close the database connection.  Closing a connection already
   ** closed is a no-op.  This method is guaranteed to never throw
