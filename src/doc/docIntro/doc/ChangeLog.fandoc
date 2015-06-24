@@ -17,6 +17,7 @@
 - InStream.readNullTerminatedStr
 - Map.getChecked
 - Win.hisReplaceState
+- JS compiler optimized closure call sites
 
 *Build 1.0.67 (8 Jan 2015)*
 - Mark sys::Regex as serializable and add defVal
