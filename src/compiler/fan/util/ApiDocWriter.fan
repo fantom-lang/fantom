@@ -158,8 +158,11 @@ class ApiDocWriter
   {
     if (t.mixins.isEmpty) return null
     s := StrBuf()
-    t.mixins.each |m| { s.join(m.signature) }
-    return s.toStr
+    t.mixins.each |m|
+    {
+      if (!m.isNoDoc) s.join(m.signature)
+    }
+    return s.isEmpty ? null : s.toStr
   }
 
   private Str? encodeLoc(DefNode n, Bool includeFile)
