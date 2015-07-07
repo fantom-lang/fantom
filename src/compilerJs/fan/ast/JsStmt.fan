@@ -13,7 +13,10 @@ using compiler
 **
 abstract class JsStmt : JsNode
 {
-  new make(JsCompilerSupport s) : super(s) {}
+  new make(JsCompilerSupport s, Stmt? stmt := null) : super(s)
+  {
+    this.stmt = stmt
+  }
 
   static JsStmt makeFor(JsCompilerSupport s, Stmt stmt)
   {
@@ -34,6 +37,10 @@ abstract class JsStmt : JsNode
       default: throw s.err("Unknown StmtId: $stmt.id", stmt.loc)
     }
   }
+
+  Loc? loc() { stmt?.loc }
+
+  Stmt? stmt // compiler Stmt
 }
 
 **************************************************************************
@@ -52,7 +59,7 @@ class JsNoOpStmt : JsStmt
 
 class JsExprStmt : JsStmt
 {
-  new make(JsCompilerSupport s, ExprStmt stmt) : super(s)
+  new make(JsCompilerSupport s, ExprStmt stmt) : super(s, stmt)
   {
     this.expr = JsExpr.makeFor(s, stmt.expr)
   }
@@ -69,17 +76,19 @@ class JsExprStmt : JsStmt
 
 class JsLocalDefStmt : JsStmt
 {
-  new make(JsCompilerSupport s, LocalDefStmt lds) : super(s)
+  new make(JsCompilerSupport s, LocalDefStmt lds) : super(s, lds)
   {
+    this.lds  = lds
     this.name = lds.name
     this.init = (lds.init != null) ? JsExpr.makeFor(s, lds.init) : null
   }
   override Void write(JsWriter out)
   {
-    out.w("var ")
-    if (init == null) out.w(name)
+    out.w("var ", lds.loc)
+    if (init == null) out.w(name, lds.loc)
     else init.write(out)
   }
+  LocalDefStmt lds
   Str name
   JsExpr? init
 }
@@ -430,4 +439,3 @@ class JsCase : JsNode
   JsExpr[] cases
   JsBlock? block
 }
-

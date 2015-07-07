@@ -28,17 +28,18 @@ class JsPodClosures : JsNode
   ** Write the actual closure Func (JsClosureExpr)
   Void writeClosure(ClosureExpr ce, JsWriter out)
   {
+    loc  := ce.loc
     func := JsMethod(support, ce.doCall)
     sig  := func.sig(func.params)
 
-    out.w("fan.sys.Func.make\$closure(").nl
+    out.w("fan.sys.Func.make\$closure(", loc).nl
     out.indent
 
     // closure spec
-    out.w("${mapFuncSpec(ce)},").nl
+    out.w("${mapFuncSpec(ce)},", loc).nl
 
     // func
-    out.w("function$sig").nl
+    out.w("function$sig", loc).nl
     out.w("{").nl
     out.indent
     old := support.thisName
@@ -55,7 +56,8 @@ class JsPodClosures : JsNode
   {
     varToFunc.each |JsMethod func, Str var|
     {
-      out.w("${var} = new fan.sys.ClosureFuncSpec\$(")
+      loc := func.def.loc
+      out.w("${var} = new fan.sys.ClosureFuncSpec\$(", loc)
 
       // return type
       JsTypeLiteralExpr.writeType(func.ret, out)
@@ -66,7 +68,7 @@ class JsPodClosures : JsNode
       func.params.each |p,i|
       {
         if (i > 0) out.w(",")
-        out.w("\"${p.name}\",\"${p.paramType.sig}\",\"${p.hasDef}\"")
+        out.w("\"${p.name}\",\"${p.paramType.sig}\",\"${p.hasDef}\"", loc)
       }
       out.w("]);").nl
     }

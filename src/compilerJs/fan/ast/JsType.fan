@@ -15,6 +15,7 @@ class JsType : JsNode
 {
   new make(JsCompilerSupport s, TypeDef def) : super(s)
   {
+    this.def         = def
     this.base        = JsTypeRef(s, def.base, def.loc)
     this.qname       = qnameToJs(def)
     this.pod         = def.pod.name
@@ -54,25 +55,27 @@ class JsType : JsNode
 
   override Void write(JsWriter out)
   {
+    loc := def.loc
+
     // class/mixin
-    if (isMixin) out.w("$qname = function() {}").nl
-    else out.w("$qname = fan.sys.Obj.\$extend($base.qname);").nl
+    if (isMixin) out.w("${qname} = function() {}", loc).nl
+    else out.w("${qname} = fan.sys.Obj.\$extend($base.qname);", loc).nl
     mixins.each |m| { copyMixin(m, out) }
 
     // ctor
-    out.w("${qname}.prototype.\$ctor = function()").nl
+    out.w("${qname}.prototype.\$ctor = function()", loc).nl
     out.w("{").nl
     out.indent
-    out.w("${base.qname}.prototype.\$ctor.call(this);").nl
-    if (peer != null) out.w("this.peer = new ${peer.qname}Peer(this);").nl
-    out.w("var \$this = this;").nl
+    out.w("${base.qname}.prototype.\$ctor.call(this);", loc).nl
+    if (peer != null) out.w("this.peer = new ${peer.qname}Peer(this);", loc).nl
+    out.w("var \$this = this;", loc).nl
     instanceInit?.write(out)
     out.unindent
     out.w("}").nl
 
     // type
     if (!isSynthetic)
-      out.w("${qname}.prototype.\$typeof = function() { return ${qname}.\$type; }").nl
+      out.w("${qname}.prototype.\$typeof = function() { return ${qname}.\$type; }", loc).nl
 
     // slots
     methods.each |m| { m.write(out) }
@@ -107,6 +110,7 @@ class JsType : JsNode
 
   override Str toStr() { sig }
 
+  TypeDef def            // compiler TypeDef
   JsTypeRef base         // base type qname
   Str qname              // type qname
   Str pod                // pod name for type
@@ -155,6 +159,7 @@ class JsTypeRef : JsNode
     this.isList = ref.isList
     this.isMap  = ref.isMap
     this.isFunc = ref.isFunc
+    this.loc = loc
 
     deref := ref.deref
     if (deref is ListType) v = JsTypeRef.make(cs, deref->v, loc)
@@ -174,7 +179,7 @@ class JsTypeRef : JsNode
 
   override Void write(JsWriter out)
   {
-    out.w(qname)
+    out.w(qname, loc)
   }
 
   override Str toStr() { sig }
@@ -189,8 +194,8 @@ class JsTypeRef : JsNode
   Bool isList        // is type a sys::List
   Bool isMap         // is type a sys::Map
   Bool isFunc        // is type a sys::Func
+  Loc? loc           // compiler Loc
 
   JsTypeRef? k       // only valid for MapType
   JsTypeRef? v       // only valid for ListType, MapType
 }
-

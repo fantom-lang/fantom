@@ -15,6 +15,7 @@ class JsMethod : JsSlot
 {
   new make(JsCompilerSupport s, MethodDef m) : super(s, m)
   {
+    this.def = m
     this.parentPeer = JsType.findPeer(s, m.parent)
     this.isInstanceCtor = m.isInstanceCtor
     this.isGetter   = m.isGetter
@@ -39,7 +40,7 @@ class JsMethod : JsSlot
                var self = new $parent();
                ${parent}.$name\$${sig(ctorParams)};
                return self;
-             }").nl
+             }", def.loc).nl
 
       // write factory make$ method
       support.thisName = "self"
@@ -55,9 +56,10 @@ class JsMethod : JsSlot
     // skip abstract methods
     if (isAbstract) return
 
-    out.w(parent)
+    loc := def.loc
+    out.w(parent, loc)
     if (!isStatic && !isInstanceCtor) out.w(".prototype")
-    out.w(".$methName = function${sig(methParams)}").nl
+    out.w(".$methName = function${sig(methParams)}", loc).nl
     out.w("{").nl
     out.indent
 
@@ -65,24 +67,24 @@ class JsMethod : JsSlot
     params.each |p|
     {
       if (!p.hasDef) return
-      out.w("if ($p.name === undefined) $p.name = ")
+      out.w("if ($p.name === undefined) $p.name = ", p.loc)
       p.defVal.write(out)
       out.w(";").nl
     }
 
     // closure support
-    if (hasClosure) out.w("var \$this = $support.thisName;").nl
+    if (hasClosure) out.w("var \$this = $support.thisName;", loc).nl
 
     if (isNative)
     {
       if (isStatic)
       {
-        out.w("return ${parentPeer.qname}Peer.$methName${sig(methParams)};").nl
+        out.w("return ${parentPeer.qname}Peer.$methName${sig(methParams)};", loc).nl
       }
       else
       {
         pars := isStatic ? params : [JsMethodParam.makeThis(support)].addAll(methParams)
-        out.w("return this.peer.$methName${sig(pars)};").nl
+        out.w("return this.peer.$methName${sig(pars)};", loc).nl
       }
     }
     else
@@ -148,6 +150,7 @@ class JsMethodParam : JsNode
 {
   new make(JsCompilerSupport s, CParam p) : super(s)
   {
+    this.p = p
     this.name = vnameToJs(p.name)
     this.paramType = JsTypeRef(s, p.paramType, p is Node ? ((Node)p).loc : null)
     this.hasDef = p.hasDefault
@@ -166,9 +169,12 @@ class JsMethodParam : JsNode
 
   override Void write(JsWriter out)
   {
-    out.w(name)
+    out.w(name, loc)
   }
 
+  Loc? loc() { p?->loc }
+
+  CParam? p             // compiler CParam
   Str name              // param name
   JsTypeRef? paramType  // param type
   Bool hasDef           // has default value

@@ -15,6 +15,7 @@ abstract class JsSlot : JsNode
 {
   new make(JsCompilerSupport s, SlotDef def) : super(s)
   {
+    this.def         = def
     this.parent      = qnameToJs(def.parentDef)
     this.origName    = def.name
     this.name        = vnameToJs(def.name)
@@ -38,6 +39,7 @@ abstract class JsSlot : JsNode
     }
   }
 
+  SlotDef def       // compiler SlotDef
   Str parent        // qname of slot parent
   Str origName      // unescaped slot name
   Str name          // slot name
@@ -62,6 +64,7 @@ class JsSlotRef : JsNode
 {
   new make(JsCompilerSupport cs, CSlot s) : super(cs)
   {
+    this.cslot       = s
     this.parent      = qnameToJs(s.parent)
     this.name        = vnameToJs(s.name)
     this.flags       = s.flags
@@ -84,9 +87,10 @@ class JsSlotRef : JsNode
 
   override Void write(JsWriter out)
   {
-    out.w(name)
+    out.w(name, cslot->loc)
   }
 
+  CSlot cslot       // compiler CSlot
   Str parent        // qname of slot parent
   Str name          // qname of type ref
   Int flags         // slot flags
@@ -96,5 +100,3 @@ class JsSlotRef : JsNode
   Bool isPrivate    // is slot private
   Bool isInternal   // is slot internal
 }
-
-

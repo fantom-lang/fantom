@@ -13,15 +13,18 @@ using compiler
 **
 abstract class JsExpr : JsNode
 {
-  new make(JsCompilerSupport s) : super(s) {}
+  new make(JsCompilerSupport s, Expr? expr := null) : super(s)
+  {
+    this.expr = expr
+  }
 
   static JsExpr makeFor(JsCompilerSupport s, Expr expr)
   {
     switch (expr.id)
     {
-      case ExprId.nullLiteral:     return JsNullLiteralExpr(s)
-      case ExprId.trueLiteral:     return JsBoolLiteralExpr(s, true)
-      case ExprId.falseLiteral:    return JsBoolLiteralExpr(s, false)
+      case ExprId.nullLiteral:     return JsNullLiteralExpr(s, expr)
+      case ExprId.trueLiteral:     return JsBoolLiteralExpr(s, expr, true)
+      case ExprId.falseLiteral:    return JsBoolLiteralExpr(s, expr, false)
       case ExprId.intLiteral:      return JsIntLiteralExpr(s, expr)
       case ExprId.floatLiteral:    return JsFloatLiteralExpr(s, expr)
       case ExprId.decimalLiteral:  return JsDecimalLiteralExpr(s, expr)
@@ -61,7 +64,7 @@ abstract class JsExpr : JsNode
       case ExprId.localVar:        return JsLocalVarExpr(s, expr)
       case ExprId.thisExpr:        return JsThisExpr(s)
       case ExprId.superExpr:       return JsSuperExpr(s, expr)
-      case ExprId.itExpr:          return JsItExpr(s)
+      case ExprId.itExpr:          return JsItExpr(s, expr)
       case ExprId.staticTarget:    return JsStaticTargetExpr(s, expr)
       case ExprId.throwExpr:       return JsThrowExpr(s, expr)
 
@@ -74,6 +77,10 @@ abstract class JsExpr : JsNode
       default: throw s.err("Unknown ExprId: $expr.id", expr.loc)
     }
   }
+
+  Loc? loc() { expr?.loc }
+
+  Expr? expr
 }
 
 **************************************************************************
@@ -92,7 +99,7 @@ class JsThisExpr : JsExpr
 
 class JsSuperExpr : JsExpr
 {
-  new make(JsCompilerSupport s, SuperExpr se) : super(s)
+  new make(JsCompilerSupport s, SuperExpr se) : super(s, se)
   {
     type = JsTypeRef(s, se.ctype, se.loc)
     if (se.explicitType != null)
@@ -101,7 +108,7 @@ class JsSuperExpr : JsExpr
   override Void write(JsWriter out)
   {
     t := explicitType ?: type
-    out.w("${t.qname}.prototype")
+    out.w("${t.qname}.prototype", loc)
   }
   JsTypeRef type
   JsTypeRef? explicitType
@@ -113,8 +120,8 @@ class JsSuperExpr : JsExpr
 
 class JsItExpr : JsExpr
 {
-  new make(JsCompilerSupport s) : super(s) {}
-  override Void write(JsWriter out) { out.w("it" ) }
+  new make(JsCompilerSupport s, ItExpr itExpr) : super(s, itExpr) { }
+  override Void write(JsWriter out) { out.w("it", loc) }
 }
 
 **************************************************************************
@@ -123,13 +130,13 @@ class JsItExpr : JsExpr
 
 class JsLocalVarExpr : JsExpr
 {
-  new make(JsCompilerSupport s, LocalVarExpr le) : super(s)
+  new make(JsCompilerSupport s, LocalVarExpr le) : super(s, le)
   {
     name = vnameToJs(le.var.name)
   }
   override Void write(JsWriter out)
   {
-    out.w(name)
+    out.w(name, loc)
   }
   Str name
 }
@@ -140,13 +147,13 @@ class JsLocalVarExpr : JsExpr
 
 class JsStaticTargetExpr : JsExpr
 {
-  new make(JsCompilerSupport s, StaticTargetExpr le) : super(s)
+  new make(JsCompilerSupport s, StaticTargetExpr le) : super(s, le)
   {
     target = JsTypeRef(s, le.ctype, le.loc)
   }
   override Void write(JsWriter out)
   {
-    out.w(target.qname)
+    out.w(target.qname, loc)
   }
   JsTypeRef target
 }
@@ -157,8 +164,8 @@ class JsStaticTargetExpr : JsExpr
 
 class JsNullLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s) : super(s) {}
-  override Void write(JsWriter out) { out.w("null" ) }
+  new make(JsCompilerSupport s, LiteralExpr x) : super(s, x) {}
+  override Void write(JsWriter out) { out.w("null", loc) }
 }
 
 **************************************************************************
@@ -167,13 +174,13 @@ class JsNullLiteralExpr : JsExpr
 
 class JsBoolLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s, Bool val) : super(s)
+  new make(JsCompilerSupport s, LiteralExpr x, Bool val) : super(s, x)
   {
     this.val = val
   }
   override Void write(JsWriter out)
   {
-    out.w(val ? "true" : "false")
+    out.w(val ? "true" : "false", loc)
   }
   Bool val
 }
@@ -184,13 +191,13 @@ class JsBoolLiteralExpr : JsExpr
 
 class JsIntLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s, LiteralExpr x) : super(s)
+  new make(JsCompilerSupport s, LiteralExpr x) : super(s, x)
   {
     this.val = x.val
   }
   override Void write(JsWriter out)
   {
-    out.w(val)
+    out.w(val, loc)
   }
   Int val
 }
@@ -201,13 +208,13 @@ class JsIntLiteralExpr : JsExpr
 
 class JsFloatLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s, LiteralExpr x) : super(s)
+  new make(JsCompilerSupport s, LiteralExpr x) : super(s, x)
   {
     this.val = x.val
   }
   override Void write(JsWriter out)
   {
-    out.w("fan.sys.Float.make($val)")
+    out.w("fan.sys.Float.make($val)", loc)
   }
   Float val
 }
@@ -218,13 +225,13 @@ class JsFloatLiteralExpr : JsExpr
 
 class JsDecimalLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s, LiteralExpr x) : super(s)
+  new make(JsCompilerSupport s, LiteralExpr x) : super(s, x)
   {
     this.val = x.val
   }
   override Void write(JsWriter out)
   {
-    out.w("fan.sys.Decimal.make($val)")
+    out.w("fan.sys.Decimal.make($val)", loc)
   }
   Decimal val
 }
@@ -235,14 +242,14 @@ class JsDecimalLiteralExpr : JsExpr
 
 class JsStrLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s, LiteralExpr x) : super(s)
+  new make(JsCompilerSupport s, LiteralExpr x) : super(s, x)
   {
     this.val = x.val
     this.esc = val.toCode('\"', true)[1..-2]  // remove outer quotes
   }
   override Void write(JsWriter out)
   {
-    out.w("\"$esc\"")
+    out.w("\"$esc\"", loc)
   }
   Str val
   Str esc
@@ -254,13 +261,13 @@ class JsStrLiteralExpr : JsExpr
 
 class JsDurationLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s, LiteralExpr x) : super(s)
+  new make(JsCompilerSupport s, LiteralExpr x) : super(s, x)
   {
     this.val = x.val
   }
   override Void write(JsWriter out)
   {
-    out.w("fan.sys.Duration.fromStr(\"$val.toStr\")")
+    out.w("fan.sys.Duration.fromStr(\"$val.toStr\")", loc)
   }
   Duration val
 }
@@ -271,15 +278,15 @@ class JsDurationLiteralExpr : JsExpr
 
 class JsUriLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s, LiteralExpr x) : super(s)
+  new make(JsCompilerSupport s, LiteralExpr x) : super(s, x)
   {
     this.val = x.val
     this.str = val.toStr.toCode('\"', true)
   }
   override Void write(JsWriter out)
   {
-    out.w("fan.sys.Uri.fromStr(")
-    out.w(val.toStr.toCode('\"', true))
+    out.w("fan.sys.Uri.fromStr(", loc)
+    out.w(val.toStr.toCode('\"', true), loc)
     out.w(")")
   }
   Obj val
@@ -292,7 +299,7 @@ class JsUriLiteralExpr : JsExpr
 
 class JsTypeLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s, LiteralExpr x) : super(s)
+  new make(JsCompilerSupport s, LiteralExpr x) : super(s, x)
   {
     this.val = JsTypeRef(s, x.val, x.loc)
   }
@@ -304,12 +311,12 @@ class JsTypeLiteralExpr : JsExpr
   {
     if (t.isList || t.isMap || t.isFunc)
     {
-      out.w("fan.sys.Type.find(\"$t.sig\")")
+      out.w("fan.sys.Type.find(\"$t.sig\")", t.loc)
     }
     else
     {
-      out.w("${t.qname}.\$type")
-      if (t.isNullable) out.w(".toNullable()")
+      out.w("${t.qname}.\$type", t.loc)
+      if (t.isNullable) out.w(".toNullable()", t.loc)
     }
   }
   JsTypeRef val
@@ -321,7 +328,7 @@ class JsTypeLiteralExpr : JsExpr
 
 class JsSlotLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s, SlotLiteralExpr x) : super(s)
+  new make(JsCompilerSupport s, SlotLiteralExpr x) : super(s, x)
   {
     this.parent = JsTypeRef(s, x.parent, x.loc)
     this.name   = x.name
@@ -329,7 +336,7 @@ class JsSlotLiteralExpr : JsExpr
   override Void write(JsWriter out)
   {
     JsTypeLiteralExpr.writeType(parent, out)
-    out.w(".slot(\"$name\")")
+    out.w(".slot(\"$name\")", loc)
   }
   JsTypeRef parent  // slot parent type
   Str name          // slot name
@@ -341,7 +348,7 @@ class JsSlotLiteralExpr : JsExpr
 
 class JsRangeLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s, RangeLiteralExpr x) : super(s)
+  new make(JsCompilerSupport s, RangeLiteralExpr x) : super(s, x)
   {
     start = JsExpr.makeFor(s, x.start)
     end   = JsExpr.makeFor(s, x.end)
@@ -349,11 +356,11 @@ class JsRangeLiteralExpr : JsExpr
   }
   override Void write(JsWriter out)
   {
-    out.w("fan.sys.Range.make(")
+    out.w("fan.sys.Range.make(", loc)
     start.write(out)
     out.w(",")
     end.write(out)
-    if (exclusive) out.w(",true")
+    if (exclusive) out.w(",true", loc)
     out.w(")")
   }
   JsExpr start
@@ -367,7 +374,7 @@ class JsRangeLiteralExpr : JsExpr
 
 class JsListLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s, ListLiteralExpr x) : super(s)
+  new make(JsCompilerSupport s, ListLiteralExpr x) : super(s, x)
   {
     this.inferredType = JsTypeRef(s, x.ctype, x.loc)
     if (x.explicitType != null)
@@ -378,7 +385,7 @@ class JsListLiteralExpr : JsExpr
   override Void write(JsWriter out)
   {
     of := (explicitType ?: inferredType).v
-    out.w("fan.sys.List.make(")
+    out.w("fan.sys.List.make(", loc)
     JsTypeLiteralExpr.writeType(of, out)
     if (vals.size > 0)
     {
@@ -403,7 +410,7 @@ class JsListLiteralExpr : JsExpr
 
 class JsMapLiteralExpr : JsExpr
 {
-  new make(JsCompilerSupport s, MapLiteralExpr me) : super(s)
+  new make(JsCompilerSupport s, MapLiteralExpr me) : super(s, me)
   {
     this.inferredType = JsTypeRef(s, me.ctype, me.loc)
     if (me.explicitType != null)
@@ -414,14 +421,14 @@ class JsMapLiteralExpr : JsExpr
   }
   override Void write(JsWriter out)
   {
-    out.w("fan.sys.Map.fromLiteral([")
+    out.w("fan.sys.Map.fromLiteral([", loc)
     keys.each |k,i| { if (i > 0) out.w(","); k.write(out) }
     out.w("],[")
     vals.each |v,i| { if (i > 0) out.w(","); v.write(out) }
     out.w("]")
     t := explicitType ?: inferredType
-    out.w(",fan.sys.Type.find(\"").w(t.k.sig).w("\")")
-    out.w(",fan.sys.Type.find(\"").w(t.v.sig).w("\")")
+    out.w(",fan.sys.Type.find(\"", loc).w(t.k.sig, loc).w("\")")
+    out.w(",fan.sys.Type.find(\"", loc).w(t.v.sig, loc).w("\")")
     out.w(")")
   }
   JsTypeRef inferredType
@@ -436,7 +443,7 @@ class JsMapLiteralExpr : JsExpr
 
 class JsUnaryExpr : JsExpr
 {
-  new make(JsCompilerSupport s, UnaryExpr x) : super(s)
+  new make(JsCompilerSupport s, UnaryExpr x) : super(s, x)
   {
     this.id      = x.id
     this.symbol  = x.opToken.symbol
@@ -446,9 +453,9 @@ class JsUnaryExpr : JsExpr
   {
     switch (id)
     {
-      case ExprId.cmpNull:    operand.write(out); out.w(" == null")
-      case ExprId.cmpNotNull: operand.write(out); out.w(" != null")
-      default:                out.w(symbol); operand.write(out)
+      case ExprId.cmpNull:    operand.write(out); out.w(" == null", loc)
+      case ExprId.cmpNotNull: operand.write(out); out.w(" != null", loc)
+      default:                out.w(symbol, loc); operand.write(out)
     }
   }
   ExprId id
@@ -462,7 +469,7 @@ class JsUnaryExpr : JsExpr
 
 class JsBinaryExpr : JsExpr
 {
-  new make(JsCompilerSupport s, BinaryExpr x) : super(s)
+  new make(JsCompilerSupport s, BinaryExpr x) : super(s, x)
   {
     this.symbol   = x.opToken.symbol
     this.lhs      = JsExpr.makeFor(s, x.lhs)
@@ -480,11 +487,11 @@ class JsBinaryExpr : JsExpr
         var := support.unique
         old := support.thisName
         support.thisName = "\$this"
-        out.w("(function(\$this) {")
-        out.w(" var $var = "); rhs.write(out); out.w("; ")
+        out.w("(function(\$this) {", loc)
+        out.w(" var $var = ", loc); rhs.write(out); out.w("; ")
         fe.writeSetter(out, JsVarExpr(support, var)); out.w(";")
-        out.w(" return $var;")
-        out.w(" })($old)")
+        out.w(" return $var;", loc)
+        out.w(" })($old)", loc)
         support.thisName = old
       }
       else { fe.writeSetter(out, rhs) }
@@ -492,7 +499,7 @@ class JsBinaryExpr : JsExpr
     else
     {
       lhs.write(out)
-      out.w(" $symbol ")
+      out.w(" $symbol ", loc)
       rhs.write(out)
     }
   }
@@ -517,7 +524,7 @@ internal class JsVarExpr : JsExpr
 
 class JsTernaryExpr : JsExpr
 {
-  new make(JsCompilerSupport s, TernaryExpr te) : super(s)
+  new make(JsCompilerSupport s, TernaryExpr te) : super(s, te)
   {
     this.condition = JsExpr.makeFor(s, te.condition)
     this.trueExpr  = JsExpr.makeFor(s, te.trueExpr)
@@ -528,13 +535,13 @@ class JsTernaryExpr : JsExpr
     var := support.unique
     old := support.thisName
     support.thisName = "\$this"
-    out.w("(function(\$this) { ")
+    out.w("(function(\$this) { ", loc)
     out.w("if ("); condition.write(out); out.w(") ")
-    if (trueExpr isnot JsThrowExpr) out.w("return ")
+    if (trueExpr isnot JsThrowExpr) out.w("return ", loc)
     trueExpr.write(out); out.w("; ")
-    if (falseExpr isnot JsThrowExpr) out.w("return ")
+    if (falseExpr isnot JsThrowExpr) out.w("return ", loc)
     falseExpr.write(out); out.w("; ")
-    out.w("})($old)")
+    out.w("})($old)", loc)
     support.thisName = old
   }
   JsExpr condition
@@ -548,7 +555,7 @@ class JsTernaryExpr : JsExpr
 
 class JsElvisExpr : JsExpr
 {
-  new make(JsCompilerSupport s, BinaryExpr be) : super(s)
+  new make(JsCompilerSupport s, BinaryExpr be) : super(s, be)
   {
     this.lhs = JsExpr.makeFor(s, be.lhs)
     this.rhs = JsExpr.makeFor(s, be.rhs)
@@ -558,12 +565,12 @@ class JsElvisExpr : JsExpr
     var := support.unique
     old := support.thisName
     support.thisName = "\$this"
-    out.w("(function(\$this) { var $var = ")
+    out.w("(function(\$this) { var $var = ", loc)
     lhs.write(out)
-    out.w("; if ($var != null) return $var; ")
-    if (rhs isnot JsThrowExpr) out.w("return ")
+    out.w("; if ($var != null) return $var; ", loc)
+    if (rhs isnot JsThrowExpr) out.w("return ", loc)
     rhs.write(out)
-    out.w("; })($old)")
+    out.w("; })($old)", loc)
     support.thisName = old
   }
   JsExpr lhs
@@ -576,7 +583,7 @@ class JsElvisExpr : JsExpr
 
 class JsCondExpr : JsExpr
 {
-  new make(JsCompilerSupport s, CondExpr ce) : super(s)
+  new make(JsCompilerSupport s, CondExpr ce) : super(s, ce)
   {
     this.symbol   = ce.opToken.symbol
     this.operands = ce.operands.map |op->JsExpr| { JsExpr.makeFor(s, op) }
@@ -586,7 +593,7 @@ class JsCondExpr : JsExpr
     out.w("(")
     operands.each |op,i|
     {
-      if (i>0 && i<operands.size) out.w(" $symbol ")
+      if (i>0 && i<operands.size) out.w(" $symbol ", loc)
       op.write(out)
     }
     out.w(")")
@@ -601,7 +608,7 @@ class JsCondExpr : JsExpr
 
 class JsTypeCheckExpr : JsExpr
 {
-  new make(JsCompilerSupport s, TypeCheckExpr te) : super(s)
+  new make(JsCompilerSupport s, TypeCheckExpr te) : super(s, te)
   {
     this.op     = te.id == ExprId.coerce ? "coerce" : te.opStr
     this.target = JsExpr.makeFor(s, te.target)
@@ -612,10 +619,10 @@ class JsTypeCheckExpr : JsExpr
     m := op
     if (m == "isnot")
     {
-      out.w("!")
+      out.w("!", loc)
       m = "is"
     }
-    out.w("fan.sys.ObjUtil.$m(")
+    out.w("fan.sys.ObjUtil.$m(", loc)
     target.write(out)
     out.w(",")
     JsTypeLiteralExpr.writeType(check, out)
@@ -632,7 +639,7 @@ class JsTypeCheckExpr : JsExpr
 
 class JsCallExpr : JsExpr
 {
-  new make(JsCompilerSupport s, CallExpr ce) : super(s)
+  new make(JsCompilerSupport s, CallExpr ce) : super(s, ce)
   {
     this.method = JsMethodRef(s, ce.method)
     this.name   = method.name
@@ -676,12 +683,12 @@ class JsCallExpr : JsExpr
       safeVar = support.unique
       old := support.thisName
       support.thisName = "\$this"
-      out.w("(function(\$this) { var $safeVar = ")
-      if (target == null) out.w(support.thisName)
+      out.w("(function(\$this) { var $safeVar = ", loc)
+      if (target == null) out.w(support.thisName, loc)
       else target.write(out)
-      out.w("; if ($safeVar == null) return null; return ")
+      out.w("; if ($safeVar == null) return null; return ", loc)
       writeCall(out)
-      out.w("; })($old)")
+      out.w("; })($old)", loc)
       support.thisName = old
     }
     else
@@ -700,7 +707,7 @@ class JsCallExpr : JsExpr
     else
     {
       writeTarget(out)
-      out.w(".$name(")
+      out.w(".$name(", loc)
       writeArgs(out)
       out.w(")")
     }
@@ -708,7 +715,7 @@ class JsCallExpr : JsExpr
 
   Void writeObj(JsWriter out)
   {
-    out.w("fan.sys.ObjUtil.$name(")
+    out.w("fan.sys.ObjUtil.$name(", loc)
     if (isStatic) writeArgs(out)
     else
     {
@@ -720,7 +727,7 @@ class JsCallExpr : JsExpr
 
   Void writePrimitive(JsWriter out)
   {
-    out.w("${targetType.qname}.$name(")
+    out.w("${targetType.qname}.$name(", loc)
     if (isStatic) writeArgs(out)
     else
     {
@@ -732,7 +739,7 @@ class JsCallExpr : JsExpr
 
   Void writeCtorChain(JsWriter out)
   {
-    out.w("${targetType.qname}.${name}\$($support.thisName")
+    out.w("${targetType.qname}.${name}\$($support.thisName", loc)
     writeArgs(out, true)
     out.w(")")
   }
@@ -740,7 +747,7 @@ class JsCallExpr : JsExpr
   Void writeSuper(JsWriter out)
   {
     target.write(out)
-    out.w(".${name}.call($support.thisName")
+    out.w(".${name}.call($support.thisName", loc)
     writeArgs(out, true)
     out.w(")")
   }
@@ -759,7 +766,7 @@ class JsCallExpr : JsExpr
     if (isDynamic)
     {
       if (hasFirstArg) out.w(",")
-      out.w("\"$dynamicName\",fan.sys.List.make(fan.sys.Obj.\$type.toNullable(),[")
+      out.w("\"$dynamicName\",fan.sys.List.make(fan.sys.Obj.\$type.toNullable(),[", loc)
       hasFirstArg = false
     }
 
@@ -850,11 +857,11 @@ class JsShortcutExpr : JsCallExpr
       var := support.unique
       old := support.thisName
       support.thisName = "\$this"
-      out.w("(function(\$this) { var $var = ")
+      out.w("(function(\$this) { var $var = ", loc)
       assignTarget.write(out)
       out.w("; ")
       doWrite(out)
-      out.w("; return $var; })($old)")
+      out.w("; return $var; })($old)", loc)
       support.thisName = old
     }
     else doWrite(out)
@@ -875,7 +882,7 @@ class JsShortcutExpr : JsCallExpr
       else
       {
         assignTarget.write(out)
-        out.w(" = ")
+        out.w(" = ", loc)
       }
     }
     super.write(out)
@@ -888,15 +895,16 @@ class JsShortcutExpr : JsCallExpr
     ref    := support.unique
     index  := support.unique
     old    := support.thisName
+    retVal := isPostfixLeave ? oldVal : newVal
     support.thisName = "\$this"
-    out.w("(function(\$this) {")
-    out.w(" var $ref = ");    assignTarget.write(out); out.w(";")
-    out.w(" var $index = ");  assignIndex.write(out);  out.w(";")
-    out.w(" var $newVal = "); super.write(out);        out.w(";")
-    if (isPostfixLeave) out.w(" var $oldVal = ${ref}.get($index);");
-    out.w(" ${ref}.set($index,$newVal);")
-    out.w(" return ").w(isPostfixLeave ? oldVal : newVal).w(";")
-    out.w(" })($old)")
+    out.w("(function(\$this) {", loc)
+    out.w(" var $ref = ", loc);    assignTarget.write(out); out.w(";")
+    out.w(" var $index = ", loc);  assignIndex.write(out);  out.w(";")
+    out.w(" var $newVal = ", loc ); super.write(out);        out.w(";")
+    if (isPostfixLeave) out.w(" var $oldVal = ${ref}.get($index);", loc);
+    out.w(" ${ref}.set($index,$newVal);", loc)
+    out.w(" return ${retVal};", loc)
+    out.w(" })($old)", loc)
     support.thisName = old
   }
 
@@ -916,7 +924,7 @@ class JsShortcutExpr : JsCallExpr
 
 class JsFieldExpr : JsExpr
 {
-  new make(JsCompilerSupport s, FieldExpr fe) : super(s)
+  new make(JsCompilerSupport s, FieldExpr fe) : super(s, fe)
   {
     if (fe.target != null) this.target = JsExpr.makeFor(s, fe.target)
     this.parent = JsTypeRef(s, fe.field.parent, fe.loc)
@@ -943,7 +951,7 @@ class JsFieldExpr : JsExpr
     name := field.name
     if (setArg != null) name += "\$"
     target.write(out)
-    out.w(".${name}.call($support.thisName")
+    out.w(".${name}.call($support.thisName", loc)
     if (setArg != null)
     {
       out.w(",")
@@ -959,9 +967,9 @@ class JsFieldExpr : JsExpr
     {
       v := support.unique
       support.thisName = "\$this"
-      out.w("(function(\$this) { var $v=")
+      out.w("(function(\$this) { var $v=", loc)
       writeTarget(out)
-      out.w("; return ($v==null) ? null : $v")
+      out.w("; return ($v==null) ? null : $v", loc)
       support.thisName = old
     }
     else
@@ -972,7 +980,7 @@ class JsFieldExpr : JsExpr
     out.w(".")
     if (useAccessor)
     {
-      out.w("$field.name")
+      out.w("$field.name", loc)
       if (setArg == null) out.w("()")
       else
       {
@@ -983,14 +991,14 @@ class JsFieldExpr : JsExpr
     }
     else
     {
-      out.w("m_$field.name")
+      out.w("m_$field.name", loc)
       if (setArg != null)
       {
         out.w(" = ")
         writeSetArg(out)
       }
     }
-    if (isSafe) out.w(" }($old))")
+    if (isSafe) out.w(" }($old))", loc)
   }
 
   private Void writeTarget(JsWriter out)
@@ -1021,7 +1029,7 @@ class JsFieldExpr : JsExpr
 
 class JsClosureExpr : JsExpr
 {
-  new make(JsCompilerSupport s, ClosureExpr ce) : super(s)
+  new make(JsCompilerSupport s, ClosureExpr ce) : super(s, ce)
   {
     this.ce = ce
   }
@@ -1039,13 +1047,13 @@ class JsClosureExpr : JsExpr
 
 class JsThrowExpr : JsExpr
 {
-  new make(JsCompilerSupport s, ThrowExpr te) : super(s)
+  new make(JsCompilerSupport s, ThrowExpr te) : super(s, te)
   {
     this.exception = JsExpr.makeFor(s, te.exception)
   }
   override Void write(JsWriter out)
   {
-    out.w("throw ")
+    out.w("throw ", loc)
     exception.write(out)
   }
   JsExpr exception  // the exception to throw
