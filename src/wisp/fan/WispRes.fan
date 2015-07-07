@@ -207,12 +207,7 @@ internal class WispRes : WebRes
 
     // write response line and headers
     sout.print("HTTP/1.1 ").print(statusCode).print(" ").print(toStatusMsg).print("\r\n")
-    &headers.each |Str v, Str k|
-    {
-      if (v.containsChar('\n'))
-        v = v.splitLines.join("\n ")
-      sout.print(k).print(": ").print(v).print("\r\n")
-    }
+    WebUtil.writeHeaders(sout, &headers)
     &cookies.each |Cookie c| { sout.print("Set-Cookie: ").print(c).print("\r\n") }
     sout.print("\r\n").flush
   }
