@@ -58,7 +58,13 @@ class WritePod : CompilerStep
 
       // write javascript
       if (compiler.js != null)
+      {
         writeStr(zip, `${podName}.js`, compiler.js)
+        if (compiler.jsSourceMap != null)
+        {
+          writeStr(zip, `${podName}.js.map`, compiler.jsSourceMap)
+        }
+      }
 
       // if explicit locale props
       if (compiler.localeProps != null)

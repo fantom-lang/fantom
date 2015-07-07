@@ -147,6 +147,7 @@ class Compiler
   Str:CField wrappers       // ClosureVars
   Obj? jsPod                // CompileJs (JavaScript AST)
   Str? js                   // CompileJs (JavaScript code)
+  Str? jsSourceMap          // CompileJs (JavaScript sourcemap)
   LocaleLiteralExpr[] localeDefs  // ResolveExpr.resolveLocaleLiteral
   Str? localeProps          // LocaleProps
   FPod? fpod                // Assemble

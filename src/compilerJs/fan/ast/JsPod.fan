@@ -91,6 +91,7 @@ class JsPod : JsNode
       out.minify(in)
       in.close
     }
+    out.w("\n//# sourceMappingURL=/pod/${name}/${name}.js.map\n")
   }
 
   Void writePeer(JsWriter out, JsType t, Bool isPeer)

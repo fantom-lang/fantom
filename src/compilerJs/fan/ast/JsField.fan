@@ -34,9 +34,9 @@ class JsField : JsSlot
         }
       }
 
-      out.w(parent)
+      out.w(parent, def.loc)
       if (!isStatic) out.w(".prototype")
-      out.w(".m_$name = $defVal;").nl
+      out.w(".m_$name = $defVal;", def.loc).nl
     }
   }
 
