@@ -204,6 +204,16 @@ class WebUtil
     return map
   }
 
+  ** Write HTTP headers
+  @NoDoc static Void writeHeaders(OutStream out, Str:Str headers)
+  {
+    headers.each |v,k|
+    {
+      if (v.containsChar('\n')) v = v.splitLines.join("\n ")
+      out.print(k).print(": ").print(v).print("\r\n")
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // IO
 //////////////////////////////////////////////////////////////////////////
