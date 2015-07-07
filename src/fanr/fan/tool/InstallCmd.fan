@@ -111,7 +111,7 @@ internal class InstallCmd : Command
 
       // query the repo, eventually it would more optimized to
       // batch as many dependency queries as possible together
-      newInstall := repo.query("$d.name $d.version", 1).first
+      newInstall := repo.query(d.toStr, 1).first
       if (newInstall != null)
       {
         items[newInstall.name] = InstallItem(newInstall, curInstalled)
