@@ -19,7 +19,6 @@ class SourceMap
   {
     this.support = support
     this.c = support.compiler
-    this.includeSources = Env.cur.vars["FAN_BUILD_SOURCEMAP_SRCS"] == "true"
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,8 +72,7 @@ class SourceMap
     files.vals.each |file, i|
     {
       if (i > 0) out.writeChars(",")
-      if (includeSources) out.writeChars(file.readAllStr.toCode)
-      else out.writeChars("null")
+      out.writeChars("null")
     }
     out.writeChars("],\n")
   }
@@ -128,7 +126,6 @@ class SourceMap
 
   private JsCompilerSupport support
   private Compiler c
-  private const Bool includeSources
   private [Str:File] files := [Str:File][:] { ordered = true }
   private MapField[] fields := [,]
 }
