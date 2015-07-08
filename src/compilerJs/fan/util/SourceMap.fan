@@ -47,9 +47,11 @@ class SourceMap
 
   Void write(OutStream out := Env.cur.out)
   {
+    pod := support.pod.name
     out.writeChars("{\n")
     out.writeChars("\"version\": 3,\n")
-    out.writeChars("\"file\": \"${support.pod.name}.js\",\n")
+    out.writeChars("\"file\": \"${pod}.js\",\n")
+    out.writeChars("\"sourceRoot\": \"/dev/${pod}/\",\n")
     writeSources(out)
     writeMappings(out)
     out.writeChars("}\n")
@@ -64,15 +66,6 @@ class SourceMap
     {
       if (i > 0) out.writeChars(",")
       out.writeChars("\"${file.name}\"")
-    }
-    out.writeChars("],\n")
-
-    // write sourcesContent
-    out.writeChars("\"sourcesContent\": [")
-    files.vals.each |file, i|
-    {
-      if (i > 0) out.writeChars(",")
-      out.writeChars("null")
     }
     out.writeChars("],\n")
   }
