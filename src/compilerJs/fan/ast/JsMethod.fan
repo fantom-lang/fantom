@@ -35,12 +35,13 @@ class JsMethod : JsSlot
     {
       // write static factory make method
       ctorParams := [JsMethodParam.makeSelf(support)].addAll(params)
-      out.w("${parent}.$name = function${sig(params)}
-             {
-               var self = new $parent();
-               ${parent}.$name\$${sig(ctorParams)};
-               return self;
-             }", def.loc).nl
+      out.w("${parent}.$name = function${sig(params)} {", def.loc).nl
+         .indent
+         .w("var self = new $parent();").nl
+         .w("${parent}.$name\$${sig(ctorParams)};").nl
+         .w("return self;").nl
+         .w("}").nl
+         .unindent
 
       // write factory make$ method
       support.thisName = "self"
