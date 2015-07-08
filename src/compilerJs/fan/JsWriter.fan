@@ -50,21 +50,13 @@ class JsWriter
       needIndent = false
     }
     str := o.toStr
+    if (str.containsChar('\n')) throw Err("w str with newline: ${str}")
     if (loc != null)
     {
       sourcemap?.add(str, Loc(loc.file, line, col), loc, name)
     }
-    str.splitLines.each |text, i|
-    {
-      if (i > 0)
-      {
-        out.writeChar('\n')
-        ++line
-        col = 0
-      }
-      out.writeChars(text)
-      col += text.size
-    }
+    out.writeChars(str)
+    col += str.size
     return this
   }
 
@@ -79,18 +71,6 @@ class JsWriter
     w(")")
     return this
   }
-
-/*
-  JsWriter wa(Str accessor, Loc loc)
-  {
-    accessor.split('.').each |tok, i|
-    {
-      if (i > 0) w(".")
-      w(tok+"1", loc, tok)
-    }
-    return this
-  }
-*/
 
   **
   ** Write newline and then return this.
@@ -163,7 +143,7 @@ class JsWriter
       s = s.trimEnd
       if (inBlock) return
       if (s.size == 0) return
-      out.printLine(s)
+      w(s).nl
     }
   }
 
