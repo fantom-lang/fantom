@@ -68,6 +68,11 @@ class Button : Widget
   native Str text
 
   **
+  ** The button's tool tip. Defaults to "".
+  **
+  native Str toolTip
+
+  **
   ** Image to display on button. Defaults to null.
   **
   native Image? image

@@ -67,6 +67,10 @@ fan.fwt.ButtonPeer.prototype.text = function(self) { return this.m_text; }
 fan.fwt.ButtonPeer.prototype.text$ = function(self, val) { this.m_text = val; }
 fan.fwt.ButtonPeer.prototype.m_text = "";
 
+fan.fwt.ButtonPeer.prototype.toolTip = function(self) { return this.m_toolTip; }
+fan.fwt.ButtonPeer.prototype.toolTip$ = function(self, val) { this.m_toolTip = val; }
+fan.fwt.ButtonPeer.prototype.m_toolTip = "";
+
 fan.fwt.ButtonPeer.prototype.m_pressed = false;
 
 fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
@@ -93,7 +97,7 @@ fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
   div.className = "_fwt_Button_ push";
   div.style.font = fan.fwt.WidgetPeer.fontToCss(
     this.m_font==null ? fan.fwt.DesktopPeer.$sysFont : this.m_font);
-
+  div.title = this.m_toolTip;
   var $this = this;
   div.onmousedown = function(event)
   {
@@ -164,6 +168,7 @@ fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
   check.style.marginRight = "6px";
 
   var div = this.emptyDiv();
+  div.title = this.m_toolTip;
   with (div.style)
   {
     font = fan.fwt.WidgetPeer.fontToCss(this.m_font==null ? fan.fwt.DesktopPeer.$sysFont : this.m_font);
@@ -247,6 +252,7 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
   {
     var div = this.elem.firstChild;
     div.tabIndex = this.m_enabled ? 0 : -1;
+    div.title = this.m_toolTip;
 
     // set def
     if (this.m_def == true) fan.fwt.WidgetPeer.addClassName(div, "def");
@@ -309,6 +315,7 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
            self.m_mode == fan.fwt.ButtonMode.m_radio)
   {
     var div = this.elem;
+    div.title = this.m_toolTip;
     div.style.color = self.m_fg ? self.m_fg.toCss() : (this.m_enabled ? "#000" : "#444");
 
     // set state
