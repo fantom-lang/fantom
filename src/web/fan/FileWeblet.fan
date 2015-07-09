@@ -92,7 +92,7 @@ class FileWeblet : Weblet
     // and if so send the file using gzip compression (we don't
     // know content length in this case)
     ae := req.headers["Accept-Encoding"] ?: ""
-    if (mime?.mediaType == "text" && WebUtil.parseQVals(ae)["gzip"] > 0f)
+    if (isGzipFile(file) && WebUtil.parseQVals(ae)["gzip"] > 0f)
     {
       res.statusCode = 200
       res.headers["Content-Encoding"] = "gzip"
@@ -106,6 +106,21 @@ class FileWeblet : Weblet
     res.statusCode = 200
     res.headers["Content-Length"] = file.size.toStr
     file.in.pipe(res.out, file.size)
+  }
+
+  **
+  ** Returns true if the file should be gzipped.
+  **
+  private static Bool isGzipFile(File file)
+  {
+    mime := file.mimeType
+    if (mime == null) return false
+    if (mime.mediaType == "text") return true
+    if (mime.mediaType == "application")
+    {
+      if (mime.subType == "json") return true
+    }
+    return false
   }
 
   **
