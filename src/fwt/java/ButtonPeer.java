@@ -77,6 +77,15 @@ public class ButtonPeer
     public void set(Widget w, String v) { if (w instanceof Button) ((Button)w).setText(v); else ((ToolItem)w).setText(v); }
   };
 
+  // Str toolTip := ""
+  public String toolTip(fan.fwt.Button self) { return toolTip.get(); }
+  public void toolTip(fan.fwt.Button self, String v) { toolTip.set(v); }
+  public final Prop.StrProp toolTip = new Prop.StrProp(this, "")
+  {
+    public String get(Widget w) { return (w instanceof Button) ? ((Button)w).getToolTipText() : ((ToolItem)w).getToolTipText(); }
+    public void set(Widget w, String v) { if (w instanceof Button) ((Button)w).setToolTipText(v); else ((ToolItem)w).setToolTipText(v); }
+  };
+
   // Image image := null
   public fan.gfx.Image image(fan.fwt.Button self) { return image.get(); }
   public void image(fan.fwt.Button self, fan.gfx.Image v) { image.set(v); }
