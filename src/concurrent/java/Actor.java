@@ -136,7 +136,7 @@ public class Actor
   private Future _send(Object msg, Duration dur, Future whenDone)
   {
     // ensure immutable or safe copy
-    msg = Sys.safe(msg);
+    msg = _safe(msg);
 
     // don't deliver new messages to a stopped pool
     if (pool.isStopped()) throw Err.make("ActorPool is stopped");
@@ -255,6 +255,29 @@ public class Actor
       future.cancel();
     }
   }
+
+  static Object _safe(Object obj)
+  {
+    if (obj == null) return null;
+    if (FanObj.isImmutable(obj)) return obj;
+
+    if (_safeLogErr)
+    {
+      _safeLogErr = false;
+      System.out.println("==");
+      System.out.println("==");
+      System.out.println("== Actor msg serialization is deprecated;");
+      System.out.println("== See http://fantom.org/forum/topic/2428");
+      System.out.println("==");
+      System.out.println("==");
+    }
+
+    Buf buf = new MemBuf(512);
+    buf.out().writeObj(obj);
+    buf.flip();
+    return buf.in().readObj();
+  }
+  private static volatile boolean _safeLogErr = true;
 
 //////////////////////////////////////////////////////////////////////////
 // Queue

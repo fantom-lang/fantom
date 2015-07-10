@@ -610,21 +610,6 @@ public final class Sys
     throw new RuntimeException("Cannot boot fan: " + e.toString());
   }
 
-  /**
-   * Make a thread-safe copy of the specified object.
-   * If it is immutable, then just return it; otherwise
-   * we make a serialized copy.
-   */
-  public static Object safe(Object obj)
-  {
-    if (obj == null) return null;
-    if (FanObj.isImmutable(obj)) return obj;
-    Buf buf = new MemBuf(512);
-    buf.out.writeObj(obj);
-    buf.flip();
-    return buf.in.readObj();
-  }
-
   /** Force sys class to load */
   public static void boot() {}
 
