@@ -7,10 +7,10 @@
 //
 
 **
-** WebSession provides a name/value map associated with
-** a specific browser "connection" to the web server.  Any
-** values stored in a WebSession must be serializable.
-** Get the current WebSession via `WebReq.session`.
+** WebSession provides a name/value map associated with a specific
+** browser "connection" to the web server.  Any values stored in a
+** WebSession must be both immutable and serializable.  Get the
+** current WebSession via `WebReq.session`.
 **
 ** See [pod doc]`pod-doc#sessions`.
 **
@@ -27,21 +27,32 @@ abstract class WebSession
   override Str toStr() { id }
 
   **
-  ** Convenience for 'map.get(name, def)'.
+  ** Iterate the key/value pairs
   **
-  @Operator Obj? get(Str name, Obj? def := null) { map.get(name, def) }
+  abstract Void each(|Obj?,Str| f)
 
   **
-  ** Convenience for 'map.set(name, val)'.
+  ** Get session value or return def if not defined.
   **
-  @Operator Void set(Str name, Obj? val) { map[name] = val }
+  @Operator abstract Obj? get(Str name, Obj? def := null)
+
+  **
+  ** Set a session value which must be immutable and serializable.
+  **
+  @Operator abstract Void set(Str name, Obj? val)
+
+  **
+  ** Remove a session key
+  **
+  abstract Void remove(Str name)
 
   **
   ** Application name/value pairs which are persisted
   ** between HTTP requests.  The values stored in this
   ** map must be serializable.
   **
-  abstract Str:Obj? map()
+  @Deprecated { msg = "Use get, set, remove, each" }
+  abstract Str:Obj? map() // TODO
 
   **
   ** Delete this web session which clears both the user
