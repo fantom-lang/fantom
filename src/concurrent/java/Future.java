@@ -109,7 +109,7 @@ public final class Future
     }
 
     // ensure immutable or safe copy
-    return Sys.safe(r);
+    return Actor._safe(r);
   }
 
   public final void cancel()
@@ -127,7 +127,7 @@ public final class Future
 
   final void set(Object r)
   {
-    r = Sys.safe(r);
+    r = Actor._safe(r);
     ArrayList wd;
     synchronized (this)
     {
