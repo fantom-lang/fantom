@@ -12,75 +12,99 @@ using web
 **
 ** Default memory based web session storage
 **
-internal const class MemWispSessionStore : WispSessionStore
+internal const class MemWispSessionStore : Actor, WispSessionStore
 {
-  override Void onStart() { actor.sendLater(houseKeepingPeriod, "_houseKeeping") }
+  new make() : super(ActorPool { it.name = "WispServiceSessions" }) {}
 
-  override Void onStop() { actorPool.stop }
+  override Void onStart() { sendLater(houseKeepingPeriod, Msg("houseKeeping")) }
 
-  override Str:Obj? load(Str id) { actor.send(id).get(timeout) }
+  override Void onStop() { pool.stop }
 
-  override Void save(Str id, Str:Obj? map) { actor.send(map.set("__id", id)) }
+  override Str:Obj? load(Str id) { send(Msg("load", id)).get(timeout) }
 
-  override Void delete(Str id) { actor.send(["__id":id, "__delete":true]) }
+  override Void save(Str id, Str:Obj? map) { send(Msg("save", id, map)) }
 
-  Obj? receive(Obj? msg)
+  override Void delete(Str id) { send(Msg("delete", id)) }
+
+  override Obj? receive(Obj? msgObj)
   {
-    [Str:Map]? sessions := Actor.locals["wisp.sessions"]
-    if (sessions == null) Actor.locals["wisp.sessions"] = sessions = Str:Map[:]
-
-    // clean-up old sessions after expiration period
-    if (msg === "_houseKeeping")
+    try
     {
-      now := Duration.now
-      expired := Str[,]
-      sessions.each |Str:Obj? map, Str id|
+      msg := (Msg)msgObj
+
+      // init or lookup map of sessions
+      sessions := Actor.locals["wisp.sessions"] as Str:MemStoreSession
+      if (sessions == null) Actor.locals["wisp.sessions"] = sessions = Str:MemStoreSession[:]
+
+      // dispatch msg to handler method
+      switch(msg.cmd)
       {
-        lastAccess := map["__lastAccess"] as Duration
-        if (lastAccess != null && now - lastAccess > expirationPeriod)
-          expired.add(id)
+        case "houseKeeping": return onHouseKeeping(sessions)
+        case "load":         return onLoad(sessions, msg)
+        case "save":         return onSave(sessions, msg)
+        case "delete":       return onDelete(sessions, msg)
       }
-      expired.each |id|
-      {
-        sessions.remove(id)
-      }
-      actor.sendLater(houseKeepingPeriod, "_houseKeeping")
-      return null
+
+      echo("Unhandled msg: $msg.cmd")
     }
-
-    // Str id is a load
-    if (msg is Str)
-    {
-      Str id := msg
-      return sessions[msg] ?: Str:Obj?[:]
-    }
-
-    // Map is save or delete
-    if (msg is Map)
-    {
-      Str:Obj? map := msg
-      Str id := map.remove("__id")
-      if (map["__delete"] == true)
-      {
-        sessions.remove(id)
-      }
-      else
-      {
-        map["__lastAccess"] = Duration.now
-        sessions[id] = map
-      }
-      return null
-    }
-
-
-    echo("WispSessionMgr.unknown msg: $msg")
+    catch (Err e) e.trace
     return null
   }
 
-  const ActorPool actorPool := ActorPool { it.name = "WispServiceSessions" }
-  const Actor actor := Actor(actorPool) |msg| { receive(msg) }
+  private Obj? onHouseKeeping(Str:MemStoreSession sessions)
+  {
+    // clean-up old sessions after expiration period
+    now := Duration.nowTicks
+    expired := Str[,]
+    sessions.each |session|
+    {
+      if (now - session.lastAccess > expirationPeriod.ticks)
+        expired.add(session.id)
+    }
+    expired.each |id| { sessions.remove(id) }
+    sendLater(houseKeepingPeriod, Msg("houseKeeping"))
+    return null
+  }
+
+  private Map onLoad(Str:MemStoreSession sessions, Msg msg)
+  {
+    sessions[msg.id]?.map ?: emptyMap
+  }
+
+  private Obj? onSave(Str:MemStoreSession sessions, Msg msg)
+  {
+    session := sessions[msg.id]
+    if (session == null) sessions[msg.id] = session = MemStoreSession(msg.id)
+    session.map = msg.map
+    session.lastAccess = Duration.nowTicks
+    return null
+  }
+
+  private Obj? onDelete(Str:MemStoreSession sessions, Msg msg)
+  {
+    sessions.remove(msg.id)
+    return null
+  }
+
   const Duration houseKeepingPeriod := 1min
-  const Duration timeout := 15sec
   const Duration expirationPeriod := 24hr
+  const Duration timeout := 15sec
+  const Str:Obj? emptyMap := [:]
+}
+
+internal const class Msg
+{
+  new make(Str c, Str? i := null, Map? m := null) { cmd = c; id = i; map = m }
+  const Str cmd
+  const Str? id
+  const Map? map
+}
+
+internal class MemStoreSession
+{
+  new make(Str id) { this.id = id }
+  const Str id
+  Map? map
+  Int lastAccess
 }
 

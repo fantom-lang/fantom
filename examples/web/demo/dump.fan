@@ -34,10 +34,10 @@ const class DumpMod : WebMod
     res.out.printLine("headers:")
     req.headers.each |Str v, Str k| { res.out.printLine("  $k: $v") }
     res.out.printLine("session:    $req.session.id")
-    req.session.map.each |Obj? v, Str k| { res.out.printLine("  $k: $v") }
+    req.session.each |Obj? v, Str k| { res.out.printLine("  $k: $v") }
     res.out.printLine("</pre>")
 
-    s["testcounter"] = (Int)s.map.get("testcounter", 0) + 1
+    s["testcounter"] = (Int)s.get("testcounter", 0) + 1
     s["foobar"] = "hi there"
   }
 }
