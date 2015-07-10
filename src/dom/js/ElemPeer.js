@@ -202,6 +202,31 @@ fan.dom.ElemPeer.prototype.size$ = function(self, val)
   this.elem.style.height = val.m_h + "px";
 }
 
+fan.dom.ElemPeer.prototype.scrollPos = function(self)
+{
+  var x = this.elem.scrollLeft;
+  var y = this.elem.scrollTop;
+  if (!this.m_scrollPos || this.m_scrollPos.m_x != x || this.m_scrollPos.m_y != y)
+    this.m_scrollPos = fan.gfx.Point.make(x, y);
+  return this.m_scrollPos;
+}
+
+fan.dom.ElemPeer.prototype.scrollPos$ = function(self, val)
+{
+  this.m_scrollPos = fan.gfx.Point.make(val.m_x, val.m_y);
+  this.elem.scrollLeft = val.m_x;
+  this.elem.scrollTop  = val.m_y;
+}
+
+fan.dom.ElemPeer.prototype.scrollSize = function(self)
+{
+  var w = this.elem.scrollWidth;
+  var h = this.elem.scrollHeight;
+  if (!this.m_scrollSize || this.m_scrollSize.m_w != w || this.m_size.m_h != h)
+    this.m_scrollSize = fan.gfx.Size.make(w, h);
+  return this.m_scrollSize;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Tree
 //////////////////////////////////////////////////////////////////////////

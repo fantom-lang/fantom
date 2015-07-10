@@ -126,6 +126,12 @@ class Elem
     set { pos = it.pos; size = it.size }
   }
 
+  ** Top left scroll position of element.
+  native Point scrollPos
+
+  ** Scrollable size of element.
+  native Size scrollSize()
+
 //////////////////////////////////////////////////////////////////////////
 // Tree
 //////////////////////////////////////////////////////////////////////////
