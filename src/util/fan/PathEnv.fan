@@ -20,6 +20,7 @@ const class PathEnv : Env
   new make() : super(Env.cur)
   {
     this.path = parsePath(vars["FAN_ENV_PATH"] ?: "")
+    this.vars = super.vars
     this.workDir = path.first
     this.tempDir = workDir + `temp/`
   }
@@ -30,7 +31,16 @@ const class PathEnv : Env
   **
   @NoDoc new makeProps(File file) : super.make(Env.cur)
   {
-    this.path = parsePath(file.readProps["path"] ?: "").insert(0, file.parent.normalize)
+    props := file.readProps
+
+    vars := super.vars.rw
+    props.each |v, n|
+    {
+      if (n.startsWith("env.") && n.size > 5) vars[n[4..-1]] = v
+    }
+
+    this.path = parsePath(props["path"] ?: "").insert(0, file.parent.normalize)
+    this.vars = vars
     this.workDir = path.first
     this.tempDir = workDir + `temp/`
   }
@@ -70,6 +80,16 @@ const class PathEnv : Env
   ** Temp directory is always under `workDir`.
   **
   override const File tempDir
+
+  **
+  ** Get the environment variables as a case insensitive, immutable
+  ** map of Str name/value pairs.  The environment map is initialized
+  ** from the following sources from lowest priority to highest priority:
+  **   1. shell environment variables
+  **   2. Java system properties (Java VM only obviously)
+  **   3. props in "fan.props" prefixed with "env."
+  **
+  override const Str:Str vars
 
   **
   ** Search `path` for given file.
