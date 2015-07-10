@@ -453,8 +453,9 @@ public class Pod
     // create a hollow Type for each FType (this requires two steps,
     // because we don't necessary have all the Types created for
     // superclasses until this loop completes)
-    types = new ClassType[fpod.types.length];
-    for (int i=0; i<fpod.types.length; ++i)
+    int numTypes = fpod.types == null ? 0 : fpod.types.length;
+    types = new ClassType[numTypes];
+    for (int i=0; i<numTypes; ++i)
     {
       // create type instance
       ClassType type = new ClassType(this, fpod.types[i]);
@@ -474,7 +475,7 @@ public class Pod
     // now that everthing is mapped, we can fill in the super
     // class fields (unless something is wacked, this will only
     // use Types in my pod or in pods already loaded)
-    for (int i=0; i<fpod.types.length; ++i)
+    for (int i=0; i<numTypes; ++i)
     {
       FType ftype = fpod.types[i];
       ClassType type = types[i];

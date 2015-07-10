@@ -19,8 +19,8 @@ const class PathEnv : Env
   **
   new make() : super(Env.cur)
   {
-    this.path = parsePath(vars["FAN_ENV_PATH"] ?: "")
     this.vars = super.vars
+    this.path = parsePath(super.vars["FAN_ENV_PATH"] ?: "")
     this.workDir = path.first
     this.tempDir = workDir + `temp/`
   }
@@ -39,8 +39,8 @@ const class PathEnv : Env
       if (n.startsWith("env.") && n.size > 5) vars[n[4..-1]] = v
     }
 
-    this.path = parsePath(props["path"] ?: "").insert(0, file.parent.normalize)
     this.vars = vars
+    this.path = parsePath(props["path"] ?: "").insert(0, file.parent.normalize)
     this.workDir = path.first
     this.tempDir = workDir + `temp/`
   }
