@@ -621,16 +621,19 @@ public class InStream
       boolean inEndOfLineComment = false;
       int c =  ' ', last = ' ';
       int lineNum = 1;
+      int colNum = 0;
 
       while (true)
       {
         last = c;
         c = rChar();
+        ++colNum;
         if (c < 0) break;
 
         // end of line
         if (c == '\n' || c == '\r')
         {
+          colNum = 0;
           inEndOfLineComment = false;
           if (last == '\r' && c == '\n') continue;
           String n = FanStr.makeTrim(name);
@@ -665,7 +668,7 @@ public class InStream
         }
 
         // line comment
-        if (c == '#' && (last == '\n' || last == '\r'))
+        if (c == '#' && colNum == 1) 
         {
           inEndOfLineComment = true;
           continue;

@@ -941,6 +941,15 @@ class StreamTest : Test
     verifyErr(IOErr#) { "novalue\na=b".in.readProps }
   }
 
+  Void testTicket2436()
+  {
+    verify("#".in.readProps.isEmpty)
+    verify("#\n".in.readProps.isEmpty)
+    verify("#\r".in.readProps.isEmpty)
+    verify("#\r\n".in.readProps.isEmpty)
+    verify("#oops".in.readProps.isEmpty)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Pipe
 //////////////////////////////////////////////////////////////////////////
