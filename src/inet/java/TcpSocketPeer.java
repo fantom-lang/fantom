@@ -24,7 +24,7 @@ public class TcpSocketPeer
     return new TcpSocketPeer(new Socket());
   }
 
-  public static TcpSocket makeSsl(TcpSocket upgrade)
+  public static TcpSocket makeTls(TcpSocket upgrade)
   {
     try
     {
