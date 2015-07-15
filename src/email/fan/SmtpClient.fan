@@ -44,7 +44,9 @@ class SmtpClient
   Str? password
 
   **
-  ** Use SSL for connection (ensure port is configured properly)
+  ** Open connection using SSL/TLS (ensure port is configured properly).
+  ** If false then the connection is opened plaintext, but may still be
+  ** upgraded to TLS if server specifies STARTTLS.
   **
   Bool ssl
 
@@ -72,7 +74,7 @@ class SmtpClient
     if (host == null) throw NullErr("host is null")
 
     // open the socket connection
-    sock = ssl ? TcpSocket.makeSsl : TcpSocket.make
+    sock = ssl ? TcpSocket.makeTls : TcpSocket.make
     sock.connect(IpAddr(host), port)
     try
     {
@@ -96,7 +98,7 @@ class SmtpClient
         if (res.code != 220) throw SmtpErr.makeRes(res)
 
         // upgrade the socket to SSL/TLS
-        sock = TcpSocket.makeSsl(sock)
+        sock = TcpSocket.makeTls(sock)
 
         // redo EHLO and SMTP handshake
         writeReq("EHLO [$IpAddr.local.numeric]")

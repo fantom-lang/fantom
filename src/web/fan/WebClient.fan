@@ -399,7 +399,7 @@ class WebClient
       else
       {
         // make https or http socket
-        socket = isHttps ? TcpSocket.makeSsl: TcpSocket.make
+        socket = isHttps ? TcpSocket.makeTls : TcpSocket.make
         socket.options.copyFrom(socketOptions)
 
         // connect to proxy or directly to request host
@@ -448,7 +448,7 @@ class WebClient
     if (resCode != 200) throw IOErr("Could not open tunnel: bad HTTP response $resCode $resPhrase")
 
     // upgrade to SSL socket now
-    return TcpSocket.makeSsl(socket)
+    return TcpSocket.makeTls(socket)
   }
 
   **
