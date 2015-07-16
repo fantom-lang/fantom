@@ -33,7 +33,7 @@ class TcpListener
   ** The password is used both to open the keystore, and to extract the private key.
   **
   @NoDoc
-  native static TcpListener makeTls(Uri? keystore := null, Str pass := "changeit")
+  native static TcpListener makeTls(Uri? keystore := null, Str? pass := null)
 
 //////////////////////////////////////////////////////////////////////////
 // State
