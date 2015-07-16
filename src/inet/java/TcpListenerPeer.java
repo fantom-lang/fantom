@@ -34,11 +34,13 @@ public class TcpListenerPeer
   }
 
   public static TcpListener makeTls() { return makeTls(null); }
-  public static TcpListener makeTls(Uri keystore) { return makeTls(keystore, "changeit"); }
+  public static TcpListener makeTls(Uri keystore) { return makeTls(keystore, null); }
   public static TcpListener makeTls(Uri keystore, String pass)
   {
     if (keystore == null)
       keystore = Env.cur().workDir().plus(Uri.fromStr("etc/inet/keystore.p12")).uri();
+    if (pass == null)
+     pass = "changeit";
     try
     {
       TcpListener self = TcpListener.make();
