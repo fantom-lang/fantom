@@ -32,7 +32,7 @@ const class WispService : Service
   const IpAddr? addr := null
 
   @NoDoc @Deprecated { msg = "Use httpPort" }
-  const Int? port := null
+  const Int port := 0
 
   **
   ** Well known TCP port for HTTP traffic.
@@ -113,7 +113,7 @@ const class WispService : Service
   {
     if (f != null) f(this)
 
-    if (httpPort == null && port != null) httpPort = port
+    if (httpPort == null && port > 0) httpPort = port
     if (httpPort == httpsPort) throw ArgErr("httpPort '${httpPort}' cannot be the same as httpsPort '${httpsPort}'")
     if (httpPort != null && httpsPort != null) root = WispTlsRedirectMod(this, root)
 
