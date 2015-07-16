@@ -25,7 +25,7 @@ internal class Main : AbstractMain
     runServices([WispService
     {
       it.addr = this.addr == null ? null : IpAddr(this.addr)
-      it.port = this.port
+      it.httpPort = this.port
       it.root = Type.find(this.mod).make
     }])
   }

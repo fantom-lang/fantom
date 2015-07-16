@@ -31,10 +31,19 @@ const class WispService : Service
   **
   const IpAddr? addr := null
 
+  @NoDoc @Deprecated { msg = "Use httpPort" }
+  const Int? port := null
+
   **
   ** Well known TCP port for HTTP traffic.
   **
-  const Int port := 80
+  const Int? httpPort := null
+
+  **
+  ** Well known TCP port for HTTPS traffic. If the http and https ports
+  ** are both non-null, then all http traffic will redirect to https.
+  **
+  const Int? httpsPort := null
 
   **
   ** Root WebMod used to service requests.
@@ -103,15 +112,24 @@ const class WispService : Service
   new make(|This|? f := null)
   {
     if (f != null) f(this)
-    listenerPool   = ActorPool { it.name = "WispServiceListener" }
-    tcpListenerRef = AtomicRef()
-    processorPool  = ActorPool { it.name = "WispService"; it.maxThreads = this.maxThreads }
+
+    if (httpPort == null && port != null) httpPort = port
+    if (httpPort == httpsPort) throw ArgErr("httpPort '${httpPort}' cannot be the same as httpsPort '${httpsPort}'")
+    if (httpPort != null && httpsPort != null) root = WispTlsRedirectMod(this, root)
+
+    listenerPool     = ActorPool { it.name = "WispServiceListener" }
+    httpListenerRef  = AtomicRef()
+    httpsListenerRef = AtomicRef()
+    processorPool    = ActorPool { it.name = "WispService"; it.maxThreads = this.maxThreads }
   }
 
   override Void onStart()
   {
     if (listenerPool.isStopped) throw Err("WispService is already stopped, use to new instance to restart")
-    Actor(listenerPool, |->| { listen }).send(null)
+    if (httpPort != null)
+      Actor(listenerPool, |->| { listen(makeListener, httpPort) }).send(null)
+    if (httpsPort != null)
+      Actor(listenerPool, |->| { listen(makeListener(true), httpsPort) }).send(null)
     sessionStore.onStart
     root.onStart
   }
@@ -120,23 +138,20 @@ const class WispService : Service
   {
     try root.onStop;         catch (Err e) log.err("WispService stop root WebMod", e)
     try listenerPool.stop;   catch (Err e) log.err("WispService stop listener pool", e)
-    try closeTcpListener;    catch (Err e) log.err("WispService stop listener socket", e)
+    try closeListener(httpListenerRef);  catch (Err e) log.err("WispService stop http listener socket", e)
+    try closeListener(httpsListenerRef); catch (Err e) log.err("WispService stop https listener socket", e)
     try processorPool.stop;  catch (Err e) log.err("WispService stop processor pool", e)
     try sessionStore.onStop; catch (Err e) log.err("WispService stop session store", e)
   }
 
-  private Void closeTcpListener()
+  private Void closeListener(AtomicRef listenerRef)
   {
-    Unsafe unsafe := tcpListenerRef.val
-    TcpListener listener := unsafe.val
-    listener.close
+    listenerRef.val?->val?->close
   }
 
-  internal Void listen()
+  internal Void listen(TcpListener listener, Int port)
   {
     // loop until we successfully bind to port
-    listener := TcpListener()
-    tcpListenerRef.val = Unsafe(listener)
     while (true)
     {
       try
@@ -146,11 +161,11 @@ const class WispService : Service
       }
       catch (Err e)
       {
-        log.err("WispService cannot bind to port ${port}", e)
+        log.err("WispService cannot bind to ${port}", e)
         Actor.sleep(10sec)
       }
     }
-    log.info("WispService started on port ${port}")
+    log.info("WispService started on ${port}")
 
     // loop until stopped accepting incoming TCP connections
     while (!listenerPool.isStopped && !listener.isClosed)
@@ -172,16 +187,38 @@ const class WispService : Service
 
     // socket should be closed by onStop, but do it again to be really sure
     try { listener.close } catch {}
-    log.info("WispService stopped on port ${port}")
+    log.info("WispService stopped on ${port}")
+  }
+
+  private TcpListener makeListener(Bool secure := false)
+  {
+    try
+    {
+      AtomicRef ref := httpListenerRef
+      TcpListener listener := TcpListener()
+      if (secure)
+      {
+        ref = httpsListenerRef
+        listener = TcpListener.makeTls
+      }
+      ref.val = Unsafe(listener)
+      return listener
+    }
+    catch (Err e)
+    {
+      log.err("Could not make listener", e)
+      throw e
+    }
   }
 
   internal const ActorPool listenerPool
-  internal const AtomicRef tcpListenerRef
+  internal const AtomicRef httpListenerRef
+  internal const AtomicRef httpsListenerRef
   internal const ActorPool processorPool
 
   @NoDoc static Void main()
   {
-    WispService { port = 8080 }.start
+    WispService { httpPort = 8080 }.start
     Actor.sleep(Duration.maxVal)
   }
 }
@@ -212,6 +249,35 @@ internal const class WispDefaultRootMod : WebMod
 }
 
 **************************************************************************
+** WispTlsRedirectMod
+**************************************************************************
+
+internal const class WispTlsRedirectMod : WebMod
+{
+  new make(WispService service, WebMod root)
+  {
+    this.service = service
+    this.root = root
+  }
+
+  override Void onService()
+  {
+    if (req.absUri.port == service.httpPort)
+    {
+      redirectUri := `https://${req.absUri.host}:${service.httpsPort}${req.uri}`
+      res.redirect(redirectUri)
+    }
+    else
+    {
+      root.onService
+    }
+  }
+
+  const WispService service
+  const WebMod root
+}
+
+**************************************************************************
 ** WispDefaultErrMod
 **************************************************************************
 
@@ -225,5 +291,3 @@ const class WispDefaultErrMod : WebMod
     res.out.print(str)
   }
 }
-
-
