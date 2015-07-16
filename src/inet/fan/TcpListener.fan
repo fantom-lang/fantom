@@ -22,6 +22,19 @@ class TcpListener
   **
   new make() {}
 
+  **
+  ** Make a new unbound TCP server socket that will be secured using TLS
+  ** when accepting connections.
+  **
+  ** If keystore is 'null', then 'etc/inet/keystore.p12' will be used as the
+  ** default. Otherwise, the keystore uri should resolve to a PKCS12 formatted
+  ** keystore.
+  **
+  ** The password is used both to open the keystore, and to extract the private key.
+  **
+  @NoDoc
+  native static TcpListener makeTls(Uri? keystore := null, Str pass := "changeit")
+
 //////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////
