@@ -9,6 +9,8 @@ package fan.inet;
 
 import java.io.*;
 import java.net.*;
+import java.security.*;
+import javax.net.ssl.*;
 import fan.sys.*;
 
 public class TcpListenerPeer
@@ -26,6 +28,24 @@ public class TcpListenerPeer
       return new TcpListenerPeer();
     }
     catch (IOException e)
+    {
+      throw IOErr.make(e);
+    }
+  }
+
+  public static TcpListener makeTls() { return makeTls(null); }
+  public static TcpListener makeTls(Uri keystore) { return makeTls(keystore, "changeit"); }
+  public static TcpListener makeTls(Uri keystore, String pass)
+  {
+    if (keystore == null)
+      keystore = Env.cur().workDir().plus(Uri.fromStr("etc/inet/keystore.p12")).uri();
+    try
+    {
+      TcpListener self = TcpListener.make();
+      self.peer.initTls(keystore, pass);
+      return self;
+    }
+    catch (Exception e)
     {
       throw IOErr.make(e);
     }
@@ -96,6 +116,7 @@ public class TcpListenerPeer
       TcpSocket s = TcpSocket.make();
       implAccept(s.peer.socket);
       s.peer.connected(s);
+      if (sslContext != null) s = upgradeTls(s);
       return s;
     }
     catch (IOException e)
@@ -115,6 +136,56 @@ public class TcpListenerPeer
     {
       return false;
     }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// TLS
+//////////////////////////////////////////////////////////////////////////
+
+  /** If non-null, then the the socket is upgraded to TLS in doAccept() */
+  private SSLContext sslContext = null;
+
+  private void initTls(final Uri keystore, final String pwd) throws Exception
+  {
+    // load keystore
+    final String path = keystore.toFile().osPath();
+    InputStream storeIn = new FileInputStream(path);
+    try
+    {
+      char[] passphrase = pwd.toCharArray();
+      KeyStore keys = KeyStore.getInstance("PKCS12");
+      keys.load(storeIn, passphrase);
+
+      KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+      kmf.init(keys, passphrase);
+
+      SSLContext sslContext = SSLContext.getInstance("TLS");
+      sslContext.init(kmf.getKeyManagers(), null, null);
+      this.sslContext = sslContext;
+    }
+    finally
+    {
+      storeIn.close();
+    }
+  }
+
+  private TcpSocket upgradeTls(TcpSocket s) throws IOException
+  {
+    SSLSocketFactory sf = sslContext.getSocketFactory();
+    InetSocketAddress remoteAddr = (InetSocketAddress)s.peer.socket.getRemoteSocketAddress();
+    SSLSocket sslSocket = (SSLSocket)sf.createSocket(
+      s.peer.socket,
+      remoteAddr.getHostName(),
+      s.peer.socket.getPort(),
+      false
+    );
+    sslSocket.setUseClientMode(false);
+    sslSocket.startHandshake();
+
+    TcpSocket upgraded = new TcpSocket();
+    upgraded.peer = new TcpSocketPeer(sslSocket);
+    upgraded.peer.connected(upgraded);
+    return upgraded;
   }
 
 //////////////////////////////////////////////////////////////////////////
