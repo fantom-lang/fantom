@@ -56,7 +56,7 @@ class Boot : AbstractMain
     }
 
     // run WispService
-    return runServices([ WispService { it.port = this.port; root = pipeline } ])
+    return runServices([ WispService { it.httpPort = this.port; root = pipeline } ])
   }
 }
 
@@ -84,4 +84,3 @@ const class ScriptMod : WebMod
     }
   }
 }
-

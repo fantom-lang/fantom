@@ -23,7 +23,7 @@ class JsDemo : AbstractMain
   {
     wisp := WispService
     {
-      it.port = this.port
+      it.httpPort = this.port
       it.root = JsDemoMod(homeDir)
     }
     return runServices([wisp])
@@ -156,4 +156,3 @@ class ShowScript : Weblet
   Compiler? compiler
   Str? js
 }
-

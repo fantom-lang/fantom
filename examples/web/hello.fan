@@ -23,7 +23,7 @@ class WebHello : AbstractMain
   {
     wisp := WispService
     {
-      it.port = this.port
+      it.httpPort = this.port
       it.root = HelloMod()
     }
     return runServices([wisp])
