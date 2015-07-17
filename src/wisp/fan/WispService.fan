@@ -11,12 +11,12 @@ using web
 using inet
 
 **
-** Simple web server services HTTP requests on a configured port
-** to a top-level root WebMod.  A given instance of WispService can
-** be only be used through one start/stop lifecycle.
+** Simple web server services HTTP/HTTPS requests to a top-level root WebMod.
+** A given instance of WispService can be only be used through one
+** start/stop lifecycle.
 **
 ** Example:
-**   WispService { port = 8080; root = MyWebMod() }.start
+**   WispService { httpPort = 8080; root = MyWebMod() }.start
 **
 const class WispService : Service
 {
@@ -35,13 +35,15 @@ const class WispService : Service
   const Int port := 0
 
   **
-  ** Well known TCP port for HTTP traffic.
+  ** Well known TCP port for HTTP traffic. The port is enabled if non-null
+  ** and disabled if null.
   **
   const Int? httpPort := null
 
   **
-  ** Well known TCP port for HTTPS traffic. If the http and https ports
-  ** are both non-null, then all http traffic will redirect to https.
+  ** Well known TCP port for HTTPS traffic. The port is enabled if non-null
+  ** and disabled if null. If the http and https ports are both non-null
+  ** then all http traffic will be redirected to the https port.
   **
   const Int? httpsPort := null
 
@@ -114,8 +116,9 @@ const class WispService : Service
     if (f != null) f(this)
 
     if (httpPort == null && port > 0) httpPort = port
+    if (httpPort == null && httpsPort == null) throw ArgErr("httpPort and httpsPort are both null. At least one port must be configured.")
     if (httpPort == httpsPort) throw ArgErr("httpPort '${httpPort}' cannot be the same as httpsPort '${httpsPort}'")
-    if (httpPort != null && httpsPort != null) root = WispTlsRedirectMod(this, root)
+    if (httpPort != null && httpsPort != null) root = WispHttpsRedirectMod(this, root)
 
     listenerPool     = ActorPool { it.name = "WispServiceListener" }
     httpListenerRef  = AtomicRef()
@@ -151,6 +154,7 @@ const class WispService : Service
 
   internal Void listen(TcpListener listener, Int port)
   {
+    portType := port == httpPort ? "http" : "https"
     // loop until we successfully bind to port
     while (true)
     {
@@ -161,11 +165,11 @@ const class WispService : Service
       }
       catch (Err e)
       {
-        log.err("WispService cannot bind to ${port}", e)
+        log.err("WispService cannot bind to ${portType} port ${port}", e)
         Actor.sleep(10sec)
       }
     }
-    log.info("WispService started on ${port}")
+    log.info("${portType} started on port ${port}")
 
     // loop until stopped accepting incoming TCP connections
     while (!listenerPool.isStopped && !listener.isClosed)
@@ -179,7 +183,7 @@ const class WispService : Service
       {
         if (!listenerPool.isStopped && !listener.isClosed)
         {
-          log.err("WispService accept on ${port}", e)
+          log.err("WispService accept on ${portType} port ${port}", e)
           Actor.sleep(5sec)
         }
       }
@@ -187,7 +191,7 @@ const class WispService : Service
 
     // socket should be closed by onStop, but do it again to be really sure
     try { listener.close } catch {}
-    log.info("WispService stopped on ${port}")
+    log.info("${portType} stopped on port ${port}")
   }
 
   private TcpListener makeListener(Bool secure := false)
@@ -249,10 +253,13 @@ internal const class WispDefaultRootMod : WebMod
 }
 
 **************************************************************************
-** WispTlsRedirectMod
+** WispHttpsRedirectMod
 **************************************************************************
 
-internal const class WispTlsRedirectMod : WebMod
+**
+** Redirects all http traffic to https
+**
+internal const class WispHttpsRedirectMod : WebMod
 {
   new make(WispService service, WebMod root)
   {
