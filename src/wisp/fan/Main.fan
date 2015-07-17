@@ -17,15 +17,22 @@ internal class Main : AbstractMain
   @Opt { help = "IP address to bind to" }
   Str? addr
 
-  @Opt { help = "http port" }
-  Int port := 8080
+  @Opt { help = "http port (Deprecated. Use -httpPort)" }
+  Int? port := null
+
+  @Opt { help = "IP port to bind for HTTP (default 8080)" }
+  Int? httpPort := null
+
+  @Opt { help = "IP port to bind for HTTPS (disabled unless set)" }
+  Int? httpsPort := null
 
   override Int run()
   {
     runServices([WispService
     {
       it.addr = this.addr == null ? null : IpAddr(this.addr)
-      it.httpPort = this.port
+      it.httpPort = this.httpPort ?: (this.port ?: 8080)
+      it.httpsPort = this.httpsPort
       it.root = Type.find(this.mod).make
     }])
   }
