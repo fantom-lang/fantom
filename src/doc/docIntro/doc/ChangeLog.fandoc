@@ -20,8 +20,10 @@
 - Win.hisReplaceState
 - JS compiler optimized closure call sites
 - JS source map support
+- HTTPS support for WispService
 - Rework WispSession to use immutable session maps
 - #2428: Actor deprecate support for serialized messages
+- #2436: Cannot parse .props file when first line is # comment
 
 *Build 1.0.67 (8 Jan 2015)*
 - Mark sys::Regex as serializable and add defVal
@@ -1319,4 +1321,3 @@
 - Compiler emits straight to Java bytecode or .NET IL
 - Basic expr compilation
 - Basic class, method support
-
