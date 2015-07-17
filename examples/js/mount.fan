@@ -32,7 +32,7 @@ class FwtMountDemo : AbstractMain
   {
     wisp := WispService
     {
-      it.port = this.port
+      it.httpPort = this.port
       it.root = FwtMountDemoMod(homeDir)
     }
     return runServices([wisp])
@@ -108,4 +108,3 @@ const class FwtMountDemoMod : WebMod
     return Compiler(input).compile.js
   }
 }
-
