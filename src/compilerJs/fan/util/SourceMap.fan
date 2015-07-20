@@ -65,7 +65,8 @@ class SourceMap
     files.vals.each |file, i|
     {
       if (i > 0) out.writeChars(",")
-      out.writeChars("\"${file.name}\"")
+      if (file == null) out.writeChars("null")
+      else out.writeChars("\"${file.name}\"")
     }
     out.writeChars("],\n")
   }
@@ -119,7 +120,7 @@ class SourceMap
 
   private JsCompilerSupport support
   private Compiler c
-  private [Str:File] files := [Str:File][:] { ordered = true }
+  private [Str:File?] files := [Str:File][:] { ordered = true }
   private MapField[] fields := [,]
 }
 
