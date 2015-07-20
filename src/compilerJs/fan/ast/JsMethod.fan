@@ -15,7 +15,6 @@ class JsMethod : JsSlot
 {
   new make(JsCompilerSupport s, MethodDef m) : super(s, m)
   {
-    this.def = m
     this.parentPeer = JsType.findPeer(s, m.parent)
     this.isInstanceCtor = m.isInstanceCtor
     this.isGetter   = m.isGetter
@@ -27,6 +26,8 @@ class JsMethod : JsSlot
     if (m.code != null) this.code = JsBlock(s, m.code)
   }
 
+  override MethodDef? node() { super.node }
+
   Bool isFieldAccessor() { isGetter || isSetter }
 
   override Void write(JsWriter out)
@@ -35,7 +36,7 @@ class JsMethod : JsSlot
     {
       // write static factory make method
       ctorParams := [JsMethodParam.makeSelf(support)].addAll(params)
-      out.w("${parent}.$name = function${sig(params)} {", def.loc).nl
+      out.w("${parent}.$name = function${sig(params)} {", loc).nl
          .indent
          .w("var self = new $parent();").nl
          .w("${parent}.$name\$${sig(ctorParams)};").nl
@@ -57,7 +58,6 @@ class JsMethod : JsSlot
     // skip abstract methods
     if (isAbstract) return
 
-    loc := def.loc
     out.w(parent, loc)
     if (!isStatic && !isInstanceCtor) out.w(".prototype")
     out.w(".$methName = function${sig(methParams)}", loc).nl
@@ -151,9 +151,9 @@ class JsMethodParam : JsNode
 {
   new make(JsCompilerSupport s, CParam p) : super(s)
   {
-    this.p = p
+    this.loc = p is Node ? ((Node)p).loc : null
     this.name = vnameToJs(p.name)
-    this.paramType = JsTypeRef(s, p.paramType, p is Node ? ((Node)p).loc : null)
+    this.paramType = JsTypeRef(s, p.paramType, this.loc)
     this.hasDef = p.hasDefault
     if (hasDef) this.defVal = JsExpr.makeFor(s, p->def)
   }
@@ -170,12 +170,9 @@ class JsMethodParam : JsNode
 
   override Void write(JsWriter out)
   {
-    out.w(name, loc)
+    out.w(name)
   }
 
-  Loc? loc() { p?->loc }
-
-  CParam? p             // compiler CParam
   Str name              // param name
   JsTypeRef? paramType  // param type
   Bool hasDef           // has default value

@@ -40,6 +40,8 @@ class JsType : JsNode
     }
   }
 
+  override TypeDef? node() { super.node }
+
   static JsTypeRef? findPeer(JsCompilerSupport cs, CType def)
   {
     CType? t := def
@@ -194,7 +196,6 @@ class JsTypeRef : JsNode
   Bool isList        // is type a sys::List
   Bool isMap         // is type a sys::Map
   Bool isFunc        // is type a sys::Func
-  Loc? loc           // compiler Loc
 
   JsTypeRef? k       // only valid for MapType
   JsTypeRef? v       // only valid for ListType, MapType

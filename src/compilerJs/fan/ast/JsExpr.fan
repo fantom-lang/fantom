@@ -13,9 +13,8 @@ using compiler
 **
 abstract class JsExpr : JsNode
 {
-  new make(JsCompilerSupport s, Expr? expr := null) : super(s)
+  new make(JsCompilerSupport s, Expr? expr := null) : super(s, expr)
   {
-    this.expr = expr
   }
 
   static JsExpr makeFor(JsCompilerSupport s, Expr expr)
@@ -77,10 +76,6 @@ abstract class JsExpr : JsNode
       default: throw s.err("Unknown ExprId: $expr.id", expr.loc)
     }
   }
-
-  Loc? loc() { expr?.loc }
-
-  Expr? expr
 }
 
 **************************************************************************

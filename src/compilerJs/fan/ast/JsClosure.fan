@@ -56,7 +56,7 @@ class JsPodClosures : JsNode
   {
     varToFunc.each |JsMethod func, Str var|
     {
-      loc := func.def.loc
+      loc := func.loc
       out.w("${var} = new fan.sys.ClosureFuncSpec\$(", loc)
 
       // return type
