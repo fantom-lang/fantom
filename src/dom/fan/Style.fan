@@ -20,6 +20,9 @@ class Style
   ** Clear all style declarations.
   native This clear()
 
+  ** Get the computed property value.
+  native Obj? computed(Str name)
+
   ** Get the given property value.
   **   color := style["color"]
   @Operator native Obj? get(Str name)

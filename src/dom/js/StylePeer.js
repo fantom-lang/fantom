@@ -15,6 +15,7 @@ fan.dom.StylePeer = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.dom.StylePeer.prototype.$ctor = function(self)
 {
   // set in ElemPeer.style
+  this.elem  = null;
   this.style = null;
 }
 
@@ -22,6 +23,12 @@ fan.dom.StylePeer.prototype.clear = function(self)
 {
   this.style.cssText = "";
   return self;
+}
+
+fan.dom.StylePeer.prototype.computed = function(self, name)
+{
+  if (!this.elem) return null;
+  return window.getComputedStyle(this.elem).getPropertyValue(name);
 }
 
 fan.dom.StylePeer.prototype.get = function(self, name)

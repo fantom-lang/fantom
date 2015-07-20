@@ -98,6 +98,7 @@ fan.dom.ElemPeer.prototype.style = function(self)
   if (this.$style == null)
   {
     this.$style = fan.dom.Style.make();
+    this.$style.peer.elem  = this.elem;
     this.$style.peer.style = this.elem.style;
   }
   return this.$style;
