@@ -19,10 +19,17 @@ abstract class JsNode
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(JsCompilerSupport support)
+  new make(JsCompilerSupport support, Node? node := null)
   {
     this.support = support
+    this.nodeRef = node
+    this.loc = node?.loc
   }
+
+  virtual Node? node() { nodeRef }
+  private Node? nodeRef
+
+  Loc? loc
 
 //////////////////////////////////////////////////////////////////////////
 // Write

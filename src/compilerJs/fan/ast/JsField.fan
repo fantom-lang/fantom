@@ -18,6 +18,8 @@ class JsField : JsSlot
     this.ftype = JsTypeRef(s, f.fieldType, f.loc)
   }
 
+  override FieldDef? node() { super.node }
+
   override Void write(JsWriter out)
   {
     if (!isNative)
@@ -34,9 +36,9 @@ class JsField : JsSlot
         }
       }
 
-      out.w(parent, def.loc)
+      out.w(parent, loc)
       if (!isStatic) out.w(".prototype")
-      out.w(".m_$name = $defVal;", def.loc).nl
+      out.w(".m_$name = $defVal;", loc).nl
     }
   }
 

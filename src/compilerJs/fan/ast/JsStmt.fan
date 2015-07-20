@@ -13,9 +13,8 @@ using compiler
 **
 abstract class JsStmt : JsNode
 {
-  new make(JsCompilerSupport s, Stmt? stmt := null) : super(s)
+  new make(JsCompilerSupport s, Stmt? stmt := null) : super(s, stmt)
   {
-    this.stmt = stmt
   }
 
   static JsStmt makeFor(JsCompilerSupport s, Stmt stmt)
@@ -37,10 +36,6 @@ abstract class JsStmt : JsNode
       default: throw s.err("Unknown StmtId: $stmt.id", stmt.loc)
     }
   }
-
-  Loc? loc() { stmt?.loc }
-
-  Stmt? stmt // compiler Stmt
 }
 
 **************************************************************************
