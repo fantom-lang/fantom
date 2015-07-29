@@ -207,10 +207,14 @@ class Bootstrap : AbstractMain
   Void runBuild(File envHome, Uri script, Str target, [Str:Str]? env := null)
   {
     // figure out which launcher to use
-    bin := (Env.cur.os) == "win32" ? `bin/fan.exe` : `bin/fan`
-
-    // buildboot using rel
-    cmd := [envHome.plus(bin).osPath, devHome.plus(script).osPath, target]
+	exec := envHome.plus(`bin/fan`).osPath
+	opts := [devHome.plus(script).osPath, target]
+	if (Env.cur.os == "win32")
+	{
+	  opts = ["/C", exec].addAll(opts)
+	  exec = "cmd.exe"
+	}
+	cmd := [exec].addAll(opts)
     echo("")
     echo(cmd.join(" "))
     p := Process(cmd)

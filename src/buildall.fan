@@ -47,6 +47,16 @@ class Build : BuildGroup
     return acc
   }
 
+  private static Str[] execCmd(File launcher, Str[] opts := [,])
+  {
+  	cmd := [launcher.osPath].addAll(opts)
+  	if (Env.cur.os == "win32")
+  	{
+  	  cmd = ["cmd.exe", "/C", launcher.osPath].addAll(opts)
+  	}
+  	return cmd
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Compile
 //////////////////////////////////////////////////////////////////////////
@@ -74,8 +84,8 @@ class Build : BuildGroup
   @Target { help = "Run 'test' on all pods" }
   Void test()
   {
-    fantExe := Exec.exePath(devHomeDir + `bin/fant`)
-    Exec.make(this, [fantExe, "-all"]).run
+    fantExe := devHomeDir + `bin/fant`
+    Exec.make(this, execCmd(fantExe, ["-all"])).run
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -97,8 +107,8 @@ class Build : BuildGroup
   @Target { help = "Build example HTML docs" }
   Void examples()
   {
-    fanExe := Exec.exePath(devHomeDir + `bin/fan`)
-    Exec.make(this, [fanExe, (scriptDir+`../examples/build.fan`).osPath]).run
+    fanExe := devHomeDir + `bin/fan`
+    Exec.make(this, execCmd(fanExe, [(scriptDir+`../examples/build.fan`).osPath])).run
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -238,8 +248,8 @@ class Build : BuildGroup
 
   private Exec makeSpawnExec(Uri script, Str target)
   {
-    fanExe := Exec.exePath(devHomeDir + `bin/fan`)
-    return Exec.make(this, [fanExe, (scriptDir + script).osPath, target])
+    fanExe := devHomeDir + `bin/fan`
+    return Exec.make(this, execCmd(fanExe, [(scriptDir + script).osPath, target]))
   }
 
   BuildPod[] allBuildPodScripts(BuildScript[] children := this.children)
