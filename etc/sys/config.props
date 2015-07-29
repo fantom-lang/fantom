@@ -50,24 +50,3 @@ errTraceMaxDepth=25
 // Set this property to pass additional command line options to the Java VM.
 // The options should be listed together separated with a space.
 java.options=-Xmx512M
-
-//////////////////////////////////////////////////////////////////////////
-// Bootstrap Build
-//////////////////////////////////////////////////////////////////////////
-
-// we substitute the runtime used for these build scripts
-// which are used to boot build the core pods needed to
-// build the rest of the system - we assume that a previous
-// stable "released" version of fan is installed at /dev/rel/
-// used only for Windows launcher, Unix uses fansubstitute script
-runtime.substitutes=                                     \
-  /E:/fan/src/buildall.fan           = E:\\rel  \
-  /E:/fan/src/buildboot.fan          = E:\\rel  \
-  /E:/fan/src/sys/build.fan          = E:\\rel  \
-  /E:/fan/src/sys/java/build.fan     = E:\\rel  \
-  /E:/fan/src/sys/js/build.fan       = E:\\rel  \
-  /E:/fan/src/sys/dotnet/build.fan   = E:\\rel  \
-  /E:/fan/src/compiler/build.fan     = E:\\rel  \
-  /E:/fan/src/compilerJava/build.fan = E:\\rel  \
-  /E:/fan/src/build/build.fan        = E:\\rel
-
