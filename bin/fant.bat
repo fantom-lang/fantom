@@ -9,5 +9,4 @@ REM
 REM fant: unit tester
 REM
 
-set LAUNCHER=%~dp0%fanlaunch.bat
-call %LAUNCHER% Fant %*
+call %~dp0\fanlaunch.bat Fant %*

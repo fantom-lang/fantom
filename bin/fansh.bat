@@ -9,5 +9,4 @@ REM
 REM fansh: interactive shell
 REM
 
-set LAUNCHER=%~dp0%fanlaunch.bat
-call %LAUNCHER% Fan fansh %*
+call %~dp0\fanlaunch.bat Fan fansh %*

@@ -9,5 +9,4 @@ REM
 REM flux: Fantom Developer UI
 REM
 
-set LAUNCHER=%~dp0%fanlaunch.bat
-call %LAUNCHER% Fan flux %*
+call %~dp0\fanlaunch.bat Fan flux %*
