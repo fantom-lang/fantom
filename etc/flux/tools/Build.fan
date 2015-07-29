@@ -73,7 +73,7 @@ class Build : FluxCommand
     f := buildFile.parent
     while (f.path.size > 0)
     {
-      binDir := f + `bin/fan.exe`
+      binDir := f + `bin/fan.bat`
       if (binDir.exists) { fanHome = f; return true }
       f = f.parent
     }
@@ -106,9 +106,15 @@ class Build : FluxCommand
   **
   Void exec()
   {
-    fan := fanHome + (Desktop.isWindows ? `bin/fan.exe` : `bin/fan`)
-    cmd := [fan.osPath, buildFile.osPath]
-    frame.console.show.exec(cmd)
+    fan  := (fanHome + `bin/fan`).osPath
+  	cmd  := fan
+  	opts := [buildFile.osPath]
+  	if (Desktop.isWindows)
+  	{
+  		cmd = "cmd.exe"
+  		opts = ["/C", fan, buildFile.osPath]
+  	}
+    frame.console.show.exec([cmd].addAll(opts))
   }
 
   static const Str[] corePods := ["sys", "jfan", "nfan",
