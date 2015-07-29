@@ -187,9 +187,15 @@ class EnvTest : Test
   Void run(Str target)
   {
     isWindows := Env.cur.os == "win32"
-    exeExt := isWindows ? ".exe" : ""
-    fan := "fan" + exeExt
-    p := Process([fan, target])
+    cmd := "fan"
+  	opts := [target]
+  	if (isWindows)
+  	{
+  	  cmd = "cmd.exe"
+  	  fan := (Env.cur.homeDir + `bin/fan`).osPath
+  	  opts = ["/C", fan, target]
+  	}
+    p := Process([cmd].addAll(opts)) 
     p.env["FAN_ENV"]      = "util::PathEnv"
     p.env["FAN_ENV_PATH"] = workHome.uri.relToAuth.toStr
     status := p.run.join
