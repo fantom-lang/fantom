@@ -9,5 +9,4 @@ REM
 REM fanp: fcode disassembler
 REM
 
-set LAUNCHER=%~dp0%fanlaunch.bat
-call %LAUNCHER% Fan "compiler::Fanp" %*
+call %~dp0\fanlaunch.bat Fan "compiler::Fanp" %*

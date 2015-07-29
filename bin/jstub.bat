@@ -9,5 +9,4 @@ REM
 REM jstub: launcher for JStub program
 REM
 
-set LAUNCHER=%~dp0%fanlaunch.bat
-call %LAUNCHER% Jstub %*
+call %~dp0\fanlaunch.bat Jstub %*
