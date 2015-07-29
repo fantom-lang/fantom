@@ -39,9 +39,16 @@ as a Unix shell script:
 
 Windows Setup [#windows]
 ************************
-The Fantom distribution includes a set of Win32 executables which
-allow you to configure which version of Java or .NET is being
-used via "etc/sys/config.props".
+The Fantom distribution is packaged as a zip file. Once unzipped, you should add
+the "bin" directory to your path:
+
+  PATH=%PATH%;C:\dev\fan\bin
+
+The Fantom launchers are implemented as a set of Windows Batch scripts
+which all route to common code in "bin\fanlaunch.bat". If your path is configured
+properly, you should be able to run
+
+  fan -version
 
 Executable Scripts [#executableWindows]
 =======================================
@@ -56,60 +63,22 @@ The following series of console commands will make ".fan" files
 executable assuming we installed to "c:\dev\fan":
 
   assoc .fan=Fan
-  ftype Fan=c:\dev\fan\bin\fan.exe "%1" %*
+  ftype Fan=cmd.exe /c call "C:\dev\fan\bin\fan.bat" "%1" %*
   set pathext=%pathext%;.fan
-
-Selecting Java or .NET Runtime [#runtime]
-=========================================
-Fantom is designed to be run on either a Java VM or a .NET CLR.  You
-can test which runtime is being used via "fan -version":
-
-  C:\dev\fan>fan -version
-  Fantom Launcher
-  Copyright (c) 2006-2013, Brian Frank and Andy Frank
-  Licensed under the Academic Free License version 3.0
-
-  Java Runtime:
-    java.version:    1.7.0_02
-    java.vm.name:    Java HotSpot(TM) Client VM
-    java.vm.vendor:  Oracle Corporation
-    java.vm.version: 22.0-b10
-    java.home:       C:\Program Files (x86)\Java\jre7
-    fan.platform:    win32-x86
-    fan.version:     1.0.62
-    fan.env:         sys::BootEnv
-    fan.home:        E:\fan
-
-Use "etc/sys/config.props" to configure which runtime is used by default.
-The value must be "java" or "dotnet":
-
-  // runtime - either "java" or "dotnet"
-  runtime=java
-
-You can override the system property using the "--D" option:
-
-  C:\dev\fan>fan -version --Druntime=dotnet
-
-You can also override the system property via the "fan_runtime"
-environmental variable:
-
-  C:\dev\fan>set fan_runtime=dotnet
-  C:\dev\fan>fan -version
-
-The runtime option is only available on Windows.
 
 Java Runtime [#javaRuntime]
 ===========================
-If running on Windows, the Fantom launcher will attempt to locate the current
-Java VM via the registry key "SOFTWARE\\JavaSoft\\Java Runtime Environment.CurrentVersion"
-similar to how "java.exe" works.  You can specify the path to the "jvm.dll"
-to use explicitly via the "java.jvm" system property.  You can use
-"java.options" to pass through options to the JVM such as memory
-settings.
+The launcher for Windows and Unix determines which java to use in the following order:
+
+1. If the 'FAN_JAVA' environment variable is set, then we assume it points to the
+"java.exe" to run.
+2. If the 'JAVA_HOME' environment variable is set, then we use "${JAVA_HOME}/bin/java"
+3. Otherwise, we fallback to the system "java"
+
+You can configure the JVM options by editing "etc/sys/config.props" and setting the
+"java.options" property. This is useful for modifying memory settings for the JVM.
 
   // etc/sys/config.props
-  runtime=java
-  java.jvm=c:\\dev\\tools\\java\\jre\\bin\\client\\jvm.dll
   java.options=-Xmx128M
 
 Fantom currently requires Java version 1.5 or greater to run.
@@ -129,14 +98,6 @@ is set or the "fan.home" Java system property is set:
 Each of the tools maps to a different class, for example to run 'fant' then run
 the Java class 'fanx.tools.Fant'.
 
-.NET Runtime [#dotnetRuntime]
-=============================
-The Fantom launcher will attempt to use the latest version of .NET installed.
-
-Fantom currently requires .NET version 2.0 or greater.
-
-TODO: Support manually specifying version, running without launcher
-
 Substitutes [#substitutes]
 ==========================
 Another feature of the launcher executables is the ability to map
@@ -145,21 +106,35 @@ is used to manage the [bootstrap build]`Bootstrap#substitutes` process.
 
 Launcher Debugger [#debugging]
 ==============================
-You can set the "fan_launcher_debug" to "true" to debug the launcher
-code.  This can be helpful if you are having problems getting your Java
-or .NET environment working:
+You can set the "FAN_LAUNCHER_DEBUG" environment variable to "true" to debug
+the launcher script. This can be helpful if you are having problems getting your
+Java environment working:
 
-  C:\dev\fan\src>set fan_launcher_debug=true
+  C:\Dev\fantom\fan> set FAN_LAUNCHER_DEBUG=true
 
-  C:\dev\fan\src>fan -version
-  -- launcher version 1.0 3-Jan-07
-  --   args[0] = "fan"
-  --   args[1] = "-version"
-  -- init
-  --   fanHome = c:\dev\fan
-  --   config.props:
-  --     runtime=java
-  ...
+  C:\Dev\fantom\fan> fan -version
+  -- LAUNCHER DEBUG ON
+  -- Launcher Args: Fan -version
+  -- FAN_HOME: C:\Dev\fantom\fan
+  -- Java: java
+  -- Fantom classpath: "C:\Dev\fantom\fan\lib\java\sys.jar";"C:\Dev\fantom\fan\lib\java\jline.jar"
+  -- Java Options: -Xmx512M
+  -- Fantom Tool: Fan
+  -- Tool Args:  -version
+  Fantom Launcher
+  Copyright (c) 2006-2013, Brian Frank and Andy Frank
+  Licensed under the Academic Free License version 3.0
+
+  Java Runtime:
+    java.version:    1.8.0_51
+    java.vm.name:    Java HotSpot(TM) 64-Bit Server VM
+    java.vm.vendor:  Oracle Corporation
+    java.vm.version: 25.51-b03
+    java.home:       C:\Program Files\Java\jre1.8.0_51
+    fan.platform:    win32-x86_64
+    fan.version:     1.0.67
+    fan.env:         sys::BootEnv
+    fan.home:        C:\Dev\fantom\fan
 
 Java Extensions [#javaExt]
 **************************
@@ -207,5 +182,3 @@ The default behavior of Fantom is to manage all its files under the
 installation directory.  But you can boot Fantom using alternative
 environments to customize how your deployment is structured.
 See `docLang::Env` for details.
-
-

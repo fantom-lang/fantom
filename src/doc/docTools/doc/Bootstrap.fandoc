@@ -58,10 +58,6 @@ This script will perform a number of steps:
   3. Configures your etc files
   4. Rebuilds your devHome environment from scratch
 
-NOTE: the bootstrap script does *not* update your [substitutes]`#substitutes`.
-You must still do that by hand if you plan on rebuilding individual bootstrap
-pods yourself.
-
 The rest of this chapter covers all the internal details required to
 fully understand bootstrap building.
 
@@ -91,68 +87,31 @@ On a clean machine with only source code, we don't have any pods compiled
 such as 'sys', 'build', or 'compiler'.  In order to run the build scripts
 to compile these pods, we need to use our *rel* installation.
 
-Windows Substitutes [#subsWindows]
-==================================
-To make this all work seamlessly on Windows, the Fantom launcher will
-look in "etc/sys/config.props" to see if a substitute runtime should be used.
-For example in our environment we map the following scripts to
-use the *rel* installation.
-
-  // etc/sys/config.props of your *dev* directory
-  runtime.substitutes=                                 \
-    /C:/dev/fan/src/buildall.fan       = C:\\dev\\rel  \
-    /C:/dev/fan/src/buildboot.fan      = C:\\dev\\rel  \
-    /C:/dev/fan/src/jfan/build.fan     = C:\\dev\\rel  \
-    /C:/dev/fan/src/sys/build.fan      = C:\\dev\\rel  \
-    /C:/dev/fan/src/compiler/build.fan = C:\\dev\\rel  \
-    /C:/dev/fan/src/build/build.fan    = C:\\dev\\rel
-
-The launcher will check if any script being run matches one of those
-files.  If a match is made, then it will route to the alternate
-runtime specified.  Turn on [launcher debugging]`Setup#debugging`
-to see exactly what is happening under the covers.
-
-Note that the extension used to run the build scripts needs to
-match the substitutes defined in the "config.props".  If you set
-your 'pathext' to include ".fan", then Windows will pass the extension
-into the launcher.  If you are running an alternate way you might
-need to explicitly specify the extension on your command line or
-change the extensions defined in "config.props".
-
-Unix Substitutes [#subsUnix]
-============================
-Unix substitution is implemented by the bootstrap build scripts
-using the following shebang:
+All bootstrap build scripts should have the following unix shebang line as the
+first line in the script. This should be done even if you are only building on Windows.
 
   #! /usr/bin/env fansubstitute
 
-The fansubstitute script explictly sets FAN_HOME to the value
-of the FAN_SUBSTITUTE variable before launching.  So you will
-need to export FAN_SUBSTITUTE to reference your *rel* installation.
-And of course you have to run your scripts as executables so
-that the shebang takes effect.
+On Unix, the fansubstitute script explicitly sets FAN_HOME to the value
+of the FAN_SUBSTITUTE variable before launching.  On Windows, the launcher
+script looks for this line in the build script you are about to run. If found, it
+sets FAN_HOME to the value of the FAN_SUBSTITUTE before launching.
+So, in either case, you will need to export FAN_SUBSTITUTE to reference your *rel* installation.
+And of course you have to run your scripts as executables so that the shebang takes effect.
 
-Also note that building on Unix will skip any .NET targets.
-
-JDK and .NET Tools [#otherTools]
+JDK [#otherTools]
 ********************************
 You need JDK 1.6 or greater to compile from source (only 1.5 is required
 for the Java runtime).
 
-Version 2.0 or greater of .NET is required.
-
 In order to compile from source you will need to setup some config
-properties to reference your JDK and .NET home directories:
+properties to reference your JDK home directory:
 
   jdkHome=/C:/dev/tools/java/
-  dotnetHome=/C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
 
-These paths should be formatted as file system Uris (not OS paths).
-These properties should be configured in "etc/build/config.props"
+This paths should be formatted as file system Uris (not OS paths).
+This property should be configured in "etc/build/config.props"
 of **both** your *rel* and *dev* environments.
-
-The .NET targets are automatically skipped if not running Windows.
-So you can ignore the .NET configuration on Unix platforms.
 
 Buildall [#buildall]
 ********************
@@ -210,19 +169,16 @@ Key things to note about your environment:
   2. bootbuild scripts should be using *rel* for fanHome
   3. non-bootbuild scripts like testSys should be using *dev* for fanHome
   4. verify javaHome for sys/javafan/build.fan
-  5. verify dotnetHome for sys/dotnet/build.fan (if running on Windows)
 
 Summary [#summary]
 ******************
 In summary, you want to make sure of a couple key things:
 
   1. setup your *rel* installation and never touch it (consider it readonly)
-  2. ensure jdkHome and dotnetHome are configured in both *rel*
+  2. ensure jdkHome is configured in both *rel*
      and *dev* etc/build/config.props
   3. ensure *rel* etc/build/config.props devHome points to your *dev* installation
-  4. make sure your substitutes are configured correctly:
-     a. on Unix make sure your FAN_SUBSTITUTE env points to the *rel* installation
-     b. on Windows make sure your *dev* etc/sys/config.props substitutes are configured
+  4. make sure the FAN_SUBSTITUTE environment variable points to the *rel* installation
   5. only put *dev* bin your path and always run your scripts from
      the *dev* installation
   6. never use a working repo for bootstrap (use only the boot repo)
