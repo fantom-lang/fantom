@@ -14,7 +14,7 @@ with the [fwt]`fwt::pod-doc` toolkit.  The standard Fantom distribution
 includes with a set of flux plugins which provide basic IDE support
 for Fantom.
 
-On Window's you launch flux with the "flux.exe" executable.  On
+On Window's you launch flux with the "flux.bat" script.  On
 Unix use the "flux" bash script.  Both of these are just conveniences
 for running "fan flux::Main".  You can pass an optional filename
 to open on startup:
