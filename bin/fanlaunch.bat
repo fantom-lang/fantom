@@ -10,38 +10,43 @@ REM fanlaunch: launcher for Fantom programs
 REM
 
 SETLOCAL
-set FAN_HOME=%~dp0%..
-set JAVA=java
-set FAN_JAVA_OPTS=
+SET FAN_HOME=%~dp0%..
+SET JAVA=java
+SET FAN_JAVA_OPTS=
+
+REM point FAN_HOME to rel if this is a buildscript that requires fansubstitute
+call :fansubstitute FAN_HOME %1 %2 || EXIT /B 1
 
 REM the first arg is the tool name, the rest are passed
 REM as arguments to the tool itself.
-set TOOL=%1
+SET TOOL=%1
 SHIFT
-set TOOL_ARGS=
+SET TOOL_ARGS=
 :argactionstart
-if -%1-==-- goto argactionend
-set TOOL_ARGS=%TOOL_ARGS% %1
-shift
-goto argactionstart
+IF -%1-==-- GOTO :argactionend
+SET TOOL_ARGS=%TOOL_ARGS% %1
+SHIFT
+GOTO :argactionstart
 :argactionend
 
 REM normalize path for fan home
 pushd "%FAN_HOME%"
-set FAN_HOME=%CD%
+SET FAN_HOME=%CD%
 popd
 
 call:getJava JAVA
 call:getProp FAN_JAVA_OPTS
-set FAN_CP="%FAN_HOME%\lib\java\sys.jar";"%FAN_HOME%\lib\java\jline.jar"
+SET FAN_CP="%FAN_HOME%\lib\java\sys.jar";"%FAN_HOME%\lib\java\jline.jar"
 
-REM echo %JAVA% %FAN_JAVA_OPTS% -cp %FAN_CP% "-Dfan.home=%FAN_HOME%" fanx.tools.%TOOL% %TOOL_ARGS%
+REM Uncomment the following line to debug the invocation of java
+REM ECHO %JAVA% %FAN_JAVA_OPTS% -cp %FAN_CP% "-Dfan.home=%FAN_HOME%" fanx.tools.%TOOL% %TOOL_ARGS%
 %JAVA% %FAN_JAVA_OPTS% -cp %FAN_CP% "-Dfan.home=%FAN_HOME%" fanx.tools.%TOOL% %TOOL_ARGS%
 ENDLOCAL
+EXIT /B 0
 
 :getJava
 SETLOCAL
-set JAVA=java
+SET JAVA=java
 IF "%FAN_JAVA%" == "" GOTO :USEJAVAHOME
 :USEFANJAVA
   SET JAVA="%FAN_JAVA%"
@@ -64,3 +69,27 @@ For /F "tokens=1* delims==" %%A IN (%FAN_HOME%\etc\sys\config.props) DO (
 	IF "%~1" NEQ "" SET %~1=%OPTIONS%
 )
 GOTO:EOF
+
+REM If the tool is Fan, and we are running against a file,
+REM then check the first line of the file to see if it has
+REM the unix "#! /usr/bin/env fansubstitute" shebang. If
+REM we detect this, then we reset FAN_HOME to the value of
+REM FAN_SUBSTITUTE environment variable.
+:fansubstitute
+SETLOCAL
+IF "%~2" NEQ "Fan" EXIT /B 0
+IF NOT EXIST %~3 EXIT /B 0
+SET /P HEAD=<%~dpnx3
+SET "SEARCH=%HEAD%"
+
+ECHO.%SEARCH%|findstr /C:"fansubstitute" >nul 2>&1
+IF ERRORLEVEL 1 EXIT /B 0
+	
+IF "%FAN_SUBSTITUTE%" == "" (
+	ECHO FAN_SUBSTITUTE environment variable must be set
+	EXIT /B 1
+)	
+(ENDLOCAL
+	IF "%~1" NEQ "" SET %~1=%FAN_SUBSTITUTE%
+)
+EXIT /B 0
