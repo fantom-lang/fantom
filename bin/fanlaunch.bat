@@ -9,6 +9,7 @@ REM
 REM fanlaunch: launcher for Fantom programs
 REM
 
+SETLOCAL
 set FAN_HOME=%~dp0%..
 set JAVA=java
 set FAN_JAVA_OPTS=
@@ -36,6 +37,7 @@ set FAN_CP="%FAN_HOME%\lib\java\sys.jar";"%FAN_HOME%\lib\java\jline.jar"
 
 REM echo %JAVA% %FAN_JAVA_OPTS% -cp %FAN_CP% "-Dfan.home=%FAN_HOME%" fanx.tools.%TOOL% %TOOL_ARGS%
 %JAVA% %FAN_JAVA_OPTS% -cp %FAN_CP% "-Dfan.home=%FAN_HOME%" fanx.tools.%TOOL% %TOOL_ARGS%
+ENDLOCAL
 
 :getJava
 SETLOCAL
@@ -46,7 +48,7 @@ IF "%FAN_JAVA%" == "" GOTO :USEJAVAHOME
   GOTO :ENDFANJAVA
 :USEJAVAHOME
 IF "%JAVA_HOME%" == "" GOTO :ENDFANJAVA
-  SET JAVA="%JAVA_HOME%"
+  SET JAVA="%JAVA_HOME%\bin\java.exe"
 :ENDFANJAVA
 (ENDLOCAL
 	IF "%~1" NEQ "" SET %~1=%JAVA%
