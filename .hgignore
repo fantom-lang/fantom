@@ -10,6 +10,13 @@ Thumbs.db
 # IntelliJ
 *.iml
 
+# Visual Studio
+.vs/
+bin/Debug/
+bin/Release/
+obj/Debug/
+obj/Release/
+
 # Specific directories and files
 syntax: regexp
 
