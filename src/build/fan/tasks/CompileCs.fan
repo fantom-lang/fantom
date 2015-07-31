@@ -66,7 +66,7 @@ class CompileCs : Task
       }
 
       // /r:<libs>
-      if (libs != null)
+      if (libs != null && !libs.isEmpty)
       {
         s := libs.join(";") |File f->Str| { return f.osPath }
         cmd.add("/r:$s")
