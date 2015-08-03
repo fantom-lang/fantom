@@ -188,12 +188,12 @@ class WebClient
       // save field
       &cookies = it
 
-      // set reqHeaders
+      // set reqHeaders (RFC 6265 § 4.2.1)
       if (it.isEmpty) { reqHeaders.remove("Cookie"); return }
       reqHeaders["Cookie"] =
         it.size == 1 ?
         it.first.toNameValStr :
-        it.join(",") |c| { c.toNameValStr }
+        it.join("; ") |c| { c.toNameValStr }
     }
   }
 

@@ -33,7 +33,7 @@ class WebClientTest : Test
     c.cookies = [a]
     verifyEq(c.reqHeaders["Cookie"], "alpha=blah")
     c.cookies = [a, b]
-    verifyEq(c.reqHeaders["Cookie"], "alpha=blah,beta=belch")
+    verifyEq(c.reqHeaders["Cookie"], "alpha=blah; beta=belch")
     c.cookies = [,]
     verifyEq(c.reqHeaders["Cookie"], null)
   }
