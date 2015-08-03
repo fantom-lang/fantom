@@ -6,6 +6,7 @@
 //   24 Dec 08  Brian Frank       Almost Christmas!
 //   15 Jan 13  Nicholas Harker   Added SSL Support
 //   21 Jan 13  Nicholas Harker   Added Proxy Exclusion Support
+//   03 Aug 15  Matthew Giannini  RFC6265
 //
 
 using inet

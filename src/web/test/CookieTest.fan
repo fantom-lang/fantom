@@ -23,14 +23,15 @@ class CookieTest : Test
        "__u": "1303429918|un=(referral)|ud=referral"])
 
     verifyCookie(Cookie("foo=bar"), Cookie("foo", "bar"))
-    verifyCookie(Cookie("foo=\"bar baz\""), Cookie("foo", "bar baz"))
-    verifyCookie(Cookie("foo=\"_\\\"quot\\\"_\""), Cookie("foo", "_\"quot\"_"))
+    verifyCookie(Cookie("foo=\"bar baz\""), Cookie("foo", "\"bar baz\""))
+    verifyCookie(Cookie("foo=\"_\\\"quot\\\"_\""), Cookie("foo", "\"_\\\"quot\\\"_\""))
     verifyCookie(Cookie.fromStr("foo=bar"), Cookie("foo", "bar"))
     verifyCookie(Cookie.fromStr("foo=bar; domain=foo.org"), Cookie("foo", "bar") {it.domain="foo.org"} )
     verifyCookie(Cookie.fromStr("foo=bar; Domain=foo.org"), Cookie("foo", "bar") {it.domain="foo.org"} )
     verifyCookie(Cookie.fromStr("foo=bar; Domain=foo.org; Path=/baz/"), Cookie("foo", "bar") {it.domain="foo.org";it.path="/baz/"} )
     verifyCookie(Cookie.fromStr("foo=bar; Domain=foo.org; Path=/baz/; HttpOnly"), Cookie("foo", "bar") {it.domain="foo.org";it.path="/baz/"} )
 
+    verifyErr(ParseErr#) { c := Cookie.fromStr("=bar") }
     verifyErr(ArgErr#) { c := Cookie("\$path", "bar") }
     verifyErr(ArgErr#) { c := Cookie("foo bar", "bar") }
     verifyErr(ArgErr#) { c := Cookie("foo", "bar\nbaz") }
