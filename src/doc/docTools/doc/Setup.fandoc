@@ -100,7 +100,7 @@ the Java class 'fanx.tools.Fant'.
 
 Substitutes [#substitutes]
 ==========================
-Another feature of the launcher executables is the ability to map
+Another feature of the launcher scripts is the ability to map
 specific script files to use an alternate Fantom runtime.  This technique
 is used to manage the [bootstrap build]`Bootstrap#substitutes` process.
 
@@ -135,6 +135,30 @@ Java environment working:
     fan.version:     1.0.67
     fan.env:         sys::BootEnv
     fan.home:        C:\Dev\fantom\fan
+
+Fantom Programs as Windows Services [#windowsServices]
+===================================
+The Fantom installation includes a binary called 'fansc.exe' in the "bin\" directory
+of the installation. The "fansc" (Fan Service Control) binary can be used to install
+and uninstall a Fantom program as a Windows Service. You can run the program without
+any arguments to see the usage.  There are a few requirements for using fansc
+
+1. Create a windows batch file launcher for your Fantom program. You can use any of
+the launchers in the "bin\" directory as a template.
+2. You must run the "fansc" program from a command prompt with elevated/administrator
+privileges.
+
+The following example illustrates installing the default WispService as a windows
+service:
+
+pre>
+// Create the bin/wisp.bat file with these contents:
+@echo off
+call %~dp0\fanlaunch.bat Fan wisp::WispService %*
+
+// Now install it, configuring it to run on port 8080
+C:\dev\fantom\fan\bin\> fansc.exe install MyWispService C:\dev\fantom\fan\bin\wisp.bat -port 8080
+<pre
 
 Java Extensions [#javaExt]
 **************************
