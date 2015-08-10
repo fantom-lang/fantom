@@ -20,6 +20,6 @@ class Build : BuildCs
     output = devHomeDir.uri + `bin/FanSc.exe`
     targetType = "exe"
 
-    srcDirs = [`FanSc/FanSc/`]
+    srcDirs = [`FanSc/`]
   }
 }
