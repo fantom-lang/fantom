@@ -168,14 +168,8 @@ internal const class WispActor : Actor
   **
   private Void initReqRes(WispReq req, WispRes res)
   {
-    // init request - create content input stream wrapper
-    req.webIn = WebUtil.makeContentInStream(req.headers, req.socket.in)
-
-    // if the WebUtil didn't wrap the stream, then that means no
-    // Content-Length or Transfer-Encoding - which in turn means we don't
-    // consider this a valid request for sending a body in the request
-    // according to 4.4 (since pipeling would be undefined)
-    if (req.webIn === req.socket.in) req.webIn = null
+    // init request input stream to read content
+    req.webIn = initReqInStream(req)
 
     // init response - set predefined headers
     res.headers["Server"] = wispVer
@@ -192,6 +186,28 @@ internal const class WispActor : Actor
 
     // configure Locale.cur for best match based on request
     Locale.setCur(req.locales.first)
+  }
+
+  **
+  ** Map the raw HTTP input stream to handle the charset and transfer encoding
+  **
+  private InStream? initReqInStream(WispReq req)
+  {
+    // raw socket input stream
+    raw := req.socket.in
+
+    // if requesting an upgrade, then leave access to raw socket
+    if (req.headers["Upgrade"] != null) return raw
+
+    // init request - create content input stream wrapper
+    wrap := WebUtil.makeContentInStream(req.headers, raw)
+
+    // if the WebUtil didn't wrap the stream, then that means no
+    // Content-Length or Transfer-Encoding - which in turn means we don't
+    // consider this a valid request for sending a body in the request
+    // according to 4.4 (since pipeling would be undefined)
+    if (wrap === raw) return null
+    return wrap
   }
 
 //////////////////////////////////////////////////////////////////////////
