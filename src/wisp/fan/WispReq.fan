@@ -43,12 +43,12 @@ internal class WispReq : WebReq
   }
 
   override SocketOptions socketOptions() { socket.options }
+  override TcpSocket socket
 
   static const Version nullVersion := Version("0")
   static const Str:Str nullHeaders := Str:Str[:]
 
   internal WispService service
-  internal TcpSocket socket
   internal InStream? webIn
   private Bool checkContinue := true
   private WispRes res

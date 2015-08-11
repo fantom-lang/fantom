@@ -22,6 +22,7 @@
 - JS source map support
 - HTTPS support for WispService
 - Rework WispSession to use immutable session maps
+- WebSocket prototype
 - #2428: Actor deprecate support for serialized messages
 - #2436: Cannot parse .props file when first line is # comment
 - #2438: Handle quotes in Cookie per RFC 6265

@@ -200,6 +200,11 @@ abstract class WebReq
   abstract SocketOptions socketOptions()
 
   **
+  ** Access to underlying socket - internal use only!
+  **
+  @NoDoc abstract TcpSocket socket()
+
+  **
   ** Stash allows you to stash objects on the WebReq object
   ** in order to pass data b/w Weblets while processing
   ** this request.

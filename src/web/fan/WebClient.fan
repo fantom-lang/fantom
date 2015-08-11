@@ -550,6 +550,6 @@ class WebClient
 
   private InStream? resInStream
   private OutStream? reqOutStream
-  private TcpSocket? socket
+  internal TcpSocket? socket
 
 }
