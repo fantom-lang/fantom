@@ -47,6 +47,14 @@ class WebSocketDemo : AbstractMain
     echo("Receiving...")
     res := s.receive
     echo("Received: $res")
+
+    s.ping
+
+    echo("Send again: $c")
+    s.send(c)
+    echo("Receiving again...")
+    res = s.receive
+    echo("Receive again: $res")
     return 0
   }
 
