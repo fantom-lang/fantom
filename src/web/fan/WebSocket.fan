@@ -101,6 +101,17 @@ class WebSocket
   **
   Obj? receive()
   {
+    while (true)
+    {
+      msg := doReceive
+      if (msg === receiveAgain) continue
+      return msg
+    }
+    throw Err()
+  }
+
+  private Obj? doReceive()
+  {
     // check if we have a frame or at end of stream
     in := socket.in
     firstByte := in.read
@@ -110,9 +121,6 @@ class WebSocket
     byte := firstByte
     fin := byte.and(0x80) > 0
     op := byte.and(0x0f)
-
-    // handle close opcode
-    if (op == opClose) { socket.close; return null }
 
     // second byte is mask, and length
     byte = in.readU1
@@ -134,9 +142,16 @@ class WebSocket
       for (i := 0; i<len; ++i)
         payload[i] = payload[i].xor(maskKey[i.mod(4)])
 
-    // return data
-    if (op == opText) return payload.readAllStr
-    if (op == opBinary) return payload
+    // handle control messages and receive again,
+    // otherwise return the payload data
+    switch (op)
+    {
+      case opClose:  close; return null
+      case opPing:   pong(payload); return receiveAgain
+      case opPong:   return receiveAgain
+      case opText:   return payload.readAllStr
+      case opBinary: return payload
+    }
     throw Err("Unsuppored opcode: $op")
   }
 
@@ -147,10 +162,32 @@ class WebSocket
   {
     // turn msg into payload Buf
     binary := msg is Buf
+    op  := binary ? opBinary : opText
     payload := binary ? (Buf)msg : Buf().print((Str)msg)
 
+    // route to common send implementation
+    doSend(op, payload)
+  }
+
+  **
+  ** Send a ping message
+  **
+  @NoDoc Void ping()
+  {
+    doSend(opPing, Buf().print("ping $Int.random.toHex"))
+  }
+
+  **
+  ** Send a pong message
+  **
+  private Void pong(Buf echo)
+  {
+    doSend(opPong, echo)
+  }
+
+  private Void doSend(Int op, Buf payload)
+  {
     // compute intermediate variables
-    op  := binary ? opBinary : opText
     len := payload.size
     maskKey := Buf.random(4)
     out  := socket.out
@@ -191,6 +228,7 @@ class WebSocket
     socket.close
   }
 
+
   private static Err err(Str msg)
   {
     IOErr(msg)
@@ -207,6 +245,8 @@ class WebSocket
   private static const Int opClose    := 0x8
   private static const Int opPing     := 0x9
   private static const Int opPong     := 0xA
+
+  private static const List receiveAgain := [ "receiveAgain" ]
 
   private TcpSocket socket
   private Bool maskOnSend
