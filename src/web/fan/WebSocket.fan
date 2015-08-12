@@ -58,9 +58,9 @@ class WebSocket
   {
     // validate request
     if (req.method != "GET") throw err("Invalid method")
-    if (req.headers["Upgrade"] != "websocket") throw err("Invalid Upgrade header")
-    if (req.headers["Connection"] != "Upgrade") throw err("Invalid Connection header")
-    key := req.headers["Sec-WebSocket-Key"] ?: throw err("Missing Sec-WebSocket-Key header")
+    checkHeader(req, "Upgrade", "websocket")
+    checkHeader(req, "Connection", "upgrade")
+    key := checkHeader(req, "Sec-WebSocket-Key", null)
 
     // send upgrade response
     res.headers["Upgrade"] = "websocket"
@@ -71,6 +71,13 @@ class WebSocket
 
     // connected, return WebSocket
     return make(req.socket, false)
+  }
+
+  private static Str checkHeader(WebReq req, Str name, Str? expected)
+  {
+    val := req.headers[name] ?: throw err("Missing $name header")
+    if (expected != null && val.indexIgnoreCase(expected) == null) throw err("Invalid $name header: $val")
+    return val
   }
 
   **
