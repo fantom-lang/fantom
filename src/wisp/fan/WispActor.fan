@@ -177,8 +177,7 @@ internal const class WispActor : Actor
 
     // if using HTTP 1.1 and client specified using keep-alives,
     // then setup response to be persistent for pipelining
-    if (req.version === ver11 &&
-        req.headers.get("Connection", "").split(',').any |tok| { tok.equalsIgnoreCase("keep-alive")})
+    if (req.version === ver11 && req.isKeepAlive && !req.isUpgrade)
     {
       res.isPersistent = true
       res.headers["Connection"] = "keep-alive"
@@ -197,7 +196,7 @@ internal const class WispActor : Actor
     raw := req.socket.in
 
     // if requesting an upgrade, then leave access to raw socket
-    if (req.headers["Upgrade"] != null) return raw
+    if (req.isUpgrade) return raw
 
     // init request - create content input stream wrapper
     wrap := WebUtil.makeContentInStream(req.headers, raw)

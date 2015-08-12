@@ -52,4 +52,8 @@ internal class WispReq : WebReq
   internal InStream? webIn
   private Bool checkContinue := true
   private WispRes res
+
+  internal Bool isUpgrade() { headers["Upgrade"] != null }
+  internal Bool isKeepAlive() { headers.get("Connection", "").indexIgnoreCase("keep-alive") != null }
+
 }
