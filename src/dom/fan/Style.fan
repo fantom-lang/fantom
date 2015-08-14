@@ -90,6 +90,21 @@ class Style
   ** Set CSS property.
   private native Void setProp(Str name, Str? val)
 
+  ** Break out standard CSS property into required vendor prefixes.
+  internal Str[] toVendor(Str name)
+  {
+    if (vendor.containsKey(name))
+    {
+      // 14-Aug-2015: Safari 8.0.7 chokes on foreign vendor prefixes when
+      // a transition animatation is used directly in the 'style' attr
+      w := Win.cur
+      if (w.isWebkit)  return ["-webkit-$name"]
+      if (w.isFirefox) return [   "-moz-$name", name]
+      if (w.isIE)      return [    "-ms-$name", name]
+    }
+    return [name]
+  }
+
   ** Property names that require vendor prefixes.
   private const static Str:Str[] vendor := [:].setList([
     "align-content",
@@ -98,5 +113,6 @@ class Style
     "flex-direction",
     "flex-wrap",
     "justify-content",
+    "transform",
   ])
 }
