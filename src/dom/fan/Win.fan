@@ -23,7 +23,20 @@ class Win
 //////////////////////////////////////////////////////////////////////////
 
   ** Private ctor.
-  private new make() {}
+  private new make()
+  {
+    ua := userAgent
+    
+    this.isMac     = ua.contains("Mac OS X")
+    this.isWindows = ua.contains("Windows")
+    this.isLinux   = ua.contains("Linux")
+
+    this.isWebkit  = ua.contains("AppleWebKit/")
+    this.isChrome  = ua.contains("Chrome/")
+    this.isSafari  = ua.contains("Safari/") && ua.contains("Version/")
+    this.isFirefox = ua.contains("Firefox/")
+    this.isIE      = ua.contains("MSIE")
+  }
 
   ** Return the current window instance.
   static native Win cur()
@@ -117,4 +130,21 @@ class Win
 
   ** Return local storage instance for window.
   native Storage localStorage()
+
+//////////////////////////////////////////////////////////////////////////
+// UA
+//////////////////////////////////////////////////////////////////////////
+
+  ** Get the browser user agent string.
+  @NoDoc native Str userAgent()
+
+  @NoDoc const Bool isMac
+  @NoDoc const Bool isWindows
+  @NoDoc const Bool isLinux
+
+  @NoDoc const Bool isWebkit
+  @NoDoc const Bool isChrome
+  @NoDoc const Bool isSafari
+  @NoDoc const Bool isFirefox
+  @NoDoc const Bool isIE
 }

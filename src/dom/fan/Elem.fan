@@ -261,7 +261,10 @@ class Elem
 
     // set transition
     style := this.style
-    trans := props.keys.join(", ") |p| { "$p ${dur.toMillis}ms" }
+    trans := props.keys.join(", ") |p|
+    {
+      style.toVendor(p).join(", ") |n| { "$n ${dur.toMillis}ms" }
+    }
     style["transition"] = trans
 
     // set props

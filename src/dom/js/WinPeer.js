@@ -16,7 +16,7 @@ fan.dom.WinPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.dom.WinPeer.prototype.$ctor = function(self)
 {
-  this.win  = null;
+  this.win = null;
 }
 
 fan.dom.WinPeer.cur = function()
@@ -27,6 +27,11 @@ fan.dom.WinPeer.cur = function()
     fan.dom.WinPeer.$cur.peer.win = window;
   }
   return fan.dom.WinPeer.$cur;
+}
+
+fan.dom.WinPeer.prototype.userAgent = function(self)
+{
+  return navigator.userAgent;
 }
 
 //////////////////////////////////////////////////////////////////////////
