@@ -48,7 +48,7 @@ canadian_dollar, CAD
 chinese_yuan, CNY, 元
 emerati_dirham, AED
 euro, EUR, €
-indian_rupee, INR
+indian_rupee, INR, ₹
 japanese_yen, JPY, ¥
 russian_ruble, RUB, руб
 south_korean_won, KRW, ₩
