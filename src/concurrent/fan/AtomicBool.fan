@@ -10,6 +10,7 @@
 ** AtomicBool is used to manage a boolean variable shared
 ** between actor/threads with atomic updates.
 **
+@Js
 final const class AtomicBool
 {
 

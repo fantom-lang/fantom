@@ -9,6 +9,7 @@
 **
 ** AtomicTest
 **
+@Js
 class AtomicTest : Test
 {
 
