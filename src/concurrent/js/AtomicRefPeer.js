@@ -34,7 +34,7 @@ fan.concurrent.AtomicRefPeer.prototype.getAndSet = function(self, val)
 
 fan.concurrent.AtomicRefPeer.prototype.compareAndSet = function(self, expect, update)
 {
-  if (!fan.sys.ObjUtil.isImmutable(val)) throw fan.sys.NotImmutableErr.make();
+  if (!fan.sys.ObjUtil.isImmutable(update)) throw fan.sys.NotImmutableErr.make();
   if (this.m_val != expect) return false;
   this.m_val = update;
   return true;
