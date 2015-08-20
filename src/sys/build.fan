@@ -28,7 +28,7 @@ class Build : BuildPod
                  "proj.uri":     "http://fantom.org/",
                  "license.name": "Academic Free License 3.0",
                  "vcs.name":     "Mercurial",
-                 "vcs.uri":      "http://hg.fantom.org/fan-1.0/"]
+                 "vcs.uri":      "https://bitbucket.org/fantom/fan-1.0/"]
     srcDirs   = [`fan/`]
     resDirs   = [`locale/`]
     docSrc    = true
