@@ -123,6 +123,7 @@ class ShowScript : Weblet
       out.includeJs(`/pod/gfx/gfx.js`)
       out.includeJs(`/pod/dom/dom.js`)
       out.includeJs(`/pod/fwt/fwt.js`)
+      out.includeJs(`/pod/webfwt/webfwt.js`)
       out.style.w(
        "body { font: 10pt Arial; }
         a { color: #00f; }
