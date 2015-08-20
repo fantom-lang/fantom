@@ -25,7 +25,7 @@ class Build : BuildPod
                "proj.uri":     "http://fantom.org/",
                "license.name": "Academic Free License 3.0",
                "vcs.name":     "Mercurial",
-               "vcs.uri":      "http://hg.fantom.org/fan-1.0/"]
+               "vcs.uri":      "https://bitbucket.org/fantom/fan-1.0/"]
     depends = ["sys 1.0", "web 1.0", "gfx 1.0"]
     srcDirs = [`fan/`, `test/`]
     jsDirs  = [`js/`]
