@@ -9,4 +9,4 @@ REM
 REM fant: unit tester
 REM
 
-call %~dp0\fanlaunch.bat Fant %*
+call %~fs0\..\fanlaunch.bat Fant %*
