@@ -61,6 +61,14 @@ public class Err
     return null;
   }
 
+  /**
+   * Emittted in abstract class factory methods
+   */
+  public static Err makeAbstractCtorErr(String qname)
+  {
+    return make("Cannot instantiate abstract class: " + qname);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Java Convenience
 //////////////////////////////////////////////////////////////////////////
