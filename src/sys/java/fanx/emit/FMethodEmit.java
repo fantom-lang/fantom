@@ -107,7 +107,8 @@ public class FMethodEmit
     this.self = false;
     this.ret  = emit.pod.typeRef(emit.type.self);
     this.code = null;
-    int init = emit.method(selfName+ ".<init>()V");
+    boolean isAbstract = (emit.type.flags & FConst.Abstract) != 0;
+    int init = isAbstract ? -1 : emit.method(selfName+ ".<init>()V");
     MethodEmit factory = emitCtorFactory(init, body, method.paramCount);
 
     // emit separate factory for each method with default
@@ -131,20 +132,36 @@ public class FMethodEmit
    *   java:
    *     static Foo make(long a) { return make$(new Foo(), a) }
    *     static Foo make(long a, Object b) { return make$(new Foo(), a, b) }
+   *
+   * If init is -1, then this an abstract method and we just raise exception.
    */
   private MethodEmit emitCtorFactory(int init, MethodEmit body, int paramLen)
   {
     this.paramLen = paramLen;
     MethodEmit factory = doEmit();
     CodeEmit code = factory.emitCode();
-    code.op2(NEW, emit.cls(selfName));
-    code.op(DUP);
-    code.op2(INVOKESPECIAL, init);
-    code.op(DUP);
-    code.maxLocals = pushArgs(code, false, paramLen);
-    code.maxStack  = code.maxLocals + 2;
-    code.op2(INVOKESTATIC, body.ref());
-    code.op(ARETURN);
+    if (init < 0)
+    {
+      // abstract factory
+      code.maxLocals = 2 + paramLen * 2;
+      code.maxStack  = 2;
+      if (emit.ErrMakeAbstractCtorErr == 0) emit.ErrMakeAbstractCtorErr = emit.method("fan/sys/Err.makeAbstractCtorErr(Ljava/lang/String;)Lfan/sys/Err;");
+      code.op2(LDC_W, emit.strConst(emit.parent.qname()));
+      code.op2(INVOKESTATIC, emit.ErrMakeAbstractCtorErr);
+      code.op(ATHROW);
+    }
+    else
+    {
+      // concrete factory
+      code.op2(NEW, emit.cls(selfName));
+      code.op(DUP);
+      code.op2(INVOKESPECIAL, init);
+      code.op(DUP);
+      code.maxLocals = pushArgs(code, false, paramLen);
+      code.maxStack  = code.maxLocals + 2;
+      code.op2(INVOKESTATIC, body.ref());
+      code.op(ARETURN);
+    }
     code.emitLineNumber(lineNum);
     return factory;
   }
