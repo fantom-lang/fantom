@@ -604,6 +604,21 @@ class Buf
   **
   Buf hmac(Str algorithm, Buf key)
 
+  **
+  ** Generate a password based cryptographic key.  Supported algoriths:
+  **   - "PBKDF2WithHmacSHA1"
+  **   - "PBKDF2WithHmacSHA256"
+  **
+  ** Parameters:
+  **   - password: secret used to generate resulting cryptographic key
+  **   - salt: cryptographic salt
+  **   - iterations: number of iterations (the 'c' term)
+  **   - keyLen: desired length of key in bytes (not bits!)
+  **
+  ** Throw ArgErr if the algorithm is not available.  This method is
+  ** only supported for memory buffers.
+  **
+  static Buf pbk(Str algorithm, Str password, Buf salt, Int iterations, Int keyLen)
 }
 
 **************************************************************************
