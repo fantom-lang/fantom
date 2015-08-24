@@ -26,7 +26,7 @@ class Win
   private new make()
   {
     ua := userAgent
-    
+
     this.isMac     = ua.contains("Mac OS X")
     this.isWindows = ua.contains("Windows")
     this.isLinux   = ua.contains("Linux")
@@ -147,4 +147,12 @@ class Win
   @NoDoc const Bool isSafari
   @NoDoc const Bool isFirefox
   @NoDoc const Bool isIE
+
+//////////////////////////////////////////////////////////////////////////
+// Diagnostics
+//////////////////////////////////////////////////////////////////////////
+
+  ** Poll for a browser dependent map of diagnostics name/value pairs
+  ** for current state of JsVM and DOM.
+  @NoDoc native Str:Obj diagnostics()
 }
