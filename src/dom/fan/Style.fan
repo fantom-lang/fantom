@@ -51,7 +51,7 @@ class Style
   }
 
   ** Set properties via CSS text.
-  **   style.setText("color: #f00; font-weight: bold;")
+  **   style.setCss("color: #f00; font-weight: bold;")
   This setCss(Str css)
   {
     css.split(';').each |s|
@@ -62,28 +62,6 @@ class Style
       v := s[i+1..-1].trim
       set(n, v)
     }
-    return this
-  }
-
-  ** Convenience for 'get("width")'.
-  Str? width
-  {
-    get { get("width") }
-    set { set("width", it) }
-  }
-
-  ** Convenience for 'get("height")'.
-  Str? height
-  {
-    get { get("height") }
-    set { set("height", it) }
-  }
-
-  ** Convenience to set CSS width and height.
-  This setSize(Str w, Str h)
-  {
-    set("width", w)
-    set("height", h)
     return this
   }
 
