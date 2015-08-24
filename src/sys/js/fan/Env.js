@@ -88,6 +88,12 @@ fan.sys.Env.prototype.args = function() { return this.m_args; }
 
 fan.sys.Env.prototype.vars = function() { return this.m_vars; }
 
+fan.sys.Env.prototype.diagnostics = function()
+{
+  var map = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Obj.$type);
+  return map;
+}
+
 fan.sys.Env.prototype.out = function() { return this.m_out; }
 
 fan.sys.Env.prototype.homeDir = function() { return this.m_homeDir; }
