@@ -970,6 +970,37 @@ class BufTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// PBK
+//////////////////////////////////////////////////////////////////////////
+
+  Void testPbk()
+  {
+    // tests from RFC 6070
+    verifyPbk("PBKDF2WithHmacSHA1", "password", "salt".toBuf, 1, 20,
+      "0c 60 c8 0f 96 1f 0e 71 f3 a9 b5 24 af 60 12 06 2f e0 37 a6")
+    verifyPbk("PBKDF2WithHmacSHA1", "password", "salt".toBuf, 4096, 20,
+      "4b 00 79 01 b7 65 48 9a be ad 49 d9 26 f7 21 d0 65 a4 29 c1")
+
+    // http://stackoverflow.com/questions/5130513/pbkdf2-hmac-sha2-test-vectors/5136918#5136918
+    verifyPbk("PBKDF2WithHmacSHA256", "password", "salt".toBuf, 1, 32,
+      "12 0f b6 cf fc f8 b3 2c 43 e7 22 52 56 c4 f8 37 a8 65 48 c9 2c cc 35 48 08 05 98 7c b7 0b e1 7b")
+    verifyPbk("PBKDF2WithHmacSHA256", "password", "salt".toBuf, 4096, 32,
+      "c5 e4 78 d5 92 88 c8 41 aa 53 0d b6 84 5c 4c 8d 96 28 93 a0 01 ce 4e 11 a4 96 38 73 aa 98 13 4a")
+  }
+
+  Void verifyPbk(Str algorithm, Str pass, Buf salt, Int iterations, Int keyLen, Str expected)
+  {
+    expected = expected.replace(" ", "")
+    actual := Buf.pbk(algorithm, pass, salt, iterations, keyLen).toHex
+    /*
+    echo(">>>> $algorithm $pass $iterations $keyLen")
+    echo("     $actual")
+    echo("     $expected")
+    */
+    verifyEq(actual, expected)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 

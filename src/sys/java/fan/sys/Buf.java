@@ -10,6 +10,9 @@ package fan.sys;
 import java.io.*;
 import java.math.*;
 import java.nio.*;
+import java.security.*;
+import javax.crypto.*;
+import javax.crypto.spec.*;
 
 /**
  * Buf
@@ -466,6 +469,100 @@ public abstract class Buf
   public Buf hmac(String algorithm, Buf key)
   {
     throw UnsupportedErr.make(typeof()+".hmac");
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// pbk
+//////////////////////////////////////////////////////////////////////////
+
+  public static Buf pbk(String algorithm, String pass, Buf _salt, long _iterations, long _keyLen)
+  {
+    try
+    {
+      // get low-level representation of args
+      byte[] salt    = ((MemBuf)_salt).bytes();
+      int iterations = (int)_iterations;
+      int keyLen     = (int)_keyLen;
+
+      // this is not supported until Java8, so use custom implementation
+      if (algorithm.equals("PBKDF2WithHmacSHA256"))
+        return new MemBuf(PBKDF2WithHmacSHA256.gen(pass, salt, iterations, keyLen));
+
+      // use built-in Java APIs
+      PBEKeySpec spec = new PBEKeySpec(pass.toCharArray(), salt, iterations, keyLen*8);
+      SecretKeyFactory skf = SecretKeyFactory.getInstance(algorithm);
+      return new MemBuf(skf.generateSecret(spec).getEncoded());
+    }
+    catch (NoSuchAlgorithmException e)
+    {
+      throw ArgErr.make("Unsupported algorithm: " + algorithm, e);
+    }
+    catch (Exception e)
+    {
+      throw Err.make(e);
+    }
+  }
+
+  // Implementation from:
+  //   http://stackoverflow.com/questions/9147463/java-pbkdf2-with-hmacsha256-as-the-prf
+  static class PBKDF2WithHmacSHA256
+  {
+    static byte[] gen(String pass, byte[] salt, int iterations, int dkLen)
+      throws Exception
+    {
+      SecretKeySpec keyspec = new SecretKeySpec(pass.getBytes(), "HmacSHA256");
+      Mac prf = Mac.getInstance("HmacSHA256");
+      prf.init(keyspec);
+
+      int hLen = prf.getMacLength(); // 20 for SHA1
+      int l = Math.max(dkLen, hLen); //  1 for 128bit (16-byte) keys
+      int r = dkLen - (l-1)*hLen;    // 16 for 128bit (16-byte) keys
+      byte T[] = new byte[l * hLen];
+      int ti_offset = 0;
+      for (int i = 1; i <= l; i++)
+      {
+        F(T, ti_offset, prf, salt, iterations, i);
+          ti_offset += hLen;
+      }
+
+      if (r < hLen)
+      {
+        // Incomplete last block
+        byte DK[] = new byte[dkLen];
+        System.arraycopy(T, 0, DK, 0, dkLen);
+        return DK;
+      }
+      return T;
+    }
+
+    private static void F(byte[] dest, int offset, Mac prf, byte[] S, int c, int blockIndex)
+    {
+      final int hLen = prf.getMacLength();
+      byte U_r[] = new byte[ hLen ];
+      byte U_i[] = new byte[S.length + 4];
+      System.arraycopy(S, 0, U_i, 0, S.length);
+      INT(U_i, S.length, blockIndex);
+      for(int i = 0; i < c; i++)
+      {
+        U_i = prf.doFinal(U_i);
+        xor(U_r, U_i);
+      }
+      System.arraycopy(U_r, 0, dest, offset, hLen);
+    }
+
+    private static void xor(byte[] dest, byte[] src)
+    {
+      for(int i = 0; i < dest.length; i++)
+        dest[i] ^= src[i];
+    }
+
+    private static void INT(byte[] dest, int offset, int i)
+    {
+      dest[offset + 0] = (byte) (i / (256 * 256 * 256));
+      dest[offset + 1] = (byte) (i / (256 * 256));
+      dest[offset + 2] = (byte) (i / (256));
+      dest[offset + 3] = (byte) (i);
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
