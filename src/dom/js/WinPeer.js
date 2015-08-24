@@ -269,3 +269,34 @@ fan.dom.WinPeer.prototype.localStorage = function(self)
   return this.$localStorage;
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Diagnostics
+//////////////////////////////////////////////////////////////////////////
+
+fan.dom.WinPeer.prototype.diagnostics = function(self)
+{
+  var map = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Obj.$type);
+  map.ordered$(true);
+
+  var dur = function(s, e) {
+    return s && e ? fan.sys.Duration.makeMillis(e-s) : null;
+  }
+
+  // user-agent
+  map.set("ua", window.navigator.userAgent);
+
+  // performance.timing
+  var t = window.performance.timing;
+  map.set("perf.timing.unload",         dur(t.unloadEventStart,      t.unloadEventEnd));
+  map.set("perf.timing.redirect",       dur(t.redirectStart,         t.redirectEnd));
+  map.set("perf.timing.domainLookup",   dur(t.domainLookupStart,     t.domainLookupEnd));
+  map.set("perf.timing.connect",        dur(t.connectStart,          t.connectEnd));
+  map.set("perf.timing.secureConnect",  dur(t.secureConnectionStart, t.connectEnd));
+  map.set("perf.timing.request",        dur(t.requestStart,          t.responseStart));
+  map.set("perf.timing.response",       dur(t.responseStart,         t.responseEnd));
+  map.set("perf.timing.domInteractive", dur(t.domLoading,            t.domInteractive));
+  map.set("perf.timing.domLoaded",      dur(t.domLoading,            t.domComplete));
+  map.set("perf.timing.load",           dur(t.loadEventStart,        t.loadEventEnd));
+
+  return map;
+}
