@@ -31,6 +31,7 @@
 - #2428: Actor deprecate support for serialized messages
 - #2436: Cannot parse .props file when first line is # comment
 - #2438: Handle quotes in Cookie per RFC 6265
+- #1591: JS RegexMatcher support
 
 *Build 1.0.67 (8 Jan 2015)*
 - Mark sys::Regex as serializable and add defVal
