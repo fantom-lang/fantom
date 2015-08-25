@@ -245,6 +245,22 @@ fan.dom.ElemPeer.prototype.nextSibling = function(self)
   return fan.dom.ElemPeer.wrap(sib);
 }
 
+fan.dom.ElemPeer.prototype.querySelector = function(self, selectors)
+{
+  var elem = this.elem.querySelector(selectors);
+  if (elem == null) return null;
+  return fan.dom.ElemPeer.wrap(elem);
+}
+
+fan.dom.ElemPeer.prototype.querySelectorAll = function(self, selectors)
+{
+  var list  = fan.sys.List.make(fan.dom.Elem.$type);
+  var elems = this.elem.querySelectorAll(selectors);
+  for (var i=0; i<elems.length; i++)
+    list.add(fan.dom.ElemPeer.wrap(elems[i]));
+  return list;
+}
+
 fan.dom.ElemPeer.prototype.addChild = function(self, child)
 {
   this.elem.appendChild(child.peer.elem);

@@ -14,6 +14,7 @@
 - Elem: deprecate hasClassName, addClassName, removeClassName -> moved to Style
 - Elem: deprecate name, val, checked -> use trap operator
 - Elem: deprecate first, last, prev, next -> firstChild, lastChild, prevSibling, nextSibling
+- Elem: deprecate find, findAll in favor of querySelector, querySelectorAll
 - Elem: animate(), replace()
 - Elem: drag and drop API support
 - Elem: scrollPos, scrollSize

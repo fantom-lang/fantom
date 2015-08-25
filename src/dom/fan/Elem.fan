@@ -131,6 +131,16 @@ class Elem
   ** this is the last element under its parent.
   native Elem? nextSibling()
 
+  ** Returns the first element that is a descendant of this
+  ** element on which it is invoked that matches the specified
+  ** group of selectors.
+  native Elem? querySelector(Str selectors)
+
+  ** Returns a list of all elements descended from this element
+  ** on which it is invoked that match the specified group of
+  ** CSS selectors.
+  native Elem[] querySelectorAll(Str selectors)
+
   ** Add a new element as a child to this element. Return this.
   @Operator virtual This add(Elem child)
   {
@@ -200,29 +210,15 @@ class Elem
   @NoDoc @Deprecated { msg = "Use lastChild"   } Elem? last()  { lastChild }
   @NoDoc @Deprecated { msg = "Use prevSibling" } Elem? prev()  { prevSibling }
   @NoDoc @Deprecated { msg = "Use nextSibling" } Elem? next()  { nextSibling }
-
-//////////////////////////////////////////////////////////////////////////
-// Focus
-//////////////////////////////////////////////////////////////////////////
-
-  ** Request keyboard focus on this elem.
-  virtual native Void focus()
-
-//////////////////////////////////////////////////////////////////////////
-// Find
-//////////////////////////////////////////////////////////////////////////
-
-  ** Return the first descendant for which c returns true.
-  ** Return null if no element returns true.
-  native Elem? find(|Elem e->Bool| c)
-
-  ** Return a list of all descendants for which c returns
-  ** true.  Return an empty list if no element returns true.
-  native Elem[] findAll(|Elem e->Bool| c)
+  @NoDoc @Deprecated { msg = "Use query" } native Elem? find(|Elem e->Bool| c)
+  @NoDoc @Deprecated { msg = "Use queryAll" } native Elem[] findAll(|Elem e->Bool| c)
 
 //////////////////////////////////////////////////////////////////////////
 // Events
 //////////////////////////////////////////////////////////////////////////
+
+  ** Request keyboard focus on this elem.
+  virtual native Void focus()
 
   ** Attach an event handler to the given event on this element.
   native Void onEvent(Str type, Bool useCapture, |DomEvent e| handler)
