@@ -105,6 +105,9 @@ class Elem
   ** Set an attribute to the given value.
   @Operator native Void set(Str name, Obj? val)
 
+  ** Get or set an attribute.
+  native override Obj? trap(Str name, Obj?[]? args := null)
+
 //////////////////////////////////////////////////////////////////////////
 // Layout
 //////////////////////////////////////////////////////////////////////////

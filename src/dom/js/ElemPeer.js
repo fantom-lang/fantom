@@ -159,6 +159,12 @@ fan.dom.ElemPeer.prototype.set = function(self, name, val)
   else this.elem.setAttribute(name, val);
 }
 
+fan.dom.ElemPeer.prototype.trap = function(self, name, args)
+{
+  if (args == null || args.size() == 0) return this.get(self, name);
+  this.set(self, name, args.first());
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Layout
 //////////////////////////////////////////////////////////////////////////

@@ -93,9 +93,11 @@ internal class DomTestClient
 
     verifyEq(elem.id,    "testAttrs")
     verifyEq(elem["id"], "testAttrs")
+    verifyEq(elem->id,   "testAttrs")
 
-    verifyEq(elem.className, "hidden")
-    verifyEq(elem["class"],  "hidden")
+    verifyEq(elem.className,  "hidden")
+    verifyEq(elem["class"],   "hidden")
+    verifyEq(elem->className, "hidden")
 
     a := elem.children[3]
     b := elem.children[4]
@@ -153,6 +155,14 @@ internal class DomTestClient
     verifyEq(elem["foo"],     null)
     verifyEq(elem.get("foo"), null)
     verifyEq(elem.get("foo", "bar"), "bar")
+
+    verifyEq(elem->offsetTop, 0)
+    verifyEq(elem->innerHTML.toStr[0..12].trim,  "<input type=")
+
+    input := Win.cur.doc.query("input[name='alpha']")
+    verifyEq(input->value, "foo")
+    input->value = "bar"
+    verifyEq(input->value, "bar")
   }
 
   Void testBasics()
