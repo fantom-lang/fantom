@@ -67,7 +67,7 @@ class RegexTest : Test
     verifyEq(re.toStr, "foobar")
     verifyEq(re.matches("foobar"), true)
     verifyEq(re.matches("barfoo"), false)
-    
+
     re = Regex.quote("foo.*bar")
     verifyEq(re.toStr, "foo\\.\\*bar")
     verifyEq(re.matches("foobar"), false)
@@ -110,6 +110,45 @@ class RegexTest : Test
 //////////////////////////////////////////////////////////////////////////
 // Matches
 //////////////////////////////////////////////////////////////////////////
+
+  Void testMatchesVsFind()
+  {
+    re := Regex.fromStr("^foo\$")
+    verifyTrue(re.matcher("foo").matches)
+    verifyTrue(re.matcher("foo").find)
+
+    re = Regex.fromStr("foo")
+    verifyTrue(re.matcher("foo").matches)
+    verifyTrue(re.matcher("foo").find)
+
+    re = Regex.fromStr("foo")
+    verifyFalse(re.matcher("foo bar").matches)
+    verifyTrue (re.matcher("foo bar").find)
+  }
+
+  ** Test basic usage which should also work in Javascript
+  Void testFindGroups()
+  {
+    matcher := Regex.fromStr("(foo)-(bar)?").matcher("foo-bar wot foo-poo ever")
+
+    verifyTrue(matcher.find)
+    verifyEq  (matcher.groupCount, 2)
+    verifyEq  (matcher.start, 0)
+    verifyEq  (matcher.end, 7)
+    verifyEq  (matcher.group(0), "foo-bar")
+    verifyEq  (matcher.group(1), "foo")
+    verifyEq  (matcher.group(2), "bar")
+
+    verifyTrue(matcher.find)
+    verifyEq  (matcher.groupCount, 2)
+    verifyEq  (matcher.start, 12)
+    verifyEq  (matcher.end, 16)
+    verifyEq  (matcher.group(0), "foo-")
+    verifyEq  (matcher.group(1), "foo")
+    verifyEq  (matcher.group(2), null)
+
+    verifyFalse(matcher.find)
+  }
 
   Void testMatches()
   {
