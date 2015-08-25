@@ -41,6 +41,7 @@ class DomTest : Weblet
             print('testBasics');    test.testBasics();
             print('testCreate');    test.testCreate();
             print('testAddRemove'); test.testAddRemove();
+            print('testStyle');     test.testStyle();
             results.style.color = 'green';
             results.innerHTML = 'All tests passed! [' + test.m_verifies + ' verifies]';
           }
@@ -217,6 +218,34 @@ internal class DomTestClient
 
     elem.remove(elem.children.first)
     verifyEq(elem.children.size, 0)
+  }
+
+  Void testStyle()
+  {
+    a := Elem {}
+
+    a.style["padding"] =  "10px"; verifyEq(a.style["padding"], "10px")
+    a.style->padding = "20px";    verifyEq(a.style->padding, "20px")
+
+    a.style["background-color"] = "#f00"; verifyEq(a.style["background-color"], "rgb(255, 0, 0)")
+    a.style->backgroundColor = "#0f0";    verifyEq(a.style->backgroundColor, "rgb(0, 255, 0)")
+
+    a.style["border-bottom-color"] = "#00f"
+    verifyEq(a.style->borderBottomColor, "rgb(0, 0, 255)")
+
+    a.style.setAll([
+      "padding": "3px",
+      "margin":  "6px",
+      "border":  "2px dotted #ff0"
+    ])
+    verifyEq(a.style->padding, "3px")
+    verifyEq(a.style->margin,  "6px")
+    verifyEq(a.style->border,  "2px dotted rgb(255, 255, 0)")
+
+    a.style.setCss("padding: 5px; margin: 10px; border: 1px solid #0f0")
+    verifyEq(a.style->padding, "5px")
+    verifyEq(a.style->margin,  "10px")
+    verifyEq(a.style->border,  "1px solid rgb(0, 255, 0)")
   }
 
   Void verify(Bool v)
