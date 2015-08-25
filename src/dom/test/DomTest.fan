@@ -100,6 +100,17 @@ internal class DomTestClient
     verifyEq(elem["class"],   "hidden")
     verifyEq(elem->className, "hidden")
 
+    f := elem.firstChild
+    verifyEq(f->name,  "alpha")
+    verifyEq(f.prevSibling, null)
+    verifyEq(f.nextSibling->name, "beta")
+    verifyEq(f.nextSibling.nextSibling.tagName, "input")
+    verifyEq(f.nextSibling.nextSibling.nextSibling.style.classes, ["a"])
+    verifyEq(f.nextSibling.nextSibling.nextSibling.nextSibling.style.classes, ["a", "b"])
+    verifyEq(elem.lastChild.prevSibling.style.classes, ["a", "b"])
+    verifyEq(elem.lastChild.tagName, "div")
+    verifyEq(elem.lastChild.nextSibling, null)
+
     a := elem.children[3]
     b := elem.children[4]
     c := elem.children[5]
