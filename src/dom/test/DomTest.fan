@@ -96,7 +96,7 @@ internal class DomTestClient
     verifyEq(elem["id"], "testAttrs")
     verifyEq(elem->id,   "testAttrs")
 
-    verifyEq(elem.className,  "hidden")
+    verifyEq(elem.style.classes, ["hidden"])
     verifyEq(elem["class"],   "hidden")
     verifyEq(elem->className, "hidden")
 
@@ -104,39 +104,30 @@ internal class DomTestClient
     b := elem.children[4]
     c := elem.children[5]
 
-    verifyEq(a.hasClass("a"), true)
-    verifyEq(a.hasClass("b"), false)
-    verifyEq(a.hasClass("c"), false)
-    verifyEq(b.hasClass("a"), true)
-    verifyEq(b.hasClass("b"), true)
-    verifyEq(b.hasClass("c"), false)
-    verifyEq(c.hasClass("a"), false)
-    a.addClass("c")
-    b.addClass("c")
-    c.addClass("c")
-    verifyEq(a.hasClass("c"), true)
-    verifyEq(b.hasClass("c"), true)
-    verifyEq(c.hasClass("c"), true)
-    a.removeClass("a")
-    b.removeClass("a")
-    verifyEq(a.hasClass("a"), false)
-    verifyEq(b.hasClass("a"), false)
-    c.removeClass("c")
-    verifyEq(c.hasClass("c"), false)
-    verifyEq(b.className, "b c")
-    b.addClass("b")
-    verifyEq(b.className, "b c")
-    b.removeClass("x")
-    verifyEq(b.className, "b c")
-
-    /*
-    NOTE: "style.cssText" is not supported in Opera
-
-    verifyEq(elem.style->cssText, "")
-    elem.style->color = "red"
-    str := (elem.style->cssText as Str).lower.trim
-    verify(str.contains("color: red"))
-    */
+    verifyEq(a.style.hasClass("a"), true)
+    verifyEq(a.style.hasClass("b"), false)
+    verifyEq(a.style.hasClass("c"), false)
+    verifyEq(b.style.hasClass("a"), true)
+    verifyEq(b.style.hasClass("b"), true)
+    verifyEq(b.style.hasClass("c"), false)
+    verifyEq(c.style.hasClass("a"), false)
+    a.style.addClass("c")
+    b.style.addClass("c")
+    c.style.addClass("c")
+    verifyEq(a.style.hasClass("c"), true)
+    verifyEq(b.style.hasClass("c"), true)
+    verifyEq(c.style.hasClass("c"), true)
+    a.style.removeClass("a")
+    b.style.removeClass("a")
+    verifyEq(a.style.hasClass("a"), false)
+    verifyEq(b.style.hasClass("a"), false)
+    c.style.removeClass("c")
+    verifyEq(c.style.hasClass("c"), false)
+    verifyEq(b.style.classes, ["b", "c"])
+    b.style.addClass("b")
+    verifyEq(b.style.classes, ["b", "c"])
+    b.style.removeClass("x")
+    verifyEq(b.style.classes, ["b", "c"])
 
     verifyEq(elem.val,        null)
     verifyEq(elem["value"],   null)
@@ -184,7 +175,7 @@ internal class DomTestClient
 
     elem = Win.cur.doc.createElem("div", ["class":"foo"])
     verifyEq(elem.tagName, "div")
-    verifyEq(elem.className, "foo")
+    verifyEq(elem.style.classes, ["foo"])
 
     elem = Win.cur.doc.createElem("div", ["id":"cool", "name":"yay", "class":"foo"])
     verifyEq(elem.tagName, "div")
@@ -199,22 +190,22 @@ internal class DomTestClient
     elem := doc.createElem("div")
     elem.add(doc.createElem("div", ["class":"a"]))
     verifyEq(elem.children.size, 1)
-    verifyEq(elem.children.first.className, "a")
+    verifyEq(elem.children.first.style.classes, ["a"])
 
     b := doc.createElem("div", ["class":"b"]); elem.add(b)
     c := doc.createElem("div", ["class":"c"]); elem.add(c)
     verifyEq(elem.children.size, 3)
-    verifyEq(elem.children[1].className, "b")
-    verifyEq(elem.children[2].className, "c")
+    verifyEq(elem.children[1].style.classes, ["b"])
+    verifyEq(elem.children[2].style.classes, ["c"])
 
     elem.remove(b)
     verifyEq(elem.children.size, 2)
-    verifyEq(elem.children[0].className, "a")
-    verifyEq(elem.children[1].className, "c")
+    verifyEq(elem.children[0].style.classes, ["a"])
+    verifyEq(elem.children[1].style.classes, ["c"])
 
     elem.remove(c)
     verifyEq(elem.children.size, 1)
-    verifyEq(elem.children[0].className, "a")
+    verifyEq(elem.children[0].style.classes, ["a"])
 
     elem.remove(elem.children.first)
     verifyEq(elem.children.size, 0)

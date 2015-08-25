@@ -40,39 +40,13 @@ class Elem
   ** The name attribute for this element.
   native Str name
 
-  ** The CSS class name(s) for this element.
-  native Str className
-
-  ** Return true if this element has the given CSS class name,
-  ** or false if it does not.
-  native Bool hasClass(Str name)
-
-  ** Add the given CSS class name to this element.  If this
-  ** element already contains the given class name, then this
-  ** method does nothing. Returns this.
-  native This addClass(Str name)
-
-  ** Remove the given CSS class name to this element. If this
-  ** element does not have the given class name, this method
-  ** does nothing. Returns this.
-  native This removeClass(Str name)
-
-  ** Toggle the presence of the given CSS class name by adding
-  ** or removing from this element.  Returns this.
-  This toggleClass(Str name)
-  {
-    if (hasClass(name)) removeClass(name)
-    else addClass(name)
-    return this
-  }
-
   // TODO FIXIT: remove
-  @NoDoc @Deprecated { msg = "Use hasClass" } Bool hasClassName(Str n) { hasClass(n) }
-  @NoDoc @Deprecated { msg = "Use addClass" } This addClassName(Str n) { addClass(n) }
-  @NoDoc @Deprecated { msg = "Use removeClass" } This removeClassName(Str n) { removeClass(n) }
+  @NoDoc @Deprecated { msg = "Use style.hasClass" } Bool hasClassName(Str n) { style.hasClass(n) }
+  @NoDoc @Deprecated { msg = "Use style.addClass" } This addClassName(Str n) { style.addClass(n); return this }
+  @NoDoc @Deprecated { msg = "Use style.removeClass" } This removeClassName(Str n) { style.removeClass(n); return this }
 
   ** Get the Style instance for this element.
-  @NoDoc native Style style()
+  native Style style()
 
   ** Text content contained in this element.
   native Str text

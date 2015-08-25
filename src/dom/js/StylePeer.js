@@ -19,6 +19,47 @@ fan.dom.StylePeer.prototype.$ctor = function(self)
   this.style = null;
 }
 
+fan.dom.StylePeer.prototype.classes  = function(self)
+{
+  var arr = this.elem.className.split(" ");
+  return fan.sys.List.make(fan.sys.Str.$type, arr);
+}
+
+fan.dom.StylePeer.prototype.classes$ = function(self, val)
+{
+  this.elem.className = val.join(" ");
+  return this.classes();
+}
+
+fan.dom.StylePeer.prototype.hasClass = function(self, className)
+{
+  var arr = this.elem.className.split(" ");
+  for (var i=0; i<arr.length; i++)
+    if (arr[i] == className)
+      return true;
+  return false;
+}
+
+fan.dom.StylePeer.prototype.addClass = function(self, className)
+{
+  if (!this.hasClass(self, className))
+    this.elem.className += " " + className;
+  return self;
+}
+
+fan.dom.StylePeer.prototype.removeClass = function(self, className)
+{
+  var arr = this.elem.className.split(" ");
+  for (var i=0; i<arr.length; i++)
+    if (arr[i] == className)
+    {
+      arr.splice(i, 1);
+      break;
+    }
+  this.elem.className = arr.join(" ");
+  return self;
+}
+
 fan.dom.StylePeer.prototype.clear = function(self)
 {
   this.style.cssText = "";

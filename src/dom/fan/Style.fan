@@ -9,13 +9,39 @@
 using gfx
 
 **
-** Style models CSS style properties.
+** Style models CSS style properties for an Elem.
 **
 @NoDoc @Js
 class Style
 {
   ** Private ctor.
   private new make() {}
+
+  ** The CSS classes for this element.
+  native Str[] classes
+
+  ** Return true if this element has the given CSS class name,
+  ** or false if it does not.
+  native Bool hasClass(Str name)
+
+  ** Add the given CSS class name to this element.  If this
+  ** element already contains the given class name, then this
+  ** method does nothing. Returns this.
+  native This addClass(Str name)
+
+  ** Remove the given CSS class name to this element. If this
+  ** element does not have the given class name, this method
+  ** does nothing. Returns this.
+  native This removeClass(Str name)
+
+  ** Toggle the presence of the given CSS class name by adding
+  ** or removing from this element.  Returns this.
+  This toggleClass(Str name)
+  {
+    if (hasClass(name)) removeClass(name)
+    else addClass(name)
+    return this
+  }
 
   ** Clear all style declarations.
   native This clear()
