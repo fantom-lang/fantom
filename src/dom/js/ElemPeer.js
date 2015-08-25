@@ -209,7 +209,7 @@ fan.dom.ElemPeer.prototype.children = function(self)
   return fan.sys.List.make(fan.dom.Elem.$type, list);
 }
 
-fan.dom.ElemPeer.prototype.first = function(self)
+fan.dom.ElemPeer.prototype.firstChild = function(self)
 {
   var kids = this.elem.childNodes;
   for (var i=0; i<kids.length; i++)
@@ -218,7 +218,7 @@ fan.dom.ElemPeer.prototype.first = function(self)
   return null;
 }
 
-fan.dom.ElemPeer.prototype.last = function(self)
+fan.dom.ElemPeer.prototype.lastChild = function(self)
 {
   var kids = this.elem.childNodes;
   for (var i=kids.length-1; i>=0; i--)
@@ -227,7 +227,7 @@ fan.dom.ElemPeer.prototype.last = function(self)
   return null;
 }
 
-fan.dom.ElemPeer.prototype.prev = function(self)
+fan.dom.ElemPeer.prototype.prevSibling = function(self)
 {
   var sib = this.elem.previousSibling;
   while (sib != null && sib.nodeType != 1)
@@ -236,7 +236,7 @@ fan.dom.ElemPeer.prototype.prev = function(self)
   return fan.dom.ElemPeer.wrap(sib);
 }
 
-fan.dom.ElemPeer.prototype.next = function(self)
+fan.dom.ElemPeer.prototype.nextSibling = function(self)
 {
   var sib = this.elem.nextSibling;
   while (sib != null && sib.nodeType != 1)

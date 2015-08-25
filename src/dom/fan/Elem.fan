@@ -117,19 +117,19 @@ class Elem
 
   ** Get the first child node of this element, or null
   ** if this element has no children.
-  native Elem? first()
+  native Elem? firstChild()
 
   ** Get the last child node of this element, or null
   ** if this element has no children.
-  native Elem? last()
+  native Elem? lastChild()
 
   ** Get the previous sibling to this element, or null
   ** if this is the first element under its parent.
-  native Elem? prev()
+  native Elem? prevSibling()
 
   ** Get the next sibling to this element, or null if
   ** this is the last element under its parent.
-  native Elem? next()
+  native Elem? nextSibling()
 
   ** Add a new element as a child to this element. Return this.
   @Operator virtual This add(Elem child)
@@ -194,6 +194,12 @@ class Elem
 
   ** Callback when a child element is removed.
   @NoDoc protected virtual Void onRemove(Elem child) {}
+
+  // TODO FIXIT: remove
+  @NoDoc @Deprecated { msg = "Use firstChild"  } Elem? first() { firstChild }
+  @NoDoc @Deprecated { msg = "Use lastChild"   } Elem? last()  { lastChild }
+  @NoDoc @Deprecated { msg = "Use prevSibling" } Elem? prev()  { prevSibling }
+  @NoDoc @Deprecated { msg = "Use nextSibling" } Elem? next()  { nextSibling }
 
 //////////////////////////////////////////////////////////////////////////
 // Focus
