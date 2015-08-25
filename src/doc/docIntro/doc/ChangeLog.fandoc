@@ -10,11 +10,12 @@
 - JsonOutStream: remove newlines from output
 - WispService.extraResHeaders
 - Elem: add Style type
+- Elem: trap support
 - Elem: deprecate hasClassName, addClassName, removeClassName -> moved to Style
+- Elem: deprecate name, val, checked -> use trap operator
 - Elem: replace()
 - Elem: drag and drop API support
 - Elem: scrollPos, scrollSize
-- Elem: trap support
 - DomEvent: meta -> stash; new 'meta' field maps to meta key modifier
 - InStream.readNullTerminatedStr
 - Map.getChecked

@@ -37,14 +37,6 @@ class Elem
   ** The id for this element.
   native Str id
 
-  ** The name attribute for this element.
-  native Str name
-
-  // TODO FIXIT: remove
-  @NoDoc @Deprecated { msg = "Use style.hasClass" } Bool hasClassName(Str n) { style.hasClass(n) }
-  @NoDoc @Deprecated { msg = "Use style.addClass" } This addClassName(Str n) { style.addClass(n); return this }
-  @NoDoc @Deprecated { msg = "Use style.removeClass" } This removeClassName(Str n) { style.removeClass(n); return this }
-
   ** Get the Style instance for this element.
   native Style style()
 
@@ -53,16 +45,6 @@ class Elem
 
   ** The HTML markup contained in this element.
   native Str html
-
-  ** The value attribute for this element, or null if one
-  ** does not exist.  This is typically only valid for form
-  ** elements.
-  native Obj? val
-
-  ** The checked attribute for this element, or null if one
-  ** does not exist.  This is typically only valid for some
-  ** form elements.
-  native Bool? checked
 
   ** The enabled attribute for this element, or null if one
   ** not applicable.  This is typically only valid for form
@@ -86,6 +68,14 @@ class Elem
     set(name, args.first)
     return null
   }
+
+  // TODO FIXIT: remove
+  @NoDoc @Deprecated { msg = "Use style.hasClass" } Bool hasClassName(Str n) { style.hasClass(n) }
+  @NoDoc @Deprecated { msg = "Use style.addClass" } This addClassName(Str n) { style.addClass(n); return this }
+  @NoDoc @Deprecated { msg = "Use style.removeClass" } This removeClassName(Str n) { style.removeClass(n); return this }
+  @NoDoc @Deprecated { msg = "Use elem->name"    } Str name      { get { this->name  } set { this->name = it }}
+  @NoDoc @Deprecated { msg = "Use elem->value"   } Obj? val      { get { this->value } set { this->value = it }}
+  @NoDoc @Deprecated { msg = "Use elem->checked" } Bool? checked { get { this->checked } set { this->checked = it }}
 
 //////////////////////////////////////////////////////////////////////////
 // Layout

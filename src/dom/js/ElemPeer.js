@@ -58,41 +58,6 @@ fan.dom.ElemPeer.prototype.tagName = function(self) { return fan.sys.Str.lower(t
 fan.dom.ElemPeer.prototype.id  = function(self) { return this.elem.id; }
 fan.dom.ElemPeer.prototype.id$ = function(self, val) { return this.elem.id = val; }
 
-fan.dom.ElemPeer.prototype.$name  = function(self) { return this.elem.name; }
-fan.dom.ElemPeer.prototype.$name$ = function(self, val) { return this.elem.name = val; }
-
-fan.dom.ElemPeer.prototype.className  = function(self) { return this.elem.className; }
-fan.dom.ElemPeer.prototype.className$ = function(self, val) { return this.elem.className = val; }
-
-fan.dom.ElemPeer.prototype.hasClass = function(self, className)
-{
-  var arr = this.elem.className.split(" ");
-  for (var i=0; i<arr.length; i++)
-    if (arr[i] == className)
-      return true;
-  return false;
-}
-
-fan.dom.ElemPeer.prototype.addClass = function(self, className)
-{
-  if (!this.hasClass(self, className))
-    this.elem.className += " " + className;
-  return self;
-}
-
-fan.dom.ElemPeer.prototype.removeClass = function(self, className)
-{
-  var arr = this.elem.className.split(" ");
-  for (var i=0; i<arr.length; i++)
-    if (arr[i] == className)
-    {
-      arr.splice(i, 1);
-      break;
-    }
-  this.elem.className = arr.join(" ");
-  return self;
-}
-
 fan.dom.ElemPeer.prototype.style = function(self)
 {
   if (this.$style == null)
@@ -109,12 +74,6 @@ fan.dom.ElemPeer.prototype.text$ = function(self, val) { this.elem.textContent =
 
 fan.dom.ElemPeer.prototype.html  = function(self) { return this.elem.innerHTML; }
 fan.dom.ElemPeer.prototype.html$ = function(self, val) { this.elem.innerHTML = val; }
-
-fan.dom.ElemPeer.prototype.val  = function(self) { return this.elem.value; }
-fan.dom.ElemPeer.prototype.val$ = function(self, val) { this.elem.value = val; }
-
-fan.dom.ElemPeer.prototype.checked  = function(self) { return this.elem.checked; }
-fan.dom.ElemPeer.prototype.checked$ = function(self, val) { this.elem.checked = val; }
 
 fan.dom.ElemPeer.prototype.enabled  = function(self)
 {
@@ -134,11 +93,11 @@ fan.dom.ElemPeer.prototype.draggable$ = function(self, val) { this.elem.draggabl
 fan.dom.ElemPeer.prototype.get = function(self, name, def)
 {
   if (name == "id")      return this.id(self);
-  if (name == "name")    return this.$name(self);
-  if (name == "class")   return this.className(self);
+  if (name == "name")    return this.elem.name;
+  if (name == "class")   return this.elem.className; // TODO: route to Style?
   if (name == "style")   return this.style(self);
-  if (name == "value")   return this.val(self);
-  if (name == "checked") return this.checked(self);
+  if (name == "value")   return this.elem.value;
+  if (name == "checked") return this.elem.checked;
 
   var val = this.elem[name];
   if (val == null) val = this.elem.getAttribute(name);
@@ -151,10 +110,10 @@ fan.dom.ElemPeer.prototype.get = function(self, name, def)
 fan.dom.ElemPeer.prototype.set = function(self, name, val)
 {
   if (name == "id")           this.id$(self, val);
-  else if (name == "name")    this.$name$(self, val);
-  else if (name == "class")   this.className$(self, val);
-  else if (name == "value")   this.val$(self, val);
-  else if (name == "checked") this.checked$(self, val);
+  else if (name == "name")    this.elem.name = val;
+  else if (name == "class")   this.elem.className = val;  // TODO: route to Style?
+  else if (name == "value")   this.elem.value = val;
+  else if (name == "checked") this.elem.checked = val;
   else if (this.elem[name])   this.elem[name] = val;
   else this.elem.setAttribute(name, val);
 }
