@@ -111,6 +111,9 @@ internal class DomTestClient
     verifyEq(elem.lastChild.tagName, "div")
     verifyEq(elem.lastChild.nextSibling, null)
 
+    verifyEq(elem.querySelector("input[name='beta']")->name, "beta")
+    verifyEq(elem.querySelectorAll("input").size, 3)
+
     a := elem.children[3]
     b := elem.children[4]
     c := elem.children[5]
