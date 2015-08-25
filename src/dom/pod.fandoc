@@ -45,48 +45,77 @@ Win [#win]
 Doc [#doc]
 **********
 
-  doc := Win.cur.doc      // get doc instance for this window
-  doc.elem("someId")      // return the Elem with id='someId'
-  doc.createElem("div")   // create a new <div> element
+  doc := Win.cur.doc                // get doc instance for this window
+  doc.elem("someId")                // return the Elem with id='someId'
+  doc.createElem("div")             // create a new <div> element
+  doc.querySelector("div.foo")      // find first <div> element where class='foo'
+  doc.querySelectorAll("div.bar")   // find all <div> elements where class='bar'
 
 Elem [#elem]
 **********
 
+  // create Elems
+  Elem("div")   // create new unattached <div> element
+  Elem("img")   // create new unattached <img> element
+
   // attributes
   elem["alt"]               // get an attribute value
   elem["alt"] = "Alt text"  // set an attribute value
+  elem->alt                 // get an attribute (equivalent to elem["alt"])
+  elem->alt = "Alt text"    // set an attribute (equivalent to elem["alt"] = "Alt text")
   elem.id                   // 'id' attribute
-  elem.name                 // 'name' attribute
   elem.tagName              // tag name of this element
 
-  // CSS
-  elem.className                 // return the current class name(s)
-  elem.hasClassName("alpha")     // does this element have the given class name?
-  elem.addClassName("beta")      // add a new class name to any current class names
-  elem.removeClassName("gamma")  // remove a class name, leaving any others remaining
+  // CSS classes
+  elem.style.classes               // return the current class name(s)
+  elem.style.hasClass("alpha")     // does this element have the given class name?
+  elem.style.addClass("beta")      // add a new class name to any current class names
+  elem.style.removeClass("gamma")  // remove a class name, leaving any others remaining
+  elem.style.toggleClass("beta")   // add class if not present, or remove if already exists
+
+  // CSS properties
+  elem.style["background-color"] = "#f00"  // set style background-color: #f00
+  elem.style->backgroundColor = "#f00"     // set style background-color: #f00
+  elem.style["color"]                      // get color property value
+  elem.style->color                        // get color property value
+  elem.style.computed("color")             // get the computed color property value
+  elem.style.setAll(["color":"#f00", "background:"#eee"])  // set list of style properties
+  elem.style.setCss("color: #f00; background: #eee")       // set style with CSS grammar
 
   // tree
   elem.parent             // parent element
-  elem.next               // next sibling
-  elem.prev               // prev sibling
+  elem.prevSibling        // prev sibling
+  elem.nextSibling        // next sibling
   elem.children           // List of child elements
-  elem.first              // first child, or null if no children
+  elem.firstChild         // first child, or null if no children
+  elem.lastChild          // last child, or null if no children
   elem.add(child)         // add a new child element
   elem.remove(child)      // remove a child element
 
-  // form conveniences
-  elem.val                // the 'value' attribute
-  elem.checked            // true/false for checkboxes
+  // forms
+  elem->name              // the 'name' attribute
+  elem->checked           // true/false for checkboxes
+  elem->checked = true    // set 'checked' attribute
+  elem->value             // the 'value' attribute
+  elem->value = "foo"     // set 'value' attribute
 
   // position and size
   elem.bounds             // pos and size of element
+  elem.pos                // pos of element in pixels
+  elem.size               // size of element in pixels
+  elem.scrollPos          // scroll pos of element
+  elem.scrollSize         // scroll size of elemen
 
   // event handlers
+  elem.focus              // focus element
   elem.onEvent("click", false) |e| { Win.cur.alert("$e.target clicked!") }
 
-  // find
-  elem.find |e| { e.tagName == "img" }     // find first <img> descendant
-  elem.findAll |e| { e.tagName == "img" }  // find all <img> descendants
+  // query
+  elem.querySelector("img")                  // find first <img> descendant
+  elem.querySelectorAll("img")               // find all <img> descendants
+  elem.querySelector("input[name='email']")  // find the <input> where name is "email"
+
+  // animation
 
 XmlHttpRequest [#xhr]
 *********************
