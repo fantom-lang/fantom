@@ -22,7 +22,7 @@ class DomTestMain : AbstractMain
   {
     wisp := WispService
     {
-      it.port = this.port
+      it.httpPort = this.port
       it.root = DomTestMod()
     }
     return runServices([wisp])

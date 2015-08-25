@@ -65,8 +65,33 @@ class Style
     return this
   }
 
+  **
+  ** Get or set an attribute.  Attribute names should be specifed
+  ** in camel case:
+  **    style->backgroundColor == style["background-color"]
+  **
+  override Obj? trap(Str name, Obj?[]? args := null)
+  {
+    name = fromCamel(name)
+    if (args == null || args.isEmpty) return get(name)
+    set(name, args.first)
+    return null
+  }
+
   ** Set CSS property.
   private native Void setProp(Str name, Str? val)
+
+  ** Convert camel case to hyphen notation.
+  private Str fromCamel(Str s)
+  {
+    h := StrBuf()
+    s.each |ch|
+    {
+      if (ch.isLower) h.addChar(ch)
+      else h.addChar('-').addChar(ch.lower)
+    }
+    return h.toStr
+  }
 
   ** Break out standard CSS property into required vendor prefixes.
   internal Str[] toVendor(Str name)
