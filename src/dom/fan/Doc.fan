@@ -57,14 +57,17 @@ class Doc
   ** pre-order traversal of the document's nodes) that matches the
   ** specified group of selectors, or null if none found.
   **
-  native Elem? query(Str selectors)
+  native Elem? querySelector(Str selectors)
 
   **
   ** Returns a list of the elements within the document (using
   ** depth-first pre-order traversal of the document's nodes) that
   ** match the specified group of selectors.
   **
-  native Elem[] queryAll(Str selectors)
+  native Elem[] querySelectorAll(Str selectors)
+
+  @NoDoc @Deprecated { msg = "Use querySelector" } Elem? query(Str s) { querySelector(s) }
+  @NoDoc @Deprecated { msg = "Use querySelectorAll" } Elem[] queryAll(Str s) { querySelectorAll(s) }
 
 //////////////////////////////////////////////////////////////////////////
 // Writing

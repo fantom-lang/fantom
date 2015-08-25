@@ -114,6 +114,9 @@ internal class DomTestClient
     verifyEq(elem.querySelector("input[name='beta']")->name, "beta")
     verifyEq(elem.querySelectorAll("input").size, 3)
 
+    verifyEq(Win.cur.doc.querySelector("input[name='beta']")->name, "beta")
+    verifyEq(Win.cur.doc.querySelectorAll("input").size, 3)
+
     a := elem.children[3]
     b := elem.children[4]
     c := elem.children[5]
