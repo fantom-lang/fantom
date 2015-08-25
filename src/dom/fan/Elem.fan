@@ -232,7 +232,7 @@ class Elem
 //////////////////////////////////////////////////////////////////////////
 
   ** Animate a set of CSS properties.
-  @NoDoc Void animate(Str:Obj props, Duration dur, |Elem|? onComplete := null)
+  Void animate(Str:Obj props, Duration dur, |Elem|? onComplete := null)
   {
     // force layout
     x := this.size
