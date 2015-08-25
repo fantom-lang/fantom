@@ -9,15 +9,15 @@
 *Build 1.0.68 (working)*
 - JsonOutStream: remove newlines from output
 - WispService.extraResHeaders
+- Doc: deprecate query, queryAll -> use querySelector, querySelectorAll
 - Elem: add Style type
 - Elem: trap support
 - Elem: deprecate hasClassName, addClassName, removeClassName -> moved to Style
 - Elem: deprecate name, val, checked -> use trap operator
 - Elem: deprecate first, last, prev, next -> firstChild, lastChild, prevSibling, nextSibling
 - Elem: deprecate find, findAll in favor of querySelector, querySelectorAll
-- Elem: animate(), replace()
+- Elem: add animate(), replace(), scrollPos, scrollSize
 - Elem: drag and drop API support
-- Elem: scrollPos, scrollSize
 - DomEvent: meta -> stash; new 'meta' field maps to meta key modifier
 - InStream.readNullTerminatedStr
 - Map.getChecked

@@ -42,14 +42,14 @@ fan.dom.DocPeer.prototype.createElem = function(self, tagName, attribs)
   return wrap;
 }
 
-fan.dom.DocPeer.prototype.query = function(self, selectors)
+fan.dom.DocPeer.prototype.querySelector = function(self, selectors)
 {
   var elem = this.doc.querySelector(selectors);
   if (elem == null) return null;
   return fan.dom.ElemPeer.wrap(elem);
 }
 
-fan.dom.DocPeer.prototype.queryAll = function(self, selectors)
+fan.dom.DocPeer.prototype.querySelectorAll = function(self, selectors)
 {
   var list  = fan.sys.List.make(fan.dom.Elem.$type);
   var elems = this.doc.querySelectorAll(selectors);
