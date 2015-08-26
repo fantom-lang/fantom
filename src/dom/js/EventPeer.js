@@ -27,7 +27,7 @@ fan.dom.EventPeer.prototype.shift = function(self) { return this.event.shiftKey;
 fan.dom.EventPeer.prototype.meta  = function(self) { return this.event.metaKey; }
 
 fan.dom.EventPeer.prototype.button = function(self) { return this.event.button; }
-fan.dom.EventPeer.prototype.keyCode = function(self) { return this.event.keyCode; }
+fan.dom.EventPeer.prototype.key = function(self) { return this.$key }
 
 fan.dom.EventPeer.prototype.stop = function(self)
 {
@@ -66,5 +66,6 @@ fan.dom.EventPeer.make = function(event)
 {
   var x = fan.dom.Event.make();
   x.peer.event = event;
+  if (event.keyCode) x.peer.$key = fan.dom.Key.fromCode(event.keyCode);
   return x;
 }

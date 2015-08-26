@@ -51,8 +51,8 @@ class Event
   ** Mouse button number pressed.
   native Int? button()
 
-  ** Key code for key pressed.
-  native Int? keyCode()
+  ** Key instance for key pressed.
+  native Key? key()
 
   ** Stop further propagation of this event.
   native Void stop()
