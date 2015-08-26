@@ -32,7 +32,7 @@ fan.dom.DataTransferPeer.prototype.getData = function(self, type)
 
 fan.dom.DataTransferPeer.prototype.setData = function(self, type, val)
 {
-  // we keep a backup of data for WebKit workaround - see DomEventPeer.dataTransfer
+  // we keep a backup of data for WebKit workaround - see EventPeer.dataTransfer
   this.data[type] = val;
   return this.dataTx.setData(type, val);
 }
