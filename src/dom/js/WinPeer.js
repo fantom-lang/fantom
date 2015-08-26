@@ -179,7 +179,7 @@ fan.dom.WinPeer.prototype.onEvent = function(self, type, useCapture, handler)
 {
   var f = function(e)
   {
-    var evt = fan.dom.DomEventPeer.make(e);
+    var evt = fan.dom.EventPeer.make(e);
     if (type == "popstate")
     {
       // copy state object into Event.stash
@@ -233,7 +233,7 @@ fan.dom.WinPeer.prototype.fakeHashChange = function(self, handler)
     if (oldHash != newHash)
     {
       oldHash = newHash;
-      handler.call(fan.dom.DomEventPeer.make(null));
+      handler.call(fan.dom.EventPeer.make(null));
     }
   }
   setInterval(checkHash, 100);

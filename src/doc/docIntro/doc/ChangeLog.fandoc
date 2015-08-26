@@ -18,7 +18,7 @@
 - Elem: deprecate find, findAll in favor of querySelector, querySelectorAll
 - Elem: add animate(), replace(), scrollPos, scrollSize
 - Elem: drag and drop API support
-- DomEvent: meta -> stash; new 'meta' field maps to meta key modifier
+- DomEvent renamed to Event; rework API to use dom::Key
 - InStream.readNullTerminatedStr
 - Map.getChecked
 - Win.hisReplaceState

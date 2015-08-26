@@ -6,13 +6,14 @@
 //   25 Feb 2009  Andy Frank  Creation
 //    8 Jul 2009  Andy Frank  Split webappClient into sys/dom
 //    2 Jun 2011  Andy Frank  Rename to DomEvent
+//   26 Aug 2015  Andy Frank  Rename back to Event
 //
 
 **
-** DomEvent models the DOM event object.
+** Event models the DOM event object.
 **
 @Js
-class DomEvent
+class Event
 {
 
 //////////////////////////////////////////////////////////////////////////
