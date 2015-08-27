@@ -52,16 +52,6 @@ fan.dom.EventPeer.prototype.dataTransfer = function(self)
   return this.dataTx;
 }
 
-fan.dom.EventPeer.prototype.toStr = function(self)
-{
-  return "Event[" +
-    "target:" + this.target() +
-    ", x:" + this.x() + ", y:" + this.y() +
-    ", alt:" + this.alt() + ", ctrl:" + this.ctrl() + ", shift:" + this.shift() +
-    ", button:" + this.button() +
-    "]";
-}
-
 fan.dom.EventPeer.make = function(event)
 {
   var x = fan.dom.Event.make();
