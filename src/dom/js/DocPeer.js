@@ -42,6 +42,12 @@ fan.dom.DocPeer.prototype.createElem = function(self, tagName, attribs)
   return wrap;
 }
 
+fan.dom.DocPeer.prototype.createFrag = function(self)
+{
+  var frag = this.doc.createDocumentFragment();
+  return fan.dom.ElemPeer.wrap(frag);
+}
+
 fan.dom.DocPeer.prototype.querySelector = function(self, selectors)
 {
   var elem = this.doc.querySelector(selectors);

@@ -52,6 +52,9 @@ class Doc
   **
   native Elem createElem(Str tagName, [Str:Str]? attrib := null)
 
+  ** Create a document fragment.
+  @NoDoc native Elem createFrag()
+
   **
   ** Returns the first element within the document (using depth-first
   ** pre-order traversal of the document's nodes) that matches the
