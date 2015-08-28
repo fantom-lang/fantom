@@ -43,7 +43,10 @@ fan.dom.StylePeer.prototype.hasClass = function(self, className)
 fan.dom.StylePeer.prototype.addClass = function(self, className)
 {
   if (!this.hasClass(self, className))
-    this.elem.className += " " + className;
+  {
+    if (this.elem.className.length == 0) this.elem.className = className;
+    else this.elem.className += " " + className;
+  }
   return self;
 }
 
