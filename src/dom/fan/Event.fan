@@ -65,9 +65,6 @@ class Event
 
   override Str toStr()
   {
-    "Event[target:$target," +
-    " x:$x, y:$y, button:$button," +
-    " key:$key, alt:$alt, ctrl:$ctrl, meta:$meta, shift:$shift" +
-    "]"
+    "Event { target=$target x=$x y=$y button=$button key=$key alt=$alt ctrl=$ctrl meta=$meta shift=$shift }"
   }
 }
