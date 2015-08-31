@@ -65,6 +65,9 @@ class Win
   ** Return the size of the window viewport in pixels.
   native Size viewport()
 
+  ** Return the size of the screen in pixels.
+  native Size screenSize()
+
   ** Returns a reference to the parent of the current window
   ** or subframe, or null if this is the top-most window.
   native Win? parent()

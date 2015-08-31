@@ -22,6 +22,7 @@
 - InStream.readNullTerminatedStr
 - Map.getChecked
 - Win.hisReplaceState
+- Win.screenSize
 - JS compiler optimized closure call sites
 - JS source map support
 - HTTPS support for WispService
