@@ -137,6 +137,32 @@ fan.sys.Range.prototype.each = function(func)
   }
 }
 
+fan.sys.Range.prototype.eachWhile = function(func)
+{
+  var start = this.m_start;
+  var end   = this.m_end;
+  var r = null
+  if (start < end)
+  {
+    if (this.m_exclusive) --end;
+    for (var i=start; i<=end; ++i)
+    {
+      r = func.call(i);
+      if (r != null) return r;
+    }
+  }
+  else
+  {
+    if (this.m_exclusive) ++end;
+    for (var i=start; i>=end; --i)
+    {
+      r = func.call(i);
+      if (r != null) return r;
+    }
+  }
+  return null;
+}
+
 fan.sys.Range.prototype.map = function(func)
 {
   var r = func.returns();

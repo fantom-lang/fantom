@@ -160,6 +160,14 @@ const final class Range
   Void each(|Int i| c)
 
   **
+  ** Iterate every integer in the range until the function returns
+  ** non-null.  If function returns non-null, then break the iteration
+  ** and return the resulting object.  Return null if the function returns
+  ** null for every integer in the range.
+  **
+  Obj? eachWhile(|Int i->Obj?| c)
+
+  **
   ** Create a new list which is the result of calling c for
   ** every integer in the range.  The new list is typed based on
   ** the return type of c.

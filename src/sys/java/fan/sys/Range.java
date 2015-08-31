@@ -154,6 +154,31 @@ public final class Range
     }
   }
 
+  public final Object eachWhile(Func f)
+  {
+    long start = this.start;
+    long end = this.end;
+    if (start < end)
+    {
+      if (exclusive) --end;
+      for (long i=start; i<=end; ++i)
+      {
+        Object r = f.call(Long.valueOf(i));
+        if (r != null) return r;
+      }
+    }
+    else
+    {
+      if (exclusive) ++end;
+      for (long i=start; i>=end; --i)
+      {
+        Object r = f.call(Long.valueOf(i));
+        if (r != null) return r;
+      }
+    }
+    return null;
+  }
+
   public final List map(Func f)
   {
     long start = this.start;
