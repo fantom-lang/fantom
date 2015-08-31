@@ -96,6 +96,13 @@ fan.dom.WinPeer.prototype.viewport = function(self)
         this.win.document.documentElement.clientHeight);
 }
 
+fan.dom.WinPeer.prototype.screenSize = function(self)
+{
+  if (this.$screenSize == null)
+    this.$screenSize = fan.gfx.Size.make(this.win.screen.width, this.win.screen.height);
+  return this.$screenSize;
+}
+
 fan.dom.WinPeer.prototype.parent = function(self)
 {
   if (this.win == this.win.parent) return null;
