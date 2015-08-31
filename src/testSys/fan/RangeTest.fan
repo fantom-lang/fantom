@@ -112,6 +112,41 @@ class RangeTest : Test
     verifyEq(list, [6, 5, 4])
   }
 
+  Void testEachWhile()
+  {
+    list := Int[,]
+
+    list.clear
+    r := (4..99).eachWhile |i| { if (i == 7) return "foo"; list.add(i); return null }
+    verifyEq(r, "foo")
+    verifyEq(list, [4, 5, 6])
+
+    list.clear
+    r = (4..7).eachWhile |i| { list.add(i); return null }
+    verifyEq(r, null)
+    verifyEq(list, [4, 5, 6, 7])
+
+    list.clear
+    r = (4..<7).eachWhile |i| { list.add(i); return null }
+    verifyEq(r, null)
+    verifyEq(list, [4, 5, 6])
+
+    list.clear
+    r = (-1..-4).eachWhile |i| { list.add(i); return null }
+    verifyEq(r, null)
+    verifyEq(list, [-1, -2, -3, -4])
+
+    list.clear
+    r = (-1..<-4).eachWhile |i| { list.add(i); return null }
+    verifyEq(r, null)
+    verifyEq(list, [-1, -2, -3])
+
+    list.clear
+    r = (-1..<-4).eachWhile |i| { if (i == -2) return this; list.add(i); return null }
+    verifySame(r, this)
+    verifyEq(list, [-1])
+  }
+
   Void testMap()
   {
     verifyEq((0..3).map { it.toStr }, Obj?["0", "1", "2", "3"])
