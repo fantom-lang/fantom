@@ -16,42 +16,89 @@ import fan.sys.*;
  */
 public class EnvProps
 {
-  public EnvProps(Env env) { this.env = env; }
-
-  public synchronized Map get(Pod pod, Uri uri, Duration maxAge)
+  public EnvProps(Env env)
   {
-    Key key = new Key(pod, uri);
-    CachedProps cp = (CachedProps)cache.get(key);
-    if (cp == null || Duration.nowTicks() - cp.read > maxAge.ticks)
-      cp = refresh(key, cp);
-    return cp.props;
+    this.env = env;
   }
 
-  private CachedProps refresh(Key key, CachedProps cp)
+  public Map get(Pod pod, Uri uri, Duration maxAge)
+  {
+    // lazy load pods with sys.envProps index prop (not for config.props)
+    Pod[] otherPods = null;
+    if (!uri.name().equals("config.props"))
+    {
+      if (envPropPods == null) envPropPods = loadEnvPropPods();
+      otherPods = envPropPods;
+    }
+
+    // lookup cached props for key (refresh if not found or expired)
+    synchronized(this)
+    {
+      Key key = new Key(pod, uri);
+      CachedProps cp = (CachedProps)cache.get(key);
+      if (cp == null || cp.isExpired(maxAge))
+        cp = refresh(key, cp, otherPods);
+      return cp.props;
+    }
+  }
+
+  private Pod[] loadEnvPropPods()
+  {
+    try
+    {
+      List podNames = env.index("sys.envProps");
+      Pod[] pods = new Pod[podNames.sz()];
+      for (int i=0; i<pods.length; ++i)
+        pods[i] = Pod.find((String)podNames.get(i), true);
+      return pods;
+    }
+    catch (Throwable e) { e.printStackTrace(); }
+    return new Pod[0];
+  }
+
+  private CachedProps refresh(Key key, CachedProps cp, Pod[] otherPods)
   {
     List files = env.findAllFiles(Uri.fromStr("etc/" + key.pod + "/" + key.uri));
     if (cp != null && !cp.isStale(files)) return cp;
     if (key.uri.isPathAbs()) throw ArgErr.make("Env.props Uri must be relative: " + key.uri);
-    cp = new CachedProps(key, files);
+    Map defProps = readDef(key.pod, key.uri, otherPods);
+    cp = new CachedProps(key, defProps, files);
     cache.put(key, cp);
     return cp;
   }
 
-  static Map readDef(Pod pod, Uri uri)
+  private static Map readDef(Pod pod, Uri uri, Pod[] otherPods)
   {
-    uri = Uri.fromStr(pod.uri() + "/" + uri);
+    Map map = readPodProps(pod, Uri.fromStr("/" + uri.toStr()));
+    if (otherPods != null)
+    {
+      Uri otherPodUri = Uri.fromStr("/" + pod.name() + "/" + uri.toStr());
+      for (int i=0; i<otherPods.length; ++i)
+      {
+        Map more = readPodProps(otherPods[i], otherPodUri);
+        if (!more.isEmpty())
+        {
+          if (map.isRO()) map = map.dup();
+          map.setAll(more);
+        }
+      }
+    }
+    return (Map)map.toImmutable();
+  }
+
+  private static Map readPodProps(Pod pod, Uri uri)
+  {
     fan.sys.File f = (fan.sys.File)pod.file(uri, false);
-    Map map = Sys.emptyStrStrMap;
     try
     {
-      if (f != null) map = (Map)f.readProps().toImmutable();
+      if (f != null) return f.readProps();
     }
     catch (Exception e)
     {
       System.out.println("ERROR: Cannot load props " + pod + "::" + uri);
       System.out.println("  " + e);
     }
-    return map;
+    return Sys.emptyStrStrMap;
   }
 
   static Map read(Map defProps, Key key, List files)
@@ -76,6 +123,7 @@ public class EnvProps
     Key(Pod p, Uri u) { pod = p; uri = u; }
     public int hashCode() { return pod.hashCode() ^ uri.hashCode(); }
     public boolean equals(Object o) { Key x = (Key)o; return pod == x.pod && uri.equals(x.uri); }
+    public String toString() { return "" + pod + ":" + uri; }
     final Pod pod;
     final Uri uri;
   }
@@ -86,15 +134,23 @@ public class EnvProps
 
   static class CachedProps
   {
-    CachedProps(Key key, List files)
+    static int count = 0;
+
+    CachedProps(Key key, Map defProps, List files)
     {
       this.files = files;
+      this.defProps = defProps;
       this.modified = new long[files.sz()];
       for (int i=0; i<files.sz(); ++i)
         this.modified[i] = ((File)files.get(i)).modified().ticks();
-      this.defProps = readDef(key.pod, key.uri);
       this.props = read(defProps, key, files);
       this.read = Duration.nowTicks();
+    }
+
+    boolean isExpired(Duration maxAge)
+    {
+      if (maxAge == Duration.maxVal) return false;
+      return Duration.nowTicks() - this.read > maxAge.ticks;
     }
 
     boolean isStale(List x)
@@ -119,4 +175,5 @@ public class EnvProps
 
   private final Env env;
   private final HashMap cache = new HashMap();
+  private Pod[] envPropPods;
 }
