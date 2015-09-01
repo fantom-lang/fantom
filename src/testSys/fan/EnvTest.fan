@@ -422,7 +422,8 @@ class EnvTest : Test
 
     // verify expected output
     s := buf.flip.readAllStr.trim
-    lines := s.splitLines.map { it[it.index("[test]")..-1] }.sort
+    lines := s.splitLines.findAll |x| { x.contains("[test]") }
+    lines = lines.map { it[it.index("[test]")..-1] }.sort
     verifyEq(lines.join("\n"),
              "[test] shutdown 1
               [test] shutdown 2

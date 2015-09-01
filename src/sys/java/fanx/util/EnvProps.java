@@ -21,6 +21,12 @@ public class EnvProps
     this.env = env;
   }
 
+  public synchronized void reload()
+  {
+    this.cache.clear();
+    this.envPropPods = null;
+  }
+
   public Map get(Pod pod, Uri uri, Duration maxAge)
   {
     // lazy load pods with sys.envProps index prop (not for config.props)
@@ -34,10 +40,10 @@ public class EnvProps
     // lookup cached props for key (refresh if not found or expired)
     synchronized(this)
     {
-      Key key = new Key(pod, uri);
+      Key key = new Key(pod.name(), uri);
       CachedProps cp = (CachedProps)cache.get(key);
       if (cp == null || cp.isExpired(maxAge))
-        cp = refresh(key, cp, otherPods);
+        cp = refresh(pod, key, cp, otherPods);
       return cp.props;
     }
   }
@@ -50,18 +56,26 @@ public class EnvProps
       Pod[] pods = new Pod[podNames.sz()];
       for (int i=0; i<pods.length; ++i)
         pods[i] = Pod.find((String)podNames.get(i), true);
+
+      if (System.getenv("FAN_DEBUG_ENVPROPS") != null)
+      {
+        String s = "EnvProps.loadEnvPropPods (" + pods.length + ")";
+        for (int i=0; i<pods.length; ++i) s = s + (i == 0 ? ": " : ", ") + pods[i];
+        System.out.println(s);
+      }
+
       return pods;
     }
     catch (Throwable e) { e.printStackTrace(); }
     return new Pod[0];
   }
 
-  private CachedProps refresh(Key key, CachedProps cp, Pod[] otherPods)
+  private CachedProps refresh(Pod pod, Key key, CachedProps cp, Pod[] otherPods)
   {
     List files = env.findAllFiles(Uri.fromStr("etc/" + key.pod + "/" + key.uri));
     if (cp != null && !cp.isStale(files)) return cp;
     if (key.uri.isPathAbs()) throw ArgErr.make("Env.props Uri must be relative: " + key.uri);
-    Map defProps = readDef(key.pod, key.uri, otherPods);
+    Map defProps = cp != null ? cp.defProps : readDef(pod, key.uri, otherPods);
     cp = new CachedProps(key, defProps, files);
     cache.put(key, cp);
     return cp;
@@ -120,11 +134,11 @@ public class EnvProps
 
   static final class Key
   {
-    Key(Pod p, Uri u) { pod = p; uri = u; }
+    Key(String p, Uri u) { pod = p; uri = u; }
     public int hashCode() { return pod.hashCode() ^ uri.hashCode(); }
-    public boolean equals(Object o) { Key x = (Key)o; return pod == x.pod && uri.equals(x.uri); }
+    public boolean equals(Object o) { Key x = (Key)o; return pod.equals(x.pod) && uri.equals(x.uri); }
     public String toString() { return "" + pod + ":" + uri; }
-    final Pod pod;
+    final String pod;
     final Uri uri;
   }
 
