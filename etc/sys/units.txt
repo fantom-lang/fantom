@@ -27,7 +27,7 @@ square_meters_per_newton, m²/N
 watts_per_square_meter_degree_kelvin, W/m²K
 ampere_square_meter, Am²
 db_milliVolt, dBmV
-db_microVolt, dBuV
+db_microVolt, dBµV
 parts_per_unit, ppu
 parts_per_million, ppm; ; 1.0E-6
 parts_per_billion, ppb; ; 1.0E-9
@@ -92,6 +92,7 @@ energy_efficiency_ratio, Btu/Wh, EER; ; 0.2916666667
 
 -- density (kg1*m-3)
 kilograms_per_cubic_meter, kg/m³; kg1*m-3
+micrograms_per_cubic_meter, µg/m³; kg1*m-3; 1.0E-9
 
 -- electric charge (sec1*A1)
 coulomb, C; sec1*A1
@@ -226,7 +227,7 @@ watts_per_square_foot_irradiance, W/ft²_irr; kg1*sec-3; 10.76391041671
 
 -- length (m1)
 meter, m; m1
-micrometer, um; m1; 1.0E-5
+micrometer, µm; m1; 1.0E-5
 millimeter, mm; m1; 0.0010
 centimeter, cm; m1; 0.01
 kilometer, km; m1; 1000.0
@@ -351,7 +352,7 @@ watts_per_meter_degree_kelvin, W/m°K; kg1*m1*sec-3*K-1
 
 -- time (sec1)
 nanosecond, ns; sec1; 1.0E-9
-microsecond, us; sec1; 1.0E-6
+microsecond, µs; sec1; 1.0E-6
 millisecond, ms; sec1; 0.0010
 hundredths_second, cs; sec1; 0.01
 tenths_second, ds; sec1; 0.1
