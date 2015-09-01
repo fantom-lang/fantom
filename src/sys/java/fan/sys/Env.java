@@ -379,6 +379,7 @@ public abstract class Env
   void onPodReload()
   {
     index.reload();
+    props.reload();
   }
 
 //////////////////////////////////////////////////////////////////////////
