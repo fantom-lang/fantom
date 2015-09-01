@@ -333,6 +333,43 @@ class EnvTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// EnvProp Pods
+//////////////////////////////////////////////////////////////////////////
+
+ Void testEnvPropPods()
+ {
+   // we turn this test off by default since it
+   // effects performance of all Env.prop lookupos
+   env := Env.cur
+   on := Env.cur.index("sys.envProps").contains("testSys")
+   if (!on) return
+
+   etc :=  Env.cur.workDir + `etc/concurrent/locale/fr.props`
+   try
+   {
+     etc.writeProps(["r":"r etc override"])
+
+     // verify concurrent/locale/fr.props bundled with me
+     pod := Pod.find("concurrent")
+     fr := Locale("fr")
+     verifyEq(env.locale(pod, "p", "!", fr), "p fr")
+     verifyEq(env.locale(pod, "q", "!", fr), "q fr")
+     verifyEq(env.locale(pod, "r", "!", fr), "r etc override")
+     verifyEq(env.locale(pod, "x", "!", fr), "!")
+
+     props := env.props(pod, `locale/fr.props`, 1hr)
+     verifyEq(props.size, 3)
+     verifyEq(props["p"], "p fr")
+     verifyEq(props["q"], "q fr")
+     verifyEq(props["r"], "r etc override")
+   }
+   finally
+   {
+     etc.delete
+   }
+ }
+
+//////////////////////////////////////////////////////////////////////////
 // Index
 //////////////////////////////////////////////////////////////////////////
 

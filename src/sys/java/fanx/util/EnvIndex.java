@@ -58,8 +58,7 @@ public class EnvIndex
 
   private void load()
   {
-    Log log = Log.get("podindex");
-    long t1 = System.currentTimeMillis();
+    //long t1 = System.currentTimeMillis();
 
     // load all the props
     List podNames = env.findAllPodNames();
@@ -74,7 +73,7 @@ public class EnvIndex
       }
       catch (Throwable e)
       {
-        log.err("Cannot load " + n, e);
+        System.out.println("ERROR: Env.index load: " + n + "\n  " + e);
       }
     }
 
@@ -93,8 +92,8 @@ public class EnvIndex
     // sort and lock down list of keys
     keys = (List)keys.sort().toImmutable();
 
-    long t2 = System.currentTimeMillis();
-    log.debug("Index load " + (t2-t1) + "ms");
+    //long t2 = System.currentTimeMillis();
+    //System.out.println("Env.index load " + (t2-t1) + "ms");
     this.index = immutable;
     this.keys  = keys;
   }

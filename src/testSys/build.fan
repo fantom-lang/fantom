@@ -27,9 +27,13 @@ class Build : BuildPod
                "vcs.uri":      "https://bitbucket.org/fantom/fan-1.0/",
                "testSys.foo":"got\n it \u0123"]
     depends = ["sys 1.0", "concurrent 1.0"]
-    index   = ["testSys.single": "works!", "testSys.mult": ["testSys-1","testSys-2"]]
+    index   = [
+      "testSys.single": "works!",
+      "testSys.mult": ["testSys-1","testSys-2"],
+      //"sys.envProps": "testSys",
+    ]
     srcDirs = [`fan/`]
-    resDirs = [`res/`, `locale/`]
+    resDirs = [`res/`, `locale/`, `concurrent/locale/`]
     docApi  = false
   }
 }
