@@ -124,6 +124,9 @@ class Win
   ** Call the specified function after a specified delay.
   native Void callLater(Duration delay, |->| f)
 
+  ** Request the browser to perform an animation before the next repaint.
+  @NoDoc native Void reqAnimationFrame(|This| f)
+
 //////////////////////////////////////////////////////////////////////////
 // Storage
 //////////////////////////////////////////////////////////////////////////

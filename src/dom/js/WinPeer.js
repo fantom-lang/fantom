@@ -252,6 +252,12 @@ fan.dom.WinPeer.prototype.callLater = function(self, delay, f)
   this.win.setTimeout(func, delay.toMillis());
 }
 
+fan.dom.WinPeer.prototype.reqAnimationFrame = function(self, f)
+{
+  var func = function() { f.call(self) };
+  this.win.requestAnimationFrame(func);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Storage
 //////////////////////////////////////////////////////////////////////////
