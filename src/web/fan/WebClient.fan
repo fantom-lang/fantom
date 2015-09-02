@@ -484,7 +484,7 @@ class WebClient
     catch (Err e) throw IOErr("Invalid HTTP response: $res", e)
 
     // check for redirect
-    checkFollowRedirect
+    if (checkFollowRedirect) return this
 
     // if there is response content, then create wrap the raw socket
     // input stream with the appropiate chunked input stream
@@ -497,20 +497,20 @@ class WebClient
   ** If we have a 3xx statu code with a location header,
   ** then check for an automate redirect.
   **
-  private Void checkFollowRedirect()
+  private Bool checkFollowRedirect()
   {
     // only redirect on 3xx status code
-    if (resCode / 100 != 3) return
+    if (resCode / 100 != 3) return false
 
     // must be explicitly configured for redirects
-    if (!followRedirects) return
+    if (!followRedirects) return false
 
     // only redirect when there is no request content
-    if (reqOutStream != null) return
+    if (reqOutStream != null) return false
 
     // only redirect if a location header was given
     loc := resHeaders["Location"]
-    if (loc == null) return
+    if (loc == null) return false
 
     // redirect
     close
@@ -520,6 +520,7 @@ class WebClient
     reqUri = newUri
     writeReq
     readRes
+    return true
   }
 
   **
