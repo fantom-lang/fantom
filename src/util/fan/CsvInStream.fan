@@ -160,6 +160,9 @@ class CsvInStream : InStream
       // if its "" then add ", otherwise end of cell
       ch = line.getSafe(pos++)
       if (ch == '"') { s.addChar(ch); continue }
+
+      // skip everything to next delimiter
+      while (ch != delimiter) ch = line.getSafe(pos++, delimiter)
       break
     }
     return s.toStr
@@ -170,4 +173,3 @@ class CsvInStream : InStream
   private Int pos
 
 }
-

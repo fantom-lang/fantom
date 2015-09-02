@@ -47,10 +47,12 @@ class CsvTest : Test
     verifyCsv(
       Str<|foo,"bar"
            "baz",roo
-           "abc","x"|>,
+           "abc","x"
+           "a" ,"b"|>,
       [["foo", "bar"],
        ["baz", "roo"],
-       ["abc", "x"]])
+       ["abc", "x"],
+       ["a",   "b"]])
       {}
 
     // quoted fields with embedded delimiters and quotes
