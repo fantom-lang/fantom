@@ -72,8 +72,8 @@ class WebClientTest : Test
 
   Void testGetChunked()
   {
-    // at least for now, google home page uses chunked transfer
-    c := WebClient(`http://google.com`)
+    // for now reddit uses chunked transfer
+    c := WebClient(`https://www.reddit.com/r/programming`)
     verify(!c.isConnected)
     try
     {
@@ -92,6 +92,7 @@ class WebClientTest : Test
       verify(c.resStr.contains("<html"))
 
       // try again
+      c.close
       again := c.getStr
       verify(again.contains("<html"))
     }
