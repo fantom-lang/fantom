@@ -255,6 +255,7 @@ public class Pod
   {
     if (name.equals("reloadList")) return reloadList();
     if (name.equals("reload")) return reload();
+    if (name.equals("classLoader")) return classLoader;
     return super.trap(name, args);
   }
 
