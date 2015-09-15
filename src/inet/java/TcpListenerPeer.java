@@ -9,6 +9,7 @@ package fan.inet;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 import java.security.*;
 import javax.net.ssl.*;
 import fan.sys.*;
@@ -181,6 +182,7 @@ public class TcpListenerPeer
       s.peer.socket.getPort(),
       false
     );
+    sslSocket.setEnabledCipherSuites(intersection(sslSocket.getSupportedCipherSuites(), ENABLED_CIPHER_SUITES));
     sslSocket.setUseClientMode(false);
     sslSocket.startHandshake();
 
@@ -189,6 +191,45 @@ public class TcpListenerPeer
     upgraded.peer.connected(upgraded);
     return upgraded;
   }
+
+  private static String[] intersection(String[] a, String[] b) {
+      Set set = new HashSet(Arrays.asList(a));
+      set.retainAll(Arrays.asList(b));
+      return (String[])set.toArray(new String[set.size()]);
+  }
+
+  private static final String[] ENABLED_CIPHER_SUITES = new String[] {
+
+          // Cipher suites that are not listed at
+          // http://java.sun.com/javase/6/docs/technotes/guides/security/StandardNames.html
+
+          "TLS_RSA_WITH_DES_CBC_SHA",
+          "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+          "TLS_RSA_WITH_RC4_128_SHA",
+          "TLS_RSA_WITH_RC4_128_MD5",
+
+          // Strong cipher suites that are listed at
+          // http://java.sun.com/javase/6/docs/technotes/guides/security/StandardNames.html
+
+          "TLS_RSA_WITH_AES_128_CBC_SHA",
+          "TLS_RSA_WITH_AES_256_CBC_SHA",
+          "SSL_RSA_WITH_3DES_EDE_CBC_SHA",
+          "SSL_RSA_WITH_RC4_128_MD5",
+          "SSL_RSA_WITH_RC4_128_SHA",
+
+          // https://support.google.com/chrome/answer/6098869?p=dh_error&rd=1#DHkey
+          // indicates to use ECDHE and disable DHE
+          "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",
+          "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",
+          "TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",
+          "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",
+          "TLS_ECDHE_ECDSA_WITH_NULL_SHA",
+          "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+          "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+          "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+          "TLS_ECDHE_RSA_WITH_RC4_128_SHA",
+          "TLS_ECDHE_RSA_WITH_NULL_SHA",
+  };
 
 //////////////////////////////////////////////////////////////////////////
 // Socket Options
