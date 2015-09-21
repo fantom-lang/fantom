@@ -32,7 +32,7 @@ fan.fwt.ToolBarPeer.prototype.prefSize = function(self, hints)
   {
     var kid  = kids.get(i);
     var pref = kid.peer.prefSize(kid);
-    pw = Math.max(pw, pref.m_w);
+    pw += pref.m_w + 4;
     ph = Math.max(ph, pref.m_h);
   }
   return fan.gfx.Size.make(pw+14, ph+14);  // add padding/border
