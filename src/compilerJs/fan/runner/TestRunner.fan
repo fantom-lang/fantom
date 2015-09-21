@@ -165,8 +165,8 @@ class TestRunner
         methodCount++
         totalVerifyCount += verifyCount;
       }
-      testCount++
     }
+    testCount++
   }
 
   Method[] methods(Type type, Str methodName)
@@ -192,22 +192,12 @@ class TestRunner
       workDir := Env.cur.workDir
       tempDir := Env.cur.tempDir
 
-      // TODO - setup/teardown
       js  := "fan.${m.parent.pod}.${m.parent.name}"
       ret := engine.eval(
        "var testRunner = function()
         {
-          try
-          {
-            fan.sys.Env.cur().m_homeDir = fan.sys.File.os($homeDir.osPath.toCode);
-            fan.sys.Env.cur().m_workDir = fan.sys.File.os($workDir.osPath.toCode);
-            fan.sys.Env.cur().m_tempDir = fan.sys.File.os($tempDir.osPath.toCode);
-
-            var test = ${js}.make();
-            test.${m.name}();
-            return test.verifyCount;
-          }
-          catch (err)
+          var test;
+          var doCatchErr = function(err)
           {
             if (err == undefined) println('Undefined error');
             else if (err.trace) err.trace();
@@ -217,7 +207,28 @@ class TestRunner
               var line = err.lineNumber; if (line == null) line = 'Unknown';
               println(err + ' (' + file + ':' + line + ')');
             }
+          }
+
+          try
+          {
+            fan.sys.Env.cur().m_homeDir = fan.sys.File.os($homeDir.osPath.toCode);
+            fan.sys.Env.cur().m_workDir = fan.sys.File.os($workDir.osPath.toCode);
+            fan.sys.Env.cur().m_tempDir = fan.sys.File.os($tempDir.osPath.toCode);
+
+            test = ${js}.make();
+            test.setup();
+            test.${m.name}();
+            return test.verifyCount;
+          }
+          catch (err)
+          {
+            doCatchErr(err);
             return -1;
+          }
+          finally
+          {
+            try { test.teardown(); }
+            catch (err) { doCatchErr(err); }
           }
         }
         testRunner();")
