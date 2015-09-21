@@ -487,6 +487,9 @@ class FloatTest : Test
 
   Void testToStr()
   {
+    verifyEq(69.69f.toStr, "69.69")
+    verifyEq(69f.toStr,    "69.0")
+
     verifyEq(Float.posInf.toStr, "INF")
     verifyEq(Float.negInf.toStr, "-INF")
     verifyEq(Float.nan.toStr,    "NaN")

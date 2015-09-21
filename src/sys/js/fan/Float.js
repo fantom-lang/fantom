@@ -157,7 +157,7 @@ fan.sys.Float.toStr = function(self)
   if (isNaN(self)) return "NaN";
   if (self == fan.sys.Float.m_posInf) return "INF";
   if (self == fan.sys.Float.m_negInf) return "-INF";
-  return ""+self;
+  return (fan.sys.Float.toInt(self) == self) ? self.toFixed(1) : ""+self;
 }
 
 fan.sys.Float.encode = function(self, out)
