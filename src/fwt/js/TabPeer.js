@@ -40,6 +40,13 @@ fan.fwt.TabPeer.prototype.sync = function(self)
   {
     $self.m_parent.peer.m_selectedIndex = $self.peer.index;
     $self.m_parent.relayout();
+
+    var evt  = fan.fwt.Event.make();
+    evt.m_id = fan.fwt.EventId.m_select;
+    evt.m_widget = self;
+    evt.m_index  = $self.peer.index;
+    evt.m_data   = $self;
+    $self.m_parent.onSelect().fire(evt);
   }
 
   var css = elem.style;

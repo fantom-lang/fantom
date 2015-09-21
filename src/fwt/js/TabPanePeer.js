@@ -13,7 +13,7 @@ fan.fwt.TabPanePeer = fan.sys.Obj.$extend(fan.fwt.PanePeer);
 fan.fwt.TabPanePeer.prototype.$ctor = function(self) {}
 
 fan.fwt.TabPanePeer.prototype.selectedIndex = function(self) { return this.m_selectedIndex; }
-fan.fwt.TabPanePeer.prototype.selectedIndex$ = function(self, val) { this.m_selectedIndex = val; }
+fan.fwt.TabPanePeer.prototype.selectedIndex$ = function(self, val) { this.m_selectedIndex = val; self.relayout(); }
 fan.fwt.TabPanePeer.prototype.m_selectedIndex = 0;
 
 fan.fwt.TabPanePeer.prototype.sync = function(self)
