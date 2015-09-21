@@ -306,7 +306,7 @@ fan.sys.Map.prototype.toStr = function()
   this.$each(function(b)
   {
     if (s.length > 0) s += ", ";
-    s += b.key + ": " + b.val;
+    s += b.key + ":" + b.val;
   });
   return "[" + s + "]";
 }
