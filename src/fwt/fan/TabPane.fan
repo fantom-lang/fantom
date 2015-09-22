@@ -33,7 +33,7 @@ class TabPane : Widget
   ** Get the list of installed tabs.  Tabs are added and
   ** removed using normal `Widget.add` and `Widget.remove`.
   **
-  Tab[] tabs() { return Tab[,].addAll(children) }
+  Tab[] tabs() { children.map |kid->Tab| { kid } }
 
   **
   ** The currently selected index of `tabs`.
