@@ -119,9 +119,9 @@ fan.sys.Pod.prototype.$at = function(name, baseQname, mixins, facets, flags)
 }
 
 // addMixin
-fan.sys.Pod.prototype.$am = function(name, baseQname, mixins, flags)
+fan.sys.Pod.prototype.$am = function(name, baseQname, mixins, facets, flags)
 {
-  var t = this.$at(name, baseQname, mixins, flags);
+  var t = this.$at(name, baseQname, mixins, facets, flags);
   t.m_isMixin = true;
   return t;
 }
