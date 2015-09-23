@@ -79,6 +79,20 @@ fan.sys.Func.prototype.checkInCtor = function(obj) {}
 
 fan.sys.Func.prototype.toStr = function() { return "sys::Func"; }
 
+fan.sys.Func.prototype.retype = function(t)
+{
+  if (t instanceof fan.sys.FuncType)
+  {
+    var params = [];
+    for (var i=0; i < t.pars.length; ++i)
+      params.push(new fan.sys.Param(String.fromCharCode(i+65), t.pars[i], 0));
+    var paramList = fan.sys.List.make(fan.sys.Param.$type, params);
+    return fan.sys.Func.make(paramList, t.ret, this.m_func);
+  }
+  else
+    throw fan.sys.ArgErr.make(fan.sys.Str.plus("Not a Func type: ", t));
+}
+
 /*************************************************************************
  * ClosureFuncSpec
  ************************************************************************/
