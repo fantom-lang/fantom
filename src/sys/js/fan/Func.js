@@ -67,6 +67,7 @@ fan.sys.Func.prototype.toImmutable = function()
 
 fan.sys.Func.prototype.params = function() { return this.m_params; }
 fan.sys.Func.prototype.returns = function() { return this.m_return; }
+fan.sys.Func.prototype.method = function() { return null; }
 
 fan.sys.Func.prototype.call = function() { return this.m_func.apply(null, arguments); }
 fan.sys.Func.prototype.callList = function(args) { return this.m_func.apply(null, args.m_values); }
