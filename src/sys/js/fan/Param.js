@@ -31,4 +31,4 @@ fan.sys.Param.prototype.$name = function() { return this.m_name; }
 fan.sys.Param.prototype.type = function() { return this.m_type; }
 fan.sys.Param.prototype.hasDefault = function() { return this.m_hasDefault; }
 fan.sys.Param.prototype.$typeof = function() { return fan.sys.Param.$type; }
-
+fan.sys.Param.prototype.toStr = function() { return this.m_type.toStr() + " " + this.m_name; }
