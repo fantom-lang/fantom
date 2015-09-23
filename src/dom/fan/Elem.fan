@@ -251,6 +251,6 @@ class Elem
 
     // invoke complete callback func
     if (onComplete != null)
-      Win.cur.callLater(dur) |->| { onComplete(this) }
+      Win.cur.setTimeout(dur) { onComplete(this) }
   }
 }

@@ -122,10 +122,30 @@ class Win
   native Void onEvent(Str type, Bool useCapture, |Event e| handler)
 
   ** Call the specified function after a specified delay.
+  @Deprecated { msg="Use setTimeout()" }
   native Void callLater(Duration delay, |->| f)
 
   ** Request the browser to perform an animation before the next repaint.
   @NoDoc native Void reqAnimationFrame(|This| f)
+
+//////////////////////////////////////////////////////////////////////////
+// Timers
+//////////////////////////////////////////////////////////////////////////
+
+  ** Call the specified function after a specified delay. Returns
+  ** a timeoutId that can be used in `clearTimeout`.
+  native Int setTimeout(Duration delay, |This win| f)
+
+  ** Clears the delay set by `setTimeout`.
+  native Void clearTimeout(Int timeoutId)
+
+  ** Calls a function repeatedly, with a fixed time delay between
+  ** each call to that function. Returns an intervalId that can be
+  ** used in `clearInterval`.
+  native Int setInterval(Duration delay, |This win| f)
+
+  ** Cancels a repeated action which was set up using `setInterval`.
+  native Void clearInterval(Int intervalId)
 
 //////////////////////////////////////////////////////////////////////////
 // Storage

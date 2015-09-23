@@ -262,6 +262,32 @@ fan.dom.WinPeer.prototype.reqAnimationFrame = function(self, f)
 // Storage
 //////////////////////////////////////////////////////////////////////////
 
+fan.dom.WinPeer.prototype.setTimeout = function(self, delay, f)
+{
+  var func = function() { f.call(self) }
+  return this.win.setTimeout(func, delay.toMillis());
+}
+
+fan.dom.WinPeer.prototype.clearTimeout = function(self, id)
+{
+  this.win.clearTimeout(id);
+}
+
+fan.dom.WinPeer.prototype.setInterval = function(self, delay, f)
+{
+  var func = function() { f.call(self) }
+  return this.win.setInterval(func, delay.toMillis());
+}
+
+fan.dom.WinPeer.prototype.clearInterval = function(self, id)
+{
+  this.win.clearInterval(id);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Storage
+//////////////////////////////////////////////////////////////////////////
+
 fan.dom.WinPeer.prototype.sessionStorage = function(self)
 {
   if (this.$sessionStorage == null)
