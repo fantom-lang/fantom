@@ -320,6 +320,31 @@ class FuncTest : Test
     verifyEq(BindDef#make.func.bind([7, 8, 9]).call(10)->list, [7, 8, 9])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Method Func
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMethodFunc()
+  {
+    func := #staticJudge.func
+    verifyEq(func.call("Dredd"), "Dredd")
+    verifyEq(func.callOn(null, ["Hershey"]), "Hershey")
+    verifyEq(func.callList(["Anderson"]), "Anderson")
+    verifyEq(func.arity, 1)
+    
+    func = #judge.func
+    verifyEq(func.call(this, "Dredd"), "Dredd")
+    verifyEq(func.callOn(this, ["Hershey"]), "Hershey")
+    verifyEq(func.callList([this, "Anderson"]), "Anderson")
+    verifyEq(func.arity, 2)
+    
+    echo("params -> ${func.params}")
+    echo("typeof -> ${func.typeof}")
+    echo("toStr  -> ${func}")
+  }
+  
+  Str judge(Str who) { who }
+  static Str staticJudge(Str who) { who }
 }
 
 @Js internal class BindDef
