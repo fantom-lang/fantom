@@ -29,6 +29,9 @@ fan.dom.EventPeer.prototype.meta  = function(self) { return this.event.metaKey; 
 fan.dom.EventPeer.prototype.button = function(self) { return this.event.button; }
 fan.dom.EventPeer.prototype.key = function(self) { return this.$key }
 
+fan.dom.EventPeer.prototype.deltaX = function(self) { return this.event.deltaX; }
+fan.dom.EventPeer.prototype.deltaY = function(self) { return this.event.deltaY; }
+
 fan.dom.EventPeer.prototype.stop = function(self)
 {
   this.event.preventDefault();

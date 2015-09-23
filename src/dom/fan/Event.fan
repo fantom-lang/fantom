@@ -51,6 +51,12 @@ class Event
   ** Mouse button number pressed.
   native Int? button()
 
+  ** Horizontal scroll amount for wheel events.
+  native Int? deltaX()
+
+  ** Vertical scroll amount for wheel events.
+  native Int? deltaY()
+
   ** Key instance for key pressed.
   native Key? key()
 
@@ -65,6 +71,7 @@ class Event
 
   override Str toStr()
   {
-    "Event { target=$target x=$x y=$y button=$button key=$key alt=$alt ctrl=$ctrl meta=$meta shift=$shift }"
+    "Event { target=$target x=$x y=$y button=$button deltaX=$deltaX deltaY=$deltaY" +
+    " key=$key alt=$alt ctrl=$ctrl meta=$meta shift=$shift }"
   }
 }
