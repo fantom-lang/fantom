@@ -77,6 +77,8 @@ fan.sys.Func.prototype.enterCtor = function(obj) {}
 fan.sys.Func.prototype.exitCtor = function() {}
 fan.sys.Func.prototype.checkInCtor = function(obj) {}
 
+fan.sys.Func.prototype.toStr = function() { return "sys::Func"; }
+
 /*************************************************************************
  * ClosureFuncSpec
  ************************************************************************/
