@@ -66,3 +66,21 @@ fan.sys.MethodFunc.prototype.callOn = function(obj, args)
 {
   return this.m_method.callOn.apply(this.m_method, arguments);
 }
+
+fan.sys.MethodFunc.prototype.retype = function(t)
+{
+  if (t instanceof fan.sys.FuncType)
+  {
+    var params = [];
+    for (var i=0; i < t.pars.length; ++i)
+      params.push(new fan.sys.Param(String.fromCharCode(i+65), t.pars[i], 0));
+    var paramList = fan.sys.List.make(fan.sys.Param.$type, params);
+
+    var func = new fan.sys.MethodFunc(this.m_method, t.ret);
+    func.m_type = t;
+    func.m_fparams = paramList;
+    return func;
+  }
+  else
+    throw fan.sys.ArgErr.make(fan.sys.Str.plus("Not a Func type: ", t));
+}
