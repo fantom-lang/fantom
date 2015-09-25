@@ -87,6 +87,9 @@ class Elem
   ** Position of element on the current doc.
   @NoDoc native Point posDoc()
 
+  ** Position of element relative to the whole document.
+  native Pos pagePos()
+
   ** Size of element in pixels.
   native Size size
 

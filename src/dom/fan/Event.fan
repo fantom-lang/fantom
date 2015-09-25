@@ -29,11 +29,14 @@ class Event
   ** The target to which the event was dispatched.
   native Elem target()
 
-  ** The x position of the event.
-  native Int x()
+  @Deprecated { msg="Use pagePos.x" }
+  Int x() { pagePos.x }
 
-  ** The y position of the event.
-  native Int y()
+  @Deprecated { msg="Use pagePos.y" }
+  Int y() { pagePos.y }
+
+  ** The mouse position of this event relative to page.
+  native Pos pagePos()
 
   ** Return true if the ALT key was pressed during the event.
   native Bool alt()
@@ -71,7 +74,11 @@ class Event
 
   override Str toStr()
   {
-    "Event { target=$target x=$x y=$y button=$button deltaX=$deltaX deltaY=$deltaY" +
-    " key=$key alt=$alt ctrl=$ctrl meta=$meta shift=$shift }"
+    "Event { target=$target pagePos=$pagePos button=$button deltaX=$deltaX deltaY=$deltaY key=$key" +
+    " alt="   + (alt   ? "T" : "F") +
+    " ctrl="  + (ctrl  ? "T" : "F") +
+    " shift=" + (shift ? "T" : "F") +
+    " meta="  + (meta  ? "T" : "F") +
+    " }"
   }
 }

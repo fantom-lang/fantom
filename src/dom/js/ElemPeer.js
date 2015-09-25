@@ -146,6 +146,14 @@ fan.dom.ElemPeer.prototype.posDoc = function(self)
   return fan.gfx.Point.make(x, y);
 }
 
+fan.dom.ElemPeer.prototype.pagePos = function(self)
+{
+  var r = this.elem.getBoundingClientRect();
+  var x = Math.round(r.left);
+  var y = Math.round(r.top);
+  return fan.dom.Pos.make(x, y);
+}
+
 fan.dom.ElemPeer.prototype.size = function(self)
 {
   var w = this.elem.offsetWidth;
