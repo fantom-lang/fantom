@@ -15,11 +15,17 @@ fan.dom.EventPeer.prototype.$ctor = function(self) {}
 
 fan.dom.EventPeer.prototype.target = function(self)
 {
-  return fan.dom.ElemPeer.wrap(this.event.target);
+  if (!this.$target)
+    this.$target = fan.dom.ElemPeer.wrap(event.target);
+  return this.$target;
 }
 
-fan.dom.EventPeer.prototype.x = function(self) { return this.event.pageX; }
-fan.dom.EventPeer.prototype.y = function(self) { return this.event.pageY; }
+fan.dom.EventPeer.prototype.pagePos = function(self)
+{
+  if (!this.$pagePos)
+    this.$pagePos = fan.dom.Pos.make(this.event.pageX, this.event.pageY);
+  return this.$pagePos;
+}
 
 fan.dom.EventPeer.prototype.alt   = function(self) { return this.event.altKey; }
 fan.dom.EventPeer.prototype.ctrl  = function(self) { return this.event.ctrlKey; }
