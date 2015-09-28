@@ -266,7 +266,7 @@ public abstract class Type
 
   public abstract List inheritance();
 
-  public final boolean fits(Type type) { return is(type); }
+  public final boolean fits(Type type) { return toNonNullable().is(type.toNonNullable()); }
   public abstract boolean is(Type type);
 
   /**

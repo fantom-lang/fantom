@@ -165,15 +165,48 @@ class TypeTest : Test
 
   Void testFits()
   {
-    verify(Float#.fits(Float#))
-    verify(Float#.fits(Num#))
-    verify(Float#.fits(Obj#))
-    verifyFalse(Float#.fits(Str#))
-    verifyFalse(Obj#.fits(Float#))
+    verifyFits(Float#, Float#, true)
+    verifyFits(Float#, Num#,   true)
+    verifyFits(Float#, Obj#,   true)
+    verifyFits(Float#, Str#,   false)
+    verifyFits(Obj#,   Float#, false)
+
+    // list
+    verifyFits(Int[]#, Obj#,     true)
+    verifyFits(Int[]#, Int[]#,   true)
+    verifyFits(Int[]#, Num[]#,   true)
+    verifyFits(Int[]#, Obj[]#,   true)
+    verifyFits(Int[]#, Float[]#, false)
+
+    // maps
+    verifyFits(Str:Int#, Obj#, true)
+    verifyFits(Str:Int#, Str:Int#, true)
+    verifyFits(Str:Int#, Str:Num#, true)
+    verifyFits(Str:Int#, Str:Obj#, true)
+    verifyFits(Str:Int#, Obj:Obj#, true)
+    verifyFits(Str:Int#, Obj:Float#, false)
+    verifyFits(Str:Int#, Str#, false)
+
+    // funcs
+    verifyFits(|Int|#, Obj#,   true)
+    verifyFits(|Int|#, |Int|#, true)
+    verifyFits(|Num|#, |Int|#, true)
+    verifyFits(|Obj|#, |Int|#, true)
+    verifyFits(|Float|#, |Int|#, false)
 
     // void doesn't fit anything
-    verifyFalse(Void#.fits(Obj#))
-    verifyFalse(Obj#.fits(Void#))
+    verifyFits(Void#, Obj#,  false)
+    verifyFits(Obj#,  Void#, false)
+  }
+
+  Void verifyFits(Type a, Type b, Bool expected)
+  {
+    an := a.toNullable
+    bn := b.toNullable
+    verifyEq(a.fits(b), expected)
+    verifyEq(an.fits(b), expected)
+    verifyEq(a.fits(bn), expected)
+    verifyEq(an.fits(bn), expected)
   }
 
 //////////////////////////////////////////////////////////////////////////
