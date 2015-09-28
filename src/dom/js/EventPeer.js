@@ -15,14 +15,14 @@ fan.dom.EventPeer.prototype.$ctor = function(self) {}
 
 fan.dom.EventPeer.prototype.target = function(self)
 {
-  if (!this.$target)
+  if (this.$target == null)
     this.$target = fan.dom.ElemPeer.wrap(event.target);
   return this.$target;
 }
 
 fan.dom.EventPeer.prototype.pagePos = function(self)
 {
-  if (!this.$pagePos)
+  if (this.$pagePos == null)
     this.$pagePos = fan.dom.Pos.make(this.event.pageX, this.event.pageY);
   return this.$pagePos;
 }
@@ -35,8 +35,17 @@ fan.dom.EventPeer.prototype.meta  = function(self) { return this.event.metaKey; 
 fan.dom.EventPeer.prototype.button = function(self) { return this.event.button; }
 fan.dom.EventPeer.prototype.key = function(self) { return this.$key }
 
-fan.dom.EventPeer.prototype.deltaX = function(self) { return this.event.deltaX; }
-fan.dom.EventPeer.prototype.deltaY = function(self) { return this.event.deltaY; }
+fan.dom.EventPeer.prototype.delta = function(self)
+{
+  if (this.$delta == null)
+  {
+    this.$delta = this.event.deltaX != null && this.event.deltaY != null
+      ? fan.dom.Pos.make(this.event.deltaX, this.event.deltaY)
+      : fan.dom.Pos.m_defVal;
+  }
+  return this.$delta;
+}
+
 
 fan.dom.EventPeer.prototype.stop = function(self)
 {
