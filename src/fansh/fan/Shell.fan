@@ -29,7 +29,7 @@ class Shell
     while (isAlive)
     {
       // input next line
-      line := Env.cur.prompt("fansh> ")
+      line := Env.cur.prompt("fansh> ") ?: "quit"
 
       // skip empty lines
       line = line.trim
