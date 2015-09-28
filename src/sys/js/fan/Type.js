@@ -364,7 +364,7 @@ fan.sys.Type.addInheritance = function(t, acc, map)
   }
 }
 
-fan.sys.Type.prototype.fits = function(that) { return this.is(that); }
+fan.sys.Type.prototype.fits = function(that) { return this.toNonNullable().is(that.toNonNullable()); }
 fan.sys.Type.prototype.is = function(that)
 {
   // we don't take nullable into account for fits

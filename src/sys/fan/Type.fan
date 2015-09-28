@@ -152,6 +152,10 @@ const class Type
   ** rather than an instance and a type.  All types (including
   ** mixin types) fit 'sys::Obj'.
   **
+  ** This method implicitly ignores the nullability of both 'this'
+  ** and 't' such that this method is always equivalent to:
+  **   this.toNonNullable.fits(t.toNonNullable)
+  **
   ** Example:
   **   Float#.fits(Float#) =>  true
   **   Float#.fits(Num#)   =>  true
