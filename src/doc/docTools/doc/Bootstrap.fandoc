@@ -46,8 +46,11 @@ The easiest way to perform a bootstrap build from hg tip is to use the
   5. Execute '{relHome}/bin/fan {relHome}/adm/bootstrap.fan'
   6. Go grab a cup of coffee
 
-NOTE: you need JDK 1.6 to recompile Fantom.  However only 1.5 is required
-to run Fantom.
+NOTE: the default setup requries JDK 1.6 to recompile Fantom in order to target 1.5 JVMs.
+If you need to use a later JDK, see the comments in etc/build/config.props to clear this
+property:
+
+  javacParams=-target 1.5
 
 By default devHome is assumed to be a peer to relHome called "fan". If
 you'd like to use another directory then specify the "-devHome" option.
