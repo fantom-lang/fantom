@@ -20,7 +20,7 @@ class Bootstrap : AbstractMain
 //////////////////////////////////////////////////////////////////////////
 
   @Opt { help = "Mercurial repository to clone" }
-  Str hgRepo := "http://hg.fantom.org/repos/fan-1.0"
+  Str hgRepo := "https://bitbucket.org/fantom/fan-1.0"
 
   @Opt { help = "Skip hg pull step" }
   Bool skipPull := false
@@ -207,14 +207,14 @@ class Bootstrap : AbstractMain
   Void runBuild(File envHome, Uri script, Str target, [Str:Str]? env := null)
   {
     // figure out which launcher to use
-	exec := envHome.plus(`bin/fan`).osPath
-	opts := [devHome.plus(script).osPath, target]
-	if (Env.cur.os == "win32")
-	{
-	  opts = ["/C", exec].addAll(opts)
-	  exec = "cmd.exe"
-	}
-	cmd := [exec].addAll(opts)
+    exec := envHome.plus(`bin/fan`).osPath
+    opts := [devHome.plus(script).osPath, target]
+    if (Env.cur.os == "win32")
+    {
+      opts = ["/C", exec].addAll(opts)
+      exec = "cmd.exe"
+    }
+    cmd := [exec].addAll(opts)
     echo("")
     echo(cmd.join(" "))
     p := Process(cmd)
