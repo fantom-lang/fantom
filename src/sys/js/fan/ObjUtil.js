@@ -85,6 +85,7 @@ fan.sys.ObjUtil.is = function(obj, type)
 fan.sys.ObjUtil.as = function(obj, type)
 {
   if (obj == null) return null;
+  type = type.toNonNullable();
   var t = fan.sys.ObjUtil.$typeof(obj);
   if (t.is(fan.sys.Func.$type)) return t.as(obj, type);
   if (t.is(fan.sys.List.$type)) return t.as(obj, type);
