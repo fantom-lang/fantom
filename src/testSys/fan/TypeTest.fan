@@ -197,6 +197,16 @@ class TypeTest : Test
     // void doesn't fit anything
     verifyFits(Void#, Obj#,  false)
     verifyFits(Obj#,  Void#, false)
+
+    // casting (in JS it uses fits reflection)
+    list1 := (Int[]?) Obj[,]
+    list2 := (Int[]?) Obj?[,]
+    list3 := (Int?[]?) Obj[,]
+    list4 := (Int?[]?) Obj?[,]
+    map1 := (Int:Int[]?) Obj:Obj[:]
+    map2 := (Int:Int[]?) Obj:Obj?[:]
+    map3 := (Int:Int?[]?) Obj:Obj[:]
+    map4 := (Int:Int?[]?) Obj:Obj?[:]
   }
 
   Void verifyFits(Type a, Type b, Bool expected)

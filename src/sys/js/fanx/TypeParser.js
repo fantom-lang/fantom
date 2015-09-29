@@ -83,7 +83,7 @@ fanx_TypeParser.prototype.load = function()
     type = type.toListOf();
     if (this.cur == '?')
     {
-      consume('?');
+      this.consume('?');
       type = type.toNullable();
     }
   }
