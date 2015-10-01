@@ -66,6 +66,7 @@ fan.sys.Func.prototype.toImmutable = function()
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.Func.prototype.params = function() { return this.m_params; }
+fan.sys.Func.prototype.arity = function() { return this.m_params.size(); }
 fan.sys.Func.prototype.returns = function() { return this.m_return; }
 fan.sys.Func.prototype.method = function() { return null; }
 
