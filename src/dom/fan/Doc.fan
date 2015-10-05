@@ -69,9 +69,6 @@ class Doc
   **
   native Elem[] querySelectorAll(Str selectors)
 
-  @NoDoc @Deprecated { msg = "Use querySelector" } Elem? query(Str s) { querySelector(s) }
-  @NoDoc @Deprecated { msg = "Use querySelectorAll" } Elem[] queryAll(Str s) { querySelectorAll(s) }
-
 //////////////////////////////////////////////////////////////////////////
 // Writing
 //////////////////////////////////////////////////////////////////////////
