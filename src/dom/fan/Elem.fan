@@ -69,14 +69,6 @@ class Elem
     return null
   }
 
-  // TODO FIXIT: remove
-  @NoDoc @Deprecated { msg = "Use style.hasClass" } Bool hasClassName(Str n) { style.hasClass(n) }
-  @NoDoc @Deprecated { msg = "Use style.addClass" } This addClassName(Str n) { style.addClass(n); return this }
-  @NoDoc @Deprecated { msg = "Use style.removeClass" } This removeClassName(Str n) { style.removeClass(n); return this }
-  @NoDoc @Deprecated { msg = "Use elem->name"    } Str name      { get { this->name  } set { this->name = it }}
-  @NoDoc @Deprecated { msg = "Use elem->value"   } Obj? val      { get { this->value } set { this->value = it }}
-  @NoDoc @Deprecated { msg = "Use elem->checked" } Bool? checked { get { this->checked } set { this->checked = it }}
-
 //////////////////////////////////////////////////////////////////////////
 // Layout
 //////////////////////////////////////////////////////////////////////////
@@ -207,14 +199,6 @@ class Elem
 
   ** Callback when a child element is removed.
   @NoDoc protected virtual Void onRemove(Elem child) {}
-
-  // TODO FIXIT: remove
-  @NoDoc @Deprecated { msg = "Use firstChild"  } Elem? first() { firstChild }
-  @NoDoc @Deprecated { msg = "Use lastChild"   } Elem? last()  { lastChild }
-  @NoDoc @Deprecated { msg = "Use prevSibling" } Elem? prev()  { prevSibling }
-  @NoDoc @Deprecated { msg = "Use nextSibling" } Elem? next()  { nextSibling }
-  @NoDoc @Deprecated { msg = "Use query" } native Elem? find(|Elem e->Bool| c)
-  @NoDoc @Deprecated { msg = "Use queryAll" } native Elem[] findAll(|Elem e->Bool| c)
 
 //////////////////////////////////////////////////////////////////////////
 // Events

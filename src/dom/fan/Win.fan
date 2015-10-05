@@ -121,10 +121,6 @@ class Win
   ** Attach an event handler to the given event on this element.
   native Void onEvent(Str type, Bool useCapture, |Event e| handler)
 
-  ** Call the specified function after a specified delay.
-  @Deprecated { msg="Use setTimeout()" }
-  native Void callLater(Duration delay, |->| f)
-
   ** Request the browser to perform an animation before the next repaint.
   @NoDoc native Void reqAnimationFrame(|This| f)
 
