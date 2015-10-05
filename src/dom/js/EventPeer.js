@@ -13,6 +13,8 @@ fan.dom.EventPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.dom.EventPeer.prototype.$ctor = function(self) {}
 
+fan.dom.EventPeer.prototype.type = function(self) { return this.event.type; }
+
 fan.dom.EventPeer.prototype.target = function(self)
 {
   if (this.$target == null)

@@ -26,6 +26,9 @@ class Event
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
+  ** The type of this event.
+  native Str type()
+
   ** The target to which the event was dispatched.
   native Elem target()
 
@@ -71,7 +74,7 @@ class Event
 
   override Str toStr()
   {
-    "Event { target=$target pagePos=$pagePos button=$button delta=$delta key=$key" +
+    "Event { type=$type target=$target pagePos=$pagePos button=$button delta=$delta key=$key" +
     " alt="   + (alt   ? "T" : "F") +
     " ctrl="  + (ctrl  ? "T" : "F") +
     " shift=" + (shift ? "T" : "F") +
