@@ -32,12 +32,6 @@ class Event
   ** The target to which the event was dispatched.
   native Elem target()
 
-  @Deprecated { msg="Use pagePos.x" }
-  Int x() { pagePos.x }
-
-  @Deprecated { msg="Use pagePos.y" }
-  Int y() { pagePos.y }
-
   ** The mouse position of this event relative to page.
   native Pos pagePos()
 

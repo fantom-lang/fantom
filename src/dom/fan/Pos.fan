@@ -49,7 +49,7 @@ const class Pos
   ** Return hash of x and y.
   override Int hash() { x.xor(y.shiftl(16)) }
 
-  ** Return if obj is same Point value.
+  ** Return if obj is same Pos value.
   override Bool equals(Obj? obj)
   {
     that := obj as Pos

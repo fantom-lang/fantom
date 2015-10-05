@@ -74,10 +74,7 @@ class Elem
 //////////////////////////////////////////////////////////////////////////
 
   ** Position of element relative to its parent in pixels.
-  native Point pos
-
-  ** Position of element on the current doc.
-  @NoDoc native Point posDoc()
+  native Pos pos
 
   ** Position of element relative to the whole document.
   native Pos pagePos()
@@ -89,12 +86,13 @@ class Elem
   ** measured in pixels.
   Rect bounds
   {
-    get { return Rect.makePosSize(pos, size) }
-    set { pos = it.pos; size = it.size }
+    // TODO
+    get { return Rect(pos.x, pos.y, size.w, size.h) } //.makePosSize(pos, size) }
+    set { pos = Pos(it.pos.x, it.pos.y) /*it.pos*/; size = it.size }
   }
 
   ** Top left scroll position of element.
-  native Point scrollPos
+  native Pos scrollPos
 
   ** Scrollable size of element.
   native Size scrollSize()
