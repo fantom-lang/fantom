@@ -6,8 +6,6 @@
 //   19 Dec 2014  Andy Frank  Creation
 //
 
-using gfx
-
 **
 ** Style models CSS style properties for an Elem.
 **
