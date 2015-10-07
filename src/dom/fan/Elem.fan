@@ -7,8 +7,6 @@
 //   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
-using gfx
-
 **
 ** Elem models a DOM element object.
 **
@@ -82,14 +80,14 @@ class Elem
   ** Size of element in pixels.
   native Size size
 
-  ** Position and size of this widget relative to its parent, both
-  ** measured in pixels.
-  Rect bounds
-  {
-    // TODO
-    get { return Rect(pos.x, pos.y, size.w, size.h) } //.makePosSize(pos, size) }
-    set { pos = Pos(it.pos.x, it.pos.y) /*it.pos*/; size = it.size }
-  }
+  // ** Position and size of this widget relative to its parent, both
+  // ** measured in pixels.
+  // Rect bounds
+  // {
+  //   // TODO
+  //   get { return Rect(pos.x, pos.y, size.w, size.h) } //.makePosSize(pos, size) }
+  //   set { pos = Pos(it.pos.x, it.pos.y) /*it.pos*/; size = it.size }
+  // }
 
   ** Top left scroll position of element.
   native Pos scrollPos

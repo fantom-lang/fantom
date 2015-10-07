@@ -37,6 +37,25 @@ class GeomTest : Test
     verifySer(Pos(-99, -505))
   }
 
+  Void testSize()
+  {
+    verifyEq(Size.defVal, Size(0, 0))
+    verifyEq(Size#.make, Size(0, 0))
+
+    verifyEq(Size(3, 4), Size(3, 4))
+    verifyNotEq(Size(3, 9), Size(3, 4))
+    verifyNotEq(Size(9, 4), Size(3, 4))
+
+    verifyEq(Size.fromStr("4,-2"), Size(4, -2))
+    verifyEq(Size.fromStr("-33 , 60"), Size(-33, 60))
+    verifyEq(Size.fromStr("x,-2", false), null)
+    verifyErr(ParseErr#) { x := Size.fromStr("x,-2") }
+    verifyErr(ParseErr#) { x := Size.fromStr("x,-2", true) }
+
+    verifySer(Size(0, 1))
+    verifySer(Size(-99, -505))
+  }
+
   Void verifySer(Obj obj)
   {
     //echo("-- " + Buf.make.writeObj(obj).flip.readAllStr)
