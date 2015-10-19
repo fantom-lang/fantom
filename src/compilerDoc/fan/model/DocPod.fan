@@ -375,10 +375,9 @@ internal class DocPodLoader
     // if this pod has types, it can't be a manual
     if (!typeList.isEmpty || list.size <= 1)
     {
-      if (list.size == 1 && list.first.isPodDoc)
-        this.podDoc = list.first
-      this.chapterMap  = map.toImmutable
-      this.chapterList = list.toImmutable
+      this.podDoc = list.find |x| { x.isPodDoc }
+      this.chapterList = this.podDoc == null ? DocChapter#.emptyList : DocChapter[podDoc]
+      this.chapterMap  = Str:DocChapter[:].setList(this.chapterList) |x| { x.name }
       return
     }
 
