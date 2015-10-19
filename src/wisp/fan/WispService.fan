@@ -269,7 +269,7 @@ internal const class WispHttpsRedirectMod : WebMod
 
   override Void onService()
   {
-    if (req.absUri.port == service.httpPort)
+    if (req.socket.localPort == service.httpPort)
     {
       redirectUri := `https://${req.absUri.host}:${service.httpsPort}${req.uri}`
       res.redirect(redirectUri)
