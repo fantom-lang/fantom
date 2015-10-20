@@ -419,6 +419,121 @@ class MiscTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// ParamDefReflect
+//////////////////////////////////////////////////////////////////////////
+
+  Void testParamDef()
+  {
+    compile(
+     """class Foo
+        {
+          static Bool someB() { true }
+          static Int someI() { 7 }
+          static Float someF() { 3f }
+
+          Str iS() { "!" }
+          Bool iB() { false }
+          Int iI() { 17 }
+          Float iF() { 13f }
+
+          static Void s1(Str a := "def-a") {}
+          static Void s2(Str a := "def-a", Str b := "def-b") {}
+          static Void s3(Str[] list := ["1", "2", "3"]) {}
+          static Void s4(Int[] list := [1, 2, 3]) {}
+          static Void s5(Date x := Date.today) {}
+          static Void s6(Int x := Date.today.year) {}
+
+          static Void sb1(Bool  a := !someB) {}
+          static Void sb2(Bool? a := someB) {}
+          static Void sb3(Obj   a := !someB) {}
+          static Void sb4(Obj?  a := someB) {}
+
+          static Void si1(Int  a := 3 + someI) {}
+          static Void si2(Int? a := 4 + someI) {}
+          static Void si3(Obj  a := 5 + someI) {}
+          static Void si4(Obj? a := 6 + someI) {}
+
+          static Void sf1(Float  a := 3f + someF) {}
+          static Void sf2(Float? a := 4f + someF) {}
+          static Void sf3(Obj    a := 5f + someF) {}
+          static Void sf4(Obj?   a := 6f + someF) {}
+
+          Void i1(Str a := "def-a") {}
+          Void i2(Str a := "def-a", Str b := "def-b") {}
+          Void i3(Str a := iS) {}
+          Void i4(Bool a := !iB) {}
+          Void i5(Int a := iI + 3) {}
+          Void i6(Float a := iF + 3f) {}
+
+          new make() {}
+          new m1(Str a := "hi!") {}
+
+          Void b1(Int a := 99, Int b := a+1, Int c := b+2) {}
+          new b2(Str x := this.toStr) {}
+        }"""
+    )
+
+    t := pod.types.first
+    instance := t.make
+    verifyParamDef(instance, "s1", "a", "def-a")
+    verifyParamDef(instance, "s2", "a", "def-a"); verifyParamDef(instance, "s2", "b", "def-b")
+    verifyParamDef(instance, "s3", "list", ["1", "2", "3"])
+    verifyParamDef(instance, "s4", "list", [1, 2, 3])
+    verifyParamDef(instance, "s5", "x", Date.today)
+    verifyParamDef(instance, "s6", "x", Date.today.year)
+
+    verifyParamDef(instance, "sb1", "a", false)
+    verifyParamDef(instance, "sb2", "a", true)
+    verifyParamDef(instance, "sb3", "a", false)
+    verifyParamDef(instance, "sb4", "a", true)
+
+    verifyParamDef(instance, "si1", "a", 10)
+    verifyParamDef(instance, "si2", "a", 11)
+    verifyParamDef(instance, "si3", "a", 12)
+    verifyParamDef(instance, "si4", "a", 13)
+
+    verifyParamDef(instance, "sf1", "a", 6f)
+    verifyParamDef(instance, "sf2", "a", 7f)
+    verifyParamDef(instance, "sf3", "a", 8f)
+    verifyParamDef(instance, "sf4", "a", 9f)
+
+    verifyParamDef(instance, "i1", "a", "def-a")
+    verifyParamDef(instance, "i2", "a", "def-a"); verifyParamDef(instance, "i2", "b", "def-b")
+    verifyParamDef(instance, "i3", "a", "!")
+    verifyParamDef(instance, "i4", "a", true)
+    verifyParamDef(instance, "i5", "a", 20)
+    verifyParamDef(instance, "i6", "a", 16f)
+
+    verifyParamDef(instance, "m1", "a", "hi!")
+
+    verifyParamDefErr(instance, "b1", "a")
+    verifyParamDefErr(instance, "b1", "b")
+    verifyParamDefErr(instance, "b1", "c")
+
+    verifyParamDefErr(instance, "b2", "x")
+  }
+
+  Void verifyParamDef(Obj instance, Str methodName, Str paramName, Obj? expected)
+  {
+    m := instance.typeof.method(methodName)
+    p := m.params.find { it.name == paramName }
+    v := m.paramDef(p, instance)
+    verifyEq(v, expected)
+    if (m.isStatic || m.isCtor) verifyEq(m.paramDef(p), expected)
+  }
+
+  Void verifyParamDefErr(Obj instance, Str methodName, Str paramName)
+  {
+    Err? err
+    try
+      verifyParamDef(instance, methodName, paramName, null)
+    catch (Err e)
+      err = e
+    verifyNotNull(err)
+    verifyEq(err.msg, "Method param may not be reflected")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // DefDoc
 //////////////////////////////////////////////////////////////////////////
 

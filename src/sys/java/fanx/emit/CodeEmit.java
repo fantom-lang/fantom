@@ -26,9 +26,14 @@ public class CodeEmit
   {
     super(method.emit, method.emit.utf("Code"));
     this.method = method;
+    reset();
+  }
 
+  void reset()
+  {
     // prefill the beginning of the info buffer
     // and backfill the values in pack()
+    info.len = 0;
     info.u2(-1);  // max stack
     info.u2(-1);  // max locals
     info.u4(-1);  // code length

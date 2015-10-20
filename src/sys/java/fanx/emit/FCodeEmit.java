@@ -1026,33 +1026,21 @@ public class FCodeEmit
     // at this point we've already handled any cases where to is
     // a primitive in the coerceToPrimitive() method - so this
     // method is strictly about boxing from a primitive
+    if (to.isRef())
+      boxToObj(from);
+    else
+      throw new IllegalStateException("Coerce " + from  + " => " + to);
+  }
 
-    if (from.isPrimitiveBool())
-    {
-      if (to.isRef()) { boolBox(); return; }
-    }
-
-    if (from.isPrimitiveLong())
-    {
-      if (to.isRef()) { intBox(); return; }
-    }
-
-    if (from.isPrimitiveDouble())
-    {
-      if (to.isRef()) { floatBox(); return; }
-    }
-
-    if (from.isPrimitiveIntLike())
-    {
-      if (to.isRef()) { code.op(I2L); intBox(); return; }
-    }
-
-    if (from.isPrimitiveFloat())
-    {
-      if (to.isRef()) { code.op(F2D); floatBox(); return; }
-    }
-
-    throw new IllegalStateException("Coerce " + from  + " => " + to);
+  void boxToObj(FTypeRef from)
+  {
+    if (!from.isPrimitive())       { return; }
+    if (from.isPrimitiveBool())    { boolBox(); return; }
+    if (from.isPrimitiveLong())    { intBox(); return; }
+    if (from.isPrimitiveDouble())  { floatBox(); return; }
+    if (from.isPrimitiveIntLike()) { code.op(I2L); intBox(); return; }
+    if (from.isPrimitiveFloat())   { code.op(F2D); floatBox(); return; }
+    throw new IllegalStateException("boxToObj " + from);
   }
 
   private void cast()
@@ -1233,10 +1221,28 @@ public class FCodeEmit
     return regs;
   }
 
+  static class InvalidRegException extends RuntimeException
+  {
+    InvalidRegException(String msg) { super(msg); }
+  }
+
   private Reg reg(int fanIndex)
   {
     if (regs == null) throw new IllegalStateException("Use of variable with undefined regs");
+    if (fanIndex >= regs.length) throw new InvalidRegException("" + fanIndex);
     return regs[fanIndex];
+  }
+
+  static final Reg[] noRegs = new Reg[0];
+
+  static Reg makeThisReg(FTypeRef typeRef)
+  {
+    Reg r = new Reg();
+    r.typeRef = typeRef;
+    r.name = "this";
+    r.stackType = FTypeRef.OBJ;
+    r.jindex = 0;
+    return r;
   }
 
   static class Reg

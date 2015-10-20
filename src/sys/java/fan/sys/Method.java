@@ -617,6 +617,42 @@ public class Method
     }
   }
 
+  public Object paramDef(Param param) { return paramDef(param, null); }
+  public Object paramDef(Param param, Object instance)
+  {
+    if (!isStatic() && !isCtor() && instance == null)
+      throw Err.make("Instance required for non-static method: " + qname());
+
+    try
+    {
+      Class cls = parent.toClass();
+      String methodName = paramDefMethodName(this.name, param.name);
+      java.lang.reflect.Method m = cls.getMethod(methodName);
+      return m.invoke(instance);
+    }
+    catch (InvocationTargetException e)
+    {
+      if (e.getCause() instanceof Err)
+        throw (Err)e.getCause();
+      else
+        throw Err.make(e.getCause());
+    }
+    catch (Exception e)
+    {
+      throw Err.make(e);
+    }
+  }
+
+  public static Err makeParamDefErr()
+  {
+    return Err.make("Method param may not be reflected");
+  }
+
+  public static String paramDefMethodName(String methodName, String paramName)
+  {
+    return "pdef$" + methodName + "$" + paramName;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////

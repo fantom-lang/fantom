@@ -130,7 +130,7 @@ public class FanClassLoader
       if (pending != null) pendingClasses.remove(name);
     }
     if (pending == null) return null;
-    // if (name.indexOf("Foo") > 0) dumpToFile(name, pending);
+//if (name.indexOf("Foo") > 0) dumpToFile(name, pending);
     return defineClass(name, pending.buf, 0, pending.len, codeSource);
   }
 
