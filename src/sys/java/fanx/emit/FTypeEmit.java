@@ -184,6 +184,10 @@ public abstract class FTypeEmit
       me = new FMethodEmit(this, m).emitStandard();
     }
 
+    // generate method for each parameter default to use for reflection
+    for (int i=0; i<m.paramCount; ++i)
+      if (m.vars[i].def != null) emitMethodParamDef(m, m.vars[i]);
+
     // Java annotations
     FFacetEmit.emitMethod(me, pod, m.attrs);
 
@@ -280,6 +284,46 @@ public abstract class FTypeEmit
     {
       String fieldName = (String)it.next();
       emitField(fieldName, "Lfan/sys/Type;", EmitConst.PRIVATE|EmitConst.STATIC);
+    }
+  }
+
+  void emitMethodParamDef(FMethod m, FMethodVar p)
+  {
+    // generate a method called pdef${method}${param} which evaluates
+    // the default expression to use for Method.paramDef reflection
+    boolean isStatic = (m.flags & FConst.Static) != 0;
+    boolean isCtor   = (m.flags & FConst.Ctor) != 0;
+    String methodName = Method.paramDefMethodName(m.name, p.name);
+    FTypeRef typeRef = pod.typeRef(p.type);
+    int flags = EmitConst.PUBLIC;
+    FCodeEmit.Reg[] regs = FCodeEmit.noRegs;
+    if (isStatic || isCtor)
+      flags |= EmitConst.STATIC;
+    else
+      regs = new FCodeEmit.Reg[] { FCodeEmit.makeThisReg(typeRef) };
+
+    MethodEmit me = emitMethod(methodName, "()Ljava/lang/Object;", flags);
+    CodeEmit code = me.emitCode();
+    code.maxLocals = m.maxStack * 2;  // assume worst for method
+    code.maxStack  = m.maxStack * 2;
+    FCodeEmit e = new FCodeEmit(this, p.def, code, regs, typeRef);
+    try
+    {
+      // emit expression, then box it to an object
+      e.emit();
+      e.boxToObj(typeRef);
+      code.op(ARETURN);
+    }
+    catch (FCodeEmit.InvalidRegException ex)
+    {
+      // if the default uses previous params, then we FCodeEmit will
+      // throw InvalidRegException; since the param can't be reflected
+      // on its own just generate code to raise an exception
+      if (this.MethodParamDefErr == 0)
+        this.MethodParamDefErr = method("fan/sys/Method.makeParamDefErr()Lfan/sys/Err;");
+      code.reset();
+      code.op2(INVOKESTATIC, this.MethodParamDefErr);
+      code.op(ATHROW);
     }
   }
 
@@ -420,6 +464,7 @@ public abstract class FTypeEmit
   int TypeToNullable;
   int NullErrMakeCoerce;
   int ErrMakeAbstractCtorErr;
+  int MethodParamDefErr;
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
