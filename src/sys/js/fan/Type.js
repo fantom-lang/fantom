@@ -852,7 +852,8 @@ fan.sys.MapType.prototype.is = function(that)
 
   if (that instanceof fan.sys.MapType)
   {
-    return this.k.is(that.k) && this.v.is(that.v);
+    return ((this.k.qname() == "sys::Obj") || this.k.is(that.k)) &&
+           ((this.v.qname() == "sys::Obj") || this.v.is(that.v));
   }
   if (that instanceof fan.sys.Type)
   {
