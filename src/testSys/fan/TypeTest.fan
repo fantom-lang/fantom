@@ -207,6 +207,13 @@ class TypeTest : Test
     map2 := (Int:Int[]?) Obj:Obj?[:]
     map3 := (Int:Int?[]?) Obj:Obj[:]
     map4 := (Int:Int?[]?) Obj:Obj?[:]
+
+    // JS casting bug - see #2453
+    // sys::CastErr: [sys::Int:sys::Obj?] cannot be cast to [sys::Int:sys::Str]
+    map5 := (Int:Str) Int:Int[1:1].map { it.toStr }
+
+    // always worked okay
+    list5 := (Str[]) Int[1].map { it.toStr }
   }
 
   Void verifyFits(Type a, Type b, Bool expected)
