@@ -513,14 +513,22 @@ class WebClient
     if (loc == null) return false
 
     // redirect
-    close
-    newUri := Uri.decode(loc)
-    if (!newUri.isAbs) newUri = reqUri + newUri
-    if (reqUri == newUri) throw Err("Cyclical redirect: $newUri")
-    reqUri = newUri
-    writeReq
-    readRes
-    return true
+    try
+    {
+      ++numRedirects
+      close
+      newUri := Uri.decode(loc)
+      if (!newUri.isAbs) newUri = reqUri + newUri
+      if (reqUri == newUri && numRedirects > 20) throw Err("Cyclical redirect: $newUri")
+      reqUri = newUri
+      writeReq
+      readRes
+      return true
+    }
+    finally
+    {
+      --numRedirects
+    }
   }
 
   **
@@ -552,5 +560,6 @@ class WebClient
   private InStream? resInStream
   private OutStream? reqOutStream
   internal TcpSocket? socket
+  private Int numRedirects := 0
 
 }
