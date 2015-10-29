@@ -148,10 +148,8 @@ fan.sys.MemBuf.prototype.toHex = function()
   return s;
 }
 
-fan.sys.MemBuf.prototype.toBase64 = function(pad)
+fan.sys.MemBuf.prototype.toBase64 = function()
 {
-  if (pad === undefined) pad = true
-
   var buf = this.m_buf;
   var size = this.m_size;
   var s = '';
@@ -176,8 +174,8 @@ fan.sys.MemBuf.prototype.toBase64 = function(pad)
     var n = ((buf[i] & 0xff) << 10) | (rem == 2 ? ((buf[size-1] & 0xff) << 2) : 0);
     s += String.fromCharCode(base64chars[(n >>> 12) & 0x3f]);
     s += String.fromCharCode(base64chars[(n >>> 6) & 0x3f]);
-    s += rem == 2 ? String.fromCharCode(base64chars[n & 0x3f]) : (pad ? '=' : "");
-    if (pad) s += '=';
+    s += rem == 2 ? String.fromCharCode(base64chars[n & 0x3f]) : '=';
+    s += '=';
   }
 
   return s;

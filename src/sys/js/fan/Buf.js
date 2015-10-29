@@ -330,13 +330,21 @@ for (var i=10; i<16; ++i) fan.sys.Buf.hexInv[97+i-10] = fan.sys.Buf.hexInv[65+i-
 // Base64
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Buf.prototype.toBase64 = function(pad)
+fan.sys.Buf.prototype.toBase64 = function()
 {
   throw fan.sys.UnsupportedErr.make(this.$typeof()+".toBase64");
 }
 
+fan.sys.Buf.prototype.toBase64Uri = function()
+{
+  return this.toBase64().replace(/\+/g, "-").replace(/[\/]/g, "_");
+}
+
 fan.sys.Buf.fromBase64 = function(s)
 {
+  // implicitly convert base64uri back to standard base64
+  s = s.replace(/-/g, "+").replace(/_/g, "/");
+
   var slen = s.length;
   var si = 0;
   var max = slen * 6 / 8;

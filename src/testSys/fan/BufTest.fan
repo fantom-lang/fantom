@@ -849,6 +849,7 @@ class BufTest : Test
     verifyBase64("hey!", "aGV5IQ==")
     verifyBase64("123456", "MTIzNDU2")
     verifyBase64("SecretPassword", "U2VjcmV0UGFzc3dvcmQ=")
+    verifyBase64("su?_d=1~~", "c3U/X2Q9MX5+")
     verifyBase64(
       "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.",
       "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2YgdGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGludWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=")
@@ -861,19 +862,22 @@ class BufTest : Test
 
   Void verifyBase64(Str src, Str base64)
   {
-    unpadded := base64
-    if (unpadded.size > 2 && unpadded[-2] == '=') unpadded = base64[0..<-2]
-    else if (unpadded.size > 1 && unpadded[-1] == '=') unpadded = base64[0..<-1]
+    safe := base64.replace("=", "").replace("+", "-").replace("/", "_")
 
     verifyEq(makeMem.print(src).toBase64, base64)
-    verifyEq(makeMem.print(src).toBase64(false), unpadded)
+    verifyEq(makeMem.print(src).toBase64Uri, safe)
 
     verifyBufEq(Buf.fromBase64(base64), Buf.make.print(src))
-    verifyBufEq(Buf.fromBase64(unpadded), Buf.make.print(src))
+    verifyBufEq(Buf.fromBase64(safe), Buf.make.print(src))
 
     breaks := StrBuf.make
     base64.each |Int ch, Int i| { breaks.addChar(ch); if (i % 3 == 0) breaks.add("\uabcd\r\n") }
     verifyBufEq(Buf.fromBase64(breaks.toStr), ascii(src))
+  }
+
+  Void testBase64Url()
+  {
+
   }
 
 //////////////////////////////////////////////////////////////////////////
