@@ -409,6 +409,11 @@ public abstract class Buf
 
   public String toBase64()
   {
+    return toBase64(true);
+  }
+
+  public String toBase64(boolean pad)
+  {
     throw UnsupportedErr.make(typeof()+".toBase64");
   }
 

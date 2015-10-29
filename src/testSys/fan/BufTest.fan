@@ -861,9 +861,15 @@ class BufTest : Test
 
   Void verifyBase64(Str src, Str base64)
   {
+    unpadded := base64
+    if (unpadded.size > 2 && unpadded[-2] == '=') unpadded = base64[0..<-2]
+    else if (unpadded.size > 1 && unpadded[-1] == '=') unpadded = base64[0..<-1]
+
     verifyEq(makeMem.print(src).toBase64, base64)
+    verifyEq(makeMem.print(src).toBase64(false), unpadded)
 
     verifyBufEq(Buf.fromBase64(base64), Buf.make.print(src))
+    verifyBufEq(Buf.fromBase64(unpadded), Buf.make.print(src))
 
     breaks := StrBuf.make
     base64.each |Int ch, Int i| { breaks.addChar(ch); if (i % 3 == 0) breaks.add("\uabcd\r\n") }

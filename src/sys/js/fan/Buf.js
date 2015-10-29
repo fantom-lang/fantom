@@ -330,7 +330,7 @@ for (var i=10; i<16; ++i) fan.sys.Buf.hexInv[97+i-10] = fan.sys.Buf.hexInv[65+i-
 // Base64
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Buf.prototype.toBase64 = function()
+fan.sys.Buf.prototype.toBase64 = function(pad)
 {
   throw fan.sys.UnsupportedErr.make(this.$typeof()+".toBase64");
 }
@@ -379,4 +379,3 @@ for (var i=0; i<128; ++i) fan.sys.Buf.base64inv[i] = -1;
 for (var i=0; i<fan.sys.Buf.base64chars.length; ++i)
   fan.sys.Buf.base64inv[fan.sys.Buf.base64chars[i]] = i;
 fan.sys.Buf.base64inv[61] = 0; // '='
-
