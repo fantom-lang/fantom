@@ -208,7 +208,7 @@ public final class MemBuf
     return s.toString();
   }
 
-  public String toBase64()
+  public String toBase64(boolean pad)
   {
     byte[] buf = this.buf;
     int size = this.size;
@@ -234,8 +234,8 @@ public final class MemBuf
       int n = ((buf[i] & 0xff) << 10) | (rem == 2 ? ((buf[size-1] & 0xff) << 2) : 0);
       s.append(base64chars[(n >>> 12) & 0x3f]);
       s.append(base64chars[(n >>> 6) & 0x3f]);
-      s.append(rem == 2 ? base64chars[n & 0x3f] : '=');
-      s.append('=');
+      s.append(rem == 2 ? base64chars[n & 0x3f] : (pad ? '=' : ""));
+      if (pad) s.append('=');
     }
 
     return s.toString();

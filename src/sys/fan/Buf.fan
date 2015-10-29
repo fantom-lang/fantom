@@ -531,15 +531,16 @@ class Buf
 
   **
   ** Encode the buffer contents from 0 to size to a Base64
-  ** string as defined by MIME RFC 2045.  No line breaks are
-  ** added.  This method is only supported by memory backed
+  ** string as defined by MIME RFC 2045 and RFC4648.
+  ** If pad is true, then the encoding is padded. No line breaks
+  ** are added.  This method is only supported by memory backed
   ** buffers, file backed buffers will throw UnsupportedErr.
   **
   ** Example:
   **   Buf.make.print("Fan").toBase64    => "RmFu"
   **   Buf.fromBase64("RmFu").readAllStr => "Fan"
   **
-  Str toBase64()
+  Str toBase64(Bool pad := true)
 
   **
   ** Decode the specified Base64 string into its binary contents

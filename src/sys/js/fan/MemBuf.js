@@ -148,8 +148,10 @@ fan.sys.MemBuf.prototype.toHex = function()
   return s;
 }
 
-fan.sys.MemBuf.prototype.toBase64 = function()
+fan.sys.MemBuf.prototype.toBase64 = function(pad)
 {
+  if (pad === undefined) pad = true
+
   var buf = this.m_buf;
   var size = this.m_size;
   var s = '';
@@ -174,8 +176,8 @@ fan.sys.MemBuf.prototype.toBase64 = function()
     var n = ((buf[i] & 0xff) << 10) | (rem == 2 ? ((buf[size-1] & 0xff) << 2) : 0);
     s += String.fromCharCode(base64chars[(n >>> 12) & 0x3f]);
     s += String.fromCharCode(base64chars[(n >>> 6) & 0x3f]);
-    s += rem == 2 ? String.fromCharCode(base64chars[n & 0x3f]) : '=';
-    s += '=';
+    s += rem == 2 ? String.fromCharCode(base64chars[n & 0x3f]) : (pad ? '=' : "");
+    if (pad) s += '=';
   }
 
   return s;
@@ -206,4 +208,3 @@ fan.sys.MemBuf.prototype.hmac = function(algorithm, keyBuf)
   }
   return fan.sys.MemBuf.makeBytes(digest);
 }
-
