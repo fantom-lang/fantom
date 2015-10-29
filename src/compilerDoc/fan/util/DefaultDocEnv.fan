@@ -25,11 +25,11 @@ const class DefaultDocEnv : DocEnv
     return null
   }
 
-  protected DocSpace? loadSpace(Str name)
+  protected DocSpace? loadSpace(DocEnv env, Str name)
   {
     file := Env.cur.findPodFile(name)
     if (file == null) return null
-    return DocPod.load(file)
+    return DocPod.load(env, file)
   }
 
   private const Actor actor := DefaultDocEnvActor(this)
@@ -50,7 +50,7 @@ internal const class DefaultDocEnvActor : Actor
     if (spaces.containsKey(name)) return spaces[name]
 
     // callback to env to load
-    space := env.loadSpace(name)
+    space := env.loadSpace(env, name)
     spaces[name] = space
     return space
   }
