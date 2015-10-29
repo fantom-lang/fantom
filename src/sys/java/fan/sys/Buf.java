@@ -409,16 +409,19 @@ public abstract class Buf
 
   public String toBase64()
   {
-    return toBase64(true);
+    throw UnsupportedErr.make(typeof()+".toBase64");
   }
 
-  public String toBase64(boolean pad)
+  public String toBase64Uri()
   {
-    throw UnsupportedErr.make(typeof()+".toBase64");
+    return toBase64().replace('+', '-').replace('/', '_').replace("=", "");
   }
 
   public static Buf fromBase64(String s)
   {
+    // implicitly convert base64uri back to standard base64
+    s = s.replace('-', '+').replace('_', '/');
+
     int slen = s.length();
     int si = 0;
     int max = slen * 6 / 8;

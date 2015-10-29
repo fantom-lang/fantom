@@ -531,21 +531,35 @@ class Buf
 
   **
   ** Encode the buffer contents from 0 to size to a Base64
-  ** string as defined by MIME RFC 2045 and RFC4648.
-  ** If pad is true, then the encoding is padded. No line breaks
-  ** are added.  This method is only supported by memory backed
-  ** buffers, file backed buffers will throw UnsupportedErr.
+  ** string as defined by MIME RFC 2045.  No line breaks are
+  ** added.  This method is only supported by memory-backed
+  ** buffers; file-backed buffers will throw UnsupportedErr.
   **
   ** Example:
   **   Buf.make.print("Fan").toBase64    => "RmFu"
   **   Buf.fromBase64("RmFu").readAllStr => "Fan"
   **
-  Str toBase64(Bool pad := true)
+  Str toBase64()
 
   **
-  ** Decode the specified Base64 string into its binary contents
-  ** as defined by MIME RFC 2045.  Any characters which are not
-  ** included in the Base64 character set are safely ignored.
+  ** Encode the buffer contents from 0 to size to a
+  ** Uri-safe Base64 string as defined by RFC 4648.
+  ** This means '+' is encoded as '-', and '/' is
+  ** encoded as '_'. Additionally, no padding is applied.
+  ** This method is only supported by memory-backed buffers;
+  ** file-backed buffers will throw UnsupportedErr.
+  **
+  ** Example:
+  **   Buf.make.print("safe base64~~").toBase64    => "c2FmZSBiYXNlNjR+fg=="
+  **   Buf.make.print("safe base64~~").toBase64Uri => "c2FmZSBiYXNlNjR-fg"
+  **
+  Str toBase64Uri()
+
+  **
+  ** Decode the specified Base64 string into its binary contents.
+  ** Both MIME RFC 2045 and URI-safe RFC 4648 encodings are supported.
+  ** Any characters which are not included in the Base64 character
+  ** set are safely ignored.
   **
   ** Example:
   **   Buf.make.print("Fan").toBase64    => "RmFu"
