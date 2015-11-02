@@ -150,10 +150,19 @@ fan.sys.MemBuf.prototype.toHex = function()
 
 fan.sys.MemBuf.prototype.toBase64 = function()
 {
+  return this.$doBase64(fan.sys.Buf.base64chars, true);
+}
+
+fan.sys.MemBuf.prototype.toBase64Uri = function()
+{
+  return this.$doBase64(fan.sys.Buf.base64UriChars, false);
+}
+
+fan.sys.MemBuf.prototype.$doBase64 = function(table, pad)
+{
   var buf = this.m_buf;
   var size = this.m_size;
   var s = '';
-  var base64chars = fan.sys.Buf.base64chars;
   var i = 0;
 
   // append full 24-bit chunks
@@ -161,10 +170,10 @@ fan.sys.MemBuf.prototype.toBase64 = function()
   for (; i<end; i += 3)
   {
     var n = ((buf[i] & 0xff) << 16) + ((buf[i+1] & 0xff) << 8) + (buf[i+2] & 0xff);
-    s += String.fromCharCode(base64chars[(n >>> 18) & 0x3f]);
-    s += String.fromCharCode(base64chars[(n >>> 12) & 0x3f]);
-    s += String.fromCharCode(base64chars[(n >>> 6) & 0x3f]);
-    s += String.fromCharCode(base64chars[n & 0x3f]);
+    s += String.fromCharCode(table[(n >>> 18) & 0x3f]);
+    s += String.fromCharCode(table[(n >>> 12) & 0x3f]);
+    s += String.fromCharCode(table[(n >>> 6) & 0x3f]);
+    s += String.fromCharCode(table[n & 0x3f]);
   }
 
   // pad and encode remaining bits
@@ -172,10 +181,10 @@ fan.sys.MemBuf.prototype.toBase64 = function()
   if (rem > 0)
   {
     var n = ((buf[i] & 0xff) << 10) | (rem == 2 ? ((buf[size-1] & 0xff) << 2) : 0);
-    s += String.fromCharCode(base64chars[(n >>> 12) & 0x3f]);
-    s += String.fromCharCode(base64chars[(n >>> 6) & 0x3f]);
-    s += rem == 2 ? String.fromCharCode(base64chars[n & 0x3f]) : '=';
-    s += '=';
+    s += String.fromCharCode(table[(n >>> 12) & 0x3f]);
+    s += String.fromCharCode(table[(n >>> 6) & 0x3f]);
+    s += rem == 2 ? String.fromCharCode(table[n & 0x3f]) : (pad ? '=' : "");
+    if (pad) s += '=';
   }
 
   return s;
