@@ -210,10 +210,19 @@ public final class MemBuf
 
   public String toBase64()
   {
+    return doBase64(Buf.base64chars, true);
+  }
+
+  public String toBase64Uri()
+  {
+    return doBase64(Buf.base64UriChars, false);
+  }
+
+  private String doBase64(char[] table, final boolean pad)
+  {
     byte[] buf = this.buf;
     int size = this.size;
     StringBuilder s = new StringBuilder(size*2);
-    char[] base64chars = Buf.base64chars;
     int i = 0;
 
     // append full 24-bit chunks
@@ -221,10 +230,10 @@ public final class MemBuf
     for (; i<end; i += 3)
     {
       int n = ((buf[i] & 0xff) << 16) + ((buf[i+1] & 0xff) << 8) + (buf[i+2] & 0xff);
-      s.append(base64chars[(n >>> 18) & 0x3f]);
-      s.append(base64chars[(n >>> 12) & 0x3f]);
-      s.append(base64chars[(n >>> 6) & 0x3f]);
-      s.append(base64chars[n & 0x3f]);
+      s.append(table[(n >>> 18) & 0x3f]);
+      s.append(table[(n >>> 12) & 0x3f]);
+      s.append(table[(n >>> 6) & 0x3f]);
+      s.append(table[n & 0x3f]);
     }
 
     // pad and encode remaining bits
@@ -232,10 +241,10 @@ public final class MemBuf
     if (rem > 0)
     {
       int n = ((buf[i] & 0xff) << 10) | (rem == 2 ? ((buf[size-1] & 0xff) << 2) : 0);
-      s.append(base64chars[(n >>> 12) & 0x3f]);
-      s.append(base64chars[(n >>> 6) & 0x3f]);
-      s.append(rem == 2 ? base64chars[n & 0x3f] : '=');
-      s.append('=');
+      s.append(table[(n >>> 12) & 0x3f]);
+      s.append(table[(n >>> 6) & 0x3f]);
+      s.append(rem == 2 ? table[n & 0x3f] : (pad ? '=' : ""));
+      if (pad) s.append('=');
     }
 
     return s.toString();

@@ -414,14 +414,11 @@ public abstract class Buf
 
   public String toBase64Uri()
   {
-    return toBase64().replace('+', '-').replace('/', '_').replace("=", "");
+    throw UnsupportedErr.make(typeof()+".toBase64Uri");
   }
 
   public static Buf fromBase64(String s)
   {
-    // implicitly convert base64uri back to standard base64
-    s = s.replace('-', '+').replace('_', '/');
-
     int slen = s.length();
     int si = 0;
     int max = slen * 6 / 8;
@@ -452,11 +449,14 @@ public abstract class Buf
   }
 
   static char[] base64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
+  static char[] base64UriChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".toCharArray();
   static final int[] base64inv = new int[128];
   static
   {
     for (int i=0; i<base64inv.length; ++i)   base64inv[i] = -1;
     for (int i=0; i<base64chars.length; ++i) base64inv[base64chars[i]] = i;
+    base64inv['-'] = 62;
+    base64inv['_'] = 63;
     base64inv['='] = 0;
   }
 
