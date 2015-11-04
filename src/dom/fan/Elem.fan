@@ -212,17 +212,32 @@ class Elem
 // Animation
 //////////////////////////////////////////////////////////////////////////
 
+  **
   ** Animate a set of CSS properties.
-  Void animate(Str:Obj props, Duration dur, |Elem|? onComplete := null)
+  **
+  **   elem.animate(["opacity":"0.5"], 1sec) { echo("done!") }
+  **   elem.animate(["opacity":"0.5"], ["dur":1sec, "delay":100ms]) { echo("done!") }
+  **
+  Void animate(Str:Obj props, Obj opts, |Elem|? onComplete := null)
   {
+    // check opt type
+    if (opts isnot Duration && opts isnot Str:Obj)
+      throw ArgErr("Invalid opts type: $opts.typeof")
+
     // force layout
     x := this.size
+
+    // get options
+    map   := opts as [Str:Obj]
+    dur   := opts as Duration ?: map?.get("dur") as Duration
+    delay := map?.get("delay") as Duration ?: 0ms
+    if (dur == null) throw ArgErr("Missing dur option")
 
     // set transition
     style := this.style
     trans := props.keys.join(", ") |p|
     {
-      style.toVendor(p).join(", ") |n| { "$n ${dur.toMillis}ms" }
+      style.toVendor(p).join(", ") |n| { "$n ${dur.toMillis}ms ${delay.toMillis}ms" }
     }
     style["transition"] = trans
 
