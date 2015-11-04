@@ -229,7 +229,7 @@ class Elem
 
     // set props and duration
     style->transitionDuration = dur
-    style->transitionProperty = style.toVendors(props.keys).join(", ")
+    style->transitionProperty = Style.toVendors(props.keys).join(", ")
 
     // set propery targets
     props.each |val,prop| { style[prop] = val }
@@ -237,5 +237,31 @@ class Elem
     // invoke complete callback func
     if (onComplete != null)
       Win.cur.setTimeout(dur) { onComplete(this) }
+  }
+
+  **
+  ** Start an animation on this element using the given key frames.
+  **
+  **   frames := KeyFrames([
+  **     KeyFrame("0%",   ["transform": "scale(1)"]),
+  **     KeyFrame("50%",  ["transform": "scale(1.1)"]),
+  **     KeyFrame("100%", ["transform": "scale(1)"]),
+  **   ])
+  **
+  **   animate(frames, null, 5sec)
+  **   animate(frames, ["animation-iteration-count":"infinite"], 1sec)
+  **
+  Void animateStart(KeyFrames frames, [Str:Obj]? opts, Duration dur)
+  {
+    if (opts != null) style.setAll(opts)
+    style->animationName = frames.name
+    style->animationDuration = dur
+  }
+
+  ** Stop the current animation on this element, or do nothing
+  ** if no animation in progress.
+  Void animateStop()
+  {
+    style->animation = null
   }
 }

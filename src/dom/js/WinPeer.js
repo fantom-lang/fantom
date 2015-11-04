@@ -82,6 +82,16 @@ fan.dom.WinPeer.prototype.doc = function(self)
   return this.$doc;
 }
 
+fan.dom.WinPeer.prototype.addStyleRules = function(self, rules)
+{
+  var doc = this.win.document;
+  var style = doc.createElement("style");
+  style.type = "text/css";
+  if (style.styleSheet) style.styleSheet.cssText = rules;
+  else style.appendChild(doc.createTextNode(rules));
+  doc.getElementsByTagName("head")[0].appendChild(style);
+}
+
 fan.dom.WinPeer.prototype.alert = function(self, obj)
 {
   this.win.alert(obj);
