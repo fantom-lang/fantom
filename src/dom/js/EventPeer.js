@@ -18,7 +18,7 @@ fan.dom.EventPeer.prototype.type = function(self) { return this.event.type; }
 fan.dom.EventPeer.prototype.target = function(self)
 {
   if (this.$target == null)
-    this.$target = fan.dom.ElemPeer.wrap(event.target);
+    this.$target = fan.dom.ElemPeer.wrap(this.event.target);
   return this.$target;
 }
 
