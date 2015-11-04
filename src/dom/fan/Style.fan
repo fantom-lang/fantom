@@ -54,21 +54,29 @@ class Style
   ** Set the given propery value.  If 'val' is null this
   ** property is removed.
   **   style["color"] = "#f00"
-  @Operator This set(Str name, Str? val)
+  @Operator This set(Str name, Obj? val)
   {
+    Str? sval
+    switch (val?.typeof)
+    {
+      case Duration#: sval = "${val->toMillis}ms"
+      default:        sval = val.toStr
+    }
+
     if (vendor.containsKey(name))
     {
-      setProp("-webkit-$name", val)
-      setProp(   "-moz-$name", val)
-      setProp(    "-ms-$name", val)
+      setProp("-webkit-$name", sval)
+      setProp(   "-moz-$name", sval)
+      setProp(    "-ms-$name", sval)
     }
-    setProp(name, val)
+
+    setProp(name, sval)
     return this
   }
 
   ** Set all the given property values.
   **   style.setAll(["color":"#f00", "font-weight":"bold"])
-  This setAll(Str:Str? map)
+  This setAll(Str:Obj? map)
   {
     map.each |v,n| { set(n,v) }
     return this
@@ -115,6 +123,14 @@ class Style
       else h.addChar('-').addChar(ch.lower)
     }
     return h.toStr
+  }
+
+  ** Convenience for `toVendor` on a list.
+  internal Str[] toVendors(Str[] names)
+  {
+    acc := Str[,]
+    names.each |n| { acc.addAll(toVendor(n)) }
+    return acc
   }
 
   ** Break out standard CSS property into required vendor prefixes.
