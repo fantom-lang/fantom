@@ -213,39 +213,26 @@ class Elem
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Animate a set of CSS properties.
+  ** Transition a set of CSS properties.
   **
-  **   elem.animate(["opacity":"0.5"], 1sec) { echo("done!") }
-  **   elem.animate(["opacity":"0.5"], ["dur":1sec, "delay":100ms]) { echo("done!") }
+  **   transition(["opacity": "0.5"], null, 1sec) { echo("done!") }
+  **   transition(["opacity": "0.5"], ["transition-delay": 500ms], 1sec) { echo("done!") }
   **
-  Void animate(Str:Obj props, Obj opts, |Elem|? onComplete := null)
+  Void transition(Str:Obj props, [Str:Obj]? opts, Duration dur, |Elem|? onComplete := null)
   {
-    // check opt type
-    if (opts isnot Duration && opts isnot Str:Obj)
-      throw ArgErr("Invalid opts type: $opts.typeof")
-
     // force layout
     x := this.size
 
-    // get options
-    map   := opts as [Str:Obj]
-    dur   := opts as Duration ?: map?.get("dur") as Duration
-    delay := map?.get("delay") as Duration ?: 0ms
-    if (dur == null) throw ArgErr("Missing dur option")
-
-    // set transition
+    // set options
     style := this.style
-    trans := props.keys.join(", ") |p|
-    {
-      style.toVendor(p).join(", ") |n| { "$n ${dur.toMillis}ms ${delay.toMillis}ms" }
-    }
-    style["transition"] = trans
+    if (opts != null) style.setAll(opts)
 
-    // set props
-    props.each |val,prop|
-    {
-      style[prop] = val
-    }
+    // set props and duration
+    style->transitionDuration = dur
+    style->transitionProperty = style.toVendors(props.keys).join(", ")
+
+    // set propery targets
+    props.each |val,prop| { style[prop] = val }
 
     // invoke complete callback func
     if (onComplete != null)
