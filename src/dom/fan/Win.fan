@@ -57,6 +57,9 @@ class Win
   ** Return the Doc instance for this window.
   native Doc doc()
 
+  ** Add new CSS style rules to this page.
+  native Void addStyleRules(Str rules)
+
   ** Display a modal message box with the given text.
   native Void alert(Obj obj)
 

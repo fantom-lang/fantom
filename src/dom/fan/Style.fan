@@ -9,8 +9,7 @@
 **
 ** Style models CSS style properties for an Elem.
 **
-@NoDoc @Js
-class Style
+@Js class Style
 {
   ** Private ctor.
   private new make() {}
@@ -126,7 +125,7 @@ class Style
   }
 
   ** Convenience for `toVendor` on a list.
-  internal Str[] toVendors(Str[] names)
+  static internal Str[] toVendors(Str[] names)
   {
     acc := Str[,]
     names.each |n| { acc.addAll(toVendor(n)) }
@@ -134,7 +133,7 @@ class Style
   }
 
   ** Break out standard CSS property into required vendor prefixes.
-  internal Str[] toVendor(Str name)
+  static internal Str[] toVendor(Str name)
   {
     if (vendor.containsKey(name))
     {
@@ -152,6 +151,15 @@ class Style
   private const static Str:Str[] vendor := [:].setList([
     "align-content",
     "align-items",
+    "animation",
+    "animation-delay",
+    "animation-direction",
+    "animation-duration",
+    "animation-iteration-count",
+    "animation-name",
+    "animation-play-state",
+    "animation-timing-function",
+    "animation-fill-mode",
     "flex",
     "flex-direction",
     "flex-wrap",
