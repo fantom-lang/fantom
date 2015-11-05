@@ -490,6 +490,7 @@ class CheckErrors : CompilerStep
   private Void checkDefiniteAssign(MethodDef? m)
   {
     if (isSys) return
+    if (curType != null && curType.isNative) return
 
     // get fields which:
     //   - instance or static fields based on ctor or static {}
