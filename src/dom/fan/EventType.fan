@@ -68,6 +68,12 @@
   **
   static const Str contextMenu := "contextmenu"
 
+  ** The focus event is fired when an element has received focus
+  static const Str focus := "focus"
+
+  ** The blur event is fired when an element has lost focus.
+  static const Str blur := "blur"
+
   ** Fired when a key is pressed down.
   static const Str keyDown := "keydown"
 
