@@ -203,6 +203,9 @@ class Elem
   ** Request keyboard focus on this elem.
   virtual native Void focus()
 
+  ** Return true if this elem has focus.
+  virtual native Bool hasFocus()
+
   ** Attach an event handler to the given event on this element.
   native Void onEvent(Str type, Bool useCapture, |Event e| handler)
 

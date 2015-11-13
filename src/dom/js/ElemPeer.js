@@ -284,6 +284,11 @@ fan.dom.ElemPeer.prototype.focus = function(self)
   catch (err) {} // ignore
 }
 
+fan.dom.ElemPeer.prototype.hasFocus = function(self)
+{
+  return this.elem === document.activeElement;
+}
+
 fan.dom.ElemPeer.prototype.find = function(self, f)
 {
   var kids = this.children(self);
