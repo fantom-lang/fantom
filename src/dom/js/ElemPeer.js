@@ -276,6 +276,11 @@ fan.dom.ElemPeer.prototype.removeChild = function(self, child)
   this.elem.removeChild(child.peer.elem);
 }
 
+fan.dom.ElemPeer.prototype.hasFocus = function(self)
+{
+  return this.elem === document.activeElement;
+}
+
 fan.dom.ElemPeer.prototype.focus = function(self)
 {
   // IE throws err if element is not visible, so we need
@@ -284,9 +289,9 @@ fan.dom.ElemPeer.prototype.focus = function(self)
   catch (err) {} // ignore
 }
 
-fan.dom.ElemPeer.prototype.hasFocus = function(self)
+fan.dom.ElemPeer.prototype.blur = function(self)
 {
-  return this.elem === document.activeElement;
+  this.elem.blur();
 }
 
 fan.dom.ElemPeer.prototype.find = function(self, f)
