@@ -35,11 +35,11 @@ namespace FanSc
         {
             base.OnStart(args);
             ProcessStartInfo processInfo = new ProcessStartInfo("cmd.exe", "/C " + string.Join(" ", cmdArgs));
-            this.EventLog.WriteEntry("Launching Fantom Service: cmd.exe" + processInfo.Arguments);
+            this.EventLog.WriteEntry("Launching Fantom Service: cmd.exe " + processInfo.Arguments);
             processInfo.UseShellExecute = false;
-            processInfo.CreateNoWindow = true;
-            processInfo.RedirectStandardError = true;
-            processInfo.RedirectStandardOutput = true;
+            processInfo.CreateNoWindow = false;
+            //processInfo.RedirectStandardError = true;
+            //processInfo.RedirectStandardOutput = true;
             this.process = Process.Start(processInfo);
         }
 
