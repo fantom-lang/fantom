@@ -113,7 +113,14 @@ public abstract class Env
 
   public File findPodFile(String name)
   {
-    return findFile(Uri.fromStr("lib/fan/" + name + ".pod"), false);
+    findFile(Uri.fromStr("lib/fan/" + name + ".pod"), false);
+    fan.sys.File file = findFile(Uri.fromStr("lib/fan/" + name + ".pod"), false);
+    if (file == null) return null;
+
+    // verify case since Windoze is case insensitive
+    String actualName = file.name();
+    if (!actualName.equals(name + ".pod")) throw UnknownPodErr.make("Case mismatch: expected '" + name + ".pod' but found '" + actualName + "'");
+    return file;
   }
 
   public List findAllPodNames()

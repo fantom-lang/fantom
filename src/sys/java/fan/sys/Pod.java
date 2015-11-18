@@ -160,11 +160,6 @@ public class Pod
       // if null or doesn't exist then its a no go
       if (file == null || !file.exists()) throw UnknownPodErr.make(name);
 
-      // verify case since Windoze is case insensitive
-      String actualName = file.getCanonicalFile().getName();
-      actualName = actualName.substring(0, actualName.length()-4);
-      if (!actualName.equals(name)) throw UnknownPodErr.make("Mismatch case: " + name + " != " + actualName);
-
       store = FStore.makeZip(file);
     }
 
