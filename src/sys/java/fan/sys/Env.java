@@ -118,8 +118,7 @@ public abstract class Env
     if (file == null) return null;
 
     // verify case since Windoze is case insensitive
-    java.io.File f = ((LocalFile) file).file;
-    String actualName = f.getCanonicalFile().getName();
+    String actualName = file.normalize().name();
     if (!actualName.equals(name + ".pod")) throw UnknownPodErr.make("Case mismatch: expected '" + name + ".pod' but found '" + actualName + "'");
     return file;
   }
