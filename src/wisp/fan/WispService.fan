@@ -225,6 +225,23 @@ const class WispService : Service
     WispService { httpPort = 8080 }.start
     Actor.sleep(Duration.maxVal)
   }
+
+  ** Create instance for Test.setup easy to use via reflection
+  @NoDoc static WispService testSetup(WebMod root)
+  {
+    log.level = LogLevel.err
+    return WispService
+    {
+      it.root = root
+      it.httpPort = (10_000..60_000).random
+    }.start
+  }
+
+  ** Teardown instance from tesetSetup
+  @NoDoc static Void testTeardown(WispService service)
+  {
+    service.stop
+  }
 }
 
 **************************************************************************
