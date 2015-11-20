@@ -129,6 +129,7 @@ internal class WispRes : WebRes
     // write response
     checkUncommitted
     this.statusCode = statusCode
+    this.errMsg = msg
     headers["Content-Type"] = "text/html; charset=UTF-8"
     headers["Content-Length"] = buf.size.toStr
     this.out.writeBuf(buf.flip)
@@ -217,6 +218,8 @@ internal class WispRes : WebRes
     // special temp hook for WebSocket
     if (statusCode == 101 && &headers["Upgrade"] == "WebSocket")
       return "Web Socket Protocol Handshake"
+    else if (errMsg != null)
+      return errMsg
     else
       return statusMsg[statusCode] ?: statusCode.toStr
   }
@@ -240,5 +243,6 @@ internal class WispRes : WebRes
   internal TcpSocket socket
   internal WebOutStream? webOut
   internal Bool isPersistent
+  private Str? errMsg
 
 }
