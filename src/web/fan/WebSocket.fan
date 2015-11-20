@@ -223,11 +223,10 @@ class WebSocket
   **
   ** Close the web socket
   **
-  Void close()
+  Bool close()
   {
     socket.close
   }
-
 
   private static Err err(Str msg)
   {
