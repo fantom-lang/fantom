@@ -254,6 +254,7 @@ public class Test
   public Object trap(String name, List args)
   {
     if (name.equals("verifyCount")) return Long.valueOf(verifyCount);
+    if (name.equals("verbose")) return Boolean.valueOf(verbose);
     return super.trap(name, args);
   }
 

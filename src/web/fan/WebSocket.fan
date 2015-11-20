@@ -20,8 +20,10 @@ class WebSocket
 
   **
   ** Open a client connection.  The URI must have a "ws" or "wss" scheme.
+  ** The 'headers' parameter defines additional HTTP headers to include
+  ** in the connection request.
   **
-  static WebSocket openClient(Uri uri)
+  static WebSocket openClient(Uri uri, [Str:Str]? headers := null)
   {
     // check scheme
     scheme := uri.scheme
@@ -35,6 +37,7 @@ class WebSocket
     c.reqHeaders["Upgrade"] = "websocket"
     c.reqHeaders["Connection"] = "Upgrade"
     c.reqHeaders["Sec-WebSocket-Key"] = key
+    if (headers != null) c.reqHeaders.addAll(headers)
     c.writeReq
 
     // read handshake response
