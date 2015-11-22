@@ -32,6 +32,9 @@ class HtmlDocWriter : DocWriter
   ** every Link element
   |Link link|? onLink := null
 
+  ** Callback to perform image link resolution and checking
+  |Image img|? onImage := null
+
 //////////////////////////////////////////////////////////////////////////
 // DocWriter
 //////////////////////////////////////////////////////////////////////////
@@ -91,6 +94,7 @@ class HtmlDocWriter : DocWriter
         out.print(" href='$link.uri.toXml'")
       case DocNodeId.image:
         img := elem as Image
+        if (onImage != null) onImage(img)
         out.print(" src='$img.uri.toXml' alt='")
         safeAttr(img.alt)
         out.print("'/>")
