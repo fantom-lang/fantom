@@ -27,6 +27,9 @@
   ** every Link element
   |Link link|? onLink := null
 
+  ** Callback to perform image link resolution and checking
+  |Image img|? onImage := null
+
 //////////////////////////////////////////////////////////////////////////
 // DocWriter
 //////////////////////////////////////////////////////////////////////////
@@ -90,6 +93,7 @@
 
       case DocNodeId.image:
         img := elem as Image
+        onImage?.call(img)
         out.print("![${img.alt}")
 
       case DocNodeId.emphasis:

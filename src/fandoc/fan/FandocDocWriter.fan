@@ -22,6 +22,9 @@ class FandocDocWriter : DocWriter
   ** every Link element
   |Link link|? onLink := null
 
+  ** Callback to perform image link resolution and checking
+  |Image img|? onImage := null
+
   override Void docStart(Doc doc)
   {
     if (doc.meta.isEmpty)
@@ -61,6 +64,7 @@ class FandocDocWriter : DocWriter
 
       case DocNodeId.image:
         img := (Image) elem
+        onImage?.call(img)
         out.print("![${img.alt}")
 
       case DocNodeId.para:
