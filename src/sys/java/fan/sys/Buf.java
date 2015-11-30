@@ -292,7 +292,7 @@ public abstract class Buf
 // InStream
 //////////////////////////////////////////////////////////////////////////
 
-  public final InStream in() { return in; }
+  public InStream in() { return in; }
 
   public final Long read() {  return in.read(); }
 

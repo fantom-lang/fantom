@@ -48,6 +48,15 @@ public final class MemBuf
 
   public Type typeof() { return Sys.MemBufType; }
 
+  public final Object toImmutable()
+  {
+    byte[] buf = this.buf;
+    int size = this.size;
+    this.buf = emptyBytes;
+    this.size = 0;
+    return new ConstBuf(buf, size);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Buf Support
 //////////////////////////////////////////////////////////////////////////
@@ -537,6 +546,8 @@ public final class MemBuf
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
+
+  private static byte[] emptyBytes = new byte[0];
 
   public byte[] buf;
   public int pos;

@@ -114,6 +114,7 @@ public final class Sys
   public static final Type ZipEntryFileType = initType("ZipEntryFile");
   public static final Type BufType          = initType("Buf");
   public static final Type MemBufType       = initType("MemBuf");
+  public static final Type ConstBufType     = initType("ConstBuf");
   public static final Type FileBufType      = initType("FileBuf");
   public static final Type NioBufType       = initType("NioBuf");
   public static final Type UriType          = initType("Uri");

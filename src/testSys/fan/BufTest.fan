@@ -1065,4 +1065,117 @@ class BufTest : Test
     verifyEq(buf.crc("CRC-32-Adler"), 0x071b_0169)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Immutable
+//////////////////////////////////////////////////////////////////////////
+
+  Void testImmutable()
+  {
+    orig := "ABCD".toBuf
+    buf := orig.toImmutable
+    e := ReadonlyErr#
+
+    verifyEq(buf.isImmutable, true)
+    verifySame(buf.toImmutable, buf)
+    verifyEq(buf.typeof.qname, "sys::ConstBuf")
+    verifyEq(buf.size, 4)
+    verifyEq(buf.size, 4)
+    verifyEq(buf.isEmpty, false)
+    verifyEq(buf[0], 'A')
+    verifyEq(buf[-1], 'D')
+    verifyEq(buf[1..2].readAllStr, "BC")
+    verifyEq(buf.in.readAllStr, "ABCD")
+    verifyEq(buf.close, true)
+
+    // TODO
+    verifyEq(buf.dup.toHex, "41424344")
+    verifyEq(buf.dup.toBase64, "QUJDRA==")
+    verifyEq(buf.dup.crc("CRC-16"), 3973)
+    verifyEq(buf.dup.hmac("SHA1", "key".toBuf).toHex, "465da90ea0ce68e62e9b17cd9bdc7c81e6eb128b")
+    verifyEq(buf.dup.toDigest("SHA-1").toHex, "fb2f85c88567f3c8ce9b799c7c54642d0c7b41f6")
+
+    verifyEq(orig.size, 0)
+    verifyEq(orig.capacity, 0)
+    orig.print("1234567")
+    verifyEq(orig.flip.readAllStr, "1234567")
+    verifyEq(buf.in.readAllStr, "ABCD")
+
+    in := buf.in
+    verifyEq(in.read, 'A')
+    verifyEq(in.read, 'B')
+    in.unread('B')
+    verifyEq(in.read, 'B')
+    verifyEq(in.read, 'C')
+    verifyErr(e) { in.unread('%') }
+    verifyEq(in.read, 'D')
+    verifyEq(in.read, null)
+
+    verifyErr(e) { x := buf.capacity }
+    verifyErr(e) { buf.capacity = 6 }
+    verifyErr(e) { buf.charset = Charset.utf16BE }
+    verifyErr(e) { buf.clear }
+    verifyErr(e) { buf.eachLine |line| {} }
+    verifyErr(e) { buf.endian = Endian.big }
+    verifyErr(e) { buf.fill(0xff, 100) }
+    verifyErr(e) { buf.flip }
+    verifyErr(e) { buf.more }
+    verifyErr(e) { buf.out.printLine("x") }
+    verifyErr(e) { buf.peek }
+    verifyErr(e) { x := buf.pos }
+    verifyErr(e) { buf.print("x") }
+    verifyErr(e) { buf.printLine("x") }
+    verifyErr(e) { buf.read }
+    verifyErr(e) { buf.readAllBuf }
+    verifyErr(e) { buf.readAllLines }
+    verifyErr(e) { buf.readAllStr }
+    verifyErr(e) { buf.readBool }
+    verifyErr(e) { buf.readBuf(Buf(),3) }
+    verifyErr(e) { buf.readBufFully(Buf(),3)  }
+    verifyErr(e) { buf.readChar }
+    verifyErr(e) { buf.readChars(3) }
+    verifyErr(e) { buf.readDecimal }
+    verifyErr(e) { buf.readF4 }
+    verifyErr(e) { buf.readF8 }
+    verifyErr(e) { buf.readLine }
+    verifyErr(e) { buf.readObj }
+    verifyErr(e) { buf.readProps }
+    verifyErr(e) { buf.readS1 }
+    verifyErr(e) { buf.readS2 }
+    verifyErr(e) { buf.readS4 }
+    verifyErr(e) { buf.readS8 }
+    verifyErr(e) { buf.readStrToken }
+    verifyErr(e) { buf.readU1 }
+    verifyErr(e) { buf.readU2 }
+    verifyErr(e) { buf.readU4 }
+    verifyErr(e) { buf.readUtf }
+    verifyErr(e) { buf.remaining }
+    verifyErr(e) { buf.seek(0) }
+    verifyErr(e) { buf[0] = 'x' }
+    verifyErr(e) { buf.size = 2 }
+    verifyErr(e) { buf.sync }
+    verifyErr(e) { buf.unread('x') }
+    verifyErr(e) { buf.unreadChar('x') }
+    verifyErr(e) { buf.write('x') }
+    verifyErr(e) { buf.writeBool(true) }
+    verifyErr(e) { buf.writeBuf("a".toBuf) }
+    verifyErr(e) { buf.writeChar('x') }
+    verifyErr(e) { buf.writeChars("abc") }
+    verifyErr(e) { buf.writeDecimal(10d) }
+    verifyErr(e) { buf.writeF4(10f) }
+    verifyErr(e) { buf.writeF8(10f) }
+    verifyErr(e) { buf.writeI2(10) }
+    verifyErr(e) { buf.writeI4(10) }
+    verifyErr(e) { buf.writeI8(10) }
+    verifyErr(e) { buf.writeObj("x") }
+    verifyErr(e) { buf.writeProps(["x":"x"]) }
+    verifyErr(e) { buf.writeUtf("x") }
+    verifyErr(e) { buf.writeXml("x") }
+
+    d := buf.dup
+    d[1] = '!'
+    verifyEq(d.readAllStr, "A!CD")
+    verifyEq(buf.size, 4)
+    verifyEq(buf[1], 'B')
+    verifyEq(buf.in.readAllStr, "ABCD")
+  }
 }
