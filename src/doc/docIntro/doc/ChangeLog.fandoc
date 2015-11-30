@@ -32,6 +32,7 @@
 - Range.eachWhile
 - Enhance Env.props to work with pods
 - Method.paramDef reflection (JVM only)
+- Immutable Buf support
 - #2428: Actor deprecate support for serialized messages
 - #2436: Cannot parse .props file when first line is # comment
 - #2438: Handle quotes in Cookie per RFC 6265
