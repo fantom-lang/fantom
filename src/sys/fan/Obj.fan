@@ -100,7 +100,7 @@ abstract class Obj
   ** Return if this Obj is [immutable]`docLang::Concurrency#immutability`
   ** and safe to share between threads:
   **   - an instance of a const class
-  **   - the result of 'List.toImmutable' or 'Map.toImmutable'
+  **   - the result of `toImmutable` on `List`, `Map`, or `Buf`
   **   - a Func object may or may not be immutable - see `sys::Func`.
   **   - other instances are assumed mutable and return false
   **
@@ -111,12 +111,13 @@ abstract class Obj
   ** NotImmutableErr if this object cannot be represented as an
   ** immutable:
   **   - if type is const, return this
-  **   - if already an immutable List, Map, or Func return this
+  **   - if already an immutable List, Map, Buf, or Func return this
   **   - if a List, then attempt to perform a deep clone by
   **     calling toImmutable on all items
   **   - if a Map, then attempt to perform a deep clone by
   **     calling toImmutable on all values (keys are already immutable)
   **   - some Funcs can be made immutable - see `sys::Func`
+  **   - if a Buf create immutable copy, see `sys::Buf`
   **   - any other object throws NotImmutableErr
   **
   This toImmutable()

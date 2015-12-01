@@ -38,7 +38,7 @@ immutable objects:
 
   - Any object instance of a [const class]`Classes#const`
   - The result of [Obj.toImmutable]`sys::Obj.toImmutable`
-    on a List, Map, or Func
+    on a List, Map, Buf, or Func
 
 By definition a const class is immutable - the compiler verifies
 that all the instance fields are themselves immutable and only
@@ -48,6 +48,10 @@ set in the object's constructor.
 compiler depending on if the function captures mutable state
 from its environment.  See [Functions]`Functions#immutable` for
 more details.
+
+Memory backed 'Buf' objects can made immutable by calling
+the 'toImmutable' method.  The original bytes are transfered
+to a new readonly Buf instance.
 
 The 'toImmutable' method supported by 'List' and 'Map' is a
 mechanism to return a readonly, deep copy of the collection which
