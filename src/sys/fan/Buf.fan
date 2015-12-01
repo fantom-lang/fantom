@@ -27,6 +27,14 @@
 ** appended.  It is common to write bytes into the buffer using the
 ** OutStream, then call `Buf.flip` to prepare the buffer to be used for reading.
 **
+** Memory bufs may be made immutable by calling `Obj.toImmutable`.  When a
+** a buf is made immutable, the original buffer's data is cleared (to avoid
+** copying the backing array).  All write operations on an immutable buf will
+** raise a 'ReadonlyErr'.  Reads may be performed by acquiring an InStream via
+** the `in` method.  However, reads operations which require a mutable Buf
+** pos will raise ReadonlyErr too including methods such as `pos`, `seek`, `read`.
+** Use `dup` to copy an immutable buf back into a mutable buf.
+**
 class Buf
 {
 
