@@ -156,14 +156,19 @@ public final class ConstBuf
     return r;
   }
 
-  public final void grow(int capacity)
+  public byte[] array()
   {
-    throw err();
+    return buf;
+  }
+
+  public int sz()
+  {
+    return this.size;
   }
 
   public ByteBuffer toByteBuffer()
   {
-    return ByteBuffer.wrap(buf, 0, size);
+    return ByteBuffer.wrap(bytes());
   }
 
   public Err err()
