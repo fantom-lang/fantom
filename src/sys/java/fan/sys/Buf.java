@@ -13,6 +13,7 @@ import java.nio.*;
 import java.security.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
+import java.util.zip.*;
 
 /**
  * Buf
@@ -363,7 +364,16 @@ public abstract class Buf
 
   public String toHex()
   {
-    throw UnsupportedErr.make(typeof()+".toHex");
+    byte[] buf = array();
+    int size = sz();
+    char[] hexChars = Buf.hexChars;
+    StringBuilder s = new StringBuilder(size*2);
+    for (int i=0; i<size; ++i)
+    {
+      int b = buf[i] & 0xFF;
+      s.append(hexChars[b>>4]).append(hexChars[b&0xf]);
+    }
+    return s.toString();
   }
 
   public static Buf fromHex(String str)
@@ -409,12 +419,44 @@ public abstract class Buf
 
   public String toBase64()
   {
-    throw UnsupportedErr.make(typeof()+".toBase64");
+    return doBase64(Buf.base64chars, true);
   }
 
   public String toBase64Uri()
   {
-    throw UnsupportedErr.make(typeof()+".toBase64Uri");
+    return doBase64(Buf.base64UriChars, false);
+  }
+
+  private String doBase64(char[] table, final boolean pad)
+  {
+    byte[] buf = this.array();
+    int size = this.sz();
+    StringBuilder s = new StringBuilder(size*2);
+    int i = 0;
+
+    // append full 24-bit chunks
+    int end = size-2;
+    for (; i<end; i += 3)
+    {
+      int n = ((buf[i] & 0xff) << 16) + ((buf[i+1] & 0xff) << 8) + (buf[i+2] & 0xff);
+      s.append(table[(n >>> 18) & 0x3f]);
+      s.append(table[(n >>> 12) & 0x3f]);
+      s.append(table[(n >>> 6) & 0x3f]);
+      s.append(table[n & 0x3f]);
+    }
+
+    // pad and encode remaining bits
+    int rem = size - i;
+    if (rem > 0)
+    {
+      int n = ((buf[i] & 0xff) << 10) | (rem == 2 ? ((buf[size-1] & 0xff) << 2) : 0);
+      s.append(table[(n >>> 12) & 0x3f]);
+      s.append(table[(n >>> 6) & 0x3f]);
+      s.append(rem == 2 ? table[n & 0x3f] : (pad ? '=' : ""));
+      if (pad) s.append('=');
+    }
+
+    return s.toString();
   }
 
   public static Buf fromBase64(String s)
@@ -466,17 +508,133 @@ public abstract class Buf
 
   public Buf toDigest(String algorithm)
   {
-    throw UnsupportedErr.make(typeof()+".toDigest");
+    try
+    {
+      MessageDigest md = MessageDigest.getInstance(algorithm);
+      md.update(array(), 0, sz());
+      return new MemBuf(md.digest());
+    }
+    catch (NoSuchAlgorithmException e)
+    {
+      throw ArgErr.make("Unknown digest algorthm: " + algorithm);
+    }
   }
 
-  public long crc(String algorithm)
+//////////////////////////////////////////////////////////////////////////
+// CRC
+//////////////////////////////////////////////////////////////////////////
+
+  public final long crc(String algorithm)
   {
-    throw UnsupportedErr.make(typeof()+".toDigest");
+    if (algorithm.equals("CRC-16")) return crc16();
+    if (algorithm.equals("CRC-32")) return crc(new CRC32());
+    if (algorithm.equals("CRC-32-Adler")) return crc(new Adler32());
+    throw ArgErr.make("Unknown CRC algorthm: " + algorithm);
   }
 
-  public Buf hmac(String algorithm, Buf key)
+  private long crc(Checksum checksum)
   {
-    throw UnsupportedErr.make(typeof()+".hmac");
+    checksum.update(array(), 0, sz());
+    return checksum.getValue() & 0xffffffff;
+  }
+
+  private long crc16()
+  {
+    byte[] array = array();
+    int size = sz();
+    int seed = 0xffff;
+    for (int i=0; i<size; ++i) seed = crc16(array[i], seed);
+    return seed;
+  }
+
+  private int crc16(int dataToCrc, int seed)
+  {
+    int dat = ((dataToCrc ^ (seed & 0xFF)) & 0xFF);
+    seed = (seed & 0xFFFF) >>> 8;
+    int index1 = (dat & 0x0F);
+    int index2 = (dat >>> 4);
+    if ((CRC16_ODD_PARITY[index1] ^ CRC16_ODD_PARITY[index2]) == 1)
+      seed ^= 0xC001;
+    dat  <<= 6;
+    seed ^= dat;
+    dat  <<= 1;
+    seed ^= dat;
+    return seed;
+  }
+
+  static private final int[] CRC16_ODD_PARITY = { 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0 };
+
+//////////////////////////////////////////////////////////////////////////
+// HMAC
+//////////////////////////////////////////////////////////////////////////
+
+  public Buf hmac(String algorithm, Buf keyBuf)
+  {
+    // get digest algorthim
+    MessageDigest md = null;
+    int blockSize = 64;
+    try
+    {
+      md = MessageDigest.getInstance(algorithm);
+    }
+    catch (NoSuchAlgorithmException e)
+    {
+      throw ArgErr.make("Unknown digest algorthm: " + algorithm);
+    }
+
+    // get secret key bytes
+    byte[] keyBytes = null;
+    int keySize = 0;
+    try
+    {
+      // get key bytes
+      MemBuf keyMemBuf = (MemBuf)keyBuf;
+      keyBytes = keyMemBuf.buf;
+      keySize  = keyMemBuf.size;
+
+      // key is greater than block size we hash it first
+      if (keySize > blockSize)
+      {
+        md.update(keyBytes, 0, keySize);
+        keyBytes = md.digest();
+        keySize = keyBytes.length;
+        md.reset();
+      }
+    }
+    catch (ClassCastException e)
+    {
+      throw UnsupportedErr.make("key parameter must be memory buffer");
+    }
+
+    // RFC 2104:
+    //   ipad = the byte 0x36 repeated B times
+    //   opad = the byte 0x5C repeated B times
+    //   H(K XOR opad, H(K XOR ipad, text))
+
+    // inner digest: H(K XOR ipad, text)
+    for (int i=0; i<blockSize; ++i)
+    {
+      if (i < keySize)
+        md.update((byte)(keyBytes[i] ^ 0x36));
+      else
+        md.update((byte)0x36);
+    }
+    md.update(array(), 0, sz());
+    byte[] innerDigest = md.digest();
+
+    // outer digest: H(K XOR opad, innerDigest)
+    md.reset();
+    for (int i=0; i<blockSize; ++i)
+    {
+      if (i < keySize)
+        md.update((byte)(keyBytes[i] ^ 0x5C));
+      else
+        md.update((byte)0x5C);
+    }
+    md.update(innerDigest);
+
+    // return result
+    return new MemBuf(md.digest());
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -577,8 +735,25 @@ public abstract class Buf
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+  /* Get size cast to an int */
+  public int sz()
+  {
+    throw UnsupportedErr.make(typeof()+".array");
+  }
+
+  /** Get direct access to backing byte array which contains
+      data from 0 to sz.  This array must never be mutated
+      outside of the class!!!! */
+  public byte[] array()
+  {
+    throw UnsupportedErr.make(typeof()+".array");
+  }
+
   /** Implements {@link Interop#toJava(Buf)} */
-  public abstract ByteBuffer toByteBuffer();
+  public ByteBuffer toByteBuffer()
+  {
+    throw UnsupportedErr.make(typeof()+".toByteBuffer");
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

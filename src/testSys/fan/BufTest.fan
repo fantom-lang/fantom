@@ -1087,12 +1087,12 @@ class BufTest : Test
     verifyEq(buf.in.readAllStr, "ABCD")
     verifyEq(buf.close, true)
 
-    // TODO
-    verifyEq(buf.dup.toHex, "41424344")
-    verifyEq(buf.dup.toBase64, "QUJDRA==")
-    verifyEq(buf.dup.crc("CRC-16"), 3973)
-    verifyEq(buf.dup.hmac("SHA1", "key".toBuf).toHex, "465da90ea0ce68e62e9b17cd9bdc7c81e6eb128b")
-    verifyEq(buf.dup.toDigest("SHA-1").toHex, "fb2f85c88567f3c8ce9b799c7c54642d0c7b41f6")
+    verifyEq(buf.toHex, "41424344")
+    verifyEq(buf.toBase64, "QUJDRA==")
+    verifyEq(buf.toBase64Uri, "QUJDRA")
+    verifyEq(buf.crc("CRC-16"), 3973)
+    verifyEq(buf.hmac("SHA1", "key".toBuf).toHex, "465da90ea0ce68e62e9b17cd9bdc7c81e6eb128b")
+    verifyEq(buf.toDigest("SHA-1").toHex, "fb2f85c88567f3c8ce9b799c7c54642d0c7b41f6")
 
     verifyEq(orig.size, 0)
     verifyEq(orig.capacity, 0)
