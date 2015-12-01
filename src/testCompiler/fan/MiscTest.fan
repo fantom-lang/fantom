@@ -715,6 +715,9 @@ class MiscTest : CompilerTest
         const Type? n
         const Type o
 
+        const Buf p := \"abc\".toBuf
+        const Buf q := Buf()
+
         new make(|Foo|? x := null)
         {
           f = wrap(null)
@@ -780,6 +783,11 @@ class MiscTest : CompilerTest
     verifyEq(obj->m, Str#)
     verifyEq(obj->n, null)
     verifyEq(obj->o, Bool#)
+
+    verifyEq(obj->p->isImmutable, true)
+    verifyEq(obj->q->isImmutable, true)
+    verifyEq(obj->p->in->readAllStr, "abc")
+    verifyEq(obj->q->size, 0)
   }
 
 //////////////////////////////////////////////////////////////////////////
