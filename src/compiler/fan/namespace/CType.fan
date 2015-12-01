@@ -469,6 +469,7 @@ mixin CType
   Bool isThis()    { qname == "sys::This" }
   Bool isType()    { qname == "sys::Type" }
   Bool isVoid()    { qname == "sys::Void" }
+  Bool isBuf()     { qname == "sys::Buf" }
   Bool isList()    { fits(ns.listType) }
   Bool isMap()     { fits(ns.mapType) }
   Bool isFunc()    { fits(ns.funcType) }
@@ -479,7 +480,7 @@ mixin CType
 
   **
   ** Is this type ok to use as a const field?  Any const
-  ** type fine, plus we allow Obj, List, Map, and Func since
+  ** type fine, plus we allow Obj, List, Map, Buf, and Func since
   ** they will implicitly have toImmutable called on them.
   **
   Bool isConstFieldType()
@@ -488,7 +489,7 @@ mixin CType
 
     // these are checked at runtime
     t := deref.toNonNullable
-    if (t.isObj || t.isList || t.isMap|| t.isFunc)
+    if (t.isObj || t.isList || t.isMap|| t.isBuf || t.isFunc)
       return true
 
     // definitely no way it can be immutable

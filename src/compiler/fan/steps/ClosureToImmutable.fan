@@ -149,8 +149,6 @@ class ClosureToImmutable : CompilerStep
   **
   **   private Bool immutable
   **
-  **
-  **
   private Void genToImmutable(TypeDef cls)
   {
     loc := cls.loc
