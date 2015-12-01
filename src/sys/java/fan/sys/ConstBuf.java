@@ -60,7 +60,7 @@ public final class ConstBuf
 
   public final long pos()
   {
-    throw err();
+    return 0;
   }
 
   final void pos(long x)
