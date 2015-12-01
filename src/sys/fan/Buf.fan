@@ -32,7 +32,7 @@
 ** copying the backing array).  All write operations on an immutable buf will
 ** raise a 'ReadonlyErr'.  Reads may be performed by acquiring an InStream via
 ** the `in` method.  However, reads operations which require a mutable Buf
-** pos will raise ReadonlyErr too including methods such as `pos`, `seek`, `read`.
+** pos will raise ReadonlyErr too including methods such as `seek` or `read`.
 ** Use `dup` to copy an immutable buf back into a mutable buf.
 **
 class Buf

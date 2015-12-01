@@ -1081,6 +1081,9 @@ class BufTest : Test
     verifyEq(buf.size, 4)
     verifyEq(buf.size, 4)
     verifyEq(buf.isEmpty, false)
+    verifyEq(buf.pos, 0)
+    verifyEq(buf.remaining, 4)
+    verifyEq(buf.more, true)
     verifyEq(buf[0], 'A')
     verifyEq(buf[-1], 'D')
     verifyEq(buf[1..2].readAllStr, "BC")
@@ -1110,6 +1113,10 @@ class BufTest : Test
     verifyEq(in.read, 'D')
     verifyEq(in.read, null)
 
+    newBuf := Buf()
+    newBuf.out.writeBuf(buf)
+    verifyEq(newBuf.flip.readAllStr, "ABCD")
+
     verifyErr(e) { x := buf.capacity }
     verifyErr(e) { buf.capacity = 6 }
     verifyErr(e) { buf.charset = Charset.utf16BE }
@@ -1118,10 +1125,8 @@ class BufTest : Test
     verifyErr(e) { buf.endian = Endian.big }
     verifyErr(e) { buf.fill(0xff, 100) }
     verifyErr(e) { buf.flip }
-    verifyErr(e) { buf.more }
     verifyErr(e) { buf.out.printLine("x") }
     verifyErr(e) { buf.peek }
-    verifyErr(e) { x := buf.pos }
     verifyErr(e) { buf.print("x") }
     verifyErr(e) { buf.printLine("x") }
     verifyErr(e) { buf.read }
@@ -1148,7 +1153,6 @@ class BufTest : Test
     verifyErr(e) { buf.readU2 }
     verifyErr(e) { buf.readU4 }
     verifyErr(e) { buf.readUtf }
-    verifyErr(e) { buf.remaining }
     verifyErr(e) { buf.seek(0) }
     verifyErr(e) { buf[0] = 'x' }
     verifyErr(e) { buf.size = 2 }
