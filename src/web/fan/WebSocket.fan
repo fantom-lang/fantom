@@ -100,7 +100,7 @@ class WebSocket
 
   **
   ** Receive a message which is returned as either a Str or Buf.
-  ** Return null if socket is closed.
+  ** Raise IOErr if socket is closed.
   **
   Obj? receive()
   {
@@ -117,8 +117,7 @@ class WebSocket
   {
     // check if we have a frame or at end of stream
     in := socket.in
-    firstByte := in.read
-    if (firstByte == null) return null
+    firstByte := in.readU1
 
     // first byte indicates final frag, and opcode
     byte := firstByte
