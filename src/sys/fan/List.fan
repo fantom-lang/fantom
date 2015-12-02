@@ -186,7 +186,8 @@ final class List
 
   **
   ** Create a shallow duplicate copy of this List.  The items
-  ** themselves are not duplicated.  This method is readonly safe.
+  ** themselves are not duplicated.  The resulting list is always
+  ** read/write.  This method is readonly safe.
   **
   L dup()
 
