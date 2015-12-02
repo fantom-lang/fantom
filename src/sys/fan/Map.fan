@@ -100,7 +100,8 @@ final class Map
 
   **
   ** Create a shallow duplicate copy of this Map.  The keys and
-  ** values themselves are not duplicated.  This method is readonly safe.
+  ** values themselves are not duplicated.  The resulting map is
+  ** always read/write.  This method is readonly safe.
   **
   M dup()
 

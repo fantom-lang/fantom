@@ -165,6 +165,7 @@ class Buf
 
   **
   ** Create a new buffer in memory which deeply clones this buffer.
+  ** The resulting buf is read/write.
   **
   Buf dup()
 
