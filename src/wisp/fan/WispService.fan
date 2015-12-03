@@ -226,7 +226,7 @@ const class WispService : Service
     Actor.sleep(Duration.maxVal)
   }
 
-  ** Create instance for Test.setup easy to use via reflection
+  ** Create instance for Test.setup easy to use via reflection (service is not started automatically)
   @NoDoc static WispService testSetup(WebMod root)
   {
     log.level = LogLevel.err
@@ -234,7 +234,7 @@ const class WispService : Service
     {
       it.root = root
       it.httpPort = (10_000..60_000).random
-    }.start
+    }
   }
 
   ** Teardown instance from tesetSetup
