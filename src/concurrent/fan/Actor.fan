@@ -95,7 +95,9 @@ native const class Actor
   ** exception, or cancellation.  Send when done messages are never
   ** coalesced.  Also see `send` and `sendLater`.
   **
-  Future sendWhenDone(Future f, Obj? msg)
+  ** TODO: should we keep this?
+  **
+  @NoDoc Future sendWhenDone(Future f, Obj? msg)
 
   **
   ** The receive behavior for this actor is handled by overriding

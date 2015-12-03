@@ -88,12 +88,10 @@ Otherwise the message must be [serializable]`Serialization` in which
 case a serialized copy of the object is passed.  If a message is
 neither immutable or serializable, then 'IOErr' is thrown.
 
-Messages are sent to an actor using of three methods:
+Messages are sent to an actor using these methods:
   - [send]`concurrent::Actor.send`: enqueues the message immediately
   - [sendLater]`concurrent::Actor.sendLater`: enqueues the message
     after a period of time has elapsed
-  - [sendWhenDone]`concurrent::Actor.sendWhenDone`: enqueues the message
-    once another message completes processing
 
 Futures [#futures]
 ******************
