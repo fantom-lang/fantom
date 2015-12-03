@@ -225,15 +225,15 @@ public class Actor
     {
       if (future.isCancelled()) return;
       if (pool.killed) { future.cancel(); return; }
-      future.set(receive(future.msg));
+      future.complete(receive(future.msg));
     }
     catch (Err e)
     {
-      future.err(e);
+      future.completeErr(e);
     }
     catch (Throwable e)
     {
-      future.err(Err.make(e));
+      future.completeErr(Err.make(e));
     }
   }
 

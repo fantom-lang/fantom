@@ -23,6 +23,11 @@ public final class Future
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
+  public static Future make()
+  {
+    return new Future(null);
+  }
+
   Future(Object msg)
   {
     this.msg   = msg;
@@ -44,6 +49,19 @@ public final class Future
 // Future
 //////////////////////////////////////////////////////////////////////////
 
+  public final FutureState state()
+  {
+    int state = this.state;
+    switch(state)
+    {
+      case PENDING:     return FutureState.pending;
+      case DONE_OK:     return FutureState.ok;
+      case DONE_ERR:    return FutureState.err;
+      case DONE_CANCEL: return FutureState.cancelled;
+    }
+    throw Err.make("Internal error " + state);
+  }
+
   public final boolean isDone()
   {
     return (state & DONE) != 0;
@@ -63,7 +81,7 @@ public final class Future
       synchronized (this)
       {
         // wait until we enter a done state, the only notifies
-        // on this object should be from cancel, set, or err
+        // on this object should be from cancel, complete, or completeErr
         if (timeout == null)
         {
           // wait forever until done
@@ -93,7 +111,7 @@ public final class Future
 
         // if canceled throw CancelErr
         if (state == DONE_CANCEL)
-          throw CancelledErr.make("message canceled");
+          throw CancelledErr.make("Future cancelled");
 
         // if error was raised, raise it to caller
         if (state == DONE_ERR)
@@ -125,12 +143,13 @@ public final class Future
     sendWhenDone(wd);
   }
 
-  final void set(Object r)
+  public final void complete(Object r)
   {
     r = Actor._safe(r);
     ArrayList wd;
     synchronized (this)
     {
+      if (state != PENDING) throw Err.make("Future already complete");
       state = DONE_OK;
       result = r;
       notifyAll();
@@ -139,11 +158,13 @@ public final class Future
     sendWhenDone(wd);
   }
 
-  final void err(Err e)
+  public final void completeErr(Err e)
   {
     ArrayList wd;
     synchronized (this)
     {
+      if (state == DONE_CANCEL) return;
+      if (state != PENDING) throw Err.make("Future already complete");
       state = DONE_ERR;
       result = e;
       notifyAll();
