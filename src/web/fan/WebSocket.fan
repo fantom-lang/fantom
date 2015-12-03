@@ -104,16 +104,25 @@ class WebSocket
   **
   Obj? receive()
   {
+    receiveBuf(null)
+  }
+
+  **
+  ** Receive Buf message into given buffer.
+  ** Raise IOErr if socket is closed.
+  **
+  @NoDoc Obj? receiveBuf(Buf? buf)
+  {
     while (true)
     {
-      msg := doReceive
+      msg := doReceive(buf)
       if (msg === receiveAgain) continue
       return msg
     }
     throw Err()
   }
 
-  private Obj? doReceive()
+  private Obj? doReceive(Buf? payload)
   {
     // check if we have a frame or at end of stream
     in := socket.in
@@ -137,7 +146,7 @@ class WebSocket
     maskKey := masked ? in.readBufFully(null, 4) : null
 
     // read payload data
-    payload := in.readBufFully(null, len)
+    payload = in.readBufFully(payload, len)
 
     // if masked, then unmask it
     if (masked)
