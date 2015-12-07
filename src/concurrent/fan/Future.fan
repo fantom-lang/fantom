@@ -56,21 +56,22 @@ native final const class Future
 
   **
   ** Complete the future successfully with given value.  Raise
-  ** an exception if value is not immutable or the future is not
-  ** in the pending state.
+  ** an exception if value is not immutable or the future is
+  ** already complete (ignore this call if cancelled).
+  ** Return this.
   **
   ** TODO: prototype feature
   **
-  Void complete(Obj? val)
+  This complete(Obj? val)
 
   **
   ** Complete the future with a failure condition using given
-  ** exception.  Raise an exceptoin if value the future is not
-  ** in the pending state.
+  ** exception.  Raise an exception if the future is already
+  ** complete (ignore this call if cancelled).  Return this.
   **
   ** TODO: prototype feature
   **
-  Void completeErr(Err err)
+  This completeErr(Err err)
 
 }
 

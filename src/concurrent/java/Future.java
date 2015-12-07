@@ -143,12 +143,13 @@ public final class Future
     sendWhenDone(wd);
   }
 
-  public final void complete(Object r)
+  public final Future complete(Object r)
   {
     r = Actor._safe(r);
     ArrayList wd;
     synchronized (this)
     {
+      if (state == DONE_CANCEL) return this;
       if (state != PENDING) throw Err.make("Future already complete");
       state = DONE_OK;
       result = r;
@@ -156,14 +157,15 @@ public final class Future
       wd = whenDone; whenDone = null;
     }
     sendWhenDone(wd);
+    return this;
   }
 
-  public final void completeErr(Err e)
+  public final Future completeErr(Err e)
   {
     ArrayList wd;
     synchronized (this)
     {
-      if (state == DONE_CANCEL) return;
+      if (state == DONE_CANCEL) return this;
       if (state != PENDING) throw Err.make("Future already complete");
       state = DONE_ERR;
       result = e;
@@ -171,6 +173,7 @@ public final class Future
       wd = whenDone; whenDone = null;
     }
     sendWhenDone(wd);
+    return this;
   }
 
 //////////////////////////////////////////////////////////////////////////
