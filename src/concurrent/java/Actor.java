@@ -92,6 +92,8 @@ public class Actor
 
   public final Future sendLater(Duration d, Object msg) { return _send(msg, d, null); }
 
+  public final Future sendWhenComplete(Future f, Object msg) { return _send(msg, null, f); }
+
   public final Future sendWhenDone(Future f, Object msg) { return _send(msg, null, f); }
 
   protected Object receive(Object msg)

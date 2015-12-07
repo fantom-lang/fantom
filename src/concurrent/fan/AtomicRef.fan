@@ -44,6 +44,6 @@ final const class AtomicRef
   **
   ** Return 'val.toStr'
   **
-  override Str toStr() { val.toStr }
+  override Str toStr() { val?.toStr ?: "null" }
 
 }

@@ -74,7 +74,7 @@ native const class Actor
   ** a future which may be used to obtain the result once it the
   ** actor has processed the message.  If the message is coalesced
   ** then this method returns the original message's future reference.
-  ** Also see `sendLater` and `sendWhenDone`.
+  ** Also see `sendLater` and `sendWhenComplete`.
   **
   Future send(Obj? msg)
 
@@ -85,19 +85,21 @@ native const class Actor
   ** is dependent on thread coordination and pending messages in the queue.
   ** Scheduled messages are not guaranteed to be processed if the
   ** actor's pool is stopped.  Scheduled messages are never coalesced.
-  ** Also see `send` and `sendWhenDone`.
+  ** Also see `send` and `sendWhenComplete`.
   **
   Future sendLater(Duration d, Obj? msg)
 
   **
   ** Schedule a message for delivery after the given future has completed.
   ** Completion may be due to the future returning a result, throwing an
-  ** exception, or cancellation.  Send when done messages are never
+  ** exception, or cancellation.  Send-when-complete messages are never
   ** coalesced.  Also see `send` and `sendLater`.
   **
-  ** TODO: should we keep this?
-  **
-  @NoDoc Future sendWhenDone(Future f, Obj? msg)
+  Future sendWhenComplete(Future f, Obj? msg)
+
+  ** Obsolete - use `sendWhenComplete`
+  @Deprecated { msg = "Use sendWhenComplete" }
+  Future sendWhenDone(Future f, Obj? msg)
 
   **
   ** The receive behavior for this actor is handled by overriding

@@ -92,6 +92,8 @@ Messages are sent to an actor using these methods:
   - [send]`concurrent::Actor.send`: enqueues the message immediately
   - [sendLater]`concurrent::Actor.sendLater`: enqueues the message
     after a period of time has elapsed
+  - [sendWhenComplete]`concurrent::Actor.sendWhenComplete`: enqueues
+    the message once another message completes processing
 
 Futures [#futures]
 ******************
