@@ -96,6 +96,13 @@ abstract const class Env
   virtual Str[] args()
 
   **
+  ** Get the main method which was used to run this Fantom VM.
+  ** Return null if VM was booted outside of a Fantom main method.
+  ** Default implementation delegates to `parent`.
+  **
+  virtual Method? mainMethod()
+
+  **
   ** Get the environment variables as a case insensitive, immutable
   ** map of Str name/value pairs.  The environment map is initialized
   ** from the following sources from lowest priority to highest priority:
