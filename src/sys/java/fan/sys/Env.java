@@ -61,6 +61,8 @@ public abstract class Env
 
   public List args() { return parent.args(); }
 
+  public Method mainMethod() { return parent.mainMethod(); }
+
   public Map vars()  { return parent.vars(); }
 
   public Map diagnostics() { return parent.diagnostics(); }

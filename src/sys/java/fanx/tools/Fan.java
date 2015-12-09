@@ -155,6 +155,9 @@ public class Fan
 
   static int callMain(Type t, Method m)
   {
+    // main method
+    Sys.bootEnv.setMainMethod(m);
+
     // check parameter type and build main arguments
     List args;
     List params = m.params();
