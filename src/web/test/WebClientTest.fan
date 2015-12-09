@@ -72,8 +72,7 @@ class WebClientTest : Test
 
   Void testGetChunked()
   {
-    // for now reddit uses chunked transfer
-    c := WebClient(`https://www.reddit.com/r/programming`)
+    c := WebClient(`https://news.ycombinator.com/`)
     verify(!c.isConnected)
     try
     {
@@ -101,7 +100,7 @@ class WebClientTest : Test
 
   Void testGetConvenience()
   {
-    c := WebClient(`http://google.com`)
+    c := WebClient(`https://news.ycombinator.com/`)
     verify(c.getStr.contains("<html"))
     Actor.sleep(100ms)
     verify(!c.isConnected)
