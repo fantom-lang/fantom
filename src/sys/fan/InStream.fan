@@ -208,6 +208,14 @@ class InStream
   **
   Str readUtf()
 
+  **
+  ** Read between 0 and 64 bits from the input stream.  Bits which
+  ** are partial bytes are consumed from the input stream one byte
+  ** at a time.  Throw IOErr on error or if end of stream is reached
+  ** before given number of bits can be read.
+  **
+  Int readBits(Int num)
+
 //////////////////////////////////////////////////////////////////////////
 // Text Data
 //////////////////////////////////////////////////////////////////////////

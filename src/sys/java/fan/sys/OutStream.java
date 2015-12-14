@@ -218,6 +218,45 @@ public class OutStream
     return this;
   }
 
+  public OutStream writeBits(long val, long num)
+  {
+    // arg checking
+    if (num == 0) return this;
+    if (num < 0 || num > 64) throw ArgErr.make("Bit num not 0 - 64: " + num);
+
+    // buffer is stored in two bytes: <size> <byte>
+    int bitsBuf = this.bitsBuf;
+    int bufByte = bitsBuf & 0xff;
+    int bufSize = (bitsBuf >> 8) & 0xff;
+
+    // write bits, sinking byte once we reach 8 bits
+    for (int i=(int)num-1; i>=0; --i)
+    {
+      int bit = (int)(val >> i) & 0x1;
+      bufByte |= bit << (7 - bufSize);
+      bufSize++;
+      if (bufSize == 8)
+      {
+        w(bufByte);
+        bufByte = 0;
+        bufSize = 0;
+      }
+    }
+
+    // save buffer and return this
+    this.bitsBuf = (bufSize << 8) | bufByte;
+    return this;
+  }
+
+  private void flushBits()
+  {
+    if (bitsBuf != 0)
+    {
+      w(bitsBuf & 0xff);
+      bitsBuf = 0;
+    }
+  }
+
   public Charset charset()
   {
     return charset;
@@ -438,6 +477,7 @@ public class OutStream
 
   public OutStream flush()
   {
+    flushBits();
     if (out != null) out.flush();
     return this;
   }
@@ -473,5 +513,5 @@ public class OutStream
   boolean bigEndian = true;
   Charset charset = Charset.utf8();
   Charset.Encoder charsetEncoder = charset.newEncoder();
-
+  int bitsBuf;
 }

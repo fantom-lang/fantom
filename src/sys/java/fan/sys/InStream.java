@@ -362,6 +362,38 @@ public class InStream
     return new String(buf, 0, cnum);
   }
 
+  public long readBits(long num)
+  {
+    // arg checking
+    if (num == 0) return 0;
+    if (num < 0 || num > 64) throw ArgErr.make("Bit num not 0 - 64: " + num);
+
+    // buffer is stored in two bytes: <size> <byte>
+    int bitsBuf = this.bitsBuf;
+    int bufByte = bitsBuf & 0xff;
+    int bufSize = (bitsBuf >> 8) & 0xff;
+
+    // read bits, sourcing a new byte once we run out bits
+    // in current byte buffer
+    long result = 0;
+    for (int i=(int)num-1; i>=0; --i)
+    {
+      if (bufSize == 0)
+      {
+        bufByte = r();
+        if (bufByte < 0) throw IOErr.make("End of stream");
+        bufSize = 8;
+      }
+      int bit = (bufByte >> (bufSize - 1)) & 0x1;
+      bufSize--;
+      result = result << 1 | (long)bit;
+    }
+
+    // update buffer and return result
+    this.bitsBuf = (bufSize << 8) | bufByte;
+    return result;
+  }
+
   public Charset charset()
   {
     return charset;
@@ -668,7 +700,7 @@ public class InStream
         }
 
         // line comment
-        if (c == '#' && colNum == 1) 
+        if (c == '#' && colNum == 1)
         {
           inEndOfLineComment = true;
           continue;
@@ -821,5 +853,6 @@ public class InStream
   Charset charset = Charset.utf8();
   Charset.Decoder charsetDecoder = charset.newDecoder();
   Charset.Encoder charsetEncoder = charset.newEncoder();
+  int bitsBuf;
 
 }
