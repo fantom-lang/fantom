@@ -130,6 +130,12 @@ class OutStream
   **
   This writeUtf(Str s)
 
+  **
+  ** Write between 0 and 64 bits of the given integer value.  Bits which
+  ** are only a partial byte are bufferred in RAM until `flush`.
+  **
+  This writeBits(Int val, Int num)
+
 //////////////////////////////////////////////////////////////////////////
 // Text Data
 //////////////////////////////////////////////////////////////////////////

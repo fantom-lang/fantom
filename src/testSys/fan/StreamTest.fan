@@ -361,6 +361,63 @@ class StreamTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Bits
+//////////////////////////////////////////////////////////////////////////
+
+  Void testBits()
+  {
+    // basic writes
+    buf := Buf()
+    buf.out.writeBits(0x1, 1)
+           .writeBits(0x5, 3)
+           .writeBits(0x9, 5)
+           .writeBits(0x4, 4)
+           .writeBits(0x7bcd, 15)
+           .flush
+    verifyEq(buf.toHex, "d4a7bcd0")
+
+    // write arg checking
+    100.times { buf.out.writeBits(0xabcd, 0) }
+    verifyErr(ArgErr#) { buf.out.writeBits(1, -1) }
+    verifyErr(ArgErr#) { buf.out.writeBits(1, 65) }
+    verifyEq(buf.toHex, "d4a7bcd0")
+
+    // basic reads
+    buf.flip
+    verifyErr(ArgErr#) { buf.in.readBits(-1) }
+    verifyErr(ArgErr#) { buf.in.readBits(65) }
+    verifyEq(buf.in.readBits(1),  0x1)
+    verifyEq(buf.in.readBits(3),  0x5)
+    verifyEq(buf.in.readBits(5),  0x9)
+    verifyEq(buf.in.readBits(4),  0x4)
+    verifyEq(buf.in.readBits(15), 0x7bcd)
+
+    // test large sampling of random value/bit sizes
+    vals := Int[,]
+    nums := Int[,]
+    buf = Buf()
+    1000.times
+    {
+      num := (1..64).random
+      val := num == 64 ? Int.random : (0..(1.shiftl(num-1))).random
+      vals.add(val)
+      nums.add(num)
+      buf.out.writeBits(val, num)
+    }
+    buf.out.flush
+
+    // read back out
+    buf.flip
+    vals.each |val, i|
+    {
+      num := nums[i]
+      actual := buf.in.readBits(num)
+      verifyEq(val, actual)
+    }
+
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Char UTF-8
 //////////////////////////////////////////////////////////////////////////
 

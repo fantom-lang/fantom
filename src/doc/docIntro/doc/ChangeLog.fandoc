@@ -35,6 +35,7 @@
 - Immutable Buf support
 - Enhance Future API: state, complete, and completeErr
 - Deprecate Actor.sendWhenDone in favor for sendWhenComplete
+- Bit I/O: OutStream.writeBits, InStream.readBits
 - #2428: Actor deprecate support for serialized messages
 - #2436: Cannot parse .props file when first line is # comment
 - #2438: Handle quotes in Cookie per RFC 6265
