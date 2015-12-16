@@ -40,6 +40,7 @@ nephelometric_turbidity_units, ntu
 formazin_nephelometric_unit, fnu
 power_usage_effectiveness, PUE
 data_center_infrastructure_efficiency, DCIE
+air_changes_per_hour, ACH
 
 -- currency (null)
 australian_dollar, AUD
