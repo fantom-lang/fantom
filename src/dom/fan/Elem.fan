@@ -122,6 +122,10 @@ class Elem
   ** this is the last element under its parent.
   native Elem? nextSibling()
 
+  ** Return 'true' if given element is a descendant of this
+  ** node, or 'false' if not.
+  native Bool containsChild(Elem elem)
+
   ** Returns the first element that is a descendant of this
   ** element on which it is invoked that matches the specified
   ** group of selectors.
