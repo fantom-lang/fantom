@@ -245,6 +245,11 @@ fan.dom.ElemPeer.prototype.nextSibling = function(self)
   return fan.dom.ElemPeer.wrap(sib);
 }
 
+fan.dom.ElemPeer.prototype.containsChild = function(self, test)
+{
+  return this.elem.contains(test.peer.elem);
+}
+
 fan.dom.ElemPeer.prototype.querySelector = function(self, selectors)
 {
   var elem = this.elem.querySelector(selectors);
