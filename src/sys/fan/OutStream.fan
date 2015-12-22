@@ -136,6 +136,12 @@ class OutStream
   **
   This writeBits(Int val, Int num)
 
+  **
+  ** Get number of bits written by `writeBits` which haven't been
+  ** written as a complete byte yet.  Not part of public API!
+  **
+  @NoDoc Int numPendingBits()
+
 //////////////////////////////////////////////////////////////////////////
 // Text Data
 //////////////////////////////////////////////////////////////////////////
