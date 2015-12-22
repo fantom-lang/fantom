@@ -248,6 +248,11 @@ public class OutStream
     return this;
   }
 
+  public long numPendingBits()
+  {
+    return (bitsBuf >> 8) & 0xff;
+  }
+
   private void flushBits()
   {
     if (bitsBuf != 0)
