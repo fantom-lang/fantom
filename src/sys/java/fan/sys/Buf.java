@@ -646,7 +646,7 @@ public abstract class Buf
     try
     {
       // get low-level representation of args
-      byte[] salt    = ((MemBuf)_salt).bytes();
+      byte[] salt    = _salt.array();
       int iterations = (int)_iterations;
       int keyLen     = (int)_keyLen;
 
