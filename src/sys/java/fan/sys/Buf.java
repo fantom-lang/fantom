@@ -646,7 +646,8 @@ public abstract class Buf
     try
     {
       // get low-level representation of args
-      byte[] salt    = _salt.array();
+      byte[] salt    = new byte[_salt.sz()];
+      System.arraycopy(_salt.array(), 0, salt, 0, _salt.sz());
       int iterations = (int)_iterations;
       int keyLen     = (int)_keyLen;
 
