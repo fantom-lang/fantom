@@ -21,7 +21,7 @@ fan.fwt.TabPeer.prototype.image = function(self) { return this.m_image; }
 fan.fwt.TabPeer.prototype.image$ = function(self, val)
 {
   this.m_image = val;
-  fan.fwt.FwtEnvPeer.loadImage(val, self)
+  if (val != null) fan.fwt.FwtEnvPeer.loadImage(val, self);
 }
 
 fan.fwt.TabPeer.prototype.m_$defCursor = "default";
