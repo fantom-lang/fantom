@@ -236,7 +236,7 @@ fan.fwt.TablePeer.prototype.refreshAll = function(self)
 
 fan.fwt.TablePeer.prototype.refreshRows = function(self, indices)
 {
-  this.refreshAll();
+  this.refreshAll(self);
 }
 
 fan.fwt.TablePeer.prototype.needRebuild = true;
