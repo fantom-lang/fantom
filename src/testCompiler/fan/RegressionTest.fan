@@ -713,6 +713,80 @@ class RegressionTest : CompilerTest
     verifyEq(o->test, [10:3])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Void Return In Try
+//////////////////////////////////////////////////////////////////////////
+
+  Void testVoidReturnInTry()
+  {
+    compile(
+      """class Foo
+         {
+           Void a1() { return foo("a1") }
+
+           Void a2() { return bar("a2") }
+
+           Void b1(Bool raise)
+           {
+             try
+             {
+               if (raise) throw Err()
+               return foo("b1-try")
+             }
+             catch (Err e) return foo("b1-catch")
+           }
+
+           Void b2(Bool raise)
+           {
+             try
+             {
+               if (raise) throw Err()
+               return bar("b2-try")
+             }
+             catch (Err e) return bar("b2-catch")
+           }
+
+           Void c1(Bool raise)
+           {
+             try
+             {
+               if (raise) throw Err()
+               return foo("c1-try")
+             }
+             catch (Err e) return foo("c1-catch")
+             finally foo(" c1-finally")
+           }
+
+           Void c2(Bool raise)
+           {
+             try
+             {
+               if (raise) throw Err()
+               return bar("c2-try")
+             }
+             catch (Err e) return bar("c2-catch")
+             finally bar(" c2-finally")
+           }
+
+           Void foo(Str r) { this.r += r }
+           Str bar(Str r)  { this.r += r }
+           Str r := ""
+         }""")
+   // compiler.fpod.dump
+
+    o := pod.types.first.make
+    o->r = ""; o->a1;        verifyEq(o->r, "a1")
+    o->r = ""; o->a2;        verifyEq(o->r, "a2")
+    o->r = ""; o->b1(false); verifyEq(o->r, "b1-try")
+    o->r = ""; o->b1(true);  verifyEq(o->r, "b1-catch")
+    o->r = ""; o->b2(false); verifyEq(o->r, "b2-try")
+    o->r = ""; o->b2(true);  verifyEq(o->r, "b2-catch")
+    o->r = ""; o->c1(false); verifyEq(o->r, "c1-try c1-finally")
+    o->r = ""; o->c1(true);  verifyEq(o->r, "c1-catch c1-finally")
+    o->r = ""; o->c2(false); verifyEq(o->r, "c2-try c2-finally")
+    o->r = ""; o->c2(true);  verifyEq(o->r, "c2-catch c2-finally")
+  }
+
 
 }
 

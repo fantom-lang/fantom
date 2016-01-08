@@ -110,6 +110,25 @@ class CodeAsm : CompilerSupport
 
   private Void returnStmt(ReturnStmt stmt)
   {
+    // if we have a expression
+    exprOnStack := false
+    if (stmt.expr != null)
+    {
+      // evaluate expr
+      expr(stmt.expr)
+
+      // unless expr was void, we have it on the stack now
+      exprOnStack = !stmt.expr.ctype.isVoid
+
+      // if we have expr on stack inside a void method, need to pop it
+      inVoidMethod := curMethod != null && curMethod.ret.isVoid
+      if (inVoidMethod && exprOnStack)
+      {
+        opType(FOp.Pop, stmt.expr.ctype)
+        exprOnStack = false
+      }
+    }
+
     // if we are in a protected region, then we can't return immediately,
     // rather we need to save the result into a temporary local; and use
     // a "leave" instruction which we will backpatch in finishCode() with
@@ -117,9 +136,8 @@ class CodeAsm : CompilerSupport
     if (inProtectedRegion)
     {
       // if returning a result then stash in temp local
-      if (stmt.expr != null)
+      if (exprOnStack)
       {
-        expr(stmt.expr)
         returnLocal = stmt.leaveVar
         op(FOp.StoreVar, returnLocal.register)
       }
@@ -138,15 +156,6 @@ class CodeAsm : CompilerSupport
     }
 
     // process as normal return
-    if (stmt.expr != null)
-    {
-      // evaluate expr
-      expr(stmt.expr)
-
-      // if we have a non-void expr inside a void method, then pop it off stack
-      if (curMethod != null && curMethod.ret.isVoid && !stmt.expr.ctype.isVoid)
-        opType(FOp.Pop, stmt.expr.ctype)
-    }
     op(FOp.Return)
   }
 
