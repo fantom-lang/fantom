@@ -774,7 +774,7 @@ class CheckErrors : CompilerStep
     // add temp local var if returning from a protected region,
     // we always call this variable "$return" and reuse it if
     // already declared by a previous return
-    if (stmt.expr != null && protectedRegionDepth > 0)
+    if (stmt.expr != null && protectedRegionDepth > 0 && !stmt.expr.ctype.isVoid)
     {
       v := curMethod.vars.find |MethodVar v->Bool| { v.name == "\$return" }
       if (v == null) v = curMethod.addLocalVar(stmt.expr.ctype, "\$return", null)
