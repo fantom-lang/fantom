@@ -24,7 +24,10 @@ class JsIndexedProps
     index := Str:Str[][:]
     pods.each |pod|
     {
-      addToIndex(pod, index)
+      try
+        addToIndex(pod, index)
+      catch (Err e)
+        echo("ERROR: JsIndexProps.write: $pod.name\n$e.traceToStr")
     }
 
     out.printLine(
@@ -48,15 +51,12 @@ class JsIndexedProps
     f := pod.file(`/index.props`, false)
     if (f == null) return
 
-    // TODO this doesn't actually parse actual format yet
-    f.eachLine |line|
+
+    f.in.readPropsListVals.each |v, n|
     {
-      eq  := line.index("=")
-      key := line[0..<eq]
-      val := line[eq+1..-1]
-      list := index[key]
-      if (list == null) index[key] = [val]
-      else list.add(val)
+      list := index[n]
+      if (list == null) index[n] = list = Str[,]
+      list.addAll(v)
     }
   }
 
