@@ -386,6 +386,11 @@ class InStream
   Str:Str readProps()
 
   **
+  ** Read props but map values to a list of strings which include duplicates.
+  **
+  @NoDoc Str:Str[] readPropsListVals()
+
+  **
   ** Pipe bytes from this input stream to the specified output stream.
   ** If n is specified, then block until exactly n bytes have been
   ** read or throw IOErr if end of stream is reached first.  If n is
