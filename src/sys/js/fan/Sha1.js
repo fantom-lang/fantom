@@ -9,9 +9,10 @@
  * Modifications:
  *   10 July 2009  Andy Frank  Edited to run in Fantom and for size/usage
  */
-fan.sys.Buf_Sha1 = function(buf, key)
-{
+fan.sys.buf_sha1 = (function () {
 
+  var crypto = fan.sys.buf_crypto;
+  var ns = {};
   var chrsz = 8;  /* bits per input character. 8 - ASCII; 16 - Unicode */
 
   /*
@@ -86,7 +87,7 @@ fan.sys.Buf_Sha1 = function(buf, key)
    */
   function core_hmac_sha1(key, data)
   {
-    var bkey = bytesToWords(key);
+    var bkey = crypto.bytesToWords(key);
     if(bkey.length > 16) bkey = core_sha1(bkey, key.length * chrsz);
 
     var ipad = Array(16), opad = Array(16);
@@ -96,7 +97,7 @@ fan.sys.Buf_Sha1 = function(buf, key)
       opad[i] = bkey[i] ^ 0x5C5C5C5C;
     }
 
-    var hash = core_sha1(ipad.concat(bytesToWords(data)), 512 + data.length * chrsz);
+    var hash = core_sha1(ipad.concat(crypto.bytesToWords(data)), 512 + data.length * chrsz);
     return core_sha1(opad.concat(hash), 512 + 160);
   }
 
@@ -119,43 +120,22 @@ fan.sys.Buf_Sha1 = function(buf, key)
     return (num << cnt) | (num >>> (32 - cnt));
   }
 
-  /*
-   * Convert a byte array to an array of big-endian words.
+  ns.digest = function(buf, key)
+  {
+    var dw = (key === undefined)
+      ? core_sha1(crypto.bytesToWords(buf), buf.length * chrsz)
+      : core_hmac_sha1(key, buf);
+    return crypto.wordsToBytes(dw);
+  }
+
+  /**
+   * PBKDF2WithHmacSHA1
    */
-  function bytesToWords(bytes)
+  ns.pbkdf2 = function(key, salt, iterations, dkLen)
   {
-    var words = new Array();
-    var size = bytes.length;
-
-    // handle full 32-bit words
-    for (var i=0; size>3 && (i+4)<=size; i+=4)
-    {
-      words.push((bytes[i]<<24) | (bytes[i+1]<<16) | (bytes[i+2]<<8) | bytes[i+3]);
-    }
-
-    // handle remaning bytes
-    var rem = bytes.length % 4;
-    if (rem > 0)
-    {
-      if (rem == 3) words.push((bytes[size-3]<<24) | (bytes[size-2]<<16) | bytes[size-1]<<8);
-      if (rem == 2) words.push((bytes[size-2]<<24) | bytes[size-1]<<16);
-      if (rem == 1) words.push(bytes[size-1]<<24);
-    }
-
-    return words;
+    return crypto.pbkdf2(core_hmac_sha1, 20, key, salt, iterations, dkLen);
   }
 
-  var dw = (key === undefined)
-    ? core_sha1(bytesToWords(buf), buf.length * chrsz)
-    : core_hmac_sha1(key, buf);
+  return ns;
 
-  var db = new Array();
-  for (var i=0; i<dw.length; i++)
-  {
-    db.push(0xff & (dw[i] >> 24));
-    db.push(0xff & (dw[i] >> 16));
-    db.push(0xff & (dw[i] >> 8));
-    db.push(0xff & dw[i]);
-  }
-  return db;
-}
+})();
