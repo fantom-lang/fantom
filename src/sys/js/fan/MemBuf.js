@@ -195,9 +195,14 @@ fan.sys.MemBuf.prototype.toDigest = function(algorithm)
   var digest = null;
   switch (algorithm)
   {
-    case "MD5":   digest = fan.sys.Buf_Md5(this.m_buf);  break;
-    case "SHA1":  // fall thru
-    case "SHA-1": digest = fan.sys.Buf_Sha1(this.m_buf); break;
+    case "MD5":
+      digest = fan.sys.Buf_Md5(this.m_buf);  break;
+    case "SHA1":
+    case "SHA-1":
+      // fall-through
+      digest = fan.sys.buf_sha1.digest(this.m_buf); break;
+    case "SHA-256":
+      digest = fan.sys.buf_sha256.digest(this.m_buf); break;
     default: throw fan.sys.Err.make("Unknown digest algorithm " + algorithm);
   }
   return fan.sys.MemBuf.makeBytes(digest);
@@ -208,9 +213,14 @@ fan.sys.MemBuf.prototype.hmac = function(algorithm, keyBuf)
   var digest = null;
   switch (algorithm)
   {
-    case "MD5":   digest = fan.sys.Buf_Md5(this.m_buf, keyBuf.m_buf);  break;
-    case "SHA1":  // fall thru
-    case "SHA-1": digest = fan.sys.Buf_Sha1(this.m_buf, keyBuf.m_buf); break;
+    case "MD5":
+      digest = fan.sys.Buf_Md5(this.m_buf, keyBuf.m_buf);  break;
+    case "SHA1":
+    case "SHA-1":
+      // fall thru
+      digest = fan.sys.buf_sha1.digest(this.m_buf, keyBuf.m_buf); break;
+    case "SHA-256":
+      digest = fan.sys.buf_sha256.digest(this.m_buf, keyBuf.m_buf); break;
     default: throw fan.sys.Err.make("Unknown digest algorithm " + algorithm);
   }
   return fan.sys.MemBuf.makeBytes(digest);

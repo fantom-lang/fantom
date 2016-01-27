@@ -395,3 +395,23 @@ for (var i=0; i<fan.sys.Buf.base64chars.length; ++i)
 fan.sys.Buf.base64inv[45] = 62; // '-'
 fan.sys.Buf.base64inv[95] = 63; // '_'
 fan.sys.Buf.base64inv[61] = 0;  // '='
+
+//////////////////////////////////////////////////////////////////////////
+// PBKDF2
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Buf.pbk = function(algorithm, password, salt, iterations, keyLen)
+{
+  var digest = null;
+  var passBytes = fan.sys.Str.toBuf(password).m_buf
+  switch(algorithm)
+  {
+    case "PBKDF2WithHmacSHA1":
+      digest = fan.sys.buf_sha1.pbkdf2(passBytes, salt.m_buf, iterations, keyLen); break;
+    case "PBKDF2WithHmacSHA256":
+      digest = fan.sys.buf_sha256.pbkdf2(passBytes, salt.m_buf, iterations, keyLen); break;
+    default: throw fan.sys.Err.make("Unsupported algorithm: " + algorithm);
+
+  }
+  return fan.sys.MemBuf.makeBytes(digest);
+}
