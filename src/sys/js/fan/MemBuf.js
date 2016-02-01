@@ -203,7 +203,7 @@ fan.sys.MemBuf.prototype.toDigest = function(algorithm)
       digest = fan.sys.buf_sha1.digest(this.m_buf); break;
     case "SHA-256":
       digest = fan.sys.buf_sha256.digest(this.m_buf); break;
-    default: throw fan.sys.Err.make("Unknown digest algorithm " + algorithm);
+    default: throw fan.sys.ArgErr.make("Unknown digest algorithm " + algorithm);
   }
   return fan.sys.MemBuf.makeBytes(digest);
 }
@@ -221,7 +221,7 @@ fan.sys.MemBuf.prototype.hmac = function(algorithm, keyBuf)
       digest = fan.sys.buf_sha1.digest(this.m_buf, keyBuf.m_buf); break;
     case "SHA-256":
       digest = fan.sys.buf_sha256.digest(this.m_buf, keyBuf.m_buf); break;
-    default: throw fan.sys.Err.make("Unknown digest algorithm " + algorithm);
+    default: throw fan.sys.ArgErr.make("Unknown digest algorithm " + algorithm);
   }
   return fan.sys.MemBuf.makeBytes(digest);
 }
