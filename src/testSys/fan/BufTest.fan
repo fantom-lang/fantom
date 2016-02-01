@@ -7,11 +7,11 @@
 //
 
 **
-** BufTest
+** AbstractBufTest
 **
-class BufTest : Test
+@Js
+abstract class AbstractBufTest : Test
 {
-
 //////////////////////////////////////////////////////////////////////////
 // Setup
 //////////////////////////////////////////////////////////////////////////
@@ -25,6 +25,9 @@ class BufTest : Test
 
   Buf makeFile()
   {
+    // js doesn't support files
+    if ("js" == Env.cur.runtime) return makeMem
+
     name := "buf" + bufs.size
     file := tempDir + name.toUri
     b := file.open("rw")
@@ -38,6 +41,47 @@ class BufTest : Test
   {
     bufs.each |Buf b| { verify(b.close) }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  Buf ascii(Str ascii)
+  {
+    return Buf.make.print(ascii)
+  }
+
+  Void verifyBufEq(Buf a, Buf b)
+  {
+    verify(eq(a, b))
+  }
+
+  Void verifyBufNotEq(Buf a, Buf b)
+  {
+    verify(!eq(a, b))
+  }
+
+  Bool eq(Buf a, Buf b)
+  {
+    if (a.size != b.size) return false
+    for (i := 0; i<a.size; ++i)
+      if (a[i] != b[i]) return false
+    return true
+  }
+
+  Void verifyBufEqStr(Buf buf, Str ascii)
+  {
+    verifyEq(buf.size, ascii.size)
+    for (i := 0; i<buf.size; ++i)
+      verifyEq(buf[i], ascii[i])
+  }
+}
+
+**
+** BufTest
+**
+class BufTest : AbstractBufTest
+{
 
 //////////////////////////////////////////////////////////////////////////
 // Equality
@@ -833,215 +877,6 @@ class BufTest : Test
     breaks := StrBuf.make
     hex.each |Int ch, Int i| { breaks.addChar(ch); if (i % 2 == 1) breaks.add("\uabcd\r\n") }
     verifyBufEq(Buf.fromHex(breaks.toStr), ascii(src))
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Base64
-//////////////////////////////////////////////////////////////////////////
-
-  Void testBase64()
-  {
-    verifyBase64("", "");
-    verifyBase64("Man", "TWFu");
-    verifyBase64("@", "QA==")
-    verifyBase64("[]", "W10=")
-    verifyBase64("brian", "YnJpYW4=")
-    verifyBase64("hey!", "aGV5IQ==")
-    verifyBase64("123456", "MTIzNDU2")
-    verifyBase64("SecretPassword", "U2VjcmV0UGFzc3dvcmQ=")
-    verifyBase64("su?_d=1~~", "c3U/X2Q9MX5+")
-    verifyBase64(
-      "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.",
-      "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2YgdGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGludWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=")
-
-    buf := Buf.make
-    300.times |Int i| { buf.write(i) }
-    buf.flip
-    verifyBufEq(Buf.fromBase64(buf.toBase64), buf)
-  }
-
-  Void verifyBase64(Str src, Str base64)
-  {
-    safe := base64.replace("=", "").replace("+", "-").replace("/", "_")
-
-    verifyEq(makeMem.print(src).toBase64, base64)
-    verifyEq(makeMem.print(src).toBase64Uri, safe)
-
-    verifyBufEq(Buf.fromBase64(base64), Buf.make.print(src))
-    verifyBufEq(Buf.fromBase64(safe), Buf.make.print(src))
-
-    breaks := StrBuf.make
-    base64.each |Int ch, Int i| { breaks.addChar(ch); if (i % 3 == 0) breaks.add("\uabcd\r\n") }
-    verifyBufEq(Buf.fromBase64(breaks.toStr), ascii(src))
-  }
-
-  Void testBase64Url()
-  {
-
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Digest
-//////////////////////////////////////////////////////////////////////////
-
-  Void testDigest()
-  {
-    verifyDigest("fan", "MD5",
-      "50bd8c21bfafa6e4e962f6a948b1ef92")
-
-    verifyDigest("fan", "SHA-1",
-      "2899441143e28aee7287e8da3d7211258f5edbd3")
-
-    verifyDigest("The quick brown fox jumps over the lazy dog", "SHA-1",
-      "2fd4e1c67a2d28fced849ee1bb76e7391b93eb12")
-
-    verifyDigest("The quick brown fox jumps over the lazy dog", "SHA-256",
-      "d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592")
-
-    verifyErr(ArgErr#) { ascii("foo").toDigest("Foo Digest!") }
-  }
-
-  Void verifyDigest(Str text, Str algorithm, Str digest)
-  {
-    verifyEq(makeMem.print(text).toDigest(algorithm).toHex, digest)
-    verifyEq(makeFile.print(text).toDigest(algorithm).toHex, digest)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// HMAC
-//////////////////////////////////////////////////////////////////////////
-
-  Void testHmac()
-  {
-    // tests from RFC 2202 http://www.faqs.org/rfcs/rfc2202.html
-
-    // MD5
-    verifyHmac("Hi There".toBuf,
-               Buf().fill(0x0b, 16), "MD5",
-               "9294727a3638bb1c13f48ef8158bfc9d")
-
-    verifyHmac("what do ya want for nothing?".toBuf,
-               "Jefe".toBuf, "MD5",
-               "750c783e6ab0b503eaa86e310a5db738")
-
-    verifyHmac(Buf().fill(0xdd, 50),
-               Buf().fill(0xaa, 16), "MD5",
-               "56be34521d144c88dbb8c733f0e8b3f6")
-
-    verifyHmac(Buf().fill(0xcd, 50),
-               Buf.fromHex("0102030405060708090a0b0c0d0e0f10111213141516171819"), "MD5",
-               "697eaf0aca3a3aea3a75164746ffaa79")
-
-    verifyHmac("Test With Truncation".toBuf,
-               Buf().fill(0x0c, 16), "MD5",
-               "56461ef2342edc00f9bab995690efd4c")
-
-    verifyHmac("Test Using Larger Than Block-Size Key - Hash Key First".toBuf,
-               Buf().fill(0xaa, 80), "MD5",
-               "6b1ab7fe4bd7bf8f0b62e6ce61b9d0cd")
-
-    verifyHmac("Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data".toBuf,
-               Buf().fill(0xaa, 80), "MD5",
-               "6f630fad67cda0ee1fb1f562db3aa53e")
-
-    // SHA1
-    verifyHmac("Hi There".toBuf,
-               Buf().fill(0x0b, 20), "SHA1",
-               "b617318655057264e28bc0b6fb378c8ef146be00")
-
-    verifyHmac("what do ya want for nothing?".toBuf,
-               "Jefe".toBuf, "SHA1",
-               "effcdf6ae5eb2fa2d27416d5f184df9c259a7c79")
-
-    verifyHmac(Buf().fill(0xdd, 50),
-               Buf().fill(0xaa, 20), "SHA1",
-               "125d7342b9ac11cd91a39af48aa17b4f63f175d3")
-
-    verifyHmac(Buf().fill(0xcd, 50),
-               Buf.fromHex("0102030405060708090a0b0c0d0e0f10111213141516171819"), "SHA1",
-               "4c9007f4026250c6bc8414f9bf50c86c2d7235da")
-
-    verifyHmac("Test With Truncation".toBuf,
-               Buf().fill(0x0c, 20), "SHA1",
-               "4c1a03424b55e07fe7f27be1d58bb9324a9a5a04")
-
-    verifyHmac("Test Using Larger Than Block-Size Key - Hash Key First".toBuf,
-               Buf().fill(0xaa, 80), "SHA1",
-               "aa4ae5e15272d00e95705637ce8a3b55ed402112")
-
-    verifyHmac("Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data".toBuf,
-               Buf().fill(0xaa, 80), "SHA1",
-               "e8e99d0f45237d786d6bbaa7965c7808bbff1a91")
-  }
-
-  Void verifyHmac(Buf data, Buf key, Str algorithm, Str expected)
-  {
-    verifyEq(data.hmac(algorithm, key).toHex, expected)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// PBK
-//////////////////////////////////////////////////////////////////////////
-
-  Void testPbk()
-  {
-    // tests from RFC 6070
-    verifyPbk("PBKDF2WithHmacSHA1", "password", "salt".toBuf, 1, 20,
-      "0c 60 c8 0f 96 1f 0e 71 f3 a9 b5 24 af 60 12 06 2f e0 37 a6")
-    verifyPbk("PBKDF2WithHmacSHA1", "password", "salt".toBuf, 4096, 20,
-      "4b 00 79 01 b7 65 48 9a be ad 49 d9 26 f7 21 d0 65 a4 29 c1")
-
-    // http://stackoverflow.com/questions/5130513/pbkdf2-hmac-sha2-test-vectors/5136918#5136918
-    verifyPbk("PBKDF2WithHmacSHA256", "password", "salt".toBuf, 1, 32,
-      "12 0f b6 cf fc f8 b3 2c 43 e7 22 52 56 c4 f8 37 a8 65 48 c9 2c cc 35 48 08 05 98 7c b7 0b e1 7b")
-    verifyPbk("PBKDF2WithHmacSHA256", "password", "salt".toBuf, 4096, 32,
-      "c5 e4 78 d5 92 88 c8 41 aa 53 0d b6 84 5c 4c 8d 96 28 93 a0 01 ce 4e 11 a4 96 38 73 aa 98 13 4a")
-  }
-
-  Void verifyPbk(Str algorithm, Str pass, Buf salt, Int iterations, Int keyLen, Str expected)
-  {
-    expected = expected.replace(" ", "")
-    actual := Buf.pbk(algorithm, pass, salt, iterations, keyLen).toHex
-    /*
-    echo(">>>> $algorithm $pass $iterations $keyLen")
-    echo("     $actual")
-    echo("     $expected")
-    */
-    verifyEq(actual, expected)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Utils
-//////////////////////////////////////////////////////////////////////////
-
-  Buf ascii(Str ascii)
-  {
-    return Buf.make.print(ascii)
-  }
-
-  Void verifyBufEq(Buf a, Buf b)
-  {
-    verify(eq(a, b))
-  }
-
-  Void verifyBufNotEq(Buf a, Buf b)
-  {
-    verify(!eq(a, b))
-  }
-
-  Bool eq(Buf a, Buf b)
-  {
-    if (a.size != b.size) return false
-    for (i := 0; i<a.size; ++i)
-      if (a[i] != b[i]) return false
-    return true
-  }
-
-  Void verifyBufEqStr(Buf buf, Str ascii)
-  {
-    verifyEq(buf.size, ascii.size)
-    for (i := 0; i<buf.size; ++i)
-      verifyEq(buf[i], ascii[i])
   }
 
 //////////////////////////////////////////////////////////////////////////
