@@ -31,11 +31,16 @@
   ** does nothing. Returns this.
   native This removeClass(Str name)
 
-  ** Toggle the presence of the given CSS class name by adding
-  ** or removing from this element.  Returns this.
-  This toggleClass(Str name)
+  **
+  ** Toggle the presence of the given CSS class name based on
+  ** the 'cond' argument:
+  **   - 'null': remove class if present, or add if missing
+  **   - 'true': always add class (see `addClass`)
+  **   - 'false': always remove class(see `removeClass`)
+  **
+  This toggleClass(Str name, Bool? cond := null)
   {
-    if (hasClass(name)) removeClass(name)
+    if (cond?.not ?: hasClass(name)) removeClass(name)
     else addClass(name)
     return this
   }
