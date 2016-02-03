@@ -30,9 +30,6 @@ If you want to jump right in and start coding:
 
 Community Resources [#communityResources]
 *****************************************
-  - [Fanzy Online Playground]`http://www.fanzy.net/` is a great site
-    to learn and try out code right from your web browser
-
   - [Rosetta Code]`http://rosettacode.org/wiki/Category:Fantom`: code
     samples in Fantom with comparisons to other languages
 
@@ -42,8 +39,6 @@ Community Resources [#communityResources]
   - [Java to Fantom in 10 Steps]`http://www.fantomfactory.org/articles/from-java-to-fantom-in-10-steps`
 
   - [Fantom Cheat Sheet]`http://wiki.colar.net/fan_cheat_sheet`
-
-  - `http://learningfantom.blogspot.com/`
 
 Also see [IDE page]`docTools::IDEs` for an overview of the various
 community projects providing Fantom tooling.
