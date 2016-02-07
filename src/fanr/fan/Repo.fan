@@ -16,9 +16,10 @@ abstract const class Repo
   ** Current schemes supported as "file" and "http".
   static Repo makeForUri(Uri uri, Str? username := null, Str? password := null)
   {
-    if (uri.scheme == null)   return FileRepo(uri)
-    if (uri.scheme == "file") return FileRepo(uri)
-    if (uri.scheme == "http") return WebRepo(uri, username, password)
+    if (uri.scheme == null)    return FileRepo(uri)
+    if (uri.scheme == "file")  return FileRepo(uri)
+    if (uri.scheme == "http")  return WebRepo(uri, username, password)
+    if (uri.scheme == "https") return WebRepo(uri, username, password)
     throw Err("No repo available for URI scheme: $uri")
   }
 
