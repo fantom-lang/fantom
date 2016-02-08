@@ -237,9 +237,11 @@ abstract class AbstractMain
   **
   virtual Int usage(OutStream out := Env.cur.out)
   {
-    // get list of argument and option fields
+    // get list of argument fields
     args := argFields
-    opts := optFields
+
+    // get list of all documented options
+    opts := optFields.findAll |f| { !f.hasFacet(NoDoc#) }
 
     // format args/opts into columns
     argRows := usagePad(args.map |f| { usageArg(f) })
