@@ -646,8 +646,7 @@ public abstract class Buf
     try
     {
       // get low-level representation of args
-      byte[] salt    = new byte[_salt.sz()];
-      System.arraycopy(_salt.array(), 0, salt, 0, _salt.sz());
+      byte[] salt    = _salt.safeArray();
       int iterations = (int)_iterations;
       int keyLen     = (int)_keyLen;
 
@@ -748,6 +747,14 @@ public abstract class Buf
   public byte[] array()
   {
     throw UnsupportedErr.make(typeof()+".array");
+  }
+
+  /** Get a copy of the backing byte array that is safe for mutating. */
+  public byte[] safeArray()
+  {
+    byte[] copy = new byte[this.sz()];
+    System.arraycopy(array(), 0, copy, 0, this.sz());
+    return copy;
   }
 
   /** Implements {@link Interop#toJava(Buf)} */
