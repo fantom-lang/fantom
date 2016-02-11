@@ -112,6 +112,13 @@ class JsType : JsNode
 
   override Str toStr() { sig }
 
+  ** Return true if type is javascript safe
+  static Bool isJsSafe(CType ctype)
+  {
+    // TODO FIXIT: don't check sys yet
+    ctype.pod.name == "sys" || ctype.isSynthetic || ctype.facet("sys::Js") != null
+  }
+
   TypeDef def            // compiler TypeDef
   JsTypeRef base         // base type qname
   Str qname              // type qname
@@ -171,13 +178,15 @@ class JsTypeRef : JsNode
       v = JsTypeRef.make(cs, deref->v, loc)
     }
 
-    // TODO FIXIT: don't check sys yet
-    // verify type is marked with @Js
-    if (this.pod != "sys" && !ref.isSynthetic && ref.facet("sys::Js") == null)
+    if (!JsType.isJsSafe(ref))
+    {
       // TODO FIXIT: warn for now
       //cs.err("Type '$ref.qname' not available in Js", loc)
       cs.warn("Type '$ref.qname' not available in Js", loc)
+    }
   }
+
+
 
   override Void write(JsWriter out)
   {

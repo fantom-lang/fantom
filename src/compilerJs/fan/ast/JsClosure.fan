@@ -35,19 +35,33 @@ class JsPodClosures : JsNode
     out.w("fan.sys.Func.make\$closure(", loc).nl
     out.indent
 
-    // closure spec
-    out.w("${mapFuncSpec(ce)},", loc).nl
+    CType[] sigTypes := [,].addAll(ce.signature.params).add(ce.signature.ret)
+    isJs := sigTypes.all { JsType.isJsSafe(it) }
+    if (isJs)
+    {
+      // closure spec
+      out.w("${mapFuncSpec(ce)},", loc).nl
 
-    // func
-    out.w("function$sig", loc).nl
-    out.w("{").nl
-    out.indent
-    old := support.thisName
-    support.thisName = "\$this"
-    func.code?.write(out)
-    support.thisName = old
-    out.unindent
-    out.w("})")
+      // func
+      out.w("function$sig", loc).nl
+      out.w("{").nl
+      out.indent
+      old := support.thisName
+      support.thisName = "\$this"
+      func.code?.write(out)
+      support.thisName = old
+      out.unindent
+      out.w("})")
+    }
+    else
+    {
+      // this closure uses non-JS types. Write a closure that documents this fact
+      out.w("new fan.sys.ClosureFuncSpec\$(fan.sys.Void.\$type, []),").nl
+      out.w("function() {").nl
+      out.w("  // Cannot write closure. Signature uses non-JS types: ${ce.signature}").nl
+      out.w("})")
+    }
+
     out.unindent
   }
 
