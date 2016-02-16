@@ -156,7 +156,7 @@ public final class ConstBuf
     return r;
   }
 
-  public byte[] array()
+  public byte[] unsafeArray()
   {
     return buf;
   }
