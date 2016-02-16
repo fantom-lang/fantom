@@ -36,6 +36,12 @@ Fantom bundle for TextMate:
 
  - [Home Page]`http://github.com/martinlau/fantom-textmate-bundle`
 
+Atom Editor (mgiannini) [#atom]
+*******************************
+Fantom package for the [Atom]`https://atom.io/` editor.
+
+ - [language-fantom]`https://github.com/mgiannini/language-fantom`
+ 
 Text Editors  [#textEditors]
 ****************************
 The Fantom distro contains configuration files for many common text editors
