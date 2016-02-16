@@ -364,7 +364,7 @@ public abstract class Buf
 
   public String toHex()
   {
-    byte[] buf = array();
+    byte[] buf = unsafeArray();
     int size = sz();
     char[] hexChars = Buf.hexChars;
     StringBuilder s = new StringBuilder(size*2);
@@ -429,7 +429,7 @@ public abstract class Buf
 
   private String doBase64(char[] table, final boolean pad)
   {
-    byte[] buf = this.array();
+    byte[] buf = this.unsafeArray();
     int size = this.sz();
     StringBuilder s = new StringBuilder(size*2);
     int i = 0;
@@ -511,7 +511,7 @@ public abstract class Buf
     try
     {
       MessageDigest md = MessageDigest.getInstance(algorithm);
-      md.update(array(), 0, sz());
+      md.update(unsafeArray(), 0, sz());
       return new MemBuf(md.digest());
     }
     catch (NoSuchAlgorithmException e)
@@ -534,13 +534,13 @@ public abstract class Buf
 
   private long crc(Checksum checksum)
   {
-    checksum.update(array(), 0, sz());
+    checksum.update(unsafeArray(), 0, sz());
     return checksum.getValue() & 0xffffffff;
   }
 
   private long crc16()
   {
-    byte[] array = array();
+    byte[] array = unsafeArray();
     int size = sz();
     int seed = 0xffff;
     for (int i=0; i<size; ++i) seed = crc16(array[i], seed);
@@ -619,7 +619,7 @@ public abstract class Buf
       else
         md.update((byte)0x36);
     }
-    md.update(array(), 0, sz());
+    md.update(unsafeArray(), 0, sz());
     byte[] innerDigest = md.digest();
 
     // outer digest: H(K XOR opad, innerDigest)
@@ -744,16 +744,16 @@ public abstract class Buf
   /** Get direct access to backing byte array which contains
       data from 0 to sz.  This array must never be mutated
       outside of the class!!!! */
-  public byte[] array()
+  public byte[] unsafeArray()
   {
     throw UnsupportedErr.make(typeof()+".array");
   }
 
   /** Get a copy of the backing byte array that is safe for mutating. */
-  public byte[] safeArray()
+  final public byte[] safeArray()
   {
     byte[] copy = new byte[this.sz()];
-    System.arraycopy(array(), 0, copy, 0, this.sz());
+    System.arraycopy(unsafeArray(), 0, copy, 0, this.sz());
     return copy;
   }
 

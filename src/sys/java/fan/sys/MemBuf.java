@@ -225,7 +225,7 @@ public final class MemBuf
     return this.size;
   }
 
-  public final byte[] array()
+  public final byte[] unsafeArray()
   {
     return this.buf;
   }
