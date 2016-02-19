@@ -27,13 +27,13 @@ class TcpListener
   ** when accepting connections.
   **
   ** If keystore is 'null', then 'etc/inet/keystore.p12' will be used as the
-  ** default. Otherwise, the keystore uri should resolve to a PKCS12 formatted
-  ** keystore.
+  ** default. Otherwise the keystore should be a crypto::KeyStore instance.
   **
-  ** The password is used both to open the keystore, and to extract the private key.
+  ** If trustore is 'null', then the default system trust store is used.
+  ** Otherwise, the trsustore should be a crypto::KeyStore instance.
   **
   @NoDoc
-  native static TcpListener makeTls(Uri? keystore := null, Str? pass := null)
+  native static TcpListener makeTls(Obj? keystore := null, Obj? truststore := null)
 
 //////////////////////////////////////////////////////////////////////////
 // State
