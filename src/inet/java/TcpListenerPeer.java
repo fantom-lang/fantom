@@ -35,17 +35,13 @@ public class TcpListenerPeer
   }
 
   public static TcpListener makeTls() { return makeTls(null); }
-  public static TcpListener makeTls(Uri keystore) { return makeTls(keystore, null); }
-  public static TcpListener makeTls(Uri keystore, String pass)
+  public static TcpListener makeTls(Object keystore) { return makeTls(keystore, null); }
+  public static TcpListener makeTls(Object keystore, Object truststore)
   {
-    if (keystore == null)
-      keystore = Env.cur().workDir().plus(Uri.fromStr("etc/inet/keystore.p12")).uri();
-    if (pass == null)
-     pass = "changeit";
     try
     {
       TcpListener self = TcpListener.make();
-      self.peer.initTls(keystore, pass);
+      self.peer.initTls(keystore, truststore);
       return self;
     }
     catch (Exception e)
@@ -148,9 +144,31 @@ public class TcpListenerPeer
   /** If non-null, then the the socket is upgraded to TLS in doAccept() */
   private SSLContext sslContext = null;
 
-  private void initTls(final Uri keystore, final String pwd) throws Exception
+  private void initTls(Object keystore, Object truststore) throws Exception
+  {
+    // init tls with backwards compatibility where we used to pass
+    // uri to keystore and str password
+    if ((keystore == null && truststore == null)
+        || (keystore instanceof Uri)
+        || (truststore instanceof String))
+    {
+      initTlsWithoutCrypto((Uri)keystore, (String)truststore);
+    }
+    else
+    {
+      initTlsWithCrypto((FanObj)keystore, (FanObj)truststore);
+    }
+  }
+
+  private void initTlsWithoutCrypto(Uri keystore, String pwd)
+    throws Exception
   {
     // load keystore
+    if (keystore == null)
+      keystore = Env.cur().workDir().plus(Uri.fromStr("etc/inet/keystore.p12")).uri();
+    if (pwd == null)
+      pwd = "changeit";
+
     final String path = keystore.toFile().osPath();
     InputStream storeIn = new FileInputStream(path);
     try
@@ -170,6 +188,36 @@ public class TcpListenerPeer
     {
       storeIn.close();
     }
+  }
+
+  private void initTlsWithCrypto(FanObj keys, FanObj truststore)
+    throws Exception
+  {
+    if (keys == null)
+    {
+      Method maker = Type.find("crypto::JavaKeyStore").method("pkcs12");
+      fan.sys.File file = Env.cur().workDir().plus(Uri.fromStr("etc/inet/keystore.p12"));
+      keys = (FanObj)maker.callList(fan.sys.List.makeObj(3).add(file).add(null).add("changeit"));
+    }
+
+    FanObj trust = null;
+    if (truststore != null) trust = (FanObj)truststore;
+
+    char[] passphrase = ((String)keys.trap("password")).toCharArray();
+    KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+    kmf.init((KeyStore)keys.trap("toNative"), passphrase);
+
+    TrustManager[] trustManagers = null;
+    if (trust != null)
+    {
+      TrustManagerFactory tmf = TrustManagerFactory.getInstance("PKIX");
+      tmf.init((KeyStore)trust.trap("toNative"));
+      trustManagers = tmf.getTrustManagers();
+    }
+
+    SSLContext sslContext = SSLContext.getInstance("TLS");
+    sslContext.init(kmf.getKeyManagers(), trustManagers, null);
+    this.sslContext = sslContext;
   }
 
   private TcpSocket upgradeTls(TcpSocket s) throws IOException
