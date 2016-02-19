@@ -73,6 +73,8 @@ const class WispService : Service
   **
   const WebMod errMod := initErrMod
 
+  @NoDoc const Obj? keystore := null
+
   private static WebMod initErrMod()
   {
     try
@@ -203,7 +205,7 @@ const class WispService : Service
       if (secure)
       {
         ref = httpsListenerRef
-        listener = TcpListener.makeTls
+        listener = TcpListener.makeTls(keystore)
       }
       ref.val = Unsafe(listener)
       return listener
