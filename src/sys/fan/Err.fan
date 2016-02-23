@@ -41,6 +41,7 @@ const class Err
   ** output stream (or 'Env.cur.out' by default).  Return this.
   **
   ** The options may be used to specify the format of the output:
+  **   - "indent": Int for initial number of indentation spaces
   **   - "maxDepth": Int specifies how many methods in each
   **        exception of chain to include.  If unspecified the
   **        default is configured from the "errTraceMaxDepth" prop

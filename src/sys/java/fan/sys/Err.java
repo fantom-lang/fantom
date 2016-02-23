@@ -149,7 +149,8 @@ public class Err
 
   public Err trace() { return trace(Env.cur().out(), null, 0, toJava()); }
   public Err trace(OutStream out) { return trace(out, null, 0, toJava()); }
-  public Err trace(OutStream out, Map opt) { return trace(out, opt, 0, toJava()); }
+  public Err trace(OutStream out, Map opt) { return trace(out, opt, optToIndent(opt), toJava()); }
+
   public Err trace(OutStream out, Map opt, int indent, Throwable java)
   {
     // map exception to stack trace
@@ -266,6 +267,17 @@ public class Err
     if (line > 0) out.writeChar(':').writeChars(String.valueOf(line));
     out.writeChar(')').writeChar('\n');
     return true;
+  }
+
+  private static int optToIndent(Map map)
+  {
+    if (map != null)
+    {
+      Object val = map.get("indent");
+      if (val instanceof Long)
+        return ((Long)val).intValue();
+    }
+    return 0;
   }
 
   public String traceToStr()
