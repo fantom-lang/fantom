@@ -4,6 +4,7 @@
 //
 // History:
 //   7 Jul 09  Andy Frank  Creation
+//   25 Feb 16  Matthew Giannini  - binary decode time zone
 //
 
 /**
@@ -37,7 +38,7 @@ fan.sys.TimeZone.fromStr = function(name, checked)
   if (checked === undefined) checked = true;
 
   // check cache first
-  var tz = fan.sys.TimeZone.cache[name];
+  var tz = fan.sys.TimeZone.fromCache$(name);
   if (tz != null) return tz;
 
   // TODO - load from server?
@@ -268,10 +269,81 @@ fan.sys.TimeZone.compareAtTime = function(rule, x, time)
 }
 
 //////////////////////////////////////////////////////////////////////////
+// Cache
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.TimeZone.cache$ = function(continent, city, encoded)
+{
+  var fullName = continent + "/" + city;
+  fan.sys.TimeZone.cache[city] = encoded;
+  fan.sys.TimeZone.cache[fullName] = encoded;
+  fan.sys.TimeZone.names.push(city);
+  fan.sys.TimeZone.fullNames.push(fullName);
+}
+
+fan.sys.TimeZone.fromCache$ = function(name)
+{
+  var entry = fan.sys.TimeZone.cache[name];
+  if (entry == null || entry === undefined) return null;
+
+  // check if already decoded
+  if ((typeof entry) !== 'string') return entry;
+
+  // need to decode base64 entry into TimeZone
+  var buf = fan.sys.Buf.fromBase64(entry);
+  var tz  = new fan.sys.TimeZone();
+
+  // decode full name
+  var continent = buf.readUtf();
+  var city = buf.readUtf();
+  var fullName = continent + "/" + city;
+  tz.m_name = city;
+  tz.m_fullName = fullName;
+
+  // helper for decoding DST
+  var decodeDst = function() {
+    var dst = new fan.sys.TimeZone$DstTime(
+      buf.read(),   // mon
+      buf.read(),   // onMode
+      buf.read(),   // onWeekday
+      buf.read(),   // onDay
+      buf.readS4(), // atTime
+      buf.read()    // atMode
+    );
+    return dst;
+  };
+
+  // decode rules
+  var rule;
+  tz.m_rules = [];
+  while (buf.more())
+  {
+    rule = new fan.sys.TimeZone$Rule();
+    rule.startYear = buf.readS2();
+    rule.offset    = buf.readS4();
+    rule.stdAbbr   = buf.readUtf();
+    rule.dstOffset = buf.readS4();
+    if (rule.dstOffset != 0)
+    {
+      rule.dstAbbr  = buf.readUtf();
+      rule.dstStart = decodeDst();
+      rule.dstEnd   = decodeDst();
+    }
+    tz.m_rules.push(rule);
+  }
+
+  // update cache
+  fan.sys.TimeZone.cache[city] = tz;
+  fan.sys.TimeZone.cache[fullName] = tz;
+
+  return tz;
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.TimeZone.cache = [];
+fan.sys.TimeZone.cache = {};
 fan.sys.TimeZone.names = [];
 fan.sys.TimeZone.fullNames = [];
 fan.sys.TimeZone.m_utc = null;  // lazy-loaded
@@ -312,4 +384,3 @@ fan.sys.TimeZone$DstTime.prototype.$ctor = function(mon, onMode, onWeekday, onDa
   this.atTime = atTime;        // seconds
   this.atMode = String.fromCharCode(atMode); // 'w' , 's', 'u' (wall, standard, universal)
 }
-
