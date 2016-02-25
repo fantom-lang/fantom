@@ -4,6 +4,7 @@
 //
 // History:
 //   6 May 10  Andy Frank  Creation
+//   25 Feb 16  Matthew Giannini - binary encode time zone
 //
 
 **
@@ -18,59 +19,42 @@ class JsTimeZone
 
   Void write(OutStream out)
   {
-    // tz,rule defined in sys.js
-    out.printLine(
-     """// $tz.fullName
-        tz = new fan.sys.TimeZone();
-        tz.m_name = "$tz.name";
-        tz.m_fullName = "$tz.fullName";
-        tz.m_rules = [];""")
+    continent := tz.fullName.split('/').first
+    city      := tz.name
 
+    // encode
+    buf := Buf().writeUtf(continent).writeUtf(city)
     rules := ([Str:Obj][])tz->rules
-    rules.each |r|
-    {
-      startYear := r["startYear"]
-      offset    := r["offset"]
-      stdAbbr   := r["stdAbbr"]
-      dstOffset := r["dstOffset"]
+    rules.each |r| { encodeRule(r, buf.out) }
 
-      out.printLine(
-       """rule = new fan.sys.TimeZone\$Rule();
-           rule.startYear = $startYear;
-           rule.offset = $offset;
-           rule.stdAbbr = "$stdAbbr";
-           rule.dstOffset = $dstOffset;""")
-
-      if (dstOffset != 0)
-      {
-        dstAbbr := r["dstAbbr"]
-        out.printLine(""" rule.dstAbbr = "$dstAbbr";""")
-        out.print(" rule.dstStart = "); writeDstTime(r["dstStart"], out)
-        out.print(" rule.dstEnd = "); writeDstTime(r["dstEnd"], out)
-      }
-
-      out.printLine(" tz.m_rules.push(rule);")
-    }
-
-    out.printLine(
-     """fan.sys.TimeZone.cache["$tz.name"] = tz;
-        fan.sys.TimeZone.cache["$tz.fullName"] = tz;
-        fan.sys.TimeZone.names.push("$tz.name");
-        fan.sys.TimeZone.fullNames.push("$tz.fullName");
-        """)
+    // write js
+    out.printLine("fan.sys.TimeZone.cache\$($continent.toCode, $city.toCode, ${buf.toBase64.toCode});")
   }
 
-  private Void writeDstTime(Str:Obj map, OutStream out)
+  private Void encodeRule(Str:Obj r, OutStream out)
   {
-    mon       := map["mon"]
-    onMode    := map["onMode"]
-    onWeekday := map["onWeekday"]
-    onDay     := map["onDay"]
-    atTime    := map["atTime"]
-    atMode    := map["atMode"]
-    out.printLine("new fan.sys.TimeZone\$DstTime($mon,$onMode,$onWeekday,$onDay,$atTime,$atMode)")
+    dstOffset := r["dstOffset"]
+    out.writeI2(r["startYear"])
+       .writeI4(r["offset"])
+       .writeUtf(r["stdAbbr"])
+       .writeI4(dstOffset)
+    if (dstOffset != 0)
+    {
+      out.writeUtf(r["dstAbbr"])
+      encodeDst(r["dstStart"], out)
+      encodeDst(r["dstEnd"], out)
+    }
   }
 
+  private Void encodeDst(Str:Obj dst, OutStream out)
+  {
+    out.write(dst["mon"])
+       .write(dst["onMode"])
+       .write(dst["onWeekday"])
+       .write(dst["onDay"])
+       .writeI4(dst["atTime"])
+       .write(dst["atMode"])
+  }
+  
   TimeZone tz
 }
-
