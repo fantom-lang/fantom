@@ -199,13 +199,13 @@ class TestRunner
           var test;
           var doCatchErr = function(err)
           {
-            if (err == undefined) println('Undefined error');
+            if (err == undefined) print('Undefined error\\n');
             else if (err.trace) err.trace();
             else
             {
               var file = err.fileName;   if (file == null) file = 'Unknown';
               var line = err.lineNumber; if (line == null) line = 'Unknown';
-              println(err + ' (' + file + ':' + line + ')');
+              print(err + ' (' + file + ':' + line + ')\\n');
             }
           }
 

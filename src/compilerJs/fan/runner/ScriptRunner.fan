@@ -97,7 +97,7 @@ class ScriptRunner
       $js
       fan.temp.Main.make().main();
       }
-      catch (err) { println('ERROR: ' + err); }
+      catch (err) { println('ERROR: ' + err + '\\n'); }
       ")
   }
 }

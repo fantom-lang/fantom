@@ -221,7 +221,7 @@ fan.sys.ObjUtil.echo = function(obj)
   try { console.log(s); }
   catch (e1)
   {
-    try { println(s); }
+    try { print(s + "\n"); }
     catch (e2) {} //alert(s); }
   }
 }
