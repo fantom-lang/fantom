@@ -75,6 +75,7 @@ class SmtpClient
 
     // open the socket connection
     sock = ssl ? TcpSocket.makeTls : TcpSocket.make
+    if (connectTimeout != null) sock.options.connectTimeout = connectTimeout
     sock.connect(IpAddr(host), port)
     try
     {
@@ -314,7 +315,10 @@ class SmtpClient
 //////////////////////////////////////////////////////////////////////////
 
   ** Log for tracing
-  Log log := Log.get("smtp")
+  @NoDoc Log log := Log.get("smtp")
+
+  ** Socket option
+  @NoDoc Duration? connectTimeout
 
   private TcpSocket? sock  // Socket if open or null if closed
   private Str[]? auths     // SASL auth mechanisms supported by server
