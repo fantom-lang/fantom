@@ -41,7 +41,10 @@ fan.sys.TimeZone.fromStr = function(name, checked)
   var tz = fan.sys.TimeZone.fromCache$(name);
   if (tz != null) return tz;
 
-  // TODO - load from server?
+  // check aliases
+  target = fan.sys.TimeZone.aliases[name];
+  tz = fan.sys.TimeZone.fromCache$(target);
+  if (tz != null) return tz;
 
   // not found
   if (checked) throw fan.sys.ParseErr.make("TimeZone not found: " + name);
@@ -296,7 +299,7 @@ fan.sys.TimeZone.fromCache$ = function(name)
   // decode full name
   var continent = buf.readUtf();
   var city = buf.readUtf();
-  var fullName = continent + "/" + city;
+  var fullName = continent == "" ? city : continent + "/" + city;
   tz.m_name = city;
   tz.m_fullName = fullName;
 
@@ -339,6 +342,14 @@ fan.sys.TimeZone.fromCache$ = function(name)
   return tz;
 }
 
+fan.sys.TimeZone.alias$ = function(alias, target)
+{
+  var parts = alias.split("/");
+  fan.sys.TimeZone.aliases[alias] = target;
+  // if alias is continent/city, also alias city
+  if (parts.length == 2) fan.sys.TimeZone.aliases[parts[1]] = target;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
@@ -346,6 +357,7 @@ fan.sys.TimeZone.fromCache$ = function(name)
 fan.sys.TimeZone.cache = {};
 fan.sys.TimeZone.names = [];
 fan.sys.TimeZone.fullNames = [];
+fan.sys.TimeZone.aliases = {};
 fan.sys.TimeZone.m_utc = null;  // lazy-loaded
 fan.sys.TimeZone.m_cur = null;  // lazy-loaded
 
