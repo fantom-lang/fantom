@@ -84,6 +84,7 @@ class ScriptRunner
     {
       // TODO - pull in other pods
       engine.eval(Pod.find("sys").file(`/sys.js`).readAllStr)
+      engine.eval((Env.cur.homeDir + `etc/sys/tz.js`).readAllStr)
     }
     catch (Err err)
     {
@@ -101,4 +102,3 @@ class ScriptRunner
       ")
   }
 }
-
