@@ -193,30 +193,13 @@ public class TcpListenerPeer
   private void initTlsWithCrypto(FanObj keys, FanObj truststore)
     throws Exception
   {
-    if (keys == null)
-    {
-      Method maker = Type.find("crypto::JavaKeyStore").method("pkcs12");
-      fan.sys.File file = Env.cur().workDir().plus(Uri.fromStr("etc/inet/keystore.p12"));
-      keys = (FanObj)maker.callList(fan.sys.List.makeObj(3).add(file).add(null).add("changeit"));
-    }
-
-    FanObj trust = null;
-    if (truststore != null) trust = (FanObj)truststore;
-
-    char[] passphrase = ((String)keys.trap("password")).toCharArray();
-    KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-    kmf.init((KeyStore)keys.trap("toNative"), passphrase);
-
-    TrustManager[] trustManagers = null;
-    if (trust != null)
-    {
-      TrustManagerFactory tmf = TrustManagerFactory.getInstance("PKIX");
-      tmf.init((KeyStore)trust.trap("toNative"));
-      trustManagers = tmf.getTrustManagers();
-    }
+    // Delegate creation of key and trust managers to crypto
+    Class klass = Class.forName("fan.crypto.InetTLS");
+    KeyManager[]   kms = (KeyManager[])klass.getMethod("toKeyManagers", FanObj.class).invoke(null, keys);
+    TrustManager[] tms = (TrustManager[])klass.getMethod("toTrustManagers", FanObj.class).invoke(null, truststore);
 
     SSLContext sslContext = SSLContext.getInstance("TLS");
-    sslContext.init(kmf.getKeyManagers(), trustManagers, null);
+    sslContext.init(kms, tms, null);
     this.sslContext = sslContext;
   }
 
