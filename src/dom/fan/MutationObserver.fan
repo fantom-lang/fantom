@@ -53,41 +53,39 @@ class MutationRec
   ** It-block constructor.
   internal new make(|This|? f := null) { if (f != null) f(this) }
 
-  ** Returns:
+  ** Mutation type:
   **  - "attrs" if the mutation was an attribute mutation
   **  - "charData" if it was a mutation to a CharacterData node
   **  - "childList" if it was a mutation to the tree of nodes
   Str type
 
-  ** Returns the node the mutation affected, depending on the 'type':
-  **  - For "attrs", it is the element whose attribute changed.
-  **  - For "charData", it is the CharacterData node.
-  **  - For "childList", it is the node whose children changed.
+  ** Target node that mutation affected, depending on the 'type':
+  **  - For "attrs", it is the element whose attribute changed
+  **  - For "charData", it is the CharacterData node
+  **  - For "childList", it is the node whose children changed
   Elem target
 
-  ** Return the nodes added, or empyt list if no nodes added.
+  ** List of nodes added, or empyt list if no nodes added.
   Elem[] added
 
-  ** Return the nodes removed, or empty list if no nodes removed.
+  ** List of nodes removed, or empty list if no nodes removed.
   Elem[] removed
 
-  ** Return the previous sibling of the added or removed nodes, or null
+  ** Previous sibling of the added or removed nodes, or null
   ** if not nodes added or removed.
   Elem? prevSibling
 
-  ** Return the next sibling of the added or removed nodes, or null if
+  ** Next sibling of the added or removed nodes, or null if
   ** no nodes added or removed.
   Elem? nextSibling
 
-  ** Returns the local name of the changed attribute, or null if no
-  ** attribute was changed.
+  ** Name of the changed attribute, or null if no attribute was changed.
   Str? attr
 
-  ** Returns the namespace of the changed attribute, or null if no
-  ** attribute was changed.
+  ** Namespace of the changed attribute, or null if no attribute was changed.
   Str? attrNs
 
-  ** The return value depends on 'type':
+  ** Old value, depending on 'type':
   **  - For "attrs", it is the value of the changed attribute before the change
   **  - For "charData", it is the data of the changed node before the change
   **  - For "childList", it is null
