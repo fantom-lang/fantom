@@ -56,7 +56,7 @@ fan.sys.Obj.prototype.compare = function(that)
   return 0;
 }
 
-fan.sys.Obj.$hashCounter = -9007199254740992;
+fan.sys.Obj.$hashCounter = 0;
 fan.sys.Obj.prototype.hash = function()
 {
   if (this.$hash === undefined)
@@ -88,7 +88,7 @@ fan.sys.Obj.prototype.$typeof = function()
 
 fan.sys.Obj.prototype.toStr = function()
 {
-  return "" + this.$typeof();
+  return "" + this.$typeof() + "@" + fan.sys.Int.toHex(this.hash());
 }
 
 fan.sys.Obj.prototype.toString = function()
