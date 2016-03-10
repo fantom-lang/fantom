@@ -88,7 +88,7 @@ fan.sys.Obj.prototype.$typeof = function()
 
 fan.sys.Obj.prototype.toStr = function()
 {
-  return "" + this.$typeof() + "@" + fan.sys.Int.toHex(this.hash());
+  return "" + this.$typeof() + "@" + this.hash();
 }
 
 fan.sys.Obj.prototype.toString = function()
