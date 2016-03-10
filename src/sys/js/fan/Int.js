@@ -237,6 +237,9 @@ fan.sys.Int.toHex = function(self, width)
 {
   if (width === undefined) width = null;
 
+  // make sure non-null to prevent infinite loop
+  if (self == null) self = 0;
+
   // TODO FIXIT: how do we handle negative numbers?
   var val = self;
   if (val < 0) val += fan.sys.Int.MAX_SAFE;
