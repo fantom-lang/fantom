@@ -21,6 +21,9 @@ fan.sys.Int.prototype.$typeof = function() { return fan.sys.Int.$type; }
 
 fan.sys.Int.make = function(val) { return val; }
 
+fan.sys.Int.MAX_SAFE = 9007199254740991;
+fan.sys.Int.MIN_SAFE = -9007199254740991;
+
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
@@ -234,8 +237,11 @@ fan.sys.Int.toHex = function(self, width)
 {
   if (width === undefined) width = null;
 
-  // convert to hex string
+  // TODO FIXIT: how do we handle negative numbers?
   var val = self;
+  if (val < 0) val += fan.sys.Int.MAX_SAFE;
+
+  // convert to hex string
   var s = "";
   while (true)
   {

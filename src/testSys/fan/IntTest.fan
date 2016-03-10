@@ -563,6 +563,15 @@ class IntTest : Test
       verifyEq(0x123456789abcdef.toHex(18), "000123456789abcdef")
       verifyEq(0xaabbccdd00112233.toHex, "aabbccdd00112233")
     }
+    if (js)
+    {
+      // TODO FIXIT: sign bit is not extended so doesn't work quite right...
+      // test special rules for negative values which differ
+      // from JVM since safe range is only 2^53
+      verifyEq((-100).toHex, "1fffffffffff9b")
+      verifyEq((-9007199254734720).toHex, "187f")
+      verifyEq(9007199254740991.toHex, "1fffffffffffff")
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
