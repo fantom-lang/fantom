@@ -18,7 +18,8 @@
 - Elem: deprecate find, findAll in favor of querySelector, querySelectorAll
 - Elem: add animate(), replace(), scrollPos, scrollSize
 - Elem: drag and drop API support
-- DOM MutationObserver API
+- dom: add MutationObserver
+- dom: add WeakMap
 - DomEvent renamed to Event; rework API to use dom::Key
 - InStream.readNullTerminatedStr
 - Map.getChecked
