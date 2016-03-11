@@ -127,6 +127,7 @@ class BufTest : AbstractBufTest
     verifyEq(buf.pos,  0)
     verifyEq(buf.size, 0)
     verify(buf.isEmpty)
+    verifyEq(buf.in.avail, 0)
 
     // write size=1
     buf.write('a')
@@ -149,6 +150,7 @@ class BufTest : AbstractBufTest
     verifyEq(buf[0], 'a')
     verifyEq(buf[1], 'b')
     verifyEq(buf[2], 'c')
+    verifyEq(buf.in.avail, 0)
 
     // rewrite pos 1
     buf.seek(1).write('x')
@@ -163,12 +165,15 @@ class BufTest : AbstractBufTest
     buf.seek(0)
     verifyEq(buf.pos,  0)
     verifyEq(buf.size, 3)
+    verifyEq(buf.remaining, 3)
+    verifyEq(buf.in.avail, 3)
 
     // read pos=1
     verifyEq(buf.read, 'a')
     verifyEq(buf.pos,  1)
     verifyEq(buf.size, 3)
     verifyEq(buf.remaining, 2)
+    verifyEq(buf.in.avail, 2)
 
     // read pos=2
     verifyEq(buf.peek, 'b')
@@ -176,12 +181,14 @@ class BufTest : AbstractBufTest
     verifyEq(buf.pos,  2)
     verifyEq(buf.size, 3)
     verifyEq(buf.remaining, 1)
+    verifyEq(buf.in.avail, 1)
 
     // read pos=3
     verifyEq(buf.read, 'c')
     verifyEq(buf.pos,  3)
     verifyEq(buf.size, 3)
     verifyEq(buf.remaining, 0)
+    verifyEq(buf.in.avail, 0)
 
     // read pos=end
     verifyEq(buf.read, null)
@@ -190,6 +197,7 @@ class BufTest : AbstractBufTest
     verifyEq(buf.pos,  3)
     verifyEq(buf.size, 3)
     verifyEq(buf.remaining, 0)
+    verifyEq(buf.in.avail, 0)
 
     // gets
     verifyEq(buf[0],  'a')

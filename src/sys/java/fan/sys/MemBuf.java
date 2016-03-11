@@ -317,6 +317,11 @@ public final class MemBuf
       return this;
     }
 
+    public long avail()
+    {
+      return MemBuf.this.remaining();
+    }
+
     public Long peek()
     {
       if (pos >= size) return null;
