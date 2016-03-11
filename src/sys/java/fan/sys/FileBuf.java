@@ -467,6 +467,11 @@ public class FileBuf
       }
     }
 
+    public long avail()
+    {
+      return FileBuf.this.remaining();
+    }
+
     public Long peek()
     {
       try

@@ -99,7 +99,7 @@ public class InStream
     catch (NullPointerException e)
     {
       if (in == null)
-        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream");
+        throw UnsupportedErr.make(getClass().getName() + " wraps null InStream");
       else
         throw e;
     }
@@ -114,7 +114,7 @@ public class InStream
     catch (NullPointerException e)
     {
       if (in == null)
-        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream");
+        throw UnsupportedErr.make(getClass().getName() + " wraps null InStream");
       else
         throw e;
     }
@@ -129,7 +129,7 @@ public class InStream
     catch (NullPointerException e)
     {
       if (in == null)
-        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream");
+        throw UnsupportedErr.make(getClass().getName() + " wraps null InStream");
       else
         throw e;
     }
@@ -145,7 +145,7 @@ public class InStream
     catch (NullPointerException e)
     {
       if (in == null)
-        throw UnsupportedErr.make(typeof().qname() + " wraps null InStream");
+        throw UnsupportedErr.make(getClass().getName() + " wraps null InStream");
       else
         throw e;
     }
