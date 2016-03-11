@@ -216,6 +216,14 @@ class InStream
   **
   Int readBits(Int num)
 
+  **
+  ** Get number of bits left in current byte which have not been
+  ** read by `readBits` yet.  For example if three bits are read, then
+  ** return 5 to indicate number of bits left to sync up up to byte
+  ** boundaries.  Not part of public API!
+  **
+  @NoDoc Int numPendingBits()
+
 //////////////////////////////////////////////////////////////////////////
 // Text Data
 //////////////////////////////////////////////////////////////////////////

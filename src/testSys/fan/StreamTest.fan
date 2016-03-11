@@ -368,12 +368,13 @@ class StreamTest : Test
   {
     // basic writes
     buf := Buf()
-    buf.out.writeBits(0x1, 1)
-           .writeBits(0x5, 3)
-           .writeBits(0x9, 5)
-           .writeBits(0x4, 4)
-           .writeBits(0x7bcd, 15)
-           .flush
+    out := buf.out
+    out.writeBits(0x1, 1); verifyEq(out.numPendingBits, 1)
+    out.writeBits(0x5, 3); verifyEq(out.numPendingBits, 4)
+    out.writeBits(0x9, 5); verifyEq(out.numPendingBits, 1)
+    out.writeBits(0x4, 4); verifyEq(out.numPendingBits, 5)
+    out.writeBits(0x7bcd, 15)
+    out.flush
     verifyEq(buf.toHex, "d4a7bcd0")
 
     // write arg checking
@@ -386,11 +387,12 @@ class StreamTest : Test
     buf.flip
     verifyErr(ArgErr#) { buf.in.readBits(-1) }
     verifyErr(ArgErr#) { buf.in.readBits(65) }
-    verifyEq(buf.in.readBits(1),  0x1)
-    verifyEq(buf.in.readBits(3),  0x5)
-    verifyEq(buf.in.readBits(5),  0x9)
-    verifyEq(buf.in.readBits(4),  0x4)
-    verifyEq(buf.in.readBits(15), 0x7bcd)
+    verifyEq(buf.in.numPendingBits, 0)
+    verifyEq(buf.in.readBits(1),  0x1);  verifyEq(buf.in.numPendingBits, 7)
+    verifyEq(buf.in.readBits(3),  0x5);  verifyEq(buf.in.numPendingBits, 4)
+    verifyEq(buf.in.readBits(5),  0x9);  verifyEq(buf.in.numPendingBits, 7)
+    verifyEq(buf.in.readBits(4),  0x4);  verifyEq(buf.in.numPendingBits, 3)
+    verifyEq(buf.in.readBits(15), 0x7bcd);  verifyEq(buf.in.numPendingBits, 4)
 
     // test large sampling of random value/bit sizes
     vals := Int[,]
