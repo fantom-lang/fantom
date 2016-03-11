@@ -394,6 +394,11 @@ public class InStream
     return result;
   }
 
+  public long numPendingBits()
+  {
+    return (bitsBuf >> 8) & 0xff;
+  }
+
   public Charset charset()
   {
     return charset;
