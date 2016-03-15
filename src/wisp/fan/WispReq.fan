@@ -28,6 +28,13 @@ internal class WispReq : WebReq
   override Int remotePort() { return socket.remotePort }
   override Str:Str headers := nullHeaders
   override Uri uri := ``
+  override once Uri absUri()
+  {
+    scheme := service.httpsPort != null ? "https" : "http"
+    host   := headers["Host"]
+    if (host == null) throw Err("Missing Host header")
+    return `${scheme}://${host}/` + uri
+  }
   override once WebSession session() { service.sessionStore.doLoad(this) }
 
   override InStream in()
