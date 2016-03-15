@@ -123,7 +123,7 @@ class Win
   native Void onEvent(Str type, Bool useCapture, |Event e| handler)
 
   ** Request the browser to perform an animation before the next repaint.
-  @NoDoc native Void reqAnimationFrame(|This| f)
+  native Void reqAnimationFrame(|This| f)
 
 //////////////////////////////////////////////////////////////////////////
 // Timers
