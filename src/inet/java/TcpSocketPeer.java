@@ -7,9 +7,10 @@
 //
 package fan.inet;
 
+import fan.sys.*;
 import java.io.*;
 import java.net.*;
-import fan.sys.*;
+import java.security.*;
 import javax.net.ssl.*;
 
 public class TcpSocketPeer
@@ -28,8 +29,11 @@ public class TcpSocketPeer
   {
     try
     {
+      SSLContext sslContext = SSLContext.getInstance("TLS");
+      sslContext.init(null, null, null);
+
       // get SSL factory because Java loves factories!
-      SSLSocketFactory factory = (SSLSocketFactory)SSLSocketFactory.getDefault();
+      SSLSocketFactory factory = sslContext.getSocketFactory();
 
       // create new SSL socket
       SSLSocket socket;
@@ -59,7 +63,7 @@ public class TcpSocketPeer
 
       return self;
     }
-    catch (IOException e)
+    catch (Exception e)
     {
       throw IOErr.make(e);
     }
