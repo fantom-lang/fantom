@@ -145,6 +145,17 @@ class Elem
     return this
   }
 
+  ** Insert a new element as a child to this element before the
+  ** specified reference element.  The reference element must
+  ** be a child of this element. Returns this.
+  virtual This insertBefore(Elem child, Elem ref)
+  {
+    insertChildBefore(child, ref)
+    onAdd(child)
+    child.onParent(this)
+    return this
+  }
+
   ** Replace existing child node with a new child.  Returns this.
   virtual This replace(Elem oldChild, Elem newChild)
   {
@@ -181,6 +192,9 @@ class Elem
 
   ** Add a new element as a child to this element.
   @NoDoc protected native Void addChild(Elem child)
+
+  ** Insert a new element as a child to this element before given node.
+  @NoDoc protected native Void insertChildBefore(Elem child, Elem ref)
 
   ** Replace an existing child element with new element.
   @NoDoc protected native Void replaceChild(Elem oldChild, Elem newChild)
