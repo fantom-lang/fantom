@@ -846,6 +846,7 @@ public class InStream
   public boolean close()
   {
     if (in != null) return in.close();
+    bitsBuf = 0;
     return true;
   }
 
