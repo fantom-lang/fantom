@@ -40,7 +40,6 @@ nephelometric_turbidity_units, ntu
 formazin_nephelometric_unit, fnu
 power_usage_effectiveness, PUE
 data_center_infrastructure_efficiency, DCIE
-air_changes_per_hour, ACH
 
 -- currency (null)
 australian_dollar, AUD
@@ -201,6 +200,7 @@ per_minute, /min; sec-1; 0.016666666666666666
 per_second, /s; sec-1
 per_hour, /h; sec-1; 2.777777777777778E-4
 percent_per_second, %/s; sec-1
+air_changes_per_hour, ACH; sec-1; 2.777777777777778E-4
 
 -- grammage (kg1*m-2)
 kilograms_per_square_meter, kg/m²; kg1*m-2
