@@ -36,12 +36,18 @@ Fantom bundle for TextMate:
 
  - [Home Page]`http://github.com/martinlau/fantom-textmate-bundle`
 
+Sublime Text 3 (mgiannini) [#sublime]
+*************************************
+Fantom package for the [Sublime Text 3]`https://www.sublimetext.com` text editor.
+
+- [sublime-fantom]`https://github.com/mgiannini/sublime-fantom`
+
 Atom Editor (mgiannini) [#atom]
 *******************************
 Fantom package for the [Atom]`https://atom.io/` editor.
 
  - [language-fantom]`https://github.com/mgiannini/language-fantom`
- 
+
 Text Editors  [#textEditors]
 ****************************
 The Fantom distro contains configuration files for many common text editors
