@@ -315,7 +315,8 @@ class InStream
   **
   ** Read the entire stream into a list of Str lines based on the
   ** configured charset encoding.  Each Str in the list maps
-  ** to a line terminated by \n, \r\n, \r, or EOF.  The Str lines
+  ** to a line terminated by \n, \r\n, \r, or EOF using the same
+  ** semantics as `readLine` with default max line length.  The Str lines
   ** themselves do not contain a trailing newline.  Empty lines
   ** are returned as the empty Str "".  Return an empty list if
   ** currently at end of stream (not null).  Throw IOErr if there
@@ -328,9 +329,10 @@ class InStream
   **
   ** Read the entire stream into Str lines based on the current
   ** encoding.  Call the specified function for each line read.
-  ** Each line is terminated by \n, \r\n, \r, or EOF.  The Str
-  ** lines themselves do not contain a trailing newline.  Empty
-  ** lines are returned as the empty Str "".  This InStream is
+  ** Each line is terminated by \n, \r\n, \r, or EOF using the same
+  ** semantics are `readLine` with the default max line length.
+  ** The Str lines themselves do not contain a trailing newline.
+  ** Empty lines are returned as the empty Str "".  This InStream is
   ** guaranteed to be closed upon return.
   **
   Void eachLine(|Str line| f)
