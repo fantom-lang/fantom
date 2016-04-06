@@ -1,3 +1,4 @@
+#! /usr/bin/env fan
 **
 ** Split a text file up into words and count occurences using:
 **   - File IO
