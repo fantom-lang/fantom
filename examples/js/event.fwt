@@ -15,9 +15,9 @@ class Demo
           hgap = 36
           GridPane
           {
-            EventDemo { name = "A" },
-            EventDemo { name = "B" },
-            EventDemo { name = "C" },
+            EventDemo("A"),
+            EventDemo("B"),
+            EventDemo("C"),
           },
           ConsumeEventDemo("container")
           {
@@ -35,8 +35,9 @@ class Demo
 
 class EventDemo : Canvas
 {
-  new make()
+  new make(Str name)
   {
+    this.name = name
     d := |e| { dump(e) }
     onMouseUp.add(d)
     onMouseDown.add(d)
@@ -73,7 +74,7 @@ class EventDemo : Canvas
     echo("$name> $event")
   }
 
-  Str? name
+  const Str name
 }
 
 class ConsumeEventDemo : BorderPane
