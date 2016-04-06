@@ -93,8 +93,8 @@ const class JsDemoMod : WebMod
   Void onPodFile()
   {
     // serve up pod resources
-    File file := ("fan://" + req.uri[1..-1]).toUri.get
-    if (!file.exists) { res.sendErr(404); return }
+    file := ("fan://" + req.uri[1..-1]).toUri.get(null, false) as File
+    if (file == null || !file.exists) { res.sendErr(404); return }
     FileWeblet(file).onService
   }
 }

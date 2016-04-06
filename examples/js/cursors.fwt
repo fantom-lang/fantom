@@ -24,10 +24,10 @@ class Cursors : Window
           grid := it
           Cursor.predefined.each |Cursor c|
           {
-            grid.add(CursorDemo { text = c.toStr(); it.cursor = c })
+            grid.add(CursorDemo(c))
           }
           c := Image(`fan://icons/x16/refresh.png`)
-          grid.add(CursorDemo { text = "custom"; it.cursor = Cursor(c, 8, 8)})
+          grid.add(CursorDemo(Cursor(c, 8, 8)))
         },
         GridPane
         {
@@ -66,8 +66,10 @@ class Cursors : Window
 
 class CursorDemo : Canvas
 {
-  new make()
+  new make(Cursor c)
   {
+    this.text = c.toStr
+    this.cursor = c
     d := |e| { dump(e) }
     onMouseEnter.add(d)
     onMouseExit.add(d)
@@ -100,6 +102,6 @@ class CursorDemo : Canvas
     repaint
   }
 
-  Str? text
+  const Str text
   Point? p
 }

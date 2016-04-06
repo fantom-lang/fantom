@@ -19,7 +19,7 @@ class BeforeUnload : Window
     Win.cur.onEvent("beforeunload", false) |event|
     {
       if (modified)
-       event.meta["beforeunloadMsg"] = "Text field was modified!"
+       event.stash["beforeunloadMsg"] = "Text field was modified!"
     }
 
     content = BorderPane
