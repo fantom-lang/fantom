@@ -23,12 +23,12 @@ class Main : AbstractMain
     echo
 
     // prompt for credentials
-    Env.cur.out.print("username> ").flush
+    Env.cur.out.print("username> ").flush  // email address
     username := Env.cur.in.readLine.trim
     Env.cur.out.print("password> ").flush
     password := Env.cur.in.readLine.trim
 
-    // display patch summary
+    // display post summary
     echo
     echo("##")
     echo("## Repo:       $siteUri")
