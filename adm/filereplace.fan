@@ -1,3 +1,4 @@
+#! /usr/bin/env fan
 
 class FileReplace
 {
