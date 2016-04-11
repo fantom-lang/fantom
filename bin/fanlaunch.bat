@@ -10,7 +10,7 @@ REM fanlaunch: launcher for Fantom programs
 REM
 
 SETLOCAL
-SET FAN_HOME=%~dp0%..
+IF "%FAN_HOME%" == "" SET FAN_HOME=%~dp0%..
 SET JAVA=java
 SET FAN_JAVA_OPTS=
 
