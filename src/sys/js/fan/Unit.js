@@ -79,10 +79,12 @@ fan.sys.Unit.fromStr = function(name, checked)
 
 fan.sys.Unit.list = function()
 {
-  var arr = [];
-  var units = fan.sys.Unit.m_units;
-  for (p in units) arr.push(units[p]);
-  return fan.sys.List.make(fan.sys.Unit.$type, arr);
+  var arr = fan.sys.List.make(fan.sys.Unit.$type, []);
+  var quantities = fan.sys.Unit.m_quantities;
+  Object.keys(quantities).forEach(function (quantity) {
+    arr.addAll(fan.sys.Unit.quantity(quantity));
+  });
+  return arr;
 }
 
 fan.sys.Unit.quantities = function()
