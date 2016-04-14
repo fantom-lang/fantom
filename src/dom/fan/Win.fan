@@ -119,8 +119,12 @@ class Win
 // Events
 //////////////////////////////////////////////////////////////////////////
 
-  ** Attach an event handler to the given event on this element.
-  native Void onEvent(Str type, Bool useCapture, |Event e| handler)
+  ** Attach an event handler to the given event on this window.
+  native Obj onEvent(Str type, Bool useCapture, |Event e| handler)
+
+  ** Remove the given event handler from this window.  If this
+  ** handler was not registered, this method does nothing.
+  native Void removeEvent(Str type, Bool useCapture, Obj handler)
 
   ** Request the browser to perform an animation before the next repaint.
   native Void reqAnimationFrame(|This| f)

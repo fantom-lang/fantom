@@ -232,6 +232,13 @@ fan.dom.WinPeer.prototype.onEvent = function(self, type, useCapture, handler)
   {
     this.win.attachEvent('on'+type, f);
   }
+
+  return f;
+}
+
+fan.dom.WinPeer.prototype.removeEvent = function(self, type, useCapture, handler)
+{
+  this.win.removeEventListener(type, handler, useCapture);
 }
 
 fan.dom.WinPeer.prototype.fakeHashChange = function(self, handler)
