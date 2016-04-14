@@ -332,18 +332,14 @@ fan.dom.ElemPeer.prototype.findAll = function(self, f, acc)
 
 fan.dom.ElemPeer.prototype.onEvent = function(self, type, useCapture, handler)
 {
-  if (this.elem.addEventListener)
-  {
-    this.elem.addEventListener(type, function(e) {
-      handler.call(fan.dom.EventPeer.make(e));
-    }, useCapture);
-  }
-  else
-  {
-    this.elem.attachEvent('on'+type, function(e) {
-      handler.call(fan.dom.EventPeer.make(e));
-    });
-  }
+  var f = function(e) { handler.call(fan.dom.EventPeer.make(e)); }
+  this.elem.addEventListener(type, f, useCapture);
+  return f;
+}
+
+fan.dom.ElemPeer.prototype.removeEvent = function(self, type, useCapture, handler)
+{
+  this.elem.removeEventListener(type, handler, useCapture);
 }
 
 fan.dom.ElemPeer.prototype.toStr = function(self)
