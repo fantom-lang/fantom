@@ -121,11 +121,11 @@ class Win
 
   ** Attach an event handler for the given event on this window.
   ** Returns callback function instance.
-  native Obj onEvent(Str type, Bool useCapture, |Event e| handler)
+  native Func onEvent(Str type, Bool useCapture, |Event e| handler)
 
   ** Remove the given event handler from this window.  If this
   ** handler was not registered, this method does nothing.
-  native Void removeEvent(Str type, Bool useCapture, Obj handler)
+  native Void removeEvent(Str type, Bool useCapture, Func handler)
 
   ** Request the browser to perform an animation before the next repaint.
   native Void reqAnimationFrame(|This| f)
