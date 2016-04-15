@@ -194,7 +194,7 @@ fan.dom.WinPeer.mapToState = function(map)
 
 fan.dom.WinPeer.prototype.onEvent = function(self, type, useCapture, handler)
 {
-  var f = function(e)
+  handler.$func = function(e)
   {
     var evt = fan.dom.EventPeer.make(e);
     if (type == "popstate")
@@ -226,19 +226,20 @@ fan.dom.WinPeer.prototype.onEvent = function(self, type, useCapture, handler)
       return;
     }
 
-    this.win.addEventListener(type, f, useCapture);
+    this.win.addEventListener(type, handler.$func, useCapture);
   }
   else
   {
-    this.win.attachEvent('on'+type, f);
+    this.win.attachEvent('on'+type, handler.$func);
   }
 
-  return f;
+  return handler;
 }
 
 fan.dom.WinPeer.prototype.removeEvent = function(self, type, useCapture, handler)
 {
-  this.win.removeEventListener(type, handler, useCapture);
+  if (handler.$func)
+    this.win.removeEventListener(type, handler.$func, useCapture);
 }
 
 fan.dom.WinPeer.prototype.fakeHashChange = function(self, handler)

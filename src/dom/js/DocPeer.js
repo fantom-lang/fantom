@@ -66,14 +66,15 @@ fan.dom.DocPeer.prototype.querySelectorAll = function(self, selectors)
 
 fan.dom.DocPeer.prototype.onEvent = function(self, type, useCapture, handler)
 {
-  var f = function(e) { handler.call(fan.dom.EventPeer.make(e)); }
-  this.doc.addEventListener(type, f, useCapture);
-  return f;
+  handler.$func = function(e) { handler.call(fan.dom.EventPeer.make(e)); }
+  this.doc.addEventListener(type, handler.$func, useCapture);
+  return handler;
 }
 
 fan.dom.DocPeer.prototype.removeEvent = function(self, type, useCapture, handler)
 {
-  this.doc.removeEventListener(type, handler, useCapture);
+  if (handler.$func)
+    this.doc.removeEventListener(type, handler.$func, useCapture);
 }
 
 fan.dom.DocPeer.prototype.out = function(self)
