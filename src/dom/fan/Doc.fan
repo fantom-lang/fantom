@@ -70,6 +70,18 @@ class Doc
   native Elem[] querySelectorAll(Str selectors)
 
 //////////////////////////////////////////////////////////////////////////
+// Events
+//////////////////////////////////////////////////////////////////////////
+
+  ** Attach an event handler for the given event on this document.
+  ** Returns callback function instance.
+  native Obj onEvent(Str type, Bool useCapture, |Event e| handler)
+
+  ** Remove the given event handler from this document.  If this
+  ** handler was not registered, this method does nothing.
+  native Void removeEvent(Str type, Bool useCapture, Obj handler)
+
+//////////////////////////////////////////////////////////////////////////
 // Writing
 //////////////////////////////////////////////////////////////////////////
 
