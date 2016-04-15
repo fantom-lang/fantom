@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.69 (working)*
+- dom: Doc.onEvent, removeEvent
+
 *Build 1.0.68 (6 Apr 2015)*
 - Windows replace exe launchers with batch scripts
 - Windows fansc service controlller

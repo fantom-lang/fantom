@@ -227,7 +227,7 @@ class Elem
   ** Remove focus from this elem.
   virtual native Void blur()
 
-  ** Attach an event handler to the given event on this element.
+  ** Attach an event handler for the given event on this element.
   ** Returns callback function instance.
   native Obj onEvent(Str type, Bool useCapture, |Event e| handler)
 

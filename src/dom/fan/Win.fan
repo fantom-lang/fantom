@@ -119,7 +119,8 @@ class Win
 // Events
 //////////////////////////////////////////////////////////////////////////
 
-  ** Attach an event handler to the given event on this window.
+  ** Attach an event handler for the given event on this window.
+  ** Returns callback function instance.
   native Obj onEvent(Str type, Bool useCapture, |Event e| handler)
 
   ** Remove the given event handler from this window.  If this
