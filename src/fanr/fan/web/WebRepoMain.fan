@@ -4,6 +4,7 @@
 //
 // History:
 //    11 May 11  Brian Frank  Creation
+//    20 Apr 16  Steve Krytkowski HTTPS Update
 //
 
 using web
@@ -11,13 +12,16 @@ using util
 
 **
 ** WebRepoMain is a super simple daemon that exposes a
-** file based repository on an HTTP port.
+** file based repository on an HTTP/S port.
 **
 @NoDoc
 class WebRepoMain : AbstractMain
 {
   @Opt { help = "http port" }
-  Int port := 8080
+  Int? httpPort := 80
+
+  @Opt { help = "https port" }
+  Int? httpsPort := 443
 
   @Opt { help = "username to use for authentication"; aliases=["u"] }
   Str? username
@@ -41,19 +45,20 @@ class WebRepoMain : AbstractMain
     }
 
     // create WispService
-    wisp := makeWispService(mod, this.port)
+    wisp := makeWispService(mod, this.httpPort, this.httpsPort)
 
     // run service
     return runServices([wisp])
   }
 
-  internal static Service makeWispService(WebMod mod, Int port)
+  internal static Service makeWispService(WebMod mod, Int httpPort, Int httpsPort)
   {
     // use reflection to create WispService
     wispType := Type.find("wisp::WispService")
-    wispPort := wispType.field("port")
+    wispHttpPort := wispType.field("httpPort")
+    wispHttpsPort := wispType.field("httpsPort")
     wispRoot := wispType.field("root")
-    return wispType.make([Field.makeSetFunc([wispPort: port, wispRoot: mod])])
+    return wispType.make([Field.makeSetFunc([wispHttpPort: httpPort, wispHttpsPort: httpsPort, wispRoot: mod])])
   }
 
 }
