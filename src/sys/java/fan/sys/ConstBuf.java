@@ -177,6 +177,41 @@ public final class ConstBuf
   }
 
 //////////////////////////////////////////////////////////////////////////
+// File
+//////////////////////////////////////////////////////////////////////////
+
+  public File toFile(Uri uri)
+  {
+    return new MemFile(this, uri);
+  }
+
+  static class MemFile extends File
+  {
+    MemFile(ConstBuf buf, Uri uri) { super(uri); this.buf = buf; this.ts = DateTime.now(); }
+    public Type typeof() { return Sys.MemFileType; }
+    public boolean exists() { return true; }
+    public Long size() { return Long.valueOf(buf.size); }
+    public DateTime modified() { return ts; }
+    public void modified(DateTime time) { throw err(); }
+    public String osPath() { return null; }
+    public File parent() { return null; }
+    public List list(Regex pattern) { return new List(Sys.FileType, 0); }
+    public File normalize() { return this; }
+    public File plus(Uri uri, boolean checkSlash) { throw err(); }
+    public File create() { throw err(); }
+    public File moveTo(File to) { throw err(); }
+    public void delete() { throw err(); }
+    public File deleteOnExit() { throw err(); }
+    public Buf open(String mode) { throw err(); }
+    public Buf mmap(String mode, long pos, Long size) { throw err(); }
+    public InStream in(Long bufSize) { return buf.in(); }
+    public OutStream out(boolean append, Long bufSize) { throw err(); }
+    Err err() { return UnsupportedErr.make("ConstBufFile"); }
+    final ConstBuf buf;
+    final DateTime ts;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // ErrOutStream
 //////////////////////////////////////////////////////////////////////////
 

@@ -516,6 +516,14 @@ class Buf
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Create an in-memory File instance for this buffer with the given
+  ** file URI.  The buffer must be a RAM based buffer which is converted
+  ** to an immutable buffer via 'Obj.toImmutable' semantics.  The current
+  ** time is used for the file's modified time.
+  **
+  File toFile(Uri uri)
+
+  **
   ** Encode the buffer contents from 0 to size into a
   ** hexadecimal string.  This method is unsupported for
   ** mmap buffers.
