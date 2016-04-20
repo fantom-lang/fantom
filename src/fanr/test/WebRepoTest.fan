@@ -4,6 +4,7 @@
 //
 // History:
 //    8 Jul 11  Brian Frank  Creation
+//    20 Apr 16  Steve Krytkowski HTTPS Update
 //
 
 using concurrent
@@ -15,7 +16,8 @@ class WebRepoTest : Test
 {
   internal TestWebRepoAuth auth := TestWebRepoAuth("bob", "123")
   internal Service? wispService
-  internal Int port := 1972
+  internal Int httpPort := 1972
+  internal Int httpsPort := 1973
 
   internal Repo? pub      // client with no username, password
   internal Repo? badUser  // client with bad username
@@ -45,15 +47,15 @@ class WebRepoTest : Test
     }
 
     // open wisp service on test port
-    wispService = WebRepoMain.makeWispService(mod, port)
+    wispService = WebRepoMain.makeWispService(mod, httpPort, httpsPort)
     wispService->log->level = LogLevel.silent
     wispService.start
 
     // setup clients
-    pub     = Repo.makeForUri(`http://localhost:$port/`)
-    good    = Repo.makeForUri(`http://localhost:$port/`, "bob", "123")
-    badUser = Repo.makeForUri(`http://localhost:$port/`, "bad", "123")
-    badPass = Repo.makeForUri(`http://localhost:$port/`, "bob", "bad")
+    pub     = Repo.makeForUri(`http://localhost:$httpPort/`)
+    good    = Repo.makeForUri(`http://localhost:$httpPort/`, "bob", "123")
+    badUser = Repo.makeForUri(`http://localhost:$httpPort/`, "bad", "123")
+    badPass = Repo.makeForUri(`http://localhost:$httpPort/`, "bob", "bad")
   }
 
   override Void teardown()
