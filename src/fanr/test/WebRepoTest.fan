@@ -17,7 +17,7 @@ class WebRepoTest : Test
   internal TestWebRepoAuth auth := TestWebRepoAuth("bob", "123")
   internal Service? wispService
   internal Int httpPort := 1972
-  internal Int httpsPort := 1973
+  internal Int? httpsPort := null
 
   internal Repo? pub      // client with no username, password
   internal Repo? badUser  // client with bad username
