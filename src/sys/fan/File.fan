@@ -477,6 +477,31 @@ internal const class LocalFile : File
 }
 
 **************************************************************************
+** MemFile
+**************************************************************************
+
+internal const class MemFile : File
+{
+  internal new init()
+  override Bool exists()
+  override Int? size()
+  override DateTime? modified
+  override Str? osPath()
+  override File? parent()
+  override File[] list(Regex? pattern := null)
+  override File normalize()
+  override File plus(Uri uri, Bool checkSlash := true)
+  override File create()
+  override File moveTo(File to)
+  override Void delete()
+  override File deleteOnExit()
+  override Buf open(Str mode := "rw")
+  override Buf mmap(Str mode := "rw", Int pos := 0, Int? size := this.size)
+  override InStream in(Int? bufferSize := 4096)
+  override OutStream out(Bool append := false, Int? bufferSize := 4096)
+}
+
+**************************************************************************
 ** ZipEntryFile
 **************************************************************************
 

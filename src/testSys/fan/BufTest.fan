@@ -909,6 +909,38 @@ class BufTest : AbstractBufTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// ToFile
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToFile()
+  {
+    mut := Buf().print("test!")
+    f := mut.toFile(`test/path/file.txt`)
+    verifyToFile(f)
+
+    mut.print("more data!")
+    verifyToFile(f)
+
+    f = Buf().print("test!").toImmutable.toFile(`test/path/file.txt`)
+    verifyToFile(f)
+  }
+
+  Void verifyToFile(File f)
+  {
+    verifyEq(f.readAllStr, "test!")
+    verifyEq(f.typeof.qname, "sys::MemFile")
+    verifyEq(f.in.readAllStr, "test!")
+    verifyEq(f.size, 5)
+    verifyEq(f.modified.date, Date.today)
+    verifyEq(f.uri, `test/path/file.txt`)
+    verifyEq(f.name, "file.txt")
+    verifyEq(f.ext, "txt")
+    verifyErr(UnsupportedErr#) { f.modified = DateTime.now }
+    verifyErr(UnsupportedErr#) { f.out }
+    verifyErr(UnsupportedErr#) { f.open("r") }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Immutable
 //////////////////////////////////////////////////////////////////////////
 
