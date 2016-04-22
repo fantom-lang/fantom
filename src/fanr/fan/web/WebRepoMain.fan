@@ -51,7 +51,7 @@ class WebRepoMain : AbstractMain
     return runServices([wisp])
   }
 
-  internal static Service makeWispService(WebMod mod, Int httpPort, Int httpsPort)
+  internal static Service makeWispService(WebMod mod, Int httpPort, Int? httpsPort)
   {
     // use reflection to create WispService
     wispType := Type.find("wisp::WispService")
