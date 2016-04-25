@@ -13,7 +13,7 @@
 **   1. a single value, or
 **   1. a a map of auth parameters that have case-insensitive keys.
 **
-@Js const class AuthScheme
+@Js const class WebAuthScheme
 {
 	** Make an auth scheme with the given name and a list of auth-params.
 	new makeParams(Str name, Str:Str params := [:])
@@ -83,7 +83,7 @@
 **
 ** AuthParser
 **
-@NoDoc @Js class AuthParser
+@NoDoc @Js internal class AuthParser
 {
 	new make(Str val)
 	{
@@ -98,24 +98,24 @@
 		return params
 	}
 
-	AuthScheme? nextScheme()
+	WebAuthScheme? nextScheme()
 	{
 		if (eof) return null
 		if (pos > 0) commaOws
 
 		name := parseToken([SP, COMMA, EOF])
-		if (cur != SP) return AuthScheme(name)
+		if (cur != SP) return WebAuthScheme(name)
 
 		while (cur == SP) consume
 
 		start  := pos
 		tok68  := parseToken68([COMMA, EOF])
-		if (tok68 != null) return AuthScheme(name, tok68)
+		if (tok68 != null) return WebAuthScheme(name, tok68)
 
 		reset(start)
 		params := parseAuthParams
 		if (params.isEmpty) throw ParseErr("Expected token68 or #auth-param at pos ${pos}: '${buf}'")
-		return AuthScheme(name, params)
+		return WebAuthScheme(name, params)
 	}
 
 //////////////////////////////////////////////////////////////////////////
