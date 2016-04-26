@@ -30,7 +30,16 @@ class WebUtil
   static Bool isToken(Str s)
   {
     if (s.isEmpty) return false
-    return s.all |Int c->Bool| { return c < 127 && tokenChars[c] }
+    return s.all |Int c->Bool| { isTokenChar(c) }
+  }
+
+  **
+  ** Return if given char unicode point is allowable within the
+  ** HTTP token production.  See `isToken`.
+  **
+  static Bool isTokenChar(Int c)
+  {
+    c < 127 && tokenChars[c]
   }
 
   private static const Bool[] tokenChars

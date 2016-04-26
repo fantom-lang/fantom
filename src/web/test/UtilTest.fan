@@ -21,6 +21,15 @@ class UtilTest : Test
     verifyEq(WebUtil.isToken("5a-3dd_33*&^%22!~"), true)
     verifyEq(WebUtil.isToken("(foo)"), false)
     verifyEq(WebUtil.isToken("foo;bar"), false)
+
+    // test https://tools.ietf.org/html/rfc7230#section-3.2.6
+    chars := Int:Bool[:] { def = false }
+    ('0'..'9').each |c| { chars[c] = true }
+    ('a'..'z').each |c| { chars[c] = true }
+    ('A'..'Z').each |c| { chars[c] = true }
+    "!#\$%&'*+-.^_`|~".each |c| { chars[c] = true }
+    for (c:=0; c<130; ++c)
+      verifyEq(WebUtil.isTokenChar(c), chars[c])
   }
 
   Void testToQuotedStr()
