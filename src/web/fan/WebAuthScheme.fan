@@ -15,13 +15,17 @@
 **
 @Js const class WebAuthScheme
 {
-	** Make an auth scheme with the given name and a list of auth-params.
+	** Make an auth scheme with the given name and a map of auth-params.
 	new makeParams(Str name, Str:Str params := [:])
 	{
 		this.name = name
-		m := [Str:Str][:] { caseInsensitive = true }
-		params.each |v, k| { m[k] = v }
-		this.params = m.toImmutable
+		if (!params.caseInsensitive)
+		{
+			m := [Str:Str][:] { caseInsensitive = true }
+			params.each |v, k| { m[k] = v }
+			params = m
+		}
+		this.params = params.toImmutable
 	}
 
 	** Make an auth scheme with the given name and token68 value.
@@ -30,6 +34,11 @@
 		this.name  = name
 		if (!AuthParser.isToken68(tok68)) throw ArgErr("Not a token68: '${tok68}'")
 		this.tok68 = tok68
+	}
+
+	WebAuthScheme addParams(Str:Str params)
+	{
+		WebAuthScheme(name, this.params.dup.addAll(params))
 	}
 
 	** Case-insensitive check to see if scheme matches name
