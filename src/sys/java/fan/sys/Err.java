@@ -178,7 +178,7 @@ public class Err
     }
 
     // print each level of the stack trace
-    out.indent(indent).writeChars(toStr()).writeChar('\n');
+    trace(toStr(), out, indent);
     int num = 0;
     for (int i=start; i<elems.length; ++i)
     {
@@ -207,6 +207,18 @@ public class Err
     }
 
     return this;
+  }
+
+  public static void trace(String str, OutStream out, int indent)
+  {
+    out.indent(indent);
+    for (int i=0; i<str.length(); ++i)
+    {
+      int ch = str.charAt(i);
+      if (ch == '\n' || ch == '\r') out.writeChar('\n').indent(indent);
+      else out.writeChar(ch);
+    }
+    out.writeChar('\n');
   }
 
   public static boolean trace(StackTraceElement elem, OutStream out, int indent)
