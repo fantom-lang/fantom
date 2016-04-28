@@ -114,25 +114,31 @@ internal class WispRes : WebRes
   **
   override Void sendErr(Int statusCode, Str? msg := null)
   {
-    // write message to buffer
-    buf := Buf()
-    WebOutStream bufOut := WebOutStream(buf.out)
-    bufOut.docType
-    bufOut.html
-    bufOut.head.title.w("$statusCode ${statusMsg[statusCode]}").titleEnd.headEnd
-    bufOut.body
-    bufOut.h1.w(statusMsg[statusCode]).h1End
-    if (msg != null) bufOut.w(msg).nl
-    bufOut.bodyEnd
-    bufOut.htmlEnd
+    checkUncommitted
+
+    // unless content-length was forced to zero, write simple body
+    Buf? buf := null
+    if (headers["Content-Length"] == null)
+    {
+      buf = Buf()
+      WebOutStream bufOut := WebOutStream(buf.out)
+      bufOut.docType
+      bufOut.html
+      bufOut.head.title.w("$statusCode ${statusMsg[statusCode]}").titleEnd.headEnd
+      bufOut.body
+      bufOut.h1.w(statusMsg[statusCode]).h1End
+      if (msg != null) bufOut.w(msg).nl
+      bufOut.bodyEnd
+      bufOut.htmlEnd
+
+      headers["Content-Type"] = "text/html; charset=UTF-8"
+      headers["Content-Length"] = buf.size.toStr
+    }
 
     // write response
-    checkUncommitted
     this.statusCode = statusCode
     this.errMsg = msg
-    headers["Content-Type"] = "text/html; charset=UTF-8"
-    headers["Content-Length"] = buf.size.toStr
-    this.out.writeBuf(buf.flip)
+    if (buf != null) this.out.writeBuf(buf.flip)
     done
   }
 
