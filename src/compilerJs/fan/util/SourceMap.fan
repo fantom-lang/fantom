@@ -69,6 +69,7 @@ class SourceMap
       else out.writeChars("\"${file.name}\"")
     }
     out.writeChars("],\n")
+
   }
 
   private Void writeMappings(OutStream out)
@@ -78,38 +79,57 @@ class SourceMap
     files.keys.each |k, i| { srcIdx[k] = i }
 
     out.writeChars("\"mappings\": \"")
-    prevLine := 0
-    prevIdx  := 0
+    prevFileIdx := 0
+    prevSrcLine := 0
+    prevSrcCol  := 0
+    prevGenLine := 0
+    prevGenCol  := 0
     MapField? prevField
-    fields.each |MapField f|
+    fields.each |MapField f, Int i|
     {
+      fileIdx := srcIdx[f.srcLoc.file]
       genLine := f.genLoc.line
-      if (genLine < prevLine) throw Err("${f} is before line ${prevLine}")
+      genCol  := f.genLoc.col
+      srcLine := f.srcLine
+      srcCol  := f.srcCol
+      if (genLine < prevGenLine) throw Err("${f} is before line ${prevGenLine}")
+
+      // handle missing/blank lines
+      if (genLine != prevGenLine)
+      {
+        prevGenCol = 0
+        while (genLine != prevGenLine)
+        {
+          out.writeChar(';')
+          ++prevGenLine
+        }
+      }
+      else
+      {
+        if (i > 0)
+        {
+          if (genCol <= prevGenCol) throw Err("${genCol} is before col ${prevGenCol}")
+          out.writeChar(',')
+        }
+      }
 
       // calculate diffs
-      genColDiff  := f.genLoc.col - (prevField?.genLoc?.col ?: 0)
-      srcDiff     := srcIdx[f.srcLoc.file] - prevIdx
-      srcLineDiff := f.srcLine - (prevField?.srcLine ?: 0)
-      srcColDiff  := f.srcCol - (prevField?.srcCol ?: 0)
+      genColDiff  := genCol - prevGenCol
+      fileDiff    := fileIdx - prevFileIdx
+      srcLineDiff := srcLine - prevSrcLine
+      srcColDiff  := srcCol - prevSrcCol
 
-      // write missing new lines if necessary
-      isNewline := prevLine < genLine || genLine == 0
-      while (prevLine < genLine)
-      {
-        out.writeChar(';')
-        ++prevLine
-      }
-      if (!isNewline) out.writeChar(',')
-
-      // write segment fields
+      // write segment field
       out.writeChars(Base64VLQ.encode(genColDiff))
-         .writeChars(Base64VLQ.encode(srcDiff))
+         .writeChars(Base64VLQ.encode(fileDiff))
          .writeChars(Base64VLQ.encode(srcLineDiff))
          .writeChars(Base64VLQ.encode(srcColDiff))
 
       // update prev state
-      prevIdx = srcIdx[f.srcLoc.file]
-      prevField = f
+      prevGenCol  = genCol
+      prevFileIdx = fileIdx
+      prevSrcLine = srcLine
+      prevSrcCol  = srcCol
     }
     out.writeChars(";\"\n")
   }
@@ -141,7 +161,13 @@ class MapField
 
   override Str toStr()
   {
-    "([${srcLoc.file}, ${srcLine}, ${srcCol}], [${genLoc.line}, ${genLoc.col}], ${name}, ${text})"
+    "([${fname}, ${srcLine}, ${srcCol}], [${genLoc.line}, ${genLoc.col}], ${name}, ${text})"
+  }
+
+  Str fname()
+  {
+    i := srcLoc.file.indexr("/")
+    return srcLoc.file[i+1..-1]
   }
 
   Str text
