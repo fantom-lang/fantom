@@ -277,7 +277,8 @@ fan.sys.TimeZone.compareAtTime = function(rule, x, time)
 
 fan.sys.TimeZone.cache$ = function(continent, city, encoded)
 {
-  var fullName = continent + "/" + city;
+  var fullName = city;
+  if (continent != "") fullName = continent + "/" + city;
   fan.sys.TimeZone.cache[city] = encoded;
   fan.sys.TimeZone.cache[fullName] = encoded;
   fan.sys.TimeZone.names.push(city);
