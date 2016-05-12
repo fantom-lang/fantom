@@ -209,7 +209,7 @@ public class TcpListenerPeer
     InetSocketAddress remoteAddr = (InetSocketAddress)s.peer.socket.getRemoteSocketAddress();
     SSLSocket sslSocket = (SSLSocket)sf.createSocket(
       s.peer.socket,
-      remoteAddr.getHostName(),
+      s.peer.socket.getInetAddress().getHostAddress(),
       s.peer.socket.getPort(),
       false
     );
