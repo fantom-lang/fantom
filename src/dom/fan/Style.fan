@@ -74,6 +74,13 @@
       setProp(    "-ms-$name", sval)
     }
 
+    if (vendorVals.any |v| { sval.startsWith(v) })
+    {
+      setProp(name, "-webkit-$sval")
+      setProp(name,    "-moz-$sval")
+      setProp(name,     "-ms-$sval")
+    }
+
     setProp(name, sval)
     return this
   }
@@ -171,4 +178,9 @@
     "justify-content",
     "transform",
   ])
+
+  ** Property values that require vendor prefixes.
+  private const static Str[] vendorVals := [
+    "linear-gradient"
+  ]
 }
