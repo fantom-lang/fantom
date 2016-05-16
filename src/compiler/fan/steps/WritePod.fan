@@ -71,7 +71,8 @@ class WritePod : CompilerStep
         writeStr(zip, `locale/en.props`, compiler.localeProps)
 
       // write resource files
-      compiler.resFiles.each |file| { writeRes(zip, file) }
+      if (compiler.resFiles != null)
+        compiler.resFiles.each |file| { writeRes(zip, file) }
 
       // if including fandoc write it out too
       if (compiler.input.includeDoc) writeDocs(zip)
