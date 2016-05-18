@@ -69,6 +69,11 @@ class AtomicTest : Test
     verifyEq(a.decrementAndGet, 4); verifyEq(a.val, 4)
     verifyEq(a.getAndDecrement, 4); verifyEq(a.val, 3)
 
+    a.increment; verifyEq(a.val, 4)
+    a.increment; verifyEq(a.val, 5)
+    a.add(4);    verifyEq(a.val, 9)
+    a.decrement; verifyEq(a.val, 8)
+
     // toStr
     verifyEq(AtomicInt(-1234).toStr, "-1234")
   }
