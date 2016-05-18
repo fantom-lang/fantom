@@ -73,6 +73,21 @@ final const class AtomicInt
   native Int addAndGet(Int delta)
 
   **
+  ** Atomically increment the value by one
+  **
+  native Void increment()
+
+  **
+  ** Atomically decrement the value by one
+  **
+  native Void decrement()
+
+  **
+  ** Atomically add the given value to the current value
+  **
+  native Void add(Int delta)
+
+  **
   ** Return 'val.toStr'
   **
   override Str toStr() { val.toStr }

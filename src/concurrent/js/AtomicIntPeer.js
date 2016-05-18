@@ -57,3 +57,15 @@ fan.concurrent.AtomicIntPeer.prototype.addAndGet = function(self, delta) {
   this.m_val = this.m_val + delta;
   return this.m_val;
 }
+
+fan.concurrent.AtomicIntPeer.prototype.increment = function(self) {
+  this.add(self, 1);
+}
+
+fan.concurrent.AtomicIntPeer.prototype.decrement = function(self) {
+  this.add(self, -1)
+}
+
+fan.concurrent.AtomicIntPeer.prototype.add = function(self, delta) {
+  this.m_val = this.m_val + delta;
+}

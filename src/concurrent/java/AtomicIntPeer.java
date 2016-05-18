@@ -67,5 +67,20 @@ public final class AtomicIntPeer
     return val.addAndGet(delta);
   }
 
+  public final void increment(AtomicInt self)
+  {
+    val.incrementAndGet();
+  }
+
+  public final void decrement(AtomicInt self)
+  {
+    val.decrementAndGet();
+  }
+
+  public final void add(AtomicInt self, long delta)
+  {
+    val.addAndGet(delta);
+  }
+
   private final AtomicLong val = new AtomicLong();
 }
