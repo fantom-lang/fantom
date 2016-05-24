@@ -151,6 +151,23 @@ abstract const class DocEnv
     return null
   }
 
+  **
+  ** Hook to perform extra DocLink checking such as links to NoDocs
+  **
+  virtual Void linkCheck(DocLink link, DocLoc loc)
+  {
+    type := link.target as DocType
+    if (type != null)
+    {
+      if (type.isNoDoc) errReport(DocErr("Link to NoDoc type $type.qname", loc))
+      else if (link.frag != null)
+      {
+        slot := type.slot(link.frag, false)
+        if (slot != null && slot.isNoDoc) errReport(DocErr("Link to NoDoc slot $slot.qname", loc))
+      }
+    }
+  }
+
   DocErr err(Str msg, DocLoc loc, Err? cause := null)
   {
     errReport(DocErr(msg, loc, cause))

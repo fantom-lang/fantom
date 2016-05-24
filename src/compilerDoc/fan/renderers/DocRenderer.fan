@@ -128,6 +128,7 @@ abstract class DocRenderer
             orig.startsWith("https:/") ||
             orig.startsWith("ftp:/")) return
 
+        linkLoc := DocLoc(loc.file, loc.line + elem.line -1)
         try
         {
           // route to DocEnv.link
@@ -136,6 +137,9 @@ abstract class DocRenderer
           // get environment URI for the DocLink
           elem.uri = env.linkUri(link).encode
           elem.isCode = link.target.isCode
+
+          // extra checking
+          env.linkCheck(link, linkLoc)
 
           // if link text was original URI, then update with DocLink.dis
           if (elem.children.first is DocText && elem.children.first.toStr == orig)
@@ -148,7 +152,7 @@ abstract class DocRenderer
           if (elem.uri.startsWith("examples::"))
             elem.uri = "http://fantom.org/doc/" + elem.uri.replace("::", "/")
           else
-            env.err(e.toStr, DocLoc(loc.file, loc.line+elem.line-1))
+            env.err(e.toStr, linkLoc)
         }
       }
       root.children.each |child| { child.write(writer) }
