@@ -9,6 +9,7 @@
 *Build 1.0.69 (working)*
 - dom: Doc.onEvent, removeEvent
 - Buf.toFile to create in-memory "files"
+- Str.mult
 
 *Build 1.0.68 (6 Apr 2015)*
 - Windows replace exe launchers with batch scripts

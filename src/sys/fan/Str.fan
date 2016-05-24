@@ -213,6 +213,15 @@ const final class Str
   **
   @Operator Str plus(Obj? obj)
 
+  **
+  ** Duplicate this string the given number of times.  Any integer
+  ** less than or equal to zero returns an empty string.
+  **
+  ** Examples:
+  **   "x" * 4  =>  "xxxx"
+  **
+  @Operator Str mult(Int times)
+
 //////////////////////////////////////////////////////////////////////////
 // Iterators
 //////////////////////////////////////////////////////////////////////////
@@ -412,11 +421,11 @@ const final class Str
   Str trim()
 
   **
-  ** Trim whitespace from the beginning and end of the string.  
+  ** Trim whitespace from the beginning and end of the string.
   ** Should the resultant string be empty, 'null' is returned.
-  ** 
-  ** For the purposes of this method, whitespace is defined as any character 
-  ** equal to or less than the 0x20 space character (including ' ', '\r', '\n', 
+  **
+  ** For the purposes of this method, whitespace is defined as any character
+  ** equal to or less than the 0x20 space character (including ' ', '\r', '\n',
   ** and '\t').
   **
   ** Examples:
