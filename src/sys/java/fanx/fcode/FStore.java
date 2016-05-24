@@ -125,9 +125,8 @@ public abstract class FStore
       {
         ZipEntry entry = (ZipEntry)en.nextElement();
         String name = entry.getName();
-        if (name.endsWith(".fcode")) continue;
+        if (name.startsWith("fcode/")) continue;
         if (name.endsWith(".class")) continue;
-        if (name.endsWith(".def") && !name.contains("/")) continue;
         Uri uri = Uri.fromStr(podUri + "/" + LocalFile.fileNameToUriName(entry.getName()));
         list.add(new fan.sys.ZipEntryFile(zipFile, entry, uri));
       }
