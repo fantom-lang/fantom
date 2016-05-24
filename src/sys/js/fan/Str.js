@@ -344,6 +344,15 @@ fan.sys.Str.fromDisplayName = function(self)
   return s;
 }
 
+fan.sys.Str.mult = function(self, times)
+{
+  if (times <= 0) return "";
+  if (times == 1) return self;
+  var s = '';
+  for (var i=0; i<times; ++i) s += self;
+  return s;
+}
+
 fan.sys.Str.justl = function(self, width) { return fan.sys.Str.padr(self, width, 32); }
 fan.sys.Str.justr = function(self, width) { return fan.sys.Str.padl(self, width, 32); }
 

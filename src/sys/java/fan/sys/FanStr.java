@@ -539,6 +539,16 @@ public class FanStr
     return s.toString();
   }
 
+  public static String mult(String self, long times)
+  {
+    int n = (int)times;
+    if (n <= 0) return "";
+    if (n == 1) return self;
+    StringBuilder s = new StringBuilder(self.length()*n);
+    for (int i=0; i<n; ++i) s.append(self);
+    return s.toString();
+  }
+
   public static String justl(String self, long width)
   {
     return padr(self, width, ' ');
