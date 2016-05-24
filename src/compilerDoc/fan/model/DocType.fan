@@ -27,6 +27,7 @@ const class DocType : Doc
     this.mixins  = attrs.mixins
     this.slotMap = slotMap
     this.isErr   = base.find {it.qname=="sys::Err"} != null
+    this.isNoDoc = hasFacet("sys::NoDoc")
 
     // create sorted list
     list := slotMap.vals.sort|a, b| { a.name <=> b.name }
@@ -35,7 +36,7 @@ const class DocType : Doc
     // but leave them in the map for lookup
     list = list.exclude |s|
     {
-      s.hasFacet("sys::NoDoc")     ||
+      s.isNoDoc ||
       DocFlags.isInternal(s.flags) ||
       DocFlags.isPrivate(s.flags)  ||
       DocFlags.isSynthetic(s.flags)
@@ -69,6 +70,9 @@ const class DocType : Doc
 
   ** Return true
   override Bool isCode() { true}
+
+  ** Return true if annotated as NoDoc
+  const Bool isNoDoc
 
   ** Source code location of this type definition
   const DocLoc loc

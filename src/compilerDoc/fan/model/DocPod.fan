@@ -336,7 +336,7 @@ internal class DocPodLoader
     // but leave them in the map for lookup
     list = list.exclude |t|
     {
-      t.hasFacet("sys::NoDoc")     ||
+      t.isNoDoc ||
       DocFlags.isInternal(t.flags) ||
       DocFlags.isSynthetic(t.flags)
     }

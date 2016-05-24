@@ -14,13 +14,14 @@ abstract const class DocSlot
   ** Constructor
   internal new make(DocAttrs attrs, DocTypeRef parent, Str name)
   {
-    this.loc    = attrs.loc
-    this.parent = parent
-    this.name   = name
-    this.qname  = parent.qname + "." + name
-    this.flags  = attrs.flags
-    this.doc    = attrs.doc
-    this.facets = attrs.facets
+    this.loc     = attrs.loc
+    this.parent  = parent
+    this.name    = name
+    this.qname   = parent.qname + "." + name
+    this.flags   = attrs.flags
+    this.doc     = attrs.doc
+    this.facets  = attrs.facets
+    this.isNoDoc = hasFacet("sys::NoDoc")
   }
 
   ** Source code location of this slot
@@ -58,6 +59,9 @@ abstract const class DocSlot
 
   ** Return if given facet is defined on slot
   Bool hasFacet(Str qname) { facets.any |f| { f.type.qname == qname } }
+
+  ** Return true if annotated as NoDoc
+  const Bool isNoDoc
 }
 
 **************************************************************************
