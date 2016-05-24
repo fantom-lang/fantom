@@ -724,7 +724,7 @@ class ExprTest : CompilerTest
         static Obj n(Str x) { return x++ }
         static Obj o(Str x) { return --x }
         static Obj q(Str x) { return x / 3 }
-        static Obj r(Str x) { return x *= 3 }
+        static Obj r(Str x) { return x -= 3 }
         static Obj s(Str x) { return x?.foo }
         static Obj t(Str x) { return x?.foo() }
         static Obj u() { return Str#bad }
@@ -748,7 +748,7 @@ class ExprTest : CompilerTest
        16, 32, "Unknown method 'sys::Str.increment'",
        17, 32, "Unknown method 'sys::Str.decrement'",
        18, 32, "No operator method found: sys::Str / sys::Int",
-       19, 32, "No operator method found: sys::Str * sys::Int",
+       19, 32, "No operator method found: sys::Str - sys::Int",
        20, 35, "Unknown slot 'sys::Str.foo'",
        21, 35, "Unknown method 'sys::Str.foo'",
        22, 27, "Unknown slot literal 'sys::Str.bad'",
