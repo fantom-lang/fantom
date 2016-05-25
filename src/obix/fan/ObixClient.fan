@@ -21,13 +21,20 @@ class ObixClient
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Construct with lobby URI and authentication credentials.
+  ** Construct to use Basic Authentication
   **
-  new make(Uri lobby, Str username, Str password)
+  static new makeBasicAuth(Uri lobby, Str username, Str password)
+  {
+    make(lobby, ["Authorization": "Basic " + "$username:$password".toBuf.toBase64])
+  }
+
+  **
+  ** Construct with given headers to use for authentication
+  **
+  new make(Uri lobby, Str:Str authHeaders)
   {
     this.lobbyUri = lobby.plusSlash
-    this.username = username
-    this.authHeader = "Basic " + "$username:$password".toBuf.toBase64
+    this.authHeaders = authHeaders
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,12 +45,6 @@ class ObixClient
   ** Uri of the lobby object
   **
   const Uri lobbyUri
-
-  **
-  ** Username to use for authentication, or null if not
-  ** using authentication.
-  **
-  const Str username
 
   **
   ** About object relative URI - either set manually or via `readLobby`.
@@ -172,7 +173,7 @@ class ObixClient
     c.reqMethod = method
     c.followRedirects = false
     c.socketOptions.receiveTimeout = this.receiveTimeout
-    c.reqHeaders["Authorization"] = authHeader
+    c.reqHeaders.setAll(authHeaders)
     c.cookies = cookies
     if (in != null) c.reqHeaders["Content-Type"]  = "text/xml; charset=utf-8"
 
@@ -212,7 +213,7 @@ class ObixClient
 
   private ObixObj readResObj(WebClient c, InStream in)
   {
-    if (c.resCode != 200) throw IOErr("Bad HTTP response: $c.resCode $c.reqUri")
+    if (c.resCode != 200) throw IOErr("Bad HTTP response: $c.resCode $c.resPhrase [$c.reqUri]")
     cookies = c.cookies
     obj := ObixObj.readXml(in)
     if (obj.elemName == "err") throw ObixErr(obj)
@@ -278,7 +279,7 @@ class ObixClient
   @NoDoc Log log := Log.get("obix")
   @NoDoc Duration receiveTimeout := 1min
 
-  private Str authHeader
+  private Str:Str authHeaders
   private Uri? watchServiceMakeUri
   private Cookie[] cookies := Cookie#.emptyList
 }
