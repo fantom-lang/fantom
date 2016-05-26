@@ -75,6 +75,9 @@ const class DocPod : DocSpace
   ** List of the public, documented types in this pod.
   const DocType[] types
 
+  ** Get all types (public, internal, nodoc, etc)
+  DocType[] allTypes() { typeMap.vals }
+
   ** Get the build timestamp or null if not available
   DateTime? ts() { DateTime.fromStr((meta["build.ts"] ?: meta["build.time"]) ?: "", false) }
 
