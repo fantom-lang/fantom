@@ -183,6 +183,17 @@ public class JavaType
     java.lang.reflect.Field[] jfields = toClass().getFields();
     java.lang.reflect.Method[] jmethods = toClass().getMethods();
 
+    // set all the Java members accessible for reflection
+    try
+    {
+      for (int i=0; i<jfields.length; ++i) jfields[i].setAccessible(true);
+      for (int i=0; i<jmethods.length; ++i) jmethods[i].setAccessible(true);
+    }
+    catch (Exception e)
+    {
+      System.out.println("ERROR: " + this + ".initSlots setAccessible: " + e);
+    }
+
     // allocate Fantom reflection structurs
     List slots = new List(Sys.SlotType, jfields.length+jmethods.length+4);
     List fields = new List(Sys.FieldType, jfields.length);
