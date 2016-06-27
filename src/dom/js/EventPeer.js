@@ -53,6 +53,8 @@ fan.dom.EventPeer.prototype.stop = function(self)
 {
   this.event.preventDefault();
   this.event.stopPropagation();
+  this.event.cancelBubble = true;
+  this.event.returnValue = false;
 }
 
 fan.dom.EventPeer.prototype.dataTransfer = function(self)
