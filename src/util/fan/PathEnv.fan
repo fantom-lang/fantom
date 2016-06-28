@@ -6,6 +6,8 @@
 //  31 Jan 10  Brian Frank  Creation
 //
 
+using concurrent
+
 **
 ** PathEnv is a simple implementation of a Fantom
 ** environment which uses a search path to resolve files.
@@ -19,10 +21,11 @@ const class PathEnv : Env
   **
   new make() : super(Env.cur)
   {
-    this.vars = super.vars
-    this.path = parsePath(super.vars["FAN_ENV_PATH"] ?: "")
-    this.workDir = path.first
-    this.tempDir = workDir + `temp/`
+    vars := super.vars
+    path := parsePath(vars["FAN_ENV_PATH"] ?: "")
+
+    this.vars = vars
+    this.pathRef = AtomicRef(path.toImmutable)
   }
 
   **
@@ -39,10 +42,11 @@ const class PathEnv : Env
       if (n.startsWith("env.") && n.size > 5) vars[n[4..-1]] = v
     }
 
+    path := parsePath(props["path"] ?: "")
+    doAdd(path, file.parent.normalize, 0)
+
     this.vars = vars
-    this.path = parsePath(props["path"] ?: "").insert(0, file.parent.normalize)
-    this.workDir = path.first
-    this.tempDir = workDir + `temp/`
+    this.pathRef = AtomicRef(path.toImmutable)
   }
 
   private File[] parsePath(Str path)
@@ -57,11 +61,12 @@ const class PathEnv : Env
         if (!dir.exists) dir = File(item.toUri.plusSlash, false).normalize
         if (!dir.exists) { log.warn("Dir not found: $dir"); return }
         if (!dir.isDir) { log.warn("Not a dir: $dir"); return }
-        acc.add(dir)
+        doAdd(acc, dir)
+
       }
     }
     catch (Err e) log.err("Cannot parse path: $path", e)
-    acc.add(Env.cur.homeDir)
+    doAdd(acc, Env.cur.homeDir )
     return acc
   }
 
@@ -69,17 +74,41 @@ const class PathEnv : Env
   ** Search path of directories in priority order.  The
   ** last item in the path is always the `sys::Env.homeDir`
   **
-  const File[] path
+  File[] path() { pathRef.val }
+  private const AtomicRef pathRef
 
   **
   ** Working directory is always first item in `path`.
   **
-  override const File workDir
+  override File workDir() { path.first }
 
   **
   ** Temp directory is always under `workDir`.
   **
-  override const File tempDir
+  override File tempDir() { workDir + `temp/` }
+
+  **
+  ** Add given directory to the front of the path which
+  ** will update both the workDir and tempDir
+  **
+  @NoDoc Void addToPath(File dir)
+  {
+    dir = dir.normalize
+    pathRef.val = doAdd(path.dup, dir, 0).toImmutable
+  }
+
+  **
+  ** Add a directory to the path only if its not already mapped
+  **
+  private static File[] doAdd(File[] path, File dir, Int insertIndex := -1)
+  {
+    if (!path.contains(dir))
+    {
+      if (insertIndex < 0) path.add(dir)
+      else path.insert(insertIndex, dir)
+    }
+    return path
+  }
 
   **
   ** Get the environment variables as a case insensitive, immutable
