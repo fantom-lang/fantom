@@ -7,16 +7,16 @@
 //
 
 **
-** Dim models a CSS dimension which is a number with a unit attached.
+** CssDim models a CSS dimension which is a number with a unit attached.
 **
 @NoDoc @Js
 @Serializable { simple = true }
-const class Dim
+const class CssDim
 {
   ** Default instance is 0px.
-  const static Dim defVal := Dim(0, "px")
+  const static CssDim defVal := CssDim(0, "px")
 
-  ** Create a new Dim with given value and unit.
+  ** Create a new CssDim with given value and unit.
   new make(Num val, Str unit)
   {
     this.val  = val
@@ -46,7 +46,7 @@ const class Dim
     }
     catch (Err err)
     {
-      if (checked) throw ParseErr("Invalid Dim: $s", err)
+      if (checked) throw ParseErr("Invalid CssDim: $s", err)
       return null
     }
   }
@@ -54,10 +54,10 @@ const class Dim
   ** Hash is 'toStr.hash'.
   override Int hash() { toStr.hash }
 
-  ** Return if obj is same Dim value.
+  ** Return if obj is same CssDim value.
   override Bool equals(Obj? obj)
   {
-    that := obj as Dim
+    that := obj as CssDim
     if (that == null) return false
     return this.val == that.val && this.unit == that.unit
   }
