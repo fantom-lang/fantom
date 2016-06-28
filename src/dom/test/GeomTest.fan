@@ -12,6 +12,28 @@
 @Js
 class GeomTest : Test
 {
+  Void testDim()
+  {
+    verifyEq(Dim#.make,  Dim(0, "px"))
+    verifyEq(Dim.defVal, Dim(0, "px"))
+    verifyEq(Dim.defVal, Dim("0px"))
+    verifyEq(Dim.defVal.toStr, "0px")
+
+    verifyDim(Dim("-1em"),         -1, "em")
+    verifyDim(Dim(100, "px"),     100, "px")
+    verifyDim(Dim(1.25f, "%"),  1.25f, "%")
+    verifyDim(Dim("-10.1vw"),  -10.1f, "vw")
+
+    verifyErr(ParseErr#) { d := Dim.fromStr("100") }
+    verifyErr(ParseErr#) { d := Dim.fromStr("abc") }
+    verifyErr(ParseErr#) { d := Dim.fromStr("100 %") }
+    verifyErr(ParseErr#) { d := Dim.fromStr("-100 px") }
+
+    verifySer(Dim(5, "px"))
+    verifySer(Dim(-5, "px"))
+    verifySer(Dim(1.25f, "%"))
+    verifySer(Dim(-5.001f, "em"))
+  }
 
   Void testPos()
   {
@@ -54,6 +76,12 @@ class GeomTest : Test
 
     verifySer(Size(0, 1))
     verifySer(Size(-99, -505))
+  }
+
+  Void verifyDim(Dim d, Num v, Str u)
+  {
+    verifyEq(d.val, v)
+    verifyEq(d.unit, u)
   }
 
   Void verifySer(Obj obj)
