@@ -367,10 +367,10 @@ public abstract class Env
   // TODO: temp hack to get PathEnv.path
   public String[] toDebugPath()
   {
-    Field f = typeof().field("path", false);
-    if (f == null) return null;
+    Method m = typeof().method("path", false);
+    if (m == null) return null;
 
-    List list = (List)f.get(this);
+    List list = (List)m.callOn(this, null);
     String[] result = new String[list.sz()];
     for (int i=0; i<list.sz(); ++i)
     {
