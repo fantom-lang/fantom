@@ -251,6 +251,7 @@ public class Pod
     if (name.equals("reloadList")) return reloadList();
     if (name.equals("reload")) return reload();
     if (name.equals("classLoader")) return classLoader;
+    if (name.equals("loadFile")) return loadFile();
     return super.trap(name, args);
   }
 
@@ -400,6 +401,18 @@ public class Pod
         filesMap.put(f.uri(), f);
       }
     }
+  }
+
+  public fan.sys.File loadFile()
+  {
+    if (loadFile == null)
+    {
+      if (fpod == null) return null;
+      java.io.File jfile = fpod.loadFile();
+      if (jfile == null) return null;
+      loadFile = new LocalFile(jfile).normalize();
+    }
+    return (fan.sys.File)loadFile;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -577,6 +590,7 @@ public class Pod
   ClassType[] types;
   HashMap typesByName;
   Class cls;
+  Object loadFile;
   List filesList;
   HashMap filesMap = new HashMap(11);
   Log log;

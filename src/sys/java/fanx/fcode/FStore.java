@@ -33,7 +33,7 @@ public abstract class FStore
     throws Exception
   {
     if (zipFile == null) throw new IllegalStateException();
-    return new ZipStore(new java.util.zip.ZipFile(zipFile));
+    return new ZipStore(zipFile, new java.util.zip.ZipFile(zipFile));
   }
 
   /**
@@ -50,6 +50,11 @@ public abstract class FStore
 //////////////////////////////////////////////////////////////////////////
 // File Access
 //////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Return a backing file
+   */
+  public abstract java.io.File loadFile();
 
   /**
    * Return a list to use for Pod.files()
@@ -115,7 +120,13 @@ public abstract class FStore
 
   static class ZipStore extends FStore
   {
-    ZipStore(java.util.zip.ZipFile zipFile) { this.zipFile = zipFile; }
+    ZipStore(java.io.File loadFile, java.util.zip.ZipFile zipFile)
+    {
+      this.loadFile = loadFile;
+      this.zipFile  = zipFile;
+    }
+
+    public java.io.File loadFile() { return loadFile; }
 
     public List podFiles(Uri podUri)
     {
@@ -177,6 +188,7 @@ public abstract class FStore
       zipFile.close();
     }
 
+    final java.io.File loadFile;
     final java.util.zip.ZipFile zipFile;
   }
 
@@ -187,6 +199,8 @@ public abstract class FStore
   static class JarDistStore extends FStore
   {
     JarDistStore(ClassLoader loader) { this.loader = loader; }
+
+    public java.io.File loadFile() { return null; }
 
     public boolean hasPod(String podName)
     {
