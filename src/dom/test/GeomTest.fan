@@ -24,6 +24,9 @@ class GeomTest : Test
     verifyCssDim(CssDim(1.25f, "%"),  1.25f, "%")
     verifyCssDim(CssDim("-10.1vw"),  -10.1f, "vw")
 
+    verifyCssDim(CssDim("auto"), 0, "auto")
+    verifyEq(CssDim("auto").toStr, "auto")
+
     verifyErr(ParseErr#) { d := CssDim.fromStr("100") }
     verifyErr(ParseErr#) { d := CssDim.fromStr("abc") }
     verifyErr(ParseErr#) { d := CssDim.fromStr("100 %") }

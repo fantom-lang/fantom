@@ -29,6 +29,7 @@ const class CssDim
   {
     try
     {
+      if (s == "auto") return autoVal
       n := StrBuf()
       f := false
       for (i:=0; i<s.size; i++)
@@ -63,11 +64,16 @@ const class CssDim
   }
 
   ** Return '"<val><unit>"'
-  override Str toStr() { "${val}$unit" }
+  override Str toStr()
+  {
+    this === autoVal ? "auto" : "${val}$unit"
+  }
 
   ** Value of dimension.
   const Num val
 
   ** Unit of dimension.
   const Str unit
+
+  private static const CssDim autoVal := CssDim(0, "auto")
 }
