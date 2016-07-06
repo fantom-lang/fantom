@@ -44,6 +44,7 @@ class Build : BuildGroup
       `gfx/build.fan`,
       `compilerDoc/build.fan`,
       `dom/build.fan`,
+      `domkit/build.fan`,
       `fwt/build.fan`,
       `webfwt/build.fan`,
       `icons/build.fan`,

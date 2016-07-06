@@ -23,6 +23,9 @@ syntax: regexp
 # general
 ^adm/pngcrush
 
+# domkit
+^src/domkit/res/css/
+
 # lib/
 ^lib/java/.*jar
 ^lib/javascript/

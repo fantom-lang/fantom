@@ -1,0 +1,11 @@
+//
+// Copyright (c) 2014, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   22 Dec 2014  Andy Frank  Creation
+//
+
+div.domkit-ScrollBox {
+  overflow: auto;
+}

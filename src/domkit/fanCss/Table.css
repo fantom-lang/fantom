@@ -1,0 +1,126 @@
+//
+// Copyright (c) 2015, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   22 Sep 2015  Andy Frank  Creation
+//
+div.domkit-Table {
+  position: relative;
+  background: #fff;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: default;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  box-sizing: border-box;
+}
+
+div.domkit-Table:focus {
+  outline: none;
+}
+
+div.domkit-Table-scrollbar {
+  position: absolute;
+  box-sizing: border-box;
+  background: transparent;
+  border: 0px solid transparent;
+  overflow: hidden;
+  -webkit-transition: background 200ms 1s, border-color 1s 1s;
+     -moz-transition: background 200ms 1s, border-color 1s 1s;
+          transition: background 200ms 1s, border-color 1s 1s;
+}
+
+div.domkit-Table-scrollbar > div {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  -webkit-transition: background 500ms 1s;
+     -moz-transition: background 500ms 1s;
+          transition: background 500ms 1s;
+}
+
+div.domkit-Table-scrollbar:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #ccc;
+  -webkit-transition: background 100ms, border-color 500ms;
+     -moz-transition: background 100ms, border-color 500ms;
+          transition: background 100ms, border-color 500ms;
+}
+
+div.domkit-Table-scrollbar.active > div,
+div.domkit-Table-scrollbar:hover > div {
+  background: #777;
+  -webkit-transition: background 250ms;
+     -moz-transition: background 250ms;
+          transition: background 250ms;
+}
+
+div.domkit-Table-thead {
+  /* required */
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+
+  /* style */
+  box-sizing: border-box;
+  background: #eee;
+  background: -webkit-linear-gradient(top, #f0f0f0, #e2e2e2);
+  background:    -moz-linear-gradient(top, #f0f0f0, #e2e2e2);
+  background:         linear-gradient(top, #f0f0f0, #e2e2e2);
+
+  border-bottom: 1px solid #999;
+}
+
+div.domkit-Table-header-sort:before {
+  content: "\25bc";
+  color: #999;
+  font-size: 10px;
+  float: right;
+}
+
+div.domkit-Table-header-sort.up:before {
+  -webkit-transform: rotate(180deg);
+     -moz-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+
+div.domkit-Table-tbody {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  overflow: hidden;
+}
+
+div.domkit-Table-header {
+  position: absolute;
+  box-sizing: border-box;
+  border-right: 1px solid #999;
+  padding: 0 4px;
+  font-size: 11px;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+div.domkit-Table-header.last { border-right: none; }
+
+div.domkit-Table-cell {
+  position: absolute;
+  box-sizing: border-box;
+  border-right: 1px solid #d9d9d9;
+  padding: 0 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+div.domkit-Table-cell.last { border-right: none; }
+
+div.domkit-Table-cell.odd  { background: #fff; }
+div.domkit-Table-cell.even { background: #f9f9f9; }

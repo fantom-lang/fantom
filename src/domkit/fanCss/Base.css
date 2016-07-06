@@ -1,0 +1,53 @@
+//
+// Copyright (c) 2014, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   19 Dec 2014  Andy Frank  Creation
+//
+
+html {
+  height: 100%;
+}
+
+body {
+  font: 14px Helvetica Neue;
+  line-height: 14px;
+  padding: 0;
+  margin: 0;
+  background: #fff;
+  overflow: hidden;
+  height: 100%;
+}
+
+a {
+  color: #2980b9;
+}
+
+.domkit-fill {
+  width: 100%;
+  height: 100%;
+}
+
+.domkit-border { border: 1px solid #bbb; }
+.domkit-border-top    { border-top:    1px solid #bbb; }
+.domkit-border-right  { border-right:  1px solid #bbb; }
+.domkit-border-bottom { border-bottom: 1px solid #bbb; }
+.domkit-border-left   { border-left:   1px solid #bbb; }
+
+.domkit-sel {
+  background-color: #dcdcdc !important;
+}
+
+:focus .domkit-sel {
+  background-color: #3498db !important;
+  color: #fff !important;
+}
+
+:focus .domkit-sel a {
+  color: #fff !important;
+}
+
+.domkit-font-mono {
+  font: 11px Menlo;
+}

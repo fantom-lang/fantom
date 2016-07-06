@@ -1,0 +1,22 @@
+//
+// Copyright (c) 2016, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   15 Mar 2016  Andy Frank  Creation
+//
+
+div.domkit-Sheet {
+  position: absolute;
+  overflow: hidden;
+  outline: none;
+}
+
+div.domkit-Sheet-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}

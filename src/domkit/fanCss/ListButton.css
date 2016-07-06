@@ -1,0 +1,59 @@
+//
+// Copyright (c) 2016, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   17 Feb 2016  Andy Frank  Creation
+//
+
+div.domkit-ListButton {
+  position: relative;
+  text-align: left;
+  padding-right: 20px;
+  overflow: hidden;
+}
+
+div.domkit-ListButton > div {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+div.domkit-ListButton:before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-bottom: 4px solid #555;
+}
+
+div.domkit-ListButton:after {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-top: 4px solid #555;
+}
+
+div.domkit-ListButton-MenuItem.domkit-MenuItem {
+  white-space: nowrap;
+  padding-left: 22px;
+}
+
+div.domkit-ListButton-MenuItem.domkit-MenuItem.sel {
+  padding-left: 6px;
+}
+
+div.domkit-ListButton-MenuItem.domkit-MenuItem.sel:before {
+  content: "\2713";
+  width: 16px;
+  float: left;
+}

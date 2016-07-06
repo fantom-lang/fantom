@@ -1,0 +1,53 @@
+//
+// Copyright (c) 2014, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   21 Dec 2014  Andy Frank  Creation
+//
+
+input.domkit-TextField {
+  box-sizing: border-box;
+  font: 11px Menlo;
+  padding: 4px;
+  margin: 0;
+  height: 23px;
+}
+
+input.domkit-TextField[disabled] {
+  opacity: 0.3;
+}
+
+input.domkit-TextField[readonly] {
+  background: #f8f8f8;
+}
+
+input.domkit-TextField:focus {
+  outline: none;
+  /*
+  box-shadow: 0 0 2px 2px #7baddc !important;
+  z-index: 2;
+  position: relative;  /* needed to make z-index work *-/
+  */
+}
+
+
+.domkit-nofocus input.domkit-TextField:focus,
+input.domkit-TextField.domkit-nofocus:focus {
+  /*box-shadow: none !important;*/
+}
+
+input.domkit-TextField.domkit-group-left {
+  margin-right: 0;
+}
+
+input.domkit-TextField.domkit-group-middle {
+  margin-left: 0;
+  margin-right: 0;
+  border-left: none;
+}
+
+input.domkit-TextField.domkit-group-right {
+  margin-left: 0;
+  border-left: none;
+}

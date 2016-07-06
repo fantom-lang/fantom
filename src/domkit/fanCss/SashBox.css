@@ -1,0 +1,17 @@
+//
+// Copyright (c) 2015, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   6 Jun 2015  Andy Frank  Creation
+//
+
+div.domkit-SashBox {
+  overflow: hidden;  /* required for dir=right */
+  position: relative;
+}
+
+div.domkit-SashBox-splitter {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.2);
+}

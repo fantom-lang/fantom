@@ -1,0 +1,52 @@
+//
+// Copyright (c) 2014, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   19 Dec 2014  Andy Frank  Creation
+//
+
+div.domkit-Dialog {
+  outline: none;
+}
+
+div.domkit-Dialog-frame {
+  background: #ececec;
+  border: 1px solid #aaa;
+  border-radius: 4px 4px 0 0 ;
+  box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.4);
+  max-width:  calc(100% - 24px);
+  max-height: calc(100% - 24px);
+}
+
+div.domkit-Dialog-title {
+  text-align: center;
+  height: 25px;
+  line-height: 25px;
+  border-bottom: 1px solid #aaa;
+  border-radius: 4px 4px 0 0;
+  background: -webkit-linear-gradient(top, #fff, #e8e8e8 1px, #d2d2d2);
+  background:    -moz-linear-gradient(top, #fff, #e8e8e8 1px, #d2d2d2);
+  background:         linear-gradient(top, #fff, #e8e8e8 1px, #d2d2d2);
+  cursor: default;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+div.domkit-Dialog-mask {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.25);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  display: flex;
+  display: -webkit-flex;
+          align-items: center;
+  -webkit-align-items: center;
+          justify-content: center;
+  -webkit-justify-content: center;
+}
