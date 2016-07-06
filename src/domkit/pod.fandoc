@@ -1,0 +1,296 @@
+**************************************************************************
+** title:      DomKit
+** author:     Andy Frank
+** created:    31 Mar 2015
+** copyright:  Copyright (c) 2014, Brian Frank and Andy Frank
+**************************************************************************
+
+Overview [#overview]
+********************
+DomKit is a DOM based UI toolkit.
+
+Layout [#layout]
+****************
+DomKit leverages the standard browser layout engine.  So anything you might do
+in a HTML page will translate to DomKit. However, since DomKit is specifically
+targeted at building rich user interfaces, it does include some standard
+widgets to simplify constructing common UI designs.
+
+Box [#box]
+==========
+`Box` is the base class for Elems who are intended to layout out their
+children in a specific way.  `Box` defaults several CSS properties to simplify
+composition:
+
+   display: block;
+   box-sizing: border-box;
+   width: 100%;
+   height: 100%;
+   position: relative;
+
+GridBox [#gridBox]
+==================
+
+TODO
+
+SashBox [#sashBox]
+==================
+`SashBox` divides a container size in one direction with flexible child sizes:
+
+  SashBox
+  {
+    it.sizes = ["25px, "100%", "50px"]
+    Elem { ... },
+    Elem { ... },
+    Elem { ... },
+  }
+
+Fixed 'px' sizes can be mixed with '%' sizes to divide space. By default
+children are laid out left to right.  To layout to to bottom, configure
+the `SashBox.dir` field:
+
+  SashBox
+  {
+    it.dir = Dir.down
+    it.sizes = ["100px", "100%"]
+    Elem { ... },
+    Elem { ... },
+  }
+
+AccordionBox [#accordionBox]
+============================
+TODO
+
+FlexBox [#flexbox]
+==================
+`FlexBox` lays out children based on the CSS Flexbox layout model.  Flexbox
+can be a little overwhelming to wrap your head around. A great tutorial that
+manages to explain it can be found here:
+
+`https://css-tricks.com/snippets/css/a-guide-to-flexbox/`
+
+In practice, only a subset of the flex model is used in domkit, and should be
+contained to "micro-layouts" for best results. The most common use case is to
+layout toolbars, such that items are centered vertically and to
+left/center/right align items.
+
+This example creates a toolbar with several buttons left-aligned:
+
+  FlexBox
+  {
+    it.flex = ["1 1 auto"]
+    GridBox {
+      it.colGaps = "4px"
+      Button { ... },
+      Button { ... },
+      Button { ... },
+    },
+  }
+
+To add another button that is right-aligned to the toolbar:
+
+  FlexBox
+  {
+    it.flex = ["1 1 auto", "0 0 auto"]
+    GridBox { ... },
+    Button { ... },
+  }
+
+The 'flex' argument specifies how the parents size should be distributed to its
+children.  There should be a flex entry for each child. The "0 0 auto" entry
+indicates this child should be given its preferred width, and should not grow
+or shrink as the parent size changes. The "1 1 auto" argument indicates that
+first our child should be laid out with its preferred size, and then any left
+over space should be allocated as well.  This in effect pushes the second child
+to be right aligned in the container.
+
+Widgets [#widgets]
+******************
+
+Button [#button]
+================
+`Button` is a widget that invokes an action when pressed.
+
+  Button
+  {
+    it.text = "Press me"
+    it.onAction { echo("Pressed!") }
+  }
+
+  Button
+  {
+    onAction { echo("Pressed!") }
+    Elem("b") { it.text="Really Press me!" },
+  }
+
+ToggleButton [#toggleButton]
+============================
+`ToggleButton` models a boolean state toggled by pressing a button:
+
+  ToggleButton
+  {
+    it.text = "Toggle Me"
+    it.onAction |b| { echo("state: $b.selected") }
+  }
+
+The content may be modified based on selected state by specifying
+[elemOn]`ToggleButton.elemOn` and [elemOff]`ToggleButton.elemOff`:
+
+  ToggleButton
+  {
+    it.elemOn  = Elem { it.text="On" }
+    it.elemOff = Elem { it.text="Off" }
+    it.selected = false   // make sure to set default state last
+  }
+
+You may also pass any object to 'elemOn' and 'elemOff' and the Elem
+instance will be created using 'Obj.toStr':
+
+  ToggleButton
+  {
+    it.elemOn  = "On"
+    it.elemOff = "Off"
+  }
+
+ListButton [#listButton]
+============================
+`ListButton` allows user selection of a list item by showing a listbox popup
+when a button is pressed:
+
+  ListButton
+  {
+    it.items = ["Alpha", "Beta", "Gamma"]
+    it.onSelect |b| { echo("Selected $b.sel.item") }
+  }
+
+By default `ListButton` will display items using 'toStr'.  To customize how
+the display element is is created, use [onElem]`ListButton.onElem`:
+
+  ListButton
+  {
+    it.items = [1,2,3,4]
+    it.onElem |v| { "Item #$v" }
+  }
+
+Combo [#combo]
+============================
+`Combo` combines a TextField and ListButton into a single widget that allows a
+user to select from a list or manually enter a value.  The internal `TextField`
+component is available with `Combo.field`.  In practice you will interact with
+Combo the same as `TextField`, so `Combo.field` is the right place to register
+event callbacks such as 'onModify' and 'onAction'.
+
+  Combo
+  {
+    it.items = ["Alpha, "Beta", "Gamma"]
+    it.field.onAction |f| { echo("value: $f.val") }
+  }
+
+Checkbox [#checkbox]
+====================
+`Checkbox` displays a checkbox that can be toggled on and off.
+
+  Checkbox {}
+  Checkbox { it.checked = true }
+
+On its own, only the actual checkbox is displayed.  Generally its desirable
+to display a text label attached to the checkbox.  You can extend the click
+target area to this label using the [wrap]`Checkbox.wrap` method:
+
+  Checkbox {}.wrap("You can click here too!")
+
+To receive callbacks when the state changes, add an
+[onAction]`Checkbox.onAction` event handler:
+
+  Checkbox
+  {
+    it.onAction |c| { echo("checked: $c.checked") }
+  }
+
+RadioButton [#radio]
+====================
+
+TODO
+
+Groups [#groups]
+================
+Some widgets can be combined to create a seamless group by using a a `FlowBox`
+with a '-1px' gap spacing:
+
+  FlowBox
+  {
+    it.gaps = ["-1px"]
+    Button { ... }
+    Button { ... }
+    Button { ... }
+  }
+
+These are the supported widgets for group spacing:
+
+ - `Button`, `ListButton`, `ToggleButton`
+ - `TextField`
+
+TODO: doc domkit-group CSS class
+
+Dialog [#dialog]
+****************
+`Dialog` opens a modal window above page content.
+
+  d := Dialog
+  {
+    it.title = "Hello"
+    Box
+    {
+      it.style->padding = "12px"
+      it.text = "Hello, World"
+    },
+  }
+  d.buttons = [
+    Button { it.text="Close"; onAction { d.close }}
+  }
+  d.open
+
+To modify the default size of dialog, override the 'width' and
+'height' styles:
+
+  Dialog
+  {
+   it.style->width  = "600px"
+   it.style->height = "400px"
+   it.title = "Hello"
+   Box { ... },
+  }
+
+Drag and Drop [#dnd]
+********************
+Any [Elem]`dom::Elem` can be converted into a drag target using `DragTarget`:
+
+  Box
+  {
+    it.text = "Drag me"
+    DragTarget.bind(it)
+    {
+      // get the data payload when a drag event starts
+      it.onDrag { "Hi :)" }
+    }
+  }
+
+Likewise any Elem can be converted into a drop target using `DropTarget`:
+
+  Box
+  {
+    it.text = "Drop on me"
+    DropTarget.bind(it)
+    {
+      it.onDrop |data| { echo("# drop: $data") }
+    }
+  }
+
+You may specify if the given drag data is able to be dropped on a
+DropTarget using [canDrop]`DropTarget.canDrop`:
+
+  DropTarget.bind(elem)
+  {
+    it.canDrop |data| { data == "foo" }
+    it.onDrop  |data| { echo("# drop: $data") }
+  }

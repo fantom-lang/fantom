@@ -1,0 +1,23 @@
+//
+// Copyright (c) 2015, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   13 May 2015  Andy Frank  Creation
+//
+
+div.domkit-Menu {
+  background: #fff !important;
+  border-radius: 5px;
+  overflow: auto;
+  outline: none;
+}
+
+div.domkit-MenuItem {
+  padding: 4px 20px 4px 10px;
+  min-width: 100px;
+  cursor: default;
+}
+
+div.domkit-MenuItem:first-child { border-radius: 4px 4px 0 0; }
+div.domkit-MenuItem:last-child  { border-radius: 0 0 4px 4px; }

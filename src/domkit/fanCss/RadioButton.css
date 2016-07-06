@@ -1,0 +1,22 @@
+//
+// Copyright (c) 2015, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   8 Sep 2015  Andy Frank  Creation
+//
+
+input.domkit-RadioButton {
+}
+
+span.domkit-RadioButton-label {
+  padding-left: 4px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+input.domkit-RadioButton[disabled] + span.domkit-RadioButton-label {
+  opacity: 0.3;
+}

@@ -1,0 +1,51 @@
+//
+// Copyright (c) 2015, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   5 Jun 2015  Andy Frank  Creation
+//
+
+div.domkit-Tree {
+  overflow: auto;
+  background: #fff;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+div.domkit-Tree:focus {
+  outline: none;
+}
+
+div.domkit-Tree-node {
+  cursor: default;
+  white-space: nowrap;
+  padding: 0px 4px;
+  height: 20px;
+  line-height: 20px;
+}
+
+div.domkit-Tree-node-expander {
+  float: left;
+  font-size: 80%;
+  width: 16px;
+  height: 20px;
+  line-height: 19px;
+  box-sizing: border-box;
+  padding-left: 5px;
+  color: #888;
+}
+
+:focus div.domkit-sel div.domkit-Tree-node-expander { color: #fff }
+
+div.domkit-Tree-node-block.expanded > div.domkit-Tree-node div.domkit-Tree-node-expander {
+  -webkit-transform: rotate(90deg);
+  padding-left: 4px;
+}
+
+div.domkit-Tree-node div:nth-child(2) {
+  display: inline-block;
+  width: calc(100% - 20px);
+}

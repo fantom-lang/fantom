@@ -1,0 +1,33 @@
+//
+// Copyright (c) 2014, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   21 Dec 2014  Andy Frank  Creation
+//
+
+textarea.domkit-TextArea {
+  box-sizing: border-box;
+  font: 11px Menlo;
+  padding: 4px;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+textarea.domkit-TextArea[disabled] {
+  opacity: 0.3;
+}
+
+textarea.domkit-TextArea[readonly] {
+  background: #f8f8f8;
+}
+
+textarea.domkit-TextArea:focus {
+  outline: none;
+  /*
+  box-shadow: 0 0 2px 2px #7baddc !important;
+  z-index: 2;
+  position: relative;  /* needed to make z-index work *-/
+  */
+}
