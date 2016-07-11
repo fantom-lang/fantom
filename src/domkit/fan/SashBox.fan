@@ -76,11 +76,13 @@ using dom
         css = "calc($d.toStr - ${per.toInt}px)"
       }
 
+      if (kid isnot FlexBox)
+        kid.style->display = "block"
+
       vert := dir == Dir.down
-      kid.style["display"] = "block"
-      kid.style["float"]   = vert ? "none" : "left"
-      kid.style["width"]   = vert ? "100%" : css
-      kid.style["height"]  = vert ? css : "100%"
+      kid.style->float  = vert ? "none" : "left"
+      kid.style->width  = vert ? "100%" : css
+      kid.style->height = vert ? css : "100%"
     }
   }
 
