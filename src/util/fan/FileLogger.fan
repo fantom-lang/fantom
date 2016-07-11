@@ -140,11 +140,22 @@ internal class FileLoggerState
 
   OutStream open(File curFile)
   {
-    this.curOut = curFile.out(true)
+    try
+    {
+      this.curOut = curFile.out(true)
+    }
+    catch (Err e)
+    {
+      echo("ERROR: Cannot open log file: $curFile")
+      e.trace
+      this.curOut =  NilOutStream()
+    }
+
     try
       logger.onOpen?.call(this.curOut)
     catch (Err e)
       curOut.printLine("ERROR: FileLogger.onOpen\n${e.traceToStr}")
+
     return this.curOut
   }
 
@@ -154,4 +165,15 @@ internal class FileLoggerState
   Str? pattern
   Str curPattern := ""
   OutStream? curOut
+}
+
+internal class NilOutStream : OutStream
+{
+  new make() : super(null) {}
+  override This write(Int byte) { this }
+  override This writeBuf(Buf buf, Int n := buf.remaining) { this }
+  override This flush()  { this }
+  override This sync() { this }
+  override Bool close() { true }
+
 }
