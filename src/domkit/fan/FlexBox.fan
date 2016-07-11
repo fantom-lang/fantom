@@ -100,8 +100,8 @@ using dom
       if (f != null) kid.style->flex = f
       if (kid is Box)
       {
-        if (dir == "row" && kid.style->width == null) kid.style->width  = "auto"
-        else if (dir == "column" && kid.style->height == null) kid.style->height = "auto"
+        if (dir == "row" && kid.style.effective("width") == "100%") kid.style->width  = "auto"
+        else if (dir == "column" && kid.style.effective("height") == "100%") kid.style->height = "auto"
       }
     }
   }
