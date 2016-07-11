@@ -51,6 +51,11 @@
   ** Get the computed property value.
   native Obj? computed(Str name)
 
+  ** Get the effetive style property value, which is the most
+  ** specific style or CSS rule in effect on this node. Returns
+  ** 'null' if no rule in effect for given property.
+  native Obj? effective(Str name)
+
   ** Get the given property value.
   **   color := style["color"]
   @Operator native Obj? get(Str name)
