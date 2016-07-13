@@ -81,7 +81,7 @@ fan.dom.StylePeer.prototype.effective = function(self, name)
 
   // inline style rule always wins
   var val = this.get(self, name);
-  if (val != null) return val;
+  if (val != null && val != "") return val;
 
   // else walk sheets
   var matches = [];
@@ -101,7 +101,7 @@ fan.dom.StylePeer.prototype.effective = function(self, name)
   for (var m=matches.length-1; m>=0; m--)
   {
     val = matches[m].style.getPropertyValue(name);
-    if (val != null) return val;
+    if (val != null && val != "") return val;
   }
 
   return null;
