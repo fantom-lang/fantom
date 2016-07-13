@@ -65,6 +65,11 @@ using dom
   ** Callback to create Popup to display when button is pressed.
   Void onPopup(|Button->Popup| f) { this.cbPopup = f }
 
+// TODO: how should this work?
+// TODO: something like onLazyPopup work better?
+  ** Remove existing popup callback.
+  @NoDoc Void removeOnPopup() { this.cbPopup = null }
+
   ** Programmatically open popup, or do nothing if no popup defined.
   Void openPopup()
   {
