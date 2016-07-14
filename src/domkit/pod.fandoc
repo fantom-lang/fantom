@@ -30,8 +30,31 @@ composition:
 
 GridBox [#gridBox]
 ==================
+`GridBox` lays out children in a table format with a fixed number of columns
+and rows. The `GridBox.cellStyle` command may be used to stylize groups of
+cells:
 
-TODO
+  GridBox
+  {
+    it.cellStyle("all", "all", "padding: 4px")
+    it.cellStyle("all", "odd", "background: #eee")
+    it.cellStyle("all",     3, "border-top: 1px solid #ddd")
+
+    it.addRow([Label { it.text="First Name:" }, TextField { ... }])
+    it.addRow([Label { it.text="Last Name:"  }, TextField { ... }])
+    it.addRow([null], [2]) // colspan=3
+    it.addRow([null, Button { it.text="Submit" }])
+  }
+
+By default `GridBox` will use preferred sizes for all child cells.  This will
+often times leave free space around the GridBox.  To adjust how the GridBox is
+positioned in this space use `GridBox.align`:
+
+  GridBox
+  {
+    it.align = "center"
+    ...
+  }
 
 SashBox [#sashBox]
 ==================
