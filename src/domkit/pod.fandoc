@@ -215,6 +215,13 @@ to be right aligned in the container.
 Widgets [#widgets]
 ******************
 
+Label [#label]
+==============
+`Label` simply displays text content.  Labels are designed to naturally align
+vertically with control widgets like `Button`:
+
+  Label { it.text="My Label" }
+
 Button [#button]
 ================
 `Button` is a widget that invokes an action when pressed.
@@ -338,10 +345,21 @@ These are the supported widgets for group spacing:
  - `Button`, `ListButton`, `ToggleButton`
  - `TextField`
 
-TODO: doc domkit-group CSS class
+TODO: doc domkit-group CSS classs
+
+Table [#table]
+==============
+TODO
+
+Tree [#tree]
+============
+TODO
+
+Modals [#modals]
+****************
 
 Dialog [#dialog]
-****************
+================
 `Dialog` opens a modal window above page content.
 
   d := Dialog
@@ -368,6 +386,17 @@ To modify the default size of dialog, override the 'width' and
    it.title = "Hello"
    Box { ... },
   }
+
+Popup [#popup]
+================
+`Popup` opens a popup window above page content.  The popup is dismissed by
+clicking anywhere outside of the popup, or by pressing the 'Esc' key:
+
+  p := Popup
+  {
+    Elem {... },
+  }
+  p.open(100, 100)
 
 Drag and Drop [#dnd]
 ********************

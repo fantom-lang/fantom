@@ -9,7 +9,9 @@
 using dom
 
 **
-** Simple text based element
+** Simple text based element.
+**
+** See also: [pod doc]`pod-doc#label`
 **
 @Js class Label : Elem
 {

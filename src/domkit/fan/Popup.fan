@@ -10,7 +10,9 @@ using concurrent
 using dom
 
 **
-** Popup window which can be closed clicking outside of element
+** Popup window which can be closed clicking outside of element.
+**
+** See also: [pod doc]`pod-doc#popup`
 **
 @Js class Popup : Elem
 {
