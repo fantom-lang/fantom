@@ -12,6 +12,8 @@ using dom
 ** AccordionBox displays collapsible content panels for presenting
 ** information in a limited amount of vertical space.
 **
+** See also: [pod doc]`pod-doc#accordionBox`
+**
 @Js class AccordionBox : Box
 {
   new make() : super()

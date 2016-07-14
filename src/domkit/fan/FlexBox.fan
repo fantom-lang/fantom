@@ -13,6 +13,8 @@ using dom
 ** primarily lays out items along a single axis (the main axis).  Alignment can
 ** also be specified for the opposite axis (the cross axis).
 **
+** See also: [pod doc]`pod-doc#flexBox`
+**
 @Js class FlexBox : Box
 {
   new make() : super()
