@@ -6,11 +6,13 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.69 (working)*
+*Build 1.0.69 (14 Jul 2016)*
+- Initial domkit code
 - dom: Doc.onEvent, removeEvent
 - Buf.toFile to create in-memory "files"
 - Str.mult
-- Initial domkit code
+- #2528: FAN_HOME and fanlaunch.bat
+- #2536: NPE when compiling scripts
 
 *Build 1.0.68 (6 Apr 2015)*
 - Windows replace exe launchers with batch scripts
