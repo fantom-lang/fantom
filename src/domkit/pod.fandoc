@@ -57,6 +57,17 @@ the `SashBox.dir` field:
     Elem { ... },
   }
 
+By default, sashes are fixed, but you can enable resizing by setting the
+`SashBox.resizable` field:
+
+  SashBox
+  {
+    it.sizes = ["40%", "60%"]
+    it.resizable = true
+    Elem { ... },
+    Elem { ... },
+  }
+
 AccordionBox [#accordionBox]
 ============================
 TODO
