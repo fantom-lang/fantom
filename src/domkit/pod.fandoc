@@ -139,6 +139,23 @@ gap is the space between 'index' and 'index+1' children:
     ...  // 4px gap between all children
   }
 
+CardBox [#cardBox]
+==================
+CardBox lays out child elements as a stack of cards, where only one card may be
+visible at a time:
+
+  CardBox
+  {
+    Elem { ... },
+    Elem { ... },
+    Elem { ... },
+    Elem { ... },
+  }
+
+The visible card is changed using `CardBox.selectedIndex`:
+
+  cardBox.selectedIndex = 2
+
 AccordionBox [#accordionBox]
 ============================
 `AccordionBox` displays collapsible content panels with a header element for
@@ -385,3 +402,7 @@ DropTarget using [canDrop]`DropTarget.canDrop`:
     it.canDrop |data| { data == "foo" }
     it.onDrop  |data| { echo("# drop: $data") }
   }
+
+DomListener [#domListener]
+**************************
+TODO
