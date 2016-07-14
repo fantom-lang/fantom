@@ -322,9 +322,24 @@ To receive callbacks when the state changes, add an
     it.onAction |c| { echo("checked: $c.checked") }
   }
 
+Menu [#menu]
+============
+TODO
+
+ProgressBar [#progressBar]
+==========================
+TODO
+
 RadioButton [#radio]
 ====================
+TODO
 
+TextField [#textField]
+======================
+TODO
+
+TextArea [#textArea]
+====================
 TODO
 
 Groups [#groups]
