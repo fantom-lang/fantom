@@ -42,7 +42,7 @@ cells:
 
     it.addRow([Label { it.text="First Name:" }, TextField { ... }])
     it.addRow([Label { it.text="Last Name:"  }, TextField { ... }])
-    it.addRow([null], [2]) // colspan=3
+    it.addRow([null], [2]) // colspan=2
     it.addRow([null, Button { it.text="Submit" }])
   }
 
@@ -89,6 +89,54 @@ By default, sashes are fixed, but you can enable resizing by setting the
     it.resizable = true
     Elem { ... },
     Elem { ... },
+  }
+
+FlowBox [#flowBox]
+==================
+`FlowBox` lays out child nodes in a single direction:
+
+  FlowBox
+  {
+    Button { ... },
+    Button { ... },
+    Button { ... },
+  }
+
+The alignment of children inside a FlowBox can be adjusted using
+`FlowBox.halign`:
+
+  FlowBox
+  {
+    it.halign = Align.center
+    ...
+  }
+
+The spacing between each child can be configured use `FlowBox.gaps`, where each
+gap is the space between 'index' and 'index+1' children:
+
+  FlowBox
+  {
+    it.gaps = ["4px", "10px"]
+    Button { ... },  // 4px gap
+    Button { ... },  // 10px gap
+    Button { ... },
+  }
+
+`FlowBox.gaps` will be cycled if < children:
+
+  FlowBox
+  {
+    it.gaps = ["4px", "1px"]
+    Button { ... },   // 4px gap
+    Button { ... },   // 1px gap
+    Button { ... },   // 4px gap
+    Button { ... },
+  }
+
+  FlowBox
+  {
+    it.gaps = ["4px"]
+    ...  // 4px gap between all children
   }
 
 AccordionBox [#accordionBox]

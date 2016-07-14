@@ -12,6 +12,8 @@ using dom
 ** SashBox lays out children in a single direction allowing both
 ** fixed and pertange sizes that can fill the parent container.
 **
+** See also: [pod doc]`pod-doc#sashBox`
+**
 @Js class SashBox : Box
 {
   new make() : super()

@@ -9,7 +9,9 @@
 using dom
 
 **
-** FlowBox lays out its children in a one-directional flow
+** FlowBox lays out its children in a one-directional flow.
+**
+** See also: [pod doc]`pod-doc#flowBox`
 **
 @Js class FlowBox : Box
 {
@@ -25,7 +27,9 @@ using dom
     set { &halign=it; style->textAlign=it.toStr }
   }
 
-  ** Gaps to insert between child elements.
+  ** Gaps to insert between child elements.  If 'gaps.length' is less
+  ** than the number of children, then 'gaps' will be cycled to
+  ** apply to all children.
   Str[] gaps := Str[,]
 
   protected override Void onAdd(Elem c)    { applyStyle }
