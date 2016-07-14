@@ -93,7 +93,16 @@ By default, sashes are fixed, but you can enable resizing by setting the
 
 AccordionBox [#accordionBox]
 ============================
-TODO
+`AccordionBox` displays collapsible content panels with a header element for
+presenting information in a limited amount of vertical space. The header
+element is used to collapse or expand the child content.
+
+  AccordionBox
+  {
+    it.addGroup(Label { it.text="Section 1 "}, [...])
+    it.addGroup(Label { it.text="Section 2 "}, [...])
+    it.addGroup(Label { it.text="Section 3 "}, [...])
+  }
 
 FlexBox [#flexbox]
 ==================
