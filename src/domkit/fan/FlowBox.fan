@@ -51,6 +51,9 @@ using dom
         if (gap > 0 && i < kids.size-1) kid.style["margin-right"] = s
       }
 
+      // check width
+      if (kid.style.effective("width") == "100%") kid.style->width  = "auto"
+
       // add join classes
       // TODO FIXIT: more optimized way than toggling classes on each add/remove?
       if (kids.size > 1 && gap == -1)
