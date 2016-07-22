@@ -57,11 +57,9 @@
 
         if (para.anchorId != null)
           out.print("[#${para.anchorId}]")
-        if (inBlockquote)
-          out.print("> ")
 
       case DocNodeId.blockQuote:
-        inBlockquote = true
+        out.print("> ")
 
       case DocNodeId.pre:
         inPre = true
@@ -103,7 +101,7 @@
         out.print("**")
 
       case DocNodeId.code:
-        out.print("``")
+        out.print("`")
     }
   }
 
@@ -115,11 +113,11 @@
         if (!inListItem)
           out.printLine // blank line
 
-      case DocNodeId.blockQuote:
-        inBlockquote = false
-
       case DocNodeId.pre:
         inPre = false
+
+      case DocNodeId.heading:
+        out.printLine // blank line
 
       case DocNodeId.orderedList:
       case DocNodeId.unorderedList:
@@ -130,11 +128,11 @@
 
       case DocNodeId.link:
         link := elem as Link
-        out.print("](${link.uri})\n")
+        out.print("](${link.uri})")
 
       case DocNodeId.image:
         img := elem as Image
-        out.print("](${img.uri})\n")
+        out.print("](${img.uri})")
 
       case DocNodeId.emphasis:
         out.writeChar('*')
@@ -143,8 +141,9 @@
         out.print("**")
 
       case DocNodeId.code:
-        out.print("``")
+        out.print("`")
     }
+    if (elem.isBlock) out.writeChar('\n')
   }
 
   override Void text(DocText text)
@@ -161,8 +160,6 @@
     else
     {
       out.print(text.str)
-      if (text.parent.isBlock)
-        out.printLine
     }
   }
 
@@ -193,11 +190,10 @@
 
   const static private Str[] ulSymbols := ["* ", "+ ", "- "]
   const static private Int indDef  := 4
-  const static private Int indCode := 8
+  const static private Int indCode := 4
 
   private OutStream out
   private ListIndex[] listIndexes := [,]
-  private Bool inBlockquote
   private Bool inPre
 
 //////////////////////////////////////////////////////////////////////////
