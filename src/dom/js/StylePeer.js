@@ -88,7 +88,7 @@ fan.dom.StylePeer.prototype.effective = function(self, name)
   for (var i=0; i<document.styleSheets.length; i++)
   {
     var sheet = document.styleSheets[i];
-    var rules = sheet.rules || sheet.cssRules;
+    var rules = sheet.rules || sheet.cssRules || [];
     for (var r=0; r<rules.length; r++)
     {
       var rule = rules[r];
