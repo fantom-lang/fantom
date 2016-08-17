@@ -38,16 +38,18 @@ using dom
   }
 
   ** Value of checked.
-  // TODO
-  // Bool checked
-  // {
-  //   get { this->checked }
-  //   set { this->checked = it }
-  // }
+  Bool checked
+  {
+    get { this->checked }
+    set { this->checked = it }
+  }
 
   // ** Callback when state is toggled.
   // Void onAction(|This| f) { this.cbAction = f }
   //
   // private Void fireAction(Event e) { cbAction?.call(this) }
   // private Func? cbAction := null
+
+  // internal use only
+  internal ButtonGroup? group := null
 }
