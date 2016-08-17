@@ -8,10 +8,10 @@
 
 input.domkit-TextField {
   box-sizing: border-box;
-  font: 11px Menlo;
+  font: 14px 'Roboto';
   padding: 4px;
   margin: 0;
-  height: 23px;
+  height: 24px;
 }
 
 input.domkit-TextField[disabled] {

@@ -6,16 +6,20 @@
 //   19 Dec 2014  Andy Frank  Creation
 //
 
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,700);
+@import url(https://fonts.googleapis.com/css?family=Roboto+Mono);
+
 html {
   height: 100%;
 }
 
 body {
-  font: 14px Helvetica Neue;
-  line-height: 14px;
+  font: 13px 'Roboto', sans-serif;
+  line-height: 13px;
   padding: 0;
   margin: 0;
   background: #fff;
+  color: #333;
   overflow: hidden;
   height: 100%;
 }
@@ -49,5 +53,5 @@ a {
 }
 
 .domkit-font-mono {
-  font: 11px Menlo;
+  font: 12px 'Roboto Mono';
 }
