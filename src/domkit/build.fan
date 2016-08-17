@@ -58,6 +58,10 @@ class Build : BuildPod
     srcFiles := srcDir.listFiles.sort |a,b| { a.name.localeCompare(b.name) }
     log.info("FindCssFiles [$srcFiles.size files]")
 
+    // make sure Base.css is first
+    base := srcFiles.find |f| { f.name == "Base.css" }
+    srcFiles.moveTo(base, 0)
+
     // merge css
     out := outFile.out
     srcFiles.each |f|
