@@ -57,6 +57,13 @@ using dom
 
   internal override Void doMouseUp()
   {
-    if (mouseDown) selected = !selected
+    if (mouseDown)
+    {
+      selected = !selected
+      group?.select(this)
+    }
   }
+
+  // internal use only
+  internal ButtonGroup? group := null
 }
