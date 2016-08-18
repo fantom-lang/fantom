@@ -59,19 +59,19 @@ using dom
     sz := this.size
     switch (halign)
     {
-      case Align.center: x -= sz.w / 2; this.style["left"] = "${x}px"
-      case Align.right:  x -= sz.w;     this.style["left"] = "${x}px"
+      case Align.center: x = gutter.max(x - (sz.w / 2)); this.style->left = "${x}px"
+      case Align.right:  x = gutter.max(x - sz.w);       this.style->left = "${x}px"
     }
 
     // adjust if outside viewport
     vp := Win.cur.viewport
-    if (sz.w + gutter + gutter > vp.w) this.style["width"]  = "${vp.w-gutter-gutter}px"
-    if (sz.h + gutter + gutter > vp.h) this.style["height"] = "${vp.h-gutter-gutter}px"
+    if (sz.w + gutter + gutter > vp.w) this.style->width  = "${vp.w-gutter-gutter}px"
+    if (sz.h + gutter + gutter > vp.h) this.style->height = "${vp.h-gutter-gutter}px"
 
     // refresh size
     sz = this.size
-    if ((x + sz.w + gutter) > vp.w) this.style["left"] = "${vp.w-sz.w-gutter}px"
-    if ((y + sz.h + gutter) > vp.h) this.style["top"]  = "${vp.h-sz.h-gutter}px"
+    if ((x + sz.w + gutter) > vp.w) this.style->left = "${vp.w-sz.w-gutter}px"
+    if ((y + sz.h + gutter) > vp.h) this.style->top  = "${vp.h-sz.h-gutter}px"
 
     this.transition([
       "opacity": "1"
