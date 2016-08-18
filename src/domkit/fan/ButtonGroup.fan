@@ -32,8 +32,17 @@ using dom
   ** Index of selected button, or 'null' if none selected.
   Int? selected := null
   {
-    set { &selected=it; update }
+    set
+    {
+      old := &selected
+      &selected = it
+      update
+      if (it != old) cbSelect?.call(this)
+    }
   }
+
+  ** Callback when selection in group has changed.
+  Void onSelect(|This| f) { this.cbSelect = f }
 
   ** Mark given button as selected.
   internal Void select(Elem button)
@@ -65,4 +74,6 @@ using dom
       throw ArgErr("Invalid button for group '$b.typeof'")
     }
   }
+
+  private Func? cbSelect
 }
