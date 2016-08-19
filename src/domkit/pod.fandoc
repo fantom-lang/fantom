@@ -169,7 +169,7 @@ element is used to collapse or expand the child content.
     it.addGroup(Label { it.text="Section 3 "}, [...])
   }
 
-FlexBox [#flexbox]
+FlexBox [#flexBox]
 ==================
 `FlexBox` lays out children based on the CSS Flexbox layout model.  Flexbox
 can be a little overwhelming to wrap your head around. A great tutorial that
