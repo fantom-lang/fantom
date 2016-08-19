@@ -26,6 +26,7 @@ using dom
     set
     {
       &selected = it
+      this.style.toggleClass("selected", it)
       if (it)
       {
         showDown
