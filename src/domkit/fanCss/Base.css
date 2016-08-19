@@ -43,7 +43,8 @@ a {
   background-color: #dcdcdc !important;
 }
 
-:focus .domkit-sel {
+:focus .domkit-sel,
+.domkit-sel.pin {
   background-color: #3498db !important;
   color: #fff !important;
 }
