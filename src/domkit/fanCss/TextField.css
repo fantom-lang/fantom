@@ -22,6 +22,10 @@ input.domkit-TextField[readonly] {
   background: #f8f8f8;
 }
 
+input.domkit-TextField[type='password'] {
+  font-family: sans-serif;
+}
+
 input.domkit-TextField:focus {
   outline: none;
   /*
