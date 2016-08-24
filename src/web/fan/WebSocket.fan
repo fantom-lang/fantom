@@ -57,6 +57,10 @@ class WebSocket
   ** problems during the handshake in which case the calling WebMod should
   ** return a 400 response.
   **
+  ** Note: once this method completes, the socket is now owned by the
+  ** WebSocket instance and not the web server (wisp); it must be explicitly
+  ** closed to prevent a file handle leak.
+  **
   static WebSocket openServer(WebReq req, WebRes res)
   {
     // validate request
@@ -72,8 +76,12 @@ class WebSocket
     res.statusCode = 101
     res.out.flush
 
+    // take ownership of the underlying socket
+    req.takeOwnershipOfSocket = true
+    socket := req.socket
+
     // connected, return WebSocket
-    return make(req.socket, false)
+    return make(socket, false)
   }
 
   private static Str checkHeader(WebReq req, Str name, Str? expected)

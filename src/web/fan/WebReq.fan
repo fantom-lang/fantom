@@ -205,6 +205,12 @@ abstract class WebReq
   @NoDoc abstract TcpSocket socket()
 
   **
+  ** Set to true for request to take ownership of the socket so that
+  ** it is not closed by web server implementation (WispActor)
+  **
+  @NoDoc Bool takeOwnershipOfSocket
+
+  **
   ** Stash allows you to stash objects on the WebReq object
   ** in order to pass data b/w Weblets while processing
   ** this request.
