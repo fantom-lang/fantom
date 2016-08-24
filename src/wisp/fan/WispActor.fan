@@ -35,79 +35,67 @@ internal const class WispActor : Actor
   **
   override Obj? receive(Obj? msg)
   {
-    TcpSocket socket := ((Unsafe)msg).val
-    try
-    {
-      // before we do anything set a receive timeout in case
-      // the client fails to send us data in a timely fashion
-      socket.options.receiveTimeout = 10sec
-
-      // loop processing requests with on this socket as
-      // long as a persistent connection is being used and
-      // we don't have any errors
-      while (process(socket)) {}
-    }
-    catch (Err e) { e.trace }
-    finally { try { socket.close } catch {} }
+    process(((Unsafe)msg).val)
     return null
   }
 
   **
-  ** Process a single HTTP request/response.  Return true if the request
-  ** was processed successfully and that a persistent connection is being
-  ** used. Return false on error or if the socket should be shutdown.
+  ** Process a single HTTP request/response.
   **
-  Bool process(TcpSocket socket)
+  private Void process(TcpSocket socket)
   {
-    // allocate request, response
-    res := WispRes(service, socket)
-    req := WispReq(service, socket, res)
+    WispRes? res
+    WispReq? req
+    close := true
+    init := false
 
-    // parse request line and headers, on error return false to
-    // close socket and terminate processing on this thread and socket
-    if (!parseReq(req)) return false
-
-    // service request
-    success := false
     try
     {
+      // allocate request, response
+      res = WispRes(service, socket)
+      req = WispReq(service, socket, res)
+
       // init thread locals
       Actor.locals["web.req"] = req
       Actor.locals["web.res"] = res
 
+      // before we do anything set a tight receive timeout in case
+      // the client fails to send us data in a timely fashion
+      socket.options.receiveTimeout = 10sec
+
+      // parse request line and headers, on error terminate processing
+      if (!parseReq(req)) return
+
       // initialize the req and res
       initReqRes(req, res)
+      init = true
 
-      // service which runs thru the installed web steps
+      // service the request which runs thru the installed web steps
       service.root.onService
 
       // save session if accessed
       service.sessionStore.doSave
 
-      // assume success which allows us to re-use this connection
-      success = true
-
-      // if the weblet didn't finishing reading the content
-      // stream then don't attempt to reuse this connection,
-      // safest thing is to just close the socket
-      try { if (req.webIn != null && req.webIn.read != null) success = false }
-      catch (IOErr e) { success = false }
+      // on request-take-ownership then do not close socket;
+      // otherwise ensure response if committed and flushed
+      if (req.takeOwnershipOfSocket)
+        close = false
+      else
+        res.close
     }
     catch (Err e)
     {
-      internalServerErr(req, res, e)
+      if (init)
+        internalServerErr(req, res, e)
+      else
+        e.trace
     }
-
-    // cleanup thread locals
-    Actor.locals.remove("web.req")
-    Actor.locals.remove("web.res")
-
-    // ensure response is committed and close the response
-    // output stream, but don't close the underlying socket
-    try { res.close } catch (Err e) { e.trace }
-
-    // return if using persistent connections
-    return success && res.isPersistent
+    finally
+    {
+      Actor.locals.remove("web.req")
+      Actor.locals.remove("web.res")
+      if (close) try { socket.close } catch {}
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
