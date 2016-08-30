@@ -152,6 +152,7 @@ class JsMethodParam : JsNode
   new make(JsCompilerSupport s, CParam p) : super(s)
   {
     this.loc = p is Node ? ((Node)p).loc : null
+    this.reflectName = p.name
     this.name = vnameToJs(p.name)
     this.paramType = JsTypeRef(s, p.paramType, this.loc)
     this.hasDef = p.hasDefault
@@ -160,12 +161,12 @@ class JsMethodParam : JsNode
 
   new makeThis(JsCompilerSupport s) : super.make(s)
   {
-    this.name = "this"
+    this.reflectName = this.name = "this"
   }
 
   new makeSelf(JsCompilerSupport s) : super.make(s)
   {
-    this.name = "self"
+    this.reflectName = this.name = "self"
   }
 
   override Void write(JsWriter out)
@@ -173,7 +174,8 @@ class JsMethodParam : JsNode
     out.w(name)
   }
 
-  Str name              // param name
+  Str reflectName       // reflected parameter name
+  Str name              // js code param name
   JsTypeRef? paramType  // param type
   Bool hasDef           // has default value
   JsNode? defVal        // default value

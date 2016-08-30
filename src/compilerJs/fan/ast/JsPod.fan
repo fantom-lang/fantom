@@ -145,7 +145,7 @@ class JsPod : JsNode
       t.methods.each |m|
       {
         if (m.isFieldAccessor) return
-        params := m.params.join(",") |p| { "new fan.sys.Param('$p.name','$p.paramType.sig',$p.hasDef)" }
+        params := m.params.join(",") |p| { "new fan.sys.Param('$p.reflectName','$p.paramType.sig',$p.hasDef)" }
         facets := m.facets.join(",") |f| { "'$f.type.sig':$f.val.toCode" }
         out.w(".\$am('$m.origName',$m.flags,'$m.ret.sig',fan.sys.List.make(fan.sys.Param.\$type,[$params]),{$facets})")
       }
