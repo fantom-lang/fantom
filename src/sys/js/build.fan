@@ -34,12 +34,14 @@ class Build : BuildScript
 
     lib := tempDir.createFile("sys.js")
     out := lib.out
+    writeNs(out)
     writeSys(out)
     writeFanx(out)
     writeTypeInfo(out)
     writeSysSupport(out)
     writeSysProps(out)
     writePodMeta(out)
+    writeEndNs(out)
     out.close
 
     // close sys.pod FPod.zip to release lock so we can rejar that file
@@ -58,6 +60,23 @@ class Build : BuildScript
     lib := devHomeDir + `lib/fan/`
     ns := FPodNamespace(lib)
     return ns.sysPod.types
+  }
+
+  private Void writeNs(OutStream out)
+  {
+    out.printLine("(function () {")
+    out.printLine("var root = this;")
+    out.printLine("var fan;")
+    out.printLine("if (typeof exports !== 'undefined') {")
+    out.printLine("  fan = exports;")
+    out.printLine("} else {")
+    out.printLine("  fan = root.fan = {};")
+    out.printLine("}")
+  }
+
+  private Void writeEndNs(OutStream out)
+  {
+    out.printLine("}).call(this);")
   }
 
   private Void writeSys(OutStream out)
