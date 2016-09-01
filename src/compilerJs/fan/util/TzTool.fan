@@ -59,9 +59,11 @@ class TzTool
     jsOut := js.out
     try
     {
-      jsOut.printLine("(function () {")
-      jsOut.printLine("var c=fan.sys.TimeZone.cache\$;")
-      jsOut.printLine("var a;")
+      jsOut.printLine(
+        "(function() {
+          ${JsPod.requireSys}
+          var c=fan.sys.TimeZone.cache\$;
+          var a;")
 
       // write built-in timezones
       byContinent.each |TimeZone[] timezones, Str continent|
@@ -83,7 +85,7 @@ class TzTool
         jsOut.printLine("c(${alias.toCode},${target.toCode});")
       }
 
-      jsOut.printLine("})();")
+      jsOut.printLine("}).call(this);")
     }
     finally jsOut.close
     log.info("Wrote: ${js.osPath ?: js}")

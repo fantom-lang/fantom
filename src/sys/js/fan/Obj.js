@@ -8,7 +8,7 @@
 //
 
 // Define the "uber-pod" and sys pods
-var fan = {};
+//var fan = {};
 fan.sys = {};
 
 /**

@@ -59,7 +59,7 @@ class JsPod : JsNode
   override Void write(JsWriter out)
   {
     // define namespace
-    out.w("fan.$name = {};").nl
+    writeNs(out.out, this.name)
 
     // write types
     types.each |t|
@@ -91,8 +91,27 @@ class JsPod : JsNode
       out.minify(in)
       in.close
     }
+    out.w("}).call(this);").nl
     out.w("//# sourceMappingURL=/pod/${name}/${name}.js.map").nl
   }
+
+  static Void writeNs(OutStream out, Str name)
+  {
+    out.printLine("(function () {")
+    out.printLine(
+      "${requireSys}
+       if (typeof exports !== 'undefined') {
+         fan.$name = exports;
+       } else {
+         fan.$name = root.fan.$name = {};
+       }")
+  }
+
+  static const Str requireSys :=
+    "var root=this;
+     var fan=root.fan;
+     if (!fan && (typeof require !== 'undefined')) fan = require('sys.js');
+     "
 
   Void writePeer(JsWriter out, JsType t, Bool isPeer)
   {

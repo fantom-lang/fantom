@@ -15,6 +15,11 @@ class JsUnitDatabase
   {
     // open etc/sys/units.txt
     in := Env.cur.findFile(`etc/sys/units.txt`).in
+    out.printLine(
+      "(function () {
+       ${JsPod.requireSys}
+       ")
+
 
     // parse each line
     curQuantityName := ""
@@ -56,6 +61,7 @@ class JsUnitDatabase
     out.printLine("}")
     writeImmutable(out, curQuantityName)
     out.printLine("fan.sys.Unit.m_quantityNames = fan.sys.Unit.m_quantityNames.toImmutable();")
+    out.printLine("}).call(this);")
   }
 
   private Void writeImmutable(OutStream out, Str quantityName)
