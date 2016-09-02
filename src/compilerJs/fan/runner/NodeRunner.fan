@@ -297,7 +297,7 @@ class NodeRunner
         }
       }
     }
-    this.dependencies = ordered
+    this.dependencies = ordered.findAll { isJsPod(it) }
   }
 
   private [Pod:Pod[]] buildGraph(Pod p, Pod:Pod[] graph := [:])
@@ -305,6 +305,11 @@ class NodeRunner
     graph[p] = p.depends.map { Pod.find(it.name) }
     p.depends.each |d| { buildGraph(Pod.find(d.name), graph) }
     return graph
+  }
+
+  private Bool isJsPod(Pod pod)
+  {
+    return pod.file(`/${pod.name}.js`, false) != null
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -324,7 +329,7 @@ class NodeRunner
       script := "${pod.name}.js"
       file   := pod.file(`/$script`, false)
       if (file != null)
-      file.copyTo(moduleDir + `$script`, copyOpts)
+        file.copyTo(moduleDir + `$script`, copyOpts)
     }
 
     // tz.js
