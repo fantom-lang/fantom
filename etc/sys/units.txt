@@ -325,7 +325,7 @@ bar; kg1*m-1*sec-2; 100000.0
 atmosphere, atm; kg1*m-1*sec-2; 101317.1
 pounds_per_square_inch, psi; kg1*m-1*sec-2; 6894.73
 centimeters_of_water, cmH₂O; kg1*m-1*sec-2; 98.0665
-inches_of_water, inH₂O; kg1*m-1*sec-2; 248.84
+inches_of_water, in/wc, inH₂O; kg1*m-1*sec-2; 248.84
 millimeters_of_mercury, mmHg; kg1*m-1*sec-2; 133.322368421
 centimeters_of_mercury, cmHg; kg1*m-1*sec-2; 1333.22368421
 inches_of_mercury, inHg; kg1*m-1*sec-2; 3386.38815789
