@@ -62,6 +62,7 @@ using dom
     else if (col is Range) ((Range)col).each |c| { cstyleMap["$c:$row"] = style }
     else if (row is Range) ((Range)row).each |r| { cstyleMap["$col:$r"] = style }
     else cstyleMap["$col:$row"] = style
+    if (!init) updateCellStyle
     return this
   }
 
@@ -82,7 +83,17 @@ using dom
       tr.add(td)
     }
     tbody.add(tr)
+    init = false
     return this
+  }
+
+  ** Update cell styles on existing children.
+  private Void updateCellStyle()
+  {
+    tbody.children.each |tr,r|
+    {
+      tr.children.each |td,c| { applyCellStyle(c, r, td) }
+    }
   }
 
   ** Find all styles to apply this to cell.
@@ -119,5 +130,6 @@ using dom
 
   private Elem table
   private Elem tbody
+  private Bool init := true
   private Str:Str cstyleMap := [:]
 }
