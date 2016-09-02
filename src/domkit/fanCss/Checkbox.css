@@ -9,6 +9,7 @@
 input.domkit-Checkbox {
 }
 
+label input.domkit-Checkbox + span.domkit-Label,
 span.domkit-Checkbox-label {
   padding-left: 4px;
   -webkit-user-select: none;
