@@ -109,44 +109,67 @@ class NodeRunner
 
   private Void testRunner(Pod pod, Str type, Str method)
   {
+    template := this.typeof.pod.file(`/res/testRunnerTemplate.js`).readAllStr
+    template = template.replace("//{{require}}", requireStatements)
+    template = template.replace("//{{tests}}", testList(pod, type, method))
+    template = template.replace("//{{envDirs}}", envDirs)
+
+    // write test runner
+    f := nodeDir + `testRunner.js`
+    f.out.writeChars(template).flush.close
+
+    // invoke node to run tests
     t1 := Duration.now
-    if (type != "*")
-    {
-      runTests(pod.type(type), method)
-    }
-    else
-    {
-      pod.types.each |t| { if (t.fits(Test#) && t.hasFacet(Js#)) runTests(t, "*") }
-    }
+    Process(["node", "$f.normalize.osPath"]).run.join
     t2 := Duration.now
 
     echo("")
     echo("Time: ${(t2-t1).toMillis}ms")
     echo("")
-    results
   }
 
-  private Void runTests(Type type, Str methodName := "*")
+  private Str requireStatements()
   {
-    echo("")
-    methods := methods(type, methodName)
-    methods.each |Method m|
+    buf := StrBuf()
+    dependencies.each |pod|
     {
-      echo("-- Run: ${m}...")
-      verifyCount := runTest(m)
-      if (verifyCount < 0)
+      if ("sys" == pod.name)
       {
-        failures++
-        failureNames.add(m.qname)
+        buf.add("var fan = require('${pod.name}.js');\n")
+        buf.add("require('tz.js');\n")
+        buf.add("require('units.js');\n")
+        buf.add("require('indexed-props.js');\n")
       }
-      else
-      {
-        echo("   Pass: $m  [$verifyCount]");
-        methodCount++
-        totalVerifyCount += verifyCount;
-      }
+      else buf.add("require('${pod.name}.js');\n")
     }
-    testCount++
+    return buf.toStr
+  }
+
+  private Str testList(Pod pod, Str type, Str method)
+  {
+    buf := StrBuf()
+    buf.add("var tests = [\n")
+
+    types := type == "*" ? pod.types : [pod.type(type)]
+    types.findAll { it.fits(Test#) && it.hasFacet(Js#) }.each |t|
+    {
+      buf.add("  {'type': fan.${pod.name}.${t.name},\n")
+         .add("   'qname': '${t.qname}',\n")
+         .add("   'methods': [")
+      methods(t, method).each { buf.add("'${it.name}',") } ; buf.add("]\n")
+      buf.add("  },\n")
+    }
+
+    return buf.add("];\n").toStr
+  }
+
+  private Str envDirs()
+  {
+    buf := StrBuf()
+    buf.add("    fan.sys.Env.cur().m_homeDir = fan.sys.File.os(${Env.cur.homeDir.osPath.toCode});\n")
+    buf.add("    fan.sys.Env.cur().m_workDir = fan.sys.File.os(${Env.cur.workDir.osPath.toCode});\n")
+    buf.add("    fan.sys.Env.cur().tempDir   = fan.sys.File.os(${Env.cur.tempDir.osPath.toCode});\n")
+    return buf.toStr()
   }
 
   private Method[] methods(Type type, Str methodName)
@@ -161,106 +184,6 @@ class NodeRunner
       }
       return false
     }
-  }
-
-  private Int runTest(Method m)
-  {
-    try
-    {
-      // env dirs
-      homeDir := Env.cur.homeDir
-      workDir := Env.cur.workDir
-      tempDir := Env.cur.tempDir
-
-      js          := "fan.${m.parent.pod}.${m.parent.name}"
-      testName    := "${js}-${m.name}"
-      testResults := (nodeDir + `${testName}.results`).deleteOnExit
-      script := Buf()
-      dependencies.each |pod|
-      {
-        if ("sys" == pod.name)
-        {
-          script.printLine("var fan = require('${pod.name}.js');")
-          script.printLine("require('tz.js');")
-          script.printLine("require('units.js');")
-          script.printLine("require('indexed-props.js');")
-        }
-        else script.printLine("require('${pod.name}.js');")
-      }
-      script.printLine("var fs=require('fs');")
-      script.printLine(
-       "var testRunner = function()
-        {
-          var test;
-          var doCatchErr = function(err)
-          {
-            if (err == undefined) print('Undefined error\\n');
-            else if (err.trace) err.trace();
-            else
-            {
-              var file = err.fileName;   if (file == null) file = 'Unknown';
-              var line = err.lineNumber; if (line == null) line = 'Unknown';
-              fan.sys.Env.cur().out().printLine(err + ' (' + file + ':' + line + ')\\n');
-            }
-          }
-
-          try
-          {
-            fan.sys.Env.cur().m_homeDir = fan.sys.File.os($homeDir.osPath.toCode);
-            fan.sys.Env.cur().m_workDir = fan.sys.File.os($workDir.osPath.toCode);
-            fan.sys.Env.cur().m_tempDir = fan.sys.File.os($tempDir.osPath.toCode);
-
-            test = ${js}.make();
-            test.setup();
-            test.${m.name}();
-            fs.writeFileSync('${testResults.normalize.osPath}', 'verify.count=' + test.verifyCount);
-            process.exit(0);
-          }
-          catch (err)
-          {
-            doCatchErr(err);
-            fs.writeFileSync('${testResults.normalize.osPath}', 'verify.count=-1');
-            process.exit(1);
-          }
-          finally
-          {
-            try { test.teardown(); }
-            catch (err) { doCatchErr(err); }
-          }
-        }
-        testRunner();")
-
-      // write test script
-      f := nodeDir + `${testName}.js`
-      f.out.writeChars(script.flip.readAllStr).flush.close
-
-      // invoke node
-      Process(["node", "$f.normalize.osPath"]).run.join
-      return testResults.readProps["verify.count"].toInt(10);
-    }
-    catch (Err e)
-    {
-      echo("")
-      echo("TEST FAILED")
-      e.trace
-      return -1
-    }
-  }
-
-  Void results()
-  {
-    if (failureNames.size > 0)
-    {
-      echo("Failed:")
-      failureNames.each |Str s| { echo("  $s") }
-      echo("")
-    }
-
-    echo("***")
-    echo("*** " +
-      (failures == 0 ? "All tests passed!" : "$failures  FAILURES") +
-      " [$testCount tests, $methodCount methods, $totalVerifyCount verifies]")
-    echo("***")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -353,12 +276,4 @@ class NodeRunner
   private [Str:Str]? argsMap      // parseArgs
   private File? nodeDir           // initDirs
   private Pod[]? dependencies     // sortDepens
-
-  // Test
-  private Int testCount        := 0
-  private Int methodCount      := 0
-  private Int totalVerifyCount := 0
-  private Int failures         := 0
-  Str[] failureNames           := [,]
-
 }
