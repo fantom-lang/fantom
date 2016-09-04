@@ -27,6 +27,7 @@ class Build : BuildPod
                "vcs.uri":      "https://bitbucket.org/fantom/fan-1.0/"]
     depends = ["sys 1.0", "compiler 1.0"]
     srcDirs = [`fan/`, `fan/ast/`, `fan/runner/`, `fan/util/`]
+    resDirs = [`res/`]
     docSrc  = true
   }
 }
