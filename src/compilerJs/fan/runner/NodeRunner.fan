@@ -6,6 +6,9 @@
 //   02 Sep 16  Matthew Giannini  Creation
 //
 
+using compiler
+using compiler::Compiler as FanCompiler
+
 class NodeRunner
 {
 
@@ -20,7 +23,11 @@ class NodeRunner
       parseArgs(args)
       initDirs
       if (hasArg("test")) doTest
+      else if (hasArg("run")) doRun
       else throw ArgErr("Invalid options")
+
+      // cleanup
+      if (!hasArg("keep")) nodeDir.delete
     }
     catch (ArgErr e)
     {
@@ -36,6 +43,7 @@ class NodeRunner
     echo("NodeRunner")
     echo("Usage:")
     echo("  NodeRunner [options] -test <pod>[::<test>[.<method>]]")
+    echo("  NodeRunner [options] -run <script>")
     echo("Options:")
     echo("  -keep      Keep intermediate test scripts")
   }
@@ -102,9 +110,6 @@ class NodeRunner
     sortDepends(p)
     writeNodeModules
     testRunner(p, type, method)
-
-    // cleanup
-    if (!hasArg("keep")) nodeDir.delete
   }
 
   private Void testRunner(Pod pod, Str type, Str method)
@@ -126,23 +131,6 @@ class NodeRunner
     echo("")
     echo("Time: ${(t2-t1).toMillis}ms")
     echo("")
-  }
-
-  private Str requireStatements()
-  {
-    buf := StrBuf()
-    dependencies.each |pod|
-    {
-      if ("sys" == pod.name)
-      {
-        buf.add("var fan = require('${pod.name}.js');\n")
-        buf.add("require('tz.js');\n")
-        buf.add("require('units.js');\n")
-        buf.add("require('indexed-props.js');\n")
-      }
-      else buf.add("require('${pod.name}.js');\n")
-    }
-    return buf.toStr
   }
 
   private Str testList(Pod pod, Str type, Str method)
@@ -184,6 +172,58 @@ class NodeRunner
       }
       return false
     }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Run
+//////////////////////////////////////////////////////////////////////////
+
+  private Void doRun()
+  {
+    file := arg("run").toUri.toFile
+    if (!file.exists) { echo("$file not found"); return }
+    this.js = compile(file.in.readAllStr)
+    writeNodeModules
+    template := this.typeof.pod.file(`/res/scriptRunnerTemplate.js`).readAllStr
+    template = template.replace("//{{require}}", requireStatements)
+    template = template.replace("{{tempPod}}", tempPod)
+
+    // write test runner
+    f := nodeDir + `scriptRunner.js`
+    f.out.writeChars(template).flush.close
+
+    // invoke node to run sript
+    Process(["node", "$f.normalize.osPath"]).run.join
+  }
+
+  Str compile(Str text)
+  {
+    this.tempPod = "temp${DateTime.now.ticks}"
+    input := CompilerInput()
+    input.podName   = tempPod
+    input.summary   = ""
+    input.version   = Version("0")
+    input.log.level = LogLevel.silent
+    input.isScript  = true
+    input.srcStr    = text
+    input.srcStrLoc = Loc("")
+    input.mode      = CompilerInputMode.str
+    input.output    = CompilerOutputMode.transientPod
+
+    // compile the source
+    compiler := FanCompiler(input)
+    CompilerOutput? co := null
+    try co = compiler.compile; catch {}
+    if (co == null)
+    {
+      buf := StrBuf()
+      compiler.errs.each |err| { buf.add("$err.line:$err.col:$err.msg\n") }
+      echo(buf)
+      Env.cur.exit(-1)
+    }
+
+    this.dependencies = compiler.depends.map { Pod.find(it.name) }
+    return compiler.js
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -255,6 +295,10 @@ class NodeRunner
         file.copyTo(moduleDir + `$script`, copyOpts)
     }
 
+    // (optional) temp pood
+    if (tempPod != null)
+      (moduleDir + `${tempPod}.js`).out.writeChars(js).flush.close
+
     // tz.js
     (Env.cur.homeDir + `etc/sys/tz.js`).copyTo(moduleDir + `tz.js`, copyOpts)
 
@@ -269,11 +313,34 @@ class NodeRunner
     out.flush.close
   }
 
+  private Str requireStatements()
+  {
+    buf := StrBuf()
+    dependencies.each |pod|
+    {
+      if ("sys" == pod.name)
+      {
+        buf.add("var fan = require('${pod.name}.js');\n")
+        buf.add("require('tz.js');\n")
+        buf.add("require('units.js');\n")
+        buf.add("require('indexed-props.js');\n")
+      }
+      else buf.add("require('${pod.name}.js');\n")
+    }
+
+    if (tempPod != null)
+      buf.add("require('${tempPod}.js');\n")
+
+    return buf.toStr
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   private [Str:Str]? argsMap      // parseArgs
   private File? nodeDir           // initDirs
-  private Pod[]? dependencies     // sortDepens
+  private Pod[]? dependencies     // sortDepends, compile
+  private Str? tempPod            // compile
+  private Str? js                 // compile
 }
