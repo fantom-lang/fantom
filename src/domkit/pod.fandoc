@@ -403,7 +403,7 @@ To modify the default size of dialog, override the 'width' and
   }
 
 Popup [#popup]
-================
+==============
 `Popup` opens a popup window above page content.  The popup is dismissed by
 clicking anywhere outside of the popup, or by pressing the 'Esc' key:
 
@@ -412,6 +412,10 @@ clicking anywhere outside of the popup, or by pressing the 'Esc' key:
     Elem {... },
   }
   p.open(100, 100)
+
+Tooltip [#tooltip]
+==================
+TODO
 
 Drag and Drop [#dnd]
 ********************
