@@ -56,3 +56,10 @@ a {
 .domkit-font-mono {
   font: 12px 'Roboto Mono';
 }
+
+.domkit-noselect {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
