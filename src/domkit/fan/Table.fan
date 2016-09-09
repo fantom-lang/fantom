@@ -336,7 +336,7 @@ using dom
       {
         it.style.addClass("domkit-Table-header")
         it.style->width  = "${colwSafe(c)}px"
-        it.style->lineHeight = "${theadh}px"
+        it.style->lineHeight = "${theadh+1}px"
         if (c == numCols-1) it.style.addClass("last")
       }
       headers[c] = header
