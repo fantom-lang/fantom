@@ -27,7 +27,7 @@ using dom
 
   ** Time mouse must be over bound node before opening the
   ** Tooltip. If 'null' the Tooltip is displayed immediatly.
-  Duration? delay := 500ms
+  Duration? delay := 750ms
 
   ** Bind this tooltip the given node.
   Void bind(Elem node)
