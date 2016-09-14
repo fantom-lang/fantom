@@ -106,7 +106,11 @@ using dom
       showUp
       if (isCombo) ((Combo)this.parent).field.focus
     }
-    popup.style["min-width"] = "${w}px"
+
+    // limit width to button size if not explicity set
+    if (popup.style.effective("min-width") == null)
+      popup.style->minWidth = "${w}px"
+
     popup.open(x, y)
   }
 
