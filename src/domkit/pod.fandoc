@@ -48,11 +48,11 @@ cells:
 
 By default `GridBox` will use preferred sizes for all child cells.  This will
 often times leave free space around the GridBox.  To adjust how the GridBox is
-positioned in this space use `GridBox.align`:
+positioned in this space use `GridBox.halign`:
 
   GridBox
   {
-    it.align = "center"
+    it.halign = Align.center
     ...
   }
 
