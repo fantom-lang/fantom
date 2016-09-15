@@ -9,7 +9,7 @@
 using dom
 
 **
-** Alignment enums: top, left, bottom, right, center
+** Alignment enums: top, left, bottom, right, center, fill
 **
 @Js enum class Align
 {
@@ -17,6 +17,7 @@ using dom
   left,
   bottom,
   right,
-  center
+  center,
+  fill
 }
 

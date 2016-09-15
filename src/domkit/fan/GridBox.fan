@@ -25,18 +25,18 @@ using dom
     this.add(table)
   }
 
-  ** How grid content is aligned against left-over space. Valid
-  ** values are "left", "right", "center", or "fill".
-  Str align := "left"
+  ** How grid content is aligned horizontally against left-over
+  ** space. Valid values are 'left', 'right', 'center', or 'fill'.
+  Align halign := Align.left
   {
     set
     {
-      switch (&align = it)
+      switch (&halign = it)
       {
-        case "left":   this.style["text-align"] = "left"
-        case "center": this.style["text-align"] = "center"
-        case "right":  this.style["text-align"] = "right"
-        case "fill":   table.style["width"] = "100%"
+        case Align.left:   this.style->textAlign = "left"
+        case Align.center: this.style->textAlign = "center"
+        case Align.right:  this.style->textAlign = "right"
+        case Align.fill:   table.style->width = "100%"
       }
     }
   }
