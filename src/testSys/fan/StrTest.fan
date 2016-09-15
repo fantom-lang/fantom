@@ -264,6 +264,11 @@ class StrTest : Test
 
     s = s + " all done"
     verifyEq(s, "hello number 5!null all done");
+
+    e := ""
+    x := "foo".upper
+    verifySame(e.plus(x), x)
+    verifySame(x.plus(e), x)
   }
 
 //////////////////////////////////////////////////////////////////////////
