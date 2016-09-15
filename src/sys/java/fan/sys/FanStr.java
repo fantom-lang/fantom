@@ -176,6 +176,7 @@ public class FanStr
   {
     if (obj == null) return self.concat("null");
     String x = FanObj.toStr(obj);
+    if (self.length() == 0) return x;
     if (x.length() == 0) return self;
     return self.concat(x);
   }
