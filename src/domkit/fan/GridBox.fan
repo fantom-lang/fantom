@@ -33,10 +33,10 @@ using dom
     {
       switch (&halign = it)
       {
-        case Align.left:   this.style->textAlign = "left"
-        case Align.center: this.style->textAlign = "center"
-        case Align.right:  this.style->textAlign = "right"
-        case Align.fill:   table.style->width = "100%"
+        case Align.left:   table.style->margin = null
+        case Align.center: table.style->margin = "0 auto"
+        case Align.right:  table.style->margin = "0 0 0 auto"
+        case Align.fill:   table.style->width  = "100%"
       }
     }
   }
