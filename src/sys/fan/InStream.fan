@@ -271,13 +271,13 @@ class InStream
   ** The max parameter specifies the maximum number of Unicode
   ** chacters (not bytes) to read before truncating the line and
   ** returning.  If max is null, then no boundary is enforced except
-  ** of course the end of the stream.  Max defaults to 4kb.
+  ** of course the end of the stream.
   **
   ** Return null if the end of stream has been reached.  Throw IOErr
   ** if there is a problem reading the stream or an invalid character
   ** encoding is encountered.
   **
-  Str? readLine(Int? max := 4096)
+  Str? readLine(Int? max := null)
 
   **
   ** Read a Str token from the input stream which is terminated
@@ -292,13 +292,13 @@ class InStream
   ** The max parameter specifies the maximum number of Unicode
   ** chacters (not bytes) to read before truncating the line and
   ** returning.  If max is null, then no boundary is enforced except
-  ** of course the end of the stream.  Max defaults to 4kb.
+  ** of course the end of the stream.
   **
   ** Return null if the end of stream has been reached.  Throw IOErr
   ** if there is a problem reading the stream or an invalid character
   ** encoding is encountered.
   **
-  Str? readStrToken(Int? max := 4096, |Int ch->Bool|? c := null)
+  Str? readStrToken(Int? max := null, |Int ch->Bool|? c := null)
 
   **
   ** Read a string terminated by the "\0" character.  The "\0"
@@ -308,15 +308,15 @@ class InStream
   ** The max parameter specifies the maximum number of Unicode
   ** chacters (not bytes) to read before truncating the string and
   ** returning.  If max is null, then no boundary is enforced except
-  ** of course the end of the stream.  Max defaults to 4kb.
+  ** of course the end of the stream.
   **
-  Str readNullTerminatedStr(Int? max := 4096)
+  Str readNullTerminatedStr(Int? max := null)
 
   **
   ** Read the entire stream into a list of Str lines based on the
-  ** configured charset encoding.  Each Str in the list maps
-  ** to a line terminated by \n, \r\n, \r, or EOF using the same
-  ** semantics as `readLine` with default max line length.  The Str lines
+  ** configured charset encoding.  Each Str in the list maps to a
+  ** line terminated by \n, \r\n, \r, or EOF using the same semantics
+  ** as `readLine` with default max line length of null.  The Str lines
   ** themselves do not contain a trailing newline.  Empty lines
   ** are returned as the empty Str "".  Return an empty list if
   ** currently at end of stream (not null).  Throw IOErr if there
@@ -330,7 +330,7 @@ class InStream
   ** Read the entire stream into Str lines based on the current
   ** encoding.  Call the specified function for each line read.
   ** Each line is terminated by \n, \r\n, \r, or EOF using the same
-  ** semantics are `readLine` with the default max line length.
+  ** semantics as `readLine` with the null default max line length.
   ** The Str lines themselves do not contain a trailing newline.
   ** Empty lines are returned as the empty Str "".  This InStream is
   ** guaranteed to be closed upon return.
