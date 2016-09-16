@@ -344,7 +344,7 @@ public abstract class Buf
 
   public final String readStrToken() { return in.readStrToken(); }
   public final String readStrToken(Long max) { return in.readStrToken(max); }
-  public final String readStrToken(Long max, Func f) { return in.readStrToken(FanInt.Chunk, f); }
+  public final String readStrToken(Long max, Func f) { return in.readStrToken(max, f); }
 
   public final List readAllLines() { return in.readAllLines(); }
 

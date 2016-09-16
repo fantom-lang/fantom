@@ -484,7 +484,7 @@ class Buf
   **
   ** Convenience for [in.readStrToken]`InStream.readStrToken`
   **
-  Str? readStrToken(Int? max := 4096, |Int ch->Bool|? c := null)
+  Str? readStrToken(Int? max := null, |Int ch->Bool|? c := null)
 
   **
   ** Convenience for [in.readAllLines]`InStream.readAllLines`

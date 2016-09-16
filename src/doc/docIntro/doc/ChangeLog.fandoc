@@ -12,6 +12,7 @@
 - Buf.toFile to create in-memory "files"
 - Str.mult
 - Wisp: remove pipelining support
+- #2518: change readLine max to be null
 - #2528: FAN_HOME and fanlaunch.bat
 - #2536: NPE when compiling scripts
 
