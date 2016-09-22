@@ -329,6 +329,7 @@ using dom
     {
       it.style.addClass("domkit-Table-thead")
       it.style->height = "${theadh}px"
+      if (theadh == 0) it.style->display = "none"
     }
     numVisCols.times |c|
     {
