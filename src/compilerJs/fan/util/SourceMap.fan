@@ -161,7 +161,11 @@ class MapField
 
   override Str toStr()
   {
-    "([${fname}, ${srcLine}, ${srcCol}], [${genLoc.line}, ${genLoc.col}], ${name}, ${text})"
+    "${fname}
+        $srcLine, $srcCol
+        $genLoc.line, $genLoc.col
+        $text
+     "
   }
 
   Str fname()

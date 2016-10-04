@@ -151,7 +151,7 @@ class JsWriter
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  OutStream out
+  private OutStream out
   SourceMap? sourcemap
   Int indentation := 0
   Bool needIndent := false
