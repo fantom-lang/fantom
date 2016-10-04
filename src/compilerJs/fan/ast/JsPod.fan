@@ -59,7 +59,7 @@ class JsPod : JsNode
   override Void write(JsWriter out)
   {
     // define namespace
-    writeNs(out.out, this.name)
+    writeNs(out, this.name)
 
     // write types
     types.each |t|
@@ -95,16 +95,17 @@ class JsPod : JsNode
     out.w("//# sourceMappingURL=/pod/${name}/${name}.js.map").nl
   }
 
-  static Void writeNs(OutStream out, Str name)
+  static Void writeNs(JsWriter out, Str name)
   {
-    out.printLine("(function () {")
-    out.printLine(
-      "${requireSys}
-       if (typeof exports !== 'undefined') {
-         fan.$name = exports;
-       } else {
-         fan.$name = root.fan.$name = {};
-       }")
+    ns := "(function () {
+           ${requireSys}
+           if (typeof exports !== 'undefined') {
+             fan.$name = exports;
+           } else {
+             fan.$name = root.fan.$name = {};
+           }
+           "
+    ns.splitLines.each { out.w(it).nl }
   }
 
   static const Str requireSys :=
