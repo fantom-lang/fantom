@@ -182,6 +182,7 @@
     "flex-wrap",
     "justify-content",
     "transform",
+    "user-select",
   ])
 
   ** Property values that require vendor prefixes.
