@@ -67,12 +67,13 @@ div.domkit-Table-thead {
 
   /* style */
   box-sizing: border-box;
-  background: #eee;
+  background: #ececee;
+  /*
   background: -webkit-linear-gradient(top, #f0f0f0, #e2e2e2);
   background:    -moz-linear-gradient(top, #f0f0f0, #e2e2e2);
   background:         linear-gradient(top, #f0f0f0, #e2e2e2);
-
-  border-bottom: 1px solid #999;
+  */
+  border-bottom: 1px solid #a9a9a9;
 }
 
 div.domkit-Table-header-sort:before {
@@ -98,7 +99,7 @@ div.domkit-Table-tbody {
 div.domkit-Table-header {
   position: absolute;
   box-sizing: border-box;
-  border-right: 1px solid #999;
+  border-right: 1px solid #a9a9a9;
   padding: 0 4px;
   font-size: 11px;
   font-weight: 500;
@@ -112,7 +113,7 @@ div.domkit-Table-header.last { border-right: none; }
 div.domkit-Table-cell {
   position: absolute;
   box-sizing: border-box;
-  border-right: 1px solid #d9d9d9;
+  border-right: 1px solid #e4e4e5;
   padding: 0 4px;
   font-size: 12px;
   white-space: nowrap;
@@ -123,4 +124,4 @@ div.domkit-Table-cell {
 div.domkit-Table-cell.last { border-right: none; }
 
 div.domkit-Table-cell.odd  { background: #fff; }
-div.domkit-Table-cell.even { background: #f9f9f9; }
+div.domkit-Table-cell.even { background: #f9f9fa; }

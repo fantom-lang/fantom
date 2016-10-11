@@ -16,8 +16,8 @@ div.domkit-Button {
   background: -webkit-linear-gradient(top, #fff, #eee);
   background:    -moz-linear-gradient(top, #fff, #eee);
   background:         linear-gradient(top, #fff, #eee);
-  */
   box-shadow: rgba(0, 0, 0, 0.05) 0 1px 1px;
+  */
   padding: 0 10px;
   border: 1px solid #c8c8c8;
   border-bottom-color: #aaa;
@@ -38,9 +38,13 @@ div.domkit-Button:focus {
   position: relative;  /* needed to make z-index work */
 }
 
+div.domkit-Button:hover {
+  background: #f5f5f5;
+}
+
 div.domkit-Button.down {
   background: #ddd;
-  box-shadow: none;
+  /*box-shadow: none;*/
 }
 
 div.domkit-Button.disabled {
@@ -52,7 +56,7 @@ div.domkit-Button.domkit-def {
   color: #fff;
   border-color: #1d7fbf;
   border-bottom-color: #0d5c91;
-  box-shadow: rgba(255, 255, 255, 0.2) 0px 1px inset, rgba(0, 0, 0, 0.05) 0 1px 1px;
+  /*box-shadow: rgba(255, 255, 255, 0.2) 0px 1px inset, rgba(0, 0, 0, 0.05) 0 1px 1px;*/
 }
 
 div.domkit-Button.domkit-def.down {
