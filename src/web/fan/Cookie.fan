@@ -139,6 +139,12 @@ const class Cookie
   const Bool secure := false
 
   **
+  ** If true, then the cookie is not available to JavaScript.
+  ** Defaults to true.
+  **
+  const Bool httpOnly := true
+
+  **
   ** Return the cookie formatted as an Set-Cookie HTTP header.
   **
   override Str toStr()
@@ -158,6 +164,7 @@ const class Cookie
     if (domain != null) s.add(";Domain=").add(domain)
     if (path != null) s.add(";Path=").add(path)
     if (secure) s.add(";Secure")
+    if (httpOnly) s.add(";HttpOnly")
     return s.toStr
   }
 
