@@ -355,6 +355,9 @@ using dom
     {
       numVisCols.times |c|
       {
+        // TODO FIXIT: seems like an awful lot of overlap of
+        // refreshCell - should look at collapsing behavoir here
+        rowSel := false
         cell := Elem
         {
           it.style.addClass("domkit-Table-cell")
@@ -364,14 +367,22 @@ using dom
           if (c < numCols && r < numRows)
           {
             if (sel.indexes.binarySearch(view.rowViewToModel(r)) >= 0)
+            {
               it.style.addClass("domkit-sel")
+              rowSel = true
+            }
           }
           it.style->width = "${colwSafe(c)}px"
           it.style->height = "${rowh}px"
           it.style->lineHeight = "${rowh+1}px"
         }
+        flags := TableFlags
+        {
+          it.focused  = manFocus
+          it.selected = rowSel
+        }
         cells[Pos(c, r)] = cell
-        if (c < numCols && r < numRows) view.onCell(cell, c, r, TableFlags {})
+        if (c < numCols && r < numRows) view.onCell(cell, c, r, flags)
         tbody.add(cell)
       }
     }
