@@ -510,7 +510,7 @@ class WebUtil
   internal const static Int LF  := '\n'
   internal const static Int HT  := '\t'
   internal const static Int SP  := ' '
-  internal const static Int maxTokenSize := 4096
+  internal const static Int maxTokenSize := 16384
 
 }
 
