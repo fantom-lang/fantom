@@ -57,9 +57,9 @@ fan.dom.WinPeer.open = function(uri, name, opts)
   }
 
   var w = fan.dom.Win.make();
-  if (opts != null) w.peer.win = window.open(uri.encode(), name, optStr);
-  if (name != null) w.peer.win = window.open(uri.encode(), name);
-  else              w.peer.win = window.open(uri.encode());
+  if (opts != null) w.peer.win = this.win.open(uri.encode(), name, optStr);
+  if (name != null) w.peer.win = this.win.open(uri.encode(), name);
+  else              w.peer.win = this.win.open(uri.encode());
   return w;
 }
 
@@ -217,22 +217,7 @@ fan.dom.WinPeer.prototype.onEvent = function(self, type, useCapture, handler)
     }
   }
 
-  if (window.addEventListener)
-  {
-    // trap hashchange for non-supporting browsers
-    if (type == "hashchange" && !("onhashchange" in window))
-    {
-      this.fakeHashChange(self, handler);
-      return;
-    }
-
-    this.win.addEventListener(type, handler.$func, useCapture);
-  }
-  else
-  {
-    this.win.attachEvent('on'+type, handler.$func);
-  }
-
+  this.win.addEventListener(type, handler.$func, useCapture);
   return handler;
 }
 
@@ -340,10 +325,10 @@ fan.dom.WinPeer.prototype.diagnostics = function(self)
   }
 
   // user-agent
-  map.set("ua", window.navigator.userAgent);
+  map.set("ua", this.win.navigator.userAgent);
 
   // performance.timing
-  var t = window.performance.timing;
+  var t = this.win.performance.timing;
   map.set("perf.timing.unload",         dur(t.unloadEventStart,      t.unloadEventEnd));
   map.set("perf.timing.redirect",       dur(t.redirectStart,         t.redirectEnd));
   map.set("perf.timing.domainLookup",   dur(t.domainLookupStart,     t.domainLookupEnd));
