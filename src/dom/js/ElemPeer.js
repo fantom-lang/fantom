@@ -99,6 +99,15 @@ fan.dom.ElemPeer.prototype.get = function(self, name, def)
   if (name == "value")   return this.elem.value;
   if (name == "checked") return this.elem.checked;
 
+  if (name == "contentWindow")
+  {
+    var v = this.elem.contentWindow;
+    if (v == null) return null;
+    var w = fan.dom.Win.make();
+    w.peer.win = v;
+    return w
+  }
+
   var val = this.elem[name];
   if (val == null) val = this.elem.getAttribute(name);
 
