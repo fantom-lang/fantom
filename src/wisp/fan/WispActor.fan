@@ -113,11 +113,11 @@ internal const class WispActor : Actor
       // skip leading CRLF (4.1)
       in := req.socket.in
       line := in.readLine
-      if (line == null) return false
+      if (line == null) throw Err("Empty request line")
       while (line.isEmpty)
       {
         line = in.readLine
-        if (line == null) return false
+        if (line == null) throw Err("Empty request line")
       }
 
       // parse request-line (5.1)
@@ -131,12 +131,12 @@ internal const class WispActor : Actor
 
       // uri; immediately reject any uri which starts with ..
       req.uri = Uri.decode(uri)
-      if (req.uri.path.first == "..") return false
+      if (req.uri.path.first == "..") throw Err("Reject URI")
 
       // version
       if (ver == "HTTP/1.1") req.version = ver11
       else if (ver == "HTTP/1.0") req.version = ver10
-      else return false
+      else throw Err("Unsupported version")
 
       // parse headers
       req.headers = WebUtil.parseHeaders(in).ro
@@ -144,7 +144,19 @@ internal const class WispActor : Actor
       // success
       return true
     }
-    catch (Err e) { return false }
+    catch (Err e)
+    {
+      // attempt to return error response
+      try
+      {
+        out := req.socket.out
+        req.socket.out
+          .print("HTTP/1.1 400 Bad Request: $e.toStr.toCode\r\n")
+          .print("\r\n").flush
+      }
+      catch (Err e2) {}
+      return false
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
