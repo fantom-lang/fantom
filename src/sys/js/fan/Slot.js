@@ -132,6 +132,7 @@ fan.sys.Slot.prototype.$$name = function(n)
     case "char":   return "$char";
     case "delete": return "$delete";
     case "enum":   return "$enum";
+    case "export": return "$export";
     case "fan":    return "$fan";
     case "float":  return "$float";
     case "import": return "$import";
