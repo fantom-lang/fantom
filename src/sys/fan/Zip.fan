@@ -42,7 +42,7 @@ final class Zip
   **
   ** Example:
   **   zip := Zip.read(File(`test.zip`).in)
-  **   File entry
+  **   File? entry
   **   while ((entry = zip.readNext()) != null)
   **   {
   **     data := entry.readAllBuf
