@@ -22,7 +22,7 @@ class HttpRes
   Int status
 
   ** The response headers.
-  Str:Str headers := Str:Str[:]
+  Str:Str headers := Str:Str[:] { it.caseInsensitive = true }
 
   ** The content of the response.
   Str content := ""
