@@ -75,7 +75,7 @@ using dom
       if (d.unit == "%" && px > 0)
       {
         per := d.val.toFloat / 100f * px.toFloat
-        css = "calc($d.toStr - ${per.toInt}px)"
+        css = "calc($d.toStr - ${per.round.toInt}px)"
       }
 
       if (kid isnot FlexBox)
