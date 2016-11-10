@@ -60,6 +60,21 @@ class Event
   ** Stop further propagation of this event.
   native Void stop()
 
+  ** Get an attribute by name.  If not found return
+  ** the specificed default value.
+  @Operator native Obj? get(Str name, Obj? def := null)
+
+  ** Set an attribute to the given value.
+  @Operator native Void set(Str name, Obj? val)
+
+  ** Get or set an attribute.
+  override Obj? trap(Str name, Obj?[]? args := null)
+  {
+    if (args == null || args.isEmpty) return get(name)
+    set(name, args.first)
+    return null
+  }
+
   ** The DataTransfer object for this event.
   native DataTransfer dataTransfer()
 

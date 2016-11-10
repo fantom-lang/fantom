@@ -57,6 +57,19 @@ fan.dom.EventPeer.prototype.stop = function(self)
   this.event.returnValue = false;
 }
 
+fan.dom.EventPeer.prototype.get = function(self, name, def)
+{
+  var val = this.event[name];
+  if (val != null) return val;
+  if (def != null) return def;
+  return null;
+}
+
+fan.dom.EventPeer.prototype.set = function(self, name, val)
+{
+  this.elem[name] = val;
+}
+
 fan.dom.EventPeer.prototype.dataTransfer = function(self)
 {
   // Andy Frank 19-Jun-2015 -- Chrome/WebKit do not allow reading getData during
