@@ -35,12 +35,20 @@ using dom
       DndUtil.map[data.hash] = data
       e.dataTransfer.setData("text/plain", data.hash.toStr)
     }
+    elem.onEvent(EventType.dragEnd, false) |e|
+    {
+      if (cbEnd != null) cbEnd(elem)
+    }
   }
 
   ** Callback to get data payload for drag event.
   Void onDrag(|Elem->Obj| f) { cbDrag = f }
 
+  ** Callback when the drag event has ended.
+  Void onEnd(|Elem| f) { cbEnd = f }
+
   private Func? cbDrag
+  private Func? cbEnd
 }
 
 **************************************************************************
@@ -74,7 +82,17 @@ using dom
       data := DndUtil.getData(e.dataTransfer)
       if (_canDrop(data)) elem.style.addClass("domkit-dnd-over")
     }
-    elem.onEvent(EventType.dragOver,  false) |e| { e.stop }
+    elem.onEvent(EventType.dragOver,  false) |e|
+    {
+      e.stop
+      if (cbOver != null)
+      {
+        // TODO: need to translate these to pageX,pageY
+        Int x := e->clientX
+        Int y := e->clientY
+        cbOver(Pos(x,y))
+      }
+    }
     elem.onEvent(EventType.dragLeave, false) |e|
     {
       if (e.target == elem)
@@ -95,6 +113,10 @@ using dom
   ** Callback when 'data' is dropped on this target.
   Void onDrop(|Obj data| f) { this.cbDrop = f }
 
+  ** Callback when drag target is over this drop target, where
+  ** 'pagePos' is the current drag node.
+  Void onOver(|Pos pagePos| f) { this.cbOver = f }
+
   private Bool _canDrop(Obj data)
   {
     cbCanDrop == null ? true : cbCanDrop.call(data)
@@ -102,6 +124,7 @@ using dom
 
   private Func? cbCanDrop
   private Func? cbDrop
+  private Func? cbOver
   private Int depth
 }
 

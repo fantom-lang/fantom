@@ -6,6 +6,10 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.70 (working)*
+- dom: Event.get,set,trap
+- domkit: DragTarget.onEnd, DropTarget.onOver
+
 *Build 1.0.69 (14 Jul 2016)*
 - Initial domkit code
 - dom: Doc.onEvent, removeEvent
