@@ -6,7 +6,7 @@
 //   13 Jul 2015  Andy Frank  Creation
 //
 
-.domkit-dnd-over::after{
+.domkit-dnd-over::after {
   content: "";
   position: absolute;
   top: 0;
