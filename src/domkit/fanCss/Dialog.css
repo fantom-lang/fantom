@@ -11,7 +11,7 @@ div.domkit-Dialog {
 }
 
 div.domkit-Dialog-frame {
-  background: #ececec;
+  background: #f8f8f8;
   border: 1px solid #aaa;
   border-radius: 4px 4px 0 0 ;
   box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.4);
@@ -21,13 +21,10 @@ div.domkit-Dialog-frame {
 
 div.domkit-Dialog-title {
   text-align: center;
-  height: 25px;
-  line-height: 25px;
-  border-bottom: 1px solid #aaa;
+  height: 26px;
+  line-height: 28px;
+  font-weight: 500;
   border-radius: 4px 4px 0 0;
-  background: -webkit-linear-gradient(top, #fff, #e8e8e8 1px, #d2d2d2);
-  background:    -moz-linear-gradient(top, #fff, #e8e8e8 1px, #d2d2d2);
-  background:         linear-gradient(top, #fff, #e8e8e8 1px, #d2d2d2);
   cursor: default;
   -webkit-user-select: none;
      -moz-user-select: none;
