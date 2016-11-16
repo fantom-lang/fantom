@@ -39,6 +39,9 @@ class Doc
   ** Get the body element.
   native Elem body()
 
+  ** Get the currently focued element, or 'null' for none.
+  native Elem? activeElem()
+
   **
   ** Get the element with this 'id', or 'null' if no
   ** element is found with this 'id'.

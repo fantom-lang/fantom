@@ -22,6 +22,13 @@ fan.dom.DocPeer.prototype.body = function(self)
   return fan.dom.ElemPeer.wrap(this.doc.body);
 }
 
+fan.dom.DocPeer.prototype.activeElem = function(self)
+{
+  var elem = this.doc.activeElement;
+  if (elem == null) return null;
+  return fan.dom.ElemPeer.wrap(elem);
+}
+
 fan.dom.DocPeer.prototype.elem = function(self, id)
 {
   var elem = this.doc.getElementById(id);
