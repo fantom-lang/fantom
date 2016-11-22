@@ -763,6 +763,11 @@ fan.sys.Uri.prototype.toCode = function()
   return s;
 }
 
+fan.sys.Uri.prototype.hash = function()
+{
+  return fan.sys.Str.hash(this.m_str);
+}
+
 fan.sys.Uri.prototype.toStr = function()
 {
   return this.m_str;
