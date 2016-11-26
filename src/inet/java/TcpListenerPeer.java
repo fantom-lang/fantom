@@ -115,7 +115,11 @@ public class TcpListenerPeer
       TcpSocket s = TcpSocket.make();
       implAccept(s.peer.socket);
       s.peer.connected(s);
-      if (sslContext != null) s = upgradeTls(s);
+      if (sslContext != null)
+      {
+        try { s = upgradeTls(s); }
+        catch (IOException e) { s.close(); throw e; }
+      }
       return s;
     }
     catch (IOException e)
