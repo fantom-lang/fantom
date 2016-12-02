@@ -54,7 +54,7 @@ a {
 }
 
 .domkit-font-mono {
-  font: 12px 'Roboto Mono' !important;
+  font: 12px 'Roboto Mono', monospace !important;
   line-height: 16px !important;
 }
 
