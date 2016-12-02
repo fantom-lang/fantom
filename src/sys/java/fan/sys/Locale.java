@@ -175,7 +175,7 @@ public class Locale
       {
         String lang = java.util.Locale.getDefault().getLanguage();
         String country = java.util.Locale.getDefault().getCountry();
-        if (country == null && country.length() == 0)
+        if (country == null || country.length() == 0)
           x = fromStr(lang);
         else
           x = fromStr(lang + "-" + country);
