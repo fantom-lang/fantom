@@ -457,7 +457,7 @@ class WebUtil
     if (env?.size > 0)
     {
       envStr.add("var env = fan.sys.Map.make(fan.sys.Str.\$type, fan.sys.Str.\$type);\n")
-      envStr.add("env.caseInsensitive\$(true);\n")
+      envStr.add("  env.caseInsensitive\$(true);\n")
       env.each |v,k|
       {
         envStr.add("  ")
@@ -467,20 +467,13 @@ class WebUtil
         else
           envStr.add("env.set('$k', $v);\n")
       }
-      envStr.add("fan.sys.Env.cur().\$setVars(env);\n")
+      envStr.add("  fan.sys.Env.cur().\$setVars(env);")
     }
 
     out.printLine(
      "<script type='text/javascript'>
-      //<![CDATA[
-      var webJsMain_hasRun = false;
-      var doLoad = function()
+      window.addEventListener('load', function()
       {
-        // safari appears to have a problem calling this event
-        // twice, so make sure we short-circuit if already run
-        if (webJsMain_hasRun) return;
-        webJsMain_hasRun = true;
-
         // inject env vars
         $envStr.toStr
 
@@ -493,12 +486,7 @@ class WebUtil
         // invoke main
         if (main.isStatic()) main.call();
         else main.callOn(main.parent().make());
-      }
-      if (window.addEventListener)
-        window.addEventListener('load', doLoad, false);
-      else
-        window.attachEvent('onload', doLoad);
-      //]]>
+      }, false);
       </script>")
   }
 
