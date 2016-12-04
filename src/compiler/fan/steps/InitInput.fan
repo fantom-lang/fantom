@@ -104,6 +104,7 @@ class InitInput : CompilerStep
   **
   private Void initPod()
   {
+    ts := DateTime.now.floor(1sec)
     meta := Str:Str[:] { ordered = true }
     meta["pod.name"]       = input.podName
     meta["pod.version"]    = input.version.toStr
@@ -113,7 +114,8 @@ class InitInput : CompilerStep
     meta["fcode.version"]  = FConst.FCodeVersion
     meta["build.host"]     = Env.cur.host
     meta["build.user"]     = Env.cur.user
-    meta["build.ts"]       = DateTime.now.toStr
+    meta["build.ts"]       = ts.toStr
+    meta["build.tsKey"]    = ts.toLocale("YYMMDDhhmmss")
     meta["build.compiler"] = typeof.pod.version.toStr
     meta["build.platform"] = Env.cur.platform
     meta.addAll(input.meta)
