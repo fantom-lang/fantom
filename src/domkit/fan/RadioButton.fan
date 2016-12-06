@@ -21,7 +21,7 @@ using dom
   {
     this.set("type", "radio")
     this.style.addClass("domkit-RadioButton")
-    // this.onEvent("change", false) |e| { fireAction(e) }
+    this.onEvent("change", false) |e| { fireAction(e) }
   }
 
   ** Wrap this checkbox with content that can also be
@@ -44,11 +44,15 @@ using dom
     set { this->checked = it }
   }
 
-  // ** Callback when state is toggled.
-  // Void onAction(|This| f) { this.cbAction = f }
-  //
-  // private Void fireAction(Event e) { cbAction?.call(this) }
-  // private Func? cbAction := null
+  ** Callback when state is toggled.
+  Void onAction(|This| f) { this.cbAction = f }
+
+  private Func? cbAction := null
+  private Void fireAction(Event e)
+  {
+    group?.select(this)
+    cbAction?.call(this)
+  }
 
   // internal use only
   internal ButtonGroup? group := null
