@@ -11,6 +11,7 @@ div.domkit-Popup {
   background: rgba(248, 248, 248, 0.95);
   border: 1px solid #ddd;
   box-shadow: 0px 9px 18px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
 }
 
 div.domkit-Popup-mask {

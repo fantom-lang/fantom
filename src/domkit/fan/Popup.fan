@@ -37,6 +37,8 @@ using dom
   ** is already open this method does nothing.
   Void open(Int x, Int y)
   {
+    sz := measure
+
     this.style.setAll([
       "left": "${x}px",
       "top":  "${y}px",
@@ -56,7 +58,6 @@ using dom
     })
 
     // shift halign if needed
-    sz := this.size
     switch (halign)
     {
       case Align.center: x = gutter.max(x - (sz.w / 2)); this.style->left = "${x}px"
@@ -98,6 +99,18 @@ using dom
 
   private Void fireOpen(Event? e)  { cbOpen?.call(this);  isOpen=true  }
   private Void fireClose(Event? e) { cbClose?.call(this); isOpen=false }
+
+  // TODO: should this be a core Elem method?
+  private Size measure()
+  {
+    b := Win.cur.doc.body
+    this.style->visibility = "hidden"
+    b.add(this)
+    sz := this.size
+    b.remove(this)
+    this.style->visibility = "visible"
+    return sz
+  }
 
   private const Int uid
   private static const AtomicRef nextId := AtomicRef(0)
