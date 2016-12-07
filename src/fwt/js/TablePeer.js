@@ -10,6 +10,7 @@
 // TableModel extensions
 //
 //  fan.fwt.TableModel.prototype.$uri = function(col,row) { return null; }
+//  fan.fwt.TableModel.prototype.$uriTarget = function(col,row) { return null; }
 //  fan.fwt.TableModel.prototype.$onMouseDown = function(col,row) {}
 //
 
@@ -336,6 +337,11 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       {
         var a = document.createElement("a");
         a.href = uri.encode();
+
+        var target = null;
+        if (model.$uriTarget) target = model.$uriTarget(view.m_cols.get(c), view.m_rows.get(r));
+        if (target != null) a.target = target;
+
         node.appendChild(a);
         node = a;
       }

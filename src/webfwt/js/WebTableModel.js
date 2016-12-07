@@ -23,6 +23,11 @@ fan.webfwt.WebTableModel.prototype.$uri = function(col,row)
   return this.uri(col, row);
 }
 
+fan.webfwt.WebTableModel.prototype.$uriTarget = function(col,row)
+{
+  return this.uriTarget(col, row);
+}
+
 fan.webfwt.WebTableModel.prototype.$onMouseDown = function(event,col,row)
 {
   this.onMouseDown(event, col, row);
