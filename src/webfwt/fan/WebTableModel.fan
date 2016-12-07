@@ -22,11 +22,13 @@ abstract class WebTableModel : TableModel
   ** Optional image to display when row is selected.
   virtual Image? imageSel(Int col, Int row) { null }
 
-  **
   ** Get the Uri used for this cell. Returning a Uri converts
   ** cell content to a hyperlink.
-  **
   virtual Uri? uri(Int col, Int row) { null }
+
+  ** Get the <a target> for the Uri used for this cell, or 'null'
+  ** for the default behavoir.
+  virtual Str? uriTarget(Int col, Int row) { null }
 
   ** Callback when mouse is pressed down on a cell.
   @Deprecated { msg="Use WebTableModel.onCellMouseDown" }
