@@ -34,6 +34,7 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
     if (fan.sys.Str.lower(key) == "content-type") ct = true;
     xhr.setRequestHeader(key, self.m_headers.get(key));
   }
+  xhr.withCredentials = self.m_withCredentials;
   if (content == null)
   {
     xhr.send(null);
