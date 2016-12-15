@@ -9,6 +9,7 @@
 *Build 1.0.70 (working)*
 - dom: Doc.activeElem
 - dom: Event.get,set,trap
+- dom: HttpReq.withCredentials
 - domkit: DragTarget.onEnd, DropTarget.onOver
 
 *Build 1.0.69 (14 Jul 2016)*
