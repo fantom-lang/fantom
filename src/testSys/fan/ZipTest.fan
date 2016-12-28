@@ -199,6 +199,12 @@ class ZipTest : Test
 
   Void testDeflate()
   {
+    verifyDeflate(null)
+    verifyDeflate(["nowrap":true])
+  }
+
+  private Void verifyDeflate([Str:Obj]? opts)
+  {
     // generate string with lots of duplicate text
     s := StrBuf()
     100.times { s.add("hello deflate!\n") }
@@ -211,14 +217,17 @@ class ZipTest : Test
 
     // write to buffer with deflate
     buf = Buf()
-    Zip.deflateOutStream(buf.out).print(text).close
+    if (opts == null)
+      Zip.deflateOutStream(buf.out).print(text).close
+    else
+      Zip.deflateOutStream(buf.out, opts).print(text).close
     deflateSize := buf.size
 
     // verify gzip is smaller than raw size
     verify(deflateSize < rawSize)
 
     // verify we can read it back out
-    x := Zip.deflateInStream(buf.flip.in).readAllStr
+    x := Zip.deflateInStream(buf.flip.in, opts).readAllStr
     verifyEq(text, x)
   }
 
