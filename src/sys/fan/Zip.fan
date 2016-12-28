@@ -151,14 +151,17 @@ final class Zip
 
   **
   ** Construct a new deflate output stream which wraps the given output stream,
-  ** and compresses data using the "deflate" compression format.
+  ** and compresses data using the "deflate" compression format.  Options:
+  **   - level: Int between 9 (best compression) to 0 (no compression)
+  **   - nowrap: Bool false to suppress defalate header and adler checksum
   **
-  static OutStream deflateOutStream(OutStream out)
+  static OutStream deflateOutStream(OutStream out, [Str:Obj?]? opts := null)
 
   **
   ** Construct a new deflate input stream which wraps the given input stream and
-  ** inflates data written using the "deflate" compression format.
+  ** inflates data written using the "deflate" compression format.  Options:
+  **   - nowrap: Bool false to suppress defalate header and adler checksum
   **
-  static InStream deflateInStream(InStream in)
+  static InStream deflateInStream(InStream in, [Str:Obj?]? opts := null)
 
 }

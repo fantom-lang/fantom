@@ -14,7 +14,9 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
+import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 /**
@@ -230,15 +232,32 @@ public final class Zip
 // Deflate/Inflate
 //////////////////////////////////////////////////////////////////////////
 
-  public static OutStream deflateOutStream(OutStream out)
+  public static OutStream deflateOutStream(OutStream out) { return deflateOutStream(out, null); }
+  public static OutStream deflateOutStream(OutStream out, Map opts)
   {
-    return new SysOutStream(new DeflaterOutputStream(SysOutStream.java(out)));
+    int level = Deflater.DEFAULT_COMPRESSION;
+    boolean nowrap = false;
+    if (opts != null)
+    {
+      if (opts.get("nowrap") != null) nowrap = ((Boolean)opts.get("nowrap")).booleanValue();
+      if (opts.get("level") != null) level = ((Long)opts.get("level")).intValue();
+    }
+    Deflater d = new Deflater(level, nowrap);
+    return new SysOutStream(new DeflaterOutputStream(SysOutStream.java(out), d));
   }
 
-  public static InStream deflateInStream(InStream in)
+  public static InStream deflateInStream(InStream in) { return deflateInStream(in, null); }
+  public static InStream deflateInStream(InStream in, Map opts)
   {
-    return new SysInStream(new InflaterInputStream(SysInStream.java(in)));
+    boolean nowrap = false;
+    if (opts != null)
+    {
+      if (opts.get("nowrap") != null) nowrap = ((Boolean)opts.get("nowrap")).booleanValue();
+    }
+    Inflater i = new Inflater(nowrap);
+    return new SysInStream(new InflaterInputStream(SysInStream.java(in), i));
   }
+
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

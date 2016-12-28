@@ -7,6 +7,7 @@
 **************************************************************************
 
 *Build 1.0.70 (working)*
+- Add options to Zip deflate in/out methods
 - dom: Doc.activeElem
 - dom: Event.get,set,trap
 - dom: HttpReq.withCredentials
