@@ -282,8 +282,13 @@ class FileTest : Test
 
     // copy overwrite=Func
     File? copyToFile
-    dirB.copyTo(dirX, ["overwrite":|File f->Bool| { if (copyToFile == null) copyToFile = f; return f.isDir || f.name=="a1"}])
+    File? copyFromFile
+    dirB.copyTo(dirX, ["overwrite":|File to,File from->Bool| {
+        if (copyToFile == null) { copyToFile = to; copyFromFile = from }
+        return to.isDir || to.name=="a1"
+      }])
     verifyEq(copyToFile, dirX)
+    verifyEq(copyFromFile, dirB)
     verifyEq((dirX + `a1`).readAllStr, "hello world!")
     verifyEq((dirX + `a2`).readAllStr, "bar")
     verifyEq((dirX + `dirA/a1`).readAllStr, "hello world!")
