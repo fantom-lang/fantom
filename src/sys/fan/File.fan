@@ -280,7 +280,7 @@ abstract const class File
   ** If during the copy, an existing file of the same name is found,
   ** then the "overwrite" option should be to 'true' to overwrite or
   ** 'false' to skip.  The overwrite option can also be a function
-  ** of type '|File f->Bool|' which is passed every destination file
+  ** of type '|File to,File from->Bool|' which is passed every to/from file
   ** to be overwritten.  If the overwrite function throws an exception,
   ** it is raised to the 'copyTo' caller.  If a directory overwrite is
   ** skipped, then it its children are skipped too.  If options are null
