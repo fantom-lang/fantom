@@ -55,6 +55,14 @@ class BorderTest : Test
     verifyBorder("1,2 inset #00ff00 3,0,0,2", [1,2,1,2], [inset], [green], [3,0,0,2], "1,2 inset #00ff00 3,0,0,2")
     verifyBorder("0,1,1,1 solid #00f 0,0,2,2", [0,1,1,1], [solid], [blue], [0,0,2,2], "0,1,1 solid #0000ff 0,0,2,2")
 
+    /// copy
+    b := Border("0,1,2,3 solid,inset,outset,solid #f00,#0f0,#00f,#000 1,2,3,4")
+    verifyBorder(b.toStr, [0,1,2,3], [solid,inset,outset,solid], [red,green,blue,black], [1, 2, 3, 4], b.toStr)
+    copy := Border(b) { widthLeft = 0; colorLeft =Color.green }
+    verifyBorder(copy.toStr, [0,1,2,0], [solid,inset,outset,solid], [red,green,blue,green], [1, 2, 3, 4], copy.toStr)
+    copy = Border(b) { widthTop = 10 }
+    verifyBorder(copy.toStr, [10,1,2,3], [solid,inset,outset,solid], [red,green,blue,black], [1, 2, 3, 4], copy.toStr)
+
     // errors
     verifyEq(Border.fromStr("%", false), null)
     verifyEq(Border.fromStr("% 3", false), null)

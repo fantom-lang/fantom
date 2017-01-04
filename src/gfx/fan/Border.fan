@@ -75,6 +75,35 @@ const class Border
   }
 
   **
+  ** Copy border with some modifications
+  **
+  new copy(Border orig, |This| f)
+  {
+    this.widthTop    = orig.widthTop
+    this.widthRight  = orig.widthRight
+    this.widthBottom = orig.widthBottom
+    this.widthLeft   = orig.widthLeft
+
+    this.styleTop    = orig.styleTop
+    this.styleRight  = orig.styleRight
+    this.styleBottom = orig.styleBottom
+    this.styleLeft   = orig.styleLeft
+
+    this.colorTop    = orig.colorTop
+    this.colorRight  = orig.colorRight
+    this.colorBottom = orig.colorBottom
+    this.colorLeft   = orig.colorLeft
+
+    this.radiusTopLeft     = orig.radiusTopLeft
+    this.radiusTopRight    = orig.radiusTopRight
+    this.radiusBottomRight = orig.radiusBottomRight
+    this.radiusBottomLeft  = orig.radiusBottomLeft
+
+    f(this)
+    toStr = formatStr
+  }
+
+  **
   ** Parse a border from string (see `toStr`).  If invalid
   ** and checked is true then throw ParseErr otherwise
   ** return null.  The string formatted as four optional
