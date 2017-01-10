@@ -30,7 +30,8 @@ using dom
   virtual Bool hasChildren() { !children.isEmpty }
 
   ** Get the children of this node.  If no children return
-  ** an empty list. Default behavior is no children.
+  ** an empty list. Default behavior is no children. This
+  ** method must return the same instances when called.
   virtual TreeNode[] children() { TreeNode#.emptyList }
 
   ** Callback to customize Elem for this node.
