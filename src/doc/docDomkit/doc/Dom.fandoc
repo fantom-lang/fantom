@@ -17,7 +17,8 @@ existing knowlege and terminology. But also so we avoid creating conflicts down
 the line as new features are added by browser vendors.
 
 This chapter will give a brief overview of the major [dom]`dom::index` API
-features.
+features.  Some of the more advanced topics such as Drag and Drop and Animation
+will be covered in subsequent chapters
 
 Win [#win]
 **********
@@ -34,6 +35,11 @@ Some sample APIs available on [Win]`dom::Win`:
   win.hyperlink(uri)   // hyperlink to new page
   win.hisBack          // go to previous page in session history
   win.viewport         // get size of window viewport
+
+  // timers
+  win.setTimeout(10sec) { ... }        // invoke func in 10sec
+  id := win.setInterval(1sec) { ... }  // invoke func every 1sec
+  win.clearInterval(id)                // cancel timer with id
 
 See [Win]`dom::Win` for complete Win API.
 
@@ -149,7 +155,27 @@ See [Style]`dom::Style` for complete Style API.
 
 Events [#events]
 ****************
-TODO
+DOM user events are modeled with [Event]`dom::Event`. Event callbacks can be
+added to Win using [Win.onEvent]`dom::Win.onEvent`:
+
+  win.onEvent("hashchange", false) |e| { Win.cur.alert("hashchanged!") }
+
+Likewise Elem can register callbacks using [Elem.onEvent]`dom::Elem.onEvent`:
+
+  elem.onEvent("mousedown",         false) |e| { echo("Pressed $e.target" }
+  elem.onEvent(EventType.mouseDown, false) |e| { echo("Pressed $e.target" }
+
+Both of the above examples are equivalent. By convention we prefer using
+[EventType]`dom::EventType` to register events to avoid typo errors.
+
+To remove a registered event handler, pass the function instance to
+'removeEvent':
+
+  func := elem.onEvent(EventType.mouseDown, false) { ... }
+  elem.removeEvent(EventType.mouseDown, false, func)
+
+See [Win]`dom::Win`, [Elem]`dom::Elem` and [Event]`dom::Event` for complete API
+details.
 
 HttpReq  [#xhr]
 ***************
