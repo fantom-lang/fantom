@@ -8,4 +8,86 @@
 
 Overview [#overview]
 ********************
+Since DomKit "widgets" are simply HTML + CSS, they can be placed most anywhere
+in the DOM tree. However, since DomKit is specifically targeted at building
+rich user interfaces, it includes some standard layout containers to simplify
+constructing common UI designs:
+
+ - [Box]`#box`
+ - [GridBox]`#gridBox`
+ - [FlowBox]`#flowBox`
+ - [SashBox]`#sashBox`
+
+Box [#box]
+**********
+[Box]`domkit::Box` is the base class for [Elems]`dom::Elem` who are intended to
+layout out their children in a specific way. Box defaults several CSS
+properties to simplify composition:
+
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+GridBox [#gridBox]
+******************
+[GridBox]`domkit::GridBox` lays out children in a table format with a fixed
+number of columns and rows.
+
+Example [#gridBoxEx]
+====================
+
+  GridBox
+  {
+    it.cellStyle("all", "all",  "padding: 4px")
+    it.cellStyle("all", "even", "background: #f8f8f8")
+    it.cellStyle("all",     4,  "background: #e8e8e8; border-top: 1px solid #ccc")
+
+    it.addRow([Label {
+      it.text = "Enter User Information"
+      it.style->fontWeight = "bold"
+    }], [2])
+    it.addRow([Label { it.text="First Name:"  }, TextField {}])
+    it.addRow([Label { it.text="Middle Name:" }, TextField {}])
+    it.addRow([Label { it.text="Last Name:"   }, TextField {}])
+    it.addRow([null, Button { it.text="Submit" }])
+  }
+
+![GridBox]`Layout-GridBox.png`
+
+cellStyle [#gridBoxCellStyle]
+=============================
+The `domkit::GridBox.cellStyle` command may be used to stylize groups of cells.
+Valid values for 'col' and 'row':
+
+  - Specific index (0, 1, 2, etc)
+  - Range of indexes (0..4, 7..<8, etc)
+  - "all":  apply to all row or columns
+  - "even": apply only to even row or columns indexes
+  - "odd":  apply only to odd row or column indexes
+
+  cellStyle("all",   "all", "padding: 4px")
+  cellStyle("all",   "odd", "padding: 4px")
+  cellStyle(    0,       1, "padding: 4px")
+  cellStyle(    3,    2..5, "padding: 4px")
+
+colSpan [#gridBoxColSpan]
+=========================
+TODO
+
+halign [#gridBoxHalign]
+=======================
+By default `domkit::GridBox` will use preferred sizes for all child cells. This
+will often times leave free space around the GridBox. To adjust how the GridBox
+is positioned in this space use `domkit::GridBox.halign`:
+
+  GridBox { it.halign = Align.center }
+
+FlowBox [#flowBox]
+******************
+TODO
+
+SashBox [#sashBox]
+******************
 TODO

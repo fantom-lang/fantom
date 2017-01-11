@@ -207,8 +207,8 @@ Example setting request headers:
 
 See [HttpReq]`dom::HttpReq` and [HttpRes]`dom::HttpRes` for complete API.
 
-Session and Local Storage [#storage]
-************************************
+Web Storage [#storage]
+**********************
 The [Win]`dom::Win` API provides methods for accessing both session and local
 browser [storage]`dom::Storage`:
 
