@@ -1,15 +1,11 @@
 **************************************************************************
-** title:      Index
+** title:      Modals
 ** author:     Andy Frank
-** created:    11 Jun 2017
+** created:    11 Jan 2017
 ** copyright:  Copyright (c) 2017, Brian Frank and Andy Frank
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-[
-  [`Intro`,    "Introduction"],
-  [`Dom`,      "Low-level DOM layer documentation"],
-  [`Layout`,   "Layout container documentation"],
-  [`Controls`, "Control library documentation"],
-  [`Modals`,   "Modal library documentation"],
-]
+Overview [#overview]
+********************
+TODO
