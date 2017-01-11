@@ -183,8 +183,43 @@ See [HttpReq]`dom::HttpReq` and [HttpRes]`dom::HttpRes` for complete API.
 
 Session and Local Storage [#storage]
 ************************************
-TODO
+The [Win]`dom::Win` API provides methods for accessing both session and local
+browser [storage]`dom::Storage`:
+
+  // local
+  win.localStorage["bar"]           // return value for bar from local storage
+  win.localStorage["foo"] = 25      // store foo:25 in local storage
+  win.localStorage.remove("foo")    // remove foo from local storage
+  win.localStorage.clear            // clear all contents from local storage
+
+  // session
+  win.sessionStorage["bar"]         // return value for bar from session storage
+  win.sessionStorage["foo"] = 33    // store foo:33 in session storage
+  win.sessionStorage.remove("foo")  // remove foo from session storage
+  win.sessionStorage.clear          // clear all contents from session storage
+
+See [Storage]`dom::Storage` for complete API.
 
 MutationObserver [#mutationObserver]
 ************************************
-TODO
+[MutationObserver]`dom::MutationObserver` provides access to the W3C Mutation
+Event API.  To use a MutationObserver first create an instance and provide the
+callback function to invoke when a mutation occurs:
+
+  observer := MutationObserver() |recs|
+  {
+    // callback when DOM mutation occurs where
+    // recs is the list of mutations
+  }
+
+Each mutation is modeled with [MutationRec]`dom::MutationRec`. Then attach your
+observer to a DOM node to start listening for events:
+
+  // listen for child add/remove events on elem
+  observer.observe(elem, ["childList":true])
+
+If you wish to stop receiving all events for your observer instance, call
+'disconnect'
+
+  // detach this observer instance from all mutation events
+  observer.disconnect
