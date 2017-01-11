@@ -35,7 +35,7 @@ Some sample APIs available on [Win]`dom::Win`:
   win.hisBack          // go to previous page in session history
   win.viewport         // get size of window viewport
 
-See [Win]`dom::Win` for complete API.
+See [Win]`dom::Win` for complete Win API.
 
 Doc [#doc]
 **********
@@ -51,7 +51,7 @@ Some sample APIs available on [Doc]`dom::Doc`:
   doc.querySelector("div.foo")      // find first <div> element where class='foo'
   doc.querySelectorAll("div.bar")   // find all <div> elements where class='bar'
 
-See [Doc]`dom::Doc` for complete API.
+See [Doc]`dom::Doc` for complete Doc API.
 
 Elem [#elem]
 ************
@@ -102,11 +102,50 @@ Methods for querying and modifying the DOM tree:
   elem.querySelector("img")     // find first <img> descendant
   elem.querySelectorAll("img")  // find all <img> descendants
 
-See [Elem]`dom::Elem` for complete API.
+See [Elem]`dom::Elem` for complete Elem API.
 
 Style [#style]
 **************
-[Style]`dom::Style` provides access to both inline and class CSS styling.
+[Style]`dom::Style` provides access to both inline and class CSS styling, and
+is accessed with the 'style' method:
+
+  style := elem.style
+
+Classes [#styleClass]
+=====================
+Methods for working with CSS style classes:
+
+  style.classes                // return the current class name(s)
+  style.hasClass("alpha")      // does elem have the given class name?
+  style.addClass("beta")       // add a new class to current class list
+  style.removeClass("gamma")   // remove a class, leaving others remaining
+  style.toggleClass("beta")    // add class if missing, remove if exists
+
+Properties [#styleProps]
+========================
+Methods for working with CSS properties:
+
+  style["background-color"] = "#f00"  // set style background-color: #f00
+  style->backgroundColor = "#f00"     // set style background-color: #f00
+  style["color"]                      // get color property value
+  style->color                        // get color property value
+  style.computed("color")             // get the computed color property value
+
+  style.setAll(["color":"#f00", "background:"#eee"])  // set list of properties
+  style.setCss("color: #f00; background: #eee")       // set with CSS grammar
+
+Note in the examples above the [trap]`sys::Obj.trap` operator can be used as a
+convenience to [get]`dom::Style.get` and [set]`dom::Style.set`. Hyphenated
+properties should be specified using camel case when using trap:
+
+  style->backgroundColor == style["background-color"]
+
+Vendor Prefixes [#styleVendorPrefix]
+====================================
+Style will automatically handle adding appropriate vendor prefixes, and
+therefore should not be specified in implementors code.
+
+See [Style]`dom::Style` for complete Style API.
 
 Events [#events]
 ****************
