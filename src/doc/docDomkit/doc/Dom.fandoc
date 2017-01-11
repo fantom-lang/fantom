@@ -1,0 +1,80 @@
+**************************************************************************
+** title:      Dom
+** author:     Andy Frank
+** created:    11 Jan 2017
+** copyright:  Copyright (c) 2017, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+When we refer to DomKit, we implicitly include the low-level [dom]`dom::index`
+pod. And while this pod is a stand-alone API and can be used independently of
+DomKit, it provides most of the heavy lifting for DomKit.
+
+The Dom APIs generally track the W3C DOM specification verbatim so we can reuse
+existing knowlege and terminology. But also so we avoid creating conflicts down
+the line as new features are added by browser vendors.
+
+This chapter will give a brief overview of the major [dom]`dom::index` API
+features.
+
+Win [#win]
+**********
+The [Win]`dom::Win` maps to the W3C Window object. Most API calls will stem
+from the current Win instance:
+
+  // get the current Win instance for this Window
+  win := Win.cur
+
+Some sample APIs available on [Win]`dom::Win`:
+
+  win.alert("Hello!")  // display a modal dialog
+  win.uri              // the URI for this page
+  win.hyperlink(uri)   // hyperlink to new page
+  win.hisBack          // go to previous page in session history
+  win.viewport         // get size of window viewport
+
+Doc [#doc]
+**********
+The [Doc]`dom::Doc` maps to the W3C Document object.
+
+  // get the Doc for the current Win instance
+  doc := Win.cur.doc
+
+Some sample APIs available on [Doc]`dom::Doc`:
+
+  doc.elem("someId")                // return the Elem with id='someId'
+  doc.createElem("div")             // create a new <div> element
+  doc.querySelector("div.foo")      // find first <div> element where class='foo'
+  doc.querySelectorAll("div.bar")   // find all <div> elements where class='bar'
+
+Elem [#elem]
+************
+The [Elem]`dom::Elem` maps to the W3C Element object.
+
+TODO
+
+Style [#style]
+**************
+TODO
+
+Events [#events]
+****************
+TODO
+
+HttpReq (XmlHttpRequest) [#xhr]
+*******************************
+TODO
+
+Session and Local Storage [#storage]
+************************************
+TODO
+
+MutationObserver [#mutationObserver]
+************************************
+TODO
+
+Trap Operator [#trap]
+*********************
+TODO

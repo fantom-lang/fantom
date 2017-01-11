@@ -1,0 +1,23 @@
+**************************************************************************
+** title:      Intro
+** author:     Andy Frank
+** created:    11 Jan 2017
+** copyright:  Copyright (c) 2017, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+DomKit is a HTML5 UI toolkit designed for building Web-based user interfaces.
+Collectivity DomKit is composed of two layers:
+
+  - **dom**: The [dom]`dom::index` pod provides low-level access to the browser DOM
+  - **domkit**: A library of reusable widgets and utilities used to construct UI's
+
+One of the chief design goals for DomKit is to minimize the abstractions added
+the the W3C DOM, which has several benefits:
+
+  - Allows us to take advantage of browser innovations as they are added over time
+  - Limits conflicts for using 3rd Party HTML components with DomKit
+  - Leverages existing knowledge and resources for building HTML interfaces
+  - Keeps library smaller and simpler
