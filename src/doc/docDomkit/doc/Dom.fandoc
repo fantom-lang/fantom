@@ -35,6 +35,8 @@ Some sample APIs available on [Win]`dom::Win`:
   win.hisBack          // go to previous page in session history
   win.viewport         // get size of window viewport
 
+See [Win]`dom::Win` for complete API.
+
 Doc [#doc]
 **********
 The [Doc]`dom::Doc` maps to the W3C Document object.
@@ -49,15 +51,62 @@ Some sample APIs available on [Doc]`dom::Doc`:
   doc.querySelector("div.foo")      // find first <div> element where class='foo'
   doc.querySelectorAll("div.bar")   // find all <div> elements where class='bar'
 
+See [Doc]`dom::Doc` for complete API.
+
 Elem [#elem]
 ************
 The [Elem]`dom::Elem` maps to the W3C Element object.
 
-TODO
+  // create Elems
+  Elem("div")   // create new unattached <div> element
+  Elem("img")   // create new unattached <img> element
+
+  // add Elem to parent
+  p := Elem("p") { it.text="Lorem ipsum" }
+  parent.add(p)
+
+Attributes [#elemAttrs]
+=======================
+Elem attribute access APIs:
+
+  elem["alt"]               // get an attr value
+  elem["alt"] = "Alt text"  // set an attr value
+  elem->alt                 // get an attr (equivalent to elem["alt"])
+  elem->alt = "Alt text"    // set an attr (equivalent to elem["alt"] = "Alt text")
+  elem.id                   // 'id' attribute
+  elem.tagName              // tag name of this element
+  elem.text = "Foo"         // set innerText content of this element
+  elem.html = "<b>Foo</b>"  // set innerHTML content of this element
+
+Note in the examples above the [trap]`sys::Obj.trap` operator can be used as a
+convenience to [get]`dom::Elem.get` and [set]`dom::Elem.set`. Some Element
+properties have a typed slot on Elem (such as 'id' and 'tagName'). The
+get/set/trap methods can be used to access any property defined on the backing
+W3C Element node.  This allows implementors to access any property without
+requiring a Dom API update.
+
+Tree Operations [#elemTree]
+===========================
+Methods for querying and modifying the DOM tree:
+
+  elem.parent                   // parent element
+  elem.prevSibling              // prev sibling
+  elem.nextSibling              // next sibling
+  elem.children                 // List of child elements
+  elem.firstChild               // first child, or null if no children
+  elem.lastChild                // last child, or null if no children
+  elem.containsChild(child)     // is child a descendant of parent
+  elem.add(child)               // add a new child element
+  elem.replace(cur, newChild)   // replace a child with new element
+  elem.remove(child)            // remove a child element
+  elem.querySelector("img")     // find first <img> descendant
+  elem.querySelectorAll("img")  // find all <img> descendants
+
+See [Elem]`dom::Elem` for complete API.
 
 Style [#style]
 **************
-TODO
+[Style]`dom::Style` provides access to both inline and class CSS styling.
 
 Events [#events]
 ****************
@@ -73,8 +122,4 @@ TODO
 
 MutationObserver [#mutationObserver]
 ************************************
-TODO
-
-Trap Operator [#trap]
-*********************
 TODO
