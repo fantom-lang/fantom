@@ -58,8 +58,8 @@ Example [#gridBoxEx]
 
 cellStyle [#gridBoxCellStyle]
 =============================
-The `domkit::GridBox.cellStyle` command may be used to stylize groups of cells.
-Valid values for 'col' and 'row':
+The [cellStyle]`domkit::GridBox.cellStyle` command may be used to stylize
+groups of cells. Valid values for 'col' and 'row':
 
   - Specific index (0, 1, 2, etc)
   - Range of indexes (0..4, 7..<8, etc)
@@ -72,9 +72,29 @@ Valid values for 'col' and 'row':
   cellStyle(    0,       1, "padding: 4px")
   cellStyle(    3,    2..5, "padding: 4px")
 
-colSpan [#gridBoxColSpan]
-=========================
-TODO
+addRow [#gridBoxAddRow]
+=======================
+Children are added to a GridBox a row at a time using
+[addRow]`domkit::GridBox.addRow`. If 'null' is passed for any position on the
+row, that cell will be left empty:
+
+   // leave first cell empty
+   it.addRow([null, Button { it.text="Submit" }])
+
+Optionally, [addRow]`domkit::GridBox.addRow` takes an argument that can specify
+that child cells should span multiple columns:
+
+   // pass a single child, but specify it should span 2 columns
+   it.addRow([Label {
+     it.text = "Enter User Information"
+     it.style->fontWeight = "bold"
+   }], [2])
+
+The 'colspan' argument may be applied to multiple children, and the list values
+correspond to the child list position:
+
+  // Add two children, where child1 spans 2 colums, and child2 3 columns
+  grid.addRow([child1, child2], [2,3])
 
 halign [#gridBoxHalign]
 =======================
@@ -86,7 +106,61 @@ is positioned in this space use `domkit::GridBox.halign`:
 
 FlowBox [#flowBox]
 ******************
-TODO
+[FlowBox]`domkit::FlowBox` lays out child nodes side-by-side horizontally.
+
+  FlowBox
+  {
+    Button { it.text="Alpha" },
+    Button { it.text="Beta"  },
+    Button { it.text="Gamma" },
+  }
+
+![FlowBox-1]`Layout-FlowBox-1.png`
+
+The alignment of children inside a FlowBox can be adjusted using
+[halign]`domkit::FlowBox.halign`:
+
+  FlowBox
+  {
+    it.halign = Align.center
+    Button { it.text="Alpha" },
+    Button { it.text="Beta"  },
+    Button { it.text="Gamma" },
+  }
+
+![FlowBox-2]`Layout-FlowBox-2.png`
+
+The spacing between each child can be configured use
+[gaps]`domkit::FlowBox.gaps`, where each gap is the space between index and
+index+1 children:
+
+  FlowBox
+  {
+    it.gaps = ["4px", "16px"]
+    Button { it.text="Alpha" },  // 4px gap after Alpha
+    Button { it.text="Beta"  },  // 16px gap after Beta
+    Button { it.text="Gamma" },
+  }
+
+![FlowBox-3]`Layout-FlowBox-3.png`
+
+If a FlowBox contains more children than 'gaps', the 'gaps' list will be cycled
+over the child list:
+
+  FlowBox
+  {
+    it.gaps = ["4px", "1px"]
+    Button { ... },   // 4px gap after
+    Button { ... },   // 1px gap after
+    Button { ... },   // 4px gap after
+    Button { ... },
+  }
+
+  FlowBox
+  {
+    it.gaps = ["4px"]
+    ...  // 4px gap between all children
+  }
 
 SashBox [#sashBox]
 ******************
