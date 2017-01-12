@@ -17,6 +17,7 @@ constructing common UI designs:
  - [GridBox]`#gridBox`
  - [FlowBox]`#flowBox`
  - [SashBox]`#sashBox`
+ - [CardBox]`#cardBox`
  - [FlexBox]`#flexBox`
 
 Box [#box]
@@ -166,6 +167,25 @@ over the child list:
 SashBox [#sashBox]
 ******************
 TODO
+
+CardBox [#cardBox]
+******************
+[CardBox]`domkit::CardBox` lays out child elements as a stack of cards, where
+only one card may be visible at a time:
+
+  CardBox
+  {
+    Box { it.style->background="#e74c3c"; it.text="Card #0" },
+    Box { it.style->background="#2ecc71"; it.text="Card #1" },
+    Box { it.style->background="#3498db"; it.text="Card #2" },
+  }
+
+The visible card is changed using
+[selectedIndex]`domkit::CardBox.selectedIndex`:
+
+  cardBox.selectedIndex = 2
+
+![CardBox]`Layout-CardBox.png`
 
 FlexBox [#flexBox]
 ******************
