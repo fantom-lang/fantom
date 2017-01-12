@@ -1,0 +1,47 @@
+**************************************************************************
+** title:      Drag and Drop
+** author:     Andy Frank
+** created:    12 Jan 2017
+** copyright:  Copyright (c) 2017, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+TODO
+
+Drag and Drop [#dnd]
+********************
+Any [Elem]`dom::Elem` can be converted into a drag target using
+[DragTarget]`domkit::DragTarget`:
+
+  Box
+  {
+    it.text = "Drag me"
+    DragTarget.bind(it)
+    {
+      // get the data payload when a drag event starts
+      it.onDrag { "Hi :)" }
+    }
+  }
+
+Likewise any Elem can be converted into a drop target using
+[DropTarget]`domkit::DropTarget`:
+
+  Box
+  {
+    it.text = "Drop on me"
+    DropTarget.bind(it)
+    {
+      it.onDrop |data| { echo("# drop: $data") }
+    }
+  }
+
+You may specify if the given drag data is able to be dropped on a
+DropTarget using [canDrop]`domkit::DropTarget.canDrop`:
+
+  DropTarget.bind(elem)
+  {
+    it.canDrop |data| { data == "foo" }
+    it.onDrop  |data| { echo("# drop: $data") }
+  }

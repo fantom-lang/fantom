@@ -9,3 +9,48 @@
 Overview [#overview]
 ********************
 TODO
+
+Dialog [#dialog]
+****************
+[Dialog]`domkit::Dialog` opens a modal window above page content.
+
+  d := Dialog
+  {
+    it.title = "Hello"
+    Box
+    {
+      it.style->padding = "12px"
+      it.text = "Hello, World"
+    },
+  }
+  d.buttons = [
+    Button { it.text="Close"; onAction { d.close }}
+  }
+  d.open
+
+To modify the default size of dialog, override the 'width' and
+'height' styles:
+
+  Dialog
+  {
+   it.style->width  = "600px"
+   it.style->height = "400px"
+   it.title = "Hello"
+   Box { ... },
+  }
+
+Popup [#popup]
+**************
+[Popup]`domkit::Popup` opens a popup window above page content. The popup is
+dismissed by clicking anywhere outside of the popup, or by pressing the 'Esc'
+key:
+
+  p := Popup
+  {
+    Elem {... },
+  }
+  p.open(100, 100)
+
+Tooltip [#tooltip]
+******************
+TODO
