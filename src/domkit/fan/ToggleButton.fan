@@ -11,7 +11,7 @@ using dom
 **
 ** ToggleButton models a boolean state toggled by pressing a button.
 **
-** See also: [pod doc]`pod-doc#toggleButton`, `Button`
+** See also: [docDomkit]`docDomkit::Controls#toggleButton`, `Button`
 **
 @Js class ToggleButton : Button
 {

@@ -11,7 +11,7 @@ using dom
 **
 ** GridBox lays its children out in a two dimensional grid.
 **
-** See also: [pod doc]`pod-doc#gridBox`
+** See also: [docDomkit]`docDomkit::Layout#gridBox`
 **
 @Js class GridBox : Box
 {

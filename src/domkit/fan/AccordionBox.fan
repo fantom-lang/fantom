@@ -10,9 +10,10 @@ using dom
 
 **
 ** AccordionBox displays collapsible content panels for presenting
-** information in a limited amount of vertical space.
+** information in a limited amount of vertical space, where the
+** header element is used to collapse or expand the child content.
 **
-** See also: [pod doc]`pod-doc#accordionBox`
+** See also: [docDomkit]`docDomkit::Layout`
 **
 @Js class AccordionBox : Box
 {

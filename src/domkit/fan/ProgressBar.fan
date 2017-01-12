@@ -11,6 +11,8 @@ using dom
 **
 ** ProgressBar visualizes progress of a long running operation
 **
+** See also: [docDomkit]`docDomkit::Controls#progressBar`
+**
 @Js class ProgressBar : Elem
 {
   new make(|This|? f := null) : super("div")

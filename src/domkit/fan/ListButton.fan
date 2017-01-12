@@ -12,7 +12,8 @@ using dom
 ** ListButton allows user selection of an item in a list by
 ** showing a listbox popup on button press.
 **
-** See also: [pod doc]`pod-doc#listButton`, `Button`, `ToggleButton`
+** See also: [docDomkit]`docDomkit::Controls#listButton`,
+** `Button`, `ToggleButton`
 **
 @Js class ListButton : Button
 {

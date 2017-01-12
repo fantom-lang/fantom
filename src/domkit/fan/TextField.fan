@@ -9,7 +9,9 @@
 using dom
 
 **
-** Text field input element
+** Text field input element.
+**
+** See also: [docDomkit]`docDomkit::Controls#textField`
 **
 @Js class TextField : Elem
 {

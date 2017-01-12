@@ -12,7 +12,8 @@ using dom
 ** ButtonGroup groups a set of toggle or radio buttons and handles
 ** making sure only one button in group is selected at a time.
 **
-** See also: [pod doc]`pod-doc#toggleButton`, `ToggleButton`, `RadioButton`
+** See also: [docDomkit]`docDomkit::Controls#buttonGroup`,
+** `ToggleButton`, `RadioButton`
 **
 @Js class ButtonGroup
 {

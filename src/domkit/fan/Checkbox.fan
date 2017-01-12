@@ -11,7 +11,7 @@ using dom
 **
 ** Checkbox displays a checkbox that can be toggled on and off.
 **
-** See also: [pod doc]`pod-doc#checkbox`
+** See also: [docDomkit]`docDomkit::Controls#checkbox`
 **
 @Js class Checkbox : Elem
 {

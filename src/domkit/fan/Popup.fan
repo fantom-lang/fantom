@@ -12,7 +12,7 @@ using dom
 **
 ** Popup window which can be closed clicking outside of element.
 **
-** See also: [pod doc]`pod-doc#popup`
+** See also: [docDomkit]`docDomkit::Modals#popup`
 **
 @Js class Popup : Elem
 {

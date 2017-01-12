@@ -12,7 +12,7 @@ using dom
 ** CardBox lays out child elements as a stack of cards, where
 ** only one card may be visible at a time.
 **
-** See also: [pod doc]`pod-doc#cardBox`
+** See also: [docDomkit]`docDomkit::Layout#cardBox`
 **
 @Js class CardBox : Box
 {
