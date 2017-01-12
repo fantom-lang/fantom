@@ -15,6 +15,8 @@ using dom
 **
 ** TreeNode models a node in a Tree.
 **
+** See also: [docDomkit]`docDomkit::Controls#tree`
+**
 @Js class TreeNode
 {
   ** Constructor.
@@ -74,6 +76,8 @@ using dom
 
 **
 ** Tree visualizes a TreeModel as a series of expandable nodes.
+**
+** See also: [docDomkit]`docDomkit::Controls#tree`
 **
 @Js class Tree : Box
 {

@@ -11,6 +11,8 @@ using dom
 **
 ** Popup menu
 **
+** See also: [docDomkit]`docDomkit::Modals#popup`
+**
 @Js class Menu : Popup
 {
   new make() : super()

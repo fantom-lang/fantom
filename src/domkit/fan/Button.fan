@@ -11,7 +11,8 @@ using dom
 **
 ** Button is a widget that invokes an action when pressed.
 **
-** See also: [pod doc]`pod-doc#button`, `ToggleButton`, `ListButton`
+** See also: [docDomkit]`docDomkit::Controls#button`,
+** `ToggleButton`, `ListButton`
 **
 @Js class Button : Elem
 {

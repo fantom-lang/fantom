@@ -11,7 +11,7 @@ using dom
 **
 ** FlowBox lays out its children in a one-directional flow.
 **
-** See also: [pod doc]`pod-doc#flowBox`
+** See also: [docDomkit]`docDomkit::Layout#flowBox`
 **
 @Js class FlowBox : Box
 {

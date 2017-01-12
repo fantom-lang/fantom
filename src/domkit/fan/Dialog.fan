@@ -12,6 +12,8 @@ using dom
 **
 ** Dialog manages a modal window above page content.
 **
+** See also: [docDomkit]`docDomkit::Modals#dialog`
+**
 @Js class Dialog : Box
 {
   new make() : super()

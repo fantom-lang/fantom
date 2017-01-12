@@ -13,7 +13,7 @@ using dom
 ** Tooltip displays a small popup when the mouse hovers over the
 ** bound node element, and is dismissed when the mouse moves out.
 **
-** See also: [pod doc]`pod-doc#tooltip`
+** See also: [docDomkit]`docDomkit::Modals#tooltip`
 **
 @Js class Tooltip : Elem
 {

@@ -63,6 +63,14 @@ instance will be created using 'Obj.toStr':
     it.elemOff = "Off"
   }
 
+RadioButton [#radio]
+********************
+TODO
+
+ButtonGroup [#buttonGroup]
+**************************
+TODO
+
 ListButton [#listButton]
 ************************
 [ListButton]`domkit::ListButton` allows user selection of a list item by
@@ -126,10 +134,6 @@ TODO
 
 ProgressBar [#progressBar]
 **************************
-TODO
-
-RadioButton [#radio]
-********************
 TODO
 
 TextField [#textField]

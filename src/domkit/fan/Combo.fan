@@ -13,7 +13,7 @@ using dom
 ** that allows a user to select from a list or manually enter a
 ** value.
 **
-** See also: [pod doc]`pod-doc#combo`
+** See also: [docDomkit]`docDomkit::Controls#combo`
 **
 @Js class Combo : Elem
 {

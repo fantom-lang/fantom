@@ -17,7 +17,7 @@ using dom
 ** DragTarget converts an Elem into a drag target for
 ** a drag-and-drop events.
 **
-** See also: [pod doc]`pod-doc#dnd`
+** See also: [docDomkit]`docDomkit::Dnd`
 **
 @Js class DragTarget
 {
@@ -61,7 +61,7 @@ using dom
 ** dropped on this target.  The 'onDrop' callback is invoked when a
 ** drop event completes.
 **
-** See also: [pod doc]`pod-doc#dnd`
+** See also: [docDomkit]`docDomkit::Dnd`
 **
 @Js class DropTarget
 {

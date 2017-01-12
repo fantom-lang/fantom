@@ -11,6 +11,8 @@ using dom
 **
 ** Table displays a grid of rows and columns.
 **
+** See also: [docDomkit]`docDomkit::Controls#table`
+**
 @Js class Table : Elem
 {
   ** Constructor.

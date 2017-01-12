@@ -11,6 +11,8 @@ using dom
 **
 ** Multi-line text input element
 **
+** See also: [docDomkit]`docDomkit::Controls#textArea`
+**
 @Js class TextArea : Elem
 {
   new make() : super("textarea")
