@@ -27,9 +27,10 @@ DOM element node (i.e. a '<div>'). It can be used and place anywhere in your
 DOM tree. Likewise a "widget" can also contain most any valid HTML content as
 children.
 
-This manual is organized into 4 main sections:
+This manual is organized into 5 main sections:
 
   - **`Dom`**: Low-level DOM API overview
   - **`Layout`**: Overview of DomKit layout containers
   - **`Controls`**: Overview of standard DomKit controls
   - **`Modals`**: Overview of DomKit modal elements
+  - **[Drag and Drop]`Dnd`**: Overview of DomKit drag and drop API

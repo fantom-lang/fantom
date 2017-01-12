@@ -12,4 +12,5 @@
   [`Layout`,   "Layout container documentation"],
   [`Controls`, "Control library documentation"],
   [`Modals`,   "Modal library documentation"],
+  [`Dnd`,      "Drag and drop documentation"],
 ]
