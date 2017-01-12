@@ -17,6 +17,7 @@ constructing common UI designs:
  - [GridBox]`#gridBox`
  - [FlowBox]`#flowBox`
  - [SashBox]`#sashBox`
+ - [FlexBox]`#flexBox`
 
 Box [#box]
 **********
@@ -165,3 +166,46 @@ over the child list:
 SashBox [#sashBox]
 ******************
 TODO
+
+FlexBox [#flexBox]
+******************
+[FlexBox]`domkit::FlexBox` lays out children based on the CSS Flexbox layout
+model. Flexbox can be a little overwhelming to wrap your head around. A great
+tutorial that manages to explain it can be found here:
+
+`https://css-tricks.com/snippets/css/a-guide-to-flexbox/`
+
+In practice, only a subset of the flex model is used in domkit, and should be
+contained to "micro-layouts" for best results. The most common use case is to
+layout toolbars, such that items are centered vertically and to
+left/center/right align items.
+
+This example creates a toolbar with several buttons left-aligned:
+
+  FlexBox
+  {
+    it.flex = ["1 1 auto"]
+    FlowBox {
+      it.gaps = ["4px"]
+      Button { ... },
+      Button { ... },
+      Button { ... },
+    },
+  }
+
+To add another button that is right-aligned to the toolbar:
+
+  FlexBox
+  {
+    it.flex = ["1 1 auto", "0 0 auto"]
+    FlowBox { ... },
+    Button { ... },
+  }
+
+The 'flex' argument specifies how the parents size should be distributed to its
+children.  There should be a flex entry for each child. The "0 0 auto" entry
+indicates this child should be given its preferred width, and should not grow
+or shrink as the parent size changes. The "1 1 auto" argument indicates that
+first our child should be laid out with its preferred size, and then any left
+over space should be allocated as well.  This in effect pushes the second child
+to be right aligned in the container.
