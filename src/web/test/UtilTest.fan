@@ -87,24 +87,6 @@ class UtilTest : Test
        ])
   }
 
-  Void testAuthParser()
-  {
-    s := AuthParser("FOO").nextScheme
-    verifyNotNull(s)
-    verify(s.isScheme("foo"))
-    verifyFalse(s.isToken68)
-
-    s = AuthParser("Hello username=\"abcd==\"").nextScheme
-    verifyNotNull(s)
-    verify(s.isScheme("hello"))
-    verifyFalse(s.isToken68)
-    verifyEq("abcd==", s["username"])
-
-    verifyErr(ParseErr#) { AuthParser("FOO=").nextScheme }
-    verifyErr(ParseErr#) { AuthParser("FOO =").nextScheme }
-    verifyErr(ParseErr#) { AuthParser("FOO a%").nextScheme}
-  }
-
   Void testChunkInStream()
   {
     str := "3\r\nxyz\r\nB\r\nhello there\r\n0\r\n\r\n"
