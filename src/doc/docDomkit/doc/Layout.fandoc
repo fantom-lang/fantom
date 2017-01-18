@@ -56,7 +56,7 @@ Example [#gridBoxEx]
     it.addRow([null, Button { it.text="Submit" }])
   }
 
-![GridBox]`Layout-GridBox.png`
+![GridBox][266×163]`Layout-GridBox.png`
 
 cellStyle [#gridBoxCellStyle]
 =============================
@@ -117,7 +117,7 @@ FlowBox [#flowBox]
     Button { it.text="Gamma" },
   }
 
-![FlowBox-1]`Layout-FlowBox-1.png`
+![FlowBox-1][600x46]`Layout-FlowBox-1.png`
 
 The alignment of children inside a FlowBox can be adjusted using
 [halign]`domkit::FlowBox.halign`:
@@ -130,7 +130,7 @@ The alignment of children inside a FlowBox can be adjusted using
     Button { it.text="Gamma" },
   }
 
-![FlowBox-2]`Layout-FlowBox-2.png`
+![FlowBox-2][600x46]`Layout-FlowBox-2.png`
 
 The spacing between each child can be configured use
 [gaps]`domkit::FlowBox.gaps`, where each gap is the space between index and
@@ -144,7 +144,7 @@ index+1 children:
     Button { it.text="Gamma" },
   }
 
-![FlowBox-3]`Layout-FlowBox-3.png`
+![FlowBox-3][600x46]`Layout-FlowBox-3.png`
 
 If a FlowBox contains more children than 'gaps', the 'gaps' list will be cycled
 over the child list:
@@ -229,7 +229,7 @@ The visible card is changed using
 
   cardBox.selectedIndex = 2
 
-![CardBox]`Layout-CardBox.png`
+![CardBox][696×264]`Layout-CardBox.png`
 
 FlexBox [#flexBox]
 ******************
