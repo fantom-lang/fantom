@@ -201,8 +201,12 @@ internal class InlineParser
   {
     consume // !
     alt := brackets
+    size := null
+    if (cur == '[') size = brackets
     uri := uri
-    return Image(uri, alt)
+    img := Image(uri, alt)
+    img.size = size
+    return img
   }
 
   private Str uri()

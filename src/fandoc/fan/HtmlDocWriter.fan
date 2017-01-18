@@ -97,7 +97,16 @@ class HtmlDocWriter : DocWriter
         if (onImage != null) onImage(img)
         out.print(" src='$img.uri.toXml' alt='")
         safeAttr(img.alt)
-        out.print("'/>")
+        out.print("'")
+        if (img.size != null)
+        {
+          toks := img.size.split('x')
+          w := toks.getSafe(0)
+          h := toks.getSafe(1)
+          if (w != null) out.print(" width='").print(w).print("'")
+          if (h != null) out.print(" height='").print(h).print("'")
+        }
+        out.print("/>")
         return
       case DocNodeId.para:
         para := elem as Para
