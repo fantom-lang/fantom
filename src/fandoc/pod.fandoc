@@ -181,10 +181,18 @@ Images use the same syntax as a hyperlink with anchor text, but
 are prefixed with a bang:
 
 pre>
-  ![fan logo]`http://fantom.org/doc/eximg.png`
+  ![fan logo]`http://fantom.org/pod/fantomws/res/img/fantom.png`
 <pre
 
-![fan logo]`http://fantom.org/doc/eximg.png`
+![fan logo]`http://fantom.org/pod/fantomws/res/img/fantom.png`
+
+You can set an explicit size for the image as follows:
+
+pre>
+  ![fan logo][80x18]`http://fantom.org/pod/fantomws/res/img/fantom.png`
+<pre
+
+![fan logo][80x18]`http://fantom.org/pod/fantomws/res/img/fantom.png`
 
 Headings [#headings]
 ********************

@@ -561,4 +561,5 @@ class Image : DocElem
   override Bool isInline() { return true }
   Str uri
   Str alt
+  Str? size  // formatted {w}x{h}
 }

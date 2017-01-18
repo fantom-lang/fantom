@@ -108,6 +108,7 @@ class FandocTest : Test
   Void testImage()
   {
     verifyDoc("![cool image]`cool.png`", ["<body>", ["<p>", ["<img cool image;cool.png>"]]])
+    verifyDoc("![cool image][100x200]`cool.png`", ["<body>", ["<p>", ["<img cool image;cool.png;100x200>"]]])
     verifyDoc("![Brian's Idea]`http://foo/idea.gif`", ["<body>", ["<p>", ["<img Brian's Idea;http://foo/idea.gif>"]]])
     verifyDoc("alpha ![x]`img.png` beta", ["<body>", ["<p>", "alpha ", ["<img x;img.png>"], " beta"]])
   }
@@ -616,6 +617,7 @@ class FandocTest : Test
       elemName = "img"
       verifyEq(actual->alt, body.split(';')[0])
       verifyEq(actual->uri, body.split(';')[1])
+      verifyEq(actual->size, body.split(';').getSafe(2))
     }
 
     verifyEq(actual.htmlName, elemName)

@@ -13,6 +13,7 @@
 - dom: HttpReq.withCredentials
 - domkit: DragTarget.onEnd, DropTarget.onOver
 - New docDomkit manual
+- Fandoc support for explicit img size
 
 *Build 1.0.69 (14 Jul 2016)*
 - Initial domkit code
