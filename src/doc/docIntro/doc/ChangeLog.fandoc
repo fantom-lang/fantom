@@ -12,6 +12,8 @@
 - dom: Event.get,set,trap
 - dom: HttpReq.withCredentials
 - domkit: DragTarget.onEnd, DropTarget.onOver
+- domkit: add GridBox.removeRow
+- domkit: fix SashPane.sizes setter to update style
 - New docDomkit manual
 - Fandoc support for explicit img size
 
