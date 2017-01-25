@@ -87,6 +87,14 @@ using dom
     return this
   }
 
+  ** Remove the row of cells at given index.
+  This removeRow(Int index)
+  {
+    row := tbody.children.getSafe(index)
+    if (row != null) tbody.removeChild(row)
+    return this
+  }
+
   ** Update cell styles on existing children.
   private Void updateCellStyle()
   {

@@ -47,6 +47,7 @@ using dom
     {
       &sizes = it
       dims = it.map |s| { CssDim(s) }.toImmutable
+      applyStyle
     }
   }
 
