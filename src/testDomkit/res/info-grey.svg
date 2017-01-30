@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <title>info</title>
+  <g id="outline">
+    <circle cx="64" cy="35" r="5" style="fill: #7f8c8d"/>
+    <line x1="64" y1="54" x2="64" y2="102" style="fill: none;stroke: #7f8c8d;stroke-miterlimit: 10;stroke-width: 5px"/>
+    <circle cx="64" cy="64" r="61.5" style="fill: none;stroke: #7f8c8d;stroke-miterlimit: 10;stroke-width: 5px"/>
+  </g>
+</svg>
