@@ -108,6 +108,15 @@ fan.dom.ElemPeer.prototype.get = function(self, name, def)
     return w
   }
 
+  if (name == "files")
+  {
+    var f = this.elem.files;
+    if (f == null) return null;
+    var list = fan.sys.List.make(fan.dom.DomFile.$type);
+    for (var i=0; i<f.length; i++) list.add(fan.dom.DomFilePeer.wrap(f[i]));
+    return list;
+  }
+
   var val = this.elem[name];
   if (val == null) val = this.elem.getAttribute(name);
 
