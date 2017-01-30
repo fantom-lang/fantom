@@ -1,9 +1,9 @@
 //
-// Copyright (c) 2015, SkyFoundry LLC
-// All Rights Reserved
+// Copyright (c) 2017, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
 //
 // History:
-//   5 Mar 2015  Andy Frank  Creation
+//   30 Jan 2017  Andy Frank  Creation
 //
 
 using dom
