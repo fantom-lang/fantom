@@ -21,11 +21,14 @@ class FilePickerTest : DomkitTest
       it.addRow([picker("Single Default", FilePicker {})])
       it.addRow([picker("Multi Default",  FilePicker { it.multi=true })])
       it.addRow([picker("Accept image/*", FilePicker { it.accept="image/*" })])
+      it.addRow([picker("Hidden",         FilePicker { it.style->display="none" })])
+      it.addRow([picker("onSelect",       FilePicker { it.onSelect |f| { listFiles(f) } })])
     })
   }
 
   Elem picker(Str label, FilePicker picker)
   {
+    open := Button { it.text="Open";          it.onAction { picker.open         }}
     list := Button { it.text="List Files";    it.onAction { listFiles(picker)   }}
     text := Button { it.text="Read Text";     it.onAction { readText(picker)    }}
     data := Button { it.text="Read Data URI"; it.onAction { readDataUri(picker) }}
@@ -34,7 +37,7 @@ class FilePickerTest : DomkitTest
       it.cellStyle("all", "all", "padding: 12px 4px;")
       it.cellStyle(    0, "all", "width: 100px;")
       it.cellStyle(    1, "all", "width: 250px;")
-      it.addRow([Label { it.text="$label:" }, picker, list, text, data])
+      it.addRow([Label { it.text="$label:" }, picker, open, list, text, data])
     }
   }
 
