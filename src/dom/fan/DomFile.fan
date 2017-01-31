@@ -21,4 +21,12 @@
   ** MIME type of the file as a read-only string or "" if
   ** the type could not be determined.
   native Str type()
+
+  ** Asynchronously load file contents as a 'data:' URI
+  ** representing the file's contents.
+  native Void readAsDataUri(|Uri| f)
+
+  ** Asynchronously load file contents as text and invoke
+  ** the callback function with results.
+  native Void readAsText(|Str| f)
 }
