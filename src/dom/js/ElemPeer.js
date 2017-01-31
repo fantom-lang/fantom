@@ -120,6 +120,8 @@ fan.dom.ElemPeer.prototype.get = function(self, name, def)
   var val = this.elem[name];
   if (val == null) val = this.elem.getAttribute(name);
 
+  if (typeof val == 'function') return val.apply(this.elem);
+
   if (val != null) return val;
   if (def != null) return def;
   return null;
