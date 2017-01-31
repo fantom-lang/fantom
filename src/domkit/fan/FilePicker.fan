@@ -18,6 +18,10 @@ using dom
     this.style.addClass("domkit-FilePicker")
     this->type = "file"
     this->tabindex = 0
+    this.onEvent("change", false)
+    {
+      if (cbSelect != null) cbSelect(this)
+    }
   }
 
   ** Indicate the types of files that the server accepts.
@@ -42,6 +46,14 @@ using dom
     set { this->multiple = it }
   }
 
+  ** Programmtically open the client file chooser interface.
+  Void open() { this->click }
+
   ** Get the list of currently selected files.
   DomFile[] files() { this->files }
+
+  ** Callback when a file has been selected by this picker.
+  Void onSelect(|FilePicker| f) { this.cbSelect = f }
+
+  private Func? cbSelect := null
 }
