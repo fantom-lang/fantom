@@ -26,11 +26,15 @@ class FilePickerTest : DomkitTest
 
   Elem picker(Str label, FilePicker picker)
   {
-    list := Button { it.text="List Files"; it.onAction { listFiles(picker) }}
+    list := Button { it.text="List Files";    it.onAction { listFiles(picker)   }}
+    text := Button { it.text="Read Text";     it.onAction { readText(picker)    }}
+    data := Button { it.text="Read Data URI"; it.onAction { readDataUri(picker) }}
     return GridBox
     {
-      it.cellStyle("all", "all", "padding: 12px;")
-      it.addRow([Label { it.text="$label:" }, picker, list])
+      it.cellStyle("all", "all", "padding: 12px 4px;")
+      it.cellStyle(    0, "all", "width: 100px;")
+      it.cellStyle(    1, "all", "width: 250px;")
+      it.addRow([Label { it.text="$label:" }, picker, list, text, data])
     }
   }
 
@@ -39,5 +43,31 @@ class FilePickerTest : DomkitTest
     files := p.files
     echo("# $p -- Files [$files.size]")
     files.each |f,i| { echo("#  [$i] $f.name ($f.size) ($f.type)") }
+  }
+
+  Void readText(FilePicker p)
+  {
+    files := p.files
+    echo("# $p -- Files [$files.size]")
+    files.each |f,i|
+    {
+      f.readAsText |s| {
+        echo("#  [$i] $f.name ----")
+        echo(s)
+      }
+    }
+  }
+
+  Void readDataUri(FilePicker p)
+  {
+    files := p.files
+    echo("# $p -- Files [$files.size]")
+    files.each |f,i|
+    {
+      f.readAsDataUri |u| {
+        echo("#  [$i] $f.name ----")
+        echo(u)
+      }
+    }
   }
 }

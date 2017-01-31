@@ -44,3 +44,22 @@ fan.dom.DomFilePeer.prototype.type = function(self)
 {
   return this.file.type;
 }
+
+fan.dom.DomFilePeer.prototype.readAsDataUri = function(self, func)
+{
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var uri = fan.sys.Uri.decode(e.target.result.toString());
+    func.call(uri);
+  }
+  reader.readAsDataURL(this.file);
+}
+
+fan.dom.DomFilePeer.prototype.readAsText = function(self, func)
+{
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    func.call(e.target.result);
+  }
+  reader.readAsText(this.file);
+}
