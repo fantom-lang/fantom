@@ -8,14 +8,27 @@
 
 Overview [#overview]
 ********************
-TODO
+Controls are the "widgets" users interact with on a page. Domkit includes a
+standard set of controls that can be used to build UIs:
 
-Label [#label]
-**************
-[Label]`domkit::Label` simply displays text content. Labels are designed to
-naturally align vertically with control widgets like [Button]`domkit::Button`:
+ - [Button]`#button`
+ - [ButtonGroup]`#buttonGroup`
+ - [Checkbox]`#checkbox`
+ - [Combo]`#combo`
+ - [FilePicker]`#filePicker`
+ - [Label]`#label`
+ - [ListButton]`#listButton`
+ - [Link]`#link`
+ - [Menu]`#menu`
+ - [ProgressBar]`#progressBar`
+ - [RadioButton]`#radioButton`
+ - [Table]`#table`
+ - [TextArea]`#textArea`
+ - [TextField]`#textField`
+ - [ToggleButton]`#toggleButton`
+ - [Tooltip]`#tooltip`
+ - [Tree]`#tree`
 
-  Label { it.text="My Label" }
 
 Button [#button]
 ****************
@@ -32,6 +45,106 @@ Button [#button]
     onAction { echo("Pressed!") }
     Elem("b") { it.text="Really Press me!" },
   }
+
+ButtonGroup [#buttonGroup]
+**************************
+TODO
+
+Checkbox [#checkbox]
+********************
+[Checkbox]`domkit::Checkbox` displays a checkbox that can be toggled on and off.
+
+  Checkbox {}
+  Checkbox { it.checked = true }
+
+On its own, only the actual checkbox is displayed.  Generally its desirable
+to display a text label attached to the checkbox.  You can extend the click
+target area to this label using the [wrap]`domkit::Checkbox.wrap` method:
+
+  Checkbox {}.wrap("You can click here too!")
+
+To receive callbacks when the state changes, add an
+[onAction]`domkit::Checkbox.onAction` event handler:
+
+  Checkbox
+  {
+    it.onAction |c| { echo("checked: $c.checked") }
+  }
+
+Combo [#combo]
+**************
+[Combo]`domkit::Combo` combines a TextField and ListButton into a single widget
+that allows a user to select from a list or manually enter a value. The
+internal [TextField]`domkit::TextField` component is available with
+[Combo]`domkit::Combo`. In practice you will interact with Combo the same as
+[TextField]`domkit::TextField`, so [Combo.field]`domkit::Combo.field` is the
+right place to register event callbacks such as 'onModify' and 'onAction'.
+
+  Combo
+  {
+    it.items = ["Alpha, "Beta", "Gamma"]
+    it.field.onAction |f| { echo("value: $f.val") }
+  }
+
+FilePicker [#filePicker]
+************************
+TODO
+
+Label [#label]
+**************
+[Label]`domkit::Label` simply displays text content. Labels are designed to
+naturally align vertically with control widgets like [Button]`domkit::Button`:
+
+  Label { it.text="My Label" }
+
+ListButton [#listButton]
+************************
+[ListButton]`domkit::ListButton` allows user selection of a list item by
+showing a listbox popup when a button is pressed:
+
+  ListButton
+  {
+    it.items = ["Alpha", "Beta", "Gamma"]
+    it.onSelect |b| { echo("Selected $b.sel.item") }
+  }
+
+By default [ListButton]`domkit::ListButton` will display items using 'toStr'.
+To customize how the display element is is created, use
+[onElem]`domkit::ListButton.onElem`:
+
+  ListButton
+  {
+    it.items = [1,2,3,4]
+    it.onElem |v| { "Item #$v" }
+  }
+
+Link [#link]
+************
+TODO
+
+Menu [#menu]
+************
+TODO
+
+ProgressBar [#progressBar]
+**************************
+TODO
+
+RadioButton [#radioButton]
+**************************
+TODO
+
+Table [#table]
+**************
+TODO
+
+TextArea [#textArea]
+********************
+TODO
+
+TextField [#textField]
+**********************
+TODO
 
 ToggleButton [#toggleButton]
 ****************************
@@ -63,109 +176,8 @@ instance will be created using 'Obj.toStr':
     it.elemOff = "Off"
   }
 
-RadioButton [#radio]
-********************
-TODO
-
-ButtonGroup [#buttonGroup]
-**************************
-TODO
-
-ListButton [#listButton]
-************************
-[ListButton]`domkit::ListButton` allows user selection of a list item by
-showing a listbox popup when a button is pressed:
-
-  ListButton
-  {
-    it.items = ["Alpha", "Beta", "Gamma"]
-    it.onSelect |b| { echo("Selected $b.sel.item") }
-  }
-
-By default [ListButton]`domkit::ListButton` will display items using 'toStr'.
-To customize how the display element is is created, use
-[onElem]`domkit::ListButton.onElem`:
-
-  ListButton
-  {
-    it.items = [1,2,3,4]
-    it.onElem |v| { "Item #$v" }
-  }
-
-Combo [#combo]
-**************
-[Combo]`domkit::Combo` combines a TextField and ListButton into a single widget
-that allows a user to select from a list or manually enter a value. The
-internal [TextField]`domkit::TextField` component is available with
-[Combo]`domkit::Combo`. In practice you will interact with Combo the same as
-[TextField]`domkit::TextField`, so [Combo.field]`domkit::Combo.field` is the
-right place to register event callbacks such as 'onModify' and 'onAction'.
-
-  Combo
-  {
-    it.items = ["Alpha, "Beta", "Gamma"]
-    it.field.onAction |f| { echo("value: $f.val") }
-  }
-
-Checkbox [#checkbox]
-********************
-[Checkbox]`domkit::Checkbox` displays a checkbox that can be toggled on and off.
-
-  Checkbox {}
-  Checkbox { it.checked = true }
-
-On its own, only the actual checkbox is displayed.  Generally its desirable
-to display a text label attached to the checkbox.  You can extend the click
-target area to this label using the [wrap]`domkit::Checkbox.wrap` method:
-
-  Checkbox {}.wrap("You can click here too!")
-
-To receive callbacks when the state changes, add an
-[onAction]`domkit::Checkbox.onAction` event handler:
-
-  Checkbox
-  {
-    it.onAction |c| { echo("checked: $c.checked") }
-  }
-
-Menu [#menu]
-************
-TODO
-
-ProgressBar [#progressBar]
-**************************
-TODO
-
-TextField [#textField]
-**********************
-TODO
-
-TextArea [#textArea]
-********************
-TODO
-
-Groups [#groups]
-****************
-Some widgets can be combined to create a seamless group by using a a
-[FloxBox]`domkit::FlowBox` with a '-1px' gap spacing:
-
-  FlowBox
-  {
-    it.gaps = ["-1px"]
-    Button { ... }
-    Button { ... }
-    Button { ... }
-  }
-
-These are the supported widgets for group spacing:
-
- - [Button]`domkit::Button`, [ListButton]`domkit::ListButton`, [ToggleButton]`domkit::ToggleButton`
- - [TextField]`domkit::TextField`
-
-TODO: doc domkit-group CSS classs
-
-Table [#table]
-**************
+Tooltip [#tooltip]
+******************
 TODO
 
 Tree [#tree]
