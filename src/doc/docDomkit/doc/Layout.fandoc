@@ -95,7 +95,7 @@ that child cells should span multiple columns:
 The 'colspan' argument may be applied to multiple children, and the list values
 correspond to the child list position:
 
-  // Add two children, where child1 spans 2 colums, and child2 3 columns
+  // Add two children, where child1 spans 2 columns, and child2 3 columns
   grid.addRow([child1, child2], [2,3])
 
 removeRow [#gridBoxRemoveRow]

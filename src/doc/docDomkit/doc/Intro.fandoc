@@ -34,3 +34,14 @@ This manual is organized into 5 main sections:
   - **`Controls`**: Overview of standard DomKit controls
   - **`Modals`**: Overview of DomKit modal elements
   - **[Drag and Drop]`Dnd`**: Overview of DomKit drag and drop API
+
+To get a feel for what is available in Domkit and some example use cases, you
+can run the test suite:
+
+   $ fan testDomkit
+
+This command will start a local web server on port 8080 which you can then open
+in your browser:
+
+   http://localhost:8080/
+
