@@ -759,6 +759,9 @@ using dom
       cx := mx - colx[col]
       cy := my - (row * rowh)
 
+      // map to model rows
+      row = view.rowViewToModel(row)
+
       // check selection
       if (e.type == EventType.mouseDown) onMouseEventSelect(e, row)
 
@@ -786,9 +789,6 @@ using dom
   {
     cur := sel.indexes
     newsel := cur.dup
-
-    // map to model rows
-    row = view.rowViewToModel(row)
 
     // check multi-selection
     if (e.shift)
