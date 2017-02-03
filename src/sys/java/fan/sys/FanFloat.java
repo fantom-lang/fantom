@@ -105,6 +105,16 @@ public final class FanFloat
     return Double.isNaN(self);
   }
 
+  public static boolean isNegZero(double self)
+  {
+    return bits(self) == 0x8000000000000000L;
+  }
+
+  public static double normNegZero(double self)
+  {
+    return bits(self) == 0x8000000000000000L ? 0f : self;
+  }
+
   public static long hash(double self)
   {
     return bits(self);

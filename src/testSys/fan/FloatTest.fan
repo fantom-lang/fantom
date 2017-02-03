@@ -44,6 +44,32 @@ class FloatTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Neg Zero
+//////////////////////////////////////////////////////////////////////////
+
+  Void testNegZero()
+  {
+    verifyEq(0f.isNegZero, false)
+    verifyEq(0f.negate.toStr, "-0.0")
+    verifyEq(0f.negate.isNegZero, true)
+    verifyEq(Float.fromStr("0").isNegZero, false)
+    verifyEq(Float.fromStr("-0").isNegZero, true)
+    verifyEq(Float.fromStr("-0.008").isNegZero, false)
+    verifyEq(Float.posInf.isNegZero, false)
+    verifyEq(Float.negInf.isNegZero, false)
+    verifyEq(Float.nan.isNegZero, false)
+
+    // can't use equality checks safely
+    verifyEq(0f.negate.toStr, "-0.0")
+    verifyEq(0f.negate.normNegZero.toStr, "0.0")
+    verifyEq(Float.fromStr("-0").toStr, "-0.0")
+    verifyEq(Float.fromStr("-0").normNegZero.toStr, "0.0")
+    verifyEq(Float.fromStr("0").toStr, "0.0")
+    verifyEq(Float.fromStr("-0.2").normNegZero.toStr, "-0.2")
+    verifyEq(Float.fromStr("1.6").normNegZero.toStr, "1.6")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Equals
 //////////////////////////////////////////////////////////////////////////
 
