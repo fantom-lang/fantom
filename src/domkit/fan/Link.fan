@@ -18,6 +18,13 @@ using dom
     this.style.addClass("domkit-Link")
   }
 
+  ** The target attribute specifies where to open the linked document.
+  Str target
+  {
+    get { this->target }
+    set { this->target = it }
+  }
+
   ** URI to hyperlink to.
   Uri uri := `#`
   {
