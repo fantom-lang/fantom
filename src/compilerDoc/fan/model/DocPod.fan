@@ -14,7 +14,7 @@ const class DocPod : DocSpace
 {
 
   ** Load from a zip file.
-  static DocPod load(DocEnv env, File file)
+  static DocPod load(DocEnv? env, File file)
   {
     return DocPod(env, file)
   }
@@ -247,7 +247,7 @@ const class DocPodIndex : Doc
 
 internal class DocPodLoader
 {
-  new make(DocEnv env, File file, DocPod pod)
+  new make(DocEnv? env, File file, DocPod pod)
   {
     this.env = env
     this.file = file
@@ -466,10 +466,13 @@ internal class DocPodLoader
 
   Void err(Str msg, DocLoc loc, Err? cause := null)
   {
-    env.err(msg, loc, cause)
+    if (env == null)
+      echo("ERROR: $msg [$loc]")
+    else
+      env.err(msg, loc, cause)
   }
 
-  DocEnv env                    // ctor
+  DocEnv? env                   // ctor
   File file                     // ctor
   DocPod pod                    // ctor
   [Str:Str]? meta               // load
