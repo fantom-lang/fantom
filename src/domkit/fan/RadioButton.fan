@@ -13,7 +13,7 @@ using dom
 ** a RadioButtonGroup, where only one button in the group can be
 ** selected at a time.
 **
-** See also: [docDomkit]`docDomkit::Controls#radio`
+** See also: [docDomkit]`docDomkit::Controls#radioButton`
 **
 @Js class RadioButton : Elem
 {
