@@ -65,7 +65,9 @@
   **   style["color"] = "#f00"
   @Operator This set(Str name, Obj? val)
   {
-    Str? sval
+    if (val == null) { setProp(name, null); return this }
+
+    sval := ""
     switch (val?.typeof)
     {
       case Duration#: sval = "${val->toMillis}ms"
