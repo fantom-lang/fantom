@@ -121,6 +121,9 @@ class WritePod : CompilerStep
       path = path.relTo(input.baseDir.uri)
     }
 
+    // ignore stupid OS X .DS_Store
+    if (file.name == ".DS_Store") return
+
     // if locale/en.props and we have explicit definition
     // from LocaleProps then skip it
     if (path == `locale/en.props` && compiler.localeProps != null)
