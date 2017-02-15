@@ -155,8 +155,7 @@ class Build : BuildGroup
       filter = |File f, Str path->Bool|
       {
         n := f.name
-        if (n.startsWith(".hg")) return false
-        if (n == ".DS_Store") return false
+        if (n.startsWith(".")) return false
         if (n == "tmp") return false
         if (n == "temp") return false
         if (f.isDir) log.info("  $path")
