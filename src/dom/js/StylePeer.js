@@ -92,8 +92,16 @@ fan.dom.StylePeer.prototype.effective = function(self, name)
     for (var r=0; r<rules.length; r++)
     {
       var rule = rules[r];
-      if (this.elem.matches(rule.selectorText))
-        matches.push(rule);
+      if (this.elem.msMatchesSelector)
+      {
+        if (this.elem.msMatchesSelector(rule.selectorText))
+          matches.push(rule);
+      }
+      else
+      {
+        if (this.elem.matches(rule.selectorText))
+          matches.push(rule);
+      }
     }
   }
 
