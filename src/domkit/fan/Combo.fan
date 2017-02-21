@@ -62,5 +62,11 @@ using dom
     set { field.enabled = button.enabled = it }
   }
 
+  // framework use only
+  internal Void update(Str val)
+  {
+    button.sel.index = items.findIndex |i| { i == val } ?: 0
+  }
+
   private ListButton button
 }

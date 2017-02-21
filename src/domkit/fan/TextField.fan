@@ -19,7 +19,11 @@ using dom
   {
     this.set("type", "text")
     this.style.addClass("domkit-TextField").addClass("domkit-border")
-    this.onEvent(EventType.input, false) |e| { fireModify(e) }
+    this.onEvent(EventType.input, false) |e|
+    {
+      checkUpdate
+      fireModify(e)
+    }
     this.onEvent(EventType.keyDown, false) |e|
     {
       if (e.key == Key.enter) fireAction(e)
@@ -60,7 +64,7 @@ using dom
   Str val
   {
     get { this->value }
-    set { this->value = it }
+    set { this->value = it; checkUpdate }
   }
 
   ** Callback when value is modified by user.
@@ -81,4 +85,10 @@ using dom
 
   private Void fireModify(Event? e) { cbModify?.call(this) }
   private Func? cbModify := null
+
+  // framework use only
+  private Void checkUpdate()
+  {
+    if (parent is Combo) ((Combo)parent).update(val.trim)
+  }
 }
