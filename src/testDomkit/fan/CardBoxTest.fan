@@ -15,6 +15,7 @@ class CardBoxTest : DomkitTest
   new make()
   {
     items := Str[,]
+    fx    := ["No effect", "slideLeft", "slideRight"]
     cardBox := CardBox {}
 
     colors.vals.each |c,i|
@@ -33,12 +34,19 @@ class CardBoxTest : DomkitTest
     {
       it.style->padding = "12px"
       it.cellStyle("all", "all", "width:200px; height:200px; padding:12px")
+      it.cellStyle(    1, "all", "width:100px")
+      it.cellStyle(    2, "all", "width:100px")
       it.addRow([
         cardBox,
         ListButton
         {
           it.items = items
           it.onSelect |b| { cardBox.selectedIndex = b.sel.index }
+        },
+        ListButton
+        {
+          it.items = fx
+          it.onSelect |b| { cardBox.effect = b.sel.index==0 ? null : b.sel.item }
         },
       ])
     })
