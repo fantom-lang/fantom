@@ -43,7 +43,7 @@ using dom
   **
   ** Valid values are:
   **   - 'slideLeft': animate cards sliding in from right-to-left
-  **   - 'slideLeft': animate cards sliding in from left-to-right
+  **   - 'slideRight': animate cards sliding in from left-to-right
   **
   Str? effect := null
 
