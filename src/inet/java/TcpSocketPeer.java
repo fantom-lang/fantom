@@ -25,7 +25,25 @@ public class TcpSocketPeer
     return new TcpSocketPeer(new Socket());
   }
 
-  private synchronized static SSLContext getSslContext()
+  public static TcpSocket makeRaw(Object raw)
+  {
+    if (!(raw instanceof Socket)) throw ArgErr.make("not a raw socket");
+    try
+    {
+      final Socket socket = (Socket)raw;
+      final TcpSocket self = new TcpSocket();
+      self.peer = new TcpSocketPeer(socket);
+      if (socket.isConnected()) self.peer.connected(self);
+      return self;
+    }
+    catch (IOException e)
+    {
+      throw IOErr.make(e);
+    }
+  }
+
+  /** Get the system singleton SSLContext instance. */
+  public static synchronized SSLContext getSslContext()
     throws GeneralSecurityException
   {
     if (_sslContext == null)
@@ -42,18 +60,17 @@ public class TcpSocketPeer
     try
     {
       // get SSL factory because Java loves factories!
-      SSLSocketFactory factory = getSslContext().getSocketFactory();
+      final SSLSocketFactory factory = getSslContext().getSocketFactory();
 
-      // create new SSL socket
       SSLSocket socket;
       if (upgrade == null)
       {
+        // create new SSL socket
         socket = (SSLSocket)factory.createSocket();
       }
-
-      // upgrade an existing socket
       else
       {
+        // upgrade an existing socket
         socket = (SSLSocket)factory.createSocket(
                    upgrade.peer.socket,
                    upgrade.peer.socket.getInetAddress().getHostAddress(),
@@ -64,13 +81,7 @@ public class TcpSocketPeer
       }
 
       // create the new TcpSocket instance
-      TcpSocket self = new TcpSocket();
-      self.peer = new TcpSocketPeer(socket);
-
-      // if upgrade, then initialize socket as already connected
-      if (upgrade != null) self.peer.connected(self);
-
-      return self;
+      return TcpSocket.makeRaw(socket);
     }
     catch (Exception e)
     {
@@ -477,6 +488,8 @@ public class TcpSocketPeer
       throw IOErr.make(e);
     }
   }
+
+  public Socket socket() { return this.socket; }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

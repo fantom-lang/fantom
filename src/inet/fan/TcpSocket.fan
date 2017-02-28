@@ -22,9 +22,14 @@ class TcpSocket
   new make() {}
 
   **
+  ** Make a TCP socket from a raw, native socket.
+  **
+  @NoDoc native static TcpSocket makeRaw(Obj socket)
+
+  **
   ** Make a new unconnected SSL/TLS TCP socket or upgrade an existing socket.
   **
-  @NoDoc static native TcpSocket makeTls(TcpSocket? upgrade := null)
+  @NoDoc native static TcpSocket makeTls(TcpSocket? upgrade := null)
 
 //////////////////////////////////////////////////////////////////////////
 // State
