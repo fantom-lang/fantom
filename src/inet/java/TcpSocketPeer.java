@@ -43,16 +43,20 @@ public class TcpSocketPeer
   }
 
   /** Get the system singleton SSLContext instance. */
-  public static synchronized SSLContext getSslContext()
+  public static SSLContext getSslContext()
     throws GeneralSecurityException
   {
-    if (_sslContext == null)
+    synchronized (sslContextLock)
     {
-      _sslContext = SSLContext.getInstance("TLS");
-      _sslContext.init(null, null, null);
+      if (_sslContext == null)
+      {
+        _sslContext = SSLContext.getInstance("TLS");
+        _sslContext.init(null, null, null);
+      }
+      return _sslContext;
     }
-    return _sslContext;
   }
+  private static final Object sslContextLock = new Object();
   private static SSLContext _sslContext;
 
   public static TcpSocket makeTls(TcpSocket upgrade)
