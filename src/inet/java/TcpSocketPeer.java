@@ -25,15 +25,24 @@ public class TcpSocketPeer
     return new TcpSocketPeer(new Socket());
   }
 
+  private synchronized static SSLContext getSslContext()
+    throws GeneralSecurityException
+  {
+    if (_sslContext == null)
+    {
+      _sslContext = SSLContext.getInstance("TLS");
+      _sslContext.init(null, null, null);
+    }
+    return _sslContext;
+  }
+  private static SSLContext _sslContext;
+
   public static TcpSocket makeTls(TcpSocket upgrade)
   {
     try
     {
-      SSLContext sslContext = SSLContext.getInstance("TLS");
-      sslContext.init(null, null, null);
-
       // get SSL factory because Java loves factories!
-      SSLSocketFactory factory = sslContext.getSocketFactory();
+      SSLSocketFactory factory = getSslContext().getSocketFactory();
 
       // create new SSL socket
       SSLSocket socket;
