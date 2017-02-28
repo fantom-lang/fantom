@@ -32,8 +32,9 @@ using dom
   {
     set
     {
+      old := &selectedIndex
       &selectedIndex = it.max(0).min(children.size)
-      updateStyle
+      if (old != &selectedIndex) updateStyle
     }
   }
 
@@ -74,6 +75,9 @@ using dom
     if (cur == null) cur = next
     if (cur === next) { fx=null; next=null }
     curIndex := kids.findIndex |k| { k == cur }
+
+    // if we are not mounted short-circuit effect
+    if (fx != null && !Win.cur.doc.body.containsChild(this)) { fx=null; next=null; }
 
     switch (fx)
     {
