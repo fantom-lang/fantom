@@ -503,9 +503,9 @@ fan.sys.UriDecoder.prototype.addQueryParam = function(map, q, start, eq, end, es
     val = this.toQueryStr(q, eq+1, end, escaped);
   }
 
-  dup = map.get(key, null)
-  if (dup !== undefined) val = dup + "," + val
-  map.set(key, val)
+  dup = map.get(key, null);
+  if (dup != null) val = dup + "," + val;
+  map.set(key, val);
 }
 
 fan.sys.UriDecoder.prototype.toQueryStr = function(q, start, end, escaped)
