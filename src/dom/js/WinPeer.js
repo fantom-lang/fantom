@@ -38,7 +38,7 @@ fan.dom.WinPeer.prototype.userAgent = function(self)
 // Secondary Windows
 //////////////////////////////////////////////////////////////////////////
 
-fan.dom.WinPeer.open = function(uri, name, opts)
+fan.dom.WinPeer.prototype.open = function(self, uri, name, opts)
 {
   if (name === undefined) name = null;
   if (opts === undefined) opts = null;
