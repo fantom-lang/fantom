@@ -44,7 +44,7 @@ class Win
 //////////////////////////////////////////////////////////////////////////
 
   ** Open a new window. Returns the new window instance.
-  static native Win open(Uri uri := `about:blank`, Str? winName := null, [Str:Str]? opts := null)
+  native Win open(Uri uri := `about:blank`, Str? winName := null, [Str:Str]? opts := null)
 
   ** Close this window.  Only applicable to windows created with
   ** `open`. Otherwise method has no effect.  Returns this.
