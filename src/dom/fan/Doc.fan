@@ -36,6 +36,9 @@ class Doc
 // Elements
 //////////////////////////////////////////////////////////////////////////
 
+  ** Get the head element.
+  native Elem head()
+
   ** Get the body element.
   native Elem body()
 
