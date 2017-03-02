@@ -8,10 +8,11 @@
 
 *Build 1.0.70 (working)*
 - Add options to Zip deflate in/out methods
-- dom: Doc.activeElem
+- dom: Doc.activeElem, Doc.head
 - dom: Event.get,set,trap
 - dom: HttpReq.withCredentials
 - dom: DomFile support
+- dom: Style.addPseudoClass
 - domkit: DragTarget.onEnd, DropTarget.onOver
 - domkit: add GridBox.removeRow
 - domkit: add Link.target

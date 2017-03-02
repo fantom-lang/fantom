@@ -17,6 +17,11 @@ fan.dom.DocPeer.prototype.$ctor = function(self)
 fan.dom.DocPeer.prototype.title  = function(self) { return this.doc.title; }
 fan.dom.DocPeer.prototype.title$ = function(self, val) { this.doc.title = val; }
 
+fan.dom.DocPeer.prototype.head = function(self)
+{
+  return fan.dom.ElemPeer.wrap(this.doc.head);
+}
+
 fan.dom.DocPeer.prototype.body = function(self)
 {
   return fan.dom.ElemPeer.wrap(this.doc.body);
