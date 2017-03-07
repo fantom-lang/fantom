@@ -31,12 +31,12 @@ using dom
   }
 
   ** Index of selected button, or 'null' if none selected.
-  Int? selected := null
+  Int? selIndex := null
   {
     set
     {
-      old := &selected
-      &selected = it
+      old := &selIndex
+      &selIndex = it
       update
       if (it != old) cbSelect?.call(this)
     }
@@ -48,7 +48,7 @@ using dom
   ** Mark given button as selected.
   internal Void select(Elem button)
   {
-    this.selected = buttons.findIndex |b| { b === button }
+    this.selIndex = buttons.findIndex |b| { b === button }
   }
 
   ** Update group state and make sure buttons are bound to this group.
@@ -60,7 +60,7 @@ using dom
       {
         t := (ToggleButton)b
         t.group = this
-        t.selected = i == selected
+        t.selected = i == selIndex
         return
       }
 
@@ -68,7 +68,7 @@ using dom
       {
         r := (RadioButton)b
         r.group = this
-        r.checked = i == selected
+        r.checked = i == selIndex
         return
       }
 
