@@ -22,24 +22,24 @@ using dom
   }
 
   ** Selected card instance, or null if no children.
-  Elem? selected()
+  Elem? selItem()
   {
-    selectedIndex==null ? null : children[selectedIndex]
+    selIndex==null ? null : children[selIndex]
   }
 
   ** Selected card index, or null if no children.
-  virtual Int? selectedIndex
+  virtual Int? selIndex
   {
     set
     {
-      old := &selectedIndex
-      &selectedIndex = it.max(0).min(children.size)
-      if (old != &selectedIndex) updateStyle
+      old := &selIndex
+      &selIndex = it.max(0).min(children.size)
+      if (old != &selIndex) updateStyle
     }
   }
 
   **
-  ** Transition effect to apply when 'selectedIndex' is changed.
+  ** Transition effect to apply when 'selIndex' is changed.
   ** If null, no effect is applied.
   **
   ** Valid values are:
@@ -63,12 +63,12 @@ using dom
     kids := children
 
     // implicitly select first card if not specified
-    if (kids.size > 0 && selectedIndex == null) selectedIndex = 0
+    if (kids.size > 0 && selIndex == null) selIndex = 0
 
     // if effect is set, stage the card we will show next
     fx   := this.effect
     cur  := kids.find |k| { k.style->display == "block" }
-    next := fx == null ? null : children[selectedIndex]
+    next := fx == null ? null : children[selIndex]
     size := fx == null ? null : this.size
 
     // if cur is selected short-circuit effect
@@ -82,8 +82,8 @@ using dom
     switch (fx)
     {
       case "slideLeft":
-        cy := curIndex > selectedIndex ? "-${size.h}px" : "0px"
-        ny := curIndex < selectedIndex ? "-${size.h}px" : "0px"
+        cy := curIndex > selIndex ? "-${size.h}px" : "0px"
+        ny := curIndex < selIndex ? "-${size.h}px" : "0px"
         cur.style->transform  = "translateX(0) translateY($cy)"
         next.style->transform = "translateX(${size.w}px) translateY($ny)"
         next.style->display   = "block"
@@ -93,8 +93,8 @@ using dom
         }
 
       case "slideRight":
-        cy := curIndex > selectedIndex ? "-${size.h}px" : "0px"
-        ny := curIndex < selectedIndex ? "-${size.h}px" : "0px"
+        cy := curIndex > selIndex ? "-${size.h}px" : "0px"
+        ny := curIndex < selIndex ? "-${size.h}px" : "0px"
         cur.style->transform  = "translateX(0) translateY($cy)"
         next.style->transform = "translateX(-${size.w}px) translateY($ny)"
         next.style->display   = "block"
@@ -113,7 +113,7 @@ using dom
   {
     children.each |kid,i|
     {
-      kid.style->display = i==selectedIndex ? "block" : "none"
+      kid.style->display = i==selIndex ? "block" : "none"
       kid.style->opacity = "1.0"
       kid.transition(["transform":"translateX(0) translateY(0)"], null, 0ms)
     }
