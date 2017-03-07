@@ -41,7 +41,7 @@ class CardBoxTest : DomkitTest
         ListButton
         {
           it.items = items
-          it.onSelect |b| { cardBox.selectedIndex = b.sel.index }
+          it.onSelect |b| { cardBox.selIndex = b.sel.index }
         },
         ListButton
         {
