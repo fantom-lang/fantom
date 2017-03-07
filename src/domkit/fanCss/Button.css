@@ -64,6 +64,12 @@ div.domkit-Button.domkit-def.down {
   box-shadow: none;
 }
 
+div.domkit-Button.selected {
+  background-color: #3498db;
+  color: #fff;
+  border-color: #2c7fb7;
+}
+
 div.domkit-Button.domkit-group-left {
   border-radius: 3px 0 0 3px;
 }
