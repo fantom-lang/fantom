@@ -143,7 +143,14 @@ using dom
   internal virtual Void doMouseUp()   { showUp }
   internal Bool mouseDown := false
 
-  private Void fireAction(Event e) { cbAction?.call(this) }
+  private Void fireAction(Event e)
+  {
+    _event = e
+    cbAction?.call(this)
+  }
+
+  // TODO: not sure how this works yet
+  @NoDoc Event? _event
 
   private Popup? popup   := null
   private Func? cbAction := null
