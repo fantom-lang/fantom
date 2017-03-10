@@ -21,12 +21,14 @@ public final class ConstBuf
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public ConstBuf(byte[] bytes, int size)
+  public ConstBuf(byte[] bytes, int size, Endian endian, Charset charset)
   {
-    this.buf  = bytes;
-    this.size = size;
-    this.in   = errInStream;
-    this.out  = errOutStream;
+    this.buf     = bytes;
+    this.size    = size;
+    this.in      = errInStream;
+    this.out     = errOutStream;
+    this.endian  = endian;
+    this.charset = charset;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -45,7 +47,7 @@ public final class ConstBuf
 
   public InStream in()
   {
-    return new ConstBufInStream();
+    return new ConstBufInStream(this);
   }
 
   public final long size()
@@ -144,6 +146,14 @@ public final class ConstBuf
   public final Buf sync() { throw err(); }
 
   public final Buf trim() { throw err(); }
+
+  public Endian endian() { return endian; }
+
+  public void endian(Endian endian) { throw err(); }
+
+  public Charset charset() { return charset; }
+
+  public void charset(Charset charset) { throw err(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
@@ -251,6 +261,12 @@ public final class ConstBuf
 
   class ConstBufInStream extends InStream
   {
+    ConstBufInStream(ConstBuf buf)
+    {
+      endian(buf.endian);
+      charset(buf.charset);
+    }
+
     public Long read() { int n = r(); return n < 0 ? null : FanInt.pos[n]; }
     public int r()
     {
@@ -308,7 +324,9 @@ public final class ConstBuf
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  byte[] buf;
-  int size;
+  final byte[] buf;
+  final int size;
+  final Endian endian;
+  final Charset charset;
 
 }

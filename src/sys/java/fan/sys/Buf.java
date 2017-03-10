@@ -213,23 +213,23 @@ public abstract class Buf
     return true;
   }
 
-  public final Endian endian()
+  public Endian endian()
   {
     return out.endian();
   }
 
-  public final void endian(Endian endian)
+  public void endian(Endian endian)
   {
     out.endian(endian);
     in.endian(endian);
   }
 
-  public final Charset charset()
+  public Charset charset()
   {
     return out.charset();
   }
 
-  public final void charset(Charset charset)
+  public void charset(Charset charset)
   {
     out.charset(charset);
     in.charset(charset);
