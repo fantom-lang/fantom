@@ -406,6 +406,7 @@ public class InStream
 
   public void charset(Charset charset)
   {
+    if (this.charset == charset) return;
     this.charsetDecoder = charset.newDecoder();
     this.charsetEncoder = charset.newEncoder();
     this.charset = charset;

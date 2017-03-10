@@ -52,7 +52,7 @@ public final class MemBuf
     int size = this.size;
     this.buf = emptyBytes;
     this.size = 0;
-    return new ConstBuf(buf, size);
+    return new ConstBuf(buf, size, endian(), charset());
   }
 
 //////////////////////////////////////////////////////////////////////////

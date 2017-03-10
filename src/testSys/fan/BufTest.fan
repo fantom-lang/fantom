@@ -1056,5 +1056,23 @@ class BufTest : AbstractBufTest
     verifyEq(buf.size, 4)
     verifyEq(buf[1], 'B')
     verifyEq(buf.in.readAllStr, "ABCD")
+
+    // endian
+    buf = Buf()
+    verifyEq(buf.endian, Endian.big)
+    buf.endian = Endian.little
+    buf = buf.toImmutable
+    verifyErr(e) { buf.endian = Endian.big }
+    verifyEq(buf.endian, Endian.little)
+    verifyEq(buf.in.endian, Endian.little)
+
+    // charset
+    buf = Buf()
+    verifyEq(buf.charset, Charset.utf8)
+    buf.charset = Charset.utf16BE
+    buf = buf.toImmutable
+    verifyErr(e) { buf.charset = Charset.utf8 }
+    verifyEq(buf.charset, Charset.utf16BE)
+    verifyEq(buf.in.charset, Charset.utf16BE)
   }
 }
