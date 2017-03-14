@@ -1,0 +1,13 @@
+//
+// Copyright (c) 2017, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   14 Mar 2017  Andy Frank  Creation
+//
+
+div.domkit-WellBox {
+  background: #e5e5e5;
+  border-radius: 4px;
+  padding: 10px;
+}

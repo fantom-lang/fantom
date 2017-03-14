@@ -17,6 +17,7 @@
 - domkit: add GridBox.removeRow
 - domkit: add Link.target
 - domkit: fix SashPane.sizes setter to update style
+- domkit: add WellBox
 - New docDomkit manual
 - Fandoc support for explicit img size
 - Float.isNegZero, normNegZero
