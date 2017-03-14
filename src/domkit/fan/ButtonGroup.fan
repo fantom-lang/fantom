@@ -26,8 +26,18 @@ using dom
   ** Convenience to add a button to `buttons`.
   This add(Elem button)
   {
+    button.enabled = this.enabled
     this.buttons = buttons.add(button)
     return this
+  }
+
+  ** Set enabled state for this button group.
+  Bool enabled := true
+  {
+    set {
+      &enabled = it
+      buttons.each |b| { b.enabled =  &enabled }
+    }
   }
 
   ** Index of selected button, or 'null' if none selected.
