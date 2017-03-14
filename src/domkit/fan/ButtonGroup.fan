@@ -36,10 +36,19 @@ using dom
     set
     {
       old := &selIndex
-      &selIndex = it
+      mod := cbBeforeSelect?.call(this, it) ?: true
+      if (mod) &selIndex = it
       update
       if (it != old) cbSelect?.call(this)
     }
+  }
+
+  ** Callback before a selection changes.  Return 'true' to
+  ** select the new button (default), or 'false' to keep the
+  ** currently selected button.
+  Void onBeforeSelect(|ButtonGroup g, Int newIndex->Bool| f)
+  {
+    this.cbBeforeSelect = f
   }
 
   ** Callback when selection in group has changed.
@@ -76,5 +85,6 @@ using dom
     }
   }
 
+  private Func? cbBeforeSelect
   private Func? cbSelect
 }
