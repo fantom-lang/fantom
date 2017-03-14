@@ -174,14 +174,7 @@ internal const class WispActor : Actor
     // init response - set predefined headers
     res.headers["Server"] = wispVer
     res.headers["Date"] = DateTime.now.toHttpStr
-
-    // if using HTTP 1.1 and client specified using keep-alives,
-    // then setup response to be persistent for pipelining
-    if (req.version === ver11 && req.isKeepAlive && !req.isUpgrade)
-    {
-      res.isPersistent = true
-      res.headers["Connection"] = "keep-alive"
-    }
+    res.headers["Connection"] = "close"
 
     // configure Locale.cur for best match based on request
     Locale.setCur(req.locales.first)
