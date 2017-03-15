@@ -234,11 +234,30 @@ only one card may be visible at a time:
   }
 
 The visible card is changed using
-[selectedIndex]`domkit::CardBox.selectedIndex`:
+[selIndex]`domkit::CardBox.selIndex`:
 
-  cardBox.selectedIndex = 2
+  cardBox.selIndex = 2
 
 ![CardBox][696×264]`Layout-CardBox.png`
+
+WellBox [#wellBox]
+******************
+[WellBox]`domkit::WellBox` displays content in recessed well:
+
+  WellBox { content, }
+
+TODO: pic
+
+A header element may optionally be merged with a WellBox:
+
+  label  := Label { it.text="Header" }
+  well   := WellBox { content, }
+
+  left   := well.mergeHeader(label)
+  center := well.mergeHeader(label, Align.center)
+  right  := well.mergeHeader(label, Align.right)
+
+TODO: pic
 
 FlexBox [#flexBox]
 ******************
