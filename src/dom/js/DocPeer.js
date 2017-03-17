@@ -76,6 +76,17 @@ fan.dom.DocPeer.prototype.querySelectorAll = function(self, selectors)
   return list;
 }
 
+fan.dom.DocPeer.prototype.exportPng = function(self, img)
+{
+  var elem = img.peer.elem;
+  var canvas = this.doc.createElement("canvas");
+  canvas.width  = elem.width;
+  canvas.height = elem.height;
+  var cx = canvas.getContext("2d");
+  cx.drawImage(elem, 0, 0);
+  return canvas.toDataURL("image/png");
+}
+
 fan.dom.DocPeer.prototype.onEvent = function(self, type, useCapture, handler)
 {
   handler.$func = function(e) { handler.call(fan.dom.EventPeer.make(e)); }

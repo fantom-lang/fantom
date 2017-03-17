@@ -75,6 +75,12 @@ class Doc
   **
   native Elem[] querySelectorAll(Str selectors)
 
+  **
+  ** Render the given image to an offscreen <canvas> element and
+  ** export the contents to a data URI of type 'image/png'.
+  **
+  @NoDoc native Str exportPng(Elem img)
+
 //////////////////////////////////////////////////////////////////////////
 // Events
 //////////////////////////////////////////////////////////////////////////
