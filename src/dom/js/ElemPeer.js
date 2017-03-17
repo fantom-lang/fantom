@@ -286,6 +286,12 @@ fan.dom.ElemPeer.prototype.querySelectorAll = function(self, selectors)
   return list;
 }
 
+fan.dom.ElemPeer.prototype.clone = function(self, deep)
+{
+  var clone = this.elem.cloneNode(deep);
+  return fan.dom.ElemPeer.wrap(clone);
+}
+
 fan.dom.ElemPeer.prototype.addChild = function(self, child)
 {
   this.elem.appendChild(child.peer.elem);
