@@ -136,6 +136,9 @@ class Elem
   ** CSS selectors.
   native Elem[] querySelectorAll(Str selectors)
 
+  ** Return a duplicate of this node.
+  native Elem clone(Bool deep := true)
+
   ** Add a new element as a child to this element. Return this.
   @Operator virtual This add(Elem child)
   {
