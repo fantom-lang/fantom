@@ -73,12 +73,9 @@ class WebSocket
     res.headers["Upgrade"] = "websocket"
     res.headers["Connection"] = "Upgrade"
     res.headers["Sec-WebSocket-Accept"] = secDigest(key)
-    res.statusCode = 101
-    res.out.flush
 
     // take ownership of the underlying socket
-    req.takeOwnershipOfSocket = true
-    socket := req.socket
+    socket := res.upgrade(101)
 
     // connected, return WebSocket
     return make(socket, false)

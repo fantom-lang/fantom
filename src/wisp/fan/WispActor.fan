@@ -76,12 +76,12 @@ internal const class WispActor : Actor
       // save session if accessed
       service.sessionStore.doSave
 
-      // on request-take-ownership then do not close socket;
+      // on upgraded to new protocol then do not close socket;
       // otherwise ensure response if committed and flushed
-      if (req.takeOwnershipOfSocket)
-        close = false
-      else
-        res.close
+       if (res.upgraded)
+         close = false
+       else
+         res.close
     }
     catch (Err e)
     {
