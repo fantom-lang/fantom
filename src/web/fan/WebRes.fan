@@ -6,6 +6,8 @@
 //   15 Mar 06  Andy Frank  Creation
 //
 
+using inet
+
 **
 ** WebRes encapsulates a response to a web request.
 **
@@ -86,6 +88,12 @@ abstract class WebRes
   ** to terminate pipeline processing.
   **
   abstract Void done()
+
+  **
+  ** Write response headers to socket, then and return ownership
+  ** of socket to upgrade to different protocol.
+  **
+  @NoDoc abstract TcpSocket upgrade(Int statusCode := 101)
 
 //////////////////////////////////////////////////////////////////////////
 // Static

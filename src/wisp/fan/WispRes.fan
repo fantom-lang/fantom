@@ -166,6 +166,19 @@ internal class WispRes : WebRes
   **
   override Void done() { isDone = true }
 
+  **
+  ** Write response to socket, then and return ownership of socket
+  ** to upgrade to different protocol.
+  **
+  override TcpSocket upgrade(Int statusCode := 101)
+  {
+    checkUncommitted
+    this.statusCode = statusCode
+    upgraded = true
+    commit(false)
+    return socket
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Impl
 //////////////////////////////////////////////////////////////////////////
@@ -234,6 +247,8 @@ internal class WispRes : WebRes
   internal WispService service
   internal TcpSocket socket
   internal WebOutStream? webOut
+  internal Bool upgraded
   private Str? errMsg
+
 
 }
