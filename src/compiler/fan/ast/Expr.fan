@@ -211,6 +211,10 @@ abstract class Expr : Node
         return s
       }
 
+      // if this is cast, return base
+      if (this is TypeCheckExpr)
+        return ((TypeCheckExpr)this).target.toDocStr
+
       // if we access an internal slot then don't expose in public docs
       CSlot? slot := null
       if (this is CallExpr) slot = ((CallExpr)this).method
@@ -225,7 +229,7 @@ abstract class Expr : Node
       if (s.contains("=")) s = s[s.index("=")+1..-1].trim
 
       // remove extra parens with binary ops
-      if (s[0] == '(' && s[-1] == ')') s = s[1..-2]
+      if (s[0] == '(' && s[-1] == ')' && !s.endsWith("()")) s = s[1..-2]
 
       // hide storage operator
       s = s.replace(".@", ".")
