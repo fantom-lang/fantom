@@ -36,7 +36,7 @@ using dom
       if (index != null) select(index)
       lastEvent = 0
     }
-    this.onEvent(EventType.mouseUp, false) |e| { fireAction }
+    this.onEvent(EventType.mouseUp, false) |e| { fireAction(e) }
     this.onEvent(EventType.keyDown, false) |e|
     {
       switch (e.key)
@@ -45,7 +45,7 @@ using dom
         case Key.up:    e.stop; lastEvent=1; select(selIndex==null ? 0 : selIndex-1)
         case Key.down:  e.stop; lastEvent=1; select(selIndex==null ? 0 : selIndex+1)
         case Key.space: // fall-thru
-        case Key.enter: e.stop; fireAction
+        case Key.enter: e.stop; fireAction(e)
       }
     }
   }
@@ -86,11 +86,11 @@ using dom
     else if (sy + mh < iy + ih) this.scrollPos = Pos(0, iy + ih - mh)
   }
 
-  private Void fireAction()
+  private Void fireAction(Event e)
   {
     if (selIndex == null) return
     MenuItem item := children[selIndex]
-    item.fireAction
+    item.fireAction(e)
   }
 
   private Int? selIndex
@@ -110,11 +110,15 @@ using dom
   ** Callback when item is selected.
   Void onAction(|This| f) { this.cbAction = f }
 
-  internal Void fireAction()
+  internal Void fireAction(Event e)
   {
+    _event = e
     (parent as Popup)?.close
     cbAction?.call(this)
   }
+
+  // TODO: not sure how this works yet
+  @NoDoc Event? _event
 
   private Func? cbAction := null
 }
