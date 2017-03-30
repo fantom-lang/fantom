@@ -20,10 +20,11 @@ class Elem
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  ** Create a new Elem in the current Doc.
-  new make(Str tagName := "div") { _make(tagName) }
+  ** Create a new Elem in the current Doc. Optionally
+  ** a namespace can be specified with 'ns'.
+  new make(Str tagName := "div", Uri? ns := null) { _make(tagName, ns) }
 
-  private native Void _make(Str tagName)
+  private native Void _make(Str tagName, Uri? ns)
 
 //////////////////////////////////////////////////////////////////////////
 // Attributes
