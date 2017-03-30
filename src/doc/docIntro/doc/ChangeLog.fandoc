@@ -14,6 +14,7 @@
 - dom: HttpReq.withCredentials
 - dom: DomFile support
 - dom: Style.addPseudoClass
+- dom: Doc/Elem support for creating namespaced elements
 - domkit: DragTarget.onEnd, DropTarget.onOver
 - domkit: add GridBox.removeRow
 - domkit: add Link.target

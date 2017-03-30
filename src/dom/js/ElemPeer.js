@@ -20,15 +20,18 @@ fan.dom.ElemPeer.prototype.$ctor = function(self)
   this.m_size = fan.gfx.Size.m_defVal;
 }
 
-fan.dom.ElemPeer.prototype._make = function(self, tagName)
+fan.dom.ElemPeer.prototype._make = function(self, tagName, ns)
 {
   // short-circut for wrap()
   if (tagName === undefined) return;
 
   var doc  = fan.dom.Win.cur().doc().peer.doc;
-  var elem = doc.createElement(tagName);
+  var elem = ns
+     ? doc.createElementNS(ns.toStr(), tagName)
+     : doc.createElement(tagName);
   this.elem = elem;
   this.elem._fanElem = self;
+  if (ns) this.m_ns = ns;
 }
 
 /*
@@ -129,6 +132,15 @@ fan.dom.ElemPeer.prototype.get = function(self, name, def)
 
 fan.dom.ElemPeer.prototype.set = function(self, name, val)
 {
+  // 30 Mar 2017: for SVG the elem[x] syntax does not properly
+  // update the attribute, so if ns has been specified then
+  // always use setAttribute
+  if (this.m_ns)
+  {
+    this.elem.setAttribute(name, val);
+    return;
+  }
+
   if (name == "id")           this.id$(self, val);
   else if (name == "name")    this.elem.name = val;
   else if (name == "class")   this.elem.className = val;  // TODO: route to Style?

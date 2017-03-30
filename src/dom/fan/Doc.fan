@@ -54,9 +54,10 @@ class Doc
   **
   ** Create a new element with the given tag name.  If the
   ** attrib map is specified, set the new elements attributes
-  ** to the given values.
+  ** to the given values. Optionally a namespace for the
+  ** element can be specified with 'ns'.
   **
-  native Elem createElem(Str tagName, [Str:Str]? attrib := null)
+  native Elem createElem(Str tagName, [Str:Str]? attrib := null, Uri? ns := null)
 
   ** Create a document fragment.
   @NoDoc native Elem createFrag()

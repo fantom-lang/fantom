@@ -41,10 +41,13 @@ fan.dom.DocPeer.prototype.elem = function(self, id)
   return fan.dom.ElemPeer.wrap(elem);
 }
 
-fan.dom.DocPeer.prototype.createElem = function(self, tagName, attribs)
+fan.dom.DocPeer.prototype.createElem = function(self, tagName, attribs, ns)
 {
-  var elem = this.doc.createElement(tagName);
+  var elem = ns
+    ? this.doc.createElementNS(ns.toStr, tagName)
+    : this.doc.createElement(tagName);
   var wrap = fan.dom.ElemPeer.wrap(elem);
+  if (ns) wrap.m_ns = ns;
   if (attribs != null)
   {
     var k = attribs.keys();
