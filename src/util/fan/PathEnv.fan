@@ -22,7 +22,7 @@ const class PathEnv : Env
   new make() : super(Env.cur)
   {
     vars := super.vars
-    path := parsePath(vars["FAN_ENV_PATH"] ?: "")
+    path := parsePath(null, vars["FAN_ENV_PATH"] ?: "")
 
     this.vars = vars
     this.pathRef = AtomicRef(path.toImmutable)
@@ -42,14 +42,14 @@ const class PathEnv : Env
       if (n.startsWith("env.") && n.size > 5) vars[n[4..-1]] = v
     }
 
-    path := parsePath(props["path"] ?: "")
+    path := parsePath(file, props["path"] ?: "")
     doAdd(path, file.parent.normalize, 0)
 
     this.vars = vars
     this.pathRef = AtomicRef(path.toImmutable)
   }
 
-  private File[] parsePath(Str path)
+  private File[] parsePath(File? ref, Str path)
   {
     acc := File[,]
     try
@@ -57,7 +57,9 @@ const class PathEnv : Env
       path.split(File.pathSep[0]).each |item|
       {
         if (item.isEmpty) return
-        dir := File.os(item).normalize
+        dir := (item.startsWith("..") && ref != null)
+          ? File.os("$ref.parent.osPath/$item").normalize
+          : File.os(item).normalize
         if (!dir.exists) dir = File(item.toUri.plusSlash, false).normalize
         if (!dir.exists) { log.warn("Dir not found: $dir"); return }
         if (!dir.isDir) { log.warn("Not a dir: $dir"); return }
