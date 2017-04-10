@@ -26,17 +26,23 @@ using dom
   ** Convenience to add a button to `buttons`.
   This add(Elem button)
   {
-    button.enabled = this.enabled
+    if (inheritEnabled) button.enabled = this.enabled
     this.buttons = buttons.add(button)
     return this
   }
+
+  ** If 'true', child buttons will inherit the `enabled` state
+  ** of this 'ButtonGroup'.  If 'false' buttons can be enabled
+  ** or diabled independent of group.
+  Bool inheritEnabled := true
 
   ** Set enabled state for this button group.
   Bool enabled := true
   {
     set {
       &enabled = it
-      buttons.each |b| { b.enabled =  &enabled }
+      if (inheritEnabled)
+        buttons.each |b| { b.enabled =  &enabled }
     }
   }
 
