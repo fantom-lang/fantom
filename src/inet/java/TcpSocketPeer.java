@@ -42,29 +42,14 @@ public class TcpSocketPeer
     }
   }
 
-  /** Get the system singleton SSLContext instance. */
-  public static SSLContext getSslContext()
-    throws GeneralSecurityException
-  {
-    synchronized (sslContextLock)
-    {
-      if (_sslContext == null)
-      {
-        _sslContext = SSLContext.getInstance("TLS");
-        _sslContext.init(null, null, null);
-      }
-      return _sslContext;
-    }
-  }
-  private static final Object sslContextLock = new Object();
-  private static SSLContext _sslContext;
-
   public static TcpSocket makeTls(TcpSocket upgrade)
   {
     try
     {
       // get SSL factory because Java loves factories!
-      final SSLSocketFactory factory = getSslContext().getSocketFactory();
+      SSLContext sslContext = SSLContext.getInstance("TLS");
+      sslContext.init(null, null, null);
+      final SSLSocketFactory factory = sslContext.getSocketFactory();
 
       SSLSocket socket;
       if (upgrade == null)
@@ -85,7 +70,9 @@ public class TcpSocketPeer
       }
 
       // create the new TcpSocket instance
-      return TcpSocket.makeRaw(socket);
+      TcpSocket tlsSocket = TcpSocket.makeRaw(socket);
+      tlsSocket.peer.sslContext = sslContext;
+      return tlsSocket;
     }
     catch (Exception e)
     {
@@ -495,11 +482,15 @@ public class TcpSocketPeer
 
   public Socket socket() { return this.socket; }
 
+  public SSLContext getSslContext() { return this.sslContext; }
+
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   Socket socket;
+  private SSLContext sslContext;
   private int inBufSize = 4096;
   private int outBufSize = 4096;
   private IpAddr remoteAddr;
