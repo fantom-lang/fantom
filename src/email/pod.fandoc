@@ -13,7 +13,7 @@ mail.  The following features are supported:
 
   - [Email]`email::Email` is used to model MIME multipart messages
   - [SmtpClient]`email::SmtpClient` implements the client side of the
-    Simple Mail Tranfer Protocol
+    Simple Mail Transfer Protocol
 
 Note: at the current time there is no support for incoming email such
 as POP3 or IMAP.  If you need this functionality, please let us know.
