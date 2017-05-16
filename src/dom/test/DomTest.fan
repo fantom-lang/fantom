@@ -20,6 +20,7 @@ class DomTest : Weblet
     out.head
       .title.w("Dom Test").titleEnd
       .includeJs(`/pod/sys/sys.js`)
+      .includeJs(`/pod/concurrent/concurrent.js`)
       .includeJs(`/pod/gfx/gfx.js`)
       .includeJs(`/pod/web/web.js`)
       .includeJs(`/pod/dom/dom.js`)
@@ -178,7 +179,17 @@ internal class DomTestClient
     verifyEq(elem.get("foo", "bar"), "bar")
 
     verifyEq(elem->offsetTop, 0)
-    verifyEq(elem->innerHTML.toStr[0..12].trim,  "<input type=")
+    verify(elem->innerHTML.toStr.contains("<input type="))
+
+    a.set("foo-bar", "ok")
+    verifyEq(a.get("foo-bar"), "ok")
+    verifyEq(a->fooBar, "ok")
+    a->fooBar = "cool"
+    verifyEq(a.get("foo-bar"), "cool")
+    verifyEq(a->fooBar, "cool")
+    a->tabIndex = 5
+    verifyEq(a.get("tabIndex"), 5)
+    verifyEq(a->tabIndex, 5)
 
     input := Win.cur.doc.querySelector("input[name='alpha']")
     verifyEq(input->value, "foo")

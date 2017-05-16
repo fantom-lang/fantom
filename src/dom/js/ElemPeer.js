@@ -104,7 +104,7 @@ fan.dom.ElemPeer.prototype.attrs = function(self)
   return map;
 }
 
-fan.dom.ElemPeer.prototype.get = function(self, name, def)
+fan.dom.ElemPeer.prototype.doGet = function(self, name, isTrap)
 {
   if (name == "id")      return this.id(self);
   if (name == "name")    return this.elem.name;
@@ -132,16 +132,21 @@ fan.dom.ElemPeer.prototype.get = function(self, name, def)
   }
 
   var val = this.elem[name];
-  if (val == null) val = this.elem.getAttribute(name);
+  if (val == null)
+  {
+    // only convert camcel case if trap operator was
+    // used _and_ using an actual attribute name
+    if (isTrap) name = fan.dom.ElemPeer.fromCamel(name);
+    val = this.elem.getAttribute(name);
+  }
 
   if (typeof val == 'function') return val.apply(this.elem);
 
   if (val != null) return val;
-  if (def != null) return def;
   return null;
 }
 
-fan.dom.ElemPeer.prototype.set = function(self, name, val)
+fan.dom.ElemPeer.prototype.doSet = function(self, name, val, isTrap)
 {
   // 30 Mar 2017: for SVG the elem[x] syntax does not properly
   // update the attribute, so if ns has been specified then
@@ -158,7 +163,25 @@ fan.dom.ElemPeer.prototype.set = function(self, name, val)
   else if (name == "value")   this.elem.value = val;
   else if (name == "checked") this.elem.checked = val;
   else if (this.elem[name])   this.elem[name] = val;
-  else this.elem.setAttribute(name, val);
+  else
+  {
+    // only convert camcel case if trap operator was
+    // used _and_ using an actual attribute name
+    if (isTrap) name = fan.dom.ElemPeer.fromCamel(name);
+    this.elem.setAttribute(name, val);
+  }
+}
+
+fan.dom.ElemPeer.fromCamel = function(s)
+{
+  var h = "";
+  for (var i=0; i<s.length; i++)
+  {
+    var ch = s[i];
+    if (ch >= "a" && ch <= "z") h += ch;
+    else h += "-" + ch.toLowerCase();
+  }
+  return h;
 }
 
 //////////////////////////////////////////////////////////////////////////
