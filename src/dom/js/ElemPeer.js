@@ -95,7 +95,7 @@ fan.dom.ElemPeer.prototype.draggable$ = function(self, val) { this.elem.draggabl
 
 fan.dom.ElemPeer.prototype.attrs = function(self)
 {
-  var map = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Obj.$type);
+  var map = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Str.$type);
   var attrs = this.elem.attributes;
   for(var i=0; i<attrs.length; i++)
   {
