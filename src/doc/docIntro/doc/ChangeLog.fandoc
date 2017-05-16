@@ -9,7 +9,7 @@
 *Build 1.0.70 (working)*
 - Add options to Zip deflate in/out methods
 - dom: Doc.activeElem, Doc.head
-- dom: Elem.clone, Elem.attrs
+- dom: Elem.clone, Elem.attrs, Elem.hasChildren
 - dom: Event.get,set,trap
 - dom: HttpReq.withCredentials
 - dom: DomFile support

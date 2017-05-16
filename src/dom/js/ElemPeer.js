@@ -242,6 +242,11 @@ fan.dom.ElemPeer.prototype.parent = function(self)
   return fan.dom.ElemPeer.wrap(parent);
 }
 
+fan.dom.ElemPeer.prototype.hasChildren = function(self)
+{
+  return this.elem.childElementCount > 0;
+}
+
 fan.dom.ElemPeer.prototype.children = function(self)
 {
   var list = new Array();
