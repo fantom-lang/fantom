@@ -37,6 +37,7 @@ class DomTest : Weblet
           try
           {
             var test = fan.dom.DomTestClient.make();
+            print('testEmpty');     test.testEmpty();
             print('testAttrs');     test.testAttrs();
             print('testBasics');    test.testBasics();
             print('testCreate');    test.testCreate();
@@ -57,6 +58,9 @@ class DomTest : Weblet
     out.body
       .h1.w("Dom Test").h1End
       .hr
+
+    // testEmpty
+    out.div.divEnd
 
     // testAttrs
     out.div("id='testAttrs' class='hidden'")
@@ -87,6 +91,13 @@ class DomTest : Weblet
 @NoDoc
 internal class DomTestClient
 {
+  Void testEmpty()
+  {
+    elem := Win.cur.doc.body.querySelector("div")  // testEmpty must be first div
+    verifyEq(elem.attrs.size, 0)
+    verifyEq(elem.hasChildren, false)
+  }
+
   Void testAttrs()
   {
     elem := Win.cur.doc.elem("testAttrs")
@@ -99,6 +110,7 @@ internal class DomTestClient
     verifyEq(elem.style.classes, ["hidden"])
     verifyEq(elem["class"],   "hidden")
     verifyEq(elem->className, "hidden")
+    verifyEq(elem.hasChildren, true)
 
     f := elem.firstChild
     verifyEq(f->name,  "alpha")

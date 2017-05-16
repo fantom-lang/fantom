@@ -107,6 +107,9 @@ class Elem
   ** this element has no parent.
   native Elem? parent()
 
+  ** Return 'true' if `children` is non-zero, 'false' otherwise.
+  native Bool hasChildren()
+
   ** Get the child nodes of this element.
   native Elem[] children()
 
