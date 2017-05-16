@@ -190,6 +190,9 @@ internal class DomTestClient
     a->tabIndex = 5
     verifyEq(a.get("tabIndex"), 5)
     verifyEq(a->tabIndex, 5)
+    a->_foo_bazPaw = "7"
+    verifyEq(a->_foo_bazPaw, "7")
+    verifyEq(a["_foo_baz-paw"], "7")
 
     input := Win.cur.doc.querySelector("input[name='alpha']")
     verifyEq(input->value, "foo")
