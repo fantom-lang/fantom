@@ -58,18 +58,27 @@ class Elem
 
   ** Get an attribute by name.  If not found return
   ** the specificed default value.
-  @Operator native Obj? get(Str name, Obj? def := null)
+  @Operator Obj? get(Str name, Obj? def := null)
+  {
+    doGet(name, false) ?: def
+  }
 
   ** Set an attribute to the given value.
-  @Operator native Void set(Str name, Obj? val)
+  @Operator Void set(Str name, Obj? val)
+  {
+    doSet(name, val, false)
+  }
 
   ** Get or set an attribute.
   override Obj? trap(Str name, Obj?[]? args := null)
   {
-    if (args == null || args.isEmpty) return get(name)
-    set(name, args.first)
+    if (args == null || args.isEmpty) return doGet(name, true)
+    doSet(name, args.first, true)
     return null
   }
+
+  private native Obj? doGet(Str name, Bool isTrap)
+  private native Void doSet(Str name, Obj? val, Bool isTrap)
 
 //////////////////////////////////////////////////////////////////////////
 // Layout
