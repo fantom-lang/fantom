@@ -53,6 +53,9 @@ class Elem
   ** The draggable attribute for this element.
   native Bool draggable
 
+  ** Get list of all attributes.
+  native Str:Obj attrs()
+
   ** Get an attribute by name.  If not found return
   ** the specificed default value.
   @Operator native Obj? get(Str name, Obj? def := null)
