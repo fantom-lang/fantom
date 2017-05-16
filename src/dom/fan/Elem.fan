@@ -53,8 +53,8 @@ class Elem
   ** The draggable attribute for this element.
   native Bool draggable
 
-  ** Get list of all attributes.
-  native Str:Obj attrs()
+  ** Get 'name:value' map of all attributes.
+  native Str:Str attrs()
 
   ** Get an attribute by name.  If not found return
   ** the specificed default value.
