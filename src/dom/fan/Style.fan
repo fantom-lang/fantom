@@ -168,8 +168,8 @@ using concurrent
     h := StrBuf()
     s.each |ch|
     {
-      if (ch.isLower) h.addChar(ch)
-      else h.addChar('-').addChar(ch.lower)
+      if (ch.isUpper) h.addChar('-').addChar(ch.lower)
+      else h.addChar(ch)
     }
     return h.toStr
   }

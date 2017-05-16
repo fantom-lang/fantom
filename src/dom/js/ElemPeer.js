@@ -178,8 +178,8 @@ fan.dom.ElemPeer.fromCamel = function(s)
   for (var i=0; i<s.length; i++)
   {
     var ch = s[i];
-    if (ch >= "a" && ch <= "z") h += ch;
-    else h += "-" + ch.toLowerCase();
+    if (ch >= "A" && ch <= "Z") h += "-" + ch.toLowerCase()
+    else h += ch;
   }
   return h;
 }
