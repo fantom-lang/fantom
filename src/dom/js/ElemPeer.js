@@ -93,6 +93,17 @@ fan.dom.ElemPeer.prototype.enabled$ = function(self, val)
 fan.dom.ElemPeer.prototype.draggable  = function(self) { return this.elem.draggable; }
 fan.dom.ElemPeer.prototype.draggable$ = function(self, val) { this.elem.draggable = val; }
 
+fan.dom.ElemPeer.prototype.attrs = function(self)
+{
+  var map = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Obj.$type);
+  var attrs = this.elem.attributes;
+  for(var i=0; i<attrs.length; i++)
+  {
+    map.set(attrs[i].name, attrs[i].value);
+  }
+  return map;
+}
+
 fan.dom.ElemPeer.prototype.get = function(self, name, def)
 {
   if (name == "id")      return this.id(self);
