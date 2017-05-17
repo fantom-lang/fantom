@@ -7,7 +7,7 @@
 **************************************************************************
 
 *Build 1.0.70 (working)*
-- Add options to Zip deflate in/out methods
+- graphics: new graphics API
 - dom: Doc.activeElem, Doc.head
 - dom: Elem.clone, Elem.attrs, Elem.hasChildren
 - dom: Event.get,set,trap
@@ -23,6 +23,7 @@
 - domkit: add WellBox
 - domkit: add ButtonGroup.enabled, inheritEnabled, onBeforeSelect
 - New docDomkit manual
+- Add options to Zip deflate in/out methods
 - Fandoc support for explicit img size
 - Float.isNegZero, normNegZero
 
