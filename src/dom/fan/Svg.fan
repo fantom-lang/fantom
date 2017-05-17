@@ -42,4 +42,45 @@ final const class Svg
     elem("text") {  it.text = text; it->x = x; it->y = y }
   }
 
+  ** Auto-generate an id for the def element and mount it into
+  ** the svg document's defs section.  This method will automatically
+  ** generate a '<defs>' child in the svg document as needed.
+  ** If defs already has an id or is already mounted, then no
+  ** action is taken.
+  static Str def(Elem svgElem, Elem defElem)
+  {
+    // sanity check document element
+    if (svgElem.tagName != "svg") throw Err("Document not <svg> element: $svgElem.tagName")
+
+    // check for <defs>
+    defsElem := svgElem.children.find |kid| { kid.tagName == "defs" }
+
+    // create it if needed
+    if (defsElem == null)
+    {
+      defsElem = elem("defs")
+      if (svgElem.hasChildren)
+        svgElem.insertBefore(defsElem, svgElem.children.first)
+      else
+        svgElem.add(defsElem)
+    }
+
+    // auto-generate if needed
+    if (defElem.id.isEmpty) defElem.id = "def-${defsElem.children.size}"
+
+    // mount if needed
+    if (defElem.parent == null) defsElem.add(defElem)
+
+    // return id
+    return defElem.id
+  }
+
+  ** Mount a definition element using `def` and return a CSS URL
+  ** to the fragment identifier such as "url(#def-d)".  This is used
+  ** to reference gradient and clip definitions.
+  static Str defUrl(Elem svgElem, Elem defElem)
+  {
+    "url(#" + def(svgElem, defElem) + ")"
+  }
+
 }
