@@ -16,6 +16,7 @@
 - dom: Style.addPseudoClass
 - dom: Doc/Elem support for creating namespaced elements
 - dom: Elem.trap support for converting camel-case attribute names to hyphens
+- dom: add Java peers for Elem,Style,Event
 - domkit: DragTarget.onEnd, DropTarget.onOver
 - domkit: add GridBox.removeRow
 - domkit: add Link.target
