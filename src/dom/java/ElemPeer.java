@@ -40,8 +40,18 @@ public class ElemPeer
 
   public String tagName(Elem self) { return this.tagName; }
 
-  public String id(Elem self) { return this.id; }
-  public void id(Elem self, String id) { this.id = id; }
+  public String id(Elem self)
+  {
+    // return empty string to match js behavoir
+    String id = (String)attrs.get("id");
+    if (id == null) return "";
+    return id;
+  }
+
+  public void id(Elem self, String id)
+  {
+    attrs.put("id", id);
+  }
 
   public Style style(Elem self)
   {
@@ -70,12 +80,16 @@ public class ElemPeer
 
   public Object doGet(Elem self, String name, boolean isTrap)
   {
+    if (name == "id") return id(self);
+
     if (isTrap) name = fromCamel(name);
     return attrs.get(name);
   }
 
   public void doSet(Elem self, String name, Object val, boolean isTrap)
   {
+    if (name == "id") { id(self, val.toString()); return; }
+
     if (isTrap) name = fromCamel(name);
     if (val == null) attrs.remove(name);
     else attrs.put(name, val);
@@ -177,7 +191,6 @@ public class ElemPeer
 
   private String tagName;    // non-null
   private Uri ns;            // null
-  private String id = "";    // non-null
   private String text = "";  // non-null
   private Style style;       // null
   private HashMap attrs = new HashMap();

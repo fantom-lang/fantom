@@ -95,6 +95,8 @@ internal class DomTestClient
   Void testEmpty()
   {
     elem := Win.cur.doc.body.querySelector("div")  // testEmpty must be first div
+    verifyEq(elem.id,  "")
+    verifyEq(elem->id, "")
     verifyEq(elem.attrs.size, 0)
     verifyEq(elem.hasChildren, false)
   }
