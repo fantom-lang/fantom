@@ -79,7 +79,7 @@ const class Font
 
   private static Float decodeSize(Str s)
   {
-    if (!s.endsWith("pt")) throw Err()
+    if (!s.endsWith("pt")) throw Err("Invalid font size: $s")
     return s[0..-3].toFloat
   }
 
