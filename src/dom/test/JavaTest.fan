@@ -13,6 +13,7 @@ class JavaTest : Test
     elem := Elem {}
     verifyEq(elem.tagName, "div")
     verifyEq(elem.id,   "")
+    verifyEq(elem->id,  "")
     verifyEq(elem.text, "")
 
     elem.id = "foo"
@@ -59,11 +60,6 @@ class JavaTest : Test
   Void testAttrs()
   {
     elem := Elem {}
-
-    elem.id = "foo"
-    elem.text = "yabba dabba"
-    verifyEq(elem.id,   "foo")
-    verifyEq(elem.text, "yabba dabba")
 
     verifyEq(elem.attrs.size, 0)
     verifyEq(elem->foo, null)
