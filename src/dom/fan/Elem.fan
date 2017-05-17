@@ -7,6 +7,8 @@
 //   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
+using graphics::Font
+
 **
 ** Elem models a DOM element object.
 **
@@ -66,6 +68,15 @@ class Elem
   ** Set an attribute to the given value.
   @Operator Void set(Str name, Obj? val)
   {
+    // TEMP TODO FIXIT: needs to be behind ns-peer check; stub for now
+    if (name == "font")
+    {
+      if (val is Str) val = Font.fromStr(val)
+      f := (Font)val
+      f.toProps.each |v, n| { set(n, v) }
+      return
+    }
+
     doSet(name, val, false)
   }
 
