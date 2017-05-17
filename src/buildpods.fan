@@ -41,6 +41,7 @@ class Build : BuildGroup
       `syntax/build.fan`,
       `sql/build.fan`,
       `email/build.fan`,
+      `graphics/build.fan`,
       `gfx/build.fan`,
       `compilerDoc/build.fan`,
       `dom/build.fan`,
