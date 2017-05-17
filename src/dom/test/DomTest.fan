@@ -60,8 +60,8 @@ class DomTest : Weblet
       .h1.w("Dom Test").h1End
       .hr
 
-    // testEmpty
-    out.div.divEnd
+    // testEmpty (use raw html so no whitespace nodes)
+    out.w("<div></div>").nl
 
     // testAttrs
     out.div("id='testAttrs' class='hidden'")
@@ -99,6 +99,7 @@ internal class DomTestClient
     verifyEq(elem->id, "")
     verifyEq(elem.attrs.size, 0)
     verifyEq(elem.hasChildren, false)
+    verifyEq(elem.text,  "")
   }
 
   Void testAttrs()
