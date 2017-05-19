@@ -106,7 +106,7 @@ using dom
   ** this method does nothing.
   Void close()
   {
-    mask := Win.cur.doc.elem("domkitDialog-mask-$uid")
+    mask := Win.cur.doc.elemById("domkitDialog-mask-$uid")
     mask?.transition(["opacity":"0"], null, 100ms)
     frame?.transition(["transform": "scale(0.75)", "opacity": "0"], null, 100ms)
     {

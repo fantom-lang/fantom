@@ -128,7 +128,7 @@ using web
 
   Void testBasics()
   {
-    elem := Win.cur.doc.elem("testBasics")
+    elem := Win.cur.doc.elemById("testBasics")
     verify(elem != null)
     kids := elem.children
     verifyEq(kids.size, 4)
@@ -154,7 +154,7 @@ using web
 
   Void testAttrs()
   {
-    top := Win.cur.doc.elem("testAttrs")
+    top := Win.cur.doc.elemById("testAttrs")
     verify(top != null)
 
     // top <div>
@@ -319,7 +319,7 @@ using web
 
   Void testStyle()
   {
-    top := Win.cur.doc.elem("testStyle")
+    top := Win.cur.doc.elemById("testStyle")
 
     // class tests
     a := top.children[0]
