@@ -3,9 +3,10 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   8 Jan 09   Andy Frank  Creation
-//   20 May 09  Andy Frank  Refactor to new OO model
-//   8 Jul 09   Andy Frank  Split webappClient into sys/dom
+//    8 Jan 2009  Andy Frank  Creation
+//   20 May 2009  Andy Frank  Refactor to new OO model
+//    8 Jul 2009  Andy Frank  Split webappClient into sys/dom
+//   19 May 2017  Andy Frank  Formalize attr vs prop
 //
 
 fan.dom.ElemPeer = fan.sys.Obj.$extend(fan.sys.Obj);
@@ -53,13 +54,10 @@ fan.dom.ElemPeer.wrap = function(elem)
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Attributes
+// Accessors
 //////////////////////////////////////////////////////////////////////////
 
 fan.dom.ElemPeer.prototype.tagName = function(self) { return fan.sys.Str.lower(this.elem.nodeName); }
-
-fan.dom.ElemPeer.prototype.id  = function(self) { return this.elem.id; }
-fan.dom.ElemPeer.prototype.id$ = function(self, val) { return this.elem.id = val; }
 
 fan.dom.ElemPeer.prototype.style = function(self)
 {
@@ -90,8 +88,9 @@ fan.dom.ElemPeer.prototype.enabled$ = function(self, val)
   this.elem.disabled = !val;
 }
 
-fan.dom.ElemPeer.prototype.draggable  = function(self) { return this.elem.draggable; }
-fan.dom.ElemPeer.prototype.draggable$ = function(self, val) { this.elem.draggable = val; }
+//////////////////////////////////////////////////////////////////////////
+// Attributes
+//////////////////////////////////////////////////////////////////////////
 
 fan.dom.ElemPeer.prototype.attrs = function(self)
 {
@@ -104,84 +103,85 @@ fan.dom.ElemPeer.prototype.attrs = function(self)
   return map;
 }
 
-fan.dom.ElemPeer.prototype.doGet = function(self, name, isTrap)
+fan.dom.ElemPeer.prototype.attr = function(self, name)
 {
-  if (name == "id")      return this.id(self);
-  if (name == "name")    return this.elem.name;
-  if (name == "class")   return this.elem.className; // TODO: route to Style?
-  if (name == "style")   return this.style(self);
-  if (name == "value")   return this.elem.value;
-  if (name == "checked") return this.elem.checked;
+  return this.elem.getAttribute(name);
+}
 
-  if (name == "contentWindow")
+fan.dom.ElemPeer.prototype.setAttr = function(self, name, val)
+{
+  if (val == null)
+    this.elem.removeAttribute(name);
+  else
+    this.elem.setAttribute(name, val);
+  return self;
+}
+
+fan.dom.ElemPeer.prototype.removeAttr = function(self, name)
+{
+  this.elem.removeAttribute(name);
+  return self;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Properties
+//////////////////////////////////////////////////////////////////////////
+
+fan.dom.ElemPeer.prototype.prop = function(self, name)
+{
+  if (fan.dom.ElemPeer.propHooks[name])
+    return fan.dom.ElemPeer.propHooks[name](this);
+
+  return this.elem[name];
+}
+
+fan.dom.ElemPeer.prototype.setProp = function(self, name, val)
+{
+  this.elem[name] = val;
+  return self;
+}
+
+fan.dom.ElemPeer.propHooks = {
+  contentWindow: function(peer)
   {
-    var v = this.elem.contentWindow;
+    var v = peer.elem.contentWindow;
     if (v == null) return null;
     var w = fan.dom.Win.make();
     w.peer.win = v;
     return w
-  }
-
-  if (name == "files")
+  },
+  files: function(peer)
   {
-    var f = this.elem.files;
+    var f = peer.elem.files;
     if (f == null) return null;
     var list = fan.sys.List.make(fan.dom.DomFile.$type);
     for (var i=0; i<f.length; i++) list.add(fan.dom.DomFilePeer.wrap(f[i]));
     return list;
   }
-
-  var val = this.elem[name];
-  if (val == null)
-  {
-    // only convert camcel case if trap operator was
-    // used _and_ using an actual attribute name
-    if (isTrap) name = fan.dom.ElemPeer.fromCamel(name);
-    val = this.elem.getAttribute(name);
-  }
-
-  if (typeof val == 'function') return val.apply(this.elem);
-
-  if (val != null) return val;
-  return null;
 }
 
-fan.dom.ElemPeer.prototype.doSet = function(self, name, val, isTrap)
+//////////////////////////////////////////////////////////////////////////
+// FFI
+//////////////////////////////////////////////////////////////////////////
+
+fan.dom.ElemPeer.prototype.invoke = function(self, name, args)
 {
-  // 30 Mar 2017: for SVG the elem[x] syntax does not properly
-  // update the attribute, so if ns has been specified then
-  // alwaysuse setAttribute
-  if (this.m_ns)
+  var f = this.elem[name];
+
+  // verify propery is actually a function
+  if (typeof f != 'function')
+    throw fan.sys.ArgErr.make(name + " is not a function");
+
+  // map fantom objects to js natives
+  var arglist = null;
+  if (args != null)
   {
-    this.elem.setAttribute(name, val);
-    return;
+    // TODO :)
+    for (var i=0; i<args.size(); i++)
+      arglist.push(args.get(i));
   }
 
-  if (name == "id")           this.id$(self, val);
-  else if (name == "name")    this.elem.name = val;
-  else if (name == "class")   this.elem.className = val;  // TODO: route to Style?
-  else if (name == "value")   this.elem.value = val;
-  else if (name == "checked") this.elem.checked = val;
-  else if (this.elem[name])   this.elem[name] = val;
-  else
-  {
-    // only convert camcel case if trap operator was
-    // used _and_ using an actual attribute name
-    if (isTrap) name = fan.dom.ElemPeer.fromCamel(name);
-    this.elem.setAttribute(name, val);
-  }
-}
-
-fan.dom.ElemPeer.fromCamel = function(s)
-{
-  var h = "";
-  for (var i=0; i<s.length; i++)
-  {
-    var ch = s[i];
-    if (ch >= "A" && ch <= "Z") h += "-" + ch.toLowerCase()
-    else h += ch;
-  }
-  return h;
+  return f.apply(this.elem, arglist);
 }
 
 //////////////////////////////////////////////////////////////////////////

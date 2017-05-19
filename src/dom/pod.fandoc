@@ -59,12 +59,19 @@ Elem [#elem]
   Elem("img")   // create new unattached <img> element
 
   // attributes
-  elem["alt"]               // get an attribute value
-  elem["alt"] = "Alt text"  // set an attribute value
-  elem->alt                 // get an attribute (equivalent to elem["alt"])
-  elem->alt = "Alt text"    // set an attribute (equivalent to elem["alt"] = "Alt text")
-  elem.id                   // 'id' attribute
-  elem.tagName              // tag name of this element
+  elem.id                          // 'id' attribute
+  elem.tagName                     // tag name of this element
+  elem.attr("alt")                 // get an attribute value
+  elem.setAttr("alt", "Alt text")  // set an attribute value
+  elem.removeAttr("alt")           // remove an attribute
+  elem["alt"]                      // get operator is a convenience for elem.attr
+  elem["alt"] = "Alt text"         // set operator is a convenience for elem.setAttr
+
+  // properties
+  elem.prop("value")               // get a DOM property value
+  elem.setProp("value", "foo")     // set a DOM property value
+  elem->value                      // trap getter is a convenience for elem.prop
+  elem->value = "foo"              // trap setter is a convenience for elem.setProp
 
   // CSS classes
   elem.style.classes               // return the current class name(s)

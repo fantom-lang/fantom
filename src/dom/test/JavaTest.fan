@@ -67,7 +67,7 @@ class JavaTest : Test
     verifyEq(elem->foo, "bar")
 
     elem->bar = false
-    elem.set("zoo", 12)
+    elem.set("zoo", "12")
     verifyEq(elem->bar, false)
     verifyEq(elem->zoo, 12)
 

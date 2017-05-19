@@ -29,14 +29,19 @@ class Elem
   private native Void _make(Str tagName, Uri? ns)
 
 //////////////////////////////////////////////////////////////////////////
-// Attributes
+// Accessors
 //////////////////////////////////////////////////////////////////////////
 
   ** Get the tag name for this element.
   native Str tagName()
 
-  ** The id for this element.
-  native Str id
+  ** The id for this element. Returns 'null' if id is not defined.
+  Str? id
+  {
+    // use attr so we get 'null' if not defined
+    get { attr("id") }
+    set { setAttr("id", it) }
+  }
 
   ** Get the Style instance for this element.
   native Style style()
@@ -52,44 +57,55 @@ class Elem
   ** elements.
   virtual native Bool? enabled
 
-  ** The draggable attribute for this element.
-  native Bool draggable
+//////////////////////////////////////////////////////////////////////////
+// Attributes
+//////////////////////////////////////////////////////////////////////////
 
   ** Get 'name:value' map of all attributes.
   native Str:Str attrs()
 
-  ** Get an attribute by name.  If not found return
-  ** the specificed default value.
-  @Operator Obj? get(Str name, Obj? def := null)
-  {
-    doGet(name, false) ?: def
-  }
+  ** Get the given HTML attribute value for this element.
+  ** Returns 'null' if attribute not defined.
+  native Str? attr(Str name)
 
-  ** Set an attribute to the given value.
-  @Operator Void set(Str name, Obj? val)
-  {
-    // TEMP TODO FIXIT: needs to be behind ns-peer check; stub for now
-    if (name == "font")
-    {
-      if (val is Str) val = Font.fromStr(val)
-      f := (Font)val
-      f.toProps.each |v, n| { set(n, v) }
-      return
-    }
+  ** Set the given HTML attribute value for this element.
+  ** If 'val' is 'null' the attribute is removed (see `removeAttr`).
+  native This setAttr(Str name, Str? val)
 
-    doSet(name, val, false)
-  }
+  ** Remove the given HTML attribute from this element.
+  native This removeAttr(Str name)
 
-  ** Get or set an attribute.
+  ** Convenience for `attr`.
+  @Operator Obj? get(Str name) { attr(name) }
+
+  ** Conveneince for `setAttr`.
+  @Operator Void set(Str name, Str? val) { setAttr(name, val) }
+
+//////////////////////////////////////////////////////////////////////////
+// Properties
+//////////////////////////////////////////////////////////////////////////
+
+  ** Get the given DOM property value for this element.
+  ** Returns 'null' if property does not exist.
+  native Obj? prop(Str name)
+
+  ** Set the given DOM properity value for this element.
+  native This setProp(Str name, Obj? val)
+
+  ** Convience for `prop` and `setProp`.
   override Obj? trap(Str name, Obj?[]? args := null)
   {
-    if (args == null || args.isEmpty) return doGet(name, true)
-    doSet(name, args.first, true)
+    if (args == null || args.isEmpty) return prop(name)
+    setProp(name, args.first)
     return null
   }
 
-  private native Obj? doGet(Str name, Bool isTrap)
-  private native Void doSet(Str name, Obj? val, Bool isTrap)
+//////////////////////////////////////////////////////////////////////////
+// FFI
+//////////////////////////////////////////////////////////////////////////
+
+  ** Invoke the given native DOM function with optional arguments.
+  native Obj? invoke(Str name, Obj?[]? args := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Layout
