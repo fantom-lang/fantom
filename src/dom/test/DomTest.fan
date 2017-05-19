@@ -397,7 +397,7 @@ using web
 
   private Void verifyAttr(Elem elem, Str name, Str? val)
   {
-    echo("# $elem a[$name]: " + elem.attr(name) + "/" + elem.get(name))
+    // echo("# $elem a[$name]: " + elem.attr(name) + "/" + elem.get(name))
     verifyEq(elem.attr(name), val)
     verifyEq(elem.get(name),  val)
     verifyEq(elem[name],      val)
@@ -405,7 +405,7 @@ using web
 
   private Void verifyProp(Elem elem, Str name, Obj? val)
   {
-    echo("# $elem p[$name]: " + elem.prop(name) + "/" + elem.trap(name))
+    // echo("# $elem p[$name]: " + elem.prop(name) + "/" + elem.trap(name))
     verifyEq(elem.prop(name), val)
     verifyEq(elem.trap(name), val)
   }
