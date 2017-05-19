@@ -30,9 +30,14 @@ public class ElemPeer
 
   public void _make(Elem self, String tagName, Uri ns)
   {
-    if (ns == null) ns = defns;
     this.tagName = tagName;
-    this.ns = ns;
+    this.ns = ns==null ? defns : ns;
+
+    // optimziation hooks for non-html namespaces
+    if (ns != null)
+    {
+      this.isSvg = ns.toStr().equals("http://www.w3.org/2000/svg");
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -105,7 +110,7 @@ public class ElemPeer
     if (propHooks.get(name) != null)
     {
       // return "" for null id to match js
-      if (name == "id") { Object v=props.get("id"); return v==null ? "" : v; }
+      if (name.equals("id")) { Object v=props.get("id"); return v==null ? "" : v; }
     }
 
     return props.get(name);
@@ -124,6 +129,19 @@ public class ElemPeer
   static
   {
     propHooks.put("id", true);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// FFI
+//////////////////////////////////////////////////////////////////////////
+
+  public Object trap(Elem self, String name, List args)
+  {
+    if (isSvg) return Svg.doTrap(self, name, args);
+
+    if (args == null || args.isEmpty()) return this.prop(self, name);
+    this.setProp(self, name, args.first());
+    return null;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -223,6 +241,8 @@ public class ElemPeer
 //////////////////////////////////////////////////////////////////////////
 
   private static final Uri defns = Uri.fromStr("http://www.w3.org/1999/xhtml");
+
+  private boolean isSvg = false;
 
   private Uri ns;                             // non-null
   private String tagName;                     // non-null

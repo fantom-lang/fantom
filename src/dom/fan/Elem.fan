@@ -95,17 +95,29 @@ class Elem
   ** Set the given DOM properity value for this element.
   native This setProp(Str name, Obj? val)
 
-  ** Convience for `prop` and `setProp`.
-  override Obj? trap(Str name, Obj?[]? args := null)
-  {
-    if (args == null || args.isEmpty) return prop(name)
-    setProp(name, args.first)
-    return null
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // FFI
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** The 'trap' operator will behave slightly differently based
+  ** on the namespace of the element.
+  **
+  ** For HTML elements, 'trap' works as a convenience for `prop`
+  ** and `setProp`:
+  **
+  **   div := Elem("div")
+  **   div->tabIndex = 0   // equivalent to div.setProp("tabIndex", 0)
+  **
+  ** For SVG elements (where `ns` is '`http://www.w3.org/2000/svg`'),
+  ** 'trap' routes to `attr` and `setAttr`:
+  **
+  **   svg := Svg.line(0, 0, 10, 10)
+  **   svg->x1 = 5      // equivalent to svg.setAttr("x1", "5")
+  **   svg->y1 = 5      // equivalent to svg.setAttr("y1", "5")
+  **   svg->x2 == "10"  // equivalent to svg.attr("x2")
+  **
+  native override Obj? trap(Str name, Obj?[]? args := null)
 
   ** Invoke the given native DOM function with optional arguments.
   native Obj? invoke(Str name, Obj?[]? args := null)
