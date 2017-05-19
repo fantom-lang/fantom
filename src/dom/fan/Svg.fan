@@ -6,6 +6,8 @@
 //   17 May 2017  Brian Frank  Creation
 //
 
+using graphics
+
 **
 ** SVG (Scalar Vector Graphics) utilities
 **
@@ -66,7 +68,7 @@ final const class Svg
     }
 
     // auto-generate if needed
-    if (defElem.id.isEmpty) defElem.id = "def-${defsElem.children.size}"
+    if (defElem.id == null) defElem.id = "def-${defsElem.children.size}"
 
     // mount if needed
     if (defElem.parent == null) defsElem.add(defElem)
@@ -86,8 +88,120 @@ final const class Svg
   ** Internal hook to customize Elem.trap behavoir.
   internal static Obj? doTrap(Elem svgElem, Str name, Obj?[]? args := null)
   {
-    if (args == null || args.isEmpty) return svgElem.attr(name)?.toStr
-    svgElem.setAttr(name, args.first.toStr)
-    return null
+    if (args == null || args.isEmpty)
+    {
+      // get
+      return svgElem.attr(name)?.toStr
+    }
+    else
+    {
+      // set
+      val := args.first
+
+      // TODO: should we be using trap for text?
+      if (name == "text") { svgElem.text = val.toStr; return null }
+
+      // convenience to explode font attrs
+      if (name == "font")
+      {
+        if (val is Str) val = Font.fromStr(val)
+        f := (Font)val
+        f.toProps.each |v,n| { svgElem.setAttr(n, v.toStr) }
+        return null
+      }
+
+      // convert to hyphens if needed and route to setAttr
+      if (camelMap.containsKey(name)) name = fromCamel(name)
+      svgElem.setAttr(name, val.toStr)
+      return null
+    }
   }
+
+  ** Convert camel case to hyphen notation.
+  private static Str fromCamel(Str s)
+  {
+    h := StrBuf(s.size + 2)
+    for (i:=0; i<s.size; ++i)
+    {
+      ch := s[i]
+      if (ch.isUpper) h.addChar('-').addChar(ch.lower)
+      else h.addChar(ch)
+    }
+    return h.toStr
+  }
+
+  // TODO: just keep a big whitelist here??
+  private static const Str:Str camelMap := Str:Str[:].setList([
+    "accentHeight",
+    "alignmentBaseline",
+    "baselineShift",
+    "capHeight",
+    "clipPath",
+    "clipRule",
+    "colorInterpolation",
+    "colorInterpolationFilters",
+    "colorProfile",
+    "colorRendering",
+    "dominantBaseline",
+    "enableBackground",
+    "fillOpacity",
+    "fillRule",
+    "floodColor",
+    "floodOpacity",
+    "fontFamily",
+    "fontSize",
+    "fontSizeAdjust",
+    "fontStretch",
+    "fontStyle",
+    "fontVariant",
+    "fontWeight",
+    "glyphName",
+    "glyphOrientationHorizontal",
+    "glyphOrientationVertical",
+    "horizAdvX",
+    "horizOriginX",
+    "imageRendering",
+    "letterSpacing",
+    "lightingColor",
+    "markerEnd",
+    "markerMid",
+    "markerStart",
+    "overlinePosition",
+    "overlineThickness",
+    "panose1",
+    "paintOrder",
+    "renderingIntent",
+    "shapeRendering",
+    "stopColor",
+    "stopOpacity",
+    "strikethroughPosition",
+    "strikethroughThickness",
+    "strokeDasharray",
+    "strokeDashoffset",
+    "strokeLinecap",
+    "strokeLinejoin",
+    "strokeMiterlimit",
+    "strokeOpacity",
+    "strokeWidth",
+    "textAnchor",
+    "textDecoration",
+    "textRendering",
+    "underlinePosition",
+    "underlineThickness",
+    "unicode",
+    "unicodeBidi",
+    "unicodeRange",
+    "unitsPerEm",
+    "vAlphabetic",
+    "vHanging",
+    "vIdeographic",
+    "vMathematical",
+    "values",
+    "version",
+    "vertAdvY",
+    "vertOriginX",
+    "vertOriginY",
+    "wordSpacing",
+    "xHeight",
+  ])
 }

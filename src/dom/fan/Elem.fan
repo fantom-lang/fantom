@@ -7,8 +7,6 @@
 //   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
-using graphics::Font
-
 **
 ** Elem models a DOM element object.
 **
