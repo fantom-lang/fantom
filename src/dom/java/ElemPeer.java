@@ -30,6 +30,7 @@ public class ElemPeer
 
   public void _make(Elem self, String tagName, Uri ns)
   {
+    if (ns == null) ns = defns;
     this.tagName = tagName;
     this.ns = ns;
   }
@@ -37,6 +38,8 @@ public class ElemPeer
 //////////////////////////////////////////////////////////////////////////
 // Accessors
 //////////////////////////////////////////////////////////////////////////
+
+  public Uri ns(Elem self) { return this.ns; }
 
   public String tagName(Elem self) { return this.tagName; }
 
@@ -219,8 +222,10 @@ public class ElemPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  private static final Uri defns = Uri.fromStr("http://www.w3.org/1999/xhtml");
+
+  private Uri ns;                             // non-null
   private String tagName;                     // non-null
-  private Uri ns;                             // null
   private String text = "";                   // non-null
   private Style style;                        // null
   private boolean enabled = true;
