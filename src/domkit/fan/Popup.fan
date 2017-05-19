@@ -85,7 +85,7 @@ using dom
   {
     this.transition(["transform": "scale(0.75)", "opacity": "0"], null, 100ms)
     {
-      mask := Win.cur.doc.elem("domkitPopup-mask-$uid")
+      mask := Win.cur.doc.elemById("domkitPopup-mask-$uid")
       mask?.parent?.remove(mask)
       fireClose(null)
     }

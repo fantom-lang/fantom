@@ -72,7 +72,7 @@ using dom
     if (f != null) cbClose = f
     this.transition(["height": "0"], null, 250ms)
     {
-      mask   := Win.cur.doc.elem("domkitSheet-mask-$uid")
+      mask   := Win.cur.doc.elemById("domkitSheet-mask-$uid")
       parent := mask?.parent
       if (parent != null)
       {

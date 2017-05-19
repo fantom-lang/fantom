@@ -34,7 +34,7 @@ fan.dom.DocPeer.prototype.activeElem = function(self)
   return fan.dom.ElemPeer.wrap(elem);
 }
 
-fan.dom.DocPeer.prototype.elem = function(self, id)
+fan.dom.DocPeer.prototype.elemById = function(self, id)
 {
   var elem = this.doc.getElementById(id);
   if (elem == null) return null;
