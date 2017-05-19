@@ -11,6 +11,7 @@ class JavaTest : Test
   Void testElemBasics()
   {
     elem := Elem {}
+    verifyEq(elem.ns, `http://www.w3.org/1999/xhtml`)
     verifyEq(elem.tagName, "div")
     verifyAttrProp(elem, "id", null, "")  // to match js behavoir
     verifyAttrProp(elem, "name", null)

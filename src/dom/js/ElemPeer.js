@@ -57,6 +57,12 @@ fan.dom.ElemPeer.wrap = function(elem)
 // Accessors
 //////////////////////////////////////////////////////////////////////////
 
+fan.dom.ElemPeer.prototype.ns = function(self)
+{
+  var ns = this.elem.namespaceURI;
+  return fan.sys.Uri.fromStr(ns);
+}
+
 fan.dom.ElemPeer.prototype.tagName = function(self) { return fan.sys.Str.lower(this.elem.nodeName); }
 
 fan.dom.ElemPeer.prototype.style = function(self)

@@ -32,6 +32,9 @@ class Elem
 // Accessors
 //////////////////////////////////////////////////////////////////////////
 
+  ** The namespace URI of this element.
+  native Uri ns()
+
   ** Get the tag name for this element.
   native Str tagName()
 

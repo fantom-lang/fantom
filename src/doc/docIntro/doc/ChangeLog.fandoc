@@ -11,7 +11,8 @@
 - dom: formalize Elem attr vs prop; get/set routes to attr; trap to prop
 - dom: remove Elem.draggable (use elem->draggable)
 - dom: Doc.activeElem, Doc.head
-- dom: Elem.clone, Elem.attrs,attr/setAttr, Elem.prop/setProp, Elem.hasChildren
+- dom: Elem.attrs,attr/setAttr, Elem.prop/setProp
+- dom: Elem.clone, Elem.hasChildren, Elem.ns
 - dom: Event.get,set,trap
 - dom: HttpReq.withCredentials
 - dom: DomFile support

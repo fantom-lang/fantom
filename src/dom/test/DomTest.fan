@@ -113,6 +113,7 @@ using web
   Void testEmpty()
   {
     elem := Win.cur.doc.body.querySelector("div")  // testEmpty must be first div
+    verifyEq(elem.ns,  `http://www.w3.org/1999/xhtml`)
     verifyEq(elem.id,  null)
     verifyEq(elem->id, "")
     verifyEq(elem.attrs.size, 0)
@@ -237,12 +238,14 @@ using web
   Void testCreate()
   {
     elem := Elem {}
+    verifyEq(elem.ns, `http://www.w3.org/1999/xhtml`)
     verifyEq(elem.tagName, "div")
 
     elem = Elem("table") {}
     verifyEq(elem.tagName, "table")
 
     elem = Win.cur.doc.createElem("div")
+    verifyEq(elem.ns, `http://www.w3.org/1999/xhtml`)
     verifyEq(elem.tagName, "div")
 
     elem = Win.cur.doc.createElem("div", ["class":"foo"])
