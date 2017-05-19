@@ -12,13 +12,13 @@ class JavaTest : Test
   {
     elem := Elem {}
     verifyEq(elem.tagName, "div")
-    verifyEq(elem.id,   "")
-    verifyEq(elem->id,  "")
-    verifyEq(elem.text, "")
+    verifyAttrProp(elem, "id", null, "")  // to match js behavoir
+    verifyAttrProp(elem, "name", null)
+    verifyEq(elem.text,  "")
 
     elem.id = "foo"
     elem.text = "yabba dabba"
-    verifyEq(elem.id,   "foo")
+    verifyAttrProp(elem, "id", "foo")
     verifyEq(elem.text, "yabba dabba")
 
     a := Elem {}
@@ -61,38 +61,41 @@ class JavaTest : Test
   {
     elem := Elem {}
 
+    // java setAttr will always also set the prop
     verifyEq(elem.attrs.size, 0)
-    verifyEq(elem->foo, null)
-    elem->foo = "bar"
-    verifyEq(elem->foo, "bar")
+    verifyAttrProp(elem, "foo", null)
+    elem["foo"] = "bar"
+    verifyAttrProp(elem, "foo", "bar")
 
+    // java setProp will always also set the attr
     elem->bar = false
-    elem.set("zoo", "12")
-    verifyEq(elem->bar, false)
-    verifyEq(elem->zoo, 12)
+    elem->zoo = 12
+    verifyAttrProp(elem, "bar", "false", false)
+    verifyAttrProp(elem, "zoo", "12", 12)
 
     attrs := elem.attrs
     verifyEq(attrs.size, 3)
-    verifyEq(attrs["foo"], "bar")
-    verifyEq(attrs["bar"], "false")
-    verifyEq(attrs["zoo"], "12")
+    verifyAttrProp(elem, "foo", "bar")
+    verifyAttrProp(elem, "bar", "false", false)
+    verifyAttrProp(elem, "zoo", "12", 12)
 
-    elem->fooBar = "ok"
-    verifyEq(elem->fooBar, "ok")
-    verifyEq(elem["foo-bar"], "ok")
-    verifyEq(elem.get("foo-bar"), "ok")
-
-    elem.set("foo-bar", "ko")
-    verifyEq(elem->fooBar, "ko")
-    verifyEq(elem["foo-bar"], "ko")
-
-    elem->fooBar = "xx"
-    verifyEq(elem->fooBar, "xx")
-    verifyEq(elem["foo-bar"], "xx")
-
-    elem->_foo_bazPaw = "5"
-    verifyEq(elem->_foo_bazPaw, "5")
-    verifyEq(elem["_foo_baz-paw"], "5")
+    // TODO: how do we handle camel case????
+    // elem->fooBar = "ok"
+    // verifyEq(elem->fooBar, "ok")
+    // verifyEq(elem["foo-bar"], "ok")
+    // verifyEq(elem.get("foo-bar"), "ok")
+    //
+    // elem.set("foo-bar", "ko")
+    // verifyEq(elem->fooBar, "ko")
+    // verifyEq(elem["foo-bar"], "ko")
+    //
+    // elem->fooBar = "xx"
+    // verifyEq(elem->fooBar, "xx")
+    // verifyEq(elem["foo-bar"], "xx")
+    //
+    // elem->_foo_bazPaw = "5"
+    // verifyEq(elem->_foo_bazPaw, "5")
+    // verifyEq(elem["_foo_baz-paw"], "5")
   }
 
   Void testStyleBasics()
@@ -124,5 +127,26 @@ class JavaTest : Test
     verifyEq(s->background, null)
     s->background = "#eee"
     verifyEq(s->background, "#eee")
+  }
+
+  private Void verifyAttrProp(Elem elem, Str name, Str? attrVal, Obj? propVal := null)
+  {
+    verifyAttr(elem, name, attrVal)
+    verifyProp(elem, name, propVal ?: attrVal)
+  }
+
+  private Void verifyAttr(Elem elem, Str name, Str? val)
+  {
+    // echo("# $elem a[$name]: " + elem.attr(name) + "/" + elem.get(name))
+    verifyEq(elem.attr(name), val)
+    verifyEq(elem.get(name),  val)
+    verifyEq(elem[name],      val)
+  }
+
+  private Void verifyProp(Elem elem, Str name, Obj? val)
+  {
+    // echo("# $elem p[$name]: " + elem.prop(name) + "/" + elem.trap(name))
+    verifyEq(elem.prop(name), val)
+    verifyEq(elem.trap(name), val)
   }
 }

@@ -35,23 +35,10 @@ public class ElemPeer
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Methods
+// Accessors
 //////////////////////////////////////////////////////////////////////////
 
   public String tagName(Elem self) { return this.tagName; }
-
-  public String id(Elem self)
-  {
-    // return empty string to match js behavoir
-    String id = (String)attrs.get("id");
-    if (id == null) return "";
-    return id;
-  }
-
-  public void id(Elem self, String id)
-  {
-    attrs.put("id", id);
-  }
 
   public Style style(Elem self)
   {
@@ -66,10 +53,17 @@ public class ElemPeer
   // public String html(Elem self) { return ...; }
   // public void html(Elem self, String html) { ... }
 
+  public boolean enabled(Elem self) { return enabled; }
+  public void enabled(Elem self, boolean v) { this.enabled = v; }
+
+//////////////////////////////////////////////////////////////////////////
+// Attributes
+//////////////////////////////////////////////////////////////////////////
+
   public Map attrs(Elem self)
   {
-    Map map = new Map(new MapType(Sys.StrType, Sys.ObjType));
-    Iterator it = attrs.entrySet().iterator();
+    Map map = new Map(new MapType(Sys.StrType, Sys.StrType));
+    Iterator it = props.entrySet().iterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
@@ -78,22 +72,60 @@ public class ElemPeer
     return map;
   }
 
-  public Object doGet(Elem self, String name, boolean isTrap)
+  public String attr(Elem self, String name)
   {
-    if (name == "id") return id(self);
-
-    if (isTrap) name = fromCamel(name);
-    return attrs.get(name);
+    // do not route to prop to avoid propHooks traps
+    Object val = props.get(name);
+    return val == null ? null : val.toString();
   }
 
-  public void doSet(Elem self, String name, Object val, boolean isTrap)
+  public Elem setAttr(Elem self, String name, String val)
   {
-    if (name == "id") { id(self, val.toString()); return; }
-
-    if (isTrap) name = fromCamel(name);
-    if (val == null) attrs.remove(name);
-    else attrs.put(name, val);
+    // route to setProp
+    this.setProp(self, name, val==null ? null : val.toString());
+    return self;
   }
+
+  public Elem removeAtrr(Elem self, String name)
+  {
+    // route to setProp
+    this.setProp(self, name, null);
+    return self;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Props
+//////////////////////////////////////////////////////////////////////////
+
+  public Object prop(Elem self, String name)
+  {
+    if (propHooks.get(name) != null)
+    {
+      // return "" for null id to match js
+      if (name == "id") { Object v=props.get("id"); return v==null ? "" : v; }
+    }
+
+    return props.get(name);
+  }
+
+  public Elem setProp(Elem self, String name, Object val)
+  {
+    if (val == null)
+      props.remove(name);
+    else
+      props.put(name, val);
+    return self;
+  }
+
+  private static HashMap propHooks = new HashMap();
+  static
+  {
+    propHooks.put("id", true);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Tree
+//////////////////////////////////////////////////////////////////////////
 
   public Elem parent(Elem self)
   {
@@ -173,6 +205,10 @@ public class ElemPeer
     kids.remove(child);
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Events
+//////////////////////////////////////////////////////////////////////////
+
   public Func onEvent(Elem self, String type, boolean useCapture, Func handler)
   {
     // ignore
@@ -183,24 +219,12 @@ public class ElemPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private static String fromCamel(String s)
-  {
-    StringBuffer h = new StringBuffer();
-    for (int i=0; i<s.length(); i++)
-    {
-      char ch = s.charAt(i);
-      if (ch >= 'A' && ch <= 'Z') h.append('-').append((char)FanInt.lower(ch));
-      else h.append(ch);
-    }
-    return h.toString();
-  }
-
-  private String tagName;    // non-null
-  private Uri ns;            // null
-  private String text = "";  // non-null
-  private Style style;       // null
-  private HashMap attrs = new HashMap();
-
-  private Elem parent;       // null
+  private String tagName;                     // non-null
+  private Uri ns;                             // null
+  private String text = "";                   // non-null
+  private Style style;                        // null
+  private boolean enabled = true;
+  private HashMap props = new HashMap();      // Str:Obj
+  private Elem parent;                        // null
   private ArrayList kids = new ArrayList();
 }
