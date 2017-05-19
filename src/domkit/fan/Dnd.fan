@@ -27,7 +27,7 @@ using dom
   ** Private ctor.
   private new make(Elem elem)
   {
-    elem.draggable = true
+    elem->draggable = true
     elem.onEvent(EventType.dragStart, false) |e|
     {
       if (cbDrag == null) return

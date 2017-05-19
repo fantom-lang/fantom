@@ -76,7 +76,7 @@ using dom
     {
       td := Elem("td")
       cs := colspan.getSafe(c)
-      if (cs != null) td["colspan"] = cs
+      if (cs != null) td["colspan"] = cs.toStr
       applyCellStyle(c+cx, r, td)
       if (elem != null) td.add(elem)
       cx += cs==null ? 0 : cs-1

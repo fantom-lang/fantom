@@ -38,7 +38,7 @@ div.domkit-Button:focus {
   position: relative;  /* needed to make z-index work */
 }
 
-div.domkit-Button:hover {
+div.domkit-Button:hover:not(.disabled) {
   background: #f5f5f5;
 }
 
@@ -64,7 +64,8 @@ div.domkit-Button.domkit-def.down {
   box-shadow: none;
 }
 
-div.domkit-Button.selected {
+div.domkit-Button.selected,
+div.domkit-Button.selected:hover {
   background-color: #3498db;
   color: #fff;
   border-color: #2c7fb7;

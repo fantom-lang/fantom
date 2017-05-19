@@ -47,8 +47,8 @@ using dom
   ** Set to 'true' to set text area to readonly mode.
   Bool ro
   {
-    get { this.get("readonly") }
-    set { this.set("readonly", it) }
+    get { this.prop("readonly") }
+    set { this.setProp("readonly", it) }
   }
 
   ** Value of text area.
