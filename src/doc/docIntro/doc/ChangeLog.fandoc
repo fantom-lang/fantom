@@ -8,14 +8,15 @@
 
 *Build 1.0.70 (working)*
 - graphics: new graphics API
+- dom: formalize Elem attr vs prop; get/set routes to attr; trap to prop
+- dom: remove Elem.draggable (use elem->draggable)
 - dom: Doc.activeElem, Doc.head
-- dom: Elem.clone, Elem.attrs, Elem.hasChildren
+- dom: Elem.clone, Elem.attrs,attr/setAttr, Elem.prop/setProp, Elem.hasChildren
 - dom: Event.get,set,trap
 - dom: HttpReq.withCredentials
 - dom: DomFile support
 - dom: Style.addPseudoClass
 - dom: Doc/Elem support for creating namespaced elements
-- dom: Elem.trap support for converting camel-case attribute names to hyphens
 - dom: add Java peers for Elem,Style,Event
 - domkit: DragTarget.onEnd, DropTarget.onOver
 - domkit: add GridBox.removeRow
