@@ -49,8 +49,8 @@ using dom
   ** Set to 'true' to set field to readonly mode.
   Bool ro
   {
-    get { this.get("readonly") }
-    set { this.set("readonly", it) }
+    get { this.prop("readonly") }
+    set { this.setProp("readonly", it) }
   }
 
   ** Set to 'true' to mask characters inputed into field.
@@ -76,8 +76,8 @@ using dom
   ** Select given range of text
   Void select(Int start, Int end)
   {
-    set("selectionStart", start)
-    set("selectionEnd", end)
+    setProp("selectionStart", start)
+    setProp("selectionEnd", end)
   }
 
   internal Void fireAction(Event? e) { cbAction?.call(this) }

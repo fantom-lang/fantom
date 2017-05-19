@@ -19,7 +19,7 @@ using dom
   new make() : super()
   {
     this.style.addClass("domkit-Button")
-    this.set("tabindex", "0")
+    this->tabIndex = 0
     this.onEvent(EventType.mouseDown, false) |e|
     {
       e.stop
@@ -123,12 +123,12 @@ using dom
       if (it)
       {
         style.removeClass("disabled")
-        this.set("tabindex", "0")
+        this->tabIndex = 0
       }
       else
       {
         style.addClass("disabled")
-        this.set("tabindex", "-1")
+        this->tabIndex = -1
       }
     }
   }

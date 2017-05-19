@@ -60,6 +60,7 @@ class ButtonTest : DomkitTest
         it.elemOff = "No"
         it.selected = false
       },
+      ToggleButton { it.html="Disabled"; it.selected=true; it.enabled=false },
       ToggleButton { it.html="Disabled"; it.enabled=false },
     }
   }

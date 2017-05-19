@@ -17,7 +17,7 @@ using dom
   {
     this.style.addClass("domkit-FilePicker")
     this->type = "file"
-    this->tabindex = 0
+    this->tabIndex = 0
     this.onEvent("change", false)
     {
       if (cbSelect != null) cbSelect(this)
@@ -47,7 +47,7 @@ using dom
   }
 
   ** Programmtically open the client file chooser interface.
-  Void open() { this->click }
+  Void open() { this.invoke("click") }
 
   ** Get the list of currently selected files.
   DomFile[] files() { this->files }

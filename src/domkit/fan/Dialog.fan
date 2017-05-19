@@ -20,8 +20,8 @@ using dom
   {
     this.uid = nextId.val
     nextId.val = uid+1
-    this.set("tabindex", "0")
     this.style.addClass("domkit-Dialog")
+    this->tabIndex = 0
   }
 
   ** Text displayed in title bar, or empty Str to hide title bar.
@@ -42,7 +42,7 @@ using dom
 
     mask := Elem {
       it.id = "domkitDialog-mask-$uid"
-      it->tabindex = 0
+      it->tabIndex = 0
       it.style.addClass("domkit-Dialog-mask")
       it.style->opacity = "0"
       it.onEvent(EventType.keyDown, false) |e| { cbKeyDown?.call(e) }
