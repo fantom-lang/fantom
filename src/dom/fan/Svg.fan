@@ -83,4 +83,11 @@ final const class Svg
     "url(#" + def(svgElem, defElem) + ")"
   }
 
+  ** Internal hook to customize Elem.trap behavoir.
+  internal static Obj? doTrap(Elem svgElem, Str name, Obj?[]? args := null)
+  {
+    if (args == null || args.isEmpty) return svgElem.attr(name)?.toStr
+    svgElem.setAttr(name, args.first.toStr)
+    return null
+  }
 }

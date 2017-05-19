@@ -32,7 +32,12 @@ fan.dom.ElemPeer.prototype._make = function(self, tagName, ns)
      : doc.createElement(tagName);
   this.elem = elem;
   this.elem._fanElem = self;
-  if (ns) this.m_ns = ns;
+
+  // optimziation hooks for non-html namespaces
+  if (ns)
+  {
+    if (ns.toStr() == "http://www.w3.org/2000/svg") this.$svg = true;
+  }
 }
 
 /*
@@ -169,6 +174,15 @@ fan.dom.ElemPeer.propHooks = {
 //////////////////////////////////////////////////////////////////////////
 // FFI
 //////////////////////////////////////////////////////////////////////////
+
+fan.dom.ElemPeer.prototype.trap = function(self, name, args)
+{
+  if (this.$svg) return fan.dom.Svg.doTrap(self, name, args);
+
+  if (args == null || args.isEmpty()) return this.prop(self, name);
+  this.setProp(self, name, args.first());
+  return null;
+}
 
 fan.dom.ElemPeer.prototype.invoke = function(self, name, args)
 {

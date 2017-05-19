@@ -130,6 +130,25 @@ class JavaTest : Test
     verifyEq(s->background, "#eee")
   }
 
+  Void testSvg()
+  {
+    a := Svg.line(0, 0, 10, 10)
+    verifyEq(a.ns, `http://www.w3.org/2000/svg`)
+    verifyEq(a.tagName, "line")
+
+    // svg prop routes to attr
+    verifyEq(a->x1, "0")
+    verifyEq(a->y1, "0")
+    verifyEq(a->x2, "10")
+    verifyEq(a->y2, "10")
+
+    // svg setProp routes to setAttr
+    a->x1 = 5
+    a->y1 = 5
+    verifyEq(a->x1, "5")
+    verifyEq(a->y1, "5")
+  }
+
   private Void verifyAttrProp(Elem elem, Str name, Str? attrVal, Obj? propVal := null)
   {
     verifyAttr(elem, name, attrVal)

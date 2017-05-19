@@ -47,6 +47,7 @@ using web
             print('testCreate');    test.testCreate();
             print('testAddRemove'); test.testAddRemove();
             print('testStyle');     test.testStyle();
+            print('testSvg');       test.testSvg();
             results.style.color = 'green';
             results.innerHTML = 'All tests passed! [' + test.m_verifies + ' verifies]';
           }
@@ -374,6 +375,29 @@ using web
     verifyEq(x.style->padding, "5px")
     verifyEq(x.style->margin,  "10px")
     verifyEq(x.style->border,  "1px solid rgb(0, 255, 0)")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// testSvg
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSvg()
+  {
+    a := Svg.line(0, 0, 10, 10)
+    verifyEq(a.ns, `http://www.w3.org/2000/svg`)
+    verifyEq(a.tagName, "line")
+
+    // svg prop routes to attr
+    verifyEq(a->x1, "0")
+    verifyEq(a->y1, "0")
+    verifyEq(a->x2, "10")
+    verifyEq(a->y2, "10")
+
+    // svg setProp routes to setAttr
+    a->x1 = 5
+    a->y1 = 5
+    verifyEq(a->x1, "5")
+    verifyEq(a->y1, "5")
   }
 
 //////////////////////////////////////////////////////////////////////////
