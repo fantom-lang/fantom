@@ -18,7 +18,7 @@ fan.dom.ElemPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.dom.ElemPeer.prototype.$ctor = function(self)
 {
   this.m_pos  = fan.dom.Pos.m_defVal;
-  this.m_size = fan.dom.Size.m_defVal;
+  this.m_size = fan.graphics.Size.m_defVal;
 }
 
 fan.dom.ElemPeer.prototype._make = function(self, tagName, ns)
@@ -237,13 +237,13 @@ fan.dom.ElemPeer.prototype.size = function(self)
   var w = this.elem.offsetWidth;
   var h = this.elem.offsetHeight;
   if (this.m_size.m_w != w || this.m_size.m_h != h)
-    this.m_size = fan.dom.Size.make(w, h);
+    this.m_size = fan.graphics.Size.makeInt(w, h);
   return this.m_size;
 }
 
 fan.dom.ElemPeer.prototype.size$ = function(self, val)
 {
-  this.m_size = fan.dom.Size.make(val.m_w, val.m_h);
+  this.m_size = fan.graphics.Size.makeInt(val.m_w, val.m_h);
   this.elem.style.width  = val.m_w + "px";
   this.elem.style.height = val.m_h + "px";
 }
@@ -269,7 +269,7 @@ fan.dom.ElemPeer.prototype.scrollSize = function(self)
   var w = this.elem.scrollWidth;
   var h = this.elem.scrollHeight;
   if (!this.m_scrollSize || this.m_scrollSize.m_w != w || this.m_size.m_h != h)
-    this.m_scrollSize = fan.dom.Size.make(w, h);
+    this.m_scrollSize = fan.graphics.Size.makeInt(w, h);
   return this.m_scrollSize;
 }
 

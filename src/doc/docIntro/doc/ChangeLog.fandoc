@@ -8,6 +8,7 @@
 
 *Build 1.0.70 (working)*
 - graphics: new graphics API
+- dom: remove dom::Size; convert to float-based graphics::Size
 - dom: formalize Elem attr vs prop; get/set routes to attr; trap to prop
 - dom: remove Elem.draggable (use elem->draggable)
 - dom: Doc.activeElem, Doc.head

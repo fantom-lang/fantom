@@ -124,13 +124,13 @@ using dom
     if (dir == Dir.down)
     {
       y := 0
-      for (i:=0; i<=resizeIndex; i++) y += kids[i].size.h
+      for (i:=0; i<=resizeIndex; i++) y += kids[i].size.h.toInt
       applyResize(resizeIndex, p.y - y)
     }
     else
     {
       x := 0
-      for (i:=0; i<=resizeIndex; i++) x += kids[i].size.w
+      for (i:=0; i<=resizeIndex; i++) x += kids[i].size.w.toInt
       applyResize(resizeIndex, p.x - x)
     }
 
@@ -171,7 +171,7 @@ using dom
         if (dir == Dir.down)
         {
           // vert
-          y += kids[i].size.h
+          y += kids[i].size.h.toInt
           if (p.y >= y-3 && p.y <= y+3)
           {
             this.style->cursor = "row-resize"
@@ -183,7 +183,7 @@ using dom
         else
         {
           // horiz
-          x += kids[i].size.w
+          x += kids[i].size.w.toInt
           if (p.x >= x-3 && p.x <= x+3)
           {
             this.style->cursor = "col-resize"

@@ -7,6 +7,7 @@
 //
 
 using dom
+using graphics
 
 **
 ** Table displays a grid of rows and columns.
@@ -145,7 +146,7 @@ using dom
   ** Rebuild table layout.
   Void rebuild()
   {
-    if (this.size.w > 0) doRebuild
+    if (this.size.w > 0f) doRebuild
     else Win.cur.setTimeout(16ms) |->| { rebuild }
   }
 
@@ -266,8 +267,8 @@ using dom
     // get container dims
     tbodysz := this.size
     this.theadh = showHeader ? 20 : 0
-    this.tbodyw = tbodysz.w
-    this.tbodyh = tbodysz.h - theadh
+    this.tbodyw = tbodysz.w.toInt
+    this.tbodyh = tbodysz.h.toInt - theadh
 
     // cache layout vars
     cx := 0
@@ -424,7 +425,7 @@ using dom
           p := e.pagePos.rel(e.target)
           thumb := e.target.firstChild
           if (p.x < thumb.pos.x) hbarPageId = startScrollPage(Pos(-tbodyw, 0))
-          else if (p.x > thumb.pos.x + thumb.size.w) hbarPageId = startScrollPage(Pos(tbodyw, 0))
+          else if (p.x > thumb.pos.x + thumb.size.w.toInt) hbarPageId = startScrollPage(Pos(tbodyw, 0))
         }
 
         Elem {
@@ -476,7 +477,7 @@ using dom
           p := e.pagePos.rel(e.target)
           thumb := e.target.firstChild
           if (p.y < thumb.pos.y) vbarPageId = startScrollPage(Pos(0, -tbodyh))
-          else if (p.y > thumb.pos.y + thumb.size.h) vbarPageId = startScrollPage(Pos(0, tbodyh))
+          else if (p.y > thumb.pos.y + thumb.size.h.toInt) vbarPageId = startScrollPage(Pos(0, tbodyh))
         }
 
         Elem {

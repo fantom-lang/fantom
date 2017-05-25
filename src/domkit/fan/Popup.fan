@@ -8,6 +8,7 @@
 
 using concurrent
 using dom
+using graphics
 
 **
 ** Popup window which can be closed clicking outside of element.
@@ -60,8 +61,8 @@ using dom
     // shift halign if needed
     switch (halign)
     {
-      case Align.center: x = gutter.max(x - (sz.w / 2)); this.style->left = "${x}px"
-      case Align.right:  x = gutter.max(x - sz.w);       this.style->left = "${x}px"
+      case Align.center: x = gutter.max(x - (sz.w.toInt / 2)); this.style->left = "${x}px"
+      case Align.right:  x = gutter.max(x - sz.w.toInt);       this.style->left = "${x}px"
     }
 
     // adjust if outside viewport

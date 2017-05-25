@@ -6,6 +6,7 @@
 //   12 Jan 09  Andy Frank  Creation
 //
 
+using graphics
 using web
 
 **************************************************************************
@@ -24,7 +25,7 @@ using web
       .title.w("Dom Test").titleEnd
       .includeJs(`/pod/sys/sys.js`)
       .includeJs(`/pod/concurrent/concurrent.js`)
-      .includeJs(`/pod/gfx/gfx.js`)
+      .includeJs(`/pod/graphics/graphics.js`)
       .includeJs(`/pod/web/web.js`)
       .includeJs(`/pod/dom/dom.js`)
       .style.w(
@@ -119,7 +120,8 @@ using web
     verifyEq(elem->id, "")
     verifyEq(elem.attrs.size, 0)
     verifyEq(elem.hasChildren, false)
-    verifyEq(elem.text,  "")
+    verifyEq(elem.text,   "")
+    verifyEq(elem.size.h, 0f)  // w will vary...
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -130,6 +132,8 @@ using web
   {
     elem := Win.cur.doc.elemById("testBasics")
     verify(elem != null)
+    verifyEq(elem.size, Size(0,0))
+
     kids := elem.children
     verifyEq(kids.size, 4)
     verifyEq(kids[0].html.trim, "alpha")

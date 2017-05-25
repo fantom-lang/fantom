@@ -8,6 +8,7 @@
 
 using concurrent
 using dom
+using graphics
 
 **
 ** DomListener monitors the DOM and invokes callbacks when modifications occur.
