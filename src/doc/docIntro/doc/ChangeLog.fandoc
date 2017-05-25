@@ -30,6 +30,7 @@
 - Add options to Zip deflate in/out methods
 - Fandoc support for explicit img size
 - Float.isNegZero, normNegZero
+- compiler: fix to check invalid coercion with shortcut assignments
 
 *Build 1.0.69 (14 Jul 2016)*
 - Initial domkit code

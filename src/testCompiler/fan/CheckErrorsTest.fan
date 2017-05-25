@@ -1104,6 +1104,7 @@ class CheckErrorsTest : CompilerTest
         //10, 21, "Left hand side is not assignable",
         11, 21, "Target is not assignable",
         12, 21, "Target is not assignable",
+        12, 21, "'sys::Int' is not assignable to '$podName::Foo'",
        ])
   }
 
