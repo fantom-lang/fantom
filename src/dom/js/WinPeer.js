@@ -100,8 +100,8 @@ fan.dom.WinPeer.prototype.alert = function(self, obj)
 fan.dom.WinPeer.prototype.viewport = function(self)
 {
   return (typeof this.win.innerWidth != "undefined")
-    ? fan.dom.Size.make(this.win.innerWidth, this.win.innerHeight)
-    : fan.dom.Size.make(
+    ? fan.graphics.Size.makeInt(this.win.innerWidth, this.win.innerHeight)
+    : fan.graphics.Size.makeInt(
         this.win.document.documentElement.clientWidth,
         this.win.document.documentElement.clientHeight);
 }
@@ -109,7 +109,7 @@ fan.dom.WinPeer.prototype.viewport = function(self)
 fan.dom.WinPeer.prototype.screenSize = function(self)
 {
   if (this.$screenSize == null)
-    this.$screenSize = fan.dom.Size.make(this.win.screen.width, this.win.screen.height);
+    this.$screenSize = fan.graphics.Size.makeInt(this.win.screen.width, this.win.screen.height);
   return this.$screenSize;
 }
 

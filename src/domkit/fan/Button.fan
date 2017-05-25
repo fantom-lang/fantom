@@ -78,15 +78,15 @@ using dom
     if (popup?.isOpen == true) return
 
     x := pagePos.x
-    y := pagePos.y + size.h
-    w := size.w
+    y := pagePos.y + size.h.toInt
+    w := size.w.toInt
 
     if (isCombo)
     {
       // stretch popup to fit combo
       combo := this.parent
       x = combo.pagePos.x
-      w = combo.size.w
+      w = combo.size.w.toInt
     }
 
     // shift to align text

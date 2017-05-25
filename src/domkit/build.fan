@@ -27,6 +27,7 @@ class Build : BuildPod
                 "vcs.uri":      "https://bitbucket.org/fantom/fan-1.0/"]
     depends = ["sys 1.0",
                "concurrent 1.0",
+               "graphics 1.0",
                "dom 1.0"]
     srcDirs = [`fan/`]
     resDirs = [`res/css/`]

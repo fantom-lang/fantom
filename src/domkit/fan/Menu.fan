@@ -83,7 +83,7 @@ using dom
     ih := item.size.h
 
     if (sy > iy) this.scrollPos = Pos(0, iy)
-    else if (sy + mh < iy + ih) this.scrollPos = Pos(0, iy + ih - mh)
+    else if (sy + mh < iy + ih) this.scrollPos = Pos(0, (iy + ih - mh).toInt)
   }
 
   private Void fireAction(Event e)

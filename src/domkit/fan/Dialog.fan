@@ -73,8 +73,8 @@ using dom
 
           fmove = doc.onEvent(EventType.mouseMove, true) |de| {
             pos := de.pagePos.rel(doc.body)
-            fx  := (pos.x - (off.x - fps.x)).max(0).min(vp.w - fsz.w)
-            fy  := (pos.y - (off.y - fps.y)).max(0).min(vp.h - fsz.h)
+            fx  := (pos.x - (off.x - fps.x)).max(0).min(vp.w.toInt - fsz.w.toInt)
+            fy  := (pos.y - (off.y - fps.y)).max(0).min(vp.h.toInt - fsz.h.toInt)
             mask.style->display = "block"
             frame.style->position = "absolute"
             frame.style->left = "${fx}px"

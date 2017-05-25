@@ -104,7 +104,7 @@ using dom
   ** Rebuild tree layout.
   Void rebuild()
   {
-    if (this.size.w > 0) doRebuild
+    if (this.size.w > 0f) doRebuild
     else Win.cur.setTimeout(16ms) |->| { rebuild }
   }
 

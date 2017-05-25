@@ -38,7 +38,7 @@ div.domkit-Button:focus {
   position: relative;  /* needed to make z-index work */
 }
 
-div.domkit-Button:hover:not(.disabled) {
+div.domkit-Button:hover {
   background: #f5f5f5;
 }
 
