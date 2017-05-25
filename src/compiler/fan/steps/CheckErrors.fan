@@ -1044,16 +1044,23 @@ class CheckErrors : CompilerStep
     // if assignment
     if (shortcut.isAssign)
     {
+      lhs := shortcut.target
+      ret := shortcut.method.returnType
+
       // check that lhs is assignable
-      if (!shortcut.target.isAssignable)
-        err("Target is not assignable", shortcut.target.loc)
+      if (!lhs.isAssignable)
+        err("Target is not assignable", lhs.loc)
+
+      // if the expression fits to type (no coercion supported)
+      if (!ret.isThis && !lhs.ctype.fits(ret))
+        err("'$ret' is not assignable to '$lhs.ctype'", lhs.loc)
 
       // check left hand side field (common code with checkAssign)
-      if (shortcut.target.id === ExprId.field)
-        checkAssignField((FieldExpr)shortcut.target, shortcut.args.first)
+      if (lhs.id === ExprId.field)
+        checkAssignField((FieldExpr)lhs, shortcut.args.first)
 
       // check that no safe calls used on entire left hand side
-      checkNoNullSafes(shortcut.target)
+      checkNoNullSafes(lhs)
     }
 
     // take this oppotunity to generate a temp local variable if needed

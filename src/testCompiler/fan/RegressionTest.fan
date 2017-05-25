@@ -787,6 +787,19 @@ class RegressionTest : CompilerTest
     o->r = ""; o->c2(true);  verifyEq(o->r, "c2-catch c2-finally")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Check += implicit casting
+//////////////////////////////////////////////////////////////////////////
+
+  Void testAssignCast()
+  {
+    verifyErrors(
+     Str<|class Foo { Void foo() { x := 3; x += 10f } }|>,
+       [
+         1, 34, "'sys::Float' is not assignable to 'sys::Int'",
+       ])
+  }
+
 
 }
 
