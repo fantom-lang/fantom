@@ -71,6 +71,25 @@ div.domkit-Button.selected:hover {
   border-color: #2c7fb7;
 }
 
+div.domkit-Button.disclosure {
+  position: relative;
+  text-align: left;
+  padding-right: 20px;
+  overflow: hidden;
+}
+
+div.domkit-Button.disclosure:after {
+  content: "";
+  position: absolute;
+  top: 9px;
+  right: 5px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #555;
+}
+
 div.domkit-Button.domkit-group-left {
   border-radius: 3px 0 0 3px;
 }
