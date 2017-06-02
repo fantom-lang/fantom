@@ -162,6 +162,23 @@ public class RichTextPeer
     public void set(Widget w, int v) { ((StyledText)w).setTabs(v);  }
   };
 
+  public fan.gfx.Color fg(RichText self) { return fg.get(); }
+  public void fg(RichText self, fan.gfx.Color v) { fg.set(v); }
+  public final Prop.ColorProp fg = new Prop.ColorProp(this)
+  {
+    public void set(Widget w, org.eclipse.swt.graphics.Color v) { ((StyledText)w).setForeground(v); }
+  };
+
+  public fan.gfx.Color bg(RichText self) { return bg.get(); }
+  public void bg(RichText self, fan.gfx.Color v) { bg.set(v); }
+  public final Prop.ColorProp bg = new Prop.ColorProp(this)
+  {
+    public void set(Widget w, org.eclipse.swt.graphics.Color v) {
+      ((StyledText)w).setBackground(v);
+      ((StyledText)w).setMarginColor(v);
+    }
+  };
+
 //////////////////////////////////////////////////////////////////////////
 // Selection
 //////////////////////////////////////////////////////////////////////////

@@ -142,6 +142,18 @@ class RichText : TextWidget
     set { model.text = it }
   }
 
+  **
+  ** The current foreground color for text.
+  ** Defaults to null (system default)
+  **
+  native Color? fg
+
+  **
+  ** The current background color of text field
+  ** Defaults to null (system default)
+  **
+  native Color? bg
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
