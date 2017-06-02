@@ -110,7 +110,11 @@ const class Color
 
       // try functional notation
       paren := s.index("(")
-      if (paren != null) return parseFunc(s[0..<paren], GeomUtil.split(s[paren+1..-2]))
+      if (paren != null)
+      {
+        if (s[-1] != ')') throw Err()
+        return parseFunc(s[0..<paren], GeomUtil.split(s[paren+1..-2]))
+      }
 
       // bad format
       throw Err()
@@ -305,6 +309,43 @@ const class Color
   Color desaturate(Float percentage := 0.2f)
   {
     saturate(-percentage)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Interpolate
+//////////////////////////////////////////////////////////////////////////
+
+  ** Interpolate between a and b where t is 0.0 to 1.0 using RGB color model.
+  static Color interpolateRgb(Color a, Color b, Float t)
+  {
+    return Color.makeRgb(interpolateByte(a.r, b.r, t),
+                         interpolateByte(a.g, b.g, t),
+                         interpolateByte(a.b, b.b, t),
+                         interpolatePercent(a.a, b.a, t))
+  }
+
+  ** Interpolate between a and b where t is 0.0 to 1.0 using HSL color model.
+  static Color interpolateHsl(Color a, Color b, Float t)
+  {
+    return Color.makeHsl(interpolateDeg(a.h, b.h, t),
+                         interpolatePercent(a.s, b.s, t),
+                         interpolatePercent(a.l, b.l, t),
+                         interpolatePercent(a.a, b.a, t))
+  }
+
+  private static Float interpolateDeg(Float a, Float b, Float t)
+  {
+    (a + (b-a) * t).min(360f).max(0f)
+  }
+
+  private static Int interpolateByte(Int a, Int b, Float t)
+  {
+    (a + (b-a) * t).toInt.min(255).max(0)
+  }
+
+  private static Float interpolatePercent(Float a, Float b, Float t)
+  {
+    (a + (b-a) * t).min(1f).max(0f)
   }
 
 //////////////////////////////////////////////////////////////////////////
