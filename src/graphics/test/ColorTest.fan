@@ -132,15 +132,111 @@ class ColorTest : Test
     verifyHsl(0xff00ff, 300f, 1f, 1f)
     verifyHsl(0x6496c8, 210f, 0.5f,  0.78f)
     verifyHsl(0x32c850, 132f, 0.75f, 0.78f)
+    verifyHsl(Color("hsl(240 0.4 1)"), 240f, 0.4f, 1f)
   }
 
-  Void verifyHsl(Int rgb, Float h, Float s, Float l)
+  Void verifyHsl(Obj obj, Float h, Float s, Float l)
   {
-    c := Color(rgb)
+    c := obj as Color ?: Color.make(obj)
     verify(c.h.approx(h, 0.1f))
     verify(c.s.approx(s, 0.01f))
     verify(c.l.approx(l, 0.01f))
     verifyEq(c, Color.makeHsl(c.h, c.s, c.l))
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Interpolate RGB
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInterpolateRgb()
+  {
+    a := Color("#123")
+    b := Color("#cba")
+    verifyInterpolateRgb(a, b, -1f,   "rgb(0 0 0)")
+    verifyInterpolateRgb(a, b, -0.2f, "rgb(0 3 27)")
+    verifyInterpolateRgb(a, b, 0f,    "rgb(17 34 51)")
+    verifyInterpolateRgb(a, b, 0.25f, "rgb(63 72 80)")
+    verifyInterpolateRgb(a, b, 0.5f,  "rgb(110 110 110)")
+    verifyInterpolateRgb(a, b, 0.75f, "rgb(157 148 140)")
+    verifyInterpolateRgb(a, b, 1.0f,  "rgb(204 187 170)")
+    verifyInterpolateRgb(a, b, 1.2f,  "rgb(241 217 193)")
+    verifyInterpolateRgb(a, b, 2f,    "rgb(255 255 255)")
+
+    a = Color("rgba(200 70 30 0.9)")
+    b = Color("rgba(250 20 90 0.1)")
+    verifyInterpolateRgb(a, b, -1f,   "rgba(150 120 0 1.0)")
+    verifyInterpolateRgb(a, b, -0.2f, "rgba(190 80 18 1.0)")
+    verifyInterpolateRgb(a, b, 0f,    "rgba(200 70 30 0.9)")
+    verifyInterpolateRgb(a, b, 0.25f, "rgba(212 57 45 0.7)")
+    verifyInterpolateRgb(a, b, 0.5f,  "rgba(225 45 60 0.5)")
+    verifyInterpolateRgb(a, b, 0.75f, "rgba(237 32 75 0.3)")
+    verifyInterpolateRgb(a, b, 1.0f,  "rgba(250 20 90 0.1)")
+    verifyInterpolateRgb(a, b, 1.2f,  "rgba(255 10 102 0.0)")
+    verifyInterpolateRgb(a, b, 2f,    "rgba(255 0 150 0.0)")
+  }
+
+  Void verifyInterpolateRgb(Color a, Color b, Float t, Str expected)
+  {
+    x := Color.interpolateRgb(a, b, t)
+    //echo("-- $a, $b  $t => $x ?= $expected => " + (x == Color(expected)))
+    verifyRbgEq(x, Color(expected))
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Interpolote HSL
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInterpolateHsl()
+  {
+    a := Color("hsl(200 0.5 0.9)")
+    b := Color("hsl(20 1 0.1)")
+    verifyInterpolateHsl(a, b, -1f,   "hsl(360 0 1)")
+    verifyInterpolateHsl(a, b, -0.2f, "hsl(236 0.4 1)")
+    verifyInterpolateHsl(a, b, 0f,    "hsl(200 0.5 0.9)")
+    verifyInterpolateHsl(a, b, 0.25f, "hsl(155 0.625 0.7)")
+    verifyInterpolateHsl(a, b, 0.5f,  "hsl(110 0.75 0.5)")
+    verifyInterpolateHsl(a, b, 0.75f, "hsl(65 0.875 0.3)")
+    verifyInterpolateHsl(a, b, 1.0f,  "hsl(20 1 0.1)")
+    verifyInterpolateHsl(a, b, 1.2f,  "hsl(0 1 0)")
+    verifyInterpolateHsl(a, b, 2f,    "hsl(0 1 0)")
+  }
+
+  Void verifyInterpolateHsl(Color a, Color b, Float t, Str expected)
+  {
+    r := Color.interpolateHsl(a, b, t)
+    e := Color(expected)
+    //echo("-- $t")
+    //echo("   ${hslStr(r)} // result")
+    //echo("   ${hslStr(e)} // expected")
+    verifyHslEq(r, e)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  static Str hslStr(Color c)
+  {
+    "hsl(" + GeomUtil.formatFloat(c.h) + " " +
+             GeomUtil.formatFloat(c.s) + " " +
+             GeomUtil.formatFloat(c.l) + " " +
+             GeomUtil.formatFloat(c.a) + ")"
+  }
+
+  Void verifyRbgEq(Color a, Color b)
+  {
+    verifyEq(a.r, b.r)
+    verifyEq(a.g, b.g)
+    verifyEq(a.b, b.b)
+    verify(a.a.approx(b.a))
+  }
+
+  Void verifyHslEq(Color a, Color b)
+  {
+    verify(a.h.approx(b.h, 2f))
+    verify(a.s.approx(b.s, 0.05f))
+    verify(a.l.approx(b.l, 0.05f))
+    verify(a.a.approx(b.a))
   }
 
 }
