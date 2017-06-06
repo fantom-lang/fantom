@@ -71,7 +71,15 @@ class FileResource : Resource
     if (kids != null) return kids
 
     files := sortFiles(file.list)
-    kids = files.map |File f->FileResource| { Resource.resolve(f.normalize.uri) }
+    kids = FileResource[,]
+    files.each |File f|
+    {
+      if (f.name.startsWith(".DS_Store")) return
+      try
+        kids.add(Resource.resolve(f.normalize.uri))
+      catch (Err e)
+        e.trace
+    }
     return kids
   }
   private FileResource[]? kids
