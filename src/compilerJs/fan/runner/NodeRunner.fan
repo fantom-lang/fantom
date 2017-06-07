@@ -18,6 +18,14 @@ class NodeRunner
 
   Int main(Str[] args := Env.cur.args)
   {
+    // check for nodejs
+    if (Process(["which", "node"]).run.join != 0)
+    {
+      echo("nodejs not found")
+      echo("to install: brew install node")
+      return 1
+    }
+
     try
     {
       parseArgs(args)
