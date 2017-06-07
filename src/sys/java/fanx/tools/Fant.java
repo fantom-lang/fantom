@@ -277,11 +277,18 @@ public class Fant
 
       if (targets.size() == 0) { help(); return -1; }
 
-      String[] t = (String[])targets.toArray(new String[targets.size()]);
       if (js)
-        return new Fan().execute("compilerJs::TestRunner", t);
+      {
+        String[] t = new String[targets.size()+1];
+        t[0] = "-test";
+        for (int i=0; i<targets.size(); i++) t[i+1] = (String)targets.get(i);
+        return new Fan().execute("compilerJs::NodeRunner", t);
+      }
       else
+      {
+        String[] t = (String[])targets.toArray(new String[targets.size()]);
         return test(t, verbose);
+      }
     }
     catch (Throwable e)
     {
