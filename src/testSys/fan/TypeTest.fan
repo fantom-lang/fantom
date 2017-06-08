@@ -328,6 +328,8 @@ class TypeTest : Test
     verify(File#.make([`foo`]) is File)
     verifyEq(File#.make([`foo`])->uri, `foo`)
     //verifyErr(Err#) { Bool.type.make }
+    verifyErr(Err#) { TypeInheritTestAbstract#.make }
+    verifyErr(Err#) { TypeInheritTestM1#.make }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -470,6 +472,7 @@ class TypeTest : Test
 ** Inherticance Types
 **************************************************************************
 
+@Js abstract class TypeInheritTestAbstract {}
 @Js internal class TypeInheritTestA { Int a := 5  }
 @Js internal mixin TypeInheritTestM1 { Int m() { 10 } }
 @Js internal class TypeInheritTestB : TypeInheritTestA { Str b := "foo" }
