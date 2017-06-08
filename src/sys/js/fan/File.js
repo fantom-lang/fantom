@@ -22,24 +22,28 @@ fan.sys.File.make = function(uri, checkSlash)
 {
   if (checkSlash === undefined) checkSlash = true;
 
-  // if running under rhino, return local instance
-  if (fan.sys.Env.$rhino)
-  {
-    var f = fan.sys.LocalFile.uriToFile(uri);
-    if (f.isDirectory() && !checkSlash && !uri.isDir())
-      uri = uri.plusSlash();
-    return fan.sys.LocalFile.makeUri(uri, f);
-  }
+  // TODO
+  // // if running under rhino, return local instance
+  // if (fan.sys.Env.$nodejs)
+  // {
+  //   var f = fan.sys.LocalFile.uriToFile(uri);
+  //   if (f.isDirectory() && !checkSlash && !uri.isDir())
+  //     uri = uri.plusSlash();
+  //   return fan.sys.LocalFile.makeUri(uri, f);
+  // }
 
   // TODO FIXIT: for now return "empty" instance
-  return new fan.sys.File();
+  var f = new fan.sys.File();
+  f.m_uri = uri;
+  return f;
 }
 
 fan.sys.File.os = function(osPath)
 {
-  // if running under rhino, return local instance
-  if (fan.sys.Env.$rhino)
-    return fan.sys.LocalFile.make(new java.io.File(osPath));
+  // TODO
+  // // if running under rhino, return local instance
+  // if (fan.sys.Env.$nodejs)
+  //   return fan.sys.LocalFile.make(new java.io.File(osPath));
 
   // TODO FIXIT: for now return "empty" instance
   return new fan.sys.File();

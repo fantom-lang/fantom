@@ -191,7 +191,7 @@ fan.sys.Test.prototype.teardown = function() {}
 
 fan.sys.Test.prototype.tempDir = function()
 {
-  if (this.m_tempDir == null && fan.sys.Env.$rhino)
+  if (this.m_tempDir == null && fan.sys.Env.$nodejs)
   {
     var x = fan.sys.Env.cur().tempDir();
     this.m_tempDir = x.plus(fan.sys.Uri.fromStr("test/"), false);
