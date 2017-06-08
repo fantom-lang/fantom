@@ -43,14 +43,20 @@ fan.sys.Slot.prototype.$literalEncode = function(out)
 
 fan.sys.Slot.findMethod = function(qname, checked)
 {
+  if (checked === undefined) checked = true;
   var slot = fan.sys.Slot.find(qname, checked);
-  return fan.sys.ObjUtil.coerce(slot, fan.sys.Method.$type);
+  if (slot instanceof fan.sys.Method || checked)
+    return fan.sys.ObjUtil.coerce(slot, fan.sys.Method.$type);
+  return null;
 }
 
 fan.sys.Slot.findField = function(qname, checked)
 {
+  if (checked === undefined) checked = true;
   var slot = fan.sys.Slot.find(qname, checked);
-  return fan.sys.ObjUtil.coerce(slot, fan.sys.Field.$type);
+  if (slot instanceof fan.sys.Field || checked)
+    return fan.sys.ObjUtil.coerce(slot, fan.sys.Field.$type);
+  return null;
 }
 
 fan.sys.Slot.find = function(qname, checked)
