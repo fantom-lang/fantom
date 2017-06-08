@@ -38,12 +38,13 @@ fan.sys.Type.prototype.$ctor = function(qname, base, mixins, facets, flags)
   this.m_pod      = fan.sys.Pod.find(s[0]);
   this.m_name     = s[1];
   this.m_base     = base == null ? null : fan.sys.Type.find(base);
-  this.m_slots    = {};
   this.m_myFacets = new fan.sys.Facets(facets);
   this.m_flags    = flags;
   this.m_$qname   = 'fan.' + this.m_pod + '.' + this.m_name;
   this.m_isMixin  = false;
   this.m_nullable = new fan.sys.NullableType(this);
+  this.m_slotsInfo   = [];   // $af/$am
+  this.m_slotsByName = null; // doReflect Str:Slot
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -238,49 +239,31 @@ fan.sys.Type.prototype.make = function(args)
 // Slots
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Type.prototype.slots = function()
-{
-  this.doReflect();
-  return this.m_slotList;
-}
-
-fan.sys.Type.prototype.methods = function()
-{
-  this.doReflect();
-  return this.m_methodList;
-}
-
-fan.sys.Type.prototype.fields = function()
-{
-  this.doReflect();
-  return this.m_fieldList;
-}
+fan.sys.Type.prototype.slots   = function() { return this.reflect().m_slotList.ro(); }
+fan.sys.Type.prototype.methods = function() { return this.reflect().m_methodList.ro(); }
+fan.sys.Type.prototype.fields  = function() { return this.reflect().m_fieldList.ro(); }
 
 fan.sys.Type.prototype.slot = function(name, checked)
 {
   if (checked === undefined) checked = true;
-  var s = this.$slot(name);
-  if (s == null && checked)
-    throw fan.sys.UnknownSlotErr.make(this.m_qname + "." + name);
-  return s;
+  var slot = this.reflect().m_slotsByName[name];
+  if (slot != null) return slot;
+  if (checked) throw fan.sys.UnknownSlotErr.make(this.m_qname + "." + name);
+  return null;
 }
 
 fan.sys.Type.prototype.method = function(name, checked)
 {
-  if (checked === undefined) checked = true;
-  var f = this.$slot(name);
-  if ((f == null || !(f instanceof fan.sys.Method)) && checked)
-    throw fan.sys.UnknownSlotErr.make(this.m_qname + "." + name);
-  return f;
+  var slot = this.slot(name, checked);
+  if (slot == null) return null;
+  return fan.sys.ObjUtil.coerce(slot, fan.sys.Method.$type);
 }
 
 fan.sys.Type.prototype.field = function(name, checked)
 {
-  if (checked === undefined) checked = true;
-  var f = this.$slot(name);
-  if ((f == null || !(f instanceof fan.sys.Field)) && checked)
-    throw fan.sys.UnknownSlotErr.make(this.m_qname + "." + name);
-  return f;
+  var slot = this.slot(name, checked);
+  if (slot == null) return null;
+  return fan.sys.ObjUtil.coerce(slot, fan.sys.Field.$type);
 }
 
 // addMethod
@@ -288,7 +271,7 @@ fan.sys.Type.prototype.$am = function(name, flags, returns, params, facets)
 {
   var r = fanx_TypeParser.load(returns);
   var m = new fan.sys.Method(this, name, flags, r, params, facets);
-  this.m_slots[name] = m;
+  this.m_slotsInfo.push(m);
   return this;
 }
 
@@ -297,7 +280,7 @@ fan.sys.Type.prototype.$af = function(name, flags, of, facets)
 {
   var t = fanx_TypeParser.load(of);
   var f = new fan.sys.Field(this, name, flags, t, facets);
-  this.m_slots[name] = f;
+  this.m_slotsInfo.push(f);
   return this;
 }
 
@@ -447,14 +430,13 @@ fan.sys.Type.prototype.loadFacets = function()
 
 fan.sys.Type.prototype.reflect = function()
 {
+  if (this.m_slotsByName != null) return this;
   this.doReflect();
   return this;
 }
 
 fan.sys.Type.prototype.doReflect = function()
 {
-  if (this.m_slotList != null) return;
-
   // these are working accumulators used to build the
   // data structures of my defined and inherited slots
   var slots = [];
@@ -462,20 +444,20 @@ fan.sys.Type.prototype.doReflect = function()
   var nameToIndex = {};   // String -> Int
 
   // merge in base class and mixin classes
-  for (var i=0; i<this.m_mixins.size(); i++) this.$mergeType(this.m_mixins[i], slots, nameToSlot, nameToIndex);
+  for (var i=0; i<this.m_mixins.size(); i++) this.$mergeType(this.m_mixins.get(i), slots, nameToSlot, nameToIndex);
   this.$mergeType(this.m_base, slots, nameToSlot, nameToIndex);
 
   // merge in all my slots
-  for (var i in this.m_slots)
+  for (var i=0; i<this.m_slotsInfo.length; i++)
   {
-    var slot = this.m_slots[i]
+    var slot = this.m_slotsInfo[i]
     this.$mergeSlot(slot, slots, nameToSlot, nameToIndex);
   }
 
   // break out into fields and methods
   var fields  = [];
   var methods = [];
-  for (var i in slots)
+  for (var i=0; i<slots.length; i++)
   {
     var slot = slots[i];
     if (slot instanceof fan.sys.Field) fields.push(slot);
@@ -483,9 +465,10 @@ fan.sys.Type.prototype.doReflect = function()
   }
 
   // set lists
-  this.m_slotList = fan.sys.List.make(fan.sys.Slot.$type, slots);
-  this.m_fieldList = fan.sys.List.make(fan.sys.Field.$type, fields);
-  this.m_methodList = fan.sys.List.make(fan.sys.Method.$type, methods);
+  this.m_slotList    = fan.sys.List.make(fan.sys.Slot.$type, slots);
+  this.m_fieldList   = fan.sys.List.make(fan.sys.Field.$type, fields);
+  this.m_methodList  = fan.sys.List.make(fan.sys.Method.$type, methods);
+  this.m_slotsByName = nameToSlot;
 }
 
 /**
@@ -561,28 +544,6 @@ fan.sys.Type.prototype.$mergeSlot = function(slot, slots, nameToSlot, nameToInde
   }
 }
 
-fan.sys.Type.prototype.$slot = function(name)
-{
-  // reflect
-  this.doReflect();
-
-  // check self first
-  var slot = this.m_slots[name];
-  if (slot != null) return slot;
-
-  // walk inheritance
-  var base = this.m_base;
-  while (base != null)
-  {
-    slot = base.m_slots[name];
-    if (slot != null) return slot;
-    base = base.m_base;
-  }
-
-  // not found
-  return null;
-}
-
 //////////////////////////////////////////////////////////////////////////
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
@@ -649,21 +610,17 @@ fan.sys.NullableType.prototype.$ctor = function(root)
 {
   this.m_root = root;
   this.m_signature = root.signature() + "?";
-  this.m_qname  = root.m_qname;
-  this.m_pod    = root.m_pod;
-  this.m_name   = root.m_name;
-  this.m_base   = root.m_base;
-  this.m_mixins = root.m_mixins;
-
-  this.m_slots  = root.m_slots;
-  this.m_slotList = root.m_slotList;
-  this.m_fieldList = root.m_fieldList;
-  this.m_methodList = root.m_methodList;
 }
 
+fan.sys.NullableType.prototype.podName = function() { return this.m_root.podName(); }
+fan.sys.NullableType.prototype.pod = function() { return this.m_root.pod(); }
+fan.sys.NullableType.prototype.name = function() { return this.m_root.name(); }
+fan.sys.NullableType.prototype.qname = function() { return this.m_root.qname(); }
 fan.sys.NullableType.prototype.signature = function() { return this.m_signature; }
 fan.sys.NullableType.prototype.flags = function() { return this.m_root.flags(); }
 
+fan.sys.NullableType.prototype.base = function() { return this.m_root.base(); }
+fan.sys.NullableType.prototype.mixins = function() { return this.m_root.mixins(); }
 fan.sys.NullableType.prototype.inheritance = function() { return this.m_root.inheritance(); }
 fan.sys.NullableType.prototype.is = function(type) { return this.m_root.is(type); }
 
@@ -679,6 +636,11 @@ fan.sys.NullableType.prototype.isGenericParameter = function() { return this.m_r
 fan.sys.NullableType.prototype.getRawType = function() { return this.m_root.getRawType(); }
 fan.sys.NullableType.prototype.params = function() { return this.m_root.params(); }
 fan.sys.NullableType.prototype.parameterize = function(params) { return this.m_root.parameterize(params).toNullable(); }
+
+fan.sys.NullableType.prototype.fields = function() { return this.m_root.fields(); }
+fan.sys.NullableType.prototype.methods = function() { return this.m_root.methods(); }
+fan.sys.NullableType.prototype.slots = function() { return this.m_root.slots(); }
+fan.sys.NullableType.prototype.slot = function(name, checked) { return this.m_root.slot(name, checked); }
 
 fan.sys.NullableType.prototype.facets = function() { return this.m_root.facets(); }
 fan.sys.NullableType.prototype.facet = function(type, checked) { return this.m_root.facet(type, checked); }
@@ -700,8 +662,6 @@ fan.sys.GenericType.prototype.params = function()
 
 fan.sys.GenericType.prototype.doReflect = function()
 {
-  if (this.m_slotList != null) return;
-
    // ensure master type is reflected
    var master = this.base();
    master.doReflect();
@@ -711,6 +671,7 @@ fan.sys.GenericType.prototype.doReflect = function()
   var slots = [];
   var fields = [];
   var methods = [];
+  var slotsByName = {};
 
   // parameterize master's slots
   for (var i=0; i<masterSlots.size(); i++)
@@ -727,12 +688,13 @@ fan.sys.GenericType.prototype.doReflect = function()
       fields.push(slot);
     }
     slots.push(slot);
-    this.m_slots[slot.m_name] = slot;
+    this.m_slotsByName[slot.m_name] = slot;
   }
 
   this.m_slotList = fan.sys.List.make(fan.sys.Slot.$type, slots);
   this.m_fieldList = fan.sys.List.make(fan.sys.Field.$type, fields);
   this.m_methodList = fan.sys.List.make(fan.sys.Method.$type, methods);
+  this.m_slotsByName = slotsByName;
 }
 
 fan.sys.GenericType.prototype.parameterizeField = function(f)
