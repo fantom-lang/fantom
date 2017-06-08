@@ -63,6 +63,12 @@ fan.sys.Decimal.equals = function(self, that)
   return false;
 }
 
+// TODO FIXIT: hash
+fan.sys.Decimal.hash = function(self)
+{
+  fan.sys.Str.hash(self.toString());
+}
+
 fan.sys.Decimal.encode = function(self, out)
 {
   out.w(""+self).w("d");

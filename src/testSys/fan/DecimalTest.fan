@@ -9,6 +9,7 @@
 **
 ** DecimalTest
 **
+@Js
 class DecimalTest : Test
 {
 
@@ -46,6 +47,7 @@ class DecimalTest : Test
     verify(x != true)
     verify(x != null)
     verify(null != x)
+    verify(77d.hash == 77d.hash)
   }
 
 //////////////////////////////////////////////////////////////////////////
