@@ -44,6 +44,9 @@ class BoolTest : Test
     verify(t.equals(t))
     verify(t.equals(true))
     verifyFalse(false.equals(t))
+    verify(t.hash == t.hash)
+    verify(f.hash == f.hash)
+    verify(t.hash != f.hash)
   }
 
 //////////////////////////////////////////////////////////////////////////
