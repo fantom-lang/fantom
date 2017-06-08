@@ -57,8 +57,8 @@ fan.sys.Env.noDef = "_Env_nodef_";
 // used to display locale keys
 fan.sys.Env.localeTestMode = false;
 
-// check if running under Rhino (Java VM)
-fan.sys.Env.$rhino = false;
+// check if running under NodeJS
+fan.sys.Env.$nodejs = this.window !== this;
 
 //////////////////////////////////////////////////////////////////////////
 // Obj
