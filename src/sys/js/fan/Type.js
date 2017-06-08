@@ -215,6 +215,8 @@ fan.sys.Type.prototype.make = function(args)
 {
   if (args === undefined) args = null;
 
+  if (this.isAbstract()) throw fan.sys.Err.make("Cannot instantiate abstract class: " + this.m_qname);
+
   var make = this.method("make", false);
   if (make != null && make.isPublic())
   {
