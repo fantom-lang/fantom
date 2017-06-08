@@ -160,13 +160,19 @@ class TypeTest : Test
 
     // test slot inheritance
     t := TypeInheritTestC#
+
+    verifyNotNull(t.slot("c"))
+    verifyNotNull(t.slot("b"))
+    verifyNotNull(t.slot("a"))
+    verifyNotNull(t.slot("m"))
+
     verifyNotNull(t.slots.find |s| { s.name == "c" })
     verifyNotNull(t.slots.find |s| { s.name == "b" })
     verifyNotNull(t.slots.find |s| { s.name == "a" })
-    // verifyNotNull(t.slots.find |s| { s.name == "m" })
+    verifyNotNull(t.slots.find |s| { s.name == "m" })
     verifyNotNull(t.fields.find |f| { f.name == "b" })
     verifyNotNull(t.fields.find |f| { f.name == "a" })
-    // verifyNotNull(t.methods.find |m| { m.name == "m" })
+    verifyNotNull(t.methods.find |m| { m.name == "m" })
   }
 
 //////////////////////////////////////////////////////////////////////////
