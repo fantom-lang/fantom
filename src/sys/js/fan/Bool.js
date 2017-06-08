@@ -22,6 +22,11 @@ fan.sys.Bool.prototype.$ctor = function() {}
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.Bool.hash = function(self)
+{
+  return self ? 1231 : 1237;
+}
+
 fan.sys.Bool.prototype.$typeof = function()
 {
   return fan.sys.Bool.$type;
