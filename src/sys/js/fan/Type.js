@@ -445,25 +445,120 @@ fan.sys.Type.prototype.loadFacets = function()
 // Util
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.Type.prototype.reflect = function()
+{
+  this.doReflect();
+  return this;
+}
+
 fan.sys.Type.prototype.doReflect = function()
 {
   if (this.m_slotList != null) return;
 
+  // these are working accumulators used to build the
+  // data structures of my defined and inherited slots
   var slots = [];
-  var fields = [];
-  var methods = [];
+  var nameToSlot  = {};   // String -> Slot
+  var nameToIndex = {};   // String -> Int
 
+  // merge in base class and mixin classes
+  for (var i=0; i<this.m_mixins.size(); i++) this.$mergeType(this.m_mixins[i], slots, nameToSlot, nameToIndex);
+  this.$mergeType(this.m_base, slots, nameToSlot, nameToIndex);
+
+  // merge in all my slots
   for (var i in this.m_slots)
   {
     var slot = this.m_slots[i]
-    slots.push(slot);
-    if (slot instanceof fan.sys.Field) fields.push(slot);
-    else if (slot instanceof fan.sys.Method) methods.push(slot);
+    this.$mergeSlot(slot, slots, nameToSlot, nameToIndex);
   }
 
+  // break out into fields and methods
+  var fields  = [];
+  var methods = [];
+  for (var i in slots)
+  {
+    var slot = slots[i];
+    if (slot instanceof fan.sys.Field) fields.push(slot);
+    else methods.push(slot);
+  }
+
+  // set lists
   this.m_slotList = fan.sys.List.make(fan.sys.Slot.$type, slots);
   this.m_fieldList = fan.sys.List.make(fan.sys.Field.$type, fields);
   this.m_methodList = fan.sys.List.make(fan.sys.Method.$type, methods);
+}
+
+/**
+ * Merge the inherit's slots into my slot maps.
+ *  slots:       Slot[] by order
+ *  nameToSlot:  String name -> Slot
+ *  nameToIndex: String name -> Long index of slots
+ */
+fan.sys.Type.prototype.$mergeType = function(inheritedType, slots, nameToSlot, nameToIndex)
+{
+  if (inheritedType == null) return;
+  var inheritedSlots = inheritedType.reflect().slots();
+  for (var i=0; i<inheritedSlots.size(); i++)
+    this.$mergeSlot(inheritedSlots.get(i), slots, nameToSlot, nameToIndex);
+}
+
+/**
+ * Merge the inherited slot into my slot maps.  Assume this slot
+ * trumps any previous definition (because we process inheritance
+ * and my slots in the right order)
+ *  slots:       Slot[] by order
+ *  nameToSlot:  String name -> Slot
+ *  nameToIndex: String name -> Long index of slots
+ */
+fan.sys.Type.prototype.$mergeSlot = function(slot, slots, nameToSlot, nameToIndex)
+{
+  // skip constructors which aren't mine
+  if (slot.isCtor() && slot.m_parent != this) return;
+
+  var name = slot.m_name;
+  var dup  = nameToIndex[name];
+  if (dup != null)
+  {
+    // if the slot is inherited from Obj, then we can
+    // safely ignore it as an override - the dup is most
+    // likely already the same Object method inherited from
+    // a mixin; but the dup might actually be a more specific
+    // override in which case we definitely don't want to
+    // override with the sys::Object version
+    if (slot.parent() == fan.sys.Obj.$type)
+      return;
+
+    // if given the choice between two *inherited* slots where
+    // one is concrete and abstract, then choose the concrete one
+    var dupSlot = slots[dup];
+    if (slot.parent() != this && slot.isAbstract() && !dupSlot.isAbstract())
+      return;
+
+// TODO FIXIT: this is not triggering -- possibly due to how we generate
+// the type info via compilerJs?
+    // check if this is a Getter or Setter, in which case the Field
+    // trumps and we need to cache the method on the Field
+    // Note: this works because we assume the compiler always generates
+    // the field before the getter and setter in fcode
+    if ((slot.m_flags & (fan.sys.FConst.Getter | fan.sys.FConst.Setter)) != 0)
+    {
+      var field = slots[dup];
+      if ((slot.m_flags & fan.sys.FConst.Getter) != 0)
+        field.m_getter = slot;
+      else
+        field.m_setter = slot;
+      return;
+    }
+
+    nameToSlot[name] = slot;
+    slots[dup] = slot;
+  }
+  else
+  {
+    nameToSlot[name] = slot;
+    slots.push(slot);
+    nameToIndex[name] = slots.length-1;
+  }
 }
 
 fan.sys.Type.prototype.$slot = function(name)

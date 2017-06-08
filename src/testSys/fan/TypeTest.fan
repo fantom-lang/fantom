@@ -157,6 +157,16 @@ class TypeTest : Test
     verifyEq(Void#.inheritance, [Void#])
 
     // mixin types tested in MixinTest.testType
+
+    // test slot inheritance
+    t := TypeInheritTestC#
+    verifyNotNull(t.slots.find |s| { s.name == "c" })
+    verifyNotNull(t.slots.find |s| { s.name == "b" })
+    verifyNotNull(t.slots.find |s| { s.name == "a" })
+    // verifyNotNull(t.slots.find |s| { s.name == "m" })
+    verifyNotNull(t.fields.find |f| { f.name == "b" })
+    verifyNotNull(t.fields.find |f| { f.name == "a" })
+    // verifyNotNull(t.methods.find |m| { m.name == "m" })
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -450,3 +460,14 @@ class TypeTest : Test
 @Js internal mixin TiM {}
 @Js internal mixin TiO : TiM {}
 
+**************************************************************************
+** Inherticance Types
+**************************************************************************
+
+@Js internal class TypeInheritTestA { Int a := 5  }
+@Js internal mixin TypeInheritTestM1 { Int m() { 10 } }
+@Js internal class TypeInheritTestB : TypeInheritTestA { Str b := "foo" }
+@Js internal class TypeInheritTestC : TypeInheritTestB, TypeInheritTestM1
+{
+  Float c := 7.5f
+}
