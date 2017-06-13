@@ -691,7 +691,7 @@ fan.sys.GenericType.prototype.doReflect = function()
       fields.push(slot);
     }
     slots.push(slot);
-    this.m_slotsByName[slot.m_name] = slot;
+    slotsByName[slot.m_name] = slot;
   }
 
   this.m_slotList = fan.sys.List.make(fan.sys.Slot.$type, slots);
