@@ -87,6 +87,9 @@ using dom
     return this
   }
 
+  ** The number of rows in this GridBox.
+  Int numRows() { tbody.children.size }
+
   ** Remove the row of cells at given index.
   This removeRow(Int index)
   {
