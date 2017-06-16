@@ -34,7 +34,7 @@
   static const Int magic := 0xff_d8
 
   ** JPEG mime type
-  static const MimeType mime := MimeType.forExt("jpeg")
+  static const MimeType mime := MimeType("image/jpeg")
 
   ** Returns true if Buf starts with `magic` number.
   ** The buf is not modified.
@@ -162,7 +162,7 @@
   private static const Int app0 := 0xff_e0
 
   ** SOF frame markers
-  private static const Int[] sof_markers := [
+  private const Int[] sof_markers := [
     0xff_c0, 0xff_c1, 0xff_c2, 0xff_c3, // non-differential, Huffman coding
     0xff_c5, 0xff_c6, 0xff_c7,          // differential, Huffman coding
     0xff_c9, 0xff_ca, 0xff_cb,          // non-differential, arithmetic coding
