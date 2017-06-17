@@ -101,7 +101,8 @@ const class Font
   ** Also see `toProps`.
   static new fromProps(Str:Str props)
   {
-    makeFields(
+    if (props["font-family"] == null) return null
+    return makeFields(
       decodeNames(props["font-family"] ?: "sans-serif"),
       decodeSize(props["font-size"] ?: "12pt"),
       decodeWeight(props["font-weight"] ?: "normal"),
