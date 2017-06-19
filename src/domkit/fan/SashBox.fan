@@ -79,8 +79,9 @@ using dom
         css = "calc($d.toStr - ${per}px)"
       }
 
-      if (kid isnot FlexBox)
-        kid.style->display = "block"
+      kid.style->display = css == "0px"
+         ? "none"
+         : (kid is FlexBox ? "flex" : "block")
 
       vert := dir == Dir.down
       kid.style->float  = vert ? "none" : "left"
