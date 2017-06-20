@@ -121,6 +121,7 @@ class ShowScript : Weblet
       out.includeJs(`/pod/concurrent/concurrent.js`)
       out.includeJs(`/pod/web/web.js`)
       out.includeJs(`/pod/gfx/gfx.js`)
+      out.includeJs(`/pod/graphics/graphics.js`)
       out.includeJs(`/pod/dom/dom.js`)
       out.includeJs(`/pod/fwt/fwt.js`)
       out.includeJs(`/pod/webfwt/webfwt.js`)
