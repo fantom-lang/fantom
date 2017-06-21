@@ -42,7 +42,7 @@
   ** '{{' and '}}'. The text between the delimiters is the key.
   ** The supplied callback is invoked to resolve the key and the macro
   ** is replaced with that value in the text. Returns the new text
-  ** after the macro has been applied. Throws `ParseErr` if the text
+  ** after the macro has been applied. Throws `sys::ParseErr` if the text
   ** contains invalid macros.
   **
   **   Macro("{{hello}} {{world}}!").apply { it.upper } => HELLO WORLD!
