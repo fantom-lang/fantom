@@ -33,9 +33,9 @@ class CardBoxTest : DomkitTest
     add(GridBox
     {
       it.style->padding = "12px"
-      it.cellStyle("all", "all", "width:200px; height:200px; padding:12px")
-      it.cellStyle(    1, "all", "width:100px")
-      it.cellStyle(    2, "all", "width:100px")
+      it.cellStyle("*", "*", "width:200px; height:200px; padding:12px")
+      it.cellStyle(  1, "*", "width:100px")
+      it.cellStyle(  2, "*", "width:100px")
       it.addRow([
         cardBox,
         ListButton

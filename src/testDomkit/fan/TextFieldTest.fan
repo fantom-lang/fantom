@@ -17,7 +17,7 @@ class TextFieldTest : DomkitTest
     add(GridBox
     {
       it.style->padding = "12px"
-      it.cellStyle("all", "all", "vertical-align: top")
+      it.cellStyle("*", "*", "vertical-align: top")
       it.addRow([fields, areas])
     })
   }
@@ -26,7 +26,7 @@ class TextFieldTest : DomkitTest
   {
     GridBox
     {
-      it.cellStyle("all", "all", "padding: 12px;")
+      it.cellStyle("*", "*", "padding: 12px;")
       it.addRow([TextField
       {
         it.onAction |f| { echo("f1: $f.val") }
@@ -74,7 +74,7 @@ class TextFieldTest : DomkitTest
   {
     GridBox
     {
-      it.cellStyle("all", "all", "padding: 12px;")
+      it.cellStyle("*", "*", "padding: 12px;")
       it.addRow([TextArea
       {
         it.placeholder = "Type something..."

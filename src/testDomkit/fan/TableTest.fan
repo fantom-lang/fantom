@@ -42,7 +42,7 @@ class TableTest : DomkitTest
     dlg.add(GridBox
     {
       it.style->padding = "6px"
-      it.cellStyle("all", "all", "padding: 6px")
+      it.cellStyle("*", "*", "padding: 6px")
       it.addRow([Label { it.text="Columns:"           }, cols   ])
       it.addRow([Label { it.text="Rows:"              }, rows   ])
       it.addRow([Label { it.text="Row Height:"        }, rowh   ])

@@ -28,7 +28,7 @@ class FlipBoxTest : DomkitTest
 
     buttons := GridBox
     {
-      it.cellStyle("all", "all", "padding:4px 0")
+      it.cellStyle("*", "*", "padding:4px 0")
       it.addRow([Button { it.text="Flip";     it.style->width="100%"; onAction { box1.flip    }}])
       it.addRow([Button { it.text="To Front"; it.style->width="100%"; onAction { box1.toFront }}])
       it.addRow([Button { it.text="To Back";  it.style->width="100%"; onAction { box1.toBack  }}])
@@ -37,7 +37,7 @@ class FlipBoxTest : DomkitTest
     add(GridBox
     {
       it.style->padding = "12px"
-      it.cellStyle("all", "all", "width:200px; height:200px; padding:12px")
+      it.cellStyle("*", "*", "width:200px; height:200px; padding:12px")
       it.addRow([box1, buttons])
     })
   }
