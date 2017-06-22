@@ -21,8 +21,7 @@ fan.dom.StylePeer.prototype.$ctor = function(self)
 
 fan.dom.StylePeer.prototype.classes  = function(self)
 {
-  var arr = this.elem.className.split(" ");
-  return fan.sys.List.make(fan.sys.Str.$type, arr);
+  return fan.sys.List.make(fan.sys.Str.$type, this.elem.classList);
 }
 
 fan.dom.StylePeer.prototype.classes$ = function(self, val)
@@ -33,33 +32,22 @@ fan.dom.StylePeer.prototype.classes$ = function(self, val)
 
 fan.dom.StylePeer.prototype.hasClass = function(self, className)
 {
-  var arr = this.elem.className.split(" ");
-  for (var i=0; i<arr.length; i++)
-    if (arr[i] == className)
-      return true;
-  return false;
+  return this.elem.classList.contains(className);
 }
 
 fan.dom.StylePeer.prototype.addClass = function(self, className)
 {
-  if (!this.hasClass(self, className))
-  {
-    if (this.elem.className.length == 0) this.elem.className = className;
-    else this.elem.className += " " + className;
-  }
+  // split for legacy support for addClass("x y z")
+  var arr = className.split(" ");
+  for (var i=0; i<arr.length; i++) this.elem.classList.add(arr[i]);
   return self;
 }
 
 fan.dom.StylePeer.prototype.removeClass = function(self, className)
 {
-  var arr = this.elem.className.split(" ");
-  for (var i=0; i<arr.length; i++)
-    if (arr[i] == className)
-    {
-      arr.splice(i, 1);
-      break;
-    }
-  this.elem.className = arr.join(" ");
+  // split for legacy support for removeClass("x y z")
+  var arr = className.split(" ");
+  for (var i=0; i<arr.length; i++) this.elem.classList.remove(arr[i]);
   return self;
 }
 

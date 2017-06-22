@@ -355,6 +355,16 @@ using web
     b.style.removeClass("x")
     verifyEq(b.style.classes, ["b", "c"])
 
+    // legacy test -- keep supporting this
+    a.style.addClass("x y z")
+    verifyEq(a.style.hasClass("x"), true)
+    verifyEq(a.style.hasClass("y"), true)
+    verifyEq(a.style.hasClass("z"), true)
+    a.style.removeClass("y z")
+    verifyEq(a.style.hasClass("x"), true)
+    verifyEq(a.style.hasClass("y"), false)
+    verifyEq(a.style.hasClass("z"), false)
+
     // style tests
     x := Elem {}
     x.style["padding"] =  "10px"; verifyEq(x.style["padding"], "10px")
@@ -402,6 +412,19 @@ using web
     a->y1 = 5
     verifyEq(a->x1, "5")
     verifyEq(a->y1, "5")
+
+    // svg classNames
+    verifyEq(a.style.classes, Str#.emptyList)
+    a.style.addClass("a b c")
+    verifyEq(a.style.classes, ["a", "b", "c"])
+    verifyEq(a.style.hasClass("a"), true)
+    verifyEq(a.style.hasClass("b"), true)
+    verifyEq(a.style.hasClass("c"), true)
+    a.style.removeClass("b c")
+    verifyEq(a.style.classes, ["a"])
+    verifyEq(a.style.hasClass("a"), true)
+    verifyEq(a.style.hasClass("b"), false)
+    verifyEq(a.style.hasClass("c"), false)
   }
 
 //////////////////////////////////////////////////////////////////////////
