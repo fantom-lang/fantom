@@ -17,7 +17,7 @@ class FilePickerTest : DomkitTest
     add(GridBox
     {
       it.style->padding = "12px"
-      it.cellStyle("all", "all", "vertical-align: top")
+      it.cellStyle("*", "*", "vertical-align: top")
       it.addRow([picker("Single Default", FilePicker {})])
       it.addRow([picker("Multi Default",  FilePicker { it.multi=true })])
       it.addRow([picker("Accept image/*", FilePicker { it.accept="image/*" })])
@@ -34,9 +34,9 @@ class FilePickerTest : DomkitTest
     data := Button { it.text="Read Data URI"; it.onAction { readDataUri(picker) }}
     return GridBox
     {
-      it.cellStyle("all", "all", "padding: 12px 4px;")
-      it.cellStyle(    0, "all", "width: 100px;")
-      it.cellStyle(    1, "all", "width: 250px;")
+      it.cellStyle("*", "*", "padding: 12px 4px;")
+      it.cellStyle(  0, "*", "width: 100px;")
+      it.cellStyle(  1, "*", "width: 250px;")
       it.addRow([Label { it.text="$label:" }, picker, open, list, text, data])
     }
   }

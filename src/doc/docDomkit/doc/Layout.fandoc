@@ -42,9 +42,9 @@ Example [#gridBoxEx]
 
   GridBox
   {
-    it.cellStyle("all", "all",  "padding: 4px")
-    it.cellStyle("all", "even", "background: #f8f8f8")
-    it.cellStyle("all",     4,  "background: #e8e8e8; border-top: 1px solid #ccc")
+    it.cellStyle("*",    "*", "padding: 4px")
+    it.cellStyle("*", "even", "background: #f8f8f8")
+    it.cellStyle("*",     4,  "background: #e8e8e8; border-top: 1px solid #ccc")
 
     it.addRow([Label {
       it.text = "Enter User Information"
@@ -65,14 +65,14 @@ groups of cells. Valid values for 'col' and 'row':
 
   - Specific index (0, 1, 2, etc)
   - Range of indexes (0..4, 7..<8, etc)
-  - "all":  apply to all row or columns
+  - "*": apply to all row or columns
   - "even": apply only to even row or columns indexes
   - "odd":  apply only to odd row or column indexes
 
-  cellStyle("all",   "all", "padding: 4px")
-  cellStyle("all",   "odd", "padding: 4px")
-  cellStyle(    0,       1, "padding: 4px")
-  cellStyle(    3,    2..5, "padding: 4px")
+  cellStyle("*",   "*", "padding: 4px")
+  cellStyle("*", "odd", "padding: 4px")
+  cellStyle(  0,     1, "padding: 4px")
+  cellStyle(  3,  2..5, "padding: 4px")
 
 addRow [#gridBoxAddRow]
 =======================

@@ -25,7 +25,7 @@ class DndTest : DomkitTest
   {
     GridBox
     {
-      it.cellStyle("all", "all", "padding:12px 24px 12px 12px")
+      it.cellStyle("*", "*", "padding:12px 24px 12px 12px")
       it.addRow([Box {
         it.style->background = DomkitTest.colors["red"]
         it.style->padding    = "10px"

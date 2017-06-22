@@ -17,7 +17,7 @@ class ProgressBarTest : DomkitTest
     grid := GridBox
     {
       it.style->padding = "12px"
-      it.cellStyle("all", "all", "padding: 12px")
+      it.cellStyle("*", "*", "padding: 12px")
       it.addRow([barDef, barText, barColor, barTextColor])
     }
 
@@ -30,7 +30,7 @@ class ProgressBarTest : DomkitTest
   {
     GridBox
     {
-      it.cellStyle("all", "all", "padding:4px")
+      it.cellStyle("*", "*", "padding:4px")
       it.addRow([ProgressBar {}])
       it.addRow([ProgressBar { it.val=40 }])
       it.addRow([ProgressBar { it.val=75 }])
@@ -42,7 +42,7 @@ class ProgressBarTest : DomkitTest
   {
     GridBox
     {
-      it.cellStyle("all", "all", "padding:4px")
+      it.cellStyle("*", "*", "padding:4px")
       it.addRow([ProgressBar { it.onText |p| { p.val.toStr }; }])
       it.addRow([ProgressBar { it.onText |p| { p.val.toStr }; it.val=40 }])
       it.addRow([ProgressBar { it.onText |p| { p.val.toStr }; it.val=75 }])
@@ -62,7 +62,7 @@ class ProgressBarTest : DomkitTest
         return DomkitTest.colors["green"]
       }
 
-      it.cellStyle("all", "all", "padding:4px")
+      it.cellStyle("*", "*", "padding:4px")
       it.addRow([ProgressBar { it.onBarColor |p| { f(p) }; }])
       it.addRow([ProgressBar { it.onBarColor |p| { f(p) }; it.val=40 }])
       it.addRow([ProgressBar { it.onBarColor |p| { f(p) }; it.val=75 }])
@@ -82,7 +82,7 @@ class ProgressBarTest : DomkitTest
         return DomkitTest.colors["green"]
       }
 
-      it.cellStyle("all", "all", "padding:4px")
+      it.cellStyle("*", "*", "padding:4px")
       it.addRow([ProgressBar { it.onText |p| { "${p.val}%" }; it.onBarColor |p| { f(p) }; }])
       it.addRow([ProgressBar { it.onText |p| { "${p.val}%" }; it.onBarColor |p| { f(p) }; it.val=40 }])
       it.addRow([ProgressBar { it.onText |p| { "${p.val}%" }; it.onBarColor |p| { f(p) }; it.val=75 }])

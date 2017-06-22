@@ -45,7 +45,7 @@ using dom
   ** Set style for cells. Valid values for 'col' and 'row':
   **  - Specific index (0, 1, 2, etc)
   **  - Range of indexes (0..4, 7..<8, etc)
-  **  - "all":  apply to all row or columns
+  **  - "*":    apply to all row or columns
   **  - "even": apply only to even row or columns indexes
   **  - "odd":  apply only to odd row or column indexes
   **
@@ -111,21 +111,21 @@ using dom
   private Void applyCellStyle(Int c, Int r, Elem td)
   {
     // all
-    setCellStyle("all:all", td)
+    setCellStyle("*:*", td)
 
     // even/odd
     calt := c.isOdd ? "odd" : "even"
     ralt := r.isOdd ? "odd" : "even"
-    setCellStyle("all:$ralt",   td)
-    setCellStyle("$calt:all",   td)
+    setCellStyle("*:$ralt",   td)
+    setCellStyle("$calt:*",   td)
     setCellStyle("$calt:$ralt", td)
 
     // row index
-    setCellStyle("all:$r",   td)
+    setCellStyle("*:$r",   td)
     setCellStyle("$calt:$r", td)
 
     // col index
-    setCellStyle("$c:all",  td)
+    setCellStyle("$c:*",  td)
     setCellStyle("$c:$ralt", td)
 
     // cell index

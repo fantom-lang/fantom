@@ -17,7 +17,7 @@ class ButtonTest : DomkitTest
     grid := GridBox
     {
       it.style->padding = "12px"
-      it.cellStyle("all", "all", "padding: 12px")
+      it.cellStyle("*", "*", "padding: 12px")
       it.addRow([buttons, menus])
       it.addRow([toggles, lists])
       it.addRow([Elem {}, combos])
@@ -148,7 +148,7 @@ class ButtonTest : DomkitTest
   {
     GridBox
     {
-      it.cellStyle("all", "all", "padding: 6px 0")
+      it.cellStyle("*", "*", "padding: 6px 0")
       it.addRow([FlowBox {
         it.gaps = ["-1px"]
         Button { it.text="Group 1" },
@@ -178,7 +178,7 @@ class ButtonTest : DomkitTest
   {
     GridBox
     {
-      it.cellStyle("all", "all", "padding: 6px 0")
+      it.cellStyle("*", "*", "padding: 6px 0")
       it.addRow([FlowBox {
         it.gaps = ["-1px"]
         TextField {},

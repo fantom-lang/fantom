@@ -17,7 +17,7 @@ class CheckboxTest : DomkitTest
     add(GridBox
     {
       it.style->padding = "18px"
-      it.cellStyle("all", "all", "padding: 18px")
+      it.cellStyle("*", "*", "padding: 18px")
       it.addRow([checks])
     })
   }
@@ -26,7 +26,7 @@ class CheckboxTest : DomkitTest
   {
     GridBox
     {
-      it.cellStyle("all", "all", "padding-bottom: 12px")
+      it.cellStyle("*", "*", "padding-bottom: 12px")
       it.addRow([Checkbox {}.wrap("Checkbox #1")])
       it.addRow([Checkbox { it.checked=false }.wrap("Checkbox #2")])
       it.addRow([Checkbox { it.checked=true  }.wrap("Checkbox #3")])

@@ -17,7 +17,7 @@ class DialogTest : DomkitTest
     add(GridBox
     {
       it.style->padding = "18px"
-      it.cellStyle("all", "all", "padding: 18px")
+      it.cellStyle("*", "*", "padding: 18px")
       it.addRow([basics])
     })
   }

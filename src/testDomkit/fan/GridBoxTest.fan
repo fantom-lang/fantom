@@ -21,16 +21,16 @@ class GridBoxTest : DomkitTest
   {
     grid := GridBox
     {
-      it.cellStyle("all", "all", "padding: 4px")
-      it.cellStyle("all", "odd", "background: #eee")
-      it.cellStyle(0,     0,     "font-weight: bold; border-bottom: 1px solid #666")
-      it.cellStyle("all", 5,     "background: #fff; height: 20px")
-      it.cellStyle("all", 6,     "font-weight: bold; border-bottom: 1px dashed #666")
-      it.cellStyle(2,     6,     "text-align: right")
-      it.cellStyle(0,     "all", "padding-right: 18px")
-      it.cellStyle(1,     "all", "text-align: right")
-      it.cellStyle(0,     7..9,  "padding-left: 10px")
-      it.cellStyle(2,     7..9,  "text-align: right; color: #999")
+      it.cellStyle("*",   "*",  "padding: 4px")
+      it.cellStyle("*", "odd",  "background: #eee")
+      it.cellStyle(  0,     0,  "font-weight: bold; border-bottom: 1px solid #666")
+      it.cellStyle("*",     5,  "background: #fff; height: 20px")
+      it.cellStyle("*",     6,  "font-weight: bold; border-bottom: 1px dashed #666")
+      it.cellStyle(  2,     6,  "text-align: right")
+      it.cellStyle(  0,   "*",  "padding-right: 18px")
+      it.cellStyle(  1,   "*",  "text-align: right")
+      it.cellStyle(  0,   7..9, "padding-left: 10px")
+      it.cellStyle(  2,   7..9, "text-align: right; color: #999")
 
       it.addRow([label("A Long Heading")], [3])
       it.addRow([label("Alpha"), label("12.543"),    button("Button 1")])

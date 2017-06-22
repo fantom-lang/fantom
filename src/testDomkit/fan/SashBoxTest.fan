@@ -25,7 +25,7 @@ class SashBoxTest : DomkitTest
     dlg.add(GridBox
     {
       it.style->padding = "6px"
-      it.cellStyle("all", "all", "padding: 6px")
+      it.cellStyle("*", "*", "padding: 6px")
       it.addRow([Label { it.text="Layout Dir:"  }, dir   ])
       it.addRow([Label { it.text="Child Type:"  }, type  ])
       it.addRow([Label { it.text="Child Sizes:" }, sizes ])
