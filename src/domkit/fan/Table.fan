@@ -364,8 +364,9 @@ using graphics
         it.add(Elem {})
         it.add(Elem {})
       }
-      hpopup.onEvent(EventType.mouseDown, false)
+      hpopup.onEvent(EventType.mouseDown, false) |e|
       {
+        e.stop
         Popup p := cbHeaderPopup.call(this)
         openHeaderPopup(hpopup, p)
       }
