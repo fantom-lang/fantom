@@ -76,11 +76,36 @@ div.domkit-Table-thead {
   border-bottom: 1px solid #a9a9a9;
 }
 
+div.domkit-Table-header-popup {
+  position: absolute;
+  box-sizing: border-box;
+  top: 0;
+  right: 0;
+  padding: 2px 4px;
+  background: #ececee;
+  border-left: 1px solid #a9a9a9;
+}
+
+div.domkit-Table-header-popup:active {
+  background: #ddd;
+}
+
+div.domkit-Table-header-popup div {
+  width: 12px;
+  height: 2px;
+  background-color: #999;
+  margin: 2px 0;
+}
+
 div.domkit-Table-header-sort:before {
   content: "\25bc";
   color: #999;
   font-size: 10px;
   float: right;
+}
+
+div.domkit-Table-header-sort.popup {
+  padding-right: 26px;
 }
 
 div.domkit-Table-header-sort.up:before {
@@ -108,6 +133,7 @@ div.domkit-Table-header {
   text-overflow: ellipsis;
 }
 
+div.domkit-Table-header:active { background: #ddd; }
 div.domkit-Table-header.last { border-right: none; }
 
 div.domkit-Table-cell {

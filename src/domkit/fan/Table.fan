@@ -51,6 +51,11 @@ using graphics
   ** List of CSS classes applied to rows in sequence, looping as required.
   Str[] stripeClasses := ["even", "odd"]
 
+  ** Callback to display header popup.  When non-null, a button will be
+  ** placed on the right-hand side of the table header to indicate the
+  ** popup is available.
+  Void onHeaderPopup(|Table->Popup| f) { this.cbHeaderPopup = f }
+
   ** The view wraps the table model to implement the row/col mapping
   ** from the view coordinate space to the model coordinate space based
   ** on column visibility and row sort order.
@@ -188,14 +193,15 @@ using graphics
     {
       header.style
         .addClass("domkit-Table-header-sort")
-        .removeClass("down").removeClass("up")
+        .removeClass("down up popup")
         .addClass(sortDir == Dir.up ? "up" : "down")
+      if (col == numCols-1 && cbHeaderPopup != null) header.style.addClass("popup")
     }
     else
     {
       header.style
         .removeClass("domkit-Table-header-sort")
-        .removeClass("down").removeClass("up")
+        .removeClass("down up popup")
     }
 
     // update model content
@@ -277,6 +283,7 @@ using graphics
     this.numCols.times |c|
     {
       cw := view.colWidth(c)
+      if (c == numCols-1 && cbHeaderPopup != null) cw += 26
       this.colx.add(cx)
       this.colw.add(cw)
       cx += cw
@@ -346,6 +353,23 @@ using graphics
       headers[c] = header
       refreshHeader(header, c)
       thead.add(header)
+    }
+    if (cbHeaderPopup != null)
+    {
+      hpopup := Elem
+      {
+        it.style.addClass("domkit-Table-header-popup")
+        it.style->height = "${theadh}px"
+        it.add(Elem {})
+        it.add(Elem {})
+        it.add(Elem {})
+      }
+      hpopup.onEvent(EventType.mouseDown, false)
+      {
+        Popup p := cbHeaderPopup.call(this)
+        openHeaderPopup(hpopup, p)
+      }
+      thead.add(hpopup)
     }
 
     // setup tbody
@@ -705,6 +729,23 @@ using graphics
 // Events
 //////////////////////////////////////////////////////////////////////////
 
+  ** Callback to display header popup.
+  private Void openHeaderPopup(Elem button, Popup popup)
+  {
+    x := button.pagePos.x
+    y := button.pagePos.y + button.size.h.toInt
+    w := button.size.w.toInt
+
+    // // adjust popup origin if haligned
+    // switch (popup.halign)
+    // {
+    //   case Align.center: x += w / 2
+    //   case Align.right:  x += w
+    // }
+
+    popup.open(x, y)
+  }
+
   ** Callback to handle scroll event.
   private Void onScroll(Pos? delta)
   {
@@ -926,6 +967,7 @@ using graphics
   private Func? cbSelect
   private Func? cbAction
   private Str:Func cbTableEvent := [:]
+  private Func? cbHeaderPopup
 
   // scrollbars
   private const Int sbarsz := 15

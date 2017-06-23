@@ -50,6 +50,7 @@ class TableTest : DomkitTest
       it.addRow([Label { it.text="Mutli-Selection:"   }, multi  ])
       it.addRow([Label { it.text="Pre-select row:"    }, presel ])
       it.addRow([Label { it.text="Show Header:"       }, header ])
+
       it.addRow([FlowBox {
         it.style->paddingTop = "6px"
         it.halign = Align.right
@@ -64,6 +65,8 @@ class TableTest : DomkitTest
   Void update()
   {
     table.showHeader = this.header.checked
+// no way to toggle this -- just comment out to test :|
+    table.onHeaderPopup { makeHeaderPopoup }
     table.sel.enabled = this.selOn.checked
     table.sel.multi  = this.multi.checked
     table.sel.index  = this.presel.val.toInt(10, false)
@@ -74,6 +77,16 @@ class TableTest : DomkitTest
       it.rowh = this.rowh.val.toInt
     }
     table.rebuild
+  }
+
+  Popup makeHeaderPopoup()
+  {
+    Popup
+    {
+      it.style->padding = "20px"
+      it.style->whiteSpace = "nowrap"
+      Label { it.text="This is a header popup" },
+    }
   }
 
   Table table
