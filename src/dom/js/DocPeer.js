@@ -103,6 +103,11 @@ fan.dom.DocPeer.prototype.removeEvent = function(self, type, useCapture, handler
     this.doc.removeEventListener(type, handler.$func, useCapture);
 }
 
+fan.dom.DocPeer.prototype.exec = function(self, name, defUi, val)
+{
+  this.doc.execCommand(name, defUi, val);
+}
+
 fan.dom.DocPeer.prototype.out = function(self)
 {
   return fan.web.WebOutStream.make(new fan.dom.DocOutStream(this.doc));

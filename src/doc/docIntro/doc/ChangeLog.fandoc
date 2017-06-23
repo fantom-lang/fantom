@@ -14,6 +14,7 @@
 - dom: remove Elem.draggable (use elem->draggable)
 - dom: Doc.activeElem, Doc.head
 - dom: Doc.elem -> elemById
+- dom: Doc.exec
 - dom: Elem.attrs,attr/setAttr, Elem.prop/setProp
 - dom: Elem.clone, Elem.hasChildren, Elem.ns
 - dom: Event.get,set,trap
