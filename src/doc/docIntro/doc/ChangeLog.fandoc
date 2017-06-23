@@ -29,6 +29,7 @@
 - domkit: fix SashPane.sizes setter to update style
 - domkit: add WellBox
 - domkit: add ButtonGroup.enabled, inheritEnabled, onBeforeSelect
+- domkit: add Table.onHeaderPopup
 - New docDomkit manual
 - Add options to Zip deflate in/out methods
 - Fandoc support for explicit img size
