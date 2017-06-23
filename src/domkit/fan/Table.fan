@@ -195,7 +195,7 @@ using graphics
         .addClass("domkit-Table-header-sort")
         .removeClass("down up popup")
         .addClass(sortDir == Dir.up ? "up" : "down")
-      if (col == numCols-1 && cbHeaderPopup != null) header.style.addClass("popup")
+      if (col == numCols-1 && hasHpbut) header.style.addClass("popup")
     }
     else
     {
@@ -272,9 +272,9 @@ using graphics
 
     // get container dims
     tbodysz := this.size
-    this.theadh = showHeader ? 20 : 0
-    this.tbodyw = tbodysz.w.toInt
-    this.tbodyh = tbodysz.h.toInt - theadh
+    this.theadh  = showHeader ? 20 : 0
+    this.tbodyw  = tbodysz.w.toInt
+    this.tbodyh  = tbodysz.h.toInt - theadh
 
     // cache layout vars
     cx := 0
@@ -283,7 +283,7 @@ using graphics
     this.numCols.times |c|
     {
       cw := view.colWidth(c)
-      if (c == numCols-1 && cbHeaderPopup != null) cw += 26
+      if (c == numCols-1 && hasHpbut) cw += hpbutw + 4
       this.colx.add(cx)
       this.colw.add(cw)
       cx += cw
@@ -354,9 +354,16 @@ using graphics
       refreshHeader(header, c)
       thead.add(header)
     }
-    if (cbHeaderPopup != null)
+
+    // setup header popup
+    if (cbHeaderPopup == null)
     {
-      hpopup := Elem
+      this.hpbut = null
+      this.hasHpbut = false
+    }
+    else
+    {
+      this.hpbut = Elem
       {
         it.style.addClass("domkit-Table-header-popup")
         it.style->height = "${theadh}px"
@@ -364,13 +371,8 @@ using graphics
         it.add(Elem {})
         it.add(Elem {})
       }
-      hpopup.onEvent(EventType.mouseDown, false) |e|
-      {
-        e.stop
-        Popup p := cbHeaderPopup.call(this)
-        openHeaderPopup(hpopup, p)
-      }
-      thead.add(hpopup)
+      this.hasHpbut = true
+      thead.add(hpbut)
     }
 
     // setup tbody
@@ -788,9 +790,20 @@ using graphics
 
     if (p.y < theadh)
     {
-      // sort column
       if (e.type == EventType.mouseDown)
-        sort(col, sortCol==col ? (sortDir==Dir.up ? Dir.down : Dir.up) : Dir.up)
+      {
+        if (hasHpbut && p.x > tbodyw-hpbutw)
+        {
+          // header popup
+          Popup hp := cbHeaderPopup.call(this)
+          openHeaderPopup(hpbut, hp)
+        }
+        else
+        {
+          // sort column
+          sort(col, sortCol==col ? (sortDir==Dir.up ? Dir.down : Dir.up) : Dir.up)
+        }
+      }
     }
     else
     {
@@ -936,7 +949,7 @@ using graphics
     }
   }
 
-  private Void updateSel(Int[] newsel)
+  @NoDoc Void updateSel(Int[] newsel)
   {
     if (!sel.enabled) return
     if (sel.indexes == newsel) return
@@ -1002,6 +1015,11 @@ using graphics
   private Int hthumbw        // hbar thumb width
   private Int vtrackh        // vbar track height
   private Int vthumbh        // vbar thumb height
+
+  // headerPopup
+  private Elem? hpbut        // header popup button
+  private Bool hasHpbut      // hpbut != null
+  private const Int hpbutw := 22  // width of header popup button
 
   // scroll
   private Int scrollx        // current x scroll pos
