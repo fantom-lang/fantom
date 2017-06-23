@@ -19,22 +19,31 @@ class ColorTest : Test
     c := Color(0xaabbcc)
     verifyEq(c.a,  1.0f)
     verifyEq(c.rgb,  0xaabbcc)
-    verifyColor(c, 0xaa, 0xbb, 0xcc, 1.0f, "#aabbcc")
+    verifyEq(c.toHexStr, "#abc")
+    verifyColor(c, 0xaa, 0xbb, 0xcc, 1.0f, "#abc")
+
+    c = Color(0x123456)
+    verifyEq(c.a,  1.0f)
+    verifyEq(c.rgb,  0x123456)
+    verifyEq(c.toHexStr, "#123456")
+    verifyColor(c, 0x12, 0x34, 0x56, 1.0f, "#123456")
 
     c = Color(0xbbccdd, 0.5f)
     verifyEq(c.rgb,  0xbbccdd)
     verifyEq(c.a, 0.5f)
+    verifyEq(c.toHexStr, "#bbccdd7f")
     verifyColor(c, 0xbb, 0xcc, 0xdd, 0.5f, "rgba(187,204,221,0.5)")
 
     c = Color.makeRgb(1, 2, 3, 0.4f)
     verifyEq(c.rgb, 0x010203)
     verifyEq(c.a, 0.4f)
+    verifyEq(c.toHexStr, "#01020366")
     verifyColor(c, 1, 2, 3, 0.4f, "rgba(1,2,3,0.4)")
 
     c = Color.makeRgb(0x33, 0x22, 0x11)
     verifyEq(c.rgb, 0x332211)
     verifyEq(c.a,  1.0f)
-    verifyColor(c, 0x33, 0x22, 0x11, 1.0f, "#332211")
+    verifyColor(c, 0x33, 0x22, 0x11, 1.0f, "#321")
   }
 
   Void verifyColor(Color c, Int r, Int g, Int b, Float a, Str s)

@@ -264,9 +264,24 @@ const class Color
   ** string, otherwise format as '"rbga()"' notation.
   override Str toStr()
   {
-    if (a >= 1.0f) return "#" + rgb.toHex(6)
+    if (a >= 1.0f) return toHexStr
     aStr := a.toLocale("0.##", Locale.en)
     return "rgba($r,$g,$b,$aStr)"
+  }
+
+  ** Format as #RGB, #RRGGBB or #RRGGBBAA syntax
+  Str toHexStr()
+  {
+    hex := rgb.toHex(6)
+    if (a >= 1f)
+    {
+      if (hex[0] == hex[1] && hex[2] == hex[3] && hex[4] == hex[5])
+        return "#" + hex[0].toChar + hex[2].toChar + hex[4].toChar
+      else
+        return "#" + hex
+    }
+    ahex := (255f * a).toInt.min(255).max(0).toHex(2)
+    return "#" + hex + ahex
   }
 
 //////////////////////////////////////////////////////////////////////////
