@@ -101,6 +101,14 @@ class Doc
   ** handler was not registered, this method does nothing.
   native Void removeEvent(Str type, Bool useCapture, Func handler)
 
+  ** When a HTML document has been switched to 'designMode', the document
+  ** object exposes the 'exec' method which allows one to run commands to
+  ** manipulate the contents of the editable region.
+  **   - 'name': the command name to execute
+  **   - 'defUi': flag to indicate if default user interface is shown
+  **   - 'val': optional value for commands that take an argument
+  native Bool exec(Str name, Bool defUi := true, Obj? val := null)
+
 //////////////////////////////////////////////////////////////////////////
 // Writing
 //////////////////////////////////////////////////////////////////////////
