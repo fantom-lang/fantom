@@ -291,7 +291,7 @@ const class Insets
       f := GeomUtil.parseFloatList(s)
       return make(f[0], f.getSafe(1), f.getSafe(2), f.getSafe(3))
     }
-    catch {}
+    catch (Err e) {}
     if (checked) throw ParseErr("Invalid Insets: $s")
     return null
   }
@@ -347,7 +347,19 @@ const class GeomUtil
   ** Split with comma or whitespace CSS/SVG styled syntax
   static Str[] split(Str s)
   {
-    Regex<|[,\s]+|>.split(s)
+    acc := Str[,]
+    start := 0
+    for (i := 0; i<s.size; ++i)
+    {
+      c := s[i]
+      if (c == ' ' || c == ',')
+      {
+        if (start < i) acc.add(s[start..<i])
+        start = i+1
+      }
+    }
+    if (start < s.size) acc.add(s[start..-1])
+    return acc
   }
 
   ** Parse list comma or whitespace separated floats
