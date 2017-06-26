@@ -29,7 +29,7 @@ using dom
       // bubble to MenuItem
       Elem? t := e.target
       while (t != null && t isnot MenuItem) t = t?.parent
-      if (t == null) return
+      if (t == null) { select(null); return }
 
       // check for selection
       index := children.findIndex |k| { t == k }
@@ -42,8 +42,8 @@ using dom
       switch (e.key)
       {
         case Key.esc:   close
-        case Key.up:    e.stop; lastEvent=1; select(selIndex==null ? 0 : selIndex-1)
-        case Key.down:  e.stop; lastEvent=1; select(selIndex==null ? 0 : selIndex+1)
+        case Key.up:    e.stop; lastEvent=1; select(selIndex==null ? 0 : findPrev(selIndex))
+        case Key.down:  e.stop; lastEvent=1; select(selIndex==null ? 0 : findNext(selIndex))
         case Key.space: // fall-thru
         case Key.enter: e.stop; fireAction(e)
       }
@@ -84,6 +84,20 @@ using dom
 
     if (sy > iy) this.scrollPos = Pos(0, iy)
     else if (sy + mh < iy + ih) this.scrollPos = Pos(0, (iy + ih - mh).toInt)
+  }
+
+  private Int? findPrev(Int start)
+  {
+    i := start
+    while (--i >= 0) { if (children[i] is MenuItem) return i }
+    return start
+  }
+
+  private Int? findNext(Int start)
+  {
+    i := start
+    while (++i < children.size) { if (children[i] is MenuItem) return i }
+    return start
   }
 
   private Void fireAction(Event e)
