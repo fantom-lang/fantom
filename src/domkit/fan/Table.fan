@@ -1109,36 +1109,6 @@ using graphics
 }
 
 **************************************************************************
-** ListModel
-**************************************************************************
-
-** TODO
-@Js @NoDoc class ListModel : TableModel
-{
-  new make(Obj[] items, Func? onText := null)
-  {
-    this.items = items
-    this.onText = onText
-  }
-  override Int numCols() { 1 }
-  override Int numRows() { items.size }
-  override Int colWidth(Int col) { 10 } // use something small so stretches to fit
-  override Obj item(Int row) { items[row] }
-  override Void onCell(Elem cell, Int col, Int row, TableFlags flags)
-  {
-    cell.style->padding = "0 8px"
-    cell.text = text(col, row)
-  }
-  private Str text(Int col, Int row)
-  {
-    item := items[row]
-    return onText==null ? item.toStr : onText(item)
-  }
-  private Obj[] items
-  private Func? onText
-}
-
-**************************************************************************
 ** TableEvent
 **************************************************************************
 
