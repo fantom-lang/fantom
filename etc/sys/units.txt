@@ -96,6 +96,7 @@ micrograms_per_cubic_meter, µg/m³; kg1*m-3; 1.0E-9
 
 -- electric charge (sec1*A1)
 coulomb, C; sec1*A1
+ampere_hour, Ah; sec1*A1; 3600
 
 -- electric conductance (kg-1*m-2*sec3*A2)
 siemens, S; kg-1*m-2*sec3*A2
