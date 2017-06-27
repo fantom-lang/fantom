@@ -25,7 +25,6 @@ percent_obscuration_per_meter, %obsc/m
 psi_per_degree_fahrenheit, psi/°F
 square_meters_per_newton, m²/N
 watts_per_square_meter_degree_kelvin, W/m²K
-ampere_square_meter, Am²
 db_milliVolt, dBmV
 db_microVolt, dBµV
 parts_per_unit, ppu
@@ -104,6 +103,9 @@ siemens, S; kg-1*m-2*sec3*A2
 -- electric current (A1)
 ampere, A; A1
 milliampere, mA; A1; 0.0010
+
+-- electromagnetic moment (m2*A1)
+ampere_square_meter, Am²; m2*A1
 
 -- electric current density (m-2*A1)
 amperes_per_square_meter, A/m²; m-2*A1
