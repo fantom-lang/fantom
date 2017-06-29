@@ -75,6 +75,10 @@ const class WispService : Service
 
   @NoDoc const Obj? keystore := null
 
+  ** Return 'true' if service is successfully listening on registered port.
+  @NoDoc Bool isListening() { isListeningRef.val }
+  private const AtomicBool isListeningRef := AtomicBool(false)
+
   private static WebMod initErrMod()
   {
     try
@@ -171,7 +175,9 @@ const class WispService : Service
         Actor.sleep(10sec)
       }
     }
+
     log.info("${portType} started on port ${port}")
+    isListeningRef.val = true
 
     // loop until stopped accepting incoming TCP connections
     while (!listenerPool.isStopped && !listener.isClosed)
@@ -192,6 +198,7 @@ const class WispService : Service
     }
 
     // socket should be closed by onStop, but do it again to be really sure
+    isListeningRef.val = false
     try { listener.close } catch {}
     log.info("${portType} stopped on port ${port}")
   }
