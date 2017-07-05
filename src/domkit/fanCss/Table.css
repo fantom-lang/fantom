@@ -92,9 +92,9 @@ div.domkit-Table-header-popup:active {
 
 div.domkit-Table-header-popup div {
   width: 12px;
-  height: 2px;
+  height: 1px;
   background-color: #999;
-  margin: 2px 0;
+  margin: 3px 0;
 }
 
 div.domkit-Table-header-sort:before {
