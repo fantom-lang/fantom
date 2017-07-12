@@ -307,7 +307,7 @@ abstract class BuildPod : BuildScript
       javac.cp.add(jstub)
       javac.cpAddExtJars
       javac.cp.add(sysJar)
-      depends.each |Depend d| { javac.cp.add(libFan+`${d.name}.pod`) }
+      depends.each |Depend d| { javac.cp.add(Env.cur.findPodFile(d.name)) }
       javac.src = javaDirs
       javac.run
     }
