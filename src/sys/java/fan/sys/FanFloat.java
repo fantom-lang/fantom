@@ -356,7 +356,7 @@ public final class FanFloat
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+      //e.printStackTrace();
       return String.valueOf(self);
     }
   }
