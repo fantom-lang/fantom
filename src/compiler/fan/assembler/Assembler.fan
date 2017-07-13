@@ -32,7 +32,7 @@ class Assembler : CompilerSupport, FConst
     fpod.name    = compiler.input.podName
     fpod.version = compiler.input.version
     fpod.depends = compiler.depends
-    fpod.meta    = pod.meta
+    fpod.meta    = assembleMeta
     fpod.index   = pod.index
 
     fpod.ftypes = FType[,]
@@ -42,6 +42,13 @@ class Assembler : CompilerSupport, FConst
     }
 
     return fpod
+  }
+
+  private Str:Str assembleMeta()
+  {
+    meta := pod.meta
+    meta["pod.fcode"] = (!types.isEmpty).toStr
+    return meta
   }
 
   private FType assembleType(TypeDef def)
