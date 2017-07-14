@@ -82,10 +82,20 @@ fan.dom.DocPeer.prototype.querySelectorAll = function(self, selectors)
 fan.dom.DocPeer.prototype.exportPng = function(self, img)
 {
   var elem = img.peer.elem;
+
+  // set phy canvas size to img
   var canvas = this.doc.createElement("canvas");
-  canvas.width  = elem.width;
-  canvas.height = elem.height;
+  canvas.style.width  = elem.width  + "px";
+  canvas.style.height = elem.height + "px";
+
+  // scale up working space if retina
+  var ratio     = window.devicePixelRatio || 1;
+  canvas.width  = ratio * elem.width;
+  canvas.height = ratio * elem.height;
+
+  // render with scale factor
   var cx = canvas.getContext("2d");
+  cx.scale(ratio, ratio);
   cx.drawImage(elem, 0, 0);
   return canvas.toDataURL("image/png");
 }
