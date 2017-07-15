@@ -113,16 +113,17 @@ const class Transform
   override Str toStr()
   {
     s := StrBuf()
-    pattern := "0.#####"
     s.add("matrix(")
-     .add(a.toLocale(pattern)).addChar(' ')
-     .add(b.toLocale(pattern)).addChar(' ')
-     .add(c.toLocale(pattern)).addChar(' ')
-     .add(d.toLocale(pattern)).addChar(' ')
-     .add(e.toLocale(pattern)).addChar(' ')
-     .add(f.toLocale(pattern)).addChar(')')
+     .add(f2s(a)).addChar(' ')
+     .add(f2s(b)).addChar(' ')
+     .add(f2s(c)).addChar(' ')
+     .add(f2s(d)).addChar(' ')
+     .add(f2s(e)).addChar(' ')
+     .add(f2s(f)).addChar(')')
     return s.toStr
   }
+
+  private static Str f2s(Float f) { f.toLocale("0.#####", Locale.en) }
 
   const Float a
   const Float b
