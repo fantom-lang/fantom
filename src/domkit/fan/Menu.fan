@@ -36,7 +36,8 @@ using dom
       if (index != null) select(index)
       lastEvent = 0
     }
-    this.onEvent(EventType.mouseUp, false) |e| { fireAction(e) }
+    this.onEvent(EventType.mouseDown, false) |e| { armed=true }
+    this.onEvent(EventType.mouseUp,   false) |e| { if (armed) fireAction(e) }
     this.onEvent(EventType.keyDown, false) |e|
     {
       switch (e.key)
@@ -108,7 +109,8 @@ using dom
   }
 
   private Int? selIndex
-  private Int lastEvent := 0  // 0=mouse, 1=key
+  private Int lastEvent := 0   // 0=mouse, 1=key
+  private Bool armed := false  // don't fire mouseUp unless we first detect a mouse down
 }
 
 **
