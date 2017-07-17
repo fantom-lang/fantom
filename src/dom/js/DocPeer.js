@@ -115,7 +115,7 @@ fan.dom.DocPeer.prototype.removeEvent = function(self, type, useCapture, handler
 
 fan.dom.DocPeer.prototype.exec = function(self, name, defUi, val)
 {
-  this.doc.execCommand(name, defUi, val);
+  return this.doc.execCommand(name, defUi, val);
 }
 
 fan.dom.DocPeer.prototype.out = function(self)
