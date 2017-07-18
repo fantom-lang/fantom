@@ -124,6 +124,33 @@ const class Color
     return null
   }
 
+  ** Parse comma separated list from string
+  @NoDoc
+  static Color[]? listFromStr(Str s, Bool checked := true)
+  {
+    try
+    {
+      toks := s.split(',')
+      if (s.contains("("))
+      {
+        acc := StrBuf[,]
+        inParen := false
+        toks.each |tok, i|
+        {
+          if (inParen) acc.last.addChar(',').add(tok)
+          else acc.add(StrBuf().add(tok))
+          if (tok.contains("(")) inParen = true
+          if (tok.contains(")")) inParen = false
+        }
+        toks = acc.map |buf->Str| { buf.toStr }
+      }
+      return toks.map |tok->Color| { Color.fromStr(tok) }
+    }
+    catch (Err e) e.trace
+    if (checked) throw ParseErr("Invalid color list: $s")
+    return null
+  }
+
   private static Color parseHex(Str s)
   {
     sub := s[1..-1]
