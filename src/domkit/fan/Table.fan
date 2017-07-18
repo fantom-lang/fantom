@@ -23,7 +23,18 @@ using graphics
     this.view = TableView(this)
     this.sel  = TableSelection(view)
     this.style.addClass("domkit-Table").addClass("domkit-border")
-    this.onEvent("wheel",                    false) |e| { onScroll(e.delta); e.stop }
+    this.onEvent("wheel", false) |e|
+    {
+      // don't consume vertical scroll if not required; this
+      // allows the parent container to scroll the table within
+      // its own viewport; this is a little tricky without
+      // consume horiz events, so for now just assume it was a
+      // "vertical" event if y-delta is greater than x-delta
+      if (!hasScrolly && e.delta != null && e.delta.y.abs > e.delta.x.abs) return
+
+      onScroll(e.delta)
+      e.stop
+    }
     this.onEvent(EventType.mouseDown,        false) |e| { onMouseEvent(e) }
     this.onEvent(EventType.mouseUp,          false) |e| { onMouseEvent(e) }
     this.onEvent(EventType.mouseDoubleClick, false) |e| { onMouseEvent(e) }
