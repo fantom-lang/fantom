@@ -117,8 +117,22 @@ class ColorTest : Test
   Void verifyFromStr(Str s, Color e)
   {
     a := Color.fromStr(s)
-    //echo("-- $s\n   $a\n   $e")
+    // echo("-- $s\n   $a\n   $e")
     verifyEq(a, e)
+
+    list := Color.listFromStr("$s,$s , $s")
+    verifyEq(list.size, 3)
+    verifyEq(list[0], e)
+    verifyEq(list[1], e)
+    verifyEq(list[2], e)
+  }
+
+  Void testListFromStr()
+  {
+    verifyEq(Color.listFromStr("#abc, red, rgb(128, 0, 0)"),
+             Color[Color("#abc"), Color("red"), Color("rgb(128, 0, 0)")])
+    verifyEq(Color.listFromStr("rgba(128, 0, 0, 50%), #abc, rgb(128, 0, 0)"),
+             Color[Color("rgba(128, 0, 0, 50%)"), Color("#abc"), Color("rgb(128, 0, 0)")])
   }
 
   Void testEquals()
