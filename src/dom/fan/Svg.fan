@@ -6,6 +6,7 @@
 //   17 May 2017  Brian Frank  Creation
 //
 
+using concurrent
 using graphics
 
 **
@@ -68,7 +69,7 @@ final const class Svg
     }
 
     // auto-generate if needed
-    if (defElem.id == null) defElem.id = "def-${defsElem.children.size}"
+    if (defElem.id == null) defElem.id = "def-" + genId.incrementAndGet.toHex
 
     // mount if needed
     if (defElem.parent == null) defsElem.add(defElem)
@@ -76,6 +77,8 @@ final const class Svg
     // return id
     return defElem.id
   }
+
+  private static const AtomicInt genId := AtomicInt()
 
   ** Mount a definition element using `def` and return a CSS URL
   ** to the fragment identifier such as "url(#def-d)".  This is used
