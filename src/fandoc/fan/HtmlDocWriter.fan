@@ -119,6 +119,9 @@ class HtmlDocWriter : DocWriter
       case DocNodeId.orderedList:
         ol := elem as OrderedList
         out.print(" style='list-style-type:$ol.style.htmlType'")
+      case DocNodeId.hr:
+        out.printLine("/>")
+        return
     }
     out.writeChar('>')
   }
@@ -126,6 +129,7 @@ class HtmlDocWriter : DocWriter
   override Void elemEnd(DocElem elem)
   {
     if (elem.id == DocNodeId.image) return
+    if (elem.id == DocNodeId.hr) return
     out.writeChar('<').writeChar('/').print(elem.htmlName).writeChar('>')
 
     // if hyperlink to code, then wrap in code element

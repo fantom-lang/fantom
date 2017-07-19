@@ -156,6 +156,24 @@ pre>
      i. Subsection i
      ii. Subsection ii
 
+Horizontal Rules [#hr]
+**********************
+Horizontal rules start with '---', and must be preceded by a blank line:
+
+pre>
+  Above the rule
+
+  ---
+
+  Below the rule
+<pre
+
+Above the rule
+
+---
+
+Below the rule
+
 Block Quotes [#blockQuotes]
 ***************************
 Block quotes start the first line (or every line) of the paragraph

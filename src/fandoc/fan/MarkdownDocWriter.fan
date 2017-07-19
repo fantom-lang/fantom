@@ -102,6 +102,9 @@
 
       case DocNodeId.code:
         out.print("`")
+
+      case DocNodeId.hr:
+        out.print("---\n")
     }
   }
 

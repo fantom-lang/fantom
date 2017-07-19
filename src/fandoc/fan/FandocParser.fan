@@ -125,6 +125,8 @@ class FandocParser
         return blockquote
       case LineType.preStart:
         return preExplicit
+      case LineType.hr:
+        return hr
       case LineType.normal:
         if (curIndent >= indent+2)
           return pre
@@ -222,6 +224,13 @@ class FandocParser
     pre := Pre.make
     pre.add(DocText(buf.toStr))
     return pre
+  }
+
+  private DocElem hr()
+  {
+    consume
+    skipBlankLines
+    return Hr.make
   }
 
   private DocElem ol()
@@ -417,6 +426,7 @@ class FandocParser
     else if (peek.startsWith("***") && curNotBlank)  peekt = LineType.h2
     else if (peek.startsWith("===") && curNotBlank)  peekt = LineType.h3
     else if (peek.startsWith("---") && curNotBlank)  peekt = LineType.h4
+    else if (peek.startsWith("---") && curt == LineType.blank) peekt = LineType.hr
     else
     {
       peekt = LineType.normal
@@ -505,6 +515,7 @@ internal enum class LineType
   blockquote,  // >
   preStart,    // pre>
   preEnd,      // <pre
+  hr,          // ---  (with a leading blank line)
   normal       // anything else
 
   Bool isList() { return this === ul }
