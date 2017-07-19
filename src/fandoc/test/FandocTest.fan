@@ -226,7 +226,18 @@ class FandocTest : Test
 
     verifyDoc("a\n\n####\nb", ["<body>", ["<p>", "a"], ["<p>", "#### b"]])
     verifyDoc("a\n\n===\n\nb", ["<body>", ["<p>", "a"], ["<p>", "==="], ["<p>", "b"]])
-    verifyDoc("\n\n------\n", ["<body>", ["<p>", "------"]])
+    verifyDoc("\n\n------\n", ["<body>", ["<hr>"]])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// HR
+//////////////////////////////////////////////////////////////////////////
+
+  Void testHr()
+  {
+    verifyDoc("Foo\n\n---\nBar", ["<body>", ["<p>", "Foo"], ["<hr>"], ["<p>", "Bar"]])
+    verifyDoc("\n\n---", ["<body>", ["<hr>"]])
+    verifyDoc("\n\n---\n", ["<body>", ["<hr>"]])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -482,8 +493,8 @@ class FandocTest : Test
     parser := FandocParser { silent = true }
     doc := parser.parse("Test", str.in)
     verifyDocNode(doc, expected)
-    //echo("======")
-    //parser.errs.each |Err e| { echo(e) }
+    // echo("======")
+    // parser.errs.each |Err e| { echo(e) }
     verifyEq(parser.errs.size, errs.size/2)
     parser.errs.each |FandocErr e, Int i|
     {

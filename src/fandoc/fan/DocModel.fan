@@ -26,7 +26,8 @@ enum class DocNodeId
   strong,
   code,
   link,
-  image
+  image,
+  hr
 }
 
 **************************************************************************
@@ -562,4 +563,19 @@ class Image : DocElem
   Str uri
   Str alt
   Str? size  // formatted {w}x{h}
+}
+
+**************************************************************************
+** Hr
+**************************************************************************
+
+**
+** Hr models a horizontal rule.
+**
+@Js
+class Hr : DocElem
+{
+  override DocNodeId id() { return DocNodeId.hr }
+  override Str htmlName() { return "hr" }
+  override Bool isInline() { return false }
 }

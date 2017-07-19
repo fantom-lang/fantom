@@ -108,6 +108,9 @@ class FandocDocWriter : DocWriter
         out.print(listIndexes.peek)
         listIndexes.peek.increment
         inListItem = true
+
+      case DocNodeId.hr:
+        out.print("---\n\n")
     }
   }
 
