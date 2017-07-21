@@ -573,8 +573,9 @@ const final class Uri
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Convenience for File.make(this) - no guarantee is made
-  ** that the file exists.
+  ** If scheme is non-null, then this is conveninece for `get` cast to a
+  ** File.  If scheme is null then is a convenience for File.make(this)
+  ** which maps to a file on the local file system.
   **
   File toFile()
 
