@@ -1252,7 +1252,8 @@ public final class Uri
 
   public File toFile()
   {
-    return File.make(this);
+    if (scheme == null) return File.make(this);
+    return (File)get();
   }
 
   public Object get() { return get(null, true); }

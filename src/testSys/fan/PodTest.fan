@@ -109,11 +109,8 @@ class PodTest : Test
     verifyEq(f.uri, `fan://testSys/locale/en.props`)
     verifySame(f, pod.files.find {it.name=="en.props"})
 
-    f = pod.file(`fan://testSys/res/test.txt`)
-    verifyEq(f.uri, `fan://testSys/res/test.txt`)
-    verifyEq(f.name, "test.txt")
-    verifyEq(f.size, 19)
-    verifyEq(f.readAllStr, "hello world\nline 2")
+    verifyTestFile(pod.file(`fan://testSys/res/test.txt`))
+    verifyTestFile(`fan://testSys/res/test.txt`.toFile)
 
     verifyErr(ArgErr#) { pod.file(`res/test.txt`) }
     verifyErr(ArgErr#) { pod.file(`fan://foo/res/test.txt`) }
@@ -122,6 +119,14 @@ class PodTest : Test
     verifyNull(pod.file(`fan://testSys/bad/file`, false))
     verifyErr(UnresolvedErr#) { pod.file(`fan://testSys/bad/file`) }
     verifyErr(UnresolvedErr#) { pod.file(`fan://testSys/bad/file`, true) }
+  }
+
+  Void verifyTestFile(File f)
+  {
+    verifyEq(f.uri, `fan://testSys/res/test.txt`)
+    verifyEq(f.name, "test.txt")
+    verifyEq(f.size, 19)
+    verifyEq(f.readAllStr, "hello world\nline 2")
   }
 
 //////////////////////////////////////////////////////////////////////////
