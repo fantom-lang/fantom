@@ -53,7 +53,7 @@ using concurrent
   ** 'name' must start with the ':' character.  Returns the
   ** generated class name.
   **
-  **   style.addPseduoClass(":hover", "background: #eee")
+  **   style.addPseudoClass(":hover", "background: #eee")
   **
   Str addPseudoClass(Str name, Str css)
   {
