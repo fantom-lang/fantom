@@ -35,6 +35,13 @@ using dom
     }
   }
 
+  ** Get or set indeterminate flag.
+  Bool indeterminate
+  {
+    get { this->indeterminate }
+    set { this->indeterminate = it }
+  }
+
   ** Value of checked.
   Bool checked
   {
