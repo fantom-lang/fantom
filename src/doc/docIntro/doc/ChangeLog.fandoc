@@ -31,6 +31,7 @@
 - domkit: add WellBox
 - domkit: add ButtonGroup.enabled, inheritEnabled, onBeforeSelect
 - domkit: add Table.onHeaderPopup
+- domkit: add Checkbox.indeterminate
 - New docDomkit manual
 - Add options to Zip deflate in/out methods
 - Fandoc support for explicit img size
