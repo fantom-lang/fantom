@@ -836,9 +836,9 @@ class MapTest : Test
     if (Env.cur.runtime != "js")
     {
       m.ordered = false
-      10.times |Int j| { m.add(j.toStr, j) }
-      verifyNotEq(m.keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
-      verifyNotEq(m.vals, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+      100.times |Int j| { m.add(j.toStr, j) }
+      verifyNotEq(m.keys, m.keys.sort |a,b| {a.toInt <=> b.toInt })
+      verifyNotEq(m.vals, m.vals.sort)
     }
 
     // errors
