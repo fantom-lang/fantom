@@ -17,6 +17,9 @@ bin/Release/
 obj/Debug/
 obj/Release/
 
+# IntelliJ
+.idea/
+
 # Specific directories and files
 syntax: regexp
 
