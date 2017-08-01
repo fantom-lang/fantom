@@ -1252,7 +1252,7 @@ public final class Uri
 
   public File toFile()
   {
-    if (scheme == null) return File.make(this);
+    if (scheme == null || scheme.equals("file")) return File.make(this);
     return (File)get();
   }
 
