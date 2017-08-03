@@ -21,6 +21,9 @@ final const class Svg
   ** SVG XML namesapce
   static const Uri ns := `http://www.w3.org/2000/svg`
 
+  ** XLink XML namespace
+  static const Uri nsXLink := `http://www.w3.org/1999/xlink`
+
   ** Create element with proper namespace
   static Elem elem(Str tagName)
   {
