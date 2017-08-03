@@ -128,7 +128,7 @@ fan.dom.ElemPeer.prototype.setAttr = function(self, name, val, ns)
     if (ns == null)
       this.elem.setAttribute(name, val);
     else
-      this.elem.setAttributeNS(ns, name, val);
+      this.elem.setAttributeNS(ns.toStr(), name, val);
   }
   return self;
 }
