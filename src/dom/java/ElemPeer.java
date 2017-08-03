@@ -87,7 +87,7 @@ public class ElemPeer
     return val == null ? null : val.toString();
   }
 
-  public Elem setAttr(Elem self, String name, String val, String ns)
+  public Elem setAttr(Elem self, String name, String val, Uri ns)
   {
     // TODO: ns?
     // route to setProp
