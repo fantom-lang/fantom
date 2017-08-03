@@ -119,12 +119,17 @@ fan.dom.ElemPeer.prototype.attr = function(self, name)
   return this.elem.getAttribute(name);
 }
 
-fan.dom.ElemPeer.prototype.setAttr = function(self, name, val)
+fan.dom.ElemPeer.prototype.setAttr = function(self, name, val, ns)
 {
   if (val == null)
     this.elem.removeAttribute(name);
   else
-    this.elem.setAttribute(name, val);
+  {
+    if (ns == null)
+      this.elem.setAttribute(name, val);
+    else
+      this.elem.setAttributeNS(ns, name, val);
+  }
   return self;
 }
 

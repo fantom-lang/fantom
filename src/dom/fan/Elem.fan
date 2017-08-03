@@ -71,9 +71,10 @@ class Elem
   ** Returns 'null' if attribute not defined.
   native Str? attr(Str name)
 
-  ** Set the given HTML attribute value for this element.
-  ** If 'val' is 'null' the attribute is removed (see `removeAttr`).
-  native This setAttr(Str name, Str? val)
+  ** Set the given HTML attribute value for this element. If 'val'
+  ** is 'null' the attribute is removed (see `removeAttr`).
+  ** Optionally a namespace can be specified with 'ns'.
+  native This setAttr(Str name, Str? val, Str? ns := null)
 
   ** Remove the given HTML attribute from this element.
   native This removeAttr(Str name)
