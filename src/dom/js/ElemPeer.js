@@ -40,6 +40,12 @@ fan.dom.ElemPeer.prototype._make = function(self, tagName, ns)
   }
 }
 
+// TODO see Elem.fan
+fan.dom.ElemPeer._wrap = function(obj)
+{
+  return fan.dom.ElemPeer.wrap(obj);
+}
+
 /*
  * Native only method to wrap an existing DOM node.  If this node
  * has already been wrapped by an Elem instance, return the
