@@ -48,6 +48,19 @@ final const class Svg
     elem("text") {  it.text = text; it->x = x; it->y = y }
   }
 
+  ** Convenience to create a 'image' element
+  static Elem image(Uri href, Float x, Float y, Float w, Float h)
+  {
+    elem("image")
+    {
+      it->x      = x
+      it->y      = y
+      it->width  = w
+      it->height = h
+      it.setAttr("href", href.encode, nsXLink)
+    }
+  }
+
   ** Auto-generate an id for the def element and mount it into
   ** the svg document's defs section.  This method will automatically
   ** generate a '<defs>' child in the svg document as needed.
