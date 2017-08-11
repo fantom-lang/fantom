@@ -21,8 +21,8 @@
     {
       if (JpegDecoder.isJpeg(buf))
         return JpegDecoder(buf.in).decode
-      if (0x89_50_4e_47_0d_0a_1a_0a == buf[0..<8].readS8())
-        throw ArgErr("PNG not supported")
+      if (PngDecoder.isPng(buf))
+        return PngDecoder(buf.in).decode
       throw ArgErr("Could not determine image type")
     }
     catch (Err err)
