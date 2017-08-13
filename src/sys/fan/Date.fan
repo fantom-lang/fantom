@@ -174,8 +174,8 @@ const final class Date
 
   **
   ** Add the specified number of days to this date to get a date in
-  ** the future.  Throw ArgErr if 'days' parameter it not an even number
-  ** of days.
+  ** the future.  Throw ArgErr if 'days' parameter it not a whole number
+  ** of days (must be evenly divisible by 24hr).
   **
   ** Example:
   **   Date(2008, Month.feb, 28) + 2day  =>  2008-03-01
@@ -184,8 +184,8 @@ const final class Date
 
   **
   ** Subtract the specified number of days to this date to get a date in
-  ** the past.  Throw ArgErr if 'days' parameter it not an even number
-  ** of days.
+  ** the past.  Throw ArgErr if 'days' parameter it not a whole number
+  ** of days (must be evenly divisible by 24hr).
   **
   ** Example:
   **   Date(2008, Month.feb, 28) - 2day  =>  2008-02-26
