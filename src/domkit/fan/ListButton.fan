@@ -76,16 +76,6 @@ using dom
       })
     }
     menu.select(sel.index)
-    // menu.onOpen
-    // {
-    //   // TODO FIXIT: make event handles cumulative
-    //   menu.focus
-    //
-    //   // TODO FIXIT: need onBeforeOpen - onOpen fires after
-    //   // animation so we get a "jump" in the UI as result
-    //   // scroll sel into view
-    //   menu.scrollPos = Pos(0, menu.children[sel.index].pos.y)
-    // }
     return menu
   }
 

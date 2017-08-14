@@ -51,6 +51,12 @@ using dom
     }
   }
 
+  protected override Void onBeforeOpen()
+  {
+    // reselect to force selected item to scroll into view
+    if (selIndex != null) select(selIndex)
+  }
+
   // TEMP TODO FIXIT: ListButton.makeLisbox
   //private Void select(Int? index)
   internal Void select(Int? index)

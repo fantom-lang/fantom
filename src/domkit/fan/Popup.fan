@@ -75,6 +75,8 @@ using graphics
     if ((x + sz.w + gutter) > vp.w) this.style->left = "${vp.w-sz.w-gutter}px"
     if ((y + sz.h + gutter) > vp.h) this.style->top  = "${vp.h-sz.h-gutter}px"
 
+    onBeforeOpen
+
     this.transition([
       "opacity": "1"
     ], null, 100ms) { fireOpen(null) }
@@ -91,6 +93,9 @@ using graphics
       fireClose(null)
     }
   }
+
+  ** Protected sub-class callback invoked directly before popup is visible.
+  protected virtual Void onBeforeOpen() {}
 
   ** Callback when popup is opened.
   Void onOpen(|This| f) { cbOpen = f }
