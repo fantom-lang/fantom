@@ -28,8 +28,8 @@ class Elem
 
   private native Void _make(Str tagName, Uri? ns)
 
-  // TODO: should probably make this official and use wrap()
-  @NoDoc static native Elem _wrap(Obj elem)
+  ** Create a `Elem` instance from a native JavaScript DOM object.
+  static native Elem fromNative(Obj elem)
 
 //////////////////////////////////////////////////////////////////////////
 // Accessors

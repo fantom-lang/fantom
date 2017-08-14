@@ -40,8 +40,7 @@ fan.dom.ElemPeer.prototype._make = function(self, tagName, ns)
   }
 }
 
-// TODO see Elem.fan
-fan.dom.ElemPeer._wrap = function(obj)
+fan.dom.ElemPeer.fromNative = function(obj)
 {
   return fan.dom.ElemPeer.wrap(obj);
 }
