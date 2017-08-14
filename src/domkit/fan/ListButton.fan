@@ -65,7 +65,8 @@ using dom
   ** Build listbox.
   private Popup makeLisbox()
   {
-    menu := Menu {}
+    this.find = ""
+    this.menu = Menu {}
     items.each |item,i|
     {
       menu.add(MenuItem {
@@ -76,6 +77,7 @@ using dom
       })
     }
     menu.select(sel.index)
+    menu.onCustomKeyDown = |Event e| { onMenuKeyDown(e) }
     return menu
   }
 
@@ -85,8 +87,21 @@ using dom
     return v is Elem ? v : Elem { it.text=v.toStr }
   }
 
+  private Void onMenuKeyDown(Event e)
+  {
+    if (e.key.code.isAlphaNum)
+    {
+      find += e.key.code.toChar.lower
+      ix := items.findIndex |i| { i.toStr.lower.startsWith(find) }
+      if (ix != null) menu.select(ix)
+    }
+  }
+
   private Func? cbSelect := null
   private Func? cbElem   := null
+
+  private Str find := ""  // onPopup
+  private Menu? menu      // onPopup
 }
 
 **************************************************************************

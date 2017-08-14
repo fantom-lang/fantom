@@ -47,6 +47,13 @@ using dom
         case Key.down:  e.stop; lastEvent=1; select(selIndex==null ? 0 : findNext(selIndex))
         case Key.space: // fall-thru
         case Key.enter: e.stop; fireAction(e)
+        default:
+          if (onCustomKeyDown != null)
+          {
+            e.stop
+            lastEvent = 1
+            onCustomKeyDown.call(e)
+          }
       }
     }
   }
@@ -113,6 +120,9 @@ using dom
     MenuItem item := children[selIndex]
     item.fireAction(e)
   }
+
+  // internal use only
+  internal Func? onCustomKeyDown := null
 
   private Int? selIndex
   private Int lastEvent := 0   // 0=mouse, 1=key
