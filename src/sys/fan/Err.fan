@@ -38,7 +38,7 @@ const class Err
 
   **
   ** Dump the stack trace of this exception to the specified
-  ** output stream (or 'Env.cur.out' by default).  Return this.
+  ** output stream (or 'Env.cur.err' by default).  Return this.
   **
   ** The options may be used to specify the format of the output:
   **   - "indent": Int for initial number of indentation spaces
@@ -47,7 +47,7 @@ const class Err
   **        default is configured from the "errTraceMaxDepth" prop
   **        in etc/sys/config.props.
   **
-  This trace(OutStream out := Env.cur.out, [Str:Obj]? options := null)
+  This trace(OutStream out := Env.cur.err, [Str:Obj]? options := null)
 
   **
   ** Dump the stack trace of this exception to a Str.

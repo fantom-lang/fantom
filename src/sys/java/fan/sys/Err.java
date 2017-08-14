@@ -147,7 +147,7 @@ public class Err
 // Trace
 //////////////////////////////////////////////////////////////////////////
 
-  public Err trace() { return trace(Env.cur().out(), null, 0, toJava()); }
+  public Err trace() { return trace(Env.cur().err(), null, 0, toJava()); }
   public Err trace(OutStream out) { return trace(out, null, 0, toJava()); }
   public Err trace(OutStream out, Map opt) { return trace(out, opt, optToIndent(opt), toJava()); }
 
