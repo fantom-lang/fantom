@@ -200,7 +200,7 @@ using graphics
     if (col == numCols-1) header.style.addClass("last")
 
     // update sort icon
-    if (view.colViewToModel(col) == view.sortCol)
+    if (col < numCols && view.colViewToModel(col) == view.sortCol)
     {
       header.style
         .addClass("domkit-Table-header-sort")
