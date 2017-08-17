@@ -49,8 +49,8 @@ using dom
   ** Set to 'true' to set field to readonly mode.
   Bool ro
   {
-    get { this.prop("readonly") }
-    set { this.setProp("readonly", it) }
+    get { this.prop("readOnly") }
+    set { this.setProp("readOnly", it) }
   }
 
   ** Set to 'true' to mask characters inputed into field.
