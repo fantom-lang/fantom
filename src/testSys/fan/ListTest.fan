@@ -1094,6 +1094,13 @@ class ListTest : Test
     verifyEq(["a", "b", "c", "a"].unique, ["a", "b", "c"])
     verifyEq(["a", null, "b", "c", "a"].unique, ["a", null, "b", "c"])
     verifyEq(["a", null, "b", "b", "c", "a", null, "c", "a", "a"].unique, ["a", null, "b", "c"])
+
+    // test for mutable entries
+    m1 := StrBuf().add("1")
+    m2 := StrBuf().add("2")
+    m3 := StrBuf().add("3")
+    verifyEq([m1, m2, m3].unique, [m1, m2, m3])
+    verifyEq([m1, m1, m2, m2, m3, m3].unique, [m1, m2, m3])
   }
 
 //////////////////////////////////////////////////////////////////////////
