@@ -213,6 +213,11 @@ const class WispService : Service
       {
         ref = httpsListenerRef
         listener = TcpListener.makeTls(keystore)
+
+        // This is important so that if there are a lot of short-lived
+        // connections (esp for HTTPS), the OS doesn't hit a limit
+        // on the number of sockets/ports in TIME_WAIT
+        listener.options.reuseAddr = true
       }
       ref.val = Unsafe(listener)
       return listener
