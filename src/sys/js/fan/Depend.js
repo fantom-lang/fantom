@@ -98,6 +98,12 @@ fan.sys.Depend.prototype.version = function( index)
   return this.m_constraints[index].m_version;
 }
 
+fan.sys.Depend.prototype.isSimple = function(index)
+{
+  if (index === undefined) index = 0;
+  return !this.isPlus(index) && !this.isRange(index);
+}
+
 fan.sys.Depend.prototype.isPlus = function(index)
 {
   if (index === undefined) index = 0;

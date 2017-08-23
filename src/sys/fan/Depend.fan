@@ -107,6 +107,14 @@ final const class Depend
   Version version(Int index := 0)
 
   **
+  ** Return if the constraint at the specified index is neither a plus nor a range:
+  **   - versionSimple: returns true
+  **   - versionPlus:   returns false
+  **   - versionRange:  returns false
+  **
+  Bool isSimple(Int index := 0)
+
+  **
   ** Return if the constraint at the specified index is a versionPlus:
   **   - versionSimple: returns false
   **   - versionPlus:   returns true

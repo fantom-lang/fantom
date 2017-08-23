@@ -226,6 +226,12 @@ public final class Depend
     return constraints[(int)index].version;
   }
 
+  public final boolean isSimple() { return isSimple(0L); }
+  public final boolean isSimple(long index)
+  {
+    return !isPlus(index) && !isRange(index);
+  }
+
   public final boolean isPlus() { return isPlus(0L); }
   public final boolean isPlus(long index)
   {
