@@ -16,13 +16,13 @@ buildVersion=1.0.69
 // Must be configured boot build in substitute/release installation
 //devHome=file:/E:/fan/
 
-// JVM version compiler target, by default Fantom requires a JDK 1.6
-// compiler that targets 1.5.  To use JDK 1.7, this property needs to
-// be cleared or set the env var FAN_BUILD_JAVACPARAMS to a space
-javacParams=-target 1.5
+// JVM version compiler target, by default Fantom requires a JDK 1.8 compiler
+// that targets 1.7.  If not concerned with targeting 1.7 then this property
+// can be cleared or set the env var FAN_BUILD_JAVACPARAMS to a space
+javacParams=-source 1.7 -target 1.7
 
 // Windows setup
-jdkHome=/C:/Program Files/Java/jdk1.6/
+jdkHome=/C:/Program Files/Java/jdk1.7/
 dotnetHome=/C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
 
 // Mac setup
