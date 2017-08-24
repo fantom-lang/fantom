@@ -83,10 +83,18 @@ public class BootEnv
     {
       return java.net.InetAddress.getLocalHost().getHostName();
     }
-    catch (Throwable e)
+    catch (Throwable e) {}
+
+    try
     {
-      return "unknown";
+      // fallbacks if DNS resolution fails
+      String s;
+      s = System.getenv("HOSTNAME");     if (s != null) return s;
+      s = System.getenv("FAN_HOSTNAME"); if (s != null) return s;
     }
+    catch (Throwable e) {}
+
+    return "unknown";
   }
 
   private static String initUser()

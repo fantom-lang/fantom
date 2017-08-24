@@ -546,6 +546,11 @@ public final class Sys
 
   static String sysConfig(String name)
   {
+    // first try system property
+    String s = System.getenv("FAN_" + name.toUpperCase());
+    if (s != null) return s;
+
+    // fallback to etc/sys/config.props
     return (String)sysConfig.get(name);
   }
 
