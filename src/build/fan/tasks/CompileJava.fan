@@ -24,7 +24,6 @@ class CompileJava : JdkTask
   new make(BuildScript script)
     : super(script)
   {
-    cp.add(rtJar)
     this.params = (script.config("javacParams") ?: "").split.findAll |s| { !s.isEmpty }
   }
 
@@ -87,6 +86,14 @@ class CompileJava : JdkTask
       {
         cmd.add("-d").add(outDir.osPath)
       }
+
+      // -bootclasspath rt.jar for current environment; this might
+      // different from jdkHomeDir if cross-compiling; this logic is a
+      // simpler version of what compilerJava::ClassPath does in Java FFI
+      javaLib := File.os(Env.cur.vars.get("java.home", "") + File.sep + "lib")
+      bootJars := [javaLib+`rt.jar`, javaLib+`jce.jar`]
+      cmd.add("-bootclasspath")
+      cmd.add(bootJars.join(File.pathSep) |File f->Str| { return f.osPath })
 
       // -cp <classpath>
       cmd.add("-cp")
