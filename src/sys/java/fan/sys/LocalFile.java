@@ -288,6 +288,38 @@ public class LocalFile
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Trap
+//////////////////////////////////////////////////////////////////////////
+
+  public Object trap(String name, List args)
+  {
+    // undocumented local file access
+    Object arg = args == null ? null : args.first();
+    if (name.equals("readable"))   return trapReadable(arg);
+    if (name.equals("writable"))   return trapWritable(arg);
+    if (name.equals("executable")) return trapExecutable(arg);
+    return super.trap(name, args);
+  }
+
+  private Object trapReadable(Object arg)
+  {
+    if (arg == null) return this.file.canRead();
+    else return this.file.setReadable((Boolean)arg);
+  }
+
+  private Object trapWritable(Object arg)
+  {
+    if (arg == null) return this.file.canWrite();
+    else return this.file.setWritable((Boolean)arg);
+  }
+
+  private Object trapExecutable(Object arg)
+  {
+    if (arg == null) return this.file.canExecute();
+    else return this.file.setExecutable((Boolean)arg);
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // File Management
 //////////////////////////////////////////////////////////////////////////
 

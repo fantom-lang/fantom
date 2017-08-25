@@ -7,6 +7,7 @@
 **************************************************************************
 
 *Build 1.0.70 (working)*
+- Require Java 1.7
 - js: Node.js-based NodeRunner now default js runtime for 'fant -js'
 - graphics: new graphics API
 - dom: remove dom::Size; convert to float-based graphics::Size
