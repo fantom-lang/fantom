@@ -23,6 +23,7 @@ using graphics
     nextId.val = uid+1
     this.style.addClass("domkit-Popup")
     this.onEvent("keydown", false) |e| { if (e.key == Key.esc) close }
+    this->tabIndex = 0
   }
 
   ** Where to align Popup relative to open(x,y):
@@ -79,7 +80,7 @@ using graphics
 
     this.transition([
       "opacity": "1"
-    ], null, 100ms) { fireOpen(null) }
+    ], null, 100ms) { this.focus; fireOpen(null) }
   }
 
   ** Close this popup. If popup is already closed
