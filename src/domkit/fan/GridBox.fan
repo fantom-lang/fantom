@@ -98,6 +98,13 @@ using dom
     return this
   }
 
+  ** Remove all rows of cells for this GridBox.
+  This removeAllRows()
+  {
+    tbody.removeAll
+    return this
+  }
+
   ** Update cell styles on existing children.
   private Void updateCellStyle()
   {

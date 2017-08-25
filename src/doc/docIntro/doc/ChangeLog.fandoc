@@ -25,7 +25,7 @@
 - dom: Doc/Elem support for creating namespaced elements
 - dom: add Java peers for Elem,Style,Event
 - domkit: DragTarget.onEnd, DropTarget.onOver
-- domkit: add GridBox.removeRow
+- domkit: add GridBox.removeRow, removeAllRows
 - domkit: change GridBox cell key "all" -> "*"
 - domkit: add Link.target
 - domkit: fix SashPane.sizes setter to update style
