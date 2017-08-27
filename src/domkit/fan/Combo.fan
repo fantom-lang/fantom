@@ -38,6 +38,7 @@ using dom
       {
         field.val = button.sel.item
         field.focus
+        field.fireModify(null)
       }
     }
 
