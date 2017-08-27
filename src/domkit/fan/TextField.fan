@@ -83,7 +83,7 @@ using dom
   internal Void fireAction(Event? e) { cbAction?.call(this) }
   private Func? cbAction := null
 
-  private Void fireModify(Event? e) { cbModify?.call(this) }
+  internal Void fireModify(Event? e) { cbModify?.call(this) }
   private Func? cbModify := null
 
   // framework use only
