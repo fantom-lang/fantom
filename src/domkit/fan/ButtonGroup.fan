@@ -33,7 +33,7 @@ using dom
 
   ** If 'true', child buttons will inherit the `enabled` state
   ** of this 'ButtonGroup'.  If 'false' buttons can be enabled
-  ** or diabled independent of group.
+  ** or disabled independent of group.
   Bool inheritEnabled := true
 
   ** Set enabled state for this button group.
@@ -100,6 +100,9 @@ using dom
       throw ArgErr("Invalid button for group '$b.typeof'")
     }
   }
+
+  // TODO: not sure how this works yet
+  @NoDoc Event? _event
 
   private Func? cbBeforeSelect
   private Func? cbSelect

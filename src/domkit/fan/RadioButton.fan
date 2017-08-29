@@ -50,7 +50,11 @@ using dom
   private Func? cbAction := null
   private Void fireAction(Event e)
   {
-    group?.select(this)
+    if (group != null)
+    {
+      group._event = e
+      group.select(this)
+    }
     cbAction?.call(this)
   }
 

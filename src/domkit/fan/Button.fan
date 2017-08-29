@@ -24,12 +24,14 @@ using dom
     {
       e.stop
       if (!enabled) return
+      this._event = e
       mouseDown = true
       doMouseDown
     }
     this.onEvent(EventType.mouseUp, false) |e|
     {
       if (!enabled) return
+      this._event = e
       doMouseUp
       if (mouseDown)
       {
@@ -41,12 +43,14 @@ using dom
     this.onEvent(EventType.mouseLeave, false) |e|
     {
       if (!mouseDown) return
+      this._event = e
       doMouseUp
       mouseDown = false
     }
     this.onEvent(EventType.keyDown, false) |e|
     {
       if (!enabled) return
+      this._event = e
       if (e.key == Key.space)
       {
         doMouseDown
@@ -145,7 +149,6 @@ using dom
 
   private Void fireAction(Event e)
   {
-    _event = e
     cbAction?.call(this)
   }
 
