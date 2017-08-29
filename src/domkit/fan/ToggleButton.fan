@@ -61,7 +61,11 @@ using dom
     if (mouseDown)
     {
       selected = !selected
-      group?.select(this)
+      if (group != null)
+      {
+        group._event = this._event
+        group.select(this)
+      }
     }
   }
 
