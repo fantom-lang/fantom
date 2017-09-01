@@ -9,6 +9,7 @@
 div.domkit-Combo {
   box-sizing: border-box;
   display: inline-block;
+  white-space: nowrap;
 }
 
 div.domkit-Combo input.domkit-TextField {
