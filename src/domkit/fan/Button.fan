@@ -51,7 +51,7 @@ using dom
     {
       if (!enabled) return
       this._event = e
-      if (e.key == Key.space)
+      if (e.key == Key.space || (this is ListButton && e.key == Key.down))
       {
         doMouseDown
         if (cbPopup == null) Win.cur.setTimeout(100ms) |->| { fireAction(e); doMouseUp }
