@@ -35,6 +35,7 @@ class Build : BuildPod
                "domkit 1.0"]
     srcDirs = [`fan/`]
     resDirs = [`res/`]
+    docApi  = false
   }
 }
 
