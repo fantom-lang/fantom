@@ -211,6 +211,8 @@ public class LocalFile
     file.setLastModified(time.toJava());
   }
 
+  public boolean isHidden() { return file.isHidden(); }
+
   public String osPath()
   {
     return file.getPath();

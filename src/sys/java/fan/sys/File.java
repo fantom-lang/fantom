@@ -138,6 +138,8 @@ public abstract class File
   public abstract DateTime modified();
   public abstract void modified(DateTime time);
 
+  public boolean isHidden() { return false; }
+
   public abstract String osPath();
 
   public abstract File parent();
