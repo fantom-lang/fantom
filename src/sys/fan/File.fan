@@ -155,6 +155,12 @@ abstract const class File
   abstract DateTime? modified
 
   **
+  ** Return if this file should be hidden to users.  On Unix hidden
+  ** files start with a dot and on Windows a metadata flag is used.
+  **
+  virtual Bool isHidden()
+
+  **
   ** Get this File as an operating system specific path on
   ** the local system.  If this File doesn't represent a
   ** path on the local file system then return null.
