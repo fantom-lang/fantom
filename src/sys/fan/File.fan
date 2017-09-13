@@ -390,37 +390,37 @@ abstract const class File
   abstract OutStream out(Bool append := false, Int? bufferSize := 4096)
 
   **
-  ** Convenience for [in.readAllBuf]`File.readAllBuf`.
+  ** Convenience for [in.readAllBuf]`InStream.readAllBuf`.
   ** The input stream is guaranteed to be closed.
   **
   Buf readAllBuf()
 
   **
-  ** Convenience for [in.readAllLines]`File.readAllLines`.
+  ** Convenience for [in.readAllLines]`InStream.readAllLines`.
   ** The input stream is guaranteed to be closed.
   **
   Str[] readAllLines()
 
   **
-  ** Convenience for [in.eachLine]`File.eachLine`.
+  ** Convenience for [in.eachLine]`InStream.eachLine`.
   ** The input stream is guaranteed to be closed.
   **
   Void eachLine(|Str line| f)
 
   **
-  ** Convenience for [in.readAllStr]`File.readAllStr`.
+  ** Convenience for [in.readAllStr]`InStream.readAllStr`.
   ** The input stream is guaranteed to be closed.
   **
   Str readAllStr(Bool normalizeNewlines := true)
 
   **
-  ** Convenience for [in.readProps()]`File.readProps`.
+  ** Convenience for [in.readProps()]`InStream.readProps`.
   ** The input stream is guaranteed to be closed.
   **
   Str:Str readProps()
 
   **
-  ** Convenience for [out.writeProps()]`File.writeProps`.
+  ** Convenience for [out.writeProps()]`OutStream.writeProps`.
   ** The output stream is guaranteed to be closed.
   **
   Void writeProps(Str:Str props)
