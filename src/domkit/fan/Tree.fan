@@ -22,6 +22,9 @@ using dom
   ** Constructor.
   new make(Obj obj) { this.obj = obj }
 
+  ** Parent node of this node, or 'null' if this node is a root.
+  TreeNode? parent { internal set }
+
   ** Backing object for this node.
   Obj obj { private set }
 
@@ -184,6 +187,7 @@ using dom
     {
       node.children.each |k|
       {
+        k.parent = node
         node.elem.add(toElem(node, k))
         doRefreshNode(k)
       }
