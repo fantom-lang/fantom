@@ -19,7 +19,7 @@ class TreeTest : DomkitTest
       it.style->width  = "300px"
       it.style->height = "90%"
       it.roots = testRoots
-      it.onSelect { echo("# sel: $tree.sel.item") }
+      it.onSelect { echo("# sel: $tree.sel.item [${tree.sel.item->parent}]") }
       it.onAction { echo("# ACTION: $tree.sel.item") }
       it.rebuild
     }
