@@ -509,16 +509,33 @@ public final class Uri
 
     private String substring(int start, int end, int section)
     {
-      if (!decoding) return str.substring(start, end);
-
       StringBuilder buf = new StringBuilder(end-start);
-      dpos = start;
-      while (dpos < end)
+      if (!decoding)
       {
-        int ch = nextChar(section);
-        if (nextCharWasEscaped && ch < delimEscMap.length && (delimEscMap[ch] & section) != 0)
-          buf.append('\\');
-        buf.append((char)ch);
+        int last = 0;
+        for (int i=start; i<end; ++i)
+        {
+          int ch = str.charAt(i);
+          if (last == '\\' && ch < delimEscMap.length && (delimEscMap[ch] & section) == 0)
+          {
+            buf.setLength(buf.length()-1); // don't allow backslash unless truly a delimiter
+          }
+          buf.append((char)ch);
+          last = last == '\\' && ch == '\\' ? 0 : ch;
+        }
+      }
+      else
+      {
+        dpos = start;
+        while (dpos < end)
+        {
+          int ch = nextChar(section);
+          if (nextCharWasEscaped && ch < delimEscMap.length && (delimEscMap[ch] & section) != 0)
+          {
+            buf.append('\\');  // if ch was an escaped delimiter
+          }
+          buf.append((char)ch);
+        }
       }
       return buf.toString();
     }
@@ -833,6 +850,11 @@ public final class Uri
       return false;
     else
       return pathStr.charAt(0) == '/';
+  }
+
+  public boolean isPathRel()
+  {
+    return !isPathAbs();
   }
 
   public boolean isPathOnly()

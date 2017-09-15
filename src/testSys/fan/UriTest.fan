@@ -12,7 +12,6 @@
 @Js
 class UriTest : Test
 {
-
 //////////////////////////////////////////////////////////////////////////
 // Def Val
 //////////////////////////////////////////////////////////////////////////
@@ -346,10 +345,12 @@ class UriTest : Test
     if (path == null)
     {
       verifyEq(uri.isPathAbs, false)
+      verifyEq(uri.isPathRel, true)
     }
     else
     {
       verifyEq(uri.isPathAbs, pathStr.startsWith("/"))
+      verifyEq(uri.isPathRel, !pathStr.startsWith("/"))
       verifyEq(uri.path.isRO, true)
       verifyEq(uri.isDir, pathStr.size > 0 && pathStr[-1] == '/')
       if (uri.isDir) verifyEq(uri.mimeType.toStr, "x-directory/normal")
@@ -657,6 +658,25 @@ class UriTest : Test
     verifyNorm("a/./b/c/../d..", `a/b/d..`)
     verifyNorm("/a/./b/../../d..", `/d..`)
     verifyNorm("a/./b/../c/d../", `a/c/d../`)
+
+    // escapes
+    verifyNorm(Str<|x\yz|>, `xyz`)
+    verifyNorm(Str<|x\/z|>, `x\/z`)
+    verifyNorm(Str<|\.|>, `.`)
+    verifyNorm(Str<|.\.|>, `..`)
+    verifyNorm(Str<|foo/bar/..|>, `foo/`)
+    verifyNorm(Str<|foo/bar/baz/..|>, `foo/bar/`)
+    verifyNorm(Str<|foo/bar/baz/\../..|>, `foo/`)
+    verifyNorm(Str<|foo/bar/baz/../.\./..|>, ``)
+    verifyNorm(Str<|foo/bar/baz/../\../\../..|>, `..`)
+    verifyNorm(Str<|foo/bar/baz/\../\../\../\../roo|>, `../roo`)
+    verifyNorm(Str<|foo/bar/baz/\../../roo|>, `foo/roo`)
+    verifyEq(Uri.decode(Str<|%2e%2e/foo|>), `../foo`)
+    verifyEq(Uri.decode(Str<|oo/bar/baz/%2e%2e/%2e%2e/%2e%2e/%2e%2e/roo|>), `../roo`)
+    verifyEq(Uri.decode(Str<|%5c|>), Uri.fromStr(Str<|\\|>))
+    verifyEq(Uri.decode(Str<|%5c%5c|>), Uri.fromStr(Str<|\\\\|>))
+    verifyEq(Uri.decode(Str<|%5c..|>), Uri.fromStr(Str<|\\..|>))
+    verifyEq(Uri.decode(Str<|%5c%5c..|>), Uri.fromStr(Str<|\\\\..|>))
 
     verifyEq(`.`.path, ["."])
     verifyEq(`.`.pathStr, ".")
@@ -1028,7 +1048,8 @@ class UriTest : Test
 
     verifyPath(`a\\/b`, Str<|a\\/b|>, [Str<|a\\|>, "b"])
 
-    verifyEq(`num\[2\] \@ foo`.name, "num\\[2\\] \\@ foo")
+    verifyEq(`num\[2\] \@ foo`.name, "num[2] @ foo")
+    verifyEq(Uri.fromStr(Str<|num\[2\] \@ foo|>).name, "num[2] @ foo")
 
     // query
     verifyEq(`foo?num=#3`.toStr,    "foo?num=#3")

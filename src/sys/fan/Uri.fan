@@ -297,7 +297,7 @@ const final class Uri
 
   **
   ** Return if the path starts with a leading slash.  If
-  ** pathStr is null, then return false.
+  ** pathStr is empty, then return false.
   **
   ** Examples:
   **   `http://foo/`.isPathAbs    =>  true
@@ -306,6 +306,12 @@ const final class Uri
   **   `../index.html`.isPathAbs  =>  false
   **
   Bool isPathAbs()
+
+  **
+  ** Return not of `isPathAbs` when path is empty
+  ** or does not start with a leading slash.
+  **
+  Bool isPathRel()
 
   **
   ** Return if this Uri contains only a path component.  The

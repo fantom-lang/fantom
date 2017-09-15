@@ -851,6 +851,11 @@ fan.sys.Uri.prototype.isPathAbs = function()
     return this.m_pathStr.charAt(0) == '/';
 }
 
+fan.sys.Uri.prototype.isPathRel = function()
+{
+  return !this.isPathAbs();
+}
+
 fan.sys.Uri.prototype.isPathOnly = function()
 {
   return this.m_scheme == null && this.m_host == null && this.m_port == null &&

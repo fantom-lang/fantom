@@ -459,6 +459,27 @@ class FileTest : Test
     verifyEq(g.path[-2], "dir\\#1")
     verifyEq(g.path[-1], "cool \\#5")
 
+    // backup
+    d1 := tempDir+`alpha\#1/`; d1.plus(`foo.txt`).out.print("alpha").close
+    d2 := d1+`bravo\#2/`;      d2.plus(`foo.txt`).out.print("bravo").close
+    d3 := d2+`charlie\#3/`;    d3.plus(`foo.txt`).out.print("charlie").close
+
+    // backup should work
+    verifyEq((d3+`foo.txt`).readAllStr, "charlie")
+    verifyEq((d3+`../foo.txt`).readAllStr, "bravo")
+    verifyEq((d3+`../../foo.txt`).readAllStr, "alpha")
+    verifyEq((d1+`bravo\#2/../foo.txt`).readAllStr, "alpha")
+    verifyEq((d1+`ignore/../foo.txt`).readAllStr, "alpha")
+
+    // should not work
+    verifyErr(IOErr#) { (d3+`\\../foo.txt`).readAllStr }
+    verifyErr(IOErr#) { (d3+`.\\./foo.txt`).readAllStr }
+    verifyErr(IOErr#) { (d3+`..\\/foo.txt`).readAllStr }
+    verifyErr(IOErr#) { (d3+`../\\../foo.txt`).readAllStr }
+    verifyErr(IOErr#) { (d3+Uri.decode("%5c../foo.txt")).readAllStr }
+    verifyErr(IOErr#) { (d3+Uri.decode(".%5c./foo.txt")).readAllStr }
+    verifyErr(IOErr#) { (d3+Uri.decode("..%5c/foo.txt")).readAllStr }
+
     // extra Windoze testing
     if (Env.cur.os == "win32")
     {

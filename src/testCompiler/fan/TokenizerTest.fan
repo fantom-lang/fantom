@@ -404,6 +404,9 @@ class TokenizerTest : Test
 
     verifyInvalid("`off end\n`")
     verifyInvalid("`off end")
+    verifyInvalid(Str<|`\..`|>)
+    verifyInvalid(Str<|`.\.`|>)
+    verifyInvalid(Str<|`\x`|>)
   }
 
   Void verifyUri(Str src, Str val)
