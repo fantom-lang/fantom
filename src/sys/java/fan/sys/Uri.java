@@ -115,6 +115,78 @@ public final class Uri
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Tokens
+//////////////////////////////////////////////////////////////////////////
+
+  public static String escapeToken(String str, long section)
+  {
+    int mask = sectionToMask(section);
+    StringBuilder buf = new StringBuilder(str.length()+4);
+    for (int i=0; i<str.length(); ++i)
+    {
+      int c = str.charAt(i);
+      if (c < delimEscMap.length && (delimEscMap[c] & mask) != 0)
+        buf.append((char)'\\');
+      buf.append((char)c);
+    }
+    return buf.toString();
+  }
+
+  public static String encodeToken(String str, long section)
+  {
+    int mask = sectionToMask(section);
+    StringBuilder buf = new StringBuilder(str.length()+4);
+    for (int i=0; i<str.length(); ++i)
+    {
+      int c = str.charAt(i);
+      if (c < 128 && (charMap[c] & mask) != 0 && (delimEscMap[c] & mask) == 0)
+        buf.append((char)c);
+      else
+        percentEncodeChar(buf, c);
+    }
+    return buf.toString();
+  }
+
+  public static String decodeToken(String str, long section)
+  {
+    int mask = sectionToMask(section);
+    if (str.length() == 0) return "";
+    return new Decoder(str, true).decodeToken(mask);
+  }
+
+  public static String unescapeToken(String str)
+  {
+    StringBuilder buf = new StringBuilder(str.length());
+    for (int i=0; i<str.length(); ++i)
+    {
+      int c = str.charAt(i);
+      if (c == '\\')
+      {
+        i++;
+        if (i>=str.length()) throw ArgErr.make("Invalid esc: " + str);
+        c = str.charAt(i);
+      }
+      buf.append((char)c);
+    }
+    return buf.toString();
+  }
+
+  private static int sectionToMask(long section)
+  {
+    switch ((int)section)
+    {
+      case 1:  return PATH;
+      case 2:  return QUERY;
+      case 3:  return FRAG;
+      default: throw ArgErr.make("Invalid section flag: " + section);
+    }
+  }
+
+  public static final long sectionPath  = 1;
+  public static final long sectionQuery = 2;
+  public static final long sectionFrag  = 3;
+
+//////////////////////////////////////////////////////////////////////////
 // Java Constructors
 //////////////////////////////////////////////////////////////////////////
 
@@ -414,6 +486,11 @@ public final class Uri
         path[n++] = pathStr.substring(segStart, pathStr.length());
 
       return new List(Sys.StrType, path);
+    }
+
+    String decodeToken(int mask)
+    {
+      return substring(0, str.length(), mask);
     }
 
     Map decodeQuery()

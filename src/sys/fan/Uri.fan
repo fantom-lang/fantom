@@ -145,6 +145,62 @@ const final class Uri
   static Void checkName(Str name)
 
 //////////////////////////////////////////////////////////////////////////
+// Tokens
+//////////////////////////////////////////////////////////////////////////
+
+  ** Path token section flag
+  static const Int sectionPath
+
+  ** Query token section flag
+  static const Int sectionQuery
+
+  ** Fragment token section flag
+  static const Int sectionFrag
+
+  **
+  ** Escape a token so that any delimter for the given section
+  ** is backslash escaped for use in normalized URI form.
+  ** Section must be `sectionPath`, `sectionQuery`, or `sectionFrag`.
+  **
+  ** Examples:
+  **    Uri.escapeToken("a/b#c", Uri.sectionPath)   =>  "a\/b\#c"
+  **    Uri.escapeToken("a=b/c", Uri.sectionQuery)  =>  "a\=b/c"
+  **
+  static Str escapeToken(Str s, Int section)
+
+  **
+  ** Unescape all backslash escape sequences.
+  **
+  ** Examples:
+  **   Uri.unescapeToken(Str<|a\#b|>)  =>  "a#b"
+  **
+  static Str unescapeToken(Str s)
+
+  **
+  ** Encode a token so that any invalid character or delimter for
+  ** the given section is "%xx" percent encoding.  Section must
+  ** be `sectionPath`, `sectionQuery`, or `sectionFrag`.  Also see
+  ** `decodeToken`.
+  **
+  ** Examples:
+  **   Uri.encodeToken("a/b#c", Uri.sectionPath)   =>  "a%2Fb%23c"
+  **   Uri.encodeToken("a=b/c", Uri.sectionQuery)  =>  "a%3Db/c"
+  **
+  static Str encodeToken(Str s, Int section)
+
+  **
+  ** Unescape "%xx" percent encoded string to its normalized form
+  ** for the given section.  Any delimiters for the section are
+  ** backslash escaped.  Section must be `sectionPath`, `sectionQuery`,
+  ** or `sectionFrag`.  Also see `encodeToken`.
+  **
+  ** Examples:
+  **   Uri.decodeToken("a%2Fb%23c", Uri.sectionPath)  =>  "a\/b\#c"
+  **   Uri.decodeToken("a%3Db/c", Uri.sectionQuery)   =>  "a\=b/c"
+  **
+  static Str decodeToken(Str s, Int section)
+
+//////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
