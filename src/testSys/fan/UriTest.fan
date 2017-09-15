@@ -1178,6 +1178,42 @@ class UriTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Tokens
+//////////////////////////////////////////////////////////////////////////
+
+  Void testTokens()
+  {
+    verifyToken("", Uri.sectionPath, "", "")
+    verifyToken("x", Uri.sectionPath, "x", "x")
+    verifyToken("Foo", Uri.sectionPath, "Foo", "Foo")
+    verifyToken("foo bar", Uri.sectionPath, "foo bar", "foo%20bar")
+    verifyToken("foo #1", Uri.sectionPath, "foo \\#1", "foo%20%231")
+    verifyToken("Δ°F", Uri.sectionPath, "Δ°F", "%CE%94%C2%B0F")
+    verifyToken("a/b?c", Uri.sectionPath, "a\\/b\\?c", "a%2Fb%3Fc")
+
+    verifyToken("foo=bar&baz", Uri.sectionQuery, "foo\\=bar\\&baz", "foo%3Dbar%26baz")
+    verifyToken("Δ # x", Uri.sectionQuery, "Δ \\# x", "%CE%94%20%23%20x")
+    verifyToken("a/b", Uri.sectionQuery, "a/b", "a/b")
+  }
+
+  Void verifyToken(Str s, Int section, Str escaped, Str encoded)
+  {
+    /*
+    echo
+    echo("--- str $s")
+    echo("    escape " + Uri.escapeToken(s, section))
+    echo("    encode " + Uri.encodeToken(s, section))
+    echo("  unescape " + Uri.unescapeToken(escaped))
+    echo("    decode " + Uri.decodeToken(encoded, section))
+    */
+
+    verifyEq(Uri.escapeToken(s, section), escaped)
+    verifyEq(Uri.encodeToken(s, section), encoded)
+    verifyEq(Uri.unescapeToken(escaped), s)
+    verifyEq(Uri.decodeToken(encoded, section), escaped)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Util
 //////////////////////////////////////////////////////////////////////////
 
