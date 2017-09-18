@@ -31,6 +31,9 @@ using dom
   ** than the number of children, then 'gaps' will be cycled to
   ** apply to all children.
   Str[] gaps := Str[,]
+  {
+    set { &gaps=it; applyStyle }
+  }
 
   protected override Void onAdd(Elem c)    { applyStyle }
   protected override Void onRemove(Elem c) { applyStyle }
