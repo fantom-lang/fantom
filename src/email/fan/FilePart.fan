@@ -41,7 +41,10 @@ class FilePart : EmailPart
 
     // default content-type to file mime type
     if (headers["Content-Type"] == null)
-      headers["Content-Type"] = file.mimeType.toStr
+    {
+      mime := file.mimeType ?: throw Err("Must specify Content-Type or file extension")
+      headers["Content-Type"] = mime.toStr
+    }
 
     // add name parameter
     mime := MimeType.fromStr(headers["Content-Type"])
