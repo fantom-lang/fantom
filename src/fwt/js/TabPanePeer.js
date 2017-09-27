@@ -9,7 +9,7 @@
 /**
  * TabPanePeer.
  */
-fan.fwt.TabPanePeer = fan.sys.Obj.$extend(fan.fwt.PanePeer);
+fan.fwt.TabPanePeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
 fan.fwt.TabPanePeer.prototype.$ctor = function(self) {}
 
 fan.fwt.TabPanePeer.prototype.selectedIndex = function(self) { return this.m_selectedIndex; }

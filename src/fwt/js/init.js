@@ -19,6 +19,40 @@ fan.fwt.DesktopPeer.clipboard  = function() { return fan.fwt.DesktopPeer.$clipbo
 fan.fwt.DesktopPeer.$clipboard = new fan.fwt.Clipboard();
 
 //
+// fwt::MenuItem CSS
+//
+fan.fwt.WidgetPeer.addCss(
+  "div._fwt_MenuItem_ {" +
+  " font:" + fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.sysFont()) + ";" +
+  " padding: 2px 12px 0px 12px;" +
+  " white-space: nowrap;" +
+  " -webkit-box-sizing: border-box;" +
+  "    -moz-box-sizing: border-box;" +
+  "         box-sizing: border-box;" +
+  "}" +
+  "div._fwt_MenuItem_ img {" +
+  "  padding: 2px 4px 3px 0;" +
+  "  vertical-align: middle;" +
+  "}" +
+  "div._fwt_MenuItem_.sep {" +
+  " margin: 6px 0 0 0;" +
+  " padding: 0 0 6px 0;" +
+  " border-top: 1px solid #dadada;" +
+  "}" +
+  "div._fwt_MenuItem_.disabled {" +
+  " color: #999;" +
+  "}" +
+  "div._fwt_MenuItem_:hover," +
+  "div._fwt_MenuItem_:focus {" +
+  " background: #3d80df;" +
+  " color: #fff;" +
+  "}" +
+  "div._fwt_MenuItem_.disabled:hover {" +
+  " background: none;" +
+  " color: #999;" +
+  "}");
+
+//
 // fwt::Combo CSS
 //
 if (fan.fwt.DesktopPeer.$isWebkit)
@@ -64,7 +98,7 @@ fan.fwt.WidgetPeer.addCss(
   " height: 19px;" +
   " padding: 5px 6px 4px 6px;" +
   " color: #fff;" +
-  " font: " + fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.$sysFont) + ";" +
+  " font: " + fan.fwt.WidgetPeer.fontToCss(fan.fwt.DesktopPeer.sysFont()) + ";" +
   // " textShadow: 0 -1px 1px #1c1c1c;" +
   " text-align: center;" +
   " border-bottom: 1px solid #282828;" +
