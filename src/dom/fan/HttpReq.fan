@@ -16,7 +16,7 @@
 class HttpReq
 {
   ** Create a new HttpReq instance.
-  new make(|This|? f)
+  new make(|This|? f := null)
   {
     if (f != null) f(this)
   }
