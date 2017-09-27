@@ -163,7 +163,13 @@ abstract class Test
 ** TestErr
 **************************************************************************
 
-internal const class TestErr : Err
+**
+** TestErr is thrown by `Test` when a test method fails a verify.
+**
+const class TestErr : Err
 {
+  **
+  ** Construct with specified error message and optional root cause.
+  **
   new make(Str? msg := null, Err? cause := null)
 }

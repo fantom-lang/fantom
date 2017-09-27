@@ -41,6 +41,7 @@
 - Float.isNegZero, normNegZero
 - compiler: fix to check invalid coercion with shortcut assignments
 - fandoc: add support for horizontal rules
+- Make sys::TestErr public
 
 *Build 1.0.69 (14 Jul 2016)*
 - Initial domkit code
