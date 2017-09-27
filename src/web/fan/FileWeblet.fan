@@ -65,11 +65,11 @@ class FileWeblet : Weblet
   }
 
   **
-  ** Checks if the file being served is under the given directory. If it is not
-  ** not a 404 response is immediately sent, short-circuiting any further
-  ** attempts to serve the file.
+  ** Checks if the file being served is under the given directory.
+  ** If it is not, a 404 response is immediately sent, short-circuiting
+  ** any further attempts to serve the file.
   **
-  **   FileWeblet(file).checkUnderDir(serveDir).onService
+  **   FileWeblet(file).checkUnderDir(dir).onService
   **
   This checkUnderDir(File dir)
   {
