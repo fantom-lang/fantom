@@ -28,7 +28,6 @@ class FileWeblet : Weblet
   **
   ** Constructor with file to service.
   **
-  **
   new make(File file)
   {
     if (file.isDir) throw ArgErr("FileWeblet cannot process dir")
@@ -65,9 +64,29 @@ class FileWeblet : Weblet
     return "\"" + file.size.toHex + "-" + file.modified.ticks.toHex + "\""
   }
 
+  **
+  ** Checks if the file being served is under the given directory. If it is not
+  ** not a 404 response is immediately sent, short-circuiting any further
+  ** attempts to serve the file.
+  **
+  **   FileWeblet(file).checkUnderDir(serveDir).onService
+  **
+  This checkUnderDir(File dir)
+  {
+    if (!dir.isDir) throw ArgErr("Not a directory: $dir")
+    if (!file.normalize.pathStr.startsWith(dir.normalize.pathStr)) res.sendErr(404)
+    return this
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Weblet
 //////////////////////////////////////////////////////////////////////////
+
+  override Void onService()
+  {
+    if (res.isDone) return
+    Weblet.super.onService
+  }
 
   **
   ** Handle GET request for the file.
