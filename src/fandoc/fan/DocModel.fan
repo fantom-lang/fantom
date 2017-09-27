@@ -203,7 +203,7 @@ abstract class DocElem : DocNode
   ** node (if applicable).  If the node is arlready parented
   ** thorw ArgErr. Return this.
   **
-  This add(DocNode node)
+  @Operator This add(DocNode node)
   {
     if (node.parent != null) throw ArgErr("Node already parented: $node")
     if (!kids.isEmpty)
