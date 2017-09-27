@@ -56,7 +56,7 @@ const class FileMod : WebMod
     if (!f.exists) { res.sendErr(404); return }
 
     // publish the file
-    FileWeblet(f).onService
+    FileWeblet(f).checkUnderDir(file).onService
   }
 
 }
