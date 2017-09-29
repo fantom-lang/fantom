@@ -46,8 +46,9 @@ class TreeTest : DomkitTest
 
 @Js class TestTreeNode : TreeNode
 {
-  new make(Str key, Int numKids := 5) : super(key)
+  new make(Str key, Int numKids := 5)
   {
+    this.key = key
     numKids.times |i| {
       kids.add(TestTreeNode("$key-$i", key.size < 5 ? 5 : 0))
     }
@@ -65,8 +66,10 @@ class TreeTest : DomkitTest
     elem.style->backgroundPosition = "0px center"
     elem.style->backgroundSize     = "14px 14px"
 
-    elem.text = "Node $obj"
+    elem.text = "Node $key"
   }
+  override Str toStr() { key }
+  private const Str key
   private Bool icon := true
   private TreeNode[] kids := [,]
 }
