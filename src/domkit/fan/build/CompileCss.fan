@@ -19,6 +19,10 @@ class CompileCss
   ** OutStream.  If 'close' is 'true', the stream is closed.
   Void compile(OutStream out, Bool close := true)
   {
+    // TODO: temp until we move this out; @import must be first rule
+    out.printLine("@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,700);")
+    out.printLine("@import url(https://fonts.googleapis.com/css?family=Roboto+Mono);")
+
     // process opts
     if (fullscreen)
     {
