@@ -30,7 +30,6 @@ class Build : BuildPod
                "graphics 1.0",
                "dom 1.0"]
     srcDirs = [`fan/`, `fan/build/`]
-//    resDirs = [`res/css/`]
-    resDirs = [`fanCss/`]
+    resDirs = [`css/`]
   }
 }
