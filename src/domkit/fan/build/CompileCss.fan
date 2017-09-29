@@ -12,10 +12,20 @@
 **
 class CompileCss
 {
+  ** If 'true' add CSS so that the <body> tag fills the viewport 100%.
+  Bool fullscreen := false
+
   ** Compile domkit css into single merged CSS file at the given
   ** OutStream.  If 'close' is 'true', the stream is closed.
   Void compile(OutStream out, Bool close := true)
   {
+    // process opts
+    if (fullscreen)
+    {
+      out.printLine("html{height:100%;}")
+      out.printLine("body{height:100%;overflow:hidden;}")
+    }
+
     // collect source css
     pod := Pod.find("domkit")
     src := pod.files.findAll |f| { f.ext == "css" }
