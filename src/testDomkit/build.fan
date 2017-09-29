@@ -43,7 +43,9 @@ class Build : BuildPod
   {
     // need to reflect this type to make build env happy
     css := scriptDir + `res/testDomkit.css`
-    Type.find("domkit::CompileCss").make->compile(css.out)
+    c := Type.find("domkit::CompileCss").make
+    c->fullscreen = true
+    c->compile(css.out)
     super.compile
   }
 }
