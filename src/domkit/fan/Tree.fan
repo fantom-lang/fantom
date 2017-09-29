@@ -17,16 +17,10 @@ using dom
 **
 ** See also: [docDomkit]`docDomkit::Controls#tree`
 **
-@Js class TreeNode
+@Js abstract class TreeNode
 {
-  ** Constructor.
-  new make(Obj obj) { this.obj = obj }
-
   ** Parent node of this node, or 'null' if this node is a root.
   TreeNode? parent { internal set }
-
-  ** Backing object for this node.
-  Obj obj { private set }
 
   ** Is this node expanded?
   Bool isExpanded() { expanded }
@@ -43,12 +37,7 @@ using dom
   virtual TreeNode[] children() { TreeNode#.emptyList }
 
   ** Callback to customize Elem for this node.
-  virtual Void onElem(Elem elem, TreeFlags flags)
-  {
-    elem.text = obj.toStr
-  }
-
-  override Str toStr() { obj.toStr }
+  abstract Void onElem(Elem elem, TreeFlags flags)
 
   internal Int? depth
   internal Elem? elem

@@ -35,6 +35,7 @@
 - domkit: add Table.onHeaderPopup
 - domkit: add Checkbox.indeterminate
 - domkit: add TreeNode.parent,isExpanded methods
+- domkit: make TreeNode abstract; remove Obj field/ctor arg
 - New docDomkit manual
 - Add options to Zip deflate in/out methods
 - Fandoc support for explicit img size
