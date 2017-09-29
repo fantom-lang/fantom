@@ -28,6 +28,9 @@ using dom
   ** Backing object for this node.
   Obj obj { private set }
 
+  ** Is this node expanded?
+  Bool isExpanded() { expanded }
+
   ** Return true if this has or might have children. This
   ** is an optimization to display an expansion control
   ** without actually loading all the children.  The

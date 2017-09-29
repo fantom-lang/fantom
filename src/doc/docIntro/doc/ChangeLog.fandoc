@@ -34,7 +34,7 @@
 - domkit: add ButtonGroup.enabled, inheritEnabled, onBeforeSelect
 - domkit: add Table.onHeaderPopup
 - domkit: add Checkbox.indeterminate
-- domkit: add TreeNode.parent method
+- domkit: add TreeNode.parent,isExpanded methods
 - New docDomkit manual
 - Add options to Zip deflate in/out methods
 - Fandoc support for explicit img size
