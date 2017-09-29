@@ -24,8 +24,7 @@ class TreeTest : DomkitTest
       it.rebuild
     }
 
-    add(Elem {
-      it.style.addClass("domkit-fill")
+    add(Box {
       it.style->padding="24px"
       tree,
     })
