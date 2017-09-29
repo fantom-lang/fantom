@@ -28,6 +28,7 @@ syntax: regexp
 
 # domkit
 ^src/domkit/res/css/
+^src/testDomkit/res/testDomkit.css
 
 # lib/
 ^lib/java/.*jar

@@ -29,56 +29,8 @@ class Build : BuildPod
                "concurrent 1.0",
                "graphics 1.0",
                "dom 1.0"]
-    srcDirs = [`fan/`]
-    resDirs = [`res/css/`]
-  }
-
-  @Target { help = "Compile to pod file and associated natives" }
-  override Void compile()
-  {
-    compileCss
-    super.compile
-  }
-
-  @Target { help = "Compile CSS" }
-  virtual Void compileCss()
-  {
-    log.info("compileCss [$podName]")
-    log.indent
-
-    srcDir  := scriptDir + `fanCss/`
-    resDir  := scriptDir + `res/css/`
-    outFile := resDir + `${podName}.css`
-
-    // clean up res/css/
-    resDir.delete
-    resDir.create
-    log.info("CleanUp [$resDir]")
-
-    // find css
-    srcFiles := srcDir.listFiles.sort |a,b| { a.name.localeCompare(b.name) }
-    log.info("FindCssFiles [$srcFiles.size files]")
-
-    // make sure Base.css is first
-    base := srcFiles.find |f| { f.name == "Base.css" }
-    srcFiles.moveTo(base, 0)
-
-    // merge css
-    out := outFile.out
-    srcFiles.each |f|
-    {
-      if (f.ext != "css") return
-      f.eachLine |line|
-      {
-        trim := line.trim
-        if (trim.isEmpty || trim.startsWith("//")) return
-        out.printLine(line)
-      }
-      out.printLine("").flush
-    }
-    out.sync.close
-    log.info("Merge [$outFile]")
-
-    log.unindent
+    srcDirs = [`fan/`, `fan/build/`]
+//    resDirs = [`res/css/`]
+    resDirs = [`fanCss/`]
   }
 }

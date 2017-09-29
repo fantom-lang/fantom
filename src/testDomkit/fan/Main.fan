@@ -77,7 +77,7 @@ const class DomkitTestMod : WebMod
     out.html
     out.head
       .title.w("Domkit Test").titleEnd
-      .includeCss(`/pod/domkit/res/css/domkit.css`)
+      .includeCss(`/pod/testDomkit/res/testDomkit.css`)
       .includeJs(`/pod/sys/sys.js`)
       .includeJs(`/tz.js`)
       .includeJs(`/units.js`)
