@@ -21,6 +21,7 @@ class TreeTest : DomkitTest
       it.roots = testRoots
       it.onSelect { echo("# sel: $tree.sel.item [${tree.sel.item->parent}]") }
       it.onAction { echo("# ACTION: $tree.sel.item") }
+      it.onTreeEvent("mousedown") |te| { echo("> $te") }
       it.rebuild
     }
 
