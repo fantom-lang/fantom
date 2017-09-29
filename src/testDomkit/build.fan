@@ -37,6 +37,15 @@ class Build : BuildPod
     resDirs = [`res/`]
     docApi  = false
   }
+
+  @Target { help = "Compile to pod file and associated natives" }
+  override Void compile()
+  {
+    // need to reflect this type to make build env happy
+    css := scriptDir + `res/testDomkit.css`
+    Type.find("domkit::CompileCss").make->compile(css.out)
+    super.compile
+  }
 }
 
 
