@@ -27,7 +27,6 @@ syntax: regexp
 ^adm/pngcrush
 
 # domkit
-^src/domkit/res/css/
 ^src/testDomkit/res/testDomkit.css
 
 # lib/
