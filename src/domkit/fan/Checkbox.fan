@@ -29,9 +29,7 @@ using dom
     Elem("label")
     {
       this,
-      content is Elem
-        ? content
-        : Elem("span") { it.style.addClass("domkit-Checkbox-label"); it.text=content.toStr },
+      content is Elem ? content : Label { it.text=content.toStr },
     }
   }
 

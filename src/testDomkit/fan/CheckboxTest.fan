@@ -19,6 +19,7 @@ class CheckboxTest : DomkitTest
       it.style->padding = "18px"
       it.cellStyle("*", "*", "padding: 18px")
       it.addRow([checks])
+      it.addRow([valign])
     })
   }
 
@@ -33,6 +34,29 @@ class CheckboxTest : DomkitTest
       it.addRow([Checkbox { it.checked=true; it.enabled=false }.wrap("Checkbox #4")])
       it.addRow([Checkbox { it.enabled=false }.wrap("Checkbox #5")])
       it.addRow([Checkbox { it.onAction |cb| { echo("checkbox: $cb.checked") }}.wrap("Echo onAction")])
+    }
+  }
+
+  Elem valign()
+  {
+    GridBox
+    {
+      it.cellStyle("*", "*", "padding-bottom: 12px")
+      it.addRow([FlowBox {
+        it.gaps = ["4px"]
+        Checkbox {}.wrap("Checkbox"),
+        Label { it.text="Label" },
+      }])
+      it.addRow([FlowBox {
+        it.gaps = ["6px"]
+        Checkbox {},
+        Label { it.text="Not Wrapped Align" },
+      }])
+      it.addRow([FlowBox {
+        it.gaps = ["4px"]
+        Checkbox {}.wrap("Checkbox"),
+        TextField {},
+      }])
     }
   }
 }

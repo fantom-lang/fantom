@@ -7,17 +7,21 @@
 //
 
 input.domkit-Checkbox {
+  position: relative;
+  bottom: -2px;
+  margin:  0;
+  padding: 0;
 }
 
-label input.domkit-Checkbox + span.domkit-Label,
-span.domkit-Checkbox-label {
-  padding-left: 4px;
+label input.domkit-Checkbox + span.domkit-Label {
+  padding-left: 6px;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
 }
 
-input.domkit-Checkbox[disabled] + span.domkit-Checkbox-label {
+// TODO: how do we handle this in base?
+input.domkit-Checkbox[disabled] + span.domkit-Label {
   opacity: 0.3;
 }

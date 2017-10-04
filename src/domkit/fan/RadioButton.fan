@@ -9,9 +9,9 @@
 using dom
 
 **
-** RadioButton displays a radio button.  RadioButtons must belong to
-** a RadioButtonGroup, where only one button in the group can be
-** selected at a time.
+** RadioButton displays a radio button.  RadioButtons should be belong to
+** a `ButtonGroup`, where only one button in the group can be selected at
+** a time.
 **
 ** See also: [docDomkit]`docDomkit::Controls#radioButton`
 **
@@ -31,9 +31,7 @@ using dom
     Elem("label")
     {
       this,
-      content is Elem
-        ? content
-        : Elem("span") { it.style.addClass("domkit-RadioButton-label"); it.text=content.toStr },
+      content is Elem ? content : Label { it.text=content.toStr },
     }
   }
 
