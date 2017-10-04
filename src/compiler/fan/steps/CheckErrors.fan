@@ -1274,7 +1274,7 @@ class CheckErrors : CompilerStep
 
     // if this call is not null safe, then verify that it's target isn't
     // a null safe call such as foo?.bar.baz
-    if (!call.isSafe && call.target is NameExpr && ((NameExpr)call.target).isSafe && call isnot ShortcutExpr)
+    if (!call.isSafe && call.target is NameExpr && ((NameExpr)call.target).isSafe)
     {
       err("Non-null safe call chained after null safe call", call.loc)
       return
