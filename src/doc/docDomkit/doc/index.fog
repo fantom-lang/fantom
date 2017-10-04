@@ -13,4 +13,5 @@
   [`Controls`, "Control library documentation"],
   [`Modals`,   "Modal library documentation"],
   [`Dnd`,      "Drag and drop documentation"],
+  [`Theming`,  "Customizing DomKit CSS"],
 ]
