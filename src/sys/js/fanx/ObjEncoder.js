@@ -96,7 +96,12 @@ fanx_ObjEncoder.prototype.writeComplex = function(type, obj, ser)
 
   var first = true;
   var defObj = null;
-  if (this.skipDefaults) defObj = fan.sys.ObjUtil.$typeof(obj).make();
+  if (this.skipDefaults)
+  {
+    // attempt to instantiate default object for type,
+    // this will fail if complex has it-block ctor
+    try { defObj = fan.sys.ObjUtil.$typeof(obj).make(); } catch(e) {}
+  }
 
   var fields = type.fields();
   for (var i=0; i<fields.size(); ++i)

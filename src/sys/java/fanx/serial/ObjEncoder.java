@@ -104,7 +104,12 @@ public class ObjEncoder
 
     boolean first = true;
     Object defObj = null;
-    if (skipDefaults) defObj = FanObj.typeof(obj).make();
+    if (skipDefaults)
+    {
+      // attempt to instantiate default object for type,
+      // this will fail if complex has it-block ctor
+      try { defObj = FanObj.typeof(obj).make(); } catch (Exception e) {}
+    }
 
     List fields = type.fields();
     for (int i=0; i<fields.sz(); ++i)
