@@ -1330,7 +1330,7 @@ class CheckErrorsTest : CompilerTest
          7,  8, "Null-safe operator on left hand side of assignment",
          8, 10, "Null-safe operator on left hand side of assignment",
          9,  8, "Null-safe operator on left hand side of assignment",
-         9,  8, "Cannot coerce 'sys::Int?' to 'sys::Int'",
+         9,  8, "Non-null safe call chained after null safe call",
         10,  5, "Cannot use null-safe call on non-nullable type '$podName::Foo'",
         11, 13, "Cannot use null-safe access on non-nullable type '$podName::Foo'",
         13, 13, "Cannot use '?:' operator on non-nullable type '$podName::Foo'",
@@ -1341,22 +1341,26 @@ class CheckErrorsTest : CompilerTest
   Void testSafeNavChaining()
   {
     verifyErrors(
-     "class Foo
-      {
-        Void func(Str? x)
+     """class Foo
         {
-          x?.size.toHex
-          x?.size->toHex
-          x?->size.toStr
-          x?->size->toStr
-          x?.size?.toHex   // ok
-          x?.size?.toHex.hash
-          x?.size?.toHex?.hash.toStr.size
-          y := foo?.foo.foo
-          foo?.foo.toStr
-        }
-        Foo? foo
-      }",
+          Void func(Str? x)
+          {
+            x?.size.toHex
+            x?.size->toHex
+            x?->size.toStr
+            x?->size->toStr
+            x?.size?.toHex   // ok
+            x?.size?.toHex.hash
+            x?.size?.toHex?.hash.toStr.size
+            y := foo?.foo.foo
+            foo?.foo.toStr
+
+            Uri? uri := null
+            echo(uri?.query["x"])
+          }
+          Foo? foo
+          Uri? list
+        }""",
 
        [
           5, 13, "Non-null safe call chained after null safe call",
@@ -1367,6 +1371,7 @@ class CheckErrorsTest : CompilerTest
          11, 26, "Non-null safe call chained after null safe call",
          12, 19, "Non-null safe field access chained after null safe call",
          13, 14, "Non-null safe call chained after null safe call",
+         16, 20, "Non-null safe call chained after null safe call",
        ])
   }
 
