@@ -18,7 +18,7 @@ using dom
   new make() : super("input")
   {
     this.set("type", "text")
-    this.style.addClass("domkit-TextField").addClass("domkit-border")
+    this.style.addClass("domkit-control domkit-control-text domkit-TextField")
     this.onEvent(EventType.input, false) |e|
     {
       checkUpdate

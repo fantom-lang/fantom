@@ -17,6 +17,6 @@ using dom
 {
   new make() : super("span")
   {
-    this.style.addClass("domkit-Label")
+    this.style.addClass("domkit-control domkit-Label")
   }
 }

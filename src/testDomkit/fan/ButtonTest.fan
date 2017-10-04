@@ -20,7 +20,7 @@ class ButtonTest : DomkitTest
       it.cellStyle("*", "*", "padding: 12px")
       it.addRow([buttons, menus])
       it.addRow([toggles, lists])
-      it.addRow([Elem {}, combos])
+      it.addRow([labels,  combos])
       it.addRow([groups1, groups2])
     }
 
@@ -37,6 +37,7 @@ class ButtonTest : DomkitTest
       Button { it.text="Button"; it.onAction { echo("# Button-1") }},
       Button { it.html="<b>Button</b>"; it.onAction { echo("# Button-2") }},
       Button { it.html="Disabled"; it.enabled=false; it.onAction { echo("# Button-3") }},
+      Button { it.onAction { echo("# Empty") }},  // no-text
     }
   }
 
@@ -79,6 +80,7 @@ class ButtonTest : DomkitTest
     {
       it.gaps = ["12px"]
       Button { it.text="Menu"; it.onPopup { menu1 }},
+      Button { it.text="Menu"; it.style.addClass("disclosure"); it.onPopup { menu1 }},
       Button { it.text="Stretch Menu to Fit Button"; it.onPopup { menu1 }},
     }
   }
@@ -175,6 +177,16 @@ class ButtonTest : DomkitTest
         ]
         it.onSelect |b| { echo("# item: $b.sel.item [$b.sel.index]") }
       },
+    }
+  }
+
+  Elem labels()
+  {
+    FlowBox
+    {
+      it.gaps = ["5px"]
+      Label  { it.text="Confirm?" },
+      Button { it.text="Yes" },
     }
   }
 

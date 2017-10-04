@@ -14,6 +14,8 @@ div.domkit-Combo {
 
 div.domkit-Combo input.domkit-TextField {
   width: calc(100% - 23px);
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 
 div.domkit-Combo div.domkit-Button {
@@ -21,7 +23,8 @@ div.domkit-Combo div.domkit-Button {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   width: 23px;
-  padding: 0;
+  padding-left:  0;
+  padding-right: 0;
 }
 
 div.domkit-Combo div.domkit-ListButton:before { right: 8px; }

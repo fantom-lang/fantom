@@ -8,7 +8,7 @@
 
 textarea.domkit-TextArea {
   box-sizing: border-box;
-  font: 13px 'Roboto';
+  font: inherit;
   padding: 4px;
   margin: 0;
   width: 100%;

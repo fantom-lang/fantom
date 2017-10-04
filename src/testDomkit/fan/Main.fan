@@ -89,7 +89,14 @@ const class DomkitTestMod : WebMod
       .includeJs(`/pod/domkit/domkit.js`)
       .includeJs(`/pod/testDomkit/testDomkit.js`)
       .style.w(
-       ".hidden { display: none; }")
+       "body {
+          font: 14px 'Helvetica Neue', Arial, sans-serif;
+          padding: 0;
+          margin: 0;
+          background: #fff;
+          color: #333;
+          line-height: 1.5;  /* for testing domkit-control */
+        }")
       .styleEnd
 
       env := Str:Str[:]
