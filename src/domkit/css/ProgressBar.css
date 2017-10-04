@@ -7,21 +7,5 @@
 //
 
 div.domkit-ProgressBar {
-  box-sizing: border-box;
-  display: inline-block;
-  background: #fff;
-  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 1px;
-  border: 1px solid #c8c8c8;
-  border-bottom-color: #aaa;
-  border-radius: 3px;
-  vertical-align: top;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  outline: none;
-  text-align: center;
   width: 200px;
-  height: 24px;
-  line-height: 24px;
 }

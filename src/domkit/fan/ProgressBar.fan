@@ -17,7 +17,7 @@ using dom
 {
   new make(|This|? f := null) : super("div")
   {
-    this.style.addClass("domkit-ProgressBar")
+    this.style.addClass("domkit-control domkit-control-button domkit-ProgressBar")
     if (f != null) f(this)
     update
   }
