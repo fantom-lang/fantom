@@ -1037,6 +1037,7 @@ class DateTimeTest : Test
     x = DateTime.make(2007, Month.may, 9, 15, 30, 0, 0, ny)
     verifyEq(x.toLocale("YYMMDD'T'hhmm"), "070509T1530")
     verifyEq(x.toLocale("'It is' k:mmaa!"), "It is 3:30pm!")
+    verifyEq(x.toLocale("''YY"), "'07")
 
     // errors
     verifyErr(ArgErr#) { x.toLocale("Y") }
@@ -1189,6 +1190,8 @@ class DateTimeTest : Test
     d := Date(2009, Month.jan, 10)
     verifyDateLocale(d, "D/M/YYYY", "10/1/2009")
     verifyDateLocale(d, "WWW D-MMM-YYYY", "Sat 10-Jan-2009")
+    verifyDateLocale(d, "DD MMM ''YY", "10 Jan '09")
+    verifyDateLocale(d, "'Tis is' DD MMM ''YY", "Tis is 10 Jan '09")
 
     verifyDateLocale(Date(1999, Month.mar, 2), "D-MMMM-YY", "2-March-99")
     verifyDateLocale(Date(2001, Month.oct, 23), "D-MMMM-YY", "23-October-01")
@@ -1243,10 +1246,14 @@ class DateTimeTest : Test
     verifyTimeLocale(Time(0, 0, 3), "k:mm:ss a", "12:00:03 a")
     verifyTimeLocale(Time(11, 59, 59), "k:mm:ss A", "11:59:59 A")
     verifyTimeLocale(Time(12, 0), "k:mm:ss aa", "12:00:00 pm")
+    verifyTimeLocale(Time(3, 0), "''h:mm 'time'", "'3:00 time")
 
     verifyNull(Time.fromLocale("xx:yy", "kk:mm", false))
     verifyErr(ParseErr#) { Time.fromLocale("3x:33", "kk:mm") }
     verifyErr(ParseErr#) { Time.fromLocale("10:7x", "kk:mm", true) }
+    verifyErr(ParseErr#) { Time.fromLocale("10:30", "''kk:mm") }
+    verifyErr(ParseErr#) { Time.fromLocale("10:30 ti", "kk:mm 'time'") }
+
   }
 
   Void verifyTimeLocale(Time t, Str pattern, Str expected, Time fromLocale := t)

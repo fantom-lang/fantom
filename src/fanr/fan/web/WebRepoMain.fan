@@ -21,7 +21,7 @@ class WebRepoMain : AbstractMain
   Int? httpPort := 80
 
   @Opt { help = "https port" }
-  Int? httpsPort := 443
+  Int? httpsPort := null
 
   @Opt { help = "username to use for authentication"; aliases=["u"] }
   Str? username

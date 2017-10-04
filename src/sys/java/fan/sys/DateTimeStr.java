@@ -79,6 +79,7 @@ class DateTimeStr
       // literals
       if (c == '\'')
       {
+        int numLiterals = 0;
         while (true)
         {
           ++i;
@@ -86,7 +87,9 @@ class DateTimeStr
           c = pattern.charAt(i);
           if (c == '\'') break;
           s.append((char)c);
+          numLiterals++;
         }
+        if (numLiterals == 0) s.append((char)'\'');
         continue;
       }
 
@@ -505,13 +508,22 @@ class DateTimeStr
           break;
 
         case '\'':
-          while (true)
+          if (n == 2) // '' means one '
           {
-            int expected = pattern.charAt(++i);
-            if (expected == '\'') break;
             int actual = str.charAt(pos++);
-            if (actual != expected)
-              throw new RuntimeException("Expected '" + (char)expected + "', not '" + (char)actual + "' [pos " + pos +"]");
+            if (actual != '\'')
+              throw new RuntimeException("Expected single quote, not '" + (char)actual + "' [pos " + pos +"]");
+          }
+          else
+          {
+            while (true)
+            {
+              int expected = pattern.charAt(++i);
+              if (expected == '\'') break;
+              int actual = str.charAt(pos++);
+              if (actual != expected)
+                throw new RuntimeException("Expected '" + (char)expected + "', not '" + (char)actual + "' [pos " + pos +"]");
+            }
           }
           break;
 
