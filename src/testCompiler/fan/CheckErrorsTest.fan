@@ -1848,9 +1848,12 @@ class CheckErrorsTest : CompilerTest
        {
          new make(Foo foo, |This| f)
          {
-           if (s != null) return // line 5 ok
-           if (foo.s != null) return  // line 6 not okay
-           if (Env.cur.homeDir == null) return // not okay
+           if (s != null) return  // line 5 ok
+           if (ni != null) return // line 6 ok
+           if (j != null) return  // line 7 not ok
+           if (this.f != null) return  // line 8 not ok
+           if (foo.s != null) return  // line 9 not okay
+           if (Env.cur.homeDir == null) return // 10 not okay
            x := s
            if (x != null) return // not okay
          }
@@ -1861,12 +1864,17 @@ class CheckErrorsTest : CompilerTest
          }
 
          const Str s
+         const Int? ni
+         const Int j
+         const Float f
        }",
        [
-         6, 13,  "Comparison of non-nullable type 'sys::Str' to null",
-         7, 17, "Comparison of non-nullable type 'sys::File' to null",
-         9, 9, "Comparison of non-nullable type 'sys::Str' to null",
-        14, 9,  "Comparison of non-nullable type 'sys::Str' to null",
+         7,  9, "Comparison of non-nullable type 'sys::Int' to null",
+         8, 14, "Comparison of non-nullable type 'sys::Float' to null",
+         9, 13, "Comparison of non-nullable type 'sys::Str' to null",
+        10, 17, "Comparison of non-nullable type 'sys::File' to null",
+        12,  9, "Comparison of non-nullable type 'sys::Str' to null",
+        17,  9, "Comparison of non-nullable type 'sys::Str' to null",
        ])
   }
 
