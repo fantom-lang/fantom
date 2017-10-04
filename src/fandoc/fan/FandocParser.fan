@@ -61,8 +61,8 @@ class FandocParser
 
   private Void header(Doc doc)
   {
-    if (!parseHeader) return
     skipBlankLines
+    if (!parseHeader) return
     while (curt !== LineType.eof && cur.startsWith("**"))
     {
       colon := cur.index(":")

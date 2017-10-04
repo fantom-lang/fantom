@@ -21,10 +21,15 @@ class FandocTest : Test
   {
     verifyDoc("*x*", ["<body>", ["<p>", ["<em>", "x"]]])
     verifyDoc("*foo*", ["<body>", ["<p>", ["<em>", "foo"]]])
+    verifyDoc("\n*foo*", ["<body>", ["<p>", ["<em>", "foo"]]])
     verifyDoc("alpha *foo* beta", ["<body>", ["<p>", "alpha ", ["<em>", "foo"], " beta"]])
 
     verifyDoc("**x**", ["<body>", ["<p>", ["<strong>", "x"]]])
+    verifyDoc("\n\n**x**", ["<body>", ["<p>", ["<strong>", "x"]]])
     verifyDoc("alpha **foo** beta", ["<body>", ["<p>", "alpha ", ["<strong>", "foo"], " beta"]])
+
+    ph := FandocParser { parseHeader = false }.parseStr("\n**foo**")
+    verifyDocNode(ph, ["<body>", ["<p>", ["<strong>", "foo"]]])
 
     // strong nested in emphasis
     verifyDoc("You know, *winter\n**really, really**\nsucks*!", ["<body>", ["<p>", "You know, ",
