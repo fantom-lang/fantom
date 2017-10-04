@@ -794,6 +794,7 @@ class CheckErrors : CompilerStep
     {
       CType? errType := c.errType
       if (errType == null) errType = ns.errType
+      checkTypeProtection(errType, c.loc)
       if (!errType.fits(ns.errType))
         err("Must catch Err, not '$c.errType'", c.errType.loc)
       else if (errType.fitsAny(caught))
