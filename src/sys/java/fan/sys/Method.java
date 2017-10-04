@@ -155,6 +155,20 @@ public class Method
   {
     MethodFunc(Type returns) { this.returns = returns; }
 
+    public Type typeof()
+    {
+      // lazily build FuncType for the method
+      if (this.funcType == null)
+      {
+        Type[] p = new Type[params.sz()];
+        for (int i=0; i<p.length; ++i)
+          p[i] = ((Param)params.get(i)).type();
+        this.funcType = new FuncType(p, returns);
+      }
+      return this.funcType;
+    }
+    private FuncType funcType;
+
     public Type returns() { return returns; }
     private final Type returns;
 
