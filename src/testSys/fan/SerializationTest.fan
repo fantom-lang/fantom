@@ -450,6 +450,10 @@ class SerializationTest : Test
     verifySer("""testSys::SerItBlock {a="A"; c="C", b="X"}""", SerItBlock { a = "A"; b = "X"; c="C" })
     obj := verifySer("""testSys::SerItBlock {a="A"; d=[1, 2, 3]}""", SerItBlock { a = "A"; b = "unset"; d = [1, 2, 3] })
     verifyEq(obj->d.isImmutable, true)
+
+    verifySer("""[testSys::SerItBlock { a="A!"; b="B!" }]""", [SerItBlock{it.a="A!";it.b="B!"}])
+    verifySer("""[testSys::SerItBlock { a="A!"; b="B!" }]""", [SerItBlock{it.a="A!";it.b="B!"}], ["skipDefaults":true])
+
     verifyErr(IOErr#) { verifySer("""testSys::SerItBlock {}""", null) }
   }
 
@@ -833,7 +837,7 @@ class SerializationTest : Test
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  Obj? verifySer(Str data, Obj? expected)
+  Obj? verifySer(Str data, Obj? expected, Str:Obj opts := ["indent":2])
   {
 //echo("===================")
 //echo(data)
@@ -843,7 +847,7 @@ class SerializationTest : Test
     verifyEq(x, expected)
 
     // verify writeObj via round trip
-    doc := Buf.make.writeObj(expected, ["indent":2]).flip.readAllStr
+    doc := Buf.make.writeObj(expected, opts).flip.readAllStr
 //echo("-------------------")
 //echo(doc)
     z := Buf.make.print(doc).flip.readObj
