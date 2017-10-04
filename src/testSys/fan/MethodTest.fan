@@ -98,12 +98,28 @@ class MethodTest : Test
   Void dummy6(|Float a, Int b, Bool c, Str d, Float e, Int f, Bool g, Str h, Type i, Slot j| x) {}
 
   Void x0() {}
-  Str?  x1() { return null }
+  Str? x1() { return null }
   Void x2(Float x) {}
   Str? x3(Float x, Int y) { return null }
   Str? x4(Float a, Int b, Bool c, Str d, Float e, Int f, Bool g, Str h) { return null }
   Str? x5(Float a, Int b, Bool c, Str d, Float e, Int f, Bool g, Str h, Type i) { return null }
   Void x6(Float a, Int b, Bool c, Str d, Float e, Int f, Bool g, Str h, Type i, Slot j) {}
+
+  Void testFuncTypeof()
+  {
+    verifyFuncTypeof(#x0, |->|#)
+    verifyFuncTypeof(#x1, |->Str?|#)
+    verifyFuncTypeof(#x2, |Float|#)
+    verifyFuncTypeof(#x3, |Float,Int->Str?|#)
+    verifyFuncTypeof(#x4, |Float,Int,Bool,Str,Float,Int,Bool,Str->Str?|#)
+  }
+
+  Void verifyFuncTypeof(Method m, Type expected)
+  {
+    verifyEq(m.func.typeof, expected)
+    verifySame(m.func, m.func)
+    verifySame(m.func.typeof, m.func.typeof)
+  }
 
   Void testReflectMethodParam()
   {
