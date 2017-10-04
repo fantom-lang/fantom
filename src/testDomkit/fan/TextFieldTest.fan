@@ -99,6 +99,13 @@ class TextFieldTest : DomkitTest
         it.val = "Can't edit\n  me!\nSo there!"
         it.onModify |f| { echo("a2: $f.val") }
       }])
+      it.addRow([TextArea
+      {
+        it.cols = 40
+        it.rows = 5
+        it.enabled = false
+        it.val = "Disabled\nDude"
+      }])
     }
   }
 }

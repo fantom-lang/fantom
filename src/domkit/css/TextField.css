@@ -8,11 +8,6 @@
 
 input.domkit-TextField {}
 
-// TODO: fold down to control-text?
-input.domkit-TextField[readonly] {
-  background: #f8f8f8;
-}
-
 input.domkit-TextField[type='password'] {
   font-family: sans-serif;
 }

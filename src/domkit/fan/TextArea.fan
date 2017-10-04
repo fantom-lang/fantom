@@ -17,7 +17,7 @@ using dom
 {
   new make() : super("textarea")
   {
-    this.style.addClass("domkit-TextArea").addClass("domkit-border")
+    this.style.addClass("domkit-control domkit-control-text domkit-TextArea") //.addClass("domkit-border")
     this.onEvent(EventType.input, false) |e| { fireModify(e) }
   }
 
