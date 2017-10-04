@@ -286,6 +286,7 @@ const final class DateTime
   **   zzz    Time zone abbr             EST, EDT
   **   zzzz   Time zone name             New_York
   **   'xyz'  Literal characters
+  **   ''     Single quote literal
   **
   ** A symbol immediately preceding a "F" pattern with a no
   ** fraction to print is skipped.

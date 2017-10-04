@@ -7,28 +7,29 @@
 //
 
 **
-** Macro provides a way to replace macro expressions within text
-** using a pluggable implementation for the macro resolution.
+** Macro provides a way to replace macro expressions within a pattern
+** using a pluggable implementation for the macro resolution. See
+** `apply` for macro syntax.
 **
-@Js class Macro
+@Js const class Macro
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  ** Create a macro for the given text.
-  new make(Str text)
+  ** Create a macro for the given pattern.
+  new make(Str pattern)
   {
-    this.text = text
+    this.pattern = pattern
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  ** The unresolved macro text
-  const Str text
+  ** The unresolved macro pattern
+  const Str pattern
 
   // Modes
   private static const Int norm    := 0
@@ -38,11 +39,11 @@
 // Macro
 //////////////////////////////////////////////////////////////////////////
 
-  ** The text is scanned for keys delimited by
+  ** The `pattern` text is scanned for keys delimited by
   ** '{{' and '}}'. The text between the delimiters is the key.
   ** The supplied callback is invoked to resolve the key and the macro
-  ** is replaced with that value in the text. Returns the new text
-  ** after the macro has been applied. Throws `sys::ParseErr` if the text
+  ** is replaced with that value in the text. Returns the resulting Str
+  ** after the macro has been applied. Throws `sys::ParseErr` if the pattern
   ** contains invalid macros.
   **
   **   Macro("{{hello}} {{world}}!").apply { it.upper } => HELLO WORLD!
@@ -61,7 +62,7 @@
     keyBuf := StrBuf()
     pos    := 0
     start  := -1
-    size   := text.size
+    size   := pattern.size
     mode   := norm
 
     while (true)
@@ -71,7 +72,7 @@
       {
         if (pos == size) break
 
-        if (text[pos] == '{' && text.getSafe(pos+1) == '{')
+        if (pattern[pos] == '{' && pattern.getSafe(pos+1) == '{')
         {
           mode  = inMacro
           start = pos
@@ -80,15 +81,15 @@
         }
         else
         {
-          resBuf.addChar(text[pos++])
+          resBuf.addChar(pattern[pos++])
         }
       }
       // inside a macro
       else if (mode == inMacro)
       {
-        if (pos == size) throw ParseErr("Unterminated macro at index $start: $text")
+        if (pos == size) throw ParseErr("Unterminated macro at index $start: $pattern")
 
-        if (text[pos] == '}' && text.getSafe(pos+1) == '}')
+        if (pattern[pos] == '}' && pattern.getSafe(pos+1) == '}')
         {
           mode = norm
           pos += 2
@@ -98,10 +99,10 @@
         }
         else
         {
-          keyBuf.addChar(text[pos++])
+          keyBuf.addChar(pattern[pos++])
         }
       }
-      else throw Err("Illegal State: mode [$mode] pos [$pos]: $text")
+      else throw Err("Illegal State: mode [$mode] pos [$pos]: $pattern")
     }
     return resBuf.toStr
   }

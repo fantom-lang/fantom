@@ -794,6 +794,7 @@ class CheckErrors : CompilerStep
     {
       CType? errType := c.errType
       if (errType == null) errType = ns.errType
+      checkTypeProtection(errType, c.loc)
       if (!errType.fits(ns.errType))
         err("Must catch Err, not '$c.errType'", c.errType.loc)
       else if (errType.fitsAny(caught))
@@ -937,12 +938,14 @@ class CheckErrors : CompilerStep
     t := expr.operand.ctype
     if (t.isNullable) return
 
-    // check if operand is inside it-block ctor
+    // check if operand is inside it-block ctor; we allow null checks
+    // on non-nullable fields (like Str) during construction, but not
+    // value types (like Int)
     if (curMethod != null && curMethod.isItBlockCtor)
     {
       // check that operand is this.{field} access
       field := expr.operand as FieldExpr
-      if (field != null && field.target != null && field.target.id == ExprId.thisExpr)
+      if (field != null && field.target != null && field.target.id == ExprId.thisExpr && !field.ctype.isVal)
         return
     }
 
@@ -1271,7 +1274,7 @@ class CheckErrors : CompilerStep
 
     // if this call is not null safe, then verify that it's target isn't
     // a null safe call such as foo?.bar.baz
-    if (!call.isSafe && call.target is NameExpr && ((NameExpr)call.target).isSafe && call isnot ShortcutExpr)
+    if (!call.isSafe && call.target is NameExpr && ((NameExpr)call.target).isSafe)
     {
       err("Non-null safe call chained after null safe call", call.loc)
       return
