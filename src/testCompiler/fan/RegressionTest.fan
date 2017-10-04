@@ -800,6 +800,23 @@ class RegressionTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #2540 With block on value type
+//////////////////////////////////////////////////////////////////////////
+
+  Void test2540()
+  {
+    verifyErrors(
+      """class Foo
+         {
+           Void foo() { [,].map |f| { 10 {echo(f)} } }
+         }""",
+       [
+         3, 30, "Cannot call 'Obj.with' on value type",
+       ])
+
+  }
+
 
 }
 
