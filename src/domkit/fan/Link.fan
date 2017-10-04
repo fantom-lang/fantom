@@ -15,7 +15,7 @@ using dom
 {
   new make() : super("a")
   {
-    this.style.addClass("domkit-Link")
+    this.style.addClass("domkit-control domkit-Link")
   }
 
   ** The target attribute specifies where to open the linked document.
