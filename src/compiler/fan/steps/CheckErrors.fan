@@ -1287,6 +1287,7 @@ class CheckErrors : CompilerStep
     {
       if (call.target.ctype.isVal || call.method.parent.isVal)
       {
+        if (name == "with") return err("Cannot call 'Obj.with' on value type", call.target.loc)
         call.target = coerce(call.target, call.method.parent) |->|
         {
           err("Cannot coerce '$call.target.ctype' to '$call.method.parent'", call.target.loc)
