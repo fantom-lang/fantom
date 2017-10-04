@@ -1545,7 +1545,11 @@ public class Parser : CompilerSupport
       case Token.trueKeyword:     consume; return LiteralExpr.makeTrue(loc, ns)
       case Token.pound:           consume; return SlotLiteralExpr(loc, curType, consumeId)
     }
-    throw err("Expected expression, not '" + cur + "'")
+
+    if (curt == Token.pipe)
+      throw err("Invalid closure expression (check types)")
+    else
+      throw err("Expected expression, not '" + cur + "'")
   }
 
   **
