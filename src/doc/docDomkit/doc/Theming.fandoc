@@ -1,0 +1,57 @@
+**************************************************************************
+** title:      Theming
+** author:     Andy Frank
+** created:    2 Oct 2017
+** copyright:  Copyright (c) 2017, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+DomKit is designed to be customized purely in CSS by overriding style classes.
+Controls primarily inherit from the following "base" style classes:
+
+   .domkit-control
+   .domkit-control-button
+   .domkit-control-text
+
+Each DomKit control type further defines a specific style class using the
+convention 'domkit-<TypeName>'.  For example [Button]`domkit::Button` uses the
+class 'domkit-Button'.
+
+Fonts [#fonts]
+**************
+DomKit inherits all fonts from a parent or '<body>'. Setting the font on your
+page should be all that is needed to customize control fonts. The "base"
+control styles or specific type classes can be used to customize specific
+controls.
+
+Valign [#valign]
+****************
+Controls are designed to automatically vertical align when placed inline with
+each other. Since controls are font agnostic (see Fonts above) this is
+accomplished by giving all controls a consistent 'line-height' and adjusting
+'padding' to account for borders.
+
+Borders [#borders]
+******************
+TODO
+
+Selection [#select]
+*******************
+TODO
+
+Sample [#sample]
+****************
+Below is a sample starting point for a custom style sheet:
+
+TODO
+
+   .domkit-control {
+   }
+
+   .domkit-control-button {
+   }
+
+   .domkit-control-text {
+   }
