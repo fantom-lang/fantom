@@ -54,7 +54,7 @@
   vertical-align: top;
 }
 
-.domkit-control:empty:before {
+.domkit-control:not(input):empty:before {
   content: "\200b";
 }
 

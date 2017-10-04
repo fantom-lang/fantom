@@ -7,16 +7,21 @@
 //
 
 input.domkit-RadioButton {
+  position: relative;
+  bottom: -2px;
+  margin:  0;
+  padding: 0;
 }
 
-span.domkit-RadioButton-label {
-  padding-left: 4px;
+label input.domkit-RadioButton + span.domkit-Label {
+  padding-left: 6px;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
 }
 
-input.domkit-RadioButton[disabled] + span.domkit-RadioButton-label {
+// TODO: how do we handle this in base?
+input.domkit-RadioButton[disabled] + span.domkit-Label {
   opacity: 0.3;
 }
