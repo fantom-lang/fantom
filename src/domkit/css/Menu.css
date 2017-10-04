@@ -15,7 +15,9 @@ div.domkit-Menu {
 }
 
 div.domkit-MenuItem {
-  padding: 4px 20px 4px 10px;
+  display: block;
+  padding-left: 10px;
+  padding-right: 20px;
   min-width: 100px;
   cursor: default;
 }

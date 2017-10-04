@@ -19,10 +19,11 @@ using dom
 {
   new make() : super()
   {
-    this.style.addClass("domkit-ListButton")
+    this.style.addClass("domkit-ListButton disclosure-list")
     this.isList = true
     this.sel = ListButtonSelection(this)
     this.onPopup { makeLisbox }
+    this.update
   }
 
   ** The current list items.
@@ -56,7 +57,8 @@ using dom
   {
     if (isCombo) return
     this.removeAll
-    if (items.size > 0) this.add(makeElem(sel.item))
+    if (items.size == 0) this.add(Elem { it.text = "\u200b" })
+    else this.add(makeElem(sel.item))
   }
 
   ** Fire select event.

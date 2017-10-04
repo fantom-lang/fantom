@@ -6,24 +6,19 @@
 //   19 Dec 2014  Andy Frank  Creation
 //
 
-body {
-  font: 13px 'Roboto', Courier;
-  line-height: 13px;
-  padding: 0;
-  margin: 0;
-  background: #fff;
-  color: #333;
-}
-
-a {
-  color: #2980b9;
-}
+//
+// Borders
+//
 
 .domkit-border { border: 1px solid #bbb; }
 .domkit-border-top    { border-top:    1px solid #bbb; }
 .domkit-border-right  { border-right:  1px solid #bbb; }
 .domkit-border-bottom { border-bottom: 1px solid #bbb; }
 .domkit-border-left   { border-left:   1px solid #bbb; }
+
+//
+// Selection
+//
 
 .domkit-sel {
   background-color: #dcdcdc !important;
@@ -39,14 +34,140 @@ a {
   color: #fff !important;
 }
 
-.domkit-font-mono {
-  font: 12px 'Roboto Mono', monospace !important;
-  line-height: 16px !important;
-}
-
 .domkit-noselect {
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+}
+
+//
+// control
+//
+
+.domkit-control {
+  box-sizing: border-box;
+  display: inline-block;
+  font: inherit;
+  padding: 5px 0;
+  line-height: 1.2;
+  vertical-align: top;
+}
+
+.domkit-control:empty:before {
+  content: "\200b";
+}
+
+.domkit-control[disabled],
+.domkit-control.disabled { opacity: 0.3; }
+
+//
+// control-button
+//
+
+.domkit-control-button {
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  padding: 4px 10px;
+  cursor: default;
+  text-align: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.domkit-control-button:hover { background: #f5f5f5; }
+.domkit-control-button.down  { background: #ddd; }
+.domkit-control-button.selected,
+.domkit-control-button.selected:hover {
+  background-color: #3498db;
+  color: #fff;
+  border-color: #2c7fb7;
+}
+
+//
+// control-text
+//
+
+.domkit-control-text {
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 2px;
+  margin: 0;
+  padding: 4px;
+}
+
+//
+// control.group
+//
+
+.domkit-control.group-left {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.domkit-control.group-middle {
+  border-radius: 0;
+  border-left: none;
+}
+
+.domkit-control.group-right {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: none;
+}
+
+//
+// control.disclosure
+//
+
+.domkit-control.disclosure {
+  position: relative;
+  text-align: left;
+  padding-right: 20px;
+  overflow: hidden;
+}
+
+.domkit-control.disclosure:after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 2px);
+  right: 5px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #555;
+}
+
+.domkit-control.disclosure-list {
+  position: relative;
+  text-align: left;
+  padding-right: 20px;
+  overflow: hidden;
+}
+
+.domkit-control.disclosure-list:before {
+  content: "";
+  position: absolute;
+  top: calc(50% - 6px);
+  right: 5px;
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-bottom: 4px solid #555;
+}
+
+.domkit-control.disclosure-list:after {
+  content: "";
+  position: absolute;
+  bottom: calc(50% - 6px);
+  right: 5px;
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-top: 4px solid #555;
 }

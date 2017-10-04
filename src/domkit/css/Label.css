@@ -6,7 +6,4 @@
 //   4 Nov 2015  Andy Frank  Creation
 //
 
-span.domkit-Label {
-  height: 24px;
-  line-height: 24px;
-}
+span.domkit-Label {}

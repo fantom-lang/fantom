@@ -27,9 +27,13 @@ class TextFieldTest : DomkitTest
     GridBox
     {
       it.cellStyle("*", "*", "padding: 12px;")
-      it.addRow([TextField
-      {
-        it.onAction |f| { echo("f1: $f.val") }
+      it.addRow([FlowBox {
+        it.gaps = ["5px"]
+        Label { it.text="Username:" },
+        TextField
+        {
+          it.onAction |f| { echo("f1: $f.val") }
+        },
       }])
       it.addRow([TextField
       {

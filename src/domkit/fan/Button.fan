@@ -18,7 +18,7 @@ using dom
 {
   new make() : super()
   {
-    this.style.addClass("domkit-Button")
+    this.style.addClass("domkit-control domkit-control-button domkit-Button")
     this->tabIndex = 0
     this.onEvent(EventType.mouseDown, false) |e|
     {

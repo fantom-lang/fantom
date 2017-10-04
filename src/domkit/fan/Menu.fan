@@ -136,7 +136,7 @@ using dom
 {
   new make() : super()
   {
-    this.style.addClass("domkit-MenuItem")
+    this.style.addClass("domkit-control domkit-MenuItem")
   }
 
   ** Callback when item is selected.
