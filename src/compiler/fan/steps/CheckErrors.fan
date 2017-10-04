@@ -937,12 +937,14 @@ class CheckErrors : CompilerStep
     t := expr.operand.ctype
     if (t.isNullable) return
 
-    // check if operand is inside it-block ctor
+    // check if operand is inside it-block ctor; we allow null checks
+    // on non-nullable fields (like Str) during construction, but not
+    // value types (like Int)
     if (curMethod != null && curMethod.isItBlockCtor)
     {
       // check that operand is this.{field} access
       field := expr.operand as FieldExpr
-      if (field != null && field.target != null && field.target.id == ExprId.thisExpr)
+      if (field != null && field.target != null && field.target.id == ExprId.thisExpr && !field.ctype.isVal)
         return
     }
 
