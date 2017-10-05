@@ -16,17 +16,3 @@ div.domkit-Button:focus {
   z-index: 2;
   position: relative;  /* needed to make z-index work */
 }
-
-// TODO: I think this moves to somethign like
-//  .domkit-control-button ".def-action" ??
-
-div.domkit-Button.domkit-def {
-  background: #3498db;
-  color: #fff;
-  border-color: #1d7fbf;
-  border-bottom-color: #0d5c91;
-}
-
-div.domkit-Button.domkit-def.down {
-  background: #1d7fbf;
-}
