@@ -69,11 +69,6 @@ div.domkit-Table-thead {
   /* style */
   box-sizing: border-box;
   background: #ececee;
-  /*
-  background: -webkit-linear-gradient(top, #f0f0f0, #e2e2e2);
-  background:    -moz-linear-gradient(top, #f0f0f0, #e2e2e2);
-  background:         linear-gradient(top, #f0f0f0, #e2e2e2);
-  */
   border-bottom: 1px solid #a9a9a9;
 }
 
