@@ -146,6 +146,29 @@ fan.dom.WinPeer.eval = function(js)
 }
 
 //////////////////////////////////////////////////////////////////////////
+// Scrolling
+//////////////////////////////////////////////////////////////////////////
+
+fan.dom.WinPeer.prototype.scrollPos = function(self)
+{
+  var x = this.win.scrollX;
+  var y = this.win.scrollY;
+  if (!this.m_scrollPos || this.m_scrollPos.m_x != x || this.m_scrollPos.m_y != y)
+    this.m_scrollPos = fan.dom.Pos.make(x, y);
+  return this.m_scrollPos;
+}
+
+fan.dom.WinPeer.prototype.scrollTo = function(self, x, y)
+{
+  this.win.scrollTo(x, y)
+}
+
+fan.dom.WinPeer.prototype.scrollBy = function(self, x, y)
+{
+  this.win.scrollBy(x, y)
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Uri
 //////////////////////////////////////////////////////////////////////////
 

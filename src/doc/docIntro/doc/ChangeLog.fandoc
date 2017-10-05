@@ -14,6 +14,7 @@
 - dom: formalize Elem attr vs prop; get/set routes to attr; trap to prop
 - dom: remove Elem.draggable (use elem->draggable)
 - dom: Win.confirm
+- dom: Win.scrollPos, scrollTo, scrollBy
 - dom: Doc.activeElem, Doc.head
 - dom: Doc.elem -> elemById
 - dom: Doc.exec
