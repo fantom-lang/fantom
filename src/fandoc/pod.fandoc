@@ -105,6 +105,9 @@ pre>
 - I mean it!
 <pre
 
+Blocks annotated with the 'pre>' token are trimmed based on the line
+with the left most margin.
+
 Unordered List [#ul]
 ********************
 Unordered lists use a dash followed by a space.  Use indentation
