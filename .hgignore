@@ -27,7 +27,7 @@ syntax: regexp
 ^adm/pngcrush
 
 # domkit
-^src/testDomkit/res/testDomkit.css
+^src/domkit/res/css
 
 # lib/
 ^lib/java/.*jar
