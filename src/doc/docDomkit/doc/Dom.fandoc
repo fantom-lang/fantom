@@ -223,8 +223,8 @@ Convenience methods are available for the common request methods:
   HttpReq { uri=`/foo` }.post("some content") |res| {...}
   HttpReq { uri=`/foo` }.postForm(["name":"Barney Stinson"]) |res| {...}
 
-The postForm will automatically encode the request to look like a normal HTML
-form submission.
+The postForm method will automatically encode the request to look like a normal
+HTML form submission.
 
 Example setting request headers:
 

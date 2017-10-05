@@ -14,12 +14,25 @@ class GridBoxTest : DomkitTest
 {
   new make()
   {
-    update
+    this.add(SashBox {
+      it.style->padding = "20px"
+      it.dir = Dir.down
+      it.sizes = ["auto", "20px", "auto"]
+      example,
+      Box {},
+      Box {
+        docDomkit.with {
+          it.style.addClass("domkit-border")
+          it.style->width   = "auto"
+          it.style->display = "inline-block"
+        },
+      },
+    })
   }
 
-  Void update()
+  Elem example()
   {
-    grid := GridBox
+    GridBox
     {
       it.cellStyle("*",   "*",  "padding: 4px")
       it.cellStyle("*", "odd",  "background: #eee")
@@ -44,8 +57,25 @@ class GridBoxTest : DomkitTest
       it.addRow([label("Site B"), null, label("735kw")])
       it.addRow([label("Site C"), null, label("2580kw")])
     }
+  }
 
-    removeAll.add(grid)
+  Elem docDomkit()
+  {
+    GridBox
+    {
+      it.cellStyle("*",    "*", "padding: 4px")
+      it.cellStyle("*", "even", "background: #f8f8f8")
+      it.cellStyle("*",     4,  "background: #e8e8e8; border-top: 1px solid #ccc")
+
+      it.addRow([Label {
+        it.text = "Enter User Information"
+        it.style->fontWeight = "bold"
+      }], [2])
+      it.addRow([Label { it.text="First Name:"  }, TextField {}])
+      it.addRow([Label { it.text="Middle Name:" }, TextField {}])
+      it.addRow([Label { it.text="Last Name:"   }, TextField {}])
+      it.addRow([null, Button { it.text="Submit" }])
+    }
   }
 
   private Label label(Str text) { Label { it.text=text } }
