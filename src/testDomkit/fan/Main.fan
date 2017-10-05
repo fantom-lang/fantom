@@ -77,7 +77,7 @@ const class DomkitTestMod : WebMod
     out.html
     out.head
       .title.w("Domkit Test").titleEnd
-      .includeCss(`/pod/testDomkit/res/testDomkit.css`)
+      .includeCss(`/pod/domkit/res/css/domkit.css`)
       .includeJs(`/pod/sys/sys.js`)
       .includeJs(`/tz.js`)
       .includeJs(`/units.js`)
@@ -89,7 +89,10 @@ const class DomkitTestMod : WebMod
       .includeJs(`/pod/domkit/domkit.js`)
       .includeJs(`/pod/testDomkit/testDomkit.js`)
       .style.w(
-       "body {
+       "html { height: 100%; }
+        body {
+          height: 100%;
+          overflow: hidden;
           font: 14px 'Helvetica Neue', Arial, sans-serif;
           padding: 0;
           margin: 0;
