@@ -75,21 +75,42 @@ Attributes [#elemAttrs]
 =======================
 Elem attribute access APIs:
 
-  elem["alt"]               // get an attr value
-  elem["alt"] = "Alt text"  // set an attr value
-  elem->alt                 // get an attr (equivalent to elem["alt"])
-  elem->alt = "Alt text"    // set an attr (equivalent to elem["alt"] = "Alt text")
-  elem.id                   // 'id' attribute
-  elem.tagName              // tag name of this element
-  elem.text = "Foo"         // set innerText content of this element
-  elem.html = "<b>Foo</b>"  // set innerHTML content of this element
+  elem["alt"]                 // get an attr value
+  elem["alt"] = "Alt text"    // set an attr value
+  elem.attr("alt")            // get an attr (equivalent to elem["alt"])
+  elem.setAttr("alt", "...")  // set an attr (equivalent to elem["alt"] = "...")
+  elem.attrs                  // map of all defined Elem attributes
 
-Note in the examples above the [trap]`sys::Obj.trap` operator can be used as a
-convenience to [get]`dom::Elem.get` and [set]`dom::Elem.set`. Some Element
-properties have a typed slot on Elem (such as 'id' and 'tagName'). The
-get/set/trap methods can be used to access any property defined on the backing
-W3C Element node.  This allows implementors to access any property without
-requiring a Dom API update.
+  elem.tagName                // tag name of this element
+  elem.id                     // 'id' attribute
+  elem.enabled                // 'enabled' attribute
+  elem.text = "Foo"           // set innerText content of this element
+  elem.html = "<b>Foo</b>"    // set innerHTML content of this element
+
+Properties [#elemProps]
+=======================
+Elem property APIs access the JavaScript properties on the backing DOM object
+instance:
+
+  elem.prop("tabIndex")           // get a prop
+  elem.setProp("tabIndex", true)  // set a prop
+
+Note that unlike attributes, property names are case-sensitive.
+
+FFI [#elemFFI]
+==============
+By default the the [trap]`sys::Obj.trap` operator can be used as a convenience
+to [prop]`dom::Elem.prop` and [setProp]`dom::Elem.setProp`:
+
+  elem->tabIndex          // get a prop
+  elem->tabIndex = true   // set a prop
+
+See [Elem.trap]`dom::Elem.trap` for details when using a non-HTML namespace.
+
+The [invoke]`dom::Elem.invoke` method can be used to be used to invoke
+JavaScript functions not exposed by the Elem API:
+
+  a.invoke("click")
 
 Tree Operations [#elemTree]
 ===========================
