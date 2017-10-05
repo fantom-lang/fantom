@@ -240,7 +240,7 @@ abstract class DocElem : DocNode
   This insert(Int index, DocNode node)
   {
     tail := DocNode[node]
-    kids.eachRange(index..-1) |child| { remove(child); tail.add(child) }
+    kids.dup.eachRange(index..-1) |child| { remove(child); tail.add(child) }
     tail.each { add(it) }
     return this
   }
