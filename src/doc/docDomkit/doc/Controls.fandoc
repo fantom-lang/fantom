@@ -108,6 +108,8 @@ showing a listbox popup when a button is pressed:
     it.onSelect |b| { echo("Selected $b.sel.item") }
   }
 
+![ListButton][82×38]`Control-ListButton-1.png`
+
 By default [ListButton]`domkit::ListButton` will display items using 'toStr'.
 To customize how the display element is is created, use
 [onElem]`domkit::ListButton.onElem`:
@@ -117,6 +119,8 @@ To customize how the display element is is created, use
     it.items = [1,2,3,4]
     it.onElem |v| { "Item #$v" }
   }
+
+![ListButton][147×178]`Control-ListButton-2.png`
 
 Link [#link]
 ************
