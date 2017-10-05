@@ -65,6 +65,10 @@ class Win
   ** Display a modal message box with the given text.
   native Void alert(Obj obj)
 
+  ** Display a confirmation dialog box with the given text.
+  ** Returns 'true' if 'ok' was selected, 'false' othterwise.
+  native Bool confirm(Obj obj)
+
   ** Return the size of the window viewport in pixels.
   native Size viewport()
 

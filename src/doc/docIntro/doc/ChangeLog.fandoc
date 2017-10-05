@@ -13,6 +13,7 @@
 - dom: remove dom::Size; convert to float-based graphics::Size
 - dom: formalize Elem attr vs prop; get/set routes to attr; trap to prop
 - dom: remove Elem.draggable (use elem->draggable)
+- dom: Win.confirm
 - dom: Doc.activeElem, Doc.head
 - dom: Doc.elem -> elemById
 - dom: Doc.exec

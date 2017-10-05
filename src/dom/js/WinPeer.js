@@ -97,6 +97,11 @@ fan.dom.WinPeer.prototype.alert = function(self, obj)
   this.win.alert(obj);
 }
 
+fan.dom.WinPeer.prototype.confirm = function(self, obj)
+{
+  return this.win.confirm(obj);
+}
+
 fan.dom.WinPeer.prototype.viewport = function(self)
 {
   return (typeof this.win.innerWidth != "undefined")
