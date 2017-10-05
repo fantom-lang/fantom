@@ -46,6 +46,8 @@ Button [#button]
     Elem("b") { it.text="Really Press me!" },
   }
 
+![Button][242×41]`Control-Button-1.png`
+
 ButtonGroup [#buttonGroup]
 **************************
 TODO

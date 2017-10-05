@@ -22,6 +22,7 @@ class ButtonTest : DomkitTest
       it.addRow([toggles, lists])
       it.addRow([labels,  combos])
       it.addRow([groups1, groups2])
+      it.addRow([docDomkit, Elem {}])
     }
 
     this.style->overflow = "auto"
@@ -276,6 +277,23 @@ class ButtonTest : DomkitTest
         TextField {},
         Button { it.text="Right" },
       }])
+    }
+  }
+
+  Elem docDomkit()
+  {
+    FlowBox {
+      it.gaps = ["10px"]
+      Button
+      {
+        it.text = "Press me"
+        it.onAction { echo("Pressed!") }
+      },
+      Button
+      {
+        onAction { echo("Pressed!") }
+        Elem("b") { it.text="Really Press me!" },
+      },
     }
   }
 }
