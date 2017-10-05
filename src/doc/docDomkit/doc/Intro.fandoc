@@ -23,17 +23,18 @@ the the W3C DOM, which has several benefits:
   - Keeps library smaller and simpler
 
 A key point to emphasize is a DomKit "widget" is nothing more than a standard
-DOM element node (i.e. a '<div>'). It can be used and place anywhere in your
+DOM element node (i.e. a '<div>'). It can be used and placed anywhere in your
 DOM tree. Likewise a "widget" can also contain most any valid HTML content as
 children.
 
-This manual is organized into 5 main sections:
+This manual is organized into 6 main sections:
 
   - **`Dom`**: Low-level DOM API overview
   - **`Layout`**: Overview of DomKit layout containers
   - **`Controls`**: Overview of standard DomKit controls
   - **`Modals`**: Overview of DomKit modal elements
   - **[Drag and Drop]`Dnd`**: Overview of DomKit drag and drop API
+  - **[Theming]`Theming`**: Overview of customizing DomKit CSS
 
 To get a feel for what is available in Domkit and some example use cases, you
 can run the test suite:
