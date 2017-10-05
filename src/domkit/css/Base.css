@@ -65,7 +65,7 @@
 .domkit-control[readonly],
 .domkit-control.readonly { background: #f8f8f8; }
 
-/* this disabled hrefs links */
+/* this disables hrefs links */
 a.domkit-control.disabled { pointer-events:none; }
 
 //

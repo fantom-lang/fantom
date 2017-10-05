@@ -216,7 +216,7 @@ using graphics
       it.focused  = manFocus
       it.selected = selected
     }
-    content.style->paddingLeft = "${node.depth*20}px"
+    content.style->paddingLeft = "${node.depth * depthIndent}px"
     node.onElem(content.lastChild, flags)
 
     // add children if expanded
@@ -309,14 +309,15 @@ using graphics
     cb := cbTreeEvent[e.type]
     if (cb != null)
     {
-      // TODO: this does not quite work how we want; need to rework how
-      // we build the the node inside TreeNode to isolate the actual
-      // content better
       content := node.elem.lastChild
+      npos := e.pagePos.rel(content)
+      npos = Pos(npos.x - (node.depth * depthIndent) - 16, npos.y)
+      if (npos.x < 0) return   // outside of content
+
       cb.call(TreeEvent(this, node) {
         it.type    = e.type
         it.pagePos = e.pagePos
-        it.nodePos = e.pagePos.rel(content)
+        it.nodePos = npos
         it.size    = content.size
       })
     }
@@ -335,6 +336,8 @@ using graphics
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
+
+  private static const Int depthIndent := 20
 
   private TreeNode[] nodes := [,]
   private Func? cbSelect
