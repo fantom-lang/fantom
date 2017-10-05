@@ -32,10 +32,12 @@ class FandocTest : Test
     verifyDocNode(ph, ["<body>", ["<p>", ["<strong>", "foo"]]])
 
     // strong nested in emphasis
+    verifyDoc("* **wow** *", ["<body>", ["<p>",  ["<em>", " ", ["<strong>", "wow"], " "]]])
     verifyDoc("You know, *winter\n**really, really**\nsucks*!", ["<body>", ["<p>", "You know, ",
       ["<em>", "winter ", ["<strong>", "really, really"], " sucks"], "!"]])
 
     // emphasis nested in strong
+    verifyDoc("** *wow* **", ["<body>", ["<p>",  ["<strong>", " ", ["<em>", "wow"], " "]]])
     verifyDoc("You know, **winter\n*really, really*\nsucks**!", ["<body>", ["<p>", "You know, ",
       ["<strong>", "winter ", ["<em>", "really, really"], " sucks"], "!"]])
 
