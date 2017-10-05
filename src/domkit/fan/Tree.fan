@@ -199,6 +199,7 @@ using graphics
 
     // set expander icon
     expander := node.elem.querySelector(".domkit-Tree-node-expander")
+    expander.style->left = "${node.depth * depthIndent}px"
     expander.html = node.hasChildren ? "\u25ba" : "&nbsp;"
 
     // remove existing children
@@ -216,7 +217,7 @@ using graphics
       it.focused  = manFocus
       it.selected = selected
     }
-    content.style->paddingLeft = "${node.depth * depthIndent}px"
+    content.style->paddingLeft = "${(node.depth+1) * depthIndent}px"
     node.onElem(content.lastChild, flags)
 
     // add children if expanded
@@ -309,16 +310,19 @@ using graphics
     cb := cbTreeEvent[e.type]
     if (cb != null)
     {
-      content := node.elem.lastChild
-      npos := e.pagePos.rel(content)
-      npos = Pos(npos.x - (node.depth * depthIndent) - 16, npos.y)
-      if (npos.x < 0) return   // outside of content
+      blockElem := node.elem
+      nodeElem  := blockElem.firstChild
+      indent    := (node.depth + 1) * depthIndent
+      npos      := e.pagePos.rel(nodeElem)
+
+      // outside of content
+      if (npos.x - indent < 0) return
 
       cb.call(TreeEvent(this, node) {
         it.type    = e.type
         it.pagePos = e.pagePos
-        it.nodePos = npos
-        it.size    = content.size
+        it.nodePos = Pos(npos.x-indent, npos.y)
+        it.size    = Size(nodeElem.size.w-indent, nodeElem.size.h)
       })
     }
   }
@@ -337,7 +341,7 @@ using graphics
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private static const Int depthIndent := 20
+  private static const Int depthIndent := 16
 
   private TreeNode[] nodes := [,]
   private Func? cbSelect
