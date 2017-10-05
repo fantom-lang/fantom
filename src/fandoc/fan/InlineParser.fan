@@ -137,7 +137,7 @@ internal class InlineParser
 
   private DocNode emphasis()
   {
-    if (peek <= 0 || peek.isSpace)
+    if (peek <= 0 || peek.isSpace && peekPeek != '*')
       return text
 
     em := Emphasis.make
@@ -270,6 +270,21 @@ internal class InlineParser
     {
       peek = -1
     }
+  }
+
+  **
+  ** Look at char after peek
+  **
+  private Int peekPeek()
+  {
+    if (pos+2 < src.size) return src[pos+2]
+    return -1
+  }
+
+  private Str debug()
+  {
+    "cur='" + (cur <= 0 ? "eof" : cur.toChar) +
+    "' peek='" + (peek <= 0 ? "eof" : peek.toChar) + "'"
   }
 
 //////////////////////////////////////////////////////////////////////////
