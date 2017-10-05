@@ -52,7 +52,7 @@ The [Doc]`dom::Doc` maps to the W3C Document object.
 
 Some sample APIs available on [Doc]`dom::Doc`:
 
-  doc.elem("someId")                // return the Elem with id='someId'
+  doc.elemById("someId")            // return the Elem with id='someId'
   doc.createElem("div")             // create a new <div> element
   doc.querySelector("div.foo")      // find first <div> element where class='foo'
   doc.querySelectorAll("div.bar")   // find all <div> elements where class='bar'
