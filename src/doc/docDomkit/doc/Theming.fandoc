@@ -16,15 +16,22 @@ Controls primarily inherit from the following "base" style classes:
    .domkit-control-text
 
 Each DomKit control type further defines a specific style class using the
-convention 'domkit-<TypeName>'.  For example [Button]`domkit::Button` uses the
-class 'domkit-Button'.
+convention 'domkit-<TypeName>'. For example [Button]`domkit::Button` uses the
+class 'domkit-Button'. A skeleton [sample theme]`#sample` is included at the
+bottom of this page for reference.
 
 Fonts [#fonts]
 **************
 DomKit inherits all fonts from a parent or '<body>'. Setting the font on your
 page should be all that is needed to customize control fonts. The "base"
 control styles or specific type classes can be used to customize specific
-controls.
+controls. Examples:
+
+   body { font: 14px 'Helvetica Neue', Arial, sans-serif; }
+
+  .domkit-control-text { font: 14px Monaco, Courier, monospace; }
+
+  .domkit-TextArea { font: 12px Monaco, Courier, monospace; }
 
 Valign [#valign]
 ****************
@@ -33,13 +40,56 @@ each other. Since controls are font agnostic (see Fonts above) this is
 accomplished by giving all controls a consistent 'line-height' and adjusting
 'padding' to account for borders.
 
+   .domkit-control {
+     padding: 5px 0;
+   }
+
+   .domkit-control-button {
+     border: 1px solid #ccc;
+     padding: 4px 10px;  // -1px for border to keep valign with .domkit-control
+   }
+
+   .domkit-control-text {
+     border: 1px solid #ccc;
+     padding: 4px 10px;  // -1px for border to keep valign with .domkit-control
+   }
+
+
 Borders [#borders]
 ******************
-TODO
+DomKit defines several classes that can be used to provide a standard border
+color and style:
+
+  .domkit-border
+  .domkit-border-top
+  .domkit-border-left
+  .domkit-border-right
+  .domkit-border-bottom
+
+These borders are used for more complex controls such as [Table]`domkit::Table`
+and [Tree]`domkit::Tree`.  Example use patterns:
+
+  // adding a border
+  Box { it.style.addClass("domkit-border") }
+
+  // adding a bottom-border
+  Box { it.style.addClass("domkit-border-bottom") }
+
+  // removing a left/right borders
+  Table {
+    it.style.removeClass("domkit-border")
+    it.style.addClass("domkit-border-top").addClass("domkit-border-bottom")
+  }
 
 Selection [#select]
 *******************
 TODO
+
+Modals [#modals]
+****************
+
+Table [#table]
+**************
 
 Fullscreen [#fullscreen]
 *******************
