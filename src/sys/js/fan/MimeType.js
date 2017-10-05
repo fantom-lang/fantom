@@ -97,16 +97,28 @@ fan.sys.MimeType.doParseParams = function(s, offset)
   {
     var c = s.charAt(i);
 
-    if (c == '(' && !inQuotes)
-      throw fan.sys.ParseErr.makeStr("MimeType", s, "comments not supported");
+    // let parens slide since sometimes they occur in cookies
+    // if (c == '(' && !inQuotes)
+    //   throw fan.sys.ParseErr.makeStr("MimeType", s, "comments not supported");
 
-    if (c == '=' && !inQuotes)
+    if (c == '=' && eq < 0 && !inQuotes)
     {
       eq = i++;
       while (fan.sys.MimeType.isSpace(s, i)) ++i;
       if (s.charAt(i) == '"') { inQuotes = true; ++i; c = s.charAt(i); }
       else inQuotes = false;
       valStart = i;
+    }
+
+    if (c == ';' && eq < 0 && !inQuotes)
+    {
+      // key with no =val
+      var key = fan.sys.Str.trim(s.substring(keyStart, i));
+      params.set(key, "");
+      keyStart = i+1;
+      eq = valStart = valEnd = -1;
+      hasEsc = false;
+      continue;
     }
 
     if (eq < 0) continue;
@@ -139,12 +151,19 @@ fan.sys.MimeType.doParseParams = function(s, offset)
 
   if (keyStart < s.length)
   {
-    if (eq < 0) throw fan.sys.IndexErr.make(eq);
     if (valEnd < 0) valEnd = s.length-1;
-    var key = fan.sys.Str.trim(s.substring(keyStart, eq));
-    var val = fan.sys.Str.trim(s.substring(valStart, valEnd+1));
-    if (hasEsc) val = fan.sys.MimeType.unescape(val);
-    params.set(key, val);
+    if (eq < 0)
+    {
+      var key = fan.sys.Str.trim(s.substring(keyStart, s.length));
+      params.set(key, "");
+    }
+    else
+    {
+      var key = fan.sys.Str.trim(s.substring(keyStart, eq));
+      var val = fan.sys.Str.trim(s.substring(valStart, valEnd+1));
+      if (hasEsc) val = fan.sys.MimeType.unscape(val);
+      params.set(key, val);
+    }
   }
 
   return params;
@@ -233,6 +252,12 @@ fan.sys.MimeType.prototype.charset = function()
   return Charset.fromStr(s);
 }
 */
+
+fan.sys.MimeType.prototype.noParams = function()
+{
+  if (this.params.isEmpty()) return this;
+  return fans.sys.MimeType.fromStr(this.mediaType() + "/" + this.subType());
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Lazy Load
