@@ -18,10 +18,11 @@ using dom
     this.style.addClass("domkit-WellBox")
   }
 
-  ** Merge a header with this 'WellBox', where 'halign'
-  ** specifies if 'header' should be left, center, or
-  ** right aligned with well.
-  Elem mergeHeader(Elem header, Align halign := Align.left)
+// TODO: this isn't working right
+  ** Return a new 'Elem' merging this 'WellBox' with the given 'header'
+  ** element, where 'halign' specifies if 'header' should be left, center,
+  ** or right aligned with well.
+  @NoDoc Elem mergeHeader(Elem header, Align halign := Align.left)
   {
     // setup header
     header.style->top = "12px"

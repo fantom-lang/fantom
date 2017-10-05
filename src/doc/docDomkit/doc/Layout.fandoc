@@ -56,7 +56,7 @@ Example [#gridBoxEx]
     it.addRow([null, Button { it.text="Submit" }])
   }
 
-![GridBox][266×163]`Layout-GridBox.png`
+![GridBox][270×173]`Layout-GridBox.png`
 
 cellStyle [#gridBoxCellStyle]
 =============================
@@ -246,18 +246,7 @@ WellBox [#wellBox]
 
   WellBox { content, }
 
-TODO: pic
-
-A header element may optionally be merged with a WellBox:
-
-  label  := Label { it.text="Header" }
-  well   := WellBox { content, }
-
-  left   := well.mergeHeader(label)
-  center := well.mergeHeader(label, Align.center)
-  right  := well.mergeHeader(label, Align.right)
-
-TODO: pic
+![WellBox][560×46]`Layout-WellBox-1.png`
 
 FlexBox [#flexBox]
 ******************
