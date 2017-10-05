@@ -171,22 +171,30 @@ class FandocParser
     // skip any blank lines
     while (curt === LineType.blank) consume
 
-    // align against indentation of first line
-    indent := 0
-    while (cur[indent] == ' ') indent++
-
-    // read preformatted lines
-    buf := StrBuf(256)
+    // read preformatted lines, keep track of left most indentation
+    lines := Str[,]
+    indent := Int.maxVal
     while (curt !== LineType.preEnd && curt !== LineType.eof)
     {
-      if (cur.isEmpty) buf.add("\n")
-      else if (cur.size >= indent) buf.add(cur[indent..-1]).add("\n")
-      else buf.add(cur)
+      // use local indent logic since curIndent has special behavior
+      if (curt != LineType.blank)
+      {
+        i := 0; while (cur[i] == ' ') i++;
+        indent = indent.min(i)
+      }
+      lines.add(cur)
       consume
     }
     consume
-
     while (curt === LineType.blank) consume
+
+    // align against left most indentation
+    buf := StrBuf()
+    lines.each |line|
+    {
+      if (line.size > indent) buf.add(line[indent..-1])
+      buf.addChar('\n')
+    }
 
     pre := Pre.make
     pre.add(DocText(buf.toStr))

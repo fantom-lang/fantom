@@ -193,6 +193,23 @@ class FandocTest : Test
         - b
       <pre
       ", ["<body>", ["<pre>", "- a\n\n- b\n"]])
+
+    verifyDoc(
+     "pre>
+        a
+       b
+      c
+      <pre
+      ", ["<body>", ["<pre>", "  a\n b\nc\n"]])
+
+    verifyDoc(
+     "pre>
+         3
+        2
+           5
+          4
+      <pre
+      ", ["<body>", ["<pre>", " 3\n2\n   5\n  4\n"]])
   }
 
 //////////////////////////////////////////////////////////////////////////
