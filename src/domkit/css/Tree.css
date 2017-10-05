@@ -20,29 +20,29 @@ div.domkit-Tree:focus {
 }
 
 div.domkit-Tree-node {
+  position: relative;
+  box-sizing: border-box;
   cursor: default;
   white-space: nowrap;
-  padding: 0px 4px;
-  height: 20px;
-  line-height: 20px;
+  padding: 3px 5px;
+  line-height: 1;
 }
 
 div.domkit-Tree-node-expander {
-  float: left;
-  font-size: 80%;
-  width: 16px;
-  height: 20px;
-  line-height: 19px;
   box-sizing: border-box;
-  padding-left: 5px;
+  display: inline-block;
+  position: absolute;
+  top: calc(50% - 6px);
+  width: 16px;
+  font-size: 12px;
   color: #888;
+  text-align: center;
 }
 
 :focus div.domkit-sel div.domkit-Tree-node-expander { color: #fff }
 
 div.domkit-Tree-node-block.expanded > div.domkit-Tree-node div.domkit-Tree-node-expander {
   -webkit-transform: rotate(90deg);
-  padding-left: 4px;
 }
 
 div.domkit-Tree-node div:nth-child(2) {
