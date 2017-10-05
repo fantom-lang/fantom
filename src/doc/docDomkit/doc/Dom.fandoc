@@ -167,6 +167,13 @@ properties should be specified using camel case when using trap:
 
   style->backgroundColor == style["background-color"]
 
+Psuedo-Classes [#stylePsuedo]
+=============================
+The [addPseudoClass]`dom::Style.addPseudoClass` method can be used to define
+CSS pseudo classes at runtime:
+
+  style.addPseudoClass(":hover", "background: #eee")
+
 Vendor Prefixes [#styleVendorPrefix]
 ====================================
 Style will automatically handle adding appropriate vendor prefixes, and
