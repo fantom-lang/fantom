@@ -49,13 +49,6 @@ class Doc
   ** Get the element with this 'id', or 'null' if no
   ** element is found with this 'id'.
   **
-  @Deprecated { msg="use elemById" }
-  Elem? elem(Str id) { elemById(id) }
-
-  **
-  ** Get the element with this 'id', or 'null' if no
-  ** element is found with this 'id'.
-  **
   native Elem? elemById(Str id)
 
   **
