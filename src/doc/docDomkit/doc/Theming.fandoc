@@ -41,6 +41,13 @@ Selection [#select]
 *******************
 TODO
 
+Fullscreen [#fullscreen]
+*******************
+TODO
+
+  html { height: 100%; }
+  body { height: 100%; overflow: hidden; }
+
 Sample [#sample]
 ****************
 Below is a sample starting point for a custom style sheet:
