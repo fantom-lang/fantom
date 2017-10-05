@@ -88,9 +88,17 @@ a.domkit-control.disabled { pointer-events:none; }
 .domkit-control-button.down  { background: #ddd; }
 .domkit-control-button.selected,
 .domkit-control-button.selected:hover {
-  background-color: #3498db;
   color: #fff;
+  background-color: #3498db;
   border-color: #2c7fb7;
+}
+.domkit-control-button.def-action {
+  color: #fff;
+  background: #3498db;
+  border-color: #1d7fbf;
+}
+.domkit-control-button.def-action.down {
+  background: #1d7fbf;
 }
 
 //
