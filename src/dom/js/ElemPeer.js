@@ -111,6 +111,7 @@ fan.dom.ElemPeer.prototype.enabled$ = function(self, val)
 fan.dom.ElemPeer.prototype.attrs = function(self)
 {
   var map = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Str.$type);
+  map.m_caseInsensitive = true;
   var attrs = this.elem.attributes;
   for(var i=0; i<attrs.length; i++)
   {
