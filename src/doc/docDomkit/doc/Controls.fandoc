@@ -111,6 +111,10 @@ right place to register event callbacks such as 'onModify' and 'onAction'.
     it.field.onAction |f| { echo("value: $f.val") }
   }
 
+![Combo][208×44]`Control-Combo-1.png`
+
+See [Combo]`domkit::Combo` for full API details.
+
 FilePicker [#filePicker]
 ************************
 TODO
@@ -121,6 +125,8 @@ Label [#label]
 naturally align vertically with control widgets like [Button]`domkit::Button`:
 
   Label { it.text="My Label" }
+
+See [Label]`domkit::Label` for full API details.
 
 ListButton [#listButton]
 ************************
@@ -146,6 +152,8 @@ To customize how the display element is is created, use
   }
 
 ![ListButton][147×178]`Control-ListButton-2.png`
+
+See [ListButton]`domkit::ListButton` for full API details.
 
 Link [#link]
 ************
@@ -203,7 +211,12 @@ instance will be created using 'Obj.toStr':
   {
     it.elemOn  = "On"
     it.elemOff = "Off"
+    it.selected = false
   }
+
+![ToggleButton][311×50]`Control-ToggleButton-1.png`
+
+See [ToggleButton]`domkit::ToggleButton` for full API details.
 
 Tooltip [#tooltip]
 ******************
