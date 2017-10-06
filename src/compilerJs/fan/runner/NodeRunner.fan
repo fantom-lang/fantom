@@ -162,9 +162,9 @@ class NodeRunner
   private Str envDirs()
   {
     buf := StrBuf()
-    buf.add("    fan.sys.Env.cur().m_homeDir = fan.sys.File.os(${Env.cur.homeDir.osPath.toCode});\n")
-    buf.add("    fan.sys.Env.cur().m_workDir = fan.sys.File.os(${Env.cur.workDir.osPath.toCode});\n")
-    buf.add("    fan.sys.Env.cur().tempDir   = fan.sys.File.os(${Env.cur.tempDir.osPath.toCode});\n")
+    buf.add("    fan.sys.Env.cur().m_homeDir = fan.sys.File.os(${Env.cur.homeDir.pathStr.toCode});\n")
+    buf.add("    fan.sys.Env.cur().m_workDir = fan.sys.File.os(${Env.cur.workDir.pathStr.toCode});\n")
+    buf.add("    fan.sys.Env.cur().m_tempDir = fan.sys.File.os(${Env.cur.tempDir.pathStr.toCode});\n")
     return buf.toStr()
   }
 
