@@ -198,7 +198,9 @@ public class Actor
       if (future == null) break;
 
       // dispatch the messge
+      this.curMsg = future.msg;
       _dispatch(future);
+      this.curMsg = null;
     }
 
     // flush locals back to context
@@ -312,8 +314,14 @@ public class Actor
 
     void dump(fan.sys.OutStream out)
     {
+      int num = 0;
+      int max = 50;
       for (Future x = head; x != null; x = x.next)
-        out.print("  ").printLine(x.msg);
+      {
+        if (num < max) out.print("  ").printLine(x.msg);
+        num++;
+      }
+      if (num > max) out.print("  " + (num-max) + " more messages...");
     }
 
     Future head, tail;
@@ -411,6 +419,7 @@ public class Actor
       out.printLine("  pool:      " + pool.name);
       out.printLine("  submitted: " + submitted);
       out.printLine("  queue:     " + queueSize());
+      out.printLine("  curMsg:    " + curMsg);
       queue.dump(out);
 
     }
@@ -439,6 +448,7 @@ public class Actor
   private Func receive;                  // func to invoke on receive or null
   private Object lock = new Object();    // lock for message queue
   private Queue queue;                   // message queue linked list
+  private Object curMsg;                 // if currently processing a message
   private boolean submitted = false;     // is actor submitted to thread pool
 
 }
