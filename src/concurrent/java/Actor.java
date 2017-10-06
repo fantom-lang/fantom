@@ -105,6 +105,8 @@ public class Actor
 
   public final long queueSize() { return queue.size; }
 
+  public final long queuePeak() { return queue.peak; }
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
@@ -305,6 +307,7 @@ public class Actor
       if (tail == null) { head = tail = f; f.next = null; }
       else { tail.next = f; tail = f; }
       size++;
+      if (size > peak) peak = size;
     }
 
     public Future coalesce(Future f)
@@ -326,6 +329,7 @@ public class Actor
 
     Future head, tail;
     int size;
+    int peak;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -419,6 +423,7 @@ public class Actor
       out.printLine("  pool:      " + pool.name);
       out.printLine("  submitted: " + submitted);
       out.printLine("  queue:     " + queueSize());
+      out.printLine("  peak:      " + queuePeak());
       out.printLine("  curMsg:    " + curMsg);
       queue.dump(out);
 

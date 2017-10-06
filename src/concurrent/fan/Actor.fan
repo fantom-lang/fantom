@@ -117,6 +117,14 @@ native const class Actor
   **
   @NoDoc Int queueSize()
 
+  **
+  ** Get the peak number of messages queued.
+  **
+  ** NOTE: this method is marked as NoDoc, it is provided for low level
+  ** access to monitor the actor, but it is subject to change.
+  **
+  @NoDoc Int queuePeak()
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
