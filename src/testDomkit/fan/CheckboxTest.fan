@@ -14,11 +14,13 @@ class CheckboxTest : DomkitTest
 {
   new make()
   {
+    this.style->background = "#eee"
     add(GridBox
     {
       it.style->padding = "18px"
       it.cellStyle("*", "*", "padding: 18px")
       it.addRow([checks])
+      it.addRow([docDomkit])
       it.addRow([valign])
     })
   }
@@ -34,6 +36,17 @@ class CheckboxTest : DomkitTest
       it.addRow([Checkbox { it.checked=true; it.enabled=false }.wrap("Checkbox #4")])
       it.addRow([Checkbox { it.enabled=false }.wrap("Checkbox #5")])
       it.addRow([Checkbox { it.onAction |cb| { echo("checkbox: $cb.checked") }}.wrap("Echo onAction")])
+    }
+  }
+
+  Elem docDomkit()
+  {
+    GridBox
+    {
+      it.cellStyle("*", "*", "padding-bottom: 12px")
+      it.addRow([Checkbox {}])
+      it.addRow([Checkbox { it.checked=true }])
+      it.addRow([Checkbox {}.wrap("You can click here too!")])
     }
   }
 
