@@ -282,18 +282,29 @@ class ButtonTest : DomkitTest
 
   Elem docDomkit()
   {
-    FlowBox {
-      it.gaps = ["10px"]
-      Button
-      {
-        it.text = "Press me"
-        it.onAction { echo("Pressed!") }
-      },
-      Button
-      {
-        onAction { echo("Pressed!") }
-        Elem("b") { it.text="Really Press me!" },
-      },
+    GridBox
+    {
+      it.cellStyle("*", "*", "padding: 10px 0")
+      it.addRow([FlowBox {
+        it.gaps = ["10px"]
+        Button
+        {
+          it.text = "Press me"
+          it.onAction { echo("Pressed!") }
+        },
+        Button
+        {
+          onAction { echo("Pressed!") }
+          Elem("b") { it.text="Really Press me!" },
+        },
+      }])
+      it.addRow([FlowBox {
+        it.gaps = ["10px"]
+        ToggleButton { it.text="Toggle Me" },
+        ToggleButton { it.text="Toggle Me"; selected=true },
+        ToggleButton { it.elemOn="On"; it.elemOff="Off"; selected=false },
+        ToggleButton { it.elemOn="On"; it.elemOff="Off"; selected=true },
+      }])
     }
   }
 }
