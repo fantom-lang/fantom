@@ -42,15 +42,34 @@ Button [#button]
 
   Button
   {
-    onAction { echo("Pressed!") }
-    Elem("b") { it.text="Really Press me!" },
+    it.add(Elem("b") { it.text="Really Press me!" })
+    it.onAction { echo("Pressed!") }
   }
 
 ![Button][242×41]`Control-Button-1.png`
 
+See [Button]`domkit::Button` for full API details.
+
+See also: [ToggleButton]`#toggleButton`, [ListButton]`#listButton`
+
 ButtonGroup [#buttonGroup]
 **************************
-TODO
+[ButtonGroup]`domkit::ButtonGroup` groups a set of toggle or radio buttons and
+handles making sure only one button in group is selected at a time.
+
+  group := ButtonGroup
+  {
+    it.add(ToggleButton { ... })
+    it.add(ToggleButton { ... })
+    it.add(ToggleButton { ... })
+  }
+
+  group.selIndex = 1      // set group selection
+  sel := group.selIndex   // get current selection
+
+See [ButtonGroup]`domkit::ButtonGroup` for full API details.
+
+See also: [ToggleButton]`#toggleButton`, [RadioButton]`#radioButton`
 
 Checkbox [#checkbox]
 ********************
@@ -65,6 +84,8 @@ target area to this label using the [wrap]`domkit::Checkbox.wrap` method:
 
   Checkbox {}.wrap("You can click here too!")
 
+![Checkbox][181×98]`Control-Checkbox-1.png`
+
 To receive callbacks when the state changes, add an
 [onAction]`domkit::Checkbox.onAction` event handler:
 
@@ -72,6 +93,8 @@ To receive callbacks when the state changes, add an
   {
     it.onAction |c| { echo("checked: $c.checked") }
   }
+
+See [Checkbox]`domkit::Checkbox` for full API details.
 
 Combo [#combo]
 **************
