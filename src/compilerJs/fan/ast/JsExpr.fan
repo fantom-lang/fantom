@@ -450,7 +450,11 @@ class JsUnaryExpr : JsExpr
     {
       case ExprId.cmpNull:    operand.write(out); out.w(" == null", loc)
       case ExprId.cmpNotNull: operand.write(out); out.w(" != null", loc)
-      default:                out.w(symbol, loc); operand.write(out)
+      default:
+        out.w(symbol, loc)
+        if (operand is JsBinaryExpr) out.w("(")
+        operand.write(out)
+        if (operand is JsBinaryExpr) out.w(")")
     }
   }
   ExprId id
