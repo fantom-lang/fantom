@@ -1,6 +1,7 @@
 //{{require}}
 
 try {
+//{{envDirs}}
   fan.{{tempPod}}.Main.make().main();
 } catch (err) {
   console.log('ERROR: ' + err + '\n');
