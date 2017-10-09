@@ -14,11 +14,13 @@ class RadioButtonTest : DomkitTest
 {
   new make()
   {
+    this.style->background = "#eee"
     add(GridBox
     {
       it.style->padding = "18px"
       it.cellStyle("*", "*", "padding: 18px; vertical-align: top")
       it.addRow([radios, group])
+      it.addRow([docDomkit, Elem {}])
       it.addRow([valign, Elem {}])
     })
   }
@@ -53,6 +55,17 @@ class RadioButtonTest : DomkitTest
       it.addRow([(g.buttons[1] as RadioButton).wrap("Group-Option #2")])
       it.addRow([(g.buttons[2] as RadioButton).wrap("Group-Option #3")])
       it.addRow([(g.buttons[3] as RadioButton).wrap("Group-Option #4")])
+    }
+  }
+
+  Elem docDomkit()
+  {
+    GridBox
+    {
+      it.cellStyle("*", "*", "padding-bottom: 12px")
+      it.addRow([RadioButton {}])
+      it.addRow([RadioButton { it.checked=true }])
+      it.addRow([RadioButton {}.wrap("You can click here too!")])
     }
   }
 

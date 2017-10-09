@@ -227,7 +227,31 @@ TODO
 
 RadioButton [#radioButton]
 **************************
-TODO
+[RadioButton]`domkit::RadioButton` displays a radio button:
+
+  RadioButton {}
+  RadioButton { it.checked = true }
+
+On its own, only the actual radio button is displayed. Generally its desirable
+to display a text label attached to the radio. You can extend the click target
+area to this label using the [wrap]`domkit::RadioButton.wrap` method:
+
+  RadioButton {}.wrap("You can click here too!")
+
+![RadioButton][191×102]`Control-RadioButton-1.png`
+
+To receive callbacks when the state changes, add an
+[onAction]`domkit::RadioButton.onAction` event handler:
+
+  RadioButton
+  {
+    it.onAction |c| { echo("checked: $c.checked") }
+  }
+
+For grouping sets of radios for exclusive selection, see
+[ButtonGroup]`#buttonGroup`.
+
+See [RadioButton]`domkit::RadioButton` for full API details.
 
 Table [#table]
 **************
@@ -243,7 +267,8 @@ TODO
 
 ToggleButton [#toggleButton]
 ****************************
-[ToggleButton]`domkit::ToggleButton` models a boolean state toggled by pressing a button:
+[ToggleButton]`domkit::ToggleButton` models a boolean state toggled by pressing
+a button:
 
   ToggleButton
   {
@@ -262,8 +287,8 @@ The content may be modified based on selected state by specifying
     it.selected = false   // make sure to set default state last
   }
 
-You may also pass any object to 'elemOn' and 'elemOff' and the Elem
-instance will be created using 'Obj.toStr':
+You may also pass any object to 'elemOn' and 'elemOff' and the Elem instance
+will be created using 'Obj.toStr':
 
   ToggleButton
   {
@@ -273,6 +298,9 @@ instance will be created using 'Obj.toStr':
   }
 
 ![ToggleButton][311×50]`Control-ToggleButton-1.png`
+
+For grouping sets of toggle buttons for exclusive selection, see
+[ButtonGroup]`#buttonGroup`.
 
 See [ToggleButton]`domkit::ToggleButton` for full API details.
 
