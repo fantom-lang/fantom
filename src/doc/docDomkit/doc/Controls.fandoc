@@ -157,6 +157,21 @@ The list of selected files can be introspected client-side via the
   // async load file contents and encode as a data:// URI client-side
   f.readAsDataUri |uri| { ... }
 
+The FilePicker UI can be customized by hiding the actual FilePicker DOM element
+and using the [open]`domkit::FilePicker.open` method to programmatically
+trigger displaying the browser's native file picker:
+
+  picker := FilePicker { it.style->display="none" }
+
+  button := Button
+  {
+    it.text = "Choose Files"
+    it.onAction { picker.open }
+  }
+
+  parent.add(picker)   // make sure FilePicke is actually mounted in DOM
+  parent.add(button)
+
 See [FilePicker]`domkit::FilePicker` and [DomFile]`dom::DomFile` for full API
 details.
 

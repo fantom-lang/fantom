@@ -23,6 +23,7 @@ class FilePickerTest : DomkitTest
       it.addRow([picker("Accept image/*", FilePicker { it.accept="image/*" })])
       it.addRow([picker("Hidden",         FilePicker { it.style->display="none" })])
       it.addRow([picker("onSelect",       FilePicker { it.onSelect |f| { listFiles(f) } })])
+      it.addRow([docDomkit])
     })
   }
 
@@ -38,6 +39,16 @@ class FilePickerTest : DomkitTest
       it.cellStyle(  0, "*", "width: 100px;")
       it.cellStyle(  1, "*", "width: 250px;")
       it.addRow([Label { it.text="$label:" }, picker, open, list, text, data])
+    }
+  }
+
+  Elem docDomkit()
+  {
+    Elem {
+      it.style->paddingTop = "20px"
+      picker := FilePicker { it.style->display="none" }
+      picker,
+      Button { it.text="Choose Files"; it.onAction { picker.open }},
     }
   }
 
