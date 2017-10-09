@@ -117,7 +117,8 @@ See [Combo]`domkit::Combo` for full API details.
 
 FilePicker [#filePicker]
 ************************
-FilePicker allows selection of files to upload from the client browser.
+[FilePicker]`domkit::FilePicker` allows selection of files to upload from the
+client browser.
 
 For simple form uploads, FilePicker is backed by an '<input type="file">' so
 can be enabled just by giving a name when inside a '<form>':
@@ -137,7 +138,7 @@ To receive callbacks when a file is selected, add an
 
   FilePicker
   {
-    it.onSelect |fp| { ... }
+    it.onSelect |p| { ... }
   }
 
 The list of selected files can be introspected client-side via the
@@ -197,7 +198,24 @@ See [ListButton]`domkit::ListButton` for full API details.
 
 Link [#link]
 ************
-TODO
+[Link]`domkit::Link` creates an '<a>' tag for links:
+
+    Link
+    {
+      it.uri  = `http://fantom.org`
+      it.text = "Fantom"
+    }
+
+Use [target]`domkit::Link.target` to specify a link target:
+
+    Link
+    {
+      it.uri    = `http://fantom.org`
+      it.text   = "Fantom"
+      it.target = "_blank"
+    }
+
+See [Link]`domkit::Link` for full API details.
 
 Menu [#menu]
 ************
