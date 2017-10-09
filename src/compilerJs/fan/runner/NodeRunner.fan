@@ -195,6 +195,7 @@ class NodeRunner
     template := this.typeof.pod.file(`/res/scriptRunnerTemplate.js`).readAllStr
     template = template.replace("//{{require}}", requireStatements)
     template = template.replace("{{tempPod}}", tempPod)
+    template = template.replace("//{{envDirs}}", envDirs)
 
     // write test runner
     f := nodeDir + `scriptRunner.js`
