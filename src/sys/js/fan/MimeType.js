@@ -34,6 +34,9 @@ fan.sys.MimeType.fromStr = function(s, checked)
         if (s == "text/plain") return fan.sys.MimeType.m_textPlain;
         if (s == "text/html")  return fan.sys.MimeType.m_textHtml;
         if (s == "text/xml")   return fan.sys.MimeType.m_textXml;
+        if (s == "text/plain; charset=utf-8") return fan.sys.MimeType.m_textPlainUtf8;
+        if (s == "text/html; charset=utf-8")  return fan.sys.MimeType.m_textHtmlUtf8;
+        if (s == "text/xml; charset=utf-8")   return fan.sys.MimeType.m_textXmlUtf8;
         break;
       case 'x':
         if (s == "x-directory/normal") return fan.sys.MimeType.m_dir;
@@ -196,9 +199,16 @@ fan.sys.MimeType.forExt = function(s)
   if (s == null) return null;
   try
   {
+    s = s.toLowerCase();
+    let m = null;
+    switch (s)
+    {
+      case "txt": m = "text/plain; charset=utf-8";
+      case "text": m = "text/plain; charset=utf-8";
+    }
     // TODO FIXIT
     //return (MimeType)Repo.readSymbolsCached(etcUri, Duration.oneMin).get(FanStr.lower(s));
-    return null;
+    return fan.sys.MimeType.fromStr(m);
   }
   catch (err)
   {
@@ -281,12 +291,13 @@ fan.sys.MimeType.emptyQuery = null;
 // Predefined
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.MimeType.predefined = function(media, sub)
+fan.sys.MimeType.predefined = function(media, sub, params)
 {
+  if (params === undefined) params = "";
   var t = new fan.sys.MimeType();
   t.m_mediaType = media;
   t.m_subType = sub;
-  t.m_params = fan.sys.MimeType.emptyParams();
+  t.m_params = fan.sys.MimeType.parseParams(params, true);
   t.m_str = media + "/" + sub;
   return t;
 }
