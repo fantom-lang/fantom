@@ -117,7 +117,47 @@ See [Combo]`domkit::Combo` for full API details.
 
 FilePicker [#filePicker]
 ************************
-TODO
+FilePicker allows selection of files to upload from the client browser.
+
+For simple form uploads, FilePicker is backed by an '<input type="file">' so
+can be enabled just by giving a name when inside a '<form>':
+
+  FilePicker { it->name="upload" }
+
+To configure what file types can be selected, or to enable multiple selection:
+
+  FilePicker
+  {
+    it.accept = "image/*"   // allow only images
+    it.multi  = true        // allow multiple files to upload
+  }
+
+To receive callbacks when a file is selected, add an
+[onSelect]`domkit::FilePicker.onSelect` event handler:
+
+  FilePicker
+  {
+    it.onSelect |fp| { ... }
+  }
+
+The list of selected files can be introspected client-side via the
+[files]`domkit::FilePicker.files` field:
+
+  // list of files
+  files := picker.files
+
+  f.name    // filename of file
+  f.size    // size of file
+  f.type    // MIME type of file
+
+  // async load file contents as a text string client-side
+  f.readAsText |text| { ... }
+
+  // async load file contents and encode as a data:// URI client-side
+  f.readAsDataUri |uri| { ... }
+
+See [FilePicker]`domkit::FilePicker` and [DomFile]`dom::DomFile` for full API
+details.
 
 Label [#label]
 **************
