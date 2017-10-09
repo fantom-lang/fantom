@@ -11,6 +11,8 @@ using dom
 **
 ** FilePicker allows selection of files.
 **
+** See also: [docDomkit]`docDomkit::Controls#filePicker`
+**
 @Js class FilePicker : Elem
 {
   new make() : super("input")
