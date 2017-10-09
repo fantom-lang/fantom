@@ -109,6 +109,9 @@ fan.sys.MimeType.m_imageJpeg = fan.sys.MimeType.predefined("image", "jpeg");
 fan.sys.MimeType.m_textPlain = fan.sys.MimeType.predefined("text", "plain");
 fan.sys.MimeType.m_textHtml  = fan.sys.MimeType.predefined("text", "html");
 fan.sys.MimeType.m_textXml   = fan.sys.MimeType.predefined("text", "xml");
+fan.sys.MimeType.m_textPlainUtf8 = fan.sys.MimeType.predefined("text", "plain", "charset=utf-8");
+fan.sys.MimeType.m_textHtmlUtf8  = fan.sys.MimeType.predefined("text", "html", "charset=utf-8");
+fan.sys.MimeType.m_textXmlUtf8   = fan.sys.MimeType.predefined("text", "xml", "charset=utf-8");
 fan.sys.MimeType.m_dir       = fan.sys.MimeType.predefined("x-directory", "normal");
 
 //
