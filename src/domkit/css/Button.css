@@ -7,12 +7,11 @@
 //
 
 div.domkit-Button {
-// TODO: hides focus ring; which would be nice to have back
   outline: none;
 }
 
-// TODO: do we still need this?
 div.domkit-Button:focus {
   z-index: 2;
   position: relative;  /* needed to make z-index work */
+  border-color: #3498db;
 }
