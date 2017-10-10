@@ -13,7 +13,7 @@ div.domkit-Dialog {
 div.domkit-Dialog-frame {
   background: #f2f2f2;
   border: 1px solid #aaa;
-  border-radius: 4px 4px 0 0 ;
+  border-radius: 4px 4px 0 0;
   box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.4);
   max-width:  calc(100% - 24px);
   max-height: calc(100% - 24px);
@@ -23,7 +23,6 @@ div.domkit-Dialog-title {
   text-align: center;
   display: block;
   font-weight: 500;
-  border-radius: 4px 4px 0 0;
   cursor: default;
   -webkit-user-select: none;
      -moz-user-select: none;

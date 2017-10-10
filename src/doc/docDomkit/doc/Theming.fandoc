@@ -98,6 +98,40 @@ focused and unfocused selection styles:
 
 Modals [#modals]
 ****************
+Basic [Dialog]`domkit::Dialog`. styles can be configured using the
+'.domkit-Dialog-frame' and '.domkit-Dialog-title' styles. The title bar also
+inherits '.domkit-control'.
+
+  .domkit-Dialog-frame {
+    background: #f2f2f2;
+    border: 1px solid #aaa;
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .domkit-Dialog-title {
+    text-align: center;
+    font-weight: 500;
+  }
+
+For [Popup]`domkit::Popup` style:
+
+  .domkit-Popup {
+    background: rgba(248, 248, 248, 0.95);
+    border: 1px solid #ddd;
+    box-shadow: 0px 9px 18px rgba(0, 0, 0, 0.25);
+  }
+
+A background mask is displayed under modals to prevent user input. This mask
+is styled using '.domkit-Dialog-mask':
+
+  .domkit-Dialog-mask {
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  .domkit-Popup-mask {
+    background: none;
+  }
 
 Table [#table]
 **************
@@ -121,4 +155,13 @@ Below is a sample starting point for a custom style sheet:
   }
 
   .domkit-control-text {
+  }
+
+  .domkit-sel {
+    background-color: #dcdcdc !important;
+  }
+
+  :focus .domkit-sel, .domkit-sel.pin {
+    background-color: #3498db !important;
+    color: #fff !important;
   }
