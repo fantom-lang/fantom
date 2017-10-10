@@ -8,36 +8,53 @@
 
 Overview [#overview]
 ********************
-TODO
+DomKit proves two classes for creating modal content: Dialog and Popup.
 
 Dialog [#dialog]
 ****************
 [Dialog]`domkit::Dialog` opens a modal window above page content.
 
-  d := Dialog
-  {
-    it.title = "Hello"
-    Box
+    dialog := Dialog { it.title = "Hello" }
+    dialog.add(SashBox
     {
+      it.dir = Dir.down
+      it.sizes = ["auto", "auto"]
       it.style->padding = "12px"
-      it.text = "Hello, World"
-    },
-  }
-  d.buttons = [
-    Button { it.text="Close"; onAction { d.close }}
-  }
-  d.open
+      Box
+      {
+        it.text= "Lorem ipsum dolor sit amet, consectetur adipiscing
+                  elit. Etiam accumsan, felis vestibulum elementum
+                  efficitur, ligula sem porta magna, sit amet semper
+                  lacus lorem vitae lacus."
+      },
+      FlowBox
+      {
+        it.style->paddingTop = "12px"
+        it.halign = Align.right
+        it.gaps = ["4px"]
+        Button { it.text="OK";     it.onAction { dialog.close; echo("# OK") }},
+        Button { it.text="Cancel"; it.onAction { dialog.close; echo("# Cancel") }},
+      },
+    })
 
-To modify the default size of dialog, override the 'width' and
-'height' styles:
+    dialog.open
+
+![Dialog][500x232]`Modal-Dialog-1.png`
+
+To modify the default size of dialog, override the 'width' and 'height' styles:
 
   Dialog
   {
-   it.style->width  = "600px"
-   it.style->height = "400px"
-   it.title = "Hello"
-   Box { ... },
+    it.style->width  = "600px"
+    it.style->height = "400px"
+    ...
   }
+
+To receive callbacks with Dialog is mounted into and removed from the DOM, use
+[onOpen]`domkit::Dialog.onOpen` and [onClose]`domkit::Dialog.onClose`:
+
+  dialog.onOpen  { echo("Opened!") }
+  dialog.onClose { echo("Closed!") }
 
 Popup [#popup]
 **************
@@ -50,7 +67,3 @@ key:
     Elem {... },
   }
   p.open(100, 100)
-
-Tooltip [#tooltip]
-******************
-TODO
