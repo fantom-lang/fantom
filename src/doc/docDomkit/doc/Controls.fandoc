@@ -234,7 +234,23 @@ See [Link]`domkit::Link` for full API details.
 
 Menu [#menu]
 ************
-TODO
+[Menu]`domkit::Menu` displays a menu of selectable
+[MenuItems]`domkit::MenuItem`.
+
+  menu := Menu
+  {
+    MenuItem { it.text="Alpha"; it.onAction { ... } },
+    MenuItem { it.text="Beta";  it.onAction { ... } },
+    MenuItem { it.text="Gamma"; it.onAction { ... } },
+    MenuItem { it.text="Delta"; it.onAction { ... } },
+  }
+
+  menu.open(100, 100)
+
+![Menu][143×154]`Control-Menu-1.png`
+
+See [Menu]`domkit::Menu` for full API details.
+
 
 ProgressBar [#progressBar]
 **************************
