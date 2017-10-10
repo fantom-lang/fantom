@@ -16,12 +16,15 @@ class Main : AbstractMain
   @Opt { help = "http port" }
   Int port := 8080
 
+  @Opt { help = "apply sample css" }
+  Bool css := false
+
   override Int run()
   {
     wisp := WispService
     {
       it.httpPort = this.port
-      it.root = DomkitTestMod()
+      it.root = DomkitTestMod { it.useSampleCss=css }
     }
     return runServices([wisp])
   }
@@ -29,6 +32,10 @@ class Main : AbstractMain
 
 const class DomkitTestMod : WebMod
 {
+  new make(|This| f) { f(this) }
+
+  const Bool useSampleCss := false
+
   override Void onService()
   {
     n := req.modRel.path.first
@@ -102,6 +109,8 @@ const class DomkitTestMod : WebMod
         }")
       .styleEnd
 
+      if (useSampleCss) out.style.w(sampleCss).styleEnd
+
       env := Str:Str[:]
       env["ui.test.qname"] = type.qname
 
@@ -132,4 +141,44 @@ const class DomkitTestMod : WebMod
     res.headers["Content-Type"] = "text/javascript; charset=utf-8"
     res.out.writeBuf((Env.cur.homeDir + `etc/sys/tz.js`).readAllBuf)
   }
+
+  const Str sampleCss :=
+ """.domkit-sel {
+      background-color: #dcdcdc !important;
+    }
+
+    :focus .domkit-sel, .domkit-sel.pin {
+      background-color: #8e44ad !important;
+      color: #fff !important;
+    }
+
+    :focus .domkit-sel a {
+      color: #fff !important;
+    }
+
+    .domkit-control {
+      font: 16px 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .domkit-control-button {
+      background: #f8f8f8;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+
+    .domkit-control-button:hover { background: #f0f0f0; }
+    .domkit-control-button.down  { background: #ccc; }
+    .domkit-control-button.selected,
+    .domkit-control-button.selected:hover {
+      color: #fff;
+      background-color: #8e44ad;
+      border-color: #6d2f87;
+    }
+
+    .domkit-control-text {
+      background: #fff;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+    """
 }

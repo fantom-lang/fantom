@@ -148,20 +148,40 @@ Sample [#sample]
 ****************
 Below is a sample starting point for a custom style sheet:
 
-  .domkit-control {
-  }
-
-  .domkit-control-button {
-  }
-
-  .domkit-control-text {
-  }
-
   .domkit-sel {
     background-color: #dcdcdc !important;
   }
 
   :focus .domkit-sel, .domkit-sel.pin {
-    background-color: #3498db !important;
+    background-color: #8e44ad !important;
     color: #fff !important;
+  }
+
+  :focus .domkit-sel a {
+    color: #fff !important;
+  }
+
+  .domkit-control {
+    font: 16px 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  .domkit-control-button {
+    background: #f8f8f8;
+    border: 1px solid #444;
+    border-radius: 5px;
+  }
+
+  .domkit-control-button:hover { background: #f0f0f0; }
+  .domkit-control-button.down  { background: #ccc; }
+  .domkit-control-button.selected,
+  .domkit-control-button.selected:hover {
+    color: #fff;
+    background-color: #8e44ad;
+    border-color: #6d2f87;
+  }
+
+  .domkit-control-text {
+    background: #fff;
+    border: 1px solid #444;
+    border-radius: 5px;
   }
