@@ -56,14 +56,29 @@ To receive callbacks with Dialog is mounted into and removed from the DOM, use
   dialog.onOpen  { echo("Opened!") }
   dialog.onClose { echo("Closed!") }
 
+See [Dialog]`domkit::Dialog` for full API details.
+
 Popup [#popup]
 **************
 [Popup]`domkit::Popup` opens a popup window above page content. The popup is
 dismissed by clicking anywhere outside of the popup, or by pressing the 'Esc'
 key:
 
-  p := Popup
+  popup := Popup
   {
-    Elem {... },
+    it.style->width = "400px"
+    it.style->padding = "12px"
+    Box
+    {
+      it.text= "Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. Etiam accumsan, felis vestibulum elementum
+                efficitur, ligula sem porta magna, sit amet semper
+                lacus lorem vitae lacus."
+    },
   }
-  p.open(100, 100)
+
+  popup.open(100, 100)
+
+![Popup][460x143]`Modal-Popup-1.png`
+
+See [Popup]`domkit::Popup` for full API details.
