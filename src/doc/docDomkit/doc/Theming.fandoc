@@ -31,7 +31,7 @@ controls. Examples:
 
   .domkit-control-text { font: 14px Monaco, Courier, monospace; }
 
-  .domkit-TextArea { font: 12px Monaco, Courier, monospace; }
+  div.domkit-TextArea { font: 12px Monaco, Courier, monospace; }
 
 Valign [#valign]
 ****************
@@ -102,21 +102,21 @@ Basic [Dialog]`domkit::Dialog`. styles can be configured using the
 '.domkit-Dialog-frame' and '.domkit-Dialog-title' styles. The title bar also
 inherits '.domkit-control'.
 
-  .domkit-Dialog-frame {
+  div.domkit-Dialog-frame {
     background: #f2f2f2;
     border: 1px solid #aaa;
     border-radius: 4px 4px 0 0;
     box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.4);
   }
 
-  .domkit-Dialog-title {
+  div.domkit-Dialog-title {
     text-align: center;
     font-weight: 500;
   }
 
 For [Popup]`domkit::Popup` style:
 
-  .domkit-Popup {
+  div.domkit-Popup {
     background: rgba(248, 248, 248, 0.95);
     border: 1px solid #ddd;
     box-shadow: 0px 9px 18px rgba(0, 0, 0, 0.25);
@@ -125,11 +125,11 @@ For [Popup]`domkit::Popup` style:
 A background mask is displayed under modals to prevent user input. This mask
 is styled using '.domkit-Dialog-mask':
 
-  .domkit-Dialog-mask {
+  div.domkit-Dialog-mask {
     background: rgba(0, 0, 0, 0.25);
   }
 
-  .domkit-Popup-mask {
+  div.domkit-Popup-mask {
     background: none;
   }
 
@@ -197,4 +197,33 @@ Below is a sample starting point for a custom style sheet:
 
   div.domkit-Tree {
     font: 16px 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  div.domkit-Dialog-frame {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  div.domkit-Dialog-title {
+    text-align: center;
+    font-weight: bold;
+    background: #f8f8f8;
+    border-bottom: 1px solid #ccc;
+  }
+
+  div.domkit-Dialog-mask {
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  div.domkit-Popup {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 9px 18px rgba(0, 0, 0, 0.25);
+  }
+
+  div.domkit-Popup-mask {
+    background: none;
   }

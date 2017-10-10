@@ -193,5 +193,34 @@ const class DomkitTestMod : WebMod
     div.domkit-Tree {
       font: 16px 'Helvetica Neue', Arial, sans-serif;
     }
+
+    div.domkit-Dialog-frame {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    div.domkit-Dialog-title {
+      text-align: center;
+      font-weight: bold;
+      background: #f8f8f8;
+      border-bottom: 1px solid #ccc;
+    }
+
+    div.domkit-Dialog-mask {
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    div.domkit-Popup {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0px 9px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    div.domkit-Popup-mask {
+      background: none;
+    }
     """
 }
