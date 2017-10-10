@@ -181,6 +181,10 @@ const class DomkitTestMod : WebMod
       border-radius: 5px;
     }
 
+    .domkit-control-button:focus, .domkit-control-text:focus {
+      border-color: #8e44ad;
+    }
+
     div.domkit-Table-header {
       font: bold 13px 'Helvetica Neue', Arial, sans-serif;
     }

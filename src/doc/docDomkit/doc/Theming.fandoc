@@ -54,7 +54,6 @@ accomplished by giving all controls a consistent 'line-height' and adjusting
      padding: 4px 10px;  // -1px for border to keep valign with .domkit-control
    }
 
-
 Borders [#borders]
 ******************
 DomKit defines several classes that can be used to provide a standard border
@@ -95,6 +94,13 @@ focused and unfocused selection styles:
     background-color: #3498db !important;
     color: #fff !important;
   }
+
+Focus [#focus]
+**************
+Focus rings for controls can be customized with ':focus' pseudo class:
+
+  .domkit-control-button:focus
+  .domkit-control-text:focus
 
 Modals [#modals]
 ****************
@@ -184,6 +190,10 @@ Below is a sample starting point for a custom style sheet:
     background: #fff;
     border: 1px solid #444;
     border-radius: 5px;
+  }
+
+  .domkit-control-button:focus, .domkit-control-text:focus {
+    border-color: #8e44ad;
   }
 
   div.domkit-Table-header {
