@@ -14,6 +14,7 @@ class TextFieldTest : DomkitTest
 {
   new make()
   {
+    this.style->background = "#eee"
     add(GridBox
     {
       it.style->padding = "12px"
@@ -71,6 +72,11 @@ class TextFieldTest : DomkitTest
         it.onModify |f| { throw Err("SHOULD NEVER HAPPEN") }
         // it.onAction |f| { throw Err("SHOULD NEVER HAPPEN") }
       }])
+
+      // docDomkit
+      it.addRow([TextField { it.cols=40 }])
+      it.addRow([TextField { it.cols=40; it.val="Hello, World" }])
+      it.addRow([TextField { it.cols=40; it.placeholder="Search..." }])
     }
   }
 
