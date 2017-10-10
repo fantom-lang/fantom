@@ -254,7 +254,27 @@ See [Menu]`domkit::Menu` for full API details.
 
 ProgressBar [#progressBar]
 **************************
-TODO
+[ProgressBar]`domkit::ProgressBar` visualizes progress of a long running
+operation.
+
+  ProgressBar {}
+
+  ProgressBar
+  {
+    it.val = 25                     // set progress value
+    it.onText |p| { "${p.val}%" }   // set bar text
+  }
+
+  ProgressBar
+  {
+    it.val = 75
+    it.onText |p| { "${p.val}%" }
+    it.onBarColor |p| { "#2ecc71" }  // set bar color
+  }
+
+![ProgressBar][225×121]`Control-ProgressBar-1.png`
+
+See [ProgressBar]`domkit::ProgressBar` for full API details.
 
 RadioButton [#radioButton]
 **************************

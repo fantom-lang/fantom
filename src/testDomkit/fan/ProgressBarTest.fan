@@ -19,6 +19,7 @@ class ProgressBarTest : DomkitTest
       it.style->padding = "12px"
       it.cellStyle("*", "*", "padding: 12px")
       it.addRow([barDef, barText, barColor, barTextColor])
+      it.addRow([docDomkit])
     }
 
     this.style->overflow = "auto"
@@ -87,6 +88,18 @@ class ProgressBarTest : DomkitTest
       it.addRow([ProgressBar { it.onText |p| { "${p.val}%" }; it.onBarColor |p| { f(p) }; it.val=40 }])
       it.addRow([ProgressBar { it.onText |p| { "${p.val}%" }; it.onBarColor |p| { f(p) }; it.val=75 }])
       it.addRow([ProgressBar { it.onText |p| { "${p.val}%" }; it.onBarColor |p| { f(p) }; it.val=100 }])
+    }
+  }
+
+  Elem docDomkit()
+  {
+
+    GridBox
+    {
+      it.cellStyle("*", "*", "padding:4px")
+      it.addRow([ProgressBar {}])
+      it.addRow([ProgressBar { it.val=25; it.onText |p| { "${p.val}%" }}])
+      it.addRow([ProgressBar { it.val=75; it.onText |p| { "${p.val}%" }; it.onBarColor |p| { "#2ecc71" }}])
     }
   }
 }
