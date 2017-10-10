@@ -21,8 +21,7 @@ div.domkit-Dialog-frame {
 
 div.domkit-Dialog-title {
   text-align: center;
-  height: 26px;
-  line-height: 28px;
+  display: block;
   font-weight: 500;
   border-radius: 4px 4px 0 0;
   cursor: default;
