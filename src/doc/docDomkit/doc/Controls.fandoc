@@ -467,4 +467,83 @@ See [Tooltip]`domkit::Tooltip` for full API details.
 
 Tree [#tree]
 ************
-TODO
+[Tree]`domkit::Tree` visualizes [TreeNodes]`domkit::TreeNode` as a series of
+expandable nodes.
+
+  @Js class MyTreeNode : TreeNode
+  {
+    new make(Obj item) { this.item = item }
+    override TreeNode[] children() { ... }
+    override Void onElem(Elem elem, TreeFlags flags)
+    {
+      elem.text = obj.toStr
+    }
+    private Obj obj
+  }
+
+  Tree
+  {
+    // Note that 'rebuild' is required to display the initial
+    // tree, and to update the tree due to any model changes
+
+    it.roots = [MyTreeNode(...), MyTreeNode(...), ...]
+    it.rebuild
+  }
+
+![Tree][316x338]`Control-Tree-1.png`
+
+Common tree operations:
+
+  // callback when selection changes; item is TreeNode instance
+  tree.onSelect |t| { echo(t.sel.item) }
+
+  // callback when row is double-clicked; item is TreeNode instance
+  tree.onAction |t| { echo(t.sel.item) }
+
+  // callback for node events
+  tree.onTreeEvent("mousedown") |e| { echo(e) }
+
+Note that 'Selection.index' is not valid for Tree instances.
+
+Lazily-loading tree nodes:
+
+  @Js class LazyTreeNode : TreeNode
+  {
+    new make(Tree tree, Obj item)
+    {
+      this.tree = tree
+      this.item = item
+    }
+
+    ...
+
+    override Bool hasChildren()
+    {
+      // return true if kids not loaded
+      kids==null ? true : kids.size > 0
+    }
+
+    override TreeNode[] children()
+    {
+      // return kids if already loaded
+      if (kids != null) return kids
+
+      // async load kids
+      doAsyncLoad(this) |items|
+      {
+        this.kids = items.map |i| { LazyTreeNode(tree, i) }
+        tree.refreshNode(this)
+      }
+
+      // return empty; doAsyncLoad will refresh
+      return TreeNode#.emptyList
+    }
+
+    private Tree tree
+    private Obj item
+    private LazyTreeNode[]? kids
+  }
+
+See API for full details: [Tree]`domkit::Tree`,
+[TreeNode]`domkit::TreeNode`, [Selection]`domkit::Selection`,
+[TreeEvent]`domkit::TreeEvent`
