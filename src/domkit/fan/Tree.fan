@@ -111,7 +111,7 @@ using graphics
 **************************************************************************
 
 **
-** Tree visualizes a TreeModel as a series of expandable nodes.
+** Tree visualizes `TreeNode`s as a series of expandable nodes.
 **
 ** See also: [docDomkit]`docDomkit::Controls#tree`
 **
