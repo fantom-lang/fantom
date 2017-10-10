@@ -6,18 +6,10 @@
 //   21 Dec 2014  Andy Frank  Creation
 //
 
-input.domkit-TextField {}
-
-input.domkit-TextField[type='password'] {
-  font-family: sans-serif;
-}
-
-// TODO: should add this back: just a border?
-input.domkit-TextField:focus {
+input.domkit-TextField {
   outline: none;
 }
 
-.domkit-nofocus input.domkit-TextField:focus,
-input.domkit-TextField.domkit-nofocus:focus {
-  /*box-shadow: none !important;*/
+input.domkit-TextField[type='password'] {
+  font-family: sans-serif;
 }

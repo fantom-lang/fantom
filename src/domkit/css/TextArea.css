@@ -9,8 +9,5 @@
 textarea.domkit-TextArea {
   width: 100%;
   height: 100%;
-}
-
-textarea.domkit-TextArea:focus {
   outline: none;
 }

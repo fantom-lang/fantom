@@ -113,6 +113,15 @@ a.domkit-control.disabled { pointer-events:none; }
 }
 
 //
+// Focus
+//
+
+.domkit-control-button:focus,
+.domkit-control-text:focus {
+  border-color: #3498db;
+}
+
+//
 // control.group
 //
 
