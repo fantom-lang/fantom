@@ -306,7 +306,61 @@ See [RadioButton]`domkit::RadioButton` for full API details.
 
 Table [#table]
 **************
-TODO
+[Table]`domkit::Table` displays a grid of rows and columns.
+
+  @Js class MyTableModel : TableModel
+  {
+    override Int numCols() { 100 }
+    override Int numRows() { 10 }
+    override Void onCell(Elem cell, Int col, Int row, TableFlags flags)
+    {
+      cell.text = "C$col:R$row""
+    }
+  }
+
+  Table
+  {
+    // Note that 'rebuild' is required to display the initial
+    // table, and to update the table due to any model changes
+
+    it.model = MyTableModel()
+    it.rebuild
+  }
+
+![Table][560×297]`Control-Table-1.png`
+
+Common table operations:
+
+  // toggle table header
+  table.showHeader = false
+
+  // sort a column
+  table.sort(2, Dir.down)
+
+  // customize zebra-striping for table rows; use empty list
+  // to remove background color from all rows
+  table.stripeClasses = [,]
+  table.stripeClasses = ["even", "odd"]
+
+  // enable multiple selection
+  table.sel.multi = true
+
+  // callback when selection changes
+  table.onSelect |t| { echo(t.sel.index) }
+
+  // callback when row is double-clicked; to access Selection.item
+  // be sure to override TableModel.item to return backing object
+  table.onAction |t| { echo(t.sel.item) }
+
+  // callback for cell events
+  table.onTableEvent("mousedown") |e| { echo(e) }
+
+  // enable custom header popup located in top-right corner of table
+  table.onHeaderPopup |t| { return Popup { ... }}
+
+See API for full details: [Table]`domkit::Table`,
+[TableModel]`domkit::TableModel`, [Selection]`domkit::Selection`,
+[TableEvent]`domkit::TableEvent`
 
 TextArea [#textArea]
 ********************
