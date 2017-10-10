@@ -310,11 +310,54 @@ TODO
 
 TextArea [#textArea]
 ********************
-TODO
+[TextArea]`domkit::TextArea` allows multi-line text input.
+
+  TextArea
+  {
+    it.cols = 40
+    it.rows = 10
+    it.val = "Some text\n  Here\nAnd there"
+  }
+
+![TextArea][288×193]`Control-TextArea-1.png`
+
+Use [onModify]`domkit::TextArea.onModify` to receive callbacks when text is
+modified in TextArea:
+
+  TextArea
+  {
+    it.onModify |f| { echo(f.val) }
+  }
+
+See [TextArea]`domkit::TextArea` for full API details.
 
 TextField [#textField]
 **********************
-TODO
+[TextField]`domkit::TextField` allows text input.
+
+  TextField {}
+  TextField { it.val = "Hello, World" }
+  TextField { it.placeholder = "Search..." }
+
+![TextField][306×148]`Control-TextField-1.png`
+
+Use [onModify]`domkit::TextField.onModify` to receive callbacks when text is
+modified in TextField:
+
+  TextField
+  {
+    it.onModify |f| { echo(f.val) }
+  }
+
+Use [onAction]`domkit::TextField.onAction` to receive callbacks when the Enter
+key is pressed in a TextField:
+
+  TextField
+  {
+    it.onAction |f| { echo(f.val) }
+  }
+
+See [TextField]`domkit::TextField` for full API details.
 
 ToggleButton [#toggleButton]
 ****************************
