@@ -180,5 +180,18 @@ const class DomkitTestMod : WebMod
       border: 1px solid #444;
       border-radius: 5px;
     }
+
+    div.domkit-Table-header {
+      font: bold 13px 'Helvetica Neue', Arial, sans-serif;
+    }
+    div.domkit-Table-cell {
+      font: 14px 'Helvetica Neue', Arial, sans-serif;
+    }
+    div.domkit-Table-cell.odd  { background: #fff; }
+    div.domkit-Table-cell.even { background: #f8f8f8; }
+
+    div.domkit-Tree {
+      font: 16px 'Helvetica Neue', Arial, sans-serif;
+    }
     """
 }
