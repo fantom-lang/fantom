@@ -59,7 +59,7 @@ using dom
 
     if (title != null)
       frame.add(Elem {
-        it.style.addClass("domkit-Dialog-title")
+        it.style.addClass("domkit-control domkit-Dialog-title")
         it.text = title
         it.onEvent(EventType.mouseDown, false) |e| {
           e.stop
