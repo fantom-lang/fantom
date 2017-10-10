@@ -141,6 +141,27 @@ is styled using '.domkit-Dialog-mask':
 
 Table [#table]
 **************
+The primary [Table]`domkit::Table` styles are:
+
+  div.domkit-Table
+  div.domkit-Table-header
+  div.domkit-Table-cell
+  div.domkit-Table-cell.odd
+  div.domkit-Table-cell.even
+
+Table is a bit unique in that the cell size must be hard-coded to provide high
+performance for large data sets. So the '-header' and '-cell' styles will *not*
+inherit the parents font sizes (only the style).  Additionally if the font size
+is increased, you may need to configure your
+[rowHeight]`domkit::TableModel.rowHeight`:
+
+  div.domkit-Table-header { font-size: 13px; }
+  div.domkit-Table-cell   { font-size: 14px; }
+
+  @Js class MyModel : TableModel
+  {
+    override Int rowHeight() { 30 }
+  }
 
 Fullscreen [#fullscreen]
 *******************
