@@ -83,7 +83,18 @@ and [Tree]`domkit::Tree`.  Example use patterns:
 
 Selection [#select]
 *******************
-TODO
+Selected items can be denoted by adding the 'domkit-sel' class to an element.
+Focus is taken into account when possible, so we need to specify both the
+focused and unfocused selection styles:
+
+  .domkit-sel {
+    background-color: #dcdcdc !important;
+  }
+
+  :focus .domkit-sel, .domkit-sel.pin {
+    background-color: #3498db !important;
+    color: #fff !important;
+  }
 
 Modals [#modals]
 ****************
@@ -93,7 +104,8 @@ Table [#table]
 
 Fullscreen [#fullscreen]
 *******************
-TODO
+To force the document body to fill the browser viewport similar to a desktop
+application, add the following styles:
 
   html { height: 100%; }
   body { height: 100%; overflow: hidden; }
@@ -102,13 +114,11 @@ Sample [#sample]
 ****************
 Below is a sample starting point for a custom style sheet:
 
-TODO
+  .domkit-control {
+  }
 
-   .domkit-control {
-   }
+  .domkit-control-button {
+  }
 
-   .domkit-control-button {
-   }
-
-   .domkit-control-text {
-   }
+  .domkit-control-text {
+  }

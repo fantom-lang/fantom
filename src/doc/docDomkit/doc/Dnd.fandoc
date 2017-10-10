@@ -8,7 +8,8 @@
 
 Overview [#overview]
 ********************
-TODO
+Dran and Drop is available for any DOM node using the
+[DragTarget]`domkit::DragTarget` and [DropTarget]`domkit::DropTarget` APIs.
 
 Drag and Drop [#dnd]
 ********************
