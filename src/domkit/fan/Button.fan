@@ -110,6 +110,7 @@ using dom
     {
       showUp
       if (isCombo) ((Combo)this.parent).field.focus
+      else this.focus
     }
 
     // limit width to button size if not explicity set

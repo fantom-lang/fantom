@@ -35,6 +35,8 @@ class PopupTest : DomkitTest
   {
     p := Popup {
       it.style.setCss(css)
+      it.onOpen  { echo("# open")  }
+      it.onClose { echo("# close") }
       Box
       {
         it.text= "Lorem ipsum dolor sit amet, consectetur adipiscing
