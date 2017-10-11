@@ -196,6 +196,7 @@ fan.sys.MimeType.unescape = function(s)
 
 fan.sys.MimeType.forExt = function(s)
 {
+  // TODO:FIXIT - we should really be loading this somehow from ext2mime.props
   if (s == null) return null;
   try
   {
@@ -203,8 +204,9 @@ fan.sys.MimeType.forExt = function(s)
     let m = null;
     switch (s)
     {
-      case "txt": m = "text/plain; charset=utf-8";
-      case "text": m = "text/plain; charset=utf-8";
+      case "png": m = "image/png"; break;
+      case "txt": m = "text/plain; charset=utf-8"; break ;
+      case "text": m = "text/plain; charset=utf-8"; break;
     }
     // TODO FIXIT
     //return (MimeType)Repo.readSymbolsCached(etcUri, Duration.oneMin).get(FanStr.lower(s));
