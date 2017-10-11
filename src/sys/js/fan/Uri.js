@@ -101,6 +101,81 @@ fan.sys.Uri.encodeQueryStr = function(buf, str)
 }
 
 //////////////////////////////////////////////////////////////////////////
+// Tokens
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Uri.escapeToken = function(str, section)
+{
+  var mask = fan.sys.Uri.$sectionToMask(section);
+  var buf = [];
+  var delimEscMap = fan.sys.Uri.delimEscMap;
+  for (let i = 0; i< str.length; ++i)
+  {
+    let c = str.charCodeAt(i);
+    if (c < delimEscMap.length && (delimEscMap[c] & mask) != 0)
+      buf.push('\\');
+    buf.push(String.fromCharCode(c));
+  }
+  return buf.join("");
+}
+
+fan.sys.Uri.encodeToken = function(str, section)
+{
+  var mask = fan.sys.Uri.$sectionToMask(section);
+  var buf = ""
+  var delimEscMap = fan.sys.Uri.delimEscMap;
+  var charMap = fan.sys.Uri.charMap;
+  for (let i = 0; i < str.length; ++i)
+  {
+    let c = str.charCodeAt(i);
+    if (c < 128 && (charMap[c] & mask) != 0 && (delimEscMap[c] & mask) == 0)
+      buf += String.fromCharCode(c);
+    else
+      buf = fan.sys.UriEncoder.percentEncodeChar(buf, c);
+  }
+  return buf;
+}
+
+fan.sys.Uri.decodeToken = function(str, section)
+{
+  var mask = fan.sys.Uri.$sectionToMask(section);
+  if (str.length == 0) return "";
+  return new fan.sys.UriDecoder(str, true).decodeToken(mask);
+}
+
+fan.sys.Uri.unescapeToken = function(str)
+{
+  var buf = "";
+  for (let i = 0; i < str.length; ++i)
+  {
+    let c = str.charAt(i);
+    if (c == '\\')
+    {
+      ++i;
+      if (i >= str.length) throw fan.sys.ArgErr.make("Invalid esc: " + str);
+      c = str.charAt(i);
+    }
+    buf += c;
+  }
+  return buf;
+}
+
+fan.sys.Uri.$sectionToMask = function(section)
+{
+  switch (section)
+  {
+    case 1: return fan.sys.Uri.PATH; break;
+    case 2: return fan.sys.Uri.QUERY; break;
+    case 3: return fan.sys.Uri.FRAG; break;
+    default: throw fan.sys.ArgErr.make("Invalid section flag: " + section);
+  }
+}
+
+fan.sys.Uri.m_sectionPath  = 1;
+fan.sys.Uri.m_sectionQuery = 2;
+fan.sys.Uri.m_sectionFrag  = 3;
+
+//////////////////////////////////////////////////////////////////////////
 // Section Constructor
 //////////////////////////////////////////////////////////////////////////
 
@@ -399,8 +474,8 @@ fan.sys.UriDecoder.prototype.pathSegments = function(pathStr, numSegs)
   if (len == 0 || (len == 1 && pathStr.charAt(0) == '/'))
     return fan.sys.Uri.emptyPath();
 
-  // check for trailing slash
-  if (len > 1 && pathStr.charAt(len-1) == '/')
+  // check for trailing slash (unless backslash escaped)
+  if (len > 1 && pathStr.charAt(len-1) == '/' && pathStr.charAt(len-2) != '\\')
   {
     numSegs--;
     len--;
@@ -530,20 +605,46 @@ fan.sys.UriDecoder.prototype.toQueryStr = function(q, start, end, escaped)
   return s;
 }
 
+fan.sys.UriDecoder.prototype.decodeToken = function(mask)
+{
+  return this.substring(0, this.str.length, mask);
+}
+
 fan.sys.UriDecoder.prototype.substring = function(start, end, section)
 {
-  if (!this.decoding) return this.str.substring(start, end);
-
-  var buf = "";
-  this.dpos = start;
-  while (this.dpos < end)
+  var buf = [];
+  var delimEscMap = fan.sys.Uri.delimEscMap;
+  if (!this.decoding)
   {
-    var ch = this.nextChar(section);
-    if (this.nextCharWasEscaped && ch < fan.sys.Uri.delimEscMap.length && (fan.sys.Uri.delimEscMap[ch] & section) != 0)
-      buf += '\\';
-    buf += String.fromCharCode(ch);
+    let last = 0;
+    let backslash = 92; // code for backslash
+    for (let i = start; i < end; ++i)
+    {
+      let ch = this.str.charCodeAt(i);
+      if (last == backslash && ch < delimEscMap.length && (delimEscMap[ch] & section) == 0)
+      {
+        // don't allow backslash unless truly a delimiter
+        buf.pop();
+      }
+      buf.push(String.fromCharCode(ch));
+      last = ((last == backslash && ch == backslash) ? 0 : ch);
+    }
   }
-  return buf;
+  else
+  {
+    this.dpos = start;
+    while (this.dpos < end)
+    {
+      let ch = this.nextChar(section);
+      if (this.nextCharWasEscaped && ch < delimEscMap.length && (delimEscMap[ch] & section) != 0)
+      {
+        // if ch was an escaped delimiter
+        buf.push('\\');
+      }
+      buf.push(String.fromCharCode(ch));
+    }
+  }
+  return buf.join("");
 }
 
 fan.sys.UriDecoder.prototype.nextChar = function(section)
@@ -1329,9 +1430,9 @@ fan.sys.Uri.isScheme = function(c)
   return c < 128 ? (fan.sys.Uri.charMap[c] & fan.sys.Uri.SCHEME) != 0 : false;
 }
 
-fan.sys.Uri.charMap     = [];
-fan.sys.Uri.nameMap     = [];
-fan.sys.Uri.delimEscMap = [];
+fan.sys.Uri.charMap     = new Array(128).fill(0);
+fan.sys.Uri.nameMap     = new Array(128).fill(0);
+fan.sys.Uri.delimEscMap = new Array(128).fill(0);
 fan.sys.Uri.SCHEME     = 0x01;
 fan.sys.Uri.USER       = 0x02;
 fan.sys.Uri.HOST       = 0x04;
