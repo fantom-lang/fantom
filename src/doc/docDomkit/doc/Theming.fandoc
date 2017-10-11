@@ -104,7 +104,7 @@ Focus rings for controls can be customized with ':focus' pseudo class:
 
 Modals [#modals]
 ****************
-Basic [Dialog]`domkit::Dialog`. styles can be configured using the
+Basic [Dialog]`domkit::Dialog` styles can be configured using the
 '.domkit-Dialog-frame' and '.domkit-Dialog-title' styles. The title bar also
 inherits '.domkit-control'.
 
@@ -164,7 +164,7 @@ is increased, you may need to configure your
   }
 
 Fullscreen [#fullscreen]
-*******************
+************************
 To force the document body to fill the browser viewport similar to a desktop
 application, add the following styles:
 
