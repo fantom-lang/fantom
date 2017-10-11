@@ -65,6 +65,7 @@ class StrTest : Test
     hello := "hello"
     five  := 5
     x     := 0xab
+    f     := File.make(`./temp/test/`)
 
     verifyEq("\$"[0], '$')
     verifyEq("\$".size, 1)
@@ -91,7 +92,7 @@ class StrTest : Test
     verifyEq("${foo()}", "foo")
     verifyEq("$this.foo", "foo")
     verifyEq("$this.foo.size", "3")
-    verifyEq("$super.tempDir", tempDir.toStr)
+    verifyEq("$f", f.toStr)
 
     y := "$five".toInt
     verifyType(y, Int#)
