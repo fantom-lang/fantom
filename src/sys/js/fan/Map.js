@@ -29,7 +29,7 @@ fan.sys.Map.make = function(k, v)
     if (v === undefined) v = fan.sys.Obj.$type.toNullable();
     mt = new fan.sys.MapType(k, v);
   }
-
+  if (mt.k.isNullable()) throw fan.sys.ArgErr.make("map key type cannot be nullable: " + mt.k.toStr());
   var self = new fan.sys.Map();
   self.m_vals = [];
   self.m_keys = null;  // only used for ordered

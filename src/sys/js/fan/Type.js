@@ -912,8 +912,7 @@ fan.sys.MapType.prototype.is = function(that)
 
   if (that instanceof fan.sys.MapType)
   {
-    return ((this.k.qname() == "sys::Obj") || this.k.is(that.k)) &&
-           ((this.v.qname() == "sys::Obj") || this.v.is(that.v));
+    return this.k.is(that.k) && this.v.is(that.v);
   }
   if (that instanceof fan.sys.Type)
   {
@@ -926,17 +925,8 @@ fan.sys.MapType.prototype.is = function(that)
 fan.sys.MapType.prototype.as = function(obj, that)
 {
   var objType = fan.sys.ObjUtil.$typeof(obj);
-
-  if (objType instanceof fan.sys.MapType &&
-      objType.k.qname() == "sys::Obj" &&
-      objType.v.qname() == "sys::Obj" &&
-      that instanceof fan.sys.MapType)
+  if (objType instanceof fan.sys.MapType && that instanceof fan.sys.MapType)
     return obj;
-
-  //if (that instanceof fan.sys.NullableType &&
-  //    that.m_root instanceof fan.sys.MapType)
-  //  that = that.m_root;
-
   return objType.is(that) ? obj : null;
 }
 
