@@ -76,7 +76,7 @@ fan.sys.Regex.prototype.$typeof = function() { return fan.sys.Regex.$type; }
 
 fan.sys.Regex.prototype.matches = function(s)
 {
-  return this.m_regexp.test(s);
+  return this.matcher(s).matches();
 }
 
 fan.sys.Regex.prototype.matcher = function(s)
@@ -87,13 +87,27 @@ fan.sys.Regex.prototype.matcher = function(s)
 fan.sys.Regex.prototype.split = function(s, limit)
 {
   if (limit === undefined) limit = 0;
-  s = fan.sys.Regex.quote(s).m_source;
 
-  // TODO FIXIT: limit works very differently in Java
   if (limit === 1)
     return fan.sys.List.make(fan.sys.Str.$type, [s]);
 
+  var array = [];
   var re = this.m_regexp;
-  var array = (limit === 0) ? s.split(re) : s.split(re, limit);
+  while (true)
+  {
+    let m = s.match(re);
+    if (m == null || (limit != 0 && array.length == limit -1))
+    {
+      array.push(s);
+      break;
+    }
+    array.push(s.substring(0, m.index));
+    s = s.substring(m.index + m[0].length);
+  }
+  // remove trailing empty strings
+  if (limit == 0)
+  {
+    while (array[array.length-1] == "") { array.pop(); }
+  }
   return fan.sys.List.make(fan.sys.Str.$type, array);
 }
