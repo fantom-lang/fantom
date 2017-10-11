@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-DomKit proves two classes for creating modal content: Dialog and Popup.
+DomKit provides two classes for creating modal content: Dialog and Popup.
 
 Dialog [#dialog]
 ****************

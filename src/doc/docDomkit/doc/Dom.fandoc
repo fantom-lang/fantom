@@ -22,8 +22,8 @@ will be covered in subsequent chapters
 
 Win [#win]
 **********
-The [Win]`dom::Win` maps to the W3C Window object. Most API calls will stem
-from the current Win instance:
+The [Win]`dom::Win` class maps to the W3C Window object. Most API calls will
+stem from the current Win instance:
 
   // get the current Win instance for this Window
   win := Win.cur
@@ -45,7 +45,7 @@ See [Win]`dom::Win` for complete Win API.
 
 Doc [#doc]
 **********
-The [Doc]`dom::Doc` maps to the W3C Document object.
+The [Doc]`dom::Doc` class maps to the W3C Document object.
 
   // get the Doc for the current Win instance
   doc := Win.cur.doc
@@ -61,7 +61,7 @@ See [Doc]`dom::Doc` for complete Doc API.
 
 Elem [#elem]
 ************
-The [Elem]`dom::Elem` maps to the W3C Element object.
+The [Elem]`dom::Elem` class maps to the W3C Element object.
 
   // create Elems
   Elem("div")   // create new unattached <div> element
@@ -99,8 +99,8 @@ Note that unlike attributes, property names are case-sensitive.
 
 FFI [#elemFFI]
 ==============
-By default the the [trap]`sys::Obj.trap` operator can be used as a convenience
-to [prop]`dom::Elem.prop` and [setProp]`dom::Elem.setProp`:
+The [trap]`sys::Obj.trap` operator can be used as a convenience to
+[prop]`dom::Elem.prop` and [setProp]`dom::Elem.setProp`:
 
   elem->tabIndex          // get a prop
   elem->tabIndex = true   // set a prop
