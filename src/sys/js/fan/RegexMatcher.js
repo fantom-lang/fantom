@@ -42,7 +42,8 @@ fan.sys.RegexMatcher.prototype.matches = function()
   if (!this.m_regexpForMatching)
     this.m_regexpForMatching = fan.sys.RegexMatcher.recompile(this.m_regexp, true);
   this.m_match = this.m_regexpForMatching.exec(this.m_str);
-  return this.m_match != null && this.m_match[0].length === this.m_str.length;
+  this.m_wasMatch = this.m_match != null && this.m_match[0].length === this.m_str.length;
+  return this.m_wasMatch;
 }
 
 fan.sys.RegexMatcher.prototype.find = function()
@@ -50,7 +51,8 @@ fan.sys.RegexMatcher.prototype.find = function()
   if (!this.m_regexpForMatching)
     this.m_regexpForMatching = fan.sys.RegexMatcher.recompile(this.m_regexp, true);
   this.m_match = this.m_regexpForMatching.exec(this.m_str);
-  return this.m_match != null;
+  this.m_wasMatch = this.m_match != null;
+  return this.m_wasMatch;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,7 +75,7 @@ fan.sys.RegexMatcher.prototype.replaceAll = function(replacement)
 
 fan.sys.RegexMatcher.prototype.groupCount = function()
 {
-  if (!this.m_match)
+  if (!this.m_wasMatch)
     return 0;
   return this.m_match.length - 1;
 }
@@ -81,7 +83,7 @@ fan.sys.RegexMatcher.prototype.groupCount = function()
 fan.sys.RegexMatcher.prototype.group = function(group)
 {
   if (group === undefined) group = 0;
-  if (!this.m_match)
+  if (!this.m_wasMatch)
     throw fan.sys.Err.make("No match found");
   if (group < 0 || group > this.groupCount())
     throw fan.sys.IndexErr.make(group);
@@ -90,7 +92,7 @@ fan.sys.RegexMatcher.prototype.group = function(group)
 
 fan.sys.RegexMatcher.prototype.start = function(group)
 {
-  if (!this.m_match)
+  if (!this.m_wasMatch)
     throw fan.sys.Err.make("No match found");
   if (group === undefined) group = 0;
   if (group < 0 || group > this.groupCount())
@@ -102,7 +104,7 @@ fan.sys.RegexMatcher.prototype.start = function(group)
 
 fan.sys.RegexMatcher.prototype.end = function(group)
 {
-  if (!this.m_match)
+  if (!this.m_wasMatch)
     throw fan.sys.Err.make("No match found");
   if (group === undefined) group = 0;
   if (group < 0 || group > this.groupCount())
