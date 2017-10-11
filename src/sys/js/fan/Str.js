@@ -251,8 +251,33 @@ fan.sys.Str.spaces = function(n)
 }
 fan.sys.Str.$spaces = null;
 
-fan.sys.Str.lower = function(self) { return self.toLowerCase(); }
-fan.sys.Str.upper = function(self) { return self.toUpperCase(); }
+// Fantom restricts lower/upper to ASCII chars only
+fan.sys.Str.lower = function(self)
+{
+  var lower = "";
+  for (let i = 0; i < self.length; ++i)
+  {
+    let char = self[i];
+    let code = self.charCodeAt(i);
+    if (65 <= code && code <= 90)
+      char = String.fromCharCode(code | 0x20);
+    lower = lower + char;
+  }
+  return lower;
+}
+fan.sys.Str.upper = function(self)
+{
+  var upper = "";
+  for (let i = 0; i < self.length; ++i)
+  {
+    let char = self[i];
+    let code = self.charCodeAt(i);
+    if (97 <= code && code <= 122)
+      char = String.fromCharCode(code & ~0x20);
+    upper = upper + char;
+  }
+  return upper;
+}
 
 fan.sys.Str.capitalize = function(self)
 {
@@ -474,6 +499,7 @@ fan.sys.Str.splitLines = function(self)
 
 fan.sys.Str.replace = function(self, oldstr, newstr)
 {
+  if (oldstr == '') return self;
   return self.split(oldstr).join(newstr);
 }
 
@@ -571,7 +597,29 @@ fan.sys.Str.isEveryChar = function(self, ch)
 
 fan.sys.Str.localeCompare = function(self, that)
 {
-  return fan.sys.Str.compareIgnoreCase(self, that);
+  return self.localeCompare(that, fan.sys.Locale.cur().toStr(), {sensitivity:'base'});
+}
+
+fan.sys.Str.localeUpper = function(self)
+{
+  return self.toLocaleUpperCase(fan.sys.Locale.cur().toStr());
+}
+
+fan.sys.Str.localeLower = function(self)
+{
+  return self.toLocaleLowerCase(fan.sys.Locale.cur().toStr());
+}
+
+fan.sys.Str.localeCapitalize = function(self)
+{
+  var upper = fan.sys.Str.localeUpper(self);
+  return upper[0] + self.substring(1);
+}
+
+fan.sys.Str.localeDecapitalize = function(self)
+{
+  var lower = fan.sys.Str.localeLower(self);
+  return lower[0] + self.substring(1);
 }
 
 //////////////////////////////////////////////////////////////////////////
