@@ -73,7 +73,7 @@ class TzTool
         {
           log.debug("$tz.fullName")
           encoded := encodeTimeZone(tz)
-          jsOut.printLine("c(a,${tz.name.toCode},${encoded.toBase64.toCode});")
+          jsOut.printLine("c(a,${tz.fullName.toCode},${encoded.toBase64.toCode});")
         }
       }
 
@@ -93,7 +93,7 @@ class TzTool
 
   private Buf encodeTimeZone(TimeZone tz)
   {
-    buf   := Buf().writeUtf(continent(tz.fullName)).writeUtf(tz.name)
+    buf   := Buf().writeUtf(tz.fullName);
     rules := ([Str:Obj][])tz->rules
     rules.each |r| { encodeRule(r, buf.out) }
     return buf
