@@ -523,4 +523,6 @@ c("US/Samoa","Pago_Pago");
 c("Universal","UTC");
 c("W-SU","Moscow");
 c("Zulu","UTC");
+fan.sys.TimeZone.m_utc = fan.sys.TimeZone.fromStr('UTC');
+fan.sys.TimeZone.m_rel = fan.sys.TimeZone.fromStr('Rel');
 }).call(this);

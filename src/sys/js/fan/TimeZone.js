@@ -58,16 +58,12 @@ fan.sys.TimeZone.defVal = function()
 
 fan.sys.TimeZone.utc = function()
 {
-  var u = fan.sys.TimeZone.fromStr("UTC");
-  if (u == null) u = fan.sys.TimeZone.m_utc;
-  return u;
+  return fan.sys.TimeZone.m_utc;
 }
 
 fan.sys.TimeZone.rel = function()
 {
-  var u = fan.sys.TimeZone.fromStr("Rel");
-  if (u == null) u = fan.sys.TimeZone.m_rel;
-  return u;
+  return fan.sys.TimeZone.m_rel;
 }
 
 fan.sys.TimeZone.cur = function()
