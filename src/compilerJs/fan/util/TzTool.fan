@@ -85,6 +85,11 @@ class TzTool
         jsOut.printLine("c(${alias.toCode},${target.toCode});")
       }
 
+      // assign static utc and rel fields
+      jsOut.printLine("fan.sys.TimeZone.m_utc = fan.sys.TimeZone.fromStr('UTC');")
+      jsOut.printLine("fan.sys.TimeZone.m_rel = fan.sys.TimeZone.fromStr('Rel');")
+
+
       jsOut.printLine("}).call(this);")
     }
     finally jsOut.close
