@@ -211,6 +211,8 @@ class DateTimeTest : Test
 
   Void testNowUnique()
   {
+    if (Env.cur.runtime == "js") return;
+
     // spawn off a bunch of actors to loop on DateTime.nowUnique
     futures := Future[,]
     10.times |->|
@@ -404,11 +406,14 @@ class DateTimeTest : Test
     verifyEq(Weekday.localeVals.isImmutable, true)
     verifySame(Weekday.localeVals, Weekday.localeVals)
 
-    Locale.fromStr("fi", false).use
+    if (Env.cur.runtime != "js")
     {
-      verifyEq(Weekday.localeVals, [Weekday.mon, Weekday.tue, Weekday.wed, Weekday.thu, Weekday.fri, Weekday.sat, Weekday.sun])
-      verifyEq(Weekday.localeVals.isImmutable, true)
-      verifySame(Weekday.localeVals, Weekday.localeVals)
+      Locale.fromStr("fi", false).use
+      {
+        verifyEq(Weekday.localeVals, [Weekday.mon, Weekday.tue, Weekday.wed, Weekday.thu, Weekday.fri, Weekday.sat, Weekday.sun])
+        verifyEq(Weekday.localeVals.isImmutable, true)
+        verifySame(Weekday.localeVals, Weekday.localeVals)
+      }
     }
 
     verifyErr(ArgErr#) { Weekday.sun.toLocale("") }
