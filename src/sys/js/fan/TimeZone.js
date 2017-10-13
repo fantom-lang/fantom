@@ -346,8 +346,8 @@ fan.sys.TimeZone.alias$ = function(alias, target)
 {
   var parts = alias.split("/");
   fan.sys.TimeZone.aliases[alias] = target;
-  // if alias is continent/city, also alias city
-  if (parts.length == 2) fan.sys.TimeZone.aliases[parts[1]] = target;
+  // if alias contains slashses, also alias the city
+  if (parts.length > 1) fan.sys.TimeZone.aliases[parts[parts.length-1]] = target;
 }
 
 //////////////////////////////////////////////////////////////////////////
