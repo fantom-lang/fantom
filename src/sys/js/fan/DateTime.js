@@ -663,6 +663,39 @@ fan.sys.DateTime.prototype.toHttpStr = function()
     "WWW, DD MMM YYYY hh:mm:ss", fan.sys.Locale.fromStr("en")) + " GMT";
 }
 
+fan.sys.DateTime.fromHttpStr = function(s, checked)
+{
+  if (checked === undefined) checked = true;
+  var oldLoc = fan.sys.Locale.cur();
+  var formats = ["WWW, DD MMM YYYY hh:mm:ss zzz",
+                 "WWWW, DD-MMM-YY hh:mm:ss zzz",
+                 // NOTE: this is not actual pattern for asctime(), but
+                 // DateTime.fromLocale does not honor multiple spaces in a row.
+                 // Not sure if that is a bug or not. Actual format is
+                 //      "WWW MMM  D hh:mm:ss YYYY"
+                 "WWW MMM D hh:mm:ss YYYY",]
+  try
+  {
+    fan.sys.Locale.setCur(fan.sys.Locale.m_en);
+    // Need to see if it is asctime() format and tweak the input s
+    // so that it will match using DateTime.fromLocale
+    let temp = s;
+    if (s.substring(0, 9).endsWith('  '))
+      temp = s.substring(0,8) + s.substring(9);
+    for (let i = 0; i < formats.length; ++i)
+    {
+      let dt = fan.sys.DateTime.fromLocale(temp, formats[i], fan.sys.TimeZone.utc(), false);
+      if (dt != null) return dt;
+    }
+  }
+  finally
+  {
+    fan.sys.Locale.setCur(oldLoc);
+  }
+  if (!checked) return null;
+  throw fan.sys.ParseErr.make("Invalid HTTP DateTime: '" + s + "'")
+}
+
 //////////////////////////////////////////////////////////////////////////
 // ISO 8601
 //////////////////////////////////////////////////////////////////////////
