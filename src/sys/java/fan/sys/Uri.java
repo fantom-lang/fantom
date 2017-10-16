@@ -256,6 +256,7 @@ public final class Uri
         String seg = (String)path.get(i);
         if (seg.equals(".") && (path.sz() > 1 || host != null))
         {
+          if (path.isRO()) path = path.rw();
           path.removeAt(i);
           modified = true;
           dotLast = true;
@@ -263,6 +264,7 @@ public final class Uri
         }
         else if (seg.equals("..") && i > 0 && !path.get(i-1).toString().equals(".."))
         {
+          if (path.isRO()) path = path.rw();
           path.removeAt(i);
           path.removeAt(i-1);
           modified = true;

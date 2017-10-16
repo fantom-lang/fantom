@@ -745,6 +745,7 @@ class UriTest : Test
 
     // misc
     verifyPlus(`/c:/dev/fan/`, `tmp/test/`, `/c:/dev/fan/tmp/test/`)
+    verifyPlus(`https://example.org/`, `/.`, `https://example.org/`)
   }
 
   Void testPlusRfc3986()
