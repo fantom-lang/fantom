@@ -92,10 +92,10 @@ using graphics
   const Str type
 
   ** Mouse position relative to page.
-  const Pos pagePos
+  const Point pagePos
 
   ** Mouse position relative to node.
-  const Pos nodePos
+  const Point nodePos
 
   ** Size of node for this event.
   const Size size
@@ -313,15 +313,15 @@ using graphics
       blockElem := node.elem
       nodeElem  := blockElem.firstChild
       indent    := (node.depth + 1) * depthIndent
-      npos      := e.pagePos.rel(nodeElem)
+      npos      := nodeElem.relPos(e.pagePos)
 
       // outside of content
-      if (npos.x - indent < 0) return
+      if (npos.x.toInt - indent < 0) return
 
       cb.call(TreeEvent(this, node) {
         it.type    = e.type
         it.pagePos = e.pagePos
-        it.nodePos = Pos(npos.x-indent, npos.y)
+        it.nodePos = Point(npos.x-indent, npos.y)
         it.size    = Size(nodeElem.size.w-indent, nodeElem.size.h)
       })
     }

@@ -9,6 +9,8 @@
 //   26 Aug 2015  Andy Frank  Rename back to Event
 //
 
+using graphics
+
 **
 ** Event models the DOM event object.
 **
@@ -33,7 +35,7 @@ class Event
   native Elem target()
 
   ** The mouse position of this event relative to page.
-  native Pos pagePos()
+  native Point pagePos()
 
   ** Return true if the ALT key was pressed during the event.
   native Bool alt()
@@ -52,7 +54,7 @@ class Event
   native Int? button()
 
   ** Scroll amount for wheel events.
-  native Pos? delta()
+  native Point? delta()
 
   ** Key instance for key pressed.
   native Key? key()

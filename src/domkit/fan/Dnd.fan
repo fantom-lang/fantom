@@ -8,6 +8,7 @@
 
 using concurrent
 using dom
+using graphics
 
 **************************************************************************
 ** DragTarget
@@ -90,7 +91,7 @@ using dom
         // TODO: need to translate these to pageX,pageY
         Int x := e->clientX
         Int y := e->clientY
-        cbOver(Pos(x,y))
+        cbOver(Point(x,y))
       }
     }
     elem.onEvent(EventType.dragLeave, false) |e|
@@ -115,7 +116,7 @@ using dom
 
   ** Callback when drag target is over this drop target, where
   ** 'pagePos' is the current drag node.
-  Void onOver(|Pos pagePos| f) { this.cbOver = f }
+  Void onOver(|Point pagePos| f) { this.cbOver = f }
 
   private Bool _canDrop(Obj data)
   {
