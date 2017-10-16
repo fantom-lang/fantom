@@ -92,7 +92,7 @@ class Win
 //////////////////////////////////////////////////////////////////////////
 
   ** Return current scroll position of document in this window.
-  native Pos scrollPos()
+  native Point scrollPos()
 
   ** Scrolls to a particular set of coordinates in the document.
   native This scrollTo(Int x, Int y)

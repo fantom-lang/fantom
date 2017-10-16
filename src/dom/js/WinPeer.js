@@ -154,7 +154,7 @@ fan.dom.WinPeer.prototype.scrollPos = function(self)
   var x = this.win.scrollX;
   var y = this.win.scrollY;
   if (!this.m_scrollPos || this.m_scrollPos.m_x != x || this.m_scrollPos.m_y != y)
-    this.m_scrollPos = fan.dom.Pos.make(x, y);
+    this.m_scrollPos = fan.graphics.Point.makeInt(x, y);
   return this.m_scrollPos;
 }
 
