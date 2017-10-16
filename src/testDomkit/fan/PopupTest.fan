@@ -46,6 +46,6 @@ class PopupTest : DomkitTest
       },
     }
 
-    p.open(b.pagePos.x, b.pagePos.y + b.size.h.toInt)
+    p.open(b.pagePos.x, b.pagePos.y + b.size.h)
   }
 }

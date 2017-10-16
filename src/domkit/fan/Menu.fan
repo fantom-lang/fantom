@@ -7,6 +7,7 @@
 //
 
 using dom
+using graphics
 
 **
 ** Popup menu
@@ -96,8 +97,8 @@ using dom
     iy := item.pos.y
     ih := item.size.h
 
-    if (sy > iy) this.scrollPos = Pos(0, iy)
-    else if (sy + mh < iy + ih) this.scrollPos = Pos(0, (iy + ih - mh).toInt)
+    if (sy > iy) this.scrollPos = Point(0f, iy)
+    else if (sy + mh < iy + ih) this.scrollPos = Point(0f, (iy + ih - mh))
   }
 
   private Int? findPrev(Int start)

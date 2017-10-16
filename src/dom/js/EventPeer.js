@@ -25,7 +25,7 @@ fan.dom.EventPeer.prototype.target = function(self)
 fan.dom.EventPeer.prototype.pagePos = function(self)
 {
   if (this.$pagePos == null)
-    this.$pagePos = fan.dom.Pos.make(this.event.pageX, this.event.pageY);
+    this.$pagePos = fan.graphics.Point.makeInt(this.event.pageX, this.event.pageY);
   return this.$pagePos;
 }
 
@@ -42,8 +42,8 @@ fan.dom.EventPeer.prototype.delta = function(self)
   if (this.$delta == null)
   {
     this.$delta = this.event.deltaX != null && this.event.deltaY != null
-      ? fan.dom.Pos.make(this.event.deltaX, this.event.deltaY)
-      : fan.dom.Pos.m_defVal;
+      ? fan.graphics.Point.makeInt(this.event.deltaX, this.event.deltaY)
+      : fan.graphics.Point.m_defVal;
   }
   return this.$delta;
 }

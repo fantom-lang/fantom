@@ -7,6 +7,7 @@
 //
 
 using dom
+using graphics
 
 **
 ** SashBox lays out children in a single direction allowing both
@@ -95,7 +96,7 @@ using dom
     if (!resizable) return
     if (resizeIndex == null) return
 
-    p := e.pagePos.rel(this)
+    p := this.relPos(e.pagePos)
     this.active = true
 
     splitter = Elem { it.style.addClass("domkit-SashBox-splitter") }
@@ -120,7 +121,7 @@ using dom
     if (!resizable) return
     if (!active) return
 
-    p := e.pagePos.rel(this)
+    p := this.relPos(e.pagePos)
     kids := children
     if (dir == Dir.down)
     {
@@ -144,7 +145,7 @@ using dom
   {
     if (!resizable) return
 
-    p := e.pagePos.rel(this)
+    p := this.relPos(e.pagePos)
     if (active)
     {
       // drag splitter
@@ -163,8 +164,8 @@ using dom
     else
     {
       // check for roll-over cursor
-      x := 0
-      y := 0
+      x := 0f
+      y := 0f
       kids := children
 
       for (i:=0; i<kids.size-1; i++)
@@ -200,7 +201,7 @@ using dom
     }
   }
 
-  private Void applyResize(Int index, Int delta)
+  private Void applyResize(Int index, Float delta)
   {
     // convert to % if needed
     sizesToPercent
@@ -218,7 +219,7 @@ using dom
     // split delta between adjacent children
     working := sizes.dup
     sz := dir == Dir.down ? this.size.h : this.size.w
-    dp := delta.toFloat / sz.toFloat * 100f
+    dp := delta / sz * 100f
     av := (dav + dp).toLocale("0.00").toFloat
     bv := (dav + dbv - av).toLocale("0.00").toFloat
     if (av < min)
