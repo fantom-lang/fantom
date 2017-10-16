@@ -228,10 +228,10 @@ using graphics
     numVisCols.times |c|
     {
       col  := firstVisCol + c
-      pos  := Pos(col, row)
+      pos  := Point(col, row)
       cell := cells[pos]
       if (cell == null) return
-      refreshCell(cell, pos.x, pos.y)
+      refreshCell(cell, pos.x.toInt, pos.y.toInt)
     }
   }
 
@@ -239,7 +239,7 @@ using graphics
   private Void refreshCell(Elem? cell, Int col, Int row)
   {
     // get cell
-    cell = cell ?: cells[Pos(col, row)]
+    cell = cell ?: cells[Point(col, row)]
     if (cell == null) throw Err("Cell not found: $col,$row")
 
     // update static view style
@@ -422,7 +422,7 @@ using graphics
           it.focused  = manFocus
           it.selected = rowSel
         }
-        cells[Pos(c, r)] = cell
+        cells[Point(c, r)] = cell
         if (c < numCols && r < numRows) view.onCell(cell, c, r, flags)
         tbody.add(cell)
       }
@@ -460,10 +460,10 @@ using graphics
         it.onEvent(EventType.mouseOut,  false) |e| { hbarPageId = stopScrollPage(hbarPageId) }
         it.onEvent(EventType.mouseDown, false) |e| {
           e.stop
-          p := e.pagePos.rel(e.target)
+          p := e.target.relPos(e.pagePos)
           thumb := e.target.firstChild
-          if (p.x < thumb.pos.x) hbarPageId = startScrollPage(Pos(-tbodyw, 0))
-          else if (p.x > thumb.pos.x + thumb.size.w.toInt) hbarPageId = startScrollPage(Pos(tbodyw, 0))
+          if (p.x < thumb.pos.x) hbarPageId = startScrollPage(Point(-tbodyw, 0))
+          else if (p.x > thumb.pos.x + thumb.size.w.toInt) hbarPageId = startScrollPage(Point(tbodyw, 0))
         }
 
         Elem {
@@ -475,16 +475,16 @@ using graphics
           it.onEvent(EventType.mouseDoubleClick, false) |e| { e.stop }
           it.onEvent(EventType.mouseDown, false) |e| {
             e.stop
-            hthumbDragOff = e.pagePos.rel(hbar.firstChild).x
+            hthumbDragOff = hbar.firstChild.relPos(e.pagePos).x.toInt
 
             doc := Win.cur.doc
             Obj? fmove
             Obj? fup
 
             fmove = doc.onEvent(EventType.mouseMove, true) |de| {
-              dx := de.pagePos.rel(hbar).x - hthumbDragOff
+              dx := hbar.relPos(de.pagePos).x - hthumbDragOff
               sx := (dx.toFloat / htrackw.toFloat * maxScrollx).toInt
-              onScroll(Pos(sx - scrollx, 0))
+              onScroll(Point.makeInt(sx - scrollx, 0))
             }
 
             fup = doc.onEvent(EventType.mouseUp, true) |de| {
@@ -512,10 +512,10 @@ using graphics
         it.onEvent(EventType.mouseOut,  false) |e| { vbarPageId = stopScrollPage(vbarPageId) }
         it.onEvent(EventType.mouseDown, false) |e| {
           e.stop
-          p := e.pagePos.rel(e.target)
+          p := e.target.relPos(e.pagePos)
           thumb := e.target.firstChild
-          if (p.y < thumb.pos.y) vbarPageId = startScrollPage(Pos(0, -tbodyh))
-          else if (p.y > thumb.pos.y + thumb.size.h.toInt) vbarPageId = startScrollPage(Pos(0, tbodyh))
+          if (p.y < thumb.pos.y) vbarPageId = startScrollPage(Point(0, -tbodyh))
+          else if (p.y > thumb.pos.y + thumb.size.h.toInt) vbarPageId = startScrollPage(Point(0, tbodyh))
         }
 
         Elem {
@@ -527,16 +527,16 @@ using graphics
           it.onEvent(EventType.mouseDoubleClick, false) |e| { e.stop }
           it.onEvent(EventType.mouseDown, false) |e| {
             e.stop
-            vthumbDragOff = e.pagePos.rel(vbar.firstChild).y
+            vthumbDragOff = vbar.firstChild.relPos(e.pagePos).y.toInt
 
             doc := Win.cur.doc
             Obj? fmove
             Obj? fup
 
             fmove = doc.onEvent(EventType.mouseMove, true) |de| {
-              dy := de.pagePos.rel(vbar).y - vthumbDragOff
+              dy := vbar.relPos(de.pagePos).y - vthumbDragOff
               sy := (dy.toFloat / vtrackh.toFloat * maxScrolly).toInt
-              onScroll(Pos(0, sy - scrolly))
+              onScroll(Point.makeInt(0, sy - scrolly))
             }
 
             fup = doc.onEvent(EventType.mouseUp, true) |de| {
@@ -552,7 +552,7 @@ using graphics
   }
 
   ** Start scroll page event.
-  private Int? startScrollPage(Pos delta)
+  private Int? startScrollPage(Point delta)
   {
     onScroll(delta)
     return Win.cur.setInterval(scrollPageFreq) { onScroll(delta) }
@@ -634,7 +634,7 @@ using graphics
       h.style->transform = "translate(${tx}px, 0)"
     }
     cells.each |c,p| {
-      tx := colxSafe(p.x) - scrollx
+      tx := colxSafe(p.x.toInt) - scrollx
       ty := (p.y * rowh) - scrolly
       c.style->transform = "translate(${tx}px, ${ty}px)"
     }
@@ -675,10 +675,10 @@ using graphics
       numVisRows.times |r|
       {
         row  := r + firstVisRow
-        op   := Pos(oldCol, row)
+        op   := Point(oldCol, row)
         cell := cells.remove(op)
         cell.style->width = newColw
-        cells[Pos(newCol, row)] = cell
+        cells[Point(newCol, row)] = cell
         refreshCell(cell, newCol, row)
       }
     }
@@ -715,9 +715,9 @@ using graphics
       numVisCols.times |c|
       {
         col  := c + firstVisCol
-        op   := Pos(col, oldRow)
+        op   := Point(col, oldRow)
         cell := cells.remove(op)
-        cells[Pos(col, newRow)] = cell
+        cells[Point(col, newRow)] = cell
         refreshCell(cell, col, newRow)
       }
     }
@@ -761,7 +761,7 @@ using graphics
   }
 
   ** Callback to handle scroll event.
-  private Void onScroll(Pos? delta)
+  private Void onScroll(Point? delta)
   {
     // short-circuit if no data
     if (delta == null) return
@@ -776,8 +776,8 @@ using graphics
     }
 
     // update scroll offset
-    scrollx = (scrollx + delta.x).min(scrollBoundx).max(0)
-    scrolly = (scrolly + delta.y).min(scrollBoundy).max(0)
+    scrollx = (scrollx + delta.x.toInt).min(scrollBoundx).max(0)
+    scrolly = (scrolly + delta.y.toInt).min(scrollBoundy).max(0)
 
     // update content
     col := (colx.binarySearch(scrollx).not - 1).max(0).min(numCols - numVisCols).max(0)
@@ -791,19 +791,19 @@ using graphics
   {
     if (numCols == 0) return
 
-    p  := e.pagePos.rel(this)
-    mx := p.x + scrollx
-    my := p.y + scrolly - theadh
+    p  := this.relPos(e.pagePos)
+    mx := p.x.toInt + scrollx
+    my := p.y.toInt + scrolly - theadh
 
     if (mx > colx.last + colw.last) return
     col := colx.binarySearch(mx)
     if (col < 0) col = col.not - 1
 
-    if (p.y < theadh)
+    if (p.y.toInt < theadh)
     {
       if (e.type == EventType.mouseDown)
       {
-        if (hasHpbut && p.x > tbodyw-hpbutw)
+        if (hasHpbut && p.x.toInt > tbodyw-hpbutw)
         {
           // header popup
           Popup hp := cbHeaderPopup.call(this)
@@ -845,7 +845,7 @@ using graphics
           it.col     = col
           it.row     = row
           it.pagePos = e.pagePos
-          it.cellPos = Pos(cx, cy)
+          it.cellPos = Point(cx, cy)
           it.size    = Size(colw[col], rowh)
         })
       }
@@ -1008,7 +1008,7 @@ using graphics
   private Elem? hbar
   private Elem? vbar
   private Int:Elem headers := [:]
-  private Pos:Elem cells   := [:]
+  private Point:Elem cells := [:]
   private Int theadh         // thead height
   private Int tbodyw         // tbody width
   private Int tbodyh         // tbody height
@@ -1147,10 +1147,10 @@ using graphics
   const Int row
 
   ** Mouse position relative to page.
-  const Pos pagePos
+  const Point pagePos
 
   ** Mouse position relative to cell.
-  const Pos cellPos
+  const Point cellPos
 
   ** Size of cell for this event.
   const Size size

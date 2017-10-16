@@ -17,7 +17,7 @@ fan.dom.ElemPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.dom.ElemPeer.prototype.$ctor = function(self)
 {
-  this.m_pos  = fan.dom.Pos.m_defVal;
+  this.m_pos  = fan.graphics.Point.m_defVal;
   this.m_size = fan.graphics.Size.m_defVal;
 }
 
@@ -224,13 +224,13 @@ fan.dom.ElemPeer.prototype.pos = function(self)
   var x = this.elem.offsetLeft;
   var y = this.elem.offsetTop;
   if (this.m_pos.m_x != x || this.m_pos.m_y != y)
-    this.m_pos = fan.dom.Pos.make(x, y);
+    this.m_pos = fan.graphics.Point.makeInt(x, y);
   return this.m_pos;
 }
 
 fan.dom.ElemPeer.prototype.pos$ = function(self, val)
 {
-  this.m_pos = fan.dom.Pos.make(val.m_x, val.m_y);
+  this.m_pos = fan.graphics.Point.makeInt(val.m_x, val.m_y);
   this.elem.style.left = val.m_x + "px";
   this.elem.style.top  = val.m_y + "px";
 }
@@ -240,7 +240,7 @@ fan.dom.ElemPeer.prototype.pagePos = function(self)
   var r = this.elem.getBoundingClientRect();
   var x = Math.round(r.left);
   var y = Math.round(r.top);
-  return fan.dom.Pos.make(x, y);
+  return fan.graphics.Point.makeInt(x, y);
 }
 
 fan.dom.ElemPeer.prototype.size = function(self)
@@ -264,13 +264,13 @@ fan.dom.ElemPeer.prototype.scrollPos = function(self)
   var x = this.elem.scrollLeft;
   var y = this.elem.scrollTop;
   if (!this.m_scrollPos || this.m_scrollPos.m_x != x || this.m_scrollPos.m_y != y)
-    this.m_scrollPos = fan.dom.Pos.make(x, y);
+    this.m_scrollPos = fan.graphics.Point.makeInt(x, y);
   return this.m_scrollPos;
 }
 
 fan.dom.ElemPeer.prototype.scrollPos$ = function(self, val)
 {
-  this.m_scrollPos = fan.dom.Pos.make(val.m_x, val.m_y);
+  this.m_scrollPos = fan.graphics.Point.makeInt(val.m_x, val.m_y);
   this.elem.scrollLeft = val.m_x;
   this.elem.scrollTop  = val.m_y;
 }

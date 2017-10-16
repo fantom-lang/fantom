@@ -131,10 +131,17 @@ class Elem
 //////////////////////////////////////////////////////////////////////////
 
   ** Position of element relative to its parent in pixels.
-  native Pos pos
+  native Point pos
 
   ** Position of element relative to the whole document.
-  native Pos pagePos()
+  native Point pagePos()
+
+  ** Given a page position, return 'p' relative to this element.
+  Point relPos(Point p)
+  {
+    pp := this.pagePos
+    return Point(p.x - pp.x, p.y - pp.y)
+  }
 
   ** Size of element in pixels.
   native Size size
@@ -149,7 +156,7 @@ class Elem
   // }
 
   ** Top left scroll position of element.
-  native Pos scrollPos
+  native Point scrollPos
 
   ** Scrollable size of element.
   native Size scrollSize()

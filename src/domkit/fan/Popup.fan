@@ -37,7 +37,7 @@ using graphics
 
   ** Open this popup in the current Window. If popup
   ** is already open this method does nothing.
-  Void open(Int x, Int y)
+  Void open(Float x, Float y)
   {
     sz := measure
 
@@ -121,7 +121,7 @@ using graphics
 
   private const Int uid
   private static const AtomicRef nextId := AtomicRef(0)
-  private static const Int gutter := 12
+  private static const Float gutter := 12f
   private Func? cbOpen
   private Func? cbClose
 }

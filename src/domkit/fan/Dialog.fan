@@ -65,16 +65,16 @@ using dom
           e.stop
           vp  := Win.cur.viewport
           doc := Win.cur.doc
-          off := e.pagePos.rel(doc.body)
+          off := doc.body.relPos(e.pagePos)
           fps := frame.pos
           fsz := frame.size
           Obj? fmove
           Obj? fup
 
           fmove = doc.onEvent(EventType.mouseMove, true) |de| {
-            pos := de.pagePos.rel(doc.body)
-            fx  := (pos.x - (off.x - fps.x)).max(0).min(vp.w.toInt - fsz.w.toInt)
-            fy  := (pos.y - (off.y - fps.y)).max(0).min(vp.h.toInt - fsz.h.toInt)
+            pos := doc.body.relPos(de.pagePos)
+            fx  := (pos.x.toInt - (off.x.toInt - fps.x.toInt)).max(0).min(vp.w.toInt - fsz.w.toInt)
+            fy  := (pos.y.toInt - (off.y.toInt - fps.y.toInt)).max(0).min(vp.h.toInt - fsz.h.toInt)
             mask.style->display = "block"
             frame.style->position = "absolute"
             frame.style->left = "${fx}px"
