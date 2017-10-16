@@ -68,6 +68,8 @@ public class Fwt
 // Display
 //////////////////////////////////////////////////////////////////////////
 
+  public Display display() { return display; }
+
   public void mainEventLoop(Shell shell)
   {
     eventLoop(shell);
@@ -268,6 +270,11 @@ public class Fwt
 //////////////////////////////////////////////////////////////////////////
 // Images
 //////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Access to images cache
+   */
+  public HashMap images() { return images; }
 
   /**
    * Map a Fan Image to an SWT Image.
