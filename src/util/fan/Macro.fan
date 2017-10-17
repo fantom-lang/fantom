@@ -108,7 +108,7 @@
   }
 
   ** Get a list of all the macro keys in the order they appear in the macro
-  ** `text`. Duplicates are not removed.
+  ** `pattern`. Duplicates are not removed.
   **
   **   Macro("{{hello}} {{world}}! Good-bye {{world}}").keys
   **      => ["hello", "world", "world"]
