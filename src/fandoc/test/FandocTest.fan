@@ -118,6 +118,7 @@ class FandocTest : Test
     verifyDoc("![cool image][100x200]`cool.png`", ["<body>", ["<p>", ["<img cool image;cool.png;100x200>"]]])
     verifyDoc("![Brian's Idea]`http://foo/idea.gif`", ["<body>", ["<p>", ["<img Brian's Idea;http://foo/idea.gif>"]]])
     verifyDoc("alpha ![x]`img.png` beta", ["<body>", ["<p>", "alpha ", ["<img x;img.png>"], " beta"]])
+    verifyDoc("[![x]`img.png`]`#link`", ["<body>", ["<p>", ["<a>", ["<img x;img.png>"]]]])
   }
 
 //////////////////////////////////////////////////////////////////////////
