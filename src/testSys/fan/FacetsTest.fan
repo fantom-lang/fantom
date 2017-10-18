@@ -137,6 +137,9 @@ class FacetsTest : Test
     verifyEq(FacetsC2#.facet(FacetsF3#)->n, "FacetsC1")
     verifyEq(FacetsC2#.facet(FacetsF4#)->n, "FacetsM3")
 
+    // Null FacetsF1
+    verifyEq(FacetsNull#.facet(FacetsF1#)->n, null)
+
     // sanity
     verifyEq(FacetsC2#.facets.isImmutable, true)
     verifySame(FacetsC2#.facets, FacetsC2#.facets)
@@ -191,3 +194,7 @@ class FacetsC1 : FacetsM2, FacetsM3 {}
 @Js
 @FacetsF1 { n = "FacetsC2" }
 class  FacetsC2 : FacetsC1 {}
+
+@Js
+@FacetsF1 { n = null }
+class  FacetsNull {}
