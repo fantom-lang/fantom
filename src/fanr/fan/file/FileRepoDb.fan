@@ -39,6 +39,7 @@ internal class FileRepoDb
       case FileRepoMsg.find:     return find(msg.a, msg.b)
       case FileRepoMsg.query:    return query(msg.a, msg.b)
       case FileRepoMsg.publish:  return publish(msg.a)
+      case FileRepoMsg.refresh:  return refresh
       default:                   throw Err("Unknown msg: $msg")
     }
   }
@@ -111,6 +112,12 @@ internal class FileRepoDb
 
     // sort by highest to lowest version
     podDir.sortAll
+  }
+
+  private Obj? refresh()
+  {
+    podDirs.clear
+    return load
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -252,6 +259,7 @@ internal const class FileRepoMsg
   const static Int query    := 2  // a=query, b=numVersions
   const static Int versions := 3  // a=Str
   const static Int publish  := 4  // a=File
+  const static Int refresh  := 5  //
 
   new make(Int id, Obj? a := null, Obj? b := null) { this.id = id; this.a = a; this.b = b}
 

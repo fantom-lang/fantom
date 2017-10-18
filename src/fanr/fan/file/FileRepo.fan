@@ -87,6 +87,13 @@ internal const class FileRepo : Repo
     return r
   }
 
+  ** Send actor message to refresh entire cache from disk
+  Future refresh()
+  {
+    msg := FileRepoMsg(FileRepoMsg.refresh)
+    return actor.send(msg)
+  }
+
   ** Dispatch actor message to our FileRepoDb
   private Obj? receive(Obj? msg)
   {
