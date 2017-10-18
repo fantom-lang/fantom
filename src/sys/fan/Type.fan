@@ -243,7 +243,7 @@ const class Type
   Type parameterize(Str:Type params)
 
   **
-  ** Convenience for List#.parameterize(["V":this])
+  ** Convenience for 'List#.parameterize(["V":this])'
   **
   ** Examples:
   **   Int#.toListOf => Int[]

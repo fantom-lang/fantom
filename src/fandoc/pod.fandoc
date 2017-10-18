@@ -42,6 +42,7 @@ pre>
   - Inline code: 'FandocParser'
   - Strong: **foo bar**
   - Emphasis: *foo bar*
+  - Strong+Emphasis: ** *foo bar* **
   - Hyperlink: `http://fantom.org/`
   - Hyperlink: [Fantom Home Page]`http://fantom.org/`
 <pre
@@ -49,6 +50,7 @@ pre>
   - Code inline: 'FandocParser'
   - Strong: **foo bar**
   - Emphasis: *foo bar*
+  - Strong+Emphasis: ** *foo bar* **
   - Hyperlink: `http://fantom.org/`
   - Hyperlink: [Fantom Home Page]`http://fantom.org/`
 

@@ -52,7 +52,7 @@ internal class InlineParser
   {
     stack.push(parent)
     DocNode? child
-    if (last.isSpace || last == '*' || last == '/')
+    if (last.isSpace || last == '*' || last == '/' || last == '(')
     {
       switch (cur)
       {
@@ -84,7 +84,7 @@ internal class InlineParser
       case '\'':
       case '`':
       case '[':
-        return last.isSpace
+        return last.isSpace || last == '('
 
       // ![
       case '!':

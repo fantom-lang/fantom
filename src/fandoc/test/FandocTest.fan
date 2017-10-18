@@ -102,6 +102,7 @@ class FandocTest : Test
 
     verifyDoc("[cool site]`http://cool/`", ["<body>", ["<p>", ["<a http://cool/>", "cool site"]]])
     verifyDoc("Check [cool site]`http://cool/`!", ["<body>", ["<p>", "Check ", ["<a http://cool/>", "cool site"], "!"]])
+    verifyDoc("([cool site]`http://cool/`)", ["<body>", ["<p>", "(", ["<a http://cool/>", "cool site"], ")"]])
 
     // empty [] are normal text
     verifyDoc("[]", ["<body>", ["<p>", "[]"]])
@@ -609,7 +610,10 @@ class FandocTest : Test
   {
     parser := FandocParser { silent = true }
     doc := parser.parse("Test", str.in)
+
+    // echo("__________________\n$str\n\n")
     // doc.write(HtmlDocWriter())
+
     verifyDocNode(doc, expected)
 
     roundtrip := StrBuf()
