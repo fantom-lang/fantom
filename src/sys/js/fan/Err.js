@@ -18,16 +18,16 @@ fan.sys.Err = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.sys.Err.prototype.$ctor = function(msg, cause)
 {
+  this.$err    = new Error();
   this.m_msg   = msg;
   this.m_cause = cause;
-  this.m_stack = new Error().stack;
 }
 
 fan.sys.Err.make$ = function(self, msg, cause)
 {
+  this.$err    = new Error();
   self.m_msg   = msg;
   self.m_cause = cause;
-  self.m_stack = new Error().stack;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -62,8 +62,8 @@ fan.sys.Err.prototype.trace = function()
 fan.sys.Err.prototype.traceToStr = function()
 {
   var s = this.$typeof() + ": " + this.m_msg;
-  if (this.m_stack != null) s += "\n" + fan.sys.Err.cleanTrace(this.m_stack);
-  if (this.m_cause != null) s += "\n  Caused by: " + this.m_cause.traceToStr();
+  if (this.$err.stack) s += "\n" + fan.sys.Err.cleanTrace(this.$err.stack);
+  if (this.m_cause)    s += "\n  Caused by: " + this.m_cause.traceToStr();
   return s;
 }
 
