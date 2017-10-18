@@ -58,6 +58,16 @@ fan.sys.Float.isNaN = function(self)
   return isNaN(self);
 }
 
+fan.sys.Float.isNegZero = function(self)
+{
+  return 1/self === -Infinity;
+}
+
+fan.sys.Float.normNegZero = function(self)
+{
+  return fan.sys.Float.isNegZero(self) ? 0.0 : self;
+}
+
 // TODO FIXIT: hash
 fan.sys.Float.hash = function(self) { fan.sys.Str.hash(self.toString()); }
 
@@ -155,6 +165,7 @@ fan.sys.Float.fromStr = function(s, checked)
 fan.sys.Float.toStr = function(self)
 {
   if (isNaN(self)) return "NaN";
+  if (fan.sys.Float.isNegZero(self)) return "-0.0";
   if (self == fan.sys.Float.m_posInf) return "INF";
   if (self == fan.sys.Float.m_negInf) return "-INF";
   return (fan.sys.Float.toInt(self) == self) ? self.toFixed(1) : ""+self;
