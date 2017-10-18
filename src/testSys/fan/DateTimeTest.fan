@@ -789,8 +789,11 @@ class DateTimeTest : Test
     verifyErr(ArgErr#) { x := DateTime.make(2007, Month.jun, 6, 0, 0, 60) }
     verifyErr(ArgErr#) { x := DateTime.make(2007, Month.jun, 6, 0, 0, 0, -1) }
     verifyErr(ArgErr#) { x := DateTime.make(2007, Month.jun, 6, 0, 0, 0, 1_000_000_000) }
-    verifyErr(ArgErr#) { x := DateTime.makeTicks(-3124137600000_000001, utc) }
     verifyErr(ArgErr#) { x := DateTime.makeTicks(3155760000000_000000, utc) }
+
+    // JS cannot represent this number, it rounds to _000000, which causes the test  to fail
+    if (Env.cur.runtime != "js")
+      verifyErr(ArgErr#) { x := DateTime.makeTicks(-3124137600000_000001, utc) }
   }
 
   Void verifyDateTime(Int ticks, TimeZone tz, Int year, Month month, Int day,
@@ -1613,7 +1616,8 @@ class DateTimeTest : Test
   {
     d := Date(date)
     Locale("en-US").use { doVerifyWeekOfYear(d, us) }
-    Locale("fi").use    { doVerifyWeekOfYear(d, fi) }
+    if (Env.cur.runtime != "js")
+      Locale("fi").use    { doVerifyWeekOfYear(d, fi) }
     verifyEq(d.weekOfYear(Weekday.tue), tue)
     verifyEq(d.toDateTime(Time(23,59)).weekOfYear(Weekday.tue), tue)
   }
@@ -1735,6 +1739,8 @@ class DateTimeTest : Test
 
   Void testAllLocales()
   {
+    if (Env.cur.runtime == "js") return
+
     locales := Pod.find("sys").files.findAll |f| { f.pathStr.startsWith("/locale/") }.map |f| { f.basename }
     locales.each |locale|
     {

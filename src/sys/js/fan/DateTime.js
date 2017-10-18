@@ -449,8 +449,11 @@ fan.sys.DateTime.prototype.hoursInDay = function()
   var month = this.month().m_ordinal;
   var day   = this.day();
   var rule  = this.tz().rule(year);
-  if (fan.sys.TimeZone.isDstDate(rule, rule.dstStart, year, month, day)) return 23;
-  if (fan.sys.TimeZone.isDstDate(rule, rule.dstEnd, year, month, day))   return 25;
+  if (rule.dstStart != null)
+  {
+    if (fan.sys.TimeZone.isDstDate(rule, rule.dstStart, year, month, day)) return 23;
+    if (fan.sys.TimeZone.isDstDate(rule, rule.dstEnd, year, month, day))   return 25;
+  }
   return 24;
 }
 
