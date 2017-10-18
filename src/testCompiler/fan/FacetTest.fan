@@ -176,11 +176,13 @@ class FacetTest : CompilerTest
           @Str[] Int b
           @Foo Int c
           @A { a = 4; xyz = 5 } Int d
-        }
+          @A { b = null } Int e
+         }
 
         facet class A
         {
           const Str a := ""
+          const Obj b := ""
         }
         """,
      [
@@ -191,6 +193,7 @@ class FacetTest : CompilerTest
        6,  3, "Not a facet type '$podName::Foo'",
        7, 12, "Invalid type for facet field 'a': expected 'sys::Str' not 'sys::Int'",
        7, 21, "Unknown facet field '$podName::A.xyz'",
+       8, 12, "Cannot assign null to non-nullable facet field 'b': 'sys::Obj'",
      ])
 
     // Assemble
