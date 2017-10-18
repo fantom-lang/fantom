@@ -179,21 +179,40 @@ internal class InlineParser
     if (peek <= 0 || peek == ']')
       return text
 
-    s := brackets
-    if (cur == '`')
+    // there are three options for square brackets
+    //   [anchor]`url`         // hyperlink
+    //   [![alt]`image`]`url`  // image hyperlink (no spaces allowed)
+    //   [#frag]               // id to link to a heading
+
+    DocNode? body
+    Str? anchor
+    if (peek == '!' && peekPeek == '[')
     {
-      link := Link(uri)
-      link.add(DocText(s))
-      return link
-    }
-    else if (s.startsWith("#"))
-    {
-      parent.anchorId = s[1..-1]
-      return null
+      consume // [
+      body = image
+      if (cur != ']') throw err("Invalid img link")
+      consume  // ]
     }
     else
     {
-      throw err("Invalid annotation [${s}]")
+      s := brackets
+      if (s.startsWith("#"))
+      {
+        parent.anchorId = s[1..-1]
+        return null
+      }
+      body = DocText(s)
+    }
+
+    if (cur == '`')
+    {
+      link := Link(uri)
+      link.add(body)
+      return link
+    }
+    else
+    {
+      throw err("Invalid annotation []")
     }
   }
 
