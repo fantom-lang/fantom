@@ -21,8 +21,8 @@ using graphics
     this->tabIndex = 0
     this.style.addClass("domkit-Menu")
     this.onOpen { this.focus }
-    this.onEvent(EventType.mouseLeave, false) { select(null) }
-    this.onEvent(EventType.mouseOver, false) |e|
+    this.onEvent("mouseleave", false) { select(null) }
+    this.onEvent("mouseover", false) |e|
     {
       // keyboard scrolling generates move/over events we need to filter out
       if (lastEvent > 0) { lastEvent=0; return }
@@ -37,9 +37,9 @@ using graphics
       if (index != null) select(index)
       lastEvent = 0
     }
-    this.onEvent(EventType.mouseDown, false) |e| { armed=true }
-    this.onEvent(EventType.mouseUp,   false) |e| { if (armed) fireAction(e) }
-    this.onEvent(EventType.keyDown, false) |e|
+    this.onEvent("mousedown", false) |e| { armed=true }
+    this.onEvent("mouseup",   false) |e| { if (armed) fireAction(e) }
+    this.onEvent("keydown", false) |e|
     {
       switch (e.key)
       {

@@ -22,7 +22,7 @@ using dom
     this.style.addClass("domkit-Popup")
     this.style->zIndex = 2000
     // this.onEvent(EventType.mouseEnter, false) { inTooltip=true;  check }
-    // this.onEvent(EventType.mouseLeave, false) { inTooltip=false; check }
+    // this.onEvent("mouseleave", false) { inTooltip=false; check }
   }
 
   ** Time mouse must be over bound node before opening the
@@ -34,8 +34,8 @@ using dom
   {
     if (this.node != null) throw ArgErr("Tooltip already bound to $this.node")
     this.node = node
-    node.onEvent(EventType.mouseEnter, false) { inNode=true;  check }
-    node.onEvent(EventType.mouseLeave, false) { inNode=false; check }
+    node.onEvent("mouseenter", false) { inNode=true;  check }
+    node.onEvent("mouseleave", false) { inNode=false; check }
   }
 
   ** Check if tooltip should be opened or closed.

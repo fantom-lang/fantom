@@ -19,12 +19,12 @@ using dom
   {
     this.set("type", "text")
     this.style.addClass("domkit-control domkit-control-text domkit-TextField")
-    this.onEvent(EventType.input, false) |e|
+    this.onEvent("input", false) |e|
     {
       checkUpdate
       fireModify(e)
     }
-    this.onEvent(EventType.keyDown, false) |e|
+    this.onEvent("keydown", false) |e|
     {
       if (e.key == Key.enter) fireAction(e)
     }

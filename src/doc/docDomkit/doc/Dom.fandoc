@@ -190,17 +190,13 @@ added to Win using [Win.onEvent]`dom::Win.onEvent`:
 
 Likewise Elem can register callbacks using [Elem.onEvent]`dom::Elem.onEvent`:
 
-  elem.onEvent("mousedown",         false) |e| { echo("Pressed $e.target" }
-  elem.onEvent(EventType.mouseDown, false) |e| { echo("Pressed $e.target" }
-
-Both of the above examples are equivalent. By convention we prefer using
-[EventType]`dom::EventType` to register events to avoid typo errors.
+  elem.onEvent("mousedown", false) |e| { echo("Pressed $e.target" }
 
 To remove a registered event handler, pass the function instance to
 'removeEvent':
 
-  func := elem.onEvent(EventType.mouseDown, false) { ... }
-  elem.removeEvent(EventType.mouseDown, false, func)
+  func := elem.onEvent("mousedown", false) { ... }
+  elem.removeEvent("mousedown", false, func)
 
 See [Win]`dom::Win`, [Elem]`dom::Elem` and [Event]`dom::Event` for complete API
 details.

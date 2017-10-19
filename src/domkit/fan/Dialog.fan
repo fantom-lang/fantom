@@ -45,7 +45,7 @@ using dom
       it->tabIndex = 0
       it.style.addClass("domkit-Dialog-mask")
       it.style->opacity = "0"
-      it.onEvent(EventType.keyDown, false) |e| { cbKeyDown?.call(e) }
+      it.onEvent("keydown", false) |e| { cbKeyDown?.call(e) }
     }
 
     this.frame = Elem
@@ -61,7 +61,7 @@ using dom
       frame.add(Elem {
         it.style.addClass("domkit-control domkit-Dialog-title")
         it.text = title
-        it.onEvent(EventType.mouseDown, false) |e| {
+        it.onEvent("mousedown", false) |e| {
           e.stop
           vp  := Win.cur.viewport
           doc := Win.cur.doc
@@ -71,7 +71,7 @@ using dom
           Obj? fmove
           Obj? fup
 
-          fmove = doc.onEvent(EventType.mouseMove, true) |de| {
+          fmove = doc.onEvent("mousemove", true) |de| {
             pos := doc.body.relPos(de.pagePos)
             fx  := (pos.x.toInt - (off.x.toInt - fps.x.toInt)).max(0).min(vp.w.toInt - fsz.w.toInt)
             fy  := (pos.y.toInt - (off.y.toInt - fps.y.toInt)).max(0).min(vp.h.toInt - fsz.h.toInt)
@@ -81,10 +81,10 @@ using dom
             frame.style->top  = "${fy}px"
           }
 
-          fup = doc.onEvent(EventType.mouseUp, true) |de| {
+          fup = doc.onEvent("mouseup", true) |de| {
             de.stop
-            doc.removeEvent(EventType.mouseMove, true, fmove)
-            doc.removeEvent(EventType.mouseUp,   true, fup)
+            doc.removeEvent("mousemove", true, fmove)
+            doc.removeEvent("mouseup",   true, fup)
           }
         }
       })

@@ -19,8 +19,8 @@ class TableTest : DomkitTest
       it.sel.multi = true
       it.onAction |t| { echo("# action: $t.sel.indexes") }
       it.onSelect |t| { echo("# select: $t.sel.indexes") }
-      it.onTableEvent(EventType.mouseDown) |e| { echo("# cell-event $e") }
-      // it.onTableEvent(EventType.mouseUp)   |e| { echo(e) }
+      it.onTableEvent("mousedown") |e| { echo("# cell-event $e") }
+      // it.onTableEvent("mouseup")   |e| { echo(e) }
       // it.onTableEvent("mousemove") |e| { onTestMove(e) }
     }
 

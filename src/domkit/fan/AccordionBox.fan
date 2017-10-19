@@ -20,7 +20,7 @@ using dom
   new make() : super()
   {
     this.style.addClass("domkit-AccordionBox")
-    this.onEvent(EventType.mouseDown, false) |e| { onMouseDown(e) }
+    this.onEvent("mousedown", false) |e| { onMouseDown(e) }
   }
 
   ** Add a new group with given header and child nodes. Optionally

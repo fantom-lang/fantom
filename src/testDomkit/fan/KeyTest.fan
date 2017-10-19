@@ -25,11 +25,11 @@ class KeyTest : DomkitTest
         it.style->height  = "64px"
         it.style->textAlign = "center"
         it.text = "Focus and Press a key"
-        // it.onEvent(EventType.mouseDown, false) |e|
+        // it.onEvent("mousedown", false) |e|
         // {
         //   box.text = "MouseDown - $e.key"
         // }
-        it.onEvent(EventType.keyDown, false) |e|
+        it.onEvent("keydown", false) |e|
         {
           str := "$e.key.name - $e.key.code"
           if (e.alt   && e.key != Key.alt)   str = "Alt + $str"

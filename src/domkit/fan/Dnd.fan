@@ -29,14 +29,14 @@ using graphics
   private new make(Elem elem)
   {
     elem->draggable = true
-    elem.onEvent(EventType.dragStart, false) |e|
+    elem.onEvent("dragstart", false) |e|
     {
       if (cbDrag == null) return
       data := cbDrag.call(elem)
       DndUtil.map[data.hash] = data
       e.dataTransfer.setData("text/plain", data.hash.toStr)
     }
-    elem.onEvent(EventType.dragEnd, false) |e|
+    elem.onEvent("dragend", false) |e|
     {
       if (cbEnd != null) cbEnd(elem)
     }
@@ -77,13 +77,13 @@ using graphics
     if (pos != "relative" || pos != "absolute") elem.style["position"] = "relative"
 
     // setup events
-    elem.onEvent(EventType.dragEnter, false) |e|
+    elem.onEvent("dragenter", false) |e|
     {
       e.stop
       data := DndUtil.getData(e.dataTransfer)
       if (_canDrop(data)) elem.style.addClass("domkit-dnd-over")
     }
-    elem.onEvent(EventType.dragOver,  false) |e|
+    elem.onEvent("dragover",  false) |e|
     {
       e.stop
       if (cbOver != null)
@@ -94,12 +94,12 @@ using graphics
         cbOver(Point(x,y))
       }
     }
-    elem.onEvent(EventType.dragLeave, false) |e|
+    elem.onEvent("dragleave", false) |e|
     {
       if (e.target == elem)
         elem.style.removeClass("domkit-dnd-over")
     }
-    elem.onEvent(EventType.drop, false) |e|
+    elem.onEvent("drop", false) |e|
     {
       e.stop
       elem.style.removeClass("domkit-dnd-over")

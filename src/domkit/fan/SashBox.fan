@@ -20,9 +20,9 @@ using graphics
   new make() : super()
   {
     this.style.addClass("domkit-SashBox")
-    this.onEvent(EventType.mouseDown, true) |e| { onMouseDown(e) }
-    this.onEvent(EventType.mouseUp,   true) |e| { onMouseUp(e)   }
-    this.onEvent(EventType.mouseMove, true) |e| { onMouseMove(e) }
+    this.onEvent("mousedown", true) |e| { onMouseDown(e) }
+    this.onEvent("mouseup",   true) |e| { onMouseUp(e)   }
+    this.onEvent("mousemove", true) |e| { onMouseMove(e) }
   }
 
   **

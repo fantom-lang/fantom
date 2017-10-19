@@ -21,7 +21,7 @@ using dom
   {
     this.field = TextField
     {
-      it.onEvent(EventType.keyDown, false) |e|
+      it.onEvent("keydown", false) |e|
       {
         if (e.key == Key.down)
         {
