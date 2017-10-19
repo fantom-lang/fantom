@@ -130,6 +130,73 @@ public final class Future
     return Actor._safe(r);
   }
 
+  public final Future waitFor() { return waitFor(null); }
+  public final Future waitFor(Duration timeout)
+  {
+    try
+    {
+      synchronized (this)
+      {
+        // wait until we enter a done state, the only notifies
+        // on this object should be from cancel, complete, or completeErr
+        if (timeout == null)
+        {
+          // wait forever until done
+          while ((state & DONE) == 0) wait();
+        }
+        else
+        {
+          // if not done, then wait with timeout and then
+          // if still not done throw a timeout exception
+          if ((state & DONE) == 0)
+          {
+            // compute deadline in millis
+            long deadline = Duration.nowMillis() + timeout.millis();
+
+            // loop until we are done or our deadline has passed
+            while ((state & DONE) == 0)
+            {
+              long left = deadline - Duration.nowMillis();
+              if (left <= 0L) break;
+              wait(left);
+            }
+
+            // if we still aren't done this is a timeout
+            if ((state & DONE) == 0) throw TimeoutErr.make("Future.get timed out");
+          }
+        }
+        return this;
+      }
+    }
+    catch (InterruptedException e)
+    {
+      throw InterruptedErr.make(e);
+    }
+  }
+
+  public static final void waitForAll(List list) { waitForAll(list, null); }
+  public static final void waitForAll(List list, Duration timeout)
+  {
+    if (timeout == null)
+    {
+      for (int i=0; i<list.sz(); ++i)
+      {
+        Future f = (Future)list.get(i);
+        f.waitFor(null);
+      }
+    }
+    else
+    {
+      long deadline = Duration.nowMillis() + timeout.millis();
+      for (int i=0; i<list.sz(); ++i)
+      {
+        Future f = (Future)list.get(i);
+        long left = deadline - Duration.nowMillis();
+        f.waitFor(Duration.makeMillis(left));
+      }
+    }
+  }
+
   public final void cancel()
   {
     ArrayList wd;

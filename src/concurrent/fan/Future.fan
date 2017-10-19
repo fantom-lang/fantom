@@ -73,6 +73,21 @@ native final const class Future
   **
   This completeErr(Err err)
 
+  **
+  ** Block until this future transitions to a completed state (ok,
+  ** err, or canceled).  If timeout is null then block forever, otherwise
+  ** raise a TimeoutErr if timeout elapses.  Return this.
+  **
+  This waitFor(Duration? timeout := null)
+
+  **
+  ** Block on a list of futures until they all transition to a completed
+  ** state.  If timeout is null block forever, otherwise raise TimeoutErr
+  ** if any one of the futures does not complete before the timeout
+  ** elapses.
+  **
+  static Void waitForAll(Future[] futures, Duration? timeout := null)
+
 }
 
 **************************************************************************
