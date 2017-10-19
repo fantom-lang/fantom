@@ -20,7 +20,7 @@ using dom
   {
     this.style.addClass("domkit-control domkit-control-button domkit-Button")
     this->tabIndex = 0
-    this.onEvent(EventType.mouseDown, false) |e|
+    this.onEvent("mousedown", false) |e|
     {
       e.stop
       if (!enabled) return
@@ -28,7 +28,7 @@ using dom
       mouseDown = true
       doMouseDown
     }
-    this.onEvent(EventType.mouseUp, false) |e|
+    this.onEvent("mouseup", false) |e|
     {
       if (!enabled) return
       this._event = e
@@ -40,14 +40,14 @@ using dom
       }
       mouseDown = false
     }
-    this.onEvent(EventType.mouseLeave, false) |e|
+    this.onEvent("mouseleave", false) |e|
     {
       if (!mouseDown) return
       this._event = e
       doMouseUp
       mouseDown = false
     }
-    this.onEvent(EventType.keyDown, false) |e|
+    this.onEvent("keydown", false) |e|
     {
       if (!enabled) return
       this._event = e

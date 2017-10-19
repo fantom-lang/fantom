@@ -124,15 +124,15 @@ using graphics
     this->tabIndex = 0
     this.style.addClass("domkit-Tree domkit-border")
 
-    this.onEvent(EventType.mouseDown,        false) |e| { onMouseEvent(e) }
-    this.onEvent(EventType.mouseUp,          false) |e| { onMouseEvent(e) }
-    this.onEvent(EventType.mouseDoubleClick, false) |e| { onMouseEvent(e) }
+    this.onEvent("mousedown", false) |e| { onMouseEvent(e) }
+    this.onEvent("mouseup",   false) |e| { onMouseEvent(e) }
+    this.onEvent("dblclick",  false) |e| { onMouseEvent(e) }
 
     // manually track focus so we can detect when
     // the browser window becomes unactive while
     // maintaining focus internally in document
-    this.onEvent(EventType.focus, false) |e| { manFocus=true;  refresh }
-    this.onEvent(EventType.blur,  false) |e| { manFocus=false; refresh }
+    this.onEvent("focus", false) |e| { manFocus=true;  refresh }
+    this.onEvent("blur",  false) |e| { manFocus=false; refresh }
   }
 
   ** Root nodes for this tree.
@@ -285,7 +285,7 @@ using graphics
     node := toNode(elem)
 
     // check expand/selection
-    if (e.type == EventType.mouseUp)
+    if (e.type == "mouseup")
     {
       if (elem.style.hasClass("domkit-Tree-node-expander"))
       {
@@ -304,7 +304,7 @@ using graphics
     }
 
     // check action
-    if (e.type == EventType.mouseDoubleClick) cbAction?.call(this, e)
+    if (e.type == "dblclick") cbAction?.call(this, e)
 
     // delegate to cell handlers
     cb := cbTreeEvent[e.type]

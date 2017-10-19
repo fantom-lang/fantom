@@ -35,16 +35,16 @@ using graphics
       onScroll(e.delta)
       e.stop
     }
-    this.onEvent(EventType.mouseDown,        false) |e| { onMouseEvent(e) }
-    this.onEvent(EventType.mouseUp,          false) |e| { onMouseEvent(e) }
-    this.onEvent(EventType.mouseDoubleClick, false) |e| { onMouseEvent(e) }
-    this.onEvent(EventType.keyDown,          false) |e| { onKeyEvent(e) }
+    this.onEvent("mousedown", false) |e| { onMouseEvent(e) }
+    this.onEvent("mouseup",   false) |e| { onMouseEvent(e) }
+    this.onEvent("dblclick",  false) |e| { onMouseEvent(e) }
+    this.onEvent("keydown",   false) |e| { onKeyEvent(e) }
 
     // manually track focus so we can detect when
     // the browser window becomes unactive while
     // maintaining focus internally in document
-    this.onEvent(EventType.focus, false) |e| { manFocus=true;  refresh }
-    this.onEvent(EventType.blur,  false) |e| { manFocus=false; refresh }
+    this.onEvent("focus", false) |e| { manFocus=true;  refresh }
+    this.onEvent("blur",  false) |e| { manFocus=false; refresh }
 
     // rebuild if size changes
     DomListener.cur.onResize(this) { rebuild }
@@ -455,10 +455,10 @@ using graphics
         it.style->width  = "${htrackw}px"
         it.style->height = "${sbarsz}px"
         it.style->borderTopWidth = "1px"
-        it.onEvent(EventType.mouseDoubleClick, false) |e| { e.stop }
-        it.onEvent(EventType.mouseUp,   false) |e| { hbarPageId = stopScrollPage(hbarPageId) }
-        it.onEvent(EventType.mouseOut,  false) |e| { hbarPageId = stopScrollPage(hbarPageId) }
-        it.onEvent(EventType.mouseDown, false) |e| {
+        it.onEvent("dblclick",  false) |e| { e.stop }
+        it.onEvent("mouseup",   false) |e| { hbarPageId = stopScrollPage(hbarPageId) }
+        it.onEvent("mouseout",  false) |e| { hbarPageId = stopScrollPage(hbarPageId) }
+        it.onEvent("mousedown", false) |e| {
           e.stop
           p := e.target.relPos(e.pagePos)
           thumb := e.target.firstChild
@@ -472,8 +472,8 @@ using graphics
           it.style->left   = "0px"
           it.style->width  = "${hthumbw}px"
           it.style->height = "${xsz}px"
-          it.onEvent(EventType.mouseDoubleClick, false) |e| { e.stop }
-          it.onEvent(EventType.mouseDown, false) |e| {
+          it.onEvent("dblclick",  false) |e| { e.stop }
+          it.onEvent("mousedown", false) |e| {
             e.stop
             hthumbDragOff = hbar.firstChild.relPos(e.pagePos).x.toInt
 
@@ -481,17 +481,17 @@ using graphics
             Obj? fmove
             Obj? fup
 
-            fmove = doc.onEvent(EventType.mouseMove, true) |de| {
+            fmove = doc.onEvent("mousemove", true) |de| {
               dx := hbar.relPos(de.pagePos).x - hthumbDragOff
               sx := (dx.toFloat / htrackw.toFloat * maxScrollx).toInt
               onScroll(Point.makeInt(sx - scrollx, 0))
             }
 
-            fup = doc.onEvent(EventType.mouseUp, true) |de| {
+            fup = doc.onEvent("mouseup", true) |de| {
               de.stop
               hthumbDragOff = null
-              doc.removeEvent(EventType.mouseMove, true, fmove)
-              doc.removeEvent(EventType.mouseUp,   true, fup)
+              doc.removeEvent("mousemove", true, fmove)
+              doc.removeEvent("mouseup",   true, fup)
             }
           }
         },
@@ -507,10 +507,10 @@ using graphics
         it.style->width  = "${sbarsz}px"
         it.style->height = "${vtrackh}px"
         it.style->borderLeftWidth = "1px"
-        it.onEvent(EventType.mouseDoubleClick, false) |e| { e.stop }
-        it.onEvent(EventType.mouseUp,   false) |e| { vbarPageId = stopScrollPage(vbarPageId) }
-        it.onEvent(EventType.mouseOut,  false) |e| { vbarPageId = stopScrollPage(vbarPageId) }
-        it.onEvent(EventType.mouseDown, false) |e| {
+        it.onEvent("dblclick",  false) |e| { e.stop }
+        it.onEvent("mouseup",   false) |e| { vbarPageId = stopScrollPage(vbarPageId) }
+        it.onEvent("mouseout",  false) |e| { vbarPageId = stopScrollPage(vbarPageId) }
+        it.onEvent("mousedown", false) |e| {
           e.stop
           p := e.target.relPos(e.pagePos)
           thumb := e.target.firstChild
@@ -524,8 +524,8 @@ using graphics
           it.style->left   = "0px"
           it.style->width  = "${xsz}px"
           it.style->height = "${vthumbh}px"
-          it.onEvent(EventType.mouseDoubleClick, false) |e| { e.stop }
-          it.onEvent(EventType.mouseDown, false) |e| {
+          it.onEvent("dblclick",  false) |e| { e.stop }
+          it.onEvent("mousedown", false) |e| {
             e.stop
             vthumbDragOff = vbar.firstChild.relPos(e.pagePos).y.toInt
 
@@ -533,17 +533,17 @@ using graphics
             Obj? fmove
             Obj? fup
 
-            fmove = doc.onEvent(EventType.mouseMove, true) |de| {
+            fmove = doc.onEvent("mousemove", true) |de| {
               dy := vbar.relPos(de.pagePos).y - vthumbDragOff
               sy := (dy.toFloat / vtrackh.toFloat * maxScrolly).toInt
               onScroll(Point.makeInt(0, sy - scrolly))
             }
 
-            fup = doc.onEvent(EventType.mouseUp, true) |de| {
+            fup = doc.onEvent("mouseup", true) |de| {
               de.stop
               vthumbDragOff = null
-              doc.removeEvent(EventType.mouseMove, true, fmove)
-              doc.removeEvent(EventType.mouseUp,   true, fup)
+              doc.removeEvent("mousemove", true, fmove)
+              doc.removeEvent("mouseup",   true, fup)
             }
           }
         },
@@ -801,7 +801,7 @@ using graphics
 
     if (p.y.toInt < theadh)
     {
-      if (e.type == EventType.mouseDown)
+      if (e.type == "mousedown")
       {
         if (hasHpbut && p.x.toInt > tbodyw-hpbutw)
         {
@@ -831,10 +831,10 @@ using graphics
       row = view.rowViewToModel(row)
 
       // check selection
-      if (e.type == EventType.mouseDown) onMouseEventSelect(e, row)
+      if (e.type == "mousedown") onMouseEventSelect(e, row)
 
       // check action
-      if (e.type == EventType.mouseDoubleClick) cbAction?.call(this)
+      if (e.type == "dblclick") cbAction?.call(this)
 
       // delegate to cell handlers
       cb := cbTableEvent[e.type]
@@ -891,7 +891,7 @@ using graphics
   private Void onKeyEvent(Event e)
   {
     // just handle keydown for now
-    if (e.type != EventType.keyDown) return
+    if (e.type != "keydown") return
 
     // short-circuit if no cells
     if (numCols==0 || numRows==0) return
@@ -979,15 +979,15 @@ using graphics
 //////////////////////////////////////////////////////////////////////////
 
   private static const Str[] cellEvents := [
-    EventType.mouseDown,
-    EventType.mouseUp,
-    EventType.mouseClick,
-    EventType.mouseDoubleClick,
+    "mousedown",
+    "mouseup",
+    "click",
+    "dblclick",
 
     // TODO: opt into these events?
-    // EventType.mouseMove,
-    // EventType.mouseOver,
-    // EventType.mouseOut,
+    // "mousemove",
+    // "mouseover",
+    // "mouseout",
   ]
 
   private Func? cbSelect
