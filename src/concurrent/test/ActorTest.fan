@@ -719,6 +719,77 @@ class ActorTest : Test
     verifyErr(CancelledErr#) { f.get }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// WaitFor
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFutureWaitFor()
+  {
+    pool := ActorPool()
+    a := spawnSleeper(pool)
+
+    // wait => ok
+    f := a.send(100ms)
+    verifySame(f.state, FutureState.pending)
+    f.waitFor
+    verifySame(f.state, FutureState.ok)
+    verifyEq(f.get, 100ms)
+    f.waitFor
+    f.waitFor(1min)
+
+    // wait => error
+    f = a.send(66ms)
+    verifySame(f.state, FutureState.pending)
+    f.waitFor(1min)
+    verifySame(f.state, FutureState.err)
+    verifyErr(UnsupportedErr#) { f.get }
+
+    // wait => cancel
+    f = a.send(3min)
+    verifySame(f.state, FutureState.pending)
+    f.cancel
+    f.waitFor
+    verifySame(f.state, FutureState.cancelled)
+    verifyErr(CancelledErr#) { f.get }
+
+    // wait  timeout
+    f = a.send(1min)
+    verifyErr(TimeoutErr#) { f.waitFor(100ms) }
+    verifySame(f.state, FutureState.pending)
+
+    // waitAll
+    t1 := Duration.now
+    f1 := spawnSleeper(pool).send(200ms)
+    f2 := spawnSleeper(pool).send(300ms)
+    f3 := spawnSleeper(pool).send(100ms)
+    f4 := spawnSleeper(pool).send(50ms)
+    Future.waitForAll([f1, f2, f3, f4])
+    t2 := Duration.now
+    dur := t2 - t1
+    fudge := 15ms
+    verify(300ms <= dur && dur <= 300ms+fudge)
+
+    // waitAll w/ timeout
+    t1 = Duration.now
+    f1 = spawnSleeper(pool).send(200ms)
+    f2 = spawnSleeper(pool).send(50ms)
+    f3 = spawnSleeper(pool).send(300ms)
+    f4 = spawnSleeper(pool).send(100ms)
+    verifyErr(TimeoutErr#) { Future.waitForAll([f1, f2, f3, f4], 250ms) }
+    t2 = Duration.now
+    dur = t2 - t1
+    verify(250ms <= dur && dur <= 250ms+fudge)
+  }
+
+  Actor spawnSleeper(ActorPool pool)
+  {
+    Actor(pool) |msg|
+    {
+      Actor.sleep(msg);
+      if (msg == 66ms) throw UnsupportedErr("bad!")
+      return msg
+    }
+  }
 }
 
 **************************************************************************
