@@ -88,16 +88,16 @@ a.domkit-control.disabled { pointer-events:none; }
 .domkit-control-button.selected,
 .domkit-control-button.selected:hover {
   color: #fff;
-  background-color: #3498db;
-  border-color: #2c7fb7;
+  background-color: hsl(204, 70%, 53%); /*#3498db;*/
+  border-color: hsl(204, 70%, 43%);
 }
 .domkit-control-button.def-action {
   color: #fff;
-  background: #3498db;
-  border-color: #1d7fbf;
+  background: hsl(204, 70%, 53%);
+  border-color: hsl(204, 70%, 43%);
 }
 .domkit-control-button.def-action.down {
-  background: #1d7fbf;
+  background: hsl(204, 70%, 43%);
 }
 
 //
@@ -119,6 +119,14 @@ a.domkit-control.disabled { pointer-events:none; }
 .domkit-control-button:focus,
 .domkit-control-text:focus {
   border-color: #3498db;
+}
+
+.domkit-control-button.def-action:focus {
+  background: hsl(204, 70%, 60%);
+  border-color: hsl(204, 70%, 43%);
+}
+.domkit-control-button.def-action.down:focus {
+  background: hsl(204, 70%, 43%);
 }
 
 //
