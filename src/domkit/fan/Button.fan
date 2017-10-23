@@ -106,7 +106,8 @@ using dom
       case Align.right:  x += w
     }
 
-    popup.onClose
+    // use internal _onClose to keep onClose available for use
+    popup._onClose
     {
       showUp
       if (isCombo) ((Combo)this.parent).field.focus

@@ -104,8 +104,16 @@ using graphics
   ** Callback when popup is closed.
   Void onClose(|This| f) { cbClose = f }
 
-  private Void fireOpen(Event? e)  { cbOpen?.call(this);  isOpen=true  }
-  private Void fireClose(Event? e) { cbClose?.call(this); isOpen=false }
+  ** Internal callback when popup is closed.
+  internal Void _onClose(|This| f) { _cbClose = f }
+
+  private Void fireOpen(Event? e)  { cbOpen?.call(this); isOpen=true  }
+  private Void fireClose(Event? e)
+  {
+    _cbClose?.call(this)
+    cbClose?.call(this)
+    isOpen = false
+  }
 
   // TODO: should this be a core Elem method?
   private Size measure()
@@ -124,4 +132,5 @@ using graphics
   private static const Float gutter := 12f
   private Func? cbOpen
   private Func? cbClose
+  private Func? _cbClose
 }
