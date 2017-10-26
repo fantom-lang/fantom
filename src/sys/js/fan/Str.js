@@ -255,10 +255,10 @@ fan.sys.Str.$spaces = null;
 fan.sys.Str.lower = function(self)
 {
   var lower = "";
-  for (let i = 0; i < self.length; ++i)
+  for (var i = 0; i < self.length; ++i)
   {
-    let char = self[i];
-    let code = self.charCodeAt(i);
+    var char = self[i];
+    var code = self.charCodeAt(i);
     if (65 <= code && code <= 90)
       char = String.fromCharCode(code | 0x20);
     lower = lower + char;
@@ -268,10 +268,10 @@ fan.sys.Str.lower = function(self)
 fan.sys.Str.upper = function(self)
 {
   var upper = "";
-  for (let i = 0; i < self.length; ++i)
+  for (var i = 0; i < self.length; ++i)
   {
-    let char = self[i];
-    let code = self.charCodeAt(i);
+    var char = self[i];
+    var code = self.charCodeAt(i);
     if (97 <= code && code <= 122)
       char = String.fromCharCode(code & ~0x20);
     upper = upper + char;
