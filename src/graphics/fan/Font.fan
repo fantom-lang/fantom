@@ -31,7 +31,7 @@ const class Font
     this.size   = size
     this.weight = weight
     this.style  = style
-    this.metricsRef = FontMetrics.find(this)
+    this.data   = FontData.find(this)
   }
 
   ** Parse font from string using CSS shorthand format for
@@ -140,11 +140,11 @@ const class Font
   ** Style as normal, italic, or oblique
   const FontStyle style := FontStyle.normal
 
-  ** Normalize to a supported font with metrics
+  ** Normalize to the closest font with metrics
   Font normalize()
   {
-    if (metricsRef != null) return this
-    return FontMetrics.normalize(this)
+    if (data != null) return this
+    return FontData.normalize(this)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -208,44 +208,71 @@ const class Font
 // Metrics
 //////////////////////////////////////////////////////////////////////////
 
+  ** Get font metrics for this font.  If this is not a [normalized]`normalize`
+  ** font with built-in metrics, then raise UnsupportedErr.
+  FontMetrics metrics(DeviceContext dc := DeviceContext.cur)
+  {
+    if (data == null) throw UnsupportedErr("FontMetrics not supported: $this")
+    return FontMetrics(dc, size, data)
+  }
+
+  ** Font metric data from predefined registry
+  private const FontData? data
+}
+
+**************************************************************************
+** FontMetrics
+**************************************************************************
+
+** FontMetrics represents font size information for a
+** specific `Font` and `DeviceContext`.
+@Js
+const class FontMetrics
+{
+  @NoDoc
+  new make(DeviceContext dc, Float size, FontData data)
+  {
+    this.data  = data
+    this.size  = size
+    this.ratio = (dc.dpi / 72f * fudge) * size / 1000f
+  }
+
   ** Get height of this font which is the sum of
   ** ascent, descent, and leading.
-  Float height() { (metrics.height * size / 1000f / pxToPtRatio).round }
+  Float height() { (data.height * ratio).round }
 
   ** Get ascent of this font which is the distance from
   ** baseline to top of chars, not including any leading area.
-  Float ascent() { (metrics.ascent * size / 1000f / pxToPtRatio).round }
+  Float ascent() { (data.ascent * ratio).round }
 
   ** Get descent of this font which is the distance from
   ** baseline to bottom of chars, not including any leading area.
-  Float descent() { (metrics.descent * size / 1000f / pxToPtRatio).round }
+  Float descent() { (data.descent * ratio).round }
 
   ** Get leading of this font which is the distance above
   ** the ascent which may include accents and other marks.
-  Float leading() { (metrics.leading * size / 1000f / pxToPtRatio).round }
+  Float leading() { (data.leading * ratio).round }
 
   ** Get the width of the string when painted with this font.
   Float width(Str s)
   {
-    m := metrics
+    d := data
     w := 0
     for (i := 0; i<s.size; ++i)
-      w += m.charWidth(s[i])
-    return (w.toFloat * size / 1000f / pxToPtRatio).round
+      w += d.charWidth(s[i])
+    return (w.toFloat * ratio).round
   }
 
   ** Last char we have metrics for
-  @NoDoc Int lastChar() { metrics.lastChar }
+  @NoDoc Int lastChar() { data.lastChar }
 
-  ** Get font metrics for this font or raise exception if not normalized
-  @NoDoc FontMetrics metrics() { metricsRef ?: throw UnsupportedErr("Metrics not supported: $this") }
+  ** This factor is used to tune metrics based on eye-ball testing
+  ** since we have simplified metric data for efficiency
+  private static const Float fudge := 1.02f
 
-  ** Font metrics in predefined registry
-  private const FontMetrics? metricsRef
-
-  ** Pixel to point ratio.  In JavaScript we assume 1 px = 1/92" with slight fudge
-  private static const Float pxToPtRatio := Env.cur.runtime == "js" ? 0.735f : 1f
-
+  private const FontData data  // backing metric data
+  private const Float size     // font size in points
+  private const Float ratio    // ratio to map 1000pt to device context
 }
 
 **************************************************************************
