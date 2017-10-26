@@ -201,7 +201,7 @@ fan.sys.MimeType.forExt = function(s)
   try
   {
     s = s.toLowerCase();
-    let m = null;
+    var m = null;
     switch (s)
     {
       case "png": m = "image/png"; break;

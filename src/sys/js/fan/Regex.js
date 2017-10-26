@@ -95,7 +95,7 @@ fan.sys.Regex.prototype.split = function(s, limit)
   var re = this.m_regexp;
   while (true)
   {
-    let m = s.match(re);
+    var m = s.match(re);
     if (m == null || (limit != 0 && array.length == limit -1))
     {
       array.push(s);

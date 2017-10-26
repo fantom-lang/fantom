@@ -682,12 +682,12 @@ fan.sys.DateTime.fromHttpStr = function(s, checked)
     fan.sys.Locale.setCur(fan.sys.Locale.m_en);
     // Need to see if it is asctime() format and tweak the input s
     // so that it will match using DateTime.fromLocale
-    let temp = s;
+    var temp = s;
     if (s.substring(0, 9).endsWith('  '))
       temp = s.substring(0,8) + s.substring(9);
-    for (let i = 0; i < formats.length; ++i)
+    for (var i = 0; i < formats.length; ++i)
     {
-      let dt = fan.sys.DateTime.fromLocale(temp, formats[i], fan.sys.TimeZone.utc(), false);
+      var dt = fan.sys.DateTime.fromLocale(temp, formats[i], fan.sys.TimeZone.utc(), false);
       if (dt != null) return dt;
     }
   }

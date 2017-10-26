@@ -109,9 +109,9 @@ fan.sys.Uri.escapeToken = function(str, section)
   var mask = fan.sys.Uri.$sectionToMask(section);
   var buf = [];
   var delimEscMap = fan.sys.Uri.delimEscMap;
-  for (let i = 0; i< str.length; ++i)
+  for (var i = 0; i< str.length; ++i)
   {
-    let c = str.charCodeAt(i);
+    var c = str.charCodeAt(i);
     if (c < delimEscMap.length && (delimEscMap[c] & mask) != 0)
       buf.push('\\');
     buf.push(String.fromCharCode(c));
@@ -125,9 +125,9 @@ fan.sys.Uri.encodeToken = function(str, section)
   var buf = ""
   var delimEscMap = fan.sys.Uri.delimEscMap;
   var charMap = fan.sys.Uri.charMap;
-  for (let i = 0; i < str.length; ++i)
+  for (var i = 0; i < str.length; ++i)
   {
-    let c = str.charCodeAt(i);
+    var c = str.charCodeAt(i);
     if (c < 128 && (charMap[c] & mask) != 0 && (delimEscMap[c] & mask) == 0)
       buf += String.fromCharCode(c);
     else
@@ -146,9 +146,9 @@ fan.sys.Uri.decodeToken = function(str, section)
 fan.sys.Uri.unescapeToken = function(str)
 {
   var buf = "";
-  for (let i = 0; i < str.length; ++i)
+  for (var i = 0; i < str.length; ++i)
   {
-    let c = str.charAt(i);
+    var c = str.charAt(i);
     if (c == '\\')
     {
       ++i;
@@ -616,11 +616,11 @@ fan.sys.UriDecoder.prototype.substring = function(start, end, section)
   var delimEscMap = fan.sys.Uri.delimEscMap;
   if (!this.decoding)
   {
-    let last = 0;
-    let backslash = 92; // code for backslash
-    for (let i = start; i < end; ++i)
+    var last = 0;
+    var backslash = 92; // code for backslash
+    for (var i = start; i < end; ++i)
     {
-      let ch = this.str.charCodeAt(i);
+      var ch = this.str.charCodeAt(i);
       if (last == backslash && ch < delimEscMap.length && (delimEscMap[ch] & section) == 0)
       {
         // don't allow backslash unless truly a delimiter
@@ -635,7 +635,7 @@ fan.sys.UriDecoder.prototype.substring = function(start, end, section)
     this.dpos = start;
     while (this.dpos < end)
     {
-      let ch = this.nextChar(section);
+      var ch = this.nextChar(section);
       if (this.nextCharWasEscaped && ch < delimEscMap.length && (delimEscMap[ch] & section) != 0)
       {
         // if ch was an escaped delimiter
