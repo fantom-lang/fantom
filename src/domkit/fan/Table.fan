@@ -898,19 +898,39 @@ using graphics
     // short-circuit if no cells
     if (numCols==0 || numRows==0) return
 
+    // updateSel takes model rows; but scrollTo takes view rows, so
+    // pre-map some of the selection indexs here to simplify things
+    selTop      := view.rowViewToModel(0)
+    selBottom   := view.rowViewToModel(numRows-1)
+    selFirstVis := view.rowViewToModel(firstVisRow)
+    pivot       := view.rowModelToView(sel.indexes.first ?: selTop)
+
     // page commands
     if (e.meta)
     {
-      if (e.key == Key.up)    { e.stop; updateSel([0]);            scrollTo(null, 0); return }
-      if (e.key == Key.down)  { e.stop; updateSel([numRows-1]);    scrollTo(null, numRows-1); return }
+      if (e.key == Key.up)    { e.stop; updateSel([selTop]);    scrollTo(null, 0); return }
+      if (e.key == Key.down)  { e.stop; updateSel([selBottom]); scrollTo(null, numRows-1); return }
       if (e.key == Key.left)  { e.stop; scrollTo(0,         null); return }
       if (e.key == Key.right) { e.stop; scrollTo(numCols-1, null); return }
     }
 
     // page up/down
-    oi := sel.indexes.first ?: 0
-    if (e.key == Key.pageUp)   { e.stop; ni:=(oi - (numVisRows-3)).max(0); updateSel([ni]); scrollTo(null, ni); return }
-    if (e.key == Key.pageDown) { e.stop; ni:=(oi + (numVisRows-3)).max(0).min(numRows-1); updateSel([ni]); scrollTo(null, ni); return }
+    if (e.key == Key.pageUp)
+    {
+      e.stop
+      prev := (pivot - (numVisRows-3)).max(0)
+      updateSel([view.rowViewToModel(prev)])
+      scrollTo(null, prev)
+      return
+    }
+    if (e.key == Key.pageDown)
+    {
+      e.stop
+      next := (pivot + (numVisRows-3)).max(0).min(numRows-1)
+      updateSel([view.rowViewToModel(next)])
+      scrollTo(null, next)
+      return
+    }
 
     // selection commands
     switch (e.key)
@@ -929,28 +949,28 @@ using graphics
       case Key.up:
         if (sel.indexes.isEmpty)
         {
-          updateSel([firstVisRow])
-          scrollTo(null, sel.indexes.first)
+          updateSel([selFirstVis])
+          scrollTo(null, firstVisRow)
         }
         else
         {
-          if (sel.indexes.first == 0) return scrollTo(null, 0)
-          prev := sel.indexes.first - 1
-          updateSel([prev])
+          if (pivot == 0) return scrollTo(null, 0)
+          prev := pivot - 1
+          updateSel([view.rowViewToModel(prev)])
           scrollTo(null, prev)
         }
 
       case Key.down:
         if (sel.indexes.isEmpty)
         {
-          updateSel([firstVisRow])
-          scrollTo(null, sel.indexes.first)
+          updateSel([selFirstVis])
+          scrollTo(null, firstVisRow)
         }
         else
         {
-          if (sel.indexes.first == numRows-1) return scrollTo(null, numRows-1)
-          next := sel.indexes.first + 1
-          updateSel([next])
+          if (pivot == numRows-1) return scrollTo(null, numRows-1)
+          next := pivot + 1
+          updateSel([view.rowViewToModel(next)])
           scrollTo(null, next)
         }
     }
