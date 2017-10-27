@@ -30,6 +30,15 @@ fan.sys.Err.make$ = function(self, msg, cause)
   self.m_cause = cause;
 }
 
+// TODO: hack to workaround how we get root errors
+// mapped into the Err wrapper instance; really need
+// to probably rework alot of this class to work better
+fan.sys.Err.prototype.$assign = function(jsErr)
+{
+  this.$err = jsErr;
+  return this;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
@@ -114,8 +123,8 @@ fan.sys.Err.make = function(err, cause)
   if (err instanceof Error)
   {
     var m = err.message;
-    if (m.indexOf(" from null") != -1) return fan.sys.NullErr.make(m, cause);
-    if (m.indexOf(" of null")   != -1) return fan.sys.NullErr.make(m, cause);
+    if (m.indexOf(" from null") != -1) return fan.sys.NullErr.make(m, cause).$assign(err);
+    if (m.indexOf(" of null")   != -1) return fan.sys.NullErr.make(m, cause).$assign(err);
 
     // TODO
     //  EvalError
@@ -124,7 +133,10 @@ fan.sys.Err.make = function(err, cause)
     //  SyntaxError
     //  TypeError
     //  URIError
-    return new fan.sys.Err(err.message, cause);
+
+    // TODO: do we need to wrap `cause` too?
+
+    return new fan.sys.Err(err.message, cause).$assign(err);
   }
   return new fan.sys.Err("" + err, cause);
 }

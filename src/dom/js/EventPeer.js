@@ -48,6 +48,12 @@ fan.dom.EventPeer.prototype.delta = function(self)
   return this.$delta;
 }
 
+fan.dom.EventPeer.prototype.err = function(self)
+{
+  if (this.event.error == null) return null;
+  if (this.$err == null) this.$err = fan.sys.Err.make(this.event.error);
+  return this.$err;
+}
 
 fan.dom.EventPeer.prototype.stop = function(self)
 {
