@@ -87,6 +87,7 @@ using graphics
   ** automatically refreshed.
   Void sort(Int? col, Dir dir := Dir.up)
   {
+    pivot = null
     view.sort(col, dir)
     refresh
   }
@@ -828,10 +829,11 @@ using graphics
       cy := my - (row * rowh)
 
       // map to model rows
+      vrow := row
       row = view.rowViewToModel(row)
 
       // check selection
-      if (e.type == "mousedown") onMouseEventSelect(e, row)
+      if (e.type == "mousedown") onMouseEventSelect(e, row, vrow)
 
       // check action
       if (e.type == "dblclick") cbAction?.call(this)
@@ -853,22 +855,22 @@ using graphics
   }
 
   ** Callback to handle selection changes from a mouse event.
-  private Void onMouseEventSelect(Event e, Int row)
+  private Void onMouseEventSelect(Event e, Int row, Int vrow)
   {
     cur := sel.indexes
     newsel := cur.dup
 
     // check multi-selection
-    if (e.shift)
+    if (e.shift && pivot != null)
     {
-      if (row < pivot)
+      if (vrow < pivot)
       {
-        (row..pivot).each |i| { newsel.add(i) }
+        (vrow..pivot).each |i| { newsel.add(view.rowViewToModel(i)) }
         newsel = newsel.unique.sort
       }
-      else if (row > pivot)
+      else if (vrow > pivot)
       {
-        (pivot..row).each |i| { newsel.add(i) }
+        (pivot..vrow).each |i| { newsel.add(view.rowViewToModel(i)) }
         newsel = newsel.unique.sort
       }
     }
@@ -876,12 +878,12 @@ using graphics
     {
       if (cur.contains(row)) newsel.remove(row)
       else newsel.add(row).sort
-      pivot = row
+      pivot = view.rowModelToView(row)
     }
     else
     {
       newsel = [row]
-      pivot = row
+      pivot = view.rowModelToView(row)
     }
 
     updateSel(newsel)
@@ -1047,7 +1049,7 @@ using graphics
   private Int firstVisCol    // first visible col
   private Int firstVisRow    // first visible row
 
-  // onSelect
+  // onSelect (always in view refrence; not model)
   private Int? pivot
 
   // focus/blur

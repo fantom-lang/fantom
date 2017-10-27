@@ -133,6 +133,14 @@ class TableTest : DomkitTest
     cell.text = text
   }
   override Int sortCompare(Int c, Int r1, Int r2) { toText(c, r1).localeCompare(toText(c, r2)) }
-  private Str toText(Int col, Int row) { "C$col:R" + row.toStr.padl(rpad, '0') }
+  private Str toText(Int col, Int row)
+  {
+    // fill some columns with non-sequential data to test view <-> model mapping
+    col > 0 && col % 5 == 0
+      ? rmap.getOrAdd(row) { Int.random(0..1000).toStr }
+      : "C$col:R" + row.toStr.padl(rpad, '0')
+  }
+
+  private Int:Str rmap := [:]
 }
 
