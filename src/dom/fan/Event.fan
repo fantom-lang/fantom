@@ -168,6 +168,9 @@ class Event
   ** Key instance for key pressed.
   native Key? key()
 
+  ** Err instance if available for 'window.onerror'.
+  native Err? err()
+
   ** Stop further propagation of this event.
   native Void stop()
 
