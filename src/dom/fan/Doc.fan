@@ -82,6 +82,15 @@ class Doc
   **
   @NoDoc native Str exportPng(Elem img)
 
+  **
+  ** Render the given image to an offscreen <canvas> element and
+  ** export the contents to a data URI of type 'image/jpeg'. The
+  ** image quality can be configured by specifying a number
+  ** between '0f' and '1f' for 'quality'.  If 'quality' is null
+  ** the default value will be used.
+  **
+  @NoDoc native Str exportJpg(Elem img, Float? quality)
+
 //////////////////////////////////////////////////////////////////////////
 // Events
 //////////////////////////////////////////////////////////////////////////
