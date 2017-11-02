@@ -208,6 +208,7 @@ fan.dom.ElemPeer.prototype.invoke = function(self, name, args)
   if (args != null)
   {
     // TODO :)
+    arglist = [];
     for (var i=0; i<args.size(); i++)
       arglist.push(args.get(i));
   }
