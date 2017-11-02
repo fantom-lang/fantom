@@ -81,6 +81,16 @@ fan.dom.DocPeer.prototype.querySelectorAll = function(self, selectors)
 
 fan.dom.DocPeer.prototype.exportPng = function(self, img)
 {
+  return this.__export(img, "image/png");
+}
+
+fan.dom.DocPeer.prototype.exportJpg = function(self, img, quality)
+{
+  return this.__export(img, "image/jpeg", quality);
+}
+
+fan.dom.DocPeer.prototype.__export = function(img, mimeType, quality)
+{
   var elem = img.peer.elem;
 
   // set phy canvas size to img
@@ -97,7 +107,7 @@ fan.dom.DocPeer.prototype.exportPng = function(self, img)
   var cx = canvas.getContext("2d");
   cx.scale(ratio, ratio);
   cx.drawImage(elem, 0, 0);
-  return canvas.toDataURL("image/png");
+  return canvas.toDataURL(mimeType, quality);
 }
 
 fan.dom.DocPeer.prototype.onEvent = function(self, type, useCapture, handler)
