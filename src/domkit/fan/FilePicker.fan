@@ -23,6 +23,9 @@ using dom
     this.onEvent("change", false)
     {
       if (cbSelect != null) cbSelect(this)
+
+      // clear value so onchange will fire if same file is re-selected
+      this->value = ""
     }
   }
 
