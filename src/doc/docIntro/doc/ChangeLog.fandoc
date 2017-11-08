@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.70 (working)*
+*Build 1.0.70 (8 Nov 2017)*
 - Require Java 1.7
 - js: Node.js-based NodeRunner now default js runtime for 'fant -js'
 - graphics: new graphics API
@@ -48,6 +48,24 @@
 - fandoc: add support for horizontal rules
 - Make sys::TestErr public
 - concurrent: add Future waitFor and waitForAll
+- #1386: js: dynamic invocation of a slot inherited from a mixin
+- #1421: js: equality operators compile like assignments
+- #1986: Fanr pod cache out of sync with the FileRepo
+- #1988: Nullability problems with facet
+- #2090: JS: Abstract class creation
+- #2357: URI Encoding / Decoding
+- #2388: fandoc: Wrapping an image in a link
+- #2457: super.trap() in Javascript
+- #2483: Method.func.typeof is not parameterized
+- #2499: Compiler check for shortcut with Int to Float implicit cast
+- #2511: Check null safe chaining with shortcuts
+- #2519: Date/Time toLocale support for single quote literal
+- #2540: Edge cases and java.lang.VerifyError
+- #2551: New line char after Markdown links
+- #2577: js: missing Uri.hash implementation
+- #2592: VerifyError for value based null check in it-block ctor
+- #2620: Err.trace dump to stderr
+- #2629: Javascript: List.unique() throws NotImmutableErr
 
 *Build 1.0.69 (14 Jul 2016)*
 - Initial domkit code
