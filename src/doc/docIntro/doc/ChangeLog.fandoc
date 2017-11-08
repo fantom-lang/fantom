@@ -6,6 +6,8 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.71 (working)*
+
 *Build 1.0.70 (8 Nov 2017)*
 - Require Java 1.7
 - js: Node.js-based NodeRunner now default js runtime for 'fant -js'
