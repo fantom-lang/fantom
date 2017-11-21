@@ -11,7 +11,7 @@
  * using the standard pattern syntax.
  */
 fan.sys.DateTimeStr = fan.sys.Obj.$extend(fan.sys.Obj);
-fan.sys.DateTime.$ctor = function()
+fan.sys.DateTimeStr.prototype.$ctor = function()
 {
   this.pattern = "";
   this.year = 0;
@@ -30,7 +30,6 @@ fan.sys.DateTime.$ctor = function()
   this.str  = "";  // when parsing
   this.pos  = 0;   // index in str for parse
 }
-
 
 fan.sys.DateTimeStr.makeDateTime = function(pattern, locale, dt)
 {
