@@ -214,9 +214,34 @@ fan.sys.InStream.prototype.readS4 = function()
     return (c4 << 24) + (c3 << 16) + (c2 << 8) + c1;
 }
 
-//fan.sys.InStream.prototype.readS8 = function() {}
-//fan.sys.InStream.prototype.readF4 = function() {}
-//fan.sys.InStream.prototype.readF8 = function() {}
+fan.sys.InStream.prototype.readS8 = function()
+{
+  var c1 = this.read();
+  var c2 = this.read();
+  var c3 = this.read();
+  var c4 = this.read();
+  var c5 = this.read();
+  var c6 = this.read();
+  var c7 = this.read();
+  var c8 = this.read();
+  if ((c1 | c2 | c3 | c4 | c5 | c6 | c7 | c8) < 0) throw fan.sys.IOErr.make("Unexpected end of stream");
+  if (this.m_bigEndian)
+    return ((c1 << 56) + (c2 << 48) + (c3 << 40) + (c4 << 32) +
+            (c5 << 24) + (c6 << 16) + (c7 << 8) + c8);
+  else
+    return ((c8 << 56) + (c7 << 48) + (c6 << 40) + (c5 << 32) +
+            (c4 << 24) + (c3 << 16) + (c2 << 8) + c1);
+}
+
+fan.sys.InStream.prototype.readF4 = function()
+{
+  return fan.sys.Float.makeBits32(this.readS4());
+}
+
+fan.sys.InStream.prototype.readF8 = function()
+{
+  throw fan.sys.Err.make("InStream.readF8 not supported in JavaScript");
+}
 
 fan.sys.InStream.prototype.readDecimal = function()
 {

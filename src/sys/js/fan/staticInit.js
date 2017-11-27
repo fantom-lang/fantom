@@ -17,6 +17,12 @@ fan.sys.Pod.$sysPod = fan.sys.Pod.find("sys");
 fan.sys.Bool.m_defVal = false;
 
 //
+// Buf
+//
+fan.sys.ConstBuf.errInStream  = new fan.sys.ErrInStream();
+fan.sys.ConstBuf.errOutStream = new fan.sys.ErrOutStream();
+
+//
 // Int
 //
 fan.sys.Int.m_maxVal = Math.pow(2, 53)

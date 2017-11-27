@@ -24,6 +24,13 @@ fan.sys.MemBuf.prototype.$ctor = function(buf, size)
   this.m_in   = new fan.sys.MemBufInStream(this);
 }
 
+fan.sys.MemBuf.makeCapacity = function(capacity)
+{
+  var buf = new fan.sys.MemBuf();
+  buf.capacity$(capacity);
+  return buf;
+}
+
 fan.sys.MemBuf.makeBytes = function(bytes)
 {
   var buf = new fan.sys.MemBuf();
@@ -38,12 +45,28 @@ fan.sys.MemBuf.makeBytes = function(bytes)
 
 fan.sys.MemBuf.prototype.$typeof = function() { return fan.sys.MemBuf.$type; }
 
+fan.sys.MemBuf.prototype.toImmutable = function()
+{
+  var buf  = this.m_buf;
+  var size = this.m_size;
+  this.m_buf = fan.sys.MemBuf.$emptyBytes
+  this.m_size = 0;
+  return new fan.sys.ConstBuf(buf, size, this.endian(), this.charset());
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Buf Support
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.MemBuf.prototype.size = function() { return this.m_size; }
-fan.sys.MemBuf.prototype.size$ = function(x) { this.m_size = x; }
+fan.sys.MemBuf.prototype.size$ = function(x)
+{
+  if (x > this.m_buf.length)
+  {
+    this.m_buf.length = x;
+  }
+  this.m_size = x;
+}
 
 fan.sys.MemBuf.prototype.pos = function() { return this.m_pos; }
 fan.sys.MemBuf.prototype.pos$ = function(x) { this.m_pos = x; }
@@ -58,10 +81,8 @@ fan.sys.MemBuf.prototype.setByte = function(pos, x)
   this.m_buf[pos] = x & 0xFF;
 }
 
-fan.sys.MemBuf.prototype.getBytes = function(pos, dest, off, len)
+fan.sys.MemBuf.prototype.getBytes = function(pos, len)
 {
-  // TODO FIXIT
-  //System.arraycopy(this.buf, (int)pos, dest, off, len);
   return this.m_buf.slice(pos, pos+len);
 }
 
@@ -79,6 +100,7 @@ fan.sys.MemBuf.prototype.pipeTo = function(dst, len)
 
 fan.sys.MemBuf.prototype.pipeFrom = function(src, len)
 {
+  this.grow(this.m_pos + len);
   var byteArray = new java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, len);
   var read = src.read(byteArray, 0, len);
    if (read < 0) return -1;
@@ -115,16 +137,14 @@ fan.sys.MemBuf.prototype.capacity = function()
   return this.m_buf.length;
 }
 
-/*
-fan.sys.MemBuf.prototype.capacity(long c)
+fan.sys.MemBuf.prototype.capacity$ = function(c)
 {
-  int newCapacity = (int)c;
-  if (newCapacity < size) throw ArgErr.make("capacity < size").val;
-  byte[] temp = new byte[newCapacity];
-  System.arraycopy(buf, 0, temp, 0, Math.min(size, newCapacity));
-  buf = temp;
+  // does this help or hurt performance? seems like js runtime
+  // woudl already be good at expanding native Array object...
+
+  if (c < this.m_size) throw fan.sys.ArgErr.make("capacity < size");
+  this.m_buf.length = c;
 }
-*/
 
 fan.sys.MemBuf.prototype.trim = function()
 {
@@ -225,3 +245,20 @@ fan.sys.MemBuf.prototype.hmac = function(algorithm, keyBuf)
   }
   return fan.sys.MemBuf.makeBytes(digest);
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Internal Support
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.MemBuf.prototype.grow = function(capacity)
+{
+  if (this.m_buf.length >= capacity) return;
+  this.capacity$(Math.max(capacity, this.m_size*2));
+}
+
+fan.sys.MemBuf.prototype.unsafeArray = function()
+{
+  return this.m_buf;
+}
+
+fan.sys.MemBuf.$emptyBytes = [];
