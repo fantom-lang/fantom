@@ -25,6 +25,18 @@ fan.sys.Float.make = function(val)
   return x;
 }
 
+fan.sys.Float.makeBits = function(bits)
+{
+  throw fan.sys.Err.make("Float.makeBits not available in JavaScript");
+}
+
+fan.sys.Float.makeBits32 = function(bits)
+{
+  var buffer = new ArrayBuffer(4);
+  (new Uint32Array(buffer))[0] = bits;
+  return fan.sys.Float.make(new Float32Array(buffer)[0]);
+}
+
 fan.sys.Float.prototype.$typeof = function()
 {
   return fan.sys.Float.$type;
@@ -70,6 +82,25 @@ fan.sys.Float.normNegZero = function(self)
 
 // TODO FIXIT: hash
 fan.sys.Float.hash = function(self) { fan.sys.Str.hash(self.toString()); }
+
+fan.sys.Float.bits = function(self)
+{
+  throw fan.sys.Err.make("Float.bits not available in JavaScript");
+}
+
+fan.sys.Float.bitsArray = function(self)
+{
+  var buf = new ArrayBuffer(8);
+  (new Float64Array(buf))[0] = self;
+  return [(new Uint32Array(buf))[0], (new Uint32Array(buf))[1]];
+}
+
+fan.sys.Float.bits32 = function(self)
+{
+  var buf = new ArrayBuffer(4);
+  (new Float32Array(buf))[0] = self;
+  return (new Uint32Array(buf))[0];
+}
 
 /////////////////////////////////////////////////////////////////////////
 // Conversion

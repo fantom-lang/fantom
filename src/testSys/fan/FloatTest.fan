@@ -465,28 +465,29 @@ class FloatTest : Test
 
   Void testBits()
   {
-    verifyEq(0f.bits,   0)
+    js := Env.cur.runtime == "js"
+
+    if (!js)
+    {
+      verifyEq(0f.bits,           0)
+      verifyEq(7.0f.bits,         0x401c000000000000)
+      verifyEq(0.007f.bits,       0x3f7cac083126e979)
+      verifyEq(3000000.0f.bits,   0x4146e36000000000)
+      verifyEq((-1.0f).bits,      0xbff0000000000000)
+      verifyEq((-7.05E-12f).bits, 0xbd9f019826e0ec8b)
+    }
+
     verifyEq(0f.bits32, 0)
-
-    verifyEq(7.0f.bits,   0x401c000000000000)
     verifyEq(7.0f.bits32, 0x40e00000)
-
-    verifyEq(0.007f.bits,   0x3f7cac083126e979)
     verifyEq(0.007f.bits32, 0x3be56042)
-
-    verifyEq(3000000.0f.bits,   0x4146e36000000000)
     verifyEq(3000000.0f.bits32, 0x4a371b00)
-
-    verifyEq((-1.0f).bits, 0xbff0000000000000)
     verifyEq((-1.0f).bits32, 0xbf800000)
-
-    verifyEq((-7.05E-12f).bits, 0xbd9f019826e0ec8b)
     verifyEq((-7.05E-12f).bits32, 0xacf80cc1)
 
     floats := [0.0f, 88.0f, -7.432f, 123.56e18f, Float.posInf, Float.negInf, Float.nan]
     floats.each |Float r|
     {
-      verifyEq(Float.makeBits(r.bits), r)
+      if (!js) verifyEq(Float.makeBits(r.bits), r)
       verify(Float.makeBits32(r.bits32).approx(r))
     }
   }
