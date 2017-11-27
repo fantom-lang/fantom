@@ -17,7 +17,12 @@ fan.sys.Buf = fan.sys.Obj.$extend(fan.sys.Obj);
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.Buf.prototype.$ctor = function() {}
-fan.sys.Buf.make = function(capacity) { return new fan.sys.MemBuf(); }
+
+fan.sys.Buf.make = function(capacity)
+{
+  var c = capacity || 1024;
+  return fan.sys.MemBuf.makeCapacity(c);
+}
 
 fan.sys.Buf.random = function(size)
 {
@@ -65,7 +70,7 @@ fan.sys.Buf.prototype.$typeof = function()
 fan.sys.Buf.prototype.isEmpty = function() { return this.size() == 0; }
 
 fan.sys.Buf.prototype.capacity = function() { return fan.sys.Int.m_maxVal; }
-//fan.sys.Buf.prototype.capacity$ = function(long c) {}
+fan.sys.Buf.prototype.capacity$ = function(c) {}
 
 fan.sys.Buf.prototype.remaining = function() { return this.size()-this.pos(); }
 
@@ -103,22 +108,20 @@ fan.sys.Buf.prototype.getRange = function(range)
   var n = (e - s + 1);
   if (n < 0) throw fan.sys.IndexErr.make(range);
 
-  var slice = [];
-  this.getBytes(s, slice, 0, n);
+  var slice = this.getBytes(s, n);
 
   var result = new fan.sys.MemBuf(slice, n);
-  result.charset$(this.m_out.charset());
+  result.charset$(this.charset());
   return result;
 }
 
 fan.sys.Buf.prototype.dup = function()
 {
   var size = this.size();
-  var copy = [];
-  this.getBytes(0, copy, 0, size);
+  var copy = this.getBytes(0, size);
 
-  var result = new MemBuf(copy, size);
-  result.charset$(this.m_out.charset());
+  var result = new fan.sys.MemBuf(copy, size);
+  result.charset$(this.charset());
   return result;
 }
 
@@ -157,7 +160,7 @@ fan.sys.Buf.prototype.close = function()
   return true;
 }
 
-fan.sys.Buf.prototype.endian = function() { this.m_out.endian(); }
+fan.sys.Buf.prototype.endian = function() { return this.m_out.endian(); }
 fan.sys.Buf.prototype.endian$ = function(endian)
 {
   this.m_out.endian$(endian);
@@ -290,6 +293,20 @@ fan.sys.Buf.prototype.writeProps = function(props, close) { return this.m_out.wr
 // Hex
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.Buf.prototype.toHex = function()
+{
+  var buf = this.unsafeArray();
+  var size = this.size();
+  var hexChars = fan.sys.Buf.hexChars;
+  var s = "";
+  for (var i=0; i<size; ++i)
+  {
+    var b = buf[i] & 0xFF;
+    s += String.fromCharCode(hexChars[b>>4]) + String.fromCharCode(hexChars[b&0xf]);
+  }
+  return s;
+}
+
 fan.sys.Buf.fromHex = function(s)
 {
   var slen = s.length;
@@ -395,6 +412,45 @@ for (var i=0; i<fan.sys.Buf.base64chars.length; ++i)
 fan.sys.Buf.base64inv[45] = 62; // '-'
 fan.sys.Buf.base64inv[95] = 63; // '_'
 fan.sys.Buf.base64inv[61] = 0;  // '='
+
+//////////////////////////////////////////////////////////////////////////
+// CRC
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Buf.prototype.crc = function(algorithm)
+{
+  if (algorithm == "CRC-16") return this.crc16();
+  // TODO
+  // if (algorithm.equals("CRC-32")) return crc(new CRC32());
+  // if (algorithm.equals("CRC-32-Adler")) return crc(new Adler32());
+  throw fan.sys.ArgErr.make("Unknown CRC algorthm: " + algorithm);
+}
+
+fan.sys.Buf.prototype.crc16 = function()
+{
+  var array = this.unsafeArray();
+  var size = this.size();
+  var seed = 0xffff;
+  for (var i=0; i<size; ++i) seed = crc16(array[i], seed);
+  return seed;
+}
+
+fan.sys.Buf.prototype.crc16 = function(dataToCrc, seed)
+{
+  var dat = ((dataToCrc ^ (seed & 0xFF)) & 0xFF);
+  seed = (seed & 0xFFFF) >>> 8;
+  var index1 = (dat & 0x0F);
+  var index2 = (dat >>> 4);
+  if ((fan.sys.Buf.CRC16_ODD_PARITY[index1] ^ fan.sys.Buf.CRC16_ODD_PARITY[index2]) == 1)
+    seed ^= 0xC001;
+  dat  <<= 6;
+  seed ^= dat;
+  dat  <<= 1;
+  seed ^= dat;
+  return seed;
+}
+
+fan.sys.Buf.CRC16_ODD_PARITY = [ 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0 ];
 
 //////////////////////////////////////////////////////////////////////////
 // PBKDF2

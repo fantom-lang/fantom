@@ -101,6 +101,38 @@ fan.sys.OutStream.prototype.writeI4 = function(x)
                .write((x >>> 24) & 0xFF);
 }
 
+fan.sys.OutStream.prototype.writeI8 = function(x)
+{
+  if (this.m_bigEndian)
+    return this.write((x >>> 56) & 0xFF)
+               .write((x >>> 48) & 0xFF)
+               .write((x >>> 40) & 0xFF)
+               .write((x >>> 32) & 0xFF)
+               .write((x >>> 24) & 0xFF)
+               .write((x >>> 16) & 0xFF)
+               .write((x >>> 8)  & 0xFF)
+               .write((x >>> 0)  & 0xFF);
+  else
+    return this.write((x >>> 0)  & 0xFF)
+               .write((x >>> 8)  & 0xFF)
+               .write((x >>> 16) & 0xFF)
+               .write((x >>> 24) & 0xFF)
+               .write((x >>> 32) & 0xFF)
+               .write((x >>> 40) & 0xFF)
+               .write((x >>> 48) & 0xFF)
+               .write((x >>> 56) & 0xFF);
+}
+
+fan.sys.OutStream.prototype.writeF4 = function(x)
+{
+  return this.writeI4(fan.sys.Float.bits32(x));
+}
+
+fan.sys.OutStream.prototype.writeF8 = function(x)
+{
+  throw fan.sys.Err.make("OutStream.writeF8 not supported in JavaScript");
+}
+
 fan.sys.OutStream.prototype.writeDecimal = function(x)
 {
   return this.writeUtf(x.toString());
