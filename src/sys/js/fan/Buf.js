@@ -493,8 +493,7 @@ fan.sys.Buf.prototype.crc = function(algorithm)
 {
   if (algorithm == "CRC-16") return this.crc16();
   if (algorithm == "CRC-32") return this.crc32();
-  // TODO
-  // if (algorithm.equals("CRC-32-Adler")) return crc(new Adler32());
+  if (algorithm == "CRC-32-Adler") return this.crcAdler32();
   throw fan.sys.ArgErr.make("Unknown CRC algorthm: " + algorithm);
 }
 
@@ -526,6 +525,7 @@ fan.sys.Buf.prototype.crc32 = function()
 {
   // From StackOverflow:
   // https://stackoverflow.com/questions/18638900/javascript-crc32#answer-18639975
+
   var array = this.unsafeArray();
   var crc = -1;
   for (var i=0, iTop=array.length; i<iTop; i++)
@@ -534,6 +534,30 @@ fan.sys.Buf.prototype.crc32 = function()
   }
   return (crc ^ (-1)) >>> 0;
 };
+
+fan.sys.Buf.prototype.crcAdler32 = function(seed)
+{
+  // https://github.com/SheetJS/js-adler32
+  //
+  // Copyright (C) 2014-present  SheetJS
+  // Licensed under Apache 2.0
+
+  var array = this.unsafeArray();
+	var a = 1, b = 0, L = array.length, M = 0;
+	if (typeof seed === 'number') { a = seed & 0xFFFF; b = (seed >>> 16) & 0xFFFF; }
+	for(var i=0; i<L;)
+  {
+		M = Math.min(L-i, 3850) + i;
+		for(; i<M; i++)
+    {
+			a += array[i] & 0xFF;
+			b += a;
+		}
+		a = (15 * (a >>> 16) + (a & 65535));
+		b = (15 * (b >>> 16) + (b & 65535));
+	}
+	return ((b % 65521) << 16) | (a % 65521);
+}
 
 fan.sys.Buf.CRC16_ODD_PARITY = [ 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0 ];
 
