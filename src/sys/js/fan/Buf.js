@@ -503,11 +503,11 @@ fan.sys.Buf.prototype.crc16 = function()
   var array = this.unsafeArray();
   var size = this.size();
   var seed = 0xffff;
-  for (var i=0; i<size; ++i) seed = crc16(array[i], seed);
+  for (var i=0; i<size; ++i) seed = this.$crc16(array[i], seed);
   return seed;
 }
 
-fan.sys.Buf.prototype.crc16 = function(dataToCrc, seed)
+fan.sys.Buf.prototype.$crc16 = function(dataToCrc, seed)
 {
   var dat = ((dataToCrc ^ (seed & 0xFF)) & 0xFF);
   seed = (seed & 0xFFFF) >>> 8;
