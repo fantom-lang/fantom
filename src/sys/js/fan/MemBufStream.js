@@ -161,7 +161,7 @@ fan.sys.MemBufInStream.prototype.skip = function(n)
 
 fan.sys.ErrInStream = fan.sys.Obj.$extend(fan.sys.InStream);
 fan.sys.ErrInStream.prototype.read    = function()         { throw this.err(); }
-fan.sys.ErrInStream.prototype.r       = function()         { throw this.err(); }
+fan.sys.ErrInStream.prototype.rChar    = function()         { throw this.err(); }
 fan.sys.ErrInStream.prototype.readBuf = function(other, n) { throw this.err(); }
 fan.sys.ErrInStream.prototype.unread  = function(n)        { throw this.err(); }
 fan.sys.ErrInStream.prototype.unread  = function(n)        { throw this.err(); }
@@ -175,7 +175,6 @@ fan.sys.ErrInStream.prototype.err     = function() { return fan.sys.ReadonlyErr.
 
 fan.sys.ErrOutStream = fan.sys.Obj.$extend(fan.sys.OutStream);
 fan.sys.ErrOutStream.prototype.write     = function(v)        { throw this.err(); }
-fan.sys.ErrOutStream.prototype.w         = function(v)        { throw this.err(); }
 fan.sys.ErrOutStream.prototype.writeBuf  = function(other, n) { throw this.err(); }
 fan.sys.ErrOutStream.prototype.writeChar = function(c)        { throw this.err(); }
 fan.sys.ErrOutStream.prototype.writeChar = function(c)        { throw this.err(); }
@@ -209,7 +208,7 @@ fan.sys.ConstBufInStream.prototype.readBuf = function(other, n)
 {
   if (this.pos >= this.size) return null;
   var len = Math.min(this.size - this.pos, n);
-  other.pipeFrom(buf, pos, len);
+  other.pipeFrom(buf.m_buf, pos, len);
   this.pos += len;
   return len;
 }

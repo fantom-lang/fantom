@@ -426,7 +426,6 @@ fan.sys.InStream.prototype.readAllLines = function()
       list.push(line);
     return list;
   }
-  catch (err) { fan.sys.Err.make(err).trace(); }
   finally
   {
     try { this.close(); } catch (err) { fan.sys.Err.make(err).trace(); }

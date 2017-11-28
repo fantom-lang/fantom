@@ -18,6 +18,7 @@ fan.sys.ConstBuf = fan.sys.Obj.$extend(fan.sys.Buf);
 fan.sys.ConstBuf.prototype.$ctor = function(buf, size, endian, charset)
 {
   this.m_buf     = buf;
+  this.m_pos     = 0;
   this.m_size    = size;
   this.m_in      = fan.sys.ConstBuf.errInStream;
   this.m_out     = fan.sys.ConstBuf.errOutStream;
@@ -89,28 +90,12 @@ fan.sys.ConstBuf.prototype.getBytes = function(pos, len)
 //   if (len > size) throw IOErr.make("Not enough bytes to write");
 //   dst.put(buf, 0, len);
 // }
-//
-// public final void pipeFrom(byte[] src, int srcPos, int len)
-// {
-//   throw err();
-// }
-//
-// public final long pipeFrom(InputStream src, long lenLong)
-//   throws IOException
-// {
-//   throw err();
-// }
-//
-// public final long pipeFrom(RandomAccessFile src, long lenLong)
-//   throws IOException
-// {
-//   throw err();
-// }
-//
-// public final int pipeFrom(ByteBuffer src, int len)
-// {
-//   throw err();
-// }
+
+fan.sys.ConstBuf.prototype.pipeFrom = function() { throw this.err(); }
+// fan.sys.ConstBuf.prototype.pipeFrom = function(src, srcPos, len)
+// fan.sys.ConstBuf.prototype.pipeFrom = function(InputStream src, long lenLong)
+// fan.sys.ConstBuf.prototype.pipeFrom = function(RandomAccessFile src, long lenLong)
+// fan.sys.ConstBuf.prototype.pipeFrom = function(ByteBuffer src, int len)
 
 //////////////////////////////////////////////////////////////////////////
 // Buf API
@@ -133,28 +118,10 @@ fan.sys.ConstBuf.prototype.charset$ = function(charset) { throw this.err(); }
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-// public final byte[] bytes()
-// {
-//   byte[] r = new byte[size];
-//   System.arraycopy(buf, 0, r, 0, size);
-//   return r;
-// }
-
 fan.sys.ConstBuf.prototype.unsafeArray = function()
 {
   return this.m_buf;
 }
-
-// public int sz()
-// {
-//   return this.size;
-// }
-//
-// public ByteBuffer toByteBuffer()
-// {
-//   return ByteBuffer.wrap(bytes());
-// }
-//
 
 fan.sys.ConstBuf.prototype.err = function()
 {

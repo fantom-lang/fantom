@@ -819,10 +819,22 @@ class BufTest : AbstractBufTest
 
   Void testPipe()
   {
-    verifyPipe(makeMem,  makeMem)
-    verifyPipe(makeMem,  makeFile)
-    verifyPipe(makeFile, makeMem)
-    verifyPipe(makeFile, makeFile)
+    // test for js env
+    src := makeMem
+    dst := makeMem
+    1800.times |Int i| { src.write(i) }
+    src.flip
+    src.in.pipe(dst.out, null, false)
+    verifyEq(dst.size, 1800)
+    1800.times |Int i| { verifyEq(dst[i], i.and(0xff)) }
+
+    if (Env.cur.runtime != "js")
+    {
+      verifyPipe(makeMem,  makeMem)
+      verifyPipe(makeMem,  makeFile)
+      verifyPipe(makeFile, makeMem)
+      verifyPipe(makeFile, makeFile)
+    }
   }
 
   Void verifyPipe(Buf src, Buf dst)
@@ -910,8 +922,8 @@ class BufTest : AbstractBufTest
   {
     buf := Buf.fromHex("F70302640008")
     verifyEq(buf.crc("CRC-16"), 0xFD10)
-    // verifyEq(buf.crc("CRC-32"), 0x15f9_d197)
-    // verifyEq(buf.crc("CRC-32-Adler"), 0x071b_0169)
+    verifyEq(buf.crc("CRC-32"), 0x15f9_d197)
+    verifyEq(buf.crc("CRC-32-Adler"), 0x071b_0169)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1002,13 +1014,9 @@ if (!js)
     verifyEq(in.read, 'D')
     verifyEq(in.read, null)
 
-// TODO
-if (!js)
-{
     newBuf := Buf()
     newBuf.out.writeBuf(buf)
     verifyEq(newBuf.flip.readAllStr, "ABCD")
-}
 
     verifyErr(e) { x := buf.capacity }
     verifyErr(e) { buf.capacity = 6 }
@@ -1024,8 +1032,7 @@ if (!js)
     verifyErr(e) { buf.printLine("x") }
     verifyErr(e) { buf.read }
     verifyErr(e) { buf.readAllBuf }
-// TODO
-if (!js) verifyErr(e) { buf.readAllLines }
+    verifyErr(e) { buf.readAllLines }
     verifyErr(e) { buf.readAllStr }
     verifyErr(e) { buf.readBool }
     verifyErr(e) { buf.readBuf(Buf(),3) }
