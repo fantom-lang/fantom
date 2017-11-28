@@ -349,12 +349,44 @@ for (var i=10; i<16; ++i) fan.sys.Buf.hexInv[97+i-10] = fan.sys.Buf.hexInv[65+i-
 
 fan.sys.Buf.prototype.toBase64 = function()
 {
-  throw fan.sys.UnsupportedErr.make(this.$typeof()+".toBase64");
+  return this.$doBase64(fan.sys.Buf.base64chars, true);
 }
 
 fan.sys.Buf.prototype.toBase64Uri = function()
 {
-  throw fan.sys.UnsupportedErr.make(this.$typeof()+".toBase64Uri");
+  return this.$doBase64(fan.sys.Buf.base64UriChars, false);
+}
+
+fan.sys.Buf.prototype.$doBase64 = function(table, pad)
+{
+  var buf = this.m_buf;
+  var size = this.m_size;
+  var s = '';
+  var i = 0;
+
+  // append full 24-bit chunks
+  var end = size-2;
+  for (; i<end; i += 3)
+  {
+    var n = ((buf[i] & 0xff) << 16) + ((buf[i+1] & 0xff) << 8) + (buf[i+2] & 0xff);
+    s += String.fromCharCode(table[(n >>> 18) & 0x3f]);
+    s += String.fromCharCode(table[(n >>> 12) & 0x3f]);
+    s += String.fromCharCode(table[(n >>> 6) & 0x3f]);
+    s += String.fromCharCode(table[n & 0x3f]);
+  }
+
+  // pad and encode remaining bits
+  var rem = size - i;
+  if (rem > 0)
+  {
+    var n = ((buf[i] & 0xff) << 10) | (rem == 2 ? ((buf[size-1] & 0xff) << 2) : 0);
+    s += String.fromCharCode(table[(n >>> 12) & 0x3f]);
+    s += String.fromCharCode(table[(n >>> 6) & 0x3f]);
+    s += rem == 2 ? String.fromCharCode(table[n & 0x3f]) : (pad ? '=' : "");
+    if (pad) s += '=';
+  }
+
+  return s;
 }
 
 fan.sys.Buf.fromBase64 = function(s)
@@ -412,6 +444,46 @@ for (var i=0; i<fan.sys.Buf.base64chars.length; ++i)
 fan.sys.Buf.base64inv[45] = 62; // '-'
 fan.sys.Buf.base64inv[95] = 63; // '_'
 fan.sys.Buf.base64inv[61] = 0;  // '='
+
+//////////////////////////////////////////////////////////////////////////
+// Digest
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Buf.prototype.toDigest = function(algorithm)
+{
+  var digest = null;
+  switch (algorithm)
+  {
+    case "MD5":
+      digest = fan.sys.Buf_Md5(this.m_buf);  break;
+    case "SHA1":
+    case "SHA-1":
+      // fall-through
+      digest = fan.sys.buf_sha1.digest(this.m_buf); break;
+    case "SHA-256":
+      digest = fan.sys.buf_sha256.digest(this.m_buf); break;
+    default: throw fan.sys.ArgErr.make("Unknown digest algorithm " + algorithm);
+  }
+  return fan.sys.MemBuf.makeBytes(digest);
+}
+
+fan.sys.Buf.prototype.hmac = function(algorithm, keyBuf)
+{
+  var digest = null;
+  switch (algorithm)
+  {
+    case "MD5":
+      digest = fan.sys.Buf_Md5(this.m_buf, keyBuf.m_buf);  break;
+    case "SHA1":
+    case "SHA-1":
+      // fall thru
+      digest = fan.sys.buf_sha1.digest(this.m_buf, keyBuf.m_buf); break;
+    case "SHA-256":
+      digest = fan.sys.buf_sha256.digest(this.m_buf, keyBuf.m_buf); break;
+    default: throw fan.sys.ArgErr.make("Unknown digest algorithm " + algorithm);
+  }
+  return fan.sys.MemBuf.makeBytes(digest);
+}
 
 //////////////////////////////////////////////////////////////////////////
 // CRC
