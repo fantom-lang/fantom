@@ -23,9 +23,6 @@ using dom
     this.onEvent("change", false)
     {
       if (cbSelect != null) cbSelect(this)
-
-      // clear value so onchange will fire if same file is re-selected
-      this->value = ""
     }
   }
 
@@ -44,7 +41,7 @@ using dom
     set { this->accept = it }
   }
 
-  ** Does this picker allow seleting multiple files?
+  ** Does this picker allow selecting multiple files?
   Bool multi
   {
     get { this->multiple }
