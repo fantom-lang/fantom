@@ -15,6 +15,15 @@
   ** include any path information.
   native Str name()
 
+  ** Return file name extension (everything after the last dot)
+  ** or 'null' name has no dot.
+  Str? ext()
+  {
+    n := this.name
+    i := n.indexr(".")
+    return i==null ? null : n[i+1..-1]
+  }
+
   ** Size of file in bytes.
   native Int size()
 
