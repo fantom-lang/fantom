@@ -284,7 +284,7 @@ using graphics
 
     // get container dims
     tbodysz := this.size
-    this.theadh  = showHeader ? 20 : 0
+    this.theadh  = showHeader ? view.headerHeight : 0
     this.tbodyw  = tbodysz.w.toInt
     this.tbodyh  = tbodysz.h.toInt - theadh
 
@@ -1091,6 +1091,9 @@ using graphics
   ** Number of rows in table.
   virtual Int numRows() { 0 }
 
+  ** Return height of header.
+  virtual Int headerHeight() { 20 }
+
   ** Return width of given column.
   virtual Int colWidth(Int col) { 100 }
 
@@ -1235,6 +1238,7 @@ using graphics
 
   override Int numCols() { cols.size }
   override Int numRows() { rows.size }
+  override Int headerHeight() { table.model.headerHeight }
   override Int colWidth(Int c) { table.model.colWidth(cols[c]) }
   override Int rowHeight() { table.model.rowHeight }
   override Obj item(Int r) { table.model.item(rows[r]) }
