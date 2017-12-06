@@ -541,6 +541,13 @@ class Link : DocElem
   override DocNodeId id() { return DocNodeId.link }
   override Str htmlName() { return "a" }
   override Bool isInline() { return true }
+
+  ** Is the text of the link the same as the URI string
+  Bool isTextUri() { children.first is DocText && children.first.toStr == this.uri }
+
+  ** Change the text to display for the link
+  Void setText(Str text) { removeAll.add(DocText(text)) }
+
   Bool isCode := false  // when uri resolves to a type or slot
   Str uri
   Int line
