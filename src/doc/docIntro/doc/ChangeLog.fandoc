@@ -8,6 +8,7 @@
 
 *Build 1.0.71 (working)*
 - dom: Add DomFile.ext
+- domkit: Add GridBox.insertRowBefore
 
 *Build 1.0.70 (8 Nov 2017)*
 - Require Java 1.7
