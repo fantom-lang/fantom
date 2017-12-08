@@ -66,6 +66,9 @@ using dom
     return this
   }
 
+  ** The number of rows in this GridBox.
+  Int numRows() { tbody.children.size }
+
   ** Add a new row to grid.
   This addRow(Elem?[] cells, Int[] colspan := Int#.emptyList)
   {
@@ -103,8 +106,15 @@ using dom
     return this
   }
 
-  ** The number of rows in this GridBox.
-  Int numRows() { tbody.children.size }
+  ** Return the row index that this child exists under, or
+  ** 'null' if child was not found in this GridBox.
+  Int? rowIndexOf(Elem child)
+  {
+    tbody.children.findIndex |row|
+    {
+      row.containsChild(child)
+    }
+  }
 
   ** Remove the row of cells at given index.
   This removeRow(Int index)
