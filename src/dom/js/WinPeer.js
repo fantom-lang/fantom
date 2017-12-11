@@ -321,6 +321,47 @@ fan.dom.WinPeer.prototype.clearInterval = function(self, id)
 }
 
 //////////////////////////////////////////////////////////////////////////
+// Geolocation
+//////////////////////////////////////////////////////////////////////////
+
+fan.dom.WinPeer.prototype.geoCurPosition = function(self, onSuccess, onErr, opts)
+{
+  this.win.navigator.geolocation.getCurrentPosition(
+    function(p,ts) { onSuccess.call(fan.dom.DomCoordPeer.wrap(p,ts)); },
+    function(err)  { if (onErr) onErr.call(fan.sys.Err.make(err.code + ": " + err.message)); },
+    this.$geoOpts(opts));
+}
+
+fan.dom.WinPeer.prototype.geoWatchPosition = function(self, onSuccess, onErr, opts)
+{
+  return this.win.navigator.geolocation.watchPosition(
+    function(p,ts) { onSuccess.call(fan.dom.DomCoordPeer.wrap(p,ts)); },
+    function(err)  { if (onErr) onErr.call(fan.sys.Err.make(err.code + ": " + err.message)); },
+    this.$geoOpts(opts));
+}
+
+fan.dom.WinPeer.prototype.geoClearWatch = function(self, id)
+{
+  this.win.navigator.geolocation.clearWatch(id);
+}
+
+fan.dom.WinPeer.prototype.$geoOpts = function(fanMap)
+{
+  if (!fanMap) return null;
+
+  var opts = {};
+  var keys = fanMap.keys();
+  for (var i=0; i<keys.size(); i++)
+  {
+    var key = keys.get(i);
+    var val = fanMap.get(key);
+    opts[key] = val;
+  }
+
+  return opts;
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Storage
 //////////////////////////////////////////////////////////////////////////
 

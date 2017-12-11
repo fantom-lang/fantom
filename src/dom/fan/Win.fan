@@ -172,6 +172,26 @@ class Win
   native Void clearInterval(Int intervalId)
 
 //////////////////////////////////////////////////////////////////////////
+// Geolocation
+//////////////////////////////////////////////////////////////////////////
+
+  ** Get the the current position of this device. This feature
+  ** is only available in secure contexts (HTTPS).
+  native Void geoCurPosition(|DomCoord| onSuccess, |Err|? onErr := null, [Str:Obj]? opts := null)
+
+  ** Register a handler function that will be called automatically each
+  ** time the position of the device changes. This method returns a watch
+  ** ID value that then can be used to unregister the handler with the
+  ** `geoClearWatch` method. This feature is only available in secure
+  ** contexts (HTTPS).
+  native Int geoWatchPosition(|DomCoord| onSuccess, |Err|? onErr := null, [Str:Obj]? opts := null)
+
+  ** Unregister location/error monitoring handlers previously installed
+  ** using `geoWatchPosition`. This feature is only available in secure
+  ** contexts (HTTPS).
+  native Void geoClearWatch(Int id)
+
+//////////////////////////////////////////////////////////////////////////
 // Storage
 //////////////////////////////////////////////////////////////////////////
 
