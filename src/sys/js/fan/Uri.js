@@ -1430,9 +1430,9 @@ fan.sys.Uri.isScheme = function(c)
   return c < 128 ? (fan.sys.Uri.charMap[c] & fan.sys.Uri.SCHEME) != 0 : false;
 }
 
-fan.sys.Uri.charMap     = new Array(128).fill(0);
-fan.sys.Uri.nameMap     = new Array(128).fill(0);
-fan.sys.Uri.delimEscMap = new Array(128).fill(0);
+fan.sys.Uri.charMap     = new Array(128);
+fan.sys.Uri.nameMap     = new Array(128);
+fan.sys.Uri.delimEscMap = new Array(128);
 fan.sys.Uri.SCHEME     = 0x01;
 fan.sys.Uri.USER       = 0x02;
 fan.sys.Uri.HOST       = 0x04;
@@ -1441,6 +1441,11 @@ fan.sys.Uri.QUERY      = 0x10;
 fan.sys.Uri.FRAG       = 0x20;
 fan.sys.Uri.DIGIT      = 0x40;
 fan.sys.Uri.HEX        = 0x80;
+
+// initialize flags for all character maps to 0
+for (var i=0; i<128; ++i) { fan.sys.Uri.charMap[i] = 0 ; }
+for (var i=0; i<128; ++i) { fan.sys.Uri.nameMap[i] = 0 ; }
+for (var i=0; i<128; ++i) { fan.sys.Uri.delimEscMap[i] = 0 ; }
 
 // alpha/digits characters
 fan.sys.Uri.unreserved = fan.sys.Uri.SCHEME | fan.sys.Uri.USER | fan.sys.Uri.HOST | fan.sys.Uri.PATH | fan.sys.Uri.QUERY | fan.sys.Uri.FRAG;
