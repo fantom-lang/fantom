@@ -134,7 +134,13 @@ fan.dom.DocPeer.prototype.out = function(self)
 }
 
 fan.dom.DocPeer.prototype.getCookiesStr = function(self) { return this.doc.cookie; }
-fan.dom.DocPeer.prototype.addCookieStr = function(self,c) { this.doc.cookie = c; }
+
+fan.dom.DocPeer.prototype.addCookie = function(self,c)
+{
+  // always force HttpOnly otherwise this is a no-op for browsers
+  c.m_httpOnly = false;
+  this.doc.cookie = c.toStr();
+}
 
 /*************************************************************************
  * DocOutStream

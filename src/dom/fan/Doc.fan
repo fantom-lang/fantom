@@ -142,12 +142,8 @@ class Doc
   **
   ** Add a cookie to this session.
   **
-  Void addCookie(Cookie c)
-  {
-    addCookieStr(c.toStr)
-  }
+  native Void addCookie(Cookie c)
 
   private native Str getCookiesStr()
-  private native Str addCookieStr(Str c)
 
 }
