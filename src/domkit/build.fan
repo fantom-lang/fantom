@@ -31,6 +31,7 @@ class Build : BuildPod
                "dom 1.0"]
     srcDirs = [`fan/`]
     resDirs = [`res/css/`]
+    docSrc  = true
   }
 
   @Target { help = "Compile to pod file and associated natives" }
