@@ -451,17 +451,20 @@ fan.sys.Buf.base64inv[61] = 0;  // '='
 
 fan.sys.Buf.prototype.toDigest = function(algorithm)
 {
+  // trim buf to content
+  var buf = this.m_buf.slice(0, this.m_size);
+
   var digest = null;
   switch (algorithm)
   {
     case "MD5":
-      digest = fan.sys.Buf_Md5(this.m_buf);  break;
+      digest = fan.sys.Buf_Md5(buf);  break;
     case "SHA1":
     case "SHA-1":
       // fall-through
-      digest = fan.sys.buf_sha1.digest(this.m_buf); break;
+      digest = fan.sys.buf_sha1.digest(buf); break;
     case "SHA-256":
-      digest = fan.sys.buf_sha256.digest(this.m_buf); break;
+      digest = fan.sys.buf_sha256.digest(buf); break;
     default: throw fan.sys.ArgErr.make("Unknown digest algorithm " + algorithm);
   }
   return fan.sys.MemBuf.makeBytes(digest);
@@ -469,17 +472,21 @@ fan.sys.Buf.prototype.toDigest = function(algorithm)
 
 fan.sys.Buf.prototype.hmac = function(algorithm, keyBuf)
 {
+  // trim buf to content
+  var buf = this.m_buf.slice(0, this.m_size);
+  var key = keyBuf.m_buf.slice(0, keyBuf.m_size);
+
   var digest = null;
   switch (algorithm)
   {
     case "MD5":
-      digest = fan.sys.Buf_Md5(this.m_buf, keyBuf.m_buf);  break;
+      digest = fan.sys.Buf_Md5(buf, key);  break;
     case "SHA1":
     case "SHA-1":
       // fall thru
-      digest = fan.sys.buf_sha1.digest(this.m_buf, keyBuf.m_buf); break;
+      digest = fan.sys.buf_sha1.digest(buf, key); break;
     case "SHA-256":
-      digest = fan.sys.buf_sha256.digest(this.m_buf, keyBuf.m_buf); break;
+      digest = fan.sys.buf_sha256.digest(buf, key); break;
     default: throw fan.sys.ArgErr.make("Unknown digest algorithm " + algorithm);
   }
   return fan.sys.MemBuf.makeBytes(digest);
@@ -604,13 +611,18 @@ fan.sys.Buf.CRC32_b_table = fan.sys.Buf.CRC32_a_table.split(' ').map(function(s)
 fan.sys.Buf.pbk = function(algorithm, password, salt, iterations, keyLen)
 {
   var digest = null;
-  var passBytes = fan.sys.Str.toBuf(password).m_buf
+  var passBuf = fan.sys.Str.toBuf(password);
+
+  // trim buf to content
+  passBytes = passBuf.m_buf.slice(0, passBuf.m_size);
+  saltBytes = salt.m_buf.slice(0, salt.m_size);
+
   switch(algorithm)
   {
     case "PBKDF2WithHmacSHA1":
-      digest = fan.sys.buf_sha1.pbkdf2(passBytes, salt.m_buf, iterations, keyLen); break;
+      digest = fan.sys.buf_sha1.pbkdf2(passBytes, saltBytes, iterations, keyLen); break;
     case "PBKDF2WithHmacSHA256":
-      digest = fan.sys.buf_sha256.pbkdf2(passBytes, salt.m_buf, iterations, keyLen); break;
+      digest = fan.sys.buf_sha256.pbkdf2(passBytes, saltBytes, iterations, keyLen); break;
     default: throw fan.sys.Err.make("Unsupported algorithm: " + algorithm);
 
   }
