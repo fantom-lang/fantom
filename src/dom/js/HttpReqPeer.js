@@ -51,7 +51,7 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
     if (!ct) xhr.setRequestHeader("Content-Type", "application/octet-stream");
     buf = new ArrayBuffer(content.size());
     view = new Uint8Array(buf);
-    view.set(content.m_buf.slice());
+    view.set(content.m_buf.slice(0, content.size()));
     xhr.send(view);
   }
   else
