@@ -11,6 +11,7 @@
 - dom: Add Geolocation API: geoCurPosition, geoWatchPosition, geoClearWatch, DomCoord
 - dom: Add Elem.fromHtml
 - domkit: Add GridBox.insertRowBefore, GridBox.rowIndexOf
+- domkit: Add AccordionBox.isExpanded, expand
 
 *Build 1.0.70 (8 Nov 2017)*
 - Require Java 1.7
