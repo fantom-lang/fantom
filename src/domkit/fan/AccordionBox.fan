@@ -37,28 +37,29 @@ using dom
     group.add(header)
     group.addAll(kids)
 
-    // check if we need to expand group
-    if (expanded) toggle(group)
-
     this.add(group)
+
+    // check if we need to expand group
+    if (expanded) expand(this.children.size-1, true)
+
     return this
   }
 
-  ** Toggle a group or fire action for child.
-  private Void onMouseDown(Event e)
+  ** Return 'true' if given group is expanded, or 'false' if not.
+  Bool isExpanded(Int groupIndex)
   {
-    // find group
-    group := this.children.find |g| { g.containsChild(e.target) }
-    if (group == null) return
-
-    // toggle if fired on header
-    if (group.firstChild.containsChild(e.target)) toggle(group)
+    group := this.children.getSafe(groupIndex)
+    if (group == null) return false // TODO: throw err?
+    return group.style.hasClass("expanded")
   }
 
-  ** Toggle expansion state for group.
-  private Void toggle(Elem group)
+  ** Set expanded state for given group.
+  Void expand(Int groupIndex, Bool expanded)
   {
-    if (group.style.hasClass("collapsed"))
+    group := this.children.getSafe(groupIndex)
+    if (group == null) return // TODO: throw err?
+
+    if (expanded)
     {
       // expand
       group.style.removeClass("collapsed").addClass("expanded")
@@ -69,6 +70,22 @@ using dom
       // collapse
       group.style.removeClass("expanded").addClass("collapsed")
       group.children.eachRange(1..-1) |k| { k.style->display = "none" }
+    }
+  }
+
+  ** Toggle a group or fire action for child.
+  private Void onMouseDown(Event e)
+  {
+    // find group
+    kids  := this.children
+    group := kids.find |g| { g.containsChild(e.target) }
+    if (group == null) return
+
+    // toggle if fired on header
+    if (group.firstChild.containsChild(e.target))
+    {
+      index := kids.findIndex |g| { g == group }
+      expand(index, !isExpanded(index))
     }
   }
 }

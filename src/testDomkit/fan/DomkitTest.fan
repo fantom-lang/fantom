@@ -52,7 +52,9 @@ abstract class DomkitTest : Box
 
   static Type[] list()
   {
-    DomkitTest#.pod.types.findAll |t| { t.fits(DomkitTest#) && !t.isAbstract }
+    DomkitTest#.pod.types
+      .findAll |t| { t.fits(DomkitTest#) && !t.isAbstract }
+      .sort |a,b| { a.name <=> b.name }
   }
 
   static Void mount(Str qname)
