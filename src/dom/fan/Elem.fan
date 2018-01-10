@@ -28,8 +28,16 @@ class Elem
 
   private native Void _make(Str tagName, Uri? ns)
 
-  ** Create a `Elem` instance from a native JavaScript DOM object.
+  ** Create an `Elem` instance from a native JavaScript DOM object.
   static native Elem fromNative(Obj elem)
+
+  ** Create an `Elem` instance from a HTML string.
+  ** This is equivlaent
+  **   elem := Elem { it.html=html }.firstChild
+  static Elem fromHtml(Str html)
+  {
+    Elem { it.html=html }.firstChild
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Accessors
