@@ -109,7 +109,7 @@ class Doc
   **   - 'name': the command name to execute
   **   - 'defUi': flag to indicate if default user interface is shown
   **   - 'val': optional value for commands that take an argument
-  native Bool exec(Str name, Bool defUi := true, Obj? val := null)
+  native Bool exec(Str name, Bool defUi := false, Obj? val := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Writing
