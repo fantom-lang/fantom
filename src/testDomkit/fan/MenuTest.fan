@@ -31,7 +31,7 @@ class MenuTest : DomkitTest
     return FlowBox
     {
       it.gaps = ["12px"]
-      simple, bigSync, bigAsync
+      simple, bigSync, bigAsync(false), bigAsync(true),
     }
   }
 
@@ -71,11 +71,11 @@ class MenuTest : DomkitTest
     }
   }
 
-  Elem bigAsync()
+  Elem bigAsync(Bool fit)
   {
     Button {
       it.style.addClass("disclosure")
-      it.text = "Big Async"
+      it.text = "Big Async " + (fit ? "Fit" : "NoFit")
       it.onPopup |b| {
         menu := Menu {}
         menu.add(Label { it.text="Loading..."; it.style->paddingLeft="10px" })
@@ -91,6 +91,7 @@ class MenuTest : DomkitTest
               it.onAction { echo("# MenuItem: #$x") }
             })
           }
+          if (fit) menu.fitBounds
         }
 
         return menu
