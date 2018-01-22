@@ -34,7 +34,11 @@ using graphics
 
       // check for selection
       index := children.findIndex |k| { t == k }
-      if (index != null) select(index)
+      if (index != null)
+      {
+        MenuItem item := children[index]
+        select(item.enabled ? index : null)
+      }
       lastEvent = 0
     }
     this.onEvent("mousedown", false) |e| { armed=true }
@@ -44,8 +48,8 @@ using graphics
       switch (e.key)
       {
         case Key.esc:   close
-        case Key.up:    e.stop; lastEvent=1; select(selIndex==null ? 0 : findPrev(selIndex))
-        case Key.down:  e.stop; lastEvent=1; select(selIndex==null ? 0 : findNext(selIndex))
+        case Key.up:    e.stop; lastEvent=1; select(selIndex==null ? findFirst : findPrev(selIndex))
+        case Key.down:  e.stop; lastEvent=1; select(selIndex==null ? findFirst : findNext(selIndex))
         case Key.space: // fall-thru
         case Key.enter: e.stop; fireAction(e)
         default:
@@ -101,17 +105,39 @@ using graphics
     else if (sy + mh < iy + ih) this.scrollPos = Point(0f, (iy + ih - mh))
   }
 
+  private Int? findFirst()
+  {
+    i := 0
+    kids := children
+    while (i++ < kids.size-1)
+    {
+      item := kids[i] as MenuItem
+      if (item != null && item.enabled) return i
+    }
+    return null
+  }
+
   private Int? findPrev(Int start)
   {
     i := start
-    while (--i >= 0) { if (children[i] is MenuItem) return i }
+    kids := children
+    while (--i >= 0)
+    {
+      item := kids[i] as MenuItem
+      if (item != null && item.enabled) return i
+    }
     return start
   }
 
   private Int? findNext(Int start)
   {
     i := start
-    while (++i < children.size) { if (children[i] is MenuItem) return i }
+    kids := children
+    while (++i < kids.size)
+    {
+      item := kids[i] as MenuItem
+      if (item != null && item.enabled) return i
+    }
     return start
   }
 
@@ -140,11 +166,18 @@ using graphics
     this.style.addClass("domkit-control domkit-MenuItem")
   }
 
+  override Bool? enabled
+  {
+    get { !style.hasClass("disabled") }
+    set { style.toggleClass("disabled", !it) }
+  }
+
   ** Callback when item is selected.
   Void onAction(|This| f) { this.cbAction = f }
 
   internal Void fireAction(Event e)
   {
+    if (!enabled) return
     _event = e
     (parent as Popup)?.close
     cbAction?.call(this)
