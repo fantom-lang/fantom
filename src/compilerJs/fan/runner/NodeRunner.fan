@@ -19,12 +19,7 @@ class NodeRunner
   Int main(Str[] args := Env.cur.args)
   {
     // check for nodejs
-    if (Process(["which", "-s", "node"]).run.join != 0)
-    {
-      echo("nodejs not found")
-      echo("to install: brew install node")
-      return 1
-    }
+    if (!checkForNode) return 1
 
     try
     {
@@ -41,9 +36,22 @@ class NodeRunner
     {
       Env.cur.err.printLine("${e.msg}\n")
       help
-      return -1
+      return 2
     }
     return 0
+  }
+
+  private Bool checkForNode()
+  {
+    cmd := ["which", "-s", "node"]
+    if ("win32" == Env.cur.os) cmd = ["where", "node"]
+    if (Process(cmd).run.join != 0)
+    {
+      Env.cur.err.printLine("Node not found")
+      Env.cur.err.printLine("Please ensure Node.js is installed and available in your PATH")
+      return false
+    }
+    return true
   }
 
   private Void help()
