@@ -13,6 +13,7 @@
 - domkit: Add GridBox.insertRowBefore, GridBox.rowIndexOf
 - domkit: Add AccordionBox.isExpanded, expand
 - domkit: Add Popup.fitBounds to verify overflow for async loaded content
+- domkit: support for MenuItem.disabled
 
 *Build 1.0.70 (8 Nov 2017)*
 - Require Java 1.7

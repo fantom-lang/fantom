@@ -31,7 +31,7 @@ class MenuTest : DomkitTest
     return FlowBox
     {
       it.gaps = ["12px"]
-      simple, bigSync, bigAsync(false), bigAsync(true),
+      simple, disabled, bigSync, bigAsync(false), bigAsync(true),
     }
   }
 
@@ -47,6 +47,23 @@ class MenuTest : DomkitTest
           MenuItem { it.text="Beta" ; it.onAction { echo("# MenuItem: Beta")  }},
           MenuItem { it.text="Gamma"; it.onAction { echo("# MenuItem: Gamma") }},
           MenuItem { it.text="Delta"; it.onAction { echo("# MenuItem: Delta") }},
+        }
+      }
+    }
+  }
+
+  Elem disabled()
+  {
+    Button {
+      it.style.addClass("disclosure")
+      it.text = "Disabled"
+      it.onPopup {
+        Menu
+        {
+          MenuItem { it.text="Alpha"; it.enabled=false; it.onAction { echo("# MenuItem: Alpha") }},
+          MenuItem { it.text="Beta" ; it.enabled=true;  it.onAction { echo("# MenuItem: Beta")  }},
+          MenuItem { it.text="Gamma"; it.enabled=false; it.onAction { echo("# MenuItem: Gamma") }},
+          MenuItem { it.text="Delta"; it.enabled=false; it.onAction { echo("# MenuItem: Delta") }},
         }
       }
     }
