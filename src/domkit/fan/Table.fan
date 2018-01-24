@@ -229,10 +229,10 @@ using graphics
     numVisCols.times |c|
     {
       col  := firstVisCol + c
-      pos  := Point(col, row)
+      pos  := TablePos(col, row)
       cell := cells[pos]
       if (cell == null) return
-      refreshCell(cell, pos.x.toInt, pos.y.toInt)
+      refreshCell(cell, pos.col, pos.row)
     }
   }
 
@@ -240,7 +240,7 @@ using graphics
   private Void refreshCell(Elem? cell, Int col, Int row)
   {
     // get cell
-    cell = cell ?: cells[Point(col, row)]
+    cell = cell ?: cells[TablePos(col, row)]
     if (cell == null) throw Err("Cell not found: $col,$row")
 
     // update static view style
@@ -423,7 +423,7 @@ using graphics
           it.focused  = manFocus
           it.selected = rowSel
         }
-        cells[Point(c, r)] = cell
+        cells[TablePos(c, r)] = cell
         if (c < numCols && r < numRows) view.onCell(cell, c, r, flags)
         tbody.add(cell)
       }
@@ -635,8 +635,8 @@ using graphics
       h.style->transform = "translate(${tx}px, 0)"
     }
     cells.each |c,p| {
-      tx := colxSafe(p.x.toInt) - scrollx
-      ty := (p.y * rowh) - scrolly
+      tx := colxSafe(p.col) - scrollx
+      ty := (p.row * rowh) - scrolly
       c.style->transform = "translate(${tx}px, ${ty}px)"
     }
   }
@@ -676,10 +676,10 @@ using graphics
       numVisRows.times |r|
       {
         row  := r + firstVisRow
-        op   := Point(oldCol, row)
+        op   := TablePos(oldCol, row)
         cell := cells.remove(op)
         cell.style->width = newColw
-        cells[Point(newCol, row)] = cell
+        cells[TablePos(newCol, row)] = cell
         refreshCell(cell, newCol, row)
       }
     }
@@ -716,9 +716,9 @@ using graphics
       numVisCols.times |c|
       {
         col  := c + firstVisCol
-        op   := Point(col, oldRow)
+        op   := TablePos(col, oldRow)
         cell := cells.remove(op)
-        cells[Point(col, newRow)] = cell
+        cells[TablePos(col, newRow)] = cell
         refreshCell(cell, col, newRow)
       }
     }
@@ -1030,7 +1030,7 @@ using graphics
   private Elem? hbar
   private Elem? vbar
   private Int:Elem headers := [:]
-  private Point:Elem cells := [:]
+  private TablePos:Elem cells := [:]
   private Int theadh         // thead height
   private Int tbodyw         // tbody width
   private Int tbodyh         // tbody height
@@ -1074,6 +1074,24 @@ using graphics
 
   // focus/blur
   private Bool manFocus := false
+}
+
+**************************************************************************
+** TablePos
+**************************************************************************
+
+**
+** TablePos provides an JS optimized hash key for col,row cell position
+**
+@Js
+internal const class TablePos
+{
+  new make(Int c, Int r) { col = c; row = r; toStr = "$c,$r"; hash = toStr.hash }
+  const Int col
+  const Int row
+  const override Int hash
+  const override Str toStr
+  override Bool equals(Obj? that) { toStr == that.toStr }
 }
 
 **************************************************************************
