@@ -24,6 +24,8 @@ public final class Unsafe
 
   public boolean isImmutable() { return true; }
 
+  public String toStr() { return "Unsafe(" + val + ")"; }
+
   private Object val;
 
 }
