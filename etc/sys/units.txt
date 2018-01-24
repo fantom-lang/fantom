@@ -41,21 +41,155 @@ power_usage_effectiveness, PUE
 data_center_infrastructure_efficiency, DCIE
 
 -- currency (null)
-australian_dollar, AUD
-british_pound, GBP, £
-canadian_dollar, CAD
-chinese_yuan, CNY, 元
-emerati_dirham, AED
-euro, EUR, €
-indian_rupee, INR, ₹
-japanese_yen, JPY, ¥
-russian_ruble, RUB, руб
-south_korean_won, KRW, ₩
-swedish_krona, SEK, kr
-swiss_franc, CHF, Fr
-taiwan_dollar, TWD
-us_dollar, USD, $
-new_israeli_shekel, NIS
+afghani,AFN,Af
+algerian_dinar,DZD
+argentine_peso,ARS
+armenian_dram,AMD,Դ
+aruban_guilder_florin,AWG,ƒ
+australian_dollar,AUD
+azerbaijanian_manat,AZN,ман
+bahamian_dollar,BSD
+bahraini_dinar,BHD
+baht,THB,฿
+balboa,PAB
+barbados_dollar,BBD
+belarussian_ruble,BYR,Br
+belize_dollar,BZD
+bermudian_dollar,BMD
+bolivar_fuerte,VEF
+boliviano,BOB
+brazilian_real,BRL,R$
+brunei_dollar,BND
+bulgarian_lev,BGN,лв
+burundi_franc,BIF
+canadian_dollar,CAD
+cape_verde_escudo,CVE
+cayman_islands_dollar,KYD
+cedi,GHS,₵
+cfa_franc_bceao,XAF
+cfp_franc,XPF
+chilean_peso,CLP
+chinese_yuan,CNY, 元
+congolese_franc,CDF
+cordoba_oro,NIO,C$
+costa_rican_colon,CRC,₡
+croatian_kuna,HRK,Kn
+cuban_peso,CUP
+czech_koruna,CZK,Kč
+dalasi,GMD
+danish_krone,DKK,kr
+denar,MKD,ден
+djibouti_franc,DJF
+dobra,STD,Db
+dominican_peso,DOP
+dong,VND,₫
+east_caribbean_dollar,XCD
+egyptian_pound,EGP
+ethiopian_birr,ETB
+euro,EUR,€
+falkland_islands_pound,FKP
+fiji_dollar,FJD
+forint,HUF
+gibraltar_pound,GIP
+gourde,HTG
+guarani,PYG,₲
+guinea_franc,GNF
+guyana_dollar,GYD
+hong_kong_dollar,HKD
+hryvnia,UAH,₴
+iceland_krona,ISK,Kr
+indian_rupee,INR,₹
+iranian_rial,IRR
+iraqi_dinar,IQD
+jamaican_dollar,JMD
+jordanian_dinar,JOD
+kenyan_shilling,KES,Sh
+kina,PGK
+kip,LAK,₭
+konvertibilna_marka,BAM,КМ
+kuwaiti_dinar,KWD
+kwacha,MWK,MK
+kwanza,AOA,Kz
+kyat,MMK
+lari,GEL,ლ
+lebanese_pound,LBP
+lek,ALL
+lempira,HNL
+leone,SLL,Le
+leu,RON
+liberian_dollar,LRD
+libyan_dinar,LYD
+lilangeni,SZL
+loti,LSL
+malagasy_ariary,MGA
+malaysian_ringgit,MYR,RM
+manat,TMT
+mauritius_rupee,MUR
+metical,MZN,MTn
+mexican_peso,MXN
+moldavian_leu,MDL
+moroccan_dirham,MAD
+naira,NGN,₦
+nakfa,ERN,Nfk
+namibia_dollar,NAD
+nepalese_rupee,NPR
+new_israeli_shekel,ILS,₪
+new_zealand_dollar,NZD
+ngultrum,BTN
+north_korean_won,KPW
+norwegian_krone,NOK
+nuevo_sol,PEN
+ouguiya,MRO,UM
+pakistan_rupee,PKR,₨
+pataca,MOP
+peso_uruguayo,UYU
+philippine_peso,PHP,₱
+pound_sterling,GBP,£
+pula,BWP
+pzloty,PLN,zł
+qatari_rial,QAR
+quetzal,GTQ
+rand,ZAR
+rial_omani,OMR
+riel,KHR
+rufiyaa,MVR
+rupiah,IDR,Rp
+russian_ruble,RUB
+rwanda_franc,RWF
+saint_helena_pound,SHP
+saudi_riyal,SAR
+serbian_dinar,RSD,din
+seychelles_rupee,SCR
+singapore_dollar,SGD
+solomon_islands_dollar,SBD
+som,KGS
+somali_shilling,SOS
+somoni,TJS,ЅМ
+south_korean_won,KRW,₩
+sri_lanka_rupee,LKR,Rs
+sudanese_pound,SDG
+suriname_dollar,SRD
+swedish_krona,SEK
+swiss_franc,CHF,SFr
+syrian_pound,SYP
+taiwan_dollar,TWD
+taka,BDT,৳
+tala,WST
+tanzanian_shilling,TZS
+tenge,KZT,〒
+trinidad_and_tobago_dollar,TTD
+tugrik,MNT,₮
+tunisian_dinar,TND
+turkish_lira,TRY,₤
+uae_dirham,AED
+uganda_shilling,UGX
+us_dollar,USD,$
+uzbekistan_sum,UZS
+vatu,VUV,Vt
+yemeni_rial,YER
+yen,JPY,¥
+zambian_kwacha,ZMW,ZK
+zimbabwe_dollar,ZWL
 
 -- acceleration (m1*sec-2)
 meters_per_second_squared, m/s²; m1*sec-2
