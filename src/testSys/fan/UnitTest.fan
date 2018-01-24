@@ -142,6 +142,45 @@ class UnitTest : Test
     verify(Unit.quantity("volume").contains(m3))
 
     verifyNotNull(Unit.quantity(quantities.last))
+
+    acc := Str:Unit[:]
+    Unit.list.each |u|
+    {
+      // verify every id is unique (also checked by Unit itself)
+      u.ids.each |id| { acc.add(id, u) }
+
+      // other sanity checks
+      verifyDatabaseUnit(u)
+    }
+  }
+
+  Void verifyDatabaseUnit(Unit u)
+  {
+    verifyUnitName(u.name)
+    u.ids.each |id| { verifyUnitId(id) }
+    verifyEq(u.ids.first, u.name)
+    verifyEq(u.ids.last, u.symbol)
+  }
+
+  Void verifyUnitName(Str id)
+  {
+    id.each |ch|
+    {
+      if (ch.isAlpha) return
+      if (ch == '_') return
+      fail(id)
+    }
+  }
+
+  Void verifyUnitId(Str id)
+  {
+    id.each |ch|
+    {
+      if (ch.isAlpha) return
+      if (ch == '_' || ch == '$' || ch == '%' || ch == '/') return
+      if (ch > 128) return
+      fail(id)
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
