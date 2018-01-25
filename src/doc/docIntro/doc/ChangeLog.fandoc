@@ -10,6 +10,7 @@
 - dom: Add DomFile.ext
 - dom: Add Geolocation API: geoCurPosition, geoWatchPosition, geoClearWatch, DomCoord
 - dom: Add Elem.fromHtml
+- dom: Fix Style.effective security exception
 - domkit: Add GridBox.insertRowBefore, GridBox.rowIndexOf
 - domkit: Add AccordionBox.isExpanded, expand
 - domkit: Add Popup.fitBounds to verify overflow for async loaded content

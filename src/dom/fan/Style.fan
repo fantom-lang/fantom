@@ -82,9 +82,15 @@ using concurrent
   ** Get the computed property value.
   native Obj? computed(Str name)
 
+  **
   ** Get the effetive style property value, which is the most
   ** specific style or CSS rule in effect on this node. Returns
   ** 'null' if no rule in effect for given property.
+  **
+  ** This method is restricted to stylesheets that have originated
+  ** from the same domain as the document. Any rules that may be
+  ** applied from an external sheet will not be included.
+  **
   native Obj? effective(Str name)
 
   ** Get the given property value.
