@@ -75,8 +75,15 @@ fan.dom.StylePeer.prototype.effective = function(self, name)
   var matches = [];
   for (var i=0; i<document.styleSheets.length; i++)
   {
+    // it is a security exception to introspect the rules of a
+    // stylesheet that was loaded from a different domain than
+    // the current document; so just silently ignore those rules
+
     var sheet = document.styleSheets[i];
-    var rules = sheet.rules || sheet.cssRules || [];
+    var rules;
+    try { rules = sheet.rules || sheet.cssRules || []; }
+    catch (err) { rules = []; }
+
     for (var r=0; r<rules.length; r++)
     {
       var rule = rules[r];
