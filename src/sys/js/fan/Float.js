@@ -81,7 +81,10 @@ fan.sys.Float.normNegZero = function(self)
 }
 
 // TODO FIXIT: hash
-fan.sys.Float.hash = function(self) { fan.sys.Str.hash(self.toString()); }
+fan.sys.Float.hash = function(self)
+{
+  return fan.sys.Str.hash(self.toString());
+}
 
 fan.sys.Float.bits = function(self)
 {
