@@ -379,7 +379,7 @@ public final class Sys
     try
     {
       String s = System.getProperty("java.version", "1.5.0");
-      if (s.startsWith("1.9.")) return JAVA_1_9;
+      if (s.startsWith("9"))    return JAVA_1_9;
       if (s.startsWith("1.8.")) return JAVA_1_8;
       if (s.startsWith("1.7.")) return JAVA_1_7;
       if (s.startsWith("1.6.")) return JAVA_1_6;
