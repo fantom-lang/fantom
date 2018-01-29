@@ -37,8 +37,8 @@ class Build : BuildPod
   @Target { help = "Compile to pod file and associated natives" }
   override Void compile()
   {
-    super.compile
     compileCss
+    super.compile
   }
 
   @Target { help = "Compile CSS" }
