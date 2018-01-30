@@ -81,9 +81,9 @@ fan.sys.Unit.list = function()
 {
   var arr = fan.sys.List.make(fan.sys.Unit.$type, []);
   var quantities = fan.sys.Unit.m_quantities;
-  Object.keys(quantities).forEach(function (quantity) {
+  for (var quantity in quantities) {
     arr.addAll(fan.sys.Unit.quantity(quantity));
-  });
+  }
   return arr;
 }
 
