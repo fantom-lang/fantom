@@ -685,7 +685,6 @@ fan.sys.UriDecoder.prototype.nextOctet = function(section)
   {
     this.nextCharWasEscaped = true;
     return (fan.sys.Uri.hexNibble(this.str.charCodeAt(this.dpos++)) << 4) | fan.sys.Uri.hexNibble(this.str.charCodeAt(this.dpos++));
-    return x;
   }
   else
   {
