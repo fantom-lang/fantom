@@ -278,7 +278,6 @@ fan.sys.LocalFile.prototype.out = function(append, bufSize)
     var fout = new java.io.FileOutputStream(this.m_file, append);
     var bout = fan.sys.SysOutStream.toBuffered(fout, bufSize);
     return new fan.sys.LocalFileOutStream(bout, fout.getFD());
-    return null;
   }
   catch (err)
   {
