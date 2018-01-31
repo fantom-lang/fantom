@@ -16,6 +16,7 @@ using dom
   new make() : super("a")
   {
     this.style.addClass("domkit-control domkit-Link")
+    setAttr("href", uri)
   }
 
   ** The target attribute specifies where to open the linked document.
@@ -31,7 +32,7 @@ using dom
     set
     {
       &uri = it
-      set("href", &uri.encode)
+      setAttr("href", &uri.encode)
     }
   }
 }
