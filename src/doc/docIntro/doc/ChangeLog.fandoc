@@ -7,13 +7,14 @@
 **************************************************************************
 
 *Build 1.0.71 (working)*
-- dom: Add DomFile.ext
-- dom: Add Geolocation API: geoCurPosition, geoWatchPosition, geoClearWatch, DomCoord
-- dom: Add Elem.fromHtml
-- dom: Fix Style.effective security exception
-- domkit: Add GridBox.insertRowBefore, GridBox.rowIndexOf
-- domkit: Add AccordionBox.isExpanded, expand
-- domkit: Add Popup.fitBounds to verify overflow for async loaded content
+- concurrent: add ConcurrentMap
+- dom: add DomFile.ext
+- dom: add Geolocation API: geoCurPosition, geoWatchPosition, geoClearWatch, DomCoord
+- dom: add Elem.fromHtml
+- dom: fix Style.effective security exception
+- domkit: add GridBox.insertRowBefore, GridBox.rowIndexOf
+- domkit: add AccordionBox.isExpanded, expand
+- domkit: sdd Popup.fitBounds to verify overflow for async loaded content
 - domkit: support for MenuItem.disabled
 
 *Build 1.0.70 (8 Nov 2017)*
