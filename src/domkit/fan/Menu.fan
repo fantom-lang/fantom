@@ -71,7 +71,7 @@ using graphics
 
   // TEMP TODO FIXIT: ListButton.makeLisbox
   //private Void select(Int? index)
-  internal Void select(Int? index)
+  @NoDoc Void select(Int? index)
   {
     kids := children
     if (kids.size == 0) return
