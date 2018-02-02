@@ -830,6 +830,7 @@ using graphics
 
       // map to model rows
       vrow := row
+      col = view.colViewToModel(col)
       row = view.rowViewToModel(row)
 
       // check selection
