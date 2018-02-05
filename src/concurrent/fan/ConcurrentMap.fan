@@ -55,6 +55,9 @@ native const final class ConcurrentMap
   ** method.  Otherwise itereate every pair and return null
   Obj? eachWhile(|Obj val, Obj key->Obj?| f)
 
+  ** Return true if the specified key is mapped
+  Bool containsKey(Obj key)
+
   ** Return list of keys
   Obj[] keys(Type of)
 
