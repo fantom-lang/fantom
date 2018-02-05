@@ -44,7 +44,13 @@ public final class ConcurrentMap extends FanObj
 
   public ConcurrentMap setAll(Map m)
   {
-    map.putAll(m.toJava());
+    if (m.isImmutable()) map.putAll(m.rw().toJava());
+    else
+    {
+      final List vals = m.vals();
+      for (int i=0; i<vals.size(); ++i) checkImmutable(vals.get(i));
+      map.putAll(m.toJava());
+    }
     return this;
   }
 
