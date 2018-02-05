@@ -74,6 +74,8 @@ public final class ConcurrentMap extends FanObj
     return null;
   }
 
+  public boolean containsKey(Object key) { return map.containsKey(key); }
+
   public List keys(Type of)
   {
     List list = List.make(of, map.size());

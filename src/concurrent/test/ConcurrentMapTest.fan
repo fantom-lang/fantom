@@ -61,7 +61,12 @@ class ConcurrentMapTest : Test
   {
     verifyEq(m.isEmpty, expected.isEmpty)
     verifyEq(m.size, expected.size)
-    expected.each |v, k| { verifyEq(m[k], v) }
+    expected.each |v, k|
+    {
+      verifyEq(m[k], v)
+      verify(m.containsKey(k))
+    }
+    verify(!m.containsKey("DNE"))
 
     x := Str:Int[:]
     m.each |v, k| { x[k] = v }
