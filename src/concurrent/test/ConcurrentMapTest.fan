@@ -49,6 +49,8 @@ class ConcurrentMapTest : Test
 
     m.setAll(["a": 5, "b": 10, "c": 15])
     verifyConcurrentMap(m, Str:Int["a":5, "b":10, "c":15])
+    m.setAll(["a": 5, "b": 10, "c": 15].toImmutable)
+    verifyConcurrentMap(m, Str:Int["a":5, "b":10, "c":15])
 
     mut := ConcurrentMap()
     verifyErr(NotImmutableErr#) { mut["foo"] = this }
