@@ -292,7 +292,7 @@ public class LocalFile
   {
     try
     {
-      return new LocalFileStore(this.file);
+      return new LocalFileStore(java.nio.file.Files.getFileStore(this.file.toPath()));
     }
     catch (java.io.IOException e)
     {

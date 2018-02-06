@@ -7,42 +7,55 @@
 //
 package fan.sys;
 
-import java.io.*;
-
 /**
  * LocalFileStore is store for LocaleFile.
- *
- * This implementation uses the java.io.File methods added in 1.6 rather
- * than new nio APIs added in 1.7 to avoid requiring 1.7
  */
 public class LocalFileStore
   extends FileStore
 {
 
-  LocalFileStore(java.io.File file)
-    throws IOException
+  LocalFileStore(java.nio.file.FileStore fs)
   {
-    this.file = file;
-    this.spaceKnown = file.getTotalSpace() > 0;
+    this.fs = fs;
   }
 
   public Long totalSpace()
   {
-    return spaceKnown ? file.getTotalSpace() : null;
+    try
+    {
+      return fs.getTotalSpace();
+    }
+    catch (java.io.IOException e)
+    {
+      return null;
+    }
   }
 
   public Long availSpace()
   {
-    return spaceKnown ? file.getUsableSpace() : null;
+    try
+    {
+      return fs.getUsableSpace();
+    }
+    catch (java.io.IOException e)
+    {
+      return null;
+    }
   }
 
   public Long freeSpace()
   {
-    return spaceKnown ? file.getFreeSpace() : null;
+    try
+    {
+      return fs.getUnallocatedSpace();
+    }
+    catch (java.io.IOException e)
+    {
+      return null;
+    }
   }
 
   public Type typeof() { return Sys.LocalFileStoreType; }
 
-  final java.io.File file;
-  final boolean spaceKnown;
+  final java.nio.file.FileStore fs;
 }
