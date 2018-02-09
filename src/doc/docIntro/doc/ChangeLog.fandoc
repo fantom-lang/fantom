@@ -17,6 +17,7 @@
 - domkit: sdd Popup.fitBounds to verify overflow for async loaded content
 - domkit: support for MenuItem.disabled
 - wisp: remove deprecated WispService.port field
+- wisp: allow session cookie name to be configurable
 
 *Build 1.0.70 (8 Nov 2017)*
 - Require Java 1.7
