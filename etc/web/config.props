@@ -24,3 +24,6 @@
 // See WispService.extraResHeaders
 // extraResHeaders=Foo:XYZ; Bar:123;
 
+// Cookie name to use for built-in web session management
+// sessionCookieName=fanws
+

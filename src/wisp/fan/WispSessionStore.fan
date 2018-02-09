@@ -14,6 +14,9 @@ using web
 **
 const mixin WispSessionStore
 {
+  ** Parent web service
+  abstract WispService service()
+
   ** Callback when WispService is started
   virtual Void onStart() {}
 
@@ -36,17 +39,18 @@ const mixin WispSessionStore
     WispSession? ws := null
 
     // try to lookup existing session via cookie
-    id := req.cookies["fanws"]
+    name := service.sessionCookieName
+    id := req.cookies[name]
     if (id != null)
     {
       map := load(id)
-      ws = WispSession(id, map)
+      ws = WispSession(name, id, map)
     }
 
     // create new session, and add cookie to response
     else
     {
-      ws = WispSession(Uuid.make.toStr + "-" + Buf.random(8).toHex, Str:Obj?[:])
+      ws = WispSession(name, Uuid.make.toStr + "-" + Buf.random(8).toHex, Str:Obj?[:])
       WebRes res := Actor.locals["web.res"]
       res.cookies.add(makeCookie(ws))
     }
@@ -59,7 +63,7 @@ const mixin WispSessionStore
   private Cookie makeCookie(WispSession ws)
   {
     secure := WebReq#.pod.config("secureSessionCookie", null) == "true"
-    return Cookie("fanws", ws.id) { it.secure = secure }
+    return Cookie(ws.name, ws.id) { it.secure = secure }
   }
 
   internal Void doSave()

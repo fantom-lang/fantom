@@ -22,9 +22,16 @@ internal class WispRes : WebRes
 
   new make(WispService service, TcpSocket socket)
   {
+    // init headers
+    headers := Str:Str[:] { caseInsensitive = true }
+    headers["Server"] = WispActor.wispVer
+    headers["Date"] = DateTime.now.toHttpStr
+    headers["Connection"] = "close"
+    headers.setAll(service.extraResHeaders)
+
     this.service = service
     this.socket  = socket
-    this.headers = service.extraResHeaders.dup
+    this.headers = headers
   }
 
 //////////////////////////////////////////////////////////////////////////

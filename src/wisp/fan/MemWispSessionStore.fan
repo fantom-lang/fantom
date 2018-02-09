@@ -14,7 +14,12 @@ using web
 **
 internal const class MemWispSessionStore : Actor, WispSessionStore
 {
-  new make() : super(ActorPool { it.name = "WispServiceSessions" }) {}
+  new make(WispService service) : super(ActorPool { it.name = "WispServiceSessions" })
+  {
+    this.service = service
+  }
+
+  override const WispService service
 
   override Void onStart() { sendLater(houseKeepingPeriod, Msg("houseKeeping")) }
 

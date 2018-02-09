@@ -53,7 +53,7 @@ const class WispService : Service
   ** Pluggable interface for managing web session state.
   ** Default implementation stores sessions in main memory.
   **
-  const WispSessionStore sessionStore := MemWispSessionStore()
+  const WispSessionStore sessionStore := MemWispSessionStore(this)
 
   **
   ** Max number of threads which are used for concurrent
@@ -110,6 +110,13 @@ const class WispService : Service
     catch (Err e) log.err("Cannot init resHeaders", e)
     return acc.toImmutable
   }
+
+  **
+  ** Cookie name to use for built-in session management.
+  ** Initialized from etc/web/config.props with the key "sessionCookieName"
+  ** otherwise defaults to "fanws"
+  **
+  const Str sessionCookieName := Pod.find("web").config("sessionCookieName", "fanws")
 
   **
   ** Constructor with it-block

@@ -171,11 +171,6 @@ internal const class WispActor : Actor
     // init request input stream to read content
     req.webIn = initReqInStream(req)
 
-    // init response - set predefined headers
-    res.headers["Server"] = wispVer
-    res.headers["Date"] = DateTime.now.toHttpStr
-    res.headers["Connection"] = "close"
-
     // configure Locale.cur for best match based on request
     Locale.setCur(req.locales.first)
   }
