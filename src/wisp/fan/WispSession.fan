@@ -11,13 +11,15 @@ using concurrent
 
 internal class WispSession : WebSession
 {
-  new make(Str id, Str:Obj? map) { this.id = id; this.map = map }
+  new make(Str name, Str id, Str:Obj? map) { this.name = name; this.id = id; this.map = map }
+
+  const Str name
 
   override Void delete()
   {
     isDeleted = true
     WispRes res := Actor.locals["web.res"]
-    res.cookies.add(Cookie("fanws", id) { maxAge=0sec })
+    res.cookies.add(Cookie(name, id) { maxAge=0sec })
   }
 
   override const Str id
