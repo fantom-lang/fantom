@@ -17,9 +17,6 @@ internal class Main : AbstractMain
   @Opt { help = "IP address to bind to" }
   Str? addr
 
-  @Opt { help = "http port (Deprecated. Use -httpPort)" }
-  Int? port := null
-
   @Opt { help = "IP port to bind for HTTP (default 8080)" }
   Int? httpPort := null
 
@@ -31,9 +28,10 @@ internal class Main : AbstractMain
     runServices([WispService
     {
       it.addr = this.addr == null ? null : IpAddr(this.addr)
-      it.httpPort = this.httpPort ?: (this.port ?: 8080)
+      it.httpPort = this.httpPort ?: 8080
       it.httpsPort = this.httpsPort
       it.root = Type.find(this.mod).make
     }])
   }
 }
+

@@ -31,9 +31,6 @@ const class WispService : Service
   **
   const IpAddr? addr := null
 
-  @NoDoc @Deprecated { msg = "Use httpPort" }
-  const Int port := 0
-
   **
   ** Well known TCP port for HTTP traffic. The port is enabled if non-null
   ** and disabled if null.
@@ -121,7 +118,6 @@ const class WispService : Service
   {
     if (f != null) f(this)
 
-    if (httpPort == null && port > 0) httpPort = port
     if (httpPort == null && httpsPort == null) throw ArgErr("httpPort and httpsPort are both null. At least one port must be configured.")
     if (httpPort == httpsPort) throw ArgErr("httpPort '${httpPort}' cannot be the same as httpsPort '${httpsPort}'")
     if (httpPort != null && httpsPort != null) root = WispHttpsRedirectMod(this, root)
