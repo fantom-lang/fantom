@@ -94,8 +94,14 @@ fan.dom.StylePeer.prototype.effective = function(self, name)
       }
       else
       {
-        if (this.elem.matches(rule.selectorText))
-          matches.push(rule);
+        // Safari 10 (at least) throws an err during matches() if it doesn't
+        // understand the CSS selector; silently ignore these errs
+        try
+        {
+          if (this.elem.matches(rule.selectorText))
+            matches.push(rule);
+        }
+        catch (err) {}
       }
     }
   }
