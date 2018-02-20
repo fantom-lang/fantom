@@ -7,6 +7,7 @@
 **************************************************************************
 
 *Build 1.0.71 (working)*
+- List.flatMap
 - concurrent: add ConcurrentMap
 - dom: add DomFile.ext
 - dom: add Geolocation API: geoCurPosition, geoWatchPosition, geoClearWatch, DomCoord

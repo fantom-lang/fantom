@@ -823,6 +823,25 @@ public final class List
     return acc;
   }
 
+  public final List flatMap(Func f)
+  {
+    Type r = f.returns();
+    Type of = Sys.ObjType.toNullable();
+    if (r instanceof ListType) of = ((ListType)r).v;
+    List acc = new List(of, (int)size());
+    if (f.arity() == 1)
+    {
+      for (int i=0; i<size; ++i)
+        acc.addAll((List)f.call(values[i]));
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+        acc.addAll((List)f.call(values[i], Long.valueOf(i)));
+    }
+    return acc;
+  }
+
   public final Object max() { return max(null); }
   public final Object max(Func f)
   {
