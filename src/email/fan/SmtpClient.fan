@@ -75,7 +75,11 @@ class SmtpClient
 
     // open the socket connection
     sock = ssl ? TcpSocket.makeTls : TcpSocket.make
-    if (connectTimeout != null) sock.options.connectTimeout = connectTimeout
+    if (connectTimeout != null)
+    {
+      sock.options.connectTimeout = connectTimeout
+      sock.options.receiveTimeout = connectTimeout
+    }
     sock.connect(IpAddr(host), port)
     try
     {
@@ -317,7 +321,7 @@ class SmtpClient
   ** Log for tracing
   @NoDoc Log log := Log.get("smtp")
 
-  ** Socket option
+  ** Socket option (connect and receive)
   @NoDoc Duration? connectTimeout
 
   private TcpSocket? sock  // Socket if open or null if closed
