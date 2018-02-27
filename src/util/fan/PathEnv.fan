@@ -68,7 +68,7 @@ const class PathEnv : Env
       }
     }
     catch (Err e) log.err("Cannot parse path: $path", e)
-    doAdd(acc, Env.cur.homeDir )
+    doAdd(acc, Env.cur.homeDir)
     return acc
   }
 
