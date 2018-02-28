@@ -284,23 +284,21 @@ using graphics
     if (elem == this) return
     node := toNode(elem)
 
-    // check expand/selection
-    if (e.type == "mouseup")
+    // check sel/expand
+    if (e.type == "mousedown")
     {
+      // update selection
+      if (!elem.style.hasClass("domkit-Tree-node-expander") && !sel.items.contains(node))
+      {
+        sel.item = node
+        cbSelect?.call(this)
+      }
+    }
+    else if (e.type == "mouseup")
+    {
+      // expand node
       if (elem.style.hasClass("domkit-Tree-node-expander"))
-      {
-        // expand node
         expand(node, !node.expanded)
-      }
-      else
-      {
-        // update selection
-        if (!sel.items.contains(node))
-        {
-          sel.item = node
-          cbSelect?.call(this)
-        }
-      }
     }
 
     // check action
