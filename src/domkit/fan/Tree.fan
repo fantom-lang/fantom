@@ -167,6 +167,17 @@ using graphics
     refreshNode(node)
   }
 
+  ** Experimental hook to modify the node display state.
+  @NoDoc Void displayState(TreeNode node, Str? state)
+  {
+    // remove existing state
+    content := node.elem.querySelector(".domkit-Tree-node")
+    content.style.removeClass("down")
+
+    // add new state
+    if (state == "down") content.style.addClass("down")
+  }
+
   ** Selection for tree. Index based selection is not supported for Tree.
   Selection sel { private set }
 
