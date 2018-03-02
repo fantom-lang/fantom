@@ -119,18 +119,20 @@ public class Charset
     {
       int c = in.r();
       if (c < 0) return -1;
-      int c2, c3;
+      int c2, c3, c4;
       switch (c >> 4)
       {
         case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
           /* 0xxxxxxx*/
           return c;
+
         case 12: case 13:
           /* 110x xxxx   10xx xxxx*/
           c2 = in.r();
           if ((c2 & 0xC0) != 0x80)
             throw IOErr.make("Invalid UTF-8 encoding");
           return ((c & 0x1F) << 6) | (c2 & 0x3F);
+
         case 14:
           /* 1110 xxxx  10xx xxxx  10xx xxxx */
           c2 = in.r();
@@ -138,6 +140,19 @@ public class Charset
           if (((c2 & 0xC0) != 0x80) || ((c3 & 0xC0) != 0x80))
             throw IOErr.make("Invalid UTF-8 encoding");
           return (((c & 0x0F) << 12) | ((c2 & 0x3F) << 6) | ((c3 & 0x3F) << 0));
+
+        case 15:
+          /* 1111 0xxx  10xx xxxx  10xx xxxx  10xx xxxx */
+          c2 = in.r();
+          c3 = in.r();
+          c4 = in.r();
+          if (((c2 & 0xC0) != 0x80) || ((c3 & 0xC0) != 0x80) || ((c4 & 0xC0) != 0x80))
+            throw IOErr.make("Invalid UTF-8 encoding");
+          // Java can't handle chars in this upper / extended range
+          // so return a replacement character instead
+          // see https://en.wikipedia.org/wiki/Specials_(Unicode_block)#Replacement_character
+          return 0xFFFD;
+
         default:
           throw IOErr.make("Invalid UTF-8 encoding");
       }
