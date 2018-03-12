@@ -10,6 +10,7 @@ package fan.inet;
 import java.io.*;
 import java.net.*;
 import java.util.Enumeration;
+import java.util.Iterator;
 import fan.sys.*;
 
 public class IpInterfacePeer
@@ -128,6 +129,19 @@ public class IpInterfacePeer
     Enumeration e = java.getInetAddresses();
     while (e.hasMoreElements())
       acc.add(IpAddrPeer.make((InetAddress)e.nextElement()));
+    return acc;
+  }
+
+  public List broadcastAddrs(IpInterface fan)
+  {
+    List acc = new List(IpAddrPeer.type);
+    Iterator iter = java.getInterfaceAddresses().iterator();
+    while (iter.hasNext())
+    {
+      InterfaceAddress iface = (InterfaceAddress)iter.next();
+      if (iface.getBroadcast() != null)
+        acc.add(IpAddrPeer.make(iface.getBroadcast()));
+    }
     return acc;
   }
 

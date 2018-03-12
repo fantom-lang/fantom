@@ -79,6 +79,11 @@ final const class IpInterface
   native IpAddr[] addrs()
 
   **
+  ** Return list of all broadcast IP addresses bound to this interface
+  **
+  native IpAddr[] broadcastAddrs()
+
+  **
   ** Return true if interface is up and running
   **
   native Bool isUp()
