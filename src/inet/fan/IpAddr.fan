@@ -96,6 +96,16 @@ final const class IpAddr
   native Bool isIPv6()
 
   **
+  ** Is this a loopback address.
+  **
+  native Bool isLoopback()
+
+  **
+  ** Is this a site local address.
+  **
+  native Bool isSiteLocal()
+
+  **
   ** Get the raw bytes of this address as a Buf of 4 or 16 bytes
   ** for IPv4 or IPv6 respectively.  The buf position is zero.
   **
