@@ -17,7 +17,8 @@
 - domkit: add AccordionBox.isExpanded, expand
 - domkit: sdd Popup.fitBounds to verify overflow for async loaded content
 - domkit: support for MenuItem.disabled
-- inet: add IpInterface.broadcastAddrs
+- inet: add broadcastAddrs to IpInterface
+- inet: add isLoopback and isSiteLocal to IpAddr
 - wisp: remove deprecated WispService.port field
 - wisp: allow session cookie name to be configurable
 

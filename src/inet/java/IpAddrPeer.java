@@ -145,6 +145,16 @@ public class IpAddrPeer
     return java instanceof Inet6Address;
   }
 
+  public boolean isLoopback(IpAddr fan)
+  {
+    return java.isLoopbackAddress();
+  }
+
+  public boolean isSiteLocal(IpAddr fan)
+  {
+    return java.isSiteLocalAddress();
+  }
+
   public Buf bytes(IpAddr fan)
   {
     return new MemBuf(java.getAddress());
