@@ -829,6 +829,7 @@ using graphics
       cy := my - (row * rowh)
 
       // map to model rows
+      vcol := col
       vrow := row
       col = view.colViewToModel(col)
       row = view.rowViewToModel(row)
@@ -849,7 +850,7 @@ using graphics
           it.row     = row
           it.pagePos = e.pagePos
           it.cellPos = Point(cx, cy)
-          it.size    = Size(colw[col], rowh)
+          it.size    = Size(colw[vcol], rowh)
         })
       }
     }
