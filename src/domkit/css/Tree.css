@@ -50,4 +50,6 @@ div.domkit-Tree-node-block.expanded > div.domkit-Tree-node div.domkit-Tree-node-
 div.domkit-Tree-node div:nth-child(2) {
   display: inline-block;
   width: calc(100% - 20px);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
