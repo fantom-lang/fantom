@@ -52,9 +52,10 @@
 
     while (true)
     {
-      m := nextMarker
+      m := readMarker
       if (app0 == m) readApp0
       else if (sof_markers.contains(m)) return readSof
+      else skipSegment
     }
     throw IOErr("Invalid JPEG")
   }
@@ -120,16 +121,24 @@
     throw IOErr("Unsupported color space for $numComps components")
   }
 
+  ** Skip a segment. The 2-byte marker has already been read. The next
+  ** 2 bytes are the length of the segment (including the 2 bytes of length).
+  private Void skipSegment()
+  {
+    len := in.readU2
+    in.readBufFully(null, len-2)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Util
 //////////////////////////////////////////////////////////////////////////
 
-  ** Advance the in stream until the next marker is found. Consume the marker
-  ** and return it. The 2-byte marker is returned (0xFF_<id>)
-  private Int nextMarker()
+  ** Read the next 2 bytes and verify that it is a marker.
+  ** The 2-byte marker is returned (0xFF_<id>)
+  private Int readMarker()
   {
-    m := 0
-    while (!isMarker(m = in.readU2)) { }
+    m := in.readU2
+    if (!isMarker(m)) throw IOErr("expected marker, got ${m.toHex(4)}")
     return m
   }
 
