@@ -57,6 +57,14 @@ using dom
     set { button.items = it }
   }
 
+  ** Callback to create an 'Elem' representation for a given list
+  ** item.  If function does not return an 'Elem' instance, one will
+  ** be created using 'toStr' of value.
+  Void onElem(|Obj->Obj| f)
+  {
+    this.button.onElem(f)
+  }
+
   override Bool? enabled
   {
     get { field.enabled }
