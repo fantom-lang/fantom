@@ -1151,6 +1151,9 @@ internal const class TablePos
 ** Table specific flags for eventing
 @Js const class TableFlags
 {
+  ** Default value with all flags cleared
+  static const TableFlags defVal := make {}
+
   new make(|This| f) { f(this) }
 
   ** Table has focus.
