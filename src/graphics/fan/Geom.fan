@@ -335,6 +335,12 @@ const class Insets
 
   ** Left side spacing
   const Float left
+
+  ** Left plus right
+  Float w() { left + right }
+
+  ** Top plus bottom
+  Float h() { top + bottom }
 }
 
 **************************************************************************
