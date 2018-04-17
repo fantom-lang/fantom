@@ -796,7 +796,7 @@ using graphics
     p  := this.relPos(e.pagePos)
     mx := p.x.toInt + scrollx
     my := p.y.toInt + scrolly - theadh
-    this.style->cursor = "default"
+    this.style->cursor = null
 
     if (mx > colx.last + colw.last) return
     col := colx.binarySearch(mx)
@@ -804,31 +804,6 @@ using graphics
 
     cx := mx - colx[col]
     canResize := (col > 0 && cx < 5) || (col < numCols-1 && colw[col]-cx < 5)
-
-    // short-circuit if just repainting resize splitter
-    if (resizeActive)
-    {
-      if (e.type == "mousemove")
-      {
-        resizeElem.style->left = "${p.x-2}px"
-      }
-      else if (e.type == "mouseup")
-      {
-        // register user colw and cache scroll pos
-        ucolw[resizeCol] = 20.max(mx - colx[resizeCol])
-        oldscroll := Point(scrollx, scrolly)
-
-        // remove splitter
-        this.remove(resizeElem)
-        resizeElem = null
-        resizeActive = false
-
-        // rebuild table and restore scrollpos
-        doRebuild
-        onScroll(oldscroll)
-      }
-      return
-    }
 
     if (p.y.toInt < theadh)
     {
@@ -840,14 +815,43 @@ using graphics
       {
         if (canResize)
         {
-          resizeActive = true
-          resizeCol    = cx < 5 ? col-1 : col
+          this.resizeCol = cx < 5 ? col-1 : col
+          this.style->cursor = "col-resize"
           this.add(resizeElem = Elem { it.style.addClass("domkit-resize-splitter") }
           {
             it.style->left = "${p.x-2}px"
             it.style->width  = "5px"
             it.style->height = "100%"
           })
+
+          doc := Win.cur.doc
+          Obj? fmove
+          Obj? fup
+
+          fmove = doc.onEvent("mousemove", true) |de| {
+            de.stop
+            dex := this.relPos(de.pagePos).x.toInt
+            resizeElem.style->left = "${dex-2}px"
+          }
+
+          fup = doc.onEvent("mouseup", true) |de| {
+            // register user colw and cache scroll pos
+            demx := this.relPos(de.pagePos).x.toInt + scrollx
+            ucolw[resizeCol] = 20.max(demx - colx[resizeCol])
+            oldscroll := Point(scrollx, scrolly)
+
+            // remove splitter
+            this.remove(resizeElem)
+            resizeElem = null
+
+            // rebuild table and restore scrollpos
+            doRebuild
+            onScroll(oldscroll)
+
+            de.stop
+            doc.removeEvent("mousemove", true, fmove)
+            doc.removeEvent("mouseup",   true, fup)
+          }
         }
         else if (hasHpbut && p.x.toInt > tbodyw-hpbutw)
         {
@@ -1098,9 +1102,8 @@ using graphics
   private Int vthumbh           // vbar thumb height
 
   // resize
-  private Bool resizeActive := false  // is a resize currently active?
-  private Int? resizeCol              // column being resized
-  private Elem? resizeElem            // visual indication of resize col size
+  private Int? resizeCol        // column being resized
+  private Elem? resizeElem      // visual indication of resize col size
 
   // headerPopup
   private Elem? hpbut             // header popup button
