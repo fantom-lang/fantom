@@ -67,6 +67,11 @@
 /* this disables hrefs links */
 a.domkit-control.disabled { pointer-events:none; }
 
+.domkit-resize-splitter {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.2);
+}
+
 //
 // control-button
 //

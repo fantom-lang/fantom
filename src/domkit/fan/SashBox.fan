@@ -99,7 +99,7 @@ using graphics
     p := this.relPos(e.pagePos)
     this.active = true
 
-    splitter = Elem { it.style.addClass("domkit-SashBox-splitter") }
+    splitter = Elem { it.style.addClass("domkit-resize-splitter") }
     if (dir == Dir.down)
     {
       splitter.style->top    = "${p.y-2}px"
