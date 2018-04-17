@@ -37,6 +37,7 @@ using graphics
     }
     this.onEvent("mousedown", false) |e| { onMouseEvent(e) }
     this.onEvent("mouseup",   false) |e| { onMouseEvent(e) }
+    this.onEvent("mousemove", false) |e| { onMouseEvent(e) }
     this.onEvent("dblclick",  false) |e| { onMouseEvent(e) }
     this.onEvent("keydown",   false) |e| { onKeyEvent(e) }
 
@@ -294,7 +295,7 @@ using graphics
     this.colw.clear
     this.numCols.times |c|
     {
-      cw := view.colWidth(c)
+      cw := ucolw[c] ?: view.colWidth(c)
       if (c == numCols-1 && hasHpbut) cw += hpbutw + 4
       this.colx.add(cx)
       this.colw.add(cw)
@@ -795,16 +796,60 @@ using graphics
     p  := this.relPos(e.pagePos)
     mx := p.x.toInt + scrollx
     my := p.y.toInt + scrolly - theadh
+    this.style->cursor = "default"
 
     if (mx > colx.last + colw.last) return
     col := colx.binarySearch(mx)
     if (col < 0) col = col.not - 1
 
+    cx := mx - colx[col]
+    canResize := (col > 0 && cx < 5) || (col < numCols-1 && colw[col]-cx < 5)
+
+    // short-circuit if just repainting resize splitter
+    if (resizeActive)
+    {
+      if (e.type == "mousemove")
+      {
+        resizeElem.style->left = "${p.x-2}px"
+      }
+      else if (e.type == "mouseup")
+      {
+        // register user colw and cache scroll pos
+        ucolw[resizeCol] = 20.max(mx - colx[resizeCol])
+        oldscroll := Point(scrollx, scrolly)
+
+        // remove splitter
+        this.remove(resizeElem)
+        resizeElem = null
+        resizeActive = false
+
+        // rebuild table and restore scrollpos
+        doRebuild
+        onScroll(oldscroll)
+      }
+      return
+    }
+
     if (p.y.toInt < theadh)
     {
-      if (e.type == "mousedown")
+      if (e.type == "mousemove")
       {
-        if (hasHpbut && p.x.toInt > tbodyw-hpbutw)
+        if (canResize) this.style->cursor = "col-resize"
+      }
+      else if (e.type == "mousedown")
+      {
+        if (canResize)
+        {
+          resizeActive = true
+          resizeCol    = cx < 5 ? col-1 : col
+          this.add(resizeElem = Elem { it.style.addClass("domkit-resize-splitter") }
+          {
+            it.style->left = "${p.x-2}px"
+            it.style->width  = "5px"
+            it.style->height = "100%"
+          })
+        }
+        else if (hasHpbut && p.x.toInt > tbodyw-hpbutw)
         {
           // header popup
           Popup hp := cbHeaderPopup.call(this)
@@ -824,8 +869,7 @@ using graphics
       row := my / rowh
       if (row >= numRows) return
 
-      // find pos relative to cell
-      cx := mx - colx[col]
+      // find pos relative to cell (cx calc above)
       cy := my - (row * rowh)
 
       // map to model rows
@@ -1033,39 +1077,45 @@ using graphics
   private Elem? vbar
   private Int:Elem headers := [:]
   private TablePos:Elem cells := [:]
-  private Int theadh         // thead height
-  private Int tbodyw         // tbody width
-  private Int tbodyh         // tbody height
-  private Int numCols        // num cols in model
-  private Int numRows        // num rows in model
-  private Int[] colx := [,]  // col x offsets
-  private Int[] colw := [,]  // col widths
-  private Int rowh           // row height
-  private Int numVisCols     // num of visible cols
-  private Int numVisRows     // num of visible rows
-  private Int maxScrollx     // max scroll x value
-  private Int maxScrolly     // max scroll y value
-  private Bool hasScrollx    // is horiz scolling
-  private Bool hasScrolly    // is vert scolling
-  private Int htrackw        // hbar track width
-  private Int hthumbw        // hbar thumb width
-  private Int vtrackh        // vbar track height
-  private Int vthumbh        // vbar thumb height
+  private Int theadh            // thead height
+  private Int tbodyw            // tbody width
+  private Int tbodyh            // tbody height
+  private Int numCols           // num cols in model
+  private Int numRows           // num rows in model
+  private Int[] colx := [,]     // col x offsets
+  private Int[] colw := [,]     // col widths
+  private Int:Int ucolw := [:]  // user defined col width (via resize)
+  private Int rowh              // row height
+  private Int numVisCols        // num of visible cols
+  private Int numVisRows        // num of visible rows
+  private Int maxScrollx        // max scroll x value
+  private Int maxScrolly        // max scroll y value
+  private Bool hasScrollx       // is horiz scolling
+  private Bool hasScrolly       // is vert scolling
+  private Int htrackw           // hbar track width
+  private Int hthumbw           // hbar thumb width
+  private Int vtrackh           // vbar track height
+  private Int vthumbh           // vbar thumb height
+
+  // resize
+  private Bool resizeActive := false  // is a resize currently active?
+  private Int? resizeCol              // column being resized
+  private Elem? resizeElem            // visual indication of resize col size
 
   // headerPopup
-  private Elem? hpbut        // header popup button
-  private Bool hasHpbut      // hpbut != null
+  private Elem? hpbut             // header popup button
+  private Bool hasHpbut           // hpbut != null
   private const Int hpbutw := 22  // width of header popup button
 
   // scroll
-  private Int scrollx        // current x scroll pos
-  private Int scrolly        // current y scroll pos
-  private Int? hbarPulseId   // hbar pulse timeout func id
-  private Int? vbarPulseId   // vbar pulse timeout func id
-  private Int? hbarPageId    // hbar page interval func id
-  private Int? vbarPageId    // vbar page interval func id
-  private Int? hthumbDragOff // offset of hthumb drag pos
-  private Int? vthumbDragOff // offset of vthumb drag pos
+  private Int scrollx           // current x scroll pos
+  private Int scrolly           // current y scroll pos
+  private Int? hbarPulseId      // hbar pulse timeout func id
+  private Int? vbarPulseId      // vbar pulse timeout func id
+  private Int? hbarPageId       // hbar page interval func id
+  private Int? vbarPageId       // vbar page interval func id
+  private Int? hthumbDragOff    // offset of hthumb drag pos
+  private Int? vthumbDragOff    // offset of vthumb drag pos
 
   // update
   private Int firstVisCol    // first visible col
