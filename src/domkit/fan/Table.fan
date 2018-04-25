@@ -90,6 +90,7 @@ using graphics
   {
     pivot = null
     view.sort(col, dir)
+    model.onSort(col, dir)
     refresh
   }
 
@@ -1195,6 +1196,9 @@ internal const class TablePos
   ** 0, or 1 according to the same semanatics as `sys::Obj.compare`.
   ** See `domkit::Table.sort`.
   virtual Int sortCompare(Int col, Int row1, Int row2) { 0 }
+
+  ** Callback when table is resorted
+  @NoDoc virtual Void onSort(Int? col, Dir dir) {}
 }
 
 **************************************************************************
