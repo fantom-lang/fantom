@@ -900,6 +900,7 @@ using graphics
           it.pagePos = e.pagePos
           it.cellPos = Point(cx, cy)
           it.size    = Size(colw[vcol], rowh)
+          it.dom      = e
         })
       }
     }
@@ -1259,6 +1260,9 @@ internal const class TablePos
 
   ** Size of cell for this event.
   const Size size
+
+  ** Underlying DOM event
+  Event? dom
 
   override Str toStr()
   {
