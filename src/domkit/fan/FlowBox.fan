@@ -43,28 +43,28 @@ using dom
     kids := children
     text := kids.any |kid| { kid is TextField }
 
-    Int? lastGap
+    Float? lastGap
     kids.each |kid,i|
     {
       // add gap
-      gap := 0
+      gap := 0f
       if (gaps.size > 0)
       {
         s := gaps[i % gaps.size]
-        gap = s[0..-3].toInt
-        if (gap > 0 && i < kids.size-1) kid.style["margin-right"] = s
+        gap = CssDim(s).val.toFloat
+        if (gap > 0f && i < kids.size-1) kid.style["margin-right"] = s
       }
 
       // check width
-      if (kid.style.effective("width") == "100%") kid.style->width  = "auto"
+      if (kid.style.effective("width") == "100%") kid.style->width = "auto"
 
       // add join classes
       // TODO FIXIT: more optimized way than toggling classes on each add/remove?
-      if (kids.size > 1 && (gap == -1 || lastGap == -1))
+      if (kids.size > 1 && (gap == -1f || lastGap == -1f))
       {
         if (i == 0)
           kid.style.addClass("group-left")
-        else if (i < kids.size-1 && gap == -1)
+        else if (i < kids.size-1 && gap == -1f)
           kid.style.removeClass("group-right").addClass("group-middle")
         else
           kid.style.addClass("group-right")
