@@ -200,20 +200,21 @@ fanx_ObjDecoder.prototype.readComplex = function(line, t, root)
 
   // get argument lists
   var args = null;
-  if (root && this.options != null)
-    args = this.options.get("makeArgs");
+  if (root && this.options != null && this.options.get("makeArgs") != null)
+    args = fan.sys.List.make(fan.sys.Obj.$type).addAll(this.options.get("makeArgs"));
 
   // construct object
   var obj = null;
   var setAfterCtor = true;
   try
   {
-    // if first parameter is an function then pass toSet
+    // if last parameter is an function then pass toSet
     // as an it-block for setting the fields
-    var p = makeCtor.params().first();
-    if (args == null && p != null && p.type().fits(fan.sys.Func.$type))
+    var p = makeCtor.params().last();
+    if (p != null && p.type().fits(fan.sys.Func.$type))
     {
-      args = fan.sys.List.make(fan.sys.Obj.$type).add(fan.sys.Field.makeSetFunc(toSet));
+      if (args == null) args = fan.sys.List.make(fan.sys.Obj.$type);
+      args.add(fan.sys.Field.makeSetFunc(toSet));
       setAfterCtor = false;
     }
 
