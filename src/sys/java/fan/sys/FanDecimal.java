@@ -160,7 +160,9 @@ public final class FanDecimal
 
     // get default pattern if necessary
     if (pattern == null)
-      pattern = Env.cur().locale(Sys.sysPod, "decimal", "#,###.0##", locale);
+    {
+      return FanFloat.toLocale(self.doubleValue(), pattern, locale);
+    }
 
     // parse pattern and get digits
     NumPattern p = NumPattern.parse(pattern);
