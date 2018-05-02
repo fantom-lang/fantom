@@ -405,6 +405,18 @@ class SerializationTest : Test
     x = "testSys::SerA { s = \"!\" }".in.readObj(["makeArgs":["foo", 5min]])
     verifyEq(x.s, "!")
     verifyEq(x.d, 5min)
+
+    SerParamsAndItBlock y := """testSys::SerParamsAndItBlock {c="C"; d=123}""".in.readObj(["makeArgs":["A", 2018]])
+    verifyEq(y.a, "A")
+    verifyEq(y.b, 2018)
+    verifyEq(y.c, "C")
+    verifyEq(y.d, 123)
+
+    y = """testSys::SerParamsAndItBlock {a="AO"; b=7; c="C"; d=123}""".in.readObj(["makeArgs":["A", 2018]])
+    verifyEq(y.a, "AO")
+    verifyEq(y.b, 7)
+    verifyEq(y.c, "C")
+    verifyEq(y.d, 123)
   }
 
   Void testComplexConst()
@@ -439,7 +451,7 @@ class SerializationTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Lists
+// It Blocks
 //////////////////////////////////////////////////////////////////////////
 
   Void testItBlocks()
@@ -1120,6 +1132,32 @@ const class SerItBlock
   override Bool equals(Obj? obj)
   {
     if (obj isnot SerItBlock) return false
+    return a == obj->a && b == obj->b && c == obj->c && d == obj->d
+  }
+}
+
+**************************************************************************
+** SerParamsAndItBlock
+**************************************************************************
+
+@Js
+@Serializable
+const class SerParamsAndItBlock
+{
+  new make(Str a, Int b, |This|? f)
+  {
+    this.a = a
+    this.b = b
+    f?.call(this)
+  }
+  const Str a
+  const Int b
+  const Str? c
+  const Int? d
+  override Int hash() { a.hash }
+  override Bool equals(Obj? obj)
+  {
+    if (obj isnot SerParamsAndItBlock) return false
     return a == obj->a && b == obj->b && c == obj->c && d == obj->d
   }
 }

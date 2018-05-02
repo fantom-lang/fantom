@@ -224,20 +224,21 @@ public class ObjDecoder
 
     // get argument lists
     List args = null;
-    if (root && options != null)
-      args = (List)options.get("makeArgs");
+    if (root && options != null && options.get("makeArgs") != null)
+      args = new List(Sys.ObjType).addAll((List)options.get("makeArgs"));
 
     // construct object
     Object obj = null;
     boolean setAfterCtor = true;
     try
     {
-      // if first parameter is an function then pass toSet
+      // if last parameter is an function then pass toSet
       // as an it-block for setting the fields
-      Param p = (Param)makeCtor.params().first();
-      if (args == null && p != null && p.type().fits(Sys.FuncType))
+      Param p = (Param)makeCtor.params().last();
+      if (p != null && p.type().fits(Sys.FuncType))
       {
-        args = new List(Sys.ObjType).add(Field.makeSetFunc(toSet));
+        if (args == null) args = new List(Sys.ObjType);
+        args.add(Field.makeSetFunc(toSet));
         setAfterCtor = false;
       }
 
