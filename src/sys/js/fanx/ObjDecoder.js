@@ -702,6 +702,6 @@ fanx_UsingPod.prototype.resolve = function(n)
 function fanx_UsingType(t,n) { this.type = t; this.name = n; }
 fanx_UsingType.prototype.resolve = function(n)
 {
-  return this.name.equals(n) ? this.type : null;
+  return this.name == n ? this.type : null;
 }
 
