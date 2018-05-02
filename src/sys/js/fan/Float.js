@@ -240,9 +240,12 @@ fan.sys.Float.toLocale = function(self, pattern, locale)
 
     // get default pattern if necessary
     if (pattern == null)
-// TODO FIXIT
-//      pattern = Env.cur().locale(Sys.sysPod, "float", "#,###.0##");
-      pattern = "#,###.0##";
+    {
+      if (Math.abs(self) >= 100.0)
+        return fan.sys.Int.toLocale(Math.round(self), null, locale);
+
+      pattern = fan.sys.Float.toDefaultLocalePattern(self);
+    }
 
     // TODO: if value is < 10^-3 or > 10^7 it will be
     // converted to exponent string, so just bail on that
@@ -263,5 +266,24 @@ fan.sys.Float.toLocale = function(self, pattern, locale)
     fan.sys.ObjUtil.echo(err);
     return ''+self;
   }
+}
+
+fan.sys.Float.toDefaultLocalePattern = function(self)
+{
+  var abs  = Math.abs(self);
+  var fabs = Math.floor(abs);
+
+  if (fabs >= 10.0) return "#0.0#";
+  if (fabs >= 1.0)  return "#0.0##";
+
+  // format a fractional number (no decimal part)
+  var frac = abs - fabs;
+  if (frac < 0.00000001) return "0.0";
+  if (frac < 0.0000001)  return "0.0000000##";
+  if (frac < 0.000001)   return "0.000000##";
+  if (frac < 0.00001)    return "0.00000##";
+  if (frac < 0.0001)     return "0.0000##";
+  if (frac < 0.001)      return "0.000##";
+  return "0.0##";
 }
 
