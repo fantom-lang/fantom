@@ -61,10 +61,11 @@ using graphics
 
   private Void applyStyle()
   {
-    px := 0
+    fixed := Str:Float[:]  // unit:sum
     dims.each |d|
     {
-      if (d.unit == "px") px += d.val.toInt
+      if (d.unit == "%") return
+      fixed[d.unit] = (fixed[d.unit] ?: 0f) + d.val.toFloat
     }
 
     kids := children
@@ -74,10 +75,10 @@ using graphics
       if (d == null) return
 
       css := d.toStr
-      if (d.unit == "%" && px > 0)
+      if (d.unit == "%" && fixed.size > 0)
       {
-        per := d.val.toFloat / 100f * px.toFloat
-        css = "calc($d.toStr - ${per}px)"
+        per := fixed.join(" - ") |sum,unit| { "${d.val.toFloat / 100f * sum}$unit" }
+        css = "calc($d.toStr - ${per})"
       }
 
       kid.style->display = css == "0px"

@@ -18,6 +18,8 @@
 - domkit: sdd Popup.fitBounds to verify overflow for async loaded content
 - domkit: support for MenuItem.disabled
 - domkit: add Combo.onItem to customize list items
+- domkit: FlowBox support for non-px gap units
+- domkit: SashBox support for non-px and mixed size units
 - inet: add broadcastAddrs to IpInterface
 - inet: add isLoopback and isSiteLocal to IpAddr
 - wisp: remove deprecated WispService.port field
