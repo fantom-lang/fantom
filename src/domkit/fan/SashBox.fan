@@ -251,10 +251,13 @@ using graphics
     remainder := 100f
 
     // convert px -> %
+    kids := children
     dims.each |d,i|
     {
       if (d.unit == "%") { converted.add(CssDim.defVal); return }
-      val := ((d.val.toFloat / sz.toFloat) * 100f).toLocale("0.00").toFloat
+      ksz  := kids.getSafe(i)?.size ?: Size.defVal
+      kval := dir == Dir.down ? ksz.h : ksz.w
+      val  := ((kval / sz.toFloat) * 100f).toLocale("0.00").toFloat
       converted.add(CssDim(val, "%"))
       remainder -= val
     }
