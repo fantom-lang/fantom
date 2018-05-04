@@ -96,6 +96,7 @@ using graphics
     if (!resizable) return
     if (resizeIndex == null) return
 
+    e.stop
     p := this.relPos(e.pagePos)
     this.active = true
 
