@@ -88,7 +88,7 @@ fan.sys.Decimal.toLocale = function(self, pattern, locale)
   return fan.sys.Float.toLocale(self, pattern, locale);
 
   // get current locale
-  // var locale = fans.sys.Locale.cur();
+  // var locale = fan.sys.Locale.cur();
   // java.text.DecimalFormatSymbols df = locale.decimal();
   //
   // // get default pattern if necessary
