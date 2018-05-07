@@ -105,7 +105,7 @@ fan.sys.ClosureFuncSpec$ = function(ret, params)
   var i, param;
 
   if (params.length % 3 != 0) {
-   throw fans.sys.ArgErr("Invalid params " + params.toString);
+   throw fan.sys.ArgErr("Invalid params " + params.toString);
   }
 
   for (i=0; i<params.length; i+=3) {
