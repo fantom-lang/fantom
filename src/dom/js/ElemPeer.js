@@ -246,8 +246,8 @@ fan.dom.ElemPeer.prototype.pagePos = function(self)
 
 fan.dom.ElemPeer.prototype.size = function(self)
 {
-  var w = this.elem.offsetWidth;
-  var h = this.elem.offsetHeight;
+  var w = this.elem.offsetWidth  || 0;
+  var h = this.elem.offsetHeight || 0;
   if (this.m_size.m_w != w || this.m_size.m_h != h)
     this.m_size = fan.graphics.Size.makeInt(w, h);
   return this.m_size;
