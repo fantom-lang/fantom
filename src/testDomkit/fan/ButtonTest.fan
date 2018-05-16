@@ -106,6 +106,19 @@ class ButtonTest : DomkitTest
       },
       ListButton
       {
+        it.items = [1,2,3,4]
+        it.sel.index = 0
+        it.onElem |Int v->Elem|
+        {
+          Elem {
+            if (v % 2 == 0) it.style.addClass("disabled")
+            it.text = "Item #$v"
+          }
+        }
+        it.onSelect |b| { echo("# item: $b.sel.item [$b.sel.index]") }
+      },
+      ListButton
+      {
         it.items = genItems("BigList", 1000)
         it.onSelect |b| { echo("# item: $b.sel.item [$b.sel.index]") }
       },
