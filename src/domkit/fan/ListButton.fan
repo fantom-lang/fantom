@@ -71,12 +71,16 @@ using dom
     this.menu = Menu {}
     items.each |item,i|
     {
+      elem := makeElem(item)
       menu.add(MenuItem {
         it.style.addClass("domkit-ListButton-MenuItem")
         if (sel.index == i) it.style.addClass("sel")
-        it.add(makeElem(item))
+        it.add(elem)
         it.onAction { sel.index=i; fireSelect }
       })
+
+      // TODO: temp hook to mark list items as disabled
+      if (elem.style.hasClass("disabled")) menu.lastChild.enabled = false
     }
     menu.select(sel.index)
     menu.onCustomKeyDown = |Event e| { onMenuKeyDown(e) }
