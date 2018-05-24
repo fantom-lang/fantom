@@ -129,9 +129,10 @@ internal const class WispActor : Actor
       // method
       req.method = method.upper
 
-      // uri; immediately reject any uri which starts with ..
+      // uri; immediately reject any uri which looks dangerous
       req.uri = Uri.decode(uri)
       if (req.uri.path.first == "..") throw Err("Reject URI")
+      if (req.uri.pathStr.contains("//")) throw Err("Reject URI")
 
       // version
       if (ver == "HTTP/1.1") req.version = ver11
