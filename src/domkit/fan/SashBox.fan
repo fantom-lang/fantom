@@ -32,9 +32,7 @@ using graphics
   **
   Dir dir := Dir.right
 
-  **
-  ** Allow user to resize sash positions.
-  **
+  ** Allow user to resize sash positions. See `div`.
   Bool resizable := false
 
   **
@@ -55,6 +53,13 @@ using graphics
   ** Minimum size a child can be resized to if 'resizable' is 'true'.
   ** Only percentage sizes allowed.
   Str minSize := "10%"
+
+  ** Create a new divider element for resizing children. Dividers are
+  ** required between children when `resizable` is 'true'.
+  static Elem div()
+  {
+    Box { it.style.addClass("domkit-SashBox-div") }
+  }
 
   protected override Void onAdd(Elem c)    { applyStyle }
   protected override Void onRemove(Elem c) { applyStyle }
@@ -98,20 +103,22 @@ using graphics
     if (resizeIndex == null) return
 
     e.stop
-    p := this.relPos(e.pagePos)
+    div := children[resizeIndex+1]
     this.active = true
 
     splitter = Elem { it.style.addClass("domkit-resize-splitter") }
     if (dir == Dir.down)
     {
-      splitter.style->top    = "${p.y-2}px"
+      this.pivoff = this.relPos(e.pagePos).y - div.pos.y
+      splitter.style->top    = "${div.pos.y}px"
       splitter.style->width  = "100%"
-      splitter.style->height = "5px"
+      splitter.style->height = "${div.size.h}px"
     }
     else
     {
-      splitter.style->left = "${p.x-2}px"
-      splitter.style->width  = "5px"
+      this.pivoff = this.relPos(e.pagePos).x - div.pos.x
+      splitter.style->left   = "${div.pos.x}px"
+      splitter.style->width  = "${div.size.w}px"
       splitter.style->height = "100%"
     }
 
@@ -129,13 +136,13 @@ using graphics
     {
       y := 0
       for (i:=0; i<=resizeIndex; i++) y += kids[i].size.h.toInt
-      applyResize(resizeIndex, p.y - y)
+      applyResize(resizeIndex, p.y - y - pivoff)
     }
     else
     {
       x := 0
       for (i:=0; i<=resizeIndex; i++) x += kids[i].size.w.toInt
-      applyResize(resizeIndex, p.x - x)
+      applyResize(resizeIndex, p.x - x - pivoff)
     }
 
     this.active = false
@@ -153,12 +160,12 @@ using graphics
       // drag splitter
       if (dir == Dir.down)
       {
-        splitter.style->top = "${p.y-2}px"
+        splitter.style->top = "${p.y-pivoff}px"
         e.stop
       }
       else
       {
-        splitter.style->left = "${p.x-2}px"
+        splitter.style->left = "${p.x-pivoff}px"
         e.stop
       }
       return
@@ -166,40 +173,16 @@ using graphics
     else
     {
       // check for roll-over cursor
-      x := 0f
-      y := 0f
-      kids := children
-
-      for (i:=0; i<kids.size-1; i++)
+      if (e.target.style.hasClass("domkit-SashBox-div"))
       {
-        if (dir == Dir.down)
-        {
-          // vert
-          y += kids[i].size.h.toInt
-          if (p.y >= y-3 && p.y <= y+3)
-          {
-            this.style->cursor = "row-resize"
-            this.resizeIndex = i
-            e.stop
-            return
-          }
-        }
-        else
-        {
-          // horiz
-          x += kids[i].size.w.toInt
-          if (p.x >= x-3 && p.x <= x+3)
-          {
-            this.style->cursor = "col-resize"
-            this.resizeIndex = i
-            e.stop
-            return
-          }
-        }
+        this.style->cursor = dir==Dir.down ? "row-resize" : "col-resize"
+        this.resizeIndex = 0.max(children.findIndex |c| { c == e.target } - 1)
       }
-
-      this.style->cursor = "default"
-      this.resizeIndex = null
+      else
+      {
+        this.style->cursor = "default"
+        this.resizeIndex = null
+      }
     }
   }
 
@@ -210,7 +193,7 @@ using graphics
 
     // get adjacent child nodes
     da  := dims[index]
-    db  := dims[index+1]
+    db  := dims[index+2]
 
     // if already at minSize bail here
     min := CssDim(minSize).val.toFloat
@@ -235,7 +218,7 @@ using graphics
       av = (dav + dbv - bv).toLocale("0.00").toFloat
     }
     working[index]   = "${av}%"
-    working[index+1] = "${bv}%"
+    working[index+2] = "${bv}%"
 
     // update
     this.sizes = working
@@ -285,5 +268,6 @@ using graphics
 
   private Bool active := false
   private Int? resizeIndex
+  private Float? pivoff
   private Elem? splitter
 }

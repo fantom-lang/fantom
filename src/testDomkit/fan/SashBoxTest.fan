@@ -26,9 +26,10 @@ class SashBoxTest : DomkitTest
     {
       it.style->padding = "6px"
       it.cellStyle("*", "*", "padding: 6px")
-      it.addRow([Label { it.text="Layout Dir:"  }, dir   ])
-      it.addRow([Label { it.text="Child Type:"  }, type  ])
-      it.addRow([Label { it.text="Child Sizes:" }, sizes ])
+      it.addRow([Label { it.text="Layout Dir:"  }, dir    ])
+      it.addRow([Label { it.text="Resizable:"   }, resize ])
+      it.addRow([Label { it.text="Child Type:"  }, type   ])
+      it.addRow([Label { it.text="Child Sizes:" }, sizes  ])
       it.addRow([FlowBox {
         it.style->paddingTop = "6px"
         it.halign = Align.right
@@ -42,33 +43,52 @@ class SashBoxTest : DomkitTest
 
   Void update()
   {
+    resz := resize.sel.item == true
+
     sash := SashBox
     {
       it.dir = this.dir.sel.item
       it.sizes = this.sizes.val.split(',')
-      it.resizable = true
+      it.resizable = resz
     }
 
     sash.sizes.each |sz,i|
     {
-      t := "kid-$i: $sz"
-      c := DomkitTest.safeColor(i)
-      Elem? k
-      switch (type.sel.index)
+      if (resz && i.isOdd)
       {
-        case 0: k = Box  { it.style->background="$c"; it.text=t }
-        case 1: k = Elem { it.style->background="$c"; it.text=t }
-        case 2: k = Elem("span") { it.style->background="$c"; it.text=t }
-        case 3: k = Button { it.text=t }
-        case 4: k = Tree { it.roots=TreeTest.testRoots }
+        sash.add(SashBox.div)
       }
-      sash.add(k)
+      else
+      {
+        t := "kid-$i: $sz"
+        c := DomkitTest.safeColor(i)
+        Elem? k
+        switch (type.sel.index)
+        {
+          case 0: k = Box  { it.style->background="$c"; it.text=t }
+          case 1: k = Elem { it.style->background="$c"; it.text=t }
+          case 2: k = Elem("span") { it.style->background="$c"; it.text=t }
+          case 3: k = Button { it.text=t }
+          case 4: k = Tree { it.roots=TreeTest.testRoots }
+        }
+        sash.add(k)
+      }
     }
 
     removeAll.add(sash)
   }
 
-  ListButton type := ListButton { it.items = ["box", "block", "inline", "button", "tree"] }
-  ListButton dir  := ListButton { it.items = [Dir.right, Dir.down] }
-  TextField sizes := TextField { it.style->width="400px"; it.val = "200px, 100%, 400px" }
+  ListButton type   := ListButton { it.items = ["box", "block", "inline", "button", "tree"] }
+  ListButton dir    := ListButton { it.items = [Dir.right, Dir.down] }
+  TextField sizes   := TextField { it.style->width="400px"; it.val="200px, 5px, 100%, 5px, 400px" }
+  ListButton resize := ListButton
+  {
+    it.items = [true, false]
+    it.onSelect |b|
+    {
+      sizes.val = b.sel.item==true
+        ? "200px, 5px, 100%, 5px, 400px"
+        : "200px, 100%, 400px"
+    }
+  }
 }
