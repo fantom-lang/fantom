@@ -122,6 +122,18 @@ using graphics
       splitter.style->height = "100%"
     }
 
+    doc := Win.cur.doc
+    Obj? fmove
+    Obj? fup
+
+    fmove = doc.onEvent("mousemove", true) |de| { onMouseMove(de) }
+    fup = doc.onEvent("mouseup", true) |de| {
+      onMouseUp(de)
+      de.stop
+      doc.removeEvent("mousemove", true, fmove)
+      doc.removeEvent("mouseup",   true, fup)
+    }
+
     this.add(splitter)
   }
 
@@ -160,12 +172,14 @@ using graphics
       // drag splitter
       if (dir == Dir.down)
       {
-        splitter.style->top = "${p.y-pivoff}px"
+        sy := 0f.max(p.y - pivoff).min(this.size.h-splitter.size.h)
+        splitter.style->top = "${sy}px"
         e.stop
       }
       else
       {
-        splitter.style->left = "${p.x-pivoff}px"
+        sx := 0f.max(p.x - pivoff).min(this.size.w-splitter.size.w)
+        splitter.style->left = "${sx}px"
         e.stop
       }
       return
