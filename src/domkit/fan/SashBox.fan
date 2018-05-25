@@ -258,7 +258,7 @@ using graphics
     // trim last child to 100% if needed
     sum := 0f
     converted.each |d| { sum += d.val.toFloat }
-    if (sum > 100f) converted[-1] = CssDim(converted.last.val.toFloat-100f, "%")
+    if (sum > 100f) converted[-1] = CssDim(converted.last.val.toFloat-(sum-100f), "%")
 
     // update
     this.sizes = converted.map |c| { c.toStr }
