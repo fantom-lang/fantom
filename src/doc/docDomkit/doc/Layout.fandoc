@@ -208,13 +208,15 @@ configure the [dir]`domkit::SashBox.dir` field:
   }
 
 By default, sashes are fixed, but you can enable resizing by setting the
-[resizable]`domkit::SashBox.resizable` field:
+[resizable]`domkit::SashBox.resizable` field and adding
+[dividers]`domkit::SashBox.div` field:
 
   SashBox
   {
-    it.sizes = ["40%", "60%"]
     it.resizable = true
+    it.sizes = ["40%", "5px", "60%"]
     Box { it.text="Child 1" },
+    SashBox.div,
     Box { it.text="Child 2" },
   }
 
