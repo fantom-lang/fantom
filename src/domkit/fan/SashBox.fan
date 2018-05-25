@@ -173,10 +173,11 @@ using graphics
     else
     {
       // check for roll-over cursor
-      if (e.target.style.hasClass("domkit-SashBox-div"))
+      div := toDiv(e.target)
+      if (div != null)
       {
         this.style->cursor = dir==Dir.down ? "row-resize" : "col-resize"
-        this.resizeIndex = 0.max(children.findIndex |c| { c == e.target } - 1)
+        this.resizeIndex = 0.max(children.findIndex |c| { c == div } - 1)
       }
       else
       {
@@ -184,6 +185,16 @@ using graphics
         this.resizeIndex = null
       }
     }
+  }
+
+  private Elem? toDiv(Elem? elem)
+  {
+    while (elem != null)
+    {
+      if (elem.style.hasClass("domkit-SashBox-div")) return elem
+      elem = elem.parent
+    }
+    return null
   }
 
   private Void applyResize(Int index, Float delta)
