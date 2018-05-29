@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.71 (working)*
+*Build 1.0.71 (29 May 2018)*
 - List.flatMap
 - concurrent: add ConcurrentMap
 - dom: add DomFile.ext
@@ -25,6 +25,8 @@
 - inet: add isLoopback and isSiteLocal to IpAddr
 - wisp: remove deprecated WispService.port field
 - wisp: allow session cookie name to be configurable
+- #2670: NodeRunner does not work on Windows
+- #2694: JS: Deserialisation bug
 
 *Build 1.0.70 (8 Nov 2017)*
 - Require Java 1.7
