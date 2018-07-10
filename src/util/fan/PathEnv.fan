@@ -157,17 +157,18 @@ const class PathEnv : Env
   **
   override Str[] findAllPodNames()
   {
-    acc := Str[,]
+    acc := Str:Str[:]
     path.each |dir|
     {
       lib := dir + `lib/fan/`
       lib.list.each |f|
       {
         if (f.isDir || f.ext != "pod") return
-        acc.add(f.basename)
+        podName := f.basename
+        acc[podName] = podName
       }
     }
-    return acc
+    return acc.keys
   }
 
   private const Log log := Log.get("pathenv")

@@ -180,13 +180,19 @@ public class Pod
       if (allPodsList == null)
       {
         List names = Env.cur().findAllPodNames();
-        List pods = new List(Sys.PodType, names.sz());
+        Map acc = new Map(Sys.StrType, Sys.PodType);
         for (int i=0; i<names.sz(); ++i)
         {
           String name = (String)names.get(i);
+          if (acc.get(name) != null)
+          {
+            System.out.println("ERROR: duplicate pod names: " + name);
+            continue;
+          }
           try
           {
-            pods.add(doFind(name, true, null, null));
+            Pod pod = doFind(name, true, null, null);
+            acc.set(name, pod);
           }
           catch (Throwable e)
           {
@@ -194,7 +200,7 @@ public class Pod
             e.printStackTrace();
           }
         }
-        allPodsList = (List)pods.sort().toImmutable();
+        allPodsList = (List)acc.vals().sort().toImmutable();
       }
       return allPodsList;
     }
