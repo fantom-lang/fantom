@@ -313,7 +313,8 @@ using graphics
     }
 
     // check action
-    if (e.type == "dblclick") cbAction?.call(this, e)
+    if (e.type == "dblclick" && !elem.style.hasClass("domkit-Tree-node-expander"))
+      cbAction?.call(this, e)
 
     // delegate to cell handlers
     cb := cbTreeEvent[e.type]

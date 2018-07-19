@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.72 (working)*
+- domkit: fix Tree.onAction to not fire on expanders
+
 *Build 1.0.71 (29 May 2018)*
 - List.flatMap
 - concurrent: add ConcurrentMap
