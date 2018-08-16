@@ -31,6 +31,16 @@ public final class ConstBuf
     this.charset = charset;
   }
 
+  public ConstBuf(byte[] bytes, int size)
+  {
+    this(bytes, size, Endian.big, Charset.utf8());
+  }
+
+  public ConstBuf(byte[] bytes)
+  {
+    this(bytes, bytes.length, Endian.big, Charset.utf8());
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Obj
 //////////////////////////////////////////////////////////////////////////
