@@ -176,6 +176,12 @@ public final class ConstBuf
     return r;
   }
 
+  public byte[] constArray()
+  {
+    if (buf.length == size) return buf;
+    return bytes();
+  }
+
   public byte[] unsafeArray()
   {
     return buf;
