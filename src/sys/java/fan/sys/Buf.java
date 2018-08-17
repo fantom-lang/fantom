@@ -765,6 +765,12 @@ public abstract class Buf
     return copy;
   }
 
+  /** Get array sized correctly which is guaranteed to be immutable */
+  public byte[] constArray()
+  {
+    throw UnsupportedErr.make(typeof()+".constArray");
+  }
+
   /** Implements {@link Interop#toJava(Buf)} */
   public ByteBuffer toByteBuffer()
   {

@@ -212,6 +212,11 @@ public final class MemBuf
     return r;
   }
 
+  public byte[] constArray()
+  {
+    return bytes();
+  }
+
   public final void grow(int capacity)
   {
     if (buf.length >= capacity) return;
