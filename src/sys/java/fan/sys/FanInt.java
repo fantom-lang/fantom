@@ -519,6 +519,7 @@ public final class FanInt
   public static final Long Chunk = Long.valueOf(4096);
 
   // internalized boxed Longs used for byte IO
+  public static Long pos(int i) { return pos[i]; }
   static final Long[] pos = new Long[256];
   static { for (int i=0; i<pos.length; ++i) pos[i] = Long.valueOf(i); }
 
