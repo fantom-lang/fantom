@@ -217,6 +217,10 @@ public class NioBuf
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+  public final InStream i() { return in; }
+
+  public final OutStream o() { return out; }
+
   final byte[] temp()
   {
     if (temp == null) temp = new byte[1024];
@@ -308,5 +312,6 @@ public class NioBuf
 
   private ByteBuffer buf;
   private byte[] temp;
-
+  private NioBufInStream in;
+  private NioBufOutStream out;
 }

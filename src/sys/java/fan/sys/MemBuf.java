@@ -52,7 +52,7 @@ public final class MemBuf
     int size = this.size;
     this.buf = emptyBytes;
     this.size = 0;
-    return new ConstBuf(buf, size, endian(), charset());
+    return new ConstBuf(buf, 0, size);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -205,17 +205,9 @@ public final class MemBuf
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public final byte[] bytes()
-  {
-    byte[] r = new byte[size];
-    System.arraycopy(buf, 0, r, 0, size);
-    return r;
-  }
+  public final InStream i() { return in; }
 
-  public byte[] constArray()
-  {
-    return bytes();
-  }
+  public final OutStream o() { return out; }
 
   public final void grow(int capacity)
   {
@@ -228,6 +220,11 @@ public final class MemBuf
   public final int sz()
   {
     return this.size;
+  }
+
+  public byte[] constArray()
+  {
+    return safeArray();
   }
 
   public final byte[] unsafeArray()
@@ -359,8 +356,14 @@ public final class MemBuf
 
   private static byte[] emptyBytes = new byte[0];
 
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
   public byte[] buf;
   public int pos;
   public int size;
+  private MemBufInStream in;
+  private MemBufOutStream out;
 
 }

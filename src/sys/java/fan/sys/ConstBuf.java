@@ -21,24 +21,16 @@ public final class ConstBuf
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public ConstBuf(byte[] bytes, int size, Endian endian, Charset charset)
+  public ConstBuf(byte[] bytes, int off, int size)
   {
-    this.buf     = bytes;
-    this.size    = size;
-    this.in      = errInStream;
-    this.out     = errOutStream;
-    this.endian  = endian;
-    this.charset = charset;
-  }
-
-  public ConstBuf(byte[] bytes, int size)
-  {
-    this(bytes, size, Endian.big, Charset.utf8());
+    this.buf  = bytes;
+    this.off  = off;
+    this.size = size;
   }
 
   public ConstBuf(byte[] bytes)
   {
-    this(bytes, bytes.length, Endian.big, Charset.utf8());
+    this(bytes, 0, bytes.length);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -57,7 +49,7 @@ public final class ConstBuf
 
   public InStream in()
   {
-    return new ConstBufInStream(this);
+    return new ConstBufInStream(buf, off, size);
   }
 
   public final long size()
@@ -82,7 +74,7 @@ public final class ConstBuf
 
   public final int getByte(long pos)
   {
-    return buf[(int)pos] & 0xFF;
+    return buf[off+(int)pos] & 0xFF;
   }
 
   public final void setByte(long pos, int x)
@@ -90,15 +82,15 @@ public final class ConstBuf
     throw err();
   }
 
-  public final void getBytes(long pos, byte[] dest, int off, int len)
+  public final void getBytes(long pos, byte[] dst, int dstOff, int len)
   {
-    System.arraycopy(this.buf, (int)pos, dest, off, len);
+    System.arraycopy(this.buf, this.off+(int)pos, dst, dstOff, len);
   }
 
   public final void pipeTo(byte[] dst, int dstPos, int len)
   {
     if (len > size) throw IOErr.make("Not enough bytes to write");
-    System.arraycopy(buf, 0, dst, dstPos, len);
+    System.arraycopy(buf, off, dst, dstPos, len);
   }
 
   public final void pipeTo(OutputStream dst, long lenLong)
@@ -106,7 +98,7 @@ public final class ConstBuf
   {
     int len = (int)lenLong;
     if (len > size) throw IOErr.make("Not enough bytes to write");
-    dst.write(buf, 0, len);
+    dst.write(buf, off, len);
   }
 
   public final void pipeTo(RandomAccessFile dst, long lenLong)
@@ -114,13 +106,13 @@ public final class ConstBuf
   {
     int len = (int)lenLong;
     if (len > size) throw IOErr.make("Not enough bytes to write");
-    dst.write(buf, 0, len);
+    dst.write(buf, off, len);
   }
 
   public final void pipeTo(ByteBuffer dst, int len)
   {
     if (len > size) throw IOErr.make("Not enough bytes to write");
-    dst.put(buf, 0, len);
+    dst.put(buf, off, len);
   }
 
   public final void pipeFrom(byte[] src, int srcPos, int len)
@@ -157,11 +149,11 @@ public final class ConstBuf
 
   public final Buf trim() { throw err(); }
 
-  public Endian endian() { return endian; }
+  public Endian endian() { return Endian.big; }
 
   public void endian(Endian endian) { throw err(); }
 
-  public Charset charset() { return charset; }
+  public Charset charset() { return Charset.utf8(); }
 
   public void charset(Charset charset) { throw err(); }
 
@@ -169,22 +161,24 @@ public final class ConstBuf
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public final byte[] bytes()
-  {
-    byte[] r = new byte[size];
-    System.arraycopy(buf, 0, r, 0, size);
-    return r;
-  }
+  public final InStream i() { throw err(); }
 
-  public byte[] constArray()
+  public final OutStream o() { throw err(); }
+
+  public final byte[] constArray()
   {
     if (buf.length == size) return buf;
-    return bytes();
+    return safeArray();
   }
 
-  public byte[] unsafeArray()
+  public final byte[] unsafeArray()
   {
     return buf;
+  }
+
+  public final int unsafeOffset()
+  {
+    return off;
   }
 
   public int sz()
@@ -192,12 +186,12 @@ public final class ConstBuf
     return this.size;
   }
 
-  public ByteBuffer toByteBuffer()
+  public final ByteBuffer toByteBuffer()
   {
-    return ByteBuffer.wrap(bytes());
+    return ByteBuffer.wrap(safeArray());
   }
 
-  public Err err()
+  static final Err err()
   {
     return ReadonlyErr.make("Buf is immutable");
   }
@@ -238,64 +232,31 @@ public final class ConstBuf
   }
 
 //////////////////////////////////////////////////////////////////////////
-// ErrOutStream
-//////////////////////////////////////////////////////////////////////////
-
-  static final ErrOutStream errOutStream = new ErrOutStream();
-  static class ErrOutStream extends OutStream
-  {
-    public final OutStream write(long v) { throw err(); }
-    public final OutStream w(int v) { throw err(); }
-    public OutStream writeBuf(Buf other, long n) { throw err(); }
-    public OutStream writeChar(long c)  { throw err(); }
-    public OutStream writeChar(char c)  { throw err(); }
-    public void endian(Endian endian) { throw err(); }
-    public void charset(Charset charset) { throw err(); }
-    Err err() { return ReadonlyErr.make("Buf is immutable"); }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// ErrInStream
-//////////////////////////////////////////////////////////////////////////
-
-  static final ErrInStream errInStream = new ErrInStream();
-  static class ErrInStream extends InStream
-  {
-    public Long read() { throw err(); }
-    public int r() { throw err(); }
-    public Long readBuf(Buf other, long n) { throw err(); }
-    public InStream unread(long n) { throw err(); }
-    public InStream unread(int n) { throw err(); }
-    public void endian(Endian endian) { throw err(); }
-    public void charset(Charset charset) { throw err(); }
-    Err err() { return ReadonlyErr.make("Buf is immutable; use Buf.in()"); }
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // ConstBufInStream
 //////////////////////////////////////////////////////////////////////////
 
-  class ConstBufInStream extends InStream
+  static class ConstBufInStream extends InStream
   {
-    ConstBufInStream(ConstBuf buf)
+    ConstBufInStream(byte[] buf, int off, int size)
     {
-      endian(buf.endian);
-      charset(buf.charset);
+      this.buf  = buf;
+      this.off  = off;
+      this.size = size;
     }
 
     public Long read() { int n = r(); return n < 0 ? null : FanInt.pos[n]; }
     public int r()
     {
-      if (pos >= size) return -1;
-      return buf[pos++] & 0xFF;
+      if (numRead >= size) return -1;
+      return buf[off+(numRead++)] & 0xFF;
     }
 
     public Long readBuf(Buf other, long n)
     {
-      if (pos >= size) return null;
-      int len = Math.min(size-pos, (int)n);
-      other.pipeFrom(buf, pos, len);
-      pos += len;
+      if (numRead >= size) return null;
+      int len = Math.min(size-numRead, (int)n);
+      other.pipeFrom(buf, off+numRead, len);
+      numRead += len;
       return Long.valueOf(len);
     }
 
@@ -307,9 +268,9 @@ public final class ConstBuf
       // which case we can just rewind the position; however
       // if we pushing back a different byte then we need
       // to shift the entire buffer and insert the byte
-      if (pos > 0 && buf[pos-1] == (byte)n)
+      if (numRead > 0 && buf[off+numRead-1] == (byte)n)
       {
-        pos--;
+        numRead--;
       }
       else
       {
@@ -320,20 +281,23 @@ public final class ConstBuf
 
     public Long peek()
     {
-      if (pos >= size) return null;
-      return FanInt.pos[buf[pos] & 0xFF];
+      if (numRead >= size) return null;
+      return FanInt.pos[buf[off+numRead] & 0xFF];
     }
 
     public long skip(long n)
     {
-      int oldPos = pos;
-      pos += n;
-      if (pos < size) return n;
-      pos = size;
-      return pos-oldPos;
+      int oldNumRead = numRead;
+      numRead += n;
+      if (numRead < size) return n;
+      numRead = size;
+      return numRead-oldNumRead;
     }
 
-    int pos;
+    private final byte[] buf;
+    private final int off;
+    private final int size;
+    private int numRead;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -341,8 +305,7 @@ public final class ConstBuf
 //////////////////////////////////////////////////////////////////////////
 
   final byte[] buf;
+  final int off;
   final int size;
-  final Endian endian;
-  final Charset charset;
 
 }

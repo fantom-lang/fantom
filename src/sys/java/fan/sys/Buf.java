@@ -215,31 +215,31 @@ public abstract class Buf
 
   public Endian endian()
   {
-    return out.endian();
+    return o().endian();
   }
 
   public void endian(Endian endian)
   {
-    out.endian(endian);
-    in.endian(endian);
+    o().endian(endian);
+    i().endian(endian);
   }
 
   public Charset charset()
   {
-    return out.charset();
+    return o().charset();
   }
 
   public void charset(Charset charset)
   {
-    out.charset(charset);
-    in.charset(charset);
+    o().charset(charset);
+    i().charset(charset);
   }
 
   public final Buf fill(long b, long times)
   {
     if (capacity() < size()+times) capacity(size()+times);
     int t = (int)times;
-    for (int i=0; i<t; ++i) out.write(b);
+    for (int i=0; i<t; ++i) o().write(b);
     return this;
   }
 
@@ -247,116 +247,116 @@ public abstract class Buf
 // OutStream
 //////////////////////////////////////////////////////////////////////////
 
-  public final OutStream out() { return out; }
+  public OutStream out() { return o(); }
 
-  public final Buf write(long b) { out.write(b); return this; }
+  public final Buf write(long b) { o().write(b); return this; }
 
-  public final Buf writeBuf(Buf other) { out.writeBuf(other); return this; }
-  public final Buf writeBuf(Buf other, long n) { out.writeBuf(other, n); return this; }
+  public final Buf writeBuf(Buf other) { o().writeBuf(other); return this; }
+  public final Buf writeBuf(Buf other, long n) { o().writeBuf(other, n); return this; }
 
-  public final Buf writeI2(long x) { out.writeI2(x); return this; }
+  public final Buf writeI2(long x) { o().writeI2(x); return this; }
 
-  public final Buf writeI4(long x) { out.writeI4(x); return this; }
+  public final Buf writeI4(long x) { o().writeI4(x); return this; }
 
-  public final Buf writeI8(long x) { out.writeI8(x); return this; }
+  public final Buf writeI8(long x) { o().writeI8(x); return this; }
 
-  public final Buf writeF4(double x) { out.writeF4(x); return this; }
+  public final Buf writeF4(double x) { o().writeF4(x); return this; }
 
-  public final Buf writeF8(double x) { out.writeF8(x); return this; }
+  public final Buf writeF8(double x) { o().writeF8(x); return this; }
 
-  public final Buf writeDecimal(BigDecimal x) { out.writeDecimal(x); return this; }
+  public final Buf writeDecimal(BigDecimal x) { o().writeDecimal(x); return this; }
 
-  public final Buf writeBool(boolean x) { out.writeBool(x); return this; }
+  public final Buf writeBool(boolean x) { o().writeBool(x); return this; }
 
-  public final Buf writeUtf(String x) { out.writeUtf(x); return this; }
+  public final Buf writeUtf(String x) { o().writeUtf(x); return this; }
 
-  public final Buf writeChar(long c) { out.writeChar(c); return this; }
+  public final Buf writeChar(long c) { o().writeChar(c); return this; }
 
-  public final Buf writeChars(String s) { out.writeChars(s); return this; }
-  public final Buf writeChars(String s, long off) { out.writeChars(s, off); return this; }
-  public final Buf writeChars(String s, long off, long len) { out.writeChars(s, off, len); return this; }
+  public final Buf writeChars(String s) { o().writeChars(s); return this; }
+  public final Buf writeChars(String s, long off) { o().writeChars(s, off); return this; }
+  public final Buf writeChars(String s, long off, long len) { o().writeChars(s, off, len); return this; }
 
-  public final Buf print(Object obj) { out.print(obj); return this; }
+  public final Buf print(Object obj) { o().print(obj); return this; }
 
-  public final Buf printLine() { out.printLine(); return this; }
-  public final Buf printLine(Object obj) { out.printLine(obj); return this; }
+  public final Buf printLine() { o().printLine(); return this; }
+  public final Buf printLine(Object obj) { o().printLine(obj); return this; }
 
-  public final Buf writeProps(Map props) { out.writeProps(props); return this; }
+  public final Buf writeProps(Map props) { o().writeProps(props); return this; }
 
-  public final Buf writeObj(Object obj) { out.writeObj(obj); return this; }
-  public final Buf writeObj(Object obj, Map opt) { out.writeObj(obj, opt); return this; }
+  public final Buf writeObj(Object obj) { o().writeObj(obj); return this; }
+  public final Buf writeObj(Object obj, Map opt) { o().writeObj(obj, opt); return this; }
 
-  public final Buf writeXml(String s) { out.writeXml(s, 0); return this; }
-  public final Buf writeXml(String s, long flags) { out.writeXml(s, flags); return this; }
+  public final Buf writeXml(String s) { o().writeXml(s, 0); return this; }
+  public final Buf writeXml(String s, long flags) { o().writeXml(s, flags); return this; }
 
 //////////////////////////////////////////////////////////////////////////
 // InStream
 //////////////////////////////////////////////////////////////////////////
 
-  public InStream in() { return in; }
+  public InStream in() { return i(); }
 
-  public final Long read() {  return in.read(); }
+  public final Long read() {  return i().read(); }
 
-  public final Long readBuf(Buf other, long n) { return in.readBuf(other, n); }
+  public final Long readBuf(Buf other, long n) { return i().readBuf(other, n); }
 
-  public final Buf unread(long n) { in.unread(n); return this; }
+  public final Buf unread(long n) { i().unread(n); return this; }
 
-  public final Buf readBufFully(Buf buf, long n) { return in.readBufFully(buf, n); }
+  public final Buf readBufFully(Buf buf, long n) { return i().readBufFully(buf, n); }
 
-  public final Buf readAllBuf() { return in.readAllBuf(); }
+  public final Buf readAllBuf() { return i().readAllBuf(); }
 
-  public final Long peek() { return in.peek(); }
+  public final Long peek() { return i().peek(); }
 
-  public final long readU1() { return in.readU1(); }
+  public final long readU1() { return i().readU1(); }
 
-  public final long readS1() { return in.readS1(); }
+  public final long readS1() { return i().readS1(); }
 
-  public final long readU2() { return in.readU2(); }
+  public final long readU2() { return i().readU2(); }
 
-  public final long readS2() { return in.readS2(); }
+  public final long readS2() { return i().readS2(); }
 
-  public final long readU4() { return in.readU4(); }
+  public final long readU4() { return i().readU4(); }
 
-  public final long readS4() { return in.readS4(); }
+  public final long readS4() { return i().readS4(); }
 
-  public final long readS8() { return in.readS8(); }
+  public final long readS8() { return i().readS8(); }
 
-  public final double readF4() { return in.readF4(); }
+  public final double readF4() { return i().readF4(); }
 
-  public final double readF8() { return in.readF8(); }
+  public final double readF8() { return i().readF8(); }
 
-  public final BigDecimal readDecimal() { return in.readDecimal(); }
+  public final BigDecimal readDecimal() { return i().readDecimal(); }
 
-  public final boolean readBool() { return in.readBool(); }
+  public final boolean readBool() { return i().readBool(); }
 
-  public final String readUtf() { return in.readUtf(); }
+  public final String readUtf() { return i().readUtf(); }
 
-  public final Long readChar() { return in.readChar(); }
+  public final Long readChar() { return i().readChar(); }
 
-  public final Buf unreadChar(long c) { in.unreadChar(c); return this; }
+  public final Buf unreadChar(long c) { i().unreadChar(c); return this; }
 
-  public final Long peekChar() { return in.peekChar(); }
+  public final Long peekChar() { return i().peekChar(); }
 
-  public final String readChars(long n) { return in.readChars(n); }
+  public final String readChars(long n) { return i().readChars(n); }
 
-  public final String readLine() { return in.readLine(); }
-  public final String readLine(Long max) { return in.readLine(max); }
+  public final String readLine() { return i().readLine(); }
+  public final String readLine(Long max) { return i().readLine(max); }
 
-  public final String readStrToken() { return in.readStrToken(); }
-  public final String readStrToken(Long max) { return in.readStrToken(max); }
-  public final String readStrToken(Long max, Func f) { return in.readStrToken(max, f); }
+  public final String readStrToken() { return i().readStrToken(); }
+  public final String readStrToken(Long max) { return i().readStrToken(max); }
+  public final String readStrToken(Long max, Func f) { return i().readStrToken(max, f); }
 
-  public final List readAllLines() { return in.readAllLines(); }
+  public final List readAllLines() { return i().readAllLines(); }
 
-  public final void eachLine(Func f) { in.eachLine(f); }
+  public final void eachLine(Func f) { i().eachLine(f); }
 
-  public final String readAllStr() { return in.readAllStr(); }
-  public final String readAllStr(boolean normalizeNewlines)  { return in.readAllStr(normalizeNewlines); }
+  public final String readAllStr() { return i().readAllStr(); }
+  public final String readAllStr(boolean normalizeNewlines)  { return i().readAllStr(normalizeNewlines); }
 
-  public final Map readProps() { return in.readProps(); }
+  public final Map readProps() { return i().readProps(); }
 
-  public final Object readObj() { return in.readObj(); }
-  public final Object readObj(Map opt) { return in.readObj(opt); }
+  public final Object readObj() { return i().readObj(); }
+  public final Object readObj(Map opt) { return i().readObj(opt); }
 
 //////////////////////////////////////////////////////////////////////////
 // File
@@ -740,8 +740,14 @@ public abstract class Buf
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Utils
+// Java API
 //////////////////////////////////////////////////////////////////////////
+
+  /** In-place input stream */
+  public abstract InStream i();
+
+  /** In-place output stream */
+  public abstract OutStream o();
 
   /* Get size cast to an int */
   public int sz()
@@ -757,13 +763,8 @@ public abstract class Buf
     throw UnsupportedErr.make(typeof()+".array");
   }
 
-  /** Get a copy of the backing byte array that is safe for mutating. */
-  final public byte[] safeArray()
-  {
-    byte[] copy = new byte[this.sz()];
-    System.arraycopy(unsafeArray(), 0, copy, 0, this.sz());
-    return copy;
-  }
+  /** Offset into unsafeArray() */
+  public int unsafeOffset() { return 0; }
 
   /** Get array sized correctly which is guaranteed to be immutable */
   public byte[] constArray()
@@ -777,11 +778,15 @@ public abstract class Buf
     throw UnsupportedErr.make(typeof()+".toByteBuffer");
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
+  /** Same as safeArray(), legacy support */
+  public final byte[] bytes() {  return safeArray(); }
 
-  OutStream out;
-  InStream in;
+  /** Get a copy of the backing byte array that is safe for mutating. */
+  public final byte[] safeArray()
+  {
+    byte[] copy = new byte[this.sz()];
+    System.arraycopy(unsafeArray(), unsafeOffset(), copy, 0, this.sz());
+    return copy;
+  }
 
 }
