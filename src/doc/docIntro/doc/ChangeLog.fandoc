@@ -7,6 +7,7 @@
 **************************************************************************
 
 *Build 1.0.72 (working)*
+- Rework Java Buf APIs
 - domkit: fix Tree.onAction to not fire on expanders
 
 *Build 1.0.71 (29 May 2018)*

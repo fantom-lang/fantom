@@ -358,6 +358,10 @@ public class FileBuf
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+  public final InStream i() { return in; }
+
+  public final OutStream o() { return out; }
+
   final byte[] temp()
   {
     byte[] temp = this.temp;
@@ -495,5 +499,7 @@ public class FileBuf
   private File file;
   private RandomAccessFile fp;
   private byte[] temp;
+  private FileBufInStream in;
+  private FileBufOutStream out;
 
 }

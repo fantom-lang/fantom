@@ -1089,8 +1089,8 @@ if (!js) verifyErr(e) { buf.writeI8(10) }
     buf.endian = Endian.little
     buf = buf.toImmutable
     verifyErr(e) { buf.endian = Endian.big }
-    verifyEq(buf.endian, Endian.little)
-    verifyEq(buf.in.endian, Endian.little)
+    verifyEq(buf.endian, Endian.big)
+    verifyEq(buf.in.endian, Endian.big)
 
     // charset
     buf = Buf()
@@ -1098,7 +1098,7 @@ if (!js) verifyErr(e) { buf.writeI8(10) }
     buf.charset = Charset.utf16BE
     buf = buf.toImmutable
     verifyErr(e) { buf.charset = Charset.utf8 }
-    verifyEq(buf.charset, Charset.utf16BE)
-    verifyEq(buf.in.charset, Charset.utf16BE)
+    verifyEq(buf.charset, Charset.utf8)
+    verifyEq(buf.in.charset, Charset.utf8)
   }
 }
