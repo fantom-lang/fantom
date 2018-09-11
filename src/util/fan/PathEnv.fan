@@ -54,7 +54,7 @@ const class PathEnv : Env
     acc := File[,]
     try
     {
-      path.split(File.pathSep[0]).each |item|
+      path.split(';').each |item|
       {
         if (item.isEmpty) return
         dir := (item.startsWith("..") && ref != null)
@@ -64,7 +64,6 @@ const class PathEnv : Env
         if (!dir.exists) { log.warn("Dir not found: $dir"); return }
         if (!dir.isDir) { log.warn("Not a dir: $dir"); return }
         doAdd(acc, dir)
-
       }
     }
     catch (Err e) log.err("Cannot parse path: $path", e)
