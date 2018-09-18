@@ -72,14 +72,25 @@ class InitInput : CompilerStep
   **
   private Void validatePodName()
   {
-    n := input.podName
-    loc := input.inputLoc
-    if (n.isEmpty) throw err("Pod name is empty", loc)
-    if (!n[0].isAlpha) throw err("Pod name must begin with alpha char", loc)
-    n.each |ch|
+    msg := isValidPodName(input.podName)
+    if (msg != null) throw err(msg, input.inputLoc)
+  }
+
+  **
+  ** Return 'null' if pod name is valid, or return a
+  ** descriptive error message if name is not valid.
+  **
+  @NoDoc static Str? isValidPodName(Str name)
+  {
+    if (name.isEmpty) return "Pod name is empty"
+    if (!name[0].isAlpha) return "Pod name must begin with alpha char"
+    for (i:=0; i<name.size; i++)
     {
-      if (!ch.isAlphaNum && ch != '_') throw err("Pod name contains invalid char '$ch.toChar'", loc)
+      ch := name[i]
+      if (!ch.isAlphaNum && ch != '_')
+        return "Pod name contains invalid char '$ch.toChar'"
     }
+    return null
   }
 
 //////////////////////////////////////////////////////////////////////////
