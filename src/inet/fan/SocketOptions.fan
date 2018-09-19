@@ -40,7 +40,14 @@ final class SocketOptions
     Type.of(this).fields.each |Field f|
     {
       try
-        f.set(this, f.get(options))
+      {
+        v := f.get(options)
+
+        // Setting traffic class to zero is unreliable across OS
+        if (v == 0 && f.name == "trafficClass") return
+        
+        f.set(this, v)
+      }
       catch (UnsupportedErr e)
         {}
     }
