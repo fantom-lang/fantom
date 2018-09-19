@@ -85,28 +85,32 @@ Fantom Pod [#pod]
 For production systems, you typically organize your code into precompiled
 modules called [pods]`docLang::Structure#pods`.  Pods are built using
 Fantom's [build toolkit]`docTools::Build`.  To build a new pod called "hello"
-create a directory structure organized as follows:
+use the 'init' tool to create a new project:
 
-  hello/
-    build.fan
-    fan/
-      Main.fan
+  C:\projects> fan build init hello
 
-The contents of "build.fan" is the build script which defines your
-pod's metadata:
+Which will generate a directory that looks like:
 
-  class Build : build::BuildPod
-  {
-    new make()
-    {
-      podName = "hello"
-      summary = "hello world pod"
-      depends = ["sys 1.0"]
-      srcDirs = [`fan/`]
-    }
-  }
+  hello
+  ├── etc
+  ├── fan.props
+  ├── lib
+  └── src
+      ├── build.fan
+      └── hello
+          ├── build.fan
+          ├── fan
+          └── test
 
-The "fan/Main.fan" file declares a single class called "Main":
+Add a file called "Main.fan" under 'src/hello/fan/':
+
+  hello
+  └── src
+      └── hello
+          └── fan
+              └── Main.fan
+
+Which declares a single class called "Main":
 
   class Main
   {
@@ -116,11 +120,12 @@ The "fan/Main.fan" file declares a single class called "Main":
 The build file itself is just a normal Fantom script file which will
 compile the pod:
 
-  C:\dev\fan\src\hello>fan build.fan
+  C:\projects> cd hello
+  C:\projects\hello> fan build.fan
   compile [hello]
     Compile [hello]
       FindSourceFiles [1 files]
-      WritePod [/C:/dev/fan/lib/fan/hello.pod]
+      WritePod [C:\projects\hello\lib\fan\hello.pod]
   BUILD SUCCESS [70ms]!
 
 If you look in your "lib/fan" directory you should now see a file
@@ -128,13 +133,13 @@ called "hello.pod".  Assuming you called your method "main" in a
 class called "Main" you can run the main method using the 'fan'
 executable:
 
-  C:\dev\fan>fan hello
+  C:\projects\hello> fan hello
   hello world #3
 
-  C:\dev\fan>fan hello::Main
+  C:\projects\hello> fan hello::Main
   hello world #3
 
-  C:\dev\fan>fan hello::Main.main
+  C:\projects\hello> fan hello::Main.main
   hello world #3
 
 Checkout `docTools::Fan` for more details running methods in a
