@@ -77,6 +77,12 @@ class Doc
   native Elem[] querySelectorAll(Str selectors)
 
   **
+  ** Invoke `querySelectorAll` but use given 'type' when wrapping
+  ** native DOM nodes. See `Elem.fromNative` for more details.
+  **
+  @NoDoc native Elem[] querySelectorAllType(Str selectors, Type type)
+
+  **
   ** Render the given image to an offscreen <canvas> element and
   ** export the contents to a data URI of type 'image/png'.
   **

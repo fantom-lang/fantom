@@ -79,6 +79,15 @@ fan.dom.DocPeer.prototype.querySelectorAll = function(self, selectors)
   return list;
 }
 
+fan.dom.DocPeer.prototype.querySelectorAllType = function(self, selectors, type)
+{
+  var list  = fan.sys.List.make(fan.dom.Elem.$type);
+  var elems = this.doc.querySelectorAll(selectors);
+  for (var i=0; i<elems.length; i++)
+    list.add(fan.dom.ElemPeer.wrap(elems[i], type.make()));
+  return list;
+}
+
 fan.dom.DocPeer.prototype.exportPng = function(self, img)
 {
   return this.__export(img, "image/png");

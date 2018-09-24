@@ -28,8 +28,14 @@ class Elem
 
   private native Void _make(Str tagName, Uri? ns)
 
+  **
   ** Create an `Elem` instance from a native JavaScript DOM object.
-  static native Elem fromNative(Obj elem)
+  ** The 'type' may be specified to create a subclass instance of
+  ** Elem.  Note if the native instance has already been mapped
+  ** to Fantom, the existing instance is returned and 'type' will
+  ** have no effect.
+  **
+  static native Elem fromNative(Obj elem, Type type := Elem#)
 
   ** Create an `Elem` instance from a HTML string.
   ** This is equivlaent
