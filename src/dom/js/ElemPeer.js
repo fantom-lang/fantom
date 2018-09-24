@@ -40,9 +40,9 @@ fan.dom.ElemPeer.prototype._make = function(self, tagName, ns)
   }
 }
 
-fan.dom.ElemPeer.fromNative = function(obj)
+fan.dom.ElemPeer.fromNative = function(obj, type)
 {
-  return fan.dom.ElemPeer.wrap(obj);
+  return fan.dom.ElemPeer.wrap(obj, type.make());
 }
 
 /*
@@ -50,14 +50,17 @@ fan.dom.ElemPeer.fromNative = function(obj)
  * has already been wrapped by an Elem instance, return the
  * existing instance.
  */
-fan.dom.ElemPeer.wrap = function(elem)
+fan.dom.ElemPeer.wrap = function(elem, fanElem)
 {
   if (elem == null) throw fan.sys.ArgErr.make("elem is null")
 
   if (elem._fanElem != undefined)
     return elem._fanElem;
 
-  var x = fan.dom.Elem.make();
+  if (fanElem && !(fanElem instanceof fan.dom.Elem))
+    throw fan.sys.ArgErr.make("Type does not subclass Elem: " + fanElem);
+
+  var x = fanElem || fan.dom.Elem.make();
   x.peer.elem = elem;
   elem._fanElem = x;
   return x;
