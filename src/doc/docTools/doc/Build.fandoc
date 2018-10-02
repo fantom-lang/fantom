@@ -192,14 +192,76 @@ Typically the pod's version is set by the build script's
 set to the config property 'buildVersion' configured in
 "etc/build/config.props".
 
+Init Tool [#init]
+*****************
 
+Fantom version 1.0.72 and after includes an "init" tool to simplify
+creating new projects:
 
+  $ fan build init hello
+  Created new env 'hello/'
+  Created new pod 'src/hello/'
+  INIT SUCCESS!
 
+Which generates the following directory:
 
+  hello
+  ├── etc
+  ├── fan.props
+  ├── lib
+  └── src
+      ├── build.fan
+      └── hello
+          ├── build.fan
+          ├── fan
+          └── test
 
+A few things to note about this structure:
 
+ 1. If the "hello" directory does not exist, the init tool assumes this is a
+    new project and generates a "fan.props" file.  This file indicates to the
+    build and runtime tools this directory is a [PathEnv]`docLang::Env#PathEnv`.
+    Now when you build pods they will be written to the local "lib/" directory
+    and not pollute your global Fantom "lib" folder.
 
+ 2. By convention Fantom projects are organized as
+    '<project-name>/src/<pod-name>'.  So the "hello" pod source will be
+    contained under its own subdirectory.
 
+ 3. The root 'src/build.fan' is your top-level build script.  This script
+    subclasses [BuildGroup]`build::BuildGroup`.  Whenever you add a new pod
+    to your project, be sure to add it here, so you can build everything in
+    on step.
 
+If you need additional pods for your project, just rerun the init tool under
+your project directory:
 
+  ~/hello$ fan build init next
+  Created new pod 'src/next/'
+  Remember to add 'next/build.fan' to 'src/build.fan'!
+  INIT SUCCESS!
 
+Your project directory now looks like:
+
+  hello
+  ├── etc
+  ├── fan.props
+  ├── lib
+  └── src
+      ├── build.fan
+      ├── hello
+      │   ├── build.fan
+      │   ├── fan
+      │   └── test
+      └── next
+          ├── build.fan
+          ├── fan
+          └── test
+
+Note that the init tool supports relative paths when generating new pod
+source trees:
+
+  $ fan build init backend/webserver
+  Created new pod 'src/backend/webserver/'
+  Remember to add 'backend/webserver/build.fan' to 'src/build.fan'!
+  INIT SUCCESS!
