@@ -7,6 +7,8 @@
 **************************************************************************
 
 *Build 1.0.72 (working)*
+- FEP 1: 'fan build' command line tool
+- fanr: Eggbox is now the default fanr repo
 - Rework Java Buf APIs
 - domkit: fix Tree.onAction to not fire on expanders
 
