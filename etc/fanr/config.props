@@ -7,7 +7,7 @@
 
 // Default repository URI to use for all commands.
 // Override on command line with the -r option
-repo=http://fantom.org/fanr/
+repo=http://eggbox.fantomfactory.org/fanr/
 
 // Number of versions per pod limit for query command.
 // Override on command line with the -n option
