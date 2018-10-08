@@ -11,6 +11,7 @@
 - fanr: Eggbox is now the default fanr repo
 - Rework Java Buf APIs
 - domkit: fix Tree.onAction to not fire on expanders
+- Date yesterday, tomorrow
 
 *Build 1.0.71 (29 May 2018)*
 - List.flatMap

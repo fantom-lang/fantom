@@ -227,10 +227,21 @@ fan.sys.Date.make = function(year, month, day)
   return new fan.sys.Date(year, month.m_ordinal, day);
 }
 
-fan.sys.Date.today = function()
+fan.sys.Date.today = function(tz)
 {
+  // TODO: tz not used
   var d = new Date();
   return new fan.sys.Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+fan.sys.Date.yesterday = function(tz)
+{
+  return fan.sys.Date.today(tz).minus(fan.sys.Duration.m_oneDay);
+}
+
+fan.sys.Date.tomorrow = function(tz)
+{
+  return fan.sys.Date.today(tz).plus(fan.sys.Duration.m_oneDay);
 }
 
 fan.sys.Date.fromStr = function(s, checked)
