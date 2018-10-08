@@ -23,6 +23,16 @@ const final class Date
   static Date today(TimeZone tz := TimeZone.cur)
 
   **
+  ** Get yesterday's Date using specified timezone.
+  **
+  static Date yesterday(TimeZone tz := TimeZone.cur)
+
+  **
+  ** Get tomorrow's Date using specified timezone.
+  **
+  static Date tomorrow(TimeZone tz := TimeZone.cur)
+
+  **
   ** Make for the specified date values:
   **  - year:  no restriction (although only 1901-2099 maps to DateTime)
   **  - month: Month enumeration

@@ -27,6 +27,18 @@ public final class Date
     return DateTime.makeTicks(DateTime.nowTicks(), tz).date();
   }
 
+  public static Date yesterday() { return yesterday(TimeZone.cur()); }
+  public static Date yesterday(TimeZone tz)
+  {
+    return today(tz).minus(Duration.oneDay);
+  }
+
+  public static Date tomorrow() { return tomorrow(TimeZone.cur()); }
+  public static Date tomorrow(TimeZone tz)
+  {
+    return today(tz).plus(Duration.oneDay);
+  }
+
   public static Date make(long year, Month month, long day)
   {
     return new Date((int)year, month.ord, (int)day);
