@@ -284,18 +284,25 @@ public final class Duration
 
   public String toLocale()
   {
+    StringBuilder s = new StringBuilder();
     long ticks = this.ticks;
     Pod pod = Sys.sysPod;
     Env env = Env.cur();
     Locale locale = Locale.cur();
 
+    // handle negatives
+    if (ticks < 0)
+    {
+      s.append((char)'-');
+      ticks = -ticks;
+    }
+
     // less than 1000ns Xns
-    if (ticks < 1000L) return ticks + env.locale(pod, "nsAbbr", "ns", locale);
+    if (ticks < 1000L) return s.append(ticks).append(env.locale(pod, "nsAbbr", "ns", locale)).toString();
 
     // less than 2ms X.XXXms
     if (ticks < 2*nsPerMilli)
     {
-      StringBuilder s = new StringBuilder();
       long ms = ticks/nsPerMilli;
       long us = (ticks - ms*nsPerMilli)/1000L;
       s.append(ms);
@@ -310,10 +317,10 @@ public final class Duration
     }
 
     // less than 2sec Xms
-    if (ticks < 2L*nsPerSec)   return (ticks/nsPerMilli) + env.locale(pod, "msAbbr", "ms", locale);
+    if (ticks < 2L*nsPerSec)   return s.append(ticks/nsPerMilli).append(env.locale(pod, "msAbbr", "ms", locale)).toString();
 
     // less than 2min Xsec
-    if (ticks < 1L*nsPerMin)   return (ticks/nsPerSec) + env.locale(pod, "secAbbr", "sec", locale);
+    if (ticks < 1L*nsPerMin)   return s.append(ticks/nsPerSec).append(env.locale(pod, "secAbbr", "sec", locale)).toString();
 
     // [Xdays] [Xhr] Xmin Xsec
     long days  = ticks/nsPerDay; ticks -= days*nsPerDay;
@@ -321,7 +328,6 @@ public final class Duration
     long min = ticks/nsPerMin;   ticks -= min*nsPerMin;
     long sec = ticks/nsPerSec;
 
-    StringBuilder s = new StringBuilder();
     if (days > 0) s.append(days).append(days == 1 ? env.locale(pod, "dayAbbr", "day", locale) : env.locale(pod, "daysAbbr", "days", locale)).append(' ');
     if (hr > 0)   s.append(hr).append(env.locale(pod, "hourAbbr", "hr", locale)).append(' ');
     if (min > 0)  s.append(min).append(env.locale(pod, "minAbbr", "min", locale)).append(' ');
