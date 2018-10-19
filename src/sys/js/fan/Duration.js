@@ -231,6 +231,8 @@ fan.sys.Duration.prototype.toLocale = function()
   var env = fan.sys.Env.cur();
   var locale = fan.sys.Locale.cur();
 
+  if (ticks < 0) return "-" + fan.sys.Duration.make(-ticks).toLocale();
+
   // less than 1000ns Xns
   if (ticks < 1000) return ticks + env.locale(pod, "nsAbbr", "ns",  locale);
 
