@@ -10,6 +10,7 @@
 - FEP 1: 'fan build' command line tool
 - fanr: Eggbox is now the default fanr repo
 - Rework Java Buf APIs
+- dom: fix DomCoord to be 'const'
 - domkit: fix Tree.onAction to not fire on expanders
 - Date yesterday, tomorrow
 
