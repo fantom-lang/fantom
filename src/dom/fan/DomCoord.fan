@@ -9,7 +9,7 @@
 **
 ** DomCoord models a DOM Coordinate object.
 **
-@Js class DomCoord
+@Js const class DomCoord
 {
   ** Private ctor.
   private new make() {}
