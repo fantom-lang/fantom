@@ -9,6 +9,7 @@ package fanx.interop;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -261,5 +262,9 @@ public class Interop
     return map.toJava();
   }
 
+  public static java.util.List toJava(List list)
+  {
+    return Arrays.asList(list.toArray());
+  }
 
 }
