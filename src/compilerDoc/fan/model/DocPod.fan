@@ -20,7 +20,7 @@ const class DocPod : DocSpace
   }
 
   ** Private constructor to copy loader fields
-  @NoDoc new make(DocEnv env, File file)
+  @NoDoc new make(DocEnv? env, File file)
   {
     this.file = file
     loader := DocPodLoader(env, file, this)
