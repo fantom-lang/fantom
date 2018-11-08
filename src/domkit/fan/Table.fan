@@ -872,7 +872,12 @@ using graphics
     {
       // short-circuit if out of bounds
       row := my / rowh
-      if (row >= numRows) return
+      if (row >= numRows)
+      {
+        // click in backbground clears selection
+        if (e.type == "mousedown") updateSel(Int[,])
+        return
+      }
 
       // find pos relative to cell (cx calc above)
       cy := my - (row * rowh)
