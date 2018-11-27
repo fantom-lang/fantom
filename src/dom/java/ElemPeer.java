@@ -213,6 +213,7 @@ public class ElemPeer
 
   public void replaceChild(Elem self, Elem oldChild, Elem newChild)
   {
+    if (oldChild == newChild) return;
     if (newChild.parent() != null) throw new RuntimeException("child already parented");
     int i = kids.indexOf(oldChild);
     if (i < 0) throw new RuntimeException("oldChild not a child of this element");
