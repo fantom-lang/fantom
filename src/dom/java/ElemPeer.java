@@ -228,6 +228,43 @@ public class ElemPeer
     kids.remove(child);
   }
 
+  public Elem querySelector(Elem self, String selectors)
+  {
+    return (Elem)querySelectorAll(self, selectors).first();
+  }
+
+  public List querySelectorAll(Elem self, String selectors)
+  {
+    QuerySelector q = QuerySelector.parse(selectors);
+    ArrayList matches = new ArrayList();
+    matchQuerySelector(self, q, matches);
+    return Interop.toFan(matches, self.typeof());
+  }
+
+  private void matchQuerySelector(Elem parent, QuerySelector q, ArrayList matches)
+  {
+    List kids = parent.children();
+    for (int i=0; i<kids.size(); i++)
+    {
+      Elem elem = (Elem)kids.get(i);
+
+      // TODO: match on tag name and/or class name
+
+      // check attrs
+      Map attrs = elem.attrs();
+      for (int j=0; j<attrs.keys().size(); j++)
+      {
+        String key = (String)attrs.keys().get(j);
+        String val = (String)attrs.get(key);
+        if (q.attrs.contains(key)) matches.add(elem);
+        // TODO: match on value
+      }
+
+      // recurse children
+      matchQuerySelector(elem, q, matches);
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Events
 //////////////////////////////////////////////////////////////////////////

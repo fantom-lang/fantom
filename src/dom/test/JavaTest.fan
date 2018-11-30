@@ -130,6 +130,26 @@ class JavaTest : Test
     verifyEq(s->background, "#eee")
   }
 
+  Void testQuerySelector()
+  {
+    Elem? root
+    Elem? a
+    Elem? b
+
+    root = Elem {
+      it.setAttr("foo", "notme")
+      a = Elem { it.setAttr("foo", "bar") },
+      b = Elem { it.setAttr("foo", "bar") },
+    }
+
+    m := root.querySelectorAll("[foo]")
+    verifyEq(m.size, 2)
+    verifySame(m[0], a)
+    verifySame(m[1], b)
+
+    verifySame(root.querySelector("[foo]"), a)
+  }
+
   Void testSvg()
   {
     a := Svg.line(0, 0, 10, 10)
