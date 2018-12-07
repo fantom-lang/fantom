@@ -134,18 +134,26 @@ class JavaTest : Test
   {
     // test class handling via xxxAttr methods
     elem := Elem {}
+    verifyEq(elem.attrs.size, 0)
+    verifyEq(elem.attr("class"), null)
+
+    // add a class
     elem.style.addClass("foo")
     verifyEq(elem.style.hasClass("foo"), true)
+    verifyEq(elem.attr("class"), "foo")
+    verifyEq(elem.attrs.size, 1)
 
     // should replace classes
     elem.setAttr("class", "bar zar")
     verifyEq(elem.style.hasClass("foo"), false)
     verifyEq(elem.style.hasClass("bar"), true)
     verifyEq(elem.style.hasClass("zar"), true)
+    verifyEq(elem.attr("class"), "bar zar")
 
     // should remove all classes
     elem.removeAttr("class")
     verifyEq(elem.style.classes.size, 0)
+    verifyEq(elem.attr("class"), null)
   }
 
   Void testQuerySelector()

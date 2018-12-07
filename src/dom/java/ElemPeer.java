@@ -71,17 +71,31 @@ public class ElemPeer
   public Map attrs(Elem self)
   {
     Map map = new Map(new MapType(Sys.StrType, Sys.StrType));
+
+    // collect props
     Iterator it = props.entrySet().iterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
       map.set(e.getKey(), e.getValue().toString());
     }
+
+    // merge in class if specified
+    String className = self.attr("class");
+    if (className != null) map.set("class", className);
+
     return map;
   }
 
   public String attr(Elem self, String name)
   {
+    // delegate to Style for class
+    if (name.equals("class"))
+    {
+      List c = style(self).classes();
+      return c.size() == 0 ? null : c.join(" ");
+    }
+
     // do not route to prop to avoid propHooks traps
     Object val = props.get(name);
     return val == null ? null : val.toString();
@@ -91,8 +105,8 @@ public class ElemPeer
   {
     if (name.equals("class"))
     {
-      // to match up to js behavior
-      style.peer.setClass(style, val);
+      // delegate to Style for class
+      style(self).peer._setClass(style, val);
     }
     else
     {
@@ -107,8 +121,8 @@ public class ElemPeer
   {
     if (name.equals("class"))
     {
-      // to match up to js behavior
-      style.peer.setClass(style, "");
+      // delegate to Style for class
+      style(self).peer._setClass(style, "");
     }
     else
     {
