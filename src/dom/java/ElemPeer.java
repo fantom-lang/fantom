@@ -95,7 +95,7 @@ public class ElemPeer
     return self;
   }
 
-  public Elem removeAtrr(Elem self, String name)
+  public Elem removeAttr(Elem self, String name)
   {
     // route to setProp
     this.setProp(self, name, null);
