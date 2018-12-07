@@ -36,6 +36,13 @@ public class StylePeer
     return classList.contains(name);
   }
 
+  // for Elem.setAttr("class", ...) support
+  public void setClass(Style self, String name)
+  {
+    classList.clear();
+    addClass(self, name);
+  }
+
   public Style addClass(Style self, String name)
   {
     // for compatibility with js (pass multiple space separated classes)
@@ -43,6 +50,7 @@ public class StylePeer
     for (int i=0; i<list.length; i++)
     {
       String n = list[i];
+      if (n.length() == 0) continue;
       if (!classList.contains(n)) classList.add(n);
     }
     return self;
