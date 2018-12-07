@@ -37,7 +37,7 @@ public class StylePeer
   }
 
   // for Elem.setAttr("class", ...) support
-  public void setClass(Style self, String name)
+  public void _setClass(Style self, String name)
   {
     classList.clear();
     addClass(self, name);
