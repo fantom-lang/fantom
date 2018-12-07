@@ -130,6 +130,24 @@ class JavaTest : Test
     verifyEq(s->background, "#eee")
   }
 
+  Void testClassAttr()
+  {
+    // test class handling via xxxAttr methods
+    elem := Elem {}
+    elem.style.addClass("foo")
+    verifyEq(elem.style.hasClass("foo"), true)
+
+    // should replace classes
+    elem.setAttr("class", "bar zar")
+    verifyEq(elem.style.hasClass("foo"), false)
+    verifyEq(elem.style.hasClass("bar"), true)
+    verifyEq(elem.style.hasClass("zar"), true)
+
+    // should remove all classes
+    elem.removeAttr("class")
+    verifyEq(elem.style.classes.size, 0)
+  }
+
   Void testQuerySelector()
   {
     Elem? root

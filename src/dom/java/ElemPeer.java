@@ -89,16 +89,32 @@ public class ElemPeer
 
   public Elem setAttr(Elem self, String name, String val, Uri ns)
   {
-    // TODO: ns?
-    // route to setProp
-    this.setProp(self, name, val==null ? null : val.toString());
+    if (name.equals("class"))
+    {
+      // to match up to js behavior
+      style.peer.setClass(style, val);
+    }
+    else
+    {
+      // TODO: ns?
+      // route to setProp
+      this.setProp(self, name, val==null ? null : val.toString());
+    }
     return self;
   }
 
   public Elem removeAttr(Elem self, String name)
   {
-    // route to setProp
-    this.setProp(self, name, null);
+    if (name.equals("class"))
+    {
+      // to match up to js behavior
+      style.peer.setClass(style, "");
+    }
+    else
+    {
+      // route to setProp
+      this.setProp(self, name, null);
+    }
     return self;
   }
 
