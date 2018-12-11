@@ -56,6 +56,8 @@ tiff=image/tiff
 trio=text/plain; charset=utf-8
 tsv=text/tab-separated-values
 wav=audio/wav
+woff=font/woff
+woff2=font/woff2
 xhtml=application/xhtml+xml
 xls=application/vnd.ms-excel
 xlsx=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
