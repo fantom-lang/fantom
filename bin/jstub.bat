@@ -9,4 +9,4 @@ REM
 REM jstub: launcher for JStub program
 REM
 
-call %~fs0\..\fanlaunch.bat Jstub %*
+call "%~fs0\..\fanlaunch.bat" Jstub %*

@@ -9,4 +9,4 @@ REM
 REM fanr: Fantom repository manager
 REM
 
-call  %~fs0\..\fanlaunch.bat Fan fanr %*
+call "%~fs0\..\fanlaunch.bat" Fan fanr %*

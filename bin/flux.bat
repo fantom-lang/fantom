@@ -9,4 +9,4 @@ REM
 REM flux: Fantom Developer UI
 REM
 
-call %~fs0\..\fanlaunch.bat Fan flux %*
+call "%~fs0\..\fanlaunch.bat" Fan flux %*

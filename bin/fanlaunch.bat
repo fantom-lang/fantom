@@ -41,7 +41,7 @@ SET FAN_CP="%FAN_HOME%\lib\java\sys.jar";"%FAN_HOME%\lib\java\jline.jar"
 IF "%FAN_LAUNCHER_DEBUG%" == "true" (
   ECHO -- LAUNCHER DEBUG ON
 	ECHO -- Launcher Args: %*
-	ECHO -- FAN_HOME: %FAN_HOME%
+	ECHO -- FAN_HOME: "%FAN_HOME%"
 	ECHO -- Java: %JAVA%
 	ECHO -- Fantom classpath: %FAN_CP%
 	ECHO -- Java Options: %FAN_JAVA_OPTS%
@@ -72,7 +72,7 @@ GOTO:EOF
 
 :getProp
 SETLOCAL
-For /F "tokens=1* delims==" %%A IN (%FAN_HOME%\etc\sys\config.props) DO (
+For /F "tokens=1* delims==" %%A IN ("%FAN_HOME%\etc\sys\config.props") DO (
     IF "%%A"=="java.options" set OPTIONS=%%B
     )
 (ENDLOCAL

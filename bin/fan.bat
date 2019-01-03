@@ -9,4 +9,4 @@ REM
 REM fan: launcher for Fantom programs
 REM
 
-call %~fs0\..\fanlaunch.bat Fan %*
+call "%~fs0\..\fanlaunch.bat" Fan %*
