@@ -9,4 +9,4 @@ REM
 REM fansh: interactive shell
 REM
 
-call %~fs0\..\fanlaunch.bat Fan fansh %*
+call "%~fs0\..\fanlaunch.bat" Fan fansh %*

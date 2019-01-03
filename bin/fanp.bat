@@ -9,4 +9,4 @@ REM
 REM fanp: fcode disassembler
 REM
 
-call %~fs0\..\fanlaunch.bat Fan "compiler::Fanp" %*
+call "%~fs0\..\fanlaunch.bat" Fan "compiler::Fanp" %*
