@@ -24,7 +24,6 @@ internal class WispRes : WebRes
   {
     // init headers
     headers := Str:Str[:] { caseInsensitive = true }
-    headers["Server"] = WispActor.wispVer
     headers["Date"] = DateTime.now.toHttpStr
     headers["Connection"] = "close"
     headers.setAll(service.extraResHeaders)

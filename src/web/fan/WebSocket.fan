@@ -11,9 +11,8 @@ using inet
 
 **
 ** WebSocket is used for both client and server web socket messaging.
-**
-** NOTE: This is API is a prototype only!  Current implementation
-** only supports basic non-fragmented text or binary messages.
+** Current implementation only supports basic non-fragmented text or
+** binary messages.
 **
 class WebSocket
 {
