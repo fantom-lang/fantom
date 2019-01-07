@@ -205,7 +205,7 @@ using graphics
   {
     while (elem != null)
     {
-      if (elem.style.hasClass("domkit-SashBox-div")) return elem
+      if (elem.style.hasClass("domkit-SashBox-div") && elem.parent == this) return elem
       elem = elem.parent
     }
     return null
