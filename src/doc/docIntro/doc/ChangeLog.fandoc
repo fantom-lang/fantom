@@ -13,6 +13,7 @@
 - dom: fix DomCoord to be 'const'
 - dom: add Win.log
 - domkit: fix Tree.onAction to not fire on expanders
+- domkit: fix SashBox bug where nested resizable SashBoxs could throw NPE
 - Date yesterday, tomorrow
 
 *Build 1.0.71 (29 May 2018)*
