@@ -39,6 +39,7 @@ obix=text/xml; charset=utf-8
 oga=audio/ogg
 ogg=audio/ogg
 ogv=video/ogg
+otf=font/otf
 pdf=application/pdf
 png=image/png
 pod=application/zip
@@ -54,6 +55,7 @@ txt=text/plain; charset=utf-8
 text=text/plain; charset=utf-8
 tiff=image/tiff
 trio=text/plain; charset=utf-8
+ttf=font/ttf
 tsv=text/tab-separated-values
 wav=audio/wav
 woff=font/woff

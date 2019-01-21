@@ -15,6 +15,7 @@
 - domkit: fix Tree.onAction to not fire on expanders
 - domkit: fix SashBox bug where nested resizable SashBoxs could throw NPE
 - Date yesterday, tomorrow
+- ext2mime: Add otf,ttf,woff,woff2
 
 *Build 1.0.71 (29 May 2018)*
 - List.flatMap
