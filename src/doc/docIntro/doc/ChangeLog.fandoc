@@ -14,6 +14,7 @@
 - dom: add Win.log
 - domkit: fix Tree.onAction to not fire on expanders
 - domkit: fix SashBox bug where nested resizable SashBoxs could throw NPE
+- domkit: fix SashBox Float.toLocale to use Locale.en to force . decimal
 - Date yesterday, tomorrow
 - ext2mime: Add otf,ttf,woff,woff2
 
