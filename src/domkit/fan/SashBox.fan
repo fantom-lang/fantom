@@ -230,17 +230,17 @@ using graphics
     working := sizes.dup
     sz := dir == Dir.down ? this.size.h : this.size.w
     dp := delta / sz * 100f
-    av := (dav + dp).toLocale("0.00").toFloat
-    bv := (dav + dbv - av).toLocale("0.00").toFloat
+    av := (dav + dp).toLocale("0.00", Locale.en).toFloat
+    bv := (dav + dbv - av).toLocale("0.00", Locale.en).toFloat
     if (av < min)
     {
       av = min
-      bv = (dav + dbv - av).toLocale("0.00").toFloat
+      bv = (dav + dbv - av).toLocale("0.00", Locale.en).toFloat
     }
     else if (bv < min)
     {
       bv = min
-      av = (dav + dbv - bv).toLocale("0.00").toFloat
+      av = (dav + dbv - bv).toLocale("0.00", Locale.en).toFloat
     }
     working[index]   = "${av}%"
     working[index+2] = "${bv}%"
@@ -267,7 +267,7 @@ using graphics
       if (d.unit == "%") { converted.add(CssDim.defVal); return }
       ksz  := kids.getSafe(i)?.size ?: Size.defVal
       kval := dir == Dir.down ? ksz.h : ksz.w
-      val  := ((kval / sz.toFloat) * 100f).toLocale("0.00").toFloat
+      val  := ((kval / sz.toFloat) * 100f).toLocale("0.00", Locale.en).toFloat
       converted.add(CssDim(val, "%"))
       remainder -= val
     }
@@ -276,7 +276,7 @@ using graphics
     dims.each |d,i|
     {
       if (d.unit != "%") return
-      val := (d.val.toFloat * remainder / 100f).toLocale("0.00").toFloat
+      val := (d.val.toFloat * remainder / 100f).toLocale("0.00", Locale.en).toFloat
       converted[i] = CssDim(val, "%")
     }
 
