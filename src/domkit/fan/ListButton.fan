@@ -57,7 +57,7 @@ using dom
   {
     if (isCombo) return
     this.removeAll
-    if (items.size == 0) this.add(Elem { it.text = "\u200b" })
+    if (items.size == 0 || sel.item == null) this.add(Elem { it.text = "\u200b" })
     else this.add(makeElem(sel.item))
   }
 
