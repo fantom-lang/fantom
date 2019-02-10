@@ -91,6 +91,16 @@ fan.sys.List.prototype.getRange = function(range)
   return fan.sys.List.make(this.m_of, this.m_values.slice(s, e+1));
 }
 
+fan.sys.List.prototype.containsSame = function(value)
+{
+  var size = this.m_size;
+  var vals = this.m_values;
+  for (var i=0; i<size; i++)
+    if (value === vals[i])
+      return true;
+  return false;
+}
+
 fan.sys.List.prototype.contains = function(value)
 {
   return this.index(value) != null;

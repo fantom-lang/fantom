@@ -666,20 +666,22 @@ class ListTest : Test
 
   Void testContainsIndex()
   {
-    js  := Env.cur.runtime == "js"
-    foo := "foobar"[0..2]
-    // TODO: this is not true under js:
-    if (!js) verify(foo !== "foo")
-    list := Str?["a", "b", null, "c", null, "b", foo]
+    foo := ListFoo("foo")
+    verify(foo !== ListFoo("foo"))
+    verifyNotSame(foo, ListFoo("foo"))
+    verifyEq(foo, ListFoo("foo"))
+    list := ["a", "b", null, "c", null, "b", foo]
 
-    //verifyEq([,].contains(null), false)
+    verifyEq([,].contains(null), false)
     verifyEq([,].contains("a"), false)
 
     verify(list.contains("a"))
-    verify(list.contains("foo"))
+    verify(list.contains(foo))
+    verify(list.contains(ListFoo("foo")))
+    verifyEq(list.contains(ListFoo("bar")), false)
 
     verifyEq(list.index("a"), 0)
-    verifyEq(list.index("foo"), 6)
+    verifyEq(list.index(ListFoo("foo")), 6)
     verifyEq(list.index("b"), 1)
 
     verifyEq(list.indexr("b"), 5)
@@ -688,8 +690,11 @@ class ListTest : Test
     verifyEq(list.indexr("xx"), null)
 
     verifyEq(list.indexSame("a"), 0)
-    if (!js) verifyEq(list.indexSame("abc"[0..0]), null)
-    if (!js) verifyEq(list.indexSame("foo"), null)
+    verifyEq(list.containsSame("a"), true)
+    verifyEq(list.indexSame(foo), 6)
+    verifyEq(list.containsSame(foo), true)
+    verifyEq(list.indexSame(ListFoo("foo")), null)
+    verifyEq(list.containsSame(ListFoo("foo")), false)
 
     verify(list.contains("b"))
     verifyEq(list.index("b"), 1)
@@ -712,7 +717,7 @@ class ListTest : Test
     verifyEq(list.containsAll(["b", null, "a"]), true)
     verifyEq(list.containsAll(["b", "a", "c"]), true)
     verifyEq(list.containsAll(["b", "x"]), false)
-    verifyEq(list.containsAll(["b", null, "foo"]), true)
+    verifyEq(list.containsAll(["b", null, ListFoo("foo")]), true)
 
     verifyEq(list.containsAny(Str?[,]), false)
     verifyEq(list.containsAny(["x"]), false)
@@ -726,8 +731,8 @@ class ListTest : Test
     verifyEq(list.index("b", 2), 5)
     verifyEq(list.index("b", -2), 5)
     verifyEq(list.index("b", -6), 1)
-    verifyEq(list.index("foo", -1), 6)
-    if (!js) verifyEq(list.indexSame("foo", -1), null)
+    verifyEq(list.index(foo, -1), 6)
+    verifyEq(list.indexSame(ListFoo("foo"), -1), null)
 
     verifyEq(list.index(null, 0), 2)
     verifyEq(list.index(null, 2), 2)
@@ -1676,4 +1681,16 @@ class ListTest : Test
     verifyErr(NotImmutableErr#) { [0, [this], 2].toImmutable }
   }
 
+}
+
+**************************************************************************
+** ListFoo
+**************************************************************************
+
+@Js internal class ListFoo
+{
+  new make(Str s) { this.s = s }
+  const Str s
+  override Bool equals(Obj? that) { that is ListFoo && ((ListFoo)that).s == s }
+  override Int hash() { s.hash }
 }

@@ -137,6 +137,12 @@ final class List
   Bool contains(V item)
 
   **
+  ** Return if this list contains the specified item.
+  ** Equality is determined by `===`.  This method is readonly safe.
+  **
+  Bool containsSame(V item)
+
+  **
   ** Return if this list contains every item in the specified list.
   ** Equality is determined by `Obj.equals`.  This method is readonly safe.
   **
