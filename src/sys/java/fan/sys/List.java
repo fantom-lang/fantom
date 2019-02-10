@@ -205,7 +205,21 @@ public final class List
 
   public final boolean contains(Object value)
   {
-    return index(value) != null;
+    if (value == null) return containsSame(value);
+    for (int i=0; i<size; ++i)
+    {
+      Object obj = values[i];
+      if (obj != null && obj.equals(value))
+        return true;
+    }
+    return false;
+  }
+
+  public final boolean containsSame(Object value)
+  {
+    for (int i=0; i<size; ++i)
+      if (values[i] == value) return true;
+    return false;
   }
 
   public final boolean containsAll(List list)
