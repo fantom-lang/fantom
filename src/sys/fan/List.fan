@@ -138,7 +138,7 @@ final class List
 
   **
   ** Return if this list contains the specified item.
-  ** Equality is determined by `===`.  This method is readonly safe.
+  ** Equality is determined by '==='.  This method is readonly safe.
   **
   Bool containsSame(V item)
 
