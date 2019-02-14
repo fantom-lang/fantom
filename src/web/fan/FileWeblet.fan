@@ -78,6 +78,11 @@ class FileWeblet : Weblet
     return this
   }
 
+  **
+  ** Extra response headers to add for all 3xx and 2xx responses
+  **
+  [Str:Str]? extraResHeaders
+
 //////////////////////////////////////////////////////////////////////////
 // Weblet
 //////////////////////////////////////////////////////////////////////////
@@ -99,6 +104,10 @@ class FileWeblet : Weblet
     // set identity headers
     res.headers["ETag"] = etag
     res.headers["Last-Modified"] = modified.toHttpStr
+
+    // extra headers
+    if (extraResHeaders != null)
+      res.headers.setAll(extraResHeaders)
 
     // check if we can return a 304 not modified
     if (checkNotModified) return
