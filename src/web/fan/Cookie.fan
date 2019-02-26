@@ -146,9 +146,12 @@ const class Cookie
 
   **
   ** If this value is non-null, then we add the `SameSite` attribute to
-  ** the cookie.
+  ** the cookie. Valid values are
+  **   - 'lax'
+  **   - 'strict'
+  ** By default we set the attribute to 'strict'
   **
-  const SameSite? sameSite := null
+  const Str? sameSite := "strict"
 
   **
   ** Return the cookie formatted as an Set-Cookie HTTP header.
@@ -178,8 +181,3 @@ const class Cookie
   internal Str toNameValStr() { "$name=$val" }
 
 }
-
-**
-** Valid values for the 'SameSite' cookie attribute
-**
-@Js enum class SameSite { lax, strict }
