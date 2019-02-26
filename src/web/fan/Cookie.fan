@@ -145,6 +145,12 @@ const class Cookie
   const Bool httpOnly := true
 
   **
+  ** If this value is non-null, then we add the `SameSite` attribute to
+  ** the cookie.
+  **
+  const SameSite? sameSite := null
+
+  **
   ** Return the cookie formatted as an Set-Cookie HTTP header.
   **
   override Str toStr()
@@ -165,9 +171,15 @@ const class Cookie
     if (path != null) s.add(";Path=").add(path)
     if (secure) s.add(";Secure")
     if (httpOnly) s.add(";HttpOnly")
+    if (sameSite !== null) s.add(";SameSite=${sameSite}")
     return s.toStr
   }
 
   internal Str toNameValStr() { "$name=$val" }
 
 }
+
+**
+** Valid values for the 'SameSite' cookie attribute
+**
+@Js enum class SameSite { lax, strict }
