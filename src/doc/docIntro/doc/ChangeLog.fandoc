@@ -18,6 +18,7 @@
 - Date yesterday, tomorrow
 - List.containsSame
 - ext2mime: Add otf,ttf,woff,woff2
+- web: default SameSite attribute to "strict" on all cookies
 
 *Build 1.0.71 (29 May 2018)*
 - List.flatMap
