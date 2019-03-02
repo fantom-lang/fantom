@@ -46,6 +46,8 @@ class WebClient
     reqHeaders["Accept-Encoding"] = "gzip"
   }
 
+  ** Custom TLS context for this WebClient instance.
+  @NoDoc Obj? tlsContext := null
 
 //////////////////////////////////////////////////////////////////////////
 // Request
@@ -400,7 +402,7 @@ class WebClient
       else
       {
         // make https or http socket
-        socket = isHttps ? TcpSocket.makeTls : TcpSocket.make
+        socket = isHttps ? TcpSocket.makeTls(null, tlsContext) : TcpSocket.make
         socket.options.copyFrom(socketOptions)
 
         // connect to proxy or directly to request host

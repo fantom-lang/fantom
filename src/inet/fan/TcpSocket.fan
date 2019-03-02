@@ -29,7 +29,7 @@ class TcpSocket
   **
   ** Make a new unconnected SSL/TLS TCP socket or upgrade an existing socket.
   **
-  @NoDoc native static TcpSocket makeTls(TcpSocket? upgrade := null)
+  @NoDoc native static TcpSocket makeTls(TcpSocket? upgrade := null, Obj? tlsContext := null)
 
 //////////////////////////////////////////////////////////////////////////
 // State
