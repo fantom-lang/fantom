@@ -338,6 +338,11 @@
     verifyInheritance(MxGooRoo#)
   }
 
+  Void testToStr()
+  {
+    verifyEq("classToStr", ClsSubSubMxToStr().toStr)
+  }
+
   Void verifyInheritance(Type t)
   {
     a1 := t.make(["a"])
@@ -378,6 +383,12 @@
 //////////////////////////////////////////////////////////////////////////
 // Helper Types
 //////////////////////////////////////////////////////////////////////////
+
+@Js const mixin MxToStr { override Str toStr() { "mixin" } }
+@Js const mixin SubMxToStr : MxToStr { }
+@Js const mixin SubSubMxToStr : SubMxToStr { }
+@Js const class ClsSubMxToStr : SubMxToStr { override Str toStr() { "classToStr" } }
+@Js const class ClsSubSubMxToStr : ClsSubMxToStr, SubSubMxToStr { }
 
 @Js
 mixin MxA
