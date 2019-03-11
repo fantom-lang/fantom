@@ -319,7 +319,7 @@ const class Color
   ** where 'opacity' is between 0.0  and 1.0.
   Color opacity(Float opacity := 1f)
   {
-    make(rgb, opacity)
+    make(rgb, a * opacity)
   }
 
   ** Get a color which is a lighter shade of this color.

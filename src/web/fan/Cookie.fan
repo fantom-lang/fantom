@@ -145,7 +145,7 @@ const class Cookie
   const Bool httpOnly := true
 
   **
-  ** If this value is non-null, then we add the `SameSite` attribute to
+  ** If this value is non-null, then we add the SameSite attribute to
   ** the cookie. Valid values are
   **   - 'lax'
   **   - 'strict'
