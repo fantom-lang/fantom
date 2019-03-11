@@ -206,10 +206,14 @@ public class Pod
     }
   }
 
-  private static Object reloadList()
+  private static Object reloadList(List args)
   {
-    Log log = Log.get("sys");
-    log.info("Pod reload list");
+    boolean silent = args != null && args.sz() > 0 && args.get(0) == LogLevel.silent;
+    if (!silent)
+    {
+      Log log = Log.get("sys");
+      log.info("Pod reload list");
+    }
 
     // update global data structures
     synchronized (podsByName)
@@ -254,7 +258,7 @@ public class Pod
 
   public Object trap(String name, List args)
   {
-    if (name.equals("reloadList")) return reloadList();
+    if (name.equals("reloadList")) return reloadList(args);
     if (name.equals("reload")) return reload();
     if (name.equals("classLoader")) return classLoader;
     if (name.equals("loadFile")) return loadFile();
