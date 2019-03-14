@@ -698,11 +698,15 @@ class FloatTest : Test
     verifyLocale(-2.34E+11f, "###,###,#00.0", "-234,000,000,000.0")
 
     // zero
-    verifyLocale(0f, "#.0", ".0")
-    verifyLocale(0f, "#.#", "0")
-    verifyLocale(0f, "0.#", "0")
-    verifyLocale(0f, "0.0", "0.0")
-    verifyLocale(0f, "00.00", "00.00")
+    [0.0f, -0.0f].each |zero|
+    {
+      verifyLocale(zero, "#.0", ".0")
+      verifyLocale(zero, "#.#", "0")
+      verifyLocale(zero, "0.#", "0")
+      verifyLocale(zero, "0.0", "0.0")
+      verifyLocale(zero, "00.00", "00.00")
+      verifyLocale(zero,  null, "0.0")
+    }
 
     // fixed size numbers
     verifyLocale(0f,   "0",   "0")
@@ -768,7 +772,6 @@ class FloatTest : Test
     verifyLocale( 0.00000000129f, null,  "0.0")
     verifyLocale(-0.00000000129f, null, "-0.0")
 
-
     Locale("en-US").use
     {
       verifyEq(0.0003f.toLocale("0.0##"), "0.0")
@@ -799,10 +802,10 @@ class FloatTest : Test
     Locale("en-US").use
     {
       actual := f.toLocale(pattern)
-      //echo("   ==> $actual ?= $expected")
+      // echo("   ==> $actual ?= $expected")
       verifyEq(actual, expected)
 
-      if (f <=> Float.nan != 0 && f != Float.posInf && f != Float.negInf)
+      if (f <=> Float.nan != 0 && f != Float.posInf && f != Float.negInf && !f.isNegZero)
       {
         decimal := f.toDecimal.toLocale(pattern)
         //echo("   dec $f.toDecimal")

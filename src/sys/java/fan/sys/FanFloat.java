@@ -336,6 +336,7 @@ public final class FanFloat
       if (Double.isNaN(self)) return locale.numSymbols().nan;
       if (self == Double.POSITIVE_INFINITY) return locale.numSymbols().posInf;
       if (self == Double.NEGATIVE_INFINITY) return locale.numSymbols().negInf;
+      if (isNegZero(self)) self = 0.0;
 
       // get default pattern if necessary
       if (pattern == null)
