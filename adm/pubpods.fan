@@ -12,7 +12,7 @@ class Main : AbstractMain
   override Int run()
   {
     // URI to use
-    siteUri := `http://fantom.org/`
+    siteUri := `https://fantom.org/`
 
     // get pods to publish
     pods := Pod.list.findAll |p| { !p.name.startsWith("test") && p.name != "icons" }
