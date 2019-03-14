@@ -578,7 +578,10 @@ public class ObjDecoder
     if (curt == Token.COLON)
     {
       consume();
-      t = new MapType(t, readType());
+      boolean lbracket2 = curt == Token.LBRACKET;
+      if (lbracket2) consume();
+      t = new MapType(t, readType(lbracket2));
+      if (lbracket2) consume(Token.RBRACKET, "Expected closing ]");
     }
     while (curt == Token.LRBRACKET)
     {
