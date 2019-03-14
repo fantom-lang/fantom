@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.72 (working)*
+*Build 1.0.72 (14 Mar 2019)*
 - FEP 1: 'fan build' command line tool
 - fanr: Eggbox is now the default fanr repo
 - Rework Java Buf APIs
