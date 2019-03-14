@@ -6,8 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.73 (working)*
+
 *Build 1.0.72 (14 Mar 2019)*
-- FEP 1: 'fan build' command line tool
 - fanr: Eggbox is now the default fanr repo
 - Rework Java Buf APIs
 - dom: fix DomCoord to be 'const'
@@ -19,6 +20,11 @@
 - List.containsSame
 - ext2mime: Add otf,ttf,woff,woff2
 - web: default SameSite attribute to "strict" on all cookies
+- #2711: FEP 1: 'fan build' command line tool
+- #2724: Float.toLocale()
+- #2726: Serialising Nested Maps
+- #2730: BugFixes for domkit::ListButton
+- #2739: Lists of Lists
 
 *Build 1.0.71 (29 May 2018)*
 - List.flatMap
