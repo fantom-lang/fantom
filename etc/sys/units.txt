@@ -283,6 +283,9 @@ gigajoule, GJ; kg1*m2*sec-2; 1000000000.0
 newton_meter, Nm; kg1*m2*sec-2
 cubic_meters_natural_gas, m³_gas; kg1*m2*sec-2; 37313432.83582089
 cubic_feet_natural_gas, ft³_gas; kg1*m2*sec-2; 1086498
+ccf; kg1*m2*sec-2; 108649800
+thousand_cubic_feet_natural_gas; kg1*m2*sec-2; 1086498000
+million_cubic_feet_natural_gas; kg1*m2*sec-2; 1086498000000
 
 -- apparent energy (kg1*m2*sec-2)
 volt_ampere_hour, VAh; kg1*m2*sec-2; 3600.0
