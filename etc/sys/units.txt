@@ -355,9 +355,10 @@ degrees_fahrenheit_per_minute, °F/min; sec-1*K1; 0.0092592592592593
 degrees_kelvin_per_hour, K/h; sec-1*K1; 2.777777777777778E-4
 degrees_kelvin_per_minute, K/min; sec-1*K1; 0.016666666666666666
 
--- illuminance (m-2*cd1)
+-- illuminance (m-2*cd*sr)
 lux, lx; m-2*cd1
-candelas_per_square_meter, cd/m²; m-2*cd1
+footcandle, fc; m-2*cd1; 0.092937
+phot, ph; m-2*cd1; 10000.0
 
 -- inductance (kg1*m2*sec-2*A-2)
 henry, H; kg1*m2*sec-2*A-2
@@ -377,13 +378,15 @@ foot, ft; m1; 0.3048
 yard, yd; m1; 0.9144
 mile; m1; 1609.344
 
--- luminescence (cd1)
-candela, cd; cd1
-footcandle, ftcd; cd1
+-- luminance (m-2*cd)
+candelas_per_square_meter, cd/m²; m-2*cd1
+candels_per_square_foot, cd/ft²; m-2*cd1; 10.7639
 
--- luminous flux (cd1)
+-- luminous flux (cd*sr)
 lumen, lm; cd1
 
+-- luminous intensity (cd)
+candela, cd; cd1
 -- magnetic field strength (m-1*A1)
 amperes_per_meter, A/m; m-1*A1
 
