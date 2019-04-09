@@ -380,7 +380,7 @@ mile; m1; 1609.344
 
 -- luminance (m-2*cd)
 candelas_per_square_meter, cd/m²; m-2*cd1
-candels_per_square_foot, cd/ft²; m-2*cd1; 10.7639
+candels_per_square_foot, cd/ft²; m-2*cd1; 0.092937
 
 -- luminous flux (cd*sr)
 lumen, lm; cd1
