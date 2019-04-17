@@ -22,7 +22,9 @@ internal class WispReq : WebReq
   }
 
   override WebMod mod := WispDefaultRootMod()
-  override Str method := ""
+  override Str method := "" { private set }
+  override Bool isGet { private set }
+  override Bool isPost { private set }
   override Version version := nullVersion
   override IpAddr remoteAddr() { return socket.remoteAddr }
   override Int remotePort() { return socket.remotePort }
@@ -59,6 +61,14 @@ internal class WispReq : WebReq
   internal InStream? webIn
   private Bool checkContinue := true
   private WispRes res
+
+  internal Void setMethod(Str method)
+  {
+    method = method.upper
+    this.method = method
+    this.isGet  = method == "GET"
+    this.isPost = method == "POST"
+  }
 
   internal Bool isUpgrade() { headers["Upgrade"] != null }
   internal Bool isKeepAlive() { headers.get("Connection", "").indexIgnoreCase("keep-alive") != null }
