@@ -7,6 +7,7 @@
 **************************************************************************
 
 *Build 1.0.73 (working)*
+- WebReq isGet, isPost conveniences
 
 *Build 1.0.72 (14 Mar 2019)*
 - fanr: Eggbox is now the default fanr repo

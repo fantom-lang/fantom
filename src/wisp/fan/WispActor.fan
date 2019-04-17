@@ -127,7 +127,7 @@ internal const class WispActor : Actor
       ver    := toks[2]
 
       // method
-      req.method = method.upper
+      req.setMethod(method)
 
       // uri; immediately reject any uri which looks dangerous
       req.uri = Uri.decode(uri)

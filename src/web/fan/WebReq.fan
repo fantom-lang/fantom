@@ -22,6 +22,16 @@ abstract class WebReq
   abstract Str method()
 
   **
+  ** Return if the method is GET
+  **
+  abstract Bool isGet()
+
+  **
+  ** Return if the method is POST
+  **
+  abstract Bool isPost()
+
+  **
   ** The HTTP version of the request.
   **
   abstract Version version()
