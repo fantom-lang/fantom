@@ -62,8 +62,7 @@ const mixin WispSessionStore
 
   private Cookie makeCookie(WispSession ws)
   {
-    secure := WebReq#.pod.config("secureSessionCookie", null) == "true"
-    return Cookie(ws.name, ws.id) { it.secure = secure }
+    Cookie.makeSession(ws.name, ws.id)
   }
 
   internal Void doSave()

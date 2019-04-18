@@ -58,6 +58,26 @@ const class Cookie
   }
 
   **
+  ** Construct a cookie to use for session management.
+  ** The following web config properties are used:
+  **   - secureSessionCookie: force use of 'Secure' cookie option
+  **   - sameSiteSessionCookie: force use of 'SameSite:strict' cookie option
+  **
+  static Cookie makeSession(Str name, Str val)
+  {
+    pod := Cookie#.pod
+    secure := pod.config("secureSessionCookie", "false") == "true"
+    sameSite := pod.config("sameSiteSessionCookie", "true") == "true"
+    return Cookie.make(name, val)
+    {
+      it.maxAge = 1day
+      it.secure = secure
+      it.sameSite = sameSite ? "strict" : null
+      it.httpOnly = true
+    }
+  }
+
+  **
   ** Construct with name and value.  The name must be a valid
   ** HTTP token and must not start with "$" (see `WebUtil.isToken`).
   ** The value string must be an ASCII string within the inclusive
@@ -174,7 +194,7 @@ const class Cookie
     if (path != null) s.add(";Path=").add(path)
     if (secure) s.add(";Secure")
     if (httpOnly) s.add(";HttpOnly")
-    if (sameSite !== null) s.add(";SameSite=${sameSite}")
+    if (sameSite != null) s.add(";SameSite=${sameSite}")
     return s.toStr
   }
 
