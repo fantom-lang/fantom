@@ -230,6 +230,7 @@ internal const class WispActor : Actor
         res.headers.clear
         req.stash["err"] = err
         service.errMod.onService
+        res.close
       }
     }
     catch (Err e) WispService.log.err("internalServiceError res failed", e)
