@@ -12,11 +12,11 @@
 // WebClient.proxy exceptions as comma separated list of Regex globs
 // proxy.exceptions=192.168.*.*,*.google.com
 
-// Set Secure parameter on session cookies to force HTTPS (defaults is false)
+// Set Secure parameter on session cookies to force HTTPS (default is false)
 // secureSessionCookie=true
 
-// Set SameSite:strict parameter on session cookies (default is true)
-// sameSiteSessionCookie=false
+// Set SameSite:strict parameter on session cookies (default is strict)
+// sameSiteSessionCookie=strict
 
 // Qualified type name of WebMod used to handle internal 500 errors
 // See WispService.errMod

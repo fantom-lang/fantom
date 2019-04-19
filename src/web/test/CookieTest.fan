@@ -49,4 +49,23 @@ class CookieTest : Test
     verifyEq(a.path, b.path)
   }
 
+  Void testSession()
+  {
+    // verify with no overrides defined in etc/web/config.props
+    c := Cookie.makeSession("key", "val")
+    verifyEq(c.name, "key")
+    verifyEq(c.val, "val")
+    verifyEq(c.httpOnly, true)
+    verifyEq(c.secure, false)
+    verifyEq(c.sameSite, "strict")
+
+    // verify with overrides to method
+    c = Cookie.makeSession("key", "val", [Cookie#secure:true])
+    verifyEq(c.name, "key")
+    verifyEq(c.val, "val")
+    verifyEq(c.httpOnly, true)
+    verifyEq(c.secure, true)
+    verifyEq(c.sameSite, "strict")
+  }
+
 }

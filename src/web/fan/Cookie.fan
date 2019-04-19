@@ -63,18 +63,17 @@ const class Cookie
   **   - secureSessionCookie: force use of 'Secure' cookie option
   **   - sameSiteSessionCookie: force use of 'SameSite:strict' cookie option
   **
-  static Cookie makeSession(Str name, Str val)
+  @NoDoc static Cookie makeSession(Str name, Str val, [Field:Obj?]? overrides := null)
   {
     pod := Cookie#.pod
-    secure := pod.config("secureSessionCookie", "false") == "true"
-    sameSite := pod.config("sameSiteSessionCookie", "true") == "true"
-    return Cookie.make(name, val)
-    {
-      it.maxAge = 1day
-      it.secure = secure
-      it.sameSite = sameSite ? "strict" : null
-      it.httpOnly = true
-    }
+    fields := [
+      #secure: pod.config("secureSessionCookie", "false") == "true",
+      #sameSite: pod.config("sameSiteSessionCookie", "strict"),
+      #maxAge: 1day,
+      #httpOnly: true
+    ]
+    if (overrides != null) overrides.each |v, f| { fields[f] = v }
+    return Cookie.make(name, val, Field.makeSetFunc(fields))
   }
 
   **
