@@ -328,7 +328,7 @@ const class WispDefaultErrMod : WebMod
   {
     err := (Err)req.stash["err"]
     res.headers["Content-Type"] = "text/plain"
-    str := "ERROR: $req.uri\n$err.traceToStr".replace("<", "&gt;")
+    str := "$res.statusCode INTERNAL SERVER ERROR\n\n$req.uri\n$err.traceToStr".replace("<", "&gt;")
     res.out.print(str)
   }
 }
