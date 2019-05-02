@@ -72,7 +72,7 @@ GOTO:EOF
 
 :getProp
 SETLOCAL
-For /F "tokens=1* delims==" %%A IN ("%FAN_HOME%\etc\sys\config.props") DO (
+For /F "tokens=1* delims==" %%A IN ('type "%FAN_HOME%\etc\sys\config.props"') DO (
     IF "%%A"=="java.options" set OPTIONS=%%B
     )
 (ENDLOCAL
