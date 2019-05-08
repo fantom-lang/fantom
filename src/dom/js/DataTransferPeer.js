@@ -37,6 +37,12 @@ fan.dom.DataTransferPeer.prototype.setData = function(self, type, val)
   return this.dataTx.setData(type, val);
 }
 
+fan.dom.DataTransferPeer.prototype.setDragImage = function(self, image, x, y)
+{
+  this.dataTx.setDragImage(image.peer.elem, x, y);
+  return self;
+}
+
 fan.dom.DataTransferPeer.make = function(dataTx)
 {
   var x = fan.dom.DataTransfer.make();
