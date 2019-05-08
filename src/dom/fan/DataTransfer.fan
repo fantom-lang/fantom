@@ -28,4 +28,8 @@ class DataTransfer
 
   ** Set data for given MIME type.
   native This setData(Str type, Str val)
+
+  ** Set a custom image to be used for dragging, where 'x' and 'y' are
+  ** offsets from the mouse cursor position.
+  native This setDragImage(Elem image, Int x, Int y)
 }
