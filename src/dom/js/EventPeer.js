@@ -18,7 +18,15 @@ fan.dom.EventPeer.prototype.type = function(self) { return this.event.type; }
 fan.dom.EventPeer.prototype.target = function(self)
 {
   if (this.$target == null)
-    this.$target = fan.dom.ElemPeer.wrap(this.event.target);
+  {
+    // 8 May 2019 - Andy Frank:
+    // Firefox 66.0.5 is firing events with TEXT_NODE as targets; I'm not
+    // sure if this is new behavior (or correct behavoir) -- but since the
+    // Fantom DOM pod only handles ELEMENT_NODE; walk up to the parent
+    var t = this.event.target;
+    if (t.nodeType == 3) t = t.parentNode;
+    this.$target = fan.dom.ElemPeer.wrap(t);
+  }
   return this.$target;
 }
 
