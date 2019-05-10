@@ -113,6 +113,7 @@ public final class Sys
   public static final Type LocalFileType    = initType("LocalFile");
   public static final Type ZipEntryFileType = initType("ZipEntryFile");
   public static final Type MemFileType      = initType("MemFile");
+  public static final Type PathFileType     = initType("PathFile");
   public static final Type BufType          = initType("Buf");
   public static final Type MemBufType       = initType("MemBuf");
   public static final Type ConstBufType     = initType("ConstBuf");
