@@ -125,6 +125,14 @@ public class Interop
   }
 
   /**
+   * Convert from java.nio.file.Path to sys::File.
+   */
+  public static File toFan(java.nio.file.Path path)
+  {
+    return new PathFile(path);
+  }
+
+  /**
    * Convert from java.nio.ByteBuffer to sys::Buf.
    */
   public static Buf toFan(java.nio.ByteBuffer buf)
@@ -235,6 +243,14 @@ public class Interop
     List list = new List(of);
     while (i.hasNext()) list.add(i.next());
     return list;
+  }
+
+  /**
+   * Convert a java.util.stream.Stream to a sys::List of the specified type.
+   */
+  public static List toFan(java.util.stream.Stream s, Type of)
+  {
+    return toFan(s.iterator(), of);
   }
 
   /**
