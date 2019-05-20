@@ -53,6 +53,8 @@ public abstract class Env
 
   public final String runtime() { return "java"; }
 
+  public final long javaVersion() { return Sys.javaVersion; }
+
   public final long idHash(Object obj) { return System.identityHashCode(obj); }
 
 //////////////////////////////////////////////////////////////////////////

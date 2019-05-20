@@ -74,6 +74,8 @@ fan.sys.Env.prototype.toStr = function() { return this.$typeof().toString(); }
 
 fan.sys.Env.prototype.runtime = function() { return "js"; }
 
+fan.sys.Env.prototype.javaVersion = function() { return 0; }
+
 // parent
 // os
 // arch

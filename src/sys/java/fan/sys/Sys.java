@@ -50,13 +50,13 @@ public final class Sys
 // Java Version
 //////////////////////////////////////////////////////////////////////////
 
-  public static int JAVA_1_5 = 15;
-  public static int JAVA_1_6 = 16;
-  public static int JAVA_1_7 = 17;
-  public static int JAVA_1_8 = 18;
-  public static int JAVA_1_9 = 19;
+  public static int JAVA_1_5 = 5;
+  public static int JAVA_1_6 = 6;
+  public static int JAVA_1_7 = 7;
+  public static int JAVA_1_8 = 8;
 
-  /** Java version 1.5, 1.6, 1.7, etc */
+  /** Java version as single integer (e.g. 8, 9). This is the way Java9+
+   *  specifies the version now. */
   public static int javaVersion = initJavaVersion();
 
 //////////////////////////////////////////////////////////////////////////
@@ -377,18 +377,19 @@ public final class Sys
 
   static int initJavaVersion()
   {
+    String s = null;
     try
     {
-      String s = System.getProperty("java.version", "1.5.0");
-      if (s.startsWith("9"))    return JAVA_1_9;
-      if (s.startsWith("1.8.")) return JAVA_1_8;
-      if (s.startsWith("1.7.")) return JAVA_1_7;
-      if (s.startsWith("1.6.")) return JAVA_1_6;
-      return JAVA_1_5;
+      s = System.getProperty("java.vm.specification.version", "1.5");
+
+      // Java 1.8 and earlier uses 1.x for version. Get 'x'
+      if (s.startsWith("1.")) s = s.substring(2,3);
+
+      return Integer.parseInt(s);
     }
     catch (Throwable e)
     {
-      throw initFail("javaVersion", e);
+      throw initFail("javaVersion: " + s, e);
     }
   }
 
