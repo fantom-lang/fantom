@@ -6,8 +6,10 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.73 (working)*
+*Build 1.0.73 (21 May 2019)*
 - WebReq isGet, isPost conveniences
+- PathFile Java implementation
+- Prep for JDK 9 support
 
 *Build 1.0.72 (14 Mar 2019)*
 - fanr: Eggbox is now the default fanr repo
