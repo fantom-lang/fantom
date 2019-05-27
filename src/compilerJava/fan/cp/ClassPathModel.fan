@@ -232,7 +232,7 @@ final class ModuleClassLib : ClassLib
 
 **
 ** ClassPathPackage models a single package found in the class
-** path with a map of classnames to `ClassFile`s.
+** path with a map of classnames to ClassFiles.
 **
 class ClassPathPackage
 {
