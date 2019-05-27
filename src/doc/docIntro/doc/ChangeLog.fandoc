@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.74 (working)*
+- Compiler support for Jigsaw Java 9+
+
 *Build 1.0.73 (21 May 2019)*
 - WebReq isGet, isPost conveniences
 - PathFile Java implementation
