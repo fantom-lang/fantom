@@ -129,6 +129,12 @@ fan.sys.Map.prototype.add = function(key, val)
   return this;
 }
 
+fan.sys.Map.prototype.addIfNotNull = function(key, val)
+{
+  if (val == null) return this;
+  return this.add(key, val);
+}
+
 fan.sys.Map.prototype.getOrAdd = function(key, valFunc)
 {
   var val = this.$get(key);

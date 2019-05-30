@@ -271,6 +271,12 @@ fan.sys.List.prototype.add = function(value)
   return this.insert$(this.m_size, value);
 }
 
+fan.sys.List.prototype.addIfNotNull = function(value)
+{
+  if (value == null) return this;
+  return this.add(value);
+}
+
 fan.sys.List.prototype.addAll = function(list)
 {
   // modify in insertAll$

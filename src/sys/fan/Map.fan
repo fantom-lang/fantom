@@ -123,6 +123,11 @@ final class Map
   M add(K key, V val)
 
   **
+  ** Call `add` if val is non-null otherwise do nothing.  Return this.
+  **
+  M addIfNotNull(K key, V? val)
+
+  **
   ** Get the value for the specified key, or if it doesn't exist
   ** then automatically add it.  The value function is called to
   ** get the value to add, it is only called if the key is not

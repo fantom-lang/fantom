@@ -8,6 +8,7 @@
 
 *Build 1.0.74 (working)*
 - Compiler support for Jigsaw Java 9+
+- List/Map addIfNotNull
 
 *Build 1.0.73 (21 May 2019)*
 - WebReq isGet, isPost conveniences
