@@ -54,6 +54,11 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
     view.set(content.m_buf.slice(0, content.size()));
     xhr.send(view);
   }
+  else if (content instanceof fan.dom.DomFile)
+  {
+    // send file as raw data
+    xhr.send(content.peer.file);
+  }
   else
   {
     throw fan.sys.Err.make("Can only send Str or Buf: " + content);
