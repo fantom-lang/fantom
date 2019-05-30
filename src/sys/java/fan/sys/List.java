@@ -400,6 +400,12 @@ public final class List
     return insert(size, value);
   }
 
+  public final List addIfNotNull(Object value)
+  {
+    if (value == null) return this;
+    return add(value);
+  }
+
   public final List addAll(List list)
   {
     // modify in insertAll(int, List)

@@ -162,6 +162,12 @@ public final class Map
     return this;
   }
 
+  public final Map addIfNotNull(Object key, Object value)
+  {
+    if (value == null) return this;
+    return add(key, value);
+  }
+
   public final Object getOrAdd(Object key, Func valFunc)
   {
     if (map.containsKey(key)) return map.get(key);
