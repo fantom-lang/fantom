@@ -9,6 +9,7 @@
 *Build 1.0.74 (working)*
 - Compiler support for Jigsaw Java 9+
 - List/Map addIfNotNull
+- dom: HttpReq.send support for sending DomFile as raw content
 
 *Build 1.0.73 (21 May 2019)*
 - WebReq isGet, isPost conveniences
