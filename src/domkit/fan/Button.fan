@@ -7,6 +7,7 @@
 //
 
 using dom
+using graphics
 
 **
 ** Button is a widget that invokes an action when pressed.
@@ -70,6 +71,9 @@ using dom
   ** Callback to create Popup to display when button is pressed.
   Void onPopup(|Button->Popup| f) { this.cbPopup = f }
 
+  ** Offset to apply to default origin for `onPopup`.
+  @NoDoc Point popupOffset := Point.defVal
+
 // TODO: how should this work?
 // TODO: something like onLazyPopup work better?
   ** Remove existing popup callback.
@@ -81,8 +85,8 @@ using dom
     if (cbPopup == null) return
     if (popup?.isOpen == true) return
 
-    x := pagePos.x
-    y := pagePos.y + size.h.toInt
+    x := pagePos.x + popupOffset.x
+    y := pagePos.y + popupOffset.y + size.h.toInt
     w := size.w.toInt
 
     if (isCombo)
@@ -92,9 +96,6 @@ using dom
       x = combo.pagePos.x
       w = combo.size.w.toInt
     }
-
-    // shift to align text
-    if (isList) x -= 12
 
     showDown
     popup = cbPopup(this)
@@ -141,7 +142,6 @@ using dom
 
   // internal use only
   internal Bool isCombo := false
-  internal Bool isList  := false
 
   internal Void showDown() { style.addClass("down") }
   internal Void showUp()   { style.removeClass("down") }
