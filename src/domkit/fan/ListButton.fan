@@ -7,6 +7,7 @@
 //
 
 using dom
+using graphics
 
 **
 ** ListButton allows user selection of an item in a list by
@@ -20,10 +21,12 @@ using dom
   new make() : super()
   {
     this.style.addClass("domkit-ListButton disclosure-list")
-    this.isList = true
     this.sel = ListButtonSelection(this)
     this.onPopup { makeLisbox }
     this.update
+
+    // shift to align text
+    this.popupOffset = Point(-12, 0)
   }
 
   ** The current list items.
@@ -73,8 +76,11 @@ using dom
     {
       elem := makeElem(item)
       menu.add(MenuItem {
-        it.style.addClass("domkit-ListButton-MenuItem")
-        if (sel.index == i) it.style.addClass("sel")
+        if (!isCombo)
+        {
+          it.style.addClass("domkit-ListButton-MenuItem")
+          if (sel.index == i) it.style.addClass("sel")
+        }
         it.add(elem)
         it.onAction { sel.index=i; fireSelect }
       })
