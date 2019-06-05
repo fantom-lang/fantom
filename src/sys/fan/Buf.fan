@@ -71,6 +71,12 @@ class Buf
   override Bool equals(Obj? that)
 
   **
+  ** Return if the buffer contents are the same size and same bytes.
+  ** Note this could be an extremely expensive call for non-memory buffers.
+  **
+  Bool bytesEqual(Buf that)
+
+  **
   ** Return string summary of the buffer.
   **
   override Str toStr()

@@ -54,11 +54,13 @@ abstract class AbstractBufTest : Test
   Void verifyBufEq(Buf a, Buf b)
   {
     verify(eq(a, b))
+    verify(a.bytesEqual(b))
   }
 
   Void verifyBufNotEq(Buf a, Buf b)
   {
     verify(!eq(a, b))
+    verify(!a.bytesEqual(b))
   }
 
   Bool eq(Buf a, Buf b)
@@ -94,6 +96,12 @@ class BufTest : AbstractBufTest
     verifyEquality(makeMem,  makeFile)
     verifyEquality(makeFile, makeMem)
     verifyEquality(makeFile, makeFile)
+
+    verifyBufEq(Buf(), Buf())
+    verifyBufEq(Buf().print("abc"), Buf().print("abc"))
+    verifyBufNotEq(Buf().print("abc"), Buf().print("ab"))
+    verifyBufNotEq(Buf().print("ab"), Buf().print("abc"))
+    verifyBufNotEq(Buf().print("abcx"), Buf().print("abcy"))
   }
 
   Void verifyEquality(Buf a, Buf b)
