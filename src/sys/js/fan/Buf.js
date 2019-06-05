@@ -53,6 +53,16 @@ fan.sys.Buf.prototype.equals = function(that)
   return this == that;
 }
 
+fan.sys.Buf.prototype.bytesEqual = function(that)
+{
+  if (this == that) return true;
+  if (this.size() != that.size()) return false;
+  for (var i=0; i<this.size(); ++i)
+    if (this.getByte(i) != that.getByte(i))
+      return false;
+  return true;
+}
+
 fan.sys.Buf.prototype.toStr = function()
 {
   return this.$typeof().$name() + "(pos=" + this.pos() + " size=" + this.size() + ")";
@@ -550,20 +560,20 @@ fan.sys.Buf.prototype.crcAdler32 = function(seed)
   // Licensed under Apache 2.0
 
   var array = this.unsafeArray();
-	var a = 1, b = 0, L = array.length, M = 0;
-	if (typeof seed === 'number') { a = seed & 0xFFFF; b = (seed >>> 16) & 0xFFFF; }
-	for(var i=0; i<L;)
+  var a = 1, b = 0, L = array.length, M = 0;
+  if (typeof seed === 'number') { a = seed & 0xFFFF; b = (seed >>> 16) & 0xFFFF; }
+  for(var i=0; i<L;)
   {
-		M = Math.min(L-i, 3850) + i;
-		for(; i<M; i++)
+    M = Math.min(L-i, 3850) + i;
+    for(; i<M; i++)
     {
-			a += array[i] & 0xFF;
-			b += a;
-		}
-		a = (15 * (a >>> 16) + (a & 65535));
-		b = (15 * (b >>> 16) + (b & 65535));
-	}
-	return ((b % 65521) << 16) | (a % 65521);
+      a += array[i] & 0xFF;
+      b += a;
+    }
+    a = (15 * (a >>> 16) + (a & 65535));
+    b = (15 * (b >>> 16) + (b & 65535));
+  }
+  return ((b % 65521) << 16) | (a % 65521);
 }
 
 fan.sys.Buf.CRC16_ODD_PARITY = [ 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0 ];

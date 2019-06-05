@@ -61,6 +61,16 @@ public abstract class Buf
     return this == that;
   }
 
+  public final boolean bytesEqual(Buf that)
+  {
+    if (this == that) return true;
+    if (this.size() != that.size()) return false;
+    for (long i=0; i<size(); ++i)
+      if (this.getByte(i) != that.getByte(i))
+        return false;
+    return true;
+  }
+
   public String toStr()
   {
     return typeof().name() + "(pos=" + pos() + " size=" + size() + ")";
