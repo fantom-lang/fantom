@@ -172,7 +172,8 @@ class WebSocket
   }
 
   **
-  ** Send a message which must be either a Str of Buf.
+  ** Send a message which must be either a Str of Buf.  Bufs are
+  ** sent using their full contents irrelevant of their current position.
   **
   Void send(Obj msg)
   {
@@ -230,7 +231,8 @@ class WebSocket
     else
     {
       // unmasked payload
-      out.writeBuf(payload.seek(0))
+      if (!payload.isImmutable) payload.seek(0)
+      out.writeBuf(payload)
     }
 
     out.flush
