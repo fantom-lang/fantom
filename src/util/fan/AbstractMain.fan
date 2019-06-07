@@ -256,12 +256,10 @@ abstract class AbstractMain
     }
 
     // print usage
-    out.printLine
     out.printLine("Usage:")
     out.printLine("  $appName [options] $argSummary")
     usagePrint(out, "Arguments:", argRows)
     usagePrint(out, "Options:", optRows)
-    out.printLine
     return 1
   }
 
@@ -363,7 +361,10 @@ abstract class AbstractMain
       // if args not ok or help was specified, dump usage
       if (!argsOk || helpOpt)
       {
-        usage
+        out := Env.cur.out
+        out.printLine
+        usage(out)
+        out.printLine
         if (!helpOpt) log.err("Missing arguments")
         return 1
       }
