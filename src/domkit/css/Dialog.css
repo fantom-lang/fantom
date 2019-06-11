@@ -22,12 +22,15 @@ div.domkit-Dialog-frame {
 div.domkit-Dialog-title {
   text-align: center;
   display: block;
-  font-weight: 500;
   cursor: default;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+}
+
+div.domkit-Dialog-title .def-label {
+  font-weight: 500;
 }
 
 div.domkit-Dialog-mask {

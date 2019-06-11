@@ -24,8 +24,9 @@ using dom
     this->tabIndex = 0
   }
 
-  ** Text displayed in title bar, or empty Str to hide title bar.
-  Str? title := null
+  ** 'Str' or 'Elem' content displayed in title bar, or
+  ** 'null' to hide title bar.
+  Obj? title := null
 
   ** Protected sub-class callback invoked directly before dialog is opened.
   protected virtual Void onBeforeOpen() {}
@@ -58,9 +59,13 @@ using dom
     }
 
     if (title != null)
+    {
+      telem := title as Elem ?:
+        Label { it.style.addClass("def-label"); it.text=title.toStr }
+
       frame.add(Elem {
-        it.style.addClass("domkit-control domkit-Dialog-title")
-        it.text = title
+        it.style.addClass("domkit-Dialog-title")
+        it.add(telem)
         it.onEvent("mousedown", false) |e| {
           e.stop
           vp  := Win.cur.viewport
@@ -88,6 +93,7 @@ using dom
           }
         }
       })
+    }
 
     frame.add(this)
     mask.add(frame)
