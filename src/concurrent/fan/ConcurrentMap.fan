@@ -12,6 +12,7 @@
 ** to be performed without locking.  Refer to the ConcurrentHashMap Javadoc
 ** for the detailed semanatics on behavior and performance.
 **
+@Js
 native const final class ConcurrentMap
 {
   ** Make with initial capacity
