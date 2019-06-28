@@ -62,7 +62,7 @@ using dom
       // TODO FIXIT: more optimized way than toggling classes on each add/remove?
       if (kids.size > 1 && (gap == -1f || lastGap == -1f))
       {
-        if (i == 0)
+        if (i == 0 || lastGap >= 0f)
           kid.style.addClass("group-left")
         else if (i < kids.size-1 && gap == -1f)
           kid.style.removeClass("group-right").addClass("group-middle")
