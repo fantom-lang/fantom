@@ -254,6 +254,19 @@ class ButtonTest : DomkitTest
         Button { it.text="Group 3" },
         Button { it.text="Group 4" },
       }])
+      it.addRow([FlowBox {
+        it.gaps = ["10px","-1px","-1px","10px","10px","-1px"]
+        Button { it.text="GA" },
+
+        Button { it.text="G1" },
+        Button { it.text="G2" },
+        Button { it.text="G3" },
+
+        Button { it.text="GB" },
+
+        Button { it.text="G4" },
+        Button { it.text="G5" },
+      }])
     }
   }
 
