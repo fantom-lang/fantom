@@ -33,7 +33,7 @@ fan.dom.EventPeer.prototype.target = function(self)
 fan.dom.EventPeer.prototype.pagePos = function(self)
 {
   if (this.$pagePos == null)
-    this.$pagePos = fan.graphics.Point.makeInt(this.event.pageX, this.event.pageY);
+    this.$pagePos = fan.graphics.Point.makeInt(this.event.pageX || 0, this.event.pageY || 0);
   return this.$pagePos;
 }
 
