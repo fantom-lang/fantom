@@ -65,22 +65,22 @@ const class Key
   static const Key tab          := make(9,  "Tab")
   static const Key capsLock     := make(20, "CapsLock")
 
-  static const Key semicolon    := make(186, "Semicolon")
-  static const Key equal        := make(187, "Equal")
-  static const Key comma        := make(188, "Comma")
-  static const Key dash         := make(189, "Dash")
-  static const Key period       := make(190, "Period")
-  static const Key slash        := make(191, "Slash")
-  static const Key backtick     := make(192, "Backtick")
-  static const Key openBracket  := make(219, "OpenBracket")
-  static const Key backSlash    := make(220, "BackSlash")
-  static const Key closeBracket := make(221, "CloseBracket")
-  static const Key quote        := make(222, "Quote")
+  static const Key semicolon    := make(186, "Semicolon", ";")
+  static const Key equal        := make(187, "Equal", "=")
+  static const Key comma        := make(188, "Comma", ",")
+  static const Key dash         := make(189, "Dash", "-")
+  static const Key period       := make(190, "Period", ".")
+  static const Key slash        := make(191, "Slash", "/")
+  static const Key backtick     := make(192, "Backtick", "`")
+  static const Key openBracket  := make(219, "OpenBracket", "[")
+  static const Key backSlash    := make(220, "BackSlash", "\\")
+  static const Key closeBracket := make(221, "CloseBracket", "]")
+  static const Key quote        := make(222, "Quote", "\"")
 
-  static const Key left         := make(37, "Left")
-  static const Key up           := make(38, "Up")
-  static const Key right        := make(39, "Right")
-  static const Key down         := make(40, "Down")
+  static const Key left         := make(37, "Left",  "\u2190")
+  static const Key up           := make(38, "Up",    "\u2191")
+  static const Key right        := make(39, "Right", "\u2192")
+  static const Key down         := make(40, "Down",  "\u2193")
   static const Key pageUp       := make(33, "PageUp")
   static const Key pageDown     := make(34, "PageDown")
   static const Key home         := make(36, "Home")
@@ -156,10 +156,11 @@ const class Key
   }
 
   ** Private constructor
-  private new make(Int code, Str name)
+  private new make(Int code, Str name, Str? symbol := null)
   {
     this.code = code
     this.name = name
+    this.symbol = symbol
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -185,4 +186,14 @@ const class Key
 
   ** Key code
   const Int code
+
+  ** Is this one of the modifier keys alt, shift, ctrl, meta
+  Bool isModifier()
+  {
+    this == alt || this == shift || this == ctrl || this == meta
+  }
+
+  ** If this a char symbol such as OpenBracket this is its symbol "[".
+  ** The arrow keys will return their respective Unicode arrow char.
+  const Str? symbol
 }
