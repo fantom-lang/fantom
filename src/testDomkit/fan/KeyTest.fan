@@ -31,6 +31,7 @@ class KeyTest : DomkitTest
         // }
         it.onEvent("keydown", false) |e|
         {
+          echo(e)
           str := "$e.key.name - $e.key.code"
           if (e.alt   && e.key != Key.alt)   str = "Alt + $str"
           if (e.ctrl  && e.key != Key.ctrl)  str = "Ctrl + $str"
