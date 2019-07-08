@@ -22,7 +22,7 @@ using graphics
   {
     this.style.addClass("domkit-ListButton disclosure-list")
     this.sel = ListButtonSelection(this)
-    this.onPopup { makeLisbox }
+    this.onPopup { makeListbox }
     this.update
 
     // shift to align text
@@ -68,7 +68,7 @@ using graphics
   internal Void fireSelect() { cbSelect?.call(this) }
 
   ** Build listbox.
-  private Popup makeLisbox()
+  private Popup makeListbox()
   {
     this.find = ""
     this.menu = Menu {}
