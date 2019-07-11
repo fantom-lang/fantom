@@ -194,10 +194,25 @@ class JsonTest : Test
       verifyEq(obj.keys.join(","), "foo,bar,baz,num,bool,float,dollar,a\nb")
     }
 
+    // verify initial state
     f()
+
+    // write out escaping unicode
     buf := Buf()
     JsonOutStream(buf.out).writeJson(obj)
-    obj = JsonInStream(buf.flip.in).readJson
+    str := buf.flip.readAllStr
+    verifyEq(str.contains("÷"), false)
+    verifyEq(str.contains("\\u00f7"), true)
+    obj = JsonInStream(str.in).readJson
+    f()
+
+    // write out without escaping unicode
+    buf = Buf()
+    JsonOutStream(buf.out) { escapeUnicode=false }.writeJson(obj)
+    str = buf.flip.readAllStr
+    verifyEq(str.contains("÷"), true)
+    verifyEq(str.contains("\\u00f7"), false)
+    obj = JsonInStream(str.in).readJson
     f()
   }
 
