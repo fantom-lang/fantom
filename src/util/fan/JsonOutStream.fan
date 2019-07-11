@@ -32,6 +32,11 @@ class JsonOutStream : OutStream
   new make(OutStream out) : super(out) {}
 
   **
+  ** Flag to escape characters over 0x7f using '\uXXXX'
+  **
+  Bool escapeUnicode := true
+
+  **
   ** Write the given object as JSON to this stream.
   ** The obj must be one of the follow:
   **   - null
@@ -114,7 +119,7 @@ class JsonOutStream : OutStream
     writeChar(JsonToken.quote)
     str.each |char|
     {
-      if (char <= 0x7f)
+      if (char <= 0x7f || !escapeUnicode)
       {
         switch (char)
         {
