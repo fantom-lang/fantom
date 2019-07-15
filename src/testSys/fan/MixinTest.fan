@@ -354,6 +354,11 @@
     verify(t.method("equals").parent == MxGoo#)
   }
 
+  Void testPrivMethod()
+  {
+    verifyEq("private hello", ClsMxPrivMethod().hello)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Test special .NET handling
 //////////////////////////////////////////////////////////////////////////
@@ -389,6 +394,14 @@
 @Js const mixin SubSubMxToStr : SubMxToStr { }
 @Js const class ClsSubMxToStr : SubMxToStr { override Str toStr() { "classToStr" } }
 @Js const class ClsSubSubMxToStr : ClsSubMxToStr, SubSubMxToStr { }
+
+@Js mixin MxPrivMethod
+{
+  Str hello() { doHello }
+  private Str doHello() { "private hello" }
+}
+
+@Js class ClsMxPrivMethod : MxPrivMethod { }
 
 @Js
 mixin MxA
