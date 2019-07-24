@@ -133,7 +133,7 @@ internal class WispRes : WebRes
       bufOut.head.title.w("$statusCode ${statusMsg[statusCode]}").titleEnd.headEnd
       bufOut.body
       bufOut.h1.w(statusMsg[statusCode]).h1End
-      if (msg != null) bufOut.w(msg).nl
+      if (msg != null) bufOut.w(msg.toXml).nl
       bufOut.bodyEnd
       bufOut.htmlEnd
 
