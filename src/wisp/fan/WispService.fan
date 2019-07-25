@@ -96,19 +96,42 @@ const class WispService : Service
   {
     acc := Str:Str[:] { caseInsensitive = true }
     try
-    {
-      Pod.find("web").config("extraResHeaders", "").split(';').each |pair|
-      {
-        if (pair.isEmpty) return
-        colon := pair.index(":") ?: throw Err("Missing colon: $pair")
-        key := pair[0..<colon].trim
-        val := pair[colon+1..-1].trim
-        if (key.isEmpty || val.isEmpty) throw Err("Invalid header: $pair")
-        acc[key] = val
-      }
-    }
-    catch (Err e) log.err("Cannot init resHeaders", e)
+      parseExtraHeaders(acc, Pod.find("web").config("extraResHeaders", ""))
+    catch (Err e)
+      log.err("Cannot init resHeaders", e)
     return acc.toImmutable
+  }
+
+  ** Parse extra headers taking quoted values into account
+  internal static Void parseExtraHeaders(Str:Str acc, Str str)
+  {
+    // trim and remove trailing semicolon
+    str = str.trim
+    if (str.endsWith(";")) str = str[0..-2]
+    if (str.isEmpty) return
+
+    // split by semicolons taking into account quotes
+    pairs := Str[,]
+    s := 0
+    inStr := false
+    for (i := 0; i<str.size; ++i)
+    {
+      ch := str[i]
+      if (ch == '"') inStr = !inStr
+      if (ch == ';' && !inStr) { pairs.add(str[s..<i].trim); s = i+1 }
+    }
+    if (s < str.size) pairs.add(str[s..-1].trim)
+
+    // add to accumulator
+    pairs.each |pair|
+    {
+      colon := pair.index(":") ?: throw Err("Missing colon: $pair")
+      key := pair[0..<colon].trim
+      val := pair[colon+1..-1].trim
+      if (val.startsWith("\"") && val.endsWith("\"")) val = val[1..-2]
+      if (key.isEmpty || val.isEmpty) throw Err("Invalid header: $pair")
+      acc[key] = val
+    }
   }
 
   **
