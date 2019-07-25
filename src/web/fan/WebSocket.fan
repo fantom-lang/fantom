@@ -104,8 +104,13 @@ class WebSocket
   SocketOptions socketOptions() { socket.options }
 
   **
+  ** Return true if this socket has been closed
+  **
+  Bool isClosed() { closed }
+
+  **
   ** Receive a message which is returned as either a Str or Buf.
-  ** Raise IOErr if socket is closed.
+  ** Raise IOErr if socket has error or is closed.
   **
   Obj? receive()
   {
@@ -114,7 +119,7 @@ class WebSocket
 
   **
   ** Receive Buf message into given buffer.
-  ** Raise IOErr if socket is closed.
+  ** Raise IOErr if socket has error or is closed.
   **
   @NoDoc Obj? receiveBuf(Buf? buf)
   {
@@ -162,7 +167,7 @@ class WebSocket
     // otherwise return the payload data
     switch (op)
     {
-      case opClose:  close; return null
+      case opClose:  close; throw IOErr("WebSocket closed")
       case opPing:   pong(payload); return receiveAgain
       case opPong:   return receiveAgain
       case opText:   return payload.readAllStr
@@ -204,6 +209,9 @@ class WebSocket
 
   private Void doSend(Int op, Buf payload)
   {
+    // check closed flag
+    if (closed) throw IOErr("WebSocket closed")
+
     // compute intermediate variables
     len := payload.size
     maskKey := Buf.random(4)
@@ -243,7 +251,13 @@ class WebSocket
   **
   Bool close()
   {
-    socket.close
+    if (closed) return false
+    try
+      doSend(opClose, Buf())
+    catch (Err e)
+      {}
+    this.closed = true
+    return socket.close
   }
 
   private static Err err(Str msg)
@@ -267,5 +281,6 @@ class WebSocket
 
   private TcpSocket socket
   private Bool maskOnSend
+  private Bool closed
 }
 
