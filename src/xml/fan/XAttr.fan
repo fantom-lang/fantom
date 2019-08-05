@@ -47,8 +47,8 @@
   **   foo='val'   =>  foo
   **   x:foo='val' =>  foo
   **
-  ** Note that attributes which start with "xml:" are not treated
-  ** as a namespace:
+  ** Note that attributes which start with "xml:" and "xmlns:"
+  ** are not treated as a namespace:
   **   xml:lang='en' => xml:lang
   **   XML:lang='en' => xml:lang
   **
