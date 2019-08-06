@@ -59,7 +59,7 @@ class DependTest : Test
     verifyEq(d.isRange, false)
     verifyEq(d.endVersion, null)
 
-    d = Depend.fromStr("foo 1.2 - 3.4.5")
+    d = Depend.fromStr("foo 1.2 \t - \t 3.4.5")
     verifyEq(d.toStr, "foo 1.2-3.4.5")
     verifyEq(d.equals(Depend.fromStr("foo 1.2-3.4.5")), true)
     verifyEq(d.equals(Depend.fromStr("foo 1.2+")), false)

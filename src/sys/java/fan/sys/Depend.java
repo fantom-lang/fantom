@@ -136,7 +136,7 @@ public final class Depend
 
     private void consumeSpaces()
     {
-      while (cur == ' ') consume();
+      while (cur == ' ' || cur == '\t') consume();
     }
 
     private void consume()

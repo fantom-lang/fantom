@@ -270,7 +270,7 @@ fan.sys.DependParser.prototype.consumeDigit = function()
 
 fan.sys.DependParser.prototype.consumeSpaces = function()
 {
-  while (this.m_cur == 32) this.consume();
+  while (this.m_cur == 32 || this.m_cur == 9) this.consume();
 }
 
 fan.sys.DependParser.prototype.consume = function()
