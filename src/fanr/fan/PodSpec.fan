@@ -18,11 +18,16 @@ const class PodSpec
 //////////////////////////////////////////////////////////////////////////
 
   ** Construct from a pod zip file
-  static PodSpec load(File file)
+  static PodSpec load(File file) { doLoad(file.in, file) }
+
+  ** Construct from an InStream
+  static PodSpec read(InStream in) { doLoad(in, null) }
+
+  private static PodSpec doLoad(InStream in, File? src)
   {
     // open as zip file (use read so that we can use any
     // file with input stream)
-    zip := Zip.read(file.in)
+    zip := Zip.read(in)
 
     try
     {
@@ -33,7 +38,7 @@ const class PodSpec
       if (meta == null) throw Err("Missing meta.props")
 
       // parse meta into PodSpec
-      return make(meta.readProps, file)
+      return make(meta.readProps, src)
     }
     finally zip.close
   }
