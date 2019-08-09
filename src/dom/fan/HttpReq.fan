@@ -47,6 +47,22 @@ class HttpReq
   Bool withCredentials := false
 
   **
+  ** Optional callback to track progress of request transfers, where
+  ** 'loaded' is the number of bytes that have been transferred, and
+  ** 'total' is the total number of bytes to be transferred.
+  **
+  ** For 'GET' requests, the progress will track the response being
+  ** downloaded to the browser.  For 'PUT' and 'POST' requests, the
+  ** progress will track the content being uploaded to the server.
+  **
+  ** Note this callback is only invoked when 'lengthComputable' is
+  ** 'true' on the underlying progress events.
+  **
+  Void onProgress(|Int loaded, Int total| f) { this.cbProgress = f }
+
+  private Func? cbProgress
+
+  **
   ** Send a request with the given content using the given
   ** HTTP method (case does not matter).  After receiving
   ** the response, call the given closure with the resulting

@@ -17,6 +17,19 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
   var xhr = new XMLHttpRequest();
   var buf;
   var view;
+
+  // attach progress listener if configured
+  if (self.m_cbProgress != null)
+  {
+    var _p = xhr;
+    var _m = method.toUpperCase();
+    if (_m == "POST" || _m == "PUT") _p = xhr.upload
+    _p.addEventListener("progress", function(e) {
+      if (e.lengthComputable) self.m_cbProgress.call(e.loaded, e.total);
+    });
+  }
+
+  // open request
   xhr.open(method.toUpperCase(), self.m_uri.m_str, self.m_async);
   if (self.m_async)
   {
@@ -26,6 +39,8 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
         f.call(fan.dom.HttpReqPeer.makeRes(xhr));
     }
   }
+
+  // setup headers
   var ct = false;
   var k = self.m_headers.keys();
   for (var i=0; i<k.size(); i++)
@@ -35,6 +50,8 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
     xhr.setRequestHeader(key, self.m_headers.get(key));
   }
   xhr.withCredentials = self.m_withCredentials;
+
+  // send request based on content type
   if (content == null)
   {
     xhr.send(null);
@@ -64,6 +81,7 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
     throw fan.sys.Err.make("Can only send Str or Buf: " + content);
   }
 
+  // for sync requests; directly invoke response handler
   if (!self.m_async) f.call(fan.dom.HttpReqPeer.makeRes(xhr));
 }
 
