@@ -19,6 +19,9 @@ const class Color
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
+  ** Transparent constant with opacity set to zero
+  const static Color transparent := make(0, 0f)
+
   ** Make a new instance with the RGB components masked
   ** together: bits 16-23 red; bits 8-15 green; bits 0-7 blue.
   ** Alpha should be a float between 1.0 and 0.0.
@@ -315,6 +318,9 @@ const class Color
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+  ** Return if `a` is zero, fully transparent
+  Bool isTransparent() { a <= 0f }
+
   ** Adjust the opacity of this color and return new instance,
   ** where 'opacity' is between 0.0  and 1.0.
   Color opacity(Float opacity := 1f)
@@ -540,6 +546,7 @@ const class Color
     acc["tan"] = Color(0xd2b48c)
     acc["thistle"] = Color(0xd8bfd8)
     acc["tomato"] = Color(0xff6347)
+    acc["transparent"] = transparent
     acc["turquoise"] = Color(0x40e0d0)
     acc["violet"] = Color(0xee82ee)
     acc["wheat"] = Color(0xf5deb3)

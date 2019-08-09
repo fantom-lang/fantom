@@ -44,6 +44,11 @@ class ColorTest : Test
     verifyEq(c.rgb, 0x332211)
     verifyEq(c.a,  1.0f)
     verifyColor(c, 0x33, 0x22, 0x11, 1.0f, "#321")
+
+    verifySame(Color.fromStr("transparent"), Color.transparent)
+    verifyEq(Color.transparent.isTransparent, true)
+    verifyEq(Color.transparent.a, 0f)
+    verifyEq(Color("red").isTransparent, false)
   }
 
   Void verifyColor(Color c, Int r, Int g, Int b, Float a, Str s)
