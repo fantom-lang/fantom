@@ -34,7 +34,7 @@ using graphics
       if (cbDrag == null) return
       data := cbDrag.call(elem)
       DndUtil.map[data.hash] = data
-      e.dataTransfer.setData("text/plain", data.hash.toStr)
+      e.dataTransfer.setData("text/plain", "fandnd:${data.hash.toStr}")
     }
     elem.onEvent("dragend", false) |e|
     {
@@ -149,9 +149,25 @@ using graphics
   ** Get the data payload for given transfer instance.
   static Obj getData(DataTransfer dt)
   {
-    key := dt.getData("text/plain").toInt(10, false)
-    if (key == null) throw ArgErr("Drag target not found: $dt")
-    val := map[key] ?: throw ArgErr("Drag target not found: $dt")
-    return val
+    data := dt.getData("text/plain")
+
+    if (data.isEmpty)
+    {
+      // if we have no data set then most likely this is file
+      // being dragged in externally into the browser
+      return dt.files
+    }
+
+    if (data.startsWith("fandnd:"))
+    {
+      // if our own key then return actor local data copy
+      key := data["fandnd:".size..-1].toInt(10, false)
+      if (key == null) throw ArgErr("Drag target not found: $data")
+      val := map[key] ?: throw ArgErr("Drag target not found: $key")
+      return val
+    }
+
+    // fallback to return original data
+    return data
   }
 }

@@ -32,4 +32,8 @@ class DataTransfer
   ** Set a custom image to be used for dragging, where 'x' and 'y' are
   ** offsets from the mouse cursor position.
   native This setDragImage(Elem image, Int x, Int y)
+
+  ** List of local files available on the data transfer, or empty list if
+  ** this drag operation doesn't involve dragging files.
+  native DomFile[] files()
 }

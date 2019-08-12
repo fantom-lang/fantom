@@ -60,7 +60,12 @@ class DndTest : DomkitTest
       DropTarget.bind(it)
       {
         it.canDrop |data| { data != "Box #3" }
-        it.onDrop  |data| { echo("# DROP: $data") }
+        it.onDrop  |data|
+        {
+          files := data as DomFile[]
+          if (files == null) echo("# DROP: $data")
+          else echo("# DROP: " + files.join(", ") |f| { f.name })
+        }
       }
       TextField { it.val="Z-order Test" },
     }
