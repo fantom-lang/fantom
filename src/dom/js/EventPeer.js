@@ -86,13 +86,17 @@ fan.dom.EventPeer.prototype.set = function(self, name, val)
 
 fan.dom.EventPeer.prototype.dataTransfer = function(self)
 {
-  // Andy Frank 19-Jun-2015 -- Chrome/WebKit do not allow reading getData during
-  // the dragover event - which makes it impossible to check drop targets during
-  // drag.  To workaround for now - we just cache in a static field
+  // Andy Frank 19-Jun-2015: Chrome/WebKit do not allow reading
+  // getData during the dragover event - which makes it impossible
+  // to check drop targets during drag. To workaround for now we
+  // just cache in a static field
+  //
+  // 12-Aug-2019: this logic needed to be tweaked a bit to add
+  // support for dragging files into the browser - the lastDataTx
+  // temp copy should be cleared during EventPeer.make when we
+  // detect either a 'drop' or 'dragend' event
 
-  if (this.event.dataTransfer.types &&
-      this.event.dataTransfer.types.length > 0 &&
-      this.event.dataTransfer.getData(this.event.dataTransfer.types[0]) == "")
+  if (fan.dom.EventPeer.lastDataTx)
     return fan.dom.EventPeer.lastDataTx;
 
   if (!this.dataTx)
@@ -103,8 +107,16 @@ fan.dom.EventPeer.prototype.dataTransfer = function(self)
 
 fan.dom.EventPeer.make = function(event)
 {
+  // map native to Fan
   var x = fan.dom.Event.make();
   x.peer.event = event;
   if (event.keyCode) x.peer.$key = fan.dom.Key.fromCode(event.keyCode);
+
+  // we need to flush our working copy when we see a dragend
+  // event; this allows us to request the real drop contents
+  // which are hidden in alot of cases during ondrag
+  if (event.type.charAt(0) == 'd' && (event.type == "drop" || event.type == "dragend"))
+    fan.dom.EventPeer.lastDataTx = null
+
   return x;
 }

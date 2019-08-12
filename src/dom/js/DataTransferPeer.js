@@ -26,7 +26,7 @@ fan.dom.DataTransferPeer.prototype.types = function(self)
 fan.dom.DataTransferPeer.prototype.getData = function(self, type)
 {
   var val = this.dataTx.getData(type);
-  if (val == "") val = this.data[type];
+  if (val == "") val = this.data[type] || "";
   return val;
 }
 
@@ -41,6 +41,17 @@ fan.dom.DataTransferPeer.prototype.setDragImage = function(self, image, x, y)
 {
   this.dataTx.setDragImage(image.peer.elem, x, y);
   return self;
+}
+
+fan.dom.DataTransferPeer.prototype.files = function(self)
+{
+  if (this.dataTx.files.length == 0)
+    return fan.dom.DomFile.$type.emptyList();
+
+  var list = fan.sys.List.make(fan.dom.DomFile.$type);
+  for (var i=0; i<this.dataTx.files.length; i++)
+      list.add(fan.dom.DomFilePeer.wrap(this.dataTx.files[i]));
+  return list;
 }
 
 fan.dom.DataTransferPeer.make = function(dataTx)

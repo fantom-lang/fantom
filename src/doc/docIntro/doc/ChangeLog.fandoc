@@ -13,6 +13,7 @@
 - dom: HttpReq.send support for sending DomFile as raw content
 - dom: HttpReq.onProgress callback
 - dom: allow Dialog.title to take Elem content in addition to Str label
+- domkit: Dnd support for DomFiles
 
 *Build 1.0.73 (21 May 2019)*
 - WebReq isGet, isPost conveniences
