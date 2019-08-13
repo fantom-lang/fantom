@@ -220,8 +220,11 @@ farad, F; kg-1*m-2*sec4*A2
 
 -- cooling efficiency (null)
 coefficient_of_performance, COP; ; 1
-kilowatt_per_ton, kW/ton; ; 1
 energy_efficiency_ratio, Btu/Wh, EER; ; 0.2930832356
+// cooling efficiency is dimensionless quantity. There is
+// no direct scaling factor to relate COP and EER to kW/ton
+// but we want it grouped here.
+kilowatt_per_ton, kW/ton; ; 1
 
 -- density (kg1*m-3)
 kilograms_per_cubic_meter, kg/m³; kg1*m-3
