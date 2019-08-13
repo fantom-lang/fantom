@@ -282,8 +282,11 @@ const class Insets
     this.left = left.toFloat
   }
 
-  ** Parse from comma or space separated string.
-  ** If invalid then throw ParseErr or return null based on checked flag.
+  ** Parse from comma or space separated string using CSS format:
+  **   - "top"
+  **   - "top, right" (implies bottom = top, left = right)
+  **   - "top, right, bottom" (implies left = right)
+  **   - "top, right, bottom, left"
   static new fromStr(Str s, Bool checked := true)
   {
     try
