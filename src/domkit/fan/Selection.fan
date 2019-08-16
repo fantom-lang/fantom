@@ -52,7 +52,7 @@ using dom
 **************************************************************************
 
 ** Internal implementation for supporting index-based Selection widgets.
-@Js internal abstract class IndexSelection : Selection
+@NoDoc @Js abstract class IndexSelection : Selection
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -104,16 +104,16 @@ using dom
 //////////////////////////////////////////////////////////////////////////
 
   ** Max number of items
-  internal abstract Int max()
+  protected abstract Int max()
 
   ** Lookup item at given index
-  internal abstract Obj toItem(Int index)
+  protected abstract Obj toItem(Int index)
 
   ** Lookup index for given item
-  internal abstract Int? toIndex(Obj item)
+  protected abstract Int? toIndex(Obj item)
 
   ** Callback when selection is modified
-  internal abstract Void onUpdate(Int[] oldIndexes, Int[] newIndexes)
+  protected abstract Void onUpdate(Int[] oldIndexes, Int[] newIndexes)
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
