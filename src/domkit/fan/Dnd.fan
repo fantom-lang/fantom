@@ -33,8 +33,7 @@ using graphics
     {
       if (cbDrag == null) return
       data := cbDrag.call(elem)
-      DndUtil.map[data.hash] = data
-      e.dataTransfer.setData("text/plain", "fandnd:${data.hash.toStr}")
+      DndUtil.setData(e.dataTransfer, data)
     }
     elem.onEvent("dragend", false) |e|
     {
@@ -136,10 +135,10 @@ using graphics
 **
 ** Internal drag and drop utilities.
 **
-@Js internal class DndUtil
+@NoDoc @Js class DndUtil
 {
   ** Global map of data payloads.
-  static Int:Obj map()
+  private static Int:Obj map()
   {
     m := Actor.locals["domkit.dnd.map"] as Int:Obj
     if (m == null) Actor.locals["domkit.dnd.map"] = m = Int:Obj[:]
@@ -169,5 +168,12 @@ using graphics
 
     // fallback to return original data
     return data
+  }
+
+  ** Set the data payload on given transfer instance.
+  static Void setData(DataTransfer dt, Obj data)
+  {
+    map[data.hash] = data
+    dt.setData("text/plain", "fandnd:${data.hash.toStr}")
   }
 }
