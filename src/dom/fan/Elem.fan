@@ -175,6 +175,12 @@ class Elem
   ** Scrollable size of element.
   native Size scrollSize()
 
+  ** Scroll parent container so this Elem is visible to user. If
+  ** 'alignToTop' is 'true' (the default value), the top of Elem
+  ** is aligned to top of the visible area.  If 'false', the bottom
+  ** of Elem is aligned to bottom of the visible area.
+  native This scrollIntoView(Bool alignToTop := true)
+
 //////////////////////////////////////////////////////////////////////////
 // Tree
 //////////////////////////////////////////////////////////////////////////

@@ -288,6 +288,11 @@ fan.dom.ElemPeer.prototype.scrollSize = function(self)
   return this.m_scrollSize;
 }
 
+fan.dom.ElemPeer.prototype.scrollIntoView = function(self, alignToTop)
+{
+  this.elem.scrollIntoView(alignToTop);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Tree
 //////////////////////////////////////////////////////////////////////////

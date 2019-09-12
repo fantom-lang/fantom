@@ -14,6 +14,7 @@
 - dom: HttpReq.onProgress callback
 - dom: allow Dialog.title to take Elem content in addition to Str label
 - dom: Event.fromNative
+- dom: Elem.scrollIntoView
 - domkit: Dnd support for DomFiles
 
 *Build 1.0.73 (21 May 2019)*
