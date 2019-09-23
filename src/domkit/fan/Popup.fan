@@ -19,8 +19,7 @@ using graphics
 {
   new make() : super()
   {
-    this.uid = nextId.val
-    nextId.val = uid+1
+    this.uid = nextId.getAndIncrement
     this.style.addClass("domkit-Popup")
     this.onEvent("keydown", false) |e| { if (e.key == Key.esc) close }
     this->tabIndex = 0
@@ -141,7 +140,7 @@ using graphics
   }
 
   private const Int uid
-  private static const AtomicRef nextId := AtomicRef(0)
+  private static const AtomicInt nextId := AtomicInt(0)
   private static const Float gutter := 12f
   private Point? openPos
   private Func? cbOpen
