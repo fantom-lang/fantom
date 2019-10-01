@@ -14,7 +14,7 @@ input.domkit-Checkbox {
 }
 
 label input.domkit-Checkbox + span.domkit-Label {
-  padding-left: 6px;
+  margin-left: 6px;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
