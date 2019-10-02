@@ -96,7 +96,7 @@ using dom
   }
 
   ** Close this tooltip.
-  private Void close()
+  @NoDoc Void close()
   {
     this.transition(["opacity":"0"], null, 100ms) {
       this.parent?.remove(this)
