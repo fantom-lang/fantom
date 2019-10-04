@@ -126,3 +126,40 @@ fan.dom.StylePeer.prototype.setProp = function(self, name, val)
   if (val == null) this.style.removeProperty(name);
   else this.style.setProperty(name, val);
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Polyfill for classList (see ElemPeer.style)
+//////////////////////////////////////////////////////////////////////////
+
+fan.dom.StylePeer.polyfillClassList = function(e)
+{
+  var elem = e;
+  function list()
+  {
+    var attr = elem.getAttribute("class")
+    return attr ? attr.split(" ") : [];
+  }
+
+  this.add = function(name)
+  {
+    var x = list();
+    x.push(name);
+    elem.setAttribute("class", x.join(" "));
+  }
+
+  this.remove = function(name)
+  {
+    var x = list();
+    var i = x.indexOf(name);
+    if (i >= 0)
+    {
+      x.splice(i, 1);
+      elem.setAttribute("class", x.join(" "));
+    }
+  }
+
+  this.contains = function(name)
+  {
+    return list().indexOf(name) >= 0;
+  }
+}

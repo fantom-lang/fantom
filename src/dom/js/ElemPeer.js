@@ -85,7 +85,12 @@ fan.dom.ElemPeer.prototype.style = function(self)
     this.$style = fan.dom.Style.make();
     this.$style.peer.elem  = this.elem;
     this.$style.peer.style = this.elem.style;
+
+    // polyfill for IE11/Edge with SVG nodes
+    if (!this.elem.classList)
+      this.elem.classList = new fan.dom.StylePeer.polyfillClassList(this.elem);
   }
+
   return this.$style;
 }
 
