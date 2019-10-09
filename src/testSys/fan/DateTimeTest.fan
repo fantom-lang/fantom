@@ -148,16 +148,17 @@ class DateTimeTest : Test
     verifySame(a.tz, TimeZone.cur)
 
     b := DateTime.now(null)
-    verify(a !== b)
-    verify(b === DateTime.now)
+    verifyNotSame(a, b)
+    verifySame(b, DateTime.now)
 
     if (Env.cur.runtime != "js")
     {
-      Actor.sleep(200ms)
-      verify(b === DateTime.now)
+      verifySame(b, DateTime.now)
+      verifySame(b, DateTime.now(100ms))
 
-      c := DateTime.now(180ms)
-      verify(b !== c)
+      Actor.sleep(100ms)
+      c := DateTime.now(50ms)
+      verifyNotSame(b, c)
     }
 
     verifyEq(Date.today, DateTime.now.date)

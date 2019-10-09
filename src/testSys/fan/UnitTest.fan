@@ -164,6 +164,7 @@ class UnitTest : Test
 
   Void verifyUnitName(Str id)
   {
+    if (id.startsWith("_")) return  // skip custom definitions
     id.each |ch|
     {
       if (ch.isAlpha) return

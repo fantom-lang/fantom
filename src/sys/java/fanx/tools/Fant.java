@@ -94,10 +94,12 @@ public class Fant
     String testName   = st.hasMoreTokens() ? st.nextToken() : "*";
     String methodName = st.hasMoreTokens() ? st.nextToken() : "*";
 
-    System.out.println();
 
     Pod pod = Pod.find(podName, true);
     Type[] tests = tests(pod, testName);
+    if (tests.length == 0) return 0;
+
+    System.out.println();
     for (int i=0; i<tests.length; ++i)
     {
       Type testType = tests[i];
