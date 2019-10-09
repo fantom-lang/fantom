@@ -41,7 +41,7 @@ class WebClientTest : Test
   Void testGetFixed()
   {
     // use skyfoundry.com assuming simple static image page
-    c := WebClient(`http://skyfoundry.com/res/img/database.png`)
+    c := WebClient(`http://skyfoundry.com/static/img/product/server.svg`)
     verify(!c.isConnected)
     try
     {
@@ -63,9 +63,10 @@ class WebClientTest : Test
       // fixed content-length
       len := c.resHeader("Content-Length").toInt
       png := c.resBuf
-      verifyEq(png[1].toChar, "P")
-      verifyEq(png[2].toChar, "N")
-      verifyEq(png[3].toChar, "G")
+      verifyEq(png[0].toChar, "<")
+      verifyEq(png[1].toChar, "s")
+      verifyEq(png[2].toChar, "v")
+      verifyEq(png[3].toChar, "g")
     }
     finally c.close
   }
