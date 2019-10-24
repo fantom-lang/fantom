@@ -149,6 +149,9 @@ using graphics
   ** Selection for table
   Selection sel { private set }
 
+  ** Callback when selection has changed but before taking effect.
+  @NoDoc Void onBeforeSelect(|Int[]->Bool| f) { cbBeforeSelect = f }
+
   ** Callback when selection has changed.
   Void onSelect(|This| f) { cbSelect = f }
 
@@ -1044,6 +1047,7 @@ using graphics
   {
     if (!sel.enabled) return
     if (sel.indexes == newsel) return
+    if (cbBeforeSelect?.call(newsel) == false) return
     sel.indexes = newsel
     cbSelect?.call(this)
   }
@@ -1069,6 +1073,7 @@ using graphics
     // "mouseout",
   ]
 
+  private Func? cbBeforeSelect
   private Func? cbSelect
   private Func? cbAction
   private Str:Func cbTableEvent := [:]
