@@ -251,7 +251,7 @@ amperes_per_square_meter, A/m²; m-2*A1
 volts_per_meter, V/m; kg1*m1*sec-3*A-1
 
 -- electric potential (kg1*m2*sec-3*A-1)
-vold, Volt, V; kg1*m2*sec-3*A-1
+volt, Volt, V; kg1*m2*sec-3*A-1
 millivolt, mV; kg1*m2*sec-3*A-1; 0.0010
 kilovolt, kV; kg1*m2*sec-3*A-1; 1000.0
 megavolt, MV; kg1*m2*sec-3*A-1; 1000000.0
