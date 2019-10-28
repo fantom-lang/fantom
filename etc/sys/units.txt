@@ -14,7 +14,7 @@ percent, %; ; 100
 pixel, px
 decibel, db
 power_factor, pf
-pH
+ph, pH
 percent_relative_humidity, %RH
 grams_of_water_per_kilogram_dry_air, gH₂O/kgAir
 volts_per_degree_kelvin, V/K
@@ -25,8 +25,8 @@ percent_obscuration_per_meter, %obsc/m
 psi_per_degree_fahrenheit, psi/°F
 square_meters_per_newton, m²/N
 watts_per_square_meter_degree_kelvin, W/m²K
-db_milliVolt, dBmV
-db_microVolt, dBµV
+db_millivolt, dBmV
+db_microvolt, dBµV
 parts_per_unit, ppu
 parts_per_million, ppm; ; 1.0E-6
 parts_per_billion, ppb; ; 1.0E-9
@@ -251,10 +251,10 @@ amperes_per_square_meter, A/m²; m-2*A1
 volts_per_meter, V/m; kg1*m1*sec-3*A-1
 
 -- electric potential (kg1*m2*sec-3*A-1)
-Volt, V; kg1*m2*sec-3*A-1
-milliVolt, mV; kg1*m2*sec-3*A-1; 0.0010
-kiloVolt, kV; kg1*m2*sec-3*A-1; 1000.0
-megaVolt, MV; kg1*m2*sec-3*A-1; 1000000.0
+vold, Volt, V; kg1*m2*sec-3*A-1
+millivolt, mV; kg1*m2*sec-3*A-1; 0.0010
+kilovolt, kV; kg1*m2*sec-3*A-1; 1000.0
+megavolt, MV; kg1*m2*sec-3*A-1; 1000000.0
 
 -- electric resistance (kg1*m2*sec-3*A-2)
 ohm, Ω, Ω; kg1*m2*sec-3*A-2
@@ -361,7 +361,7 @@ degrees_kelvin_per_minute, K/min; sec-1*K1; 0.016666666666666666
 -- illuminance (m-2*cd*sr)
 lux, lx; m-2*cd1
 footcandle, fc; m-2*cd1; 0.092937
-phot, ph; m-2*cd1; 10000.0
+phot; m-2*cd1; 10000.0
 
 -- inductance (kg1*m2*sec-2*A-2)
 henry, H; kg1*m2*sec-2*A-2
