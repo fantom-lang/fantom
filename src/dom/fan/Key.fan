@@ -120,6 +120,7 @@ const class Key
         Key key := f.get(null)
         c.add(key.code, key)
         n.add(key.name, key)
+        if (key.symbol != null) n.add(key.symbol, key)
       }
     }
     // additional cross browser mapping
@@ -136,7 +137,7 @@ const class Key
 // Lookup
 //////////////////////////////////////////////////////////////////////////
 
-  ** Lookup by string name
+  ** Lookup by string name or symbol
   static new fromStr(Str s, Bool checked := true)
   {
     try
