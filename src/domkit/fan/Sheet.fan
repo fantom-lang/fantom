@@ -33,6 +33,14 @@ using dom
   ** Optional delay for open animation.
   @NoDoc Duration? delay := null
 
+  ** Protected sub-class callback invoked directly before dialog is opened.
+  protected virtual Void onBeforeOpen() {}
+
+  ** Callback when a key is pressed while Dialog is open, including
+  ** events that where dispatched outside the dialog. This callback
+  ** is only fired if `canDismiss` is 'false'.
+  protected Void onKeyDown(|Event e| f) { this.cbKeyDown = f }
+
   ** Open this sheet over given element. If sheet
   ** is already open this method does nothing.
   This open(Elem parent, Str height)
@@ -56,8 +64,14 @@ using dom
         it.onEvent("keydown",   false) |e| { e.stop; close }
         it.onEvent("mousedown", false) |e| { e.stop; close }
       }
+      else
+      {
+        it.onEvent("keydown", false) |e| { cbKeyDown?.call(e) }
+      }
       it.add(this)
     })
+
+    onBeforeOpen
 
     opts := delay == null ? null : ["transition-delay":delay]
     this.transition(["height": height], opts, 250ms) { this.focus; fireOpen(null) }
@@ -97,4 +111,5 @@ using dom
 
   private Func? cbOpen
   private Func? cbClose
+  private Func? cbKeyDown
 }
