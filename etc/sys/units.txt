@@ -440,6 +440,7 @@ megabtus_per_hour, MBTU/h, MMBTU/h; kg1*m2*sec-3; 293071.07017222
 joules_per_hour, J/h; kg1*m2*sec-3; 0.000277777778
 kilojoules_per_hour, kJ/h; kg1*m2*sec-3; 0.277777778
 megajoules_per_hour, MJ/h; kg1*m2*sec-3; 277.777778
+gigajoules_per_hour, GJ/h; kg1*m2*sec-3; 277777.778
 
 -- power by area (kg1*sec-3)
 watts_per_square_meter, W/m²; kg1*sec-3
