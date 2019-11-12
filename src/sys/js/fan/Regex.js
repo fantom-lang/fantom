@@ -15,9 +15,9 @@ fan.sys.Regex = fan.sys.Obj.$extend(fan.sys.Obj);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Regex.fromStr = function(pattern)
+fan.sys.Regex.fromStr = function(pattern, flags)
 {
-  return new fan.sys.Regex(pattern);
+  return new fan.sys.Regex(pattern, flags);
 }
 
 fan.sys.Regex.glob = function(pattern)
@@ -46,10 +46,11 @@ fan.sys.Regex.quote = function(pattern)
   return new fan.sys.Regex(s);
 }
 
-fan.sys.Regex.prototype.$ctor = function(source)
+fan.sys.Regex.prototype.$ctor = function(source, flags)
 {
   this.m_source = source;
-  this.m_regexp = new RegExp(source);
+  this.m_flags = flags;
+  this.m_regexp = new RegExp(source, flags);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,10 +60,12 @@ fan.sys.Regex.prototype.$ctor = function(source)
 fan.sys.Regex.prototype.equals = function(obj)
 {
   if (obj instanceof fan.sys.Regex)
-    return obj.m_source === this.m_source;
+    return obj.m_source === this.m_source && obj.m_flags == this.m_flags;
   else
     return false;
 }
+
+fan.sys.Regex.prototype.flags = function() { return this.m_flags; }
 
 fan.sys.Regex.prototype.hash = function() { return fan.sys.Str.hash(this.m_source); }
 

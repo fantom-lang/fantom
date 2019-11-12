@@ -26,6 +26,10 @@ class RegexTest : Test
     verifyEq(re.hash, ";".hash)
     verifyType(re, Regex#)
     verifyEq(Regex.defVal.toStr, "")
+    verifyNotEq(Regex("foo"), Regex("foo", "i"))
+    verifyEq(Regex("foo", "i"), Regex("foo", "i"))
+    verifyNotEq(Regex("foo", "mi"), Regex("foo", "i"))
+    verifyEq(Regex("foo", "i").flags, "i")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,6 +59,23 @@ class RegexTest : Test
     re = Regex.glob("+()")
     verifyEq(re.toStr, Str<|\+\(\)|>)
     verifyEq(re.matches("+()"), true)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Flags
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFlags()
+  {
+    re := Regex("abc", "")
+    verifyEq(re.flags, "")
+    verifyEq(re.matches("abc"), true)
+    verifyEq(re.matches("ABC"), false)
+
+    re = Regex("abc", "i")
+    verifyEq(re.flags, "i")
+    verifyEq(re.matches("abc"), true)
+    verifyEq(re.matches("ABC"), true)
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -18,9 +18,15 @@ const final class Regex
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Compile a regular expression pattern string.
+  ** Compile a regular expression pattern string.  Flags is a string
+  ** of ASCII chars.  In JavaScript the flags are passed directly to RegExp.
+  ** In Java the flags are matched against known constants or ignored.
+  ** The following cross-platform flags are supported:
+  **   - 'i': case insensitive
+  **   - 'm': multi-line support for start/end matching
+  **   - 's': dot all to allow "." to match newlines
   **
-  static new fromStr(Str pattern)
+  static new fromStr(Str pattern, Str flags := "")
 
   **
   ** Make a Regex which will match a glob pattern:
@@ -51,7 +57,7 @@ const final class Regex
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Equality is based on pattern string.
+  ** Equality is based on pattern string and flags.
   **
   override Bool equals(Obj? obj)
 
@@ -68,6 +74,11 @@ const final class Regex
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return flags string
+  **
+  Str flags()
 
   **
   ** Convenience for [matcher(s).matches]`RegexMatcher.matches`.
@@ -94,9 +105,5 @@ const final class Regex
   **     discarded.
   **
   Str[] split(Str s, Int limit := 0)
-
-
-  // TODO: flags support
-  // TODO: examples in fandoc
 
 }
