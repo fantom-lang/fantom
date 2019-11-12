@@ -170,7 +170,7 @@ internal class WispRes : WebRes
   ** to terminate pipeline processing.  Once called, no further
   ** WebSteps in the pipeline are executed.
   **
-  override Void done() { isDone = true }
+  override Void done() { isDone = true; isCommitted = true }
 
   **
   ** Write response to socket, then and return ownership of socket
