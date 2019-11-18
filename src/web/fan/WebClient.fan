@@ -471,7 +471,7 @@ class WebClient
     try
     {
       // parse status-line
-      res = in.readLine
+      res = in.readLine ?: throw IOErr("No response")
       if (res.startsWith("HTTP/1.1")) resVersion = ver11
       else if (res.startsWith("HTTP/1.0")) resVersion = ver10
       else throw Err("Not HTTP")

@@ -42,6 +42,8 @@ public class TcpSocketPeer
     }
   }
 
+  public static TcpSocket makeTls() { return makeTls(null, null); }
+  public static TcpSocket makeTls(TcpSocket upgrade) { return makeTls(upgrade, null); }
   public static TcpSocket makeTls(TcpSocket upgrade, Object tlsContext)
   {
     try
