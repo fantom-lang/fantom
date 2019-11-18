@@ -280,8 +280,15 @@ abstract const class Env
   ** Get listing of all keys mapped by indexed props.  The
   ** values of each key may be resolved by the `index` method.
   ** See [docLang]`docLang::Env#index` for details.
+  ** NOTE: Java runtime only
   **
   virtual Str[] indexKeys()
+
+  **
+  ** Return list of all pod names that define the given key.
+  ** NOTE: Java runtime only
+  **
+  virtual Str[] indexPodNames(Str key)
 
   **
   ** Return a merged key/value map of all the prop files found

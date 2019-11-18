@@ -10,6 +10,7 @@
 - Compiler support for Jigsaw Java 9+
 - List/Map addIfNotNull
 - Buf.bytesEqual
+- Env.indexPodNames
 - dom: HttpReq.send support for sending DomFile as raw content
 - dom: HttpReq.onProgress callback
 - dom: allow Dialog.title to take Elem content in addition to Str label
