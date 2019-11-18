@@ -462,7 +462,7 @@ fan.dom.ElemPeer.prototype.onEvent = function(self, type, useCapture, handler)
 fan.dom.ElemPeer.prototype.removeEvent = function(self, type, useCapture, handler)
 {
   if (handler.$func)
-    this.elem.removeEventListener(type, handler, useCapture);
+    this.elem.removeEventListener(type, handler.$func, useCapture);
 }
 
 fan.dom.ElemPeer.prototype.toStr = function(self)
