@@ -124,7 +124,6 @@ internal class WispRes : WebRes
 
     // unless content-length was forced to zero, write simple body
     Buf? buf := null
-    hasContent := headers["Content-Length"] != "0"
     if (headers["Content-Length"] == null)
     {
       buf = Buf()
@@ -146,7 +145,7 @@ internal class WispRes : WebRes
     this.statusCode = statusCode
     this.errMsg = msg
     if (buf != null) this.out.writeBuf(buf.flip)
-    commit(hasContent)
+    else commit(false)
     done
   }
 
