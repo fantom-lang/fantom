@@ -124,6 +124,7 @@ internal class WispRes : WebRes
 
     // unless content-length was forced to zero, write simple body
     Buf? buf := null
+    hasContent := headers["Content-Length"] != "0"
     if (headers["Content-Length"] == null)
     {
       buf = Buf()
@@ -145,6 +146,7 @@ internal class WispRes : WebRes
     this.statusCode = statusCode
     this.errMsg = msg
     if (buf != null) this.out.writeBuf(buf.flip)
+    commit(hasContent)
     done
   }
 
@@ -170,7 +172,7 @@ internal class WispRes : WebRes
   ** to terminate pipeline processing.  Once called, no further
   ** WebSteps in the pipeline are executed.
   **
-  override Void done() { isDone = true; isCommitted = true }
+  override Void done() { isDone = true }
 
   **
   ** Write response to socket, then and return ownership of socket
