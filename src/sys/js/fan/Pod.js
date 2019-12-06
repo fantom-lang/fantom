@@ -33,6 +33,10 @@ fan.sys.Pod.list = function()
   return fan.sys.Pod.$list;
 }
 
+fan.sys.Pod.load = function(instream) {
+  throw fan.sys.UnsupportedErr.make("Pod.load");
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
@@ -72,7 +76,47 @@ fan.sys.Pod.prototype.uri = function()
   return this.m_uri;
 }
 
+fan.sys.Pod.prototype.depends = function()
+{
+  if (this.$dependsArray == null)
+  {
+    var arr = [];
+    var depends = this.meta().get("pod.depends").split(";");
+    for (var i=0; i<depends.length; ++i) {
+      var d = depends[i];
+      if (d == "") continue;
+      arr.push(fan.sys.Depend.fromStr(d))
+    }
+    this.$dependsArray = fan.sys.List.make(fan.sys.Depend.$type, arr);
+  }
+  return this.$dependsArray;
+}
+
+fan.sys.Pod.prototype.props = function(uri, maxAge) {
+  return fan.sys.Env.cur().props(this, uri, maxAge);
+}
+
+fan.sys.Pod.prototype.config = function(key, def) {
+  return fan.sys.Env.cur().config(this, key, def);
+}
+
+fan.sys.Pod.prototype.doc = function() {
+  return null;
+}
+
 fan.sys.Pod.prototype.toStr = function() { return this.m_name; }
+
+//////////////////////////////////////////////////////////////////////////
+// Files
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Pod.prototype.files = function() {
+  throw fan.sys.UnsupportedErr.make("Pod.files")
+}
+
+fan.sys.Pod.prototype.file = function(uri, checked) {
+  throw fan.sys.UnsupportedErr.make("Pod.file")
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Types
