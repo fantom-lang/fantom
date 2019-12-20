@@ -173,7 +173,7 @@ const final class Time
 
   **
   ** Add the specified duration to this time. Throw ArgErr if 'dur' is
-  ** not between 0 and 24hr.
+  ** not between 0 and 24hr. Overflows will rollover.
   **
   ** Example:
   **   Time(5,0,0) + 30min  =>  05:30:00
@@ -181,7 +181,7 @@ const final class Time
   @Operator Time plus(Duration dur)
 
   ** Subtract the specified duration to this time. Throw ArgErr if 'dur' is
-  ** not between 0 and 24hr.
+  ** not between 0 and 24hr. Overflows will rollover.
   **
   ** Example:
   **   Time(5,0,0) - 30min  =>  04:30:00
