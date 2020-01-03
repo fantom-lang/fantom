@@ -556,6 +556,7 @@ kilocubic_feet_per_minute, kcfm; m3*sec-1; 0.4719474432
 imperial_gallons_per_minute, galUK/min; m3*sec-1; 0.004546092
 liters_per_minute, L/min; m3*sec-1; 1.6666666666666667E-5
 gallons_per_minute, gal/min; m3*sec-1; 6.30901964E-5
+gallons_per_hour, gal/hr, gph; m3*sec-1; 1.0515033E-6
 liters_per_hour, L/h; m3*sec-1; 2.7777777777777776E-7
 cubic_meters_per_minute, m³/min; m3*sec-1; 0.016666666666666666
 cubic_meters_per_hour, m³/h; m3*sec-1; 2.777777777777778E-4
