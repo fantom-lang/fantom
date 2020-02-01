@@ -244,6 +244,13 @@ fan.sys.TimeZone.compareOnDay = function(rule, x, year, mon, day)
       if (start > day) return +1;
       return 0;
 
+    case '<':
+      var lastw = fan.sys.DateTime.weekdayInMonth(year, fan.sys.Month.m_vals.get(mon), fan.sys.Weekday.m_vals.get(x.onWeekday), -1);
+      while (lastw > x.onDay) lastw -= 7;
+      if (lastw < day) return -1;
+      if (lastw > day) return +1;
+      return 0;
+
     default:
       throw new Error('' + x.onMode);
   }

@@ -765,7 +765,6 @@ class DateTimeTest : Test
     verifyDateTime(195256800000_000000, jeru, 2006, mar, 10, 0, 0, 0, fri, std)
     verifyDateTime(195343200000_000000, jeru, 2006, mar, 11, 0, 0, 0, sat, std)
     verifyDateTime(197071200000_000000, jeru, 2006, mar, 31, 0, 0, 0, fri, std)
-    verifyDateTime(197154000000_000000, jeru, 2006, apr,  1, 0, 0, 0, sat, dst)
 
     // St. John has -3:30 offset
     verifyDateTime(255148200000_000000, stJohn, 2008, jan, 31, 23, 0, 0, thu, std)

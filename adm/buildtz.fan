@@ -20,8 +20,7 @@ using build
 ** Refer to the "zic.8.txt" source file the code distribution
 ** to describe the format of the input text files.
 **
-** http://www.twinsun.com/tz/tz-link.htm
-** ftp://elsie.nci.nih.gov/pub/
+** https://www.iana.org/time-zones
 **
 ** Refer to TimeZone.java for the time zone binary database format.
 **
@@ -39,12 +38,20 @@ using build
 **   - Africa/Cairo has too many rules for 2010, just picked last one
 **   - Asia/Gaza was weird, commented out 2010
 **
-** Conversion Notes Sep-2011
+** Conversion Notes Sep-2015
 ** -------------------------
 **   - 2014h version
 **   - Africa/Cairo has many overlapping rules - nuked many of them
 **   - Africa/Casabalanca has overlapping rules - nuked many of them
 **   - Asia/Hebron - overlapping rules, nuked many of 2010
+**
+** Conversion Notes Jan-2020
+** -------------------------
+**   - 2019c version
+**   - Africa/Cairo has many overlapping rules - nuked many of them
+**   - Africa/Casabalanca has overlapping rules - nuked many of them
+**   - Asia/Hebron - overlapping rules, nuked many of 2010
+**   - Asia/Gaza - overlapping rules, couple in 2010-2013
 **
 class Build : BuildScript
 {
@@ -54,7 +61,7 @@ class Build : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   // directory of input files
-  Uri srcDir := `/work/stuff/tzinfo/2014h/`
+  Uri srcDir := `/work/stuff/tzinfo/2019c/`
 
   // input files from Olsen database
   Uri[] srcUris :=
@@ -75,7 +82,7 @@ class Build : BuildScript
 
   // we don't include any rules after this date (applies
   // to Israeli time which is calculated out into the future)
-  Int maxYear := 2020
+  Int maxYear := 2030
 
   // parsed zones
   Zone[] zones := Zone[,]
@@ -694,7 +701,7 @@ class NormRule
 **     'l'  lastSun  the last Sunday in the month
 **     'l'  lastMon  the last Monday in the month
 **     '>'  Sun>=8   first Sunday on or after the eighth
-**     '<'  Sun<=25  last Sunday on or before the 25th (not used)
+**     '<'  Sun<=25  last Sunday on or before the 25th
 **
 **  Names of days of the week may be abbreviated or
 **  spelled out in full.  Note that there must be no
@@ -721,6 +728,15 @@ class OnDay
       x.mode = '>'
       x.weekday = Build.toWeekday(s[0..<gt])
       x.day = s[gt+2..-1].toInt
+      return x
+    }
+
+    lt := s.index("<=")
+    if (lt != null)
+    {
+      x.mode = '<'
+      x.weekday = Build.toWeekday(s[0..<lt])
+      x.day = s[lt+2..-1].toInt
       return x
     }
 
