@@ -565,7 +565,7 @@ public final class TimeZone
    *     'l'  lastSun  the last Sunday in the month
    *     'l'  lastMon  the last Monday in the month
    *     '>'  Sun>=8   first Sunday on or after the eighth
-   *     '<'  Sun<=25  last Sunday on or before the 25th (not used)
+   *     '<'  Sun<=25  last Sunday on or before the 25th
    */
   static int compareOnDay(Rule rule, DstTime x, int year, int mon, int day)
   {
@@ -591,6 +591,13 @@ public final class TimeZone
         while (start < x.onDay) start += 7;
         if (start < day) return -1;
         if (start > day) return +1;
+        return 0;
+
+      case '<':
+        int lastw = DateTime.weekdayInMonth(year, mon, x.onWeekday, -1);
+        while (lastw > x.onDay) lastw -= 7;
+        if (lastw < day) return -1;
+        if (lastw > day) return +1;
         return 0;
 
       default:
