@@ -19,6 +19,7 @@
 - domkit: Dnd support for DomFiles
 - Enhance Regex to support cross-platform flags
 - Update timezone database to tzinfo 2019c
+- web: WebRes.removeCookie
 
 *Build 1.0.73 (21 May 2019)*
 - WebReq isGet, isPost conveniences

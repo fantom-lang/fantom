@@ -46,6 +46,16 @@ abstract class WebRes
   abstract Cookie[] cookies()
 
   **
+  ** Remove a cookie for this response.  This method is a
+  ** convenience for:
+  **   res.cookies.add(Cookie(name, "") { maxAge=0day }
+  **
+  Void removeCookie(Str name)
+  {
+    cookies.add(Cookie(name, "") { maxAge=0day })
+  }
+
+  **
   ** Return true if this response has been commmited.  A committed
   ** response has written its response headers, and can no longer
   ** modify its status code or headers.  A response is committed
