@@ -34,21 +34,36 @@ using graphics
       if (cbDrag == null) return
       data := cbDrag.call(elem)
       DndUtil.setData(e.dataTransfer, data)
+      if (cbDragImage != null)
+      {
+        this.dragImage = cbDragImage.call(data)
+        this.dragImage.style->position = "absolute"
+        this.dragImage.style->top      = "-1000px"
+        this.dragImage.style->right    = "-1000px"
+        Win.cur.doc.body.add(dragImage)
+        e.dataTransfer.setDragImage(dragImage, 0, 0)
+      }
     }
     elem.onEvent("dragend", false) |e|
     {
       if (cbEnd != null) cbEnd(elem)
+      dragImage?.parent?.remove(dragImage)
     }
   }
 
   ** Callback to get data payload for drag event.
   Void onDrag(|Elem->Obj| f) { cbDrag = f }
 
+  ** Callback to customize the drag image for drag event.
+  Void onDragImage(|Obj->Elem| f) { cbDragImage = f }
+
   ** Callback when the drag event has ended.
   Void onEnd(|Elem| f) { cbEnd = f }
 
   private Func? cbDrag
+  private Func? cbDragImage
   private Func? cbEnd
+  private Elem? dragImage
 }
 
 **************************************************************************
