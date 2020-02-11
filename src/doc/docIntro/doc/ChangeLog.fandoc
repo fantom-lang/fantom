@@ -16,8 +16,8 @@
 - dom: allow Dialog.title to take Elem content in addition to Str label
 - dom: Event.fromNative
 - dom: Elem.scrollIntoView
-- dom: DragTarget.onDragImage
 - domkit: Dnd support for DomFiles
+- domkit: DragTarget.onDragImage
 - Enhance Regex to support cross-platform flags
 - Update timezone database to tzinfo 2019c
 - web: WebRes.removeCookie
