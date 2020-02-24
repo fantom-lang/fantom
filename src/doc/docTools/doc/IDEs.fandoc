@@ -48,6 +48,12 @@ Fantom package for the [Atom]`https://atom.io/` editor.
 
  - [language-fantom]`https://github.com/mgiannini/language-fantom`
 
+Visual Studio Code (a-mackay) [#vscode]
+***************************************
+Fantom syntax highlighting for the [Visual Studio Code]`https://code.visualstudio.com/` editor.
+
+- [a-mackay/fantom-syntax-highlighting]`https://github.com/a-mackay/fantom-syntax-highlighting`
+
 Text Editors  [#textEditors]
 ****************************
 The Fantom distro contains configuration files for many common text editors
