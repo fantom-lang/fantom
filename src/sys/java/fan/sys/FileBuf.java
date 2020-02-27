@@ -336,7 +336,7 @@ public class FileBuf
       long total = 0;
       while (total < size)
       {
-        int n = fp.read(temp, 0, (int)Math.min(temp.length, (int)size-total));
+        int n = fp.read(temp, 0, (int)Math.min(temp.length, size-total));
         md.update(temp, 0, n);
         total += n;
       }
