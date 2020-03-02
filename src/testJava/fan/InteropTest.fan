@@ -310,6 +310,43 @@ class InteropTest : JavaTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Boxed Primitives
+//////////////////////////////////////////////////////////////////////////
+
+  Void testBoxedPrimitives()
+  {
+    compile(
+     "using [java] java.lang::Integer
+      using [java] java.lang::Float as JFloat
+      using [java] fanx.test
+      class Foo
+      {
+        Obj init() { return InteropTest() }
+
+        // java.lang.Boolean, Long, and Double map to boxed Bool?, Int?, Float?
+        Bool? setb(Obj o, Bool v) { x := (InteropTest)o; x.boolo(v); return x.boolo() }
+        Int? setl(Obj o, Int v) { x := (InteropTest)o; x.numol(v); return x.numol() }
+        Float? setd(Obj o, Float v) { x := (InteropTest)o; x.numod(v); return x.numod() }
+
+        // test using java.lang.Integer, etc directly for rest
+        Int seti(Obj o, Int v) { x := (InteropTest)o; x.numoi(Integer.valueOf(v)); return x.numoi().longValue() }
+        Float setf(Obj o, Float v) { x := (InteropTest)o; x.numof(JFloat.valueOf(v)); return x.numof().doubleValue() }
+      }")
+
+    obj := pod.types.first.make
+    x := obj->init
+
+
+    verifyEq(obj->setb(x, true), true)
+    verifyEq(obj->setb(x, false), false)
+    verifyEq(obj->setl(x, -70123), -70123)
+    verifyEq(obj->setd(x, -70123f), -70123f)
+
+    verifyEq(obj->seti(x, 1234), 1234)
+    verifyEq(obj->setf(x, 45678f), 45678f)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Arrays
 //////////////////////////////////////////////////////////////////////////
 
@@ -512,7 +549,7 @@ class InteropTest : JavaTest
     verify(obj->d)
     // TODO: need to fix JLS resolution rules
     // verify(obj->e)
-    verify(obj->f)
+    // echo(obj->f)
   }
 
 //////////////////////////////////////////////////////////////////////////

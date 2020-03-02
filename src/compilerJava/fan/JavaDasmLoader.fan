@@ -271,7 +271,7 @@ internal class JavaDasmLoader
       return ((JavaType)comp).toArrayOf.toNullable
     }
 
-    // check for direct mappings of Obj/Str/Decimal (considered nullable)
+    // check for direct mappings of java.lang classes (considered nullable)
     if (!multiDim)
     {
       switch (t.sig)
@@ -279,6 +279,9 @@ internal class JavaDasmLoader
         case "Ljava/lang/Object;":     return ns.objType.toNullable
         case "Ljava/lang/String;":     return ns.strType.toNullable
         case "Ljava/math/BigDecimal;": return ns.decimalType.toNullable
+        case "Ljava/lang/Long;":       return ns.intType.toNullable
+        case "Ljava/lang/Double;":     return ns.floatType.toNullable
+        case "Ljava/lang/Boolean;":    return ns.boolType.toNullable
       }
     }
 
