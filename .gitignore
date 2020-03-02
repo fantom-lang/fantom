@@ -1,0 +1,46 @@
+# ignore files for fan
+
+Thumbs.db
+.DS_Store
+*.log
+
+# IntelliJ
+*.iml
+
+# Visual Studio
+.vs/
+bin/Debug/
+bin/Release/
+obj/Debug/
+obj/Release/
+
+# IntelliJ
+.idea/
+
+# general
+adm/pngcrush
+
+# domkit
+src/domkit/res/css/
+
+# lib/
+lib/java/*.jar
+lib/javascript/
+lib/dotnet/*.pdb
+lib/dotnet/sys.dll
+lib/fan/*.pod
+etc/sys/types.db
+lib/tmp/
+
+# doc/
+doc/
+
+# flux
+etc/flux/session/
+
+# src/
+src/sys/java/temp/
+
+# temp
+tmp/
+temp/
