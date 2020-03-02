@@ -29,6 +29,7 @@ public class InteropTest
 //////////////////////////////////////////////////////////////////////////
 
   public long num = 1000;
+  public boolean bool;
 
   public byte   numb() { return (byte)num; }
   public short  nums() { return (short)num; }
@@ -84,6 +85,22 @@ public class InteropTest
   public long numi(String s) { return num = Integer.parseInt(s); }  // 4x overload
 
   public static int si(String s, int y) { return Integer.parseInt(s) + y; }
+
+//////////////////////////////////////////////////////////////////////////
+// Boxed Primitives
+//////////////////////////////////////////////////////////////////////////
+
+  public Boolean boolo() { return bool; }
+  public Integer numoi() { return Integer.valueOf((int)num); }
+  public Long    numol() { return Long.valueOf(num); }
+  public Double  numod() { return Double.valueOf(num); }
+  public Float   numof() { return Float.valueOf(num); }
+
+  public void boolo(Boolean x) { bool = x.booleanValue(); }
+  public void numoi(Integer x) { num = x.longValue(); }
+  public void numol(Long x)    { num = x.longValue(); }
+  public void numod(Double x)  { num = x.longValue(); }
+  public void numof(Float x)   { num = x.longValue(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Object Arrays
