@@ -388,9 +388,10 @@ using graphics
     {
       this.hpbut = Elem
       {
+        mtop := ((theadh-21) / 2) + 3
         it.style.addClass("domkit-Table-header-popup")
         it.style->height = "${theadh}px"
-        it.add(Elem {})
+        it.add(Elem { it.style->marginTop="${mtop}px" })
         it.add(Elem {})
         it.add(Elem {})
       }
