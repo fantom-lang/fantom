@@ -6,7 +6,8 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.74 (working)*
+*Build 1.0.74 (2 Mar 2020)*
+- Java 8 runtime required
 - Compiler support for Jigsaw Java 9+
 - Binary integer literals prefixed with "0b"
 - List/Map addIfNotNull
@@ -22,6 +23,9 @@
 - Enhance Regex to support cross-platform flags
 - Update timezone database to tzinfo 2019c
 - web: WebRes.removeCookie
+- #2673: JS: Unimplemented methods on Pod.js
+- #2760: JS: Backwards compatibility issue
+- #2784: fan.sys.FileBuf.toDigest() bug
 
 *Build 1.0.73 (21 May 2019)*
 - WebReq isGet, isPost conveniences
