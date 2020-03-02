@@ -18,29 +18,29 @@ obj/Release/
 .idea/
 
 # general
-adm/pngcrush
+/adm/pngcrush
 
 # domkit
-src/domkit/res/css/
+/src/domkit/res/css/
 
 # lib/
-lib/java/*.jar
-lib/javascript/
-lib/dotnet/*.pdb
-lib/dotnet/sys.dll
-lib/fan/*.pod
-etc/sys/types.db
-lib/tmp/
+/lib/java/*.jar
+/lib/javascript/
+/lib/dotnet/*.pdb
+/lib/dotnet/sys.dll
+/lib/fan/*.pod
+/etc/sys/types.db
+/lib/tmp/
 
 # doc/
-doc/
+/doc/
 
 # flux
-etc/flux/session/
+/etc/flux/session/
 
 # src/
-src/sys/java/temp/
+/src/sys/java/temp/
 
 # temp
-tmp/
-temp/
+/tmp/
+/temp/
