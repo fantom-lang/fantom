@@ -8,6 +8,7 @@
 
 *Build 1.0.74 (working)*
 - Compiler support for Jigsaw Java 9+
+- Binary integer literals prefixed with "0b"
 - List/Map addIfNotNull
 - Buf.bytesEqual
 - Env.indexPodNames

@@ -176,8 +176,11 @@ class Tokenizer : CompilerSupport
   private TokenVal number()
   {
     // check for hex value
-    if (cur == '0' && peek == 'x')
-      return hex
+    if (cur == '0')
+    {
+      if (peek == 'x') return hexInt
+      if (peek == 'b') return binaryInt
+    }
 
     // find end of literal
     start := pos
@@ -272,7 +275,7 @@ class Tokenizer : CompilerSupport
   **
   ** Process hex int/long literal starting with 0x
   **
-  TokenVal hex()
+  private TokenVal hexInt()
   {
     consume // 0
     consume // x
@@ -293,6 +296,36 @@ class Tokenizer : CompilerSupport
       nibCount++
       if (nibCount > 16) throw err("Hex literal too big")
       val = val.shiftl(4) + nib;
+      consume
+    }
+
+    return TokenVal(Token.intLiteral, val)
+  }
+
+  **
+  ** Process binary int/long literal starting with 0b
+  **
+  private TokenVal binaryInt()
+  {
+    consume // 0
+    consume // b
+
+    // read first digit
+    val := cur.fromDigit(2)
+    if (val == null) throw err("Expecting binary digit")
+    consume
+    Int bitCount := 1
+    while (true)
+    {
+      bit := cur.fromDigit(2)
+      if (bit == null)
+      {
+        if (cur == '_') { consume; continue }
+        break
+      }
+      bitCount++
+      if (bitCount > 64) throw err("Binary literal too big")
+      val = val.shiftl(1) + bit;
       consume
     }
 
