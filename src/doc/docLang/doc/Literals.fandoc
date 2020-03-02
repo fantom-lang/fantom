@@ -46,9 +46,9 @@ actually more than 2^16 Unicode characters).  Int is 'const' which means that al
 instances are immutable.
 
 Int literals are expressed as a string of decimal digits.  An Int can also be
-represented in hexadecimal if prefixed with '0x'.  Octal notation is not
-supported.  You can use the '_' underbar anywhere within an 'Int' literal as
-a separator to make your code more readable.
+represented in hexadecimal if prefixed with '0x' or binary if prefixed with '0b'.
+Octal notation is not supported.  You can use the '_' underbar anywhere within
+an 'Int' literal as a separator to make your code more readable.
 
 Fantom also permits C style character literals to represent a Unicode code point
 as an 'Int' literal.  Character literals are surrounded with the tick and support
@@ -65,6 +65,7 @@ digit hexadecimal number.
   -89_039
   0xcafebabe
   0xCAFE_BABE
+  0b1011
   '?'
   '\n'
   '\u03ab'

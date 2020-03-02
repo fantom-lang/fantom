@@ -106,6 +106,7 @@ class TokenizerTest : Test
     verifyInt("07",          07)
     verifyInt("1_234",       1234)
     verifyInt("1_234_567",   1234567)
+
     verifyInt("0x3",         0x3)
     verifyInt("0x03",        0x03)
     verifyInt("0x123",       0x123)
@@ -119,6 +120,18 @@ class TokenizerTest : Test
     verifyInt("0xFFFFFFFFFFFFFFFF",    0xFFFFFFFFFFFFFFFF)
     verifyInt("0xffff_ffff",           0xffffffff)
     verifyInt("0xFFFF_FFFF_FFFF_FFFF", 0xFFFFFFFFFFFFFFFF)
+
+    verifyInt("0b0",         0)
+    verifyInt("0b1",         1)
+    verifyInt("0b11",        3)
+    verifyInt("0b101",       5)
+    verifyInt("0b1000",      8)
+    verifyInt("0b10001000",  0x88)
+    verifyInt("0b1000100011110001",  0x88f1)
+    verifyInt("0b100100001000100011110001",  0x9088f1)
+    verifyInt("0b11110000_10010000_10001000_11110001",  0xf090_88f1)
+    verifyInt("0b11110000_10010000_10001000_11110001_11110000_10010000_10001000_11100010",  0xf090_88f1_f090_88e2)
+
     verifyInt("2147483647",            2147483647)
     verifyInt("9223372036854775807",   9223372036854775807)
     verifyInt("9_223_372_036_854_775_807",9223372036854775807)
