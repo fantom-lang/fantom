@@ -41,7 +41,7 @@ The easiest way to perform a bootstrap build from hg tip is to use the
 "bootstrap.fan" script:
   1. Download latest released build from `http://fantom.org/`
   2. Unzip that build to '{relHome}'
-  3. Ensure 'hg' is installed in your path (see [Mercurial]`http://mercurial.selenic.com/`)
+  3. Ensure 'git' is installed in your path (see [Git]`https://git-scm.com/`)
   4. Verify 'java_home' env var points to your JDK installation
   5. Execute '{relHome}/bin/fan {relHome}/adm/bootstrap.fan'
   6. Go grab a cup of coffee
