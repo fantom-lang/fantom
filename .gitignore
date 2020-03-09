@@ -24,7 +24,7 @@ obj/Release/
 /src/domkit/res/css/
 
 # lib/
-/lib/java/*.jar
+/lib/java/**/*.jar
 /lib/javascript/
 /lib/dotnet/*.pdb
 /lib/dotnet/sys.dll

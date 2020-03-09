@@ -10,7 +10,7 @@
 using util
 
 **
-** Perform a check-out from hg tip and clean bootstrap build
+** Perform a check-out from git tip and clean bootstrap build
 **
 class Bootstrap : AbstractMain
 {
@@ -19,16 +19,16 @@ class Bootstrap : AbstractMain
 // Env
 //////////////////////////////////////////////////////////////////////////
 
-  @Opt { help = "Mercurial repository to clone" }
-  Str hgRepo := "https://bitbucket.org/fantom/fan-1.0"
+  @Opt { help = "Git repository to clone" }
+  Str gitRepo := "https://github.com/fantom-lang/fantom"
 
-  @Opt { help = "Skip hg pull step" }
+  @Opt { help = "Skip git pull step" }
   Bool skipPull := false
 
   @Opt { help = "Dir to clone repo and build" }
   File devHome
 
-  Str? hgVer
+  Str? gitVer
   Str? jdkVer
   File? jdkHome
   Str relVer
@@ -57,7 +57,7 @@ class Bootstrap : AbstractMain
       printEnv
       checks
       confirm
-      hgPull
+      gitPull
       configEtcs
       build
       return 0
@@ -71,11 +71,11 @@ class Bootstrap : AbstractMain
 
   Void initEnv()
   {
-    // hgVer
+    // gitVer
     if (skipPull)
-      hgRepo = hgVer = "*** SKIP ***"
+      gitRepo = gitVer = "*** SKIP ***"
     else
-      hgVer = execToStr(["hg", "version"])
+      gitVer = execToStr(["git", "--version"])
 
     // javaHome
     javaHome := Env.cur.vars.find |v, k| { k.lower == "java_home" }
@@ -100,9 +100,9 @@ class Bootstrap : AbstractMain
   {
     echo("")
     echo("Bootstrap Environment:")
-    echo("  hgRepo:    $hgRepo")
-    echo("  hgVer:     $hgVer")
-    echo("  jdkVer:    $jdkVer (need 1.6+)")
+    echo("  gitRepo:   $gitRepo")
+    echo("  gitVer:    $gitVer")
+    echo("  jdkVer:    $jdkVer (need 1.8+)")
     echo("  jdkHome:   $jdkHome")
     echo("  relVer:    $relVer")
     echo("  relHome:   $relHome")
@@ -116,8 +116,8 @@ class Bootstrap : AbstractMain
 
   Void checks()
   {
-    if (!hgVer.contains("Mercurial") && !skipPull)
-      fatal("check that 'hg' is installed in your path")
+    if (!gitVer.contains("git") && !skipPull)
+      fatal("check that 'git' is installed in your path")
 
     if (!jdkVer.contains("javac"))
       fatal("check that 'javac' is installed in your path")
@@ -145,18 +145,18 @@ class Bootstrap : AbstractMain
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Hg Pull
+// Git Pull
 //////////////////////////////////////////////////////////////////////////
 
-  Void hgPull()
+  Void gitPull()
   {
     if (skipPull) return
 
     // clone or pull+update
-    if(devHome.plus(`.hg/`).exists)
-      runPullCmd(["hg", "pull", "-u", hgRepo], devHome)
+    if(devHome.plus(`.git/`).exists)
+      runPullCmd(["git", "pull"], devHome)
     else
-      runPullCmd(["hg", "clone", hgRepo, devHome.osPath], devHome.parent)
+      runPullCmd(["git", "clone", gitRepo, devHome.osPath], devHome.parent)
   }
 
   Void runPullCmd(Str[] cmd, File workDir)
@@ -164,7 +164,7 @@ class Bootstrap : AbstractMain
     echo("")
     echo(cmd.join(" "))
     r := Process(cmd, workDir).run.join
-    if (r != 0) fatal("could not hg clone/pull repo")
+    if (r != 0) fatal("could not git clone/pull repo")
   }
 
 //////////////////////////////////////////////////////////////////////////
