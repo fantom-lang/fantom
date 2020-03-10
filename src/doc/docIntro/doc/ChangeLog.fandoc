@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.75 (working)*
+- Move repo from BitBucket to GitHub
+
 *Build 1.0.74 (2 Mar 2020)*
 - Java 8 runtime required
 - Compiler support for Jigsaw Java 9+
