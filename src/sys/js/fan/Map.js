@@ -131,6 +131,11 @@ fan.sys.Map.prototype.add = function(key, val)
 
 fan.sys.Map.prototype.addIfNotNull = function(key, val)
 {
+  return this.addNotNull(key, val);
+}
+
+fan.sys.Map.prototype.addNotNull = function(key, val)
+{
   if (val == null) return this;
   return this.add(key, val);
 }
@@ -370,6 +375,19 @@ fan.sys.Map.prototype.findAll = function(f)
   return acc;
 }
 
+fan.sys.Map.prototype.findNotNull = function()
+{
+  var acc = fan.sys.Map.make(this.m_type.k, this.m_type.v.toNonNullable());
+  if (this.m_ordered) acc.ordered$(true);
+  if (this.m_caseInsensitive) acc.caseInsensitive$(true);
+  this.$each(function(b)
+  {
+    if (b.val != null)
+      acc.set(b.key, b.val);
+  });
+  return acc;
+}
+
 fan.sys.Map.prototype.exclude = function(f)
 {
   var acc = fan.sys.Map.make(this.m_type.k, this.m_type.v);
@@ -427,6 +445,17 @@ fan.sys.Map.prototype.map = function(f)
   if (this.m_ordered) acc.ordered$(true);
   if (this.m_caseInsensitive) acc.caseInsensitive$(true);
   this.$each(function(b) { acc.add(b.key, f.call(b.val, b.key)); });
+  return acc;
+}
+
+fan.sys.Map.prototype.mapNotNull = function(f)
+{
+  var r = f.returns();
+  if (r == fan.sys.Void.$type) r = fan.sys.Obj.$type;
+  var acc = fan.sys.Map.make(this.m_type.k, r.toNonNullable());
+  if (this.m_ordered) acc.ordered$(true);
+  if (this.m_caseInsensitive) acc.caseInsensitive$(true);
+  this.$each(function(b) { acc.addNotNull(b.key, f.call(b.val, b.key)); });
   return acc;
 }
 

@@ -122,10 +122,14 @@ final class Map
   **
   M add(K key, V val)
 
+  ** Deprecated - use addNotNull
+  @Deprecated { msg = "Use addNotNull" }
+  M addIfNotNull(K key, V? val)
+
   **
   ** Call `add` if val is non-null otherwise do nothing.  Return this.
   **
-  M addIfNotNull(K key, V? val)
+  M addNotNull(K key, V? val)
 
   **
   ** Get the value for the specified key, or if it doesn't exist
@@ -293,6 +297,13 @@ final class Map
   M findAll(|V val, K key->Bool| c)
 
   **
+  ** Return a new map containing all the key/value pairs where
+  ** value is not null.  If this map is `ordered` or `caseInsensitive`,
+  ** then the resulting map is too.  This method is readonly safe.
+  **
+  M findNotNull()
+
+  **
   ** Return a new map containing the key/value pairs for which c
   ** returns false.  If c returns true for every item, then return
   ** an empty list.  The inverse of this method is `findAll`.  If
@@ -345,6 +356,15 @@ final class Map
   **   x => [2:4, 3:6, 4:8]
   **
   Obj:Obj? map(|V val, K key->Obj?| c)
+
+  **
+  ** Convenience for `map` and `findNotNull`.  Each item is
+  ** mapped by the given function and if null is returned it is
+  ** excluded from the result.  The resulting type is based on
+  ** on the return type of c but non-nullable.  This method is
+  ** readonly safe.
+  **
+  Obj:Obj? mapNotNull(|V val, K key->Obj?| c)
 
 //////////////////////////////////////////////////////////////////////////
 // Readonly

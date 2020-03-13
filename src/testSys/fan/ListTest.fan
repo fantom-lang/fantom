@@ -372,17 +372,17 @@ class ListTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// AddIfNotNull
+// AddNotNull
 //////////////////////////////////////////////////////////////////////////
 
-  Void testAddIfNotNull()
+  Void testAddNotNull()
   {
     x := Str[,]
-    verifySame(x.addIfNotNull("a"), x)
+    verifySame(x.addNotNull("a"), x)
     verifyEq(x, ["a"])
-    verifySame(x.addIfNotNull(null), x)
+    verifySame(x.addNotNull(null), x)
     verifyEq(x, ["a"])
-    verifySame(x.addIfNotNull("b"), x)
+    verifySame(x.addNotNull("b"), x)
     verifyEq(x, ["a", "b"])
   }
 
@@ -1000,6 +1000,12 @@ class ListTest : Test
     verifyEq([null, "a", 3, "b", null, 5ms].findType(Duration#), [5ms])
     verifyEq(["a", 3, "b", 6sec, 5f].findType(Obj#), ["a", 3, "b", 6sec, 5f])
 
+    // findNonNull
+    verifyEq([1, null, 2].findNotNull, Int[1, 2])
+    verifyEq(Str?[null].findNotNull, Str[,])
+    verifyEq(Str?[null, "x", null, null, "y", null].findNotNull, Str["x", "y"])
+    verifyEq([null, 1, null, "foo"].findNotNull, Obj[1, "foo"])
+
     // exclude
     verifyEq(list.exclude|Int v, Int i->Bool| { return v % 20 == 0 }, [10, 30])
     verifyEq(list.exclude|Int v, Int i->Bool| { return i % 2 == 0 },  [10, 30, 60])
@@ -1038,6 +1044,19 @@ class ListTest : Test
     verifyEq(list.map |Int v->Int| { v*2 },  Int[6, 8, 10])
     verifyEq(list.map |Int v->Obj?| { return null }, [null, null, null])
     verifyEq(list.map |Int v, Int i->Bool| { return i%2==0 },  [true, false, true])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// MapNotNull
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMapNotNull()
+  {
+    list := [3, 4, 5]
+    verifyEq(list.mapNotNull |Int v->Int?| { v.isOdd ? 10+v : null },  Int[13, 15])
+    verifyEq(list.mapNotNull |Int v->Int?| { null },  Int[,])
+    verifyEq(list.mapNotNull |Int v->Str?| { v.toStr },  Str["3", "4", "5"])
+    verifyEq(list.mapNotNull |Int v->Str| { v.toStr },  Str["3", "4", "5"])
   }
 
 //////////////////////////////////////////////////////////////////////////

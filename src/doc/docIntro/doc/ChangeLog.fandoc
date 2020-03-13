@@ -8,6 +8,9 @@
 
 *Build 1.0.75 (working)*
 - Move repo from BitBucket to GitHub
+- List addNotNull, mapNotNull, findNotNull
+- Map addNotNull, mapNotNull, findNotNull
+- Deprecated List.addIfNotNull, Map.addIfNotNull
 - domkit: Add DropTarget.onLeave callback
 
 *Build 1.0.74 (2 Mar 2020)*

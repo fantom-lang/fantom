@@ -485,17 +485,17 @@ class MapTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// AddIfNotNull
+// AddNotNull
 //////////////////////////////////////////////////////////////////////////
 
-  Void testAddIfNotNull()
+  Void testAddNotNull()
   {
     m := Str:Str[:]
-    verifySame(m.addIfNotNull("foo", null), m)
+    verifySame(m.addNotNull("foo", null), m)
     verifyEq(m, Str:Str[:])
-    verifySame(m.addIfNotNull("foo", "bar"), m)
+    verifySame(m.addNotNull("foo", "bar"), m)
     verifyEq(m, Str:Str["foo":"bar"])
-    verifySame(m.addIfNotNull("foo", null), m)
+    verifySame(m.addNotNull("foo", null), m)
     verifyEq(m, Str:Str["foo":"bar"])
   }
 
@@ -1044,6 +1044,11 @@ class MapTest : Test
     verifyEq(mx2.caseInsensitive, true)
     verifyEq(mx1["two"], 2)
     verifyEq(mx2["two"], 2)
+
+
+    // findNull
+    mc = Str:Int?["x":1, "y":2, "z":null]
+    verifyEq(mc.findNotNull, Str:Int["x":1, "y":2])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1112,6 +1117,38 @@ class MapTest : Test
     m = m.map |v->Str| { v.upper }
     verifyEq(m.caseInsensitive, true)
     verifyEq(m["Foo"], "FOO")
+  }
+
+
+//////////////////////////////////////////////////////////////////////////
+// MapNotNull
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMapNotNull()
+  {
+    m1 := Int:Int?[1:10, 2:null, 3:30, 4:null]
+    verifyEq(m1.mapNotNull |v->Str?| { v?.toStr }, Int:Str[1:"10", 3:"30"])
+
+    // ordered
+    m2 := Int:Int[:]
+    m2.ordered = true
+    m2[1] = 'a'
+    m2[2] = 'b'
+    m2[3] = 'c'
+    m2x := m2.mapNotNull |v->Str?| { v == 'b' ? null : v.toChar.upper }
+    verifyEq(m2x.ordered, true)
+    verifyEq(m2x, Int:Str[1:"A", 3:"C"])
+
+    // case insensitive
+    m3 := Str:Int[:]
+    m3.caseInsensitive = true
+    m3["a"] = 100
+    m3["b"] = 200
+    m3["c"] = 300
+    m3x := m3.mapNotNull |v, k->Int?| { k == "b" ? null : v / 100 }
+    verifyEq(m3x.caseInsensitive, true)
+    verifyEq(m3x, ["a":1, "c":3])
+    verifyEq(m3x["C"], 3)
   }
 
 //////////////////////////////////////////////////////////////////////////

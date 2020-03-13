@@ -400,7 +400,10 @@ public final class List
     return insert(size, value);
   }
 
-  public final List addIfNotNull(Object value)
+  // deprecated
+  public final List addIfNotNull(Object value) { return addNotNull(value); }
+
+  public final List addNotNull(Object value)
   {
     if (value == null) return this;
     return add(value);
@@ -758,6 +761,18 @@ public final class List
     return acc;
   }
 
+  public final List findNotNull()
+  {
+    List acc = new List(of.toNonNullable(), size);
+    for (int i=0; i<size; ++i)
+    {
+      Object item = values[i];
+      if (item != null)
+        acc.add(item);
+    }
+    return acc;
+  }
+
   public final List exclude(Func f)
   {
     List acc = new List(of, size);
@@ -839,6 +854,24 @@ public final class List
     {
       for (int i=0; i<size; ++i)
         acc.add(f.call(values[i], Long.valueOf(i)));
+    }
+    return acc;
+  }
+
+  public final List mapNotNull(Func f)
+  {
+    Type r = f.returns();
+    if (r == Sys.VoidType) r = Sys.ObjType;
+    List acc = new List(r.toNonNullable(), (int)size());
+    if (f.arity() == 1)
+    {
+      for (int i=0; i<size; ++i)
+        acc.addNotNull(f.call(values[i]));
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+        acc.addNotNull(f.call(values[i], Long.valueOf(i)));
     }
     return acc;
   }

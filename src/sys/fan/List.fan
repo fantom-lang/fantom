@@ -218,10 +218,14 @@ final class List
   **
   @Operator L add(V item)
 
+  ** Deprecated - use addNotNull
+  @Deprecated { msg = "Use addNotNull" }
+  L addIfNotNull(V? item)
+
   **
   ** Call `add` if item is non-null otherwise do nothing.  Return this.
   **
-  L addIfNotNull(V? item)
+  L addNotNull(V? item)
 
   **
   ** Add all the items in the specified list to the end of this list.
@@ -432,6 +436,17 @@ final class List
   L findType(Type t)
 
   **
+  ** Return a new list with all null items removed. The returned
+  ** list will be based on this list's type but non-nullable.
+  ** This method is readonly safe.
+  **
+  ** Example:
+  **   list := Int?[1, null, 2, null, 3]
+  **   list.findNotNull => Int[1, 2, 3]
+  **
+  L findNotNull()
+
+  **
   ** Return a new list containing the items for which c returns
   ** false.  If c returns true for every item, then return an
   ** empty list.  The inverse of this method is findAll().  This
@@ -477,6 +492,19 @@ final class List
   **   list.map |Int v->Int| { return v*2 } => [6, 8, 10]
   **
   Obj?[] map(|V item, Int index->Obj?| c)
+
+  **
+  ** Convenience for `map` and `findNotNull`.  Each item is
+  ** mapped by the given function and if null is returned it is
+  ** excluded from the result.  The resulting type is based on
+  ** on the return type of c but non-nullable.  This method is
+  ** readonly safe.
+  **
+  ** Example:
+  **   list := [3, 4, 5]
+  **   list.mapIfNotNull |Int v->Int?| { v.isOdd ? 10+v : null } => [13, 15]
+  **
+  Obj[] mapNotNull(|V item, Int index->Obj?| c)
 
   **
   ** This is a combination of `map` and `flatten`.  Each item in

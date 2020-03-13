@@ -164,6 +164,11 @@ public final class Map
 
   public final Map addIfNotNull(Object key, Object value)
   {
+    return addNotNull(key, value);
+  }
+
+  public final Map addNotNull(Object key, Object value)
+  {
     if (value == null) return this;
     return add(key, value);
   }
@@ -417,6 +422,23 @@ public final class Map
     return acc;
   }
 
+  public final Map findNotNull()
+  {
+    Map acc = new Map(type.k, type.v.toNonNullable());
+    if (this.ordered()) acc.ordered(true);
+    if (this.caseInsensitive()) acc.caseInsensitive(true);
+    Iterator it = pairsIterator();
+    while (it.hasNext())
+    {
+      Entry e = (Entry)it.next();
+      Object key = e.getKey();
+      Object val = e.getValue();
+      if (val != null)
+        acc.set(key, val);
+    }
+    return acc;
+  }
+
   public final Map exclude(Func f)
   {
     Map acc = new Map(type);
@@ -491,6 +513,24 @@ public final class Map
       Object key = e.getKey();
       Object val = e.getValue();
       acc.set(key, f.call(val, key));
+    }
+    return acc;
+  }
+
+  public final Map mapNotNull(Func f)
+  {
+    Type r = f.returns();
+    if (r == Sys.VoidType) r = Sys.ObjType;
+    Map acc = new Map(type.k, r.toNonNullable());
+    if (this.ordered()) acc.ordered(true);
+    if (this.caseInsensitive()) acc.caseInsensitive(true);
+    Iterator it = pairsIterator();
+    while (it.hasNext())
+    {
+      Entry e = (Entry)it.next();
+      Object key = e.getKey();
+      Object val = e.getValue();
+      acc.addNotNull(key, f.call(val, key));
     }
     return acc;
   }
