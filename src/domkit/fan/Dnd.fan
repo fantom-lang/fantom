@@ -111,7 +111,10 @@ using graphics
     elem.onEvent("dragleave", false) |e|
     {
       if (e.target == elem)
+      {
         elem.style.removeClass("domkit-dnd-over")
+        cbLeave?.call()
+      }
     }
     elem.onEvent("drop", false) |e|
     {
@@ -132,6 +135,9 @@ using graphics
   ** 'pagePos' is the current drag node.
   Void onOver(|Point pagePos| f) { this.cbOver = f }
 
+  ** Callback when drag target has left this drop target.
+  Void onLeave(|->| f) { this.cbLeave = f }
+
   private Bool _canDrop(Obj data)
   {
     cbCanDrop == null ? true : cbCanDrop.call(data)
@@ -140,6 +146,7 @@ using graphics
   private Func? cbCanDrop
   private Func? cbDrop
   private Func? cbOver
+  private Func? cbLeave
   private Int depth
 }
 

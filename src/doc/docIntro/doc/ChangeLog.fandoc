@@ -8,6 +8,7 @@
 
 *Build 1.0.75 (working)*
 - Move repo from BitBucket to GitHub
+- domkit: Add DropTarget.onLeave callback
 
 *Build 1.0.74 (2 Mar 2020)*
 - Java 8 runtime required
