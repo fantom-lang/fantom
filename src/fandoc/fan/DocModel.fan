@@ -112,6 +112,11 @@ abstract class DocNode
   {
     return parent?.children?.last === this
   }
+
+  **
+  ** Get all the DocText children as a string
+  **
+  internal abstract Str toText()
 }
 
 **************************************************************************
@@ -134,6 +139,8 @@ class DocText : DocNode
   {
     out.text(this)
   }
+
+  internal override Str toText() { str }
 
   override Str toStr() { return str }
 
@@ -274,6 +281,16 @@ abstract class DocElem : DocNode
     return this
   }
 
+  **
+  ** Get all the DocText children as a string
+  **
+  internal override Str toText()
+  {
+    s := StrBuf()
+    kids.each |kid| { s.join(kid.toText, " ") }
+    return s.toStr
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Path
 //////////////////////////////////////////////////////////////////////////
@@ -350,7 +367,7 @@ class Heading : DocElem
   override DocNodeId id() { return DocNodeId.heading }
   override Str htmlName() { return "h$level" }
   override Bool isInline() { return false }
-  Str title() { children.first.toStr }
+  Str title() { toText }
   const Int level
 }
 
