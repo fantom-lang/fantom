@@ -31,7 +31,7 @@ Installers are also available for macOS and Windows:
 
 ## Community
 
-We are most active on the [Forum](http://fantom.org/forum/topic).
+We are most active on the [Forum](http://fantom.org/forum/topic), but also hang out on [Slack](https://join.slack.com/t/fantom-lang/shared_invite/zt-3se21er9-Tm~L2lpYel6jcqYKPcdkBg). 
 
 Bugs and feature requests should be reported on the Forum.
 
