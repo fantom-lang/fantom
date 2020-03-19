@@ -21,7 +21,7 @@ class HelloWorld
 
 ## Installing
 
-Download the lastest official release from [fantom.org](http://fantom.org).
+Download the latest official release from [fantom.org](http://fantom.org).
 See [Setup](https://fantom.org/doc/docTools/Setup) for installation details.
 
 Installers are also available for macOS and Windows:
