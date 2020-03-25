@@ -14,7 +14,7 @@ in your path:
   {fan.home}/bin
 
 When you first install Fantom it will automatically try to run using
-your currently configured Java VM (requires Java 1.5 or greater).
+your currently configured Java VM (requires Java 8 or greater).
 If things are working correctly you should be able to run "fan -version":
 
   C:\dev\fan\bin>fan -version
@@ -35,7 +35,7 @@ If things are working correctly you should be able to run "fan -version":
 
 If that doesn't work then try these options:
   1. Review [setup]`docTools::Setup` instructions
-  2. Install Java 1.5 or greater and retry
+  2. Install Java 8 or greater and retry
   3. Explicitly [configure]`docTools::Setup#javaRuntime` where
      your JVM is installed
   4. Turn on [launcher debugging]`docTools::Setup#debugging`
