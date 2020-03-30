@@ -13,6 +13,7 @@
 - Deprecated List.addIfNotNull, Map.addIfNotNull
 - domkit: Add DropTarget.onLeave callback
 - Updates to original documentation
+- Remove actor message serialization [#2428]
 
 *Build 1.0.74 (2 Mar 2020)*
 - Java 8 runtime required

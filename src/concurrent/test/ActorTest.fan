@@ -118,16 +118,11 @@ class ActorTest : Test
     verifySame(f.get, constObj)
     verifySame(f.state, FutureState.ok)
 
-    // serializable
-    f = a.send("serial")
-    verifyEq(f.get, SerMsg { i = 123_321 })
-    verifyEq(f.get, SerMsg { i = 123_321 })
-    verifyNotSame(f.get, f.get)
-    verifySame(f.state, FutureState.ok)
-
-    // non-serializable mutables
-    verifyErr(IOErr#) { a.send(this) }
-    verifyErr(IOErr#) { a.send("mutable").get }
+    // not immutable
+    verifyErr(NotImmutableErr#) { a.send(this) }
+    verifyErr(NotImmutableErr#) { a.send(SerMsg { i = 123 }) }
+    verifyErr(NotImmutableErr#) { a.send("serial").get }
+    verifyErr(NotImmutableErr#) { a.send("mutable").get }
 
     // receive raises error
     f = a.send("throw")
@@ -141,9 +136,9 @@ class ActorTest : Test
     switch (msg)
     {
       case "const":   return constObj
-      case "serial":  return SerMsg { i = 123_321 }
+      case "serial":  return SerMsg { i = 123 }
       case "throw":   throw UnknownServiceErr()
-      case "mutable": return Buf()
+      case "mutable": return StrBuf()
       default: return "?"
     }
   }
@@ -682,7 +677,7 @@ class ActorTest : Test
     verifySame(f.typeof, Future#)
 
     // can only complete with immutable value
-    verifyErr(IOErr#) { f.complete(this) }  // TODO: NotImmutableErr
+    verifyErr(NotImmutableErr#) { f.complete(this) }
     verifySame(f.state, FutureState.pending)
 
     // verify complete
