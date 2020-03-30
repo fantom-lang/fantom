@@ -102,7 +102,7 @@ Decimal [#decimal]
 which provides better precision than a Float.  Decimals are ideal for
 financial applications where Floats may incur rounding errors.
 Decimals are backed by 'BigDecimal' in Java and 'System.Decimal'
-in .NET.
+in .NET.  They are not supported in JavaScript.
 
 Decimal literals are expressed just like Float literals except
 they use the "d" or "D" suffix.  Examples of 'Decimal' literals:
@@ -260,7 +260,7 @@ is the foundation of Fantom's subsystem for naming and resolution.  'Uris' have
 their own literal syntax using the back tick:
   `index.html`
   `/some/path/file.txt`
-  `http://fantom.org/`
+  `https://fantom.org/`
   `TPS Report.doc`
 
 Note that when working with URIs in Fantom and representing them as literals we

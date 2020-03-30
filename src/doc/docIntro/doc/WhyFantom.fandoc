@@ -8,43 +8,32 @@
 
 Overview [#overview]
 ********************
-Do we really need another programming language?  Well obviously we thought
-so, or we wouldn't have built Fantom!  Fantom is designed as a practical programming
-language to make it easy and fun to get real work done.  It is not an
-academic language to explore bleeding edge theories, but based on solid real
-world experience.  During its design we set out to solve what we perceived
-were some real problems with Java and C#.  Our background is heavily Java, but
-many of Java's problems are shared by C# and .NET also.
+Fantom's raison d'être is to write portable software that runs on the Java
+VM server side and transpiles to JavaScript for web based front ends.
+Fantom was initially developed back in 2005 during a period of stagnation in
+the Java programming language.  It was also well before any statically
+typed options were available to transpile to JavaScript.
 
 Portability [#portability]
 **************************
-The primary reason we created Fantom is to write software that can seamlessly
-run on both the Java VM and the .NET CLR.  The reality is that many software
-organizations are committed to one or the other of these platforms.  Even
-dynamic languages like Python and Ruby are getting hosted on one of these VMs.
-Whether your business is in-house software or building software components to
-sell to other companies, you tend to pick one camp or the other.
+The original mission for Fantom was to write software to seamlessly run on
+both the Java VM and the .NET CLR.  But over time, we shifted our focus
+to also target JavaScript to run Fantom in web browsers.  The .NET runtime
+is not actively developed anymore, but is complete enough to run the core
+stack.  Today our focus is exclusively on supporting the Java VM and
+transpiling to JavaScript for web applications.
 
-We built Fantom from the ground up to tackle portability between these VMs.
-Fantom's source language compiles into fcode - a bytecode representation that
-can be translated into both Java bytecode and IL easily.  This translation
-is typically done at runtime, which enables you to deploy Fantom modules as
-a single file and have them run on either VM.
-
-But getting a language to run on both Java and .NET is the easy part - in
-fact there are many solutions to this problem.  The hard part is getting
-portable APIs.  Fantom provides a set of APIs which abstract away the Java
-and .NET APIs.  We actually consider this one of Fantom's primary benefits,
-because it gives us a chance to develop a suite of system APIs that are
-elegant and easy to use compared to the Java and .NET counter parts.
-
-But portability means much more than just Java or .NET.  We also support
-compiling Fantom to JavaScript for use in browsers, including support for
-many of the standard libraries.
+Fantom is unique in that is primary goal was to build a langauge portable
+to multiple runtimes.  Because of this mission, Fantom was built with
+a clean set of APIs to abstract away lower level Java, C#, and JavaScript
+APIs.  We actually consider this one of Fantom's primary benefits, because
+it gave us a chance to develop a suite of system APIs that are elegant
+and easy to use compared some of their lower level counter parts.
 
 Because Fantom is designed from the ground up to be portable, targeting
-new platforms is reasonably easy.  Future targets might include Objective-C
-for the iPhone, the [LLVM]`http://llvm.org/`, or [Parrot]`http://www.parrotcode.org/`.
+new platforms should be reasonably easy.  Future targets might include
+Objective-C or Swift for the iPhone, the [LLVM]`http://llvm.org/`, or
+[Parrot]`http://www.parrotcode.org/`.
 
 Elegant APIs [#elegantApis]
 ***************************
@@ -105,7 +94,7 @@ strongly typed, the Java and C# languages are moving to be more strongly
 typed.  Generic types illustrate this trend - a feature added to
 both Java and C# in the not so distant past.  A fully parameterized
 type system introduces a great deal of complexity - we are
-trying hard to find the [right balance]`http://fantom.org/sidewalk/topic/1433`
+trying hard to find the [right balance]`https://fantom.org/forum/topic/1433`
 between value and complexity.
 
 Currently Fantom takes a limited approach to generics.  There is no
@@ -116,35 +105,6 @@ array type syntax of Java and C#.  This trade-off seems to hit the
 sweet spot where generics make sense without complicating the overall
 type system.
 
-Mixins [#mixins]
-****************
-Building software is often a modeling problem - figuring out how
-to map a domain model into code.  In an object oriented language,
-this typically means modeling via classes and interfaces.  Both
-Java and C# use a similar approach: classes support single inheritance
-of both type and implementation.  Interfaces support multiple inheritance
-of type, but do not support inheritance of implementation.
-
-Anyone who has worked in Java or C# knows that choosing between a
-class or an interface is often a decision that haunts you.  Because
-once you choose a class you've burned your only chance for implementation
-inheritance.  If you have a complicated domain model, then interfaces
-become a necessary burden - but often end up resulting in a lot
-of busy work if you need them to have common implementation code.
-Interfaces are also fraught with peril when it comes to versioning
-because you can't add a method without breaking all of the
-implementing code.
-
-There are plenty of good reasons why Java and C# ended up using
-the class/interface model.  Multiple inheritance offers lots of
-power, but comes at the expense of complexity and some pretty nasty
-pitfalls.  Fantom takes a middle of the road approach called mixins.
-Mixins are essentially Java or C# interfaces that can have method
-implementations.  To avoid some of the pitfalls of true
-multiple inheritance, mixins restrict features such as fields
-which store state.  Mixins are a very nice feature in the Fantom
-toolbox when it comes to designing your object oriented models.
-
 Modularity [#modularity]
 ************************
 Designing software to be modular is one of those things you learn
@@ -153,16 +113,17 @@ should let you easily divide your programs up into reusable chunks
 which are easy to version, ship around, and combine with other
 modules via clear dependencies.
 
-What passes for module management in Java is the JAR file - which
-is basically to say Java really doesn't have any module management.
-There is a new JSR which might solve this problem, but for the last
-decade we've lived with classpath hell.  Java also suffers from some
-misguided marketing decisions which have resulted in a monolith
-J2SE that as of 1.6 weighs in at 44MB.  The process to subset this
-monolithic monstrosity into J2ME moves at a glacial pace.  Considering
-the brilliance in much of the core original Java technology, it
-is hard to understand why something as fundamental as modularity is
-lacking.
+What passed for module management in Java for decades is the JAR file - which
+is basically to say Java really didn't have any module management.  Project
+Jigsaw was was finally released in Java 9, but it has an uphill battle
+to conquer the inertia from so many years without a proper module
+system.  And its unnecessarily complex to compensate for overlaying
+modules over a system orginally designed without modules in mind.
+
+JavaScript is also a poster child for a language designed from scratch
+without built-in module support.  Like Java, adding modules to JavaScript
+was done as an afterthought and it didn't happen until Fantom had been
+around for many years.
 
 The .NET design was pretty serious about modularity, and at the
 high level it has a great design for versioning, GAC, etc.  However
@@ -222,12 +183,10 @@ automatically implements boxing and unboxing when necessary.
 
 Functional Programming [#functional]
 ************************************
-Both Java and .NET originally provided little support for functional
-programming.  At least .NET provided delegates, but functions in
-Java were limited to interfaces and quasi-closure support via inner
-classes.  Both languages seem to be moving towards true closure support
-and first class functions.  But they leave a huge legacy of APIs
-and code designed without functional programming in mind.
+When Fantom was originally developed, Java did not provide much in the
+way for functional programming.  Java 8 did add many features to support
+functional programming, but functions are still are not truly first class
+citizens in the type system.
 
 Fantom was designed from the ground up to support functions as first
 class objects.  Closures are a key feature of the language, and
@@ -273,8 +232,7 @@ frustrating about Java:
   - **Default parameters**: methods can have default arguments - no more
     writing boiler plate code for convenience methods
 
-  - **Type Inference**: local variables use type inference to avoid all
-    the noise that obscures typical Java code
+  - **Type Inference**: local variables use type inference
 
   - **Field Accessors**: field accessors are defined implicitly - another
     area where idiomatic Java code has a low signal to noise ratio

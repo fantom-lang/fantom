@@ -30,7 +30,6 @@
   [`Closures`,      "deep dive into closures"],
 "Interop",
   [`JavaFFI`,       "Java foreign function interface"],
-  [`DotnetFFI`,     ".NET foreign function interface"],
   [`Natives`,       "implementing methods and fields in Java and C# code"],
   [`JavaScript`,    "compiling to JavaScript"],
 "Advanced",

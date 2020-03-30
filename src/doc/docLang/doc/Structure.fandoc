@@ -96,7 +96,7 @@ methods overloaded by parameter type like Java or C#.  Although you may
 find this to be a drag on occasion, there are a couple features in Fantom
 that make this restriction quite palatable.  First method parameters may
 have defaults - this eliminates the convenience methods commonly used in
-Java or C# APIs.  Second all types subclass from Obj - this eliminates
+Java APIs.  Second all types subclass from Obj - this eliminates
 the API bloat required to support all the primitives in an API like
 'java.io.PrintWriter'.  Lastly, constructors in Fantom are named which eliminates
 another common requirement for parameter based overloading.  The benefit of

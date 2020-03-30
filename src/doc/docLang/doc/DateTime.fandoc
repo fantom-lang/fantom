@@ -18,7 +18,7 @@ The following sys types are used to represent and work with time:
   - `sys::Month`: enum for months of the year
   - `sys::Weekday`: enum for days of the week
 
-All these classes are immutable [const classes]`http://fantom.org/doc/docLang/Classes.html#const`.
+All these classes are immutable [const classes]`docLang::Classes#const`.
 
 Ticks [#ticks]
 **************

@@ -14,7 +14,7 @@ result of the expression is non-void, then it will print the result
 via the 'Obj.toStr' method.  Enter "quit" to exit:
 
   C:\dev\fan\bin>fansh
-  Fantom Shell v1.0.19 ('?' for help)
+  Fantom Shell v1.0.74 ('?' for help)
   fansh> 3 + 4
   7
   fansh> "3" + 4
@@ -31,7 +31,7 @@ evaluations.  You can enter the "scope" command to list the current
 local variables.  An example:
 
   C:\dev\fan\bin>fansh
-  Fantom Shell v1.0.19 ('?' for help)
+  Fantom Shell v1.0.74 ('?' for help)
   fansh> x := 5
   5
   fansh> y := 7

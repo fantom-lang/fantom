@@ -19,26 +19,25 @@ If things are working correctly you should be able to run "fan -version":
 
   C:\dev\fan\bin>fan -version
   Fantom Launcher
-  Copyright (c) 2006-2013, Brian Frank and Andy Frank
+  Copyright (c) 2006-2020, Brian Frank and Andy Frank
   Licensed under the Academic Free License version 3.0
 
   Java Runtime:
-    java.version:    1.7.0_02
-    java.vm.name:    Java HotSpot(TM) Client VM
+    java.version:    1.8.0_91
+    java.vm.name:    Java HotSpot(TM) 64-Bit Server VM
     java.vm.vendor:  Oracle Corporation
-    java.vm.version: 22.0-b10
-    java.home:       C:\Program Files (x86)\Java\jre7
-    fan.platform:    win32-x86
-    fan.version:     1.0.62
+    java.vm.version: 25.91-b14
+    java.home:       /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre
+    fan.platform:    macosx-x86_64
+    fan.version:     1.0.74
     fan.env:         sys::BootEnv
-    fan.home:        C:\dev\fan
+    fan.home:        /work/fan
 
 If that doesn't work then try these options:
   1. Review [setup]`docTools::Setup` instructions
   2. Install Java 8 or greater and retry
   3. Explicitly [configure]`docTools::Setup#javaRuntime` where
      your JVM is installed
-  4. Turn on [launcher debugging]`docTools::Setup#debugging`
 
 Fantom Shell [#fansh]
 *********************
@@ -48,7 +47,7 @@ shell run the 'fansh' executable and call the [Obj.echo]`sys::Obj.echo`
 method:
 
   C:\dev\fan\bin>fansh
-  Fantom Shell v1.0.22 ('?' for help)
+  Fantom Shell v1.0.74 ('?' for help)
   fansh> echo("hello world #1")
   hello world #1
   fansh> quit

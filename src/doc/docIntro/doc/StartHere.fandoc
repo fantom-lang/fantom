@@ -10,7 +10,7 @@ Learn More [#learnMore]
 ***********************
 Try these links to learn more about Fantom:
   - `Tour`: quick introduction to Fantom's features by code example
-  - `WhyFantom`: why we're crazy enough to build Fantom
+  - `WhyFantom`: why we built Fantom
   - Hello world five different ways:
       - [Fantom shell]`HelloWorld#fansh`: interactive shell
       - [Fantom script]`HelloWorld#script`: executable scripts
@@ -22,7 +22,7 @@ Quick Start [#quickStart]
 *************************
 If you want to jump right in and start coding:
 
-  - [Download]`http://fantom.org` the latest build
+  - [Download]`https://fantom.org` the latest build
   - [Setup]`docTools::Setup`: your environment
   - `HelloWorld`: try your hand at hello world
   - [Examples]`examples::index`: snippets of example
@@ -32,9 +32,6 @@ Community Resources [#communityResources]
 *****************************************
   - [Rosetta Code]`http://rosettacode.org/wiki/Category:Fantom`: code
     samples in Fantom with comparisons to other languages
-
-  - [langref.org]`http://langref.org/fantom/solved`: lots of code samples for
-    different problem sets
 
   - [Java to Fantom in 10 Steps]`http://www.fantomfactory.org/articles/from-java-to-fantom-in-10-steps`
 
@@ -72,14 +69,9 @@ make sure to review how to write [unit tests]`docTools::Fant` and
 Getting Involved [#gettingInvolved]
 ***********************************
 The place to ask questions and submit feedback is the
-[discussion group]`http://fantom.org/sidewalk/topic/`.
+[discussion group]`https://fantom.org/forum/topic/`.
 Or you can [contact us]`Faq#contact` directly.  Let us know
 what you think!
-
-If you are itching to contribute code, please take a look at the
-[open tickets]`http://fantom.org/sidewalk/ticket/?state=open`
-or [roadmap]`Roadmap#futureWork` to find what might interest
-you.
 
 
 

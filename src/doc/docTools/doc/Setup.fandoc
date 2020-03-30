@@ -16,8 +16,7 @@ you should add "bin" into your path:
 The Fantom launchers are implemented as a set of Bash shell
 scripts which all route to common code sourced in "bin/fanlaunch".
 The current implementation is pretty simple and requires that
-you have a "java" command available in your environment (we
-haven't tried Mono with Fantom yet).
+you have a "java" command available in your environment.
 
 If the unpacked zip file doesn't have the executable permission
 set on script files, then the "adm/unixsetup" script will
@@ -73,7 +72,7 @@ The launcher for Windows and Unix determines which java to use in the following 
 1. If the 'FAN_JAVA' environment variable is set, then we assume it points to the
 "java.exe" to run.
 2. If the 'JAVA_HOME' environment variable is set, then we use "${JAVA_HOME}/bin/java"
-3. Otherwise, we fallback to the system "java"
+3. Otherwise, we fallback to the system "java" executable
 
 You can configure the JVM options by editing "etc/sys/config.props" and setting the
 "java.options" property. This is useful for modifying memory settings for the JVM.
@@ -81,8 +80,8 @@ You can configure the JVM options by editing "etc/sys/config.props" and setting 
   // etc/sys/config.props
   java.options=-Xmx128M
 
-Fantom currently requires Java version 1.5 or greater to run.
-Java 1.6 or greater is required to compile from source.
+Fantom currently requires Java version 1.8 or greater to run.
+Java 1.8 is required to compile from source.
 
 You can also run Fantom directly without the launcher by adding "sys.jar"
 to your classpath and ensuring either the "fan_home" environment variable
@@ -103,38 +102,6 @@ Substitutes [#substitutes]
 Another feature of the launcher scripts is the ability to map
 specific script files to use an alternate Fantom runtime.  This technique
 is used to manage the [bootstrap build]`Bootstrap#substitutes` process.
-
-Launcher Debugger [#debugging]
-==============================
-You can set the "FAN_LAUNCHER_DEBUG" environment variable to "true" to debug
-the launcher script. This can be helpful if you are having problems getting your
-Java environment working:
-
-  C:\Dev\fantom\fan> set FAN_LAUNCHER_DEBUG=true
-
-  C:\Dev\fantom\fan> fan -version
-  -- LAUNCHER DEBUG ON
-  -- Launcher Args: Fan -version
-  -- FAN_HOME: C:\Dev\fantom\fan
-  -- Java: java
-  -- Fantom classpath: "C:\Dev\fantom\fan\lib\java\sys.jar";"C:\Dev\fantom\fan\lib\java\jline.jar"
-  -- Java Options: -Xmx512M
-  -- Fantom Tool: Fan
-  -- Tool Args:  -version
-  Fantom Launcher
-  Copyright (c) 2006-2013, Brian Frank and Andy Frank
-  Licensed under the Academic Free License version 3.0
-
-  Java Runtime:
-    java.version:    1.8.0_51
-    java.vm.name:    Java HotSpot(TM) 64-Bit Server VM
-    java.vm.vendor:  Oracle Corporation
-    java.vm.version: 25.51-b03
-    java.home:       C:\Program Files\Java\jre1.8.0_51
-    fan.platform:    win32-x86_64
-    fan.version:     1.0.67
-    fan.env:         sys::BootEnv
-    fan.home:        C:\Dev\fantom\fan
 
 Fantom Programs as Windows Services [#windowsServices]
 ===================================
@@ -183,7 +150,7 @@ be unpleasant in Unix and OS X environments because control keys such as the
 arrow keys are not handled.  You can add [JLine2]`https://github.com/jline/jline2`
 to your system classpath to fix this.  The built-in bash scripts will automatically
 put "lib/java/jline.jar" into the classpath.  You can download a pre-built
-"jline.jar" file from `http://repo1.maven.org/maven2/jline/jline/`.  If JLine
+"jline.jar" file from `https://repo1.maven.org/maven2/jline/jline/`.  If JLine
 is not installed, then 'java.lang.Console' is used as a fallback.  To integrate
 command line support into your application use `sys::Env.prompt`.
 

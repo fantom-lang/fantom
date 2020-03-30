@@ -9,10 +9,10 @@
 Contact Us? [#contact]
 **********************
 Please direct questions or feedback to the
-[discussion group]`http://fantom.org/sidewalk/topic/`.  Or feel free
-to use email or Twitter:
-  - Brian: briansfrank at gmail dot com | [twitter/briansfrank]`http://twitter.com/briansfrank`
-  - Andy: afrankvt at gmail dot com | [twitter/afrankvt]`http://twitter.com/afrankvt`
+[discussion group]`https://fantom.org/forum/topic/`.  Or feel free
+to use email:
+  - Brian: briansfrank at gmail dot com
+  - Andy: afrankvt at gmail dot com
 
 Didn't this language used to be called Fan? [#fan]
 **************************************************
@@ -30,10 +30,8 @@ is a BSD-styled license (it is very similiar to the Apache 2.0 license).
 
 What is the status of Fantom? [#status]
 ***************************************
-Fantom is currently in [development]`Roadmap#status`.  It is robust
-and stable and ready to use in production.  It has been used successfully
-in production for several years now.  However we may still make occassional
-breaking changes.
+Fantom is mature, stable, and ready to be used in production.  It has been
+used in commercial software since 2008.
 
 How do Fantom version numbers work? [#versions]
 ***********************************************

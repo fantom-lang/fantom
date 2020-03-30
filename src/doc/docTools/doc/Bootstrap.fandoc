@@ -19,7 +19,7 @@ bootstrap process requires two Fantom installations:
 
 By convention we structure our development directory tree like this:
 
-  dev/
+  work/
     rel/
       bin/
       lib/
@@ -31,33 +31,27 @@ By convention we structure our development directory tree like this:
       ...
 
 The "rel" directory always contains the last released build.  The "fan"
-directory contains our main development code branch.  We call our top
-level directory "dev", but for the purposes of this discussion "fan"
-is the development directory.
+directory contains our main development code branch.
 
 Bootstrap Script [#script]
 **************************
 The easiest way to perform a bootstrap build from hg tip is to use the
 "bootstrap.fan" script:
-  1. Download latest released build from `http://fantom.org/`
+  1. Download latest released build from `https://fantom.org/`
   2. Unzip that build to '{relHome}'
   3. Ensure 'git' is installed in your path (see [Git]`https://git-scm.com/`)
   4. Verify 'java_home' env var points to your JDK installation
   5. Execute '{relHome}/bin/fan {relHome}/adm/bootstrap.fan'
   6. Go grab a cup of coffee
 
-NOTE: the default setup requries JDK 1.6 to recompile Fantom in order to target 1.5 JVMs.
-If you need to use a later JDK, see the comments in etc/build/config.props to clear this
-property:
-
-  javacParams=-target 1.5
+NOTE: the default setup requries JDK 1.8 to recompile Fantom.
 
 By default devHome is assumed to be a peer to relHome called "fan". If
 you'd like to use another directory then specify the "-devHome" option.
 
 This script will perform a number of steps:
   1. Verifies your environment
-  2. Clones hg tip or if hg repo exists performs a pull/update
+  2. Clones git repo or if repo exists performs a pull
   3. Configures your etc files
   4. Rebuilds your devHome environment from scratch
 
@@ -66,8 +60,8 @@ fully understand bootstrap building.
 
 Dev Home [#devHome]
 *******************
-By default the build assumes *devHome* to be the home directory
-of Fantom installation.  For example if you rebuild jfan, then the output
+By default the build assumes *devHome* to be the home directory of Fantom
+installation.  For example if you rebuild the Java runtime, then the output
 goes into "devHome/lib/java/sys.jar".  In the case of the *rel*
 installation we don't want this default because we will overwrite
 ourselves (which leads to some nasty problems).  So you need to set
@@ -75,12 +69,12 @@ the *devHome* prop in "etc/build/config.props" of your *rel* installation
 to reference the *dev* directory using a URI (not OS path):
 
   // Must be configured boot build in substitute/release installation
-  devHome=file:/C:/dev/fan/
+  devHome=file:/C:/work/fan/
 
 If you forget to do this, then you will get a build error which
 looks something like this:
 
-  C:\dev\fan\src>sys\java\build
+  C:\work\fan\src>sys\java\build
   ERR: Must update 'devHome' for bootstrap build
   BUILD FAILED [12ms]!
 
@@ -104,8 +98,7 @@ And of course you have to run your scripts as executables so that the shebang ta
 
 JDK [#otherTools]
 ********************************
-You need JDK 1.6 or greater to compile from source (only 1.5 is required
-for the Java runtime).
+You need JDK 1.8 to compile from source.
 
 In order to compile from source you will need to setup some config
 properties to reference your JDK home directory:

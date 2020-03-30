@@ -18,7 +18,7 @@ Here is a quick check-list for when and when not to write native code:
   1. If possible then the best solution is to write your code in 100% Fantom;
      then it is portable across any platform
   2. If you don't care about portability, then use a FFI to call out to
-     a native library - see `JavaFFI` and `DotnetFFI`.
+     a native library - see `JavaFFI`
   3. If you need to call out native APIs, but still wish your Fantom
      pod to be portable across multiple platforms then use natives
 

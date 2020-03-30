@@ -12,7 +12,6 @@
   [`Tour`,       "whirlwind tour of Fantom's features"],
   [`WhyFantom`,  "why we built Fantom and what problems we desire to solve"],
   [`HelloWorld`, "getting started with hello world"],
-  [`Roadmap`,    "current development status and future plans"],
   [`Faq`,        "frequently asked questions"],
   [`License`,    "Academic Free License 3.0"],
   [`ChangeLog`,  "list of changes in each build"]
