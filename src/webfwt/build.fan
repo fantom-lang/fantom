@@ -21,7 +21,7 @@ class Build : BuildPod
     podName = "webfwt"
     summary = "Web extensions to the FWT toolkit"
     meta    = ["org.name":     "Fantom",
-               "org.uri":      "http://fantom.org/",
+               "org.uri":      "https://fantom.org/",
                "proj.name":    "Fantom Core",
                "license.name": "Academic Free License 3.0",
                "vcs.name":     "Git",

@@ -19,9 +19,9 @@ class Build : BuildPod
     podName = "wisp"
     summary = "Wisp web Server"
     meta    = ["org.name":     "Fantom",
-               "org.uri":      "http://fantom.org/",
+               "org.uri":      "httsp://fantom.org/",
                "proj.name":    "Fantom Core",
-               "proj.uri":     "http://fantom.org/",
+               "proj.uri":     "https://fantom.org/",
                "license.name": "Academic Free License 3.0",
                "vcs.name":     "Git",
                "vcs.uri":      "https://github.com/fantom-lang/fantom"]

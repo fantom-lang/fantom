@@ -81,7 +81,7 @@ public final class FanDecimal
   public static BigDecimal div(BigDecimal self, BigDecimal x)
   {
     // From https://github.com/groovy/groovy-core/blob/master/src/main/org/codehaus/groovy/runtime/typehandling/BigDecimalMath.java
-    // as suggested by 'saltnlight5' in "Decimal operation failure?" discussion http://fantom.org/sidewalk/topic/1743
+    // as suggested by 'saltnlight5' in "Decimal operation failure?" discussion https://fantom.org/sidewalk/topic/1743
     try
     {
       return self.divide(x);

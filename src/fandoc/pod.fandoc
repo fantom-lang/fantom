@@ -43,16 +43,16 @@ pre>
   - Strong: **foo bar**
   - Emphasis: *foo bar*
   - Strong+Emphasis: ** *foo bar* **
-  - Hyperlink: `http://fantom.org/`
-  - Hyperlink: [Fantom Home Page]`http://fantom.org/`
+  - Hyperlink: `https://fantom.org/`
+  - Hyperlink: [Fantom Home Page]`https://fantom.org/`
 <pre
 
   - Code inline: 'FandocParser'
   - Strong: **foo bar**
   - Emphasis: *foo bar*
   - Strong+Emphasis: ** *foo bar* **
-  - Hyperlink: `http://fantom.org/`
-  - Hyperlink: [Fantom Home Page]`http://fantom.org/`
+  - Hyperlink: `https://fantom.org/`
+  - Hyperlink: [Fantom Home Page]`https://fantom.org/`
 
 Paragraphs [#p]
 ***************
@@ -204,27 +204,27 @@ Images use the same syntax as a hyperlink with anchor text, but
 are prefixed with a bang:
 
 pre>
-  ![fan logo]`http://fantom.org/pod/fantomws/res/img/fantom.png`
+  ![fan logo]`https://fantom.org/pod/fantomws/res/img/fantom.png`
 <pre
 
-![fan logo]`http://fantom.org/pod/fantomws/res/img/fantom.png`
+![fan logo]`https://fantom.org/pod/fantomws/res/img/fantom.png`
 
 You can set an explicit size for the image as follows:
 
 pre>
-  ![fan logo][80x18]`http://fantom.org/pod/fantomws/res/img/fantom.png`
+  ![fan logo][80x18]`https://fantom.org/pod/fantomws/res/img/fantom.png`
 <pre
 
-![fan logo][80x18]`http://fantom.org/pod/fantomws/res/img/fantom.png`
+![fan logo][80x18]`https://fantom.org/pod/fantomws/res/img/fantom.png`
 
 You can make an image a link as follows with no spaces between the
 brackets:
 
 pre>
- [![alt]`http://fantom.org/pod/fantomws/res/img/fantom.png`]`http://fantom.org/`
+ [![alt]`https://fantom.org/pod/fantomws/res/img/fantom.png`]`https://fantom.org/`
 <pre
 
-[![alt]`http://fantom.org/pod/fantomws/res/img/fantom.png`]`http://fantom.org/`
+[![alt]`https://fantom.org/pod/fantomws/res/img/fantom.png`]`https://fantom.org/`
 
 
 Headings [#headings]

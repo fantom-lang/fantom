@@ -150,7 +150,7 @@ abstract class DocRenderer
         catch (Err e)
         {
           if (elem.uri.startsWith("examples::"))
-            elem.uri = "http://fantom.org/doc/" + elem.uri.replace("::", "/")
+            elem.uri = "https://fantom.org/doc/" + elem.uri.replace("::", "/")
           else
             env.err(e.toStr, linkLoc)
         }

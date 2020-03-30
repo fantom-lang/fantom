@@ -273,7 +273,7 @@ public class Actor
       System.out.println("==");
       System.out.println("==");
       System.out.println("== Actor msg serialization is deprecated;");
-      System.out.println("== See http://fantom.org/forum/topic/2428");
+      System.out.println("== See https://fantom.org/forum/topic/2428");
       System.out.println("==");
       System.out.println("==");
     }

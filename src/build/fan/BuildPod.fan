@@ -192,7 +192,7 @@ abstract class BuildPod : BuildScript
     // TODO: add additinal meta props defined by config file/env var
     // this behavior is not guaranteed in future versions, rather we
     // need to potentially overhaul how build data is defined
-    // See topic http://fantom.org/sidewalk/topic/1584
+    // See topic https://fantom.org/forum/topic/1584
     config("meta", "").split(',').each |pair|
     {
       if (pair.isEmpty) return

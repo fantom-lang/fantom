@@ -38,7 +38,7 @@ class PathTest : Test
   Void testLinks()
   {
     verifyPath("`link`", [0,0], [DocNodeId.para, DocNodeId.link])
-    verifyPath("text [fantom]`http://fantom.org` text", [0,1], [DocNodeId.para, DocNodeId.link])
+    verifyPath("text [fantom]`https://fantom.org` text", [0,1], [DocNodeId.para, DocNodeId.link])
   }
 
   Void testImages()

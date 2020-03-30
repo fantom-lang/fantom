@@ -265,7 +265,7 @@ internal class ListIndex
   private static Int:Str sortr(Int:Str unordered)
   {
     // no ordered literal map... grr...
-    // http://fantom.org/sidewalk/topic/1837#c14431
+    // https://fantom.org/forum/topic/1837#c14431
     sorted := [:] { it.ordered = true }
     unordered.keys.sortr.each { sorted[it] = unordered[it] }
     return sorted

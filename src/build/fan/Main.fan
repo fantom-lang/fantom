@@ -154,7 +154,7 @@ internal class InitCmd
           summary = "Description of this pod"
           version = Version("1.0")
           // These values are optional, but recommended
-          // See: http://fantom.org/doc/docLang/Pods#meta
+          // See: https://fantom.org/doc/docLang/Pods#meta
           // meta = [
           //   "org.name":     "My Org",
           //   "org.uri":      "http://myorg.org/",

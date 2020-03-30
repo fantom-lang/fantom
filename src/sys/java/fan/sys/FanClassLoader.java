@@ -113,7 +113,7 @@ public class FanClassLoader
       String s = e.toString();
       if (s.contains("swt"))
       {
-        String msg = "cannot load SWT library; see http://fantom.org/doc/docTools/Setup.html#swt";
+        String msg = "cannot load SWT library; see https://fantom.org/doc/docTools/Setup.html#swt";
         System.out.println("\nERROR: " + msg + "\n");
         e = new NoClassDefFoundError(e.getMessage() + ": " + msg);
       }

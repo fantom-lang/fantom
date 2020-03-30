@@ -302,7 +302,7 @@ internal const class WispDefaultRootMod : WebMod
         .h1.w("Wisp").h1End
         .p.w("Wisp is running!").pEnd
         .p.w("Currently there is no WebMod installed on this server.").pEnd
-        .p.w("See <a href='http://fantom.org/doc/wisp/pod-doc.html'>wisp::pod-doc</a>
+        .p.w("See <a href='https://fantom.org/doc/wisp/pod-doc.html'>wisp::pod-doc</a>
               to configure a WebMod for the server.").pEnd
       .bodyEnd
     .htmlEnd

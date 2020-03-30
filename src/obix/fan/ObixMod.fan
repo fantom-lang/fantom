@@ -36,19 +36,19 @@ const abstract class ObixMod : WebMod
   ** Construct with the given map for 'obix:About' parameters:
   **   - serverName: defaults to 'Env.cur.host'
   **   - vendorName: defaults to "Fantom"
-  **   - vendorUrl: defaults to "http://fantom.org/"
+  **   - vendorUrl: defaults to "https://fantom.org/"
   **   - productName: defaults to "Fantom"
   **   - productVersion: defaults to version of obix pod
-  **   - productUrl: defaults to "http://fantom.org/"
+  **   - productUrl: defaults to "https://fantom.org/"
   **
   new make(Str:Obj about := Str:Obj[:])
   {
     this.aboutServerName  = about["serverName"]     ?: Env.cur.host
     this.aboutVendorName  = about["vendorName"]     ?: "Fantom"
-    this.aboutVendorUrl   = about["vendorUrl"]      ?: `http://fantom.org`
+    this.aboutVendorUrl   = about["vendorUrl"]      ?: `https://fantom.org`
     this.aboutProductName = about["productName"]    ?: "Fantom"
     this.aboutProductVer  = about["productVersion"] ?: ObixMod#.pod.version.toStr
-    this.aboutProductUrl  = about["productUrl"]     ?: `http://fantom.org`
+    this.aboutProductUrl  = about["productUrl"]     ?: `https://fantom.org`
   }
 
 //////////////////////////////////////////////////////////////////////////

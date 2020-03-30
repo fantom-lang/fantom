@@ -217,7 +217,7 @@ Link [#link]
 
     Link
     {
-      it.uri  = `http://fantom.org`
+      it.uri  = `https://fantom.org`
       it.text = "Fantom"
     }
 
@@ -225,7 +225,7 @@ Use [target]`domkit::Link.target` to specify a link target:
 
     Link
     {
-      it.uri    = `http://fantom.org`
+      it.uri    = `https://fantom.org`
       it.text   = "Fantom"
       it.target = "_blank"
     }
