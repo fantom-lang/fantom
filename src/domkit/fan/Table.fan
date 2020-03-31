@@ -23,22 +23,12 @@ using graphics
     this.view = TableView(this)
     this.sel  = TableSelection(view)
     this.style.addClass("domkit-Table").addClass("domkit-border")
-    this.onEvent("wheel", false) |e|
-    {
-      // don't consume vertical scroll if not required; this
-      // allows the parent container to scroll the table within
-      // its own viewport; this is a little tricky without
-      // consume horiz events, so for now just assume it was a
-      // "vertical" event if y-delta is greater than x-delta
-      if (!hasScrolly && e.delta != null && e.delta.y.abs > e.delta.x.abs) return
 
-      onScroll(e.delta)
-      e.stop
-    }
     this.onEvent("mousedown", false) |e| { onMouseEvent(e) }
     this.onEvent("mouseup",   false) |e| { onMouseEvent(e) }
     this.onEvent("mousemove", false) |e| { onMouseEvent(e) }
     this.onEvent("dblclick",  false) |e| { onMouseEvent(e) }
+    this.onEvent("wheel",     false) |e| { onWheelEvent(e) }
     this.onEvent("keydown",   false) |e| { onKeyEvent(e) }
 
     // manually track focus so we can detect when
@@ -956,6 +946,50 @@ using graphics
     updateSel(newsel)
   }
 
+  ** Callback to handle wheel events.
+  private Void onWheelEvent(Event e)
+  {
+    // don't consume vertical scroll if not required; this
+    // allows the parent container to scroll the table within
+    // its own viewport; this is a little tricky without
+    // consume horiz events, so for now just assume it was a
+    // "vertical" event if y-delta is greater than x-delta
+    if (!hasScrolly && e.delta != null && e.delta.y.abs > e.delta.x.abs) return
+
+    // Firefox has trouble with backpressure on mousewheel
+    // and repaint performance; so manually try to tune how
+    // often we update the table
+    if (Win.cur.isFirefox)
+    {
+      ffsx += e.delta.x
+      ffsy += e.delta.y
+      e.stop
+
+      // install manual scroller to udpate scroll offsets
+      if (ffscrollId == null)
+        this.ffscrollId = Win.cur.setInterval(40ms) {
+          if (ffsx != 0f || ffsy != 0f) onScroll(Point(ffsx, ffsy))
+          ffsx = 0f
+          ffsy = 0f
+        }
+
+      // clear scroller if idle for given timeout
+      if (ffclearId != null) Win.cur.clearTimeout(ffclearId)
+      this.ffclearId = Win.cur.setTimeout(1500ms) {
+        Win.cur.clearInterval(ffscrollId)
+        this.ffscrollId = null
+        this.ffsx = 0f
+        this.ffsy = 0f
+      }
+    }
+    else
+    {
+      // other browers just scroll normal
+      onScroll(e.delta)
+      e.stop
+    }
+  }
+
   ** Callback to handle key events.
   private Void onKeyEvent(Event e)
   {
@@ -1138,6 +1172,12 @@ using graphics
   private Int? vbarPageId       // vbar page interval func id
   private Int? hthumbDragOff    // offset of hthumb drag pos
   private Int? vthumbDragOff    // offset of vthumb drag pos
+
+  // firefox: scroll
+  private Int? ffscrollId       // scroll interval func id
+  private Int? ffclearId        // clear interval timeout func id
+  private Float ffsx            // firefox: cur mousewheel scrollx
+  private Float ffsy            // firefox: cur mousewheel scrolly
 
   // update
   private Int firstVisCol    // first visible col
