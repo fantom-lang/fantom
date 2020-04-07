@@ -40,7 +40,7 @@ class JarDist : JdkTask
     sysClasses
     podNames.each |name| { podClasses(name) }
     etcFiles
-    main
+    boot
     manifest
     jar
     cleanupTempDir
@@ -53,13 +53,14 @@ class JarDist : JdkTask
     if (podNames.isEmpty) throw fatal("Not configured: JarDist.podNames")
     if (podNames.contains("sys")) throw fatal("sys is implied in JarDist.podNames")
     if (outFile == null) throw fatal("Not configured: JarDist.outFile")
-    if (mainMethod == null) throw fatal("Not configured: JarDist.mainMethod")
-
-    m := Slot.findMethod(mainMethod, false)
-    if (m == null) throw fatal("mainMethod not found: $mainMethod")
-    if (!m.isStatic) throw fatal("mainMethod not static: $mainMethod")
-    if (!isMainParamsOk(m)) throw fatal("mainMethod params must be () or (Str[]): $mainMethod")
-    mainMethodArg = !m.params.isEmpty
+    if (hasMain)
+    {
+      m := Slot.findMethod(mainMethod, false)
+      if (m == null) throw fatal("mainMethod not found: $mainMethod")
+      if (!m.isStatic) throw fatal("mainMethod not static: $mainMethod")
+      if (!isMainParamsOk(m)) throw fatal("mainMethod params must be () or (Str[]): $mainMethod")
+      mainMethodArg = !m.params.isEmpty
+    }
   }
 
   private static Bool isMainParamsOk(Method m)
@@ -93,7 +94,7 @@ class JarDist : JdkTask
     log.info("Pod [$podName]")
 
     // open as zip and
-    podFile := script.devHomeDir + `lib/fan/${podName}.pod`
+    podFile := findPod(podName)
     if (!podFile.exists) throw Err("Pod not found: $podFile")
     podZip  := Zip.open(podFile)
     meta := podZip.contents[`/meta.props`].readProps
@@ -124,7 +125,7 @@ class JarDist : JdkTask
       Exec(script,
         [javaExe,
          "-cp", (script.devHomeDir + `lib/java/sys.jar`).osPath,
-         "-Dfan.home=$Env.cur.workDir.osPath",
+         "-Dfan.home=$Env.cur.homeDir.osPath",
          "fanx.tools.Jstub",
          "-d", tempDir.osPath,
          podName]).run
@@ -157,7 +158,7 @@ class JarDist : JdkTask
   {
     copyOpts := ["overwrite":true]
     resources := Str[,]
-    zip := Zip.open(script.devHomeDir + `lib/fan/${podName}.pod`)
+    zip := Zip.open(findPod(podName))
     zip.contents.each |f|
     {
       if (f.isDir) return
@@ -201,14 +202,14 @@ class JarDist : JdkTask
     this.manifestFile = Env.cur.workDir + `Manifest.mf`
     out := this.manifestFile.out
     out.printLine("Manifest-Version: 1.0")
-    out.printLine("Main-Class: fanjardist.Main")
+    if (hasMain) out.printLine("Main-Class: fanjardist.Boot")
     out.printLine("Created-By: Fantom JarDist $typeof.pod.version")
     out.close
   }
 
-  private Void main()
+  private Void boot()
   {
-    log.info("Main")
+    log.info("Boot")
 
     // explicitly initialize all the pod constants
     podInits := StrBuf();
@@ -217,44 +218,59 @@ class JarDist : JdkTask
       podInits.add("""      Env.cur().loadPodClass(Pod.find("$podName"));\n""")
     }
 
-    mainArgs := mainMethodArg ? "Env.cur().args()" : ""
-
-    // write out Main Java class
-    file := tempDir + `fanjardist/Main.java`
-    file.out.print(
+    // write out Boot Java class
+    file := tempDir + `fanjardist/Boot.java`
+    out  := file.out
+    out.print(
       """package fanjardist;
          import fan.sys.*;
-         public class Main
+         public class Boot
          {
-           public static void boot()
+           public static void init()
            {
-             boot(new String[0]);
+             init(new String[0]);
            }
 
-           public static void boot(String[] args)
+           public static void init(String fanHome)
+           {
+             init(new String[0], fanHome);
+           }
+
+           public static void init(String[] args)
+           {
+             init(args, System.getProperty("fan.home", "."));
+           }
+
+           public static void init(String[] args, String fanHome)
            {
                System.getProperties().put("fan.jardist", "true");
-               System.getProperties().put("fan.home",    ".");
+               System.getProperties().put("fan.home",    fanHome);
                Sys.boot();
                Sys.bootEnv.setArgs(args);
          $podInits
-           }
+           }""")
 
-           public static void main(String[] args)
-           {
-             try
+    // if a main method is provided, stub in a main wrapper
+    if (hasMain)
+    {
+      mainArgs := mainMethodArg ? "Env.cur().args()" : ""
+      out.print(
+        """  public static void main(String[] args)
              {
-               boot(args);
-               Method m = Slot.findMethod("$mainMethod");
-               m.call($mainArgs);
+               try
+               {
+                 init(args);
+                 Method m = Slot.findMethod("$mainMethod");
+                 m.call($mainArgs);
+               }
+               catch (Err e) { e.trace(); }
+               catch (Throwable e) { e.printStackTrace(); }
              }
-             catch (Err e) { e.trace(); }
-             catch (Throwable e) { e.printStackTrace(); }
-           }
-         }
-         """).close
+           """)
+    }
+    out.print("}").flush.close
 
-    // compile main
+    // compile boot
     Exec(script,
       [javacExe,
        "-cp", tempDir.osPath,
@@ -275,6 +291,14 @@ class JarDist : JdkTask
        "-C", tempDir.osPath,
        "."], tempDir).run
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Util
+//////////////////////////////////////////////////////////////////////////
+
+  private File? findPod(Str podName) { Env.cur.findPodFile(podName) }
+
+  private Bool hasMain() { this.mainMethod != null }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
