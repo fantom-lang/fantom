@@ -804,6 +804,45 @@ class ActorTest : Test
     verify(t2 - t1 < 120ms)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Balance
+//////////////////////////////////////////////////////////////////////////
+
+  Void testBalance()
+  {
+    pool := ActorPool {}
+    a := Actor(pool) |msg| { if (msg != "start") Actor.sleep(100ms); return msg }
+    b := Actor(pool) |msg| { if (msg != "start") Actor.sleep(100ms); return msg }
+    c := Actor(pool) |msg| { if (msg != "start") Actor.sleep(100ms); return msg }
+    d := Actor(pool) |msg| { if (msg != "start") Actor.sleep(100ms); return msg }
+    e := Actor(pool) |msg| { return msg }
+
+    a.send("start").get; 4.times |x| { a.send(x) }
+    b.send("start").get; 3.times |x| { b.send(x) }
+    c.send("start").get; 5.times |x| { c.send(x) }
+    d.send("start").get; 3.times |x| { d.send(x) }
+
+    verifyEq(a.queueSize, 3)
+    verifyEq(b.queueSize, 2)
+    verifyEq(c.queueSize, 4)
+    verifyEq(d.queueSize, 2)
+    verifyEq(e.queueSize, 0)
+
+    verifySame(pool.balance([a]), a)
+    verifySame(pool.balance([e]), e)
+    verifySame(pool.balance([a, b]), b)
+    verifySame(pool.balance([a, b, c]), b)
+    verifySame(pool.balance([c, a, b]), b)
+    verifySame(pool.balance([c, d, a, b]), d)
+    verifySame(pool.balance([a, b, c, d]), b)
+    verifySame(pool.balance([d, c, b, a]), d)
+    verifySame(pool.balance([e, d, c, b, a]), e)
+    verifySame(pool.balance([a, b, c, d, e]), e)
+    verifySame(pool.balance([a, b, e, c, d]), e)
+
+    verifyErr(IndexErr#) { pool.balance(Actor[,]) }
+  }
+
 }
 
 **************************************************************************

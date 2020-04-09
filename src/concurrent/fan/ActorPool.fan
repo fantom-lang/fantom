@@ -68,6 +68,15 @@ native const class ActorPool
   This join(Duration? timeout := null)
 
   **
+  ** Given a list of one or more actors, return the next actor to use
+  ** to perform load balanced work. The default implemention returns
+  ** the actor with the lowest number of messages in its queue.
+  **
+  ** NOTE: this is an experimental feature which is subject to change
+  **
+  @NoDoc virtual Actor balance(Actor[] actors)
+
+  **
   ** Name to use for the pool and associated threads.
   **
   const Str name := "ActorPool"

@@ -106,6 +106,26 @@ public class ActorPool
     return super.trap(name, args);
   }
 
+  public Actor balance(List actors)
+  {
+    Actor best = (Actor)actors.get(0);
+    long bestSize = best.queueSize();
+    if (bestSize == 0) return best;
+
+    for (int i=1; i<actors.sz(); ++i)
+    {
+      Actor x = (Actor)actors.get(i);
+      long xSize = x.queueSize();
+      if (xSize < bestSize)
+      {
+        best = x;
+        bestSize = xSize;
+        if (bestSize == 0) return best;
+      }
+    }
+    return best;
+  }
+
   final boolean hasPending()
   {
     return threadPool.hasPending();
