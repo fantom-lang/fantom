@@ -190,9 +190,10 @@ public class Actor
     locals.set(context.locals);
     Locale.setCur(context.locale);
 
-    // process up to 100 messages before yielding the thread
-    int maxMessages = (int)pool.maxMsgsBeforeYield;
-    for (int count = 0; count < maxMessages; count++)
+    // process messages for 1sec before yielding the thread
+    long maxTicks = pool.maxTimeBeforeYield.ticks();
+    long startTicks = Duration.nowTicks();
+    while (true)
     {
       // get next message, or if none pending we are done
       Future future = null;
@@ -203,6 +204,14 @@ public class Actor
       this.curMsg = future.msg;
       _dispatch(future);
       this.curMsg = null;
+
+      // if there are pending actors waiting for a thread,
+      // then check if its time to yield our thread
+      if (pool.hasPending())
+      {
+        long curTicks = Duration.nowTicks();
+        if (curTicks - startTicks >= maxTicks) break;
+      }
     }
 
     // flush locals back to context

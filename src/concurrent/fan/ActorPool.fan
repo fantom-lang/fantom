@@ -80,15 +80,18 @@ native const class ActorPool
   const Int maxThreads := 100
 
   **
-  ** Max number of messages processed by an actor before the actor yields
-  ** the thread another actor.  A high number allows processing lots of
-  ** quick messages to avoid excessive thread context switching.  A smaller
-  ** number can be used for long message processing where the thread context
-  ** switching might be less significant.
+  ** Max duration an actor will work processing messages before yielding its
+  ** thread.  Because actors require cooperative multi-tasking we don't
+  ** want to let an actor hog a thread forever and potentially starve out
+  ** other actors waiting for a thread.  Note its possible for an actor to
+  ** work longer than this time (especially if its blocking on I/O).  However
+  ** once this time has expired, the actor will not process subsequent messages
+  ** in its queue.  As an optimization an actor will never yield unless
+  ** the pool has other actors waiting for a thread.
   **
   ** NOTE: this method is marked as NoDoc, it is provided for low level
   ** access to tune the actor pool, but it is subject to change.
   **
-  @NoDoc const Int maxMsgsBeforeYield := 100
+  @NoDoc const Duration maxTimeBeforeYield := 5sec
 
 }

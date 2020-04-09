@@ -106,6 +106,11 @@ public class ActorPool
     return super.trap(name, args);
   }
 
+  final boolean hasPending()
+  {
+    return threadPool.hasPending();
+  }
+
   final void submit(Actor actor)
   {
     threadPool.submit(actor);
@@ -130,6 +135,7 @@ public class ActorPool
       out.printLine("ActorPool");
       out.printLine("  name:       " + name);
       out.printLine("  maxThreads: " + maxThreads);
+      out.printLine("  maxTime:    " + maxTimeBeforeYield);
       threadPool.dump(out);
     }
     catch (Exception e) { out.printLine("  " + e + "\n"); }
@@ -159,5 +165,5 @@ public class ActorPool
   volatile boolean killed;
   public String name = "ActorPool";
   public long maxThreads = 100;
-  public long maxMsgsBeforeYield = 100;
+  public Duration maxTimeBeforeYield = Duration.oneSec;
 }

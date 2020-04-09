@@ -785,6 +785,25 @@ class ActorTest : Test
       return msg
     }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Yields
+//////////////////////////////////////////////////////////////////////////
+
+  Void testYields()
+  {
+    pool := ActorPool { maxThreads = 1; maxTimeBeforeYield = 100ms }
+    a := Actor(pool) |msg| { Actor.sleep(50ms); return msg }
+    5.times |i| { a.send(null) }
+
+    b := Actor(pool) |msg| { "ret: $msg" }
+    t1 := Duration.now
+    f := b.send("x")
+    verifyEq(f.get, "ret: x")
+    t2 := Duration.now
+    verify(t2 - t1 < 120ms)
+  }
+
 }
 
 **************************************************************************
