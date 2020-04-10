@@ -98,7 +98,7 @@ native const class Actor
   Future sendWhenComplete(Future f, Obj? msg)
 
   ** Obsolete - use `sendWhenComplete`
-  @Deprecated { msg = "Use sendWhenComplete" }
+  @NoDoc @Deprecated { msg = "Use sendWhenComplete" }
   Future sendWhenDone(Future f, Obj? msg)
 
   **
@@ -109,21 +109,41 @@ native const class Actor
   **
   protected virtual Obj? receive(Obj? msg)
 
+//////////////////////////////////////////////////////////////////////////
+// Diagnostics
+//////////////////////////////////////////////////////////////////////////
+
+  // NOTE: these methods are marked as NoDoc, they are provided for
+  // low level access to monitor the actor, but they are subject to change.
+
+  **
+  ** Return debug string for the current state of this actor:
+  **   - idle: no messages queued
+  **   - running: currently assigned a thread and processing messages
+  **   - pending: messages are queued and waiting for thread
+  **
+  @NoDoc Str threadState()
+
   **
   ** Get the current number of messages pending on the message queue.
-  **
-  ** NOTE: this method is marked as NoDoc, it is provided for low level
-  ** access to monitor the actor, but it is subject to change.
   **
   @NoDoc Int queueSize()
 
   **
   ** Get the peak number of messages queued.
   **
-  ** NOTE: this method is marked as NoDoc, it is provided for low level
-  ** access to monitor the actor, but it is subject to change.
-  **
   @NoDoc Int queuePeak()
+
+  **
+  ** Get the total number of messages processed by receive method.
+  **
+  @NoDoc Int receiveCount()
+
+  **
+  ** Get the total number of nanosecond ticks spent by this method
+  ** in the receive method processing messages.
+  **
+  @NoDoc Int receiveTicks()
 
 //////////////////////////////////////////////////////////////////////////
 // Utils

@@ -103,9 +103,24 @@ public class Actor
     return null;
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Diagnostics
+//////////////////////////////////////////////////////////////////////////
+
+  public final String threadState()
+  {
+    if (curMsg != idleMsg) return "running";
+    if (submitted) return "pending";
+    return "idle";
+  }
+
   public final long queueSize() { return queue.size; }
 
   public final long queuePeak() { return queue.peak; }
+
+  public final long receiveCount() { return receiveCount; }
+
+  public final long receiveTicks() { return receiveTicks; }
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
@@ -203,7 +218,7 @@ public class Actor
       // dispatch the messge
       this.curMsg = future.msg;
       _dispatch(future);
-      this.curMsg = null;
+      this.curMsg = idleMsg;
 
       // if there are pending actors waiting for a thread,
       // then check if its time to yield our thread
@@ -213,6 +228,12 @@ public class Actor
         if (curTicks - startTicks >= maxTicks) break;
       }
     }
+
+    // keep track of time between start and now; for efficiency we only
+    // update this after a work cycle has ended - but this means its
+    // possible to be stuck continously processing the queue if never have
+    // to yield our thread, in which case we won't see this stat updated
+    receiveTicks += Duration.nowTicks() - startTicks;
 
     // flush locals back to context
     context.locale = Locale.cur();
@@ -240,6 +261,7 @@ public class Actor
     {
       if (future.isCancelled()) return;
       if (pool.killed) { future.cancel(); return; }
+      receiveCount++;
       future.complete(receive(future.msg));
     }
     catch (Err e)
@@ -410,14 +432,18 @@ public class Actor
       out = (fan.sys.OutStream)args.get(0);
     try
     {
+      Duration ticksTotal = Duration.make(receiveTicks());
+      Duration ticksAvg = Duration.make(receiveCount <= 0 ? 0 : receiveTicks / receiveCount);
+
       out.printLine("Actor");
       out.printLine("  pool:      " + pool.name);
-      out.printLine("  submitted: " + submitted);
-      out.printLine("  queue:     " + queueSize());
-      out.printLine("  peak:      " + queuePeak());
-      out.printLine("  curMsg:    " + curMsg);
+      out.printLine("  state:     " + threadState());
+      out.printLine("  queue:     " + queueSize() + " (peak " + queuePeak() + ")");
+      out.printLine("  received:  " + receiveCount());
+      out.printLine("  ticks:     " + ticksTotal.toLocale() + " (avg " + ticksAvg.toLocale() + ")");
+      if (curMsg != idleMsg)
+        out.printLine("  curMsg:    " + curMsg);
       queue.dump(out);
-
     }
     catch (Exception e) { out.printLine("  " + e + "\n"); }
     return out;
@@ -439,12 +465,15 @@ public class Actor
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  static final String idleMsg = "__idle__";
+
   final Context context;                 // mutable world state of actor
   private ActorPool pool;                // pooled controller
   private Func receive;                  // func to invoke on receive or null
   private Object lock = new Object();    // lock for message queue
   private Queue queue;                   // message queue linked list
-  private Object curMsg;                 // if currently processing a message
+  private Object curMsg = idleMsg;       // if currently processing a message
   private boolean submitted = false;     // is actor submitted to thread pool
-
+  private int receiveCount;              // total number of messages received
+  private long receiveTicks;             // total ticks spend in receive
 }

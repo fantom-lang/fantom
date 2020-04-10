@@ -15,6 +15,7 @@
 - Updates to original documentation
 - Remove actor message serialization [#2428]
 - Actors now yield based on time instead of msg count
+- Actor improved diagnostics
 - ActorPool.balance experimental method
 
 *Build 1.0.74 (2 Mar 2020)*

@@ -794,11 +794,14 @@ class ActorTest : Test
   {
     pool := ActorPool { maxThreads = 1; maxTimeBeforeYield = 100ms }
     a := Actor(pool) |msg| { Actor.sleep(50ms); return msg }
+    verifyEq(a.threadState, "idle")
     5.times |i| { a.send(null) }
 
     b := Actor(pool) |msg| { "ret: $msg" }
     t1 := Duration.now
     f := b.send("x")
+    verifyEq(a.threadState, "running")
+    verifyEq(b.threadState, "pending")
     verifyEq(f.get, "ret: x")
     t2 := Duration.now
     verify(t2 - t1 < 120ms)
@@ -843,6 +846,31 @@ class ActorTest : Test
     verifyErr(IndexErr#) { pool.balance(Actor[,]) }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Diagnostics
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDiagnostics()
+  {
+    pool := ActorPool {}
+    a := Actor(pool) |msg| { Actor.sleep(msg); return msg }
+    verifyDiagnostics(a, 0, 0, 0, 0ms)
+    a.send(100ms)
+    a.send(100ms)
+    Actor.sleep(10ms)
+    verifyDiagnostics(a, 1, 2, 1, 0ms)
+    Actor.sleep(200ms)
+    verifyDiagnostics(a, 0, 2, 2, 200ms)
+  }
+
+  private Void verifyDiagnostics(Actor a, Int queueSize, Int queuePeak, Int receiveCount, Duration receiveTicks)
+  {
+    verifyEq(a.queueSize,    queueSize)
+    verifyEq(a.queuePeak,    queuePeak)
+    verifyEq(a.receiveCount, receiveCount)
+    diff := Duration((receiveTicks.ticks - a.receiveTicks).abs)
+    verify(diff < 50ms)
+  }
 }
 
 **************************************************************************
