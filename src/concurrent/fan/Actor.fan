@@ -140,8 +140,9 @@ native const class Actor
   @NoDoc Int receiveCount()
 
   **
-  ** Get the total number of nanosecond ticks spent by this method
-  ** in the receive method processing messages.
+  ** Get the total number of nanosecond ticks spent in the receive
+  ** method processing messages.  Note that this value might lag until
+  ** the actor yields it thread.
   **
   @NoDoc Int receiveTicks()
 

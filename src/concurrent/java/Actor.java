@@ -201,11 +201,11 @@ public class Actor
 
   public final void _work()
   {
-    // set locals for this actor
+    // reset environment for this actor
     locals.set(context.locals);
     Locale.setCur(context.locale);
 
-    // process messages for 1sec before yielding the thread
+    // process messages for maxTimeBeforeYield before yielding the thread
     long maxTicks = pool.maxTimeBeforeYield.ticks();
     long startTicks = Duration.nowTicks();
     while (true)
@@ -235,7 +235,7 @@ public class Actor
     // to yield our thread, in which case we won't see this stat updated
     receiveTicks += Duration.nowTicks() - startTicks;
 
-    // flush locals back to context
+    // flush environment back to context
     context.locale = Locale.cur();
 
     // done dispatching, either clear the submitted
@@ -465,7 +465,7 @@ public class Actor
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  static final String idleMsg = "__idle__";
+  static final String idleMsg = new String("_idle_");
 
   final Context context;                 // mutable world state of actor
   private ActorPool pool;                // pooled controller
