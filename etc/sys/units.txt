@@ -10,7 +10,7 @@
 //
 
 -- dimensionless (null)
-percent, %; ; 100
+percent, %; ; 0.01
 pixel, px
 decibel, db
 power_factor, pf
