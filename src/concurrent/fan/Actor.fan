@@ -69,7 +69,7 @@ native const class Actor
 
   **
   ** Asynchronously send a message to this actor for processing.
-  ** If msg is not immutable or serializable, then IOErr is thrown.
+  ** If msg is not immutable, then NotImmutableErr is thrown.
   ** Throw Err if this actor's pool has been stopped.  Return
   ** a future which may be used to obtain the result once it the
   ** actor has processed the message.  If the message is coalesced

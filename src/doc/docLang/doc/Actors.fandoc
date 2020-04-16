@@ -166,9 +166,9 @@ the timer or poll/block until the message has been processed.
 
 Chaining [#chaining]
 ********************
-The [sendWhenDone]`concurrent::Actor.sendWhenDone` method is used to
+The [sendWhenComplete]`concurrent::Actor.sendWhenComplete` method is used to
 deliver a message once another message has completed processing.
-Using 'sendWhenDone' allows asynchronous message chaining.  Consider
+Using 'sendWhenComplete' allows asynchronous message chaining.  Consider
 this code:
 
   future := actor1.send(msg1)
@@ -181,7 +181,7 @@ itself is passed as the message:
   a.sendWhenDone(future, future)        // future is message itself
   a.sendWhenDone(future, MyMsg(future)) // MyMsg references future
 
-Remember that 'sendWhenDone' is called no matter how the future
+Remember that 'sendWhenComplete' is called no matter how the future
 completes: successfully, with an error, or cancellation.
 
 Coalescing Messages [#coalescing]

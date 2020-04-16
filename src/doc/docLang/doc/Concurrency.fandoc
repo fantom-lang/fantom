@@ -82,7 +82,7 @@ which will pass an object to another thread include:
 
   - [Actor.send]`concurrent::Actor.send`
   - [Actor.sendLater]`concurrent::Actor.sendLater`
-  - [Actor.sendWhenDone]`concurrent::Actor.sendWhenDone`
+  - [Actor.sendWhenComplete]`concurrent::Actor.sendWhenComplete`
   - [Future.get]`concurrent::Future.get`
 
 All of these APIs use the same pattern to safely pass an object
