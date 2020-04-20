@@ -782,7 +782,7 @@ public abstract class Buf
     throw UnsupportedErr.make(typeof()+".constArray");
   }
 
-  /** Implements {@link Interop#toJava(Buf)} */
+  /** Implements {@link fanx.interop.Interop#toJava(Buf)} */
   public ByteBuffer toByteBuffer()
   {
     throw UnsupportedErr.make(typeof()+".toByteBuffer");

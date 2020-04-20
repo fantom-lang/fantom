@@ -15,7 +15,7 @@ import fanx.fcode.*;
 import fanx.emit.*;
 
 /**
- * ListType is the GenericType for Lists: Foo[] -> V = Foo
+ * ListType is the GenericType for Lists: Foo[] -&gt; V = Foo
  */
 public class ListType
   extends GenericType

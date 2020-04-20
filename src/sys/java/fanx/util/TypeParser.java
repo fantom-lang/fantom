@@ -18,7 +18,7 @@ import fan.sys.*;
  *   x::N
  *   x::V[]
  *   x::V[x::K]
- *   |x::A, ... -> x::R|
+ *   |x::A, ... -&gt; x::R|
  */
 public class TypeParser
 {

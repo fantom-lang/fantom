@@ -13,8 +13,8 @@ import fanx.serial.*;
 
 /**
  * FanInt defines the methods for sys::Int
- *   sys::Int   =>  long primitive
- *   sys::Int?  =>  java.lang.Long
+ *   sys::Int   =&gt;  long primitive
+ *   sys::Int?  =&gt;  java.lang.Long
  */
 public final class FanInt
 {

@@ -45,7 +45,7 @@ public class Interop
   /**
    * Convert sys::Type to java.lang.Class.  You
    * can also access this functionality using the
-   * trap operator "->toClass" on Type.
+   * trap operator "-&gt;toClass" on Type.
    */
   public static Class toJava(Type type)
   {

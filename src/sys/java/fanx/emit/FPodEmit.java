@@ -12,7 +12,7 @@ import fanx.fcode.*;
 import fanx.util.*;
 
 /**
- * FPodEmit translates FPod fcode to Java bytecode as a class called <podName>.$Pod.
+ * FPodEmit translates FPod fcode to Java bytecode as a class called @{code &lt;podName&gt;.$Pod}.
  * The pod class itself defines all the constants used by it's types.
  */
 public class FPodEmit

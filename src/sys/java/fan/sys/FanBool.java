@@ -12,8 +12,8 @@ import fanx.serial.*;
 
 /**
  * FanBoolean defines the methods for sys::Bool:
- *   sys::Bool   =>  boolean primitive
- *   sys::Bool?  =>  java.lang.Boolean
+ *   sys::Bool   =&gt;  boolean primitive
+ *   sys::Bool?  =&gt;  java.lang.Boolean
  */
 public final class FanBool
 {

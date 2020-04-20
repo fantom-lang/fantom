@@ -262,7 +262,7 @@ public final class FTypeRef
 
   /**
    * If this type is represented as a Java primitive array, get the
-   * stack type of component type: int[] -> INT.
+   * stack type of component type: int[] -&gt; INT.
    */
   public int arrayOfStackType()
   {

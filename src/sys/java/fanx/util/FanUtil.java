@@ -120,8 +120,8 @@ public class FanUtil
 
   /**
    * Given a Fantom qname, get the Java class name:
-   *   sys::Obj  =>  java.lang.Object
-   *   foo::Bar  =>  fan.foo.Bar
+   *   sys::Obj  =&gt;  java.lang.Object
+   *   foo::Bar  =&gt;  fan.foo.Bar
    */
   public static String toJavaClassName(String podName, String typeName)
   {
@@ -162,9 +162,9 @@ public class FanUtil
 
   /**
    * Given a Fantom qname, get the Java implementation class name:
-   *   sys::Obj   =>  fan.sys.FanObj
-   *   sys::Float =>  fan.sys.FanFloat
-   *   sys::Obj   =>  fan.sys.FanObj
+   *   sys::Obj   =&gt;  fan.sys.FanObj
+   *   sys::Float =&gt;  fan.sys.FanFloat
+   *   sys::Obj   =&gt;  fan.sys.FanObj
    */
   public static String toJavaImplClassName(String podName, String typeName)
   {
@@ -205,8 +205,8 @@ public class FanUtil
 
   /**
    * Given a Fantom qname, get the Java type signature:
-   *   sys::Obj  =>  java/lang/Object
-   *   foo::Bar  =>  fan/foo/Bar
+   *   sys::Obj  =&gt;  java/lang/Object
+   *   foo::Bar  =&gt;  fan/foo/Bar
    */
   public static String toJavaTypeSig(String podName, String typeName, boolean nullable)
   {
@@ -378,8 +378,8 @@ public class FanUtil
   /**
    * Given a Java type signature, return the implementation
    * class signature for methods and fields:
-   *   java/lang/Object  =>  fan/sys/FanObj
-   *   java/lang/Long    =>  fan/sys/FanInt
+   *   java/lang/Object  =&gt;  fan/sys/FanObj
+   *   java/lang/Long    =&gt;  fan/sys/FanInt
    * Anything returns itself.
    */
   public static String toJavaImplSig(String jsig)

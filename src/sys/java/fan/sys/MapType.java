@@ -15,7 +15,7 @@ import fanx.fcode.*;
 import fanx.emit.*;
 
 /**
- * MapType is the GenericType for Maps: Foo:Bar -> K = Foo, V = Bar
+ * MapType is the GenericType for Maps: Foo:Bar -&gt; K = Foo, V = Bar
  */
 public class MapType
   extends GenericType
