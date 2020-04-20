@@ -99,14 +99,14 @@ Futures [#futures]
 ******************
 All three send methods return a [Future]`concurrent::Future` which may
 used to access the result of that message.  You can poll for the
-result using [isDone]`concurrent::Future.isDone` - a future
-enters the done state by one of three transitions:
+result using `concurrent::Future.state` - a future enters the complete
+state by one of three transitions:
   - The actor processes the message and returns a result
   - The actor raises an exception while processing the message
   - The future is cancelled (see [cancel]`concurrent::Future.cancel`)
 
-Once a future enters the done state, the result is available via
-the [get]`concurrent::Future.get` method.  If the future is not done,
+Once a future enters the complete state, the result is available via
+the [get]`concurrent::Future.get` method.  If the future is not complete,
 then calling 'get' will block the caller until the future becomes
 done.  A timeout may be used to block for a fixed period of time.
 Calling 'get' results in one of these outcomes:
@@ -172,14 +172,14 @@ Using 'sendWhenComplete' allows asynchronous message chaining.  Consider
 this code:
 
   future := actor1.send(msg1)
-  actor2.sendWhenDone(future, msg2)
+  actor2.sendWhenComplete(future, msg2)
 
 In this example, 'msg2' is enqueued on 'actor2' only after
 'actor1' completes processing of 'msg1'.  Typically the future
 itself is passed as the message:
 
-  a.sendWhenDone(future, future)        // future is message itself
-  a.sendWhenDone(future, MyMsg(future)) // MyMsg references future
+  a.sendWhenComplete(future, future)        // future is message itself
+  a.sendWhenComplete(future, MyMsg(future)) // MyMsg references future
 
 Remember that 'sendWhenComplete' is called no matter how the future
 completes: successfully, with an error, or cancellation.

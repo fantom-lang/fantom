@@ -39,13 +39,13 @@ native final const class Future
   ** processing.  Completion may be due to the computation returning
   ** a result, throwing an exception, or cancellation.
   **
-  @Deprecated { msg = "Use Future.state" }
+  @NoDoc @Deprecated { msg = "Use Future.state" }
   Bool isDone()
 
   **
   ** Return if this message has been cancelled.
   **
-  @Deprecated { msg = "Use Future.state" }
+  @NoDoc @Deprecated { msg = "Use Future.state" }
   Bool isCancelled()
 
   **
