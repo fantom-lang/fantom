@@ -4,6 +4,7 @@
 //
 // History:
 //   26 Mar 09  Brian Frank  Creation
+//   24 Apr 20  Brian Frank  Make Future abstract
 //
 package fan.concurrent;
 
@@ -161,27 +162,27 @@ public class Actor
     if (pool.isStopped()) throw Err.make("ActorPool is stopped");
 
     // get the future instance to manage this message's lifecycle
-    Future f = new Future(msg);
+    ActorFuture f = new ActorFuture(msg);
 
     // either enqueue immediately or schedule with pool
     if (dur != null)
       pool.schedule(this, dur, f);
     else if (whenDone != null)
-      whenDone.sendWhenDone(this, f);
+      ((ActorFuture)whenDone).sendWhenDone(this, f);
     else
       f = _enqueue(f, true);
 
     return f;
   }
 
-  final Future _enqueue(Future f, boolean coalesce)
+  final ActorFuture _enqueue(ActorFuture f, boolean coalesce)
   {
     synchronized (lock)
     {
       // attempt to coalesce
       if (coalesce)
       {
-        Future c = queue.coalesce(f);
+        ActorFuture c = queue.coalesce(f);
         if (c != null) return c;
       }
 
@@ -211,7 +212,7 @@ public class Actor
     while (true)
     {
       // get next message, or if none pending we are done
-      Future future = null;
+      ActorFuture future = null;
       synchronized (lock) { future = queue.get(); }
       if (future == null) break;
 
@@ -255,7 +256,7 @@ public class Actor
 
   }
 
-  final void _dispatch(Future future)
+  final void _dispatch(ActorFuture future)
   {
     try
     {
@@ -304,10 +305,10 @@ public class Actor
 
   static class Queue
   {
-    public Future get()
+    public ActorFuture get()
     {
       if (head == null) return null;
-      Future f = head;
+      ActorFuture f = head;
       head = f.next;
       if (head == null) tail = null;
       f.next = null;
@@ -315,7 +316,7 @@ public class Actor
       return f;
     }
 
-    public void add(Future f)
+    public void add(ActorFuture f)
     {
       if (tail == null) { head = tail = f; f.next = null; }
       else { tail.next = f; tail = f; }
@@ -323,7 +324,7 @@ public class Actor
       if (size > peak) peak = size;
     }
 
-    public Future coalesce(Future f)
+    public ActorFuture coalesce(ActorFuture f)
     {
       return null;
     }
@@ -332,7 +333,7 @@ public class Actor
     {
       int num = 0;
       int max = 50;
-      for (Future x = head; x != null; x = x.next)
+      for (ActorFuture x = head; x != null; x = x.next)
       {
         if (num < max) out.print("  ").printLine(x.msg);
         num++;
@@ -340,7 +341,7 @@ public class Actor
       if (num > max) out.print("  " + (num-max) + " more messages...");
     }
 
-    Future head, tail;
+    ActorFuture head, tail;
     int size;
     int peak;
   }
@@ -357,9 +358,9 @@ public class Actor
       this.coalesceFunc = coalesceFunc;
     }
 
-    public Future get()
+    public ActorFuture get()
     {
-      Future f = super.get();
+      ActorFuture f = super.get();
       if (f != null)
       {
         try
@@ -375,7 +376,7 @@ public class Actor
       return f;
     }
 
-    public void add(Future f)
+    public void add(ActorFuture f)
     {
       try
       {
@@ -389,12 +390,12 @@ public class Actor
       super.add(f);
     }
 
-    public Future coalesce(Future incoming)
+    public ActorFuture coalesce(ActorFuture incoming)
     {
       Object key = toKey(incoming.msg);
       if (key == null) return null;
 
-      Future orig = (Future)pending.get(key);
+      ActorFuture orig = (ActorFuture)pending.get(key);
       if (orig == null) return null;
 
       orig.msg = coalesce(orig.msg, incoming.msg);

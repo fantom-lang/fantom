@@ -93,7 +93,8 @@ native const class Actor
   ** Schedule a message for delivery after the given future has completed.
   ** Completion may be due to the future returning a result, throwing an
   ** exception, or cancellation.  Send-when-complete messages are never
-  ** coalesced.  Also see `send` and `sendLater`.
+  ** coalesced.  The given future must be an actor based future.  Also
+  ** see `send` and `sendLater`.
   **
   Future sendWhenComplete(Future f, Obj? msg)
 

@@ -59,7 +59,8 @@ class ActorTest : Test
     100.times |Int i| { futures.add(a.send(i)) }
     futures.each |Future f, Int i|
     {
-      verifyType(f, Future#)
+      verifyType(f, ActorFuture#)
+      verifyEq(f.typeof.base, Future#)
       verifyEq(f.get, i+1)
       verifySame(f.state, FutureState.ok)
       verifyEq(f.get, i+1)
@@ -672,9 +673,10 @@ class ActorTest : Test
 
   Void testFuture()
   {
-    f := Future()
+    f := Future.makeCompletable
     verifyEq(f.state, FutureState.pending)
-    verifySame(f.typeof, Future#)
+    verifySame(f.typeof, ActorFuture#)
+    verifySame(f.typeof.base, Future#)
 
     // can only complete with immutable value
     verifyErr(NotImmutableErr#) { f.complete(this) }
@@ -692,7 +694,7 @@ class ActorTest : Test
     verifyEq(f.get, "done!")
 
     // verify completeErr
-    f = Future()
+    f = Future.makeCompletable
     verifyEq(f.state, FutureState.pending)
     err := CastErr()
     f.completeErr(err)
@@ -704,7 +706,7 @@ class ActorTest : Test
     verifyErr(CastErr#) { f.get }
 
     // verify cancel;
-    f = Future()
+    f = Future.makeCompletable
     f.cancel
     verifySame(f.state, FutureState.cancelled)
     verifyErr(CancelledErr#) { f.get }
@@ -884,4 +886,5 @@ internal class SerMsg
   override Bool equals(Obj? that) { that is SerMsg && i == that->i }
   Int i := 7
 }
+
 

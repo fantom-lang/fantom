@@ -136,7 +136,7 @@ public class ActorPool
     threadPool.submit(actor);
   }
 
-  final void schedule(Actor a, Duration d, Future f)
+  final void schedule(Actor a, Duration d, ActorFuture f)
   {
     scheduler.schedule(d.ticks(), new ScheduledWork(a, f));
   }
@@ -168,12 +168,12 @@ public class ActorPool
 
   static class ScheduledWork implements Scheduler.Work
   {
-    ScheduledWork(Actor a, Future f) { actor = a; future = f; }
+    ScheduledWork(Actor a, ActorFuture f) { actor = a; future = f; }
     public String toString() { return "ScheduledWork msg=" + future.msg; }
     public void work() { if (!future.isCancelled()) actor._enqueue(future, false); }
     public void cancel() { future.cancel(); }
     final Actor actor;
-    final Future future;
+    final ActorFuture future;
   }
 
 //////////////////////////////////////////////////////////////////////////
