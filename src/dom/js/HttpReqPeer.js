@@ -88,6 +88,7 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
 fan.dom.HttpReqPeer.makeRes = function(xhr)
 {
   var res = fan.dom.HttpRes.make();
+  res.m_$xhr    = xhr;
   res.m_status  = xhr.status;
   res.m_content = xhr.responseText;
 
