@@ -8,6 +8,7 @@
 package fan.concurrent;
 
 import fan.sys.*;
+import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 
 /**
@@ -17,6 +18,7 @@ import java.util.ArrayList;
  */
 public final class Future
   extends FanObj
+  implements java.util.concurrent.Future
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,6 +75,7 @@ public final class Future
   }
 
   public final Object get() { return get(null); }
+  public final Object get(long t, TimeUnit u) { return get(Duration.make(u.toNanos(t))); }
   public final Object get(Duration timeout)
   {
     Object r = null;
@@ -195,6 +198,13 @@ public final class Future
         f.waitFor(Duration.makeMillis(left));
       }
     }
+  }
+
+  // java Future version
+  public final boolean cancel(boolean mayInterrupt)
+  {
+    cancel();
+    return true;
   }
 
   public final void cancel()
