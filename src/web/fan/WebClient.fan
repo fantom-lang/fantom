@@ -443,6 +443,7 @@ class WebClient
     socket.connect(IpAddr(proxy.host), proxy.port ?: 80)
     out := socket.out
     out.print("CONNECT ${reqUri.host}:${reqUri.port ?: 443} HTTP/${reqVersion}").print("\r\n")
+       .print("Host: ${reqUri.host}:${reqUri.port ?: 443}").print("\r\n")
        .print("\r\n")
     out.flush
 
