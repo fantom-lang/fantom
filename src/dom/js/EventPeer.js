@@ -13,9 +13,14 @@ fan.dom.EventPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 
 fan.dom.EventPeer.prototype.$ctor = function(self) {}
 
+fan.dom.EventPeer.makeMock = function()
+{
+  return fan.dom.EventPeer.make(new Event("mock"));
+}
+
 fan.dom.EventPeer.fromNative = function(obj)
 {
-  return fan.dom.EventPeer.make(obj)
+  return fan.dom.EventPeer.make(obj);
 }
 
 fan.dom.EventPeer.prototype.type = function(self) { return this.event.type; }

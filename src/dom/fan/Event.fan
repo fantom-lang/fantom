@@ -133,6 +133,9 @@ class Event
 
   private new make() {}
 
+  ** Create a mock `Event` manullay.
+  @NoDoc static native Event makeMock()
+
   ** Create an `Event` instance from a native JavaScript Event object.
   static native Event fromNative(Obj event)
 
