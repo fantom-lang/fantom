@@ -35,7 +35,7 @@ directory contains our main development code branch.
 
 Bootstrap Script [#script]
 **************************
-The easiest way to perform a bootstrap build from hg tip is to use the
+The easiest way to perform a bootstrap build from git is to use the
 "bootstrap.fan" script:
   1. Download latest released build from `https://fantom.org/`
   2. Unzip that build to '{relHome}'
