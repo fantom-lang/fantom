@@ -158,6 +158,10 @@ using graphics
   ** Callback when row is double-clicked.
   Void onAction(|This| f) { cbAction = f }
 
+  ** Callback when a key is pressed in table.
+  // TODO: need to fix to take |This,Event| arg...
+  @NoDoc Void onKeyDown(|Event| f) { cbKeyDown = f }
+
   ** Callback when a event occurs inside a table cell.
   Void onTableEvent(Str type, |TableEvent| f) { cbTableEvent[type] = f }
 
@@ -1007,17 +1011,20 @@ using graphics
         if (cur < 0) cur = cur.not - 1
         pre := colx[cur] == scrollx ? cur-1 : cur
         scrollTo(0.max(pre), null)
+        return
 
       case Key.right:
         cur := colx.binarySearch(scrollx)
         if (cur < 0) cur = cur.not - 1
         scrollTo((numCols-1).min(cur+1), null)
+        return
 
       case Key.up:
         if (sel.indexes.isEmpty)
         {
           updateSel([selFirstVis])
           scrollTo(null, firstVisRow)
+          return
         }
         else
         {
@@ -1025,6 +1032,7 @@ using graphics
           prev := pivot - 1
           updateSel([view.rowViewToModel(prev)])
           scrollTo(null, prev)
+          return
         }
 
       case Key.down:
@@ -1032,6 +1040,7 @@ using graphics
         {
           updateSel([selFirstVis])
           scrollTo(null, firstVisRow)
+          return
         }
         else
         {
@@ -1039,6 +1048,7 @@ using graphics
           next := pivot + 1
           updateSel([view.rowViewToModel(next)])
           scrollTo(null, next)
+          return
         }
     }
 
@@ -1048,6 +1058,9 @@ using graphics
       cbAction?.call(this)
       return
     }
+
+    // else bubble up to callback
+    if (e.type == "keydown") return cbKeyDown?.call(e)
   }
 
   @NoDoc Void updateSel(Int[] newsel)
@@ -1083,6 +1096,7 @@ using graphics
   private Func? cbBeforeSelect
   private Func? cbSelect
   private Func? cbAction
+  private Func? cbKeyDown
   private Str:Func cbTableEvent := [:]
   private Func? cbHeaderPopup
 
