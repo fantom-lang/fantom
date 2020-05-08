@@ -165,4 +165,16 @@ final const class Pod
   **
   Str? locale(Str name, Str? def := "pod::name")
 
+  **
+  ** Expand a set of pods to include all their recurisve dependencies.
+  ** This method is does not order them; see `orderByDepends()`.
+  **
+  static Pod[] flattenDepends(Pod[] pods)
+
+  **
+  ** Order a list of pods by their dependencies.
+  ** This method does not flatten dependencies - see `flattenDepends()`.
+  **
+  static Pod[] orderByDepends(Pod[] pods)
+
 }

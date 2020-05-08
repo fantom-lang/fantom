@@ -18,6 +18,7 @@
 - Actor improved diagnostics
 - ActorPool.balance experimental method
 - Future is now abstract
+- Pod flattenDepends, orderByDepends
 
 *Build 1.0.74 (2 Mar 2020)*
 - Java 8 runtime required
