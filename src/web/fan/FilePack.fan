@@ -9,7 +9,7 @@
 using concurrent
 
 **
-** FileBundle is an in-memory cache of multiple text files to service
+** FilePack is an in-memory cache of multiple text files to service
 ** static resources via HTTP.  It takes one or more text files and
 ** creates one compound file.  The result is stored in RAM using GZIP
 ** compression.
@@ -22,7 +22,7 @@ using concurrent
 ** methods is provided for standard bundling of Fantom JavaScrit and CSS
 ** files.
 **
-const class FileBundle
+const class FilePack
 {
 
 //////////////////////////////////////////////////////////////////////////

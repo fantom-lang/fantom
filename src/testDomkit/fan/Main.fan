@@ -36,15 +36,15 @@ const class DomkitTestMod : WebMod
   {
     f(this)
     pods := [typeof.pod]
-    this.jsBundle  = FileBundle(FileBundle.toAppJsFiles(pods))
-    this.cssBundle = FileBundle(FileBundle.toAppCssFiles(pods))
+    this.jsPack  = FilePack(FilePack.toAppJsFiles(pods))
+    this.cssPack = FilePack(FilePack.toAppCssFiles(pods))
   }
 
   const Bool useSampleCss := false
 
-  const FileBundle jsBundle
+  const FilePack jsPack
 
-  const FileBundle cssBundle
+  const FilePack cssPack
 
   override Void onService()
   {
@@ -53,8 +53,8 @@ const class DomkitTestMod : WebMod
     {
       case null:       onIndex
       case "test":     onTest
-      case "app.js":   jsBundle.onService(req, res)
-      case "app.css":  cssBundle.onService(req, res)
+      case "app.js":   jsPack.onService(req, res)
+      case "app.css":  cssPack.onService(req, res)
       case "pod":      onPod
       default:         res.sendErr(404)
     }
