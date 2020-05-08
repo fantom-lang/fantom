@@ -19,6 +19,7 @@
 - ActorPool.balance experimental method
 - Future is now abstract
 - Pod flattenDepends, orderByDepends
+- New web::FileBundle class
 
 *Build 1.0.74 (2 Mar 2020)*
 - Java 8 runtime required

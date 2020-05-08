@@ -32,9 +32,19 @@ class Main : AbstractMain
 
 const class DomkitTestMod : WebMod
 {
-  new make(|This| f) { f(this) }
+  new make(|This| f)
+  {
+    f(this)
+    pods := [typeof.pod]
+    this.jsBundle  = FileBundle(FileBundle.toAppJsFiles(pods))
+    this.cssBundle = FileBundle(FileBundle.toAppCssFiles(pods))
+  }
 
   const Bool useSampleCss := false
+
+  const FileBundle jsBundle
+
+  const FileBundle cssBundle
 
   override Void onService()
   {
@@ -43,9 +53,9 @@ const class DomkitTestMod : WebMod
     {
       case null:       onIndex
       case "test":     onTest
+      case "app.js":   jsBundle.onService(req, res)
+      case "app.css":  cssBundle.onService(req, res)
       case "pod":      onPod
-      case "units.js": onUnits
-      case "tz.js":    onTz
       default:         res.sendErr(404)
     }
   }
@@ -84,17 +94,8 @@ const class DomkitTestMod : WebMod
     out.html
     out.head
       .title.w("Domkit Test").titleEnd
-      .includeCss(`/pod/domkit/res/css/domkit.css`)
-      .includeJs(`/pod/sys/sys.js`)
-      .includeJs(`/tz.js`)
-      .includeJs(`/units.js`)
-      .includeJs(`/pod/util/util.js`)
-      .includeJs(`/pod/concurrent/concurrent.js`)
-      .includeJs(`/pod/graphics/graphics.js`)
-      .includeJs(`/pod/web/web.js`)
-      .includeJs(`/pod/dom/dom.js`)
-      .includeJs(`/pod/domkit/domkit.js`)
-      .includeJs(`/pod/testDomkit/testDomkit.js`)
+      .includeCss(`/app.css`)
+      .includeJs(`/app.js`)
       .style.w(
        "html { height: 100%; }
         body {
@@ -128,18 +129,6 @@ const class DomkitTestMod : WebMod
     File file := ("fan://" + req.uri.pathOnly.toStr["/pod/".size..-1]).toUri.get
     if (!file.exists) { res.sendErr(404); return }
     FileWeblet(file).onService
-  }
-
-  Void onUnits()
-  {
-    res.headers["Content-Type"] = "text/javascript; charset=utf-8"
-    JsUnitDatabase().write(res.out)
-  }
-
-  Void onTz()
-  {
-    res.headers["Content-Type"] = "text/javascript; charset=utf-8"
-    res.out.writeBuf((Env.cur.homeDir + `etc/sys/tz.js`).readAllBuf)
   }
 
   const Str sampleCss :=

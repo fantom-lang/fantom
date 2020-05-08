@@ -167,13 +167,13 @@ final const class Pod
 
   **
   ** Expand a set of pods to include all their recurisve dependencies.
-  ** This method is does not order them; see `orderByDepends()`.
+  ** This method is does not order them; see `orderByDepends`.
   **
   static Pod[] flattenDepends(Pod[] pods)
 
   **
   ** Order a list of pods by their dependencies.
-  ** This method does not flatten dependencies - see `flattenDepends()`.
+  ** This method does not flatten dependencies - see `flattenDepends`.
   **
   static Pod[] orderByDepends(Pod[] pods)
 

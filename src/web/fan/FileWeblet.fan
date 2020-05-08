@@ -160,11 +160,18 @@ class FileWeblet : Weblet
   **
   virtual protected Bool checkNotModified()
   {
+    doCheckNotModified(req, res, etag, modified)
+  }
+
+  **
+  ** Utility for standard check modified logic
+  **
+  internal static Bool doCheckNotModified(WebReq req, WebRes res, Str etag, DateTime modified)
+  {
     // check If-Match-None
     matchNone := req.headers["If-None-Match"]
     if (matchNone != null)
     {
-      etag := this.etag
       match := WebUtil.parseList(matchNone).any |Str s->Bool|
       {
         return s == etag || s == "*"
