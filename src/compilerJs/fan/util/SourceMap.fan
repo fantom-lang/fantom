@@ -147,9 +147,13 @@ class SourceMap
   ** we just add the appropiate offset.
   static Void pack(File[] files, OutStream out)
   {
-    // the last file must be a pod so we so we know to
+    // find the last pod file so we so we know to
     // leave off trailing comma (strict JSON is required)
-    if (files.last.uri.scheme != "fan") throw ArgErr("Last file must be pod js file")
+    lastPodIndex := files.eachrWhile |f, i|
+    {
+      f.uri.scheme == "fan" ?  i : null
+    }
+    if (lastPodIndex == null) throw ArgErr("Must include at least one pod js file")
 
     // open compound source map file
     out.printLine("{")
@@ -176,7 +180,7 @@ class SourceMap
 
           // add offset section and insert original JSON
           out.print("""{ "offset": {"line":${curOffset},"column":0}, "map":${sm.readAllStr} }""")
-          if (i+1 < files.size) out.printLine(",")  // need last file to be pod
+          if (i < lastPodIndex) out.printLine(",")  // cannot have trailing comma
         }
       }
 
@@ -184,8 +188,8 @@ class SourceMap
       // echo("-- $uri.name  " + readNumLinesFromJson(json) + " ?= " + readNumLinesByCounting(file))
       numLines := readNumLinesFromJson(json) ?: readNumLinesByCounting(file)
 
-      // advance curOffset and add extra newline inserted by FilePack
-      curOffset += numLines + 1
+      // advance curOffset
+      curOffset += numLines
     }
 
     // close file

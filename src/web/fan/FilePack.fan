@@ -101,17 +101,36 @@ const class FilePack : Weblet
 // File Utils
 //////////////////////////////////////////////////////////////////////////
 
-  ** Pack multiple text files together to the given output stream.
-  ** A newline character is inserted between each file.  The stream
-  ** is not closed.  Return the given out stream.
+  ** Pack multiple text files together and write to the given output
+  ** stream.  A trailing newline is automatically added if the file is
+  ** missing one.  Empty files are skipped.  The stream is not closed.
+  ** Return the given out stream.
   static OutStream pack(File[] files, OutStream out)
   {
-    files.each |f|
-    {
-      f.in.pipe(out)
-      out.printLine // insert extra newline between each file
-    }
+    files.each |f| { pipeToPack(f, out) }
     return out
+  }
+
+  ** Pack a file to the given outstream and ensure there is a trailing newline
+  private static Void pipeToPack(File f, OutStream out)
+  {
+    chunkSize := f.size.min(4096)
+    if (chunkSize == 0) return // skip empty files
+    buf := Buf(chunkSize)
+    in := f.in(chunkSize)
+    try
+    {
+      lastIsNewline := false
+      while (true)
+      {
+        n := in.readBuf(buf.clear, chunkSize)
+        if (n == null) break
+        if (n > 0) lastIsNewline = buf[-1] == '\n'
+        out.writeBuf(buf.flip, buf.remaining)
+      }
+      if (!lastIsNewline) out.writeChar('\n')
+    }
+    finally { in.close }
   }
 
 //////////////////////////////////////////////////////////////////////////
