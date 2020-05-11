@@ -92,7 +92,6 @@ class JsPod : JsNode
       in.close
     }
     out.w("}).call(this);").nl
-    out.w("//# sourceMappingURL=/pod/${name}/${name}.js.map").nl
   }
 
   static Void writeNs(JsWriter out, Str name)

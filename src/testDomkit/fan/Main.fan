@@ -53,8 +53,8 @@ const class DomkitTestMod : WebMod
     {
       case null:       onIndex
       case "test":     onTest
-      case "app.js":   jsPack.onService(req, res)
-      case "app.css":  cssPack.onService(req, res)
+      case "app.js":   jsPack.onService
+      case "app.css":  cssPack.onService
       case "pod":      onPod
       default:         res.sendErr(404)
     }
