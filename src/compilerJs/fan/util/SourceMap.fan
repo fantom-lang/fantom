@@ -153,11 +153,6 @@ class SourceMap
     // options
     sourceRoot := options?.get("sourceRoot") as Str
 
-    // find the last pod file so we so we know to
-    // leave off trailing comma (strict JSON is required)
-    lastPodIndex := files.eachrWhile |f, i| { isPodJsFile(f) ? i : null }
-    if (lastPodIndex == null) throw ArgErr("Must include at least one pod js file")
-
     // open compound source map file
     out.printLine("{")
        .printLine("\"version\": 3,")
@@ -165,16 +160,17 @@ class SourceMap
 
     // process each file
     curOffset := 0
-    files.eachRange(0..lastPodIndex) |file, i|
+    files.each |file, i|
     {
-      Str? json := null
+      // check if file is within a pod
       uri := file.uri
+      pod := uri.scheme == "fan" ? Pod.find(uri.host, false) : null
 
       // check if this standard pod JS file
-      if (isPodJsFile(file))
+      Str? json := null
+      if (pod != null && isPodJsFile(file))
       {
         // lookup sourcemap for the pod
-        pod := Pod.find(uri.host)
         sm := pod.file(`/${pod.name}.js.map`, false)
         if (sm != null)
         {
@@ -184,19 +180,38 @@ class SourceMap
           // apply options
           if (sourceRoot != null) json = setSourceRoot(json, sourceRoot+pod.name)
 
-          // add offset section and insert original JSON
-          out.print(Str<|{"offset": {"line":|>)
-             .print(curOffset)
-             .print(Str<|, "column":0}, "map":|>)
-             .print(json)
-             .print("}")
-          if (i < lastPodIndex) out.printLine(",")  // cannot have trailing comma
         }
       }
 
       // read number of lines from JSON if we can, otherwise count them
       // echo("-- $uri.name  " + readNumLinesFromJson(json) + " ?= " + readNumLinesByCounting(file))
       numLines := readNumLinesFromJson(json) ?: readNumLinesByCounting(file)
+
+      // if we have raw js file, then generate a synthetic sourcemap
+      if (json == null)
+      {
+        mappings := StrBuf().add("AAAA;")
+        buf := StrBuf()
+        buf.add("""{
+                   "version":3,
+                   "file": "core.js",
+                   "sources": ["${file.name}"],
+                   """)
+        if (pod != null) buf.add("\"sourceRoot\": \"").add(sourceRoot ?: "/dev/").add(pod.name).add("/\",\n")
+        buf.add(Str<|"mappings": "AAAA;|>)
+        (numLines+1).times |x| { buf.add("AACA;") }
+        buf.add("\"}")
+        json = buf.toStr
+      }
+
+      // add offset section and insert original JSON
+      out.print(Str<|{"offset": {"line":|>)
+         .print(curOffset)
+         .print(Str<|, "column":0}, "map":|>)
+         .print(json)
+         .print("}")
+      if (i+1 < files.size) out.printLine(",")  // cannot have trailing comma
+
 
       // advance curOffset
       curOffset += numLines
