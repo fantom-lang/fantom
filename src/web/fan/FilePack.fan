@@ -12,9 +12,10 @@ using concurrent
 ** FilePack is an in-memory cache of multiple text files to service
 ** static resources via HTTP.  It takes one or more text files and
 ** creates one compound file.  The result is stored in RAM using GZIP
-** compression.
+** compression.  Or you can use the `pack` utility method to store
+** the result to your own files/buffers.
 **
-** The `onService` method is used to service GET requests for the bundle.
+** The `onGet` method is used to service GET requests for the bundle.
 ** The Content-Type header is set based on file extension of files bundled.
 ** It also implictly supports ETag/Last-Modified for 304 optimization.
 **

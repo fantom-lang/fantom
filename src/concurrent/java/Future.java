@@ -96,4 +96,6 @@ public abstract class Future
 
   public abstract Future completeErr(Err e);
 
+  public Future wraps() { return null; }
+
 }

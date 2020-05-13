@@ -168,11 +168,19 @@ public class Actor
     if (dur != null)
       pool.schedule(this, dur, f);
     else if (whenDone != null)
-      ((ActorFuture)whenDone).sendWhenDone(this, f);
+      toWhenDoneFuture(whenDone).sendWhenDone(this, f);
     else
       f = _enqueue(f, true);
 
     return f;
+  }
+
+  private static ActorFuture toWhenDoneFuture(Future f)
+  {
+    if (f instanceof ActorFuture) return (ActorFuture)f;
+    Future wraps = f.wraps();
+    if (wraps instanceof ActorFuture) return (ActorFuture)wraps;
+    throw ArgErr.make("Only actor Futures supported for sendWhenComplete");
   }
 
   final ActorFuture _enqueue(ActorFuture f, boolean coalesce)

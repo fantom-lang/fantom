@@ -76,6 +76,11 @@ native abstract const class Future
   abstract This completeErr(Err err)
 
   **
+  ** If this future wraps another future
+  **
+  @NoDoc virtual Future? wraps()
+
+  **
   ** Block until this future transitions to a completed state (ok,
   ** err, or canceled).  If timeout is null then block forever, otherwise
   ** raise a TimeoutErr if timeout elapses.  Return this.
