@@ -35,8 +35,10 @@ class JsIndexedProps
          ${JsPod.requireSys}
          var i = fan.sys.Map.make(fan.sys.Str.\$type, new fan.sys.ListType(fan.sys.Str.\$type));")
 
-    index.each |vals, key|
+    keys := index.keys.sort
+    keys.each |key|
     {
+      vals := index[key].sort
       v := vals.join(",") |v| { v.toCode }
       out.printLine("  i.set(\"$key\", fan.sys.List.make(fan.sys.Str.\$type, [$v]));")
     }
