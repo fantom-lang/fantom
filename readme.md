@@ -27,7 +27,7 @@ See [Setup](https://fantom.org/doc/docTools/Setup) for installation details.
 Installers are also available for macOS and Windows:
 
   * macOS: `brew install fantom`
-  * Windows: [fantom-1.0.74.exe](https://bitbucket.org/fantomfactory/fantom-windows-installer/downloads/fantom-1.0.74.exe)
+  * Windows: [fantom-1.0.74.exe](https://github.com/Fantom-Factory/fantomWindowsInstaller/releases)
 
 ## Community
 
