@@ -53,4 +53,4 @@ errTraceMaxDepth=25
 
 // Set this property to pass additional command line options to the Java VM.
 // The options should be listed together separated with a space.
-java.options=-Xmx512M
+// java.options=-Xmx512M
