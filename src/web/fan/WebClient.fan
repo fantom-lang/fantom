@@ -309,34 +309,33 @@ class WebClient
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Convenience for 'writeForm("POST", form)'
+  ** Convenience for 'writeForm("POST", form).readRes'
   **
   This postForm(Str:Str form)
   {
-    writeForm("POST", form)
+    writeForm("POST", form).readRes
   }
 
   **
-  ** Convenience for 'writeStr("POST", content)'
+  ** Convenience for 'writeStr("POST", content).readRes'
   **
   This postStr(Str content)
   {
-    writeStr("POST", content)
+    writeStr("POST", content).readRes
   }
 
   **
-  ** Convenience for 'writeFile("POST", file)'
+  ** Convenience for 'writeFile("POST", file).readRes'
   **
   This postFile(File file)
   {
-    writeFile("POST", file)
+    writeFile("POST", file).readRes
   }
 
   **
   ** Make a request with the given HTTP method to the URI with the given form data.
   ** Set the Content-Type to application/x-www-form-urlencoded.
-  ** Upon completion the response is ready to be read.  This method
-  ** does not support the ["Expect" header]`pod-doc#expectContinue` (it
+  ** This method does not support the ["Expect" header]`pod-doc#expectContinue` (it
   ** writes all form data before reading response). Should primarily be used for POST
   ** and PATCH requests.
   **
@@ -349,15 +348,13 @@ class WebClient
     reqHeaders["Content-Length"] = body.size.toStr // encoded form is ASCII
     writeReq
     reqOut.print(body).close
-    readRes
     return this
   }
 
   **
   ** Make a request with the given HTTP method to the URI using UTF-8 encoding of given
   ** string.  If Content-Type is not already set, then set it
-  ** to "text/plain; charset=utf-8".  Upon completion the response
-  ** is ready to be read.  This method does not support the
+  ** to "text/plain; charset=utf-8".  This method does not support the
   ** ["Expect" header]`pod-doc#expectContinue` (it writes full string
   ** before reading response). Should primarily be used for "POST" and "PATCH"
   ** requests.
@@ -373,14 +370,12 @@ class WebClient
     reqHeaders["Content-Length"] = body.size.toStr
     writeReq
     reqOut.writeBuf(body).close
-    readRes
     return this
   }
 
   **
   ** Write a file using the given HTTP method to the URI.  If Content-Type header is not already
-  ** set, then it is set from the file extension's MIME type.  Upon
-  ** completion the response is ready to be read.  This method does
+  ** set, then it is set from the file extension's MIME type. This method does
   ** not support the ["Expect" header]`pod-doc#expectContinue` (it
   ** writes full file before reading response). Should primarily be used for "POST" and
   ** "PATCH" requests.
@@ -397,7 +392,6 @@ class WebClient
     writeReq
     file.in.pipe(reqOut, file.size)
     reqOut.close
-    readRes
     return this
   }
 
