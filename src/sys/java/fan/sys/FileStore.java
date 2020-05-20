@@ -19,9 +19,8 @@ public abstract class FileStore
 
   protected static void make$() {}
 
-  protected static void makeNew$(File self, Uri uri)
+  protected static void makeNew$(FileStore self)
   {
-    self.uri = uri;
   }
 
   public abstract Long totalSpace();
