@@ -44,7 +44,10 @@ using graphics
     // manually track focus so we can detect when
     // the browser window becomes unactive while
     // maintaining focus internally in document
-    this.onEvent("focus", false) |e| { manFocus=true;  refresh }
+// TODO FIXIT: we need the timeout so that events can
+// properaly bubble before refresh potentially replaces
+// the event target (see TableSelection.onUpdate)
+    this.onEvent("focus", false) |e| { manFocus=true;  Win.cur.setTimeout(100ms) { refresh }}
     this.onEvent("blur",  false) |e| { manFocus=false; refresh }
 
     // rebuild if size changes
@@ -1328,8 +1331,14 @@ internal const class TablePos
   // }
   override Void onUpdate(Int[] oldIndexes, Int[] newIndexes)
   {
-    oldIndexes.each |i| { if (i < max) view.table.refreshRow(view.rowModelToView(i)) }
-    newIndexes.each |i| { view.table.refreshRow(view.rowModelToView(i)) }
+    // TODO FIXIT: we need this primary for mouse events, so
+    // the event can bubble on things like cmd/ctrl+click on
+    // <a> child nodes, before refreshRow removes the original
+    // node instance
+    Win.cur.setTimeout(100ms) {
+      oldIndexes.each |i| { if (i < max) view.table.refreshRow(view.rowModelToView(i)) }
+      newIndexes.each |i| { view.table.refreshRow(view.rowModelToView(i)) }
+    }
   }
   private TableView view
 }
