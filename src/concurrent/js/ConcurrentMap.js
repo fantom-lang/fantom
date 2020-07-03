@@ -49,7 +49,6 @@ fan.concurrent.ConcurrentMap.prototype.add = function(key, val)
 {
   if (this.containsKey(key)) throw fan.sys.Err("Key already mapped: " + key);
   this.m_map.add(key, this.$checkImmutable(val));
-  console.log(this.m_map.toStr());
 }
 
 fan.concurrent.ConcurrentMap.prototype.getOrAdd = function(key, defVal)
