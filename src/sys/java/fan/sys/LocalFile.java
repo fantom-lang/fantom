@@ -10,6 +10,7 @@ package fan.sys;
 import java.io.Closeable;
 import java.io.FileDescriptor;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
@@ -223,6 +224,12 @@ public class LocalFile
   }
 
   public boolean isHidden() { return file.isHidden(); }
+
+  public boolean isReadable() { return Files.isReadable(file.toPath()); }
+
+  public boolean isWritable() { return Files.isWritable(file.toPath()); }
+
+  public boolean isExecutable() { return Files.isExecutable(file.toPath()); }
 
   public String osPath()
   {

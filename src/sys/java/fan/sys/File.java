@@ -140,6 +140,12 @@ public abstract class File
 
   public boolean isHidden() { return false; }
 
+  public boolean isReadable() { return true; }
+
+  public boolean isWritable() { return false; }
+
+  public boolean isExecutable() { return false; }
+
   public abstract String osPath();
 
   public abstract File parent();

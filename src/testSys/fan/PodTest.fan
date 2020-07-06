@@ -127,6 +127,8 @@ class PodTest : Test
     verifyEq(f.name, "test.txt")
     verifyEq(f.size, 19)
     verifyEq(f.readAllStr, "hello world\nline 2")
+    verify(f.isReadable)
+    verifyFalse(f.isWritable)
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -161,6 +161,21 @@ abstract const class File
   virtual Bool isHidden()
 
   **
+  ** Return if this file is readable.
+  **
+  virtual Bool isReadable()
+
+  **
+  ** Return if this file is writable.
+  **
+  virtual Bool isWritable()
+
+  **
+  ** Return if this file is executable.
+  **
+  virtual Bool isExecutable()
+
+  **
   ** Get this File as an operating system specific path on
   ** the local system.  If this File doesn't represent a
   ** path on the local file system then return null.
