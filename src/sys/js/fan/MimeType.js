@@ -267,7 +267,7 @@ fan.sys.MimeType.prototype.charset = function()
 
 fan.sys.MimeType.prototype.noParams = function()
 {
-  if (this.params.isEmpty()) return this;
+  if (this.params().isEmpty()) return this;
   return fan.sys.MimeType.fromStr(this.mediaType() + "/" + this.subType());
 }
 
