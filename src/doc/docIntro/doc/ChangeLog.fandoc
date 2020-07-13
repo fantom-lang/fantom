@@ -11,6 +11,7 @@
 - List addNotNull, mapNotNull, findNotNull
 - Map addNotNull, mapNotNull, findNotNull
 - Deprecated List.addIfNotNull, Map.addIfNotNull
+- dom: Add HttpReq.resType
 - domkit: Add DropTarget.onLeave callback
 - Updates to original documentation
 - Remove actor message serialization [#2428]

@@ -31,6 +31,11 @@ class HttpReq
   ** Defaults to 'true'
   Bool async := true
 
+  ** The type of data contained in the response. It also lets the
+  ** author change the response type. If an empty string is set as
+  ** the value, the default value of '"text"' is used.
+  Str resType := ""
+
   **
   ** Indicates whether or not cross-site 'Access-Control' requests
   ** should be made using credentials such as cookies, authorization

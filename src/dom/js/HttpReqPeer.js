@@ -51,6 +51,9 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
   }
   xhr.withCredentials = self.m_withCredentials;
 
+  // set response type
+  xhr.responseType = self.m_resType;
+
   // send request based on content type
   if (content == null)
   {
