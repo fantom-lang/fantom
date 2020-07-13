@@ -40,6 +40,9 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
     }
   }
 
+  // set response type
+  xhr.responseType = self.m_resType;
+
   // setup headers
   var ct = false;
   var k = self.m_headers.keys();
@@ -50,9 +53,6 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
     xhr.setRequestHeader(key, self.m_headers.get(key));
   }
   xhr.withCredentials = self.m_withCredentials;
-
-  // set response type
-  xhr.responseType = self.m_resType;
 
   // send request based on content type
   if (content == null)
@@ -90,10 +90,12 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
 
 fan.dom.HttpReqPeer.makeRes = function(xhr)
 {
+  var isText = xhr.responseType == "" || xhr.responseType == "text";
+
   var res = fan.dom.HttpRes.make();
   res.m_$xhr    = xhr;
   res.m_status  = xhr.status;
-  res.m_content = xhr.responseText;
+  res.m_content = isText ? xhr.responseText : "";
 
   var all = xhr.getAllResponseHeaders().split("\n");
   for (var i=0; i<all.length; i++)
