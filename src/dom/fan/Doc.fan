@@ -42,7 +42,7 @@ class Doc
   ** Get the body element.
   native Elem body()
 
-  ** Get the currently focued element, or 'null' for none.
+  ** Get the currently focused element, or 'null' for none.
   native Elem? activeElem()
 
   **

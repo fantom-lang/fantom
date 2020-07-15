@@ -31,6 +31,9 @@ using dom
   ** Protected sub-class callback invoked directly before dialog is opened.
   protected virtual Void onBeforeOpen() {}
 
+  ** Protected sub-class callback invoked directly after dialog is opened.
+  protected virtual Void onAfterOpen() {}
+
   ** Callback when a key is pressed while Dialog is open, including
   ** events that where dispatched outside the dialog.
   protected Void onKeyDown(|Event e| f) { this.cbKeyDown = f }
@@ -105,7 +108,7 @@ using dom
     frame.transition([
       "transform": "scale(1)",
       "opacity": "1"
-    ], null, 100ms) { this.focus; fireOpen }
+    ], null, 100ms) { this.focus; onAfterOpen(); fireOpen }
   }
 
   ** Close this dialog. If dialog is already closed
@@ -127,8 +130,8 @@ using dom
   ** Callback when popup is closed.
   Void onClose(|This| f) { cbClose = f }
 
-  private Void fireOpen()    { cbOpen?.call(this)    }
-  private Void fireClose()   { cbClose?.call(this)   }
+  private Void fireOpen()  { cbOpen?.call(this)  }
+  private Void fireClose() { cbClose?.call(this) }
 
   private const Int uid
   private static const AtomicRef nextId := AtomicRef(0)
