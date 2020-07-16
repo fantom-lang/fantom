@@ -112,13 +112,8 @@ internal const class WispActor : Actor
     {
       // skip leading CRLF (4.1)
       in := req.socket.in
-      line := in.readLine
-      if (line == null) throw Err("Empty request line")
-      while (line.isEmpty)
-      {
-        line = in.readLine
-        if (line == null) throw Err("Empty request line")
-      }
+      line := WebUtil.readLine(in)
+      while (line.isEmpty) line = WebUtil.readLine(in)
 
       // parse request-line (5.1)
       toks   := line.split

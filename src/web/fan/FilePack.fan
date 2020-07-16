@@ -143,7 +143,7 @@ const class FilePack : Weblet
   **   - flatten the pods using `sys::Pod.flattenDepends`
   **   - order them by dependencies using `sys::Pod.orderByDepends`
   **   - insert `toEtcJsFiles` immediately after "sys.js"
-  static File[] toAppJsFiles(Pod[] pods, Bool flattenAndOrder := true)
+  static File[] toAppJsFiles(Pod[] pods)
   {
     pods = Pod.flattenDepends(pods)
     pods = Pod.orderByDepends(pods)

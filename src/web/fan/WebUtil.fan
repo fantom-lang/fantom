@@ -128,7 +128,7 @@ class WebUtil
       // continuation of last header field
       if (peek.isSpace && last != null)
       {
-        headers[last] += " " + in.readLine.trim
+        headers[last] += " " + WebUtil.readLine(in).trim
         continue
       }
 
@@ -371,6 +371,19 @@ class WebUtil
     return ChunkOutStream(out)
   }
 
+  **
+  ** Read line of HTTP protocol.  Raise exception if unexpected
+  ** end of stream or the line exceeds our max size.
+  **
+  @NoDoc static Str readLine(InStream in)
+  {
+    max := 4096
+    line := in.readLine(max)
+    if (line == null) throw IOErr("Unexpected end of stream")
+    if (line.size == max) throw IOErr("Max request line")
+    return line
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Multi-Part Forms
 //////////////////////////////////////////////////////////////////////////
@@ -385,7 +398,7 @@ class WebUtil
   static Void parseMultiPart(InStream in, Str boundary, |Str:Str headers, InStream in| cb)
   {
     boundary = "--" + boundary
-    line := in.readLine
+    line := WebUtil.readLine(in)
     if (line == boundary + "--") return
     if (line != boundary) throw IOErr("Expecting boundry line $boundary.toCode")
     while (true)
@@ -523,10 +536,10 @@ internal class ChunkInStream : InStream
       if (noMoreChunks) return false
 
       // we expect \r\n unless this is first chunk
-      if (chunkRem != -1 && !in.readLine.isEmpty) throw Err()
+      if (chunkRem != -1 && !WebUtil.readLine(in).isEmpty) throw Err()
 
       // read the next chunk status line
-      line := in.readLine
+      line := WebUtil.readLine(in)
       semi := line.index(";")
       if (semi != null) line = line[0..semi]
       chunkRem = line.trim.toInt(16)
