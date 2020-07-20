@@ -21,6 +21,7 @@
 - Pod flattenDepends, orderByDepends
 - Remove JS fixed sourceMappingURL in favor of SourceMap header
 - New web::FilePack class
+- Add opts to Zip.writeNext
 
 *Build 1.0.74 (2 Mar 2020)*
 - Java 8 runtime required

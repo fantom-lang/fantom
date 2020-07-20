@@ -123,8 +123,9 @@ public final class Zip
     }
   }
 
-  public OutStream writeNext(Uri path) { return writeNext(path, DateTime.now()); }
-  public OutStream writeNext(Uri path, DateTime modifyTime)
+  public OutStream writeNext(Uri path) { return writeNext(path, DateTime.now(), null); }
+  public OutStream writeNext(Uri path, DateTime modifyTime) { return writeNext(path, modifyTime, null); }
+  public OutStream writeNext(Uri path, DateTime modifyTime, Map opts)
   {
     if (zipOut == null) throw UnsupportedErr.make("Zip not opened for writing");
     if (path.frag() != null) throw ArgErr.make("Path must not contain fragment: " + path);
@@ -141,10 +142,29 @@ public final class Zip
 
     try
     {
+      // init ZipEntry
       String zipPath = path.toString();
       if (zipPath.startsWith("/")) zipPath = zipPath.substring(1);
       ZipEntry entry = new ZipEntry(zipPath);
+
+      // options
       entry.setTime(modifyTime.toJava());
+      if (opts != null)
+      {
+        if (opts.get("level") != null)
+        {
+          int level = ((Long)opts.get("level")).intValue();
+          zipOut.setLevel(level);
+          zipOut.setMethod(level == 0 ? ZipOutputStream.STORED : ZipOutputStream.DEFLATED);
+        }
+        if (opts.get("comment")          != null) entry.setComment((String)opts.get("comment"));
+        if (opts.get("crc")              != null) entry.setCrc((Long)opts.get("crc"));
+        if (opts.get("extra")            != null) entry.setExtra(((Buf)opts.get("extra")).safeArray());
+        if (opts.get("compressedSize")   != null) entry.setCompressedSize((Long)opts.get("compressedSize"));
+        if (opts.get("uncompressedSize") != null) entry.setSize((Long)opts.get("uncompressedSize"));
+      }
+
+      // putNextEntry and return as SysOutStream
       zipOut.putNextEntry(entry);
       return new SysOutStream(zipOut)
       {
