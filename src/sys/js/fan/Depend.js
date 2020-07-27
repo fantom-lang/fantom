@@ -44,7 +44,7 @@ fan.sys.Depend.fromStr = function(str, checked)
 fan.sys.Depend.prototype.equals = function(obj)
 {
   if (obj instanceof fan.sys.Depend)
-    return this.toStr().equals(obj.toStr());
+    return this.toStr() == obj.toStr();
   else
     return false;
 }
