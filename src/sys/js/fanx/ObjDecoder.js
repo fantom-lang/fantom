@@ -447,6 +447,10 @@ fanx_ObjDecoder.prototype.readMap = function(mapType, firstKey)
     ? fan.sys.Map.make(fan.sys.Obj.$type, fan.sys.Obj.$type.toNullable())
     : fan.sys.Map.make(mapType);
 
+  // we don't encode whether the original map was ordered or not,
+  // so assume it was to ensure map is still ordered after decode
+  map.ordered$(true);
+
   // finish first pair
   this.consume(fanx_Token.COLON, "Expected ':'");
   map.set(firstKey, this.$readObj(null, null, false));
