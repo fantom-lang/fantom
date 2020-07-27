@@ -102,3 +102,8 @@ fan.sys.Decimal.toLocale = function(self, pattern, locale)
   // // route to common FanNum method
   // return FanNum.toLocale(p, d, df);
 }
+
+fan.sys.Decimal.toStr = function(self)
+{
+  return fan.sys.Float.toStr(self);
+}
