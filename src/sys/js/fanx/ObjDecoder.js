@@ -552,7 +552,7 @@ fanx_ObjDecoder.prototype.readType = function(lbracket)
     var lbracket2 = curt == fanx_Token.LBRACKET;
     if (lbracket2) this.consume();
     t = new fan.sys.MapType(t, this.readType(lbracket2));
-    if (lbracket2) this.consume(fanx_Token.RBRACKET, "Expected closeing ']'")
+    if (lbracket2) this.consume(fanx_Token.RBRACKET, "Expected closeing ']'");
   }
   while (this.curt == fanx_Token.LRBRACKET)
   {
