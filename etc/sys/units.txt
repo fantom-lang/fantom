@@ -15,6 +15,7 @@ pixel, px
 decibel, db
 power_factor, pf
 ph, pH
+absolute_humidity, g/m³
 percent_relative_humidity, %RH
 grams_of_water_per_kilogram_dry_air, gH₂O/kgAir
 volts_per_degree_kelvin, V/K
