@@ -447,7 +447,13 @@ fan.sys.Type.prototype.doReflect = function()
   var nameToIndex = {};   // String -> Int
 
   // merge in base class and mixin classes
-  for (var i=0; i<this.m_mixins.size(); i++) this.$mergeType(this.m_mixins.get(i), slots, nameToSlot, nameToIndex);
+  if (this.m_mixins)
+  {
+    for (var i=0; i<this.m_mixins.size(); i++)
+    {
+      this.$mergeType(this.m_mixins.get(i), slots, nameToSlot, nameToIndex);
+    }
+  }
   this.$mergeType(this.m_base, slots, nameToSlot, nameToIndex);
 
   // merge in all my slots
