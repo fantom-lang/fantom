@@ -36,6 +36,7 @@ class WebSocket
     c.reqHeaders["Upgrade"] = "websocket"
     c.reqHeaders["Connection"] = "Upgrade"
     c.reqHeaders["Sec-WebSocket-Key"] = key
+    c.reqHeaders["Sec-WebSocket-Version"] = "13"
     if (headers != null) c.reqHeaders.addAll(headers)
     c.writeReq
 
