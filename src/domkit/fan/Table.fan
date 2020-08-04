@@ -95,6 +95,7 @@ using graphics
     view.sort(col, dir)
     model.onSort(col, dir)
     refresh
+    cbSort?.call(this)
   }
 
   ** Scroll to the given row and column in table.  Pass 'null' to
@@ -160,6 +161,9 @@ using graphics
 
   ** Callback when row is double-clicked.
   Void onAction(|This| f) { cbAction = f }
+
+  ** Callback when table is sorted by a column
+  Void onSort(|This| f) { cbSort = f }
 
   ** Callback when a key is pressed in table.
   // TODO: need to fix to take |This,Event| arg...
@@ -1099,6 +1103,7 @@ using graphics
   private Func? cbBeforeSelect
   private Func? cbSelect
   private Func? cbAction
+  private Func? cbSort
   private Func? cbKeyDown
   private Str:Func cbTableEvent := [:]
   private Func? cbHeaderPopup
