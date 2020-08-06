@@ -15,7 +15,6 @@ pixel, px
 decibel, db
 power_factor, pf
 ph, pH
-absolute_humidity, g/m³
 percent_relative_humidity, %RH
 grams_of_water_per_kilogram_dry_air, gH₂O/kgAir
 volts_per_degree_kelvin, V/K
@@ -229,6 +228,8 @@ kilowatt_per_ton, kW/ton; ; 1
 
 -- density (kg1*m-3)
 kilograms_per_cubic_meter, kg/m³; kg1*m-3
+grams_per_cubic_meter, g/m³; kg1*m-3; 1.0E-3
+milligrams_per_cubic_meter, mg/m³; kg1*m-3; 1.0E-6
 micrograms_per_cubic_meter, µg/m³; kg1*m-3; 1.0E-9
 
 -- electric charge (sec1*A1)
