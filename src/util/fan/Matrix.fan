@@ -11,22 +11,30 @@
 **
 mixin Matrix
 {
-  static Matrix create(Int numRows, Int numCols, Float fill := 0f)
+  ** Create a new matrix with the given number of rows and columsn.
+  ** All elements of the matrix are initialized to zero.
+  static Matrix create(Int numRows, Int numCols)
   {
-    MMatrix(numRows, numCols, fill)
+    MMatrix(numRows, numCols)
   }
 
   ** The number of rows in the matrix.
-  abstract Int nrows()
+  abstract Int numRows()
 
   ** The number of columns in the matrix.
-  abstract Int ncols()
+  abstract Int numCols()
+
+  ** Return true if the matrix is square.
+  abstract Bool isSquare()
 
   ** Get the element at 'A[i,j]'
   abstract Float get(Int i, Int j)
 
   ** Set the element at 'A[i,j]' to val.
   abstract This set(Int i, Int j, Float val)
+
+  ** Set every element in the matrix to the given val.
+  abstract This fill(Float val)
 
   ** Get the transpose of the matrix.
   abstract Matrix transpose()

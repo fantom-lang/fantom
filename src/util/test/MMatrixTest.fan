@@ -15,6 +15,18 @@ class MMatrixTest : Test
     m.set(1,1,4f); verify(m.get(1,1).approx(4f))
   }
 
+  Void testFill()
+  {
+    verifyMatrixEq(Matrix.create(2,2).fill(5f), matrix(2,2,[5f,5f,5f,5f]))
+  }
+
+  Void testIsSquare()
+  {
+    verify(Matrix.create(1,1).isSquare)
+    verify(Matrix.create(10,10).isSquare)
+    verifyFalse(Matrix.create(1,2).isSquare)
+  }
+
   Void testTranspose()
   {
     a := matrix(2,3,[1f,2f,3f,4f,5f,6f])
@@ -108,11 +120,11 @@ class MMatrixTest : Test
 
   private Void verifyMatrixEq(Matrix a, Matrix b, Float eps := 1.0E-6f)
   {
-    verifyEq(a.nrows, b.nrows)
-    verifyEq(a.ncols, b.ncols)
-    for (i := 0; i < a.nrows; ++i)
+    verifyEq(a.numRows, b.numRows)
+    verifyEq(a.numCols, b.numCols)
+    for (i := 0; i < a.numRows; ++i)
     {
-      for (j := 0; j < a.ncols; ++j)
+      for (j := 0; j < a.numCols; ++j)
       {
         verify(a.get(i,j).approx(b.get(i,j), eps))
       }

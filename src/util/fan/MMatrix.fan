@@ -11,15 +11,19 @@
 **
 @NoDoc native class MMatrix : Matrix
 {
-  new make(Int numRows, Int numCols, Float fill := 0.0f)
+  new make(Int numRows, Int numCols)
 
-  override Int nrows()
+  override Int numRows()
 
-  override Int ncols()
+  override Int numCols()
+
+  override Bool isSquare()
 
   override Float get(Int i, Int j)
 
   override This set(Int i, Int j, Float val)
+
+  override This fill(Float val)
 
   override Matrix transpose()
 

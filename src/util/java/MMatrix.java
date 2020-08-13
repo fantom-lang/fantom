@@ -19,17 +19,7 @@ public class MMatrix extends FanObj implements Matrix
 
   public static MMatrix make(final long numRows, final long numCols)
   {
-    return make(numRows, numCols, 0.0d);
-  }
-  public static MMatrix make(final long numRows, final long numCols, double fill)
-  {
-    double[] array = new double[(int)numRows * (int)numCols];
-    java.util.Arrays.fill(array, fill);
-    return new MMatrix(numRows, numCols, array);
-  }
-  public static MMatrix makeArray(final long numRows, final long numCols, FloatArray arr)
-  {
-    return new MMatrix(numRows, numCols, (double[])arr.array());
+    return new MMatrix(numRows, numCols, new double[(int)numRows * (int)numCols]);
   }
 
   private MMatrix(final long numRows, final long numCols, final double[] array)
@@ -39,8 +29,8 @@ public class MMatrix extends FanObj implements Matrix
     if (array.length != numRows * numCols)
         throw ArgErr.make("Invalid array");
 
-    this.m_nrows = numRows;
-    this.m_ncols = numCols;
+    this.numRows = numRows;
+    this.numCols = numCols;
     this.array   = array;
   }
 
@@ -51,15 +41,17 @@ public class MMatrix extends FanObj implements Matrix
   /* Model the storage as 1-dimensional array */
   private double[] array;
 
-  private final long m_nrows;
-  private final long m_ncols;
+  private final long numRows;
+  private final long numCols;
 
 //////////////////////////////////////////////////////////////////////////
 // Matrix
 //////////////////////////////////////////////////////////////////////////
 
-  public long nrows() { return m_nrows; }
-  public long ncols() { return m_ncols; }
+  public long numRows() { return numRows; }
+  public long numCols() { return numCols; }
+
+  public boolean isSquare() { return numRows == numCols; }
 
   public double get(final long i, final long j)
   {
@@ -72,14 +64,20 @@ public class MMatrix extends FanObj implements Matrix
     return this;
   }
 
-  private int idx(final long i, final long j) { return (int)(i * m_ncols + j); }
+  public MMatrix fill(final double val)
+  {
+    Arrays.fill(array, val);
+    return this;
+  }
+
+  private int idx(final long i, final long j) { return (int)(i * numCols + j); }
 
   public Matrix transpose()
   {
-    MMatrix t = new MMatrix(ncols(), nrows(), new double[array.length]);
-    for (int r = 0; r < m_nrows; ++r)
+    MMatrix t = new MMatrix(numCols(), numRows(), new double[array.length]);
+    for (int r = 0; r < numRows; ++r)
     {
-      for (int c = 0; c < m_ncols; ++c)
+      for (int c = 0; c < numCols; ++c)
       {
         t.set(c, r, get(r, c));
       }
@@ -96,10 +94,10 @@ public class MMatrix extends FanObj implements Matrix
   public Matrix plus(final Matrix b)
   {
     checkDimsEq(b);
-    final MMatrix m = new MMatrix(nrows(), ncols(), new double[array.length]);
-    for (int i = 0; i < m_nrows; ++i)
+    final MMatrix m = new MMatrix(numRows, numCols, new double[array.length]);
+    for (int i = 0; i < numRows; ++i)
     {
-      for (int j = 0; j < m_ncols; ++j)
+      for (int j = 0; j < numCols; ++j)
       {
         m.set(i, j, this.get(i,j) + b.get(i,j));
       }
@@ -110,10 +108,10 @@ public class MMatrix extends FanObj implements Matrix
   public Matrix minus(final Matrix b)
   {
     checkDimsEq(b);
-    final MMatrix m = new MMatrix(nrows(), ncols(), new double[array.length]);
-    for (int i = 0; i < m_nrows; ++i)
+    final MMatrix m = new MMatrix(numRows, numCols, new double[array.length]);
+    for (int i = 0; i < numRows; ++i)
     {
-      for (int j = 0; j < m_ncols; ++j)
+      for (int j = 0; j < numCols; ++j)
       {
         m.set(i, j, this.get(i,j) - b.get(i,j));
       }
@@ -123,18 +121,18 @@ public class MMatrix extends FanObj implements Matrix
 
   public Matrix mult(final Matrix b)
   {
-    if (this.ncols() != b.nrows())
-      throw ArgErr.make(String.format("Matrix cols don't match rows: %d != %d", ncols(), b.nrows()));
+    if (this.numCols != b.numRows())
+      throw ArgErr.make(String.format("Matrix cols don't match rows: %d != %d", numCols, numRows));
 
-    final int numRows = (int)this.nrows();
-    final int numCols = (int)b.ncols();
+    final int numRows = (int)this.numRows();
+    final int numCols = (int)b.numCols();
     final MMatrix m = new MMatrix(numRows, numCols, new double[numRows*numCols]);
     for (int i = 0; i < numRows; ++i)
     {
       for (int j = 0; j < numCols; ++j)
       {
         double sum = 0d;
-        for (int k = 0; k < this.m_ncols; ++k) { sum += get(i,k) * b.get(k,j); }
+        for (int k = 0; k < this.numCols; ++k) { sum += get(i,k) * b.get(k,j); }
         m.set(i, j, sum);
       }
     }
@@ -144,8 +142,8 @@ public class MMatrix extends FanObj implements Matrix
   public double determinant()
   {
     checkSquare();
-    if (nrows() == 1) return get(0,0);
-    if (nrows() == 2) return (get(0,0) * get(1,1)) - (get(0,1) * get(1,0));
+    if (numRows == 1) return get(0,0);
+    if (numRows == 2) return (get(0,0) * get(1,1)) - (get(0,1) * get(1,0));
     return determinantLU();
   }
 
@@ -153,30 +151,30 @@ public class MMatrix extends FanObj implements Matrix
   {
     checkSquare();
     final double[] m = new double[array.length];
-    for (int i=0; i<m_nrows; ++i)
+    for (int i=0; i<numRows; ++i)
     {
-      for (int j=0; j<m_ncols; ++j)
+      for (int j=0; j<numCols; ++j)
       {
         double x = slice(i,j).determinant();
         if (i % 2 == 0) x = -x;
         if (j % 2 == 0) x = -x;
-        m[idx((int)m_nrows, i, j)] = x;
+        m[idx((int)numRows, i, j)] = x;
       }
     }
-    return new MMatrix(nrows(), ncols(), m);
+    return new MMatrix(numRows, numCols, m);
   }
 
-  public Matrix slice(final long exRow, final long exCol)
+  private Matrix slice(final long exRow, final long exCol)
   {
-    final int aNumRows = (int)(nrows() - 1);
-    final int aNumCols = (int)(ncols() - 1);
+    final int aNumRows = (int)(numRows - 1);
+    final int aNumCols = (int)(numCols - 1);
     final double[] m = new double[aNumRows * aNumCols];
     int ar = 0;
-    for (int i=0; i<m_nrows; ++i)
+    for (int i=0; i<numRows; ++i)
     {
       if (i == exRow) continue;
       int ac = 0;
-      for (int j=0; j<m_ncols; ++j)
+      for (int j=0; j<numCols; ++j)
       {
         if (j == exCol) continue;
         m[idx(aNumCols, ar, ac)] = get(i,j);
@@ -214,8 +212,8 @@ public class MMatrix extends FanObj implements Matrix
   */
   private double determinantLU()
   {
-    final int m = (int)nrows();
-    final int n = (int)ncols();
+    final int m = (int)numRows;
+    final int n = (int)numCols;
     final double[] lu = new double[m*n];
     System.arraycopy(this.array, 0, lu, 0, array.length);
 
@@ -283,25 +281,25 @@ public class MMatrix extends FanObj implements Matrix
 
   private void checkDimsEq(final Matrix b)
   {
-    if (this.nrows() != b.nrows() || this.ncols() != b.ncols())
-      throw ArgErr.make(String.format("Matrix dimensions not equal: %d x %d != %d x %d", this.nrows(), this.ncols(), b.nrows(), b.ncols()));
+    if (this.numRows != b.numRows() || this.numCols != b.numCols())
+      throw ArgErr.make(String.format("Matrix dimensions not equal: %d x %d != %d x %d", this.numRows, this.numCols, b.numRows(), b.numCols()));
   }
 
   private void checkSquare()
   {
-    if (nrows() != ncols())
-      throw ArgErr.make(String.format("Matrix is not square: %d x %d", nrows(), ncols()));
+    if (!isSquare())
+      throw ArgErr.make(String.format("Matrix is not square: %d x %d", numRows, numCols));
   }
 
   public String dump(long m, long n)
   {
     final StringBuilder sb = new StringBuilder();
-    sb.append(nrows() + " x " + ncols()).append('\n');
+    sb.append(numRows + " x " + numCols).append('\n');
 
-    m = Math.min(m, nrows());
-    n = Math.min(n, ncols());
+    m = Math.min(m, numRows);
+    n = Math.min(n, numCols);
 
-    final String eor = n < ncols() ? "...\n" : "\n";
+    final String eor = n < numCols ? "...\n" : "\n";
 
     for (int i = 0; i < m; ++i)
     {
@@ -311,7 +309,7 @@ public class MMatrix extends FanObj implements Matrix
       }
       sb.append(eor);
     }
-    if (m < nrows()) sb.append(" ...\n");
+    if (m < numRows()) sb.append(" ...\n");
 
     return sb.toString();
   }
