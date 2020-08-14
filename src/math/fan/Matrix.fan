@@ -11,13 +11,6 @@
 **
 mixin Matrix
 {
-  ** Create a new matrix with the given number of rows and columsn.
-  ** All elements of the matrix are initialized to zero.
-  static Matrix create(Int numRows, Int numCols)
-  {
-    MMatrix(numRows, numCols)
-  }
-
   ** The number of rows in the matrix.
   abstract Int numRows()
 
@@ -59,4 +52,40 @@ mixin Matrix
 
   ** Compute the inverse of the matrix.
   abstract Matrix inverse()
+}
+
+**
+** Native implementation of the Matrix mixin.
+**
+@NoDoc final native class MMatrix : Matrix
+{
+  new make(Int numRows, Int numCols)
+
+  override Int numRows()
+
+  override Int numCols()
+
+  override Bool isSquare()
+
+  override Float get(Int i, Int j)
+
+  override This set(Int i, Int j, Float val)
+
+  override This fill(Float val)
+
+  override Matrix transpose()
+
+  override This multScalar(Float x)
+
+  @Operator override Matrix plus(Matrix b)
+
+  @Operator override Matrix minus(Matrix b)
+
+  @Operator override Matrix mult(Matrix b)
+
+  override Float determinant()
+
+  override Matrix cofactor()
+
+  override Matrix inverse()
 }

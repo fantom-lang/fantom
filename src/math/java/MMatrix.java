@@ -5,7 +5,7 @@
 // History:
 //   11 Aug 20  Matthew Giannini  Creation
 //
-package fan.util;
+package fan.math;
 
 import fan.sys.*;
 import java.util.Arrays;
@@ -43,6 +43,21 @@ public class MMatrix extends FanObj implements Matrix
 
   private final long numRows;
   private final long numCols;
+
+  /** Utility to get the matrix in a 2-dimensional array */
+  public double[][] dim2()
+  {
+    double[][] arr = new double[(int)numRows][(int)numCols];
+    for (int row = 0; row < numRows; ++row)
+    {
+      for (int col = 0; col < numCols; ++col)
+      {
+        arr[row] = new double[(int)numCols];
+        System.arraycopy(array, row * (int)numCols, arr[row], 0, (int)numCols);
+      }
+    }
+    return arr;
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Matrix
@@ -231,7 +246,7 @@ public class MMatrix extends FanObj implements Matrix
       for (int i=0; i<m; ++i)
       {
         // dot product
-        final int kmax = Math.min(i,j);
+        final int kmax = java.lang.Math.min(i,j);
         double s = 0d;
         for (int k=0; k<kmax; ++k) { s += lu[idx(n, i, k)] * luColj[k]; }
 
@@ -243,7 +258,7 @@ public class MMatrix extends FanObj implements Matrix
       int p = j;
       for (int i=j+1; i < m; ++i)
       {
-        if (Math.abs(luColj[i]) > Math.abs(luColj[p])) p = i;
+        if (java.lang.Math.abs(luColj[i]) > java.lang.Math.abs(luColj[p])) p = i;
       }
       if (p != j)
       {
@@ -296,8 +311,8 @@ public class MMatrix extends FanObj implements Matrix
     final StringBuilder sb = new StringBuilder();
     sb.append(numRows + " x " + numCols).append('\n');
 
-    m = Math.min(m, numRows);
-    n = Math.min(n, numCols);
+    m = java.lang.Math.min(m, numRows);
+    n = java.lang.Math.min(n, numCols);
 
     final String eor = n < numCols ? "...\n" : "\n";
 

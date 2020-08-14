@@ -10,21 +10,21 @@ class MMatrixTest : Test
 {
   Void testGetSet()
   {
-    m := Matrix.create(2,2)
+    m := Math.matrix(2,2)
     m.set(0,0,1f); verify(m.get(0,0).approx(1f))
     m.set(1,1,4f); verify(m.get(1,1).approx(4f))
   }
 
   Void testFill()
   {
-    verifyMatrixEq(Matrix.create(2,2).fill(5f), matrix(2,2,[5f,5f,5f,5f]))
+    verifyMatrixEq(Math.matrix(2,2).fill(5f), matrix(2,2,[5f,5f,5f,5f]))
   }
 
   Void testIsSquare()
   {
-    verify(Matrix.create(1,1).isSquare)
-    verify(Matrix.create(10,10).isSquare)
-    verifyFalse(Matrix.create(1,2).isSquare)
+    verify(Math.matrix(1,1).isSquare)
+    verify(Math.matrix(10,10).isSquare)
+    verifyFalse(Math.matrix(1,2).isSquare)
   }
 
   Void testTranspose()
@@ -111,7 +111,7 @@ class MMatrixTest : Test
 
   private Matrix matrix(Int numRows, Int numCols, Float[] arr)
   {
-    m := Matrix.create(numRows, numCols)
+    m := Math.matrix(numRows, numCols)
     for (i:=0;i<numRows;++i)
       for (j:=0;j<numCols;++j)
         m.set(i,j,arr[i*numCols + j])
