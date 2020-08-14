@@ -20,10 +20,12 @@ mixin Matrix
   ** Return true if the matrix is square.
   abstract Bool isSquare()
 
-  ** Get the element at 'A[i,j]'
+  ** Get the element at 'A[i,j]', where 'i' is the row index, and 'j' is
+  ** column index.
   abstract Float get(Int i, Int j)
 
-  ** Set the element at 'A[i,j]' to val.
+  ** Set the element at 'A[i,j]', where 'i' is the row index, and 'j' is
+  ** column index.
   abstract This set(Int i, Int j, Float val)
 
   ** Set every element in the matrix to the given val.
