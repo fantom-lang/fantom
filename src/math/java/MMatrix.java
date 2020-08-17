@@ -45,7 +45,7 @@ public class MMatrix extends FanObj implements Matrix
   private final long numCols;
 
   /** Utility to get the matrix in a 2-dimensional array */
-  public double[][] dim2()
+  public double[][] toArray2D()
   {
     double[][] arr = new double[(int)numRows][(int)numCols];
     for (int row = 0; row < numRows; ++row)
