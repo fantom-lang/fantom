@@ -189,7 +189,6 @@ class Build : BuildGroup
   {
     superclean
     compile
-    test
     examples
     deleteNonDist
     readme
