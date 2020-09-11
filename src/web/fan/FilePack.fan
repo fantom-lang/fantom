@@ -175,12 +175,22 @@ const class FilePack : Weblet
   }
 
   ** Return the required sys etc files:
+  **  - add `toMimeJsFile`
   **  - add `toUnitsJsFile`
   **  - add `toTimezonesJsFile`
   **  - add `toIndexPropsJsFile`
   static File[] toEtcJsFiles()
   {
-    [toUnitsJsFile, toTimezonesJsFile, toIndexPropsJsFile]
+    [toMimeJsFile, toUnitsJsFile, toTimezonesJsFile, toIndexPropsJsFile]
+  }
+
+  ** Compile the mime type database into a Javascript file "mime.js"
+  static File toMimeJsFile()
+  {
+    buf := Buf(4096)
+    c := Type.find("compilerJs::JsExtToMime").make
+    c->write(buf.out)
+    return buf.toFile(`mime.js`)
   }
 
   ** Compile the unit database into a JavaScript file "unit.js"
@@ -190,12 +200,6 @@ const class FilePack : Weblet
     c := Type.find("compilerJs::JsUnitDatabase").make
     c->write(buf.out)
     return buf.toFile(`units.js`)
-  }
-
-  ** Compile the mime type database into a Javascript file "mime.js"
-  static File toMimeJsFile()
-  {
-    Env.cur.homeDir + `etc/sys/mime.js`
   }
 
   ** Compile the timezone database into a JavaScript file "tz.js"

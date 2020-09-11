@@ -317,13 +317,15 @@ class NodeRunner
       (moduleDir + `${tempPod}.js`).out.writeChars(js).flush.close
 
     // mime.js
-    (Env.cur.homeDir + `etc/sys/mime.js`).copyTo(moduleDir + `mime.js`, copyOpts)
+    out := (moduleDir + `mime.js`).out
+    JsExtToMime().write(out)
+    out.flush.close
 
     // tz.js
     (Env.cur.homeDir + `etc/sys/tz.js`).copyTo(moduleDir + `tz.js`, copyOpts)
 
     // units.js
-    out := (moduleDir + `units.js`).out
+    out = (moduleDir + `units.js`).out
     JsUnitDatabase().write(out)
     out.flush.close
 
