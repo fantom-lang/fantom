@@ -192,6 +192,12 @@ const class FilePack : Weblet
     return buf.toFile(`units.js`)
   }
 
+  ** Compile the mime type database into a Javascript file "mime.js"
+  static File toMimeJsFile()
+  {
+    Env.cur.homeDir + `etc/sys/mime.js`
+  }
+
   ** Compile the timezone database into a JavaScript file "tz.js"
   static File toTimezonesJsFile()
   {
