@@ -107,20 +107,6 @@ fan.sys.UriPodBase = "/pod/"; // TODO
 fan.sys.Locale.m_en = fan.sys.Locale.fromStr("en")
 
 //
-// MimeType
-//
-fan.sys.MimeType.m_imagePng  = fan.sys.MimeType.predefined("image", "png");
-fan.sys.MimeType.m_imageGif  = fan.sys.MimeType.predefined("image", "gif");
-fan.sys.MimeType.m_imageJpeg = fan.sys.MimeType.predefined("image", "jpeg");
-fan.sys.MimeType.m_textPlain = fan.sys.MimeType.predefined("text", "plain");
-fan.sys.MimeType.m_textHtml  = fan.sys.MimeType.predefined("text", "html");
-fan.sys.MimeType.m_textXml   = fan.sys.MimeType.predefined("text", "xml");
-fan.sys.MimeType.m_textPlainUtf8 = fan.sys.MimeType.predefined("text", "plain", "charset=utf-8");
-fan.sys.MimeType.m_textHtmlUtf8  = fan.sys.MimeType.predefined("text", "html", "charset=utf-8");
-fan.sys.MimeType.m_textXmlUtf8   = fan.sys.MimeType.predefined("text", "xml", "charset=utf-8");
-fan.sys.MimeType.m_dir       = fan.sys.MimeType.predefined("x-directory", "normal");
-
-//
 // LogLevel
 //
 fan.sys.LogLevel.m_debug  = new fan.sys.LogLevel(0, "debug");
