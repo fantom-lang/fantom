@@ -1342,7 +1342,7 @@ internal const class TablePos
     // node instance
     Win.cur.setTimeout(100ms) {
       oldIndexes.each |i| { if (i < max) view.table.refreshRow(view.rowModelToView(i)) }
-      newIndexes.each |i| { view.table.refreshRow(view.rowModelToView(i)) }
+      newIndexes.each |i| { if (i < max) view.table.refreshRow(view.rowModelToView(i)) }
     }
   }
   private TableView view
