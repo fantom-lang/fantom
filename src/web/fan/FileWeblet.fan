@@ -148,6 +148,10 @@ class FileWeblet : Weblet
     {
       if (mime.subType == "json") return true
     }
+    if (mime.mediaType == "image")
+    {
+      if (mime.subType == "svg+xml") return true
+    }
     return false
   }
 
