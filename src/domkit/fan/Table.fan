@@ -44,10 +44,7 @@ using graphics
     // manually track focus so we can detect when
     // the browser window becomes unactive while
     // maintaining focus internally in document
-// TODO FIXIT: we need the timeout so that events can
-// properaly bubble before refresh potentially replaces
-// the event target (see TableSelection.onUpdate)
-    this.onEvent("focus", false) |e| { manFocus=true;  Win.cur.setTimeout(100ms) { refresh }}
+    this.onEvent("focus", false) |e| { if (!manFocus) { manFocus=true; refresh }}
     this.onEvent("blur",  false) |e| { manFocus=false; refresh }
 
     // rebuild if size changes
@@ -935,6 +932,23 @@ using graphics
   ** Callback to handle selection changes from a mouse event.
   private Void onMouseEventSelect(Event e, Int row, Int vrow)
   {
+    // always force focus for mousedown
+    manFocus = true
+
+    // short-circuit if we initiated a hyperlink so that
+    // the event can bubble properly down to the <a> tag
+    if (e.target.tagName == "a")
+    {
+      // Chrome seems to be doing some weird stuff here; forcing
+      // an onblur call on the Table <div> inbetween firing the
+      // hyperlink. Technically that might be correct but complicates
+      // how we manage focus.  So if we detect this manually invoke
+      // the click to skip over that behavoir
+      e.target->click
+      e.stop
+      return
+    }
+
     cur := sel.indexes
     newsel := cur.dup
 
@@ -1336,14 +1350,8 @@ internal const class TablePos
   // }
   override Void onUpdate(Int[] oldIndexes, Int[] newIndexes)
   {
-    // TODO FIXIT: we need this primary for mouse events, so
-    // the event can bubble on things like cmd/ctrl+click on
-    // <a> child nodes, before refreshRow removes the original
-    // node instance
-    Win.cur.setTimeout(100ms) {
-      oldIndexes.each |i| { if (i < max) view.table.refreshRow(view.rowModelToView(i)) }
-      newIndexes.each |i| { if (i < max) view.table.refreshRow(view.rowModelToView(i)) }
-    }
+    oldIndexes.each |i| { if (i < max) view.table.refreshRow(view.rowModelToView(i)) }
+    newIndexes.each |i| { if (i < max) view.table.refreshRow(view.rowModelToView(i)) }
   }
   private TableView view
 }
