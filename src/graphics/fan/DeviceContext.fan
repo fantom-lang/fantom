@@ -27,4 +27,7 @@ const class DeviceContext
   ** Dots per inch which defines graphical resolution of
   ** the device for the logical coordinate system
   const Float dpi
+
+  ** Debub string
+  override Str toStr() { "DeviceContext { dpi=$dpi }" }
 }

@@ -54,6 +54,16 @@ abstract class DocNode
   abstract Void write(DocWriter out)
 
   **
+  ** Is this an inline versus a block node.
+  **
+  abstract Bool isInline()
+
+  **
+  ** Is this a block element versus an inline element.
+  **
+  Bool isBlock() { return !isInline }
+
+  **
   ** Debug dump to output stream.
   **
   Void dump(OutStream out := Env.cur.out)
@@ -140,6 +150,8 @@ class DocText : DocNode
     out.text(this)
   }
 
+  override Bool isInline() { true }
+
   internal override Str toText() { str }
 
   override Str toStr() { return str }
@@ -163,16 +175,6 @@ abstract class DocElem : DocNode
   ** Get the HTML element name to use for this element.
   **
   abstract Str htmlName()
-
-  **
-  ** Is this an inline versus a block element.
-  **
-  abstract Bool isInline()
-
-  **
-  ** Is this a block element versus an inline element.
-  **
-  Bool isBlock() { return !isInline }
 
   **
   ** Write this element and its children to the specified DocWriter.
