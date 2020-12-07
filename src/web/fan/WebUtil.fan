@@ -377,7 +377,7 @@ class WebUtil
   **
   @NoDoc static Str readLine(InStream in)
   {
-    max := 4096
+    max := 65536 // 64KB
     line := in.readLine(max)
     if (line == null) throw IOErr("Unexpected end of stream")
     if (line.size == max) throw IOErr("Max request line")
