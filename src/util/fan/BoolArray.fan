@@ -43,6 +43,12 @@ native final class BoolArray
   ** Return this.
   This fill(Bool val, Range? range := null)
 
+  ** Set entire array to false
+  This clear()
+
+  ** Iterate each index set to true
+  Void eachTrue(|Int index| f)
+
   ** Copy the booleans from 'that' array into this array and return this.
   This copyFrom(BoolArray that)
 

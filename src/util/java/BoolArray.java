@@ -44,12 +44,32 @@ public final class BoolArray extends FanObj
   public BoolArray fill(boolean val) { return fill(val, null); }
   public BoolArray fill(boolean val, Range range)
   {
+    if (range == null && !val) return clear();
     int start, end;
     int size = (int)size();
     if (range == null) { start = 0; end = size-1; }
     else  { start = range.startIndex(size); end = range.endIndex(size); }
     for (int i=start; i<=end; ++i) set(i, val);
     return this;
+  }
+
+  public BoolArray clear()
+  {
+    for (int i=0; i<words.length; ++i) words[i] = 0;
+    return this;
+  }
+
+  public void eachTrue(Func func)
+  {
+    for (int i=0; i<words.length; ++i)
+    {
+      if (words[i] == 0) continue;
+      for (int j=0; j<32; ++j)
+      {
+        int index = (i << 0x05) + j;
+        if (get(index)) func.call(Long.valueOf(index));
+      }
+    }
   }
 
   public BoolArray copyFrom(BoolArray that)

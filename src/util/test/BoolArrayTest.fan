@@ -45,6 +45,35 @@ class BoolArrayTest : Test
     c.copyFrom(a)
     (0..<size).each |i| { verifyEq(c[i], indices.contains(i)) }
     (size..<c.size).each |i| { verifyEq(c[i], false) }
+
+    trues := Int[,]
+    a.eachTrue |i| { trues.add(i) }
+    verifyEq(trues, indices.dup.sort)
+  }
+
+  Void testRandom()
+  {
+    size := (300..700).random
+    sets := Int[,]
+    100.times |i|
+    {
+      x := (0..<size).random
+      if (sets.contains(x)) return
+      sets.add(x)
+    }
+
+    a := BoolArray(size)
+    sets.each |x| { a.set(x, true) }
+    a.size.times |i| { verifyEq(a.get(i), sets.contains(i)) }
+
+    trues := Int[,]
+    a.eachTrue |i| { trues.add(i) }
+    verifyEq(trues, sets.dup.sort)
+
+    a.clear
+    a.size.times |i| { verifyEq(a.get(i), false) }
+    a.eachTrue |i| { fail }
+
   }
 
 }
