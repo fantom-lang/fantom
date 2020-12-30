@@ -38,6 +38,9 @@ native final class BoolArray
   ** Negative indices are *not* supported.
   @Operator Void set(Int index, Bool val)
 
+  ** Set the value at given index and return the previous value.
+  Bool getAndSet(Int index, Bool val)
+
   ** Fill this array with the given boolean value.  If range is null
   ** then the entire array is filled, otherwise just the specified range.
   ** Return this.

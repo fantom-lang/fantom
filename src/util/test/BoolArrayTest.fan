@@ -63,7 +63,11 @@ class BoolArrayTest : Test
     }
 
     a := BoolArray(size)
-    sets.each |x| { a.set(x, true) }
+    sets.each |x|
+    {
+      verifyEq(a.getAndSet(x, true), false)
+      verifyEq(a.getAndSet(x, true), true)
+    }
     a.size.times |i| { verifyEq(a.get(i), sets.contains(i)) }
 
     trues := Int[,]
@@ -73,7 +77,6 @@ class BoolArrayTest : Test
     a.clear
     a.size.times |i| { verifyEq(a.get(i), false) }
     a.eachTrue |i| { fail }
-
   }
 
 }

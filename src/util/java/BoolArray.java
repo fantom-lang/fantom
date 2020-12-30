@@ -41,6 +41,18 @@ public final class BoolArray extends FanObj
       words[i>>0x5] &= ~mask;
   }
 
+  public final boolean getAndSet(long index, boolean v)
+  {
+    int i = (int)index;
+    int mask = 1 << (i & 0x1F);
+    boolean prev = (words[i>>0x5] & mask) != 0;
+    if (v)
+      words[i>>0x5] |= mask;
+    else
+      words[i>>0x5] &= ~mask;
+    return prev;
+  }
+
   public BoolArray fill(boolean val) { return fill(val, null); }
   public BoolArray fill(boolean val, Range range)
   {
