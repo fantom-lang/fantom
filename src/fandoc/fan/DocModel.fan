@@ -154,7 +154,7 @@ class DocText : DocNode
 
   internal override Str toText() { str }
 
-  override Str toStr() { return str }
+  override Str toStr() { str }
 
   Str str
 }
@@ -202,6 +202,11 @@ abstract class DocElem : DocNode
   ** Get a readonly list of this elements's children.
   **
   DocNode[] children() { return kids.ro }
+
+  **
+  ** Iterate the children nodes
+  **
+  Void eachChild(|DocNode| f) { kids.each(f) }
 
   @Deprecated { msg = "Use add()" }
   This addChild(DocNode node) { add(node) }
