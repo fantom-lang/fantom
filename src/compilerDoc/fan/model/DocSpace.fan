@@ -33,4 +33,9 @@ const abstract class DocSpace
   ** Iterate all the documents in this space.
   **
   abstract Void eachDoc(|Doc| f)
+
+  **
+  ** Return spaceName by default
+  **
+  override Str toStr() { spaceName }
 }

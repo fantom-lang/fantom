@@ -13,17 +13,29 @@
 const class DocPod : DocSpace
 {
 
-  ** Load from a zip file.
+  ** Load from a zip file using the given DocEnv as the  gerror handler
   static DocPod load(DocEnv? env, File file)
   {
-    return DocPod(env, file)
+    loadFile(file) |err|
+    {
+      if (env == null)
+        echo("ERROR: $err")
+      else
+        env.errReport(err)
+    }
+  }
+
+  ** Load from a zip file with given error handler
+  static DocPod loadFile(File file, |DocErr| onErr)
+  {
+    make(file, onErr)
   }
 
   ** Private constructor to copy loader fields
-  @NoDoc new make(DocEnv? env, File file)
+  @NoDoc new make(File file, |DocErr| onErr)
   {
     this.file = file
-    loader := DocPodLoader(env, file, this)
+    loader := DocPodLoader(file, this, onErr)
     zip := Zip.open(file)
     try
     {
@@ -247,11 +259,11 @@ const class DocPodIndex : Doc
 
 internal class DocPodLoader
 {
-  new make(DocEnv? env, File file, DocPod pod)
+  new make(File file, DocPod pod, |DocErr| onErr)
   {
-    this.env = env
-    this.file = file
-    this.pod  = pod
+    this.file  = file
+    this.pod   = pod
+    this.onErr = onErr
   }
 
   Void loadMeta(Zip zip)
@@ -466,15 +478,12 @@ internal class DocPodLoader
 
   Void err(Str msg, DocLoc loc, Err? cause := null)
   {
-    if (env == null)
-      echo("ERROR: $msg [$loc]")
-    else
-      env.err(msg, loc, cause)
+    onErr(DocErr(msg, loc, cause))
   }
 
-  DocEnv? env                   // ctor
   File file                     // ctor
   DocPod pod                    // ctor
+  |DocErr| onErr                // ctor
   [Str:Str]? meta               // load
   Str? name                     // loadMeta
   Str? summary                  // loadMeta

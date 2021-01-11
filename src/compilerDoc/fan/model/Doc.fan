@@ -69,11 +69,18 @@ const abstract class Doc
   **
   virtual Void onCrawl(DocCrawler crawler) {}
 
+  **
   ** Get a chapter heading for this document by its anchor id
+  **
   virtual DocHeading? heading(Str id, Bool checked := true)
   {
     if (checked) throw NameErr("Unknown header anchor id $space.spaceName::$docName#${id}")
     return null
   }
+
+  **
+  ** Return docName by default
+  **
+  override Str toStr() { docName }
 }
 
