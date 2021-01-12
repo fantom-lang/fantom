@@ -35,6 +35,9 @@ using graphics
   ** Allow user to resize sash positions. See `div`.
   Bool resizable := false
 
+  ** Callback when user resizes a sash pane if `resizable` is 'true'.
+  Void onSashResize(|This| f) { this.cbSashResize = f }
+
   **
   ** Size to apply to each child, width or height based on `dir`.  Fixed
   ** 'px' and percentage sizes are allowed.  Percentage sizes will be
@@ -248,6 +251,7 @@ using graphics
     // update
     this.sizes = working
     applyStyle
+    cbSashResize?.call(this)
   }
 
   ** Convert `sizes` to %
@@ -295,4 +299,5 @@ using graphics
   private Int? resizeIndex
   private Float? pivoff
   private Elem? splitter
+  private Func? cbSashResize
 }

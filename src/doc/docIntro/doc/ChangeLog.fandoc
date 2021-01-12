@@ -8,6 +8,7 @@
 
 *Build 1.0.76 (working)*
 - BoolArray clear, eachTrue, getAndSet
+- domkit: SashBox.onSashResize
 
 *Build 1.0.75 (24 Aug 2020)*
 - Move repo from BitBucket to GitHub
