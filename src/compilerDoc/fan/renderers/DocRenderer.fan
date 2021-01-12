@@ -24,10 +24,9 @@ abstract class DocRenderer
   ** All subclasses must implement ctor with env, out, doc params.
   new make(DocEnv env, WebOutStream out, Doc doc)
   {
-    this.env = env
-    this.out = out
-    this.doc = doc
-    this.theme = env.theme
+    this.envRef = env
+    this.outRef = out
+    this.docRef = doc
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,17 +34,20 @@ abstract class DocRenderer
 //////////////////////////////////////////////////////////////////////////
 
   ** Environment with access to model, theme, linking, etc
-  DocEnv env { private set }
+  virtual DocEnv env() { envRef }
+  private DocEnv envRef
 
   ** HTML output stream
-  WebOutStream out { private set }
+  virtual WebOutStream out() { outRef }
+  private WebOutStream outRef
 
   ** Document to be renderered
-  const Doc doc
+  virtual Doc doc() { docRef }
+  private Doc docRef
 
   ** Theme to use for rendering chrome and navigation.
   ** This field is initialized from `DocEnv.theme`.
-  const DocTheme theme
+  virtual DocTheme theme() { env.theme }
 
 //////////////////////////////////////////////////////////////////////////
 // Hooks
