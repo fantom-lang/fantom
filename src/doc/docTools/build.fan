@@ -17,7 +17,7 @@ class Build : BuildPod
   new make()
   {
     podName = "docTools"
-    summary = "Documentation for command line tools"
+    summary = "Fantom command line tools"
     meta    = ["org.name":     "Fantom",
                "org.uri":      "https://fantom.org/",
                "proj.name":    "Fantom Docs",

@@ -17,7 +17,7 @@ class Build : BuildPod
   new make()
   {
     podName = "docIntro"
-    summary = "Overview and getting started with Fantom"
+    summary = "Fantom overview and getting started"
     meta    = ["org.name":     "Fantom",
                "org.uri":      "https://fantom.org/",
                "proj.name":    "Fantom Docs",

@@ -17,7 +17,7 @@ class Build : BuildPod
   new make()
   {
     podName = "docDomkit"
-    summary = "Documentation for DomKit HTML5 UI framework"
+    summary = "Fantom DomKit HTML5 UI framework documentation"
     meta    = ["org.name":     "Fantom",
                "org.uri":      "https://fantom.org/",
                "proj.name":    "Fantom Docs",
