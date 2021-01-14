@@ -41,6 +41,15 @@ const class DocLink
     this.frag   = frag
   }
 
+  ** Construct an absolute link such as "https://foo/"
+  new makeAbsUri(Doc from, Uri uri, Str dis)
+  {
+    this.from   = from    // not really used
+    this.target = from    // not really used
+    this.absUri = uri
+    this.dis    = dis
+  }
+
   ** Document we are linking from
   const Doc from
 
@@ -52,6 +61,9 @@ const class DocLink
 
   ** Optional fragment in the link document
   const Str? frag
+
+  ** If link resolves to an absolute URI
+  const Uri? absUri
 
   ** Debug string representation
   override Str toStr()

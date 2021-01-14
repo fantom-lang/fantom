@@ -65,6 +65,7 @@ abstract const class DocEnv
   **
   virtual Uri linkUri(DocLink link)
   {
+    if (link.absUri != null) return link.absUri
     s := StrBuf()
     if (link.from.isTopIndex)
       s.add(link.target.space.spaceName).add("/")
