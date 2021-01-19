@@ -68,9 +68,18 @@ abstract const class DocEnv
     if (link.absUri != null) return link.absUri
     s := StrBuf()
     if (link.from.isTopIndex)
-      s.add(link.target.space.spaceName).add("/")
+    {
+      if (!link.target.isTopIndex)
+        s.add(link.target.space.spaceName).add("/")
+    }
+    else if (link.target.isTopIndex)
+    {
+      s.add("../")
+    }
     else if (link.from.space !== link.target.space)
+    {
       s.add("../").add(link.target.space.spaceName).add("/")
+    }
     docName := link.target.docName
     if (docName == "pod-doc") docName = "index"
     s.add(docName)

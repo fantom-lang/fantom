@@ -28,7 +28,7 @@ const class DocTopIndex : Doc
   override DocSpace space() { throw UnsupportedErr() }
 
   ** Throw UnsupportedErr
-  override Str docName() { throw UnsupportedErr() }
+  override Str docName() { "index" }
 
   ** Default is "Doc Index"
   override const Str title := "Doc Index"
@@ -38,6 +38,9 @@ const class DocTopIndex : Doc
 
   ** Return true
   override Bool isTopIndex() { true}
+
+  ** Debug string
+  override Str toStr() { typeof.name }
 }
 
 **************************************************************************

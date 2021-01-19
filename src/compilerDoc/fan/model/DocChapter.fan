@@ -114,6 +114,9 @@ const class DocChapter : Doc
   ** Title is 'meta.title', or qualified name if not specified.
   override Str title() { meta["title"] ?: qname }
 
+  ** Use title for breadcrumb
+  override Str breadcrumb() { title }
+
   ** Default renderer is `DocChapterRenderer`
   override Type renderer() { DocChapterRenderer# }
 
