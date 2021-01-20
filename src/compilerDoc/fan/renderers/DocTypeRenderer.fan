@@ -113,7 +113,7 @@ class DocTypeRenderer : DocRenderer
     if (DocFlags.isEnum(type.flags))
     {
       out.ul
-      type.slots.each |s|
+      type.declared.each |s|
       {
         if (DocFlags.isEnum(s.flags))
           out.li.a(`#$s.name`).esc(s.name).aEnd.liEnd
@@ -169,7 +169,7 @@ class DocTypeRenderer : DocRenderer
   ** Render HTML for slot signature.
   virtual Void writeSlotSig(DocSlot slot)
   {
-    out.p("class='sig'").code
+    out.p("class='$sigClass'").code
     slot.facets.each |f| { writeFacet(f); out.br }
 
     if (slot is DocField)
@@ -301,7 +301,7 @@ class DocTypeRenderer : DocRenderer
   ** Write the given facet.
   virtual Void writeFacet(DocFacet f)
   {
-    out.code("class='sig'")
+    out.code("class='$sigClass'")
     out.w("@")
     writeTypeRef(f.type)
     if (f.fields.size > 0)
@@ -330,5 +330,8 @@ class DocTypeRenderer : DocRenderer
     writeLink(link)
     out.pEnd
   }
+
+  ** Signature classname to use
+  @NoDoc Str sigClass := "sig"
 }
 

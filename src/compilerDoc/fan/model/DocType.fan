@@ -15,7 +15,7 @@ const class DocType : Doc
 {
 
   ** Constructor
-  internal new make(DocPod pod, DocAttrs attrs, DocTypeRef ref, Str:DocSlot slotMap)
+  internal new make(DocPod pod, DocAttrs attrs, DocTypeRef ref, DocSlot[] list, Str:DocSlot slotMap)
   {
     this.pod     = pod
     this.ref     = ref
@@ -29,8 +29,6 @@ const class DocType : Doc
     this.isErr   = base.find {it.qname=="sys::Err"} != null
     this.isNoDoc = hasFacet("sys::NoDoc")
 
-    // create sorted list
-    list := slotMap.vals.sort|a, b| { a.name <=> b.name }
 
     // filter out slots which shouldn't be documented,
     // but leave them in the map for lookup
@@ -41,7 +39,8 @@ const class DocType : Doc
       DocFlags.isPrivate(s.flags)  ||
       DocFlags.isSynthetic(s.flags)
     }
-    this.slots = list
+    this.declared = list
+    this.slots = list.sort|a, b| { a.name <=> b.name }
   }
 
   ** Pod which defines this type
@@ -109,8 +108,11 @@ const class DocType : Doc
   ** Is this a subclass of 'sys::Err'
   const Bool isErr
 
-  ** List of the public, documented slots in this type.
+  ** List of the public, documented slots in this type (sorted).
   const DocSlot[] slots
+
+  ** List of the public, documented slots in this type (in declared order).
+  @NoDoc const DocSlot[] declared
 
   ** Get slot by name.  If not found return null or raise UknownSlotErr
   DocSlot? slot(Str name, Bool checked := true)
