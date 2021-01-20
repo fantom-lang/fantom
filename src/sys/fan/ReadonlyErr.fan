@@ -7,8 +7,8 @@
 //
 
 **
-** ReadonlyErr indicates an attempt to modify a readonly instance;
-** it is commonly used with List and Map.
+** ReadonlyErr indicates an attempt to modify a readonly instance.
+** It is commonly used with List and Map.
 **
 const class ReadonlyErr : Err
 {

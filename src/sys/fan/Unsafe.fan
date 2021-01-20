@@ -7,8 +7,7 @@
 //
 
 **
-** Unsafe is used to wrap a non-const mutable objects so that
-** it can be passed as an immutable reference.
+** Unsafe wraps a mutable object as an immutable reference.
 **
 const final class Unsafe
 {

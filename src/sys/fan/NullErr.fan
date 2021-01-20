@@ -7,8 +7,10 @@
 //
 
 **
-** NullErr is a runtime exception raised when using a null reference
-** or when null is passed for a method argument which must be non-null.
+** NullErr indicates an attempt to dereference null.  It is
+** often raised when attempting to access an instance field or method
+** on a null reference.  It may also be thrown when a parameter is
+** expecting a non-nullable argument and null is passed.
 **
 const class NullErr : Err
 {

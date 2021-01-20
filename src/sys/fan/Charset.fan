@@ -7,7 +7,7 @@
 //
 
 **
-** Charset represents a specific character encoding used to decode
+** Charset represents a specific character encoding.  It is used to decode
 ** bytes to Unicode characters, and encode Unicode characters to bytes.
 **
 @Serializable { simple = true }

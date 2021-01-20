@@ -47,10 +47,9 @@ facet class Serializable
 **************************************************************************
 
 **
-** Transient is a facet used to annotate fields which
-** should not be serialized inside a `Serializable` type.
-** See the [Serialization Doc]`docLang::Serialization` for
-** details.
+** Transient annotates fields which should not be serialized.  It used inside
+** a `Serializable` type.  See the [Serialization Doc]`docLang::Serialization`
+** for details.
 **
 facet class Transient {}
 
@@ -68,8 +67,8 @@ facet class Js {}
 **************************************************************************
 
 **
-** This facet is used on public types and slots to indicate they should
-** not be documented with automated tools such as [Fandoc]`fandoc::pod-doc`.
+** Annotate a type or slot as undocumented.  This facet indicates an API
+** should not be documented with automated tools such as [Fandoc]`fandoc::pod-doc`.
 ** As a developer you should avoid using these types and slots since they
 ** are explicitly marked as not part of the public API.
 **
