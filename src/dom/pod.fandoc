@@ -8,9 +8,6 @@
 
 Overview [#overview]
 ********************
-**WARNING**: the dom API is still an early prototype, so will be going
-through many changes during development
-
 The [dom]`dom::index` pod provides a framework for interoperating with
 the browser DOM and related browser APIs.  For the most part, these map
 one-to-one:
@@ -52,7 +49,7 @@ Doc [#doc]
   doc.querySelectorAll("div.bar")   // find all <div> elements where class='bar'
 
 Elem [#elem]
-**********
+************
 
   // create Elems
   Elem("div")   // create new unattached <div> element

@@ -286,6 +286,11 @@ class DocTypeRenderer : DocRenderer
       else throw Err("Unsupported parameterized type: $ref")
       if (ref.isNullable) out.w("?")
     }
+    else if (ref.isGenericVar)
+    {
+      out.w(full ? ref.qname : ref.name)
+         .w(ref.isNullable ? "?" : "")
+    }
     else
     {
       // make link by hand to avoid having to resolve

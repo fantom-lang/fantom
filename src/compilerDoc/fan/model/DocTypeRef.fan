@@ -50,6 +50,9 @@ abstract const class DocTypeRef
   ** Is this a nullable type such as 'Str?'
   abstract Bool isNullable()
 
+  ** Is this one of the generic variable types such as 'sys::V'
+  abstract Bool isGenericVar()
+
   ** Is this a parameterized generic type such as 'Str[]'
   abstract Bool isParameterized()
 
@@ -88,6 +91,7 @@ internal const class BasicTypeRef : DocTypeRef
   override Str dis() { name }
   override Bool isNullable() { false }
   override Bool isParameterized() { false }
+  override Bool isGenericVar() { name.size == 1 && pod == "sys" }
   override DocTypeRef? v() { null }
   override DocTypeRef? k() { null }
   override DocTypeRef[]? funcParams() { null }
@@ -109,6 +113,7 @@ internal const class NullableTypeRef : DocTypeRef
   override Str dis() { "${base.dis}?" }
   override Bool isNullable() { true }
   override Bool isParameterized() { base.isParameterized }
+  override Bool isGenericVar() { base.isGenericVar }
   override DocTypeRef? v() { base.v }
   override DocTypeRef? k() { base.k }
   override DocTypeRef[]? funcParams() { base.funcParams }
@@ -129,6 +134,7 @@ internal const class ListTypeRef : DocTypeRef
   override Str dis() { "${v.dis}[]" }
   override Bool isNullable() { false }
   override Bool isParameterized() { true }
+  override Bool isGenericVar() { false }
   override const DocTypeRef? v
   override DocTypeRef? k() { null }
   override DocTypeRef[]? funcParams() { null }
@@ -149,6 +155,7 @@ internal const class MapTypeRef : DocTypeRef
   override Str dis() { "[$k.dis:$v.dis]" }
   override Bool isNullable() { false }
   override Bool isParameterized() { true }
+  override Bool isGenericVar() { false }
   override const DocTypeRef? k
   override const DocTypeRef? v
   override DocTypeRef[]? funcParams() { null }
@@ -187,6 +194,7 @@ internal const class FuncTypeRef : DocTypeRef
   }
   override Bool isNullable() { false }
   override Bool isParameterized() { true }
+  override Bool isGenericVar() { false }
   override DocTypeRef? v() { null }
   override DocTypeRef? k() { null }
   override const DocTypeRef[]? funcParams
