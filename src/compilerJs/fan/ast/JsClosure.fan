@@ -36,7 +36,7 @@ class JsPodClosures : JsNode
     out.indent
 
     CType[] sigTypes := [,].addAll(ce.signature.params).add(ce.signature.ret)
-    isJs := sigTypes.all { JsType.isJsSafe(it) }
+    isJs := sigTypes.all { JsType.checkJsSafety(it, support, loc) }
     if (isJs)
     {
       // closure spec
