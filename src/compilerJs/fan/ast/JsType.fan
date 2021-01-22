@@ -115,11 +115,29 @@ class JsType : JsNode
 
   override Str toStr() { sig }
 
-  ** Return true if type is javascript safe
-  static Bool isJsSafe(CType ctype)
+  static Bool checkJsSafety(CType ctype, CompilerSupport cs, Loc? loc)
   {
-    // TODO FIXIT: don't check sys yet
-    ctype.pod.name == "sys" || ctype.isSynthetic || ctype.facet("sys::Js") != null
+    if (ctype is TypeRef)           return checkJsSafety(ctype->t, cs, loc)
+    else if (ctype is NullableType) return checkJsSafety(ctype->root, cs, loc)
+    else if (ctype is ListType)     return checkJsSafety(ctype->v, cs, loc)
+    else if (ctype is MapType)
+    {
+      return checkJsSafety(ctype->k, cs, loc) && checkJsSafety(ctype->v, cs, loc)
+    }
+    else if (ctype is FuncType)
+    {
+      safe := true
+      ft := (FuncType)ctype
+      ft.params.each |param| { safe = safe && checkJsSafety(param, cs, loc) }
+      safe = safe && checkJsSafety(ft.ret, cs, loc)
+      return safe
+    }
+    else if (!(ctype.pod.name == "sys" || ctype.isSynthetic || ctype.facet("sys::Js") != null))
+    {
+      cs.warn("Type '$ctype.qname' not available in Js", loc)
+      return false
+    }
+    return true
   }
 
   TypeDef def            // compiler TypeDef
@@ -181,12 +199,7 @@ class JsTypeRef : JsNode
       v = JsTypeRef.make(cs, deref->v, loc)
     }
 
-    if (!JsType.isJsSafe(ref))
-    {
-      // TODO FIXIT: warn for now
-      //cs.err("Type '$ref.qname' not available in Js", loc)
-      cs.warn("Type '$ref.qname' not available in Js", loc)
-    }
+    JsType.checkJsSafety(ref, cs, loc)
   }
 
 

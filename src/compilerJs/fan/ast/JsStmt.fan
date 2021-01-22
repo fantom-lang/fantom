@@ -76,6 +76,7 @@ class JsLocalDefStmt : JsStmt
     this.lds  = lds
     this.name = lds.name
     this.init = (lds.init != null) ? JsExpr.makeFor(s, lds.init) : null
+    JsType.checkJsSafety(lds.ctype, s, lds.loc)
   }
   override Void write(JsWriter out)
   {
