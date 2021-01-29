@@ -69,7 +69,6 @@ const class Cookie
     fields := [
       #secure: pod.config("secureSessionCookie", "false") == "true",
       #sameSite: pod.config("sameSiteSessionCookie", "strict"),
-      #maxAge: 1day,
       #httpOnly: true
     ]
     if (overrides != null) overrides.each |v, f| { fields[f] = v }
