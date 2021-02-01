@@ -2,7 +2,7 @@
 
 try {
 //{{envDirs}}
-  fan.{{tempPod}}.Main.make().main();
+  fan.{{tempPod}}.Main.main();
 } catch (err) {
   console.log('ERROR: ' + err + '\n');
   if (err == undefined) print('Undefined error\n');
