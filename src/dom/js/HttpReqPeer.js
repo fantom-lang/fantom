@@ -30,7 +30,7 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
   }
 
   // open request
-  xhr.open(method.toUpperCase(), self.m_uri.m_str, self.m_async);
+  xhr.open(method.toUpperCase(), self.m_uri.encode(), self.m_async);
   if (self.m_async)
   {
     xhr.onreadystatechange = function ()
