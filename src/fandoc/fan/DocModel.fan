@@ -126,7 +126,7 @@ abstract class DocNode
   **
   ** Get all the DocText children as a string
   **
-  internal abstract Str toText()
+  abstract Str toText()
 }
 
 **************************************************************************
@@ -152,7 +152,7 @@ class DocText : DocNode
 
   override Bool isInline() { true }
 
-  internal override Str toText() { str }
+  override Str toText() { str }
 
   override Str toStr() { str }
 
@@ -291,7 +291,7 @@ abstract class DocElem : DocNode
   **
   ** Get all the DocText children as a string
   **
-  internal override Str toText()
+  override Str toText()
   {
     s := StrBuf()
     kids.each |kid| { s.join(kid.toText, " ") }
