@@ -594,6 +594,7 @@ class Image : DocElem
   Str uri
   Str alt
   Str? size  // formatted {w}x{h}
+  Int line
 }
 
 **************************************************************************

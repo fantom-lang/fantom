@@ -225,6 +225,7 @@ internal class InlineParser
     uri := uri
     img := Image(uri, alt)
     img.size = size
+    img.line = this.line
     return img
   }
 
