@@ -582,12 +582,14 @@ class DateTimeStr
 
   private Month parseMon()
   {
+    // TODO: this does not handle all the cases yet such as and fr "janv." and zh "10月"
     StringBuilder s = new StringBuilder();
     while (pos < str.length())
     {
       int ch = str.charAt(pos);
       if ('a' <= ch && ch <= 'z') { s.append((char)ch); pos++; continue; }
       if ('A' <= ch && ch <= 'Z') { s.append((char)FanInt.lower(ch)); pos++; continue; }
+      if (Character.isAlphabetic(ch)) { s.append((char)Character.toLowerCase(ch)); pos++; continue; }
       break;
     }
     Month m = locale().monthByName(s.toString());

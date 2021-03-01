@@ -1232,6 +1232,23 @@ class DateTimeTest : Test
     verifyNull(Date.fromLocale("2-nomonth-1999", "D-MMMM-YYYY", false))
     verifyErr(ParseErr#) { Date.fromLocale("xyz", "YY-MM-DD") }
     verifyErr(ParseErr#) { Date.fromLocale("99-xxx-02", "YY-MMM-DD", true) }
+
+    // test different months for common locales
+    // note: fr doesn't work because the months have period after abbrevation
+    // TODO: This does not handle all the cases yet such as and fr "janv." and zh "10月";
+    // need to add fr, zh, ru, ja
+    ["de", "nl", "pt", "es", "it", "fa", "he"].each |localeStr|
+    {
+      Locale(localeStr).use
+      {
+        Month.vals.each |m|
+        {
+          dm := Date(2021, m, 01)
+          s := dm.toLocale("DD MMM YYYY")
+          verifyEq(Date.fromLocale(s, "DD MMM YYYY"), dm)
+        }
+      }
+    }
   }
 
   Void verifyDateLocale(Date d, Str pattern, Str expected)
@@ -1767,6 +1784,19 @@ class DateTimeTest : Test
         fail
       }
     }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Js Float Drift
+//////////////////////////////////////////////////////////////////////////
+
+  Void testJsFloatDrift()
+  {
+    a := DateTime("2021-01-22T10:18:53.375+01:00 Madrid")
+    b := a.toTimeZone(TimeZone("New_York"))
+    verifyEq(a.ticks, b.ticks)
+    verifyEq(a.toStr, "2021-01-22T10:18:53.375+01:00 Madrid")
+    verifyEq(b.toStr, "2021-01-22T04:18:53.375-05:00 New_York")
   }
 
 }
