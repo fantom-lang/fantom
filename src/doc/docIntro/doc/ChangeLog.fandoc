@@ -8,6 +8,7 @@
 
 *Build 1.0.76 (working)*
 - BoolArray clear, eachTrue, getAndSet
+- Int.clip, Float.clip
 - domkit: SashBox.onSashResize
 - WebClient.authBasic
 

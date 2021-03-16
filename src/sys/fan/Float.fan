@@ -235,6 +235,13 @@ const final class Float : Num
   Float max(Float that)
 
   **
+  ** Clip this float between the min and max.  If its less than min then
+  ** return min, if its greater than max return max, otherwise return this
+  ** float itself.
+  **
+  Float clip(Float min, Float max)
+
+  **
   ** Returns the smallest whole number greater than or equal
   ** to this number.
   **
