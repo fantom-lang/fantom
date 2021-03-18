@@ -19,10 +19,9 @@
   {
     try
     {
-      if (JpegDecoder.isJpeg(buf))
-        return JpegDecoder(buf.in).decode
-      if (PngDecoder.isPng(buf))
-        return PngDecoder(buf.in).decode
+      if (JpegDecoder.isJpeg(buf)) return JpegDecoder(buf.in).decode
+      if (PngDecoder.isPng(buf))   return PngDecoder(buf.in).decode
+      if (SvgDecoder.isSvg(buf))   return SvgDecoder(buf.in).decode
       throw ArgErr("Could not determine image type")
     }
     catch (Err err)
