@@ -135,7 +135,8 @@ internal class ApiDocParser
     consumeLine
 
     // attrs, facets, and doc
-    attrs  := parseAttrs
+    attrs := parseAttrs
+    attrs.flags = attrs.flags.and(DocFlags.Const.not)
     return DocMethod(attrs, typeRef, name, returns, params)
   }
 
