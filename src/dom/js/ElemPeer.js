@@ -42,6 +42,7 @@ fan.dom.ElemPeer.prototype._make = function(self, tagName, ns)
 
 fan.dom.ElemPeer.fromNative = function(obj, type)
 {
+  if (obj instanceof fan.dom.Elem) return obj;
   return fan.dom.ElemPeer.wrap(obj, type.make());
 }
 

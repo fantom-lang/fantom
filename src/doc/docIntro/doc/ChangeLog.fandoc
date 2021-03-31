@@ -9,6 +9,7 @@
 *Build 1.0.76 (working)*
 - BoolArray clear, eachTrue, getAndSet
 - Int.clip, Float.clip
+- dom: Elem.fromNative fix if already Elem instance
 - domkit: SashBox.onSashResize
 - WebClient.authBasic
 
