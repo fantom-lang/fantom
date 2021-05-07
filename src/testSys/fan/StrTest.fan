@@ -310,10 +310,10 @@ class StrTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Slice
+// Get Range
 //////////////////////////////////////////////////////////////////////////
 
-  Void testSlice()
+  Void testGetRange()
   {
     /* Ruby
     irb(main):001:0> "abcd"[0..1]    => "ab"
@@ -349,48 +349,63 @@ class StrTest : Test
     // TODO: not clear how error handling should work...
 
     s := "abcd"
-    verifyEq(s[0..1],    "ab")
-    verifyEq(s[0..<0],   "")
-    verifyEq(s[0..2],    "abc")
-    verifyEq(s[0..3],    "abcd")
-    verifyEq(s[1..1],    "b")
-    verifyEq(s[1..2],    "bc")
-    verifyEq(s[1..3],    "bcd")
-    verifyEq(s[3..2],    "")
-    verifyEq(s[3..3],    "d")
-    verifyEq(s[4..-1],   "")
-    verifyEq(s[0..<1],   "a")
-    verifyEq(s[0..<2],   "ab")
-    verifyEq(s[0..<3],   "abc")
-    verifyEq(s[0..<4],   "abcd")
-    verifyEq(s[0..-1],   "abcd")
-    verifyEq(s[0..-2],   "abc")
-    verifyEq(s[0..-3],   "ab")
-    verifyEq(s[0..-4],   "a")
-    verifyEq(s[0..-5],   "")
-    verifyEq(s[0..<-1],  "abc")
-    verifyEq(s[0..<-2],  "ab")
-    verifyEq(s[0..<-3],  "a")
-    verifyEq(s[1..<-3],  "")
-    verifyEq(s[1..<-1],  "bc")
-    verifyEq(s[-3..<-1], "bc")
-    verifyEq(s[-2..<-1], "c")
-    verifyEq(s[-3..<-1], "bc")
-    verifyEq(s[-1..<-1], "")
+    verifyGetRange(s, 0..1,    "ab")
+    verifyGetRange(s, 0..<0,   "")
+    verifyGetRange(s, 0..2,    "abc")
+    verifyGetRange(s, 0..3,    "abcd")
+    verifyGetRange(s, 1..1,    "b")
+    verifyGetRange(s, 1..2,    "bc")
+    verifyGetRange(s, 1..3,    "bcd")
+    verifyGetRange(s, 3..2,    "")
+    verifyGetRange(s, 3..3,    "d")
+    verifyGetRange(s, 4..-1,   "")
+    verifyGetRange(s, 0..<1,   "a")
+    verifyGetRange(s, 0..<2,   "ab")
+    verifyGetRange(s, 0..<3,   "abc")
+    verifyGetRange(s, 0..<4,   "abcd")
+    verifyGetRange(s, 0..-1,   "abcd")
+    verifyGetRange(s, 0..-2,   "abc")
+    verifyGetRange(s, 0..-3,   "ab")
+    verifyGetRange(s, 0..-4,   "a")
+    verifyGetRange(s, 0..-5,   "")
+    verifyGetRange(s, 0..<-1,  "abc")
+    verifyGetRange(s, 0..<-2,  "ab")
+    verifyGetRange(s, 0..<-3,  "a")
+    verifyGetRange(s, 1..<-3,  "")
+    verifyGetRange(s, 1..<-1,  "bc")
+    verifyGetRange(s, -3..<-1, "bc")
+    verifyGetRange(s, -2..<-1, "c")
+    verifyGetRange(s, -3..<-1, "bc")
+    verifyGetRange(s, -1..<-1, "")
 
     // examples
-    verifyEq("abcd"[0..2],   "abc")
-    verifyEq("abcd"[3..3],   "d")
-    verifyEq("abcd"[-2..-1], "cd")
-    verifyEq("abcd"[0..<2],  "ab")
-    verifyEq("abcd"[1..-2],  "bc")
+    verifyGetRange("abcd", 0..2,   "abc")
+    verifyGetRange("abcd", 3..3,   "d")
+    verifyGetRange("abcd", -2..-1, "cd")
+    verifyGetRange("abcd", 0..<2,  "ab")
+    verifyGetRange("abcd", 1..-2,  "bc")
 
 
-    verifyErr(IndexErr#) { x:=s[0..4] }
-    verifyErr(IndexErr#) { x:=s[1..4] }
-    verifyErr(IndexErr#) { x:=s[3..1] }
-    verifyErr(IndexErr#) { x:=s[3..<2] }
-    verifyErr(IndexErr#) { x:=s[0..<5] }
+    verifyGetRange(s, 0..4, null)
+    verifyGetRange(s, 1..4, null)
+    verifyGetRange(s, 3..1, null)
+    verifyGetRange(s, 3..<2, null)
+    verifyGetRange(s, 0..<5, null)
+  }
+
+  Void verifyGetRange(Str s, Range r, Str? expected)
+  {
+    if (expected != null)
+    {
+echo("-- $s[$r] => " + s.getRange(r) + " ?= " + expected)
+      verifyEq(s[r], expected)
+      verifyEq(s.getRange(r), expected)
+    }
+    else
+    {
+      verifyErr(IndexErr#) { x := s[r] }
+      verifyErr(IndexErr#) { x := s.getRange(r) }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
