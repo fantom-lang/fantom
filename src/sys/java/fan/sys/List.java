@@ -892,7 +892,7 @@ public final class List
   {
     Type r = f.returns();
     if (r == Sys.VoidType) r = Sys.ObjType;
-    Map acc = new Map(r, new ListType(of));
+    Map acc = new Map(r, typeof());
     return groupByInto(acc, f);
   }
 

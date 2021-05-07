@@ -713,6 +713,35 @@ fan.sys.List.prototype.flatMap = function(f)
   return acc;
 }
 
+
+fan.sys.List.prototype.groupBy = function(f)
+{
+  var r = f.returns();
+  if (r == fan.sys.Void.$type) r = fan.sys.Obj.$type;
+  var acc = fan.sys.Map.make(r, this.$typeof());
+  return this.groupByInto(acc, f);
+}
+
+fan.sys.List.prototype.groupByInto = function(acc, f)
+{
+  var mapValType = acc.m_type.v;
+  var bucketOfType = mapValType.v;
+  var arity1 = f.arity() == 1;
+  for (var i=0; i<this.m_size; ++i)
+  {
+    var val = this.m_values[i];
+    var key = arity1 ? f.call(val) : f.call(val, i);
+    var bucket = acc.get(key);
+    if (bucket == null)
+    {
+      bucket = fan.sys.List.make(bucketOfType, 8);
+      acc.set(key, bucket);
+    }
+    bucket.add(val);
+  }
+  return acc;
+}
+
 fan.sys.List.prototype.max = function(f)
 {
   if (f === undefined) f = null;
