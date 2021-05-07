@@ -82,6 +82,10 @@ abstract class GenericType : CType
     {
       t = parameterizeListType(nn)
     }
+    else if (nn is MapType)
+    {
+      t = parameterizeMapType(nn)
+    }
     else if (nn is FuncType)
     {
       t = parameterizeFuncType(nn)
@@ -97,6 +101,11 @@ abstract class GenericType : CType
   private CType parameterizeListType(ListType t)
   {
     return parameterize(t.v).toListOf
+  }
+
+  private CType parameterizeMapType(MapType t)
+  {
+    return MapType(parameterize(t.k), parameterize(t.v))
   }
 
   private CType parameterizeFuncType(FuncType t)
