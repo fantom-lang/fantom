@@ -185,22 +185,15 @@ public final class List
 
   public final List getRange(Range r)
   {
-    try
-    {
-      int s = r.startIndex(size);
-      int e = r.endIndex(size);
-      int n = e - s + 1;
-      if (n < 0) throw IndexErr.make(r);
+    int s = r.startIndex(size);
+    int e = r.endIndex(size);
+    int n = e - s + 1;
+    if (n < 0) throw IndexErr.make(r);
 
-      List acc = new List(of, n);
-      acc.size = n;
-      System.arraycopy(values, s, acc.values, 0, n);
-      return acc;
-    }
-    catch (ArrayIndexOutOfBoundsException e)
-    {
-      throw IndexErr.make(r);
-    }
+    List acc = new List(of, n);
+    acc.size = n;
+    System.arraycopy(values, s, acc.values, 0, n);
+    return acc;
   }
 
   public final boolean contains(Object value)
