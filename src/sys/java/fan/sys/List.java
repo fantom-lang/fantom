@@ -888,6 +888,35 @@ public final class List
     return acc;
   }
 
+  public final Map groupBy(Func f)
+  {
+    Type r = f.returns();
+    if (r == Sys.VoidType) r = Sys.ObjType;
+    Map acc = new Map(r, new ListType(of));
+    return groupByInto(acc, f);
+  }
+
+  public final Map groupByInto(Map acc, Func f)
+  {
+    MapType accType = acc.type();
+    if (!(accType.v instanceof ListType)) throw ArgErr.make("Map value type is not list: $accType");
+    Type bucketOfType = ((ListType)accType.v).v;
+    boolean arity1 = f.arity() == 1;
+    for (int i=0; i<size; ++i)
+    {
+      Object val = values[i];
+      Object key = arity1 ? f.call(val) : f.call(val, Long.valueOf(i));
+      List bucket = (List)acc.get(key);
+      if (bucket == null)
+      {
+        bucket = new List(bucketOfType, 8);
+        acc.set(key, bucket);
+      }
+      bucket.add(val);
+    }
+    return acc;
+  }
+
   public final Object max() { return max(null); }
   public final Object max(Func f)
   {

@@ -1088,6 +1088,28 @@ echo("-- $list [$r] => " + list.getRange(r) + " ?= " + expected)
   }
 
 //////////////////////////////////////////////////////////////////////////
+// GroupBy
+//////////////////////////////////////////////////////////////////////////
+
+  /* TODO add for 1.0.77
+  Void testGroupBy()
+  {
+    list := ["ape", "bear", "camel", "deer", "eel"]
+
+    verifyEq(list.groupBy { it.size }, Obj:Str[][3:["ape", "eel"], 4:["bear", "deer"], 5:["camel"]])
+    verifyEq(list.groupBy |s| { s.size }, Obj:Str[][3:["ape", "eel"], 4:["bear", "deer"], 5:["camel"]])
+    verifyEq(list.groupBy |s->Int| { s.size }, Int:Str[][3:["ape", "eel"], 4:["bear", "deer"], 5:["camel"]])
+
+
+    map := Int:Str[][:]
+    list.groupByInto(map) { it.size }
+    verifyEq(map, Int:Str[][3:["ape", "eel"], 4:["bear", "deer"], 5:["camel"]])
+    ["fox", "goat"].groupByInto(map) |s| { s.size }
+    verifyEq(map, Int:Str[][3:["ape", "eel", "fox"], 4:["bear", "deer", "goat"], 5:["camel"]])
+  }
+  */
+
+//////////////////////////////////////////////////////////////////////////
 // Any/All
 //////////////////////////////////////////////////////////////////////////
 
