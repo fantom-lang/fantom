@@ -413,6 +413,62 @@ class ItBlockTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// This Params (allow This to be used func parameters in method params)
+//////////////////////////////////////////////////////////////////////////
+
+  Void testThisParams()
+  {
+    compile(
+     """class Acme
+        {
+          Obj c1() { x1 {} }
+          Obj c2() { x2 { this } }
+          Obj c3() { x3 |t, s| { t.s + "," + s } }
+          Obj c4() { x4 |s, t| { s + "," + t.s } }
+          Obj c5() { x5 |a, b| { a.s + "," + b.s } }
+          Obj c6() { x5 |a, b| { a.s + "," + b.s } }
+
+          Obj x1(|This| f) { f(this); return this }
+          Obj x2(|This->Obj| f) { return f(this) }
+          Obj x3(|This, Str->Obj| f) { f(this, "foo") }
+          Obj x4(|Str, This->Str| f) { f("foo", this) }
+          Obj x5(|This, This->Str| f) { f(this, this) }
+          Obj x6(|This?, This?->Str| f) { f(this, this) }
+
+          Str s() { typeof.name }
+        }""")
+
+    obj := pod.types.first.make
+    verifySame(obj->c1, obj)
+    verifySame(obj->c2, obj)
+    verifyEq(obj->c3, "Acme,foo")
+    verifyEq(obj->c4, "foo,Acme")
+    verifyEq(obj->c5, "Acme,Acme")
+    verifyEq(obj->c6, "Acme,Acme")
+  }
+
+  Void testThisParamsErr()
+  {
+    verifyErrors(
+     "class Foo
+      {
+        Void x3(|->This| a) {}
+        Void x4(|->This?| b) {}
+        Void x5(|Void->Str| c) {}
+        Void x6(|Str,Void->Str| d) {}
+        Void x7(|Str,Void?->Str| e) {}
+      }
+      ",
+      [
+       3, 11, "Invalid return type 'sys::This' in func type of param 'a'",
+       4, 11, "Invalid return type 'sys::This?' in func type of param 'b'",
+       5, 11, "Invalid param type 'sys::Void' in func type of param 'c'",
+       6, 11, "Invalid param type 'sys::Void' in func type of param 'd'",
+       7, 11, "Invalid param type 'sys::Void?' in func type of param 'e'",
+      ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // ConstErr
 //////////////////////////////////////////////////////////////////////////
 

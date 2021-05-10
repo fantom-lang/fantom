@@ -7,6 +7,7 @@
 **************************************************************************
 
 *Build 1.0.76 (working)*
+- Allow This to be in any func param position as method param
 - BoolArray clear, eachTrue, getAndSet
 - Int.clip, Float.clip
 - dom: Elem.fromNative fix if already Elem instance

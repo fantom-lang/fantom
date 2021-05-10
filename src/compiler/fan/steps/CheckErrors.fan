@@ -444,7 +444,11 @@ class CheckErrors : CompilerStep
     t := p.paramType
     if (t.isVoid) { err("Cannot use Void as parameter type", p.loc); return }
     if (t.isThis)  { err("Cannot use This as parameter type", p.loc); return }
-    if (t.toNonNullable.signature != "|sys::This->sys::Void|") checkValidType(p.loc, t)
+    func := t.deref.toNonNullable as FuncType
+    if (func != null)
+      checkParamFuncType(p, func)
+    else
+      checkValidType(p.loc, t)
 
     // check parameter default type
     if (p.def != null && !p.paramType.isGenericParameter)
@@ -453,6 +457,19 @@ class CheckErrors : CompilerStep
       {
         err("'$p.def.toTypeStr' is not assignable to '$p.paramType'", p.def.loc)
       }
+    }
+  }
+
+  private Void checkParamFuncType(ParamDef param, FuncType t)
+  {
+    if (!t.ret.isVoid && !t.ret.isValid)
+      err("Invalid return type '$t.ret' in func type of param '$param.name'", param.loc)
+
+    // This type is allowed in func params as a co-variant position
+    t.params.each |p|
+    {
+      if (!p.isThis && !p.isValid)
+        err("Invalid param type '$p' in func type of param '$param.name'", param.loc)
     }
   }
 
