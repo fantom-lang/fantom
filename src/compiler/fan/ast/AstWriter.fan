@@ -92,6 +92,7 @@ class AstWriter
     if (flags.and(FConst.Static)    != 0) w("static ")
     if (flags.and(FConst.Storage)   != 0) w("storage ")
     if (flags.and(FConst.Virtual)   != 0) w("virtual ")
+    if (flags.and(FConst.Once)      != 0) w("once ")
 
     if (flags.and(FConst.Synthetic) != 0) w("synthetic ")
     if (flags.and(FConst.Getter)    != 0) w("getter ")

@@ -41,7 +41,8 @@ mixin FConst
   const static Int Storage    := 0x00010000
   const static Int Synthetic  := 0x00020000
   const static Int Virtual    := 0x00040000
-  const static Int FlagsMask  := 0x0007ffff
+  const static Int Once       := 0x00080000
+  const static Int FlagsMask  := 0x000fffff
 
 //////////////////////////////////////////////////////////////////////////
 // MethodVarFlags

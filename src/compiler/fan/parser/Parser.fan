@@ -283,7 +283,7 @@ public class Parser : CompilerSupport
         case Token.internalKeyword:  flags = flags.or(FConst.Internal);  protection = true
         case Token.nativeKeyword:    flags = flags.or(FConst.Native)
         case Token.newKeyword:       flags = flags.or(FConst.Ctor)
-        case Token.onceKeyword:      flags = flags.or(Once) // Parser only flag
+        case Token.onceKeyword:      flags = flags.or(FConst.Once)
         case Token.overrideKeyword:  flags = flags.or(FConst.Override)
         case Token.privateKeyword:   flags = flags.or(FConst.Private);   protection = true
         case Token.protectedKeyword: flags = flags.or(FConst.Protected); protection = true
@@ -466,7 +466,7 @@ public class Parser : CompilerSupport
     field := FieldDef(loc, parent)
     field.doc    = doc
     field.facets = facets
-    field.flags  = flags.and(ParserFlagsMask.not)
+    field.flags  = flags
     field.name   = name
     if (type != null) field.fieldType = type
 
@@ -2415,11 +2415,6 @@ public class Parser : CompilerSupport
 //////////////////////////////////////////////////////////////////////////
 // Parser Flags
 //////////////////////////////////////////////////////////////////////////
-
-  // These are flags used only by the parser we merge with FConst
-  // flags by starting from most significant bit and working down
-  const static Int Once     := 0x8000_0000
-  const static Int ParserFlagsMask := 0
 
   // Bitwise and this mask to clear all protection scope flags
   const static Int ProtectionMask := (FConst.Public).or(FConst.Protected).or(FConst.Private).or(FConst.Internal).not

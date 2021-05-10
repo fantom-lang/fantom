@@ -36,6 +36,7 @@ abstract class CompilerTest : Test
     input.mode        = CompilerInputMode.str
     input.srcStr      = src
     input.srcStrLoc   = Loc.make("Script")
+    //input.fcodeDump = true
     f?.call(input)
 
     compiler = Compiler.make(input)

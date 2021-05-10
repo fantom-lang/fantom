@@ -8,11 +8,14 @@
 
 *Build 1.0.76 (working)*
 - Allow This to be in any func param position as method param
+- Allow once methods to be used on const classes
+- Add once as new fcode bitmask flag 0x80000
 - BoolArray clear, eachTrue, getAndSet
 - Int.clip, Float.clip
 - dom: Elem.fromNative fix if already Elem instance
 - domkit: SashBox.onSashResize
 - WebClient.authBasic
+- Minor enhancements to compilerDoc APIs
 
 *Build 1.0.75 (24 Aug 2020)*
 - Move repo from BitBucket to GitHub

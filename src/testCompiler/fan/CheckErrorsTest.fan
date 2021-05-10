@@ -631,7 +631,7 @@ class CheckErrorsTest : CompilerTest
         const [Num:Duration]? ok1   // ok
         const [Num:Str[][]]? ok2    // ok
 
-        once Int p() { return 3 }  // 30
+        once Int p() { return 3 }  // 30 ok now
       }
 
       class Bar {}
@@ -695,7 +695,9 @@ class CheckErrorsTest : CompilerTest
 
          1,  7, "Const type 'Foo' cannot subclass non-const class 'Bar'", // further tests in testConstInheritance
         22,  3, "Const type 'Foo' cannot contain non-const field 'j'",
+        /*
         30,  3, "Const type 'Foo' cannot contain once method 'p'",
+        */
 
         34,  1, "Non-const type 'Roo' cannot subclass const class 'Foo'",
         35, 25, "Const type 'Boo' cannot contain non-const field 'x'",

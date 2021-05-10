@@ -31,6 +31,7 @@ final const class DocFlags
   const static Int Storage    := 0x00010000
   const static Int Synthetic  := 0x00020000
   const static Int Virtual    := 0x00040000
+  const static Int Once       := 0x00080000
 
   static Bool isAbstract (Int flags) { flags.and(DocFlags.Abstract)  != 0 }
   static Bool isConst    (Int flags) { flags.and(DocFlags.Const)     != 0 }
@@ -51,6 +52,7 @@ final const class DocFlags
   static Bool isStorage  (Int flags) { flags.and(DocFlags.Storage)   != 0 }
   static Bool isSynthetic(Int flags) { flags.and(DocFlags.Synthetic) != 0 }
   static Bool isVirtual  (Int flags) { flags.and(DocFlags.Virtual)   != 0 }
+  static Bool isOnce     (Int flags) { flags.and(DocFlags.Once)      != 0 }
 
   static Int fromName(Str name)
   {

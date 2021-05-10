@@ -119,7 +119,7 @@ class CheckErrors : CompilerStep
 
     // these modifiers are never allowed on a type
     if (flags.and(FConst.Ctor) != 0)      err("Cannot use 'new' modifier on type", loc)
-    if (flags.and(Parser.Once) != 0)      err("Cannot use 'once' modifier on type", loc)
+    if (flags.and(FConst.Once) != 0)      err("Cannot use 'once' modifier on type", loc)
     if (flags.and(FConst.Override) != 0)  err("Cannot use 'override' modifier on type", loc)
     if (flags.and(FConst.Private) != 0)   err("Cannot use 'private' modifier on type", loc)
     if (flags.and(FConst.Protected) != 0) err("Cannot use 'protected' modifier on type", loc)
@@ -177,15 +177,8 @@ class CheckErrors : CompilerStep
     // in another check
     t.fieldDefs.each |FieldDef f|
     {
-      if (!f.isConst && !f.isStatic && f.isStorage && !isSys)
+      if (!f.isConst && !f.isStatic && f.isStorage && !isSys && !f.isOnce)
         err("Const type '$t.name' cannot contain non-const field '$f.name'", f.loc)
-    }
-
-    // check that no once methods
-    t.methodDefs.each |MethodDef m|
-    {
-      if (m.isOnce)
-        err("Const type '$t.name' cannot contain once method '$m.name'", m.loc)
     }
   }
 
@@ -256,7 +249,7 @@ class CheckErrors : CompilerStep
     // these modifiers are never allowed on a field
     if (flags.and(FConst.Ctor) != 0)    err("Cannot use 'new' modifier on field", loc)
     if (flags.and(FConst.Final) != 0)   err("Cannot use 'final' modifier on field", loc)
-    if (flags.and(Parser.Once) != 0)    err("Cannot use 'once' modifier on field", loc)
+    if (flags.and(FConst.Once) != 0 && flags.and(FConst.Synthetic) == 0) err("Cannot use 'once' modifier on field", loc)
 
     // check invalid protection combinations
     checkProtectionFlags(flags, loc)
@@ -380,7 +373,7 @@ class CheckErrors : CompilerStep
       if (flags.and(FConst.Abstract) != 0) err("Invalid combination of 'new' and 'abstract' modifiers", loc)
       else if (flags.and(FConst.Override) != 0) err("Invalid combination of 'new' and 'override' modifiers", loc)
       else if (flags.and(FConst.Virtual) != 0) err("Invalid combination of 'new' and 'virtual' modifiers", loc)
-      if (flags.and(Parser.Once) != 0)     err("Invalid combination of 'new' and 'once' modifiers", loc)
+      if (flags.and(FConst.Once) != 0)     err("Invalid combination of 'new' and 'once' modifiers", loc)
       if (flags.and(FConst.Native) != 0)   err("Invalid combination of 'new' and 'native' modifiers", loc)
     }
 
@@ -390,18 +383,18 @@ class CheckErrors : CompilerStep
       if (flags.and(FConst.Abstract) != 0) err("Invalid combination of 'static' and 'abstract' modifiers", loc)
       else if (flags.and(FConst.Override) != 0) err("Invalid combination of 'static' and 'override' modifiers", loc)
       else if (flags.and(FConst.Virtual) != 0) err("Invalid combination of 'static' and 'virtual' modifiers", loc)
-      if (flags.and(Parser.Once) != 0) err("Invalid combination of 'static' and 'once' modifiers", loc)
+      if (flags.and(FConst.Once) != 0) err("Invalid combination of 'static' and 'once' modifiers", loc)
     }
 
     // check invalid abstract flags
     if (flags.and(FConst.Abstract) != 0)
     {
       if (flags.and(FConst.Native) != 0) err("Invalid combination of 'abstract' and 'native' modifiers", loc)
-      if (flags.and(Parser.Once) != 0) err("Invalid combination of 'abstract' and 'once' modifiers", loc)
+      if (flags.and(FConst.Once) != 0) err("Invalid combination of 'abstract' and 'once' modifiers", loc)
     }
 
     // mixins cannot have once methods
-    if (flags.and(Parser.Once) != 0)
+    if (flags.and(FConst.Once) != 0)
     {
       if (curType.isMixin)
         err("Mixins cannot have once methods", m.loc)

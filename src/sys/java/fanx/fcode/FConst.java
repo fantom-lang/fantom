@@ -42,7 +42,8 @@ public interface FConst
   public static final int Storage    = 0x00010000;
   public static final int Synthetic  = 0x00020000;
   public static final int Virtual    = 0x00040000;
-  public static final int FlagsMask  = 0x0007ffff;
+  public static final int Once       = 0x00080000;
+  public static final int FlagsMask  = 0x000fffff;
 
 //////////////////////////////////////////////////////////////////////////
 // MethodVarFlags

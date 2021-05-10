@@ -328,7 +328,6 @@ plate code:
   once Str fullName() { return "$firstName  $lastName" }
 
 Restrictions for once methods:
-  - Must not be declared within a const class
   - Must not be declared within a mixin
   - Must not be a constructor
   - Must not be static
@@ -339,6 +338,13 @@ Restrictions for once methods:
 If a once method throws an exception, then there is no cached
 value - subsequent calls will re-execute the method until it
 returns a value.
+
+A once method may be used on a const class with caveats.  In the JVM the
+cache field is compiled to a volatile field.  However, there is no
+guarantee that the method is called exactly once across multiple threads.
+So the computation must be a pure function that always returns the
+same value.  Furthermore there is no guarantee that all threads see the
+exact same instance returned.
 
 Covariance [#covariance]
 ************************

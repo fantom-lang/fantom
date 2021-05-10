@@ -249,6 +249,7 @@ class FPrinter : FConst
     if (flags.and(FConst.Storage)   != 0) s.add("storage ")
     if (flags.and(FConst.Synthetic) != 0) s.add("synthetic ")
     if (flags.and(FConst.Virtual)   != 0) s.add("virtual ")
+    if (flags.and(FConst.Once)      != 0) s.add("once ")
     return s.toStr[0..-2]
   }
 
