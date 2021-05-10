@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.76 (working)*
+*Build 1.0.76 (10 May 2021)*
 - Allow This to be in any func param position as method param
 - Allow once methods to be used on const classes
 - Add once as new fcode bitmask flag 0x80000
@@ -16,6 +16,8 @@
 - domkit: SashBox.onSashResize
 - WebClient.authBasic
 - Minor enhancements to compilerDoc APIs
+- #2488: Javascript - No warnings on func params
+- #2820: Proposal: once methods on const classes
 
 *Build 1.0.75 (24 Aug 2020)*
 - Move repo from BitBucket to GitHub
