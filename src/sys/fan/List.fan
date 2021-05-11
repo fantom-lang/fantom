@@ -532,15 +532,13 @@ final class List
   **   list := ["ape", "bear", "cat", "deer"]
   **   list.groupBy |s->Int| { s.size }  =>  [3:[ape, cat], 4:[bear, deer]]
   **
-  // TODO add for 1.0.77
-  // Obj:L groupBy(|V item, Int index->Obj| c)
+  Obj:L groupBy(|V item, Int index->Obj| c)
 
   **
   ** Group by into an existing map.  This method shares the same
   ** semantics as `groupBy` except it adds into the given map.
   **
-  // TODO add for 1.0.77
-  // Obj:L groupByInto(Obj:L map, |V item, Int index->Obj| c)
+  Obj:L groupByInto(Obj:L map, |V item, Int index->Obj| c)
 
   **
   ** Reduce is used to iterate through every item in the list

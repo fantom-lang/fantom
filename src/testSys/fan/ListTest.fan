@@ -1091,7 +1091,6 @@ echo("-- $list [$r] => " + list.getRange(r) + " ?= " + expected)
 // GroupBy
 //////////////////////////////////////////////////////////////////////////
 
-  /* TODO add for 1.0.77
   Void testGroupBy()
   {
     list := ["ape", "bear", "camel", "deer", "eel"]
@@ -1107,7 +1106,6 @@ echo("-- $list [$r] => " + list.getRange(r) + " ?= " + expected)
     ["fox", "goat"].groupByInto(map) |s| { s.size }
     verifyEq(map, Int:Str[][3:["ape", "eel", "fox"], 4:["bear", "deer", "goat"], 5:["camel"]])
   }
-  */
 
 //////////////////////////////////////////////////////////////////////////
 // Any/All

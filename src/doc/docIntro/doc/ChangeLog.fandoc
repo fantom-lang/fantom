@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.77 (working)*
+- List groupBy, groupByInto
+
 *Build 1.0.76 (10 May 2021)*
 - Allow This to be in any func param position as method param
 - Allow once methods to be used on const classes
