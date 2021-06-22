@@ -255,7 +255,7 @@ using graphics
   }
 
   ** Convert `sizes` to %
-  private Void sizesToPercent()
+  @NoDoc Void sizesToPercent()
   {
     // short-circuit if already converted
     if (dims.all |d| { d.unit == "%" }) return
