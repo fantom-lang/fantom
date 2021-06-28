@@ -68,19 +68,9 @@ fan.sys.TimeZone.rel = function()
 
 fan.sys.TimeZone.cur = function()
 {
+  // TODO
   if (fan.sys.TimeZone.m_cur == null)
-  {
-    try
-    {
-      var name = Intl.DateTimeFormat().resolvedOptions().timeZone.split("/")[1];
-      fan.sys.TimeZone.m_cur = fan.sys.TimeZone.fromStr(name);
-    }
-    catch (error)
-    {
-      console.log(error);
-      fan.sys.TimeZone.m_cur = fan.sys.TimeZone.fromStr("New_York");
-    }
-  }
+    fan.sys.TimeZone.m_cur = fan.sys.TimeZone.fromStr("New_York");
   return fan.sys.TimeZone.m_cur;
 }
 
