@@ -1,7 +1,7 @@
 using gfx
 using fwt
 
-class Demo
+@Js class Demo
 {
   static Void main()
   {

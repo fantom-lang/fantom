@@ -11,7 +11,7 @@ using gfx
 using fwt
 using web
 
-class StorageTest : Window
+@Js class StorageTest : Window
 {
   new make() : super(null, null)
   {
@@ -26,7 +26,7 @@ class StorageTest : Window
   Void main() { open }
 }
 
-class StoragePane : InsetPane
+@Js class StoragePane : InsetPane
 {
   new make(Str dis, Storage storage) : super(24)
   {
@@ -132,7 +132,7 @@ class StoragePane : InsetPane
   Table table
 }
 
-class StorageModel : TableModel
+@Js class StorageModel : TableModel
 {
   new make(Storage storage) { this.storage = storage }
   override Int numRows() { return storage.size }

@@ -9,7 +9,7 @@
 using gfx
 using fwt
 
-class Cursors : Window
+@Js class Cursors : Window
 {
   new make() : super(null, null)
   {
@@ -64,7 +64,7 @@ class Cursors : Window
   Void main() { open }
 }
 
-class CursorDemo : Canvas
+@Js class CursorDemo : Canvas
 {
   new make(Cursor c)
   {

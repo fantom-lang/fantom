@@ -9,7 +9,7 @@
 using gfx
 using fwt
 
-class Hello : Window
+@Js class Hello : Window
 {
   new make() : super(null, null)
   {

@@ -10,7 +10,7 @@ using dom
 using gfx
 using fwt
 
-class BeforeUnload : Window
+@Js class BeforeUnload : Window
 {
   new make() : super(null, null)
   {

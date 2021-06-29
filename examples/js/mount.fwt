@@ -13,7 +13,7 @@ using fwt
 **
 ** Used with `mount.fan`
 **
-class FwtMountDemoWin : Window
+@Js class FwtMountDemoWin : Window
 {
   new make() : super(null, null)
   {

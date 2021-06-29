@@ -13,7 +13,7 @@ using fwt
 **
 ** Show ScrollBar in action
 **
-class ScrollDemo
+@Js class ScrollDemo
 {
   static Void main()
   {
