@@ -88,6 +88,7 @@ REM FAN_SUBSTITUTE environment variable.
 :fansubstitute
 SETLOCAL
 IF "%~2" NEQ "Fan" EXIT /B 0
+IF EXIST "%~3\*" EXIT /B 0   REM check if it is a directory
 IF NOT EXIST "%~3" EXIT /B 0
 SET /P HEAD=<%~dpnx3
 SET "SEARCH=%HEAD%"
