@@ -22,8 +22,6 @@
   [`fwt/table.fan`,         "Table model and visualization options"],
 "email",
   [`email/sending.fan`,     "Sending email via SMTP"],
-"js",
-  [`js/demo.fan`,           "Run web server to demo Fantom to JavaScript in browser"],
 "java",
   [`java/hello.fan`,        "Hello world with Java FFI"],
   [`java/swing.fan`,        "Swing application using Java FFI"],
@@ -34,5 +32,7 @@
   [`web/client.fan`,        "Working with web::WebClient"],
   [`web/hello.fan`,         "Hello world web server application"],
   [`web/demo.fan`,          "Illustrates some basic web APIs"],
+"webfwt",
+  [`webfwt/demo.fan`,       "Run web server to demo Web FWT in browser"],
 ]
 

@@ -28,7 +28,7 @@ class Build : BuildPod
                   "vcs.name":     "Mercurial",
                   "vcs.uri":      "http://hg.fantom.org/fan-1.0/"]
     depends    = ["sys 1.0"]
-    resDirs    = [`index.fog`, `concurrent/`, `email/`, `fwt/`, `java/`, `js/`, `sys/`, `util/`, `web/`]
+    resDirs    = [`index.fog`, `concurrent/`, `email/`, `fwt/`, `java/`, `sys/`, `util/`, `web/`, `webfwt/`]
   }
 
   @Target { help = "Verify all examples compile" }
