@@ -150,6 +150,12 @@ public abstract class Env
     return scripts.compile(file, options);
   }
 
+  public String compileScriptToJs(File file) { return compileScriptToJs(file, null); }
+  public String compileScriptToJs(File file, Map options)
+  {
+    return scripts.compileJs(file, options);
+  }
+
   public List index(String key)
   {
     return index.get(key);

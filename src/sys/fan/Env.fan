@@ -268,6 +268,20 @@ abstract const class Env
   virtual Type compileScript(File f, [Str:Obj]? options := null)
 
   **
+  ** Compile a script file into a pod and return the JS source
+  ** code of resulting pod.  If the script contains errors
+  ** then the first CompilerErr found is thrown.  The options
+  ** available:
+  **   - podName: the name of pod created for script
+  **   - logLevel: the default `LogLevel` to use for logging
+  **     the compilation process and errors
+  **   - log: the `compiler::CompilerLog` to use for
+  **     logging the compilation process and errors
+  **   - logOut: an output stream to capture logging
+  **
+  virtual Str compileScriptToJs(File f, [Str:Obj]? options := null)
+
+  **
   ** Lookup all the matching values for a pod indexed key.  If no
   ** matches are found return the empty list.  Indexed props are
   ** declared in your pod's build script, and coalesced into a master

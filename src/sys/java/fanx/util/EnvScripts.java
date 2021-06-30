@@ -61,6 +61,19 @@ public class EnvScripts
     return t;
   }
 
+  public String compileJs(File file, Map options)
+  {
+    // normalize the file path as our cache key
+    file = file.normalize();
+
+    // get pod name
+    String podName = (String)options.get("podName");
+    if (podName == null) podName = generatePodName(file);
+
+    // compile the script
+    return compileJs(podName, file, options);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
@@ -85,6 +98,13 @@ public class EnvScripts
     // use Fantom reflection to run compiler::Main.compileScript(File)
     Method m = Slot.findMethod("compiler::Main.compileScript", true);
     return (Pod)m.call(podName, f, options);
+  }
+
+  private String compileJs(String podName, File f, Map options)
+  {
+    // use Fantom reflection to run compiler::Main.compileScriptToJs(File)
+    Method m = Slot.findMethod("compiler::Main.compileScriptToJs", true);
+    return (String)m.call(podName, f, options);
   }
 
 //////////////////////////////////////////////////////////////////////////

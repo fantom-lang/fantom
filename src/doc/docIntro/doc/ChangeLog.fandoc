@@ -9,6 +9,7 @@
 *Build 1.0.77 (working)*
 - List groupBy, groupByInto
 - Move examples/js/ -> examples/webfwt/
+- Env.compileScriptToJs
 
 *Build 1.0.76 (10 May 2021)*
 - Allow This to be in any func param position as method param
