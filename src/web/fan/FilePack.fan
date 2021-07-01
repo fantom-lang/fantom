@@ -177,11 +177,10 @@ const class FilePack : Weblet
   ** Return the required sys etc files:
   **  - add `toMimeJsFile`
   **  - add `toUnitsJsFile`
-  **  - add `toTimezonesJsFile`
   **  - add `toIndexPropsJsFile`
   static File[] toEtcJsFiles()
   {
-    [toMimeJsFile, toUnitsJsFile, toTimezonesJsFile, toIndexPropsJsFile]
+    [toMimeJsFile, toUnitsJsFile, toIndexPropsJsFile]
   }
 
   ** Compile the mime type database into a Javascript file "mime.js"
@@ -203,9 +202,11 @@ const class FilePack : Weblet
   }
 
   ** Compile the timezone database into a JavaScript file "tz.js"
+  @Deprecated { msg="tz.js is now included by default in sys.js" }
   static File toTimezonesJsFile()
   {
-    Env.cur.homeDir + `etc/sys/tz.js`
+    // return empty file
+    File.createTemp.deleteOnExit
   }
 
   ** Compile the indexed props database into a JavaScript file "index-props.js"

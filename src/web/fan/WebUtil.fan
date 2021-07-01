@@ -443,6 +443,7 @@ class WebUtil
       {
         envStr.add("  ")
         v = v.toCode('\'')
+        // NOTE: uriPodBase is only used for FWT
         if (k == "sys.uriPodBase")
           envStr.add("fan.sys.UriPodBase = $v;\n")
         else

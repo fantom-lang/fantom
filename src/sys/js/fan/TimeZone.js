@@ -282,7 +282,7 @@ fan.sys.TimeZone.compareAtTime = function(rule, x, time)
 // Cache
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.TimeZone.cache$ = function(continent, fullName, encoded)
+fan.sys.TimeZone.cache$ = function(fullName, encoded)
 {
   // this handles cases where full name has multiple slashses
   var city = fullName.split("/").reverse()[0];

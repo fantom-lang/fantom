@@ -30,7 +30,9 @@ fan.sys.Int.m_minVal = -Math.pow(2, 53)
 fan.sys.Int.m_defVal = 0;
 fan.sys.Int.Chunk  = 4096;
 
+//
 // Float
+//
 fan.sys.Float.m_posInf = fan.sys.Float.make(Number.POSITIVE_INFINITY);
 fan.sys.Float.m_negInf = fan.sys.Float.make(Number.NEGATIVE_INFINITY);
 fan.sys.Float.m_nan    = fan.sys.Float.make(Number.NaN);
@@ -192,39 +194,8 @@ fan.sys.Weekday.m_vals = fan.sys.List.make(fan.sys.Weekday.$type,
 //
 // TimeZone
 //
-// Etc/UTC
-tz = new fan.sys.TimeZone();
-tz.m_name = "UTC";
-tz.m_fullName = "Etc/UTC";
-tz.m_rules = [];
-rule = new fan.sys.TimeZone$Rule();
- rule.startYear = 1995;
- rule.offset = 0;
- rule.stdAbbr = "UTC";
- rule.dstOffset = 0;
- tz.m_rules.push(rule);
-fan.sys.TimeZone.cache["UTC"] = tz;
-fan.sys.TimeZone.cache["Etc/UTC"] = tz;
-fan.sys.TimeZone.names.push("UTC");
-fan.sys.TimeZone.fullNames.push("Etc/UTC");
-fan.sys.TimeZone.m_utc = tz;
-
-// Etc/Rel
-tz = new fan.sys.TimeZone();
-tz.m_name = "Rel";
-tz.m_fullName = "Etc/Rel";
-tz.m_rules = [];
-rule = new fan.sys.TimeZone$Rule();
- rule.startYear = 1995;
- rule.offset = 0;
- rule.stdAbbr = "Rel";
- rule.dstOffset = 0;
- tz.m_rules.push(rule);
-fan.sys.TimeZone.cache["Rel"] = tz;
-fan.sys.TimeZone.cache["Etc/Rel"] = tz;
-fan.sys.TimeZone.names.push("Rel");
-fan.sys.TimeZone.fullNames.push("Etc/Rel");
-fan.sys.TimeZone.m_rel = tz;
+fan.sys.TimeZone.m_utc = fan.sys.TimeZone.fromStr("UTC");
+fan.sys.TimeZone.m_rel = fan.sys.TimeZone.fromStr("Rel");
 
 //
 // DateTime

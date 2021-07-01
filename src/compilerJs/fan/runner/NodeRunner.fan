@@ -297,7 +297,7 @@ class NodeRunner
 //////////////////////////////////////////////////////////////////////////
 
   ** Copy all pod js files into <nodeDir>/node_modules
-  ** Also copies in mime.js, tz.js, units.js, and indexed-props.js
+  ** Also copies in mime.js, units.js, and indexed-props.js
   private Void writeNodeModules()
   {
     moduleDir := nodeDir + `node_modules/`
@@ -321,9 +321,6 @@ class NodeRunner
     JsExtToMime().write(out)
     out.flush.close
 
-    // tz.js
-    (Env.cur.homeDir + `etc/sys/tz.js`).copyTo(moduleDir + `tz.js`, copyOpts)
-
     // units.js
     out = (moduleDir + `units.js`).out
     JsUnitDatabase().write(out)
@@ -344,7 +341,6 @@ class NodeRunner
       {
         buf.add("var fan = require('${pod.name}.js');\n")
         buf.add("require('mime.js');\n")
-        buf.add("require('tz.js');\n")
         buf.add("require('units.js');\n")
         buf.add("require('indexed-props.js');\n")
       }

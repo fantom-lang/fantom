@@ -4,8 +4,9 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   8 Jan 09  Andy Frank  Creation
-//   8 Jul 09  Andy Frank  Split webappClient into sys/dom
+//   8 Jan 2009  Andy Frank  Creation
+//   8 Jul 2009  Andy Frank  Split webappClient into sys/dom
+//   1 Jul 2021  Andy Frank  Update to embed tz.js directly
 //
 
 using build
@@ -24,9 +25,10 @@ class Build : BuildScript
   {
     log.info("compile [js]")
 
-    sys   = scriptFile.parent + `fan/`
-    fanx  = scriptFile.parent + `fanx/`
-    types = resolveSysTypes
+    this.etc   = scriptFile.parent.parent.parent.parent + `etc/`
+    this.sys   = scriptFile.parent + `fan/`
+    this.fanx  = scriptFile.parent + `fanx/`
+    this.types = resolveSysTypes
 
     tempDir := scriptFile.parent + `temp-js/`
     tempDir.delete
@@ -171,6 +173,8 @@ class Build : BuildScript
     append(sys + `StrInStream.js`, out)
     append(sys + `StrBufOutStream.js`, out)
     append(sys + `DateTimeStr.js`, out)
+    // use expclit ; to avoid parser bugs with tz func wrapper
+    out.print(";"); (etc + `sys/tz.js`).in.pipe(out)
     append(sys + `staticInit.js`, out)
   }
 
@@ -288,8 +292,8 @@ class Build : BuildScript
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  File? etc       // etc/ dir
   File? sys       // sys/fan/ dir
   File? fanx      // sys/fanx/ dir
   CType[]? types  // types to emit
-
 }

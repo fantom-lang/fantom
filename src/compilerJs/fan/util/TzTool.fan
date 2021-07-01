@@ -61,36 +61,28 @@ class TzTool
     {
       jsOut.printLine(
         "(function() {
-          ${JsPod.requireSys}
-          var c=fan.sys.TimeZone.cache\$;
-          var a;")
+         var c=fan.sys.TimeZone.cache\$;")
 
       // write built-in timezones
       byContinent.each |TimeZone[] timezones, Str continent|
       {
-        jsOut.printLine("a=${continent.toCode};")
         timezones.each |TimeZone tz|
         {
           log.debug("$tz.fullName")
           encoded := encodeTimeZone(tz)
-          jsOut.printLine("c(a,${tz.fullName.toCode},${encoded.toBase64.toCode});")
+          jsOut.printLine("c(${tz.fullName.toCode},${encoded.toBase64.toCode});")
         }
       }
 
       // write aliases
-      jsOut.printLine("c=fan.sys.TimeZone.alias\$;")
+      jsOut.printLine("var a=fan.sys.TimeZone.alias\$;")
       aliases.each |target, alias|
       {
         log.debug("Alias $alias = $target")
-        jsOut.printLine("c(${alias.toCode},${target.toCode});")
+        jsOut.printLine("a(${alias.toCode},${target.toCode});")
       }
 
-      // assign static utc and rel fields
-      jsOut.printLine("fan.sys.TimeZone.m_utc = fan.sys.TimeZone.fromStr('UTC');")
-      jsOut.printLine("fan.sys.TimeZone.m_rel = fan.sys.TimeZone.fromStr('Rel');")
-
-
-      jsOut.printLine("}).call(this);")
+      jsOut.printLine("})();")
     }
     finally jsOut.close
     log.info("Wrote: ${js.osPath ?: js}")
@@ -194,5 +186,4 @@ class TzTool
   {
     TzTool().run
   }
-
 }
