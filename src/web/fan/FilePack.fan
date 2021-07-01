@@ -206,7 +206,7 @@ const class FilePack : Weblet
   static File toTimezonesJsFile()
   {
     // return empty file
-    File.createTemp.deleteOnExit
+    Buf().toFile(`tz.js`)
   }
 
   ** Compile the indexed props database into a JavaScript file "index-props.js"
