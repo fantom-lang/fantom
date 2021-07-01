@@ -204,6 +204,7 @@ fan.sys.Time.m_defVal = new fan.sys.Time(0, 0, 0, 0);
 fan.sys.Date.m_defVal = new fan.sys.Date(2000, 0, 1);
 fan.sys.DateTime.m_defVal = fan.sys.DateTime.make(
   2000, fan.sys.Month.m_jan, 1, 0, 0, 0, 0, fan.sys.TimeZone.utc());
+fan.sys.DateTime.m_boot = fan.sys.DateTime.now();
 
 //
 // Regex
