@@ -56,7 +56,14 @@ fan.sys.Locale.prototype.$ctor = function(str, lang, country)
 
 fan.sys.Locale.cur = function()
 {
-  if (fan.sys.Locale.$cur == null) fan.sys.Locale.$cur = fan.sys.Locale.fromStr("en-US");
+  if (fan.sys.Locale.$cur == null)
+  {
+    // check for explicit locale from Env.vars or fallback to en-US
+    var loc = fan.sys.Env.cur().m_vars.get("locale");
+    if (loc == null) loc = "en-US"
+    fan.sys.Locale.$cur = fan.sys.Locale.fromStr(loc);
+  }
+
   return fan.sys.Locale.$cur;
 }
 
