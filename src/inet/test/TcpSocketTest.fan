@@ -127,7 +127,7 @@ class TcpSocketTest : Test
   Void doTestConnectHttp(Duration? timeout)
   {
     // connect to www server
-    s := TcpSocket().connect(IpAddr("hg.fantom.org"), 80, timeout)
+    s := TcpSocket().connect(IpAddr("fantom.org"), 80, timeout)
 
     // verify connetion state
     verifyEq(s.isBound, true)
