@@ -33,7 +33,7 @@ using fwt
   }
 }
 
-class EventDemo : Canvas
+@Js class EventDemo : Canvas
 {
   new make(Str name)
   {
@@ -77,7 +77,7 @@ class EventDemo : Canvas
   const Str name
 }
 
-class ConsumeEventDemo : BorderPane
+@Js class ConsumeEventDemo : BorderPane
 {
   new make(Str name)
   {
