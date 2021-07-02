@@ -28,6 +28,7 @@
   [`java/buildjardist.fan`, "Build fansh into a single JAR for deployment"],
 "js",
   [`js/hello.fan`,          "Hello world JS appliaction"],
+  [`js/env.fan`,            "Shows how to configure the JS boot Env"],
   [`js/dom.fan`,            "Basic examples of using dom APIs"],
 "util",
   [`util/main.fan`,         "Working with util::AbstractMain"],

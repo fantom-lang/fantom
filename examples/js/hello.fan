@@ -65,13 +65,13 @@ const class JsHelloMod : WebMod
     out.html
     out.head
       .title.w("Hello World, from Fantom JS!").titleEnd
+      .initJs(["main":"hello::JsHello"])
       .includeJs(`/hello.js`)
       .style.w(
         "body {
            padding: 0.25em 2em;
            font: 16px -apple-system, BlinkMacSystemFont, sans-serif;
          }").styleEnd
-      WebUtil.jsMain(out, "hello::JsHello")
     out.headEnd
     out.body
       .h1.w("Hello World, from Fantom JS!").h1End
