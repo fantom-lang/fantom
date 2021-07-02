@@ -117,6 +117,7 @@ class ShowScript : Weblet
     out.html
     out.head
       out.title.w("FWT Demo - $file.name").titleEnd
+      out.initJs(["main":main])
       out.includeJs(`/pod/sys/sys.js`)
       out.includeJs(`/pod/concurrent/concurrent.js`)
       out.includeJs(`/pod/web/web.js`)
@@ -130,7 +131,6 @@ class ShowScript : Weblet
         a { color: #00f; }
         ").styleEnd
       out.script.w(js).scriptEnd
-      WebUtil.jsMain(out, main)
     out.headEnd
     out.body
     out.bodyEnd
