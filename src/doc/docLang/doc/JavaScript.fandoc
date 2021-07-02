@@ -1,7 +1,7 @@
 **************************************************************************
 ** title:      JavaScript
 ** author:     Andy Frank
-** created:    17 Apr 09
+** created:    17 Apr 2009
 ** copyright:  Copyright (c) 2009, Brian Frank and Andy Frank
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
@@ -24,14 +24,6 @@ the `sys::Js` facet:
     Void sayHi() { Win.cur.alert("Hello!") }
   }
 
-Natives [#natives]
-******************
-To compile JavaScript natives, add the source directories to your
-build script using the [jsDirs]`build::BuildPod.jsDirs` field.
-See [Build Pod]`docTools::Build#buildPod` for an example.
-
-TODO: flush out details
-
 Deployment [#deployment]
 ************************
 The JavaScript compiler works by translating Fantom source code directly
@@ -44,67 +36,107 @@ JavaScript source file.  This file will also include reflection information
 and other meta-data needed at runtime.  The file is named '<podname>.js' and
 is packaged into the root directory of the pod file.
 
-Running [#running]
-******************
-You can run JavaScript compiled from Fantom by loading the pod's JavaScript
-source file into any JavaScript VM.  There are no special requirements, other
-than loading the pods in the correct dependency order.
+As JavaScript files are interpreted in the order they are parsed, each pod JS
+file must be written in the correct order.  To simplify this process, the
+[FilePack]`web::FilePack` API provides conveniences to generate a file list
+that guarantee the correct dependency order:
 
-Testing [#runningTesting]
-=========================
-If you simply want to run your [Tests]`docTools::Fant` from the command line,
-the Java runtime provides a built-in test framework using Rhino (requires
-Java 1.6+):
+  // expands to: sys.js, concurrent.js, graphics.js, web.js, dom.js
+  files := FilePack.toAppJsFiles([Pod.find("dom")])
 
-  fan compilerJs::TestRunner
+Browser Runtime [#browserRuntime]
+*********************************
+Web browsers are the primary target for Fantom JS, so most of the APIs are
+focused on simplifying how to wire up Fantom-based web apps.
 
-The test runner has the same semantics as the normal 'fant' tool, but will
-load and execute your pod's source and tests in the Rhino scripting engine.
+Using [FilePack]`web::FilePack` is the easiest way to bundle up your
+dependencies and serve up to the browser:
 
-Browsers [#runningBrowsers]
-===========================
-Running Fantom JavaScript in the browser requires a bit more work. First you
-must expose the pods' JavaScript source files as URIs from your server.  The
-simplest mechanism is to use [FileWeblet]`web::FileWeblet`:
+  files := FilePack.toAppJsFiles(pods)
+  pack  := FilePack(files)
 
-  file := `fan://$podName/${podName}.js`.get
-  if (!file.exists) { res.sendErr(404); return }
-  FileWeblet(file).onService
+  ...
 
-Then you must load the pods in the correct dependency order in your '<head>'
-tag.  Finally, to "mount" the JavaScript runtime, invoke
-[WebUtil.jsMain]`web::WebUtil.jsMain`:
+  override Void onGet()
+  {
+    switch (req.modRel.path.first)
+    {
+      case "myApp.js": pack.onGet
+      ...
+    }
+  }
+
+  ...
 
   out.head
-    out.title.w("My Page").titleEnd
-    out.includeJs(`/pod/sys/sys.js`)
-    out.includeJs(`/pod/concurrent/concurrent.js`)
-    out.includeJs(`/pod/web/web.js`)
-    out.includeJs(`/pod/gfx/gfx.js`)
-    out.includeJs(`/pod/dom/dom.js`)
-    out.includeJs(`/pod/fwt/fwt.js`)
-    out.includeJs(`/pod/myPod/myPod.js`)
-    WebUtil.jsMain(out, "myPod::Main")
-    out.headEnd
+    .initJs(["main":"myApp::Main"])
+    .includeJs(`/myApp.js`)
+    .headEnd
 
-A complete example is available in [js-demo]`examples::js-demo`.
-Note that this example illustrates dynamically compiling code into the page.
-This is not required (or normal).  The only requirement is to load your pods
-and invoke 'WebUtil.jsMain'.  There is also no requirement that
-[fwt]`fwt::index` be used. You can simply run plain JavaScript, or interact
-with the DOM directly with the [dom]`dom::index` pod.
+A complete example can be found in [js-hello]`examples::js-hello`.
 
-Running outside of Fantom [#runningNonFantom]
-=============================================
-While running or serving Fantom JavaScript is easiest from a Fantom runtime,
-there is no requirement for that.  You must first load the pods' JavaScript
-source into your VM (in order), or expose them from your web server using the
-pod zipfiles.
+Environment Initialization [#env]
+=================================
+The Fantom JS runtime can be initialized with custom configuration using the
+[Env.vars]`sys::Env.vars` API.  No explicit initialization is required by
+default. Simply parsing the source code will produce a valid runtime
+available at 'Win.onLoad':
 
-Once the pods have been loaded and interpreted by your VM or the browser's VM,
-you can launch any class using this syntax:
+  out.head.includeJs(`/myApp.js`).headEnd
+
+To customize the default behavior, use
+[WebOutStream.initJs]`web::WebOutStream.initJs` to initialize the desired
+'Env.vars'. This *must* occur before any pod JS is parsed:
+
+  out.head
+    .initJs(["main":"myApp::Main", "timezone":"Denver"])
+    .includeJs(`/myApp.js`)
+    .headEnd
+
+Principally this method is used to specify the "main" method to bootstrap your
+application at load time.  See [WebOutStream.initJs]`web::WebOutStream.initJs`
+for full list supported 'Env.vars'.
+
+See [js-env]`examples::js-env` for example code for setting up timezones and
+locales.
+
+Alternative Runtimes [#altRuntimes]
+***********************************
+You can run JavaScript compiled from Fantom by loading the pod's JavaScript
+source file into any JavaScript VM.  There are no special requirements. Most
+of the information from the above sections should apply to other JsVMs.
+
+Invoking Fantom from JavaScript [#jsFFI]
+****************************************
+Fantom types are normal JavaScript objects, so they can be invoked natively
+from JavaScript code.  Types are are formatted as:
 
   fan.<myPod>.<myType>.<method>
 
   fan.myPod.MyType.staticMain();           // invoke a static method
   fan.myPod.MyType.make().instanceMain();  // invoke method from instance
+
+An example using an HTML event handler:
+
+  <button onclick="fan.myPod.MyType.doSomething();">Click Me</button>
+
+Natives [#natives]
+******************
+To compile JavaScript natives, add the source directories to your
+build script using the [jsDirs]`build::BuildPod.jsDirs` field.
+See [Build Pod]`docTools::Build#buildPod` for an example.
+
+TODO: flush out details
+
+Testing [#testing]
+******************
+Fantom includes built-in support for 'fant' to run units test in a JavaScript
+VM using the '-js' flag:
+
+  $ fant -js myPod
+
+To run JS tests you need to have [NodeJs]`https://nodejs.org` installed. For
+macOS you can install using [Homebrew]`https://brew.sh`:
+
+  $ brew install node
+
