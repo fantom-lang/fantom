@@ -88,12 +88,17 @@ const class DomkitTestMod : WebMod
     type := typeof.pod.type(name, false)
     if (type == null || !type.fits(DomkitTest#)) { res.sendErr(404); return }
 
+    env := Str:Str[:]
+    env["main"] = "testDomkit::DomkitTest"
+    env["ui.test.qname"] = type.qname
+
     res.headers["Content-Type"] = "text/html; charset=utf-8"
     out := res.out
     out.docType
     out.html
     out.head
       .title.w("Domkit Test").titleEnd
+      .initJs(env)
       .includeCss(`/app.css`)
       .includeJs(`/app.js`)
       .style.w(
@@ -111,11 +116,6 @@ const class DomkitTestMod : WebMod
       .styleEnd
 
       if (useSampleCss) out.style.w(sampleCss).styleEnd
-
-      env := Str:Str[:]
-      env["ui.test.qname"] = type.qname
-
-      WebUtil.jsMain(out, "testDomkit::DomkitTest", env)
 
     out.headEnd
 
