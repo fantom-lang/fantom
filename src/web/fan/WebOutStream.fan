@@ -196,6 +196,61 @@ class WebOutStream : OutStream
   }
 
   **
+  ** Customize how the JavaScript runtime environment is initialized.
+  ** This method *must* be called inside the '<head>' tag, and also
+  ** before 'sys.js' is loaded in order to take effect.
+  **
+  ** Note this method is not necessary if no customization is needed.
+  ** The JS runtime will automatically initialize using default values.
+  **
+  ** The following variables are supported:
+  **
+  **   - 'timezone': set the default TimeZone for JsVM
+  **
+  **   - 'locale': set the default Locale for the JsVM. Note you
+  **     must manually provide the locale config.props files. See
+  **     `FilePack.toLocaleJsFile`.
+  **
+  **   - 'main': an optional method to invoke after the page has
+  **     been loaded. The 'main' argument can be either a type or
+  **     method.  If no method is specified, 'main' is used. If
+  **     the method is not static, a new instance of type is
+  **     created:
+  **
+  **       "foo::Instance"     =>  Instance().main()
+  **       "foo::Instance.bar" =>  Instance().bar()
+  **       "foo::Static"       =>  Static.main()
+  **       "foo::Static.bar"   =>  Static.bar()
+  **
+  This initJs(Str:Str env)
+  {
+    w("<script type='text/javascript'>")
+
+    // init Env.vars to pickup in Env.$ctor
+    w("var fan\$env = {").nl
+    env.keys.each |n,i|
+    {
+      v := env[n]
+      w("  ${n.toCode}:${v.toCode}")
+      if (i < env.keys.size-1) w(",")
+      nl
+    }
+    w("}").nl
+
+    // if main method is specified add an onLoad callback to invoke
+    main := env["main"]
+    if (main != null)
+    {
+      w("window.addEventListener('load', function() {
+           fan.sys.Env.\$invokeMain('${main}');
+         }, false);").nl
+    }
+
+    w("</script>").nl
+    return this
+  }
+
+  **
   ** Write a complete <link> tag for an Atom feed resource.
   **
   This atom(Uri href, Str? attrs := null)

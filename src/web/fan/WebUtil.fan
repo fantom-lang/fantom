@@ -432,6 +432,7 @@ class WebUtil
   ** If 'env' is specified, then vars will be added to and available
   ** from `sys::Env.vars` on client-side.
   **
+  @Deprecated { msg="use WebOutStream.initJs" }
   static Void jsMain(OutStream out, Str main, [Str:Str]? env := null)
   {
     envStr := StrBuf()
