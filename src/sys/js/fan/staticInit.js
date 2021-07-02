@@ -101,7 +101,6 @@ fan.sys.OutStream.m_xmlEscUnicode  = 0x04;
 //
 fan.sys.Uri.parentRange = fan.sys.Range.make(0, -2, false);
 fan.sys.Uri.m_defVal = fan.sys.Uri.fromStr("");
-fan.sys.UriPodBase = "/pod/"; // TODO
 
 //
 // Locale

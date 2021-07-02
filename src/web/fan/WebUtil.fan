@@ -444,9 +444,10 @@ class WebUtil
       {
         envStr.add("  ")
         v = v.toCode('\'')
-        // NOTE: uriPodBase is only used for FWT
+        // NOTE: uriPodBase is only used for FWT; and this now gets
+        // configured via normal Env.var moving forward in initJs
         if (k == "sys.uriPodBase")
-          envStr.add("fan.sys.UriPodBase = $v;\n")
+          envStr.add("fan.fwt.WidgetPeer.\$uriPodBase = $v;\n")
         else
           envStr.add("env.set('$k', $v);\n")
       }

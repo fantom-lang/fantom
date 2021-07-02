@@ -10,7 +10,10 @@
  * WidgetPeer.
  */
 fan.fwt.WidgetPeer = fan.sys.Obj.$extend(fan.sys.Obj);
-fan.fwt.WidgetPeer.prototype.$ctor = function(self) {}
+fan.fwt.WidgetPeer.prototype.$ctor = function(self)
+{
+  this.$uriPodBase = null;
+}
 
 // attach global event handlers
 window.addEventListener("load", function() {
@@ -595,8 +598,15 @@ fan.fwt.WidgetPeer.insetsToCss = function(insets)
 
 fan.fwt.WidgetPeer.uriToImageSrc = function(uri)
 {
+  if (fan.fwt.WidgetPeer.$uriPodBase == null)
+  {
+    var base = fan.sys.Env.cur().m_vars.get("sys.uriPodBase");
+    if (base == null) base = "/pod/";
+    fan.fwt.WidgetPeer.$uriPodBase = base;
+  }
+
   if (uri.scheme() == "fan")
-    return fan.sys.UriPodBase + uri.host() + uri.pathStr()
+    return fan.fwt.WidgetPeer.$uriPodBase + uri.host() + uri.pathStr()
   else if (uri.pathStr().indexOf("mem-") == 0)
     return fan.fwt.FwtEnvPeer.imgCache[uri.toStr()].src
   else
