@@ -224,7 +224,7 @@ class WebOutStream : OutStream
   **
   This initJs(Str:Str env)
   {
-    w("<script type='text/javascript'>")
+    w("<script type='text/javascript'>").nl
 
     // init Env.vars to pickup in Env.$ctor
     w("var fan\$env = {").nl

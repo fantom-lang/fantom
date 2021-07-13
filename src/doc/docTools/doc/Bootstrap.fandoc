@@ -15,7 +15,7 @@ scripts themselves are written in Fantom.  To solve this problem, the
 bootstrap process requires two Fantom installations:
 
   1.  *rel*: known good Fantom installation (typically the last build)
-  2.  *dev*: development environment to build (probably pulled from hg)
+  2.  *dev*: development environment to build (probably pulled from github)
 
 By convention we structure our development directory tree like this:
 
