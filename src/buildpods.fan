@@ -53,7 +53,6 @@ class Build : BuildGroup
       `icons/build.fan`,
       `flux/build.fan`,
       `xml/build.fan`,
-      `obix/build.fan`,
       `doc/build.fan`,
     ]
   }

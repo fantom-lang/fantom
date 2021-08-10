@@ -12,6 +12,7 @@
 - Env.compileScriptToJs
 - Add new examples/js/ sample code for different JS use cases
 - New WebOutStream.initJs that deprecates WebUtil.jsMain
+- Move obix out of Fantom into Haxall repo
 - js: New formal Env.var initialization design for JS
 - js: TimeZone.cur now defaults to Env.var or queries browser for best match
 - js: Locale.cur can now be defaulted via Env.var
