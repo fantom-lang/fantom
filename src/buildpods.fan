@@ -31,6 +31,7 @@ class Build : BuildGroup
       `testCompiler/build.fan`,
       `testJava/build.fan`,
       `math/build.fan`,
+      `asn1/build.fan`,
       `util/build.fan`,
       `inet/build.fan`,
       `fansh/build.fan`,
