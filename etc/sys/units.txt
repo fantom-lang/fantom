@@ -286,8 +286,8 @@ tons_refrigeration_hour, tonrefh; kg1*m2*sec-2; 1.26606708E7
 megajoule, MJ; kg1*m2*sec-2; 1000000.0
 gigajoule, GJ; kg1*m2*sec-2; 1000000000.0
 newton_meter, Nm; kg1*m2*sec-2
-cubic_meters_natural_gas, m³_gas; kg1*m2*sec-2; 37313432.83582089
-cubic_feet_natural_gas, ft³_gas; kg1*m2*sec-2; 1086498
+cubic_meters_natural_gas, standard_cubic_meter, scm, m³_gas; kg1*m2*sec-2; 37313432.83582089
+cubic_feet_natural_gas, standard_cubic_foot, scf, ft³_gas; kg1*m2*sec-2; 1086498
 hundred_cubic_feet_natural_gas; kg1*m2*sec-2; 108649800
 thousand_cubic_feet_natural_gas; kg1*m2*sec-2; 1086498000
 million_cubic_feet_natural_gas; kg1*m2*sec-2; 1086498000000
