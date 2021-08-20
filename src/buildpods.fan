@@ -32,6 +32,7 @@ class Build : BuildGroup
       `testJava/build.fan`,
       `math/build.fan`,
       `asn1/build.fan`,
+      `crypto/build.fan`,
       `util/build.fan`,
       `inet/build.fan`,
       `fansh/build.fan`,
@@ -55,6 +56,7 @@ class Build : BuildGroup
       `flux/build.fan`,
       `xml/build.fan`,
       `doc/build.fan`,
+      `cryptoJava/build.fan`,
     ]
   }
 
