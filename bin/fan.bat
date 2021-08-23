@@ -10,3 +10,4 @@ REM fan: launcher for Fantom programs
 REM
 
 call "%~fs0\..\fanlaunch.bat" Fan %*
+EXIT /B %errorlevel%

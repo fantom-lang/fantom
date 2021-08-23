@@ -52,7 +52,7 @@ IF "%FAN_LAUNCHER_DEBUG%" == "true" (
 )
 %JAVA% %FAN_JAVA_OPTS% -cp %FAN_CP% "-Dfan.home=%FAN_HOME%" fanx.tools.%TOOL% %TOOL_ARGS%
 ENDLOCAL
-EXIT /B 0
+EXIT /B %errorlevel%
 
 :getJava
 SETLOCAL
