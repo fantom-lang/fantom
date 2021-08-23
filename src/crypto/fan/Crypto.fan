@@ -112,7 +112,7 @@ const mixin Crypto
   **
   abstract KeyStore loadKeyStore(File? file := null, Str:Obj opts := [:])
 
-  ** Read the next PEM-encoded object from the input stream. Returns one of the
+  ** Load the next PEM-encoded object from the input stream. Returns one of the
   ** following depending on the PEM encoding:
   **  - `PrivKey`
   **  - `Cert`
@@ -120,8 +120,8 @@ const mixin Crypto
   ** Returns 'null' if there are no more PEM objects to decode. The input
   ** stream will be closed in this case.
   **
-  **   key  := Crypto.cur.readPem(`server.key`) as PrivKey
-  **   cert := Crypto.cur.readPem(`server.pem`) as Cert
+  **   key  := Crypto.cur.loadPem(`server.key`) as PrivKey
+  **   cert := Crypto.cur.loadPem(`server.pem`) as Cert
   **
-  abstract Obj? readPem(InStream in)
+  abstract Obj? loadPem(InStream in)
 }

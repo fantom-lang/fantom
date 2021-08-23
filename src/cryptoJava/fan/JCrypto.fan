@@ -45,8 +45,8 @@ const class JCrypto : Crypto
     JKeyStore.load(file, opts)
   }
 
-  override Obj? readPem(InStream in)
+  override Obj? loadPem(InStream in)
   {
-    PemReader(in).read
+    PemReader(in).next
   }
 }

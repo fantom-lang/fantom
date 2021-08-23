@@ -92,7 +92,7 @@ class PemReader : PemConst
     this.in = in
   }
 
-  Obj? read()
+  Obj? next()
   {
     if (!skipToBegin) { in.close; return null }
     parseLabel
