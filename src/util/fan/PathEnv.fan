@@ -63,7 +63,7 @@ const class PathEnv : Env
         if (!dir.exists) dir = File(item.toUri.plusSlash, false).normalize
         if (!dir.exists) { log.warn("Dir not found: $dir"); return }
         if (!dir.isDir) { log.warn("Not a dir: $dir"); return }
-        doAdd(acc, dir)
+        doAdd(acc, dir, 0)
       }
     }
     catch (Err e) log.err("Cannot parse path: $path", e)
