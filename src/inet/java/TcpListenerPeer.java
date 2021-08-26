@@ -34,20 +34,12 @@ public class TcpListenerPeer
     }
   }
 
-  public static TcpListener makeTls() { return makeTls(null); }
-  public static TcpListener makeTls(Object keystore) { return makeTls(keystore, null); }
-  public static TcpListener makeTls(Object keystore, Object truststore)
+  public TcpListener init(TcpListener fan, SocketConfig config)
   {
-    try
-    {
-      TcpListener self = TcpListener.make();
-      self.peer.initTls(keystore, truststore);
-      return self;
-    }
-    catch (Exception e)
-    {
-      throw IOErr.make(e);
-    }
+    this.config = config;
+    setReceiveBufferSize(fan, config.receiveBufferSize);
+    setReuseAddr(fan, config.reuseAddr);
+    return fan;
   }
 
   public TcpListenerPeer()
@@ -58,6 +50,11 @@ public class TcpListenerPeer
 //////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////
+
+  public SocketConfig config(TcpListener self)
+  {
+    return this.config;
+  }
 
   public boolean isBound(TcpListener fan)
   {
@@ -112,14 +109,9 @@ public class TcpListenerPeer
   {
     try
     {
-      TcpSocket s = TcpSocket.make();
+      TcpSocket s = TcpSocketPeer.makeNative(new Socket(), this.config, true);
       implAccept(s.peer.socket);
       s.peer.connected(s);
-      if (sslContext != null)
-      {
-        try { s = upgradeTls(s); }
-        catch (IOException e) { s.close(); throw e; }
-      }
       return s;
     }
     catch (IOException e)
@@ -139,90 +131,6 @@ public class TcpListenerPeer
     {
       return false;
     }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// TLS
-//////////////////////////////////////////////////////////////////////////
-
-  /** If non-null, then the the socket is upgraded to TLS in doAccept() */
-  private SSLContext sslContext = null;
-
-  private void initTls(Object keystore, Object truststore) throws Exception
-  {
-    // init tls with backwards compatibility where we used to pass
-    // uri to keystore and str password
-    if ((keystore == null && truststore == null)
-        || (keystore instanceof Uri)
-        || (truststore instanceof String))
-    {
-      initTlsWithoutCrypto((Uri)keystore, (String)truststore);
-    }
-    else
-    {
-      initTlsWithCrypto((FanObj)keystore, (FanObj)truststore);
-    }
-  }
-
-  private void initTlsWithoutCrypto(Uri keystore, String pwd)
-    throws Exception
-  {
-    // load keystore
-    if (keystore == null)
-      keystore = Env.cur().workDir().plus(Uri.fromStr("etc/inet/keystore.p12")).uri();
-    if (pwd == null)
-      pwd = "changeit";
-
-    final String path = keystore.toFile().osPath();
-    InputStream storeIn = new FileInputStream(path);
-    try
-    {
-      char[] passphrase = pwd.toCharArray();
-      KeyStore keys = KeyStore.getInstance("PKCS12");
-      keys.load(storeIn, passphrase);
-
-      KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-      kmf.init(keys, passphrase);
-
-      SSLContext sslContext = SSLContext.getInstance("TLS");
-      sslContext.init(kmf.getKeyManagers(), null, null);
-      this.sslContext = sslContext;
-    }
-    finally
-    {
-      storeIn.close();
-    }
-  }
-
-  private void initTlsWithCrypto(FanObj keys, FanObj truststore)
-    throws Exception
-  {
-    // Delegate creation of key and trust managers to crypto
-    Class klass = Class.forName("fan.crypto.InetTLS");
-    KeyManager[]   kms = (KeyManager[])klass.getMethod("toKeyManagers", FanObj.class).invoke(null, keys);
-    TrustManager[] tms = (TrustManager[])klass.getMethod("toTrustManagers", FanObj.class).invoke(null, truststore);
-
-    SSLContext sslContext = SSLContext.getInstance("TLS");
-    sslContext.init(kms, tms, null);
-    this.sslContext = sslContext;
-  }
-
-  private TcpSocket upgradeTls(TcpSocket s) throws IOException
-  {
-    SSLSocketFactory sf = sslContext.getSocketFactory();
-    SSLSocket sslSocket = (SSLSocket)sf.createSocket(
-      s.peer.socket,
-      s.peer.socket.getInetAddress().getHostAddress(),
-      s.peer.socket.getPort(),
-      false
-    );
-    sslSocket.setUseClientMode(false);
-    sslSocket.startHandshake();
-
-    TcpSocket upgraded = new TcpSocket();
-    upgraded.peer = new TcpSocketPeer(sslSocket);
-    upgraded.peer.connected(upgraded);
-    return upgraded;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -310,6 +218,7 @@ public class TcpListenerPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  private SocketConfig config;
   private int inBufSize = 4096;
   private int outBufSize = 4096;
   private SysInStream in;

@@ -17,23 +17,35 @@ class TcpSocket
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Make a new unbound, unconnected TCP socket.
+  ** Make a new unbound, unconnected TCP socket. The socket will be configured
+  ** using the given [socket configuration]`SocketConfig`. The following configuration
+  ** applies to a TCP socket:
+  **   - `SocketConfig.inBufferSize`
+  **   - `SocketConfig.outBufferSize`
+  **   - `SocketConfig.keepAlive`
+  **   - `SocketConfig.receiveBufferSize`
+  **   - `SocketConfig.sendBufferSize`
+  **   - `SocketConfig.reuseAddr`
+  **   - `SocketConfig.linger`
+  **   - `SocketConfig.receiveTimeout`
+  **   - `SocketConfig.noDelay`
+  **   - `SocketConfig.trafficClass`
   **
-  new make() {}
+  new make(SocketConfig config := SocketConfig.cur)
+  {
+    init(config)
+  }
 
-  **
-  ** Make a TCP socket from a raw, native socket.
-  **
-  @NoDoc native static TcpSocket makeRaw(Obj socket)
-
-  **
-  ** Make a new unconnected SSL/TLS TCP socket or upgrade an existing socket.
-  **
-  @NoDoc native static TcpSocket makeTls(TcpSocket? upgrade := null, Obj? tlsContext := null)
+  private native This init(SocketConfig config)
 
 //////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get the [socket configuration]`SocketConfig` for this socket.
+  **
+  native SocketConfig config()
 
   **
   ** Is this socket bound to a local address and port.
@@ -92,9 +104,14 @@ class TcpSocket
   ** connection error.  If a non-null timeout is specified, then block no
   ** longer then the specified timeout before raising an IOErr.  If
   ** timeout is null, then a system default is used.  The default timeout
-  ** can also be set via `SocketOptions.connectTimeout`.
+  ** is configured via `SocketConfig.connectTimeout`.
   **
-  native This connect(IpAddr addr, Int port, Duration? timeout := options.connectTimeout)
+  native This connect(IpAddr addr, Int port, Duration? timeout := config.connectTimeout)
+
+  **
+  ** Get a new TCP socket that is upgrade to use TLS.
+  **
+  native TcpSocket upgradeTls()
 
   **
   ** Get the input stream used to read data from the socket.  The input
@@ -150,6 +167,7 @@ class TcpSocket
   **   - trafficClass
   **  Accessing other option fields will throw UnsupportedErr.
   **
+  @Deprecated { msg = "Use SocketConfig" }
   native SocketOptions options()
 
   internal native Int? getInBufferSize()

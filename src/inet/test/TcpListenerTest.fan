@@ -77,14 +77,23 @@ class TcpListenerTest : Test
 
   Void testAccept()
   {
-    listener := TcpListener.make.bind(null, null)
+    // NOTE: with SocketConfig changes, you can no longer set a receive timeout
+    // on TcpListener
+    // config := SocketConfig { it.receiveTimeout = 100ms }
+    listener := TcpListener.make().bind(null, null)
     port := listener.localPort
 
+    /*
+    // Force an accept before doing timings - one time class creation/initialization
+    // needs to occur before doing the timing test.
+    verifyErr(IOErr#) { listener.accept }
+    verifyEq(listener.options.receiveTimeout, 100ms)
+
     t1 := Duration.now
-    listener.options.receiveTimeout = 100ms
     verifyErr(IOErr#) { listener.accept }
     t2 := Duration.now
     verify(50ms < t2-t1 && t2-t1 < 200ms, (t2-t1).toLocale)
+    */
 
     actor := Actor(ActorPool()) { runClient(port) }
     future := actor.send(null)
@@ -145,10 +154,11 @@ class TcpListenerTest : Test
     so.reuseAddr = !reuse
     verifyEq(so.reuseAddr, !reuse)
 
-    so.receiveTimeout = 100ms
-    verifyEq(so.receiveTimeout, 100ms)
-    so.receiveTimeout = null
-    verifyEq(so.receiveTimeout, null)
+    // NOTE: SocketConfig removes this option
+    // so.receiveTimeout = 100ms
+    // verifyEq(so.receiveTimeout, 100ms)
+    // so.receiveTimeout = null
+    // verifyEq(so.receiveTimeout, null)
 
     verifyErr(UnsupportedErr#) { echo(so.broadcast) }
     verifyErr(UnsupportedErr#) { so.broadcast = false }

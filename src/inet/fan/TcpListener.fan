@@ -18,26 +18,27 @@ class TcpListener
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Make a new unbound TCP server socket.
+  ** Create a new, unbound TCP server socket. The socket will be configured
+  ** using the given [socket configuration]`SocketConfig`. The following
+  ** configuration applies to listeners:
+  **   - `SocketConfig.receiveBufferSize`
+  **   - `SocketConfig.reuseAddr`
   **
-  new make() {}
+  new make(SocketConfig config := SocketConfig.cur)
+  {
+    init(config)
+  }
 
-  **
-  ** Make a new unbound TCP server socket that will be secured using TLS
-  ** when accepting connections.
-  **
-  ** If keystore is 'null', then 'etc/inet/keystore.p12' will be used as the
-  ** default. Otherwise the keystore should be a crypto::KeyStore instance.
-  **
-  ** If trustore is 'null', then the default system trust store is used.
-  ** Otherwise, the trsustore should be a crypto::KeyStore instance.
-  **
-  @NoDoc
-  native static TcpListener makeTls(Obj? keystore := null, Obj? truststore := null)
+  private native This init(SocketConfig config)
 
 //////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** The `SocketConfig` being used to configure the server sockets.
+  **
+  native SocketConfig config()
 
   **
   ** Is this socket bound to a local address and port.
@@ -103,6 +104,7 @@ class TcpListener
   **   - receiveTimeout
   **  Accessing other option fields will throw UnsupportedErr.
   **
+  @Deprecated { msg = "Use SocketConfig" }
   SocketOptions options()
   {
     return SocketOptions(this)
@@ -113,8 +115,4 @@ class TcpListener
 
   internal native Bool getReuseAddr()
   internal native Void setReuseAddr(Bool v)
-
-  internal native Duration? getReceiveTimeout()
-  internal native Void setReceiveTimeout(Duration? v)
-
 }

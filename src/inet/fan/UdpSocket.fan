@@ -17,13 +17,31 @@ class UdpSocket
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Make a new unbound UDP socket.
+  ** Make a new unbound UDP socket. The socket will be configured using the
+  ** given [socket configuration]`SocketConfig`. The following configuration
+  ** applies to UDP sockets:
+  **   - `SocketConfig.broadcast`
+  **   - `SocketConfig.receiveBufferSize`
+  **   - `SocketConfig.sendBufferSize`
+  **   - `SocketConfig.reuseAddr`
+  **   - `SocketConfig.receiveBufferSize`
+  **   - `SocketConfig.trafficClass`
   **
-  new make() {}
+  new make(SocketConfig config := SocketConfig.cur)
+  {
+    init(config)
+  }
+
+  private native This init(SocketConfig config)
 
 //////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get the [socket configuration]`SocketConfig` for this socket.
+  **
+  native SocketConfig config()
 
   **
   ** Is this socket bound to a local address and port.
@@ -141,6 +159,7 @@ class UdpSocket
   **   - trafficClass
   **  Accessing other option fields will throw UnsupportedErr.
   **
+  @Deprecated { msg = "Use SocketConfig" }
   native SocketOptions options()
 
   internal native Bool getBroadcast()

@@ -70,7 +70,8 @@ const class WispService : Service
   **
   const WebMod errMod := initErrMod
 
-  @NoDoc const Obj? keystore := null
+  ** The `SocketConfig` to use for creating sockets
+  const SocketConfig socketConfig := SocketConfig.cur
 
   ** Return 'true' if service is successfully listening on registered port.
   @NoDoc Bool isListening() { isListeningRef.val }
@@ -154,7 +155,7 @@ const class WispService : Service
 
     listenerPool     = ActorPool { it.name = "WispServiceListener" }
     httpListenerRef  = AtomicRef()
-    httpsListenerRef = AtomicRef()
+    sslListenerRef   = AtomicRef()
     processorPool    = ActorPool { it.name = "WispService"; it.maxThreads = this.maxThreads }
   }
 
@@ -162,9 +163,9 @@ const class WispService : Service
   {
     if (listenerPool.isStopped) throw Err("WispService is already stopped, use to new instance to restart")
     if (httpPort != null)
-      Actor(listenerPool, |->| { listen(makeListener, httpPort) }).send(null)
+      Actor(listenerPool, |->| { listen(makeListener(httpListenerRef), httpPort) }).send(null)
     if (httpsPort != null)
-      Actor(listenerPool, |->| { listen(makeListener(true), httpsPort) }).send(null)
+      Actor(listenerPool, |->| { listen(makeListener(sslListenerRef), httpsPort) }).send(null)
     sessionStore.onStart
     root.onStart
   }
@@ -174,7 +175,7 @@ const class WispService : Service
     try root.onStop;         catch (Err e) log.err("WispService stop root WebMod", e)
     try listenerPool.stop;   catch (Err e) log.err("WispService stop listener pool", e)
     try closeListener(httpListenerRef);  catch (Err e) log.err("WispService stop http listener socket", e)
-    try closeListener(httpsListenerRef); catch (Err e) log.err("WispService stop https listener socket", e)
+    try closeListener(sslListenerRef);   catch (Err e) log.err("WispService stop https listener socket", e)
     try processorPool.stop;  catch (Err e) log.err("WispService stop processor pool", e)
     try sessionStore.onStop; catch (Err e) log.err("WispService stop session store", e)
   }
@@ -229,23 +230,16 @@ const class WispService : Service
     log.info("${portType} stopped on port ${port}")
   }
 
-  private TcpListener makeListener(Bool secure := false)
+  private TcpListener makeListener(AtomicRef storage)
   {
     try
     {
-      AtomicRef ref := httpListenerRef
-      TcpListener listener := TcpListener()
-      if (secure)
-      {
-        ref = httpsListenerRef
-        listener = TcpListener.makeTls(keystore)
+      // force reuseAddr
+      cfg := this.socketConfig
+      if (!cfg.reuseAddr) cfg = cfg.copy { it.reuseAddr = true }
 
-        // This is important so that if there are a lot of short-lived
-        // connections (esp for HTTPS), the OS doesn't hit a limit
-        // on the number of sockets/ports in TIME_WAIT
-        listener.options.reuseAddr = true
-      }
-      ref.val = Unsafe(listener)
+      TcpListener listener := TcpListener(cfg)
+      storage.val = Unsafe(listener)
       return listener
     }
     catch (Err e)
@@ -257,7 +251,7 @@ const class WispService : Service
 
   internal const ActorPool listenerPool
   internal const AtomicRef httpListenerRef
-  internal const AtomicRef httpsListenerRef
+  internal const AtomicRef sslListenerRef
   internal const ActorPool processorPool
 
   @NoDoc static Void main()

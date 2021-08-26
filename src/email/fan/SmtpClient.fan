@@ -50,6 +50,9 @@ class SmtpClient
   **
   Bool ssl
 
+  ** The `SocketConfig` to use for creating sockets.
+  SocketConfig socketConfig := SocketConfig.cur
+
 //////////////////////////////////////////////////////////////////////////
 // Send
 //////////////////////////////////////////////////////////////////////////
@@ -74,12 +77,8 @@ class SmtpClient
     if (host == null) throw NullErr("host is null")
 
     // open the socket connection
-    sock = ssl ? TcpSocket.makeTls : TcpSocket.make
-    if (connectTimeout != null)
-    {
-      sock.options.connectTimeout = connectTimeout
-      sock.options.receiveTimeout = connectTimeout
-    }
+    sock = TcpSocket(socketConfig)
+    if (ssl) sock = sock.upgradeTls
     sock.connect(IpAddr(host), port)
     try
     {
@@ -103,7 +102,7 @@ class SmtpClient
         if (res.code != 220) throw SmtpErr.makeRes(res)
 
         // upgrade the socket to SSL/TLS
-        sock = TcpSocket.makeTls(sock)
+        sock = sock.upgradeTls
 
         // redo EHLO and SMTP handshake
         writeReq("EHLO [$IpAddr.local.numeric]")
@@ -320,9 +319,6 @@ class SmtpClient
 
   ** Log for tracing
   @NoDoc Log log := Log.get("smtp")
-
-  ** Socket option (connect and receive)
-  @NoDoc Duration? connectTimeout
 
   private TcpSocket? sock  // Socket if open or null if closed
   private Str[]? auths     // SASL auth mechanisms supported by server

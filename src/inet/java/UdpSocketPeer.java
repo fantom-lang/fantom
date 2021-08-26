@@ -33,11 +33,25 @@ public class UdpSocketPeer
     }
   }
 
+  public UdpSocket init(UdpSocket fan, SocketConfig config)
+  {
+    this.config = config;
+    setBroadcast(fan, config.broadcast);
+    setReceiveBufferSize(fan, config.receiveBufferSize);
+    setSendBufferSize(fan, config.sendBufferSize);
+    setReuseAddr(fan, config.reuseAddr);
+    setReceiveTimeout(fan, config.receiveTimeout);
+    setTrafficClass(fan, config.trafficClass);
+    return fan;
+  }
+
   public UdpSocketPeer(DatagramSocket socket)
     throws IOException
   {
     this.socket = socket;
   }
+
+  public SocketConfig config() { return this.config; }
 
 //////////////////////////////////////////////////////////////////////////
 // State
@@ -380,6 +394,7 @@ public class UdpSocketPeer
 //////////////////////////////////////////////////////////////////////////
 
   private final DatagramSocket socket;
+  private SocketConfig config;
   private IpAddr remoteAddr;
   private int remotePort = -1;
   private SocketOptions options;

@@ -25,65 +25,39 @@ public class TcpSocketPeer
     return new TcpSocketPeer(new Socket());
   }
 
-  public static TcpSocket makeRaw(Object raw)
+  public TcpSocket init(TcpSocket fan, SocketConfig config)
   {
-    if (!(raw instanceof Socket)) throw ArgErr.make("not a raw socket");
+    this.config = config;
+
+    // if socket is alredy connected, then it is already configured.
+    if (fan.isConnected()) return fan;
+
+    setInBufferSize(fan, config.inBufferSize);
+    setOutBufferSize(fan, config.outBufferSize);
+    setKeepAlive(fan, config.keepAlive);
+    setReceiveBufferSize(fan, config.receiveBufferSize);
+    setSendBufferSize(fan, config.sendBufferSize);
+    setReuseAddr(fan, config.reuseAddr);
+    setLinger(fan, config.linger);
+    setReceiveTimeout(fan, config.receiveTimeout);
+    setNoDelay(fan, config.noDelay);
+    setTrafficClass(fan, config.trafficClass);
+    return fan;
+  }
+
+  public static TcpSocket makeNative(Object raw, SocketConfig config, boolean isServer)
+  {
     try
     {
       final Socket socket = (Socket)raw;
       final TcpSocket self = new TcpSocket();
       self.peer = new TcpSocketPeer(socket);
+      self.peer.isServer= isServer;
+      self.peer.init(self, config);
       if (socket.isConnected()) self.peer.connected(self);
       return self;
     }
     catch (IOException e)
-    {
-      throw IOErr.make(e);
-    }
-  }
-
-  public static TcpSocket makeTls() { return makeTls(null, null); }
-  public static TcpSocket makeTls(TcpSocket upgrade) { return makeTls(upgrade, null); }
-  public static TcpSocket makeTls(TcpSocket upgrade, Object tlsContext)
-  {
-    try
-    {
-      SSLContext sslContext;
-
-      if (tlsContext != null) sslContext = (SSLContext)tlsContext;
-      else
-      {
-        // get SSL factory because Java loves factories!
-        sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, null, null);
-      }
-
-      final SSLSocketFactory factory = sslContext.getSocketFactory();
-
-      SSLSocket socket;
-      if (upgrade == null)
-      {
-        // create new SSL socket
-        socket = (SSLSocket)factory.createSocket();
-      }
-      else
-      {
-        // upgrade an existing socket
-        socket = (SSLSocket)factory.createSocket(
-                   upgrade.peer.socket,
-                   upgrade.peer.socket.getInetAddress().getHostAddress(),
-                   upgrade.peer.socket.getPort(),
-                   false);
-        socket.setUseClientMode(true);
-        socket.startHandshake();
-      }
-
-      // create the new TcpSocket instance
-      TcpSocket tlsSocket = TcpSocket.makeRaw(socket);
-      tlsSocket.peer.sslContext = sslContext;
-      return tlsSocket;
-    }
-    catch (Exception e)
     {
       throw IOErr.make(e);
     }
@@ -99,8 +73,81 @@ public class TcpSocketPeer
   }
 
 //////////////////////////////////////////////////////////////////////////
+// TLS
+//////////////////////////////////////////////////////////////////////////
+
+  public TcpSocket upgradeTls(TcpSocket self) { return upgradeTls(self, self); }
+  public TcpSocket upgradeTls(TcpSocket self, TcpSocket wrap)
+  {
+    try
+    {
+      SSLSocketFactory factory = config.peer.sslContext().getSocketFactory();
+      SSLSocket socket;
+      boolean clientMode = true;
+      if (wrap == null || !wrap.isConnected())
+      {
+        // create a new SSL socket
+        socket = (SSLSocket)factory.createSocket();
+      }
+      else
+      {
+        // upgrade an existing socket
+        socket = (SSLSocket)factory.createSocket(
+                   wrap.peer.socket,
+                   wrap.peer.socket.getInetAddress().getHostAddress(),
+                   wrap.peer.socket.getPort(),
+                   false);
+        clientMode = !wrap.peer.isServer;
+      }
+      configureSslSocket(socket, clientMode);
+
+      // create the new TcpSocket instance
+      final TcpSocket tlsSocket = TcpSocketPeer.makeNative(socket, config, !clientMode);
+      return tlsSocket;
+    }
+    catch (Exception e) { throw IOErr.make(e); }
+  }
+
+  private void configureSslSocket(SSLSocket socket, final boolean clientMode)
+  {
+    socket.setUseClientMode(clientMode);
+    socket.setEnabledProtocols(sslProtocols);
+  }
+
+  // SSL protocols we want to enable
+  private static String[] sslProtocols;
+  static
+  {
+    // At a minimum we support TLSv1.2. And we try to add TLSv1.3 if the runtime
+    // supports it.
+    try
+    {
+      String[] supported = SSLContext.getDefault().getSupportedSSLParameters().getProtocols();
+      String[] configured = new String[] { "TLSv1.2" };
+      for (int i = 0; i < supported.length; ++i)
+      {
+        if (supported[i].equals("TLSv1.3"))
+        {
+          configured = new String[] { "TLSv1.2", "TLSv1.3" };
+          break;
+        }
+      }
+      sslProtocols = configured;
+    }
+    catch (Exception ignore)
+    {
+      IOErr.make("Using default ssl protocols", ignore).trace();
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////
+
+  public SocketConfig config(TcpSocket self)
+  {
+    return this.config;
+  }
 
   public boolean isBound(TcpSocket fan)
   {
@@ -491,15 +538,13 @@ public class TcpSocketPeer
 
   public Socket socket() { return this.socket; }
 
-  public SSLContext getSslContext() { return this.sslContext; }
-
-
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   Socket socket;
-  private SSLContext sslContext;
+  private SocketConfig config;
+  boolean isServer = false;
   private int inBufSize = 4096;
   private int outBufSize = 4096;
   private IpAddr remoteAddr;

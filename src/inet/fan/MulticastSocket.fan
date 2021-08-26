@@ -16,7 +16,7 @@ class MulticastSocket : UdpSocket
   **
   ** Make a new unbound multicast UDP socket.
   **
-  new make() {}
+  new make(SocketConfig config := SocketConfig.cur) : super(config) {}
 
   **
   ** Default network interface for outgoing datagrams on this socket
