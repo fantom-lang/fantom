@@ -155,7 +155,7 @@ const class WispService : Service
 
     listenerPool     = ActorPool { it.name = "WispServiceListener" }
     httpListenerRef  = AtomicRef()
-    sslListenerRef   = AtomicRef()
+    httpsListenerRef = AtomicRef()
     processorPool    = ActorPool { it.name = "WispService"; it.maxThreads = this.maxThreads }
   }
 
@@ -165,7 +165,7 @@ const class WispService : Service
     if (httpPort != null)
       Actor(listenerPool, |->| { listen(makeListener(httpListenerRef), httpPort) }).send(null)
     if (httpsPort != null)
-      Actor(listenerPool, |->| { listen(makeListener(sslListenerRef), httpsPort) }).send(null)
+      Actor(listenerPool, |->| { listen(makeListener(httpsListenerRef), httpsPort) }).send(null)
     sessionStore.onStart
     root.onStart
   }
@@ -175,7 +175,7 @@ const class WispService : Service
     try root.onStop;         catch (Err e) log.err("WispService stop root WebMod", e)
     try listenerPool.stop;   catch (Err e) log.err("WispService stop listener pool", e)
     try closeListener(httpListenerRef);  catch (Err e) log.err("WispService stop http listener socket", e)
-    try closeListener(sslListenerRef);   catch (Err e) log.err("WispService stop https listener socket", e)
+    try closeListener(httpsListenerRef); catch (Err e) log.err("WispService stop https listener socket", e)
     try processorPool.stop;  catch (Err e) log.err("WispService stop processor pool", e)
     try sessionStore.onStop; catch (Err e) log.err("WispService stop session store", e)
   }
@@ -251,7 +251,7 @@ const class WispService : Service
 
   internal const ActorPool listenerPool
   internal const AtomicRef httpListenerRef
-  internal const AtomicRef sslListenerRef
+  internal const AtomicRef httpsListenerRef
   internal const ActorPool processorPool
 
   @NoDoc static Void main()
