@@ -95,13 +95,13 @@ class WebSocket
   private new make(TcpSocket socket, Bool maskOnSend)
   {
     this.socket = socket
-    this.socket.options.receiveTimeout = 1min
     this.maskOnSend = maskOnSend
   }
 
   **
   ** Access to socket options for this request.
   **
+  @Deprecated { msg = "Socket should be configured using SocketConfig" }
   SocketOptions socketOptions() { socket.options }
 
   **

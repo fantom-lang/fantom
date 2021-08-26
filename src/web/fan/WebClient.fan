@@ -204,6 +204,12 @@ class WebClient
 // Networking
 //////////////////////////////////////////////////////////////////////////
 
+  @Deprecated { msg = "Use WebClient.socketConfig to configure sockets" }
+  once SocketOptions socketOptions()
+  {
+    TcpSocket().options
+  }
+
   **
   ** When set to true a 3xx response with a Location header
   ** will automatically update the `reqUri` field and retry the
