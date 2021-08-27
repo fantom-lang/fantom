@@ -105,6 +105,8 @@ class PemReader : PemConst
         return JPrivKey.decode(der)
       case PemLabel.privKey:
         return JPrivKey.decode(der)
+      case PemLabel.publicKey:
+        return JPubKey.decode(der)
       case PemLabel.cert:
         return X509.load(der.in)
       case PemLabel.csr:
