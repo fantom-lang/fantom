@@ -79,6 +79,13 @@ const class SocketConfig
   ** Create a copy of this configuration and then apply any overrides from the it-block.
   virtual This copy(|This| f) { makeCopy(this, f) }
 
+  ** Convenience to create a copy of this socket configuration and set the connect
+  ** and receive timeouts to the given duration.
+  This setTimeouts(Duration dur)
+  {
+    copy { it.connectTimeout = dur; it.receiveTimeout = dur }
+  }
+
   private native Void force_peer()
 
 //////////////////////////////////////////////////////////////////////////
