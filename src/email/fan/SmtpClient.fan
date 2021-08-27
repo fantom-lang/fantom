@@ -50,7 +50,7 @@ class SmtpClient
   **
   Bool ssl
 
-  ** The `SocketConfig` to use for creating sockets.
+  ** The `inet::SocketConfig` to use for creating sockets.
   SocketConfig socketConfig := SocketConfig.cur
 
 //////////////////////////////////////////////////////////////////////////

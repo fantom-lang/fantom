@@ -59,7 +59,7 @@ const mixin AsymKey : Key
   ** Gets the size, in bits, of the key modulus used by the asymmetric algorithm.
   abstract Int keySize()
 
-  ** Get the [PEM] encoding of the key.
+  ** Get the PEM encoding of the key.
   override abstract Str toStr()
 }
 

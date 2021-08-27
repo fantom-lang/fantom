@@ -37,15 +37,15 @@ const class AsnObj
 // Value
 //////////////////////////////////////////////////////////////////////////
 
-  ** Get the value as a `Bool`
+  ** Get the value as a `sys::Bool`
   Bool bool() { val }
 
   ** Is this object's universal tag a 'Boolean'
   Bool isBool() { univTag == AsnTag.univBool }
 
-  ** Get the value as an `Int`. If the value is a `BigInt` you may lose
+  ** Get the value as an `sys::Int`. If the value is a `math::BigInt` you may lose
   ** both precision and sign. Use `bigInt` to get the value explicitly
-  ** as a `BigInt`.
+  ** as a `math::BigInt`.
   Int int()
   {
     if (val is BigInt) return ((BigInt)val).toInt
@@ -55,14 +55,14 @@ const class AsnObj
   ** Is this object's universal tag an 'Integer'
   Bool isInt() { univTag == AsnTag.univInt }
 
-  ** Get the value as a `BigInt`.
+  ** Get the value as a `math::BigInt`.
   BigInt bigInt()
   {
     if (val is Int) return BigInt.makeInt(val)
     return val
   }
 
-  ** Get any of the  binary values as a `Buf`. The Buf will be a safe copy
+  ** Get any of the  binary values as a `sys::Buf`. The Buf will be a safe copy
   ** that can be modified. Throws `AsnErr` if the value is not a binary value.
   virtual Buf buf() { throw AsnErr("Not a binary type: ${typeof}") }
 
@@ -78,10 +78,10 @@ const class AsnObj
   ** Is this object's universal tag an 'Object Identifier'
   Bool isOid() { univTag == AsnTag.univOid }
 
-  ** Get the value as a `Str`
+  ** Get the value as a `sys::Str`
   Str str() { val }
 
-  ** Get the value as a `DateTime` timestamp
+  ** Get the value as a `sys::DateTime` timestamp
   DateTime ts() { val }
 
   ** Get this object as an `AsnColl`

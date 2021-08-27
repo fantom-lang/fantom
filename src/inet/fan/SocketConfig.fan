@@ -92,11 +92,11 @@ const class SocketConfig
 // Tls Config
 //////////////////////////////////////////////////////////////////////////
 
-  ** The `KeyStore` to use when creating secure sockets. If null, the runtime
+  ** The `crypto::KeyStore` to use when creating secure sockets. If null, the runtime
   ** default will be used.
   const KeyStore? keystore := null
 
-  ** The `KeyStore` to use for obtaining trusted certificates when creating
+  ** The `crypto::KeyStore` to use for obtaining trusted certificates when creating
   ** secure sockets. If null, the runtime default will be used.
   const KeyStore? truststore := null
 

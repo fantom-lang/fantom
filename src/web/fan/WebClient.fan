@@ -46,7 +46,7 @@ class WebClient
     reqHeaders["Accept-Encoding"] = "gzip"
   }
 
-  ** The `SocketConfig` to use for creating sockets
+  ** The `inet::SocketConfig` to use for creating sockets
   SocketConfig socketConfig := SocketConfig.cur
 
 //////////////////////////////////////////////////////////////////////////

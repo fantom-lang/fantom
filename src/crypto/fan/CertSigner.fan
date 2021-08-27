@@ -30,7 +30,7 @@ mixin CertSigner
   abstract This notAfter(Date date)
 
   ** Configure the signature algorithm to sign the certificate with. This map
-  ** is configured the same as a `Crypto.csr`. By default, an implementation
+  ** is configured the same as a `Crypto.genCsr`. By default, an implementation
   ** should choose a "strong" signing algorithm.
   abstract This signWith(Str:Obj opts)
 

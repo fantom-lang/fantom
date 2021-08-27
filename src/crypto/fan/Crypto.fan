@@ -88,9 +88,9 @@ const mixin Crypto
   abstract Cert[] loadX509(InStream in)
 
   ** Attempt to load the full certificate chain for the given uri. If the certificate
-  ** chain cannot be obtained, throw an `Err`.
+  ** chain cannot be obtained, throw an `sys::Err`.
   **
-  ** This is an optional operation and implementations may throw `UnsupportedErr`.
+  ** This is an optional operation and implementations may throw `sys::UnsupportedErr`.
   **
   **   certs := Crypto.cur.loadCertForUri(`https://my.server.com/`)
   virtual Cert[] loadCertsForUri(Uri uri) { throw UnsupportedErr() }

@@ -70,7 +70,7 @@ const class WispService : Service
   **
   const WebMod errMod := initErrMod
 
-  ** The `SocketConfig` to use for creating sockets
+  ** The `inet::SocketConfig` to use for creating sockets
   const SocketConfig socketConfig := SocketConfig.cur
 
   ** Return 'true' if service is successfully listening on registered port.

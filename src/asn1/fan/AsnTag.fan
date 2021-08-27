@@ -102,8 +102,8 @@ final const class AsnTag
     return res
   }
 
-  ** Tag equality is based only the [class]`TagClass` and 'id'. The
-  ** [mode]`TagMode` is ignored for eqality purposes.
+  ** Tag equality is based only the [class]`AsnTagClass` and 'id'. The
+  ** [mode]`AsnTagMode` is ignored for eqality purposes.
   override Bool equals(Obj? obj)
   {
     if (this === obj) return true

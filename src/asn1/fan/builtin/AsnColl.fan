@@ -62,8 +62,8 @@ abstract const class AsnColl : AsnObj
   Bool isEmpty() { items.isEmpty }
 
   ** Get an item value from the collection.
-  **  - If key is a `Str` then get the named item.
-  **  - If key is an `Int`, then get the item at that zero-based index.
+  **  - If key is a `sys::Str` then get the named item.
+  **  - If key is an `sys::Int`, then get the item at that zero-based index.
   AsnObj? get(Obj key)
   {
     if (key is Int) return items.getSafe(key)?.val

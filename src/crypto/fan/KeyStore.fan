@@ -10,7 +10,7 @@
 ** KeyStore stores keys[`Key`] and certificates[`Cert`] in an aliased
 ** [keystore entry]`KeyStoreEntry`.
 **
-** A keystore must be [loaded]`load` before it can be used.
+** See `Crypto.loadKeyStore`
 **
 const mixin KeyStore
 {

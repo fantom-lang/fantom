@@ -45,7 +45,7 @@ final const class Asn
   ** Singleton for universal 'Null'
   static const AsnObj Null := AsnObj([AsnTag.univNull], null)
 
-  ** Create an ASN.1 `Object Identifier' value (OID).
+  ** Create an ASN.1 'Object Identifier' value (OID).
   **
   ** See `AsnObjBuilder.oid`
   static AsnOid oid(Obj val) { builder.oid(val) }
@@ -133,8 +133,8 @@ class AsnObjBuilder
     finish(AsnObj(etags(AsnTag.univBool), val))
   }
 
-  ** Build an ASN.1 'Integer' value. The 'val' may be either an `Int`
-  ** or a `BigInt`, but is always normalized to `BigInt`.
+  ** Build an ASN.1 'Integer' value. The 'val' may be either an `sys::Int`
+  ** or a `math::BigInt`, but is always normalized to `math::BigInt`.
   AsnObj int(Obj val)
   {
     if (val is Int) val = BigInt.makeInt(val)
@@ -168,7 +168,7 @@ class AsnObjBuilder
       : finish(AsnObj(etags(AsnTag.univNull), null))
   }
 
-  ** Build an ASN.1 `Object Identifier' value (OID). The 'val' may be:
+  ** Build an ASN.1 'Object Identifier' value (OID). The 'val' may be:
   **  1. an 'Int[]' where each element of the list is a part of the oid.
   **  1. a 'Str' where each part of the oid is separated by '.'.
   **
