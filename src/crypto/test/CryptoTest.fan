@@ -9,6 +9,7 @@
 **
 ** Common base class with utilities for crypto tests
 **
+@NoDoc
 abstract class CryptoTest : Test
 {
   virtual Crypto crypto() { Crypto.cur }

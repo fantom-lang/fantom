@@ -6,7 +6,7 @@
 //   05 Aug 2021 Matthew Giannini Creation
 //
 
-abstract class BerTest : Test
+@NoDoc abstract class BerTest : Test
 {
   protected Buf octets(Int[] bytes)
   {
