@@ -43,16 +43,16 @@ const mixin KeyStore
   abstract KeyStoreEntry? get(Str alias, Bool checked := true)
 
   ** Convenience to get a `TrustEntry` from the keystore.
-  virtual TrustEntry getTrust(Str alias, Bool checked := true) { get(alias, checked) }
+  virtual TrustEntry? getTrust(Str alias, Bool checked := true) { get(alias, checked) }
 
   ** Convenience to get a `PrivKeyEntry` from the keystore.
-  virtual PrivKeyEntry getPrivKey(Str alias, Bool checked := true) { get(alias, checked) }
+  virtual PrivKeyEntry? getPrivKey(Str alias, Bool checked := true) { get(alias, checked) }
 
   ** Return ture if the key store has an entry with the given alias.
   virtual Bool containsAlias(Str alias) { get(alias, false) != null }
 
   ** Adds a `PrivKeyEntry` to the keystore with the given alias and returns it.
-  abstract This setPrivKey(Str alias, PrivKey privKey, Cert[] chain)
+  abstract This setPrivKey(Str alias, PrivKey priv, Cert[] chain)
 
   ** Adds a `TrustEntry` to the keystore with the given alias and returns it.
   abstract This setTrust(Str alias, Cert cert)
@@ -97,13 +97,21 @@ const mixin KeyStoreEntry
 const mixin PrivKeyEntry : KeyStoreEntry
 {
   ** Get the private key from this entry.
-  abstract PrivKey privKey()
+  abstract PrivKey priv()
 
   ** Get the certificate chain from this entry.
   abstract Cert[] certChain()
 
-  ** Get the end entity certificate from the certificate chain (index 0)
+  ** Get the end entity certificate from the certificate chain; this should
+  ** be the first entry in the `certChain`.
   virtual Cert cert() { certChain.first }
+
+  ** Convenience to get the public key from the `cert`.
+  virtual PubKey pub() { cert.pub }
+
+  ** Get the `KeyPair` for the entry. It consists of the `priv` and `pub`
+  ** keys from this entry.
+  abstract KeyPair keyPair()
 }
 
 **************************************************************************

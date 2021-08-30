@@ -93,15 +93,17 @@ const class JKeyStoreEntry : KeyStoreEntry
 **
 const class JPrivKeyEntry : JKeyStoreEntry, PrivKeyEntry
 {
-  new make(PrivKey privKey, Cert[] chain, Str:Str attrs := [:]) : super(attrs)
+  new make(PrivKey priv, Cert[] chain, Str:Str attrs := [:]) : super(attrs)
   {
-    this.privKey   = privKey
+    this.priv      = priv
     this.certChain = chain
   }
 
-  override const PrivKey privKey
+  override const PrivKey priv
 
   override const Cert[] certChain
+
+  override JKeyPair keyPair() { JKeyPair(priv, pub) }
 }
 
 **************************************************************************
