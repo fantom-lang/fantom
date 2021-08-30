@@ -108,7 +108,7 @@ class PemReader : PemConst
       case PemLabel.publicKey:
         return JPubKey.decode(der)
       case PemLabel.cert:
-        return X509.load(der.in)
+        return X509.load(der.in).first
       case PemLabel.csr:
         return JCsr.decode(Buf.fromBase64(base64))
     }
