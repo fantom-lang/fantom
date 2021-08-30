@@ -174,7 +174,7 @@ class PodTest : Test
 
     verifyFlattenDepends(
       ["fluxText", "webmod"],
-      ["sys", "concurrent", "compiler", "gfx", "fwt", "flux", "syntax", "fluxText", "util", "inet", "web", "webmod"])
+      ["sys", "concurrent", "compiler", "crypto", "gfx", "fwt", "flux", "syntax", "fluxText", "util", "inet", "web", "webmod"])
   }
 
   Void verifyFlattenDepends(Str[] names, Str[] expected)
