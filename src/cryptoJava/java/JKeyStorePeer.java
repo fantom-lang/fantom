@@ -88,7 +88,8 @@ public class JKeyStorePeer
     ConcurrentMap store = ConcurrentMap.make();
     for (Enumeration<String> e = ks.aliases(); e.hasMoreElements(); )
     {
-      final String alias = e.nextElement();
+      // normalize all aliases to lower-case
+      final String alias = e.nextElement().toLowerCase();
       if (ks.isKeyEntry(alias))
       {
         // PrivKeyEntry

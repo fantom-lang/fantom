@@ -43,7 +43,7 @@ const class JKeyStore : KeyStore
 
   override KeyStoreEntry? get(Str alias, Bool checked := true)
   {
-    entry := entries.get(alias) as KeyStoreEntry
+    entry := entries.get(normAlias(alias)) as KeyStoreEntry
     if (entry != null) return entry
     if (checked) throw Err("No entry with alias: '$alias'")
     return null
@@ -61,12 +61,15 @@ const class JKeyStore : KeyStore
 
   override This set(Str alias, KeyStoreEntry entry)
   {
-    entries.set(alias, entry)
+    // store normalized to lower-case
+    entries.set(normAlias(alias), entry)
     return this
   }
 
   override Void remove(Str alias) { entries.remove(alias) }
 
+  ** Normalize alias to lower-case
+  private Str normAlias(Str alias) { alias.lower }
 }
 
 **************************************************************************
