@@ -101,6 +101,7 @@ const mixin Crypto
   **  - '.p12', '.pfx': PKCS12 format
   **  - '.jks': Java KeyStore (JAVA only)
   **
+  ** If the file does not have an extension, then PKCS12 format will be assumed.
   ** Other formats may be supported depending on the runtime implementation. Throws
   ** an Err if the format is not supported or there is a problem loading the keystore.
   **

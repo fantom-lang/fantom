@@ -34,20 +34,29 @@ public class JKeyStorePeer
 
   public static JKeyStore load(File file, Map opts)
   {
-    String format = null;
-    String ext = "p12";
-    if (file != null) ext = file.ext();
-    switch(ext)
+    // format option trumps file extension
+    String format = (String)opts.get("format");
+    if (format == null)
     {
-      case "p12":
-      case "pfx":
-        format = "pkcs12";
-        break;
-      case "jks":
-        format = "jks";
-        break;
-      default:
-        throw UnsupportedErr.make("Unsupported file ext: " + file.ext());
+      String ext = "p12";
+      if (file != null)
+      {
+        // If the file doesn't have an extension, then default is pkcs12
+        ext = file.ext();
+        if (ext == null) ext = "p12";
+      }
+      switch(ext)
+      {
+        case "p12":
+        case "pfx":
+          format = "pkcs12";
+          break;
+        case "jks":
+          format = "jks";
+          break;
+        default:
+          throw UnsupportedErr.make("Unsupported file ext: " + file.ext());
+      }
     }
     return file == null
       ? JKeyStore.make(format, ConcurrentMap.make())
