@@ -11,10 +11,10 @@
 //
 
 // default version used by build scripts
-buildVersion=1.0.76
+buildVersion=1.0.77
 
 // Must be configured boot build in substitute/release installation
-//devHome=file:/E:/fan/
+//devHome=/work/fan/
 
 // JVM version compiler target, by default Fantom uses JDK 1.8 compiler
 // javacParams=-source 1.8 -target 1.8

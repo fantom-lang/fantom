@@ -6,7 +6,8 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.77 (working)*
+*Build 1.0.77 (2 Sep 2021)*
+- Distribution zip now shipped without tests
 - List groupBy, groupByInto
 - Move examples/js/ -> examples/webfwt/
 - Env.compileScriptToJs
@@ -16,6 +17,11 @@
 - js: New formal Env.var initialization design for JS
 - js: TimeZone.cur now defaults to Env.var or queries browser for best match
 - js: Locale.cur can now be defaulted via Env.var
+- New asn1 pod
+- New crypto pod
+- New SocketConfig and TLS support in inet
+- #2652: List.groupBy()
+- #2798: JS Test Code
 
 *Build 1.0.76 (10 May 2021)*
 - Allow This to be in any func param position as method param
