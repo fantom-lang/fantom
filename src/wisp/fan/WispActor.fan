@@ -52,7 +52,10 @@ internal const class WispActor : Actor
     try
     {
       // upgrade to TLS
-      if (isTls) socket = socket.upgradeTls
+      if (socket.localPort == service.httpsPort)
+      {
+        socket = socket.upgradeTls
+      }
 
       // allocate request, response
       res = WispRes(service, socket)
@@ -106,7 +109,6 @@ internal const class WispActor : Actor
     }
   }
 
-  ** Should sockets be upgrade to tls?
   private Bool isTls() { service.httpsPort != null }
 
 //////////////////////////////////////////////////////////////////////////
