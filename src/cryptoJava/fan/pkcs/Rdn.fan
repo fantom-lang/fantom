@@ -83,6 +83,7 @@ const class Rdn
     m["SERIALNUMBER"] = Asn.oid("${id_at}.5")
     m["C"]  = Asn.oid("${id_at}.6")
     m["L"]  = Asn.oid("${id_at}.7")
+    m["S"]  = Asn.oid("${id_at}.8")
     m["ST"] = Asn.oid("${id_at}.8")
     m["STREET"] = Asn.oid("${id_at}.9")
     m["O"]  = Asn.oid("${id_at}.10")
