@@ -80,10 +80,11 @@ const class SocketConfig
   virtual This copy(|This| f) { makeCopy(this, f) }
 
   ** Convenience to create a copy of this socket configuration and set the connect
-  ** and receive timeouts to the given duration.
-  This setTimeouts(Duration dur)
+  ** and receive timeouts to the given duration. Setting to 'null' indicates
+  ** infinite timeouts.
+  This setTimeouts(Duration? connectTimeout, Duration? receiveTimeout := connectTimeout)
   {
-    copy { it.connectTimeout = dur; it.receiveTimeout = dur }
+    copy { it.connectTimeout = connectTimeout; it.receiveTimeout = receiveTimeout }
   }
 
   private native Void force_peer()
