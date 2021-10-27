@@ -111,7 +111,18 @@ public class TcpSocketPeer
   private void configureSslSocket(SSLSocket socket, final boolean clientMode)
   {
     socket.setUseClientMode(clientMode);
-    socket.setEnabledProtocols(sslProtocols);
+
+    // configure SSL parameters
+    SSLParameters params = socket.getSSLParameters();
+
+    // supported SSL protocols
+    params.setProtocols(sslProtocols);
+
+    // application protocols
+    final List protocols = (List)this.config.tlsParams.get("appProtocols");
+    if (protocols != null) params.setApplicationProtocols((String[])protocols.asArray(String.class));
+
+    socket.setSSLParameters(params);
   }
 
   // SSL protocols we want to enable

@@ -59,6 +59,7 @@ const class SocketConfig
     {
       this.keystore          = orig.keystore
       this.truststore        = orig.truststore
+      this.tlsParams         = orig.tlsParams
 
       this.inBufferSize      = orig.inBufferSize
       this.keepAlive         = orig.keepAlive
@@ -100,6 +101,14 @@ const class SocketConfig
   ** The `crypto::KeyStore` to use for obtaining trusted certificates when creating
   ** secure sockets. If null, the runtime default will be used.
   const KeyStore? truststore := null
+
+  ** TCP sockets that are upgraded to TLS will be configured with these parameters.
+  ** The following parameters are supported:
+  ** - 'appProtocols': ('Str[]') prioritized array of application-layer protocol
+  ** names that can be negotiated over the TLS protocol
+  **
+  ** **Experimental - this functionality is subject to change**
+  @NoDoc const Str:Obj? tlsParams := [:]
 
 //////////////////////////////////////////////////////////////////////////
 // Socket Config
