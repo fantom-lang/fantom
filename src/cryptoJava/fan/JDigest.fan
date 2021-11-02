@@ -20,5 +20,13 @@ native const class JDigest : Digest
 
   override This update(Buf buf)
 
+  override This updateAscii(Str str)
+
+  override This updateByte(Int i)
+
+  override This updateI4(Int i)
+
+  override This updateI8(Int i)
+
   override This reset()
 }

@@ -72,5 +72,40 @@ final public class JDigest extends FanObj implements fan.crypto.Digest
     return this;
   }
 
+  public JDigest updateAscii(String s)
+  {
+    for (int i=0; i<s.length(); ++i)
+      md.update((byte)s.charAt(i));
+    return this;
+  }
+
+  public JDigest updateByte(long i)
+  {
+    md.update((byte)(i & 0xFF));
+    return this;
+  }
+
+  public JDigest updateI4(long i)
+  {
+    md.update((byte)((i >> 24) & 0xFF));
+    md.update((byte)((i >> 16) & 0xFF));
+    md.update((byte)((i >> 8)  & 0xFF));
+    md.update((byte)((i >> 0)  & 0xFF));
+    return this;
+  }
+
+  public JDigest updateI8(long i)
+  {
+    md.update((byte)((i >> 56) & 0xFF));
+    md.update((byte)((i >> 48) & 0xFF));
+    md.update((byte)((i >> 40) & 0xFF));
+    md.update((byte)((i >> 32) & 0xFF));
+    md.update((byte)((i >> 24) & 0xFF));
+    md.update((byte)((i >> 16) & 0xFF));
+    md.update((byte)((i >> 8)  & 0xFF));
+    md.update((byte)((i >> 0)  & 0xFF));
+    return this;
+  }
+
   public JDigest reset() { this.md.reset(); return this; }
 }

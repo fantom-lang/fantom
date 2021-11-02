@@ -25,6 +25,22 @@ const mixin Digest
   ** Return this.
   abstract This update(Buf buf)
 
+  ** Update the digest using only the 8-bit characters in given string.
+  ** Return this.
+  abstract This updateAscii(Str str)
+
+  ** Update the digest with one byte / 8-bit integer.
+  ** Return this.
+  abstract This updateByte(Int i)
+
+  ** Update the digest with four byte / 32-bit integer.
+  ** Return this.
+  abstract This updateI4(Int i)
+
+  ** Update the digest with eight byte / 64-bit integer.
+  ** Return this.
+  abstract This updateI8(Int i)
+
   ** Reset the digest. Return this.
   abstract This reset()
 }

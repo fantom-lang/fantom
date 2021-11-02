@@ -45,4 +45,22 @@ class DigestTest : CryptoTest
     buf.size.times |i| { md.update(byte.clear.write(buf[i])) }
     verify(md.digest.bytesEqual(expectHash))
   }
+
+  Void testUpdates()
+  {
+    a := Crypto.cur.digest("SHA-1")
+    b := Buf()
+
+    a.update("foo".toBuf); b.writeBuf("foo".toBuf)
+    a.updateByte(0x46); b.write(0x46)
+    a.updateByte(0xFA); b.write(0xFA)
+    a.updateI4(0x1234_5678); b.writeI4(0x1234_5678);
+    a.updateI4(0xabcd_ef87); b.writeI4(0xabcd_ef87);
+    a.updateI8(0xabcd_0123_fedc); b.writeI8(0xabcd_0123_fedc);
+    a.updateAscii("hello"); b.print("hello")
+
+    ad := a.digest.toHex
+    bd := b.toDigest("SHA-1").toHex
+    verifyEq(ad, bd)
+  }
 }
