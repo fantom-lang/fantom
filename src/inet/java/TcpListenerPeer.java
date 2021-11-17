@@ -39,7 +39,7 @@ public class TcpListenerPeer
     this.config = config;
     setReceiveBufferSize(fan, config.receiveBufferSize);
     setReuseAddr(fan, config.reuseAddr);
-    setReceiveTimeout(fan, config.receiveTimeout);
+    setConnectTimeout(fan, config.connectTimeout);
     return fan;
   }
 
@@ -186,7 +186,7 @@ public class TcpListenerPeer
     }
   }
 
-  public Duration getReceiveTimeout(TcpListener fan)
+  public Duration getConnectTimeout(TcpListener fan)
   {
     try
     {
@@ -200,7 +200,7 @@ public class TcpListenerPeer
     }
   }
 
-  public void setReceiveTimeout(TcpListener fan, Duration v)
+  public void setConnectTimeout(TcpListener fan, Duration v)
   {
     try
     {

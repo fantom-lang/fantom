@@ -23,7 +23,8 @@ class TcpListener
   ** configuration applies to listeners:
   **   - `SocketConfig.receiveBufferSize`
   **   - `SocketConfig.reuseAddr`
-  **   - `SocketConfig.receiveTimeout`
+  **   - `SocketConfig.connectTimeout` - how long to block waiting for accept()
+  **   to receive a new connection before throwing an IOErr
   **
   new make(SocketConfig config := SocketConfig.cur)
   {
@@ -102,7 +103,6 @@ class TcpListener
   ** The following options apply to TcpListeners:
   **   - receiveBufferSize
   **   - reuseAddr
-  **   - receiveTimeout
   **  Accessing other option fields will throw UnsupportedErr.
   **
   @Deprecated { msg = "Use SocketConfig" }
@@ -116,7 +116,4 @@ class TcpListener
 
   internal native Bool getReuseAddr()
   internal native Void setReuseAddr(Bool v)
-
-  internal native Duration? getReceiveTimeout()
-  internal native Void setReceiveTimeout(Duration? v)
 }
