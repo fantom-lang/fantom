@@ -39,6 +39,7 @@ public class TcpListenerPeer
     this.config = config;
     setReceiveBufferSize(fan, config.receiveBufferSize);
     setReuseAddr(fan, config.reuseAddr);
+    setReceiveTimeout(fan, config.receiveTimeout);
     return fan;
   }
 
