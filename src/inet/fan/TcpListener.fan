@@ -23,6 +23,7 @@ class TcpListener
   ** configuration applies to listeners:
   **   - `SocketConfig.receiveBufferSize`
   **   - `SocketConfig.reuseAddr`
+  **   - `SocketConfig.receiveTimeout`
   **
   new make(SocketConfig config := SocketConfig.cur)
   {
@@ -115,4 +116,7 @@ class TcpListener
 
   internal native Bool getReuseAddr()
   internal native Void setReuseAddr(Bool v)
+
+  internal native Duration? getReceiveTimeout()
+  internal native Void setReceiveTimeout(Duration? v)
 }
