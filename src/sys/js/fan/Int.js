@@ -89,12 +89,14 @@ fan.sys.Int.abs = function(self)      { return self < 0 ? -self : self; }
 fan.sys.Int.min = function(self, val) { return self < val ? self : val; }
 fan.sys.Int.max = function(self, val) { return self > val ? self : val; }
 
-fan.sys.Int.clip = function(self, min, max)
+fan.sys.Int.clamp = function(self, min, max)
 {
   if (self < min) return min;
   if (self > max) return max;
   return self;
 }
+
+fan.sys.Int.clip = function(self, min, max) { return fan.sys.Int.clamp(self, min, max); }
 
 fan.sys.Int.isEven  = function(self) { return self % 2 == 0; }
 fan.sys.Int.isOdd   = function(self) { return self % 2 != 0; }

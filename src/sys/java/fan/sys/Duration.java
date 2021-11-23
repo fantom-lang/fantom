@@ -214,6 +214,13 @@ public final class Duration
     return this.ticks >= that.ticks ? this : that;
   }
 
+  public final Duration clamp(Duration min, Duration max)
+  {
+    if (this.ticks < min.ticks) return min;
+    if (this.ticks > max.ticks) return max;
+    return this;
+  }
+
   public final Duration abs()
   {
     if (ticks >= 0) return this;

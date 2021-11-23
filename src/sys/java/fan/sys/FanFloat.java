@@ -187,11 +187,16 @@ public final class FanFloat
     return that;
   }
 
-  public static double clip(double self, double min, double max)
+  public static double clamp(double self, double min, double max)
   {
     if (self < min) return min;
     if (self > max) return max;
     return self;
+  }
+
+  public static double clip(double self, double min, double max)
+  {
+    return clamp(self, min, max);
   }
 
   public static double ceil(double self)

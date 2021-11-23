@@ -169,11 +169,16 @@ public final class FanInt
     return that;
   }
 
-  public static long clip(long self, long min, long max)
+  public static long clamp(long self, long min, long max)
   {
     if (self < min) return min;
     if (self > max) return max;
     return self;
+  }
+
+  public static long clip(long self, long min, long max)
+  {
+    return clamp(self, min, max);
   }
 
   public static long pow(long self, long pow)

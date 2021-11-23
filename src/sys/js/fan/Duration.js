@@ -181,6 +181,12 @@ fan.sys.Duration.prototype.max = function(that)
   if (this.m_ticks >= that.m_ticks) return this;
   else return that;
 }
+fan.sys.Duration.prototype.clamp = function(min, max)
+{
+  if (this.m_ticks < min.m_ticks) return min;
+  if (this.m_ticks > max.m_ticks) return max;
+  return this;
+}
 fan.sys.Duration.prototype.abs = function()
 {
   if (this.m_ticks >= 0) return this;

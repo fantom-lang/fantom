@@ -141,12 +141,14 @@ fan.sys.Float.sqrt  = function(self) { return fan.sys.Float.make(Math.sqrt(self)
 fan.sys.Float.random = function() { return fan.sys.Float.make(Math.random()); }
 
 
-fan.sys.Float.clip = function(self, min, max)
+fan.sys.Float.clamp = function(self, min, max)
 {
   if (self < min) return min;
   if (self > max) return max;
   return self;
 }
+
+fan.sys.Float.clip = function(self, min, max) { return fan.sys.Float.clamp(self, min, max); }
 
 // arithmetic
 fan.sys.Float.plus     = function(a,b) { return fan.sys.Float.make(a+b); }

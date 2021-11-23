@@ -175,6 +175,13 @@ class DurationTest : Test
     verifySame(a.max(b), a)
     verifySame(b.max(a), a)
     verifySame(a.max(c), c)
+
+    min := 10sec
+    x   := 12sec
+    max := 20sec
+    verifySame(x.clamp(min, max), x)
+    verifySame(99ms.clamp(min, max), min)
+    verifySame(1min.clamp(min, max), max)
   }
 
 //////////////////////////////////////////////////////////////////////////

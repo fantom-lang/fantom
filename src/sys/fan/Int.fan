@@ -214,10 +214,18 @@ const final class Int : Num
   Int max(Int that)
 
   **
+  ** Clamp this integer between the min and max.  If its less than min then
+  ** return min, if its greater than max return max, otherwise return this
+  ** integer itself.
+  **
+  Int clamp(Int min, Int max)
+
+  **
   ** Clip this integer between the min and max.  If its less than min then
   ** return min, if its greater than max return max, otherwise return this
   ** integer itself.
   **
+  @NoDoc @Deprecated { msg = "Use clamp" }
   Int clip(Int min, Int max)
 
   **

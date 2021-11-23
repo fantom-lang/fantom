@@ -173,6 +173,13 @@ const final class Duration
   **
   Duration max(Duration that)
 
+  **
+  ** Clamp this duration between the min and max.  If its less than min then
+  ** return min, if its greater than max return max, otherwise return this
+  ** duration itself.
+  **
+  Duration clamp(Duration min, Duration max)
+
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////
