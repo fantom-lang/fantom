@@ -137,7 +137,7 @@ public class MMatrix extends FanObj implements Matrix
   public Matrix mult(final Matrix b)
   {
     if (this.numCols != b.numRows())
-      throw ArgErr.make(String.format("Matrix cols don't match rows: %d != %d", numCols, numRows));
+      throw ArgErr.make(String.format("Matrix cols don't match rows: %d != %d", this.numCols, b.numRows()));
 
     final int numRows = (int)this.numRows();
     final int numCols = (int)b.numCols();
