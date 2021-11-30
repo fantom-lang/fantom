@@ -23,8 +23,7 @@ class TcpListener
   ** configuration applies to listeners:
   **   - `SocketConfig.receiveBufferSize`
   **   - `SocketConfig.reuseAddr`
-  **   - `SocketConfig.connectTimeout` - how long to block waiting for accept()
-  **   to receive a new connection before throwing an IOErr
+  **   - `SocketConfig.acceptTimeout`
   **
   new make(SocketConfig config := SocketConfig.cur)
   {
@@ -81,7 +80,7 @@ class TcpListener
   **
   ** Accept the next incoming connection.  This method blocks the
   ** calling thread until a new connection is established.  If this
-  ** listener's receiveTimeout option is configured, then accept
+  ** listener's `SocketConfig.acceptTimeout` is configured, then accept
   ** will timeout with an IOErr.
   **
   TcpSocket accept() { return doAccept }

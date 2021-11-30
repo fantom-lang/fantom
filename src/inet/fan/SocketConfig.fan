@@ -69,6 +69,7 @@ const class SocketConfig
       this.linger            = orig.linger
       this.connectTimeout    = orig.connectTimeout
       this.receiveTimeout    = orig.receiveTimeout
+      this.acceptTimeout     = orig.acceptTimeout
       this.noDelay           = orig.noDelay
       this.trafficClass      = orig.trafficClass
 
@@ -144,8 +145,12 @@ const class SocketConfig
 
   ** 'SO_TIMEOUT' controls the amount of time a socket
   ** will block on a read call before throwing an IOErr timeout exception.
-  ** Null is used to indicate an infinite timeout.
+  ** 'null' is used to indicate an infinite timeout.
   const Duration? receiveTimeout := 60sec
+
+  ** Controls how long a `TcpListener.accept` will block before throwing an
+  ** IOErr timeout exception. 'null' is used to indicate infinite timeout.
+  const Duration? acceptTimeout := null
 
   ** 'TCP_NODELAY' socket option specifies that send not be delayed
   ** to merge packets (Nagle's algorthm).
