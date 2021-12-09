@@ -148,7 +148,7 @@ public class SqlMetaPeer
         Type fanType = SqlUtil.sqlToFanType(columns.getInt(typeIndex));
         if (fanType == null)
         {
-          System.out.println("WARNING: Cannot map " + typeName + " to Fan type");
+          //System.out.println("WARNING: Cannot map " + typeName + " to Fan type");
           fanType = Sys.StrType;
         }
         cols.add(Col.make(Long.valueOf(colIndex++), name, fanType, typeName));

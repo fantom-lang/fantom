@@ -117,7 +117,7 @@ public class StatementPeer
       Type fanType = SqlUtil.sqlToFanType(meta.getColumnType(i+1));
       if (fanType == null)
       {
-        System.out.println("WARNING: Cannot map " + typeName + " to Fan type");
+        //System.out.println("WARNING: Cannot map " + typeName + " to Fan type");
         fanType = Sys.StrType;
       }
       cols.add(Col.make(Long.valueOf(i), name, fanType, typeName));
