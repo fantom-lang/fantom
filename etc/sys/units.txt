@@ -276,6 +276,7 @@ kilojoule, kJ; kg1*m2*sec-2; 1000.0
 watt_hour, Wh; kg1*m2*sec-2; 3600.0
 kilowatt_hour, kWh; kg1*m2*sec-2; 3600000.0
 megawatt_hour, MWh; kg1*m2*sec-2; 3.6E9
+gigawatt_hour, GWh; kg1*m2*sec-2; 3.6E12
 btu, BTU; kg1*m2*sec-2; 1054.852
 kilobtu, kBTU; kg1*m2*sec-2; 1054852.0
 megabtu, MBTU, MMBTU; kg1*m2*sec-2; 1.054852E9
