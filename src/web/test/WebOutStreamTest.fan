@@ -460,6 +460,13 @@ class WebOutStreamTest : Test
     out.footerEnd
     verifyOut(buf, "</footer>")
 
+    out.main
+    verifyOut(buf, "<main>")
+    out.main("class='foo'")
+    verifyOut(buf, "<main class='foo'>")
+    out.mainEnd
+    verifyOut(buf, "</main>")
+
     out.nav
     verifyOut(buf, "<nav>")
     out.nav("class='foo'")

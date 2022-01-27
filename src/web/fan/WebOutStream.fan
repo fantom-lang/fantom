@@ -806,6 +806,12 @@ class WebOutStream : OutStream
   ** End a <footer> tag.
   This footerEnd() { return tagEnd("footer").nl }
 
+  ** Start a <main> tag.
+  This main(Str? attrs := null) { return tag("main", attrs).nl }
+
+  ** End a <main> tag.
+  This mainEnd() { return tagEnd("main").nl }
+
   ** Start a <nav> tag.
   This nav(Str? attrs := null) { return tag("nav", attrs).nl }
 
