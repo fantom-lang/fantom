@@ -122,7 +122,7 @@ abstract class AbstractMain
     {
       tok := toks[i]
       Str? next := i+1 < toks.size ? toks[i+1] : null
-      if (tok.startsWith("-"))
+      if (tok.startsWith("-") && argi == 0)
       {
         if (parseOpt(opts, tok, next)) ++i
       }
