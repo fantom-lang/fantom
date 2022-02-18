@@ -33,7 +33,7 @@ and easy to use compared some of their lower level counter parts.
 Because Fantom is designed from the ground up to be portable, targeting
 new platforms should be reasonably easy.  Future targets might include
 Objective-C or Swift for the iPhone, the [LLVM]`http://llvm.org/`, or
-[Parrot]`http://www.parrotcode.org/`.
+[WASM]`https://webassembly.org/`.
 
 Elegant APIs [#elegantApis]
 ***************************
@@ -199,7 +199,7 @@ Quite often we need to declare data structures in our code.  Common
 examples include declaring a list or map.  In Java and C# these simple
 tasks include mostly noise which makes for very ugly, verbose declarative
 programming.  For this reason, you often find the declarative parts of
-a Java or C# application shoved off into XML files.
+a Java or C# application shoved off into XML, JSON, or YAML files.
 
 Fantom incorporates declarative programming right into the language.  Fantom
 supports a literal syntax for lists, maps, ranges, uris, and durations.
