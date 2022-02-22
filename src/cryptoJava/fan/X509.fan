@@ -28,4 +28,8 @@ native const class X509 : Cert
   override PubKey pub()
 
   override Str toStr()
+
+  Date notBefore()
+
+  Date notAfter()
 }

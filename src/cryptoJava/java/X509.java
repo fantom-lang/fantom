@@ -14,6 +14,7 @@ import fanx.interop.Interop;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Calendar;
 
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
@@ -138,6 +139,23 @@ final public class X509 extends FanObj implements fan.crypto.Cert
   public fan.crypto.PubKey pub()
   {
     return new JPubKey(cert.getPublicKey());
+  }
+
+  public Date notBefore()
+  {
+    return toDate(cert.getNotBefore());
+  }
+
+  public Date notAfter()
+  {
+    return toDate(cert.getNotAfter());
+  }
+
+  private static Date toDate(java.util.Date jdate)
+  {
+    Calendar c = Calendar.getInstance();
+    c.setTime(jdate);
+    return Date.make(c.get(Calendar.YEAR), Month.fromOrdinal(c.get(Calendar.MONTH)), c.get(Calendar.DAY_OF_MONTH));
   }
 
   public String pem()
