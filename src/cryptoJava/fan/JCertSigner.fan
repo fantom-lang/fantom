@@ -171,7 +171,7 @@ class JCertSigner : CertSigner
   override This subjectKeyId(Buf buf)
   {
     this.exts.add(V3Ext(Asn.oid("2.5.29.14"),
-                         Asn.seq([Asn.octets(buf)])))
+                         Asn.octets(buf)))
     return this
   }
 
