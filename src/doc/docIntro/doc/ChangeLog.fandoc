@@ -10,6 +10,7 @@
 - Deprecate Int/Float clip in favor of clamp
 - Duration.clamp
 - WebOutStream.main
+- dom: ResizeObserver
 
 *Build 1.0.77 (2 Sep 2021)*
 - Distribution zip now shipped without tests

@@ -1,7 +1,7 @@
 **************************************************************************
 ** title:      Dom
 ** author:     Andy Frank
-** created:    17 Apr 09
+** created:    17 Apr 2009
 ** copyright:  Copyright (c) 2009, Brian Frank and Andy Frank
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
@@ -141,4 +141,15 @@ Convenience methods are availabe for the common request methods:
 
 The [postForm]`dom::HttpReq.postForm` will automatically encode the
 request to look like a normal HTML form submission.
+
+Observers [#observers]
+**********************
+
+[ResizeObserver]`dom::ResizeObserver` provides a callback when the size of
+a given element or list of elements is modified:
+
+    ResizeObserver {
+      it.observe(elem)
+      it.onResize |e| { echo("new size: ${e.first.size}") }
+    }
 
