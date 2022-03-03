@@ -157,11 +157,25 @@ class JCertSigner : CertSigner
       .add(Asn.int(serialNumber))
       .add(sigAlg)
       .add(issuerDn.asn)
-      .add(Asn.seq([Asn.genTime(_notBefore), Asn.genTime(_notAfter)]))
+      .add(Asn.seq([validity(_notBefore), validity(_notAfter)]))
       .add(subjectDn.asn)
       .add(Asn.any(csr.pub.encoded))
     if (!exts.isEmpty) items.add(Asn.tag(AsnTag.context(3).explicit).seq(exts))
     return Asn.seq(items)
+  }
+
+  ** https://datatracker.ietf.org/doc/html/rfc5280#section-4.1.2.5
+  **
+  ** CAs conforming to this profile MUST always encode certificate
+  ** validity dates through the year 2049 as UTCTime; certificate validity
+  ** dates in 2050 or later MUST be encoded as GeneralizedTime.
+  ** Conforming applications MUST be able to process validity dates that
+  ** are encoded in either UTCTime or GeneralizedTime.
+  private static AsnObj validity(DateTime ts)
+  {
+    // force non-zero seconds because X509 requires them to be ASN.1 encoded
+    if (ts.sec == 0) ts = ts + 1sec
+    return ts.year < 2050 ? Asn.utc(ts.toUtc) : Asn.genTime(ts)
   }
 
 //////////////////////////////////////////////////////////////////////////
