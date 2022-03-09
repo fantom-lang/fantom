@@ -401,7 +401,8 @@ public class FanStr
     // do an array lookup for reasonable length
     // strings since that is the common case
     int count = (int)n;
-    try { return spaces[count]; } catch (ArrayIndexOutOfBoundsException e) {}
+    if (count < spaces.length)
+      return spaces[count];
 
     // otherwise we build a new one
     StringBuilder s = new StringBuilder(spaces[spaces.length-1]);
