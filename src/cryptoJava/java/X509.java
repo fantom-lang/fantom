@@ -141,6 +141,12 @@ final public class X509 extends FanObj implements fan.crypto.Cert
     return new JPubKey(cert.getPublicKey());
   }
 
+  public Buf serialNum()
+  {
+    byte[] bytes = cert.getSerialNumber().toByteArray();
+    return new MemBuf(bytes);
+  }
+
   public Date notBefore()
   {
     return toDate(cert.getNotBefore());

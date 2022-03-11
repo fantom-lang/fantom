@@ -29,6 +29,8 @@ native const class X509 : Cert
 
   override Str toStr()
 
+  Buf serialNum()
+
   Date notBefore()
 
   Date notAfter()
