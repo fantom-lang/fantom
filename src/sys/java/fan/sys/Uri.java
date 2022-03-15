@@ -197,9 +197,9 @@ public final class Uri
     host     = x.host;
     port     = x.port;
     pathStr  = x.pathStr;
-    path     = x.path.ro();
+    path     = (List)x.path.toImmutable();
     queryStr = x.queryStr;
-    query    = x.query.ro();
+    query    = (Map)x.query.toImmutable();
     frag     = x.frag;
     str      = x.str != null ? x.str : new Encoder(this, false).encode();
   }
@@ -256,7 +256,7 @@ public final class Uri
         String seg = (String)path.get(i);
         if (seg.equals(".") && (path.sz() > 1 || host != null))
         {
-          if (path.isRO()) path = path.rw();
+          path = path.rw();
           path.removeAt(i);
           modified = true;
           dotLast = true;
@@ -264,7 +264,7 @@ public final class Uri
         }
         else if (seg.equals("..") && i > 0 && !path.get(i-1).toString().equals(".."))
         {
-          if (path.isRO()) path = path.rw();
+          path = path.rw();
           path.removeAt(i);
           path.removeAt(i-1);
           modified = true;
@@ -1331,7 +1331,7 @@ public final class Uri
     t.frag     = this.frag;
     t.pathStr  = this.pathStr;
     t.path     = this.path;
-    t.query    = merge.ro();
+    t.query    = (Map)merge.toImmutable();
     t.queryStr = s.toString();
     return new Uri(t);
   }
