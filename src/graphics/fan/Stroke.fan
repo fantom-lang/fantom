@@ -1,0 +1,220 @@
+//
+// Copyright (c) 2022, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   28 Feb 2022  Brian Frank  Creation
+//
+
+**
+** Stroke defines the how to paint shape outlines.
+** There are two implementions:
+**   - `Color`: simple color with default styling
+**   - `StyledStroke`: color, width, dash, line cap, line join
+**
+@Js
+const mixin Stroke
+{
+  ** Is this a simple color stroke with defaults for all other styling.
+  abstract Bool isColorStroke()
+
+  ** Is this a stroke that includes custom width, dash, caps, and joins.
+  abstract Bool isStyledStroke()
+
+  ** Return this stroke instance as a Color or raise exception
+  abstract Color asColorStroke()
+
+  ** Return this stroke instance as a StyledStroke or raise exception
+  abstract StyledStroke asStyledStroke()
+}
+
+**************************************************************************
+** StyledStroke
+**************************************************************************
+
+**
+** StyledStroke specifies color, width, dash, line caps, and line joins.
+**
+@Js
+@Serializable { simple = true }
+const final class StyledStroke : Stroke
+{
+  **
+  ** Parse from string format:
+  **    width color [dash] cap join
+  **
+  ** Examples:
+  **   #000
+  **   0.5 lime
+  **   2 red [1, 2]
+  **   green round radius
+  **
+  static new fromStr(Str s, Bool checked := true)
+  {
+    try
+    {
+      color := Color.black
+      width := 1f
+      dash  := null
+      cap   := StrokeCap.butt
+      join  := StrokeJoin.miter
+
+      Str[]? toks
+      bracketStart := s.index("[")
+      if (bracketStart != null)
+      {
+        bracketEnd := s.indexr("]")
+        dash = s[bracketStart+1..<bracketEnd]
+        toks = s[0..<bracketStart].split.addAll(s[bracketEnd+1..-1].split)
+      }
+      else
+      {
+        if (s.isEmpty) throw Err()
+        toks = s.split
+      }
+
+      toks.each |tok|
+      {
+        if (tok.isEmpty) return
+
+        char := tok[0]
+
+        if (char.isDigit || char == '.')  { width = Float.fromStr(tok); return }
+
+        if (char == '#') { color = Color.fromStr(tok); return }
+
+        tryColor := Color.fromStr(tok, false)
+        if (tryColor != null) { color = tryColor; return }
+
+        tryCap := StrokeCap.fromStr(tok, false)
+        if (tryCap != null) { cap = tryCap; return }
+
+        join = StrokeJoin.fromStr(tok, true)
+      }
+
+      return makeFields(color, width, dash, cap, join)
+    }
+    catch (Err e)
+    {
+      if (checked) throw ParseErr("StyledStroke: $s")
+      return null
+    }
+  }
+
+  ** Make with an it-block
+  new make(|This| f) { f(this) }
+
+  ** Make with fields
+  new makeFields(Color color, Float width := 1f, Str? dash := null, StrokeCap cap := StrokeCap.butt, StrokeJoin join := StrokeJoin.miter)
+  {
+    this.color = color
+    this.width = width
+    this.dash  = dash
+    this.cap   = cap
+    this.join  = join
+  }
+
+  ** Color of stroke
+  const Color color := Color.black
+
+  ** Stroke width
+  const Float width := 1f
+
+  ** Dash pattern as comma separated numbers or dashes and gaps.
+  ** If null then render as solid line.
+  const Str? dash
+
+  ** How to render line end caps
+  const StrokeCap cap := StrokeCap.butt
+
+  ** How to render line joins
+  const StrokeJoin join := StrokeJoin.miter
+
+  ** Return false
+  override Bool isColorStroke() { false }
+
+  ** Return true
+  override Bool isStyledStroke() { true }
+
+  ** Raise exception
+  override Color asColorStroke() { color }
+
+  ** Return this
+  override StyledStroke asStyledStroke() { this }
+
+  ** Hash
+  override Int hash() { color.hash.xor(width.hash) }
+
+  ** Equality
+  override Bool equals(Obj? obj)
+  {
+    that := obj as StyledStroke
+    if (that == null) return false
+    return this.color ==  that.color &&
+           this.width ==  that.width &&
+           this.dash  ==  that.dash  &&
+           this.cap   === that.cap   &&
+           this.join  === that.join
+  }
+
+  ** Return this stroke with different width.
+  Stroke toSize(Float newWidth)
+  {
+    if (this.width == newWidth) return this
+    return makeFields(color, newWidth, dash, cap, join)
+  }
+
+  ** Return string format
+  override Str toStr()
+  {
+    s := StrBuf()
+    if (width != 1f) s.join(GeomUtil.formatFloat(width))
+    s.join(color.toStr)
+    if (dash != null) s.add(" [").add(dash).add("]")
+    if (cap !== StrokeCap.butt) s.addChar(' ').add(cap.name)
+    if (join !== StrokeJoin.miter) s.addChar(' ').add(join.name)
+    return s.toStr
+  }
+
+}
+
+**************************************************************************
+** StrokeCap
+**************************************************************************
+
+**
+** Defines how a stroke end cap is rendered
+**
+@Js
+enum class StrokeCap
+{
+  ** Cap is a flat edge with no extension
+  butt,
+
+  ** Cap is a a rounded semi-circle
+  round,
+
+  ** Cap is a half square extension
+  square
+}
+
+**************************************************************************
+** StrokeJoin
+**************************************************************************
+
+**
+** Defines how two stroke lines are joined together
+**
+@Js
+enum class StrokeJoin
+{
+  ** Join using a bevel with angle to smooth transition
+  bevel,
+
+  ** Join using sharp corners
+  miter,
+
+  ** Join using rounded semi-circle (round in SVG terminology)
+  radius
+}
+

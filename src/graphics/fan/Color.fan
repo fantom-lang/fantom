@@ -12,7 +12,7 @@
 **
 @Js
 @Serializable { simple = true }
-const class Color
+const final class Color : Fill, Stroke
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -21,6 +21,9 @@ const class Color
 
   ** Transparent constant with opacity set to zero
   const static Color transparent := make(0, 0f)
+
+  ** Black is #000
+  const static Color black := make(0, 1.0f)
 
   ** Make a new instance with the RGB components masked
   ** together: bits 16-23 red; bits 8-15 green; bits 0-7 blue.
@@ -313,6 +316,32 @@ const class Color
     ahex := (255f * a).toInt.min(255).max(0).toHex(2)
     return "#" + hex + ahex
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Fill
+//////////////////////////////////////////////////////////////////////////
+
+  ** Always return true
+  override Bool isColorFill() { true }
+
+  ** Return this
+  override Color asColorFill() { this }
+
+//////////////////////////////////////////////////////////////////////////
+// Stroke
+//////////////////////////////////////////////////////////////////////////
+
+  ** Always return true
+  override Bool isColorStroke() { true }
+
+  ** Always return false
+  override Bool isStyledStroke() { false }
+
+  ** Return this
+  override Color asColorStroke() { this }
+
+  ** Return default style with only color override
+  override StyledStroke asStyledStroke() { StyledStroke(this) }
 
 //////////////////////////////////////////////////////////////////////////
 // Utils

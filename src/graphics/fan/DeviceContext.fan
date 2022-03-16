@@ -28,6 +28,6 @@ const class DeviceContext
   ** the device for the logical coordinate system
   const Float dpi
 
-  ** Debub string
+  ** Debug string
   override Str toStr() { "DeviceContext { dpi=$dpi }" }
 }

@@ -7,6 +7,7 @@
 **************************************************************************
 
 *Build 1.0.78 (working)*
+- New graphics APIs: Graphics, Stroke, Fill
 - Deprecate Int/Float clip in favor of clamp
 - Duration.clamp
 - WebOutStream.main
