@@ -25,6 +25,9 @@ const final class Color : Fill, Stroke
   ** Black is #000
   const static Color black := make(0, 1.0f)
 
+  ** White is #FFF
+  const static Color white := make(0xFFFFFF, 1.0f)
+
   ** Make a new instance with the RGB components masked
   ** together: bits 16-23 red; bits 8-15 green; bits 0-7 blue.
   ** Alpha should be a float between 1.0 and 0.0.
@@ -428,6 +431,8 @@ const final class Color : Fill, Stroke
 //////////////////////////////////////////////////////////////////////////
 // Predefined
 //////////////////////////////////////////////////////////////////////////
+
+  @NoDoc static Str[] keywords() { byKeyword.keys }
 
   private static const Str:Color byKeyword
   static
