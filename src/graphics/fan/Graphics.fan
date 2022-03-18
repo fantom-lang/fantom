@@ -29,6 +29,9 @@ mixin Graphics
   ** Get font metrics for the given font
   abstract FontMetrics metrics(Font font := this.font)
 
+  ** Begin a new path operation to stroke, fill, or clip a shape.
+  abstract GraphicsPath path()
+
   ** Draw a line with the current stroke and paint.
   abstract This drawLine(Float x1, Float y1, Float x2, Float y2)
 
