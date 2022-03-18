@@ -23,6 +23,10 @@ mixin Graphics
   ** Current stroke defines how the shapes are outlined
   abstract Stroke stroke
 
+  ** Global alpha value used to control opacity for rending.
+  ** The value must be between 0.0 (transparent) and 1.0 (opaue).
+  abstract Float alpha
+
   ** Current font used for drawing text
   abstract Font font
 
