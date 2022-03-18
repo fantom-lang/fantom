@@ -7,15 +7,15 @@
 //
 
 **
-** Fill models the color, image, or pattern used to fill a shape.
+** Paint models the color, image, or pattern used to stroke or fill a shape.
 ** Currently there is only one implementation: `Color`.
 **
 @Js
-const mixin Fill
+const mixin Paint
 {
-  ** Is this solid color fill
-  abstract Bool isColorFill()
+  ** Is this solid color paint
+  abstract Bool isColorPaint()
 
   ** Return as solid Color
-  abstract Color asColorFill()
+  abstract Color asColorPaint()
 }

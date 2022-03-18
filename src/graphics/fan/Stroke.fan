@@ -7,53 +7,28 @@
 //
 
 **
-** Stroke defines the how to paint shape outlines.
-** There are two implementions:
-**   - `Color`: simple color with default styling
-**   - `StyledStroke`: color, width, dash, line cap, line join
-**
-@Js
-const mixin Stroke
-{
-  ** Is this a simple color stroke with defaults for all other styling.
-  abstract Bool isColorStroke()
-
-  ** Is this a stroke that includes custom width, dash, caps, and joins.
-  abstract Bool isStyledStroke()
-
-  ** Return this stroke instance as a Color or raise exception
-  abstract Color asColorStroke()
-
-  ** Return this stroke instance as a StyledStroke or raise exception
-  abstract StyledStroke asStyledStroke()
-}
-
-**************************************************************************
-** StyledStroke
-**************************************************************************
-
-**
-** StyledStroke specifies color, width, dash, line caps, and line joins.
+** Stroke defines the how to render shape outlines.
 **
 @Js
 @Serializable { simple = true }
-const final class StyledStroke : Stroke
+const class Stroke
 {
+  ** Default value is width 1, no dash, butt cap, miter join.
+  static const Stroke defVal := makeFields
+
   **
   ** Parse from string format:
-  **    width color [dash] cap join
+  **    width [dash] cap join
   **
   ** Examples:
-  **   #000
-  **   0.5 lime
-  **   2 red [1, 2]
-  **   green round radius
+  **   0.5
+  **   2 [1, 2]
+  **   round radius
   **
   static new fromStr(Str s, Bool checked := true)
   {
     try
     {
-      color := Color.black
       width := 1f
       dash  := null
       cap   := StrokeCap.butt
@@ -81,18 +56,13 @@ const final class StyledStroke : Stroke
 
         if (char.isDigit || char == '.')  { width = Float.fromStr(tok); return }
 
-        if (char == '#') { color = Color.fromStr(tok); return }
-
-        tryColor := Color.fromStr(tok, false)
-        if (tryColor != null) { color = tryColor; return }
-
         tryCap := StrokeCap.fromStr(tok, false)
         if (tryCap != null) { cap = tryCap; return }
 
         join = StrokeJoin.fromStr(tok, true)
       }
 
-      return makeFields(color, width, dash, cap, join)
+      return makeFields(width, dash, cap, join)
     }
     catch (Err e)
     {
@@ -105,53 +75,43 @@ const final class StyledStroke : Stroke
   new make(|This| f) { f(this) }
 
   ** Make with fields
-  new makeFields(Color color, Float width := 1f, Str? dash := null, StrokeCap cap := StrokeCap.butt, StrokeJoin join := StrokeJoin.miter)
+  new makeFields(Float width := 1f, Str? dash := null, StrokeCap cap := StrokeCap.butt, StrokeJoin join := StrokeJoin.miter)
   {
-    this.color = color
     this.width = width
     this.dash  = dash
     this.cap   = cap
     this.join  = join
   }
 
-  ** Color of stroke
-  const Color color := Color.black
-
-  ** Stroke width
+  ** Stroke width.  Default is 1.
   const Float width := 1f
 
-  ** Dash pattern as comma separated numbers or dashes and gaps.
+  ** Dash pattern as space/comma separated numbers of dashes and gaps.
   ** If null then render as solid line.
   const Str? dash
 
-  ** How to render line end caps
+  ** How to render line end caps.  Default is butt.
   const StrokeCap cap := StrokeCap.butt
 
-  ** How to render line joins
+  ** How to render line joins. Default is miter.
   const StrokeJoin join := StrokeJoin.miter
 
-  ** Return false
-  override Bool isColorStroke() { false }
-
-  ** Return true
-  override Bool isStyledStroke() { true }
-
-  ** Raise exception
-  override Color asColorStroke() { color }
-
-  ** Return this
-  override StyledStroke asStyledStroke() { this }
-
   ** Hash
-  override Int hash() { color.hash.xor(width.hash) }
+  override Int hash()
+  {
+    hash := width.hash
+            .xor(cap.ordinal.shiftl(11))
+            .xor(join.ordinal.shiftl(13))
+    if (dash != null) hash = hash.xor(dash.hash)
+    return hash
+  }
 
   ** Equality
   override Bool equals(Obj? obj)
   {
-    that := obj as StyledStroke
+    that := obj as Stroke
     if (that == null) return false
-    return this.color ==  that.color &&
-           this.width ==  that.width &&
+    return this.width ==  that.width &&
            this.dash  ==  that.dash  &&
            this.cap   === that.cap   &&
            this.join  === that.join
@@ -161,7 +121,7 @@ const final class StyledStroke : Stroke
   Stroke toSize(Float newWidth)
   {
     if (this.width == newWidth) return this
-    return makeFields(color, newWidth, dash, cap, join)
+    return makeFields(newWidth, dash, cap, join)
   }
 
   ** Return string format
@@ -169,10 +129,10 @@ const final class StyledStroke : Stroke
   {
     s := StrBuf()
     if (width != 1f) s.join(GeomUtil.formatFloat(width))
-    s.join(color.toStr)
     if (dash != null) s.add(" [").add(dash).add("]")
     if (cap !== StrokeCap.butt) s.addChar(' ').add(cap.name)
     if (join !== StrokeJoin.miter) s.addChar(' ').add(join.name)
+    if (s.isEmpty) return GeomUtil.formatFloat(width)
     return s.toStr
   }
 

@@ -12,7 +12,7 @@
 **
 @Js
 @Serializable { simple = true }
-const final class Color : Fill, Stroke
+const final class Color : Paint
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -321,30 +321,14 @@ const final class Color : Fill, Stroke
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Fill
+// Paint
 //////////////////////////////////////////////////////////////////////////
 
   ** Always return true
-  override Bool isColorFill() { true }
+  override Bool isColorPaint() { true }
 
   ** Return this
-  override Color asColorFill() { this }
-
-//////////////////////////////////////////////////////////////////////////
-// Stroke
-//////////////////////////////////////////////////////////////////////////
-
-  ** Always return true
-  override Bool isColorStroke() { true }
-
-  ** Always return false
-  override Bool isStyledStroke() { false }
-
-  ** Return this
-  override Color asColorStroke() { this }
-
-  ** Return default style with only color override
-  override StyledStroke asStyledStroke() { StyledStroke(this) }
+  override Color asColorPaint() { this }
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
