@@ -96,7 +96,7 @@ const class Stroke
   ** How to render line joins. Default is miter.
   const StrokeJoin join := StrokeJoin.miter
 
-  ** Hash
+  ** Hash is based on fields
   override Int hash()
   {
     hash := width.hash
@@ -106,7 +106,7 @@ const class Stroke
     return hash
   }
 
-  ** Equality
+  ** Equality is based on fields
   override Bool equals(Obj? obj)
   {
     that := obj as Stroke
@@ -124,7 +124,7 @@ const class Stroke
     return makeFields(newWidth, dash, cap, join)
   }
 
-  ** Return string format
+  ** Return string format - see `fromStr`
   override Str toStr()
   {
     s := StrBuf()

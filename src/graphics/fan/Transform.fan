@@ -13,10 +13,19 @@
 **   |b  d  f|
 **   |0  0  1|
 **
-@NoDoc @Js
+@Js
+@Serializable { simple = true }
 const class Transform
 {
-  ** Parse from SVG string format
+  **
+  ** Parse from SVG string format:
+  **   matrix(<a> <b> <c> <d> <e> <f>)
+  **   translate(<x> [<y>])
+  **   scale(<x> [<y>])
+  **   rotate(<a> [<x> <y>])
+  **   skewX(<a>)
+  **   skewY(<a>)
+  **
   static new fromStr(Str s, Bool checked := true)
   {
     try
@@ -55,13 +64,13 @@ const class Transform
     }
   }
 
-  ** Translate factory
+  ** Translate transform
   static Transform translate(Float tx, Float ty)
   {
     make(1f, 0f, 0f, 1f, tx, ty)
   }
 
-  ** Scale
+  ** Scale transform
   static Transform scale(Float sx, Float sy)
   {
     make(sx, 0f, 0f, sy, 0f, 0f)
@@ -110,6 +119,18 @@ const class Transform
          this.b * that.e + this.d * that.f + this.f * 1f)  // f
   }
 
+  ** Hash code is based on string format
+  override Int hash() { toStr.hash }
+
+  ** Equality is based on string format
+  override Bool equals(Obj? obj)
+  {
+    that := obj as Transform
+    if (that == null) return false
+    return this.toStr == that.toStr
+  }
+
+  ** Return in 'matrix(<a> <b> <c> <d> <e> <f>)' format
   override Str toStr()
   {
     s := StrBuf()

@@ -53,6 +53,8 @@ class TransformTest : Test
     //echo("-- $t")
     //echo("   matrix($expected)")
     verifyEq(t.toStr, "matrix($expected)")
+    verifyEq(t, Transform(t.toStr))
+    verifyEq(t, Buf().writeObj(t).flip.readObj)
   }
 }
 
