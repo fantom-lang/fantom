@@ -60,6 +60,9 @@ class Win
   ** Return the Doc instance for this window.
   native Doc doc()
 
+  ** Return current text selection model.
+  @NoDoc native TextSel sel()
+
   ** Add new CSS style rules to this page.
   native Void addStyleRules(Str rules)
 
