@@ -36,6 +36,10 @@ mixin GraphicsPath
   ** the first and second control points; x and y specify the end point.
   abstract This curveTo(Float cp1x, Float cp1y, Float cp2x, Float cp2y, Float x, Float y)
 
+  ** Add a quadratic Bézier curve to the path.  The cpx and cpy specify
+  ** the control point; the x and y specify the end point.
+  abstract This quadTo(Float cpx, Float cpy, Float x, Float y)
+
   ** Close the path by add a line from current point back to starting point.
   abstract This close()
 
