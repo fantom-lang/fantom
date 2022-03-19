@@ -45,6 +45,11 @@ mixin Graphics
   ** Fill a rectangle with the current paint.
   abstract This fillRect(Float x, Float y, Float w, Float h)
 
+  ** Convenience to clip the given the rectangle.  This sets the
+  ** clipping area to the intersection of the current clipping region
+  ** and the specified rectangle.
+  abstract This clipRect(Float x, Float y, Float w, Float h)
+
   ** Draw a rectangle with rounded corners with the current stroke and paint.
   ** The ellipse of the corners is specified by wArc and hArc.
   abstract This drawRoundRect(Float x, Float y, Float w, Float h, Float wArc, Float hArc)

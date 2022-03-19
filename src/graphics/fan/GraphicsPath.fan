@@ -32,6 +32,12 @@ mixin GraphicsPath
   ** Add a line to the path from current point to given point.
   abstract This lineTo(Float x, Float y)
 
+  ** Create circular arc centered at x, y with given radius.  The start
+  ** angle and sweep angle are measured in degrees.  East is 0°, north 90°,
+  ** west is 180°, and south is 270°.  Positive sweeps are counterclockwise
+  ** and negative sweeps are clockwise.
+  abstract This arc(Float x, Float y, Float radius, Float start, Float sweep)
+
   ** Add a Bézier curve to the path.  The cp1 and cp2 parameters specify
   ** the first and second control points; x and y specify the end point.
   abstract This curveTo(Float cp1x, Float cp1y, Float cp2x, Float cp2y, Float x, Float y)
