@@ -17,7 +17,7 @@ class Build : BuildPod
   new make()
   {
     podName  = "gfx"
-    summary  = "Graphics API"
+    summary  = "Graphics support for FWT"
     meta     = ["org.name":     "Fantom",
                 "org.uri":      "https://fantom.org/",
                 "proj.name":    "Fantom Core",

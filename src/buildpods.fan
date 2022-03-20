@@ -45,6 +45,7 @@ class Build : BuildGroup
       `sql/build.fan`,
       `email/build.fan`,
       `graphics/build.fan`,
+      `graphicsJava/build.fan`,
       `gfx/build.fan`,
       `compilerDoc/build.fan`,
       `dom/build.fan`,

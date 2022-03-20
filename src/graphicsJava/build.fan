@@ -1,23 +1,23 @@
 #! /usr/bin/env fan
 //
-// Copyright (c) 2017, Brian Frank and Andy Frank
+// Copyright (c) 2022, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   17 May 2017  Brian Frank  Creation
+//   28 Feb 2022  Brian Frank  Creation
 //
 
 using build
 
 **
-** Build: graphics
+** Build: graphicsJava
 **
 class Build : BuildPod
 {
   new make()
   {
-    podName  = "graphics"
-    summary  = "Graphics API"
+    podName = "graphicsJava"
+    summary = "Server and desktop Java2D graphics"
     meta     = ["org.name":     "Fantom",
                 "org.uri":      "https://fantom.org/",
                 "proj.name":    "Fantom Core",
@@ -25,8 +25,9 @@ class Build : BuildPod
                 "license.name": "Academic Free License 3.0",
                 "vcs.name":     "Git",
                 "vcs.uri":      "https://github.com/fantom-lang/fantom"]
-    depends  = ["sys 1.0", "concurrent 1.0"]
-    srcDirs  = [`fan/`, `test/`]
-    docSrc   = true
+    depends = ["sys 1.0",
+               "concurrent 1.0",
+               "graphics 1.0"]
+    srcDirs = [`fan/java2D/`]
   }
 }
