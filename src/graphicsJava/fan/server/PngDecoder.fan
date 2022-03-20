@@ -7,11 +7,12 @@
 //
 
 using concurrent
+using graphics
 
 **
-** Decodes a PNG file into an `Image`
+** Decodes a PNG file into a ServerImage
 **
-@NoDoc @Js class PngDecoder
+internal class PngDecoder
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -20,8 +21,9 @@ using concurrent
 
   ** Creates a PNG decoder for the given stream. The stream will
   ** not be closed after decoding.
-  new make(InStream in)
+  new make(Uri uri, InStream in)
   {
+    this.uri = uri
     this.in = in
   }
 
@@ -43,7 +45,7 @@ using concurrent
 // Decode
 //////////////////////////////////////////////////////////////////////////
 
-  Image decode()
+  ServerImage decode()
   {
     // verify magic
     if (magic != in.readS8) throw IOErr("Missing magic")
@@ -66,9 +68,10 @@ using concurrent
     return toImage
   }
 
-  private PngImage toImage()
+  private ServerPngImage toImage()
   {
-    PngImage {
+    ServerPngImage {
+      it.uri = this.uri
       it.mime = PngDecoder.mime
       it.size = Size(width, height)
       it.props = [
@@ -146,6 +149,7 @@ using concurrent
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  private const Uri uri
   private InStream in
   private Str:Obj props := [:]
 
@@ -172,42 +176,11 @@ using concurrent
 ** PngImage
 **************************************************************************
 
-@NoDoc @Js const class PngImage : Image
+internal const class ServerPngImage : ServerImage, PngImage
 {
   new make(|This| f) : super(f) { }
 
-  ** Does the image have an alpha channel
-  Bool hasAlpha() { colorType == 4 || colorType == 6 }
-
-  ** Does the image have a palette index
-  Bool hasPalette() { palette.size > 0 }
-
-  ** Does the image have simple transparency alpha channel
-  Bool hasTransparency() { transparency.size > 0 }
-
-  ** Color type code
-  Int colorType() { props["colorType"] }
-
-  ** Number of color components
-  Int colors() {
-    c := (colorType == 2 || colorType == 6) ? 3 : 1
-    return hasAlpha ? c + 1 : c
-  }
-
-  ** Number of bits in a pixel
-  Int pixelBits() { colors * ((Int)props["colorSpaceBits"]) }
-
-  ** The palette index. The Buf is immutable.
-  Buf palette() { props["palette"] }
-
-  ** The simple transparency alpha channel. The Buf is immutable.
-  Buf transparency() { props["transparency"] }
-
-  ** Raw image data. The Buf is immutable.
-  Buf imgData() { props["imgData"] }
-
-  ** Get decompressed pixels. The Buf is immutable.
-  Buf pixels()
+  override Buf pixels()
   {
     if (pixelsRef.val != null) return pixelsRef.val->seek(0)
 

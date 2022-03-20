@@ -7,11 +7,13 @@
 //
 
 **
+** DO NOT USE - this design is deprecated in favor of Graphics.metrics
+**
 ** DeviceContext models the target device for graphical rendering.
 ** Typically this maps to a display, image buffer, printer, or output
 ** format such as PDF.
 **
-@Js
+@NoDoc @Js
 const class DeviceContext
 {
   ** Return default device context for the VM which is typically

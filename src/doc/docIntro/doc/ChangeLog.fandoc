@@ -7,7 +7,9 @@
 **************************************************************************
 
 *Build 1.0.78 (working)*
-- New graphics APIs: Graphics, Stroke, Fill
+- New graphics APIs: GraphicsEnv, Graphics, Image, Stroke, Paint
+- Deprecate Font.metrics & DeviceContext in favor of Graphics.metrics
+- New Java2D graphics implementation
 - Deprecate Int/Float clip in favor of clamp
 - Duration.clamp
 - WebOutStream.main

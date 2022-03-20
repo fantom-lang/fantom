@@ -140,13 +140,6 @@ const class Font
   ** Style as normal, italic, or oblique
   const FontStyle style := FontStyle.normal
 
-  ** Normalize to the closest font with metrics
-  Font normalize()
-  {
-    if (data != null) return this
-    return FontData.normalize(this)
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
@@ -208,8 +201,24 @@ const class Font
 // Metrics
 //////////////////////////////////////////////////////////////////////////
 
+  **
+  ** DO NOT USE - this design is deprecated in favor of Graphics.metrics
+  **
+  ** Normalize to the closest font with metrics
+  **
+  @NoDoc Font normalize()
+  {
+    if (data != null) return this
+    return FontData.normalize(this)
+  }
+
+  **
+  ** DO NOT USE - this design is deprecated in favor of Graphics.metrics
+  **
   ** Get font metrics for this font.  If this is not a [normalized]`normalize`
   ** font with built-in metrics, then raise UnsupportedErr.
+  **
+  @NoDoc
   FontMetrics metrics(DeviceContext dc := DeviceContext.cur)
   {
     if (data == null) throw UnsupportedErr("FontMetrics not supported: $this")

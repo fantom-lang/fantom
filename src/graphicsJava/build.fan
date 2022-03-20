@@ -28,6 +28,6 @@ class Build : BuildPod
     depends = ["sys 1.0",
                "concurrent 1.0",
                "graphics 1.0"]
-    srcDirs = [`fan/java2D/`]
+    srcDirs = [`fan/server/`, `fan/java2D/`]
   }
 }

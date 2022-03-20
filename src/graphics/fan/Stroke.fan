@@ -66,7 +66,7 @@ const class Stroke
     }
     catch (Err e)
     {
-      if (checked) throw ParseErr("StyledStroke: $s")
+      if (checked) throw ParseErr("Stroke: $s")
       return null
     }
   }

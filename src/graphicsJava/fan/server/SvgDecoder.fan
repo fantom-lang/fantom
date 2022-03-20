@@ -6,10 +6,12 @@
 //   18 Mar 2021  Brian Frank  Creation
 //
 
+using graphics
+
 **
-** Decodes a SVG file into an `Image`
+** Decodes a SVG file into a ServerImage
 **
-@NoDoc @Js class SvgDecoder
+internal class SvgDecoder
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -18,8 +20,9 @@
 
   ** Creates a SVG decoder for the given stream. The stream will
   ** not be closed after decoding.
-  new make(InStream in)
+  new make(Uri uri, InStream in)
   {
+    this.uri = uri
     this.in = in
   }
 
@@ -43,7 +46,7 @@
 // Decode
 //////////////////////////////////////////////////////////////////////////
 
-  Image decode()
+  ServerImage decode()
   {
     width  := 100f
     height := 100f
@@ -63,8 +66,9 @@
       height = Float(nums[3])
     }
 
-    return Image
+    return ServerImage
     {
+      it.uri   = this.uri
       it.mime  = SvgDecoder.mime
       it.size  = Size(width, height)
       it.props = Str:Obj[:]
@@ -75,6 +79,7 @@
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  private const Uri uri
   private InStream in
 }
 
