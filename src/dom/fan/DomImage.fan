@@ -11,8 +11,8 @@ using graphics
 **
 ** Dom implementation of the Image API backed by an HTMLImageElement
 **
-@NoDoc @Js
-const class DomImage : Image
+@Js
+internal const class DomImage : Image
 {
   new make(Uri uri, MimeType mime, Elem elem)
   {

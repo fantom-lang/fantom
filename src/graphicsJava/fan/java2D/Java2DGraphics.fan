@@ -161,8 +161,8 @@ class Java2DGraphics : Graphics
     }
   }
 
-  ** Get font metrics
-  override FontMetrics metrics(Font font := this.font)
+  ** Get font metrics for current font
+  override FontMetrics metrics()
   {
     Java2DFontMetrics(g.getFontMetrics)
   }

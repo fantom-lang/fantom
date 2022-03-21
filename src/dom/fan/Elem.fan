@@ -181,6 +181,10 @@ class Elem
   ** of Elem is aligned to bottom of the visible area.
   native This scrollIntoView(Bool alignToTop := true)
 
+  ** Paint a '<canvas>' element.  The given callback is invoked
+  ** with a graphics context to perform the rendering operation.
+  Void renderCanvas(|Graphics| f) { CanvasGraphics.render(this, f) }
+
 //////////////////////////////////////////////////////////////////////////
 // Tree
 //////////////////////////////////////////////////////////////////////////

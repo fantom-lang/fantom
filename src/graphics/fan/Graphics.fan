@@ -30,8 +30,8 @@ mixin Graphics
   ** Current font used for drawing text
   abstract Font font
 
-  ** Get font metrics for the given font
-  abstract FontMetrics metrics(Font font := this.font)
+  ** Get font metrics for the current font
+  abstract FontMetrics metrics()
 
   ** Begin a new path operation to stroke, fill, or clip a shape.
   abstract GraphicsPath path()
