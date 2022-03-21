@@ -26,10 +26,6 @@ class Build : BuildGroup
     [
       `compilerJs/build.fan`,
       `concurrent/build.fan`,
-      `testSys/build.fan`,
-      `testNative/build.fan`,
-      `testCompiler/build.fan`,
-      `testJava/build.fan`,
       `math/build.fan`,
       `asn1/build.fan`,
       `crypto/build.fan`,
@@ -50,7 +46,6 @@ class Build : BuildGroup
       `compilerDoc/build.fan`,
       `dom/build.fan`,
       `domkit/build.fan`,
-      `testDomkit/build.fan`,
       `fwt/build.fan`,
       `webfwt/build.fan`,
       `icons/build.fan`,
@@ -58,6 +53,12 @@ class Build : BuildGroup
       `xml/build.fan`,
       `doc/build.fan`,
       `cryptoJava/build.fan`,
+      `testSys/build.fan`,
+      `testNative/build.fan`,
+      `testCompiler/build.fan`,
+      `testJava/build.fan`,
+      `testGraphics/build.fan`,
+      `testDomkit/build.fan`,
     ]
   }
 

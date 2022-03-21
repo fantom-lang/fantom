@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+<g id="color">
+  <g transform='rotate(45 66.361 98.755)' fill='none' fill-rule='evenodd'>
+   <rect stroke='#333' stroke-width='3' fill='#ECF0F1' y='59.599' width='80' height='20' rx='2'/>
+   <path stroke='#333' stroke-width='3' fill='#EFD7B1' d='M5 79.599h70v42H5z'/>
+   <path d='M5 59.599c0-22.358 22-13 22-22.358V13.099C27 4.892 33 0 40 0s13 4.882 13 13.099V37.24c0 9.358 22 0 22 22.358H5z' stroke='#333' stroke-width='3' fill='#16A085'/>
+   <circle fill='#333' cx='40' cy='13.599' r='3'/>
+   <path stroke='#333' stroke-width='3' stroke-linecap='square' d='M18 101.599v19m14-29v29m14-19v19m14-29v29'/>
+  </g>
+</g>
+</svg>
