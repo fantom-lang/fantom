@@ -233,8 +233,10 @@ const class Font
 ** FontMetrics
 **************************************************************************
 
-** FontMetrics represents font size information for a
-** specific `Font` and `DeviceContext`.
+**
+** FontMetrics represents font size information for a `Font` within
+** a specific graphics context.
+**
 @Js
 abstract const class FontMetrics
 {
@@ -258,8 +260,11 @@ abstract const class FontMetrics
   abstract Float width(Str s)
 }
 
-** FontMetrics represents font size information for a
-** specific `Font` and `DeviceContext`.
+**************************************************************************
+** FontDataMetrics
+**************************************************************************
+
+** FontDataMetrics implements metrics via internal, predefined FontData
 @Js
 internal const class FontDataMetrics : FontMetrics
 {

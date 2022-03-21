@@ -30,9 +30,6 @@ internal class SvgDecoder
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  ** SVG mime type
-  static const MimeType mime := MimeType("image/svg+xml")
-
   ** Returns true if Buf starts looks like XML
   static Bool isSvg(Buf buf)
   {
@@ -69,7 +66,7 @@ internal class SvgDecoder
     return ServerImage
     {
       it.uri   = this.uri
-      it.mime  = SvgDecoder.mime
+      it.mime  = Image.mimeSvg
       it.size  = Size(width, height)
       it.props = Str:Obj[:]
     }

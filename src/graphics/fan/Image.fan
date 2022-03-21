@@ -31,10 +31,32 @@ mixin Image
   ** If the image has not been loaded yet, then return 0,0.
   abstract Size size()
 
+  ** Get the size width
+  Float w() { size.w }
+
+  ** Get the size height
+  Float h() { size.h }
+
   ** Image properties
   **  - 'colorSpace' (Str) - the image color space (e.g.RGB, RGBA, CMYK)
   **  - 'colorSpaceBits' (Int) - bits-per-channel of the color space
   @NoDoc @Operator abstract Obj? get(Str prop)
+
+  ** Map file extension to mime type
+  @NoDoc static MimeType mimeForExt(Str ext)
+  {
+    ext = ext.lower
+    if (ext == "svg") return mimeSvg
+    if (ext == "png") return mimePng
+    if (ext == "jpg" || ext == "jpeg") return mimeJpeg
+    if (ext == "gif") return mimeGif
+    return MimeType.forExt(ext) ?: MimeType("image/unknown")
+  }
+
+  @NoDoc static const MimeType mimePng  := MimeType("image/png")
+  @NoDoc static const MimeType mimeGif  := MimeType("image/gif")
+  @NoDoc static const MimeType mimeJpeg := MimeType("image/jpeg")
+  @NoDoc static const MimeType mimeSvg  := MimeType("image/svg+xml")
 }
 
 **************************************************************************

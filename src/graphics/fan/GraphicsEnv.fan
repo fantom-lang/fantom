@@ -39,7 +39,7 @@ const mixin GraphicsEnv
 
   ** Get an image for the given uri.  The uri is the unique key for the image
   ** in this environment.  If file data is null, then asynchronously load and
-  ** cache the image on the first load.  Supported formats include: PNG, GIF,
+  ** cache the image on the first load.  Standard supported formats are: PNG,
   ** JPEG, and SVG.
   abstract Image image(Uri uri, Buf? data := null)
 

@@ -65,6 +65,17 @@ mixin Graphics
   ** stroke/outline text).
   abstract This drawText(Str s, Float x, Float y)
 
+  ** Draw an image at the given coordinate for the top/left corner.
+  ** If the width or height does not correspond to the image's natural size
+  ** then the image is scaled to fit.
+  abstract This drawImage(Image img, Float x, Float y, Float w := img.w, Float h := img.h)
+
+  ** Draw a rectangular region of the source image to the drawing surface.
+  ** The src rectangle defines the subregion of the source image to use.  The
+  ** dst rectangle identifies the destination location.  If the src size
+  ** does not correspond to the dst size, then the image is scaled to fit.
+  abstract This drawImageRegion(Image img, Rect src, Rect dst)
+
   ** Translate the coordinate system to the new origin.
   ** This call is a convenience for:
   **   transform(Transform.translate(x, y))
@@ -80,5 +91,8 @@ mixin Graphics
 
   ** Pop the graphics stack and reset the state to the the last `push`.
   abstract This pop()
+
+  ** Dispose of this graphics context and release underyling OS resources.
+  abstract Void dispose()
 
 }

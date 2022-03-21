@@ -228,6 +228,42 @@ class Java2DGraphics : Graphics
     return this
   }
 
+  ** Draw an image at the given coordinate for the top/left corner.
+  ** If the width or height does not correspond to the image's natural size
+  ** then the image is scaled to fit.  Also see `copyImage`.
+  override This drawImage(Image img, Float x, Float y, Float w := img.w, Float h := img.h)
+  {
+    awt := ((Java2DImage)img).awt
+    if (awt == null) return this
+
+    g.drawImage(awt, x.toInt, y.toInt, w.toInt, h.toInt, null)
+    return this
+  }
+
+  ** Copy a rectangular region of the source image to the drawing surface.
+  ** The src rectangle defines the region of the soure image to copy.  The
+  ** dst rectangle identifies the destination location.  If the src size
+  ** does not correspond to the dst size, then the image is scaled to fit.
+  ** Also see `drawImage`.
+  override This drawImageRegion(Image img, Rect src, Rect dst)
+  {
+    awt := ((Java2DImage)img).awt
+    if (awt == null) return this
+
+    dx1 := dst.x.toInt
+    dx2 := dx1 + dst.w.toInt
+    dy1 := dst.y.toInt
+    dy2 := dy1 + dst.h.toInt
+
+    sx1 := src.x.toInt
+    sx2 := sx1 + src.w.toInt
+    sy1 := src.y.toInt
+    sy2 := sy1 + src.h.toInt
+
+    g.drawImage(awt, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null)
+    return this
+  }
+
   ** Translate the coordinate system to the new origin
   override This translate(Float x, Float y)
   {
@@ -286,6 +322,12 @@ class Java2DGraphics : Graphics
     this.stroke = s.stroke
     this.alpha  = s.alpha
     this.font   = s.font
+  }
+
+  ** Dispose of this graphics context and release underyling OS resources.
+  override Void dispose()
+  {
+    g.dispose
   }
 
   private Graphics2D g

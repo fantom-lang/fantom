@@ -36,9 +36,6 @@ internal class JpegDecoder
   ** JPEG magic number
   static const Int magic := 0xff_d8
 
-  ** JPEG mime type
-  static const MimeType mime := MimeType("image/jpeg")
-
   ** Returns true if Buf starts with `magic` number.
   ** The buf is not modified.
   static Bool isJpeg(Buf buf) { magic == buf[0..<2].readU2() }
@@ -107,7 +104,7 @@ internal class JpegDecoder
 
     return ServerImage {
       it.uri   = this.uri
-      it.mime  = JpegDecoder.mime
+      it.mime  = Image.mimeJpeg
       it.size  = size
       it.props = props.toImmutable
     }

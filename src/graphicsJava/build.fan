@@ -29,5 +29,6 @@ class Build : BuildPod
                "concurrent 1.0",
                "graphics 1.0"]
     srcDirs = [`fan/server/`, `fan/java2D/`]
+    docApi  = false
   }
 }
