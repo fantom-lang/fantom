@@ -82,14 +82,14 @@ fan.dom.WinPeer.prototype.doc = function(self)
   return this.$doc;
 }
 
-fan.dom.WinPeer.prototype.sel = function(self)
+fan.dom.WinPeer.prototype.textSel = function(self)
 {
-  if (this.$sel == null)
+  if (this.$textSel == null)
   {
-    this.$sel = fan.dom.TextSel.make();
-    this.$sel.peer.sel = this.win.getSelection();
+    this.$textSel = fan.dom.TextSel.make();
+    this.$textSel.peer.sel = this.win.getSelection();
   }
-  return this.$sel;
+  return this.$textSel;
 }
 
 fan.dom.WinPeer.prototype.addStyleRules = function(self, rules)
