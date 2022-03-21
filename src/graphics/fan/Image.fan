@@ -32,10 +32,10 @@ mixin Image
   abstract Size size()
 
   ** Get the size width
-  Float w() { size.w }
+  virtual Float w() { size.w }
 
   ** Get the size height
-  Float h() { size.h }
+  virtual Float h() { size.h }
 
   ** Image properties
   **  - 'colorSpace' (Str) - the image color space (e.g.RGB, RGBA, CMYK)

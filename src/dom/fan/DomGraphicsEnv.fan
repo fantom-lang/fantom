@@ -6,6 +6,7 @@
 //   20 Mar 2022  Brian Frank  Creation
 //
 
+using concurrent
 using graphics
 
 **
@@ -16,6 +17,28 @@ const class DomGraphicsEnv : GraphicsEnv
 {
   override Image image(Uri uri, Buf? data := null)
   {
-    throw UnsupportedErr()
+    // get from cache
+    image := images.get(uri) as DomImage
+    if (image != null) return image
+
+    // create DomImage
+    image = loadImage(uri)
+
+    // safely add to the cache
+    return images.getOrAdd(uri, image)
   }
+
+  private DomImage loadImage(Uri uri)
+  {
+    mime := Image.mimeForExt(uri.ext ?: "")
+    elem := Elem("img")
+    elem->src = uri.encode
+    return DomImage(uri, mime, elem)
+  }
+
+  private const ConcurrentMap images := ConcurrentMap()
 }
+
+
+
+
