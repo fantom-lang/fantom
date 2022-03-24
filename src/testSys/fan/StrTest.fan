@@ -679,6 +679,31 @@ echo("-- $s[$r] => " + s.getRange(r) + " ?= " + expected)
   }
 
 //////////////////////////////////////////////////////////////////////////
+// EachWhile
+//////////////////////////////////////////////////////////////////////////
+
+  Void testEachWhile()
+  {
+    chars := Int[,]
+    indices := Int[,]
+
+    r := "abcd".eachWhile |ch| { chars.add(ch); return ch == 'x' ? "break" : null }
+    verifyEq(chars, ['a', 'b', 'c', 'd'])
+    verifyEq(r, null)
+
+    chars.clear
+    r = "abcd".eachWhile |ch| { chars.add(ch); return ch == 'c' ? "break" : null }
+    verifyEq(chars, ['a', 'b', 'c'])
+    verifyEq(r, "break")
+
+    chars.clear
+    r = "abcd".eachWhile |ch, i| { chars.add(ch); indices.add(i); return i == 1 ? "break" : null }
+    verifyEq(chars, ['a', 'b'])
+    verifyEq(indices, [0, 1])
+    verifyEq(r, "break")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Any/All
 //////////////////////////////////////////////////////////////////////////
 

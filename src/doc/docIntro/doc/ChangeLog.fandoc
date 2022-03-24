@@ -13,6 +13,7 @@
 - Deprecate Font.metrics & DeviceContext in favor of Graphics.metrics
 - Deprecate Int/Float clip in favor of clamp
 - Duration.clamp
+- Str.eachWhile
 - WebOutStream.main
 - dom: ResizeObserver
 

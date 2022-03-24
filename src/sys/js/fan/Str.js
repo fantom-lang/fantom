@@ -169,7 +169,7 @@ fan.sys.Str.each = function(self, f)
   if (f.m_params.size() == 1)
   {
     for (var i=0; i<len; i++)
-      f.call(self.charCodeAt(i), i);
+      f.call(self.charCodeAt(i));
   }
   else
   {
@@ -183,13 +183,35 @@ fan.sys.Str.eachr = function(self, f)
   if (f.m_params.size() == 1)
   {
     for (var i=self.length-1; i>=0; i--)
-      f.call(self.charCodeAt(i), i);
+      f.call(self.charCodeAt(i));
   }
   else
   {
     for (var i=self.length-1; i>=0; i--)
       f.call(self.charCodeAt(i), i);
   }
+}
+
+fan.sys.Str.eachWhile = function(self, f)
+{
+  var len = self.length;
+  if (f.m_params.size() == 1)
+  {
+    for (var i=0; i<len; i++)
+    {
+      var r = f.call(self.charCodeAt(i));
+      if (r != null) return r;
+    }
+  }
+  else
+  {
+    for (var i=0; i<len; i++)
+    {
+      var r = f.call(self.charCodeAt(i), i);
+      if (r != null) return r;
+    }
+  }
+  return null;
 }
 
 fan.sys.Str.any = function(self, f)

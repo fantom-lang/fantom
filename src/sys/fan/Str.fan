@@ -252,6 +252,14 @@ const final class Str
   Void eachr(|Int ch, Int index| c)
 
   **
+  ** Iterate each character in the string until the function returns
+  ** non-null.  If function returns non-null, then break the iteration
+  ** and return the resulting object.  Return null if the function
+  ** returns null for every item.
+  **
+  Obj? eachWhile(|Int ch, Int index->Obj?| c)
+
+  **
   ** Return true if c returns true for any of the characters in
   ** this string.  If this string is empty, return false.
   **
