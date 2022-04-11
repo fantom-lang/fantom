@@ -15,6 +15,7 @@
 - Duration.clamp
 - Str.eachWhile
 - WebOutStream.main
+- ConcurrentMap.getAndSet
 - dom: ResizeObserver
 
 *Build 1.0.77 (2 Sep 2021)*

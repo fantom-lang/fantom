@@ -48,6 +48,10 @@ class ConcurrentMapTest : Test
     verifyEq(m.getOrAdd("a", 10), 10)
     verifyEq(m.getOrAdd("a", 20), 10)
 
+    verifyEq(m.getAndSet("a", 30), 10)
+    verifyEq(m.getAndSet("a", 40), 30)
+    verifyEq(m.getAndSet("b", 50), null)
+
     m.setAll(["a": 5, "b": 10, "c": 15])
     verifyConcurrentMap(m, Str:Int["a":5, "b":10, "c":15])
     m.setAll(["a": 5, "b": 10, "c": 15].toImmutable)
@@ -58,6 +62,9 @@ class ConcurrentMapTest : Test
     verifyErr(NotImmutableErr#) { mut.add("foo", Buf()) }
     verifyErr(NotImmutableErr#) { mut.set("foo", Str[,]) }
     verifyErr(NotImmutableErr#) { mut.add("foo", Str[,]) }
+    verifyErr(NotImmutableErr#) { mut.getAndSet("foo", Str[,]) }
+    verifyErr(NotImmutableErr#) { mut.getOrAdd("foo", Str[,]) }
+    verifyEq(mut.size, 0)
   }
 
   Void verifyConcurrentMap(ConcurrentMap m, Str:Obj expected)

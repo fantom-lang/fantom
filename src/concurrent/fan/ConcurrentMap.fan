@@ -30,6 +30,10 @@ native const final class ConcurrentMap
   ** Set a value by key
   @Operator Void set(Obj key, Obj val)
 
+  ** Set a value by key and return old value.  Return the old value
+  ** mapped by the key or null if it is not currently mapped.
+  Obj? getAndSet(Obj key, Obj val)
+
   ** Add a value by key, raise exception if key was already mapped
   Void add(Obj key, Obj val)
 
