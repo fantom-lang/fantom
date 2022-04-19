@@ -318,7 +318,6 @@ using graphics
     this.numCols.times |c|
     {
       cw := ucolw[c] ?: view.colWidth(c)
-      if (c == numCols-1 && hasHpbut) cw += hpbutw + 4
       this.colx.add(cx)
       this.colw.add(cw)
       cx += cw
