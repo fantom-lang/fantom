@@ -18,6 +18,7 @@ obj/Release/
 .idea/
 
 # general
+/readme.html
 /adm/pngcrush
 
 # domkit

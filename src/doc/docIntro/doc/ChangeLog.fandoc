@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.78 (working)*
+*Build 1.0.78 (26 Apr 2022)*
 - New graphics APIs: GraphicsEnv, Graphics, Image, Stroke, Paint
 - Canvas rendering via Elem.renderCanvas
 - New Java2D graphics implementation
