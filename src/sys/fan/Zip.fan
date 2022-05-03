@@ -94,6 +94,14 @@ final class Zip
   File? readNext()
 
   **
+  ** Call the specified function for every entry in the zip. Use the File's
+  ** input stream to read the file contents.  Some file meta-data such as size
+  ** may not be available. Throw UnsupportedErr if not reading from an input
+  ** stream.
+  **
+  Void readEach(|File| c)
+
+  **
   ** Append a new file to the end of this zip file and return an OutStream
   ** which may be used to write the file contents.  The Uri must not contain
   ** a query or fragment; it may optionally start with a slash.  Closing the

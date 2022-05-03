@@ -108,6 +108,14 @@ class ZipTest : Test
       verify([`/foo.txt`, `/path/bar.hex`].contains(entry.uri))
       verify(entry.readAllBuf.size >= 8)
     }
+
+    // readEach
+    t := Uri[,]
+    z = Zip.read(buf.seek(0).in)
+    z.readEach |e| { t.add(e.uri) }
+    verifyEq(t.size, 2)
+    verifyEq(t[0], `/foo.txt`)
+    verifyEq(t[1], `/path/bar.hex`)
   }
 
   Void write(Zip z)

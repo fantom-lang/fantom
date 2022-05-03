@@ -123,6 +123,15 @@ public final class Zip
     }
   }
 
+  public void readEach(Func f)
+  {
+    File file;
+    while ((file = readNext()) != null)
+    {
+      f.call(file);
+    }
+  }
+
   public OutStream writeNext(Uri path) { return writeNext(path, DateTime.now(), null); }
   public OutStream writeNext(Uri path, DateTime modifyTime) { return writeNext(path, modifyTime, null); }
   public OutStream writeNext(Uri path, DateTime modifyTime, Map opts)
