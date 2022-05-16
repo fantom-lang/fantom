@@ -116,7 +116,8 @@ public class TcpSocketPeer
     SSLParameters params = socket.getSSLParameters();
 
     // supported SSL protocols
-    params.setProtocols(sslProtocols);
+    if (!clientMode)
+      params.setProtocols(sslProtocols);
 
     // application protocols
     final List protocols = (List)this.config.tlsParams.get("appProtocols");
@@ -125,7 +126,7 @@ public class TcpSocketPeer
     socket.setSSLParameters(params);
   }
 
-  // SSL protocols we want to enable
+  // SSL protocols we want to enable for a server
   private static String[] sslProtocols;
   static
   {
