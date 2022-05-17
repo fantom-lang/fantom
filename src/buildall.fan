@@ -159,6 +159,7 @@ class Build : BuildGroup
         if (n == "tmp") return false
         if (n == "temp") return false
         if (n.startsWith("test") && f.ext == "pod") return false
+        if (f.ext == "jar" && f.path[-2] == "ext") return false
         if (f.isDir) log.info("  $path")
         return true
       }
