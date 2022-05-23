@@ -81,12 +81,9 @@ sent to it, so it doesn't really matter what we pass.
 
 Message Passing [#messages]
 ***************************
-Actors communicate by sending each other messages.  Messages
-cannot be used to pass mutable state between actors.  If a message
-is [immutable]`Concurrency#immutability` then it passed by reference.
-Otherwise the message must be [serializable]`Serialization` in which
-case a serialized copy of the object is passed.  If a message is
-neither immutable or serializable, then 'IOErr' is thrown.
+Actors communicate by sending each other messages.  Messages passed
+between actors must be [immutable]`Concurrency#immutability` to guarantee
+thread safety.
 
 Messages are sent to an actor using these methods:
   - [send]`concurrent::Actor.send`: enqueues the message immediately
