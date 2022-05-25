@@ -180,7 +180,7 @@ public class JKeyStorePeer
             {
               // create java private key
               final JPrivKeyEntry privKeyEntry = (JPrivKeyEntry)entry;
-              final JPrivKey privKey = (JPrivKey)JPrivKey.decode(privKeyEntry.priv.encoded());
+              final JPrivKey privKey = (JPrivKey)JPrivKey.decode(privKeyEntry.priv.encoded(), privKeyEntry.priv.algorithm());
 
               // create java certificate chain
               Cert[] chain = (Cert[])privKeyEntry.certChain.asArray(Cert.class);

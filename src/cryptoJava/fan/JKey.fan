@@ -39,7 +39,7 @@ native abstract const class JKey : Key
 
 native const class JPrivKey : JKey, PrivKey
 {
-  static JPrivKey decode(Buf der)
+  static JPrivKey decode(Buf der, Str algorithm)
 
   override Str  algorithm()
   override Str? format()

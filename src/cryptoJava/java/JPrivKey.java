@@ -24,16 +24,17 @@ final public class JPrivKey extends JKey implements fan.crypto.PrivKey
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  static JPrivKey decode(Buf der)
+  static JPrivKey decode(Buf der, String algorithm)
   {
+    final PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(der.safeArray());
     try
     {
-      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-      return new JPrivKey(keyFactory.generatePrivate(new PKCS8EncodedKeySpec(der.safeArray())));
+      KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
+      return new JPrivKey(keyFactory.generatePrivate(spec));
     }
     catch (Exception e)
     {
-      throw Err.make("Failed to decode private key:\n" + der.toHex());
+      throw Err.make("Failed to decode private key:\n" + der.toHex(), e);
     }
   }
 
@@ -68,7 +69,10 @@ final public class JPrivKey extends JKey implements fan.crypto.PrivKey
   {
     try
     {
-      Signature signer = toSignature(algorithm(), digest);
+      String alg = algorithm();
+      if (alg.equals("EC")) alg = "ECDSA";
+
+      Signature signer = toSignature(alg, digest);
       signer.initSign(priv());
       signer.update(data.unsafeArray(), 0, data.sz());
       return new MemBuf(signer.sign());

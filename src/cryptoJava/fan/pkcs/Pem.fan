@@ -26,6 +26,7 @@ enum class PemLabel
 {
   publicKey("PUBLIC KEY"),
   rsaPrivKey("RSA PRIVATE KEY"),
+  ecPrivKey("EC PRIVATE KEY"),
   privKey("PRIVATE KEY"),
   cert("CERTIFICATE"),
   csr("CERTIFICATE REQUEST")
@@ -102,9 +103,11 @@ class PemReader : PemConst
     {
       case PemLabel.rsaPrivKey:
         der = Buf.fromBase64(rsaP1ToP8(base64))
-        return JPrivKey.decode(der)
+        return JPrivKey.decode(der, "RSA")
       case PemLabel.privKey:
-        return JPrivKey.decode(der)
+        return JPrivKey.decode(der, "RSA")
+      case PemLabel.ecPrivKey:
+        return JPrivKey.decode(der, "EC")
       case PemLabel.publicKey:
         return JPubKey.decode(der)
       case PemLabel.cert:
