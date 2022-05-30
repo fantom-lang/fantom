@@ -120,6 +120,11 @@ final class StrBuf
   This replaceRange(Range r, Str str)
 
   **
+  ** Reverse the contents of this string buffer.  Return this.
+  **
+  This reverse()
+
+  **
   ** Clear the contents of the string buffer so that is
   ** has a size of zero.  Return this.
   **

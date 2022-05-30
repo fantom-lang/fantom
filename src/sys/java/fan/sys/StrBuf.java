@@ -149,6 +149,12 @@ public class StrBuf
     return this;
   }
 
+  public StrBuf reverse()
+  {
+    sb.reverse();
+    return this;
+  }
+
   public StrBuf clear()
   {
     sb.setLength(0);

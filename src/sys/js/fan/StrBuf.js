@@ -126,6 +126,12 @@ fan.sys.StrBuf.prototype.replaceRange = function(r, str)
   return this;
 }
 
+fan.sys.StrBuf.prototype.reverse = function()
+{
+  this.m_str = fan.sys.Str.reverse(this.m_str);
+  return this;
+}
+
 fan.sys.StrBuf.prototype.isEmpty = function()
 {
   return this.m_str.length == 0;
