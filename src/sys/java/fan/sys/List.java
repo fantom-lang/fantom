@@ -624,6 +624,26 @@ public final class List
     }
   }
 
+  public final void eachNotNull(Func f)
+  {
+    if (f.arity() == 1)
+    {
+      for (int i=0; i<size; ++i)
+      {
+        Object value = values[i];
+        if (value != null) f.call(value);
+      }
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+      {
+        Object value = values[i];
+        if (value != null) f.call(value, Long.valueOf(i));
+      }
+    }
+  }
+
   public final void eachRange(Range r, Func f)
   {
     int s = r.startIndex(size);

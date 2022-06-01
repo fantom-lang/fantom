@@ -926,6 +926,25 @@ echo("-- $list [$r] => " + list.getRange(r) + " ?= " + expected)
   }
 
 //////////////////////////////////////////////////////////////////////////
+// EachNotNull
+//////////////////////////////////////////////////////////////////////////
+
+  Void testEachNotNull()
+  {
+    list := Str?[null, "a", null, "b", null, null, "c", null]
+
+    values := Str[,]
+    list.eachNotNull |v| { values.add(v) }
+    verifyEq(values,  ["a", "b", "c"])
+
+    values.clear
+    indices := Int[,]
+    list.eachNotNull |v, i| { values.add(v); indices.add(i) }
+    verifyEq(values,  ["a", "b", "c"])
+    verifyEq(indices, [1, 3, 6])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // EachRange
 //////////////////////////////////////////////////////////////////////////
 

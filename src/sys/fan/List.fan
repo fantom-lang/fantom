@@ -369,6 +369,13 @@ final class List
   Void eachRange(Range r, |V item, Int index| c)
 
   **
+  ** Call the specified function for every non-null item in the
+  ** list starting with index 0 and incrementing up to size-1.  This
+  ** method is readonly safe.
+  **
+  Void eachNotNull(|V item, Int index| c)
+
+  **
   ** Iterate every item in the list starting with index 0 up to
   ** size-1 until the function returns non-null.  If function
   ** returns non-null, then break the iteration and return the

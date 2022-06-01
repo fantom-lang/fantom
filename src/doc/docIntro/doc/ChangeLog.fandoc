@@ -9,6 +9,7 @@
 *Build 1.0.79 (working)*
 - Zip.readEach
 - StrBuf.reverse
+- List.eachNotNull
 
 *Build 1.0.78 (26 Apr 2022)*
 - New graphics APIs: GraphicsEnv, Graphics, Image, Stroke, Paint

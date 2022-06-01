@@ -455,6 +455,23 @@ fan.sys.List.prototype.eachr = function(f)
   }
 }
 
+fan.sys.List.prototype.eachNotNull = function(f)
+{
+  if (f.m_params.size() == 1)
+  {
+    for (var i=0; i<this.m_size; i++)
+      if (this.m_values[i] != null)
+        f.call(this.m_values[i])
+  }
+  else
+  {
+    for (var i=0; i<this.m_size; i++)
+      if (this.m_values[i] != null)
+        f.call(this.m_values[i], i)
+  }
+}
+
+
 fan.sys.List.prototype.eachRange = function(r, f)
 {
   var s = r.$start(this.m_size);
