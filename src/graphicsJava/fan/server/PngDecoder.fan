@@ -179,7 +179,7 @@ internal const class ServerPngImage : ServerImage, PngImage
 
   override Buf pixels()
   {
-    if (pixelsRef.val != null) return pixelsRef.val->seek(0)
+    if (pixelsRef.val != null) return pixelsRef.val
 
     data := Zip.deflateInStream(imgData.in).readAllBuf
     pixelBytes  := pixelBits / 8
