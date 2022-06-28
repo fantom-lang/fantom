@@ -168,7 +168,6 @@ public class JKeyStorePeer
       ks.load(null, pwd);
 
       // fill the store
-      String[] aliases = (String[])self.aliases().asArray(String.class);
       self.entries.each(new Func.Indirect2() {
         public Object call(Object a, Object b)
         {
