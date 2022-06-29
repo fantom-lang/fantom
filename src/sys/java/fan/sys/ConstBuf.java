@@ -69,7 +69,7 @@ public final class ConstBuf
 
   final void pos(long x)
   {
-    throw err();
+    if (x != 0) throw err();
   }
 
   public final int getByte(long pos)
