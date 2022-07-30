@@ -466,12 +466,7 @@ class ResolveExpr : CompilerStep
   private Expr resolveCall(CallExpr call)
   {
     // dynamic calls are just syntactic sugar for Obj.trap
-    if (call.isDynamic)
-    {
-      call.method = ns.objTrap
-      call.ctype = ns.objType.toNullable
-      return call
-    }
+    if (call.isDynamic) return resolveTrapCall(call)
 
     // if this is a constructor chained call to a FFI
     // super-class then route to the FFI bridge to let it handle
@@ -488,6 +483,22 @@ class ResolveExpr : CompilerStep
     }
 
     return CallResolver(compiler, curType, curMethod, call).resolve
+  }
+
+  **
+  ** Resolve dynamic call to trap() method
+  **
+  private Expr resolveTrapCall(CallExpr call)
+  {
+    // resolve to Obj.trap of its override
+    call.method = call.target.ctype.method("trap")
+    call.ctype = call.method.returnType
+
+    // if subclass has covariant return type, then insert cast
+    if (call.ctype.isObj)
+      return call
+    else
+      return TypeCheckExpr.coerce(call, call.ctype) { from = ns.objType.toNullable }
   }
 
   **

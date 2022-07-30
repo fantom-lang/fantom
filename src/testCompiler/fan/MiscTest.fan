@@ -1073,4 +1073,31 @@ class MiscTest : CompilerTest
        ], compiler.warns)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Covariant trap
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCovariantTrap()
+  {
+    compile(
+       "class Foo
+        {
+          Str works() { return \"yeah!\" }
+
+          This self() { return this }
+
+          override Foo? trap(Str n, Obj?[]? args := null) { self }
+
+          Str m()
+          {
+            x := this
+            return x->self.works
+          }
+        }")
+
+    obj := pod.types[0].make
+    method := obj.typeof.method("m") // can't use trap
+    verifyEq(method.callOn(obj, null), "yeah!")
+  }
+
 }
