@@ -11,6 +11,7 @@
 - StrBuf.reverse
 - List.eachNotNull
 - Enhance compiler to allow covariant dynamic calls
+- New util::FileLoc class
 
 *Build 1.0.78 (26 Apr 2022)*
 - New graphics APIs: GraphicsEnv, Graphics, Image, Stroke, Paint
