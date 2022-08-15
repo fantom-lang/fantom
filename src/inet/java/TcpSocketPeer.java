@@ -8,10 +8,15 @@
 package fan.inet;
 
 import fan.sys.*;
+import fan.crypto.*;
+import fanx.interop.*;
 import java.io.*;
 import java.net.*;
 import java.security.*;
 import javax.net.ssl.*;
+
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
 
 public class TcpSocketPeer
 {
@@ -117,7 +122,15 @@ public class TcpSocketPeer
 
     // supported SSL protocols
     if (!clientMode)
+    {
+      // configure client authentication
+      final String clientAuth = (String)this.config.tlsParams.get("clientAuth");
+      if (clientAuth.equals("need")) params.setNeedClientAuth(true);
+      else if (clientAuth.equals("want")) params.setWantClientAuth(true);
+
+      // Configure SSL protocols
       params.setProtocols(sslProtocols);
+    }
 
     // application protocols
     final List protocols = (List)this.config.tlsParams.get("appProtocols");
@@ -334,6 +347,83 @@ public class TcpSocketPeer
   {
     if (in != null) throw Err.make("Must set outBufSize before connection");
     outBufSize = (v == null) ? 0 : v.intValue();
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Certificates
+//////////////////////////////////////////////////////////////////////////
+
+  public String clientAuth(TcpSocket fan)
+  {
+    if (socket instanceof SSLSocket)
+    {
+      if (((SSLSocket)socket).getNeedClientAuth()) return "need";
+      if (((SSLSocket)socket).getWantClientAuth()) return "want";
+    }
+    return "none";
+  }
+
+  public List localCerts(TcpSocket fan)
+  {
+    SSLSession s = sslSession();
+
+    if (s != null)
+    {
+      Certificate[] certs = s.getLocalCertificates();
+      if (certs != null) return makeCertList(certs);
+    }
+    return List.make(Type.find("crypto::Cert"), 0);
+  }
+
+  public List remoteCerts(TcpSocket fan)
+  {
+    SSLSession s = sslSession();
+    if (s != null)
+    {
+      try
+      {
+        return makeCertList(s.getPeerCertificates());
+      }
+      catch (SSLPeerUnverifiedException ignore)
+      {
+        IOErr.make("Remote certificate not verified", ignore).trace();
+      }
+    }
+    return List.make(Type.find("crypto::Cert"), 0);
+  }
+
+  private SSLSession sslSession()
+  {
+    if (socket instanceof SSLSocket)
+    {
+      SSLSession s = ((SSLSocket)socket).getSession();
+      if (s.getCipherSuite() == "SSL_NULL_WITH_NULL_NULL") return null;
+      return s;
+    }
+    return null;
+  }
+
+  private List makeCertList(Certificate[] certs)
+  {
+    try
+    {
+      Crypto crypto = (Crypto)Type.find("cryptoJava::JCrypto").make();
+
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      for (int i = 0; i < certs.length; i++)
+      {
+        X509Certificate cert = (X509Certificate)certs[i];
+        out.write(cert.getEncoded());
+      }
+      byte[] ders = out.toByteArray();
+      InputStream in = new ByteArrayInputStream(ders);
+      return crypto.loadX509(Interop.toFan(in, ders.length));
+    }
+    catch (Exception ignore)
+    {
+      IOErr.make("Error parsing certificates", ignore).trace();
+    }
+    return List.make(Type.find("crypto::Cert"), 0);
   }
 
 //////////////////////////////////////////////////////////////////////////

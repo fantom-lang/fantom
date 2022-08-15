@@ -107,6 +107,11 @@ const class SocketConfig
   ** The following parameters are supported:
   ** - 'appProtocols': ('Str[]') prioritized array of application-layer protocol
   ** names that can be negotiated over the TLS protocol
+  ** - 'clientAuth': ('Str') determine client certificate authentication configuration
+  ** of socket.  Supported values:
+  **   - 'want': Configure socket to request client authentication
+  **   - 'need': Configure socket to require client authentication
+  **   - 'none': (Default) socket does not request or require client authentication
   **
   ** **Experimental - this functionality is subject to change**
   @NoDoc const Str:Obj? tlsParams := [:]
