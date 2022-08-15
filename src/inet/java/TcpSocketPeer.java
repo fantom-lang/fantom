@@ -124,7 +124,7 @@ public class TcpSocketPeer
     if (!clientMode)
     {
       // configure client authentication
-      final String clientAuth = (String)this.config.tlsParams.get("clientAuth");
+      final String clientAuth = (String)this.config.tlsParams.get("clientAuth", "none");
       if (clientAuth.equals("need")) params.setNeedClientAuth(true);
       else if (clientAuth.equals("want")) params.setWantClientAuth(true);
 
