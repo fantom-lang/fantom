@@ -153,6 +153,13 @@ public class Err
 
   public Err trace(OutStream out, Map opt, int indent, Throwable java)
   {
+    // prevent cyclic cause which leads to StackOverflowError
+    if (indent > 10)
+    {
+      out.indent(indent).printLine("WARN: Cyclic trace");
+      return this;
+    }
+
     // map exception to stack trace
     StackTraceElement[] elems = java.getStackTrace();
 
