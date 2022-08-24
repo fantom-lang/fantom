@@ -23,7 +23,12 @@ fan.dom.CanvasGraphics.render = function(canvas, cb)
 {
   var cx = canvas.peer.elem.getContext("2d");
   var g = new fan.dom.CanvasGraphics();
-  cx.translate(0.5, 0.5);  // avoid blurry lines
+  if (!canvas.peer.m_inited)
+  {
+    // first time thru scale by half a pixel to avoid blurry lines
+    canvas.peer.m_inited = true;
+    cx.translate(0.5, 0.5);
+  }
   g.cx = cx;
   cb.call(g);
 }
