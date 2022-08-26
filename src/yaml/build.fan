@@ -8,8 +8,6 @@
 //
 
 using build
-using util
-using web
 
 class Build : build::BuildPod
 {
@@ -36,37 +34,7 @@ class Build : build::BuildPod
   @Target { help = "Download the latest release of https://github.com/yaml/yaml-test-suite into your Fantom installation for testing" }
   Void preptest()
   {
-    // Download latest data tag from yaml/yaml-test-suite
-    reqHeaders := Str:Str[:] { caseInsensitive = true }.add("User-Agent", "Fantom/1.0")
-    tag := (JsonInStream(
-              WebClient(`https://api.github.com/repos/yaml/yaml-test-suite/tags`)
-              { it.reqHeaders = reqHeaders }
-              .getIn)
-            .readJson as [Str:Str][])
-            .find |tag| { tag["name"].startsWith("data") }
-
-    // Find target directory
-    target := Env.cur.homeDir + `etc/yaml/tests/`
-
-    // Delete old directory, if applicable
-    if (target.exists)
-      target.delete
-
-    // Create new directory to unzip to
-    target.create
-    zip := Zip.read(
-            WebClient(tag["zipball_url"].toUri)
-            { it.reqHeaders = reqHeaders }
-            .getIn)
-    File? f
-    while ((f = zip.readNext) != null)
-    {
-      if (f.uri == `/`) continue
-      if (!f.uri.toStr.contains("/tags/") && !f.uri.toStr.contains("/name/"))
-        f.copyTo(target + f.uri.relTo(("/${f.uri.path[0]}/").toUri), ["overwrite":false])
-    }
-
-    echo("SUCCESS: downloaded tests [$target.osPath]")
+    Slot.findMethod("yaml::PrepTest.main").call
   }
 
   @Target { help = "Clear any downloaded tests from your Fantom installation" }

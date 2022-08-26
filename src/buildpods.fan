@@ -51,6 +51,7 @@ class Build : BuildGroup
       `icons/build.fan`,
       `flux/build.fan`,
       `xml/build.fan`,
+      `yaml/build.fan`,
       `doc/build.fan`,
       `cryptoJava/build.fan`,
       `testSys/build.fan`,
