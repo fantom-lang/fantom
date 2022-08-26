@@ -1,0 +1,192 @@
+**************************************************************************
+** title:      Yaml
+** author:     Kiera O'Flynn
+** created:    12 Aug 2022
+** copyright:  Copyright (c) 2022, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+YAML [#yaml]
+************
+This pod provides the means for parsing YAML files into native Fantom
+objects, as well as transforming Fantom objects back into YAML text.
+For information about YAML, see `https://yaml.org/`.
+
+To do this, the intermediate class [YamlObj]`yaml::YamlObj` is used,
+representing an abstract YAML node. Each node has a type
+([YamlScalar]`yaml::YamlScalar`, [YamlList]`yaml::YamlList`, or
+[YamlMap]`yaml::YamlMap`), a tag (e.g. 'tag:yaml.org,2002:str'
+or '?' for an non-specific tag), and content (which, depending on the
+node type, could contain further nodes). This can then be converted
+to a YAML string or a Fantom object.
+
+This parser is fully compliant with the YAML 1.2.2 specification,
+other than disallowing nodes which contain themselves.
+
+Reading YAML documents [#read]
+==============================
+First, [YamlReader.parse]`yaml::YamlReader.parse` parses YAML text
+from a stream into a YamlObj hierarchy. Then,
+[YamlObj.decode]`yaml::YamlObj.decode` finishes the process, transforming
+the YamlObj into a native Fantom object. (See the
+[schema section]`yaml::pod-doc#schemas` on how to fine-tune this process
+if desired.)
+
+Since multiple documents may be contained within a single YAML stream,
+the result of [YamlReader.parse]`yaml::YamlReader.parse` is always a
+YamlList tagged with 'tag:yaml.org,2002:stream' which contains the
+list of documents as content.
+This way, you may call [YamlObj.decode]`yaml::YamlObj.decode` directly
+on the result, and it will correctly output the list of documents as
+a list of Fantom objects.
+
+pre>
+  str := "---
+          - This is
+          - a list!
+          - which is in a different
+            document from...
+          ---
+          foo: 1
+          map:
+          inner list: [a,b,c] # comment
+          "
+  res := YamlReader(str.in).parse.decode
+
+  //output
+  [
+    ["This is", "a list!", "which is in a different document from..."],
+    ["foo": 1, "map": null, "inner list": ["a","b","c"]]
+  ]
+<pre
+
+Writing YAML documents [#write]
+===============================
+This time, the process occurs in reverse: native Fantom objects can
+be converted to YamlObjs, which can then be written to text.
+
+To convert a Fantom object to a YamlObj, use [YamlSchema.encode]`yaml::YamlSchema.encode`
+with a schema of your choice ([YamlSchema.core]`yaml::YamlSchema.core` is recommended).
+Then, to convert that YamlObj to text, call [YamlObj.write]`yaml::YamlObj.write`:
+
+pre>
+  map := ["one key": [1, 2, 3], "multiline\nkey": [:], ["complex", "key"].toImmutable: false]
+  yamlObj := YamlSchema.core.encode(map)
+  yamlObj.write
+
+  //written to standard out
+
+  ? - complex
+    - key
+  : false
+  "multiline\nkey": {}
+  one key:
+   - 1
+   - 2
+   - 3
+<pre
+
+You may also use [YamlObj.toStr]`yaml::YamlObj.toStr` to write this content into a string
+rather than an OutStream. Note that all objects written either way end with a newline character.
+
+Also note that any [serializable]`docLang::Serialization` object can be encoded in YAML:
+
+- A simple is just encoded as a string.
+- A complex is encoded as a map, where each field is a map entry.
+- A collection is encoded like a complex, except there is an additional 'each'
+  field that contains the child items.
+
+The object as a whole is then tagged as '!fan/pod::Type'.
+
+Finally, note that this will always use YAML's block style to write objects, as it is
+not possible for some YAML objects to be written in flow style and still be preserved.
+If you would like to write objects in flow style anyway, use [JsonOutStream]`util::JsonOutStream`.
+
+Schemas [#schemas]
+==================
+Often, YAML documents contain plain, untagged text, such as
+'Text' or '1'. (This is represented in YamlObjs by the '?' tag.)
+Sometimes, we want these to be parsed as something other than
+a Str; for example, we might want '1' to be parsed as an Int,
+'true' as a Bool, and so on.
+
+This is where the [YamlSchema]`yaml::YamlSchema` class comes in.
+Schemas are all about assigning and reading tags. Different
+schemas may assign different tags to '?'-tagged nodes (reading)
+or Fantom objects (writing), and may treat tagged nodes
+differently when creating Fantom objects.
+
+This lists the differences between the built-in schemas
+(where '!!' is short for 'tag:yaml.org,2002:'):
+
+  +-------------+--------------------------+-------------------------------------+
+  | Schema      | Recognized tags => types | Main uses                           |
+  |-------------+--------------------------+-------------------------------------|
+  | YamlSchema. | !!str   => Str           | Useful when you want all text to be |
+  | failsafe    | !!seq   => List          | treated literally. For example,     |
+  |             | !!map   => Map           | empty keys will be treated as ""    |
+  |             |                          | instead of null.                    |
+  |-------------+--------------------------+-------------------------------------|
+  | YamlSchema. | failsafe's tags, +       | Useful if you want to parse JSON-   |
+  | json        | !!null  => null          | like text that may be mixed with    |
+  |             | !!bool  => Bool          | YAML's compact styles. Though it    |
+  |             | !!int   => Int           | won't notice anything style-        |
+  |             | !!float => Float         | related, it will error if there     |
+  |             |                          | are plain, untagged strings that    |
+  |             |                          | are not null/booleans/ints/floats.  |
+  |-------------+--------------------------+-------------------------------------|
+  | YamlSchema. | json's tags              | Useful in most cases (and thus      |
+  | core        |                          | used as the default schema). A wide |
+  |             |                          | variety of patterns can be used     |
+  |             |                          | to indicate non-Str content (e.g.   |
+  |             |                          | ints can be specified in hex or     |
+  |             |                          | octal). Unlike the JsonSchema, the  |
+  |             |                          | CoreSchema accepts plain strings.   |
+  +-------------+--------------------------+-------------------------------------+
+
+See `https://yaml.org/spec/1.2.2/#recommended-schemas` for more information about
+each schema and exact definitions of each pattern.
+
+Examples:
+
+  str := "int: 1
+          empty:
+          plain: Text
+          large float: -2E+05
+          "
+  parsed   := YamlReader(str.in).parse
+  failsafe := YamlSchema.failsafe.decode(parsed)
+  core     := YamlSchema.core.decode(parsed)
+
+  //failsafe content - text is just literal
+  [
+    ["int": "1", "empty": "", "plain": "Text", "large float": "-2E+05"]
+  ]
+
+  //core content - text is interpreted in different ways
+  [
+    ["int": 1, "empty": null, "plain": "Text", "large float": -20000.0f]
+  ]
+
+Creating custom schemas [#custom-schemas]
+-----------------------------------------
+To interpret additional tags, a custom schema must be created.
+To do this, it is recommended that you subclass the CoreSchema class
+(which is itself a subclass of [YamlSchema]`yaml::YamlSchema`), adding
+the extra tags you want from there. This makes it possible to keep all of
+the core schema's tags in use (e.g. '0x05' is still interpreted as the Int '5'
+without further work needed).
+
+YamlSchemas all have three protected helper methods that you inherit:
+'assignTag', 'validate', and 'isRecognized'. The first is meant to be used
+for '?'-tagged nodes, giving the node a proper tag, while the second is
+meant to be used for nodes with specified tags, ensuring that a '!!int'-
+tagged node does not contain '"true"' as content instead of, say, '"5"'.
+The third just returns 'true' if the schema recognizes a given tag.
+In each of these methods, if 'super.isRecognized' would return 'true'
+for a node (or 'super.assignTag' assigns something other than '!!str'),
+you should use the superclass's method before defaulting to your own code; e.g. if
+a node contains the content 'true', calling 'super.assignTag' will
+correctly return the '!!bool' tag. See the [implementations of the JSON and
+core schemas]`src-YamlSchema.fan` for examples of
+this, both which inherit from the failsafe schema.
