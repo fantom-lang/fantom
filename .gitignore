@@ -24,13 +24,16 @@ obj/Release/
 # domkit
 /src/domkit/res/css/
 
+# etc
+/etc/sys/types.db
+/etc/yaml/tests/
+
 # lib/
 /lib/java/**/*.jar
 /lib/javascript/
 /lib/dotnet/*.pdb
 /lib/dotnet/sys.dll
 /lib/fan/*.pod
-/etc/sys/types.db
 /lib/tmp/
 
 # doc/
