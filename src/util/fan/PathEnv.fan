@@ -75,7 +75,7 @@ const class PathEnv : Env
   ** Search path of directories in priority order.  The
   ** last item in the path is always the `sys::Env.homeDir`
   **
-  File[] path() { pathRef.val }
+  override File[] path() { pathRef.val }
   private const AtomicRef pathRef
 
   **

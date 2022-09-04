@@ -104,6 +104,11 @@ public abstract class Env
 // Resolution
 //////////////////////////////////////////////////////////////////////////
 
+  public List path()
+  {
+    return (List)List.make(Sys.FileType, new File[] { homeDir() }).toImmutable();
+  }
+
   public File findFile(Uri uri) { return findFile(uri, true); }
   public File findFile(Uri uri, boolean checked)
   {

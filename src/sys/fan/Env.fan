@@ -206,6 +206,11 @@ abstract const class Env
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Path used by `findFile` is this is a `util::PathEnv`.
+  **
+  virtual File[] path()
+
+  **
   ** Find a file in the environment using a relative path such
   ** as "etc/foo/config.props".  If the URI is not relative then
   ** throw ArgErr.  If the file is not found in the environment
