@@ -84,6 +84,13 @@ final const class IpInterface
   native IpAddr[] broadcastAddrs()
 
   **
+  ** Returns the network prefix length in bits for given address. This is also
+  ** known as the subnet mask in the context of IPv4 addresses. Typical IPv4
+  ** values would be 8 (255.0.0.0), 16 (255.255.0.0) or 24 (255.255.255.0).
+  **
+  native Int prefixSize(IpAddr addr)
+
+  **
   ** Return true if interface is up and running
   **
   native Bool isUp()

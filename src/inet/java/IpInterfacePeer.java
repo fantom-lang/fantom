@@ -145,6 +145,18 @@ public class IpInterfacePeer
     return acc;
   }
 
+  public long prefixSize(IpInterface fan, IpAddr addr)
+  {
+    Iterator iter = java.getInterfaceAddresses().iterator();
+    while (iter.hasNext())
+    {
+      InterfaceAddress iface = (InterfaceAddress)iter.next();
+      if (iface.getAddress().equals(addr.peer.java))
+        return iface.getNetworkPrefixLength();
+    }
+    throw IOErr.make("InetAddr not found for this interface: " + addr);
+  }
+
   public boolean isUp(IpInterface fan)
   {
     try
