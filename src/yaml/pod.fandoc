@@ -187,6 +187,6 @@ In each of these methods, if 'super.isRecognized' would return 'true'
 for a node (or 'super.assignTag' assigns something other than '!!str'),
 you should use the superclass's method before defaulting to your own code; e.g. if
 a node contains the content 'true', calling 'super.assignTag' will
-correctly return the '!!bool' tag. See the [implementations of the JSON and
-core schemas]`src-YamlSchema.fan` for examples of
+correctly return the '!!bool' tag. See the implementations of the JSON and
+core schemas in [YamlSchema.fan]`YamlSchema` for examples of
 this, both which inherit from the failsafe schema.
