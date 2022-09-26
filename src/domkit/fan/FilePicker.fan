@@ -54,6 +54,9 @@ using dom
   ** Get the list of currently selected files.
   DomFile[] files() { this->files }
 
+  ** Reset picker to no selection.
+  Void reset() { this->value = "" }
+
   ** Callback when a file has been selected by this picker.
   Void onSelect(|FilePicker| f) { this.cbSelect = f }
 
