@@ -15,6 +15,7 @@
 - Env.path
 - New util::FileLoc class
 - IpInterface.prefixSize
+- HttpReq.postFormMultipart
 
 *Build 1.0.78 (26 Apr 2022)*
 - New graphics APIs: GraphicsEnv, Graphics, Image, Stroke, Paint

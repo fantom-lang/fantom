@@ -56,6 +56,7 @@ const class DomkitTestMod : WebMod
       case "app.js":   jsPack.onService
       case "app.css":  cssPack.onService
       case "pod":      onPod
+      case "form":     onForm
       default:         res.sendErr(404)
     }
   }
@@ -129,6 +130,52 @@ const class DomkitTestMod : WebMod
     File file := ("fan://" + req.uri.pathOnly.toStr["/pod/".size..-1]).toUri.get
     if (!file.exists) { res.sendErr(404); return }
     FileWeblet(file).onService
+  }
+
+  Void onForm()
+  {
+    if (req.method != "POST") { res.sendErr(501); return }
+
+    res.statusCode = 200
+    res.headers["Content-Type"] = "text/plain; charset=utf-8"
+    out := res.out
+
+    out.printLine("FormData")
+    out.printLine("========")
+    if (req.form != null)
+    {
+      // urlencoded
+      req.form.each |v,n| { out.printLine("  $n: $v") }
+    }
+    else
+    {
+      // multipart
+      req.parseMultiPartForm |n,in,h|
+      {
+        d := h["Content-Disposition"]
+        r := Regex(Str<|filename="(.*?)"|>)
+        m := r.matcher(d)
+        v := ""
+        if (m.find)
+        {
+          f := m.group(1)
+          s := in.readAllBuf.size.toLocale("B")
+          v = "${f} [$s]"
+        }
+        else
+        {
+          v = in.readAllStr
+        }
+        out.printLine("  $n: $v")
+      }
+    }
+
+    out.printLine("")
+    out.printLine("Headers")
+    out.printLine("=======")
+    req.headers.each |v,n| { out.printLine("  $n: $v") }
+
+    out.flush
   }
 
   const Str sampleCss :=

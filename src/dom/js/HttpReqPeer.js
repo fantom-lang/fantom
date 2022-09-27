@@ -59,6 +59,11 @@ fan.dom.HttpReqPeer.prototype.send = function(self, method, content, f)
   {
     xhr.send(null);
   }
+  else if (content instanceof FormData)
+  {
+    // send FormData (implicity adds Content-Type header)
+    xhr.send(content);
+  }
   else if (fan.sys.ObjUtil.$typeof(content) === fan.sys.Str.$type)
   {
     // send text
@@ -110,8 +115,9 @@ fan.dom.HttpReqPeer.makeRes = function(xhr)
   return res;
 }
 
-fan.dom.HttpReqPeer.prototype.encodeForm = function(self, form)
+fan.dom.HttpReqPeer.prototype.postForm = function(self, form, f)
 {
+  // encode form content into urlencoded str
   var content = ""
   var k = form.keys();
   for (var i=0; i<k.size(); i++)
@@ -120,5 +126,25 @@ fan.dom.HttpReqPeer.prototype.encodeForm = function(self, form)
     content += encodeURIComponent(k.get(i)) + "=" +
                encodeURIComponent(form.get(k.get(i)));
   }
-  return content;
+  // send POST request
+  self.m_headers.set("Content-Type", "application/x-www-form-urlencoded");
+  self.send("POST", content, f);
+}
+
+fan.dom.HttpReqPeer.prototype.postFormMultipart = function(self, form, f)
+{
+  // encode form map to FormData instance
+  var data = new FormData();
+  var keys = form.keys();
+  for (var i=0; i<keys.size(); i++)
+  {
+    var k = keys.get(i);
+    var v = form.get(k);
+    if (v instanceof fan.dom.DomFile)
+      data.append(k, v.peer.file, v.peer.file.name);
+    else
+      data.append(k, v);
+  }
+  // send POST request
+  self.send("POST", data, f);
 }
