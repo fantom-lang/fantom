@@ -20,6 +20,12 @@ or as a standalone application:
 
   - [Home Page]`https://github.com/xored/f4`
 
+IntelliJ [#intellij]
+***************************************
+Fantom syntax highlighting for IntelliJ
+
+  - [GitHub]`https://github.com/anboralabs/fantom-lang-intellij`
+
 Netbeans FantomIDE (tcolar) [#netbeans]
 ***************************************
 FantomIDE is an IDE for the Fantom language based on Netbeans
