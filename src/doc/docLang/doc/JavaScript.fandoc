@@ -120,13 +120,34 @@ An example using an HTML event handler:
 
   <button onclick="fan.myPod.MyType.doSomething();">Click Me</button>
 
+Fields are compiled into JavaScript as follows:
+
+  - the field itself is prefixed with "m_"
+  - getter matches field name
+  - the setter is suffixed with the "$" character
+  - const fields do not have a getter (must access as m_myField)
+
+Field examples:
+
+  instance.myField()        // call getter
+  instance.myField$(value)  // call setter
+  instance.m_field          // access field storage
+
+Any Fantom slot that conflicts with a JavaScript keyword will be
+prefixed with "$".  For example a slot named "var" will be accessed
+in JavaScript as "$var".
+
+Refer to the JavaScript source code in [sys]`https://github.com/fantom-lang/fantom/tree/master/src/sys/js/fan`
+and [dom]`https://github.com/fantom-lang/fantom/tree/master/src/dom/js` to
+see how  the various types are implemented.
+
 Natives [#natives]
 ******************
 To compile JavaScript natives, add the source directories to your
 build script using the [jsDirs]`build::BuildPod.jsDirs` field.
 See [Build Pod]`docTools::Build#buildPod` for an example.
 
-TODO: flush out details
+The JavaScript code must follow the compiler conventions discussed above.
 
 Testing [#testing]
 ******************
