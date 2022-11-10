@@ -329,6 +329,8 @@ public abstract class File
       {
         java.nio.file.Path jfrom = (((LocalFile)from).file).toPath();
         java.nio.file.Path jto = (((LocalFile)to).file).toPath();
+        java.nio.file.Path jtoParent = jto.getParent();
+        if (java.nio.file.Files.notExists(jtoParent)) java.nio.file.Files.createDirectories(jtoParent);
         java.nio.file.Files.copy(jfrom, jto, java.nio.file.StandardCopyOption.COPY_ATTRIBUTES, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
       }
       catch (Exception e)
