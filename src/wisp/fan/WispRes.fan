@@ -52,6 +52,19 @@ internal class WispRes : WebRes
   }
 
   **
+  ** Reason phrase to include in HTTP response line.  If null, then
+  ** a status phrase is used based on the `statusCode`.
+  **
+  override Str? statusPhrase
+  {
+    set
+    {
+      checkUncommitted
+      &statusPhrase = it
+    }
+  }
+
+  **
   ** Map of HTTP response headers.  You must set all headers before
   ** you access out() for the first time, which commits the response.
   ** Throw an err if response is already committed.
@@ -143,7 +156,7 @@ internal class WispRes : WebRes
 
     // write response
     this.statusCode = statusCode
-    this.errMsg = msg
+    this.statusPhrase = msg
     if (buf != null) this.out.writeBuf(buf.flip)
     else commit(false)
     done
@@ -230,8 +243,8 @@ internal class WispRes : WebRes
     // special temp hook for WebSocket
     if (statusCode == 101 && &headers["Upgrade"] == "WebSocket")
       return "Web Socket Protocol Handshake"
-    else if (errMsg != null)
-      return errMsg
+    else if (statusPhrase != null)
+      return statusPhrase
     else
       return statusMsg[statusCode] ?: statusCode.toStr
   }
@@ -255,7 +268,6 @@ internal class WispRes : WebRes
   internal TcpSocket socket
   internal WebOutStream? webOut
   internal Bool upgraded
-  private Str? errMsg
 
 
 }

@@ -17,6 +17,7 @@
 - IpInterface.prefixSize
 - HttpReq.postFormMultipart
 - Convert File.copy to use NIO
+- Add WebRes.statusPhrase
 
 *Build 1.0.78 (26 Apr 2022)*
 - New graphics APIs: GraphicsEnv, Graphics, Image, Stroke, Paint

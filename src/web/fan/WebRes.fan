@@ -28,6 +28,12 @@ abstract class WebRes
   abstract Int statusCode
 
   **
+  ** Reason phrase to include in HTTP response line.  If null, then
+  ** a status phrase is used based on the `statusCode`.
+  **
+  abstract Str? statusPhrase
+
+  **
   ** Map of HTTP response headers.  You must set all headers before
   ** you access out() for the first time, which commits the response.
   ** Throw an err if response is already committed.
