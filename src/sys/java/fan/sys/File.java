@@ -307,16 +307,7 @@ public abstract class File
     // copy file contents
     else
     {
-      OutStream out = to.out();
-      try
-      {
-        in().pipe(out);
-      }
-      finally
-      {
-        out.close();
-      }
-      copyPermissions(this, to);
+      doCopyFile(this, to);
     }
   }
 
@@ -329,22 +320,36 @@ public abstract class File
     return copyTo(dir.plusNameOf(this), options);
   }
 
-  private static void copyPermissions(File from, File to)
+  private static void doCopyFile(File from, File to)
   {
-    // if both are LocaleFiles, try to hack the file
-    // permissions until we get 1.7 support
-    try
+    // if both are LocaleFiles use nio to ensure permissions/attributes are copied
+    if (from instanceof LocalFile && to instanceof LocalFile)
     {
-      if (from instanceof LocalFile && to instanceof LocalFile)
+      try
       {
-        java.io.File jfrom = ((LocalFile)from).file;
-        java.io.File jto = ((LocalFile)to).file;
-        jto.setReadable(jfrom.canRead(), false);
-        jto.setWritable(jfrom.canWrite(), false);
-        jto.setExecutable(jfrom.canExecute(), false);
+        java.nio.file.Path jfrom = (((LocalFile)from).file).toPath();
+        java.nio.file.Path jto = (((LocalFile)to).file).toPath();
+        java.nio.file.Files.copy(jfrom, jto, java.nio.file.StandardCopyOption.COPY_ATTRIBUTES, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+      }
+      catch (Exception e)
+      {
+        throw Err.make(e);
       }
     }
-    catch (NoSuchMethodError e) {}  // ignore if not on 1.6
+
+    // use Fantom pipe
+    else
+    {
+      OutStream out = to.out();
+      try
+      {
+        from.in().pipe(out);
+      }
+      finally
+      {
+        out.close();
+      }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
