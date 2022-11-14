@@ -48,6 +48,7 @@ using graphics
     {
       if (cbEnd != null) cbEnd(elem)
       dragImage?.parent?.remove(dragImage)
+      DndUtil.clearData(e.dataTransfer)
     }
   }
 
@@ -159,43 +160,33 @@ using graphics
 **
 @NoDoc @Js class DndUtil
 {
-  ** Global map of data payloads.
-  private static Int:Obj map()
-  {
-    m := Actor.locals["domkit.dnd.map"] as Int:Obj
-    if (m == null) Actor.locals["domkit.dnd.map"] = m = Int:Obj[:]
-    return m
-  }
+  ** Cache for current drag-and-drop operation
+  private const static AtomicRef dataRef := AtomicRef(Unsafe(null))
 
   ** Get the data payload for given transfer instance.
   static Obj getData(DataTransfer dt)
   {
-    data := dt.getData("text/plain")
+    // then check Fantom object from cache
+    data := ((Unsafe)dataRef.val).val
+    if (data != null) return data
 
-    if (data.isEmpty)
-    {
-      // if we have no data set then most likely this is file
-      // being dragged in externally into the browser
-      return dt.files
-    }
+    // check files first
+    if (!dt.files.isEmpty) return dt.files
 
-    if (data.startsWith("fandnd:"))
-    {
-      // if our own key then return actor local data copy
-      key := data["fandnd:".size..-1].toInt(10, false)
-      if (key == null) throw ArgErr("Drag target not found: $data")
-      val := map[key] ?: throw ArgErr("Drag target not found: $key")
-      return val
-    }
-
-    // fallback to return original data
-    return data
+    // return plain text
+    return dt.getData("text/plain")
   }
 
   ** Set the data payload on given transfer instance.
   static Void setData(DataTransfer dt, Obj data)
   {
-    map[data.hash] = data
-    dt.setData("text/plain", "fandnd:${data.hash.toStr}")
+    dataRef.val = Unsafe(data)
+    dt.setData("text/plain", data.toStr)
+  }
+
+  ** Clear data cache
+  static Void clearData(DataTransfer dt)
+  {
+    dataRef.val = Unsafe(null)
   }
 }
