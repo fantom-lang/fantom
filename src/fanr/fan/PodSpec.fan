@@ -101,4 +101,11 @@ const class PodSpec
 
   ** Equality is based on name and version
   override final Bool equals(Obj? x) { x is PodSpec && toStr == x.toStr }
+
+  ** Return true if this pod contains Fantom fcode
+  @NoDoc Bool containsCode()
+  {
+    fcode := meta["pod.fcode"] ?: "true"
+    return fcode != "false"
+  }
 }
