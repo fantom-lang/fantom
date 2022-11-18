@@ -242,6 +242,7 @@ public final class Zip
       {
         String relUri = entry.uri().toStr().substring(1);
         File dest = dir.plus(Uri.fromStr(relUri));
+        if (entry.isDir()) { dest.create(); continue; }
         OutStream out = dest.out();
         try
         {
