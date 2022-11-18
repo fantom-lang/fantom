@@ -229,6 +229,39 @@ public final class Zip
     }
   }
 
+  public static long unzipInto(File zipFile, File dir)
+  {
+    if (!dir.isDir()) throw ArgErr.make("Not dir: " + dir);
+    Zip zip = null;
+    try
+    {
+      int count = 0;
+      zip = read(zipFile.in());
+      File entry;
+      while ((entry = zip.readNext()) != null)
+      {
+        String relUri = entry.uri().toStr().substring(1);
+        File dest = dir.plus(Uri.fromStr(relUri));
+        OutStream out = dest.out();
+        try
+        {
+          entry.in().pipe(out);
+        }
+        finally
+        {
+          out.close();
+        }
+        if (entry.modified() != null) dest.modified(entry.modified());
+        count++;
+      }
+      return count;
+    }
+    finally
+    {
+      if (zip != null) zip.close();
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // GZIP
 //////////////////////////////////////////////////////////////////////////

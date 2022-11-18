@@ -149,6 +149,13 @@ final class Zip
   **
   override Str toStr()
 
+  **
+  ** Static utility to unzip a zip file to the given directory.
+  ** Raise exception if there is any failures.  Return number of
+  ** files unzipped on success.
+  **
+  static Int unzipInto(File zip, File dir)
+
 //////////////////////////////////////////////////////////////////////////
 // GZIP
 //////////////////////////////////////////////////////////////////////////
