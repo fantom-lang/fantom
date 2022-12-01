@@ -1100,4 +1100,39 @@ class MiscTest : CompilerTest
     verifyEq(method.callOn(obj, null), "yeah!")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Mixin Set Operator
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMixinSetOp()
+  {
+    compile(
+     """mixin M
+        {
+          @Operator abstract This set(Str n, Str v)
+        }
+
+        class C : M
+        {
+          Str:Str map := [:]
+          @Operator override This set(Str n, Str v)
+          {
+            map[n] = v
+            return this
+          }
+
+          Str:Str test()
+          {
+            C c := make
+            M m := c
+            m.set("a", "alpha")
+            m["b"] = "beta"
+            return c.map
+          }
+        }""")
+
+    obj := pod.types[1].make
+    m := obj.typeof.method("test")
+    verifyEq(m.callOn(obj, null), ["a":"Alpha", "b":"Beta"])
+  }
 }
