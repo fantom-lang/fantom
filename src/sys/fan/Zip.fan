@@ -16,7 +16,7 @@
 **   2. `Zip.read` is used to read a zip file from an input stream.
 **      Each entry is pulled off the stream using `readNext`
 **   3. `Zip.write` is used to write a zip file to an output stream.
-**      Each entry must is written to the stream using `writeNext`
+**      Each entry is written to the stream using `writeNext`
 **
 final class Zip
 {

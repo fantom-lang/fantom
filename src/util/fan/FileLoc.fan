@@ -40,6 +40,36 @@ const class FileLoc
     this.col  = col
   }
 
+  ** Parse location formatted from `toStr`
+  @NoDoc static FileLoc parse(Str s)
+  {
+    // by convention this should be called fromStr but that
+    // conflicts with the make(Str) constructor - so just leave
+    // as nodoc backdoor hook
+    file := s
+    line := 0
+    col  := 0
+    if (s.endsWith(")"))
+    {
+      open := s.indexr("(")
+      if (open != null)
+      {
+        file = s[0..<open]
+        comma := s.index(",", open+2)
+        if (comma == null)
+        {
+          line = s[open+1..-2].trim.toInt(10, false) ?: 0
+        }
+        else
+        {
+          line = s[open+1..<comma].trim.toInt(10, false) ?: 0
+          col  = s[comma+1..-2].trim.toInt(10, false) ?: 0
+        }
+      }
+    }
+    return make(file, line, col)
+  }
+
   ** Filename location
   const Str file
 
@@ -72,7 +102,7 @@ const class FileLoc
     return col <=> x.col
   }
 
-  ** Return string representation.
+  ** Return string representation as "file", "file(line)", or "file(line,col)".
   ** This is the standard format used by the Fantom compiler.
   override Str toStr()
   {
@@ -81,5 +111,28 @@ const class FileLoc
     return "$file($line,$col)"
   }
 
+}
+
+**************************************************************************
+** FileLocErr
+**************************************************************************
+
+**
+** Exception with a file location
+**
+@Js
+const class FileLocErr : Err
+{
+  ** Constructor with message, location, and optional cause
+  new make(Str msg, FileLoc loc, Err? cause) : super(msg, cause)
+  {
+    this.loc = loc
+  }
+
+  ** File location
+  const FileLoc loc
+
+  ** Return "loc: msg"
+  override Str toStr() { "$loc.toStr: $msg" }
 }
 
