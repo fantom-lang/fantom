@@ -124,7 +124,7 @@ const class FileLoc
 const class FileLocErr : Err
 {
   ** Constructor with message, location, and optional cause
-  new make(Str msg, FileLoc loc, Err? cause) : super(msg, cause)
+  new make(Str msg, FileLoc loc, Err? cause := null) : super(msg, cause)
   {
     this.loc = loc
   }
