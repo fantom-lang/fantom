@@ -79,6 +79,9 @@ const class FileLoc
   ** One based line column number or zero if unknown
   const Int col
 
+  ** Is this the unknown location
+  Bool isUnknown() { this === unknown }
+
   ** Hash code
   override Int hash()
   {
@@ -133,6 +136,10 @@ const class FileLocErr : Err
   const FileLoc loc
 
   ** Return "loc: msg"
-  override Str toStr() { "$loc.toStr: $msg" }
+  override Str toStr()
+  {
+    if (loc.isUnknown) return super.toStr
+    return "$loc.toStr: $msg"
+  }
 }
 
