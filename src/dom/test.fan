@@ -37,6 +37,7 @@ const class DomTestMod : WebMod
     if (name == null) onIndex
     else if (name == "pod") onPodFile
     else if (name == "dom") dom::DomTest().onService
+    else if (name == "clipboard") dom::ClipboardTest().onService
     else res.sendErr(404)
   }
 
@@ -54,6 +55,7 @@ const class DomTestMod : WebMod
       .h1.w("Dom Test").h1End
       .ul
         .li.a(`/dom`).w("Dom").aEnd.liEnd
+        .li.a(`/clipboard`).w("Clipboard").aEnd.liEnd
       .ulEnd
       .bodyEnd
     out.htmlEnd

@@ -121,6 +121,28 @@ class Win
   native Void reload(Bool force := false)
 
 //////////////////////////////////////////////////////////////////////////
+// Clipboard
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Read textual contents of the system clipboard. Returns an empty
+  ** string if the clipboard is empty, does not contain text, or does
+  ** not include a textual representation of clipboard's contents.
+  **
+  ** The user has to interact with the page or a UI element in order
+  ** for this feature to work.
+  **
+  native Void clipboardReadText(|Str text| f)
+
+  **
+  ** Write given text to the system clipboard.
+  **
+  ** The user has to interact with the page or a UI element in order
+  ** for this feature to work.
+  **
+  native Void clipboardWriteText(Str text)
+
+//////////////////////////////////////////////////////////////////////////
 // History
 //////////////////////////////////////////////////////////////////////////
 
