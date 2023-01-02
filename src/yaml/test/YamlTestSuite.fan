@@ -153,7 +153,7 @@ class YamlTestSuite : Test
         return YamlRes(name, fname, e)
       }
     }
-    catch (ParseErr e)
+    catch (FileLocErr e)
     {
       if (!parseErr)
         // Error where none expected

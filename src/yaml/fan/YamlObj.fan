@@ -7,6 +7,8 @@
 //    5 Jul 2022  Kiera O'Flynn   Creation
 //
 
+using util
+
 **************************************************************************
 ** YamlObj
 **************************************************************************
@@ -33,6 +35,9 @@ abstract const class YamlObj
   ** content of type 'Str', [YamlLists]`yaml::YamlList` with content
   ** type 'YamlObj[]', and [YamlMaps]`yaml::YamlMap` with 'YamlObj:YamlObj'.
   const Obj content := 0 //the "?" and 0 are placeholders
+
+  ** The text location from which this node was parsed.
+  const FileLoc loc := FileLoc.unknown
 
 //////////////////////////////////////////////////////////////////////////
 // Public methods
@@ -94,9 +99,10 @@ const class YamlScalar : YamlObj
 
   ** Creates a YamlScalar with the string 's' as content
   ** and 'tag' as its tag.
-  new make(Str s, Str tag := "?")
+  new make(Str s, Str tag := "?", FileLoc loc := FileLoc.unknown)
   {
     this.content = s
+    this.loc = loc
 
     if (tag == "!")     this.tag = "tag:yaml.org,2002:str"
     else if (tag != "") this.tag = tag
@@ -174,9 +180,10 @@ const class YamlList : YamlObj
 
   ** Creates a YamlList with the list 's' as content
   ** and 'tag' as its tag.
-  new make(YamlObj[] s, Str tag := "!")
+  new make(YamlObj[] s, Str tag := "!", FileLoc loc := FileLoc.unknown)
   {
     this.content = s
+    this.loc = loc
 
     if (tag == "!" || tag == "") this.tag = "tag:yaml.org,2002:seq"
     else                         this.tag = tag
@@ -245,9 +252,10 @@ const class YamlMap : YamlObj
 
   ** Creates a YamlMap with the map 's' as content
   ** and 'tag' as its tag.
-  new make([YamlObj:YamlObj] s, Str tag := "!")
+  new make([YamlObj:YamlObj] s, Str tag := "!", FileLoc loc := FileLoc.unknown)
   {
     this.content = s
+    this.loc = loc
 
     if (tag == "!" || tag == "") this.tag = "tag:yaml.org,2002:map"
     else                         this.tag = tag

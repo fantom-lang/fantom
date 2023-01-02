@@ -7,6 +7,8 @@
 //   13 Jul 2022  Kiera O'Flynn   Creation
 //
 
+using util
+
 **
 ** A set of non-exhaustive tests to ensure basic functionality.
 **
@@ -36,7 +38,7 @@ class BasicYamlTest : Test
                          """.in).parse
     verifyEq(obj.decode, [,].add("And let them back\nout"))
 
-    verifyErr (ParseErr#) { YamlReader("---\nLine one # With a comment\nLine two".in) .parse }
+    verifyErr (FileLocErr#) { YamlReader("---\nLine one # With a comment\nLine two".in) .parse }
   }
 
   ** Tests directives and completely empty documents
@@ -75,25 +77,25 @@ class BasicYamlTest : Test
     verifyEq(obj.decode, [null, null])
 
     // Error tests
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("""%YAML 1.2.2    # invalid version format
                     ---
                     """.in).parse
     }
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("""%TAG ! tag:fantom.org,2022:test
                     %TAG ! tag:fantom.org,2022:test   # tags cannot be redefined
                     ---""".in).parse
     }
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("""%TAG ! tag:fantom.org,2022:test
                     This text isn't a comment or directive!
                     ---""".in).parse
     }
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("""%YAML 1.2""".in).parse
     }
@@ -102,17 +104,24 @@ class BasicYamlTest : Test
   ** Tests --- and ... with non-empty documents
   Void testDocSeparators()
   {
+    obj := YamlReader("Test1
+                       ---
+                       Test2".in).parse
+    verifyEq(obj.content->get(0)->loc->line, 1)
+    verifyEq(obj.content->get(1)->loc->line, 2)
+
     verifyEq(
-      YamlReader("Test1
-                  ---
-                  Test2".in).parse.decode,
+      obj.decode,
       [,].add("Test1")
          .add("Test2"))
     
+    obj = YamlReader("Test1
+                      ...
+                      Test2".in).parse
+    verifyEq(obj.content->get(1)->loc->line, 3)
+    
     verifyEq(
-      YamlReader("Test1
-                  ...
-                  Test2".in).parse.decode,
+      obj.decode,
       [,].add("Test1")
          .add("Test2"))
     
@@ -140,7 +149,7 @@ class BasicYamlTest : Test
     verifyEq(
       YamlReader("'It''s in the other room'".in).parse.decode,
       [,].add("It's in the other room"))
-    verifyErr (ParseErr#) { YamlReader("'This contains' 'two separate strings'".in).parse }
+    verifyErr (FileLocErr#) { YamlReader("'This contains' 'two separate strings'".in).parse }
 
     verifyEq(
       YamlReader("'This is a   \n   multiline\n test #slay #not a comment\n\n\n hehe' #real comment\n  ".in).parse.decode,
@@ -202,7 +211,7 @@ class BasicYamlTest : Test
     verifyEq(
       YamlReader("|\n  This is a test\n".in).parse.decode,
       [,].add("This is a test\n"))
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("|3\n This is a test\n".in).parse
     }
@@ -217,7 +226,7 @@ class BasicYamlTest : Test
     verifyEq(
       YamlReader("|\n\n   \n \n\n   Test\n".in).parse.decode,
       [,].add("\n\n\n\nTest\n"))
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("|\n  \n   \n \n\n  Test\n".in).parse
     }
@@ -241,11 +250,11 @@ class BasicYamlTest : Test
     verifyEq(
       YamlReader(">\nTest1\n \nTest2".in).parse.decode,
       [,].add("Test1\n \nTest2\n"))
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("|\n  Test \n Test2".in).parse
     }
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("|\n  Test \n \t  Test2".in).parse
     }
@@ -307,7 +316,7 @@ class BasicYamlTest : Test
     verifyEq(
       YamlReader(">\n  This is a test\n".in).parse.decode,
       [,].add("This is a test\n"))
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader(">3\n This is a test\n".in).parse
     }
@@ -322,7 +331,7 @@ class BasicYamlTest : Test
     verifyEq(
       YamlReader(">\n\n   \n \n\n   Test\n".in).parse.decode,
       [,].add("\n\n\n\nTest\n"))
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader(">\n  \n   \n \n\n  Test\n".in).parse
     }
@@ -356,11 +365,11 @@ class BasicYamlTest : Test
       YamlReader(">-\n  trimmed\n  \n \n\n  as\n  space".in).parse.decode,
       [,].add("trimmed\n\n\nas space"))
     
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader(">\n  Test \n Test2".in).parse
     }
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader(">\n  Test \n \t  Test2".in).parse
     }
@@ -437,7 +446,7 @@ class BasicYamlTest : Test
       [,].add(
         [,].addAll(["Two plastic bags drifting", "o'er the beach"])))
     
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("[
                     |
@@ -445,7 +454,7 @@ class BasicYamlTest : Test
                   ]".in).parse
     }
 
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("[too many,,]".in).parse
     }
@@ -490,7 +499,7 @@ class BasicYamlTest : Test
       [,].add(
         [:].addAll(["Two plastic bags drifting":null, "o'er the beach":null])))
     
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("{
                     ? |
@@ -499,7 +508,7 @@ class BasicYamlTest : Test
                   }".in).parse
     }
 
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("{too many,,}".in).parse
     }
@@ -523,7 +532,7 @@ class BasicYamlTest : Test
            .add("this is another test")))
 
     // But don't carry over between documents
-    verifyErr(ParseErr#)
+    verifyErr(FileLocErr#)
     {
       YamlReader("---
                   &A test
@@ -568,21 +577,21 @@ class BasicYamlTest : Test
         [,].add("First item - same item"))
       )
 
-    verifyErr (ParseErr#)
+    verifyErr (FileLocErr#)
     {
       YamlReader("  - Non-compact
                    - uneven node
                   ".in).parse
     }
 
-    verifyErr (ParseErr#)
+    verifyErr (FileLocErr#)
     {
       YamlReader("- good
                   -bad
                   ".in).parse
     }
 
-    verifyErr (ParseErr#)
+    verifyErr (FileLocErr#)
     {
       YamlReader("- good
                   - still good
@@ -634,7 +643,7 @@ class BasicYamlTest : Test
           [:].addAll(["map":"node", "with":"multiple lines of content"])))
       )
     
-    verifyErr (ParseErr#)
+    verifyErr (FileLocErr#)
     {
       YamlReader("Multiple-line
                     key: shouldn't work
@@ -643,7 +652,7 @@ class BasicYamlTest : Test
 
     YamlReader(("a" * 1024 + ": works!").in).parse
 
-    verifyErr (ParseErr#)
+    verifyErr (FileLocErr#)
     {
       YamlReader(("a" * 1025 + ": doesn't work").in).parse
     }

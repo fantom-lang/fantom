@@ -7,6 +7,8 @@
 //    5 Jul 2022  Kiera O'Flynn   Creation
 //
 
+using util
+
 internal class YamlParser
 {
 
@@ -14,9 +16,9 @@ internal class YamlParser
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(InStream in)
+  new make(InStream in, FileLoc loc := FileLoc.unknown)
   {
-    this.r = YamlTokenizer(in)
+    this.r = YamlTokenizer(in, loc)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -50,6 +52,8 @@ internal class YamlParser
     while((['#', '\n'] as Int?[]).contains(r.peekNextNs(r.docPrefix))) r.eatLine(r.docPrefix)
     while(r.peek(r.any) == 0xFFFE) r.any
 
+    docLoc := r.loc
+
     //directive/explicit document
     if (r.peek == '%' || r.peekToken == "---")
     {
@@ -59,7 +63,7 @@ internal class YamlParser
       if (r.peekIndentedNs(0, r.docPrefix) == null || r.nextTokenEndsDoc)
       {
         sLComments(r.docPrefix)
-        docs.add(YamlScalar(""))
+        docs.add(YamlScalar("", "?", docLoc))
         if (r.peekToken(r.docPrefix) == "...") parseDocEnd
         else if (r.peekToken(r.docPrefix) == "---") parseDocument
         return
@@ -74,7 +78,12 @@ internal class YamlParser
 
     if (!tagShorthands.containsKey("!")) tagShorthands.add("!", "!")
     if (!tagShorthands.containsKey("!!")) tagShorthands.add("!!", "tag:yaml.org,2002:")
-    docs.add(parseBlockNode(-1, Context.blockIn))
+    node := parseBlockNode(-1, Context.blockIn)
+    docs.add(Type.of(node).make(
+      [node.content,
+       node.tag,
+       docLoc]
+    ))
 
     //move onto next document, if applicable
     while (r.peek(r.docPrefix) != null && ['#', '\n', null].contains(r.peekNextNs(r.docPrefix)))
@@ -144,7 +153,7 @@ internal class YamlParser
         
         case "TAG":
           r.eatWs
-          hloc   := r.loc.dup
+          hloc   := r.loc
           r.eatChar('!')
           handle := "!" + r.eatUntilr(r.tagHandle) |c1| { !r.isNs(c1) || c1 == '!' }
           if (r.peek == '!')
@@ -154,7 +163,7 @@ internal class YamlParser
           }
           else if (handle != "!") throw err("A named tag handle must end in the '!' character.", hloc)
           r.eatWs
-          ploc   := r.loc.dup
+          ploc   := r.loc
           prefix := r.eatToken(null, r.uri)
           r.eatCommentLine("A TAG directive")
 
@@ -386,7 +395,7 @@ internal class YamlParser
       else
       {
         if (res.containsKey("tag")) return res
-        tloc := r.loc.dup
+        tloc := r.loc
         separate(n,ctx)
         r.eatChar('!')
 
@@ -618,7 +627,7 @@ internal class YamlParser
   {
     Int? c
     s := StrBuf()
-    initLoc := r.loc.dup
+    initLoc := r.loc
     endFound := false
 
     r.eatChar('\'')
@@ -677,7 +686,7 @@ internal class YamlParser
   {
     Int? c
     s := StrBuf()
-    initLoc := r.loc.dup
+    initLoc := r.loc
     endFound := false
 
     r.eatChar('"')
@@ -1160,7 +1169,7 @@ internal class YamlParser
   ** [79] s-l-comments
   private Void sLComments(|->Int?| readRule := r.printable)
   {
-    if (r.loc.col != Loc.firstCol - 1) r.eatCommentLine
+    if (r.loc.col != 1) r.eatCommentLine
     while ((['#','\n'] as Int?[]).contains(r.peekNextNs(readRule))) r.eatLine(readRule)
   }
 
@@ -1182,17 +1191,17 @@ internal class YamlParser
 //////////////////////////////////////////////////////////////////////////
 
   ** Error with line & col info
-  private Err err(Str msg, Loc? loc := null)
+  private Err err(Str msg, FileLoc? loc := null)
   {
     if (loc == null) loc = r.loc
-    return ParseErr("($loc.line,$loc.col): $msg")
+    return FileLocErr(msg, loc)
   }
 
   ** Assert that the stream is at the beginning of a line (or the end of
   ** the stream).
   private Void assertLineStart()
   {
-    if (r.loc.col != Loc.firstCol - 1 && r.peek(r.any) != null)
+    if (r.loc.col != 1 && r.peek(r.any) != null)
       throw err("Internal parser error: The parser should have been at the beginning of the line here.")
   }
 
@@ -1230,7 +1239,7 @@ internal class YamlParser
     if (str.getSafe(1025) == ':')
       str = str[0..1024] + 'a'
 
-    return YamlParser(str.in).startsWithKey(tagShorthands, anchors, ctx)
+    return YamlParser(str.in, r.loc).startsWithKey(tagShorthands, anchors, ctx)
   }
 
   ** Returns whether or not the stream can be interpreted as an implicit key,
@@ -1255,7 +1264,7 @@ internal class YamlParser
       r.eatChar(':')
       return !r.isNs(r.peek) || (ctx.isFlow && f.tag != "?")
     }
-    catch (ParseErr e)
+    catch (FileLocErr e)
     {
       return false
     }
