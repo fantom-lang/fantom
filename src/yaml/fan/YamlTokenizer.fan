@@ -7,6 +7,8 @@
 //    7 Jul 2022  Kiera O'Flynn   Creation
 //
 
+using util
+
 **************************************************************************
 ** YamlTokenizer
 **************************************************************************
@@ -18,15 +20,10 @@ internal class YamlTokenizer
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(InStream in)
+  new make(InStream in, FileLoc loc := FileLoc.unknown)
   {
     this.in = in
-
-    loc = Loc()
-    {
-      it.line = 1
-      it.col = Loc.firstCol - 1
-    }
+    this.loc = FileLoc(loc.file, 1, 1)
 
     deduceEncoding
   }
@@ -38,7 +35,7 @@ internal class YamlTokenizer
   ** Returns the next character without reading any characters.
   Int? peek(|->Int?| readRule := printable)
   {
-    initLoc := loc.dup
+    initLoc := loc
     c := readRule()
     if (c != null)
     {
@@ -94,7 +91,7 @@ internal class YamlTokenizer
   {
     s := StrBuf()
     Int? c
-    lastLoc := loc.dup
+    lastLoc := loc
     while(true)
     {
       if (peek(any) == null || endRule(peek(any))) break
@@ -106,7 +103,7 @@ internal class YamlTokenizer
         break
       }
       s.addChar(c)
-      lastLoc = loc.dup
+      lastLoc = loc
     }
     return s.toStr
   }
@@ -120,7 +117,7 @@ internal class YamlTokenizer
     s := StrBuf()
     Int[] buf := [,]
     Int? c
-    initLoc := loc.dup
+    initLoc := loc
     while(true)
     {
       if (peek(any) == null || endRule(peek(any))) break
@@ -166,7 +163,7 @@ internal class YamlTokenizer
   {
     Int[] buf := [,]
     Int? c
-    initLoc := loc.dup
+    initLoc := loc
     while ((c = readRule()) != null && contRule(c)) buf.add(c)
     if (c != null) buf.add(c)
     unreadAll(buf)
@@ -205,11 +202,11 @@ internal class YamlTokenizer
   {
     Int[] buf := [,]
     Int? c
-    initLoc := loc.dup
+    initLoc := loc
 
     // Peek through whitespace
     inComment := false
-    spacesToGo := loc.col == Loc.firstCol - 1 ? n : 0
+    spacesToGo := loc.col == 1 ? n : 0
     while ((c = peek(docPrefix)) != null && (c == '#' || inComment || isWs(c) || isNl(c)))
     {
       c = read
@@ -252,7 +249,7 @@ internal class YamlTokenizer
   {
     Int[] buf := [,]
     Int? c
-    initLoc := loc.dup
+    initLoc := loc
 
     res := false
     while (res == false)
@@ -299,11 +296,11 @@ internal class YamlTokenizer
   {
     Int[] buf := [,]
     Int? c
-    initLoc := loc.dup
+    initLoc := loc
 
     // Peek through WS
     inComment := false
-    spacesToGo := loc.col == Loc.firstCol - 1 ? n : 0
+    spacesToGo := loc.col == 1 ? n : 0
     while ((c = readRule()) != null && (c == '#' || inComment || isWs(c) || isNl(c)))
     {
       buf.add(c)
@@ -344,11 +341,11 @@ internal class YamlTokenizer
     Int[] buf := [,]
     Int? c
     s := StrBuf()
-    initLoc := loc.dup
+    initLoc := loc
 
     // Peek through whitespace
     inComment := false
-    spacesToGo := loc.col == Loc.firstCol - 1 ? n : 0
+    spacesToGo := loc.col == 1 ? n : 0
     while ((c = readRule()) != null && (c == '#' || inComment || isWs(c) || isNl(c)))
     {
       buf.add(c)
@@ -395,7 +392,7 @@ internal class YamlTokenizer
   {
     Int[] buf := [,]
     Int? c
-    initLoc := loc.dup
+    initLoc := loc
 
     // Peek through whitespace
     inComment := false
@@ -413,7 +410,7 @@ internal class YamlTokenizer
     {
       buf.add(c)
       setPeek(3)
-      if (peekArr.size >= 2 && loc.col == Loc.firstCol)
+      if (peekArr.size >= 2 && loc.col - 1 == 1)
       {
         tok3 := "${c.toChar}${peekArr[0].toChar}${peekArr[1].toChar}"
         res = ["---", "..."].contains(tok3) && !isNs(peekArr.getSafe(2))
@@ -444,7 +441,7 @@ internal class YamlTokenizer
     |->Int?|
     {
       c := read
-      if (c == 0xFFFE && loc.col == Loc.firstCol) { loc.col--; return docPrefix()() }
+      if (c == 0xFFFE && loc.col - 1 == 1) { decCol; return docPrefix()() }
       else if (!isPrintable(c)) throw charsetErr(c)
       return c
     }
@@ -593,10 +590,23 @@ internal class YamlTokenizer
     |->Int?|
     {
       c := read
-      if (c == 0xFFFE) loc.col--
+      if (c == 0xFFFE) decCol
       return c
     }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Loc helper methods
+//////////////////////////////////////////////////////////////////////////
+
+  ** Increments the column location
+  Void incCol() { loc = FileLoc(loc.file, loc.line, loc.col + 1) }
+
+  ** Decrements the column location
+  Void decCol() { loc = FileLoc(loc.file, loc.line, loc.col - 1) }
+
+  ** Increments the line & resets the column
+  Void incLine() { loc = FileLoc(loc.file, loc.line + 1, 1) }
 
 //////////////////////////////////////////////////////////////////////////
 // Internal helper methods
@@ -617,7 +627,7 @@ internal class YamlTokenizer
         (beg[0] == 0x00 && beg[1] == 0x00 && beg[2] == 0x00) ||
         (beg[0] == 0xFF && beg[1] == 0xFE && beg[2] == 0x00 && beg[3] == 0x00) ||
         (beg[1] == 0x00 && beg[2] == 0x00 && beg[3] == 0x00))
-      throw ParseErr("This YAML parser does not support the UTF-32 encoding.")
+      throw err("This YAML parser does not support the UTF-32 encoding.")
 
     //UTF-16BE
     else if ((beg[0] == 0xFE && beg[1] == 0xFF) ||
@@ -644,18 +654,14 @@ internal class YamlTokenizer
     Int? c
     if (peekArr.size != 0) c = peekArr.removeAt(0)
     else c = in.readChar
-    if (c != null) loc.col++
+    if (c != null) incCol
     if (c == '\r')
     {
       setPeek(1)
       if (peekArr[0] == '\n') return read
       else c = '\n'
     }
-    if (c == '\n')
-    {
-      loc.line++
-      loc.col = Loc.firstCol - 1
-    }
+    if (c == '\n') incLine
     return c
   }
 
@@ -743,10 +749,10 @@ internal class YamlTokenizer
   }
 
   ** Error with line & col info
-  private Err err(Str msg, Loc? loc := null)
+  private Err err(Str msg, FileLoc? loc := null)
   {
     if (loc == null) loc = this.loc
-    return ParseErr("($loc.line,$loc.col): $msg")
+    return FileLocErr(msg, loc)
   }
 
   ** Error from character outside allowed charset
@@ -770,28 +776,6 @@ internal class YamlTokenizer
   private InStream in
   private Int[] peekArr := [,]
 
-  Loc loc
+  FileLoc loc
 
-}
-
-**************************************************************************
-** Loc
-**************************************************************************
-
-internal class Loc
-{
-  Int line := 0
-  Int col := 0
-
-  ** Returns a copy of this location.
-  Loc dup()
-  {
-    Loc()
-    {
-      it.line = this.line
-      it.col = this.col
-    }
-  }
-
-  static const Int firstCol := 2
 }

@@ -7,6 +7,8 @@
 //   14 Jul 2022  Kiera O'Flynn   Creation
 //
 
+using util
+
 **
 ** A test suite for the YamlTokenizer class.
 **
@@ -48,17 +50,17 @@ class YamlTokenTest : Test
 
     YamlTokenizer("test1".in).eatStr("test")
     YamlTokenizer("test1".in).eatStr("test1")
-    verifyErr (ParseErr#) { YamlTokenizer("test1".in).eatStr("test2") }
-    verifyErr (ParseErr#) { YamlTokenizer("test1".in).eatStr("test100") }
-    verifyErr (ParseErr#) { YamlTokenizer("test1".in).eatStr("t3st1") }
+    verifyErr (FileLocErr#) { YamlTokenizer("test1".in).eatStr("test2") }
+    verifyErr (FileLocErr#) { YamlTokenizer("test1".in).eatStr("test100") }
+    verifyErr (FileLocErr#) { YamlTokenizer("test1".in).eatStr("t3st1") }
 
     YamlTokenizer("test2".in).eatChar('t')
-    verifyErr (ParseErr#) { YamlTokenizer("test2".in).eatChar('a') }
+    verifyErr (FileLocErr#) { YamlTokenizer("test2".in).eatChar('a') }
 
     r = YamlTokenizer("test3".in)
     r.eatToken("test3")
-    verifyErr (ParseErr#) { r = YamlTokenizer("test3".in); r.eatToken("test0") }
-    verifyErr (ParseErr#) { r = YamlTokenizer("test3".in); r.eatToken("") }
+    verifyErr (FileLocErr#) { r = YamlTokenizer("test3".in); r.eatToken("test0") }
+    verifyErr (FileLocErr#) { r = YamlTokenizer("test3".in); r.eatToken("") }
 
     // eatUntil, eatLine, eatWs
 
@@ -138,7 +140,7 @@ class YamlTokenTest : Test
     verifyEq(r.loc.line, 3)
     verifyEq(r.loc.col, fc - 1)
 
-    verifyErr (ParseErr#) { YamlTokenizer("   Content here oops\n".in).eatCommentLine }
+    verifyErr (FileLocErr#) { YamlTokenizer("   Content here oops\n".in).eatCommentLine }
 
     // nextKeyStr
 
@@ -195,5 +197,5 @@ class YamlTokenTest : Test
     verify(YamlTokenizer("\uFFFE---\n".in).nextTokenEndsDoc)
   }
 
-  Int fc := Loc.firstCol
+  Int fc := 2
 }
