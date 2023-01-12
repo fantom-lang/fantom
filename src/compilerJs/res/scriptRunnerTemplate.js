@@ -5,6 +5,7 @@ try {
   fan.{{tempPod}}.Main.main();
 } catch (err) {
   console.log('ERROR: ' + err + '\n');
+  console.log(err.stack);
   if (err == undefined) print('Undefined error\n');
   else if (err.trace) err.trace();
   else
