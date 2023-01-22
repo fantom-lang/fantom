@@ -291,7 +291,7 @@ class Inherit : CompilerStep
       // if the definition already has a covariant return type, then
       // it must be exactly the same type as this new override (we
       // can't have conflicting covariant overrides
-      if (def.inheritedRet != null && def.inheritedRet != base.inheritedReturnType)
+      if (def.inheritedRet != null && def.inheritedRet != base.inheritedReturnType && !base.inheritedReturnType.isObj)
         throw err("Conflicting covariant returns: '$def.inheritedRet' and '$base.inheritedReturnType'", loc)
     }
 
