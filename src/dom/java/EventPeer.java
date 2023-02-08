@@ -10,14 +10,8 @@ package fan.dom;
 
 public class EventPeer
 {
-
-//////////////////////////////////////////////////////////////////////////
-// Construction
-//////////////////////////////////////////////////////////////////////////
-
-  public static EventPeer make(Style fan)
+  public static EventPeer make(Event fan)
   {
-    return new EventPeer();
+    return DomPeerFactory.factory().makeEvent(fan);
   }
-
 }

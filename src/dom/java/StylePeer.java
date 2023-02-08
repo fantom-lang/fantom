@@ -22,7 +22,7 @@ public class StylePeer
 
   public static StylePeer make(Style fan)
   {
-    return new StylePeer();
+    return DomPeerFactory.factory().makeStyle(fan);
   }
 
 //////////////////////////////////////////////////////////////////////////

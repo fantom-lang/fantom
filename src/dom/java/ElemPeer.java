@@ -25,7 +25,7 @@ public class ElemPeer
 
   public static ElemPeer make(Elem fan)
   {
-    return new ElemPeer();
+    return DomPeerFactory.factory().makeElem(fan);
   }
 
   public void _make(Elem self, String tagName, Uri ns)
