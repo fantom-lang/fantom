@@ -965,6 +965,7 @@ class DateTimeTest : Test
     verifyEq(x.toLocale("M, MM, MMM, MMMM"), "2, 02, Feb, February")
     verifyEq(x.toLocale("D, DD, DDD"), "5, 05, 5th")
     verifyEq(x.toLocale("WWW WWWW"), "Tue Tuesday")
+    verifyEq(x.toLocale("Q, QQQ, QQQQ"), "1, 1st, 1st Quarter")
     verifyEq(x.toLocale("h, hh, k, kk, a, aa, A, AA"), "3, 03, 3, 03, a, am, A, AM")
     verifyEq(x.toLocale("m, mm"), "7, 07")
     verifyEq(x.toLocale("s, ss"), "20, 20")
@@ -1228,6 +1229,19 @@ class DateTimeTest : Test
     verifyEq(Date("2010-01-24").toLocale("DDD"), "24th")
     verifyEq(Date("2010-01-30").toLocale("DDD"), "30th")
     verifyEq(Date("2010-01-31").toLocale("DDD"), "31st")
+
+    verifyEq(Date("2023-01-07").toLocale("Q"), "1")
+    verifyEq(Date("2023-02-07").toLocale("QQQ"), "1st")
+    verifyEq(Date("2023-03-07").toLocale("QQQQ"), "1st Quarter")
+    verifyEq(Date("2023-04-01").toLocale("Q"), "2")
+    verifyEq(Date("2023-05-07").toLocale("QQQ"), "2nd")
+    verifyEq(Date("2023-06-30").toLocale("QQQQ"), "2nd Quarter")
+    verifyEq(Date("2023-07-01").toLocale("Q"), "3")
+    verifyEq(Date("2023-08-07").toLocale("QQQ"), "3rd")
+    verifyEq(Date("2023-09-30").toLocale("QQQQ"), "3rd Quarter")
+    verifyEq(Date("2023-10-01").toLocale("Q"), "4")
+    verifyEq(Date("2023-11-07").toLocale("QQQ"), "4th")
+    verifyEq(Date("2023-12-31").toLocale("QQQQ"), "4th Quarter")
 
     verifyNull(Date.fromLocale("2-nomonth-1999", "D-MMMM-YYYY", false))
     verifyErr(ParseErr#) { Date.fromLocale("xyz", "YY-MM-DD") }

@@ -139,18 +139,18 @@ fan.sys.Log.m_handlers.push(fan.sys.Func.make(
 //
 // Month
 //
-fan.sys.Month.m_jan = new fan.sys.Month(0,  "jan");
-fan.sys.Month.m_feb = new fan.sys.Month(1,  "feb");
-fan.sys.Month.m_mar = new fan.sys.Month(2,  "mar");
-fan.sys.Month.m_apr = new fan.sys.Month(3,  "apr");
-fan.sys.Month.m_may = new fan.sys.Month(4,  "may");
-fan.sys.Month.m_jun = new fan.sys.Month(5,  "jun");
-fan.sys.Month.m_jul = new fan.sys.Month(6,  "jul");
-fan.sys.Month.m_aug = new fan.sys.Month(7,  "aug");
-fan.sys.Month.m_sep = new fan.sys.Month(8,  "sep");
-fan.sys.Month.m_oct = new fan.sys.Month(9,  "oct");
-fan.sys.Month.m_nov = new fan.sys.Month(10, "nov");
-fan.sys.Month.m_dec = new fan.sys.Month(11, "dec");
+fan.sys.Month.m_jan = new fan.sys.Month(0,  "jan", 1);
+fan.sys.Month.m_feb = new fan.sys.Month(1,  "feb", 1);
+fan.sys.Month.m_mar = new fan.sys.Month(2,  "mar", 1);
+fan.sys.Month.m_apr = new fan.sys.Month(3,  "apr", 2);
+fan.sys.Month.m_may = new fan.sys.Month(4,  "may", 2);
+fan.sys.Month.m_jun = new fan.sys.Month(5,  "jun", 2);
+fan.sys.Month.m_jul = new fan.sys.Month(6,  "jul", 3);
+fan.sys.Month.m_aug = new fan.sys.Month(7,  "aug", 3);
+fan.sys.Month.m_sep = new fan.sys.Month(8,  "sep", 3);
+fan.sys.Month.m_oct = new fan.sys.Month(9,  "oct", 4);
+fan.sys.Month.m_nov = new fan.sys.Month(10, "nov", 4);
+fan.sys.Month.m_dec = new fan.sys.Month(11, "dec", 4);
 
 fan.sys.Month.m_vals = fan.sys.List.make(fan.sys.Month.$type,
 [

@@ -14,18 +14,18 @@ public final class Month
   extends Enum
 {
 
-  public static final Month jan = new Month(0,  "jan");
-  public static final Month feb = new Month(1,  "feb");
-  public static final Month mar = new Month(2,  "mar");
-  public static final Month apr = new Month(3,  "apr");
-  public static final Month may = new Month(4,  "may");
-  public static final Month jun = new Month(5,  "jun");
-  public static final Month jul = new Month(6,  "jul");
-  public static final Month aug = new Month(7,  "aug");
-  public static final Month sep = new Month(8,  "sep");
-  public static final Month oct = new Month(9,  "oct");
-  public static final Month nov = new Month(10, "nov");
-  public static final Month dec = new Month(11, "dec");
+  public static final Month jan = new Month(0,  "jan", 1);
+  public static final Month feb = new Month(1,  "feb", 1);
+  public static final Month mar = new Month(2,  "mar", 1);
+  public static final Month apr = new Month(3,  "apr", 2);
+  public static final Month may = new Month(4,  "may", 2);
+  public static final Month jun = new Month(5,  "jun", 2);
+  public static final Month jul = new Month(6,  "jul", 3);
+  public static final Month aug = new Month(7,  "aug", 3);
+  public static final Month sep = new Month(8,  "sep", 3);
+  public static final Month oct = new Month(9,  "oct", 4);
+  public static final Month nov = new Month(10, "nov", 4);
+  public static final Month dec = new Month(11, "dec", 4);
 
   static final Month[] array =
   {
@@ -37,12 +37,13 @@ public final class Month
 
   public static Month fromOrdinal(int ord) { return array[ord]; }
 
-  private Month(int ordinal, String name)
+  private Month(int ordinal, String name, int quarter)
   {
     Enum.make$(this, FanInt.pos[ordinal], name.intern());
     this.ord = ordinal;
     this.localeAbbrKey = name + "Abbr";
     this.localeFullKey = name + "Full";
+    this.quarter = quarter;
   }
 
   public static Month fromStr(String name) { return fromStr(name, true); }
@@ -97,6 +98,7 @@ public final class Month
   }
 
   final int ord;
+  final int quarter;
   final String localeAbbrKey;
   final String localeFullKey;
 }

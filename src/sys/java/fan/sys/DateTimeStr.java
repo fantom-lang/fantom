@@ -151,6 +151,17 @@ class DateTimeStr
           }
           break;
 
+        case 'Q':
+          int quarter = mon.quarter;
+          switch (n)
+          {
+            case 4:  s.append(quarter).append(daySuffix(quarter)).append(' ').append(quarterLabel()); break;
+            case 3:  s.append(quarter).append(daySuffix(quarter)); break;
+            case 1:  s.append(quarter); break;
+            default: invalidNum = true;
+          }
+          break;
+
         case 'V':
           int woy = weekOfYear();
           if (woy < 1) throw ArgErr.make("Week of year not available");
@@ -675,6 +686,11 @@ class DateTimeStr
     if (val instanceof DateTime) return (int)((DateTime)val).weekOfYear(sow);
     if (val instanceof Date) return (int)((Date)val).weekOfYear(sow);
     return 0;
+  }
+
+  private String quarterLabel()
+  {
+    return Env.cur().locale(Sys.sysPod, "quarter", "Quarter", locale);
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -145,6 +145,9 @@ const final class Date
   **   DDD    Day with suffix            1st, 2nd, 3rd, 24th
   **   WWW    Three letter abbr weekday  Tue
   **   WWWW   Full weekday               Tuesday
+  **   Q      Quarter number             3
+  **   QQQ    Quarter with suffix        3rd
+  **   QQQQ   Quarter spelled out        3rd Quarter
   **   'xyz'  Literal characters
   **
   Str toLocale(Str? pattern := null, Locale locale := Locale.cur)

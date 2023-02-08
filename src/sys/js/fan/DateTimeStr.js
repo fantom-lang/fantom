@@ -169,6 +169,17 @@ fan.sys.DateTimeStr.prototype.format = function()
         }
         break;
 
+      case 'Q':
+        var quarter = this.mon.m_quarter;
+        switch (n)
+        {
+          case 4:  s += quarter + fan.sys.DateTimeStr.daySuffix(quarter) + " " + this.quarterLabel(); break;
+          case 3:  s += quarter + fan.sys.DateTimeStr.daySuffix(quarter); break;
+          case 1:  s += quarter; break;
+          default: invalidNum = true;
+        }
+        break;
+
       case 'V':
         var woy = this.weekOfYear();
         if (woy < 1) throw fan.sys.ArgErr.make("Week of year not available");
@@ -691,5 +702,10 @@ fan.sys.DateTimeStr.prototype.weekOfYear = function()
   if (this.valDateTime !== undefined) return this.valDateTime.weekOfYear(sow);
   if (this.valDate !== undefined)     return this.valDate.weekOfYear(sow);
   return 0;
+}
+
+fan.sys.DateTimeStr.prototype.quarterLabel = function()
+{
+  return fan.sys.Env.cur().locale(fan.sys.Pod.find("sys"), "quarter", "Quarter", this.locale());
 }
 

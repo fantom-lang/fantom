@@ -16,9 +16,10 @@ fan.sys.Month = fan.sys.Obj.$extend(fan.sys.Enum);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Month.prototype.$ctor = function(ordinal, name)
+fan.sys.Month.prototype.$ctor = function(ordinal, name, quarter)
 {
   fan.sys.Enum.make$(this, ordinal, name);
+  this.m_quarter = quarter;
   this.m_localeAbbrKey = name + "Abbr";
   this.m_localeFullKey = name + "Full";
 }
