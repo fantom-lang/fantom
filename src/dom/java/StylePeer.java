@@ -10,7 +10,7 @@ package fan.dom;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import fan.sys.List;
+import fan.sys.*;
 import fanx.interop.*;
 
 public class StylePeer
@@ -63,6 +63,12 @@ public class StylePeer
     return self;
   }
 
+  Style clear(Style self) { throw err(); }
+
+  Object computed(Style self, String name) { throw err(); }
+
+  Object effective(String name) { throw err(); }
+
   public Object get(Style self, String name)
   {
     return props.get(name);
@@ -73,6 +79,8 @@ public class StylePeer
     if (val == null) props.remove(name);
     else props.put(name, val);
   }
+
+  private static Err err() { return UnsupportedErr.make(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
