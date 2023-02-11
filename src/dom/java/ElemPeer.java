@@ -28,6 +28,11 @@ public class ElemPeer
     return DomPeerFactory.factory().makeElem(fan);
   }
 
+  public static Elem fromNative(Object elem, Type type)
+  {
+    return DomPeerFactory.factory().elemFromNative(elem, type);
+  }
+
   public void _make(Elem self, String tagName, Uri ns)
   {
     this.tagName = tagName;
@@ -58,8 +63,8 @@ public class ElemPeer
   public void text(Elem self, String text) { this.text = text; }
 
   // TODO: need to serialize all children into <html> format?
-  // public String html(Elem self) { return ...; }
-  // public void html(Elem self, String html) { ... }
+  public String html(Elem self) { throw err(); }
+  public void html(Elem self, String html) { throw err(); }
 
   public boolean enabled(Elem self) { return enabled; }
   public void enabled(Elem self, boolean v) { this.enabled = v; }
@@ -175,6 +180,21 @@ public class ElemPeer
     return null;
   }
 
+  public Object invoke(String name, List args) { throw err(); }
+
+//////////////////////////////////////////////////////////////////////////
+//Layout
+//////////////////////////////////////////////////////////////////////////
+
+// cannot compile against "web" pod - see https://fantom.org/forum/topic/2886
+// public Point pos       (Elem self) { throw err(); }
+// public Point pagePos   (Elem self) { throw err(); }
+// public Size  size      (Elem self) { throw err(); }
+// public Point scrollPos (Elem self) { throw err(); }
+// public Size  scrollSize(Elem self) { throw err(); }
+
+  public Elem scrollIntoView(Elem self, boolean alignToTop) { throw err(); }
+
 //////////////////////////////////////////////////////////////////////////
 // Tree
 //////////////////////////////////////////////////////////////////////////
@@ -271,6 +291,8 @@ public class ElemPeer
     return Interop.toFan(matches, self.typeof());
   }
 
+  public Elem clone(Elem self, boolean deep) { throw err(); }
+
   private void matchQuerySelector(Elem parent, QuerySelector q, ArrayList matches)
   {
     List kids = parent.children();
@@ -299,11 +321,17 @@ public class ElemPeer
 // Events
 //////////////////////////////////////////////////////////////////////////
 
+  public boolean hasFocus(Elem self) { throw err(); }
+  public void    focus   (Elem self) { throw err(); }
+  public void    blur    (Elem self) { throw err(); }
+
   public Func onEvent(Elem self, String type, boolean useCapture, Func handler)
   {
     // ignore
     return handler;
   }
+
+  public void removeEvent(Elem self, String type, boolean useCapture, Func handler) { throw err(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
@@ -321,4 +349,6 @@ public class ElemPeer
   private HashMap props = new HashMap();      // Str:Obj
   private Elem parent;                        // null
   private ArrayList kids = new ArrayList();
+
+  private static Err err() { return UnsupportedErr.make(); }
 }

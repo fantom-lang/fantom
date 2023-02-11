@@ -8,10 +8,17 @@
 
 package fan.dom;
 
+import fan.sys.*;
+
 public class HttpReqPeer
 {
   public static HttpReqPeer make(HttpReq fan)
   {
     return DomPeerFactory.factory().makeHttpReq(fan);
   }
+
+  public void   send      (String method, Object content, Func c) { throw err(); }
+  public String encodeForm(Map form)                              { throw err(); }
+
+  private static Err err() { return UnsupportedErr.make(); }
 }

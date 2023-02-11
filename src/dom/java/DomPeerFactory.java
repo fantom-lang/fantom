@@ -28,6 +28,11 @@ public class DomPeerFactory
     return new DocPeer();
   }
 
+  public DomFilePeer makeDomFile(DomFile fan)
+  {
+    return new DomFilePeer();
+  }
+
   public ElemPeer makeElem(Elem fan)
   {
     return new ElemPeer();
@@ -62,5 +67,19 @@ public class DomPeerFactory
   {
     throw UnsupportedErr.make("Win.cur");
   }
-}
 
+  public Object winEval(String js)
+  {
+    throw UnsupportedErr.make("Win.eval");
+  }
+
+  public Elem elemFromNative(Object elem, Type type)
+  {
+    throw UnsupportedErr.make("elem.fromNative");
+  }
+
+  public Event eventFromNative(Object elem)
+  {
+    throw UnsupportedErr.make("event.fromNative");
+  }
+}
