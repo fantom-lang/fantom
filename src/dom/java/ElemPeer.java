@@ -66,8 +66,8 @@ public class ElemPeer
   public String html(Elem self) { throw err(); }
   public void html(Elem self, String html) { throw err(); }
 
-  public boolean enabled(Elem self) { return enabled; }
-  public void enabled(Elem self, boolean v) { this.enabled = v; }
+  public Boolean enabled(Elem self) { return enabled; }
+  public void enabled(Elem self, Boolean v) { this.enabled = v; }
 
 //////////////////////////////////////////////////////////////////////////
 // Attributes

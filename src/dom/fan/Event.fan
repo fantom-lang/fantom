@@ -23,13 +23,6 @@ using graphics
 **   "click"       Fired when a mouse button is pressed and released on a
 **                 single element.
 **
-**   "mousedown"   Fired when a mouse button is pressed on an element.
-**
-**   "mouseup"     Fired when a mouse button is released over an element.
-**
-**   "click"       Fired when a mouse button is pressed and released on a
-**                 single element.
-**
 **   "dblclick"    Fired when a mouse button is clicked twice on a single element.
 **
 **   "mousemove"   Fired when a mouse is moved while over an element.
