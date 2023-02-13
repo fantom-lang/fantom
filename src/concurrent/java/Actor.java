@@ -159,7 +159,7 @@ public class Actor
     msg = _safe(msg);
 
     // don't deliver new messages to a stopped pool
-    if (pool.isStopped()) throw Err.make("ActorPool is stopped");
+    if (pool.isStopped()) throw Err.make("ActorPool is stopped [" + pool.name + "]");
 
     // get the future instance to manage this message's lifecycle
     ActorFuture f = new ActorFuture(msg);
