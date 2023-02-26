@@ -415,8 +415,8 @@ const final class Int : Num
   ** then leading zeros are prepended to ensure the specified width.
   **
   ** Examples:
-  **   255.toRadix(8)    =>  "ff"
-  **   255.toRadix(8, 3) =>  "00ff"
+  **   255.toRadix(8)    =>  "377"
+  **   255.toRadix(8, 5) =>  "00377"
   **
   Str toRadix(Int radix, Int? width := null)
 
