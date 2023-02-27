@@ -4,6 +4,7 @@
 //
 // History:
 //   06 Aug 2021 Matthew Giannini Creation
+//   26 Feb 2023 Jeremy Criquet Added many of the common methods from java's BigInteger
 //
 
 **
@@ -47,28 +48,11 @@ native const class BigInt
   ** Compare based on integer value.
   override Int compare(Obj obj)
 
-  ** Return decimal string representation.
-  override Str toStr()
+  ** The hash for a BigInt is platform dependent.
+  override Int hash()
 
 //////////////////////////////////////////////////////////////////////////
-// Identity
-//////////////////////////////////////////////////////////////////////////
-
-  ** -1, 0, 1 if the BigInt is negative, zero, or positive.
-  Int signum()
-
-  ** Convert the number to an Int.
-  **
-  ** If the value is out-of-range and checked is true, an Err is thrown.
-  ** Otherwise the value is truncated, with possible loss of sign.
-  Int toInt(Bool checked := true)
-
-  ** Returns a byte array containing the two's-complement representation
-  ** of this BigInt.
-  Buf toBuf()
-
-//////////////////////////////////////////////////////////////////////////
-// Methods
+// Operations
 //////////////////////////////////////////////////////////////////////////
 
   ////////// unary //////////
@@ -81,6 +65,46 @@ native const class BigInt
 
   ** Decrement by one.  Shortcut is --a or a--.
   @Operator BigInt decrement()
+
+  ////////// mult //////////
+
+  ** Multiply this with b.  Shortcut is a*b.
+  @Operator BigInt mult(BigInt b)
+
+  ** Multiply this with b.  Shortcut is a*b.
+  @Operator BigInt multInt(Int b)
+
+  ////////// div //////////
+
+  ** Divide this by b.  Shortcut is a/b.
+  @Operator BigInt div(BigInt b)
+
+  ** Divide this by b.  Shortcut is a/b.
+  @Operator BigInt divInt(Int b)
+
+  ////////// mod //////////
+
+  ** Return remainder of this divided by b.  Shortcut is a%b.
+  @Operator BigInt mod(BigInt b)
+
+  ** Return remainder of this divided by b.  Shortcut is a%b.
+  @Operator Int modInt(Int b)
+
+  ////////// plus //////////
+
+  ** Add this with b.  Shortcut is a+b.
+  @Operator BigInt plus(BigInt b)
+
+  ** Add this with b.  Shortcut is a+b.
+  @Operator BigInt plusInt(Int b)
+
+  ////////// minus //////////
+
+  ** Subtract b from this.  Shortcut is a-b.
+  @Operator BigInt minus(BigInt b)
+
+  ** Subtract b from this.  Shortcut is a-b.
+  @Operator BigInt minusInt(Int b)
 
 //////////////////////////////////////////////////////////////////////////
 // Bitwise
@@ -126,5 +150,60 @@ native const class BigInt
   ** similar to Int.shifta, not Int.shiftr.  Sign extension is performed.
   ** Negative values call shiftl instead.
   BigInt shiftr(Int b)
+
+//////////////////////////////////////////////////////////////////////////
+// Math
+//////////////////////////////////////////////////////////////////////////
+
+  ** -1, 0, 1 if the BigInt is negative, zero, or positive.
+  Int signum()
+
+  ** Return the absolute value of this integer.  If this value is
+  ** positive then return this, otherwise return the negation.
+  BigInt abs()
+
+  ** Return the smaller of this and the specified BigInt values.
+  BigInt min(BigInt that)
+
+  ** Return the larger of this and the specified BigInt values.
+  BigInt max(BigInt that)
+
+  ** Return this value raised to the specified power.
+  ** Throw ArgErr if pow is less than zero.
+  BigInt pow(Int pow)
+
+//////////////////////////////////////////////////////////////////////////
+// Conversion
+//////////////////////////////////////////////////////////////////////////
+
+  ** Convert the number to an Int.
+  **
+  ** If the value is out-of-range and checked is true, an Err is thrown.
+  ** Otherwise the value is truncated, with possible loss of sign.
+  Int toInt(Bool checked := true)
+
+  ** Convert the number to an Float.
+  **
+  ** If the value is out-of-range, it will return Float.posInf
+  ** or Float.negInf.  Possible loss of precision is still possible, even
+  ** if the value is finite.
+  Float toFloat()
+
+  ** Convert the number to an Decimal.
+  **
+  ** This simply wraps the BigInt with Decimal with a 0 scale,
+  ** equivilent mathematically to int * 2^0
+  Decimal toDecimal()
+
+  ** Returns a byte array containing the two's-complement representation
+  ** of this BigInt.
+  Buf toBuf()
+
+  ** Return decimal string representation.
+  override Str toStr()
+
+  ** Return string representation in given radix.  If width is non-null,
+  ** then leading zeros are prepended to ensure the specified width.
+  Str toRadix(Int radix, Int? width := null)
 
 }
