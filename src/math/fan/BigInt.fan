@@ -16,42 +16,42 @@ native const class BigInt
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-	static new fromStr(Str s, Int radix := 10, Bool checked := true)
+  static new fromStr(Str s, Int radix := 10, Bool checked := true)
 
-	** Default value is 0.
-	static const BigInt defVal
-	static const BigInt zero
-	static const BigInt one
+  ** Default value is 0.
+  static const BigInt defVal
+  static const BigInt zero
+  static const BigInt one
 
-	new makeInt(Int val)
-	new makeBuf(Buf bytes)
+  new makeInt(Int val)
+  new makeBuf(Buf bytes)
 
-	private new privateMake()
+  private new privateMake()
 
 //////////////////////////////////////////////////////////////////////////
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-	override Bool equals(Obj? obj)
+  override Bool equals(Obj? obj)
 
-	override Int compare(Obj obj)
+  override Int compare(Obj obj)
 
-	override Str toStr()
+  override Str toStr()
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-	** -1, 0, 1 if the BigInt is negative, zero, or positive.
-	Int signum()
+  ** -1, 0, 1 if the BigInt is negative, zero, or positive.
+  Int signum()
 
-	** Convert the number to an Int.
-	**
-	** If the value is out-of-range and checked is true, an Err is thrown.
-	** Otherwise the value is truncated, with possible loss of sign.
-	Int toInt(Bool checked := true)
+  ** Convert the number to an Int.
+  **
+  ** If the value is out-of-range and checked is true, an Err is thrown.
+  ** Otherwise the value is truncated, with possible loss of sign.
+  Int toInt(Bool checked := true)
 
-	Buf toBuf()
+  Buf toBuf()
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
@@ -59,38 +59,38 @@ native const class BigInt
 
   ////////// unary //////////
 
-	@Operator BigInt negate()
+  @Operator BigInt negate()
 
-	@Operator BigInt increment()
+  @Operator BigInt increment()
 
-	@Operator BigInt decrement()
+  @Operator BigInt decrement()
 
 //////////////////////////////////////////////////////////////////////////
 // Bitwise
 //////////////////////////////////////////////////////////////////////////
 
-	BigInt setBit(Int b)
+  BigInt setBit(Int b)
 
-	BigInt clearBit(Int b)
+  BigInt clearBit(Int b)
 
-	BigInt flipBit(Int b)
+  BigInt flipBit(Int b)
 
-	Bool testBit(Int b)
+  Bool testBit(Int b)
 
-	** Returns the number of bits in the minimal two's-complement
-	** representation of this BigInteger, excluding a sign bit.
-	Int bitLen()
+  ** Returns the number of bits in the minimal two's-complement
+  ** representation of this BigInteger, excluding a sign bit.
+  Int bitLen()
 
-	BigInt not()
+  BigInt not()
 
-	BigInt and(Obj b)
+  BigInt and(Obj b)
 
-	BigInt or(Obj b)
+  BigInt or(Obj b)
 
-	BigInt xor(Obj b)
+  BigInt xor(Obj b)
 
-	BigInt shiftl(Int b)
+  BigInt shiftl(Int b)
 
-	BigInt shftr(Int b)
+  BigInt shftr(Int b)
 
 }
