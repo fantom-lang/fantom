@@ -39,7 +39,11 @@ fan.sys.SysInStream.prototype.$typeof = function() { return fan.sys.SysInStream.
 // InStream
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.SysInStream.prototype.read = function() { var n = this.r(); return n < 0 ? null : n; }
+fan.sys.SysInStream.prototype.read = function()
+{
+  var n = this.r();
+  return n < 0 ? null : n;
+}
 fan.sys.SysInStream.prototype.r = function()
 {
   try
@@ -121,3 +125,115 @@ fan.sys.SysInStream.prototype.close = function()
   }
 }
 
+/*************************************************************************
+ * LocalFileInStream
+ ************************************************************************/
+
+fan.sys.LocalFileInStream = fan.sys.Obj.$extend(fan.sys.SysInStream);
+fan.sys.LocalFileInStream.prototype.$typeof = function() { return fan.sys.LocalFileInStream.$type; }
+fan.sys.LocalFileInStream.prototype.$ctor = function(fd, bufSize)
+{
+  fan.sys.SysInStream.prototype.$ctor.call(this);
+  this.fd = fd;
+  this.pre = [];
+  this.buf = Buffer.alloc(bufSize);
+  this.start = 0;
+  this.end = 0;
+  this._load();
+}
+
+fan.sys.LocalFileInStream.prototype._load = function()
+{
+  this.start = 0;
+  this.end = fs.readSync(this.fd, this.buf);
+}
+
+fan.sys.LocalFileInStream.prototype.avail = function()
+{
+  return this.pre.length + (this.end - this.start);
+}
+
+fan.sys.LocalFileInStream.prototype.r = function()
+{
+  try
+  {
+    if (this.avail() === 0)
+      this._load();
+    else if (this.pre.length > 0)
+      return this.pre.pop();
+
+    if (this.avail() == 0)
+    {
+      return -1;
+    }
+    var x = this.buf[this.start++];
+    return x
+  }
+  catch (e)
+  {
+    throw fan.sys.IOErr.make(e);
+  }
+}
+
+fan.sys.LocalFileInStream.prototype.readBuf = function(buf, n)
+{
+  var out = buf.out();
+  var read = 0;
+  var r;
+  while (n > 0)
+  {
+    r = this.read();
+    if (r === null) break;
+    out.write(r);
+    n--;
+    read++;
+  }
+  return read == 0 ? null : read;
+}
+
+fan.sys.LocalFileInStream.prototype.unread = function(n)
+{
+  this.pre.push(n);
+}
+
+fan.sys.LocalFileInStream.prototype.skip = function(n)
+{
+  var skipped = 0;
+
+  if (this.pre.length > 0)
+  {
+    var len = Math.min(this.pre.length, n);
+    this.pre = this.pre.slice(0, -len);
+    n -= len;
+    skipped += len;
+  }
+
+  if (this.avail() === 0)
+    this._load();
+  while (this.avail() > n)
+  {
+    this.n -= this.avail();
+    this.skipped += this.avail();
+    this._load();
+  }
+
+  n = Math.min(this.avail(), n);
+
+  start += n;
+  skipped += n;
+
+  return skipped;
+}
+
+fan.sys.LocalFileInStream.prototype.close = function()
+{
+  try
+  {
+    fs.closeSync(fd);
+    return true;
+  }
+  catch (e)
+  {
+    return false;
+  }
+}

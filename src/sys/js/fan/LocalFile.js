@@ -3,216 +3,185 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   1 Sep 10  Andy Frank  Creation
+//   1 Sep 10  Andy Frank     Creation
+//   8 Jan 23  Kiera O'Flynn  Integration w/ Node JS
 //
+
+
+var fs = null;
+if (typeof require !== "undefined") { fs = require('fs'); }
 
 /**
  * LocalFile.
  */
 
 fan.sys.LocalFile = fan.sys.Obj.$extend(fan.sys.File);
-fan.sys.LocalFile.prototype.$ctor = function() {}
+fan.sys.LocalFile.prototype.$ctor = function()
+{
+  fan.sys.File.prototype.$ctor.call()
+}
 fan.sys.LocalFile.prototype.$typeof = function() { return fan.sys.LocalFile.$type; }
 
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.LocalFile.make = function(file)
-{
-  var instance = new fan.sys.LocalFile();
-  instance.m_file = file;
-  instance.m_uri  = fan.sys.LocalFile.fileToUri(file, file.isDirectory(), null);
-  return instance;
-}
-
-fan.sys.LocalFile.makeUri = function(uri, file)
-{
-  if (file.exists())
-  {
-    if (file.isDirectory())
-    {
-      if (!uri.isDir())
-        throw fan.sys.IOErr.make("Must use trailing slash for dir: " + uri);
-    }
-    else
-    {
-      if (uri.isDir())
-        throw fan.sys.IOErr.make("Cannot use trailing slash for file: " + uri);
-    }
-  }
-
-  var instance = new fan.sys.LocalFile();
-  instance.m_uri  = uri;
-  instance.m_file = file;
-  return instance;
-}
-
-//////////////////////////////////////////////////////////////////////////
-// Conversions
-//////////////////////////////////////////////////////////////////////////
-
-fan.sys.LocalFile.fileToUri = function(file, isDir, scheme)
-{
-  var path = fan.sys.Str.javaToJs(file.getPath());
-  var len = path.length;
-  var s = "";
-
-  // if scheme was specified
-  if (scheme != null) s += scheme + ':';
-
-  // deal with Windoze drive name
-  if (len > 2 && path.charAt(1) == ':' && path.charAt(0) != '/')
-    s += '/';
-
-  // map characters
-  for (var i=0; i<len; ++i)
-  {
-    var c = path.charAt(i);
-    switch (c)
-    {
-      case '?':
-      case '#':  s += '\\' + c; break;
-      case '\\': s += '/'; break;
-      default:   s += c;
-    }
-  }
-
-  // add trailing slash if not present
-  if (isDir && (s.length == 0 || s.charAt(s.length-1) != '/'))
-    s += '/';
-
-  return fan.sys.Uri.fromStr(s);
-}
-
-fan.sys.LocalFile.uriToFile = function(uri)
+fan.sys.LocalFile.make = function(uri)
 {
   if (uri.scheme() != null && uri.scheme() != "file")
-    throw fan.sys.ArgErr.make("Invalid Uri scheme for local file: " + uri);
-  return new java.io.File(fan.sys.LocalFile.uriToPath(uri));
-}
+    throw fan.sys.ArgErr.make("Invalid Uri scheme for local file: " + uri.toStr());
+  var os = require('os');
+  var url = require('url');
+  var path = require('path');
+  var instance = new fan.sys.LocalFile();
+  instance.m_uri = uri;
+  instance.m_uri_str = uri.toStr();
 
-fan.sys.LocalFile.uriToPath = function(uri)
-{
-  var path = uri.pathStr();
-  var len  = path.length;
-  var s = null;
-  for (var i=0; i<len; ++i)
-  {
-    var c = path.charAt(i);
-    if (c == '\\')
-    {
-      if (s == null) { s = ""; s += path.substr(0, i); }
-    }
-    else if (s != null) s += c;
-  }
-  return s == null ? path : s;
-}
+  // node cannot handle windows paths with leading '/' so we need
+  // finagle the uri path into a format that works on unix and windows
+  // console.log("TODO: normalize windows path: " + instance.m_uri_str);
+  instance.m_node_os_path = uri.toStr();
 
-fan.sys.LocalFile.fileNameToUriName = function(name)
-{
-  var len = name.length;
-  var s = null;
-  for (var i=0; i<len; ++i)
-  {
-    var c = name.charAt(i);
-    switch (c)
-    {
-      case '?':
-      case '#':
-        if (s == null) { s = ""; s += name.substr(0,i); }
-        s += '\\' + c;
-        break;
-      default:
-        if (s != null) s += c;
+  if (os.platform == "win32" && uri.isPathAbs()) {
+    var uriStr = uri.toStr();
+    if (!uri.isAbs()) {
+      // ensure the uri has file scheme
+      uriStr = "file://" + uriStr;
     }
+    else if (!/^.+:/.test(uri.pathStr())) {
+      // ensure paths that don't have drive are fixed to have drive
+      // otherwise url.fileURLToPath barfs
+      // file:/ok/path => file:///C:/ok/path
+      uriStr = "file:///" + fan.sys.File._win32Drive() + uri.pathStr();
+    }
+    instance.m_node_os_path = url.fileURLToPath(uriStr).split(path.sep).join(path.posix.sep);
   }
-  return s == null ? name : s;
+
+  return instance;
 }
 
 //////////////////////////////////////////////////////////////////////////
-// File
+// Access
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.LocalFile.prototype.isDir = function() { return this.m_uri.isDir(); }
+fan.sys.LocalFile.prototype.isDirectory = function()
+{
+  return this.exists() && fs.statSync(this.m_node_os_path).isDirectory();
+}
 
-fan.sys.LocalFile.prototype.exists = function() { return this.m_file.exists(); }
+fan.sys.LocalFile.prototype.exists = function() { return fs.existsSync(this.m_node_os_path); }
 
 fan.sys.LocalFile.prototype.size = function()
 {
-  if (this.m_file.isDirectory()) return null;
-  return this.m_file.length();
+  if (!this.exists() || this.isDirectory()) return null;
+  return fs.statSync(this.m_node_os_path).size;
 }
 
-//public DateTime modified() { return DateTime.fromJava(file.lastModified()); }
+fan.sys.LocalFile.prototype.modified = function()
+{
+  if (!this.exists()) return null;
+  return fan.sys.DateTime.fromJs(fs.statSync(this.m_node_os_path).mtime);
+}
 
-//public void modified(DateTime time) { file.setLastModified(time.toJava()); }
+fan.sys.LocalFile.prototype.modified$ = function(val)
+{
+  throw fan.sys.UnsupportedErr.make("Node JS cannot set the last-modified time of a local file.");
+}
+
+fan.sys.LocalFile.prototype._checkAccess = (C) =>
+(
+  function()
+  {
+    try {
+      fs.accessSync(this.m_node_os_path, C);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+)
+
+fan.sys.LocalFile.prototype.isHidden = function()
+{
+  throw fan.sys.UnsupportedErr.make("Node JS cannot detect whether a local file is hidden.");
+}
+fan.sys.LocalFile.prototype.isReadable = function()
+{
+  return this._checkAccess(fs.constants.R_OK);
+}
+fan.sys.LocalFile.prototype.isWritable = function()
+{
+  return this._checkAccess(fs.constants.W_OK);
+}
+fan.sys.LocalFile.prototype.isExecutable = function()
+{
+  return this._checkAccess(fs.constants.X_OK);
+}
 
 fan.sys.LocalFile.prototype.osPath = function()
 {
-  return fan.sys.Str.javaToJs(this.m_file.getPath());
+  return this.m_node_os_path;
 }
 
 fan.sys.LocalFile.prototype.parent = function()
 {
-  var parent = this.m_uri.parent();
+  let parent = this.m_uri.parent();
   if (parent == null) return null;
-  return fan.sys.LocalFile.makeUri(parent, fan.sys.LocalFile.uriToFile(parent));
+  return fan.sys.LocalFile.make(parent);
 }
 
-fan.sys.LocalFile.prototype.list = function()
+fan.sys.LocalFile.prototype.list = function(pattern)
 {
-  var list = this.m_file.listFiles();
+  if (!this.exists() || !this.isDir())
+    return fan.sys.List.make(fan.sys.File.$type, []);
+
+  var list = fs.readdirSync(this.m_node_os_path, { withFileTypes: true });
+
   var len = list == null ? 0 : list.length;
   var acc = fan.sys.List.make(fan.sys.File.$type, []);
   for (var i=0; i<len; ++i)
   {
     var f = list[i];
-    var name = fan.sys.LocalFile.fileNameToUriName(f.getName());
-    acc.add(fan.sys.LocalFile.makeUri(this.m_uri.plusName(name, f.isDirectory()), f));
+    var name = f.name;
+    if (!pattern || pattern.matches(name))
+      acc.add(fan.sys.LocalFile.make(this.m_uri.plusName(name, f.isDirectory())));
   }
   return acc;
 }
 
-// public File normalize()
-
-fan.sys.LocalFile.prototype.plus = function(uri, checkSlash)
+fan.sys.LocalFile.prototype.normalize = function()
 {
-  return fan.sys.File.make(this.m_uri.plus(uri), checkSlash);
+  var url = require('url');
+  var path = require('path');
+  var href = url.pathToFileURL(path.resolve(this.m_node_os_path)).href;
+  var uri  = fan.sys.Uri.fromStr(href);
+  return fan.sys.LocalFile.make(uri);
 }
+
+// TODO: store
 
 //////////////////////////////////////////////////////////////////////////
 // File Management
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.LocalFile.prototype.create = function()
-{
-  if (this.isDir())
-    this.createDir();
-  else
-    this.createFile();
-  return this;
-}
+// Helper create functions
 
-fan.sys.LocalFile.prototype.createFile = function()
+fan.sys.LocalFile.prototype._createFile = function()
 {
-  if (this.m_file.exists())
-  {
-    if (this.m_file.isDirectory())
-      throw fan.sys.IOErr.make("Already exists as dir: " + this.m_file);
-  }
+  if (this.isDirectory())
+    throw fan.sys.IOErr.make("Already exists as dir: " + this.m_uri);
 
-  var parent = this.m_file.getParentFile();
+  if (this.exists())
+    this.$delete();
+
+  var parent = this.parent();
   if (parent != null && !parent.exists())
-  {
-    if (!parent.mkdirs())
-      throw fan.sys.IOErr.make("Cannot create dir: " + parent);
-  }
+    parent.create();
 
   try
   {
-    var out = new java.io.FileOutputStream(this.m_file);
-    out.close();
+    var out = fs.openSync(this.m_node_os_path, 'w');
+    fs.close(out);
   }
   catch (e)
   {
@@ -220,68 +189,153 @@ fan.sys.LocalFile.prototype.createFile = function()
   }
 }
 
-fan.sys.LocalFile.prototype.createDir = function()
+fan.sys.LocalFile.prototype._createDir = function()
 {
-  if (this.m_file.exists())
+  try
   {
-    if (!this.m_file.isDirectory())
-      throw fan.sys.IOErr.make("Already exists as file: " + this.m_file);
+    fs.mkdirSync(this.m_node_os_path, { recursive: true });
   }
+  catch (e)
+  {
+    throw fan.sys.IOErr.make(e);
+  }
+}
+
+fan.sys.LocalFile.prototype.create = function()
+{
+  if (this.isDir())
+    this._createDir();
   else
-  {
-    if (!this.m_file.mkdirs())
-      throw fan.sys.IOErr.make("Cannot create dir: " + this.m_file);
-  }
+    this._createFile();
+  return this;
 }
 
 fan.sys.LocalFile.prototype.$delete = function()
 {
   if (!this.exists()) return;
 
-  if (this.m_file.isDirectory())
+  try
   {
-    var kids = this.list();
-    for (var i=0; i<kids.size(); ++i)
-      kids.get(i).$delete();
+    fs.rmSync(this.m_node_os_path, { recursive: true, force: true });
   }
-
-  if (!this.m_file['delete']())
-    throw fan.sys.IOErr.make("Cannot delete: " + this.m_file);
+  catch (e)
+  {
+    throw fan.sys.IOErr.make("Cannot delete: " + this.m_uri + "\n" + e);
+  }
 }
 
+fan.sys.LocalFile._toDelete = [];
+
+if (typeof process !== "undefined") {
+process.on('SIGTERM', () => {
+  fan.sys.LocalFile._toDelete.forEach((f) => {
+    f.delete$();
+  })
+});
+}
+
+fan.sys.LocalFile.prototype.deleteOnExit = function()
+{
+  fan.sys.LocalFile._toDelete.push(this);
+  return this;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Copy
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.LocalFile.prototype.superDoCopyFile = fan.sys.File.prototype.doCopyFile;
+
+fan.sys.LocalFile.prototype.doCopyFile = function(to)
+{
+  if (!(to instanceof fan.sys.LocalFile))
+    return this.superDoCopyFile(to);
+
+  fs.copyFileSync(this.m_node_os_path, to.m_node_os_path);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Move
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.LocalFile.prototype.moveTo = function(to)
+{
+  if (this.isDir() != to.isDir())
+  {
+    if (this.isDir())
+      throw fan.sys.ArgErr.make("moveTo must be dir `" + to.toStr() + "`");
+    else
+      throw fan.sys.ArgErr.make("moveTo must not be dir `" + to.toStr() + "`");
+  }
+
+  if (!(to instanceof fan.sys.LocalFile))
+    throw fan.sys.IOErr.make("Cannot move LocalFile to " + to.$typeof());
+  
+  if (to.exists())
+    throw fan.sys.IOErr.make("moveTo already exists: " + to.toStr());
+  
+  if (!this.exists())
+    throw fan.sys.IOErr.make("moveTo source file does not exist: " + this.toStr());
+  
+  if (!this.isDirectory())
+  {
+    var destParent = to.parent();
+    if (destParent != null && !destParent.exists())
+      destParent.create();
+  }
+
+  try
+  {
+    // NOTE: this is very likely going to fail sometimes on windows and we can't
+    // do async retries. so that is sad
+    // https://stackoverflow.com/questions/32457363/eperm-while-renaming-directory-in-node-js-randomly
+    fs.renameSync(this.m_node_os_path, to.m_node_os_path)
+  }
+  catch (e)
+  {
+    throw fan.sys.IOErr.make("moveTo failed: " + to.toStr(), fan.sys.IOErr.make(""+e));
+  }
+
+  return to;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // IO
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.LocalFile.prototype.$in = function(bufSize)
+// TODO: open
+// TODO: mmap
+
+fan.sys.LocalFile.prototype.in = function(bufSize)
 {
-  if (bufSize === undefined) bufSize = fan.sys.Int.Chunk;
-  try
-  {
-    return fan.sys.SysInStream.make(new java.io.FileInputStream(this.m_file), bufSize);
-  }
-  catch (e)
-  {
-    throw fan.sys.IOErr.make(e);
-  }
+  if (!bufSize) bufSize = fan.sys.Int.Chunk;
+
+  if (this.isDirectory())
+    throw fan.sys.IOErr.make("cannot get in stream for a directory");
+
+  var fd = fs.openSync(this.m_node_os_path, 'r');
+  return this.m_in = new fan.sys.LocalFileInStream(fd, bufSize);
 }
+
+fan.sys.LocalFile.prototype.$in = fan.sys.LocalFile.prototype.in
 
 fan.sys.LocalFile.prototype.out = function(append, bufSize)
 {
-  if (append === undefined) append = false;
-  if (bufSize === undefined) bufSize = fan.sys.Int.Chunk;
-  try
-  {
-    var parent = this.m_file.getParentFile();
-    if (parent != null && !parent.exists()) parent.mkdirs();
-    var fout = new java.io.FileOutputStream(this.m_file, append);
-    var bout = fan.sys.SysOutStream.toBuffered(fout, bufSize);
-    return new fan.sys.LocalFileOutStream(bout, fout.getFD());
-  }
-  catch (err)
-  {
-    throw fan.sys.IOErr.make(e);
-  }
+  if (append === undefined)  append = false;
+  if (!bufSize) bufSize = fan.sys.Int.Chunk;
+
+  if (this.isDirectory())
+    throw fan.sys.IOErr.make("cannot get out stream for a directory");
+
+  var flag = append ? 'a' : 'w';
+  var fd = fs.openSync(this.m_node_os_path, flag);
+  // TODO: add bufSize
+  return new fan.sys.LocalFileOutStream(fd);
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+// TODO: sep
+// TODO: pathSep

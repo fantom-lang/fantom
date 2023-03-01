@@ -130,18 +130,18 @@ fan.sys.ConsoleOutStream.prototype.flush = function()
  ************************************************************************/
 
 fan.sys.LocalFileOutStream = fan.sys.Obj.$extend(fan.sys.SysOutStream);
-fan.sys.LocalFileOutStream.prototype.$ctor = function(out, fd)
+fan.sys.LocalFileOutStream.prototype.$typeof = function() { return fan.sys.LocalFileOutStream.$type; }
+fan.sys.LocalFileOutStream.prototype.$ctor = function(fd)
 {
-  fan.sys.SysOutStream.prototype.$ctor.call(this);
-  this.out = out;
+  fan.sys.OutStream.prototype.$ctor.call(this);
   this.fd = fd;
 }
-fan.sys.LocalFileOutStream.prototype.sync = function()
+
+fan.sys.LocalFileOutStream.prototype.write = function(v)
 {
   try
   {
-    this.flush();
-    this.fd.sync();
+    fs.writeSync(this.fd, Buffer.from([v]));
     return this;
   }
   catch (e)
@@ -150,3 +150,31 @@ fan.sys.LocalFileOutStream.prototype.sync = function()
   }
 }
 
+fan.sys.LocalFileOutStream.prototype.writeBuf = function(buf, n)
+{
+  if (n === undefined) n = buf.remaining();
+  if (buf.pos() + n > buf.size())
+    throw fan.sys.IOErr.make("Not enough bytes to write");
+  try
+  {
+    fs.writeSync(this.fd, Buffer.from(buf.getBytes(buf.pos(), n)))
+    return this;
+  }
+  catch (e)
+  {
+    throw fan.sys.IOErr.make(e);
+  }
+}
+
+fan.sys.LocalFileOutStream.prototype.close = function()
+{
+  try
+  {
+    fs.closeSync(fd);
+    return true;
+  }
+  catch (e)
+  {
+    return false;
+  }
+}
