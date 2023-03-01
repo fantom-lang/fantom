@@ -189,6 +189,12 @@ const class YamlList : YamlObj
     else                         this.tag = tag
   }
 
+  ** Iterate the list items
+  Void each(|YamlObj| f)
+  {
+    ((YamlObj[])content).each(f)
+  }
+
   override internal Void writeInd(OutStream out, Int first, Int next := first)
   {
     // special case - this is the overarching document collection, indentation ignored
