@@ -690,9 +690,18 @@ class FileTest : Test
   {
     f := tempDir
     s := f.store
-    verify(s.totalSpace > 0)
-    verify(s.totalSpace > s.availSpace)
-    verify(s.totalSpace > s.freeSpace)
+    if ("js" == Env.cur.runtime)
+    {
+      verifyNull(s.totalSpace)
+      verifyNull(s.freeSpace)
+      verifyNull(s.availSpace)
+    }
+    else
+    {
+      verify(s.totalSpace > 0)
+      verify(s.totalSpace > s.availSpace)
+      verify(s.totalSpace > s.freeSpace)
+    }
     verifyEq(s.typeof.qname, "sys::LocalFileStore")
   }
 

@@ -158,7 +158,10 @@ fan.sys.LocalFile.prototype.normalize = function()
   return fan.sys.LocalFile.make(uri);
 }
 
-// TODO: store
+fan.sys.LocalFile.prototype.store = function()
+{
+  return new fan.sys.LocalFileStore();
+}
 
 //////////////////////////////////////////////////////////////////////////
 // File Management
@@ -303,7 +306,11 @@ fan.sys.LocalFile.prototype.moveTo = function(to)
 // IO
 //////////////////////////////////////////////////////////////////////////
 
-// TODO: open
+// fan.sys.LocalFile.prototype.open = function(mode)
+// {
+//   if (!mode) mode = "rw";
+// }
+
 // TODO: mmap
 
 fan.sys.LocalFile.prototype.in = function(bufSize)
