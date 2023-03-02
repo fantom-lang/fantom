@@ -64,6 +64,7 @@ public class Field
   public Object trap(String name, List args)
   {
     // private undocumented access
+    if (name.equals("setConst")) { set(args.get(0), args.get(1), false); return null; }
     if (name.equals("getter")) return getter;
     if (name.equals("setter")) return setter;
     return super.trap(name, args);

@@ -58,6 +58,7 @@ fan.sys.Field.prototype.$ctor = function(parent, name, flags, type, facets)
 fan.sys.Field.prototype.trap = function(name, args)
 {
   // private undocumented access
+  if (name == "setConst") { this.set(args.get(0), args.get(1), false); return null; }
   if (name == "getter") return this.m_getter;
   if (name == "setter") return this.m_setter;
   return fan.sys.Obj.prototype.trap.call(this, name, args);
