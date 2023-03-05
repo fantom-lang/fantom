@@ -58,8 +58,15 @@ bash=shell
 ksh=shell
 zsh=shell
 
+// xeto rules
+xeto=xeto
+
 // xml rules
 xml=xml
 htm=xml
 html=xml
+
+// yaml rules
+yaml=yaml
+yml=yaml
 

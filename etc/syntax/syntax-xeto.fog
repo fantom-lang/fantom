@@ -1,0 +1,34 @@
+//
+// Syntax rules for Xeto
+//
+// History:
+//   26 Apr 22  Brian Frank  Creation
+//
+
+using syntax
+
+SyntaxRules
+{
+  // bracket symbols
+  brackets = "<>{}[]"
+
+  // list of end of line comment tokens
+  comments = ["//"]
+
+  // block comments
+  blockCommentStart = "/*"
+  blockCommentEnd   = "*/"
+  blockCommentsNest = true
+
+  // string and character literals
+  strs =
+  [
+    SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = true },
+    SyntaxStr { delimiter = "\"\"\""; escape = '\\'; multiLine = true },
+  ]
+
+  // keyword list
+  keywords = [,]
+}
+
+

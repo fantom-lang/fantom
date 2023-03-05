@@ -1,0 +1,29 @@
+//
+// Syntax rules for YAML
+//
+// History:
+//   5 Mar 23  Brian Frank  Creation
+//
+
+using syntax
+
+SyntaxRules
+{
+  // bracket symbols
+  brackets = "<>{}[]"
+
+  // list of end of line comment tokens
+  comments = ["#"]
+
+  // string and character literals
+  strs =
+  [
+    SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = false },
+    SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false },
+  ]
+
+  // keyword list
+  keywords = [,]
+}
+
+
