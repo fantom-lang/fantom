@@ -150,7 +150,7 @@ internal class YamlParser
 
           doneYaml = true
           r.eatCommentLine("A YAML directive")
-        
+
         case "TAG":
           r.eatWs
           hloc   := r.loc
@@ -179,12 +179,12 @@ internal class YamlParser
             if (uri == null) throw err("$prefix is a not a valid URI.", ploc)
             else if (uri.scheme == null) throw err("The URI $prefix does not include a scheme.", ploc)
           }
-          
+
           // Add handle-prefix to shorthand mapping
           if (tagShorthands.containsKey(handle))
             throw err("The tag handle \"$handle\" is already registered for this document.", hloc)
           tagShorthands.add(handle, prefix)
-        
+
         case "":
           throw err("A directive name cannot be empty.")
 
@@ -499,7 +499,7 @@ internal class YamlParser
         r.eatInd(indent)
         s.add(r.eatLine)
       }
-      
+
       s.addChar('\n')
       if (r.peek(r.docPrefix) == null) break
     }
@@ -576,7 +576,7 @@ internal class YamlParser
 
         s.add(r.eatLine)
       }
-      
+
       s.addChar('\n')
       if (r.peek(r.docPrefix) == null) break
     }
@@ -618,7 +618,7 @@ internal class YamlParser
 
     if (!res.containsKey("chomp"))
       res["chomp"] = "clip"
-    
+
     return res
   }
 
@@ -655,14 +655,14 @@ internal class YamlParser
       while (!endFound && r.peekNextNs(r.str) == '\n' && !r.nextTokenEndsDoc)
       {
         r.eatLine(r.ws)
-        
+
         if (r.peekNextNs(r.str) == '\n')
           while (r.peekNextNs(r.str) == '\n')
           {
             s.addChar('\n')
             r.eatLine(r.ws)
           }
-        
+
         else s.addChar(' ')
 
         r.eatInd(n)
@@ -673,7 +673,7 @@ internal class YamlParser
 
     if (c != '\'')
       throw err("Ending ' not found.", initLoc)
-    
+
     // Error if comment directly adjacent
     if (r.peek == '#')
       throw err("Comments must be preceded by whitespace.")
@@ -739,7 +739,7 @@ internal class YamlParser
                           r.eatWs
                         }
                         else throw err("Ending \" not found.", initLoc)
-            
+
             case null:  throw err("Ending \" not found.", initLoc)
             default:    throw err("\"\\$c.toChar\" is not a valid escape sequence.")
           }
@@ -755,14 +755,14 @@ internal class YamlParser
       while (!endFound && r.peekNextNs(r.str) == '\n' && !r.nextTokenEndsDoc)
       {
         r.eatLine(r.ws)
-        
+
         if (r.peekNextNs(r.str) == '\n')
           while (r.peekNextNs(r.str) == '\n')
           {
             s.addChar('\n')
             r.eatLine(r.ws)
           }
-        
+
         else if (r.peekNextNs(r.str) == null)
           throw err("Ending \" not found.", initLoc)
 
@@ -776,7 +776,7 @@ internal class YamlParser
 
     if (c != '"')
       throw err("Ending \" not found.", initLoc)
-    
+
     // Error if comment directly adjacent
     if (r.peek == '#')
       throw err("Comments must be preceded by whitespace.")
@@ -836,7 +836,7 @@ internal class YamlParser
       // non-empty key
       if (r.peek != ':')
         key = parseFlowNode(n, Context.flowKey)
-      
+
       r.eatWs
       r.eatChar(':')
       separate(n,ctx)
@@ -844,7 +844,7 @@ internal class YamlParser
       // non-empty entry
       if (![']', ',', null].contains(r.peek))
         val = parseFlowNode(n,ctx)
-      
+
       return YamlMap(YamlObj:YamlObj[key:val])
     }
 
@@ -903,14 +903,14 @@ internal class YamlParser
     }
 
     // [144] ns-flow-map-implicit-entry(n,c)
-      
+
     // non-empty key
     emptyKey := r.peekUntil |c1| { !r.isNs(c1) || r.isFlow(c1) } == ":"
     if (!emptyKey)
       key = parseFlowNode(n,ctx)
 
     separate(n,ctx)
-    
+
     // indicated entry
     if (r.peek == ':')
     {
@@ -945,7 +945,7 @@ internal class YamlParser
       r.eatInd(m)
       res.add(parseBlockSeqEntry(m))
     }
-    
+
     return YamlList(res, tag)
   }
 
@@ -965,6 +965,7 @@ internal class YamlParser
     if (m <= n) throw err("Your list must be indented by at least ${n+1} spaces, not just ${m}.")
 
     res := YamlObj:YamlObj[:]
+    res.ordered = true
     while (r.peekUntil |c1| { c1 != ' ' }.size == m &&
            r.isNs(r.peekPast |c1| { c1 == ' ' }) &&
            (r.peekNextNs == '?' ||

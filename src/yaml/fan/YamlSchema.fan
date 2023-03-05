@@ -201,6 +201,7 @@ const class FailsafeSchema : YamlSchema
 
       case "tag:yaml.org,2002:map":
         res := [:]
+        res.ordered = true
         map := node.content as [YamlObj:YamlObj]
         map.keys.each |k|
         {
