@@ -59,4 +59,41 @@ class CharsetTest : Test
     verifySame(Charset.fromStr("utf-16le"), Charset.utf16LE())
   }
 
+  Void testInStreamNesting()
+  {
+    str := "\u2022 hello world \u2022"
+
+    // use binary buffer
+    buf := Buf()
+    out := buf.out
+    out.charset = Charset.utf16BE
+    out.print(str)
+
+    in1 := buf.flip.in
+    in2 := CharsetTestInStream(in1)
+
+    in2.charset = Charset.utf16BE
+    verifyEq(in2.readAllStr, str)
+
+    verifyEq(in1.charset, Charset.utf8)
+    verifyEq(in2.charset, Charset.utf16BE)
+
+    // now test with StrInStream
+
+    in1 = str.in
+    in2 = CharsetTestInStream(in1)
+
+    in2.charset = Charset.utf16BE
+    verifyEq(in2.readAllStr, str)
+
+    verifyEq(in1.charset, Charset.utf8)
+    verifyEq(in2.charset, Charset.utf16BE)
+  }
+
+}
+
+@Js
+internal class CharsetTestInStream : InStream
+{
+  new make(InStream in) : super(in) {}
 }

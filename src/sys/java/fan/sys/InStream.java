@@ -31,6 +31,17 @@ public class InStream
   public static void make$(InStream self, InStream in)
   {
     self.in = in;
+    self.inChar = in == null ? null : in.toCharInStream();
+  }
+
+  /**
+   * If this input stream is optimized to read chars, then return
+   * this.  Otherwise return null so that wrapped InStreams always
+   * do charset decoding themselves from the raw bytes.
+   */
+  protected InStream toCharInStream()
+  {
+    return null;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,8 +83,8 @@ public class InStream
    */
   public int rChar()
   {
-    if (in != null)
-      return in.rChar();
+    if (inChar != null)
+      return inChar.rChar();
     else
       return charsetDecoder.decode(this);
   }
@@ -856,6 +867,7 @@ public class InStream
 //////////////////////////////////////////////////////////////////////////
 
   InStream in;
+  InStream inChar;
   boolean bigEndian = true;
   Charset charset = Charset.utf8();
   Charset.Decoder charsetDecoder = charset.newDecoder();
