@@ -8,6 +8,7 @@
 package fan.sys;
 
 import java.lang.management.*;
+import java.lang.reflect.*;
 import java.net.*;
 import java.util.Iterator;
 import java.util.HashMap;
@@ -171,6 +172,10 @@ public class BootEnv
       return (String)jline.getClass()
         .getMethod("readLine", new Class[] { String.class })
         .invoke(jline, new Object[] { msg });
+    }
+    catch (InvocationTargetException e)
+    {
+      throw Err.make(e.getCause());
     }
     catch (Exception e)
     {
