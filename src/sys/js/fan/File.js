@@ -37,6 +37,7 @@ fan.sys.File.make = function(uri, checkSlash)
     console.log("Warning: not running on Node JS, dummy file object returned");
     var f = new fan.sys.File();
     f.m_uri = uri;
+    return f;
   }
 
   // Check slash
