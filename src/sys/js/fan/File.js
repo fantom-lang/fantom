@@ -165,7 +165,7 @@ fan.sys.File.prototype.mimeType = function() { return this.m_uri.mimeType(); }
 // Returns whether the file is *internally* a directory, rather than just using the uri
 fan.sys.File.prototype.isDirectory = function() { this._throwNotSupported("isDirectory"); }
 
-fan.sys.File.prototype.exists   = function() { return false; }
+fan.sys.File.prototype.exists   = function() { return true; }
 fan.sys.File.prototype.size     = function() { this._throwNotSupported("size"); }
 
 fan.sys.File.prototype.isEmpty  = function()
