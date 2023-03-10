@@ -30,11 +30,6 @@ var testRunner = function(type, method)
     test[method]();
     return test.verifyCount;
   }
-  catch (err)
-  {
-    doCatchErr(err);
-    return -1;
-  }
   finally
   {
     try { test.teardown(); }
