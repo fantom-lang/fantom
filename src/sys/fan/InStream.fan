@@ -21,9 +21,12 @@ class InStream
   ** All reads from this stream will be routed to the specified
   ** inner stream.
   **
-  ** If in is null, then it is the subclass responsibility to
+  ** If 'in' is null, then it is the subclass responsibility to
   ** handle reads by overriding the following methods: `read`,
   ** `readBuf`, and `unread`.
+  **
+  ** If 'in' is not null, then this stream will automatically
+  ** set its own charset to 'in.charset'.
   **
   protected new make(InStream? in)
 

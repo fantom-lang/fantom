@@ -31,7 +31,11 @@ public class InStream
   public static void make$(InStream self, InStream in)
   {
     self.in = in;
-    self.inChar = in == null ? null : in.toCharInStream();
+    if (in != null)
+    {
+      self.inChar = in.toCharInStream();
+      self.charset(in.charset());
+    }
   }
 
   /**
