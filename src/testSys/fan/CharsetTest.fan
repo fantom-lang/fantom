@@ -63,30 +63,35 @@ class CharsetTest : Test
   {
     str := "\u2022 hello world \u2022"
 
-    // use binary buffer
+    // start with binary buffer
     buf := Buf()
     out := buf.out
     out.charset = Charset.utf16BE
     out.print(str)
 
+    // verify wrapped stream does not change underlying stream
     in1 := buf.flip.in
     in2 := CharsetTestInStream(in1)
-
     in2.charset = Charset.utf16BE
     verifyEq(in2.readAllStr, str)
-
     verifyEq(in1.charset, Charset.utf8)
     verifyEq(in2.charset, Charset.utf16BE)
 
-    // now test with StrInStream
-
+    // now test with StrInStream which used rChar differently
     in1 = str.in
     in2 = CharsetTestInStream(in1)
-
     in2.charset = Charset.utf16BE
     verifyEq(in2.readAllStr, str)
-
     verifyEq(in1.charset, Charset.utf8)
+    verifyEq(in2.charset, Charset.utf16BE)
+
+    // now wrap a stream that has its charset set and verify
+    // wrapped stream takes its configuration
+    in1 = buf.seek(0).in
+    in1.charset = Charset.utf16BE
+    in2 = CharsetTestInStream(in1)
+    verifyEq(in2.readAllStr, str)
+    verifyEq(in1.charset, Charset.utf16BE)
     verifyEq(in2.charset, Charset.utf16BE)
   }
 
