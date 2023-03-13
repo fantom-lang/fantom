@@ -97,6 +97,7 @@ abstract class JsNode
     "in":     true,
     "int":    true,
     "name":   true,
+    "self":   true,
     "typeof": true,
     "var":    true,
     "with":   true

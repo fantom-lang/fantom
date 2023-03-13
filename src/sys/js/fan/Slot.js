@@ -145,6 +145,7 @@ fan.sys.Slot.prototype.$$name = function(n)
     case "in":     return "$in";
     case "int":    return "$int";
     case "name":   return "$name";
+    case "self":   return "$self";
     case "typeof": return "$typeof";
     case "var":    return "$var";
     case "with":   return "$with";
