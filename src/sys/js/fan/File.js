@@ -376,7 +376,7 @@ fan.sys.File.prototype.rename = function(newName)
 
 fan.sys.File.prototype.open = function(mode) { this._throwNotSupported("open"); }
 fan.sys.File.prototype.mmap = function(mode, pos, size) { this._throwNotSupported("mmap"); }
-fan.sys.File.prototype.in   = function(bufSize) { this._throwNotSupported("in"); }
+fan.sys.File.prototype.$in   = function(bufSize) { this._throwNotSupported("in"); }
 fan.sys.File.prototype.out  = function(append, bufSize) { this._throwNotSupported("out"); }
 
 fan.sys.File.prototype.readAllBuf = function()

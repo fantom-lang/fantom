@@ -19,7 +19,6 @@ fan.sys.MemFile.prototype.$typeof = function() { return fan.sys.MemFile.$type; }
 
 fan.sys.MemFile.make = function(buf, uri)
 {
-  console.log("Making MemFile for " + buf + "\n" +  uri);
   var instance = new fan.sys.MemFile();
   instance.m_buf = buf;
   instance.m_uri = uri;
@@ -45,7 +44,7 @@ fan.sys.MemFile.prototype.delete = function() { throw this.err(); }
 fan.sys.MemFile.prototype.deleteOnExit = function() { throw this.err(); }
 fan.sys.MemFile.prototype.open = function(mode) { throw this.err(); }
 fan.sys.MemFile.prototype.mmap = function(mode, pos, size) { throw this.err(); }
-fan.sys.MemFile.prototype.in = function(bufSize) { return this.m_buf.in(); }
+fan.sys.MemFile.prototype.$in = function(bufSize) { return this.m_buf.$in(); }
 fan.sys.MemFile.prototype.out = function(append, bufSize) { throw this.err(); }
 fan.sys.MemFile.prototype.toStr = function() { return this.m_uri.toStr(); }
 fan.sys.MemFile.prototype.err = function()

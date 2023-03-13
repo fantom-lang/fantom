@@ -313,7 +313,7 @@ fan.sys.LocalFile.prototype.moveTo = function(to)
 
 // TODO: mmap
 
-fan.sys.LocalFile.prototype.in = function(bufSize)
+fan.sys.LocalFile.prototype.$in = function(bufSize)
 {
   if (!bufSize) bufSize = fan.sys.Int.Chunk;
 
@@ -323,8 +323,6 @@ fan.sys.LocalFile.prototype.in = function(bufSize)
   var fd = fs.openSync(this.m_node_os_path, 'r');
   return this.m_in = new fan.sys.LocalFileInStream(fd, bufSize);
 }
-
-fan.sys.LocalFile.prototype.$in = fan.sys.LocalFile.prototype.in
 
 fan.sys.LocalFile.prototype.out = function(append, bufSize)
 {
