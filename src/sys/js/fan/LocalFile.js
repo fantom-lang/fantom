@@ -18,7 +18,7 @@ if (typeof require !== "undefined") { fs = require('fs'); }
 fan.sys.LocalFile = fan.sys.Obj.$extend(fan.sys.File);
 fan.sys.LocalFile.prototype.$ctor = function()
 {
-  fan.sys.File.prototype.$ctor.call()
+  fan.sys.File.prototype.$ctor.call();
 }
 fan.sys.LocalFile.prototype.$typeof = function() { return fan.sys.LocalFile.$type; }
 
