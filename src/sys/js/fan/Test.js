@@ -103,7 +103,7 @@ fan.sys.Test.prototype.verifySame = function(expected, actual, msg)
 {
   if (!fan.sys.ObjUtil.equals(expected, actual))
   {
-    if (msg == null) msg = fan.sys.ObjUtil.toStr(expected) + " !== " + fan.sys.ObjUtil.toStr(actual);
+    if (msg == null) msg = fan.sys.ObjUtil.toStr(expected) + " [" + expected.$typeof() + "] != " + fan.sys.ObjUtil.toStr(actual) + " [" + actual.$typeof() + "]";
     this.fail(msg);
   }
   this.verifyCount++;
