@@ -38,14 +38,14 @@ class JsMethod : JsSlot
       ctorParams := [JsMethodParam.makeSelf(support)].addAll(params)
       out.w("${parent}.$name = function${sig(params)} {", loc).nl
          .indent
-         .w("var \$self = new $parent();").nl
+         .w("var self = new $parent();").nl
          .w("${parent}.$name\$${sig(ctorParams)};").nl
-         .w("return \$self;").nl
+         .w("return self;").nl
          .w("}").nl
          .unindent
 
       // write factory make$ method
-      support.thisName = "\$self"
+      support.thisName = "self"
       writeMethod(out, "$name\$", ctorParams)
       support.thisName = "this"
     }
@@ -166,7 +166,7 @@ class JsMethodParam : JsNode
 
   new makeSelf(JsCompilerSupport s) : super.make(s)
   {
-    this.reflectName = this.name = "\$self"
+    this.reflectName = this.name = "self"
   }
 
   override Void write(JsWriter out)
