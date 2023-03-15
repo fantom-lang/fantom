@@ -11,7 +11,12 @@
 **
 class TzTool
 {
-  new make() { }
+  new make(Str[] args := Env.cur.args)
+  {
+    this.args = args
+  }
+
+  private const Str[] args
 
   Void run()
   {
@@ -61,6 +66,9 @@ class TzTool
     {
       jsOut.printLine(
         "(function() {
+         var root=this;
+         var fan=root.fan;
+         if (!fan && (typeof require !== 'undefined')) fan = require('sys.js');
          var c=fan.sys.TimeZone.cache\$;")
 
       // write built-in timezones
@@ -129,15 +137,19 @@ class TzTool
 
   private Void parseArgs()
   {
-    args := Env.cur.args.dup.reverse
     if (args.isEmpty) usage()
-    while (!args.isEmpty)
+    i :=0
+    while (i < args.size)
     {
-      arg := args.pop
+      arg := args[i++]
       switch (arg)
       {
         case "-gen":
           this.gen = true
+        case "-outDir":
+          outDir := args[i++].toUri.toFile
+          if (!outDir.isDir) throw ArgErr("Not a directory: ${outDir}")
+          this.js = outDir.plus(`tz.js`)
         case "-verbose":
         case "-v":
           log.level = LogLevel.debug
@@ -160,6 +172,7 @@ class TzTool
          $main [options]
        Options:
          -gen          Generate tz.js
+         -outDir       (optional) generate tz.js in this directory
          -verbose, -v  Enable verbose logging
          -help, -?     Print usage help
        ")
