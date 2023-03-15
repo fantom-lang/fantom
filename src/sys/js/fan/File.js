@@ -328,7 +328,7 @@ fan.sys.File.prototype.doCopyFile = function(to)
   var out = to.out();
   try
   {
-    this.in().pipe(out);
+    this.$in().pipe(out);
   }
   finally
   {
@@ -381,28 +381,28 @@ fan.sys.File.prototype.out  = function(append, bufSize) { this._throwNotSupporte
 
 fan.sys.File.prototype.readAllBuf = function()
 {
-  return this.in(fan.sys.Int.Chunk).readAllBuf();
+  return this.$in(fan.sys.Int.Chunk).readAllBuf();
 }
 
 fan.sys.File.prototype.readAllLines = function()
 {
-  return this.in(fan.sys.Int.Chunk).readAllLines();
+  return this.$in(fan.sys.Int.Chunk).readAllLines();
 }
 
 fan.sys.File.prototype.eachLine = function(f)
 {
-  this.in(fan.sys.Int.Chunk).eachLine(f);
+  this.$in(fan.sys.Int.Chunk).eachLine(f);
 }
 
 fan.sys.File.prototype.readAllStr = function(normalizeNewlines)
 {
   if (normalizeNewlines === undefined) normalizeNewlines = true;
-  return this.in(fan.sys.Int.Chunk).readAllStr(normalizeNewlines);
+  return this.$in(fan.sys.Int.Chunk).readAllStr(normalizeNewlines);
 }
 
 fan.sys.File.prototype.readProps = function()
 {
-  return this.in(fan.sys.Int.Chunk).readProps();
+  return this.$in(fan.sys.Int.Chunk).readProps();
 }
 
 fan.sys.File.prototype.writeProps = function(props)
@@ -413,7 +413,7 @@ fan.sys.File.prototype.writeProps = function(props)
 fan.sys.File.prototype.readObj = function(options)
 {
   if (options === undefined) options = null;
-  var ins = this.in();
+  var ins = this.$in();
   try
   {
     return ins.readObj(options);
