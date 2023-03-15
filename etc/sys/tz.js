@@ -1,4 +1,7 @@
 (function() {
+var root=this;
+var fan=root.fan;
+if (!fan && (typeof require !== 'undefined')) fan = require('sys.js');
 var c=fan.sys.TimeZone.cache$;
 c("CET","AANDRVQHzAAADhAAA0NFVAAADhAABENFU1QCbAAAAAAcIHMJbAAAAAAcIHMHywAADhAAA0NFVAAADhAABENFU1QCbAAAAAAcIHMIbAAAAAAcIHM=");
 c("CST6CDT","AAdDU1Q2Q0RUB9f//6ugAANDU1QAAA4QAANDRFQCPgAIAAAcIHcKPgABAAAcIHcHy///q6AAA0NTVAAADhAAA0NEVAM+AAEAABwgdwlsAAAAABwgdw==");
