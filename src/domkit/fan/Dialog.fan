@@ -103,6 +103,7 @@ using dom
 
     body := Win.cur.doc.body
     body.add(mask)
+    fireMounted
 
     mask.transition(["opacity":"1"], null, 100ms)
     frame.transition([
@@ -124,19 +125,24 @@ using dom
     }
   }
 
+  ** Callback when dialog is mounted but not yet visible.
+  @NoDoc Void onMounted(|This| f) { cbMounted = f }
+
   ** Callback when dialog is opened.
   Void onOpen(|This| f) { cbOpen = f }
 
   ** Callback when popup is closed.
   Void onClose(|This| f) { cbClose = f }
 
-  private Void fireOpen()  { cbOpen?.call(this)  }
-  private Void fireClose() { cbClose?.call(this) }
+  private Void fireMounted() { cbMounted?.call(this) }
+  private Void fireOpen()    { cbOpen?.call(this)  }
+  private Void fireClose()   { cbClose?.call(this) }
 
   private const Int uid
   private static const AtomicRef nextId := AtomicRef(0)
 
   private Elem? frame     := null
+  private Func? cbMounted := null
   private Func? cbOpen    := null
   private Func? cbClose   := null
   private Func? cbKeyDown := null
