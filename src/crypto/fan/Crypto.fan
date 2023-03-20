@@ -23,7 +23,9 @@ const mixin Crypto
   {
     try
     {
-      cur = Type.find("cryptoJava::JCrypto").make
+      cur = Env.cur.runtime == "java"
+       ? Type.find("cryptoJava::JCrypto").make
+       : NilCrypto()
     }
     catch (Err err)
     {
