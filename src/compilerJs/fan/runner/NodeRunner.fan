@@ -27,7 +27,7 @@ class NodeRunner
       initDirs
       if (hasArg("test")) doTest
       else if (hasArg("run")) doRun
-      else if (hasArg("js")) doJsBootStrap
+      else if (hasArg("init")) doJsBootStrap
       else throw ArgErr("Invalid options")
 
       // cleanup
