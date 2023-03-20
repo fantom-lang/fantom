@@ -27,7 +27,7 @@ class NodeRunner
       initDirs
       if (hasArg("test")) doTest
       else if (hasArg("run")) doRun
-      else if (hasArg("init")) doJsBootStrap
+      else if (isInit) doJsBootStrap
       else throw ArgErr("Invalid options")
 
       // cleanup
@@ -65,12 +65,14 @@ class NodeRunner
     echo("  -keep      Keep intermediate test scripts")
   }
 
+  private Bool isInit() { hasArg("init") }
+
   private Void initDirs()
   {
     this.nodeDir = Env.cur.tempDir + `nodeRunner/`
     if (hasArg("dir"))
       nodeDir = arg("dir").toUri.plusSlash.toFile
-    else if (hasArg("js"))
+    else if (isInit)
       nodeDir = Env.cur.homeDir.plus(`lib/js/`)
     nodeDir = nodeDir.normalize
   }
@@ -336,7 +338,7 @@ class NodeRunner
     writeUnitsJs
 
     // indexed-props
-    if (!hasArg("js"))
+    if (!isInit)
     {
       out := (moduleDir + `indexed-props.js`).out
       JsIndexedProps().write(out, dependencies)
