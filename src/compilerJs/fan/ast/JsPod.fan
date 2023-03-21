@@ -156,12 +156,16 @@ class JsPod : JsNode
       out.w("  fan.${t.pod}.${t.name}.\$type")
       t.fields.each |f|
       {
+        // don't write for FFI
+        if (f.ftype.isForeign) return
+
         facets := f.facets.join(",") |x| { "'$x.type.sig':$x.val.toCode" }
         out.w(".\$af('$f.origName',$f.flags,'$f.ftype.sig',{$facets})")
       }
       t.methods.each |m|
       {
         if (m.isFieldAccessor) return
+        if (m.params.any |p| { p.paramType.isForeign}) return
         params := m.params.join(",") |p| { "new fan.sys.Param('$p.reflectName','$p.paramType.sig',$p.hasDef)" }
         facets := m.facets.join(",") |f| { "'$f.type.sig':$f.val.toCode" }
         out.w(".\$am('$m.origName',$m.flags,'$m.ret.sig',fan.sys.List.make(fan.sys.Param.\$type,[$params]),{$facets})")

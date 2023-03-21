@@ -189,6 +189,7 @@ class JsTypeRef : JsNode
     this.isList = ref.isList
     this.isMap  = ref.isMap
     this.isFunc = ref.isFunc
+    this.isForeign = ref.isForeign
     this.loc = loc
 
     deref := ref.deref
@@ -221,6 +222,7 @@ class JsTypeRef : JsNode
   Bool isList        // is type a sys::List
   Bool isMap         // is type a sys::Map
   Bool isFunc        // is type a sys::Func
+  Bool isForeign     // is type foreign
 
   JsTypeRef? k       // only valid for MapType
   JsTypeRef? v       // only valid for ListType, MapType

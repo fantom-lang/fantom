@@ -35,6 +35,7 @@ obj/Release/
 /lib/dotnet/sys.dll
 /lib/fan/*.pod
 /lib/js/
+/lib/data/
 /lib/tmp/
 
 # doc/

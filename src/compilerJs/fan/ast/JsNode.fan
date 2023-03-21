@@ -71,7 +71,15 @@ abstract class JsNode
     }
     */
 
-    return "fan.${ctype.pod.name}.$ctype.name"
+
+    js := "fan.${ctype.pod.name}.$ctype.name"
+
+    // make it so java FFI calls parse in js runtimes
+    // code will parse but fail if actually invoked
+    if (js.contains(".[java].")) js = js.replace(".[java].", ".")
+    else if (js.contains("[java]")) js = js.replace("[java]", "")
+
+    return js
   }
 
   **

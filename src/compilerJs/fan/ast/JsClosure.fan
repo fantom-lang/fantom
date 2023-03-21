@@ -36,7 +36,7 @@ class JsPodClosures : JsNode
     out.indent
 
     CType[] sigTypes := [,].addAll(ce.signature.params).add(ce.signature.ret)
-    isJs := sigTypes.all { JsType.checkJsSafety(it, support, loc) }
+    isJs := sigTypes.all { JsType.checkJsSafety(it, support, loc) && !it.isForeign }
     if (isJs)
     {
       // closure spec
@@ -59,6 +59,7 @@ class JsPodClosures : JsNode
       out.w("new fan.sys.ClosureFuncSpec\$(fan.sys.Void.\$type, []),").nl
       out.w("function() {").nl
       out.w("  // Cannot write closure. Signature uses non-JS types: ${ce.signature}").nl
+      out.w("  throw fan.sys.UnsupportedErr.make('Closure uses non-JS types: ' + ${ce.signature.toStr.toCode});").nl
       out.w("})")
     }
 
