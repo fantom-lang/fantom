@@ -123,9 +123,23 @@ fan.sys.Env.prototype.diagnostics = function()
   return map;
 }
 
+fan.sys.Env.prototype.user = function() { return this.m_user; }
+
 fan.sys.Env.prototype.out = function() { return this.m_out; }
 
-fan.sys.Env.prototype.user = function() { return this.m_user; }
+fan.sys.Env.prototype.prompt = function(msg)
+{
+  if (!fan.sys.Env.$nodejs) throw fan.sys.UnsupportedErr.make("Not supported in this runtime");
+  if (msg === undefined) msg = "";
+  // https://github.com/nodejs/node/issues/28243
+  let fs = require('fs');
+  fs.writeSync(1, String(msg));
+  let s = '', buf = Buffer.alloc(1);
+  while(buf[0] - 10 && buf[0] - 13)
+    s += buf, fs.readSync(0, buf, 0, 1, 0);
+  return s.slice(1);
+}
+
 
 fan.sys.Env.prototype.homeDir = function() { return this.m_homeDir; }
 
