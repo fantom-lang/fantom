@@ -47,6 +47,9 @@ fan.sys.Env.prototype.$ctor = function()
   // pod props map, keyed by pod.name
   this.m_props = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Map.$type);
 
+  // user
+  this.m_user = "unknown";
+
   // env.out
   this.m_out = new fan.sys.SysOutStream(new fan.sys.ConsoleOutStream());
 }
@@ -121,6 +124,8 @@ fan.sys.Env.prototype.diagnostics = function()
 }
 
 fan.sys.Env.prototype.out = function() { return this.m_out; }
+
+fan.sys.Env.prototype.user = function() { return this.m_user; }
 
 fan.sys.Env.prototype.homeDir = function() { return this.m_homeDir; }
 
