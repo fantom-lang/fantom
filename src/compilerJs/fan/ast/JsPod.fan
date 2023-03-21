@@ -38,7 +38,7 @@ class JsPod : JsNode
       }
 
       // check for @js facet
-      if (def.hasFacet("sys::Js")) types.add(JsType(s,def))
+      if (def.hasFacet("sys::Js") || support.forceJs) types.add(JsType(s,def))
     }
 
     // resource files
@@ -92,17 +92,43 @@ class JsPod : JsNode
     out.w("}).call(this);").nl
   }
 
-  static Void writeNs(JsWriter out, Str name)
+  Void writeNs(JsWriter out, Str name)
   {
     ns := "(function () {
-           ${requireSys}
+           ${requireModules}
            if (typeof exports !== 'undefined') {
-             fan.$name = exports;
+             //fan.$name = exports;
+             module.exports = fan;
+             fan.$name = {};
            } else {
              fan.$name = root.fan.$name = {};
            }
            "
     ns.splitLines.each { out.w(it).nl }
+  }
+
+  Str requireModules()
+  {
+    sb := StrBuf()
+    sb.add("var root=this;
+            var fan=root.fan;
+            if (!fan && (typeof require !== 'undefined'))
+            {
+            ")
+    support.compiler.pod.depends.each |depend| {
+      if (depend.name == "sys")
+      {
+        sb.add("try { fan = require('fan.js'); }\n")
+        sb.add("catch (err) { fan = require('sys.js'); }\n")
+        // sb.add("fan = require('fan.js');\n")
+      }
+      // else sb.add("require('${depend.name}.js');\n")
+      else
+      {
+        sb.add("try { require('${depend.name}.js'); } catch (e) { /*ignore*/ }\n")
+      }
+    }
+    return sb.add("}\n").toStr
   }
 
   static const Str requireSys :=

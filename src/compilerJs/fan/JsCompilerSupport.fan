@@ -38,6 +38,7 @@ class JsCompilerSupport : CompilerSupport
   }
   private Int id := 0
 
+  Bool forceJs() { compiler.input.forceJs }
 
   Str:JsTypeRef typeRef := Str:JsTypeRef[:]  // typeRef map
 

@@ -38,6 +38,12 @@ class CompilerInput
   **
   Bool isScript := false
 
+
+  **
+  ** Flag indicating if we should treat all types as having the @Js facet
+  **
+  Bool forceJs := false
+
   **
   ** Version to include in ouput pod's manifest.
   **

@@ -41,6 +41,9 @@ class CompileJs  : CompilerStep
     // if any JS directories were specified force JS compilation
     if (compiler.jsFiles != null && !compiler.jsFiles.isEmpty) return true
 
+    // are we forcing generation of js for all types
+    if (compiler.input.forceJs) return true
+
     // run JS compiler is any type has @Js facet
     return compiler.types.any { it.hasFacet("sys::Js") }
   }

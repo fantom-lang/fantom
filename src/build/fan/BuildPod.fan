@@ -171,6 +171,27 @@ abstract class BuildPod : BuildScript
     log.unindent
   }
 
+  @Target { help = "Compile to javascript" }
+  virtual Void js()
+  {
+    switch (podName)
+    {
+      case "compilerJs":
+      case "webfwt":
+      case "testCompiler":
+        return
+    }
+
+    validate
+
+    log.info("js [$podName]")
+    log.indent
+
+    compileJs
+
+    log.unindent
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Compile Fan
 //////////////////////////////////////////////////////////////////////////
@@ -179,6 +200,31 @@ abstract class BuildPod : BuildScript
   ** Compile Fan code into pod file
   **
   virtual Void compileFan()
+  {
+    // generate standard compiler input
+    ci := stdFanCompilerInput
+
+    // subclass hook
+    onCompileFan(ci)
+
+    try
+    {
+      Compiler(ci).compile
+    }
+    catch (CompilerErr err)
+     {
+      // all errors should already be logged by Compiler
+      throw FatalBuildErr()
+    }
+    catch (Err err)
+    {
+      log.err("Internal compiler error")
+      err.trace
+      throw FatalBuildErr.make
+    }
+  }
+
+  protected CompilerInput stdFanCompilerInput()
   {
     // add my own meta
     meta := this.meta.dup
@@ -246,24 +292,7 @@ abstract class BuildPod : BuildScript
       ci.ns = FPodNamespace(f)
     }
 
-    // subclass hook
-    onCompileFan(ci)
-
-    try
-    {
-      Compiler(ci).compile
-    }
-    catch (CompilerErr err)
-     {
-      // all errors should already be logged by Compiler
-      throw FatalBuildErr()
-    }
-    catch (Err err)
-    {
-      log.err("Internal compiler error")
-      err.trace
-      throw FatalBuildErr.make
-    }
+    return ci
   }
 
   **
@@ -392,6 +421,36 @@ abstract class BuildPod : BuildScript
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Javascript
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Compile to javascript node module
+  **
+  virtual Void compileJs()
+  {
+    ci := stdFanCompilerInput
+    ci.forceJs = true
+    // ci.output = CompilerOutputMode.js
+    try
+    {
+      c := Compiler(ci)
+      c.frontend
+      Env.cur.homeDir.plus(`lib/js/node_modules/${podName}.js`).out.writeChars(c.js).flush.close
+    }
+    catch (CompilerErr err)
+    {
+      throw FatalBuildErr()
+    }
+    catch (Err err)
+    {
+      log.err("Internal compiler error")
+      err.trace
+      throw FatalBuildErr()
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // DotnetNative
 //////////////////////////////////////////////////////////////////////////
 
@@ -463,6 +522,7 @@ abstract class BuildPod : BuildScript
     dir := isFantomCore ? devHomeDir : Env.cur.workDir
     Delete(this, dir+`lib/fan/${podName}.pod`).run
     Delete(this, dir+`lib/java/${podName}.jar`).run
+    Delete(this, dir+`lib/js/node_modules/${podName}.js`).run
     Delete(this, dir+`lib/dotnet/${podName}.dll`).run
     Delete(this, dir+`lib/dotnet/${podName}.pdb`).run
     Delete(this, dir+`lib/tmp/${podName}.dll`).run
