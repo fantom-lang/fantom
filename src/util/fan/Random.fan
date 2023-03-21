@@ -12,6 +12,7 @@
 ** in sys.  Also see `sys::Int.random`, `sys::Float.random`,
 ** `sys::Range.random`, and `sys::List.random`.
 **
+@Js
 abstract class Random
 {
 
@@ -53,6 +54,7 @@ abstract class Random
 
 }
 
+@Js
 internal class SeededRandom : Random
 {
   new make(Int seed) { this.seed = seed; init }
@@ -64,6 +66,7 @@ internal class SeededRandom : Random
   const Int seed
 }
 
+@Js
 internal class SecureRandom : Random
 {
   new make() { init }

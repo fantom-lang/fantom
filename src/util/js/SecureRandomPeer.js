@@ -9,7 +9,3 @@
 /**
  * SecureRandom.
  */
-fan.util.SecureRandom = fan.sys.Obj.$extend(fan.util.Random);
-
-fan.util.SecureRandom.prototype.$ctor = function() {}
-fan.util.SecureRandom.prototype.$typeof = function() { return fan.util.SecureRandom.$type; }

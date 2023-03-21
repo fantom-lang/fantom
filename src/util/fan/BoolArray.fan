@@ -10,6 +10,7 @@
 ** Optimized fixed size array of booleans packed into words
 ** of 32-bits.  The array values default to false.
 **
+@Js
 native final class BoolArray
 {
 

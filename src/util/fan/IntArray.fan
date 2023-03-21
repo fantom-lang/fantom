@@ -10,6 +10,7 @@
 ** Optimized fixed size array of 1, 2, 4, or 8 byte unboxed integers.
 ** The array values default to zero.
 **
+@Js
 native class IntArray
 {
 
