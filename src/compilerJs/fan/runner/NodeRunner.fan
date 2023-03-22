@@ -378,7 +378,7 @@ class NodeRunner
   private Void writeTzJs()
   {
     // tz.js
-    TzTool(["-gen", "-outDir", moduleDir.toStr]).run
+    TzTool(["-silent", "-gen", "-outDir", moduleDir.toStr]).run
   }
 
   private Str requireStatements()

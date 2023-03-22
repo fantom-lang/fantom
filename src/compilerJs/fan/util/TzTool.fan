@@ -150,6 +150,8 @@ class TzTool
           outDir := args[i++].toUri.toFile
           if (!outDir.isDir) throw ArgErr("Not a directory: ${outDir}")
           this.js = outDir.plus(`tz.js`)
+        case "-silent":
+          this.log.level = LogLevel.silent
         case "-verbose":
         case "-v":
           log.level = LogLevel.debug
@@ -174,6 +176,7 @@ class TzTool
          -gen          Generate tz.js
          -outDir       (optional) generate tz.js in this directory
          -verbose, -v  Enable verbose logging
+         -silent       Suppress all logging
          -help, -?     Print usage help
        ")
     Env.cur.exit(1)

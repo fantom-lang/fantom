@@ -22,6 +22,7 @@ class JsMethod : JsSlot
     this.params     = m.params.map |CParam p->JsMethodParam| { JsMethodParam(s, p) }
     this.ret        = JsTypeRef(s, m.ret, m.loc)
     this.hasClosure = ClosureFinder(m).exists
+    // this.doc        = m.doc?.lines?.join("\n")
     if (m.ctorChain != null) this.ctorChain = JsExpr.makeFor(s, m.ctorChain)
     if (m.code != null) this.code = JsBlock(s, m.code)
   }
@@ -126,6 +127,7 @@ class JsMethod : JsSlot
   Bool hasClosure         // does this method contain a closure
   JsExpr? ctorChain       // ctorChain if has one
   JsBlock? code           // method body if has one
+  Str? doc                // method documentation
 }
 
 **************************************************************************
