@@ -231,6 +231,8 @@ kilograms_per_cubic_meter, kg/m³; kg1*m-3
 grams_per_cubic_meter, g/m³; kg1*m-3; 1.0E-3
 milligrams_per_cubic_meter, mg/m³; kg1*m-3; 1.0E-6
 micrograms_per_cubic_meter, µg/m³; kg1*m-3; 1.0E-9
+kilograms_per_liter, kg/L; kg1*m-3; 1.0E-3
+milligrams_per_liter, mg/L; kg1*m-3; 1.0E-9
 
 -- electric charge (sec1*A1)
 coulomb, C; sec1*A1
@@ -523,8 +525,10 @@ kilometers_per_hour, km/h; m1*sec-1; 0.277778
 miles_per_hour, mph; m1*sec-1; 0.447027
 feet_per_second, ft/s; m1*sec-1; 0.3048
 feet_per_minute, ft/min; m1*sec-1; 0.00508
+inches_per_hour, in/h; m1*sec-1; 7.0555555555555556E-6
 millimeters_per_second, mm/s; m1*sec-1; 0.0010
 millimeters_per_minute, mm/min; m1*sec-1; 1.6666666666666667E-5
+millimeters_per_hour, mm/h; m1*sec-1; 2.7777777777777778E-7
 meters_per_minute, m/min; m1*sec-1; 0.016666666666666666
 meters_per_hour, m/h; m1*sec-1; 2.777777777777778E-4
 knot; m1*sec-1; 0.5144
