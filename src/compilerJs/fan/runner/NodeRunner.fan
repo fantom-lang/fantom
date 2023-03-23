@@ -31,7 +31,7 @@ class NodeRunner
       else throw ArgErr("Invalid options")
 
       // cleanup
-      if (!hasArg("keep")) nodeDir.delete
+      if (!hasArg("keep") && !isInit) nodeDir.delete
     }
     catch (ArgErr e)
     {
@@ -266,6 +266,8 @@ class NodeRunner
          require('tz.js');
          module.exports = fan;
          """).flush.close
+
+    echo("JS init written to: ${nodeDir}")
   }
 
 //////////////////////////////////////////////////////////////////////////
