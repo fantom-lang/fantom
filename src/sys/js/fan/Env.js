@@ -131,6 +131,16 @@ fan.sys.Env.prototype.prompt = function(msg)
 {
   if (!fan.sys.Env.$nodejs) throw fan.sys.UnsupportedErr.make("Not supported in this runtime");
   if (msg === undefined) msg = "";
+
+  if (process.platform == "win32") {
+    return this.$win32prompt(msg);
+  } else {
+    return this.$unixprompt(msg);
+  }
+}
+
+fan.sys.Env.prototype.$win32prompt = function(msg)
+{
   // https://github.com/nodejs/node/issues/28243
   let fs = require('fs');
   fs.writeSync(1, String(msg));
@@ -142,6 +152,24 @@ fan.sys.Env.prototype.prompt = function(msg)
   }
   if (buf[0] == 13) { fs.readSync(0, buf, 0, 1, 0); }
   return s.slice(1);
+}
+
+fan.sys.Env.prototype.$unixprompt = function(msg)
+{
+  // https://stackoverflow.com/questions/61394928/get-user-input-through-node-js-console/74250003?noredirect=1#answer-75008198
+  let stdin = fs.openSync("/dev/stdin","rs");
+
+  fs.writeSync(process.stdout.fd, msg);
+  let s = '';
+  let buf = Buffer.alloc(1);
+  fs.readSync(stdin,buf,0,1,null);
+  while((buf[0] != 10) && (buf[0] != 13)) {
+    s += buf;
+    fs.readSync(stdin,buf,0,1,null);
+  }
+  // Not sure if we need this on unix?
+  // if (buf[0] == 13) { fs.readSync(0, buf, 0, 1, 0); }
+  return s;
 }
 
 
