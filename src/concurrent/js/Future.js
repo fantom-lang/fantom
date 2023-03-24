@@ -15,3 +15,14 @@ fan.concurrent.Future = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.concurrent.Future.prototype.$ctor = function() {}
 fan.concurrent.Future.prototype.$typeof = function() { return fan.concurrent.Future.$type; }
 
+fan.concurrent.Future.makeCompletable = function()
+{
+  var self = new fan.concurrent.Future();
+  fan.concurrent.Future.make$(self);
+  return self;
+}
+
+fan.concurrent.Future.make$ = function(self)
+{
+}
+
