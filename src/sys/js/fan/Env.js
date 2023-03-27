@@ -84,8 +84,17 @@ fan.sys.Env.noDef = "_Env_nodef_";
 // used to display locale keys
 fan.sys.Env.localeTestMode = false;
 
-// check if running under NodeJS
+// true running under NodeJS
 fan.sys.Env.$nodejs = this.window !== this;
+
+// throw an unsupported error if not running in Node
+fan.sys.Env.$requirenodejs = function()
+{
+  if (!fan.sys.Env.$nodejs)
+  {
+    throw fan.sys.UnsupportedErr.make("Not supported in this runtime");
+  }
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Obj
@@ -103,11 +112,33 @@ fan.sys.Env.prototype.runtime = function() { return "js"; }
 
 fan.sys.Env.prototype.javaVersion = function() { return 0; }
 
-// parent
-// os
-// arch
-// platform
-// idHash
+fan.sys.Env.prototype.os = function()
+{
+  fan.sys.Env.$requirenodejs();
+  return process.platform;
+}
+
+fan.sys.Env.prototype.arch = function()
+{
+  fan.sys.Env.$requirenodejs();
+  return process.arch;
+}
+
+fan.sys.Env.prototype.platform = function()
+{
+  return this.os() + "-" + this.arch();
+}
+
+fan.sys.Env.prototype.parent = function()
+{
+  return null;
+}
+
+fan.sys.Env.prototype.idHash = function(obj)
+{
+  if (!obj) return 0;
+  return fan.sys.ObjUtil.hash(obj);
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Virtuals
@@ -129,7 +160,7 @@ fan.sys.Env.prototype.out = function() { return this.m_out; }
 
 fan.sys.Env.prototype.prompt = function(msg)
 {
-  if (!fan.sys.Env.$nodejs) throw fan.sys.UnsupportedErr.make("Not supported in this runtime");
+  fan.sys.Env.$requirenodejs();
   if (msg === undefined) msg = "";
 
   if (process.platform == "win32") {
