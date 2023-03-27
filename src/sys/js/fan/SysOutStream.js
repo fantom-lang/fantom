@@ -114,6 +114,11 @@ fan.sys.ConsoleOutStream.prototype.$ctor = function()
   this.m_buf = "";
 }
 fan.sys.ConsoleOutStream.prototype.$typeof = function() { return fan.sys.SysOutStream.$type; }
+fan.sys.ConsoleOutStream.prototype.writeChar = function(c)
+{
+  if (c == 10) this.flush();
+  else this.m_buf += String.fromCharCode(c);
+}
 fan.sys.ConsoleOutStream.prototype.write = function(v)
 {
   if (v == 10) this.flush();

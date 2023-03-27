@@ -51,7 +51,7 @@ fan.sys.Env.prototype.$ctor = function()
   this.m_user = "unknown";
 
   // env.out
-  this.m_out = new fan.sys.SysOutStream(new fan.sys.ConsoleOutStream());
+  this.m_out = new fan.sys.ConsoleOutStream();
 }
 
 fan.sys.Env.$invokeMain = function(qname)
