@@ -17,6 +17,8 @@ abstract class JsExpr : JsNode
   {
   }
 
+  internal Bool isLocalDefStmt := false
+
   static JsExpr makeFor(JsCompilerSupport s, Expr expr)
   {
     switch (expr.id)
@@ -475,6 +477,7 @@ class JsBinaryExpr : JsExpr
     this.rhs      = JsExpr.makeFor(s, x.rhs)
     this.leave    = x.leave
     this.isAssign = x.assignTarget != null
+    this.x = x
   }
   override Void write(JsWriter out)
   {
@@ -497,9 +500,11 @@ class JsBinaryExpr : JsExpr
     }
     else
     {
+      if (isAssign && !isLocalDefStmt) out.w("(")
       lhs.write(out)
       out.w(" $symbol ", loc)
       rhs.write(out)
+      if (isAssign && !isLocalDefStmt) out.w(")")
     }
   }
   Str symbol
@@ -507,6 +512,7 @@ class JsBinaryExpr : JsExpr
   JsExpr rhs
   Bool leave
   Bool isAssign
+  BinaryExpr x
 }
 
 // for JsBinaryExpr support
