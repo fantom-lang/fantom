@@ -9,6 +9,8 @@ package fan.sys;
 
 import java.lang.ref.*;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.zip.*;
@@ -160,6 +162,14 @@ public class Pod
       // if null or doesn't exist then its a no go
       if (file == null || !file.exists()) throw UnknownPodErr.make(name);
 
+      // check if there is a staged file that needs to be installed
+      File staged = new File(file.getParentFile().getParentFile(), "install/" + file.getName());
+      if (staged.exists())
+      {
+        Log.get("sys").info("Installing  \"" + staged.getName() + "\" to " + file.getCanonicalFile());
+        Files.move(staged.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      }
+
       store = FStore.makeZip(file);
     }
 
@@ -237,7 +247,11 @@ public class Pod
     // close current zip file
     try
     {
-      if (fpod.store != null) fpod.store.close();
+      if (fpod.store != null)
+      {
+        fpod.store.close();
+        fpod.store = null;
+      }
     }
     catch (Exception e)
     {
