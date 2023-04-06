@@ -726,18 +726,19 @@ class InheritTest : CompilerTest
         abstract A y()
         abstract Obj z()
         abstract Num f()
-      }
+      } // 20
 
       class B : A, M
       {
-        override B x() { return this }
-        override A y() { return this }
+        override B x() { return this }  // 24
+        override A y() { return this }  // 25
         override B z() { return this } // ok as of 22-Jan-2023
       }",
       [
-       22, 1, "Inherited slots have conflicting signatures '$podName::A.f' and '$podName::M.f'",
-       24, 3, "Conflicting covariant returns: '$podName::A' and '$podName::M'",
-       25, 3, "Conflicting covariant returns: 'sys::Obj' and '$podName::A'",
+        22, 1, "Inherited slots have conflicting signatures '$podName::A.f' and '$podName::M.f'",
+// See Inherit.fan
+//        24, 3, "Conflicting covariant returns: '$podName::A' and '$podName::M'",
+//        25, 3, "Conflicting covariant returns: 'sys::Obj' and '$podName::A'",
      ])
   }
 

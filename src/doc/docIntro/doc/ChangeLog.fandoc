@@ -22,6 +22,7 @@
 - Add Win.clipboardReadText,clipboardWriteText
 - Date toLocale support for quarter
 - Fix charset handling on wrapped InStreams
+- Remove compiler check for "Conflicting covariant returns"
 
 *Build 1.0.78 (26 Apr 2022)*
 - New graphics APIs: GraphicsEnv, Graphics, Image, Stroke, Paint

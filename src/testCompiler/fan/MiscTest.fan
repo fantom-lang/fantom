@@ -1104,6 +1104,8 @@ class MiscTest : CompilerTest
 // Mixin Set Operator
 //////////////////////////////////////////////////////////////////////////
 
+  // TODO: I noticed this doesn't work and wanted to capture the
+  // test case (which currently fails).  1-Dec-2022
   Void testMixinSetOp()
   {
     compile(

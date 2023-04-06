@@ -291,8 +291,13 @@ class Inherit : CompilerStep
       // if the definition already has a covariant return type, then
       // it must be exactly the same type as this new override (we
       // can't have conflicting covariant overrides
+      /* 6-Apr-2023: I can't remember why we have this check here and it seems
+         like it is creating artificial constraints.  The checks above verify
+         that return type is a covariant fit, so I am not sure this is needed.
+         Then again I probably added it for some reason ten years ago...
       if (def.inheritedRet != null && def.inheritedRet != base.inheritedReturnType && !base.inheritedReturnType.isObj)
         throw err("Conflicting covariant returns: '$def.inheritedRet' and '$base.inheritedReturnType'", loc)
+      */
     }
 
     // save original return type
