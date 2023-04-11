@@ -736,9 +736,9 @@ class InheritTest : CompilerTest
       }",
       [
         22, 1, "Inherited slots have conflicting signatures '$podName::A.f' and '$podName::M.f'",
-// See Inherit.fan
-//        24, 3, "Conflicting covariant returns: '$podName::A' and '$podName::M'",
-//        25, 3, "Conflicting covariant returns: 'sys::Obj' and '$podName::A'",
+        24, 3, "Conflicting covariant returns: '$podName::A' and '$podName::M'",
+        25, 3, "Conflicting covariant returns: 'sys::Obj' and '$podName::A'",
+        26, 3, "Conflicting covariant returns: '$podName::A' and 'sys::Obj'",
      ])
   }
 
