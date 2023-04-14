@@ -67,12 +67,9 @@ internal class WispRes : WebRes
   **
   ** Map of HTTP response headers.  You must set all headers before
   ** you access out() for the first time, which commits the response.
-  ** Throw an err if response is already committed.
+  ** The headers are readonly once the response is committed.
   **
   override Str:Str headers
-  {
-    get { checkUncommitted; return &headers }
-  }
 
   **
   ** Get the list of cookies to set via a header fields.  Add a
@@ -225,15 +222,14 @@ internal class WispRes : WebRes
     // if we have content then we need to ensure we have our
     // headers and response stream are setup correctly
     sout := socket.out
-    if (content)
-    {
-      cout := WebUtil.makeContentOutStream(&headers, sout)
-      if (cout != null) webOut = WebOutStream(cout)
-    }
+    if (content) webOut = req.mod.makeResOut(sout)
+
+    // lock down the headers
+    headers = headers.ro
 
     // write response line and headers
     sout.print("HTTP/1.1 ").print(statusCode).print(" ").print(toStatusMsg).print("\r\n")
-    WebUtil.writeHeaders(sout, &headers)
+    WebUtil.writeHeaders(sout, headers)
     &cookies.each |Cookie c| { sout.print("Set-Cookie: ").print(c).print("\r\n") }
     sout.print("\r\n").flush
   }
@@ -265,6 +261,7 @@ internal class WispRes : WebRes
 //////////////////////////////////////////////////////////////////////////
 
   internal WispService service
+  internal WispReq? req
   internal TcpSocket socket
   internal WebOutStream? webOut
   internal Bool upgraded

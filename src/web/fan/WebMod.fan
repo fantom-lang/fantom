@@ -25,4 +25,15 @@ abstract const class WebMod : Weblet
   **
   virtual Void onStop() {}
 
+  **
+  ** Create WebOutStream from socket output stream to use for 'WebRes.out'.
+  ** This method is call on the current WebMod during the response commit.
+  **
+  @NoDoc virtual WebOutStream? makeResOut(OutStream out)
+  {
+    cout := WebUtil.makeContentOutStream(res.headers, out)
+    if (cout == null) return null
+    return WebOutStream(cout)
+  }
+
 }

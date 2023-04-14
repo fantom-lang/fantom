@@ -17,11 +17,12 @@ internal class WispReq : WebReq
   new make(WispService service, TcpSocket socket, WispRes res)
   {
     this.service = service
+    this.mod     = service.root
     this.socket  = socket
     this.res     = res
   }
 
-  override WebMod mod := WispDefaultRootMod()
+  override WebMod mod
   override Str method := "" { private set }
   override Bool isGet { private set }
   override Bool isPost { private set }

@@ -60,6 +60,7 @@ internal const class WispActor : Actor
       // allocate request, response
       res = WispRes(service, socket)
       req = WispReq(service, socket, res)
+      res.req = req
 
       // init thread locals
       Actor.locals["web.req"] = req

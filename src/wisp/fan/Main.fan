@@ -8,6 +8,7 @@
 
 using util
 using inet
+using web
 
 internal class Main : AbstractMain
 {
@@ -34,4 +35,41 @@ internal class Main : AbstractMain
     }])
   }
 }
+
+**************************************************************************
+** TestMod
+**************************************************************************
+
+/*
+internal const class TestMod : WebMod
+{
+  override Void onGet()
+  {
+    res.headers["Content-Type"] = "text/plain"
+    res.out.printLine("$req.method $req.uri")
+    req.headers.each |v, n| { res.out.printLine("$n: $v") }
+    res.out.flush
+    num := ((TestOutStream)req.stash["testOut"]).num
+    echo("-- $req.uri $num bytes")
+  }
+
+  override WebOutStream? makeResOut(OutStream out)
+  {
+    tout := TestOutStream(out)
+    req.stash["testOut"] = tout
+    return super.makeResOut(tout)
+  }
+}
+
+internal class TestOutStream : OutStream
+{
+  new make(OutStream out) : super(out) {}
+  Int num := 0
+  override This write(Int byte) { super.write(byte); num++; return this }
+  override This writeBuf(Buf buf, Int n := buf.remaining) { super.writeBuf(buf, n); num += n; return this }
+}
+*/
+
+
+
 

@@ -732,7 +732,7 @@ class InheritTest : CompilerTest
       {
         override B x() { return this }  // 24
         override A y() { return this }  // 25
-        override B z() { return this } // ok as of 22-Jan-2023
+        override B z() { return this }  // 26
       }",
       [
         22, 1, "Inherited slots have conflicting signatures '$podName::A.f' and '$podName::M.f'",
