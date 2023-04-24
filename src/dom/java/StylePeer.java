@@ -67,7 +67,7 @@ public class StylePeer
 
   Object computed(Style self, String name) { throw err(); }
 
-  Object effective(String name) { throw err(); }
+  Object effective(Style self, String name) { throw err(); }
 
   public Object get(Style self, String name)
   {
