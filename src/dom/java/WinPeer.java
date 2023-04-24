@@ -48,8 +48,8 @@ public class WinPeer
   public Uri     uri               (Win self)                                           { throw err(); }
   public void    hyperlink         (Win self, Uri uri)                                  { throw err(); }
   public void    reload            (Win self, boolean force)                            { throw err(); }
-  public void    clipboardReadText (Func f)                                             { throw err(); }
-  public void    clipboardWriteText(String text)                                        { throw err(); }
+  public void    clipboardReadText (Win self, Func f)                                   { throw err(); }
+  public void    clipboardWriteText(Win self, String text)                              { throw err(); }
   public void    hisBack           (Win self)                                           { throw err(); }
   public void    hisForward        (Win self)                                           { throw err(); }
   public void    hisPushState      (Win self, String title, Uri uri, Map map)           { throw err(); }
