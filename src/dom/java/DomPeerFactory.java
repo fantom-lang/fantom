@@ -78,7 +78,7 @@ public class DomPeerFactory
     throw UnsupportedErr.make("elem.fromNative");
   }
 
-  public Event eventFromNative(Object elem)
+  public Event eventFromNative(Object event)
   {
     throw UnsupportedErr.make("event.fromNative");
   }
