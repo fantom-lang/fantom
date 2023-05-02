@@ -245,6 +245,13 @@ public class Pod
     log.info("Pod reload: " + name);
 
     // close current zip file
+    this.close();
+
+    return this;
+  }
+
+  private Object close()
+  {
     try
     {
       if (fpod.store != null)
@@ -276,6 +283,7 @@ public class Pod
     if (name.equals("reload")) return reload();
     if (name.equals("classLoader")) return classLoader;
     if (name.equals("loadFile")) return loadFile();
+    if (name.equals("close")) return close();
     return super.trap(name, args);
   }
 
