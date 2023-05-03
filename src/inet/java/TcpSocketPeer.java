@@ -81,7 +81,10 @@ public class TcpSocketPeer
 // TLS
 //////////////////////////////////////////////////////////////////////////
 
-  public TcpSocket upgradeTls(TcpSocket self) { return upgradeTls(self, self); }
+  public TcpSocket upgradeTls(TcpSocket self, IpAddr addr, Long port)
+  {
+    return upgradeTls(self, self, addr, port);
+  }
   public TcpSocket upgradeTls(TcpSocket self, TcpSocket wrap)
   {
     try
