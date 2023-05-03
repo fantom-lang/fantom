@@ -189,6 +189,9 @@ const class YamlList : YamlObj
     else                         this.tag = tag
   }
 
+  ** Content as a list
+  YamlObj[] list() { content }
+
   ** Iterate the list items
   Void each(|YamlObj| f)
   {
@@ -266,6 +269,9 @@ const class YamlMap : YamlObj
     if (tag == "!" || tag == "") this.tag = "tag:yaml.org,2002:map"
     else                         this.tag = tag
   }
+
+  ** Content as a map
+  [YamlObj:YamlObj] map() { content }
 
   override internal Void writeInd(OutStream out, Int first, Int next := first)
   {
