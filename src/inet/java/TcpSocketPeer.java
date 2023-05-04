@@ -81,8 +81,11 @@ public class TcpSocketPeer
 // TLS
 //////////////////////////////////////////////////////////////////////////
 
-  public TcpSocket upgradeTls(TcpSocket self) { return upgradeTls(self, self); }
-  public TcpSocket upgradeTls(TcpSocket self, TcpSocket wrap)
+  public TcpSocket upgradeTls(TcpSocket self, IpAddr addr, Long port)
+  {
+    return upgradeTls(self, self, addr, port);
+  }
+  public TcpSocket upgradeTls(TcpSocket self, TcpSocket wrap, IpAddr addr, Long port)
   {
     try
     {
@@ -97,10 +100,24 @@ public class TcpSocketPeer
       else
       {
         // upgrade an existing socket
+        String javaAddr;
+        int javaPort;
+
+        if (addr == null)
+        {
+          javaAddr = wrap.peer.socket.getInetAddress().getHostAddress();
+          javaPort = wrap.peer.socket.getPort();
+        }
+        else //TLS handshake through tunnel
+        {
+          javaAddr = addr.hostname();
+          javaPort = port.intValue();
+        }
+
         socket = (SSLSocket)factory.createSocket(
                    wrap.peer.socket,
-                   wrap.peer.socket.getInetAddress().getHostAddress(),
-                   wrap.peer.socket.getPort(),
+                   javaAddr,
+                   javaPort,
                    false);
         clientMode = !wrap.peer.isServer;
       }

@@ -111,9 +111,10 @@ class TcpSocket
   native This connect(IpAddr addr, Int port, Duration? timeout := config.connectTimeout)
 
   **
-  ** Get a new TCP socket that is upgrade to use TLS.
+  ** Get a new TCP socket that is upgraded to use TLS.  If connecting
+  ** through a web proxy, specify the destination address and port.
   **
-  native TcpSocket upgradeTls()
+  native TcpSocket upgradeTls(IpAddr? addr := null, Int? port := null)
 
   **
   ** Get the input stream used to read data from the socket.  The input
