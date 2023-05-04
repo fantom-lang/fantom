@@ -481,7 +481,7 @@ class WebClient
     if (resCode != 200) throw IOErr("Could not open tunnel: bad HTTP response $resCode $resPhrase")
 
     // upgrade to SSL socket now
-    return socket.upgradeTls
+    return socket.upgradeTls(IpAddr(reqUri.host), reqUri.port ?: 443)
   }
 
   **
