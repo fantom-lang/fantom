@@ -97,8 +97,8 @@ const class YamlScalar : YamlObj
 {
   // content : Str
 
-  ** Creates a YamlScalar with the string 's' as content
-  ** and 'tag' as its tag.
+  ** Creates a YamlScalar with the string 's' as content,
+  ** found at location 'loc', with 'tag' as its tag.
   new make(Str s, Str tag := "?", FileLoc loc := FileLoc.unknown)
   {
     this.content = s
@@ -108,6 +108,10 @@ const class YamlScalar : YamlObj
     else if (tag != "") this.tag = tag
     else                this.tag = "?"
   }
+
+  ** Convenience for creating a YamlScalar with an explicit file location but
+  ** implicit tag.
+  new makeLoc(Str s, FileLoc loc) : this.make(s, "?", loc) {}
 
   override internal Void writeInd(OutStream out, Int first, Int next := first)
   {
@@ -178,8 +182,8 @@ const class YamlList : YamlObj
 {
   // content : YamlObj[]
 
-  ** Creates a YamlList with the list 's' as content
-  ** and 'tag' as its tag.
+  ** Creates a YamlList with the list 's' as content,
+  ** found at location 'loc', with 'tag' as its tag.
   new make(YamlObj[] s, Str tag := "!", FileLoc loc := FileLoc.unknown)
   {
     this.content = s
@@ -188,6 +192,10 @@ const class YamlList : YamlObj
     if (tag == "!" || tag == "") this.tag = "tag:yaml.org,2002:seq"
     else                         this.tag = tag
   }
+
+  ** Convenience for creating a YamlList with an explicit file location but
+  ** implicit tag.
+  new makeLoc(YamlObj[] s, FileLoc loc) : this.make(s, "!", loc) {}
 
   ** Content as a list
   YamlObj[] list() { content }
@@ -259,8 +267,8 @@ const class YamlMap : YamlObj
 {
   // content : [YamlObj:YamlObj]
 
-  ** Creates a YamlMap with the map 's' as content
-  ** and 'tag' as its tag.
+  ** Creates a YamlMap with the map 's' as content,
+  ** found at location 'loc', with 'tag' as its tag.
   new make([YamlObj:YamlObj] s, Str tag := "!", FileLoc loc := FileLoc.unknown)
   {
     this.content = s
@@ -269,6 +277,10 @@ const class YamlMap : YamlObj
     if (tag == "!" || tag == "") this.tag = "tag:yaml.org,2002:map"
     else                         this.tag = tag
   }
+
+  ** Convenience for creating a YamlMap with an explicit file location but
+  ** implicit tag.
+  new makeLoc([YamlObj:YamlObj] s, FileLoc loc) : this.make(s, "!", loc) {}
 
   ** Content as a map
   [YamlObj:YamlObj] map() { content }
