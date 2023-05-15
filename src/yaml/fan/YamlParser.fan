@@ -52,8 +52,6 @@ internal class YamlParser
     while((['#', '\n'] as Int?[]).contains(r.peekNextNs(r.docPrefix))) r.eatLine(r.docPrefix)
     while(r.peek(r.any) == 0xFFFE) r.any
 
-    docLoc := r.loc
-
     //directive/explicit document
     if (r.peek == '%' || r.peekToken == "---")
     {
@@ -62,8 +60,9 @@ internal class YamlParser
       // Completely empty document
       if (r.peekIndentedNs(0, r.docPrefix) == null || r.nextTokenEndsDoc)
       {
+        startLoc := r.loc
         sLComments(r.docPrefix)
-        docs.add(YamlScalar("", "?", docLoc))
+        docs.add(YamlScalar("", "?", startLoc))
         if (r.peekToken(r.docPrefix) == "...") parseDocEnd
         else if (r.peekToken(r.docPrefix) == "---") parseDocument
         return
@@ -78,12 +77,7 @@ internal class YamlParser
 
     if (!tagShorthands.containsKey("!")) tagShorthands.add("!", "!")
     if (!tagShorthands.containsKey("!!")) tagShorthands.add("!!", "tag:yaml.org,2002:")
-    node := parseBlockNode(-1, Context.blockIn)
-    docs.add(Type.of(node).make(
-      [node.content,
-       node.tag,
-       docLoc]
-    ))
+    docs.add(parseBlockNode(-1, Context.blockIn))
 
     //move onto next document, if applicable
     while (r.peek(r.docPrefix) != null && ['#', '\n', null].contains(r.peekNextNs(r.docPrefix)))
@@ -217,12 +211,14 @@ internal class YamlParser
 
     anchor := ""
     tag := ""
+    FileLoc? startLoc
 
     //parse properties, if they are specified
     if ((['&', '!'] as Int?[]).contains(c = r.peekIndentedNs(n+1, r.docPrefix)) &&
         !nextNodeIsKey(n+1,ctx))
     {
       separate(n+1, ctx)
+      startLoc = r.loc
       p := parseProperties(n+1, ctx)
       if (p.containsKey("anchor")) anchor = p["anchor"]
       if (p.containsKey("tag")) tag = p["tag"]
@@ -241,12 +237,12 @@ internal class YamlParser
       if (r.peekIndentedToken(seqSpacing+1, r.any) == "-")
       {
         sLComments
-        return parseBlockSeq(seqSpacing, tag)
+        return parseBlockSeq(seqSpacing, tag, startLoc)
       }
       else if (r.peekIndentedToken(n+1, r.any) == "?" || nextNodeIsKey(n+1,ctx))
       {
         sLComments
-        return parseBlockMap(n, tag)
+        return parseBlockMap(n, tag, startLoc)
       }
 
       //mark empty nodes ending the document
@@ -257,31 +253,31 @@ internal class YamlParser
       {
         case '|':
           separate(n+1,ctx)
-          return parseLiteral(n+1, tag)
+          return parseLiteral(n+1, tag, startLoc)
         case '>':
           separate(n+1,ctx)
-          return parseFolded(n+1, tag)
+          return parseFolded(n+1, tag, startLoc)
         case '\'':
           separate(n+1, Context.flowOut)
-          return objSLComments(r.loc.line, true, parseSingleQuote(n+1, Context.flowOut, tag))
+          return objSLComments(r.loc.line, true, parseSingleQuote(n+1, Context.flowOut, tag, startLoc))
         case '"':
           separate(n+1, Context.flowOut)
-          return objSLComments(r.loc.line, true, parseDoubleQuote(n+1, Context.flowOut, tag))
+          return objSLComments(r.loc.line, true, parseDoubleQuote(n+1, Context.flowOut, tag, startLoc))
         case '{':
           separate(n+1, Context.flowOut)
-          return objSLComments(r.loc.line, true, parseFlowMap(n+1, Context.flowOut, tag))
+          return objSLComments(r.loc.line, true, parseFlowMap(n+1, Context.flowOut, tag, startLoc))
         case '[':
           separate(n+1, Context.flowOut)
-          return objSLComments(r.loc.line, true, parseFlowSeq(n+1, Context.flowOut, tag))
+          return objSLComments(r.loc.line, true, parseFlowSeq(n+1, Context.flowOut, tag, startLoc))
         case null:
           sLComments
           if (anchor != "" || tag != "")
-            return YamlScalar("", tag)
+            return YamlScalar("", tag, startLoc)
           else
             throw err("A node cannot be completely empty here.")
         default:
           separate(n+1, Context.flowOut)
-          return objSLComments(r.loc.line, false, parsePlain(n+1, Context.flowOut, tag))
+          return objSLComments(r.loc.line, false, parsePlain(n+1, Context.flowOut, tag, startLoc))
       }
     }()
 
@@ -303,6 +299,7 @@ internal class YamlParser
 
     anchor := ""
     tag := ""
+    startLoc := r.loc
 
     //parse properties, if they are specified
     if (r.peek == '&' || r.peek == '!')
@@ -321,10 +318,10 @@ internal class YamlParser
     {
       c := r.peekIndentedNs(n)
 
-      if (c == '{')       return parseFlowMap(n,ctx,tag)
-      else if (c == '[')  return parseFlowSeq(n,ctx,tag)
-      else if (c == '\'') return parseSingleQuote(n,ctx,tag)
-      else if (c == '"')  return parseDoubleQuote(n,ctx,tag)
+      if (c == '{')       return parseFlowMap(n,ctx,tag,startLoc)
+      else if (c == '[')  return parseFlowSeq(n,ctx,tag,startLoc)
+      else if (c == '\'') return parseSingleQuote(n,ctx,tag,startLoc)
+      else if (c == '"')  return parseDoubleQuote(n,ctx,tag,startLoc)
       else if (c == null ||                        // Empty node (nothing ending it)
                r.peekIndentedToken(n) == ":" ||    // Ended by ": "
               ((ctx == Context.flowIn || ctx == Context.flowKey) &&
@@ -334,9 +331,9 @@ internal class YamlParser
       {
         if (anchor == "" && tag == "")
           throw err("A node cannot be completely empty here.")
-        return YamlScalar("", tag)
+        return YamlScalar("", tag, startLoc)
       }
-      else return parsePlain(n,ctx,tag)
+      else return parsePlain(n,ctx,tag,startLoc)
     }()
 
     //change anchor status from in progress to permanent, if applicable
@@ -352,13 +349,14 @@ internal class YamlParser
   ** [104] c-ns-alias-node
   private YamlObj parseAlias(Context ctx)
   {
+    startLoc := r.loc
     r.eatChar('*')
     name := r.eatUntil |c1| { !r.isNs(c1) || ((ctx == Context.flowIn || ctx == Context.flowKey) && r.isFlowEnd(c1)) }
 
     if (name == "")
       throw err("An alias name must be at least one character long.")
     else if (anchors.containsKey(name))
-      return anchors[name]
+      return setLoc(anchors[name], startLoc)
     else if (anchorsInProgress.contains(name))
       throw err("This parser does not support self-containing nodes.")
     else
@@ -450,8 +448,9 @@ internal class YamlParser
   }
 
   ** [170] c-l+literal(n)
-  private YamlScalar parseLiteral(Int n, Str tag)
+  private YamlScalar parseLiteral(Int n, Str tag, FileLoc? loc)
   {
+    startLoc := loc ?: r.loc
     s := StrBuf()
 
     r.eatChar('|')
@@ -460,7 +459,7 @@ internal class YamlParser
     head := parseBlockHeader(n)
     //edge case where the stream ends after the block header
     if (r.loc.line == line)
-      return YamlScalar("", tag == "" ? "!" : tag)
+      return YamlScalar("", tag == "" ? "!" : tag, startLoc)
 
     /* Null indent: The indentation has not been assigned or detected.
      * Negative indent: The indentation has been detected, but not confirmed
@@ -514,12 +513,13 @@ internal class YamlParser
       if (s.size == 1 && s[0] == '\n') s.remove(0)
     }
 
-    return YamlScalar(s.toStr, tag == "" ? "!" : tag)
+    return YamlScalar(s.toStr, tag == "" ? "!" : tag, startLoc)
   }
 
   ** [174] c-l+folded(n)
-  private YamlScalar parseFolded(Int n, Str tag)
+  private YamlScalar parseFolded(Int n, Str tag, FileLoc? loc)
   {
+    startLoc := loc ?: r.loc
     s := StrBuf()
 
     r.eatChar('>')
@@ -591,7 +591,7 @@ internal class YamlParser
       if (s.size == 1 && s[0] == '\n') s.remove(0)
     }
 
-    return YamlScalar(s.toStr, tag == "" ? "!" : tag)
+    return YamlScalar(s.toStr, tag == "" ? "!" : tag, startLoc)
   }
 
   ** [162] c-b-block-header(t)
@@ -623,7 +623,7 @@ internal class YamlParser
   }
 
   ** [120] c-single-quoted(n,c)
-  private YamlScalar parseSingleQuote(Int n, Context ctx, Str tag)
+  private YamlScalar parseSingleQuote(Int n, Context ctx, Str tag, FileLoc? loc)
   {
     Int? c
     s := StrBuf()
@@ -678,11 +678,11 @@ internal class YamlParser
     if (r.peek == '#')
       throw err("Comments must be preceded by whitespace.")
 
-    return YamlScalar(s.toStr, tag == "" ? "!" : tag)
+    return YamlScalar(s.toStr, tag == "" ? "!" : tag, loc ?: initLoc)
   }
 
   ** [109] c-double-quoted(n,c)
-  private YamlScalar parseDoubleQuote(Int n, Context ctx, Str tag)
+  private YamlScalar parseDoubleQuote(Int n, Context ctx, Str tag, FileLoc? loc)
   {
     Int? c
     s := StrBuf()
@@ -781,15 +781,16 @@ internal class YamlParser
     if (r.peek == '#')
       throw err("Comments must be preceded by whitespace.")
 
-    return YamlScalar(s.toStr, tag == "" ? "!" : tag)
+    return YamlScalar(s.toStr, tag == "" ? "!" : tag, loc ?: initLoc)
   }
 
   ** [137] c-flow-sequence(n,c)
-  private YamlList parseFlowSeq(Int n, Context ctx, Str tag)
+  private YamlList parseFlowSeq(Int n, Context ctx, Str tag, FileLoc? loc)
   {
     YamlObj[] res := [,]
     if (ctx == Context.flowOut)  ctx = Context.flowIn
     if (ctx == Context.blockKey) ctx = Context.flowKey
+    startLoc := loc ?: r.loc
 
     r.eatChar('[')
 
@@ -814,7 +815,7 @@ internal class YamlParser
     if (r.peek == '#')
       throw err("Comments must be preceded by whitespace.")
 
-    return YamlList(res, tag)
+    return YamlList(res, tag, startLoc)
   }
 
   ** [139] ns-flow-seq-entry(n,c)
@@ -823,15 +824,15 @@ internal class YamlParser
     // [143] ns-flow-map-explicit-entry(n,c)
     if (r.peekToken == "?")
     {
+      startLoc := r.loc
       entry := parseFlowMapEntry(n,ctx)
-      return YamlMap(YamlObj:YamlObj[entry["key"]:entry["val"]])
+      return YamlMap(YamlObj:YamlObj[entry["key"]:entry["val"]], startLoc)
     }
 
     // [151] ns-flow-pair-entry(n,c)
     else if (nextNodeIsKey(n,ctx))
     {
-      YamlObj key := YamlScalar("")
-      YamlObj val := YamlScalar("")
+      YamlObj key := YamlScalar("", r.loc)
 
       // non-empty key
       if (r.peek != ':')
@@ -841,22 +842,25 @@ internal class YamlParser
       r.eatChar(':')
       separate(n,ctx)
 
+      YamlObj val := YamlScalar("", r.loc)
+
       // non-empty entry
       if (![']', ',', null].contains(r.peek))
         val = parseFlowNode(n,ctx)
 
-      return YamlMap(YamlObj:YamlObj[key:val])
+      return YamlMap(YamlObj:YamlObj[key:val], key.loc)
     }
 
     return parseFlowNode(n,ctx)
   }
 
   ** [140] c-flow-mapping(n,c)
-  private YamlMap parseFlowMap(Int n, Context ctx, Str tag)
+  private YamlMap parseFlowMap(Int n, Context ctx, Str tag, FileLoc? loc)
   {
     res := YamlObj:YamlObj[:]
     if (ctx == Context.flowOut)  ctx = Context.flowIn
     if (ctx == Context.blockKey) ctx = Context.flowKey
+    startLoc := loc ?: r.loc
 
     r.eatChar('{')
 
@@ -882,15 +886,15 @@ internal class YamlParser
     if (r.peek == '#')
       throw err("Comments must be preceded by whitespace.")
 
-    return YamlMap(res, tag)
+    return YamlMap(res, tag, startLoc)
   }
 
   ** [142] ns-flow-map-entry(n,c)
   private [Str:YamlObj] parseFlowMapEntry(Int n, Context ctx)
   {
-    YamlObj key   := YamlScalar("")
-    YamlObj val   := YamlScalar("")
-    keyIsJson     := r.nextKeyIsJson
+    YamlObj key := YamlScalar("", r.loc)
+    YamlObj val := YamlScalar("", r.loc)
+    keyIsJson   := r.nextKeyIsJson
 
     // [143] ns-flow-map-explicit-entry(n,c)
     if (r.peekToken == "?")
@@ -904,12 +908,16 @@ internal class YamlParser
 
     // [144] ns-flow-map-implicit-entry(n,c)
 
+    // reset location
+    key = YamlScalar("", r.loc)
+
     // non-empty key
     emptyKey := r.peekUntil |c1| { !r.isNs(c1) || r.isFlow(c1) } == ":"
     if (!emptyKey)
       key = parseFlowNode(n,ctx)
 
     separate(n,ctx)
+    val = YamlScalar("", r.loc)
 
     // indicated entry
     if (r.peek == ':')
@@ -932,8 +940,10 @@ internal class YamlParser
   }
 
   ** [183] l+block-sequence(n)
-  private YamlList parseBlockSeq(Int n, Str tag)
+  private YamlList parseBlockSeq(Int n, Str tag, FileLoc? loc)
   {
+    startLoc := loc
+
     m := (r.peekUntil |c1| { c1 != ' ' }).size
     if (m <= n) throw err("Your list must be indented by at least ${n+1} spaces, not just ${m}.")
 
@@ -943,10 +953,12 @@ internal class YamlParser
            !r.nextTokenEndsDoc)
     {
       r.eatInd(m)
+      if (startLoc == null)
+        startLoc = r.loc
       res.add(parseBlockSeqEntry(m))
     }
 
-    return YamlList(res, tag)
+    return YamlList(res, tag, startLoc)
   }
 
   ** [184] c-l-block-seq-entry(n)
@@ -959,8 +971,10 @@ internal class YamlParser
   }
 
   ** [187] l+block-mapping(n)
-  private YamlMap parseBlockMap(Int n, Str tag)
+  private YamlMap parseBlockMap(Int n, Str tag, FileLoc? loc)
   {
+    startLoc := loc
+
     m := (r.peekUntil |c1| { c1 != ' ' }).size
     if (m <= n) throw err("Your list must be indented by at least ${n+1} spaces, not just ${m}.")
 
@@ -973,11 +987,13 @@ internal class YamlParser
            !r.nextTokenEndsDoc)
     {
       r.eatInd(m)
+      if (startLoc == null)
+        startLoc = r.loc
       entry := parseBlockMapEntry(m)
       res.add(entry["key"], entry["val"])
     }
 
-    return YamlMap(res, tag)
+    return YamlMap(res, tag, startLoc)
   }
 
   ** [188] ns-l-block-map-entry(n)
@@ -1002,7 +1018,7 @@ internal class YamlParser
         res["val"] = parseBlockIndented(n, Context.blockOut)
       }
       // empty value
-      else res["val"] = YamlScalar("")
+      else res["val"] = YamlScalar("", r.loc)
     }
 
     // [192] ns-l-block-map-implicit-entry(n)
@@ -1013,7 +1029,7 @@ internal class YamlParser
                   "Make sure it is not too long (>1024 characters) and only spans a single line, or " +
                   "consider making it an explicit key instead.")
       r.eatWs
-      if (r.peekToken == ":") res["key"] = YamlScalar("")
+      if (r.peekToken == ":") res["key"] = YamlScalar("", r.loc)
       else res["key"] = parseFlowNode(0, Context.blockKey)
       r.eatWs
       r.eatChar(':')
@@ -1023,8 +1039,8 @@ internal class YamlParser
           (r.peekIndentedNs(n+1, r.docPrefix) == null &&
            r.peekIndentedToken(n, r.docPrefix) != "-"))
       {
+        res["val"] = YamlScalar("", r.loc)
         sLComments
-        res["val"] = YamlScalar("")
       }
       // error if value is compact map
       else if ((r.peekNextNs != '#' && r.peekNextNs != '\n' && nextNodeIsKey(n+1, Context.blockKey)) ||
@@ -1047,6 +1063,7 @@ internal class YamlParser
       m := r.eatUntil |c1| { c1 != ' ' }.size
 
       YamlObj[] res := [,]
+      startLoc := r.loc
       res.add(parseBlockSeqEntry(n+1+m))
       while (r.peekUntil |c1| { c1 != ' ' }.size == n+1+m &&
              r.peekPast  |c1| { c1 == ' ' } == '-')
@@ -1055,7 +1072,7 @@ internal class YamlParser
         res.add(parseBlockSeqEntry(n+1+m))
       }
 
-      return YamlList(res)
+      return YamlList(res, startLoc)
     }
 
     // [195] ns-l-compact-mapping(n)
@@ -1066,6 +1083,7 @@ internal class YamlParser
       m := r.eatUntil |c1| { c1 != ' ' }.size
 
       res := YamlObj:YamlObj[:]
+      startLoc := r.loc
       entry := parseBlockMapEntry(n+1+m)
       res.add(entry["key"], entry["val"])
       while (r.peekUntil |c1| { c1 != ' ' }.size == n+1+m &&
@@ -1076,15 +1094,16 @@ internal class YamlParser
         res.add(entry["key"], entry["val"])
       }
 
-      return YamlMap(res)
+      return YamlMap(res, startLoc)
     }
 
     // Empty node
     else if (r.peekIndentedNs(n+1, r.docPrefix) == null &&
             !(ctx == Context.blockOut && r.peekIndentedToken(n, r.docPrefix) == "-"))
     {
+      startLoc := r.loc
       sLComments
-      return YamlScalar("")
+      return YamlScalar("", startLoc)
     }
 
     // Regular block node
@@ -1092,9 +1111,10 @@ internal class YamlParser
   }
 
   ** [131] ns-plain(n,c)
-  private YamlScalar parsePlain(Int n, Context ctx, Str tag)
+  private YamlScalar parsePlain(Int n, Context ctx, Str tag, FileLoc? loc)
   {
     s := StrBuf()
+    startLoc := loc ?: r.loc
 
     // [133] ns-plain-one-line(c)
     c := r.firstChar(ctx)()
@@ -1123,7 +1143,7 @@ internal class YamlParser
       }
     }
 
-    return YamlScalar(s.toStr.trim, tag)
+    return YamlScalar(s.toStr.trim, tag, startLoc)
   }
 
   ** Eats the plain scalar from the current position to some other
@@ -1269,6 +1289,16 @@ internal class YamlParser
     {
       return false
     }
+  }
+
+  ** Returns a copy of the given YamlObj with the location set to 'loc'.
+  private YamlObj setLoc(YamlObj obj, FileLoc loc)
+  {
+    return Type.of(obj).make(
+      [obj.content,
+       obj.tag,
+       loc]
+    )
   }
 
 //////////////////////////////////////////////////////////////////////////
