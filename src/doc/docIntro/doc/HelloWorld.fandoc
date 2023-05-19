@@ -119,8 +119,8 @@ Which declares a single class called "Main":
 The build file itself is just a normal Fantom script file which will
 compile the pod:
 
-  C:\projects> cd hello
-  C:\projects\hello> fan build.fan
+  C:\projects> cd hello\src
+  C:\projects\hello\src> fan build.fan
   compile [hello]
     Compile [hello]
       FindSourceFiles [1 files]

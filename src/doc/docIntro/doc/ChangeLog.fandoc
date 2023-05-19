@@ -23,7 +23,9 @@
 - Date toLocale support for quarter
 - Fix charset handling on wrapped InStreams
 - Remove compiler check for "Conflicting covariant returns"
-* Elem.closest
+- Elem.closest
+- New BuildPod "js" target to stage for Node.JS
+- JS support for file API when running in Node.JS
 
 *Build 1.0.78 (26 Apr 2022)*
 - New graphics APIs: GraphicsEnv, Graphics, Image, Stroke, Paint
