@@ -229,6 +229,11 @@ class Elem
   ** CSS selectors.
   native Elem[] querySelectorAll(Str selectors)
 
+  ** Traverses this element and its parents (heading toward the
+  ** document root) until it finds a node that matches the
+  ** specified CSS selector.  Returns 'null' if none found.
+  native Elem? closest(Str selectors)
+
   ** Return a duplicate of this node.
   native Elem clone(Bool deep := true)
 

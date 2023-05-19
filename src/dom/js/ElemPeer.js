@@ -383,6 +383,13 @@ fan.dom.ElemPeer.prototype.querySelectorAll = function(self, selectors)
   return list;
 }
 
+fan.dom.ElemPeer.prototype.closest = function(self, selectors)
+{
+  var elem = this.elem.closest(selectors);
+  if (elem == null) return null;
+  return fan.dom.ElemPeer.wrap(elem);
+}
+
 fan.dom.ElemPeer.prototype.clone = function(self, deep)
 {
   var clone = this.elem.cloneNode(deep);
