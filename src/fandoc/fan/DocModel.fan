@@ -293,6 +293,7 @@ abstract class DocElem : DocNode
   **
   override Str toText()
   {
+    if (kids.size == 1) return kids.first.toText
     s := StrBuf()
     kids.each |kid| { s.join(kid.toText, " ") }
     return s.toStr

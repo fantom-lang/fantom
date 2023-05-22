@@ -167,7 +167,7 @@ class HtmlDocWriter : DocWriter
     }
   }
 
-  private Void safeText(Str s)
+  @NoDoc Void safeText(Str s)
   {
     s.each |Int ch|
     {
