@@ -7,6 +7,7 @@
 //
 
 using web
+using fandoc::HtmlDocWriter
 
 **
 ** DocEnv is the centralized glue class for managing documentation
@@ -177,6 +178,14 @@ abstract const class DocEnv
       }
     }
   }
+
+  ** Create HtmlDocWriter for rendering Fandoc
+  @NoDoc
+  virtual HtmlDocWriter initFandocHtmlWriter(OutStream out)
+  {
+    HtmlDocWriter(out)
+  }
+
 
   DocErr err(Str msg, DocLoc loc, Err? cause := null)
   {

@@ -121,7 +121,7 @@ abstract class DocRenderer
     // if no errors, then write as HTML
     if (parser.errs.isEmpty)
     {
-      writer := HtmlDocWriter(out)
+      writer := env.initFandocHtmlWriter(out)
       writer.onLink  = |Link elem| { onFandocLink(elem, toFandocElemLoc(docLoc, elem.line)) }
       writer.onImage = |Image elem| { onFandocImage(elem, toFandocElemLoc(docLoc, elem.line)) }
       root.children.each |child| { child.write(writer) }
