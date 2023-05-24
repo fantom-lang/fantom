@@ -130,6 +130,7 @@ fan.dom.CanvasGraphics.prototype.fillRect = function(x, y, w, h)
 // This clipRect(Float x, Float y, Float w, Float h)
 fan.dom.CanvasGraphics.prototype.clipRect = function(x, y, w, h)
 {
+  this.cx.beginPath();
   this.cx.rect(x, y, w, h)
   this.cx.clip();
   return this;
@@ -211,6 +212,7 @@ fan.dom.CanvasGraphics.prototype.push = function (r)
   this.cx.save();
   if (r !== undefined)
   {
+    this.cx.beginPath();
     this.cx.translate(r.m_x, r.m_y);
     this.cx.rect(0, 0, r.m_w, r.m_h);
     this.cx.clip();
