@@ -1,7 +1,11 @@
 name: Create and publish a Docker image to GitHub Packages
 
 on:
-  push: { branches: [ master ] }
+  push: 
+    branches: 
+      - master
+    tags:
+      - v*
 
 env:
   IMAGE_NAME: ${{ github.repository }}
