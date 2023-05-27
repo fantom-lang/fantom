@@ -1,4 +1,12 @@
-ARG JDK_VERSION=17
+# USAGE
+# docker build -t fantom .
+#
+# The following build args are accepted, with documentation:
+# - JDK_VERSION: The version of the JDK to use. Defaults to 17.
+# - SWT_DL_URL: The URL to download the SWT jar from. Defaults to 4.27. Be sure that this is compatible with your JDK version.
+# - REL_VERSION: The version name of Fantom to use to bootstrap. Defaults to fantom-1.0.77.
+# - REL_TAG: The tag of Fantom to use to bootstrap. Be sure that matches REL_VERSION. Defaults to v1.0.77.
+
 
 # ================================
 # Bootstrap image
@@ -8,9 +16,10 @@ ARG JDK_VERSION=17
 # It mirrors the Bootstrap.fan script, but does not use it (since we want to use the 
 # local fantom, not one pulled via git).
 
+ARG JDK_VERSION=17
+
 FROM eclipse-temurin:$JDK_VERSION as bootstrap
 
-ARG FAN_DL_URL=https://github.com/fantom-lang/fantom/releases/download
 ARG SWT_DL_URL=https://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.27-202303020300/swt-4.27-gtk-linux-x86_64.zip&mirror_id=1
 
 # These define the `rel` Fantom version.
@@ -20,7 +29,7 @@ ARG REL_TAG=v1.0.77
 WORKDIR /work
 
 RUN set -e; \
-    FAN_BIN_URL="$FAN_DL_URL/$REL_TAG/$REL_VERSION.zip" \
+    FAN_BIN_URL="https://github.com/fantom-lang/fantom/releases/download/$REL_TAG/$REL_VERSION.zip" \
     # Install curl
     && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -q update && apt-get -q install -y curl unzip && rm -rf /var/lib/apt/lists/* \
