@@ -1,3 +1,5 @@
+ARG JDK_VERSION=17
+
 # ================================
 # Bootstrap image
 # ================================
@@ -6,7 +8,7 @@
 # It mirrors the Bootstrap.fan script, but does not use it (since we want to use the 
 # local fantom, not one pulled via git).
 
-FROM openjdk:8-jdk as bootstrap
+FROM eclipse-temurin:$JDK_VERSION as bootstrap
 
 ARG FAN_DL_URL=https://github.com/fantom-lang/fantom/releases/download
 # SWT 4.16 was the last one with JDK 8 support
@@ -22,7 +24,7 @@ RUN set -e; \
     FAN_BIN_URL="$FAN_DL_URL/$REL_TAG/$REL_VERSION.zip" \
     # Install curl
     && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -q update && apt-get -q install -y curl && rm -rf /var/lib/apt/lists/* \
+    && apt-get -q update && apt-get -q install -y curl unzip && rm -rf /var/lib/apt/lists/* \
     # Download Fantom
     && curl -fsSL "$FAN_BIN_URL" -o fantom.zip \
     && unzip fantom.zip -d fantom \
@@ -45,8 +47,8 @@ RUN mkdir rel/lib/java/ext/linux-x86_64 \
     && rm swt.jar
 
 # Populate config.props with jdkHome (to use jdk, not jre) and devHome
-RUN echo -e "\n\njdkHome=/usr/local/openjdk-8/\ndevHome=/work/fan/\n" >> rel/etc/build/config.props \
-    && echo -e "\n\njdkHome=/usr/local/openjdk-8/" >> fan/etc/build/config.props
+RUN echo -e "\n\njdkHome=$JAVA_HOME/\ndevHome=/work/fan/\n" >> rel/etc/build/config.props \
+    && echo -e "\n\njdkHome=$JAVA_HOME/" >> fan/etc/build/config.props
 
 RUN rel/bin/fan fan/src/buildall.fan superclean \
     && rel/bin/fan fan/src/buildboot.fan compile \
@@ -59,7 +61,7 @@ RUN rel/bin/fan fan/src/buildall.fan superclean \
 # ================================
 # This simply copies the new Fantom into a fresh container and sets up the path.
 
-FROM openjdk:8-jdk
+FROM eclipse-temurin:$JDK_VERSION as run
 
 COPY --from=bootstrap /work/fan/ /opt/fan/
 
