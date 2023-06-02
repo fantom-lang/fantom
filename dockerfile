@@ -1,3 +1,13 @@
+# USAGE
+# docker build -t fantom .
+#
+# The following build args are accepted, with documentation:
+# - JDK_VERSION: The version of the JDK to use. Defaults to 17.
+# - SWT_DL_URL: The URL to download the SWT jar from. Defaults to 4.27. Be sure that this is compatible with your JDK version.
+# - REL_VERSION: The version name of Fantom to use to bootstrap. Defaults to fantom-1.0.77.
+# - REL_TAG: The tag of Fantom to use to bootstrap. Be sure that matches REL_VERSION. Defaults to v1.0.77.
+
+
 # ================================
 # Bootstrap image
 # ================================
@@ -6,11 +16,11 @@
 # It mirrors the Bootstrap.fan script, but does not use it (since we want to use the 
 # local fantom, not one pulled via git).
 
-FROM openjdk:8-jdk as bootstrap
+ARG JDK_VERSION=17
 
-ARG FAN_DL_URL=https://github.com/fantom-lang/fantom/releases/download
-# SWT 4.16 was the last one with JDK 8 support
-ARG SWT_DL_URL=https://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.16-202006040540/swt-4.16-gtk-linux-x86_64.zip
+FROM eclipse-temurin:$JDK_VERSION as bootstrap
+
+ARG SWT_DL_URL=https://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.27-202303020300/swt-4.27-gtk-linux-x86_64.zip&mirror_id=1
 
 # These define the `rel` Fantom version.
 ARG REL_VERSION=fantom-1.0.77
@@ -19,10 +29,10 @@ ARG REL_TAG=v1.0.77
 WORKDIR /work
 
 RUN set -e; \
-    FAN_BIN_URL="$FAN_DL_URL/$REL_TAG/$REL_VERSION.zip" \
+    FAN_BIN_URL="https://github.com/fantom-lang/fantom/releases/download/$REL_TAG/$REL_VERSION.zip" \
     # Install curl
     && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -q update && apt-get -q install -y curl && rm -rf /var/lib/apt/lists/* \
+    && apt-get -q update && apt-get -q install -y curl unzip && rm -rf /var/lib/apt/lists/* \
     # Download Fantom
     && curl -fsSL "$FAN_BIN_URL" -o fantom.zip \
     && unzip fantom.zip -d fantom \
@@ -45,8 +55,8 @@ RUN mkdir rel/lib/java/ext/linux-x86_64 \
     && rm swt.jar
 
 # Populate config.props with jdkHome (to use jdk, not jre) and devHome
-RUN echo -e "\n\njdkHome=/usr/local/openjdk-8/\ndevHome=/work/fan/\n" >> rel/etc/build/config.props \
-    && echo -e "\n\njdkHome=/usr/local/openjdk-8/" >> fan/etc/build/config.props
+RUN echo -e "\n\njdkHome=$JAVA_HOME/\ndevHome=/work/fan/\n" >> rel/etc/build/config.props \
+    && echo -e "\n\njdkHome=$JAVA_HOME/" >> fan/etc/build/config.props
 
 RUN rel/bin/fan fan/src/buildall.fan superclean \
     && rel/bin/fan fan/src/buildboot.fan compile \
@@ -59,7 +69,7 @@ RUN rel/bin/fan fan/src/buildall.fan superclean \
 # ================================
 # This simply copies the new Fantom into a fresh container and sets up the path.
 
-FROM openjdk:8-jdk
+FROM eclipse-temurin:$JDK_VERSION as run
 
 COPY --from=bootstrap /work/fan/ /opt/fan/
 

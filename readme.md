@@ -29,6 +29,18 @@ Installers are also available for macOS and Windows:
   * macOS: `brew install fantom`
   * Windows: [installer](https://github.com/Fantom-Factory/fantomWindowsInstaller/releases)
 
+### Docker
+
+This repo vends a docker image that can be downloaded and run locally using:
+```bash
+docker run -it ghcr.io/fantom-lang/fantom:latest bash
+```
+
+It can be used in other dockerfiles using the `FROM` command:
+```dockerfile
+FROM ghcr.io/fantom-lang/fantom:latest AS build
+```
+
 ## Community
 
 We are most active on the [Forum](http://fantom.org/forum/topic), but also hang out on [Slack](https://join.slack.com/t/fantom-lang/shared_invite/zt-3se21er9-Tm~L2lpYel6jcqYKPcdkBg). 
