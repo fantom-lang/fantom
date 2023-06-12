@@ -26,7 +26,7 @@ using dom
     }
     this.onEvent("keydown", false) |e|
     {
-      if (e.key == Key.enter) fireAction(e)
+      onKeyDown(e)
     }
   }
 
@@ -80,10 +80,18 @@ using dom
     setProp("selectionEnd", end)
   }
 
-  internal Void fireAction(Event? e) { cbAction?.call(this) }
+  // framework use only
+  @NoDoc protected virtual Void onKeyDown(Event e)
+  {
+    if (e.key == Key.enter) fireAction(e)
+  }
+
+  // framework use only
+  @NoDoc protected Void fireAction(Event? e) { cbAction?.call(this) }
   private Func? cbAction := null
 
-  internal Void fireModify(Event? e) { cbModify?.call(this) }
+  // framework use only
+  @NoDoc protected Void fireModify(Event? e) { cbModify?.call(this) }
   private Func? cbModify := null
 
   // framework use only
