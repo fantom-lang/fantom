@@ -296,7 +296,10 @@ fan.dom.ElemPeer.prototype.scrollSize = function(self)
 
 fan.dom.ElemPeer.prototype.scrollIntoView = function(self, alignToTop)
 {
-  this.elem.scrollIntoView(alignToTop);
+  var opts = alignToTop
+    ? { block:"nearest", inline:"start" }
+    : { block:"nearest", inline:"end" };
+  this.elem.scrollIntoView(opts);
 }
 
 //////////////////////////////////////////////////////////////////////////
