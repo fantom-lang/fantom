@@ -344,6 +344,9 @@ const class Insets
 
   ** Top plus bottom
   Float h() { top + bottom }
+
+  ** Return if all sides are set to zero
+  Bool isNone() { top == 0f && right == 0f && bottom == 0f && left == 0f }
 }
 
 **************************************************************************

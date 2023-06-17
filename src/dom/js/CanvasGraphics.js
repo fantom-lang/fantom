@@ -84,6 +84,7 @@ fan.dom.CanvasGraphics.prototype.m_font = null
 fan.dom.CanvasGraphics.prototype.font   = function() { return this.m_font }
 fan.dom.CanvasGraphics.prototype.font$  = function(x)
 {
+  if (this.m_font === x) return;
   this.m_font = x;
   this.cx.font = x.toStr();
 }

@@ -64,6 +64,8 @@ class StrokeTest : Test
     verifyNotEq(s, Stroke(w, dash, cap == StrokeCap.round ? StrokeCap.square : StrokeCap.round, join))
     verifyNotEq(s, Stroke(w, dash, cap, join == StrokeJoin.radius ? StrokeJoin.bevel : StrokeJoin.radius))
 
+    verifyEq(s.isNone, s.width == 0f)
+
     verifyEq(s, Stroke.fromStr(s.toStr))
     verifyEq(s, Buf().writeObj(s).flip.readObj)
   }

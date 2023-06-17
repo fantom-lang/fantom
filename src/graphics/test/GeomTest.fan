@@ -197,6 +197,12 @@ class GeomTest : Test
     verifyErr(ParseErr#) { x := Insets.fromStr("3,4,x,6") }
     verifyErr(ParseErr#) { x := Insets.fromStr("", true) }
 
+    verifyEq(Insets(0, 0, 0, 0).isNone, true)
+    verifyEq(Insets(1, 0, 0, 0).isNone, false)
+    verifyEq(Insets(0, 1, 0, 0).isNone, false)
+    verifyEq(Insets(0, 0, 1, 0).isNone, false)
+    verifyEq(Insets(0, 0, 0, 1).isNone, false)
+
     verifySer(Insets(1, 2, 3, 4))
     verifySer(Insets(-1, 2, -3, 4))
   }

@@ -121,6 +121,7 @@ class Java2DGraphics : Graphics
   {
     set
     {
+      if (&font === it) return
       &font = it
       size := (it.size * 1.333f).toInt // Java appears to use pixels, not points
       if (it.weight === FontWeight.normal)

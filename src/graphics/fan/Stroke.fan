@@ -16,6 +16,9 @@ const class Stroke
   ** Default value is width 1, no dash, butt cap, miter join.
   static const Stroke defVal := makeFields
 
+  ** Value with width of zero
+  static const Stroke none := makeFields(0f)
+
   **
   ** Parse from string format:
   **    width [dash] cap join
@@ -95,6 +98,9 @@ const class Stroke
 
   ** How to render line joins. Default is miter.
   const StrokeJoin join := StrokeJoin.miter
+
+  ** Is the width set to zero
+  Bool isNone() { width == 0f }
 
   ** Hash is based on fields
   override Int hash()
