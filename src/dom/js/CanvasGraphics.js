@@ -44,13 +44,8 @@ fan.dom.CanvasGraphics.prototype.paint$ = function(x)
 }
 
 // Color color
-fan.dom.CanvasGraphics.prototype.m_color = fan.graphics.Color.m_black;
-fan.dom.CanvasGraphics.prototype.color  = function() { return this.m_color }
-fan.dom.CanvasGraphics.prototype.color$ = function(x)
-{
-  this.m_color = x;
-  this.paint$(x);
-}
+fan.dom.CanvasGraphics.prototype.color  = function() { return this.m_paint.asColorPaint(); }
+fan.dom.CanvasGraphics.prototype.color$ = function(x) { this.paint$(x); }
 
 // Stroke stroke
 fan.dom.CanvasGraphics.prototype.m_stroke = fan.graphics.Stroke.m_defVal;

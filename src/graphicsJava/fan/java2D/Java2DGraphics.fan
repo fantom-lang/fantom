@@ -34,10 +34,11 @@ class Java2DGraphics : Graphics
     g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY)
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB)
+    this.paint = Color.black
   }
 
   ** Current paint defines how text and shapes are stroked and filled
-  override Paint paint := Color.black
+  override Paint paint := Color.transparent // set in make
   {
     set
     {
@@ -53,13 +54,10 @@ class Java2DGraphics : Graphics
 
   ** Convenience for setting paint to a solid color.  If the paint
   ** is currently not a solid color, then get returns the last color set.
-  override Color color := Color.black
+  override Color color
   {
-    set
-    {
-      &color = it
-      this.paint = it
-    }
+    get { paint.asColorPaint }
+    set { this.paint = it }
   }
 
   ** Current stroke defines how the shapes are outlined
@@ -348,3 +346,4 @@ internal class JavaGraphicsState
   Float alpha
   Font? font
 }
+

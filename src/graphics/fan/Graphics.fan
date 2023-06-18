@@ -17,7 +17,7 @@ mixin Graphics
   abstract Paint paint
 
   ** Convenience for setting paint to a solid color.  If the paint
-  ** is currently not a solid color, then get returns the last color set.
+  ** is currently not a solid color, then get returns `Paint.asColorPaint`.
   abstract Color color
 
   ** Current stroke defines how the shapes are outlined
