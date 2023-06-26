@@ -670,7 +670,7 @@ class CodeAsm : CompilerSupport
       case ExprId.ternary:         ternary(expr)
       case ExprId.staticTarget:    return
       case ExprId.throwExpr:       throwOp(((ThrowExpr)expr).exception)
-      default:                     throw Err(expr.id.toStr)
+      default:                     throw err("${expr.id} - ${expr.toStr}", expr.loc)
     }
   }
 
