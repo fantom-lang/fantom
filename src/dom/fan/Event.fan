@@ -142,6 +142,18 @@ class Event
   ** The target to which the event was dispatched.
   native Elem target()
 
+  **
+  ** Optional secondary target depending on event type:
+  **
+  **   event     target                relatedTarget
+  **   --------  --------------------  -----------------------------
+  **   blur      elem losing focus     elem receiving focus (if any)
+  **   focus     elem receiving focus  elem losing focus (if any)
+  **   focusin   elem receiving focus  elem losing focus (if any)
+  **   focusout  elem losing focus     elem receiving focus (if any)
+  **
+  native Elem? relatedTarget()
+
   ** The mouse position of this event relative to page.
   native Point pagePos()
 

@@ -24,6 +24,7 @@
 - Fix charset handling on wrapped InStreams
 - Remove compiler check for "Conflicting covariant returns"
 - Elem.closest
+- Event.relatedTarget
 - New BuildPod "js" target to stage for Node.JS
 - JS support for file API when running in Node.JS
 

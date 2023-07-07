@@ -40,6 +40,16 @@ fan.dom.EventPeer.prototype.target = function(self)
   return this.$target;
 }
 
+fan.dom.EventPeer.prototype.relatedTarget = function(self)
+{
+  if (this.$relatedTarget === undefined)
+  {
+    var rt = this.event.relatedTarget;
+    this.$relatedTarget = rt == null ? null : fan.dom.ElemPeer.wrap(rt);
+  }
+  return this.$relatedTarget;
+}
+
 fan.dom.EventPeer.prototype.pagePos = function(self)
 {
   if (this.$pagePos == null)
