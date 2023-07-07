@@ -92,7 +92,7 @@ class Win
   static native Obj eval(Str js)
 
   ** Log object to console.
-  native Obj log(Obj obj)
+  native Void log(Obj? obj)
 
 //////////////////////////////////////////////////////////////////////////
 // Scrolling
