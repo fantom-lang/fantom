@@ -49,17 +49,22 @@ public final class ActorFuture
 // Future
 //////////////////////////////////////////////////////////////////////////
 
-  public final FutureState state()
+  public final FutureStatus status()
   {
     int state = this.state;
     switch(state)
     {
-      case PENDING:     return FutureState.pending;
-      case DONE_OK:     return FutureState.ok;
-      case DONE_ERR:    return FutureState.err;
-      case DONE_CANCEL: return FutureState.cancelled;
+      case PENDING:     return FutureStatus.pending;
+      case DONE_OK:     return FutureStatus.ok;
+      case DONE_ERR:    return FutureStatus.err;
+      case DONE_CANCEL: return FutureStatus.cancelled;
     }
     throw Err.make("Internal error " + state);
+  }
+
+  public final FutureState state()
+  {
+    return (FutureState)FutureState.vals.get(status().ordinal());
   }
 
   public final Object get() { return get(null); }

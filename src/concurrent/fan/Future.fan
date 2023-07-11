@@ -37,18 +37,24 @@ native abstract const class Future
   **
   ** Current state of asynchronous computation
   **
-  abstract FutureState state()
+  @Deprecated { msg = "Use status" }
+  virtual FutureState state()
 
   **
-  ** Deprecated, use 'state.isComplete'.
+  ** Current state of asynchronous computation
   **
-  @NoDoc @Deprecated { msg = "Use Future.state" }
+  abstract FutureStatus status()
+
+  **
+  ** Deprecated, use 'status.isComplete'.
+  **
+  @NoDoc @Deprecated { msg = "Use Future.status" }
   Bool isDone()
 
   **
-  ** Deprecated, use 'state.isCancelled'.
+  ** Deprecated, use 'status.isCancelled'.
   **
-  @NoDoc @Deprecated { msg = "Use Future.state" }
+  @NoDoc @Deprecated { msg = "Use Future.status" }
   Bool isCancelled()
 
   **
@@ -106,6 +112,7 @@ internal native final const class ActorFuture  : Future
 {
   override Obj? get(Duration? timeout := null)
   override FutureState state()
+  override FutureStatus status()
   override Void cancel()
   override This complete(Obj? val)
   override This completeErr(Err err)
@@ -117,6 +124,36 @@ internal native final const class ActorFuture  : Future
 **************************************************************************
 
 ** State of a Future's asynchronous computation
+@Js
+enum class FutureStatus
+{
+  pending,
+  ok,
+  err,
+  cancelled
+
+  ** Return if pending state
+  Bool isPending() { this === pending }
+
+  ** Return if in any completed state: ok, err, or cancelled
+  Bool isComplete() { this !== pending }
+
+  ** Return if the ok state
+  Bool isOk() { this === ok }
+
+  ** Return if the err state
+  Bool isErr() { this === err }
+
+  ** Return if the cancelled state
+  Bool isCancelled() { this === cancelled }
+}
+
+**************************************************************************
+** FutureState
+**************************************************************************
+
+** State of a Future's asynchronous computation
+@Deprecated { msg="Use FutureStatus" }
 @Js
 enum class FutureState
 {
@@ -140,5 +177,6 @@ enum class FutureState
   ** Return if the cancelled state
   Bool isCancelled() { this === cancelled }
 }
+
 
 

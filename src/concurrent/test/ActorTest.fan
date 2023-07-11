@@ -62,7 +62,7 @@ class ActorTest : Test
       verifyType(f, ActorFuture#)
       verifyEq(f.typeof.base, Future#)
       verifyEq(f.get, i+1)
-      verifySame(f.state, FutureState.ok)
+      verifySame(f.status, FutureStatus.ok)
       verifyEq(f.get, i+1)
     }
   }
@@ -117,6 +117,7 @@ class ActorTest : Test
     f := a.send("const")
     verifySame(f.get, constObj)
     verifySame(f.get, constObj)
+    verifySame(f.status, FutureStatus.ok)
     verifySame(f.state, FutureState.ok)
 
     // not immutable
@@ -129,6 +130,7 @@ class ActorTest : Test
     f = a.send("throw")
     verifyErr(UnknownServiceErr#) { f.get }
     verifyErr(UnknownServiceErr#) { f.get }
+    verifySame(f.status, FutureStatus.err)
     verifySame(f.state, FutureState.err)
   }
 
@@ -166,7 +168,7 @@ class ActorTest : Test
     // block on future until canceled
     verifyErr(CancelledErr#) { f.get }
     verifyErr(CancelledErr#) { f.get }
-    verifySame(f.state, FutureState.cancelled)
+    verifySame(f.status, FutureStatus.cancelled)
   }
 
   static Obj? sleep(Obj? msg)
@@ -242,7 +244,7 @@ class ActorTest : Test
     verifyEq(pool.isDone, true)
 
     // verify all futures have completed
-    futures.each |Future f| { verify(f.state.isComplete) }
+    futures.each |Future f| { verify(f.status.isComplete) }
     futures.each |Future f, Int i| { verifyEq(f.get, durs[i]) }
 
     // verify all scheduled messages were canceled
@@ -253,7 +255,7 @@ class ActorTest : Test
   {
     futures.each |Future f|
     {
-      verifySame(f.state, FutureState.cancelled)
+      verifySame(f.status, FutureStatus.cancelled)
       verifyErr(CancelledErr#) { f.get }
       verifyErr(CancelledErr#) { f.get(200ms) }
     }
@@ -307,11 +309,11 @@ class ActorTest : Test
     //  1) completed successfully
     //  2) were interrupted (if running during kill)
     //  3) were cancelled (if pending)
-    futures.each |Future f, Int i| { verify(f.state.isComplete, "$i ${durs[i]}") }
+    futures.each |Future f, Int i| { verify(f.status.isComplete, "$i ${durs[i]}") }
     futures.each |Future f, Int i|
     {
       // each future either
-      if (f.state == FutureState.cancelled)
+      if (f.status == FutureStatus.cancelled)
       {
         verifyErr(CancelledErr#) { f.get }
       }
@@ -402,7 +404,7 @@ class ActorTest : Test
   {
     if (expected == null)
     {
-      verifySame(f.state, FutureState.cancelled)
+      verifySame(f.status, FutureStatus.cancelled)
       verifyErr(CancelledErr#) { f.get }
     }
     else
@@ -487,7 +489,7 @@ class ActorTest : Test
   {
     Str x := Actor.locals.get("x", "")
     if (!x.isEmpty) x += ","
-    if (!msg.state.isComplete) throw Err("not done yet!")
+    if (!msg.status.isComplete) throw Err("not done yet!")
     try
       x += msg.get.toStr
     catch (Err e)
@@ -541,11 +543,11 @@ class ActorTest : Test
     verifyAllSame(ferr)
     verifyAllSame(fcancel)
 
-    f1s.each |Future f| { verify(f.state.isComplete); verifyEq(f.get, ["one"]) }
-    f2s.each |Future f| { verify(f.state.isComplete); verifyEq(f.get, ["one", "two"]) }
-    f3s.each |Future f| { verify(f.state.isComplete); verifyEq(f.get, ["one", "two", "three"]) }
-    f4s.each |Future f| { verify(f.state.isComplete); verifyEq(f.get, ["one", "two", "three", "four"]) }
-    ferr.each |Future f| { verify(f.state.isComplete); verifyErr(IndexErr#) { f.get } }
+    f1s.each |Future f| { verify(f.status.isComplete); verifyEq(f.get, ["one"]) }
+    f2s.each |Future f| { verify(f.status.isComplete); verifyEq(f.get, ["one", "two"]) }
+    f3s.each |Future f| { verify(f.status.isComplete); verifyEq(f.get, ["one", "two", "three"]) }
+    f4s.each |Future f| { verify(f.status.isComplete); verifyEq(f.get, ["one", "two", "three", "four"]) }
+    ferr.each |Future f| { verify(f.status.isComplete); verifyErr(IndexErr#) { f.get } }
     verifyAllCancelled(fcancel)
   }
 
@@ -607,10 +609,10 @@ class ActorTest : Test
     verifyAllSame(ferr)
     verifyAllSame(fcancel)
 
-    f1s.each |Future f| { verify(f.state.isComplete); verifyEq(f.get, ["1", 1, 2]) }
-    f2s.each |Future f| { verify(f.state.isComplete); verifyEq(f.get, ["2", 10, 20, 30]) }
-    f3s.each |Future f| { verify(f.state.isComplete); verifyEq(f.get, ["3", 100, 200]) }
-    ferr.each |Future f| { verify(f.state.isComplete); verifyErr(IndexErr#) { f.get } }
+    f1s.each |Future f| { verify(f.status.isComplete); verifyEq(f.get, ["1", 1, 2]) }
+    f2s.each |Future f| { verify(f.status.isComplete); verifyEq(f.get, ["2", 10, 20, 30]) }
+    f3s.each |Future f| { verify(f.status.isComplete); verifyEq(f.get, ["3", 100, 200]) }
+    ferr.each |Future f| { verify(f.status.isComplete); verifyErr(IndexErr#) { f.get } }
     verifyAllCancelled(fcancel)
   }
 
@@ -674,45 +676,45 @@ class ActorTest : Test
   Void testFuture()
   {
     f := Future.makeCompletable
-    verifyEq(f.state, FutureState.pending)
+    verifyEq(f.status, FutureStatus.pending)
     verifySame(f.typeof, ActorFuture#)
     verifySame(f.typeof.base, Future#)
 
     // can only complete with immutable value
     verifyErr(NotImmutableErr#) { f.complete(this) }
-    verifySame(f.state, FutureState.pending)
+    verifySame(f.status, FutureStatus.pending)
 
     // verify complete
     f.complete("done!")
-    verifySame(f.state, FutureState.ok)
+    verifySame(f.status, FutureStatus.ok)
     verifyEq(f.get, "done!")
 
     // can only complete once
     verifyErr(Err#) { f.complete("no!") }
     verifyErr(Err#) { f.completeErr(Err()) }
-    verifySame(f.state, FutureState.ok)
+    verifySame(f.status, FutureStatus.ok)
     verifyEq(f.get, "done!")
 
     // verify completeErr
     f = Future.makeCompletable
-    verifyEq(f.state, FutureState.pending)
+    verifyEq(f.status, FutureStatus.pending)
     err := CastErr()
     f.completeErr(err)
-    verifySame(f.state, FutureState.err)
+    verifySame(f.status, FutureStatus.err)
     verifyErr(CastErr#) { f.get }
     verifyErr(Err#) { f.complete("no!") }
     verifyErr(Err#) { f.completeErr(Err()) }
-    verifySame(f.state, FutureState.err)
+    verifySame(f.status, FutureStatus.err)
     verifyErr(CastErr#) { f.get }
 
     // verify cancel;
     f = Future.makeCompletable
     f.cancel
-    verifySame(f.state, FutureState.cancelled)
+    verifySame(f.status, FutureStatus.cancelled)
     verifyErr(CancelledErr#) { f.get }
     f.complete("no!")
     f.completeErr(IOErr())
-    verifySame(f.state, FutureState.cancelled)
+    verifySame(f.status, FutureStatus.cancelled)
     verifyErr(CancelledErr#) { f.get }
   }
 
@@ -727,32 +729,32 @@ class ActorTest : Test
 
     // wait => ok
     f := a.send(100ms)
-    verifySame(f.state, FutureState.pending)
+    verifySame(f.status, FutureStatus.pending)
     f.waitFor
-    verifySame(f.state, FutureState.ok)
+    verifySame(f.status, FutureStatus.ok)
     verifyEq(f.get, 100ms)
     f.waitFor
     f.waitFor(1min)
 
     // wait => error
     f = a.send(66ms)
-    verifySame(f.state, FutureState.pending)
+    verifySame(f.status, FutureStatus.pending)
     f.waitFor(1min)
-    verifySame(f.state, FutureState.err)
+    verifySame(f.status, FutureStatus.err)
     verifyErr(UnsupportedErr#) { f.get }
 
     // wait => cancel
     f = a.send(3min)
-    verifySame(f.state, FutureState.pending)
+    verifySame(f.status, FutureStatus.pending)
     f.cancel
     f.waitFor
-    verifySame(f.state, FutureState.cancelled)
+    verifySame(f.status, FutureStatus.cancelled)
     verifyErr(CancelledErr#) { f.get }
 
     // wait  timeout
     f = a.send(1min)
     verifyErr(TimeoutErr#) { f.waitFor(100ms) }
-    verifySame(f.state, FutureState.pending)
+    verifySame(f.status, FutureStatus.pending)
 
     // waitAll
     t1 := Duration.now
