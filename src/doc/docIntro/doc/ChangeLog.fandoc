@@ -8,25 +8,24 @@
 
 *Build 1.0.79 (working)*
 - New yaml API
-- Zip.readEach
+- Zip.readEach, Zip.unzipInto
 - StrBuf.reverse
 - List.eachNotNull
-- Enhance compiler to allow covariant dynamic calls
 - Env.path
 - New util::FileLoc class
 - IpInterface.prefixSize
 - HttpReq.postFormMultipart
 - Convert File.copy to use NIO
 - Add WebRes.statusPhrase
-- Add Zip.unzipInto
 - Add Win.clipboardReadText,clipboardWriteText
 - Date toLocale support for quarter
 - Fix charset handling on wrapped InStreams
-- Remove compiler check for "Conflicting covariant returns"
+- Enhance compiler to allow covariant dynamic calls
 - Elem.closest
 - Event.relatedTarget
 - New BuildPod "js" target to stage for Node.JS
 - JS support for file API when running in Node.JS
+- Deprecate Future.state in favor of Future.status
 
 *Build 1.0.78 (26 Apr 2022)*
 - New graphics APIs: GraphicsEnv, Graphics, Image, Stroke, Paint
