@@ -215,7 +215,11 @@ class CallResolver : CompilerSupport
     if (base === ns.error) return null
 
     // attempt to resolve the slot by name
-    found := base.slot(name)
+    CSlot? found
+    try
+      found = base.slot(name)
+    catch (Err e)
+      err("Cannot resolve $name on $base; $e.msg", loc)
     if (found == null) return null
 
     // if the resolved slot is on a FFI type then we have to
