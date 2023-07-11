@@ -102,6 +102,9 @@ class MainDom
     typeName := Env.cur.vars["typeName"]
     test := (AbstractTest)MainDom#.pod.type(typeName).make
 
+
+    |->|? repaint := null
+
     header := FlowBox
     {
       it.style.setCss("background:#e0e0e0; border-bottom:1px solid #999; padding:12px;")
@@ -116,6 +119,14 @@ class MainDom
           Win.cur.hyperlink(`/test/$type`)
         }
       },
+      Button
+      {
+        it.text = "Repaint"
+        it.onAction
+        {
+          repaint()
+        }
+      },
       //Elem("a") { it->href=`/svg/${typeName}`; it.text = "SVG"; it.style->lineHeight = "25px" },
     }
 
@@ -124,6 +135,11 @@ class MainDom
     canvas.setAttr("width", "${size.w.toInt}px")
     canvas.setAttr("height", "${size.h.toInt}px")
     canvas.renderCanvas |g| { test.paint(size, g) }
+
+    repaint = |->|
+    {
+      canvas.renderCanvas |g| { test.paint(size, g) }
+    }
 
     sash := SashBox
     {
