@@ -121,42 +121,7 @@ class Java2DGraphics : Graphics
     {
       if (&font === it) return
       &font = it
-      size := (it.size * 1.333f).toInt // Java appears to use pixels, not points
-      if (it.weight === FontWeight.normal)
-      {
-        style := it.style.isNormal ? AwtFont.PLAIN : AwtFont.ITALIC
-        g.setFont(AwtFont(it.name, style, size))
-      }
-      else if (it.weight === FontWeight.bold)
-      {
-        style := it.style.isNormal ? AwtFont.BOLD : AwtFont.ITALIC.or(AwtFont.BOLD)
-        g.setFont(AwtFont(it.name, style, size))
-      }
-      else
-      {
-        // doesn't really work, but this is theoretically the correct mapping
-        map := HashMap()
-        map.put(TextAttribute.FAMILY, it.name)
-        map.put(TextAttribute.SIZE, size)
-        switch (it.weight.num)
-        {
-          case 100: map.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_EXTRA_LIGHT)
-          case 200: map.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_LIGHT)
-          case 300: map.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_DEMILIGHT)
-          case 400: map.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_REGULAR)
-          case 500: map.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_SEMIBOLD)
-          case 600: map.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_MEDIUM)
-          case 700: map.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD)
-          case 800: map.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_HEAVY)
-          case 900: map.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD)
-          default:  map.put(TextAttribute.WEIGHT, it.weight.num)
-        }
-        if (it.style === FontStyle.italic)
-        {
-          map.put(TextAttribute.POSTURE, TextAttribute.POSTURE_OBLIQUE)
-        }
-        g.setFont(AwtFont(map))
-      }
+      g.setFont(env.awtFont(it))
     }
   }
 
@@ -299,6 +264,14 @@ class Java2DGraphics : Graphics
     restoreState(stack.pop)
     return this
   }
+
+  ** Get current environemnt - lazily load
+  private Java2DGraphicsEnv env()
+  {
+    if (envRef == null) return envRef = GraphicsEnv.cur
+    return envRef
+  }
+  private Java2DGraphicsEnv? envRef
 
   private JavaGraphicsState saveState()
   {
