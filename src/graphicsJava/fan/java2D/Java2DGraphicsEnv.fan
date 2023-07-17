@@ -42,6 +42,7 @@ const class Java2DGraphicsEnv : GraphicsEnv
     {
       style := f.style.isNormal ? AwtFont.PLAIN : AwtFont.ITALIC
       awt := AwtFont(name, style, size)
+      // echo("-> $f.name => $awt.getName")
       return awt
     }
 
@@ -105,7 +106,6 @@ const class Java2DGraphicsEnv : GraphicsEnv
     try
     {
       fonts := GraphicsEnvironment.getLocalGraphicsEnvironment.getAvailableFontFamilyNames
-      // echo(fonts.sort.join("\n"))
       fonts.each |Str n| { acc[n.lower] = n }
     }
     catch (Err e) e.trace
@@ -119,6 +119,7 @@ const class Java2DGraphicsEnv : GraphicsEnv
 
     // try to use decent default for sans-serf
     sans := acc["inter"]
+    if (sans != null) sans = "inter regular" // so we don't use light
     if (sans == null) sans = "roboto"
     if (sans == null) sans = "helvetica neue"
     if (sans == null) sans = "arial"

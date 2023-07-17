@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.79 (working)*
+*Build 1.0.79 (17 Jul 2023)*
 - New yaml API
 - Zip.readEach, Zip.unzipInto
 - StrBuf.reverse
