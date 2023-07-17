@@ -23,17 +23,17 @@ class BasicYamlTest : Test
     obj = YamlReader("""---
                          And let them
                            back
-                         
+
                           out
-                         
+
                          """.in).parse
     verifyEq(obj.decode, [,].add("And let them back\nout"))
-    verifyLoc(obj.list[0], 2, 2)
+    verifyLoc(obj.val[0], 2, 2)
 
     obj = YamlReader("""---
                          And let them
                            back
-                         
+
                           out # Comment
                         #Comment 2
                          """.in).parse
@@ -51,22 +51,22 @@ class BasicYamlTest : Test
                          %TAG !! tag:fantom.org,2022:test/      # tag handles
                          %TAG !test! tag:fantom.org,2022:test/
                          --- !!1
-                         
+
                          # Completely empty node
                          """.in).parse
-    verifyEq(obj.list[0].tag, "tag:fantom.org,2022:test/1")
-    verifyLoc(obj.list[0], 5, 5)
+    verifyEq(obj.val[0].tag, "tag:fantom.org,2022:test/1")
+    verifyLoc(obj.val[0], 5, 5)
     verifyEq(obj.decode, [null])
 
     obj = YamlReader("""\uFFFE# No directives
                         --- !!1
-                        
+
                         # More complete emptiness
                         ...
                         # ..and even more!
                         ...""".in).parse
-    verifyEq(obj.list[0].tag, "tag:yaml.org,2002:1")
-    verifyLoc(obj.list[0], 2, 5)
+    verifyEq(obj.val[0].tag, "tag:yaml.org,2002:1")
+    verifyLoc(obj.val[0], 2, 5)
     verifyEq(obj.decode, [null])
 
     obj = YamlReader("""%TAG !! tag:fantom.org,2022:test1/    # Multi-document
@@ -75,10 +75,10 @@ class BasicYamlTest : Test
                         %TAG !! tag:fantom.org,2022:test2/
                         --- !!1
                         """.in).parse
-    verifyEq(obj.list[0].tag, "tag:fantom.org,2022:test1/1")
-    verifyEq(obj.list[1].tag, "tag:fantom.org,2022:test2/1")
-    verifyLoc(obj.list[0], 2, 5)
-    verifyLoc(obj.list[1], 5, 5)
+    verifyEq(obj.val[0].tag, "tag:fantom.org,2022:test1/1")
+    verifyEq(obj.val[1].tag, "tag:fantom.org,2022:test2/1")
+    verifyLoc(obj.val[0], 2, 5)
+    verifyLoc(obj.val[1], 5, 5)
     verifyEq(obj.decode, [null, null])
 
     // Error tests
@@ -112,8 +112,8 @@ class BasicYamlTest : Test
     obj := YamlReader("Test1
                        ---
                        Test2".in).parse
-    verifyLoc(obj.list[0], 1, 1)
-    verifyLoc(obj.list[1], 3, 1)
+    verifyLoc(obj.val[0], 1, 1)
+    verifyLoc(obj.val[1], 3, 1)
 
     verifyEq(
       obj.decode,
@@ -123,8 +123,8 @@ class BasicYamlTest : Test
     obj = YamlReader("Test1
                       ...
                       Test2".in).parse
-    verifyLoc(obj.list[0], 1, 1)
-    verifyLoc(obj.list[1], 3, 1)
+    verifyLoc(obj.val[0], 1, 1)
+    verifyLoc(obj.val[1], 3, 1)
 
     verifyEq(
       obj.decode,
@@ -137,7 +137,7 @@ class BasicYamlTest : Test
                   ...
                   >-
                   Test2
-                  
+
                   ...".in).parse.decode,
       [,].add("Test1\n")
          .add("Test2"))
@@ -271,19 +271,19 @@ class BasicYamlTest : Test
                          # Comments:
                        --- |-   # here too
                          # text
-                         
+
                         # Clip
                          # comments:
-                       
-                       --- |  
+
+                       --- |
                          # text
-                        
+
                         # Keep
                          # comments:
-                       
+
                        --- |+
                          # text
-                       
+
                         # Trail
                          # comments.|>.in).parse.decode,
       [,].add("# text")
@@ -292,11 +292,11 @@ class BasicYamlTest : Test
 
     verifyEq(
       YamlReader(Str <|--- |-
-                       
+
                        --- |
-                       
+
                        --- |+
-                       
+
                        |>.in).parse.decode,
       [,].add("")
          .add("")
@@ -383,30 +383,30 @@ class BasicYamlTest : Test
     // Chomping
     verifyEq(
       YamlReader(Str <|>
-                       
+
                         folded
                         line
-                        
+
                         next
                         line
                           * bullet
-  
+
                           * list
                           * lines
-                        
+
                         last
                         line
- 
+
                        # Comment|>.in).parse.decode,
       [,].add("\nfolded line\nnext line\n  * bullet\n\n  * list\n  * lines\n\nlast line\n"))
 
     verifyEq(
       YamlReader(Str <|--- >-
-                       
+
                        --- >
-                       
+
                        --- >+
-                       
+
                        |>.in).parse.decode,
       [,].add("")
          .add("")
@@ -443,7 +443,7 @@ class BasicYamlTest : Test
       [,].add([,]))
 
     obj :=  YamlReader("[
-                        \t\t! Two plastic  
+                        \t\t! Two plastic
                               bags
                             drifting, o'er\t
                         the beach
@@ -451,9 +451,9 @@ class BasicYamlTest : Test
     verifyEq(obj.decode,
       [,].add(
         [,].addAll(["Two plastic bags drifting", "o'er the beach"])))
-    verifyLoc(obj.list[0], 1, 1)
-    verifyLoc(obj.list[0]->list->get(0), 2, 3)
-    verifyLoc(obj.list[0]->list->get(1), 4, 15)
+    verifyLoc(obj.val[0], 1, 1)
+    verifyLoc(obj.val[0].val->get(0), 2, 3)
+    verifyLoc(obj.val[0].val->get(1), 4, 15)
 
     verifyErr(FileLocErr#)
     {
@@ -500,7 +500,7 @@ class BasicYamlTest : Test
 
     verifyEq(
       YamlReader("{
-                  \t\t! Two plastic  
+                  \t\t! Two plastic
                         bags
                       drifting, o'er\t
                   the beach
@@ -541,10 +541,10 @@ class BasicYamlTest : Test
            .add("this is a test")
            .add("this is another test")
            .add("this is another test")))
-    verifyLoc(obj.list[0]->list->get(0), 2, 3)
-    verifyLoc(obj.list[0]->list->get(1), 3, 3)
-    verifyLoc(obj.list[0]->list->get(2), 4, 3)
-    verifyLoc(obj.list[0]->list->get(3), 5, 3)
+    verifyLoc(obj.val[0].val->get(0), 2, 3)
+    verifyLoc(obj.val[0].val->get(1), 3, 3)
+    verifyLoc(obj.val[0].val->get(2), 4, 3)
+    verifyLoc(obj.val[0].val->get(3), 5, 3)
 
     // But don't carry over between documents
     verifyErr(FileLocErr#)
@@ -586,11 +586,11 @@ class BasicYamlTest : Test
         [,].add([,].addAll(["Compact", "node"]))
            .add("yea"))
       )
-    verifyLoc(obj.list[0], 1, 3)
-    verifyLoc(obj.list[0]->list->get(0), 1, 7)
-    verifyLoc(obj.list[0]->list->get(0)->content->get(0), 1, 9)
-    verifyLoc(obj.list[0]->list->get(0)->content->get(1), 3, 9)
-    verifyLoc(obj.list[0]->list->get(1), 4, 5)
+    verifyLoc(obj.val[0], 1, 3)
+    verifyLoc(obj.val[0].val->get(0), 1, 7)
+    verifyLoc(obj.val[0].val->get(0)->content->get(0), 1, 9)
+    verifyLoc(obj.val[0].val->get(0)->content->get(1), 3, 9)
+    verifyLoc(obj.val[0].val->get(1), 4, 5)
 
     verifyEq(
       YamlReader("- First item
@@ -646,7 +646,7 @@ class BasicYamlTest : Test
     verifyEq(
       YamlReader("-
                    map: node
-                   with:    multiple   
+                   with:    multiple
                      lines of content
                   ".in).parse.decode,
       [,].add(
@@ -657,7 +657,7 @@ class BasicYamlTest : Test
     verifyEq(
       YamlReader("nested:
                     map: node
-                    with:    multiple   
+                    with:    multiple
                      lines of content
                   ".in).parse.decode,
       [,].add(

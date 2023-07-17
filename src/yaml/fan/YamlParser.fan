@@ -1295,7 +1295,7 @@ internal class YamlParser
   private YamlObj setLoc(YamlObj obj, FileLoc loc)
   {
     return Type.of(obj).make(
-      [obj.content,
+      [obj.val,
        obj.tag,
        loc]
     )

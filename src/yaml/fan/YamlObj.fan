@@ -29,15 +29,29 @@ abstract const class YamlObj
 
   ** The node's tag. Either a specific tag (e.g. 'tag:yaml.org,2002:str')
   ** or the non-specific tag '?'.
-  const Str tag     := "?"
+  Str tag() { tagRef }
+  internal const Str tagRef
 
-  ** The node's content. [YamlScalars]`yaml::YamlScalar` always have
+  ** The node's content value. [YamlScalars]`yaml::YamlScalar` always have
   ** content of type 'Str', [YamlLists]`yaml::YamlList` with content
   ** type 'YamlObj[]', and [YamlMaps]`yaml::YamlMap` with 'YamlObj:YamlObj'.
-  const Obj content := 0 //the "?" and 0 are placeholders
+  virtual Obj val() { valRef }
+  internal const Obj valRef
+
+  @Deprecated { msg =  "Use val" }
+  @NoDoc Obj content() { valRef }
 
   ** The text location from which this node was parsed.
-  const FileLoc loc := FileLoc.unknown
+  FileLoc loc() { locRef }
+  internal const FileLoc locRef
+
+  ** Internal make
+  internal new make(Obj val, Str tag, FileLoc loc)
+  {
+    this.valRef = val
+    this.tagRef = tag
+    this.locRef = loc
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Public methods
@@ -64,11 +78,11 @@ abstract const class YamlObj
   {
     this.typeof == that?.typeof &&
     this.tag == (that as YamlObj).tag &&
-    this.content == (that as YamlObj).content
+    this.val == (that as YamlObj).val
   }
 
   ** Hash is based on tag and content
-  override Int hash() { 31 * tag.hash + content.hash }
+  override Int hash() { 31 * tag.hash + val.hash }
 
   ** Returns 'write' written into a string.
   override Str toStr()
@@ -97,21 +111,26 @@ const class YamlScalar : YamlObj
 {
   // content : Str
 
-  ** Creates a YamlScalar with the string 's' as content,
+  ** Creates a YamlScalar with the string 'val' as content,
   ** found at location 'loc', with 'tag' as its tag.
-  new make(Str s, Str tag := "?", FileLoc loc := FileLoc.unknown)
+  new make(Str val, Str tag := "?", FileLoc loc := FileLoc.unknown)
+   : super(val, normTag(tag), loc)
   {
-    this.content = s
-    this.loc = loc
+  }
 
-    if (tag == "!")     this.tag = "tag:yaml.org,2002:str"
-    else if (tag != "") this.tag = tag
-    else                this.tag = "?"
+  private static Str normTag(Str tag)
+  {
+    if (tag == "!") return "tag:yaml.org,2002:str"
+    if (tag != "")  return tag
+    return "?"
   }
 
   ** Convenience for creating a YamlScalar with an explicit file location but
   ** implicit tag.
-  new makeLoc(Str s, FileLoc loc) : this.make(s, "?", loc) {}
+  @NoDoc new makeLoc(Str s, FileLoc loc) : this.make(s, "?", loc) {}
+
+  ** Content value as a string
+  override Str val() { valRef }
 
   override internal Void writeInd(OutStream out, Int first, Int next := first)
   {
@@ -121,7 +140,7 @@ const class YamlScalar : YamlObj
     // Plain scalar
     {
       //cover when a plain scalar contains '\n'
-      out.writeChars(Regex("\\n(?=.)").matcher(content).replaceAll("\n\n" + (" " * next)) + "\n")
+      out.writeChars(Regex("\\n(?=.)").matcher(val).replaceAll("\n\n" + (" " * next)) + "\n")
     }
     else
     // Non-plain - use quotation marks & escape chars
@@ -131,7 +150,7 @@ const class YamlScalar : YamlObj
 
       out.writeChar('"')
 
-      (content as Str).each |c|
+      (val as Str).each |c|
       {
         // Escape chars
         switch(c)
@@ -182,28 +201,30 @@ const class YamlList : YamlObj
 {
   // content : YamlObj[]
 
-  ** Creates a YamlList with the list 's' as content,
+  ** Creates a YamlList with the list 'val' as content,
   ** found at location 'loc', with 'tag' as its tag.
-  new make(YamlObj[] s, Str tag := "!", FileLoc loc := FileLoc.unknown)
+  new make(YamlObj[] val, Str tag := "!", FileLoc loc := FileLoc.unknown)
+    : super(val, normTag(tag), loc)
   {
-    this.content = s
-    this.loc = loc
+  }
 
-    if (tag == "!" || tag == "") this.tag = "tag:yaml.org,2002:seq"
-    else                         this.tag = tag
+  private static Str normTag(Str tag)
+  {
+    if (tag == "!" || tag == "") return "tag:yaml.org,2002:seq"
+    return tag
   }
 
   ** Convenience for creating a YamlList with an explicit file location but
   ** implicit tag.
-  new makeLoc(YamlObj[] s, FileLoc loc) : this.make(s, "!", loc) {}
+  @NoDoc new makeLoc(YamlObj[] s, FileLoc loc) : this.make(s, "!", loc) {}
 
-  ** Content as a list
-  YamlObj[] list() { content }
+  ** Content value as a list
+  override YamlObj[] val() { valRef }
 
   ** Iterate the list items
   Void each(|YamlObj| f)
   {
-    ((YamlObj[])content).each(f)
+    ((YamlObj[])val).each(f)
   }
 
   override internal Void writeInd(OutStream out, Int first, Int next := first)
@@ -215,7 +236,7 @@ const class YamlList : YamlObj
     // normal list
     else
     {
-      contList := content as YamlObj[]
+      contList := val as YamlObj[]
       isEmpty := contList.size == 0
       isTagged := tag != "?" && tag != "tag:yaml.org,2002:seq"
 
@@ -237,7 +258,7 @@ const class YamlList : YamlObj
   ** Writes the content as a stream of YAML documents instead of a list
   private Void writeStream(OutStream out)
   {
-    contList := content as YamlObj[]
+    contList := val as YamlObj[]
 
     if (contList.size != 0)
       out.writeChars("%YAML 1.2\n")
@@ -267,27 +288,29 @@ const class YamlMap : YamlObj
 {
   // content : [YamlObj:YamlObj]
 
-  ** Creates a YamlMap with the map 's' as content,
+  ** Creates a YamlMap with the map 'val' as content,
   ** found at location 'loc', with 'tag' as its tag.
-  new make([YamlObj:YamlObj] s, Str tag := "!", FileLoc loc := FileLoc.unknown)
+  new make([YamlObj:YamlObj] val, Str tag := "!", FileLoc loc := FileLoc.unknown)
+    : super(val, normTag(tag), loc)
   {
-    this.content = s
-    this.loc = loc
+  }
 
-    if (tag == "!" || tag == "") this.tag = "tag:yaml.org,2002:map"
-    else                         this.tag = tag
+  private static Str normTag(Str tag)
+  {
+    if (tag == "!" || tag == "") return "tag:yaml.org,2002:map"
+    return tag
   }
 
   ** Convenience for creating a YamlMap with an explicit file location but
   ** implicit tag.
-  new makeLoc([YamlObj:YamlObj] s, FileLoc loc) : this.make(s, "!", loc) {}
+  @NoDoc new makeLoc([YamlObj:YamlObj] s, FileLoc loc) : this.make(s, "!", loc) {}
 
-  ** Content as a map
-  [YamlObj:YamlObj] map() { content }
+  ** Content value as a map
+  override [YamlObj:YamlObj] val() { valRef }
 
   override internal Void writeInd(OutStream out, Int first, Int next := first)
   {
-    contMap := content as YamlObj:YamlObj
+    contMap := val as YamlObj:YamlObj
     isEmpty := contMap.keys.size == 0
     isTagged := tag != "?" && tag != "tag:yaml.org,2002:map"
 
@@ -307,14 +330,14 @@ const class YamlMap : YamlObj
       kStr := buf.toStr[0..-2] //strip ending '\n'
 
       // Key fits on single line
-      if ((k.typeof == YamlScalar# || k.content == YamlObj[,] || k.content == [YamlObj:YamlObj][:]) &&
+      if ((k.typeof == YamlScalar# || k.val == YamlObj[,] || k.val == [YamlObj:YamlObj][:]) &&
           !kStr.containsChar('\n') &&
           kStr.size <= 1024)
       {
         out.writeChars(kStr + ":")
 
         // Scalar
-        if (v.typeof == YamlScalar# || v.content == YamlObj[,] || v.content == [YamlObj:YamlObj][:])
+        if (v.typeof == YamlScalar# || v.val == YamlObj[,] || v.val == [YamlObj:YamlObj][:])
           v.writeInd(out, 1, next + 1)
         // Non-scalar
         else

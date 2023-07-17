@@ -12,6 +12,7 @@ using util
 **
 ** A set of non-exhaustive tests to ensure basic functionality.
 **
+@NoDoc
 class PrepTest
 {
   static Void main()
