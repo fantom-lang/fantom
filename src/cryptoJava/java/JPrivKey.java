@@ -24,7 +24,7 @@ final public class JPrivKey extends JKey implements fan.crypto.PrivKey
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  static JPrivKey decode(Buf der, String algorithm)
+  public static JPrivKey decode(Buf der, String algorithm)
   {
     final PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(der.safeArray());
     try
