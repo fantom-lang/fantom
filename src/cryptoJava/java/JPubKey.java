@@ -24,7 +24,7 @@ final public class JPubKey extends JKey implements fan.crypto.PubKey
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  static JPubKey decode(Buf der)
+  public static JPubKey decode(Buf der)
   {
     try
     {
