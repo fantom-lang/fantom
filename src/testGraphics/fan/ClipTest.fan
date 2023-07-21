@@ -16,14 +16,20 @@ class ClipTest : AbstractTest
     drawStuff(g)
 
     g.push
-    g.translate(250f, 0f)
+    g.translate(200f, 0f)
     g.path.arc(120f, 120f, 75f, 0f, 360f).clip
     drawStuff(g)
     g.pop
 
     g.push
-    g.translate(450f, 0f)
+    g.translate(400f, 0f)
     g.clipRect(45f, 45f, 150f, 150f)
+    drawStuff(g)
+    g.pop
+
+    g.push
+    g.translate(600f, 0f)
+    g.clipRoundRect(45f, 45f, 150f, 150f, 50f, 50f)
     drawStuff(g)
     g.pop
   }
@@ -31,10 +37,10 @@ class ClipTest : AbstractTest
   static Void drawStuff(Graphics g)
   {
     g.color = Color("darkorange")
-    g.fillRect(20f, 20f, 220f, 220f)
+    g.fillRect(20f, 20f, 200f, 200f)
     g.font = Font("24pt Times")
     g.color = Color("Blue")
-    g.drawText("Clip this text!", 35f, 130f)
+    g.drawText("Clip this text!", 30f, 120f)
    }
 
 }

@@ -148,6 +148,14 @@ fan.dom.CanvasGraphics.prototype.fillRoundRect = function(x, y, w, h, wArc, hArc
   return this;
 }
 
+// This clipRoundRect(Float x, Float y, Float w, Float h, Float wArc, Float hArc)
+fan.dom.CanvasGraphics.prototype.clipRoundRect = function(x, y, w, h, wArc, hArc)
+{
+  this.pathRoundRect(x, y, w, h, wArc, hArc);
+  this.cx.clip();
+  return this;
+}
+
 // generate path for a rounded rectangle
 fan.dom.CanvasGraphics.prototype.pathRoundRect = function(x, y, w, h, wArc, hArc)
 {

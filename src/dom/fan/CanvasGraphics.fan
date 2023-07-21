@@ -42,6 +42,8 @@ internal native class CanvasGraphics : Graphics
 
   override native This fillRoundRect(Float x, Float y, Float w, Float h, Float wArc, Float hArc)
 
+  override native This clipRoundRect(Float x, Float y, Float w, Float h, Float wArc, Float hArc)
+
   override native This drawText(Str s, Float x, Float y)
 
   override native This drawImage(Image img, Float x, Float y, Float w := img.w, Float h := img.h)

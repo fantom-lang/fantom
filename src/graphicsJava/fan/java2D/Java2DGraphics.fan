@@ -183,6 +183,14 @@ class Java2DGraphics : Graphics
     return this
   }
 
+  ** Clip a rectangle with rounded corners with the current paint.
+  ** The ellipse of the corners is specified by wArc and hArc.
+  override This clipRoundRect(Float x, Float y, Float w, Float h, Float wArc, Float hArc)
+  {
+    g.clip(RoundRectangle2D(x, y, w, h, wArc, hArc))
+    return this
+  }
+
   ** Draw a the text string with the current fill and font.
   ** The x, y coordinate specifies the top left corner of
   ** the rectangular area where the text is to be drawn.
