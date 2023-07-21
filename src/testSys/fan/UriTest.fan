@@ -285,6 +285,13 @@ class UriTest : Test
     verifyEq(uri.userInfo, userInfo)
     verifyEq(uri.host, host)
     verifyEq(uri.port, port)
+
+    // ensure decode
+    uri = Uri.decode(uri.toStr)
+    verifyEq(uri.auth, auth)
+    verifyEq(uri.userInfo, userInfo)
+    verifyEq(uri.host, host)
+    verifyEq(uri.port, port)
   }
 
 //////////////////////////////////////////////////////////////////////////

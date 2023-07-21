@@ -1482,12 +1482,12 @@ fan.sys.Uri.charMap[59]  = fan.sys.Uri.USER | fan.sys.Uri.HOST | fan.sys.Uri.PAT
 fan.sys.Uri.charMap[61]  = fan.sys.Uri.USER | fan.sys.Uri.HOST | fan.sys.Uri.PATH | fan.sys.Uri.QUERY | fan.sys.Uri.FRAG;
 
 // gen-delimiter symbols
-fan.sys.Uri.charMap[58] = fan.sys.Uri.PATH | fan.sys.Uri.USER | fan.sys.Uri.QUERY | fan.sys.Uri.FRAG;
+fan.sys.Uri.charMap[58] = fan.sys.Uri.HOST | fan.sys.Uri.PATH | fan.sys.Uri.USER | fan.sys.Uri.QUERY | fan.sys.Uri.FRAG;
 fan.sys.Uri.charMap[47] = fan.sys.Uri.PATH | fan.sys.Uri.QUERY | fan.sys.Uri.FRAG;
 fan.sys.Uri.charMap[63] = fan.sys.Uri.QUERY | fan.sys.Uri.FRAG;
 fan.sys.Uri.charMap[35] = 0;
-fan.sys.Uri.charMap[91] = 0;
-fan.sys.Uri.charMap[93] = 0;
+fan.sys.Uri.charMap[91] = fan.sys.Uri.HOST;
+fan.sys.Uri.charMap[93] = fan.sys.Uri.HOST;
 fan.sys.Uri.charMap[64] = fan.sys.Uri.PATH | fan.sys.Uri.QUERY | fan.sys.Uri.FRAG;
 
 // delimiter escape map - which characters need to

@@ -1544,12 +1544,12 @@ public final class Uri
     charMap['=']  = USER | HOST | PATH | QUERY | FRAG;
 
     // gen-delimiter symbols
-    charMap[':'] = PATH | USER | QUERY | FRAG;
+    charMap[':'] = HOST | PATH | USER | QUERY | FRAG;
     charMap['/'] = PATH | QUERY | FRAG;
     charMap['?'] = QUERY | FRAG;
     charMap['#'] = 0;
-    charMap['['] = 0;
-    charMap[']'] = 0;
+    charMap['['] = HOST;
+    charMap[']'] = HOST;
     charMap['@'] = PATH | QUERY | FRAG;
 
     // delimiter escape map - which characters need to
