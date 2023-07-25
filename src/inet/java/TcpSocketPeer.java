@@ -118,7 +118,7 @@ public class TcpSocketPeer
                    wrap.peer.socket,
                    javaAddr,
                    javaPort,
-                   false);
+                   true);
         clientMode = !wrap.peer.isServer;
       }
       configureSslSocket(socket, clientMode);
