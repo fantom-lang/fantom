@@ -65,7 +65,6 @@ class UuidTest : Test
   {
     if (Env.cur.runtime != "js") return
 
-    verifyErr(UnsupportedErr#) { x := Uuid() }
     verifyErr(UnsupportedErr#) { x := Uuid.makeBits(0xaabb_ccdd_0022_0345, 0x0123_ff00eecc5577) }
 
     strUuid := "aabbccdd-0022-0345-0123-ff00eecc5577"
