@@ -159,6 +159,9 @@ class WebSocket
     // read payload data
     payload = in.readBufFully(payload, len)
 
+    // read fragmented message (not done yet!)
+    if (!fin) throw Err("Fragmentation not supported yet!")
+
     // if masked, then unmask it
     if (masked)
       for (i := 0; i<len; ++i)
