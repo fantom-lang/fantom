@@ -12,7 +12,7 @@ Native classes, methods, and fields are used to implement Fantom in the
 native language of the runtime platform.  For example a native method
 would be implemented in Java for the JVM, in C# for the CLR, and JavaScript
 for browsers.  Natives are the glue code for portable libraries such
-as 'inet' and 'fwt'.
+as 'inet' and 'dom'.
 
 Here is a quick check-list for when and when not to write native code:
   1. If possible then the best solution is to write your code in 100% Fantom;

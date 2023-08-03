@@ -73,8 +73,8 @@ under "adm/tools" including:
 
 Flux [#flux]
 ************
-The Fantom distro includes a very basic editor called `Flux` which
-provides syntax color coding for Fantom, Java, C#, etc.
+The Fantom FWT repo includes a very basic editor called [Flux]`https://github.com/fantom-lang/fwt/blob/master/flux.md`
+which provides syntax color coding for Fantom, Java, C#, etc.
 
 Camembert (tcolar) [#camembert]
 *******************************

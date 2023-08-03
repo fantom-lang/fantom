@@ -180,7 +180,6 @@ abstract class BuildPod : BuildScript
     switch (podName)
     {
       case "compilerJs":
-      case "webfwt":
       case "testCompiler":
         return
     }

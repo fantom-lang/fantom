@@ -51,8 +51,6 @@ following schemes:
   - **fan**: resolves to the objects in the Fantom namespace (discussed below)
   - **file**: resolves to 'File' instances on the local file system
   - **http**: not done yet, but coming soon...
-  - **flux**: application specific uris for [flux]`docTools::Flux` (like
-    "about:" in Firefox)
 
 You can plug in your own scheme handling by subclassing 'UriScheme':
 

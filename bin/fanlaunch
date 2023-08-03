@@ -21,9 +21,9 @@ esac
 
 # MAC OS X we have to set to set a special flag
 # to ensure that SWT will run correctly
-if $darwin; then
-  osFlags="-XstartOnFirstThread"
-fi
+# if $darwin; then
+#  osFlags="-XstartOnFirstThread"
+# fi
 
 # Set FAN_HOME if it is not already set (from Groovy)
 if [ -z "$FAN_HOME" -o ! -d "$FAN_HOME" ] ; then

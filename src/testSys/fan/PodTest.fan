@@ -165,16 +165,17 @@ class PodTest : Test
   Void testFlattenDepends()
   {
     verifyFlattenDepends(
-      ["fluxText"],
-      ["sys", "concurrent", "compiler", "gfx", "fwt", "flux", "syntax", "fluxText"])
+      ["domkit"],
+      ["concurrent", "crypto", "dom", "domkit", "graphics", "inet", "sys", "web"])
+
 
     verifyFlattenDepends(
-      ["fluxText", "sys", "fwt"],
-      ["sys", "concurrent", "compiler", "gfx", "fwt", "flux", "syntax", "fluxText"])
+      ["domkit", "sys", "graphics"],
+      ["concurrent", "crypto", "dom", "domkit", "graphics", "inet", "sys", "web"])
 
     verifyFlattenDepends(
-      ["fluxText", "webmod"],
-      ["sys", "concurrent", "compiler", "crypto", "gfx", "fwt", "flux", "syntax", "fluxText", "util", "inet", "web", "webmod"])
+      ["domkit", "webmod"],
+      ["concurrent", "crypto", "dom", "domkit", "graphics", "inet", "sys", "web", "webmod", "util"])
   }
 
   Void verifyFlattenDepends(Str[] names, Str[] expected)
@@ -203,7 +204,7 @@ class PodTest : Test
       ["web", "inet", "concurrent", "sys"],
       ["sys", "concurrent", "inet", "web"])
 
-    big := ["sys", "concurrent", "gfx", "fwt", "flux", "syntax", "fluxText"]
+    big := ["sys", "concurrent", "graphics", "dom", "domkit"]
     10.times { verifyOrderByDepends(big.dup.shuffle, big) }
   }
 

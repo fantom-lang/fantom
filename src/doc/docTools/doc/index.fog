@@ -14,6 +14,5 @@
   [`Fanp`,       "fcode disassembler"],
   [`Build`,      "build toolkit"],
   [`Bootstrap`,  "how to recompile the runtime and compiler itself"],
-  [`Flux`,       "using Flux as a Fantom \"IDE\""],
   [`IDEs`,       "links to other Fantom IDEs"],
 ]

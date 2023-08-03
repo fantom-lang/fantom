@@ -154,19 +154,6 @@ put "lib/java/jline.jar" into the classpath.  You can download a pre-built
 is not installed, then 'java.lang.Console' is used as a fallback.  To integrate
 command line support into your application use `sys::Env.prompt`.
 
-SWT Support [#swt]
-******************
-The Fantom distribution ships with SWT support for a a couple common
-platforms.  If your platform is not supported, follow these steps
-to get SWT working:
-  1. Verify your platform identifier using "fan -version" (see
-     `sys::Env.platform`)
-  2. Download your platform's "swt.jar" from
-     [eclipse.org]`http://www.eclipse.org/swt/`
-  3. Put "swt.jar" into '{home}/lib/java/ext/{platform}/swt.jar'
-
-You can easily test SWT support by attempting to run `Flux`.
-
 Env [#env]
 **********
 The default behavior of Fantom is to manage all its files under the

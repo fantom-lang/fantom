@@ -144,25 +144,6 @@ executable:
 Checkout `docTools::Fan` for more details running methods in a
 pod, and `docTools::Build` for details on the build toolkit.
 
-Fantom FWT [#fwt]
-*****************
-The [Fantom Widget Toolkit]`fwt::index` makes it easy to create
-desktop applications.  The following script will launch a simple
-window (this script is available under "examples/fwt/hello.fan"):
-
-  using fwt
-  class FwtHello : Test
-  {
-    Void main()
-    {
-      Window { Label { text = "Hello world" }, }.open
-    }
-  }
-
-Fantom makes declarative work like UI definition easy because
-[serialized objects]`docLang::Serialization` can be used as normal
-expressions.
-
 Fantom WebApp [#webapp]
 ***********************
 To create a very simple hello world web application we can
