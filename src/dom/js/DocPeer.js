@@ -41,6 +41,22 @@ fan.dom.DocPeer.prototype.elemById = function(self, id)
   return fan.dom.ElemPeer.wrap(elem);
 }
 
+fan.dom.DocPeer.prototype.elemFromPos = function(self, p)
+{
+  var elem = this.doc.elementFromPoint(p.m_x, p.m_y);
+  if (elem == null) return null;
+  return fan.dom.ElemPeer.wrap(elem);
+}
+
+fan.dom.DocPeer.prototype.elemsFromPos = function(self, p)
+{
+  var list  = fan.sys.List.make(fan.dom.Elem.$type);
+  var elems = this.doc.elementsFromPoint(p.m_x, p.m_y);
+  for (var i=0; i<elems.length; i++)
+    list.add(fan.dom.ElemPeer.wrap(elems[i]));
+  return list;
+}
+
 fan.dom.DocPeer.prototype.createElem = function(self, tagName, attribs, ns)
 {
   var elem = ns

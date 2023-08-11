@@ -7,6 +7,7 @@
 //   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
+using graphics
 using web
 
 **
@@ -50,6 +51,19 @@ class Doc
   ** element is found with this 'id'.
   **
   native Elem? elemById(Str id)
+
+  **
+  ** Get the topmost element at the specified coordinates
+  ** (relative to the viewport), or 'null' if none found.
+  **
+  native Elem? elemFromPos(Point p)
+
+  **
+  ** Get a list of all elements at the specified coordinates
+  ** (relative to the viewport). The elements are ordered from
+  ** the topmost to the bottommost box of the viewport.
+  **
+  native Elem[] elemsFromPos(Point p)
 
   **
   ** Create a new element with the given tag name.  If the

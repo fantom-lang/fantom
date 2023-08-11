@@ -8,6 +8,7 @@
 
 *Build 1.0.80 (working)*
 - Move fwt pods into separate repo
+- Add Doc.elemFromPos, elemsFromPos
 
 *Build 1.0.79 (17 Jul 2023)*
 - New yaml API
