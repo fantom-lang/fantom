@@ -138,10 +138,11 @@ class JsPod : JsNode
     }
 
     file := natives[key]
-    if (file == null)
+    if (file == null || !file.exists)
     {
-      err("Missing native impl for ${t.def.signature}", Loc("${t.name}.fan"))
+      warn("Missing native impl for ${t.def.signature}", Loc("${t.name}.fan"))
       // Do not export peer types that we don't have implementations for
+      natives.remove(key)
       this.peers[t.name] = false
     }
     else
