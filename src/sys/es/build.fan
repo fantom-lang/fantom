@@ -273,7 +273,7 @@ class Build : BuildScript
     // append(sys + `ZipSupport.js`, out)
     // append(sys + `ZipStream.js`, out)
     // embed timezones
-    // (etc + `sys/fan_tz.js`).in.pipe(out)
+    (etc + `sys/fan_tz.js`).in.pipe(out)
     append(sys + `staticInit.js`, out)
   }
 

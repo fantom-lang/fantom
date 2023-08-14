@@ -172,24 +172,25 @@ abstract class BuildPod : BuildScript
   }
 
   **
-  ** Compile to all classes to JavaScript
+  ** Compile to all classes to run in Node.js
   **
-  @Target { help = "Compile to javascript" }
-  virtual Void js()
+  @Target { help = "Compile all types to run in Node.js" }
+  virtual Void nodeJs()
   {
     switch (podName)
     {
       case "compilerJs":
+      case "compilerEs":
       case "testCompiler":
         return
     }
 
     validate
 
-    log.info("js [$podName]")
+    log.info("nodeJs [$podName]")
     log.indent
 
-    compileJs
+    compileNodeJs
 
     log.unindent
   }
@@ -429,16 +430,20 @@ abstract class BuildPod : BuildScript
   **
   ** Compile to javascript node module
   **
-  virtual Void compileJs()
+  virtual Void compileNodeJs()
   {
     ci := stdFanCompilerInput
     ci.forceJs = true
-    // ci.output = CompilerOutputMode.js
     try
     {
       c := Compiler(ci)
       c.frontend
+      esmDir := Env.cur.homeDir.plus(`lib/es/esm/`)
       Env.cur.homeDir.plus(`lib/js/node_modules/${podName}.js`).out.writeChars(c.js).flush.close
+      if (c.esm != null)
+        esmDir.plus(`${podName}.js`).out.writeChars(c.esm).flush.close
+      if (c.tsDecl != null)
+        esmDir.plus(`${podName}.d.ts`).out.writeChars(c.tsDecl).flush.close
     }
     catch (CompilerErr err)
     {
@@ -525,6 +530,8 @@ abstract class BuildPod : BuildScript
     Delete(this, dir+`lib/fan/${podName}.pod`).run
     Delete(this, dir+`lib/java/${podName}.jar`).run
     Delete(this, dir+`lib/js/node_modules/${podName}.js`).run
+    Delete(this, dir+`lib/es/esm/${podName}.js`).run
+    Delete(this, dir+`lib/es/esm/${podName}.d.ts`).run
     Delete(this, dir+`lib/dotnet/${podName}.dll`).run
     Delete(this, dir+`lib/dotnet/${podName}.pdb`).run
     Delete(this, dir+`lib/tmp/${podName}.dll`).run

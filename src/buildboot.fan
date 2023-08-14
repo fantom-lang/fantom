@@ -31,6 +31,7 @@ class Build : BuildGroup
       `sys/java/build.fan`,
       //`sys/dotnet/build.fan`,
       `sys/js/build.fan`,
+      `sys/es/build.fan`,
       `compiler/build.fan`,
       `compilerJava/build.fan`,
       `build/build.fan`,
