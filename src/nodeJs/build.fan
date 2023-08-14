@@ -35,7 +35,7 @@ class Build : BuildPod
     srcDirs = [
                `fan/`,
                `fan/cmd/`,
-               // `fan/ts/`,
+               `fan/ts/`,
               ]
     resDirs = [
                `res/`,
