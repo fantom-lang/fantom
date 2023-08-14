@@ -72,17 +72,15 @@ class CompileEsPlugin : CompilerStep
   {
     if (pod.name.contains("fwt")) return
 
-try {
+    // generate CommonJs and ESM module
     JsPod(this).write
-// echo(buf.toStr)
     compiler.cjs = buf.toStr
     compiler.esm = toEsm(compiler.cjs)
 
-} catch (Err e) { echo(buf.toStr); throw e }
-
+    // write out the sourcemap (note: the same sourcemap works
+    // with CommonJs and ESM because toEsm preserves the line numbering)
     buf.clear
     sourcemap.write(js.line, buf.out)
-// echo(buf.toStr)
     compiler.cjsSourceMap = buf.toStr
   }
 
