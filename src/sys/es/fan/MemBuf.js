@@ -40,7 +40,7 @@ class MemBuf extends Buf {
 
   static __makeBytes(bytes) {
     const buf = new MemBuf();
-    buf.data   = bytes instanceof Array ? new Uint8Array(bytes) : bytes;
+    buf.data   = (bytes instanceof Array || bytes instanceof ArrayBuffer) ? new Uint8Array(bytes) : bytes;
     buf.__size = bytes.length;
     return buf;
   }
