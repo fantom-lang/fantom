@@ -57,6 +57,7 @@ internal class InitCmd : NodeJsCmd
     ci.includeDoc = true
     c := Compiler(ci)
     c.frontend
-    sysDecl.out.writeChars(c.tsDecl).flush.close
+    if (c.tsDecl != null)
+      sysDecl.out.writeChars(c.tsDecl).flush.close
   }
 }

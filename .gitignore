@@ -35,8 +35,10 @@ obj/Release/
 /lib/dotnet/sys.dll
 /lib/fan/*.pod
 /lib/js/
+/lib/es/
 /lib/data/
 /lib/tmp/
+/lib/src/
 
 # doc/
 /doc/
@@ -51,3 +53,4 @@ obj/Release/
 /tmp/
 /temp/
 temp-java/
+temp-es/

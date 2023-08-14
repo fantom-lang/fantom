@@ -7,6 +7,7 @@
 //
 
 using compilerJs
+using concurrent
 using util
 using web
 using wisp
@@ -19,14 +20,32 @@ class Main : AbstractMain
   @Opt { help = "apply sample css" }
   Bool css := false
 
+  @Opt { help = "javascript mode to use (js, es)" }
+  Str mode := "js"
+
   override Int run()
   {
+    // set javascript mode for file packing
+    FilePack.mode.val = checkMode
+
     wisp := WispService
     {
       it.httpPort = this.port
-      it.root = DomkitTestMod { it.useSampleCss=css }
+      it.root = DomkitTestMod { it.useSampleCss=css; it.mode = this.mode }
     }
     return runServices([wisp])
+  }
+
+  private Str checkMode()
+  {
+    switch (this.mode)
+    {
+      case "js":
+      case "es":
+        return this.mode
+      default:
+        throw ArgErr.make("Invalid mode: ${mode}")
+    }
   }
 }
 
@@ -36,9 +55,15 @@ const class DomkitTestMod : WebMod
   {
     f(this)
     pods := [typeof.pod]
-    this.jsPack  = FilePack(FilePack.toAppJsFiles(pods))
+    appJsFiles  := FilePack.toAppJsFiles(pods)
+    this.jsPack  = FilePack(appJsFiles)
     this.cssPack = FilePack(FilePack.toAppCssFiles(pods))
   }
+
+  const Log log := Log.get("filepack")
+
+  const Str mode
+  private Bool isEs() { mode == "es" }
 
   const Bool useSampleCss := false
 
@@ -51,14 +76,14 @@ const class DomkitTestMod : WebMod
     n := req.modRel.path.first
     switch (n)
     {
-      case null:       onIndex
-      case "test":     onTest
-      case "app.js":   jsPack.onService
-      case "app.css":  cssPack.onService
-      case "pod":      onPod
-      case "form":     onForm
-      default:         res.sendErr(404)
+      case null:       return onIndex
+      case "test":     return onTest
+      case "app.js":   return jsPack.onService
+      case "app.css":  return cssPack.onService
+      case "pod":      return onPod
+      case "form":     return onForm
     }
+    res.sendErr(404)
   }
 
   Void onIndex()
@@ -92,6 +117,7 @@ const class DomkitTestMod : WebMod
     env := Str:Str[:]
     env["main"] = "testDomkit::DomkitTest"
     env["ui.test.qname"] = type.qname
+    if (isEs) env["es"] = "true"
 
     res.headers["Content-Type"] = "text/html; charset=utf-8"
     out := res.out
