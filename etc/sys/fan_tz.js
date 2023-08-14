@@ -1,5 +1,4 @@
-import * as sys from './sys.js'
-const c=sys.TimeZone.__cache;
+const c=TimeZone.__cache;
 c("CET","AANDRVQHzAAADhAAA0NFVAAADhAABENFU1QCbAAAAAAcIHMJbAAAAAAcIHMHywAADhAAA0NFVAAADhAABENFU1QCbAAAAAAcIHMIbAAAAAAcIHM=");
 c("CST6CDT","AAdDU1Q2Q0RUB9f//6ugAANDU1QAAA4QAANDRFQCPgAIAAAcIHcKPgABAAAcIHcHy///q6AAA0NTVAAADhAAA0NEVAM+AAEAABwgdwlsAAAAABwgdw==");
 c("EET","AANFRVQHzAAAHCAAA0VFVAAADhAABEVFU1QCbAAAAAAOEHUJbAAAAAAOEHUHywAAHCAAA0VFVAAADhAABEVFU1QCbAAAAAAOEHUIbAAAAAAOEHU=");
@@ -388,7 +387,7 @@ c("Atlantic/Madeira","ABBBdGxhbnRpYy9NYWRlaXJhB8wAAAAAAANXRVQAAA4QAARXRVNUAmwAAA
 c("Atlantic/Reykjavik","ABJBdGxhbnRpYy9SZXlramF2aWsHywAAAAAAA0dNVAAAAAA=");
 c("Atlantic/South_Georgia","ABZBdGxhbnRpYy9Tb3V0aF9HZW9yZ2lhB8v//+PgAAMtMDIAAAAA");
 c("Atlantic/Stanley","ABBBdGxhbnRpYy9TdGFubGV5B9r//9XQAAMtMDMAAAAAB9H//8fAAActMDQvLTAzAAAOEAAHLTA0Ly0wMwg+AAEAABwgdwM+AA8AABwgdwfL///HwAAHLTA0Ly0wMwAADhAABy0wNC8tMDMIPgAJAAAAAHcDPgAQAAAAAHc=");
-const a=sys.TimeZone.__alias;
+const a=TimeZone.__alias;
 a("Africa/Asmera","Nairobi");
 a("Africa/Timbuktu","Abidjan");
 a("America/Argentina/ComodRivadavia","Catamarca");
