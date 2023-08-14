@@ -37,6 +37,7 @@ class CompilerOutput
   ** If `CompilerOutputMode.js` mode, the JavaScript code string.
   **
   Str? js
+  Str? es
 }
 
 **************************************************************************

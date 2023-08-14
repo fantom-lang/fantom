@@ -17,19 +17,28 @@ class CompileJs  : CompilerStep
 
   override Void run()
   {
-    // short circuit if no types define the @Js facet
-    if (!needCompileJs) return
+    if (needCompileJs)
+    {
+      log.info("CompileJs")
+      compile("compilerJs::CompileJsPlugin")
+      compile("compilerEs::CompileEsPlugin")
+    }
 
-    // try to resolve plugin type
-    t := Type.find("compilerJs::CompileJsPlugin", false)
+    // generate d.ts files when forcing js
+    if (compiler.input.forceJs || pod.name == "sys") compile("nodeJs::CompileTsPlugin")
+  }
+
+  private Void compile(Str qname)
+  {
+    // try to resolve plugin
+    t := Type.find(qname, false)
     if (t == null)
     {
-      log.info("WARN: compilerJs not installed!")
+      log.info("WARN: ${qname} not installed")
       return
     }
 
     // do it!
-    log.info("CompileJs")
     t.make([compiler])->run
   }
 
@@ -44,7 +53,7 @@ class CompileJs  : CompilerStep
     // are we forcing generation of js for all types
     if (compiler.input.forceJs) return true
 
-    // run JS compiler is any type has @Js facet
+    // run JS compiler if any type has @Js facet
     return compiler.types.any { it.hasFacet("sys::Js") }
   }
 
