@@ -26,7 +26,7 @@ using web
   native This unobserve(Elem target)
 
   ** Disconnect this observer from all resize events for all nodes.
-  native This disconnet()
+  native This disconnect()
 
   ** Callback when an observed target size has been modified.
   Void onResize(|ResizeObserverEntry[] entries| callback)
@@ -34,7 +34,8 @@ using web
     this.callback = callback
   }
 
-  private Func? callback
+  @NoDoc
+  internal Func? callback
 }
 
 *************************************************************************
