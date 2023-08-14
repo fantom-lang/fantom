@@ -34,6 +34,7 @@ public class EventPeer
   public void         stop        (Event self)                          { throw err(); }
   public Object       get         (Event self, String name, Object def) { throw err(); }
   public void         set         (Event self, String name, Object val) { throw err(); }
+  public Object       data        (Event self)                          { throw err(); }
   public DataTransfer dataTransfer(Event self)                          { throw err(); }
 
 // cannot compile against "graphics" pod - see https://fantom.org/forum/topic/2886

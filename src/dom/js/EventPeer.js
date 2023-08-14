@@ -104,6 +104,24 @@ fan.dom.EventPeer.prototype.set = function(self, name, val)
   this.elem[name] = val;
 }
 
+fan.dom.EventPeer.prototype.data = function(self)
+{
+  if (this.event.data == null) return null;
+  if (this.$data == null)
+  {
+    var data = this.event.data;
+    if (data instanceof ArrayBuffer)
+    {
+      // old design required copying the bytes into normal array
+      var bytes = new Uint8Array(data);
+      var array = Array.from(bytes);
+      data = fan.sys.MemBuf.makeBytes(array);
+    }
+    this.$data = data;
+  }
+  return this.$data;
+}
+
 fan.dom.EventPeer.prototype.dataTransfer = function(self)
 {
   // Andy Frank 19-Jun-2015: Chrome/WebKit do not allow reading

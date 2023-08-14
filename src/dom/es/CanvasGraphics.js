@@ -3,7 +3,7 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   1 Mar 2022  Brian Frank  Creation
+//    1 Mar 2022 Brian Frank    Creation
 //   10 Jun 2023 Kiera O'Flynn  Refactor to ES
 //
 

@@ -103,6 +103,22 @@ class EventPeer extends sys.Obj {
     this.event[name] = val;
   }
 
+  data(self)
+  {
+    if (this.event.data == null) return null;
+    if (this.#data == null)
+    {
+      var data = this.event.data;
+      if (data instanceof ArrayBuffer)
+      {
+        data = sys.MemBuf.__makeBytes(data);
+      }
+      this.#data = data;
+    }
+    return this.#data;
+  }
+  #data;
+
   dataTransfer(self)
   {
     // Andy Frank 19-Jun-2015: Chrome/WebKit do not allow reading
