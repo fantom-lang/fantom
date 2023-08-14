@@ -200,6 +200,9 @@ class Event
     return null
   }
 
+  ** Data message used with `HttpSocket.onReceive`
+  native Obj data()
+
   ** The DataTransfer object for this event.
   native DataTransfer dataTransfer()
 

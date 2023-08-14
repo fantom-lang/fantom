@@ -7,8 +7,10 @@
 **************************************************************************
 
 *Build 1.0.80 (working)*
+- New JavaScript design
 - Move fwt pods into separate repo
 - Add Doc.elemFromPos, elemsFromPos
+- Add new dom HttpSocket API
 
 *Build 1.0.79 (17 Jul 2023)*
 - New yaml API
