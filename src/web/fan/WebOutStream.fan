@@ -211,6 +211,9 @@ class WebOutStream : OutStream
   **     must manually provide the locale config.props files. See
   **     `FilePack.toLocaleJsFile`.
   **
+  **   - 'es': if this variable is to any value, then emit code
+  **     to work with ES JavaScript.
+  **
   **   - 'main': an optional method to invoke after the page has
   **     been loaded. The 'main' argument can be either a type or
   **     method.  If no method is specified, 'main' is used. If
@@ -224,10 +227,11 @@ class WebOutStream : OutStream
   **
   This initJs(Str:Str env)
   {
+    es := env["es"] != null
     w("<script type='text/javascript'>").nl
 
     // init Env.vars to pickup in Env.$ctor
-    w("var fan\$env = {").nl
+    w("const fan\$env = {").nl
     env.keys.each |n,i|
     {
       v := env[n]
@@ -241,9 +245,19 @@ class WebOutStream : OutStream
     main := env["main"]
     if (main != null)
     {
-      w("window.addEventListener('load', function() {
-           fan.sys.Env.\$invokeMain('${main}');
-         }, false);").nl
+      if (es)
+      {
+        w("window.addEventListener('load', function() {
+             fan.sys.Env.cur().__loadVars(fan\$env);
+             fan.sys.Env.__invokeMain('${main}');
+           }, false);").nl
+      }
+      else
+      {
+        w("window.addEventListener('load', function() {
+             fan.sys.Env.\$invokeMain('${main}');
+           }, false);").nl
+      }
     }
 
     w("</script>").nl
