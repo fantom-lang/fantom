@@ -146,6 +146,7 @@ class Slot extends Obj {
       case "char":      return "char$";
       case "delete":    return "delete$";
       case "enum":      return "enum$";
+      case "eval":      return "eval$";
       case "export":    return "export$";
       case "fan":       return "fan$";
       case "float":     return "float$";
