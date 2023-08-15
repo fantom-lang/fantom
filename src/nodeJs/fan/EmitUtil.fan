@@ -71,7 +71,7 @@ internal class EmitUtil
   }
 
   ** Copy all pod js files into '<dir>/node_modules/'.
-  // ** Also copies in mime.js, units.js, and indexed-props.js
+  ** Also copies in mime.js, units.js, and indexed-props.js
   Void writeNodeModules()
   {
     writeFanJs
@@ -80,7 +80,7 @@ internal class EmitUtil
     writeScriptJs
     writeMimeJs
     writeUnitsJs
-    // TODO: indexed-props?
+    writeIndexedPropsJs
   }
 
   ** Write 'es6.js' (grab it from sys.js)
@@ -88,15 +88,6 @@ internal class EmitUtil
   {
     out := ms.file("fan").out
     podJsFile(Pod.find("sys"), "fan").in.pipe(out)
-    out.flush.close
-  }
-
-
-  ** Write 'es6.js' (grab it from sys.js)
-  Void writeEs6()
-  {
-    out := ms.file("es6").out
-    podJsFile(Pod.find("sys"), "es6").in.pipe(out)
     out.flush.close
   }
 
@@ -162,6 +153,13 @@ internal class EmitUtil
     out.flush.close
   }
 
+  Void writeIndexedPropsJs()
+  {
+    out := ms.file("fan_indexed_props").out
+    JsIndexedProps(ms).write(out)
+    out.flush.close
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Str
 //////////////////////////////////////////////////////////////////////////
@@ -181,6 +179,7 @@ internal class EmitUtil
         // need explicit js ext because node has built-in lib named sys
         ms.writeInclude(buf.out, "sys.ext", baseDir)
         ms.writeInclude(buf.out, "fan_mime.ext", baseDir)
+        ms.writeInclude(buf.out, "fan_indexed_props.ext", baseDir)
       }
       else ms.writeInclude(buf.out, "${pod.name}.ext", baseDir)
     }

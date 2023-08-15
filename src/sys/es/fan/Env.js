@@ -27,9 +27,6 @@ class Env extends Obj {
     const vars = typeof fan$env === 'undefined' ? {} : fan$env;
     this.__loadVars(vars);
 
-    // TODO:FIXIT - pod props map, keyed by pod.name
-    // TODO:FIXIT - user?
-
     this.#out = new ConsoleOutStream();
   }
 
@@ -48,6 +45,11 @@ class Env extends Obj {
       const v = env[k];
       this.#vars.set(k, v);
     }
+  }
+
+  __loadIndex(index) {
+    if (index.typeof$().toStr() != "[sys::Str:sys::Str[]]") throw ArgErr.make("Invalid type");
+    this.#index = index;
   }
 
   #args;
