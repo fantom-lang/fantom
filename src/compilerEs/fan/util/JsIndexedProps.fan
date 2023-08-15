@@ -40,15 +40,15 @@ class JsIndexedProps
 
     ms.writeBeginModule(out)
     ms.writeInclude(out, "sys.ext")
-    // out.printLine("const i = sys.Map.make(sys.Str.type\$, new sys.ListType(sys.Str.type\$));")
     out.printLine("const i = sys.Map.make(sys.Str.type\$, sys.List.make(sys.Str.type\$).typeof\$());")
+    out.printLine("const x = (k, v) => i.set(k, sys.List.make(sys.Str.type\$, v));")
 
     keys := index.keys.sort
     keys.each |key|
     {
       vals := index[key].sort
       v := vals.join(",") |v| { v.toCode }
-      out.printLine("i.set(\"$key\", sys.List.make(sys.Str.type\$, [${v}]));")
+      out.printLine("x(\"$key\", [${v}]);")
     }
 
     out.printLine("sys.Env.cur().__loadIndex(i);")

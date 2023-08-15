@@ -60,10 +60,6 @@ const class FilePack : Weblet
 // Identity (NoDoc fields subject to change)
 //////////////////////////////////////////////////////////////////////////
 
-  ** Valid values are 'js' or 'es'
-  @NoDoc static const AtomicRef mode := AtomicRef("js")
-  static Bool isEs() { FilePack.mode.val == "es" }
-
   ** The in-memory file contents in GZIP encoding
   @NoDoc const Buf buf
 
@@ -152,16 +148,16 @@ const class FilePack : Weblet
     pods = Pod.flattenDepends(pods)
     pods = Pod.orderByDepends(pods)
     files := toPodJsFiles(pods)
-    files.insertAll(1, toEtcJsFiles)
-    if (FilePack.isEs) files.insert(0, toPodJsFile(Pod.find("sys"), "fan"))
+    sysIndex := files.findIndex |f| { f.name == "sys.js" }
+    files.insertAll(sysIndex+1, toEtcJsFiles)
     return files
   }
 
   ** Get the standard pod JavaScript file or null if no JS code.  The
   ** standard location used by the Fantom JS compiler is "/{pod-name}.js"
-  static File? toPodJsFile(Pod pod, Str name := pod.name)
+  static File? toPodJsFile(Pod pod)
   {
-    uri := (FilePack.isEs ? `/js/` : `/`).plus(`${name}.js`)
+    uri := (WebJsMode.cur.isEs ? `/js/` : `/`).plus(`${pod.name}.js`)
     return pod.file(uri, false)
   }
 
@@ -175,7 +171,11 @@ const class FilePack : Weblet
     pods.each |pod|
     {
       js := toPodJsFile(pod)
-      if (js != null) acc.add(js)
+      if (js != null)
+      {
+        if (pod.name == "sys" && WebJsMode.cur.isEs) acc.add(pod.file(`/js/fan.js`))
+        acc.add(js)
+      }
     }
     return acc
   }
@@ -186,9 +186,7 @@ const class FilePack : Weblet
   **  - add `toIndexPropsJsFile`
   static File[] toEtcJsFiles()
   {
-    FilePack.isEs
-      ? [toMimeJsFile, toUnitsJsFile]
-      : [toMimeJsFile, toUnitsJsFile, toIndexPropsJsFile]
+    [toMimeJsFile, toUnitsJsFile, toIndexPropsJsFile]
   }
 
   @NoDoc static Obj moduleSystem()
@@ -196,21 +194,33 @@ const class FilePack : Weblet
     Type.find("compilerEs::CommonJs").make([Env.cur.tempDir.plus(`file_pack/`)])
   }
 
-  private static File toJsFile(Str cname, Uri fname)
+  private static File compileJsFile(Str cname, Uri fname, Obj? arg := null)
   {
     buf := Buf(4096)
-    c := FilePack.isEs
+    c := WebJsMode.cur.isEs
       ? Type.find("compilerEs::${cname}").make([moduleSystem])
       : Type.find("compilerJs::${cname}").make
-    c->write(buf.out)
+    c->write(buf.out, arg)
     return buf.toFile(fname)
   }
 
   ** Compile the mime type database into a Javascript file "mime.js"
-  static File toMimeJsFile() { toJsFile("JsExtToMime", `mime.js`) }
+  static File toMimeJsFile()
+  {
+    compileJsFile("JsExtToMime", `mime.js`)
+  }
 
   ** Compile the unit database into a JavaScript file "unit.js"
-  static File toUnitsJsFile() { toJsFile("JsUnitDatabase", `units.js`) }
+  static File toUnitsJsFile()
+  {
+    compileJsFile("JsUnitDatabase", `units.js`)
+  }
+
+  ** Compile the indexed props database into a JavaScript file "index-props.js"
+  static File toIndexPropsJsFile(Pod[] pods := Pod.list)
+  {
+    compileJsFile("JsIndexedProps", `index-props.js`, pods)
+  }
 
   ** Compile the timezone database into a JavaScript file "tz.js"
   @Deprecated { msg="tz.js is now included by default in sys.js" }
@@ -218,15 +228,6 @@ const class FilePack : Weblet
   {
     // return empty file
     Buf().toFile(`tz.js`)
-  }
-
-  ** Compile the indexed props database into a JavaScript file "index-props.js"
-  static File toIndexPropsJsFile(Pod[] pods := Pod.list)
-  {
-    buf := Buf(10_000)
-    c := Type.find("compilerJs::JsIndexedProps").make
-    c->write(buf.out, pods)
-    return buf.toFile(`index-props.js`)
   }
 
   ** Compile the locale props into a JavaScript file "{locale}.js"

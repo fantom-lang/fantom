@@ -21,31 +21,19 @@ class Main : AbstractMain
   Bool css := false
 
   @Opt { help = "javascript mode to use (js, es)" }
-  Str mode := "js"
+  Str jsMode := "js"
 
   override Int run()
   {
     // set javascript mode for file packing
-    FilePack.mode.val = checkMode
+    WebJsMode.setCur(WebJsMode.fromStr(jsMode))
 
     wisp := WispService
     {
       it.httpPort = this.port
-      it.root = DomkitTestMod { it.useSampleCss=css; it.mode = this.mode }
+      it.root = DomkitTestMod { it.useSampleCss=css }
     }
     return runServices([wisp])
-  }
-
-  private Str checkMode()
-  {
-    switch (this.mode)
-    {
-      case "js":
-      case "es":
-        return this.mode
-      default:
-        throw ArgErr.make("Invalid mode: ${mode}")
-    }
   }
 }
 
@@ -61,9 +49,6 @@ const class DomkitTestMod : WebMod
   }
 
   const Log log := Log.get("filepack")
-
-  const Str mode
-  private Bool isEs() { mode == "es" }
 
   const Bool useSampleCss := false
 
@@ -117,7 +102,6 @@ const class DomkitTestMod : WebMod
     env := Str:Str[:]
     env["main"] = "testDomkit::DomkitTest"
     env["ui.test.qname"] = type.qname
-    if (isEs) env["es"] = "true"
 
     res.headers["Content-Type"] = "text/html; charset=utf-8"
     out := res.out
