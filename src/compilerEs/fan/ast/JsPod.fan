@@ -243,15 +243,14 @@ class JsPod : JsNode
   {
     // only export public types
     js.wl("// cjs exports begin")
-    js.wl("const ${pod.name} = {").indent
+    js.wl("const __${pod.name} = {").indent
     types.findAll { it.def.isPublic }.each |t| {
       js.wl("${t.name},")
       if (this.peers[t.name]) js.wl("${t.peer.name}Peer,")
     }
     js.unindent.wl("};")
-    js.wl("fan.${pod.name} = ${pod.name};")
-    js.wl("if (typeof exports !== 'undefined') module.exports = ${pod.name};")
-    // js.wl("else this.${pod.name} = ${pod.name};")
+    js.wl("fan.${pod.name} = __${pod.name};")
+    js.wl("if (typeof exports !== 'undefined') module.exports = __${pod.name};")
     js.wl("// cjs exports end")
   }
 }
