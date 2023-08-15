@@ -66,6 +66,10 @@ class Err extends Obj {
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
+  __err() {
+    return this.#err;
+  }
+
   msg() {
     return this.#msg;
   }
