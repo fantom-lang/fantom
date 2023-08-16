@@ -9,6 +9,7 @@
 **
 ** ZipTest
 **
+@Js
 class ZipTest : Test
 {
 
@@ -106,7 +107,7 @@ class ZipTest : Test
       entry := z.readNext()
       if (entry == null) break
       verify([`/foo.txt`, `/path/bar.hex`].contains(entry.uri))
-      verify(entry.readAllBuf.size >= 8)
+      verify(entry.readAllBuf.size >= 4)
     }
 
     // readEach
@@ -123,7 +124,7 @@ class ZipTest : Test
     verifyEq(count, 2)
     verifyEq(unzipDir.plus(`foo.txt`).modified, fooModified)
     verifyEq(unzipDir.plus(`foo.txt`).readAllStr, "hello zip!\n")
-    verifyEq(unzipDir.plus(`path/bar.hex`).readAllBuf.in.readS8, 0xabcd_0123_0000_ffff)
+    verifyEq(unzipDir.plus(`path/bar.hex`).readAllBuf.in.readU4, 0xabcd_0123)
   }
 
   Void write(Zip z)
@@ -139,7 +140,7 @@ class ZipTest : Test
 
     // file 2 (no leading slash)
     out = z.writeNext(`path/bar.hex`, yesterday)
-    out.writeI8(0xabcd_0123_0000_ffff)
+    out.writeI4(0xabcd_0123)
     out.close
 
     // errors
@@ -172,7 +173,7 @@ class ZipTest : Test
     verifyEq(f.osPath, null)
     if (f.size != null) verifyEq(f.size, 8); // doesn't work consistently in Java
     verify(yesterday + -2sec <= f.modified && f.modified <= yesterday + 2sec)
-    verifyEq(f.in.readS8, 0xabcd_0123_0000_ffff)
+    verifyEq(f.in.readU4, 0xabcd_0123)
 
     // errors
     verifyErr(UnsupportedErr#) { z.writeNext(`/relative.txt`) }

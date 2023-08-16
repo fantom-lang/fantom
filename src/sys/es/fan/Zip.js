@@ -199,7 +199,7 @@ class Zip extends Obj {
         if (entry.isDir()) { return; }
         const out = dest.out();
         try {
-          entry.in$().pipe(out);
+          entry.in().pipe(out);
         }
         finally {
           out.close();
@@ -216,7 +216,7 @@ class Zip extends Obj {
       }
       else {
         // unzip from in stream
-        zip = Zip.read(zipFile.in$());
+        zip = Zip.read(zipFile.in());
         let entry;
         while ((entry = zip.readNext()) != null)
           processEntry(entry);
