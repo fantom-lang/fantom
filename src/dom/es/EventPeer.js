@@ -45,6 +45,17 @@ class EventPeer extends sys.Obj {
     return this.#target;
   }
 
+  #relatedTarget;
+  relatedTarget(self)
+  {
+    if (this.#relatedTarget === undefined)
+    {
+      const rt = this.event.relatedTarget;
+      this.#relatedTarget = rt == null ? null : ElemPeer.wrap(rt);
+    }
+    return this.#relatedTarget;
+  }
+
   #pagePos;
   pagePos(self)
   {
