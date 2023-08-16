@@ -22,7 +22,6 @@ class TsDocWriter : DocWriter
   Str type := ""
 
   private OutStream out
-  private Str[] deps
 
   private Bool started
   private ListIndex[] listIndexes := [,]
@@ -32,10 +31,9 @@ class TsDocWriter : DocWriter
   private Int lineWidth := 0
   private const Int maxWidth := 60
 
-  new make(OutStream out, Str[] deps)
+  new make(OutStream out)
   {
     this.out = out
-    this.deps = deps
   }
 
   **
@@ -264,7 +262,7 @@ class TsDocWriter : DocWriter
 
       if (Slot.find("$p::${t}.$s", false) != null)
       {
-        s = JsNode.pickleName(s, deps)
+        s = JsNode.methodToJs(s)
         if (p != pod)       link.uri = "${p}.${t}.$s"
         else if (t != type) link.uri = "${t}.$s"
         else                link.uri = s

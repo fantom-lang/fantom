@@ -35,11 +35,10 @@ class CompileTsPlugin : CompilerStep
   {
     buf := Buf()
     out = buf.out
+    docWriter = TsDocWriter(out)
 
     // Write dependencies
     deps := pod.depends.map |CDepend dep->Str| { dep.name }
-    docWriter = TsDocWriter(out, deps)
-
     deps.each |dep|
     {
       out.print("import * as ${dep} from './${dep}.js';\n")
@@ -93,7 +92,7 @@ class CompileTsPlugin : CompilerStep
       }
       fields.each |field|
       {
-        name := JsNode.pickleName(field.name, deps)
+        name := JsNode.methodToJs(field.name)
         staticStr := field.isStatic ? "static " : ""
         typeStr := getJsType(field.fieldType, pod, field.isStatic ? type : null)
 
@@ -119,7 +118,7 @@ class CompileTsPlugin : CompilerStep
       {
         isStatic := method.isStatic || method.isCtor || pmap.containsKey(type.signature)
         staticStr := isStatic ? "static " : ""
-        name := JsNode.pickleName(method.name, deps)
+        name := JsNode.methodToJs(method.name)
 
         inputList := method.params.map |CParam p->Str| {
           paramName := JsNode.pickleName(p.name, deps)
