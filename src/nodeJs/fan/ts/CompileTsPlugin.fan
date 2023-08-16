@@ -35,11 +35,10 @@ class CompileTsPlugin : CompilerStep
   {
     buf := Buf()
     out = buf.out
+    docWriter = TsDocWriter(out)
 
     // Write dependencies
     deps := pod.depends.map |CDepend dep->Str| { dep.name }
-    docWriter = TsDocWriter(out, deps)
-
     deps.each |dep|
     {
       out.print("import * as ${dep} from './${dep}.js';\n")
@@ -54,7 +53,6 @@ class CompileTsPlugin : CompilerStep
       // they have the @Js facet or not
       // if (!type.hasFacet(jsFacet)) return
       if (type.isInternal) return
-      if (type.signature == "sys::Func") return
 
       setupDoc(pod.name, type.name)
 
@@ -93,7 +91,7 @@ class CompileTsPlugin : CompilerStep
       }
       fields.each |field|
       {
-        name := JsNode.pickleName(field.name, deps)
+        name := JsNode.methodToJs(field.name)
         staticStr := field.isStatic ? "static " : ""
         typeStr := getJsType(field.fieldType, pod, field.isStatic ? type : null)
 
@@ -119,7 +117,8 @@ class CompileTsPlugin : CompilerStep
       {
         isStatic := method.isStatic || method.isCtor || pmap.containsKey(type.signature)
         staticStr := isStatic ? "static " : ""
-        name := JsNode.pickleName(method.name, deps)
+        name := JsNode.methodToJs(method.name)
+        if (type.signature == "sys::Func") name += "<R>"
 
         inputList := method.params.map |CParam p->Str| {
           paramName := JsNode.pickleName(p.name, deps)
@@ -171,7 +170,7 @@ class CompileTsPlugin : CompilerStep
   private Str getJsType(CType type, CPod thisPod, CType? thisType := null)
   {
     // Built-in type
-    if (pmap.containsKey(type.signature))
+    if (pmap.containsKey(type.signature) && !type.isFunc)
       return pmap[type.signature]
 
     // Nullable type
@@ -188,6 +187,8 @@ class CompileTsPlugin : CompilerStep
       {
         case "L": return "List<V>"
         case "M": return "Map<K,V>"
+        case "R": return "R"
+        default:  return "unknown"
       }
     
     // List/map types
@@ -269,12 +270,12 @@ class CompileTsPlugin : CompilerStep
                     static is(obj: any, type: Type): boolean
                     static as(obj: any, type: Type): any
                     static coerce(obj: any, type: Type): any
-                    static typeof\$(obj: any): Type
+                    static typeof(obj: any): Type
                     static trap(obj: any, name: string, args: List<JsObj | null> | null): JsObj | null
                     static doTrap(obj: any, name: string, args: List<JsObj | null> | null, type: Type): JsObj | null
                     static isImmutable(obj: any): boolean
                     static toImmutable(obj: any): JsObj | null
-                    static with\$<T>(self: T, f: (() => T)): T
+                    static with<T>(self: T, f: ((it: T) => void)): T
                     static toStr(obj: any): string
                     static echo(obj: any): void
                   }
@@ -289,7 +290,8 @@ class CompileTsPlugin : CompilerStep
     "sys::Int":     "number",
     "sys::Num":     "number",
     "sys::Str":     "string",
-    "sys::Void":    "void"
+    "sys::Void":    "void",
+    "sys::Func":    "(...args: any[]) => R"
   ]
 
 }

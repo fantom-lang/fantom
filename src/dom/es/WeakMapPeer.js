@@ -13,6 +13,6 @@ class WeakMapPeer extends sys.Obj {
   has(self, key)      { return this.map.has(key); }
   get(self, key)      { return this.map.get(key); }
   set(self, key, val) { this.map.set(key, val); return self; }
-  delete$(self, key)  { return this.map.delete$(key); }
+  delete(self, key)   { return this.map.delete(key); }
 
 }

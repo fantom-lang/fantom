@@ -45,6 +45,22 @@ class DocPeer extends sys.Obj {
     return ElemPeer.wrap(elem);
   }
 
+  elemFromPos(self, p)
+  {
+    const elem = this.doc.elementFromPoint(p.x(), p.y());
+    if (elem == null) return null;
+    return ElemPeer.wrap(elem);
+  }
+
+  elemsFromPos(self, p)
+  {
+    const list  = sys.List.make(Elem.type$);
+    const elems = this.doc.elementsFromPoint(p.x(), p.y());
+    for (let i=0; i<elems.length; i++)
+      list.add(ElemPeer.wrap(elems[i]));
+    return list;
+  }
+
   createElem(self, tagName, attribs, ns)
   {
     const elem = ns
