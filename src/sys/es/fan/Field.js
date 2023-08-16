@@ -36,7 +36,7 @@ class Field extends Slot {
   constructor(parent, name, flags, type, facets) {
     super(parent, name, flags, facets);
     this.#type   = type;
-    this.#name$  = this.name$$(name);
+    this.#name$  = name; //this.name$$(name);
     this.#qname$ = this.parent().qname() + '.' + this.#name$;
     // TODO:FIXIT - probably don't need these (see Type.js for where these get set)
     // this.m_getter = null;
