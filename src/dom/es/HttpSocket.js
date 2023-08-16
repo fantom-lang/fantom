@@ -13,7 +13,7 @@
 class HttpSocket extends sys.Obj {
 
   constructor() { super(); }
-  typeof$() { return HttpSocket.type$; }
+  typeof() { return HttpSocket.type$; }
 
   // open
   static open(uri, protocols)

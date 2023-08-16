@@ -90,7 +90,7 @@ class JsType : JsNode
     js.indent
 
     writeCtor
-    if (!def.isSynthetic) js.wl("typeof\$() { return ${name}.type\$; }", loc).nl
+    if (!def.isSynthetic) js.wl("typeof() { return ${name}.type\$; }", loc).nl
     mixins.each |m| { copyMixin(m) }
 
     // slots
@@ -118,7 +118,7 @@ class JsType : JsNode
       }
 
       // use mixin implementation (hijack it from the parent type's prototype)
-      slotName := nameToJs(slot.name)
+      slotName := methodToJs(slot.name)
       js.wl("${slotName}() { return ${qnameToJs(slot.parent)}.prototype.${slotName}.apply(this, arguments); }").nl
     }
   }
@@ -146,8 +146,8 @@ class JsType : JsNode
 
   private Void writeField(FieldDef f)
   {
-    privName   := fieldJs(f.name)
-    accessName := nameToJs(f.name)
+    privName   := fieldToJs(f.name)
+    accessName := methodToJs(f.name)
 
     if (f.isNative) return writeNativeField(f, accessName)
     if (f.isEnum)   return writeEnumField(f, accessName)
@@ -298,7 +298,7 @@ class JsType : JsNode
     }
 
     selfJs := nameToJs("\$self")
-    nameJs := nameToJs(m.name)
+    nameJs := methodToJs(m.name)
     typeJs := qnameToJs(m.parentDef)
     if (typeJs != qnameToJs(def)) throw Err("??? ${typeJs} ${qnameToJs(def)}")
     if (m.isInstanceCtor)
@@ -332,7 +332,7 @@ class JsType : JsNode
     plugin.curMethod = null
   }
 
-  private Void doWriteMethod(MethodDef m, Str methName := nameToJs(m.name), CParam[] methParams := m.params)
+  private Void doWriteMethod(MethodDef m, Str methName := methodToJs(m.name), CParam[] methParams := m.params)
   {
     // skip abstract methods
     if (m.isAbstract) return

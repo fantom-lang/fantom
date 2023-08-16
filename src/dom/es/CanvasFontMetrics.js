@@ -13,7 +13,7 @@
 class CanvasFontMetrics extends graphics.FontMetrics {
 
   constructor() { super(); }
-  typeof$() { return CanvasFontMetrics.type$; }
+  typeof() { return CanvasFontMetrics.type$; }
 
   init(cx)
   {

@@ -139,27 +139,90 @@ class Slot extends Obj {
 // Util
 //////////////////////////////////////////////////////////////////////////
 
-  name$$(n) {
+  static #reservedWords = new js.Map();
+  static
+  {
     // must keep in sync with compilerJs::JsNode
-    switch (n)
-    {
-      case "char":      return "char$";
-      case "delete":    return "delete$";
-      case "enum":      return "enum$";
-      case "eval":      return "eval$";
-      case "export":    return "export$";
-      case "fan":       return "fan$";
-      case "float":     return "float$";
-      case "import":    return "import$";
-      case "in":        return "in$";
-      case "int":       return "int$";
-      case "interface": return "interface$";
-      case "self":      return "self$";
-      case "typeof":    return "typeof$";
-      case "var":       return "var$";
-      case "with":      return "with$";
-    }
-    return n;
+    ["arguments",
+     "as",
+     "async",
+     "await",
+     "break",
+     "case",
+     "catch",
+     "class",
+     "const",
+     "continue",
+     "debugger",
+     "default",
+     "delete",
+     "do",
+     "else",
+     "enum",
+     "export",
+     "eval",
+     "extends",
+     "false",
+     "finally",
+     "for",
+     "from",
+     "function",
+     "get",
+     "if",
+     "implements",
+     "import",
+     "in",
+     "instanceof",
+     "interface",
+     "let",
+     "new",
+     "null",
+     "of",
+     "package",
+     "private",
+     "protected",
+     "public",
+     "return",
+     "self",      // not a reserved word but used heavily by the compiler
+     "set",
+     "static",
+     "super",
+     "switch",
+     // "this",   
+     "throw",
+     "true",
+     "try",
+     "typeof",
+     "var",
+     "void",
+     "while",
+     "with",
+     "yield",].forEach((n) => { Slot.#reservedWords.set(n, `${n}\$`); });
   }
+
+  name$$(n) { return Slot.#reservedWords.get(n) ?? n; }
+
+  // name$$(n) {
+  //   // must keep in sync with compilerJs::JsNode
+  //   switch (n)
+  //   {
+  //     case "char":      return "char$";
+  //     case "delete":    return "delete$";
+  //     case "enum":      return "enum$";
+  //     case "eval":      return "eval$";
+  //     case "export":    return "export$";
+  //     case "fan":       return "fan$";
+  //     case "float":     return "float$";
+  //     case "import":    return "import$";
+  //     case "in":        return "in$";
+  //     case "int":       return "int$";
+  //     case "interface": return "interface$";
+  //     case "self":      return "self$";
+  //     case "typeof":    return "typeof$";
+  //     case "var":       return "var$";
+  //     case "with":      return "with$";
+  //   }
+  //   return n;
+  // }
 
 }

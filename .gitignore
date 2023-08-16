@@ -48,6 +48,7 @@ obj/Release/
 
 # src/
 /src/sys/java/temp/
+/src/testEs/
 
 # temp
 /tmp/

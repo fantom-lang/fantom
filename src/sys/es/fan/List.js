@@ -76,7 +76,7 @@ class List extends Obj {
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  typeof$() { return this.#of.toListOf(); }
+  typeof() { return this.#of.toListOf(); }
 
   of() { return this.#of;}
 
@@ -472,7 +472,7 @@ push(obj) {
     const acc = List.make(t);
     for (let i=0; i<this.#size; ++i) {
       const item = this.#values[i];
-      if (item != null && ObjUtil.typeof$(item).is(t))
+      if (item != null && ObjUtil.typeof(item).is(t))
         acc.add(item);
     }
     return acc;
@@ -550,12 +550,12 @@ push(obj) {
   groupBy(f) {
     let r = arguments[arguments.length-1]
     if (r == null || r == Void.type$ || !(r instanceof Type)) r = Obj.type$.toNullable();
-    const acc = Map.make(r, this.typeof$());
+    const acc = Map.make(r, this.typeof());
     return this.groupByInto(acc, f);
   }
 
   groupByInto(acc, f) {
-    const mapValType = acc.typeof$().v;
+    const mapValType = acc.typeof().v;
     const bucketOfType = mapValType.v;
     // const arity1 = f.arity() == 1;
     for (let i=0; i<this.#size; ++i) {

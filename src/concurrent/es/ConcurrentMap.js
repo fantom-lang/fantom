@@ -23,7 +23,7 @@ class ConcurrentMap extends sys.Obj {
     return self;
   }
 
-  typeof$() { return ConcurrentMap.type$; }
+  typeof() { return ConcurrentMap.type$; }
 
   isEmpty() { return this.#map.isEmpty(); }
 

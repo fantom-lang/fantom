@@ -93,7 +93,7 @@ class Test extends Obj {
 
   verifySame(expected, actual, msg=null) {
     if (!ObjUtil.same(expected, actual)) {
-      if (msg == null) msg = ObjUtil.toStr(expected) + " [" + expected.typeof$() + "] != " + ObjUtil.toStr(actual) + " [" + actual.typeof$() + "]";
+      if (msg == null) msg = ObjUtil.toStr(expected) + " [" + expected.typeof() + "] != " + ObjUtil.toStr(actual) + " [" + actual.typeof() + "]";
       this.fail(msg);
     }
     this.#verifyCount++;
@@ -119,10 +119,10 @@ class Test extends Obj {
     catch (err)
     {
       const e = Err.make(err);
-      if (e.typeof$() == errType || errType == null) { this.#verifyCount++; return; }
+      if (e.typeof() == errType || errType == null) { this.#verifyCount++; return; }
       //if (verbose) System.out.print("  verifyErr: " + e + "\n");
       console.log("  verifyErr: " + e + "\n");
-      this.fail(e.typeof$() + " thrown, expected " + errType);
+      this.fail(e.typeof() + " thrown, expected " + errType);
     }
     this.fail("No err thrown, expected " + errType);
   }
@@ -135,9 +135,9 @@ class Test extends Obj {
     catch (err)
     {
       const e = Err.make(err);
-      if (e.typeof$() != errType) {
+      if (e.typeof() != errType) {
         print("  verifyErrMsg: " + e + "\n");
-        this.fail(e.typeof$() + " thrown, expected " + errType);
+        this.fail(e.typeof() + " thrown, expected " + errType);
       }
       this.#verifyCount++;
       this.verifyEq(errMsg, e.msg());
@@ -171,7 +171,7 @@ class Test extends Obj {
     if (this.#tempDir == null && Env.__isNode()) {
       const x = Env.cur().tempDir();
       this.#tempDir = x.plus(Uri.fromStr("test/"), false);
-      this.#tempDir.delete$();
+      this.#tempDir.delete();
       this.#tempDir.create();
     }
     return this.#tempDir;

@@ -123,7 +123,7 @@ class Type extends Obj {
   log()       { return this.#pod.log(); }
   toStr()     { return this.signature(); }
   toLocale()  { return this.signature(); }
-  typeof$()   { return Type.type$; }
+  typeof()   { return Type.type$; }
   literalEncode$(out) { out.w(this.signature()).w("#"); }
 
 //////////////////////////////////////////////////////////////////////////
@@ -528,7 +528,7 @@ class Type extends Obj {
 
   static of(obj) {
     if (obj instanceof Obj)
-      return obj.typeof$();
+      return obj.typeof();
     else
       return Type.toFanType(obj);
   }
@@ -550,7 +550,7 @@ class Type extends Obj {
     {
       const obj = objs[i];
       if (obj == null) { nullable = true; continue; }
-      const t = ObjUtil.typeof$(obj);
+      const t = ObjUtil.typeof(obj);
       if (best == null) { best = t; continue; }
       while (!t.is(best)) {
         best = best.base();
@@ -786,7 +786,7 @@ class ListType extends GenericType {
   }
 
   as(obj, that) {
-    const objType = ObjUtil.typeof$(obj);
+    const objType = ObjUtil.typeof(obj);
 
     if (objType instanceof ListType &&
         // TOOD:MAYBE - commenting out this check allows runtime coercion
@@ -867,7 +867,7 @@ class MapType extends GenericType {
   }
 
   as(obj, that) {
-    const objType = ObjUtil.typeof$(obj);
+    const objType = ObjUtil.typeof(obj);
     if (objType instanceof MapType && that instanceof MapType)
       return obj;
     return objType.is(that) ? obj : null;

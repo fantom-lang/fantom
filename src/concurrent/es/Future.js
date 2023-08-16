@@ -14,7 +14,7 @@
 class Future extends sys.Obj {
   constructor() { super(); }
 
-  typeof$() { return Future.type$; }
+  typeof() { return Future.type$; }
 
   static makeCompletable() {
     const self = new Future();

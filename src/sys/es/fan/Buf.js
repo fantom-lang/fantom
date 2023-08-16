@@ -71,7 +71,7 @@ class Buf extends Obj {
   }
 
   toStr() {
-    return `${this.typeof$().name()} (pos=${this.pos()} size=${this.size()})`;
+    return `${this.typeof().name()} (pos=${this.pos()} size=${this.size()})`;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -158,13 +158,13 @@ class Buf extends Obj {
   endian(it) { 
     if (it === undefined) return this.out().endian();
     this.out().endian(it);
-    this.in$().endian(it);
+    this.in().endian(it);
   }
 
   charset(it) {
     if (it === undefined) return this.out().charset();
     this.out().charset(it);
-    this.in$().charset(it);
+    this.in().charset(it);
   }
 
   fill(b, times) {
@@ -217,7 +217,7 @@ class Buf extends Obj {
 // InStream
 //////////////////////////////////////////////////////////////////////////
 
-  in$() { return this.__in; }
+  in() { return this.__in; }
 
   read() {  return this.__in.read(); }
 

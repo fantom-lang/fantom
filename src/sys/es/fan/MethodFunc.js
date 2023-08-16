@@ -43,7 +43,7 @@ class MethodFunc extends Obj {
   method() { return this.#method; }
   isImmutable() { return true; }
 
-  typeof$() {
+  typeof() {
     // lazy load type and params
     if (!this.#type) {
       const params = this.params();

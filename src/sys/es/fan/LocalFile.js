@@ -141,7 +141,7 @@ class LocalFile extends File {
     if (this.__isDirectory())
       throw IOErr.make(`Already exists as dir: ${this.uri()}`);
 
-    if (this.exists()) this.delete$();
+    if (this.exists()) this.delete();
 
     const fs = node.fs;
     const parent = this.parent();
@@ -173,7 +173,7 @@ class LocalFile extends File {
     return this;
   }
 
-  delete$() {
+  delete() {
     if (!this.exists()) return;
 
     try {
@@ -192,7 +192,7 @@ class LocalFile extends File {
   static {
     if (typeof process !== "undefined") {
       process.on('exit', () => {
-        LocalFile.#toDelete.forEach((f) => { f.delete$(); })
+        LocalFile.#toDelete.forEach((f) => { f.delete(); })
       });
     }
   }
@@ -221,7 +221,7 @@ class LocalFile extends File {
     }
 
     if (!(to instanceof LocalFile))
-      throw IOErr.make(`Cannot move LocalFile to ${to.typeof$()}`);
+      throw IOErr.make(`Cannot move LocalFile to ${to.typeof()}`);
     
     if (to.exists())
       throw IOErr.make(`moveTo already exists: ${to.toStr()}`);
@@ -256,7 +256,7 @@ class LocalFile extends File {
 
 // TODO: mmap
 
-  in$(bufSize) {
+  in(bufSize) {
     if (this.__isDirectory())
       throw IOErr.make("cannot get in stream for a directory");
     if (!bufSize) bufSize = Int.__chunk;

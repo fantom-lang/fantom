@@ -65,7 +65,7 @@ class HttpReqPeer extends sys.Obj {
       // send FormData (implicity adds Content-Type header)
       xhr.send(content);
     }
-    else if (sys.ObjUtil.typeof$(content) === sys.Str.type$)
+    else if (sys.ObjUtil.typeof(content) === sys.Str.type$)
     {
       // send text
       if (!ct) xhr.setRequestHeader("Content-Type", "text/plain");

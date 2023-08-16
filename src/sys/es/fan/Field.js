@@ -59,11 +59,17 @@ class Field extends Slot {
 
   trap(name, args=null) {
     // private undocumented access
-    throw Err.make("TODO:FIXIT: Field.trap()");
+    switch (name)
+    {
+      case "setConst":
+      case "getter":
+      case "setter":
+        throw Err.make(`TODO:FIXIT - special field trap: ${name}`)
+    }
     // if (name == "setConst") { this.set(args.get(0), args.get(1), false); return null; }
     // if (name == "getter") return this.m_getter;
     // if (name == "setter") return this.m_setter;
-    // return super.trap(name, args);
+    return super.trap(name, args);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -112,8 +118,8 @@ class Field extends Slot {
       throw ReadonlyErr.make("Cannot set static field " + this.qname$());
 
     // check type
-    if (value != null && !ObjUtil.typeof$(value).is(this.type().toNonNullable()))
-      throw ArgErr.make("Wrong type for field " + this.qname$() + ": " + this.type() + " != " + ObjUtil.typeof$(value));
+    if (value != null && !ObjUtil.typeof(value).is(this.type().toNonNullable()))
+      throw ArgErr.make("Wrong type for field " + this.qname$() + ": " + this.type() + " != " + ObjUtil.typeof(value));
 
     // TODO
     //if (setter != null)

@@ -62,7 +62,7 @@ class Map extends Obj {
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  typeof$() { return this.#type; }
+  typeof() { return this.#type; }
   __type(it) { 
     if (!(it instanceof MapType)) throw ArgErr.make(`Must be MapType: ${it} ${it.constructor.name}`);
     this.#type = it;
@@ -143,7 +143,7 @@ class Map extends Obj {
     if (key == null) 
       throw NullErr.make("key is null");
     if (!ObjUtil.isImmutable(key))
-      throw NotImmutableErr.make("key is not immutable: " + ObjUtil.typeof$(key));
+      throw NotImmutableErr.make("key is not immutable: " + ObjUtil.typeof(key));
     this.#set(key, val);
     return this;
   }
@@ -153,7 +153,7 @@ class Map extends Obj {
     if (key == null)
       throw NullErr.make("key is null");
     if (!ObjUtil.isImmutable(key))
-      throw NotImmutableErr.make("key is not immutable: " + ObjUtil.typeof$(key));
+      throw NotImmutableErr.make("key is not immutable: " + ObjUtil.typeof(key));
     this.#set(key, val, true);
     return this;
   }
@@ -279,7 +279,7 @@ class Map extends Obj {
     if (it === undefined) return this.#def;
     this.#modify();
     if (it != null && !ObjUtil.isImmutable(it))
-      throw NotImmutableErr.make("def must be immutable: " + ObjUtil.typeof$(it));
+      throw NotImmutableErr.make("def must be immutable: " + ObjUtil.typeof(it));
     this.#def = it;
   }
 

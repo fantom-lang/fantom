@@ -35,16 +35,16 @@ class Obj {
     return this;
   }
 
-  isImmutable() { return this.typeof$().isConst(); }
+  isImmutable() { return this.typeof().isConst(); }
 
   toImmutable() {
     if (this.isImmutable()) return this;
-    throw NotImmutableErr.make(this.typeof$().toStr());
+    throw NotImmutableErr.make(this.typeof().toStr());
   }
 
-  toStr() { return `${this.typeof$()}@${this.hash()}`; }
+  toStr() { return `${this.typeof()}@${this.hash()}`; }
 
   toString() { return "" + this.toStr(); }
 
-  trap(name, args=null) { return ObjUtil.doTrap(this, name, args, this.typeof$()); }
+  trap(name, args=null) { return ObjUtil.doTrap(this, name, args, this.typeof()); }
 }

@@ -79,7 +79,7 @@ class Err extends Obj {
   }
 
   toStr() {
-    return `${this.typeof$()}: ${this.#msg}`;
+    return `${this.typeof()}: ${this.#msg}`;
   }
 
   trace() {
@@ -87,7 +87,7 @@ class Err extends Obj {
   }
 
   traceToStr() {
-    let s = this.typeof$() + ": " + this.#msg;
+    let s = this.typeof() + ": " + this.#msg;
     if (this.#err.stack) s += "\n" + Err.cleanTrace(this.#err.stack);
     if (this.#cause) 
     {

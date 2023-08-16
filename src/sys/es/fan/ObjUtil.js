@@ -74,7 +74,7 @@ class ObjUtil {
 
   static is(obj, type) {
     if (obj == null) return false;
-    return ObjUtil.typeof$(obj).is(type);
+    return ObjUtil.typeof(obj).is(type);
   }
 
   static as(obj, type) {
@@ -85,7 +85,7 @@ class ObjUtil {
       obj.fanType$ = type;
       return obj;
     }
-    const t = ObjUtil.typeof$(obj);
+    const t = ObjUtil.typeof(obj);
     if (t.is(Func.type$)) return t.as(obj, type);
     if (t.is(List.type$)) return t.as(obj, type);
     if (t.is(Map.type$))  return t.as(obj, type);
@@ -101,15 +101,15 @@ class ObjUtil {
 
     const v = ObjUtil.as(obj, type);
     if (v == null) {
-      const t = ObjUtil.typeof$(obj);
+      const t = ObjUtil.typeof(obj);
       throw CastErr.make(t + " cannot be cast to " + type);
     }
 
     return obj;
   }
 
-  static typeof$(obj) {
-    if (obj instanceof Obj) return obj.typeof$();
+  static typeof(obj) {
+    if (obj instanceof Obj) return obj.typeof();
     else return Type.toFanType(obj);
   }
 
@@ -175,7 +175,7 @@ class ObjUtil {
 // with
 //////////////////////////////////////////////////////////////////////////
 
-  static with$(self, f) {
+  static with(self, f) {
     if (self instanceof Obj) {
       return self.with$(f);
     }

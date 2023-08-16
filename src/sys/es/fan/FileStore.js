@@ -23,7 +23,7 @@ class FileStore extends Obj {
  */
 class LocalFileStore extends FileStore {
   constructor() { super(); }
-  typeof$() { return LocalFileStore.type$; }
+  typeof() { return LocalFileStore.type$; }
   totalSpace() { return null; }
   availSpace() { return null; }
   freeSpace() { return null; }

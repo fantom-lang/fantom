@@ -58,7 +58,7 @@ fanx_ObjEncoder.prototype.writeObj = function(obj)
     obj.literalEncode$(this);
     return;
   }
-  var type = ObjUtil.typeof$(obj);
+  var type = ObjUtil.typeof(obj);
   var ser = type.facet(Serializable.type$, false);
   if (ser != null)
   {
@@ -100,7 +100,7 @@ fanx_ObjEncoder.prototype.writeComplex = function(type, obj, ser)
   {
     // attempt to instantiate default object for type,
     // this will fail if complex has it-block ctor
-    try { defObj = ObjUtil.typeof$(obj).make(); } catch(e) {}
+    try { defObj = ObjUtil.typeof(obj).make(); } catch(e) {}
   }
 
   var fields = type.fields();
@@ -233,7 +233,7 @@ fanx_ObjEncoder.prototype.writeList = function(list)
 fanx_ObjEncoder.prototype.writeMap = function(map)
 {
   // get k,v type
-  var t = map.typeof$();
+  var t = map.typeof();
 
   // decide if we're going output as single or multi-line format
   var nl = this.isMultiLine(t.k) || this.isMultiLine(t.v);

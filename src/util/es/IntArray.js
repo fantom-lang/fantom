@@ -11,5 +11,5 @@
  * IntArray.
  */
 class IntArray extends sys.Obj {
-  typeof$() { return IntArray.type$; }
+  typeof() { return IntArray.type$; }
 }

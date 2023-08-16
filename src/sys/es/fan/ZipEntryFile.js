@@ -114,7 +114,7 @@ class ZipEntryFile extends File {
 // Reading
 //////////////////////////////////////////////////////////////////////////
 
-  in$(bufferSize=4096) {
+  in(bufferSize=4096) {
     if (this.#isFileBacked)
       return (this.#in = this.#yauzlZip.getInStream(this.#entry, {}, bufferSize));
     else {
@@ -125,7 +125,7 @@ class ZipEntryFile extends File {
 
   #in;
   __in(bufferSize=4096) {
-    return this.#in || this.in$(bufferSize);
+    return this.#in || this.in(bufferSize);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -133,7 +133,7 @@ class ZipEntryFile extends File {
 //////////////////////////////////////////////////////////////////////////
 
   create() { this.#throwIO("create") }
-  delete$() { this.#throwIO("delete") }
+  delete() { this.#throwIO("delete") }
   deleteOnExit() { this.#throwIO("deleteOnExit") }
   moveTo() { this.#throwIO("moveTo") }
   out() { this.#throwIO("out") }

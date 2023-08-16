@@ -14,7 +14,7 @@
 class Actor extends sys.Obj {
   constructor() { super(); }
 
-  typeof$() { return Actor.type$; }
+  typeof() { return Actor.type$; }
 
   static #locals;
 

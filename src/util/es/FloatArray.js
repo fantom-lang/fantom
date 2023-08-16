@@ -11,5 +11,5 @@
  * FloatArray.
  */
 class FloatArray extends sys.Obj {
-  typeof$() { return FloatArray.type$; }
+  typeof() { return FloatArray.type$; }
 }

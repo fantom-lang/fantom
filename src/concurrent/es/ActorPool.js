@@ -24,7 +24,7 @@ class ActorPool extends sys.Obj {
   maxThreads() { return this.#maxThreads; }
   __maxThreads(it) { this.#maxThreads = it; }
 
-  typeof$() { return ActorPool.type$; }
+  typeof() { return ActorPool.type$; }
 
   static make(f) {
     const self = new ActorPool();

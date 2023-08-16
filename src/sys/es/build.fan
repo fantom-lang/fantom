@@ -213,11 +213,11 @@ class Build : BuildScript
         case "Func":
         case "List":
         case "Map":
-          // these have custom typeof$() implementations
+          // these have custom typeof() implementations
           ignore := true
         default:
-          // otherwise autogenerate the typeof$() method on the type's prototype
-          out.printLine("${t.name}.prototype.typeof\$ = () => { return ${t.name}.type\$; }")
+          // otherwise autogenerate the typeof() method on the type's prototype
+          out.printLine("${t.name}.prototype.typeof = () => { return ${t.name}.type\$; }")
       }
 
       // init generic types after Type

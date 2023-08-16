@@ -21,7 +21,7 @@ class Method extends Slot {
     super(parent, name, flags, facets);
     this.#returns = returns;
     this.#params  = params;
-    this.#name$   = this.name$$(name);
+    this.#name$   = name; //this.name$$(name);
     this.#qname$  = this.parent().qnameJs$() + '.' + this.#name$;
     this.#mask    = (generic != null) ? 0 : Method.#toMask(parent, returns, params);
     this.#generic = generic;

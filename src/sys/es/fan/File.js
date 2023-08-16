@@ -208,7 +208,7 @@ class File extends Obj {
     return this.plus(Uri.fromStr(name)).create();
   }
 
-  delete$() { this.#throwNotSupported("delete"); }
+  delete() { this.#throwNotSupported("delete"); }
   deleteOnExit() { this.#throwNotSupported("deleteOnExit"); }
 
 //////////////////////////////////////////////////////////////////////////
@@ -275,7 +275,7 @@ class File extends Obj {
   __doCopyFile(to) {
     const out = to.out();
     try {
-      this.in$().pipe(out);
+      this.in().pipe(out);
     }
     finally {
       out.close();
@@ -318,20 +318,20 @@ class File extends Obj {
   open(mode) { this.#throwNotSupported("open"); }
   mmap(mode, pos, size) { this.#throwNotSupported("mmap"); }
 
-  in$(bufSize=4096) { this.#throwNotSupported("in"); }
+  in(bufSize=4096) { this.#throwNotSupported("in"); }
   out(append=false, bufSize=4096) { this.#throwNotSupported("out"); }
 
-  readAllBuf() { return this.in$(Int.__chunk).readAllBuf(); }
+  readAllBuf() { return this.in(Int.__chunk).readAllBuf(); }
 
-  readAllLines() { return this.in$(Int.__chunk).readAllLines(); }
+  readAllLines() { return this.in(Int.__chunk).readAllLines(); }
 
-  eachLine(f) { this.in$(Int.__chunk).eachLine(f); }
+  eachLine(f) { this.in(Int.__chunk).eachLine(f); }
 
   readAllStr(normalizeNewlines=true) {
-    return this.in$(Int.__chunk).readAllStr(normalizeNewlines);
+    return this.in(Int.__chunk).readAllStr(normalizeNewlines);
   }
 
-  readProps() { return this.in$(Int.__chunk).readProps(); }
+  readProps() { return this.in(Int.__chunk).readProps(); }
 
   writeProps(props) { 
     this.create();
@@ -339,7 +339,7 @@ class File extends Obj {
   }
 
   readObj(options=null) {
-    const ins = this.in$();
+    const ins = this.in();
     try {
       return ins.readObj(options);
     }

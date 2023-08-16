@@ -43,7 +43,7 @@ class MemFile extends File {
   deleteOnExit() { throw this.err(); }
   open(mode) { throw this.err(); }
   mmap(mode, pos, size) { throw this.err(); }
-  in$(bufSize) { return this.#buf.in$(); }
+  in(bufSize) { return this.#buf.in(); }
   out(append, bufSize) { throw this.err(); }
   toStr() { return this.uri().toStr(); }
   err() { return UnsupportedErr.make("MemFile"); }

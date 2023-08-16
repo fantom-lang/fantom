@@ -56,7 +56,7 @@ class ConstBuf extends Buf {
 // Buf Support
 //////////////////////////////////////////////////////////////////////////
 
-  in$() { return new ConstBufInStream(this); }
+  in() { return new ConstBufInStream(this); }
   
   toFile(uri) { return MemFile.make(this.toImmutable(), uri); }
 

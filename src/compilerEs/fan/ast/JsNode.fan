@@ -112,25 +112,33 @@ abstract class JsNode
     return js
   }
 
-  ** Get the name that should be used for the generated field in JS code
-  static Str fieldJs(Obj name)
+  ** Get the name that should be used for the generated field in JS code.
+  ** A field is always private so we do not need to swizzle its name.
+  static Str fieldToJs(Obj name)
   {
     // if (name is Str) return "_${name}\$"
     if (name is Str) return "#${name}"
-    if (name is Field) return fieldJs(((Field)name).name)
-    if (name is FieldDef) return fieldJs(((FieldDef)name).name)
+    if (name is Field) return fieldToJs(((Field)name).name)
+    if (name is FieldDef) return fieldToJs(((FieldDef)name).name)
     throw ArgErr("${name} [${name.typeof}]")
   }
 
-  ** Return the JS variable/method/param name to use for the given Fantom name
+  ** Get the name that should be used for the generated method in JS code.
+  ** It turns out we don't need to swizzle method names.
+  static Str methodToJs(Str name) { return name; }
+
+  ** Return the JS identifier name to use for the given Fantom name.
+  ** This should be used to get names for local variable declarations
+  ** and method/func parameters.
   **
   ** Note - use fieldJs for generating field names since we have a lot of special
   ** handling for fields
+  ** Note - use methodJs for generating method names
   Str nameToJs(Str name) { pickleName(name, plugin.dependOnNames) }
 
   @NoDoc static Str pickleName(Str name, Obj? depends := null)
   {
-    name = namePickles.get(name, name)
+    name = reservedWords.get(name, name)
     if (depends != null)
     {
       isDepends := false
@@ -141,29 +149,67 @@ abstract class JsNode
     return name
   }
 
-  private static const Str:Str namePickles
+  private static const Str:Str reservedWords
   static
   {
     m := Str:Str[:]
-    ["char",
+    ["arguments",
+     "as",
+     "async",
+     "await",
+     "break",
+     "case",
+     "catch",
+     "class",
      "const",
+     "continue",
+     "debugger",
+     "default",
      "delete",
+     "do",
+     "else",
      "enum",
      "export",
      "eval",
-     "float",
+     "extends",
+     "false",
+     "finally",
+     "for",
+     "from",
+     "function",
+     "get",
+     "if",
+     "implements",
      "import",
      "in",
-     "int",
+     "instanceof",
      "interface",
      "let",
-     "self",
-     "require",
+     "new",
+     "null",
+     "of",
+     "package",
+     "private",
+     "protected",
+     "public",
+     "return",
+     "self",      // not a reserved word but used heavily by the compiler
+     "set",
+     "static",
+     "super",
+     "switch",
+     // "this",   // causes problems with code generation. needs deeper investigation, but should be safe since it is also Fantom keyword
+     "throw",
+     "true",
+     "try",
      "typeof",
      "var",
+     "void",
+     "while",
      "with",
-    ].each |name| { m[name] = "${name}\$" }
-    namePickles = m.toImmutable
+     "yield",
+     ].each |name| { m[name] = "${name}\$" }
+     reservedWords = m.toImmutable
   }
 
   ** return a unique id name

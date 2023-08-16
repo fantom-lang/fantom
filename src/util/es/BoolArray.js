@@ -11,5 +11,5 @@
  * BoolArray.
  */
 class BoolArray extends sys.Obj {
-  typeof$() { return BoolArray.type$; }
+  typeof() { return BoolArray.type$; }
 }

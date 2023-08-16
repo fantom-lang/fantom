@@ -48,7 +48,7 @@ class OutStream extends Obj {
   __out() { return this.#out; }
 
   write(x) {
-    if (!this.#out) throw UnsupportedErr.make(`${this.typeof$().qname()} wraps null OutStream`);
+    if (!this.#out) throw UnsupportedErr.make(`${this.typeof().qname()} wraps null OutStream`);
     this.#out.write(x);
     return this;
     // try
@@ -66,7 +66,7 @@ class OutStream extends Obj {
   }
 
   writeBuf(buf, n=buf.remaining()) {
-    if (!this.#out) throw UnsupportedErr.make(`${this.typeof$().qname()} wraps null OutStream`);
+    if (!this.#out) throw UnsupportedErr.make(`${this.typeof().qname()} wraps null OutStream`);
     this.out.writeBuf(buf, n);
     return this;
     // try
@@ -77,7 +77,7 @@ class OutStream extends Obj {
     // catch (err)
     // {
     //   if (this.out == null)
-    //     throw fan.sys.UnsupportedErr.make(this.typeof$().qname() + " wraps null OutStream");
+    //     throw fan.sys.UnsupportedErr.make(this.typeof().qname() + " wraps null OutStream");
     //   else
     //     throw err;
     // }

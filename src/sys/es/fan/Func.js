@@ -27,7 +27,7 @@ class Func extends Obj {
 // Identity 
 //////////////////////////////////////////////////////////////////////////
 
-  // typeof$() { return this.#type; }
+  // typeof() { return this.#type; }
 
   // toImmutable() {
   //   if (this.isImmutable()) return this;

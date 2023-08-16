@@ -68,7 +68,7 @@ class Js extends Obj {
     return Js.#defVal;
   }
   
-  toStr() { return this.typeof$().qname(); }
+  toStr() { return this.typeof().qname(); }
 }
 
 /*************************************************************************
@@ -83,7 +83,7 @@ class NoDoc extends Obj {
     return NoDoc.#defVal;
   }
   
-  toStr() { return this.typeof$().qname(); }
+  toStr() { return this.typeof().qname(); }
 }
 
 /*************************************************************************
@@ -98,7 +98,7 @@ class Operator extends Obj {
     return Operator.#defVal;
   }
   
-  toStr() { return this.typeof$().qname(); }
+  toStr() { return this.typeof().qname(); }
 }
 
 /*************************************************************************
@@ -139,6 +139,6 @@ class Transient extends Obj {
     return Transient.#defVal;
   }
   
-  toStr() { return this.typeof$().qname(); }
+  toStr() { return this.typeof().qname(); }
 }
 

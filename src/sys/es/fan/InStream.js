@@ -69,17 +69,17 @@ class InStream extends Obj {
   avail() { return 0; }
 
   read() {
-    if (!this.#in) throw UnsupportedErr.make(`${this.typeof$().qname()} wraps null InStream`);
+    if (!this.#in) throw UnsupportedErr.make(`${this.typeof().qname()} wraps null InStream`);
     return this.#in.read();
   }
 
   readBuf(buf, n) {
-    if (!this.#in) throw UnsupportedErr.make(`${this.typeof$().qname()} wraps null InStream`);
+    if (!this.#in) throw UnsupportedErr.make(`${this.typeof().qname()} wraps null InStream`);
     return this.#in.readBuf(buf, n);
   }
 
   unread(n) {
-    if (!this.#in) throw UnsupportedErr.make(`${this.typeof$().qname()} wraps null InStream`);
+    if (!this.#in) throw UnsupportedErr.make(`${this.typeof().qname()} wraps null InStream`);
     return this.#in.unread(n);
   }
 

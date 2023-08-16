@@ -13,5 +13,5 @@
 class ActorFuture extends Future {
   constructor() { super(); }
 
-  typeof$() { return ActorFuture.type$; }
+  typeof() { return ActorFuture.type$; }
 }

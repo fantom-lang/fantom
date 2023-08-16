@@ -364,7 +364,7 @@ class JsExpr : JsNode
 
   private Void writeSuperField(FieldExpr fe)
   {
-    name := nameToJs(fe.field.name)
+    name := methodToJs(fe.field.name)
 
     // TODO: do we need anything special here for setArg != null ?
     // possibly if we change to getter/setter design
@@ -383,12 +383,11 @@ class JsExpr : JsNode
   private Void writeNormField(FieldExpr fe)
   {
     old         := plugin.thisName
-    name        := nameToJs(fe.field.name)
+    name        := methodToJs(fe.field.name)
     parent      := fe.field.parent
     useAccessor := fe.useAccessor
 
     // use accessor if referring to an enum
-if (plugin.curMethod == null) throw Err("curMethod is null")
     if (fe.field.isEnum) useAccessor = true
     // use the accessor for static fields unless we are in the static initializer;
     // in which case we need to access the private fields directly to initialize them.
@@ -432,7 +431,7 @@ if (plugin.curMethod == null) throw Err("curMethod is null")
     }
     else
     {
-      js.w("${fieldJs(fe.field.name)}", fe.loc)
+      js.w("${fieldToJs(fe.field.name)}", fe.loc)
       if (setArg != null)
       {
         js.w(" = ")
@@ -540,7 +539,7 @@ internal class JsCallExpr : JsExpr
   new make(CompileEsPlugin plugin, CallExpr ce) : super(plugin, ce)
   {
     this.ce = ce
-    this.name = nameToJs(ce.method.name)
+    this.name = methodToJs(ce.method.name)
 
     if (ce.method != null)
     {

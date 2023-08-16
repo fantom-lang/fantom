@@ -48,7 +48,7 @@ class Env extends Obj {
   }
 
   __loadIndex(index) {
-    if (index.typeof$().toStr() != "[sys::Str:sys::Str[]]") throw ArgErr.make("Invalid type");
+    if (index.typeof().toStr() != "[sys::Str:sys::Str[]]") throw ArgErr.make("Invalid type");
     this.#index = index;
   }
 
@@ -95,7 +95,7 @@ class Env extends Obj {
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  toStr() { return this.typeof$().toString(); }
+  toStr() { return this.typeof().toString(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Non-Virtuals
