@@ -177,7 +177,7 @@ class ObjUtil {
 
   static with(self, f) {
     if (self instanceof Obj) {
-      return self.with$(f);
+      return self.with(f);
     }
     else {
       f(self);

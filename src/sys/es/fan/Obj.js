@@ -30,7 +30,7 @@ class Obj {
     return this.#hash;
   }
 
-  with$(f) {
+  with(f) {
     f(this);
     return this;
   }

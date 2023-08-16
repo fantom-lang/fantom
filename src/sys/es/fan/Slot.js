@@ -201,28 +201,4 @@ class Slot extends Obj {
   }
 
   name$$(n) { return Slot.#reservedWords.get(n) ?? n; }
-
-  // name$$(n) {
-  //   // must keep in sync with compilerJs::JsNode
-  //   switch (n)
-  //   {
-  //     case "char":      return "char$";
-  //     case "delete":    return "delete$";
-  //     case "enum":      return "enum$";
-  //     case "eval":      return "eval$";
-  //     case "export":    return "export$";
-  //     case "fan":       return "fan$";
-  //     case "float":     return "float$";
-  //     case "import":    return "import$";
-  //     case "in":        return "in$";
-  //     case "int":       return "int$";
-  //     case "interface": return "interface$";
-  //     case "self":      return "self$";
-  //     case "typeof":    return "typeof$";
-  //     case "var":       return "var$";
-  //     case "with":      return "with$";
-  //   }
-  //   return n;
-  // }
-
 }
