@@ -34,6 +34,8 @@ class ActorTest : Test
     verifyEq(ActorPool().maxThreads, 100)
     verifyEq(ActorPool() { maxThreads = 2 }.maxThreads, 2)
     verifyErr(ArgErr#) { x := ActorPool() { maxThreads = 0 } }
+    verifyErr(ArgErr#) { x := ActorPool() { maxQueue = 0 } }
+    verifyErr(ArgErr#) { x := ActorPool() { maxQueue = 0xffff_ffff } }
     verifyErr(ConstErr#) { x := ActorPool(); x.with { maxThreads = 0 } }
   }
 
@@ -848,6 +850,55 @@ class ActorTest : Test
     verifySame(pool.balance([a, b, e, c, d]), e)
 
     verifyErr(IndexErr#) { pool.balance(Actor[,]) }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// QueueOverflow
+//////////////////////////////////////////////////////////////////////////
+
+  Void testQueueOverflow()
+  {
+    waitTime := 10ms
+
+    pool := ActorPool {}
+    verifyEq(pool.maxQueue, 100_000_000)
+
+    pool = ActorPool { it.maxQueue = 4 }
+    verifyEq(pool.maxQueue, 4)
+
+    actor := Actor(pool) |msg| { Actor.sleep(100ms); return "ok $msg" }
+    verifyEq(actor.queueSize, 0)
+    verifyEq(actor.isQueueFull, false)
+
+    f0 := actor.send("a")
+    f1 := actor.send("b")
+    f2 := actor.send("c")
+    f3 := actor.send("d")
+    while (actor.queueSize == 4) Actor.sleep(waitTime)
+    f4 := actor.send("e")
+    verifyEq(actor.queueSize, 4)
+    verifyEq(actor.isQueueFull, true)
+
+    // send to full queue
+    f5 := actor.send("f")
+    verifyEq(actor.queueSize, 4)
+    verifyEq(actor.isQueueFull, true)
+    verifyEq(f5.status, FutureStatus.err)
+    verifyErr(QueueOverflowErr#) { f5.get }
+
+    // sendWhenDone to full queue
+    f6 := actor.sendWhenDone(Future.makeCompletable.complete("foo"), "f")
+    verifyEq(actor.queueSize, 4)
+    verifyEq(actor.isQueueFull, true)
+    verifyEq(f6.status, FutureStatus.err)
+    verifyErr(QueueOverflowErr#) { f6.get }
+
+    // send later will queue above max size
+    f7 := actor.sendLater(10ms, "h")
+    while (actor.queueSize == 4) Actor.sleep(waitTime)
+    verifyEq(actor.queueSize, 5)
+    verifyEq(actor.isQueueFull, true)
+    verifyEq(f7.get, "ok h")
   }
 
 //////////////////////////////////////////////////////////////////////////

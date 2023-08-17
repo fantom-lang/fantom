@@ -115,6 +115,8 @@ public class Actor
     return "idle";
   }
 
+  public final boolean isQueueFull() { return queue.size >= (int)pool.maxQueue; }
+
   public final long queueSize() { return queue.size; }
 
   public final long queuePeak() { return queue.peak; }
@@ -170,7 +172,7 @@ public class Actor
     else if (whenDone != null)
       toWhenDoneFuture(whenDone).sendWhenDone(this, f);
     else
-      f = _enqueue(f, true);
+      f = _enqueue(f, true, true);
 
     return f;
   }
@@ -183,7 +185,17 @@ public class Actor
     throw ArgErr.make("Only actor Futures supported for sendWhenComplete");
   }
 
-  final ActorFuture _enqueue(ActorFuture f, boolean coalesce)
+  final ActorFuture _enqueueLater(ActorFuture f)
+  {
+    return _enqueue(f, false, false);
+  }
+
+  final ActorFuture _enqueueWhenDone(ActorFuture f)
+  {
+    return _enqueue(f, false, true);
+  }
+
+  private final ActorFuture _enqueue(ActorFuture f, boolean coalesce, boolean checkMaxQueue)
   {
     synchronized (lock)
     {
@@ -192,6 +204,13 @@ public class Actor
       {
         ActorFuture c = queue.coalesce(f);
         if (c != null) return c;
+      }
+
+      // check queue size
+      if (queue.size+1 > (int)pool.maxQueue && checkMaxQueue)
+      {
+        f.completeErr(QueueOverflowErr.make("queueSize: " + queue.size));
+        return f;
       }
 
       // add to queue

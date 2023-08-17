@@ -237,7 +237,7 @@ public final class ActorFuture
     // if immediate we are already done so enqueue immediately
     if (immediate)
     {
-      try { a._enqueue(f, false); }
+      try { a._enqueueWhenDone(f); }
       catch (Throwable e) { e.printStackTrace(); }
     }
   }
@@ -248,7 +248,7 @@ public final class ActorFuture
     for (int i=0; i<list.size(); ++i)
     {
       WhenDone wd = (WhenDone)list.get(i);
-      try { wd.actor._enqueue(wd.future, false); }
+      try { wd.actor._enqueueWhenDone(wd.future); }
       catch (Throwable e) { e.printStackTrace(); }
     }
   }
