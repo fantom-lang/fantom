@@ -793,7 +793,9 @@ class ListType extends GenericType {
         // of one list type to another
         // objType.v.qname() == "sys::Obj" &&
         that instanceof ListType)
-      return obj;
+    {
+      return obj.__retype(that.v);
+    }
 
     if (that instanceof NullableType &&
         that.root instanceof ListType)
