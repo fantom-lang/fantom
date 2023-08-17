@@ -89,6 +89,15 @@ native const class ActorPool
   const Int maxThreads := 100
 
   **
+  ** Max number of messages that may be queued by actors in this pool.
+  ** Once this limit is reached, any messages sent are immediately rejected
+  ** and their future will raise `QueueOverflowErr`.  This limit only applies
+  ** to messages sent via 'send' and 'sendWhenDone'.  No limit checking
+  ** is applied to 'sendLater'.
+  **
+  const Int maxQueue := 100_000_000
+
+  **
   ** Max duration an actor will work processing messages before yielding its
   ** thread.  Because actors require cooperative multi-tasking we don't
   ** want to let an actor hog a thread forever and potentially starve out

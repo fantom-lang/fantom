@@ -126,6 +126,11 @@ native const class Actor
   @NoDoc Str threadState()
 
   **
+  ** Return if queueSize is equal to or greater the pool's max queue size.
+  **
+  @NoDoc Bool isQueueFull()
+
+  **
   ** Get the current number of messages pending on the message queue.
   **
   @NoDoc Int queueSize()

@@ -39,6 +39,8 @@ public class ActorPool
       itBlock.exitCtor();
     }
     if (self.maxThreads < 1) throw ArgErr.make("ActorPool.maxThreads must be >= 1, not " + self.maxThreads);
+    if (self.maxQueue < 1) throw ArgErr.make("ActorPool.maxQueue mst be >= 1, not " + self.maxQueue);
+    if (self.maxQueue > Integer.MAX_VALUE) throw ArgErr.make("ActorPool.maxQueue too big");
 
     self.threadPool = new ThreadPool(self.name, (int)self.maxThreads);
     self.scheduler = new Scheduler(self.name);
@@ -170,7 +172,7 @@ public class ActorPool
   {
     ScheduledWork(Actor a, ActorFuture f) { actor = a; future = f; }
     public String toString() { return "ScheduledWork msg=" + future.msg; }
-    public void work() { if (!future.isCancelled()) actor._enqueue(future, false); }
+    public void work() { if (!future.isCancelled()) actor._enqueueLater(future); }
     public void cancel() { future.cancel(); }
     final Actor actor;
     final ActorFuture future;
@@ -185,5 +187,6 @@ public class ActorPool
   volatile boolean killed;
   public String name = "ActorPool";
   public long maxThreads = 100;
+  public long maxQueue = 100_000_000;
   public Duration maxTimeBeforeYield = Duration.oneSec;
 }
