@@ -386,6 +386,7 @@ class JsExpr : JsNode
     name        := methodToJs(fe.field.name)
     parent      := fe.field.parent
     useAccessor := fe.useAccessor
+    isSet       := this.setArg != null
 
     // use accessor if referring to an enum
     if (fe.field.isEnum) useAccessor = true
@@ -396,7 +397,11 @@ class JsExpr : JsNode
     // force use of the accessor methods if we are accessing the
     // field outside its type since we declare all fields as private
     // in the generated js code
+    //
+    // else if the field is declared on this type and we are doing a set,
+    // but the field has a private setter, then we don't use the accessor
     if (parent.qname != plugin.curType.qname) useAccessor = true
+    else if (isSet && (fe.field.setter?.isPrivate ?: false)) useAccessor = false
 
     writeTarget := |->| {
       if (fe.target == null) js.w(qnameToJs(parent), fe.loc)

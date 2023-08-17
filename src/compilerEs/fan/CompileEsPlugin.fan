@@ -75,6 +75,7 @@ class CompileEsPlugin : CompilerStep
     // generate CommonJs and ESM module
     JsPod(this).write
     compiler.cjs = buf.toStr
+// echo(buf.toStr)
     compiler.esm = toEsm(compiler.cjs)
 
     // write out the sourcemap (note: the same sourcemap works
