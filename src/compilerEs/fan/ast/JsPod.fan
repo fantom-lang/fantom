@@ -61,10 +61,10 @@ class JsPod : JsNode
     js.wl("const fantom = __require('fantom.js');")
     js.wl("const sys = fantom ? fantom.sys : __require('sys.js');")
 
-    // special handling for dom
-    // if (pod.name == "dom") js.wl("const es6 = __require('es6.js');")
-
-    pod.depends.each |depend|
+    // we need to require full dependency chain
+    pods := (Pod[])pod.depends.map |p->Pod| { Pod.find(p.name) }
+    pods = Pod.orderByDepends(Pod.flattenDepends(pods))
+    pods.each |depend|
     {
       if (depend.name == "sys") return
       // NOTE if we change sys to fan we need to update JNode.qnameToJs
