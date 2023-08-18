@@ -20,13 +20,13 @@ class HttpReqPeer extends sys.Obj {
     let view;
 
     // attach progress listener if configured
-    if (self.m_cbProgress != null)
+    if (self.__cbProgress() != null)
     {
       let p = xhr;
       const m = method.toUpperCase();
       if (m == "POST" || m == "PUT") p = xhr.upload
       p.addEventListener("progress", function(e) {
-        if (e.lengthComputable) self.m_cbProgress(e.loaded, e.total);
+        if (e.lengthComputable) self.__cbProgress()(e.loaded, e.total);
       });
     }
 
@@ -99,8 +99,9 @@ class HttpReqPeer extends sys.Obj {
     const isText = xhr.responseType == "" || xhr.responseType == "text";
 
     const res = HttpRes.make();
-    res.status     (xhr.status);
-    res.content    (isText ? xhr.responseText : "");
+    res.__xhr = xhr;
+    res.status(xhr.status);
+    res.content(isText ? xhr.responseText : "");
 
     const all = xhr.getAllResponseHeaders().split("\n");
     for (let i=0; i<all.length; i++)
