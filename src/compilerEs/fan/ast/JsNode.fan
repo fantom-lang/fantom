@@ -76,6 +76,13 @@ abstract class JsNode
     return true
   }
 
+  CType resolveType(CType ctype)
+  {
+    t := ctype is TypeRef ? ctype->t : ctype
+    if (t is NullableType) t = t->root
+    return t
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Method Utils
 //////////////////////////////////////////////////////////////////////////

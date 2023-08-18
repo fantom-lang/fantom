@@ -56,7 +56,7 @@ class Func extends Obj {
     return fparams.ro();
   }
   static arity(f) { return this.params(f).size(); }
-  static returns(f) { return f.__method?.returns() ?? Obj.type$; }
+  static returns(f) { return f?.__returns ?? (f.__method?.returns() ?? Obj.type$); }
   static method(f) { return f.__method; }
 
   //TODO:bind() - never implemented?

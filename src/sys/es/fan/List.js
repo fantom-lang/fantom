@@ -518,7 +518,7 @@ push(obj) {
   }
 
   map(f) {
-    let r = arguments[arguments.length-1]
+    let r = arguments[arguments.length-1];
     if (r == null || r == Void.type$ || !(r instanceof Type)) r = Obj.type$.toNullable();
 
     const acc = List.make(r);
@@ -528,7 +528,7 @@ push(obj) {
   }
 
   mapNotNull(f) {
-    let r = arguments[arguments.length-1]
+    let r = arguments[arguments.length-1];
     if (r == null || r == Void.type$ || !(r instanceof Type)) r = Obj.type$.toNullable();
 
     const acc = List.make(r.toNonNullable());
@@ -538,7 +538,7 @@ push(obj) {
   }
 
   flatMap(f) {
-    const r = arguments[arguments.length-1]
+    const r = arguments[arguments.length-1];
     let of = (r == null || r == Void.type$ || !(r instanceof Type)) ? null : r.v;
     if (of == null) of = Obj.type$.toNullable();
 
@@ -549,7 +549,7 @@ push(obj) {
   }
 
   groupBy(f) {
-    let r = arguments[arguments.length-1]
+    let r = arguments[arguments.length-1];
     if (r == null || r == Void.type$ || !(r instanceof Type)) r = Obj.type$.toNullable();
     const acc = Map.make(r, this.typeof());
     return this.groupByInto(acc, f);

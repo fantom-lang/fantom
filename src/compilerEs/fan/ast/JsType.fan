@@ -304,7 +304,7 @@ class JsType : JsNode
     if (m.isInstanceCtor)
     {
       // write static factory make method
-      ctorParams := CParam[SyntheticParam(selfJs)].addAll(m.params)
+      ctorParams := CParam[SyntheticParam(selfJs, curType)].addAll(m.params)
       js.wl("static ${nameJs}${methodParams(m.params)} {", m.loc)
         .indent
         .wl("const ${selfJs} = new ${typeJs}();")
@@ -352,8 +352,7 @@ class JsType : JsNode
     }
 
     // closure support
-    hasClosure := ClosureFinder(m).exists
-    if (hasClosure) js.wl("const this\$ = ${plugin.thisName};")
+    writeClosureSupport(m, methName, methParams)
 
     if (m.isNative)
     {
@@ -363,7 +362,7 @@ class JsType : JsNode
       }
       else
       {
-        pars := CParam[SyntheticParam("this")].addAll(methParams)
+        pars := CParam[SyntheticParam("this", curType)].addAll(methParams)
         js.wl("return this.peer.${methName}${methodParams(pars)};", m.loc)
       }
     }
@@ -382,6 +381,23 @@ class JsType : JsNode
 
     js.unindent
     js.wl("}")
+  }
+
+  private Void writeClosureSupport(MethodDef m, Str methName, CParam[] methParams)
+  {
+    // if the method contains closure we need to provide them access to this
+    hasClosure := ClosureFinder(m).exists
+    if (hasClosure) js.wl("const this\$ = ${plugin.thisName};")
+
+    // if the last argument is a closure and this is a "special" typed method
+    // then we need to set the return type on the closure
+    if (!JsCallExpr.typedFuncs.contains(methName)) return
+    param := methParams.last
+    if (param == null) return
+    ft := resolveType(param.paramType) as FuncType
+    if (ft == null) return
+    name := nameToJs(param.name)
+    js.wl("${name}.__returns = ((arg) => { let r = arg; if (r == null || r == sys.Void.type\$ || !(r instanceof sys.Type)) r = null; return r; })(arguments[arguments.length-1]);")
   }
 
   ** An enum static$init method is used to initialize the enum vals.
@@ -444,9 +460,10 @@ class JsType : JsNode
 
 internal class SyntheticParam : CParam
 {
-  new make(Str name) { this.name = name }
+  new make(Str name, CType type) { this.name = name; this.type = type }
   override const Str name
-  override CType paramType() { throw UnsupportedErr() }
+  private CType type
+  override CType paramType() { return this.type; }
   override const Bool hasDefault := false
 }
 

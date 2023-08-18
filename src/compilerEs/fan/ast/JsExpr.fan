@@ -558,11 +558,11 @@ internal class JsCallExpr : JsExpr
 
     if (ce.target != null)
     {
-      resolveType := |CType ctype->CType| {
-        t := ctype is TypeRef ? ctype->t : ctype
-        if (t is NullableType) t = t->root
-        return t
-      }
+      // resolveType := |CType ctype->CType| {
+      //   t := ctype is TypeRef ? ctype->t : ctype
+      //   if (t is NullableType) t = t->root
+      //   return t
+      // }
       this.targetType = ce.target.ctype == null ? this.parent : ce.target.ctype
       resolved := resolveType(ce.target.ctype)
       funcType := c.ns.resolveType("sys::Func")
@@ -698,7 +698,7 @@ internal class JsCallExpr : JsExpr
 
     if (ce.isDynamic) js.w("])")
   }
-  private static const Str[] typedFuncs := ["map", "mapNotNull", "flatMap", "groupBy"]
+  static const Str[] typedFuncs := ["map", "mapNotNull", "flatMap", "groupBy", "mapToList"]
 }
 
 **************************************************************************
