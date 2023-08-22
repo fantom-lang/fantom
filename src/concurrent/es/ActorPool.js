@@ -17,8 +17,8 @@ class ActorPool extends sys.Obj {
   }
 
   #name = "ActorPool";
-  name$() { return this.#name; }
-  __name$(it) { this.#name = it; }
+  name() { return this.#name; }
+  __name(it) { this.#name = it; }
 
   #maxThreads = 100;
   maxThreads() { return this.#maxThreads; }
