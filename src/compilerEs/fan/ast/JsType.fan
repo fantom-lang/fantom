@@ -328,7 +328,6 @@ class JsType : JsNode
       return
     }
     else doWriteMethod(m)
-    js.nl
     plugin.curMethod = null
   }
 
@@ -380,7 +379,7 @@ class JsType : JsNode
     }
 
     js.unindent
-    js.wl("}")
+    js.wl("}").nl
   }
 
   private Void writeClosureSupport(MethodDef m, Str methName, CParam[] methParams)
