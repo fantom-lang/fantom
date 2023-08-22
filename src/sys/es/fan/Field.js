@@ -62,11 +62,12 @@ class Field extends Slot {
     switch (name)
     {
       case "setConst":
+        this.set(args.get(0), args.get(1), false);
+        return null;
       case "getter":
       case "setter":
         throw Err.make(`TODO:FIXIT - special field trap: ${name}`)
     }
-    // if (name == "setConst") { this.set(args.get(0), args.get(1), false); return null; }
     // if (name == "getter") return this.m_getter;
     // if (name == "setter") return this.m_setter;
     return super.trap(name, args);
