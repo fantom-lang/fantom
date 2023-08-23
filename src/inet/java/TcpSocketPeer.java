@@ -137,16 +137,12 @@ public class TcpSocketPeer
     // configure SSL parameters
     SSLParameters params = socket.getSSLParameters();
 
-    // supported SSL protocols
     if (!clientMode)
     {
       // configure client authentication
       final String clientAuth = (String)this.config.tlsParams.get("clientAuth", "none");
       if (clientAuth.equals("need")) params.setNeedClientAuth(true);
       else if (clientAuth.equals("want")) params.setWantClientAuth(true);
-
-      // Configure SSL protocols
-      params.setProtocols(sslProtocols);
     }
 
     // application protocols
@@ -154,32 +150,6 @@ public class TcpSocketPeer
     if (protocols != null) params.setApplicationProtocols((String[])protocols.asArray(String.class));
 
     socket.setSSLParameters(params);
-  }
-
-  // SSL protocols we want to enable for a server
-  private static String[] sslProtocols;
-  static
-  {
-    // At a minimum we support TLSv1.2. And we try to add TLSv1.3 if the runtime
-    // supports it.
-    try
-    {
-      String[] supported = SSLContext.getDefault().getSupportedSSLParameters().getProtocols();
-      String[] configured = new String[] { "TLSv1.2" };
-      for (int i = 0; i < supported.length; ++i)
-      {
-        if (supported[i].equals("TLSv1.3"))
-        {
-          configured = new String[] { "TLSv1.2", "TLSv1.3" };
-          break;
-        }
-      }
-      sslProtocols = configured;
-    }
-    catch (Exception ignore)
-    {
-      IOErr.make("Using default ssl protocols", ignore).trace();
-    }
   }
 
 //////////////////////////////////////////////////////////////////////////

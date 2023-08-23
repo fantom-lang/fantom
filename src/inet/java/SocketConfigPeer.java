@@ -14,6 +14,7 @@ import fan.crypto.PrivKeyEntry;
 import fanx.interop.Interop;
 
 import java.util.HashMap;
+import java.util.Arrays;
 import javax.net.ssl.*;
 import java.security.KeyFactory;
 import java.security.SecureRandom;
@@ -86,7 +87,10 @@ public class SocketConfigPeer
         }
 
         // create the SSLContext for this socket config
-        SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+        String[] supported = SSLContext.getDefault().getSupportedSSLParameters().getProtocols();
+        SSLContext sslContext;
+        if (Arrays.asList(supported).contains("TLSv1.3")) { sslContext = SSLContext.getInstance("TLSv1.3"); }
+        else { sslContext = SSLContext.getInstance("TLSv1.2"); }
         sslContext.init(keyManagers, trustManagers, new SecureRandom());
         this._sslContext = sslContext;
       }
