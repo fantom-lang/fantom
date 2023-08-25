@@ -429,16 +429,24 @@ class JsType : JsNode
     // TODO: this feels brittle
     // some enums have static initializers for other fields
     // so we still need to emit the code for those. It turns
-    // out they appear to be wrapped in
+    // out they appear to be all statements including and after the first if stmt:
     //   if (true) {...}
-    // blocks so we look for those and only write those.
+    // so we look for those and only write those.
     js.wl("static static\$init() {").indent
     // force the enum vals to be loaded because the static init code
     // might be attempting to reference <Enum>.#vals field directly
     js.wl("const ${uniqName} = ${enumName}.vals();")
-    m.code.stmts.each |stmt|
+
+    // find the first IfStmt block. It is assumed that all static init
+    // prior to that is for the actual enum fields. We skip those since they are
+    // handled special by the compiler and do the rest of the stmts
+    ifIdx := m.code.stmts.findIndex |item| { item is IfStmt }
+    if (ifIdx != null)
     {
-      if (stmt is IfStmt) { writeStmt(stmt) }
+      m.code.stmts[ifIdx..-1].each |stmt| {
+        writeStmt(stmt)
+        js.wl(";")
+      }
     }
     js.unindent.wl("}").nl
   }
