@@ -35,7 +35,12 @@ internal class InitCmd : NodeJsCmd
     out := ms.file("fantom").out
     ms.writeBeginModule(out)
     ["sys", "fan_mime", "fan_units"].each |m| { ms.writeInclude(out, "${m}.ext") }
-    ms.writeExports(out, ["sys"])
+    ["os", "path", "fs", "url"].each |m| { ms.writeInclude(out, "${m}") }
+
+    template := this.typeof.pod.file(`/res/fantomTemplate.js`).readAllStr
+    out.writeChars(template)
+
+    ms.writeExports(out, ["sys", "boot"])
     ms.writeEndModule(out).flush.close
   }
 
