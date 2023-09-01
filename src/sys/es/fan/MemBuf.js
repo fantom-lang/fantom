@@ -40,8 +40,10 @@ class MemBuf extends Buf {
 
   static __makeBytes(bytes) {
     const buf = new MemBuf();
-    buf.data   = (bytes instanceof Array || bytes instanceof ArrayBuffer) ? new Uint8Array(bytes) : bytes;
-    buf.__size = bytes.length;
+    if (bytes instanceof Array || bytes instanceof ArrayBuffer) buf.data = new Uint8Array(bytes);
+    else if (bytes instanceof Uint8Array) buf.data = bytes;
+    else throw ArgErr.make(`Unsupported type for bytes: ${typeof bytes}`);
+    buf.__size = buf.data.length;
     return buf;
   }
 
