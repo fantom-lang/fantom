@@ -12,6 +12,7 @@
 - Actor queue overflow limits
 - Add Doc.elemFromPos, elemsFromPos
 - Add new dom HttpSocket API
+- New concurrent Lock API
 
 *Build 1.0.79 (17 Jul 2023)*
 - New yaml API
