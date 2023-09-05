@@ -661,7 +661,7 @@ internal class JsCallExpr : JsExpr
   protected Void writeSuper()
   {
     writeExpr(ce.target)
-    js.w(".${name}.call(this", loc)
+    js.w(".${name}.call(${plugin.thisName}", loc)
     writeArgs(true)
     js.w(")")
   }
