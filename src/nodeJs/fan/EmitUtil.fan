@@ -183,9 +183,10 @@ internal class EmitUtil
       }
       else ms.writeInclude(buf.out, "${pod.name}.ext", baseDir)
     }
-    if (scriptJs != null) throw Err("TODO: script js")
-    // if (scriptJs != null)
-    //   buf.add("import * as ${scriptJs.basename} from './${ms.moduleType}/${scriptJs.name}';\n")
+
+    if (scriptJs != null)
+      ms.writeInclude(buf.out, "${scriptJs.basename}.ext", baseDir)
+
     return buf.flip.readAllStr
   }
 

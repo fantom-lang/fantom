@@ -51,6 +51,7 @@ class CompileEsPlugin : CompilerStep
 
   private Void readJsProps()
   {
+    if (compiler.input.baseDir == null) return
     f := compiler.input.baseDir.plus(`js.props`)
     if (!f.exists) return
     f.readProps.each |val, key|

@@ -59,6 +59,7 @@ internal class RunCmd : NodeJsCmd
     input.version   = Version("0")
     input.log.level = LogLevel.silent
     input.isScript  = true
+    input.baseDir   = this.script.parent
     input.srcStr    = this.script.in.readAllStr
     input.srcStrLoc = Loc("")
     input.mode      = CompilerInputMode.str
@@ -67,7 +68,7 @@ internal class RunCmd : NodeJsCmd
     // compile the source
     compiler := Compiler(input)
     CompilerOutput? co := null
-    try co = compiler.compile; catch {}
+    try co = compiler.compile; catch(Err err) { throw err }
     if (co == null)
     {
       buf := StrBuf()
@@ -79,7 +80,10 @@ internal class RunCmd : NodeJsCmd
     emit.withDepends(compiler.depends.map { Pod.find(it.name) })
 
     // return generated js
-    return compiler.cjs.toBuf.toFile(`${tempPod}.js`)
+    return this.cjs
+      ? compiler.cjs.toBuf.toFile(`${tempPod}.js`)
+      : compiler.esm.toBuf.toFile(`${tempPod}.js`)
+
   }
 }
 

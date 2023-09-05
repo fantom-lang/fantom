@@ -221,7 +221,7 @@ class JsPod : JsNode
     baseDir := c.input.baseDir
     if (baseDir != null)
     {
-      c.resFiles.each |file|
+      c.resFiles?.each |file|
       {
         if (file.ext != "props") return
         uri := file.uri.relTo(baseDir.uri)
