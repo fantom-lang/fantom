@@ -224,11 +224,21 @@ class JsPod : JsNode
       c.resFiles?.each |file|
       {
         if (file.ext != "props") return
-        uri := file.uri.relTo(baseDir.uri)
-        key := "${pod.name}:${uri}"
-        js.wl("m=sys.Map.make(sys.Str.type\$, sys.Str.type\$);")
-        file.in.readProps.each |v,k| { js.wl("m.set(${k.toCode},${v.toCode});") }
-        js.wl("sys.Env.cur().__props(${key.toCode}, m);").nl
+        uri   := file.uri.relTo(baseDir.uri)
+        key   := "${pod.name}:${uri}"
+        try
+        {
+          props := file.in.readProps
+          js.wl("m=sys.Map.make(sys.Str.type\$, sys.Str.type\$);")
+          props.each |v,k| { js.wl("m.set(${k.toCode},${v.toCode});") }
+          js.wl("sys.Env.cur().__props(${key.toCode}, m);").nl
+        }
+        catch (ArgErr err)
+        {
+          // some props files aren't actually valid props files, so we ignore those
+          // e.g. they have duplicate keys which is not allowed
+          warn("Invalid props file: ${uri}. ${err.msg}")
+        }
       }
       js.nl
     }
