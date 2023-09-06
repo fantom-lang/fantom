@@ -129,8 +129,8 @@ class CompileEsPlugin : CompilerStep
         pod := m.group(1)
         if (pod == "fantom") { buf.addChar('\n'); continue; }
         file := m.group(2)
-        buf.add("const ${pod} = await (async function () { try { return await import('./${file}.js'); } catch(err) { /* ignore */ } })();\n")
-        // buf.add("import * as ${pod} from './${file}.js'\n")
+        // buf.add("const ${pod} = await (async function () { try { return await import('./${file}.js'); } catch(err) { /* ignore */ } })();\n")
+        buf.add("import * as ${pod} from './${file}.js'\n")
       }
       else if (line.startsWith("// cjs require end")) { buf.add("${line}\n"); break }
       else buf.addChar('\n')

@@ -17,10 +17,15 @@ class CompileJs  : CompilerStep
 
   override Void run()
   {
+    log.info("CompileJs")
     if (needCompileJs)
     {
-      log.info("CompileJs")
       compile("compilerJs::CompileJsPlugin")
+    }
+
+    if (pod.name != "sys")
+    {
+      // we need to generate new javascript for all pods even if no js types
       compile("compilerEs::CompileEsPlugin")
     }
 

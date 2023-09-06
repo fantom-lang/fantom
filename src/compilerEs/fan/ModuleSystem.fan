@@ -119,8 +119,8 @@ const class Esm : ModuleSystem
   }
   protected override OutStream doWriteInclude(OutStream out, Str module, Str path)
   {
-    out.printLine("const ${module} = await (async function() { try { return await import('${path}'); } catch (err) { /* ignore */ } })();")
-    // out.printLine("import * as ${module} from '${path}';")
+    // out.printLine("const ${module} = await (async function() { try { return await import('${path}'); } catch (err) { /* ignore */ } })();")
+    out.printLine("import * as ${module} from '${path}';")
   }
 
 }
