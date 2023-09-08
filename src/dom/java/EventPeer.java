@@ -28,7 +28,7 @@ public class EventPeer
   public boolean      ctrl        (Event self)                          { throw err(); }
   public boolean      shift       (Event self)                          { throw err(); }
   public boolean      meta        (Event self)                          { throw err(); }
-  public long         button      (Event self)                          { throw err(); }
+  public Long         button      (Event self)                          { throw err(); }
   public Key          key         (Event self)                          { throw err(); }
   public Err          err         (Event self)                          { throw err(); }
   public void         stop        (Event self)                          { throw err(); }
