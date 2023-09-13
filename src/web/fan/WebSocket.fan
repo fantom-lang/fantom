@@ -73,7 +73,10 @@ class WebSocket
     res.headers["Upgrade"] = "websocket"
     res.headers["Connection"] = "Upgrade"
     res.headers["Sec-WebSocket-Accept"] = secDigest(key)
-    if (!res.headers.containsKey("Sec-WebSocket-Protocol"))
+    subprotocols := res.headers["Sec-WebSocket-Protocol"]
+    if (subprotocols.trim.isEmpty)
+      res.headers.remove("Sec-WebSocket-Protocol")
+    else if (subprotocols == null)
       res.headers.addNotNull("Sec-WebSocket-Protocol", req.headers["Sec-WebSocket-Protocol"])
 
     // take ownership of the underlying socket
