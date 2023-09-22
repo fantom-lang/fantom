@@ -18,6 +18,7 @@ using [java] java.awt.geom::AffineTransform
 using [java] java.awt.geom::Line2D$Double as Line2D
 using [java] java.awt.geom::Rectangle2D$Double as Rect2D
 using [java] java.awt.geom::RoundRectangle2D$Double as RoundRectangle2D
+using [java] java.awt.geom::Ellipse2D$Double as Ellipse2D
 using [java] java.awt.font::TextAttribute
 using [java] fanx.interop::FloatArray
 using graphics
@@ -188,6 +189,20 @@ class Java2DGraphics : Graphics
   override This clipRoundRect(Float x, Float y, Float w, Float h, Float wArc, Float hArc)
   {
     g.clip(RoundRectangle2D(x, y, w, h, wArc, hArc))
+    return this
+  }
+
+  ** Draw an ellipse within the given bounds with the current stroke and paint.
+  override This drawEllipse(Float x, Float y, Float w, Float h)
+  {
+    g.draw(Ellipse2D(x, y, w, h))
+    return this
+  }
+
+  ** Fill an ellipse within the given bounds with the current stroke and paint.
+  override This fillEllipse(Float x, Float y, Float w, Float h)
+  {
+    g.fill(Ellipse2D(x, y, w, h))
     return this
   }
 

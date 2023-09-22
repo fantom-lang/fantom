@@ -62,6 +62,12 @@ mixin Graphics
   ** The ellipse of the corners is specified by wArc and hArc.
   abstract This clipRoundRect(Float x, Float y, Float w, Float h, Float wArc, Float hArc)
 
+  ** Draw an ellipse within the given bounds with the current stroke and paint.
+  abstract This drawEllipse(Float x, Float y, Float w, Float h)
+
+  ** Fill an ellipse within the given bounds with the current stroke and paint.
+  abstract This fillEllipse(Float x, Float y, Float w, Float h)
+
   ** Draw a the text string with the current paint and font.  The x, y
   ** coordinate specifies the left baseline corner of where the text
   ** is to be drawn.  Technically this is a fill operation similiar to
