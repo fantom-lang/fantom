@@ -13,6 +13,9 @@ class TransformTest : Test
 {
   Void test()
   {
+    // defval
+    verifyEq(Transform.defVal.toStr, "matrix(1 0 0 1 0 0)")
+
     // core multiplication
     a := Transform(1f, 2f, 3f, 4f, 5f, 6f)
     b := Transform(7f, 8f, 9f, 10f, 11f, 12f)
