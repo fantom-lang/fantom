@@ -54,6 +54,30 @@ class ImageTest : AbstractTest
          Win.cur.setTimeout(1sec) { paint(size, g) }
        }
     }
+
+    // only supported on java
+    if (Env.cur.runtime == "java")
+    {
+      // create rendered img
+      ren := Image.render(MimeType("image/png"), Size(128f, 128f)) |ig|
+      {
+        ig.color = Color("#e2e8f0")
+        ig.fillRect(0f, 0f, 128f, 128f)
+        ig.color = Color("#fb7185")
+        ig.drawRect(0f, 0f, 127f, 127f)
+        ig.drawLine(0f, 0f, 127f, 127f)
+        ig.drawLine(0f, 127f, 127f, 0f)
+      }
+
+      // draw ren
+      g.color = Color("#555")
+      g.drawText("Rendered", 750f, 455f)
+      g.drawImage(ren, 750f, 460f)
+
+      // test Image.write
+      write(png, "existing.png")
+      write(ren, "rendered.png")
+    }
   }
 
   Image load(Str name)
@@ -77,5 +101,12 @@ class ImageTest : AbstractTest
     return x
   }
 
+  Void write(Image img, Str filename)
+  {
+    temp := Env.cur.tempDir + `${filename}`
+    out  := temp.out
+    img.write(out)
+    out.sync.close
+  }
 }
 
