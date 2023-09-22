@@ -171,6 +171,31 @@ class CanvasGraphics extends sys.Obj {
     this.cx.quadraticCurveTo(x, y, x + wArc, y);
   }
 
+  // This drawEllipse(Float x, Float y, Float w, Float h)
+  drawEllipsefunction(x, y, w, h)
+  {
+    this.pathEllipse(x, y, w, h);
+    this.cx.stroke();
+  }
+
+  // This fillEllipse(Float x, Float y, Float w, Float h)
+  fillEllipse(x, y, w, h)
+  {
+    this.pathEllipse(x, y, w, h);
+    this.cx.fill();
+  }
+
+  // generate path for an ellipse
+  pathEllipse(x, y, w, h)
+  {
+    var rx = w / 2;
+    var ry = h / 2;
+    var cx = x + rx;
+    var cy = y + ry;
+    this.cx.beginPath();
+    this.cx.ellipse(cx, cy, rx, ry, 0, 0, 2 * Math.PI);
+  }
+
   // This drawText(Str s, Float x, Float y)
   drawText(s, x, y)
   {
