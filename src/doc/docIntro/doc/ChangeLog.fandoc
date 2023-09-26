@@ -15,6 +15,7 @@
 - New concurrent Lock API
 - Add Graphics.drawEllipse,fillEllipse
 - Add Image.render and Image.write
+- Fixes for Crypto EC keypair support
 
 *Build 1.0.79 (17 Jul 2023)*
 - New yaml API

@@ -115,9 +115,10 @@ final public class JPrivKey extends JKey implements fan.crypto.PrivKey
 // Util
 //////////////////////////////////////////////////////////////////////////
 
-  static Signature toSignature(final String keyAlg, final String digest)
+  static Signature toSignature(String keyAlg, final String digest)
     throws Exception
   {
+    if (keyAlg.equals("EC")) keyAlg = "ECDSA";
     String algorithm = digest + "with" + keyAlg;
 
     // Parse signature digest that includes masking generation function

@@ -56,7 +56,7 @@ native const class JPrivKey : JKey, PrivKey
 
 native const class JPubKey : JKey, PubKey
 {
-  static JPubKey decode(Buf der)
+  static JPubKey decode(Buf der, Str algorithm)
 
   override Str  algorithm()
   override Str? format()

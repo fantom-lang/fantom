@@ -88,9 +88,10 @@ class PemReader : PemConst
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(InStream in)
+  new make(InStream in, Str algorithm)
   {
     this.in = in
+    this.algorithm = algorithm
   }
 
   Obj? next()
@@ -105,11 +106,11 @@ class PemReader : PemConst
         der = Buf.fromBase64(rsaP1ToP8(base64))
         return JPrivKey.decode(der, "RSA")
       case PemLabel.privKey:
-        return JPrivKey.decode(der, "RSA")
+        return JPrivKey.decode(der, algorithm)
       case PemLabel.ecPrivKey:
         return JPrivKey.decode(der, "EC")
       case PemLabel.publicKey:
-        return JPubKey.decode(der)
+        return JPubKey.decode(der, algorithm)
       case PemLabel.cert:
         return X509.load(der.in).first
       case PemLabel.csr:
@@ -171,6 +172,8 @@ class PemReader : PemConst
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
+
+  private const Str algorithm   // only for PKCS8
 
   private InStream in
   private Str? line
