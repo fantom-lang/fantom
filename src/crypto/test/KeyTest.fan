@@ -11,6 +11,7 @@ class KeyTest : CryptoTest
   Void testSigning()
   {
     data := "message".toBuf
+    bad  := "messaGe".toBuf
 
     // RSA
     pair := crypto.genKeyPair("RSA", 2048)
@@ -18,6 +19,7 @@ class KeyTest : CryptoTest
     verifyKey(pair.pub, "RSA", "X.509")
     sig := pair.priv.sign(data, "SHA512")
     verify(pair.pub.verify(data, "SHA512", sig))
+    verifyFalse(pair.pub.verify(bad, "SHA512", sig))
 
     // type checks
     verify(pair is KeyPair)
@@ -30,6 +32,7 @@ class KeyTest : CryptoTest
     verifyKey(pair.pub,  "EC", "X.509")
     sig = pair.priv.sign(data, "SHA256")
     verify(pair.pub.verify(data, "SHA256", sig))
+    verifyFalse(pair.pub.verify(bad, "SHA256", sig))
 
     // DSA
     pair = crypto.genKeyPair("DSA", 1024)
@@ -37,6 +40,7 @@ class KeyTest : CryptoTest
     verifyKey(pair.pub, "DSA", "X.509")
     sig = pair.priv.sign(data, "SHA1")
     verify(pair.pub.verify(data, "SHA1", sig))
+    verifyFalse(pair.pub.verify(bad, "SHA1", sig))
 
     k1 := crypto.genKeyPair("RSA", 1024)
     k2 := crypto.genKeyPair("RSA", 1024)
