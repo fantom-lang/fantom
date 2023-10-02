@@ -60,6 +60,9 @@ class JsUnitDatabase
       out.printLine("q.add(sys.Unit.define('${line}'));")
     }
 
+    // close off last def
+    out.printLine("sys.Unit.__quantityUnits('${curQuantityName}', q);\n")
+
     // finish up
     out.printLine("sys.Unit.__quantities(qn);")
     ms.writeEndModule(out)
