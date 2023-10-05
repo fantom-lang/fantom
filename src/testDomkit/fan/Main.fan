@@ -25,6 +25,8 @@ class Main : AbstractMain
 
   override Int run()
   {
+    log.info("Running with jsMode=${jsMode}")
+
     // set javascript mode for file packing
     WebJsMode.setCur(WebJsMode.fromStr(jsMode))
 
