@@ -1,7 +1,6 @@
 
 // utility to force a path to a directory
-const toDir = function(f)
-{
+const toDir = function(f) {
   if (os.platform() == "win32") {
     // change to posix-style path
     f = f.split(path.sep).join(path.posix.sep);
@@ -11,6 +10,11 @@ const toDir = function(f)
   return f;
 };
 
+// Supported options:
+// - polyfill: list of libraries to polyfill. The following libraries
+//   are supported:
+//   - 'ws': polyfill the WebSocket class. The 'ws' package from NPM must
+//   be available in the node path.
 const boot = async function(opts={}) {
   const {Env, File,} = sys;
 
@@ -28,6 +32,12 @@ const boot = async function(opts={}) {
   Env.cur().__workDir = File.os(fan_home);
   Env.cur().__tempDir = File.os(toDir(path.resolve(fan_home, "temp")));
 
+  // handle polyfills
+  for (const lib of (opts["polyfill"] ?? [])) {
+    const f = polyfills[lib];
+    if (f) await f();
+  }
+
   // import all pods
   const modules = path.resolve(fan_home, "lib/es/esm");
   for (const fan_module of fs.readdirSync(modules)) {
@@ -39,4 +49,15 @@ const boot = async function(opts={}) {
   }
 
   return sys;
+};
+
+const polyfills = {
+  "ws": async function() {
+    try {
+      const {WebSocket} = await import('ws');
+      globalThis.WebSocket = WebSocket;
+    } catch (err) {
+      console.log(`WARN: 'ws' package not available`);
+    }
+  }
 };
