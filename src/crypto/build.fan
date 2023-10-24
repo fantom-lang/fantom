@@ -32,5 +32,6 @@ class Build : BuildPod
                 `test/`,
                ]
     javaDirs = Uri[,] // force .class files to be written
+    docSrc   = true
   }
 }
