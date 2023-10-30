@@ -214,9 +214,19 @@ class InStream extends Obj {
               (c4 << 24) + (c3 << 16) + (c2 << 8) + c1);
   }
 
-  readF4() { return Float.makeBits32(this.readS4()); }
+  readF4() {
+    const buf  = new ArrayBuffer(4);
+    const data = new DataView(buf);
+    for (let i = 0; i < 4; ++i) { data.setUint8(i, this.read()); }
+    return data.getFloat32(0, !this.#bigEndian);
+}
 
-  readF8() { throw Err.make("InStream.readF8 not supported in JavaScript"); }
+  readF8() {
+    const buf  = new ArrayBuffer(8);
+    const data = new DataView(buf);
+    for (let i = 0; i < 8; ++i) { data.setUint8(i, this.read()); }
+    return data.getFloat64(0, !this.#bigEndian);
+  }
 
   readDecimal() {
     const inp = this.readUtf()
