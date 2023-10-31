@@ -171,7 +171,7 @@ class SourceMap
       if (pod != null && isPodJsFile(file))
       {
         // lookup sourcemap for the pod
-        sm := pod.file(`/${pod.name}.js.map`, false)
+        sm := pod.file(`/js/${pod.name}.js.map`, false)
         if (sm != null)
         {
           // read into memory
