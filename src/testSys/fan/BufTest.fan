@@ -1045,8 +1045,7 @@ class BufTest : AbstractBufTest
     verifyErr(e) { buf.readChars(3) }
     verifyErr(e) { buf.readDecimal }
     verifyErr(e) { buf.readF4 }
-// TODO
-if (!js) verifyErr(e) { buf.readF8 }
+    verifyErr(e) { buf.readF8 }
     verifyErr(e) { buf.readLine }
     verifyErr(e) { buf.readObj }
     verifyErr(e) { buf.readProps }
