@@ -614,7 +614,7 @@ class BufTest : AbstractBufTest
     buf.writeI4(0xabcd0123)
     if (!js) buf.writeI8(0xabcd0123ffffeeee)
     buf.writeF4(2f)
-    if (!js) buf.writeF8(77.0f)
+    buf.writeF8(77.0f)
     if (!js) buf.writeDecimal(50.03D)
     buf.writeBool(true)
     buf.print("harry").printLine(" potter")
@@ -631,7 +631,7 @@ class BufTest : AbstractBufTest
     verifyEq(buf.readU4, 0xabcd0123)
     if (!js) verifyEq(buf.readS8, 0xabcd0123ffffeeee)
     verifyEq(buf.readF4, 2f)
-    if (!js) verifyEq(buf.readF8, 77f)
+    verifyEq(buf.readF8, 77f)
     if (!js) verifyEq(buf.readDecimal, 50.03d)
     verifyEq(buf.readBool, true)
     verifyEq(buf.readLine, "harry potter")
@@ -1074,8 +1074,7 @@ if (!js) verifyErr(e) { buf.readS8 }
     verifyErr(e) { buf.writeChars("abc") }
     verifyErr(e) { buf.writeDecimal(10d) }
     verifyErr(e) { buf.writeF4(10f) }
-// TODO
-if (!js) verifyErr(e) { buf.writeF8(10f) }
+    verifyErr(e) { buf.writeF8(10f) }
     verifyErr(e) { buf.writeI2(10) }
     verifyErr(e) { buf.writeI4(10) }
 // TODO

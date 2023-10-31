@@ -218,14 +218,14 @@ class InStream extends Obj {
     const buf  = new ArrayBuffer(4);
     const data = new DataView(buf);
     for (let i = 0; i < 4; ++i) { data.setUint8(i, this.read()); }
-    return data.getFloat32(0, !this.#bigEndian);
+    return Float.make(data.getFloat32(0, !this.#bigEndian));
 }
 
   readF8() {
     const buf  = new ArrayBuffer(8);
     const data = new DataView(buf);
     for (let i = 0; i < 8; ++i) { data.setUint8(i, this.read()); }
-    return data.getFloat64(0, !this.#bigEndian);
+    return Float.make(data.getFloat64(0, !this.#bigEndian));
   }
 
   readDecimal() {
