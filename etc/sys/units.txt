@@ -315,6 +315,7 @@ megawatt_hours_per_square_meter, MWh/m²; kg1*sec-2; 3.6E9
 megawatt_hours_per_square_foot, MWh/ft²; kg1*sec-2; 3.8750077500155E10
 megajoules_per_square_meter, MJ/m²; kg1*sec-2; 1000000.0
 megajoules_per_square_foot, MJ/ft²; kg1*sec-2; 1.076391041671E7
+btu_per_square_foot, BTU/ft²; kg1*sec-2; 1.135433731957E4
 kilobtu_per_square_foot, kBTU/ft²; kg1*sec-2; 1.135433731957E7
 megabtu_per_square_foot, MBTU/ft²; kg1*sec-2; 1.135433731957E10
 
