@@ -991,7 +991,7 @@ class FuncType extends GenericType {
 
   doParameterize$(t) {
     // return
-    if (t == Sys.RType) return ret;
+    if (t == Sys.RType) return this.#ret;
 
     // if A-H maps to avail params
     const name = t.name().charCodeAt(0) - 65;

@@ -24,7 +24,7 @@ class Env extends Obj {
     this.#vars.caseInsensitive(true);
     this.#props = Map.make(Str.type$, Str.type$);
 
-    const vars = typeof fan$env === 'undefined' ? {} : fan$env;
+    const vars = ((typeof globalThis.fan$env) === 'undefined') ? {} : globalThis.fan$env;
     this.__loadVars(vars);
 
     this.#out = new ConsoleOutStream();

@@ -847,9 +847,9 @@ class YauzlEntry {
 
   foundDataDescriptor = false;
 
-  getLastModDate() {
-    return dosDateTimeToDate(this.lastModFileDate, this.lastModFileTime);
-  }
+  // getLastModDate() {
+  //   return dosDateTimeToDate(this.lastModFileDate, this.lastModFileTime);
+  // }
   isEncrypted() {
     return (this.generalPurposeBitFlag & 0x1) !== 0;
   }
@@ -988,28 +988,29 @@ class yazl {
   static #cp437 = '\u0000☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼ !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ';
   static #reverseCp437;
   static encodeCp437(string) {
-    if (/^[\x20-\x7e]*$/.test(string)) {
-      // CP437, ASCII, and UTF-8 overlap in this range.
-      return bufferFrom(string, "utf-8");
-    }
+    throw "TODO:encodeCp437(string)";
+    // if (/^[\x20-\x7e]*$/.test(string)) {
+    //   // CP437, ASCII, and UTF-8 overlap in this range.
+    //   return bufferFrom(string, "utf-8");
+    // }
   
-    // This is the slow path.
-    if (!yazl.#reverseCp437) {
-      // cache this once
-      reverseCp437 = {};
-      for (var i = 0; i < yazl.#cp437.length; i++) {
-        reverseCp437[cp437[i]] = i;
-      }
-    }
+    // // This is the slow path.
+    // if (!yazl.#reverseCp437) {
+    //   // cache this once
+    //   let reverseCp437 = {};
+    //   for (var i = 0; i < yazl.#cp437.length; i++) {
+    //     reverseCp437[cp437[i]] = i;
+    //   }
+    // }
   
-    var result = bufferAlloc(string.length);
-    for (var i = 0; i < string.length; i++) {
-      var b = reverseCp437[string[i]];
-      if (b == null) throw new Error("character not encodable in CP437: " + JSON.stringify(string[i]));
-      result[i] = b;
-    }
+    // var result = bufferAlloc(string.length);
+    // for (var i = 0; i < string.length; i++) {
+    //   var b = reverseCp437[string[i]];
+    //   if (b == null) throw new Error("character not encodable in CP437: " + JSON.stringify(string[i]));
+    //   result[i] = b;
+    // }
   
-    return result;
+    // return result;
   }
 }
 
@@ -1145,11 +1146,11 @@ class YazlZipFile {
     // number of the disk with the start of the central directory                     4 bytes
     zip64EocdrBuffer.writeUInt32LE(0, 20);
     // total number of entries in the central directory on this disk                  8 bytes
-    writeUInt64LE(zip64EocdrBuffer, this.entries.length, 24);
+    yazl.writeUInt64LE(zip64EocdrBuffer, this.entries.length, 24);
     // total number of entries in the central directory                               8 bytes
-    writeUInt64LE(zip64EocdrBuffer, this.entries.length, 32);
+    yazl.writeUInt64LE(zip64EocdrBuffer, this.entries.length, 32);
     // size of the central directory                                                  8 bytes
-    writeUInt64LE(zip64EocdrBuffer, sizeOfCentralDirectory, 40);
+    yazl.writeUInt64LE(zip64EocdrBuffer, sizeOfCentralDirectory, 40);
     // offset of start of central directory with respect to the starting disk number  8 bytes
     writeUInt64LE(zip64EocdrBuffer, this.offsetOfStartOfCentralDirectory, 48);
     // zip64 extensible data sector                                                   (variable size)
@@ -1180,7 +1181,7 @@ class YazlEntry {
   constructor(metadataPath, options) {
     this.utf8FileName = Buffer.from(metadataPath);
     if (this.utf8FileName.length > 0xffff)
-      throw new Error("utf8 file name too long. " + utf8FileName.length + " > " + 0xffff);
+      throw new Error("utf8 file name too long. " + this.utf8FileName.length + " > " + 0xffff);
     this.isDirectory = metadataPath.endsWith("/");
     this.setLastModDate(options.mtime);
     if (options.mode != null) {

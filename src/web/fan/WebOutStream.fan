@@ -227,7 +227,7 @@ class WebOutStream : OutStream
     w("<script type='text/javascript'>").nl
 
     // init Env.vars to pickup in Env.$ctor
-    w("const fan\$env = {").nl
+    w("globalThis.fan\$env = {").nl
     env.keys.each |n,i|
     {
       v := env[n]

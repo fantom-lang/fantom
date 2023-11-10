@@ -27,7 +27,7 @@ class Dimension {
           (this.K << 13) ^ (this.A << 8) ^ (this.mol << 3) ^ this.cd;
   }
 
-  equals(o) {
+  equals(x) {
     return this.kg == x.kg && this.m   == x.m   && this.sec == x.sec && this.K == x.K &&
           this.A  == x.A  && this.mol == x.mol && this.cd  == x.cd;
   }

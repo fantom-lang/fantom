@@ -155,7 +155,7 @@ static shifta(a, b) { let x = a >> b; return x; }
     return self;
   }
 
-  static clip(self, min, max) { return clamp(self, min, max); }
+  static clip(self, min, max) { return Int.clamp(self, min, max); }
  
   static pow(self, pow) {
     if (pow < 0) throw ArgErr.make("pow < 0");
