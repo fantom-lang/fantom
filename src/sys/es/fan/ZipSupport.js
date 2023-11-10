@@ -1152,7 +1152,7 @@ class YazlZipFile {
     // size of the central directory                                                  8 bytes
     yazl.writeUInt64LE(zip64EocdrBuffer, sizeOfCentralDirectory, 40);
     // offset of start of central directory with respect to the starting disk number  8 bytes
-    writeUInt64LE(zip64EocdrBuffer, this.offsetOfStartOfCentralDirectory, 48);
+    yazl.writeUInt64LE(zip64EocdrBuffer, this.offsetOfStartOfCentralDirectory, 48);
     // zip64 extensible data sector                                                   (variable size)
     // nothing in the zip64 extensible data sector
   
