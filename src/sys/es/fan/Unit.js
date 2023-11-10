@@ -23,8 +23,8 @@ class Dimension {
   #str = null;
 
   hashCode() {
-    return (kg << 28) ^ (m << 23) ^ (sec << 18) ^
-          (K << 13) ^ (A << 8) ^ (mol << 3) ^ cd;
+    return (this.kg << 28) ^ (this.m << 23) ^ (this.sec << 18) ^
+          (this.K << 13) ^ (this.A << 8) ^ (this.mol << 3) ^ this.cd;
   }
 
   equals(o) {
