@@ -652,7 +652,13 @@ internal class JsCallExpr : JsExpr
       writeTarget
       // if native closure, we invoke the func directly (don't do Func.call())
       if (isClos) js.w("(")
-      else js.w(".${name}(", loc)
+      else
+      {
+        if ((targetType?.isForeign ?: false) && isCtor && name == "<init>")
+          js.w(".javaInit(", loc)
+        else
+          js.w(".${name}(", loc)
+      }
       writeArgs
       js.w(")")
     }
