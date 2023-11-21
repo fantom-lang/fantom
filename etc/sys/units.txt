@@ -534,6 +534,7 @@ millimeters_per_hour, mm/h; m1*sec-1; 2.7777777777777778E-7
 meters_per_minute, m/min; m1*sec-1; 0.016666666666666666
 meters_per_hour, m/h; m1*sec-1; 2.777777777777778E-4
 knot; m1*sec-1; 0.5144
+cubic_feet_per_minute_per_square_foot, cfm/ft²; m1*sec-1; 0.00508
 
 -- volume (m3)
 cubic_meter, m³; m3
