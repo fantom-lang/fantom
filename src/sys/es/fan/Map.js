@@ -512,7 +512,7 @@ class Map extends Obj {
 // Internal
 //////////////////////////////////////////////////////////////////////////
 
-  static fromLiteral$(keys, vals, k, v) {
+  static __fromLiteral(keys, vals, k, v) {
     const map = Map.make(k,v);
     for (let i=0; i<keys.length; i++)
       map.set(keys[i], vals[i]);
