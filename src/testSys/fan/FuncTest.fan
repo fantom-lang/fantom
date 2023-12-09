@@ -87,7 +87,7 @@ class FuncTest : Test
 
     y := Str#plus.func
     verifyEq(y.method, Str#plus)
-    y = y.retype(|Str,Int->Str|#)
+    y = y.retype(|Str,Int->Str|?#)
     verifyEq(Type.of(y).signature, "|sys::Str,sys::Int->sys::Str|")
     verifyEq(y.method, Str#plus)
     verifyEq(y("x", 5), "x5")
