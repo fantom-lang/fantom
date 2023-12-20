@@ -62,7 +62,7 @@ class JsPod : JsNode
     js.wl("const sys = fantom ? fantom.sys : __require('sys.js');")
 
     // we need to require full dependency chain
-    pods := (Pod[])pod.depends.map |p->Pod| { Pod.find(p.name) }
+    pods := (Pod[])pod.depends.mapNotNull |p->Pod?| { Pod.find(p.name, false) }
     pods = Pod.orderByDepends(Pod.flattenDepends(pods))
     pods.each |depend|
     {
