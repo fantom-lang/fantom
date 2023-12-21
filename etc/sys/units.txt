@@ -320,6 +320,11 @@ btu_per_square_foot, BTU/ft²; kg1*sec-2; 1.135433731957E4
 kilobtu_per_square_foot, kBTU/ft²; kg1*sec-2; 1.135433731957E7
 megabtu_per_square_foot, MBTU/ft²; kg1*sec-2; 1.135433731957E10
 
+-- energy by volume (kg1*m-1*sec-2)
+joules_per_cubic_meter, J/m³; kg1*m-1*sec-2
+gigajoules_per_cubic_meter, GJ/m³; kg1*m-1*sec-2; 1000000000.0
+kilowatt_hours_per_cubic_meter, kWh/m³; kg1*m-1*sec-2; 3600000.0
+
 -- enthalpy (m2*sec-2)
 joules_per_gram, J/g; m2*sec-2; 0.0010
 joules_per_kilogram, J/kg; m2*sec-2
