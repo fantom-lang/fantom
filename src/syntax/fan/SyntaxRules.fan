@@ -11,7 +11,7 @@
 ** SyntaxRules defines the syntax rules used to parse a specific
 ** programming language.
 **
-@Serializable
+@Js @Serializable
 const class SyntaxRules
 {
 
@@ -108,7 +108,7 @@ const class SyntaxRules
 **
 ** Syntax rules for a string or character literal
 **
-@Serializable
+@Js @Serializable
 const class SyntaxStr
 {
   ** Token which delimits the start and end of the string.
