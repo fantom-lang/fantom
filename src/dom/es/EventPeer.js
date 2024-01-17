@@ -132,22 +132,7 @@ class EventPeer extends sys.Obj {
 
   dataTransfer(self)
   {
-    // Andy Frank 19-Jun-2015: Chrome/WebKit do not allow reading
-    // getData during the dragover event - which makes it impossible
-    // to check drop targets during drag. To workaround for now we
-    // just cache in a static field
-    //
-    // 12-Aug-2019: this logic needed to be tweaked a bit to add
-    // support for dragging files into the browser - the lastDataTx
-    // temp copy should be cleared during EventPeer.make when we
-    // detect either a 'drop' or 'dragend' event
-
-    if (EventPeer.lastDataTx)
-      return EventPeer.lastDataTx;
-
-    if (!this.dataTx)
-      this.dataTx = EventPeer.lastDataTx = DataTransferPeer.make(this.event.dataTransfer);
-
+    if (!this.dataTx) this.dataTx = DataTransferPeer.make(this.event.dataTransfer);
     return this.dataTx;
   }
 
@@ -157,13 +142,6 @@ class EventPeer extends sys.Obj {
     const x = Event.make();
     x.peer.event = event;
     if (event.keyCode) x.peer.$key = Key.fromCode(event.keyCode);
-
-    // we need to flush our working copy when we see a dragend
-    // event; this allows us to request the real drop contents
-    // which are hidden in alot of cases during ondrag
-    if (event.type.charAt(0) == 'd' && (event.type == "drop" || event.type == "dragend"))
-      EventPeer.lastDataTx = null
-
     return x;
   }
 }
