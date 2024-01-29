@@ -20,6 +20,8 @@ fan.dom.EventPeer.makeMock = function()
 
 fan.dom.EventPeer.fromNative = function(obj)
 {
+  // short-circut if peer already exists
+  if (obj.peer && obj.peer.event) return obj;
   return fan.dom.EventPeer.make(obj);
 }
 
