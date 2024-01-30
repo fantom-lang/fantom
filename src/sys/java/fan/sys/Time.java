@@ -204,7 +204,7 @@ public final class Time
   private Time plus(long ticks)
   {
     if (ticks == 0) return this;
-    if (ticks > Duration.nsPerDay)
+    if (ticks > Duration.nsPerDay || ticks < -Duration.nsPerDay)
       throw ArgErr.make("Duration out of range: " + Duration.make(ticks));
 
     long newTicks = toDuration().ticks + ticks;

@@ -509,10 +509,23 @@ class Map extends Obj {
   }
 
 //////////////////////////////////////////////////////////////////////////
+// JS
+//////////////////////////////////////////////////////////////////////////
+
+  toJs() {
+    // since we create a copy here; do not need to check modify
+    // this.#modify();
+
+    var js = {};
+    this.#each((b) => { js[b.key] = b.val });
+    return js;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Internal
 //////////////////////////////////////////////////////////////////////////
 
-  static fromLiteral$(keys, vals, k, v) {
+  static __fromLiteral(keys, vals, k, v) {
     const map = Map.make(k,v);
     for (let i=0; i<keys.length; i++)
       map.set(keys[i], vals[i]);

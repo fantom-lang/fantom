@@ -24,19 +24,18 @@ final public class JPubKey extends JKey implements fan.crypto.PubKey
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public static JPubKey decode(Buf der)
+  public static JPubKey decode(Buf der, String algorithm)
   {
     try
     {
-      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+      KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
       return new JPubKey(keyFactory.generatePublic(new X509EncodedKeySpec(der.safeArray())));
     }
     catch (Exception e)
     {
-      throw Err.make("Failed to decode public key:\n" + der.toHex());
+      throw Err.make("Failed to decode public key:\n" + der.toHex(), e);
     }
   }
-
 
   JPubKey(PublicKey pubKey)
   {

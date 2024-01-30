@@ -29,14 +29,15 @@ class WinPeer extends sys.Obj {
     if (!WinPeer.#cur)
     {
       WinPeer.#cur = Win.make();
-      WinPeer.#cur.peer.win = window;
+      WinPeer.#cur.peer.win = globalThis;
     }
     return WinPeer.#cur;
   }
 
   userAgent(self)
   {
-    return navigator.userAgent;
+    if (globalThis.navigator === undefined) return "NodeJs";
+    return globalThis.navigator.userAgent;
   }
 
 //////////////////////////////////////////////////////////////////////////

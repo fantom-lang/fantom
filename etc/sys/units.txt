@@ -291,9 +291,10 @@ gigajoule, GJ; kg1*m2*sec-2; 1000000000.0
 newton_meter, Nm; kg1*m2*sec-2
 cubic_meters_natural_gas, standard_cubic_meter, scm, m³_gas; kg1*m2*sec-2; 37313432.83582089
 cubic_feet_natural_gas, standard_cubic_foot, scf, ft³_gas; kg1*m2*sec-2; 1086498
-hundred_cubic_feet_natural_gas; kg1*m2*sec-2; 108649800
-thousand_cubic_feet_natural_gas; kg1*m2*sec-2; 1086498000
-million_cubic_feet_natural_gas; kg1*m2*sec-2; 1086498000000
+hundred_cubic_feet_natural_gas, Hcf_natural_gas; kg1*m2*sec-2; 108649800
+centum_cubic_feet_natural_gas, Ccf_natural_gas; kg1*m2*sec-2; 108649800
+thousand_cubic_feet_natural_gas, Mcf_natural_gas; kg1*m2*sec-2; 1086498000
+million_cubic_feet_natural_gas, MMcf_natural_gas; kg1*m2*sec-2; 1086498000000
 
 -- apparent energy (kg1*m2*sec-2)
 volt_ampere_hour, VAh; kg1*m2*sec-2; 3600.0
@@ -315,8 +316,14 @@ megawatt_hours_per_square_meter, MWh/m²; kg1*sec-2; 3.6E9
 megawatt_hours_per_square_foot, MWh/ft²; kg1*sec-2; 3.8750077500155E10
 megajoules_per_square_meter, MJ/m²; kg1*sec-2; 1000000.0
 megajoules_per_square_foot, MJ/ft²; kg1*sec-2; 1.076391041671E7
+btu_per_square_foot, BTU/ft²; kg1*sec-2; 1.135433731957E4
 kilobtu_per_square_foot, kBTU/ft²; kg1*sec-2; 1.135433731957E7
 megabtu_per_square_foot, MBTU/ft²; kg1*sec-2; 1.135433731957E10
+
+-- energy by volume (kg1*m-1*sec-2)
+joules_per_cubic_meter, J/m³; kg1*m-1*sec-2
+gigajoules_per_cubic_meter, GJ/m³; kg1*m-1*sec-2; 1000000000.0
+kilowatt_hours_per_cubic_meter, kWh/m³; kg1*m-1*sec-2; 3600000.0
 
 -- enthalpy (m2*sec-2)
 joules_per_gram, J/g; m2*sec-2; 0.0010
@@ -532,6 +539,7 @@ millimeters_per_hour, mm/h; m1*sec-1; 2.7777777777777778E-7
 meters_per_minute, m/min; m1*sec-1; 0.016666666666666666
 meters_per_hour, m/h; m1*sec-1; 2.777777777777778E-4
 knot; m1*sec-1; 0.5144
+cubic_feet_per_minute_per_square_foot, cfm/ft²; m1*sec-1; 0.00508
 
 -- volume (m3)
 cubic_meter, m³; m3
@@ -542,7 +550,7 @@ hectoliter, hL; m3; 0.10
 liter, L; m3; 0.0010
 kiloliter, kL; m3
 cubic_inch, in³; m3; 1.6387064E-5
-cubic_foot, ft³; m3; 0.028317
+cubic_foot, ft³; m3; 0.028316846592
 cubic_yard, yd³; m3; 0.764555
 gallon, gal; m3; 0.003785
 kilogallon, kgal; m3; 3.785
@@ -550,7 +558,11 @@ quart, qt; m3; 9.46E-4
 pint, pt; m3; 4.73E-4
 fluid_ounce, fl_oz; m3; 2.95729E-5
 imperial_gallon, galUK; m3; 0.004546092
-hecto_cubic_foot, hft³; m3; 2.8317
+hecto_cubic_foot, hft³; m3; 2.8316846592
+hundred_cubic_feet, Hcf; m3; 2.8316846592
+centum_cubic_feet, Ccf; m3; 2.8316846592
+thousand_cubic_feet, Mcf; m3; 28.316846592
+million_cubic_feet, MMcf; m3; 28316.846592
 
 -- volumetric flow (m3*sec-1)
 cubic_meters_per_second, m³/s; m3*sec-1

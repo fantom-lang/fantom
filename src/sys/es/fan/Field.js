@@ -92,7 +92,7 @@ class Field extends Slot {
       if (this.isSynthetic() && fname.endsWith("$Store"))
         fname = fname.slice(-fname.length, -"$Store".length);
       // special handling for private fields (naughty naughty)
-      if (this.isPrivate()) fname = `__${fname}`;
+      else if (this.isPrivate()) fname = `__${fname}`;
       return instance[fname]();
     }
   }

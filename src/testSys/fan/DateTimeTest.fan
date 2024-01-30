@@ -1525,6 +1525,7 @@ class DateTimeTest : Test
 
     verifyErr(ArgErr#) { x := Time(3,30,0) + 25hr }
     verifyErr(ArgErr#) { x := Time(3,30,0) + 2day }
+    verifyErr(ArgErr#) { x := Time(3,30,0) - 25hr }
   }
 
   Void verifyTimeMath(Time a, Time b, Duration diff)

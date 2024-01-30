@@ -26,6 +26,17 @@ class PathTest : AbstractTest
     g.color = Color("blue")
     pathRoundRect(g, 200f, 40f, 200f, 100f, 15f, 25f).draw
 
+    // circle
+    g.color = Color("#93c5fd")
+    g.fillEllipse(440f, 40f, 100f, 100f)
+    g.color = Color("#1e40af")
+    g.drawEllipse(440f, 40f, 100f, 100f)
+    // oval
+    g.color = Color("#93c5fd")
+    g.fillEllipse(560f, 40f, 200f, 100f)
+    g.color = Color("#1e40af")
+    g.drawEllipse(560f, 40f, 200f, 100f)
+
     // quadTo
     cx := 100f
     cy := 250f

@@ -119,6 +119,7 @@ final class Func
   ** Return a new function which wraps this function but with
   ** a different reflective type signature.  No verification is
   ** done that this function actually conforms to new signature.
+  ** This method implicitly calls `Type.toNonNullable` on 't'.
   ** Throw ArgErr if 't' isn't a parameterized function type.
   **
   ** Examples:

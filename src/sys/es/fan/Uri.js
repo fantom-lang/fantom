@@ -113,7 +113,7 @@ class Uri extends Obj {
     const len = str.length;
     for (let i=0; i<len; ++i) {
       const c = str.charCodeAt(i);
-      if (c < 128 && (Uri.__charMap[c] & Uri.__QUERY) != 0 && (Uri.__delimEscMap[c] & Uri.__QUERY) == 0)
+      if (c < 128 && (Uri.__charMap()[c] & Uri.__QUERY) != 0 && (Uri.__delimEscMap()[c] & Uri.__QUERY) == 0)
         buf += str.charAt(i);
       else if (c == 32)
         buf += "+"
@@ -131,7 +131,7 @@ class Uri extends Obj {
   {
     const mask = Uri.#sectionToMask(section);
     const buf = [];
-    const delimEscMap = Uri.__delimEscMap;
+    const delimEscMap = Uri.__delimEscMap();
     for (let i = 0; i< str.length; ++i) {
       const c = str.charCodeAt(i);
       if (c < delimEscMap.length && (delimEscMap[c] & mask) != 0)
@@ -144,8 +144,8 @@ class Uri extends Obj {
   static encodeToken(str, section) {
     const mask = Uri.#sectionToMask(section);
     let buf = ""
-    const delimEscMap = Uri.__delimEscMap;
-    const charMap = Uri.__charMap;
+    const delimEscMap = Uri.__delimEscMap();
+    const charMap = Uri.__charMap();
     for (let i = 0; i < str.length; ++i) {
       const c = str.charCodeAt(i);
       if (c < 128 && (charMap[c] & mask) != 0 && (delimEscMap[c] & mask) == 0)
@@ -644,7 +644,7 @@ class Uri extends Obj {
     const len = str.length;
     for (let i=0; i<len; ++i) {
       const c = str.charCodeAt(i);
-      if (c < Uri.__delimEscMap.length && (Uri.__delimEscMap[c] & Uri.__QUERY) != 0)
+      if (c < Uri.__delimEscMap().length && (Uri.__delimEscMap()[c] & Uri.__QUERY) != 0)
         buf += '\\';
       buf += str.charAt(i);
     }
@@ -657,27 +657,27 @@ class Uri extends Obj {
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-static isName(name) {
-  const len = name.length;
+  static isName(name) {
+    const len = name.length;
 
-  // must be at least one character long
-  if (len == 0) return false;
+    // must be at least one character long
+    if (len == 0) return false;
 
-  // check for "." and ".."
-  if (name.charAt(0) == '.' && len <= 2) {
-    if (len == 1) return false;
-    if (name.charAt(1) == '.') return false;
+    // check for "." and ".."
+    if (name.charAt(0) == '.' && len <= 2) {
+      if (len == 1) return false;
+      if (name.charAt(1) == '.') return false;
+    }
+
+    // check that each char is unreserved
+    for (let i=0; i<len; ++i) {
+      const c = name.charCodeAt(i);
+      if (c < 128 && Uri.__nameMap()[c]) continue;
+      return false;
+    }
+
+    return true;
   }
-
-  // check that each char is unreserved
-  for (let i=0; i<len; ++i) {
-    const c = name.charCodeAt(i);
-    if (c < 128 && Uri.#nameMap[c]) continue;
-    return false;
-  }
-
-  return true;
-}
 
   static checkName(name) {
     if (!Uri.isName(name))
@@ -688,7 +688,7 @@ static isName(name) {
 
 
   static __hexNibble(ch) {
-    if ((Uri.__charMap[ch] & Uri.__HEX) == 0)
+    if ((Uri.__charMap()[ch] & Uri.__HEX) == 0)
       throw ParseErr.make(`Invalid percent encoded hex: '${String.fromCharCode(ch)}'`);
 
     if (ch <= 57) return ch - 48;
@@ -713,12 +713,99 @@ static isName(name) {
   }
 
   static __isScheme(c) {
-    return c < 128 ? (Uri.__charMap[c] & Uri.__SCHEME) != 0 : false;
+    return c < 128 ? (Uri.__charMap()[c] & Uri.__SCHEME) != 0 : false;
   }
 
-  static __charMap     = new Array(128);
-  static #nameMap      = new Array(128);
-  static __delimEscMap = new Array(128);
+  static #charMap = undefined;
+  static __charMap() {
+    if (Uri.#charMap) return Uri.#charMap;
+
+    Uri.#charMap = new Array(128);
+    Uri.#charMap.fill(0);
+
+    // alpha/digits characters
+    for (let i=97; i<=122; ++i) { Uri.#charMap[i] = Uri.#unreserved; }
+    for (let i=65; i<=90; ++i) { Uri.#charMap[i] = Uri.#unreserved; }
+    for (let i=48; i<=57; ++i) { Uri.#charMap[i] = Uri.#unreserved; }
+
+    // unreserved symbols
+    Uri.#charMap[45] = Uri.#unreserved;
+    Uri.#charMap[46] = Uri.#unreserved;
+    Uri.#charMap[95] = Uri.#unreserved;
+    Uri.#charMap[126] = Uri.#unreserved;
+
+    // hex
+    for (let i=48; i<=57; ++i)  Uri.#charMap[i] |= Uri.__HEX | Uri.__DIGIT;
+    for (let i=97; i<=102; ++i) Uri.#charMap[i] |= Uri.__HEX;
+    for (let i=65; i<=70; ++i)  Uri.#charMap[i] |= Uri.__HEX;
+
+    // sub-delimiter symbols
+    Uri.#charMap[33]  = Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
+    Uri.#charMap[36]  = Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
+    Uri.#charMap[38]  = Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
+    Uri.#charMap[39]  = Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
+    Uri.#charMap[40]  = Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
+    Uri.#charMap[41]  = Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
+    Uri.#charMap[42]  = Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
+    Uri.#charMap[43]  = Uri.__SCHEME | Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__FRAG;
+    Uri.#charMap[44]  = Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
+    Uri.#charMap[59]  = Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
+    Uri.#charMap[61]  = Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
+
+    // gen-delimiter symbols
+    Uri.#charMap[58] = Uri.__HOST | Uri.__PATH  | Uri.__USER  | Uri.__QUERY | Uri.__FRAG;
+    Uri.#charMap[47] = Uri.__PATH  | Uri.__QUERY | Uri.__FRAG;
+    Uri.#charMap[63] = Uri.__QUERY | Uri.__FRAG;
+    Uri.#charMap[35] = 0;
+    Uri.#charMap[91] = Uri.__HOST;
+    Uri.#charMap[93] = Uri.__HOST;
+    Uri.#charMap[64] = Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
+
+    return Uri.#charMap;
+  }
+
+  static #nameMap = undefined;
+  static __nameMap() {
+    if (Uri.#nameMap) return Uri.#nameMap;
+
+    Uri.#nameMap = new Array(128);
+    Uri.#nameMap.fill(0);
+
+    // alpha/digits characters
+    for (let i=97; i<=122; ++i) { Uri.#nameMap[i] = true; }
+    for (let i=65; i<=90; ++i) { Uri.#nameMap[i] = true; }
+    for (let i=48; i<=57; ++i) { Uri.#nameMap[i] = true; }
+
+    // unreserved symbols
+    Uri.#nameMap[45] = true;
+    Uri.#nameMap[46] = true;
+    Uri.#nameMap[95] = true;
+    Uri.#nameMap[126] = true;
+
+    return Uri.#nameMap;
+  }
+
+  static #delimEscMap = undefined;
+  static __delimEscMap() {
+    if (Uri.#delimEscMap) return Uri.#delimEscMap;
+
+    Uri.#delimEscMap = new Array(128);
+    Uri.#delimEscMap.fill(0);
+
+    // delimiter escape map - which characters need to
+    // be backslashed escaped in each section
+    Uri.#delimEscMap[58]  = Uri.__PATH;
+    Uri.#delimEscMap[47]  = Uri.__PATH;
+    Uri.#delimEscMap[63]  = Uri.__PATH;
+    Uri.#delimEscMap[35]  = Uri.__PATH | Uri.__QUERY;
+    Uri.#delimEscMap[38]  = Uri.__QUERY;
+    Uri.#delimEscMap[59]  = Uri.__QUERY;
+    Uri.#delimEscMap[61]  = Uri.__QUERY;
+    Uri.#delimEscMap[92]  = Uri.__SCHEME | Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
+
+    return Uri.#delimEscMap;
+  }
+
   static __SCHEME     = 0x01;
   static __USER       = 0x02;
   static __HOST       = 0x04;
@@ -730,7 +817,12 @@ static isName(name) {
 
   static #unreserved = Uri.__SCHEME | Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
 
-  static
+/* 2023-11-28: this doesn't work in Safari :-(
+  static __charMap     = new Array(128);
+  static #nameMap      = new Array(128);
+  static __delimEscMap = new Array(128);
+
+  static __initialize()
   {
     // initialize flags for all character maps to 0
     Uri.__charMap.fill(0);
@@ -786,6 +878,7 @@ static isName(name) {
     Uri.__delimEscMap[61]  = Uri.__QUERY;
     Uri.__delimEscMap[92]  = Uri.__SCHEME | Uri.__USER | Uri.__HOST | Uri.__PATH | Uri.__QUERY | Uri.__FRAG;
   }
+  */
 
 //////////////////////////////////////////////////////////////////////////
 // Empty Path/Query
@@ -1171,7 +1264,7 @@ class UriDecoder extends UriSections {
 
   substring(start, end, section) {
     let buf = [];
-    const delimEscMap = Uri.__delimEscMap;
+    const delimEscMap = Uri.__delimEscMap();
     if (!this.decoding) {
       let last = 0;
       let backslash = 92; // code for backslash
@@ -1246,7 +1339,7 @@ class UriDecoder extends UriSections {
       return 32 // ' ';
 
     // verify character ok
-    if (c >= Uri.__charMap.length || (Uri.__charMap[c] & section) == 0)
+    if (c >= Uri.__charMap().length || (Uri.__charMap()[c] & section) == 0)
       throw ParseErr.make("Invalid char in " + Uri.__toSection(section) + " at index " + (this.dpos-1));
 
     // return character as is
@@ -1309,7 +1402,7 @@ class UriEncoder {
       c = s.charCodeAt(i);
 
       // unreserved character
-      const charMap = Uri.__charMap;
+      const charMap = Uri.__charMap();
       if (c < 128 && (charMap[c] & section) != 0 && prev != 92) {
         this.buf += String.fromCharCode(c);
         continue;

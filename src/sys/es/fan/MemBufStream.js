@@ -228,7 +228,7 @@ class ConstBufInStream extends InStream {
   readBuf(other, n) {
     if (this.__pos >= this.__size) return null;
     const len = Math.min(this.__size - this.__pos, n);
-    other.pipeFrom(buf.data, this.__pos, len);
+    other.pipeFrom(this.buf.data, this.__pos, len);
     this.__pos += len;
     return len;
   }

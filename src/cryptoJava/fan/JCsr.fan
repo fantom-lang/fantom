@@ -16,7 +16,7 @@ const class JCsr : Csr
     req       := (AsnSeq)BerReader(der.in).readObj
     reqInfo   := (AsnSeq)req.vals[0]
     encPubKey := BerWriter.toBuf(reqInfo.vals[2])
-    pubKey    := JPubKey.decode(encPubKey)
+    pubKey    := JPubKey.decode(encPubKey, "RSA")
 
     this.pub     = (PubKey)pubKey
     this.subject = Dn((AsnSeq)reqInfo.vals[1]).toStr

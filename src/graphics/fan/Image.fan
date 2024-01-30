@@ -12,6 +12,25 @@
 @Js
 mixin Image
 {
+  ** Render a new image with the given MIME type and size using the
+  ** provided Graphics instance. Throws 'UnsupportedErr' if rendering
+  ** is not supported in this env.
+  static Image render(MimeType mime, Size size, |Graphics| f)
+  {
+    try
+    {
+      // render is currently only supported for the Java2D env, which
+      // is not the default for VM. So we need to directly query impl
+      // to check for platform support
+      GraphicsEnv env := Type.find("graphicsJava::Java2DGraphicsEnv").make
+      return env.renderImage(mime, size, f)
+    }
+    catch
+    {
+      throw UnsupportedErr("Image.render not supported in this env")
+    }
+  }
+
   ** Unique uri key for this image in the GraphicsEnv cache.
   abstract Uri uri()
 
@@ -36,6 +55,14 @@ mixin Image
 
   ** Get the size height
   virtual Float h() { size.h }
+
+  ** Write image content to the given output stream, where encoding
+  ** is based on `mime` type.  Throws 'UnsupportedErr' if write is
+  ** not supported in this env.
+  virtual Void write(OutStream out)
+  {
+    throw UnsupportedErr("Image.write not supported in this env")
+  }
 
   ** Image properties
   **  - 'colorSpace' (Str) - the image color space (e.g.RGB, RGBA, CMYK)

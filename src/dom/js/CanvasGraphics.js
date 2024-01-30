@@ -171,6 +171,31 @@ fan.dom.CanvasGraphics.prototype.pathRoundRect = function(x, y, w, h, wArc, hArc
   this.cx.quadraticCurveTo(x, y, x + wArc, y);
 }
 
+// This drawEllipse(Float x, Float y, Float w, Float h)
+fan.dom.CanvasGraphics.prototype.drawEllipse = function(x, y, w, h)
+{
+  this.pathEllipse(x, y, w, h);
+  this.cx.stroke();
+}
+
+// This fillEllipse(Float x, Float y, Float w, Float h)
+fan.dom.CanvasGraphics.prototype.fillEllipse = function(x, y, w, h)
+{
+  this.pathEllipse(x, y, w, h);
+  this.cx.fill();
+}
+
+// generate path for an ellipse
+fan.dom.CanvasGraphics.prototype.pathEllipse = function(x, y, w, h)
+{
+  var rx = w / 2;
+  var ry = h / 2;
+  var cx = x + rx;
+  var cy = y + ry;
+  this.cx.beginPath();
+  this.cx.ellipse(cx, cy, rx, ry, 0, 0, 2 * Math.PI);
+}
+
 // This drawText(Str s, Float x, Float y)
 fan.dom.CanvasGraphics.prototype.drawText = function (s, x, y)
 {

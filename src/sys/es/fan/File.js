@@ -62,8 +62,8 @@ class File extends Obj {
   static os(osPath) {
     if (!Env.__isNode())
       throw Err.make("Must be running on Node JS to create a local file.");
-    const os   = node.os;
-    if (os.platform() == "win32") {
+    const os = node.os;
+    if (os?.platform() == "win32") {
       if (osPath.startsWith("/")) {
         osPath = "file://" + osPath;
       } else if (/^.+:/.test(osPath)) {
@@ -77,7 +77,7 @@ class File extends Obj {
   static osRoots() {
     if (!Env.__isNode())
       throw Err.make("Must be running on Node JS to access the OS roots.");
-    const r = node.os.platform() == "win32"
+    const r = node.os?.platform() == "win32"
       ? "/" + File.__win32Drive() + "/"
       : node.path.parse(process.cwd()).root;
     return List.make(File.type$, [File.make(r, false)]);

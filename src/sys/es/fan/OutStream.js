@@ -131,9 +131,19 @@ class OutStream extends Obj {
                  .write((x >>> 56) & 0xFF);
   }
 
-  writeF4(x) { return this.writeI4(Float.bits32(x)); }
+  writeF4(x) {
+    const buf  = new ArrayBuffer(4);
+    const data = new DataView(buf);
+    data.setFloat32(0, x, !this.#bigEndian);
+    for (const byte of new Uint8Array(buf)) { this.write(byte); }
+  }
 
-  writeF8(x) { throw make("OutStream.writeF8 not supported in JavaScript"); }
+  writeF8(x) {
+    const buf  = new ArrayBuffer(8);
+    const data = new DataView(buf);
+    data.setFloat64(0, x, !this.#bigEndian);
+    for (const byte of new Uint8Array(buf)) { this.write(byte); }
+  }
 
   writeDecimal(x) { return this.writeUtf(x.toString()); }
 

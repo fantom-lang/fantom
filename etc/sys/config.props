@@ -21,23 +21,27 @@ errTraceMaxDepth=25
 // property can only be configured by bootstrap homeDir.  The
 // default timezone can also be set with the environment variable
 // FAN_TIMEZONE (which will take priority over this file)
-// timezone=New_York
+
+//timezone=New_York
 
 // Default locale for the VM as "lang" or "lang-country". If
 // not specified the default is queried from the Java runtime.
 // The default locale can also be set with the environment
 // variable FAN_LOCALE (which will take priority over this file)
-// locale=fr-FR
+
+//locale=fr-FR
 
 // If set to true, this displays all Env.locale strings as
 // pod::key to allow debugging during the localization process.
 // Currently only supported in JavaScript environment.
-// localeTestMode=true
+
+//localeTestMode=true
 
 // If debug is set to true, then the runtime emits debug
 // information such as the LocalVariableTable for debuggers
 // This property can only be configured by bootstrap homeDir.
-// debug=true
+
+//debug=true
 
 //////////////////////////////////////////////////////////////////////////
 // Java Runtime
@@ -53,4 +57,4 @@ errTraceMaxDepth=25
 
 // Set this property to pass additional command line options to the Java VM.
 // The options should be listed together separated with a space.
-// java.options=-Xmx512M
+//java.options=-Xmx512M

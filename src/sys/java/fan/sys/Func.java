@@ -293,7 +293,7 @@ public abstract class Func
   {
     try
     {
-      return new Wrapper((FuncType)t, this);
+      return new Wrapper((FuncType)t.toNonNullable(), this);
     }
     catch (ClassCastException e)
     {

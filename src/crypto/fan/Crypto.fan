@@ -120,11 +120,15 @@ const mixin Crypto
   **  - `PrivKey`
   **  - `Cert`
   **  - `Csr`
+  **
+  ** For PKCS#8, the 'algorithm' argument will be used for decoding. This
+  ** argument is ignored for PKCS#1 where the alogithm is inferred.
+  **
   ** Returns 'null' if there are no more PEM objects to decode. The input
   ** stream will be closed in this case.
   **
   **   key  := Crypto.cur.loadPem(`server.key`) as PrivKey
   **   cert := Crypto.cur.loadPem(`server.pem`) as Cert
   **
-  abstract Obj? loadPem(InStream in)
+  abstract Obj? loadPem(InStream in, Str algorithm := "RSA")
 }

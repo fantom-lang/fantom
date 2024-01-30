@@ -87,8 +87,8 @@ class TimeZone extends Obj {
       catch (err) {
         // fallback to UTC if we get here
         console.log(Err.make(err).msg());
-        TimeZone.cur = TimeZone.#utc;
-        throw Err.make(err);
+        TimeZone.#cur = TimeZone.utc();
+        // throw Err.make(err);
       }
     }
 

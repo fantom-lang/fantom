@@ -8,6 +8,7 @@
 
 using [java] java.awt::Font as AwtFont
 using [java] java.awt::Image as AwtImage
+using [java] java.awt.image::BufferedImage
 using [java] java.awt::GraphicsEnvironment
 using [java] javax.imageio
 using [java] fanx.interop
@@ -157,6 +158,20 @@ const class Java2DGraphicsEnv : GraphicsEnv
 
   ** Hook to resolve a URI to its file data
   virtual Buf resolveImageData(Uri uri) { uri.toFile.readAllBuf }
+
+  ** Make a new rendered image instance.
+  override Image renderImage(MimeType mime, Size size, |Graphics| f)
+  {
+    // create blank img
+    awt  := BufferedImage(size.w.toInt, size.h.toInt, BufferedImage.TYPE_INT_ARGB)
+    uri  := `rendered-image`
+    img  := Java2DImage(uri, mime, awt)
+
+    // render
+    g := Java2DGraphics(awt.createGraphics)
+    f(g)
+    return img
+  }
 
   ** Image cache
   private const ConcurrentMap images := ConcurrentMap()

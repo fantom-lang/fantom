@@ -253,7 +253,9 @@ const class FilePack : Weblet
   static File toPodJsMapFile(File[] files, [Str:Obj]? options := null)
   {
     buf := Buf(4 * 1024 * 1024)
-    m := Slot.findMethod("compilerJs::SourceMap.pack")
+    m := WebJsMode.cur.isEs ?
+         Slot.findMethod("compilerEs::SourceMap.pack") :
+         Slot.findMethod("compilerJs::SourceMap.pack")
     m.call(files, buf.out, options)
     return buf.toFile(`js.map`)
   }

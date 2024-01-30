@@ -35,7 +35,7 @@ const mixin GraphicsEnv
   }
 
   ** Install new cur default for the VM
-  @NoDoc static Void install(GraphicsEnv env) {  curRef.val = env }
+  @NoDoc static Void install(GraphicsEnv env) { curRef.val = env }
 
   ** Get an image for the given uri.  The uri is the unique key for the image
   ** in this environment.  If file data is null, then asynchronously load and
@@ -43,4 +43,9 @@ const mixin GraphicsEnv
   ** JPEG, and SVG.
   abstract Image image(Uri uri, Buf? data := null)
 
+  ** Make a new rendered image instance or throw 'Err' if not supported.
+  @NoDoc virtual Image renderImage(MimeType mime, Size size, |Graphics| f)
+  {
+    throw Err("Not supported in this env")
+  }
 }

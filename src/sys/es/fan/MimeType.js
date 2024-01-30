@@ -188,7 +188,7 @@ class MimeType extends Obj {
       return MimeType.#byExt[ext];
     }
     catch (err) {
-      ObjUtil.echo("MimeType.forExt: " + s);
+      ObjUtil.echo("MimeType.forExt: " + ext);
       ObjUtil.echo(err);
       return null;
     }

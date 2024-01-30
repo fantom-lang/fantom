@@ -57,6 +57,10 @@ class WebSocket
   ** problems during the handshake in which case the calling WebMod should
   ** return a 400 response.
   **
+  ** Callers should set the Sec-WebSocket-Protocol response header before
+  ** calling this method.  However, if not set then this call will set it to
+  ** the request header value for Sec-WebSocket-Protocol (if available).
+  **
   ** Note: once this method completes, the socket is now owned by the
   ** WebSocket instance and not the web server (wisp); it must be explicitly
   ** closed to prevent a file handle leak.
@@ -73,7 +77,8 @@ class WebSocket
     res.headers["Upgrade"] = "websocket"
     res.headers["Connection"] = "Upgrade"
     res.headers["Sec-WebSocket-Accept"] = secDigest(key)
-    res.headers.addNotNull("Sec-WebSocket-Protocol", req.headers["Sec-WebSocket-Protocol"])
+    if (res.headers["Sec-WebSocket-Protocol"] == null)
+      res.headers.addNotNull("Sec-WebSocket-Protocol", req.headers["Sec-WebSocket-Protocol"])
 
     // take ownership of the underlying socket
     socket := res.upgrade(101)

@@ -171,7 +171,7 @@ class SourceMap
       if (pod != null && isPodJsFile(file))
       {
         // lookup sourcemap for the pod
-        sm := pod.file(`/${pod.name}.js.map`, false)
+        sm := pod.file(`/js/${pod.name}.js.map`, false)
         if (sm != null)
         {
           // read into memory
@@ -179,12 +179,11 @@ class SourceMap
 
           // apply options
           if (sourceRoot != null) json = setSourceRoot(json, sourceRoot+pod.name)
-
         }
       }
 
       // read number of lines from JSON if we can, otherwise count them
-      // echo("-- $uri.name  " + readNumLinesFromJson(json) + " ?= " + readNumLinesByCounting(file))
+      // echo("-- $uri.name " + readNumLinesFromJson(json) + " ?= " + readNumLinesByCounting(file))
       numLines := readNumLinesFromJson(json) ?: readNumLinesByCounting(file)
 
       // if we have raw js file, then generate a synthetic sourcemap
@@ -225,7 +224,7 @@ class SourceMap
   ** Return if the file is the standard compilerJs pod transpiled source
   private static Bool isPodJsFile(File f)
   {
-    f.uri.scheme == "fan" && f.uri.pathStr == "/${f.uri.host}.js"
+    f.uri.scheme == "fan" && f.uri.pathStr == "/js/${f.uri.host}.js"
   }
 
   ** Try to parse "x_fan_linecount" key from JSON contents

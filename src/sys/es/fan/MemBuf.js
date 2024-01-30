@@ -107,7 +107,7 @@ class MemBuf extends Buf {
 
   trim() {
     if (this.__size == this.data.length) return this;
-    this.data = this.data.slice(0, size);
+    this.data = this.data.slice(0, this.__size);
     return this;
   }
 

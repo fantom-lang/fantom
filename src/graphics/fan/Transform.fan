@@ -152,4 +152,7 @@ const class Transform
   const Float d
   const Float e
   const Float f
+
+  ** Default instance is no transform.
+  static const Transform defVal := Transform(1f, 0f, 0f, 1f, 0f, 0f)
 }

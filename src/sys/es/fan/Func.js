@@ -24,7 +24,7 @@ class Func extends Obj {
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Identity 
+// Identity
 //////////////////////////////////////////////////////////////////////////
 
   // typeof() { return this.#type; }
@@ -38,14 +38,14 @@ class Func extends Obj {
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  static call(f, ...args) { 
-    if (f.__method) return f.__method.call(...args); 
+  static call(f, ...args) {
+    if (f.__method) return f.__method.call(...args);
     return f(...args);
   }
   static callOn(f, obj, args) { return f.__method.callOn(obj, args); }
   static callList(f, args) { return f.__method.callList(args); }
 
-  static params(f) { 
+  static params(f) {
     let mparams = f.__method.params();
     let fparams = mparams;
     if ((f.__method.flags$() & (FConst.Static | FConst.Ctor)) == 0) {
@@ -66,9 +66,10 @@ class Func extends Obj {
   // checkInCtor(obj) {}
 
   static toStr(f) { return "sys::Func"; }
-  
+
   // TODO:FIXIT
   // retype(t) {
+  //   t = t.toNonNullable();
   //   if (t instanceof FuncType) {
   //     var params = [];
   //     for (let i=0; i < t.pars.length; ++i)

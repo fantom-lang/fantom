@@ -13,6 +13,10 @@
 - Add Doc.elemFromPos, elemsFromPos
 - Add new dom HttpSocket API
 - New concurrent Lock API
+- Add Graphics.drawEllipse,fillEllipse
+- Add Image.render and Image.write
+- Fixes for Crypto EC keypair support
+- Fix Time.minus 24hr boundary checks
 
 *Build 1.0.79 (17 Jul 2023)*
 - New yaml API

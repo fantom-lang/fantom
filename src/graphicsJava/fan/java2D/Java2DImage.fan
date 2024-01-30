@@ -7,6 +7,8 @@
 //
 
 using [java] java.awt.image::BufferedImage
+using [java] javax.imageio
+using [java] fanx.interop
 using graphics
 
 **
@@ -29,6 +31,28 @@ const class Java2DImage : Image
   override Bool isLoaded() { true }
 
   override const Size size
+
+  override Void write(OutStream out)
+  {
+    // NOTE: ImageIO.write does not appear to throw any exceptions if the
+    // format is unsupported, it simply writes zero content, so make sure
+    // any formats added here get tested
+
+    // get encoding format
+    Str? format
+    switch (mime)
+    {
+      case Image.mimePng: format = "png"
+      case Image.mimeGif: format = "gif"
+      default: throw UnsupportedErr("Mime type not supported '${mime}'")
+    }
+
+    // sanity check
+    if (awt == null) throw IOErr("No raster data available")
+
+    // write
+    ImageIO.write(awt, format, Interop.toJava(out))
+  }
 
   @Operator override Obj? get(Str prop) { null }
 

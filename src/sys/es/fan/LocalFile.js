@@ -38,7 +38,7 @@ class LocalFile extends File {
     // console.log("TODO: normalize windows path: " + instance.m_uri_str);
     instance.#node_os_path = uri.toStr();
 
-    if (os.platform == "win32" && uri.isPathAbs()) {
+    if (os?.platform == "win32" && uri.isPathAbs()) {
       let uriStr = uri.toStr();
       if (!uri.isAbs()) {
         // ensure the uri has file scheme

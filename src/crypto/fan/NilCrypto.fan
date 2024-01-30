@@ -19,7 +19,7 @@ internal const class NilCrypto : Crypto
   override Cert[] loadX509(InStream in) { throw unsupported }
   override Cert[] loadCertsForUri(Uri uri) { throw unsupported }
   override KeyStore loadKeyStore(File? file := null, Str:Obj opts := [:]) { throw unsupported }
-  override Obj? loadPem(InStream in) { throw unsupported }
+  override Obj? loadPem(InStream in, Str algorithm := "") { throw unsupported }
 
   private Err unsupported()
   {

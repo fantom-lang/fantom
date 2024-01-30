@@ -24,7 +24,7 @@ class Env extends Obj {
     this.#vars.caseInsensitive(true);
     this.#props = Map.make(Str.type$, Str.type$);
 
-    const vars = typeof fan$env === 'undefined' ? {} : fan$env;
+    const vars = ((typeof js.fan$env) === 'undefined') ? {} : js.fan$env;
     this.__loadVars(vars);
 
     this.#out = new ConsoleOutStream();
@@ -37,7 +37,7 @@ class Env extends Obj {
     // set some pre-defined vars
     if (Env.__isNode()) {
       this.#vars.set("os.name", this.os());
-      this.#vars.set("os.version", Env.__node().os.version());
+      this.#vars.set("os.version", Env.__node()?.os?.version());
     }
 
     for (let i=0; i<keys.length; ++i) {
@@ -106,13 +106,13 @@ class Env extends Obj {
   javaVersion() { return 0; }
 
   os() { 
-    let p = Env.__node().os.platform();
+    let p = Env.__node()?.os?.platform();
     if (p === "darwin") p = "macosx";
     return p;
   }
 
   arch() {
-    let a = Env.__node().os.arch();
+    let a = Env.__node()?.os?.arch();
     switch (a) {
       case "ia32": a = "x86";
       case "x64":  a = "x86_64";
@@ -139,7 +139,7 @@ class Env extends Obj {
 
   diagnostics() { return Map.make(Str.type$, Obj.type$); }
 
-  host() { return Env.__node().os.hostname(); }
+  host() { return Env.__node()?.os?.hostname(); }
 
   user() { return "unknown"; }
 
@@ -152,7 +152,7 @@ class Env extends Obj {
 
   #win32prompt(msg) {
     // https://github.com/nodejs/node/issues/28243
-    const fs = Env.__node().fs;
+    const fs = Env.__node()?.fs;
     fs.writeSync(1, String(msg));
     let s = '', buf = Buffer.alloc(1);
     while(buf[0] != 10 && buf[0] != 13) {
@@ -165,7 +165,7 @@ class Env extends Obj {
 
   #unixprompt(msg) {
     // https://stackoverflow.com/questions/61394928/get-user-input-through-node-js-console/74250003?noredirect=1#answer-75008198
-    const fs = Env.__node().fs;
+    const fs = Env.__node()?.fs;
     const stdin = fs.openSync("/dev/stdin","rs");
 
     fs.writeSync(process.stdout.fd, msg);

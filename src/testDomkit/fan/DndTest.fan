@@ -59,12 +59,21 @@ class DndTest : DomkitTest
       it.style.setCss("background: #eee; padding: 10px; width: 300px; height: 300px")
       DropTarget.bind(it)
       {
-        it.canDrop |data| { data != "Box #3" }
+        it.canDrop |data|
+        {
+          // trace canDrop checks
+          files := data as DomFile[]
+          if (files == null) echo("> ? $data")
+          else echo("> ? [files]: " + files.join(", ") |f| { f.name })
+
+          // test no drop
+          return data != "Box #3"
+        }
         it.onDrop  |data|
         {
           files := data as DomFile[]
           if (files == null) echo("# DROP: $data")
-          else echo("# DROP: " + files.join(", ") |f| { f.name })
+          else echo("# DROP [files]: " + files.join(", ") |f| { f.name })
         }
       }
       TextField { it.val="Z-order Test" },
