@@ -255,6 +255,10 @@ public class Test
   {
     if (name.equals("verifyCount")) return Long.valueOf(verifyCount);
     if (name.equals("verbose")) return Boolean.valueOf(verbose);
+
+    if (name.equals("curTestMethod") && args != null && args.size() == 1)
+      this.curTestMethod = (Method) args.get(0);
+
     return super.trap(name, args);
   }
 
