@@ -24,6 +24,8 @@ class EventPeer extends sys.Obj {
 
   static fromNative(obj)
   {
+    // short-circut if peer already exists
+    if (obj.peer && obj.peer.event) return obj;
     return EventPeer.make(obj);
   }
 
