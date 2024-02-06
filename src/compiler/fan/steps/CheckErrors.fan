@@ -221,8 +221,8 @@ class CheckErrors : CompilerStep
     // facets
     checkFacets(f.facets)
 
-    // mixins cannot have non-abstract fields
-    if (curType.isMixin && !f.isAbstract && !f.isStatic)
+    // mixins cannot have non-abstract fields with storage
+    if (curType.isMixin && !f.isAbstract && !f.isStatic && f.isStorage)
       err("Mixin field '$f.name' must be abstract", f.loc)
 
     // abstract field cannot have initialization
