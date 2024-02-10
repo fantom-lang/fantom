@@ -33,10 +33,10 @@ facet class Serializable
   const Bool simple := false
 
   **
-  ** Collections are serializabled with a collection of child objects
+  ** Collections are serialized with a collection of child objects
   ** using the following  rules where 'Item' is the item type:
   **   - Provide an 'add(Item)' method to add child items during 'readObj'
-  **   - Provide an 'each(|Item| f)' method to iterate children item
+  **   - Provide an 'each(|Item| f)' method to iterate child items
   **     during 'writeObj'
   **
   const Bool collection := false
@@ -47,7 +47,7 @@ facet class Serializable
 **************************************************************************
 
 **
-** Transient annotates fields which should not be serialized.  It used inside
+** Transient annotates fields which should not be serialized.  It is used inside
 ** a `Serializable` type.  See the [Serialization Doc]`docLang::Serialization`
 ** for details.
 **
@@ -94,7 +94,7 @@ facet class Deprecated
 **************************************************************************
 
 **
-** Used on methods to indicate method may be used an operator.
+** Used on methods to indicate method may be used as an operator.
 ** The operator symbol is determined by the method name:
 **
 **   prefix     symbol    degree

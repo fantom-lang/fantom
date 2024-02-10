@@ -28,7 +28,7 @@
 ** within "1.2".  Likewise "foo 1.2.64" will match all patch numbers
 ** within the "1.2.64" build.  The "+" plus sign is used to specify a
 ** given version and anything greater.  The "-" dash is used to
-** specify an inclusive range.  When using a range, then end version
+** specify an inclusive range.  When using a range, the end version
 ** is matched using the same rules as a simple version - for example
 ** "4", "4.2", and "4.0.99" are all matches for "foo 1.2-4".  You may
 ** specify a list of potential constraints separated by commas - a match
@@ -51,7 +51,7 @@ final const class Depend
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Parse the string according into a dependency.  See class
+  ** Parse the string accordingly into a dependency.  See class
   ** header for specification of the format.  If invalid format
   ** and checked is false return null, otherwise throw ParseErr.
   **

@@ -206,7 +206,7 @@ abstract const class Env
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Path used by `findFile` is this is a `util::PathEnv`.
+  ** Path used by `findFile` if this is a `util::PathEnv`.
   **
   virtual File[] path()
 
@@ -235,7 +235,7 @@ abstract const class Env
 
   **
   ** Resolve the pod file for the given pod name.  If the
-  ** name cannot be resovled to a pod, return null.  The
+  ** name cannot be resolved to a pod, return null.  The
   ** default implementation routes to `findFile` to look
   ** in "lib/fan" directory.
   **
@@ -319,7 +319,7 @@ abstract const class Env
   ** The uri must be relative.  Note that props such as locale files
   ** can be bundled into a pod for deployment and searched by adding
   ** an indexed prop with the key "sys.envProps" and the pod name as
-  ** the value.  This feature is not support "config.props".
+  ** the value.  This feature does not support "config.props".
   **
   ** The files are parsed using `InStream.readProps` and merged according
   ** to their priority order.  If the file is defined as a resource in
@@ -328,7 +328,7 @@ abstract const class Env
   ** overwrites any key-value pairs defined at a lower priority.
   **
   ** The map is cached so that subsequent calls for the same path
-  ** doesn't require accessing the file system again.  The 'maxAge'
+  ** don't require accessing the file system again.  The 'maxAge'
   ** parameter specifies the tolerance accepted before a cache
   ** refresh is performed to check if any of the files have been
   ** modified.

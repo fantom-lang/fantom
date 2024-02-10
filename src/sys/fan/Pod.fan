@@ -38,7 +38,7 @@ final const class Pod
 
   **
   ** Load a pod into memory from the specified input stream.  The
-  ** stream must contain a valid pod zip file with the all the definitions.
+  ** stream must contain a valid pod zip file with all the definitions.
   ** The pod is completely loaded into memory and the input stream is
   ** closed.  The pod cannot have resources.  The pod name as defined
   ** by '/pod.def' must be uniquely named or Err is thrown.
@@ -94,7 +94,7 @@ final const class Pod
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** List of the all defined types.
+  ** List of all the defined types.
   **
   Type[] types()
 
@@ -166,8 +166,8 @@ final const class Pod
   Str? locale(Str name, Str? def := "pod::name")
 
   **
-  ** Expand a set of pods to include all their recurisve dependencies.
-  ** This method is does not order them; see `orderByDepends`.
+  ** Expand a set of pods to include all their recursive dependencies.
+  ** This method does not order them; see `orderByDepends`.
   **
   static Pod[] flattenDepends(Pod[] pods)
 

@@ -102,7 +102,7 @@ const class TimeZone
 
   **
   ** Get the full name of this time zone as defined by the zoneinfo
-  ** database.  These names are formatted as "contintent/location"
+  ** database.  These names are formatted as "continent/location"
   ** where location is a major city within the time zone region.
   ** Examples of full names are "America/New_York" and "Europe/London".
   **

@@ -101,7 +101,7 @@ final class StrBuf
   **
   ** Remove the char at the specified index.  A negative index may be
   ** used to access an index from the end of the list.  Size is decremented
-  ** by 1.  Return the this.  Throw IndexErr if index is out of range.
+  ** by 1.  Return this.  Throw IndexErr if index is out of range.
   **
   This remove(Int index)
 
@@ -125,7 +125,7 @@ final class StrBuf
   This reverse()
 
   **
-  ** Clear the contents of the string buffer so that is
+  ** Clear the contents of the string buffer so that it
   ** has a size of zero.  Return this.
   **
   This clear()

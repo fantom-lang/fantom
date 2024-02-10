@@ -48,7 +48,7 @@ const final class Uuid
   static Uuid makeBits(Int hi, Int lo)
 
   **
-  ** Parse a UUID from according to the string format defined in the
+  ** Parse a UUID according to the string format defined in the
   ** class header documentation.  If invalid format and checked is false
   ** return null, otherwise throw ParseErr.
   **

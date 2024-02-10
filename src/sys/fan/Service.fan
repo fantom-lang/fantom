@@ -93,7 +93,7 @@ const mixin Service
 
   **
   ** Start this service.  If not installed, this method
-  ** autoamatically calls `install`.  If already running,
+  ** automatically calls `install`.  If already running,
   ** do nothing.  Return this.
   **
   This start()

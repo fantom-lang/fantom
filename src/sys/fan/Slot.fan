@@ -17,7 +17,7 @@ abstract const class Slot
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Find a Slot by it's qualified name "pod::Type.slot".  If the slot
+  ** Find a Slot by its qualified name "pod::Type.slot".  If the slot
   ** doesn't exist and checked is false then return null, otherwise
   ** throw UnknownSlotErr.
   **
@@ -97,7 +97,7 @@ abstract const class Slot
   **   - instance methods are never const
   **   - closures which don't capture any variables from their
   **     scope are automatically const
-  **   - partional apply methods which only capture const variables
+  **   - partial apply methods which only capture const variables
   **     from their scope are automatically const
   **
   Bool isConst()

@@ -18,7 +18,7 @@
 **     immutable; toImmutable always returns this
 **   - Closures which capture non-final or non-const variables are
 **     always mutable; toImmutable always throws NotImmutableErr
-**   - Closure which capture non-final variables which aren't known
+**   - Closures which capture non-final variables which aren't known
 **     to be immutable until runtime (such as Obj or List) will return
 **     false for isImmutable, but will provide a toImmutable method which
 **     attempts to bind to the current variables by calling toImmutable
@@ -107,7 +107,7 @@ final class Func
 
   **
   ** Create a new function by binding the specified arguments to
-  ** this function's parameters.  The new function which takes the
+  ** this function's parameters.  The new function takes the
   ** remaining unbound parameters.
   **
   ** The resulting function is immutable if this function is
@@ -118,7 +118,7 @@ final class Func
   **
   ** Return a new function which wraps this function but with
   ** a different reflective type signature.  No verification is
-  ** done that this function actually conforms to new signature.
+  ** done that this function actually conforms to the new signature.
   ** This method implicitly calls `Type.toNonNullable` on 't'.
   ** Throw ArgErr if 't' isn't a parameterized function type.
   **

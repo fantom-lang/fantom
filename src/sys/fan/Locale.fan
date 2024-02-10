@@ -52,7 +52,7 @@ const class Locale
 
   **
   ** Run the specified function using this locale as the
-  ** the actor's current locale.  This method guarantees
+  ** actor's current locale.  This method guarantees
   ** that upon return the actor's current locale remains
   ** unchanged.
   **
@@ -74,7 +74,7 @@ const class Locale
   Str? country()
 
   **
-  ** Compute hash code base on normalized toStr format.
+  ** Compute hash code based on normalized toStr format.
   **
   override Int hash()
 

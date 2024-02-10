@@ -28,11 +28,11 @@
 ** OutStream, then call `Buf.flip` to prepare the buffer to be used for reading.
 **
 ** Memory bufs may be made immutable by calling `Obj.toImmutable`.  When a
-** a buf is made immutable, the original buffer's data is cleared (to avoid
+** buf is made immutable, the original buffer's data is cleared (to avoid
 ** copying the backing array).  All write operations on an immutable buf will
 ** raise a 'ReadonlyErr'.  Reads may be performed by acquiring an InStream via
-** the `in` method.  However, reads operations which require a mutable Buf
-** pos will raise ReadonlyErr too including methods such as `seek` or `read`.
+** the `in` method.  However, read operations which require a mutable Buf
+** pos will raise ReadonlyErr too, including methods such as `seek` or `read`.
 ** Use `dup` to copy an immutable buf back into a mutable buf.
 **
 class Buf
@@ -111,7 +111,7 @@ class Buf
 
   **
   ** Return the current position for the next read or write.  The
-  ** position is always between 0 and `size`.  If pos is less then
+  ** position is always between 0 and `size`.  If pos is less than
   ** size then future writes will rewrite the existing bytes without
   ** growing size.  Change the position with `seek`.
   **
@@ -144,7 +144,7 @@ class Buf
   **
   ** Get the byte at the specified absolute index.  A negative index
   ** may be used to access from the end of the buffer.  For example
-  ** get(-1)  is translated into get(size()-1).  This method accesses
+  ** get(-1) is translated into get(size-1).  This method accesses
   ** the buffer absolutely independent of current position.  The get
   ** method is accessed via the [] shortcut operator.  Throw IndexErr
   ** if index out of range.
@@ -180,7 +180,7 @@ class Buf
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Set is used to overwrite the byte at the specified the index.  A
+  ** Set is used to overwrite the byte at the specified index.  A
   ** negative index may be used to access an index from the end of the
   ** buffer.  The set method is accessed via the []= shortcut operator.
   ** Return this.  Throw IndexErr if index is out of range.
@@ -591,12 +591,12 @@ class Buf
   static Buf fromBase64(Str s)
 
   **
-  ** Apply the specified message digest algorthm to this buffer's
+  ** Apply the specified message digest algorithm to this buffer's
   ** contents from 0 to size and return the resulting hash.  Digests
   ** are secure one-way hash functions which input an arbitrary sized
   ** buffer and return a fixed sized buffer.  Common algorithms include:
   ** "MD5", "SHA-1", and "SHA-256"; the full list supported is platform
-  ** dependent.  On the Java VM, the algorithm maps to those avaialble
+  ** dependent.  On the Java VM, the algorithm maps to those available
   ** via the 'java.security.MessageDigest' API.  Throw ArgErr if the
   ** algorithm is not available.  This method is unsupported for mmap
   ** buffers.
@@ -608,14 +608,14 @@ class Buf
   Buf toDigest(Str algorithm)
 
   **
-  ** Compute a cycle reduancy check code using this buffer's contents
+  ** Compute a cycle redundancy check code using this buffer's contents
   ** from 0 to size.  The supported algorithm names:
   **    - "CRC-16": also known as CRC-16-ANSI, CRC-16-IBM; used by
   **      USB, ANSI X3.28, and Modbus
   **    - "CRC-32": used by Ethernet, MPEG-2, PKZIP, Gzip, PNG
   **    - "CRC-32-Adler": used by Zlib
   **
-  ** Raise ArgErr is algorithm is not available.  This method is
+  ** Raise ArgErr if algorithm is not available.  This method is
   ** only supported for memory based buffers.
   **
   Int crc(Str algorithm)
@@ -643,7 +643,7 @@ class Buf
   Buf hmac(Str algorithm, Buf key)
 
   **
-  ** Generate a password based cryptographic key.  Supported algoriths:
+  ** Generate a password based cryptographic key.  Supported algorithms:
   **   - "PBKDF2WithHmacSHA1"
   **   - "PBKDF2WithHmacSHA256"
   **

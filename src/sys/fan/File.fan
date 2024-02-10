@@ -137,14 +137,14 @@ abstract const class File
   abstract Bool exists()
 
   **
-  ** Return the size of the file in bytes otherwise null if a
+  ** Return the size of the file in bytes, otherwise null if a
   ** directory or unknown.
   **
   abstract Int? size()
 
   **
-  ** If this is a file return if the file size is zero or null.
-  ** If this is a directory return if this directory has no
+  ** If this is a file, return if the file size is zero or null.
+  ** If this is a directory, return if this directory has no
   ** files without reading a full listing.
   **
   virtual Bool isEmpty()
@@ -199,7 +199,7 @@ abstract const class File
 
   **
   ** List the child sub-directories contained by this directory.  If
-  ** the directory doesn't contain any sub-direcotries or this file
+  ** the directory doesn't contain any sub-directories or this file
   ** doesn't represent a directory, then return an empty list.  If
   ** pattern is non-null then only filenames matched are returned or
   ** if null then all filenames.
@@ -268,7 +268,7 @@ abstract const class File
   **
   ** Create a file under this directory.  Convenience for `create`:
   **   return (this+name.toUri).create
-  ** Throw IOErr is this file is not a directory or if there is a
+  ** Throw IOErr if this file is not a directory or if there is an
   ** error creating the new file.  Return the file created.
   **
   File createFile(Str name)
@@ -277,7 +277,7 @@ abstract const class File
   ** Create a sub-directory under this directory.  Convenience
   ** for `create`:
   **   return (this+name/.toUri).create
-  ** Throw IOErr is this file is not a directory or if there is a
+  ** Throw IOErr if this file is not a directory or if there is an
   ** error creating the new directory.  Return the directory created.
   **
   File createDir(Str name)
@@ -293,18 +293,18 @@ abstract const class File
   **   - overwrite: Bool or |File f->Bool|
   **
   ** If the "exclude" option is a Regex - each source file's Uri string
-  ** is is checked for a match to skip.  If a directory is skipped, then
+  ** is checked for a match to skip.  If a directory is skipped, then
   ** its children are skipped also.  The exclude option can also be a
   ** function of type '|File f->Bool|' to check each file.  Exclude
   ** processing is performed first before checking for an overwrite.
   **
   ** If during the copy, an existing file of the same name is found,
-  ** then the "overwrite" option should be to 'true' to overwrite or
+  ** then the "overwrite" option should be 'true' to overwrite or
   ** 'false' to skip.  The overwrite option can also be a function
   ** of type '|File to,File from->Bool|' which is passed every to/from file
   ** to be overwritten.  If the overwrite function throws an exception,
   ** it is raised to the 'copyTo' caller.  If a directory overwrite is
-  ** skipped, then it its children are skipped too.  If options are null
+  ** skipped, then its children are skipped too.  If options are null
   ** or overwrite is unspecified then the copy is immediately terminated
   ** with an IOErr.
   **
@@ -340,7 +340,7 @@ abstract const class File
 
   **
   ** Renaming this file within its current directory.
-  ** It is a convenience for:
+  ** This method is a convenience for:
   **   return this.moveTo(parent + newName)
   **
   virtual File rename(Str newName)
@@ -355,7 +355,7 @@ abstract const class File
   **
   ** Request that the file or directory represented by this File
   ** be deleted when the virtual machine exits.  Long running applications
-  ** should use this method will care since each file marked to delete will
+  ** should use this method with care since each file marked to delete will
   ** consume resources.  Throw IOErr on error.  Return this.
   **
   abstract File deleteOnExit()
@@ -373,7 +373,7 @@ abstract const class File
   **
   ** The Buf instance returned is backed by a random access file
   ** pointer. It provides the same functionality as a memory backed
-  ** buffer, except for a couple exceptions such as `Buf.unread`.
+  ** buffer, except for a couple of exceptions such as `Buf.unread`.
   ** The resulting Buf is a raw interface to the random access
   ** file, no buffering is provided at the framework level - so
   ** use methods which only access a few bytes carefully.  However
@@ -460,7 +460,7 @@ abstract const class File
 
   **
   ** Return the platform's separator for names within
-  ** in a path: backslash on Windows, forward slash on Unix.
+  ** a path: backslash on Windows, forward slash on Unix.
   **
   static const Str sep
 

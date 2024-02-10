@@ -35,7 +35,7 @@
 ** escaped as "\\".  For example a filename with the "#" character is
 ** represented as "file \#2".  Only the path, query, and fragment sections
 ** can use escaped general delimiters; the scheme and authority sections
-** cannot use escaped general delimters.
+** cannot use escaped general delimiters.
 **
 ** Encoded form as defined by RFC 3986 uses a stricter set of rules for
 ** the characters allowed in each section of the URI (scheme, userInfo,
@@ -67,7 +67,7 @@ const final class Uri
   **
   ** Parse the specified string into a Uri.  If invalid format
   ** and checked is false return null,  otherwise throw ParseErr.
-  ** a standard form Unicode string into its generic parts.
+  ** Parses a standard form Unicode string into its generic parts.
   ** It does not unescape '%' or '+' and handles normal Unicode
   ** characters in the string.  If general delimiters such
   ** as the "?" or "#" characters are used outside their normal
@@ -83,10 +83,10 @@ const final class Uri
 
   **
   ** Parse an ASCII percent encoded string into a Uri according to
-  ** RFC 3986.  All '%HH' escape sequences are translated into octects,
-  ** and then the octect sequence is UTF-8 decoded into a Str.  The '+'
+  ** RFC 3986.  All '%HH' escape sequences are translated into octets,
+  ** and then the octet sequence is UTF-8 decoded into a Str.  The '+'
   ** character in the query section is unescaped into a space.  If
-  ** checked if true then throw ParseErr if the string is a malformed
+  ** checked is true then throw ParseErr if the string is a malformed
   ** URI or if not encoded correctly, otherwise return null. Refer
   ** to `fromStr` for normalization rules.
   **
@@ -111,7 +111,7 @@ const final class Uri
   ** to the "application/x-www-form-urlencoded" MIME type.  This method
   ** will unescape '%' percent encoding and '+' into space.  The parameters
   ** are parsed into map using the same semantics as `Uri.query`.  Throw
-  ** ArgErr is the string is malformed.  See `encodeQuery`.
+  ** ArgErr if the string is malformed.  See `encodeQuery`.
   **
   static Str:Str decodeQuery(Str s)
 
@@ -123,10 +123,10 @@ const final class Uri
   static Str encodeQuery(Str:Str q)
 
   **
-  ** Return if the specified string is an valid name segment to
+  ** Return if the specified string is a valid name segment to
   ** use in an unencoded URI.  The name must be at least one char
   ** long and can never be "." or "..".  The legal characters are
-  ** defined by as follows from RFC 3986:
+  ** defined as follows from RFC 3986:
   **
   **   unreserved  =  ALPHA / DIGIT / "-" / "." / "_" / "~"
   **   ALPHA       =  %x41-5A / %x61-7A   ; A-Z / a-z
@@ -158,7 +158,7 @@ const final class Uri
   static const Int sectionFrag
 
   **
-  ** Escape a token so that any delimter for the given section
+  ** Escape a token so that any delimiter for the given section
   ** is backslash escaped for use in normalized URI form.
   ** Section must be `sectionPath`, `sectionQuery`, or `sectionFrag`.
   **
@@ -177,7 +177,7 @@ const final class Uri
   static Str unescapeToken(Str s)
 
   **
-  ** Encode a token so that any invalid character or delimter for
+  ** Encode a token so that any invalid character or delimiter for
   ** the given section is "%xx" percent encoding.  Section must
   ** be `sectionPath`, `sectionQuery`, or `sectionFrag`.  Also see
   ** `decodeToken`.
@@ -227,7 +227,7 @@ const final class Uri
 
   **
   ** Return the percent encoded string for this Uri according to
-  ** RFC 3986.  Each section of the Uri is UTF-8 encoded into octects
+  ** RFC 3986.  Each section of the Uri is UTF-8 encoded into octets
   ** and then percent encoded according to its valid character set.
   ** Spaces in the query section are encoded as '+'.
   **
@@ -364,7 +364,7 @@ const final class Uri
   Bool isPathAbs()
 
   **
-  ** Return not of `isPathAbs` when path is empty
+  ** Return logical-not of `isPathAbs` when path is empty
   ** or does not start with a leading slash.
   **
   Bool isPathRel()
@@ -635,14 +635,14 @@ const final class Uri
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** If scheme is non-null, then this is conveninece for `get` cast to a
+  ** If scheme is non-null, then this is convenience for `get` cast to a
   ** File.  If scheme is null then is a convenience for File.make(this)
   ** which maps to a file on the local file system.
   **
   File toFile()
 
   **
-  ** Resolve this Uri into an Fantom object.
+  ** Resolve this Uri into a Fantom object.
   ** See [docLang]`docLang::Naming#resolving` for the resolve process.
   **
   Obj? get(Obj? base := null, Bool checked := true)

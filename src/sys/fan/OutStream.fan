@@ -39,7 +39,7 @@ class OutStream
   virtual This write(Int byte)
 
   **
-  ** Write n bytes from the specified Buf at it's current position to
+  ** Write n bytes from the specified Buf at its current position to
   ** this output stream.  If n is defaulted to buf.remaining(), then
   ** everything left in the buffer is drained to this output stream.
   ** The buf's position is advanced n bytes upon return.  Throw
@@ -124,7 +124,7 @@ class OutStream
   This writeBool(Bool b)
 
   **
-  ** Write a Str in modified UTF-8 format according the 'java.io.DataOutput'
+  ** Write a Str in modified UTF-8 format according to the 'java.io.DataOutput'
   ** specification.  This method is paired with `InStream.readUtf`.  Throw
   ** IOErr on error.  Return this.
   **
@@ -160,7 +160,7 @@ class OutStream
 
   **
   ** Write the Unicode characters in the specified string to the
-  ** stream using the current charset encoding.  Off specifies
+  ** stream using the current charset encoding.  The off arg specifies
   ** the index offset to start writing characters and len the
   ** number of characters in str to write.  Return this.
   **

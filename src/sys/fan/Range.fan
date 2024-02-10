@@ -9,7 +9,7 @@
 **
 ** Range represents a contiguous range of integers from start to
 ** end.  Ranges may be represented as literals in Fantom source code as
-** "start..end" for an inclusive end or "start..<end" for an exlusive
+** "start..end" for an inclusive end or "start..<end" for an exclusive
 ** range.
 **
 @Serializable { simple = true }

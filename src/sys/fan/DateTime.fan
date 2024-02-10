@@ -55,9 +55,9 @@ const final class DateTime
   ** the lifetime of this VM.  Since most platforms don't actually support
   ** nanosecond resolution, the unused nanoseconds are used as a counter
   ** to ensure uniqueness.  However, bursts of calls may result in a
-  ** drift from the actual system time.  For example if the platform's
+  ** drift from the actual system time.  For example, if the platform's
   ** clock supports millisecond resolution, then calling this method
-  ** more than one million time within a millisecond will introduce
+  ** more than one million times within a millisecond will introduce
   ** a millisecond drift (1,000,000ns in a ms).
   **
   static Int nowUnique()
@@ -80,7 +80,7 @@ const final class DateTime
   **  - ns:    0-999_999_999
   **  - tz:    time zone used to map date/time to ns ticks
   **
-  ** Throw ArgErr is any of the parameters are out of range.
+  ** Throw ArgErr if any of the parameters are out of range.
   **
   static new make(Int year, Month month, Int day, Int hour, Int min, Int sec := 0, Int ns := 0, TimeZone tz := TimeZone.cur)
 
@@ -112,7 +112,7 @@ const final class DateTime
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Two times are equal if have identical nanosecond ticks.
+  ** Two times are equal if they have identical nanosecond ticks.
   **
   override Bool equals(Obj? that)
 
@@ -133,7 +133,7 @@ const final class DateTime
   ** See `toLocale` for the pattern legend.  The base of the
   ** string encoding conforms to ISO 8601 and XML Schema
   ** Part 2.  The Fantom format also appends the timezone name to
-  ** avoid the ambiguities associated with interpretting the time
+  ** avoid the ambiguities associated with interpreting the time
   ** zone offset.  Also see `toIso` and `toHttpStr`.
   **
   ** Examples:
@@ -239,7 +239,7 @@ const final class DateTime
   ** Return the number of hours for this date and this timezone.
   ** Days which transition to DST will be 23 hours and days which
   ** transition back to standard time will be 25 hours.  Note there
-  ** one timezone "Lord_Howe" which has a 30min offset which is
+  ** is one timezone "Lord_Howe" which has a 30min offset which is
   ** not handled by this method (WTF).
   **
   Int hoursInDay()
@@ -291,7 +291,7 @@ const final class DateTime
   **   'xyz'  Literal characters
   **   ''     Single quote literal
   **
-  ** A symbol immediately preceding a "F" pattern with a no
+  ** A symbol immediately preceding a "F" pattern with no
   ** fraction to print is skipped.
   **
   ** Examples:
@@ -448,7 +448,7 @@ const final class DateTime
   **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]+HH:MM
   **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]-HH:MM
   **
-  ** If a timezone offset is specified, then one the predefined "Etc/GMT+x"
+  ** If a timezone offset is specified, then one of the predefined "Etc/GMT+x"
   ** timezones are used for the result:
   **   DateTime("2009-01-15T12:00:00Z")       =>  2009-01-15T12:00:00Z UTC
   **   DateTime("2009-01-15T12:00:00-05:00")  =>  2009-01-15T12:00:00-05:00 GMT+5

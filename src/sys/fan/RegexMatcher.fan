@@ -7,7 +7,7 @@
 //
 
 **
-** RegexMatcher is used to matching operations
+** RegexMatcher is used in matching operations
 ** on a regular expression.
 **
 final class RegexMatcher
@@ -35,7 +35,7 @@ final class RegexMatcher
   Bool matches()
 
   **
-  ** Attempt to find the next match .  If a match is made
+  ** Attempt to find the next match.  If a match is made
   ** then return true - additional info is available via
   ** the `group`, `start`, and `end` methods.  Return false
   ** if a match cannot be made.
@@ -54,7 +54,7 @@ final class RegexMatcher
 
   **
   ** Replace every sequence which matches the pattern with the
-  ** given replacment string.
+  ** given replacement string.
   **
   Str replaceAll(Str replacement)
 
@@ -64,7 +64,7 @@ final class RegexMatcher
 
   **
   ** Return the number of capturing groups or zero if no match.
-  ** Group zero is is not included.
+  ** Group zero is not included.
   **
   Int groupCount()
 
@@ -85,7 +85,7 @@ final class RegexMatcher
   Int start(Int group := 0)
 
   **
-  ** Return end index+1 one of the given `group`.
+  ** Return end index+1 of the given `group`.
   ** Throw exception if failed to match input or group
   ** index is invalid.
   **

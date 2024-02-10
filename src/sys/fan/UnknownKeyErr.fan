@@ -7,7 +7,7 @@
 //
 
 **
-** UnknownKeyErr indicates an attempt lookup non-existent key.
+** UnknownKeyErr indicates an attempt to lookup a non-existent key.
 **
 const class UnknownKeyErr : Err
 {

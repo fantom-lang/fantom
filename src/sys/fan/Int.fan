@@ -214,15 +214,15 @@ const final class Int : Num
   Int max(Int that)
 
   **
-  ** Clamp this integer between the min and max.  If its less than min then
-  ** return min, if its greater than max return max, otherwise return this
+  ** Clamp this integer between the min and max.  If it's less than min then
+  ** return min, if it's greater than max return max, otherwise return this
   ** integer itself.
   **
   Int clamp(Int min, Int max)
 
   **
-  ** Clip this integer between the min and max.  If its less than min then
-  ** return min, if its greater than max return max, otherwise return this
+  ** Clip this integer between the min and max.  If it's less than min then
+  ** return min, if it's greater than max return max, otherwise return this
   ** integer itself.
   **
   @NoDoc @Deprecated { msg = "Use clamp" }
@@ -294,7 +294,7 @@ const final class Int : Num
   Int lower()
 
   **
-  ** Return if this Unicode char is an digit in the specified radix.
+  ** Return if this Unicode char is a digit in the specified radix.
   ** A decimal radix of ten returns true for 0-9.  A radix of 16
   ** also returns true for a-f and A-F.
   **
@@ -307,7 +307,7 @@ const final class Int : Num
 
   **
   ** Convert this number into a Unicode char '0'-'9'.  If radix is
-  ** is greater than 10, then use a lower case letter.  Return null if
+  ** greater than 10, then use a lower case letter.  Return null if
   ** this number cannot be represented as a single digit character for
   ** the specified radix.
   **
@@ -346,8 +346,8 @@ const final class Int : Num
   ** is not supported for integers.
   **
   ** In addition 'Int.toLocale' supports the "B" pattern which will
-  ** format a number of bytes with the appropiate B, KB, MB, GB suffix
-  ** based on the magnitide (1024B == 1KB).
+  ** format a number of bytes with the appropriate B, KB, MB, GB suffix
+  ** based on the magnitude (1024B == 1KB).
   **
   ** Examples:
   **   3.toLocale("00")             =>  03
@@ -376,7 +376,7 @@ const final class Int : Num
   ** If this Unicode char is a lowercase char, then return
   ** it as uppercase according to the current locale.  Note that
   ** Unicode contains some case conversion rules that don't work
-  ** correctly on a single character, so `Str.localeLower` should
+  ** correctly on a single character, so `Str.localeUpper` should
   ** be preferred.  See also `localeLower` and `upper`.
   **
   Int localeUpper()

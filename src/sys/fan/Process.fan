@@ -17,7 +17,7 @@ final class Process
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Construct a Process instanced used to launch an external
+  ** Construct a Process instance used to launch an external
   ** OS process with the specified command arguments.
   ** The first item in the 'cmd' list is the executable
   ** itself, then rest are the parameters.
@@ -84,7 +84,7 @@ final class Process
 
   **
   ** Spawn this process.  See `join` to wait until the process
-  ** finished and to get the exit code.  Return this.
+  ** finishes and to get the exit code.  Return this.
   **
   This run()
 
