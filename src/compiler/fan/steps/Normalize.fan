@@ -154,9 +154,14 @@ class Normalize : CompilerStep
     if (parent.isMixin) return
     if (base.isObj) return
 
-    // check if the base class has exactly one available
+    // check if the base class has exactly one available, visible
     // constructor with no parameters
     superCtors := base.instanceCtors
+    if (superCtors.size > 1)
+    {
+      // if there are more than one, then only find ctors visible to me
+      superCtors = superCtors.findAll |ctor| { ctor.isVisibleTo(curType) }
+    }
     if (superCtors.size != 1) return
     superCtor := superCtors.first
     if (superCtor.isPrivate) return
