@@ -129,17 +129,17 @@ final class Zip
   **
   ** Finish writing the contents of this zip file, but leave the underlying
   ** OutStream open.  This method is guaranteed to never throw an IOErr.
-  ** Return true if the stream was finished successfully or false if the
-  ** an error occurred.  Throw UnsupportedErr if zip is not not writing to
+  ** Return true if the stream was finished successfully or false if 
+  ** an error occurred.  Throw UnsupportedErr if zip is not writing to
   ** an output stream.
   **
   Bool finish()
 
   **
   ** Close this zip file for reading and writing.  If this zip file is
-  ** reading or writing an stream, then the underlying stream is also
+  ** reading or writing a stream, then the underlying stream is also
   ** closed.  This method is guaranteed to never throw an IOErr.  Return
-  ** true if the close was successful or false if the an error occurred.
+  ** true if the close was successful or false if an error occurred.
   **
   Bool close()
 
@@ -151,7 +151,7 @@ final class Zip
 
   **
   ** Static utility to unzip a zip file to the given directory.
-  ** Raise exception if there is any failures.  Return number of
+  ** Raise exception if there are any failures.  Return number of
   ** files unzipped on success.
   **
   static Int unzipInto(File zip, File dir)

@@ -30,7 +30,7 @@ abstract class Test
   **
   ** Get the current test method being executed or throw Err if
   ** not currently running a test.  This method is available during
-  ** both `setup` and `teardown` as well during the test itself.
+  ** both `setup` and `teardown` as well as during the test itself.
   **
   Method curTestMethod()
 

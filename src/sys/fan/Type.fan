@@ -7,7 +7,7 @@
 //
 
 **
-** Type defines the contract of an Obj by the slots its supports.
+** Type defines the contract of an Obj by the slots it supports.
 ** Types model the inheritance relationships and provide a mapping
 ** for all the slots both inherited and declared.
 **
@@ -34,7 +34,7 @@ const class Type
   static Type of(Obj obj)
 
   **
-  ** Find a Type by it's qualified name "pod::Type".  If the type
+  ** Find a Type by its qualified name "pod::Type".  If the type
   ** doesn't exist and checked is false then return null, otherwise
   ** throw UnknownTypeErr.
   **
@@ -70,7 +70,7 @@ const class Type
   **
   ** Qualified name formatted as "pod::name".  For parameterized
   ** types derived from List, Map, or Func, this method always returns
-  ** "sys::List", "sys::Map", or "sys::Func" respectively.  If this
+  ** "sys::List", "sys::Map", or "sys::Func" respectively.  If this is
   ** a nullable type, the qname does *not* include the "?".
   **
   ** Examples:
@@ -254,7 +254,7 @@ const class Type
   **
   ** Return an immutable empty list of this type.  Since immutable
   ** lists can be used safely everywhere, this allows signficant memory
-  ** savings instead allocating new empty lists.
+  ** savings instead of allocating new empty lists.
   **
   ** Examples:
   **   Str#.emptyList  =>  Str[,]
@@ -288,7 +288,7 @@ const class Type
   Bool isEnum()
 
   **
-  ** Return if this Type is an Facet type.
+  ** Return if this Type is a Facet type.
   **
   Bool isFacet()
 
@@ -322,17 +322,17 @@ const class Type
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** List of the all defined fields (including inherited fields).
+  ** List of all the defined fields (including inherited fields).
   **
   Field[] fields()
 
   **
-  ** List of the all defined methods (including inherited methods).
+  ** List of all the defined methods (including inherited methods).
   **
   Method[] methods()
 
   **
-  ** List of the all defined slots, both fields and methods (including
+  ** List of all the defined slots, both fields and methods (including
   ** inherited slots).
   **
   Slot[] slots()

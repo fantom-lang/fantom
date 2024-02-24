@@ -220,7 +220,17 @@ class FieldTest : CompilerTest
       {
         virtual Int abc
         abstract Int xyz
-      }")
+      }
+
+      mixin Mix
+      {
+        Int x
+        {
+          get { 23 }
+          set { echo(it) }
+        }
+      }
+      ")
 
       foo := pod.types[0]
       goo := pod.types[2]
@@ -244,6 +254,11 @@ class FieldTest : CompilerTest
       verifyEq(obj->bar->x, 44); verifyEq(obj->x, 44); verifyEq(obj->q, 44)
       obj->q = 33
       verifyEq(obj->bar->x, 33); verifyEq(obj->x, 33); verifyEq(obj->q, 33)
+
+      // Mixin without storage ok
+      m := pod.types[3]
+      mxFlags := (Int)m.field("x")->flags
+      verifyEq(mxFlags.and(FConst.Storage) != 0, false)
   }
 
   Void verifyStorage(Field f, Bool expected)

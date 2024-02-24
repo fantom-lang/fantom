@@ -51,7 +51,7 @@ const final class Str
 
   **
   ** Compare based on Unicode character values.  Case is not
-  ** not taken into account - also see `compareIgnoreCase`
+  ** taken into account - also see `compareIgnoreCase`
   ** and `localeCompare`.
   **
   ** Examples:
@@ -123,10 +123,10 @@ const final class Str
   Bool endsWith(Str s)
 
   **
-  ** Return the first occurance of the specified substring searching
+  ** Return the first occurrence of the specified substring searching
   ** forward, starting at the specified offset index.  A negative offset
   ** may be used to access from the end of string.  Return null if no
-  ** occurences are found.
+  ** occurrences are found.
   **
   ** Examples:
   **   "abcabc".index("b")     => 1
@@ -138,10 +138,10 @@ const final class Str
   Int? index(Str s, Int offset := 0)
 
   **
-  ** Reverse index - return the first occurance of the specified
+  ** Reverse index - return the first occurrence of the specified
   ** substring searching backward, starting at the specified offset
   ** index.  A negative offset may be used to access from the end
-  ** of string.  Return null if no occurences are found.
+  ** of string.  Return null if no occurrences are found.
   **
   ** Examples:
   **   "abcabc".indexr("b")     => 4
@@ -233,7 +233,7 @@ const final class Str
   Int[] chars()
 
   **
-  ** Call the specified function for every char in the starting
+  ** Call the specified function for every char in the string
   ** with index 0 and incrementing up to size-1.
   **
   ** Example:
@@ -284,7 +284,7 @@ const final class Str
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the a Str containing the specified number of spaces.  Also
+  ** Get a Str containing the specified number of spaces.  Also
   ** see `justl` and `justr` to justify an existing string.
   **
   ** Examples:
@@ -398,7 +398,7 @@ const final class Str
 
   **
   ** If size is less than width, then add the given char to
-  ** the left to acheive the specified with.  Also see `justl`.
+  ** the left to achieve the specified width.  Also see `justl`.
   **
   ** Examples:
   **   "xyz".padr(2, '.') => "xyz"
@@ -635,14 +635,14 @@ const final class Str
   ** '\n \r \f \t \\ $'.  If the quote character is the double quote,
   ** single quote, or backtick then it is escaped too.  Control chars
   ** less than 0x20 are escaped as '\uXXXX'.  If 'escapeUnicode' is
-  ** true then any char over 0x7F it is escaped as '\uXXXX'.
+  ** true then any char over 0x7F is escaped as '\uXXXX'.
   **
   Str toCode(Int? quote := '"', Bool escapeUnicode := false)
 
   **
   ** Return this string as valid XML text.  The special control
   ** characters amp, lt, apos and quot are always escaped.  The
-  ** gt char is escaped only if it is the first char or if preceeded
+  ** gt char is escaped only if it is the first char or if preceded
   ** by the ']' char.  Also see `OutStream.writeXml` which is more
   ** efficient if streaming.
   **
@@ -659,7 +659,7 @@ const final class Str
   Regex toRegex()
 
   **
-  ** Create an input stream to read characters from the this string.
+  ** Create an input stream to read characters from this string.
   ** The input stream is designed only to read character data.  Attempts
   ** to perform binary reads will throw UnsupportedErr.
   **

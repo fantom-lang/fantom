@@ -20,7 +20,7 @@ final class Map
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Constructor with of type (must be Map type).
+  ** Constructor for type (must be Map type).
   **
   new make(Type type)
 
@@ -29,7 +29,7 @@ final class Map
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Two Maps are equal if they have the same type and number
+  ** Two Maps are equal if they have the same type and same number
   ** of equal key/value pairs.
   **
   ** Examples:
@@ -71,7 +71,7 @@ final class Map
 
   **
   ** Get the value for the specified key.  If the key is not
-  ** mapped then return null or raise UnknownKeyEr based on checked
+  ** mapped then return null or raise UnknownKeyErr based on checked
   ** flag.  This method is readonly safe.
   **
   V? getChecked(K key, Bool checked := true)
@@ -99,7 +99,7 @@ final class Map
   V[] vals()
 
   **
-  ** Create a shallow duplicate copy of this Map.  The keys and
+  ** Create a shallow duplicate copy of this map.  The keys and
   ** values themselves are not duplicated.  The resulting map is
   ** always read/write.  This method is readonly safe.
   **
@@ -116,7 +116,7 @@ final class Map
 
   **
   ** Add the specified key/value pair to the map.  If the key is
-  ** already mapped, then throw the ArgErr.  Return this.  If key
+  ** already mapped, then throw ArgErr.  Return this.  If key
   ** does not return true for Obj.isImmutable, then throw NotImmutableErr.
   ** If key is null throw NullErr.  Throw ReadonlyErr if readonly.
   **
@@ -162,7 +162,7 @@ final class Map
   ** Add the specified list to this map where the values are the list items
   ** and the keys are derived by calling the specified function on each item.
   ** If the function is null, then the items themselves are used as the keys.
-  ** If any key already mapped then it is overwritten.  Return this.  Throw
+  ** If any key is already mapped then it is overwritten.  Return this.  Throw
   ** ReadonlyErr if readonly.  Also see `addList`.
   **
   ** Examples:
@@ -176,8 +176,8 @@ final class Map
   ** Add the specified list to this map where the values are the list items
   ** and the keys are derived by calling the specified function on each item.
   ** If the function is null, then the items themselves are used as the keys.
-  ** If any key already mapped then this method will fail (any previous keys
-  ** will remain mapped potentially leaving this map in an inconsistent state).
+  ** If any key is already mapped then this method will fail (any previous keys
+  ** will remain mapped, potentially leaving this map in an inconsistent state).
   ** Return this.  Throw ReadonlyErr if readonly.  Also see `setList`.
   **
   ** Examples:
@@ -241,7 +241,7 @@ final class Map
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return a string representation the Map.  This method is readonly safe.
+  ** Return a string representation of the Map.  This method is readonly safe.
   **
   override Str toStr()
 
@@ -252,6 +252,9 @@ final class Map
   ** is used.  This method is readonly safe.
   **
   ** Example:
+  **   m := ["a" : 1, "b" : 2]
+  **   m.join(" and ") |Int v, Str k->Str| { return "$v from $k" }
+  **     => 1 from a and 2 from b
   **
   Str join(Str separator, |V val, K key->Str|? c := null)
 
@@ -266,7 +269,7 @@ final class Map
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Call the specified function for every key/value in the list.
+  ** Call the specified function for every key/value pair in the map.
   ** This method is readonly safe.
   **
   Void each(|V val, K key| c)
@@ -306,7 +309,7 @@ final class Map
   **
   ** Return a new map containing the key/value pairs for which c
   ** returns false.  If c returns true for every item, then return
-  ** an empty list.  The inverse of this method is `findAll`.  If
+  ** an empty map.  The inverse of this method is `findAll`.  If
   ** this map is `ordered` or `caseInsensitive`, then the resulting
   ** map is too.  This method is readonly safe.
   **
@@ -331,11 +334,11 @@ final class Map
   Bool all(|V val, K key->Bool| c)
 
   **
-  ** Reduce is used to iterate through every value in the map
+  ** Reduce is used to iterate through every key/value pair in the map
   ** to reduce the map into a single value called the reduction.
   ** The initial value of the reduction is passed in as the init
   ** parameter, then passed back to the closure along with each
-  ** item.  This method is readonly safe.
+  ** key/value pair.  This method is readonly safe.
   **
   ** Example:
   **   m := ["2":2, "3":3, "4":4]
@@ -345,7 +348,7 @@ final class Map
 
   **
   ** Create a new map with the same keys, but apply the specified
-  ** closure to generate new values.  The new mapped is typed based
+  ** closure to generate new values.  The new map is typed based
   ** on the return type of c.  If this map is `ordered` or
   ** `caseInsensitive`, then the resulting map is too.  This method
   ** is readonly safe.
@@ -358,10 +361,10 @@ final class Map
   Obj:Obj? map(|V val, K key->Obj?| c)
 
   **
-  ** Convenience for `map` and `findNotNull`.  Each item is
+  ** Convenience for `map` and `findNotNull`.  Each key/value pair is
   ** mapped by the given function and if null is returned it is
   ** excluded from the result.  The resulting type is based on
-  ** on the return type of c but non-nullable.  This method is
+  ** the return type of c but non-nullable.  This method is
   ** readonly safe.
   **
   Obj:Obj? mapNotNull(|V val, K key->Obj?| c)
@@ -382,7 +385,7 @@ final class Map
 
   **
   ** Return if this Map is read-write.  A read-write Map is mutable
-  ** and may be modified.  Use r`o` to get a readonly Map from a
+  ** and may be modified.  Use `ro` to get a readonly Map from a
   ** read-write Map.  This method is readonly safe.
   **
   Bool isRW()

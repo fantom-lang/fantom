@@ -7,7 +7,7 @@
 //
 
 **
-** Facet is a mixin includes into every facet type.
+** Facet is a mixin included into every facet type.
 **
 ** See `docLang::Facets` for details.
 **

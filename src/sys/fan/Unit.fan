@@ -38,7 +38,7 @@
 **  - percent sign '%'
 **  - dollar sign '$'
 **
-** Units with equal dimensions are considered to the measure the same
+** Units with equal dimensions are considered to measure the same
 ** physical quantity.  This is not always true, but good enough for
 ** practice. Conversions with the 'convertTo' method are expressed with
 ** the following equations:
@@ -135,7 +135,7 @@ const class Unit
   override Str toStr()
 
   **
-  ** Return the list of programatic identifiers for this unit.
+  ** Return the list of programmatic identifiers for this unit.
   ** The first item is always `name` and the last is always `symbol`.
   **
   Str[] ids()
@@ -157,7 +157,7 @@ const class Unit
   ** For example the scale factor for kilometer is 1000 because it is
   ** defined as a 1000 meters where meter is the normalized unit for
   ** length.  See class header for normalization and conversion equations.
-  ** The scale factor the normalized unit is always one.
+  ** The scale factor for the normalized unit is always one.
   **
   Float scale()
 

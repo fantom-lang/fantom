@@ -48,7 +48,7 @@ class InStream
   virtual Int? read()
 
   **
-  ** Attempt to read the next n bytes into the Buf at it's current
+  ** Attempt to read the next n bytes into the Buf at its current
   ** position.  The buffer will be grown as needed.  Return the number
   ** of bytes read and increment buf's size and position accordingly.
   ** Return null and leave buf's state untouched if end of stream.
@@ -75,7 +75,7 @@ class InStream
 
   **
   ** Attempt to skip 'n' number of bytes.  Return the number of bytes
-  ** actually skipped which may be equal to or lesser than n.
+  ** actually skipped which may be equal to or less than n.
   **
   virtual Int skip(Int n)
 
@@ -91,7 +91,7 @@ class InStream
   Buf readAllBuf()
 
   **
-  ** Read the next n bytes from the stream into the Buf at it's
+  ** Read the next n bytes from the stream into the Buf at its
   ** current position.  The buffer will be grown as needed.  If the
   ** buf parameter is null, then a memory buffer is automatically created
   ** with a capacity of n.  Block until exactly n bytes have been
@@ -177,7 +177,7 @@ class InStream
 
   **
   ** Read the next four bytes as a 32-bit floating point number using
-  ** using configured `endian` according to `Float.bits32`.  This method
+  ** configured `endian` according to `Float.bits32`.  This method
   ** may be paired with `OutStream.writeF4`.  Throw IOErr on error or if
   ** the end of stream is reached before four bytes can be read.
   **
@@ -204,7 +204,7 @@ class InStream
   Decimal readDecimal()
 
   **
-  ** Read a Str in modified UTF-8 format according the java.io.DataInput
+  ** Read a Str in modified UTF-8 format according to the java.io.DataInput
   ** specification. This method may be paired with `OutStream.writeUtf`.
   ** Throw IOErr on error, invalid UTF encoding, or if the end of stream
   ** is reached before the string is fully read.
@@ -272,7 +272,7 @@ class InStream
   ** EOF.  The Str returned never contains the trailing newline.
   **
   ** The max parameter specifies the maximum number of Unicode
-  ** chacters (not bytes) to read before truncating the line and
+  ** characters (not bytes) to read before truncating the line and
   ** returning.  If max is null, then no boundary is enforced except
   ** of course the end of the stream.
   **
@@ -293,7 +293,7 @@ class InStream
   ** until the next character which returns true for `Int.isSpace`.
   **
   ** The max parameter specifies the maximum number of Unicode
-  ** chacters (not bytes) to read before truncating the line and
+  ** characters (not bytes) to read before truncating the line and
   ** returning.  If max is null, then no boundary is enforced except
   ** of course the end of the stream.
   **
@@ -309,7 +309,7 @@ class InStream
   ** string result.
   **
   ** The max parameter specifies the maximum number of Unicode
-  ** chacters (not bytes) to read before truncating the string and
+  ** characters (not bytes) to read before truncating the string and
   ** returning.  If max is null, then no boundary is enforced except
   ** of course the end of the stream.
   **
@@ -372,7 +372,7 @@ class InStream
 
   **
   ** Read the entire stream into a 'Str:Str' of name/value pairs using the
-  ** Fantom props file format.  This format is similiar but different than
+  ** Fantom props file format.  This format is similar to but different than
   ** the Java properties file format:
   **   - Input must be UTF-8 encoded (current charset is ignored)
   **   - Name/value pairs formatted as logical line: '<name>=<value>'

@@ -38,7 +38,7 @@ const final class Date
   **  - month: Month enumeration
   **  - day:   1-31
   **
-  ** Throw ArgErr is any of the parameters are out of range.
+  ** Throw ArgErr if any of the parameters are out of range.
   **
   static new make(Int year, Month month, Int day)
 
@@ -65,7 +65,7 @@ const final class Date
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Two dates are equal if have the same year, month, and day.
+  ** Two dates are equal if they have the same year, month, and day.
   **
   override Bool equals(Obj? that)
 
@@ -187,7 +187,7 @@ const final class Date
 
   **
   ** Add the specified number of days to this date to get a date in
-  ** the future.  Throw ArgErr if 'days' parameter it not a whole number
+  ** the future.  Throw ArgErr if 'days' parameter is not a whole number
   ** of days (must be evenly divisible by 24hr).
   **
   ** Example:
@@ -197,7 +197,7 @@ const final class Date
 
   **
   ** Subtract the specified number of days to this date to get a date in
-  ** the past.  Throw ArgErr if 'days' parameter it not a whole number
+  ** the past.  Throw ArgErr if 'days' parameter is not a whole number
   ** of days (must be evenly divisible by 24hr).
   **
   ** Example:
@@ -255,7 +255,7 @@ const final class Date
   DateTime toDateTime(Time t, TimeZone tz := TimeZone.cur)
 
   **
-  ** Return a DateTime for the beginning of the this day at midnight.
+  ** Return a DateTime for the beginning of this day at midnight.
   **
   DateTime midnight(TimeZone tz := TimeZone.cur)
 

@@ -180,6 +180,7 @@ internal class EmitUtil
         ms.writeInclude(buf.out, "sys.ext", baseDir)
         ms.writeInclude(buf.out, "fan_mime.ext", baseDir)
         ms.writeInclude(buf.out, "fan_indexed_props.ext", baseDir)
+        ms.writeInclude(buf.out, "fan_units.ext", baseDir)
       }
       else ms.writeInclude(buf.out, "${pod.name}.ext", baseDir)
     }

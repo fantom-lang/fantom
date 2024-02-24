@@ -32,7 +32,7 @@ const final class Time
   **  - sec:   0-59
   **  - ns:    0-999_999_999
   **
-  ** Throw ArgErr is any of the parameters are out of range.
+  ** Throw ArgErr if any of the parameters are out of range.
   **
   static new make(Int hour, Int min, Int sec := 0, Int ns := 0)
 
@@ -133,7 +133,7 @@ const final class Time
   **   AA     Upper case AM/PM           AM, PM
   **   'xyz'  Literal characters
   **
-  ** A symbol immediately preceding a "F" pattern with a no
+  ** A symbol immediately preceding a "F" pattern with no
   ** fraction to print is skipped.
   **
   Str toLocale(Str? pattern := null, Locale locale := Locale.cur)

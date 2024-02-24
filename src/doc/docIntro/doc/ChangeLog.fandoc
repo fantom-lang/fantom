@@ -17,6 +17,7 @@
 - Add Image.render and Image.write
 - Fixes for Crypto EC keypair support
 - Fix Time.minus 24hr boundary checks
+- Allow mixins to have non-abstract fields if no storage required
 
 *Build 1.0.79 (17 Jul 2023)*
 - New yaml API

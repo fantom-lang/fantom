@@ -40,18 +40,18 @@ const final class Charset
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** An charset for "UTF-8" format (Eight-bit UCS Transformation Format).
+  ** A charset for "UTF-8" format (Eight-bit UCS Transformation Format).
   **
   static Charset utf8()
 
   **
-  ** An charset for "UTF-16BE" format (Sixteen-bit UCS Transformation
+  ** A charset for "UTF-16BE" format (Sixteen-bit UCS Transformation
   ** Format, big-endian byte order).
   **
   static Charset utf16BE()
 
   **
-  ** An charset for "UTF-16LE" format (Sixteen-bit UCS Transformation
+  ** A charset for "UTF-16LE" format (Sixteen-bit UCS Transformation
   ** Format, little-endian byte order).
   **
   static Charset utf16LE()

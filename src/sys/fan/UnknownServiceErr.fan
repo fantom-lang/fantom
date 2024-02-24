@@ -8,8 +8,8 @@
 //
 
 **
-** UnknownServiceErr indicates an attempt to lookup an service
-** not installed.  See `Service.find`.
+** UnknownServiceErr indicates an attempt to lookup a service
+** which is not installed.  See `Service.find`.
 **
 const class UnknownServiceErr : Err
 {

@@ -7,7 +7,7 @@
 //
 
 **
-** List represents an linear sequence of Objects indexed by an Int.
+** List represents a linear sequence of Objects indexed by an Int.
 **
 ** See [examples]`examples::sys-lists`.
 **
@@ -20,7 +20,7 @@ final class List
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Constructor with of type and initial capacity.
+  ** Constructor for of[] with initial capacity.
   **
   new make(Type of, Int capacity)
 
@@ -48,7 +48,7 @@ final class List
   override Bool equals(Obj? that)
 
   **
-  ** Return platform dependent hashcode based a hash of the items
+  ** Return platform dependent hashcode based on a hash of the items
   ** of the list.
   **
   override Int hash()
@@ -98,7 +98,7 @@ final class List
   Int capacity
 
   **
-  ** Get is used to return the item at the specified the index.  A
+  ** Get is used to return the item at the specified index.  A
   ** negative index may be used to access an index from the end of the
   ** list.  For example get(-1) is translated into get(size()-1).  The
   ** get method is accessed via the [] shortcut operator.  Throw
@@ -185,7 +185,7 @@ final class List
   V? first()
 
   **
-  ** Return the item at index-1, or if empty return null.
+  ** Return the item at size-1, or if empty return null.
   ** This method is readonly safe.
   **
   V? last()
@@ -202,7 +202,7 @@ final class List
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Set is used to overwrite the item at the specified the index.  A
+  ** Set is used to overwrite the item at the specified index.  A
   ** negative index may be used to access an index from the end of the
   ** list.  The set method is accessed via the []= shortcut operator.
   ** If you wish to use List as a sparse array and set values greater
@@ -316,7 +316,7 @@ final class List
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return the item at index-1, or if empty return null.
+  ** Return the item at size-1, or if empty return null.
   ** This method has the same semantics as last().  This method
   ** is readonly safe.
   **
@@ -324,7 +324,7 @@ final class List
 
   **
   ** Remove the last item and return it, or return null if the list
-  ** is empty.  This method as the same semantics as 'removeAt(-1)', with
+  ** is empty.  This method has the same semantics as 'removeAt(-1)', with
   ** the exception that an empty list is handled.  Throw ReadonlyErr
   ** if readonly.
   **
@@ -348,6 +348,9 @@ final class List
   **
   ** Example:
   **   ["a", "b", "c"].each |Str s| { echo(s) }
+  **   => a
+  **      b
+  **      c
   **
   Void each(|V item, Int index| c)
 
@@ -358,11 +361,14 @@ final class List
   **
   ** Example:
   **   ["a", "b", "c"].eachr |Str s| { echo(s) }
+  **   => c
+  **      b
+  **      a
   **
   Void eachr(|V item, Int index| c)
 
   **
-  ** Iterate the list usnig the specified range.   Negative indexes
+  ** Iterate the list using the specified range.   Negative indexes
   ** may be used to access from the end of the list.  This method is
   ** readonly safe.  Throw IndexErr if range is invalid.
   **
@@ -432,7 +438,7 @@ final class List
   **
   ** Return a new list containing all the items which are an instance
   ** of the specified type such that item.type.fits(t) is true.  Any null
-  ** items are automatically excluded.  If none of the items are instance
+  ** items are automatically excluded.  If none of the items is an instance
   ** of the specified type, then an empty list is returned.  The returned
   ** list will be a list of t.  This method is readonly safe.
   **
@@ -504,7 +510,7 @@ final class List
   ** Convenience for `map` and `findNotNull`.  Each item is
   ** mapped by the given function and if null is returned it is
   ** excluded from the result.  The resulting type is based on
-  ** on the return type of c but non-nullable.  This method is
+  ** the return type of c but non-nullable.  This method is
   ** readonly safe.
   **
   ** Example:
@@ -650,7 +656,7 @@ final class List
   ** Reverse sort - perform an in-place reverse sort on this list.  If
   ** a method is provided it implements the comparator returning -1,
   ** 0, or 1.  If the comparator method is null then sorting is based
-  ** on the items <=> operator (shortcut for 'compare' method).  Return
+  ** on the value's <=> operator (shortcut for 'compare' method).  Return
   ** this.  Throw ReadonlyErr if readonly.
   **
   ** Example:
@@ -663,9 +669,13 @@ final class List
   ** search algorithm.  The list must be sorted in ascending order according
   ** to the specified comparator function.  If the list contains multiple
   ** matches for key, no guarantee is made to which one is returned.  If
-  ** the comparator is null then then it is assumed to be the '<=>'
+  ** the comparator is null then it is assumed to be the '<=>'
   ** operator (shortcut for the 'compare' method).  If the key is not found,
   ** then return a negative value which is '-(insertation point) - 1'.
+  **
+  ** Example:
+  **   [1,3,5,7,9].binarySearch(4)  => -3
+  **   [1,3,5,7,9].binarySearch(3)  => 1
   **
   Int binarySearch(V key, |V a, V b->Int|? c := null)
 
@@ -676,6 +686,12 @@ final class List
   ** The list must be sorted in ascending order according to the specified
   ** comparator function. If the key is not found, then return a negative value
   ** which is '-(insertation point) - 1'.
+  **
+  ** Example:
+  **   [1,3,5,7,9].binaryFind |Int item->Int| { return 4 <=> item } 
+  **               => -3
+  **   [1,3,5,7,9].binaryFind |Int item->Int| { return 3 <=> item } 
+  **               => 1
   **
   Int binaryFind(|V item, Int index->Int| c)
 
@@ -690,7 +706,7 @@ final class List
 
   **
   ** Swap the items at the two specified indexes.  Negative indexes may
-  ** used to access an index from the end of the list.  Return this.
+  ** be used to access an index from the end of the list.  Return this.
   ** Throw ReadonlyErr if readonly.
   **
   L swap(Int indexA, Int indexB)
@@ -737,7 +753,7 @@ final class List
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return a string representation the list.  This method is readonly safe.
+  ** Return a string representation of the list.  This method is readonly safe.
   **
   override Str toStr()
 

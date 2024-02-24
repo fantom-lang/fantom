@@ -8,7 +8,7 @@
 
 **
 ** CancelledErr indicates that an operation was cancelled
-** before it complete normally.
+** before it completed normally.
 **
 const class CancelledErr : Err
 {

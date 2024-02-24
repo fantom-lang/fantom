@@ -8,7 +8,7 @@
 //
 
 **
-** UnknownFacetErr indicates an attempt to access a undefined facet.
+** UnknownFacetErr indicates an attempt to access an undefined facet.
 **
 const class UnknownFacetErr : Err
 {

@@ -52,7 +52,7 @@ abstract const class Num
 
   **
   ** Get the current locale's separator for grouping thousands
-  ** together.  For example in the the US this is a comma.
+  ** together.  For example in the US this is a comma.
   **
   static Str localeGrouping()
 

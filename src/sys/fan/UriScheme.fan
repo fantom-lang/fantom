@@ -12,7 +12,7 @@
 ** index key "sys.uriScheme.{scheme}={qname}" where "scheme" is
 ** lowercase scheme name and "qname" is the qualified type name
 ** of the subclass.  See [docLang]`docLang::Naming` for the details
-** of scheme handling works.
+** of how scheme handling works.
 **
 abstract const class UriScheme
 {

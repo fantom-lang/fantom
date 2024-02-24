@@ -78,6 +78,18 @@ mixin CSlot
   **
   abstract CBridge? usesBridge()
 
+  **
+  ** Return if this slot is visible to the given type
+  **
+  Bool isVisibleTo(CType curType)
+  {
+    if (parent == curType) return true
+    if (isPrivate) return false
+    if (isInternal) return parent.pod == curType.pod
+    if (isProtected) return parent.pod == curType.pod || curType.fits(parent)
+    return true
+  }
+
 }
 
 **************************************************************************

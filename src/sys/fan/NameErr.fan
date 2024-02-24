@@ -7,7 +7,7 @@
 //
 
 **
-** NameErr indicates an attempt use an invalid name.
+** NameErr indicates an attempt to use an invalid name.
 ** See `Uri.isName` and `Uri.checkName`.
 **
 const class NameErr : Err
