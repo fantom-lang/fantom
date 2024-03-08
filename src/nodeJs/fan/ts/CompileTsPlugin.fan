@@ -92,6 +92,12 @@ class CompileTsPlugin : CompilerStep
       }
 
       // Write fields
+      if (true)
+      {
+        // write <Class>.type$ field for use in TypeScript
+        t := getNamespacedType("Type", "sys", this.pod)
+        out.print("  static type\$: ${t}\n")
+      }
       fields := type.fields.findAll |field|
       {
         field.isPublic &&
