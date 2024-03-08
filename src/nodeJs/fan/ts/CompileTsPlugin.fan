@@ -54,14 +54,23 @@ class CompileTsPlugin : CompilerStep
       // if (!type.hasFacet(jsFacet)) return
       if (type.isInternal) return
 
+      isList := false
+      isMap  := false
+
       setupDoc(pod.name, type.name)
 
       // Parameterization of List & Map
       classParams := ""
       if (type.signature == "sys::List")
+      {
         classParams = "<V = unknown>"
+        isList = true
+      }
       if (type.signature == "sys::Map")
+      {
         classParams = "<K = unknown, V = unknown>"
+        isMap = true
+      }
 
       abstr := type.isMixin ? "abstract " : ""
       extends := ""
@@ -72,6 +81,7 @@ class CompileTsPlugin : CompilerStep
         implement := type.mixins.map { getNamespacedType(it.name, it.pod.name, this.pod) }.join(", ")
         extends += "implements $implement "
       }
+      else if (isList) extends += "implements Iterable<V> "
 
       // Write class documentation & header
       printDoc(type.doc, 0)
@@ -106,6 +116,12 @@ class CompileTsPlugin : CompilerStep
       }
 
       // Write methods
+      if (isList)
+      {
+        // make list iterable
+        out.print("  /** List Iterator */\n")
+        out.print("  [Symbol.iterator](): Iterator<V>\n")
+      }
       methods := type.methods.findAll |method|
       {
         method.isPublic &&
