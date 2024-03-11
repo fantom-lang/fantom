@@ -27,6 +27,16 @@ class JsonOutStream : OutStream
   }
 
   **
+  ** Convenience for pretty-printing JSON to an in-memory string.
+  **
+  public static Str prettyPrintToStr(Obj? obj)
+  {
+    buf := StrBuf()
+    JsonOutStream(buf.out) { it.prettyPrint = true }.writeJson(obj)
+    return buf.toStr
+  }
+
+  **
   ** Construct by wrapping given output stream.
   **
   new make(OutStream out) : super(out) {}
@@ -35,6 +45,12 @@ class JsonOutStream : OutStream
   ** Flag to escape characters over 0x7f using '\uXXXX'
   **
   Bool escapeUnicode := true
+
+  **
+  ** Write JSON in pretty-printed format. This format produces more readable
+  ** JSON at the expense of larger output size.
+  **
+  Bool prettyPrint := false
 
   **
   ** Write the given object as JSON to this stream.
@@ -89,29 +105,31 @@ class JsonOutStream : OutStream
 
   private Void writeJsonMap(Map map)
   {
-    writeChar(JsonToken.objectStart)
+    writeChar(JsonToken.objectStart).ppnl.indent
     notFirst := false
     map.each |val, key|
     {
       if (key isnot Str) throw Err("JSON map key is not Str type: $key [$key.typeof]")
-      if (notFirst) writeChar(JsonToken.comma)
+      if (notFirst) writeChar(JsonToken.comma).ppnl
       writeJsonPair(key, val)
       notFirst = true
     }
-    writeChar(JsonToken.objectEnd)
+    ppnl.unindent
+    ppsp.writeChar(JsonToken.objectEnd)
   }
 
   private Void writeJsonList(Obj?[] array)
   {
-    writeChar(JsonToken.arrayStart)
+    writeChar(JsonToken.arrayStart).ppnl.indent
     notFirst := false
     array.each |item|
     {
-      if (notFirst) writeChar(JsonToken.comma)
-      writeJson(item)
+      if (notFirst) writeChar(JsonToken.comma).ppnl
+      ppsp.writeJson(item)
       notFirst = true
     }
-    writeChar(JsonToken.arrayEnd)
+    ppnl.unindent
+    ppsp.writeChar(JsonToken.arrayEnd)
   }
 
   private Void writeJsonStr(Str str)
@@ -158,8 +176,33 @@ class JsonOutStream : OutStream
 
   private Void writeJsonPair(Str key, Obj? val)
   {
-    writeJsonStr(key)
-    writeChar(JsonToken.colon)
+    ppsp.writeJsonStr(key)
+    writeChar(JsonToken.colon); if (prettyPrint) writeChar(' ')
     writeJson(val)
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Pretty-Printing Support
+//////////////////////////////////////////////////////////////////////////
+
+  ** Write a newline if we are pretty-printing
+  private This ppnl()
+  {
+    if (prettyPrint) writeChar('\n')
+    return this
+  }
+
+  ** Write leading-space if we are pretty-printing
+  private This ppsp()
+  {
+    if (prettyPrint) print(Str.spaces(level * 2))
+    return this
+  }
+
+  private This indent() { ++level; return this }
+
+  private This unindent() { --level; return this }
+
+  ** Indentation level when pretty-printing
+  private Int level := 0
 }
