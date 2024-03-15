@@ -47,6 +47,7 @@ class JsPod : JsNode
     writeTypes
     writeTypeInfo
     writeProps
+    writeClosureFields
     writeNatives
     writeExports
     js.wl("}).call(this);")
@@ -246,6 +247,11 @@ class JsPod : JsNode
       }
       js.nl
     }
+  }
+
+  private Void writeClosureFields()
+  {
+    plugin.closureSupport.write
   }
 
   private Void writeNatives()

@@ -38,11 +38,17 @@ class CompilerInput
   **
   Bool isScript := false
 
-
   **
   ** Flag indicating if we should treat all types as having the @Js facet
   **
   Bool forceJs := false
+
+
+  **
+  ** Flag to force Fantom closures to be compiled with type reflection information
+  ** when emitting JavaScript.
+  **
+  Bool jsReflectClosures := false
 
   **
   ** Version to include in ouput pod's manifest.

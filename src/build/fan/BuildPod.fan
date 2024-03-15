@@ -227,7 +227,7 @@ abstract class BuildPod : BuildScript
     }
   }
 
-  @NoDoc protected CompilerInput stdFanCompilerInput()
+  @NoDoc protected virtual CompilerInput stdFanCompilerInput()
   {
     // add my own meta
     meta := this.meta.dup

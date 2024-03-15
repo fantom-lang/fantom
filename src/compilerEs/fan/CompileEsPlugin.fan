@@ -23,6 +23,7 @@ class CompileEsPlugin : CompilerStep
   {
     this.sourcemap = SourceMap(this)
     this.js = JsWriter(buf.out, sourcemap)
+    this.closureSupport = JsClosure(this)
     pod.depends.each |depend| { dependOnNames[depend.name] = true }
     readJsProps
   }
@@ -44,6 +45,8 @@ class CompileEsPlugin : CompilerStep
   Int nextUid() { uid++; }
 
   [Str:Bool] dependOnNames := [:] { def = false }
+
+  JsClosure closureSupport { private set }
 
 //////////////////////////////////////////////////////////////////////////
 // js.props
