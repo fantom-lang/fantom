@@ -165,6 +165,14 @@ class CompilerInput
   **
   Uri[]? jsFiles
 
+  **
+  ** List of files or directores containing '.props' files that should
+  ** be compiled to JavaScript.  If this field is null then it defaults
+  ** to `resFiles`.  Uris are relative to `baseDir`.
+  ** This field is used only in file mode.
+  **
+  Uri[]? jsPropsFiles
+
 //////////////////////////////////////////////////////////////////////////
 // CompilerInputMode.str
 //////////////////////////////////////////////////////////////////////////

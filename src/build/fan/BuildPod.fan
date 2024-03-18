@@ -108,6 +108,13 @@ abstract class BuildPod : BuildScript
   Uri[]? jsDirs
 
   **
+  ** List of Uris relative to build script that should be searched for '.props'
+  ** files to compile to JavaScript. You may also give relative paths to files
+  ** with a '.props' ext.  If this field is null, it defaults to `resDirs`.
+  **
+  Uri[]? jsProps
+
+  **
   ** The directory to look in for the dependency pod file (and
   ** potentially their recursive dependencies).  If null then we
   ** use the compiler's own pod definitions via reflection (which
@@ -270,23 +277,24 @@ abstract class BuildPod : BuildScript
 
     // map my config to CompilerInput structure
     ci := CompilerInput()
-    ci.inputLoc    = Loc.makeFile(scriptFile)
-    ci.podName     = podName
-    ci.summary     = summary
-    ci.version     = version
-    ci.depends     = depends.map |s->Depend| { Depend(applyMacros(s)) }
-    ci.meta        = meta
-    ci.index       = index
-    ci.baseDir     = scriptDir
-    ci.srcFiles    = srcDirs
-    ci.resFiles    = resDirs
-    ci.jsFiles     = jsDirs
-    ci.log         = log
-    ci.includeDoc  = docApi
-    ci.includeSrc  = docSrc
-    ci.mode        = CompilerInputMode.file
-    ci.outDir      = outPodDir.toFile
-    ci.output      = CompilerOutputMode.podFile
+    ci.inputLoc     = Loc.makeFile(scriptFile)
+    ci.podName      = podName
+    ci.summary      = summary
+    ci.version      = version
+    ci.depends      = depends.map |s->Depend| { Depend(applyMacros(s)) }
+    ci.meta         = meta
+    ci.index        = index
+    ci.baseDir      = scriptDir
+    ci.srcFiles     = srcDirs
+    ci.resFiles     = resDirs
+    ci.jsFiles      = jsDirs
+    ci.jsPropsFiles = jsProps ?: resDirs
+    ci.log          = log
+    ci.includeDoc   = docApi
+    ci.includeSrc   = docSrc
+    ci.mode         = CompilerInputMode.file
+    ci.outDir       = outPodDir.toFile
+    ci.output       = CompilerOutputMode.podFile
 
     if (dependsDir != null)
     {

@@ -163,9 +163,10 @@ class InitInput : CompilerStep
     if (input.mode !== CompilerInputMode.file) return
 
     // map pod facets to src/res files
-    compiler.srcFiles = findFiles(input.srcFiles, "fan")
-    compiler.resFiles = findFiles(input.resFiles, null)
-    compiler.jsFiles  = findFiles(input.jsFiles,  "js")
+    compiler.srcFiles     = findFiles(input.srcFiles, "fan")
+    compiler.resFiles     = findFiles(input.resFiles, null)
+    compiler.jsFiles      = findFiles(input.jsFiles,  "js")
+    compiler.jsPropsFiles = findFiles(input.jsPropsFiles, "props")
 
     if (compiler.srcFiles.isEmpty && compiler.resFiles.isEmpty)
       throw err("No fan source files found", input.inputLoc)

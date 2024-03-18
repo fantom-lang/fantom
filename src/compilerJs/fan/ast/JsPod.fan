@@ -45,7 +45,7 @@ class JsPod : JsNode
     baseDir := s.compiler.input.baseDir
     if (baseDir != null)
     {
-      s.compiler.resFiles?.each |file|
+      s.compiler.jsPropsFiles?.each |file|
       {
         if (file.ext != "props") return
         uri := file.uri.relTo(baseDir.uri)

@@ -59,7 +59,7 @@ class CompileJs  : CompilerStep
     if (compiler.input.forceJs) return true
 
     // are there any props files that need to be written to JS?
-    if (compiler.resFiles?.any |file| { file.ext == "props" } ?: false) return true
+    if (compiler.jsPropsFiles != null && !compiler.jsPropsFiles.isEmpty) return true
 
     // run JS compiler if any type has @Js facet
     return compiler.types.any { it.hasFacet("sys::Js") }
