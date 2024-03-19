@@ -66,12 +66,13 @@ class JsonOutStream : OutStream
   **
   This writeJson(Obj? obj)
   {
-         if (obj is Str)  writeJsonStr(obj)
-    else if (obj is Num)  writeJsonNum(obj)
-    else if (obj is Bool) writeJsonBool(obj)
-    else if (obj is Map)  writeJsonMap(obj)
-    else if (obj is List) writeJsonList(obj)
-    else if (obj == null) writeJsonNull
+         if (obj is Str)   writeJsonStr(obj)
+    else if (obj is Map)   writeJsonMap(obj)
+    else if (obj is List)  writeJsonList(obj)
+    else if (obj is Float) writeJsonFloat(obj)
+    else if (obj is Num)   writeJsonNum(obj)
+    else if (obj is Bool)  writeJsonBool(obj)
+    else if (obj == null)  writeJsonNull
     else writeJsonObj(obj)
     return this
   }
@@ -157,6 +158,15 @@ class JsonOutStream : OutStream
       }
     }
     writeChar(JsonToken.quote)
+  }
+
+  private Void writeJsonFloat(Float float)
+  {
+    // check for unsupported literals
+    if (float.isNaN || float == Float.posInf || float == Float.negInf)
+      throw IOErr("Unsupported JSON float literal: '${float}'")
+
+    print(float)
   }
 
   private Void writeJsonNum(Num num)

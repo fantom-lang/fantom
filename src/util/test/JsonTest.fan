@@ -115,7 +115,6 @@ class JsonTest : Test
     verifyWrite(["key":"val"], Str<|{"key":"val"}|>)
     verifyWrite(["key":"val\\\"ue"], Str<|{"key":"val\\\"ue"}|>)
 
-
     // simples
     verifyWrite(5min, Str<|"5min"|>)
     verifyWrite(`/some/uri/`, Str<|"/some/uri/"|>)
@@ -127,6 +126,11 @@ class JsonTest : Test
     // serializable
     verifyWrite(SerialA(),
       Str<|{"b":true,"i":7,"f":5.0,"s":"string\n","ints":[1,2,3]}|>)
+
+    // invalid float literals
+    verifyErr(IOErr#) { verifyWrite(Float.nan, "")    }
+    verifyErr(IOErr#) { verifyWrite(Float.posInf, "") }
+    verifyErr(IOErr#) { verifyWrite(Float.negInf, "") }
 
     // errors
     verifyErr(IOErr#) { verifyWrite(Buf(), "") }
