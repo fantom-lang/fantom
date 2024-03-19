@@ -55,29 +55,21 @@ const final class Color : Paint
   ** Also see `h`, `s`, `l`.
   static Color makeHsl(Float h, Float s, Float l, Float a := 1.0f)
   {
-    r := l; g := l; b := l
-    if (s != 0f)
-    {
-      if (h == 360f) h = 0f
-      h /= 60f
-      i := h.floor
-      f := h - i
-      p := l * (1f - s)
-      q := l * (1f - s * f)
-      t := l * (1f - (s*(1f-f)))
-      switch (i.toInt)
-      {
-        case 0: r=l; g=t; b=p
-        case 1: r=q; g=l; b=p
-        case 2: r=p; g=l; b=t
-        case 3: r=p; g=q; b=l
-        case 4: r=t; g=p; b=l
-        case 5: r=l; g=p; b=q
-      }
-    }
-    return make((r * 255f).toInt.shiftl(16)
-                .or((g * 255f).toInt.shiftl(8))
-                .or((b * 255f).toInt), a)
+    c := (1f - (2f * l - 1f).abs) * s
+    x := c * (1f - ((h / 60f) % 2f - 1f).abs)
+    m := l - c / 2f
+    r := 0f
+    g := 0f
+    b := 0f
+         if (h < 60f)               { r=c;  g=x;  b=0f }
+    else if (h >= 60f  && h < 120f) { r=x;  g=c;  b=0f }
+    else if (h >= 120f && h < 180f) { r=0f; g=c;  b=x  }
+    else if (h >= 180f && h < 240f) { r=0f; g=x;  b=c  }
+    else if (h >= 240f && h < 300f) { r=x;  g=0f; b=c  }
+    else if (h >= 300f && h < 360f) { r=c;  g=0f; b=x  }
+    return make(((r+m) * 255f).round.toInt.shiftl(16)
+                .or(((g+m) * 255f).round.toInt.shiftl(8))
+                .or(((b+m) * 255f).round.toInt), a)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -271,14 +263,18 @@ const final class Color : Paint
   {
     min := r.min(b.min(g)).toFloat
     max := r.max(b.max(g)).toFloat
-    return max == 0f ? 0f : (max-min) / max
+    c   := max - min
+    if (c == 0f) return 0f
+    return c / (1f - (2f * l - 1f).abs) / 255f
   }
 
   ** Lightness (brightness) as a float between 0.0 and 1.0 of the HSL
   ** model (hue, saturation, lightness). Also see `makeHsl`, `h`, `s`.
   Float l()
   {
-    r.max(b.max(g)).toFloat / 255f
+    max := r.max(b.max(g)).toFloat
+    min := r.min(b.min(g)).toFloat
+    return (max + min) * 0.5f / 255f
   }
 
 //////////////////////////////////////////////////////////////////////////

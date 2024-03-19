@@ -150,25 +150,38 @@ class ColorTest : Test
 
   Void testHsl()
   {
-    verifyHsl(0x000000, 0f,   0f, 0f)
-    verifyHsl(0xffffff, 0f,   0f, 1f)
-    verifyHsl(0xff0000, 0f,   1f, 1f)
-    verifyHsl(0x00ff00, 120f, 1f, 1f)
-    verifyHsl(0x0000ff, 240f, 1f, 1f)
-    verifyHsl(0xffff00, 60f,  1f, 1f)
-    verifyHsl(0x00ffff, 180f, 1f, 1f)
-    verifyHsl(0xff00ff, 300f, 1f, 1f)
-    verifyHsl(0x6496c8, 210f, 0.5f,  0.78f)
-    verifyHsl(0x32c850, 132f, 0.75f, 0.78f)
-    verifyHsl(Color("hsl(240 0.4 1)"), 240f, 0.4f, 1f)
+    verifyHsl(0x000000, 0f,   0f, 0f)      // black
+    verifyHsl(0xffffff, 0f,   0f, 1f)      // white
+    verifyHsl(0xff0000, 0f,   1f, 0.5f)    // red
+    verifyHsl(0x00ff00, 120f, 1f, 0.5f)    // lime
+    verifyHsl(0x0000ff, 240f, 1f, 0.5f)    // blue
+    verifyHsl(0xffff00, 60f,  1f, 0.5f)    // yellow
+    verifyHsl(0x00ffff, 180f, 1f, 0.5f)    // cyan
+    verifyHsl(0xff00ff, 300f, 1f, 0.5f)    // magenta
+    verifyHsl(0xbfbfbf, 0f,   0f, 0.749f)  // silver (191,191,191)
+    verifyHsl(0x808080, 0f,   0f, 0.501f)  // gray   (128,128,128)
+    verifyHsl(0x800000, 0f,   1f, 0.25f)   // maroon (128,0,0)
+    verifyHsl(0x808000, 60f,  1f, 0.25f)   // olive  (128,128,0)
+    verifyHsl(0x008000, 120f, 1f, 0.25f)   // green  (0,128,0)
+    verifyHsl(0x800080, 300f, 1f, 0.25f)   // purple (128,0,128)
+    verifyHsl(0x008080, 180f, 1f, 0.25f)   // teal   (0,128,128)
+    verifyHsl(0x000080, 240f, 1f, 0.25f)   // navy   (0,0,128)
+
+    verifyHsl(0x32c850, 132f,     0.60f,  0.490f)  // (50,200,80)
+    verifyHsl(0x6496c8, 210f,     0.476f, 0.588f)  // (100,150,200)
+    verifyHsl(0x7e22ce, 272.093f, 0.716f, 0.470f)  // (126, 34, 206)
+    verifyHsl(0xfcd34d, 45.942f,  0.967f, 0.645f)  // (252, 211, 77)
+
+    // l=100% is always #fff and so we lose hue/sat on roundtrip to rgb
+    verifyHsl(Color("hsl(240 0.4 1)"), 0f, 0f, 1f)
   }
 
   Void verifyHsl(Obj obj, Float h, Float s, Float l)
   {
     c := obj as Color ?: Color.make(obj)
-    verify(c.h.approx(h, 0.1f))
-    verify(c.s.approx(s, 0.01f))
-    verify(c.l.approx(l, 0.01f))
+    verify(c.h.approx(h, 0.001f))
+    verify(c.s.approx(s, 0.001f))
+    verify(c.l.approx(l, 0.001f))
     verifyEq(c, Color.makeHsl(c.h, c.s, c.l))
   }
 
