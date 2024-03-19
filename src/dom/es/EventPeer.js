@@ -73,7 +73,10 @@ class EventPeer extends sys.Obj {
   button(self) { return this.event.button; }
 
   $key;
-  key(self)   { return this.$key }
+  key(self) { return this.$key }
+
+  $keyChar;
+  keyChar(self) { return this.$keyChar }
 
   #delta;
   delta(self)
@@ -144,6 +147,7 @@ class EventPeer extends sys.Obj {
     const x = Event.make();
     x.peer.event = event;
     if (event.keyCode) x.peer.$key = Key.fromCode(event.keyCode);
+    if (event.key) x.peer.$keyChar = event.key;
     return x;
   }
 }

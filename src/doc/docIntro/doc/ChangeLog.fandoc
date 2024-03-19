@@ -11,6 +11,7 @@
 - Move fwt pods into separate repo
 - Actor queue overflow limits
 - Add Doc.elemFromPos, elemsFromPos
+- Add Event.keyChar
 - Add new dom HttpSocket API
 - New concurrent Lock API
 - Add Graphics.drawEllipse,fillEllipse

@@ -179,6 +179,10 @@ class Event
   ** Key instance for key pressed.
   native Key? key()
 
+  ** Character string for key event that represents text typed.
+  ** For example Shift + Key.b would return "B".
+  native Str? keyChar()
+
   ** Err instance if available for 'window.onerror'.
   native Err? err()
 

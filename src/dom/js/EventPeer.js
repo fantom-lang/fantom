@@ -66,6 +66,7 @@ fan.dom.EventPeer.prototype.meta  = function(self) { return this.event.metaKey; 
 
 fan.dom.EventPeer.prototype.button = function(self) { return this.event.button; }
 fan.dom.EventPeer.prototype.key = function(self) { return this.$key }
+fan.dom.EventPeer.prototype.keyChar = function(self) { return this.$keyChar }
 
 fan.dom.EventPeer.prototype.delta = function(self)
 {
@@ -136,5 +137,6 @@ fan.dom.EventPeer.make = function(event)
   var x = fan.dom.Event.make();
   x.peer.event = event;
   if (event.keyCode) x.peer.$key = fan.dom.Key.fromCode(event.keyCode);
+  if (event.key) x.peer.$keyChar = event.key;
   return x;
 }
