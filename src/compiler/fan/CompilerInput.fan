@@ -38,11 +38,17 @@ class CompilerInput
   **
   Bool isScript := false
 
-
   **
   ** Flag indicating if we should treat all types as having the @Js facet
   **
   Bool forceJs := false
+
+
+  **
+  ** Flag to force Fantom closures to be compiled with type reflection information
+  ** when emitting JavaScript.
+  **
+  Bool jsReflectClosures := false
 
   **
   ** Version to include in ouput pod's manifest.
@@ -158,6 +164,14 @@ class CompilerInput
   ** This field is used only in file mode.
   **
   Uri[]? jsFiles
+
+  **
+  ** List of files or directores containing '.props' files that should
+  ** be compiled to JavaScript.  If this field is null then it defaults
+  ** to `resFiles`.  Uris are relative to `baseDir`.
+  ** This field is used only in file mode.
+  **
+  Uri[]? jsPropsFiles
 
 //////////////////////////////////////////////////////////////////////////
 // CompilerInputMode.str

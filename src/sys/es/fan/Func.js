@@ -46,6 +46,8 @@ class Func extends Obj {
   static callList(f, args) { return f.__method.callList(args); }
 
   static params(f) {
+    if (f.__params) return f.__params;
+
     let mparams = f.__method.params();
     let fparams = mparams;
     if ((f.__method.flags$() & (FConst.Static | FConst.Ctor)) == 0) {
@@ -66,6 +68,13 @@ class Func extends Obj {
   // checkInCtor(obj) {}
 
   static toStr(f) { return "sys::Func"; }
+
+  static __reflect(spec, f)
+  {
+    f.__returns = spec[0];
+    f.__params = spec[1];
+    return f;
+  }
 
   // TODO:FIXIT
   // retype(t) {

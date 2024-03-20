@@ -142,6 +142,7 @@ class Compiler
   File[]? srcFiles          // InitInput
   File[]? resFiles          // InitInput
   File[]? jsFiles           // InitInput
+  File[]? jsPropsFiles      // InitInput
   TypeDef[]? types          // Parse
   ClosureExpr[]? closures   // Parse
   Str:CField wrappers       // ClosureVars

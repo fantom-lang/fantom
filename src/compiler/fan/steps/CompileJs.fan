@@ -58,6 +58,9 @@ class CompileJs  : CompilerStep
     // are we forcing generation of js for all types
     if (compiler.input.forceJs) return true
 
+    // are there any props files that need to be written to JS?
+    if (compiler.jsPropsFiles != null && !compiler.jsPropsFiles.isEmpty) return true
+
     // run JS compiler if any type has @Js facet
     return compiler.types.any { it.hasFacet("sys::Js") }
   }

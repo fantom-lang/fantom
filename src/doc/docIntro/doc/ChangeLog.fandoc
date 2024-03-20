@@ -11,6 +11,7 @@
 - Move fwt pods into separate repo
 - Actor queue overflow limits
 - Add Doc.elemFromPos, elemsFromPos
+- Add Event.keyChar
 - Add new dom HttpSocket API
 - New concurrent Lock API
 - Add Graphics.drawEllipse,fillEllipse
@@ -18,6 +19,7 @@
 - Fixes for Crypto EC keypair support
 - Fix Time.minus 24hr boundary checks
 - Allow mixins to have non-abstract fields if no storage required
+- Fix Color HSL implementation to match browser behavoir
 
 *Build 1.0.79 (17 Jul 2023)*
 - New yaml API

@@ -461,27 +461,7 @@ class JsExpr : JsNode
 
   private Void writeClosure(ClosureExpr ce)
   {
-    CType[] sigTypes := [,].addAll(ce.signature.params).add(ce.signature.ret)
-    isJs := sigTypes.all { !it.isForeign && checkJsSafety(it, loc) }
-    if (isJs)
-    {
-      js.w("${methodParams(ce.doCall.params)}", loc).wl(" => {")
-      js.indent
-      old := plugin.thisName
-      plugin.thisName = "this\$"
-      writeBlock(ce.doCall.code)
-      plugin.thisName = old
-      js.unindent
-      js.w("}")
-    }
-    else
-    {
-      // this closure uses non-JS types. Write a closure that documents this fact
-      js.wl("() => {")
-      js.wl("  // Cannot write closure. Signature uses non-JS types: ${ce.signature}")
-      js.wl("  throw sys.UnsupportedErr.make('Closure uses non-JS types: ' + ${ce.signature.toStr.toCode});")
-      js.w("}")
-    }
+    plugin.closureSupport.writeClosure(ce)
   }
 
 //////////////////////////////////////////////////////////////////////////
