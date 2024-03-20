@@ -63,7 +63,8 @@ class JsClosure : JsNode
     varToFunc.each |MethodDef func, Str var|
     {
       loc := func.loc
-      js.w("const ${var} = [${qnameToJs(func.ret)}.type\$,")
+      nullable := func.ret.isNullable ? ".toNullable()" : ""
+      js.w("const ${var} = [${qnameToJs(func.ret)}.type\$${nullable},")
       js.w("sys.List.make(sys.Param.type\$, [")
       func.params.each |p,i|
       {
@@ -78,11 +79,7 @@ class JsClosure : JsNode
 
   private Str mapFuncSpec(ClosureExpr ce)
   {
-    var := specKeyToVar.getOrAdd(specKey(ce)) |->Str|
-    {
-      // "${ce.enclosingType.pod}.__clos${plugin.nextUid}"
-      "__clos${plugin.nextUid}"
-    }
+    var := specKeyToVar.getOrAdd(specKey(ce)) |->Str| { "__clos${plugin.nextUid}" }
     varToFunc[var] = ce.doCall
     return var
   }
