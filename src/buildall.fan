@@ -126,6 +126,9 @@ class Build : BuildGroup
     // doc nuke it all
     Delete.make(this, devHomeDir + `doc/`).run
 
+    // etc test files
+    Delete.make(this, devHomeDir + `etc/yaml/`).run
+
     // nuke flux session data
     Delete.make(this, devHomeDir + `etc/flux/session/`).run
 
