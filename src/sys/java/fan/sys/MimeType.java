@@ -294,6 +294,12 @@ public final class MimeType
     return fromStr(mediaType + "/" + subType);
   }
 
+  public boolean isText()
+  {
+    return (mediaType.equals("text")) ||
+           (mediaType.equals("application") && subType.equals("json"));
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Lazy Load
 //////////////////////////////////////////////////////////////////////////

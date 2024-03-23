@@ -248,6 +248,12 @@ fan.sys.MimeType.prototype.noParams = function()
   return fan.sys.MimeType.fromStr(this.mediaType() + "/" + this.subType());
 }
 
+fan.sys.MimeType.prototype.isText = function()
+{
+    return (this.m_mediaType == "text") ||
+           (this.m_mediaType == "application" && this.m_subType == "json");
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Lazy Load
 //////////////////////////////////////////////////////////////////////////
@@ -308,4 +314,3 @@ fan.sys.MimeType.predefined = function(media, sub, params)
 //////////////////////////////////////////////////////////////////////////
 
 // see sysPod.js
-

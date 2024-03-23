@@ -199,4 +199,23 @@ class MimeTypeTest : Test
     verifyEq(MimeType("image/gif; foo=bar; baz=roo").noParams, MimeType("image/gif"))
   }
 
+//////////////////////////////////////////////////////////////////////////
+// IsText
+//////////////////////////////////////////////////////////////////////////
+
+  Void testIsText()
+  {
+    verifyIsText("text/plain", true)
+    verifyIsText("text/html; charset=utf-8", true)
+    verifyIsText("image/png", false)
+    verifyIsText("video/mpeg", false)
+    verifyIsText("application/x-word", false)
+    verifyIsText("application/json",true)
+  }
+
+  Void verifyIsText(Str s, Bool expect)
+  {
+    x := MimeType(s)
+    verifyEq(x.isText, expect)
+  }
 }
