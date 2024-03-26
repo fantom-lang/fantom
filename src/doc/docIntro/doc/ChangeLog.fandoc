@@ -21,6 +21,7 @@
 - Allow mixins to have non-abstract fields if no storage required
 - Fix Color HSL implementation to match browser behavoir
 - Add MimeType.isText
+- Add util::LockFile
 
 *Build 1.0.79 (17 Jul 2023)*
 - New yaml API
@@ -1591,3 +1592,4 @@
 - Compiler emits straight to Java bytecode or .NET IL
 - Basic expr compilation
 - Basic class, method support
+
