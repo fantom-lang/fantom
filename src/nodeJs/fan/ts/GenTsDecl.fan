@@ -14,29 +14,29 @@ using fandoc
 **
 ** Generate TypeScript declaration file for a pod
 **
-class CompileTsPlugin : CompilerStep
+class GenTsDecl
 {
-  new make(Compiler compiler) : super(compiler)
+  new make(OutStream out, CPod pod, Bool allTypes := false)
   {
-    this.c = compiler
-    docParser = FandocParser()
+    this.out = out
+    this.pod = pod
+    this.allTypes = allTypes
+    this.docParser = FandocParser()
+    this.docWriter = TsDocWriter(out)
   }
 
-  private Compiler c
-  private OutStream? out
+  private OutStream out
+  private CPod pod
+  private const Bool allTypes
   private FandocParser docParser
-  private TsDocWriter? docWriter
+  private TsDocWriter docWriter
 
 //////////////////////////////////////////////////////////////////////////
 // Main writing method
 //////////////////////////////////////////////////////////////////////////
 
-  override Void run()
+  Void run()
   {
-    buf := Buf()
-    out = buf.out
-    docWriter = TsDocWriter(out)
-
     // Write dependencies
     deps := pod.depends.map |CDepend dep->Str| { dep.name }
     deps.each |dep|
@@ -47,12 +47,15 @@ class CompileTsPlugin : CompilerStep
     out.write('\n')
 
     // Write declaration for each type
-    pod.typeDefs.findAll { !it.isSynthetic }.each |type|
+    pod.types.findAll { !it.isSynthetic }.each |type|
     {
-      // TODO: for now generate declaration for all types regardless of whether
-      // they have the @Js facet or not
-      // if (!type.hasFacet(jsFacet)) return
+      // if we aren't generating all types, short-circuit if missing @Js facet
+      if (!allTypes && !type.hasFacet("sys::Js")) return
+
+      // skip internal types
       if (type.isInternal) return
+
+      // TODO: skip @NoDoc???
 
       isList := false
       isMap  := false
@@ -84,7 +87,7 @@ class CompileTsPlugin : CompilerStep
       else if (isList) extends += "implements Iterable<V> "
 
       // Write class documentation & header
-      printDoc(type.doc, 0)
+      // printDoc(type, 0)
       out.print("export ${abstr}class $type.name$classParams $extends{\n")
 
       hasItBlockCtor := type.ctors.any |CMethod m->Bool| {
@@ -169,9 +172,6 @@ class CompileTsPlugin : CompilerStep
       out.print("}\n")
     }
     if (pod.name == "sys") printObjUtil
-
-    buf.seek(0)
-    c.tsDecl = buf.readAllStr
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -212,7 +212,7 @@ class CompileTsPlugin : CompilerStep
         case "R": return "R"
         default:  return "unknown"
       }
-    
+
     // List/map types
     if (type.isList || type.isMap)
     {
