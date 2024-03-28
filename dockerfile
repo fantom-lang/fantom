@@ -48,11 +48,11 @@ RUN set -e; \
 COPY . ./fan/
 
 # Copy SWT into installations
-RUN mkdir rel/lib/java/ext/linux-x86_64 \
-    && cp swt.jar rel/lib/java/ext/linux-x86_64/ \
-    && mkdir fan/lib/java/ext/linux-x86_64 \
-    && cp swt.jar fan/lib/java/ext/linux-x86_64/ \
-    && rm swt.jar
+#RUN mkdir rel/lib/java/ext/linux-x86_64 \
+#    && cp swt.jar rel/lib/java/ext/linux-x86_64/ \
+#    && mkdir fan/lib/java/ext/linux-x86_64 \
+#    && cp swt.jar fan/lib/java/ext/linux-x86_64/ \
+#    && rm swt.jar
 
 # Populate config.props with jdkHome (to use jdk, not jre) and devHome
 RUN echo -e "\n\njdkHome=$JAVA_HOME/\ndevHome=/work/fan/\n" >> rel/etc/build/config.props \
