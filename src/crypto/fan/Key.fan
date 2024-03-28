@@ -118,3 +118,28 @@ const mixin PubKey : AsymKey
   **
   abstract Buf encrypt(Buf data, Str padding := "PKCS1Padding")
 }
+
+**************************************************************************
+** SecretKey
+**************************************************************************
+
+**
+** A symmetric secret key
+**
+const mixin SecretKey : Key { }
+
+**************************************************************************
+** MacKey
+**************************************************************************
+
+**
+** A symmetric secret key used to generate/verify a message authentication code
+**
+const mixin MacKey : SecretKey
+{
+  ** Compute MAC digest
+  abstract Buf digest(Buf data)
+
+  ** Verify MAC digest
+  abstract Bool verify(Buf data, Buf expectedValue)
+}

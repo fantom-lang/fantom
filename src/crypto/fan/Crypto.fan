@@ -131,4 +131,42 @@ const mixin Crypto
   **   cert := Crypto.cur.loadPem(`server.pem`) as Cert
   **
   abstract Obj? loadPem(InStream in, Str algorithm := "RSA")
+
+  ** Load a JSON Web Key (JWK) from a Map. 
+  **
+  ** Throws an error if unable to determine the JWK type.
+  **
+  **   jwkRsa  := Crypto.cur.loadJwk(["kty":"RSA", "alg":"RS256", ...])
+  **   jwkEc   := Crypto.cur.loadJwk(["kty":"EC", "alg":"ES256", ...])
+  **   jwkHmac := Crypto.cur.loadJwk(["kty":"oct", "alg":"HS256", ...])
+  **
+  abstract Jwk? loadJwk(Str:Obj map)
+
+  **
+  ** Import JSON Web Key Set
+  **
+  abstract Jwk[] loadJwksForUri(Uri uri, Int maxKeys := 10)
+
+  ** Load a JSON Web Token (JWT) from the encoded Str. 
+  **
+  ** Jwt object includes utilities to verify claims and verify the Jwt 
+  ** digital signature. 
+  **
+  **   jwt := Crypto.cur.loadJwt("aaa.bbb.ccc")
+  **                    .verifyClaim("iss", "https://trusted.issuer.com")
+  **                    .verifySignature(key)
+  **  
+  abstract Jwt loadJwt(Str encoded)
+
+  ** Build a JSON Web Token (JWT) from a Map. 
+  **
+  ** JwtBuilder object includes utilities to add claims and sign the Jwt. 
+  **
+  **   jwt := Crypto.cur.buildJwt(["sub": "user2@fantom.org", "myClaim":"hello2"])
+  **                    .setNbf(5min)
+  **                    .setExp(10min)
+  **                    .build(key)
+  **  
+  @NoDoc
+  abstract JwtBuilder buildJwt(Str:Obj claims, Str:Obj additionalHeaders := [:])
 }
