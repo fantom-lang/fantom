@@ -23,8 +23,8 @@ FROM eclipse-temurin:$JDK_VERSION as bootstrap
 ARG SWT_DL_URL=https://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.27-202303020300/swt-4.27-gtk-linux-x86_64.zip&mirror_id=1
 
 # These define the `rel` Fantom version.
-ARG REL_VERSION=fantom-1.0.77
-ARG REL_TAG=v1.0.77
+ARG REL_VERSION=fantom-1.0.79
+ARG REL_TAG=v1.0.79
 
 WORKDIR /work
 
