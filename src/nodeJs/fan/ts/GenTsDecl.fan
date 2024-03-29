@@ -16,6 +16,12 @@ using fandoc
 **
 class GenTsDecl
 {
+  ** Generate ts declare file a pod using reflection
+  static Void genForPod(Pod pod, OutStream out)
+  {
+    make(out, ReflectPod(ReflectNamespace(), pod), false).run
+  }
+
   new make(OutStream out, CPod pod, Bool allTypes := false)
   {
     this.out = out
@@ -56,126 +62,129 @@ class GenTsDecl
       out.print("import * as ${dep} from './${dep}.js';\n")
     }
     if (pod.name == "sys") printJsObj
-    out.write('\n')
+    out.writeChar('\n')
 
     // Write declaration for each type
     genTypes.each |type|
     {
-      isList := false
-      isMap  := false
-
-      setupDoc(pod.name, type.name)
-
-      // Parameterization of List & Map
-      classParams := ""
-      if (type.signature == "sys::List")
-      {
-        classParams = "<V = unknown>"
-        isList = true
-      }
-      if (type.signature == "sys::Map")
-      {
-        classParams = "<K = unknown, V = unknown>"
-        isMap = true
-      }
-
-      abstr := type.isMixin ? "abstract " : ""
-      extends := ""
-      if (type.base != null)
-        extends = "extends ${getNamespacedType(type.base.name, type.base.pod.name, pod)} "
-      if (!type.mixins.isEmpty)
-      {
-        implement := type.mixins.map { getNamespacedType(it.name, it.pod.name, this.pod) }.join(", ")
-        extends += "implements $implement "
-      }
-      else if (isList) extends += "implements Iterable<V> "
-
-      // Write class documentation & header
-      printDoc(type.doc, 0)
-      out.print("export ${abstr}class $type.name$classParams $extends{\n")
-
-      hasItBlockCtor := type.ctors.any |CMethod m->Bool| {
-        m.params.any |CParam p->Bool| { p.paramType.isFunc }
-      }
-
-      // Write fields
-      if (true)
-      {
-        // write <Class>.type$ field for use in TypeScript
-        t := getNamespacedType("Type", "sys", this.pod)
-        out.print("  static type\$: ${t}\n")
-      }
-      fields := type.fields.findAll |field|
-      {
-        field.isPublic &&
-        (field is FieldDef ||
-         (type.mixins.any |m| { m.slot(field.name)?.isPublic == true } &&
-          type.base?.slot(field.name) == null))
-      }
-      fields.each |field|
-      {
-        name := JsNode.methodToJs(field.name)
-        staticStr := field.isStatic ? "static " : ""
-        typeStr := getJsType(field.fieldType, pod, field.isStatic ? type : null)
-
-        if (field is FieldDef)
-          printDoc(field.doc, 2)
-
-        out.print("  $staticStr$name(): $typeStr\n")
-        if (!field.isConst)
-          out.print("  $staticStr$name(it: $typeStr): void\n")
-        else if (hasItBlockCtor)
-          out.print("  ${staticStr}__$name(it: $typeStr): void\n")
-      }
-
-      // Write methods
-      if (isList)
-      {
-        // make list iterable
-        out.print("  /** List Iterator */\n")
-        out.print("  [Symbol.iterator](): Iterator<V>\n")
-      }
-      methods := type.methods.findAll |method|
-      {
-        method.isPublic &&
-        (method is MethodDef ||
-         (type.mixins.any |m| { m.slot(method.name)?.isPublic == true } &&
-          type.base?.slot(method.name) == null))
-      }
-      methods.each |method|
-      {
-        isStatic := method.isStatic || method.isCtor || pmap.containsKey(type.signature)
-        staticStr := isStatic ? "static " : ""
-        name := JsNode.methodToJs(method.name)
-        if (type.signature == "sys::Func") name += "<R>"
-
-        inputList := method.params.map |CParam p->Str| {
-          paramName := JsNode.pickleName(p.name, deps)
-          if (p.hasDefault)
-            paramName += "?"
-          paramType := getJsType(p.paramType, pod, isStatic ? type : null)
-          return "$paramName: $paramType"
-        }
-        if (!method.isStatic && !method.isCtor && pmap.containsKey(type.signature))
-          inputList.insert(0, "self: ${pmap[type.signature]}")
-        if (method.isCtor)
-          inputList.add("...args: unknown[]")
-        inputs := inputList.join(", ")
-
-        output := method.isCtor ? type.name : getJsType(method.returnType, pod, pmap.containsKey(type.signature) ? type : null)
-        if (method.qname == "sys::Obj.toImmutable" ||
-            method.qname == "sys::List.ro" ||
-            method.qname == "sys::Map.ro")
-              output = "Readonly<$output>"
-
-        if (method is MethodDef)
-          printDoc(method.doc, 2)
-        out.print("  $staticStr$name($inputs): $output\n")
-      }
-
-      out.print("}\n")
+      genType(type, deps)
     }
+
     if (pod.name == "sys") printObjUtil
+  }
+
+  private Void genType(CType type, Str[] deps)
+  {
+    isList := false
+    isMap  := false
+
+    setupDoc(pod.name, type.name)
+
+    // Parameterization of List & Map
+    classParams := ""
+    if (type.signature == "sys::List")
+    {
+      classParams = "<V = unknown>"
+      isList = true
+    }
+    if (type.signature == "sys::Map")
+    {
+      classParams = "<K = unknown, V = unknown>"
+      isMap = true
+    }
+
+    abstr := type.isMixin ? "abstract " : ""
+    extends := ""
+    if (type.base != null)
+      extends = "extends ${getNamespacedType(type.base.name, type.base.pod.name, pod)} "
+    if (!type.mixins.isEmpty)
+    {
+      implement := type.mixins.map { getNamespacedType(it.name, it.pod.name, this.pod) }.join(", ")
+      extends += "implements $implement "
+    }
+    else if (isList) extends += "implements Iterable<V> "
+
+    // Write class documentation & header
+    printDoc(type.doc, 0)
+    out.print("export ${abstr}class $type.name$classParams $extends{\n")
+
+    hasItBlockCtor := type.ctors.any |CMethod m->Bool| {
+      m.params.any |CParam p->Bool| { p.paramType.isFunc }
+    }
+
+    // Write fields
+    if (true)
+    {
+      // write <Class>.type$ field for use in TypeScript
+      t := getNamespacedType("Type", "sys", this.pod)
+      out.print("  static type\$: ${t}\n")
+    }
+    type.fields.each |field|
+    {
+      if (!includeSlot(type, field)) return
+
+      name := JsNode.methodToJs(field.name)
+      staticStr := field.isStatic ? "static " : ""
+      typeStr := getJsType(field.fieldType, pod, field.isStatic ? type : null)
+
+      printDoc(field.doc, 2)
+
+      out.print("  $staticStr$name(): $typeStr\n")
+      if (!field.isConst)
+        out.print("  $staticStr$name(it: $typeStr): void\n")
+      else if (hasItBlockCtor)
+        out.print("  ${staticStr}__$name(it: $typeStr): void\n")
+    }
+
+    // Write methods
+    if (isList)
+    {
+      // make list iterable
+      out.print("  /** List Iterator */\n")
+      out.print("  [Symbol.iterator](): Iterator<V>\n")
+    }
+    type.methods.each |method|
+    {
+      if (!includeSlot(type, method)) return
+
+      isStatic := method.isStatic || method.isCtor || pmap.containsKey(type.signature)
+      staticStr := isStatic ? "static " : ""
+      name := JsNode.methodToJs(method.name)
+      if (type.signature == "sys::Func") name += "<R>"
+
+      inputList := method.params.map |CParam p->Str| {
+        paramName := JsNode.pickleName(p.name, deps)
+        if (p.hasDefault)
+          paramName += "?"
+        paramType := getJsType(p.paramType, pod, isStatic ? type : null)
+        return "$paramName: $paramType"
+      }
+      if (!method.isStatic && !method.isCtor && pmap.containsKey(type.signature))
+        inputList.insert(0, "self: ${pmap[type.signature]}")
+      if (method.isCtor)
+        inputList.add("...args: unknown[]")
+      inputs := inputList.join(", ")
+
+      output := method.isCtor ? type.name : getJsType(method.returnType, pod, pmap.containsKey(type.signature) ? type : null)
+      if (method.qname == "sys::Obj.toImmutable" ||
+          method.qname == "sys::List.ro" ||
+          method.qname == "sys::Map.ro")
+            output = "Readonly<$output>"
+
+      printDoc(method.doc, 2)
+      out.print("  $staticStr$name($inputs): $output\n")
+    }
+
+    out.print("}\n")
+  }
+
+  private Bool includeSlot(CType type, CSlot slot)
+  {
+    // declared only slots, not inherited
+    if (slot.parent !== type) return false
+
+    // public only
+    return slot.isPublic
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -271,10 +280,11 @@ class GenTsDecl
 
   private Void printDoc(CDoc? doc, Int indent)
   {
-    if (doc == null) return
+    text := doc?.text?.trimToNull
+    if (text == null) return
 
     docWriter.indent = indent
-    docParser.parse("Doc", doc.text.in).write(docWriter)
+    docParser.parse("Doc", text.in).write(docWriter)
   }
 
   private Void printJsObj()
@@ -321,3 +331,4 @@ class GenTsDecl
   ]
 
 }
+
