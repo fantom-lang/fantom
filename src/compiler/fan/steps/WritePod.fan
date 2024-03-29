@@ -78,6 +78,9 @@ class WritePod : CompilerStep
       if (compiler.esm != null)
       {
         writeStr(zip, `js/${podName}.mjs`, compiler.esm)
+        // write <pod>.d.ts
+        if (compiler.tsDecl != null)
+          writeStr(zip, `js/${podName}.d.ts`, compiler.tsDecl)
       }
 
       // if explicit locale props
