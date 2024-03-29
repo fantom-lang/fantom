@@ -66,7 +66,10 @@ class CompileJs  : CompilerStep
     // run it
     buf := Buf()
     t.make([buf.out, pod, compiler.input.forceJs || compiler.isSys])->run
-    compiler.tsDecl = buf.seek(0).readAllStr
+    if (!buf.isEmpty)
+    {
+      compiler.tsDecl = buf.seek(0).readAllStr
+    }
   }
 
   Bool needCompileJs()
