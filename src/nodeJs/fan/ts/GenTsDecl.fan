@@ -37,6 +37,18 @@ class GenTsDecl
 
   Void run()
   {
+    genTypes := pod.types.findAll |CType type->Bool|
+    {
+      if (type.isSynthetic || type.isInternal) return false
+      // TODO: skip @NoDoc???
+      // if we aren't generating all types, short-circuit if missing @Js facet
+      if (!allTypes && !type.hasFacet("sys::Js")) return false
+      return true
+    }
+
+    // short-circuit if no types to generate
+    if (genTypes.isEmpty) return
+
     // Write dependencies
     deps := pod.depends.map |CDepend dep->Str| { dep.name }
     deps.each |dep|
@@ -47,16 +59,8 @@ class GenTsDecl
     out.write('\n')
 
     // Write declaration for each type
-    pod.types.findAll { !it.isSynthetic }.each |type|
+    genTypes.each |type|
     {
-      // if we aren't generating all types, short-circuit if missing @Js facet
-      if (!allTypes && !type.hasFacet("sys::Js")) return
-
-      // skip internal types
-      if (type.isInternal) return
-
-      // TODO: skip @NoDoc???
-
       isList := false
       isMap  := false
 
@@ -87,7 +91,7 @@ class GenTsDecl
       else if (isList) extends += "implements Iterable<V> "
 
       // Write class documentation & header
-      // printDoc(type, 0)
+      printDoc(type.doc, 0)
       out.print("export ${abstr}class $type.name$classParams $extends{\n")
 
       hasItBlockCtor := type.ctors.any |CMethod m->Bool| {
@@ -115,7 +119,7 @@ class GenTsDecl
         typeStr := getJsType(field.fieldType, pod, field.isStatic ? type : null)
 
         if (field is FieldDef)
-          printDoc(field->doc, 2)
+          printDoc(field.doc, 2)
 
         out.print("  $staticStr$name(): $typeStr\n")
         if (!field.isConst)
@@ -165,7 +169,7 @@ class GenTsDecl
               output = "Readonly<$output>"
 
         if (method is MethodDef)
-          printDoc(method->doc, 2)
+          printDoc(method.doc, 2)
         out.print("  $staticStr$name($inputs): $output\n")
       }
 
@@ -265,12 +269,12 @@ class GenTsDecl
     docWriter.type = type
   }
 
-  private Void printDoc(DocDef? doc, Int indent)
+  private Void printDoc(CDoc? doc, Int indent)
   {
     if (doc == null) return
 
     docWriter.indent = indent
-    docParser.parse("Doc", doc.lines.join("\n").in).write(docWriter)
+    docParser.parse("Doc", doc.text.in).write(docWriter)
   }
 
   private Void printJsObj()
