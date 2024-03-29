@@ -12,17 +12,12 @@
 ** the compilation units themsevles as TypeDef and TypeRef or to
 ** precompiled types in imported pods via ReflectType or FType.
 **
-mixin CType
+mixin CType : CNode
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Naming
 //////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Associated namespace for this type representation
-  **
-  abstract CNamespace ns()
 
   **
   ** Parent pod which defines this type.
@@ -569,3 +564,4 @@ mixin CType
   **
   Bool isNoDoc() { hasFacet("sys::NoDoc") }
 }
+

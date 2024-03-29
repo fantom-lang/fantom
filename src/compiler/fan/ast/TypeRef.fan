@@ -29,6 +29,7 @@ class TypeRef : Node, CType
 //////////////////////////////////////////////////////////////////////////
 
   override CNamespace ns() { t.ns }
+  override CDoc? doc()     { t.doc }
   override CPod pod()      { t.pod }
   override Str name()      { t.name }
   override Str qname()     { t.qname }
@@ -81,3 +82,4 @@ class TypeRef : Node, CType
   CType t { private set }
 
 }
+

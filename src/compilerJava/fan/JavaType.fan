@@ -51,6 +51,7 @@ class JavaType : CType
 //////////////////////////////////////////////////////////////////////////
 
   override CNamespace ns() { pod.ns }
+  override CDoc? doc() { null }
   override JavaPod pod
   override const Str name
   override const Str qname
@@ -324,3 +325,4 @@ class JavaType : CType
 
   private Bool loaded := false
 }
+

@@ -13,6 +13,7 @@
 **
 abstract class ReflectSlot : CSlot
 {
+  override CDoc? doc()      { CDoc(slot.doc) }
   override Str name()       { slot.name }
   override Str qname()      { slot.qname }
   override Str signature()  { slot.signature }
@@ -134,3 +135,4 @@ class ReflectFacet : CFacet
   override Str toStr() { f.toStr }
   Facet f
 }
+

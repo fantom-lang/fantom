@@ -32,6 +32,7 @@ class FType : CType
   override once Str name() { fpod.n(fpod.typeRef(self).typeName) }
   override once Str qname() { "${fpod.name}::${name}" }
   override Str signature() { qname }
+  override CDoc? doc() { null }
 
   FAttr? attr(Str name)
   {
@@ -226,3 +227,4 @@ class FType : CType
   FFacet[]? ffacets     // decoded facet attributes
 
 }
+

@@ -127,7 +127,7 @@ class ApiDocWriter
   {
     w("\n")
     if (node.doc == null) return
-    node.doc.lines.each |line|
+    node.docDef.lines.each |line|
     {
       if (line.startsWith(slotPrefix)) w(slotPrefix[0..0])
       w(line).w("\n")
@@ -172,8 +172,8 @@ class ApiDocWriter
     if (n.loc.line != null)
     {
       s.add(":").add(n.loc.line)
-      if (n.doc != null && n.doc.loc.line != null)
-        s.add("/").add(n.doc.loc.line)
+      if (n.docDef != null && n.docDef.loc.line != null)
+        s.add("/").add(n.docDef.loc.line)
     }
     return s.isEmpty ? null : s.toStr
   }
@@ -218,3 +218,4 @@ class ApiDocWriter
 
   OutStream out
 }
+

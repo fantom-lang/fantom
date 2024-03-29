@@ -26,6 +26,7 @@ abstract class GenericType : CType
 //////////////////////////////////////////////////////////////////////////
 
   override CNamespace ns() { base.ns }
+  override CDoc? doc()     { base.doc }
   override CPod pod()      { ns.sysPod }
   override Str name()      { base.name }
   override Str qname()     { base.qname }
@@ -409,6 +410,7 @@ class GenericParameterType : CType
 
   override CNamespace ns
   override CPod pod() { ns.sysPod }
+  override CDoc? doc() { null }
   override Str name
   override Str qname
   override Str signature() { qname }
@@ -442,6 +444,7 @@ class ParameterizedField : CField
     this.setter = ParameterizedMethod(parent, generic.setter)
   }
 
+  override CDoc? doc() { generic.doc }
   override Str name()  { generic.name }
   override Str qname() { generic.qname }
   override Str signature() { generic.signature }
@@ -485,6 +488,7 @@ class ParameterizedMethod : CMethod
     signature = "$returnType $name(" + params.join(", ") + ")"
   }
 
+  override CDoc? doc() { generic.doc }
   override Str name()  { generic.name }
   override Str qname() { generic.qname }
   override Int flags() { generic.flags }
@@ -520,3 +524,4 @@ class ParameterizedMethodParam : CParam
   override CType paramType { private set }
   CParam generic { private set }
 }
+

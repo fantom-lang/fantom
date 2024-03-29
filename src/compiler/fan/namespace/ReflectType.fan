@@ -35,6 +35,7 @@ class ReflectType : CType
 //////////////////////////////////////////////////////////////////////////
 
   override ReflectNamespace ns() { pod.ns }
+  override CDoc? doc()     { CDoc(t.doc) }
   override Str name()      { t.name }
   override Str qname()     { t.qname }
   override Str signature() { t.signature }
@@ -103,3 +104,4 @@ class ReflectType : CType
   private Bool slotsLoaded := false
 
 }
+

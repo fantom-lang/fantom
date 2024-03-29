@@ -30,6 +30,7 @@ abstract class FSlot : CSlot, FConst
   override CType parent() { fparent }
   override Str name() { fparent.fpod.n(nameIndex) }
   override Str qname() { fparent.qname + "." + name }
+  override CDoc? doc() { null }
 
   FAttr? attr(Str name)
   {
@@ -69,3 +70,4 @@ abstract class FSlot : CSlot, FConst
   FFacet[]? ffacets       // facets
 
 }
+

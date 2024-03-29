@@ -28,6 +28,7 @@ class NullableType : CType
 //////////////////////////////////////////////////////////////////////////
 
   override CNamespace ns() { root.ns }
+  override CDoc? doc()     { root.doc }
   override CPod pod()      { root.pod }
   override Str name()      { root.name }
   override Str qname()     { root.qname }
@@ -73,3 +74,4 @@ class NullableType : CType
 
   CType root { private set }
 }
+

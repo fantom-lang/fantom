@@ -11,9 +11,9 @@
 ** compiler.  CSlots unifies slots being compiled as SlotDefs
 ** with slots imported as ReflectSlot or FSlot.
 **
-mixin CSlot
+mixin CSlot : CNode
 {
-  virtual CNamespace ns() { parent.ns }
+  override CNamespace ns() { parent.ns }
   abstract CType parent()
   abstract Str name()
   abstract Str qname()
@@ -276,3 +276,4 @@ const class MarkerFacet : CFacet
   override Obj? get(Str name) { null }
 
 }
+

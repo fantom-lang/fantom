@@ -70,3 +70,4 @@ class FField : FSlot, CField
   override CMethod? setter
 
 }
+
