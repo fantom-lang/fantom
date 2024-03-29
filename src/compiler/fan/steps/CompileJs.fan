@@ -27,6 +27,7 @@ class CompileJs  : CompilerStep
     if (needCompileJs)
     {
       compile("compilerJs::CompileJsPlugin")
+      genTsDecl
     }
 
     if (pod.name != "sys")
@@ -35,8 +36,6 @@ class CompileJs  : CompilerStep
       compile("compilerEs::CompileEsPlugin")
     }
 
-    // generate d.ts files
-    genTsDecl
   }
 
   private Void compile(Str qname)
