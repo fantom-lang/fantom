@@ -72,6 +72,7 @@ class JsPod : JsNode
     pods.each |depend|
     {
       if (depend.name == "sys") return
+      if (!c.ns.resolvePod(depend.name, null).hasJs) return
       // NOTE if we change sys to fan we need to update JNode.qnameToJs
       // js.wl("import * as ${depend.name} from './${depend.name}.js';")
       js.wl("const ${plugin.podAlias(depend.name)} = __require('${depend.name}.js');")

@@ -71,7 +71,7 @@ class CompileJs  : CompilerStep
 
   Bool needCompileEs()
   {
-    needCompileJs
+    needCompileJs || compiler.isSys
   }
 
   Bool needCompileJs()

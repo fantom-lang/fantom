@@ -37,7 +37,9 @@ internal class EmitUtil
   ** Configure the pod dependencies before emitting any code
   This withDepends(Pod[] pods)
   {
-    this.depends = Pod.orderByDepends(Pod.flattenDepends(pods))
+    this.depends = Pod
+      .orderByDepends(Pod.flattenDepends(pods))
+      .findAll { it.name == "sys" || it.meta["pod.js"] == "true" }
     return this
   }
 
