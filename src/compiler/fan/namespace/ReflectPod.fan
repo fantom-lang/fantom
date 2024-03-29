@@ -28,6 +28,8 @@ class ReflectPod : CPod
 
   override once File file() { Env.cur.findPodFile(name) }
 
+  override Str:Str meta() { pod.meta }
+
   override CType[] types()
   {
     if (!loadedAllTypes)
@@ -61,3 +63,4 @@ class ReflectPod : CPod
   private Bool loadedAllTypes := false
 
 }
+

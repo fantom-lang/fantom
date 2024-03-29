@@ -293,24 +293,25 @@ final class FPod : CPod, FConst
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  override CNamespace ns    // compiler's namespace
-  override Str name         // pod's unique name
-  override Version version  // pod version
+  override CNamespace ns     // compiler's namespace
+  override Str name          // pod's unique name
+  override Version version   // pod version
   override CDepend[] depends // pod dependencies
-  Str:Str meta              // pod meta
-  Str:Obj index             // pod index
-  Zip? zip                  // zipped storage
-  FType[]? ftypes           // pod's declared types
-  FTable names              // identifier names: foo
-  FTable typeRefs           // types refs:   [pod,type,sig]
-  FTable fieldRefs          // fields refs:  [parent,name,type]
-  FTable methodRefs         // methods refs: [parent,name,ret,params]
-  FTable ints               // Int literals
-  FTable floats             // Float literals
-  FTable decimals           // Decimal literals
-  FTable strs               // Str literals
-  FTable durations          // Duration literals
-  FTable uris               // Uri literals
-  [Str:FType]? ftypesByName // if loaded
+  override Str:Str meta      // pod meta
+  Str:Obj index              // pod index
+  Zip? zip                   // zipped storage
+  FType[]? ftypes            // pod's declared types
+  FTable names               // identifier names: foo
+  FTable typeRefs            // types refs:   [pod,type,sig]
+  FTable fieldRefs           // fields refs:  [parent,name,type]
+  FTable methodRefs          // methods refs: [parent,name,ret,params]
+  FTable ints                // Int literals
+  FTable floats              // Float literals
+  FTable decimals            // Decimal literals
+  FTable strs                // Str literals
+  FTable durations           // Duration literals
+  FTable uris                // Uri literals
+  [Str:FType]? ftypesByName  // if loaded
 
 }
+

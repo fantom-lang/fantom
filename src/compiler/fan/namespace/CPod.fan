@@ -44,6 +44,16 @@ mixin CPod
   abstract File file()
 
   **
+  ** Pod meta data
+  **
+  abstract Str:Str meta()
+
+  **
+  ** Return if this pod has client side JavaScript
+  **
+  Bool hasJs() { meta["pod.js"] == "true" || name == "sys" }
+
+  **
   ** Lookup a type by its simple name.  If the type doesn't
   ** exist and checked is true then throw UnknownTypeErr
   ** otherwise return null.
@@ -88,3 +98,4 @@ mixin CPod
   }
 
 }
+

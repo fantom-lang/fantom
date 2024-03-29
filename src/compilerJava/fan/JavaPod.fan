@@ -42,6 +42,8 @@ class JavaPod : CPod
 
   override File file() { throw UnsupportedErr() }
 
+  override const Str:Str meta := [:]
+
   const Str packageName
 
   override const Version version := Version.defVal
@@ -69,3 +71,4 @@ class JavaPod : CPod
   const Bool isInterop
 
 }
+

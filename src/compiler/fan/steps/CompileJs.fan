@@ -27,15 +27,13 @@ class CompileJs  : CompilerStep
     if (needCompileJs)
     {
       compile("compilerJs::CompileJsPlugin")
+    }
+
+    if (needCompileEs)
+    {
+      if (pod.name != "sys") compile("compilerEs::CompileEsPlugin")
       genTsDecl
     }
-
-    if (pod.name != "sys")
-    {
-      // we need to generate new javascript for all pods even if no js types
-      compile("compilerEs::CompileEsPlugin")
-    }
-
   }
 
   private Void compile(Str qname)
@@ -71,6 +69,11 @@ class CompileJs  : CompilerStep
     }
   }
 
+  Bool needCompileEs()
+  {
+    needCompileJs
+  }
+
   Bool needCompileJs()
   {
     // in JS mode we force JS compilation
@@ -90,3 +93,4 @@ class CompileJs  : CompilerStep
   }
 
 }
+
