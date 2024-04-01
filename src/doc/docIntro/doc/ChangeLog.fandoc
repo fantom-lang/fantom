@@ -24,6 +24,7 @@
 - Add util::LockFile
 - Redesign ES compiler to not generate code for every pod
 - Include TypeScript decl file in pods with JS code
+- Prompt support for jline 3
 
 *Build 1.0.79 (17 Jul 2023)*
 - New yaml API

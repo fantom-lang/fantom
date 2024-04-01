@@ -158,88 +158,25 @@ public class BootEnv
 
   public String prompt(String msg)
   {
-    // attempt to initilize JLine and if we can't fallback to Java API
-    if (!jlineInit())
-    {
-      java.io.Console console = System.console();
-      if (console == null) return promptStdIn(msg);
-      return console.readLine(msg);
-    }
-
-    // use reflection to call JLine ConsoleReader.readLine
-    try
-    {
-      return (String)jline.getClass()
-        .getMethod("readLine", new Class[] { String.class })
-        .invoke(jline, new Object[] { msg });
-    }
-    catch (InvocationTargetException e)
-    {
-      throw Err.make(e.getCause());
-    }
-    catch (Exception e)
-    {
-      throw Err.make(e);
-    }
+    return console().prompt(msg);
   }
 
   public String promptPassword(String msg)
   {
-    // attempt to initilize JLine and if we can't fallback to Java API
-    if (!jlineInit())
-    {
-      java.io.Console console = System.console();
-      if (console == null) return promptStdIn(msg);
-      char[] pass = console.readPassword(msg);
-      if (pass == null) return null;
-      return new String(pass);
-    }
-
-    // use reflection to call JLine ConsoleReader.readLine
-    try
-    {
-      return (String)jline.getClass()
-        .getMethod("readLine", new Class[] { String.class, Character.class })
-        .invoke(jline, new Object[] { msg, Character.valueOf('#') });
-    }
-    catch (Exception e)
-    {
-      throw Err.make(e);
-    }
+    return console().promptPassword(msg);
   }
 
-  private boolean jlineInit()
+  public EnvConsole console()
   {
-    if (jline == null)
+    if (consoleRef == null)
     {
-      // use reflection to see if jline.console.ConsoleReader
-      // is available in classpath
-      try
-      {
-        // jline = new ConsoleReader()
-        Class cls  = Class.forName("jline.console.ConsoleReader");
-        jline = cls.getConstructor(new Class[] {}).newInstance();
-      }
-      catch (Throwable e)
-      {
-        jline = e;
-      }
+      consoleRef = EnvConsole.init();
+      System.out.println("BootEnv.console = " + consoleRef.getClass().getName());
     }
-    return !(jline instanceof Throwable);
+    return consoleRef;
   }
 
-  private String promptStdIn(String msg)
-  {
-    try
-    {
-      out().print(msg).flush();
-      return new java.io.BufferedReader(new java.io.InputStreamReader(System.in)).readLine();
-    }
-    catch (Exception e)
-    {
-      throw Err.make(e);
-    }
-  }
+  private EnvConsole consoleRef;
 
 //////////////////////////////////////////////////////////////////////////
 // Exit and Shutdown Hooks

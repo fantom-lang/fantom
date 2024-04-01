@@ -147,12 +147,12 @@ JLine [#jline]
 **************
 Running command line applications such as [fansh]`Fansh` in the Java VM can
 be unpleasant in Unix and OS X environments because control keys such as the
-arrow keys are not handled.  You can add [JLine2]`https://github.com/jline/jline2`
-to your system classpath to fix this.  The built-in bash scripts will automatically
-put "lib/java/jline.jar" into the classpath.  You can download a pre-built
-"jline.jar" file from `https://repo1.maven.org/maven2/jline/jline/`.  If JLine
-is not installed, then 'java.lang.Console' is used as a fallback.  To integrate
-command line support into your application use `sys::Env.prompt`.
+arrow keys are not handled.  You can add [JLine]`https://github.com/jline/jline3`
+to your system classpath to fix this.  The built-in bash launcher scripts will
+automatically add "lib/java/jline.jar" into the classpath.  Both JLine3 LineReader
+and JLine2 ConsoleReader are supported. If JLine is not found, then 'java.lang.Console'
+is used as a fallback.  To integrate command line support into your application
+use `sys::Env.prompt`.
 
 Env [#env]
 **********
@@ -160,3 +160,4 @@ The default behavior of Fantom is to manage all its files under the
 installation directory.  But you can boot Fantom using alternative
 environments to customize how your deployment is structured.
 See `docLang::Env` for details.
+
