@@ -154,6 +154,12 @@ and JLine2 ConsoleReader are supported. If JLine is not found, then 'java.lang.C
 is used as a fallback.  To integrate command line support into your application
 use `sys::Env.prompt`.
 
+Newer versions of Java do not support adding jars to '{java-home}/lib/ext'.
+Instead if you would like jline to be globally available across all installations
+of Fantom, then set the classpath as environment variable like this:
+
+  export CLASSPATH=/work/stuff/jline/jline-3.9.0.jar
+
 Env [#env]
 **********
 The default behavior of Fantom is to manage all its files under the

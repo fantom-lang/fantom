@@ -171,7 +171,7 @@ public class BootEnv
     if (consoleRef == null)
     {
       consoleRef = EnvConsole.init();
-      System.out.println("BootEnv.console = " + consoleRef.getClass().getName());
+      //System.out.println("BootEnv.console = " + consoleRef.getClass().getName());
     }
     return consoleRef;
   }

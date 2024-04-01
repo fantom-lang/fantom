@@ -24,8 +24,8 @@ public abstract class EnvConsole
 {
   public static EnvConsole init()
   {
-    try { return new Jline3Console(); } catch (Exception e) {  e.printStackTrace(); }
-    try { return new Jline2Console(); } catch (Exception e) { e.printStackTrace();  }
+    try { return new Jline3Console(); } catch (Exception e) {}
+    try { return new Jline2Console(); } catch (Exception e) {}
     if (System.console() != null) return new JavaConsole(System.console());
     return new StdinConsole();
   }
