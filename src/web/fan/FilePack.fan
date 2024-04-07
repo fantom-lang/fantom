@@ -148,7 +148,7 @@ const class FilePack : Weblet
     pods = Pod.flattenDepends(pods)
     pods = Pod.orderByDepends(pods)
     files := toPodJsFiles(pods)
-    sysIndex := files.findIndex |f| { f.name == "sys.js" }
+    sysIndex := files.findIndex |f| { f.name == "sys.js" } ?: throw Err("Missing sys.js")
     files.insertAll(sysIndex+1, toEtcJsFiles)
     return files
   }
@@ -310,3 +310,4 @@ const class FilePack : Weblet
   }
 
 }
+
