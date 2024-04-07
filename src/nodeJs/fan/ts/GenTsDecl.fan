@@ -27,14 +27,12 @@ class GenTsDecl
     this.out = out
     this.pod = pod
     this.allTypes = allTypes
-    this.docParser = FandocParser()
     this.docWriter = TsDocWriter(out)
   }
 
   private OutStream out
   private CPod pod
   private const Bool allTypes
-  private FandocParser docParser
   private TsDocWriter docWriter
 
 //////////////////////////////////////////////////////////////////////////
@@ -105,7 +103,7 @@ class GenTsDecl
     else if (isList) extends += "implements Iterable<V> "
 
     // Write class documentation & header
-    printDoc(type.doc, 0)
+    printDoc(type, 0)
     out.print("export ${abstr}class $type.name$classParams $extends{\n")
 
     hasItBlockCtor := type.ctors.any |CMethod m->Bool| {
@@ -127,7 +125,7 @@ class GenTsDecl
       staticStr := field.isStatic ? "static " : ""
       typeStr := getJsType(field.fieldType, pod, field.isStatic ? type : null)
 
-      printDoc(field.doc, 2)
+      printDoc(field, 2)
 
       out.print("  $staticStr$name(): $typeStr\n")
       if (!field.isConst)
@@ -171,7 +169,7 @@ class GenTsDecl
           method.qname == "sys::Map.ro")
             output = "Readonly<$output>"
 
-      printDoc(method.doc, 2)
+      printDoc(method, 2)
       out.print("  $staticStr$name($inputs): $output\n")
     }
 
@@ -278,13 +276,18 @@ class GenTsDecl
     docWriter.type = type
   }
 
-  private Void printDoc(CDoc? doc, Int indent)
+  private Void printDoc(CNode node, Int indent)
   {
+    doc := node.doc
     text := doc?.text?.trimToNull
     if (text == null) return
 
+    parser := FandocParser()
+    parser.silent = true
+    fandoc := parser.parse(node.toStr, text.in)
+
     docWriter.indent = indent
-    docParser.parse("Doc", text.in).write(docWriter)
+    fandoc.write(docWriter)
   }
 
   private Void printJsObj()
