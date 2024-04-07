@@ -43,10 +43,11 @@ class GenTsDecl
   {
     genTypes := pod.types.findAll |CType type->Bool|
     {
-      if (type.isSynthetic || type.isInternal) return false
-      // TODO: skip @NoDoc???
+      if (type.isSynthetic || type.isInternal || type.isNoDoc) return false
+
       // if we aren't generating all types, short-circuit if missing @Js facet
       if (!allTypes && !type.hasFacet("sys::Js")) return false
+
       return true
     }
 
@@ -173,13 +174,16 @@ class GenTsDecl
       out.print("  $staticStr$name($inputs): $output\n")
     }
 
-    out.print("}\n")
+    out.print("}\n\n")
   }
 
   private Bool includeSlot(CType type, CSlot slot)
   {
     // declared only slots, not inherited
     if (slot.parent !== type) return false
+
+    // skip @NoDoc
+    if (slot.isNoDoc) return false
 
     // public only
     return slot.isPublic
@@ -281,6 +285,8 @@ class GenTsDecl
     doc := node.doc
     text := doc?.text?.trimToNull
     if (text == null) return
+
+    if (node.isNoDoc) return
 
     parser := FandocParser()
     parser.silent = true
