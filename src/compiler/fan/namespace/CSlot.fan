@@ -45,16 +45,6 @@ mixin CSlot : CNode
   Bool isStaticCtor() { isCtor && isStatic }
 
   **
-  ** Get the facet keyed by given type, or null if not defined.
-  **
-  abstract CFacet? facet(Str qname)
-
-  **
-  ** Return if the given facet is defined.
-  **
-  Bool hasFacet(Str qname) { facet(qname) != null }
-
-  **
   ** If this a foreign function interface slot.  A FFI slot is one
   ** declared in another language.  See `usesForeign` to check if the
   ** slot uses any FFI types in its signature.

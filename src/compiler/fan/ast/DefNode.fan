@@ -38,7 +38,7 @@ abstract class DefNode : Node, CNode
     }
   }
 
-  CFacet? facet(Str qname)
+  override CFacet? facet(Str qname)
   {
     if (facets == null) return null
     return facets.find |f| { f.type.qname == qname }

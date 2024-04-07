@@ -545,23 +545,5 @@ mixin CType : CNode
   **
   abstract COperators operators()
 
-//////////////////////////////////////////////////////////////////////////
-// Facets
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Get the facet keyed by given type, or null if not defined.
-  **
-  abstract CFacet? facet(Str qname)
-
-  **
-  ** Return if the given facet is defined.
-  **
-  Bool hasFacet(Str qname) { facet(qname) != null }
-
-  **
-  ** Return if type has NoDoc facet
-  **
-  Bool isNoDoc() { hasFacet("sys::NoDoc") }
 }
 
