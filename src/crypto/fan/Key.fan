@@ -118,3 +118,53 @@ const mixin PubKey : AsymKey
   **
   abstract Buf encrypt(Buf data, Str padding := "PKCS1Padding")
 }
+
+**************************************************************************
+** SecretKey
+**************************************************************************
+
+**
+** A symmetric key
+**
+const mixin SymKey : Key { }
+
+**************************************************************************
+** MacKey
+**************************************************************************
+
+**
+** A symmetric key used to generate a message authentication code
+**
+@NoDoc
+const mixin MacKey : SymKey
+{
+  ** Get the computed MAC size in bytes
+  abstract Int macSize()
+
+  ** Complete the digest computation and return the MAC.
+  ** The digest is reset after this method is called.
+  abstract Buf digest()
+
+  ** Update the digest using *all* the bytes in the buf (regardless of current position).
+  ** Return this.
+  abstract This update(Buf buf)
+
+  ** Update the digest using only the 8-bit characters in given string.
+  ** Return this.
+  abstract This updateAscii(Str str)
+
+  ** Update the digest with one byte / 8-bit integer.
+  ** Return this.
+  abstract This updateByte(Int i)
+
+  ** Update the digest with four byte / 32-bit integer.
+  ** Return this.
+  abstract This updateI4(Int i)
+
+  ** Update the digest with eight byte / 64-bit integer.
+  ** Return this.
+  abstract This updateI8(Int i)
+
+  ** Reset the digest. Return this.
+  abstract This reset()
+}

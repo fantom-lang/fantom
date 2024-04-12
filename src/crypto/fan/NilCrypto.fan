@@ -20,6 +20,10 @@ internal const class NilCrypto : Crypto
   override Cert[] loadCertsForUri(Uri uri) { throw unsupported }
   override KeyStore loadKeyStore(File? file := null, Str:Obj opts := [:]) { throw unsupported }
   override Obj? loadPem(InStream in, Str algorithm := "") { throw unsupported }
+  override Jwk? loadJwk(Str:Obj map) { throw unsupported }
+  override Jwk[] loadJwksForUri(Uri uri, Int maxJwKeys := 10) { throw unsupported }
+  override Jwt decodeJwt(Str encoded, Key key, Duration clockDrift := 60sec) { throw unsupported }
+  override Str encodeJwt(Str:Obj header, Str:Obj claims, Key key) { throw unsupported }
 
   private Err unsupported()
   {

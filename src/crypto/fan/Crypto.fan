@@ -131,4 +131,74 @@ const mixin Crypto
   **   cert := Crypto.cur.loadPem(`server.pem`) as Cert
   **
   abstract Obj? loadPem(InStream in, Str algorithm := "RSA")
+
+  ** Load a JSON Web Key (JWK[`Jwk`]) from a Map. 
+  **
+  ** Throws an error if unable to determine the JWK type.
+  **
+  **   jwkRsa  := Crypto.cur.loadJwk(["kty":"RSA", "alg":"RS256", ...])
+  **   jwkEc   := Crypto.cur.loadJwk(["kty":"EC", "alg":"ES256", ...])
+  **   jwkHmac := Crypto.cur.loadJwk(["kty":"oct", "alg":"HS256", ...])
+  **
+  abstract Jwk? loadJwk(Str:Obj map)
+
+  **
+  ** Import JSON Web Key Set from a Uri
+  **
+  ** jwks := Crypto.cur.loadJwk(`https://example.com/jwks.json`)
+  **
+  abstract Jwk[] loadJwksForUri(Uri uri, Int maxKeys := 10)
+
+  **
+  ** Decode a JWT[`Jwt`] from an encoded Str
+  **
+  ** Provide a Key[`Key`] (PubKey[`PubKey`] or MacKey[`MacKey`]) to verify the signature
+  **
+  ** If the exp and/or nbf claims exist, those will be verified
+  **
+  **   jwk :=  [
+  **             "kty": "EC",
+  **             "use": "sig",
+  **             "crv": "P-256",
+  **             "kid": "abcd",
+  **             "x": "I59TOAdnJ7uPgPOdIxj-BhWSQBXKS3lsRZJwj5eIYAo",
+  **             "y": "8FJEvVIZDjVBnrBJPRUCwtgS86rHoFl1kBfbjX9rOng",
+  **             "alg": "ES256",
+  **           ]
+  **
+  **   ecJwk := Crypto.cur.loadJwk(jwk)
+  **
+  **   jwt := Jwt.decode("1111.2222.3333", ecJwk.key)
+  **
+  **   jwt2 := Crypto.cur.decodeJwt("1111.2222.3333", ecJwk.key)
+  **
+  @NoDoc
+  abstract Jwt decodeJwt(Str encoded, Key key, Duration clockDrift := 60sec)
+
+  ** Digitally sign and return a base64 encoded JWT[`Jwt`]
+  ** 
+  ** The (alg) parameter must be set in the header parameter to a supported JWS algorithm
+  **
+  ** The key parameter (PrivKey[`PrivKey`] or MacKey[`MacKey`]) is used to sign and return the base64 encoded JWT
+  ** 
+  ** The following JWS Algorithms are supported:
+  **
+  **   -   HS256 - HMAC using SHA-256
+  **   -   HS384 - HMAC using SHA-384
+  **   -   HS512 - HMAC using SHA-512 
+  **   -   RS256 - RSASSA-PKCS1-v1_5 using SHA-256
+  **   -   RS384 - RSASSA-PKCS1-v1_5 using SHA-384
+  **   -   RS512 - RSASSA-PKCS1-v1_5 using SHA-512
+  **   -   ES256 - ECDSA using P-256 and SHA-256
+  **   -   ES384 - ECDSA using P-256 and SHA-384
+  **   -   ES512 - ECDSA using P-256 and SHA-512
+  **   -   none  - No digital signature or MAC performed 
+  **
+  **   pair   := Crypto.cur.genKeyPair("RSA", 2048)
+  **   priv   := pair.priv
+  **
+  **   jwtStr := Crypto.cur.encodeJwt(["alg": "RS256"], ["myClaim": "ClaimValue", "exp": DateTime.nowUtc + 10min, "iss": "https://fantom.accounts.dev"], priv)
+  **
+  @NoDoc
+  abstract Str encodeJwt(Str:Obj header, Str:Obj claims, Key key)
 }
