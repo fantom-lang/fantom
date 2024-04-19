@@ -66,3 +66,24 @@ native const class JPubKey : JKey, PubKey
   override Buf  encrypt(Buf data, Str padding := "PKCS1Padding")
   override Str  toStr()
 }
+
+**************************************************************************
+** JPubKey
+**************************************************************************
+@NoDoc
+native const class JMacKey : MacKey
+{
+  static JMacKey load(Buf key, Str algorithm)
+
+  override Str algorithm()
+  override Str? format()
+  override Buf? encoded()
+  override Int macSize()
+  override Buf digest()
+  override This update(Buf buf)
+  override This updateAscii(Str str)
+  override This updateByte(Int i)
+  override This updateI4(Int i)
+  override This updateI8(Int i)
+  override This reset()
+}
