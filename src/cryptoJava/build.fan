@@ -32,6 +32,7 @@ class Build : BuildPod
                 "crypto 1.0",
                 "inet 1.0",
                 "util 1.0",
+                "web 1.0",
                ]
     srcDirs  = [`fan/`,
                 `fan/pkcs/`,
