@@ -3,7 +3,7 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   26 March 2024 Ross Schwalm   Creation
+//   26 Mar 2024  Ross Schwalm  Creation
 //
 
 package fan.cryptoJava;
@@ -35,7 +35,7 @@ final public class JMacKey extends JKey implements fan.crypto.MacKey
     catch (NoSuchAlgorithmException e)
     {
       throw Err.make("Unknown MAC algorithm: " + algorithm, e);
-    }    
+    }
     catch (InvalidKeyException e)
     {
       throw Err.make("Invalid key", e);
@@ -138,3 +138,4 @@ final public class JMacKey extends JKey implements fan.crypto.MacKey
 
   public JMacKey reset() { this.mac.reset(); return this; }
 }
+

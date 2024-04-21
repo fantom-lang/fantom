@@ -9,6 +9,7 @@
 *Build 1.0.80 (working)*
 - New ECMA class-based JavaScript design
 - Move fwt pods into separate repo
+- Crypto JWT and JWK APIs
 - Actor queue overflow limits
 - Add Doc.elemFromPos, elemsFromPos
 - Add Event.keyChar

@@ -3,7 +3,7 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   21 March 2024 Ross Schwalm Creation
+//   21 Mar 2024  Ross Schwalm  Creation
 //
 
 using web
@@ -43,7 +43,7 @@ const class JJwk : Jwk
 
   new make(Str:Obj map)
   {
-    meta = map 
+    meta = map
 
     //Section 6.1 of RFC7518 - JSON Web Algorithms (JWA)
     if(!meta.containsKey(JwkConst.KeyTypeHeader)) throw Err("JWK missing Key type (${JwkConst.KeyTypeHeader})")
@@ -102,7 +102,7 @@ const class JJwk : Jwk
     if (keysList.size > maxJwKeys) { keysList = keysList.getRange(0..maxJwKeys-1) }
     jwkList := [,]
     keysList.each |k| { jwkList = jwkList.add(JJwk(k)) }
-    return jwkList      
+    return jwkList
   }
 
   **
@@ -112,7 +112,7 @@ const class JJwk : Jwk
   static Jwk toJwk(Key key, Str digest, Str:Obj meta := [:])
   {
     jwk := [:].addAll(meta)
-    
+
     if (key is PubKey)
     {
       pubKey := key as PubKey
@@ -126,7 +126,7 @@ const class JJwk : Jwk
       else if (pubKey.algorithm == "RSA")
       {
         keyParams := JwRsaPubKey.bufToJwk(pubKey.encoded)
-        jwk = jwk.addAll(keyParams) 
+        jwk = jwk.addAll(keyParams)
         jwk[JwkConst.AlgorithmHeader] = JwsAlgorithm.fromKeyAndDigest("RSA", digest).toStr
         jwk[JwkConst.KeyTypeHeader] = "RSA"
       }
@@ -199,7 +199,7 @@ internal enum class JwsKeyType
   {
     kty := key[JwkConst.KeyTypeHeader]
     if (kty == null) return null
-    type := JwsKeyType.vals.find |JwsKeyType v->Bool| { return v.toStr == kty }  
+    type := JwsKeyType.vals.find |JwsKeyType v->Bool| { return v.toStr == kty }
     return type == null ? throw Err("JWK kty invalid type") : type
   }
 
@@ -231,7 +231,7 @@ internal enum class JwsUse
 ** JwPubKey
 **************************************************************************
 
-internal mixin JwPubKey 
+internal mixin JwPubKey
 {
   static PubKey? pem(Buf der, Str algorithm)
   {
@@ -306,12 +306,12 @@ internal class JwRsaPubKey : JwPubKey, JwaConst
   }
 
   static native Buf jwkToBuf(Str mod, Str exp)
-  
+
   static native Str:Obj bufToJwk(Buf key)
 
   private static Buf der(Str:Obj jwk)
   {
-    mod := jwk[ModulusParameter] as Str 
+    mod := jwk[ModulusParameter] as Str
     exp := jwk[ExponentParameter] as Str
     return jwkToBuf(mod, exp)
   }
@@ -368,7 +368,7 @@ internal class JwEcPubKey : JwPubKey, JwaConst
     if(!map.containsKey(XCoordParameter)) throw Err("JWK missing EC X coordinate parameter (${XCoordParameter})")
     if(!map.containsKey(YCoordParameter)) throw Err("JWK missing EC Y coordinate parameter (${YCoordParameter})")
     if(!map.containsKey(CurveParameter)) throw Err("JWK missing EC Curve parameter (${CurveParameter})")
-  
+
     return pem(der(map), algorithm)
   }
 
@@ -378,7 +378,7 @@ internal class JwEcPubKey : JwPubKey, JwaConst
 
   private static Buf der(Str:Obj jwk)
   {
-    x := jwk[XCoordParameter] as Str 
+    x := jwk[XCoordParameter] as Str
     y := jwk[YCoordParameter] as Str
     crv := jwk[CurveParameter] as Str
     return jwkToBuf(x, y, crv)
@@ -417,10 +417,11 @@ internal class JwHmacKey : JwaConst
 
     if(!map.containsKey(KeyValueParameter)) throw Err("JWK missing Key Value Parameter (${KeyValueParameter})")
 
-    strKey := map[KeyValueParameter] as Str 
+    strKey := map[KeyValueParameter] as Str
 
     algorithmName := "Hmac" + JwsAlgorithm.fromParameters(map).digest
 
     return JMacKey.load(strKey.toBuf, algorithmName)
   }
 }
+

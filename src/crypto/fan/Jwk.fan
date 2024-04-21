@@ -3,7 +3,7 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   21 March 2024 Ross Schwalm Creation
+//   21 Mar 2024  Ross Schwalm  Creation
 //
 
 **
@@ -19,3 +19,4 @@ const mixin Jwk
   ** Key
   abstract Key key()
 }
+

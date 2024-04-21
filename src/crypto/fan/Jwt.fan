@@ -3,7 +3,7 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   21 March 2024 Ross Schwalm Creation
+//   21 Mar 2024  Ross Schwalm  Creation
 //
 
 **
@@ -22,10 +22,10 @@
 ** The (alg) parameter must be set to a supported JWS algorithm.
 **
 ** The following JWS algorithms are supported:
-** 
+**
 **   -   HS256 - HMAC using SHA-256
 **   -   HS384 - HMAC using SHA-384
-**   -   HS512 - HMAC using SHA-512 
+**   -   HS512 - HMAC using SHA-512
 **   -   RS256 - RSASSA-PKCS1-v1_5 using SHA-256
 **   -   RS384 - RSASSA-PKCS1-v1_5 using SHA-384
 **   -   RS512 - RSASSA-PKCS1-v1_5 using SHA-512
@@ -42,17 +42,17 @@ const class Jwt
   //////////////////////////////////////////////////////////////////////////
 
   ** It-block constructor
-  new make(|This| f) 
-  { 
+  new make(|This| f)
+  {
     // call it-block initializer
     f(this)
-    
+
     //Initialize Header
     if (kid == null) this.kid = checkHeaderMap(JwtConst.KeyIdHeader, Str#)
     //Validate alg Parameter
     jwsAlg := JwsAlgorithm.fromAlg(alg)
     this.alg = jwsAlg.toStr
-    this.header = normalizeHeaderMap 
+    this.header = normalizeHeaderMap
 
     //Initialize Registered Claims
     if (iss == null) this.iss = checkClaimMap(JwtConst.IssuerClaim, Str#)
@@ -67,11 +67,11 @@ const class Jwt
   }
 
   private Str:Obj normalizeHeaderMap()
-  { 
+  {
     params := [:].addAll(header)
     if (kid != null) params[JwtConst.KeyIdHeader] = kid
     params[JwtConst.AlgorithmHeader] = alg
-    return params 
+    return params
   }
 
   private Str:Obj normalizeClaimsMap()
@@ -90,22 +90,22 @@ const class Jwt
   private Obj? checkHeaderMap(Str parameter, Type type)
   {
     if (header[parameter] == null) return null
-    val := (header[parameter]).typeof == type ? header[parameter] : 
+    val := (header[parameter]).typeof == type ? header[parameter] :
                 throw ArgErr("JWT (${parameter}) header parameter must be ${type.name}")
-    return val    
+    return val
   }
 
   private Obj? checkClaimMap(Str claim, Type type)
   {
     if (claims[claim] == null) return null
-    val := (claims[claim]).typeof == type ? claims[claim] : 
+    val := (claims[claim]).typeof == type ? claims[claim] :
                 throw ArgErr("JWT (${claim}) claim must be ${type.name}")
     return val
   }
 
-  //////////////////////////////////////////////////////////////////////////
-  // Header
-  //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// Header
+//////////////////////////////////////////////////////////////////////////
 
   ** JOSE Header
   const Str:Obj header := [:]
@@ -119,9 +119,9 @@ const class Jwt
   ** Algorithm header
   const Str alg
 
-  //////////////////////////////////////////////////////////////////////////
-  // Registered Claims
-  //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// Registered Claims
+//////////////////////////////////////////////////////////////////////////
 
   ** JWT Claims
   const Str:Obj claims := [:]
@@ -138,20 +138,20 @@ const class Jwt
   const Obj? aud
 
   ** Expiration claim for this token
-  ** 
-  ** When encoded, the value will be converted to UTC, the epoch const will be subtracted 
+  **
+  ** When encoded, the value will be converted to UTC, the epoch const will be subtracted
   ** from this value and it will be converted to seconds
   const DateTime? exp
 
   ** Not before claim for this token
-  ** 
-  ** When encoded, the value will be converted to UTC, the epoch const will be subtracted 
+  **
+  ** When encoded, the value will be converted to UTC, the epoch const will be subtracted
   ** from this value and it will be converted to seconds
   const DateTime? nbf
 
   ** Issued at claim for this token
   **
-  ** When encoded, the value will be converted to UTC, the epoch const will be subtracted 
+  ** When encoded, the value will be converted to UTC, the epoch const will be subtracted
   ** from this value and it will be converted to seconds
   const DateTime? iat
 
@@ -193,7 +193,7 @@ const class Jwt
   **   jwt := Jwt.decode("1111.2222.3333")
   **
   @NoDoc
-  static new decodeUnsigned(Str encoded)  
+  static new decodeUnsigned(Str encoded)
   {
     doDecode(encoded, null)
   }
@@ -229,18 +229,18 @@ const class Jwt
       verifyExp(claims[JwtConst.ExpirationClaim], clockDrift)
       verifyNbf(claims[JwtConst.NotBeforeClaim], clockDrift)
 
-      if (key is PubKey) 
-      { 
-        if (jwsAlg.keyType != key.algorithm) 
+      if (key is PubKey)
+      {
+        if (jwsAlg.keyType != key.algorithm)
           throw Err("JWT (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
-        if (!((PubKey)key).verify(jwsSigningInput, digestAlgorithm, signature)) 
+        if (!((PubKey)key).verify(jwsSigningInput, digestAlgorithm, signature))
           throw Err("Invalid JWT signature")
       }
-      else if (key is MacKey) 
+      else if (key is MacKey)
       {
-        if(key.algorithm != "Hmac" + jwsAlg.digest) 
+        if(key.algorithm != "Hmac" + jwsAlg.digest)
           throw Err("JWS (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
-        if(!((MacKey)key).update(jwsSigningInput).digest.bytesEqual(signature)) 
+        if(!((MacKey)key).update(jwsSigningInput).digest.bytesEqual(signature))
           throw Err("Invalid JWT MAC")
       }
       else
@@ -250,7 +250,7 @@ const class Jwt
     }
 
     return Jwt {
-      it.header = header  
+      it.header = header
       it.kid = header[JwtConst.KeyIdHeader]
       it.alg = header[JwtConst.AlgorithmHeader]
       it.claims = claims
@@ -274,14 +274,14 @@ const class Jwt
   **
   **   -   HS256 - HMAC using SHA-256
   **   -   HS384 - HMAC using SHA-384
-  **   -   HS512 - HMAC using SHA-512 
+  **   -   HS512 - HMAC using SHA-512
   **   -   RS256 - RSASSA-PKCS1-v1_5 using SHA-256
   **   -   RS384 - RSASSA-PKCS1-v1_5 using SHA-384
   **   -   RS512 - RSASSA-PKCS1-v1_5 using SHA-512
   **   -   ES256 - ECDSA using P-256 and SHA-256
   **   -   ES384 - ECDSA using P-256 and SHA-384
   **   -   ES512 - ECDSA using P-256 and SHA-512
-  **   -   none  - No digital signature or MAC performed 
+  **   -   none  - No digital signature or MAC performed
   **
   **   pair   := Crypto.cur.genKeyPair("RSA", 2048)
   **   priv   := pair.priv
@@ -293,11 +293,11 @@ const class Jwt
   **                it.iss    = "https://fantom.accounts.dev"
   **             }.encode(priv)
   **
-  Str encode(Key? key)  
+  Str encode(Key? key)
   {
     claimsSet := formatRegisteredClaims
-    
-    if (key == null && header[JwtConst.AlgorithmHeader] != "none") 
+
+    if (key == null && header[JwtConst.AlgorithmHeader] != "none")
       throw Err("JWT (${JwtConst.AlgorithmHeader}) header parameter must be \"none\" if key is null")
 
     encodedHeader := writeJsonToStr(header).toBuf.toBase64Uri
@@ -329,18 +329,18 @@ const class Jwt
     {
       claimValue := claims[claim]
 
-      if (claimValue is List) 
+      if (claimValue is List)
       {
-        if (!((List)claimValue).contains(expectedValue)) 
-        { 
-          throw Err("JWT (${claim}) claim ${claimValue} does not contain expected value: ${expectedValue}") 
+        if (!((List)claimValue).contains(expectedValue))
+        {
+          throw Err("JWT (${claim}) claim ${claimValue} does not contain expected value: ${expectedValue}")
         }
       }
       else
       {
-        if (claimValue != expectedValue) 
-        { 
-          throw Err("JWT (${claim}) claim ${claimValue} is not equal to expected value: ${expectedValue}") 
+        if (claimValue != expectedValue)
+        {
+          throw Err("JWT (${claim}) claim ${claimValue} is not equal to expected value: ${expectedValue}")
         }
       }
     }
@@ -348,9 +348,9 @@ const class Jwt
     return this
   }
 
-  //////////////////////////////////////////////////////////////////////////
-  // Utility Functions
-  //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// Utility Functions
+//////////////////////////////////////////////////////////////////////////
 
   private Str writeJsonToStr(Str:Obj map) { Type.find("util::JsonOutStream").method("writeJsonToStr").call(map) }
 
@@ -389,7 +389,7 @@ const class Jwt
   {
     if (aud == null) return null
     else if (aud is Str) return [(Str)aud]
-    else if (aud is List) 
+    else if (aud is List)
     {
       unique := ((List)aud).unique
       return unique.findType(Str#)
@@ -414,17 +414,17 @@ const class Jwt
   {
     signature := ""
     jwsAlg := JwsAlgorithm.fromAlg(alg)
-    if (key is PrivKey) 
+    if (key is PrivKey)
     {
-      if (jwsAlg.keyType != key.algorithm) 
-        throw Err("JWT (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")      
+      if (jwsAlg.keyType != key.algorithm)
+        throw Err("JWT (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
       sigBuf := ((PrivKey)key).sign(signingContent, jwsAlg.digest)
       if (key.algorithm == "EC") signature = transcodeDerToConcat(sigBuf, 64).toBase64Uri
       else signature = sigBuf.toBase64Uri
     }
     else if (key is MacKey)
     {
-      if(key.algorithm != "Hmac" + jwsAlg.digest) 
+      if(key.algorithm != "Hmac" + jwsAlg.digest)
         throw Err("JWS (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
       sigBuf := ((MacKey)key).update(signingContent).digest
       signature = sigBuf.toBase64Uri
@@ -439,7 +439,7 @@ const class Jwt
 
   // The ECDSA signature must be converted to ASN.1 DER bytes for verification
   //
-  // JWS ECDSA signatures are formatted as the EC point R and S unsigned integers converted to byte arrays and 
+  // JWS ECDSA signatures are formatted as the EC point R and S unsigned integers converted to byte arrays and
   // concatenated as defined in [RFC7515]`https://datatracker.ietf.org/doc/html/rfc7515#page-45`
   private static Buf transcodeConcatToDer(Buf sig)
   {
@@ -450,10 +450,10 @@ const class Jwt
 
     j := i
     if (sig[rawLen - i] < 0) j++
-    k := rawLen 
+    k := rawLen
     while (k > 1 && sig[rawLen*2 - k] == 0) {--k}
 
-    l := k 
+    l := k
     if (sig[rawLen*2 - k] < 0) l++
     len := 2 + j + 2 + l
 
@@ -468,7 +468,7 @@ const class Jwt
       derLen = 2 + 2 + j + 2 + l
       offset = 1
     }
-    else  
+    else
     {
       derLen = 3 + 2 + j + 2 + l
       setByte = true
@@ -555,7 +555,7 @@ const class Jwt
 **************************************************************************
 
 internal mixin JwtConst
-{  
+{
   // Javascript Object Signing and Encryption (JOSE) Headers
   const static Str AlgorithmHeader := "alg"
   const static Str KeyIdHeader := "kid"
@@ -581,7 +581,7 @@ enum class JwsAlgorithm
   hs512,
   rs256,
   rs384,
-  rs512,  
+  rs512,
   es256,
   es384,
   es512,
@@ -599,14 +599,14 @@ enum class JwsAlgorithm
   {
     alg := params[JwtConst.AlgorithmHeader]
     if (alg == null) throw Err("Missing (${JwtConst.AlgorithmHeader}) Parameter: ${params}")
-    algorithm := JwsAlgorithm.vals.find |JwsAlgorithm v->Bool| { return v.name.equalsIgnoreCase(alg) }  
+    algorithm := JwsAlgorithm.vals.find |JwsAlgorithm v->Bool| { return v.name.equalsIgnoreCase(alg) }
     return algorithm == null ? throw Err("Unsupported or Invalid JWS (alg) Parameter: ${alg}") : algorithm
   }
 
   static new fromKeyAndDigest(Str keyType, Str digest)
   {
-    algorithm := JwsAlgorithm.vals.find |JwsAlgorithm v->Bool| 
-    { 
+    algorithm := JwsAlgorithm.vals.find |JwsAlgorithm v->Bool|
+    {
       if (keyType != "none") { return v.keyType == keyType && v.digest == digest }
       else { return v.keyType == keyType }
     }
@@ -627,20 +627,20 @@ enum class JwsAlgorithm
 
   public Str keyType()
   {
-    firstLetter := name[0..0]
-    switch(firstLetter)
+    switch(name[0])
     {
-      case "h": return "oct"
-      case "r": return "RSA"
-      case "e": return "EC"
-      case "n": return "none"
+      case 'h': return "oct"
+      case 'r': return "RSA"
+      case 'e': return "EC"
+      case 'n': return "none"
       default:  return "none"
-    }    
+    }
   }
 
-  override Str toStr() 
-  { 
-    if (name != "none") return name.upper 
-    else return name 
+  override Str toStr()
+  {
+    if (name != "none") return name.upper
+    else return name
   }
 }
+
