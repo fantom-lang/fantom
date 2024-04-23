@@ -8,8 +8,6 @@
 //   08 Sep 09  Brian Frank  Rework fandoc -> example
 //
 
-using fwt
-
 **
 ** Working with Pod, Type, Slot, Field, Method, and Symbol
 ** reflection APIs.
@@ -42,14 +40,14 @@ class Reflection
   Void types()
   {
     echo("\n--- types ---")
-    pod := Pod.find("fwt")
-    t := pod.type("Button")
+    pod := Pod.find("graphics")
+    t := pod.type("Point")
     show("foo".typeof,                   "get the type of the an object")
     show(pod.types,                      "list the types in myPod")
-    show(pod.type("Button"),             "find a type in pod by simple name")
+    show(pod.type("Point"),              "find a type in pod by simple name")
     show(pod.type("Foo", false),         "returns null if type not found")
-    show(Type.find("fwt::Label"),        "lookup a type by its qualified name")
-    show(Type.find("fwt::Foo", false),   "returns null if type not found")
+    show(Type.find("graphics::Point"),        "lookup a type by its qualified name")
+    show(Type.find("graphics::Foo", false),   "returns null if type not found")
     show(Int#,                           "type literal for sys::Int")
     show(Int?[]#,                        "type literal for sys::Int?[]")
     show(t.fits(Num#),                   "reflective is/instanceof operator")
@@ -69,13 +67,13 @@ class Reflection
   Void slots()
   {
     echo("\n--- slots ---")
-    t := Type.find("fwt::Widget")
-    s := t.slot("onFocus")
-    show(t.slot("relayout"),           "lookup the slot called xyz on someType")
+    t := Type.find("web::WebClient")
+    s := t.slot("cookies")
+    show(t.slot("cookies"),            "lookup the slot called xyz on someType")
     show(t.slots,                      "list all the slots on someType")
-    show(Slot.find("fwt::Widget.enabled"),    "looukp a slot by its qualified name")
-    show(Slot.find("fwt::Widget.foo", false), "returns null if slot not found")
-    show(Widget#enabled,               "slot literal")
+    show(Slot.find("web::WebClient.cookies"),     "looukp a slot by its qualified name")
+    show(Slot.find("web::WebClient..foo", false), "returns null if slot not found")
+    show(Str#replace,                  "slot literal")
     show(#main,                        "slot literal (in enclosing class)")
     show(s.qname,                      "qualified name")
     show(s.name,                       "unqualified simple name")
@@ -109,16 +107,16 @@ class Reflection
   Void fields()
   {
     echo("\n--- fields ---")
-    t   := Type.find("fwt::Label")
+    t   := Type.find("web::WebClient")
     obj := t.make
-    f   := t.field("text")
-    show(t.field("fg"),                "lookup the field called xyz on someType")
+    f   := t.field("followRedirects")
+    show(t.field("cookies"),           "lookup the field called xyz on someType")
     show(t.field("x", false),          "returns null if field not found")
     show(t.fields,                     "list all the fields on someType")
-    show(Slot.findField("fwt::Label.text"),       "looukp a field by its qualified name")
-    show(Slot.findField("fwt::Label.foo", false),  "returns null if field not found")
+    show(Slot.findField("web::WebClient.cookies"),     "looukp a field by its qualified name")
+    show(Slot.findField("web::WebClient.foo", false),  "returns null if field not found")
     show(f.type,                       "type of field")
-    f.set(obj, "hi")                   // set instance field
+    f.set(obj, true)                   // set instance field
     show(f.get(obj),                   "get instance field")
     show(Float#pi.get,                 "get static field")
   }
@@ -130,7 +128,4 @@ class Reflection
     echo(what.padr(40) + " => " + resultStr)
   }
 }
-
-
-
 
