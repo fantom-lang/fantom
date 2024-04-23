@@ -62,11 +62,6 @@ public final class ActorFuture
     throw Err.make("Internal error " + state);
   }
 
-  public final FutureState state()
-  {
-    return (FutureState)FutureState.vals.get(status().ordinal());
-  }
-
   public final Object get() { return get(null); }
   public final Object get(Duration timeout)
   {
@@ -277,3 +272,4 @@ public final class ActorFuture
   private ArrayList whenDone;  // list of messages to deliver when done
 
 }
+

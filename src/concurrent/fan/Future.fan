@@ -37,12 +37,6 @@ native abstract const class Future
   **
   ** Current state of asynchronous computation
   **
-  @Deprecated { msg = "Use status" }
-  virtual FutureState state()
-
-  **
-  ** Current state of asynchronous computation
-  **
   abstract FutureStatus status()
 
   **
@@ -111,7 +105,6 @@ native abstract const class Future
 internal native final const class ActorFuture  : Future
 {
   override Obj? get(Duration? timeout := null)
-  override FutureState state()
   override FutureStatus status()
   override Void cancel()
   override This complete(Obj? val)
@@ -147,36 +140,4 @@ enum class FutureStatus
   ** Return if the cancelled state
   Bool isCancelled() { this === cancelled }
 }
-
-**************************************************************************
-** FutureState
-**************************************************************************
-
-** State of a Future's asynchronous computation
-@Deprecated { msg="Use FutureStatus" }
-@Js
-enum class FutureState
-{
-  pending,
-  ok,
-  err,
-  cancelled
-
-  ** Return if pending state
-  Bool isPending() { this === pending }
-
-  ** Return if in any completed state: ok, err, or cancelled
-  Bool isComplete() { this !== pending }
-
-  ** Return if the ok state
-  Bool isOk() { this === ok }
-
-  ** Return if the err state
-  Bool isErr() { this === err }
-
-  ** Return if the cancelled state
-  Bool isCancelled() { this === cancelled }
-}
-
-
 

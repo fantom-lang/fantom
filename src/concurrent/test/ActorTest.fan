@@ -120,7 +120,6 @@ class ActorTest : Test
     verifySame(f.get, constObj)
     verifySame(f.get, constObj)
     verifySame(f.status, FutureStatus.ok)
-    verifySame(f.state, FutureState.ok)
 
     // not immutable
     verifyErr(NotImmutableErr#) { a.send(this) }
@@ -133,7 +132,6 @@ class ActorTest : Test
     verifyErr(UnknownServiceErr#) { f.get }
     verifyErr(UnknownServiceErr#) { f.get }
     verifySame(f.status, FutureStatus.err)
-    verifySame(f.state, FutureState.err)
   }
 
   static Obj? messaging(Str msg)
@@ -939,5 +937,4 @@ internal class SerMsg
   override Bool equals(Obj? that) { that is SerMsg && i == that->i }
   Int i := 7
 }
-
 
