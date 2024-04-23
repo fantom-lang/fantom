@@ -96,7 +96,7 @@ Futures [#futures]
 ******************
 All three send methods return a [Future]`concurrent::Future` which may
 used to access the result of that message.  You can poll for the
-result using `concurrent::Future.state` - a future enters the complete
+result using `concurrent::Future.status` - a future enters the complete
 state by one of three transitions:
   - The actor processes the message and returns a result
   - The actor raises an exception while processing the message
@@ -271,3 +271,4 @@ processing their pending message queues - all pending messages are cancelled.
 Actors which are currently  executing a message are interrupted (which may
 or may not immediately terminate that thread).  Once all actors have
 relinquished their threads, the ActorPool enters the *done* state.
+
