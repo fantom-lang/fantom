@@ -74,21 +74,51 @@ class KeyTest : CryptoTest
     // being we need to convert to pkcs8
     // $ openssl pkey -in priv1.pem -out priv8.pem
 
+    // secp256k1 curve not supported started in Java16
+    // https://docs.oracle.com/en/java/javase/17/migrate/removed-tools-and-components.html#GUID-F182E075-858A-4468-9434-8FC1704E7BB7
+    if (getJavaMajorVersion < 16)
+    {
+      // secp256k1 curve
+      // private key
+      ecPrivLegacy :=
+        "-----BEGIN PRIVATE KEY-----
+         MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQg3BYiYrV9YyVXwQmyo2Vp
+         Iox+Gk3mYFV17fdewbMVKBehRANCAAT0ng721uClmiIoGYm1bBvmVxuSLTwiCt4Y
+         p0jY/EKA4YDUxReIbpAr2pdd3kdX6m1tpT26FrpEAYFm40PsxM4Q
+         -----END PRIVATE KEY-----"
+      PrivKey privLegacy := Crypto.cur.loadPem(ecPrivLegacy.in, "EC")
+      verifyKey(privLegacy, "EC", "PKCS#8")
+
+      // public key
+      ecPubLegacy :=
+        "-----BEGIN PUBLIC KEY-----
+         MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE9J4O9tbgpZoiKBmJtWwb5lcbki08Igre
+         GKdI2PxCgOGA1MUXiG6QK9qXXd5HV+ptbaU9uha6RAGBZuND7MTOEA==
+         -----END PUBLIC KEY-----"
+      PubKey pubLegacy := Crypto.cur.loadPem(ecPubLegacy.in, "EC")
+      verifyKey(pubLegacy, "EC", "X.509")
+
+      // test sig
+      data := "message".toBuf
+      sig  := privLegacy.sign(data, "SHA256")
+      verify(pubLegacy.verify(data, "SHA256", sig))
+    }
+
+    // NIST P-256 curve
     // private key
     ecPriv :=
       "-----BEGIN PRIVATE KEY-----
-       MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQg3BYiYrV9YyVXwQmyo2Vp
-       Iox+Gk3mYFV17fdewbMVKBehRANCAAT0ng721uClmiIoGYm1bBvmVxuSLTwiCt4Y
-       p0jY/EKA4YDUxReIbpAr2pdd3kdX6m1tpT26FrpEAYFm40PsxM4Q
+       MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCBwYc+D4HMQ5OVHQMw9
+       KsTo/26oJb6dN5QH1GbFcVysUA==
        -----END PRIVATE KEY-----"
-    PrivKey priv := Crypto.cur.loadPem(ecPriv.in, "EC")
+    PrivKey priv := crypto.loadPem(ecPriv.in, "EC")
     verifyKey(priv, "EC", "PKCS#8")
 
-    // public key
+    // private key
     ecPub :=
       "-----BEGIN PUBLIC KEY-----
-       MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE9J4O9tbgpZoiKBmJtWwb5lcbki08Igre
-       GKdI2PxCgOGA1MUXiG6QK9qXXd5HV+ptbaU9uha6RAGBZuND7MTOEA==
+       MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEI59TOAdnJ7uPgPOdIxj+BhWSQBXK
+       S3lsRZJwj5eIYArwUkS9UhkONUGesEk9FQLC2BLzqsegWXWQF9uNf2s6eA==
        -----END PUBLIC KEY-----"
     PubKey pub := Crypto.cur.loadPem(ecPub.in, "EC")
     verifyKey(pub, "EC", "X.509")
@@ -97,6 +127,7 @@ class KeyTest : CryptoTest
     data := "message".toBuf
     sig  := priv.sign(data, "SHA256")
     verify(pub.verify(data, "SHA256", sig))
+
   }
 
   private Void verifyKey(Key key, Str alg, Str format)

@@ -6,6 +6,8 @@
 //   17 Aug 2021 Matthew Giannini   Creation
 //
 
+using [java] java.lang::System
+
 **
 ** Common base class with utilities for crypto tests
 **
@@ -38,5 +40,17 @@ abstract class CryptoTest : Test
                       -----END CERTIFICATE-----|>
     crt := contents.toBuf.toFile(`self-signed.crt`)
     this.selfSign = crypto.loadX509(crt.in).first
+  }
+
+  internal Int getJavaMajorVersion()
+  {
+    version := System.getProperty("java.version")
+    if (version.startsWith("1.")) version = version.getRange(2..2)
+    else
+    {
+        dot := version.index(".")
+        if(dot != -1) version = version.getRange(0..dot-1)
+    }
+    return version.toInt
   }
 }
