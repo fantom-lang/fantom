@@ -25,10 +25,11 @@ class HttpRes
   Str:Str headers := Str:Str[:] { it.caseInsensitive = true }
 
   ** The text content of the response when the XMLHttpRequest
-  ** 'responseType' is 'text'.
+  ** `HttpReq.resType` is "text"
   Str content := ""
 
   ** The binary content of the response when the XMLHttpRequest
-  ** 'responseType' is 'arraybuffer'
+  ** `HttpReq.resType` is "arraybuffer"
   Buf contentBuf := Buf(0)
 }
+
