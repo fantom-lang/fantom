@@ -22,7 +22,7 @@
 - Fixes for Crypto EC keypair support
 - Fix Time.minus 24hr boundary checks
 - Allow mixins to have non-abstract fields if no storage required
-- Fix Color HSL implementation to match browser behavoir
+- Fix Color HSL implementation to match browser behavior
 - Add MimeType.isText
 - Add util::LockFile
 - Redesign ES compiler to not generate code for every pod

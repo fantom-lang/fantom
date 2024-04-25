@@ -30,7 +30,7 @@ const class FilePack : Weblet
 //////////////////////////////////////////////////////////////////////////
 
   ** Construct a bundle for the given list of text files
-  static new makeFiles(File[] files)
+  static new makeFiles(File[] files, MimeType? mimeType := null)
   {
     // calculate buffer size to avoid resizes assuming 25% gzip compression
     totalSize := 0
@@ -38,7 +38,8 @@ const class FilePack : Weblet
     buf := Buf(totalSize/4)
 
     // derive mime type from file ext (assume they are all the same)
-    mimeType := files[0].mimeType ?: throw Err("Ext to mimeType: $files.first")
+    if (mimeType == null)
+      mimeType = files[0].mimeType ?: throw Err("Ext to mimeType: $files.first")
 
     // write each file to the buffer
     out := Zip.gzipOutStream(buf.out)
@@ -71,6 +72,14 @@ const class FilePack : Weblet
 
   ** Inferred mime type from file extensions
   @NoDoc const MimeType mimeType
+
+  ** Configurable URI for application specific path
+  @NoDoc Uri uri
+  {
+    get { uriRef.val ?: throw Err("No uri configured") }
+    set { uriRef.val = it }
+  }
+  private const AtomicRef uriRef := AtomicRef()
 
 //////////////////////////////////////////////////////////////////////////
 // Weblet
