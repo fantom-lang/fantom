@@ -23,8 +23,8 @@ FROM eclipse-temurin:$JDK_VERSION as bootstrap
 ARG SWT_DL_URL=https://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.27-202303020300/swt-4.27-gtk-linux-x86_64.zip&mirror_id=1
 
 # These define the `rel` Fantom version.
-ARG REL_VERSION=fantom-1.0.79
-ARG REL_TAG=v1.0.79
+ARG REL_VERSION=fantom-1.0.80
+ARG REL_TAG=v1.0.80
 
 WORKDIR /work
 
@@ -47,20 +47,13 @@ RUN set -e; \
 
 COPY . ./fan/
 
-# Copy SWT into installations
-#RUN mkdir rel/lib/java/ext/linux-x86_64 \
-#    && cp swt.jar rel/lib/java/ext/linux-x86_64/ \
-#    && mkdir fan/lib/java/ext/linux-x86_64 \
-#    && cp swt.jar fan/lib/java/ext/linux-x86_64/ \
-#    && rm swt.jar
-
-# Populate config.props with jdkHome (to use jdk, not jre) and devHome
-RUN echo -e "\n\njdkHome=$JAVA_HOME/\ndevHome=/work/fan/\n" >> rel/etc/build/config.props \
-    && echo -e "\n\njdkHome=$JAVA_HOME/" >> fan/etc/build/config.props
-
-RUN rel/bin/fan fan/src/buildall.fan superclean \
-    && rel/bin/fan fan/src/buildboot.fan compile \
-    && fan/bin/fan fan/src/buildpods.fan compile
+RUN <<EOF
+  echo "\n\njdkHome=${JAVA_HOME}/\ndevHome=/work/fan/\n" >> rel/etc/build/config.props
+  echo "\n\njdkHome=${JAVA_HOME}/" >> fan/etc/build/config.props
+  rel/bin/fan fan/src/buildall.fan superclean
+  rel/bin/fan fan/src/buildboot.fan compile
+  fan/bin/fan fan/src/buildpods.fan compile
+EOF
 
 # The /work/fan directory now contains a compiled version of the local Fantom
 
