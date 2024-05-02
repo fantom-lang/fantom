@@ -100,7 +100,7 @@ const class JJwk : Jwk
     keysList := jwks["keys"] as List
     if (keysList == null) throw Err("Invalid JSON Web Key Set")
     if (keysList.size > maxJwKeys) { keysList = keysList.getRange(0..maxJwKeys-1) }
-    jwkList := [,]
+    Jwk[] jwkList := Jwk[,]
     keysList.each |k| { jwkList = jwkList.add(JJwk(k)) }
     return jwkList
   }

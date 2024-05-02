@@ -428,6 +428,122 @@ class JwtTest : CryptoTest
     }
   }
 
+  Void testDecodeWithJwks()
+  {
+    Str:Obj key1 := [
+                      "kty": "EC",
+                      "use": "sig",
+                      "crv": "P-256",
+                      "kid": "wxyz",
+                      "x": "I59TOAdnJ7uPgPOdIxj-BhWSQBXKS3lsRZJwj5eIYAo",
+                      "y": "8FJEvVIZDjVBnrBJPRUCwtgS86rHoFl1kBfbjX9rOng",
+                      "alg": "ES256",
+                    ]
+
+    Str:Obj key2 := [
+                      "kty": "oct",
+                      "kid": "efgh",
+                      "k": "badSecret",
+                      "alg": "HS384",
+                    ]
+
+    ecJwk   := crypto.loadJwk(key1)
+    octJwk  := crypto.loadJwk(key2)
+    jwks := [ecJwk, octJwk]
+
+    ecPrivPem := "-----BEGIN PRIVATE KEY-----
+                  MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCBwYc+D4HMQ5OVHQMw9
+                  KsTo/26oJb6dN5QH1GbFcVysUA==
+                  -----END PRIVATE KEY-----"
+
+    myPrivKey := crypto.loadPem(ecPrivPem.in, "EC") as PrivKey
+
+    jwtStr := Jwt {
+                it.alg = "ES256"
+                it.kid = "wxyz"
+                it.claims = ["myClaim":"hello"]
+                it.sub = "user@fantom.org"
+              }.encode(myPrivKey)
+
+    jwt := Jwt.decode(jwtStr, jwks)
+
+    verifyEq(jwt.claims["sub"], "user@fantom.org")
+    verifyEq(jwt.sub, "user@fantom.org")
+    verifyEq(jwt.claims["myClaim"], "hello")
+
+    jwtStr  = Jwt {
+                it.alg = "ES384"
+                it.kid = "wxyz"
+                it.claims = ["myClaim":"hello"]
+                it.sub = "user@fantom.org"
+              }.encode(myPrivKey)
+
+    //mismatched alg parameters
+    verifyErrMsg(Err#, "JWT (alg) header parameter ES384 != JWK alg ES256")
+    {
+      err := Jwt.decode(jwtStr, jwks)
+    }
+
+    jwtStr  = Jwt {
+                it.alg = "HS384"
+                it.kid = "efgh"
+                it.claims = ["myClaim":"hello"]
+                it.sub = "user@fantom.org"
+              }.encode(octJwk.key)
+
+    //not strongly typed as Jwk[]
+    jwks2 := [,]
+    jwks2.add(ecJwk)
+    jwks2.add(octJwk)
+
+    jwt  = Jwt.decode(jwtStr, jwks2)
+
+    verifyEq(jwt.claims["sub"], "user@fantom.org")
+    verifyEq(jwt.sub, "user@fantom.org")
+    verifyEq(jwt.claims["myClaim"], "hello")
+
+    jwtStr  = Jwt {
+                it.alg = "HS384"
+                it.claims = ["myClaim":"hello"]
+                it.sub = "user@fantom.org"
+              }.encode(octJwk.key)
+
+    verifyErrMsg(Err#, "JWT missing (kid) header parameter: [alg:HS384]")
+    {
+      err := Jwt.decode(jwtStr, jwks)
+    }
+
+    jwtStr  = Jwt {
+                it.alg = "HS384"
+                it.kid = "ijkl"
+                it.claims = ["myClaim":"hello"]
+                it.sub = "user@fantom.org"
+              }.encode(octJwk.key)
+
+    verifyErrMsg(Err#, "Could not find JWK with matching kid: ijkl")
+    {
+      err := Jwt.decode(jwtStr, jwks)
+    }
+
+    verifyErrMsg(ArgErr#, "The key parameter must be a Jwk[] or Key")
+    {
+      err := Jwt.decode(jwtStr, "badSecret")
+    }
+
+    verifyErrMsg(ArgErr#, "The key parameter must be a Jwk[] or Key")
+    {
+      err := Jwt.decode(jwtStr, octJwk)
+    }
+
+    verifyErrMsg(ArgErr#, "The key parameter must contain all Jwk objects")
+    {
+      jwks3 := [,]
+      jwks3.add(octJwk)
+      jwks3.add("badSecret")
+      err := Jwt.decode(jwtStr, jwks3)
+    }
+  }
+
   // CVE-2022-21449
   Void testPsychicSignatureAttack()
   {
