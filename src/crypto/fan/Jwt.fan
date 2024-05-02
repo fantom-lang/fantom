@@ -139,20 +139,26 @@ const class Jwt
 
   ** Expiration claim for this token
   **
-  ** When encoded, the value will be converted to UTC, the epoch const will be subtracted
+  ** When encoded, the value will be converted to `TimeZone.utc`, the epoch const will be subtracted
   ** from this value and it will be converted to seconds
+  **
+  ** When decoded, the value will be converted to `TimeZone.utc`
   const DateTime? exp
 
   ** Not before claim for this token
   **
-  ** When encoded, the value will be converted to UTC, the epoch const will be subtracted
+  ** When encoded, the value will be converted to `TimeZone.utc`, the epoch const will be subtracted
   ** from this value and it will be converted to seconds
+  **
+  ** When decoded, the value will be converted to `TimeZone.utc`
   const DateTime? nbf
 
   ** Issued at claim for this token
   **
-  ** When encoded, the value will be converted to UTC, the epoch const will be subtracted
+  ** When encoded, the value will be converted to `TimeZone.utc`, the epoch const will be subtracted
   ** from this value and it will be converted to seconds
+  **
+  ** When decoded, the value will be converted to `TimeZone.utc`
   const DateTime? iat
 
   ** JWT ID claim for this token
@@ -163,7 +169,11 @@ const class Jwt
 
   ** Decode a `Jwt` from an encoded Str
   **
-  ** Provide a `Key` (`PubKey` or `SymKey`) to verify the signature
+  ** The key parameter supports these types to verify the signature:
+  **
+  **   - `Key` (`PubKey` or `SymKey`)
+  **   - `Jwk`[] - An error is thrown if the Jwt kid header parameter
+  **               is missing or no matching kid is found in the list
   **
   ** If the exp and/or nbf claims exist, those will be verified
   **
@@ -179,23 +189,49 @@ const class Jwt
   **
   **   ecJwk := Crypto.cur.loadJwk(jwk)
   **
-  **   jwt := Jwt.decode("1111.2222.3333", ecJwk.key)
+  **   jwt   := Jwt.decode("1111.2222.3333", ecJwk.key)
   **
-  static new decode(Str encoded, Key key, Duration clockDrift := 60sec)
+  **   jwks := Crypto.cur.loadJwksForUri(`https://example.com/jwks.json`)
+  **
+  **   jwt2  := Jwt.decodeJwks("4444.5555.6666", jwks)
+  **
+  static new decode(Str encoded, Obj key, Duration clockDrift := 60sec)
   {
-    doDecode(encoded, key, clockDrift)
+    if (key is List)
+    {
+      if (!((List)key).all { it is Jwk }) throw ArgErr("The key parameter must contain all Jwk objects")
+      return decodeFromJwks(encoded, key, clockDrift)
+    }
+    if (key is Key) return doDecode(encoded, key, clockDrift)
+    throw ArgErr("The key parameter must be a Jwk[] or Key")
   }
 
   ** Decode an unsigned `Jwt` from an encoded Str
   **
   ** No claims are verified
   **
-  **   jwt := Jwt.decode("1111.2222.3333")
+  **   jwt := Jwt.decode("1111.2222.")
   **
   @NoDoc
   static new decodeUnsigned(Str encoded)
   {
     doDecode(encoded, null)
+  }
+
+  private static new decodeFromJwks(Str encoded, Jwk[] jwks, Duration clockDrift := 60sec)
+  {
+    jwt := decodeUnsigned(encoded)
+    kid := jwt.kid
+    if (kid == null) throw Err("JWT missing (kid) header parameter: ${jwt.header}")
+    matchingJwk := jwks.find |Jwk jwk->Bool| { return jwk.meta[JwtConst.KeyIdHeader] != null &&
+                                                      (Str)jwk.meta[JwtConst.KeyIdHeader] == kid }
+
+    if (matchingJwk == null) throw Err("Could not find JWK with matching kid: ${kid}")
+
+    if (matchingJwk.meta[JwtConst.AlgorithmHeader] != jwt.alg)
+      throw Err("JWT (alg) header parameter ${jwt.alg} != JWK alg ${matchingJwk.meta[JwtConst.AlgorithmHeader]}")
+
+    return doDecode(encoded, matchingJwk.key, clockDrift)
   }
 
   private static new doDecode(Str encoded, Key? key, Duration clockDrift := 60sec)
@@ -224,7 +260,7 @@ const class Jwt
     catch (Err e) {throw Err("Error parsing JWT parts", e)}
 
     //Verify Signature
-    if (!signature.bytesEqual(Buf.fromBase64("")) || jwsAlg != JwsAlgorithm.none || key != null)
+    if (key != null)
     {
       verifyExp(claims[JwtConst.ExpirationClaim], clockDrift)
       verifyNbf(claims[JwtConst.NotBeforeClaim], clockDrift)
@@ -352,6 +388,13 @@ const class Jwt
 // Utility Functions
 //////////////////////////////////////////////////////////////////////////
 
+  override Str toStr()
+  {
+    return "JOSE HEADER:\n" + prettyPrint(header) + "\nJWT CLAIMS:\n" + prettyPrint(claims)
+  }
+
+  private Str prettyPrint(Str:Obj map) { Type.find("util::JsonOutStream").method("prettyPrintToStr").call(map) }
+
   private Str writeJsonToStr(Str:Obj map) { Type.find("util::JsonOutStream").method("writeJsonToStr").call(map) }
 
   private static Obj? readJson(Str encoded) { Type.find("util::JsonInStream").make([Buf.fromBase64(encoded).in])->readJson }
@@ -401,7 +444,7 @@ const class Jwt
 
   private DateTime? fromNumericDate(Int? val)
   {
-    if (val != null && val is Int) return DateTime.fromJava(val * 1000)
+    if (val != null) return DateTime.fromJava(val * 1000).toUtc
     return null
   }
 

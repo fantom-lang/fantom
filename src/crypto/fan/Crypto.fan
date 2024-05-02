@@ -132,7 +132,7 @@ const mixin Crypto
   **
   abstract Obj? loadPem(InStream in, Str algorithm := "RSA")
 
-  ** Load a JSON Web Key (JWK[`Jwk`]) from a Map. 
+  ** Load a JSON Web Key (`Jwk`) from a Map.
   **
   ** Throws an error if unable to determine the JWK type.
   **
@@ -145,7 +145,7 @@ const mixin Crypto
   **
   ** Import JSON Web Key Set from a Uri
   **
-  ** jwks := Crypto.cur.loadJwksForUri(`https://example.com/jwks.json`)
+  **   jwks := Crypto.cur.loadJwksForUri(`https://example.com/jwks.json`)
   **
   abstract Jwk[] loadJwksForUri(Uri uri, Int maxKeys := 10)
 }
