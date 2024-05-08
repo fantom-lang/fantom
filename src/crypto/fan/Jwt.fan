@@ -139,26 +139,26 @@ const class Jwt
 
   ** Expiration claim for this token
   **
-  ** When encoded, the value will be converted to `TimeZone.utc`, the epoch const will be subtracted
+  ** When encoded, the value will be converted to 'TimeZone.utc', the epoch const will be subtracted
   ** from this value and it will be converted to seconds
   **
-  ** When decoded, the value will be converted to `TimeZone.utc`
+  ** When decoded, the value will be converted to 'TimeZone.utc'
   const DateTime? exp
 
   ** Not before claim for this token
   **
-  ** When encoded, the value will be converted to `TimeZone.utc`, the epoch const will be subtracted
+  ** When encoded, the value will be converted to 'TimeZone.utc', the epoch const will be subtracted
   ** from this value and it will be converted to seconds
   **
-  ** When decoded, the value will be converted to `TimeZone.utc`
+  ** When decoded, the value will be converted to 'TimeZone.utc'
   const DateTime? nbf
 
   ** Issued at claim for this token
   **
-  ** When encoded, the value will be converted to `TimeZone.utc`, the epoch const will be subtracted
+  ** When encoded, the value will be converted to 'TimeZone.utc', the epoch const will be subtracted
   ** from this value and it will be converted to seconds
   **
-  ** When decoded, the value will be converted to `TimeZone.utc`
+  ** When decoded, the value will be converted to 'TimeZone.utc'
   const DateTime? iat
 
   ** JWT ID claim for this token
