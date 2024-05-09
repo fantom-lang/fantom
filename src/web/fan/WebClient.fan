@@ -334,6 +334,14 @@ class WebClient
   }
 
   **
+  ** Convenience for 'writeBuf("POST", content).readRes'
+  **
+  This postBuf(Buf buf)
+  {
+    writeBuf("POST", buf).readRes
+  }
+
+  **
   ** Convenience for 'writeFile("POST", file).readRes'
   **
   This postFile(File file)
@@ -379,6 +387,25 @@ class WebClient
     reqHeaders["Content-Length"] = body.size.toStr
     writeReq
     reqOut.writeBuf(body).close
+    return this
+  }
+
+  **
+  ** Write a binary buffer using the given HTTP method to the URI.  If Content-Type
+  ** header is not already set, then it is set as ""application/octet-stream". This
+  ** method does not support the ["Expect" header]`pod-doc#expectContinue`
+  **
+  This writeBuf(Str method, Buf content)
+  {
+    if (reqHeaders["Expect"] != null) throw UnsupportedErr("'Expect' header")
+    reqMethod = method
+    ct := reqHeaders["Content-Type"]
+    if (ct == null)
+      reqHeaders["Content-Type"] = "application/octet-stream"
+    reqHeaders["Content-Length"] = content.size.toStr
+    writeReq
+    reqOut.writeBuf(content.seek(0))
+    reqOut.close
     return this
   }
 
@@ -595,3 +622,4 @@ class WebClient
   private Int numRedirects := 0
 
 }
+
