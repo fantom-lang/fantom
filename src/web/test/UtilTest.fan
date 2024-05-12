@@ -304,4 +304,41 @@ class UtilTest : Test
     `multipart-c`.toFile.out.print("-------\r\n-------").close
   }
 
+  Void testMultiPart1023()
+  {
+    bound    := "XXXXX"
+    buf      := Buf()
+    out      := buf.out
+
+    // multi-part form with x2 parts
+    out.print("--").print(bound).print("\r\n")
+    out.print("name: foo1\r\n")    // Part1 = foo1
+    out.print("\r\n")
+    1023.times |i| { out.write(i == 1022 ? 0xab : 0) }    // 1023 is the MAGIC bad number!
+    out.print("\r\n")
+
+    out.print("--").print(bound).print("\r\n")
+    out.print("name: foo2\r\n")    // Part2 = foo2
+    out.print("\r\n")
+    out.print("Data-Data-Data")
+    out.print("\r\n")
+
+    out.print("--").print(bound).print("--\r\n")
+
+    // parse it with WebUtil
+    names := Str[,]
+    vals  := Buf[,]
+    WebUtil.parseMultiPart(buf.flip.in, bound) |headers, InStream in|
+    {
+      names.add(headers["name"])
+      vals.add(in.readAllBuf)   // drain the part stream
+    }
+
+    verifyEq(names, ["foo1", "foo2"])
+    verifyEq(vals.size, 2)
+    verifyEq(vals[0].size, 1023)
+    verifyEq(vals[0].get(1022), 0xab)
+    verifyEq(vals[1].size, 14)
+  }
 }
+

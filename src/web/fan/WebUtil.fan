@@ -741,16 +741,18 @@ internal class MultiPartInStream : InStream
     // if we have read boundary, then this part is complete
     if (endOfPart) return false
 
-    // read the next line or 1000 bytes into curLine buf
+    // read the next line or 1kb bytes into curLine buf
     curLine.clear
-    for (i:=0; i<1024; ++i)
+    while (true)
     {
       c := in.readU1
       curLine.write(c)
+      if (c == '\r') continue  // don't break if \r is the 1024th byte
+      if (curLine.size >= 1024) break
       if (c == '\n') break
     }
 
-    // if not a property \r\n newline then keep chugging
+    // if not a proper \r\n newline then keep chugging
     if (curLine.size < 2 || curLine[-2] != '\r') { curLine.seek(0); return true }
 
     // go ahead and keep reading as long as we have boundary match
