@@ -64,6 +64,15 @@ public class SqlUtil
     {
       jobj = ((MemBuf)value).buf;
     }
+    // Support for Postgres text[] <--> Fantom Str[]
+    else if ((value instanceof List) && (((List) value).of().equals(Sys.StrType)))
+    {
+      List list = (List) value;
+      String[] arr = new String[(int)list.size()];
+      for (int i = 0; i < list.size(); i++)
+        arr[i] = list.get(i).toString();
+      jobj = arr;
+    }
 
     return jobj;
   }
@@ -218,6 +227,9 @@ public class SqlUtil
       case Types.TIME:
         return new ToFanTime();
 
+      case Types.ARRAY:
+        return new ToFanList();
+
       default:
         return new ToDefFanStr();
     }
@@ -319,6 +331,7 @@ public class SqlUtil
     }
   }
 
+
   public static class ToFanBuf extends SqlToFan
   {
     public Object toObj(ResultSet rs, int col)
@@ -327,6 +340,22 @@ public class SqlUtil
       byte[] buf = rs.getBytes(col);
       if (rs.wasNull()) return null;
       return new MemBuf(buf);
+    }
+  }
+
+  // Support for Postgres text[] <--> Fantom Str[]
+  public static class ToFanList extends SqlToFan
+  {
+    public Object toObj(ResultSet rs, int col)
+      throws SQLException
+    {
+      String[] arr = (String[])
+        ((java.sql.Array) rs.getObject(col)).getArray();
+
+      List list = new List(Sys.StrType, arr.length);
+      for (int i = 0; i < arr.length; i++)
+        list.add(arr[i]);
+      return list;
     }
   }
 
