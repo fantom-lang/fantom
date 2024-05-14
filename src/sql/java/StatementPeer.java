@@ -455,7 +455,15 @@ public class StatementPeer
       while (current != len)
       {
         int ch = sql.charAt(current);
-        if (ch == '@') { mode = MODE_PARAM; break; }
+        if (ch == '@') {
+          // @> is the 'penguin operator' in Postgres, which we do
+          // not want to treat as a parameter.
+          boolean isPenguin = (current < len && sql.charAt(current+1) == '>');
+          if (!isPenguin)
+          {
+            mode = MODE_PARAM; break;
+          }
+        }
         if (ch == '\'') { mode = MODE_QUOTE; break; }
 
         current++;
