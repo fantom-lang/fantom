@@ -331,7 +331,6 @@ public class SqlUtil
     }
   }
 
-
   public static class ToFanBuf extends SqlToFan
   {
     public Object toObj(ResultSet rs, int col)
@@ -352,10 +351,7 @@ public class SqlUtil
       String[] arr = (String[])
         ((java.sql.Array) rs.getObject(col)).getArray();
 
-      List list = new List(Sys.StrType, arr.length);
-      for (int i = 0; i < arr.length; i++)
-        list.add(arr[i]);
-      return list;
+      return new List(Sys.StrType, arr);
     }
   }
 
@@ -369,3 +365,4 @@ public class SqlUtil
   }
 
 }
+
