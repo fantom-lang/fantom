@@ -34,6 +34,7 @@ class GenTsDecl
   private CPod pod
   private const Bool allTypes
   private TsDocWriter docWriter
+  private Str[]? deps := null
 
 //////////////////////////////////////////////////////////////////////////
 // Main writing method
@@ -55,7 +56,7 @@ class GenTsDecl
     if (genTypes.isEmpty) return
 
     // Write dependencies
-    deps := pod.depends.map |CDepend dep->Str| { dep.name }
+    this.deps = pod.depends.map |CDepend dep->Str| { dep.name }
     deps.each |dep|
     {
       out.print("import * as ${dep} from './${dep}.js';\n")
@@ -66,13 +67,13 @@ class GenTsDecl
     // Write declaration for each type
     genTypes.each |type|
     {
-      genType(type, deps)
+      genType(type)
     }
 
     if (pod.name == "sys") printObjUtil
   }
 
-  private Void genType(CType type, Str[] deps)
+  private Void genType(CType type)
   {
     isList := false
     isMap  := false
@@ -111,6 +112,10 @@ class GenTsDecl
       m.params.any |CParam p->Bool| { p.paramType.isFunc }
     }
 
+    // keep track of slot names we've written. only mixin slots that have
+    // not been overridden by the current type will be included
+    Str[] writtenSlots := [,]
+
     // Write fields
     if (true)
     {
@@ -118,21 +123,11 @@ class GenTsDecl
       t := getNamespacedType("Type", "sys", this.pod)
       out.print("  static type\$: ${t}\n")
     }
-    type.fields.each |field|
+    type.fields.each |CField field|
     {
       if (!includeSlot(type, field)) return
-
-      name := JsNode.methodToJs(field.name)
-      staticStr := field.isStatic ? "static " : ""
-      typeStr := getJsType(field.fieldType, pod, field.isStatic ? type : null)
-
-      printDoc(field, 2)
-
-      out.print("  $staticStr$name(): $typeStr\n")
-      if (!field.isConst)
-        out.print("  $staticStr$name(it: $typeStr): void\n")
-      else if (hasItBlockCtor)
-        out.print("  ${staticStr}__$name(it: $typeStr): void\n")
+      writeField(type, field, hasItBlockCtor)
+      writtenSlots.add(field.name)
     }
 
     // Write methods
@@ -145,38 +140,84 @@ class GenTsDecl
     type.methods.each |method|
     {
       if (!includeSlot(type, method)) return
+      writeMethod(type, method)
+      writtenSlots.add(method.name)
+    }
 
-      isStatic := method.isStatic || method.isCtor || pmap.containsKey(type.signature)
-      staticStr := isStatic ? "static " : ""
-      name := JsNode.methodToJs(method.name)
-      if (type.signature == "sys::Func") name += "<R>"
+    // copy mixins
+    type.mixins.each |CType ref|
+    {
+      ref.slots.each |CSlot slot|
+      {
+        // skip slots already written by the current type (overridden)
+        if (writtenSlots.contains(slot.name)) return
+        if (!slot.parent.isMixin) return
+        if (slot.isNoDoc || slot.isStatic) return
 
-      inputList := method.params.map |CParam p->Str| {
-        paramName := JsNode.pickleName(p.name, deps)
-        if (p.hasDefault)
-          paramName += "?"
-        paramType := getJsType(p.paramType, pod, isStatic ? type : null)
-        return "$paramName: $paramType"
+        // write the mixin slot
+        if (slot is CField)
+        {
+          // echo("    ${slot} [slot] parent = ${slot.parent} [${slot.typeof}]")
+          writeField(ref, slot, hasItBlockCtor)
+        }
+        else if (slot is CMethod)
+        {
+          // echo("    ${slot} [slot] parent = ${slot.parent} [${slot.typeof}]")
+          writeMethod(ref, slot)
+        }
+        writtenSlots.add(slot.name)
       }
-      if (!method.isStatic && !method.isCtor && pmap.containsKey(type.signature))
-        inputList.insert(0, "self: ${pmap[type.signature]}")
-      if (method.isCtor)
-        inputList.add("...args: unknown[]")
-      inputs := inputList.join(", ")
-
-      output := method.isCtor ? type.name : getJsType(method.returnType, pod, pmap.containsKey(type.signature) ? type : null)
-      if (method.qname == "sys::Obj.toImmutable" ||
-          method.qname == "sys::List.ro" ||
-          method.qname == "sys::Map.ro")
-            output = "Readonly<$output>"
-
-      printDoc(method, 2)
-      out.print("  $staticStr$name($inputs): $output\n")
     }
 
     out.print("}\n\n")
   }
 
+  private Void writeField(CType type, CField field, Bool hasItBlockCtor)
+  {
+    name := JsNode.methodToJs(field.name)
+    staticStr := field.isStatic ? "static " : ""
+    typeStr := getJsType(field.fieldType, pod, field.isStatic ? type : null)
+
+    printDoc(field, 2)
+
+    out.print("  ${staticStr}${name}(): ${typeStr};\n")
+    if (!field.isConst)
+      out.print("  ${staticStr}${name}(it: ${typeStr}): void;\n")
+    else if (hasItBlockCtor)
+      out.print("  ${staticStr}__$name(it: ${typeStr}): void;\n")
+  }
+
+  private Void writeMethod(CType type, CMethod method)
+  {
+    isStatic := method.isStatic || method.isCtor || pmap.containsKey(type.signature)
+    staticStr := isStatic ? "static " : ""
+    name := JsNode.methodToJs(method.name)
+    if (type.signature == "sys::Func") name += "<R>"
+
+    inputList := method.params.map |CParam p->Str| {
+      paramName := JsNode.pickleName(p.name, deps)
+      if (p.hasDefault)
+        paramName += "?"
+      paramType := getJsType(p.paramType, pod, isStatic ? type : null)
+      return "${paramName}: ${paramType}"
+    }
+    if (!method.isStatic && !method.isCtor && pmap.containsKey(type.signature))
+      inputList.insert(0, "self: ${pmap[type.signature]}")
+    if (method.isCtor)
+      inputList.add("...args: unknown[]")
+    inputs := inputList.join(", ")
+
+    output := method.isCtor ? type.name : getJsType(method.returnType, pod, pmap.containsKey(type.signature) ? type : null)
+    if (method.qname == "sys::Obj.toImmutable" ||
+        method.qname == "sys::List.ro" ||
+        method.qname == "sys::Map.ro")
+          output = "Readonly<${output}>"
+
+    printDoc(method, 2)
+    out.print("  ${staticStr}${name}(${inputs}): ${output};\n")
+  }
+
+  ** Only used for checking slots on the current type; not inherited
   private Bool includeSlot(CType type, CSlot slot)
   {
     // declared only slots, not inherited
