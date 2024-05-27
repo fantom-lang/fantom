@@ -24,6 +24,12 @@ fan.dom.StoragePeer.prototype.size = function(self, key)
   return this.$instance.length;
 }
 
+fan.dom.StoragePeer.prototype.keys = function(self)
+{
+  var keys = Object.keys(this.$instance);
+  return fan.sys.List.make(fan.sys.Str.$type, keys);
+}
+
 fan.dom.StoragePeer.prototype.key = function(self, index)
 {
   return this.$instance.key(index);
