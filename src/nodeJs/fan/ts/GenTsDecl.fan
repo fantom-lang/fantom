@@ -152,7 +152,8 @@ class GenTsDecl
         // skip slots already written by the current type (overridden)
         if (writtenSlots.contains(slot.name)) return
         if (!slot.parent.isMixin) return
-        if (slot.isNoDoc || slot.isStatic) return
+        if (slot.isNoDoc) return
+        if (slot.isStatic) return
 
         // write the mixin slot
         if (slot is CField)

@@ -107,7 +107,20 @@ class JsType : JsNode
     {
       if (slot.parent.isObj) return
       if (slot.isAbstract) return
-      if (slot.isStatic) return
+
+      if (slot.isStatic)
+      {
+        // copy static fields
+        //
+        // NOTE: we don't need to do static methods because the compiler
+        // appears to resolve those correctly in an earlier step
+        if (slot.isPrivate) return
+        if (slot.name == "static\$init") return
+        if (slot is CMethod) return
+        slotName := methodToJs(slot.name)
+        js.wl("static ${slotName}() { return ${qnameToJs(slot.parent)}.${slotName}(); }").nl
+        return
+      }
 
       if (!slot.isPrivate)
       {

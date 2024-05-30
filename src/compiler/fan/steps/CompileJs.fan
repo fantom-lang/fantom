@@ -66,6 +66,7 @@ class CompileJs  : CompilerStep
     if (!buf.isEmpty)
     {
       compiler.tsDecl = buf.seek(0).readAllStr
+// echo(compiler.tsDecl)
     }
   }
 
