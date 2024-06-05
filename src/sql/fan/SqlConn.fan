@@ -41,6 +41,11 @@ mixin SqlConn
   **
   abstract Bool isClosed()
 
+  **
+  ** User data stash for adding cached data to this connection
+  **
+  abstract Str:Obj? stash()
+
 //////////////////////////////////////////////////////////////////////////
 // Data
 //////////////////////////////////////////////////////////////////////////
@@ -77,3 +82,4 @@ mixin SqlConn
   abstract Void rollback()
 
 }
+

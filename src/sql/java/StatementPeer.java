@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2007, John Sublett
+// Copyright (c) 2007, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
@@ -582,3 +582,4 @@ public class StatementPeer
   private boolean isAutoKeys;         // isInsert and connector supports auto-gen keys
   private int autoKeyMode;            // JDBC constant for auto-gen keys
 }
+

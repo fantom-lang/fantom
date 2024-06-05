@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2007, John Sublett
+// Copyright (c) 2007, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
@@ -91,3 +91,4 @@ class Statement
   native Int? limit
 
 }
+

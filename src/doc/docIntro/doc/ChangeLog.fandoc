@@ -8,6 +8,7 @@
 
 *Build 1.0.81 (working)*
 - Add dom::Storage.keys to iterate all keys
+- Add new SqlConnPool API
 
 *Build 1.0.80 (23 Apr 2024)*
 - New ECMA class-based JavaScript design

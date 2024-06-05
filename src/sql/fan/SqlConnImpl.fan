@@ -6,6 +6,8 @@
 //   30 Jun 07  Brian Frank  Creation
 //
 
+using concurrent
+
 **
 ** SqlConn manages a connection to a relational database.
 ** See [pod-doc]`pod-doc#connections`.
@@ -57,6 +59,11 @@ class SqlConnImpl : SqlConn
   **
   override Statement sql(Str sql) { Statement(this, sql) }
 
+  **
+  ** User data stash for adding cached data to this connection
+  **
+  override once Str:Obj? stash() { Str:Obj[:] }
+
 //////////////////////////////////////////////////////////////////////////
 // Transactions
 //////////////////////////////////////////////////////////////////////////
@@ -79,3 +86,26 @@ class SqlConnImpl : SqlConn
   override native Void rollback()
 
 }
+
+**************************************************************************
+** TestSqlConn
+**************************************************************************
+
+@NoDoc
+internal class TestSqlConn: SqlConn
+{
+  static const AtomicInt idCounter := AtomicInt()
+  internal new make() { id = idCounter.getAndIncrement }
+  const Int id
+  override Bool close() { closed = true}
+  override Bool isClosed() { return closed }
+  override SqlMeta meta() { throw Err() }
+  override Statement sql(Str sql) { throw Err() }
+  override Bool autoCommit
+  override Void commit() {}
+  override Void rollback() {}
+  override once Str:Obj? stash() { Str:Obj[:] }
+  override Str toStr() { "TestSqlConn-$id" }
+  private Bool closed
+}
+
