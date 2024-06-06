@@ -15,6 +15,10 @@ class SqlServiceTest : Test
   internal SqlConn? db
   internal DbType? dbType
 
+  internal Str? uri
+  internal Str? user
+  internal Str? pass
+
 //////////////////////////////////////////////////////////////////////////
 // Top
 //////////////////////////////////////////////////////////////////////////
@@ -32,6 +36,7 @@ class SqlServiceTest : Test
       transactions
       preparedStmts
       executeStmts
+      pool
     }
     catch (Err e)
     {
@@ -51,9 +56,9 @@ class SqlServiceTest : Test
   Void open()
   {
     pod  := typeof.pod
-    uri  := pod.config("test.uri")      ?: throw Err("Missing 'sql::test.uri' config prop")
-    user := pod.config("test.username") ?: throw Err("Missing 'sql::test.username' config prop")
-    pass := pod.config("test.password") ?: throw Err("Missing 'sql::test.password' config prop")
+    uri  = pod.config("test.uri")      ?: throw Err("Missing 'sql::test.uri' config prop")
+    user = pod.config("test.username") ?: throw Err("Missing 'sql::test.username' config prop")
+    pass = pod.config("test.password") ?: throw Err("Missing 'sql::test.password' config prop")
     db = SqlConn.open(uri, user, pass)
     verifyEq(db.isClosed, false)
 
@@ -524,6 +529,22 @@ class SqlServiceTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Pool
+//////////////////////////////////////////////////////////////////////////
+
+  Void pool()
+  {
+    pool := TestPool
+    {
+      it.uri      = this.uri
+      it.username = this.user
+      it.password = this.pass
+    }
+    pool.execute(|SqlConn c| {})
+    pool.close
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
@@ -598,4 +619,24 @@ internal enum class DbType
 {
   mysql,
   postgres
+}
+
+**************************************************************************
+** TestPool
+**************************************************************************
+
+const internal class TestPool : SqlConnPool
+{
+  new make(|This|? f) : super(f) {}
+
+  protected override Void onOpen(SqlConn c)
+  {
+    if (!c.stash.isEmpty) throw Err("test failure")
+    c.stash["foo"] = 42
+  }
+
+  protected override Void onClose(SqlConn c)
+  {
+    if (c.stash["foo"] != 42) throw Err("test failure")
+  }
 }
