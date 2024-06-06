@@ -415,6 +415,16 @@ class SqlServiceTest : Test
       }
       i++
     }
+
+    // queryEachWhile
+    verifyEq(
+      db.sql("select * from farmers").queryEachWhile(null) |row->Obj?|
+        { return (row->age == 40) ? row->name : null },
+      "Donny")
+    verifyEq(
+      db.sql("select * from farmers").queryEachWhile(null) |row->Obj?|
+        { return (row->name == "Frodo") ? row->age : null },
+      null)
   }
 
 //////////////////////////////////////////////////////////////////////////
