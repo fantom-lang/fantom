@@ -83,7 +83,7 @@ public class StatementPeer
   /**
    * Invoke the 'eachFunc' on every row in the result.
    */
-  void each(ResultSet rs, Func eachFunc)
+  Object each(ResultSet rs, Func eachFunc, boolean isWhile)
     throws SQLException
   {
     Cols cols = makeCols(rs);
@@ -95,8 +95,10 @@ public class StatementPeer
         row = makeRow(rs, cols, converters);
       else
         updateRow(rs, row, converters);
-      eachFunc.call(row);
+      Object r = eachFunc.call(row);
+      if (isWhile && (r != null)) return r;
     }
+    return null;
   }
 
   /**
@@ -183,6 +185,17 @@ public class StatementPeer
 
   public void queryEach(Statement self, Map params, Func eachFunc)
   {
+    doQueryEach(self, params, eachFunc, false);
+  }
+
+  public Object queryEachWhile(Statement self, Map params, Func eachFunc)
+  {
+    return doQueryEach(self, params, eachFunc, true);
+  }
+
+  private Object doQueryEach(
+      Statement self, Map params, Func eachFunc, boolean isWhile)
+  {
     try
     {
       ResultSet rs = null;
@@ -197,7 +210,7 @@ public class StatementPeer
         rs = stmt.executeQuery(self.sql);
       }
 
-      each(rs, eachFunc);
+      return each(rs, eachFunc, isWhile);
     }
     catch (SQLException ex)
     {
