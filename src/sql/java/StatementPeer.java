@@ -68,7 +68,9 @@ public class StatementPeer
         rs = stmt.executeQuery(self.sql);
       }
 
-      return toRows(rs);
+      List result = toRows(rs);
+      rs.close();
+      return result;
     }
     catch (SQLException ex)
     {
@@ -83,7 +85,7 @@ public class StatementPeer
   /**
    * Invoke the 'eachFunc' on every row in the result.
    */
-  Object each(ResultSet rs, Func eachFunc, boolean isWhile)
+  private Object each(ResultSet rs, Func eachFunc, boolean isWhile)
     throws SQLException
   {
     Cols cols = makeCols(rs);
@@ -105,7 +107,7 @@ public class StatementPeer
    * Map result set columns to Fan columns.
    * result set.
    */
-  Cols makeCols(ResultSet rs)
+  private Cols makeCols(ResultSet rs)
     throws SQLException
   {
     // map the meta-data to a dynamic type
@@ -131,7 +133,7 @@ public class StatementPeer
    * Make a row of the specified dynamic type and set the cell values
    * from the specified result set.
    */
-  Row makeRow(ResultSet rs, Cols cols, SqlUtil.SqlToFan[] converters)
+  private Row makeRow(ResultSet rs, Cols cols, SqlUtil.SqlToFan[] converters)
     throws SQLException
   {
     Row row = Row.make();
@@ -147,7 +149,7 @@ public class StatementPeer
   /**
    * Update an existing row with new values from the specified result set.
    */
-  Object updateRow(ResultSet rs, Row row, SqlUtil.SqlToFan[] converters)
+  private Object updateRow(ResultSet rs, Row row, SqlUtil.SqlToFan[] converters)
     throws SQLException
   {
     int numCols = rs.getMetaData().getColumnCount();
@@ -160,7 +162,7 @@ public class StatementPeer
   /**
    * Make the list of converters for the specified result set.
    */
-  SqlUtil.SqlToFan[] makeConverters(ResultSet rs)
+  private SqlUtil.SqlToFan[] makeConverters(ResultSet rs)
     throws SQLException
   {
     int numCols = rs.getMetaData().getColumnCount();
@@ -173,7 +175,7 @@ public class StatementPeer
   /**
    * Convert the result set to a list of the 'of' type.
    */
-  List toRows(ResultSet rs)
+  private List toRows(ResultSet rs)
     throws SQLException
   {
     Cols cols = makeCols(rs);
@@ -210,7 +212,9 @@ public class StatementPeer
         rs = stmt.executeQuery(self.sql);
       }
 
-      return each(rs, eachFunc, isWhile);
+      Object result = each(rs, eachFunc, isWhile);
+      rs.close();
+      return result;
     }
     catch (SQLException ex)
     {
@@ -259,7 +263,10 @@ public class StatementPeer
       // if result is ResultSet, then return Row[]
       if (isResultSet)
       {
-        return toRows(stmt.getResultSet());
+        ResultSet rs = stmt.getResultSet();
+        List result = toRows(rs);
+        rs.close();
+        return result;
       }
 
       // if auto-generated keys, then return Int[]
@@ -282,6 +289,7 @@ public class StatementPeer
 
           keys.add(key);
         }
+        rs.close();
         if (keys != null) return keys;
       }
 
@@ -299,6 +307,8 @@ public class StatementPeer
   {
     try
     {
+      // We don't need to close this ResultSet.
+      // https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html#getMoreResults--
       if (stmt.getMoreResults())
         return toRows(stmt.getResultSet());
       else
@@ -342,7 +352,6 @@ public class StatementPeer
       }
     }
   }
-
 
   public void close(Statement self)
   {
