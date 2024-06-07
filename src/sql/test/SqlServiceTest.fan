@@ -81,7 +81,7 @@ class SqlServiceTest : Test
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Drop all tables in the database
+  ** Verify the metadata
   **
   Void verifyMeta()
   {
@@ -110,60 +110,45 @@ class SqlServiceTest : Test
   {
     verifyEq(db.meta.tableExists("foo_bar_should_not_exist"), false)
 
-    // TODO Currently, SqlMetaPeer.java fetches every single table from every
-    // schema.  In Postgres, this means it ends up fetching all the various
-    // system tables as well, which we then try to drop, which is bad.  We
-    // should probably fix SqlMeta so it can fetch tables for a specific
-    // schema.  In our test case here, that schema would be 'fantest'.
+    // TODO Currently, db.meta.tables fetches every single table from every
+    // schema.  In both Postgres and MySQL, this means it ends up fetching all
+    // the various system tables as well.  We should probably fix SqlMeta so it
+    // can fetch tables for a specific schema.  In our test case here, that
+    // schema would be 'fantest'.
     //
-    // For now, I've modified this test so that if we are running postgres, it
-    // just tries to drop the one table that actually gets created in the
-    // 'fantest' schema.
+    // In the original version of this test, it tried to drop every single one
+    // of these system tables, which fails spectacularly.  I'm not sure how
+    // this test ever worked before.
+    //
+    // I've modified this test so that it just tries to drop the one table that
+    // actually gets created in the 'fantest' schema, namely 'farmers'.
 
-    if (dbType == DbType.postgres)
-    {
-      Str[] tables := ["farmers"]
-      tables.each |Str tableName|
-      {
-        if (db.meta.tableExists(tableName))
-        {
-          try
-          {
-            db.sql("drop table $tableName").execute
-            tables.remove(tableName)
-          }
-          catch (Err e)
-          {
-            e.trace
-          }
-        }
-      }
-    }
-    else
-    {
-      Str[] tables := db.meta.tables.dup
-      while (tables.size != 0)
-      {
-        Int dropped := 0
-        tables.each |Str tableName|
-        {
-          verifyEq(db.meta.tableExists(tableName), true)
-          try
-          {
-            db.sql("drop table $tableName").execute
-            tables.remove(tableName)
-            dropped++
-          }
-          catch (Err e)
-          {
-            e.trace
-          }
-        }
+    if (db.meta.tableExists("farmers"))
+      db.sql("drop table farmers").execute
 
-        if (dropped == 0)
-          throw SqlErr("All tables could not be dropped.")
-      }
-    }
+    // OLD VERSION
+    //Str[] tables := db.meta.tables.dup
+    //while (tables.size != 0)
+    //{
+    //  Int dropped := 0
+    //  tables.each |Str tableName|
+    //  {
+    //    verifyEq(db.meta.tableExists(tableName), true)
+    //    try
+    //    {
+    //      db.sql("drop table $tableName").execute
+    //      tables.remove(tableName)
+    //      dropped++
+    //    }
+    //    catch (Err e)
+    //    {
+    //      e.trace
+    //    }
+    //  }
+    //
+    //  if (dropped == 0)
+    //    throw SqlErr("All tables could not be dropped.")
+    //}
   }
 
 //////////////////////////////////////////////////////////////////////////
