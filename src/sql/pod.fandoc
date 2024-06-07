@@ -36,16 +36,15 @@ To setup the fantest database and user account via the mysql command line:
   mysql -u root -p
   mysql> create user fantest identified by 'fantest';
   mysql> create database fantest;
-  mysql> grant all privileges on fantest.* to fantest identified by 'fantest';
+  mysql> grant all privileges on fantest.* to fantest;
 
 To use Postgres as the test database, modify "etc/sql/config.props" so that
-'test.uri' equals "jdbc:postgresql://localhost/postgres", and then setup the
+'test.uri' equals "jdbc:postgresql://localhost:5432/postgres", and then setup 
 the fantest database and user account via the Postgres command line:
   sudo -u postgres psql
   postgres=# create role fantest with password 'fantest';
   postgres=# alter role fantest with login;
   postgres=# create schema authorization fantest;
-  postgres=# set search_path to fantest;
 
 Connections [#connections]
 **************************
