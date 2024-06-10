@@ -34,6 +34,9 @@ mixin SqlConn
   ** an exception.  Return true if the connection was closed
   ** successfully or 'false' if closed abnormally.
   **
+  ** Do not close connections that were created by SqlConnPool.  The pool
+  ** handles that for you.
+  **
   abstract Bool close()
 
   **
@@ -42,7 +45,7 @@ mixin SqlConn
   abstract Bool isClosed()
 
   **
-  ** User data stash for adding cached data to this connection
+  ** User data stash for adding cached data to this connection.
   **
   abstract Str:Obj? stash()
 

@@ -33,6 +33,17 @@ const class SqlConnPool
   ** actor must call checkLinger periodically to close idle connetions.
   const Duration linger := 5min
 
+  ** onOpen is invoked just after a connection is opened by the pool. This
+  ** method can be used to modify the newly opened connection, for example by
+  ** turning off autoCommit.
+  protected virtual Void onOpen(SqlConn c) {}
+
+  ** onClose is invoked just before a connection is closed by the pool.
+  ** This method can be used to clean up any state owned by the connection,
+  ** for example by closing prepared Statements that are stored in the
+  ** connection's stash.
+  protected virtual Void onClose(SqlConn c) {}
+
   ** Logger
   const Log log := Log.get("sqlPool")
 

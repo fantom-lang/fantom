@@ -156,11 +156,14 @@ public class SqlConnPoolPeer
 
   private SqlConn open(SqlConnPool self)
   {
-    return SqlConnImpl.openDefault(self.uri, self.username, self.password);
+    SqlConn c = SqlConnImpl.openDefault(self.uri, self.username, self.password);
+    self.onOpen(c);
+    return c;
   }
 
   private void close(SqlConnPool self, Entry entry)
   {
+    self.onClose(entry.conn);
     entry.conn.close();
   }
 
