@@ -490,6 +490,12 @@ class ResolveExpr : CompilerStep
   **
   private Expr resolveTrapCall(CallExpr call)
   {
+    if (call.target.ctype === ns.error)
+    {
+      call.ctype = ns.error
+      return call
+    }
+
     // resolve to Obj.trap of its override
     call.method = call.target.ctype.method("trap")
     call.ctype = call.method.returnType
@@ -990,3 +996,4 @@ class ResolveExpr : CompilerStep
   Bool inClosure := false         // are we inside a closure's block
 
 }
+

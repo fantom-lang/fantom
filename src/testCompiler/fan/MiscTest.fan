@@ -1125,6 +1125,27 @@ class MiscTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Trap on generic
+//////////////////////////////////////////////////////////////////////////
+
+  Void testTrapOnError()
+  {
+    compile(
+     """class C
+        {
+          Str test()
+          {
+            Obj x := [300]
+            return x.last->toHex
+          }
+        }""")
+
+    obj := pod.types[0].make
+    m := obj.typeof.method("test")
+    verifyEq(m.callOn(obj, null), "12c")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Mixin Set Operator
 //////////////////////////////////////////////////////////////////////////
 
@@ -1162,3 +1183,4 @@ class MiscTest : CompilerTest
     verifyEq(m.callOn(obj, null), ["a":"Alpha", "b":"Beta"])
   }
 }
+
