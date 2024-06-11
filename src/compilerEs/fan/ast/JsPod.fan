@@ -25,7 +25,9 @@ class JsPod : JsNode
     // map native files by name
     c.jsFiles?.each |f| {
       // we expect ES javascript files in es/ directory
-      natives[f.name] = f.parent.parent.plus(`es/${f.name}`)
+      esFile := f.parent.parent.plus(`es/${f.name}`)
+      if (esFile.exists)
+        natives[f.name] = f.parent.parent.plus(`es/${f.name}`)
     }
 
     // find types to emit
@@ -143,19 +145,17 @@ class JsPod : JsNode
       this.peers[t.name] = true
     }
 
-    file := natives[key]
+    file := natives.remove(key)
     if (file == null || !file.exists)
     {
       warn("Missing native impl for ${t.def.signature}", Loc("${t.name}.fan"))
       // Do not export peer types that we don't have implementations for
-      natives.remove(key)
       this.peers[t.name] = false
     }
     else
     {
       in := file.in
       js.minify(in)
-      natives.remove(key)
     }
   }
 
