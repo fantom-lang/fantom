@@ -24,7 +24,7 @@ const class SqlConnPool
   const Str? password
 
   ** Max number of simultaneous connections to allow before blocking threads
-  const Int maxConns := 100
+  const Int maxConns := 10
 
   ** Max time to block waiting for a connection before raising TimeoutErr
   const Duration timeout := 30sec

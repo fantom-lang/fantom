@@ -7,10 +7,10 @@
 
 // Java JDBC drivers; these are java classnames separated by a comma
 // which are loaded into the VM using Class.forName on startup
-java.drivers=com.mysql.jdbc.Driver
+// java.drivers=com.mysql.jdbc.Driver
 
 // test setup
-test.uri=jdbc:mysql://localhost:3306/fantest
+test.uri=jdbc:postgresql://localhost:5432/postgres
 test.username=fantest
 test.password=fantest
 
