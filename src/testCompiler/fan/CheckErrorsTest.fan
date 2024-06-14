@@ -857,7 +857,6 @@ class CheckErrorsTest : CompilerTest
         27,  3, "Invalid combination of 'new' and 'native' modifiers",
 
         29,  3, "Invalid combination of 'new' and 'once' modifiers",
-        30,  3, "Invalid combination of 'static' and 'once' modifiers",
         31,  3, "Invalid combination of 'abstract' and 'once' modifiers",
 
         42,  3, "Mixins cannot have once methods",

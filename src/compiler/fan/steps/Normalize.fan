@@ -74,7 +74,7 @@ class Normalize : CompilerStep
         if (m.isStaticInit)
           appendStaticInit(sInit, m)
         else
-          normalizeMethod(m, iInit)
+          normalizeMethod(m, iInit, sInit)
       }
     }
 
@@ -111,7 +111,7 @@ class Normalize : CompilerStep
 // Method Normalization
 //////////////////////////////////////////////////////////////////////////
 
-  private Void normalizeMethod(MethodDef m, Block iInit)
+  private Void normalizeMethod(MethodDef m, Block iInit, Block sInit)
   {
     code := m.code
     if (code == null) return
@@ -123,7 +123,7 @@ class Normalize : CompilerStep
     if (m.isInstanceCtor) insertSuperCtor(m)
 
     // once
-    if (m.isOnce) normalizeOnce(m, iInit)
+    if (m.isOnce) normalizeOnce(m, iInit, sInit)
   }
 
   private Void addImplicitReturn(MethodDef m)
@@ -173,12 +173,13 @@ class Normalize : CompilerStep
     m.ctorChain.isCtorChain = true
   }
 
-  private Void normalizeOnce(MethodDef m, Block iInit)
+  private Void normalizeOnce(MethodDef m, Block iInit, Block sInit)
   {
     loc := m.loc
+    isStatic := m.isStatic
 
     // we'll report these errors in CheckErrors
-    if (curType.isMixin || m.isStatic || m.isCtor || m.isFieldAccessor)
+    if (curType.isMixin || m.isCtor || m.isFieldAccessor)
       return
 
     // error checking
@@ -186,18 +187,30 @@ class Normalize : CompilerStep
     if (!m.params.isEmpty) err("Once method '$m.name' cannot have parameters", loc)
     if (m.ret.isForeign) err("Once method cannot be used with FFI type '$m.ret'", loc)
 
+    // field flags
+    fieldFlags  := FConst.Private + FConst.Storage + FConst.Synthetic + FConst.Once
+    methodFlags := FConst.Private + FConst.Synthetic
+    if (isStatic)
+    {
+      fieldFlags += FConst.Static
+      methodFlags += FConst.Static
+    }
+
     // generate storage field
     f := FieldDef(loc, curType)
-    f.flags     = FConst.Private + FConst.Storage + FConst.Synthetic + FConst.Once
+    f.flags     = fieldFlags
     f.name      = m.name + "\$Store"
     f.fieldType = ns.objType.toNullable
     f.init      = Expr.makeForLiteral(loc, ns, "_once_")
     curType.addSlot(f)
-     iInit.add(fieldInitStmt(f))
+    if (isStatic)
+      sInit.add(fieldInitStmt(f))
+    else
+      iInit.add(fieldInitStmt(f))
 
     // add name$Once with original code
     x := MethodDef(loc, curType)
-    x.flags        = FConst.Private + FConst.Synthetic
+    x.flags        = methodFlags
     x.name         = m.name + "\$Once"
     x.ret          = m.returnType
     x.inheritedRet = null
@@ -226,11 +239,12 @@ class Normalize : CompilerStep
       Expr.makeForLiteral(loc, ns, "_once_"))
 
     // name$Store = name$Once()
+    callTarget := isStatic ? null : ThisExpr(loc)
     trueBlock := Block(loc)
     trueBlock.add(BinaryExpr(
         f.makeAccessorExpr(loc, false),
         Token.assign,
-        CallExpr.makeWithMethod(loc, ThisExpr(loc), x)
+        CallExpr.makeWithMethod(loc, callTarget, x)
       ).toStmt)
 
     ifStmt := IfStmt(loc, cond, trueBlock)
@@ -339,3 +353,4 @@ class Normalize : CompilerStep
   }
 
 }
+

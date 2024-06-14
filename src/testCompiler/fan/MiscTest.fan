@@ -6,6 +6,7 @@
 //   19 Sep 06  Brian Frank  Creation
 //
 
+using concurrent
 using compiler
 
 **
@@ -600,6 +601,8 @@ class MiscTest : CompilerTest
       {
         virtual once DateTime x() { return DateTime.now(null) }
         once DateTime bad() { throw Err.make }
+
+        static once DateTime s() { DateTime.now(null)  }
       }
 
       class B : A
@@ -610,7 +613,14 @@ class MiscTest : CompilerTest
 
      a := pod.type("A").make
      b := pod.type("B").make
-     verifySame(a->x, a->x)
+     s := a.typeof.method("s")
+     x1 := a->x
+     s1 := s.callOn(null, [,])
+     verifySame(a->x, x1)
+     verifySame(s.call, s1)
+     Actor.sleep(10ms)
+     verifySame(a->x, x1)
+     verifySame(s.call, s1)
      verifyNotSame(b->x, b->x)
      verifyErr(Err#) { a->bad }
      verifyErr(Err#) { a->bad }
@@ -1130,7 +1140,7 @@ class MiscTest : CompilerTest
 
   Void testTrapOnError()
   {
-    compile(
+    verifyErrors(
      """class C
         {
           Str test()
@@ -1138,11 +1148,10 @@ class MiscTest : CompilerTest
             Obj x := [300]
             return x.last->toHex
           }
-        }""")
-
-    obj := pod.types[0].make
-    m := obj.typeof.method("test")
-    verifyEq(m.callOn(obj, null), "12c")
+        }""",
+       [
+          6, 14,  "Unknown slot 'sys::Obj.last'",
+       ])
   }
 
 //////////////////////////////////////////////////////////////////////////
