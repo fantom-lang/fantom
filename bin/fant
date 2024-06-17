@@ -4,5 +4,9 @@
 # fant: unit tester
 #
 
-. "${0%/*}/fanlaunch" 
-fanlaunch Fant "$@"
+# To run original Java version:
+#   fanlaunch Fant "$@"
+
+. "${0%/*}/fanlaunch"
+fanlaunch Fan "util::TestRunner" "$@"
+

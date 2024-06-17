@@ -21,8 +21,10 @@ class TestRunner
   static Int main(Str[] args)
   {
     targets := Str[,]
-    runner := TestRunner()
-    isAll := false
+    runner  := TestRunner()
+    isAll   := false
+    isJs    := false
+    isEs    := false
 
     // parse args
     for (i:=0; i<args.size; ++i)
@@ -48,6 +50,16 @@ class TestRunner
         isAll = true
         continue
       }
+      if (arg == "-es")
+      {
+        isEs = true
+        continue
+      }
+      if (arg == "-js")
+      {
+        isJs = true
+        continue
+      }
       if (arg.startsWith("-"))
       {
         echo("WARNING: Unknown option: $arg")
@@ -55,6 +67,10 @@ class TestRunner
       }
       targets.add(arg)
     }
+
+    // handle js/es re-routing
+    if (isEs) return runner.runEs(targets)
+    if (isJs) return runner.runJs(targets)
 
     // run tests
     if (isAll)
@@ -93,6 +109,8 @@ class TestRunner
           -version       print version
           -v             verbose mode
           -all           test all pods
+          -es            test new ECMA JavaScript environment
+          -js            test legacy JavaScript environment
         """)
   }
 
@@ -112,6 +130,22 @@ class TestRunner
      out.printLine("Env path:")
      Env.cur.path.each |f| { out.printLine("  $f.osPath") }
      out.printLine
+  }
+
+  ** Run new ECMA JS code
+  private Int runEs(Str[] targets)
+  {
+    args := Str[,].add("test").addAll(targets)
+    type := Type.find("nodeJs::Main")
+    return type.make->main(args)
+  }
+
+  ** Run legacy JS code
+  private Int runJs(Str[] targets)
+  {
+    args := Str[,].add("-test").addAll(targets)
+    type := Type.find("compilerJs::NodeRunner")
+    return type.make->main(args)
   }
 
 //////////////////////////////////////////////////////////////////////////
