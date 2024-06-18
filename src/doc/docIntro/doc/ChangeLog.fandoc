@@ -7,6 +7,7 @@
 **************************************************************************
 
 *Build 1.0.81 (working)*
+- New util::Console API
 - Rewrite fant in Fantom as new util::TestRunner class
 - Add dom::Storage.keys to iterate all keys
 - Add new SqlConnPool API
