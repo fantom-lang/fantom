@@ -142,7 +142,7 @@ class Build : BuildScript
             const node = __require('node.js')
            """)
     }
-    out.printLine("const js = (typeof window !== 'undefined') ? window : global;").printLine
+    out.printLine("const js = (typeof window !== 'undefined') ? window : globalThis;").printLine
   }
 
   private Void resolveSysTypes()
